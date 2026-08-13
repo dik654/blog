@@ -3338,8 +3338,42 @@ export const ARTICLE_EVIDENCE: Readonly<
       "block executor가 transaction 실행과 state 변경을 소유하는 경계",
     ),
   ),
-  "blockchain/reth-chainspec": withSeriesEvidence(RETH_SERIES_EVIDENCE),
-  "blockchain/reth-cli": withSeriesEvidence(RETH_SERIES_EVIDENCE),
+  "blockchain/reth-chainspec": withSeriesEvidence(
+    RETH_SERIES_EVIDENCE,
+    {
+      kind: "공식 문서",
+      label: "Reth ChainSpec API",
+      href: "https://reth.rs/docs/reth/chainspec/struct.ChainSpec.html",
+      note: "선택한 Reth 2.x docs version의 chain·genesis·hardfork·fee/blob parameter 경계",
+    },
+    {
+      kind: "공식 규격",
+      label: "EIP-6122 — Fork identifier update",
+      href: "https://eips.ethereum.org/EIPS/eip-6122",
+      note: "Timestamp fork를 포함한 fork ID 계산과 peer compatibility validation 규칙",
+    },
+  ),
+  "blockchain/reth-cli": withSeriesEvidence(
+    RETH_SERIES_EVIDENCE,
+    {
+      kind: "공식 문서",
+      label: "Reth Book — reth node",
+      href: "https://reth.rs/cli/reth/node.html",
+      note: "실행한 release에서 operator input과 node option surface를 확인하는 command reference",
+    },
+    {
+      kind: "공식 문서",
+      label: "Reth NodeBuilder API",
+      href: "https://reth.rs/docs/reth/builder/struct.NodeBuilder.html",
+      note: "NodeConfig에서 typed components·hooks·NodeHandle로 이어지는 current builder contract",
+    },
+    {
+      kind: "공식 프로젝트 기록",
+      label: "Reth v2.2.0 release",
+      href: "https://github.com/paradigmxyz/reth/releases/tag/v2.2.0",
+      note: "Discv5 default와 feature·compatibility 변화가 release에 귀속된다는 upgrade 근거",
+    },
+  ),
   "blockchain/reth-db": withSeriesEvidence(RETH_SERIES_EVIDENCE),
   "blockchain/reth-eip1559": withSeriesEvidence(RETH_SERIES_EVIDENCE, {
     kind: "공식 규격",
@@ -3355,7 +3389,27 @@ export const ARTICLE_EVIDENCE: Readonly<
   }),
   "blockchain/reth-exex": withSeriesEvidence(RETH_SERIES_EVIDENCE),
   "blockchain/reth-mev": withSeriesEvidence(RETH_SERIES_EVIDENCE),
-  "blockchain/reth-net": withSeriesEvidence(RETH_SERIES_EVIDENCE),
+  "blockchain/reth-net": withSeriesEvidence(
+    RETH_SERIES_EVIDENCE,
+    {
+      kind: "공식 규격",
+      label: "Ethereum devp2p RLPx specification",
+      href: "https://github.com/ethereum/devp2p/blob/master/rlpx.md",
+      note: "Peer authentication·encrypted framing·capability negotiation의 wire boundary",
+    },
+    {
+      kind: "공식 규격",
+      label: "Ethereum Wire Protocol (eth)",
+      href: "https://github.com/ethereum/devp2p/blob/master/caps/eth.md",
+      note: "Status와 versioned block·transaction announcement/request/response semantics",
+    },
+    {
+      kind: "공식 규격",
+      label: "Ethereum Node Discovery v5",
+      href: "https://github.com/ethereum/devp2p/blob/master/discv5/discv5-theory.md",
+      note: "Signed node record·discovery session·lookup의 역할과 한계",
+    },
+  ),
   "blockchain/reth-payload-builder": withSeriesEvidence(
     RETH_SERIES_EVIDENCE,
     source(
@@ -3381,12 +3435,28 @@ export const ARTICLE_EVIDENCE: Readonly<
     ),
   ),
   "blockchain/prysm-beacon-db": withSeriesEvidence(PRYSM_SERIES_EVIDENCE),
-  "blockchain/prysm-beacon-state": withSeriesEvidence(PRYSM_SERIES_EVIDENCE),
+  "blockchain/prysm-beacon-state": withSeriesEvidence(
+    PRYSM_SERIES_EVIDENCE,
+    {
+      kind: "공식 규격",
+      label: "Ethereum Consensus Specifications — BeaconState",
+      href: "https://github.com/ethereum/consensus-specs/blob/master/specs/phase0/beacon-chain.md",
+      note: "fork별 protocol state schema·transition과 hash-tree-root의 정본",
+    },
+  ),
   "blockchain/prysm-block-processing": withSeriesEvidence(
     PRYSM_SERIES_EVIDENCE,
   ),
   "blockchain/prysm-block-proposal": withSeriesEvidence(PRYSM_SERIES_EVIDENCE),
-  "blockchain/prysm-bls": withSeriesEvidence(PRYSM_SERIES_EVIDENCE),
+  "blockchain/prysm-bls": withSeriesEvidence(
+    PRYSM_SERIES_EVIDENCE,
+    {
+      kind: "핵심 연구",
+      label: "CFRG Internet-Draft — BLS Signatures draft-06",
+      href: "https://datatracker.ietf.org/doc/draft-irtf-cfrg-bls-signature/06/",
+      note: "BLS core·aggregate·Proof-of-Possession API와 key-validation 전제; RFC가 아닌 revision 고정 draft",
+    },
+  ),
   "blockchain/prysm-engine-api": withSeriesEvidence(
     PRYSM_SERIES_EVIDENCE,
     source(
@@ -3424,6 +3494,12 @@ export const ARTICLE_EVIDENCE: Readonly<
       OFFICIAL_SOURCES.ethereum.ssz,
       "serialization과 hash-tree-root의 공식 규칙",
     ),
+    {
+      kind: "공식 규격",
+      label: "Ethereum Consensus Specifications — Merkle proof formats",
+      href: "https://github.com/ethereum/consensus-specs/blob/master/ssz/merkle-proofs.md",
+      note: "generalized index와 single/multiproof helper-node 계산 형식",
+    },
   ),
   "blockchain/prysm-state-cache": withSeriesEvidence(PRYSM_SERIES_EVIDENCE),
   "blockchain/prysm-sync": withSeriesEvidence(PRYSM_SERIES_EVIDENCE),
@@ -3431,21 +3507,65 @@ export const ARTICLE_EVIDENCE: Readonly<
   "blockchain/prysm-validator-client": withSeriesEvidence(
     PRYSM_SERIES_EVIDENCE,
   ),
-  "blockchain/cometbft-abci": withSeriesEvidence(COMETBFT_SERIES_EVIDENCE),
-  "blockchain/cometbft-consensus": withSeriesEvidence(
-    COMETBFT_SERIES_EVIDENCE,
-    source(
-      "공식 규격",
-      OFFICIAL_SOURCES.cometbft.consensus,
-      "round·proposal·prevote·precommit과 commit 조건",
-    ),
-  ),
+  "blockchain/cometbft-abci": [
+    {
+      kind: "공식 규격",
+      label: "CometBFT v0.40.0 — ABCI++ Methods",
+      href: "https://github.com/cometbft/cometbft/blob/v0.40.0/spec/abci/abci%2B%2B_methods.md",
+      note: "PrepareProposal·ProcessProposal·FinalizeBlock·Commit의 field와 호출·authority 기준",
+    },
+    {
+      kind: "공식 규격",
+      label: "CometBFT v0.40.0 — ABCI Application Requirements",
+      href: "https://github.com/cometbft/cometbft/blob/v0.40.0/spec/abci/abci%2B%2B_app_requirements.md",
+      note: "Determinism·candidate state·connection ordering·crash recovery에 대한 application 의무",
+    },
+    {
+      kind: "공식 코드",
+      label: "CometBFT v0.40.0 — ABCI source snapshot",
+      href: "https://github.com/cometbft/cometbft/tree/v0.40.0/abci",
+      note: "실제 protobuf type과 client/server adapter를 확인하는 pinned source",
+    },
+  ],
+  "blockchain/cometbft-consensus": [
+    {
+      kind: "공식 규격",
+      label: "CometBFT v0.40.0 — Byzantine Consensus Algorithm",
+      href: "https://github.com/cometbft/cometbft/blob/v0.40.0/spec/consensus/consensus.md",
+      note: "H/R/S·proposal·prevote·precommit·PoLC·commit과 safety/liveness proof 기준",
+    },
+    {
+      kind: "공식 코드",
+      label: "CometBFT v0.40.0 — consensus source snapshot",
+      href: "https://github.com/cometbft/cometbft/tree/v0.40.0/consensus",
+      note: "Event loop·state transition·timeout·WAL 구현을 확인하는 pinned source",
+    },
+  ],
   "blockchain/cometbft-crypto": withSeriesEvidence(COMETBFT_SERIES_EVIDENCE),
   "blockchain/cometbft-execution": withSeriesEvidence(COMETBFT_SERIES_EVIDENCE),
   "blockchain/cometbft-mempool": withSeriesEvidence(COMETBFT_SERIES_EVIDENCE),
   "blockchain/cometbft-p2p": withSeriesEvidence(COMETBFT_SERIES_EVIDENCE),
   "blockchain/cometbft-state": withSeriesEvidence(COMETBFT_SERIES_EVIDENCE),
-  "blockchain/cometbft-types": withSeriesEvidence(COMETBFT_SERIES_EVIDENCE),
+  "blockchain/cometbft-types": [
+    {
+      kind: "공식 규격",
+      label: "CometBFT v0.40.0 — Data Structures",
+      href: "https://github.com/cometbft/cometbft/blob/v0.40.0/spec/core/data_structures.md",
+      note: "Block·Header·Vote·Commit·ValidatorSet·Evidence field와 validation rule의 pinned 기준",
+    },
+    {
+      kind: "공식 규격",
+      label: "CometBFT v0.40.0 — Evidence",
+      href: "https://github.com/cometbft/cometbft/blob/v0.40.0/spec/consensus/evidence.md",
+      note: "Duplicate vote·light-client attack evidence의 검증·gossip·commit 경계",
+    },
+    {
+      kind: "공식 코드",
+      label: "CometBFT v0.40.0 — types source snapshot",
+      href: "https://github.com/cometbft/cometbft/tree/v0.40.0/types",
+      note: "Canonical sign bytes와 validation implementation을 확인하는 pinned source",
+    },
+  ],
   "blockchain/filecoin-f3": [
     {
       kind: "공식 코드",
@@ -3617,7 +3737,65 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "Lotus daemon·chain·miner 구현의 원본",
     },
   ],
+  "gpu/hw-memory": [
+    {
+      kind: "공식 가이드",
+      label: "AMD EPYC 9005 Architecture Overview",
+      href: "https://www.amd.com/content/dam/amd/en/documents/epyc-technical-docs/user-guides/58462_amd-epyc-9005-tg-architecture-overview.pdf",
+      note: "CPU platform의 memory channel·DIMM type·DPC·data-rate 지원 범위",
+    },
+    {
+      kind: "공식 규격",
+      label: "JEDEC JESD79-5 — DDR5 SDRAM",
+      href: "https://www.jedec.org/standards-documents/docs/jesd79-5c",
+      note: "DDR5 device command·timing·burst·transfer semantics의 정본",
+    },
+    {
+      kind: "공식 연구",
+      label: "Micron — DDR5 New Features",
+      href: "https://www.micron.com/content/dam/micron/global/public/products/white-paper/ddr5-new-features-white-paper.pdf",
+      note: "DDR5 subchannel·on-die ECC의 device-internal 보호 경계",
+    },
+    {
+      kind: "공식 규격",
+      label: "JEDEC — DDR5 Registered DIMM Design Specification",
+      href: "https://www.jedec.org/standards-documents/docs/jesd82-511",
+      note: "RCD와 registered DIMM module interface의 규격 경계",
+    },
+  ],
+  "gpu/gpu-architecture": [
+    {
+      kind: "공식 문서",
+      label: "NVIDIA CUDA Programming Guide — Programming Model",
+      href: "https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html",
+      note: "Grid·block·thread와 SM·warp execution 경계",
+    },
+    {
+      kind: "공식 가이드",
+      label: "NVIDIA CUDA C++ Best Practices Guide",
+      href: "https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/",
+      note: "Memory hierarchy·effective bandwidth·profiling 최적화 지침",
+    },
+    {
+      kind: "핵심 논문",
+      label: "Williams et al. — Roofline",
+      href: "https://escholarship.org/uc/item/3qf383m0",
+      note: "Arithmetic intensity로 compute·memory performance roof를 구분하는 원 연구",
+    },
+  ],
   "gpu/hw-network": [
+    {
+      kind: "공식 규격",
+      label: "PCI-SIG — PCI Express Base Specification",
+      href: "https://pcisig.com/specifications",
+      note: "PCIe generation별 signaling·lane·transaction protocol의 공식 범위",
+    },
+    {
+      kind: "공식 문서",
+      label: "NVIDIA NVLink and NVSwitch",
+      href: "https://www.nvidia.com/en-us/data-center/nvlink/",
+      note: "제품 세대별 node-local GPU interconnect와 switch 구성 범위",
+    },
     {
       kind: "공식 규격",
       label: "IEEE 802.3 Ethernet Working Group standards map",
@@ -3731,7 +3909,8 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
     {
       kind: "핵심 논문",
-      label: "Ongaro·Ousterhout — In Search of an Understandable Consensus Algorithm",
+      label:
+        "Ongaro·Ousterhout — In Search of an Understandable Consensus Algorithm",
       href: "https://raft.github.io/raft.pdf",
       note: "Raft의 leader election·log replication·safety와 crash-majority 전제",
     },
@@ -3766,6 +3945,102 @@ export const ARTICLE_EVIDENCE: Readonly<
       label: "EIP-3675 — Upgrade consensus to Proof-of-Stake",
       href: "https://eips.ethereum.org/EIPS/eip-3675",
       note: "Ethereum Mainnet execution layer의 PoW→PoS transition 경계",
+    },
+  ],
+  "blockchain/bft-theory": [
+    {
+      kind: "핵심 논문",
+      label: "Lamport·Shostak·Pease — The Byzantine Generals Problem",
+      href: "https://lamport.azurewebsites.net/pubs/byz.pdf",
+      note: "Oral·signed message model에서 interactive consistency의 조건과 algorithm",
+    },
+    {
+      kind: "핵심 논문",
+      label:
+        "Dwork·Lynch·Stockmeyer — Consensus in the Presence of Partial Synchrony",
+      href: "https://groups.csail.mit.edu/tds/papers/Lynch/jacm88.pdf",
+      note: "Unknown bound·GST의 partial-synchrony model과 Byzantine resilience 범위",
+    },
+    {
+      kind: "핵심 논문",
+      label: "Castro·Liskov — Practical Byzantine Fault Tolerance",
+      href: "https://pmg.csail.mit.edu/papers/osdi99.pdf",
+      note: "PBFT normal case·checkpoint·view change와 구현 평가의 원문 범위",
+    },
+    {
+      kind: "핵심 논문",
+      label: "Yin et al. — HotStuff",
+      href: "https://arxiv.org/abs/1803.05069",
+      note: "Chained quorum certificate·pacemaker·responsiveness의 protocol 조건",
+    },
+  ],
+  "blockchain/pos-theory": [
+    {
+      kind: "핵심 논문",
+      label:
+        "Bowers·Juels·Oprea — Proofs of Retrievability: Theory and Implementation",
+      href: "https://eprint.iacr.org/2008/175",
+      note: "Challenge-response와 extractor를 통해 단순 possession이 아니라 encoded file retrievability를 정의하는 이론 범위",
+    },
+    {
+      kind: "핵심 논문",
+      label: "Filecoin: A Decentralized Storage Network",
+      href: "https://filecoin.io/filecoin.pdf",
+      note: "Proof-of-Replication과 Proof-of-Spacetime을 storage market·chain protocol에 연결한 원 논문",
+    },
+    {
+      kind: "공식 문서",
+      label: "Filecoin Docs — Proofs",
+      href: "https://docs.filecoin.io/basics/the-blockchain/proofs",
+      note: "현재 문서가 설명하는 PoRep·Winning PoSt·Window PoSt의 역할과 versioned implementation 경계",
+    },
+  ],
+  "p2p/libp2p": [
+    {
+      kind: "공식 규격",
+      label: "libp2p Specifications — Connection Establishment",
+      href: "https://github.com/libp2p/specs/tree/master/connections",
+      note: "Transport upgrade·secure channel·stream multiplexer와 protocol negotiation의 interoperable 경계",
+    },
+    {
+      kind: "공식 문서",
+      label: "rust-libp2p 0.56 — Transport trait",
+      href: "https://docs.rs/libp2p/latest/libp2p/trait.Transport.html",
+      note: "Dial·listen·poll associated future/output과 lazy dial semantics의 current API",
+    },
+    {
+      kind: "공식 문서",
+      label: "rust-libp2p 0.56 — Swarm and NetworkBehaviour",
+      href: "https://docs.rs/libp2p/latest/libp2p/struct.Swarm.html",
+      note: "Swarm progress·event stream·close와 protocol state ownership의 current API",
+    },
+  ],
+  "p2p/libp2p-noise": [
+    {
+      kind: "공식 규격",
+      label: "libp2p Specifications — noise-libp2p",
+      href: "https://github.com/libp2p/specs/blob/master/noise/README.md",
+      note: "XX profile·identity payload·고정 cipher suite·framing·fail-closed 검증 정본",
+    },
+    {
+      kind: "공식 규격",
+      label: "Trevor Perrin — The Noise Protocol Framework, Revision 34",
+      href: "https://noiseprotocol.org/noise.html",
+      note: "Handshake pattern token·SymmetricState·CipherState 처리의 원 명세",
+    },
+  ],
+  "p2p/libp2p-tcp": [
+    {
+      kind: "공식 문서",
+      label: "rust-libp2p 0.56 — TCP Config and Transport",
+      href: "https://docs.rs/libp2p/latest/libp2p/tcp/struct.Config.html",
+      note: "TCP_NODELAY·backlog·TTL·per-dial port reuse와 Transport implementation의 current API",
+    },
+    {
+      kind: "공식 문서",
+      label: "rust-libp2p 0.56 — Transport trait",
+      href: "https://docs.rs/libp2p/latest/libp2p/trait.Transport.html",
+      note: "Lazy dial future, listen event와 raw connection output의 상위 contract",
     },
   ],
   "p2p/tls-fundamentals": [
@@ -3820,6 +4095,50 @@ export const ARTICLE_EVIDENCE: Readonly<
       label: "IPLD Data Model — Links",
       href: "https://ipld.io/docs/data-model/kinds/#link-kind",
       note: "IPLD Link와 CID가 data model graph를 연결하는 의미",
+    },
+  ],
+  "crypto/finite-field-theory": [
+    {
+      kind: "공식 규격",
+      label: "NIST FIPS 186-5 — Digital Signature Standard",
+      href: "https://csrc.nist.gov/pubs/fips/186-5/final",
+      note: "실제 암호 규격에서 prime·binary field parameter와 validation을 사용하는 범위",
+    },
+    {
+      kind: "핵심 논문",
+      label:
+        "Schwartz — Fast Probabilistic Algorithms for Verification of Polynomial Identities",
+      href: "https://doi.org/10.1145/322186.322189",
+      note: "Random polynomial identity test와 degree 기반 false-acceptance bound의 원문",
+    },
+  ],
+  "crypto/lagrange": [
+    {
+      kind: "공식 문서",
+      label: "NIST DLMF §3.3 — Interpolation",
+      href: "https://dlmf.nist.gov/3.3",
+      note: "Lagrange form과 polynomial interpolation notation의 표준 reference",
+    },
+    {
+      kind: "핵심 논문",
+      label: "Berrut & Trefethen — Barycentric Lagrange Interpolation",
+      href: "https://doi.org/10.1137/S0036144502417715",
+      note: "Barycentric forms·precomputation·floating-point analysis의 원문 범위",
+    },
+  ],
+  "crypto/fft": [
+    {
+      kind: "핵심 논문",
+      label: "Pollard — The Fast Fourier Transform in a Finite Field",
+      href: "https://doi.org/10.1007/BF01934338",
+      note: "Finite-field roots-of-unity transform과 fast computation의 초기 원문",
+    },
+    {
+      kind: "핵심 논문",
+      label:
+        "Cooley & Tukey — An Algorithm for the Machine Calculation of Complex Fourier Series",
+      href: "https://doi.org/10.1090/S0025-5718-1965-0178586-1",
+      note: "Composite-length DFT factorization과 intermediate reuse의 원 논문",
     },
   ],
 };

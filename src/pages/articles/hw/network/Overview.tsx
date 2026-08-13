@@ -1,5 +1,6 @@
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import ContentBoundary from "@/components/articles/content-boundary";
 import ContextViz from "./viz/ContextViz";
 
 const axes = [
@@ -59,6 +60,7 @@ export default function Overview() {
       <div className="not-prose mb-8">
         <ContextViz />
       </div>
+      <ContentBoundary article="hw-network" />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <div id="workload-contract" className="scroll-mt-24">
@@ -66,10 +68,11 @@ export default function Overview() {
             서버 네트워크는 케이블 속도를 고르는 문제처럼 보이지만, 실제로는
             <strong> 어떤 endpoint가 누구에게 얼마를 언제 보내는지</strong>를
             정하는 문제다. 같은 100 Gb/s 링크라도 큰 checkpoint 하나를 옮기는
-            흐름과 수백 rank가 barrier에 맞춰 all-to-all을 수행하는 흐름은 queue와
-            tail latency가 전혀 다르게 나타난다. 먼저 source·destination·message
-            size·동시 flow·burst를 기록한 traffic matrix를 만들고, 그다음에 링크와
-            fabric이 이를 감당하는지 계산해야 한다.
+            흐름과 수백 rank가 barrier에 맞춰 all-to-all을 수행하는 흐름은
+            queue와 tail latency가 전혀 다르게 나타난다. 먼저
+            source·destination·message size·동시 flow·burst를 기록한 traffic
+            matrix를 만들고, 그다음에 링크와 fabric이 이를 감당하는지 계산해야
+            한다.
           </p>
         </div>
 
@@ -114,18 +117,37 @@ export default function Overview() {
             question="800 Gb/s라고 적힌 포트에서 애플리케이션이 실제로 옮긴 데이터 속도는 어떻게 구분하는가?"
             idea={
               <p>
-                포트의 line rate는 wire가 전달하는 bit의 속도이고, goodput은 작업이
-                끝날 때까지 실제 payload byte를 옮긴 속도입니다. Bit를 byte로
-                바꾸고 protocol·FEC·header·idle·queue 시간을 제외해야 두 값을
-                같은 단위로 비교할 수 있습니다.
+                포트의 line rate는 wire가 전달하는 bit의 속도이고, goodput은
+                작업이 끝날 때까지 실제 payload byte를 옮긴 속도입니다. Bit를
+                byte로 바꾸고 protocol·FEC·header·idle·queue 시간을 제외해야 두
+                값을 같은 단위로 비교할 수 있습니다.
               </p>
             }
             formula={String.raw`G_{\mathrm{payload}}=\frac{Q_{\mathrm{payload}}}{T_{\mathrm{completion}}}\le \frac{R_{\mathrm{line}}}{8}`}
             terms={[
-              { symbol: "Q_{\\mathrm{payload}}", name: "완료한 payload", description: "Header와 retransmission을 제외하고 애플리케이션이 전달하려던 유효 byte 수입니다." },
-              { symbol: "T_{\\mathrm{completion}}", name: "완료 시간", description: "마지막 유효 byte가 목적지에 도착할 때까지의 wall-clock 시간입니다." },
-              { symbol: "G_{\\mathrm{payload}}", name: "goodput", description: "애플리케이션 관점의 유효 전송률이며 보통 GB/s로 기록합니다." },
-              { symbol: "R_{\\mathrm{line}}", name: "line rate", description: "Port가 물리·MAC 계층에서 광고하는 bit/s입니다." },
+              {
+                symbol: "Q_{\\mathrm{payload}}",
+                name: "완료한 payload",
+                description:
+                  "Header와 retransmission을 제외하고 애플리케이션이 전달하려던 유효 byte 수입니다.",
+              },
+              {
+                symbol: "T_{\\mathrm{completion}}",
+                name: "완료 시간",
+                description:
+                  "마지막 유효 byte가 목적지에 도착할 때까지의 wall-clock 시간입니다.",
+              },
+              {
+                symbol: "G_{\\mathrm{payload}}",
+                name: "goodput",
+                description:
+                  "애플리케이션 관점의 유효 전송률이며 보통 GB/s로 기록합니다.",
+              },
+              {
+                symbol: "R_{\\mathrm{line}}",
+                name: "line rate",
+                description: "Port가 물리·MAC 계층에서 광고하는 bit/s입니다.",
+              },
             ]}
             assumptions={[
               "Decimal GB/s와 Gb/s를 비교하며 1 byte=8 bit를 사용합니다.",
@@ -142,10 +164,11 @@ export default function Overview() {
         <p className="leading-7">
           관리·block gossip처럼 작고 지연에 민감한 flow, storage sync와
           backup처럼 큰 bulk flow, GPU collective처럼 여러 rank가 barrier에서
-          만나는 east-west flow는 목표와 실패 영향이 다르다. 그래서 VLAN·VRF·queue·별도
-          fabric 가운데 필요한 격리 수준을 정하고 각 class의 SLO와 capacity를
-          따로 계산한다. Blockchain, storage, AI라는 제품 이름만으로 고정 link
-          rate를 배정하면 실제 burst와 fan-in을 놓치기 쉽다.
+          만나는 east-west flow는 목표와 실패 영향이 다르다. 그래서
+          VLAN·VRF·queue·별도 fabric 가운데 필요한 격리 수준을 정하고 각 class의
+          SLO와 capacity를 따로 계산한다. Blockchain, storage, AI라는 제품
+          이름만으로 고정 link rate를 배정하면 실제 burst와 fan-in을 놓치기
+          쉽다.
         </p>
 
         <div className="not-prose my-6 border-l-4 border-cyan-400 bg-cyan-50/60 dark:bg-cyan-950/20 rounded-r-lg p-4">
@@ -156,6 +179,12 @@ export default function Overview() {
             같은 시간축에 저장함
           </p>
         </div>
+        <p>
+          이 글은 GPU memory에서 PCIe·NVLink를 거쳐 HCA와 switched fabric으로
+          나가는 경로를 먼저 보고, 그 뒤 Ethernet·RDMA·InfiniBand의 계약을
+          확장합니다. CUDA block·stream은 각 정본 글에서 재사용하며 여기서는
+          interconnect topology와 end-to-end 측정만 소유합니다.
+        </p>
 
         <div id="paper-ethernet-8023" className="scroll-mt-24">
           <CitationBlock

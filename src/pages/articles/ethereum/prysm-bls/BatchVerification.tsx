@@ -1,246 +1,90 @@
+import ExplainedFormula from "@/components/ui/explained-formula";
 import type { CodeRef } from "@/components/code/types";
-import { CodeViewButton } from "@/components/code";
-import { codeRefs } from "./codeRefs";
 
-interface Props {
+export default function BatchVerification({
+  onCodeRef: _onCodeRef,
+}: {
   onCodeRef: (key: string, ref: CodeRef) => void;
-}
-
-export default function BatchVerification({ onCodeRef }: Props) {
+}) {
   return (
     <section id="batch-verification" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">배치 검증 최적화</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          <strong>AggregateVerify</strong> — 서로 다른 (pk, msg) 쌍의 집계
-          서명을 한 번에 검증한다.
-        </p>
-        <div className="not-prose flex flex-wrap gap-2 my-4">
-          <CodeViewButton
-            onClick={() => onCodeRef("bls-batch", codeRefs["bls-batch"])}
-          />
-          <span className="text-xs text-muted-foreground self-center">
-            AggregateVerify()
-          </span>
-        </div>
-
-        {/* ── AggregateVerify vs FastAggregateVerify ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          AggregateVerify — 서로 다른 메시지
-        </h3>
-        <div className="not-prose space-y-4 my-4">
-          <div className="rounded-lg border border-border/60 p-4">
-            <p className="font-semibold text-sm text-blue-400 mb-2">
-              <code>AggregateVerify(pks, msgs, sig_agg)</code>
-            </p>
-            <p className="text-sm text-muted-foreground mb-2">
-              각 서명자가 <strong>서로 다른 메시지</strong>에 서명한 경우 집계
-              검증
-            </p>
-            <p className="text-sm text-muted-foreground">
-              Pairing product:{" "}
-              <code>e(G1, sig_agg) == product e(pk_i, H(msg_i))</code>
-            </p>
-          </div>
-          <div className="rounded-lg border border-border/60 p-4">
-            <p className="font-semibold text-sm text-green-400 mb-2">
-              수학적 증명
-            </p>
-            <div className="text-sm text-muted-foreground space-y-0.5">
-              <p>
-                <code>sig_agg = sum sk_i x H(msg_i)</code>
-              </p>
-              <p>
-                <code>
-                  e(G1, sig_agg) = product e(G1, sk_i x H(msg_i)) = product
-                  e(pk_i, H(msg_i))
-                </code>
-              </p>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="rounded-lg border border-border/60 p-4">
-              <p className="font-semibold text-sm text-amber-400 mb-2">비용</p>
-              <ul className="text-sm space-y-1 text-muted-foreground">
-                <li>
-                  <strong>N+1</strong> pairings (FAV는 2)
-                </li>
-                <li>
-                  <strong>N</strong> hash_to_curve 호출
-                </li>
-              </ul>
-            </div>
-            <div className="rounded-lg border border-border/60 p-4">
-              <p className="font-semibold text-sm text-violet-400 mb-2">
-                사용처
-              </p>
-              <ul className="text-sm space-y-1 text-muted-foreground">
-                <li>Attestation indices (각자 다른 att_data)</li>
-                <li>Block execution batch</li>
-                <li>Cross-fork signature verification</li>
-              </ul>
-            </div>
-          </div>
-        </div>
+      <h2 className="mb-6 text-2xl font-bold">
+        Batch verification은 여러 판정을 묶어 계산하지만 어느 입력이 틀렸는지는
+        자동으로 알려주지 않는다
+      </h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          <code>AggregateVerify</code>는 여러 public key가 서로 다른 message에 만든 signature를 aggregate해 검증합니다. 같은 message에 대한 <code>FastAggregateVerify</code>보다 hash-to-curve와 pairing input이 많으므로 일반적으로 더 비싸며, attestation data root가 서로 다른 signature를 한 batch에 다룰 때 이 경로가 필요합니다.
+          Aggregate는 protocol이 의도한 여러 signature를 하나의 signature로
+          표현하는 기능이고, batch verification은 서로 독립된 verification
+          equation을 더 적은 pairing work로 함께 검사하는 구현 최적화입니다.
+          Batch 실패 뒤 모든 message를 reject할지, batch를 나눠 invalid item을
+          찾을지는 latency·CPU·peer penalty 정책까지 포함한 별도 선택입니다.
         </p>
+      </div>
 
-        {/* ── Prysm의 Batch verification ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          Prysm의 배치 검증 전략
-        </h3>
-        <div className="not-prose space-y-4 my-4">
-          <div className="rounded-lg border border-border/60 p-4">
-            <p className="font-semibold text-sm text-blue-400 mb-2">
-              <code>SignatureBatch</code> &mdash; 동적 배치 수집
-            </p>
-            <ul className="text-sm space-y-1 text-muted-foreground">
-              <li>
-                <code>Signatures []Signature</code> &mdash; 수집된 서명
-              </li>
-              <li>
-                <code>PubKeys []PublicKey</code> &mdash; 대응 공개키
-              </li>
-              <li>
-                <code>Messages [][]byte</code> &mdash; 각 메시지
-              </li>
-            </ul>
-            <p className="text-sm text-muted-foreground mt-2">
-              <code>Verify()</code>: 모든 메시지 동일 &rarr;{" "}
-              <code>FastAggregateVerify</code>, 아니면{" "}
-              <code>AggregateVerify</code>
-            </p>
-          </div>
-          <div className="rounded-lg border border-border/60 p-4">
-            <p className="font-semibold text-sm text-green-400 mb-2">
-              <code>processBlock</code> 활용 흐름
-            </p>
-            <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside">
-              <li>
-                각 operation마다 서명 수집 (즉시 검증 안 함): RandaoReveal,
-                ProposerSig, Attestations, Slashings
-              </li>
-              <li>
-                블록 처리 끝에서 <code>batch.Verify()</code> 한 번에 검증
-              </li>
-            </ol>
-          </div>
-          <div className="rounded-lg border border-border/60 p-4">
-            <p className="font-semibold text-sm text-amber-400 mb-2">
-              같은 block fixture로 비교
-            </p>
-            <div className="grid grid-cols-2 gap-3 text-sm text-center">
-              <div className="bg-red-500/10 rounded p-2">
-                <p className="text-muted-foreground">순차 검증</p>
-                <p className="font-mono">
-                  <strong>N회</strong> individual verify
-                </p>
-              </div>
-              <div className="bg-green-500/10 rounded p-2">
-                <p className="text-muted-foreground">배치 검증</p>
-                <p className="font-mono">
-                  <strong>1회 batch</strong> + failure fallback
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+      <ExplainedFormula
+        question="독립된 N개 검증식을 한 식으로 묶을 때 왜 무작위 계수가 필요할까요?"
+        idea={
+          <>
+            각 식에 verifier가 새로 뽑은 nonzero scalar rᵢ를 곱해 합칩니다.
+            공격자가 서로의 오류를 정확히 상쇄하는 batch를 미리 만들기 어렵게
+            합니다.
+          </>
+        }
+        formula={String.raw`e\!\left(G_1,\sum_{i=1}^{N}r_i\sigma_i\right)=\prod_{i=1}^{N}e\!\left(r_iPK_i,H(m_i)\right)`}
+        terms={[
+          {
+            symbol: "N",
+            name: "Batch size",
+            description:
+              "이번 검증 호출에 묶인 독립 signature equation 수입니다.",
+          },
+          {
+            symbol: "r_i",
+            name: "Random coefficient",
+            description:
+              "각 item에 독립적으로 배정하는 nonzero challenge scalar입니다.",
+          },
+          {
+            symbol: "PK_i,m_i,\sigma_i",
+            name: "Verification tuple",
+            description:
+              "Public key, 정확한 signing-root bytes, signature입니다.",
+          },
+        ]}
+        assumptions={[
+          "Random coefficient는 공격자가 input을 고른 뒤 예측할 수 없게 생성합니다.",
+          "각 point와 message/domain은 개별 API 전제 검사를 통과합니다.",
+          "Library가 제공하는 batch 알고리즘과 failure probability 범위를 고정된 version에서 확인합니다.",
+        ]}
+        interpretation="Batch PASS는 포함된 모든 equation을 높은 확률로 함께 받아들일 근거입니다. Batch FAIL만으로 어느 item이 invalid인지 알 수 없으며, 고정 계수나 재사용 계수는 상쇄 공격 경계를 약하게 만들 수 있습니다."
+      />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>Failure isolation은 queue 정책의 일부입니다</h3>
         <p>
-          Prysm은 block 안의 독립적인 BLS check를 모아 batch verification 경로로 보내 pairing setup과 final exponentiation을 공유합니다. 개선 폭은 signature 수, message 중복도, blst version, CPU와 batch failure 시 fallback 방식에 따라 달라지므로 고정된 배수 대신 같은 block fixture로 individual·batch path를 benchmark해야 합니다.
+          64개 batch가 실패했을 때 개별 64개를 모두 다시 검증하면 정상 경로의
+          이득이 공격 입력에서 사라집니다. 반으로 나누는 binary isolation은
+          invalid item이 적을 때 재검증 수를 줄이지만, deadline을 넘긴 stale
+          attestation은 찾기 전에 폐기하는 편이 낫습니다. Queue에는 object root,
+          peer, arrival/deadline, fork/domain, batch ID와 fallback 결과를
+          남깁니다.
         </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">배치 vs 개별 성능</h3>
-        <ul>
-          <li>
-            <strong>개별 Verify</strong> — 패어링 2회/건. 1000건 = 2000 패어링
-          </li>
-          <li>
-            <strong>FastAggregateVerify</strong> — 패어링 2회 + 포인트 덧셈
-            999회
-          </li>
-          <li>
-            <strong>AggregateVerify</strong> — n+1 패어링 (밀러 루프 배치
-            최적화)
-          </li>
-        </ul>
-
-        {/* ── Miller Loop 최적화 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          Miller Loop 배치 — 내부 최적화
-        </h3>
-        <div className="not-prose space-y-4 my-4">
-          <div className="rounded-lg border border-border/60 p-4">
-            <p className="font-semibold text-sm text-blue-400 mb-2">
-              Pairing = Miller loop + Final exponentiation
-            </p>
-            <div className="grid grid-cols-2 gap-3 text-sm text-center">
-              <div className="bg-muted/50 rounded p-2">
-                <p className="text-muted-foreground">Miller loop</p>
-                <p className="font-mono">pair별 누적 가능</p>
-              </div>
-              <div className="bg-muted/50 rounded p-2">
-                <p className="text-muted-foreground">Final exp</p>
-                <p className="font-mono">batch 끝에서 공유</p>
-              </div>
-            </div>
-          </div>
-          <div className="rounded-lg border border-border/60 p-4">
-            <p className="font-semibold text-sm text-green-400 mb-2">
-              배치 최적화 원리
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-muted-foreground">
-              <div>
-                <p className="font-semibold text-xs text-red-400 mb-1">
-                  순진한 방법
-                </p>
-                <p>N x (miller + final_exp)</p>
-              </div>
-              <div>
-                <p className="font-semibold text-xs text-green-400 mb-1">
-                  배치 최적화
-                </p>
-                <p>N x miller_loop &rarr; 공유된 final exponentiation</p>
-              </div>
-            </div>
-          </div>
-          <div className="rounded-lg border border-border/60 p-4">
-            <p className="font-semibold text-sm text-amber-400 mb-2">
-              blst MultiPairing API
-            </p>
-            <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside">
-              <li>
-                <code>Pairing.Add(pk, sig)</code> &mdash; miller_loop 단계만
-                누적 (<code>blst_pairing_aggregate_pk_in_g1</code>)
-              </li>
-              <li>
-                <code>Pairing.FinalExp()</code> &mdash; 모든 누적 후 1번의 final
-                exponentiation
-              </li>
-            </ol>
-            <div className="grid grid-cols-2 gap-3 text-sm text-center mt-3">
-              <div>
-                <p className="text-muted-foreground">N=100</p>
-                <p className="font-mono">
-                  200ms &rarr; <strong>120ms</strong>
-                </p>
-              </div>
-              <div>
-                <p className="text-muted-foreground">N=1000</p>
-                <p className="font-mono">
-                  2000ms &rarr; <strong>1200ms</strong>
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <h3>Release gate</h3>
         <p>
-          Blst는 여러 pairing term의 Miller loop 결과를 누적하고 final exponentiation을 공유할 수 있습니다. 이 구조가 BLS-heavy block validation에서 중요한 최적화이지만 정확한 speedup은 batch size와 hardware에 따라 달라지며, invalid signature가 섞였을 때 어느 항목이 실패했는지 찾는 비용도 함께 측정해야 합니다.
+          Valid, malformed point, wrong subgroup, wrong domain, duplicate key,
+          same-message, distinct-message와 rogue-key fixture를 base와
+          candidate에 동일하게 넣습니다. Accept/reject parity와 no-crash·bounded
+          allocation을 hard gate로 통과한 뒤 signatures/s, p50/p99, queue wait,
+          CPU cycles, fallback rate와 end-to-end missed duty를 비교합니다.
+          Microbenchmark만 빠르고 queue wait가 늘면 production 개선이 아닙니다.
         </p>
-
-        <p className="mt-4 border-l-2 border-amber-500/50 pl-3 text-sm">
-          <strong>💡 전략 선택</strong> — Prysm은 블록 내 어테스테이션 검증 시
-          동일한 signing root를 공유하는 signature에는 FastAggregateVerify를 사용할 수 있고 서로 다른 message에는 AggregateVerify나 batch verification이 필요합니다. Ethereum validator public key는 deposit 과정의 proof-of-possession 성격을 가진 signature 검증을 거쳐 rogue-key 공격 전제를 통제합니다.
+        <p>
+          Batch size를 키우면 amortization은 좋아지지만 첫 item이 기다리는
+          시간이 늘어납니다. Traffic rate가 낮거나 slot deadline이 가까우면 작은
+          batch 또는 즉시 단일 검증이 더 낫습니다. 따라서 고정 “최적 batch=64”가
+          아니라 queue age와 deadline을 포함한 adaptive policy를 같은
+          workload에서 검증합니다.
         </p>
       </div>
     </section>

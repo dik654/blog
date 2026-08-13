@@ -116,11 +116,11 @@ export const OFFICIAL_SOURCES = {
     },
     consensus: {
       source: "CometBFT Specification — Byzantine Consensus Algorithm",
-      href: "https://docs.cometbft.com/v0.38/spec/consensus/consensus",
+      href: "https://docs.cosmos.network/cometbft/latest/spec/consensus/Byzantine-Consensus-Algorithm.md",
     },
     abci: {
       source: "CometBFT Specification — ABCI 2.0",
-      href: "https://docs.cometbft.com/main/spec/abci/",
+      href: "https://docs.cosmos.network/cometbft/latest/spec/abci/Overview",
     },
   },
 } as const;

@@ -1,98 +1,43 @@
+import { Link } from "react-router-dom";
+import ContentBoundary from "@/components/articles/content-boundary";
 import StorageProofOverviewViz from "./viz/StorageProofOverviewViz";
 
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">개요: 저장 증명 분류</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-8">
-        <p className="leading-7">
-          저장 증명(Proof of Storage) — 분산 저장소에서 데이터가 실제로 보관
-          중임을 암호학적으로 보장하는 프로토콜.
-          <br />
-          PoR, PoRep, PoSt 세 가지로 분류되며 각각 다른 보안 속성을 보장
+      <h2 className="mb-6 text-2xl font-bold">
+        저장 증명은 “파일이 있다”를 하나의 Boolean으로 줄이지 않는다
+      </h2>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p className="text-lg leading-8">
+          Remote storage provider가 짧은 challenge에 답했다고 해서 client가 지금 전체 file을
+          빠르게 내려받을 수 있고, 다른 provider와 독립된 replica를 보유하며, 계약 기간 내내
+          저장했다는 세 결론이 동시에 나오지는 않습니다. Proof of storage는 검증하려는 주장에
+          따라 encoding·commitment·challenge·extractor·time receipt를 다르게 구성합니다.
+        </p>
+        <p>
+          이 글은 Proof of Retrievability(PoR)의 추출 가능성, Filecoin 적용의 Proof of
+          Replication(PoRep)과 Proof of Spacetime(PoSt)을 구분합니다. Hash·Merkle commitment는
+          <Link to="/crypto/hash-theory"> hash 정본</Link>, error-correcting recovery는
+          <Link to="/blockchain/erasure-coding"> erasure coding</Link>, succinct proof는
+          <Link to="/crypto/snark-theory"> SNARK</Link>에서 가져옵니다.
         </p>
       </div>
-      <div className="not-prose">
-        <StorageProofOverviewViz />
-      </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          저장 증명 3가지 분류
-        </h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-          {`// Storage Proofs 3 Types:
-
-// 1. PoR (Proof of Retrievability):
-// - data 보관 증명
-// - 검증자: challenge
-// - 저장자: response (partial data + proof)
-// - 검증: data integrity
-// - 사용: cloud storage audits
-
-// 2. PoRep (Proof of Replication):
-// - 고유 물리적 복제본 증명
-// - Sybil attack 방어
-// - 여러 copies 구분
-// - 사용: Filecoin sealing
-
-// 3. PoSt (Proof of Spacetime):
-// - 지속적 저장 증명
-// - 시간 축 추가
-// - 주기적 challenge
-// - 사용: Filecoin WindowPoSt
-
-// 진화:
-// - 2007: PoR (Ateniese et al.)
-// - 2013: PoRep 제안
-// - 2017: PoSt 제안 (Benet-Dalrymple-Greco)
-// - 2020: Filecoin mainnet
-// - 2024: PDP 등장 (light PoR variant)
-
-// Security properties 비교:
-//
-// PoR:
-// ✓ data integrity
-// ✗ uniqueness
-// ✗ time persistence
-//
-// PoRep:
-// ✓ data integrity
-// ✓ uniqueness (physical)
-// ✗ time persistence
-//
-// PoSt:
-// ✓ data integrity
-// ✓ uniqueness (built on PoRep)
-// ✓ time persistence
-
-// Filecoin 실제 사용:
-// - Sealing phase: PoRep (one-time)
-// - Proving phase: PoSt (continuous)
-// - 둘 다 필요 (complementary)
-
-// Cryptographic primitives:
-// - Merkle trees (PoR)
-// - Stacked DRG (PoRep)
-// - VDF / random beacon (PoSt)
-// - SNARK (all three, compression)
-
-// Applications:
-// - Decentralized storage (Filecoin)
-// - Audit systems
-// - Data availability
-// - Cloud verification
-// - Compliance (GDPR, etc.)`}
-        </pre>
-        <p className="leading-7">
-          Storage Proofs:{" "}
-          <strong>
-            PoR (retrievable) → PoRep (unique) → PoSt (persistent)
-          </strong>
-          .<br />
-          Filecoin = PoRep + PoSt 결합.
-          <br />
-          2007 PoR → 2024 PDP까지 진화.
+      <ContentBoundary article="pos-theory" />
+      <StorageProofOverviewViz />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>세 질문의 output을 분리합니다</h3>
+        <ul>
+          <li><strong>PoR:</strong> 충분히 자주 응답하는 prover에서 extractor가 encoded file 전체를 복구할 수 있는가?</li>
+          <li><strong>PoRep:</strong> 특정 provider·sector context에 묶인 replica-specific encoding과 commitment가 존재하는가?</li>
+          <li><strong>PoSt:</strong> 여러 proving window의 fresh challenge obligation을 계속 만족했는가?</li>
+        </ul>
+        <p>
+          이 proof들은 data confidentiality, geographic diversity, user-facing retrieval latency,
+          censorship resistance를 자동 보장하지 않습니다. Storage proof acceptance와 retrieval
+          service SLO, encryption key custody, replication placement는 별도 receipt와 평가가 필요합니다.
+          같은 운영 주체의 replica 여러 개는 수량이 늘어도 장애·검열 위험이 함께 움직일 수 있으므로
+          provider correlation도 별도 배치 정책과 failure test로 확인합니다.
         </p>
       </div>
     </section>

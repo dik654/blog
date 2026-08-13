@@ -86,6 +86,7 @@ export const hwArticles: Article[] = [
     subcategory: "hw-infra",
     sections: [
       { id: "overview", title: "서버 네트워크는 workload에서 시작한다" },
+      { id: "interconnect", title: "PCIe·NVLink에서 fabric까지" },
       { id: "ethernet", title: "Ethernet 링크와 leaf-spine fabric" },
       { id: "rdma", title: "RDMA와 RoCE v2의 실제 데이터 경로" },
       { id: "infiniband", title: "InfiniBand와 GPU collective fabric" },

@@ -1,151 +1,102 @@
-import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
-import COWDetailViz from "./viz/COWDetailViz";
 
-interface Props {
+export default function StateInterface({
+  onCodeRef,
+}: {
   onCodeRef: (key: string, ref: CodeRef) => void;
-}
-
-export default function StateInterface({ onCodeRef }: Props) {
+}) {
   return (
     <section id="state-interface" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">
-        상태 인터페이스 & Copy-on-Write
+      <h2 className="mb-6 text-2xl font-bold">
+        Copy-on-Write는 branch를 싸게 만들되 첫 mutation에서 backing data를
+        분리한다
       </h2>
-      <div className="not-prose mb-8">
-        <COWDetailViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>
+          Fork choice는 같은 parent에서 나온 여러 candidate state를 잠시
+          유지합니다. 매번 validators·balances 전체를 deep copy하면 메모리와
+          copy latency가 커지므로 Prysm은 공유 가능한 field를 참조하고, setter가
+          shared field를 바꾸려 할 때 해당 backing data를 복사하는
+          Copy-on-Write(COW)를 사용합니다.
+        </p>
       </div>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <div className="not-prose flex flex-wrap gap-2 mb-4">
+
+      <ExplainedFormula
+        question="큰 state에서 일부 field만 바꿀 때 copy byte를 어떻게 추정할까요?"
+        idea={
+          <>
+            Deep copy는 모든 field를 복제하지만 field-granular COW는 실제로 처음
+            쓰는 shared field만 분리합니다. Metadata와 implementation overhead는
+            별도로 셉니다.
+          </>
+        }
+        formula={String.raw`B_{\mathrm{deep}}=\sum_{j=1}^{F}S_j,\qquad B_{\mathrm{COW}}\approx\sum_{j\in W,\,r_j>1}S_j+B_{\mathrm{meta}}`}
+        terms={[
+          {
+            symbol: "F",
+            name: "Field count",
+            description: "현재 fork의 BeaconState field 수입니다.",
+          },
+          {
+            symbol: "S_j",
+            name: "Backing size",
+            description: "Field j를 분리할 때 실제 복사되는 byte 수입니다.",
+          },
+          {
+            symbol: "W",
+            name: "Written fields",
+            description:
+              "해당 branch transition이 처음 수정한 field 집합입니다.",
+          },
+          {
+            symbol: "r_j",
+            name: "Reference count",
+            description: "Backing field를 공유하는 live state view 수입니다.",
+          },
+        ]}
+        assumptions={[
+          "Field 단위 공유와 write-before-mutate 규칙을 지킵니다.",
+          "Nested slice·map이 얕게 alias되지 않도록 실제 owner 경계를 확인합니다.",
+          "수식은 allocator capacity·GC·lock·trie cache 비용을 정확히 예측하는 모델이 아닙니다.",
+        ]}
+        interpretation="세 field 크기가 8 MB, 2 MB, 1 MB이고 첫 field만 수정하면 deep copy는 약 11 MB, 이상적인 COW는 약 8 MB+metadata를 복사합니다. 작고 자주 쓰는 field가 많으면 COW 관리 비용이 이득을 상쇄할 수 있습니다."
+      />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>Read view와 mutable owner를 type으로 분리합니다</h3>
+        <p>
+          Reader가 얻은 state view는 관찰하는 동안 slot·fork·root generation이
+          바뀌지 않아야 합니다. Writer는 setter를 통해서만 mutation하고,
+          reference count가 1인지 확인한 뒤 backing data를 고유화합니다.
+          Getter가 내부 slice를 그대로 노출해 caller가 수정할 수 있으면
+          setter·dirty tracking을 우회하므로 defensive copy나 read-only view가
+          필요합니다.
+        </p>
+        <h3>Aliasing 반례</h3>
+        <p>
+          State A와 B가 balances slice를 공유한 상태에서 B가 index 5를 직접
+          바꾸면 A의 root도 논리적으로 바뀌지만 A의 dirty bit는 그대로일 수
+          있습니다. 이후 A가 cached root를 반환하면 value와 commitment가
+          갈라집니다. COW의 성능 주장은 모든 mutation path가 owner check와 dirty
+          marking을 통과한다는 전제에서만 성립합니다.
+        </p>
+        <h3>Concurrency와 lifetime</h3>
+        <p>
+          Reference count의 atomicity만으로 state 전체가 thread-safe해지는 것은
+          아닙니다. Read snapshot lifetime, writer serialization, cache
+          invalidation과 release 시 decrement 순서를 정하고 race detector·branch
+          mutation fixture로 A/B 격리를 검사합니다.
+        </p>
+      </div>
+      <div className="not-prose my-4 flex flex-wrap gap-3">
+        {codeRefs["state-copy"] && (
           <CodeViewButton
             onClick={() => onCodeRef("state-copy", codeRefs["state-copy"])}
           />
-          <span className="text-xs text-muted-foreground self-center">
-            NewBeaconState()
-          </span>
-        </div>
-
-        {/* ── COW 동작 원리 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          Copy-on-Write — 참조 카운트 기반
-        </h3>
-        <div className="not-prose space-y-4 my-4">
-          <div className="rounded-lg border border-border/60 p-4">
-            <p className="font-semibold text-sm text-blue-400 mb-2">
-              <code>BeaconState</code> 구조체
-            </p>
-            <ul className="text-sm space-y-0.5 text-muted-foreground">
-              <li>
-                <code>state *ethpb.BeaconState</code> &mdash; raw struct
-              </li>
-              <li>
-                <code>tries map[FieldIndex]*FieldTrie</code> &mdash; 각 필드별
-                merkle 캐시
-              </li>
-              <li>
-                <code>sharedFieldReferences map[FieldIndex]*Reference</code>{" "}
-                &mdash; COW 참조 카운트
-              </li>
-              <li>
-                <code>dirtyFields map[FieldIndex]bool</code> &mdash; 변경된 필드
-                추적
-              </li>
-              <li>
-                <code>dirtyIndices map[FieldIndex][]uint64</code> &mdash; 변경된
-                인덱스 추적
-              </li>
-            </ul>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="rounded-lg border border-green-500/30 p-4">
-              <p className="font-semibold text-sm text-green-400 mb-2">
-                <code>Copy()</code> &mdash; O(1) 복사
-              </p>
-              <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside">
-                <li>포인터만 복사 (struct deep copy 아님)</li>
-                <li>tries, sharedFieldReferences 공유</li>
-                <li>각 필드의 reference count 증가</li>
-              </ol>
-            </div>
-            <div className="rounded-lg border border-amber-500/30 p-4">
-              <p className="font-semibold text-sm text-amber-400 mb-2">
-                <code>SetValidators()</code> &mdash; 쓰기 시 복사
-              </p>
-              <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside">
-                <li>
-                  <code>ref.Refs() &gt; 1</code>? &rarr; deep copy 실행
-                </li>
-                <li>
-                  새 <code>Reference(count: 1)</code> 생성
-                </li>
-                <li>
-                  실제 값 변경 + <code>dirtyFields</code> 마킹
-                </li>
-              </ol>
-            </div>
-          </div>
-        </div>
-        <p>
-          Copy-on-Write state는 ref count로 backing field가 다른 state view와 공유되는지 추적합니다. <code>Copy()</code>는 공유 가능한 field의 reference를 늘려 초기 clone 비용을 작게 만들고, setter가 shared field를 바꾸려 할 때만 해당 backing data를 분리합니다. 모든 field와 metadata가 같은 방식으로 O(1) copy된다고 단정하지 말고 current implementation의 exception을 확인해야 합니다.
-        </p>
-
-        {/* ── 메모리 효과 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          메모리 효과 — fork choice 분기 시나리오
-        </h3>
-        <div className="not-prose space-y-4 my-4">
-          <div className="rounded-lg border border-border/60 p-4">
-            <p className="font-semibold text-sm text-blue-400 mb-2">
-              여러 fork state 유지 시나리오
-            </p>
-            <div className="grid grid-cols-2 gap-3 text-sm text-center">
-              <div className="bg-red-500/10 rounded p-2">
-                <p className="text-muted-foreground">naive 복사</p>
-                <p className="font-mono">
-                  <strong>state 수 × 전체 backing data</strong>
-                </p>
-              </div>
-              <div className="bg-green-500/10 rounded p-2">
-                <p className="text-muted-foreground">COW 복사</p>
-                <p className="font-mono">
-                  <strong>공유 backing + dirty field copy</strong>
-                </p>
-              </div>
-            </div>
-            <p className="text-xs text-muted-foreground mt-2">
-              Copy 직후 공유 가능한 backing을 참조하고 setter가 변경하는 field만
-              분리
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="rounded-lg border border-green-500/30 p-4">
-              <p className="font-semibold text-sm text-green-400 mb-2">장점</p>
-              <ul className="text-sm space-y-1 text-muted-foreground">
-                <li>중복 allocation 감소</li>
-                <li>초기 copy 범위 축소</li>
-                <li>fork 수가 늘 때 GC pressure 완화</li>
-              </ul>
-            </div>
-            <div className="rounded-lg border border-red-500/30 p-4">
-              <p className="font-semibold text-sm text-red-400 mb-2">
-                트레이드오프
-              </p>
-              <ul className="text-sm space-y-1 text-muted-foreground">
-                <li>참조 카운트 관리 overhead (mutex lock)</li>
-                <li>race condition 가능성 (정밀한 동기화 필요)</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <p>
-          Fork choice가 인접한 여러 block state를 보관할 때 대부분의 large field는 동일하므로 COW는 duplicate allocation을 크게 줄일 수 있습니다. 절감률은 fork 수, dirty field와 validator-set size에 따라 달라지므로 고정된 10배 수치보다 heap profile에서 shared backing data, copied byte와 GC pause를 비교해야 합니다.
-        </p>
-
-        <p className="mt-4 border-l-2 border-amber-500/50 pl-3 text-sm">
-          <strong>💡 참조 카운트 기반 COW</strong> — Setter 호출 시 참조
-          count가 1보다 크면 mutation 대상 field의 backing data를 분리합니다. Go slice의 shared backing array를 활용하므로 setter가 이 guard를 우회하면 state branch가 서로 오염될 수 있어 mutation API boundary가 중요합니다.
-        </p>
+        )}
       </div>
     </section>
   );

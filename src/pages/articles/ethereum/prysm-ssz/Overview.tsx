@@ -1,6 +1,9 @@
-import ContextViz from "./viz/ContextViz";
-import SSZMerkleViz from "./viz/SSZMerkleViz";
+import { Link } from "react-router-dom";
+import ContentBoundary from "@/components/articles/content-boundary";
+import { CitationBlock } from "@/components/ui/citation";
+import { OFFICIAL_SOURCES } from "@/content/official-sources";
 import type { CodeRef } from "@/components/code/types";
+import PrysmFoundationViz from "../prysm-foundation-viz";
 
 export default function Overview({
   onCodeRef: _onCodeRef,
@@ -9,261 +12,79 @@ export default function Overview({
 }) {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">SSZ는 consensus object의 serialization과 Merkle root를 함께 정의한다</h2>
-      <div className="not-prose mb-8">
-        <ContextViz />
-      </div>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          이 아티클에서는 SSZ 인코딩 규칙, 청크 패킹, HashTreeRoot 계산 과정을
-          코드 수준으로 추적한다.
+      <h2 className="mb-5 text-2xl font-bold">
+        SSZ는 한 schema에서 전송 바이트와 검증 가능한 state root를 함께 만든다
+      </h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="text-lg leading-8">
+          Beacon block을 다른 node에 보내려면 값을 byte sequence로 바꿔야 하고,
+          그 block 안의 특정 field만 증명하려면 같은 값에서 Merkle root도 계산할
+          수 있어야 합니다. Simple Serialize(SSZ)는 이 두 문제를 별도 규칙으로
+          흩어 놓지 않고
+          <strong> type schema→serialization과 hash-tree-root</strong>라는 한
+          계약으로 묶습니다.
         </p>
-
-        {/* ── SSZ vs RLP ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          SSZ vs RLP — 왜 새로운 직렬화?
-        </h3>
-        <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
-          <div className="rounded-lg border border-red-500/30 p-4">
-            <p className="font-semibold text-sm text-red-400 mb-2">
-              RLP (EL) 한계
-            </p>
-            <ul className="text-sm space-y-1 text-muted-foreground">
-              <li>정수 길이 가변 &rarr; canonical form 복잡</li>
-              <li>Merkle root 직접 계산 불가 (별도 MPT 필요)</li>
-              <li>스트림 파싱 어려움</li>
-              <li>Fixed-size 구조체도 length prefix 필요</li>
-            </ul>
-          </div>
-          <div className="rounded-lg border border-green-500/30 p-4">
-            <p className="font-semibold text-sm text-green-400 mb-2">
-              SSZ (CL) 설계 목표
-            </p>
-            <ul className="text-sm space-y-1 text-muted-foreground">
-              <li>
-                <strong>Merkleization 내장</strong> &mdash; 모든 타입이{" "}
-                <code>HashTreeRoot</code> 계산 가능
-              </li>
-              <li>
-                <strong>Fixed vs Variable 구분</strong> &mdash; fixed는 length
-                prefix 없음, variable은 4-byte offset
-              </li>
-              <li>
-                <strong>스키마 기반</strong> &mdash; 컴파일 타임 필드 순서,
-                reflection 불필요
-              </li>
-              <li>
-                <strong>Ethereum 2.0 전용</strong> 하위 호환 설계
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
-          <div className="rounded-lg border border-border/60 p-4">
-            <p className="font-semibold text-sm text-blue-400 mb-2">
-              Basic Types
-            </p>
-            <ul className="text-sm space-y-1 text-muted-foreground font-mono">
-              <li>
-                uint{"{"}8,16,32,64,128,256{"}"}
-              </li>
-              <li>bool</li>
-              <li>byte (= uint8)</li>
-            </ul>
-          </div>
-          <div className="rounded-lg border border-border/60 p-4">
-            <p className="font-semibold text-sm text-amber-400 mb-2">
-              Composite Types
-            </p>
-            <ul className="text-sm space-y-1 text-muted-foreground">
-              <li>
-                <code>Vector[T, N]</code> &mdash; 고정 길이
-              </li>
-              <li>
-                <code>List[T, N]</code> &mdash; 가변 길이 (최대 N)
-              </li>
-              <li>
-                <code>Container</code> &mdash; 구조체
-              </li>
-              <li>
-                <code>Bitvector[N]</code> &mdash; 고정 비트
-              </li>
-              <li>
-                <code>Bitlist[N]</code> &mdash; 가변 비트
-              </li>
-              <li>
-                <code>Union[T1, T2]</code> &mdash; tagged union (EIP-7495)
-              </li>
-            </ul>
-          </div>
-        </div>
         <p>
-          SSZ의 중요한 차이는 serialization rule과 <code>hash_tree_root</code> rule을 같은 type system에서 정의한다는 점입니다. RLP-encoded execution object가 별도의 trie scheme과 결합되는 것과 달리, BeaconState와 BeaconBlock 같은 consensus type은 SSZ schema만으로 byte encoding과 Merkle commitment의 형태를 함께 결정합니다.
-        </p>
-
-        {/* ── SSZ 인코딩 규칙 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          SSZ 인코딩 규칙 — Fixed vs Variable
-        </h3>
-        <div className="not-prose space-y-4 my-4">
-          <div className="rounded-lg border border-border/60 p-4">
-            <p className="font-semibold text-sm text-blue-400 mb-2">
-              Basic types &mdash; little-endian 바이트 시퀀스
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm font-mono text-muted-foreground">
-              <div>
-                <code>uint64(42)</code> &rarr; <code>[0x2a, 0, ..., 0]</code> 8B
-              </div>
-              <div>
-                <code>bool(true)</code> &rarr; <code>[0x01]</code> 1B
-              </div>
-              <div>
-                <code>byte(0xff)</code> &rarr; <code>[0xff]</code> 1B
-              </div>
-            </div>
-          </div>
-          <div className="rounded-lg border border-border/60 p-4">
-            <p className="font-semibold text-sm text-green-400 mb-2">
-              Fixed-size Vector &mdash; 단순 concat
-            </p>
-            <p className="text-sm text-muted-foreground">
-              <code>Vector[uint64, 3](1, 2, 3)</code> &rarr; 3개 원소를 순서대로
-              이어붙임 (24 bytes)
-            </p>
-          </div>
-          <div className="rounded-lg border border-border/60 p-4">
-            <p className="font-semibold text-sm text-amber-400 mb-2">
-              Container 인코딩 &mdash; 2-part 레이아웃
-            </p>
-            <p className="text-sm text-muted-foreground mb-2">
-              fixed 필드는 그대로 인코딩, variable 필드는 4-byte offset으로
-              위치만 기록, 실제 데이터는 끝에 순서대로 배치
-            </p>
-            <div className="text-sm font-mono text-muted-foreground bg-muted/50 rounded p-2">
-              <p>
-                {"{"} a: uint64, b: List[uint64, 10], c: uint32 {"}"}
-              </p>
-              <p className="mt-1">
-                [a=1 (8B)] [b_offset=16 (4B)] [c=3 (4B)] [b=10,20 (16B)]
-              </p>
-              <p className="text-xs mt-1">
-                fixed part &middot; &middot; &middot; offset &middot; &middot;
-                &middot; fixed &middot; &middot; &middot; variable data &mdash;
-                총 32 bytes
-              </p>
-            </div>
-          </div>
-          <div className="rounded-lg border border-border/60 p-4">
-            <p className="font-semibold text-sm text-violet-400 mb-2">
-              디코딩 순서
-            </p>
-            <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside">
-              <li>fixed 부분 먼저 파싱</li>
-              <li>offset으로 variable 부분 위치 파악</li>
-              <li>다음 offset (없으면 끝)까지가 현재 필드 데이터</li>
-            </ol>
-          </div>
-        </div>
-        <p>
-          Container encoding은 fixed-size field를 fixed part에 바로 쓰고 variable-size field 자리에는 4-byte offset을 기록합니다. Decoder는 이 offset으로 variable part의 시작과 끝을 찾을 수 있으므로, schema를 알고 있다면 앞선 variable value를 모두 materialize하지 않고도 원하는 field 구간으로 이동할 수 있습니다.
-        </p>
-
-        {/* ── BeaconState 직렬화 크기 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          BeaconState 직렬화 — 실전 수치
-        </h3>
-        <div className="not-prose space-y-4 my-4">
-          <div className="rounded-lg border border-border/60 p-4">
-            <p className="font-semibold text-sm text-blue-400 mb-2">
-              BeaconState 주요 필드 (Deneb fork)
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-muted-foreground">
-              <div>
-                <p className="font-semibold text-xs text-foreground/70 mb-1">
-                  Fixed-size
-                </p>
-                <ul className="space-y-0.5">
-                  <li>
-                    <code>genesis_time</code>: <code>uint64</code>
-                  </li>
-                  <li>
-                    <code>slot</code>: <code>Slot</code>
-                  </li>
-                  <li>
-                    <code>fork</code>: <code>Fork</code>
-                  </li>
-                  <li>
-                    <code>block_roots</code>: <code>Vector[B256, 8192]</code>
-                  </li>
-                  <li>
-                    <code>state_roots</code>: <code>Vector[B256, 8192]</code>
-                  </li>
-                  <li>
-                    <code>randao_mixes</code>: <code>Vector[B256, 65536]</code>
-                  </li>
-                </ul>
-              </div>
-              <div>
-                <p className="font-semibold text-xs text-foreground/70 mb-1">
-                  Variable-size
-                </p>
-                <ul className="space-y-0.5">
-                  <li>
-                    <code>validators</code>:{" "}
-                    <code>{"List[Validator, 2^40]"}</code>
-                  </li>
-                  <li>
-                    <code>balances</code>: <code>{"List[Gwei, 2^40]"}</code>
-                  </li>
-                  <li>
-                    <code>historical_roots</code>: <code>List[B256, ...]</code>
-                  </li>
-                  <li>
-                    <code>eth1_data_votes</code>:{" "}
-                    <code>List[Eth1Data, 2048]</code>
-                  </li>
-                  <li>
-                    <code>historical_summaries</code>:{" "}
-                    <code>List[HistoricalSummary, ...]</code>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div className="rounded-lg border border-border/60 p-4">
-            <p className="font-semibold text-sm text-amber-400 mb-2">
-              State 크기를 구성하는 항목
-            </p>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm text-center">
-              <div>
-                <p className="text-muted-foreground">validators</p>
-                <p className="font-mono">registry length</p>
-              </div>
-              <div>
-                <p className="text-muted-foreground">balances</p>
-                <p className="font-mono">validator count</p>
-              </div>
-              <div>
-                <p className="text-muted-foreground">기타 필드</p>
-                <p className="font-mono">fork별 queue·vector</p>
-              </div>
-              <div>
-                <p className="text-muted-foreground font-semibold">총합</p>
-                <p className="font-mono font-semibold">현재 state를 직렬화해 측정</p>
-              </div>
-            </div>
-            <p className="text-xs text-muted-foreground mt-2">
-              <code>HashTreeRoot</code>를 매번 전체 재계산하지 않도록 FieldTrie와
-              branch cache를 사용
-            </p>
-          </div>
-        </div>
-        <p>
-          BeaconState는 validator 수와 fork별 queue에 따라 계속 커지는 대형 object이며 매 slot transition 뒤 같은 state root를 계산해야 합니다. Prysm은 <code>FieldTrie</code>와 cached branch를 사용해 바뀐 chunk에서 root까지의 경로만 다시 hash합니다. 비용은 변경된 chunk 수와 tree depth에 비례하므로 고정된 크기나 O(1)이라고 단정하기보다, 현재 network state를 serialize해 크기를 재고 full re-merkleization과 비교해야 합니다.
+          이 글은 SSZ type을 처음 보는 독자를 위해{" "}
+          <strong>
+            typed value→fixed/dynamic byte layout→32-byte chunk→Merkle
+            root→field proof
+          </strong>{" "}
+          순서로 내려갑니다. <Link to="/blockchain/prysm">Prysm 개요</Link>가
+          consensus object의 전체 lifecycle을 소유하고, 여기서는 그 lifecycle에
+          입력되는 byte·root identity만 다룹니다.
         </p>
       </div>
-      <div className="not-prose mt-6">
-        <SSZMerkleViz />
+
+      <ContentBoundary article="prysm-ssz" />
+      <PrysmFoundationViz mode="ssz" />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>먼저 붙잡을 핵심 아이디어</h3>
+        <p>
+          Schema는 field의 순서, 각 field가 고정 길이인지 가변 길이인지,
+          collection의 최대 길이를 미리 정합니다. 따라서 decoder는 payload 안에
+          type 이름을 다시 넣지 않아도 어디까지 읽을지 계산할 수 있고,
+          Merkleizer는 각 값이 tree의 어느 leaf에 놓이는지 결정할 수 있습니다.
+          같은 bytes라도 다른 schema로 읽으면 다른 object가 될 수 있으므로
+          receipt에는 fork와 SSZ type을 반드시 남깁니다.
+        </p>
+        <p>
+          예를 들어 <code>List[uint64, 4]</code> 값 <code>[7, 9]</code>는 원소를
+          little-endian 8-byte로 직렬화해 16 bytes가 됩니다. Merkleization에서는
+          두 값을 하나의 32-byte chunk에 pack한 뒤 list limit이 정한 tree에 넣고
+          실제 원소 수 2를 <code>mix_in_length</code>합니다. 최대 길이 4는
+          capacity이고 실제 길이 2는 현재 value의 일부입니다.
+        </p>
+
+        <h3>SSZ가 보장하는 것과 보장하지 않는 것</h3>
+        <p>
+          Canonical schema와 bounded decoder를 사용하면 같은 typed value가
+          하나의 표준 byte encoding과 root를 갖도록 만들 수 있습니다. 하지만
+          decode 성공이 signature, state transition 또는 fork-choice validity를
+          뜻하지는 않습니다. 또한 SHA-256 collision resistance를 전제로
+          commitment를 사용하므로 root 하나에서 원래 값을 복원할 수도 없습니다.
+        </p>
+      </div>
+
+      <div id="paper-ssz-spec" className="scroll-mt-24">
+        <CitationBlock {...OFFICIAL_SOURCES.ethereum.ssz} citeKey={1}>
+          공식 SSZ 문서는 type·serialization·merkleization 규칙을 정의합니다. 이
+          규칙은 protocol 정본이지만 Prysm의 cache layout이나 특정 구현의
+          처리량을 정하지 않으며, 분석할 때는 consensus-spec release·commit과
+          fork를 고정합니다.
+        </CitationBlock>
+      </div>
+      <div id="paper-prysm-ssz-source" className="scroll-mt-24">
+        <CitationBlock
+          {...OFFICIAL_SOURCES.prysm.repository}
+          citeKey={2}
+          type="code"
+        >
+          Prysm source는 SSZ 생성 코드와 runtime validation 경계를 확인하는
+          implementation 근거입니다. Moving branch의 package 구조를 모든
+          release의 고정 사실로 일반화하지 않습니다.
+        </CitationBlock>
       </div>
     </section>
   );

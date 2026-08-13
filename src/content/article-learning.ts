@@ -35732,7 +35732,7 @@ export const ARTICLE_LEARNING: Readonly<
   },
   "gpu/hw-network": {
     coreIdea:
-      "서버 네트워크는 가장 큰 port 숫자를 고르는 일이 아닙니다. Workload의 endpoint·message·동시성·failure state를 먼저 고정하고, line rate와 payload goodput, Ethernet compatibility와 fabric capacity, RDMA control/data path, RoCE GID와 GPU–HCA topology, collective operation과 nccl-tests bandwidth를 서로 다른 측정 경계로 연결해야 합니다.",
+      "서버 interconnect는 가장 큰 port 숫자를 고르는 일이 아닙니다. GPU memory에서 NVLink·PCIe·HCA·network fabric을 거쳐 remote GPU까지의 path를 workload endpoint·message·동시성·failure state로 고정하고, raw rate와 payload goodput, latency와 bandwidth, collective 완료 시간을 서로 다른 측정 경계로 연결해야 합니다.",
     assumedKnowledge: [
       {
         id: "bit-byte",
@@ -35740,6 +35740,18 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
     introducedHere: [
+      {
+        id: "pcie-transaction-bandwidth-latency",
+        role: "Lane GT/s·width·encoding의 raw byte/s와 payload goodput·small-transfer latency를 분리합니다.",
+      },
+      {
+        id: "pcie-topology-peer-path",
+        role: "GPU·NIC pair의 switch·root complex·NUMA·ACS/IOMMU 경로를 inventory로 고정합니다.",
+      },
+      {
+        id: "nvlink-device-fabric-boundary",
+        role: "Node-local NVLink/NVSwitch path와 node-external HCA·network path를 구분합니다.",
+      },
       {
         id: "network-workload-traffic-matrix",
         role: "구매 전에 누가 누구에게 어떤 traffic을 동시에 보내는지 측정 계약으로 만듭니다.",
@@ -35782,6 +35794,36 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
     conceptExplanations: [
+      {
+        id: "pcie-transaction-bandwidth-latency",
+        sectionId: "pcie-transaction-bandwidth-latency",
+        intuition:
+          "도로의 lane별 신호 속도와 차선 수로 raw 상한을 구한 뒤, 실제 짐의 header·출발 준비·공유 구간을 제외해 payload 완료 시간을 재는 것과 같습니다.",
+        workedExample:
+          "PCIe 5.0 x16은 32GT/s×16×128/130÷8≈63GB/s 한 방향 raw 상한이지만 TLP overhead와 DMA setup 때문에 큰 복사 goodput은 더 낮고 작은 복사는 latency가 지배할 수 있습니다.",
+        boundary:
+          "양방향 duplex 합, raw data rate와 application payload, negotiated x16 표기와 실제 topology contention을 섞으면 안 됩니다.",
+      },
+      {
+        id: "pcie-topology-peer-path",
+        sectionId: "pcie-topology-peer-path",
+        intuition:
+          "두 방이 같은 복도에 있는지 다른 건물의 다리를 건너야 하는지에 따라 같은 문 폭이어도 이동 경로가 달라지는 것과 같습니다.",
+        workedExample:
+          "GPU0–HCA0가 같은 PCIe switch/root에 있고 GPU0–HCA1이 remote socket root 아래라면 pair별 P2P capability와 bandwidth·latency를 따로 측정합니다.",
+        boundary:
+          "같은 root 표기만으로 direct peer path가 보장되지 않으며 ACS·IOMMU·virtualization·driver policy가 routing을 제한할 수 있습니다.",
+      },
+      {
+        id: "nvlink-device-fabric-boundary",
+        sectionId: "nvlink-device-fabric-boundary",
+        intuition:
+          "건물 안 전용 연결 통로가 있어도 다른 건물로 나가는 순간 다시 출입구와 외부 도로를 거쳐야 하는 경계입니다.",
+        workedExample:
+          "Node-local GPU pair는 NVLink/NVSwitch를 쓸 수 있지만 remote node all-reduce는 source GPU에서 HCA까지의 PCIe/GDR와 외부 fabric을 연속해 사용합니다.",
+        boundary:
+          "NVLink 이름만으로 모든 GPU pair의 연결·aggregate bandwidth·automatic routing을 보장하지 않으며 제품 세대와 system topology를 확인해야 합니다.",
+      },
       {
         id: "network-workload-traffic-matrix",
         sectionId: "workload-contract",
@@ -35891,6 +35933,17 @@ export const ARTICLE_LEARNING: Readonly<
         concepts: ["network-workload-traffic-matrix", "bit-byte"],
       },
       {
+        label: "Device path",
+        relation:
+          "GPU memory에서 NVLink·PCIe topology와 HCA까지 node-local 경로를 고정",
+        concepts: [
+          "pcie-transaction-bandwidth-latency",
+          "pcie-topology-peer-path",
+          "nvlink-device-fabric-boundary",
+          "gpudirect-rdma-topology",
+        ],
+      },
+      {
         label: "Link",
         relation: "Wire 호환성과 application goodput의 측정 경계를 분리",
         concepts: [
@@ -35930,16 +35983,22 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "basic",
         question:
-          "800Gb/s link의 byte/s 상한을 계산하고 80GB payload가 1.1초에 완료됐을 때 goodput과 line-rate 대비 비율을 구하라.",
+          "PCIe 5.0 x16의 한 방향 raw 상한과 800Gb/s link의 byte/s 상한을 계산하고, 80GB network payload가 1.1초에 완료됐을 때 goodput 비율을 구하라.",
         answerChecklist: [
+          "PCIe 약 63GB/s",
+          "32GT/s×16×128/130÷8",
           "100GB/s",
           "72.7GB/s",
           "72.7%",
           "decimal unit",
           "payload/completion boundary",
         ],
-        requiredConcepts: ["bit-byte", "line-rate-goodput-boundary"],
-        sectionId: "goodput-boundary",
+        requiredConcepts: [
+          "bit-byte",
+          "pcie-transaction-bandwidth-latency",
+          "line-rate-goodput-boundary",
+        ],
+        sectionId: "pcie-transaction-bandwidth-latency",
       },
       {
         level: "advanced",
@@ -36037,8 +36096,9 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "advanced",
         question:
-          "8-GPU node에서 GPU별 HCA affinity를 검증하는 GDR on/off 실험과 topology·counter ledger를 설계하라.",
+          "8-GPU node에서 NVLink/NVSwitch와 PCIe root를 구분하고 GPU별 HCA affinity를 검증하는 GDR on/off 실험과 topology·counter ledger를 설계하라.",
         answerChecklist: [
+          "NVLink/NVSwitch pair",
           "PCIe root",
           "NUMA",
           "GPU-HCA pair",
@@ -36048,23 +36108,29 @@ export const ARTICLE_LEARNING: Readonly<
           "collective",
           "errors",
         ],
-        requiredConcepts: ["gpudirect-rdma-topology"],
-        sectionId: "gpudirect-topology",
+        requiredConcepts: [
+          "nvlink-device-fabric-boundary",
+          "pcie-topology-peer-path",
+          "gpudirect-rdma-topology",
+        ],
+        sectionId: "pcie-topology-peer-path",
       },
       {
         level: "basic",
         question:
-          "16-rank all-reduce에서 algbw=400GB/s일 때 busbw를 계산하고 두 수의 해석 차이를 설명하라.",
+          "16-rank all-reduce에서 node-local NVLink path와 node-external network path를 구분하고 algbw=400GB/s일 때 busbw를 계산해 두 수의 해석 차이를 설명하라.",
         answerChecklist: [
           "factor 1.875",
           "750GB/s",
           "S/t",
           "corrected comparison",
           "not wire traffic",
+          "local vs external path",
         ],
         requiredConcepts: [
           "collective-rank-semantics",
           "nccl-algbw-busbw-boundary",
+          "nvlink-device-fabric-boundary",
         ],
         sectionId: "nccl-bandwidth-boundary",
       },
@@ -36092,6 +36158,35 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
     papers: [
+      {
+        title: "PCI-SIG — PCI Express Base Specification",
+        href: "https://pcisig.com/specifications",
+        problem:
+          "서로 다른 vendor device가 lane·transaction·link protocol로 상호운용되는 범용 I/O fabric을 정의하는 문제",
+        contribution:
+          "PCIe generation별 signaling, lane width와 transaction/link/physical layer의 공식 규격 경계를 제공",
+        assumptions:
+          "사용하는 PCIe generation·negotiated width·topology와 해당 specification revision",
+        evidenceScope:
+          "Raw lane rate·encoding과 PCIe protocol의 architecture 경계",
+        notClaim:
+          "특정 GPU–NIC pair의 payload goodput·P2P 가능성·latency를 보장하지 않음",
+        sectionId: "paper-pcie-base",
+      },
+      {
+        title: "NVIDIA NVLink and NVSwitch",
+        href: "https://www.nvidia.com/en-us/data-center/nvlink/",
+        problem:
+          "지원 GPU 사이의 node-local peer bandwidth와 scalable switch connectivity를 제공하는 문제",
+        contribution:
+          "제품 세대별 NVLink·NVSwitch capability와 supported system 구성을 공식 제시",
+        assumptions:
+          "명시된 NVIDIA GPU·NVLink generation·NVSwitch system topology",
+        evidenceScope: "NVLink/NVSwitch의 제품별 연결 범위와 aggregate 사양",
+        notClaim:
+          "모든 GPU pair·CUDA operation이 자동으로 같은 bandwidth를 사용하거나 node-external network를 대체한다는 뜻은 아님",
+        sectionId: "paper-nvlink-fabric",
+      },
       {
         title: "IEEE 802.3 Ethernet Working Group standards map",
         href: "https://www.ieee802.org/3/index.html",
@@ -44911,6 +45006,662 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "gpu/hw-memory": {
+    entryNote:
+      "DDR·ECC·DIMM 약어를 안다고 가정하지 않습니다. 애플리케이션 working set에서 CPU memory controller·channel·module·DRAM을 따라가며 bit·byte와 초·ns 단위를 직접 환산합니다.",
+    coreIdea:
+      "Server memory는 용량 제품표가 아니라 workload의 capacity·bandwidth·latency·reliability 요구를 channel population, DIMM electrical path, ECC failure boundary와 운영 검증으로 연결하는 시스템입니다.",
+    assumedKnowledge: [
+      {
+        id: "bit-byte",
+        role: "64-bit channel width를 8 byte/transfer로 환산합니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "memory-workload-capacity-path",
+        role: "Working set과 page fault·NUMA를 physical capacity 선택에 연결합니다.",
+      },
+      {
+        id: "ddr-channel-bandwidth-latency",
+        role: "MT/s·channel width의 GB/s와 CL cycle의 ns를 분리합니다.",
+      },
+      {
+        id: "ddr5-subchannel-burst",
+        role: "DDR5의 두 독립 subchannel과 burst가 무엇을 바꾸는지 설명합니다.",
+      },
+      {
+        id: "ecc-protection-boundary",
+        role: "On-die ECC, system ECC와 service recovery의 보호 범위를 구분합니다.",
+      },
+      {
+        id: "ecc-syndrome-secded",
+        role: "Check bit와 syndrome 수에서 single-error 위치 식별 bound를 계산합니다.",
+      },
+      {
+        id: "dimm-electrical-load",
+        role: "UDIMM·RDIMM·3DS·MRDIMM을 controller load와 data path로 읽습니다.",
+      },
+      {
+        id: "memory-population-compatibility",
+        role: "CPU·board·DIMM·DPC·firmware 호환을 acceptance test로 닫습니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "memory-workload-capacity-path",
+        sectionId: "memory-workload-capacity-path",
+        intuition:
+          "짐의 최대 부피뿐 아니라 작업대와 임시 보관 공간, 다른 작업의 동시 사용량까지 합쳐 창고 크기를 정하는 과정입니다.",
+        workedExample:
+          "Peak RSS 180GiB, OS/cache 24GiB, 동시 job 32GiB와 20% 여유를 합치면 약 283GiB이므로 256GiB 구성은 page pressure 위험이 있습니다.",
+        boundary:
+          "RSS 합만으로 공유 page·cache reclaim·memory mapping을 정확히 예측하지 못하므로 실제 page fault와 working-set trace가 필요합니다.",
+      },
+      {
+        id: "ddr-channel-bandwidth-latency",
+        sectionId: "ddr-channel-bandwidth-latency",
+        intuition:
+          "도로의 차선 수와 초당 통과 차량 수가 대역폭이고, 차 한 대가 목적지에 도착하는 시간은 latency이므로 같은 숫자로 비교할 수 없습니다.",
+        workedExample:
+          "DDR5-6400 64-bit channel은 51.2GB/s 상한이고 8 channels는 409.6GB/s입니다. CL32의 CAS 구간은 10ns입니다.",
+        boundary:
+          "이론 bandwidth는 refresh·row miss·queue를 생략하고 CAS 시간은 전체 load-to-use latency가 아닙니다.",
+      },
+      {
+        id: "ddr5-subchannel-burst",
+        sectionId: "ddr5-subchannel-burst",
+        intuition:
+          "한 큰 창구를 두 개의 독립 창구로 나눠 서로 다른 요청을 처리하되 건물 전체 출입구 폭이 두 배가 된 것은 아닌 구조입니다.",
+        workedExample:
+          "두 32-bit subchannel이 독립 command를 받아 서로 다른 bank request를 처리하지만 일반 module의 합계 payload width는 64-bit입니다.",
+        boundary:
+          "Subchannel만으로 실제 application bandwidth가 두 배가 되거나 모든 random access가 빨라진다는 뜻은 아닙니다.",
+      },
+      {
+        id: "ecc-protection-boundary",
+        sectionId: "ecc-protection-boundary",
+        intuition:
+          "제품 내부 검사와 배송 중 충격 검사, 창고 전체의 재해 복구가 서로 다른 사고를 다루는 것과 같습니다.",
+        workedExample:
+          "On-die ECC가 cell read의 single-bit 오류를 내부 교정해도 module trace에서 뒤집힌 bit는 system ECC codeword가 있어야 controller가 감지할 수 있습니다.",
+        boundary:
+          "System ECC도 entire-device failure·silent corruption·service outage·backup을 모두 해결하지 않으며 RAS 능력은 platform별입니다.",
+      },
+      {
+        id: "ecc-syndrome-secded",
+        sectionId: "ecc-syndrome-secded",
+        intuition:
+          "오류가 난 자리마다 고유 번호표를 주려면 정상 상태까지 포함한 경우의 수보다 syndrome 번호 수가 많아야 합니다.",
+        workedExample:
+          "64 data bits에는 r=7이면 2⁷=128≥64+7+1=72이므로 single-bit 위치를 나타낼 수 있고 전체 parity를 더해 double detection을 확장할 수 있습니다.",
+        boundary:
+          "독립 bit-flip의 Hamming bound이며 chipkill·burst error나 특정 controller의 codeword layout을 곧바로 설명하지 않습니다.",
+        proofIdea:
+          "r check bits가 만드는 가능한 syndrome 2ʳ개에 no-error 하나와 m data+r check bit 각각의 단일 오류 상태를 injectively 배정해야 합니다.",
+        counterexample:
+          "r=6이면 64 states뿐인데 64 data+6 check+정상=71 states를 구분해야 하므로 두 상태가 같은 syndrome을 공유할 수밖에 없습니다.",
+      },
+      {
+        id: "dimm-electrical-load",
+        sectionId: "dimm-electrical-load",
+        intuition:
+          "여러 장치를 직접 구동하는 대신 중간 driver가 신호를 다시 만들어 controller의 부담을 줄이는 차이입니다.",
+        workedExample:
+          "RDIMM의 RCD가 command/address를 받아 여러 DRAM rank에 re-drive하므로 server가 더 큰 capacity 구성을 지원할 수 있습니다.",
+        boundary:
+          "RDIMM이 모든 workload에서 UDIMM보다 빠르거나 동일 DDR generation module을 서로 섞을 수 있다는 뜻은 아닙니다.",
+      },
+      {
+        id: "memory-population-compatibility",
+        sectionId: "memory-population-compatibility",
+        intuition:
+          "플러그 모양뿐 아니라 전압·protocol·배치 순서와 firmware까지 맞아야 시스템 구성이 성립하는 chain입니다.",
+        workedExample:
+          "CPU의 RDIMM 지원, board slot 순서, 2DPC rate, rank/density와 BIOS revision을 고정한 뒤 boot·ECC baseline·NUMA bandwidth·stress를 통과시킵니다.",
+        boundary:
+          "QVL 밖 module이 반드시 실패한다는 뜻은 아니지만 production support와 같은 동작 rate를 보장할 근거도 없습니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "Demand",
+        relation: "Workload의 capacity·access·reliability 요구를 측정",
+        concepts: ["memory-workload-capacity-path"],
+      },
+      {
+        label: "Transfer",
+        relation: "Bit 폭과 transfer rate를 channel bandwidth·ns로 환산",
+        concepts: [
+          "bit-byte",
+          "ddr-channel-bandwidth-latency",
+          "ddr5-subchannel-burst",
+        ],
+      },
+      {
+        label: "Protect",
+        relation: "오류 위치와 syndrome 능력을 보호 경계에 연결",
+        concepts: ["ecc-syndrome-secded", "ecc-protection-boundary"],
+      },
+      {
+        label: "Populate",
+        relation: "Electrical load와 platform 지원을 실제 system에서 검증",
+        concepts: ["dimm-electrical-load", "memory-population-compatibility"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "Peak RSS 180GiB, OS/cache 24GiB, 동시 job 32GiB에 20% 여유를 둘 때 필요한 capacity를 계산하고 256GiB의 위험을 설명하라.",
+        answerChecklist: [
+          "236GiB subtotal",
+          "283.2GiB",
+          "256GiB insufficient",
+          "page pressure",
+          "measure working set",
+        ],
+        requiredConcepts: ["memory-workload-capacity-path"],
+        sectionId: "memory-workload-capacity-path",
+      },
+      {
+        level: "basic",
+        question:
+          "DDR5-6400 64-bit channel 8개의 이론 bandwidth를 GB/s로 계산하라.",
+        answerChecklist: [
+          "8 bytes/transfer",
+          "51.2GB/s/channel",
+          "409.6GB/s",
+          "decimal",
+          "upper bound",
+        ],
+        requiredConcepts: ["bit-byte", "ddr-channel-bandwidth-latency"],
+        sectionId: "ddr-channel-bandwidth-latency",
+      },
+      {
+        level: "basic",
+        question:
+          "DDR5-6400 CL32와 DDR4-3200 CL16의 CAS 시간을 ns로 비교하고 전체 memory latency가 아님을 설명하라.",
+        answerChecklist: [
+          "DDR5 CAS=10ns",
+          "DDR4 CAS=10ns",
+          "transfer rate twice clock",
+          "row/queue/NUMA excluded",
+        ],
+        requiredConcepts: ["ddr-channel-bandwidth-latency"],
+        sectionId: "ddr-channel-bandwidth-latency",
+      },
+      {
+        level: "basic",
+        question:
+          "DDR5의 두 32-bit subchannel이 module width 두 배를 뜻하지 않는 이유와 얻는 scheduling 이점을 설명하라.",
+        answerChecklist: [
+          "independent commands",
+          "32+32 bit",
+          "64-bit total",
+          "bank parallelism",
+          "burst",
+        ],
+        requiredConcepts: ["ddr5-subchannel-burst"],
+        sectionId: "ddr5-subchannel-burst",
+      },
+      {
+        level: "basic",
+        question:
+          "DRAM cell·module trace·memory bus·machine failure를 on-die ECC·system ECC·service recovery에 배치하라.",
+        answerChecklist: [
+          "cell/on-die",
+          "module/bus system ECC",
+          "controller support",
+          "machine failover",
+          "boundaries",
+        ],
+        requiredConcepts: ["ecc-protection-boundary"],
+        sectionId: "ecc-protection-boundary",
+      },
+      {
+        level: "basic",
+        question:
+          "UDIMM과 RDIMM의 command/address path 차이와 왜 섞어 쓰지 않는지 설명하라.",
+        answerChecklist: [
+          "direct load",
+          "RCD register/re-drive",
+          "electrical contract",
+          "controller support",
+          "no mixing",
+        ],
+        requiredConcepts: ["dimm-electrical-load"],
+        sectionId: "dimm-electrical-load",
+      },
+      {
+        level: "advanced",
+        question:
+          "64 data bit의 single-error 위치 식별에 r=6이 부족하고 r=7이 충분한 이유를 inequality와 pigeonhole 아이디어로 증명하라.",
+        answerChecklist: [
+          "2^r states",
+          "m+r+1",
+          "64<71",
+          "128≥72",
+          "syndrome collision",
+          "overall parity SECDED boundary",
+        ],
+        requiredConcepts: ["ecc-syndrome-secded"],
+        sectionId: "ecc-syndrome-secded",
+      },
+      {
+        level: "advanced",
+        question:
+          "2-socket server의 1DPC·2DPC memory BOM과 population acceptance ledger를 설계하라.",
+        answerChecklist: [
+          "CPU generation",
+          "DIMM type",
+          "slot order",
+          "rank/density",
+          "trained MT/s",
+          "firmware",
+          "ECC baseline",
+          "stress",
+        ],
+        requiredConcepts: [
+          "dimm-electrical-load",
+          "memory-population-compatibility",
+        ],
+        sectionId: "memory-population-compatibility",
+      },
+      {
+        level: "advanced",
+        question:
+          "Local NUMA와 remote NUMA access를 공정 비교하는 bandwidth·latency·application 실험을 설계하라.",
+        answerChecklist: [
+          "CPU/memory pinning",
+          "same working set",
+          "read/write mix",
+          "GB/s",
+          "ns/p99",
+          "page placement",
+          "application replay",
+        ],
+        requiredConcepts: [
+          "memory-workload-capacity-path",
+          "ddr-channel-bandwidth-latency",
+        ],
+        sectionId: "memory-workload-capacity-path",
+      },
+      {
+        level: "advanced",
+        question:
+          "Corrected error rate가 특정 DIMM에서 증가하는 incident의 관측·격리·교체·재발 검증 runbook을 작성하라.",
+        answerChecklist: [
+          "physical location",
+          "rate/trend",
+          "temperature/power",
+          "page offline/host drain",
+          "replace",
+          "stress",
+          "counter reset boundary",
+        ],
+        requiredConcepts: [
+          "ecc-protection-boundary",
+          "memory-population-compatibility",
+        ],
+        sectionId: "ecc-protection-boundary",
+      },
+    ],
+    papers: [
+      {
+        title: "AMD EPYC 9005 Architecture Overview",
+        href: "https://www.amd.com/content/dam/amd/en/documents/epyc-technical-docs/user-guides/58462_amd-epyc-9005-tg-architecture-overview.pdf",
+        problem: "CPU platform의 channel·DIMM·DPC 지원 조합 확인",
+        contribution: "EPYC 9005 memory subsystem과 지원 configuration 공개",
+        assumptions: "해당 CPU·board·firmware generation",
+        evidenceScope: "Platform memory population 상한",
+        notClaim: "모든 server CPU에 같은 수치가 적용된다는 뜻은 아님",
+        sectionId: "paper-amd-memory-population",
+      },
+      {
+        title: "JEDEC JESD79-5 — DDR5 SDRAM",
+        href: "https://www.jedec.org/standards-documents/docs/jesd79-5c",
+        problem: "상호운용 가능한 DDR5 device command·timing·transfer 정의",
+        contribution: "DDR5 SDRAM electrical·protocol 규격",
+        assumptions: "해당 JESD79-5 revision과 compliant device",
+        evidenceScope: "DDR5 device behavior",
+        notClaim: "CPU population·application bandwidth를 보장하지 않음",
+        sectionId: "paper-jedec-ddr5",
+      },
+      {
+        title: "Micron — DDR5 New Features",
+        href: "https://www.micron.com/content/dam/micron/global/public/products/white-paper/ddr5-new-features-white-paper.pdf",
+        problem: "DDR5 on-die ECC와 구조 변화를 DDR4와 구분",
+        contribution: "On-die ECC·subchannel·refresh 구조 설명",
+        assumptions: "문서가 다루는 DDR5 device 범위",
+        evidenceScope:
+          "DDR5 DRAM die 내부 on-die ECC의 read-time 보호 위치와 system-level ECC가 별도라는 구조적 경계",
+        notClaim: "System ECC나 특정 server RAS를 대신 설명하지 않음",
+        sectionId: "paper-ddr5-on-die-ecc",
+      },
+      {
+        title: "JEDEC — DDR5 Registered DIMM Design Specification",
+        href: "https://www.jedec.org/standards-documents/docs/jesd82-511",
+        problem: "DDR5 RDIMM의 registered interface와 module 설계 상호운용",
+        contribution: "RCD 기반 module design specification",
+        assumptions: "해당 module revision과 supporting platform",
+        evidenceScope: "Registered DIMM interface",
+        notClaim:
+          "모든 capacity·rank·DPC 조합의 system support를 보장하지 않음",
+        sectionId: "paper-jedec-dimm-modules",
+      },
+    ],
+  },
+  "gpu/gpu-architecture": {
+    coreIdea:
+      "GPU는 CPU launch가 만든 logical blocks를 SM에 배치하고, 많은 resident warp 가운데 ready instruction을 issue해 memory wait를 숨기는 throughput processor입니다. 성능은 peak FLOPS가 아니라 register→shared/L1→L2→HBM traffic과 resource residency를 같은 trace에서 측정해 판단합니다.",
+    assumedKnowledge: [
+      {
+        id: "cuda-launch-hierarchy",
+        role: "Grid·block·thread를 physical core가 아니라 logical 작업표로 읽습니다.",
+      },
+      {
+        id: "cuda-warp-simt",
+        role: "32-lane warp의 SIMT issue와 branch masking을 이해합니다.",
+      },
+      {
+        id: "cuda-shared-scratchpad",
+        role: "Shared memory를 block-local staging storage로 사용합니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "gpu-host-device-execution-trace",
+        role: "CPU request부터 SM issue와 completion까지 software/hardware 경계를 연결합니다.",
+      },
+      {
+        id: "gpu-memory-traffic-hierarchy",
+        role: "Register·shared/L1·L2·HBM을 scope와 traffic으로 구분합니다.",
+      },
+      {
+        id: "gpu-latency-hiding-occupancy",
+        role: "Ready warp와 resource 최소값으로 latency hiding 기회를 계산합니다.",
+      },
+      {
+        id: "gpu-roofline-peak-achieved",
+        role: "Arithmetic intensity의 roof와 profiler achieved value를 분리합니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "gpu-host-device-execution-trace",
+        sectionId: "host-device-execution-trace",
+        intuition:
+          "택배 주문서가 물류센터의 작업 묶음이 되고 실제 작업대에 배치된 뒤 저장 선반을 거쳐 완료되는 순서와 같습니다.",
+        workedExample:
+          "CPU가 1M-element kernel을 launch하면 grid의 blocks가 가용 SM에 순서 없이 배치되고, 각 SM은 block threads를 warps로 묶어 ready instruction을 issue합니다.",
+        boundary:
+          "Thread 하나가 CUDA core 하나를 계속 소유하거나 block 번호가 특정 SM 번호를 정한다는 뜻은 아닙니다.",
+      },
+      {
+        id: "gpu-memory-traffic-hierarchy",
+        sectionId: "gpu-memory-traffic-hierarchy",
+        intuition:
+          "책상 위 메모, 같은 팀의 화이트보드, 층 공용 서가와 외부 창고처럼 scope가 넓어질수록 공유와 capacity가 늘지만 이동 비용도 커집니다.",
+        workedExample:
+          "Block이 HBM tile을 shared memory에 한 번 stage해 8번 재사용하면 이상적으로 반복 global load를 줄이지만 barrier와 shared capacity 비용이 추가됩니다.",
+        boundary:
+          "Cache hit latency와 capacity는 GPU 세대마다 다르며 local memory라는 주소 공간이 별도 on-chip RAM이라는 뜻도 아닙니다.",
+      },
+      {
+        id: "gpu-latency-hiding-occupancy",
+        sectionId: "gpu-latency-hiding-occupancy",
+        intuition:
+          "한 작업자가 자재를 기다리는 동안 이미 준비된 다른 작업표를 처리하는 방식이며, 기다림 자체를 짧게 만드는 것과 다릅니다.",
+        workedExample:
+          "Thread·register·shared-memory 한도가 각각 8·3·5 resident blocks를 허용하면 실제 상한은 3 blocks이고 그 안의 ready warps가 stall을 덮습니다.",
+        boundary:
+          "Occupancy 100%가 최속을 보장하지 않으며 register를 줄여 spill이 생기면 더 많은 warps보다 HBM traffic 증가가 클 수 있습니다.",
+      },
+      {
+        id: "gpu-roofline-peak-achieved",
+        sectionId: "gpu-peak-achieved-boundary",
+        intuition:
+          "공장의 최대 기계 속도와 원료 공급 속도 가운데 낮은 쪽이 생산 상한을 정하지만 실제 생산량은 고장·대기까지 포함해 더 낮은 것과 같습니다.",
+        workedExample:
+          "I=2 FLOP/B, 3TB/s memory와 60TFLOP/s compute이면 memory roof는 6TFLOP/s이며 achieved 4TFLOP/s라면 6과 60을 구분해 gap을 조사합니다.",
+        boundary:
+          "Roofline은 cache·instruction dependency·launch gap을 완전히 설명하지 않으며 식만으로 병목을 확정할 수 없습니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "Launch",
+        relation: "Logical work를 CPU runtime에서 GPU로 전달",
+        concepts: ["cuda-launch-hierarchy", "gpu-host-device-execution-trace"],
+      },
+      {
+        label: "Issue",
+        relation: "Block을 SM에 두고 warp 단위로 ready instruction을 선택",
+        concepts: ["cuda-warp-simt", "gpu-latency-hiding-occupancy"],
+      },
+      {
+        label: "Move",
+        relation: "Operand와 data를 scope별 memory 계층에서 이동",
+        concepts: ["cuda-shared-scratchpad", "gpu-memory-traffic-hierarchy"],
+      },
+      {
+        label: "Measure",
+        relation: "Peak roof와 achieved time·traffic으로 병목을 검증",
+        concepts: ["gpu-roofline-peak-achieved"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "CPU가 vector kernel을 launch한 뒤 결과가 돌아올 때까지 grid·block·SM·warp·memory를 올바른 순서로 설명하라.",
+        answerChecklist: [
+          "CPU/runtime",
+          "grid/block logical work",
+          "SM placement",
+          "warp issue",
+          "memory load/store",
+          "completion",
+        ],
+        requiredConcepts: [
+          "gpu-host-device-execution-trace",
+          "cuda-launch-hierarchy",
+        ],
+        sectionId: "host-device-execution-trace",
+      },
+      {
+        level: "basic",
+        question:
+          "Register·shared/L1·L2·HBM의 ownership scope와 miss/spill이 만드는 다음 traffic을 비교하라.",
+        answerChecklist: [
+          "thread",
+          "block/SM",
+          "chip-wide",
+          "device memory",
+          "spill",
+          "miss traffic",
+        ],
+        requiredConcepts: [
+          "gpu-memory-traffic-hierarchy",
+          "cuda-shared-scratchpad",
+        ],
+        sectionId: "gpu-memory-traffic-hierarchy",
+      },
+      {
+        level: "basic",
+        question:
+          "F=2TFLOP, Q=1TB인 kernel의 intensity와 3TB/s·60TFLOP/s 장치에서 roof를 계산하라.",
+        answerChecklist: [
+          "2 FLOP/B",
+          "6 TFLOP/s memory roof",
+          "60 TFLOP/s compute roof",
+          "minimum",
+          "upper bound",
+        ],
+        requiredConcepts: ["gpu-roofline-peak-achieved"],
+        sectionId: "gpu-memory-traffic-hierarchy",
+      },
+      {
+        level: "basic",
+        question:
+          "Thread·register·shared-memory 제한이 각각 8·3·5 blocks이고 architecture limit가 16일 때 resident block 상한을 구하라.",
+        answerChecklist: [
+          "min",
+          "3 blocks",
+          "register bound",
+          "not performance guarantee",
+        ],
+        requiredConcepts: ["gpu-latency-hiding-occupancy"],
+        sectionId: "gpu-latency-hiding-occupancy",
+      },
+      {
+        level: "basic",
+        question:
+          "Memory bandwidth 병목과 memory latency 병목을 profiler 관찰과 첫 실험으로 구분하라.",
+        answerChecklist: [
+          "bytes/throughput",
+          "long scoreboard",
+          "eligible warp",
+          "coalescing/reuse",
+          "parallelism/prefetch",
+        ],
+        requiredConcepts: [
+          "gpu-memory-traffic-hierarchy",
+          "gpu-latency-hiding-occupancy",
+        ],
+        sectionId: "gpu-peak-achieved-boundary",
+      },
+      {
+        level: "basic",
+        question:
+          "Peak 60TFLOP/s인 GPU에서 measured 12TFLOP/s가 나왔을 때 peak와 achieved가 다른 이유를 세 가지 제시하라.",
+        answerChecklist: [
+          "upper bound",
+          "memory traffic",
+          "occupancy/stall",
+          "instruction mix",
+          "elapsed-time boundary",
+        ],
+        requiredConcepts: ["gpu-roofline-peak-achieved"],
+        sectionId: "gpu-peak-achieved-boundary",
+      },
+      {
+        level: "advanced",
+        question:
+          "Warp divergence를 branch efficiency 하나로 결론 내리지 않는 paired experiment를 설계하라.",
+        answerChecklist: [
+          "same input/output",
+          "branch variant",
+          "instruction count",
+          "active lanes",
+          "kernel time",
+          "memory controls",
+        ],
+        requiredConcepts: ["cuda-warp-simt", "gpu-roofline-peak-achieved"],
+        sectionId: "gpu-peak-achieved-boundary",
+      },
+      {
+        level: "advanced",
+        question:
+          "Register 72→48개로 줄여 resident blocks가 3→4가 됐지만 느려진 경우 spill·occupancy·traffic으로 원인을 검증하라.",
+        answerChecklist: [
+          "compiler register report",
+          "local load/store",
+          "HBM bytes",
+          "eligible warps",
+          "kernel time",
+          "correctness",
+        ],
+        requiredConcepts: [
+          "gpu-latency-hiding-occupancy",
+          "gpu-memory-traffic-hierarchy",
+        ],
+        sectionId: "gpu-latency-hiding-occupancy",
+      },
+      {
+        level: "advanced",
+        question:
+          "Kernel의 roofline point를 만들기 위한 FLOP·HBM byte·time 측정 ledger와 과대해석 금지 조건을 작성하라.",
+        answerChecklist: [
+          "operation counting",
+          "read/write bytes",
+          "precision",
+          "elapsed time",
+          "peak same device",
+          "cache boundary",
+          "not cycle model",
+        ],
+        requiredConcepts: ["gpu-roofline-peak-achieved"],
+        sectionId: "gpu-peak-achieved-boundary",
+      },
+      {
+        level: "advanced",
+        question:
+          "GPU kernel은 빨라졌지만 end-to-end 시간이 그대로인 pipeline에서 launch·PCIe·network까지 병목을 좁히는 순서를 설계하라.",
+        answerChecklist: [
+          "timeline",
+          "kernel duration",
+          "launch gaps",
+          "host-device copy",
+          "PCIe topology",
+          "network completion",
+          "one-axis change",
+        ],
+        requiredConcepts: [
+          "gpu-host-device-execution-trace",
+          "gpu-roofline-peak-achieved",
+        ],
+        sectionId: "gpu-peak-achieved-boundary",
+      },
+    ],
+    papers: [
+      {
+        title: "NVIDIA CUDA Programming Guide — Programming Model",
+        href: "https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html",
+        problem:
+          "Logical thread hierarchy를 scalable GPU hardware에 배치하는 programming model",
+        contribution: "Grid·block·thread와 warp·SM 실행 경계를 공식 정의",
+        assumptions: "확인한 CUDA version과 target compute capability",
+        evidenceScope: "Programming hierarchy와 execution semantics",
+        notClaim: "모든 GPU의 내부 unit 수·issue 폭·latency가 같다는 뜻은 아님",
+        sectionId: "paper-cuda-execution-model",
+      },
+      {
+        title: "NVIDIA CUDA Best Practices — Memory Optimizations",
+        href: "https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/",
+        problem:
+          "GPU memory spaces와 transaction을 활용해 useful bandwidth를 높이는 문제",
+        contribution:
+          "Coalescing·shared-memory staging·effective bandwidth 측정 지침",
+        assumptions: "Target architecture와 access pattern",
+        evidenceScope: "Memory optimization 원칙",
+        notClaim: "고정 latency·speedup을 보장하지 않음",
+        sectionId: "paper-cuda-memory-hierarchy",
+      },
+      {
+        title: "NVIDIA CUDA Programming Guide — Hardware Multithreading",
+        href: "https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#hardware-multithreading",
+        problem: "Warp stall을 resident work로 숨기는 execution model",
+        contribution: "Warp scheduling과 block resource residency 설명",
+        assumptions: "Architecture별 resource limits",
+        evidenceScope: "Hardware multithreading semantics",
+        notClaim: "Maximum occupancy가 maximum performance라는 뜻은 아님",
+        sectionId: "paper-cuda-occupancy",
+      },
+      {
+        title: "Williams et al. — Roofline",
+        href: "https://escholarship.org/uc/item/3qf383m0",
+        problem: "Compute와 memory limit를 같은 performance model에서 구분",
+        contribution:
+          "Operational intensity와 machine roofs의 시각적 분석 모델",
+        assumptions: "정의된 operation·byte boundary와 machine peaks",
+        evidenceScope: "Attainable performance upper-bound reasoning",
+        notClaim: "Cycle-accurate prediction이나 profiler 대체가 아님",
+        sectionId: "paper-roofline-model",
+      },
+    ],
+  },
   "gpu/cuda-thread-hierarchy": {
     entryLevel: true,
     entryNote:
@@ -45711,121 +46462,882 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "p2p/tls-fundamentals": {
-    coreIdea: "TLS 1.3은 handshake에서 identity·협상 transcript·shared secret을 하나로 묶고 HKDF로 용도별 key를 분리한 뒤, record마다 고유 nonce를 써 AEAD로 application bytes를 보호합니다.",
-    assumedKnowledge: [{ id: "bit-byte", role: "Handshake message와 record가 순서와 길이를 가진 byte sequence라는 출발점을 제공합니다." }],
+    coreIdea:
+      "TLS 1.3은 handshake에서 identity·협상 transcript·shared secret을 하나로 묶고 HKDF로 용도별 key를 분리한 뒤, record마다 고유 nonce를 써 AEAD로 application bytes를 보호합니다.",
+    assumedKnowledge: [
+      {
+        id: "bit-byte",
+        role: "Handshake message와 record가 순서와 길이를 가진 byte sequence라는 출발점을 제공합니다.",
+      },
+    ],
     introducedHere: [
-      { id: "tls13-secure-channel", role: "Handshake와 record protocol의 서로 다른 책임을 하나의 secure-channel 흐름으로 연결합니다." },
-      { id: "tls13-transcript-authentication", role: "CertificateVerify·Finished가 identity와 협상 message를 묶는 이유를 설명합니다." },
-      { id: "tls13-aead-record-nonce", role: "Traffic key 아래 record sequence와 nonce의 수명 불변식을 계산합니다." },
-      { id: "tls13-hkdf-key-schedule", role: "PSK·ECDHE에서 방향·시점·용도별 secret과 key가 갈라지는 tree를 해석합니다." },
+      {
+        id: "tls13-secure-channel",
+        role: "Handshake와 record protocol의 서로 다른 책임을 하나의 secure-channel 흐름으로 연결합니다.",
+      },
+      {
+        id: "tls13-transcript-authentication",
+        role: "CertificateVerify·Finished가 identity와 협상 message를 묶는 이유를 설명합니다.",
+      },
+      {
+        id: "tls13-aead-record-nonce",
+        role: "Traffic key 아래 record sequence와 nonce의 수명 불변식을 계산합니다.",
+      },
+      {
+        id: "tls13-hkdf-key-schedule",
+        role: "PSK·ECDHE에서 방향·시점·용도별 secret과 key가 갈라지는 tree를 해석합니다.",
+      },
     ],
     conceptExplanations: [
-      { id: "tls13-secure-channel", sectionId: "overview", intuition: "낯선 배달망을 지나도 봉투를 읽거나 바꾸지 못하게 하고, 봉투가 의도한 가게에서 왔는지 확인하는 통신 계약입니다.", workedExample: "ClientHello·ServerHello로 조건과 key share를 합의하고 certificate·Finished를 검증한 뒤 방향별 application key로 record를 보호합니다.", boundary: "TLS는 endpoint 사이 confidentiality·integrity·인증을 다루지만 hostname 정책, endpoint malware, traffic timing 은닉과 application authorization을 자동 해결하지 않습니다." },
-      { id: "tls13-transcript-authentication", sectionId: "handshake", intuition: "계약서 모든 페이지의 순서와 내용을 한 fingerprint로 만들고 권한 있는 key로 서명해 한 글자 변경도 드러내는 방식입니다.", workedExample: "ClientHello의 ALPN 한 byte가 바뀌면 transcript hash와 CertificateVerify·Finished 입력이 달라져 client 검증이 실패합니다.", boundary: "유효한 signature는 private-key 소유를 증명하지만 certificate chain·hostname·시간 정책이 맞는지는 client가 별도로 확인합니다." },
-      { id: "tls13-aead-record-nonce", sectionId: "record-protocol", intuition: "같은 열쇠를 여러 봉투에 쓰되 봉투마다 절대 겹치지 않는 번호를 섞어 동일 nonce 재사용을 막습니다.", workedExample: "Static IV와 sequence i=5의 96-bit encoding을 XOR해 다섯 번째 record nonce를 만들고 header를 associated data로 인증합니다.", boundary: "Counter reset과 같은 key 재사용은 위험하며 padding도 packet length·timing·endpoint metadata를 완전히 숨기지 않습니다." },
-      { id: "tls13-hkdf-key-schedule", sectionId: "key-schedule", intuition: "하나의 원재료 secret에 용도 label을 붙여 client/server·handshake/application용 열쇠를 서로 다른 서랍에 나누는 절차입니다.", workedExample: "같은 PRK에서 c hs traffic과 s ap traffic label·transcript context를 사용하면 별도 secret과 AEAD key가 나옵니다.", boundary: "Key separation은 약한 PSK나 endpoint memory 노출을 고치지 않으며 PSK-only·0-RTT가 fresh ECDHE와 같은 forward secrecy를 갖는 것도 아닙니다." },
+      {
+        id: "tls13-secure-channel",
+        sectionId: "overview",
+        intuition:
+          "낯선 배달망을 지나도 봉투를 읽거나 바꾸지 못하게 하고, 봉투가 의도한 가게에서 왔는지 확인하는 통신 계약입니다.",
+        workedExample:
+          "ClientHello·ServerHello로 조건과 key share를 합의하고 certificate·Finished를 검증한 뒤 방향별 application key로 record를 보호합니다.",
+        boundary:
+          "TLS는 endpoint 사이 confidentiality·integrity·인증을 다루지만 hostname 정책, endpoint malware, traffic timing 은닉과 application authorization을 자동 해결하지 않습니다.",
+      },
+      {
+        id: "tls13-transcript-authentication",
+        sectionId: "handshake",
+        intuition:
+          "계약서 모든 페이지의 순서와 내용을 한 fingerprint로 만들고 권한 있는 key로 서명해 한 글자 변경도 드러내는 방식입니다.",
+        workedExample:
+          "ClientHello의 ALPN 한 byte가 바뀌면 transcript hash와 CertificateVerify·Finished 입력이 달라져 client 검증이 실패합니다.",
+        boundary:
+          "유효한 signature는 private-key 소유를 증명하지만 certificate chain·hostname·시간 정책이 맞는지는 client가 별도로 확인합니다.",
+      },
+      {
+        id: "tls13-aead-record-nonce",
+        sectionId: "record-protocol",
+        intuition:
+          "같은 열쇠를 여러 봉투에 쓰되 봉투마다 절대 겹치지 않는 번호를 섞어 동일 nonce 재사용을 막습니다.",
+        workedExample:
+          "Static IV와 sequence i=5의 96-bit encoding을 XOR해 다섯 번째 record nonce를 만들고 header를 associated data로 인증합니다.",
+        boundary:
+          "Counter reset과 같은 key 재사용은 위험하며 padding도 packet length·timing·endpoint metadata를 완전히 숨기지 않습니다.",
+      },
+      {
+        id: "tls13-hkdf-key-schedule",
+        sectionId: "key-schedule",
+        intuition:
+          "하나의 원재료 secret에 용도 label을 붙여 client/server·handshake/application용 열쇠를 서로 다른 서랍에 나누는 절차입니다.",
+        workedExample:
+          "같은 PRK에서 c hs traffic과 s ap traffic label·transcript context를 사용하면 별도 secret과 AEAD key가 나옵니다.",
+        boundary:
+          "Key separation은 약한 PSK나 endpoint memory 노출을 고치지 않으며 PSK-only·0-RTT가 fresh ECDHE와 같은 forward secrecy를 갖는 것도 아닙니다.",
+      },
     ],
     conceptStages: [
-      { label: "00 Byte 경계", relation: "Wire message와 transcript의 실제 hash 입력을 확정", concepts: ["bit-byte"] },
-      { label: "01 Channel 합의", relation: "Identity·parameter·shared secret을 transcript에 결합", concepts: ["tls13-secure-channel", "tls13-transcript-authentication"] },
-      { label: "02 Key 분리", relation: "PSK·ECDHE에서 역할·시점별 traffic secret을 파생", concepts: ["tls13-hkdf-key-schedule"] },
-      { label: "03 Record 보호", relation: "방향별 key·IV·sequence로 AEAD record를 보호", concepts: ["tls13-aead-record-nonce"] },
+      {
+        label: "00 Byte 경계",
+        relation: "Wire message와 transcript의 실제 hash 입력을 확정",
+        concepts: ["bit-byte"],
+      },
+      {
+        label: "01 Channel 합의",
+        relation: "Identity·parameter·shared secret을 transcript에 결합",
+        concepts: ["tls13-secure-channel", "tls13-transcript-authentication"],
+      },
+      {
+        label: "02 Key 분리",
+        relation: "PSK·ECDHE에서 역할·시점별 traffic secret을 파생",
+        concepts: ["tls13-hkdf-key-schedule"],
+      },
+      {
+        label: "03 Record 보호",
+        relation: "방향별 key·IV·sequence로 AEAD record를 보호",
+        concepts: ["tls13-aead-record-nonce"],
+      },
     ],
     exercises: [
-      { level: "basic", question: "TLS 1.3에서 handshake protocol과 record protocol이 각각 맡는 책임과 어느 순서로 연결되는지 설명하세요.", answerChecklist: ["handshake authentication·negotiation", "shared keying material", "record fragmentation", "traffic-key AEAD", "failure terminates channel"], requiredConcepts: ["tls13-secure-channel"], sectionId: "overview" },
-      { level: "basic", question: "ECDHE shared secret만 얻고 certificate·CertificateVerify를 검증하지 않으면 중간자 공격을 막지 못하는 이유를 설명하세요.", answerChecklist: ["unauthenticated key shares", "attacker makes two secrets", "certificate public key", "transcript signature", "hostname policy separate"], requiredConcepts: ["tls13-transcript-authentication"], sectionId: "handshake" },
-      { level: "basic", question: "ClientHello의 ALPN 한 byte가 바뀌었을 때 transcript hash, CertificateVerify와 Finished 검증이 어떻게 반응하는지 추적하세요.", answerChecklist: ["serialized bytes change", "transcript hash changes", "signature input differs", "Finished MAC differs", "connection rejected"], requiredConcepts: ["tls13-transcript-authentication"], sectionId: "handshake" },
-      { level: "basic", question: "같은 traffic IV에서 record sequence 5와 6의 nonce가 달라지는 계산과 nonce 재사용이 위험한 이유를 설명하세요.", answerChecklist: ["96-bit sequence encoding", "IV XOR", "distinct counters", "same-key nonce uniqueness", "counter and key lifecycle"], requiredConcepts: ["tls13-aead-record-nonce"], sectionId: "record-protocol" },
-      { level: "basic", question: "HKDF-Extract와 HKDF-Expand-Label이 각각 무엇을 만들며 label과 transcript context가 필요한 이유를 설명하세요.", answerChecklist: ["IKM and salt", "PRK", "labeled output", "role/phase separation", "transcript binding"], requiredConcepts: ["tls13-hkdf-key-schedule"], sectionId: "key-schedule" },
-      { level: "basic", question: "TLS record padding을 적용해도 외부 관찰자에게 남는 정보와 줄일 수 있는 정보를 구분하세요.", answerChecklist: ["content hidden", "inner type hidden", "length partially obscured", "timing remains", "IP endpoints remain", "bandwidth trade-off"], requiredConcepts: ["tls13-aead-record-nonce"], sectionId: "record-protocol" },
-      { level: "advanced", question: "Payment API에서 TLS 0-RTT를 허용할지 판단하고 replay cache·idempotency key·ticket freshness를 포함한 안전한 정책을 설계하세요.", answerChecklist: ["early data replayable", "method name insufficient", "side-effect analysis", "idempotency key", "ticket freshness/single use", "reject or defer", "audit duplicate effect"], requiredConcepts: ["tls13-secure-channel", "tls13-hkdf-key-schedule"], sectionId: "handshake" },
-      { level: "advanced", question: "Process snapshot 복원 뒤 traffic key는 같고 record counter만 0으로 돌아간 사고의 실패 경로와 방어를 설계하세요.", answerChecklist: ["same-key nonce reuse", "confidentiality/integrity break", "key+counter atomic lifetime", "new handshake/key generation", "usage limit", "negative test"], requiredConcepts: ["tls13-aead-record-nonce", "tls13-hkdf-key-schedule"], sectionId: "record-protocol" },
-      { level: "advanced", question: "PSK-only, PSK+(EC)DHE와 certificate-based full handshake를 authentication·forward secrecy·0-RTT replay 축으로 비교하세요.", answerChecklist: ["PSK authentication scope", "fresh ECDHE forward secrecy", "certificate identity", "PSK-only boundary", "0-RTT replay", "application policy"], requiredConcepts: ["tls13-secure-channel", "tls13-transcript-authentication", "tls13-hkdf-key-schedule"], sectionId: "key-schedule" },
-      { level: "advanced", question: "TLS 1.3 client의 release gate를 certificate, transcript, AEAD, KeyUpdate와 malformed record failure injection까지 포함해 작성하세요.", answerChecklist: ["chain/hostname/time", "CertificateVerify", "Finished", "tag fail closed", "nonce uniqueness", "KeyUpdate generations", "malformed/truncated records", "no plaintext on failure"], requiredConcepts: ["tls13-transcript-authentication", "tls13-aead-record-nonce", "tls13-hkdf-key-schedule"], sectionId: "record-protocol" },
+      {
+        level: "basic",
+        question:
+          "TLS 1.3에서 handshake protocol과 record protocol이 각각 맡는 책임과 어느 순서로 연결되는지 설명하세요.",
+        answerChecklist: [
+          "handshake authentication·negotiation",
+          "shared keying material",
+          "record fragmentation",
+          "traffic-key AEAD",
+          "failure terminates channel",
+        ],
+        requiredConcepts: ["tls13-secure-channel"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "ECDHE shared secret만 얻고 certificate·CertificateVerify를 검증하지 않으면 중간자 공격을 막지 못하는 이유를 설명하세요.",
+        answerChecklist: [
+          "unauthenticated key shares",
+          "attacker makes two secrets",
+          "certificate public key",
+          "transcript signature",
+          "hostname policy separate",
+        ],
+        requiredConcepts: ["tls13-transcript-authentication"],
+        sectionId: "handshake",
+      },
+      {
+        level: "basic",
+        question:
+          "ClientHello의 ALPN 한 byte가 바뀌었을 때 transcript hash, CertificateVerify와 Finished 검증이 어떻게 반응하는지 추적하세요.",
+        answerChecklist: [
+          "serialized bytes change",
+          "transcript hash changes",
+          "signature input differs",
+          "Finished MAC differs",
+          "connection rejected",
+        ],
+        requiredConcepts: ["tls13-transcript-authentication"],
+        sectionId: "handshake",
+      },
+      {
+        level: "basic",
+        question:
+          "같은 traffic IV에서 record sequence 5와 6의 nonce가 달라지는 계산과 nonce 재사용이 위험한 이유를 설명하세요.",
+        answerChecklist: [
+          "96-bit sequence encoding",
+          "IV XOR",
+          "distinct counters",
+          "same-key nonce uniqueness",
+          "counter and key lifecycle",
+        ],
+        requiredConcepts: ["tls13-aead-record-nonce"],
+        sectionId: "record-protocol",
+      },
+      {
+        level: "basic",
+        question:
+          "HKDF-Extract와 HKDF-Expand-Label이 각각 무엇을 만들며 label과 transcript context가 필요한 이유를 설명하세요.",
+        answerChecklist: [
+          "IKM and salt",
+          "PRK",
+          "labeled output",
+          "role/phase separation",
+          "transcript binding",
+        ],
+        requiredConcepts: ["tls13-hkdf-key-schedule"],
+        sectionId: "key-schedule",
+      },
+      {
+        level: "basic",
+        question:
+          "TLS record padding을 적용해도 외부 관찰자에게 남는 정보와 줄일 수 있는 정보를 구분하세요.",
+        answerChecklist: [
+          "content hidden",
+          "inner type hidden",
+          "length partially obscured",
+          "timing remains",
+          "IP endpoints remain",
+          "bandwidth trade-off",
+        ],
+        requiredConcepts: ["tls13-aead-record-nonce"],
+        sectionId: "record-protocol",
+      },
+      {
+        level: "advanced",
+        question:
+          "Payment API에서 TLS 0-RTT를 허용할지 판단하고 replay cache·idempotency key·ticket freshness를 포함한 안전한 정책을 설계하세요.",
+        answerChecklist: [
+          "early data replayable",
+          "method name insufficient",
+          "side-effect analysis",
+          "idempotency key",
+          "ticket freshness/single use",
+          "reject or defer",
+          "audit duplicate effect",
+        ],
+        requiredConcepts: ["tls13-secure-channel", "tls13-hkdf-key-schedule"],
+        sectionId: "handshake",
+      },
+      {
+        level: "advanced",
+        question:
+          "Process snapshot 복원 뒤 traffic key는 같고 record counter만 0으로 돌아간 사고의 실패 경로와 방어를 설계하세요.",
+        answerChecklist: [
+          "same-key nonce reuse",
+          "confidentiality/integrity break",
+          "key+counter atomic lifetime",
+          "new handshake/key generation",
+          "usage limit",
+          "negative test",
+        ],
+        requiredConcepts: [
+          "tls13-aead-record-nonce",
+          "tls13-hkdf-key-schedule",
+        ],
+        sectionId: "record-protocol",
+      },
+      {
+        level: "advanced",
+        question:
+          "PSK-only, PSK+(EC)DHE와 certificate-based full handshake를 authentication·forward secrecy·0-RTT replay 축으로 비교하세요.",
+        answerChecklist: [
+          "PSK authentication scope",
+          "fresh ECDHE forward secrecy",
+          "certificate identity",
+          "PSK-only boundary",
+          "0-RTT replay",
+          "application policy",
+        ],
+        requiredConcepts: [
+          "tls13-secure-channel",
+          "tls13-transcript-authentication",
+          "tls13-hkdf-key-schedule",
+        ],
+        sectionId: "key-schedule",
+      },
+      {
+        level: "advanced",
+        question:
+          "TLS 1.3 client의 release gate를 certificate, transcript, AEAD, KeyUpdate와 malformed record failure injection까지 포함해 작성하세요.",
+        answerChecklist: [
+          "chain/hostname/time",
+          "CertificateVerify",
+          "Finished",
+          "tag fail closed",
+          "nonce uniqueness",
+          "KeyUpdate generations",
+          "malformed/truncated records",
+          "no plaintext on failure",
+        ],
+        requiredConcepts: [
+          "tls13-transcript-authentication",
+          "tls13-aead-record-nonce",
+          "tls13-hkdf-key-schedule",
+        ],
+        sectionId: "record-protocol",
+      },
     ],
     papers: [
-      { title: "RFC 8446 — TLS 1.3", href: "https://www.rfc-editor.org/rfc/rfc8446.html", problem: "신뢰할 수 없는 network 위에서 낮은 handshake latency와 현대적인 authenticated secure channel을 함께 정의하는 문제", contribution: "Handshake state machine, transcript authentication, AEAD-only record protection, HKDF key schedule과 0-RTT mode를 표준화", assumptions: "Reliable ordered transport, 지원 cipher·signature·group, certificate 또는 PSK trust와 endpoint key 보호가 있다는 전제", evidenceScope: "TLS 1.3 wire protocol과 security considerations의 normative 범위", notClaim: "모든 application의 hostname·authorization·replay policy나 traffic-analysis 저항을 자동 보장한다는 뜻은 아님", sectionId: "paper-rfc8446" },
-      { title: "RFC 5869 — HKDF", href: "https://www.rfc-editor.org/rfc/rfc5869.html", problem: "다양한 input key material에서 context별 output keying material을 안전하게 파생하는 공통 primitive가 필요한 문제", contribution: "HMAC 기반 Extract와 Expand의 입력·길이·info 계약을 표준화", assumptions: "안전한 hash/HMAC과 적절한 salt·entropy·output length를 사용한다는 전제", evidenceScope: "Generic HKDF primitive와 test vector 범위", notClaim: "TLS-specific label tree나 약한 PSK의 entropy, endpoint compromise를 HKDF 자체가 해결한다는 뜻은 아님", sectionId: "paper-rfc5869" },
+      {
+        title: "RFC 8446 — TLS 1.3",
+        href: "https://www.rfc-editor.org/rfc/rfc8446.html",
+        problem:
+          "신뢰할 수 없는 network 위에서 낮은 handshake latency와 현대적인 authenticated secure channel을 함께 정의하는 문제",
+        contribution:
+          "Handshake state machine, transcript authentication, AEAD-only record protection, HKDF key schedule과 0-RTT mode를 표준화",
+        assumptions:
+          "Reliable ordered transport, 지원 cipher·signature·group, certificate 또는 PSK trust와 endpoint key 보호가 있다는 전제",
+        evidenceScope:
+          "TLS 1.3 wire protocol과 security considerations의 normative 범위",
+        notClaim:
+          "모든 application의 hostname·authorization·replay policy나 traffic-analysis 저항을 자동 보장한다는 뜻은 아님",
+        sectionId: "paper-rfc8446",
+      },
+      {
+        title: "RFC 5869 — HKDF",
+        href: "https://www.rfc-editor.org/rfc/rfc5869.html",
+        problem:
+          "다양한 input key material에서 context별 output keying material을 안전하게 파생하는 공통 primitive가 필요한 문제",
+        contribution:
+          "HMAC 기반 Extract와 Expand의 입력·길이·info 계약을 표준화",
+        assumptions:
+          "안전한 hash/HMAC과 적절한 salt·entropy·output length를 사용한다는 전제",
+        evidenceScope: "Generic HKDF primitive와 test vector 범위",
+        notClaim:
+          "TLS-specific label tree나 약한 PSK의 entropy, endpoint compromise를 HKDF 자체가 해결한다는 뜻은 아님",
+        sectionId: "paper-rfc5869",
+      },
     ],
   },
   "p2p/quic-fundamentals": {
-    coreIdea: "QUIC은 UDP 위에서 connection·packet·stream·recovery·flow/congestion state를 userspace가 소유하고 TLS 1.3 secret으로 packet을 보호해 handshake, multiplexing과 migration을 한 transport에 결합합니다.",
+    coreIdea:
+      "QUIC은 UDP 위에서 connection·packet·stream·recovery·flow/congestion state를 userspace가 소유하고 TLS 1.3 secret으로 packet을 보호해 handshake, multiplexing과 migration을 한 transport에 결합합니다.",
     assumedKnowledge: [
-      { id: "bit-byte", role: "Packet field와 stream offset을 byte sequence와 integer encoding으로 읽습니다." },
-      { id: "tls13-secure-channel", role: "QUIC이 재사용하는 TLS handshake authentication과 traffic-secret 경계를 제공합니다." },
+      {
+        id: "bit-byte",
+        role: "Packet field와 stream offset을 byte sequence와 integer encoding으로 읽습니다.",
+      },
+      {
+        id: "tls13-secure-channel",
+        role: "QUIC이 재사용하는 TLS handshake authentication과 traffic-secret 경계를 제공합니다.",
+      },
     ],
     introducedHere: [
-      { id: "quic-transport-state", role: "UDP가 제공하지 않는 reliability·recovery·congestion·security 상태의 owner를 설명합니다." },
-      { id: "quic-packet-number-space", role: "Initial·Handshake·Application Data의 ACK와 key stage를 분리합니다." },
-      { id: "quic-stream-flow-control", role: "Stream offset 재조립과 stream/connection receive credit을 계산합니다." },
-      { id: "quic-connection-id-path-validation", role: "주소 변경 뒤 state lookup과 새 path reachability 검증을 구분합니다." },
+      {
+        id: "quic-transport-state",
+        role: "UDP가 제공하지 않는 reliability·recovery·congestion·security 상태의 owner를 설명합니다.",
+      },
+      {
+        id: "quic-packet-number-space",
+        role: "Initial·Handshake·Application Data의 ACK와 key stage를 분리합니다.",
+      },
+      {
+        id: "quic-stream-flow-control",
+        role: "Stream offset 재조립과 stream/connection receive credit을 계산합니다.",
+      },
+      {
+        id: "quic-connection-id-path-validation",
+        role: "주소 변경 뒤 state lookup과 새 path reachability 검증을 구분합니다.",
+      },
     ],
     conceptExplanations: [
-      { id: "quic-transport-state", sectionId: "overview", intuition: "UDP 봉투를 쓰되 도착 확인·재전송·혼잡 조절·여러 대화방과 암호화를 application 가까운 userspace가 모두 관리하는 운송 체계입니다.", workedExample: "Stream frame을 packet number 18에 넣어 보낸 뒤 ACK range에서 빠지면 같은 frame bytes를 새 packet 25에 싣고 congestion window를 조정합니다.", boundary: "UDP라는 이유만으로 빠르지 않으며 userspace crypto·packet processing 비용, shared congestion와 network 차단이 남습니다." },
-      { id: "quic-packet-number-space", sectionId: "handshake", intuition: "아직 열쇠가 다른 준비 단계의 송장 번호를 본 운송 단계의 송장 번호와 섞지 않는 별도 장부입니다.", workedExample: "Initial packet 2와 Handshake packet 2는 서로 다른 space이므로 ACK와 loss state도 독립적으로 해석합니다.", boundary: "Packet-number space는 stream ordering과 다르며 Initial protection은 공개 input으로 파생돼 server authentication을 주지 않습니다." },
-      { id: "quic-stream-flow-control", sectionId: "streams", intuition: "여러 대화방의 빠진 문장만 그 방에서 기다리고, receiver가 방별·전체 수용 가능한 byte와 방 개수를 credit으로 알립니다.", workedExample: "Stream credit 1000 byte, connection credit 300 byte가 남으면 sender가 새로 보낼 수 있는 stream data는 최대 300 byte입니다.", boundary: "Flow control은 receiver memory를 보호하고 congestion control은 network를 보호합니다. 독립 stream도 connection congestion·CPU·MAX_DATA를 공유합니다." },
-      { id: "quic-connection-id-path-validation", sectionId: "migration", intuition: "전화번호가 바뀌어도 대화 ID로 상태를 찾되 새 주소로 challenge가 돌아오는지 확인한 뒤 그 길을 신뢰합니다.", workedExample: "Wi-Fi에서 LTE로 바뀌면 같은 connection state를 CID로 찾고 8-byte PATH_CHALLENGE의 동일 response를 받은 뒤 path를 validated로 전환합니다.", boundary: "Path validation은 return reachability이지 user identity 인증이 아니며 CID 재사용은 서로 다른 path를 link할 privacy risk가 있습니다." },
+      {
+        id: "quic-transport-state",
+        sectionId: "overview",
+        intuition:
+          "UDP 봉투를 쓰되 도착 확인·재전송·혼잡 조절·여러 대화방과 암호화를 application 가까운 userspace가 모두 관리하는 운송 체계입니다.",
+        workedExample:
+          "Stream frame을 packet number 18에 넣어 보낸 뒤 ACK range에서 빠지면 같은 frame bytes를 새 packet 25에 싣고 congestion window를 조정합니다.",
+        boundary:
+          "UDP라는 이유만으로 빠르지 않으며 userspace crypto·packet processing 비용, shared congestion와 network 차단이 남습니다.",
+      },
+      {
+        id: "quic-packet-number-space",
+        sectionId: "handshake",
+        intuition:
+          "아직 열쇠가 다른 준비 단계의 송장 번호를 본 운송 단계의 송장 번호와 섞지 않는 별도 장부입니다.",
+        workedExample:
+          "Initial packet 2와 Handshake packet 2는 서로 다른 space이므로 ACK와 loss state도 독립적으로 해석합니다.",
+        boundary:
+          "Packet-number space는 stream ordering과 다르며 Initial protection은 공개 input으로 파생돼 server authentication을 주지 않습니다.",
+      },
+      {
+        id: "quic-stream-flow-control",
+        sectionId: "streams",
+        intuition:
+          "여러 대화방의 빠진 문장만 그 방에서 기다리고, receiver가 방별·전체 수용 가능한 byte와 방 개수를 credit으로 알립니다.",
+        workedExample:
+          "Stream credit 1000 byte, connection credit 300 byte가 남으면 sender가 새로 보낼 수 있는 stream data는 최대 300 byte입니다.",
+        boundary:
+          "Flow control은 receiver memory를 보호하고 congestion control은 network를 보호합니다. 독립 stream도 connection congestion·CPU·MAX_DATA를 공유합니다.",
+      },
+      {
+        id: "quic-connection-id-path-validation",
+        sectionId: "migration",
+        intuition:
+          "전화번호가 바뀌어도 대화 ID로 상태를 찾되 새 주소로 challenge가 돌아오는지 확인한 뒤 그 길을 신뢰합니다.",
+        workedExample:
+          "Wi-Fi에서 LTE로 바뀌면 같은 connection state를 CID로 찾고 8-byte PATH_CHALLENGE의 동일 response를 받은 뒤 path를 validated로 전환합니다.",
+        boundary:
+          "Path validation은 return reachability이지 user identity 인증이 아니며 CID 재사용은 서로 다른 path를 link할 privacy risk가 있습니다.",
+      },
     ],
     conceptStages: [
-      { label: "00 선수 경계", relation: "Wire bytes와 TLS secure-channel 속성을 준비", concepts: ["bit-byte", "tls13-secure-channel"] },
-      { label: "01 Packet 상태", relation: "UDP 위 packet·frame·ACK·encryption stage를 구성", concepts: ["quic-transport-state", "quic-packet-number-space"] },
-      { label: "02 Stream 제어", relation: "Offset ordering과 receiver credit으로 multiplexing을 제한", concepts: ["quic-stream-flow-control"] },
-      { label: "03 Path 변화", relation: "Connection identity를 주소에서 분리하고 새 path를 검증", concepts: ["quic-connection-id-path-validation"] },
+      {
+        label: "00 선수 경계",
+        relation: "Wire bytes와 TLS secure-channel 속성을 준비",
+        concepts: ["bit-byte", "tls13-secure-channel"],
+      },
+      {
+        label: "01 Packet 상태",
+        relation: "UDP 위 packet·frame·ACK·encryption stage를 구성",
+        concepts: ["quic-transport-state", "quic-packet-number-space"],
+      },
+      {
+        label: "02 Stream 제어",
+        relation: "Offset ordering과 receiver credit으로 multiplexing을 제한",
+        concepts: ["quic-stream-flow-control"],
+      },
+      {
+        label: "03 Path 변화",
+        relation: "Connection identity를 주소에서 분리하고 새 path를 검증",
+        concepts: ["quic-connection-id-path-validation"],
+      },
     ],
     exercises: [
-      { level: "basic", question: "UDP가 QUIC에 제공하는 기능과 QUIC endpoint가 직접 구현해야 하는 기능을 packet 한 개의 흐름으로 구분하세요.", answerChecklist: ["UDP datagram demux/checksum", "QUIC packet number", "ACK/loss recovery", "congestion control", "flow control", "TLS-derived protection"], requiredConcepts: ["quic-transport-state"], sectionId: "overview" },
-      { level: "basic", question: "Stream A의 중간 frame이 유실되어도 Stream B가 진행할 수 있는 이유와 여전히 공유하는 자원을 설명하세요.", answerChecklist: ["stream ID and offset", "per-stream ordered delivery", "B contiguous bytes delivered", "shared congestion window", "shared MAX_DATA/CPU"], requiredConcepts: ["quic-stream-flow-control", "quic-transport-state"], sectionId: "streams" },
-      { level: "basic", question: "Initial·Handshake·Application Data packet-number space가 분리되는 이유와 같은 packet number 2가 충돌하지 않는 이유를 설명하세요.", answerChecklist: ["independent spaces", "encryption levels", "separate ACK state", "separate loss state", "key discard lifecycle"], requiredConcepts: ["quic-packet-number-space"], sectionId: "handshake" },
-      { level: "basic", question: "Stream credit 1,000 byte와 connection credit 300 byte가 남았을 때 보낼 수 있는 새 data를 계산하고 retransmission 처리 차이를 말하세요.", answerChecklist: ["minimum credit", "300 bytes", "stream offset", "retransmission not new bytes", "congestion separately limits"], requiredConcepts: ["quic-stream-flow-control"], sectionId: "streams" },
-      { level: "basic", question: "Wi-Fi에서 LTE로 바뀐 뒤 connection ID와 PATH_CHALLENGE/RESPONSE가 각각 맡는 책임을 설명하세요.", answerChecklist: ["state lookup", "4-tuple change", "return reachability", "amplification limit", "not identity authentication"], requiredConcepts: ["quic-connection-id-path-validation"], sectionId: "migration" },
-      { level: "basic", question: "QUIC Initial packet protection이 server 인증이나 진짜 기밀성을 제공하지 않는 이유를 설명하세요.", answerChecklist: ["public version salt", "client-chosen DCID", "anyone derives Initial key", "certificate/Finished later", "Handshake/1-RTT protection"], requiredConcepts: ["quic-packet-number-space", "tls13-secure-channel"], sectionId: "handshake" },
-      { level: "advanced", question: "한 stream이 receive credit을 모두 점유하는 slow-consumer workload에서 memory·fairness·throughput release gate를 설계하세요.", answerChecklist: ["per-stream credit", "connection MAX_DATA", "MAX_STREAMS", "scheduler priority/quota", "shared congestion", "memory metric", "backpressure test"], requiredConcepts: ["quic-stream-flow-control", "quic-transport-state"], sectionId: "streams" },
-      { level: "advanced", question: "NAT rebinding과 active migration을 구분하면서 address spoofing·CID linkability를 막는 path 정책을 작성하세요.", answerChecklist: ["4-tuple observation", "CID state lookup", "PATH_CHALLENGE entropy", "response validation", "pre-validation limit", "new CID rotation", "retirement/privacy"], requiredConcepts: ["quic-connection-id-path-validation"], sectionId: "migration" },
-      { level: "advanced", question: "QUIC 0-RTT API에서 TLS replay, transport parameter 변화와 anti-amplification을 함께 다루는 정책을 설계하세요.", answerChecklist: ["PSK early data", "replay boundary", "side-effect/idempotency", "remembered parameters", "Retry/address validation", "3x amplification", "fallback to 1-RTT"], requiredConcepts: ["tls13-secure-channel", "quic-transport-state", "quic-packet-number-space"], sectionId: "handshake" },
-      { level: "advanced", question: "TCP+TLS와 QUIC을 공정하게 비교하는 mobile benchmark를 handshake·loss·migration·CPU·fallback 조건까지 설계하세요.", answerChecklist: ["same application payload", "cold/resumed split", "RTT/loss matrix", "CPU/energy", "stream HOL", "migration downtime", "UDP-blocked fallback", "versioned implementations"], requiredConcepts: ["quic-transport-state", "quic-stream-flow-control", "quic-connection-id-path-validation"], sectionId: "security" },
+      {
+        level: "basic",
+        question:
+          "UDP가 QUIC에 제공하는 기능과 QUIC endpoint가 직접 구현해야 하는 기능을 packet 한 개의 흐름으로 구분하세요.",
+        answerChecklist: [
+          "UDP datagram demux/checksum",
+          "QUIC packet number",
+          "ACK/loss recovery",
+          "congestion control",
+          "flow control",
+          "TLS-derived protection",
+        ],
+        requiredConcepts: ["quic-transport-state"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "Stream A의 중간 frame이 유실되어도 Stream B가 진행할 수 있는 이유와 여전히 공유하는 자원을 설명하세요.",
+        answerChecklist: [
+          "stream ID and offset",
+          "per-stream ordered delivery",
+          "B contiguous bytes delivered",
+          "shared congestion window",
+          "shared MAX_DATA/CPU",
+        ],
+        requiredConcepts: ["quic-stream-flow-control", "quic-transport-state"],
+        sectionId: "streams",
+      },
+      {
+        level: "basic",
+        question:
+          "Initial·Handshake·Application Data packet-number space가 분리되는 이유와 같은 packet number 2가 충돌하지 않는 이유를 설명하세요.",
+        answerChecklist: [
+          "independent spaces",
+          "encryption levels",
+          "separate ACK state",
+          "separate loss state",
+          "key discard lifecycle",
+        ],
+        requiredConcepts: ["quic-packet-number-space"],
+        sectionId: "handshake",
+      },
+      {
+        level: "basic",
+        question:
+          "Stream credit 1,000 byte와 connection credit 300 byte가 남았을 때 보낼 수 있는 새 data를 계산하고 retransmission 처리 차이를 말하세요.",
+        answerChecklist: [
+          "minimum credit",
+          "300 bytes",
+          "stream offset",
+          "retransmission not new bytes",
+          "congestion separately limits",
+        ],
+        requiredConcepts: ["quic-stream-flow-control"],
+        sectionId: "streams",
+      },
+      {
+        level: "basic",
+        question:
+          "Wi-Fi에서 LTE로 바뀐 뒤 connection ID와 PATH_CHALLENGE/RESPONSE가 각각 맡는 책임을 설명하세요.",
+        answerChecklist: [
+          "state lookup",
+          "4-tuple change",
+          "return reachability",
+          "amplification limit",
+          "not identity authentication",
+        ],
+        requiredConcepts: ["quic-connection-id-path-validation"],
+        sectionId: "migration",
+      },
+      {
+        level: "basic",
+        question:
+          "QUIC Initial packet protection이 server 인증이나 진짜 기밀성을 제공하지 않는 이유를 설명하세요.",
+        answerChecklist: [
+          "public version salt",
+          "client-chosen DCID",
+          "anyone derives Initial key",
+          "certificate/Finished later",
+          "Handshake/1-RTT protection",
+        ],
+        requiredConcepts: ["quic-packet-number-space", "tls13-secure-channel"],
+        sectionId: "handshake",
+      },
+      {
+        level: "advanced",
+        question:
+          "한 stream이 receive credit을 모두 점유하는 slow-consumer workload에서 memory·fairness·throughput release gate를 설계하세요.",
+        answerChecklist: [
+          "per-stream credit",
+          "connection MAX_DATA",
+          "MAX_STREAMS",
+          "scheduler priority/quota",
+          "shared congestion",
+          "memory metric",
+          "backpressure test",
+        ],
+        requiredConcepts: ["quic-stream-flow-control", "quic-transport-state"],
+        sectionId: "streams",
+      },
+      {
+        level: "advanced",
+        question:
+          "NAT rebinding과 active migration을 구분하면서 address spoofing·CID linkability를 막는 path 정책을 작성하세요.",
+        answerChecklist: [
+          "4-tuple observation",
+          "CID state lookup",
+          "PATH_CHALLENGE entropy",
+          "response validation",
+          "pre-validation limit",
+          "new CID rotation",
+          "retirement/privacy",
+        ],
+        requiredConcepts: ["quic-connection-id-path-validation"],
+        sectionId: "migration",
+      },
+      {
+        level: "advanced",
+        question:
+          "QUIC 0-RTT API에서 TLS replay, transport parameter 변화와 anti-amplification을 함께 다루는 정책을 설계하세요.",
+        answerChecklist: [
+          "PSK early data",
+          "replay boundary",
+          "side-effect/idempotency",
+          "remembered parameters",
+          "Retry/address validation",
+          "3x amplification",
+          "fallback to 1-RTT",
+        ],
+        requiredConcepts: [
+          "tls13-secure-channel",
+          "quic-transport-state",
+          "quic-packet-number-space",
+        ],
+        sectionId: "handshake",
+      },
+      {
+        level: "advanced",
+        question:
+          "TCP+TLS와 QUIC을 공정하게 비교하는 mobile benchmark를 handshake·loss·migration·CPU·fallback 조건까지 설계하세요.",
+        answerChecklist: [
+          "same application payload",
+          "cold/resumed split",
+          "RTT/loss matrix",
+          "CPU/energy",
+          "stream HOL",
+          "migration downtime",
+          "UDP-blocked fallback",
+          "versioned implementations",
+        ],
+        requiredConcepts: [
+          "quic-transport-state",
+          "quic-stream-flow-control",
+          "quic-connection-id-path-validation",
+        ],
+        sectionId: "security",
+      },
     ],
     papers: [
-      { title: "RFC 9000 — QUIC Transport", href: "https://www.rfc-editor.org/rfc/rfc9000.html", problem: "낮은 handshake latency, multiplexed streams와 address migration을 UDP 위 secure transport로 표준화하는 문제", contribution: "Connection·packet/frame·stream·flow control·connection ID와 migration state machine을 정의", assumptions: "UDP datagram path, TLS 1.3 integration, endpoint state와 network congestion feedback가 있다는 전제", evidenceScope: "QUIC version 1 transport wire and state semantics", notClaim: "모든 network·implementation에서 TCP보다 빠르거나 UDP 차단·CPU 비용이 없다는 뜻은 아님", sectionId: "paper-rfc9000" },
-      { title: "RFC 9001 — Using TLS to Secure QUIC", href: "https://www.rfc-editor.org/rfc/rfc9001.html", problem: "TLS 1.3 handshake를 QUIC packet·encryption level과 결합하면서 record layer 중복을 피하는 문제", contribution: "CRYPTO frames, Initial/Handshake/0-RTT/1-RTT key derivation과 packet/header protection을 정의", assumptions: "RFC 8446 TLS 1.3과 RFC 9000 transport state를 정확히 구현한다는 전제", evidenceScope: "TLS-to-QUIC mapping과 packet protection의 normative 범위", notClaim: "Initial protection이 server authentication이거나 traffic metadata까지 숨긴다는 뜻은 아님", sectionId: "paper-rfc9001" },
-      { title: "RFC 9002 — QUIC Loss Detection and Congestion Control", href: "https://www.rfc-editor.org/rfc/rfc9002.html", problem: "QUIC ACK와 packet-number semantics에 맞는 loss recovery와 network-friendly congestion control 기준이 필요한 문제", contribution: "RTT estimation, packet/time threshold loss, PTO와 NewReno-like controller를 정의", assumptions: "ACK feedback와 timer·packet state를 유지하고 adversarial input을 방어한다는 전제", evidenceScope: "QUIC recovery와 congestion-control reference algorithm", notClaim: "특정 workload throughput이나 모든 alternative controller 대비 우월성을 보장하는 benchmark가 아님", sectionId: "paper-rfc9002" },
+      {
+        title: "RFC 9000 — QUIC Transport",
+        href: "https://www.rfc-editor.org/rfc/rfc9000.html",
+        problem:
+          "낮은 handshake latency, multiplexed streams와 address migration을 UDP 위 secure transport로 표준화하는 문제",
+        contribution:
+          "Connection·packet/frame·stream·flow control·connection ID와 migration state machine을 정의",
+        assumptions:
+          "UDP datagram path, TLS 1.3 integration, endpoint state와 network congestion feedback가 있다는 전제",
+        evidenceScope: "QUIC version 1 transport wire and state semantics",
+        notClaim:
+          "모든 network·implementation에서 TCP보다 빠르거나 UDP 차단·CPU 비용이 없다는 뜻은 아님",
+        sectionId: "paper-rfc9000",
+      },
+      {
+        title: "RFC 9001 — Using TLS to Secure QUIC",
+        href: "https://www.rfc-editor.org/rfc/rfc9001.html",
+        problem:
+          "TLS 1.3 handshake를 QUIC packet·encryption level과 결합하면서 record layer 중복을 피하는 문제",
+        contribution:
+          "CRYPTO frames, Initial/Handshake/0-RTT/1-RTT key derivation과 packet/header protection을 정의",
+        assumptions:
+          "RFC 8446 TLS 1.3과 RFC 9000 transport state를 정확히 구현한다는 전제",
+        evidenceScope:
+          "TLS-to-QUIC mapping과 packet protection의 normative 범위",
+        notClaim:
+          "Initial protection이 server authentication이거나 traffic metadata까지 숨긴다는 뜻은 아님",
+        sectionId: "paper-rfc9001",
+      },
+      {
+        title: "RFC 9002 — QUIC Loss Detection and Congestion Control",
+        href: "https://www.rfc-editor.org/rfc/rfc9002.html",
+        problem:
+          "QUIC ACK와 packet-number semantics에 맞는 loss recovery와 network-friendly congestion control 기준이 필요한 문제",
+        contribution:
+          "RTT estimation, packet/time threshold loss, PTO와 NewReno-like controller를 정의",
+        assumptions:
+          "ACK feedback와 timer·packet state를 유지하고 adversarial input을 방어한다는 전제",
+        evidenceScope: "QUIC recovery와 congestion-control reference algorithm",
+        notClaim:
+          "특정 workload throughput이나 모든 alternative controller 대비 우월성을 보장하는 benchmark가 아님",
+        sectionId: "paper-rfc9002",
+      },
     ],
   },
   "p2p/content-addressing": {
-    coreIdea: "Content addressing은 canonical bytes의 cryptographic digest로 무결성을 확인하고, CIDv1이 codec·hash metadata를 함께 운반하며, Merkle DAG와 mutable name layer가 큰 구조와 최신 pointer를 분리합니다.",
-    assumedKnowledge: [{ id: "bit-byte", role: "Hash와 CID가 logical object가 아니라 codec으로 확정한 bytes를 입력으로 삼는다는 출발점입니다." }],
+    coreIdea:
+      "Content addressing은 canonical bytes의 cryptographic digest로 무결성을 확인하고, CIDv1이 codec·hash metadata를 함께 운반하며, Merkle DAG와 mutable name layer가 큰 구조와 최신 pointer를 분리합니다.",
+    assumedKnowledge: [
+      {
+        id: "bit-byte",
+        role: "Hash와 CID가 logical object가 아니라 codec으로 확정한 bytes를 입력으로 삼는다는 출발점입니다.",
+      },
+    ],
     introducedHere: [
-      { id: "content-address-integrity", role: "Digest equality가 보장하는 byte integrity와 보장하지 않는 availability·identity를 나눕니다." },
-      { id: "cidv1-self-describing-format", role: "Version·codec·hash algorithm·digest length·multibase 표현을 parse합니다." },
-      { id: "merkle-dag-root-commitment", role: "Child CID가 parent bytes와 root identity에 전파되는 계산을 설명합니다." },
-      { id: "mutable-content-name-resolution", role: "IPNS·DNSLink가 immutable CID 위에 authority·freshness가 있는 pointer를 더하는 방식을 구분합니다." },
+      {
+        id: "content-address-integrity",
+        role: "Digest equality가 보장하는 byte integrity와 보장하지 않는 availability·identity를 나눕니다.",
+      },
+      {
+        id: "cidv1-self-describing-format",
+        role: "Version·codec·hash algorithm·digest length·multibase 표현을 parse합니다.",
+      },
+      {
+        id: "merkle-dag-root-commitment",
+        role: "Child CID가 parent bytes와 root identity에 전파되는 계산을 설명합니다.",
+      },
+      {
+        id: "mutable-content-name-resolution",
+        role: "IPNS·DNSLink가 immutable CID 위에 authority·freshness가 있는 pointer를 더하는 방식을 구분합니다.",
+      },
     ],
     conceptExplanations: [
-      { id: "content-address-integrity", sectionId: "overview", intuition: "택배 창고 주소 대신 물건 자체의 정교한 fingerprint를 주문서에 적어 어느 창고에서 받아도 내용이 같은지 검사합니다.", workedExample: "Raw bytes 'hello'를 SHA-256으로 hash한 digest를 주소에 넣고 수신 bytes를 다시 hash해 일치할 때만 accept합니다.", boundary: "Hash 일치는 bytes 무결성이지 availability, 작성자 identity, content 진실성·malware safety나 semantic equality의 보장이 아닙니다." },
-      { id: "cidv1-self-describing-format", sectionId: "cid", intuition: "Fingerprint 옆에 이 주소의 version, bytes를 읽는 format과 fingerprint algorithm·길이를 같이 적어 decoder가 추측하지 않게 합니다.", workedExample: "Raw hello CIDv1은 01(version), 55(raw), 12(sha2-256), 20(32 bytes), digest 순서로 parse합니다.", boundary: "Multibase prefix는 text encoding이며 binary CID 일부가 아닙니다. CIDv0은 implicit dag-pb·sha2-256인 제한된 legacy form입니다." },
-      { id: "merkle-dag-root-commitment", sectionId: "merkle-dag", intuition: "폴더 목록에 각 파일 fingerprint를 적고 그 목록도 hash하면 root fingerprint 하나가 아래 구조 전체를 묶습니다.", workedExample: "lib.rs bytes가 바뀌면 leaf CID, 이를 포함한 src node bytes와 CID, 최종 root CID가 순서대로 바뀌고 readme block은 재사용됩니다.", boundary: "Chunking·codec·metadata order가 다르면 같은 사용자-visible file도 다른 root가 되며 root는 missing block availability를 보장하지 않습니다." },
-      { id: "mutable-content-name-resolution", sectionId: "resolution", intuition: "매 version마다 바뀌는 fingerprint 대신 서명 가능한 고정 이름이 최신 fingerprint를 가리키고 sequence·expiry로 오래된 pointer를 가립니다.", workedExample: "IPNS resolver가 public-key name 아래 서명된 sequence 3 record와 유효 시간을 확인한 뒤 /ipfs/bafyV3 path를 반환합니다.", boundary: "DHT는 배포 수단이지 신뢰 근거가 아니며 key 탈취, stale cache와 availability 문제는 signature만으로 해결되지 않습니다." },
+      {
+        id: "content-address-integrity",
+        sectionId: "overview",
+        intuition:
+          "택배 창고 주소 대신 물건 자체의 정교한 fingerprint를 주문서에 적어 어느 창고에서 받아도 내용이 같은지 검사합니다.",
+        workedExample:
+          "Raw bytes 'hello'를 SHA-256으로 hash한 digest를 주소에 넣고 수신 bytes를 다시 hash해 일치할 때만 accept합니다.",
+        boundary:
+          "Hash 일치는 bytes 무결성이지 availability, 작성자 identity, content 진실성·malware safety나 semantic equality의 보장이 아닙니다.",
+      },
+      {
+        id: "cidv1-self-describing-format",
+        sectionId: "cid",
+        intuition:
+          "Fingerprint 옆에 이 주소의 version, bytes를 읽는 format과 fingerprint algorithm·길이를 같이 적어 decoder가 추측하지 않게 합니다.",
+        workedExample:
+          "Raw hello CIDv1은 01(version), 55(raw), 12(sha2-256), 20(32 bytes), digest 순서로 parse합니다.",
+        boundary:
+          "Multibase prefix는 text encoding이며 binary CID 일부가 아닙니다. CIDv0은 implicit dag-pb·sha2-256인 제한된 legacy form입니다.",
+      },
+      {
+        id: "merkle-dag-root-commitment",
+        sectionId: "merkle-dag",
+        intuition:
+          "폴더 목록에 각 파일 fingerprint를 적고 그 목록도 hash하면 root fingerprint 하나가 아래 구조 전체를 묶습니다.",
+        workedExample:
+          "lib.rs bytes가 바뀌면 leaf CID, 이를 포함한 src node bytes와 CID, 최종 root CID가 순서대로 바뀌고 readme block은 재사용됩니다.",
+        boundary:
+          "Chunking·codec·metadata order가 다르면 같은 사용자-visible file도 다른 root가 되며 root는 missing block availability를 보장하지 않습니다.",
+      },
+      {
+        id: "mutable-content-name-resolution",
+        sectionId: "resolution",
+        intuition:
+          "매 version마다 바뀌는 fingerprint 대신 서명 가능한 고정 이름이 최신 fingerprint를 가리키고 sequence·expiry로 오래된 pointer를 가립니다.",
+        workedExample:
+          "IPNS resolver가 public-key name 아래 서명된 sequence 3 record와 유효 시간을 확인한 뒤 /ipfs/bafyV3 path를 반환합니다.",
+        boundary:
+          "DHT는 배포 수단이지 신뢰 근거가 아니며 key 탈취, stale cache와 availability 문제는 signature만으로 해결되지 않습니다.",
+      },
     ],
     conceptStages: [
-      { label: "00 Byte 정본", relation: "Logical value를 canonical hash input으로 직렬화", concepts: ["bit-byte"] },
-      { label: "01 Integrity", relation: "받은 bytes의 digest를 주소와 대조", concepts: ["content-address-integrity"] },
-      { label: "02 Typed identifier", relation: "Version·codec·multihash로 검증 정보를 self-describe", concepts: ["cidv1-self-describing-format"] },
-      { label: "03 Graph와 이름", relation: "Child link를 root에 커밋하고 최신 pointer는 별도 layer로 해석", concepts: ["merkle-dag-root-commitment", "mutable-content-name-resolution"] },
+      {
+        label: "00 Byte 정본",
+        relation: "Logical value를 canonical hash input으로 직렬화",
+        concepts: ["bit-byte"],
+      },
+      {
+        label: "01 Integrity",
+        relation: "받은 bytes의 digest를 주소와 대조",
+        concepts: ["content-address-integrity"],
+      },
+      {
+        label: "02 Typed identifier",
+        relation: "Version·codec·multihash로 검증 정보를 self-describe",
+        concepts: ["cidv1-self-describing-format"],
+      },
+      {
+        label: "03 Graph와 이름",
+        relation:
+          "Child link를 root에 커밋하고 최신 pointer는 별도 layer로 해석",
+        concepts: [
+          "merkle-dag-root-commitment",
+          "mutable-content-name-resolution",
+        ],
+      },
     ],
     exercises: [
-      { level: "basic", question: "Location address와 content address가 각각 답하는 질문과 provider가 악성 bytes를 보냈을 때 검증 흐름을 설명하세요.", answerChecklist: ["where to fetch", "what bytes expected", "hash received bytes", "digest compare", "reject mismatch", "availability separate"], requiredConcepts: ["content-address-integrity"], sectionId: "overview" },
-      { level: "basic", question: "같은 logical object라도 codec·key order·newline이 달라지면 CID가 바뀔 수 있는 이유를 hash 입력까지 추적하세요.", answerChecklist: ["logical value", "canonical encoding", "different bytes", "different digest", "new CID", "semantic equality separate"], requiredConcepts: ["content-address-integrity", "cidv1-self-describing-format"], sectionId: "overview" },
-      { level: "basic", question: "CIDv1 raw hello 예의 01 55 12 20 digest bytes에서 각 field를 해석하고 multibase prefix의 위치를 설명하세요.", answerChecklist: ["version 1", "raw codec", "sha2-256 code", "32-byte length", "digest", "multibase text only"], requiredConcepts: ["cidv1-self-describing-format"], sectionId: "cid" },
-      { level: "basic", question: "CID decoder가 overlong varint, truncated digest와 trailing bytes를 거부해야 하는 이유를 canonical identity 관점에서 설명하세요.", answerChecklist: ["minimal varint", "exact digest length", "consume all bytes", "no ambiguous encodings", "cache/signature identity"], requiredConcepts: ["cidv1-self-describing-format"], sectionId: "cid" },
-      { level: "basic", question: "Leaf file 하나를 수정했을 때 leaf, parent와 root CID가 바뀌고 sibling block은 재사용되는 과정을 설명하세요.", answerChecklist: ["leaf bytes change", "leaf CID changes", "parent link bytes change", "ancestor/root change", "unchanged sibling reused"], requiredConcepts: ["merkle-dag-root-commitment"], sectionId: "merkle-dag" },
-      { level: "basic", question: "IPNS record를 해석할 때 signature, sequence, validity와 TTL을 각각 확인하고 DHT 조회 자체가 신뢰가 아닌 이유를 설명하세요.", answerChecklist: ["public-key authority", "signature", "higher sequence", "validity expiry", "cache TTL", "routing not trust"], requiredConcepts: ["mutable-content-name-resolution"], sectionId: "resolution" },
-      { level: "advanced", question: "같은 1 GiB file에 fixed-size와 content-defined chunking을 적용할 때 root CID·deduplication·random read trade-off를 비교 실험하세요.", answerChecklist: ["same source bytes", "versioned chunkers", "boundary changes", "root differs", "edit amplification", "dedup ratio", "block count/read cost"], requiredConcepts: ["merkle-dag-root-commitment", "content-address-integrity"], sectionId: "merkle-dag" },
-      { level: "advanced", question: "Malicious provider, unavailable provider와 compromised publisher key를 구분하는 fetch·resolution threat model을 작성하세요.", answerChecklist: ["digest rejects wrong bytes", "availability not solved", "IPNS signature authority", "key compromise signs malicious pointer", "revocation/rotation", "provider diversity", "audit provenance"], requiredConcepts: ["content-address-integrity", "mutable-content-name-resolution"], sectionId: "resolution" },
-      { level: "advanced", question: "CIDv0·CIDv1과 base32·base58btc 표현을 normalize하는 gateway의 strict parser release gate를 설계하세요.", answerChecklist: ["Qm 46-char v0 rule", "34-byte 12 20", "v1 leading 01", "multibase decode", "minimal varints", "no trailing bytes", "same binary CID", "malformed corpus"], requiredConcepts: ["cidv1-self-describing-format"], sectionId: "cid" },
-      { level: "advanced", question: "IPNS와 DNSLink로 website 최신 version을 제공할 때 authority·freshness·rollback·cache·content verification을 비교 설계하세요.", answerChecklist: ["IPNS key authority", "signed sequence/validity", "DNS authority/trust chain", "TTL stale window", "rollback policy", "resolved CID verification", "key/domain recovery", "availability monitoring"], requiredConcepts: ["mutable-content-name-resolution", "content-address-integrity"], sectionId: "resolution" },
+      {
+        level: "basic",
+        question:
+          "Location address와 content address가 각각 답하는 질문과 provider가 악성 bytes를 보냈을 때 검증 흐름을 설명하세요.",
+        answerChecklist: [
+          "where to fetch",
+          "what bytes expected",
+          "hash received bytes",
+          "digest compare",
+          "reject mismatch",
+          "availability separate",
+        ],
+        requiredConcepts: ["content-address-integrity"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "같은 logical object라도 codec·key order·newline이 달라지면 CID가 바뀔 수 있는 이유를 hash 입력까지 추적하세요.",
+        answerChecklist: [
+          "logical value",
+          "canonical encoding",
+          "different bytes",
+          "different digest",
+          "new CID",
+          "semantic equality separate",
+        ],
+        requiredConcepts: [
+          "content-address-integrity",
+          "cidv1-self-describing-format",
+        ],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "CIDv1 raw hello 예의 01 55 12 20 digest bytes에서 각 field를 해석하고 multibase prefix의 위치를 설명하세요.",
+        answerChecklist: [
+          "version 1",
+          "raw codec",
+          "sha2-256 code",
+          "32-byte length",
+          "digest",
+          "multibase text only",
+        ],
+        requiredConcepts: ["cidv1-self-describing-format"],
+        sectionId: "cid",
+      },
+      {
+        level: "basic",
+        question:
+          "CID decoder가 overlong varint, truncated digest와 trailing bytes를 거부해야 하는 이유를 canonical identity 관점에서 설명하세요.",
+        answerChecklist: [
+          "minimal varint",
+          "exact digest length",
+          "consume all bytes",
+          "no ambiguous encodings",
+          "cache/signature identity",
+        ],
+        requiredConcepts: ["cidv1-self-describing-format"],
+        sectionId: "cid",
+      },
+      {
+        level: "basic",
+        question:
+          "Leaf file 하나를 수정했을 때 leaf, parent와 root CID가 바뀌고 sibling block은 재사용되는 과정을 설명하세요.",
+        answerChecklist: [
+          "leaf bytes change",
+          "leaf CID changes",
+          "parent link bytes change",
+          "ancestor/root change",
+          "unchanged sibling reused",
+        ],
+        requiredConcepts: ["merkle-dag-root-commitment"],
+        sectionId: "merkle-dag",
+      },
+      {
+        level: "basic",
+        question:
+          "IPNS record를 해석할 때 signature, sequence, validity와 TTL을 각각 확인하고 DHT 조회 자체가 신뢰가 아닌 이유를 설명하세요.",
+        answerChecklist: [
+          "public-key authority",
+          "signature",
+          "higher sequence",
+          "validity expiry",
+          "cache TTL",
+          "routing not trust",
+        ],
+        requiredConcepts: ["mutable-content-name-resolution"],
+        sectionId: "resolution",
+      },
+      {
+        level: "advanced",
+        question:
+          "같은 1 GiB file에 fixed-size와 content-defined chunking을 적용할 때 root CID·deduplication·random read trade-off를 비교 실험하세요.",
+        answerChecklist: [
+          "same source bytes",
+          "versioned chunkers",
+          "boundary changes",
+          "root differs",
+          "edit amplification",
+          "dedup ratio",
+          "block count/read cost",
+        ],
+        requiredConcepts: [
+          "merkle-dag-root-commitment",
+          "content-address-integrity",
+        ],
+        sectionId: "merkle-dag",
+      },
+      {
+        level: "advanced",
+        question:
+          "Malicious provider, unavailable provider와 compromised publisher key를 구분하는 fetch·resolution threat model을 작성하세요.",
+        answerChecklist: [
+          "digest rejects wrong bytes",
+          "availability not solved",
+          "IPNS signature authority",
+          "key compromise signs malicious pointer",
+          "revocation/rotation",
+          "provider diversity",
+          "audit provenance",
+        ],
+        requiredConcepts: [
+          "content-address-integrity",
+          "mutable-content-name-resolution",
+        ],
+        sectionId: "resolution",
+      },
+      {
+        level: "advanced",
+        question:
+          "CIDv0·CIDv1과 base32·base58btc 표현을 normalize하는 gateway의 strict parser release gate를 설계하세요.",
+        answerChecklist: [
+          "Qm 46-char v0 rule",
+          "34-byte 12 20",
+          "v1 leading 01",
+          "multibase decode",
+          "minimal varints",
+          "no trailing bytes",
+          "same binary CID",
+          "malformed corpus",
+        ],
+        requiredConcepts: ["cidv1-self-describing-format"],
+        sectionId: "cid",
+      },
+      {
+        level: "advanced",
+        question:
+          "IPNS와 DNSLink로 website 최신 version을 제공할 때 authority·freshness·rollback·cache·content verification을 비교 설계하세요.",
+        answerChecklist: [
+          "IPNS key authority",
+          "signed sequence/validity",
+          "DNS authority/trust chain",
+          "TTL stale window",
+          "rollback policy",
+          "resolved CID verification",
+          "key/domain recovery",
+          "availability monitoring",
+        ],
+        requiredConcepts: [
+          "mutable-content-name-resolution",
+          "content-address-integrity",
+        ],
+        sectionId: "resolution",
+      },
     ],
     papers: [
-      { title: "CID (Content Identifier) Specification", href: "https://specs.ipfs.tech/cid/", problem: "Bare digest만으로는 content codec·hash algorithm·identifier version을 안전하게 해석하고 진화시키기 어려운 문제", contribution: "CIDv1 binary version·content multicodec·multihash와 optional string multibase, strict decoder를 정의", assumptions: "Registered codec·hash code와 canonical byte encoding을 구현하고 malformed input을 거부한다는 전제", evidenceScope: "CIDv0/v1 identifier format과 decoding의 normative 범위", notClaim: "CID가 content availability·publisher identity·semantic validity나 특정 routing 성능을 보장한다는 뜻은 아님", sectionId: "paper-cid-spec" },
-      { title: "IPNS Record and Protocol", href: "https://specs.ipfs.tech/ipns/ipns-record/", problem: "Content change 때 CID가 바뀌는 immutable addressing 위에서 stable mutable name을 검증 가능하게 제공하는 문제", contribution: "Public-key name, signed record fields, sequence·validity·TTL, creation과 verification 절차를 정의", assumptions: "Private-key authority와 supported signature algorithm, routing 배포와 resolver clock·cache가 있다는 전제", evidenceScope: "IPNS name과 signed record protocol의 normative 범위", notClaim: "DHT가 항상 최신 record를 빠르게 반환하거나 key compromise·availability를 자동 해결한다는 뜻은 아님", sectionId: "paper-ipns-spec" },
+      {
+        title: "CID (Content Identifier) Specification",
+        href: "https://specs.ipfs.tech/cid/",
+        problem:
+          "Bare digest만으로는 content codec·hash algorithm·identifier version을 안전하게 해석하고 진화시키기 어려운 문제",
+        contribution:
+          "CIDv1 binary version·content multicodec·multihash와 optional string multibase, strict decoder를 정의",
+        assumptions:
+          "Registered codec·hash code와 canonical byte encoding을 구현하고 malformed input을 거부한다는 전제",
+        evidenceScope: "CIDv0/v1 identifier format과 decoding의 normative 범위",
+        notClaim:
+          "CID가 content availability·publisher identity·semantic validity나 특정 routing 성능을 보장한다는 뜻은 아님",
+        sectionId: "paper-cid-spec",
+      },
+      {
+        title: "IPNS Record and Protocol",
+        href: "https://specs.ipfs.tech/ipns/ipns-record/",
+        problem:
+          "Content change 때 CID가 바뀌는 immutable addressing 위에서 stable mutable name을 검증 가능하게 제공하는 문제",
+        contribution:
+          "Public-key name, signed record fields, sequence·validity·TTL, creation과 verification 절차를 정의",
+        assumptions:
+          "Private-key authority와 supported signature algorithm, routing 배포와 resolver clock·cache가 있다는 전제",
+        evidenceScope: "IPNS name과 signed record protocol의 normative 범위",
+        notClaim:
+          "DHT가 항상 최신 record를 빠르게 반환하거나 key compromise·availability를 자동 해결한다는 뜻은 아님",
+        sectionId: "paper-ipns-spec",
+      },
     ],
   },
   "ai/arima": {
@@ -46933,103 +48445,4212 @@ export const ARTICLE_LEARNING: Readonly<
   },
   "blockchain/smr-theory": {
     entryLevel: true,
-    entryNote: "Key-value command 두 개와 replica 세 개로 시작합니다. Paxos·Raft 이름을 외우기 전에 order→commit→apply→reply 경계를 계산합니다.",
-    coreIdea: "SMR은 같은 initial state와 deterministic transition을 가진 replica가 consensus로 정한 같은 command log를 순서대로 apply해 하나의 fault-tolerant service처럼 동작하게 합니다.",
+    entryNote:
+      "Key-value command 두 개와 replica 세 개로 시작합니다. Paxos·Raft 이름을 외우기 전에 order→commit→apply→reply 경계를 계산합니다.",
+    coreIdea:
+      "SMR은 같은 initial state와 deterministic transition을 가진 replica가 consensus로 정한 같은 command log를 순서대로 apply해 하나의 fault-tolerant service처럼 동작하게 합니다.",
     assumedKnowledge: [],
     introducedHere: [
-      { id: "smr-deterministic-transition", role: "같은 ordered command가 같은 state를 만드는 조건을 계산합니다." },
-      { id: "total-order-broadcast-contract", role: "Network arrival와 protocol delivery order를 구분합니다." },
-      { id: "replicated-log-commit-apply", role: "Append·commit·apply·reply 상태를 분리합니다." },
-      { id: "crash-majority-quorum", role: "Majority 교집합과 crash availability를 계산합니다." },
-      { id: "raft-term-log-safety", role: "Term·prefix·election·commit 규칙을 연결합니다." },
-      { id: "paxos-promise-chosen-invariant", role: "Promise와 adopted value로 chosen value를 보존합니다." },
-      { id: "smr-client-effect-boundary", role: "Reply loss retry와 external effect의 exactly-once 한계를 설명합니다." },
+      {
+        id: "smr-deterministic-transition",
+        role: "같은 ordered command가 같은 state를 만드는 조건을 계산합니다.",
+      },
+      {
+        id: "total-order-broadcast-contract",
+        role: "Network arrival와 protocol delivery order를 구분합니다.",
+      },
+      {
+        id: "replicated-log-commit-apply",
+        role: "Append·commit·apply·reply 상태를 분리합니다.",
+      },
+      {
+        id: "crash-majority-quorum",
+        role: "Majority 교집합과 crash availability를 계산합니다.",
+      },
+      {
+        id: "raft-term-log-safety",
+        role: "Term·prefix·election·commit 규칙을 연결합니다.",
+      },
+      {
+        id: "paxos-promise-chosen-invariant",
+        role: "Promise와 adopted value로 chosen value를 보존합니다.",
+      },
+      {
+        id: "smr-client-effect-boundary",
+        role: "Reply loss retry와 external effect의 exactly-once 한계를 설명합니다.",
+      },
     ],
     conceptExplanations: [
-      { id: "smr-deterministic-transition", sectionId: "overview", intuition: "같은 출발 장부에 같은 명령을 같은 순서로 적용하면 같은 장부가 된다는 복제 원리입니다.", workedExample: "S0=10에서 deposit 3, withdraw 1을 같은 순서로 적용한 세 replica는 모두 12와 같은 두 result를 만듭니다.", boundary: "Clock·random·external read처럼 replica마다 다른 입력이 transition 안에 남으면 log가 같아도 state가 갈라집니다." },
-      { id: "total-order-broadcast-contract", sectionId: "total-order", intuition: "쪽지가 도착한 순서는 달라도 게시판에 올리는 순서는 모두 같게 정하는 계약입니다.", workedExample: "R1에 A,B가 도착하고 R2에 B,A가 도착해도 둘 다 log index 7=A, 8=B로 deliver합니다.", boundary: "Receive와 deliver는 다르며 wall-clock timestamp를 전역 순서로 보장하는 개념도 아닙니다." },
-      { id: "replicated-log-commit-apply", sectionId: "log-replication", intuition: "내 공책에 쓴 것, 과반이 보관한 것, 장부에 반영한 것, 고객에게 성공을 알린 것을 나눕니다.", workedExample: "Leader append 뒤 crash면 uncommitted일 수 있고, majority commit 뒤 reply loss면 retry에서 이전 result를 찾아야 합니다.", boundary: "Local append나 follower ACK 하나를 client-visible commit으로 읽으면 안 됩니다." },
-      { id: "crash-majority-quorum", sectionId: "log-replication", intuition: "절반보다 큰 두 모임은 적어도 한 사람을 공유하므로 이전 결정의 증거가 새 모임에 남습니다.", workedExample: "n=5이면 q=3이고 두 quorum 교집합은 최소 1입니다. 2 crash 뒤에도 나머지 3개가 quorum입니다.", boundary: "그 한 process가 정직하다는 보장이 필요한 Byzantine model에는 이 계산만으로 부족합니다." },
-      { id: "raft-term-log-safety", sectionId: "log-replication", intuition: "새 반장은 이전에 확정한 장부보다 뒤처지지 않아야 하며 epoch 번호로 옛 반장의 메시지를 거절합니다.", workedExample: "Term 4 index 9가 commit됐다면 term 5 candidate의 last term/index가 voter보다 덜 up-to-date할 때 vote를 받지 못합니다.", boundary: "Timeout과 leader election은 progress 장치이며 committed-prefix safety를 혼자 증명하지 않습니다." },
-      { id: "paxos-promise-chosen-invariant", sectionId: "paxos", intuition: "새 투표를 열 때 이전 투표에서 이미 선택됐을 수 있는 답을 이어받아 선택을 뒤집지 않습니다.", workedExample: "Prepare quorum의 accepted records 중 (5,A)가 가장 높으면 proposal 8도 A를 Accept하도록 보냅니다.", boundary: "한 slot agreement가 Multi-Paxos log recovery·reconfiguration·client dedupe 전체를 해결하지 않습니다.", proofIdea: "이전 Accept quorum과 새 Prepare quorum의 교집합, promise의 낮은-number 거절, 최고 accepted value adoption을 결합합니다.", counterexample: "Disjoint quorum을 허용하면 한쪽은 A, 다른 쪽은 B를 chosen할 수 있어 invariant가 깨집니다." },
-      { id: "smr-client-effect-boundary", sectionId: "overview", intuition: "성공 답변이 길에서 사라져 같은 요청이 다시 와도 내부 명령과 외부 결제를 두 번 실행하지 않게 하는 경계입니다.", workedExample: "r-17 increment가 commit되고 reply가 손실되면 request-result table에서 r-17의 기존 result를 반환합니다.", boundary: "Replicated log가 외부 payment API까지 원자적으로 commit하거나 자동 exactly-once로 만드는 것은 아닙니다." },
+      {
+        id: "smr-deterministic-transition",
+        sectionId: "overview",
+        intuition:
+          "같은 출발 장부에 같은 명령을 같은 순서로 적용하면 같은 장부가 된다는 복제 원리입니다.",
+        workedExample:
+          "S0=10에서 deposit 3, withdraw 1을 같은 순서로 적용한 세 replica는 모두 12와 같은 두 result를 만듭니다.",
+        boundary:
+          "Clock·random·external read처럼 replica마다 다른 입력이 transition 안에 남으면 log가 같아도 state가 갈라집니다.",
+      },
+      {
+        id: "total-order-broadcast-contract",
+        sectionId: "total-order",
+        intuition:
+          "쪽지가 도착한 순서는 달라도 게시판에 올리는 순서는 모두 같게 정하는 계약입니다.",
+        workedExample:
+          "R1에 A,B가 도착하고 R2에 B,A가 도착해도 둘 다 log index 7=A, 8=B로 deliver합니다.",
+        boundary:
+          "Receive와 deliver는 다르며 wall-clock timestamp를 전역 순서로 보장하는 개념도 아닙니다.",
+      },
+      {
+        id: "replicated-log-commit-apply",
+        sectionId: "log-replication",
+        intuition:
+          "내 공책에 쓴 것, 과반이 보관한 것, 장부에 반영한 것, 고객에게 성공을 알린 것을 나눕니다.",
+        workedExample:
+          "Leader append 뒤 crash면 uncommitted일 수 있고, majority commit 뒤 reply loss면 retry에서 이전 result를 찾아야 합니다.",
+        boundary:
+          "Local append나 follower ACK 하나를 client-visible commit으로 읽으면 안 됩니다.",
+      },
+      {
+        id: "crash-majority-quorum",
+        sectionId: "log-replication",
+        intuition:
+          "절반보다 큰 두 모임은 적어도 한 사람을 공유하므로 이전 결정의 증거가 새 모임에 남습니다.",
+        workedExample:
+          "n=5이면 q=3이고 두 quorum 교집합은 최소 1입니다. 2 crash 뒤에도 나머지 3개가 quorum입니다.",
+        boundary:
+          "그 한 process가 정직하다는 보장이 필요한 Byzantine model에는 이 계산만으로 부족합니다.",
+      },
+      {
+        id: "raft-term-log-safety",
+        sectionId: "log-replication",
+        intuition:
+          "새 반장은 이전에 확정한 장부보다 뒤처지지 않아야 하며 epoch 번호로 옛 반장의 메시지를 거절합니다.",
+        workedExample:
+          "Term 4 index 9가 commit됐다면 term 5 candidate의 last term/index가 voter보다 덜 up-to-date할 때 vote를 받지 못합니다.",
+        boundary:
+          "Timeout과 leader election은 progress 장치이며 committed-prefix safety를 혼자 증명하지 않습니다.",
+      },
+      {
+        id: "paxos-promise-chosen-invariant",
+        sectionId: "paxos",
+        intuition:
+          "새 투표를 열 때 이전 투표에서 이미 선택됐을 수 있는 답을 이어받아 선택을 뒤집지 않습니다.",
+        workedExample:
+          "Prepare quorum의 accepted records 중 (5,A)가 가장 높으면 proposal 8도 A를 Accept하도록 보냅니다.",
+        boundary:
+          "한 slot agreement가 Multi-Paxos log recovery·reconfiguration·client dedupe 전체를 해결하지 않습니다.",
+        proofIdea:
+          "이전 Accept quorum과 새 Prepare quorum의 교집합, promise의 낮은-number 거절, 최고 accepted value adoption을 결합합니다.",
+        counterexample:
+          "Disjoint quorum을 허용하면 한쪽은 A, 다른 쪽은 B를 chosen할 수 있어 invariant가 깨집니다.",
+      },
+      {
+        id: "smr-client-effect-boundary",
+        sectionId: "overview",
+        intuition:
+          "성공 답변이 길에서 사라져 같은 요청이 다시 와도 내부 명령과 외부 결제를 두 번 실행하지 않게 하는 경계입니다.",
+        workedExample:
+          "r-17 increment가 commit되고 reply가 손실되면 request-result table에서 r-17의 기존 result를 반환합니다.",
+        boundary:
+          "Replicated log가 외부 payment API까지 원자적으로 commit하거나 자동 exactly-once로 만드는 것은 아닙니다.",
+      },
     ],
     conceptStages: [
-      { label: "00 선수", relation: "Execution·failure·safety/liveness model을 재사용합니다.", concepts: ["distributed-process-message-execution", "distributed-failure-model", "consensus-safety-liveness"] },
-      { label: "01 상태", relation: "동일 state·ordered input·deterministic transition을 고정합니다.", concepts: ["smr-deterministic-transition"] },
-      { label: "02 순서", relation: "Arrival과 delivery를 나눠 total-order log를 만듭니다.", concepts: ["total-order-broadcast-contract"] },
-      { label: "03 복제", relation: "Majority와 Raft rule로 append·commit·apply를 전진합니다.", concepts: ["crash-majority-quorum", "raft-term-log-safety", "replicated-log-commit-apply"] },
-      { label: "04 선택", relation: "Paxos promise와 quorum 교집합으로 chosen value를 보존합니다.", concepts: ["paxos-promise-chosen-invariant"] },
-      { label: "05 효과", relation: "Client retry와 external effect를 log commit에서 분리합니다.", concepts: ["smr-client-effect-boundary", "agent-replay-idempotency"] },
+      {
+        label: "00 선수",
+        relation: "Execution·failure·safety/liveness model을 재사용합니다.",
+        concepts: [
+          "distributed-process-message-execution",
+          "distributed-failure-model",
+          "consensus-safety-liveness",
+        ],
+      },
+      {
+        label: "01 상태",
+        relation:
+          "동일 state·ordered input·deterministic transition을 고정합니다.",
+        concepts: ["smr-deterministic-transition"],
+      },
+      {
+        label: "02 순서",
+        relation: "Arrival과 delivery를 나눠 total-order log를 만듭니다.",
+        concepts: ["total-order-broadcast-contract"],
+      },
+      {
+        label: "03 복제",
+        relation: "Majority와 Raft rule로 append·commit·apply를 전진합니다.",
+        concepts: [
+          "crash-majority-quorum",
+          "raft-term-log-safety",
+          "replicated-log-commit-apply",
+        ],
+      },
+      {
+        label: "04 선택",
+        relation:
+          "Paxos promise와 quorum 교집합으로 chosen value를 보존합니다.",
+        concepts: ["paxos-promise-chosen-invariant"],
+      },
+      {
+        label: "05 효과",
+        relation: "Client retry와 external effect를 log commit에서 분리합니다.",
+        concepts: ["smr-client-effect-boundary", "agent-replay-idempotency"],
+      },
     ],
     exercises: [
-      { level: "basic", question: "S0=10에서 deposit 3과 withdraw 1을 세 replica가 같은 순서로 적용할 때 state와 필요한 전제를 설명하세요.", answerChecklist: ["ordered log", "deterministic δ", "final state 12", "same initial state", "clock/random boundary"], requiredConcepts: ["smr-deterministic-transition"], sectionId: "overview" },
-      { level: "basic", question: "R1은 A,B 순으로, R2는 B,A 순으로 receive했지만 둘 다 A,B로 deliver하는 trace에서 arrival·delivery와 네 성질을 구분하세요.", answerChecklist: ["agreement", "total order", "integrity", "conditional validity", "receive≠deliver"], requiredConcepts: ["total-order-broadcast-contract"], sectionId: "total-order" },
-      { level: "basic", question: "Leader local append, follower ACK, quorum commit, state apply, client reply를 순서대로 놓고 crash cut마다 복구 판단을 적으세요.", answerChecklist: ["다섯 상태", "uncommitted suffix", "committed prefix", "apply index", "reply loss retry"], requiredConcepts: ["replicated-log-commit-apply"], sectionId: "log-replication" },
-      { level: "basic", question: "n=5의 majority q와 두 quorum 최소 교집합, 허용 가능한 crash 수를 계산하세요.", answerChecklist: ["q=3", "2q-n=1", "f=2", "partition에 따른 liveness", "Byzantine 비적용"], requiredConcepts: ["crash-majority-quorum"], sectionId: "log-replication" },
-      { level: "basic", question: "Raft의 term, prevLogTerm/index check, election restriction, current-term commit rule이 각각 막는 실패를 설명하세요.", answerChecklist: ["stale leader", "prefix conflict", "뒤처진 candidate", "current-term majority", "safety/liveness 분리"], requiredConcepts: ["raft-term-log-safety"], sectionId: "log-replication" },
-      { level: "basic", question: "Prepare quorum의 accepted records가 none, (3,B), (5,A)라면 proposal 8이 어떤 value를 선택해야 하고 왜인지 설명하세요.", answerChecklist: ["highest accepted=5", "A adoption", "promise", "Accept quorum", "chosen invariant"], requiredConcepts: ["paxos-promise-chosen-invariant"], sectionId: "paxos" },
-      { level: "advanced", question: "Total-order broadcast에서 SMR을 구성하고 deterministic transition이 없을 때의 반례를 만드세요.", answerChecklist: ["same initial state", "same delivered prefix", "inductive transition", "clock/random counterexample", "input capture"], requiredConcepts: ["total-order-broadcast-contract", "smr-deterministic-transition"], sectionId: "overview" },
-      { level: "advanced", question: "Raft leader가 current-term entry를 commit하기 전후에 crash하는 failure matrix와 oracle을 설계하세요.", answerChecklist: ["append/ACK/commit/apply/reply cuts", "term/index lineage", "committed prefix preservation", "uncommitted rollback", "state digest/result receipt"], requiredConcepts: ["raft-term-log-safety", "replicated-log-commit-apply"], sectionId: "log-replication" },
-      { level: "advanced", question: "Paxos promise·quorum intersection·highest accepted adoption으로 서로 다른 두 chosen value가 생기지 않는 증명 아이디어와 disjoint 반례를 설명하세요.", answerChecklist: ["old accept quorum", "new prepare quorum", "intersection", "highest accepted chain", "lower proposal rejection", "disjoint counterexample"], requiredConcepts: ["paxos-promise-chosen-invariant", "crash-majority-quorum"], sectionId: "paxos" },
-      { level: "advanced", question: "Commit 직후 reply loss와 external payment 성공 직후 crash를 함께 견디는 client/effect 계약과 release test를 설계하세요.", answerChecklist: ["stable request/operation ID", "committed result table", "outbox/effect receipt", "status reconciliation", "duplicate effect hard gate", "rollback/compensation boundary"], requiredConcepts: ["smr-client-effect-boundary", "replicated-log-commit-apply", "agent-replay-idempotency"], sectionId: "overview" },
+      {
+        level: "basic",
+        question:
+          "S0=10에서 deposit 3과 withdraw 1을 세 replica가 같은 순서로 적용할 때 state와 필요한 전제를 설명하세요.",
+        answerChecklist: [
+          "ordered log",
+          "deterministic δ",
+          "final state 12",
+          "same initial state",
+          "clock/random boundary",
+        ],
+        requiredConcepts: ["smr-deterministic-transition"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "R1은 A,B 순으로, R2는 B,A 순으로 receive했지만 둘 다 A,B로 deliver하는 trace에서 arrival·delivery와 네 성질을 구분하세요.",
+        answerChecklist: [
+          "agreement",
+          "total order",
+          "integrity",
+          "conditional validity",
+          "receive≠deliver",
+        ],
+        requiredConcepts: ["total-order-broadcast-contract"],
+        sectionId: "total-order",
+      },
+      {
+        level: "basic",
+        question:
+          "Leader local append, follower ACK, quorum commit, state apply, client reply를 순서대로 놓고 crash cut마다 복구 판단을 적으세요.",
+        answerChecklist: [
+          "다섯 상태",
+          "uncommitted suffix",
+          "committed prefix",
+          "apply index",
+          "reply loss retry",
+        ],
+        requiredConcepts: ["replicated-log-commit-apply"],
+        sectionId: "log-replication",
+      },
+      {
+        level: "basic",
+        question:
+          "n=5의 majority q와 두 quorum 최소 교집합, 허용 가능한 crash 수를 계산하세요.",
+        answerChecklist: [
+          "q=3",
+          "2q-n=1",
+          "f=2",
+          "partition에 따른 liveness",
+          "Byzantine 비적용",
+        ],
+        requiredConcepts: ["crash-majority-quorum"],
+        sectionId: "log-replication",
+      },
+      {
+        level: "basic",
+        question:
+          "Raft의 term, prevLogTerm/index check, election restriction, current-term commit rule이 각각 막는 실패를 설명하세요.",
+        answerChecklist: [
+          "stale leader",
+          "prefix conflict",
+          "뒤처진 candidate",
+          "current-term majority",
+          "safety/liveness 분리",
+        ],
+        requiredConcepts: ["raft-term-log-safety"],
+        sectionId: "log-replication",
+      },
+      {
+        level: "basic",
+        question:
+          "Prepare quorum의 accepted records가 none, (3,B), (5,A)라면 proposal 8이 어떤 value를 선택해야 하고 왜인지 설명하세요.",
+        answerChecklist: [
+          "highest accepted=5",
+          "A adoption",
+          "promise",
+          "Accept quorum",
+          "chosen invariant",
+        ],
+        requiredConcepts: ["paxos-promise-chosen-invariant"],
+        sectionId: "paxos",
+      },
+      {
+        level: "advanced",
+        question:
+          "Total-order broadcast에서 SMR을 구성하고 deterministic transition이 없을 때의 반례를 만드세요.",
+        answerChecklist: [
+          "same initial state",
+          "same delivered prefix",
+          "inductive transition",
+          "clock/random counterexample",
+          "input capture",
+        ],
+        requiredConcepts: [
+          "total-order-broadcast-contract",
+          "smr-deterministic-transition",
+        ],
+        sectionId: "overview",
+      },
+      {
+        level: "advanced",
+        question:
+          "Raft leader가 current-term entry를 commit하기 전후에 crash하는 failure matrix와 oracle을 설계하세요.",
+        answerChecklist: [
+          "append/ACK/commit/apply/reply cuts",
+          "term/index lineage",
+          "committed prefix preservation",
+          "uncommitted rollback",
+          "state digest/result receipt",
+        ],
+        requiredConcepts: [
+          "raft-term-log-safety",
+          "replicated-log-commit-apply",
+        ],
+        sectionId: "log-replication",
+      },
+      {
+        level: "advanced",
+        question:
+          "Paxos promise·quorum intersection·highest accepted adoption으로 서로 다른 두 chosen value가 생기지 않는 증명 아이디어와 disjoint 반례를 설명하세요.",
+        answerChecklist: [
+          "old accept quorum",
+          "new prepare quorum",
+          "intersection",
+          "highest accepted chain",
+          "lower proposal rejection",
+          "disjoint counterexample",
+        ],
+        requiredConcepts: [
+          "paxos-promise-chosen-invariant",
+          "crash-majority-quorum",
+        ],
+        sectionId: "paxos",
+      },
+      {
+        level: "advanced",
+        question:
+          "Commit 직후 reply loss와 external payment 성공 직후 crash를 함께 견디는 client/effect 계약과 release test를 설계하세요.",
+        answerChecklist: [
+          "stable request/operation ID",
+          "committed result table",
+          "outbox/effect receipt",
+          "status reconciliation",
+          "duplicate effect hard gate",
+          "rollback/compensation boundary",
+        ],
+        requiredConcepts: [
+          "smr-client-effect-boundary",
+          "replicated-log-commit-apply",
+          "agent-replay-idempotency",
+        ],
+        sectionId: "overview",
+      },
     ],
     papers: [
-      { title: "Implementing Fault-Tolerant Services Using the State Machine Approach", href: "https://www.cs.cornell.edu/fbs/publications/SMSurvey.pdf", problem: "Replicated deterministic state machines로 fault-tolerant service를 구현하는 조건", contribution: "Replica coordination·command ordering·output voting을 state-machine approach로 정리", assumptions: "Fault class에 맞는 replica 수·agreement와 deterministic transition", evidenceScope: "SMR architecture의 tutorial과 formal requirements", notClaim: "External effect exactly-once나 non-determinism이 자동 해결된다는 뜻 아님", sectionId: "paper-schneider-smr" },
-      { title: "In Search of an Understandable Consensus Algorithm", href: "https://raft.github.io/raft.pdf", problem: "Paxos 계열 consensus를 이해·구현하기 쉬운 구조로 분해", contribution: "Leader election·log replication·safety·membership change와 사용자 연구", assumptions: "Crash-fault non-Byzantine servers와 majority availability", evidenceScope: "Raft design·proof sketch·evaluation의 논문 조건", notClaim: "단순 majority ACK가 모든 durability·exactly-once를 보장하지 않음", sectionId: "paper-raft" },
-      { title: "Paxos Made Simple", href: "https://www.microsoft.com/en-us/research/publication/paxos-made-simple/", problem: "한 value를 안전하게 chosen하고 state-machine sequence로 확장하는 문제", contribution: "Prepare/promise·Accept와 value-adoption invariant의 간결한 설명", assumptions: "Acceptor durable state와 intersecting majorities, non-Byzantine faults", evidenceScope: "Single-decree Paxos safety와 state-machine extension", notClaim: "Production storage·reconfiguration·latency library를 제공하지 않음", sectionId: "paper-paxos-made-simple" },
+      {
+        title:
+          "Implementing Fault-Tolerant Services Using the State Machine Approach",
+        href: "https://www.cs.cornell.edu/fbs/publications/SMSurvey.pdf",
+        problem:
+          "Replicated deterministic state machines로 fault-tolerant service를 구현하는 조건",
+        contribution:
+          "Replica coordination·command ordering·output voting을 state-machine approach로 정리",
+        assumptions:
+          "Fault class에 맞는 replica 수·agreement와 deterministic transition",
+        evidenceScope: "SMR architecture의 tutorial과 formal requirements",
+        notClaim:
+          "External effect exactly-once나 non-determinism이 자동 해결된다는 뜻 아님",
+        sectionId: "paper-schneider-smr",
+      },
+      {
+        title: "In Search of an Understandable Consensus Algorithm",
+        href: "https://raft.github.io/raft.pdf",
+        problem: "Paxos 계열 consensus를 이해·구현하기 쉬운 구조로 분해",
+        contribution:
+          "Leader election·log replication·safety·membership change와 사용자 연구",
+        assumptions:
+          "Crash-fault non-Byzantine servers와 majority availability",
+        evidenceScope: "Raft design·proof sketch·evaluation의 논문 조건",
+        notClaim:
+          "단순 majority ACK가 모든 durability·exactly-once를 보장하지 않음",
+        sectionId: "paper-raft",
+      },
+      {
+        title: "Paxos Made Simple",
+        href: "https://www.microsoft.com/en-us/research/publication/paxos-made-simple/",
+        problem:
+          "한 value를 안전하게 chosen하고 state-machine sequence로 확장하는 문제",
+        contribution:
+          "Prepare/promise·Accept와 value-adoption invariant의 간결한 설명",
+        assumptions:
+          "Acceptor durable state와 intersecting majorities, non-Byzantine faults",
+        evidenceScope: "Single-decree Paxos safety와 state-machine extension",
+        notClaim:
+          "Production storage·reconfiguration·latency library를 제공하지 않음",
+        sectionId: "paper-paxos-made-simple",
+      },
     ],
   },
   "blockchain/consensus-mechanisms": {
     entryLevel: true,
-    entryNote: "Toy 8-bit hash와 stake 10·20·30·40에서 시작합니다. 체인 이름이나 고정 TPS를 외우지 않고 membership→proposal→fork choice→finality→release gate를 추적합니다.",
-    coreIdea: "PoW와 PoS는 공개 membership의 영향력을 희소 자원에 연결하며, valid block rule·fork choice·finality·accountability를 별도 계약으로 조합합니다.",
+    entryNote:
+      "Toy 8-bit hash와 stake 10·20·30·40에서 시작합니다. 체인 이름이나 고정 TPS를 외우지 않고 membership→proposal→fork choice→finality→release gate를 추적합니다.",
+    coreIdea:
+      "PoW와 PoS는 공개 membership의 영향력을 희소 자원에 연결하며, valid block rule·fork choice·finality·accountability를 별도 계약으로 조합합니다.",
     assumedKnowledge: [],
     introducedHere: [
-      { id: "permissionless-sybil-resource-weight", role: "Identity 수 대신 work·stake에 influence를 연결합니다." },
-      { id: "pow-hash-target-lottery", role: "Target 성공 확률과 기대 hash 수를 계산합니다." },
-      { id: "pow-chainwork-probabilistic-finality", role: "Chainwork fork choice와 confirmation risk를 구분합니다." },
-      { id: "pos-stake-weighted-selection", role: "Stake 비율과 선택 확률의 경계를 계산합니다." },
-      { id: "pos-attestation-slashing-evidence", role: "Signed vote와 slashable evidence를 분류합니다." },
-      { id: "fork-choice-finality-separation", role: "Head와 finalized checkpoint를 별도 state로 기록합니다." },
-      { id: "consensus-resource-security-ledger", role: "자원 비용·집중도·failure surface를 같은 축으로 비교합니다." },
-      { id: "permissionless-consensus-release-gate", role: "동일 fault trace의 paired 채택 검사를 설계합니다." },
+      {
+        id: "permissionless-sybil-resource-weight",
+        role: "Identity 수 대신 work·stake에 influence를 연결합니다.",
+      },
+      {
+        id: "pow-hash-target-lottery",
+        role: "Target 성공 확률과 기대 hash 수를 계산합니다.",
+      },
+      {
+        id: "pow-chainwork-probabilistic-finality",
+        role: "Chainwork fork choice와 confirmation risk를 구분합니다.",
+      },
+      {
+        id: "pos-stake-weighted-selection",
+        role: "Stake 비율과 선택 확률의 경계를 계산합니다.",
+      },
+      {
+        id: "pos-attestation-slashing-evidence",
+        role: "Signed vote와 slashable evidence를 분류합니다.",
+      },
+      {
+        id: "fork-choice-finality-separation",
+        role: "Head와 finalized checkpoint를 별도 state로 기록합니다.",
+      },
+      {
+        id: "consensus-resource-security-ledger",
+        role: "자원 비용·집중도·failure surface를 같은 축으로 비교합니다.",
+      },
+      {
+        id: "permissionless-consensus-release-gate",
+        role: "동일 fault trace의 paired 채택 검사를 설계합니다.",
+      },
     ],
     conceptExplanations: [
-      { id: "permissionless-sybil-resource-weight", sectionId: "overview", intuition: "누구나 이름표를 만들 수 있으므로 이름표가 아니라 얻기 비싼 영수증에 표를 연결합니다.", workedExample: "한 운영자가 node key 1,000개를 만들어도 hash work나 effective stake가 늘지 않으면 자원 weight는 그대로입니다.", boundary: "자원 비용은 state-transition validity·network availability·honesty 자체를 보장하지 않습니다." },
-      { id: "pow-hash-target-lottery", sectionId: "pow", intuition: "정답 범위가 작은 복권을 header를 바꾸며 반복해서 뽑고, 당첨표는 누구나 싸게 확인합니다.", workedExample: "8-bit hash에서 T=16이면 p=1/16, 기대 16회이고 T=8이면 기대 32회입니다.", boundary: "균등·독립 hash 근사 식이 hardware efficiency·propagation·difficulty adjustment까지 설명하지는 않습니다." },
-      { id: "pow-chainwork-probabilistic-finality", sectionId: "pow", intuition: "더 많은 계산 영수증이 누적된 valid 장부를 따르되, 뒤집힐 위험은 깊이에 따라 작아질 뿐 일반적으로 0은 아닙니다.", workedExample: "같은 높이의 두 valid block 뒤 한 branch에 후속 work가 더 붙으면 node가 그 branch를 head로 선택합니다.", boundary: "Block 개수와 chainwork는 다르고, work가 invalid transaction을 valid하게 만들지 않습니다." },
-      { id: "pos-stake-weighted-selection", sectionId: "pos", intuition: "잠긴 stake 비율을 장기 추첨 확률·vote weight로 사용합니다.", workedExample: "Stake 합 100에서 10·20·30·40의 toy selection 확률은 0.1·0.2·0.3·0.4입니다.", boundary: "40% validator가 다음 slot에 반드시 선택되거나 key 수만큼 influence를 갖는다는 뜻은 아닙니다." },
-      { id: "pos-attestation-slashing-evidence", sectionId: "pos", intuition: "Validator의 서명 투표를 head·checkpoint 판단에 쓰고 서로 모순된 서명을 처벌 증거로 남깁니다.", workedExample: "같은 slashable scope에서 서로 충돌하는 두 attestation signature는 signer와 message를 재현할 evidence가 됩니다.", boundary: "Offline penalty·일반 버그·모든 나쁜 결과가 곧 slashing condition인 것은 아닙니다." },
-      { id: "fork-choice-finality-separation", sectionId: "overview", intuition: "현재 읽을 장부의 끝과 다시 쓰지 않기로 잠근 과거 페이지를 따로 표시합니다.", workedExample: "새 vote로 head가 B에서 C로 바뀌어도 finalized checkpoint F와 충돌하지 않으면 safety violation은 아닙니다.", boundary: "Head 변화·reorg·conflicting finality는 서로 다른 oracle이 필요합니다." },
-      { id: "consensus-resource-security-ledger", sectionId: "comparison", intuition: "속도 한 줄 대신 누가 어떤 자원을 얼마만큼 통제하고 어떤 실패에 노출되는지 같은 표에 적습니다.", workedExample: "PoW에는 hash concentration·energy·propagation, PoS에는 stake concentration·custody·client correlation을 기록합니다.", boundary: "서로 다른 chain·layer·workload의 TPS 숫자는 protocol family 비교 근거가 아닙니다." },
-      { id: "permissionless-consensus-release-gate", sectionId: "comparison", intuition: "후보 둘을 같은 시험장과 같은 방해 조건에서 실행해 안전성과 회복·비용을 함께 봅니다.", workedExample: "동일 partition·delay·equivocation trace에서 conflicting finality 0, reorg depth, recovery p95와 concentration을 비교합니다.", boundary: "짧은 정상 benchmark 통과는 adversarial safety나 장기 decentralization 보장이 아닙니다." },
+      {
+        id: "permissionless-sybil-resource-weight",
+        sectionId: "overview",
+        intuition:
+          "누구나 이름표를 만들 수 있으므로 이름표가 아니라 얻기 비싼 영수증에 표를 연결합니다.",
+        workedExample:
+          "한 운영자가 node key 1,000개를 만들어도 hash work나 effective stake가 늘지 않으면 자원 weight는 그대로입니다.",
+        boundary:
+          "자원 비용은 state-transition validity·network availability·honesty 자체를 보장하지 않습니다.",
+      },
+      {
+        id: "pow-hash-target-lottery",
+        sectionId: "pow",
+        intuition:
+          "정답 범위가 작은 복권을 header를 바꾸며 반복해서 뽑고, 당첨표는 누구나 싸게 확인합니다.",
+        workedExample:
+          "8-bit hash에서 T=16이면 p=1/16, 기대 16회이고 T=8이면 기대 32회입니다.",
+        boundary:
+          "균등·독립 hash 근사 식이 hardware efficiency·propagation·difficulty adjustment까지 설명하지는 않습니다.",
+      },
+      {
+        id: "pow-chainwork-probabilistic-finality",
+        sectionId: "pow",
+        intuition:
+          "더 많은 계산 영수증이 누적된 valid 장부를 따르되, 뒤집힐 위험은 깊이에 따라 작아질 뿐 일반적으로 0은 아닙니다.",
+        workedExample:
+          "같은 높이의 두 valid block 뒤 한 branch에 후속 work가 더 붙으면 node가 그 branch를 head로 선택합니다.",
+        boundary:
+          "Block 개수와 chainwork는 다르고, work가 invalid transaction을 valid하게 만들지 않습니다.",
+      },
+      {
+        id: "pos-stake-weighted-selection",
+        sectionId: "pos",
+        intuition: "잠긴 stake 비율을 장기 추첨 확률·vote weight로 사용합니다.",
+        workedExample:
+          "Stake 합 100에서 10·20·30·40의 toy selection 확률은 0.1·0.2·0.3·0.4입니다.",
+        boundary:
+          "40% validator가 다음 slot에 반드시 선택되거나 key 수만큼 influence를 갖는다는 뜻은 아닙니다.",
+      },
+      {
+        id: "pos-attestation-slashing-evidence",
+        sectionId: "pos",
+        intuition:
+          "Validator의 서명 투표를 head·checkpoint 판단에 쓰고 서로 모순된 서명을 처벌 증거로 남깁니다.",
+        workedExample:
+          "같은 slashable scope에서 서로 충돌하는 두 attestation signature는 signer와 message를 재현할 evidence가 됩니다.",
+        boundary:
+          "Offline penalty·일반 버그·모든 나쁜 결과가 곧 slashing condition인 것은 아닙니다.",
+      },
+      {
+        id: "fork-choice-finality-separation",
+        sectionId: "overview",
+        intuition:
+          "현재 읽을 장부의 끝과 다시 쓰지 않기로 잠근 과거 페이지를 따로 표시합니다.",
+        workedExample:
+          "새 vote로 head가 B에서 C로 바뀌어도 finalized checkpoint F와 충돌하지 않으면 safety violation은 아닙니다.",
+        boundary:
+          "Head 변화·reorg·conflicting finality는 서로 다른 oracle이 필요합니다.",
+      },
+      {
+        id: "consensus-resource-security-ledger",
+        sectionId: "comparison",
+        intuition:
+          "속도 한 줄 대신 누가 어떤 자원을 얼마만큼 통제하고 어떤 실패에 노출되는지 같은 표에 적습니다.",
+        workedExample:
+          "PoW에는 hash concentration·energy·propagation, PoS에는 stake concentration·custody·client correlation을 기록합니다.",
+        boundary:
+          "서로 다른 chain·layer·workload의 TPS 숫자는 protocol family 비교 근거가 아닙니다.",
+      },
+      {
+        id: "permissionless-consensus-release-gate",
+        sectionId: "comparison",
+        intuition:
+          "후보 둘을 같은 시험장과 같은 방해 조건에서 실행해 안전성과 회복·비용을 함께 봅니다.",
+        workedExample:
+          "동일 partition·delay·equivocation trace에서 conflicting finality 0, reorg depth, recovery p95와 concentration을 비교합니다.",
+        boundary:
+          "짧은 정상 benchmark 통과는 adversarial safety나 장기 decentralization 보장이 아닙니다.",
+      },
     ],
     conceptStages: [
-      { label: "00 선수", relation: "Execution·failure·safety/liveness를 고정합니다.", concepts: ["distributed-process-message-execution", "distributed-failure-model", "consensus-safety-liveness"] },
-      { label: "01 membership", relation: "Sybil influence를 희소 자원에 연결합니다.", concepts: ["permissionless-sybil-resource-weight"] },
-      { label: "02 PoW", relation: "Hash lottery에서 chainwork·confirmation으로 확장합니다.", concepts: ["pow-hash-target-lottery", "pow-chainwork-probabilistic-finality"] },
-      { label: "03 PoS", relation: "Stake selection에서 signed accountability로 확장합니다.", concepts: ["pos-stake-weighted-selection", "pos-attestation-slashing-evidence"] },
-      { label: "04 상태", relation: "Head와 finalized history를 분리합니다.", concepts: ["fork-choice-finality-separation"] },
-      { label: "05 채택", relation: "자원 ledger와 paired failure gate로 평가합니다.", concepts: ["consensus-resource-security-ledger", "permissionless-consensus-release-gate"] },
+      {
+        label: "00 선수",
+        relation: "Execution·failure·safety/liveness를 고정합니다.",
+        concepts: [
+          "distributed-process-message-execution",
+          "distributed-failure-model",
+          "consensus-safety-liveness",
+        ],
+      },
+      {
+        label: "01 membership",
+        relation: "Sybil influence를 희소 자원에 연결합니다.",
+        concepts: ["permissionless-sybil-resource-weight"],
+      },
+      {
+        label: "02 PoW",
+        relation: "Hash lottery에서 chainwork·confirmation으로 확장합니다.",
+        concepts: [
+          "pow-hash-target-lottery",
+          "pow-chainwork-probabilistic-finality",
+        ],
+      },
+      {
+        label: "03 PoS",
+        relation: "Stake selection에서 signed accountability로 확장합니다.",
+        concepts: [
+          "pos-stake-weighted-selection",
+          "pos-attestation-slashing-evidence",
+        ],
+      },
+      {
+        label: "04 상태",
+        relation: "Head와 finalized history를 분리합니다.",
+        concepts: ["fork-choice-finality-separation"],
+      },
+      {
+        label: "05 채택",
+        relation: "자원 ledger와 paired failure gate로 평가합니다.",
+        concepts: [
+          "consensus-resource-security-ledger",
+          "permissionless-consensus-release-gate",
+        ],
+      },
     ],
     exercises: [
-      { level: "basic", question: "한 운영자가 node key를 1개에서 1,000개로 늘렸지만 hash work·stake는 그대로인 경우 왜 표 1,000개가 되지 않는지 설명하세요.", answerChecklist: ["permissionless identity", "Sybil risk", "resource weighting", "work/stake unchanged", "validity 비보장"], requiredConcepts: ["permissionless-sybil-resource-weight"], sectionId: "overview" },
-      { level: "basic", question: "8-bit hash에서 T=16과 T=8의 한 번 성공 확률과 기대 시도 수를 각각 계산하세요.", answerChecklist: ["16/256=1/16", "E=16", "8/256=1/32", "E=32", "uniform·independent 전제"], requiredConcepts: ["pow-hash-target-lottery"], sectionId: "pow" },
-      { level: "basic", question: "같은 parent의 valid PoW block A·B가 보인 뒤 B branch에 더 많은 work가 붙는 trace에서 validation·fork choice·confirmation을 구분하세요.", answerChecklist: ["full validity", "cumulative work", "head B", "reorg risk", "probability≠zero"], requiredConcepts: ["pow-chainwork-probabilistic-finality"], sectionId: "pow" },
-      { level: "basic", question: "Stake 10·20·30·40인 toy validator 집합의 선택 확률을 계산하고 40%의 의미를 설명하세요.", answerChecklist: ["total 100", "0.1·0.2·0.3·0.4", "long-run expectation", "single-slot 비보장", "effective stake"], requiredConcepts: ["pos-stake-weighted-selection"], sectionId: "pos" },
-      { level: "basic", question: "PoS에서 proposal·attestation·fork choice·finality·slashing evidence를 실행 순서와 역할로 분류하세요.", answerChecklist: ["candidate", "signed vote", "head", "checkpoint", "objective conflicting signature", "offline penalty 경계"], requiredConcepts: ["pos-attestation-slashing-evidence", "fork-choice-finality-separation"], sectionId: "pos" },
-      { level: "basic", question: "Head가 B에서 C로 바뀌지만 둘 다 finalized checkpoint F의 descendant인 trace가 왜 conflicting finality가 아닌지 설명하세요.", answerChecklist: ["head mutable", "F unchanged", "descendant check", "reorg vs finality", "별도 receipt"], requiredConcepts: ["fork-choice-finality-separation"], sectionId: "overview" },
-      { level: "advanced", question: "PoW target 식을 유도하고 target을 절반으로 줄였을 때 기대 work가 두 배가 되는 이유와 식 밖의 변수를 설명하세요.", answerChecklist: ["success region T", "p=T/2^b", "geometric expectation", "2^b/T", "hardware·network·adjustment boundary"], requiredConcepts: ["pow-hash-target-lottery"], sectionId: "pow" },
-      { level: "advanced", question: "PoW confirmation과 PoS explicit finality의 evidence·failure mode·client receipt를 비교하세요.", answerChecklist: ["chainwork", "probabilistic reorg", "stake checkpoint", "honesty/timing assumptions", "head/finalized root", "version/time"], requiredConcepts: ["pow-chainwork-probabilistic-finality", "fork-choice-finality-separation", "pos-attestation-slashing-evidence"], sectionId: "comparison" },
-      { level: "advanced", question: "PoW·PoS를 TPS 숫자 없이 비교하는 resource·security ledger를 설계하고 concentration 반례를 넣으세요.", answerChecklist: ["cost asset", "influence concentration", "propagation/custody", "client correlation", "fork choice/finality", "same workload"], requiredConcepts: ["consensus-resource-security-ledger"], sectionId: "comparison" },
-      { level: "advanced", question: "Partition·delayed block/vote·equivocation·outage·restart를 포함한 PoW/PoS paired release matrix와 hard gate를 설계하세요.", answerChecklist: ["same binary/config/membership", "same transaction/fault trace", "conflicting finality=0", "reorg depth", "recovery p95", "resource/concentration", "rollback receipt"], requiredConcepts: ["permissionless-consensus-release-gate", "fork-choice-finality-separation", "consensus-resource-security-ledger"], sectionId: "comparison" },
+      {
+        level: "basic",
+        question:
+          "한 운영자가 node key를 1개에서 1,000개로 늘렸지만 hash work·stake는 그대로인 경우 왜 표 1,000개가 되지 않는지 설명하세요.",
+        answerChecklist: [
+          "permissionless identity",
+          "Sybil risk",
+          "resource weighting",
+          "work/stake unchanged",
+          "validity 비보장",
+        ],
+        requiredConcepts: ["permissionless-sybil-resource-weight"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "8-bit hash에서 T=16과 T=8의 한 번 성공 확률과 기대 시도 수를 각각 계산하세요.",
+        answerChecklist: [
+          "16/256=1/16",
+          "E=16",
+          "8/256=1/32",
+          "E=32",
+          "uniform·independent 전제",
+        ],
+        requiredConcepts: ["pow-hash-target-lottery"],
+        sectionId: "pow",
+      },
+      {
+        level: "basic",
+        question:
+          "같은 parent의 valid PoW block A·B가 보인 뒤 B branch에 더 많은 work가 붙는 trace에서 validation·fork choice·confirmation을 구분하세요.",
+        answerChecklist: [
+          "full validity",
+          "cumulative work",
+          "head B",
+          "reorg risk",
+          "probability≠zero",
+        ],
+        requiredConcepts: ["pow-chainwork-probabilistic-finality"],
+        sectionId: "pow",
+      },
+      {
+        level: "basic",
+        question:
+          "Stake 10·20·30·40인 toy validator 집합의 선택 확률을 계산하고 40%의 의미를 설명하세요.",
+        answerChecklist: [
+          "total 100",
+          "0.1·0.2·0.3·0.4",
+          "long-run expectation",
+          "single-slot 비보장",
+          "effective stake",
+        ],
+        requiredConcepts: ["pos-stake-weighted-selection"],
+        sectionId: "pos",
+      },
+      {
+        level: "basic",
+        question:
+          "PoS에서 proposal·attestation·fork choice·finality·slashing evidence를 실행 순서와 역할로 분류하세요.",
+        answerChecklist: [
+          "candidate",
+          "signed vote",
+          "head",
+          "checkpoint",
+          "objective conflicting signature",
+          "offline penalty 경계",
+        ],
+        requiredConcepts: [
+          "pos-attestation-slashing-evidence",
+          "fork-choice-finality-separation",
+        ],
+        sectionId: "pos",
+      },
+      {
+        level: "basic",
+        question:
+          "Head가 B에서 C로 바뀌지만 둘 다 finalized checkpoint F의 descendant인 trace가 왜 conflicting finality가 아닌지 설명하세요.",
+        answerChecklist: [
+          "head mutable",
+          "F unchanged",
+          "descendant check",
+          "reorg vs finality",
+          "별도 receipt",
+        ],
+        requiredConcepts: ["fork-choice-finality-separation"],
+        sectionId: "overview",
+      },
+      {
+        level: "advanced",
+        question:
+          "PoW target 식을 유도하고 target을 절반으로 줄였을 때 기대 work가 두 배가 되는 이유와 식 밖의 변수를 설명하세요.",
+        answerChecklist: [
+          "success region T",
+          "p=T/2^b",
+          "geometric expectation",
+          "2^b/T",
+          "hardware·network·adjustment boundary",
+        ],
+        requiredConcepts: ["pow-hash-target-lottery"],
+        sectionId: "pow",
+      },
+      {
+        level: "advanced",
+        question:
+          "PoW confirmation과 PoS explicit finality의 evidence·failure mode·client receipt를 비교하세요.",
+        answerChecklist: [
+          "chainwork",
+          "probabilistic reorg",
+          "stake checkpoint",
+          "honesty/timing assumptions",
+          "head/finalized root",
+          "version/time",
+        ],
+        requiredConcepts: [
+          "pow-chainwork-probabilistic-finality",
+          "fork-choice-finality-separation",
+          "pos-attestation-slashing-evidence",
+        ],
+        sectionId: "comparison",
+      },
+      {
+        level: "advanced",
+        question:
+          "PoW·PoS를 TPS 숫자 없이 비교하는 resource·security ledger를 설계하고 concentration 반례를 넣으세요.",
+        answerChecklist: [
+          "cost asset",
+          "influence concentration",
+          "propagation/custody",
+          "client correlation",
+          "fork choice/finality",
+          "same workload",
+        ],
+        requiredConcepts: ["consensus-resource-security-ledger"],
+        sectionId: "comparison",
+      },
+      {
+        level: "advanced",
+        question:
+          "Partition·delayed block/vote·equivocation·outage·restart를 포함한 PoW/PoS paired release matrix와 hard gate를 설계하세요.",
+        answerChecklist: [
+          "same binary/config/membership",
+          "same transaction/fault trace",
+          "conflicting finality=0",
+          "reorg depth",
+          "recovery p95",
+          "resource/concentration",
+          "rollback receipt",
+        ],
+        requiredConcepts: [
+          "permissionless-consensus-release-gate",
+          "fork-choice-finality-separation",
+          "consensus-resource-security-ledger",
+        ],
+        sectionId: "comparison",
+      },
     ],
     papers: [
-      { title: "Bitcoin: A Peer-to-Peer Electronic Cash System", href: "https://bitcoin.org/bitcoin.pdf", problem: "중앙 기관 없이 transaction ordering과 double-spend를 저지하는 문제", contribution: "Hash-based PoW·cumulative-work chain·attacker catch-up probability를 결합", assumptions: "Hash power·network propagation·valid block verification model", evidenceScope: "Bitcoin paper의 protocol과 확률 분석", notClaim: "모든 hash·network·confirmation 수의 보편 안전성은 아님", sectionId: "paper-bitcoin-pow" },
-      { title: "Combining GHOST and Casper", href: "https://arxiv.org/abs/2003.03052", problem: "Block-tree fork choice와 accountable finality의 결합", contribution: "GHOST 계열 head rule과 Casper finality gadget의 성질 분석", assumptions: "논문의 honest stake·network timing·validator message model", evidenceScope: "해당 Gasper protocol snapshot의 이론 분석", notClaim: "현재 모든 Ethereum upgrade 규칙의 대체 정본은 아님", sectionId: "paper-gasper" },
-      { title: "Ethereum Proof-of-Stake Consensus Specifications", href: "https://ethereum.github.io/consensus-specs/", problem: "PoS client가 같은 state transition·fork choice를 구현하는 규격", contribution: "Fork별 stable specification과 reference tests", assumptions: "배포한 fork·client version과 외부 execution/API 규격", evidenceScope: "현재 versioned Ethereum consensus behavior", notClaim: "모든 PoS protocol의 일반 이론이나 성능 benchmark가 아님", sectionId: "paper-ethereum-pos-spec" },
-      { title: "EIP-3675: Upgrade consensus to Proof-of-Stake", href: "https://eips.ethereum.org/EIPS/eip-3675", problem: "Ethereum Mainnet execution layer의 PoW→PoS 전환", contribution: "Terminal PoW block과 이후 validity·fork-choice 연결 규칙", assumptions: "Merge transition의 execution·consensus interface", evidenceScope: "해당 network upgrade specification", notClaim: "PoW·PoS family 전체의 TPS·보안 비교가 아님", sectionId: "paper-eip-3675" },
+      {
+        title: "Bitcoin: A Peer-to-Peer Electronic Cash System",
+        href: "https://bitcoin.org/bitcoin.pdf",
+        problem:
+          "중앙 기관 없이 transaction ordering과 double-spend를 저지하는 문제",
+        contribution:
+          "Hash-based PoW·cumulative-work chain·attacker catch-up probability를 결합",
+        assumptions:
+          "Hash power·network propagation·valid block verification model",
+        evidenceScope: "Bitcoin paper의 protocol과 확률 분석",
+        notClaim: "모든 hash·network·confirmation 수의 보편 안전성은 아님",
+        sectionId: "paper-bitcoin-pow",
+      },
+      {
+        title: "Combining GHOST and Casper",
+        href: "https://arxiv.org/abs/2003.03052",
+        problem: "Block-tree fork choice와 accountable finality의 결합",
+        contribution:
+          "GHOST 계열 head rule과 Casper finality gadget의 성질 분석",
+        assumptions:
+          "논문의 honest stake·network timing·validator message model",
+        evidenceScope: "해당 Gasper protocol snapshot의 이론 분석",
+        notClaim: "현재 모든 Ethereum upgrade 규칙의 대체 정본은 아님",
+        sectionId: "paper-gasper",
+      },
+      {
+        title: "Ethereum Proof-of-Stake Consensus Specifications",
+        href: "https://ethereum.github.io/consensus-specs/",
+        problem:
+          "PoS client가 같은 state transition·fork choice를 구현하는 규격",
+        contribution: "Fork별 stable specification과 reference tests",
+        assumptions: "배포한 fork·client version과 외부 execution/API 규격",
+        evidenceScope: "현재 versioned Ethereum consensus behavior",
+        notClaim: "모든 PoS protocol의 일반 이론이나 성능 benchmark가 아님",
+        sectionId: "paper-ethereum-pos-spec",
+      },
+      {
+        title: "EIP-3675: Upgrade consensus to Proof-of-Stake",
+        href: "https://eips.ethereum.org/EIPS/eip-3675",
+        problem: "Ethereum Mainnet execution layer의 PoW→PoS 전환",
+        contribution:
+          "Terminal PoW block과 이후 validity·fork-choice 연결 규칙",
+        assumptions: "Merge transition의 execution·consensus interface",
+        evidenceScope: "해당 network upgrade specification",
+        notClaim: "PoW·PoS family 전체의 TPS·보안 비교가 아님",
+        sectionId: "paper-eip-3675",
+      },
+    ],
+  },
+  "p2p/libp2p": {
+    coreIdea:
+      "libp2p는 transport·peer authentication·stream multiplexing·Swarm·protocol state의 owner를 분리하고, 한 connection의 typed output과 command/event 왕복으로 서로 다른 구현을 같은 application contract에 조립합니다.",
+    assumedKnowledge: [
+      {
+        id: "tls13-secure-channel",
+        role: "Raw network connection과 authenticated secure channel이 다른 상태라는 기준을 제공합니다.",
+      },
+      {
+        id: "quic-transport-state",
+        role: "Security·multiplexing을 내장한 transport와 TCP external upgrade 경로를 비교합니다.",
+      },
+      {
+        id: "content-address-integrity",
+        role: "연결 전달과 수신 bytes 검증이 서로 다른 책임임을 구분합니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "libp2p-connection-upgrade-pipeline",
+        role: "Multiaddr에서 authenticated multiplexed connection까지 output type을 추적합니다.",
+      },
+      {
+        id: "rust-libp2p-event-ownership",
+        role: "Swarm·Behaviour·Handler가 소유하는 state와 event 방향을 나눕니다.",
+      },
+      {
+        id: "libp2p-substream-protocol-negotiation",
+        role: "Stream multiplexing과 application protocol 선택을 구분합니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "libp2p-connection-upgrade-pipeline",
+        sectionId: "overview",
+        intuition:
+          "빈 운송관에 신분 확인과 여러 대화방을 순서대로 붙여 application이 쓸 연결로 만드는 조립선입니다.",
+        workedExample:
+          "TcpStream → Noise의 (PeerId, secure I/O) → Yamux StreamMuxer → Swarm registration을 한 trace로 따릅니다.",
+        boundary:
+          "QUIC처럼 기능을 내장한 transport는 조립 위치가 다르며 layer 수만으로 latency 우위를 결론낼 수 없습니다.",
+      },
+      {
+        id: "rust-libp2p-event-ownership",
+        sectionId: "swarm-loop",
+        intuition:
+          "본사 정책인 Behaviour, 지점 한 곳인 Handler와 이 둘을 잇는 배차실 Swarm으로 상태를 나눕니다.",
+        workedExample:
+          "Behaviour의 NotifyHandler가 connection-local Handler로 가고 substream I/O 결과가 SwarmEvent로 돌아옵니다.",
+        boundary:
+          "Command enqueue는 remote 처리 완료가 아니며 Swarm stream을 poll하지 않으면 progress가 멈춥니다.",
+      },
+      {
+        id: "libp2p-substream-protocol-negotiation",
+        sectionId: "handler-trait",
+        intuition:
+          "여러 대화방을 여는 기능과 새 방에서 어느 언어를 쓸지 합의하는 기능은 별도입니다.",
+        workedExample:
+          "Handler가 substream을 요청하고 muxer가 열면 multistream-select로 /ipfs/ping/1.0.0을 합의합니다.",
+        boundary:
+          "Unsupported protocol·negotiation timeout·stream reset·connection close는 서로 다른 실패입니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 재사용",
+        relation:
+          "Secure channel·QUIC·content integrity의 정본 경계를 준비합니다.",
+        concepts: [
+          "tls13-secure-channel",
+          "quic-transport-state",
+          "content-address-integrity",
+        ],
+      },
+      {
+        label: "01 connection",
+        relation: "Transport output에 security와 multiplexer를 결합합니다.",
+        concepts: ["libp2p-connection-upgrade-pipeline"],
+      },
+      {
+        label: "02 ownership",
+        relation:
+          "Global protocol state와 connection-local state를 event로 연결합니다.",
+        concepts: ["rust-libp2p-event-ownership"],
+      },
+      {
+        label: "03 stream",
+        relation: "Substream 생성과 application protocol 합의를 분리합니다.",
+        concepts: ["libp2p-substream-protocol-negotiation"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "TCP multiaddr로 시작한 outbound connection의 output이 SwarmEvent까지 바뀌는 순서를 설명하세요.",
+        answerChecklist: [
+          "multiaddr dial",
+          "raw connection",
+          "peer-authenticated security",
+          "stream multiplexer",
+          "(PeerId, StreamMuxer)",
+          "Swarm registration/event",
+        ],
+        requiredConcepts: ["libp2p-connection-upgrade-pipeline"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "Transport::dial 호출과 실제 connection 시작이 같은 순간이 아닌 이유와 future를 poll하지 않을 때의 결과를 설명하세요.",
+        answerChecklist: [
+          "lazy future",
+          "first poll",
+          "address racing",
+          "no poll no progress",
+          "cancellation cleanup",
+        ],
+        requiredConcepts: ["libp2p-connection-upgrade-pipeline"],
+        sectionId: "transport-trait",
+      },
+      {
+        level: "basic",
+        question:
+          "Kademlia routing table, peer 한 명의 substream negotiation, socket dial을 Behaviour·Handler·Swarm/Transport에 배치하세요.",
+        answerChecklist: [
+          "Behaviour global protocol state",
+          "Handler connection-local",
+          "Transport dial",
+          "Swarm coordination",
+          "command/event direction",
+        ],
+        requiredConcepts: ["rust-libp2p-event-ownership"],
+        sectionId: "behaviour-trait",
+      },
+      {
+        level: "basic",
+        question:
+          "Stream multiplexing과 multistream-select protocol negotiation이 같은 기능이 아닌 이유를 ping substream 예로 설명하세요.",
+        answerChecklist: [
+          "one connection",
+          "multiple substreams",
+          "open stream",
+          "protocol ID agreement",
+          "negotiated handler I/O",
+        ],
+        requiredConcepts: ["libp2p-substream-protocol-negotiation"],
+        sectionId: "handler-trait",
+      },
+      {
+        level: "basic",
+        question:
+          "ToSwarm::NotifyHandler를 반환했다는 사실이 remote application 처리 완료를 뜻하지 않는 이유를 설명하세요.",
+        answerChecklist: [
+          "enqueue/action",
+          "connection can close",
+          "delivery may fail",
+          "substream I/O",
+          "application acknowledgment separate",
+        ],
+        requiredConcepts: ["rust-libp2p-event-ownership"],
+        sectionId: "swarm-loop",
+      },
+      {
+        level: "basic",
+        question:
+          "TCP+Noise+Yamux와 QUIC이 Swarm에 같은 형태로 들어오지만 조립 위치가 다른 이유를 설명하세요.",
+        answerChecklist: [
+          "TCP raw stream",
+          "external security",
+          "external muxer",
+          "QUIC built-in TLS",
+          "QUIC built-in streams",
+          "common authenticated muxed output",
+        ],
+        requiredConcepts: [
+          "libp2p-connection-upgrade-pipeline",
+          "quic-transport-state",
+        ],
+        sectionId: "overview",
+      },
+      {
+        level: "advanced",
+        question:
+          "Hot Behaviour가 계속 Ready를 반환하는 workload에서 starvation·busy loop를 검출하고 완화하는 release gate를 설계하세요.",
+        answerChecklist: [
+          "waker/Pending contract",
+          "per-poll budget",
+          "bounded queue",
+          "cooperative yield",
+          "queue depth",
+          "p95 event delay",
+          "idle CPU",
+          "memory trade-off",
+        ],
+        requiredConcepts: ["rust-libp2p-event-ownership"],
+        sectionId: "swarm-loop",
+      },
+      {
+        level: "advanced",
+        question:
+          "Dial timeout 한 건을 address·transport·identity·muxer·substream 단계로 분해하는 trace schema와 failure injection을 설계하세요.",
+        answerChecklist: [
+          "correlation ID",
+          "address candidates",
+          "phase timestamps",
+          "authenticated PeerId",
+          "selected protocols",
+          "close reason",
+          "cleanup baseline",
+          "no generic timeout collapse",
+        ],
+        requiredConcepts: [
+          "libp2p-connection-upgrade-pipeline",
+          "rust-libp2p-event-ownership",
+        ],
+        sectionId: "connection-poll",
+      },
+      {
+        level: "advanced",
+        question:
+          "한 peer의 여러 주소를 concurrent dial할 때 winner 선택과 loser cancellation이 안전한 상태 기계를 설계하세요.",
+        answerChecklist: [
+          "lazy dial futures",
+          "bounded concurrency",
+          "first valid authenticated winner",
+          "not first TCP only",
+          "cancel losers",
+          "socket/timer cleanup",
+          "duplicate connection policy",
+        ],
+        requiredConcepts: [
+          "libp2p-connection-upgrade-pipeline",
+          "rust-libp2p-event-ownership",
+        ],
+        sectionId: "transport-trait",
+      },
+      {
+        level: "advanced",
+        question:
+          "새 request-response protocol을 Behaviour와 Handler로 나누고 backpressure·retry·completion semantics를 설계하세요.",
+        answerChecklist: [
+          "global peer/request state",
+          "per-connection handler",
+          "protocol ID",
+          "bounded queues",
+          "negotiation failure",
+          "application acknowledgment",
+          "idempotent retry",
+          "metrics",
+        ],
+        requiredConcepts: [
+          "rust-libp2p-event-ownership",
+          "libp2p-substream-protocol-negotiation",
+        ],
+        sectionId: "connection-poll",
+      },
+    ],
+    papers: [
+      {
+        title: "libp2p Connection Establishment Specification",
+        href: "https://github.com/libp2p/specs/tree/master/connections",
+        problem:
+          "서로 다른 transport·security·multiplexer 구현이 interoperable connection을 만드는 문제",
+        contribution:
+          "Connection-level upgrade와 stream-level protocol negotiation의 wire 경계를 정의",
+        assumptions:
+          "양쪽 구현이 공통 protocol ID와 framing·negotiation 규칙을 지원",
+        evidenceScope: "libp2p connection bootstrap specification",
+        notClaim:
+          "모든 language implementation의 내부 poll 구조나 고정 latency를 규정하지 않음",
+        sectionId: "paper-libp2p-connections",
+      },
+      {
+        title: "rust-libp2p Transport trait",
+        href: "https://docs.rs/libp2p/latest/libp2p/trait.Transport.html",
+        problem:
+          "Dial·listen과 connection upgrade를 조합 가능한 Rust interface로 표현하는 문제",
+        contribution:
+          "Associated future/output/error와 lazy dial contract를 문서화",
+        assumptions: "표시된 crate version과 enabled feature·runtime provider",
+        evidenceScope: "rust-libp2p 0.56 public API",
+        notClaim:
+          "모든 transport가 TCP와 동일한 reliability·timing을 보장하지 않음",
+        sectionId: "paper-rust-libp2p-transport",
+      },
+      {
+        title: "rust-libp2p Swarm and NetworkBehaviour",
+        href: "https://docs.rs/libp2p/latest/libp2p/struct.Swarm.html",
+        problem:
+          "Transport connection과 protocol behaviours를 하나의 asynchronous event stream으로 조율하는 문제",
+        contribution:
+          "Swarm progress·event·close와 Behaviour ownership API를 문서화",
+        assumptions:
+          "Swarm stream이 runtime에서 계속 poll되고 bounded resources가 설정됨",
+        evidenceScope: "rust-libp2p 0.56 API semantics",
+        notClaim:
+          "특정 poll fairness·throughput이나 remote 처리 완료를 자동 보장하지 않음",
+        sectionId: "paper-rust-libp2p-swarm",
+      },
+    ],
+  },
+  "p2p/libp2p-noise": {
+    coreIdea:
+      "noise-libp2p는 Noise XX의 DH handshake state와 libp2p identity signature를 별도로 검증해 Noise static key를 expected PeerId에 묶고, 성공한 두 방향 CipherState만 framed secure I/O로 인계합니다.",
+    assumedKnowledge: [
+      {
+        id: "bit-byte",
+        role: "Handshake payload·signature input과 2-byte frame length가 정확한 byte sequence라는 출발점입니다.",
+      },
+      {
+        id: "tls13-secure-channel",
+        role: "Key agreement만이 아니라 peer authentication과 protected application I/O가 함께 필요하다는 비교 기준입니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "noise-xx-handshake-state",
+        role: "XX 세 message의 token과 key-state 변화를 추적합니다.",
+      },
+      {
+        id: "libp2p-noise-identity-binding",
+        role: "Noise static key와 long-term PeerId를 signature로 연결합니다.",
+      },
+      {
+        id: "noise-framed-transport-lifecycle",
+        role: "Handshake에서 framed AEAD transport와 fail-closed 종료까지 수명을 정의합니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "noise-xx-handshake-state",
+        sectionId: "handshake-flow",
+        intuition:
+          "서로 신분증을 미리 모르는 두 사람이 일회용 열쇠로 봉투를 만든 뒤 장기 열쇠 정보를 그 안에서 교환합니다.",
+        workedExample:
+          "→e, ←e·ee·s·es, →s·se를 처리하며 DH output과 transcript를 순서대로 state에 섞습니다.",
+        boundary:
+          "XX가 static DH key를 인증해도 그 key가 expected libp2p PeerId와 같은지는 profile payload 검증이 필요합니다.",
+      },
+      {
+        id: "libp2p-noise-identity-binding",
+        sectionId: "keypair-signing",
+        intuition:
+          "장기 identity key가 이번 Noise static public key를 승인한 서명 영수증입니다.",
+        workedExample:
+          "prefix||noise_static을 identity key로 서명하고 receiver가 signature와 derived PeerId를 모두 검사합니다.",
+        boundary:
+          "PeerId 인증은 application authorization·평판·IP privacy를 자동 보장하지 않습니다.",
+      },
+      {
+        id: "noise-framed-transport-lifecycle",
+        sectionId: "finish-verify",
+        intuition:
+          "길이표가 붙은 암호 봉투를 순서대로 열되 하나라도 훼손되면 연결 전체를 종료합니다.",
+        workedExample:
+          "2-byte big-endian length 뒤 ciphertext와 16-byte tag를 읽고 tag 실패나 truncation에서 plaintext를 반환하지 않습니다.",
+        boundary:
+          "Ciphertext는 content를 숨겨도 IP, timing과 frame length 관측까지 숨기지 않습니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 byte·channel",
+        relation:
+          "정확한 serialization과 authenticated-channel 목표를 준비합니다.",
+        concepts: ["bit-byte", "tls13-secure-channel"],
+      },
+      {
+        label: "01 XX state",
+        relation: "세 message에서 DH·transcript state를 누적합니다.",
+        concepts: ["noise-xx-handshake-state"],
+      },
+      {
+        label: "02 identity",
+        relation: "Noise static key를 expected PeerId에 묶습니다.",
+        concepts: ["libp2p-noise-identity-binding"],
+      },
+      {
+        label: "03 transport",
+        relation:
+          "검증된 두 방향 CipherState를 bounded frame I/O로 전환합니다.",
+        concepts: ["noise-framed-transport-lifecycle"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "Noise static DH key와 libp2p identity key가 각각 맡는 역할을 구분하세요.",
+        answerChecklist: [
+          "Noise DH/key agreement",
+          "identity long-term key",
+          "signature binding",
+          "PeerId derivation",
+          "not same key assumption",
+        ],
+        requiredConcepts: ["libp2p-noise-identity-binding"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "XX의 →e, ←e·ee·s·es, →s·se 세 message에서 언제 static key와 payload가 보호되는지 설명하세요.",
+        answerChecklist: [
+          "message 1 ephemeral clear",
+          "ee mixed",
+          "responder static encrypted",
+          "initiator static encrypted",
+          "payload stages",
+          "three messages",
+        ],
+        requiredConcepts: ["noise-xx-handshake-state"],
+        sectionId: "handshake-flow",
+      },
+      {
+        level: "basic",
+        question:
+          "유효한 identity signature지만 expected PeerId와 다른 payload를 받아도 거부해야 하는 이유를 설명하세요.",
+        answerChecklist: [
+          "signature proves another key",
+          "derive actual PeerId",
+          "compare expected",
+          "wrong peer",
+          "terminate connection",
+        ],
+        requiredConcepts: ["libp2p-noise-identity-binding"],
+        sectionId: "keypair-signing",
+      },
+      {
+        level: "basic",
+        question:
+          "Identity-binding 식에서 m, Noise static key, identity key와 signature가 맡는 역할을 설명하세요.",
+        answerChecklist: [
+          "domain prefix",
+          "exact static bytes",
+          "identity private signing",
+          "public verification",
+          "binding not encryption",
+        ],
+        requiredConcepts: ["libp2p-noise-identity-binding"],
+        sectionId: "keypair-signing",
+      },
+      {
+        level: "basic",
+        question:
+          "noise-libp2p transport frame의 length, ciphertext와 authentication tag가 손상될 때 처리 경로를 설명하세요.",
+        answerChecklist: [
+          "2-byte big-endian length",
+          "bounded message",
+          "AEAD ciphertext",
+          "16-byte tag",
+          "fail closed",
+          "no plaintext",
+        ],
+        requiredConcepts: ["noise-framed-transport-lifecycle"],
+        sectionId: "finish-verify",
+      },
+      {
+        level: "basic",
+        question:
+          "TLS 1.3과 noise-libp2p가 모두 secure channel을 만들지만 identity와 negotiation 경로가 다른 점을 설명하세요.",
+        answerChecklist: [
+          "TLS certificate/PSK",
+          "TLS transcript",
+          "Noise XX pattern",
+          "libp2p identity payload",
+          "fixed Noise suite",
+          "common confidentiality/integrity",
+        ],
+        requiredConcepts: [
+          "tls13-secure-channel",
+          "noise-xx-handshake-state",
+          "libp2p-noise-identity-binding",
+        ],
+        sectionId: "overview",
+      },
+      {
+        level: "advanced",
+        question:
+          "Noise static key 한 byte, identity signature 한 byte, expected PeerId를 차례로 변조하는 negative-test matrix를 설계하세요.",
+        answerChecklist: [
+          "separate mutations",
+          "handshake/decrypt outcome",
+          "signature failure",
+          "PeerId mismatch",
+          "immediate termination",
+          "no fallback",
+          "resource cleanup",
+        ],
+        requiredConcepts: [
+          "noise-xx-handshake-state",
+          "libp2p-noise-identity-binding",
+          "noise-framed-transport-lifecycle",
+        ],
+        sectionId: "finish-verify",
+      },
+      {
+        level: "advanced",
+        question:
+          "Responder message 2 payload를 application early data처럼 사용할 때의 authentication boundary와 안전한 정책을 설계하세요.",
+        answerChecklist: [
+          "payload encrypted",
+          "forward secrecy",
+          "sender not yet authenticated responder",
+          "active attacker boundary",
+          "no sensitive effect",
+          "defer until verify",
+        ],
+        requiredConcepts: [
+          "noise-xx-handshake-state",
+          "libp2p-noise-identity-binding",
+        ],
+        sectionId: "handshake-flow",
+      },
+      {
+        level: "advanced",
+        question:
+          "Length-prefix slowloris, oversized frame, truncation과 tag failure를 포함한 parser release gate를 설계하세요.",
+        answerChecklist: [
+          "length timeout",
+          "size cap",
+          "bounded allocation",
+          "read exact",
+          "tag verification",
+          "fail closed",
+          "metrics",
+          "fuzz/property test",
+        ],
+        requiredConcepts: ["noise-framed-transport-lifecycle"],
+        sectionId: "finish-verify",
+      },
+      {
+        level: "advanced",
+        question:
+          "Handshake snapshot·counter rollback이 가능한 runtime에서 key와 nonce 수명을 지키는 운영 방어를 설계하세요.",
+        answerChecklist: [
+          "directional CipherState",
+          "monotonic nonce",
+          "no state rollback",
+          "fresh handshake",
+          "key erase",
+          "counter exhaustion",
+          "snapshot prohibition/test",
+        ],
+        requiredConcepts: [
+          "noise-framed-transport-lifecycle",
+          "noise-xx-handshake-state",
+        ],
+        sectionId: "finish-verify",
+      },
+    ],
+    papers: [
+      {
+        title: "noise-libp2p Secure Channel Handshake",
+        href: "https://github.com/libp2p/specs/blob/master/noise/README.md",
+        problem:
+          "CA 없이 libp2p PeerId를 authenticated encrypted transport에 묶는 문제",
+        contribution:
+          "XX profile·identity payload·fixed cipher suite·wire framing을 정의",
+        assumptions: "25519·ChaChaPoly·SHA256과 libp2p identity signature 구현",
+        evidenceScope: "noise-libp2p revision 5 specification",
+        notClaim:
+          "Noise Framework의 모든 pattern이나 application authorization을 정의하지 않음",
+        sectionId: "paper-libp2p-noise-spec",
+      },
+      {
+        title: "The Noise Protocol Framework",
+        href: "https://noiseprotocol.org/noise.html",
+        problem:
+          "DH handshake를 작은 token language와 state machine으로 구성·분석하는 문제",
+        contribution:
+          "Handshake pattern·SymmetricState·CipherState 처리 규칙을 정의",
+        assumptions: "선택한 primitive의 보안성과 pattern 규칙·nonce 수명 준수",
+        evidenceScope: "Noise Framework revision 34",
+        notClaim:
+          "libp2p PeerId payload나 protocol negotiation을 자체 정의하지 않음",
+        sectionId: "paper-noise-framework",
+      },
+    ],
+  },
+  "p2p/libp2p-tcp": {
+    coreIdea:
+      "libp2p TCP Transport는 multiaddr를 lazy nonblocking dial/listen state로 바꾸고 socket option·backpressure·timeout·cancellation을 관리해 raw ordered byte stream을 만들며, security·PeerId·multiplexing은 후속 upgrade에 맡깁니다.",
+    assumedKnowledge: [
+      {
+        id: "bit-byte",
+        role: "TCP가 message가 아닌 ordered byte stream을 제공한다는 출발점입니다.",
+      },
+      {
+        id: "libp2p-connection-upgrade-pipeline",
+        role: "Raw TcpStream 뒤 security·muxer가 붙는 전체 connection 조립 위치를 제공합니다.",
+      },
+      {
+        id: "libp2p-noise-identity-binding",
+        role: "TCP remote address와 authenticated PeerId가 다른 identity 경계임을 제공합니다.",
+      },
+      {
+        id: "quic-transport-state",
+        role: "Security·stream을 transport에 내장한 QUIC과 같은 조건에서 비교합니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "libp2p-tcp-multiaddr-dial",
+        role: "Layered address를 lazy dial future와 listener events로 변환합니다.",
+      },
+      {
+        id: "libp2p-tcp-socket-lifecycle",
+        role: "Socket option·backlog·port reuse·timeout·close의 자원 수명을 추적합니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "libp2p-tcp-multiaddr-dial",
+        sectionId: "dial-listen",
+        intuition:
+          "사람이 읽는 layered route를 OS가 연결할 IP·port와 기다릴 future로 바꾸는 접수대입니다.",
+        workedExample:
+          "/ip4/203.0.113.7/tcp/4001을 SocketAddr로 바꾸고 first poll에서 nonblocking connect를 시작합니다.",
+        boundary:
+          "TCP connect 성공은 remote PeerId 인증이나 libp2p protocol negotiation 성공이 아닙니다.",
+      },
+      {
+        id: "libp2p-tcp-socket-lifecycle",
+        sectionId: "socket-creation",
+        intuition:
+          "Socket의 성능 option과 queue를 workload에 맞게 고르고 생성부터 취소·종료까지 자원 영수증을 남깁니다.",
+        workedExample:
+          "NODELAY·backlog를 고정하고 PortUse::Reuse dial의 실제 local port와 fallback을 trace합니다.",
+        boundary:
+          "Option 이름만으로 latency·throughput·NAT 성공을 보장하지 않으며 OS와 workload에서 측정해야 합니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 경계",
+        relation:
+          "Byte stream, libp2p upgrade, identity와 QUIC 비교를 준비합니다.",
+        concepts: [
+          "bit-byte",
+          "libp2p-connection-upgrade-pipeline",
+          "libp2p-noise-identity-binding",
+          "quic-transport-state",
+        ],
+      },
+      {
+        label: "01 address",
+        relation: "Multiaddr를 dial future와 listener event로 바꿉니다.",
+        concepts: ["libp2p-tcp-multiaddr-dial"],
+      },
+      {
+        label: "02 socket",
+        relation: "Option·queue·timeout·cancellation 수명을 관리합니다.",
+        concepts: ["libp2p-tcp-socket-lifecycle"],
+      },
+      {
+        label: "03 upgrade",
+        relation: "Raw stream을 security·muxer 뒤 Swarm output으로 인계합니다.",
+        concepts: ["libp2p-connection-upgrade-pipeline"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "/ip4/203.0.113.7/tcp/4001 multiaddr가 Swarm-ready connection이 되기까지 각 output을 순서대로 적으세요.",
+        answerChecklist: [
+          "SocketAddr",
+          "lazy connect",
+          "TcpStream",
+          "Noise PeerId/secure I/O",
+          "multiplexer",
+          "Swarm registration",
+        ],
+        requiredConcepts: [
+          "libp2p-tcp-multiaddr-dial",
+          "libp2p-connection-upgrade-pipeline",
+        ],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "Nonblocking connect의 in-progress 결과가 즉시 실패가 아닌 이유와 성공 확인 절차를 설명하세요.",
+        answerChecklist: [
+          "async readiness",
+          "future poll",
+          "writable notification",
+          "socket error check",
+          "timeout/cancel",
+        ],
+        requiredConcepts: [
+          "libp2p-tcp-multiaddr-dial",
+          "libp2p-tcp-socket-lifecycle",
+        ],
+        sectionId: "dial-listen",
+      },
+      {
+        level: "basic",
+        question:
+          "TCP_NODELAY를 켤 때 줄이려는 지연과 늘 수 있는 비용을 설명하세요.",
+        answerChecklist: [
+          "Nagle coalescing disabled",
+          "small-write latency",
+          "more packets",
+          "header overhead",
+          "not fixed 200ms",
+          "measure workload",
+        ],
+        requiredConcepts: ["libp2p-tcp-socket-lifecycle"],
+        sectionId: "socket-creation",
+      },
+      {
+        level: "basic",
+        question:
+          "Listen backlog, established connection limit와 substream limit가 서로 다른 이유를 설명하세요.",
+        answerChecklist: [
+          "OS pending accept queue",
+          "application established connections",
+          "multiplexed streams",
+          "overload layers",
+          "separate metrics",
+        ],
+        requiredConcepts: ["libp2p-tcp-socket-lifecycle"],
+        sectionId: "socket-creation",
+      },
+      {
+        level: "basic",
+        question:
+          "PortUse::Reuse가 NAT traversal에 도움을 줄 수 있지만 best-effort인 이유와 관측할 값을 적으세요.",
+        answerChecklist: [
+          "listener local port",
+          "NAT mapping",
+          "per-dial option",
+          "OS/address constraints",
+          "fallback ephemeral port",
+          "actual local/remote address",
+        ],
+        requiredConcepts: ["libp2p-tcp-socket-lifecycle"],
+        sectionId: "socket-creation",
+      },
+      {
+        level: "basic",
+        question:
+          "TCP connect 성공과 Noise·muxer·Swarm 성공을 별도 상태로 기록해야 하는 이유를 설명하세요.",
+        answerChecklist: [
+          "reachability only",
+          "no encryption",
+          "no PeerId",
+          "security negotiation",
+          "mux protocol",
+          "phase-specific failure",
+        ],
+        requiredConcepts: [
+          "libp2p-connection-upgrade-pipeline",
+          "libp2p-noise-identity-binding",
+        ],
+        sectionId: "upgrade-chain",
+      },
+      {
+        level: "advanced",
+        question:
+          "DNS multiaddr가 네 IP로 풀릴 때 bounded concurrent dial과 winner·loser cleanup을 설계하세요.",
+        answerChecklist: [
+          "address expansion",
+          "concurrency cap",
+          "lazy futures",
+          "authenticated winner",
+          "cancel losers",
+          "socket/timer cleanup",
+          "error aggregation",
+        ],
+        requiredConcepts: [
+          "libp2p-tcp-multiaddr-dial",
+          "libp2p-tcp-socket-lifecycle",
+        ],
+        sectionId: "dial-listen",
+      },
+      {
+        level: "advanced",
+        question:
+          "TCP connect 40ms 뒤 Noise가 3초 timeout되는 trace를 진단하고 phase별 budget과 slowloris 방어를 설계하세요.",
+        answerChecklist: [
+          "connect success timestamp",
+          "security phase",
+          "separate timeout",
+          "pending handshake cap",
+          "byte/progress deadline",
+          "close raw socket",
+          "metrics label",
+        ],
+        requiredConcepts: [
+          "libp2p-tcp-socket-lifecycle",
+          "libp2p-connection-upgrade-pipeline",
+        ],
+        sectionId: "upgrade-chain",
+      },
+      {
+        level: "advanced",
+        question:
+          "TCP+Noise+Yamux와 QUIC을 공정하게 비교하는 benchmark matrix를 설계하세요.",
+        answerChecklist: [
+          "same peer/workload",
+          "same RTT/loss",
+          "cold/warm",
+          "auth policy",
+          "stream count/payload",
+          "authenticated-ready/first byte",
+          "CPU/wire bytes",
+          "failure cleanup",
+        ],
+        requiredConcepts: [
+          "libp2p-connection-upgrade-pipeline",
+          "quic-transport-state",
+        ],
+        sectionId: "upgrade-chain",
+      },
+      {
+        level: "advanced",
+        question:
+          "Accept burst와 slow consumer가 동시에 올 때 memory·latency·cleanup release gate를 설계하세요.",
+        answerChecklist: [
+          "backlog",
+          "pending handshake cap",
+          "established cap",
+          "substream/queue cap",
+          "backpressure",
+          "p95 latency",
+          "memory high-water",
+          "graceful close",
+        ],
+        requiredConcepts: [
+          "libp2p-tcp-socket-lifecycle",
+          "libp2p-connection-upgrade-pipeline",
+        ],
+        sectionId: "upgrade-chain",
+      },
+    ],
+    papers: [
+      {
+        title: "rust-libp2p TCP Config and Transport",
+        href: "https://docs.rs/libp2p/latest/libp2p/tcp/struct.Config.html",
+        problem:
+          "Runtime-independent TCP socket setup을 libp2p Transport contract에 넣는 문제",
+        contribution:
+          "Current default option·backlog와 per-dial port reuse 경계를 문서화",
+        assumptions:
+          "rust-libp2p 0.56, target OS·runtime provider와 enabled tcp feature",
+        evidenceScope: "Current public Rust API",
+        notClaim: "고정 latency·throughput·NAT 성공률을 보장하지 않음",
+        sectionId: "paper-rust-libp2p-tcp",
+      },
+    ],
+  },
+  "blockchain/bft-theory": {
+    entryLevel: true,
+    entryNote:
+      "Replica 네 개와 Byzantine 한 개의 conflicting vote에서 시작합니다. Protocol 이름보다 message→certificate→lock→view change→commit evidence를 먼저 추적합니다.",
+    coreIdea:
+      "BFT는 fault model에 맞는 quorum overlap과 honest signing rule을 certificate·lock·view change에 연결해 safety를 항상 지키고 partial synchrony가 회복되면 progress를 얻습니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      {
+        id: "bft-authenticated-equivocation",
+        role: "Signature와 honesty·equivocation evidence의 경계를 설명합니다.",
+      },
+      {
+        id: "bft-quorum-certificate",
+        role: "같은 phase·value에 대한 typed signer evidence를 정의합니다.",
+      },
+      {
+        id: "bft-honest-quorum-intersection",
+        role: "3f+1·2f+1의 honest overlap을 계산합니다.",
+      },
+      {
+        id: "bft-lock-certificate-safety",
+        role: "Overlap을 conflicting commit 방지 규칙에 연결합니다.",
+      },
+      {
+        id: "bft-view-change-evidence",
+        role: "Leader 교체 때 safe evidence를 인계합니다.",
+      },
+      {
+        id: "bft-partial-synchrony-progress",
+        role: "GST 전 safety와 GST 뒤 liveness를 나눕니다.",
+      },
+      {
+        id: "bft-weight-membership-snapshot",
+        role: "Signer count와 weighted stake threshold를 분리합니다.",
+      },
+      {
+        id: "bft-failure-injection-release-gate",
+        role: "Adversarial schedule의 paired 채택 검사를 설계합니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "bft-authenticated-equivocation",
+        sectionId: "byzantine-model",
+        intuition:
+          "서명된 편지는 누가 썼는지는 알 수 있지만 그 사람이 서로 다른 사람에게 다른 지시를 보내는 것을 막지는 못합니다.",
+        workedExample:
+          "F가 A에게 signed vote(x), B에게 signed vote(y)를 보내면 두 signature 모두 valid해도 함께 equivocation evidence가 됩니다.",
+        boundary:
+          "Valid signature는 value validity·membership authorization·honesty의 증명이 아닙니다.",
+      },
+      {
+        id: "bft-quorum-certificate",
+        sectionId: "overview",
+        intuition:
+          "같은 사건·단계·값에 동의한 서로 다른 참여자의 서명 묶음입니다.",
+        workedExample:
+          "View 7, height 10, prepare, digest x에 A·B·C의 distinct valid signature를 묶어 certificate를 만듭니다.",
+        boundary:
+          "Phase·view·height·domain이 다른 vote나 duplicate signer를 한 certificate로 세면 안 됩니다.",
+      },
+      {
+        id: "bft-honest-quorum-intersection",
+        sectionId: "faulty-threshold",
+        intuition:
+          "두 큰 모임이 공유하는 사람이 fault 수보다 많으면 적어도 한 명은 honest입니다.",
+        workedExample:
+          "n=4,f=1,q=3이면 두 quorum은 최소 2=f+1명이 겹치므로 모두 faulty일 수 없습니다.",
+        boundary:
+          "Equal-weight fixed membership 계산이며 overlap만으로 honest signing rule을 대신하지 않습니다.",
+        proofIdea: "|Q1∩Q2|≥2q−n에 n=3f+1,q=2f+1을 대입합니다.",
+        counterexample:
+          "q=2이면 {A,B}와 {C,D}가 겹치지 않아 conflicting certificate를 만들 수 있습니다.",
+      },
+      {
+        id: "bft-lock-certificate-safety",
+        sectionId: "safety-liveness",
+        intuition:
+          "한 번 강한 증거를 보고 잠근 honest replica는 더 강한 안전 증거 없이 반대편에 서명하지 않습니다.",
+        workedExample:
+          "x certificate로 lock한 B가 stale y proposal을 거절해 Qx·Qy의 honest overlap이 두 commit을 막습니다.",
+        boundary:
+          "Protocol별 phase·unlock·commit rule은 다르므로 2f+1 vote만 보고 임의 phase에서 commit하면 안 됩니다.",
+      },
+      {
+        id: "bft-view-change-evidence",
+        sectionId: "safety-liveness",
+        intuition:
+          "반장을 바꾸더라도 이전 장부의 가장 강한 영수증을 새 반장에게 넘깁니다.",
+        workedExample:
+          "Timeout quorum의 highest certificate가 x이면 새 leader가 그 evidence와 양립하는 x 또는 descendant를 제안합니다.",
+        boundary:
+          "Timeout은 old leader가 Byzantine이라는 완전한 증명도, lock을 지우는 권한도 아닙니다.",
+      },
+      {
+        id: "bft-partial-synchrony-progress",
+        sectionId: "byzantine-model",
+        intuition:
+          "Network가 불안정할 때는 멈출 수 있지만 모순을 만들지 않고, 안정된 뒤 정직 leader를 만나면 다시 갑니다.",
+        workedExample:
+          "GST 전 세 view가 timeout돼도 conflicting commit 0을 지키고 GST 뒤 view 4에서 certificate·commit이 전진합니다.",
+        boundary:
+          "GST 이전 latency 상한이나 모든 순간의 liveness를 보장하지 않습니다.",
+      },
+      {
+        id: "bft-weight-membership-snapshot",
+        sectionId: "faulty-threshold",
+        intuition:
+          "표를 셀 때 어느 명부와 어느 weight 표를 썼는지 영수증에 고정합니다.",
+        workedExample:
+          "Epoch e의 total weight 100과 threshold 67을 certificate에 묶으면 key 40개가 아니라 signed weight 합을 검증합니다.",
+        boundary:
+          "Equal signer count와 stake weight, current epoch와 next epoch를 섞으면 threshold 계산이 달라집니다.",
+      },
+      {
+        id: "bft-failure-injection-release-gate",
+        sectionId: "safety-liveness",
+        intuition:
+          "거짓말·침묵·지연·재시작을 같은 순서로 후보 둘에 넣고 모순 0과 회복 시간을 따로 봅니다.",
+        workedExample:
+          "같은 seed에서 equivocation·partition·stale replay를 주입하고 committed digest conflict=0, GST 뒤 recovery p95를 비교합니다.",
+        boundary:
+          "정상 happy-path throughput만으로 Byzantine safety나 partition recovery를 입증하지 않습니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 선수",
+        relation: "Failure·timing·safety/liveness와 signature를 재사용합니다.",
+        concepts: [
+          "distributed-failure-model",
+          "partial-synchrony-gst",
+          "consensus-safety-liveness",
+        ],
+      },
+      {
+        label: "01 message",
+        relation: "Signed origin과 conflicting behavior를 분리합니다.",
+        concepts: ["bft-authenticated-equivocation"],
+      },
+      {
+        label: "02 certificate",
+        relation: "Quorum overlap으로 typed evidence를 제한합니다.",
+        concepts: ["bft-honest-quorum-intersection", "bft-quorum-certificate"],
+      },
+      {
+        label: "03 safety",
+        relation: "Honest overlap을 lock rule과 view evidence에 연결합니다.",
+        concepts: ["bft-lock-certificate-safety", "bft-view-change-evidence"],
+      },
+      {
+        label: "04 progress",
+        relation: "GST 뒤 조건부 liveness를 얻습니다.",
+        concepts: ["bft-partial-synchrony-progress"],
+      },
+      {
+        label: "05 deployment",
+        relation: "Weight snapshot과 failure gate로 배포를 검증합니다.",
+        concepts: [
+          "bft-weight-membership-snapshot",
+          "bft-failure-injection-release-gate",
+        ],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "Crash·partition·Byzantine equivocation과 valid signature의 의미를 A←x, B←y trace로 분류하세요.",
+        answerChecklist: [
+          "crash silence",
+          "partition channel",
+          "equivocation",
+          "signature origin/integrity",
+          "honesty 비보장",
+          "conflict evidence",
+        ],
+        requiredConcepts: [
+          "bft-authenticated-equivocation",
+          "distributed-failure-model",
+        ],
+        sectionId: "byzantine-model",
+      },
+      {
+        level: "basic",
+        question:
+          "View 7 height 10의 A·B·C vote로 quorum certificate를 만들 때 검증할 필드를 적으세요.",
+        answerChecklist: [
+          "distinct signer",
+          "membership",
+          "domain",
+          "phase",
+          "view/height",
+          "value digest",
+          "signature validity",
+        ],
+        requiredConcepts: ["bft-quorum-certificate"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "n=4,f=1,q=3에서 Qx={A,B,C}, Qy={B,C,D}의 교집합과 honest 최소 수를 계산하세요.",
+        answerChecklist: [
+          "intersection {B,C}",
+          "size 2",
+          "f+1",
+          "at most one faulty",
+          "at least one honest",
+        ],
+        requiredConcepts: ["bft-honest-quorum-intersection"],
+        sectionId: "faulty-threshold",
+      },
+      {
+        level: "basic",
+        question:
+          "x certificate로 lock한 replica가 stale y proposal을 받는 trace에서 lock과 certificate의 역할을 설명하세요.",
+        answerChecklist: [
+          "local lock",
+          "safe proposal rule",
+          "y rejection",
+          "honest overlap",
+          "conflicting commit prevention",
+        ],
+        requiredConcepts: [
+          "bft-lock-certificate-safety",
+          "bft-quorum-certificate",
+        ],
+        sectionId: "safety-liveness",
+      },
+      {
+        level: "basic",
+        question:
+          "GST 전 view 1~3 timeout, GST 뒤 view 4 commit trace에서 safety와 liveness 판정을 나누세요.",
+        answerChecklist: [
+          "GST 전 halt allowed",
+          "conflict 0",
+          "timeout≠fault proof",
+          "honest leader",
+          "bounded delay",
+          "GST 뒤 commit",
+        ],
+        requiredConcepts: [
+          "bft-partial-synchrony-progress",
+          "consensus-safety-liveness",
+        ],
+        sectionId: "byzantine-model",
+      },
+      {
+        level: "basic",
+        question:
+          "같은 100개 key라도 한 운영자가 40 weight를 가진 경우 count quorum과 weighted quorum이 왜 다른지 설명하세요.",
+        answerChecklist: [
+          "key count≠weight",
+          "epoch membership",
+          "total weight",
+          "threshold",
+          "operator concentration",
+          "snapshot receipt",
+        ],
+        requiredConcepts: ["bft-weight-membership-snapshot"],
+        sectionId: "faulty-threshold",
+      },
+      {
+        level: "advanced",
+        question:
+          "n=3f+1,q=2f+1의 honest-overlap 식을 유도하고 q를 낮춘 disjoint quorum 반례를 만드세요.",
+        answerChecklist: [
+          "set lower bound",
+          "2q−n",
+          "f+1",
+          "greater than f",
+          "honest signer",
+          "disjoint/small-q counterexample",
+          "lock assumption",
+        ],
+        requiredConcepts: [
+          "bft-honest-quorum-intersection",
+          "bft-lock-certificate-safety",
+        ],
+        sectionId: "faulty-threshold",
+      },
+      {
+        level: "advanced",
+        question:
+          "Byzantine leader timeout 뒤 새 leader가 안전하게 proposal을 고르는 view-change protocol과 stale evidence 반례를 설명하세요.",
+        answerChecklist: [
+          "timeout quorum",
+          "highest/strongest certificate",
+          "lock handoff",
+          "safe proposal",
+          "stale view rejection",
+          "timeout non-bypass",
+        ],
+        requiredConcepts: [
+          "bft-view-change-evidence",
+          "bft-lock-certificate-safety",
+        ],
+        sectionId: "safety-liveness",
+      },
+      {
+        level: "advanced",
+        question:
+          "PBFT식 phase certificate와 HotStuff chained certificate를 공통 state machine 축으로 비교하되 근거 범위를 제한하세요.",
+        answerChecklist: [
+          "proposal/vote",
+          "typed phase",
+          "certificate",
+          "lock/commit",
+          "view/pacemaker",
+          "protocol-specific rule",
+          "performance non-generalization",
+        ],
+        requiredConcepts: [
+          "bft-quorum-certificate",
+          "bft-view-change-evidence",
+        ],
+        sectionId: "safety-liveness",
+      },
+      {
+        level: "advanced",
+        question:
+          "Equivocation·omission·partition·timeout race·restart·stale replay의 paired release matrix를 설계하세요.",
+        answerChecklist: [
+          "same binary/config/membership",
+          "same seed/schedule",
+          "conflicting committed digest=0",
+          "GST marker",
+          "recovery p95/views/messages",
+          "certificate/weight receipt",
+          "rollback gate",
+        ],
+        requiredConcepts: [
+          "bft-failure-injection-release-gate",
+          "bft-weight-membership-snapshot",
+          "bft-partial-synchrony-progress",
+        ],
+        sectionId: "safety-liveness",
+      },
+    ],
+    papers: [
+      {
+        title: "The Byzantine Generals Problem",
+        href: "https://lamport.azurewebsites.net/pubs/byz.pdf",
+        problem: "Traitor가 임의 message를 보낼 때 interactive consistency",
+        contribution: "Oral·signed message model의 algorithm과 조건",
+        assumptions: "논문이 구분한 communication·authentication model",
+        evidenceScope: "Byzantine problem formulation과 해당 model 결과",
+        notClaim:
+          "모든 partial-synchrony signed protocol의 threshold를 하나로 고정하지 않음",
+        sectionId: "paper-byzantine-generals",
+      },
+      {
+        title: "Consensus in the Presence of Partial Synchrony",
+        href: "https://groups.csail.mit.edu/tds/papers/Lynch/jacm88.pdf",
+        problem: "동기·비동기 사이 timing model의 consensus",
+        contribution: "Unknown bound/GST model과 resilience bounds",
+        assumptions: "Process·authentication·fault·timing model",
+        evidenceScope: "Partial-synchrony consensus의 이론 조건",
+        notClaim:
+          "실제 Internet delay·timeout 값이나 구현 성능을 제공하지 않음",
+        sectionId: "paper-dls-bft",
+      },
+      {
+        title: "Practical Byzantine Fault Tolerance",
+        href: "https://pmg.csail.mit.edu/papers/osdi99.pdf",
+        problem: "Byzantine SMR의 practical algorithm과 implementation",
+        contribution: "Normal phases·checkpoint·view change·evaluation",
+        assumptions: "논문의 system·workload·fault setup",
+        evidenceScope: "PBFT protocol과 당시 evaluation",
+        notClaim: "현대 WAN·weighted membership의 고정 성능 아님",
+        sectionId: "paper-pbft",
+      },
+      {
+        title: "HotStuff: BFT Consensus with Linearity and Responsiveness",
+        href: "https://arxiv.org/abs/1803.05069",
+        problem: "Leader replacement가 단순한 responsive partial-synchrony BFT",
+        contribution: "Chained QC와 pacemaker separation",
+        assumptions: "논문의 authenticated fixed-membership model",
+        evidenceScope: "HotStuff protocol proof와 evaluation",
+        notClaim: "모든 implementation의 total bytes·latency 보장 아님",
+        sectionId: "paper-hotstuff",
+      },
+    ],
+  },
+  "blockchain/pos-theory": {
+    entryLevel: true,
+    entryNote:
+      "한 파일을 저장했다고 주장하는 상황에서 시작합니다. Hash 일치, 일부 challenge 응답, 전체 복구 가능성, replica별 물리적 encoding, 시간 구간별 보관과 retrieval SLA를 먼저 서로 다른 질문으로 나눕니다.",
+    coreIdea:
+      "Proof of Storage는 하나의 Boolean이 아니라 PoR의 retrievability, PoRep의 replica-specific encoding, PoSt의 fresh time-window evidence를 각 commitment·challenge·version receipt로 검증하는 계층이며 서비스 품질은 별도 SLO가 맡습니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      {
+        id: "storage-proof-claim-decomposition",
+        role: "PoR·PoRep·PoSt와 retrieval SLO가 답하는 질문을 분리합니다.",
+      },
+      {
+        id: "por-challenge-extractor",
+        role: "Challenge response에서 recoverability로 가는 extractor 전제를 설명합니다.",
+      },
+      {
+        id: "por-sampling-detection",
+        role: "손상 sample 검출 확률과 independence 경계를 계산합니다.",
+      },
+      {
+        id: "porep-replica-specific-encoding",
+        role: "같은 data가 replica identity별로 다른 encoding을 갖는 이유를 설명합니다.",
+      },
+      {
+        id: "porep-data-replica-commitment-binding",
+        role: "CommD·CommR·replica identity·parameter version을 한 statement에 묶습니다.",
+      },
+      {
+        id: "post-window-fresh-challenge",
+        role: "현재 window의 randomness와 sector snapshot을 proof에 고정합니다.",
+      },
+      {
+        id: "storage-proof-evidence-ledger",
+        role: "Restart·duplicate·reorg를 stable proof ID와 receipt로 조정합니다.",
+      },
+      {
+        id: "storage-proof-service-boundary",
+        role: "Proof acceptance와 실제 retrieval·availability를 별도 검증합니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "storage-proof-claim-decomposition",
+        sectionId: "overview",
+        intuition:
+          "보관 증명이라는 한 이름 아래 서로 다른 질문표를 먼저 나눕니다.",
+        workedExample:
+          "같은 file hash가 맞아도 provider가 지금 전체 file을 복구 가능하게 들고 있는지, 특정 replica로 encoding했는지, 이번 시간 구간에도 유지했는지는 별도 주장입니다.",
+        boundary:
+          "어느 storage proof도 retrieval latency·privacy·geography를 자동 보장하지 않습니다.",
+      },
+      {
+        id: "por-challenge-extractor",
+        sectionId: "por",
+        intuition:
+          "몇 번 맞힌 사실보다 충분한 fresh challenge를 계속 맞히는 prover에게서 file을 되찾을 수 있는지가 핵심입니다.",
+        workedExample:
+          "Verifier가 random block positions를 반복 질의하고 extractor가 여러 valid responses로 encoded file을 복구합니다.",
+        boundary:
+          "한 번의 valid response나 단순 hash match는 full-file retrievability proof가 아닙니다.",
+      },
+      {
+        id: "por-sampling-detection",
+        sectionId: "por",
+        intuition:
+          "손상 위치를 한 번도 뽑지 못할 확률을 먼저 구하고 1에서 뺍니다.",
+        workedExample:
+          "손상 비율 0.2에서 독립 challenge 5개면 detection은 1-0.8^5≈0.672입니다.",
+        boundary:
+          "Challenge가 편향·중복되거나 손상 위치가 adaptive하면 독립·균등 sample 식을 그대로 쓰지 않습니다.",
+        proofIdea:
+          "각 sample이 손상을 놓칠 확률 1-rho를 k번 곱한 뒤 complement를 취합니다.",
+        counterexample:
+          "항상 같은 index를 다섯 번 묻는다면 exponent k가 주는 독립 반복 이득은 없습니다.",
+      },
+      {
+        id: "porep-replica-specific-encoding",
+        sectionId: "porep",
+        intuition:
+          "같은 책도 사물함 번호별 봉인 방식이 달라야 하나의 복제본을 여러 개라고 재사용하기 어렵습니다.",
+        workedExample:
+          "R1=Encode(D,id1), R2=Encode(D,id2)이므로 같은 D라도 encoded bytes와 CommR이 달라집니다.",
+        boundary:
+          "Encoding이 다르다는 사실만으로 storage duration이나 retrieval quality가 증명되지는 않습니다.",
+      },
+      {
+        id: "porep-data-replica-commitment-binding",
+        sectionId: "porep",
+        intuition:
+          "원본 영수증과 replica 영수증을 같은 proof statement에 묶어 바꿔치기를 막습니다.",
+        workedExample:
+          "Verifier는 CommD, CommR, replica ID, parameter version을 public input으로 고정하고 relation을 확인합니다.",
+        boundary:
+          "다른 provider·dataset·version의 valid proof를 현재 statement에 재사용해서는 안 됩니다.",
+      },
+      {
+        id: "post-window-fresh-challenge",
+        sectionId: "post",
+        intuition:
+          "과거 사진이 아니라 이번 점검 시간에 나온 질문으로 현재 보관을 확인합니다.",
+        workedExample:
+          "Window w의 chain randomness와 sector snapshot에서 challenge를 만들고 deadline 전 proof를 제출합니다.",
+        boundary:
+          "Winning·Window PoSt의 역할과 network constant는 배포 version에 따라 달라지며 고정 수치로 일반화하지 않습니다.",
+      },
+      {
+        id: "storage-proof-evidence-ledger",
+        sectionId: "post",
+        intuition:
+          "제출 버튼을 다시 눌러도 같은 일을 두 번 만들지 않도록 proof 전 과정을 영수증 하나로 잇습니다.",
+        workedExample:
+          "proof/job ID에 commitment, randomness, challenge digest, deadline, tx ID, inclusion height와 reorg 상태를 저장합니다.",
+        boundary:
+          "Process의 success 로그만으로 chain inclusion이나 final status를 확정하지 않습니다.",
+      },
+      {
+        id: "storage-proof-service-boundary",
+        sectionId: "overview",
+        intuition:
+          "창고에 상자가 있다는 증거와 고객이 제시간에 상자를 받을 수 있다는 SLO는 다른 검사입니다.",
+        workedExample:
+          "PoSt가 valid여도 key loss나 network outage로 retrieval p95가 SLO를 넘으면 서비스 gate는 실패합니다.",
+        boundary:
+          "Proof metric 하나로 availability·latency·confidentiality·placement를 합치지 않습니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 byte identity",
+        relation:
+          "Hash·content address가 어떤 bytes를 말하는지 먼저 고정합니다.",
+        concepts: ["content-address-integrity"],
+      },
+      {
+        label: "01 claim map",
+        relation:
+          "Storage proof와 service claim을 서로 다른 질문으로 분리합니다.",
+        concepts: [
+          "storage-proof-claim-decomposition",
+          "storage-proof-service-boundary",
+        ],
+      },
+      {
+        label: "02 PoR",
+        relation:
+          "Sampling response를 extractor 기반 retrievability로 연결합니다.",
+        concepts: ["por-sampling-detection", "por-challenge-extractor"],
+      },
+      {
+        label: "03 PoRep",
+        relation:
+          "Replica-specific encoding과 두 commitment를 하나의 statement로 묶습니다.",
+        concepts: [
+          "porep-replica-specific-encoding",
+          "porep-data-replica-commitment-binding",
+        ],
+      },
+      {
+        label: "04 PoSt",
+        relation: "Fresh window challenge로 시간 구간별 evidence를 만듭니다.",
+        concepts: ["post-window-fresh-challenge"],
+      },
+      {
+        label: "05 operations",
+        relation:
+          "Proof lifecycle과 retrieval probe를 별도 receipt로 release gate에 연결합니다.",
+        concepts: [
+          "storage-proof-evidence-ledger",
+          "storage-proof-service-boundary",
+        ],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "File hash 일치, challenge response, full recovery, replica별 encoding, 이번 window 보관, retrieval p95를 PoR·PoRep·PoSt·service SLO로 분류하세요.",
+        answerChecklist: [
+          "hash byte identity",
+          "PoR retrievability",
+          "extractor",
+          "PoRep replica encoding",
+          "PoSt time window",
+          "retrieval separate SLO",
+        ],
+        requiredConcepts: [
+          "storage-proof-claim-decomposition",
+          "storage-proof-service-boundary",
+        ],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "손상 비율 rho=0.2에서 독립·균등 challenge k=5개의 검출 확률과 모두 놓칠 확률을 계산하세요.",
+        answerChecklist: [
+          "miss per sample 0.8",
+          "all miss 0.8^5",
+          "0.32768",
+          "detect 0.67232",
+          "independent uniform assumption",
+        ],
+        requiredConcepts: ["por-sampling-detection"],
+        sectionId: "por",
+      },
+      {
+        level: "basic",
+        question:
+          "PoR의 encode→challenge→respond→verify→extract 흐름을 추적하고 possession과 retrievability를 구분하세요.",
+        answerChecklist: [
+          "encoded redundancy",
+          "fresh random challenge",
+          "bounded response",
+          "verification",
+          "many transcripts",
+          "extractor recovery",
+          "one response insufficient",
+        ],
+        requiredConcepts: ["por-challenge-extractor"],
+        sectionId: "por",
+      },
+      {
+        level: "basic",
+        question:
+          "같은 D를 id1·id2로 encoding할 때 R1·R2와 CommD·CommR이 무엇을 고정하는지 설명하세요.",
+        answerChecklist: [
+          "same source D",
+          "replica ID input",
+          "different encoded R",
+          "CommD source",
+          "CommR replica",
+          "parameter/version binding",
+        ],
+        requiredConcepts: [
+          "porep-replica-specific-encoding",
+          "porep-data-replica-commitment-binding",
+        ],
+        sectionId: "porep",
+      },
+      {
+        level: "basic",
+        question:
+          "PoSt window receipt에 필요한 필드를 적고 missing·invalid·late·reorged를 서로 다른 상태로 분류하세요.",
+        answerChecklist: [
+          "proof/job ID",
+          "sector snapshot",
+          "randomness/challenge digest",
+          "deadline",
+          "proof/version",
+          "submission tx",
+          "chain inclusion",
+          "distinct terminal/reconciling states",
+        ],
+        requiredConcepts: [
+          "post-window-fresh-challenge",
+          "storage-proof-evidence-ledger",
+        ],
+        sectionId: "post",
+      },
+      {
+        level: "basic",
+        question:
+          "Storage proof는 accepted지만 retrieval timeout·key loss·provider correlation이 발생한 사례의 판정을 설명하세요.",
+        answerChecklist: [
+          "proof claim can pass",
+          "retrieval SLO fail",
+          "key custody separate",
+          "availability separate",
+          "correlation risk",
+          "independent probe/owner",
+        ],
+        requiredConcepts: ["storage-proof-service-boundary"],
+        sectionId: "overview",
+      },
+      {
+        level: "advanced",
+        question:
+          "P(detect)=1-(1-rho)^k를 유도하고 반복 audit·편향 challenge·adaptive corruption·extractor의 경계를 설명하세요.",
+        answerChecklist: [
+          "per-sample miss",
+          "independence product",
+          "complement",
+          "fresh uniform",
+          "replacement/duplicates",
+          "adaptive counterexample",
+          "sampling not extractor proof",
+        ],
+        requiredConcepts: ["por-sampling-detection", "por-challenge-extractor"],
+        sectionId: "por",
+      },
+      {
+        level: "advanced",
+        question:
+          "다른 dataset·replica ID·provider·parameter version의 valid PoRep proof를 바꿔 끼우는 공격에 대한 fail-closed statement validation을 설계하세요.",
+        answerChecklist: [
+          "CommD",
+          "CommR",
+          "replica/provider identity",
+          "parameter/version",
+          "domain separation",
+          "public input equality",
+          "reject mismatch before acceptance",
+        ],
+        requiredConcepts: ["porep-data-replica-commitment-binding"],
+        sectionId: "porep",
+      },
+      {
+        level: "advanced",
+        question:
+          "Proof 생성·submit 사이 crash와 inclusion 뒤 reorg가 있는 PoSt state machine을 stable ID·reconcile·dedupe·deadline으로 설계하세요.",
+        answerChecklist: [
+          "stable proof/job ID",
+          "persist intent",
+          "generation receipt",
+          "idempotent submit",
+          "chain lookup",
+          "reorg transition",
+          "deadline budget",
+          "no success-log finality",
+        ],
+        requiredConcepts: [
+          "storage-proof-evidence-ledger",
+          "post-window-fresh-challenge",
+        ],
+        sectionId: "post",
+      },
+      {
+        level: "advanced",
+        question:
+          "같은 data·parameter·randomness에서 base/candidate storage-proof release matrix와 hard gate를 설계하세요.",
+        answerChecklist: [
+          "same dataset/replica/version",
+          "same challenge/randomness",
+          "corrupt block",
+          "missing sector",
+          "stale randomness",
+          "wrong replica ID",
+          "restart/reorg",
+          "retrieval probe separate",
+          "proof false accept zero gate",
+          "rollback artifact",
+        ],
+        requiredConcepts: [
+          "storage-proof-evidence-ledger",
+          "storage-proof-service-boundary",
+          "porep-data-replica-commitment-binding",
+        ],
+        sectionId: "post",
+      },
+    ],
+    papers: [
+      {
+        title: "PORs: Proofs of Retrievability for Large Files",
+        href: "https://eprint.iacr.org/2008/175",
+        problem:
+          "Remote file이 실제로 복구 가능한지 짧은 challenge-response로 검증",
+        contribution:
+          "Encoding·sentinel/authenticator·extractor를 결합한 retrievability 정의",
+        assumptions: "논문의 adversary·challenge·encoding·extractor model",
+        evidenceScope: "PoR security definition과 construction",
+        notClaim:
+          "Retrieval latency·online availability·modern deployment cost를 보장하지 않음",
+        sectionId: "paper-por-theory",
+      },
+      {
+        title: "Filecoin: A Decentralized Storage Network",
+        href: "https://filecoin.io/filecoin.pdf",
+        problem:
+          "분산 storage market에서 unique physical replication과 시간 경과 보관을 증명",
+        contribution:
+          "Proof-of-Replication과 Proof-of-Spacetime protocol design",
+        assumptions: "논문의 encoding·commitment·chain·economic model",
+        evidenceScope: "PoRep/PoSt의 protocol claim과 original construction",
+        notClaim:
+          "현재 network constant·actor version·implementation 성능을 고정하지 않음",
+        sectionId: "paper-filecoin-porep",
+      },
+      {
+        title: "Filecoin Docs — Proofs",
+        href: "https://docs.filecoin.io/basics/the-blockchain/proofs",
+        problem:
+          "현재 Filecoin proof lifecycle과 PoSt 역할을 운영자가 이해하는 문제",
+        contribution:
+          "PoRep·Winning PoSt·Window PoSt의 current documented purpose와 연결",
+        assumptions: "표시한 문서 revision과 network/proof version",
+        evidenceScope:
+          "현재 공식 문서가 설명하는 proof 종류·역할·운영 lifecycle의 범위",
+        notClaim:
+          "원 논문의 formal proof나 모든 compatible network의 constant를 대신하지 않음",
+        sectionId: "paper-filecoin-post-spec",
+      },
+    ],
+  },
+  "blockchain/cometbft-types": {
+    entryLevel: true,
+    entryNote: "Block·signature·validator를 모른다고 가정하고, 합의 증거가 어떤 bytes와 좌표를 보존해야 다른 node가 다시 검증할 수 있는지부터 시작합니다.",
+    coreIdea: "CometBFT protocol type은 header commitment, chain-bound canonical vote, historical voting-power certificate와 verified evidence를 연결해 합의 결정을 재검증 가능한 wire evidence로 보존합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "cometbft-wire-state-evidence-boundary", role: "Peer·disk가 검증하는 protocol object와 node-local scheduling state를 구분합니다." },
+      { id: "cometbft-header-commitment-lag", role: "Header commitment와 previous application result의 높이 관계를 해석합니다." },
+      { id: "cometbft-canonical-sign-bytes", role: "Vote signature가 chain·height·round·phase·BlockID에 묶이는 입력을 구성합니다." },
+      { id: "cometbft-voting-power-commit-certificate", role: "Historical validator power로 Commit threshold를 검증합니다." },
+      { id: "cometbft-validator-proposer-priority", role: "Voting power를 사용하는 proposer scheduler와 quorum을 분리합니다." },
+      { id: "cometbft-evidence-accountability-pipeline", role: "Signed conflict 탐지에서 application penalty 입력까지의 단계를 잇습니다." },
+    ],
+    conceptExplanations: [
+      { id: "cometbft-wire-state-evidence-boundary", sectionId: "overview", intuition: "회의록에 남아 제삼자가 확인할 서명 문서와, 사회자가 다음 발언자를 고르려고 가진 메모는 역할이 다릅니다.", workedExample: "Vote·Commit은 peer와 disk가 검증하지만 RoundState와 proposer priority는 node가 다음 동작을 고르는 runtime state입니다.", boundary: "Protobuf로 encoding됐다는 사실만으로 signature·semantic validity가 생기지 않습니다.", counterexample: "Local proposer priority를 block certificate처럼 외부 검증 근거로 쓰면 다른 node runtime과 일치하지 않을 수 있습니다." },
+      { id: "cometbft-header-commitment-lag", sectionId: "block-header", intuition: "봉인한 상자는 현재 내용물과 직전 작업 영수증을 묶지만, 아직 실행하지 않은 현재 작업 결과는 담을 수 없습니다.", workedExample: "Header h는 current DataHash와 이전 block의 AppHash·LastResultsHash를 잇고 block h의 FinalizeBlock AppHash는 다음 header로 갑니다.", boundary: "Header commitment는 transaction의 business validity나 application proof 자체가 아닙니다.", counterexample: "Header h의 AppHash를 block h 실행 뒤 state로 읽으면 off-by-one 장애 진단이 됩니다." },
+      { id: "cometbft-canonical-sign-bytes", sectionId: "vote-commit", intuition: "같은 서명이 어느 chain의 몇 번째 회의에서 어떤 안건에 한 표인지 봉투 바깥에 함께 적습니다.", workedExample: "Chain A·height 10·round 2·Precommit·BlockID X를 canonical encoding한 bytes에 validator가 서명합니다.", boundary: "Network Vote object와 canonical signing representation은 같다고 가정하지 않습니다.", counterexample: "ChainID나 phase를 빼면 다른 chain·message context에 signature를 재사용할 여지가 생깁니다." },
+      { id: "cometbft-voting-power-commit-certificate", sectionId: "vote-commit", intuition: "사람 수가 아니라 의결권 weight를 합하고 같은 안건의 표만 셉니다.", workedExample: "Total power 100에서 Block B의 유효 precommit power가 67이면 >2/3이고 66이면 threshold를 넘지 못합니다.", boundary: "Nil·absent·다른 round vote와 duplicate validator vote는 B의 power에 더하지 않습니다.", proofIdea: "Signature와 coordinates를 먼저 검증한 후 historical set의 validator별 한 slot만 합해 quorum certificate를 구성합니다.", counterexample: "현재 validator set으로 과거 Commit을 검증하면 당시 정상 signer를 잘못 제외할 수 있습니다." },
+      { id: "cometbft-validator-proposer-priority", sectionId: "validator-set", intuition: "Weight가 큰 참가자는 credit을 더 빨리 쌓지만 선택되면 전체 credit만큼 비용을 내 다음 참가자에게 기회를 줍니다.", workedExample: "Priority에 각 power를 더하고 최대 validator를 고른 뒤 선택자의 priority에서 total power W를 뺍니다.", boundary: "Normalization·rescaling·tie break와 update delay는 선택한 release source에서 확인합니다.", counterexample: "Priority가 높다는 사실은 그 validator의 proposal이 valid하거나 commit됐다는 증거가 아닙니다." },
+      { id: "cometbft-evidence-accountability-pipeline", sectionId: "validator-set", intuition: "위반 장면을 발견하는 것과 신원·시점·규칙을 검증해 공식 기록에 올리고 처분하는 것은 별 단계입니다.", workedExample: "같은 validator·H/R/type인데 BlockID가 다른 signed vote 두 개를 historical set과 age로 검증해 block에 포함하고 FinalizeBlock으로 전달합니다.", boundary: "CometBFT evidence system은 application의 economic penalty 크기나 모든 공격 방지를 소유하지 않습니다.", counterexample: "서로 다른 round의 두 vote를 좌표 확인 없이 duplicate vote로 처벌하면 정상 lock change도 오탐할 수 있습니다." },
+    ],
+    conceptStages: [
+      { label: "00 위치", relation: "Architecture owner에서 wire evidence의 역할을 분리합니다.", concepts: ["cometbft-consensus-application-boundary", "cometbft-wire-state-evidence-boundary"] },
+      { label: "01 header", relation: "Current payload와 previous result를 commitment로 묶습니다.", concepts: ["cometbft-header-commitment-lag"] },
+      { label: "02 vote", relation: "Vote context를 canonical signature input으로 고정합니다.", concepts: ["cometbft-canonical-sign-bytes"] },
+      { label: "03 commit", relation: "Historical validator power로 certificate를 검증합니다.", concepts: ["cometbft-voting-power-commit-certificate"] },
+      { label: "04 membership", relation: "Quorum weight와 proposer scheduling state를 구분합니다.", concepts: ["cometbft-validator-proposer-priority"] },
+      { label: "05 accountability", relation: "Conflicting signature를 verified evidence와 application input으로 연결합니다.", concepts: ["cometbft-evidence-accountability-pipeline"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Block·Vote·Commit·RoundState·proposer priority를 wire evidence와 local runtime state로 분류하고 이유를 설명하세요.", answerChecklist: ["Block/Vote/Commit wire evidence", "RoundState local", "priority scheduler", "third-party verification", "encoding not validity"], requiredConcepts: ["cometbft-wire-state-evidence-boundary"], sectionId: "overview" },
+      { level: "basic", question: "Header의 DataHash·LastCommitHash·AppHash가 각각 어느 payload와 높이를 가리키는지 설명하세요.", answerChecklist: ["current data", "previous commit", "previous application result", "next-header lag", "off-by-one"], requiredConcepts: ["cometbft-header-commitment-lag"], sectionId: "block-header" },
+      { level: "basic", question: "Vote를 서명할 때 chain ID·height·round·phase·BlockID가 canonical bytes에 필요한 이유를 설명하세요.", answerChecklist: ["domain binding", "chain", "height/round", "message phase", "block or nil", "replay/substitution"], requiredConcepts: ["cometbft-canonical-sign-bytes"], sectionId: "vote-commit" },
+      { level: "basic", question: "Total power 100에서 Block B precommit 67, nil 20, absent 13일 때 Commit 여부와 각 상태 의미를 답하세요.", answerChecklist: ["67 > 2/3", "commit threshold", "nil explicit vote", "absent not received", "do not sum nil/absent"], requiredConcepts: ["cometbft-voting-power-commit-certificate"], sectionId: "vote-commit" },
+      { level: "basic", question: "Power 3:1 validator pair의 proposer priority update를 두 단계 추적하고 quorum weight와 다른 점을 말하세요.", answerChecklist: ["add own power", "select maximum", "subtract total power", "deterministic tie break", "scheduler not certificate"], requiredConcepts: ["cometbft-validator-proposer-priority"], sectionId: "validator-set" },
+      { level: "basic", question: "DuplicateVoteEvidence가 detection에서 application policy까지 가는 단계를 순서대로 쓰세요.", answerChecklist: ["conflicting signed votes", "same coordinates", "historical set/signature", "age/duplicate", "gossip/block inclusion", "FinalizeBlock misbehavior", "application penalty"], requiredConcepts: ["cometbft-evidence-accountability-pipeline"], sectionId: "validator-set" },
+      { level: "advanced", question: "Field order·encoding version·DataHash가 하나씩 달라질 때 header commitment와 vote 검증이 어떻게 실패해야 하는지 adversarial fixture를 설계하세요.", answerChecklist: ["pinned v0.40.0 schema", "canonical encoding", "Merkle recomputation", "different header hash", "BlockID mismatch", "fail closed", "valid control"], requiredConcepts: ["cometbft-header-commitment-lag", "cometbft-canonical-sign-bytes"], sectionId: "block-header" },
+      { level: "advanced", question: "Validator set이 height H 이후 바뀌는 상황에서 H의 Commit을 latest set으로 검증하는 버그와 올바른 snapshot receipt를 설명하세요.", answerChecklist: ["historical height", "validator-set hash", "address/public key", "voting power", "signature slots", "latest-set counterexample", "version receipt"], requiredConcepts: ["cometbft-voting-power-commit-certificate", "cometbft-validator-proposer-priority"], sectionId: "validator-set" },
+      { level: "advanced", question: "Wrong ChainID·wrong round·duplicate validator index·nil/absent confusion·bad extension signature를 포함한 Commit verifier 순서를 설계하세요.", answerChecklist: ["shape/coordinates", "canonical sign bytes", "historical membership", "signature", "dedupe", "BlockID bucket", "power threshold", "extension separate"], requiredConcepts: ["cometbft-canonical-sign-bytes", "cometbft-voting-power-commit-certificate"], sectionId: "vote-commit" },
+      { level: "advanced", question: "Duplicate vote, different-round lock change, stale evidence, already committed evidence를 구분하는 failure matrix와 release gate를 만드세요.", answerChecklist: ["same validator/H/R/type", "different BlockID", "different-round non-counterexample", "historical snapshot", "signature/chain", "age", "deduplication", "application delivery not penalty", "zero false positive"], requiredConcepts: ["cometbft-evidence-accountability-pipeline", "cometbft-wire-state-evidence-boundary"], sectionId: "validator-set" },
+    ],
+    papers: [
+      { title: "CometBFT v0.40.0 Data Structures", href: "https://github.com/cometbft/cometbft/blob/v0.40.0/spec/core/data_structures.md", problem: "Block·Vote·Commit·ValidatorSet·Evidence의 field와 validation rule 고정", contribution: "Protocol object의 canonical structure와 검증 관계를 release tag로 제공", assumptions: "v0.40.0 schema·encoding·validator snapshot", evidenceScope: "해당 release의 data structures와 validation", notClaim: "Application business validity나 모든 future release field를 고정하지 않음", sectionId: "paper-cometbft-data-structures-v040" },
+      { title: "CometBFT v0.40.0 Evidence", href: "https://github.com/cometbft/cometbft/blob/v0.40.0/spec/consensus/evidence.md", problem: "Byzantine misbehavior를 검증·전파·commit해 application에 전달", contribution: "Evidence lifecycle와 validity criteria 설명", assumptions: "Historical validator data·signature·age parameter가 사용 가능", evidenceScope: "Consensus evidence detection과 delivery", notClaim: "Application penalty 정책이나 모든 공격 예방을 대신하지 않음", sectionId: "paper-cometbft-evidence-v040" },
+    ],
+  },
+  "blockchain/cometbft-consensus": {
+    entryLevel: true,
+    entryNote: "합의 알고리즘을 모른다고 가정하고, 한 block 위치와 재시도 번호와 현재 투표 phase를 구분하는 H/R/S 좌표부터 시작합니다.",
+    coreIdea: "CometBFT consensus는 여러 message producer를 한 H/R/S state owner에 직렬화하고 signed prevote·precommit과 PoLC lock을 보존하면서 timeout으로 round를 늘려 safety와 liveness를 분리합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "cometbft-height-round-step-state", role: "Consensus event와 transition을 height·round·step으로 좌표화합니다." },
+      { id: "cometbft-event-queue-serialization", role: "Peer·internal·timer message를 단일 state owner가 적용합니다." },
+      { id: "cometbft-proposal-prevote-precommit", role: "Proposal에서 nil/block prevote, lock과 precommit, commit으로 이어지는 규칙을 설명합니다." },
+      { id: "cometbft-pol-lock-transition", role: "Higher-round evidence가 earlier lock을 안전하게 갱신하는 조건을 설명합니다." },
+      { id: "cometbft-round-timeout-stale-event", role: "Round별 waiting budget과 stale timeout suppression을 연결합니다." },
+      { id: "cometbft-equivocation-evidence-separation", role: "Consensus detection과 application penalty를 분리합니다." },
+    ],
+    conceptExplanations: [
+      { id: "cometbft-height-round-step-state", sectionId: "overview", intuition: "같은 장부 줄(height)을 합의하지 못하면 사회자와 대기 시간을 바꾼 회차(round)를 열고, 제안·1차표·2차표(step)를 구분합니다.", workedExample: "(H=10,R=2,S=Prevote)는 열 번째 block의 세 번째 시도에서 prevote를 모으는 상태입니다.", boundary: "높은 round가 높은 height를 뜻하지 않으며 step 이름만으로 certificate가 존재한다고 볼 수 없습니다.", counterexample: "Round 3 vote를 round 2 VoteSet에 더하면 서로 다른 consensus instance를 섞습니다." },
+      { id: "cometbft-event-queue-serialization", sectionId: "receive-routine", intuition: "여러 창구의 서류를 장부 담당자 한 명이 번호대로 처리해 동시에 같은 칸을 고치지 않게 합니다.", workedExample: "Peer vote·internal proposal·timeout envelope를 queue에 넣고 loop가 state-before/after와 WAL receipt를 남깁니다.", boundary: "Queue arrival은 message acceptance나 state transition 완료가 아닙니다.", counterexample: "Network callback이 RoundState를 직접 쓰면 timeout과 vote가 race해 step이 역행할 수 있습니다." },
+      { id: "cometbft-proposal-prevote-precommit", sectionId: "round-state", intuition: "후보를 보았다는 1차표와 그 후보에 lock을 걸었다는 2차표를 분리합니다.", workedExample: "Valid proposal B에 +2/3 prevote가 모이면 B를 lock·precommit하고 +2/3 B precommit이면 commit합니다.", boundary: "Nil vote와 absent vote, prevote와 precommit은 의미가 다릅니다.", counterexample: "Proposal만 받았거나 +2/3 prevote만으로 바로 commit하면 required phase를 건너뜁니다." },
+      { id: "cometbft-pol-lock-transition", sectionId: "round-state", intuition: "이전 약속을 단순히 시간이 지났다고 지우지 않고, 더 최신의 충분한 공동 증거가 있을 때만 갱신합니다.", workedExample: "Round 1 B lock 뒤 round 3 proposal이 higher PoLC round를 증명하면 protocol rule에 따라 lock을 갱신합니다.", boundary: "실제 validRound·POLRound transition은 pinned consensus spec의 정확한 조건을 따릅니다.", proofIdea: "서로 교차하는 honest voting power가 conflicting higher certificate 생성을 제한해 earlier commit과 충돌하지 않게 합니다.", counterexample: "Timeout 하나만 보고 lock을 지우면 Byzantine proposer가 다른 block certificate를 만들 수 있습니다." },
+      { id: "cometbft-round-timeout-stale-event", sectionId: "timeout", intuition: "통신이 느릴수록 다음 회차에서는 더 기다리되 이미 다음 단계로 간 뒤 울린 알람은 무시합니다.", workedExample: "T_s(r)=T_s0+rΔ_s로 예산을 늘리고 timeout의 H/R/S가 current state와 다르면 state를 바꾸지 않습니다.", boundary: "GST 이전 무기한 delay에서는 timeout schedule만으로 termination을 보장하지 않습니다.", counterexample: "Round 1 timeout이 round 2 precommit 뒤 처리돼 round를 되돌리면 safety·liveness state가 손상됩니다." },
+      { id: "cometbft-equivocation-evidence-separation", sectionId: "byzantine", intuition: "위조가 아닌 두 상충 서명을 발견하는 일과 벌금을 정하는 일은 담당자가 다릅니다.", workedExample: "Consensus가 duplicate vote를 검증·포함하고 application은 FinalizeBlock misbehavior 입력으로 penalty를 정합니다.", boundary: "서로 다른 round의 다른 vote는 그 자체로 duplicate vote가 아닙니다.", counterexample: "Detection count를 slash 완료나 공격 예방률로 보고하면 evidence 전달·application policy 실패를 놓칩니다." },
+    ],
+    conceptStages: [
+      { label: "00 좌표", relation: "Consensus instance와 phase를 H/R/S로 고정합니다.", concepts: ["cometbft-height-round-step-state"] },
+      { label: "01 입력", relation: "여러 producer event를 검증·직렬화합니다.", concepts: ["cometbft-event-queue-serialization"] },
+      { label: "02 round", relation: "Proposal·prevote·precommit certificate transition을 실행합니다.", concepts: ["cometbft-proposal-prevote-precommit"] },
+      { label: "03 safety", relation: "PoLC evidence로 lock을 보존·갱신합니다.", concepts: ["bft-lock-certificate-safety", "cometbft-pol-lock-transition"] },
+      { label: "04 liveness", relation: "Partial synchrony 아래 timeout과 stale-event guard를 적용합니다.", concepts: ["bft-partial-synchrony-progress", "cometbft-round-timeout-stale-event"] },
+      { label: "05 accountability", relation: "Equivocation detection과 penalty owner를 나눕니다.", concepts: ["cometbft-equivocation-evidence-separation"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Height 10 round 2 Prevote 상태에서 height·round·step이 각각 무엇을 뜻하는지 설명하세요.", answerChecklist: ["block position", "retry within height", "evidence phase", "H/R/S coordinates", "do not mix rounds"], requiredConcepts: ["cometbft-height-round-step-state"], sectionId: "overview" },
+      { level: "basic", question: "Peer vote·internal proposal·timeout이 receive에서 state transition까지 가는 경로를 쓰세요.", answerChecklist: ["producer", "envelope", "cheap validation", "queue", "single owner", "H/R/S validation", "state/WAL receipt"], requiredConcepts: ["cometbft-event-queue-serialization"], sectionId: "receive-routine" },
+      { level: "basic", question: "Valid proposal, nil prevote, +2/3 block prevote, +2/3 block precommit이 각각 어떤 다음 동작을 만드는지 답하세요.", answerChecklist: ["proposal validation", "block or nil prevote", "PoLC", "lock/precommit", "commit", "nil not absent"], requiredConcepts: ["cometbft-proposal-prevote-precommit"], sectionId: "round-state" },
+      { level: "basic", question: "Round 1에서 B에 lock된 validator가 round 3 proposal을 받을 때 무엇을 확인해야 lock을 갱신할 수 있나요?", answerChecklist: ["existing lock", "higher valid/POL round", "signed prevote evidence", "compatible transition", "not timeout alone"], requiredConcepts: ["cometbft-pol-lock-transition"], sectionId: "round-state" },
+      { level: "basic", question: "T_s(r)=T_s0+rΔ_s의 기호와 partial-synchrony 전제, stale timeout 처리법을 설명하세요.", answerChecklist: ["step", "round", "base", "delta", "GST/bounded delay", "recheck H/R/S", "ignore stale"], requiredConcepts: ["cometbft-round-timeout-stale-event"], sectionId: "timeout" },
+      { level: "basic", question: "Duplicate vote 발견부터 application penalty까지 owner를 나누세요.", answerChecklist: ["same H/R/type", "different BlockID", "signature/history validation", "evidence pool/block", "ABCI misbehavior", "application policy"], requiredConcepts: ["cometbft-equivocation-evidence-separation"], sectionId: "byzantine" },
+      { level: "advanced", question: "Future vote·past vote·stale timeout·duplicate queue delivery가 섞인 event loop의 deterministic transition table을 설계하세요.", answerChecklist: ["current H/R/S", "past/future policy", "signature/membership", "deduplication", "stale timer guard", "single state owner", "WAL replay", "bounded queue"], requiredConcepts: ["cometbft-height-round-step-state", "cometbft-event-queue-serialization", "cometbft-round-timeout-stale-event"], sectionId: "receive-routine" },
+      { level: "advanced", question: "Timeout에 따라 lock을 지우는 잘못된 protocol에서 conflicting commit이 생기는 반례와 PoLC 수정책을 설명하세요.", answerChecklist: ["earlier lock", "timeout-only unlock", "Byzantine conflicting proposal", "two quorum risk", "higher signed PoLC", "honest intersection", "preserve evidence"], requiredConcepts: ["cometbft-pol-lock-transition", "bft-lock-certificate-safety"], sectionId: "round-state" },
+      { level: "advanced", question: "Timeout base/delta 후보 두 개를 같은 latency/loss schedule에서 비교하는 release experiment를 설계하세요.", answerChecklist: ["same validator/app/workload", "same network seed", "conflicting commit zero", "commit latency", "rounds per height", "nil power", "stale timers", "message bytes", "GST marking"], requiredConcepts: ["cometbft-round-timeout-stale-event", "bft-partial-synchrony-progress"], sectionId: "timeout" },
+      { level: "advanced", question: "Equivocating proposer·duplicate precommit·delayed block parts·crash/WAL replay를 포함한 consensus release gate를 만드세요.", answerChecklist: ["pinned v0.40.0", "same fault seed", "evidence identity", "conflicting commit zero", "height/AppHash convergence", "progress after GST", "replay idempotence", "false-positive control", "rollback artifact"], requiredConcepts: ["cometbft-equivocation-evidence-separation", "cometbft-event-queue-serialization", "cometbft-pol-lock-transition"], sectionId: "byzantine" },
+    ],
+    papers: [
+      { title: "CometBFT v0.40.0 Byzantine Consensus Algorithm", href: "https://github.com/cometbft/cometbft/blob/v0.40.0/spec/consensus/consensus.md", problem: "Byzantine validator와 delayed network에서 한 block order 결정", contribution: "H/R/S, proposal·prevote·precommit, PoLC·timeout과 safety/liveness proof 설명", assumptions: "Authenticated weighted validators, Byzantine power bound, partial synchrony", evidenceScope: "v0.40.0 consensus state-machine semantics", notClaim: "Application execution·fixed latency·모든 deployment 성능을 보장하지 않음", sectionId: "paper-cometbft-consensus-v040" },
+    ],
+  },
+  "blockchain/cometbft-abci": {
+    entryLevel: true,
+    entryNote: "RPC나 blockchain application을 모른다고 가정하고, 합의가 순서를 정하는 일과 application이 state를 계산·저장하는 일을 분리하는 데서 시작합니다.",
+    coreIdea: "ABCI++는 logical connection의 state view, Prepare/Process candidate coherence, FinalizeBlock deterministic transition과 Commit durability를 분리해 decided block을 같은 AppHash의 durable application state로 넘깁니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "cometbft-abci-connection-state-separation", role: "Consensus·mempool·query·snapshot 연결의 state view와 ordering을 구분합니다." },
+      { id: "cometbft-prepare-process-coherence", role: "Correct proposal preparation과 deterministic validation이 호환되게 합니다." },
+      { id: "cometbft-candidate-committed-state", role: "여러 proposal candidate와 authoritative decided state를 격리합니다." },
+      { id: "cometbft-finalize-determinism", role: "같은 ordered input에서 같은 transaction results·updates·AppHash를 만듭니다." },
+      { id: "cometbft-apphash-next-header-lag", role: "FinalizeBlock result와 다음 header AppHash의 높이를 연결합니다." },
+      { id: "cometbft-commit-crash-replay", role: "Block·CometBFT state·application commit receipt를 비교해 안전하게 replay합니다." },
+    ],
+    conceptExplanations: [
+      { id: "cometbft-abci-connection-state-separation", sectionId: "abci-client", intuition: "주문 접수 창구, 조리 확정 라인, 완료 주문 조회 창구는 같은 주방을 써도 보는 상태와 순서가 다릅니다.", workedExample: "Consensus connection은 candidate/Finalize/Commit, mempool은 CheckTx/recheck, query는 committed height, snapshot은 restore state를 다룹니다.", boundary: "Local·socket·gRPC transport 선택은 state authority나 determinism을 자동 보장하지 않습니다.", counterexample: "Query가 candidate state를 읽으면 아직 결정되지 않은 결과를 committed receipt처럼 노출할 수 있습니다." },
+      { id: "cometbft-prepare-process-coherence", sectionId: "prepare-process", intuition: "제안자가 만든 정상 답안은 같은 규칙을 가진 채점자들이 모두 통과시켜야 다음 단계로 갑니다.", workedExample: "PrepareProposal이 max_tx_bytes 안의 B를 만들고 correct ProcessProposal은 같은 S_h·B·C_h에서 모두 ACCEPT합니다.", boundary: "Prepare는 non-deterministic일 수 있지만 Process 판정은 correct node 사이 deterministic해야 합니다.", counterexample: "Local clock으로 ACCEPT를 정하면 같은 block에 node별 판정이 갈려 liveness가 멈춥니다." },
+      { id: "cometbft-candidate-committed-state", sectionId: "prepare-process", intuition: "여러 초안을 미리 계산해도 최종 선택된 초안 하나만 원장에 반영합니다.", workedExample: "Round 0 candidate A와 round 1 candidate B를 block hash별 cache에 두고 B가 decided되면 B 결과만 FinalizeBlock에서 승격합니다.", boundary: "Candidate path는 durable state나 external side effect를 갱신하지 않습니다.", counterexample: "ProcessProposal에서 main state를 덮으면 다른 candidate가 결정됐을 때 rollback할 근거가 사라집니다." },
+      { id: "cometbft-finalize-determinism", sectionId: "finalize-commit", intuition: "모든 지점이 같은 이전 장부와 같은 확정 주문을 받으면 같은 새 장부를 계산해야 합니다.", workedExample: "S_h와 decided B_h에서 F를 실행해 동일 tx results·validator updates·AppHash A를 반환합니다.", boundary: "Node-local clock·randomness·unordered iteration·remote API를 state-affecting output에 쓰지 않습니다.", proofIdea: "Ordered input과 deterministic transition이 같으면 induction으로 correct replicas의 state sequence가 같습니다.", counterexample: "Remote price API를 FinalizeBlock 중 읽으면 같은 block에서 서로 다른 AppHash가 생길 수 있습니다." },
+      { id: "cometbft-apphash-next-header-lag", sectionId: "finalize-commit", intuition: "현재 작업을 끝낸 영수증은 이미 봉인된 현재 표지에 넣지 못하고 다음 표지에 실립니다.", workedExample: "Block h FinalizeBlock의 AppHash는 next block header field로 연결되고 장애 trace는 decided h·app committed height·next header를 구분합니다.", boundary: "AppHash는 application-specific commitment이며 CometBFT database root나 current transaction hash가 아닙니다.", counterexample: "Header h의 AppHash를 block h 실행 결과로 대조하면 정상 node도 divergence처럼 보일 수 있습니다." },
+      { id: "cometbft-commit-crash-replay", sectionId: "finalize-commit", intuition: "배송 상자·처리 결과·창고 입고표 중 어디까지 남았는지 확인한 뒤 빠진 단계만 다시 합니다.", workedExample: "Block만 저장됐으면 FinalizeBlock 이후를 replay하고 CometBFT result는 있으나 app Commit receipt가 없으면 result를 재현·대조한 뒤 Commit합니다.", boundary: "External payment·webhook은 outbox/idempotency로 별도 reconcile합니다.", counterexample: "Timeout을 미실행으로 간주해 external effect까지 다시 보내면 duplicate charge가 생깁니다." },
+    ],
+    conceptStages: [
+      { label: "00 owner", relation: "Consensus order와 application transition을 분리합니다.", concepts: ["cometbft-consensus-application-boundary"] },
+      { label: "01 connections", relation: "Logical connection별 state view와 ordering을 나눕니다.", concepts: ["cometbft-abci-connection-state-separation"] },
+      { label: "02 proposal", relation: "Prepare와 Process의 candidate coherence를 유지합니다.", concepts: ["cometbft-prepare-process-coherence"] },
+      { label: "03 candidate", relation: "여러 초안과 committed state를 block identity별로 격리합니다.", concepts: ["cometbft-candidate-committed-state"] },
+      { label: "04 finalize", relation: "Decided block의 deterministic state transition을 계산합니다.", concepts: ["cometbft-finalize-determinism"] },
+      { label: "05 identity", relation: "Resulting AppHash를 next header와 연결합니다.", concepts: ["cometbft-apphash-next-header-lag"] },
+      { label: "06 persist", relation: "Commit receipt와 crash replay로 durable state를 복구합니다.", concepts: ["cometbft-commit-crash-replay", "cometbft-external-effect-reconciliation"] },
+    ],
+    exercises: [
+      { level: "basic", question: "CheckTx·PrepareProposal·ProcessProposal·FinalizeBlock·Commit의 authority를 한 줄씩 구분하세요.", answerChecklist: ["admission", "candidate construction", "deterministic candidate validation", "authoritative execution", "durable application state", "not same receipt"], requiredConcepts: ["cometbft-consensus-application-boundary", "cometbft-prepare-process-coherence", "cometbft-finalize-determinism"], sectionId: "overview" },
+      { level: "basic", question: "Consensus·mempool·query·snapshot connection이 보는 state와 ordering을 분류하세요.", answerChecklist: ["candidate/execute/commit", "CheckTx/recheck", "committed height", "restore/trusted AppHash", "transport not authority"], requiredConcepts: ["cometbft-abci-connection-state-separation"], sectionId: "abci-client" },
+      { level: "basic", question: "PrepareProposal이 non-deterministic이어도 되고 ProcessProposal은 deterministic해야 하는 이유를 설명하세요.", answerChecklist: ["single proposer selection", "max_tx_bytes", "same proposal", "correct-node same decision", "coherence", "liveness"], requiredConcepts: ["cometbft-prepare-process-coherence"], sectionId: "prepare-process" },
+      { level: "basic", question: "한 height에서 candidate A·B를 미리 실행했고 B가 결정됐을 때 state cache와 side effect를 어떻게 처리해야 하나요?", answerChecklist: ["block identity isolation", "multiple candidates", "B only authoritative", "FinalizeBlock promotion", "discard A", "no candidate external effect"], requiredConcepts: ["cometbft-candidate-committed-state"], sectionId: "prepare-process" },
+      { level: "basic", question: "S_{h+1}=F(S_h,B_h) 식의 입력·출력과 금지할 nondeterministic source를 설명하세요.", answerChecklist: ["previous committed state", "decided block/context", "same results/updates/AppHash", "clock/randomness/iteration/API", "deterministic configuration"], requiredConcepts: ["cometbft-finalize-determinism"], sectionId: "finalize-commit" },
+      { level: "basic", question: "Block h의 FinalizeBlock AppHash, application committed height, 다음 header AppHash를 trace로 연결하세요.", answerChecklist: ["decided height h", "Finalize result", "Commit durability", "next header", "off-by-one", "application-specific commitment"], requiredConcepts: ["cometbft-apphash-next-header-lag"], sectionId: "finalize-commit" },
+      { level: "advanced", question: "Local clock·random map iteration·remote price API가 ProcessProposal과 FinalizeBlock에 들어간 경우 각각의 failure와 수정책을 분석하세요.", answerChecklist: ["same input", "different decision/result", "liveness stall", "AppHash divergence", "remove node-local input", "ordered oracle/input", "deterministic iteration", "external effect boundary"], requiredConcepts: ["cometbft-prepare-process-coherence", "cometbft-finalize-determinism"], sectionId: "prepare-process" },
+      { level: "advanced", question: "Remote ABCI timeout 뒤 retry할 때 duplicate FinalizeBlock·Commit·external effect를 막는 request/receipt 설계를 만드세요.", answerChecklist: ["method/height/block identity", "timeout not non-execution", "idempotent transition", "result comparison", "committed-height handshake", "outbox", "idempotency key", "reconciliation"], requiredConcepts: ["cometbft-abci-connection-state-separation", "cometbft-commit-crash-replay", "cometbft-external-effect-reconciliation"], sectionId: "abci-client" },
+      { level: "advanced", question: "Persisted block·CometBFT result/state·application committed height 조합별 crash recovery matrix를 작성하세요.", answerChecklist: ["block-only replay", "result/state without app commit", "reexecute and compare", "Commit idempotence", "app-ahead fail", "AppHash/height invariant", "candidate isolation", "external effects separate"], requiredConcepts: ["cometbft-commit-crash-replay", "cometbft-finalize-determinism", "cometbft-apphash-next-header-lag"], sectionId: "finalize-commit" },
+      { level: "advanced", question: "Multi-round proposals·Process divergence·Finalize/Commit crash·restart·state sync를 포함한 ABCI candidate/base release gate를 설계하세요.", answerChecklist: ["pinned v0.40.0/app/config", "same genesis/transactions", "candidate isolation", "decision parity", "tx-result parity", "AppHash parity", "commit-height recovery", "state-sync trusted hash", "external-effect oracle", "rollback artifact"], requiredConcepts: ["cometbft-prepare-process-coherence", "cometbft-candidate-committed-state", "cometbft-finalize-determinism", "cometbft-commit-crash-replay"], sectionId: "finalize-commit" },
+    ],
+    papers: [
+      { title: "CometBFT v0.40.0 ABCI++ Methods", href: "https://github.com/cometbft/cometbft/blob/v0.40.0/spec/abci/abci%2B%2B_methods.md", problem: "ABCI request·response field와 호출 authority 정의", contribution: "Prepare·Process·Finalize·Commit lifecycle과 method별 requirement 제공", assumptions: "v0.40.0 protocol과 compatible application", evidenceScope: "ABCI method semantics와 call timing", notClaim: "Application business logic·database atomicity·external exactly-once를 구현하지 않음", sectionId: "paper-cometbft-abci-methods-v040" },
+      { title: "CometBFT v0.40.0 ABCI Application Requirements", href: "https://github.com/cometbft/cometbft/blob/v0.40.0/spec/abci/abci%2B%2B_app_requirements.md", problem: "Correct application의 coherence·determinism·state·recovery 의무 정의", contribution: "Formal requirements와 candidate state·connection·crash recovery model 제공", assumptions: "Correct process와 pinned application/configuration", evidenceScope: "Application integration correctness boundary", notClaim: "특정 storage engine이나 external service의 durability를 보장하지 않음", sectionId: "paper-cometbft-app-requirements-v040" },
+    ],
+  },
+  "blockchain/cometbft": {
+    entryLevel: true,
+    entryNote:
+      "alice→bob 10이라는 transaction bytes 한 건이 node에 도착한 뒤 app hash로 남기까지를 따라갑니다. CometBFT·ABCI·mempool을 미리 안다고 가정하지 않습니다.",
+    coreIdea:
+      "CometBFT는 P2P·mempool·Byzantine consensus로 command order를 정하고 ABCI++ application은 그 order를 deterministic state transition으로 실행하므로, admission·commit·app persistence와 external effect를 별도 receipt로 추적해야 합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      {
+        id: "cometbft-consensus-application-boundary",
+        role: "Consensus order와 application transition의 owner를 분리합니다.",
+      },
+      {
+        id: "cometbft-transaction-lifecycle-trace",
+        role: "Transaction 한 건의 단계별 evidence를 연결합니다.",
+      },
+      {
+        id: "cometbft-admission-commit-separation",
+        role: "Receive·CheckTx와 inclusion·commit·execution을 구분합니다.",
+      },
+      {
+        id: "cometbft-proposal-finalization-separation",
+        role: "Proposal hook과 authoritative transition을 구분합니다.",
+      },
+      {
+        id: "cometbft-apphash-state-identity",
+        role: "Height별 application state commitment를 설명합니다.",
+      },
+      {
+        id: "cometbft-version-snapshot-receipt",
+        role: "Source·docs·binary의 version drift를 막습니다.",
+      },
+      {
+        id: "cometbft-external-effect-reconciliation",
+        role: "Consensus 밖 side effect의 retry·restart를 조정합니다.",
+      },
+      {
+        id: "cometbft-architecture-release-gate",
+        role: "Fault injection과 parity로 candidate를 채택합니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "cometbft-consensus-application-boundary",
+        sectionId: "overview",
+        intuition:
+          "회의 진행자는 발언 순서를 정하고 장부 담당자는 그 순서대로 잔액을 계산합니다.",
+        workedExample:
+          "Validators가 block order를 commit하면 ABCI application이 그 block을 같은 prior state에 실행해 app hash를 만듭니다.",
+        boundary:
+          "CometBFT가 application business logic이나 임의 external API를 대신 실행하는 것은 아닙니다.",
+      },
+      {
+        id: "cometbft-transaction-lifecycle-trace",
+        sectionId: "overview",
+        intuition:
+          "하나의 택배 번호로 접수·분류·출발·도착 영수증을 이어 봅니다.",
+        workedExample:
+          "tx ID에 CheckTx result, proposal height/round, block hash, commit evidence, FinalizeBlock result와 app hash를 연결합니다.",
+        boundary:
+          "마지막 success log 하나만으로 앞 단계와 durable persistence를 추측하지 않습니다.",
+      },
+      {
+        id: "cometbft-admission-commit-separation",
+        sectionId: "overview",
+        intuition: "입장권 검사는 공연이 끝났다는 영수증이 아닙니다.",
+        workedExample:
+          "CheckTx PASS 뒤 node가 crash하면 transaction이 어느 block에도 포함되지 않을 수 있습니다.",
+        boundary:
+          "RPC async·sync·commit 응답과 application effect를 같은 completion level로 취급하지 않습니다.",
+      },
+      {
+        id: "cometbft-proposal-finalization-separation",
+        sectionId: "overview",
+        intuition: "초안 편집과 승인된 원본 반영은 다른 단계입니다.",
+        workedExample:
+          "PrepareProposal이 후보를 구성하고 ProcessProposal이 검사하지만 FinalizeBlock은 합의된 block의 transition을 계산합니다.",
+        boundary:
+          "Proposal hook의 결과를 committed application state로 간주하지 않습니다.",
+      },
+      {
+        id: "cometbft-apphash-state-identity",
+        sectionId: "overview",
+        intuition:
+          "같은 높이의 장부 내용이 같은지 짧은 fingerprint로 비교합니다.",
+        workedExample:
+          "Height 42의 block을 적용한 모든 correct application이 같은 app hash를 다음 state identity로 반환합니다.",
+        boundary:
+          "App hash 일치만으로 external database·notification·remote payment까지 같다고 말하지 않습니다.",
+      },
+      {
+        id: "cometbft-version-snapshot-receipt",
+        sectionId: "overview",
+        intuition: "매뉴얼과 기계가 같은 revision인지 영수증에 적습니다.",
+        workedExample:
+          "CometBFT semver·git SHA, ABCI version, app binary/config, chain ID·height와 DB schema를 한 run manifest에 둡니다.",
+        boundary:
+          "Repository main이나 latest docs를 production binary의 고정 동작으로 가정하지 않습니다.",
+      },
+      {
+        id: "cometbft-external-effect-reconciliation",
+        sectionId: "overview",
+        intuition: "장부 반영과 은행 API 호출 사이 crash를 다시 맞춰 봅니다.",
+        workedExample:
+          "Committed tx ID를 outbox와 payment idempotency key에 저장하고 restart 뒤 receipt를 조회해 누락·중복을 조정합니다.",
+        boundary:
+          "Consensus commit은 replicated state 밖 side effect의 exactly-once를 자동 보장하지 않습니다.",
+      },
+      {
+        id: "cometbft-architecture-release-gate",
+        sectionId: "overview",
+        intuition:
+          "같은 장애 시험지를 기존·후보 binary에 주고 모순 0과 복구 증거를 비교합니다.",
+        workedExample:
+          "Invalid proposal·equivocation·delay·app rejection·commit crash·restart를 같은 seed로 재생하고 block/app-hash parity를 확인합니다.",
+        boundary:
+          "정상 TPS 한 숫자만으로 BFT safety·restart correctness·application determinism을 입증하지 않습니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 foundation",
+        relation:
+          "SMR·BFT가 order와 deterministic transition을 만드는 전제를 가져옵니다.",
+        concepts: ["smr-deterministic-transition", "bft-quorum-certificate"],
+      },
+      {
+        label: "01 owners",
+        relation: "Consensus engine과 application의 책임을 나눕니다.",
+        concepts: ["cometbft-consensus-application-boundary"],
+      },
+      {
+        label: "02 lifecycle",
+        relation: "Admission에서 app result까지 단계별 receipt를 잇습니다.",
+        concepts: [
+          "cometbft-admission-commit-separation",
+          "cometbft-transaction-lifecycle-trace",
+        ],
+      },
+      {
+        label: "03 execution",
+        relation: "Proposal hook과 final transition·app hash를 분리합니다.",
+        concepts: [
+          "cometbft-proposal-finalization-separation",
+          "cometbft-apphash-state-identity",
+        ],
+      },
+      {
+        label: "04 provenance",
+        relation: "실제 binary·protocol·application·DB version을 고정합니다.",
+        concepts: ["cometbft-version-snapshot-receipt"],
+      },
+      {
+        label: "05 operations",
+        relation: "External effect와 adversarial release gate를 연결합니다.",
+        concepts: [
+          "cometbft-external-effect-reconciliation",
+          "cometbft-architecture-release-gate",
+        ],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "P2P/RPC·mempool·consensus·ABCI application·storage가 transaction lifecycle에서 각각 소유하는 일을 분류하세요.",
+        answerChecklist: [
+          "receive/gossip",
+          "candidate admission",
+          "block order",
+          "deterministic transition",
+          "block/consensus persistence",
+          "app-state persistence",
+        ],
+        requiredConcepts: ["cometbft-consensus-application-boundary"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "alice→bob 10 transaction의 receive부터 app hash까지 필요한 receipt를 순서대로 적으세요.",
+        answerChecklist: [
+          "transaction ID",
+          "CheckTx result",
+          "proposal height/round",
+          "block hash",
+          "commit evidence",
+          "FinalizeBlock result",
+          "app hash",
+          "persistence status",
+        ],
+        requiredConcepts: ["cometbft-transaction-lifecycle-trace"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "RPC receive·CheckTx PASS·proposal inclusion·consensus commit·FinalizeBlock·Commit을 후보와 확정 상태로 분류하세요.",
+        answerChecklist: [
+          "receive not validation",
+          "CheckTx admission",
+          "proposal candidate",
+          "consensus ordered",
+          "FinalizeBlock transition",
+          "Commit persistence",
+          "no status collapsing",
+        ],
+        requiredConcepts: [
+          "cometbft-admission-commit-separation",
+          "cometbft-proposal-finalization-separation",
+        ],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "PrepareProposal·ProcessProposal·FinalizeBlock이 같은 호출이 아닌 이유와 client가 확인할 최종 receipt를 설명하세요.",
+        answerChecklist: [
+          "prepare candidate",
+          "process validation",
+          "consensus between",
+          "finalize authoritative transition",
+          "committed height/index",
+          "application result",
+        ],
+        requiredConcepts: ["cometbft-proposal-finalization-separation"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "Height 42에서 block hash와 app hash가 각각 무엇을 고정하며 app hash가 보장하지 않는 것을 설명하세요.",
+        answerChecklist: [
+          "ordered block identity",
+          "post-state commitment",
+          "same prior state/order",
+          "application determinism",
+          "external effects excluded",
+        ],
+        requiredConcepts: ["cometbft-apphash-state-identity"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "CometBFT 동작을 재현하기 위한 version receipt를 작성하고 moving main을 바로 production 근거로 쓰면 안 되는 이유를 설명하세요.",
+        answerChecklist: [
+          "semver",
+          "git SHA",
+          "ABCI version",
+          "app binary/config",
+          "chain ID/height",
+          "DB schema",
+          "main drift",
+        ],
+        requiredConcepts: ["cometbft-version-snapshot-receipt"],
+        sectionId: "overview",
+      },
+      {
+        level: "advanced",
+        question:
+          "FinalizeBlock 뒤 application Commit 전 crash와 external payment 호출 중 crash를 구분해 recovery protocol을 설계하세요.",
+        answerChecklist: [
+          "consensus/block evidence",
+          "app-state persistence check",
+          "stable tx ID",
+          "outbox",
+          "idempotency key",
+          "remote receipt lookup",
+          "reconcile before retry",
+          "no blind replay",
+        ],
+        requiredConcepts: [
+          "cometbft-external-effect-reconciliation",
+          "cometbft-transaction-lifecycle-trace",
+        ],
+        sectionId: "overview",
+      },
+      {
+        level: "advanced",
+        question:
+          "Application이 local clock·random map iteration·remote API를 transition 안에서 읽을 때 app hash가 갈라지는 반례와 수정책을 설명하세요.",
+        answerChecklist: [
+          "same ordered input",
+          "nondeterministic source",
+          "different result/state",
+          "app hash divergence",
+          "deterministic input",
+          "ordered oracle/result",
+          "external effect boundary",
+        ],
+        requiredConcepts: [
+          "cometbft-consensus-application-boundary",
+          "cometbft-apphash-state-identity",
+        ],
+        sectionId: "overview",
+      },
+      {
+        level: "advanced",
+        question:
+          "Invalid proposal·equivocation·delayed vote·app rejection·commit crash·restart·state-sync의 paired release matrix를 설계하세요.",
+        answerChecklist: [
+          "same genesis/validators",
+          "same app/transactions",
+          "same network seed",
+          "conflicting commit zero",
+          "height/block parity",
+          "app-hash parity",
+          "restart recovery",
+          "performance after hard gates",
+          "rollback artifact",
+        ],
+        requiredConcepts: [
+          "cometbft-architecture-release-gate",
+          "cometbft-version-snapshot-receipt",
+        ],
+        sectionId: "overview",
+      },
+      {
+        level: "advanced",
+        question:
+          "Transaction이 CheckTx PASS지만 block에 없고, block은 commit됐지만 app receipt가 없을 때 각각 어느 심층 글과 evidence부터 확인할지 triage plan을 만드세요.",
+        answerChecklist: [
+          "mempool admission",
+          "consensus proposal/round",
+          "ABCI execution",
+          "state/block store",
+          "tx ID/height/block hash",
+          "app hash/persistence",
+          "version receipt",
+          "do not infer remote completion",
+        ],
+        requiredConcepts: [
+          "cometbft-transaction-lifecycle-trace",
+          "cometbft-admission-commit-separation",
+        ],
+        sectionId: "overview",
+      },
+    ],
+    papers: [
+      {
+        title: "cometbft/cometbft source repository",
+        href: "https://github.com/cometbft/cometbft",
+        problem:
+          "Consensus·mempool·state·P2P 책임을 실제 release source에서 확인",
+        contribution: "공식 implementation과 release·upgrade history 제공",
+        assumptions: "분석한 semver 또는 git SHA와 build/config를 함께 고정",
+        evidenceScope: "선택한 source snapshot의 package·type·handler 동작",
+        notClaim:
+          "Moving main의 코드가 모든 production network와 같거나 README 성능이 보편적이라고 주장하지 않음",
+        sectionId: "paper-cometbft-repository",
+      },
+      {
+        title: "CometBFT ABCI++ Specification",
+        href: "https://docs.cosmos.network/cometbft/latest/spec/abci/Overview",
+        problem:
+          "SMR engine과 application 사이 request·response·state lifecycle 정의",
+        contribution:
+          "ABCI++ method와 application requirement·expected behavior를 규격화",
+        assumptions: "표시한 CometBFT·ABCI release와 deterministic application",
+        evidenceScope:
+          "Consensus/application interface와 method ordering·responsibility",
+        notClaim:
+          "Application business validity·disk transaction·external effect exactly-once를 대신 보장하지 않음",
+        sectionId: "paper-cometbft-abci-spec",
+      },
+      {
+        title: "CometBFT Byzantine Consensus Algorithm",
+        href: "https://docs.cosmos.network/cometbft/latest/spec/consensus/Byzantine-Consensus-Algorithm.md",
+        problem: "Byzantine validator와 network delay에서 block order 합의",
+        contribution:
+          "Proposal·prevote·precommit·round change의 protocol 동작 설명",
+        assumptions: "규격이 정한 validator power·fault·timing·signature model",
+        evidenceScope:
+          "CometBFT consensus state machine과 safety/liveness boundary",
+        notClaim:
+          "Application execution·storage durability·모든 deployment의 latency/TPS를 고정하지 않음",
+        sectionId: "paper-cometbft-consensus-spec",
+      },
+    ],
+  },
+  "blockchain/reth": {
+    entryLevel: true,
+    entryNote: "Block hash 하나가 network 또는 Engine API에서 들어온 뒤 state root와 RPC response가 되기까지를 따라갑니다. Rust crate나 Ethereum client 내부 구조를 미리 안다고 가정하지 않습니다.",
+    coreIdea: "Reth는 execution-client owner 경계 안에서 historical sync와 live Engine input을 같은 validation·EVM·storage invariant에 합류시키고, block/state identity와 provider view를 versioned receipt로 추적합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "reth-execution-client-boundary", role: "Execution client와 consensus client의 책임을 나눕니다." },
+      { id: "reth-block-lifecycle-trace", role: "Block input부터 provider view까지 evidence를 연결합니다." },
+      { id: "reth-historical-live-path-separation", role: "과거 stage sync와 head 근처 Engine path를 구분합니다." },
+      { id: "reth-provider-consistent-view", role: "RPC·ExEx가 같은 block/state snapshot을 읽게 합니다." },
+      { id: "reth-storage-tier-ownership", role: "Mutable state·immutable history·index의 owner와 lifetime을 정합니다." },
+      { id: "reth-version-snapshot-receipt", role: "Binary·chain·Engine·storage version을 한 provenance로 고정합니다." },
+      { id: "reth-reorg-unwind-reconciliation", role: "Canonical head 변경과 crash 뒤 derived state를 조정합니다." },
+      { id: "reth-node-release-gate", role: "Correctness parity를 통과한 뒤 node 성능을 비교합니다." },
+    ],
+    conceptExplanations: [
+      { id: "reth-execution-client-boundary", sectionId: "overview", intuition: "Consensus client가 어느 책을 정본으로 둘지 고르고 execution client가 그 책의 거래를 계산합니다.", workedExample: "Beacon client가 head·safe·finalized와 payload를 Engine API로 보내면 Reth가 payload validity·EVM result·state root를 반환합니다.", boundary: "Reth가 validator duty나 consensus finality를 혼자 결정하지 않습니다." },
+      { id: "reth-block-lifecycle-trace", sectionId: "overview", intuition: "하나의 block 번호표에 접수부터 저장·조회까지의 영수증을 이어 붙입니다.", workedExample: "Block hash에 source, parent, validation, chain spec, receipts, state root, canonical status, storage checkpoint와 query view를 연결합니다.", boundary: "Network receive·execution success·canonical adoption·durable write를 하나의 success로 합치지 않습니다." },
+      { id: "reth-historical-live-path-separation", sectionId: "overview", intuition: "오래된 서고를 구간별 정리하는 작업과 방금 들어온 책을 바로 처리하는 창구는 cursor가 다릅니다.", workedExample: "Historical range는 stage checkpoint·unwind로, head payload는 forkchoice update와 reorg로 처리하지만 같은 block의 EVM output은 같아야 합니다.", boundary: "두 path의 retry·latency·rollback state를 하나로 공유하면 중복·gap을 만들 수 있습니다." },
+      { id: "reth-provider-consistent-view", sectionId: "overview", intuition: "질문 하나를 답하는 동안 장부 판본을 바꾸지 않습니다.", workedExample: "RPC query가 canonical block hash·state root·storage generation을 고정하고 mutable DB와 history segment를 그 view에서 읽습니다.", boundary: "Abstraction이 storage 차이를 숨겨도 reorg·migration 중 mixed snapshot을 허용한다는 뜻은 아닙니다." },
+      { id: "reth-storage-tier-ownership", sectionId: "overview", intuition: "자주 바뀌는 최신 장부와 닫힌 과거 기록을 같은 보관 규칙으로 다루지 않습니다.", workedExample: "Latest state는 mutable writer가, historical segment는 append/seal lifecycle이, index는 재생성·migration owner가 맡습니다.", boundary: "Storage V2나 pruning profile을 모든 기존 node의 동일 layout으로 가정하지 않습니다." },
+      { id: "reth-version-snapshot-receipt", sectionId: "overview", intuition: "코드·chain rule·disk format이 같은 revision인지 run manifest에 적습니다.", workedExample: "Reth semver/SHA, chain spec digest, Engine fork, storage schema, pruning profile, OS/hardware를 한 receipt로 남깁니다.", boundary: "Latest docs와 moving main을 이전 production binary의 실제 동작으로 읽지 않습니다." },
+      { id: "reth-reorg-unwind-reconciliation", sectionId: "overview", intuition: "잘못 이어진 장부 꼬리를 공통 조상까지 되돌린 뒤 새 꼬리를 다시 계산합니다.", workedExample: "Old head의 derived state·index를 unwind하고 new branch를 재실행한 뒤 pinned provider view를 새 generation으로 갱신합니다.", boundary: "Canonical pointer만 바꾸고 receipts·trie·indexes를 남기면 stale query가 생깁니다." },
+      { id: "reth-node-release-gate", sectionId: "overview", intuition: "빠른 후보가 정답 장부와 같은지 먼저 확인한 뒤 속도를 비교합니다.", workedExample: "같은 snapshot·Engine sequence에서 invalid input·reorg·checkpoint crash·migration·restart를 주입하고 hash/root/receipt/query parity를 검사합니다.", boundary: "Sync throughput이나 RPC p95 하나만으로 protocol correctness·recovery·storage compatibility를 입증하지 않습니다." },
+    ],
+    conceptStages: [
+      { label: "00 boundary", relation: "Execution·consensus client의 owner와 Engine API handoff를 나눕니다.", concepts: ["reth-execution-client-boundary"] },
+      { label: "01 ingest", relation: "Historical·live input의 cursor와 retry를 분리합니다.", concepts: ["reth-historical-live-path-separation"] },
+      { label: "02 execute", relation: "Validation·EVM·canonicalization·root evidence를 block trace로 잇습니다.", concepts: ["reth-block-lifecycle-trace"] },
+      { label: "03 storage", relation: "Storage tier owner와 pinned provider view를 연결합니다.", concepts: ["reth-storage-tier-ownership", "reth-provider-consistent-view"] },
+      { label: "04 recover", relation: "Reorg·crash 뒤 common ancestor와 derived suffix를 조정합니다.", concepts: ["reth-reorg-unwind-reconciliation"] },
+      { label: "05 release", relation: "Version provenance와 correctness-first 채택 gate를 묶습니다.", concepts: ["reth-version-snapshot-receipt", "reth-node-release-gate"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Reth execution client와 beacon consensus client가 block lifecycle에서 각각 소유하는 일을 Engine API를 기준으로 분류하세요.", answerChecklist: ["EL payload validation", "EVM execution", "state/receipt roots", "Engine/JSON-RPC", "CL fork choice/finality", "validator duty", "head-safe-finalized handoff"], requiredConcepts: ["reth-execution-client-boundary"], sectionId: "overview" },
+      { level: "basic", question: "Block hash 하나에 input부터 RPC query까지 연결할 최소 receipt 필드를 순서대로 적으세요.", answerChecklist: ["source/request", "parent/number", "validation result", "chain spec/fork", "execution receipts/logs", "state root", "canonical status", "storage checkpoint", "provider view"], requiredConcepts: ["reth-block-lifecycle-trace"], sectionId: "overview" },
+      { level: "basic", question: "Historical stage sync와 live Engine path의 trigger·cursor·rollback·공유 oracle을 비교하세요.", answerChecklist: ["range/checkpoint", "head/forkchoice", "stage unwind", "live reorg", "same chain spec", "same EVM output", "state-root parity"], requiredConcepts: ["reth-historical-live-path-separation"], sectionId: "overview" },
+      { level: "basic", question: "Network receive·validation·execution·canonicalization·DB write·RPC read 성공을 서로 다른 상태로 유지해야 하는 이유를 설명하세요.", answerChecklist: ["receive not valid", "execute not canonical", "canonical pointer not durable all data", "write not same consumer view", "typed owner/status", "restart decision"], requiredConcepts: ["reth-block-lifecycle-trace"], sectionId: "overview" },
+      { level: "basic", question: "Mutable latest state·immutable history·index를 읽는 RPC가 reorg 중 mixed result를 내지 않도록 provider view를 설계하세요.", answerChecklist: ["pin block hash", "pin state root", "storage generation", "tier owner", "atomic/read transaction", "retry on invalidation", "no silent mixing"], requiredConcepts: ["reth-provider-consistent-view", "reth-storage-tier-ownership"], sectionId: "overview" },
+      { level: "basic", question: "Reth 장애·성능 결과를 재현할 version receipt를 쓰고 현재 v2.5.0 문서를 영구 사실로 쓰면 안 되는 이유를 설명하세요.", answerChecklist: ["semver", "git SHA", "chain spec digest", "Engine/fork version", "storage schema", "pruning profile", "OS/hardware", "date/version drift"], requiredConcepts: ["reth-version-snapshot-receipt"], sectionId: "overview" },
+      { level: "advanced", question: "Old head A-B-C가 A-B-D-E로 reorg되고 C 처리 뒤 crash한 상황의 unwind·replay·query reconciliation을 설계하세요.", answerChecklist: ["common ancestor B", "persist intent/checkpoint", "unwind C derived state/index", "execute D/E", "canonical marker", "new storage generation", "invalidate/retry stale view", "idempotent restart"], requiredConcepts: ["reth-reorg-unwind-reconciliation", "reth-provider-consistent-view"], sectionId: "overview" },
+      { level: "advanced", question: "같은 block을 historical path와 live path가 처리해 state root가 다를 때 원인을 version·input·execution·storage 축으로 triage하세요.", answerChecklist: ["same bytes/parent", "chain spec/fork", "EVM config", "execution receipts/logs", "nondeterministic external input excluded", "storage prior state", "binary/SHA", "do not choose faster output"], requiredConcepts: ["reth-historical-live-path-separation", "reth-block-lifecycle-trace", "reth-version-snapshot-receipt"], sectionId: "overview" },
+      { level: "advanced", question: "Storage migration 중 concurrent RPC가 old header와 new state를 섞는 반례와 fail-closed migration contract를 설계하세요.", answerChecklist: ["generation mismatch", "pinned view", "read transaction/snapshot", "dual-read parity", "migration manifest", "atomic generation switch", "retryable error", "rollback-compatible snapshot"], requiredConcepts: ["reth-storage-tier-ownership", "reth-provider-consistent-view", "reth-version-snapshot-receipt"], sectionId: "overview" },
+      { level: "advanced", question: "Invalid header·bad tx·missing parent·reorg·checkpoint crash·migration·restart·concurrent RPC를 포함한 Reth paired release matrix를 설계하세요.", answerChecklist: ["same snapshot/peers", "same Engine sequence", "same chain spec", "canonical hash parity", "state/receipt/log parity", "provider snapshot parity", "restart/reorg recovery", "performance after hard gates", "rollback binary/config/storage"], requiredConcepts: ["reth-node-release-gate", "reth-reorg-unwind-reconciliation"], sectionId: "overview" },
+    ],
+    papers: [
+      { title: "paradigmxyz/reth source repository", href: "https://github.com/paradigmxyz/reth", problem: "Ethereum execution node를 modular component와 library crates로 구현", contribution: "Network·sync·execution·storage·RPC source와 release history 제공", assumptions: "분석한 Reth semver 또는 git SHA, feature·config·chain spec 고정", evidenceScope: "선택한 source snapshot의 component·trait·storage·runtime 동작", notClaim: "Moving main·README benchmark가 모든 production network·hardware에서 동일하다고 주장하지 않음", sectionId: "paper-reth-repository" },
+      { title: "Reth official documentation", href: "https://reth.rs/", problem: "Operator와 node builder가 current configuration·storage·component·API contract를 찾는 문제", contribution: "Versioned runbook·SDK guide·crate API와 node component 설명", assumptions: "표시된 docs version과 target chain·node profile", evidenceScope: "Current public Reth operator·SDK·storage·RPC documentation", notClaim: "Ethereum protocol specification 전체나 특정 deployment의 성능·안전을 대신하지 않음", sectionId: "paper-reth-docs" },
+    ],
+  },
+  "blockchain/prysm": {
+    entryLevel: true,
+    entryNote: "Beacon block 하나가 network에서 들어와 state·head·finality와 validator duty evidence가 되기까지를 따라갑니다. Ethereum client 내부 구조를 미리 안다고 가정하지 않습니다.",
+    coreIdea: "Prysm은 consensus wire object를 단계별로 검증해 beacon state와 fork-choice/finality evidence로 바꾸고, validator signing과 execution-client handoff를 별도 권한·receipt로 유지합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "prysm-consensus-client-boundary", role: "Beacon node·validator client·execution client의 책임을 나눕니다." },
+      { id: "prysm-consensus-object-lifecycle", role: "Object root 하나로 wire input부터 duty receipt까지 연결합니다." },
+      { id: "prysm-wire-validation-layers", role: "Decode·topic·fork·signature·state validation failure를 분리합니다." },
+      { id: "prysm-state-head-finality-separation", role: "Post-state·head·justified/finalized를 서로 다른 evidence로 봅니다." },
+      { id: "prysm-validator-duty-signing-boundary", role: "Duty context와 signing/slashing authority를 고정합니다." },
+      { id: "prysm-engine-execution-handoff", role: "Consensus와 execution payload validity의 Engine 경계를 정합니다." },
+      { id: "prysm-spec-code-version-receipt", role: "Code·spec·fork·network·database version을 고정합니다." },
+      { id: "prysm-release-gate", role: "Consensus parity 뒤 성능을 비교하는 채택 gate를 만듭니다." },
+    ],
+    conceptExplanations: [
+      { id: "prysm-consensus-client-boundary", sectionId: "overview", intuition: "Beacon node는 합의 장부를 정리하고 validator client는 배정된 서명만 수행하며 execution client는 거래를 실행합니다.", workedExample: "Beacon node가 block·attestation을 검증해 head와 duty를 계산하고 validator client가 signing root를 확인하며 execution payload는 Engine API로 execution client에 넘깁니다.", boundary: "Prysm beacon node가 EVM transaction을 직접 실행하거나 validator signer가 fork choice를 결정한다고 보지 않습니다." },
+      { id: "prysm-consensus-object-lifecycle", sectionId: "overview", intuition: "하나의 object 번호표에 접수·검증·state·head·서명 영수증을 차례로 붙입니다.", workedExample: "Block root에 source peer, topic, fork digest, SSZ type, slot, signature result, pre/post-state root, head/finality status를 연결합니다.", boundary: "Gossip accept·transition success·canonical head·finality·signature를 하나의 success로 합치지 않습니다." },
+      { id: "prysm-wire-validation-layers", sectionId: "overview", intuition: "봉투를 열 수 있는지, 올바른 창구인지, 서명이 맞는지, 현재 장부에서 허용되는지를 차례로 확인합니다.", workedExample: "Bounded SSZ decode 뒤 topic/fork digest를 확인하고 signature·stateless rule, parent state가 필요한 stateful rule을 검사합니다.", boundary: "Decode 성공은 signature나 state validity를 보장하지 않고 stateful validation 전에 untrusted object가 state를 바꾸면 안 됩니다." },
+      { id: "prysm-state-head-finality-separation", sectionId: "overview", intuition: "계산 가능한 후보 장부, 지금 선택한 장부 끝, 되돌리기 어려운 확정 지점을 서로 다른 포인터로 둡니다.", workedExample: "Parent state에 transition한 post-state가 valid해도 fork choice가 다른 branch를 head로 고를 수 있고 finalized checkpoint는 head보다 느리게 움직입니다.", boundary: "State root 하나만 보고 canonical·safe·finalized를 추론하지 않습니다." },
+      { id: "prysm-validator-duty-signing-boundary", sectionId: "overview", intuition: "서명기는 받은 요청마다 어느 validator가 어느 slot·fork에 무엇을 서명하는지 다시 확인합니다.", workedExample: "Validator index·slot/epoch·domain·signing root와 slashing history를 stable duty ID에 연결하고 remote signer receipt를 저장합니다.", boundary: "Signer timeout을 blind retry하거나 동일 key가 conflicting proposal·attestation에 서명하도록 허용하지 않습니다." },
+      { id: "prysm-engine-execution-handoff", sectionId: "overview", intuition: "Consensus block을 받아들일 수 있는지와 그 안의 execution payload가 EVM 규칙에 맞는지를 서로 다른 담당자가 확인합니다.", workedExample: "Beacon node가 block root와 payload를 넘기고 execution client의 VALID·INVALID·SYNCING·latest valid hash를 consensus trace에 연결합니다.", boundary: "SYNCING을 VALID로 보거나 consensus signature 성공을 execution validity로 확대하지 않습니다." },
+      { id: "prysm-spec-code-version-receipt", sectionId: "overview", intuition: "같은 이름의 규칙이라도 어느 release·fork·network에서 관찰했는지 run manifest에 적습니다.", workedExample: "Prysm release/SHA, spec commit/fork, network/genesis root, flags, slashing DB schema와 execution-client version을 함께 저장합니다.", boundary: "Moving master·develop이나 unstable future fork 설명을 현재 production 전체의 고정 사실로 쓰지 않습니다." },
+      { id: "prysm-release-gate", sectionId: "overview", intuition: "더 빠른 후보가 같은 consensus 결론을 내는지 먼저 확인한 뒤 처리량을 비교합니다.", workedExample: "같은 fixture에서 malformed SSZ·bad signature·invalid state·equivocation·reorg·Engine SYNCING·restart·signer timeout을 주입하고 state/head/finality/duty parity를 검사합니다.", boundary: "Missed duty·slot p95 하나만으로 consensus safety·recovery·slashing protection을 입증하지 않습니다." },
+    ],
+    conceptStages: [
+      { label: "00 owners", relation: "Beacon·validator·execution client의 state와 authority를 구분합니다.", concepts: ["prysm-consensus-client-boundary"] },
+      { label: "01 receive", relation: "Wire object를 decode·topic·fork·signature·state validation으로 나눕니다.", concepts: ["prysm-wire-validation-layers"] },
+      { label: "02 transition", relation: "Object identity와 pre/post-state evidence를 연결합니다.", concepts: ["prysm-consensus-object-lifecycle"] },
+      { label: "03 choose", relation: "Valid state·fork-choice head·finality checkpoint를 분리합니다.", concepts: ["prysm-state-head-finality-separation"] },
+      { label: "04 act", relation: "Validator signing과 execution handoff를 별도 권한·receipt로 제한합니다.", concepts: ["prysm-validator-duty-signing-boundary", "prysm-engine-execution-handoff"] },
+      { label: "05 release", relation: "Spec·code provenance와 adversarial parity gate를 묶습니다.", concepts: ["prysm-spec-code-version-receipt", "prysm-release-gate"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Beacon block 하나를 처리할 때 beacon node·validator client·execution client가 소유하는 state·validation·side effect를 분류하세요.", answerChecklist: ["beacon state", "fork-choice/finality", "validator duty", "slashing protection", "signature", "execution payload/EVM", "Engine API handoff"], requiredConcepts: ["prysm-consensus-client-boundary"], sectionId: "overview" },
+      { level: "basic", question: "Block 또는 attestation object root 하나에 wire input부터 head/finality·duty까지 연결할 최소 trace 필드를 적으세요.", answerChecklist: ["source/topic", "fork digest", "SSZ type/version", "slot/proposer or committee", "domain/signing root", "validation status", "pre/post-state root", "head/justified/finalized", "duty/slashing receipt"], requiredConcepts: ["prysm-consensus-object-lifecycle"], sectionId: "overview" },
+      { level: "basic", question: "Malformed bytes·wrong topic/fork·bad signature·valid signature but invalid parent state를 어느 validation layer에서 거절할지 분류하세요.", answerChecklist: ["bounded decode", "topic", "fork digest", "signature/domain", "stateless rule", "stateful parent/pre-state rule", "typed reject reason", "no state mutation before pass"], requiredConcepts: ["prysm-wire-validation-layers"], sectionId: "overview" },
+      { level: "basic", question: "Post-state·fork-choice head·justified·finalized checkpoint가 다른 값을 가질 수 있는 작은 reorg 상황을 설명하세요.", answerChecklist: ["valid candidate state", "competing branches", "current head", "justified checkpoint", "finalized checkpoint", "different evidence strength", "explicit API identity"], requiredConcepts: ["prysm-state-head-finality-separation"], sectionId: "overview" },
+      { level: "basic", question: "Remote signer에 proposal 또는 attestation 서명을 요청할 때 검증하고 receipt에 남길 필드를 적으세요.", answerChecklist: ["validator/key", "slot/epoch", "duty type", "fork/domain", "signing root", "authorization", "slashing history", "stable duty ID", "signed-root receipt"], requiredConcepts: ["prysm-validator-duty-signing-boundary"], sectionId: "overview" },
+      { level: "basic", question: "Prysm 결과를 재현할 version receipt를 쓰고 master·develop·unstable fork 문서를 현재 사실로 섞으면 안 되는 이유를 설명하세요.", answerChecklist: ["Prysm release", "git SHA", "spec commit/fork", "network/genesis", "feature flags", "DB schemas", "execution-client version", "stable/unstable boundary"], requiredConcepts: ["prysm-spec-code-version-receipt"], sectionId: "overview" },
+      { level: "advanced", question: "같은 execution payload에 VALID·INVALID·SYNCING이 차례로 관찰되는 상황에서 optimistic processing·head update·final acceptance trace를 설계하세요.", answerChecklist: ["consensus block/root", "payload identity", "Engine request/version", "status", "latest valid hash", "optimistic marker", "no SYNCING as final valid", "reconcile on later status", "head/state impact"], requiredConcepts: ["prysm-engine-execution-handoff", "prysm-state-head-finality-separation"], sectionId: "overview" },
+      { level: "advanced", question: "동일 validator duty의 signer timeout·restart·retry가 equivocation을 만들지 않도록 idempotent protocol을 설계하세요.", answerChecklist: ["stable duty ID", "domain/signing root", "persist intent", "slashing-protection check", "signer request authorization", "remote receipt lookup", "same-root replay only", "conflict fail closed", "no blind retry"], requiredConcepts: ["prysm-validator-duty-signing-boundary"], sectionId: "overview" },
+      { level: "advanced", question: "Old head A-B-C가 A-B-D-E로 바뀌는 reorg에서 state cache·head·finality·execution status·validator duty를 조정하세요.", answerChecklist: ["common ancestor B", "branch state roots", "old/new head", "invalidate stale cache", "finalized checkpoint invariant", "Engine forkchoice/status", "cancel/recompute duty", "restart receipt", "no mixed view"], requiredConcepts: ["prysm-state-head-finality-separation", "prysm-engine-execution-handoff", "prysm-consensus-object-lifecycle"], sectionId: "overview" },
+      { level: "advanced", question: "Malformed SSZ·wrong fork·bad signature·invalid transition·equivocation·reorg·Engine statuses·restart·signer timeout을 포함한 Prysm paired release matrix를 설계하세요.", answerChecklist: ["same genesis/spec fork", "same object/peer schedule", "same Engine fixture", "accept/reject parity", "pre/post-state parity", "head/finality parity", "duty/signing/slashing parity", "restart recovery", "performance after hard gates", "rollback binary/config/DB snapshot"], requiredConcepts: ["prysm-release-gate", "prysm-spec-code-version-receipt"], sectionId: "overview" },
+    ],
+    papers: [
+      { title: "OffchainLabs/prysm source repository", href: "https://github.com/OffchainLabs/prysm", problem: "Beacon node·validator client·network·state·API 책임을 실제 implementation에서 확인", contribution: "공식 Prysm source와 release·branch history 제공", assumptions: "분석한 release·git SHA, build flags, network와 database version 고정", evidenceScope: "선택한 source snapshot의 package·object·runtime 동작", notClaim: "Moving master/develop이나 repository benchmark를 모든 production deployment의 고정 behavior·performance로 일반화하지 않음", sectionId: "paper-prysm-repository" },
+      { title: "Ethereum Proof-of-Stake Consensus Specifications", href: "https://ethereum.github.io/consensus-specs/", problem: "Fork별 beacon state transition·fork choice·validator·P2P·execution handoff 규칙 정의", contribution: "Ethereum consensus protocol의 executable specification과 test-vector basis 제공", assumptions: "표시한 spec commit·fork·preset/network와 stable/unstable status 고정", evidenceScope: "Protocol state·validation·fork-choice·validator·Engine responsibility", notClaim: "Prysm package layout·database schema·operator setting·특정 client 성능을 정하지 않음", sectionId: "paper-ethereum-consensus-specs" },
+    ],
+  },
+  "blockchain/reth-cli": {
+    entryLevel: true,
+    entryNote: "CLI flag·Rust generic·node component를 미리 안다고 가정하지 않습니다. 문자열 설정이 typed config와 launch receipt가 되는 순서를 작은 precedence 예에서 시작합니다.",
+    coreIdea: "Reth CLI는 여러 설정 source를 provenance가 있는 NodeConfig로 정규화하고, typestate와 dependency-aware component builder로 잘못된 조립을 launch 전에 막으며 runtime readiness는 별도 supervision receipt로 검증합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "reth-config-precedence-provenance", role: "여러 설정 source의 우선순위와 최종값 근거를 보존합니다." },
+      { id: "reth-node-builder-typestate", role: "Assembly 순서를 Rust type과 method capability로 제한합니다." },
+      { id: "reth-component-dependency-dag", role: "Component output/input type의 의존 순서를 설명합니다." },
+      { id: "reth-component-addon-hook-boundary", role: "Core component와 add-on hook의 시점·failure radius를 분리합니다." },
+      { id: "reth-launch-supervision-receipt", role: "Startup·readiness·crash cleanup 상태를 owner별로 추적합니다." },
+      { id: "reth-cli-release-gate", role: "Correctness-first node assembly 채택과 rollback을 설계합니다." },
+    ],
+    conceptExplanations: [
+      { id: "reth-config-precedence-provenance", sectionId: "overview", intuition: "같은 설정을 여러 메모에 적었을 때 어느 메모가 이겼는지 값과 함께 남깁니다.", workedExample: "Default 8545, file 9545, CLI 10545이고 CLI>file>default라면 10545와 source=cli를 기록합니다.", boundary: "정확한 precedence·flag·default는 실행한 release의 help와 schema에 귀속하며 parse 성공이 filesystem·port·storage compatibility를 보장하지 않습니다." },
+      { id: "reth-node-builder-typestate", sectionId: "node-builder", intuition: "조립 중인 기계의 상태마다 다음에 꽂을 수 있는 부품만 보이게 합니다.", workedExample: "Types나 components가 없는 builder에는 launch method가 없거나 trait bound가 성립하지 않아 compilation이 실패합니다.", boundary: "Compile-time 조합 정합성은 database open·socket bind·service health 같은 runtime readiness를 보장하지 않습니다." },
+      { id: "reth-component-dependency-dag", sectionId: "components", intuition: "부품 카드 네 장이 아니라 앞 부품의 output 규격이 뒤 부품의 socket 규격을 정하는 그래프입니다.", workedExample: "Pool transaction type을 바꾸면 network broadcast와 payload builder가 같은 type을 소비하는지 다시 확인합니다.", boundary: "Trait component라는 이유로 임의 구현을 서로 독립적으로 교체할 수 있다는 뜻은 아닙니다." },
+      { id: "reth-component-addon-hook-boundary", sectionId: "components", intuition: "Engine의 필수 부품과 계기판·확장 장치를 failure radius와 start 시점으로 나눕니다.", workedExample: "Executor·pool·network·payload는 core이고 RPC·ExEx와 lifecycle hook은 만들어진 component를 소비하는 add-on입니다.", boundary: "Add-on 실패를 core execution corruption으로 합치거나, public RPC 뒤 side effect를 무조건 안전하게 replay하지 않습니다." },
+      { id: "reth-launch-supervision-receipt", sectionId: "node-builder", intuition: "전원 버튼을 눌렀다는 사실 대신 저장소·부품·확장이 실제로 준비된 순서를 영수증으로 남깁니다.", workedExample: "config_validated→storage_open→components_initialized→add_ons_started→ready를 stable attempt ID와 기록합니다.", boundary: "NodeHandle 반환이나 process 생존 하나만으로 readiness·durability·chain sync를 선언하지 않습니다." },
+      { id: "reth-cli-release-gate", sectionId: "components", intuition: "빠른 새 조립법이 같은 node를 만들고 실패 뒤 정리되는지 먼저 시험합니다.", workedExample: "Missing JWT·port conflict·schema mismatch·hook timeout·crash·shutdown을 base/candidate에 주입하고 config·state parity를 검사합니다.", boundary: "Startup latency가 낮다는 이유로 잘못된 chain identity·leaked resource·비호환 storage를 허용하지 않습니다." },
+    ],
+    conceptStages: [
+      { label: "01 input", relation: "설정 source와 precedence를 typed provenance로 고정합니다.", concepts: ["reth-config-precedence-provenance"] },
+      { label: "02 assembly", relation: "Type state와 component dependency를 따라 launchable 구성을 만듭니다.", concepts: ["reth-node-builder-typestate", "reth-component-dependency-dag"] },
+      { label: "03 extension", relation: "Core와 add-on의 호출 시점·failure radius를 나눕니다.", concepts: ["reth-component-addon-hook-boundary"] },
+      { label: "04 runtime", relation: "Startup state와 readiness·cleanup evidence를 남깁니다.", concepts: ["reth-launch-supervision-receipt"] },
+      { label: "05 release", relation: "Failure matrix와 rollback compatibility를 hard gate로 검사합니다.", concepts: ["reth-cli-release-gate"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Default 8545, config file 9545, CLI 10545인 HTTP port를 CLI>file>default precedence로 정규화하고 receipt를 쓰세요.", answerChecklist: ["final 10545", "source cli", "shadowed file 9545", "default 8545", "config digest", "release-specific precedence"], requiredConcepts: ["reth-config-precedence-provenance"], sectionId: "overview" },
+      { level: "basic", question: "Reth CLI가 소유하는 일과 launch 이후 core service가 소유하는 일을 구분하세요.", answerChecklist: ["parse sources", "normalize typed config", "validate conflict", "builder handoff", "storage open runtime", "component start runtime", "readiness separate"], requiredConcepts: ["reth-config-precedence-provenance", "reth-launch-supervision-receipt"], sectionId: "overview" },
+      { level: "basic", question: "Types와 components가 빠진 builder를 launch하려는 예가 왜 compile time에 실패하는지 typestate로 설명하세요.", answerChecklist: ["different builder types", "method availability", "trait bounds", "types before components", "components before launch", "runtime flag contrast"], requiredConcepts: ["reth-node-builder-typestate"], sectionId: "node-builder" },
+      { level: "basic", question: "Transaction pool implementation을 바꿀 때 network와 payload builder까지 확인해야 하는 이유를 설명하세요.", answerChecklist: ["pool transaction output", "network broadcast input", "payload selection input", "associated type", "trait compatibility", "dependency DAG"], requiredConcepts: ["reth-component-dependency-dag"], sectionId: "components" },
+      { level: "basic", question: "Core component와 add-on/hook을 예시·호출 시점·failure radius로 분류하세요.", answerChecklist: ["executor/pool/network/payload core", "RPC/ExEx/hooks add-on", "component initialized", "RPC started", "side effects", "separate failure policy"], requiredConcepts: ["reth-component-addon-hook-boundary"], sectionId: "components" },
+      { level: "basic", question: "Process가 살아 있고 NodeHandle을 반환했는데도 ready가 아닐 수 있는 사례와 최소 launch receipt를 쓰세요.", answerChecklist: ["config validated", "storage open", "components initialized", "add-ons started", "ready state", "attempt ID", "runtime failure"], requiredConcepts: ["reth-launch-supervision-receipt"], sectionId: "node-builder" },
+      { level: "advanced", question: "Custom L2에서 EVM과 pool을 교체할 때 compile-time·runtime compatibility 검증을 설계하세요.", answerChecklist: ["pinned semver/SHA", "chain-specific block/tx/receipt", "associated types", "network compatibility", "payload compatibility", "compile fixture", "runtime parity", "no old crate assumption"], requiredConcepts: ["reth-node-builder-typestate", "reth-component-dependency-dag"], sectionId: "components" },
+      { level: "advanced", question: "Chain path·JWT·RPC/P2P port·existing database가 충돌하는 config를 fail-closed로 처리하고 민감정보 없는 receipt를 설계하세요.", answerChecklist: ["precedence/source", "path readable", "JWT exists/redacted", "port uniqueness/bind", "chain/database identity", "no partial public service", "reason-coded error", "config digest"], requiredConcepts: ["reth-config-precedence-provenance", "reth-launch-supervision-receipt"], sectionId: "overview" },
+      { level: "advanced", question: "storage_open 뒤 hook side effect 중 crash한 startup을 idempotent하게 재조정하세요.", answerChecklist: ["stable attempt ID", "durable last state", "resource inventory", "hook idempotency/outbox", "cleanup partial services", "reconcile before retry", "readiness not inferred", "reason receipt"], requiredConcepts: ["reth-component-addon-hook-boundary", "reth-launch-supervision-receipt"], sectionId: "node-builder" },
+      { level: "advanced", question: "Missing JWT·occupied port·schema mismatch·component failure·hook timeout·crash·shutdown을 포함한 paired Reth CLI release matrix를 설계하세요.", answerChecklist: ["same normalized config", "same chain spec/storage", "same binary manifest fields", "failure injection", "lifecycle parity", "canonical/state-root parity", "resource cleanup", "performance after hard gates", "rollback binary/config/storage"], requiredConcepts: ["reth-cli-release-gate", "reth-launch-supervision-receipt"], sectionId: "components" },
+    ],
+    papers: [
+      { title: "Reth Book — reth node", href: "https://reth.rs/cli/reth/node.html", problem: "Operator input이 어떤 node configuration으로 해석되는지 확인", contribution: "Current command option과 chain/config input surface 제공", assumptions: "실행한 Reth semver/SHA와 실제 --help·config schema 고정", evidenceScope: "선택한 release의 documented CLI option", notClaim: "Parse 성공·default가 runtime readiness나 모든 2.x의 영구 동작이라고 주장하지 않음", sectionId: "paper-reth-node-cli" },
+      { title: "Reth NodeBuilder documentation", href: "https://reth.rs/docs/reth/builder/struct.NodeBuilder.html", problem: "Typed node assembly와 hook lifecycle 확인", contribution: "Types·components·add-ons·launch flow와 public API 설명", assumptions: "표시된 crate version·feature·source snapshot", evidenceScope: "해당 version builder state와 trait boundary", notClaim: "Compile success가 runtime health·chain correctness를 보장한다고 주장하지 않음", sectionId: "paper-reth-node-builder" },
+      { title: "Reth v2.2.0 release", href: "https://github.com/paradigmxyz/reth/releases/tag/v2.2.0", problem: "Upgrade 시 default·feature·compatibility 변화 식별", contribution: "Discv5 default와 gated feature·upgrade 주의 기록", assumptions: "v2.2.0 release artifact와 해당 config", evidenceScope: "Reth v2.2.0 release artifact에 명시된 default·feature·upgrade compatibility 범위", notClaim: "모든 2.x·custom build가 같은 default나 성능을 갖는다고 주장하지 않음", sectionId: "paper-reth-v220-release" },
+    ],
+  },
+  "blockchain/reth-chainspec": {
+    entryLevel: true,
+    entryNote: "Chain ID·genesis·hardfork를 모른다고 가정합니다. 초기 계정 값 하나가 state root와 genesis hash를 바꾸는 작은 예에서 시작합니다.",
+    coreIdea: "Reth ChainSpec은 chain ID·sealed genesis·ordered ForkCondition·protocol parameter를 하나의 versioned rule bundle로 묶어 validator·executor·payload·network consumer가 boundary에서 같은 결정을 내리게 합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "reth-chain-identity-bundle", role: "Chain ID보다 강한 execution ruleset identity를 만듭니다." },
+      { id: "reth-fork-condition-context", role: "Fork activation을 block context의 맞는 좌표에 평가합니다." },
+      { id: "reth-fork-id-compatibility-filter", role: "Peer schedule compatibility를 handshake에서 빠르게 거릅니다." },
+      { id: "reth-genesis-state-root-derivation", role: "Alloc에서 block-0 state commitment를 계산합니다." },
+      { id: "reth-genesis-sealed-hash", role: "Genesis header를 canonical chain identity로 sealing합니다." },
+      { id: "reth-chainspec-consumer-parity", role: "Validator·EVM·payload·network가 같은 fork decision을 내리게 합니다." },
+      { id: "reth-chainspec-release-gate", role: "Genesis·fork boundary의 paired correctness gate를 설계합니다." },
+    ],
+    conceptExplanations: [
+      { id: "reth-chain-identity-bundle", sectionId: "overview", intuition: "도서관 이름뿐 아니라 첫 장부와 개정 일정까지 같아야 같은 판본입니다.", workedExample: "Chain ID가 같아도 alloc balance나 future fork timestamp가 다르면 genesis hash 또는 boundary 이후 execution rule이 달라집니다.", boundary: "Chain ID나 이름 하나로 database·peer·ruleset compatibility를 확정하지 않습니다." },
+      { id: "reth-fork-condition-context", sectionId: "hardfork", intuition: "Upgrade마다 달력·쪽수·누적 작업량 중 지정된 자에만 눈금을 맞춥니다.", workedExample: "Block(100)은 n=99 false, n=100 true이고 Timestamp(1000)은 t=999 false, t=1000 true입니다.", boundary: "평균 block time으로 timestamp를 추정하거나 Timestamp fork를 block number로 판정하지 않습니다." },
+      { id: "reth-fork-id-compatibility-filter", sectionId: "hardfork", intuition: "긴 개정 이력을 짧은 표식으로 비교해 명백히 다른 판본을 먼저 거릅니다.", workedExample: "Genesis와 active fork history·next fork가 다른 peer를 Status 단계에서 거르고 block은 별도로 full validation합니다.", boundary: "Fork ID 일치가 peer honesty·block validity를 증명하지 않고 mismatch가 항상 악성이라는 뜻도 아닙니다." },
+      { id: "reth-genesis-state-root-derivation", sectionId: "genesis", intuition: "초기 계정 목록 전체를 한 개의 검증 가능한 fingerprint로 접습니다.", workedExample: "Alice balance 100→101은 account encoding과 trie path·state root를 바꿉니다.", boundary: "JSON parse 성공이나 key 순서만 같다는 사실이 canonical state root 일치를 보장하지 않습니다." },
+      { id: "reth-genesis-sealed-hash", sectionId: "genesis", intuition: "초기 state fingerprint와 활성 rule field를 block-0 header에 넣고 최종 판본 번호를 만듭니다.", workedExample: "State root 또는 genesis-active conditional field가 바뀌면 header encoding과 genesis hash가 달라집니다.", boundary: "Expected hash를 비교하지 않은 custom genesis를 built-in chain과 같다고 가정하지 않습니다." },
+      { id: "reth-chainspec-consumer-parity", sectionId: "overview", intuition: "검사자·계산기·제작자·문지기가 같은 개정표를 사용하게 합니다.", workedExample: "Boundary−1, boundary, boundary+1에서 validator·EVM·payload·fork filter의 active decision과 required field가 일치해야 합니다.", boundary: "Shared type 이름만으로 runtime에서 같은 spec instance·digest·context를 사용한다고 단정하지 않습니다." },
+      { id: "reth-chainspec-release-gate", sectionId: "genesis", intuition: "새 parser·ruleset이 같은 block 0과 경계 결정을 만드는지 먼저 검사합니다.", workedExample: "Alloc mutation·wrong hash·database mismatch·restart를 주입하고 root·genesis hash·fork decision parity를 비교합니다.", boundary: "Parsing speed나 sync throughput을 genesis identity·consensus compatibility의 대리 지표로 쓰지 않습니다." },
+    ],
+    conceptStages: [
+      { label: "01 identity", relation: "Chain ID·genesis·fork·parameter를 ruleset identity로 묶습니다.", concepts: ["reth-chain-identity-bundle"] },
+      { label: "02 activation", relation: "Condition과 current block context로 active rule을 고릅니다.", concepts: ["reth-fork-condition-context", "reth-fork-id-compatibility-filter"] },
+      { label: "03 genesis", relation: "Alloc에서 state root와 sealed block-0 hash를 유도합니다.", concepts: ["reth-genesis-state-root-derivation", "reth-genesis-sealed-hash"] },
+      { label: "04 consumers", relation: "Validator·executor·payload·network decision을 맞춥니다.", concepts: ["reth-chainspec-consumer-parity"] },
+      { label: "05 release", relation: "Mutation·boundary·restart fixture로 correctness를 닫습니다.", concepts: ["reth-chainspec-release-gate"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Chain ID만 같고 genesis alloc 또는 future fork schedule이 다른 두 node가 왜 같은 chain이 아닌지 설명하세요.", answerChecklist: ["chain ID insufficient", "alloc changes state root", "genesis hash", "fork schedule", "protocol parameters", "ruleset identity"], requiredConcepts: ["reth-chain-identity-bundle", "reth-genesis-sealed-hash"], sectionId: "overview" },
+      { level: "basic", question: "Block(100), Timestamp(1000), Never 조건을 n=99/100과 t=999/1000 context에서 평가하세요.", answerChecklist: ["Block 99 false", "Block 100 true", "Timestamp 999 false", "Timestamp 1000 true", "Never false", "matching coordinate"], requiredConcepts: ["reth-fork-condition-context"], sectionId: "hardfork" },
+      { level: "basic", question: "Genesis alloc에서 sealed genesis hash까지 네 단계를 순서대로 설명하세요.", answerChecklist: ["parse canonical types", "account/code/storage encoding", "state trie root", "genesis-active fields", "header encoding", "sealed hash"], requiredConcepts: ["reth-genesis-state-root-derivation", "reth-genesis-sealed-hash"], sectionId: "genesis" },
+      { level: "basic", question: "Alice 초기 balance 100을 101로 바꾸면 어떤 commitment가 연쇄적으로 달라지는지 설명하세요.", answerChecklist: ["account encoding", "trie path", "state root", "header field", "header hash", "database identity mismatch"], requiredConcepts: ["reth-genesis-state-root-derivation", "reth-genesis-sealed-hash"], sectionId: "genesis" },
+      { level: "basic", question: "Fork ID가 무엇을 거르고 무엇을 증명하지 않는지 설명하세요.", answerChecklist: ["genesis input", "active fork history", "next activation", "peer compatibility filter", "not peer honesty", "not block validity", "full validation follows"], requiredConcepts: ["reth-fork-id-compatibility-filter"], sectionId: "hardfork" },
+      { level: "basic", question: "Boundary−1·boundary·boundary+1에서 validator·EVM·payload·network가 공유해야 할 입력과 output을 쓰세요.", answerChecklist: ["same spec digest", "same block context", "activation result", "validation rules", "EVM spec", "required header/payload fields", "fork filter"], requiredConcepts: ["reth-chainspec-consumer-parity", "reth-fork-condition-context"], sectionId: "overview" },
+      { level: "advanced", question: "같은 timestamp에 두 fork가 예약된 custom chain의 deterministic activation·ordering test를 설계하세요.", answerChecklist: ["ordered schedule", "same timestamp", "boundary contexts", "pinned implementation semantics", "consumer parity", "fork ID", "no average-block-time inference", "version receipt"], requiredConcepts: ["reth-fork-condition-context", "reth-chainspec-consumer-parity"], sectionId: "hardfork" },
+      { level: "advanced", question: "Chain ID는 같지만 expected genesis hash와 existing database가 다른 startup을 triage하세요.", answerChecklist: ["raw genesis bytes", "alloc canonicalization", "derived state root", "conditional header fields", "sealed hash", "database identity", "fail closed", "no partial sync"], requiredConcepts: ["reth-chain-identity-bundle", "reth-genesis-state-root-derivation", "reth-genesis-sealed-hash"], sectionId: "genesis" },
+      { level: "advanced", question: "Moving main의 ChainSpec field를 production binary 설명에 섞지 않는 provenance receipt를 설계하세요.", answerChecklist: ["Reth semver", "git SHA", "Cargo features", "raw spec digest", "genesis hash", "fork schedule/params", "docs version/date", "consumer decision receipt"], requiredConcepts: ["reth-chain-identity-bundle", "reth-chainspec-consumer-parity"], sectionId: "overview" },
+      { level: "advanced", question: "Alloc mutation·boundary fork·wrong hash·database mismatch·restart를 포함한 paired ChainSpec release matrix를 설계하세요.", answerChecklist: ["same raw fixtures", "base/candidate versions", "state-root parity", "genesis-hash parity", "activation parity", "validator/EVM/payload/network parity", "reason-coded failure", "restart", "performance after gates", "rollback artifact"], requiredConcepts: ["reth-chainspec-release-gate", "reth-chainspec-consumer-parity"], sectionId: "genesis" },
+    ],
+    papers: [
+      { title: "Reth ChainSpec documentation", href: "https://reth.rs/docs/reth/chainspec/struct.ChainSpec.html", problem: "Reth가 chain identity·genesis·fork·parameter를 묶는 current type 확인", contribution: "ChainSpec field와 fork/fee/blob query API 설명", assumptions: "표시된 Reth 2.x docs version·feature·chain type", evidenceScope: "해당 version public ChainSpec surface", notClaim: "Custom genesis 안전성·consumer runtime parity·future layout을 보장하지 않음", sectionId: "paper-reth-chainspec-docs" },
+      { title: "EIP-6122 — Fork identifier update", href: "https://eips.ethereum.org/EIPS/eip-6122", problem: "Timestamp fork를 포함한 peer chain compatibility 판정", contribution: "Fork hash·next 계산과 validation rule 규정", assumptions: "EIP가 정의한 genesis·fork schedule·local head context", evidenceScope: "Fork ID handshake compatibility", notClaim: "Peer honesty·block validity·network availability를 증명하지 않음", sectionId: "paper-eip-6122-forkid" },
+      { title: "reth_ethereum::chainspec module", href: "https://reth.rs/docs/reth_ethereum/chainspec/index.html", problem: "Genesis·hardfork에서 sealed header와 Ethereum ChainSpec을 만드는 source boundary 확인", contribution: "Builder·ForkCondition·make_genesis_header API와 source 연결", assumptions: "Pinned crate docs/source snapshot", evidenceScope: "선택한 release genesis construction path", notClaim: "다른 client와 custom chain의 전체 interoperability를 자동 검증하지 않음", sectionId: "paper-reth-chainspec-source" },
+    ],
+  },
+  "blockchain/reth-net": {
+    entryLevel: true,
+    entryNote: "IP address·socket·peer가 같은 말이라고 가정하지 않습니다. 발견된 endpoint가 active Ethereum peer가 되기까지 네 gate를 한 단계씩 설명합니다.",
+    coreIdea: "Reth network는 discovery candidate·transport·RLPx identity/capability·ETH Status를 별도 state로 승격하고 announcement/request flow를 bounded resource로 처리하며 failure reason을 cleanup·retry·reputation에 feedback합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "reth-peer-candidate-active-separation", role: "Address 후보와 protocol-ready peer의 권한을 분리합니다." },
+      { id: "reth-discovery-record-freshness", role: "Signed record를 fresh·diverse dial candidate로 검증합니다." },
+      { id: "reth-rlpx-capability-negotiation", role: "Authenticated channel에서 공통 subprotocol version을 고릅니다." },
+      { id: "reth-eth-status-compatibility-gate", role: "ETH chain·fork context가 맞는 session만 active로 승격합니다." },
+      { id: "reth-eth-announcement-request-flow", role: "존재 push와 필요한 bytes pull을 구분합니다." },
+      { id: "reth-network-backpressure-budget", role: "Per-peer queue·request·byte budget으로 memory와 fairness를 지킵니다." },
+      { id: "reth-session-failure-reputation", role: "Close reason을 cleanup·retry·peer score에 연결합니다." },
+      { id: "reth-network-version-receipt", role: "Release default와 실제 enabled/negotiated protocol을 분리합니다." },
+      { id: "reth-network-release-gate", role: "Adversarial peer fixture의 correctness-first 채택 gate를 만듭니다." },
+    ],
+    conceptExplanations: [
+      { id: "reth-peer-candidate-active-separation", sectionId: "overview", intuition: "전화번호를 알았다는 사실과 신원을 확인하고 같은 언어로 대화할 준비가 된 상태를 나눕니다.", workedExample: "Discovery endpoint→pending TCP→authenticated RLPx→compatible ETH Status 순으로만 권한과 slot을 올립니다.", boundary: "Address·TCP open·encryption 각각은 active Ethereum peer나 honest data를 증명하지 않습니다." },
+      { id: "reth-discovery-record-freshness", sectionId: "discovery", intuition: "주소록 서명이 맞아도 최신 번호인지와 실제 연결 기록을 다시 봅니다.", workedExample: "Record identity·sequence·age·endpoint policy를 검사하고 prefix concentration과 failed dial history를 반영합니다.", boundary: "Signed record·bootnode·trusted peer가 reachability·honesty·eclipse resistance를 보장하지 않습니다." },
+      { id: "reth-rlpx-capability-negotiation", sectionId: "session", intuition: "신원을 확인한 두 프로그램이 둘 다 지원하는 protocol name/version만 골라 message schema를 맞춥니다.", workedExample: "Local eth/68·snap/1과 peer eth/67·eth/68의 공통 ETH 후보는 eth/68입니다.", boundary: "공통 capability가 있어도 genesis·fork Status가 다르면 active가 아니며 version selection은 pinned spec을 따릅니다." },
+      { id: "reth-eth-status-compatibility-gate", sectionId: "session", intuition: "같은 언어를 골랐어도 같은 장부 판본을 말하는지 첫 대화에서 확인합니다.", workedExample: "Negotiated ETH Status의 network·genesis·fork/head를 local ChainSpec과 비교해 active 또는 reason-coded disconnect합니다.", boundary: "Status pass는 이후 block·transaction validity와 peer honesty를 보장하지 않습니다." },
+      { id: "reth-eth-announcement-request-flow", sectionId: "eth-wire", intuition: "새 물건이 있다고 먼저 알리고 필요한 사람만 상세 bytes를 요청합니다.", workedExample: "Transaction hash announcement를 dedupe한 뒤 모르는 항목만 correlated request/response로 가져옵니다.", boundary: "Announcement 수신을 txpool acceptance나 모든 peer full broadcast로 해석하지 않습니다." },
+      { id: "reth-network-backpressure-budget", sectionId: "eth-wire", intuition: "들어오는 물보다 배수구가 느릴 때 수조 크기와 넘침 정책을 정합니다.", workedExample: "Per-peer inflight request·response bytes·channel capacity를 제한하고 saturation 때 pause/drop/disconnect를 message class별로 고릅니다.", boundary: "Queue를 크게 하는 것이 무제한 burst·malformed input·fairness 문제를 해결하지 않으며 숫자는 release/config에 귀속합니다." },
+      { id: "reth-session-failure-reputation", sectionId: "session", intuition: "상대 위반과 우리 서버 과부하를 같은 벌점으로 처리하지 않습니다.", workedExample: "Timeout·capacity·identity mismatch·wrong genesis·malformed frame을 별도 close reason으로 남기고 slot 회수 뒤 retry·score·ban을 다르게 적용합니다.", boundary: "Transient timeout 하나를 영구 악성 증거로 확대하거나 close 뒤 inflight buffer를 남기지 않습니다." },
+      { id: "reth-network-version-receipt", sectionId: "overview", intuition: "문서가 말하는 default와 실제 연결에서 켜진 protocol을 한 장에 함께 적습니다.", workedExample: "Reth semver/SHA·features·enabled discv4/v5·network config·negotiated ETH version·ChainSpec digest를 남깁니다.", boundary: "v2.2.0의 Discv5 default를 이전/이후 release나 custom build에 일반화하지 않습니다." },
+      { id: "reth-network-release-gate", sectionId: "discovery", intuition: "빠른 새 network stack이 악성·느린 peer에서도 같은 state와 cleanup을 만드는지 먼저 시험합니다.", workedExample: "Stale record·bad identity·wrong chain·flood·saturation·restart에서 state count·close reason·accepted message parity를 검사합니다.", boundary: "Peer count·connection latency·throughput만으로 protocol correctness·bounded memory·eclipse resistance를 입증하지 않습니다." },
+    ],
+    conceptStages: [
+      { label: "01 discover", relation: "Fresh record를 candidate로 만들되 active 권한과 분리합니다.", concepts: ["reth-discovery-record-freshness", "reth-peer-candidate-active-separation"] },
+      { label: "02 negotiate", relation: "RLPx identity와 capability 교집합을 확정합니다.", concepts: ["reth-rlpx-capability-negotiation"] },
+      { label: "03 activate", relation: "ETH Status와 ChainSpec compatibility로 session을 승격합니다.", concepts: ["reth-eth-status-compatibility-gate"] },
+      { label: "04 exchange", relation: "Announcement와 correlated pull을 bounded queue에서 처리합니다.", concepts: ["reth-eth-announcement-request-flow", "reth-network-backpressure-budget"] },
+      { label: "05 feedback", relation: "Close reason을 cleanup·retry·reputation에 반영합니다.", concepts: ["reth-session-failure-reputation"] },
+      { label: "06 release", relation: "Version provenance와 adversarial parity gate를 묶습니다.", concepts: ["reth-network-version-receipt", "reth-network-release-gate"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Discovery endpoint가 active Ethereum peer가 될 때까지 네 state와 각 gate를 순서대로 설명하세요.", answerChecklist: ["candidate record", "pending transport", "RLPx identity/encryption", "capability intersection", "ETH Status", "active permission", "separate slots"], requiredConcepts: ["reth-peer-candidate-active-separation", "reth-rlpx-capability-negotiation", "reth-eth-status-compatibility-gate"], sectionId: "overview" },
+      { level: "basic", question: "Local eth/68·snap/1과 peer eth/67·eth/68의 capability 교집합을 구하고 아직 active가 아닌 이유를 설명하세요.", answerChecklist: ["pair name/version", "shared eth/68", "no shared snap", "RLPx secure", "Status still required", "genesis/fork check"], requiredConcepts: ["reth-rlpx-capability-negotiation", "reth-eth-status-compatibility-gate"], sectionId: "session" },
+      { level: "basic", question: "ETH Status가 비교하는 context와 PASS가 보장하지 않는 것을 구분하세요.", answerChecklist: ["network/chain", "genesis", "fork ID/context", "head", "compatibility gate", "not peer honesty", "not block validity"], requiredConcepts: ["reth-eth-status-compatibility-gate"], sectionId: "session" },
+      { level: "basic", question: "Transaction announcement에서 txpool 전달까지 push·dedupe·pull·validation 경로를 설명하세요.", answerChecklist: ["hash/metadata announcement", "known-set dedupe", "policy", "request ID", "bounded response", "decode/validate", "txpool admission separate"], requiredConcepts: ["reth-eth-announcement-request-flow", "reth-network-backpressure-budget"], sectionId: "eth-wire" },
+      { level: "basic", question: "Signed discovery record가 있어도 fresh dial candidate와 active peer를 별도로 검증해야 하는 이유를 설명하세요.", answerChecklist: ["signature origin", "sequence/age", "endpoint policy", "reachability unknown", "handshake identity", "Status compatibility", "honesty not proven"], requiredConcepts: ["reth-discovery-record-freshness", "reth-peer-candidate-active-separation"], sectionId: "discovery" },
+      { level: "basic", question: "Capacity·timeout·identity mismatch·wrong genesis·malformed frame 종료에서 공통 cleanup과 다른 policy를 쓰세요.", answerChecklist: ["remove pending/active", "release slot", "cancel inflight", "release buffer", "reason-coded metric", "retry distinction", "reputation/ban distinction"], requiredConcepts: ["reth-session-failure-reputation"], sectionId: "session" },
+      { level: "advanced", question: "Stale ENR·duplicate identity·한 prefix 집중·unreachable endpoint로 eclipse를 시도하는 fixture와 방어 한계를 설계하세요.", answerChecklist: ["signed records", "sequence/age", "identity dedupe", "prefix/diversity limit", "rate limit", "dial feedback", "no guaranteed Sybil resistance", "active handshake still required"], requiredConcepts: ["reth-discovery-record-freshness", "reth-peer-candidate-active-separation"], sectionId: "discovery" },
+      { level: "advanced", question: "Announcement flood와 느린 consumer에서 bounded memory·fairness를 지키는 backpressure contract를 설계하세요.", answerChecklist: ["per-peer budget", "message-class budget", "inflight request limit", "response byte cap", "bounded channel", "pause/drop/disconnect", "local overload distinction", "memory/latency metrics"], requiredConcepts: ["reth-network-backpressure-budget", "reth-session-failure-reputation"], sectionId: "eth-wire" },
+      { level: "advanced", question: "Current docs·v2.2.0 default·custom build를 섞지 않는 network session receipt를 설계하세요.", answerChecklist: ["semver", "git SHA", "Cargo features", "enabled discv4/v5", "network config digest", "negotiated RLPx/ETH", "ChainSpec digest", "date/docs version", "per-session outcome"], requiredConcepts: ["reth-network-version-receipt"], sectionId: "overview" },
+      { level: "advanced", question: "Stale record·bad identity·no capability·wrong genesis·malformed message·flood·saturation·restart의 paired release matrix를 설계하세요.", answerChecklist: ["same records/DNS", "same clock/seed", "same fault schedule", "candidate/pending/active parity", "close reason parity", "slot/buffer cleanup", "accepted message trace", "bounded memory", "performance after gates", "rollback config/binary"], requiredConcepts: ["reth-network-release-gate", "reth-session-failure-reputation", "reth-network-version-receipt"], sectionId: "discovery" },
+    ],
+    papers: [
+      { title: "Reth Project Layout — Networking", href: "https://github.com/paradigmxyz/reth/blob/main/docs/repo/layout.md", problem: "Peer·session·discovery·wire·downloader source owner 확인", contribution: "Current repository의 network crate responsibility 지도 제공", assumptions: "Pinned Reth semver/SHA와 repository snapshot", evidenceScope: "선택한 source layout의 responsibility", notClaim: "Crate path·default·feature가 모든 release에서 같다고 주장하지 않음", sectionId: "paper-reth-network-layout" },
+      { title: "Ethereum devp2p RLPx specification", href: "https://github.com/ethereum/devp2p/blob/master/rlpx.md", problem: "Authenticated encrypted peer channel과 capability negotiation 정의", contribution: "Handshake·framing·Hello/capability wire contract", assumptions: "Pinned spec revision과 compliant peer implementation", evidenceScope: "RLPx transport/session semantics", notClaim: "Peer honesty·ETH Status compatibility·block validity를 보장하지 않음", sectionId: "paper-devp2p-rlpx" },
+      { title: "Ethereum Wire Protocol (eth)", href: "https://github.com/ethereum/devp2p/blob/master/caps/eth.md", problem: "Status와 block·transaction data exchange semantics 정의", contribution: "Versioned ETH message·request/response contract", assumptions: "Negotiated protocol version과 local ChainSpec", evidenceScope: "ETH wire field·message behavior", notClaim: "Local queue policy·peer score·received object validity를 대신 보장하지 않음", sectionId: "paper-devp2p-eth" },
+      { title: "Ethereum Node Discovery v5", href: "https://github.com/ethereum/devp2p/blob/master/discv5/discv5-theory.md", problem: "중앙 목록 없이 signed node record를 탐색·갱신", contribution: "Discovery session·lookup·record의 protocol model", assumptions: "Pinned spec revision·clock·identity/signature validation", evidenceScope: "Discv5 discovery semantics", notClaim: "Application compatibility·peer honesty·eclipse-free topology를 보장하지 않음", sectionId: "paper-devp2p-discv5" },
+    ],
+  },
+  "blockchain/prysm-ssz": {
+    entryLevel: true,
+    entryNote: "정수와 byte가 무엇인지에서 시작해 SSZ container 하나를 직접 배치하고 root·field proof까지 계산합니다. Serialization이나 Merkle tree를 미리 안다고 가정하지 않습니다.",
+    coreIdea: "SSZ는 fork별 type schema 하나로 canonical wire bytes와 Merkle commitment를 결정하고, generalized index로 전체 값을 보내지 않고 field 포함을 검증하게 합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "ssz-schema-type-contract", role: "같은 schema가 byte layout과 root 위치를 함께 정하게 합니다." },
+      { id: "ssz-static-dynamic-offset-layout", role: "Fixed part와 variable part의 실제 byte 위치를 계산합니다." },
+      { id: "ssz-canonical-bounded-decoding", role: "Malformed offset과 limit 초과를 allocation 전에 거릅니다." },
+      { id: "ssz-chunk-packing", role: "Basic value를 32-byte Merkle leaf로 바꿉니다." },
+      { id: "ssz-merkleization", role: "Chunk와 zero hash를 root 하나로 commitment합니다." },
+      { id: "ssz-length-mixing", role: "List의 capacity와 actual length를 구분합니다." },
+      { id: "ssz-generalized-index", role: "Binary tree path를 하나의 정수 주소로 표현합니다." },
+      { id: "ssz-merkle-multiproof", role: "여러 field proof의 겹친 sibling을 제거합니다." },
+    ],
+    conceptExplanations: [
+      { id: "ssz-schema-type-contract", sectionId: "overview", intuition: "내용만 보내는 대신 송신자와 수신자가 같은 서식을 미리 공유합니다.", workedExample: "List[uint64,4]의 [7,9]는 limit 4와 actual length 2를 구분해 bytes와 tree shape를 정합니다.", boundary: "같은 bytes를 다른 fork/schema로 읽으면 다른 value가 될 수 있으며 decode 성공은 protocol validity가 아닙니다." },
+      { id: "ssz-static-dynamic-offset-layout", sectionId: "encode-decode", intuition: "가변 field 자리에는 내용 대신 뒤쪽 내용이 시작되는 byte 주소를 적습니다.", workedExample: "{uint64,List,uint32}의 fixed part는 8+4+4=16 bytes라 list offset은 16입니다.", boundary: "Offset은 length가 아니며 다음 offset 또는 payload end와 schema element width로 범위를 계산합니다." },
+      { id: "ssz-canonical-bounded-decoding", sectionId: "encode-decode", intuition: "상자를 열기 전에 주소가 상자 안에 있고 순서가 맞는지 검사합니다.", workedExample: "32-byte payload가 offset 40을 선언하면 allocation 없이 reject하고 List[uint64,4]가 40 bytes여도 limit 초과로 reject합니다.", boundary: "Outer slice가 valid해도 nested offset·bitlist termination·boolean canonicality는 재귀 검사가 필요합니다.", counterexample: "Untrusted length로 먼저 allocation하면 작은 compressed input이 memory exhaustion을 일으킬 수 있습니다." },
+      { id: "ssz-chunk-packing", sectionId: "merkleize", intuition: "작은 basic values를 32-byte 칸에 순서대로 채우고 큰 composite는 자신의 root 한 칸으로 요약합니다.", workedExample: "uint64 다섯 개 40 bytes는 32-byte chunk 두 개지만 composite 다섯 개는 child root 다섯 개가 leaf가 됩니다.", boundary: "Element 수와 chunk 수는 같지 않으며 little-endian width와 type kind를 먼저 확인합니다." },
+      { id: "ssz-merkleization", sectionId: "merkleize", intuition: "인접한 두 칸을 왼쪽·오른쪽 순서대로 hash해 root 하나가 될 때까지 올립니다.", workedExample: "Limit 4 tree에서 leaf 하나가 바뀌면 leaf와 두 ancestor, 최대 세 값만 다시 계산할 수 있습니다.", boundary: "SHA-256 collision resistance·type limit·zero-padding을 전제로 하며 root에서 원래 값을 복원할 수 없습니다." },
+      { id: "ssz-length-mixing", sectionId: "merkleize", intuition: "같은 padded data라도 실제로 몇 개를 썼는지를 root에 붙입니다.", workedExample: "List[uint64,4]의 []와 [0]은 zero data가 비슷해도 length 0과 1을 mix해 다른 root를 갖습니다.", boundary: "Vector는 type 자체에 길이가 고정되므로 list처럼 actual length를 mix하지 않습니다.", counterexample: "Length를 생략하면 서로 다른 list values가 같은 padded data subtree로 보일 수 있습니다." },
+      { id: "ssz-generalized-index", sectionId: "multiproof", intuition: "Root에서 왼쪽은 0, 오른쪽은 1을 붙여 tree 길찾기를 정수 하나에 저장합니다.", workedExample: "gindex 13=1101₂에서 선두 1을 빼면 오른쪽→왼쪽→오른쪽 path입니다.", boundary: "Gindex는 schema가 정한 tree에서만 의미가 있으며 fork schema가 바뀌면 같은 숫자가 다른 field를 가리킬 수 있습니다." },
+      { id: "ssz-merkle-multiproof", sectionId: "multiproof", intuition: "여러 길찾기가 공유하는 형제 hash를 한 번만 챙깁니다.", workedExample: "Depth 20 single proof sibling payload는 20×32=640 bytes이며 가까운 두 target은 root 근처 path를 공유합니다.", boundary: "Proof는 주어진 root의 포함만 보장하고 그 root의 canonical/finalized chain status를 보장하지 않습니다." },
+    ],
+    conceptStages: [
+      { label: "00 schema", relation: "Type·field order·limit으로 두 출력의 공통 계약을 고정합니다.", concepts: ["ssz-schema-type-contract"] },
+      { label: "01 bytes", relation: "Static/dynamic layout을 만들고 malformed input을 bounded decode합니다.", concepts: ["ssz-static-dynamic-offset-layout", "ssz-canonical-bounded-decoding"] },
+      { label: "02 chunks", relation: "Typed values를 32-byte leaf로 pack합니다.", concepts: ["ssz-chunk-packing"] },
+      { label: "03 root", relation: "Tree root와 actual list length commitment를 계산합니다.", concepts: ["ssz-merkleization", "ssz-length-mixing"] },
+      { label: "04 proof", relation: "Field path를 주소화하고 여러 target proof를 합칩니다.", concepts: ["ssz-generalized-index", "ssz-merkle-multiproof"] },
+    ],
+    exercises: [
+      { level: "basic", question: "SSZ schema가 serialization과 hash-tree-root에 각각 무엇을 결정하며 decode 성공이 보장하지 않는 것을 설명하세요.", answerChecklist: ["field order", "static/dynamic type", "collection limit", "wire bytes", "tree position", "fork/type receipt", "not signature/state validity"], requiredConcepts: ["ssz-schema-type-contract"], sectionId: "overview" },
+      { level: "basic", question: "{a:uint64,b:List[uint64,4],c:uint32}에서 a=1,b=[10,20],c=3의 fixed/variable layout과 전체 byte 수를 계산하세요.", answerChecklist: ["a 8 bytes", "b offset 4 bytes", "c 4 bytes", "offset 16", "b 16 bytes", "total 32", "little endian"], requiredConcepts: ["ssz-static-dynamic-offset-layout"], sectionId: "encode-decode" },
+      { level: "basic", question: "32-byte payload가 first offset 12·40·16을 각각 선언할 때 fixed part가 16이라면 판정과 추가 검사를 쓰세요.", answerChecklist: ["12 before fixed reject", "40 out of bounds reject", "16 candidate valid", "monotonic offsets", "element alignment", "list limit", "nested canonical checks", "allocate after bounds"], requiredConcepts: ["ssz-canonical-bounded-decoding", "ssz-static-dynamic-offset-layout"], sectionId: "encode-decode" },
+      { level: "basic", question: "Vector[uint64,5]가 몇 32-byte chunk를 만들고 composite 5개와 leaf 수가 다른 이유를 설명하세요.", answerChecklist: ["5×8=40 bytes", "two chunks", "four uint64 first chunk", "one uint64+padded second", "composite child root", "type kind before count"], requiredConcepts: ["ssz-chunk-packing"], sectionId: "merkleize" },
+      { level: "basic", question: "Limit 4 tree의 leaf 하나가 바뀔 때 재계산 경로와 zero hash·left/right ordering 전제를 설명하세요.", answerChecklist: ["depth 2", "changed leaf", "parent", "root", "about 3 values", "cached sibling", "zero padding", "ordered concatenation"], requiredConcepts: ["ssz-merkleization"], sectionId: "merkleize" },
+      { level: "basic", question: "List []와 [0]을 mix-in-length가 구분하는 과정과 Vector에는 같은 처리가 필요 없는 이유를 설명하세요.", answerChecklist: ["padded data ambiguity", "actual length chunk", "length 0 vs 1", "final hash", "list capacity not length", "vector length in type"], requiredConcepts: ["ssz-length-mixing"], sectionId: "merkleize" },
+      { level: "advanced", question: "gindex 13의 path와 sibling index sequence를 계산하고 depth 3 single proof를 root까지 검증하세요.", answerChecklist: ["13=1101 binary", "drop leading one", "right-left-right", "sibling xor 1", "parent floor divide 2", "three sibling hashes", "left/right ordering", "compare trusted root"], requiredConcepts: ["ssz-generalized-index", "ssz-merkleization"], sectionId: "multiproof" },
+      { level: "advanced", question: "가까운 target 두 개와 먼 target 두 개의 multiproof helper set을 비교하고 canonical parser 조건을 설계하세요.", answerChecklist: ["union ancestor paths", "shared siblings removed", "near targets more sharing", "far targets less saving", "unique targets", "no ancestor collision", "canonical order", "bounded helper count"], requiredConcepts: ["ssz-merkle-multiproof", "ssz-generalized-index"], sectionId: "multiproof" },
+      { level: "advanced", question: "Light client가 임의 공격자 root에 valid proof를 받았지만 chain field를 신뢰하면 안 되는 이유와 추가 evidence를 설명하세요.", answerChecklist: ["proof only inclusion in supplied root", "trusted header/root", "sync committee signature", "light-client update rule", "fork/schema", "canonical/finality status", "domain", "do not infer chain truth"], requiredConcepts: ["ssz-merkle-multiproof", "ssz-schema-type-contract"], sectionId: "multiproof" },
+      { level: "advanced", question: "Malformed offsets·limit boundary·bitlist·round trip·root·multiproof를 포함한 SSZ base/candidate release gate를 설계하세요.", answerChecklist: ["same spec commit/fork", "official vectors", "accept/reject parity", "decode-reencode bytes", "root parity", "proof parity", "bounded allocation", "no crash", "performance after hard gates", "rollback artifact"], requiredConcepts: ["ssz-canonical-bounded-decoding", "ssz-merkleization", "ssz-merkle-multiproof"], sectionId: "multiproof" },
+    ],
+    papers: [
+      { title: "Ethereum Consensus Specifications — Simple Serialize", href: "https://github.com/ethereum/consensus-specs/blob/master/ssz/simple-serialize.md", problem: "Consensus object에 canonical serialization과 Merkle commitment 규칙을 함께 부여", contribution: "SSZ type·offset·chunk·merkleization·length-mixing algorithm과 bounds 정의", assumptions: "고정한 specification release/commit, fork schema와 hash function", evidenceScope: "SSZ byte encoding·root calculation·type bounds", notClaim: "Prysm cache layout·signature validity·canonical chain status나 특정 처리량을 보장하지 않음", sectionId: "paper-ssz-spec" },
+      { title: "Ethereum Consensus Specifications — Merkle proof formats", href: "https://github.com/ethereum/consensus-specs/blob/master/ssz/merkle-proofs.md", problem: "SSZ tree의 field path와 여러 target inclusion proof를 interoperable하게 표현", contribution: "Generalized index와 helper-index 기반 single/multiproof 형식 제공", assumptions: "신뢰하는 root·정확한 SSZ schema·canonical target/helper 집합", evidenceScope: "주어진 root에 대한 field/subtree inclusion verification", notClaim: "Root 자체의 consensus 신뢰·finality나 모든 target 배치의 고정 압축률을 보장하지 않음", sectionId: "paper-ssz-merkle-proofs" },
+      { title: "OffchainLabs/prysm source repository — SSZ implementation", href: "https://github.com/OffchainLabs/prysm", problem: "Specification의 SSZ rule이 Prysm release에서 생성·검증·cache code로 구현되는 위치 확인", contribution: "실제 Go implementation·dependency·release history 제공", assumptions: "분석한 Prysm semver/SHA·generator version·build flags 고정", evidenceScope: "선택한 source snapshot의 method·error·allocation behavior", notClaim: "Moving branch 구조와 benchmark가 모든 production release에서 같다고 주장하지 않음", sectionId: "paper-prysm-ssz-source" },
+    ],
+  },
+  "blockchain/prysm-bls": {
+    entryLevel: true,
+    entryNote: "나머지 연산의 scalar와 공개 point라는 직관부터 시작해 single·aggregate·batch signature를 검증합니다. Elliptic curve나 pairing을 미리 안다고 가정하지 않습니다.",
+    coreIdea: "BLS는 같은 secret scalar가 만든 public key와 message signature 관계를 pairing으로 확인하고, 정확한 domain·key/message set·PoP 전제 아래 signature point를 집계합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "bls12-381-group-role", role: "Secret scalar·G1 public key·G2 signature·GT pairing 역할을 나눕니다." },
+      { id: "bls-point-serialization-validation", role: "Wire bytes를 안전한 curve point로 승격합니다." },
+      { id: "bls-signing-root-domain-separation", role: "Chain·fork·duty와 ciphersuite message space를 분리합니다." },
+      { id: "bls-pairing-verification", role: "Secret을 모른 채 signature scalar 관계를 검사합니다." },
+      { id: "bls-signature-aggregation", role: "여러 signature point를 하나로 더합니다." },
+      { id: "bls-proof-of-possession-rogue-key", role: "Public-key aggregate의 rogue-key 전제를 닫습니다." },
+      { id: "bls-api-message-cardinality", role: "같은 message와 다른 message의 API를 구분합니다." },
+      { id: "bls-batch-verification-release-gate", role: "Batch correctness·failure isolation 뒤 성능을 비교합니다." },
+    ],
+    conceptExplanations: [
+      { id: "bls12-381-group-role", sectionId: "overview", intuition: "비밀 숫자 하나를 두 종류의 공개 point 관계에 똑같이 숨기고 pairing으로 일치 여부만 봅니다.", workedExample: "sk=5라는 장난감 직관에서 PK=5G1, σ=5H(m)이며 verifier는 5를 몰라도 pairing equality를 검사합니다.", boundary: "실제 group order와 point는 큰 유한체 값이며 작은 정수 example이 cryptographic security를 재현하지 않습니다." },
+      { id: "bls-point-serialization-validation", sectionId: "blst-binding", intuition: "길이가 맞는 좌표 문자열을 실제 허용된 group point인지 검사한 뒤 사용합니다.", workedExample: "48-byte public key와 96-byte signature도 noncanonical·wrong subgroup·identity이면 reject합니다.", boundary: "Deserialize 성공만으로 key/signature validity가 아니며 trusted-point cache와 untrusted input path를 구분합니다.", counterexample: "Identity public key를 허용하면 identity signature가 모든 message 관계에 악용될 수 있습니다." },
+      { id: "bls-signing-root-domain-separation", sectionId: "sign-verify", intuition: "같은 내용의 도장을 다른 chain·fork·업무에 다시 쓰지 못하도록 용도를 message에 붙입니다.", workedExample: "같은 object root도 proposer domain과 attester domain 또는 다른 genesis root면 signing root가 달라집니다.", boundary: "Consensus domain과 hash-to-curve DST는 서로 다른 layer이며 둘 중 하나만 맞아도 충분하지 않습니다." },
+      { id: "bls-pairing-verification", sectionId: "sign-verify", intuition: "Public key와 signature에 숨은 곱셈 배율이 같은지 target group에서 비교합니다.", workedExample: "PK=skG1, σ=skH(m)이면 e(G1,σ)=e(PK,H(m))입니다.", boundary: "Equality는 해당 tuple의 cryptographic validity이고 duty authorization·slashing safety·message state validity는 별도입니다.", proofIdea: "Pairing bilinearity로 e(G1,skH)=e(G1,H)^sk=e(skG1,H)를 사용합니다." },
+      { id: "bls-signature-aggregation", sectionId: "sign-verify", intuition: "여러 signature point를 더해도 결과 point 크기는 그대로지만 검증 입력 목록은 남깁니다.", workedExample: "Validator 128명의 G2 signature를 더해 aggregate는 96 bytes지만 128 public keys와 participant bits가 필요합니다.", boundary: "Aggregate 크기가 고정이어도 signer identity·message list·authorization evidence까지 96 bytes가 되는 것은 아닙니다." },
+      { id: "bls-proof-of-possession-rogue-key", sectionId: "sign-verify", intuition: "Public key를 등록할 때 대응 secret을 실제로 안다는 별도 서명을 확인합니다.", workedExample: "공격자가 honest key를 상쇄한 crafted key를 제출해 aggregate signer인 척하는 경로를 PoP registration으로 막습니다.", boundary: "PoP를 검증하지 않은 arbitrary keys에 same-message public-key aggregation을 적용하지 않습니다.", counterexample: "Key list를 본 뒤 crafted key를 고를 수 있으면 aggregate equation만 맞추는 rogue-key 공격이 가능합니다." },
+      { id: "bls-api-message-cardinality", sectionId: "sign-verify", intuition: "모두 같은 종이에 서명했는지 각기 다른 종이에 서명했는지에 따라 검증 장부가 달라집니다.", workedExample: "같은 attestation data/domain은 FAV 후보지만 slot만 같고 object root가 다르면 각 (PK,m) tuple을 보존합니다.", boundary: "Same slot·same duty type은 byte-identical signing root를 뜻하지 않습니다." },
+      { id: "bls-batch-verification-release-gate", sectionId: "batch-verification", intuition: "여러 검사를 한 번에 풀되 오답이 섞이면 찾는 비용과 deadline까지 함께 봅니다.", workedExample: "64-item batch 실패를 반으로 나누어 invalid 하나를 찾고 queue wait·fallback count를 receipt에 남깁니다.", boundary: "Batch PASS/FAIL API와 aggregate signature semantics를 혼동하지 않고 random coefficient 전제를 확인합니다." },
+    ],
+    conceptStages: [
+      { label: "00 groups", relation: "Scalar와 G1/G2/GT의 공개 역할을 잡습니다.", concepts: ["bls12-381-group-role"] },
+      { label: "01 input", relation: "Compressed bytes를 canonical subgroup point로 검증합니다.", concepts: ["bls-point-serialization-validation"] },
+      { label: "02 context", relation: "Object에 chain·fork·duty와 BLS suite domain을 묶습니다.", concepts: ["bls-signing-root-domain-separation"] },
+      { label: "03 verify", relation: "Pairing equation과 aggregation 전제를 구분합니다.", concepts: ["bls-pairing-verification", "bls-signature-aggregation"] },
+      { label: "04 API safety", relation: "PoP와 same/distinct-message API를 선택합니다.", concepts: ["bls-proof-of-possession-rogue-key", "bls-api-message-cardinality"] },
+      { label: "05 batch", relation: "Correctness-first batch·fallback·deadline gate를 만듭니다.", concepts: ["bls-batch-verification-release-gate"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Secret scalar, G1 public key, G2 message/signature와 GT pairing의 역할을 초심자에게 설명하고 Ethereum byte 크기를 적으세요.", answerChecklist: ["secret scalar", "G1 generator/public key", "48-byte compressed PK", "hash-to-G2", "96-byte signature", "GT pairing relation", "not small toy security"], requiredConcepts: ["bls12-381-group-role"], sectionId: "overview" },
+      { level: "basic", question: "길이가 정확한 public key/signature bytes도 BLST 호출 전에 reject해야 하는 네 조건과 owner를 설명하세요.", answerChecklist: ["canonical encoding", "on curve", "correct subgroup", "non-identity", "Go length/context", "binding lifetime", "native validation", "typed error"], requiredConcepts: ["bls-point-serialization-validation"], sectionId: "blst-binding" },
+      { level: "basic", question: "Consensus domain과 BLS DST를 비교하고 같은 object root의 proposer·attester·다른-chain signing root가 달라지는 이유를 설명하세요.", answerChecklist: ["object root", "domain type", "fork version", "genesis validators root", "signing data", "DST hash-to-curve", "different layers", "replay boundary"], requiredConcepts: ["bls-signing-root-domain-separation"], sectionId: "sign-verify" },
+      { level: "basic", question: "e(G1,σ)=e(PK,H(m))를 각 기호와 bilinearity로 설명하고 이 판정이 보장하지 않는 것을 쓰세요.", answerChecklist: ["PK=skG1", "signature=skH(m)", "hash-to-curve", "pairing", "bilinearity", "same scalar relation", "not duty authorization", "not slashing/state validity"], requiredConcepts: ["bls-pairing-verification"], sectionId: "sign-verify" },
+      { level: "basic", question: "128 validator signature를 aggregate할 때 줄어드는 것과 사라지지 않는 evidence를 분류하세요.", answerChecklist: ["G2 point addition", "one 96-byte aggregate", "public-key set", "participant bits", "message/domain", "key registration", "protocol authorization", "no signer identity from signature alone"], requiredConcepts: ["bls-signature-aggregation"], sectionId: "sign-verify" },
+      { level: "basic", question: "Verify·FastAggregateVerify·AggregateVerify를 message cardinality와 PoP 전제로 선택하세요.", answerChecklist: ["single tuple Verify", "same exact message FAV", "PoP/registered keys", "distinct messages tuple-preserving", "same slot insufficient", "domain included", "reject empty/mismatched lists"], requiredConcepts: ["bls-api-message-cardinality", "bls-proof-of-possession-rogue-key"], sectionId: "sign-verify" },
+      { level: "advanced", question: "PoP 없는 public-key aggregation의 rogue-key 반례를 구성하고 registration·runtime 검증을 분리하세요.", answerChecklist: ["observe honest key", "crafted cancelling key", "aggregate equation deception", "secret possession proof", "PopVerify at registration", "key validation", "bind registry identity", "runtime participant set"], requiredConcepts: ["bls-proof-of-possession-rogue-key", "bls-signature-aggregation"], sectionId: "sign-verify" },
+      { level: "advanced", question: "Random coefficients로 N개 pairing equation을 batch하는 이유와 fixed/reused coefficient 반례, 실패 격리를 설명하세요.", answerChecklist: ["one equation combination", "fresh nonzero r_i", "unpredictable after inputs", "prevent error cancellation", "batch fail no culprit", "binary isolation", "deadline policy", "fallback receipt"], requiredConcepts: ["bls-batch-verification-release-gate", "bls-pairing-verification"], sectionId: "batch-verification" },
+      { level: "advanced", question: "BLST upgrade에서 base보다 candidate가 빨라 보이지만 subgroup check를 생략한 비교를 진단하고 공정한 benchmark를 설계하세요.", answerChecklist: ["same validation scope", "same BLST commit", "CPU/ISA", "compiler flags", "deserialize included", "input cardinality/distribution", "workers", "correctness parity first", "p50/p99/CPU"], requiredConcepts: ["bls-point-serialization-validation", "bls-batch-verification-release-gate"], sectionId: "blst-binding" },
+      { level: "advanced", question: "Malformed point·wrong domain·rogue key·same/distinct-message·batch failure·deadline을 포함한 BLS release matrix를 설계하세요.", answerChecklist: ["same Prysm/BLST fixture", "accept/reject parity", "no crash/bounded allocation", "domain/fork cases", "PoP cases", "API selection", "random batch", "fallback isolation", "performance after gates", "rollback dependency"], requiredConcepts: ["bls-batch-verification-release-gate", "bls-api-message-cardinality", "bls-signing-root-domain-separation"], sectionId: "batch-verification" },
+    ],
+    papers: [
+      { title: "BLS Signatures — CFRG Internet-Draft draft-06", href: "https://datatracker.ietf.org/doc/draft-irtf-cfrg-bls-signature/06/", problem: "짧고 집계 가능한 pairing-based signature의 interoperable API와 security variants 정의", contribution: "Core·augmentation·Proof-of-Possession scheme, key validation과 aggregate verification 전제 정리", assumptions: "정확한 draft revision·ciphersuite·curve·hash-to-curve·PoP mode 고정", evidenceScope: "BLS algorithm과 rogue-key/key-validation security contract", notClaim: "RFC가 아니며 Ethereum consensus domain·Prysm binding·특정 CPU 성능을 정하지 않음", sectionId: "paper-bls-draft" },
+      { title: "OffchainLabs/prysm source repository — BLS/BLST binding", href: "https://github.com/OffchainLabs/prysm", problem: "Ethereum signing root가 Go wrapper를 거쳐 BLST native operation으로 실행되는 경계 확인", contribution: "실제 validation·error·batch 호출과 pinned dependency source 제공", assumptions: "Prysm semver/SHA·BLST commit·compiler·CPU feature와 build flags 고정", evidenceScope: "선택한 implementation snapshot의 method·input·failure behavior", notClaim: "Moving branch나 한 CPU benchmark를 모든 Prysm deployment의 고정 성능으로 일반화하지 않음", sectionId: "paper-prysm-bls-source" },
+    ],
+  },
+  "blockchain/prysm-beacon-state": {
+    entryLevel: true,
+    entryNote: "장부의 현재 snapshot과 그 snapshot을 식별하는 root에서 시작합니다. Ethereum fork·Copy-on-Write·Merkle cache를 미리 안다고 가정하지 않습니다.",
+    coreIdea: "BeaconState는 fork별 consensus transition input이며 Prysm은 Copy-on-Write와 dirty FieldTrie로 계산 비용을 줄이되 full SSZ post-state/root와 같은 value·identity를 보존합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "beacon-state-protocol-snapshot", role: "다음 transition에 필요한 consensus 값을 하나의 state로 묶습니다." },
+      { id: "beacon-state-fork-schema", role: "State field·root·upgrade를 활성 fork에 귀속합니다." },
+      { id: "prysm-state-interface-contract", role: "Fork-specific state를 read view와 controlled setter로 노출합니다." },
+      { id: "prysm-state-copy-on-write", role: "Branch clone을 늦추고 첫 write에서 backing data를 분리합니다." },
+      { id: "prysm-state-aliasing-isolation", role: "한 branch의 nested mutation이 다른 view를 바꾸지 않게 합니다." },
+      { id: "prysm-state-dirty-field-tracking", role: "변경된 field와 packed chunk 좌표를 기록합니다." },
+      { id: "prysm-field-trie-incremental-root", role: "Dirty path ancestor만 hash해 full root를 재현합니다." },
+      { id: "prysm-state-version-release-gate", role: "Fork·cache·reorg·restart root parity 뒤 성능을 비교합니다." },
+    ],
+    conceptExplanations: [
+      { id: "beacon-state-protocol-snapshot", sectionId: "overview", intuition: "다음 장부 페이지를 계산하는 데 필요한 현재 규칙과 잔액·참여·history를 한 snapshot에 모읍니다.", workedExample: "Slot 100 state에서 빈 slot 101을 처리하고 slot 102 block을 적용해 pre/post root receipt를 만듭니다.", boundary: "계산 가능한 post-state가 fork-choice head나 finalized state라는 뜻은 아닙니다." },
+      { id: "beacon-state-fork-schema", sectionId: "state-fork", intuition: "같은 장부 이름이라도 protocol upgrade 시점마다 field와 해석 규칙이 versioned됩니다.", workedExample: "Altair participation/sync committee와 Bellatrix execution payload header는 활성 fork upgrade에서 초기화·해석됩니다.", boundary: "Future unstable fork schema를 현재 mainnet state에 적용하지 않고 network schedule·spec status를 고정합니다." },
+      { id: "prysm-state-interface-contract", sectionId: "state-interface", intuition: "여러 fork state를 공통으로 읽되 쓰기는 검증된 문을 통해서만 합니다.", workedExample: "Slot()은 common read지만 fork에 없는 field accessor나 setter는 explicit unsupported error를 냅니다.", boundary: "공통 interface가 모든 fork field와 mutation을 동일하게 지원한다는 뜻은 아닙니다." },
+      { id: "prysm-state-copy-on-write", sectionId: "state-interface", intuition: "복사본을 만들 때 큰 field를 공유하고 그 branch가 처음 쓸 때만 자기 복사본을 만듭니다.", workedExample: "8·2·1 MB field 중 8 MB field만 쓰면 deep 11 MB 대신 이상적으로 8 MB+metadata만 복사합니다.", boundary: "Allocator·GC·nested capacity와 작은 field 관리 비용 때문에 수식이 실제 memory를 정확히 예측하지는 않습니다." },
+      { id: "prysm-state-aliasing-isolation", sectionId: "state-interface", intuition: "A 복사본을 고쳐도 B의 값과 root 영수증이 변하지 않게 backing owner를 끊습니다.", workedExample: "Shared balances에서 B[5] write 전에 unique copy를 만들고 B만 dirty marking합니다.", boundary: "Atomic ref count만으로 state 전체 thread safety가 되지 않으며 getter가 mutable slice를 노출하면 우회됩니다.", counterexample: "Direct slice mutation은 A 값까지 바꾸면서 A cached root를 stale하게 남길 수 있습니다." },
+      { id: "prysm-state-dirty-field-tracking", sectionId: "field-trie", intuition: "책 전체가 아니라 수정한 쪽과 그 칸의 좌표를 표시합니다.", workedExample: "uint64 balances index 5는 32-byte leaf마다 네 값이 pack되므로 dirty chunk index 1입니다.", boundary: "Element index와 chunk index를 섞거나 append의 length change를 빼먹으면 다른 root를 계산합니다." },
+      { id: "prysm-field-trie-incremental-root", sectionId: "field-trie", intuition: "변경 없는 sibling hash는 재사용하고 수정 leaf에서 root까지의 조상만 바꿉니다.", workedExample: "Chunk limit 16, depth 4에서 leaf 하나 변경은 leaf+4 ancestor 약 5개 값을 갱신합니다.", boundary: "Cache는 같은 fork·schema·generation·length여야 하며 full SSZ root가 correctness oracle입니다." },
+      { id: "prysm-state-version-release-gate", sectionId: "state-fork", intuition: "빠른 state 후보가 같은 장부와 root를 만드는지 fork·crash 반례로 먼저 확인합니다.", workedExample: "Activation 전/정확한 slot/후 fixture와 COW branch·dirty cache·reorg·restart에서 post-state/root parity를 검사합니다.", boundary: "Transition p95·memory 절감만으로 cache correctness·fork compatibility를 입증하지 않습니다." },
+    ],
+    conceptStages: [
+      { label: "00 protocol state", relation: "다음 transition의 snapshot과 fork schema를 고정합니다.", concepts: ["beacon-state-protocol-snapshot", "beacon-state-fork-schema"] },
+      { label: "01 interface", relation: "Read view와 fork-specific controlled setter를 나눕니다.", concepts: ["prysm-state-interface-contract"] },
+      { label: "02 clone", relation: "COW owner와 alias isolation으로 candidate branch를 만듭니다.", concepts: ["prysm-state-copy-on-write", "prysm-state-aliasing-isolation"] },
+      { label: "03 dirty path", relation: "Mutation을 packed chunk 좌표에 기록해 incremental root를 계산합니다.", concepts: ["prysm-state-dirty-field-tracking", "prysm-field-trie-incremental-root"] },
+      { label: "04 release", relation: "Fork·reorg·restart root parity 뒤 성능을 비교합니다.", concepts: ["prysm-state-version-release-gate"] },
+    ],
+    exercises: [
+      { level: "basic", question: "BeaconState·post-state·fork-choice head·finalized checkpoint를 구분하고 slot 100→102 transition receipt를 작성하세요.", answerChecklist: ["protocol snapshot", "pre-state root", "empty slot 101", "target slot 102", "block operations", "post-state root", "head separate", "finality separate"], requiredConcepts: ["beacon-state-protocol-snapshot"], sectionId: "overview" },
+      { level: "basic", question: "Validator/history/checkpoint/execution-link field가 다음 transition에서 맡는 역할과 fork schema가 필요한 이유를 설명하세요.", answerChecklist: ["registry/balance", "recent roots/history", "justified/finalized checkpoint", "execution payload header", "slot/fork", "field set changes", "network schedule", "root interpreted by schema"], requiredConcepts: ["beacon-state-protocol-snapshot", "beacon-state-fork-schema"], sectionId: "overview" },
+      { level: "basic", question: "Common state interface의 read·write·unsupported-fork 결과를 설계하고 mutable slice getter 반례를 설명하세요.", answerChecklist: ["read-only view", "controlled setter", "fork version", "explicit unsupported error", "no direct mutable backing", "dirty mark", "snapshot lifetime"], requiredConcepts: ["prysm-state-interface-contract", "prysm-state-aliasing-isolation"], sectionId: "state-interface" },
+      { level: "basic", question: "8·2·1 MB field 중 첫 field만 수정하는 두 branch에서 deep copy와 이상적 COW copy bytes를 계산하고 생략 비용을 쓰세요.", answerChecklist: ["deep 11 MB per clone/mutation model", "COW about 8 MB", "reference count >1", "copy before write", "metadata", "allocator/GC", "nested capacity", "measure actual"], requiredConcepts: ["prysm-state-copy-on-write"], sectionId: "state-interface" },
+      { level: "basic", question: "balances[5]가 dirty element 5가 아니라 packed chunk 1을 바꾸는 이유와 append 시 추가 marker를 설명하세요.", answerChecklist: ["uint64 8 bytes", "four values per 32-byte chunk", "floor 5/4=1", "field id", "dirty chunk", "append data", "length mix change", "whole replacement distinction"], requiredConcepts: ["prysm-state-dirty-field-tracking"], sectionId: "field-trie" },
+      { level: "basic", question: "Chunk limit 16 subtree에서 leaf 하나를 바꿀 때 incremental hash count와 cache reuse 전제를 계산하세요.", answerChecklist: ["depth log2 16=4", "new leaf", "four ancestors", "about five values", "cached siblings", "same fork/schema", "same generation", "full-root oracle"], requiredConcepts: ["prysm-field-trie-incremental-root"], sectionId: "field-trie" },
+      { level: "advanced", question: "State A/B가 balances backing을 공유할 때 B direct mutation으로 A value·dirty bit·cached root가 갈라지는 반례와 방어를 설계하세요.", answerChecklist: ["shared alias", "B writes index", "A value changes", "A dirty missing", "stale root", "unique before write", "read-only/defensive getter", "race test", "full-root parity"], requiredConcepts: ["prysm-state-aliasing-isolation", "prysm-state-copy-on-write", "prysm-state-dirty-field-tracking"], sectionId: "state-interface" },
+      { level: "advanced", question: "Fork activation epoch에서 old state를 new schema로 upgrade하는 순서와 unknown future fork의 fail-closed 처리를 설계하세요.", answerChecklist: ["slot to epoch", "activation schedule", "old common fields", "spec-defined new fields", "fork version", "new full root", "atomic checkpoint", "unknown reject", "official vector"], requiredConcepts: ["beacon-state-fork-schema", "prysm-state-version-release-gate"], sectionId: "state-fork" },
+      { level: "advanced", question: "Fork 경계 reorg에서 common ancestor, state/cache generation, head/finality와 state root를 조정하세요.", answerChecklist: ["common ancestor", "fork at each slot", "replay empty slots/upgrade", "invalidate old branch cache", "new generation", "full root", "head update", "finalized invariant", "no cross-fork cache"], requiredConcepts: ["beacon-state-fork-schema", "prysm-field-trie-incremental-root", "prysm-state-version-release-gate"], sectionId: "state-fork" },
+      { level: "advanced", question: "Fork 전·activation·후, COW alias, dirty leaf/length, reorg, crash/restart를 포함한 Prysm state release matrix를 설계하세요.", answerChecklist: ["same Prysm/spec/network receipt", "official vectors", "state bytes parity", "post-root parity", "full-root oracle", "branch isolation", "reorg/restart recovery", "bounded memory", "performance after hard gates", "rollback DB snapshot"], requiredConcepts: ["prysm-state-version-release-gate", "prysm-state-aliasing-isolation", "prysm-field-trie-incremental-root"], sectionId: "state-fork" },
+    ],
+    papers: [
+      { title: "Ethereum Proof-of-Stake Consensus Specifications — BeaconState", href: "https://github.com/ethereum/consensus-specs/blob/master/specs/phase0/beacon-chain.md", problem: "Fork별 consensus state와 deterministic state transition input/output 정의", contribution: "BeaconState container·helper·slot/epoch/block transition의 executable specification 제공", assumptions: "고정한 spec release/commit·fork·network preset과 stable status", evidenceScope: "Protocol state schema·upgrade·transition·root requirements", notClaim: "Prysm COW·FieldTrie·DB layout·performance를 규정하지 않음", sectionId: "paper-beacon-state-spec" },
+      { title: "OffchainLabs/prysm source repository — state implementation", href: "https://github.com/OffchainLabs/prysm", problem: "큰 fork-specific state를 branch·hash·cache하는 실제 client implementation 확인", contribution: "State interface·COW·dirty field·FieldTrie source와 release history 제공", assumptions: "Prysm semver/SHA·build flags·SSZ generator·DB/cache schema 고정", evidenceScope: "선택한 source snapshot의 aliasing·cache·error·performance path", notClaim: "Moving branch 구조나 한 benchmark가 모든 release·fork에서 같다고 주장하지 않음", sectionId: "paper-prysm-state-source" },
+    ],
+  },
+  "crypto/finite-field-theory": {
+    entryLevel: true,
+    entryNote:
+      "정수의 덧셈·곱셈과 나머지에서 시작합니다. 군·환을 미리 알지 않아도 0이 아닌 값으로 나눗셈이 가능한 이유까지 이 글 안에서 계산합니다.",
+    coreIdea:
+      "유한체는 유한한 원소 집합 안에서 덧셈·곱셈·0이 아닌 값의 나눗셈을 정확히 수행하며, root bound와 무작위 평가로 큰 다항식 주장을 압축 검증하게 합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      {
+        id: "algebraic-field-contract",
+        role: "군·환·체의 차이를 사용 가능한 연산과 inverse로 구분합니다.",
+      },
+      {
+        id: "prime-field-modular-arithmetic",
+        role: "소수 modulus의 residue와 field division을 계산합니다.",
+      },
+      {
+        id: "finite-field-multiplicative-order",
+        role: "생성원·subgroup·root order를 판정합니다.",
+      },
+      {
+        id: "polynomial-coefficient-evaluation-form",
+        role: "다항식의 coefficient와 evaluation 표현을 구분합니다.",
+      },
+      {
+        id: "polynomial-root-degree-bound",
+        role: "Degree가 서로 다른 root 수를 제한하는 이유를 증명합니다.",
+      },
+      {
+        id: "schwartz-zippel-bound",
+        role: "Random evaluation의 false-acceptance 확률과 전제를 계산합니다.",
+      },
+      {
+        id: "extension-field-quotient",
+        role: "Irreducible polynomial quotient로 p^k 원소 field를 구성합니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "algebraic-field-contract",
+        sectionId: "overview",
+        intuition:
+          "계산 결과가 같은 집합에 머물고, 0이 아닌 곱셈을 되돌릴 수 있는 숫자 세계입니다.",
+        workedExample:
+          "F7에서 3·5=1이므로 5가 3의 inverse이고 6/3=6·5=2입니다.",
+        boundary:
+          "Ring에는 곱셈 inverse가 없을 수 있고 0으로는 field에서도 나눌 수 없습니다.",
+      },
+      {
+        id: "prime-field-modular-arithmetic",
+        sectionId: "prime-field",
+        intuition:
+          "p의 배수만큼 차이 나는 정수를 같은 residue로 보고 매 연산 뒤 0…p−1로 환원합니다.",
+        workedExample: "F7에서 5+6=11≡4이고 3^−1=5입니다.",
+        boundary:
+          "합성수 mod n은 zero divisor 때문에 일반적으로 field가 아닙니다.",
+        proofIdea:
+          "gcd(a,p)=1이므로 Bezout identity ax+py=1에서 x mod p가 inverse입니다.",
+        counterexample: "mod 8에서는 2·4=0이고 2의 inverse가 없습니다.",
+      },
+      {
+        id: "finite-field-multiplicative-order",
+        sectionId: "prime-field",
+        intuition:
+          "원소를 반복해서 곱할 때 1로 처음 돌아오는 cycle 길이입니다.",
+        workedExample: "F17에서 3의 order는 16이고 4의 order는 4입니다.",
+        boundary:
+          "a^(p−1)=1만 확인하면 proper divisor order인 후보를 generator로 오판할 수 있습니다.",
+      },
+      {
+        id: "polynomial-coefficient-evaluation-form",
+        sectionId: "polynomial",
+        intuition:
+          "같은 다항식을 x의 거듭제곱별 숫자 목록이나 여러 x에서 관찰한 값 목록으로 적습니다.",
+        workedExample:
+          "1+2x는 coefficient [1,2]이고 x=0,1에서 evaluation [1,3]입니다.",
+        boundary:
+          "Evaluation point 수와 degree bound가 없으면 value vector만으로 polynomial이 유일하지 않습니다.",
+      },
+      {
+        id: "polynomial-root-degree-bound",
+        sectionId: "polynomial",
+        intuition:
+          "서로 다른 root마다 x−r factor 하나가 필요하므로 degree보다 많은 root를 담을 수 없습니다.",
+        workedExample: "x²−1은 F7에서 1과 6 두 root를 갖습니다.",
+        boundary: "모든 계수가 0인 zero polynomial에는 적용하지 않습니다.",
+        proofIdea:
+          "Factor theorem을 root마다 반복해 d+1개의 서로 다른 linear factor가 degree d를 나눌 수 없음을 보입니다.",
+        counterexample:
+          "Zero polynomial은 field의 모든 점에서 0이므로 root 수 bound가 없습니다.",
+      },
+      {
+        id: "schwartz-zippel-bound",
+        sectionId: "schwartz-zippel",
+        intuition:
+          "거짓 polynomial identity가 우연히 맞아 보이는 challenge point의 비율을 degree로 제한합니다.",
+        workedExample:
+          "d=3, |S|=101이면 한 번의 false acceptance가 최대 3/101입니다.",
+        boundary:
+          "Challenge를 본 뒤 polynomial을 고르거나 biased·reused challenge를 쓰면 독립 반복 bound를 그대로 적용할 수 없습니다.",
+        proofIdea:
+          "한 변수를 남기고 나머지를 고정한 뒤 univariate root bound를 변수별로 귀납 적용합니다.",
+        counterexample:
+          "|S|≤d이면 d/|S|가 1 이상이라 유용한 보장이 되지 않습니다.",
+      },
+      {
+        id: "extension-field-quotient",
+        sectionId: "extension-field",
+        intuition:
+          "Base field에 없는 root를 기약 다항식의 관계로 추가하고 높은 차수는 그 관계로 줄입니다.",
+        workedExample:
+          "F3[u]/(u²+1)에서 u²=2이고 a+bu 형태의 9개 원소가 있습니다.",
+        boundary:
+          "Modulus polynomial이 reducible이면 zero divisor가 생겨 quotient가 field가 아닐 수 있습니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "01 연산 계약",
+        relation: "나눗셈 가능한 algebraic structure를 정합니다.",
+        concepts: [
+          "algebraic-field-contract",
+          "prime-field-modular-arithmetic",
+        ],
+      },
+      {
+        label: "02 곱셈군",
+        relation: "Cycle length로 generator와 subgroup을 읽습니다.",
+        concepts: ["finite-field-multiplicative-order"],
+      },
+      {
+        label: "03 다항식",
+        relation: "표현과 degree-root 관계를 연결합니다.",
+        concepts: [
+          "polynomial-coefficient-evaluation-form",
+          "polynomial-root-degree-bound",
+        ],
+      },
+      {
+        label: "04 확률 검사",
+        relation: "Root bound를 random evaluation error bound로 확장합니다.",
+        concepts: ["schwartz-zippel-bound"],
+      },
+      {
+        label: "05 확장",
+        relation: "Irreducible quotient로 더 큰 field를 만듭니다.",
+        concepts: ["extension-field-quotient"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "군·환·체를 연산·항등원·역원 기준으로 구분하고 정수 Z가 field가 아닌 이유를 설명하세요.",
+        answerChecklist: [
+          "group one operation",
+          "ring two operations",
+          "distributivity",
+          "field nonzero inverse",
+          "1/3 not integer",
+        ],
+        requiredConcepts: ["algebraic-field-contract"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "F7에서 5+6, 4·5, 6/3을 계산하고 각 환원·inverse 단계를 쓰세요.",
+        answerChecklist: [
+          "11 mod 7=4",
+          "20 mod 7=6",
+          "3 inverse=5",
+          "6·5=30 mod 7=2",
+        ],
+        requiredConcepts: ["prime-field-modular-arithmetic"],
+        sectionId: "prime-field",
+      },
+      {
+        level: "basic",
+        question:
+          "mod 8이 field가 아닌 것을 2와 4의 곱으로 보이고 inverse 부재와 연결하세요.",
+        answerChecklist: [
+          "2·4=0 mod 8",
+          "both nonzero",
+          "zero divisor",
+          "2 inverse absent",
+        ],
+        requiredConcepts: [
+          "prime-field-modular-arithmetic",
+          "algebraic-field-contract",
+        ],
+        sectionId: "prime-field",
+      },
+      {
+        level: "basic",
+        question:
+          "F17에서 4의 거듭제곱을 계산해 order 4임을 보이고 generator가 아닌 이유를 설명하세요.",
+        answerChecklist: [
+          "4²=16",
+          "4⁴=1",
+          "no earlier one",
+          "order 4",
+          "less than 16",
+        ],
+        requiredConcepts: ["finite-field-multiplicative-order"],
+        sectionId: "prime-field",
+      },
+      {
+        level: "basic",
+        question:
+          "f(x)=1+2x의 coefficient 표현과 x=0,1 평가 표현을 쓰고 필요한 degree bound를 설명하세요.",
+        answerChecklist: [
+          "[1,2]",
+          "[1,3]",
+          "two distinct points",
+          "degree below 2",
+          "same polynomial",
+        ],
+        requiredConcepts: ["polynomial-coefficient-evaluation-form"],
+        sectionId: "polynomial",
+      },
+      {
+        level: "basic",
+        question: "F3[u]/(u²+1)에서 (1+u)(2+u)를 계산하고 원소 수를 구하세요.",
+        answerChecklist: ["2+3u+u²", "u²=2", "3u=0", "result 1", "3²=9"],
+        requiredConcepts: ["extension-field-quotient"],
+        sectionId: "extension-field",
+      },
+      {
+        level: "advanced",
+        question:
+          "Fermat 소정리에서 a^(p−2)가 inverse임을 유도하고 a=0·합성수 modulus 반례를 설명하세요.",
+        answerChecklist: [
+          "a^(p−1)=1",
+          "factor a",
+          "a^(p−2)",
+          "a nonzero",
+          "prime p",
+          "mod 8 counterexample",
+        ],
+        requiredConcepts: ["prime-field-modular-arithmetic"],
+        sectionId: "prime-field",
+      },
+      {
+        level: "advanced",
+        question:
+          "Degree d root bound를 factor theorem으로 증명하고 zero polynomial이 반례가 아닌 이유를 구분하세요.",
+        answerChecklist: [
+          "root gives factor",
+          "distinct linear factors",
+          "product degree",
+          "at most d",
+          "zero polynomial excluded",
+        ],
+        requiredConcepts: ["polynomial-root-degree-bound"],
+        sectionId: "polynomial",
+      },
+      {
+        level: "advanced",
+        question:
+          "d=3, |S|=101인 Schwartz–Zippel 검사를 세 번 독립 반복할 때 bound를 계산하고 곱셈이 무효인 조건을 적으세요.",
+        answerChecklist: [
+          "3/101",
+          "(3/101)^3",
+          "fixed polynomial",
+          "independent uniform challenges",
+          "adaptive/reuse boundary",
+        ],
+        requiredConcepts: ["schwartz-zippel-bound"],
+        sectionId: "schwartz-zippel",
+      },
+      {
+        level: "advanced",
+        question:
+          "F5에서 u²+1을 modulus로 쓰면 quotient가 field가 아닌 이유를 root와 zero divisor로 보이세요.",
+        answerChecklist: [
+          "2²+1=0 mod 5",
+          "reducible",
+          "(u−2)(u+2)",
+          "nonzero factors product zero",
+          "choose irreducible",
+        ],
+        requiredConcepts: ["extension-field-quotient"],
+        sectionId: "extension-field",
+      },
+    ],
+    papers: [
+      {
+        title: "NIST FIPS 186-5: Digital Signature Standard",
+        href: "https://csrc.nist.gov/pubs/fips/186-5/final",
+        problem:
+          "Digital signature의 finite-field·elliptic-curve parameter와 검증 조건을 표준화",
+        contribution:
+          "Prime/binary field를 사용하는 signature algorithm과 parameter validation 규정",
+        assumptions:
+          "규격이 승인한 algorithm·parameter·implementation boundary",
+        evidenceScope:
+          "실제 암호 표준에서 finite-field arithmetic을 사용하는 범위",
+        notClaim:
+          "모든 ZK field·extension representation의 성능과 안전성을 보장하지 않음",
+        sectionId: "paper-fips-finite-field",
+      },
+      {
+        title:
+          "Fast Probabilistic Algorithms for Verification of Polynomial Identities",
+        href: "https://doi.org/10.1145/322186.322189",
+        problem: "Symbolic polynomial identity verification 비용",
+        contribution:
+          "Random evaluation과 degree 기반 error bound를 사용하는 빠른 검사",
+        assumptions: "고정된 nonzero polynomial·uniform random evaluation set",
+        evidenceScope:
+          "Polynomial identity testing의 algorithm과 probability bound",
+        notClaim:
+          "Challenge generation·commitment binding을 포함한 전체 ZK soundness 증명은 아님",
+        sectionId: "paper-schwartz-zippel",
+      },
+    ],
+  },
+  "crypto/lagrange": {
+    coreIdea:
+      "Lagrange interpolation은 각 sample point에서만 1인 selector polynomial을 만들고 목표값으로 가중해, 서로 다른 n개 point를 통과하는 유일한 degree n−1 이하 polynomial을 구성합니다.",
+    assumedKnowledge: [
+      {
+        id: "prime-field-modular-arithmetic",
+        role: "Selector denominator의 field inverse를 계산합니다.",
+      },
+      {
+        id: "polynomial-coefficient-evaluation-form",
+        role: "Evaluation values에서 coefficient polynomial을 복원한다는 목표를 읽습니다.",
+      },
+      {
+        id: "polynomial-root-degree-bound",
+        role: "Interpolant의 유일성과 vanishing divisibility를 증명합니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "lagrange-interpolation-basis",
+        role: "Sample별 selector와 weighted sum을 구성합니다.",
+      },
+      {
+        id: "polynomial-interpolation-uniqueness",
+        role: "Degree bound 아래 interpolant가 하나뿐임을 증명합니다.",
+      },
+      {
+        id: "vanishing-polynomial-domain",
+        role: "Domain 전체 zero를 divisibility로 표현합니다.",
+      },
+      {
+        id: "barycentric-interpolation",
+        role: "고정 points에서 새 point evaluation을 O(n)에 계산합니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "lagrange-interpolation-basis",
+        sectionId: "formula",
+        intuition:
+          "각 sample 위치에만 켜지는 selector를 만들어 y값을 하나씩 붙입니다.",
+        workedExample: "x=0,1,2에서 l1은 (0,1,0)이므로 y1만 선택합니다.",
+        boundary: "x 좌표가 중복되면 denominator가 0이라 정의되지 않습니다.",
+      },
+      {
+        id: "polynomial-interpolation-uniqueness",
+        sectionId: "overview",
+        intuition:
+          "두 후보가 같은 n점에서 만나면 그 차이는 n개 root를 갖습니다.",
+        workedExample:
+          "세 점을 통과하는 두 quadratic의 차이는 degree≤2인데 root가 3개라 zero polynomial입니다.",
+        boundary:
+          "Degree bound를 제거하면 Z_H의 배수를 더해 무한히 많은 후보를 만들 수 있습니다.",
+        proofIdea: "Difference polynomial에 root-degree bound를 적용합니다.",
+        counterexample:
+          "L(x)+cZ_H(x)는 같은 sample을 통과하지만 degree가 n 이상일 수 있습니다.",
+      },
+      {
+        id: "vanishing-polynomial-domain",
+        sectionId: "vanishing",
+        intuition:
+          "검사점마다 하나의 zero factor를 두어 domain 전체를 polynomial 하나에 담습니다.",
+        workedExample: "H={0,1,2}이면 Z_H=x(x−1)(x−2)입니다.",
+        boundary:
+          "H 밖에서 C가 0인지 또는 C 자체가 zero polynomial인지는 보장하지 않습니다.",
+      },
+      {
+        id: "barycentric-interpolation",
+        sectionId: "usage",
+        intuition:
+          "매 query에서 반복되는 denominator product를 weight로 미리 저장합니다.",
+        workedExample:
+          "고정 x_i에서는 w_i를 한 번 계산하고 각 z에서 numerator·denominator sum만 O(n)에 계산합니다.",
+        boundary:
+          "z=x_i이면 division by zero를 피하고 y_i를 직접 반환해야 합니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 선수",
+        relation:
+          "Field inverse·polynomial representation·root bound를 가져옵니다.",
+        concepts: [
+          "prime-field-modular-arithmetic",
+          "polynomial-coefficient-evaluation-form",
+          "polynomial-root-degree-bound",
+        ],
+      },
+      {
+        label: "01 구성",
+        relation: "Selector sum으로 interpolant를 만듭니다.",
+        concepts: ["lagrange-interpolation-basis"],
+      },
+      {
+        label: "02 유일성",
+        relation: "Difference root count로 후보 하나를 고정합니다.",
+        concepts: ["polynomial-interpolation-uniqueness"],
+      },
+      {
+        label: "03 도메인",
+        relation: "모든 evaluation constraint를 divisibility로 묶습니다.",
+        concepts: ["vanishing-polynomial-domain"],
+      },
+      {
+        label: "04 평가",
+        relation: "Fixed samples의 repeated query를 최적화합니다.",
+        concepts: ["barycentric-interpolation"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "서로 다른 n개 점이 degree n−1 이하 polynomial을 하나로 정하는 이유를 존재와 유일성으로 나눠 설명하세요.",
+        answerChecklist: [
+          "Lagrange construction",
+          "degree at most n−1",
+          "difference polynomial",
+          "n roots",
+          "root bound",
+          "unique",
+        ],
+        requiredConcepts: [
+          "lagrange-interpolation-basis",
+          "polynomial-interpolation-uniqueness",
+        ],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "점 (0,1),(1,4),(2,9)의 l0,l1,l2가 각 sample에서 만드는 값 표를 작성하세요.",
+        answerChecklist: [
+          "l0=(1,0,0)",
+          "l1=(0,1,0)",
+          "l2=(0,0,1)",
+          "distinct x",
+          "selector",
+        ],
+        requiredConcepts: ["lagrange-interpolation-basis"],
+        sectionId: "formula",
+      },
+      {
+        level: "basic",
+        question:
+          "같은 세 점을 Lagrange 식으로 보간해 L(x)=x²+2x+1을 얻고 세 점에 대입해 확인하세요.",
+        answerChecklist: [
+          "basis formulas",
+          "weighted sum",
+          "coefficient expansion",
+          "L(0)=1",
+          "L(1)=4",
+          "L(2)=9",
+        ],
+        requiredConcepts: ["lagrange-interpolation-basis"],
+        sectionId: "formula",
+      },
+      {
+        level: "basic",
+        question:
+          "x 좌표가 중복된 (1,2),(1,3)이 왜 보간 입력이 아닌지 denominator와 함수값으로 설명하세요.",
+        answerChecklist: [
+          "x_i−x_j=0",
+          "inverse absent",
+          "same input different output",
+          "not a function",
+        ],
+        requiredConcepts: [
+          "lagrange-interpolation-basis",
+          "prime-field-modular-arithmetic",
+        ],
+        sectionId: "formula",
+      },
+      {
+        level: "basic",
+        question: "H={0,1,2}의 Z_H를 전개하고 0,1,2,3에서 평가하세요.",
+        answerChecklist: [
+          "x(x−1)(x−2)",
+          "x³−3x²+2x",
+          "zeros at 0,1,2",
+          "Z_H(3)=6",
+        ],
+        requiredConcepts: ["vanishing-polynomial-domain"],
+        sectionId: "vanishing",
+      },
+      {
+        level: "basic",
+        question:
+          "Barycentric weight를 언제 precompute하고 z=x_i일 때 어떤 branch가 필요한지 설명하세요.",
+        answerChecklist: [
+          "fixed x coordinates",
+          "inverse products",
+          "O(n) query",
+          "division by zero",
+          "return y_i",
+        ],
+        requiredConcepts: ["barycentric-interpolation"],
+        sectionId: "usage",
+      },
+      {
+        level: "advanced",
+        question:
+          "Degree bound가 없을 때 interpolant 유일성이 깨지는 family L+cZ_H를 구성하고 이유를 증명하세요.",
+        answerChecklist: [
+          "Z_H(h)=0",
+          "same samples",
+          "arbitrary c",
+          "degree can reach n",
+          "degree bound essential",
+        ],
+        requiredConcepts: [
+          "polynomial-interpolation-uniqueness",
+          "vanishing-polynomial-domain",
+        ],
+        sectionId: "overview",
+      },
+      {
+        level: "advanced",
+        question:
+          "C(h)=0 for all h in H iff Z_H divides C를 factor theorem 양방향으로 증명하세요.",
+        answerChecklist: [
+          "each x−h divides C",
+          "distinct coprime factors",
+          "product divides",
+          "reverse substitution",
+          "same field",
+        ],
+        requiredConcepts: [
+          "vanishing-polynomial-domain",
+          "polynomial-root-degree-bound",
+        ],
+        sectionId: "vanishing",
+      },
+      {
+        level: "advanced",
+        question:
+          "F7의 점 (0,1),(1,3),(2,2)를 보간할 때 모든 division을 inverse로 계산해 L을 구하세요.",
+        answerChecklist: [
+          "field inverses",
+          "three basis",
+          "weighted sum mod 7",
+          "L(x)=2x²+1",
+          "L(0)=1·L(1)=3·L(2)=2",
+        ],
+        requiredConcepts: [
+          "lagrange-interpolation-basis",
+          "prime-field-modular-arithmetic",
+        ],
+        sectionId: "formula",
+      },
+      {
+        level: "advanced",
+        question:
+          "Arbitrary points의 Lagrange·barycentric와 roots-of-unity domain의 INTT를 workload별로 선택하세요.",
+        answerChecklist: [
+          "arbitrary one-off",
+          "fixed points repeated query",
+          "precomputed weights",
+          "full coefficient recovery",
+          "structured roots",
+          "O(n log n)",
+        ],
+        requiredConcepts: [
+          "lagrange-interpolation-basis",
+          "barycentric-interpolation",
+        ],
+        sectionId: "usage",
+      },
+    ],
+    papers: [
+      {
+        title: "NIST DLMF §3.3: Interpolation",
+        href: "https://dlmf.nist.gov/3.3",
+        problem: "Polynomial interpolation formula와 notation의 표준 참고 경로",
+        contribution:
+          "Lagrange form·divided differences와 수치 해석 참고문헌 정리",
+        assumptions:
+          "DLMF가 구분한 real/complex approximation setting과 formula conditions",
+        evidenceScope: "보간 공식과 표준 수학 reference",
+        notClaim:
+          "Finite-field ZK protocol soundness나 implementation 성능을 직접 증명하지 않음",
+        sectionId: "reference-dlmf-interpolation",
+      },
+      {
+        title: "Barycentric Lagrange Interpolation",
+        href: "https://doi.org/10.1137/S0036144502417715",
+        problem: "Lagrange interpolant의 efficient stable evaluation",
+        contribution: "Barycentric forms와 floating-point 특성 정리",
+        assumptions: "Distinct nodes와 논문의 numerical arithmetic model",
+        evidenceScope: "Barycentric identity·algorithm·real numerical analysis",
+        notClaim:
+          "Floating-point stability 결론이 finite-field arithmetic에 그대로 적용되지는 않음",
+        sectionId: "paper-barycentric-interpolation",
+      },
+    ],
+  },
+  "crypto/fft": {
+    coreIdea:
+      "NTT는 finite-field roots-of-unity에서의 polynomial evaluation이며, radix-2 butterfly는 even·odd sub-transform을 재사용해 exact transform과 inverse를 O(n log n)에 계산합니다.",
+    assumedKnowledge: [
+      {
+        id: "prime-field-modular-arithmetic",
+        role: "Twiddle multiplication·inverse root·n inverse를 field에서 계산합니다.",
+      },
+      {
+        id: "finite-field-multiplicative-order",
+        role: "Transform length와 같은 order의 primitive root를 확인합니다.",
+      },
+      {
+        id: "polynomial-coefficient-evaluation-form",
+        role: "NTT가 바꾸는 두 polynomial representation을 구분합니다.",
+      },
+      {
+        id: "lagrange-interpolation-basis",
+        role: "INTT를 structured interpolation으로 이해합니다.",
+      },
+      {
+        id: "roots-of-unity",
+        role: "Root의 주기·대칭이 transform factorization을 만드는 공통 직관을 사용합니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "finite-field-ntt",
+        role: "Coefficient를 finite-field root evaluations로 바꾸는 transform을 정의합니다.",
+      },
+      {
+        id: "ntt-domain-two-adicity",
+        role: "Field가 지원하는 radix-2 domain size를 계산합니다.",
+      },
+      {
+        id: "ntt-butterfly",
+        role: "Even·odd 결과를 두 output으로 결합합니다.",
+      },
+      {
+        id: "inverse-ntt",
+        role: "Inverse root와 n inverse로 coefficient를 복원합니다.",
+      },
+      {
+        id: "ntt-linear-convolution",
+        role: "Padding을 포함한 linear polynomial product pipeline을 설계합니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "finite-field-ntt",
+        sectionId: "dft",
+        intuition:
+          "다항식 계수를 여러 규칙적인 field points에서 본 값 목록으로 바꾸는 정확한 좌표 변환입니다.",
+        workedExample:
+          "F17,n=4,omega=4에서 [1,2,3,4]는 [10,7,15,6]으로 변환됩니다.",
+        boundary:
+          "Complex signal spectrum의 Hz·phase 해석은 포함하지 않으며 FFT는 transform 자체가 아니라 빠른 algorithm family입니다.",
+      },
+      {
+        id: "ntt-domain-two-adicity",
+        sectionId: "unit-root",
+        intuition:
+          "Field의 nonzero cycle 안에 transform 길이만큼의 작은 cycle이 있어야 합니다.",
+        workedExample:
+          "F17* order 16에는 size 8 subgroup이 있고 omega=9가 order 8입니다.",
+        boundary:
+          "Order가 작은 root를 쓰면 evaluation point가 반복되어 transform이 invertible하지 않습니다.",
+      },
+      {
+        id: "ntt-butterfly",
+        sectionId: "butterfly",
+        intuition:
+          "Even·odd sub-result 한 쌍을 더하고 빼서 반대편 output 두 개를 동시에 만듭니다.",
+        workedExample: "t=omega^k O_k라 두면 outputs는 E_k+t와 E_k−t입니다.",
+        boundary:
+          "Radix-2는 power-of-two length variant이며 bit order와 memory pass는 별도 implementation contract입니다.",
+      },
+      {
+        id: "inverse-ntt",
+        sectionId: "intt",
+        intuition:
+          "Root를 반대로 순회해 다른 coefficient 기여를 상쇄하고 n inverse로 scale합니다.",
+        workedExample:
+          "F17,n=4에서는 n inverse=13이고 inverse root 13으로 forward-like kernel을 실행합니다.",
+        boundary:
+          "Characteristic가 n을 나누거나 forward/inverse ordering이 다르면 round trip이 성립하지 않습니다.",
+      },
+      {
+        id: "ntt-linear-convolution",
+        sectionId: "zk-usage",
+        intuition:
+          "Coefficient convolution을 evaluation point별 독립 곱으로 바꾸고 다시 coefficient로 돌아옵니다.",
+        workedExample:
+          "길이 3과 2 polynomial product는 결과 길이 4이므로 n=4 domain으로 padding합니다.",
+        boundary:
+          "n<L_a+L_b−1이면 x^n−1을 기준으로 wrap-around한 cyclic product가 됩니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 선수",
+        relation:
+          "Field·order·polynomial form·interpolation·roots를 연결합니다.",
+        concepts: [
+          "prime-field-modular-arithmetic",
+          "finite-field-multiplicative-order",
+          "polynomial-coefficient-evaluation-form",
+          "lagrange-interpolation-basis",
+          "roots-of-unity",
+        ],
+      },
+      {
+        label: "01 변환",
+        relation: "Coefficient를 structured evaluations로 바꿉니다.",
+        concepts: ["finite-field-ntt"],
+      },
+      {
+        label: "02 도메인",
+        relation: "지원 가능한 root order와 radix depth를 정합니다.",
+        concepts: ["ntt-domain-two-adicity"],
+      },
+      {
+        label: "03 재사용",
+        relation: "Even·odd factorization으로 work를 줄입니다.",
+        concepts: ["ntt-butterfly"],
+      },
+      {
+        label: "04 복원",
+        relation: "Inverse root와 normalization으로 coefficients를 되찾습니다.",
+        concepts: ["inverse-ntt"],
+      },
+      {
+        label: "05 곱셈",
+        relation: "Padding한 linear product와 implementation gate를 만듭니다.",
+        concepts: ["ntt-linear-convolution"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "NTT transform과 radix-2 FFT algorithm을 구분하고 direct·fast work를 비교하세요.",
+        answerChecklist: [
+          "coefficient to evaluations",
+          "invertible linear transform",
+          "algorithm not transform",
+          "O(n²)",
+          "O(n log n)",
+          "exact result",
+        ],
+        requiredConcepts: ["finite-field-ntt", "ntt-butterfly"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "F17,n=4,omega=4에서 f=1+2x+3x²+4x³의 네 evaluation을 계산하세요.",
+        answerChecklist: ["points 1,4,16,13", "mod 17", "10", "7", "15", "6"],
+        requiredConcepts: ["finite-field-ntt"],
+        sectionId: "dft",
+      },
+      {
+        level: "basic",
+        question:
+          "F17에서 generator g=3과 n=8로 omega를 만들고 order 8임을 확인하세요.",
+        answerChecklist: [
+          "(p−1)/n=2",
+          "omega=9",
+          "omega^8=1",
+          "omega^4=-1",
+          "no smaller return",
+        ],
+        requiredConcepts: [
+          "ntt-domain-two-adicity",
+          "finite-field-multiplicative-order",
+        ],
+        sectionId: "unit-root",
+      },
+      {
+        level: "basic",
+        question:
+          "Butterfly에서 E=4,O=6,twiddle=1일 때 paired outputs를 F17에서 계산하세요.",
+        answerChecklist: [
+          "t=6",
+          "E+t=10",
+          "E−t=-2",
+          "15 mod 17",
+          "shared intermediates",
+        ],
+        requiredConcepts: ["ntt-butterfly"],
+        sectionId: "butterfly",
+      },
+      {
+        level: "basic",
+        question:
+          "F17,n=4의 n inverse와 omega=4의 inverse를 계산하고 INTT 절차를 설명하세요.",
+        answerChecklist: [
+          "4 inverse=13",
+          "omega inverse=13",
+          "inverse-root transform",
+          "multiply n inverse",
+          "round trip",
+        ],
+        requiredConcepts: ["inverse-ntt", "prime-field-modular-arithmetic"],
+        sectionId: "intt",
+      },
+      {
+        level: "basic",
+        question:
+          "길이 3과 2 polynomial을 linear multiply할 때 최소 n과 padding 이유를 설명하세요.",
+        answerChecklist: [
+          "3+2−1=4",
+          "n≥4",
+          "zero padding",
+          "pointwise product",
+          "prevent wrap-around",
+        ],
+        requiredConcepts: ["ntt-linear-convolution"],
+        sectionId: "zk-usage",
+      },
+      {
+        level: "advanced",
+        question:
+          "Roots geometric sum으로 inverse NTT matrix를 유도하고 i=j와 i!=j를 나눠 설명하세요.",
+        answerChecklist: [
+          "sum omega^{k(i−j)}",
+          "n when equal",
+          "zero otherwise",
+          "inverse root",
+          "n inverse",
+          "field characteristic",
+        ],
+        requiredConcepts: ["inverse-ntt", "finite-field-ntt"],
+        sectionId: "intt",
+      },
+      {
+        level: "advanced",
+        question:
+          "Radix-2 recurrence T(n)=2T(n/2)+O(n)에서 O(n log n)을 유도하고 n=8 stage를 추적하세요.",
+        answerChecklist: [
+          "even odd split",
+          "two half transforms",
+          "linear merge",
+          "log2 n levels",
+          "n work per level",
+          "24-scale work",
+        ],
+        requiredConcepts: ["ntt-butterfly"],
+        sectionId: "butterfly",
+      },
+      {
+        level: "advanced",
+        question:
+          "Length가 부족한 NTT product가 cyclic convolution이 되는 x^n−1 quotient 반례를 만드세요.",
+        answerChecklist: [
+          "A=1+x²·B=1+x",
+          "linear product=1+x+x²+x³",
+          "n=3에서 x³=1",
+          "cyclic result=2+x+x²",
+          "n=4 padding fixes",
+        ],
+        requiredConcepts: ["ntt-linear-convolution"],
+        sectionId: "zk-usage",
+      },
+      {
+        level: "advanced",
+        question:
+          "NTT 구현 후보 두 개를 direct oracle·round trip·product oracle·ordering·memory와 end-to-end 측정으로 비교하는 release gate를 설계하세요.",
+        answerChecklist: [
+          "same field/root/input",
+          "direct NTT oracle",
+          "INTT round trip",
+          "schoolbook product",
+          "bit order/normalization",
+          "kernel and end-to-end",
+          "memory traffic",
+        ],
+        requiredConcepts: [
+          "finite-field-ntt",
+          "inverse-ntt",
+          "ntt-linear-convolution",
+        ],
+        sectionId: "zk-usage",
+      },
+    ],
+    papers: [
+      {
+        title: "The Fast Fourier Transform in a Finite Field",
+        href: "https://doi.org/10.1007/BF01934338",
+        problem: "Finite field의 Fourier-type transform을 빠르게 계산하는 문제",
+        contribution:
+          "Appropriate roots를 가진 finite field에서 fast transform 구조 전개",
+        assumptions: "Field와 transform length가 요구 root와 inverse를 지원",
+        evidenceScope: "Finite-field FFT/NTT의 algebraic algorithm",
+        notClaim:
+          "모든 prime·length 지원이나 현대 GPU memory 성능을 보장하지 않음",
+        sectionId: "paper-pollard-ntt",
+      },
+      {
+        title:
+          "An Algorithm for the Machine Calculation of Complex Fourier Series",
+        href: "https://doi.org/10.1090/S0025-5718-1965-0178586-1",
+        problem: "Composite-length discrete Fourier sums의 계산량",
+        contribution:
+          "Length factorization으로 sub-transform intermediate를 재사용",
+        assumptions: "원 논문의 complex arithmetic과 factorable length",
+        evidenceScope: "Cooley–Tukey factorization의 원 논문",
+        notClaim:
+          "Finite-field root 존재와 inverse 조건까지 원 논문이 제공하는 것은 아님",
+        sectionId: "paper-cooley-tukey",
+      },
     ],
   },
 };

@@ -1,226 +1,36 @@
-import { CodeViewButton } from "@/components/code";
-import type { CodeRef } from "@/components/code/types";
-import { codeRefs } from "./codeRefs";
+import { CitationBlock } from "@/components/ui/citation";
 
-const callbacks = [
-  {
-    fn: "handle_pending_inbound_connection",
-    desc: "인바운드 연결 수락 전 거부 가능",
-  },
-  {
-    fn: "handle_established_inbound_connection",
-    desc: "ConnectionHandler 인스턴스 반환 필수",
-  },
-  {
-    fn: "handle_pending_outbound_connection",
-    desc: "추가 주소를 Vec로 반환 가능",
-  },
-  {
-    fn: "handle_established_outbound_connection",
-    desc: "ConnectionHandler 인스턴스 반환 필수",
-  },
-];
-
-const toSwarmVariants = [
-  { name: "GenerateEvent", desc: "외부에 이벤트 전달" },
-  { name: "Dial", desc: "새 연결 시도" },
-  { name: "NotifyHandler", desc: "특정 Handler에 메시지 전송" },
-  { name: "CloseConnection", desc: "연결 종료 요청" },
-];
-
-export default function BehaviourTrait({
-  title,
-  onCodeRef,
-}: {
-  title?: string;
-  onCodeRef?: (key: string, ref: CodeRef) => void;
-}) {
+export default function BehaviourTrait({ title }: { title?: string }) {
   return (
     <section id="behaviour-trait" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">
-        {title ?? "NetworkBehaviour 트레이트"}
-      </h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
+      <h2 className="mb-6 text-2xl font-bold">{title ?? "NetworkBehaviour는 peer 전체의 protocol 정책을 소유합니다"}</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          <strong>NetworkBehaviour</strong>는 프로토콜 로직을 캡슐화하는
-          트레이트다.
-          <br />
-          Kademlia, GossipSub, Identify 등 모든 프로토콜이 이 트레이트를
-          구현한다.
-        </p>
-
-        <h3>연결 생명주기 콜백 4개</h3>
-      </div>
-
-      <div className="space-y-2 mt-3">
-        {callbacks.map((c, i) => (
-          <div
-            key={i}
-            className="flex items-start gap-3 rounded-lg border px-4 py-2.5"
-          >
-            <span className="font-mono text-xs text-sky-500 mt-0.5 shrink-0">
-              {i + 1}
-            </span>
-            <div>
-              <p className="font-mono text-sm font-semibold text-foreground/90">
-                {c.fn}
-              </p>
-              <p className="text-xs text-foreground/60 mt-0.5">{c.desc}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3>이벤트 흐름</h3>
-        <p>
-          <strong>Swarm → Behaviour</strong> 방향은 <code>FromSwarm</code>{" "}
-          열거형이 전달한다.
-          <br />
-          연결 수립, 종료, 주소 변경 등의 이벤트가 포함된다.
-          <br />
-          <strong>Handler → Behaviour</strong> 방향은{" "}
-          <code>on_connection_handler_event()</code>를 호출한다.
-        </p>
-
-        <h3>Behaviour → Swarm 커맨드 (ToSwarm)</h3>
-      </div>
-
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-3">
-        {toSwarmVariants.map((v) => (
-          <div key={v.name} className="rounded-lg border px-3 py-2 text-center">
-            <p className="font-mono text-xs font-bold text-amber-500">
-              {v.name}
-            </p>
-            <p className="text-[11px] text-foreground/50 mt-1">{v.desc}</p>
-          </div>
-        ))}
-      </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3>왜 ConnectionHandler를 Behaviour가 생성하나?</h3>
-        <p>
-          프로토콜마다 서브스트림 협상(negotiation)이 다르기 때문이다.
-          <br />
-          Kademlia는 <code>/ipfs/kad/1.0.0</code>, GossipSub은{" "}
-          <code>/meshsub/1.1.0</code>을 사용한다.
-          <br />
-          Handler 생성 시점에 프로토콜 정보를 주입해야 올바른 협상이 가능하다.
+          <code>NetworkBehaviour</code>는 어떤 bytes를 어느 peer에 보낼지 정하는
+          global protocol state입니다. Kademlia의 routing table이나 GossipSub의
+          mesh처럼 여러 peer를 함께 봐야 하는 상태가 여기에 놓입니다. 반면 socket과
+          특정 connection의 substream negotiation은 Behaviour가 직접 poll하지 않고
+          connection별 Handler에 맡깁니다.
         </p>
         <p>
-          <code>#[derive(NetworkBehaviour)]</code> 매크로를 사용하면 여러
-          Behaviour를 하나의 struct로 합성할 수 있다.
-          <br />
-          Swarm은 합성된 단일 Behaviour만 폴링하면 된다.
+          연결 전 callback은 후보 주소를 더하거나 policy상 연결을 거부할 수 있고,
+          established callback은 그 connection을 담당할 Handler를 만듭니다. 이후
+          <code>poll</code>이 Dial·NotifyHandler·CloseConnection·application event 같은
+          <code>ToSwarm</code> action을 반환합니다. 하나의 derived Behaviour에 여러
+          protocol을 넣으면 child poll 순서가 관측 가능한 공정성에 영향을 줄 수 있으므로
+          hot protocol이 나머지를 굶기지 않는지 측정해야 합니다.
         </p>
-      </div>
-
-      {onCodeRef && (
-        <div className="not-prose flex flex-wrap gap-2 mt-4">
-          <CodeViewButton
-            onClick={() =>
-              onCodeRef("network-behaviour", codeRefs["network-behaviour"])
-            }
-          />
-          <CodeViewButton
-            onClick={() => onCodeRef("to-swarm", codeRefs["to-swarm"])}
-          />
-          <CodeViewButton
-            onClick={() => onCodeRef("from-swarm", codeRefs["from-swarm"])}
-          />
+        <div id="paper-network-behaviour" className="scroll-mt-24 border-l border-primary/50 pl-4">
+          <p className="text-xs font-bold text-primary">API 정본 · NetworkBehaviour</p>
+          <p>
+            현재 trait은 connection lifecycle callback, handler event 수신,
+            Swarm event 수신과 action poll을 분리합니다. 이 구분은 “Behaviour가
+            network I/O를 직접 수행한다”는 오해를 막아 줍니다.
+          </p>
+          <CitationBlock source="rust-libp2p 0.56 — NetworkBehaviour" citeKey={4} href="https://docs.rs/libp2p/latest/libp2p/swarm/trait.NetworkBehaviour.html">
+            Behaviour가 local node의 protocol 행동을 정의하고 Transport가 byte 전달을 정의한다는 책임 경계를 확인합니다.
+          </CitationBlock>
         </div>
-      )}
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          NetworkBehaviour Trait 정의
-        </h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-          {`// NetworkBehaviour Trait (Rust libp2p)
-//
-// pub trait NetworkBehaviour: 'static {
-//     type ConnectionHandler: ConnectionHandler;
-//     type ToSwarm: Send + 'static;
-//
-//     // Connection lifecycle
-//     fn handle_pending_inbound_connection(
-//         &mut self,
-//         connection_id: ConnectionId,
-//         local_addr: &Multiaddr,
-//         remote_addr: &Multiaddr,
-//     ) -> Result<(), ConnectionDenied>;
-//
-//     fn handle_established_inbound_connection(
-//         &mut self,
-//         connection_id: ConnectionId,
-//         peer: PeerId,
-//         local_addr: &Multiaddr,
-//         remote_addr: &Multiaddr,
-//     ) -> Result<Self::ConnectionHandler, ConnectionDenied>;
-//
-//     fn handle_pending_outbound_connection(
-//         &mut self,
-//         connection_id: ConnectionId,
-//         maybe_peer: Option<PeerId>,
-//         addresses: &[Multiaddr],
-//         effective_role: Endpoint,
-//     ) -> Result<Vec<Multiaddr>, ConnectionDenied>;
-//
-//     fn handle_established_outbound_connection(
-//         &mut self,
-//         connection_id: ConnectionId,
-//         peer: PeerId,
-//         addr: &Multiaddr,
-//         role: Endpoint,
-//     ) -> Result<Self::ConnectionHandler, ConnectionDenied>;
-//
-//     // State updates
-//     fn on_swarm_event(&mut self, event: FromSwarm);
-//     fn on_connection_handler_event(
-//         &mut self,
-//         peer_id: PeerId,
-//         connection_id: ConnectionId,
-//         event: THandlerOutEvent<Self>,
-//     );
-//
-//     // Async polling
-//     fn poll(
-//         &mut self,
-//         cx: &mut Context<'_>,
-//     ) -> Poll<ToSwarm<Self::ToSwarm, THandlerInEvent<Self>>>;
-// }
-
-// derive(NetworkBehaviour) 매크로:
-//
-//   #[derive(NetworkBehaviour)]
-//   struct MyBehaviour {
-//       kad: kad::Behaviour<MemoryStore>,
-//       gossip: gossipsub::Behaviour,
-//       identify: identify::Behaviour,
-//   }
-//
-//   // Auto-generated:
-//   enum MyBehaviourEvent {
-//       Kad(kad::Event),
-//       Gossip(gossipsub::Event),
-//       Identify(identify::Event),
-//   }
-//
-//   // 각 sub-behaviour를 순회
-//   // 이벤트를 하나의 enum으로 통합
-//   // ConnectionHandler도 자동 합성
-
-// 특징:
-//   - Composition over inheritance
-//   - 각 protocol은 독립 module
-//   - 운영 시점에 조합 결정
-//   - Type-safe event routing
-
-// Async 설계:
-//   poll() = 논블로킹
-//   Waker 기반 알림
-//   tokio/smol 등 런타임 호환`}
-        </pre>
       </div>
     </section>
   );

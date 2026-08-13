@@ -1,159 +1,80 @@
-import M from "@/components/ui/math";
+import ExplainedFormula from "@/components/ui/explained-formula";
 import SchwartzZippelViz from "./viz/SchwartzZippelViz";
 
 export default function SchwartzZippel() {
   return (
     <section id="schwartz-zippel" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Schwartz-Zippel 보조정리</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
-        <p>두 다항식이 같은지 랜덤 점에서 확인 — PLONK, STARK 건전성의 기반.</p>
+      <h2 className="mb-6 text-2xl font-bold">
+        Schwartz–Zippel: 항등식 검사를 확률로 압축하기
+      </h2>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p>
+          Prover가 두 거대한 다항식 P와 Q가 같다고 주장할 때 모든 계수를
+          비교하는 대신, verifier는 예측하기 어려운 r을 고르고 P(r)=Q(r)인지
+          확인할 수 있습니다. 거짓 주장의 차이 R=P−Q는 0이 아닌 다항식이므로
+          무작위 점에서 우연히 0이 될 가능성이 작다는 것이 핵심입니다.
+        </p>
       </div>
-      <div className="not-prose">
-        <SchwartzZippelViz />
-      </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          Schwartz-Zippel Lemma
-        </h3>
-
-        {/* 보조정리 정식 */}
-        <div className="not-prose rounded-lg border-l-4 border-l-blue-500 bg-card p-4 mb-4">
-          <div className="text-sm font-semibold mb-2">
-            Schwartz-Zippel Lemma (1979)
-          </div>
-          <p className="text-sm text-muted-foreground mb-2">
-            <M>{"P \\in F[x_1, \\ldots, x_n]"}</M> &mdash; 차수 <M>d</M>인
-            non-zero 다항식
-            <br />
-            <M>{"S \\subseteq F"}</M> 유한 부분집합에서{" "}
-            <M>{"(r_1, \\ldots, r_n) \\in S^n"}</M> 랜덤 샘플링
-          </p>
-          <M display>
-            {
-              "\\underbrace{\\Pr[P(r_1, \\ldots, r_n) = 0]}_{\\text{랜덤 평가가 0일 확률}} \\leq \\frac{\\overbrace{d}^{\\text{다항식 차수}}}{\\underbrace{|S|}_{\\text{샘플링 집합 크기}}}"
-            }
-          </M>
-          <p className="text-sm text-muted-foreground mt-2">
-            P = 검사 대상 다항식, r_i = S에서 균일 랜덤 선택한 값, d = 총 차수,
-            |S| = 샘플링 집합의 원소 수. |S|가 클수록 오류 확률이 지수적으로
-            감소 -- ZKP에서 |S|를 체 전체로 잡으면 사실상 0에 수렴.
-          </p>
-        </div>
-
-        {/* Polynomial Identity Testing */}
-        <h4 className="text-lg font-semibold mt-5 mb-3">
-          Polynomial Identity Testing
-        </h4>
-        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-muted-foreground mb-2">
-              Method 1 (직접)
-            </div>
-            <p className="text-sm text-muted-foreground">
-              모든 계수 비교: <M>{"O(d)"}</M>
-            </p>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-2">
-              Method 2 (SZ)
-            </div>
-            <ul className="text-sm text-muted-foreground space-y-1">
-              <li>
-                차이 다항식 <M>{"D(x) = P(x) - Q(x)"}</M>
-              </li>
-              <li>
-                <M>{"r \\leftarrow \\text{random} \\in S"}</M>
-              </li>
-              <li>
-                <M>{"P = Q"}</M> &rarr; <M>{"D = 0"}</M> &rarr; 항상 true
-              </li>
-              <li>
-                <M>{"P \\neq Q"}</M> &rarr; <M>{"\\Pr[D(r)=0] \\leq d/|S|"}</M>
-              </li>
-            </ul>
-            <p className="text-xs text-muted-foreground mt-2">
-              <M>{"|S| = 2^{256}"}</M>이면 오류 확률 사실상 0
-            </p>
-          </div>
-        </div>
-
-        {/* ZKP 활용 */}
-        <h4 className="text-lg font-semibold mt-5 mb-3">ZKP에서의 활용</h4>
-        <div className="not-prose grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
-          {[
-            {
-              name: "PLONK",
-              desc: "Grand product &mdash; random challenge로 한 점 검증",
-            },
-            {
-              name: "STARK",
-              desc: "AIR constraint &mdash; DEEP composition single point",
-            },
-            {
-              name: "Sumcheck",
-              desc: (
-                <>
-                  수행: <M>{"\\sum f(x)"}</M> over <M>{"{\\{0,1\\}}^n"}</M>
-                </>
-              ),
-            },
-            { name: "Multi-linear", desc: "Random challenge로 평가" },
-          ].map((p) => (
-            <div key={p.name} className="rounded-lg border bg-card p-3">
-              <p className="text-sm font-semibold">{p.name}</p>
-              <p className="text-xs text-muted-foreground mt-1">{p.desc}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* 보안 분석 */}
-        <h4 className="text-lg font-semibold mt-5 mb-3">보안 분석</h4>
-        <div className="not-prose rounded-lg border bg-card p-4 mb-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <p className="text-sm font-semibold mb-1">Soundness error</p>
-              <ul className="text-sm text-muted-foreground space-y-1">
-                <li>
-                  단일 쿼리: <M>{"d / |F|"}</M>
-                </li>
-                <li>
-                  <M>k</M> 쿼리: <M>{"(d / |F|)^k"}</M>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <p className="text-sm font-semibold mb-1">실전 계산</p>
-              <ul className="text-sm text-muted-foreground space-y-1">
-                <li>
-                  BN254 <M>{"F_r"}</M>: <M>{"|F| \\sim 2^{254}"}</M>
-                </li>
-                <li>
-                  <M>{"d = 10^6"}</M> &rarr; error <M>{"\\sim 2^{-230}"}</M>
-                </li>
-                <li>&rarr; 매우 안전</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        {/* 변형 */}
-        <div className="not-prose rounded-lg border bg-card p-4">
-          <p className="text-xs font-mono text-muted-foreground mb-2">
-            Variants
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-            <div className="rounded bg-muted/50 p-2 text-center text-sm text-muted-foreground">
-              DeMillo-Lipton-SZ
-            </div>
-            <div className="rounded bg-muted/50 p-2 text-center text-sm text-muted-foreground">
-              Multi-variate extension
-            </div>
-            <div className="rounded bg-muted/50 p-2 text-center text-sm text-muted-foreground">
-              Low-degree testing (STARK core)
-            </div>
-          </div>
-        </div>
+      <SchwartzZippelViz />
+      <ExplainedFormula
+        question="거짓 다항식 항등식이 무작위 검사 한 번을 통과할 확률은 얼마일까요?"
+        idea="변수를 하나 고정하면 남은 변수의 다항식이 되고, univariate root bound를 변수별로 귀납 적용합니다. total degree d가 허용하는 나쁜 점의 비율은 최대 d/|S|입니다."
+        formula={String.raw`R\not\equiv0,\ \deg R\le d,\ r\xleftarrow{\$}S^m\quad\Longrightarrow\quad \Pr[R(r)=0]\le\frac d{|S|}`}
+        terms={[
+          {
+            symbol: "R",
+            name: "difference polynomial",
+            description: "P−Q로 만든 0이 아닌 m변수 다항식입니다.",
+          },
+          {
+            symbol: "d",
+            name: "total degree",
+            description: "각 monomial의 지수 합 가운데 최댓값입니다.",
+          },
+          {
+            symbol: "S",
+            name: "challenge set",
+            description: "각 좌표를 균등하게 고르는 유한 부분집합입니다.",
+          },
+          {
+            symbol: "r",
+            name: "random point",
+            description: "S에서 독립적으로 뽑은 m개 좌표입니다.",
+          },
+        ]}
+        assumptions={[
+          "R은 challenge를 보기 전에 고정됩니다.",
+          "좌표는 S에서 독립·균등하게 선택됩니다.",
+          "d/|S|가 1보다 작을 만큼 S가 충분히 큽니다.",
+        ]}
+        interpretation="degree 3, |S|=101이면 한 번의 false acceptance는 최대 3/101입니다. 동일한 고정 R에 독립 challenge를 t번 쓰면 최대 (3/101)^t지만, challenge 재사용이나 adaptive polynomial에는 그대로 곱할 수 없습니다."
+      />
+      <div
+        id="paper-schwartz-zippel"
+        className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">
+          논문 읽기 · 확률적 항등식 검사
+        </p>
+        <p className="mt-2 text-sm font-semibold">
+          Schwartz (1980), Fast Probabilistic Algorithms for Verification of
+          Polynomial Identities
+        </p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          문제는 symbolic polynomial identity verification의 비용입니다. 논문은
+          무작위 평가를 사용한 빠른 검증과 degree에 따른 오류 확률을 분석합니다.
+          Bound는 uniformly sampled challenge와 고정된 nonzero polynomial을
+          전제로 하며, 암호 프로토콜의 challenge 생성·commitment binding까지
+          자동으로 증명하지는 않습니다.
+        </p>
+        <a
+          href="https://doi.org/10.1145/322186.322189"
+          target="_blank"
+          rel="noreferrer"
+          className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
+        >
+          논문 원문 보기
+        </a>
       </div>
     </section>
   );

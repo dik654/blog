@@ -1,8 +1,9 @@
-import ContextViz from "./viz/ContextViz";
-import BLSSignFlowViz from "./viz/BLSSignFlowViz";
+import { Link } from "react-router-dom";
+import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
 import { OFFICIAL_SOURCES } from "@/content/official-sources";
 import type { CodeRef } from "@/components/code/types";
+import PrysmFoundationViz from "../prysm-foundation-viz";
 
 export default function Overview({
   onCodeRef: _onCodeRef,
@@ -11,90 +12,85 @@ export default function Overview({
 }) {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">BLS12-381은 많은 validator signature를 하나로 집계한다</h2>
-      <div className="not-prose mb-8">
-        <ContextViz />
+      <h2 className="mb-5 text-2xl font-bold">
+        BLS 집계의 출발점은 압축이 아니라 누가 어떤 consensus object에
+        서명했는지 고정하는 일이다
+      </h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="text-lg leading-8">
+          Ethereum에서는 많은 validator가 같은 attestation data에 투표합니다.
+          서명을 단순히 이어 붙이면 참여자 수만큼 byte가 늘지만 BLS signature는
+          curve point 덧셈으로 여러 서명을 하나의 96-byte point에 모을 수
+          있습니다. 다만 aggregate 하나만 보아서는 어떤 public key와 message가
+          참여했는지 알 수 없으므로 그 입력 목록과 protocol domain이 검증 계약의
+          일부입니다.
+        </p>
+        <p>
+          이 글은 elliptic curve를 미리 안다고 가정하지 않고{" "}
+          <strong>
+            secret scalar→public point→signing root→signature point→pairing
+            check→aggregation
+          </strong>{" "}
+          순서로 설명합니다. <Link to="/blockchain/prysm-ssz">SSZ 글</Link>이
+          object root를 소유하고, 여기서는 그 root를 validator authorization으로
+          바꾸는 경계만 소유합니다.
+        </p>
       </div>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          Ethereum 합의 계층에서는 많은 validator가 같은 투표 대상에 서명한다.
-          개별 서명을 모두 그대로 전달하고 검증하면 네트워크와 블록 공간, 검증
-          비용이 참여자 수에 따라 커진다.
+
+      <ContentBoundary article="prysm-bls" />
+      <PrysmFoundationViz mode="bls" />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>숫자에서 point까지</h3>
+        <p>
+          BLS12-381은 유한체 위에 정의된 두 elliptic-curve subgroup G1·G2와
+          target group GT를 사용합니다. Secret key는 정해진 범위의 scalar이고
+          public key는 G1의 generator에 그 scalar를 곱한 point입니다. Ethereum이
+          사용하는 minimal-pubkey-size variant에서 compressed public key는 48
+          bytes, G2 signature는 96 bytes입니다. 이 크기는 참여자 수와 무관하지만
+          public-key 목록과 aggregation bits의 비용은 사라지지 않습니다.
         </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          문제 — 다수의 투표를 작게 운반하고 안전하게 검증
-        </h3>
-        <p className="leading-7">
-          BLS는 서명 point를 더해 여러 서명을 하나의 고정 크기 서명으로 표현할
-          수 있다. 하지만 “크기가 하나”라는 사실만으로 유효성이 보장되지는
-          않는다. 공개키 집합, 메시지가 같은지 다른지, Proof-of-Possession
-          전제가 충족되는지를 API 선택과 함께 확인해야 한다.
+        <p>
+          Pairing은 G1 point와 G2 point의 비밀 scalar 관계를 GT에서 비교할 수
+          있게 하는 함수입니다. Verifier가 secret key를 몰라도 public key,
+          hash-to-curve한 message, signature 사이 관계를 확인할 수 있습니다.
+          “수학식이 맞는다” 전에 compressed point가 canonical이고 curve와 올바른
+          subgroup에 있으며 identity point가 아닌지 검사해야 합니다.
         </p>
+        <h3>두 종류의 domain separation을 구분합니다</h3>
+        <p>
+          Consensus domain은 object root에 domain type·fork version·genesis
+          validators root를 묶어 “어느 chain의 어떤 duty”인지 정합니다. BLS
+          ciphersuite의 domain separation tag(DST)는 hash-to-curve 입력을 다른
+          ciphersuite와 섞지 않게 합니다. 이름은 비슷하지만 하나는 Ethereum
+          protocol object를, 다른 하나는 cryptographic encoding suite를
+          분리합니다.
+        </p>
+      </div>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          아이디어 — 그룹 역할과 검증 조건을 분리
-        </h3>
-        <div className="not-prose grid grid-cols-1 sm:grid-cols-3 gap-3 my-4">
-          <div className="rounded-lg border bg-card p-4">
-            <h4 className="font-semibold text-sm mb-2">G1 공개키</h4>
-            <p className="text-xs text-muted-foreground">
-              Ethereum의 최소 공개키 크기 변형에서 공개키는 압축 48 bytes다.
-            </p>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <h4 className="font-semibold text-sm mb-2">G2 서명</h4>
-            <p className="text-xs text-muted-foreground">
-              메시지를 DST와 함께 G2로 매핑해 만든 서명은 압축 96 bytes다.
-            </p>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <h4 className="font-semibold text-sm mb-2">Pairing 검사</h4>
-            <p className="text-xs text-muted-foreground">
-              공개키·메시지·서명이 같은 비밀키 관계를 만족하는지 pairing
-              product로 확인한다.
-            </p>
-          </div>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">구현을 읽는 네 경계</h3>
-        <ol>
-          <li>
-            <strong>직렬화 검증</strong> — 길이, canonical encoding, subgroup,
-            infinity 조건을 확인한다.
-          </li>
-          <li>
-            <strong>도메인 분리</strong> — consensus signing root와 BLS
-            ciphersuite DST의 역할을 구분한다.
-          </li>
-          <li>
-            <strong>API 선택</strong> — 단일 Verify, 동일 메시지
-            FastAggregateVerify, 서로 다른 메시지 AggregateVerify를 섞지 않는다.
-          </li>
-          <li>
-            <strong>native 경계</strong> — Prysm의 Go 오류 처리와 BLST의 curve
-            연산 책임을 나눠 본다.
-          </li>
-        </ol>
+      <div id="paper-bls-draft" className="scroll-mt-24">
         <CitationBlock
-          {...OFFICIAL_SOURCES.ethereum.consensusSpecs}
+          source="CFRG Internet-Draft — BLS Signatures, draft-06"
+          href="https://datatracker.ietf.org/doc/draft-irtf-cfrg-bls-signature/06/"
           citeKey={1}
         >
-          Ethereum 합의 사양의 BLS helper와 signing root 규칙이 프로토콜 입력
-          조건을 결정한다. 성능 수치는 사양이 아니므로 이 글은 특정 CPU의 밀리초
-          값을 일반화하지 않는다.
+          Draft는 CoreVerify·AggregateVerify·Proof-of-Possession과 key
+          validation 전제를 정리합니다. 2025-11 공개된 Internet-Draft로 RFC가
+          아니며 2026-05 만료 상태이므로 문서 revision을 고정하고 Ethereum
+          ciphersuite 선택과 구분해 읽습니다.
         </CitationBlock>
+      </div>
+      <div id="paper-prysm-bls-source" className="scroll-mt-24">
         <CitationBlock
           {...OFFICIAL_SOURCES.prysm.repository}
           citeKey={2}
           type="code"
         >
-          Prysm에서 사용하는 wrapper와 BLST 호출 경계는 릴리스별 실제 소스를
-          기준으로 확인한다.
+          Prysm source와 고정된 BLST dependency는 Go wrapper·native
+          validation·error propagation의 implementation 근거입니다. 특정 CPU의
+          SIMD speedup이나 moving branch layout을 모든 deployment에 일반화하지
+          않습니다.
         </CitationBlock>
-      </div>
-      <div className="not-prose mt-6">
-        <BLSSignFlowViz />
       </div>
     </section>
   );

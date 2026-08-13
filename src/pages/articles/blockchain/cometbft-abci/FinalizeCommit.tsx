@@ -1,231 +1,51 @@
-import { codeRefs } from "./codeRefs";
-import FinalizeBlockViz from "./viz/FinalizeBlockViz";
-import CommitViz from "./viz/CommitViz";
-import type { CodeRef } from "@/components/code/types";
-
-export default function FinalizeCommit({
-  onCodeRef,
-}: {
-  onCodeRef: (key: string, ref: CodeRef) => void;
-}) {
-  const open = (key: string) => onCodeRef(key, codeRefs[key]);
+import ExplainedFormula from "@/components/ui/explained-formula";
+import CometBFTCoreViz from "../cometbft-core-viz";
+export default function FinalizeCommit() {
   return (
     <section id="finalize-commit" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">FinalizeBlock & Commit</h2>
-
-      <h3 className="text-lg font-semibold mb-3">FinalizeBlock — 블록 실행</h3>
-      <div className="not-prose mb-6">
-        <FinalizeBlockViz onOpenCode={open} />
-      </div>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        {/* ── FinalizeBlock 구조 ── */}
-        <div className="not-prose mb-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
-            <div className="rounded-lg border bg-card p-4">
-              <p className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-2">
-                Request 구조체
-              </p>
-              <p className="text-xs text-muted-foreground mb-2">
-                <code>RequestFinalizeBlock</code>
-              </p>
-              <ul className="text-sm space-y-1 text-muted-foreground">
-                <li>
-                  <code className="text-xs">Txs [][]byte</code> — 확정된 TX 목록
-                </li>
-                <li>
-                  <code className="text-xs">DecidedLastCommit</code> — 이전 블록
-                  커밋
-                </li>
-                <li>
-                  <code className="text-xs">Misbehavior</code> — 악의 행위 증거
-                </li>
-                <li>
-                  <code className="text-xs">Hash</code>,{" "}
-                  <code className="text-xs">Height</code>,{" "}
-                  <code className="text-xs">Time</code>,{" "}
-                  <code className="text-xs">ProposerAddress</code>
-                </li>
-              </ul>
-            </div>
-            <div className="rounded-lg border bg-card p-4">
-              <p className="text-xs font-semibold text-green-600 dark:text-green-400 mb-2">
-                Response 구조체
-              </p>
-              <p className="text-xs text-muted-foreground mb-2">
-                <code>ResponseFinalizeBlock</code>
-              </p>
-              <ul className="text-sm space-y-1 text-muted-foreground">
-                <li>
-                  <code className="text-xs">Events []Event</code> — module
-                  이벤트
-                </li>
-                <li>
-                  <code className="text-xs">TxResults []*ExecTxResult</code> —
-                  TX 실행 결과
-                </li>
-                <li>
-                  <code className="text-xs">ValidatorUpdates</code> — validator
-                  변경
-                </li>
-                <li>
-                  <code className="text-xs">ConsensusParamUpdates</code> — 합의
-                  파라미터 변경
-                </li>
-                <li>
-                  <code className="text-xs">AppHash []byte</code> — 새 state
-                  root
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="rounded-lg border bg-card p-4 mb-3">
-            <p className="text-xs font-semibold text-purple-600 dark:text-purple-400 mb-2">
-              Cosmos SDK 내부 실행 흐름 — <code>BaseApp.FinalizeBlock</code>
-            </p>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm text-muted-foreground">
-              <div className="rounded bg-muted/50 p-2 text-center">
-                <p className="text-xs font-medium mb-1">1. BeginBlock</p>
-                <p className="text-xs">module hooks 호출</p>
-              </div>
-              <div className="rounded bg-muted/50 p-2 text-center">
-                <p className="text-xs font-medium mb-1">2. DeliverTx x N</p>
-                <p className="text-xs">각 TX 순차 실행</p>
-              </div>
-              <div className="rounded bg-muted/50 p-2 text-center">
-                <p className="text-xs font-medium mb-1">3. EndBlock</p>
-                <p className="text-xs">validator updates 수집</p>
-              </div>
-              <div className="rounded bg-muted/50 p-2 text-center">
-                <p className="text-xs font-medium mb-1">4. ComputeAppHash</p>
-                <p className="text-xs">state root 계산</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <div className="rounded-lg border border-dashed border-muted-foreground/30 p-3">
-              <p className="text-xs font-semibold mb-1">ABCI 1.0 (이전)</p>
-              <p className="text-xs text-muted-foreground">
-                BeginBlock + N x DeliverTx + EndBlock = N+2 호출
-              </p>
-            </div>
-            <div className="rounded-lg border border-dashed border-green-500/30 bg-green-500/5 p-3">
-              <p className="text-xs font-semibold mb-1">ABCI 2.0 (현재)</p>
-              <p className="text-xs text-muted-foreground">
-                FinalizeBlock 1회 — overhead 감소 + 병렬화 여지
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <p className="leading-7">
-          <code>FinalizeBlock</code>은 ABCI 2.0에서 이전의 BeginBlock,
-          DeliverTx, EndBlock 경계를 하나의 요청으로 묶은 핵심 메서드다. 앱은
-          확정된 transaction 목록을 실행하고 결과와 AppHash, validator 및
-          consensus parameter update를 CometBFT에 반환한다.
-        </p>
-
-        <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4 mb-8">
-          <strong>💡 ABCI v2 핵심 변경</strong> —
-          BeginBlock/DeliverTx/EndBlock을 FinalizeBlock 하나로 통합했기 때문에,
-          앱은 모든 TX를 한 번에 받아 처리, TxResults + ValidatorUpdates +
-          AppHash 반환.
+      <h2 className="mb-6 text-2xl font-bold">FinalizeBlock은 결정된 state를 계산하고 Commit은 그 state를 durable하게 만든다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>
+          Consensus가 decided block을 넘기면 application은 transaction을 deterministic하게 실행하고 transaction results,
+          validator·consensus parameter updates, AppHash를 반환합니다. 이 결과는 CometBFT가 저장하지만 application state의
+          영속화는 아직 끝나지 않았습니다. 뒤따르는 Commit이 반환돼야 application이 그 height를 durable하게 저장했다고
+          판단할 수 있습니다.
         </p>
       </div>
-
-      <h3 className="text-lg font-semibold mb-3">Commit — 상태 영구 저장</h3>
-      <div className="not-prose mb-6">
-        <CommitViz onOpenCode={open} />
-      </div>
-      <div className="not-prose mb-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
-          <div className="rounded-lg border bg-card p-4">
-            <p className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-2">
-              Request / Response
-            </p>
-            <p className="text-xs text-muted-foreground mb-1">
-              Request: 빈 구조체 (파라미터 없음)
-            </p>
-            <p className="text-xs text-muted-foreground">
-              <code>ResponseCommit</code>
-            </p>
-            <ul className="text-sm space-y-1 text-muted-foreground mt-1">
-              <li>
-                <code className="text-xs">RetainHeight int64</code> — 이 높이
-                이하 pruning 가능
-              </li>
-            </ul>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <p className="text-xs font-semibold text-purple-600 dark:text-purple-400 mb-2">
-              SDK 구현 — <code>BaseApp.Commit</code>
-            </p>
-            <ul className="text-sm space-y-1 text-muted-foreground">
-              <li>
-                <span className="font-medium">1.</span> IAVL tree → disk flush (
-                <code className="text-xs">cms.Commit()</code>)
-              </li>
-              <li>
-                <span className="font-medium">2.</span> state version tracking
-              </li>
-              <li>
-                <span className="font-medium">3.</span> pruning hint 계산 (
-                <code className="text-xs">RetainHeight</code>)
-              </li>
-              <li>
-                <span className="font-medium">4.</span>{" "}
-                <code className="text-xs">CommittedBlockEvent</code> 발행
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
-          <div className="rounded-lg border border-green-500/30 bg-green-500/5 p-4">
-            <p className="text-xs font-semibold text-green-600 dark:text-green-400 mb-2">
-              정순: App → CometBFT (안전)
-            </p>
-            <ul className="text-sm space-y-1 text-muted-foreground">
-              <li>App.Commit() — disk에 app state 저장</li>
-              <li>CometBFT state.Save() — state.db 저장</li>
-              <li>중간 crash 시 → WAL replay → idempotent 복구</li>
-            </ul>
-          </div>
-          <div className="rounded-lg border border-red-500/30 bg-red-500/5 p-4">
-            <p className="text-xs font-semibold text-red-600 dark:text-red-400 mb-2">
-              역순: CometBFT → App (위험)
-            </p>
-            <ul className="text-sm space-y-1 text-muted-foreground">
-              <li>CometBFT가 "block N 저장됨" 기록</li>
-              <li>App crash → state 미저장</li>
-              <li>재시작 시 N+1 요청 → 불일치 발생</li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="rounded-lg border border-dashed border-muted-foreground/30 p-3">
-          <p className="text-xs font-semibold mb-1">Pruning</p>
-          <p className="text-xs text-muted-foreground">
-            <code>RetainHeight</code> 이하 블록은 CometBFT가 prune 가능. archive
-            node는 <code>retain_height = 0</code> (전체 유지).
-          </p>
-        </div>
-      </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          <code>Commit</code>은 FinalizeBlock에서 계산한 app state를 영구
-          저장한다. 앱의 commit이 성공한 뒤 CometBFT state를 저장해야 crash
-          recovery 때 두 상태가 어긋나지 않으며, 응답의
-          <code>RetainHeight</code>는 block pruning 범위를 알려준다.
+      <ExplainedFormula
+        question="모든 correct node가 같은 다음 state와 AppHash를 만들기 위한 최소 식은 무엇일까요?"
+        idea={<>결정된 block과 이전 committed state만 deterministic transition에 넣고, 결과 state의 commitment를 계산합니다. Node-local 입력과 external effect는 함수 밖으로 분리합니다.</>}
+        formula={String.raw`\begin{aligned}S_{h+1}&=F(S_h,B_h),\\ A_{h+1}&=C(S_{h+1})\end{aligned}`}
+        terms={[
+          { symbol: "S_h", name: "Previous state", description: "FinalizeBlock 전에 durable하게 commit된 application state입니다." },
+          { symbol: "B_h", name: "Decided block", description: "Consensus가 height h에서 결정한 block과 protocol context입니다." },
+          { symbol: "F", name: "State transition", description: "Application의 deterministic state-transition function입니다." },
+          { symbol: "A_{h+1}", name: "AppHash", description: "결과 state를 식별하며 다음 block header에 연결되는 commitment입니다." },
+        ]}
+        assumptions={["모든 correct node가 같은 ordered input과 application version/configuration을 사용합니다.", "Map iteration·floating behavior·clock·randomness·remote API처럼 결과가 갈리는 입력을 제거하거나 consensus input에 포함합니다.", "Commitment collision resistance를 가정하며 AppHash가 비어 있거나 application-specific일 수 있는 protocol 범위를 따릅니다."]}
+        interpretation="같은 S_h와 B_h인데 A가 다르면 consensus order는 같아도 replicated application state가 갈라진 것입니다. AppHash 일치는 external notification이 exactly once 실행됐다는 뜻은 아닙니다."
+      />
+      <CometBFTCoreViz mode="recovery" />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>AppHash의 한-height 연결을 확인합니다</h3>
+        <p>
+          FinalizeBlock이 반환한 AppHash는 다음 block header의 AppHash로 들어갑니다. 따라서 장애 로그는 decided block
+          height, FinalizeBlock result AppHash, application committed height, 다음 header의 AppHash를 분리해 남겨야 합니다.
+          같은 이름만 보고 현재 block payload의 hash나 CometBFT 자체 database root로 해석하면 안 됩니다.
         </p>
-
-        <p className="text-sm border-l-2 border-sky-500/50 pl-3 mt-4">
-          <strong>💡 Commit 순서</strong> — 앱 Commit() 후에 CometBFT
-          state.Save()를 호출한다. 순서를 바꾸면 중간 크래시 때
-          앱과 CometBFT가 서로 다른 height를 기록할 수 있다.
+        <h3>Crash point별 replay 결정을 표로 만듭니다</h3>
+        <p>
+          Block만 저장됐으면 FinalizeBlock 이후를 replay하고, CometBFT result/state가 저장됐지만 application Commit이
+          끝나지 않았으면 FinalizeBlock 결과를 재현해 저장된 결과와 대조한 뒤 Commit합니다. Application이 더 높은 height를
+          보고하면 blindly 진행하지 않고 handshake·recovery invariant를 실패시킵니다. Replay 가능한 transition과
+          idempotent Commit이 필요하며 payment·webhook 같은 external effect는 state outbox에서 별도로 reconcile합니다.
         </p>
+      </div>
+      <div id="paper-cometbft-app-requirements-v040" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+        <p className="text-xs font-bold text-primary">공식 규격 읽기 · application requirements</p>
+        <p className="mt-2 text-sm font-semibold">Requirements for the ABCI Application</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">문제는 proposal coherence·determinism·candidate state·connection ordering·crash recovery를 application 의무로 명시하는 것입니다. 규격은 올바른 integration 조건을 설명하지만 특정 database의 atomicity나 외부 시스템 side effect를 자동 보장하지 않습니다.</p>
+        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://github.com/cometbft/cometbft/blob/v0.40.0/spec/abci/abci%2B%2B_app_requirements.md" target="_blank" rel="noreferrer">v0.40.0 application requirements 보기</a>
       </div>
     </section>
   );

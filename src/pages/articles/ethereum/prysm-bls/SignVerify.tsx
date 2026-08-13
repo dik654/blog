@@ -1,103 +1,95 @@
+import ExplainedFormula from "@/components/ui/explained-formula";
 import type { CodeRef } from "@/components/code/types";
-import { CodeViewButton } from "@/components/code";
-import { codeRefs } from "./codeRefs";
 
-interface Props {
+export default function SignVerify({
+  onCodeRef: _onCodeRef,
+}: {
   onCodeRef: (key: string, ref: CodeRef) => void;
-}
-
-export default function SignVerify({ onCodeRef }: Props) {
+}) {
   return (
     <section id="sign-verify" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Sign, Verify & Aggregate</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3 className="text-xl font-semibold mt-2 mb-3">
-          Sign — 프로토콜 메시지에서 G2 서명으로
-        </h3>
-        <ol>
-          <li>
-            객체의 <code>hash_tree_root</code>와 consensus domain으로 signing
-            root를 만든다.
-          </li>
-          <li>BLS ciphersuite의 DST를 사용해 메시지를 G2 point로 매핑한다.</li>
-          <li>
-            비밀키 스칼라 곱을 수행하고 point를 canonical 96-byte 형식으로
-            압축한다.
-          </li>
-        </ol>
-        <p className="leading-7">
-          consensus domain과 ciphersuite DST는 둘 다 “domain”이라 불리지만
-          계층이 다르다. 전자는 포크·네트워크·서명 목적을 signing root에 묶고,
-          후자는 hash-to-curve의 암호학적 메시지 공간을 분리한다.
+      <h2 className="mb-6 text-2xl font-bold">
+        Verify는 signature를 복호화하지 않고 두 scalar 관계가 같은지 pairing으로
+        비교한다
+      </h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>
+          Secret key <code>sk</code>로 public key <code>PK=sk·G₁</code>를
+          만들고, message bytes를 G2 point로 옮긴
+          <code>H(m)</code>에 같은 scalar를 곱해 signature{" "}
+          <code>σ=sk·H(m)</code>를 만듭니다. Pairing의 bilinearity 덕분에
+          verifier는 secret scalar 없이 두 관계가 같은지 비교합니다.
         </p>
+      </div>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          Verify — 역직렬화 검증이 먼저다
-        </h3>
-        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 my-4">
-          <div className="rounded-lg border bg-card p-4">
-            <h4 className="font-semibold text-sm mb-2">입력 검사</h4>
-            <ul className="text-xs space-y-1 text-muted-foreground">
-              <li>압축 형식과 canonical encoding</li>
-              <li>curve·subgroup membership</li>
-              <li>API가 요구하는 infinity 처리</li>
-            </ul>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <h4 className="font-semibold text-sm mb-2">관계 검사</h4>
-            <p className="text-xs text-muted-foreground">
-              <code>e(G1, sig) = e(pk, H(msg))</code>에 해당하는 pairing
-              product를 계산해 같은 비밀키 관계를 확인한다.
-            </p>
-          </div>
-        </div>
-        <div className="not-prose flex flex-wrap gap-2 my-4">
-          <CodeViewButton
-            onClick={() => onCodeRef("bls-verify", codeRefs["bls-verify"])}
-          />
-          <span className="text-xs text-muted-foreground self-center">
-            Verify()
-          </span>
-          <CodeViewButton
-            onClick={() =>
-              onCodeRef("bls-fast-agg-verify", codeRefs["bls-fast-agg-verify"])
-            }
-          />
-          <span className="text-xs text-muted-foreground self-center">
-            FastAggregateVerify()
-          </span>
-        </div>
+      <ExplainedFormula
+        question="Public key와 signature가 같은 secret key로 만들어졌는지 어떻게 확인할까요?"
+        idea={
+          <>
+            Pairing은 한쪽 point의 scalar multiplication을 target group의
+            exponent로 옮깁니다. 그래서 generator와 signature의 관계를 public
+            key와 message point의 관계와 비교할 수 있습니다.
+          </>
+        }
+        formula={String.raw`PK=sk\,G_1,\qquad \sigma=sk\,H(m),\qquad e(G_1,\sigma)=e(PK,H(m))`}
+        terms={[
+          {
+            symbol: "sk",
+            name: "Secret scalar",
+            description: "Validator만 보관하는 nonzero scalar입니다.",
+          },
+          {
+            symbol: "G_1",
+            name: "G1 generator",
+            description: "Public key subgroup의 공개 기준 point입니다.",
+          },
+          {
+            symbol: "H(m)",
+            name: "Hash-to-curve",
+            description:
+              "DST를 적용해 signing-root bytes를 G2 subgroup point로 옮긴 값입니다.",
+          },
+          {
+            symbol: "e",
+            name: "Pairing",
+            description:
+              "G1×G2 입력의 scalar 관계를 GT에서 비교하는 bilinear map입니다.",
+          },
+        ]}
+        assumptions={[
+          "PK·signature는 canonical decode, curve·subgroup·non-identity 검사를 통과했습니다.",
+          "H는 Ethereum이 지정한 BLS ciphersuite와 DST를 사용합니다.",
+          "m은 SSZ object root와 올바른 consensus domain으로 만든 signing root입니다.",
+        ]}
+        interpretation="Equality가 참이면 주어진 key/message/signature 관계가 유효하다는 뜻입니다. Validator가 protocol상 그 duty에 서명할 권한이 있었는지, double-sign인지, message 내용이 valid한지는 별도 검사입니다."
+      />
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          Aggregate — 압축과 검증 조건을 분리
-        </h3>
-        <p className="leading-7">
-          서명 집계는 G2 point 덧셈이고 결과는 여전히 하나의 압축 서명이다. 동일
-          메시지라면 공개키를 집계하는 FastAggregateVerify 경로를 사용할 수
-          있지만, 서로 다른 메시지라면 각 <code>(public key, message)</code>{" "}
-          쌍을 보존하는 AggregateVerify 계열이 필요하다.
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>Signing root가 replay boundary를 만듭니다</h3>
+        <p>
+          Ethereum의 signing data는 object root 32 bytes와 domain 32 bytes를 SSZ
+          container로 묶어 다시 root를 계산합니다. Domain은 duty type, fork
+          version과 genesis validators root에서 만들어지므로 같은 object라도
+          proposer·attester 목적 또는 다른 chain에서 서명이 재사용되지 않습니다.
+          단, 잘못된 fork epoch로 domain을 계산하면 cryptography는 정상이어도
+          protocol signature는 reject됩니다.
         </p>
-        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 my-4">
-          <div className="rounded-lg border border-green-500/30 bg-green-500/5 p-4">
-            <h4 className="font-semibold text-sm mb-2">같은 메시지</h4>
-            <p className="text-xs text-muted-foreground">
-              등록된 PoP 등 프로토콜 전제를 확인하고 공개키 집계 + aggregate
-              signature 검증을 수행한다.
-            </p>
-          </div>
-          <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-4">
-            <h4 className="font-semibold text-sm mb-2">서로 다른 메시지</h4>
-            <p className="text-xs text-muted-foreground">
-              메시지별 공개키 관계를 유지하고 구현이 제공하는 안전한 aggregate
-              또는 batch 검증 경로를 사용한다.
-            </p>
-          </div>
-        </div>
-        <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          “pairing 한 번” 같은 표현은 수학식의 항, library API 호출, Miller
-          loop와 final exponentiation 묶음을 혼동하기 쉽다. 이 글은 API 조건과
-          결과를 중심으로 설명하고 특정 연산 횟수·시간을 보편 성능으로 제시하지
-          않는다.
+        <h3>같은 message와 다른 message의 API를 섞지 않습니다</h3>
+        <p>
+          여러 public key가 정확히 같은 <code>m</code>에 서명했다면 public key를
+          더한 뒤 aggregate signature와 비교하는 FastAggregateVerify를 사용할 수
+          있습니다. Attestation data root나 domain이 하나라도 다르면 각{" "}
+          <code>(PKᵢ,mᵢ)</code>
+          pair를 보존하는 AggregateVerify 계열이 필요합니다. “같은 slot”은 같은
+          message라는 뜻이 아닙니다.
+        </p>
+        <h3>Rogue-key 반례</h3>
+        <p>
+          공격자가 다른 public key를 본 뒤 자신의 key를 그 합을 상쇄하도록
+          고르면 실제 secret을 모르는 key까지 aggregate에 포함된 것처럼 꾸밀 수
+          있습니다. Proof-of-Possession(PoP)은 key 등록 때 그 public key에
+          대응하는 secret을 안다는 별도 proof를 검증합니다. PoP 전제를 확인하지
+          않은 public-key aggregation에 FastAggregateVerify를 적용하지 않습니다.
         </p>
       </div>
     </section>

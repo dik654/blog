@@ -2759,9 +2759,67 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "hw-memory": {
+    title: "서버 메모리 정본 글이 소유하는 범위",
+    owns: [
+      "Working set·capacity·channel bandwidth·CAS/NUMA latency의 측정 경계",
+      "DDR5 subchannel·ECC syndrome·on-die/system 보호 범위",
+      "UDIMM·RDIMM·3DS·MRDIMM electrical path와 population acceptance",
+    ],
+    reuses: [
+      {
+        label: "Bit·byte 단위 변환",
+        href: "/ai/text-unicode-encoding#bits-bytes",
+      },
+    ],
+    evidence: [
+      {
+        kind: "standard",
+        rule: "DDR·DIMM 구조는 JEDEC 규격, channel·DPC·MT/s는 target CPU·server population guide를 함께 고정한다.",
+      },
+      {
+        kind: "project-measurement",
+        rule: "Bandwidth·latency·ECC 안정성은 같은 firmware·population·NUMA 배치에서 단위와 workload를 표시해 측정한다.",
+      },
+    ],
+  },
+  "gpu-architecture": {
+    title: "GPU architecture 정본 글이 소유하는 범위",
+    owns: [
+      "CPU launch에서 block placement·warp issue·completion으로 내려가는 hardware trace",
+      "Register·shared/L1·L2·HBM의 scope·spill·traffic hierarchy",
+      "Resource-limited residency, latency hiding과 Roofline peak/achieved 경계",
+    ],
+    reuses: [
+      {
+        label: "CUDA grid·block·thread·warp",
+        href: "/gpu/cuda-thread-hierarchy",
+      },
+      {
+        label: "Shared-memory transaction·bank",
+        href: "/gpu/cuda-shared-memory",
+      },
+      { label: "Stream·event ordering", href: "/gpu/cuda-sync-streams" },
+      {
+        label: "PCIe·NVLink·network path",
+        href: "/gpu/hw-network#interconnect",
+      },
+    ],
+    evidence: [
+      {
+        kind: "standard",
+        rule: "Warp·SM·memory semantics는 CUDA Programming Guide와 target compute capability를 함께 기록한다.",
+      },
+      {
+        kind: "project-measurement",
+        rule: "Peak 사양과 achieved FLOP/s·byte/s·kernel time을 분리하고 같은 input·precision·compiler에서 paired 비교한다.",
+      },
+    ],
+  },
   "hw-network": {
     title: "서버 네트워크 정본 글이 소유하는 범위",
     owns: [
+      "PCIe raw/payload·latency 경계와 GPU–NIC peer topology, NVLink node-local 범위",
       "Workload traffic matrix와 line rate·payload goodput 측정 경계",
       "Ethernet link compatibility·leaf-spine oversubscription·failure state",
       "RDMA memory/queue path·RoCE v2 GID·GPUDirect topology·collective bandwidth 기초",
@@ -2770,6 +2828,14 @@ export const EDITORIAL_BOUNDARIES = {
       {
         label: "Bit·byte와 단위 변환",
         href: "/ai/text-unicode-encoding#bits-bytes",
+      },
+      {
+        label: "GPU SM·memory traffic 기초",
+        href: "/gpu/gpu-architecture",
+      },
+      {
+        label: "CUDA stream·multi-GPU resource ownership",
+        href: "/gpu/cuda-sync-streams",
       },
     ],
     evidence: [
@@ -3324,16 +3390,498 @@ export const EDITORIAL_BOUNDARIES = {
       "같은 fault trace에서 security·resource·concentration을 비교하는 paired release gate",
     ],
     reuses: [
-      { label: "Process·failure·safety/liveness 전제", href: "/blockchain/distributed-systems" },
-      { label: "고정 membership의 log agreement", href: "/blockchain/smr-theory" },
-      { label: "Byzantine quorum과 partial synchrony", href: "/blockchain/bft-theory" },
-      { label: "Hash function·preimage resistance", href: "/crypto/hash-theory" },
+      {
+        label: "Process·failure·safety/liveness 전제",
+        href: "/blockchain/distributed-systems",
+      },
+      {
+        label: "고정 membership의 log agreement",
+        href: "/blockchain/smr-theory",
+      },
+      {
+        label: "Byzantine quorum과 partial synchrony",
+        href: "/blockchain/bft-theory",
+      },
+      {
+        label: "Hash function·preimage resistance",
+        href: "/crypto/hash-theory",
+      },
     ],
     evidence: [
-      { kind: "primary-source", rule: "PoW·Gasper claim은 원 논문의 network·resource·honesty·timing 전제와 분석 범위로 제한한다." },
-      { kind: "standard", rule: "현재 Ethereum constant·fork·handler는 배포 client와 stable consensus-spec version에 귀속한다." },
-      { kind: "project-measurement", rule: "Protocol 비교는 동일 binary·config·membership·workload·fault schedule에서 paired 측정한다." },
-      { kind: "project-claim", rule: "다른 chain·layer의 TPS·finality 숫자를 consensus family의 고정 성능으로 일반화하지 않는다." },
+      {
+        kind: "primary-source",
+        rule: "PoW·Gasper claim은 원 논문의 network·resource·honesty·timing 전제와 분석 범위로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "현재 Ethereum constant·fork·handler는 배포 client와 stable consensus-spec version에 귀속한다.",
+      },
+      {
+        kind: "project-measurement",
+        rule: "Protocol 비교는 동일 binary·config·membership·workload·fault schedule에서 paired 측정한다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "다른 chain·layer의 TPS·finality 숫자를 consensus family의 고정 성능으로 일반화하지 않는다.",
+      },
+    ],
+  },
+  "bft-theory": {
+    title: "Byzantine fault tolerance 이론 글이 소유하는 범위",
+    owns: [
+      "Authenticated equivocation과 signature의 출처·무결성·honesty 경계",
+      "Equal-weight 3f+1 membership·2f+1 certificate의 honest quorum intersection",
+      "Phase certificate·lock·view-change evidence를 잇는 safety 규칙",
+      "Partial synchrony GST와 pacemaker·honest leader에 따른 조건부 liveness",
+      "Membership/weight snapshot과 adversarial failure-injection release gate",
+    ],
+    reuses: [
+      {
+        label: "Process·timing·failure·safety/liveness",
+        href: "/blockchain/distributed-systems",
+      },
+      {
+        label: "Crash-majority log replication",
+        href: "/blockchain/smr-theory",
+      },
+      {
+        label: "Permissionless resource weighting·PoS attestation",
+        href: "/blockchain/consensus-mechanisms",
+      },
+      { label: "Digital signature 기초", href: "/crypto/digital-signature" },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "Threshold·safety·liveness claim은 oral/signed message·timing·membership·fault model을 함께 고정한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Certificate는 signer uniqueness·domain·phase·view·height·value digest·membership version을 검증한다.",
+      },
+      {
+        kind: "project-measurement",
+        rule: "동일 schedule에서 conflicting commit 0건과 GST 뒤 recovery를 별도 oracle로 paired 측정한다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "논문의 message complexity·latency를 임의 구현·WAN·weighted deployment의 고정 성능으로 확대하지 않는다.",
+      },
+    ],
+  },
+  "pos-theory": {
+    title: "Proof of Storage 이론 글이 소유하는 범위",
+    owns: [
+      "PoR retrievability·PoRep replica-specific encoding·PoSt time-window evidence의 claim 분리",
+      "PoR challenge·extractor와 sampling detection probability의 전제",
+      "PoRep data/replica commitment와 replica identity·parameter binding",
+      "PoSt fresh randomness·window·sector snapshot과 restart/reorg evidence ledger",
+      "Cryptographic storage proof와 retrieval·availability·privacy·placement SLO의 경계",
+    ],
+    reuses: [
+      {
+        label: "Content digest와 address integrity",
+        href: "/p2p/content-addressing",
+      },
+      {
+        label: "Hash function과 collision/preimage 경계",
+        href: "/crypto/hash-theory",
+      },
+      {
+        label: "Erasure coding과 복구 threshold",
+        href: "/crypto/erasure-coding",
+      },
+      {
+        label: "SNARK statement·witness·verification",
+        href: "/crypto/snark-theory",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "PoR·PoRep·PoSt claim은 원 논문과 표시한 공식 specification의 challenge·extractor·commitment·timing 전제에 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Sector size·window·parameter·proof variant 같은 현재 constant는 배포 network와 actor/proof version에 귀속한다.",
+      },
+      {
+        kind: "project-measurement",
+        rule: "Proof 성공과 retrieval SLO는 같은 data·replica에서 별도 receipt·failure oracle로 paired 측정한다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "Proof acceptance를 낮은 latency·상시 availability·confidentiality·geographic placement의 증명으로 확대하지 않는다.",
+      },
+    ],
+  },
+  "cometbft-types": {
+    title: "CometBFT protocol type 글이 소유하는 범위",
+    owns: [
+      "Wire evidence와 local runtime state의 구분",
+      "Header commitment와 previous execution result의 높이 연결",
+      "Canonical vote sign bytes와 voting-power Commit 검증",
+      "Validator proposer-priority scheduler와 historical set snapshot",
+      "Duplicate-vote evidence의 탐지·검증·전달 pipeline",
+    ],
+    reuses: [
+      { label: "CometBFT 전체 owner·transaction lifecycle", href: "/blockchain/cometbft" },
+      { label: "BFT quorum intersection·lock", href: "/blockchain/bft-theory" },
+      { label: "Hash·content identity", href: "/p2p/content-addressing" },
+      { label: "Consensus H/R/S transition", href: "/blockchain/cometbft-consensus" },
+      { label: "ABCI FinalizeBlock·AppHash", href: "/blockchain/cometbft-abci" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Field·encoding·validation·sign-byte claim은 CometBFT v0.40.0 tag의 data-structure specification과 source에 귀속한다." },
+      { kind: "standard", rule: "Production에서는 semver·git SHA·chain ID·height와 historical validator-set hash를 함께 고정한다." },
+      { kind: "project-measurement", rule: "Malformed field·wrong chain/round·duplicate signature·wrong set·stale evidence fixture를 valid oracle과 paired 검증한다." },
+      { kind: "project-claim", rule: "Commitment·signature acceptance를 application validity나 economic penalty 완료로 확대하지 않는다." },
+    ],
+  },
+  "cometbft-consensus": {
+    title: "CometBFT consensus state-machine 글이 소유하는 범위",
+    owns: [
+      "Height·round·step 좌표와 consensus event serialization",
+      "Proposal·prevote·precommit·nil vote의 transition semantics",
+      "PoLC·valid round·lock 갱신 규칙",
+      "Round timeout schedule과 stale-event suppression",
+      "Equivocation detection과 application penalty의 구분",
+    ],
+    reuses: [
+      { label: "BFT quorum·lock·partial synchrony", href: "/blockchain/bft-theory" },
+      { label: "Vote·Commit·ValidatorSet wire verification", href: "/blockchain/cometbft-types" },
+      { label: "ABCI proposal validation·execution", href: "/blockchain/cometbft-abci" },
+      { label: "CometBFT architecture owner map", href: "/blockchain/cometbft" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "State transition·PoLC·timeout·proof claim은 CometBFT v0.40.0 consensus specification과 pinned source에 제한한다." },
+      { kind: "standard", rule: "Safety·liveness는 validator power·authentication·partial-synchrony 전제를 함께 표시한다." },
+      { kind: "project-measurement", rule: "Equivocation·nil vote·delayed parts·stale timer·crash/WAL replay를 같은 seed와 schedule로 candidate/base에 주입한다." },
+      { kind: "project-claim", rule: "Queue arrival·timeout expiry·vote count를 commit이나 fixed latency 보장으로 읽지 않는다." },
+    ],
+  },
+  "cometbft-abci": {
+    title: "CometBFT ABCI++ integration 글이 소유하는 범위",
+    owns: [
+      "Consensus·mempool·query·snapshot logical connection과 state ordering",
+      "PrepareProposal·ProcessProposal coherence와 determinism 경계",
+      "Candidate execution과 committed application state의 격리",
+      "FinalizeBlock deterministic transition과 AppHash next-header 연결",
+      "Commit durability·height handshake·crash replay",
+    ],
+    reuses: [
+      { label: "Consensus/application top-level boundary", href: "/blockchain/cometbft" },
+      { label: "H/R/S·proposal·vote decision", href: "/blockchain/cometbft-consensus" },
+      { label: "Header·Commit·AppHash wire objects", href: "/blockchain/cometbft-types" },
+      { label: "Deterministic SMR·external effect boundary", href: "/blockchain/smr-theory" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Method field·call timing·determinism·crash recovery claim은 CometBFT v0.40.0 ABCI++ method와 application-requirement spec에 귀속한다." },
+      { kind: "standard", rule: "Transport·application binary/config·ABCI protocol·database schema·chain height를 같은 deployment snapshot으로 기록한다." },
+      { kind: "project-measurement", rule: "Multi-round candidate·Process divergence·Finalize/Commit crash·restart·state sync를 deterministic result·AppHash·height oracle로 검사한다." },
+      { kind: "project-claim", rule: "CheckTx·Prepare·Process ACCEPT·Finalize response를 durable Commit이나 external exactly-once receipt로 확대하지 않는다." },
+    ],
+  },
+  cometbft: {
+    title: "CometBFT architecture overview가 소유하는 범위",
+    owns: [
+      "CometBFT consensus engine과 deterministic ABCI++ application의 top-down owner 경계",
+      "Receive·CheckTx·proposal·commit·FinalizeBlock·app hash transaction lifecycle trace",
+      "Admission·proposal hook·authoritative finalization·persistence status의 분리",
+      "CometBFT·ABCI·application·chain·database version snapshot receipt",
+      "External effect reconciliation과 adversarial architecture release gate",
+    ],
+    reuses: [
+      { label: "Process·failure·timing model", href: "/blockchain/distributed-systems" },
+      { label: "Deterministic SMR·commit/apply·client retry", href: "/blockchain/smr-theory" },
+      { label: "Byzantine quorum·lock·view change", href: "/blockchain/bft-theory" },
+      { label: "CometBFT type·consensus·ABCI·execution·state 세부", href: "/blockchain/cometbft-types" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Package·method·field·lifecycle claim은 표시한 CometBFT release 또는 git SHA와 official ABCI/consensus specification에 귀속한다." },
+      { kind: "standard", rule: "Moving main과 latest docs를 production binary의 고정 동작으로 읽지 않고 semver·ABCI version·application version을 함께 기록한다." },
+      { kind: "project-measurement", rule: "Candidate 채택은 같은 genesis·validator set·application·transaction·network schedule의 paired fault matrix로 검증한다." },
+      { kind: "project-claim", rule: "CheckTx·P2P receive·consensus commit을 application disk commit이나 external effect exactly-once로 확대하지 않는다." },
+    ],
+  },
+  "reth-cli": {
+    title: "Reth CLI·NodeBuilder 글이 소유하는 범위",
+    owns: [
+      "CLI·config file·default precedence와 normalized config provenance",
+      "NodeBuilder typestate와 component dependency DAG",
+      "Core component와 RPC·ExEx·lifecycle hook add-on 경계",
+      "Launch state·readiness·crash cleanup supervision receipt",
+      "Node assembly adversarial release·rollback gate",
+    ],
+    reuses: [
+      { label: "Reth execution-client·block lifecycle", href: "/blockchain/reth" },
+      { label: "Chain identity·fork activation", href: "/blockchain/reth-chainspec" },
+      { label: "Provider pinned view·storage ownership", href: "/blockchain/reth-provider" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Flag·default·type·method·trait claim은 실행한 Reth 2.x semver/SHA와 official CLI/crate docs·source에 귀속한다." },
+      { kind: "standard", rule: "CLI parse success와 compile-time assembly success를 runtime readiness·chain correctness로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "같은 normalized config·chain spec·storage snapshot에서 failure matrix와 lifecycle receipt parity를 먼저 비교한다." },
+      { kind: "project-claim", rule: "Moving main·old crate layout·README 성능을 모든 release·custom node의 고정 동작으로 일반화하지 않는다." },
+    ],
+  },
+  "reth-chainspec": {
+    title: "Reth ChainSpec·genesis 글이 소유하는 범위",
+    owns: [
+      "Chain ID·genesis hash·fork schedule·protocol parameter의 chain identity bundle",
+      "Block·Timestamp·TTD·Never activation predicate와 boundary context",
+      "Genesis alloc→state root→conditional header→sealed hash derivation",
+      "Fork ID compatibility filter와 validator·EVM·payload·network consumer parity",
+      "Genesis·fork boundary release gate",
+    ],
+    reuses: [
+      { label: "Reth execution block lifecycle", href: "/blockchain/reth" },
+      { label: "Ethereum execution·consensus architecture", href: "/blockchain/ethereum-architecture" },
+      { label: "Reth peer/session compatibility path", href: "/blockchain/reth-net" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "ChainSpec field·ForkCondition·genesis builder claim은 pinned Reth 2.x crate docs/source와 EIP에 귀속한다." },
+      { kind: "standard", rule: "Fork ID를 peer honesty·block validity 증명으로, chain ID 일치를 동일 genesis·ruleset 보장으로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "Raw genesis·spec bytes가 같은 paired boundary fixture에서 derived root·hash·consumer decision parity를 검사한다." },
+      { kind: "project-claim", rule: "Current mainnet fork list·field·activation을 custom chain이나 future release의 영구 상수로 일반화하지 않는다." },
+    ],
+  },
+  "reth-net": {
+    title: "Reth discovery·RLPx·ETH network 글이 소유하는 범위",
+    owns: [
+      "Discovery candidate·pending transport·authenticated session·active peer 상태 분리",
+      "Signed record freshness·diversity와 session outcome feedback",
+      "RLPx capability intersection·ETH Status compatibility gate",
+      "Announcement·request/response·bounded channel backpressure",
+      "Reason-coded close·reputation과 adversarial network release gate",
+    ],
+    reuses: [
+      { label: "Reth execution network-input boundary", href: "/blockchain/reth" },
+      { label: "ChainSpec fork ID·genesis compatibility", href: "/blockchain/reth-chainspec" },
+      { label: "Distributed process·message·failure model", href: "/blockchain/distributed-systems" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "RLPx·ETH·Discv5 wire claim은 official devp2p specification과 pinned Reth 2.x source에 귀속한다." },
+      { kind: "standard", rule: "Address discovery·signature·TCP·encrypted channel·Status를 peer honesty나 block validity로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "같은 signed record·DNS·clock·seed·fault schedule에서 state·cleanup·message parity를 먼저 검사한다." },
+      { kind: "project-claim", rule: "특정 ETH version·queue size·peer limit·Discv5 default를 모든 release·deployment의 고정값으로 일반화하지 않는다." },
+    ],
+  },
+  reth: {
+    title: "Reth architecture overview가 소유하는 범위",
+    owns: [
+      "Execution client와 consensus client의 Engine API owner 경계",
+      "Block input→validation→EVM execution→canonicalization→storage→provider trace",
+      "Historical stage pipeline과 live Engine path의 cursor·retry·shared invariant 분리",
+      "Mutable state·immutable history·index의 storage ownership과 pinned provider view",
+      "Reth·chain spec·Engine fork·storage schema provenance와 reorg/release gate",
+    ],
+    reuses: [
+      { label: "Ethereum execution·consensus architecture", href: "/blockchain/ethereum-architecture" },
+      { label: "EVM deterministic transition", href: "/blockchain/evm" },
+      { label: "SMR commit·apply·retry boundary", href: "/blockchain/smr-theory" },
+      { label: "Reth CLI·network·pipeline·execution·storage·RPC 상세", href: "/blockchain/reth-cli" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Crate·trait·pipeline·storage claim은 표시한 Reth semver 또는 git SHA와 official docs/source에 귀속한다." },
+      { kind: "standard", rule: "Ethereum execution·Engine fork behavior는 chain spec과 protocol version을 함께 고정하며 Reth 문서를 protocol 정본 전체로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "Node 후보는 같은 chain snapshot·peer fixture·Engine sequence·chain spec의 paired correctness gate 뒤 성능을 비교한다." },
+      { kind: "project-claim", rule: "Repository marketing·moving main·특정 benchmark를 모든 network·hardware·storage profile의 고정 성능으로 일반화하지 않는다." },
+    ],
+  },
+  prysm: {
+    title: "Prysm consensus-client overview가 소유하는 범위",
+    owns: [
+      "Beacon node·validator client·execution client의 consensus·signing·Engine API owner 경계",
+      "SSZ wire object→검증→beacon state→fork-choice head·finality→duty/signature lifecycle trace",
+      "Decode·topic·fork·signature·stateless·stateful validation의 단계별 failure 분리",
+      "Post-state·head·justified/finalized checkpoint와 validator signing authority의 identity 경계",
+      "Prysm·consensus spec·network·database·execution-client version receipt와 release gate",
+    ],
+    reuses: [
+      { label: "PoS consensus와 validator 역할", href: "/blockchain/consensus-mechanisms" },
+      { label: "Byzantine quorum·safety·liveness", href: "/blockchain/bft-theory" },
+      { label: "Reth execution-client·Engine 경계", href: "/blockchain/reth" },
+      { label: "Prysm SSZ·BLS·state·fork choice·validator·Engine 세부", href: "/blockchain/prysm-ssz" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Package·object·validation·runtime claim은 표시한 Prysm release 또는 git SHA와 official Ethereum consensus-spec commit·fork에 귀속한다." },
+      { kind: "standard", rule: "Stable·unstable fork와 master·develop branch를 구분하고 future specification을 현재 production rule로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "Candidate는 같은 genesis·fork·object·peer·Engine fixture에서 state·head·finality·duty parity를 통과한 뒤 성능을 비교한다." },
+      { kind: "project-claim", rule: "Gossip accept·state transition·head selection·finality·execution validity·signature를 하나의 success로 합치거나 repository 설명을 모든 deployment의 성능·안전으로 일반화하지 않는다." },
+    ],
+  },
+  "prysm-ssz": {
+    title: "Prysm SSZ serialization·Merkle proof 글이 소유하는 범위",
+    owns: [
+      "SSZ fork schema에서 static/dynamic wire layout과 bounded canonical decode",
+      "Basic packing·composite child root·zero padding·mix-in-length를 잇는 hash-tree-root 계산",
+      "Generalized index와 single/multiproof의 helper-node 검증 경계",
+      "Type·fork·byte length·root·decode result를 잇는 SSZ receipt와 release fixture",
+    ],
+    reuses: [
+      { label: "Consensus object의 wire→state lifecycle", href: "/blockchain/prysm" },
+      { label: "BeaconState value와 incremental root cache", href: "/blockchain/prysm-beacon-state" },
+      { label: "유한체 arithmetic와 algebraic proof 기초", href: "/crypto/finite-field-theory" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "Type·encoding·Merkle proof 규칙은 고정한 consensus-spec release/commit과 fork schema에 귀속한다." },
+      { kind: "primary-source", rule: "Prysm package·generated method·cache 동작은 분석한 release/SHA의 actual source에만 귀속한다." },
+      { kind: "project-measurement", rule: "Official vector·round trip·root/proof parity·bounded malformed input을 통과한 뒤 bytes/s와 allocation을 비교한다." },
+      { kind: "project-claim", rule: "Decode·proof 성공을 signature·canonical chain·state transition validity로 확대하지 않는다." },
+    ],
+  },
+  "prysm-bls": {
+    title: "Prysm BLS authorization·aggregation 글이 소유하는 범위",
+    owns: [
+      "BLS12-381 G1 public key·G2 signature·pairing의 Ethereum group 역할",
+      "Consensus signing root와 BLS ciphersuite DST의 서로 다른 domain-separation 경계",
+      "Point validation·PoP·same/distinct-message API와 rogue-key 방어 전제",
+      "Native BLST binding·randomized batch·failure isolation·deadline release gate",
+    ],
+    reuses: [
+      { label: "SSZ object root와 schema commitment", href: "/blockchain/prysm-ssz" },
+      { label: "Validator duty·slashing signing boundary", href: "/blockchain/prysm" },
+      { label: "Prime-field modular arithmetic", href: "/crypto/finite-field-theory" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "BLS API·PoP·validation 전제는 표시한 CFRG draft revision과 Ethereum consensus-spec fork를 함께 고정한다." },
+      { kind: "primary-source", rule: "Prysm wrapper·BLST native behavior는 실제 dependency commit·compiler·CPU feature에 귀속한다." },
+      { kind: "project-measurement", rule: "Malformed point·wrong domain·rogue key·batch failure의 판정 parity 뒤 throughput·tail·fallback을 비교한다." },
+      { kind: "project-claim", rule: "Aggregate 96 bytes를 public-key/participant evidence나 protocol authorization 전체가 96 bytes라는 뜻으로 읽지 않는다." },
+    ],
+  },
+  "prysm-beacon-state": {
+    title: "Prysm BeaconState value·cache·fork 글이 소유하는 범위",
+    owns: [
+      "Fork별 BeaconState protocol snapshot과 state-root identity",
+      "Read interface·controlled setter·Copy-on-Write의 backing owner와 alias isolation",
+      "Dirty field/chunk tracking과 FieldTrie incremental-root cache invariant",
+      "Fork upgrade·reorg·restart에서 full-root parity를 먼저 보는 versioned release gate",
+    ],
+    reuses: [
+      { label: "SSZ packing·Merkleization·mix-in-length", href: "/blockchain/prysm-ssz" },
+      { label: "Post-state·fork-choice head·finality 분리", href: "/blockchain/prysm" },
+      { label: "Slot·epoch·block transition 상세", href: "/blockchain/prysm-slot-processing" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "State field·upgrade·transition은 고정한 consensus-spec release/commit·fork·network preset에 귀속한다." },
+      { kind: "primary-source", rule: "COW·FieldTrie·interface·cache claim은 표시한 Prysm release/SHA의 source에만 귀속한다." },
+      { kind: "project-measurement", rule: "Full SSZ root를 oracle로 COW branch·dirty path·fork boundary·reorg·restart parity 뒤 memory/hash/latency를 비교한다." },
+      { kind: "project-claim", rule: "Post-state 계산을 canonical head·finality로, reference count를 state 전체 thread safety로 확대하지 않는다." },
+    ],
+  },
+  libp2p: {
+    title: "libp2p connection·Swarm 아키텍처 글이 소유하는 범위",
+    owns: [
+      "Transport→security→multiplexer→Swarm으로 이어지는 connection output 조립",
+      "NetworkBehaviour의 peer-global state와 ConnectionHandler의 connection-local state 경계",
+      "Swarm command/event 왕복과 poll progress·fairness·backpressure",
+      "Stream multiplexing과 substream application protocol negotiation의 구분",
+      "한 connection의 phase별 trace·failure cleanup·release gate",
+    ],
+    reuses: [
+      {
+        label: "TLS 1.3 authenticated secure channel",
+        href: "/p2p/tls-fundamentals",
+      },
+      {
+        label: "QUIC packet·stream·migration state",
+        href: "/p2p/quic-fundamentals",
+      },
+      {
+        label: "Content-addressed byte integrity",
+        href: "/p2p/content-addressing",
+      },
+      { label: "TCP raw connection 구현", href: "/p2p/libp2p-tcp" },
+      { label: "Noise PeerId binding 구현", href: "/p2p/libp2p-noise" },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "Wire bootstrap·negotiation 주장은 libp2p connection specification의 범위로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Rust trait·variant·poll semantics는 표시한 rust-libp2p crate version과 feature에 귀속한다.",
+      },
+      {
+        kind: "project-measurement",
+        rule: "Fairness·buffer·latency 판단은 같은 binary·runtime·workload에서 queue·CPU·event delay·cleanup을 함께 측정한다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "Layer 수나 추상화만으로 고정 성능·remote 처리 완료·delivery guarantee를 일반화하지 않는다.",
+      },
+    ],
+  },
+  "libp2p-noise": {
+    title: "noise-libp2p secure-channel 글이 소유하는 범위",
+    owns: [
+      "Noise XX 세 message의 token·DH·handshake-state 변화",
+      "Noise static DH key와 libp2p identity key의 역할 분리",
+      "Identity signature·derived PeerId·expected PeerId의 binding 검증",
+      "2-byte length·bounded ciphertext·AEAD tag의 framed transport lifecycle",
+      "Malformed payload·identity mismatch·counter 수명에서 fail-closed release gate",
+    ],
+    reuses: [
+      {
+        label: "TLS 1.3 secure-channel 비교 기준",
+        href: "/p2p/tls-fundamentals",
+      },
+      { label: "libp2p 전체 connection upgrade", href: "/p2p/libp2p" },
+      { label: "TCP raw byte stream", href: "/p2p/libp2p-tcp" },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "XX profile·identity payload·cipher suite·wire frame은 noise-libp2p active specification에 귀속한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Token·SymmetricState·CipherState 일반 규칙은 Noise Framework revision 34와 libp2p profile을 구분한다.",
+      },
+      {
+        kind: "project-measurement",
+        rule: "채택 전 정상·변조·truncation·oversize·timeout trace와 key/counter lifecycle을 같은 implementation version에서 검증한다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "PeerId authentication을 application authorization·신뢰도·traffic-analysis 저항으로 확대하지 않는다.",
+      },
+    ],
+  },
+  "libp2p-tcp": {
+    title: "libp2p TCP Transport 글이 소유하는 범위",
+    owns: [
+      "TCP multiaddr parsing과 lazy nonblocking dial·listener event",
+      "TCP_NODELAY·backlog·TTL·per-dial port reuse의 option trade-off",
+      "Address·connect·accept·timeout·cancellation·close의 socket lifecycle",
+      "TCP success와 Noise·muxer·Swarm success를 나눈 upgrade trace",
+      "TCP+Noise+Yamux와 QUIC의 동일 조건 release comparison",
+    ],
+    reuses: [
+      { label: "libp2p connection upgrade pipeline", href: "/p2p/libp2p" },
+      { label: "Noise identity binding", href: "/p2p/libp2p-noise" },
+      { label: "QUIC transport state", href: "/p2p/quic-fundamentals" },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "Transport lazy future와 output semantics는 rust-libp2p current public trait에 귀속한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Socket option default와 port reuse API는 crate version·OS·runtime provider를 함께 기록한다.",
+      },
+      {
+        kind: "project-measurement",
+        rule: "Latency·throughput·NAT·backpressure 주장은 같은 network·workload에서 address·phase timing·CPU·wire bytes·memory를 측정한다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "TCP 단계 수나 NODELAY 이름으로 고정 지연·성능 배수·NAT 성공을 일반화하지 않는다.",
+      },
     ],
   },
   "tls-fundamentals": {
@@ -3531,6 +4079,84 @@ export const EDITORIAL_BOUNDARIES = {
       {
         kind: "project-measurement",
         rule: "LSTM 채택은 같은 origin·horizon·feature·refit·hardware budget에서 naive·seasonal naive·ARIMA·단순 learned baseline과 비교한 결과에만 귀속한다.",
+      },
+    ],
+  },
+  "finite-field-theory": {
+    title: "유한체 이론 글이 소유하는 범위",
+    owns: [
+      "Field operation contract와 prime-field modular inverse",
+      "Finite-field multiplicative order·generator·subgroup",
+      "Polynomial coefficient/evaluation form·root-degree bound·Schwartz–Zippel",
+      "Irreducible polynomial quotient를 이용한 extension field 구성",
+    ],
+    reuses: [],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "Schwartz–Zippel bound는 고정된 nonzero polynomial·degree·uniform independent challenge 조건과 함께 제시한다.",
+      },
+      {
+        kind: "standard",
+        rule: "실제 암호 parameter 주장은 확인한 표준의 algorithm·field·validation 범위로 제한한다.",
+      },
+    ],
+  },
+  lagrange: {
+    title: "Lagrange 보간 글이 소유하는 범위",
+    owns: [
+      "Selector basis를 이용한 polynomial interpolation 구성과 유일성",
+      "Evaluation domain의 vanishing polynomial과 divisibility equivalence",
+      "Barycentric weight precomputation과 query-point branch",
+    ],
+    reuses: [
+      {
+        label: "Prime-field inverse·polynomial root bound",
+        href: "/crypto/finite-field-theory",
+      },
+      {
+        label: "Roots-of-unity domain의 fast interpolation",
+        href: "/crypto/fft",
+      },
+    ],
+    evidence: [
+      {
+        kind: "standard",
+        rule: "Interpolation은 distinct x와 explicit degree bound를 전제로 하며 arbitrary-point와 roots-of-unity algorithm을 구분한다.",
+      },
+      {
+        kind: "primary-source",
+        rule: "Barycentric 논문의 floating-point stability 결론과 finite-field algebraic reuse 범위를 분리한다.",
+      },
+    ],
+  },
+  "crypto-fft": {
+    title: "유한체 NTT 글이 소유하는 범위",
+    owns: [
+      "Finite-field NTT matrix와 primitive-root domain·2-adicity",
+      "Radix-2 even/odd butterfly와 O(n log n) recurrence",
+      "Inverse root·n inverse를 이용한 INTT",
+      "Padding된 linear polynomial product와 implementation 검증 계약",
+    ],
+    reuses: [
+      {
+        label: "Prime-field arithmetic와 multiplicative order",
+        href: "/crypto/finite-field-theory",
+      },
+      {
+        label: "Arbitrary-point Lagrange interpolation",
+        href: "/crypto/lagrange",
+      },
+      { label: "Complex DFT·sampling·signal spectrum", href: "/ai/fft" },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "Finite-field transform과 Cooley–Tukey factorization의 전제·대수 domain을 원 논문별로 분리한다.",
+      },
+      {
+        kind: "project-measurement",
+        rule: "구현 성능은 같은 field·length·direction·batch에서 direct oracle·round trip·product correctness 뒤 kernel과 end-to-end를 함께 측정한다.",
       },
     ],
   },

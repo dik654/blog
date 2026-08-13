@@ -83,7 +83,7 @@ export function Flow({
             {step.body}
           </p>
           {index < steps.length - 1 && (
-            <span className="absolute -right-4 top-3 hidden text-xs text-muted-foreground md:block">
+            <span className="absolute right-1 top-3 hidden text-xs text-muted-foreground md:block">
               →
             </span>
           )}

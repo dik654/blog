@@ -10,8 +10,8 @@ export default function FFT() {
     <div className="space-y-12">
       <Overview />
       <DFT />
-      <Butterfly />
       <UnitRoot />
+      <Butterfly />
       <INTT />
       <ZKUsage />
     </div>

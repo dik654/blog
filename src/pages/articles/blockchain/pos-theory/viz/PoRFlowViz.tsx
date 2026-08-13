@@ -1,138 +1,19 @@
-import { motion } from "framer-motion";
-import StepViz from "@/components/ui/step-viz";
-
-const C = ["#6366f1", "#10b981", "#f59e0b"];
-const NODES = [
-  { label: "검증자", color: C[0], sub: "Verifier" },
-  { label: "챌린지 생성", color: C[0], sub: "랜덤 인덱스" },
-  { label: "저장자", color: C[1], sub: "Prover" },
-  { label: "응답 생성", color: C[1], sub: "σ = H(block)" },
-  { label: "검증", color: C[2], sub: "Accept/Reject" },
-];
-const EDGES = ["랜덤 블록 선택", "전송", "블록 읽기 + 해시", "응답 전달"];
-const STEPS = [
-  {
-    label: "검증자가 챌린지 생성",
-    body: "검증자가 파일의 랜덤 블록 인덱스 집합을 선택합니다.",
-  },
-  {
-    label: "저장자에게 챌린지 전송",
-    body: "선택된 인덱스를 저장자에게 보냅니다.",
-  },
-  {
-    label: "저장자가 블록 읽고 응답",
-    body: "저장자가 해당 블록을 읽고 인증 태그와 함께 응답합니다.",
-  },
-  {
-    label: "검증자가 응답 검증",
-    body: "검증자가 미리 저장한 메타데이터와 비교하여 응답을 검증합니다.",
-  },
-  {
-    label: "수락 또는 거부",
-    body: "모든 블록이 올바르면 수락, 하나라도 틀리면 거부합니다.",
-  },
-];
-const NW = 62,
-  NH = 34,
-  GAP = 72,
-  SY = 55;
-function nx(i: number) {
-  return 6 + i * GAP;
-}
+import { DistributedFrame, Flow } from "../../distributed-systems/viz/DistributedVizPrimitives";
 
 export default function PoRFlowViz() {
   return (
-    <StepViz steps={STEPS}>
-      {(step) => (
-        <svg
-          viewBox="0 0 500 120"
-          className="w-full max-w-2xl"
-          style={{ height: "auto" }}
-        >
-          <defs>
-            <marker
-              id="por-ah"
-              markerWidth="6"
-              markerHeight="6"
-              refX="5"
-              refY="3"
-              orient="auto"
-            >
-              <path
-                d="M0,0 L6,3 L0,6"
-                fill="var(--muted-foreground)"
-                opacity={0.5}
-              />
-            </marker>
-          </defs>
-          {EDGES.map((lbl, i) => {
-            const x1 = nx(i) + NW,
-              x2 = nx(i + 1);
-            return (
-              <motion.g
-                key={`e-${i}`}
-                animate={{ opacity: i < step ? 0.6 : 0 }}
-              >
-                <line
-                  x1={x1}
-                  y1={SY}
-                  x2={x2}
-                  y2={SY}
-                  stroke="var(--muted-foreground)"
-                  strokeWidth={1.2}
-                  markerEnd="url(#por-ah)"
-                />
-                <text
-                  x={(x1 + x2) / 2}
-                  y={SY - 8}
-                  textAnchor="middle"
-                  fontSize={9}
-                  fill="var(--muted-foreground)"
-                >
-                  {lbl}
-                </text>
-              </motion.g>
-            );
-          })}
-          {NODES.map((n, i) => {
-            const x = nx(i),
-              glow = i === step;
-            return (
-              <motion.g key={i} animate={{ opacity: i <= step ? 1 : 0.15 }}>
-                <rect
-                  x={x}
-                  y={SY - NH / 2}
-                  width={NW}
-                  height={NH}
-                  rx={6}
-                  fill={glow ? `${n.color}22` : "#ffffff08"}
-                  stroke={n.color}
-                  strokeWidth={glow ? 2 : 1}
-                />
-                <text
-                  x={x + NW / 2}
-                  y={SY - 1}
-                  textAnchor="middle"
-                  fontSize={10}
-                  fontWeight={600}
-                  fill={n.color}
-                >
-                  {n.label}
-                </text>
-                <text
-                  x={x + NW / 2}
-                  y={SY + 9}
-                  textAnchor="middle"
-                  fontSize={9}
-                  fill="var(--muted-foreground)"
-                >
-                  {n.sub}
-                </text>
-              </motion.g>
-            );
-          })}
-        </svg>
-      )}
-    </StepViz>
+    <DistributedFrame
+      eyebrow="PoR audit"
+      title="짧은 challenge를 full-file recovery 명제로 연결한다"
+      description="Verifier는 file 전체를 매번 받지 않지만, encoded blocks·authenticator·random challenge와 extractor proof가 함께 있어야 retrievability를 주장할 수 있습니다."
+      note="한 번의 PASS는 sample evidence입니다. Repeated success probability와 security theorem의 extractor 전제를 기록하지 않으면 ‘보유 확인’ 이상으로 말할 수 없습니다."
+    >
+      <Flow steps={[
+        { label: "01 encode", title: "Recovery redundancy", body: "File을 error-correcting code 등 scheme의 encoding으로 바꾸고 authenticator를 만듭니다." },
+        { label: "02 challenge", title: "Fresh sample", body: "Verifier가 예측하기 어려운 block indices·coefficients를 선택합니다." },
+        { label: "03 respond", title: "Compact proof", body: "Prover가 challenged encoded data와 authenticator에서 response를 계산합니다." },
+        { label: "04 extract", title: "반복 성공→복구", body: "Scheme의 acceptance threshold를 넘는 prover에서 extractor가 전체 file을 복구할 수 있음을 보입니다." },
+      ]} />
+    </DistributedFrame>
   );
 }

@@ -8317,7 +8317,8 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     kind: "concept",
     domain: "distributed-systems",
     label: "Permissionless Sybil-resource weighting",
-    definition: "누구나 identity를 만들 수 있는 network에서 표를 identity 수로 세지 않고 hash work나 bonded stake처럼 희소하고 검증 가능한 자원 비용에 proposal·vote influence를 연결하는 membership 규칙입니다.",
+    definition:
+      "누구나 identity를 만들 수 있는 network에서 표를 identity 수로 세지 않고 hash work나 bonded stake처럼 희소하고 검증 가능한 자원 비용에 proposal·vote influence를 연결하는 membership 규칙입니다.",
     canonicalHref: "/blockchain/consensus-mechanisms#overview",
   },
   "pow-hash-target-lottery": {
@@ -8325,7 +8326,8 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     kind: "method",
     domain: "distributed-systems",
     label: "PoW hash-target lottery",
-    definition: "Block header의 hash가 target보다 작을 때 proof를 인정하고, 균등·독립 hash 근사에서 성공 확률 T/2^b와 기대 시도 수 2^b/T를 갖는 계산 자원 기반 추첨입니다.",
+    definition:
+      "Block header의 hash가 target보다 작을 때 proof를 인정하고, 균등·독립 hash 근사에서 성공 확률 T/2^b와 기대 시도 수 2^b/T를 갖는 계산 자원 기반 추첨입니다.",
     canonicalHref: "/blockchain/consensus-mechanisms#pow",
   },
   "pow-chainwork-probabilistic-finality": {
@@ -8333,7 +8335,8 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     kind: "concept",
     domain: "distributed-systems",
     label: "PoW chainwork·probabilistic finality",
-    definition: "서로 경쟁하는 valid branch 가운데 cumulative proof-of-work가 큰 branch를 선택하고 후속 work가 쌓일수록 reorg 위험이 낮아지지만 일반적으로 0이 되지는 않는 fork-choice·confirmation 계약입니다.",
+    definition:
+      "서로 경쟁하는 valid branch 가운데 cumulative proof-of-work가 큰 branch를 선택하고 후속 work가 쌓일수록 reorg 위험이 낮아지지만 일반적으로 0이 되지는 않는 fork-choice·confirmation 계약입니다.",
     canonicalHref: "/blockchain/consensus-mechanisms#pow",
   },
   "pos-stake-weighted-selection": {
@@ -8341,7 +8344,8 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     kind: "method",
     domain: "distributed-systems",
     label: "PoS stake-weighted selection",
-    definition: "Protocol state의 eligible effective stake와 randomness를 이용해 proposer·committee·vote influence를 배분하는 선택 규칙입니다. Stake 비율은 장기 확률·weight이지 다음 slot 당첨 보장이 아닙니다.",
+    definition:
+      "Protocol state의 eligible effective stake와 randomness를 이용해 proposer·committee·vote influence를 배분하는 선택 규칙입니다. Stake 비율은 장기 확률·weight이지 다음 slot 당첨 보장이 아닙니다.",
     canonicalHref: "/blockchain/consensus-mechanisms#pos",
   },
   "pos-attestation-slashing-evidence": {
@@ -8349,7 +8353,8 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     kind: "concept",
     domain: "distributed-systems",
     label: "PoS attestation·slashing evidence",
-    definition: "Validator가 head·checkpoint 대상에 서명한 attestation을 fork choice와 finality에 사용하고, protocol이 정의한 모순 서명을 객관적 evidence로 만들어 경제적 penalty에 연결하는 accountability 계약입니다.",
+    definition:
+      "Validator가 head·checkpoint 대상에 서명한 attestation을 fork choice와 finality에 사용하고, protocol이 정의한 모순 서명을 객관적 evidence로 만들어 경제적 penalty에 연결하는 accountability 계약입니다.",
     canonicalHref: "/blockchain/consensus-mechanisms#pos",
   },
   "fork-choice-finality-separation": {
@@ -8357,7 +8362,8 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     kind: "concept",
     domain: "distributed-systems",
     label: "Fork choice·finality separation",
-    definition: "현재 관찰한 valid message로 canonical head를 갱신하는 fork-choice rule과, protocol 가정 아래 이전 history를 되돌리지 않겠다는 더 강한 finality 판단을 서로 다른 state와 evidence로 기록하는 경계입니다.",
+    definition:
+      "현재 관찰한 valid message로 canonical head를 갱신하는 fork-choice rule과, protocol 가정 아래 이전 history를 되돌리지 않겠다는 더 강한 finality 판단을 서로 다른 state와 evidence로 기록하는 경계입니다.",
     canonicalHref: "/blockchain/consensus-mechanisms#overview",
   },
   "consensus-resource-security-ledger": {
@@ -8365,7 +8371,8 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     kind: "concept",
     domain: "distributed-systems",
     label: "Consensus resource·security ledger",
-    definition: "PoW의 hash·energy·propagation과 PoS의 bonded stake·custody·client diversity처럼 protocol 영향력의 비용·집중도·failure surface를 같은 축으로 기록하는 비교 모델입니다.",
+    definition:
+      "PoW의 hash·energy·propagation과 PoS의 bonded stake·custody·client diversity처럼 protocol 영향력의 비용·집중도·failure surface를 같은 축으로 기록하는 비교 모델입니다.",
     canonicalHref: "/blockchain/consensus-mechanisms#comparison",
   },
   "permissionless-consensus-release-gate": {
@@ -8373,12 +8380,1370 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     kind: "method",
     domain: "distributed-systems",
     label: "Permissionless consensus paired release gate",
-    definition: "같은 binary·config·membership·transaction workload·fault schedule에서 conflicting finality 0건을 hard gate로 두고 reorg depth·recovery time·resource cost·participation concentration을 paired 측정하는 채택 계약입니다.",
+    definition:
+      "같은 binary·config·membership·transaction workload·fault schedule에서 conflicting finality 0건을 hard gate로 두고 reorg depth·recovery time·resource cost·participation concentration을 paired 측정하는 채택 계약입니다.",
     canonicalHref: "/blockchain/consensus-mechanisms#comparison",
+  },
+  "bft-authenticated-equivocation": {
+    id: "bft-authenticated-equivocation",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "BFT authenticated equivocation",
+    definition:
+      "Signature가 message bytes와 signer를 묶어도 signer가 recipient별 conflicting value를 보낼 수 있으며, 두 valid signature를 위반 evidence로 남길 뿐 정직함 자체를 보장하지 않는 Byzantine communication 경계입니다.",
+    canonicalHref: "/blockchain/bft-theory#byzantine-model",
+  },
+  "bft-quorum-certificate": {
+    id: "bft-quorum-certificate",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "BFT quorum certificate",
+    definition:
+      "같은 instance·phase·view·height·value digest에 대한 distinct valid signer 또는 voting weight를 모아 protocol state transition의 근거로 쓰는 typed evidence입니다.",
+    canonicalHref: "/blockchain/bft-theory#overview",
+  },
+  "bft-honest-quorum-intersection": {
+    id: "bft-honest-quorum-intersection",
+    kind: "theorem",
+    domain: "distributed-systems",
+    label: "BFT honest quorum intersection",
+    definition:
+      "Equal-weight n=3f+1, q=2f+1에서 두 quorum의 최소 교집합 f+1이 fault bound f보다 커 honest signer를 적어도 한 명 포함하게 하는 safety 산술입니다.",
+    canonicalHref: "/blockchain/bft-theory#faulty-threshold",
+  },
+  "bft-lock-certificate-safety": {
+    id: "bft-lock-certificate-safety",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "BFT lock·certificate safety",
+    definition:
+      "Honest replica가 protocol의 phase certificate에 따라 lock을 갱신하고 unsafe conflicting vote를 거절해 quorum의 honest overlap을 conflicting commit 방지로 연결하는 규칙입니다.",
+    canonicalHref: "/blockchain/bft-theory#safety-liveness",
+  },
+  "bft-view-change-evidence": {
+    id: "bft-view-change-evidence",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "BFT view-change evidence handoff",
+    definition:
+      "Timeout 뒤 높은 view로 이동할 때 quorum의 strongest safe certificate·lock evidence를 새 leader에게 넘겨 stale·conflicting proposal이 safety state를 지우지 못하게 하는 전환 계약입니다.",
+    canonicalHref: "/blockchain/bft-theory#safety-liveness",
+  },
+  "bft-partial-synchrony-progress": {
+    id: "bft-partial-synchrony-progress",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "BFT partial-synchrony progress",
+    definition:
+      "GST 전에는 halt를 허용하면서 safety를 유지하고, GST 뒤 bounded delay와 honest leader·pacemaker 조건에서 certificate와 commit이 전진하도록 하는 조건부 liveness 계약입니다.",
+    canonicalHref: "/blockchain/bft-theory#byzantine-model",
+  },
+  "bft-weight-membership-snapshot": {
+    id: "bft-weight-membership-snapshot",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "BFT weight·membership snapshot",
+    definition:
+      "Certificate가 사용한 membership·voting weight·fault bound·threshold와 epoch/version을 고정해 signer count와 stake weight, membership update와 rounding을 혼동하지 않게 하는 receipt입니다.",
+    canonicalHref: "/blockchain/bft-theory#faulty-threshold",
+  },
+  "bft-failure-injection-release-gate": {
+    id: "bft-failure-injection-release-gate",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "BFT failure-injection release gate",
+    definition:
+      "같은 binary·config·membership·seed·schedule에서 equivocation·omission·delay·partition·timeout race·restart·stale replay를 주입하고 conflicting committed digest 0건과 GST 뒤 recovery를 분리 평가하는 채택 계약입니다.",
+    canonicalHref: "/blockchain/bft-theory#safety-liveness",
+  },
+  "libp2p-connection-upgrade-pipeline": {
+    id: "libp2p-connection-upgrade-pipeline",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "libp2p connection upgrade pipeline",
+    definition:
+      "Multiaddr로 만든 transport connection에 peer-authenticated security와 stream multiplexer를 순서대로 결합해 Swarm이 소유할 (PeerId, StreamMuxer) output으로 바꾸는 연결 조립 계약입니다.",
+    canonicalHref: "/p2p/libp2p#overview",
+  },
+  "rust-libp2p-event-ownership": {
+    id: "rust-libp2p-event-ownership",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "rust-libp2p Swarm·Behaviour·Handler event ownership",
+    definition:
+      "NetworkBehaviour의 peer-global protocol state, ConnectionHandler의 connection-local substream state와 Swarm의 transport·pool 조율을 command/event 방향으로 분리하고 지속적인 poll로 진행시키는 ownership 구조입니다.",
+    canonicalHref: "/p2p/libp2p#swarm-loop",
+  },
+  "libp2p-substream-protocol-negotiation": {
+    id: "libp2p-substream-protocol-negotiation",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "libp2p substream protocol negotiation",
+    definition:
+      "Secure multiplexed connection에서 새 substream을 열고 양쪽이 지원하는 protocol ID 하나를 합의한 뒤 negotiated stream을 connection-local handler에 인계하는 절차입니다.",
+    canonicalHref: "/p2p/libp2p#handler-trait",
+  },
+  "noise-xx-handshake-state": {
+    id: "noise-xx-handshake-state",
+    kind: "method",
+    domain: "computer-science",
+    label: "Noise XX handshake state",
+    definition:
+      "서로의 static key를 미리 모르는 initiator와 responder가 →e, ←e·ee·s·es, →s·se token 순서로 DH output과 transcript를 symmetric state에 섞고 양방향 CipherState로 전환하는 authenticated key-exchange pattern입니다.",
+    canonicalHref: "/p2p/libp2p-noise#handshake-flow",
+  },
+  "libp2p-noise-identity-binding": {
+    id: "libp2p-noise-identity-binding",
+    kind: "method",
+    domain: "computer-science",
+    label: "libp2p Noise identity binding",
+    definition:
+      "Noise static DH public key에 domain-separated prefix를 붙여 libp2p identity key로 서명하고, handshake payload의 public key·signature와 expected PeerId를 함께 검증해 channel key를 peer identity에 묶는 방법입니다.",
+    canonicalHref: "/p2p/libp2p-noise#keypair-signing",
+  },
+  "noise-framed-transport-lifecycle": {
+    id: "noise-framed-transport-lifecycle",
+    kind: "concept",
+    domain: "computer-science",
+    label: "noise-libp2p framed transport lifecycle",
+    definition:
+      "2-byte big-endian length와 bounded Noise message를 handshake·transport phase에 따라 처리하고 AEAD failure·truncation·identity mismatch에서 plaintext fallback 없이 connection을 종료하는 I/O 수명 계약입니다.",
+    canonicalHref: "/p2p/libp2p-noise#finish-verify",
+  },
+  "libp2p-tcp-multiaddr-dial": {
+    id: "libp2p-tcp-multiaddr-dial",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "libp2p TCP multiaddr dial·listen",
+    definition:
+      "Layered multiaddr를 TCP가 지원하는 socket address로 해석하고 lazy nonblocking dial future 또는 listener event로 바꾸며 address·connect·accept 실패를 구분하는 transport 경계입니다.",
+    canonicalHref: "/p2p/libp2p-tcp#dial-listen",
+  },
+  "libp2p-tcp-socket-lifecycle": {
+    id: "libp2p-tcp-socket-lifecycle",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "libp2p TCP socket option·backpressure lifecycle",
+    definition:
+      "Nonblocking socket의 NODELAY·backlog·TTL·best-effort port reuse 설정을 workload trade-off로 선택하고 connect·accept·timeout·cancellation부터 close까지 buffer와 자원 소유권을 추적하는 계약입니다.",
+    canonicalHref: "/p2p/libp2p-tcp#socket-creation",
+  },
+  "algebraic-field-contract": {
+    id: "algebraic-field-contract",
+    domain: "mathematics",
+    label: "Field operation contract",
+    definition:
+      "덧셈·곱셈의 항등원과 역원, 분배법칙을 가지며 0이 아닌 모든 원소로 나눌 수 있는 대수 구조의 연산 계약입니다.",
+    canonicalHref: "/crypto/finite-field-theory#overview",
+  },
+  "prime-field-modular-arithmetic": {
+    id: "prime-field-modular-arithmetic",
+    kind: "method",
+    domain: "mathematics",
+    label: "Prime-field modular arithmetic",
+    definition:
+      "소수 p에 대해 0부터 p−1까지의 residue를 덧셈·곱셈 뒤 mod p로 환원하고, 0이 아닌 원소의 곱셈 역원으로 나눗셈을 정의하는 정확한 산술입니다.",
+    canonicalHref: "/crypto/finite-field-theory#prime-field",
+  },
+  "finite-field-multiplicative-order": {
+    id: "finite-field-multiplicative-order",
+    domain: "mathematics",
+    label: "Finite-field multiplicative order",
+    definition:
+      "0이 아닌 field 원소 a에 대해 a^d=1이 되는 가장 작은 양의 정수 d로, subgroup 크기와 primitive root 여부를 결정합니다.",
+    canonicalHref: "/crypto/finite-field-theory#prime-field",
+  },
+  "polynomial-coefficient-evaluation-form": {
+    id: "polynomial-coefficient-evaluation-form",
+    domain: "mathematics",
+    label: "Polynomial coefficient · evaluation form",
+    definition:
+      "같은 degree-bounded polynomial을 거듭제곱별 coefficient vector 또는 서로 다른 points에서의 value vector로 나타내는 두 표현입니다.",
+    canonicalHref: "/crypto/finite-field-theory#polynomial",
+  },
+  "polynomial-root-degree-bound": {
+    id: "polynomial-root-degree-bound",
+    kind: "theorem",
+    domain: "mathematics",
+    label: "Polynomial root–degree bound",
+    definition:
+      "Field 위의 0이 아닌 degree d univariate polynomial은 서로 다른 root를 최대 d개만 가진다는 정리입니다.",
+    canonicalHref: "/crypto/finite-field-theory#polynomial",
+  },
+  "schwartz-zippel-bound": {
+    id: "schwartz-zippel-bound",
+    kind: "theorem",
+    domain: "mathematics",
+    label: "Schwartz–Zippel bound",
+    definition:
+      "Total degree d의 0이 아닌 multivariate polynomial을 유한 집합 S에서 독립·균등하게 뽑은 점에 평가할 때 0이 될 확률이 최대 d/|S|라는 bound입니다.",
+    canonicalHref: "/crypto/finite-field-theory#schwartz-zippel",
+  },
+  "extension-field-quotient": {
+    id: "extension-field-quotient",
+    domain: "mathematics",
+    label: "Extension field by polynomial quotient",
+    definition:
+      "Fₚ[x]를 degree k 기약 다항식으로 나눈 residue class로 p^k개 원소의 field를 구성하고, degree k 미만 coefficient vector로 원소를 표현하는 방법입니다.",
+    canonicalHref: "/crypto/finite-field-theory#extension-field",
+  },
+  "lagrange-interpolation-basis": {
+    id: "lagrange-interpolation-basis",
+    kind: "method",
+    domain: "mathematics",
+    label: "Lagrange interpolation basis",
+    definition:
+      "서로 다른 sample point x_i에서 자기 위치는 1, 다른 위치는 0이 되는 selector polynomial l_i를 만들고 y_i l_i를 합해 interpolant를 구성하는 방법입니다.",
+    canonicalHref: "/crypto/lagrange#formula",
+  },
+  "polynomial-interpolation-uniqueness": {
+    id: "polynomial-interpolation-uniqueness",
+    kind: "theorem",
+    domain: "mathematics",
+    label: "Polynomial interpolation uniqueness",
+    definition:
+      "서로 다른 n개 x 좌표의 값을 만족하는 degree n−1 이하 polynomial은 정확히 하나라는 정리입니다.",
+    canonicalHref: "/crypto/lagrange#overview",
+  },
+  "vanishing-polynomial-domain": {
+    id: "vanishing-polynomial-domain",
+    domain: "mathematics",
+    label: "Evaluation-domain vanishing polynomial",
+    definition:
+      "유한 domain H의 각 h를 root로 갖는 Z_H(x)=∏(x−h)이며, domain 전체의 zero constraint를 divisibility로 표현합니다.",
+    canonicalHref: "/crypto/lagrange#vanishing",
+  },
+  "barycentric-interpolation": {
+    id: "barycentric-interpolation",
+    kind: "method",
+    domain: "mathematics",
+    label: "Barycentric Lagrange interpolation",
+    definition:
+      "고정 sample x 좌표의 inverse-product weight를 precompute하고 rational ratio 형태로 interpolant의 새 point value를 O(n)에 평가하는 방법입니다.",
+    canonicalHref: "/crypto/lagrange#usage",
+  },
+  "finite-field-ntt": {
+    id: "finite-field-ntt",
+    kind: "method",
+    domain: "mathematics",
+    label: "Number theoretic transform (NTT)",
+    definition:
+      "Polynomial coefficient를 finite-field primitive roots-of-unity domain의 evaluation vector로 바꾸는 invertible linear transform입니다.",
+    canonicalHref: "/crypto/fft#dft",
+  },
+  "ntt-domain-two-adicity": {
+    id: "ntt-domain-two-adicity",
+    domain: "mathematics",
+    label: "NTT domain · 2-adicity",
+    definition:
+      "Fₚ*의 subgroup order가 transform length를 지원하는 조건과, p−1을 나누는 최대 2의 거듭제곱으로 radix-2 domain 크기를 정하는 성질입니다.",
+    canonicalHref: "/crypto/fft#unit-root",
+  },
+  "ntt-butterfly": {
+    id: "ntt-butterfly",
+    kind: "method",
+    domain: "computer-science",
+    label: "Finite-field NTT butterfly",
+    definition:
+      "Even·odd sub-transform과 finite-field twiddle product를 더하고 빼서 서로 n/2 떨어진 두 NTT output을 함께 만드는 radix-2 계산 단위입니다.",
+    canonicalHref: "/crypto/fft#butterfly",
+  },
+  "inverse-ntt": {
+    id: "inverse-ntt",
+    kind: "method",
+    domain: "mathematics",
+    label: "Inverse NTT (INTT)",
+    definition:
+      "Primitive root의 inverse와 transform length의 field inverse를 사용해 roots-of-unity evaluation vector에서 원래 polynomial coefficient를 복원하는 변환입니다.",
+    canonicalHref: "/crypto/fft#intt",
+  },
+  "ntt-linear-convolution": {
+    id: "ntt-linear-convolution",
+    kind: "method",
+    domain: "computer-science",
+    label: "NTT linear polynomial product",
+    definition:
+      "결과 coefficient 길이 이상으로 zero-padding한 두 polynomial을 NTT하고 pointwise multiply한 뒤 INTT해 wrap-around 없는 linear product를 계산하는 방법입니다.",
+    canonicalHref: "/crypto/fft#zk-usage",
+  },
+  "storage-proof-claim-decomposition": {
+    id: "storage-proof-claim-decomposition",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Storage-proof claim decomposition",
+    definition:
+      "PoR의 retrievability, PoRep의 replica-specific encoding, PoSt의 시간 구간별 보관 증거와 retrieval SLA를 서로 다른 검증 주장으로 분리하는 계약입니다.",
+    canonicalHref: "/blockchain/pos-theory#overview",
+  },
+  "por-challenge-extractor": {
+    id: "por-challenge-extractor",
+    kind: "method",
+    domain: "computer-science",
+    label: "PoR challenge·extractor contract",
+    definition:
+      "Fresh challenge에 반복적으로 올바른 response를 내는 prover로부터 encoded data를 복구할 수 있어야 한다는 extractor 관점으로 단순 possession과 retrievability를 구분합니다.",
+    canonicalHref: "/blockchain/pos-theory#por",
+  },
+  "por-sampling-detection": {
+    id: "por-sampling-detection",
+    kind: "concept",
+    domain: "statistics",
+    label: "PoR sampling detection probability",
+    definition:
+      "손상 비율 rho에서 독립·균등한 k개 위치를 검사할 때 하나 이상 손상을 발견할 확률 1-(1-rho)^k와 그 independence·population 전제를 함께 기록하는 계산입니다.",
+    canonicalHref: "/blockchain/pos-theory#por",
+  },
+  "porep-replica-specific-encoding": {
+    id: "porep-replica-specific-encoding",
+    kind: "method",
+    domain: "computer-science",
+    label: "PoRep replica-specific encoding",
+    definition:
+      "같은 원본 D라도 replica identity와 공개 parameter에 따라 서로 다른 encoded replica R_i를 만들고 그 생성 관계를 증명하는 방법입니다.",
+    canonicalHref: "/blockchain/pos-theory#porep",
+  },
+  "porep-data-replica-commitment-binding": {
+    id: "porep-data-replica-commitment-binding",
+    kind: "method",
+    domain: "computer-science",
+    label: "PoRep data·replica commitment binding",
+    definition:
+      "원본 data commitment와 encoded replica commitment, replica identity, proof parameter version을 하나의 public statement에 묶어 다른 replica나 dataset의 증거를 바꿔 끼우지 못하게 하는 계약입니다.",
+    canonicalHref: "/blockchain/pos-theory#porep",
+  },
+  "post-window-fresh-challenge": {
+    id: "post-window-fresh-challenge",
+    kind: "method",
+    domain: "computer-science",
+    label: "PoSt window·fresh-challenge contract",
+    definition:
+      "검증 가능한 randomness, proving window와 sector snapshot을 함께 고정해 과거 proof replay가 아니라 해당 시간 구간의 storage evidence를 요구하는 계약입니다.",
+    canonicalHref: "/blockchain/pos-theory#post",
+  },
+  "storage-proof-evidence-ledger": {
+    id: "storage-proof-evidence-ledger",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Storage-proof evidence ledger",
+    definition:
+      "Commitment·parameter version·randomness·challenge set·deadline·submission·chain inclusion과 reorg 상태를 stable proof/job ID로 묶어 restart와 중복 제출을 조정하는 운영 기록입니다.",
+    canonicalHref: "/blockchain/pos-theory#post",
+  },
+  "storage-proof-service-boundary": {
+    id: "storage-proof-service-boundary",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Storage proof·service boundary",
+    definition:
+      "Cryptographic storage proof acceptance가 retrieval latency·online availability·confidentiality·geographic placement까지 자동으로 보장하지 않으므로 별도 probe와 SLO로 검증해야 한다는 경계입니다.",
+    canonicalHref: "/blockchain/pos-theory#overview",
+  },
+  "cometbft-consensus-application-boundary": {
+    id: "cometbft-consensus-application-boundary",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "CometBFT consensus·application boundary",
+    definition:
+      "CometBFT가 Byzantine SMR로 command order를 정하고 ABCI++ application이 그 순서를 deterministic state transition으로 실행한다는 owner·request/response 경계입니다.",
+    canonicalHref: "/blockchain/cometbft#overview",
+  },
+  "cometbft-transaction-lifecycle-trace": {
+    id: "cometbft-transaction-lifecycle-trace",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "CometBFT transaction lifecycle trace",
+    definition:
+      "Transaction ID를 receive·CheckTx·proposal height/round·block hash·commit evidence·FinalizeBlock result·app hash·persistence receipt에 연결해 단계별 성공과 실패를 구분하는 추적법입니다.",
+    canonicalHref: "/blockchain/cometbft#overview",
+  },
+  "cometbft-admission-commit-separation": {
+    id: "cometbft-admission-commit-separation",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "CometBFT admission·commit separation",
+    definition:
+      "RPC 수신과 CheckTx·mempool acceptance는 후보 admission이고, block inclusion·consensus commit·application result는 서로 뒤의 별도 evidence라는 상태 구분입니다.",
+    canonicalHref: "/blockchain/cometbft#overview",
+  },
+  "cometbft-proposal-finalization-separation": {
+    id: "cometbft-proposal-finalization-separation",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "CometBFT proposal·finalization separation",
+    definition:
+      "PrepareProposal·ProcessProposal의 후보 구성·검증과 FinalizeBlock의 authoritative deterministic transition을 다른 lifecycle phase로 유지하는 ABCI++ 계약입니다.",
+    canonicalHref: "/blockchain/cometbft#overview",
+  },
+  "cometbft-apphash-state-identity": {
+    id: "cometbft-apphash-state-identity",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "CometBFT app-hash state identity",
+    definition:
+      "합의된 block을 적용한 application state의 commitment를 height·block hash·application version과 함께 다음 height의 replicated-state identity로 보존하는 receipt입니다.",
+    canonicalHref: "/blockchain/cometbft#overview",
+  },
+  "cometbft-version-snapshot-receipt": {
+    id: "cometbft-version-snapshot-receipt",
+    kind: "concept",
+    domain: "computer-science",
+    label: "CometBFT version snapshot receipt",
+    definition:
+      "CometBFT semver·git SHA, ABCI protocol, application binary/config, chain ID·height와 database schema를 함께 고정해 moving main과 실제 deployment를 섞지 않는 provenance 기록입니다.",
+    canonicalHref: "/blockchain/cometbft#overview",
+  },
+  "cometbft-external-effect-reconciliation": {
+    id: "cometbft-external-effect-reconciliation",
+    kind: "method",
+    domain: "computer-science",
+    label: "CometBFT external-effect reconciliation",
+    definition:
+      "Replicated application state 밖의 notification·payment·remote write를 stable transaction ID, outbox·idempotency receipt와 restart reconciliation로 조정해 consensus commit을 external exactly-once로 오해하지 않는 방법입니다.",
+    canonicalHref: "/blockchain/cometbft#overview",
+  },
+  "cometbft-architecture-release-gate": {
+    id: "cometbft-architecture-release-gate",
+    kind: "method",
+    domain: "computer-science",
+    label: "CometBFT architecture release gate",
+    definition:
+      "같은 genesis·validator set·application·transaction·network schedule에서 invalid proposal·equivocation·delay·app rejection·commit crash·restart·state-sync를 주입하고 conflicting commit 0과 app-hash parity를 hard gate로 비교하는 채택 계약입니다.",
+    canonicalHref: "/blockchain/cometbft#overview",
+  },
+  "cometbft-wire-state-evidence-boundary": {
+    id: "cometbft-wire-state-evidence-boundary",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "CometBFT wire evidence·runtime state boundary",
+    definition:
+      "Block·Vote·Commit처럼 peer와 disk가 검증하는 protocol object와 RoundState·proposer priority처럼 node가 다음 동작을 고르는 local runtime state를 구분하는 type ownership입니다.",
+    canonicalHref: "/blockchain/cometbft-types#overview",
+  },
+  "cometbft-header-commitment-lag": {
+    id: "cometbft-header-commitment-lag",
+    kind: "concept",
+    domain: "computer-science",
+    label: "CometBFT header commitment·execution lag",
+    definition:
+      "Header가 current data·evidence와 previous commit·application result commitment를 canonical field order로 묶으며 current block의 FinalizeBlock AppHash는 다음 header에 연결된다는 높이 관계입니다.",
+    canonicalHref: "/blockchain/cometbft-types#block-header",
+  },
+  "cometbft-canonical-sign-bytes": {
+    id: "cometbft-canonical-sign-bytes",
+    kind: "method",
+    domain: "computer-science",
+    label: "CometBFT canonical vote sign bytes",
+    definition:
+      "Vote의 chain ID·height·round·phase·BlockID를 release가 정한 canonical representation으로 encoding해 다른 chain·round·message context에 signature를 바꿔 쓰지 못하게 하는 서명 입력입니다.",
+    canonicalHref: "/blockchain/cometbft-types#vote-commit",
+  },
+  "cometbft-voting-power-commit-certificate": {
+    id: "cometbft-voting-power-commit-certificate",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "CometBFT voting-power commit certificate",
+    definition:
+      "Historical validator snapshot에서 같은 height·round·BlockID의 유효한 precommit을 validator별 한 번만 세어 total voting power의 2/3를 초과했는지 검증하는 commit 증거입니다.",
+    canonicalHref: "/blockchain/cometbft-types#vote-commit",
+  },
+  "cometbft-validator-proposer-priority": {
+    id: "cometbft-validator-proposer-priority",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "CometBFT weighted proposer priority",
+    definition:
+      "Round마다 validator priority에 voting power를 더하고 최고 priority proposer를 선택한 뒤 total power를 차감해 장기 제안 기회를 weight에 비례시키는 deterministic scheduling state입니다.",
+    canonicalHref: "/blockchain/cometbft-types#validator-set",
+  },
+  "cometbft-evidence-accountability-pipeline": {
+    id: "cometbft-evidence-accountability-pipeline",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "CometBFT evidence accountability pipeline",
+    definition:
+      "Conflicting signed object 탐지, historical membership·signature·age 검증, gossip·block inclusion과 ABCI misbehavior 전달을 이어 detection과 application penalty를 분리하는 경로입니다.",
+    canonicalHref: "/blockchain/cometbft-types#validator-set",
+  },
+  "cometbft-height-round-step-state": {
+    id: "cometbft-height-round-step-state",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "CometBFT height·round·step state",
+    definition:
+      "결정할 block 위치 height, 같은 height의 재시도 round, Propose·Prevote·Precommit·Commit evidence phase인 step으로 consensus event와 transition을 좌표화한 상태입니다.",
+    canonicalHref: "/blockchain/cometbft-consensus#overview",
+  },
+  "cometbft-event-queue-serialization": {
+    id: "cometbft-event-queue-serialization",
+    kind: "method",
+    domain: "computer-science",
+    label: "CometBFT consensus event serialization",
+    definition:
+      "Peer·internal·timer producer의 message를 검증된 envelope로 queue에 넣고 단일 consensus state owner가 H/R/S 순서로 적용해 race와 state regression을 막는 실행 경로입니다.",
+    canonicalHref: "/blockchain/cometbft-consensus#receive-routine",
+  },
+  "cometbft-proposal-prevote-precommit": {
+    id: "cometbft-proposal-prevote-precommit",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "CometBFT proposal·prevote·precommit transition",
+    definition:
+      "Proposal validity와 current lock에 따라 block 또는 nil을 prevote하고 +2/3 prevote evidence에서 lock·precommit을 만들며 +2/3 block precommit에서 commit하는 round transition입니다.",
+    canonicalHref: "/blockchain/cometbft-consensus#round-state",
+  },
+  "cometbft-pol-lock-transition": {
+    id: "cometbft-pol-lock-transition",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "CometBFT PoLC·lock transition",
+    definition:
+      "Validator가 더 높은 round의 proof-of-lock-change evidence를 확인할 때만 earlier lock을 호환되는 proposal로 갱신해 round change 중 conflicting commit을 막는 규칙입니다.",
+    canonicalHref: "/blockchain/cometbft-consensus#round-state",
+  },
+  "cometbft-round-timeout-stale-event": {
+    id: "cometbft-round-timeout-stale-event",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "CometBFT round timeout·stale-event guard",
+    definition:
+      "Step별 waiting budget을 round와 함께 늘리고 timeout event의 height·round·step을 current state와 재검사해 늦게 도착한 timer가 consensus state를 되돌리지 못하게 하는 liveness 제어입니다.",
+    canonicalHref: "/blockchain/cometbft-consensus#timeout",
+  },
+  "cometbft-equivocation-evidence-separation": {
+    id: "cometbft-equivocation-evidence-separation",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "CometBFT equivocation detection·penalty separation",
+    definition:
+      "같은 validator·height·round·type의 conflicting signed BlockID를 탐지하는 consensus evidence와 그 증거에 경제적 처벌을 적용하는 application policy를 별도 단계로 유지하는 경계입니다.",
+    canonicalHref: "/blockchain/cometbft-consensus#byzantine",
+  },
+  "cometbft-abci-connection-state-separation": {
+    id: "cometbft-abci-connection-state-separation",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "ABCI logical connection·state separation",
+    definition:
+      "Consensus candidate/execute state, mempool CheckTx view, committed query view와 snapshot restore state를 logical connection별 ordering·authority로 구분하는 application integration 계약입니다.",
+    canonicalHref: "/blockchain/cometbft-abci#abci-client",
+  },
+  "cometbft-prepare-process-coherence": {
+    id: "cometbft-prepare-process-coherence",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "ABCI Prepare·Process proposal coherence",
+    definition:
+      "PrepareProposal이 byte limit 안에서 만든 correct candidate를 correct node의 deterministic ProcessProposal이 같은 committed input에서 일관되게 ACCEPT하도록 맞추는 progress 계약입니다.",
+    canonicalHref: "/blockchain/cometbft-abci#prepare-process",
+  },
+  "cometbft-candidate-committed-state": {
+    id: "cometbft-candidate-committed-state",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "ABCI candidate·committed state separation",
+    definition:
+      "한 height의 여러 proposal을 미리 실행한 candidate state와 consensus가 결정해 FinalizeBlock·Commit으로 승격한 authoritative application state를 block identity별로 격리하는 규칙입니다.",
+    canonicalHref: "/blockchain/cometbft-abci#prepare-process",
+  },
+  "cometbft-finalize-determinism": {
+    id: "cometbft-finalize-determinism",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "ABCI FinalizeBlock determinism",
+    definition:
+      "같은 previous committed state와 decided block·protocol context에서 transaction results·updates·application state commitment가 모든 correct node에서 같도록 node-local nondeterminism을 배제하는 전이 계약입니다.",
+    canonicalHref: "/blockchain/cometbft-abci#finalize-commit",
+  },
+  "cometbft-apphash-next-header-lag": {
+    id: "cometbft-apphash-next-header-lag",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "ABCI AppHash·next-header lag",
+    definition:
+      "Height h의 FinalizeBlock이 반환한 application state commitment가 다음 block header의 AppHash에 포함되므로 decided block·application height·header field를 off-by-one 없이 연결하는 규칙입니다.",
+    canonicalHref: "/blockchain/cometbft-abci#finalize-commit",
+  },
+  "cometbft-commit-crash-replay": {
+    id: "cometbft-commit-crash-replay",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "ABCI Commit crash replay",
+    definition:
+      "Persisted block·CometBFT response/state·application committed height를 handshake에서 비교하고 crash 지점에 따라 FinalizeBlock·Commit을 deterministic·idempotent하게 replay하는 복구 절차입니다.",
+    canonicalHref: "/blockchain/cometbft-abci#finalize-commit",
+  },
+  "reth-execution-client-boundary": {
+    id: "reth-execution-client-boundary",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Reth execution·consensus-client boundary",
+    definition:
+      "Reth가 execution payload 검증·EVM transition·state commitment·Engine/JSON-RPC를 소유하고 consensus client가 fork choice·finality·validator duty를 소유한다는 Engine API 경계입니다.",
+    canonicalHref: "/blockchain/reth#overview",
+  },
+  "reth-block-lifecycle-trace": {
+    id: "reth-block-lifecycle-trace",
+    kind: "method",
+    domain: "computer-science",
+    label: "Reth block lifecycle trace",
+    definition:
+      "Block hash를 input source·parent·protocol validation·chain spec·execution output·roots·canonical status·storage checkpoint·provider view에 연결해 단계별 failure를 추적하는 방법입니다.",
+    canonicalHref: "/blockchain/reth#overview",
+  },
+  "reth-historical-live-path-separation": {
+    id: "reth-historical-live-path-separation",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Reth historical-sync·live-engine path separation",
+    definition:
+      "긴 과거 range를 stage checkpoint·unwind로 처리하는 historical path와 head 근처 payload·forkchoice update를 처리하는 live path가 동일 EVM·storage invariant에 합류하도록 cursor와 retry를 분리하는 계약입니다.",
+    canonicalHref: "/blockchain/reth#overview",
+  },
+  "reth-provider-consistent-view": {
+    id: "reth-provider-consistent-view",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Reth provider consistent view",
+    definition:
+      "Mutable state·immutable history·index를 같은 canonical block hash·state root·storage generation에 고정해 RPC·ExEx consumer가 reorg·migration 중 mixed snapshot을 읽지 않게 하는 조회 계약입니다.",
+    canonicalHref: "/blockchain/reth#overview",
+  },
+  "reth-storage-tier-ownership": {
+    id: "reth-storage-tier-ownership",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Reth storage-tier ownership",
+    definition:
+      "최신 mutable state, immutable historical segment, trie·receipt·header index와 pruning profile을 data lifetime·writer·reader·migration·rollback 책임으로 나누는 저장 구조입니다.",
+    canonicalHref: "/blockchain/reth#overview",
+  },
+  "reth-version-snapshot-receipt": {
+    id: "reth-version-snapshot-receipt",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Reth version snapshot receipt",
+    definition:
+      "Reth semver·git SHA, chain spec digest, execution/Engine fork version, storage format·schema, pruning profile와 OS·hardware를 함께 고정해 moving docs와 deployment를 섞지 않는 provenance입니다.",
+    canonicalHref: "/blockchain/reth#overview",
+  },
+  "reth-reorg-unwind-reconciliation": {
+    id: "reth-reorg-unwind-reconciliation",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "Reth reorg·unwind reconciliation",
+    definition:
+      "Canonical head 변경이나 invalid suffix 발견 시 common ancestor·unwind point를 고정하고 derived state·indexes·provider views를 되돌린 뒤 새 branch를 재실행해 crash 중간 상태를 조정하는 방법입니다.",
+    canonicalHref: "/blockchain/reth#overview",
+  },
+  "reth-node-release-gate": {
+    id: "reth-node-release-gate",
+    kind: "method",
+    domain: "computer-science",
+    label: "Reth node release gate",
+    definition:
+      "같은 chain snapshot·peer fixture·Engine sequence·chain spec에서 invalid input·reorg·checkpoint crash·migration·restart·concurrent query를 주입하고 canonical hash·state root·receipt·provider parity를 hard gate로 비교하는 채택 계약입니다.",
+    canonicalHref: "/blockchain/reth#overview",
+  },
+  "prysm-consensus-client-boundary": {
+    id: "prysm-consensus-client-boundary",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Prysm consensus-client ownership boundary",
+    definition:
+      "Prysm beacon node가 consensus object·beacon state·fork choice·finality를, validator client가 duty·signing protection을, execution client가 Engine API 너머 EVM payload validity를 소유하는 책임 경계입니다.",
+    canonicalHref: "/blockchain/prysm#overview",
+  },
+  "prysm-consensus-object-lifecycle": {
+    id: "prysm-consensus-object-lifecycle",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "Prysm consensus-object lifecycle trace",
+    definition:
+      "Beacon block·attestation의 source·topic·fork·SSZ·signature·state validation부터 post-state, head·finality와 validator duty receipt까지 object root 하나로 잇는 추적 방법입니다.",
+    canonicalHref: "/blockchain/prysm#overview",
+  },
+  "prysm-wire-validation-layers": {
+    id: "prysm-wire-validation-layers",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Prysm wire-validation layers",
+    definition:
+      "Bounded SSZ decode, gossip topic·fork digest, signature와 stateless rule, parent beacon state가 필요한 stateful rule을 서로 다른 failure stage로 유지하는 검증 경계입니다.",
+    canonicalHref: "/blockchain/prysm#overview",
+  },
+  "prysm-state-head-finality-separation": {
+    id: "prysm-state-head-finality-separation",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Prysm state·head·finality separation",
+    definition:
+      "특정 parent에 transition을 적용한 post-state, fork choice가 고른 현재 head, justified·finalized checkpoint를 서로 다른 identity와 evidence strength로 다루는 계약입니다.",
+    canonicalHref: "/blockchain/prysm#overview",
+  },
+  "prysm-validator-duty-signing-boundary": {
+    id: "prysm-validator-duty-signing-boundary",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "Prysm validator duty·signing boundary",
+    definition:
+      "Validator index·slot/epoch·fork domain·signing root·slashing history를 확인하고 stable duty ID와 signed-root receipt로 local 또는 remote signer의 권한과 retry를 제한하는 서명 계약입니다.",
+    canonicalHref: "/blockchain/prysm#overview",
+  },
+  "prysm-engine-execution-handoff": {
+    id: "prysm-engine-execution-handoff",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Prysm Engine execution handoff",
+    definition:
+      "Consensus block root와 execution payload를 execution client에 넘기고 VALID·INVALID·SYNCING 및 latest-valid-hash를 consensus processing과 조정하는 Engine API 경계입니다.",
+    canonicalHref: "/blockchain/prysm#overview",
+  },
+  "prysm-spec-code-version-receipt": {
+    id: "prysm-spec-code-version-receipt",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Prysm spec·code version receipt",
+    definition:
+      "Prysm release·SHA, consensus-spec commit·fork, network/genesis, feature flags, validator/slashing DB schema와 execution-client version을 한 run provenance로 고정하는 방법입니다.",
+    canonicalHref: "/blockchain/prysm#overview",
+  },
+  "prysm-release-gate": {
+    id: "prysm-release-gate",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "Prysm consensus release gate",
+    definition:
+      "동일 genesis·fork·object·peer·Engine fixture에서 malformed SSZ, bad signature, invalid transition, equivocation, reorg, restart와 signer timeout을 주입하고 state·head·finality·duty parity를 먼저 검사하는 채택 계약입니다.",
+    canonicalHref: "/blockchain/prysm#overview",
+  },
+  "ssz-schema-type-contract": {
+    id: "ssz-schema-type-contract",
+    kind: "concept",
+    domain: "computer-science",
+    label: "SSZ schema·type contract",
+    definition: "Field order·static/dynamic shape·collection limit을 미리 정해 같은 typed value의 wire encoding과 hash-tree-root 위치를 결정하는 Ethereum consensus serialization 계약입니다.",
+    canonicalHref: "/blockchain/prysm-ssz#overview",
+  },
+  "ssz-static-dynamic-offset-layout": {
+    id: "ssz-static-dynamic-offset-layout",
+    kind: "method",
+    domain: "computer-science",
+    label: "SSZ static·dynamic offset layout",
+    definition: "Container의 fixed part에는 고정 field 값과 dynamic field의 4-byte 시작 offset을 두고 variable part에는 dynamic value를 field 순서대로 배치하는 encoding 방법입니다.",
+    canonicalHref: "/blockchain/prysm-ssz#encode-decode",
+  },
+  "ssz-canonical-bounded-decoding": {
+    id: "ssz-canonical-bounded-decoding",
+    kind: "method",
+    domain: "computer-science",
+    label: "SSZ canonical bounded decoding",
+    definition: "Schema limit·fixed-part 경계·monotonic offset·element alignment·canonical scalar/bit 표현을 allocation 전에 검사해 한 byte input을 하나의 typed value로만 해석하는 decode 경계입니다.",
+    canonicalHref: "/blockchain/prysm-ssz#encode-decode",
+  },
+  "ssz-chunk-packing": {
+    id: "ssz-chunk-packing",
+    kind: "method",
+    domain: "computer-science",
+    label: "SSZ 32-byte chunk packing",
+    definition: "Basic values를 element width와 little-endian 순서에 따라 연속된 32-byte Merkle leaf로 pack하고 composite values는 child root 하나를 leaf로 사용하는 규칙입니다.",
+    canonicalHref: "/blockchain/prysm-ssz#merkleize",
+  },
+  "ssz-merkleization": {
+    id: "ssz-merkleization",
+    kind: "method",
+    domain: "computer-science",
+    label: "SSZ Merkleization",
+    definition: "Type limit이 정한 binary-tree depth까지 chunk를 zero hash로 채우고 left/right 순서를 보존한 SHA-256 parent를 계산해 typed value를 32-byte root로 commitment하는 방법입니다.",
+    canonicalHref: "/blockchain/prysm-ssz#merkleize",
+  },
+  "ssz-length-mixing": {
+    id: "ssz-length-mixing",
+    kind: "method",
+    domain: "computer-science",
+    label: "SSZ mix-in-length",
+    definition: "List·bitlist의 data subtree root와 실제 element/bit count의 32-byte little-endian chunk를 다시 hash해 같은 padded data와 다른 실제 길이를 구분하는 규칙입니다.",
+    canonicalHref: "/blockchain/prysm-ssz#merkleize",
+  },
+  "ssz-generalized-index": {
+    id: "ssz-generalized-index",
+    kind: "concept",
+    domain: "computer-science",
+    label: "SSZ generalized index",
+    definition: "Root=1, left=2i, right=2i+1로 binary Merkle tree node 위치를 번호 매겨 binary representation에 root-to-node path를 담는 주소 체계입니다.",
+    canonicalHref: "/blockchain/prysm-ssz#multiproof",
+  },
+  "ssz-merkle-multiproof": {
+    id: "ssz-merkle-multiproof",
+    kind: "method",
+    domain: "computer-science",
+    label: "SSZ Merkle multiproof",
+    definition: "여러 target generalized index의 ancestor path를 합치고 다른 target에서 계산 가능한 sibling을 제거해 하나의 신뢰 root에 대한 여러 field 포함을 함께 검증하는 방법입니다.",
+    canonicalHref: "/blockchain/prysm-ssz#multiproof",
+  },
+  "bls12-381-group-role": {
+    id: "bls12-381-group-role",
+    kind: "concept",
+    domain: "mathematics",
+    label: "BLS12-381 group roles",
+    definition: "Secret scalar가 G1 public-key point와 G2 message/signature point를 만들고 pairing이 두 scalar 관계를 GT에서 비교하게 하는 Ethereum BLS의 group 배치입니다.",
+    canonicalHref: "/blockchain/prysm-bls#overview",
+  },
+  "bls-point-serialization-validation": {
+    id: "bls-point-serialization-validation",
+    kind: "method",
+    domain: "computer-science",
+    label: "BLS point serialization validation",
+    definition: "48-byte public key와 96-byte signature를 native point로 사용하기 전에 canonical field encoding·curve·prime-order subgroup·non-identity 조건을 확인하는 입력 검증입니다.",
+    canonicalHref: "/blockchain/prysm-bls#blst-binding",
+  },
+  "bls-signing-root-domain-separation": {
+    id: "bls-signing-root-domain-separation",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "BLS signing-root domain separation",
+    definition: "SSZ object root에 duty domain type·fork version·genesis validators root를 묶고 BLS DST와 구분해 chain·fork·서명 목적 사이 replay를 막는 Ethereum 서명 문맥입니다.",
+    canonicalHref: "/blockchain/prysm-bls#sign-verify",
+  },
+  "bls-pairing-verification": {
+    id: "bls-pairing-verification",
+    kind: "method",
+    domain: "mathematics",
+    label: "BLS pairing verification",
+    definition: "e(G1,σ)=e(PK,H(m))의 bilinear 관계로 secret scalar를 공개하지 않고 public key·message point·signature가 같은 scalar에서 왔는지 확인하는 방법입니다.",
+    canonicalHref: "/blockchain/prysm-bls#sign-verify",
+  },
+  "bls-signature-aggregation": {
+    id: "bls-signature-aggregation",
+    kind: "method",
+    domain: "mathematics",
+    label: "BLS signature aggregation",
+    definition: "여러 G2 signature point를 더해 하나의 96-byte aggregate point로 표현하면서 검증에는 정확한 public-key·message 집합을 별도로 보존하는 방법입니다.",
+    canonicalHref: "/blockchain/prysm-bls#sign-verify",
+  },
+  "bls-proof-of-possession-rogue-key": {
+    id: "bls-proof-of-possession-rogue-key",
+    kind: "concept",
+    domain: "computer-science",
+    label: "BLS Proof-of-Possession·rogue-key boundary",
+    definition: "Public-key aggregation 전에 각 key에 대응하는 secret을 소유함을 별도 proof로 확인해 다른 key의 합을 상쇄하는 rogue-key 공격을 막는 등록 전제입니다.",
+    canonicalHref: "/blockchain/prysm-bls#sign-verify",
+  },
+  "bls-api-message-cardinality": {
+    id: "bls-api-message-cardinality",
+    kind: "concept",
+    domain: "computer-science",
+    label: "BLS verification API message cardinality",
+    definition: "단일 Verify, 동일 message의 FastAggregateVerify, 서로 다른 message tuple의 AggregateVerify를 message equality와 PoP 전제에 따라 구분하는 API 계약입니다.",
+    canonicalHref: "/blockchain/prysm-bls#sign-verify",
+  },
+  "bls-batch-verification-release-gate": {
+    id: "bls-batch-verification-release-gate",
+    kind: "method",
+    domain: "computer-science",
+    label: "BLS batch-verification release gate",
+    definition: "Randomized batch equation의 accept/reject parity·malformed input·failure isolation·deadline을 hard gate로 확인한 뒤 throughput·tail latency·fallback cost를 비교하는 채택 절차입니다.",
+    canonicalHref: "/blockchain/prysm-bls#batch-verification",
+  },
+  "beacon-state-protocol-snapshot": {
+    id: "beacon-state-protocol-snapshot",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "BeaconState protocol snapshot",
+    definition: "Validator registry·balance·history·checkpoint·execution linkage 등 다음 slot·epoch·block transition에 필요한 consensus 값을 fork별 SSZ container에 모은 protocol state입니다.",
+    canonicalHref: "/blockchain/prysm-beacon-state#overview",
+  },
+  "beacon-state-fork-schema": {
+    id: "beacon-state-fork-schema",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "BeaconState fork-specific schema",
+    definition: "Network fork activation에 따라 field·nested type·initialization과 transition rule을 versioning하고 state root를 해당 fork schema에서만 해석하는 계약입니다.",
+    canonicalHref: "/blockchain/prysm-beacon-state#state-fork",
+  },
+  "prysm-state-interface-contract": {
+    id: "prysm-state-interface-contract",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Prysm state-interface contract",
+    definition: "Fork별 BeaconState concrete type을 공통 read view와 controlled setter로 노출하면서 unsupported field·mutation·version mismatch를 명시적 error로 유지하는 구현 경계입니다.",
+    canonicalHref: "/blockchain/prysm-beacon-state#state-interface",
+  },
+  "prysm-state-copy-on-write": {
+    id: "prysm-state-copy-on-write",
+    kind: "method",
+    domain: "computer-science",
+    label: "Prysm BeaconState Copy-on-Write",
+    definition: "Candidate state들이 backing field를 참조해 clone 비용을 늦추고 shared field의 첫 mutation 직전에 고유 copy를 만들어 branch 간 값 격리를 보존하는 방법입니다.",
+    canonicalHref: "/blockchain/prysm-beacon-state#state-interface",
+  },
+  "prysm-state-aliasing-isolation": {
+    id: "prysm-state-aliasing-isolation",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Prysm state aliasing isolation",
+    definition: "Getter·setter·reference lifetime과 concurrency를 통제해 한 candidate state의 nested slice mutation이 다른 state view나 dirty/root cache에 보이지 않게 하는 invariant입니다.",
+    canonicalHref: "/blockchain/prysm-beacon-state#state-interface",
+  },
+  "prysm-state-dirty-field-tracking": {
+    id: "prysm-state-dirty-field-tracking",
+    kind: "method",
+    domain: "computer-science",
+    label: "Prysm dirty-field·index tracking",
+    definition: "State setter가 변경한 field와 element가 속한 packed chunk index를 기록해 root recomputation 범위를 정하되 append·length·whole-field replacement를 구분하는 방법입니다.",
+    canonicalHref: "/blockchain/prysm-beacon-state#field-trie",
+  },
+  "prysm-field-trie-incremental-root": {
+    id: "prysm-field-trie-incremental-root",
+    kind: "method",
+    domain: "computer-science",
+    label: "Prysm FieldTrie incremental root",
+    definition: "같은 fork·schema·generation의 cached sibling subtree를 재사용하고 dirty leaf에서 field/state root까지 ancestor만 갱신해 full SSZ root와 같은 결과를 내는 최적화입니다.",
+    canonicalHref: "/blockchain/prysm-beacon-state#field-trie",
+  },
+  "prysm-state-version-release-gate": {
+    id: "prysm-state-version-release-gate",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "Prysm state version·release gate",
+    definition: "Prysm·consensus-spec·fork schedule·SSZ generator·DB/cache schema를 고정하고 fork transition·COW·dirty cache·reorg·restart의 state bytes/root parity를 성능보다 먼저 검사하는 채택 계약입니다.",
+    canonicalHref: "/blockchain/prysm-beacon-state#state-fork",
+  },
+  "gpu-host-device-execution-trace": {
+    id: "gpu-host-device-execution-trace",
+    domain: "computer-science",
+    label: "GPU host-to-device execution trace",
+    definition:
+      "CPU runtime의 buffer·kernel launch가 logical grid를 만들고, block placement·warp issue·memory access를 거쳐 결과와 completion이 돌아오는 software–hardware 실행 경로입니다.",
+    canonicalHref: "/gpu/gpu-architecture#host-device-execution-trace",
+  },
+  "gpu-memory-traffic-hierarchy": {
+    id: "gpu-memory-traffic-hierarchy",
+    domain: "computer-science",
+    label: "GPU memory traffic hierarchy",
+    definition:
+      "Thread register, block-shared memory, SM-local L1, chip-wide L2와 device HBM/GDDR을 scope·capacity·traffic 비용으로 나누고 miss·spill이 다음 계층 byte 이동을 만드는 경로입니다.",
+    canonicalHref: "/gpu/gpu-architecture#gpu-memory-traffic-hierarchy",
+  },
+  "gpu-latency-hiding-occupancy": {
+    id: "gpu-latency-hiding-occupancy",
+    kind: "method",
+    domain: "computer-science",
+    label: "GPU latency hiding · occupancy resource bound",
+    definition:
+      "Stalled warp 대신 resident ready warp를 issue할 기회를 만들되 thread·register·shared-memory·block 한도의 최소값으로 residency를 계산하고 실제 stall 감소와 구분하는 방법입니다.",
+    canonicalHref: "/gpu/gpu-architecture#gpu-latency-hiding-occupancy",
+  },
+  "gpu-roofline-peak-achieved": {
+    id: "gpu-roofline-peak-achieved",
+    kind: "method",
+    domain: "computer-science",
+    label: "GPU Roofline · peak/achieved boundary",
+    definition:
+      "FLOP/byte인 arithmetic intensity와 peak compute·memory bandwidth로 이상적 performance roof를 계산하되 profiler의 elapsed time·traffic으로 얻은 achieved value와 분리하는 병목 분석입니다.",
+    canonicalHref: "/gpu/gpu-architecture#gpu-peak-achieved-boundary",
+  },
+  "memory-workload-capacity-path": {
+    id: "memory-workload-capacity-path",
+    domain: "computer-science",
+    label: "Memory workload · capacity path",
+    definition:
+      "Peak working set, OS·cache·동시 작업과 성장 여유를 physical capacity와 비교하고 page fault·NUMA locality까지 같은 workload phase에서 검증하는 memory sizing 경로입니다.",
+    canonicalHref: "/gpu/hw-memory#memory-workload-capacity-path",
+  },
+  "ddr-channel-bandwidth-latency": {
+    id: "ddr-channel-bandwidth-latency",
+    kind: "metric",
+    domain: "computer-science",
+    label: "DDR channel bandwidth · latency units",
+    definition:
+      "실제 MT/s·channel data width·활성 channel로 byte/s 상한을 계산하고 CL cycle은 clock period와 곱해 ns로 환산해 bandwidth와 latency를 구분하는 측정 경계입니다.",
+    canonicalHref: "/gpu/hw-memory#ddr-channel-bandwidth-latency",
+  },
+  "ddr5-subchannel-burst": {
+    id: "ddr5-subchannel-burst",
+    domain: "computer-science",
+    label: "DDR5 independent subchannels · burst",
+    definition:
+      "일반 DDR5 DIMM의 module data path를 독립 command를 받는 두 32-bit subchannel과 더 긴 burst로 구성해 bank 이용 기회를 높이는 구조이며 총 module payload width 증가와는 구분합니다.",
+    canonicalHref: "/gpu/hw-memory#ddr5-subchannel-burst",
+  },
+  "ecc-protection-boundary": {
+    id: "ecc-protection-boundary",
+    domain: "computer-science",
+    label: "On-die ECC · system ECC protection boundary",
+    definition:
+      "DRAM die 내부 cell read를 교정하는 on-die ECC와 DIMM·bus transfer codeword를 보호하는 system ECC, machine·service recovery를 서로 다른 failure boundary로 분리하는 계약입니다.",
+    canonicalHref: "/gpu/hw-memory#ecc-protection-boundary",
+  },
+  "ecc-syndrome-secded": {
+    id: "ecc-syndrome-secded",
+    kind: "theorem",
+    domain: "computer-science",
+    label: "Hamming syndrome · SECDED bound",
+    definition:
+      "r check bit의 syndrome 2ʳ개가 정상과 m+r개 단일 오류 위치를 구분해야 한다는 2ʳ≥m+r+1 bound와 전체 parity를 더한 single-error-correct/double-error-detect 경계입니다.",
+    canonicalHref: "/gpu/hw-memory#ecc-syndrome-secded",
+  },
+  "dimm-electrical-load": {
+    id: "dimm-electrical-load",
+    domain: "computer-science",
+    label: "DIMM electrical load · registered path",
+    definition:
+      "UDIMM direct load, RDIMM의 RCD command/address re-drive, 3DS die stack과 MRDIMM data multiplexing을 memory controller가 지원해야 할 electrical·data-path 계약으로 읽는 개념입니다.",
+    canonicalHref: "/gpu/hw-memory#dimm-electrical-load",
+  },
+  "memory-population-compatibility": {
+    id: "memory-population-compatibility",
+    kind: "method",
+    domain: "computer-science",
+    label: "Server memory population compatibility chain",
+    definition:
+      "CPU generation·DIMM type·board slot order·capacity·rank·density·DPC·trained MT/s·firmware가 함께 맞는지 QVL과 실제 boot·stress·NUMA test로 닫는 호환성 절차입니다.",
+    canonicalHref: "/gpu/hw-memory#memory-population-compatibility",
+  },
+  "pcie-transaction-bandwidth-latency": {
+    id: "pcie-transaction-bandwidth-latency",
+    kind: "metric",
+    domain: "computer-science",
+    label: "PCIe transaction bandwidth · latency boundary",
+    definition:
+      "Lane GT/s·negotiated width·encoding efficiency로 한 방향 raw byte/s 상한을 계산하고 TLP overhead·DMA setup·switch contention이 포함된 payload goodput과 small-transfer latency를 분리하는 경계입니다.",
+    canonicalHref: "/gpu/hw-network#pcie-transaction-bandwidth-latency",
+  },
+  "pcie-topology-peer-path": {
+    id: "pcie-topology-peer-path",
+    domain: "computer-science",
+    label: "PCIe topology · peer path",
+    definition:
+      "GPU·NIC pair가 공유하는 switch·root complex·NUMA socket과 ACS/IOMMU policy를 기록해 direct P2P 또는 host/inter-socket 우회 경로와 capability를 판정하는 topology 계약입니다.",
+    canonicalHref: "/gpu/hw-network#pcie-topology-peer-path",
+  },
+  "nvlink-device-fabric-boundary": {
+    id: "nvlink-device-fabric-boundary",
+    domain: "computer-science",
+    label: "NVLink device-fabric boundary",
+    definition:
+      "지원 GPU pair의 NVLink lane·NVSwitch path와 peer-access를 node-local device interconnect로 한정하고, node 밖 GPU–HCA PCIe·GPUDirect·network path와 분리하는 경계입니다.",
+    canonicalHref: "/gpu/hw-network#nvlink-device-fabric-boundary",
+  },
+  "reth-config-precedence-provenance": {
+    id: "reth-config-precedence-provenance",
+    kind: "method",
+    domain: "computer-science",
+    label: "Reth config precedence · provenance",
+    definition:
+      "CLI·config file·default에서 같은 setting 후보를 모아 pinned release의 precedence로 하나의 typed value를 고르고 최종값과 source·가려진 후보·config digest를 함께 기록하는 시작 경계입니다.",
+    canonicalHref: "/blockchain/reth-cli#overview",
+  },
+  "reth-node-builder-typestate": {
+    id: "reth-node-builder-typestate",
+    kind: "method",
+    domain: "computer-science",
+    label: "Reth NodeBuilder typestate",
+    definition:
+      "Node types·components·add-ons가 채워질 때마다 다른 builder type을 반환해 현재 state에서 허용된 method와 trait bound만 노출하고 잘못된 assembly 순서를 compile time에 거르는 패턴입니다.",
+    canonicalHref: "/blockchain/reth-cli#node-builder",
+  },
+  "reth-component-dependency-dag": {
+    id: "reth-component-dependency-dag",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Reth component dependency DAG",
+    definition:
+      "Executor·transaction pool·network·payload builder의 associated output type이 다음 builder의 input constraint가 되는 의존 그래프로, trait component를 임의 조합 가능한 독립 plug-in으로 오해하지 않게 합니다.",
+    canonicalHref: "/blockchain/reth-cli#components",
+  },
+  "reth-component-addon-hook-boundary": {
+    id: "reth-component-addon-hook-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Reth core component · add-on hook boundary",
+    definition:
+      "Execution·pool·network·payload 같은 core component와 RPC·ExEx·lifecycle hook 같은 add-on을 입력 context·호출 시점·side effect·failure radius로 구분하는 확장 계약입니다.",
+    canonicalHref: "/blockchain/reth-cli#components",
+  },
+  "reth-launch-supervision-receipt": {
+    id: "reth-launch-supervision-receipt",
+    kind: "method",
+    domain: "computer-science",
+    label: "Reth launch · supervision receipt",
+    definition:
+      "Config validation, storage open, component initialization, add-on start와 readiness를 stable attempt ID·owner·status·error로 따로 기록해 crash cleanup·idempotent restart와 service health를 판단하는 lifecycle 증거입니다.",
+    canonicalHref: "/blockchain/reth-cli#node-builder",
+  },
+  "reth-cli-release-gate": {
+    id: "reth-cli-release-gate",
+    kind: "method",
+    domain: "computer-science",
+    label: "Reth CLI · node assembly release gate",
+    definition:
+      "같은 chain spec·storage snapshot·normalized config에서 conflict·missing secret·schema mismatch·component/hook failure·crash·shutdown을 주입하고 config와 chain-state parity를 먼저 검사하는 채택 계약입니다.",
+    canonicalHref: "/blockchain/reth-cli#components",
+  },
+  "reth-chain-identity-bundle": {
+    id: "reth-chain-identity-bundle",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Reth chain identity bundle",
+    definition:
+      "Chain ID 하나가 아니라 sealed genesis hash, ordered fork schedule, protocol parameter digest와 implementation version을 함께 묶어 같은 execution ruleset인지 판정하는 identity입니다.",
+    canonicalHref: "/blockchain/reth-chainspec#overview",
+  },
+  "reth-fork-condition-context": {
+    id: "reth-fork-condition-context",
+    kind: "method",
+    domain: "computer-science",
+    label: "Reth ForkCondition · block context evaluation",
+    definition:
+      "Fork의 Block·Timestamp·TTD·Never variant를 candidate block number·timestamp·difficulty history의 대응 좌표에만 평가해 boundary에서 사용할 validation·EVM rule을 고르는 predicate입니다.",
+    canonicalHref: "/blockchain/reth-chainspec#hardfork",
+  },
+  "reth-fork-id-compatibility-filter": {
+    id: "reth-fork-id-compatibility-filter",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "Reth fork-ID compatibility filter",
+    definition:
+      "Genesis hash와 활성 fork history·다음 activation을 압축한 ForkId를 local head context에서 검증해 명백히 다른 peer schedule을 거르되 peer honesty나 block validity 증명으로 확대하지 않는 handshake gate입니다.",
+    canonicalHref: "/blockchain/reth-chainspec#hardfork",
+  },
+  "reth-genesis-state-root-derivation": {
+    id: "reth-genesis-state-root-derivation",
+    kind: "method",
+    domain: "computer-science",
+    label: "Reth genesis state-root derivation",
+    definition:
+      "Genesis alloc의 address·balance·nonce·code·storage를 canonical account와 trie key/value로 바꿔 초기 state commitment를 재계산하는 block-0 경로입니다.",
+    canonicalHref: "/blockchain/reth-chainspec#genesis",
+  },
+  "reth-genesis-sealed-hash": {
+    id: "reth-genesis-sealed-hash",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Reth sealed genesis hash",
+    definition:
+      "Derived state root와 genesis-active fork의 조건부 field를 넣은 canonical block-0 header를 hashing해 database·peer network가 공유해야 할 genesis identity로 고정한 값입니다.",
+    canonicalHref: "/blockchain/reth-chainspec#genesis",
+  },
+  "reth-chainspec-consumer-parity": {
+    id: "reth-chainspec-consumer-parity",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "Reth ChainSpec consumer parity",
+    definition:
+      "Validator·executor·payload builder·network fork filter가 같은 ChainSpec digest와 block context에서 동일 fork activation과 parameter 결정을 내리는지 boundary fixture로 확인하는 invariant입니다.",
+    canonicalHref: "/blockchain/reth-chainspec#overview",
+  },
+  "reth-chainspec-release-gate": {
+    id: "reth-chainspec-release-gate",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "Reth ChainSpec release gate",
+    definition:
+      "같은 raw genesis와 rule bundle에서 alloc mutation·boundary fork·wrong hash·database mismatch·restart를 주입하고 derived root·genesis hash·fork decision·consumer parity를 먼저 비교하는 채택 절차입니다.",
+    canonicalHref: "/blockchain/reth-chainspec#genesis",
+  },
+  "reth-peer-candidate-active-separation": {
+    id: "reth-peer-candidate-active-separation",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Reth peer candidate · active separation",
+    definition:
+      "Discovery endpoint, pending transport, authenticated RLPx session과 ETH-compatible active peer를 별도 state·권한·slot으로 유지해 주소 발견을 신뢰나 protocol readiness로 확대하지 않는 lifecycle입니다.",
+    canonicalHref: "/blockchain/reth-net#overview",
+  },
+  "reth-discovery-record-freshness": {
+    id: "reth-discovery-record-freshness",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "Reth discovery record freshness · diversity",
+    definition:
+      "Signed node record의 identity·sequence·age·endpoint policy와 failed-dial history를 검사하고 prefix·identity concentration을 제한해 fresh dial candidate를 만드는 discovery 경계입니다.",
+    canonicalHref: "/blockchain/reth-net#discovery",
+  },
+  "reth-rlpx-capability-negotiation": {
+    id: "reth-rlpx-capability-negotiation",
+    kind: "method",
+    domain: "computer-science",
+    label: "Reth RLPx capability negotiation",
+    definition:
+      "RLPx가 peer identity·encrypted frame을 확정한 뒤 양쪽 Hello의 protocol name·version 교집합에서 사용할 subprotocol schema를 선택하는 session 단계입니다.",
+    canonicalHref: "/blockchain/reth-net#session",
+  },
+  "reth-eth-status-compatibility-gate": {
+    id: "reth-eth-status-compatibility-gate",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "Reth ETH Status compatibility gate",
+    definition:
+      "Negotiated ETH version의 Status에 담긴 network·genesis·fork·head context를 local ChainSpec과 검증해 data-message 권한을 열거나 reason-coded disconnect하는 gate입니다.",
+    canonicalHref: "/blockchain/reth-net#session",
+  },
+  "reth-eth-announcement-request-flow": {
+    id: "reth-eth-announcement-request-flow",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Reth ETH announcement · request/response flow",
+    definition:
+      "새 block·transaction의 존재를 bounded push로 알리고 receiver가 dedupe·policy 뒤 필요한 object만 correlated request/response로 가져오는 ETH data path입니다.",
+    canonicalHref: "/blockchain/reth-net#eth-wire",
+  },
+  "reth-network-backpressure-budget": {
+    id: "reth-network-backpressure-budget",
+    kind: "method",
+    domain: "computer-science",
+    label: "Reth network backpressure budget",
+    definition:
+      "Per-peer·message-class별 inflight request, response bytes, queue capacity와 processing rate를 제한하고 saturation 때 pause·drop·disconnect를 구분해 unbounded memory와 starvation을 막는 자원 계약입니다.",
+    canonicalHref: "/blockchain/reth-net#eth-wire",
+  },
+  "reth-session-failure-reputation": {
+    id: "reth-session-failure-reputation",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "Reth session failure · reputation mapping",
+    definition:
+      "Timeout·capacity·identity mismatch·incompatible Status·malformed message와 local overload를 reason-coded close로 보존하고 slot cleanup·retry·peer score·ban을 서로 다른 policy로 적용하는 feedback 경로입니다.",
+    canonicalHref: "/blockchain/reth-net#session",
+  },
+  "reth-network-version-receipt": {
+    id: "reth-network-version-receipt",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Reth network version receipt",
+    definition:
+      "Reth semver·SHA·features, enabled discovery variants, negotiated RLPx/ETH capability, ChainSpec digest와 network config를 함께 고정해 release default와 실제 session을 구분하는 provenance입니다.",
+    canonicalHref: "/blockchain/reth-net#overview",
+  },
+  "reth-network-release-gate": {
+    id: "reth-network-release-gate",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "Reth network adversarial release gate",
+    definition:
+      "동일 signed records·DNS·clock·seed·fault schedule에서 stale record·bad identity·wrong chain·flood·channel saturation·restart를 주입하고 session state·cleanup·accepted message parity를 먼저 비교하는 채택 계약입니다.",
+    canonicalHref: "/blockchain/reth-net#discovery",
   },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
+  {
+    from: "cuda-launch-hierarchy",
+    to: "gpu-host-device-execution-trace",
+    relation: "prerequisite",
+    reason:
+      "Logical grid·block 작업표가 hardware placement와 issue trace의 입력이 됩니다.",
+  },
+  {
+    from: "cuda-warp-simt",
+    to: "gpu-latency-hiding-occupancy",
+    relation: "prerequisite",
+    reason:
+      "Warp가 scheduler의 issue·stall 전환 단위이므로 resident warp 수의 의미를 정합니다.",
+  },
+  {
+    from: "cuda-shared-scratchpad",
+    to: "gpu-memory-traffic-hierarchy",
+    relation: "prerequisite",
+    reason:
+      "Shared-memory staging은 block-local reuse로 global traffic을 바꾸는 계층입니다.",
+  },
+  {
+    from: "gpu-host-device-execution-trace",
+    to: "gpu-memory-traffic-hierarchy",
+    relation: "produces",
+    reason:
+      "Issued warp의 load/store가 register부터 HBM까지의 traffic 경로를 만듭니다.",
+  },
+  {
+    from: "gpu-memory-traffic-hierarchy",
+    to: "gpu-roofline-peak-achieved",
+    relation: "prerequisite",
+    reason:
+      "Arithmetic intensity의 byte 분모는 분석 경계의 HBM traffic에서 계산합니다.",
+  },
+  {
+    from: "gpu-latency-hiding-occupancy",
+    to: "gpu-roofline-peak-achieved",
+    relation: "evaluates",
+    reason:
+      "Roofline 상한에 못 미치는 이유 중 parallelism·stall 경계를 profiler로 분해합니다.",
+  },
+  {
+    from: "bit-byte",
+    to: "ddr-channel-bandwidth-latency",
+    relation: "prerequisite",
+    reason: "Channel bit width와 MT/s를 byte/s로 환산합니다.",
+  },
+  {
+    from: "memory-workload-capacity-path",
+    to: "ddr-channel-bandwidth-latency",
+    relation: "produces",
+    reason:
+      "Workload의 capacity와 access demand가 필요한 channel bandwidth·latency 목표를 만듭니다.",
+  },
+  {
+    from: "ddr5-subchannel-burst",
+    to: "ddr-channel-bandwidth-latency",
+    relation: "optimizes",
+    reason:
+      "독립 subchannel과 burst가 bank scheduling 기회와 transfer utilization을 바꿉니다.",
+  },
+  {
+    from: "ecc-syndrome-secded",
+    to: "ecc-protection-boundary",
+    relation: "prerequisite",
+    reason:
+      "Codeword correction 능력을 어디까지 보호하는지 failure 위치와 함께 제한합니다.",
+  },
+  {
+    from: "dimm-electrical-load",
+    to: "memory-population-compatibility",
+    relation: "constrains",
+    reason:
+      "Buffer·rank·DPC load가 지원 module 조합과 trained rate를 제한합니다.",
+  },
+  {
+    from: "ddr-channel-bandwidth-latency",
+    to: "memory-population-compatibility",
+    relation: "evaluates",
+    reason:
+      "Population 뒤 실제 channel·MT/s·NUMA bandwidth를 acceptance test로 확인합니다.",
+  },
+  {
+    from: "bit-byte",
+    to: "pcie-transaction-bandwidth-latency",
+    relation: "prerequisite",
+    reason: "Lane bit transfer rate를 한 방향 byte/s 상한으로 환산합니다.",
+  },
+  {
+    from: "gpu-memory-traffic-hierarchy",
+    to: "pcie-transaction-bandwidth-latency",
+    relation: "extends",
+    reason:
+      "Device memory traffic을 chip 밖 DMA transaction과 completion 경계로 확장합니다.",
+  },
+  {
+    from: "pcie-transaction-bandwidth-latency",
+    to: "pcie-topology-peer-path",
+    relation: "constrains",
+    reason:
+      "Negotiated lane width와 shared switch/root path가 pair별 bandwidth·latency 상한을 정합니다.",
+  },
+  {
+    from: "pcie-topology-peer-path",
+    to: "gpudirect-rdma-topology",
+    relation: "prerequisite",
+    reason:
+      "GPU–HCA direct DMA 가능성과 affinity는 PCIe root·switch·policy에서 시작합니다.",
+  },
+  {
+    from: "nvlink-device-fabric-boundary",
+    to: "collective-rank-semantics",
+    relation: "constrains",
+    reason:
+      "Rank pair의 node-local NVLink/NVSwitch path가 collective topology와 완료 시간을 제한합니다.",
+  },
   {
     from: "cuda-launch-hierarchy",
     to: "cuda-warp-simt",
@@ -18234,139 +19599,1262 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     from: "distributed-process-message-execution",
     to: "total-order-broadcast-contract",
     relation: "extends",
-    reason: "서로 다른 network arrival order 위에 correct process가 공유하는 protocol delivery order를 추가합니다.",
+    reason:
+      "서로 다른 network arrival order 위에 correct process가 공유하는 protocol delivery order를 추가합니다.",
   },
   {
     from: "total-order-broadcast-contract",
     to: "smr-deterministic-transition",
     relation: "prerequisite",
-    reason: "모든 replica가 같은 command prefix를 같은 순서로 deliver해야 deterministic transition이 같은 state를 만듭니다.",
+    reason:
+      "모든 replica가 같은 command prefix를 같은 순서로 deliver해야 deterministic transition이 같은 state를 만듭니다.",
   },
   {
     from: "consensus-safety-liveness",
     to: "total-order-broadcast-contract",
     relation: "constrains",
-    reason: "Agreement·order·integrity의 safety와 correct broadcast의 conditional validity를 별도 성질로 해석합니다.",
+    reason:
+      "Agreement·order·integrity의 safety와 correct broadcast의 conditional validity를 별도 성질로 해석합니다.",
   },
   {
     from: "smr-deterministic-transition",
     to: "replicated-log-commit-apply",
     relation: "produces",
-    reason: "Ordered command를 durable log에 기록하고 commit한 뒤 deterministic state machine에 차례로 apply합니다.",
+    reason:
+      "Ordered command를 durable log에 기록하고 commit한 뒤 deterministic state machine에 차례로 apply합니다.",
   },
   {
     from: "distributed-failure-model",
     to: "crash-majority-quorum",
     relation: "prerequisite",
-    reason: "Majority quorum의 f crash tolerance는 equivocation을 허용하지 않는 fixed crash-fault membership에 한정됩니다.",
+    reason:
+      "Majority quorum의 f crash tolerance는 equivocation을 허용하지 않는 fixed crash-fault membership에 한정됩니다.",
   },
   {
     from: "crash-majority-quorum",
     to: "raft-term-log-safety",
     relation: "prerequisite",
-    reason: "Raft election과 replication은 majority intersection 위에 term·log freshness·commit rule을 더합니다.",
+    reason:
+      "Raft election과 replication은 majority intersection 위에 term·log freshness·commit rule을 더합니다.",
   },
   {
     from: "raft-term-log-safety",
     to: "replicated-log-commit-apply",
     relation: "produces",
-    reason: "Term·prefix consistency·commit rule로 다음 leader에서도 보존되는 committed log prefix를 만듭니다.",
+    reason:
+      "Term·prefix consistency·commit rule로 다음 leader에서도 보존되는 committed log prefix를 만듭니다.",
   },
   {
     from: "crash-majority-quorum",
     to: "paxos-promise-chosen-invariant",
     relation: "prerequisite",
-    reason: "Prepare·Accept quorum의 교집합이 이전 accepted value의 증거를 새 proposer에게 전달합니다.",
+    reason:
+      "Prepare·Accept quorum의 교집합이 이전 accepted value의 증거를 새 proposer에게 전달합니다.",
   },
   {
     from: "paxos-promise-chosen-invariant",
     to: "replicated-log-commit-apply",
     relation: "produces",
-    reason: "각 slot의 chosen-value invariant를 연속 log position에 적용해 Multi-Paxos state-machine log를 구성합니다.",
+    reason:
+      "각 slot의 chosen-value invariant를 연속 log position에 적용해 Multi-Paxos state-machine log를 구성합니다.",
   },
   {
     from: "replicated-log-commit-apply",
     to: "smr-client-effect-boundary",
     relation: "constrains",
-    reason: "Commit·apply·reply crash cut을 stable request ID와 result receipt에 연결해 retry가 state-machine effect를 중복 적용하지 않게 합니다.",
+    reason:
+      "Commit·apply·reply crash cut을 stable request ID와 result receipt에 연결해 retry가 state-machine effect를 중복 적용하지 않게 합니다.",
   },
   {
     from: "agent-replay-idempotency",
     to: "smr-client-effect-boundary",
     relation: "extends",
-    reason: "Replicated state transition 밖 payment·email 같은 side effect도 operation key·outbox·status reconciliation이 필요합니다.",
+    reason:
+      "Replicated state transition 밖 payment·email 같은 side effect도 operation key·outbox·status reconciliation이 필요합니다.",
   },
   {
     from: "distributed-process-message-execution",
     to: "permissionless-sybil-resource-weight",
     relation: "extends",
-    reason: "고정된 process membership 대신 누구나 identity를 만들 수 있을 때 영향력을 검증 가능한 희소 자원에 연결합니다.",
+    reason:
+      "고정된 process membership 대신 누구나 identity를 만들 수 있을 때 영향력을 검증 가능한 희소 자원에 연결합니다.",
   },
   {
     from: "distributed-failure-model",
     to: "permissionless-sybil-resource-weight",
     relation: "constrains",
-    reason: "Sybil identity와 Byzantine behavior를 허용하는 공개 membership에서 honest resource fraction 전제를 선언하게 합니다.",
+    reason:
+      "Sybil identity와 Byzantine behavior를 허용하는 공개 membership에서 honest resource fraction 전제를 선언하게 합니다.",
   },
   {
     from: "permissionless-sybil-resource-weight",
     to: "pow-hash-target-lottery",
     relation: "extends",
-    reason: "PoW는 영향력 비용을 target proof를 찾기 위해 소비한 hash work에 연결합니다.",
+    reason:
+      "PoW는 영향력 비용을 target proof를 찾기 위해 소비한 hash work에 연결합니다.",
   },
   {
     from: "pow-hash-target-lottery",
     to: "pow-chainwork-probabilistic-finality",
     relation: "produces",
-    reason: "각 valid target proof가 branch의 cumulative work를 늘리고 후속 work가 confirmation evidence가 됩니다.",
+    reason:
+      "각 valid target proof가 branch의 cumulative work를 늘리고 후속 work가 confirmation evidence가 됩니다.",
   },
   {
     from: "permissionless-sybil-resource-weight",
     to: "pos-stake-weighted-selection",
     relation: "extends",
-    reason: "PoS는 proposal·vote influence를 protocol에 등록된 effective stake와 signing identity에 연결합니다.",
+    reason:
+      "PoS는 proposal·vote influence를 protocol에 등록된 effective stake와 signing identity에 연결합니다.",
   },
   {
     from: "pos-stake-weighted-selection",
     to: "pos-attestation-slashing-evidence",
     relation: "produces",
-    reason: "선택된 validator의 stake-weighted signed messages를 head·checkpoint vote와 accountability evidence로 사용합니다.",
+    reason:
+      "선택된 validator의 stake-weighted signed messages를 head·checkpoint vote와 accountability evidence로 사용합니다.",
   },
   {
     from: "pow-chainwork-probabilistic-finality",
     to: "fork-choice-finality-separation",
     relation: "produces",
-    reason: "Cumulative-work head rule과 confirmation-depth risk policy가 canonical head와 probabilistic finality의 차이를 보여줍니다.",
+    reason:
+      "Cumulative-work head rule과 confirmation-depth risk policy가 canonical head와 probabilistic finality의 차이를 보여줍니다.",
   },
   {
     from: "pos-attestation-slashing-evidence",
     to: "fork-choice-finality-separation",
     relation: "produces",
-    reason: "Attestation 기반 head update와 supermajority checkpoint finality를 서로 다른 state로 유지합니다.",
+    reason:
+      "Attestation 기반 head update와 supermajority checkpoint finality를 서로 다른 state로 유지합니다.",
   },
   {
     from: "consensus-safety-liveness",
     to: "fork-choice-finality-separation",
     relation: "constrains",
-    reason: "Conflicting finality가 없는 safety와 network recovery 뒤 head·checkpoint가 전진하는 liveness를 분리합니다.",
+    reason:
+      "Conflicting finality가 없는 safety와 network recovery 뒤 head·checkpoint가 전진하는 liveness를 분리합니다.",
   },
   {
     from: "permissionless-sybil-resource-weight",
     to: "consensus-resource-security-ledger",
     relation: "evaluates",
-    reason: "Hash work와 bonded stake가 실제로 누구에게 얼마나 집중됐고 어떤 운영 비용·failure surface를 만드는지 측정합니다.",
+    reason:
+      "Hash work와 bonded stake가 실제로 누구에게 얼마나 집중됐고 어떤 운영 비용·failure surface를 만드는지 측정합니다.",
   },
   {
     from: "fork-choice-finality-separation",
     to: "permissionless-consensus-release-gate",
     relation: "evaluates",
-    reason: "Head reorg와 conflicting finalized history를 다른 oracle로 기록해 candidate protocol을 검증합니다.",
+    reason:
+      "Head reorg와 conflicting finalized history를 다른 oracle로 기록해 candidate protocol을 검증합니다.",
   },
   {
     from: "consensus-resource-security-ledger",
     to: "permissionless-consensus-release-gate",
     relation: "constrains",
-    reason: "Safety 결과뿐 아니라 자원 비용·집중도·recovery latency까지 같은 paired run의 채택 기준으로 고정합니다.",
+    reason:
+      "Safety 결과뿐 아니라 자원 비용·집중도·recovery latency까지 같은 paired run의 채택 기준으로 고정합니다.",
+  },
+  {
+    from: "distributed-failure-model",
+    to: "bft-authenticated-equivocation",
+    relation: "extends",
+    reason:
+      "일반 Byzantine fault를 conflicting signed message와 accountability evidence가 있는 authenticated model로 구체화합니다.",
+  },
+  {
+    from: "bft-authenticated-equivocation",
+    to: "bft-quorum-certificate",
+    relation: "constrains",
+    reason:
+      "Certificate가 signer uniqueness·domain·phase·value를 검증해야 equivocation과 duplicate counting을 탐지할 수 있습니다.",
+  },
+  {
+    from: "distributed-failure-model",
+    to: "bft-honest-quorum-intersection",
+    relation: "prerequisite",
+    reason:
+      "Byzantine fault bound f를 알아야 두 quorum의 overlap이 전부 faulty일 수 없는 threshold를 계산합니다.",
+  },
+  {
+    from: "bft-honest-quorum-intersection",
+    to: "bft-quorum-certificate",
+    relation: "constrains",
+    reason:
+      "서로 충돌할 수 있는 두 certificate signer set이 honest replica를 공유하도록 quorum 크기를 제한합니다.",
+  },
+  {
+    from: "bft-honest-quorum-intersection",
+    to: "bft-lock-certificate-safety",
+    relation: "prerequisite",
+    reason:
+      "Honest overlap이 conflicting vote를 거절하는 lock rule과 결합될 때 두 commit certificate를 막습니다.",
+  },
+  {
+    from: "bft-quorum-certificate",
+    to: "bft-lock-certificate-safety",
+    relation: "produces",
+    reason:
+      "Typed phase certificate가 replica lock을 갱신하고 후속 safe proposal의 evidence가 됩니다.",
+  },
+  {
+    from: "bft-lock-certificate-safety",
+    to: "bft-view-change-evidence",
+    relation: "constrains",
+    reason:
+      "새 view가 이전 lock보다 약한 evidence로 conflicting proposal을 시작하지 못하게 합니다.",
+  },
+  {
+    from: "partial-synchrony-gst",
+    to: "bft-partial-synchrony-progress",
+    relation: "prerequisite",
+    reason:
+      "GST 뒤 message bound라는 조건이 timeout·honest leader를 통한 BFT liveness의 시간 범위를 정합니다.",
+  },
+  {
+    from: "bft-view-change-evidence",
+    to: "bft-partial-synchrony-progress",
+    relation: "produces",
+    reason:
+      "Safety evidence를 보존한 leader rotation이 GST 뒤 정직 leader를 만날 때 progress를 회복합니다.",
+  },
+  {
+    from: "pos-stake-weighted-selection",
+    to: "bft-weight-membership-snapshot",
+    relation: "constrains",
+    reason:
+      "Stake-weighted certificate는 key 수가 아니라 epoch에 고정된 effective weight와 threshold를 사용합니다.",
+  },
+  {
+    from: "bft-quorum-certificate",
+    to: "bft-weight-membership-snapshot",
+    relation: "constrains",
+    reason:
+      "Certificate 해석에 사용한 membership·weight·fault bound·version receipt를 함께 보존합니다.",
+  },
+  {
+    from: "consensus-safety-liveness",
+    to: "bft-failure-injection-release-gate",
+    relation: "evaluates",
+    reason:
+      "Conflicting commit 0건의 safety oracle과 GST 뒤 recovery의 liveness metric을 서로 나눕니다.",
+  },
+  {
+    from: "bft-lock-certificate-safety",
+    to: "bft-failure-injection-release-gate",
+    relation: "evaluates",
+    reason:
+      "Equivocation·stale view·timeout race에서 lock과 certificate invariant가 유지되는지 검사합니다.",
+  },
+  {
+    from: "bft-partial-synchrony-progress",
+    to: "bft-failure-injection-release-gate",
+    relation: "evaluates",
+    reason:
+      "Partition 중 halt와 GST 표시 뒤 recovery time을 같은 fault trace에서 구분해 측정합니다.",
+  },
+  {
+    from: "tls13-secure-channel",
+    to: "libp2p-connection-upgrade-pipeline",
+    relation: "prerequisite",
+    reason:
+      "Libp2p connection은 raw transport를 peer-authenticated secure channel로 바꾼 뒤 multiplexer를 인계합니다.",
+  },
+  {
+    from: "quic-transport-state",
+    to: "libp2p-connection-upgrade-pipeline",
+    relation: "contrasts",
+    reason:
+      "QUIC은 security와 multiplexing을 transport 안에 내장해 TCP의 외부 upgrade chain과 다른 조립 위치를 가집니다.",
+  },
+  {
+    from: "libp2p-connection-upgrade-pipeline",
+    to: "rust-libp2p-event-ownership",
+    relation: "produces",
+    reason:
+      "인증된 PeerId와 StreamMuxer output을 Swarm에 인계해야 Behaviour·Handler event 왕복이 시작됩니다.",
+  },
+  {
+    from: "rust-libp2p-event-ownership",
+    to: "libp2p-substream-protocol-negotiation",
+    relation: "produces",
+    reason:
+      "ConnectionHandler의 outbound request를 Swarm과 muxer가 처리해 protocol이 합의된 substream을 돌려줍니다.",
+  },
+  {
+    from: "content-address-integrity",
+    to: "rust-libp2p-event-ownership",
+    relation: "contrasts",
+    reason:
+      "Content addressing은 전달받은 bytes의 digest를 검증하지만 peer connection과 event delivery를 만들지는 않습니다.",
+  },
+  {
+    from: "tls13-secure-channel",
+    to: "noise-xx-handshake-state",
+    relation: "contrasts",
+    reason:
+      "둘 다 authenticated secure channel을 만들지만 Noise XX는 token pattern과 별도 libp2p identity payload를 사용합니다.",
+  },
+  {
+    from: "noise-xx-handshake-state",
+    to: "libp2p-noise-identity-binding",
+    relation: "constrains",
+    reason:
+      "XX가 만든 static DH binding 후보를 libp2p identity signature와 expected PeerId가 실제 peer identity로 제한합니다.",
+  },
+  {
+    from: "libp2p-noise-identity-binding",
+    to: "noise-framed-transport-lifecycle",
+    relation: "produces",
+    reason:
+      "Handshake state와 identity 검증이 모두 성공한 뒤에만 framed transport CipherState를 상위 connection으로 인계합니다.",
+  },
+  {
+    from: "noise-framed-transport-lifecycle",
+    to: "libp2p-connection-upgrade-pipeline",
+    relation: "produces",
+    reason:
+      "Noise transport output이 TCP upgrade chain의 authenticated I/O와 PeerId를 제공합니다.",
+  },
+  {
+    from: "bit-byte",
+    to: "libp2p-tcp-multiaddr-dial",
+    relation: "prerequisite",
+    reason:
+      "Multiaddr component와 IP·port를 wire와 OS가 해석할 byte·integer 경계로 변환합니다.",
+  },
+  {
+    from: "libp2p-tcp-multiaddr-dial",
+    to: "libp2p-tcp-socket-lifecycle",
+    relation: "produces",
+    reason:
+      "해석한 socket address로 nonblocking dial 또는 listener를 만들고 option·timeout·close 수명을 추적합니다.",
+  },
+  {
+    from: "libp2p-tcp-socket-lifecycle",
+    to: "libp2p-connection-upgrade-pipeline",
+    relation: "produces",
+    reason:
+      "TCP socket이 만든 ordered byte stream은 security와 muxer upgrade가 올라갈 raw connection 입력입니다.",
+  },
+  {
+    from: "algebraic-field-contract",
+    to: "prime-field-modular-arithmetic",
+    relation: "produces",
+    reason:
+      "Prime modulus의 residue 연산은 0이 아닌 모든 원소에 inverse가 있는 field contract를 구체화합니다.",
+  },
+  {
+    from: "prime-field-modular-arithmetic",
+    to: "finite-field-multiplicative-order",
+    relation: "produces",
+    reason:
+      "Fₚ*의 modular exponentiation으로 각 원소의 order와 생성원 여부를 계산합니다.",
+  },
+  {
+    from: "algebraic-field-contract",
+    to: "polynomial-coefficient-evaluation-form",
+    relation: "prerequisite",
+    reason:
+      "Coefficient arithmetic와 서로 다른 point 사이 interpolation에 field division이 필요합니다.",
+  },
+  {
+    from: "polynomial-coefficient-evaluation-form",
+    to: "polynomial-root-degree-bound",
+    relation: "produces",
+    reason:
+      "Degree-bounded polynomial의 factorization이 서로 다른 zero의 최대 수를 제한합니다.",
+  },
+  {
+    from: "polynomial-root-degree-bound",
+    to: "schwartz-zippel-bound",
+    relation: "prerequisite",
+    reason:
+      "Univariate root bound를 변수별로 적용해 random multivariate evaluation의 false-acceptance 비율을 제한합니다.",
+  },
+  {
+    from: "algebraic-field-contract",
+    to: "extension-field-quotient",
+    relation: "extends",
+    reason:
+      "Irreducible polynomial quotient로 base field에 없던 algebraic element를 추가하면서 field inverse를 보존합니다.",
+  },
+  {
+    from: "prime-field-modular-arithmetic",
+    to: "lagrange-interpolation-basis",
+    relation: "prerequisite",
+    reason:
+      "Selector denominator x_i−x_j의 inverse를 같은 field에서 계산합니다.",
+  },
+  {
+    from: "polynomial-root-degree-bound",
+    to: "polynomial-interpolation-uniqueness",
+    relation: "prerequisite",
+    reason:
+      "두 interpolant의 차이가 degree보다 많은 root를 가지면 zero polynomial이어야 함을 보입니다.",
+  },
+  {
+    from: "lagrange-interpolation-basis",
+    to: "polynomial-interpolation-uniqueness",
+    relation: "produces",
+    reason: "Selector sum이 degree n−1 이하 interpolant의 존재를 구성합니다.",
+  },
+  {
+    from: "polynomial-root-degree-bound",
+    to: "vanishing-polynomial-domain",
+    relation: "prerequisite",
+    reason:
+      "각 domain root의 linear factor를 곱해 domain 전체 zero constraint를 divisibility로 바꿉니다.",
+  },
+  {
+    from: "lagrange-interpolation-basis",
+    to: "barycentric-interpolation",
+    relation: "optimizes",
+    reason:
+      "고정 denominator를 weight로 precompute해 새 point evaluation을 O(n)에 계산합니다.",
+  },
+  {
+    from: "finite-field-multiplicative-order",
+    to: "ntt-domain-two-adicity",
+    relation: "prerequisite",
+    reason:
+      "Transform length와 같은 order의 primitive root가 존재해야 evaluation points가 중복되지 않습니다.",
+  },
+  {
+    from: "roots-of-unity",
+    to: "ntt-domain-two-adicity",
+    relation: "contrasts",
+    reason:
+      "Complex unit-circle roots의 회전 대칭과 finite-field multiplicative subgroup의 대수적 root를 구분합니다.",
+  },
+  {
+    from: "polynomial-coefficient-evaluation-form",
+    to: "finite-field-ntt",
+    relation: "prerequisite",
+    reason:
+      "NTT가 빠르게 계산하는 대상은 coefficient에서 structured evaluation으로 가는 정확한 linear map입니다.",
+  },
+  {
+    from: "ntt-domain-two-adicity",
+    to: "finite-field-ntt",
+    relation: "constrains",
+    reason:
+      "Field의 supported subgroup order가 가능한 transform length와 radix-2 recursion 깊이를 제한합니다.",
+  },
+  {
+    from: "finite-field-ntt",
+    to: "ntt-butterfly",
+    relation: "produces",
+    reason:
+      "Even·odd factorization으로 direct NTT matrix의 intermediate를 재사용합니다.",
+  },
+  {
+    from: "finite-field-ntt",
+    to: "inverse-ntt",
+    relation: "produces",
+    reason:
+      "Root orthogonality가 inverse root와 n inverse를 사용한 coefficient 복원을 만듭니다.",
+  },
+  {
+    from: "lagrange-interpolation-basis",
+    to: "inverse-ntt",
+    relation: "contrasts",
+    reason:
+      "INTT는 arbitrary-point interpolation과 같은 복원 목표를 roots-of-unity domain의 구조로 빠르게 계산합니다.",
+  },
+  {
+    from: "finite-field-ntt",
+    to: "ntt-linear-convolution",
+    relation: "optimizes",
+    reason:
+      "Coefficient convolution을 evaluation별 pointwise multiplication으로 바꿉니다.",
+  },
+  {
+    from: "inverse-ntt",
+    to: "ntt-linear-convolution",
+    relation: "produces",
+    reason:
+      "Pointwise product evaluation에서 linear product coefficient를 복원합니다.",
+  },
+  {
+    from: "convolution-theorem",
+    to: "ntt-linear-convolution",
+    relation: "contrasts",
+    reason:
+      "Complex Fourier convolution theorem과 같은 algebraic pattern을 finite field polynomial product에 적용하되 measurement semantics는 포함하지 않습니다.",
+  },
+  {
+    from: "content-address-integrity",
+    to: "storage-proof-claim-decomposition",
+    relation: "prerequisite",
+    reason:
+      "Content digest가 byte identity를 고정해야 그 다음에 retrievability·replication·time-window 보관 주장을 분리할 수 있습니다.",
+  },
+  {
+    from: "storage-proof-claim-decomposition",
+    to: "por-challenge-extractor",
+    relation: "extends",
+    reason:
+      "PoR은 단순 hash 일치에서 반복 challenge를 통한 recoverability 주장으로 범위를 넓힙니다.",
+  },
+  {
+    from: "conditional-probability",
+    to: "por-sampling-detection",
+    relation: "prerequisite",
+    reason:
+      "여러 challenge에서 모두 손상을 놓칠 확률을 곱해 detection probability를 계산합니다.",
+  },
+  {
+    from: "por-sampling-detection",
+    to: "por-challenge-extractor",
+    relation: "constrains",
+    reason:
+      "유한 sample 검출률만으로 full-file retrievability를 주장할 수 없으므로 extractor·encoding 전제가 추가로 필요합니다.",
+  },
+  {
+    from: "storage-proof-claim-decomposition",
+    to: "porep-replica-specific-encoding",
+    relation: "extends",
+    reason:
+      "PoRep은 data 보유 주장에 replica identity별 physical encoding 관계를 추가합니다.",
+  },
+  {
+    from: "porep-replica-specific-encoding",
+    to: "porep-data-replica-commitment-binding",
+    relation: "produces",
+    reason:
+      "Encoding 관계를 검증하려면 원본과 replica commitment를 같은 public statement에 묶어야 합니다.",
+  },
+  {
+    from: "porep-data-replica-commitment-binding",
+    to: "post-window-fresh-challenge",
+    relation: "prerequisite",
+    reason:
+      "PoSt는 이미 고정된 replica commitment 집합에서 현재 window의 fresh challenge를 검증합니다.",
+  },
+  {
+    from: "post-window-fresh-challenge",
+    to: "storage-proof-evidence-ledger",
+    relation: "produces",
+    reason:
+      "Window·randomness·deadline과 submission 상태를 기록해야 restart·reorg 뒤 proof 결과를 재조정할 수 있습니다.",
+  },
+  {
+    from: "storage-proof-claim-decomposition",
+    to: "storage-proof-service-boundary",
+    relation: "constrains",
+    reason:
+      "Storage proof가 답하는 주장과 retrieval·availability SLO가 답하는 주장을 분리합니다.",
+  },
+  {
+    from: "storage-proof-evidence-ledger",
+    to: "storage-proof-service-boundary",
+    relation: "evaluates",
+    reason:
+      "Proof receipt와 별도의 retrieval probe receipt를 나란히 보아 cryptographic acceptance와 service health를 혼동하지 않습니다.",
+  },
+  {
+    from: "smr-deterministic-transition",
+    to: "cometbft-consensus-application-boundary",
+    relation: "extends",
+    reason: "CometBFT는 ordered commands를 ABCI application의 deterministic transition에 인계하는 구체적 SMR engine입니다.",
+  },
+  {
+    from: "bft-quorum-certificate",
+    to: "cometbft-consensus-application-boundary",
+    relation: "prerequisite",
+    reason: "Application 실행 전에 validator consensus evidence가 block order를 고정합니다.",
+  },
+  {
+    from: "cometbft-consensus-application-boundary",
+    to: "cometbft-transaction-lifecycle-trace",
+    relation: "produces",
+    reason: "Consensus와 application owner를 나누면 transaction의 단계별 receipt를 연결할 수 있습니다.",
+  },
+  {
+    from: "cometbft-admission-commit-separation",
+    to: "cometbft-transaction-lifecycle-trace",
+    relation: "constrains",
+    reason: "Receive·CheckTx·inclusion·commit·execution을 서로 다른 status로 기록합니다.",
+  },
+  {
+    from: "cometbft-consensus-application-boundary",
+    to: "cometbft-proposal-finalization-separation",
+    relation: "extends",
+    reason: "ABCI++ 안에서도 candidate preparation과 authoritative state transition을 분리합니다.",
+  },
+  {
+    from: "cometbft-proposal-finalization-separation",
+    to: "cometbft-apphash-state-identity",
+    relation: "produces",
+    reason: "합의된 block의 finalization 결과가 다음 height에 사용할 application state commitment를 만듭니다.",
+  },
+  {
+    from: "cometbft-version-snapshot-receipt",
+    to: "cometbft-transaction-lifecycle-trace",
+    relation: "constrains",
+    reason: "Transaction trace의 method·field 의미를 실제 CometBFT·ABCI·application version에 귀속합니다.",
+  },
+  {
+    from: "smr-client-effect-boundary",
+    to: "cometbft-external-effect-reconciliation",
+    relation: "extends",
+    reason: "Consensus commit과 외부 API side effect 사이에는 outbox·idempotency·reconciliation이 별도로 필요합니다.",
+  },
+  {
+    from: "cometbft-transaction-lifecycle-trace",
+    to: "cometbft-architecture-release-gate",
+    relation: "evaluates",
+    reason: "각 failure injection에서 같은 transaction·block·app-state receipt를 비교합니다.",
+  },
+  {
+    from: "cometbft-apphash-state-identity",
+    to: "cometbft-architecture-release-gate",
+    relation: "evaluates",
+    reason: "같은 committed height에서 divergent app hash가 없는지를 hard gate로 확인합니다.",
+  },
+  {
+    from: "cometbft-external-effect-reconciliation",
+    to: "cometbft-architecture-release-gate",
+    relation: "evaluates",
+    reason: "Commit 전후 crash와 restart에서 external effect 중복·누락을 별도 oracle로 검사합니다.",
+  },
+  {
+    from: "cometbft-consensus-application-boundary",
+    to: "cometbft-wire-state-evidence-boundary",
+    relation: "extends",
+    reason: "Architecture owner 경계를 실제 wire object와 local runtime state의 type 경계로 구체화합니다.",
+  },
+  {
+    from: "content-address-integrity",
+    to: "cometbft-header-commitment-lag",
+    relation: "prerequisite",
+    reason: "Canonical encoded field의 Merkle commitment로 block payload와 state receipt identity를 고정합니다.",
+  },
+  {
+    from: "cometbft-wire-state-evidence-boundary",
+    to: "cometbft-header-commitment-lag",
+    relation: "produces",
+    reason: "Wire block의 header가 current object와 previous execution receipt를 commitment로 보존합니다.",
+  },
+  {
+    from: "cometbft-wire-state-evidence-boundary",
+    to: "cometbft-canonical-sign-bytes",
+    relation: "produces",
+    reason: "Vote wire object를 chain·height·round·phase에 고정한 canonical signature input으로 변환합니다.",
+  },
+  {
+    from: "cometbft-canonical-sign-bytes",
+    to: "cometbft-voting-power-commit-certificate",
+    relation: "prerequisite",
+    reason: "각 precommit의 origin과 consensus coordinates가 검증돼야 같은 block power로 집계할 수 있습니다.",
+  },
+  {
+    from: "bft-quorum-certificate",
+    to: "cometbft-voting-power-commit-certificate",
+    relation: "extends",
+    reason: "일반 BFT certificate를 CometBFT historical validator power·CommitSig validation으로 구체화합니다.",
+  },
+  {
+    from: "cometbft-voting-power-commit-certificate",
+    to: "cometbft-validator-proposer-priority",
+    relation: "contrasts",
+    reason: "Voting power는 quorum과 proposer scheduling에 함께 쓰이지만 certificate와 priority state의 의미는 다릅니다.",
+  },
+  {
+    from: "bft-authenticated-equivocation",
+    to: "cometbft-evidence-accountability-pipeline",
+    relation: "extends",
+    reason: "Signed equivocation을 historical validation·gossip·block inclusion·application delivery로 이어 줍니다.",
+  },
+  {
+    from: "cometbft-canonical-sign-bytes",
+    to: "cometbft-evidence-accountability-pipeline",
+    relation: "prerequisite",
+    reason: "Conflicting vote 두 개가 같은 validator와 consensus coordinates에서 나온 서명인지 검증합니다.",
+  },
+  {
+    from: "cometbft-voting-power-commit-certificate",
+    to: "cometbft-height-round-step-state",
+    relation: "prerequisite",
+    reason: "Consensus state transition은 현재 H/R/S에서 해당 vote certificate가 무엇을 증명하는지 해석합니다.",
+  },
+  {
+    from: "cometbft-height-round-step-state",
+    to: "cometbft-event-queue-serialization",
+    relation: "constrains",
+    reason: "Queue event가 current state보다 과거·현재·미래인지 판정해 state regression을 막습니다.",
+  },
+  {
+    from: "cometbft-height-round-step-state",
+    to: "cometbft-proposal-prevote-precommit",
+    relation: "produces",
+    reason: "H/R/S coordinates 위에서 proposal validation과 prevote·precommit·commit transition이 실행됩니다.",
+  },
+  {
+    from: "bft-lock-certificate-safety",
+    to: "cometbft-pol-lock-transition",
+    relation: "extends",
+    reason: "일반 lock safety를 CometBFT valid/POL round와 prevote certificate transition으로 구체화합니다.",
+  },
+  {
+    from: "cometbft-proposal-prevote-precommit",
+    to: "cometbft-pol-lock-transition",
+    relation: "produces",
+    reason: "+2/3 prevote evidence가 lock 갱신과 precommit의 근거가 됩니다.",
+  },
+  {
+    from: "bft-partial-synchrony-progress",
+    to: "cometbft-round-timeout-stale-event",
+    relation: "extends",
+    reason: "Partial-synchrony progress 전제를 step별 round timeout과 stale-event guard로 구현합니다.",
+  },
+  {
+    from: "cometbft-event-queue-serialization",
+    to: "cometbft-round-timeout-stale-event",
+    relation: "constrains",
+    reason: "Timeout도 H/R/S event로 직렬화하고 처리 시 current state를 다시 확인합니다.",
+  },
+  {
+    from: "cometbft-evidence-accountability-pipeline",
+    to: "cometbft-equivocation-evidence-separation",
+    relation: "produces",
+    reason: "Consensus detection·on-chain evidence와 application penalty policy를 구분합니다.",
+  },
+  {
+    from: "cometbft-consensus-application-boundary",
+    to: "cometbft-abci-connection-state-separation",
+    relation: "extends",
+    reason: "Consensus·mempool·query·snapshot connection의 state view와 authority를 application boundary 안에서 나눕니다.",
+  },
+  {
+    from: "cometbft-proposal-finalization-separation",
+    to: "cometbft-prepare-process-coherence",
+    relation: "extends",
+    reason: "Candidate preparation과 deterministic validation이 correct proposer에서 서로 호환돼야 progress합니다.",
+  },
+  {
+    from: "cometbft-prepare-process-coherence",
+    to: "cometbft-candidate-committed-state",
+    relation: "constrains",
+    reason: "한 height의 여러 candidate 실행 결과를 block identity별로 격리하고 decided block만 승격합니다.",
+  },
+  {
+    from: "smr-deterministic-transition",
+    to: "cometbft-finalize-determinism",
+    relation: "extends",
+    reason: "Deterministic SMR transition을 FinalizeBlock request와 state-affecting response에 적용합니다.",
+  },
+  {
+    from: "cometbft-candidate-committed-state",
+    to: "cometbft-finalize-determinism",
+    relation: "prerequisite",
+    reason: "Consensus가 선택한 candidate만 prior committed state에 authoritative하게 적용합니다.",
+  },
+  {
+    from: "cometbft-finalize-determinism",
+    to: "cometbft-apphash-next-header-lag",
+    relation: "produces",
+    reason: "FinalizeBlock의 deterministic state commitment가 다음 header의 AppHash로 연결됩니다.",
+  },
+  {
+    from: "cometbft-apphash-state-identity",
+    to: "cometbft-apphash-next-header-lag",
+    relation: "extends",
+    reason: "Top-level app-state identity를 실제 FinalizeBlock height와 next-header field 관계로 구체화합니다.",
+  },
+  {
+    from: "cometbft-finalize-determinism",
+    to: "cometbft-commit-crash-replay",
+    relation: "prerequisite",
+    reason: "Crash 뒤 FinalizeBlock을 재실행해 저장된 response와 비교하려면 같은 input에서 같은 output이 나와야 합니다.",
+  },
+  {
+    from: "cometbft-abci-connection-state-separation",
+    to: "cometbft-commit-crash-replay",
+    relation: "constrains",
+    reason: "Consensus·mempool connection ordering과 committed height handshake를 보존하며 replay합니다.",
+  },
+  {
+    from: "smr-deterministic-transition",
+    to: "reth-execution-client-boundary",
+    relation: "extends",
+    reason: "Reth는 Ethereum protocol의 ordered execution payload를 EVM state transition으로 계산하는 execution-layer 구현입니다.",
+  },
+  {
+    from: "reth-execution-client-boundary",
+    to: "reth-block-lifecycle-trace",
+    relation: "produces",
+    reason: "Consensus-client handoff부터 execution·canonicalization·storage·query까지 block evidence를 연결합니다.",
+  },
+  {
+    from: "reth-historical-live-path-separation",
+    to: "reth-block-lifecycle-trace",
+    relation: "constrains",
+    reason: "Historical stage cursor와 live Engine cursor가 같은 block을 처리할 때 동일 execution output을 내야 합니다.",
+  },
+  {
+    from: "reth-block-lifecycle-trace",
+    to: "reth-provider-consistent-view",
+    relation: "produces",
+    reason: "검증·실행·canonicalization 결과를 pinned block/state identity로 provider consumer에게 넘깁니다.",
+  },
+  {
+    from: "reth-storage-tier-ownership",
+    to: "reth-provider-consistent-view",
+    relation: "prerequisite",
+    reason: "Provider가 mutable state·immutable history·index의 reader와 lifetime을 알아야 mixed view를 막을 수 있습니다.",
+  },
+  {
+    from: "reth-version-snapshot-receipt",
+    to: "reth-block-lifecycle-trace",
+    relation: "constrains",
+    reason: "Block trace의 fork rule·Engine behavior·storage schema를 실제 binary와 chain spec version에 귀속합니다.",
+  },
+  {
+    from: "reth-reorg-unwind-reconciliation",
+    to: "reth-historical-live-path-separation",
+    relation: "extends",
+    reason: "두 ingestion path 모두 common ancestor 뒤 derived suffix를 되돌리고 새 canonical branch를 재실행해야 합니다.",
+  },
+  {
+    from: "reth-provider-consistent-view",
+    to: "reth-reorg-unwind-reconciliation",
+    relation: "constrains",
+    reason: "Reorg·migration 중 consumer가 old/new storage generation을 섞지 않도록 pinned view를 무효화하거나 retry합니다.",
+  },
+  {
+    from: "reth-block-lifecycle-trace",
+    to: "reth-node-release-gate",
+    relation: "evaluates",
+    reason: "Base와 candidate의 canonical hash·state root·receipt·checkpoint를 같은 block fixture로 비교합니다.",
+  },
+  {
+    from: "reth-reorg-unwind-reconciliation",
+    to: "reth-node-release-gate",
+    relation: "evaluates",
+    reason: "Reorg·checkpoint crash·restart 뒤 canonical recovery와 stale derived state 제거를 검사합니다.",
+  },
+  {
+    from: "reth-version-snapshot-receipt",
+    to: "reth-node-release-gate",
+    relation: "constrains",
+    reason: "Candidate와 rollback artifact의 binary·chain·storage compatibility를 release receipt에 고정합니다.",
+  },
+  {
+    from: "consensus-safety-liveness",
+    to: "prysm-consensus-client-boundary",
+    relation: "extends",
+    reason: "일반 consensus safety·liveness를 Ethereum beacon state·fork choice·validator duty를 담당하는 Prysm client 경계로 구체화합니다.",
+  },
+  {
+    from: "prysm-consensus-client-boundary",
+    to: "prysm-consensus-object-lifecycle",
+    relation: "produces",
+    reason: "Beacon node·validator client·execution client owner별 evidence를 하나의 consensus object trace로 연결합니다.",
+  },
+  {
+    from: "prysm-wire-validation-layers",
+    to: "prysm-consensus-object-lifecycle",
+    relation: "constrains",
+    reason: "Decode·topic·fork·signature·state-dependent failure를 accept 하나로 합치지 않고 단계별 receipt로 남깁니다.",
+  },
+  {
+    from: "prysm-consensus-object-lifecycle",
+    to: "prysm-state-head-finality-separation",
+    relation: "produces",
+    reason: "Valid transition의 post-state와 fork-choice head·justified/finalized checkpoint를 별도 identity로 도출합니다.",
+  },
+  {
+    from: "prysm-state-head-finality-separation",
+    to: "prysm-validator-duty-signing-boundary",
+    relation: "constrains",
+    reason: "Validator duty와 signing root를 정확한 head·fork·epoch context에 고정하고 conflicting retry를 막습니다.",
+  },
+  {
+    from: "prysm-consensus-client-boundary",
+    to: "prysm-engine-execution-handoff",
+    relation: "produces",
+    reason: "Consensus-layer acceptance와 execution payload validity를 Engine API status로 조정합니다.",
+  },
+  {
+    from: "prysm-spec-code-version-receipt",
+    to: "prysm-consensus-object-lifecycle",
+    relation: "constrains",
+    reason: "Object validation·transition·fork-choice 결과를 실제 Prysm build와 consensus fork에 귀속합니다.",
+  },
+  {
+    from: "prysm-consensus-object-lifecycle",
+    to: "prysm-release-gate",
+    relation: "evaluates",
+    reason: "같은 object fixture에서 validation·state·head·finality outcome parity를 hard gate로 검사합니다.",
+  },
+  {
+    from: "prysm-validator-duty-signing-boundary",
+    to: "prysm-release-gate",
+    relation: "evaluates",
+    reason: "Equivocation·signer timeout·restart에서 duty identity와 slashing decision이 보존되는지 검사합니다.",
+  },
+  {
+    from: "prysm-engine-execution-handoff",
+    to: "prysm-release-gate",
+    relation: "evaluates",
+    reason: "VALID·INVALID·SYNCING과 reorg sequence에서 consensus/execution coordination parity를 확인합니다.",
+  },
+  {
+    from: "prysm-spec-code-version-receipt",
+    to: "prysm-release-gate",
+    relation: "constrains",
+    reason: "Base·candidate·rollback artifact와 spec fork·database compatibility를 release receipt에 고정합니다.",
+  },
+  {
+    from: "reth-version-snapshot-receipt",
+    to: "reth-config-precedence-provenance",
+    relation: "prerequisite",
+    reason: "설정 최종값과 source를 실제 binary·feature·chain/storage version에 귀속해야 같은 시작 조건을 재현할 수 있습니다.",
+  },
+  {
+    from: "reth-config-precedence-provenance",
+    to: "reth-node-builder-typestate",
+    relation: "produces",
+    reason: "검증·정규화된 NodeConfig가 type-state assembly의 입력이 됩니다.",
+  },
+  {
+    from: "reth-node-builder-typestate",
+    to: "reth-component-dependency-dag",
+    relation: "constrains",
+    reason: "Builder state와 trait bound가 component output/input의 호환 순서를 compile time에 제한합니다.",
+  },
+  {
+    from: "reth-component-dependency-dag",
+    to: "reth-component-addon-hook-boundary",
+    relation: "extends",
+    reason: "Core dependency 조립 이후 RPC·ExEx·hook이 어느 lifecycle state를 소비하는지 구분합니다.",
+  },
+  {
+    from: "reth-component-addon-hook-boundary",
+    to: "reth-launch-supervision-receipt",
+    relation: "produces",
+    reason: "Core와 add-on의 서로 다른 start·failure 상태를 단계별 launch evidence로 보존합니다.",
+  },
+  {
+    from: "reth-launch-supervision-receipt",
+    to: "reth-cli-release-gate",
+    relation: "evaluates",
+    reason: "Startup conflict·crash·shutdown에서 resource cleanup과 readiness parity를 검사합니다.",
+  },
+  {
+    from: "reth-version-snapshot-receipt",
+    to: "reth-cli-release-gate",
+    relation: "constrains",
+    reason: "Base·candidate·rollback의 binary·config·storage compatibility를 같은 manifest에 고정합니다.",
+  },
+  {
+    from: "reth-version-snapshot-receipt",
+    to: "reth-chain-identity-bundle",
+    relation: "extends",
+    reason: "Execution-node provenance에 genesis·fork schedule·protocol parameter digest를 더해 chain ruleset identity를 만듭니다.",
+  },
+  {
+    from: "reth-chain-identity-bundle",
+    to: "reth-fork-condition-context",
+    relation: "produces",
+    reason: "Ordered fork schedule과 current block context가 active ruleset 판정의 입력이 됩니다.",
+  },
+  {
+    from: "reth-fork-condition-context",
+    to: "reth-fork-id-compatibility-filter",
+    relation: "produces",
+    reason: "Active fork history와 next activation이 peer handshake용 compressed ForkId를 만듭니다.",
+  },
+  {
+    from: "reth-genesis-state-root-derivation",
+    to: "reth-genesis-sealed-hash",
+    relation: "produces",
+    reason: "Alloc에서 계산한 state root가 block-0 header field가 되어 sealed genesis hash를 바꿉니다.",
+  },
+  {
+    from: "reth-genesis-sealed-hash",
+    to: "reth-chain-identity-bundle",
+    relation: "produces",
+    reason: "Sealed block-0 hash가 chain ID만으로 구분할 수 없는 genesis state identity를 제공합니다.",
+  },
+  {
+    from: "reth-fork-condition-context",
+    to: "reth-chainspec-consumer-parity",
+    relation: "evaluates",
+    reason: "Validator·executor·payload·network가 boundary context에서 같은 activation 결과를 내는지 비교합니다.",
+  },
+  {
+    from: "reth-chain-identity-bundle",
+    to: "reth-chainspec-consumer-parity",
+    relation: "constrains",
+    reason: "모든 consumer가 같은 immutable ChainSpec digest를 사용해야 decision parity를 의미 있게 비교할 수 있습니다.",
+  },
+  {
+    from: "reth-chainspec-consumer-parity",
+    to: "reth-chainspec-release-gate",
+    relation: "evaluates",
+    reason: "Boundary fork의 validation·execution·payload·network decision 일치를 hard gate로 둡니다.",
+  },
+  {
+    from: "reth-genesis-sealed-hash",
+    to: "reth-chainspec-release-gate",
+    relation: "evaluates",
+    reason: "Genesis mutation·database mismatch에서 derived root와 sealed hash parity를 확인합니다.",
+  },
+  {
+    from: "reth-execution-client-boundary",
+    to: "reth-peer-candidate-active-separation",
+    relation: "extends",
+    reason: "Execution client의 network input owner를 discovery candidate부터 ETH-compatible active peer까지 세분화합니다.",
+  },
+  {
+    from: "reth-discovery-record-freshness",
+    to: "reth-peer-candidate-active-separation",
+    relation: "produces",
+    reason: "Identity·sequence·endpoint policy를 통과한 record만 pending dial 후보가 됩니다.",
+  },
+  {
+    from: "reth-peer-candidate-active-separation",
+    to: "reth-rlpx-capability-negotiation",
+    relation: "produces",
+    reason: "Transport가 열린 pending candidate가 RLPx identity와 capability 협상 단계로 이동합니다.",
+  },
+  {
+    from: "reth-rlpx-capability-negotiation",
+    to: "reth-eth-status-compatibility-gate",
+    relation: "produces",
+    reason: "공통 ETH schema를 선택해야 해당 version의 Status를 decode·검증할 수 있습니다.",
+  },
+  {
+    from: "reth-fork-id-compatibility-filter",
+    to: "reth-eth-status-compatibility-gate",
+    relation: "prerequisite",
+    reason: "Status의 fork context를 local ChainSpec과 비교해 다른 schedule의 peer를 data path 전에 거릅니다.",
+  },
+  {
+    from: "reth-eth-status-compatibility-gate",
+    to: "reth-eth-announcement-request-flow",
+    relation: "produces",
+    reason: "Compatible active session만 block·transaction announcement와 request/response 권한을 얻습니다.",
+  },
+  {
+    from: "reth-network-backpressure-budget",
+    to: "reth-eth-announcement-request-flow",
+    relation: "constrains",
+    reason: "Announcement·inflight request·response byte와 queue를 bounded resource 안에서 처리합니다.",
+  },
+  {
+    from: "reth-network-backpressure-budget",
+    to: "reth-session-failure-reputation",
+    relation: "produces",
+    reason: "Local saturation과 remote protocol abuse를 다른 close reason으로 보존해 retry·score 정책을 분리합니다.",
+  },
+  {
+    from: "reth-session-failure-reputation",
+    to: "reth-discovery-record-freshness",
+    relation: "evaluates",
+    reason: "실제 dial·handshake·message 결과가 candidate의 liveness와 다음 retry 판단에 feedback됩니다.",
+  },
+  {
+    from: "reth-version-snapshot-receipt",
+    to: "reth-network-version-receipt",
+    relation: "extends",
+    reason: "Node 전체 provenance에 enabled discovery와 negotiated wire capability·network config를 추가합니다.",
+  },
+  {
+    from: "reth-network-version-receipt",
+    to: "reth-network-release-gate",
+    relation: "constrains",
+    reason: "Release default와 실제 feature·protocol session을 구분해 base·candidate fixture를 고정합니다.",
+  },
+  {
+    from: "reth-peer-candidate-active-separation",
+    to: "reth-network-release-gate",
+    relation: "evaluates",
+    reason: "Adversarial discovery·handshake input에서 candidate·pending·active state parity와 cleanup을 검사합니다.",
+  },
+  {
+    from: "reth-network-backpressure-budget",
+    to: "reth-network-release-gate",
+    relation: "evaluates",
+    reason: "Flood와 channel saturation에서 bounded memory·fairness·reason-coded close가 보존되는지 검사합니다.",
+  },
+  {
+    from: "prysm-wire-validation-layers",
+    to: "ssz-schema-type-contract",
+    relation: "prerequisite",
+    reason: "Consensus wire object를 bounded decode하려면 fork별 SSZ type과 limit이 먼저 고정돼야 합니다.",
+  },
+  {
+    from: "ssz-schema-type-contract",
+    to: "ssz-static-dynamic-offset-layout",
+    relation: "produces",
+    reason: "Schema의 static/dynamic field 분류가 fixed part와 variable part의 byte 위치를 결정합니다.",
+  },
+  {
+    from: "ssz-static-dynamic-offset-layout",
+    to: "ssz-canonical-bounded-decoding",
+    relation: "constrains",
+    reason: "Decoder는 fixed-part boundary와 monotonic offsets·payload limit을 확인한 뒤 dynamic value를 읽습니다.",
+  },
+  {
+    from: "ssz-schema-type-contract",
+    to: "ssz-chunk-packing",
+    relation: "produces",
+    reason: "Type kind와 element width가 basic-value packing과 composite child-root leaf를 결정합니다.",
+  },
+  {
+    from: "ssz-chunk-packing",
+    to: "ssz-merkleization",
+    relation: "prerequisite",
+    reason: "Canonical 32-byte leaves를 만든 뒤 type limit depth에서 zero padding과 parent hashing을 수행합니다.",
+  },
+  {
+    from: "ssz-merkleization",
+    to: "ssz-length-mixing",
+    relation: "extends",
+    reason: "List·bitlist는 padded data root에 실제 length를 추가로 commitment해야 합니다.",
+  },
+  {
+    from: "ssz-merkleization",
+    to: "ssz-generalized-index",
+    relation: "produces",
+    reason: "정해진 binary tree의 node path를 generalized index로 주소화합니다.",
+  },
+  {
+    from: "ssz-generalized-index",
+    to: "ssz-merkle-multiproof",
+    relation: "prerequisite",
+    reason: "여러 target path와 helper sibling 집합을 계산하려면 각 node의 canonical address가 필요합니다.",
+  },
+  {
+    from: "ssz-merkleization",
+    to: "ssz-merkle-multiproof",
+    relation: "produces",
+    reason: "Multiproof는 target values와 sibling hashes로 같은 SSZ root를 재구성합니다.",
+  },
+  {
+    from: "prime-field-modular-arithmetic",
+    to: "bls12-381-group-role",
+    relation: "extends",
+    reason: "BLS12-381 curve와 subgroup point 연산은 유한체 arithmetic 위에서 구성됩니다.",
+  },
+  {
+    from: "bls12-381-group-role",
+    to: "bls-point-serialization-validation",
+    relation: "produces",
+    reason: "G1/G2 group element를 wire bytes로 전달할 때 canonical curve·subgroup·identity 검사가 필요합니다.",
+  },
+  {
+    from: "ssz-merkleization",
+    to: "bls-signing-root-domain-separation",
+    relation: "prerequisite",
+    reason: "Consensus signing root는 SSZ object root와 fork·duty domain을 함께 commitment합니다.",
+  },
+  {
+    from: "bls12-381-group-role",
+    to: "bls-pairing-verification",
+    relation: "produces",
+    reason: "G1 public key와 G2 message/signature의 scalar 관계를 bilinear pairing으로 검사합니다.",
+  },
+  {
+    from: "bls-signing-root-domain-separation",
+    to: "bls-pairing-verification",
+    relation: "constrains",
+    reason: "Pairing에 넣을 message point는 정확한 chain·fork·duty signing root와 BLS DST에서 만들어야 합니다.",
+  },
+  {
+    from: "bls-pairing-verification",
+    to: "bls-signature-aggregation",
+    relation: "extends",
+    reason: "Bilinearity가 여러 signature point의 합을 public-key·message 집합과 함께 검증하게 합니다.",
+  },
+  {
+    from: "bls-proof-of-possession-rogue-key",
+    to: "bls-signature-aggregation",
+    relation: "constrains",
+    reason: "Same-message public-key aggregation은 rogue-key substitution을 막는 registration/PoP 전제가 필요합니다.",
+  },
+  {
+    from: "bls-api-message-cardinality",
+    to: "bls-signature-aggregation",
+    relation: "constrains",
+    reason: "Message가 같은지 다른지에 따라 FastAggregateVerify와 tuple-preserving AggregateVerify를 선택합니다.",
+  },
+  {
+    from: "bls-signature-aggregation",
+    to: "bls-batch-verification-release-gate",
+    relation: "evaluates",
+    reason: "Single·aggregate·batch input의 validity parity와 failure isolation을 성능보다 먼저 검사합니다.",
+  },
+  {
+    from: "prysm-state-head-finality-separation",
+    to: "beacon-state-protocol-snapshot",
+    relation: "prerequisite",
+    reason: "Fork-choice head와 finality를 구분하려면 각 branch transition이 만든 post-state identity가 먼저 필요합니다.",
+  },
+  {
+    from: "beacon-state-fork-schema",
+    to: "beacon-state-protocol-snapshot",
+    relation: "constrains",
+    reason: "BeaconState field와 root는 활성 fork의 SSZ schema와 transition rule에서만 해석됩니다.",
+  },
+  {
+    from: "beacon-state-protocol-snapshot",
+    to: "prysm-state-interface-contract",
+    relation: "produces",
+    reason: "Prysm은 fork별 protocol state를 common read view와 controlled mutation API로 노출합니다.",
+  },
+  {
+    from: "prysm-state-interface-contract",
+    to: "prysm-state-copy-on-write",
+    relation: "produces",
+    reason: "공통 state view의 candidate clone 비용을 줄이기 위해 shared backing과 write-time copy를 사용합니다.",
+  },
+  {
+    from: "prysm-state-aliasing-isolation",
+    to: "prysm-state-copy-on-write",
+    relation: "constrains",
+    reason: "모든 mutation이 owner 분리와 setter를 거쳐야 sibling state의 값과 root cache가 보존됩니다.",
+  },
+  {
+    from: "prysm-state-copy-on-write",
+    to: "prysm-state-dirty-field-tracking",
+    relation: "produces",
+    reason: "고유화한 backing field의 실제 mutation 위치를 field와 packed chunk 좌표로 기록합니다.",
+  },
+  {
+    from: "prysm-state-dirty-field-tracking",
+    to: "prysm-field-trie-incremental-root",
+    relation: "produces",
+    reason: "Dirty leaf 목록이 cached sibling을 재사용하며 다시 계산할 ancestor path를 정합니다.",
+  },
+  {
+    from: "ssz-merkleization",
+    to: "prysm-field-trie-incremental-root",
+    relation: "prerequisite",
+    reason: "Incremental root는 full SSZ Merkleization과 동일한 packing·padding·length 규칙을 보존해야 합니다.",
+  },
+  {
+    from: "beacon-state-fork-schema",
+    to: "prysm-state-version-release-gate",
+    relation: "evaluates",
+    reason: "Fork activation 전후의 schema upgrade와 root parity를 official fixture에서 검사합니다.",
+  },
+  {
+    from: "prysm-field-trie-incremental-root",
+    to: "prysm-state-version-release-gate",
+    relation: "evaluates",
+    reason: "Incremental cache result를 cache-disabled full root oracle과 mutation·reorg·restart에서 비교합니다.",
+  },
+  {
+    from: "prysm-spec-code-version-receipt",
+    to: "prysm-state-version-release-gate",
+    relation: "constrains",
+    reason: "Prysm·spec·network·fork·SSZ generator·DB/cache schema를 base와 candidate receipt에 고정합니다.",
   },
 ];
 

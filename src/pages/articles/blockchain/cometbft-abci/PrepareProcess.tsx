@@ -1,245 +1,44 @@
-import { codeRefs } from "./codeRefs";
-import PrepareProposalViz from "./viz/PrepareProposalViz";
-import ProcessProposalViz from "./viz/ProcessProposalViz";
-import type { CodeRef } from "@/components/code/types";
-
-export default function PrepareProcess({
-  onCodeRef,
-}: {
-  onCodeRef: (key: string, ref: CodeRef) => void;
-}) {
-  const open = (key: string) => onCodeRef(key, codeRefs[key]);
+import ExplainedFormula from "@/components/ui/explained-formula";
+import CometBFTCoreViz from "../cometbft-core-viz";
+export default function PrepareProcess() {
   return (
     <section id="prepare-process" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">
-        PrepareProposal & ProcessProposal
-      </h2>
-
-      {/* ── PrepareProposal 구현 ── */}
-      <h3 className="text-lg font-semibold mb-3 mt-6">
-        PrepareProposal 코드 추적
-      </h3>
-      <div className="not-prose mb-8">
-        <PrepareProposalViz onOpenCode={open} />
-      </div>
-
-      <div className="not-prose mb-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
-          <div className="rounded-lg border bg-card p-4">
-            <p className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-2">
-              Request 구조체
-            </p>
-            <p className="text-xs text-muted-foreground mb-2">
-              <code>RequestPrepareProposal</code> — proposer만 수신
-            </p>
-            <ul className="text-sm space-y-1 text-muted-foreground">
-              <li>
-                <code className="text-xs">MaxTxBytes</code> — 블록 최대 크기
-              </li>
-              <li>
-                <code className="text-xs">Txs [][]byte</code> — mempool TX 후보
-                목록
-              </li>
-              <li>
-                <code className="text-xs">LocalLastCommit</code> — vote
-                extension 포함 커밋
-              </li>
-              <li>
-                <code className="text-xs">Height</code>,{" "}
-                <code className="text-xs">Time</code>,{" "}
-                <code className="text-xs">ProposerAddress</code>
-              </li>
-            </ul>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <p className="text-xs font-semibold text-green-600 dark:text-green-400 mb-2">
-              Response 구조체
-            </p>
-            <p className="text-xs text-muted-foreground mb-2">
-              <code>ResponsePrepareProposal</code>
-            </p>
-            <ul className="text-sm space-y-1 text-muted-foreground">
-              <li>
-                <code className="text-xs">Txs [][]byte</code> — 앱이 선택한 최종
-                TX 목록
-              </li>
-            </ul>
-            <p className="text-xs font-semibold text-blue-600 dark:text-blue-400 mt-3 mb-1">
-              앱이 할 수 있는 것
-            </p>
-            <ul className="text-sm space-y-1 text-muted-foreground">
-              <li>TX 제거 (mempool 필터링)</li>
-              <li>TX 순서 변경 (MEV-resistant ordering)</li>
-              <li>TX 추가 (oracle data, cross-chain)</li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="rounded-lg border bg-card p-4 mb-3">
-          <p className="text-xs font-semibold text-purple-600 dark:text-purple-400 mb-2">
-            예시 정책 — 후보 순회와 byte 한도
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm text-muted-foreground">
-            <div className="rounded bg-muted/50 p-2 text-center">
-              <p className="text-xs font-medium mb-1">1. mempool TX 순회</p>
-              <p className="text-xs">후보 TX를 순서대로 탐색</p>
-            </div>
-            <div className="rounded bg-muted/50 p-2 text-center">
-              <p className="text-xs font-medium mb-1">2. 크기 체크</p>
-              <p className="text-xs">
-                <code className="text-xs">MaxTxBytes</code> 초과 시 중단
-              </p>
-            </div>
-            <div className="rounded bg-muted/50 p-2 text-center">
-              <p className="text-xs font-medium mb-1">3. 유효성 재검증</p>
-              <p className="text-xs">invalid TX skip, valid만 추가</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-3">
-          <div className="rounded-lg border border-dashed border-muted-foreground/30 p-3">
-            <p className="text-xs font-semibold mb-1">dYdX 활용</p>
-            <p className="text-xs text-muted-foreground">
-              orderbook 상태 포함, MEV 방어 순서, oracle 가격 주입
-            </p>
-          </div>
-          <div className="rounded-lg border border-dashed border-muted-foreground/30 p-3">
-            <p className="text-xs font-semibold mb-1">Skip MEV 활용</p>
-            <p className="text-xs text-muted-foreground">
-              vote extension ordering 적용, block builder 통합
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          PrepareProposal은{" "}
-          <strong>
-            이 라운드의 proposer 애플리케이션에 transaction 목록 구성을 위임
-          </strong>
-          한다. 이때
-          애플리케이션은 byte/gas 한도를 지키면서 후보를 제거·재배치·추가할 수
-          있지만, 결과 블록은 다른 validator의 ProcessProposal과 합의 규칙을
-          통과해야 한다.
-        </p>
-
-        <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          <strong>💡 제안자만 PrepareProposal을 호출</strong> — 앱이 TX 순서
-          변경, 필터링, 추가를 수행할 수 있고, 나머지 validator는
-          ProcessProposal로 그 결과를 검증한다.
+      <h2 className="mb-6 text-2xl font-bold">PrepareProposal은 선택하고 ProcessProposal은 모든 correct node가 같은 후보를 판정한다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>
+          Proposer application은 mempool candidate에서 transaction을 제거·재배치하거나 새 bytes를 넣을 수 있지만 응답의
+          총 transaction bytes가 request의 <code>max_tx_bytes</code>를 넘지 않게 해야 합니다. 이 구성은 local state나
+          policy에 따라 달라질 수 있어 deterministic일 필요가 없습니다. 반면 다른 validator가 같은 proposal bytes와
+          같은 committed state를 검사하는 ProcessProposal은 ACCEPT/REJECT가 갈리지 않도록 deterministic해야 합니다.
         </p>
       </div>
-
-      {/* ── ProcessProposal ── */}
-      <h3 className="text-lg font-semibold mb-3 mt-8">
-        ProcessProposal 코드 추적
-      </h3>
-      <div className="not-prose mb-8">
-        <ProcessProposalViz onOpenCode={open} />
-      </div>
-
-      <div className="not-prose mb-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
-          <div className="rounded-lg border bg-card p-4">
-            <p className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-2">
-              Request 구조체
-            </p>
-            <p className="text-xs text-muted-foreground mb-2">
-              <code>RequestProcessProposal</code> — 모든 validator 수신
-            </p>
-            <ul className="text-sm space-y-1 text-muted-foreground">
-              <li>
-                <code className="text-xs">Txs [][]byte</code> — 제안된 TX 목록
-              </li>
-              <li>
-                <code className="text-xs">ProposedLastCommit</code> — 이전 블록
-                커밋 정보
-              </li>
-              <li>
-                <code className="text-xs">Hash</code> — 블록 해시
-              </li>
-              <li>
-                <code className="text-xs">Height</code>,{" "}
-                <code className="text-xs">Time</code>,{" "}
-                <code className="text-xs">ProposerAddress</code>
-              </li>
-            </ul>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <p className="text-xs font-semibold text-green-600 dark:text-green-400 mb-2">
-              Response 구조체
-            </p>
-            <p className="text-xs text-muted-foreground mb-2">
-              <code>ResponseProcessProposal</code>
-            </p>
-            <ul className="text-sm space-y-1 text-muted-foreground">
-              <li>
-                <code className="text-xs">Status</code> —{" "}
-                <code className="text-xs">ACCEPT</code> 또는{" "}
-                <code className="text-xs">REJECT</code>
-              </li>
-            </ul>
-            <p className="text-xs font-semibold text-blue-600 dark:text-blue-400 mt-3 mb-1">
-              SDK 기본 구현
-            </p>
-            <p className="text-xs text-muted-foreground">
-              모든 TX 재검증 → 하나라도 invalid면{" "}
-              <code className="text-xs">REJECT</code>
-            </p>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
-          <div className="rounded-lg border border-red-500/30 bg-red-500/5 p-4">
-            <p className="text-xs font-semibold text-red-600 dark:text-red-400 mb-2">
-              REJECT 시나리오
-            </p>
-            <ul className="text-sm space-y-1 text-muted-foreground">
-              <li>invalid TX 포함</li>
-              <li>허용되지 않은 TX 순서</li>
-              <li>app-specific rule 위반</li>
-              <li>vote extension mismatch</li>
-            </ul>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <p className="text-xs font-semibold mb-2">투표 결과 영향</p>
-            <ul className="text-sm space-y-1 text-muted-foreground">
-              <li>
-                <code className="text-xs">ACCEPT</code> →{" "}
-                <code className="text-xs">prevote(block_hash)</code>
-              </li>
-              <li>
-                <code className="text-xs">REJECT</code> →{" "}
-                <code className="text-xs">prevote(nil)</code>
-              </li>
-              <li>
-                충분한 voting power가 nil에 prevote하면 해당 블록으로 polka를
-                만들지 못함
-              </li>
-            </ul>
-            <p className="text-xs text-muted-foreground mt-2">
-              CometBFT는 ProcessProposal 거부 자체만으로 proposer를 자동
-              slash하지 않는다.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          ProcessProposal은 각 validator가 제안된 block을 application 규칙으로
-          검증하는 경계다. ACCEPT이면 block에 prevote할 수 있지만 REJECT이면
-          nil에 prevote한다. 같은 블록에 +2/3 voting power가 모이지 않으면
-          합의는 다음 라운드로 넘어간다.
-          제안자의 보상·처벌은 애플리케이션 정책이며 ProcessProposal status의
-          자동 결과가 아니다.
+      <CometBFTCoreViz mode="abci" />
+      <ExplainedFormula
+        question="Correct validator 둘이 같은 proposal을 받았을 때 왜 같은 판정을 내야 할까요?"
+        idea={<>판정 함수의 입력을 committed state, proposal bytes, protocol context로 닫고 local clock·randomness·remote API처럼 node마다 달라지는 값을 제거합니다.</>}
+        formula={String.raw`d=G(S_h,B,C_h)`}
+        terms={[
+          { symbol: "S_h", name: "Committed state", description: "Height h 직전의 committed application state입니다." },
+          { symbol: "B", name: "Proposal", description: "검사하는 동일 proposal block bytes입니다." },
+          { symbol: "C_h", name: "Protocol context", description: "Request가 제공한 height·time·last commit·proposer 등 context입니다." },
+          { symbol: "G", name: "Validation function", description: "ProcessProposal의 deterministic validation function입니다." },
+        ]}
+        assumptions={["Correct node가 같은 application binary·configuration과 동일한 committed input을 사용합니다.", "Local clock·unordered iteration·remote service response처럼 합의 입력 밖의 값을 판정에 사용하지 않습니다.", "ACCEPT는 block commit이나 transaction success가 아니라 prevote 가능한 candidate라는 뜻입니다."]}
+        interpretation="같은 S_h·B·C_h에는 같은 d가 나와야 합니다. 일부 node만 REJECT하면 safety보다 먼저 liveness가 무너져 quorum을 만들지 못할 수 있습니다."
+      />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>Coherence는 proposer 자신도 검사 대상이라는 뜻입니다</h3>
+        <p>
+          정상 proposer가 PrepareProposal로 만든 candidate는 correct validator의 ProcessProposal에서 ACCEPT돼야 progress할
+          수 있습니다. Proposer에서도 ProcessProposal이 호출될 수 있고 failure 상황에서는 이전 invocation의 candidate가
+          도착하거나 호출되지 않을 수 있으므로, “Prepare 직후 Process가 정확히 한 번 이어진다”는 local call sequence에
+          state correctness를 의존하면 안 됩니다.
         </p>
-
-        <p className="text-sm border-l-2 border-sky-500/50 pl-3 mt-4">
-          <strong>💡 REJECT 시 nil prevote</strong> — 충분한 노드가 거부하면
-          해당 라운드 타임아웃, 다음 라운드로 진행.
+        <h3>Candidate execution은 cache이지 commit이 아닙니다</h3>
+        <p>
+          Prepare/Process에서 block을 미리 실행해 FinalizeBlock을 빠르게 만들 수 있지만 각 candidate state는 block hash로
+          격리합니다. 여러 round candidate를 덮어쓰지 않고, decided block과 일치하는 결과만 FinalizeBlock에서 승격하며
+          나머지는 안전하게 폐기합니다. External side effect는 candidate path에서 실행하지 않습니다.
         </p>
       </div>
     </section>

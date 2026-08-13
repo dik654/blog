@@ -1,144 +1,111 @@
 import { CitationBlock } from "@/components/ui/citation";
+import ExplainedFormula from "@/components/ui/explained-formula";
 import EccPathViz from "./viz/EccPathViz";
 
-const layers = [
-  {
-    layer: "DDR5 on-die ECC",
-    protects: "각 DRAM die의 cell array 내부 single-bit 오류",
-    outside: "module 배선·memory bus·controller 이후 경로",
-  },
-  {
-    layer: "System ECC",
-    protects: "추가 check bit와 controller가 보는 memory transfer",
-    outside: "지원하지 않는 CPU·보드에서는 동작하지 않음",
-  },
-  {
-    layer: "Patrol scrub / ECS",
-    protects: "사용 전에 잠재 오류를 찾아 교정·보고",
-    outside: "교체와 서비스 failover를 대신하지 않음",
-  },
-  {
-    layer: "Advanced RAS",
-    protects: "rank sparing·device correction·page retirement 등",
-    outside: "기능과 교정 능력이 플랫폼마다 다름",
-  },
-  {
-    layer: "Replication / backup",
-    protects: "machine·service·data loss 장애 영역",
-    outside: "실시간 memory corruption의 1차 감지를 대신하지 않음",
-  },
-];
-
 const operations = [
-  ["수집", "BMC·OS의 corrected/uncorrectable counter와 DIMM 위치를 저장"],
-  ["경보", "단일 횟수보다 시간당 증가율과 같은 row·rank 반복을 기준으로 설정"],
-  ["격리", "page offlining·서비스 failover·host drain 정책을 오류 등급별 정의"],
-  ["교체·검증", "DIMM 교체 후 stress test와 counter 재발 여부를 확인"],
-];
+  [
+    "수집",
+    "Corrected·uncorrectable counter를 DIMM·rank·row와 timestamp에 연결",
+  ],
+  ["판정", "단발 횟수보다 증가율·반복 위치·온도·전원 event를 함께 비교"],
+  [
+    "격리",
+    "Page offlining, host drain, failover와 machine-check 대응을 오류 등급별 실행",
+  ],
+  ["복구", "DIMM 교체 뒤 stress test와 counter 재발 여부를 확인"],
+] as const;
 
 export default function ECC() {
   return (
     <section id="ecc" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">ECC: 보호 범위와 오류 운영</h2>
-      <div className="not-prose mb-8">
-        <EccPathViz />
-      </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          ECC는 하나의 기능명이 아니라 여러 보호 경계의 조합
-          <br />
-          DDR5 on-die ECC는 DRAM chip 내부 오류를 교정하고, system ECC는 ECC
-          module과 memory controller를 이용해 module·bus를 지나는 codeword
-          오류를 감지·교정함
-        </p>
-        <p className="leading-7">
-          따라서 DDR5라는 이유만으로 system ECC memory가 되는 것은 아니며
-          CPU·보드·DIMM이 모두 해당 구성을 지원해야 함. 정확한 single/multi-bit
-          교정 범위도 SECDED·device correction 등 플랫폼 RAS 방식에 따라 다름
-        </p>
-
-        <div className="overflow-x-auto not-prose my-6">
-          <table className="min-w-full text-sm border border-border">
-            <thead>
-              <tr className="bg-muted">
-                {["보호 계층", "다루는 범위", "남는 경계"].map((heading) => (
-                  <th
-                    key={heading}
-                    className="border border-border px-3 py-2 text-left"
-                  >
-                    {heading}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {layers.map((row) => (
-                <tr key={row.layer}>
-                  <td className="border border-border px-3 py-2 font-medium whitespace-nowrap">
-                    {row.layer}
-                  </td>
-                  <td className="border border-border px-3 py-2">
-                    {row.protects}
-                  </td>
-                  <td className="border border-border px-3 py-2 text-amber-700 dark:text-amber-300">
-                    {row.outside}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      <h2 className="mb-6 text-2xl font-bold">
+        ECC: 어느 위치의 몇 bit 오류를 다루는지부터 확인합니다
+      </h2>
+      <EccPathViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <div id="ecc-protection-boundary" className="scroll-mt-24">
+          <p>
+            DDR5 on-die ECC는 DRAM die 내부 cell array에서 read한 값을
+            내부적으로 교정해 yield와 신뢰성을 높입니다. 하지만 chip 밖 DQ pin,
+            module trace, memory bus에서 생긴 오류를 대신 보호하지 않습니다.
+            System ECC는 추가 check bit가 있는 DIMM과 memory controller가
+            codeword를 만들고 syndrome을 계산해 이 더 넓은 transfer 경계를
+            보호합니다. 따라서 “DDR5이므로 ECC”와 “system ECC memory”는 같은
+            말이 아닙니다.
+          </p>
         </div>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">
-          Corrected error도 정상 상태는 아니다
-        </h3>
-        <p className="leading-7">
-          교정 가능한 오류는 즉시 서비스 장애를 막지만 반복 횟수 증가는
-          DIMM·socket·전원·온도의 고장 전조일 수 있음. 교정됐다는 이유로 로그를
-          버리지 말고 물리 위치와 시간 추세를 남겨 예방 교체 기준에 연결해야 함
-          <br />
-          교정 불가능 오류는 machine check와 프로세스 중단으로 이어질 수
-          있으므로 host 격리와 failover도 미리 시험
-        </p>
-
-        <div className="not-prose my-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {operations.map(([title, body], index) => (
-            <div key={title} className="rounded-lg border border-border/60 p-4">
-              <p className="text-xs font-semibold text-emerald-500 mb-2">
-                {index + 1}. {title}
+        <div id="ecc-syndrome-secded" className="scroll-mt-24">
+          <ExplainedFormula
+            question="m개의 data bit 위치에서 single-bit 오류를 식별하려면 Hamming check bit가 최소 몇 개 필요한가?"
+            idea={
+              <p>
+                r개의 check bit가 만드는 2ʳ개 syndrome 상태가 정상 상태 하나와
+                data·check bit 각각의 단일 오류 위치를 구분할 만큼 커야 합니다.
               </p>
-              <p className="text-sm leading-6">{body}</p>
-            </div>
+            }
+            formula={"2^r\\ge m+r+1"}
+            terms={[
+              {
+                symbol: "m",
+                name: "data bits",
+                description:
+                  "한 codeword에서 보호하려는 실제 data bit 수입니다.",
+              },
+              {
+                symbol: "r",
+                name: "Hamming check bits",
+                description:
+                  "단일 오류 위치를 나타낼 syndrome을 만드는 check bit 수입니다.",
+              },
+              {
+                symbol: "+1",
+                name: "no-error state",
+                description:
+                  "어느 bit도 뒤집히지 않은 정상 상태를 위한 경우입니다.",
+              },
+            ]}
+            assumptions={[
+              "독립적인 binary bit-flip과 Hamming-style single-error correction을 설명하는 최소 bound입니다.",
+              "SECDED는 보통 전체 parity bit를 더해 double-error detection을 확장하지만 실제 codeword·symbol·chipkill 구성은 platform마다 다릅니다.",
+              "이 식은 burst, entire-chip failure나 silent data corruption 전체를 보장하지 않습니다.",
+            ]}
+            interpretation="m=64이면 r=7에서 128≥72가 되어 단일 오류 위치를 표현할 수 있습니다. 전체 parity를 추가한 SECDED 계열은 1-bit correction과 2-bit detection을 목표로 하지만, 제품의 실제 RAS 능력은 controller 문서를 확인해야 합니다."
+          />
+        </div>
+        <p>
+          Corrected error는 즉시 data를 복구했다는 뜻이지 hardware가 건강하다는
+          뜻은 아닙니다. 같은 DIMM·rank에서 증가하면 열, 전원, socket contact나
+          device 열화의 신호일 수 있으므로 로그를 지우지 않고 시간당 비율과 물리
+          위치를 남깁니다. Uncorrectable error에는 process 종료나 machine
+          check가 뒤따를 수 있어 service failover와 host 격리를 실제로 시험해야
+          합니다.
+        </p>
+        <div className="not-prose my-6 grid min-w-0 gap-3 sm:grid-cols-2">
+          {operations.map(([title, detail]) => (
+            <article
+              key={title}
+              className="min-w-0 rounded-lg border border-border/70 p-4"
+            >
+              <p className="text-sm font-semibold">{title}</p>
+              <p className="mt-1 break-words text-sm leading-6 text-muted-foreground">
+                {detail}
+              </p>
+            </article>
           ))}
         </div>
-
-        <CitationBlock
-          source="Micron — DDR5 New Features"
-          citeKey={6}
-          type="paper"
-          href="https://www.micron.com/content/dam/micron/global/public/products/white-paper/ddr5-new-features-white-paper.pdf"
-        >
-          DDR5 on-die ECC가 DRAM READ 전에 die 내부 single-bit 오류를 교정하며
-          system-level ECC와 별도 계층임을 설명.
-        </CitationBlock>
-        <CitationBlock
-          source="Kingston — DDR5 Overview, On-Die ECC"
-          citeKey={7}
-          href="https://www.kingston.com/en/blog/pc-performance/ddr5-overview"
-        >
-          on-die ECC는 chip 내부 오류만 교정하고 module과 CPU memory controller
-          사이 bus 오류는 교정할 수 없다고 명시.
-        </CitationBlock>
-        <CitationBlock
-          source="AMD — EPYC Embedded 9005 Product Brief"
-          citeKey={8}
-          type="paper"
-          href="https://www.amd.com/content/dam/amd/en/documents/products/embedded/epyc/epyc-embedded-9005-series-product-brief.pdf"
-        >
-          Advanced Memory Device Correction, Dynamic PPR와 out-of-band error
-          polling 등 system RAS 기능이 CPU 플랫폼 기능임을 보여 줌.
-        </CitationBlock>
+        <div id="paper-ddr5-on-die-ecc" className="scroll-mt-24">
+          <CitationBlock
+            source="Micron — DDR5 New Features"
+            citeKey={3}
+            type="paper"
+            href="https://www.micron.com/content/dam/micron/global/public/products/white-paper/ddr5-new-features-white-paper.pdf"
+          >
+            Micron의 기술 문서는 on-die ECC가 DRAM 내부 read 이전에 동작하는
+            경계와 system-level ECC와의 차이를 설명합니다. 특정 server의 SECDED,
+            device correction과 telemetry 기능은 CPU·board의 RAS 문서를
+            우선합니다.
+          </CitationBlock>
+        </div>
       </div>
     </section>
   );

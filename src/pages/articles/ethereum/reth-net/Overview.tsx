@@ -1,7 +1,8 @@
+import { Link } from "react-router-dom";
+import ContentBoundary from "@/components/articles/content-boundary";
 import type { CodeRef } from "@/components/code/types";
 import ContextViz from "./viz/ContextViz";
 import NetworkStackViz from "./viz/NetworkStackViz";
-import { NET_LAYERS } from "./OverviewData";
 
 export default function Overview({
   onCodeRef: _onCodeRef,
@@ -10,69 +11,98 @@ export default function Overview({
 }) {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">
-        Reth 네트워크: 발견에서 protocol session까지
+      <h2 className="mb-5 text-2xl font-bold">
+        Reth networking은 주소 수집이 아니라 후보를 compatible active
+        session으로 승격하는 검증 pipeline이다
       </h2>
-      <div className="not-prose mb-8">
-        <ContextViz />
-      </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
-        <h3>배경</h3>
-        <p>
-          실행 클라이언트는 새 피어를 찾고, 상대 노드와 암호화 연결을 만든 뒤,
-          서로 지원하는 devp2p capability를 협상해야 한다. 그 이후에야
-          헤더·블록·트랜잭션을 교환할 수 있다.
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="text-lg leading-8">
+          실행 클라이언트는 bootnode·DNS·discovery에서 endpoint를 얻고,
+          transport를 열어 RLPx identity와 encrypted frame을 설정한 뒤 공통
+          devp2p capability와 ETH Status compatibility를 확인해야 합니다. 이 네
+          단계를 모두 통과하기 전까지 상대는 block·transaction을 신뢰해 받을
+          active peer가 아니라 후보 또는 pending session입니다.
         </p>
-        <h3>문제</h3>
         <p>
-          발견한 endpoint를 곧바로 신뢰하거나 discovery·transport·Ethereum wire
-          semantics를 한 루프에 섞으면 연결 한도, timeout, protocol upgrade와
-          악성 피어 처리의 경계가 흐려진다. 또한 네트워크 전체가 특정{" "}
-          <code>eth/*</code> 버전을 쓴다고 고정하면 문서가 새 버전이 배포되는
-          순간 틀어진다.
-        </p>
-        <h3>아이디어</h3>
-        <p>
-          Reth는 discovery, connection manager, RLPx session, negotiated
-          subprotocol을 별도 책임으로 둔다. 각 피어는 양쪽이 공통으로 지원하는
-          capability를 골라 통신하므로 버전은 연결별 결과이며 전역 상수가
-          아니다.
-        </p>
-        <h3>구현</h3>
-        <p>
-          discovery가 dial 후보를 공급하면 connection manager가 방향·slot·평판을
-          확인한다. RLPx가 상대 identity와 암호화 frame을 설정하고, Hello와
-          Status 검증을 통과한 session만 request/response와 gossip을 네트워크
-          서비스에 전달한다.
+          이 글은{" "}
+          <strong>
+            candidate→transport→RLPx→capability/status→data path→failure cleanup
+          </strong>{" "}
+          순서로 진행합니다.
+          <Link to="/blockchain/reth">Reth 구조</Link>의 block lifecycle과
+          <Link to="/blockchain/reth-chainspec"> ChainSpec</Link>의 fork
+          compatibility를 재사용하고, 여기서는 peer lifecycle과 bounded message
+          flow를 소유합니다.
         </p>
       </div>
 
-      <div className="not-prose mb-8">
-        <NetworkStackViz />
+      <ContentBoundary article="reth-net" />
+      <ContextViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>먼저 알아둘 최소 개념</h3>
+        <p>
+          <strong>Discovery record</strong>는 node identity와 endpoint를 담은
+          dial 후보 정보이고,
+          <strong>RLPx</strong>는 Ethereum devp2p의 authenticated encrypted
+          transport와 framing 경계입니다.
+          <strong>Capability</strong>는 <code>eth</code> 같은 subprotocol 이름과
+          version의 조합이며, <strong>Status</strong>는 선택된 ETH protocol에서
+          network·genesis·fork·head context를 비교하는 compatibility gate입니다.
+          Address를 찾았거나 TCP가 연결됐다는 사실만으로 이 뒤의 gate가
+          통과되지는 않습니다.
+        </p>
+        <h3>Phase별 receipt가 있어야 실패 원인을 구분할 수 있습니다</h3>
+        <p>
+          Connection receipt에는 candidate source와 record sequence·age,
+          local/remote endpoint, inbound/outbound direction, handshake peer
+          identity, negotiated capabilities, ETH version·fork ID·head, channel
+          limit와 close reason을 남깁니다. 그래야 stale record, timeout,
+          identity mismatch, no shared capability, wrong genesis, malformed
+          message와 local overload를 같은 “connection failed” counter로 뭉개지
+          않습니다.
+        </p>
       </div>
 
-      <h3 className="mb-3 text-lg font-semibold">계층별 책임</h3>
-      <div className="not-prose grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {NET_LAYERS.map((layer) => (
-          <article
-            key={layer.id}
-            className="rounded-xl border border-border/70 bg-card p-4"
-          >
-            <p className="text-sm font-semibold" style={{ color: layer.color }}>
-              {layer.label}
-            </p>
-            <p className="mt-1 text-xs font-medium text-foreground/65">
-              {layer.role}
-            </p>
-            <p className="mt-3 text-xs leading-5 text-foreground/60">
-              {layer.details}
-            </p>
-            <p className="mt-2 text-xs leading-5 text-foreground/45">
-              {layer.why}
-            </p>
-          </article>
-        ))}
+      <NetworkStackViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>Reth 2.x라는 범위도 version receipt가 필요합니다</h3>
+        <p>
+          2026-08-14에 확인한 공식 repository layout은 network core가
+          ingress/egress, peer와 session management를 소유하고,
+          discovery·eth-wire/RLPx·downloaders를 별도 crate 책임으로 나눕니다.
+          그러나 crate path와 default는 release에서 바뀝니다. 예를 들어 v2.2.0
+          release note의 Discv5 default change를 이전 version이나 custom build에
+          일반화하지 않고 semver·SHA, Cargo feature, network config digest와
+          실제 enabled discovery protocol을 함께 기록합니다.
+        </p>
+      </div>
+
+      <div
+        id="paper-reth-network-layout"
+        className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">
+          공식 source guide 읽기 · network ownership
+        </p>
+        <p className="mt-2 text-sm font-semibold">
+          Reth Project Layout — Networking
+        </p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          문제는 peer·session·discovery·wire·downloader의 실제 source owner를
+          찾는 것입니다. 공식 layout은 current repository의 crate 책임을
+          설명하지만, 특정 release의 path가 영구 API이거나 모든 protocol
+          feature가 default-enabled라는 뜻은 아닙니다.
+        </p>
+        <a
+          className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
+          href="https://github.com/paradigmxyz/reth/blob/main/docs/repo/layout.md"
+          target="_blank"
+          rel="noreferrer"
+        >
+          공식 layout 보기
+        </a>
       </div>
     </section>
   );

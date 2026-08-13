@@ -1,276 +1,39 @@
-import { motion } from "framer-motion";
-import { CodeViewButton } from "@/components/code";
-import type { CodeRef } from "@/components/code/types";
-import { codeRefs } from "../libp2p/codeRefs";
+import { Link } from "react-router-dom";
 
-const CHAIN_STEPS = [
-  {
-    step: 1,
-    from: "TcpStream",
-    to: "(PeerId, Output<T>)",
-    layer: "Noise XX",
-    desc: "3-way 핸드셰이크로 DH 키 교환. 상대 PeerId 인증 + 암호화 스트림 생성.",
-    color: "#8b5cf6",
-  },
-  {
-    step: 2,
-    from: "Output<T>",
-    to: "StreamMuxerBox",
-    layer: "Yamux",
-    desc: "하나의 암호화된 TCP 위에 다수의 논리적 스트림 다중화. 최대 256개 인바운드 버퍼.",
-    color: "#10b981",
-  },
-  {
-    step: 3,
-    from: "(PeerId, StreamMuxerBox)",
-    to: "Swarm 진입",
-    layer: "Transport::Output",
-    desc: "ConnectionPool에 등록. 이제 NetworkBehaviour가 서브스트림을 열 수 있다.",
-    color: "#f59e0b",
-  },
-];
-
-const BUILDER_CHAIN = [
-  { method: ".with_tcp()", desc: "TCP Transport 등록", color: "#64748b" },
-  {
-    method: ".with_noise()",
-    desc: "Security 업그레이드 등록",
-    color: "#8b5cf6",
-  },
-  {
-    method: ".with_behaviour()",
-    desc: "Yamux 자동 + Behaviour 생성",
-    color: "#10b981",
-  },
-  { method: ".build()", desc: "Swarm 인스턴스 반환", color: "#f59e0b" },
-];
-
-export default function UpgradeChain({
-  onCodeRef,
-}: {
-  onCodeRef?: (key: string, ref: CodeRef) => void;
-}) {
+export default function UpgradeChain() {
   return (
     <section id="upgrade-chain" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">업그레이드 체인</h2>
-
-      {/* 업그레이드 파이프라인 */}
-      <div className="rounded-xl border border-border bg-card p-5 mb-6">
-        <p className="text-xs font-mono text-foreground/50 mb-4">
-          TCP raw bytes → Swarm Output 까지 3단계
-        </p>
-        <div className="flex flex-col gap-3">
-          {CHAIN_STEPS.map((s, i) => (
-            <motion.div
-              key={s.step}
-              initial={{ opacity: 0, x: -16 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: i * 0.12 }}
-              className="rounded-lg border p-4"
-              style={{
-                borderColor: s.color + "40",
-                background: s.color + "06",
-              }}
-            >
-              <div className="flex items-center gap-2 mb-2">
-                <span
-                  className="text-[10px] font-mono font-bold rounded-full w-5 h-5
-                  flex items-center justify-center shrink-0"
-                  style={{ background: s.color + "20", color: s.color }}
-                >
-                  {s.step}
-                </span>
-                <span
-                  className="text-xs font-mono font-bold"
-                  style={{ color: s.color }}
-                >
-                  {s.layer}
-                </span>
-              </div>
-              <div className="flex items-center gap-2 mb-1.5">
-                <span
-                  className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-foreground/5
-                  text-foreground/60"
-                >
-                  {s.from}
-                </span>
-                <span className="text-foreground/30">→</span>
-                <span
-                  className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-foreground/5
-                  text-foreground/60"
-                >
-                  {s.to}
-                </span>
-              </div>
-              <p className="text-[11px] text-foreground/60">{s.desc}</p>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3 className="text-xl font-semibold mt-2 mb-3">
-          왜 Security가 Mux보다 먼저인가?
-        </h3>
+      <h2 className="mb-6 text-2xl font-bold">Upgrade chain은 성공 type뿐 아니라 timeout과 자원 소유권도 바꿉니다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          암호화 전에 다중화를 하면 스트림 헤더가 <strong>평문</strong>으로
-          노출된다.
-          <br />
-          공격자가 어떤 프로토콜을 협상하는지 관찰할 수 있다.
-          <br />
-          Security 먼저 적용하면 Yamux 프레임 자체가 암호화된다.
+          Raw <code>TcpStream</code>에서 먼저 security protocol ID를 합의하고
+          <Link to="/p2p/libp2p-noise"> Noise</Link> handshake를 수행합니다. 성공하면
+          remote PeerId와 authenticated encrypted I/O가 나오고, 그 위에서 Yamux 같은
+          공통 stream multiplexer를 선택합니다. 마지막 output만
+          <Link to="/p2p/libp2p"> Swarm</Link>의 connection pool로 이동합니다.
         </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          SwarmBuilder 체이닝 패턴
-        </h3>
         <p>
-          타입 상태 패턴(typestate pattern)으로 빌더 순서를 컴파일 타임에
-          강제한다.
-          <code>.with_tcp()</code> 없이 <code>.with_noise()</code>를 호출하면
-          컴파일 에러. 실수를 런타임이 아닌 컴파일 타임에 잡는 Rust의 전형적
-          설계다.
+          Security와 muxer 협상은 직렬 dependency이므로 각 단계에 별도 timeout과 error
+          label이 필요합니다. TCP connect 40ms, security 3s timeout이라면 문제는 network
+          reachability가 아니라 secure-channel phase입니다. 전체 timeout 하나만 두면 어떤
+          protocol과 message에서 멈췄는지 알 수 없고 slowloris가 handshake slot을 오래
+          점유할 수 있습니다.
         </p>
-      </div>
-
-      {/* SwarmBuilder 체이닝 */}
-      <div className="mt-6 rounded-xl border border-border bg-card p-5">
-        <p className="text-xs font-mono text-foreground/50 mb-3">
-          SwarmBuilder — 타입 상태로 순서 강제
+        <h3>같은 조건에서 비교하는 release gate</h3>
+        <p>
+          TCP+Noise+Yamux와 QUIC을 비교할 때는 같은 peer pair, address family, RTT·loss,
+          authentication policy, warm/cold session, application stream 수와 payload를
+          고정합니다. Connect latency, authenticated-ready latency, first application byte,
+          CPU, bytes on wire, failure cleanup을 함께 재야 합니다. “TCP는 3단계, QUIC은
+          1단계”라는 구조만으로 고정 배수의 속도 차이를 주장할 수 없습니다.
         </p>
-        <div className="flex flex-col gap-1.5">
-          {BUILDER_CHAIN.map((b, i) => (
-            <motion.div
-              key={b.method}
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 + i * 0.08 }}
-              className="flex items-center gap-3 rounded-lg border px-4 py-2"
-              style={{
-                borderColor: b.color + "40",
-                background: b.color + "08",
-              }}
-            >
-              <span
-                className="text-xs font-mono font-bold shrink-0"
-                style={{ color: b.color }}
-              >
-                {b.method}
-              </span>
-              <span className="text-xs text-foreground/60">{b.desc}</span>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-
-      {/* 코드 참조 */}
-      {onCodeRef && (
-        <div className="not-prose flex flex-wrap gap-2 mt-6">
-          <CodeViewButton
-            onClick={() => onCodeRef("noise-config", codeRefs["noise-config"])}
-          />
-          <span className="text-[10px] text-muted-foreground self-center">
-            Noise XX 핸드셰이크
-          </span>
-          <CodeViewButton
-            onClick={() => onCodeRef("yamux-muxer", codeRefs["yamux-muxer"])}
-          />
-          <span className="text-[10px] text-muted-foreground self-center">
-            Yamux StreamMuxer
-          </span>
-          <CodeViewButton
-            onClick={() =>
-              onCodeRef("noise-handshake", codeRefs["noise-handshake"])
-            }
-          />
-          <span className="text-[10px] text-muted-foreground self-center">
-            finish() 서명 검증
-          </span>
-        </div>
-      )}
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          multistream-select Protocol Negotiation
-        </h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-          {`// multistream-select Protocol
-//
-// 목적: 양측이 지원하는 protocol 협상
-//
-// Negotiation Flow:
-//
-//   A → B: "/multistream/1.0.0"
-//   B → A: "/multistream/1.0.0"  (OK)
-//
-//   A → B: "/noise" (try)
-//   B → A: "/noise" (accept)
-//     → use Noise
-//
-//   Alternative:
-//   A → B: "/noise"
-//   B → A: "na" (not available)
-//   A → B: "/tls" (fallback)
-//   B → A: "/tls" (accept)
-//     → use TLS
-
-// Length-prefixed messages:
-//   [varint length][protocol string][\\n]
-//
-//   "\\x07/noise\\n" = 8 bytes
-//
-// ls command (list protocols):
-//   A → B: "ls"
-//   B → A: list of supported protocols
-
-// Upgrade Types:
-//
-//   Security upgrade:
-//     Raw TCP → encrypted stream
-//     Noise XX, TLS 1.3
-//
-//   Mux upgrade:
-//     Encrypted stream → multiplexed substreams
-//     Yamux, Mplex
-//
-//   Custom protocols:
-//     multistream negotiate on each substream
-//     Kad, GossipSub, Identify, Ping
-
-// SwarmBuilder Type State Pattern:
-//
-//   Initial:
-//     SwarmBuilder::new(keypair)
-//     → Builder<WithIdentity>
-//
-//   After .with_tcp():
-//     → Builder<WithIdentity, WithTcp>
-//
-//   After .with_noise():
-//     → Builder<WithIdentity, WithTcp, WithSecurity>
-//
-//   After .with_yamux():
-//     → Builder<..., WithMuxer>
-//
-//   After .with_behaviour():
-//     → Builder<..., WithBehaviour>
-//
-//   .build() only available when all set
-//
-//   → Compile-time safety
-//   → Impossible wrong order
-
-// Why Security before Mux?
-//   If Mux first:
-//     Stream headers exposed (plaintext)
-//     Attacker sees protocol negotiation
-//     Timing analysis possible
-//
-//   Security first:
-//     Everything after Noise encrypted
-//     Mux frames, protocol IDs hidden
-//     Only TCP metadata visible (IP, port, size)`}
-        </pre>
+        <h3>실패 주입 체크리스트</h3>
+        <ul>
+          <li>Unsupported security·muxer protocol에서 raw socket이 즉시 닫히는지 확인합니다.</li>
+          <li>Noise expected PeerId mismatch가 muxer와 Swarm까지 올라가지 않는지 확인합니다.</li>
+          <li>Upgrade timeout·cancellation 뒤 socket, future, buffer와 metric label이 정리되는지 확인합니다.</li>
+          <li>Overload에서 pending inbound, established connection과 substream limit를 각각 관측합니다.</li>
+        </ul>
       </div>
     </section>
   );

@@ -58,12 +58,12 @@ export default function InfiniBand() {
           <p className="leading-7">
             InfiniBand는 GPU 전용이거나 단일 회사의 비공개 protocol이 아니라
             server·storage 연결을 위한 IBTA 표준 channel-based switched
-            fabric이다. Reliable messaging와 RDMA semantics,
-            HCA·switch·subnet management를 하나의 ecosystem으로 제공해 HPC와
-            분산 학습에 널리 쓰인다. 다만 collective는 fabric 이름만으로
-            빨라지지 않는다. 같은 count와 datatype으로 참여한 rank들의 위치,
-            node 안 NVLink·PCIe 경로, node 밖 HCA와 fabric 경로, message size와
-            algorithm이 함께 완료 시간을 만든다.
+            fabric이다. Reliable messaging와 RDMA semantics, HCA·switch·subnet
+            management를 하나의 ecosystem으로 제공해 HPC와 분산 학습에 널리
+            쓰인다. 다만 collective는 fabric 이름만으로 빨라지지 않는다. 같은
+            count와 datatype으로 참여한 rank들의 위치, node 안 NVLink·PCIe 경로,
+            node 밖 HCA와 fabric 경로, message size와 algorithm이 함께 완료
+            시간을 만든다.
           </p>
         </div>
 
@@ -112,8 +112,8 @@ export default function InfiniBand() {
         </h3>
         <p className="leading-7">
           GPU collective는 노드 안의 NVLink·PCIe와 노드 밖의 HCA·fabric을
-          연속해서 사용한다. Rank가 어느 GPU에 있고 그 GPU에서 가장 가까운
-          HCA가 무엇인지, collective algorithm이 ring·tree 등의 path를 어떻게
+          연속해서 사용한다. Rank가 어느 GPU에 있고 그 GPU에서 가장 가까운 HCA가
+          무엇인지, collective algorithm이 ring·tree 등의 path를 어떻게
           만드는지가 성능에 영향을 준다. 단일 pair bandwidth 다음에는 실제 rank
           수와 message size로 all-reduce·all-gather·reduce-scatter를 측정하고,
           operation time·algorithm bandwidth·bus bandwidth를 함께 비교한다.
@@ -124,9 +124,9 @@ export default function InfiniBand() {
           idea={
             <p>
               algbw는 input size를 완료 시간으로 나눈 사용자 관점의 속도입니다.
-              nccl-tests의 busbw는 point-to-point transfer model에서 all-reduce가
-              rank당 주고받아야 하는 양을 반영하려고 rank 수에 따른 보정 계수를
-              곱한 비교 지표입니다.
+              nccl-tests의 busbw는 point-to-point transfer model에서
+              all-reduce가 rank당 주고받아야 하는 양을 반영하려고 rank 수에 따른
+              보정 계수를 곱한 비교 지표입니다.
             </p>
           }
           formula={String.raw`\begin{aligned}
@@ -134,18 +134,42 @@ export default function InfiniBand() {
             B_{\mathrm{bus}}&=B_{\mathrm{alg}}\frac{2(n-1)}{n}
           \end{aligned}`}
           terms={[
-            { symbol: "S", name: "collective input size", description: "nccl-tests가 한 rank의 all-reduce 입력으로 보고하는 byte 수입니다." },
-            { symbol: "t", name: "operation time", description: "해당 collective 한 번이 완료되는 평균 시간입니다." },
-            { symbol: "n", name: "rank count", description: "같은 communicator의 collective에 참여한 총 rank 수입니다." },
-            { symbol: "B_{\\mathrm{alg}}", name: "algorithm bandwidth", description: "같은 크기의 작업 완료 시간을 예측하기 쉬운 S/t입니다." },
-            { symbol: "B_{\\mathrm{bus}}", name: "nccl-tests bus bandwidth", description: "Flat send/receive model의 hardware 사용률 비교를 위한 all-reduce 보정값입니다." },
+            {
+              symbol: "S",
+              name: "collective input size",
+              description:
+                "nccl-tests가 한 rank의 all-reduce 입력으로 보고하는 byte 수입니다.",
+            },
+            {
+              symbol: "t",
+              name: "operation time",
+              description: "해당 collective 한 번이 완료되는 평균 시간입니다.",
+            },
+            {
+              symbol: "n",
+              name: "rank count",
+              description:
+                "같은 communicator의 collective에 참여한 총 rank 수입니다.",
+            },
+            {
+              symbol: "B_{\\mathrm{alg}}",
+              name: "algorithm bandwidth",
+              description:
+                "같은 크기의 작업 완료 시간을 예측하기 쉬운 S/t입니다.",
+            },
+            {
+              symbol: "B_{\\mathrm{bus}}",
+              name: "nccl-tests bus bandwidth",
+              description:
+                "Flat send/receive model의 hardware 사용률 비교를 위한 all-reduce 보정값입니다.",
+            },
           ]}
           assumptions={[
             "NCCL tests 문서의 point-to-point transfer accounting을 적용합니다.",
             "Reduction offload나 계층형 hardware algorithm에서는 busbw가 물리 link traffic과 일치하지 않을 수 있습니다.",
             "GB/s 단위, message size, rank 수, algorithm/protocol, topology를 함께 기록합니다.",
           ]}
-          interpretation="16 ranks라면 보정 계수는 1.875입니다. Busbw는 application이 1초에 처리한 tensor byte가 아니며, 최신 offload algorithm에서는 실제 wire counter로 해석하면 안 됩니다."
+          interpretation="16 ranks라면 보정 계수는 1.875이므로 algbw가 400GB/s일 때 busbw는 750GB/s입니다. Busbw는 application이 1초에 처리한 tensor byte가 아니며, 최신 offload algorithm에서는 실제 wire counter로 해석하면 안 됩니다."
         />
 
         <div

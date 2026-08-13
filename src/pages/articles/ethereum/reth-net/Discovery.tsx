@@ -1,7 +1,19 @@
 import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
-import { DISC_MESSAGES, LOOKUP_STEPS } from "./DiscoveryData";
+
+const LOOKUP = [
+  ["seed", "Bootnode·DNS·local table에서 시작 후보를 고릅니다."],
+  ["query", "Target과 가까운 record를 제한된 병렬도로 요청합니다."],
+  [
+    "verify",
+    "Identity/signature·sequence·expiry·endpoint policy를 검사합니다.",
+  ],
+  [
+    "promote",
+    "Fresh candidate만 dial queue에 넣고 실제 session 결과를 feedback합니다.",
+  ],
+] as const;
 
 export default function Discovery({
   onCodeRef,
@@ -11,103 +23,85 @@ export default function Discovery({
   return (
     <section id="discovery" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
-        Discovery: 주소 목록을 살아 있는 dial 후보로 바꾸기
+        Discovery는 trusted peer를 찾는 것이 아니라 fresh dial candidate를
+        유지한다
       </h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>
+          Bootnode는 첫 접점이지 중앙 신뢰 기관이 아니며, discovery record의
+          서명은 record가 해당 node key에서 왔음을 보일 뿐 endpoint가 지금
+          reachable하거나 peer가 honest하다는 뜻은 아닙니다. Sequence가 더
+          최신인지, address family와 port가 local policy에 맞는지, 최근
+          liveness가 있는지를 확인한 뒤에도 결과는 active peer가 아니라 dial
+          후보입니다.
+        </p>
+      </div>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
-        <div className="not-prose mb-4 flex flex-wrap gap-2">
+      <ol className="not-prose my-8 grid min-w-0 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {LOOKUP.map(([title, body], index) => (
+          <li key={title} className="min-w-0 border-t border-border pt-4">
+            <p className="font-mono text-[11px] font-semibold text-primary">
+              {String(index + 1).padStart(2, "0")}
+            </p>
+            <p className="mt-2 text-sm font-bold">{title}</p>
+            <p className="mt-2 break-words text-xs leading-5 text-muted-foreground">
+              {body}
+            </p>
+          </li>
+        ))}
+      </ol>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>Stale·Sybil·eclipse input을 서로 다른 축에서 제한합니다</h3>
+        <p>
+          Stale record는 sequence·age와 failed dial history로 줄이고, 한 IP
+          prefix·ASN·identity cluster가 table과 outbound slot을 독점하지 않도록
+          diversity와 rate limit을 둡니다. 그러나 diversity heuristic이 Sybil
+          resistance를 증명하지 않으며, trusted/static peer도 identity·protocol
+          handshake와 message validation을 생략할 권한은 없습니다. Discovery
+          result와 session behavior score를 분리해 한 번의 transient timeout을
+          영구 ban으로 확대하지 않습니다.
+        </p>
+        <h3>Release test는 deterministic candidate fixture에서 시작합니다</h3>
+        <p>
+          Base와 candidate에 같은 signed records·DNS answers·random seed·clock과
+          network fault schedule을 주고 stale sequence, invalid signature,
+          duplicate identity, unreachable endpoint, identity mismatch, no shared
+          capability, wrong genesis, message flood, channel saturation과
+          restart를 주입합니다. Candidate→pending→active count, reason-coded
+          close, slot·buffer 회수와 accepted message trace가 일치한 뒤 lookup
+          rate·connection latency·CPU·memory를 비교합니다.
           <CodeViewButton
             onClick={() =>
               onCodeRef("net-discovery", codeRefs["net-discovery"])
             }
           />
-          <span className="self-center text-xs text-muted-foreground">
-            discovery 책임을 보는 축약 코드
-          </span>
-        </div>
-        <h3>배경</h3>
-        <p>
-          새 노드는 아직 연결할 피어를 모른다. bootnode와 DNS 목록은 첫 접점을
-          제공하지만, 장기간 살아 있는 전체 peer set을 중앙 목록 하나에 의존할
-          수는 없다.
-        </p>
-        <h3>문제</h3>
-        <p>
-          endpoint는 이동하고 응답하지 않을 수 있으며, node identity와 IP·port
-          정보도 갱신된다. 발견된 주소를 곧바로 active peer로 취급하면 stale
-          record와 악성 응답이 connection slot을 차지한다.
-        </p>
-        <h3>아이디어</h3>
-        <p>
-          discovery table은 “연결 후보”만 유지한다. discv4의 거리 기반 table과
-          discv5의 서명된 ENR·lookup은 서로 다른 wire details를 가지지만, 반복
-          질의로 더 적합한 후보를 찾고 liveness와 record freshness를 갱신한다는
-          역할은 같다.
-        </p>
-        <h3>구현</h3>
-        <p>
-          Reth는 discv4·discv5와 DNS discovery를 조합할 수 있다. lookup 응답을
-          local table에 병합하고, connection manager가 그중 일부를 dial한다.
-          실제 연결 성공, handshake와 protocol behavior는 discovery score와
-          별개의 피드백으로 관리한다.
         </p>
       </div>
 
-      <h3 className="mb-3 text-lg font-semibold">
-        반복 lookup의 안정적인 흐름
-      </h3>
-      <div className="not-prose mb-8 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {LOOKUP_STEPS.map((step) => (
-          <article
-            key={step.step}
-            className="rounded-xl border border-border/70 bg-card p-4"
-          >
-            <p
-              className="font-mono text-xs font-bold"
-              style={{ color: step.color }}
-            >
-              Step {step.step}
-            </p>
-            <p className="mt-1 text-sm font-medium text-foreground/75">
-              {step.title}
-            </p>
-            <p className="mt-2 text-xs leading-5 text-foreground/55">
-              {step.desc}
-            </p>
-          </article>
-        ))}
+      <div
+        id="paper-devp2p-discv5"
+        className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">
+          공식 규격 읽기 · discovery threat model
+        </p>
+        <p className="mt-2 text-sm font-semibold">Ethereum Node Discovery v5</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          문제는 중앙 peer 목록 없이 signed node record를 찾고 갱신하는
+          것입니다. 규격은 discovery session·lookup·record semantics를
+          설명하지만 application protocol compatibility, peer honesty와
+          eclipse-free topology를 자동 보장하지는 않습니다.
+        </p>
+        <a
+          className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
+          href="https://github.com/ethereum/devp2p/blob/master/discv5/discv5-theory.md"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Discv5 규격 보기
+        </a>
       </div>
-
-      <h3 className="mb-3 text-lg font-semibold">discv4 message 역할</h3>
-      <div className="not-prose overflow-x-auto">
-        <table className="min-w-full border border-border text-sm">
-          <thead>
-            <tr className="bg-muted">
-              <th className="border border-border px-4 py-2 text-left">
-                메시지
-              </th>
-              <th className="border border-border px-4 py-2 text-left">역할</th>
-            </tr>
-          </thead>
-          <tbody>
-            {DISC_MESSAGES.map((message) => (
-              <tr key={message.name}>
-                <td className="border border-border px-4 py-2 font-mono text-xs">
-                  {message.name}
-                </td>
-                <td className="border border-border px-4 py-2 text-foreground/70">
-                  {message.purpose}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <p className="mt-3 text-xs leading-5 text-muted-foreground">
-        discv5는 동일한 표를 그대로 재사용하지 않는다. ENR, session
-        establishment와 request/response semantics는 discv5 규격을 별도로 따라야
-        한다.
-      </p>
     </section>
   );
 }

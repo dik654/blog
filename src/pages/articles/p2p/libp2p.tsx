@@ -13,12 +13,12 @@ export default function LibP2PArticle() {
 
   return (
     <>
-      <Overview onCodeRef={sidebar.open} />
+      <Overview />
       <TransportTrait onCodeRef={sidebar.open} />
-      <SwarmLoop onCodeRef={sidebar.open} />
-      <BehaviourTrait onCodeRef={sidebar.open} />
-      <HandlerTrait onCodeRef={sidebar.open} />
-      <ConnectionPoll onCodeRef={sidebar.open} />
+      <SwarmLoop />
+      <BehaviourTrait />
+      <HandlerTrait />
+      <ConnectionPoll />
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}
         codeRef={sidebar.codeRef}

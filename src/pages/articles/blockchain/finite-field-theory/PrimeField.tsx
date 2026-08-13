@@ -1,349 +1,89 @@
-import M from "@/components/ui/math";
-import PrimeFieldViz from "./viz/PrimeFieldViz";
-import PrimeFieldDefViz from "./viz/PrimeFieldDefViz";
-import MultiplicativeGroupViz from "./viz/MultiplicativeGroupViz";
-import PrimitiveRootViz from "./viz/PrimitiveRootViz";
+import ExplainedFormula from "@/components/ui/explained-formula";
 
 export default function PrimeField() {
   return (
     <section id="prime-field" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">소수체 & 원시근</h2>
-      <div className="not-prose mb-8">
-        <PrimeFieldViz />
+      <h2 className="mb-6 text-2xl font-bold">소수체의 나눗셈과 곱셈군</h2>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p>
+          Fₚ에서는 정수를 계산한 뒤 p로 나눈 나머지를 취합니다. p가 소수이면
+          1,…,p−1 가운데 어떤 값도 p와 공약수를 갖지 않으므로, extended
+          Euclidean algorithm이 ax+py=1을 만드는 x를 찾습니다. 이 x mod p가 a의
+          곱셈 역원입니다. 합성수 modulus에서는 zero divisor가 생길 수 있어 같은
+          결론이 성립하지 않습니다.
+        </p>
       </div>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-2">
-        <h3>소수체 정의</h3>
-      </div>
-      <div className="not-prose mb-8">
-        <PrimeFieldDefViz />
-      </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-2">
-        <h3>곱셈군 Fp*</h3>
-      </div>
-      <div className="not-prose mb-8">
-        <MultiplicativeGroupViz />
-      </div>
+      <ExplainedFormula
+        question="Fₚ에서 0이 아닌 a로 어떻게 나눌까요?"
+        idea="Fermat의 소정리 a^(p−1)=1의 양변에서 a 한 개를 분리하면 a^(p−2)가 a의 역원입니다. 구현에서는 exponentiation 또는 extended Euclidean algorithm을 선택합니다."
+        formula={String.raw`a^{-1}\equiv a^{p-2}\pmod p,\qquad b/a\equiv b\,a^{-1}\pmod p`}
+        terms={[
+          {
+            symbol: "p",
+            name: "prime modulus",
+            description: "field의 원소 수인 소수입니다.",
+          },
+          {
+            symbol: "a",
+            name: "divisor",
+            description: "0이 아닌 field 원소입니다.",
+          },
+          {
+            symbol: "a^{-1}",
+            name: "multiplicative inverse",
+            description: "a·a⁻¹=1을 만족하는 유일한 원소입니다.",
+          },
+          {
+            symbol: "b/a",
+            name: "field division",
+            description: "정수 몫이 아니라 b에 a의 역원을 곱한 값입니다.",
+          },
+        ]}
+        assumptions={[
+          "p는 소수이고 a≠0입니다.",
+          "모든 equality는 Fₚ, 즉 mod p에서 읽습니다.",
+        ]}
+        interpretation="F₇에서 3⁻¹=3⁵=5이고 6/3=6·5=30≡2입니다. modulus 8에서는 2·4=0인 zero divisor가 있어 2의 역원이 없으므로 F₈을 정수 mod 8로 만들 수 없습니다."
+      />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3>원시근 (Primitive Root)</h3>
-      </div>
-      <div className="not-prose mb-8">
-        <PrimitiveRootViz />
-      </div>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3>ZKP에서의 활용</h3>
-        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 my-4">
-          {[
-            {
-              name: "NTT 단위근",
-              desc: "p-1이 2의 거듭제곱을 인수로 가지면 NTT 가능 (BN254: p-1 = 2²⁸ · ...)",
-            },
-            {
-              name: "Pedersen 생성원",
-              desc: "g, h를 이산로그 관계 미지인 두 생성원으로 선택",
-            },
-          ].map((p) => (
-            <div
-              key={p.name}
-              className="rounded-lg border border-indigo-500/20 bg-indigo-500/5 p-3"
-            >
-              <p className="font-semibold text-sm text-indigo-400">{p.name}</p>
-              <p className="text-sm mt-1 text-foreground/75">{p.desc}</p>
-            </div>
-          ))}
-        </div>
+        <h3>Fₚ*는 p−1개 원소를 가진 cyclic group입니다</h3>
+        <p>
+          0을 뺀 Fₚ*는 곱셈에 대해 순환군(cyclic group)입니다. 어떤 생성원 g의
+          거듭제곱은 모든 0이 아닌 원소를 한 번씩 방문합니다. 원소 a의 order는
+          aᵈ=1이 되는 가장 작은 양의 d이며, Lagrange theorem에 따라 d는 p−1을
+          나눕니다. 생성원은 order가 정확히 p−1인 원소입니다.
+        </p>
       </div>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          소수체 및 원시근 심층
-        </h3>
-
-        {/* 소수체 정의 카드 */}
-        <div className="not-prose rounded-lg border bg-card p-4 mb-4">
-          <p className="text-xs font-mono text-muted-foreground mb-3">
-            Prime Field <M>{"\\mathbb{F}_p"}</M>
-          </p>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3">
-            <div className="rounded bg-muted/50 p-2 text-center text-sm">
-              <span className="font-semibold">집합</span>
-              <br />
-              <span className="text-xs text-muted-foreground">
-                <code>{"{0, 1, ..., p-1}"}</code>
-              </span>
-            </div>
-            <div className="rounded bg-muted/50 p-2 text-center text-sm">
-              <span className="font-semibold">덧셈</span>
-              <br />
-              <span className="text-xs text-muted-foreground">
-                <M>{"(a+b) \\bmod p"}</M>
-              </span>
-            </div>
-            <div className="rounded bg-muted/50 p-2 text-center text-sm">
-              <span className="font-semibold">곱셈</span>
-              <br />
-              <span className="text-xs text-muted-foreground">
-                <M>{"(a \\cdot b) \\bmod p"}</M>
-              </span>
-            </div>
-            <div className="rounded bg-muted/50 p-2 text-center text-sm">
-              <span className="font-semibold">조건</span>
-              <br />
-              <span className="text-xs text-muted-foreground">
-                <M>p</M> 소수 필수
-              </span>
-            </div>
-          </div>
-          <p className="text-sm text-muted-foreground">
-            모든 non-zero 원소가 곱셈 역원 보유 &mdash; 소수가 아니면 체가 되지
-            않는다.
-          </p>
-        </div>
-
-        {/* 기본 정리 */}
-        <h4 className="text-lg font-semibold mt-5 mb-3">기본 정리</h4>
-        <div className="not-prose grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-2">
-              Fermat 소정리
-            </div>
-            <M display>
-              {
-                "\\underbrace{a}_{\\text{체 원소}} ^{\\overbrace{p-1}^{\\text{체의 위수}}} \\equiv \\underbrace{1}_{\\text{항등원}} \\pmod{\\underbrace{p}_{\\text{소수}}}"
-              }
-            </M>
-            <p className="text-sm text-muted-foreground mt-2">
-              a = 0이 아닌 체의 원소, p = 소수(체의 크기), p-1 = 곱셈군의 위수.
-              어떤 원소든 p-1번 거듭제곱하면 반드시 1로 돌아온다.
-            </p>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 mb-2">
-              Euler 정리
-            </div>
-            <M display>
-              {
-                "\\underbrace{a}_{\\text{원소}} ^{\\overbrace{\\phi(n)}^{\\text{오일러 토션트}}} \\equiv \\underbrace{1}_{\\text{항등원}} \\pmod{\\underbrace{n}_{\\text{모듈러스}}}"
-              }
-            </M>
-            <p className="text-sm text-muted-foreground mt-2">
-              phi(n) = n 이하에서 n과 서로소인 수의 개수(오일러 토션트 함수).
-              gcd(a, n) = 1인 모든 a에 성립하며, n이 소수이면 Fermat 소정리와
-              동치.
-            </p>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-amber-600 dark:text-amber-400 mb-2">
-              Lagrange 정리
-            </div>
-            <p className="text-sm text-muted-foreground">
-              부분군의 위수는 군의 위수를 나눈다
-            </p>
-          </div>
-        </div>
-
-        {/* 곱셈군 */}
-        <h4 className="text-lg font-semibold mt-5 mb-3">
-          곱셈군 <M>{"\\mathbb{F}_p^*"}</M>
-        </h4>
-        <div className="not-prose rounded-lg border bg-card p-4 mb-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <p className="text-sm font-semibold mb-1">구조</p>
-              <ul className="text-sm text-muted-foreground space-y-1">
-                <li>
-                  집합: <code>{"{1, 2, ..., p-1}"}</code> (<M>p-1</M>개 원소)
-                </li>
-                <li>
-                  항상 <strong>순환군</strong> (
-                  <M>{"\\cong \\mathbb{Z}/(p{-}1)\\mathbb{Z}"}</M>)
-                </li>
-                <li>
-                  <M>{"(p{-}1)"}</M>의 모든 약수 <M>d</M>마다 유일한 위수{" "}
-                  <M>d</M> 부분군
-                </li>
-              </ul>
-            </div>
-            <div>
-              <p className="text-sm font-semibold mb-1">원시근 (생성원)</p>
-              <ul className="text-sm text-muted-foreground space-y-1">
-                <li>
-                  <M>{"\\text{ord}(g) = p-1"}</M>이면 원시근
-                </li>
-                <li>
-                  개수: <M>{"\\phi(p-1)"}</M>
-                </li>
-                <li>
-                  <M>{"\\mathbb{F}_{17}"}</M> 예: <M>{"\\phi(16) = 8"}</M>개
-                  &mdash; <code>{"{3,5,6,7,10,11,12,14}"}</code>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        {/* 원시근 탐색 알고리즘 */}
-        <h4 className="text-lg font-semibold mt-5 mb-3">
-          원시근 탐색 알고리즘
-        </h4>
-        <div className="not-prose rounded-lg border bg-card p-4 mb-4">
-          <div className="space-y-2">
-            {[
-              {
-                step: "1",
-                text: (
-                  <>
-                    소인수분해: <M>{"p-1 = \\prod q_i^{e_i}"}</M>
-                  </>
-                ),
-              },
-              {
-                step: "2",
-                text: (
-                  <>
-                    랜덤 <M>{"x \\in \\{2, ..., p{-}1\\}"}</M> 선택
-                  </>
-                ),
-              },
-              {
-                step: "3",
-                text: (
-                  <>
-                    각 소인수 <M>{"q_i"}</M>에 대해{" "}
-                    <M>{"x^{(p-1)/q_i} \\equiv 1"}</M>이면 거부
-                  </>
-                ),
-              },
-              {
-                step: "4",
-                text: (
-                  <>
-                    모두 통과하면 <M>x</M>가 원시근
-                  </>
-                ),
-              },
-            ].map((s) => (
-              <div key={s.step} className="flex gap-3 items-start">
-                <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs px-2 py-0.5 rounded font-semibold shrink-0">
-                  {s.step}
-                </span>
-                <p className="text-sm text-muted-foreground">{s.text}</p>
-              </div>
-            ))}
-          </div>
-          <p className="text-xs text-muted-foreground mt-3">
-            기대 시도 횟수: <M>{"O(\\log\\log p)"}</M> &mdash; 밀도{" "}
-            <M>{"\\sim 1/\\log\\log p"}</M>
-          </p>
-        </div>
-
-        {/* ZK 전용 체 */}
-        <h4 className="text-lg font-semibold mt-5 mb-3">주요 ZK 체</h4>
-        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-          {[
-            {
-              name: "BN254",
-              adicity: "2-adicity 28",
-              ntt: "2^{28}",
-              use: "Ethereum 프리컴파일",
-            },
-            {
-              name: "BLS12-381",
-              adicity: "2-adicity 32",
-              ntt: "2^{32}",
-              use: "Zcash, Filecoin, Eth 2.0",
-            },
-            {
-              name: "Goldilocks",
-              adicity: "2-adicity 32",
-              ntt: "2^{32}",
-              use: "Plonky2, Risc0 (u64 연산)",
-            },
-            {
-              name: "Mersenne 31",
-              adicity: "2-adicity 1",
-              ntt: "확장체 FFT",
-              use: "Stwo, Plonky3",
-            },
-          ].map((f) => (
-            <div key={f.name} className="rounded-lg border bg-card p-3">
-              <p className="text-sm font-semibold">{f.name}</p>
-              <p className="text-xs text-muted-foreground mt-1">
-                {f.adicity} &rarr; Max NTT <M>{f.ntt}</M>
-              </p>
-              <p className="text-xs text-muted-foreground">{f.use}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* 체 산술 최적화 */}
-        <h4 className="text-lg font-semibold mt-5 mb-3">체 산술 최적화</h4>
-        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-2">
-              Montgomery 형식
-            </div>
-            <p className="text-sm text-muted-foreground">
-              <M>x</M>를 <M>{"xR \\bmod p"}</M>로 표현 (<M>{"R = 2^{256}"}</M>)
-              <br />
-              곱셈: <M>{"(xR \\cdot yR) \\cdot R^{-1} = (xy)R"}</M>
-              <br />
-              나눗셈 불필요, 시프트만 &mdash; ~50% 성능 향상
-            </p>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 mb-2">
-              Barrett / Solinas
-            </div>
-            <p className="text-sm text-muted-foreground">
-              Barrett: <M>{"2^k / p"}</M> 사전 계산으로 빠른 mod
-              <br />
-              Solinas: <M>{"p = 2^a - 2^b \\pm 1"}</M> &mdash; 시프트만으로
-              리덕션 (secp256k1)
-            </p>
-          </div>
-        </div>
-
-        {/* 역원 계산 */}
-        <h4 className="text-lg font-semibold mt-5 mb-3">역원 계산</h4>
-        <div className="not-prose grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
-          <div className="rounded-lg border bg-card p-3">
-            <p className="text-sm font-semibold">확장 유클리드</p>
-            <p className="text-xs text-muted-foreground mt-1">
-              <M>{"O(\\log p)"}</M> 반복. 대부분의 구현에서 사용
-            </p>
-          </div>
-          <div className="rounded-lg border bg-card p-3">
-            <p className="text-sm font-semibold">Fermat 소정리</p>
-            <p className="text-xs text-muted-foreground mt-1">
-              <M>{"a^{-1} = a^{p-2}"}</M> &mdash; <M>{"O(\\log p)"}</M> 곱셈,
-              상수 시간
-            </p>
-          </div>
-          <div className="rounded-lg border bg-card p-3">
-            <p className="text-sm font-semibold">
-              일괄 역원 (Montgomery trick)
-            </p>
-            <p className="text-xs text-muted-foreground mt-1">
-              <M>n</M>개 동시 역원 &mdash; 비용: <M>{"3(n{-}1)"}</M> 곱셈 + 역원
-              1회
-            </p>
-          </div>
-        </div>
-
-        {/* 체 크기 고려 */}
-        <div className="not-prose rounded-lg border-l-4 border-l-amber-500 bg-card p-4">
-          <div className="text-sm font-semibold mb-1">체 크기 트레이드오프</div>
-          <p className="text-sm text-muted-foreground">
-            128-bit 보안: ECC 256-bit / RSA 3072-bit / 페어링 256-500 bit
-            <br />
-            작은 체 = 빠른 산술, 그러나 확장체 필요 가능 &mdash; ZK에서 큰 체는
-            네이티브 ECDSA, 작은 체는 빠른 prover
-          </p>
-        </div>
-      </div>
+      <ExplainedFormula
+        question="후보 g가 Fₚ* 전체를 생성하는지 어떻게 검사할까요?"
+        idea="p−1의 각 서로 다른 소인수 q마다 g를 (p−1)/q번 거듭제곱했을 때 1이 아니면, g의 order가 어느 proper divisor에도 갇힐 수 없습니다."
+        formula={String.raw`g\text{ is primitive}\iff g^{(p-1)/q}\not\equiv1\pmod p\quad\text{for every prime }q\mid(p-1)`}
+        terms={[
+          {
+            symbol: "g",
+            name: "generator candidate",
+            description: "Fₚ*의 후보 원소입니다.",
+          },
+          {
+            symbol: "q",
+            name: "prime divisor",
+            description: "p−1을 나누는 서로 다른 소인수입니다.",
+          },
+          {
+            symbol: "p−1",
+            name: "group order",
+            description: "Fₚ*의 전체 원소 수입니다.",
+          },
+        ]}
+        assumptions={[
+          "p−1의 서로 다른 소인수를 알고 있어야 합니다.",
+          "g는 0이 아닌 Fₚ 원소입니다.",
+        ]}
+        interpretation="F₁₇에서 g=3은 q=2에 대해 3⁸=16≠1이므로 order 16이고 생성원입니다. NTT의 크기 n 단위근은 n|(p−1)일 때 g^((p−1)/n)로 얻습니다."
+      />
     </section>
   );
 }

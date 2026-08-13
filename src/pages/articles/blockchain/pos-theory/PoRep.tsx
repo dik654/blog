@@ -1,102 +1,52 @@
+import ExplainedFormula from "@/components/ui/explained-formula";
 import PoRepFlowViz from "./viz/PoRepFlowViz";
 
 export default function PoRep() {
   return (
     <section id="porep" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Proof of Replication (PoRep)</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-8">
-        <p className="leading-7">
-          원본 데이터의 고유하고 독립적인 물리적 복제본을 생성했음을 증명.
-          <br />
-          Sybil 공격(하나의 복제본으로 여러 저장을 주장)을 방지
+      <h2 className="mb-6 text-2xl font-bold">
+        PoRep은 data와 replica identity를 묶은 encoding을 증명한다
+      </h2>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p>
+          같은 raw data 한 벌로 replica 여러 개의 보상을 받는 deduplication attack을 줄이려면 claimed
+          replica마다 다른 committed representation을 요구해야 합니다. Filecoin sealing은 exact sector data,
+          provider·sector·protocol randomness에서 replica identity를 만들고 construction-specific encoding을
+          수행한 뒤 data commitment와 replica commitment의 관계를 succinct proof로 검증합니다.
         </p>
       </div>
-      <div className="not-prose">
-        <PoRepFlowViz />
-      </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">PoRep 프로토콜 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-          {`// Proof of Replication (PoRep):
-
-// Definition (Filecoin whitepaper 2017):
-// "Prove that N physical replicas of data
-//  are distinctly stored"
-
-// Problem solved:
-// Sybil attack:
-// - storage provider claims N replicas
-// - but stores only 1
-// - receives N × reward
-// - cheats the system
-
-// PoRep prevents:
-// - each replica physically unique
-// - N replicas = N storage spaces
-// - can't deduplicate
-
-// Filecoin PoRep:
-// - 4-phase sealing
-// - Stacked DRG encoding
-// - SNARK proof
-// - 3-6 hours per sector
-
-// Sealing process:
-// 1. Original data D
-// 2. replica_id = hash(prover || sector || ticket || D)
-// 3. SDR encoding (11 layers, sequential)
-// 4. Merkle commitments
-// 5. SNARK proof
-
-// Key properties:
-// - unique per (prover, sector):
-//   same D → different sealed output
-// - time-bound creation:
-//   takes hours to generate
-// - space-time bound:
-//   must store intermediate data
-// - costly to fake:
-//   economical infeasibility
-
-// Challenge-response:
-// - during sealing: prover commits
-// - verifier checks commitment
-// - on-chain proof submission
-// - cryptographic binding
-
-// Relationships:
-// PoRep → PoSt (extension)
-// - PoRep: one-time replication proof
-// - PoSt: continuous time-based proof
-// - PoSt uses PoRep's sealed sectors
-
-// Attack mitigation:
-// 1. Generation attack:
-//    regenerate data on-demand
-//    → SDR sequential makes slow
-//
-// 2. Sybil attack:
-//    pretend multiple replicas
-//    → unique sealing prevents
-//
-// 3. Outsourcing attack:
-//    rent storage elsewhere
-//    → costly, time-bound
-
-// Proof size:
-// - pre-SNARK: MBs
-// - post-SNARK: 192 bytes
-// - constant size (Groth16)
-// - efficient on-chain verification`}
-        </pre>
-        <p className="leading-7">
-          PoRep: <strong>unique physical replication 증명 (Sybil 방어)</strong>.
-          <br />
-          Filecoin = SDR + SNARK, 3-6h per sector.
-          <br />
-          replica_id 고유화 + sequential encoding 강제.
+      <PoRepFlowViz />
+      <ExplainedFormula
+        question="같은 data D라도 replica identity가 다르면 무엇이 달라져야 할까?"
+        idea="Replica-specific encoding은 D와 identifier를 함께 입력으로 받아 encoded replica R과 commitment를 만듭니다. Security는 단순 함수 표기보다 해당 construction의 encoding·space·sequentiality assumptions에 있습니다."
+        formula={String.raw`\begin{aligned}
+          R_i&=E(D,i)\\
+          C_D&=C(D)\\
+          C_{R_i}&=C(R_i)
+        \end{aligned}`}
+        terms={[
+          { symbol: "D", name: "sector data", description: "Padding·piece layout까지 확정된 source sector bytes입니다." },
+          { symbol: String.raw`\mathrm{replica\_id}_i`, name: "replica identity", description: "Provider·sector·ticket 등 protocol inputs에 귀속되는 context입니다." },
+          { symbol: String.raw`R_i`, name: "encoded replica", description: "Identity i에 맞게 encoding된 stored representation입니다." },
+          { symbol: String.raw`C_D,C_{R_i}`, name: "commitments", description: "Data와 encoded replica를 proof statement에 묶는 commitments입니다." },
+        ]}
+        assumptions={["Encode·Commit·proof statement는 선택한 PoRep construction과 network version에 고정합니다.", "Physical-device independence나 geographic diversity를 commitment 하나로 직접 관측한다고 가정하지 않습니다."]}
+        interpretation="replica_id₁≠replica_id₂이면 같은 D에서도 R₁과 R₂의 commitment가 달라져야 합니다. Verifier는 proof가 C_D·C_R·public inputs를 같은 instance로 묶는지 확인합니다."
+      />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>구현 수치를 이론 정의와 분리합니다</h3>
+        <p>
+          Sealing phase 수, graph layer 수, sector size, proof system, proof bytes, 시간과 hardware는 network
+          upgrade·proof parameter·implementation에 따라 달라집니다. 따라서 고정 “몇 시간·몇 byte”를 PoRep의
+          정의로 쓰지 않고, network version·proving parameter digest·hardware·peak memory·wall time을 run
+          receipt에 기록합니다.
         </p>
+      </div>
+      <div id="paper-filecoin-porep" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+        <p className="text-xs font-bold text-primary">논문 읽기 · PoRep와 PoSt</p>
+        <p className="mt-2 text-sm font-semibold">Filecoin: A Decentralized Storage Network</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">문제는 decentralized storage market에서 claimed storage를 공개 검증하는 것입니다. Proof-of-Replication과 Proof-of-Spacetime, market·power accounting의 초기 설계를 제시합니다. 현재 production proof constants·actors·penalties의 최종 규격으로 읽으면 안 됩니다.</p>
+        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://filecoin.io/filecoin.pdf" target="_blank" rel="noreferrer">Filecoin paper 보기</a>
       </div>
     </section>
   );

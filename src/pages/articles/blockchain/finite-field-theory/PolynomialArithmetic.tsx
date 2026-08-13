@@ -1,183 +1,53 @@
-import M from "@/components/ui/math";
-import PolyFFTViz from "./viz/PolyFFTViz";
+import ExplainedFormula from "@/components/ui/explained-formula";
 
 export default function PolynomialArithmetic() {
   return (
-    <section id="polynomial-arithmetic" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">다항식 산술 & FFT</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
+    <section id="polynomial" className="mb-16 scroll-mt-20">
+      <h2 className="mb-6 text-2xl font-bold">
+        유한체 위 다항식은 두 표현을 오갑니다
+      </h2>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          다항식은 ZKP의 핵심 데이터 구조 — 회로 제약, 증명, 검증 모두 다항식
-          연산으로 환원.
+          다항식은 계수 벡터로 저장하거나 여러 x에서의 평가값으로 저장할 수
+          있습니다. 계수 표현은 덧셈과 degree 확인에 편하고, 같은 평가점에서의
+          곱은 평가 표현에서 pointwise multiplication이 됩니다. Lagrange 보간과
+          NTT는 이 두 표현 사이를 바꾸는 방법입니다.
+        </p>
+        <p>
+          0이 아닌 다항식 A와 B의 곱에서는 degree(AB)=degree(A)+degree(B)가
+          성립합니다. 다항식 division은 A=QB+R, degree(R)&lt;degree(B)인 Q와 R을
+          유일하게 만듭니다. 이 유일성도 B의 leading coefficient로 나눌 수 있는
+          field 위에서 보장됩니다.
         </p>
       </div>
-      <div className="not-prose">
-        <PolyFFTViz />
-      </div>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">다항식 연산과 NTT</h3>
-
-        {/* 두 가지 표현 */}
-        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-2">
-              1. Coefficient Form (계수)
-            </div>
-            <M display>
-              {
-                "p(x) = \\underbrace{a_0}_{\\text{상수항}} + \\underbrace{a_1 x}_{\\text{1차항}} + \\underbrace{a_2 x^2}_{\\text{2차항}} + \\cdots + \\underbrace{a_d x^d}_{\\text{최고차항}}"
-              }
-            </M>
-            <p className="text-sm text-muted-foreground mt-2">
-              a_i = i차 계수, d = 다항식의 차수(degree), x = 변수. 저장:{" "}
-              <code>[a_0, a_1, ..., a_d]</code> 배열로 d+1개 계수만 보관.
-            </p>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 mb-2">
-              2. Evaluation Form (평가)
-            </div>
-            <p className="text-sm text-muted-foreground">
-              도메인{" "}
-              <M>{"D = \\{\\omega^0, \\omega^1, \\ldots, \\omega^{n-1}\\}"}</M>
-            </p>
-            <p className="text-xs text-muted-foreground mt-2">
-              저장: <code>[p(w^0), p(w^1), ..., p(w^(n-1))]</code>
-            </p>
-          </div>
-        </div>
-
-        <div className="not-prose rounded-lg border bg-card p-4 mb-4">
-          <p className="text-xs font-mono text-muted-foreground mb-2">변환</p>
-          <div className="flex items-center justify-center gap-3 text-sm">
-            <span className="rounded bg-blue-100 dark:bg-blue-900/30 px-2 py-1 text-blue-700 dark:text-blue-300 font-semibold">
-              계수
-            </span>
-            <span className="text-muted-foreground flex flex-col items-center text-xs">
-              <span>&rarr; FFT/NTT</span>
-              <span>&larr; IFFT/INTT</span>
-            </span>
-            <span className="rounded bg-emerald-100 dark:bg-emerald-900/30 px-2 py-1 text-emerald-700 dark:text-emerald-300 font-semibold">
-              평가
-            </span>
-            <span className="text-muted-foreground ml-2">
-              <M>{"O(n \\log n)"}</M>
-            </span>
-          </div>
-        </div>
-
-        {/* 복잡도 비교 */}
-        <h4 className="text-lg font-semibold mt-5 mb-3">복잡도 비교</h4>
-        <div className="not-prose rounded-lg border bg-card p-4 mb-4">
-          <div className="grid grid-cols-3 gap-2 text-center text-sm mb-1">
-            <div className="font-semibold text-muted-foreground">연산</div>
-            <div className="font-semibold text-blue-600 dark:text-blue-400">
-              계수 형태
-            </div>
-            <div className="font-semibold text-emerald-600 dark:text-emerald-400">
-              평가 형태
-            </div>
-          </div>
-          {[
-            { op: "Add", coeff: "O(n)", eval: "O(n)" },
-            { op: "Multiply", coeff: "O(n^2)", eval: "O(n) pointwise" },
-            { op: "Divide", coeff: "O(n^2)", eval: "O(n) pointwise" },
-          ].map((r) => (
-            <div
-              key={r.op}
-              className="grid grid-cols-3 gap-2 text-center text-sm py-1 border-t border-border/50"
-            >
-              <div className="text-muted-foreground">{r.op}</div>
-              <div>
-                <M>{r.coeff}</M>
-              </div>
-              <div className="font-semibold">
-                <M>{r.eval}</M>
-              </div>
-            </div>
-          ))}
-          <p className="text-xs text-muted-foreground mt-2 text-center">
-            곱셈이 많으면 평가 형태가 유리
-          </p>
-        </div>
-
-        {/* NTT */}
-        <h4 className="text-lg font-semibold mt-5 mb-3">
-          NTT (Number Theoretic Transform)
-        </h4>
-        <div className="not-prose rounded-lg border bg-card p-4 mb-4">
-          <p className="text-sm text-muted-foreground mb-3">
-            FFT의 유한체 버전 &mdash; 단위근{" "}
-            <M>{"\\omega \\in \\mathbb{F}_p"}</M>에서 <M>{"\\omega^n = 1"}</M>,{" "}
-            <M>{"\\omega^k \\neq 1"}</M> (<M>{"k < n"}</M>)
-          </p>
-          <p className="text-sm text-muted-foreground mb-3">
-            필요 조건: <M>{"n \\mid (p{-}1)"}</M>
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            <div className="rounded bg-muted/50 p-2">
-              <p className="text-sm font-semibold">
-                BN254 <M>{"F_r"}</M>
-              </p>
-              <p className="text-xs text-muted-foreground">
-                <M>{"p{-}1 = 2^{28} \\cdot 5 \\cdot 11 \\cdots"}</M> &rarr;{" "}
-                <M>{"2^{28}"}</M>까지 NTT
-              </p>
-            </div>
-            <div className="rounded bg-muted/50 p-2">
-              <p className="text-sm font-semibold">Goldilocks</p>
-              <p className="text-xs text-muted-foreground">
-                <M>{"p{-}1 = 2^{32} \\cdot (2^{32}{-}1)"}</M> &rarr;{" "}
-                <M>{"2^{32}"}</M> 대규모 NTT
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* ZKP 사용 예 */}
-        <h4 className="text-lg font-semibold mt-5 mb-3">다항식 활용처</h4>
-        <div className="not-prose grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
-          {[
-            { name: "FRI (STARK)", desc: "Reed-Solomon + Low-degree test" },
-            { name: "KZG", desc: "P(x) 커밋 → 상수 크기 증명" },
-            { name: "PLONK", desc: "Gate · Permutation · Lookup 다항식" },
-            { name: "Groth16", desc: "QAP: A(x), B(x), C(x)" },
-          ].map((p) => (
-            <div key={p.name} className="rounded-lg border bg-card p-3">
-              <p className="text-sm font-semibold">{p.name}</p>
-              <p className="text-xs text-muted-foreground mt-1">{p.desc}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* Lagrange 보간 */}
-        <h4 className="text-lg font-semibold mt-5 mb-3">Lagrange 보간</h4>
-        <div className="not-prose rounded-lg border bg-card p-4">
-          <p className="text-sm text-muted-foreground mb-2">
-            <M>n</M>개 점 &rarr; 차수 <M>{"(n{-}1)"}</M> 다항식
-          </p>
-          <M display>
-            {
-              "L_i(x) = \\prod_{j \\neq i} \\underbrace{\\frac{x - x_j}{x_i - x_j}}_{\\text{j번째 보간 인수}}"
-            }
-          </M>
-          <p className="text-sm text-muted-foreground mt-2">
-            L_i(x) = i번째 Lagrange 기저 다항식. x_j에서 0, x_i에서 1이 되도록
-            설계된 "선택 함수".
-          </p>
-          <M display>
-            {
-              "p(x) = \\sum_i \\underbrace{y_i}_{\\text{목표값}} \\cdot \\underbrace{L_i(x)}_{\\text{기저 다항식}}"
-            }
-          </M>
-          <p className="text-sm text-muted-foreground mt-2">
-            y_i = i번째 점의 y좌표(목표값), L_i(x) = 해당 점에서만 1인 기저
-            다항식. 모든 기저의 가중합으로 n개 점을 정확히 통과하는 차수 n-1
-            다항식 구성. Barycentric form은 더 효율적 평가 + 수치 안정성을 제공.
-          </p>
-        </div>
-      </div>
+      <ExplainedFormula
+        question="degree d 이하 다항식이 서로 다른 점 몇 개에서 0이 될 수 있을까요?"
+        idea="root r을 하나 찾으면 (x−r)이 다항식을 나눕니다. root마다 서로 다른 일차 factor가 하나씩 필요하므로 degree보다 많은 root를 가질 수 없습니다."
+        formula={String.raw`P\ne0,\ \deg P=d\quad\Longrightarrow\quad |\{r\in F:P(r)=0\}|\le d`}
+        terms={[
+          {
+            symbol: "P",
+            name: "polynomial",
+            description: "zero polynomial이 아닌 F[x]의 다항식입니다.",
+          },
+          {
+            symbol: "d",
+            name: "degree",
+            description: "0이 아닌 최고차항의 지수입니다.",
+          },
+          {
+            symbol: "r",
+            name: "root",
+            description: "P(r)=0을 만족하는 field 원소입니다.",
+          },
+        ]}
+        assumptions={[
+          "계수는 field에 속합니다.",
+          "P는 모든 계수가 0인 zero polynomial이 아닙니다.",
+        ]}
+        interpretation="degree 2인 x²−1은 F₇에서 root 1과 6 두 개를 갖습니다. 반면 zero polynomial은 모든 점에서 0이므로 이 bound의 대상이 아닙니다."
+      />
     </section>
   );
 }

@@ -12,9 +12,9 @@ export default function LibP2PNoiseArticle() {
   return (
     <>
       <Overview onCodeRef={sidebar.open} />
-      <KeypairSigning onCodeRef={sidebar.open} />
-      <HandshakeFlow onCodeRef={sidebar.open} />
-      <FinishVerify onCodeRef={sidebar.open} />
+      <KeypairSigning />
+      <HandshakeFlow />
+      <FinishVerify />
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}
         codeRef={sidebar.codeRef}

@@ -1,243 +1,56 @@
-import ProposerViz from "./viz/ProposerViz";
-import { codeRefs } from "./codeRefs";
-import type { CodeRef } from "@/components/code/types";
-
-export default function ValidatorSet({
-  onCodeRef,
-}: {
-  onCodeRef: (key: string, ref: CodeRef) => void;
-}) {
+import ExplainedFormula from "@/components/ui/explained-formula";
+import CometBFTCoreViz, { EvidenceLedgerViz } from "../cometbft-core-viz";
+export default function ValidatorSet() {
   return (
     <section id="validator-set" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">
-        ValidatorSet & 가중 라운드 로빈
-      </h2>
-      <div className="not-prose mb-8">
-        <ProposerViz onOpenCode={(key) => onCodeRef(key, codeRefs[key])} />
+      <h2 className="mb-6 text-2xl font-bold">ValidatorSet은 검증 weight snapshot이고 proposer priority는 별도 scheduler state다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>
+          Validator는 address·public key·voting power와 proposer priority를 가집니다. Public key와 power는 vote를
+          검증하고 quorum weight를 계산하는 합의 입력입니다. 반면 proposer priority는 다음 proposer를 고르는 누적
+          scheduler 값이므로 block certificate의 의미와 혼동하면 안 됩니다.
+        </p>
       </div>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        {/* ── ValidatorSet 구조 ── */}
-        <h3 className="text-xl font-semibold mt-4 mb-3">
-          ValidatorSet & Validator 구조체
-        </h3>
-        <div className="not-prose space-y-3 my-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="bg-muted rounded-lg p-4">
-              <p className="text-sm font-semibold mb-2">
-                <code>ValidatorSet</code> — cometbft/types/validator_set.go
-              </p>
-              <div className="space-y-1 text-sm">
-                <div className="flex justify-between border-b border-border/30 py-0.5">
-                  <code className="text-xs">Validators</code>
-                  <span className="text-xs text-muted-foreground">
-                    <code>[]*Validator</code> — sorted by address
-                  </span>
-                </div>
-                <div className="flex justify-between border-b border-border/30 py-0.5">
-                  <code className="text-xs">Proposer</code>
-                  <span className="text-xs text-muted-foreground">
-                    <code>*Validator</code> — 현재 라운드 제안자
-                  </span>
-                </div>
-                <div className="flex justify-between py-0.5">
-                  <code className="text-xs">totalVotingPower</code>
-                  <span className="text-xs text-muted-foreground">
-                    <code>int64</code> — 캐시된 합계
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div className="bg-muted rounded-lg p-4">
-              <p className="text-sm font-semibold mb-2">
-                <code>Validator</code>
-              </p>
-              <div className="space-y-1 text-sm">
-                <div className="flex justify-between border-b border-border/30 py-0.5">
-                  <code className="text-xs">Address</code>
-                  <span className="text-xs text-muted-foreground">
-                    <code>Address</code> — Ed25519 pubkey hash (20 bytes)
-                  </span>
-                </div>
-                <div className="flex justify-between border-b border-border/30 py-0.5">
-                  <code className="text-xs">PubKey</code>
-                  <span className="text-xs text-muted-foreground">
-                    <code>crypto.PubKey</code> — Ed25519 공개키
-                  </span>
-                </div>
-                <div className="flex justify-between border-b border-border/30 py-0.5">
-                  <code className="text-xs">VotingPower</code>
-                  <span className="text-xs text-muted-foreground">
-                    <code>int64</code> — 애플리케이션이 제공한 합의 가중치
-                  </span>
-                </div>
-                <div className="flex justify-between py-0.5">
-                  <code className="text-xs">ProposerPriority</code>
-                  <span className="text-xs text-muted-foreground">
-                    <code>int64</code> — 라운드 로빈용 priority
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="bg-muted rounded-lg p-4">
-              <p className="text-sm font-semibold mb-2">속성</p>
-              <ul className="text-sm text-muted-foreground space-y-1">
-                <li>validator 세트와 변경은 ABCI 애플리케이션이 제공</li>
-                <li>
-                  VotingPower의 경제적 의미는 체인 설계에 따름; CometBFT는 정수
-                  가중치로 사용
-                </li>
-                <li>ProposerPriority는 round마다 업데이트</li>
-                <li>Validators는 Address 순 정렬 유지</li>
-              </ul>
-              <p className="text-xs text-muted-foreground mt-2">
-                합의 조건: 2/3+ VotingPower = "quorum" → 같은 블록에 Precommit →
-                finalize
-              </p>
-            </div>
-            <div className="bg-muted rounded-lg p-4">
-              <p className="text-sm font-semibold mb-2">
-                고정 수치를 피해야 하는 이유
-              </p>
-              <div className="text-sm text-muted-foreground space-y-1">
-                <p>
-                  validator 수와 voting power는 매 height의 애플리케이션 상태다.
-                </p>
-                <p>
-                  운영 네트워크의 현재 stake·최대 개수·하한을 CometBFT 타입의
-                  불변 속성으로 적으면 안 된다.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <p className="leading-7">
-          ValidatorSet은 <strong>weighted validators</strong>의 결정적
-          스냅샷이다.
-          각 validator의 VotingPower가 합의 가중치이며, 그 가중치를 stake에서
-          어떻게 도출할지는 application의 책임이다. CometBFT는 이 snapshot에서
-          2/3를 초과하는 voting power가 같은 block에 precommit했는지를 확인해
-          commit을 구성한다.
+      <CometBFTCoreViz mode="validators" />
+      <ExplainedFormula
+        question="Voting power가 큰 validator에게 비례적으로 proposal 기회를 주면서 연속 독점을 막으려면 어떻게 갱신할까요?"
+        idea={<>각 round에 모든 priority에 자신의 power를 더하고 최고 priority를 선택한 뒤, 선택자에게 전체 power만큼 비용을 부과합니다. 여러 round를 보면 제안 횟수가 weight에 가까워집니다.</>}
+        formula={String.raw`\begin{aligned}p_i&\gets p_i+w_i,\\ j&\gets\arg\max_i p_i,\\ p_j&\gets p_j-W\end{aligned}`}
+        terms={[
+          { symbol: "p_i", name: "Proposer priority", description: "Validator i의 round 시작 proposer priority입니다." },
+          { symbol: "w_i", name: "Voting power", description: "Validator i의 voting power입니다." },
+          { symbol: "W", name: "Total power", description: "Validator set의 total voting power입니다." },
+          { symbol: "j", name: "Selected proposer", description: "갱신 뒤 priority가 가장 높은 validator입니다." },
+        ]}
+        assumptions={["동일 validator set snapshot과 deterministic tie-break를 사용합니다.", "실제 구현의 normalization·rescaling·set update는 v0.40.0 source를 함께 확인합니다.", "이 식은 proposer scheduling이며 consensus safety를 단독으로 증명하지 않습니다."]}
+        interpretation="Power가 3:1이면 장기적으로 앞 validator가 더 자주 선택되지만, 선택할 때 W를 빼므로 매 round 같은 validator가 자동으로 독점하지 않습니다."
+      />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>Validator update에는 높이 지연이 있습니다</h3>
+        <p>
+          Application이 FinalizeBlock에서 반환한 update가 어느 height의 block validation과 last-commit 정보에 반영되는지는
+          protocol lifecycle에 의해 정해집니다. 운영 로그에는 “현재 set”, “다음 set”, “commit을 검증한 historical set”을
+          구분하고 height와 hash를 함께 남겨야 합니다. 최신 set으로 과거 commit을 검증하면 정상 서명을 잘못 거부할 수 있습니다.
         </p>
-
-        {/* ── 가중 라운드 로빈 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          가중 라운드 로빈 — IncrementProposerPriority
-        </h3>
-        <div className="not-prose space-y-3 my-4">
-          <div className="bg-muted rounded-lg p-4">
-            <p className="text-sm font-semibold mb-1">
-              <code>incrementProposerPriority()</code> — 결정적 가중 라운드 로빈
-            </p>
-            <p className="text-xs text-muted-foreground mb-3">
-              같은 validator set·priority·round를 본 모든 노드가 동일한
-              proposer를 계산
-            </p>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm">
-              <div className="bg-background rounded px-3 py-2">
-                <p className="font-medium text-xs mb-1">1. Priority 증가</p>
-                <p className="text-xs text-muted-foreground">
-                  각 validator의 priority를 VotingPower만큼 증가
-                </p>
-              </div>
-              <div className="bg-background rounded px-3 py-2">
-                <p className="font-medium text-xs mb-1">2. 최고 선정</p>
-                <p className="text-xs text-muted-foreground">
-                  <code>findHighestPriority()</code> — 가장 높은 priority 선택
-                </p>
-              </div>
-              <div className="bg-background rounded px-3 py-2">
-                <p className="font-medium text-xs mb-1">3. Total 차감</p>
-                <p className="text-xs text-muted-foreground">
-                  선정자 priority -= TotalVotingPower (기회 양보)
-                </p>
-              </div>
-              <div className="bg-background rounded px-3 py-2">
-                <p className="font-medium text-xs mb-1">4. Proposer 설정</p>
-                <p className="text-xs text-muted-foreground">
-                  <code>vals.Proposer = mostest</code>
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-muted rounded-lg p-4">
-            <p className="text-sm font-semibold mb-3">
-              동작 예시 — 4 validators, voting power [100, 80, 60, 40], total =
-              280
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
-              <div className="bg-background rounded px-3 py-2">
-                <p className="font-medium text-xs mb-1">Round 0</p>
-                <p className="text-xs text-muted-foreground">
-                  priorities [0,0,0,0] → +VP → [100,80,60,40]
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  select val0 (100) → -280
-                </p>
-                <p className="text-xs font-mono text-muted-foreground">
-                  → [-180, 80, 60, 40]
-                </p>
-              </div>
-              <div className="bg-background rounded px-3 py-2">
-                <p className="font-medium text-xs mb-1">Round 1</p>
-                <p className="text-xs text-muted-foreground">
-                  +VP → [-80, 160, 120, 80]
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  select val1 (160) → -280
-                </p>
-                <p className="text-xs font-mono text-muted-foreground">
-                  → [-80, -120, 120, 80]
-                </p>
-              </div>
-              <div className="bg-background rounded px-3 py-2">
-                <p className="font-medium text-xs mb-1">Round 2</p>
-                <p className="text-xs text-muted-foreground">
-                  +VP → [20, -40, 180, 120]
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  select val2 (180) → -280
-                </p>
-                <p className="text-xs font-mono text-muted-foreground">
-                  → [20, -40, -100, 120]
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-muted rounded-lg p-4">
-            <p className="text-sm font-semibold mb-2">특성</p>
-            <div className="grid grid-cols-3 gap-2 text-sm text-center text-muted-foreground">
-              <div className="bg-background rounded px-3 py-2">
-                결정적 (모든 노드 동일 결과)
-              </div>
-              <div className="bg-background rounded px-3 py-2">
-                stake 비례 기회
-              </div>
-              <div className="bg-background rounded px-3 py-2">
-                장기적 공정성 (priority 축적)
-              </div>
-            </div>
-          </div>
-        </div>
-        <p className="leading-7">
-          <strong>IncrementProposerPriority</strong>가 가중 라운드 로빈의 핵심.
-          매 round priority를 voting power만큼 늘리고 선정된 proposer에게서
-          전체 power를 차감하기 때문에, 모든 노드가 같은 입력으로 같은 proposer를
-          계산하면서 장기적으로 power 비율에 가까운 기회를 배분한다.
+        <p>
+          작은 계산으로 power가 3과 1이고 priority가 둘 다 0이라고 하겠습니다. 첫 round에 power를 더하면 3과 1이므로
+          첫 validator를 고르고 total power 4를 빼 priority는 -1과 1이 됩니다. 다음 round에 다시 power를 더하면 2와
+          2가 되므로 pinned implementation의 deterministic tie-break가 proposer를 정합니다. 이 예는 scheduling 계산이지
+          proposal validity나 commit certificate가 아닙니다.
         </p>
-
-        <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          <strong>{"💡"} 가중 라운드 로빈</strong> — priority를 모든 노드가 같이
-          갱신하므로 별도의 랜덤성 입력 없이 이번 round의 proposer를 동일하게
-          선택한다. 다만
-          랜덤성을 사용하는 다른 합의 프로토콜도 공유된 랜덤성을 검증해 동일한
-          결과에 도달할 수 있으므로, 랜덤 추첨 자체가 BFT에 부적합하다고
-          일반화하지 않는다.
+        <h3>Evidence는 signed conflict에서 application policy까지 이어지는 pipeline입니다</h3>
+        <p>
+          DuplicateVoteEvidence는 같은 validator·height·round·vote type인데 BlockID가 다른 두 signed vote를 묶습니다.
+          하지만 두 bytes를 찾았다는 사실만으로 처벌이 끝나지는 않습니다. 당시 membership·power와 signature, chain ID,
+          age, 이미 commit됐는지를 검증하고 block에 포함한 뒤 FinalizeBlock의 misbehavior 입력으로 application에 전달합니다.
         </p>
+      </div>
+      <EvidenceLedgerViz />
+      <div id="paper-cometbft-evidence-v040" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+        <p className="text-xs font-bold text-primary">공식 규격 읽기 · evidence accountability</p>
+        <p className="mt-2 text-sm font-semibold">CometBFT Evidence Specification</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">문제는 Byzantine 행동을 객관적으로 검증·gossip·commit해 application에 전달하는 것입니다. 이 규격은 detection과 on-chain delivery를 설명하지만 경제적 penalty의 크기나 모든 공격의 예방까지 보장하지 않습니다.</p>
+        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://github.com/cometbft/cometbft/blob/v0.40.0/spec/consensus/evidence.md" target="_blank" rel="noreferrer">v0.40.0 evidence 규격 보기</a>
       </div>
     </section>
   );

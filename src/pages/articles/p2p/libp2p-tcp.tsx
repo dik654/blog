@@ -12,9 +12,9 @@ export default function Libp2pTcpArticle() {
   return (
     <>
       <Overview onCodeRef={sidebar.open} />
-      <SocketCreation onCodeRef={sidebar.open} />
-      <DialListen onCodeRef={sidebar.open} />
-      <UpgradeChain onCodeRef={sidebar.open} />
+      <SocketCreation />
+      <DialListen />
+      <UpgradeChain />
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}
         codeRef={sidebar.codeRef}

@@ -1,267 +1,56 @@
-import ContextViz from "./viz/ContextViz";
-import { codeRefs } from "./codeRefs";
-import type { CodeRef } from "@/components/code/types";
-
-export default function Overview({
-  onCodeRef,
-}: {
-  onCodeRef: (key: string, ref: CodeRef) => void;
-}) {
+import { Link } from "react-router-dom";
+import ContentBoundary from "@/components/articles/content-boundary";
+import CometBFTCoreViz from "../cometbft-core-viz";
+export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">핵심 type은 block·vote·commit의 합의 증거를 보존한다</h2>
-      <div className="not-prose mb-8">
-        <ContextViz onOpenCode={(key) => onCodeRef(key, codeRefs[key])} />
+      <h2 className="mb-6 text-2xl font-bold">CometBFT type은 메모리 구조체가 아니라 합의 증거의 wire 계약이다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="text-lg leading-8">
+          서로 다른 validator가 같은 block을 결정했다고 말하려면 “block bytes가 비슷하다”로는 부족합니다.
+          무엇을 hash했고, 어느 chain·height·round·phase에 누가 서명했으며, 그 서명 power가 어떤 validator
+          snapshot에서 threshold를 넘었는지 재현할 수 있어야 합니다. CometBFT의 Block·Vote·Commit·ValidatorSet은
+          바로 이 검증 문장을 bytes로 보존하는 protocol type입니다.
+        </p>
+        <p>
+          이 글은 <strong>header commitment → canonical vote → voting-power commit → evidence</strong> 순서로
+          객체를 읽습니다. Consensus가 이 증거를 언제 만드는지는 <Link to="/blockchain/cometbft-consensus">합의 엔진</Link>,
+          application state가 AppHash가 되는 과정은 <Link to="/blockchain/cometbft-abci">ABCI++</Link>, quorum
+          intersection의 일반 증명은 <Link to="/blockchain/bft-theory">BFT 이론</Link>이 소유합니다.
+        </p>
       </div>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          CometBFT의 합의 메시지(블록 제안, 투표, 커밋)는 모두{" "}
-          <code>types/</code> 패키지의 Go 구조체로 정의된다.
-          이 아티클에서는 Block, Vote, ValidatorSet, Evidence의 내부
-          필드와 핵심 함수를 코드 수준으로 추적한다.
+      <ContentBoundary article="cometbft-types" />
+      <CometBFTCoreViz mode="types" />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>먼저 runtime state와 wire evidence를 구분합니다</h3>
+        <p>
+          <code>RoundState</code>나 proposer priority처럼 node가 다음 동작을 고르는 runtime state와, Block·Vote처럼
+          peer에게 보내고 disk에 남기는 wire object는 같은 것이 아닙니다. 또한 Protobuf schema가 있다는 사실만으로
+          signature가 안전해지는 것도 아닙니다. 서명에는 별도의 canonical representation과 chain domain이 필요하고,
+          검증자는 선택한 release의 schema·validation rule·sign-byte rule을 한 snapshot으로 맞춰야 합니다.
         </p>
-
-        {/* ── types 패키지 구조 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          types 패키지 — 합의 메시지의 타입 계층
-        </h3>
-        <div className="not-prose space-y-3 my-4">
-          <div className="bg-muted rounded-lg p-4">
-            <p className="text-sm font-semibold mb-3">
-              cometbft/types/ 패키지의 주요 역할
-            </p>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-sm">
-              <div className="bg-background rounded px-3 py-2">
-                <code className="text-xs">block.go</code>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  Block, Header, Data, EvidenceData
-                </p>
-              </div>
-              <div className="bg-background rounded px-3 py-2">
-                <code className="text-xs">block_meta.go</code>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  BlockMeta (블록 요약)
-                </p>
-              </div>
-              <div className="bg-background rounded px-3 py-2">
-                <code className="text-xs">part_set.go</code>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  PartSet (블록 분할 전파)
-                </p>
-              </div>
-              <div className="bg-background rounded px-3 py-2">
-                <code className="text-xs">proposal.go</code>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  Proposal (블록 제안)
-                </p>
-              </div>
-              <div className="bg-background rounded px-3 py-2">
-                <code className="text-xs">vote.go</code>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  Vote (투표)
-                </p>
-              </div>
-              <div className="bg-background rounded px-3 py-2">
-                <code className="text-xs">vote_set.go</code>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  VoteSet (투표 집계)
-                </p>
-              </div>
-              <div className="bg-background rounded px-3 py-2">
-                <code className="text-xs">validator.go</code>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  Validator (단일 검증자)
-                </p>
-              </div>
-              <div className="bg-background rounded px-3 py-2">
-                <code className="text-xs">validator_set.go</code>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  ValidatorSet (검증자 목록)
-                </p>
-              </div>
-              <div className="bg-background rounded px-3 py-2">
-                <code className="text-xs">evidence.go</code>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  Evidence (비잔틴 증거)
-                </p>
-              </div>
-              <div className="bg-background rounded px-3 py-2">
-                <code className="text-xs">canonical.go</code>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  CanonicalVote (서명 대상)
-                </p>
-              </div>
-              <div className="bg-background rounded px-3 py-2">
-                <code className="text-xs">genesis.go</code>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  GenesisDoc (제네시스 정보)
-                </p>
-              </div>
-              <div className="bg-background rounded px-3 py-2">
-                <code className="text-xs">params.go</code>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  ConsensusParams
-                </p>
-              </div>
-              <div className="bg-background rounded px-3 py-2">
-                <code className="text-xs">protobuf.go</code>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  protobuf 변환
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-muted rounded-lg p-4">
-            <p className="text-sm font-semibold mb-3">합의 메시지 레이어</p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
-              <div className="bg-background rounded px-3 py-2">
-                <p className="font-medium text-xs mb-1">1. Block (블록 단위)</p>
-                <ul className="text-xs text-muted-foreground space-y-0.5">
-                  <li>Header — 메타데이터</li>
-                  <li>Data — transactions</li>
-                  <li>Evidence — 애플리케이션에 전달할 misbehavior 증거</li>
-                  <li>LastCommit — 이전 블록 투표 집계</li>
-                </ul>
-              </div>
-              <div className="bg-background rounded px-3 py-2">
-                <p className="font-medium text-xs mb-1">2. Proposal</p>
-                <p className="text-xs text-muted-foreground">
-                  리더가 만드는 블록 제안
-                </p>
-              </div>
-              <div className="bg-background rounded px-3 py-2">
-                <p className="font-medium text-xs mb-1">
-                  3. Vote (검증자 서명 투표)
-                </p>
-                <ul className="text-xs text-muted-foreground space-y-0.5">
-                  <li>Prevote — 블록 수용 여부</li>
-                  <li>Precommit — 최종 커밋 투표</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="bg-muted rounded-lg p-4">
-              <p className="text-sm font-semibold mb-2">Protobuf 직렬화</p>
-              <ul className="text-sm text-muted-foreground space-y-1">
-                <li>CometBFT — Protobuf 3</li>
-                <li>Ethereum — SSZ</li>
-                <li>Bitcoin — bespoke binary</li>
-                <li>gRPC native 지원</li>
-              </ul>
-            </div>
-            <div className="bg-muted rounded-lg p-4">
-              <p className="text-sm font-semibold mb-2">왜 Protobuf?</p>
-              <ul className="text-sm text-muted-foreground space-y-1">
-                <li>Tendermint Go 생태계 기본 선택</li>
-                <li>Go codegen 도구 성숙</li>
-                <li>ABCI 앱과 protobuf 공유</li>
-                <li>스키마 evolution 지원</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <p className="leading-7">
-          <code>types</code> 패키지는{" "}
-          <strong>합의 메시지 전체의 타입 경계</strong>를 정의한다.
-          Block/Vote/Validator/Evidence 등의 런타임 타입과 protobuf wire 타입을
-          변환하므로, canonical sign bytes와 네트워크 직렬화 규칙을 함께
-          이해해야 한다.
+        <p>
+          여기서 hash는 임의 길이 bytes를 짧은 digest로 바꾸는 함수이고, collision resistance는 서로 다른 두 입력이
+          같은 digest를 갖는 경우를 현실적으로 찾기 어렵다는 전제입니다. Digital signature는 private key 보유자가 특정
+          bytes에 서명했음을 public key로 확인하게 하지만 그 내용이 참이거나 signer가 정직하다는 뜻은 아닙니다.
+          Validator는 이런 vote를 내는 참여 node이며, voting power는 각 validator 표의 weight입니다.
         </p>
-
-        {/* ── Tendermint BFT 메시지 흐름 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          Tendermint BFT 메시지 흐름
-        </h3>
-        <div className="not-prose space-y-3 my-4">
-          <div className="bg-muted rounded-lg p-4">
-            <p className="text-sm font-semibold mb-3">
-              1 Round of Consensus (3-phase commit) — Round R, Height H
-            </p>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
-              <div className="bg-background rounded px-3 py-2">
-                <p className="font-medium text-xs mb-1">Step 1: Propose</p>
-                <p className="text-xs text-muted-foreground">
-                  Proposer (round-robin) → 모든 validator
-                </p>
-                <p className="text-xs text-muted-foreground mt-1">
-                  <code>Proposal(block, block_parts)</code>
-                </p>
-              </div>
-              <div className="bg-background rounded px-3 py-2">
-                <p className="font-medium text-xs mb-1">Step 2: Prevote</p>
-                <p className="text-xs text-muted-foreground">
-                  모든 validator → 모든 validator
-                </p>
-                <p className="text-xs text-muted-foreground mt-1">
-                  <code>Vote(Prevote, block_hash | nil)</code>
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  2/3+ 수집 → "polka"
-                </p>
-              </div>
-              <div className="bg-background rounded px-3 py-2">
-                <p className="font-medium text-xs mb-1">Step 3: Precommit</p>
-                <p className="text-xs text-muted-foreground">
-                  모든 validator → 모든 validator
-                </p>
-                <p className="text-xs text-muted-foreground mt-1">
-                  <code>Vote(Precommit, block_hash | nil)</code>
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  2/3+ 수집 → "commit"
-                </p>
-              </div>
-              <div className="bg-background rounded px-3 py-2">
-                <p className="font-medium text-xs mb-1">Step 4: Commit</p>
-                <p className="text-xs text-muted-foreground">
-                  NewRoundStep 시작
-                </p>
-                <p className="text-xs text-muted-foreground mt-1">
-                  H += 1, R = 0
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="bg-muted rounded-lg p-4">
-              <p className="text-sm font-semibold mb-2">타이밍</p>
-              <div className="grid grid-cols-2 gap-2 text-sm text-muted-foreground">
-                <div>propose timeout</div>
-                <div className="text-right font-mono">기본값 + round delta</div>
-                <div>prevote timeout</div>
-                <div className="text-right font-mono">vote 설정값</div>
-                <div>precommit timeout</div>
-                <div className="text-right font-mono">vote 설정값</div>
-                <div>commit timeout</div>
-                <div className="text-right font-mono">commit 설정값</div>
-              </div>
-              <p className="text-xs text-muted-foreground mt-2">
-                Round 실패 → R += 1 → re-propose (네트워크 지연/장애 시 재시도)
-              </p>
-            </div>
-            <div className="bg-muted rounded-lg p-4">
-              <p className="text-sm font-semibold mb-2">최종성 보장</p>
-              <p className="text-sm text-muted-foreground">
-                +2/3 voting power의 Precommit commit을 수집하면 해당 height를
-                결정
-              </p>
-              <p className="text-sm text-muted-foreground mt-1">
-                안전성은 비잔틴 voting power 1/3 미만과 신뢰 가정에 의존
-              </p>
-            </div>
-          </div>
-        </div>
-        <p className="leading-7">
-          Tendermint BFT는 <strong>3-phase commit</strong> —
-          Propose/Prevote/Precommit으로 진행한다. 각 단계에서 필요한 voting
-          power가 모이거나 timeout이 발생하면 다음 step 또는 round로 넘어간다.
-          +2/3 voting power의 Precommit commit이 생기면 다음 height로 전진하며,
-          가정을 유지하는 정상 프로토콜에서 다시 되돌리지 않는다.
+        <h3>이 글의 release 기준</h3>
+        <p>
+          아래 field와 lifecycle은 <code>v0.40.0</code> tag의 공식 specification과 source를 기준으로 설명합니다.
+          Production 분석에서는 binary semver와 git SHA를 다시 기록해야 하며, moving <code>main</code>의 field나
+          아직 배포하지 않은 feature를 현재 chain의 동작으로 일반화하지 않습니다.
         </p>
+      </div>
+      <div id="paper-cometbft-data-structures-v040" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+        <p className="text-xs font-bold text-primary">공식 규격 읽기 · v0.40.0 data structures</p>
+        <p className="mt-2 text-sm font-semibold">CometBFT Data Structures</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          문제는 block·vote·commit·validator·evidence의 field와 validation rule을 같은 release에서 고정하는 것입니다.
+          규격은 wire object와 검증 관계를 정의하지만 application business validity나 모든 chain의 validator 정책까지
+          대신 정의하지 않습니다.
+        </p>
+        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://github.com/cometbft/cometbft/blob/v0.40.0/spec/core/data_structures.md" target="_blank" rel="noreferrer">v0.40.0 규격 보기</a>
       </div>
     </section>
   );

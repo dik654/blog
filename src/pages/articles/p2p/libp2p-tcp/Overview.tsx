@@ -1,233 +1,52 @@
-import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import ContentBoundary from "@/components/articles/content-boundary";
 import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
+import { CitationBlock } from "@/components/ui/citation";
+import ConnectionTraceViz from "../libp2p/viz/ConnectionTraceViz";
 import { codeRefs } from "../libp2p/codeRefs";
 
-const COMPARE = [
-  {
-    proto: "QUIC",
-    security: "TLS 1.3 내장",
-    mux: "스트림 다중화 내장",
-    steps: 1,
-    color: "#06b6d4",
-  },
-  {
-    proto: "TCP",
-    security: "Noise XX 별도",
-    mux: "Yamux 별도",
-    steps: 3,
-    color: "#ef4444",
-  },
-];
-
-const LAYERS = [
-  {
-    label: "TCP raw bytes",
-    desc: "OS 소켓, 평문 바이트 스트림",
-    color: "#64748b",
-  },
-  { label: "+ Noise XX", desc: "암호화 + PeerId 인증", color: "#8b5cf6" },
-  {
-    label: "+ Yamux",
-    desc: "하나의 TCP 위에 여러 스트림 다중화",
-    color: "#10b981",
-  },
-  {
-    label: "= (PeerId, StreamMuxerBox)",
-    desc: "Swarm이 사용하는 최종 Output",
-    color: "#f59e0b",
-  },
-];
-
-export default function Overview({
-  onCodeRef,
-}: {
-  onCodeRef?: (key: string, ref: CodeRef) => void;
-}) {
+export default function Overview({ onCodeRef }: { onCodeRef?: (key: string, ref: CodeRef) => void }) {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">TCP Transport 개요</h2>
-
-      {/* TCP 업그레이드 스택 시각화 */}
-      <div className="rounded-xl border border-border bg-card p-5 mb-6">
-        <p className="text-xs font-mono text-foreground/50 mb-4">
-          TCP 업그레이드 스택 — 3단계를 거쳐야 Swarm에 진입
-        </p>
-        <div className="flex flex-col gap-1.5">
-          {LAYERS.map((l, i) => (
-            <motion.div
-              key={l.label}
-              initial={{ opacity: 0, x: -16 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: i * 0.12 }}
-              className="flex items-center gap-3 rounded-lg border px-4 py-2.5"
-              style={{
-                borderColor: l.color + "40",
-                background: l.color + "08",
-              }}
-            >
-              <span
-                className="text-xs font-mono font-bold shrink-0 w-48"
-                style={{ color: l.color }}
-              >
-                {l.label}
-              </span>
-              <span className="text-xs text-foreground/60">{l.desc}</span>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          libp2p에서 TCP는 가장 기본적인 전송 계층이다.
-          <br />
-          하지만 TCP 자체는 <strong>평문 바이트 스트림</strong>만 제공한다.
-          <br />
-          P2P 통신에 필요한 암호화와 스트림 다중화가 없다.
+      <h2 className="mb-6 text-2xl font-bold">libp2p TCP Transport는 multiaddr를 비동기 ordered byte stream으로 바꿉니다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="text-lg leading-8">
+          <code>/ip4/203.0.113.7/tcp/4001</code>로 peer에 dial한다고 해봅시다. TCP
+          Transport의 책임은 이 layered address를 OS socket address로 해석하고,
+          nonblocking connect를 진행해 ordered byte stream을 반환하거나 실패 이유를
+          알리는 데까지입니다. 암호화, PeerId 인증과 application protocol은 아직 없습니다.
         </p>
         <p>
-          그래서 TCP Transport의 핵심 과제는 <strong>업그레이드 체인</strong>
-          이다. raw TCP 위에 Noise(암호화) + Yamux(멀티플렉싱)을 순서대로 얹어야
-          Swarm이 쓸 수 있는 <code>(PeerId, StreamMuxerBox)</code>가 된다.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          왜 QUIC 대신 TCP를 분석하는가?
-        </h3>
-        <p>
-          QUIC는 보안+다중화가 내장이라 Transport 하나로 끝난다.
-          <br />
-          TCP는 각 계층이 <strong>분리</strong>되어 있어 libp2p의 모듈 설계가
-          드러난다.
-          <br />
-          업그레이드 패턴을 이해하면 커스텀 Transport 작성도 가능하다.
+          그래서 TCP connect 성공을 libp2p connection 성공으로 기록하면 진단이
+          흐려집니다. 그 뒤 <Link to="/p2p/libp2p-noise">Noise secure-channel</Link>과
+          stream multiplexer 협상이 모두 끝나야 Swarm이 사용할
+          <code>(PeerId, StreamMuxer)</code>가 됩니다. <Link to="/p2p/quic-fundamentals">QUIC</Link>은
+          security와 multiplexing을 transport 안에 포함하므로 같은 output에 도달하는
+          조립 경로가 다릅니다.
         </p>
       </div>
-
-      {/* TCP vs QUIC 비교 카드 */}
-      <div className="mt-6 rounded-xl border border-border bg-card p-5">
-        <p className="text-xs font-mono text-foreground/50 mb-3">
-          TCP vs QUIC — 업그레이드 비용
-        </p>
-        <div className="flex flex-col gap-2">
-          {COMPARE.map((c, i) => (
-            <motion.div
-              key={c.proto}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 + i * 0.1 }}
-              className="flex items-center gap-3 rounded-lg border px-4 py-2.5"
-              style={{
-                borderColor: c.color + "40",
-                background: c.color + "08",
-              }}
-            >
-              <span
-                className="text-xs font-mono font-bold w-12"
-                style={{ color: c.color }}
-              >
-                {c.proto}
-              </span>
-              <span className="text-xs text-foreground/60 flex-1">
-                보안: {c.security} / 다중화: {c.mux}
-              </span>
-              <span
-                className="text-[10px] font-mono px-2 py-0.5 rounded"
-                style={{ background: c.color + "15", color: c.color }}
-              >
-                {c.steps === 1 ? "1단계" : `${c.steps}단계`}
-              </span>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-
-      {/* 소스 코드 참조 */}
+      <ContentBoundary article="libp2p-tcp" />
+      <ConnectionTraceViz kind="tcp" />
       {onCodeRef && (
-        <div className="not-prose flex flex-wrap gap-2 mt-6">
-          <CodeViewButton
-            onClick={() =>
-              onCodeRef("transport-trait", codeRefs["transport-trait"])
-            }
-          />
-          <span className="text-[10px] text-muted-foreground self-center">
-            Transport 트레이트
-          </span>
-          <CodeViewButton
-            onClick={() =>
-              onCodeRef("tcp-transport", codeRefs["tcp-transport"])
-            }
-          />
-          <span className="text-[10px] text-muted-foreground self-center">
-            TCP Transport 구현
-          </span>
+        <div className="not-prose my-5 flex flex-wrap items-center gap-3">
+          <CodeViewButton onClick={() => onCodeRef("tcp-transport", codeRefs["tcp-transport"])} />
+          <span className="text-xs text-muted-foreground">Transport의 dial·listen·poll 구현 경계를 확인합니다.</span>
+          <CodeViewButton onClick={() => onCodeRef("tcp-socket", codeRefs["tcp-socket"])} />
+          <span className="text-xs text-muted-foreground">Socket 생성과 option 적용을 실제 source로 추적합니다.</span>
         </div>
       )}
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">TCP Transport 구조</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-          {`// libp2p-tcp Transport
-//
-// Multiaddr 형식:
-//   /ip4/1.2.3.4/tcp/9000
-//   /ip4/1.2.3.4/tcp/9000/p2p/QmID
-//   /dns4/example.com/tcp/443/wss  (WebSocket over TCP)
-//
-// Key components:
-//
-//   TcpConfig:
-//     nodelay: bool          (TCP_NODELAY 설정)
-//     port_reuse: PortUse    (리사이클링 전략)
-//     backlog: u32           (listen queue 크기)
-//
-//   GenTcpTransport<T: TcpProvider>:
-//     Provider trait으로 runtime 추상화
-//     - TokioTcpProvider
-//     - AsyncStdTcpProvider
-//     - SmolTcpProvider
-//
-//   PortUse enum:
-//     New:   매번 새 ephemeral port
-//     Reuse: listener port 재사용 (NAT hole punching)
-
-// Transport Pipeline:
-//
-//   raw TCP stream
-//       ↓
-//   Security upgrade (Noise XX)
-//       ↓ negotiated cipher keys
-//   Stream muxer upgrade (Yamux)
-//       ↓ multiplexed substreams
-//   (PeerId, StreamMuxerBox)
-//       ↓
-//   Swarm ConnectionPool
-
-// TCP vs QUIC Connection Time:
-//
-//   TCP 3-way: 1 RTT (~50-100ms)
-//   + Noise XX: 2 RTT (~100-200ms)
-//   + Yamux negotiation: 1 RTT (~50-100ms)
-//   = Total: 3-4 RTT (~200-400ms)
-//
-//   QUIC: 1 RTT (~50-100ms) for everything
-//
-// → QUIC 3-4배 빠름, 하지만 TCP는 방화벽 친화
-
-// 배포 시 고려:
-//   TCP: 기본 포트 30303 (Ethereum), 4001 (IPFS)
-//   NAT 뒤: port forwarding 또는 UPnP
-//   Cloud: Security group에 TCP 인바운드 허용
-
-// 주요 Multiaddr protocols:
-//   /ip4, /ip6: IP address
-//   /dns4, /dns6: DNS hostname
-//   /tcp: TCP port
-//   /tls: TLS encryption
-//   /ws, /wss: WebSocket
-//   /p2p: PeerId`}
-        </pre>
+      <div id="paper-rust-libp2p-tcp" className="prose prose-neutral max-w-none scroll-mt-24 border-l border-primary/50 pl-4 dark:prose-invert">
+        <p className="text-xs font-bold text-primary">API 정본 · rust-libp2p TCP</p>
+        <p>
+          현재 0.56 문서는 default로 TCP_NODELAY 활성, port reuse 비활성, OS TTL,
+          listen backlog 1024를 명시합니다. 이 숫자는 protocol 보장이 아니라 해당 crate
+          version의 default이며, OS limit과 application load에 따라 실제 동작을 측정해야
+          합니다.
+        </p>
+        <CitationBlock source="rust-libp2p 0.56 — TCP Config and Transport" citeKey={1} href="https://docs.rs/libp2p/latest/libp2p/tcp/struct.Config.html">
+          Current socket option default와 per-connection PortUse로 이동한 API 경계를 확인합니다.
+        </CitationBlock>
       </div>
     </section>
   );

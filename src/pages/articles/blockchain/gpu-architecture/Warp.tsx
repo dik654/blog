@@ -1,52 +1,89 @@
 import { CitationBlock } from "@/components/ui/citation";
+import ExplainedFormula from "@/components/ui/explained-formula";
 import WarpScheduleViz from "./viz/WarpScheduleViz";
 
 export default function Warp() {
   return (
     <section id="warp" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">워프 스케줄링 & 점유율</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          GPU SM은 여러 워프(32-thread 그룹)를 동시에 관리하며, 하나의 워프가
-          메모리 응답을 기다리는 동안 다른 워프를 즉시 실행합니다.
-          <br />이 <strong>지연 은닉(Latency Hiding)</strong> 기법이 GPU
-          처리량의 핵심입니다.
-        </p>
-
-        <CitationBlock
-          source="NVIDIA — Warp Scheduling and Latency Hiding"
-          citeKey={3}
-          type="paper"
-          href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#hardware-multithreading"
-        >
-          <p className="italic">
-            "When a warp is paused or stalled, the warp scheduler selects
-            another available warp to execute — hiding the latency of memory
-            accesses."
+      <h2 className="mb-6 text-2xl font-bold">
+        Warp scheduling과 occupancy: 기다림을 숨길 만큼만 resident로 둡니다
+      </h2>
+      <WarpScheduleViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <div id="gpu-latency-hiding-occupancy" className="scroll-mt-24">
+          <p>
+            Warp 하나가 memory dependency에 막히면 scheduler는 같은 SM에
+            resident인 다른 ready warp를 고릅니다. 이{" "}
+            <strong>latency hiding</strong>은 stall 자체를 없애는 것이 아니라,
+            기다리는 시간에 다른 instruction을 issue해 execution unit이 쉬는
+            시간을 줄이는 방식입니다. 따라서 independent warp가 충분하지 않거나
+            모든 warp가 같은 memory bottleneck에 걸리면 occupancy 숫자가 높아도
+            처리량은 오르지 않습니다.
           </p>
-        </CitationBlock>
-      </div>
-
-      <div className="not-prose my-8">
-        <WarpScheduleViz />
-      </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3 className="text-xl font-semibold mt-6 mb-3">점유율 제한 요인</h3>
-        <ul className="space-y-1 text-sm">
-          <li>
-            <strong>레지스터 수</strong> — 스레드당 사용 레지스터가 많으면 SM에
-            올릴 수 있는 워프 수 감소
-          </li>
-          <li>
-            <strong>공유 메모리</strong> — 블록당 사용량이 크면 동시 활성 블록
-            수 제한
-          </li>
-          <li>
-            <strong>블록 크기</strong> — 블록당 스레드 수가 워프 배수가 아니면
-            낭비 발생
-          </li>
-        </ul>
+        </div>
+        <ExplainedFormula
+          question="한 SM에 동시에 resident할 수 있는 block 수는 무엇이 제한하는가?"
+          idea={
+            <p>
+              Thread·register·shared-memory·architecture block limit가 각각
+              허용하는 block 수를 계산하고, 가장 작은 값이 실제 상한이 됩니다.
+            </p>
+          }
+          formula={
+            "\\begin{aligned} B_{\\mathrm{res}}&=\\min(B_{\\max},B_T,B_R,B_S)\\\\ B_T&=\\left\\lfloor\\frac{T_{SM}}{T_B}\\right\\rfloor\\quad B_R=\\left\\lfloor\\frac{R_{SM}}{R_TT_B}\\right\\rfloor\\\\ B_S&=\\left\\lfloor\\frac{S_{SM}}{S_B}\\right\\rfloor \\end{aligned}"
+          }
+          terms={[
+            {
+              symbol: "B_{\\max}",
+              name: "architecture block limit",
+              description:
+                "SM당 허용되는 resident block 수의 hardware 상한입니다.",
+            },
+            {
+              symbol: "T_{SM},T_B",
+              name: "thread budgets",
+              description:
+                "SM의 resident thread 한도와 block당 thread 수입니다.",
+            },
+            {
+              symbol: "R_{SM},R_T",
+              name: "register budgets",
+              description:
+                "SM의 register 수와 compiler가 보고한 thread당 register 수입니다.",
+            },
+            {
+              symbol: "S_{SM},S_B",
+              name: "shared-memory budgets",
+              description:
+                "SM의 가용 shared memory와 block당 정적·동적 사용량입니다.",
+            },
+          ]}
+          assumptions={[
+            "실제 allocation granularity와 architecture별 partition·warp limit는 단순식에서 생략했습니다.",
+            "Compiler 옵션과 launch configuration이 정해진 동일 kernel을 비교합니다.",
+            "Resident block 상한은 latency hiding의 기회일 뿐 성능 보장이 아닙니다.",
+          ]}
+          interpretation="예를 들어 thread 기준 8 blocks, register 기준 3 blocks, shared-memory 기준 5 blocks라면 resident 상한은 3 blocks입니다. Register를 더 줄여 4 blocks가 되어도 spill traffic이 늘면 실행 시간은 오히려 나빠질 수 있습니다."
+        />
+        <p>
+          같은 warp 안 branch가 갈리면 active mask로 경로를 나누어 실행할 수
+          있어 lane utilization이 줄어듭니다. 하지만 divergence가 곧 틀린 결과를
+          뜻하지 않으며, 짧은 branch를 억지로 없애 instruction을 늘리는 것도
+          항상 이득은 아닙니다. Profiler에서 eligible warps, stall reason,
+          branch efficiency와 kernel time을 함께 봅니다.
+        </p>
+        <div id="paper-cuda-occupancy" className="scroll-mt-24">
+          <CitationBlock
+            source="NVIDIA CUDA Programming Guide — Hardware Multithreading"
+            citeKey={3}
+            href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#hardware-multithreading"
+          >
+            공식 guide는 block resource가 active block·warp 수를 제한하고 warp
+            scheduler가 ready instruction을 선택하는 구조를 설명합니다.
+            Occupancy 최대화가 곧 kernel time 최소화라는 결론은 제공하지
+            않습니다.
+          </CitationBlock>
+        </div>
       </div>
     </section>
   );

@@ -1,219 +1,29 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { CodeViewButton } from "@/components/code";
-import type { CodeRef } from "@/components/code/types";
-import { codeRefs } from "../libp2p/codeRefs";
-import { CHECKS, PARAMS } from "./FinishVerifyData";
-
-export default function FinishVerify({
-  onCodeRef,
-}: {
-  onCodeRef?: (key: string, ref: CodeRef) => void;
-}) {
-  const [active, setActive] = useState(0);
-
+export default function FinishVerify() {
   return (
     <section id="finish-verify" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">finish(): 검증과 전환</h2>
-
-      <div className="rounded-xl border border-border bg-card p-5 mb-6">
-        <p className="text-xs font-mono text-foreground/50 mb-4">
-          finish() 내부 검증 흐름
-        </p>
-        <div className="flex flex-col gap-1.5">
-          {CHECKS.map((c, i) => (
-            <motion.button
-              key={c.label}
-              onClick={() => setActive(i)}
-              initial={{ opacity: 0, x: -12 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: i * 0.1 }}
-              className="w-full flex items-center gap-3 rounded-lg border px-4 py-2.5 text-left cursor-pointer"
-              style={{
-                borderColor: active === i ? c.color + "60" : c.color + "20",
-                background: active === i ? c.color + "12" : "transparent",
-              }}
-            >
-              <span
-                className="text-xs font-mono font-bold shrink-0"
-                style={{ color: c.color }}
-              >
-                {c.label}
-              </span>
-              <span className="text-xs text-foreground/60 flex-1">
-                {c.desc}
-              </span>
-            </motion.button>
-          ))}
-        </div>
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={active}
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
-            className="mt-3 rounded-lg border p-3 text-xs text-foreground/70"
-            style={{
-              borderColor: CHECKS[active].color + "30",
-              background: CHECKS[active].color + "08",
-            }}
-          >
-            <strong style={{ color: CHECKS[active].color }}>
-              {CHECKS[active].label}
-            </strong>
-            <p className="mt-1">{CHECKS[active].detail}</p>
-          </motion.div>
-        </AnimatePresence>
-      </div>
-
-      {/* PARAMS_XX 분해 */}
-      <div className="rounded-xl border border-border bg-card p-5 mb-6">
-        <p className="text-xs font-mono text-foreground/50 mb-2">
-          Noise 파라미터
-        </p>
-        <p className="font-mono text-sm font-bold text-foreground/80 mb-3">
-          {PARAMS.value}
-        </p>
-        <div className="flex flex-wrap gap-2">
-          {PARAMS.parts.map((p, i) => (
-            <motion.div
-              key={p.token}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2 + i * 0.08 }}
-              className="rounded-lg border px-3 py-1.5"
-              style={{
-                borderColor: p.color + "40",
-                background: p.color + "08",
-              }}
-            >
-              <span
-                className="text-xs font-mono font-bold"
-                style={{ color: p.color }}
-              >
-                {p.token}
-              </span>
-              <span className="text-[10px] text-foreground/50 ml-2">
-                {p.desc}
-              </span>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
+      <h2 className="mb-6 text-2xl font-bold">Handshake 완료와 안전한 connection 인계는 같은 검증 묶음입니다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          <code>finish()</code>는 3라운드가 끝난 뒤 호출된다.
-          <br />
-          핵심은 <strong>서명 검증</strong>이다.
-          <br />
-          상대가 보낸 DH 공개키가 정말 해당 PeerId 소유인지 확인한다.
+          Implementation은 Noise state가 complete라는 flag만 보고 connection을 넘기면 안
+          됩니다. Remote static key 존재, payload protobuf decode, identity public key와
+          signature 존재, binding signature 검증, derived PeerId와 expected PeerId 비교가
+          모두 끝나야 <code>(PeerId, secure I/O)</code>를 반환합니다. Expected PeerId가
+          없는 inbound에서도 인증된 실제 PeerId를 상위 admission policy에 전달해야 합니다.
         </p>
         <p>
-          검증에 통과하면 <code>HandshakeState</code>가{" "}
-          <code>TransportState</code>로 전환된다.
-          <br />
-          이후 모든 바이트는 <strong>ChaCha20-Poly1305</strong>로 암호화된다.
-          <br />
-          반환값은 <code>(PeerId, Output)</code> — Swarm이 바로 사용할 수 있는
-          형태다.
+          Transport phase에서는 각 message를 2-byte big-endian length와 ciphertext로
+          framing하고, 최대 message size와 AEAD tag를 검사합니다. Truncated length,
+          oversized frame, invalid tag, counter exhaustion과 unexpected EOF는 fail-closed로
+          connection을 끝냅니다. Noise는 encrypted record의 내용과 무결성을 보호하지만
+          packet timing·length·IP endpoint를 숨기지 않습니다.
         </p>
-      </div>
-
-      {onCodeRef && (
-        <div className="not-prose flex flex-wrap gap-2 mt-6">
-          <CodeViewButton
-            onClick={() =>
-              onCodeRef("noise-handshake", codeRefs["noise-handshake"])
-            }
-          />
-          <span className="text-[10px] text-muted-foreground self-center">
-            finish() 구현
-          </span>
-          <CodeViewButton
-            onClick={() => onCodeRef("noise-config", codeRefs["noise-config"])}
-          />
-          <span className="text-[10px] text-muted-foreground self-center">
-            Noise Config
-          </span>
-        </div>
-      )}
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">Transport Mode 전환</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-          {`// HandshakeState → TransportState 전환
-//
-// finish() 단계:
-//
-// 1. Handshake 완료 확인
-//    모든 round 완료됨 (XX: 3 rounds)
-//    양쪽 identity 검증됨
-//
-// 2. Split (Noise spec)
-//    Final chaining key에서 2개 cipher key 파생:
-//      k1: Initiator → Responder
-//      k2: Responder → Initiator
-//
-//    // Noise: Split()
-//    k_init_to_resp, k_resp_to_init = HKDF(ck, "", 2*32)
-//
-// 3. CipherState 생성
-//    struct CipherState {
-//        k: 32-byte key
-//        n: uint64 nonce (starts at 0)
-//    }
-//
-// 4. Transport ready
-//    Encrypt: ChaCha20-Poly1305(k, nonce, plaintext, ad)
-//    Decrypt: ChaCha20-Poly1305(k, nonce, ciphertext, ad)
-//    Nonce 증가 per message
-
-// Message Format (Noise Transport):
-//
-//   plaintext
-//   → encrypt_with_ad(k, n, "", plaintext)
-//   → ciphertext || 16-byte auth tag
-//
-//   Length prefix (libp2p):
-//     2 bytes big-endian length
-//     followed by encrypted data
-//
-//   Max message: 65535 bytes (16-bit length)
-
-// 보안 보장:
-//
-//   Confidentiality:
-//     모든 데이터 ChaCha20으로 암호화
-//     관찰자는 plaintext 못 봄
-//
-//   Authenticity:
-//     Poly1305 MAC으로 무결성
-//     변조 감지 (decrypt 실패)
-//
-//   Ordering:
-//     Nonce monotonic 증가
-//     Replay 공격 방지
-//     Out-of-order 감지
-//
-//   Forward Secrecy:
-//     세션 종료 시 key 폐기
-//     Compromise 시 과거 세션 안전
-
-// 실무 고려사항:
-//
-//   Rekey:
-//     nonce overflow 전 rekey
-//     k = HKDF(k, "rekey")
-//
-//   Connection termination:
-//     Wipe keys from memory
-//     Zero all sensitive buffers
-//
-//   Error handling:
-//     Decrypt 실패 → connection 종료
-//     재협상 없음 (보안)`}
-        </pre>
+        <h3>Release gate</h3>
+        <ul>
+          <li>정상 XX trace에서 양쪽 PeerId와 송수신 key 방향이 서로 대응하는지 확인합니다.</li>
+          <li>Static key 한 byte, signature 한 byte와 expected PeerId를 각각 바꿔 모두 거부되는지 확인합니다.</li>
+          <li>Length 0·최댓값 초과·truncation·tag failure 뒤 plaintext가 상위로 전달되지 않는지 확인합니다.</li>
+          <li>Handshake timeout과 취소 뒤 socket, task와 key material이 남지 않는지 관측합니다.</li>
+        </ul>
       </div>
     </section>
   );

@@ -1,111 +1,80 @@
-import Math from "@/components/ui/math";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import ButterflyViz from "./viz/ButterflyViz";
 
 export default function Butterfly() {
   return (
     <section id="butterfly" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Butterfly 분할</h2>
+      <h2 className="mb-6 text-2xl font-bold">
+        Butterfly는 even·odd 결과를 두 번 재사용한다
+      </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Cooley-Tukey 알고리즘은 DFT를 <strong>재귀적으로 반씩 나누어</strong>{" "}
-          <Math>{"O(n^2)"}</Math>를 <Math>{"O(n \\log n)"}</Math>으로 줄인다.
-          <br />
-          핵심 관찰: n점 DFT를 짝수/홀수 인덱스로 분리하면 n/2점 DFT 2개로
-          환원된다
+          coefficient index를 even과 odd로 나누면 f(x)=E(x²)+xO(x²)입니다. ω²는
+          order n/2인 root이므로 E와 O는 각각 크기 n/2 transform으로 계산할 수
+          있습니다. 결합 단계에서는 같은 두 intermediate로 서로 n/2 떨어진
+          output을 만듭니다.
         </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">짝수/홀수 분할</h3>
-        <p>
-          <Math>{"f(x) = a_0 + a_1 x + a_2 x^2 + a_3 x^3"}</Math>을 다시 쓰면:
-        </p>
-        <Math display>
+      </div>
+      <ButterflyViz />
+      <ExplainedFormula
+        question="E[k]와 O[k] 한 쌍에서 NTT output 두 개를 어떻게 얻을까요?"
+        idea="half-turn identity ω^(k+n/2)=−ω^k를 사용하면 odd contribution의 부호만 바뀌므로 새 sub-transform 없이 더하기와 빼기로 두 output을 만듭니다."
+        formula={String.raw`y_k=E_k+\omega^kO_k,\qquad y_{k+n/2}=E_k-\omega^kO_k`}
+        terms={[
           {
-            "f(x) = \\underbrace{(a_0 + a_2 x^2)}_{f_{\\text{even}}(x^2)} + x \\cdot \\underbrace{(a_1 + a_3 x^2)}_{f_{\\text{odd}}(x^2)}"
-          }
-        </Math>
-        <p>
-          <Math>{"f_{\\text{even}}(t) = a_0 + a_2 t"}</Math>,{" "}
-          <Math>{"f_{\\text{odd}}(t) = a_1 + a_3 t"}</Math>로 놓으면
-          <br />
-          <Math>
-            {"f(x) = f_{\\text{even}}(x^2) + x \\cdot f_{\\text{odd}}(x^2)"}
-          </Math>
-          <br />
-          n차 문제가 n/2차 문제 2개로 줄었다
-        </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">Twiddle Factor</h3>
-        <p>
-          평가점 <Math>{"\\omega^k"}</Math>를 대입하면:
-        </p>
-        <Math display>
+            symbol: "E_k",
+            name: "even transform",
+            description: "짝수 index coefficient의 n/2-point NTT 결과입니다.",
+          },
           {
-            "\\underbrace{f(\\omega^k)}_{\\text{상반부 결과}} = \\underbrace{f_{\\text{even}}(\\omega^{2k})}_{\\text{짝수 부분}} + \\underbrace{\\omega^k}_{\\text{twiddle factor}} \\cdot \\underbrace{f_{\\text{odd}}(\\omega^{2k})}_{\\text{홀수 부분}}"
-          }
-        </Math>
-        <p className="text-sm text-muted-foreground mt-2">
-          ω<sup>k</sup> = twiddle factor — 짝수/홀수 부분을 결합하는 회전 인자
-          <br />f<sub>even</sub>(ω<sup>2k</sup>) = n/2 크기 하위 문제의 결과, f
-          <sub>odd</sub>도 동일
-        </p>
-        <p>
-          단위근의 성질 <Math>{"\\omega^{n/2} = -1"}</Math>을 이용하면 하반부(
-          <Math>{"k \\geq n/2"}</Math>)는 추가 계산 없이 얻는다:
-        </p>
-        <Math display>
+            symbol: "O_k",
+            name: "odd transform",
+            description: "홀수 index coefficient의 n/2-point NTT 결과입니다.",
+          },
           {
-            "\\underbrace{f(\\omega^{k+n/2})}_{\\text{하반부 결과}} = \\underbrace{f_{\\text{even}}(\\omega^{2k})}_{\\text{짝수 부분}} - \\underbrace{\\omega^k}_{\\text{같은 twiddle}} \\cdot \\underbrace{f_{\\text{odd}}(\\omega^{2k})}_{\\text{홀수 부분}}"
-          }
-        </Math>
-        <p className="text-sm text-muted-foreground mt-2">
-          부호만 반전(+ → −) — 같은 twiddle factor로 2개 결과를 동시에 계산.
-          이것이 butterfly 구조
+            symbol: String.raw`\omega^k`,
+            name: "twiddle factor",
+            description:
+              "odd 부분의 phase를 k번째 output에 맞추는 field 배율입니다.",
+          },
+          {
+            symbol: "y_k,y_{k+n/2}",
+            name: "paired outputs",
+            description: "같은 intermediate를 공유하는 반대편 두 결과입니다.",
+          },
+        ]}
+        assumptions={[
+          "n은 짝수이고 ω는 primitive n-th root입니다.",
+          "Radix-2 재귀를 끝까지 쓰려면 n은 2의 거듭제곱입니다.",
+        ]}
+        interpretation="각 recursion level은 전체 n개 값에 O(n) work를 하고 level은 log₂n개이므로 recurrence T(n)=2T(n/2)+O(n)=O(n log n)입니다."
+      />
+      <div
+        id="paper-cooley-tukey"
+        className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">
+          논문 읽기 · factorization
         </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">
-          수치 예시: <Math>{"\\mathbb{F}_{17}"}</Math>, n=4,{" "}
-          <Math>{"\\omega=4"}</Math>
-        </h3>
-        <p>
-          입력 계수 <Math>{"[a_0, a_1, a_2, a_3] = [1, 2, 3, 4]"}</Math>.
-          <br />
-          짝수 부분: <Math>{"f_e(t) = 1 + 3t"}</Math>, 홀수 부분:{" "}
-          <Math>{"f_o(t) = 2 + 4t"}</Math>
+        <p className="mt-2 text-sm font-semibold">
+          Cooley &amp; Tukey (1965), An Algorithm for the Machine Calculation of
+          Complex Fourier Series
         </p>
-        <div className="not-prose grid grid-cols-1 gap-3 my-4">
-          {[
-            {
-              step: "1단계 — n/2점 DFT (ω²=16 기준)",
-              desc: "f_e(1)=4, f_e(16)=1+48≡15. f_o(1)=6, f_o(16)=2+64≡15",
-              color: "indigo",
-            },
-            {
-              step: "2단계 — Butterfly 결합",
-              desc: "f(ω⁰) = 4+1·6=10, f(ω²) = 4-1·6=-2≡15. f(ω¹) = 15+4·15=75≡7, f(ω³) = 15-4·15=-45≡6",
-              color: "emerald",
-            },
-            {
-              step: "결과",
-              desc: "[f(1), f(4), f(16), f(13)] = [10, 7, 15, 6] — DFT 직접 계산과 동일",
-              color: "amber",
-            },
-          ].map((p) => (
-            <div
-              key={p.step}
-              className={`rounded-lg border border-${p.color}-500/20 bg-${p.color}-500/5 p-4`}
-            >
-              <p className={`font-semibold text-sm text-${p.color}-400`}>
-                {p.step}
-              </p>
-              <p className="text-sm mt-1.5 text-foreground/75">{p.desc}</p>
-            </div>
-          ))}
-        </div>
-        <p>
-          n/2점 DFT 2개 + butterfly 결합 = 총 <Math>{"O(n \\log n)"}</Math>.
-          <br />
-          재귀적으로 계속 반씩 나누면 <Math>{"\\log_2 n"}</Math> 단계, 각 단계{" "}
-          <Math>{"O(n)"}</Math> 연산이다
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          문제는 composite length의 discrete Fourier sum을 효율적으로 계산하는
+          것입니다. 논문은 transform length를 factor에 따라 나누어
+          intermediate를 재사용합니다. 원 논문은 complex arithmetic을 다루며,
+          finite-field 적용에는 primitive roots와 invertible length라는 추가
+          대수 조건이 필요합니다.
         </p>
+        <a
+          href="https://doi.org/10.1090/S0025-5718-1965-0178586-1"
+          target="_blank"
+          rel="noreferrer"
+          className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
+        >
+          논문 원문 보기
+        </a>
       </div>
     </section>
   );
