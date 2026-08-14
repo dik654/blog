@@ -1,7 +1,7 @@
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ContentBoundary from "@/components/articles/content-boundary";
-import ContextViz from "./viz/ContextViz";
+import NetworkLearningFlowViz from "./viz/NetworkLearningFlowViz";
 
 const axes = [
   {
@@ -57,9 +57,7 @@ export default function Overview() {
       <h2 className="text-2xl font-bold mb-6">
         서버 네트워크는 workload에서 시작한다
       </h2>
-      <div className="not-prose mb-8">
-        <ContextViz />
-      </div>
+      <NetworkLearningFlowViz mode="fundamentals" />
       <ContentBoundary article="hw-network" />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
@@ -124,6 +122,16 @@ export default function Overview() {
               </p>
             }
             formula={String.raw`G_{\mathrm{payload}}=\frac{Q_{\mathrm{payload}}}{T_{\mathrm{completion}}}\le \frac{R_{\mathrm{line}}}{8}`}
+            annotatedFormula={String.raw`\begin{aligned}
+              G_{\mathrm{payload}}
+              &=\underbrace{\frac{Q_{\mathrm{payload}}}{T_{\mathrm{completion}}}}_{\text{유효 byte / 완료 시간}}\\[4pt]
+              &\le\underbrace{\frac{R_{\mathrm{line}}}{8}}_{\text{bit/s를 byte/s로}}
+            \end{aligned}`}
+            operations={[
+              { expression: String.raw`\frac{Q_{\mathrm{payload}}}{T_{\mathrm{completion}}}`, annotation: ["protocol byte가 아니라 완료한 payload만", "wall-clock 시간으로 나눠 goodput 계산"] },
+              { expression: String.raw`\frac{R_{\mathrm{line}}}{8}`, annotation: ["광고된 bit/s를 8로 나눠", "비교 가능한 byte/s 상한으로 변환"] },
+              { expression: String.raw`G_{\mathrm{payload}}\le R_{\mathrm{line}}/8`, annotation: ["실제 완료 속도를 물리 상한과 비교해", "overhead·queue가 만든 간극을 확인"] },
+            ]}
             terms={[
               {
                 symbol: "Q_{\\mathrm{payload}}",
@@ -171,7 +179,7 @@ export default function Overview() {
           쉽다.
         </p>
 
-        <div className="not-prose my-6 border-l-4 border-cyan-400 bg-cyan-50/60 dark:bg-cyan-950/20 rounded-r-lg p-4">
+        <div className="not-prose my-6 border-l border-cyan-400 bg-cyan-50/60 dark:bg-cyan-950/20 rounded-r-lg p-4">
           <p className="font-semibold mb-1">좋은 첫 측정</p>
           <p className="text-sm leading-6">
             application phase와 함께 host별 tx/rx bytes, flow 수, message size,
@@ -196,14 +204,16 @@ export default function Overview() {
             표준군임을 보여 주며, 현재 진행 중인 rate별 표준 상태도 제공한다.
           </CitationBlock>
         </div>
-        <CitationBlock
-          source="InfiniBand Trade Association — Architecture Specification"
-          citeKey={2}
-          href="https://www.infinibandta.org/ibta-specification/"
-        >
-          InfiniBand와 RoCE를 server·storage 연결과 high-performance
-          message·I/O를 위한 표준 architecture로 정의한다.
-        </CitationBlock>
+        <div id="paper-infiniband-fabric" className="scroll-mt-24">
+          <CitationBlock
+            source="InfiniBand Trade Association — Architecture Specification"
+            citeKey={2}
+            href="https://www.infinibandta.org/ibta-specification/"
+          >
+            InfiniBand와 RoCE를 server·storage 연결과 high-performance
+            message·I/O를 위한 표준 architecture로 정의한다.
+          </CitationBlock>
+        </div>
       </div>
     </section>
   );

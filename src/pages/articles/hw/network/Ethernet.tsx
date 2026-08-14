@@ -106,6 +106,16 @@ export default function Ethernet() {
             </p>
           }
           formula={String.raw`\rho_{\mathrm{os}}=\frac{\sum_i C_{\mathrm{host},i}}{\sum_{j\in A}C_{\mathrm{uplink},j}}`}
+          annotatedFormula={String.raw`\begin{aligned}
+            C_{\mathrm{demand}}&=\underbrace{\sum_i C_{\mathrm{host},i}}_{\text{host 요구량 합}}\\[4pt]
+            C_{\mathrm{alive}}&=\underbrace{\sum_{j\in A}C_{\mathrm{uplink},j}}_{\text{살아 있는 uplink 합}}\\[4pt]
+            \rho_{\mathrm{os}}&=\underbrace{\frac{C_{\mathrm{demand}}}{C_{\mathrm{alive}}}}_{\text{요구량 / 가용량}}
+          \end{aligned}`}
+          operations={[
+            { expression: String.raw`\sum_i C_{\mathrm{host},i}`, annotation: ["같은 leaf에서 fabric으로 향할 수 있는", "모든 host-facing 용량을 수요로 누적"] },
+            { expression: String.raw`\sum_{j\in A}C_{\mathrm{uplink},j}`, annotation: ["고장 난 link는 제외하고", "현재 forwarding 가능한 uplink만 누적"] },
+            { expression: String.raw`C_{\mathrm{demand}}/C_{\mathrm{alive}}`, annotation: ["동시 요구량을 살아 있는 공급량으로 나눠", "1 초과인지로 oversubscription을 읽음"] },
+          ]}
           terms={[
             { symbol: "C_{\\mathrm{host},i}", name: "host-facing capacity", description: "Leaf에 연결된 i번째 endpoint link의 단방향 line capacity입니다." },
             { symbol: "A", name: "active uplink set", description: "현재 실제로 forwarding할 수 있는 uplink들의 집합입니다." },

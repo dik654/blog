@@ -122,10 +122,22 @@ export default function RDMA() {
             &\operatorname{sameSubnet}_p(a,b) \\
             &\qquad\iff (a\land M_p)=(b\land M_p)
           \end{aligned}`}
+          annotatedFormula={String.raw`\begin{aligned}
+            s_a&=\underbrace{a\land M_p}_{\text{local host bit 제거}}\\[4pt]
+            s_b&=\underbrace{b\land M_p}_{\text{remote host bit 제거}}\\[4pt]
+            \mathrm{same}_p&=\underbrace{\mathbf 1[s_a=s_b]}_{\text{prefix 같으면 1}}
+          \end{aligned}`}
+          operations={[
+            { expression: String.raw`a\land M_p`, annotation: ["local IPv4의 host bit를 0으로 만들고", "prefix identity만 추출"] },
+            { expression: String.raw`b\land M_p`, annotation: ["remote IPv4에도 동일한 mask를 적용해", "같은 길이의 prefix를 추출"] },
+            { expression: String.raw`a_{\mathrm{net}}=b_{\mathrm{net}}`, annotation: ["추출한 prefix를 비교해", "direct subnet의 local GID 후보인지 판정"] },
+          ]}
           terms={[
             { symbol: "a,b", name: "endpoint IPv4 addresses", description: "비교할 local GID의 IPv4 값과 remote peer GID의 IPv4 값입니다." },
             { symbol: "p", name: "prefix length", description: "/30처럼 network prefix로 사용할 상위 bit 수입니다." },
             { symbol: "M_p", name: "subnet mask", description: "상위 p bit가 1이고 나머지가 0인 32bit mask입니다." },
+            { symbol: "s_a,s_b", name: "masked network prefixes", description: "Local·remote 주소에서 host bit를 지운 뒤 남은 network prefix입니다." },
+            { symbol: "\\mathrm{same}_p", name: "same-subnet indicator", description: "두 prefix가 같으면 1, 다르면 0인 후보 판정값입니다." },
             { symbol: "\\land", name: "bitwise AND", description: "Host bit를 지우고 network prefix만 남기는 bit 연산입니다." },
           ]}
           assumptions={[

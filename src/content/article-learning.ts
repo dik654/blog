@@ -36137,7 +36137,12 @@ export const ARTICLE_LEARNING: Readonly<
         id: "nccl-algbw-busbw-boundary",
         role: "Operation time·algbw·busbw와 실제 wire counter를 같은 값으로 오해하지 않게 합니다.",
       },
-    ],
+    ].filter(({ id }) => [
+      "network-workload-traffic-matrix",
+      "line-rate-goodput-boundary",
+      "ethernet-link-compatibility-chain",
+      "fabric-oversubscription-failure-state",
+    ].includes(id)),
     conceptExplanations: [
       {
         id: "pcie-transaction-bandwidth-latency",
@@ -36269,7 +36274,12 @@ export const ARTICLE_LEARNING: Readonly<
         boundary:
           "Busbw correction은 point-to-point accounting이며 NVLS·offload·계층형 algorithm에서는 실제 hardware bottleneck counter와 달라질 수 있습니다.",
       },
-    ],
+    ].filter(({ id }) => [
+      "network-workload-traffic-matrix",
+      "line-rate-goodput-boundary",
+      "ethernet-link-compatibility-chain",
+      "fabric-oversubscription-failure-state",
+    ].includes(id)),
     conceptStages: [
       {
         label: "Describe",
@@ -36323,7 +36333,7 @@ export const ARTICLE_LEARNING: Readonly<
           "nccl-algbw-busbw-boundary",
         ],
       },
-    ],
+    ].filter(({ label }) => label === "Describe" || label === "Link" || label === "Fabric"),
     exercises: [
       {
         level: "basic",
@@ -36501,7 +36511,18 @@ export const ARTICLE_LEARNING: Readonly<
         ],
         sectionId: "infiniband",
       },
-    ],
+    ].filter(() => false).concat(([
+      { level: "basic", question: "Traffic matrix의 source·destination·message size·concurrency·phase 열을 정의하라.", answerChecklist: ["source", "destination", "message size", "concurrent flows", "phase", "burst"], requiredConcepts: ["network-workload-traffic-matrix"], sectionId: "workload-contract" },
+      { level: "basic", question: "800Gb/s line rate를 GB/s로 바꾸고 80GB가 1.1초에 끝났을 때 goodput을 계산하라.", answerChecklist: ["divide by 8", "100GB/s", "72.7GB/s", "72.7 percent", "decimal units"], requiredConcepts: ["line-rate-goodput-boundary"], sectionId: "goodput-boundary" },
+      { level: "basic", question: "Line rate·wire throughput·payload goodput을 서로 다른 측정 경계로 설명하라.", answerChecklist: ["physical MAC", "headers FEC", "application bytes", "completion time", "direction"], requiredConcepts: ["line-rate-goodput-boundary"], sectionId: "goodput-boundary" },
+      { level: "basic", question: "OSFP 800G 표기만으로 link 호환을 확정할 수 없는 이유를 chain 순서로 설명하라.", answerChecklist: ["MAC rate", "lane grouping", "PHY encoding", "FEC", "module media", "both ends"], requiredConcepts: ["ethernet-link-compatibility-chain"], sectionId: "ethernet-link-contract" },
+      { level: "basic", question: "Host 8×100G와 uplink 4×200G의 정상 oversubscription을 계산하라.", answerChecklist: ["800 host", "800 uplink", "one to one", "same direction", "aggregate ceiling"], requiredConcepts: ["fabric-oversubscription-failure-state"], sectionId: "fabric-oversubscription" },
+      { level: "basic", question: "Uplink 하나가 실패했을 때 위 fabric의 oversubscription을 다시 계산하라.", answerChecklist: ["600 active uplink", "800 divided by 600", "1.33 to one", "failure state", "not flow prediction"], requiredConcepts: ["fabric-oversubscription-failure-state"], sectionId: "fabric-oversubscription" },
+      { level: "advanced", question: "Parameter-server incast와 all-to-all을 서로 다른 traffic matrix로 작성하라.", answerChecklist: ["fan in", "all pairs", "barrier", "message buckets", "p99 completion", "background traffic"], requiredConcepts: ["network-workload-traffic-matrix"], sectionId: "workload-contract" },
+      { level: "advanced", question: "Link-up은 성공하지만 payload goodput이 낮은 반례와 필요한 counter를 설계하라.", answerChecklist: ["FEC CRC", "drop queue", "retransmit", "flow completion", "application phase", "same timeline"], requiredConcepts: ["ethernet-link-compatibility-chain", "line-rate-goodput-boundary"], sectionId: "ethernet" },
+      { level: "advanced", question: "ECMP hash 불균형 때문에 1:1 fabric에서 특정 flow만 느린 반례를 설명하라.", answerChecklist: ["aggregate one to one", "hash collision", "hot uplink", "queue", "per flow telemetry", "reroute test"], requiredConcepts: ["fabric-oversubscription-failure-state", "network-workload-traffic-matrix"], sectionId: "fabric-oversubscription" },
+      { level: "advanced", question: "관리·bulk·GPU burst traffic의 SLO와 격리·failure acceptance ledger를 작성하라.", answerChecklist: ["traffic class", "latency vs throughput", "queue isolation", "failure state", "p99", "recovery", "counter evidence"], requiredConcepts: ["network-workload-traffic-matrix", "line-rate-goodput-boundary", "fabric-oversubscription-failure-state"], sectionId: "overview" },
+    ] satisfies ArticleExercise[])) as ArticleExercise[],
     papers: [
       {
         title: "PCI-SIG — PCI Express Base Specification",
@@ -36605,6 +36626,116 @@ export const ARTICLE_LEARNING: Readonly<
           "Busbw가 offload·hierarchical algorithm의 실제 wire traffic이나 application end-to-end throughput과 항상 같다는 뜻은 아님",
         sectionId: "paper-nccl-tests-performance",
       },
+    ].filter((_, index) => index === 2 || index === 5),
+  },
+  "gpu/gpu-interconnects": {
+    entryLevel: true,
+    entryNote: "PCIe·NVLink를 안다고 가정하지 않습니다. GPU buffer 한 개가 peer 또는 HCA까지 이동하는 경로를 device·link·switch·root 단위로 나눕니다.",
+    coreIdea: "GPU interconnect 성능은 제품 이름의 peak 합이 아니라 실제 GPU·NIC pair가 지나는 PCIe/NVLink topology의 가장 좁고 공유되는 구간, payload size와 latency에서 결정됩니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "pcie-transaction-bandwidth-latency", role: "Lane raw rate와 transaction payload·small-transfer latency를 분리합니다." },
+      { id: "pcie-topology-peer-path", role: "Switch·root complex·NUMA·ACS/IOMMU를 pair path로 기록합니다." },
+      { id: "nvlink-device-fabric-boundary", role: "지원 GPU의 node-local interconnect와 외부 HCA path를 구분합니다." },
+    ],
+    conceptExplanations: [
+      { id: "pcie-transaction-bandwidth-latency", sectionId: "pcie-transaction-bandwidth-latency", intuition: "차선별 신호 속도와 차선 수로 도로 상한을 구한 뒤 실제 화물 완료량을 따로 재는 것과 같습니다.", workedExample: "PCIe 5.0 x16은 약 63GB/s 한 방향 raw 상한이지만 작은 copy는 setup latency가 지배합니다.", boundary: "양방향 합·raw rate·payload goodput·small-transfer latency를 같은 숫자로 읽지 않습니다." },
+      { id: "pcie-topology-peer-path", sectionId: "pcie-topology-peer-path", intuition: "같은 문 폭이라도 같은 복도인지 다른 건물 다리를 건너는지에 따라 실제 이동이 달라집니다.", workedExample: "GPU0-HCA0 same root와 GPU0-HCA1 remote socket pair를 따로 측정합니다.", boundary: "x16 표기나 same root만으로 P2P 허용과 goodput을 보장하지 않습니다." },
+      { id: "nvlink-device-fabric-boundary", sectionId: "nvlink-device-fabric-boundary", intuition: "건물 안 전용 통로도 다른 건물로 나갈 때는 외부 출입구를 다시 거칩니다.", workedExample: "Node-local GPU pair는 NVLink, remote all-reduce는 다시 HCA와 fabric을 사용합니다.", boundary: "NVLink 이름이 모든 GPU pair·operation·node-external path를 자동 대체하지 않습니다." },
+    ],
+    conceptStages: [
+      { label: "Rate", relation: "Lane signaling에서 raw one-way ceiling을 계산", concepts: ["bit-byte", "pcie-transaction-bandwidth-latency"] },
+      { label: "Path", relation: "GPU·NIC pair의 switch·root·NUMA route를 고정", concepts: ["pcie-topology-peer-path"] },
+      { label: "Boundary", relation: "NVLink local path와 external HCA path를 분리", concepts: ["nvlink-device-fabric-boundary"] },
+    ],
+    exercises: [
+      { level: "basic", question: "PCIe 5.0 x16 한 방향 raw 상한을 계산하라.", answerChecklist: ["32GT/s", "16 lanes", "128/130", "divide by 8", "about 63GB/s"], requiredConcepts: ["pcie-transaction-bandwidth-latency"], sectionId: "pcie-transaction-bandwidth-latency" },
+      { level: "basic", question: "Raw PCIe rate와 large-copy goodput이 다른 이유를 설명하라.", answerChecklist: ["TLP DLLP", "flow control", "DMA setup", "contention", "payload completion"], requiredConcepts: ["pcie-transaction-bandwidth-latency"], sectionId: "pcie-transaction-bandwidth-latency" },
+      { level: "basic", question: "작은 transfer가 peak bandwidth보다 latency에 묶이는 이유를 설명하라.", answerChecklist: ["fixed setup", "small payload", "queue", "completion", "message buckets"], requiredConcepts: ["pcie-transaction-bandwidth-latency"], sectionId: "pcie-transaction-bandwidth-latency" },
+      { level: "basic", question: "GPU-HCA pair inventory에 switch·root·NUMA를 왜 모두 기록하는가?", answerChecklist: ["actual path", "shared segment", "remote socket", "affinity", "pair measurement"], requiredConcepts: ["pcie-topology-peer-path"], sectionId: "pcie-topology-peer-path" },
+      { level: "basic", question: "NVLink와 NVSwitch의 node-local 역할을 PCIe·network와 구분하라.", answerChecklist: ["supported peers", "local aggregate", "runtime placement", "HCA external", "not all pairs"], requiredConcepts: ["nvlink-device-fabric-boundary"], sectionId: "nvlink-device-fabric-boundary" },
+      { level: "basic", question: "Remote GPU transfer의 GPU memory→HCA→fabric path를 순서대로 그리라.", answerChecklist: ["source buffer", "local link", "PCIe root", "HCA", "network", "remote topology"], requiredConcepts: ["pcie-topology-peer-path", "nvlink-device-fabric-boundary"], sectionId: "overview" },
+      { level: "advanced", question: "ACS·IOMMU가 direct peer route를 제한하는 반례와 control experiment를 설계하라.", answerChecklist: ["redirect", "virtualization policy", "P2P capability", "same pair", "on off control", "latency bandwidth"], requiredConcepts: ["pcie-topology-peer-path"], sectionId: "pcie-topology-peer-path" },
+      { level: "advanced", question: "같은 x16 GPU-HCA 두 pair의 topology-aware benchmark ledger를 작성하라.", answerChecklist: ["negotiated width", "switch root", "NUMA", "message buckets", "bandwidth", "latency", "errors"], requiredConcepts: ["pcie-transaction-bandwidth-latency", "pcie-topology-peer-path"], sectionId: "pcie-topology-peer-path" },
+      { level: "advanced", question: "NVLink aggregate 사양을 remote all-reduce wire bandwidth로 오해한 계산을 교정하라.", answerChecklist: ["local only", "peer support", "HCA path", "external fabric", "different metric", "measure segments"], requiredConcepts: ["nvlink-device-fabric-boundary"], sectionId: "nvlink-device-fabric-boundary" },
+      { level: "advanced", question: "Topology change 뒤 GPU-HCA affinity regression을 검출하는 release gate를 설계하라.", answerChecklist: ["inventory diff", "pair matrix", "P2P/GDR capability", "message buckets", "baseline", "rollback"], requiredConcepts: ["pcie-topology-peer-path", "nvlink-device-fabric-boundary"], sectionId: "overview" },
+    ],
+    papers: [
+      { title: "PCI-SIG — PCI Express Base Specification", href: "https://pcisig.com/specifications", problem: "Lane·transaction·link protocol을 vendor 간 상호 운용해야 합니다.", contribution: "Generation signaling·width·transaction layer의 공식 경계를 제공합니다.", assumptions: "Target generation·negotiated width·spec revision을 고정합니다.", evidenceScope: "Raw lane rate와 PCIe architecture입니다.", notClaim: "특정 pair의 P2P·payload goodput·latency를 보장하지 않습니다.", sectionId: "paper-pcie-base" },
+      { title: "NVIDIA NVLink and NVSwitch", href: "https://www.nvidia.com/en-us/data-center/nvlink/", problem: "지원 GPU 사이 node-local peer connectivity를 제공해야 합니다.", contribution: "제품 세대별 NVLink·NVSwitch 범위를 제시합니다.", assumptions: "명시된 GPU·generation·system topology를 사용합니다.", evidenceScope: "제품별 연결·aggregate 사양입니다.", notClaim: "모든 pair·operation·remote path에 같은 rate가 적용되지 않습니다.", sectionId: "paper-nvlink-fabric" },
+    ],
+  },
+  "gpu/rdma-roce": {
+    entryLevel: true,
+    entryNote: "RDMA를 CPU-free networking으로 외우지 않습니다. Registered range 하나와 work request 하나에서 시작합니다.",
+    coreIdea: "RDMA는 host가 memory capability와 queue를 준비하고 NIC가 payload DMA를 수행한 뒤 completion을 돌려주는 분업입니다. RoCE GID와 GPUDirect도 이 range·key·lifetime·topology 계약 위에 놓입니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "rdma-control-data-path", role: "Host setup·NIC payload DMA·completion/recovery를 나눕니다." },
+      { id: "rdma-memory-registration-capability", role: "Memory range·access key·owner·lifetime을 capability로 묶습니다." },
+      { id: "roce-v2-gid-routing", role: "Netdev IP·GID entry·QP route 선택을 연결합니다." },
+      { id: "gpudirect-rdma-topology", role: "GPU memory와 NIC direct DMA의 PCIe·driver 조건을 고정합니다." },
+    ],
+    conceptExplanations: [
+      { id: "rdma-control-data-path", sectionId: "rdma-control-data-path", intuition: "사람이 주소·권한·작업표를 준비하고 반복 화물 이동은 전용 장비가 맡는 분업입니다.", workedExample: "CPU가 MR/QP/WQ를 만들고 NIC가 DMA한 뒤 CQ에 결과를 남깁니다.", boundary: "CPU·kernel·copy가 완전히 사라지는 기술이 아닙니다." },
+      { id: "rdma-memory-registration-capability", sectionId: "rdma-memory-registration", intuition: "전체 memory 열쇠 대신 한 서랍의 범위·동작·기간만 담은 출입증입니다.", workedExample: "1GB buffer의 rkey를 transfer lifetime에만 peer에 줍니다.", boundary: "Registration cache는 stale key·pinned memory·reuse race를 만들 수 있습니다." },
+      { id: "roce-v2-gid-routing", sectionId: "roce-gid-routing", intuition: "여러 출구 주소 중 목적지와 연결된 주소표 항목을 QP에 고르는 과정입니다.", workedExample: "Remote 10.112.1.2에는 local 10.112.1.1/30의 RoCE v2 GID를 고릅니다.", boundary: "Subnet match만으로 VLAN·route·GID type까지 보장하지 않습니다." },
+      { id: "gpudirect-rdma-topology", sectionId: "gpudirect-topology", intuition: "GPU와 NIC가 가깝다는 말 대신 둘 사이 PCIe bridge와 policy가 direct DMA를 허용하는지 확인합니다.", workedExample: "GPU0-HCA0와 GPU0-HCA1을 GDR on/off로 pair 비교합니다.", boundary: "Support 표시만으로 작은 message나 remote root에서도 더 빠르다고 결론 내리지 않습니다." },
+    ],
+    conceptStages: [
+      { label: "Control", relation: "Host setup과 NIC data movement를 분리", concepts: ["rdma-control-data-path"] },
+      { label: "Capability", relation: "DMA range·key·access·lifetime을 고정", concepts: ["rdma-memory-registration-capability"] },
+      { label: "Route", relation: "RoCE GID에서 GPU-HCA direct path까지 확장", concepts: ["roce-v2-gid-routing", "gpudirect-rdma-topology"] },
+    ],
+    exercises: [
+      { level: "basic", question: "RDMA write에서 CPU·NIC·memory가 맡는 일을 순서대로 나누라.", answerChecklist: ["register", "QP WQ", "NIC DMA", "transport", "completion", "CPU recovery"], requiredConcepts: ["rdma-control-data-path"], sectionId: "rdma-control-data-path" },
+      { level: "basic", question: "RDMA가 CPU와 kernel을 완전히 없애지 않는 이유를 설명하라.", answerChecklist: ["setup", "registration", "posting", "poll completion", "error recovery"], requiredConcepts: ["rdma-control-data-path"], sectionId: "rdma-control-data-path" },
+      { level: "basic", question: "Registered memory capability의 range·access·lkey/rkey·lifetime을 정의하라.", answerChecklist: ["bounded range", "local remote access", "keys", "owner", "expiry"], requiredConcepts: ["rdma-memory-registration-capability"], sectionId: "rdma-memory-registration" },
+      { level: "basic", question: "Remote 10.112.1.2에 맞는 local /30 GID를 선택하라.", answerChecklist: ["mask", "prefix equality", "10.112.1.1", "RoCE v2", "GID index"], requiredConcepts: ["roce-v2-gid-routing"], sectionId: "roce-gid-routing" },
+      { level: "basic", question: "RoCE v2 GID와 ordinary IP route가 연결되지만 같은 개념은 아닌 이유를 말하라.", answerChecklist: ["netdev IP", "GID table", "type", "QP address vector", "route VLAN"], requiredConcepts: ["roce-v2-gid-routing"], sectionId: "roce-gid-routing" },
+      { level: "basic", question: "GPUDirect path와 host-staged path를 buffer 이동 순서로 대조하라.", answerChecklist: ["GPU memory", "NIC direct DMA", "bounce buffer", "PCIe topology", "driver support"], requiredConcepts: ["gpudirect-rdma-topology"], sectionId: "gpudirect-topology" },
+      { level: "advanced", question: "Registration cache의 성능 이점과 stale rkey·buffer reuse 위험을 함께 설계하라.", answerChecklist: ["amortize pin map", "generation", "revoke", "reuse barrier", "pinned limit", "negative fixture"], requiredConcepts: ["rdma-memory-registration-capability"], sectionId: "rdma-memory-registration" },
+      { level: "advanced", question: "같은 subnet prefix가 여러 cable에 있을 때 GID 선택이 모호해지는 반례를 교정하라.", answerChecklist: ["duplicate prefix", "netdev identity", "route", "VLAN", "GID type", "peer mapping"], requiredConcepts: ["roce-v2-gid-routing"], sectionId: "roce-gid-routing" },
+      { level: "advanced", question: "GPU-HCA pair별 GDR on/off control experiment를 설계하라.", answerChecklist: ["same pair", "same message", "topology", "on off", "bandwidth latency", "CPU", "errors"], requiredConcepts: ["gpudirect-rdma-topology"], sectionId: "gpudirect-topology" },
+      { level: "advanced", question: "Timeout·QP error·key expiry를 포함한 RDMA recovery release gate를 작성하라.", answerChecklist: ["completion status", "stop DMA", "revoke key", "drain queue", "reconnect", "receipt", "rollback"], requiredConcepts: ["rdma-control-data-path", "rdma-memory-registration-capability", "roce-v2-gid-routing"], sectionId: "overview" },
+    ],
+    papers: [
+      { title: "NVIDIA Networking — RDMA over Converged Ethernet", href: "https://docs.nvidia.com/networking/display/mlnxenv23102131201lts/RDMA+over+Converged+Ethernet+(RoCE)", problem: "Ethernet netdev·IP·GID type를 QP path에 연결해야 합니다.", contribution: "RoCE mode·GID population·source index 경계를 문서화합니다.", assumptions: "대상 driver·firmware·IP/VLAN config를 고정합니다.", evidenceScope: "NVIDIA RoCE stack의 GID/QP 관계입니다.", notClaim: "혼잡·loss·tail latency를 자동 해결하지 않습니다.", sectionId: "paper-roce-gid" },
+      { title: "NVIDIA CUDA GPUDirect RDMA", href: "https://docs.nvidia.com/cuda/gpudirect-rdma/", problem: "GPU memory와 PCIe peer 사이 direct DMA가 필요합니다.", contribution: "Pinning·DMA·root complex·IOMMU·driver 제약을 문서화합니다.", assumptions: "지원 GPU/NIC/driver/kernel/topology를 사용합니다.", evidenceScope: "Direct peer data path와 platform integration입니다.", notClaim: "모든 pair·message에서 host-staged보다 빠르다는 뜻은 아닙니다.", sectionId: "paper-gpudirect-rdma" },
+    ],
+  },
+  "gpu/gpu-collective-network": {
+    entryLevel: true,
+    entryNote: "NCCL 숫자부터 시작하지 않습니다. Rank 하나와 buffer·operation·count·datatype 계약을 먼저 정의합니다.",
+    coreIdea: "Collective는 모든 rank의 호출 계약과 node-local·external fabric path가 함께 끝나야 완료됩니다. algbw는 operation payload/time, busbw는 비교용 correction이며 실제 wire counter와 분리해야 합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "collective-rank-semantics", role: "Rank placement·operation·count·datatype·call order를 collective 계약으로 고정합니다." },
+      { id: "nccl-algbw-busbw-boundary", role: "Operation time·algbw·busbw와 wire counter를 분리합니다." },
+    ],
+    conceptExplanations: [
+      { id: "collective-rank-semantics", sectionId: "collective-rank-semantics", intuition: "여러 사람이 같은 자료형·길이·순서로 참여해야 끝나는 공동 작업입니다.", workedExample: "16-rank all-reduce가 각 N-value input을 reduce해 모든 rank에 N-value output을 남깁니다.", boundary: "한 rank의 count·datatype·call order가 다르면 hang·crash·corruption이 가능합니다." },
+      { id: "nccl-algbw-busbw-boundary", sectionId: "nccl-bandwidth-boundary", intuition: "일이 끝난 속도와 flat network 기준으로 환산한 비교 숫자를 분리합니다.", workedExample: "16-rank all-reduce algbw 400GB/s는 correction 후 busbw 750GB/s입니다.", boundary: "Busbw는 offload·hierarchical algorithm의 실제 wire payload counter가 아닙니다." },
+    ],
+    conceptStages: [
+      { label: "Contract", relation: "Rank·buffer·operation·count·datatype을 맞춤", concepts: ["collective-rank-semantics"] },
+      { label: "Measure", relation: "Completion time에서 algbw·busbw를 계산하고 counter와 대조", concepts: ["nccl-algbw-busbw-boundary"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Collective rank와 rank-to-GPU mapping을 정의하라.", answerChecklist: ["participant index", "process GPU", "placement", "path", "same communicator"], requiredConcepts: ["collective-rank-semantics"], sectionId: "collective-rank-semantics" },
+      { level: "basic", question: "All-reduce의 input·output과 all-gather·all-to-all의 traffic 차이를 설명하라.", answerChecklist: ["reduce distribute", "gather shards", "all pairs", "same count", "different pattern"], requiredConcepts: ["collective-rank-semantics"], sectionId: "collective-rank-semantics" },
+      { level: "basic", question: "Rank 하나의 count·datatype이 다르면 생길 수 있는 결과를 말하라.", answerChecklist: ["hang", "crash", "corruption", "contract mismatch", "preflight"], requiredConcepts: ["collective-rank-semantics"], sectionId: "collective-rank-semantics" },
+      { level: "basic", question: "16-rank all-reduce algbw=400GB/s에서 busbw를 계산하라.", answerChecklist: ["2 times n minus 1 over n", "30 over 16", "1.875", "750GB/s", "comparison metric"], requiredConcepts: ["nccl-algbw-busbw-boundary"], sectionId: "nccl-bandwidth-boundary" },
+      { level: "basic", question: "Operation time·algbw·busbw를 각각 정의하라.", answerChecklist: ["wall time", "payload over time", "correction factor", "rank count", "not same"], requiredConcepts: ["nccl-algbw-busbw-boundary"], sectionId: "nccl-bandwidth-boundary" },
+      { level: "basic", question: "Node-local NVLink path와 node-external HCA path를 한 collective에 연결하라.", answerChecklist: ["rank buffer", "local reduction", "PCIe HCA", "fabric", "remote rank", "completion"], requiredConcepts: ["collective-rank-semantics"], sectionId: "overview" },
+      { level: "advanced", question: "Busbw를 wire throughput으로 보고 line-rate 효율을 계산한 오류를 교정하라.", answerChecklist: ["derived metric", "algorithm accounting", "offload hierarchy", "wire counter", "same direction units", "no direct ratio"], requiredConcepts: ["nccl-algbw-busbw-boundary"], sectionId: "nccl-bandwidth-boundary" },
+      { level: "advanced", question: "Ring과 tree algorithm을 같은 message·rank placement에서 비교하는 ledger를 설계하라.", answerChecklist: ["same operation", "same count dtype", "algorithm", "time", "algbw busbw", "counter", "tail"], requiredConcepts: ["collective-rank-semantics", "nccl-algbw-busbw-boundary"], sectionId: "infiniband" },
+      { level: "advanced", question: "한 rank의 delayed call이 전체 completion에 미치는 영향을 failure timeline으로 설명하라.", answerChecklist: ["collective order", "barrier dependency", "straggler", "timeout", "rank trace", "recovery"], requiredConcepts: ["collective-rank-semantics"], sectionId: "collective-rank-semantics" },
+      { level: "advanced", question: "Ethernet·RoCE·InfiniBand를 공정 비교하는 collective acceptance gate를 작성하라.", answerChecklist: ["same rank placement", "same message", "operation time", "algbw busbw", "p99", "CPU GPU wait", "failure recovery", "support"], requiredConcepts: ["collective-rank-semantics", "nccl-algbw-busbw-boundary"], sectionId: "infiniband" },
+    ],
+    papers: [
+      { title: "InfiniBand Trade Association — About InfiniBand", href: "https://www.infinibandta.org/about-infiniband/", problem: "Reliable messaging와 RDMA를 제공하는 interoperable fabric이 필요합니다.", contribution: "HCA·switch·link·RDMA architecture 범위를 제시합니다.", assumptions: "Target generation·width·subnet manager·media를 고정합니다.", evidenceScope: "InfiniBand architecture 역할입니다.", notClaim: "모든 workload에서 RoCE보다 빠르거나 저렴하다는 뜻은 아닙니다.", sectionId: "paper-infiniband-fabric" },
+      { title: "NVIDIA nccl-tests — Performance", href: "https://github.com/NVIDIA/nccl-tests/blob/master/doc/PERFORMANCE.md", problem: "Collective S/t를 hardware link와 직접 비교하기 어렵습니다.", contribution: "algbw와 operation별 busbw correction을 공개합니다.", assumptions: "동일 revision·rank·message·operation을 사용합니다.", evidenceScope: "nccl-tests metric 계산입니다.", notClaim: "Busbw가 실제 wire traffic과 항상 같지 않습니다.", sectionId: "paper-nccl-tests-performance" },
     ],
   },
   "ai/sionic-eureka": {

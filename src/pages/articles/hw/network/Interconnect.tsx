@@ -33,6 +33,16 @@ export default function Interconnect() {
             formula={
               "B_{\\mathrm{PCIe,raw}}=R_{\\mathrm{GT/s}}\\times L\\times\\eta_{\\mathrm{enc}}\\div 8"
             }
+            annotatedFormula={String.raw`\begin{aligned}
+              R_{\mathrm{lanes}}&=\underbrace{R_{\mathrm{GT/s}}\times L}_{\text{모든 lane으로 확장}}\\[4pt]
+              R_{\mathrm{bits}}&=\underbrace{R_{\mathrm{lanes}}\times\eta_{\mathrm{enc}}}_{\text{encoding overhead 제거}}\\[4pt]
+              B_{\mathrm{PCIe,raw}}&=\underbrace{R_{\mathrm{bits}}\div 8}_{\text{bit를 byte로 변환}}
+            \end{aligned}`}
+            operations={[
+              { expression: String.raw`R_{\mathrm{GT/s}}\times L`, annotation: ["lane 하나의 transfer rate에", "실제 negotiated lane 수를 곱해 link 전체로 확장"] },
+              { expression: String.raw`R_{\mathrm{lanes}}\times\eta_{\mathrm{enc}}`, annotation: ["encoding에 쓰이는 bit를 제외해", "payload 이전 단계의 유효 bit rate 계산"] },
+              { expression: String.raw`R_{\mathrm{bits}}\div 8`, annotation: ["8 bit를 1 byte로 묶어", "복사 지표와 비교할 byte/s로 변환"] },
+            ]}
             terms={[
               {
                 symbol: "R_{\\mathrm{GT/s}}",

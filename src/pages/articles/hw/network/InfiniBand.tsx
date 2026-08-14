@@ -133,6 +133,16 @@ export default function InfiniBand() {
             B_{\mathrm{alg}}&=\frac{S}{t} \\
             B_{\mathrm{bus}}&=B_{\mathrm{alg}}\frac{2(n-1)}{n}
           \end{aligned}`}
+          annotatedFormula={String.raw`\begin{aligned}
+            B_{\mathrm{alg}}&=\underbrace{\frac{S}{t}}_{\text{작업 byte / 완료 시간}}\\[4pt]
+            f_{\mathrm{AR}}&=\underbrace{\frac{2(n-1)}{n}}_{\text{all-reduce 이동 보정}}\\[4pt]
+            B_{\mathrm{bus}}&=\underbrace{B_{\mathrm{alg}}\times f_{\mathrm{AR}}}_{\text{비교용 busbw로 환산}}
+          \end{aligned}`}
+          operations={[
+            { expression: String.raw`S/t`, annotation: ["rank 한 개의 input size를", "collective wall time으로 나눠 작업 완료 속도 계산"] },
+            { expression: String.raw`2(n-1)/n`, annotation: ["reduce와 distribute 두 방향을 반영하고", "자기 자신을 제외한 rank 비율로 보정"] },
+            { expression: String.raw`B_{\mathrm{alg}}\times f_{\mathrm{AR}}`, annotation: ["operation 중심 속도에 all-reduce 계수를 곱해", "nccl-tests의 비교용 busbw 생성"] },
+          ]}
           terms={[
             {
               symbol: "S",

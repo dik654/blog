@@ -3636,7 +3636,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "RDMA control path · data path",
     definition:
       "Memory 등록·queue pair·work request·completion·recovery의 host control과 등록된 memory 사이 payload를 NIC DMA로 옮기는 data movement를 구분한 실행 경계입니다.",
-    canonicalHref: "/gpu/hw-network#rdma-control-data-path",
+    canonicalHref: "/gpu/rdma-roce#rdma-control-data-path",
   },
   "rdma-memory-registration-capability": {
     id: "rdma-memory-registration-capability",
@@ -3645,7 +3645,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "RDMA memory registration capability",
     definition:
       "NIC가 DMA할 virtual-memory range를 고정하고 local/remote access key와 lifetime을 부여해 허용된 queue operation만 해당 memory에 접근하게 하는 capability 계약입니다.",
-    canonicalHref: "/gpu/hw-network#rdma-memory-registration",
+    canonicalHref: "/gpu/rdma-roce#rdma-memory-registration",
   },
   "roce-v2-gid-routing": {
     id: "roce-v2-gid-routing",
@@ -3654,7 +3654,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "RoCE v2 GID · QP route selection",
     definition:
       "IP address·netdev·RoCE version에 대응하는 GID table entry에서 source GID index를 고르고 remote address vector와 함께 QP의 routable path를 정하는 선택 과정입니다.",
-    canonicalHref: "/gpu/hw-network#roce-gid-routing",
+    canonicalHref: "/gpu/rdma-roce#roce-gid-routing",
   },
   "gpudirect-rdma-topology": {
     id: "gpudirect-rdma-topology",
@@ -3663,7 +3663,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "GPUDirect RDMA topology boundary",
     definition:
       "GPU memory와 NIC가 host bounce buffer 없이 DMA할 수 있는지 PCIe root complex·switch·IOMMU/ACS·BAR·driver와 GPU–HCA affinity까지 포함해 판단하는 platform 경계입니다.",
-    canonicalHref: "/gpu/hw-network#gpudirect-topology",
+    canonicalHref: "/gpu/rdma-roce#gpudirect-topology",
   },
   "collective-rank-semantics": {
     id: "collective-rank-semantics",
@@ -3672,7 +3672,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Collective rank semantics",
     definition:
       "같은 communicator의 rank들이 동일 count·datatype의 collective에 함께 참여하고 rank placement와 operation 종류가 data movement와 결과 배치를 결정하는 계약입니다.",
-    canonicalHref: "/gpu/hw-network#collective-rank-semantics",
+    canonicalHref: "/gpu/gpu-collective-network#collective-rank-semantics",
   },
   "nccl-algbw-busbw-boundary": {
     id: "nccl-algbw-busbw-boundary",
@@ -3681,7 +3681,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "NCCL algbw · busbw boundary",
     definition:
       "Collective input size를 완료 시간으로 나눈 algbw와, nccl-tests가 flat point-to-point transfer accounting으로 operation·rank 수에 맞춰 보정한 busbw를 구분하는 측정 계약입니다.",
-    canonicalHref: "/gpu/hw-network#nccl-bandwidth-boundary",
+    canonicalHref: "/gpu/gpu-collective-network#nccl-bandwidth-boundary",
   },
   "b300-port-split-identity": {
     id: "b300-port-split-identity",
@@ -10847,7 +10847,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "PCIe transaction bandwidth · latency boundary",
     definition:
       "Lane GT/s·negotiated width·encoding efficiency로 한 방향 raw byte/s 상한을 계산하고 TLP overhead·DMA setup·switch contention이 포함된 payload goodput과 small-transfer latency를 분리하는 경계입니다.",
-    canonicalHref: "/gpu/hw-network#pcie-transaction-bandwidth-latency",
+    canonicalHref: "/gpu/gpu-interconnects#pcie-transaction-bandwidth-latency",
   },
   "pcie-topology-peer-path": {
     id: "pcie-topology-peer-path",
@@ -10855,7 +10855,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "PCIe topology · peer path",
     definition:
       "GPU·NIC pair가 공유하는 switch·root complex·NUMA socket과 ACS/IOMMU policy를 기록해 direct P2P 또는 host/inter-socket 우회 경로와 capability를 판정하는 topology 계약입니다.",
-    canonicalHref: "/gpu/hw-network#pcie-topology-peer-path",
+    canonicalHref: "/gpu/gpu-interconnects#pcie-topology-peer-path",
   },
   "nvlink-device-fabric-boundary": {
     id: "nvlink-device-fabric-boundary",
@@ -10863,7 +10863,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "NVLink device-fabric boundary",
     definition:
       "지원 GPU pair의 NVLink lane·NVSwitch path와 peer-access를 node-local device interconnect로 한정하고, node 밖 GPU–HCA PCIe·GPUDirect·network path와 분리하는 경계입니다.",
-    canonicalHref: "/gpu/hw-network#nvlink-device-fabric-boundary",
+    canonicalHref: "/gpu/gpu-interconnects#nvlink-device-fabric-boundary",
   },
   "reth-config-precedence-provenance": {
     id: "reth-config-precedence-provenance",
@@ -14652,6 +14652,13 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "prerequisite",
     reason:
       "GPU–HCA direct DMA 가능성과 affinity는 PCIe root·switch·policy에서 시작합니다.",
+  },
+  {
+    from: "pcie-topology-peer-path",
+    to: "nvlink-device-fabric-boundary",
+    relation: "contrasts",
+    reason:
+      "범용 PCIe peer path와 지원 GPU 사이의 node-local NVLink/NVSwitch path를 같은 device pair inventory에서 구분합니다.",
   },
   {
     from: "nvlink-device-fabric-boundary",
@@ -21995,6 +22002,20 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "constrains",
     reason:
       "Oversubscription ratio가 실제 병목이 되는지는 동시에 같은 uplink로 향하는 traffic matrix에 달려 있습니다.",
+  },
+  {
+    from: "network-workload-traffic-matrix",
+    to: "collective-rank-semantics",
+    relation: "prerequisite",
+    reason:
+      "Collective를 network workload로 평가하려면 rank placement·message size·operation·동시성부터 traffic matrix에 고정해야 합니다.",
+  },
+  {
+    from: "fabric-oversubscription-failure-state",
+    to: "collective-rank-semantics",
+    relation: "constrains",
+    reason:
+      "Rank들이 어느 leaf와 uplink를 동시에 쓰는지, 그리고 failure 뒤 살아 있는 capacity가 collective 완료 시간을 제한합니다.",
   },
   {
     from: "rdma-control-data-path",

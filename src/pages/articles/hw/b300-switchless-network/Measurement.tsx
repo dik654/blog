@@ -80,7 +80,7 @@ export default function Measurement() {
             nccl-tests는 algbw=S/t와 collective별 busbw 보정식을 정의한다. 이
             문서는 busbw의 계산 기준을 제공하지만 offload·계층형 algorithm의
             실제 wire traffic과 동일하다고 보장하지 않는다. 일반 이론은{" "}
-            <a href="/gpu/hw-network#nccl-bandwidth-boundary">서버 네트워크 정본 글</a>에서
+            <a href="/gpu/gpu-collective-network#nccl-bandwidth-boundary">GPU collective network 정본 글</a>에서
             자세히 설명한다.
           </CitationBlock>
           <CitationBlock source={B300_SWITCHLESS_SOURCE_LINKS.project.label} citeKey={7} type="code" href={B300_SWITCHLESS_SOURCE_LINKS.project.href}>

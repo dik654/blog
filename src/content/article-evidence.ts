@@ -3994,6 +3994,20 @@ export const ARTICLE_EVIDENCE: Readonly<
   "gpu/hw-network": [
     {
       kind: "공식 규격",
+      label: "IEEE 802.3 Ethernet Working Group standards map",
+      href: "https://www.ieee802.org/3/index.html",
+      note: "Ethernet MAC·PHY·media amendment와 표준화 상태의 정본",
+    },
+    {
+      kind: "공식 규격",
+      label: "InfiniBand Trade Association — About InfiniBand",
+      href: "https://www.infinibandta.org/about-infiniband/",
+      note: "Ethernet과 대조할 switched fabric·HCA·link architecture 범위",
+    },
+  ],
+  "gpu/gpu-interconnects": [
+    {
+      kind: "공식 규격",
       label: "PCI-SIG — PCI Express Base Specification",
       href: "https://pcisig.com/specifications",
       note: "PCIe generation별 signaling·lane·transaction protocol의 공식 범위",
@@ -4004,12 +4018,8 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://www.nvidia.com/en-us/data-center/nvlink/",
       note: "제품 세대별 node-local GPU interconnect와 switch 구성 범위",
     },
-    {
-      kind: "공식 규격",
-      label: "IEEE 802.3 Ethernet Working Group standards map",
-      href: "https://www.ieee802.org/3/index.html",
-      note: "Ethernet MAC·PHY·media amendment와 표준화 상태의 정본",
-    },
+  ],
+  "gpu/rdma-roce": [
     {
       kind: "공식 문서",
       label: "NVIDIA Networking — RDMA over Converged Ethernet",
@@ -4022,6 +4032,8 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://docs.nvidia.com/cuda/gpudirect-rdma/",
       note: "GPU memory와 PCIe peer device 사이 direct DMA의 platform·lifetime 제약",
     },
+  ],
+  "gpu/gpu-collective-network": [
     {
       kind: "공식 규격",
       label: "InfiniBand Trade Association — About InfiniBand",

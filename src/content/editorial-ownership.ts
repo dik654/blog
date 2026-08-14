@@ -103,7 +103,7 @@ export const EDITORIAL_BOUNDARIES = {
       },
       {
         label: "GPU–HCA·collective topology",
-        href: "/gpu/hw-network#gpudirect-topology",
+        href: "/gpu/rdma-roce#gpudirect-topology",
       },
     ],
     evidence: [
@@ -2878,7 +2878,7 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "Stream·event ordering", href: "/gpu/cuda-sync-streams" },
       {
         label: "PCIe·NVLink·network path",
-        href: "/gpu/hw-network#interconnect",
+        href: "/gpu/gpu-interconnects",
       },
     ],
     evidence: [
@@ -2893,12 +2893,10 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "hw-network": {
-    title: "서버 네트워크 정본 글이 소유하는 범위",
+    title: "서버 network workload·Ethernet fabric 정본이 소유하는 범위",
     owns: [
-      "PCIe raw/payload·latency 경계와 GPU–NIC peer topology, NVLink node-local 범위",
       "Workload traffic matrix와 line rate·payload goodput 측정 경계",
       "Ethernet link compatibility·leaf-spine oversubscription·failure state",
-      "RDMA memory/queue path·RoCE v2 GID·GPUDirect topology·collective bandwidth 기초",
     ],
     reuses: [
       {
@@ -2917,12 +2915,51 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [
       {
         kind: "primary-source",
-        rule: "Ethernet·RoCE·InfiniBand·GPUDirect·NCCL 정의는 IEEE·IBTA·NVIDIA 공식 문서와 공개 코드를 기준으로 한다.",
+        rule: "Ethernet link·PHY·media·fabric 정의는 IEEE 802.3과 장비의 qualified configuration을 함께 기준으로 한다.",
       },
       {
         kind: "standard",
-        rule: "Line rate·goodput·algbw·busbw·wire counter는 단위·방향·rank·operation 조건과 함께 분리한다.",
+        rule: "Line rate와 payload goodput은 단위·방향·flow·completion boundary를 함께 기록해 분리한다.",
       },
+    ],
+  },
+  "gpu-interconnects": {
+    title: "GPU PCIe·NVLink device path 글이 소유하는 범위",
+    owns: ["PCIe lane raw-rate와 transaction payload·small-transfer latency 경계", "GPU·NIC pair의 switch·root complex·NUMA·ACS/IOMMU path", "NVLink/NVSwitch node-local 범위와 node-external HCA 경계"],
+    reuses: [
+      { label: "Bit·byte 단위 변환", href: "/ai/text-unicode-encoding#bits-bytes" },
+      { label: "GPU memory hierarchy", href: "/gpu/gpu-architecture" },
+      { label: "Network workload와 goodput", href: "/gpu/hw-network" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "PCIe·NVLink generation·width·aggregate rate는 PCI-SIG와 target NVIDIA system 문서에 귀속한다." },
+      { kind: "project-measurement", rule: "실제 peer path는 inventory·P2P capability·pair별 bandwidth/latency로 확인하고 사양표로 대체하지 않는다." },
+    ],
+  },
+  "rdma-roce": {
+    title: "RDMA·RoCE·GPUDirect data path 글이 소유하는 범위",
+    owns: ["Host setup·NIC DMA·completion으로 나눈 RDMA control/data path", "Registered memory range·key·access·lifetime capability", "RoCE v2 netdev·GID·QP route와 GPU–HCA direct DMA topology"],
+    reuses: [
+      { label: "Server network traffic와 Ethernet fabric", href: "/gpu/hw-network" },
+      { label: "GPU PCIe topology", href: "/gpu/gpu-interconnects" },
+      { label: "CUDA stream·multi-GPU ownership", href: "/gpu/cuda-sync-streams" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "RoCE GID·QP와 GPUDirect requirement는 pinned driver·firmware·CUDA 문서 범위로 제한한다." },
+      { kind: "project-measurement", rule: "Registration cache·GDR 이득은 range lifetime·GPU-HCA pair·message bucket별 control과 비교한다." },
+    ],
+  },
+  "gpu-collective-network": {
+    title: "GPU collective network와 NCCL measurement 글이 소유하는 범위",
+    owns: ["Rank·operation·count·datatype·call-order collective contract", "Node-local과 node-external 합성 path", "NCCL operation time·algbw·busbw와 hardware counter 경계"],
+    reuses: [
+      { label: "GPU PCIe·NVLink topology", href: "/gpu/gpu-interconnects" },
+      { label: "RDMA·RoCE·GPUDirect path", href: "/gpu/rdma-roce" },
+      { label: "Network workload·goodput", href: "/gpu/hw-network" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Collective semantics와 metric formula는 NCCL·nccl-tests·IBTA 공식 자료의 versioned 범위로 제한한다." },
+      { kind: "project-measurement", rule: "algbw·busbw를 wire payload로 간주하지 않고 rank placement·algorithm·counter·failure recovery와 함께 측정한다." },
     ],
   },
   "b300-switchless-network": {
@@ -2936,7 +2973,7 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [
       {
         label: "Ethernet·RDMA·RoCE·InfiniBand 기본기",
-        href: "/gpu/hw-network",
+        href: "/gpu/rdma-roce",
       },
     ],
     evidence: [
@@ -6266,7 +6303,7 @@ export const EDITORIAL_BOUNDARIES = {
     ],
     reuses: [
       { label: "GPU Roofline·memory hierarchy", href: "/gpu/gpu-architecture#gpu-peak-achieved-boundary" },
-      { label: "PCIe·NVLink·collective topology", href: "/gpu/hw-network#gpudirect-topology" },
+      { label: "PCIe·NVLink·collective topology", href: "/gpu/gpu-collective-network" },
       { label: "Hopper TMA·Transformer Engine", href: "/gpu/gpu-arch-hopper" },
     ],
     evidence: [
@@ -6608,13 +6645,13 @@ export const EDITORIAL_BOUNDARIES = {
   "hw-server-vs-desktop": {
     title: "서버·데스크톱 platform 선택 글이 소유하는 범위",
     owns: ["Workload resource envelope와 lane·memory·NUMA topology", "BMC/Redfish·serviceability 경계와 fault-injection release gate"],
-    reuses: [{ label: "Memory sizing·ECC·population", href: "/gpu/hw-memory" }, { label: "PCIe bandwidth·topology", href: "/gpu/hw-network#pcie-transaction-bandwidth-latency" }],
+    reuses: [{ label: "Memory sizing·ECC·population", href: "/gpu/hw-memory" }, { label: "PCIe bandwidth·topology", href: "/gpu/gpu-interconnects#pcie-transaction-bandwidth-latency" }],
     evidence: [{ kind: "primary-source", rule: "관리 semantics는 pinned DMTF Redfish release, server energy 분류는 ENERGY STAR v4.0에 귀속한다." }, { kind: "project-measurement", rule: "Exact BOM·firmware·trace에서 boot·stress·fault·remote recovery를 paired 측정한다." }, { kind: "project-claim", rule: "Server label·Redfish 지원을 무중단·성능 우위로 확대하지 않는다." }],
   },
   "hw-nvme-storage": {
     title: "NVMe protocol·form-factor·device path 글이 소유하는 범위",
     owns: ["NVMe protocol과 M.2·U.2/U.3·E1.S mechanical/service 경계", "Controller-to-root lane·thermal·hot-plug release gate"],
-    reuses: [{ label: "PCIe bit/byte·goodput", href: "/gpu/hw-network#pcie-transaction-bandwidth-latency" }, { label: "Storage tier placement", href: "/gpu/hw-storage-comparison" }],
+    reuses: [{ label: "PCIe bit/byte·goodput", href: "/gpu/gpu-interconnects#pcie-transaction-bandwidth-latency" }, { label: "Storage tier placement", href: "/gpu/hw-storage-comparison" }],
     evidence: [{ kind: "standard", rule: "Protocol은 NVMe Base 2.2, E1.S mechanical claim은 SFF-TA-1006 Rev 2.0에 고정한다." }, { kind: "project-measurement", rule: "Exact drive·backplane·firmware에서 precondition·steady state·thermal·fault parity를 측정한다." }, { kind: "project-claim", rule: "Form factor나 link peak를 fixed performance·endurance·hot-plug 보장으로 확대하지 않는다." }],
   },
   "hw-storage-comparison": {
