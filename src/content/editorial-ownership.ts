@@ -6967,6 +6967,74 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "project-claim", rule: "Known floor가 device capacity보다 작다는 계산을 load 성공·최대 context 품질·production concurrency 보장으로 확대하지 않는다." },
     ],
   },
+  "dpo": {
+    title: "DPO 글이 소유하는 범위",
+    owns: [
+      "같은 prompt의 chosen·rejected pair contract와 label boundary",
+      "Policy/reference log-ratio에서 chosen−rejected margin을 만드는 DPO objective",
+      "Offline pair support·length/style shortcut·독립 배포 평가 경계",
+    ],
+    reuses: [
+      { label: "Reward model·online PPO-RLHF", href: "/ai/rlhf" },
+      { label: "SFT response-token objective", href: "/ai/supervised-fine-tuning" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "DPO 유도와 실험 claim은 원 논문의 KL-regularized objective·Bradley–Terry·dataset 조건에 귀속한다." },
+      { kind: "standard", rule: "Reference revision·chat template·loss variant·length aggregation을 구현 receipt에 고정한다." },
+      { kind: "project-measurement", rule: "Pair loss와 배포 behavior를 분리해 사실성·안전성·capability·length slice를 paired 비교한다." },
+    ],
+  },
+  "constitutional-ai": {
+    title: "Constitutional AI 글이 소유하는 범위",
+    owns: [
+      "Natural-language constitution의 trigger·principle·priority·audit example 형태",
+      "Principle 기반 critique→revision과 AI feedback pipeline",
+      "AI judge provenance·shared blind spot·human oversight 경계",
+    ],
+    reuses: [
+      { label: "Reward model·PPO feedback loop", href: "/ai/rlhf" },
+      { label: "Direct pair optimization", href: "/ai/dpo" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "CAI phase와 RLAIF claim은 원 논문의 constitution·model·prompt·evaluation 범위에만 귀속한다." },
+      { kind: "project-measurement", rule: "Principle별 violation·over-refusal·judge disagreement와 blinded human audit을 분리해 측정한다." },
+      { kind: "project-claim", rule: "AI feedback 사용을 human oversight 제거·완전한 원칙·value alignment 증명으로 확대하지 않는다." },
+    ],
+  },
+  "orpo": {
+    title: "ORPO 글이 소유하는 범위",
+    owns: [
+      "Chosen NLL과 chosen/rejected sequence-odds separation의 결합",
+      "Reference-free와 pair-free를 구분하는 single-stage training contract",
+      "Reference forward 절감과 전체 training memory·quality 평가 경계",
+    ],
+    reuses: [
+      { label: "SFT token likelihood", href: "/ai/supervised-fine-tuning" },
+      { label: "Pairwise preference contract", href: "/ai/dpo#pair-contract" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "ORPO objective와 benchmark는 원 논문의 model 규모·dataset·sequence probability convention에 귀속한다." },
+      { kind: "project-measurement", rule: "동일 base·pair·token budget에서 memory·step time·chosen quality·preference margin·safety regression을 함께 측정한다." },
+      { kind: "project-claim", rule: "한 stage와 reference-free를 data audit·evaluation 제거 또는 보편적 비용 절반으로 확대하지 않는다." },
+    ],
+  },
+  "kto": {
+    title: "KTO 글이 소유하는 범위",
+    owns: [
+      "Exposure·desirable·undesirable·class balance를 분리한 binary-feedback data contract",
+      "Policy/reference log-ratio·KL reference point·비대칭 utility의 KTO objective",
+      "Pair-free feedback의 logging bias·independent evaluation 경계",
+    ],
+    reuses: [
+      { label: "Reference policy와 KL drift", href: "/ai/rlhf#ppo" },
+      { label: "Pairwise preference와 DPO", href: "/ai/dpo" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "KTO utility와 결과는 원 논문의 reference·KL estimate·model·dataset·class imbalance 조건에 귀속한다." },
+      { kind: "project-measurement", rule: "노출·무응답·사용자별 click propensity와 class balance를 기록하고 pairwise human audit과 behavior regression을 따로 측정한다." },
+      { kind: "project-claim", rule: "Pair가 필요 없다는 장점을 binary log의 무편향·clean label·보편적 우월성으로 확대하지 않는다." },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

@@ -5444,21 +5444,21 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Pairwise preference",
     definition:
       "같은 prompt의 두 response 가운데 어느 쪽이 더 나은지를 기록한 상대 비교 label입니다.",
-    canonicalHref: "/ai/rlhf#reward-model",
+    canonicalHref: "/ai/dpo#pair-contract",
   },
   "binary-feedback": {
     id: "binary-feedback",
     label: "Binary feedback",
     definition:
       "각 response에 desirable·undesirable 또는 like·dislike를 독립적으로 붙인 label입니다.",
-    canonicalHref: "/ai/rlhf#kto",
+    canonicalHref: "/ai/kto#binary-feedback",
   },
   constitution: {
     id: "constitution",
     label: "Constitution",
     definition:
       "응답을 critique·revise·judge할 때 적용할 원칙과 우선순위를 자연어로 기록한 기준입니다.",
-    canonicalHref: "/ai/rlhf#constitutional-ai",
+    canonicalHref: "/ai/constitutional-ai#constitution",
   },
   "reward-model": {
     id: "reward-model",
@@ -5493,7 +5493,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Offline preference optimization",
     definition:
       "현재 policy의 새 rollout 없이 고정된 preference dataset의 support 안에서 policy를 학습합니다.",
-    canonicalHref: "/ai/rlhf#dpo",
+    canonicalHref: "/ai/dpo#overview",
   },
   "ppo-rlhf": {
     id: "ppo-rlhf",
@@ -5507,35 +5507,99 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "DPO",
     definition:
       "Chosen·rejected pair의 policy/reference log-ratio 차이를 직접 분류하는 offline objective입니다.",
-    canonicalHref: "/ai/rlhf#dpo",
+    canonicalHref: "/ai/dpo#dpo",
   },
   orpo: {
     id: "orpo",
     label: "ORPO",
     definition:
       "Chosen likelihood를 높이는 SFT와 rejected 대비 odds-ratio separation을 한 stage에 둡니다.",
-    canonicalHref: "/ai/rlhf#orpo",
+    canonicalHref: "/ai/orpo#orpo",
   },
   kto: {
     id: "kto",
     label: "KTO",
     definition:
       "짝이 없는 binary feedback을 policy/reference KL 기준점의 양쪽에서 학습합니다.",
-    canonicalHref: "/ai/rlhf#kto",
+    canonicalHref: "/ai/kto#kto",
   },
   cai: {
     id: "cai",
     label: "Constitutional AI · RLAIF",
     definition:
       "자연어 원칙으로 critique·revision data와 AI preference signal을 만드는 feedback pipeline입니다.",
-    canonicalHref: "/ai/rlhf#constitutional-ai",
+    canonicalHref: "/ai/constitutional-ai#constitutional-ai",
   },
   "independent-evaluation": {
     id: "independent-evaluation",
     label: "Independent evaluation",
     definition:
       "Preference objective와 분리해 capability·사실성·over-refusal·safety regression을 측정합니다.",
-    canonicalHref: "/ai/rlhf#kto",
+    canonicalHref: "/ai/kto#evaluation",
+  },
+  "dpo-reference-relative-margin": {
+    id: "dpo-reference-relative-margin",
+    domain: "machine-learning",
+    label: "DPO reference-relative margin",
+    definition:
+      "Chosen과 rejected 각각의 policy/reference log-ratio를 구한 뒤 그 차이를 preference margin으로 사용하는 DPO의 핵심 비교량입니다.",
+    canonicalHref: "/ai/dpo#dpo",
+  },
+  "dpo-data-support-boundary": {
+    id: "dpo-data-support-boundary",
+    domain: "machine-learning",
+    label: "DPO data-support boundary",
+    definition:
+      "Offline pair에 관측되지 않은 response와 shortcut에 대해서는 DPO objective만으로 behavior를 보장하지 못한다는 평가 경계입니다.",
+    canonicalHref: "/ai/dpo#evaluation",
+  },
+  "constitutional-critique-revision": {
+    id: "constitutional-critique-revision",
+    domain: "machine-learning",
+    label: "Constitutional critique–revision",
+    definition:
+      "자연어 원칙으로 초안의 구체적인 위반을 지적한 뒤 그 지적을 반영한 response를 만드는 supervised data pipeline입니다.",
+    canonicalHref: "/ai/constitutional-ai#constitutional-ai",
+  },
+  "ai-feedback-judge-provenance": {
+    id: "ai-feedback-judge-provenance",
+    domain: "machine-learning",
+    label: "AI-feedback judge provenance",
+    definition:
+      "AI evaluator의 model·prompt·constitution revision과 사람 audit 결과를 preference label의 생성 근거로 함께 남기는 계약입니다.",
+    canonicalHref: "/ai/constitutional-ai#evaluation",
+  },
+  "orpo-sequence-odds-margin": {
+    id: "orpo-sequence-odds-margin",
+    domain: "machine-learning",
+    label: "ORPO sequence-odds margin",
+    definition:
+      "Chosen과 rejected의 sequence odds를 log-space에서 비교해 preference separation을 만드는 ORPO의 상대량입니다.",
+    canonicalHref: "/ai/orpo#orpo",
+  },
+  "orpo-single-stage-preference": {
+    id: "orpo-single-stage-preference",
+    domain: "machine-learning",
+    label: "ORPO single-stage preference",
+    definition:
+      "Chosen NLL과 odds-ratio preference loss를 하나의 training stage에서 함께 최적화하는 실행 계약입니다.",
+    canonicalHref: "/ai/orpo#overview",
+  },
+  "kto-kl-reference-point": {
+    id: "kto-kl-reference-point",
+    domain: "machine-learning",
+    label: "KTO KL reference point",
+    definition:
+      "Policy/reference log-ratio의 gain과 loss를 나누기 위해 batch KL estimate를 기준점으로 쓰는 KTO의 비교축입니다.",
+    canonicalHref: "/ai/kto#kto",
+  },
+  "kto-asymmetric-binary-utility": {
+    id: "kto-asymmetric-binary-utility",
+    domain: "machine-learning",
+    label: "KTO asymmetric binary utility",
+    definition:
+      "Desirable과 undesirable example을 KL 기준점의 반대 방향 sigmoid utility로 학습하는 binary-feedback objective입니다.",
+    canonicalHref: "/ai/kto#kto",
   },
   "image-identity-group-split": {
     id: "image-identity-group-split",
@@ -21124,6 +21188,108 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     to: "independent-evaluation",
     relation: "evaluates",
     reason: "Principle·judge가 공유하는 blind spot을 audit합니다.",
+  },
+  {
+    from: "pairwise-preference",
+    to: "dpo-reference-relative-margin",
+    relation: "prerequisite",
+    reason: "같은 prompt의 chosen·rejected pair가 relative margin의 두 비교 대상을 제공합니다.",
+  },
+  {
+    from: "reference-policy",
+    to: "dpo-reference-relative-margin",
+    relation: "constrains",
+    reason: "각 response probability의 절대값보다 policy가 고정 reference에서 이동한 양을 비교하게 합니다.",
+  },
+  {
+    from: "dpo-reference-relative-margin",
+    to: "dpo",
+    relation: "produces",
+    reason: "Chosen minus rejected relative log-ratio가 DPO logistic loss의 decision margin이 됩니다.",
+  },
+  {
+    from: "offline-preference",
+    to: "dpo-data-support-boundary",
+    relation: "constrains",
+    reason: "현재 policy의 새 rollout 없이 고정 pair support에서만 학습한다는 평가 범위를 고정합니다.",
+  },
+  {
+    from: "dpo",
+    to: "dpo-data-support-boundary",
+    relation: "evaluates",
+    reason: "Pair loss 개선과 support 밖 배포 behavior를 별도 holdout으로 비교하게 합니다.",
+  },
+  {
+    from: "constitution",
+    to: "constitutional-critique-revision",
+    relation: "prerequisite",
+    reason: "원칙과 우선순위가 초안 위반을 지적하고 수정할 기준을 제공합니다.",
+  },
+  {
+    from: "constitutional-critique-revision",
+    to: "cai",
+    relation: "produces",
+    reason: "Critique와 revised response가 Constitutional AI supervised phase의 학습 data가 됩니다.",
+  },
+  {
+    from: "cai",
+    to: "ai-feedback-judge-provenance",
+    relation: "produces",
+    reason: "AI preference label이 어떤 model·prompt·constitution에서 생성됐는지 기록합니다.",
+  },
+  {
+    from: "ai-feedback-judge-provenance",
+    to: "independent-evaluation",
+    relation: "prerequisite",
+    reason: "Judge와 policy의 shared blind spot을 사람 audit과 evaluator disagreement로 추적하게 합니다.",
+  },
+  {
+    from: "pairwise-preference",
+    to: "orpo-sequence-odds-margin",
+    relation: "prerequisite",
+    reason: "Chosen과 rejected sequence odds를 비교할 같은-prompt pair를 제공합니다.",
+  },
+  {
+    from: "orpo-sequence-odds-margin",
+    to: "orpo-single-stage-preference",
+    relation: "produces",
+    reason: "Odds separation term을 chosen NLL과 같은 training objective에 넣습니다.",
+  },
+  {
+    from: "sft",
+    to: "orpo-single-stage-preference",
+    relation: "extends",
+    reason: "Chosen token imitation objective를 preference separation이 함께 있는 single-stage training으로 확장합니다.",
+  },
+  {
+    from: "orpo-single-stage-preference",
+    to: "orpo",
+    relation: "produces",
+    reason: "Imitation과 odds-ratio loss의 결합이 ORPO objective를 구성합니다.",
+  },
+  {
+    from: "reference-policy",
+    to: "kto-kl-reference-point",
+    relation: "prerequisite",
+    reason: "현재 policy log-ratio와 batch KL을 계산할 고정 비교 distribution을 제공합니다.",
+  },
+  {
+    from: "kto-kl-reference-point",
+    to: "kto-asymmetric-binary-utility",
+    relation: "prerequisite",
+    reason: "Desirable gain과 undesirable loss를 나누는 utility 기준점이 됩니다.",
+  },
+  {
+    from: "binary-feedback",
+    to: "kto-asymmetric-binary-utility",
+    relation: "prerequisite",
+    reason: "짝 없는 response label이 어느 방향의 utility를 적용할지 선택합니다.",
+  },
+  {
+    from: "kto-asymmetric-binary-utility",
+    to: "kto",
+    relation: "produces",
+    reason: "KL 기준점 양쪽의 비대칭 sigmoid utility가 KTO loss를 구성합니다.",
   },
   {
     from: "transformer-block",

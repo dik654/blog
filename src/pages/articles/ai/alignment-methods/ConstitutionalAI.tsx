@@ -1,10 +1,3 @@
-const stages = [
-  ["Principles", "허용·금지·우선순위를 natural-language constitution으로 명시한다."],
-  ["Critique", "Model이 response가 어떤 principle을 위반했는지 분석한다."],
-  ["Revision", "Critique를 반영한 response로 supervised data를 만든다."],
-  ["AI feedback", "Principle에 따른 preference label로 reward 또는 preference optimization을 수행한다."],
-];
-
 export default function ConstitutionalAI() {
   return (
     <section id="constitutional-ai" className="mb-16 scroll-mt-20">
@@ -21,10 +14,6 @@ export default function ConstitutionalAI() {
           대체한 설계로 읽는 편이 정확하다.
         </p>
       </div>
-
-      <figure data-viz="constitutional-ai-stages" className="not-prose my-8 grid gap-4 rounded-xl border border-border/70 bg-card p-4 sm:grid-cols-2 sm:p-6">
-        {stages.map(([title, body], index) => <div key={title} className="rounded-xl border bg-background p-4"><p className="text-xs font-bold text-primary/70">0{index + 1}</p><p className="mt-2 font-semibold">{title}</p><p className="mt-1 text-sm leading-6 text-muted-foreground">{body}</p></div>)}
-      </figure>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>RLAIF는 label cost를 없애는 마법이 아니다</h3>

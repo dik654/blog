@@ -44240,539 +44240,206 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/rlhf": {
-    coreIdea:
-      "Post-training 방법의 차이는 약어의 계보가 아니라 어떤 feedback을 모으고, 그 signal을 scalar reward 또는 direct policy loss로 바꾸며, 현재 policy를 online으로 다시 sample하는지에 있습니다.",
-    assumedKnowledge: [
-      {
-        id: "language-model-policy",
-        role: "Preference method가 실제로 update하는 대상입니다.",
-      },
-      {
-        id: "cross-entropy-nll",
-        role: "SFT와 chosen likelihood term의 기준 objective입니다.",
-      },
-      {
-        id: "sft",
-        role: "Reference checkpoint와 instruction-following behavior의 출발점입니다.",
-      },
-    ],
+    entryLevel: true,
+    entryNote: "Language model·SFT를 이미 안다고 가정하지 않고, 같은 prompt의 두 response에 붙은 상대 판단에서 시작합니다.",
+    coreIdea: "RLHF는 behavior target을 pairwise feedback으로 관측하고 reward model로 압축한 뒤 현재 policy의 online rollout을 PPO로 제한해 갱신하는 pipeline입니다.",
+    assumedKnowledge: [],
     introducedHere: [
-      {
-        id: "behavior-target",
-        role: "도움됨·사실성·안전성 같은 제품 목표를 관측 가능한 rubric과 평가 slice로 내립니다.",
-      },
-      {
-        id: "feedback-contract",
-        role: "방법 이름 전에 data가 담는 판단 단위를 고정합니다.",
-      },
-      {
-        id: "pairwise-preference",
-        role: "같은 prompt의 두 response 중 어느 쪽이 나은지 기록한 상대 label을 설명합니다.",
-      },
-      {
-        id: "binary-feedback",
-        role: "Response 하나에 desirable·undesirable을 붙이는 짝 없는 label을 구분합니다.",
-      },
-      {
-        id: "constitution",
-        role: "Critique·revision·judge에 적용할 자연어 원칙과 충돌 우선순위를 정의합니다.",
-      },
-      {
-        id: "reward-model",
-        role: "Pairwise ordering을 response별 scalar proxy로 압축하는 학습 모델을 설명합니다.",
-      },
-      {
-        id: "reference-policy",
-        role: "PPO·DPO·KTO에서 상대 변화와 drift의 기준입니다.",
-      },
-      {
-        id: "kl-regularization",
-        role: "Reward 개선과 reference distribution에서 멀어지는 비용을 한 objective에서 교환합니다.",
-      },
-      {
-        id: "online-rollout",
-        role: "현재 policy의 새 response를 학습 중 다시 평가하는 경로입니다.",
-      },
-      {
-        id: "offline-preference",
-        role: "고정된 pair·binary dataset support에서 학습하는 대안입니다.",
-      },
-      {
-        id: "ppo-rlhf",
-        role: "현재 policy rollout·reward proxy·KL shaping·clipped update가 이어지는 online 경로를 설명합니다.",
-      },
-      {
-        id: "dpo",
-        role: "Chosen·rejected pair를 policy/reference log-ratio의 direct offline loss로 바꿉니다.",
-      },
-      {
-        id: "orpo",
-        role: "Chosen SFT와 rejected 대비 odds separation을 한 stage에서 결합합니다.",
-      },
-      {
-        id: "kto",
-        role: "짝이 없는 binary feedback을 reference KL 기준점 양쪽에서 학습합니다.",
-      },
-      {
-        id: "cai",
-        role: "Constitution 기반 critique·revision과 AI preference signal의 생성 경로를 설명합니다.",
-      },
-      {
-        id: "independent-evaluation",
-        role: "Training proxy와 분리된 capability·사실성·안전성·over-refusal 검증을 유지합니다.",
-      },
+      { id: "behavior-target", role: "모호한 좋은 답을 관측 가능한 rubric과 failure slice로 내립니다." },
+      { id: "feedback-contract", role: "한 label이 담는 판단 단위와 수집 조건을 고정합니다." },
+      { id: "reward-model", role: "상대 preference를 response별 scalar proxy로 압축합니다." },
+      { id: "reference-policy", role: "현재 policy drift의 고정 비교점입니다." },
+      { id: "kl-regularization", role: "Reward 개선과 reference 이탈 비용을 교환합니다." },
+      { id: "online-rollout", role: "현재 policy가 만든 새 response를 학습 중 평가합니다." },
+      { id: "ppo-rlhf", role: "Rollout·reward·KL·clipped update의 online loop입니다." },
     ],
     conceptExplanations: [
-      {
-        id: "behavior-target",
-        sectionId: "overview",
-        intuition:
-          "‘좋은 답’이라는 모호한 기대를 annotator와 evaluator가 같은 사례에 적용할 수 있는 관찰 항목으로 바꾼 목표입니다.",
-        workedExample:
-          "의료 답변에서는 출처 제시·불확실성 표현·위험한 자가진단 회피를 각각 rubric 항목과 failure slice로 나눌 수 있습니다.",
-        boundary:
-          "Rubric 점수가 인간 가치 전체나 실제 배포 효용을 완전히 나타내지는 않습니다. 빠진 상황과 서로 충돌하는 목표를 별도 평가해야 합니다.",
-      },
-      {
-        id: "feedback-contract",
-        sectionId: "overview",
-        intuition:
-          "사람의 막연한 선호를 그대로 학습할 수는 없으므로, 무엇을 한 번의 판단으로 기록할지 먼저 정한 data 계약입니다.",
-        workedExample:
-          "같은 prompt의 답 A·B 중 하나를 고르면 pairwise preference이고, 답 하나에 thumbs-up을 붙이면 binary feedback입니다.",
-        boundary:
-          "Label은 인간 가치 전체가 아니라 수집 화면·annotator 지침·sampling policy가 관측하게 만든 일부 signal입니다.",
-      },
-      {
-        id: "pairwise-preference",
-        sectionId: "reward-model",
-        intuition:
-          "절대 점수를 매기기 어려울 때 같은 질문의 답 두 개를 나란히 놓고 어느 쪽이 더 낫다고 순서만 기록합니다.",
-        workedExample:
-          "Prompt x에 답 A가 근거를 제시하고 답 B가 사실을 지어냈다면 `(x, A, B)`에서 A를 chosen, B를 rejected로 저장합니다.",
-        boundary:
-          "A가 선택됐다고 A가 완전히 옳거나 B보다 모든 축에서 낫다는 뜻은 아닙니다. 제시 순서·길이·annotator disagreement를 기록해야 합니다.",
-      },
-      {
-        id: "binary-feedback",
-        sectionId: "kto",
-        intuition:
-          "비교 상대를 꼭 만들지 않고 response 하나마다 좋아요·싫어요처럼 desirable 여부를 독립적으로 기록합니다.",
-        workedExample:
-          "서로 다른 prompt에서 수집한 답 100개에 thumbs-up/down만 있어도 각 `(prompt,response,label)`을 KTO류 학습 입력으로 쓸 수 있습니다.",
-        boundary:
-          "Binary label은 pairwise 순위를 자동으로 제공하지 않으며 사용자의 클릭 편향·노출 위치·class imbalance가 품질 신호와 섞일 수 있습니다.",
-      },
-      {
-        id: "constitution",
-        sectionId: "constitutional-ai",
-        intuition:
-          "응답을 고칠 때 참고할 자연어 원칙집입니다. Critic과 judge가 어떤 위반을 먼저 보고 어떻게 수정할지 공통 기준을 줍니다.",
-        workedExample:
-          "‘사실을 꾸미지 말 것’과 ‘위험한 행동을 구체적으로 돕지 말 것’을 두고 초안 critique→revision→preference 생성에 적용합니다.",
-        boundary:
-          "원칙을 적었다고 해석이 자동으로 일관되거나 충돌이 사라지지 않습니다. 우선순위·예외·AI judge calibration과 사람 audit가 남습니다.",
-      },
-      {
-        id: "reward-model",
-        sectionId: "reward-model",
-        intuition:
-          "두 답의 상대 비교를 여러 번 학습해 새 response 하나의 선호 proxy를 scalar로 요약하는 채점 모델입니다.",
-        workedExample:
-          "Chosen A와 rejected B에 점수 2.1과 0.4를 주면 sigmoid(2.1−0.4)가 A를 선택할 pairwise probability가 됩니다.",
-        boundary:
-          "Scalar가 사실성·안전성·도움됨을 완전히 측정하지 않습니다. Training pair 밖의 shortcut과 reward hacking은 독립 red-team으로 찾아야 합니다.",
-      },
-      {
-        id: "reference-policy",
-        sectionId: "ppo",
-        intuition:
-          "새 policy가 원래 모델에서 얼마나 멀어졌는지 재는 기준점입니다. 지나친 변화에 비용을 주어 이미 배운 언어 능력이 한꺼번에 무너지는 것을 줄입니다.",
-        workedExample:
-          "Reference가 어떤 token에 0.20, 현재 policy가 0.40의 확률을 주면 두 분포의 차이가 KL penalty에 반영됩니다.",
-        boundary:
-          "Reference에 가깝다는 사실은 응답이 사실이거나 안전하다는 보장이 아닙니다. Reference 자체의 오류도 그대로 기준에 들어갑니다.",
-      },
-      {
-        id: "kl-regularization",
-        sectionId: "ppo",
-        intuition:
-          "Reward만 좇아 기존 언어 분포에서 급격히 멀어지지 않도록 reference policy와의 차이에 가격을 붙입니다.",
-        workedExample:
-          "Reward가 1.0 늘어도 KL cost β·KL이 1.4라면 shaped objective는 악화되어 그 update를 억제할 수 있습니다.",
-        boundary:
-          "KL은 drift의 크기를 재는 비용이지 reward 오류 detector가 아닙니다. 잘못된 proxy를 reference 근처에서 공략하는 행동도 생길 수 있습니다.",
-      },
-      {
-        id: "online-rollout",
-        sectionId: "ppo",
-        intuition:
-          "현재 학습 중인 policy가 직접 새 답을 만들고, 그 답을 평가한 결과로 다음 update를 하는 feedback loop입니다.",
-        workedExample:
-          "Prompt 128개에 현재 policy가 답을 생성하고 reward model이 점수를 붙인 뒤 PPO가 이 새 trajectory로 한 batch를 갱신합니다.",
-        boundary:
-          "과거 모델이 만든 고정 dataset만 읽는 학습과 다릅니다. 생성·reward inference·update가 함께 돌아가므로 비용과 운영 복잡도가 큽니다.",
-      },
-      {
-        id: "offline-preference",
-        sectionId: "dpo",
-        intuition:
-          "이미 모아 둔 chosen·rejected pair나 binary label을 다시 sampling하지 않고 학습하는 방식입니다.",
-        workedExample:
-          "DPO는 한 prompt의 chosen response log-probability를 rejected보다 상대적으로 높이되 reference policy와의 차이를 함께 사용합니다.",
-        boundary:
-          "학습이 간단해지는 대신 dataset에 없는 행동을 새로 탐색하지 않습니다. 고정 data의 편향과 support 밖 behavior는 별도 평가가 필요합니다.",
-      },
-      {
-        id: "ppo-rlhf",
-        sectionId: "ppo",
-        intuition:
-          "현재 policy가 답을 만들고 reward·KL로 평가한 뒤, 그 rollout을 만든 old policy에서 한 번에 너무 멀어지지 않게 clipped update를 반복하는 online 방식입니다.",
-        workedExample:
-          "Prompt batch→현재 policy response→reward model score와 KL shaping→advantage→PPO minibatch update 순으로 한 cycle을 실행합니다.",
-        boundary:
-          "PPO clipping은 update 안정화 장치일 뿐 reward의 타당성이나 alignment를 보장하지 않습니다. Online rollout·reward serving·failure recovery 비용도 필요합니다.",
-      },
-      {
-        id: "dpo",
-        sectionId: "dpo",
-        intuition:
-          "별도 reward model과 online RL loop 없이 chosen이 rejected보다 reference 대비 더 가능해지도록 pair를 직접 분류합니다.",
-        workedExample:
-          "같은 prompt에서 policy/reference log-ratio 차이의 chosen−rejected margin을 logistic loss로 높입니다.",
-        boundary:
-          "Pairwise dataset support와 preference model 가정에 의존하며 online exploration·독립 평가·data 품질 문제를 없애지 않습니다.",
-      },
-      {
-        id: "orpo",
-        sectionId: "orpo",
-        intuition:
-          "Chosen response의 token likelihood를 높이는 SFT와 chosen/rejected odds 차이를 벌리는 preference 항을 한 training stage에 둡니다.",
-        workedExample:
-          "한 pair에서 chosen NLL을 줄이면서 rejected 대비 sequence odds-ratio가 커지도록 가중 loss를 더합니다.",
-        boundary:
-          "Reference model forward가 없다는 사실이 compute·memory·tuning 비용이 항상 더 작거나 모든 규모에서 더 좋다는 뜻은 아닙니다.",
-      },
-      {
-        id: "kto",
-        sectionId: "kto",
-        intuition:
-          "짝이 없는 좋은 답과 나쁜 답을 reference policy와의 KL 기준점 양쪽에서 각각 더 가능하게·덜 가능하게 만듭니다.",
-        workedExample:
-          "Thumbs-up response는 policy/reference log-ratio가 기준보다 커지게, thumbs-down response는 작아지게 loss를 구성합니다.",
-        boundary:
-          "Binary label 품질과 class balance, KL estimate에 민감하며 reference-free나 pairwise 방식과 같은 objective로 취급할 수 없습니다.",
-      },
-      {
-        id: "cai",
-        sectionId: "constitutional-ai",
-        intuition:
-          "사람이 모든 pair를 직접 고르는 대신 원칙을 이용해 초안을 critique·revise하고 AI evaluator가 preference signal 일부를 만드는 pipeline입니다.",
-        workedExample:
-          "유해한 초안에 constitution을 적용해 critique와 수정 답을 만들고, 두 후보를 AI judge가 비교해 RLAIF 학습 pair로 저장합니다.",
-        boundary:
-          "Human oversight를 제거하는 방법이 아닙니다. Constitution 작성·충돌 해결·judge calibration·독립 사람 audit가 필요합니다.",
-      },
-      {
-        id: "independent-evaluation",
-        sectionId: "overview",
-        intuition:
-          "학습에 사용한 reward나 preference loss와 다른 측정기로 실제 capability와 failure를 다시 확인하는 평가 경계입니다.",
-        workedExample:
-          "Training reward가 올라도 blind human pairwise, 사실성 set, over-refusal slice, jailbreak set과 latency를 별도 holdout에서 비교합니다.",
-        boundary:
-          "Judge 하나의 종합 점수만으로 독립적이라고 할 수 없습니다. Data leakage·shared model bias·version drift를 고정하고 slice별 결과와 disagreement를 남겨야 합니다.",
-      },
+      { id: "behavior-target", sectionId: "overview", intuition: "‘좋은 답’을 도움됨·사실성·안전성처럼 관측할 항목으로 바꾼 목표입니다.", workedExample: "의료 답변의 출처·불확실성·위험 조언을 서로 다른 rubric으로 둡니다.", boundary: "Rubric은 인간 가치 전체가 아니며 목표 충돌과 빠진 상황을 별도 평가합니다." },
+      { id: "feedback-contract", sectionId: "overview", intuition: "무엇을 한 번의 판단으로 기록하는지 정한 data schema입니다.", workedExample: "같은 prompt의 A/B 선택은 pairwise label이고 response 하나의 thumbs-up은 다른 계약입니다.", boundary: "수집 UI·annotator 지침·sampling policy가 label에 섞입니다." },
+      { id: "reward-model", sectionId: "reward-model", intuition: "여러 pair의 순서를 새 response 하나의 scalar preference proxy로 압축한 scorer입니다.", workedExample: "Score 2.1과 0.4의 차이에 sigmoid를 적용해 A 선택 확률을 만듭니다.", boundary: "높은 pair accuracy가 사실성·안전성 또는 support 밖 ranking을 보장하지 않습니다." },
+      { id: "reference-policy", sectionId: "ppo", intuition: "새 policy가 원래 checkpoint에서 얼마나 이동했는지 재는 고정 기준입니다.", workedExample: "Reference 0.2, policy 0.4인 token probability 차이가 KL에 반영됩니다.", boundary: "Reference 근접성은 응답 correctness 증명이 아닙니다." },
+      { id: "kl-regularization", sectionId: "ppo", intuition: "Reward만 좇아 기존 distribution에서 급격히 멀어지는 변화에 가격을 붙입니다.", workedExample: "Reward +1보다 β·KL 비용 1.4가 크면 shaped objective가 악화됩니다.", boundary: "KL은 reward hacking detector가 아니라 drift 비용입니다." },
+      { id: "online-rollout", sectionId: "ppo", intuition: "현재 학습 중인 policy가 직접 response를 만들고 그 trajectory에서 update signal을 얻습니다.", workedExample: "Prompt 128개 생성→reward scoring→advantage→PPO update를 한 cycle로 실행합니다.", boundary: "고정 dataset만 읽는 offline 학습과 달리 generation·scoring runtime이 필요합니다." },
+      { id: "ppo-rlhf", sectionId: "ppo", intuition: "Reward·KL로 평가한 rollout을 old policy에서 너무 멀어지지 않게 clipped update하는 방법입니다.", workedExample: "Probability ratio가 1±ε 밖으로 나가면 한 batch의 surrogate benefit을 자릅니다.", boundary: "Clipping은 update 안정화 장치이지 alignment 보증이 아닙니다." },
     ],
     conceptStages: [
-      {
-        label: "Foundation",
-        relation: "token likelihood를 먼저 학습",
-        concepts: ["language-model-policy", "cross-entropy-nll", "sft"],
-      },
-      {
-        label: "Feedback",
-        relation: "behavior target을 관측 가능한 label로 변환",
-        concepts: [
-          "behavior-target",
-          "feedback-contract",
-          "pairwise-preference",
-          "binary-feedback",
-          "constitution",
-        ],
-      },
-      {
-        label: "Optimization",
-        relation: "feedback schema에 맞는 update 경로를 선택",
-        concepts: [
-          "reference-policy",
-          "kl-regularization",
-          "online-rollout",
-          "offline-preference",
-          "reward-model",
-          "ppo-rlhf",
-          "dpo",
-          "orpo",
-          "kto",
-          "cai",
-        ],
-      },
-      {
-        label: "Evaluation",
-        relation: "training proxy와 실제 behavior를 분리해 검증",
-        concepts: ["independent-evaluation"],
-      },
+      { label: "01 목표", relation: "원하는 behavior를 관측 단위로 내림", concepts: ["behavior-target", "feedback-contract"] },
+      { label: "02 점수", relation: "Pair ordering을 scalar proxy로 압축", concepts: ["pairwise-preference", "reward-model"] },
+      { label: "03 online loop", relation: "현재 response를 생성하고 제한된 update 수행", concepts: ["reference-policy", "kl-regularization", "online-rollout", "ppo-rlhf"] },
     ],
     exercises: [
-      {
-        level: "basic",
-        question:
-          "Pretraining을 마친 language model에 SFT와 preference post-training을 추가하는 이유는 무엇일까요?",
-        answerChecklist: [
-          "Next-token likelihood와 제품 behavior target의 차이를 구분한다.",
-          "SFT가 demonstration token likelihood를 높이는 단계라고 설명한다.",
-          "Preference feedback은 인간 가치 전체가 아니라 관측 가능한 proxy라고 제한한다.",
-        ],
-        requiredConcepts: [
-          "language-model-policy",
-          "sft",
-          "behavior-target",
-          "feedback-contract",
-        ],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "Pairwise preference, binary feedback, constitution은 각각 어떤 형태의 판단을 기록할까요?",
-        answerChecklist: [
-          "Pairwise는 같은 prompt의 두 response 사이 상대 순서라고 설명한다.",
-          "Binary는 response별 desirable·undesirable label이라 pair가 필수는 아니라고 설명한다.",
-          "Constitution은 critique·revision·judge에 적용할 자연어 원칙이라고 설명한다.",
-        ],
-        requiredConcepts: [
-          "pairwise-preference",
-          "binary-feedback",
-          "constitution",
-        ],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "Online PPO-RLHF와 offline preference optimization의 가장 중요한 실행 차이는 무엇일까요?",
-        answerChecklist: [
-          "Online은 현재 policy의 새 response와 trajectory를 학습 중 생성한다고 설명한다.",
-          "Offline은 고정 dataset support 안에서 학습한다고 설명한다.",
-          "Online의 reward hacking·분산 runtime과 offline의 support·shortcut 위험을 비교한다.",
-        ],
-        requiredConcepts: [
-          "online-rollout",
-          "offline-preference",
-          "ppo-rlhf",
-          "dpo",
-        ],
-        sectionId: "ppo",
-      },
-      {
-        level: "basic",
-        question:
-          "같은 prompt의 chosen·rejected pair를 reward model이 scalar score와 pairwise probability로 바꾸는 순서를 설명할 수 있을까요?",
-        answerChecklist: [
-          "Reward model이 각 response에 scalar proxy score를 준다고 설명한다.",
-          "Chosen−rejected score 차이에 sigmoid를 적용해 pairwise probability를 만든다고 설명한다.",
-          "높은 pairwise accuracy가 사실성·안전성 전체나 support 밖 ranking을 보장하지 않는다고 제한한다.",
-        ],
-        requiredConcepts: [
-          "pairwise-preference",
-          "reward-model",
-          "behavior-target",
-        ],
-        sectionId: "reward-model",
-      },
-      {
-        level: "basic",
-        question:
-          "Reference policy와 KL regularization은 PPO·DPO·KTO에서 각각 어떤 기준점 역할을 하며 무엇을 보장하지 않을까요?",
-        answerChecklist: [
-          "Reference policy가 현재 policy 변화의 고정 비교점이라고 설명한다.",
-          "KL은 reference distribution에서 멀어지는 비용이라고 설명한다.",
-          "Reference 근접성과 응답의 사실성·안전성·reward 타당성을 구분한다.",
-        ],
-        requiredConcepts: ["reference-policy", "kl-regularization"],
-        sectionId: "ppo",
-      },
-      {
-        level: "basic",
-        question:
-          "DPO·ORPO·KTO가 요구하는 feedback schema와 training stage를 표로 구분할 수 있을까요?",
-        answerChecklist: [
-          "DPO는 chosen/rejected pair와 reference log-ratio를 사용한다고 설명한다.",
-          "ORPO는 pair를 사용하며 chosen SFT와 odds separation을 한 stage에 둔다고 설명한다.",
-          "KTO는 짝 없는 binary label과 reference KL 기준점을 사용한다고 설명한다.",
-        ],
-        requiredConcepts: [
-          "pairwise-preference",
-          "binary-feedback",
-          "dpo",
-          "orpo",
-          "kto",
-        ],
-        sectionId: "kto",
-      },
-      {
-        level: "advanced",
-        question:
-          "KL penalty와 PPO clipping만으로 alignment가 보장되지 않는 이유는 무엇일까요?",
-        answerChecklist: [
-          "KL penalty는 reference policy에서 멀어지는 비용이라고 설명한다.",
-          "PPO clipping은 rollout policy 대비 한 batch의 probability-ratio update를 제한한다고 설명한다.",
-          "두 장치 모두 reward proxy의 타당성·사실성·안전성을 직접 검사하지 않는다고 결론낸다.",
-        ],
-        requiredConcepts: [
-          "reference-policy",
-          "kl-regularization",
-          "ppo-rlhf",
-          "independent-evaluation",
-        ],
-        sectionId: "ppo",
-      },
-      {
-        level: "advanced",
-        question:
-          "Pairwise ranking과 thumbs-up/down log가 함께 있는 제품에서 PPO·DPO·ORPO·KTO 후보를 어떤 순서로 좁혀야 할까요?",
-        answerChecklist: [
-          "Feedback schema와 label quality를 먼저 확인한다.",
-          "새 policy sample의 online 평가 필요성과 rollout infrastructure를 비교한다.",
-          "Reward model·reference forward·SFT 결합 여부와 compute budget을 비교한다.",
-          "동일한 base·data budget·decoding·독립 evaluation에서 최종 선택한다고 설명한다.",
-        ],
-        requiredConcepts: [
-          "pairwise-preference",
-          "binary-feedback",
-          "ppo-rlhf",
-          "dpo",
-          "orpo",
-          "kto",
-          "independent-evaluation",
-        ],
-        sectionId: "kto",
-      },
-      {
-        level: "advanced",
-        question:
-          "CAI/RLAIF를 도입하면 human feedback과 oversight를 제거할 수 있다는 주장에 어떻게 반박할까요?",
-        answerChecklist: [
-          "Constitution 작성과 principle 충돌 우선순위에 사람 판단이 남는다고 지적한다.",
-          "AI evaluator와 policy가 blind spot·style shortcut을 공유할 수 있다고 설명한다.",
-          "Judge calibration, violation set과 independent human audit가 필요하다고 결론낸다.",
-        ],
-        requiredConcepts: ["constitution", "cai", "independent-evaluation"],
-        sectionId: "constitutional-ai",
-      },
-      {
-        level: "advanced",
-        question:
-          "DPO나 KTO가 한 benchmark에서 PPO보다 높았다는 결과를 새 base model의 방법 선택에 그대로 적용할 수 있을까요?",
-        answerChecklist: [
-          "논문의 base model·dataset support·prompt domain과 judge 조건을 확인한다.",
-          "Reported result와 objective에서 유도되는 일반 성질을 분리한다.",
-          "같은 checkpoint·data·decoding에서 capability·preference·safety regression을 다시 측정한다.",
-        ],
-        requiredConcepts: ["dpo", "kto", "ppo-rlhf", "independent-evaluation"],
-        sectionId: "kto",
-      },
+      { level: "basic", question: "Pretraining likelihood와 behavior target은 왜 다른가요?", answerChecklist: ["Next-token 목표", "관측 가능한 rubric", "proxy 경계"], requiredConcepts: ["behavior-target"], sectionId: "overview" },
+      { level: "basic", question: "Feedback contract가 먼저 필요한 이유는 무엇인가요?", answerChecklist: ["판단 단위", "수집 조건", "label 편향"], requiredConcepts: ["feedback-contract"], sectionId: "overview" },
+      { level: "basic", question: "Chosen·rejected pair를 reward probability로 바꾸는 순서를 설명하세요.", answerChecklist: ["두 scalar score", "score 차이", "sigmoid"], requiredConcepts: ["pairwise-preference", "reward-model"], sectionId: "reward-model" },
+      { level: "basic", question: "Reference policy는 무엇을 비교하며 무엇을 보장하지 않나요?", answerChecklist: ["고정 checkpoint", "drift 기준", "correctness 비보장"], requiredConcepts: ["reference-policy"], sectionId: "ppo" },
+      { level: "basic", question: "KL penalty의 역할을 reward와 함께 설명하세요.", answerChecklist: ["reward 개선", "distribution drift 비용", "hacking detector 아님"], requiredConcepts: ["kl-regularization"], sectionId: "ppo" },
+      { level: "basic", question: "Online rollout 한 cycle을 순서대로 설명하세요.", answerChecklist: ["현재 policy 생성", "reward·KL", "PPO update"], requiredConcepts: ["online-rollout", "ppo-rlhf"], sectionId: "ppo" },
+      { level: "advanced", question: "Reward accuracy가 높아도 reward hacking이 가능한 이유는 무엇인가요?", answerChecklist: ["scalar 압축", "support 밖 생성", "독립 audit"], requiredConcepts: ["reward-model", "behavior-target"], sectionId: "reward-model" },
+      { level: "advanced", question: "KL과 PPO clipping의 제한 대상 차이를 설명하세요.", answerChecklist: ["reference drift", "old/new ratio", "alignment 비보장"], requiredConcepts: ["kl-regularization", "ppo-rlhf"], sectionId: "ppo" },
+      { level: "advanced", question: "PPO-RLHF 운영 memory·compute 역할을 어떻게 분해하나요?", answerChecklist: ["policy/value/reward/reference", "rollout KV", "optimizer·activation"], requiredConcepts: ["online-rollout", "ppo-rlhf"], sectionId: "ppo" },
+      { level: "advanced", question: "같은 reward 상승을 release하기 전 어떤 holdout을 봐야 하나요?", answerChecklist: ["사실성", "over-refusal", "capability·human audit"], requiredConcepts: ["behavior-target", "reward-model"], sectionId: "overview" },
     ],
     papers: [
-      {
-        title: "InstructGPT",
-        href: "https://arxiv.org/abs/2203.02155",
-        problem:
-          "Next-token pretraining만으로 사용자 의도에 맞는 behavior를 정하기 어렵다는 문제",
-        contribution:
-          "Demonstration SFT → pairwise reward model → PPO라는 기준 pipeline",
-        assumptions:
-          "선별된 labeler preference가 원하는 behavior의 유용한 proxy라는 전제",
-        evidenceScope:
-          "영어 API prompt, 정해진 labeler pool과 1.3B·6B·175B 계열 비교",
-        notClaim:
-          "이 pipeline이나 PPO가 모든 model·domain에서 보편적으로 최선이라는 결론은 아님",
-        sectionId: "paper-instructgpt",
-      },
-      {
-        title: "PPO",
-        href: "https://arxiv.org/abs/1707.06347",
-        problem:
-          "On-policy trajectory를 여러 epoch 재사용할 때 policy가 과도하게 변하는 문제",
-        contribution: "Old/new policy ratio를 제한하는 clipped surrogate",
-        assumptions:
-          "Behavior policy에서 모은 trajectory와 유용한 advantage estimate가 있다는 전제",
-        evidenceScope:
-          "원 논문은 일반 RL benchmark를 다루며 LLM reward model·KL shaping은 후속 결합",
-        notClaim:
-          "PPO clipping 자체가 reward의 타당성이나 alignment를 보장한다는 결론은 아님",
-        sectionId: "paper-ppo",
-      },
-      {
-        title: "DPO",
-        href: "https://arxiv.org/abs/2305.18290",
-        problem:
-          "Reward model과 online RL runtime을 따로 운영하는 RLHF pipeline의 복잡성",
-        contribution:
-          "KL-regularized reward optimum을 pairwise policy loss로 재매개화",
-        assumptions:
-          "고정 reference, pairwise data, Bradley–Terry preference와 KL-regularized optimum",
-        evidenceScope:
-          "Summarization·single-turn dialogue·sentiment control의 model·dataset 조건",
-        notClaim:
-          "Online exploration·data support·independent evaluation까지 없앤 방법이라는 결론은 아님",
-        sectionId: "paper-dpo",
-      },
-      {
-        title: "Constitutional AI",
-        href: "https://arxiv.org/abs/2212.08073",
-        problem:
-          "Harmlessness feedback의 기준과 대규모 human label 의존성을 다루는 문제",
-        contribution:
-          "Natural-language principle 기반 critique·revision과 AI feedback",
-        assumptions:
-          "Constitution이 충분히 구체적이고 evaluator가 principle을 일관되게 적용한다는 전제",
-        evidenceScope:
-          "Self-critique supervised phase와 AI preference를 쓰는 RL phase의 공개 실험",
-        notClaim:
-          "사람의 기준 작성·calibration·최종 oversight가 사라진다는 결론은 아님",
-        sectionId: "paper-cai",
-      },
-      {
-        title: "ORPO",
-        href: "https://arxiv.org/abs/2403.07691",
-        problem:
-          "SFT 뒤에 별도 reference-based preference stage를 두는 학습 복잡성",
-        contribution:
-          "Chosen SFT와 odds-ratio preference separation을 한 stage에 결합",
-        assumptions:
-          "같은 prompt의 chosen·rejected pair와 안정적인 sequence odds 계산이 있다는 전제",
-        evidenceScope:
-          "125M–7B model과 논문에서 사용한 preference dataset·benchmark 범위",
-        notClaim:
-          "더 큰 model에서도 항상 reference-based 방법보다 우월하거나 전체 비용이 절반이라는 결론은 아님",
-        sectionId: "paper-orpo",
-      },
-      {
-        title: "KTO",
-        href: "https://arxiv.org/abs/2402.01306",
-        problem:
-          "같은 prompt의 response pair보다 독립적인 like/dislike log가 많은 현실의 feedback 조건",
-        contribution:
-          "짝이 없는 desirable·undesirable feedback을 reference point로 학습",
-        assumptions:
-          "Binary label이 response 품질을 반영하고 policy/reference KL을 안정적으로 추정한다는 전제",
-        evidenceScope:
-          "1B–30B model, class imbalance를 포함한 논문의 dataset·evaluation 조건",
-        notClaim:
-          "Binary feedback이 pairwise preference보다 언제나 깨끗하거나 우월하다는 결론은 아님",
-        sectionId: "paper-kto",
-      },
+      { title: "InstructGPT", href: "https://arxiv.org/abs/2203.02155", problem: "Pretraining만으로 사용자 의도에 맞는 behavior를 정하기 어려움", contribution: "SFT→reward model→PPO pipeline", assumptions: "Labeler preference가 유용한 proxy", evidenceScope: "논문의 영어 prompt·model·labeler 조건", notClaim: "모든 domain의 최적 pipeline이라는 뜻 아님", sectionId: "paper-instructgpt" },
+      { title: "PPO", href: "https://arxiv.org/abs/1707.06347", problem: "On-policy data 재사용 중 과도한 policy 변화", contribution: "Clipped surrogate objective", assumptions: "Behavior trajectory와 advantage estimate", evidenceScope: "원 논문의 일반 RL benchmark", notClaim: "Reward 타당성이나 alignment 보장 아님", sectionId: "paper-ppo" },
+    ],
+  },
+  "ai/dpo": {
+    entryLevel: true,
+    entryNote: "하나의 prompt와 chosen·rejected response 두 개에서 출발합니다.",
+    coreIdea: "DPO는 각 response의 policy/reference log-ratio를 비교해 chosen의 상대 이동량이 rejected보다 커지게 하는 offline pair objective입니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "pairwise-preference", role: "같은 prompt의 두 response에 붙은 상대 label입니다." },
+      { id: "offline-preference", role: "현재 policy의 새 rollout 없이 고정 pair support에서 학습합니다." },
+      { id: "dpo-reference-relative-margin", role: "Chosen과 rejected의 policy/reference log-ratio 차이입니다." },
+      { id: "dpo", role: "Relative margin을 logistic policy loss로 직접 학습합니다." },
+      { id: "dpo-data-support-boundary", role: "Pair 밖 behavior와 shortcut을 독립 평가하는 경계입니다." },
+    ],
+    conceptExplanations: [
+      { id: "pairwise-preference", sectionId: "pair-contract", intuition: "같은 질문의 두 답 가운데 어느 쪽을 더 선호했는지 기록한 상대 판단입니다.", workedExample: "근거 있는 A를 chosen, 꾸며낸 B를 rejected로 저장합니다.", boundary: "Chosen이 절대 정답이거나 모든 축에서 우월하다는 뜻은 아닙니다." },
+      { id: "offline-preference", sectionId: "overview", intuition: "이미 모은 pair만 읽고 학습 중 새 response를 만들지 않는 방식입니다.", workedExample: "고정 JSONL pair와 reference log-prob으로 batch를 구성합니다.", boundary: "Dataset support 밖 행동을 탐색하거나 자동 보정하지 않습니다." },
+      { id: "dpo-reference-relative-margin", sectionId: "dpo", intuition: "Chosen과 rejected가 reference에서 각각 이동한 양의 차이입니다.", workedExample: "Chosen +0.8, rejected +0.1이면 margin은 0.7입니다.", boundary: "Reference·template·length aggregation이 바뀌면 같은 β의 의미도 달라집니다." },
+      { id: "dpo", sectionId: "dpo", intuition: "Relative margin이 양수가 되도록 pair를 직접 분류하는 policy objective입니다.", workedExample: "βΔ를 sigmoid에 넣고 chosen label의 negative log likelihood를 줄입니다.", boundary: "Reward network를 제거해도 preference model 가정과 reference는 남습니다." },
+      { id: "dpo-data-support-boundary", sectionId: "evaluation", intuition: "Training pair와 실제 배포 prompt 사이의 간극을 별도 test로 확인하는 경계입니다.", workedExample: "길이 shortcut·사실성·over-refusal을 pair 밖 holdout에서 측정합니다.", boundary: "Pair loss 하나를 전체 alignment score로 확대하지 않습니다." },
+    ],
+    conceptStages: [
+      { label: "01 pair", relation: "같은 prompt의 상대 label", concepts: ["pairwise-preference"] },
+      { label: "02 offline", relation: "고정 data·reference에서 비교", concepts: ["offline-preference", "reference-policy"] },
+      { label: "03 margin", relation: "상대 이동량을 loss로 변환", concepts: ["dpo-reference-relative-margin", "dpo"] },
+      { label: "04 audit", relation: "Support 밖 behavior 검증", concepts: ["dpo-data-support-boundary"] },
+    ],
+    exercises: [
+      { level: "basic", question: "DPO pair의 x·y+·y−를 설명하세요.", answerChecklist: ["같은 prompt", "chosen", "rejected"], requiredConcepts: ["pairwise-preference"], sectionId: "pair-contract" },
+      { level: "basic", question: "DPO가 offline이라는 말은 무엇인가요?", answerChecklist: ["고정 pair", "새 rollout 없음", "support 제한"], requiredConcepts: ["offline-preference"], sectionId: "overview" },
+      { level: "basic", question: "Reference policy가 필요한 이유는 무엇인가요?", answerChecklist: ["고정 비교점", "relative change", "template 일치"], requiredConcepts: ["reference-policy", "dpo-reference-relative-margin"], sectionId: "dpo" },
+      { level: "basic", question: "Chosen +0.8, rejected +0.1의 margin을 계산하세요.", answerChecklist: ["0.8−0.1", "0.7", "chosen 방향"], requiredConcepts: ["dpo-reference-relative-margin"], sectionId: "dpo" },
+      { level: "basic", question: "DPO가 제거하는 runtime과 남기는 계약을 구분하세요.", answerChecklist: ["reward model 제거", "online rollout 제거", "reference·pair 남음"], requiredConcepts: ["dpo"], sectionId: "dpo" },
+      { level: "basic", question: "Pair loss가 낮아도 별도 평가가 필요한 이유는 무엇인가요?", answerChecklist: ["support 밖", "shortcut", "behavior slice"], requiredConcepts: ["dpo-data-support-boundary"], sectionId: "evaluation" },
+      { level: "advanced", question: "Bradley–Terry와 KL optimum 가정이 유도에서 하는 역할은 무엇인가요?", answerChecklist: ["pair likelihood", "reward 재매개화", "partition 상쇄"], requiredConcepts: ["dpo", "dpo-reference-relative-margin"], sectionId: "dpo" },
+      { level: "advanced", question: "Length normalization 변경이 실험 비교를 깨는 이유는 무엇인가요?", answerChecklist: ["sequence log-prob", "margin scale", "receipt 고정"], requiredConcepts: ["dpo-reference-relative-margin"], sectionId: "evaluation" },
+      { level: "advanced", question: "DPO release matrix를 설계하세요.", answerChecklist: ["같은 base·data", "β sweep", "사실성·safety·capability"], requiredConcepts: ["dpo", "dpo-data-support-boundary"], sectionId: "evaluation" },
+      { level: "advanced", question: "DPO가 PPO보다 항상 우월하다는 주장을 반박하세요.", answerChecklist: ["online exploration 차이", "논문 범위", "동일 조건 재평가"], requiredConcepts: ["offline-preference", "dpo-data-support-boundary"], sectionId: "evaluation" },
+    ],
+    papers: [
+      { title: "Direct Preference Optimization", href: "https://arxiv.org/abs/2305.18290", problem: "Reward model·online RL pipeline 복잡성", contribution: "KL optimum을 pairwise policy loss로 재매개화", assumptions: "고정 reference·pair·Bradley–Terry", evidenceScope: "논문의 summarization·dialogue·sentiment 조건", notClaim: "Online exploration과 data audit 제거 아님", sectionId: "paper-dpo" },
+      { title: "TRL DPO Trainer", href: "https://huggingface.co/docs/trl/dpo_trainer", problem: "Objective를 실제 training config로 옮김", contribution: "Reference·loss variant·data interface", assumptions: "Exact library revision과 template", evidenceScope: "공식 trainer API surface", notClaim: "Defaults의 보편적 최적성 아님", sectionId: "paper-dpo-implementation" },
+    ],
+  },
+  "ai/constitutional-ai": {
+    entryLevel: true,
+    entryNote: "자연어 원칙 한 개를 response 초안 하나에 적용하는 장면에서 시작합니다.",
+    coreIdea: "Constitutional AI는 판단 원칙의 provenance를 드러내고 그 원칙으로 critique·revision data와 AI feedback을 만드는 pipeline입니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "constitution", role: "Trigger·principle·priority·example을 가진 자연어 판단 기준입니다." },
+      { id: "constitutional-critique-revision", role: "원칙 위반 지적과 수정 response를 만드는 supervised 경로입니다." },
+      { id: "cai", role: "Critique·revision과 AI preference를 잇는 전체 pipeline입니다." },
+      { id: "ai-feedback-judge-provenance", role: "Judge model·prompt·constitution·human audit을 label 근거로 기록합니다." },
+    ],
+    conceptExplanations: [
+      { id: "constitution", sectionId: "constitution", intuition: "응답을 평가할 자연어 원칙과 충돌 우선순위입니다.", workedExample: "‘사실을 꾸미지 말 것’을 trigger·허용·위반 예와 함께 둡니다.", boundary: "원칙 목록만으로 해석 일관성과 완전성이 생기지 않습니다." },
+      { id: "constitutional-critique-revision", sectionId: "constitutional-ai", intuition: "초안의 구체적 위반을 지적한 뒤 그 이유에 맞게 response를 고치는 data 생성 단계입니다.", workedExample: "확정적 진단 문장을 critique하고 불확실성과 의료기관 안내를 넣어 revise합니다.", boundary: "Critique가 틀리면 revision도 같은 오류를 강화할 수 있습니다." },
+      { id: "cai", sectionId: "constitutional-ai", intuition: "원칙 기반 supervised revision과 AI preference signal을 연결하는 방법입니다.", workedExample: "Revised candidates를 principle-aware judge가 비교해 RLAIF pair를 만듭니다.", boundary: "Human feedback과 oversight를 완전히 제거하는 방법이 아닙니다." },
+      { id: "ai-feedback-judge-provenance", sectionId: "evaluation", intuition: "AI label이 어떤 evaluator와 원칙 revision에서 나왔는지 추적하는 receipt입니다.", workedExample: "Judge SHA·prompt·constitution v3·human disagreement를 pair에 저장합니다.", boundary: "Judge 점수 하나는 독립 검증이 아닙니다." },
+    ],
+    conceptStages: [
+      { label: "01 원칙", relation: "판단 기준과 충돌 순서", concepts: ["constitution"] },
+      { label: "02 수정", relation: "위반 지적과 revised response", concepts: ["constitutional-critique-revision"] },
+      { label: "03 feedback", relation: "AI preference pipeline", concepts: ["cai"] },
+      { label: "04 audit", relation: "Judge provenance와 사람 검증", concepts: ["ai-feedback-judge-provenance"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Constitution 한 항목의 네 부분을 설명하세요.", answerChecklist: ["trigger", "principle·priority", "audit example"], requiredConcepts: ["constitution"], sectionId: "constitution" },
+      { level: "basic", question: "Critique와 revision의 차이는 무엇인가요?", answerChecklist: ["위반 지적", "수정 response", "같은 원칙"], requiredConcepts: ["constitutional-critique-revision"], sectionId: "constitutional-ai" },
+      { level: "basic", question: "CAI의 supervised phase와 RL/feedback phase를 구분하세요.", answerChecklist: ["critique·revision", "AI preference", "서로 다른 data"], requiredConcepts: ["cai"], sectionId: "constitutional-ai" },
+      { level: "basic", question: "RLAIF가 줄이는 비용과 남기는 사람 역할은 무엇인가요?", answerChecklist: ["일부 label 비용", "원칙 작성", "calibration·audit"], requiredConcepts: ["cai", "constitution"], sectionId: "evaluation" },
+      { level: "basic", question: "Judge provenance에 무엇을 기록해야 하나요?", answerChecklist: ["model·prompt", "constitution revision", "human disagreement"], requiredConcepts: ["ai-feedback-judge-provenance"], sectionId: "evaluation" },
+      { level: "basic", question: "원칙 충돌의 예와 처리 방식을 설명하세요.", answerChecklist: ["두 원칙", "우선순위", "경계 사례"], requiredConcepts: ["constitution"], sectionId: "constitution" },
+      { level: "advanced", question: "Policy와 judge의 shared blind spot을 어떻게 검출하나요?", answerChecklist: ["다른 judge", "blind human audit", "violation slice"], requiredConcepts: ["ai-feedback-judge-provenance"], sectionId: "evaluation" },
+      { level: "advanced", question: "Critique 오류가 training data에 전파되는 trace를 설계하세요.", answerChecklist: ["잘못된 위반", "revision 왜곡", "preference 강화"], requiredConcepts: ["constitutional-critique-revision", "cai"], sectionId: "constitutional-ai" },
+      { level: "advanced", question: "Constitution revision을 배포 artifact로 관리하는 방법은 무엇인가요?", answerChecklist: ["version", "example suite", "rollback"], requiredConcepts: ["constitution", "ai-feedback-judge-provenance"], sectionId: "evaluation" },
+      { level: "advanced", question: "CAI가 value alignment를 증명한다는 주장을 반박하세요.", answerChecklist: ["원칙 불완전", "judge bias", "논문 범위"], requiredConcepts: ["cai", "ai-feedback-judge-provenance"], sectionId: "evaluation" },
+    ],
+    papers: [
+      { title: "Constitutional AI", href: "https://arxiv.org/abs/2212.08073", problem: "Harmlessness feedback 기준과 human label 의존", contribution: "원칙 기반 critique·revision과 AI feedback", assumptions: "구체적인 constitution과 evaluator 적용", evidenceScope: "논문의 supervised·RL phase", notClaim: "Human oversight 제거 아님", sectionId: "paper-rlaif" },
+    ],
+  },
+  "ai/orpo": {
+    entryLevel: true,
+    entryNote: "Chosen response를 따라가는 SFT loss와 rejected에서 멀어지는 preference loss를 따로 정의합니다.",
+    coreIdea: "ORPO는 chosen NLL과 chosen/rejected sequence-odds separation을 reference model 없이 한 training stage에서 결합합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "orpo-sequence-odds-margin", role: "Chosen과 rejected의 log-odds 차이입니다." },
+      { id: "orpo-single-stage-preference", role: "Chosen NLL과 odds separation을 한 objective에 둡니다." },
+      { id: "orpo", role: "Reference-free single-stage preference method입니다." },
+    ],
+    conceptExplanations: [
+      { id: "orpo-sequence-odds-margin", sectionId: "orpo", intuition: "Chosen probability의 odds가 rejected보다 얼마나 큰지 log-space에서 잰 차이입니다.", workedExample: "Chosen log-odds −1.2, rejected −2.0이면 margin 0.8입니다.", boundary: "Sequence probability의 length 처리와 수치 안정성을 고정해야 합니다." },
+      { id: "orpo-single-stage-preference", sectionId: "overview", intuition: "Chosen imitation과 pair separation을 같은 parameter update에서 함께 수행합니다.", workedExample: "NLL과 λ·OR loss를 더해 한 backward pass를 만듭니다.", boundary: "Data collection과 evaluation까지 하나가 된다는 뜻은 아닙니다." },
+      { id: "orpo", sectionId: "orpo", intuition: "SFT checkpoint 뒤 별도 reference-based stage 없이 pair preference를 결합하는 objective입니다.", workedExample: "Chosen NLL을 줄이면서 chosen/rejected odds margin을 키웁니다.", boundary: "Reference-free는 pair-free나 항상 저비용이라는 뜻이 아닙니다." },
+    ],
+    conceptStages: [
+      { label: "01 pair", relation: "Chosen·rejected contract", concepts: ["pairwise-preference"] },
+      { label: "02 imitate", relation: "Chosen token likelihood", concepts: ["sft"] },
+      { label: "03 separate", relation: "Odds margin과 single-stage loss", concepts: ["orpo-sequence-odds-margin", "orpo-single-stage-preference", "orpo"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Chosen NLL이 담당하는 역할은 무엇인가요?", answerChecklist: ["token imitation", "chosen response", "rejected 분리 아님"], requiredConcepts: ["sft", "orpo-single-stage-preference"], sectionId: "pair-contract" },
+      { level: "basic", question: "Sequence odds를 정의하세요.", answerChecklist: ["p/(1−p)", "log-space", "length convention"], requiredConcepts: ["orpo-sequence-odds-margin"], sectionId: "orpo" },
+      { level: "basic", question: "Log-odds −1.2와 −2.0의 margin은 얼마인가요?", answerChecklist: ["−1.2−(−2.0)", "0.8", "chosen 우세"], requiredConcepts: ["orpo-sequence-odds-margin"], sectionId: "orpo" },
+      { level: "basic", question: "Single-stage의 정확한 의미는 무엇인가요?", answerChecklist: ["NLL+preference", "같은 update", "평가 제거 아님"], requiredConcepts: ["orpo-single-stage-preference"], sectionId: "overview" },
+      { level: "basic", question: "Reference-free와 pair-free를 구분하세요.", answerChecklist: ["reference forward 없음", "chosen/rejected 필요", "data audit 남음"], requiredConcepts: ["orpo"], sectionId: "pair-contract" },
+      { level: "basic", question: "λ가 조절하는 trade-off는 무엇인가요?", answerChecklist: ["imitation", "preference separation", "sweep"], requiredConcepts: ["orpo-single-stage-preference"], sectionId: "pair-contract" },
+      { level: "advanced", question: "작은 sequence probability에서 odds를 안전하게 구현하는 방법을 설명하세요.", answerChecklist: ["log-space", "stable transform", "overflow·underflow test"], requiredConcepts: ["orpo-sequence-odds-margin"], sectionId: "orpo" },
+      { level: "advanced", question: "Reference forward 제거가 전체 memory 절반을 뜻하지 않는 이유는 무엇인가요?", answerChecklist: ["optimizer", "activation", "trainable policy"], requiredConcepts: ["orpo"], sectionId: "evaluation" },
+      { level: "advanced", question: "ORPO release 비교 실험을 설계하세요.", answerChecklist: ["같은 base·pair", "memory·time", "quality·safety"], requiredConcepts: ["orpo-single-stage-preference", "orpo"], sectionId: "evaluation" },
+      { level: "advanced", question: "ORPO가 큰 model에서도 항상 우월하다는 주장을 반박하세요.", answerChecklist: ["논문 규모", "dataset 조건", "재평가"], requiredConcepts: ["orpo"], sectionId: "evaluation" },
+    ],
+    papers: [
+      { title: "ORPO", href: "https://arxiv.org/abs/2403.07691", problem: "SFT 뒤 별도 preference stage의 복잡성", contribution: "Chosen NLL과 odds-ratio loss 결합", assumptions: "Chosen/rejected pair와 안정적 sequence odds", evidenceScope: "논문의 125M–7B·dataset 조건", notClaim: "모든 큰 model의 보편적 우월성 아님", sectionId: "paper-orpo-implementation" },
+    ],
+  },
+  "ai/kto": {
+    entryLevel: true,
+    entryNote: "같은 prompt의 pair가 아니라 response 하나에 붙은 좋아요·싫어요 log에서 시작합니다.",
+    coreIdea: "KTO는 policy/reference log-ratio를 batch KL 기준점과 비교해 desirable과 undesirable example에 반대 방향 utility를 적용합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "binary-feedback", role: "Response별 desirable·undesirable label과 exposure를 구분합니다." },
+      { id: "kto-kl-reference-point", role: "Policy/reference batch KL을 gain·loss 기준점으로 사용합니다." },
+      { id: "kto-asymmetric-binary-utility", role: "두 class에 반대 방향 sigmoid utility를 적용합니다." },
+      { id: "kto", role: "짝 없는 feedback을 학습하는 reference-based objective입니다." },
+      { id: "independent-evaluation", role: "Training utility와 실제 behavior를 다른 holdout에서 검증합니다." },
+    ],
+    conceptExplanations: [
+      { id: "binary-feedback", sectionId: "binary-feedback", intuition: "Response 하나에 긍정·부정 label을 독립적으로 붙인 기록입니다.", workedExample: "노출 뒤 명시적 thumbs-up/down event를 저장합니다.", boundary: "무응답·timeout·미노출을 dislike로 바꾸지 않습니다." },
+      { id: "kto-kl-reference-point", sectionId: "kto", intuition: "Policy가 reference에서 평균적으로 이동한 양을 utility의 0점처럼 사용합니다.", workedExample: "Response log-ratio 0.7, batch KL 0.2이면 z=0.5입니다.", boundary: "Batch composition과 stop-gradient convention을 고정해야 합니다." },
+      { id: "kto-asymmetric-binary-utility", sectionId: "kto", intuition: "Desirable은 기준보다 위로, undesirable은 아래로 갈수록 utility가 커지게 방향을 나눕니다.", workedExample: "z=0.5는 desirable sigmoid에 +βz, undesirable에는 −βz로 들어갑니다.", boundary: "Class weight가 exposure bias와 label noise를 고치지는 않습니다." },
+      { id: "kto", sectionId: "kto", intuition: "Pair를 복원하지 않고 binary label을 reference point 양쪽에서 학습하는 objective입니다.", workedExample: "Like와 dislike example을 한 batch에 넣고 class별 utility를 계산합니다.", boundary: "표준 KTO는 reference policy와 KL estimate를 사용합니다." },
+      { id: "independent-evaluation", sectionId: "evaluation", intuition: "Training loss와 다른 evaluator로 실제 capability·사실성·안전성을 다시 보는 경계입니다.", workedExample: "Binary utility와 blind human pairwise win rate를 따로 보고합니다.", boundary: "같은 judge 하나의 종합 점수는 독립 평가가 아닙니다." },
+    ],
+    conceptStages: [
+      { label: "01 log", relation: "Exposure와 binary label", concepts: ["binary-feedback"] },
+      { label: "02 baseline", relation: "Reference 대비 이동 기준", concepts: ["reference-policy", "kto-kl-reference-point"] },
+      { label: "03 utility", relation: "Class별 반대 방향 update", concepts: ["kto-asymmetric-binary-utility", "kto"] },
+      { label: "04 audit", relation: "Logging bias와 behavior 분리", concepts: ["independent-evaluation"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Binary feedback와 pairwise preference의 형태를 구분하세요.", answerChecklist: ["response 하나", "desirable·undesirable", "같은 prompt pair 불필요"], requiredConcepts: ["binary-feedback"], sectionId: "binary-feedback" },
+      { level: "basic", question: "노출되지 않은 무응답을 dislike로 쓰면 안 되는 이유는 무엇인가요?", answerChecklist: ["exposure", "missing event", "label bias"], requiredConcepts: ["binary-feedback"], sectionId: "binary-feedback" },
+      { level: "basic", question: "KTO의 implicit reward는 무엇인가요?", answerChecklist: ["policy log-prob", "reference log-prob", "차이"], requiredConcepts: ["kto"], sectionId: "kto" },
+      { level: "basic", question: "r=0.7, z0=0.2일 때 z를 계산하세요.", answerChecklist: ["0.7−0.2", "0.5", "reference 위"], requiredConcepts: ["kto-kl-reference-point"], sectionId: "kto" },
+      { level: "basic", question: "Desirable과 undesirable utility 방향을 설명하세요.", answerChecklist: ["+βz", "−βz", "반대 방향"], requiredConcepts: ["kto-asymmetric-binary-utility"], sectionId: "kto" },
+      { level: "basic", question: "표준 KTO가 reference-free인가요?", answerChecklist: ["아님", "reference policy", "batch KL"], requiredConcepts: ["kto", "kto-kl-reference-point"], sectionId: "kto" },
+      { level: "advanced", question: "심한 class imbalance를 평가하는 방법을 설계하세요.", answerChecklist: ["class weight", "raw·balanced 결과", "slice"], requiredConcepts: ["binary-feedback", "kto-asymmetric-binary-utility"], sectionId: "evaluation" },
+      { level: "advanced", question: "Batch KL estimate drift가 objective를 바꾸는 경로를 설명하세요.", answerChecklist: ["reference point 이동", "z 변화", "utility 변화"], requiredConcepts: ["kto-kl-reference-point"], sectionId: "kto" },
+      { level: "advanced", question: "KTO release evaluation을 설계하세요.", answerChecklist: ["time/exposure split", "human pairwise", "사실성·capability"], requiredConcepts: ["kto", "independent-evaluation"], sectionId: "evaluation" },
+      { level: "advanced", question: "Binary feedback이 pair보다 항상 우월하다는 주장을 반박하세요.", answerChecklist: ["click propensity", "label noise", "논문 범위"], requiredConcepts: ["binary-feedback", "independent-evaluation"], sectionId: "evaluation" },
+    ],
+    papers: [
+      { title: "KTO", href: "https://arxiv.org/abs/2402.01306", problem: "Pair보다 독립 like/dislike가 많은 조건", contribution: "KL reference point의 비대칭 binary utility", assumptions: "Binary label·reference·KL estimate", evidenceScope: "논문의 1B–30B·class imbalance 조건", notClaim: "Binary feedback의 보편적 우월성 아님", sectionId: "paper-kto-implementation" },
     ],
   },
   "blockchain/distributed-systems": {

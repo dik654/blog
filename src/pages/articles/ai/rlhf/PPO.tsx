@@ -24,6 +24,21 @@ export default function PPO() {
         question="Reward를 높이면서 SFT policy에서 무제한으로 멀어지는 것을 어떻게 제어할까?"
         idea={<>Reward maximization에 reference policy와의 KL cost를 함께 두면, reward가 충분히 좋아질 때만 기존 token distribution을 바꾸게 됩니다. β는 reward 한 단위와 policy drift 한 단위의 환율입니다.</>}
         formula={String.raw`\begin{aligned}\ell_{KL}(x,y)&=\log\frac{\pi_\theta(y\mid x)}{\pi_{ref}(y\mid x)}\\R_{KL}(x,y)&=r_\phi(x,y)-\beta\ell_{KL}(x,y)\\J(\theta)&=\mathbb E_{x\sim\mathcal D,\,y\sim\pi_\theta}[R_{KL}(x,y)]\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+\ell_{KL}
+ &=\underbrace{\log\frac{\pi_\theta(y\mid x)}{\pi_{ref}(y\mid x)}}_{\text{reference 대비 policy 이동량}}\\
+R_{KL}
+ &=\underbrace{r_\phi(x,y)}_{\text{선호 proxy 보상}}
+  -\underbrace{\beta\ell_{KL}}_{\text{distribution drift 가격}}\\
+J(\theta)
+ &=\underbrace{\mathbb E_{x\sim\mathcal D,\,y\sim\pi_\theta}[R_{KL}]}_{\text{현재 policy가 만든 응답에서 평균}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\pi_\theta/\pi_{ref}`, annotation: ["같은 response를 현재·기준 policy가", "얼마나 다르게 보는지 비율로 비교"] },
+          { expression: String.raw`\log(\pi_\theta/\pi_{ref})`, annotation: ["token별 probability ratio를", "sequence에서 더할 수 있는 log-ratio로 변환"] },
+          { expression: String.raw`r_\phi-\beta\ell_{KL}`, annotation: ["reward 이득에서", "reference 이탈 비용을 차감"] },
+          { expression: String.raw`y\sim\pi_\theta`, annotation: ["과거 고정 data가 아니라", "현재 policy support를 online 평가"] },
+        ]}
         terms={[
           { symbol: String.raw`\pi_\theta`, name: "policy", description: "응답을 sample하며 update되는 language model입니다." },
           { symbol: String.raw`\pi_{ref}`, name: "reference policy", description: "보통 SFT checkpoint를 고정해 drift의 기준으로 사용합니다." },
@@ -38,6 +53,22 @@ export default function PPO() {
         question="같은 rollout batch를 여러 epoch 학습할 때 policy가 한 번에 너무 크게 바뀌는 것을 어떻게 제한할까?"
         idea={<>PPO는 새 policy와 rollout을 만든 old policy의 token probability ratio를 사용합니다. Advantage 방향의 update는 허용하되 ratio가 1±ε 밖으로 나가면 surrogate benefit을 잘라, 한 batch에서 더 밀어붙일 유인을 줄입니다.</>}
         formula={String.raw`\begin{aligned}\rho_t&=\frac{\pi_\theta(a_t\mid s_t)}{\pi_{old}(a_t\mid s_t)}\\u_t&=\rho_t\hat A_t\\c_t&=\operatorname{clip}(\rho_t,1-\epsilon,1+\epsilon)\hat A_t\\L^{CLIP}(\theta)&=\mathbb E_t[\min(u_t,c_t)]\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+\rho_t
+ &=\underbrace{\frac{\pi_\theta(a_t\mid s_t)}{\pi_{old}(a_t\mid s_t)}}_{\text{rollout 뒤 token 확률 변화 비율}}\\
+u_t
+ &=\underbrace{\rho_t\hat A_t}_{\text{advantage 방향의 원래 update 이득}}\\
+c_t
+ &=\underbrace{\operatorname{clip}(\rho_t,1-\epsilon,1+\epsilon)}_{\text{허용 비율 밖 변화 고정}}\hat A_t\\
+L^{CLIP}
+ &=\underbrace{\mathbb E_t[\min(u_t,c_t)]}_{\text{더 낙관적인 이득을 선택하지 않음}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\pi_\theta/\pi_{old}`, annotation: ["같은 sampled token이", "update 후 얼마나 더/덜 가능해졌는지 비교"] },
+          { expression: String.raw`\rho_t\hat A_t`, annotation: ["좋은 action은 확률을 높이고", "나쁜 action은 낮추는 방향을 부여"] },
+          { expression: String.raw`\operatorname{clip}(\rho_t,1-\epsilon,1+\epsilon)`, annotation: ["한 rollout batch를 반복 학습해도", "surrogate 이득이 계속 커지지 않게 제한"] },
+          { expression: String.raw`\min(u_t,c_t)`, annotation: ["원래 항과 제한 항 중", "보수적인 objective를 선택"] },
+        ]}
         terms={[
           { symbol: "s_t,a_t", name: "state·action", description: "LLM에서는 prompt와 prefix가 state, 다음 token이 action입니다." },
           { symbol: String.raw`\pi_{old}`, name: "behavior policy", description: "현재 rollout batch를 생성한 update 이전 policy입니다." },

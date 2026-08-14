@@ -74,7 +74,7 @@ function ConceptGlyph({
       viewBox="0 0 72 56"
       role="img"
       aria-label={`${concept.label} · ${kind}`}
-      className={large ? "h-20 w-24" : "h-14 w-[4.5rem]"}
+      className={large ? "h-16 w-20 sm:h-20 sm:w-24" : "h-10 w-12 sm:h-14 sm:w-[4.5rem]"}
     >
       <title>{concept.label}</title>
       {kind === "input" ? (
@@ -379,7 +379,7 @@ export default function ArticleLessonFlowViz({
             </div>
             <div
               data-shape-legend
-              className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1 text-[9px] text-muted-foreground"
+              className="hidden flex-wrap items-center justify-end gap-x-3 gap-y-1 text-[9px] text-muted-foreground sm:flex"
             >
               <span>▱ 입력</span>
               <span>○ 처리</span>
@@ -394,7 +394,7 @@ export default function ArticleLessonFlowViz({
               <section
                 key={`${stage.label}-${stageIndex}`}
                 data-lesson-stage
-                className="relative grid min-w-0 gap-3 border-b border-border/55 px-4 py-4 last:border-b-0 md:grid-cols-[10rem_minmax(0,1fr)] md:items-center"
+                className="relative grid min-w-0 grid-cols-[5.5rem_minmax(0,1fr)] items-center gap-2 border-b border-border/55 px-3 py-3 last:border-b-0 sm:grid-cols-[8rem_minmax(0,1fr)] sm:px-4 sm:py-4 md:grid-cols-[10rem_minmax(0,1fr)]"
               >
                 <div className="min-w-0">
                   <div className="flex items-center gap-2">
@@ -430,7 +430,7 @@ export default function ArticleLessonFlowViz({
                           aria-selected={selected}
                           aria-label={`${index + 1}. ${candidate.concept.label}`}
                           onClick={() => selectConcept(index)}
-                          className={`relative flex w-[7.25rem] min-w-0 flex-col items-center rounded-lg px-1.5 py-1 text-center transition-colors ${
+                          className={`relative flex w-[5.25rem] min-w-0 flex-col items-center rounded-lg px-1 py-1 text-center transition-colors sm:w-[7.25rem] sm:px-1.5 ${
                             selected
                               ? "bg-primary/[0.065] text-primary"
                               : "text-foreground hover:bg-muted/35"
@@ -468,7 +468,7 @@ export default function ArticleLessonFlowViz({
                 {groupIndex < stageGroups.length - 1 ? (
                   <div
                     data-stage-flow-arrow
-                    className="col-span-full flex justify-center pt-1"
+                    className="col-span-full hidden justify-center pt-1 md:flex"
                     aria-hidden="true"
                   >
                     <span className="rotate-90">
@@ -484,11 +484,35 @@ export default function ArticleLessonFlowViz({
           </div>
         </div>
 
+        <details
+          data-concept-detail
+          className="group mt-4 rounded-xl border border-border/65 bg-muted/[0.1]"
+        >
+          <summary className="cursor-pointer list-none px-4 py-4 marker:hidden sm:px-5">
+            <div className="flex min-w-0 items-start justify-between gap-4">
+              <div className="min-w-0">
+                <p className="font-mono text-[10px] font-black text-primary">
+                  FOCUS {String(safeActive + 1).padStart(2, "0")} · {step.stage.label}
+                </p>
+                <p className="mt-1 break-words text-sm font-black leading-6 text-foreground">
+                  {step.concept.label}
+                </p>
+                <p className="mt-1 line-clamp-2 text-xs leading-5 text-muted-foreground">
+                  {step.concept.definition}
+                </p>
+              </div>
+              <span className="shrink-0 rounded-md border border-border bg-background px-2.5 py-1.5 text-[10px] font-bold text-muted-foreground group-open:text-primary">
+                <span className="group-open:hidden">자세히 보기</span>
+                <span className="hidden group-open:inline">접기</span>
+              </span>
+            </div>
+          </summary>
+
         <motion.div
           key={step.id}
           data-concept-step={step.id}
           role="tabpanel"
-          className="mt-4 min-w-0 overflow-hidden rounded-xl border border-border/65 bg-muted/[0.1]"
+          className="min-w-0 overflow-hidden border-t border-border/65 bg-muted/[0.1]"
           initial={reduceMotion ? false : { opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.28, ease: "easeOut" }}
@@ -751,6 +775,7 @@ export default function ArticleLessonFlowViz({
             </p>
           </div>
         </motion.div>
+        </details>
       </div>
 
       <p

@@ -22,6 +22,22 @@ export default function DPO() {
         question="Chosen·rejected pair만으로 reference 대비 policy의 선호 방향을 어떻게 학습할까?"
         idea={<>각 response의 log probability가 아니라 policy가 reference보다 그 response를 얼마나 더 선호하게 됐는지 log-ratio를 비교합니다. Chosen의 relative log-ratio가 rejected보다 클수록 sigmoid 안의 margin이 커집니다.</>}
         formula={String.raw`\begin{aligned}r_\theta(x,y)&=\log\frac{\pi_\theta(y\mid x)}{\pi_{ref}(y\mid x)}\\\Delta_\theta&=r_\theta(x,y_+)-r_\theta(x,y_-)\\\mathcal L_{DPO}&=-\mathbb E_{\mathcal D}\log\sigma(\beta\Delta_\theta)\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+r_+(x)
+ &=\underbrace{\log\frac{\pi_\theta(y_+\mid x)}{\pi_{ref}(y_+\mid x)}}_{\text{chosen의 reference 대비 상승량}}\\
+r_-(x)
+ &=\underbrace{\log\frac{\pi_\theta(y_-\mid x)}{\pi_{ref}(y_-\mid x)}}_{\text{rejected의 reference 대비 상승량}}\\
+\Delta_\theta
+ &=\underbrace{r_+(x)-r_-(x)}_{\text{chosen 방향의 상대 margin}}\\
+\mathcal L_{DPO}
+ &=\underbrace{-\mathbb E_{\mathcal D}\log\sigma(\beta\Delta_\theta)}_{\text{chosen label의 logistic loss}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\pi_\theta(y)/\pi_{ref}(y)`, annotation: ["Response의 절대 likelihood가 아니라", "reference에서 변한 비율을 계산"] },
+          { expression: String.raw`r_+-r_-`, annotation: ["Chosen과 rejected의 이동량을 빼", "공통 prompt normalization을 상쇄"] },
+          { expression: String.raw`\beta\Delta_\theta`, annotation: ["Relative margin의", "preference update 민감도를 조절"] },
+          { expression: String.raw`-\log\sigma(\beta\Delta_\theta)`, annotation: ["Chosen margin이 음수인 pair를", "큰 손실로 교정"] },
+        ]}
         terms={[
           { symbol: String.raw`\pi_\theta`, name: "trainable policy", description: "Preference pair로 update되는 model입니다." },
           { symbol: String.raw`\pi_{ref}`, name: "reference policy", description: "보통 SFT checkpoint를 고정한 기준 model입니다." },

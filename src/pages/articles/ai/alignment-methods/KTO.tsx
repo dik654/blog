@@ -1,5 +1,4 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
-import MethodChoiceViz from "../rlhf/viz/MethodChoiceViz";
 
 export default function KTO() {
   return (
@@ -23,6 +22,27 @@ export default function KTO() {
         question="Pair가 없는 desirable·undesirable label을 reference 대비 policy update로 어떻게 바꿀까?"
         idea={<>Response의 policy/reference log-ratio를 암묵적 reward로 보고, batch에서 추정한 KL을 reference point z0로 둡니다. Desirable이면 그 기준보다 높아질수록 utility가 커지고, undesirable이면 기준보다 낮아질수록 utility가 커지도록 sigmoid 방향을 반대로 둡니다.</>}
         formula={String.raw`\begin{aligned}r_\theta&=\log\pi_\theta(y\mid x)-\log\pi_{ref}(y\mid x)\\z_0&=D_{KL}(\pi_\theta\|\pi_{ref})\\z&=r_\theta-z_0\\v_D&=\lambda_D\sigma(\beta z),\quad v_U=\lambda_U\sigma(-\beta z)\\\mathcal L_{KTO}&=\mathbb E_{\mathcal D}[\lambda_y-v_y]\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+r_\theta
+ &=\underbrace{\log\pi_\theta(y\mid x)-\log\pi_{ref}(y\mid x)}_{\text{response의 reference 대비 선호 변화}}\\
+z_0
+ &=\underbrace{D_{KL}(\pi_\theta\|\pi_{ref})}_{\text{batch의 gain·loss 기준점}}\\
+z
+ &=\underbrace{r_\theta-z_0}_{\text{기준점에서 떨어진 방향과 크기}}\\
+v_D
+ &=\underbrace{\lambda_D\sigma(\beta z)}_{\text{desirable은 위쪽 이동에 보상}}\\
+v_U
+ &=\underbrace{\lambda_U\sigma(-\beta z)}_{\text{undesirable은 아래쪽 이동에 보상}}\\
+\mathcal L_{KTO}
+ &=\underbrace{\mathbb E_{\mathcal D}[\lambda_y-v_y]}_{\text{class utility 부족분을 평균}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\log\pi_\theta-\log\pi_{ref}`, annotation: ["현재 policy의 response 선호를", "reference 대비 log-ratio로 계산"] },
+          { expression: String.raw`r_\theta-z_0`, annotation: ["평균 KL 이동을 빼", "gain과 loss의 기준점을 만듦"] },
+          { expression: String.raw`\sigma(\beta z)`, annotation: ["Desirable example은", "기준 위로 갈수록 utility 증가"] },
+          { expression: String.raw`\sigma(-\beta z)`, annotation: ["Undesirable example은 부호를 뒤집어", "기준 아래로 갈수록 utility 증가"] },
+          { expression: String.raw`\lambda_y-v_y`, annotation: ["Class별 최대 weight에서 현재 utility를 빼", "부족한 방향만 학습"] },
+        ]}
         terms={[
           { symbol: "r_\theta", name: "implicit reward", description: "현재 policy가 reference보다 response y를 얼마나 더 선호하는지 나타내는 log-ratio입니다." },
           { symbol: "z_0", name: "reference point", description: "Policy와 reference의 KL을 batch에서 추정해 gain·loss 기준으로 사용합니다." },
@@ -32,8 +52,6 @@ export default function KTO() {
         assumptions={["각 example에는 binary label이 있지만 같은 prompt의 짝이 반드시 필요하지는 않습니다.", "표준 KTO는 reference model과 KL estimate를 사용하며 z0를 통한 gradient는 stop-gradient로 다룹니다."]}
         interpretation="KTO는 pair collection 비용을 줄일 수 있지만 binary log가 자동으로 깨끗해지는 것은 아닙니다. 노출되지 않은 응답, 무응답과 실제 dislike를 구분하고 사용자별 feedback propensity를 점검해야 합니다."
       />
-
-      <MethodChoiceViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>방법 선택은 확보 가능한 feedback에서 시작한다</h3>

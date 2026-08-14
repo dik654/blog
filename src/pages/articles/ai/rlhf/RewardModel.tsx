@@ -23,6 +23,23 @@ export default function RewardModel() {
         question="Pairwise preference를 reward model의 probability와 loss로 어떻게 바꿀까?"
         idea={<>Bradley–Terry model은 두 응답의 절대 score가 아니라 score 차이가 선택 odds를 정한다고 가정합니다. Chosen의 score가 커질수록 sigmoid probability가 1에 가까워지도록 negative log-likelihood를 최소화합니다.</>}
         formula={String.raw`\begin{aligned}\Delta r&=r_\phi(x,y_+)-r_\phi(x,y_-)\\P(y_+\succ y_-)&=\sigma(\Delta r)\\\ell_{RM}&=-\log\sigma(\Delta r)\\\mathcal L_{RM}&=\mathbb E_{\mathcal D}[\ell_{RM}]\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+\Delta r
+ &=\underbrace{r_\phi(x,y_+)}_{\text{chosen 점수}}
+  -\underbrace{r_\phi(x,y_-)}_{\text{rejected 점수}}\\
+p_+
+ &=\underbrace{\sigma(\Delta r)}_{\text{점수 차이를 선택 확률로}}\\
+\ell_{RM}
+ &=\underbrace{-\log p_+}_{\text{chosen 확률이 낮을수록 큰 벌점}}\\
+\mathcal L_{RM}
+ &=\underbrace{\mathbb E_{\mathcal D}[\ell_{RM}]}_{\text{수집한 모든 pair에서 평균}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`r_\phi(x,y_+)-r_\phi(x,y_-)`, annotation: ["절대 점수 원점을 없애고", "두 response의 상대 순서만 남김"] },
+          { expression: String.raw`\sigma(\Delta r)`, annotation: ["무한 범위 score gap을", "0~1 pairwise probability로 변환"] },
+          { expression: String.raw`-\log p_+`, annotation: ["chosen probability가 0에 가까운", "틀린 ranking을 크게 벌점"] },
+          { expression: String.raw`\mathbb E_{\mathcal D}`, annotation: ["한 pair가 아니라", "dataset의 평균 ordering을 학습"] },
+        ]}
         terms={[
           { symbol: "x", name: "prompt", description: "두 response가 공유하는 조건입니다." },
           { symbol: "y_+,y_-", name: "chosen·rejected", description: "Labeler가 더 낫다고 고른 응답과 비교 대상입니다." },

@@ -1827,30 +1827,19 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://arxiv.org/abs/1707.06347",
       note: "Clipped surrogate objective와 alternating policy update를 제안한 PPO 원문",
     },
-    {
-      kind: "핵심 논문",
-      label: "Direct Preference Optimization",
-      href: "https://arxiv.org/abs/2305.18290",
-      note: "명시적 reward model 없이 preference를 최적화하는 경로",
-    },
-    {
-      kind: "핵심 논문",
-      label: "Constitutional AI",
-      href: "https://arxiv.org/abs/2212.08073",
-      note: "원칙 기반 self-critique와 RLAIF",
-    },
-    {
-      kind: "핵심 논문",
-      label: "KTO: Model Alignment as Prospect Theoretic Optimization",
-      href: "https://arxiv.org/abs/2402.01306",
-      note: "binary feedback를 prospect theory 관점으로 쓰는 목적함수",
-    },
-    {
-      kind: "핵심 논문",
-      label: "ORPO: Monolithic Preference Optimization",
-      href: "https://arxiv.org/abs/2403.07691",
-      note: "SFT와 preference objective를 한 단계로 결합",
-    },
+  ],
+  "ai/dpo": [
+    { kind: "핵심 논문", label: "Direct Preference Optimization", href: "https://arxiv.org/abs/2305.18290", note: "KL-regularized reward objective를 chosen·rejected policy log-ratio loss로 재매개화" },
+    { kind: "공식 문서", label: "Hugging Face TRL · DPO Trainer", href: "https://huggingface.co/docs/trl/dpo_trainer", note: "Reference handling·loss variant·data format을 확인하는 implementation surface" },
+  ],
+  "ai/constitutional-ai": [
+    { kind: "핵심 논문", label: "Constitutional AI", href: "https://arxiv.org/abs/2212.08073", note: "원칙 기반 self-critique·revision과 RLAIF pipeline" },
+  ],
+  "ai/orpo": [
+    { kind: "핵심 논문", label: "ORPO: Monolithic Preference Optimization", href: "https://arxiv.org/abs/2403.07691", note: "Chosen SFT와 odds-ratio preference objective를 한 단계로 결합" },
+  ],
+  "ai/kto": [
+    { kind: "핵심 논문", label: "KTO: Model Alignment as Prospect Theoretic Optimization", href: "https://arxiv.org/abs/2402.01306", note: "짝 없는 binary feedback을 KL reference point 양쪽에서 학습" },
   ],
   "ai/sentence-embeddings": [
     {

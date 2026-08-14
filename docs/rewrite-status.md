@@ -22,6 +22,8 @@
 - [ ] 이전 URL을 보존하는 redirect·alias 계약과 orphan link 감사를 추가하고 split·merge·rename·delete마다 자동 검사
 - [ ] 모든 `ExplainedFormula`가 generic fallback이 아니라 식의 실제 항과 연산 의도를 명시한 `annotatedFormula`·`operations`를 갖도록 전역 전환
 - [x] 첫 분리 사례 `/ai/model-vram-budgeting`을 범용 VRAM 정본으로 만들고 Qwen 글은 Qwen-specific architecture 적용 예만 소유하도록 중복 축소. Public catalog 391, graph 2,309 concepts·3,390 relations·owner/invariant 0, selected learning·route·Viz·build 통과
+- [x] RLHF 한 글에 섞여 있던 DPO·Constitutional AI·ORPO·KTO를 독립 public route로 분리하고 `/ai/rlhf`는 reward model·online PPO만 소유하도록 축소. 다섯 route 모두 topology `keep`, exact 6+4, explicit operation-annotated formula, 신규 keyboard Viz와 selected strict audit 통과
+- [ ] 현재 전역 잔여량: public catalog 395, topology `split-review` 91·`rename-or-split-review` 2, explicit formula 19/1,053·전환 대기 1,034. 휴리스틱 후보는 본문 학습 질문을 확인한 뒤 실제 CRUD한다.
 
 ### 2026-08-15 · WEBCAT · Ethereum future roadmap · binary-field proving · permissioned RWA markets
 
@@ -497,12 +499,13 @@
 
 ### AI / LLM post-training · RLHF · preference optimization
 
-- [x] 별도 alignment-methods 글의 중복을 RLHF canonical article 하나로 통합한 현재 구조를 유지
-- [x] behavior target → feedback contract → reward/direct loss → online/offline loop → independent evaluation의 top-down 흐름으로 재작성
-- [x] Reward model·PPO KL objective·PPO clip·DPO·ORPO·KTO 수식 6개를 설명형 순서로 이관
-- [x] InstructGPT·PPO·DPO·CAI·ORPO·KTO 원 논문을 본문과 evidence에 직접 연결하고 실험 범위의 과도한 일반화를 제한
-- [x] gradient 카드와 방법 나열을 feedback contract·reward compression·online/offline·method choice flat Viz로 교체
-- [x] desktop 1440px / mobile 390px에서 수식·Viz·페이지 overflow 없음과 DOM 설명 순서 확인
+- [x] `/ai/rlhf`는 behavior target→feedback contract→reward model→online PPO만 소유하고 `/ai/dpo`·`/ai/constitutional-ai`·`/ai/orpo`·`/ai/kto`를 독립 학습 단위로 생성
+- [x] Pairwise pair·constitution·sequence odds·binary feedback을 각 글에서 정의→작은 형태→도형 흐름→objective→평가 경계 순서로 다시 작성
+- [x] Reward model·PPO KL·PPO clip·DPO·ORPO·KTO 수식 6개 모두 실제 항과 σ·log·뺄셈·ratio·clip·min의 의도를 KaTeX underbrace와 operation panel로 명시
+- [x] 다섯 route의 canonical owner를 7/5/4/3/5 concepts로 나누고 각 exact basic6+advanced4·paper evidence·editorial ownership을 독립 등록
+- [x] 기존 text-card method table 대신 네 방법 각각의 입력→변환→update→audit 도형 흐름 Viz를 새로 만들고 ArrowLeft/ArrowRight/Space keyboard navigation을 제공
+- [x] 자동 concept lesson은 전체 map을 기본 노출하고 긴 5컷 storyboard는 선택 개념별 접힌 상세로 변경해 본문 진입 전에 장면 카드가 화면을 점유하지 않도록 축소
+- [x] desktop 1440px / mobile 390px에서 page·Viz·수식 overflow와 console을 확인하고 ORPO mobile underbrace 346px를 316px로 교정
 
 ### AI / ARIMA
 

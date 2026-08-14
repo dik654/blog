@@ -20,7 +20,24 @@ export default function ORPO() {
       <ExplainedFormula
         question="Chosen likelihood를 높이는 SFT와 rejected 대비 preference margin을 한 objective에 어떻게 넣을까?"
         idea={<>Sequence probability pθ(y|x)를 odds p/(1−p)로 바꾸고 chosen odds와 rejected odds의 비를 log-sigmoid loss로 학습합니다. 동시에 SFT term이 chosen token likelihood를 직접 높여 domain adaptation의 기준축을 유지합니다.</>}
-        formula={String.raw`\begin{aligned}o_\theta(y)&=\frac{p_\theta(y\mid x)}{1-p_\theta(y\mid x)}\\\Delta_{OR}&=\log o_\theta(y_+)-\log o_\theta(y_-)\\\mathcal L_{OR}&=-\log\sigma(\Delta_{OR})\\\mathcal L_{ORPO}&=\mathcal L_{SFT}+\lambda\mathcal L_{OR}\end{aligned}`}
+        formula={String.raw`\begin{aligned}p_\pm&=p_\theta(y_\pm\mid x)\\o_\pm&=\frac{p_\pm}{1-p_\pm}\\\Delta&=\log o_+-\log o_-\\L_O&=-\log\sigma(\Delta)\\L&=L_S+\lambda L_O\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+o_+(x)
+ &=\underbrace{\frac{p_\theta(y_+\mid x)}{1-p_\theta(y_+\mid x)}}_{\text{chosen odds}}\\
+o_-(x)
+ &=\underbrace{\frac{p_\theta(y_-\mid x)}{1-p_\theta(y_-\mid x)}}_{\text{rejected odds}}\\
+\Delta_{OR}
+ &=\underbrace{\log o_+(x)-\log o_-(x)}_{\text{preference gap}}\\
+\mathcal L_{ORPO}
+ &=\underbrace{\mathcal L_{SFT}}_{\text{chosen 모방}}
+  +\underbrace{\lambda[-\log\sigma(\Delta_{OR})]}_{\text{pair 분리}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`p/(1-p)`, annotation: ["해당 response와 그 밖의 outcome을", "상대 odds로 비교"] },
+          { expression: String.raw`\log o_+-\log o_-`, annotation: ["Odds의 비를 차이로 바꿔", "chosen/rejected margin을 계산"] },
+          { expression: String.raw`-\log\sigma(\Delta_{OR})`, annotation: ["Chosen odds가 낮은 pair에", "더 큰 preference 벌점을 부여"] },
+          { expression: String.raw`\mathcal L_{SFT}+\lambda\mathcal L_{OR}`, annotation: ["Chosen imitation을 유지하면서", "pair separation을 같은 stage에 추가"] },
+        ]}
         terms={[
           { symbol: "p_\theta(y\mid x)", name: "sequence likelihood", description: "Token log-probability를 sequence 단위로 모은 값이며 length 처리 방식을 명시해야 합니다." },
           { symbol: String.raw`\operatorname{odds}`, name: "generation odds", description: "해당 response 확률과 그 외 response 확률의 비입니다." },
