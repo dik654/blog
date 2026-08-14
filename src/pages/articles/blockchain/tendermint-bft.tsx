@@ -1,15 +1,5 @@
-import Overview from "./tendermint-bft/Overview";
-import Protocol from "./tendermint-bft/Protocol";
-import Locking from "./tendermint-bft/Locking";
-import Comparison from "./tendermint-bft/Comparison";
+import ModernArticle from "./tendermint-bft/ModernArticle";
 
 export default function TendermintBFTArticle() {
-  return (
-    <>
-      <Overview />
-      <Protocol />
-      <Locking />
-      <Comparison />
-    </>
-  );
+  return <ModernArticle />;
 }

@@ -1,15 +1,5 @@
-import Overview from "./tee-attestation/Overview";
-import Local from "./tee-attestation/Local";
-import Remote from "./tee-attestation/Remote";
-import IasDcap from "./tee-attestation/IasDcap";
+import ModernArticle from "./tee-attestation/ModernArticle";
 
 export default function TeeAttestationArticle() {
-  return (
-    <>
-      <Overview />
-      <Local />
-      <Remote />
-      <IasDcap />
-    </>
-  );
+  return <ModernArticle />;
 }

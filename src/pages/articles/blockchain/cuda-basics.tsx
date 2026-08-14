@@ -1,13 +1,5 @@
-import Overview from "./cuda-basics/Overview";
-import MemoryModel from "./cuda-basics/MemoryModel";
-import BlockchainGPU from "./cuda-basics/BlockchainGPU";
+import ModernCudaBasicsArticle from "./cuda-basics/ModernArticle";
 
 export default function CUDABasicsArticle() {
-  return (
-    <>
-      <Overview />
-      <MemoryModel />
-      <BlockchainGPU />
-    </>
-  );
+  return <ModernCudaBasicsArticle />;
 }

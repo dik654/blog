@@ -30,12 +30,12 @@ export const zkpMathArticles: Article[] = [
   },
   {
     slug: "crt",
-    title: "중국인 나머지 정리 (CRT)",
+    title: "CRT: 나머지 조건의 조립·유일성·RSA 경계",
     subcategory: "zkp-math",
     sections: [
-      { id: "overview", title: "중국인 나머지 정리란?" },
-      { id: "numerical", title: "계산 방법" },
-      { id: "crypto-usage", title: "암호학에서의 사용" },
+      { id: "overview", title: "나머지 조건에서 시작하기" },
+      { id: "numerical", title: "Selector 구성·23 예제·유일성" },
+      { id: "crypto-usage", title: "RSA-CRT·fault·benchmark" },
     ],
     component: () => import("@/pages/articles/blockchain/crt"),
   },

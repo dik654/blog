@@ -2580,7 +2580,10 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 코드", label: "Claw Code pinned plugins crate", href: "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/plugins/src/lib.rs", note: "PluginKind·manifest validation·registry collision·process execution·init/shutdown의 actual source이며 signature·sandbox·mandatory enforcer·rollback 보장은 아님" },
     { kind: "공식 규격", label: "SLSA v1.2 levels", href: "https://slsa.dev/spec/v1.2/levels", note: "외부 package build provenance의 일반 assurance vocabulary이며 Claw plugin 준수 인증은 아님" },
   ),
-  "ai/claw-worker-boot": clawEvidence(),
+  "ai/claw-worker-boot": clawEvidence(
+    { kind: "공식 코드", label: "Claw Code pinned worker boot state machine", href: "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src/worker_boot.rs", note: "WorkerStatus·ready gate·prompt attempt·misdelivery replay·StartupEvidenceBundle의 actual snapshot이며 durable registry·real health probe·generation·exactly-once 보장은 아님" },
+    { kind: "공식 코드", label: "Claw Code pinned trust resolver", href: "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src/trust_resolver.rs", note: "Trust cue·path allow/deny·manual policy의 actual source이며 repository identity·sandbox·capability별 승인 근거는 아님" },
+  ),
   "ai/claw-compaction": clawEvidence(
     {
       kind: "공식 코드",
@@ -4691,5 +4694,61 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 코드", label: "Bitcoin Core · chainwork implementation", href: "https://github.com/bitcoin/bitcoin/blob/master/src/chain.cpp", note: "Compact target를 integer block work로 바꾸고 CBlockIndex에 누적하는 current 구현이며 재현 시 commit pin 필요" },
     { kind: "핵심 논문", label: "Bitcoin: A Peer-to-Peer Electronic Cash System", href: "https://bitcoin.org/bitcoin.pdf", note: "Cumulative-work chain과 attacker catch-up의 random-walk·Poisson confirmation 모델 원문" },
     { kind: "핵심 논문", label: "The Bitcoin Backbone Protocol", href: "https://eprint.iacr.org/2014/765.pdf", note: "Common prefix·chain growth·chain quality의 명시적 theorem과 network·honest-power assumptions" },
+  ],
+  "tee/hw-security": [
+    { kind: "공식 규격", label: "NIST SP 800-193 · Platform Firmware Resiliency Guidelines", href: "https://csrc.nist.gov/pubs/sp/800/193/final", note: "Platform firmware와 critical data의 protection·detection·recovery 원칙이며 특정 TEE 안전 인증은 아님" },
+  ],
+  "tee/tee-tcb": [
+    { kind: "공식 규격", label: "TCG PC Client Platform Firmware Profile 1.06", href: "https://trustedcomputinggroup.org/resource/pc-client-specific-platform-firmware-profile-specification/", note: "TPM 2.0 PC client boot event·PCR extend·event-log 순서의 정본" },
+    { kind: "공식 규격", label: "TCG PC Client Reference Integrity Manifest", href: "https://trustedcomputinggroup.org/resource/tcg-pc-client-reference-integrity-manifest-specification/", note: "Boot-cycle quote와 log를 평가할 reference integrity information 정본" },
+  ],
+  "tee/tee-memory": [
+    { kind: "공식 규격", label: "AMD SEV-SNP Firmware ABI Specification 1.58", href: "https://docs.amd.com/v/u/en-US/56860_PUB_1.58_SEV_SNP", note: "SNP guest request·page state·attestation report의 vendor ABI" },
+    { kind: "공식 문서", label: "Intel Trust Domain Extensions Documentation", href: "https://www.intel.com/content/www/us/en/developer/tools/trust-domain-extensions/documentation.html", note: "Current TDX architecture·ABI·security guidance·attestation revision 진입점" },
+  ],
+  "tee/tee-attestation": [
+    { kind: "공식 규격", label: "RFC 9334 · RATS Architecture", href: "https://www.rfc-editor.org/rfc/rfc9334.html", note: "Attester·Verifier·Relying Party와 evidence·result·appraisal·freshness의 vendor-neutral 정본" },
+    { kind: "공식 규격", label: "AMD SEV-SNP Firmware ABI Specification 1.58", href: "https://docs.amd.com/v/u/en-US/56860_PUB_1.58_SEV_SNP", note: "SNP attestation report request·field·signature interface의 vendor 정본" },
+  ],
+  "crypto/crt": [
+    { kind: "공식 규격", label: "RFC 8017 · PKCS #1 v2.2", href: "https://www.rfc-editor.org/rfc/rfc8017.html", note: "Two-prime RSA private key의 p·q·dP·dQ·qInv와 RSA primitive 입력·오류 계약" },
+    { kind: "보충 읽기", label: "NIST DLMF §27.15 · Chinese Remainder Theorem", href: "https://dlmf.nist.gov/27.15", note: "Pairwise-coprime congruence system의 구성·유일성 표기 reference" },
+  ],
+  "crypto/karatsuba": [
+    { kind: "핵심 논문", label: "Karatsuba & Ofman · Multiplication of many-digital numbers", href: "https://www.mathnet.ru/eng/dan26729", note: "Operand 분할로 quadratic보다 낮은 multiplication complexity를 구성한 1962 원문" },
+    { kind: "공식 문서", label: "GNU MP 6.3.0 · Karatsuba Multiplication", href: "https://gmplib.org/manual/Karatsuba-Multiplication.html", note: "세 곱 공식·odd-size split·carry/addition·target threshold의 production 구현 설명" },
+  ],
+  "crypto/sparse-multiplication": [
+    { kind: "공식 코드", label: "arkworks algebra 0.5.0 Fp12 @ 7ad88c46", href: "https://github.com/arkworks-rs/algebra/blob/7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c/ff/src/fields/models/fp12_2over3over2.rs", note: "mul_by_034·mul_by_014와 pinned coefficient-layout lowering source" },
+    { kind: "핵심 논문", label: "Aranha et al. · Efficient Implementation of Bilinear Pairings", href: "https://eprint.iacr.org/2012/408", note: "BN curve·degree-12 extension에서 sparse multiplication·reduction·platform benchmark의 원 연구" },
+  ],
+  "crypto/frobenius-optimization": [
+    { kind: "핵심 논문", label: "Scott et al. · On the final exponentiation for calculating pairings", href: "https://eprint.iacr.org/2008/490", note: "Pairing-friendly curve의 final exponent factorization과 Frobenius 활용 원 연구" },
+    { kind: "공식 코드", label: "arkworks algebra 0.5.0 Fp12 Frobenius @ 7ad88c46", href: "https://github.com/arkworks-rs/algebra/blob/7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c/ff/src/fields/models/fp12_2over3over2.rs", note: "Degree 12·coefficient table·power modulo dispatch의 pinned implementation source" },
+    { kind: "공식 코드", label: "arkworks curves BN254 fields @ e2d16a27", href: "https://github.com/arkworks-rs/curves/tree/e2d16a27e2cfa9f972ae9772df827a22730011b4/bn254/src/fields", note: "구체 BN254 non-residue·tower·Frobenius coefficient profile source" },
+  ],
+  "blockchain/bft-comparison": [
+    { kind: "핵심 논문", label: "Castro·Liskov — Practical Byzantine Fault Tolerance", href: "https://pmg.csail.mit.edu/papers/osdi99.pdf", note: "PBFT normal phase·checkpoint·view change와 당시 NFS evaluation 범위" },
+    { kind: "핵심 논문", label: "Yin et al. — HotStuff", href: "https://arxiv.org/abs/1803.05069", note: "Chained QC·linear authenticator communication·pacemaker의 model과 proof" },
+    { kind: "핵심 논문", label: "Giridharan et al. — Autobahn", href: "https://arxiv.org/abs/2401.10369", note: "Parallel lanes·cut consensus와 piece-wise partial-synchrony blip 평가" },
+  ],
+  "blockchain/consensus-comparison": [
+    { kind: "핵심 논문", label: "Dwork·Lynch·Stockmeyer — Consensus in the Presence of Partial Synchrony", href: "https://groups.csail.mit.edu/tds/papers/Lynch/jacm88.pdf", note: "Unknown bound·GST timing model과 fault별 resilience의 원 이론" },
+    { kind: "핵심 논문", label: "Nakamoto — Bitcoin", href: "https://bitcoin.org/bitcoin.pdf", note: "PoW cumulative-work chain과 attacker catch-up confirmation model" },
+    { kind: "핵심 논문", label: "Lamport·Shostak·Pease — The Byzantine Generals Problem", href: "https://lamport.azurewebsites.net/pubs/byz.pdf", note: "Byzantine interactive consistency의 oral/signed message model 경계" },
+  ],
+  "blockchain/dag-consensus": [
+    { kind: "핵심 논문", label: "Danezis et al. — Narwhal and Tusk", href: "https://arxiv.org/abs/2105.11827", note: "Reliable transaction dissemination과 ordering 분리·DAG mempool evaluation" },
+    { kind: "핵심 논문", label: "Spiegelman et al. — Bullshark", href: "https://arxiv.org/abs/2201.05677", note: "DAG anchor·wave ordering과 synchronous fast path·asynchronous property" },
+  ],
+  "blockchain/tendermint-bft": [
+    { kind: "핵심 논문", label: "Jae Kwon — Tendermint: Consensus without Mining", href: "https://tendermint.com/static/docs/tendermint.pdf", note: "2014 draft v0.6의 역사적 Tendermint 설계이며 outdated 표기를 본문에 유지" },
+    { kind: "공식 규격", label: "CometBFT v0.38 — Byzantine Consensus Algorithm", href: "https://docs.cometbft.com/v0.38/spec/consensus/consensus", note: "Height·round·step, +2/3, PoLC·lock과 timeout transition의 version-pinned 정본" },
+    { kind: "공식 규격", label: "CometBFT v0.38 — Validator Signing", href: "https://docs.cometbft.com/v0.38/spec/consensus/signing", note: "Canonical vote fields·same H/R/type double-sign과 lock-related signing 경계" },
+  ],
+  "gpu/cuda-basics": [
+    { kind: "공식 문서", label: "NVIDIA CUDA C++ Programming Guide 12.8.1", href: "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-programming-guide/index.html", note: "Host/device·kernel·grid/block/thread·warp·memory semantics의 version-pinned 정본이며 특정 speedup·block size 보장은 아님" },
+    { kind: "공식 문서", label: "NVIDIA CUDA C++ Best Practices Guide 12.8.1", href: "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-best-practices-guide/index.html", note: "APOD·effective bandwidth·coalescing·transfer·occupancy 측정 기준이며 단일 metric의 성능 보장은 아님" },
+    { kind: "공식 코드", label: "NVIDIA cuda-samples v12.8", href: "https://github.com/NVIDIA/cuda-samples/tree/v12.8", note: "Vector·reduction·matrix·stream CUDA API pattern의 pinned example source이며 production blockchain 최적 구현이나 benchmark는 아님" },
   ],
 };

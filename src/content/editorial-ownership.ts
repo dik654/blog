@@ -5788,6 +5788,227 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "project-measurement", rule: "같은 lane·rules·SHA·green evidence에 conflict·stale·forged outcome을 주입해 decision event와 executor effect를 비교한다." },
     ],
   },
+  "hw-security": {
+    title: "Hardware security threat model·Root of Trust·resilience 글이 소유하는 범위",
+    owns: ["공격자·자산·property·비보장 threat-model 경계", "Root of Trust에서 protect·detect·recover로 이어지는 resilience", "Memory·Secure Boot·attestation을 결합한 evidence release gate"],
+    reuses: [
+      { label: "TCB·Measured Boot·PCR", href: "/tee/tee-tcb" },
+      { label: "TEE private/shared memory", href: "/tee/tee-memory" },
+      { label: "Remote attestation roles", href: "/tee/tee-attestation" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "Firmware protection·detection·recovery 주장은 NIST SP 800-193 범위에 한정한다." },
+      { kind: "project-claim", rule: "제품 이름만으로 confidentiality·integrity·freshness·availability를 묶어 보장하지 않는다." },
+      { kind: "project-measurement", rule: "Altered image·old TCB·reused nonce·debug·malformed evidence·host pause를 secret-release gate에 주입한다." },
+    ],
+  },
+  "tee-tcb": {
+    title: "Property-specific TCB·Secure/Measured Boot·PCR appraisal 글이 소유하는 범위",
+    owns: ["보안 property별 TCB dependency closure", "Secure Boot와 Measured Boot의 동작 분리", "PCR extend·event-log replay·reference manifest appraisal"],
+    reuses: [
+      { label: "Hardware threat model·Root of Trust", href: "/tee/hw-security" },
+      { label: "Attestation result와 authorization", href: "/tee/tee-attestation" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "PCR·event log 순서는 TCG PC Client Platform Firmware Profile 범위에 귀속한다." },
+      { kind: "standard", rule: "Reference value는 TCG PC Client RIM의 boot-cycle 범위를 넘어 runtime correctness로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "Reorder·omission·altered PCR·new/revoked reference fixture로 replay와 policy를 함께 검증한다." },
+    ],
+  },
+  "tee-memory": {
+    title: "TEE private/shared page·memory confidentiality/integrity 글이 소유하는 범위",
+    owns: ["Private/shared page copy·validation lifecycle", "Address-tweaked encryption의 제한된 직관", "Integrity·ownership·freshness와 platform별 보호 단위·release gate"],
+    reuses: [
+      { label: "Security property와 threat model", href: "/tee/hw-security#threat-properties" },
+      { label: "TCB component closure", href: "/tee/tee-tcb#tcb-closure" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "SEV-SNP field·state 주장은 AMD ABI 1.58에, TDX 주장은 선택한 Intel official revision에 한정한다." },
+      { kind: "project-claim", rule: "단순화 XEX 식을 모든 vendor의 실제 algorithm·integrity structure로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "Malicious shared input·page flip·conversion crash·counter replay에서 unauthorized private commit을 검사한다." },
+    ],
+  },
+  "tee-attestation": {
+    title: "RATS roles·freshness·vendor appraisal·secret release 글이 소유하는 범위",
+    owns: ["Attester·Verifier·Relying Party와 evidence artifact 구분", "Nonce freshness와 workload/channel binding", "Vendor report normalization·collateral·policy release gate"],
+    reuses: [
+      { label: "Hardware threat/property boundary", href: "/tee/hw-security#threat-properties" },
+      { label: "TCB·reference-value appraisal", href: "/tee/tee-tcb#pcr-log-appraisal" },
+      { label: "TEE memory protection boundary", href: "/tee/tee-memory" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "Role·artifact·freshness vocabulary는 RFC 9334 범위이며 특정 wire protocol을 주장하지 않는다." },
+      { kind: "primary-source", rule: "SNP report field 주장은 AMD ABI 1.58에 한정하고 타 vendor semantics로 일반화하지 않는다." },
+      { kind: "project-measurement", rule: "Bad signature·replay·altered measurement·old TCB·debug·expired collateral·unknown field에서 false accept 0을 hard gate로 둔다." },
+    ],
+  },
+  crt: {
+    title: "CRT 글이 소유하는 범위",
+    owns: [
+      "정수 congruence·pairwise-coprime CRT의 존재와 modulo-product 유일성",
+      "부분 곱·modular inverse selector를 이용한 구성과 non-coprime 반례",
+      "RSA-CRT 재결합의 correctness·fault·side-channel·benchmark 경계",
+    ],
+    reuses: [
+      { label: "Prime-field modular arithmetic와 inverse", href: "/crypto/finite-field-theory#prime-field" },
+      { label: "Lagrange selector와 interpolation 유일성", href: "/crypto/lagrange#formula" },
+      { label: "Finite-field implementation release gate", href: "/crypto/field-arithmetic#fr-scalar" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "RSA CRT parameter와 primitive 입력 범위는 RFC 8017 PKCS #1 v2.2에 귀속한다." },
+      { kind: "project-claim", rule: "Pairwise-coprime 정리에서 RSA constant-time·fault resistance나 고정 speedup을 유도하지 않는다." },
+      { kind: "project-measurement", rule: "Direct/CRT parity와 fault·timing gate 뒤 같은 key·backend·target에서 latency를 비교한다." },
+    ],
+  },
+  karatsuba: {
+    title: "Karatsuba 글이 소유하는 범위",
+    owns: [
+      "일반 high/low operand 분할과 네 곱→세 곱 bilinear 재결합",
+      "T(n)=3T(n/2)+Theta(n)의 recurrence tree와 n^log2(3) bound",
+      "Addition·carry·temporary·cache를 포함한 target별 crossover 선택",
+    ],
+    reuses: [
+      { label: "Polynomial coefficient 표현", href: "/crypto/finite-field-theory#polynomial" },
+      { label: "Fp² Karatsuba·inverse와 tower reduction", href: "/crypto/extension-fields#fp2" },
+      { label: "더 큰 polynomial의 NTT product", href: "/crypto/fft#zk-usage" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Subquadratic multiplication의 역사적·점근적 주장은 Karatsuba–Ofman 원문 범위에 귀속한다." },
+      { kind: "primary-source", rule: "Odd limb·sign·threshold 구현 설명은 GNU MP 6.3.0 manual 범위에 고정한다." },
+      { kind: "project-measurement", rule: "Cutoff는 target·compiler·limb·allocation을 고정한 paired benchmark로 다시 측정한다." },
+    ],
+  },
+  "sparse-multiplication": {
+    title: "Sparse multiplication 글이 소유하는 범위",
+    owns: [
+      "Coefficient support와 support-aware convolution의 계산 경로",
+      "Miller line의 profile-pinned Fp¹² slot을 sparse helper로 내리는 경계",
+      "Partial-product 장부·Amdahl 상한·generic parity release gate",
+    ],
+    reuses: [
+      { label: "Polynomial coefficient와 quotient arithmetic", href: "/crypto/finite-field-theory#polynomial" },
+      { label: "Fp²→Fp¹² tower layout·non-residue", href: "/crypto/extension-fields#overview" },
+      { label: "Miller loop와 pairing 전체 경로", href: "/crypto/pairing#miller-loop" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "구체 slot·helper claim은 ark-ff 0.5.0 commit 7ad88c46…의 Fp12 source에 고정한다." },
+      { kind: "primary-source", rule: "Pairing sparse multiplication 성능 주장은 인용 논문의 curve·tower·platform 범위로 제한한다." },
+      { kind: "project-measurement", rule: "Generic parity·wrong-slot negative fixture 뒤 operation·memory·Miller/pairing latency를 비교한다." },
+    ],
+  },
+  "frobenius-optimization": {
+    title: "Frobenius 최적화 글이 소유하는 범위",
+    owns: [
+      "Characteristic-p Frobenius automorphism의 직관·증명과 Fp^k cycle",
+      "Embedding-degree 12 final exponent의 easy/hard factorization과 적용 전제",
+      "무료라는 표현을 coefficient transform의 상대 비용으로 제한하는 경계",
+    ],
+    reuses: [
+      { label: "Irreducible quotient extension field", href: "/crypto/finite-field-theory#extension-field" },
+      { label: "Tower-basis Frobenius coefficient table", href: "/crypto/extension-fields#frobenius-optimization" },
+      { label: "Pairing final exponentiation 전체 경로", href: "/crypto/pairing#final-exp" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Final exponent 최적화는 Scott et al.의 curve·factorization 범위에 귀속한다." },
+      { kind: "primary-source", rule: "Degree·table dispatch 주장은 ark-ff 0.5.0 commit 7ad88c46… source에 고정한다." },
+      { kind: "project-measurement", rule: "Basis·cycle·independent exponent parity 뒤 constant mul·load·cycle과 end-to-end final-exp를 측정한다." },
+    ],
+  },
+  "claw-worker-boot": {
+    title: "Claw worker boot·trust·prompt delivery 글이 소유하는 범위",
+    owns: [
+      "Pinned WorkerStatus·Ready-only send·terminal cue와 StartupEvidenceBundle의 actual snapshot",
+      "Pinned path trust matcher와 repository identity·capability approval의 경계",
+      "Prompt misdelivery·replay와 generation·deduplication hardening의 구분",
+    ],
+    reuses: [
+      { label: "Subagent task·artifact join", href: "/ai/claw-subagent-orchestration#team-lead-workers" },
+      { label: "Claw permission enforcement", href: "/ai/claw-permissions" },
+      { label: "Recovery effect reconciliation", href: "/ai/claw-recovery" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Status·cue·replay·timeout 주장은 pinned b71afdd worker_boot.rs·trust_resolver.rs와 같은 commit test에만 귀속한다." },
+      { kind: "project-claim", rule: "Repository identity, process generation, durable registry, real health probe와 exactly-once effect는 확인된 구현이 아니라 hardening gap이다." },
+      { kind: "project-measurement", rule: "같은 terminal fixture·cwd·receipt에서 gate·wrong target·timeout·late result를 주입해 unauthorized send와 state receipt를 비교한다." },
+    ],
+  },
+  "sparse-autoencoder": {
+    title: "Sparse autoencoder 해석·평가 글이 소유하는 범위",
+    owns: [
+      "Activation hook measurement와 overcomplete sparse dictionary의 해석 계약",
+      "Reconstruction·sparsity·dead latent·LM behavior의 quality frontier",
+      "Feature observation·held-out control·steering intervention의 증거 ladder",
+    ],
+    reuses: [
+      { label: "Autoencoder reconstruction·sparsity 정본", href: "/ai/autoencoder#variants" },
+      { label: "Transformer residual 계산 경로", href: "/ai/transformer-architecture" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Superposition·Top-K·JumpReLU·steering 주장은 각 원 연구의 model·hook·corpus·SAE·intervention 조건으로 제한한다." },
+      { kind: "standard", rule: "FVE·active count·LM loss recovery·held-out explanation·causal behavior를 서로 대체하지 않는 별도 평가 축으로 기록한다." },
+      { kind: "project-measurement", rule: "SAE 후보는 같은 activation fixture에서 seed·width·sparsity frontier와 controlled steering side effect를 paired 비교한다." },
+    ],
+  },
+  "yarn-rope-extension": {
+    title: "RoPE·Position Interpolation·YaRN context 확장 글이 소유하는 범위",
+    owns: [
+      "RoPE 상대 회전 geometry와 dimension pair별 frequency·wavelength spectrum",
+      "PI·NTK-aware·YaRN의 scaling 대상과 YaRN frequency ramp·attention compensation",
+      "Long-context 위치·길이·task·serving paired release gate",
+    ],
+    reuses: [
+      { label: "Scaled dot-product attention", href: "/ai/transformer-architecture#attention-boundary" },
+      { label: "Lost in the middle 평가", href: "/ai/context-engineering#optimization" },
+      { label: "KV cache와 serving capacity", href: "/ai/hybrid-attention-serving#kv-cache" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "RoPE·PI·YaRN 결과는 각 논문의 checkpoint·data·extension factor·evaluation 범위에만 귀속한다." },
+      { kind: "standard", rule: "Runtime config는 model revision과 library version을 고정하고 resolved factor·original length·attention factor를 기록한다." },
+      { kind: "project-measurement", rule: "Base/candidate를 위치·길이·task·short regression·KV·TTFT·concurrency의 같은 matrix에서 비교한다." },
+    ],
+  },
+  "cuda-basics": {
+    title: "CUDA host·kernel·thread·memory 입문 글이 소유하는 범위",
+    owns: [
+      "Host allocation·transfer·kernel launch·completion·result 회수 lifecycle",
+      "Host↔device transfer를 포함한 end-to-end amortization과 workload 적합성",
+      "CPU correctness parity 뒤 timeline·traffic·stall·throughput release gate",
+    ],
+    reuses: [
+      { label: "CUDA grid·block·thread·warp 정본", href: "/gpu/cuda-thread-hierarchy" },
+      { label: "Shared memory·coalescing·bank 정본", href: "/gpu/cuda-shared-memory" },
+      { label: "Stream·event synchronization 정본", href: "/gpu/cuda-sync-streams" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "CUDA semantics와 optimization guidance는 Toolkit 12.8.1 archive와 target compute capability·device property를 함께 기록한다." },
+      { kind: "primary-source", rule: "Sample code 주장은 NVIDIA cuda-samples v12.8 tag의 build 가능한 API demonstration 범위로 제한한다." },
+      { kind: "project-measurement", rule: "Speedup은 같은 input·precision·compiler·driver·GPU에서 CPU parity와 H2D/kernel/D2H critical path를 paired 측정한 결과에만 귀속한다." },
+    ],
+  },
+  "bft-comparison": {
+    title: "PBFT·HotStuff·Autobahn 비교 글이 소유하는 범위",
+    owns: ["PBFT prepared/view-change, HotStuff chained-QC/pacemaker, Autobahn lane/cut의 같은 상태축 비교", "Membership·fault·workload를 고정한 BFT comparison envelope와 blip recovery 판단"],
+    reuses: [{ label: "Process·failure·partial synchrony", href: "/blockchain/distributed-systems" }, { label: "BFT quorum·lock·view-change 정본", href: "/blockchain/bft-theory" }, { label: "DAG data/order 상세", href: "/blockchain/dag-consensus" }],
+    evidence: [{ kind: "primary-source", rule: "PBFT·HotStuff·Autobahn 구조와 성능 주장은 각 원 논문의 model·implementation·evaluation 범위에 귀속한다." }, { kind: "project-measurement", rule: "우위 주장은 동일 membership·payload·arrival·fault trace에서 conflict 0 뒤 latency·throughput·bytes·CPU·recovery를 paired 측정한다." }, { kind: "project-claim", rule: "논문 간 TPS나 asymptotic authenticator 수를 end-to-end product 성능으로 확대하지 않는다." }],
+  },
+  "consensus-comparison": {
+    title: "합의 protocol 종합 비교 글이 소유하는 범위",
+    owns: ["Classical/DAG BFT·Nakamoto·sampling 계열의 membership·evidence·finality assumption matrix", "Client latency 분해와 같은 workload/fault의 protocol 선택 release gate"],
+    reuses: [{ label: "Consensus safety·liveness", href: "/blockchain/distributed-systems#overview" }, { label: "SMR total order·apply", href: "/blockchain/smr-theory" }, { label: "Permissionless fork choice", href: "/blockchain/consensus-mechanisms" }],
+    evidence: [{ kind: "primary-source", rule: "Partial synchrony와 Nakamoto confirmation은 DLS·Bitcoin 원문의 서로 다른 model 범위로 인용한다." }, { kind: "project-measurement", rule: "동일 client endpoint·payload·offered load·fault schedule에서 finality endpoint를 명시하고 paired 측정한다." }, { kind: "project-claim", rule: "결정적 certificate와 확률적 confirmation·sampling error를 동일 confidence 값으로 환산하지 않는다." }],
+  },
+  "dag-consensus": {
+    title: "Narwhal·Bullshark DAG consensus 글이 소유하는 범위",
+    owns: ["Certified DAG data availability, parent quorum overlap과 non-guarantee", "Bullshark anchor causal history·deterministic linearization과 certified/ordered/executed state separation"],
+    reuses: [{ label: "BFT quorum certificate", href: "/blockchain/bft-theory#overview" }, { label: "Total-order broadcast와 deterministic SMR", href: "/blockchain/smr-theory" }, { label: "Protocol-wide 비교 envelope", href: "/blockchain/bft-comparison" }],
+    evidence: [{ kind: "primary-source", rule: "Narwhal/Tusk·Bullshark 구성과 성능은 각 논문의 variant·synchrony·worker·WAN workload 범위에 귀속한다." }, { kind: "project-measurement", rule: "Offered·certified·committed·executed rate, arrival-order independence와 state-root parity 뒤 network·CPU·storage·GC를 비교한다." }, { kind: "project-claim", rule: "DAG width·certificate를 committed TPS·fair order·application validity로 확대하지 않는다." }],
+  },
+  "tendermint-bft": {
+    title: "역사적 Tendermint round·lock 글이 소유하는 범위",
+    owns: ["Height·round·step, weighted +2/3 prevote/precommit과 PoLC higher-round lock transition", "2014 Tendermint draft와 version-pinned CometBFT specification의 역사·현재 경계"],
+    reuses: [{ label: "일반 BFT lock·partial-synchrony 정본", href: "/blockchain/bft-theory" }, { label: "현재 CometBFT runtime state machine", href: "/blockchain/cometbft-consensus" }, { label: "ABCI++ application 경계", href: "/blockchain/cometbft-abci" }],
+    evidence: [{ kind: "primary-source", rule: "초기 설계는 outdated 표기의 2014 draft에, 현재 state-machine semantics는 링크한 CometBFT v0.38 spec에 귀속한다." }, { kind: "project-measurement", rule: "Release·SHA·genesis·historical voting power를 고정하고 equivocation·stale POLRound·timeout·restart에서 conflict 0·state parity·recovery를 검사한다." }, { kind: "project-claim", rule: "Consensus commit을 deterministic application·external exactly-once나 모든 CometBFT release의 동일 동작으로 확대하지 않는다." }],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

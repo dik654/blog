@@ -41,7 +41,7 @@ export default function RopeFoundation() {
       <ExplainedFormula
         question="한 token의 위치를 query와 key에 어떻게 넣되 vector의 크기는 보존할까?"
         idea={<>head dimension을 2차원 쌍으로 나눈 뒤 위치 m과 frequency θ가 정하는 각도만큼 회전합니다. 회전은 길이를 바꾸지 않고 방향만 바꾸므로 content vector의 norm을 그대로 유지합니다.</>}
-        formula={String.raw`R(m\theta)=\begin{pmatrix}\cos(m\theta)&-\sin(m\theta)\\\sin(m\theta)&\cos(m\theta)\end{pmatrix},\qquad q_m=R(m\theta)q`}
+        formula={String.raw`\begin{aligned}R(m\theta)&=\begin{pmatrix}\cos(m\theta)&-\sin(m\theta)\\\sin(m\theta)&\cos(m\theta)\end{pmatrix}\\[3pt]q_m&=R(m\theta)q\end{aligned}`}
         terms={[
           { symbol: "m", name: "token position", description: "sequence 안에서 현재 query 또는 key가 놓인 index입니다." },
           { symbol: "\\theta", name: "inverse frequency", description: "차원 쌍마다 다른 회전 속도이며, 값이 클수록 짧은 거리에서도 각도가 빨리 변합니다." },
@@ -62,7 +62,7 @@ export default function RopeFoundation() {
       <ExplainedFormula
         question="절대 위치 m과 n을 넣었는데 attention score에는 왜 상대 거리 n−m이 남을까?"
         idea={<>회전 행렬의 transpose는 반대 방향 회전이고, 두 회전을 연달아 적용하면 각도 차이만 남습니다.</>}
-        formula={String.raw`(R_mq)^\top(R_nk)=q^\top R_m^\top R_nk=q^\top R_{n-m}k`}
+        formula={String.raw`\begin{aligned}(R_mq)^\top(R_nk)&=q^\top R_m^\top R_nk\\&=q^\top R_{n-m}k\end{aligned}`}
         terms={[
           { symbol: "R_m^\\top R_n", name: "rotation composition", description: "−mθ 회전 뒤 nθ 회전을 적용하므로 (n−m)θ가 됩니다." },
           { symbol: "n-m", name: "relative distance", description: "두 token이 sequence에서 얼마나 떨어져 있는지 나타냅니다." },

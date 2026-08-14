@@ -1,13 +1,5 @@
-import Overview from "./crt/Overview";
-import NumericalExample from "./crt/NumericalExample";
-import CryptoUsage from "./crt/CryptoUsage";
+import ModernArticle from "./crt/ModernArticle";
 
 export default function CRT() {
-  return (
-    <div className="space-y-12">
-      <Overview />
-      <NumericalExample />
-      <CryptoUsage />
-    </div>
-  );
+  return <ModernArticle />;
 }

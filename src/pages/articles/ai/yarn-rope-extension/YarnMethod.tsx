@@ -56,7 +56,7 @@ export default function YarnMethod() {
       <ExplainedFormula
         question="context가 길어지며 달라진 attention entropy를 logit scale로 어떻게 보정할까?"
         idea={<>softmax 전에 temperature t를 두고, query와 key 양쪽의 rotary embedding을 m(s)=√(1/t)만큼 scale합니다. 그러면 dot product에는 m(s)²=1/t가 반영됩니다.</>}
-        formula={String.raw`\operatorname{softmax}\!\left(\frac{q_m^\top k_n}{t\sqrt d}\right),\qquad m(s)=\sqrt{\frac1t}=0.1\ln s+1`}
+        formula={String.raw`\begin{aligned}p(n\mid m)&=\operatorname{softmax}\!\left(\frac{q_m^\top k_n}{t\sqrt d}\right)\\[3pt]m(s)&=\sqrt{\frac1t}=0.1\ln s+1\end{aligned}`}
         terms={[
           { symbol: "t", name: "attention temperature", description: "작을수록 logits가 커지고 softmax distribution이 더 뾰족해집니다." },
           { symbol: "m(s)", name: "length scale", description: "rotary cosine·sine에 적용하는 scale이며 q와 k 양쪽에 들어갑니다." },
