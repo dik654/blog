@@ -494,7 +494,10 @@ export default function ArticleLearningContractView({
           </h2>
           <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {contract.papers.map((paper) => (
-              <div key={paper.href} className="min-w-0 border-t border-border/80 pt-3">
+              <div
+                key={`${paper.sectionId}-${paper.href}`}
+                className="min-w-0 border-t border-border/80 pt-3"
+              >
                 <a
                   href={paper.href}
                   target="_blank"

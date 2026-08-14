@@ -27,6 +27,15 @@
 - [x] Playwright Chromium으로 386 route × 390/1440 = 772회 실제 본문 로드 검사: 개념 탭 3,437회 클릭, 수식 2,114회·연산 의도 4,586개·재생 컨트롤 778개 확인, page/Viz/KaTeX/console/page error 0
 - [x] 5컷 재생 교정 뒤 390px에서 386 route를 다시 검사해 수업 Viz가 onboarding·본문보다 먼저 오고, 첫 컷의 정의·형태·예시·경계가 숨겨지며, 익명 장면 탭·page/Viz 폭·console error가 모두 0임을 확인
 
+### 2026-08-14 · 용어 밀집 문단을 세로 설명으로 전환
+
+- [x] `TermBreakdown` 공용 컴포넌트를 추가해 `용어 한 줄 → 상세 설명 → 작은 예 → 다른 필드와의 경계`를 본문 폭의 세로 목록으로 렌더
+- [x] `filecoin-onchain-cloud`의 네 service 기록, dataset generation 12개 필드, store/addPieces receipt, period state 3개 값, payment rail 5개 항목을 장문 나열에서 세로 설명으로 전환
+- [x] 굵게 표시한 용어가 한 문단에 세 개 이상 직접 등장하는 기존 문단 260개는 전역 article style에서 각 용어가 `— 용어`로 새 줄을 소유하도록 보강
+- [x] 실제 공개 import closure 2,640개 파일을 검사하는 `audit:terms`를 추가하고 현재 `filecoin-onchain-cloud`의 밀집 문단 후보가 0임을 확인
+- [x] Playwright 390px 전역 재검사에서 공개 386 route의 실제 렌더 문단 265개·용어 996개에 줄바꿈 규칙이 적용되고 page overflow·style 누락·console error가 모두 0임을 확인
+- [ ] 자동 줄바꿈만으로 의미가 충분하지 않은 168개 공개 글의 210개 후보 문단은 `TermBreakdown` 또는 문단별 정의 절로 계속 전환
+
 ## 새 learning contract 기준으로 다시 열어 둔 글
 
 기존의 내용·수식·Viz 검수를 통과했더라도, 핵심 논문이 둘 이상인 전문 글은 선수 개념·학습 결과·논문 내부 해설 경로를 다시 확인한다. 특히 선수 개념은 현재 category에서 멈추지 않고 수학·통계·물리·컴퓨터 구조 등 실제로 필요한 기초까지 재귀적으로 따라간다. 정본 글·anchor·초심자 설명이 비어 있거나 `entryLevel` 글에 닿기 전에 순환하면 상위 글도 완료로 보지 않는다.

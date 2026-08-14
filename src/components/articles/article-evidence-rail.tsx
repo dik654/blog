@@ -56,7 +56,7 @@ export default function ArticleEvidenceRail({
       </div>
 
       <div className="grid min-w-0 gap-2 p-3 sm:grid-cols-2 sm:p-4 lg:grid-cols-4">
-        {items.map((item) => {
+        {items.map((item, index) => {
           const reading = item.href ? readingByHref.get(item.href) : undefined;
           const content = (
             <>
@@ -81,7 +81,7 @@ export default function ArticleEvidenceRail({
 
           return item.href ? (
             <div
-              key={`${item.kind}-${item.label}`}
+              key={`${item.kind}-${item.label}-${item.href}-${index}`}
               data-evidence-item
               className="min-w-0 rounded-xl border border-border/70 bg-background/70 p-3"
             >
@@ -105,7 +105,7 @@ export default function ArticleEvidenceRail({
             </div>
           ) : (
             <div
-              key={`${item.kind}-${item.label}`}
+              key={`${item.kind}-${item.label}-no-href-${index}`}
               data-evidence-item
               className="min-w-0 rounded-xl border border-border/70 bg-background/70 p-3"
             >

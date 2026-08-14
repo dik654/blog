@@ -188,4 +188,36 @@
   article .not-prose {
     min-width: 0;
   }
+
+  /*
+   * 세 개 이상의 새 용어를 한 문단에서 소개할 때는 굵은 용어가 각자 한 줄을
+   * 소유한다. 설명 문장은 바로 뒤에 이어지고 다음 용어에서 다시 줄이 바뀐다.
+   * 개별 글은 더 상세한 예·경계가 필요하면 TermBreakdown을 사용한다.
+   */
+  [data-article-body] p:has(> strong:nth-of-type(3)),
+  [data-article-body] p:has(> b:nth-of-type(3)),
+  [data-article-body] p:has(> code:nth-of-type(3)) {
+    padding-block: 0.25rem;
+  }
+  [data-article-body] p:has(> strong:nth-of-type(3)) > strong,
+  [data-article-body] p:has(> b:nth-of-type(3)) > b,
+  [data-article-body] p:has(> code:nth-of-type(3)) > code {
+    display: inline;
+    color: var(--foreground);
+    line-height: 1.55;
+  }
+  [data-article-body] p:has(> strong:nth-of-type(3)) > strong::before,
+  [data-article-body] p:has(> b:nth-of-type(3)) > b::before {
+    content: "\A — ";
+    color: var(--muted-foreground);
+    white-space: pre;
+  }
+  [data-article-body] p:has(> code:nth-of-type(3)) > code::before {
+    content: "\A — " !important;
+    color: var(--muted-foreground);
+    white-space: pre;
+  }
+  [data-article-body] p:has(> code:nth-of-type(3)) > code::after {
+    content: "" !important;
+  }
 }

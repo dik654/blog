@@ -12,6 +12,15 @@ const lessonViz = fs.readFileSync(
   "src/components/viz/ArticleLessonFlowViz.tsx",
   "utf8",
 );
+const termBreakdown = fs.readFileSync(
+  "src/components/articles/term-breakdown.tsx",
+  "utf8",
+);
+const globalStyles = fs.readFileSync("src/index.css", "utf8");
+const cloudArticle = fs.readFileSync(
+  "src/pages/articles/blockchain/filecoin-onchain-cloud/ModernArticle.tsx",
+  "utf8",
+);
 
 const primerIndex = articlePage.indexOf("<ArticleLessonPrimer");
 const onboardingIndex = articlePage.indexOf("<ArticleOnboarding");
@@ -67,6 +76,19 @@ const contract = {
     lessonViz.includes("useReducedMotion") &&
     lessonViz.includes("window.setTimeout"),
   legacySharedVizExcluded: !articlePage.includes("ArticleConceptViz"),
+  verticalTermBreakdown:
+    termBreakdown.includes("data-term-breakdown") &&
+    termBreakdown.includes("data-term-breakdown-item") &&
+    termBreakdown.includes("작은 예 ·") &&
+    termBreakdown.includes("구분할 것 ·"),
+  denseEmphasizedTermsBreakLines:
+    globalStyles.includes("p:has(> strong:nth-of-type(3))") &&
+    globalStyles.includes("p:has(> code:nth-of-type(3))") &&
+    globalStyles.includes('content: "\\A — ";'),
+  cloudTermsSeparated:
+    (cloudArticle.match(/<TermBreakdown/g) ?? []).length >= 4 &&
+    cloudArticle.includes("Dataset generation을 고정하는 필드") &&
+    cloudArticle.includes("Payment rail의 다섯 장부 항목"),
   introducedTermsSingleColumn:
     introducedSection.includes('className="mt-4 grid gap-4"') &&
     !introducedSection.includes("grid-cols-2"),

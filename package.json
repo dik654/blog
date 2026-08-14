@@ -13,6 +13,7 @@
     "audit:learning": "node scripts/audit-learning-contract.mjs",
     "audit:formula": "node scripts/audit-formula-annotations.mjs",
     "audit:reading": "node scripts/audit-reading-experience.mjs",
+    "audit:terms": "node scripts/audit-term-density.mjs",
     "test:audit-learning-routes": "node --test scripts/audit-learning-routes.test.mjs",
     "preview": "vite preview"
   },
