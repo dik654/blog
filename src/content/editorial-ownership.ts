@@ -6927,7 +6927,7 @@ export const EDITORIAL_BOUNDARIES = {
     owns: [
       "공식 layer_types를 48 Gated DeltaNet·16 Gated Attention으로 분리하는 3:1 schedule",
       "Qwen3.6 attention KV의 token당 64 KiB와 DeltaNet FP32 core state의 request당 144 MiB shape 계산",
-      "공식 BF16·mixed-FP8 checkpoint의 dtype별 weight payload와 48 GiB known-floor admission 계산",
+      "범용 VRAM 정본을 Qwen 공식 BF16·mixed-FP8 checkpoint와 16-layer KV·48-layer Delta state에 적용한 48 GiB 사례",
       "Delta-rule prediction-error correction과 recurrent decode·chunked prefill 실행 경계",
       "Partial multimodal RoPE·dense FFN·MTP·vision tokens를 hybrid serving state에 연결하는 release gate",
     ],
@@ -6937,6 +6937,7 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "RNN recurrent state와 압축 한계", href: "/ai/rnn" },
       { label: "Quantized resident-memory ledger", href: "/ai/quantization" },
       { label: "Resident-memory concurrency bound", href: "/ai/compression-pipeline" },
+      { label: "Model weight·KV·workspace VRAM 계산 정본", href: "/ai/model-vram-budgeting" },
       { label: "vLLM cache block과 hybrid groups", href: "/ai/vllm-paged-attention" },
       { label: "Speculative draft·verify·commit", href: "/ai/vllm-spec-decode" },
     ],
@@ -6945,6 +6946,25 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "primary-source", rule: "BF16 total_size와 FP8·BF16 parameter histogram은 각각 official safetensors index와 Qwen3.6-27B-FP8 checkpoint revision에 귀속한다." },
       { kind: "standard", rule: "Recurrent matrix shape·chunk/recurrent path는 확인한 Transformers reference source에, hybrid block allocation은 확인한 vLLM stable design revision에 귀속한다." },
       { kind: "project-claim", rule: "28.75 GiB weight·64 KiB/token KV·144 MiB state와 48 GiB known floor는 명시한 artifact·logical shape 계산이며 allocator padding·TP·kernel workspace를 포함한 physical VRAM 또는 262K admission 보장으로 확대하지 않는다." },
+    ],
+  },
+  "model-vram-budgeting": {
+    title: "Model VRAM budgeting 글이 소유하는 범위",
+    owns: [
+      "Parameter headline을 checkpoint dtype별 weight payload로 바꾸는 범용 계산 절차",
+      "Attention KV·recurrent state·activation·workspace의 서로 다른 memory growth classes",
+      "Known logical floor와 physical runtime peak를 구분하는 device admission 판정",
+      "Model identity·geometry·runtime·retention을 묶는 startup memory receipt",
+    ],
+    reuses: [
+      { label: "Quantization과 resident-memory ledger", href: "/ai/quantization" },
+      { label: "KV cache와 serving capacity", href: "/ai/hybrid-attention-serving" },
+      { label: "Qwen3.6 hybrid request state 적용", href: "/ai/qwen36-hybrid-architecture" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Parameter·dtype·payload는 배포할 exact checkpoint index와 tensor metadata revision에 귀속한다." },
+      { kind: "standard", rule: "Logical cache shape는 model config에, physical allocation·workspace·peak는 사용한 serving engine·kernel·GPU profile의 startup receipt에 귀속한다." },
+      { kind: "project-claim", rule: "Known floor가 device capacity보다 작다는 계산을 load 성공·최대 context 품질·production concurrency 보장으로 확대하지 않는다." },
     ],
   },
 } as const satisfies Record<string, EditorialBoundary>;

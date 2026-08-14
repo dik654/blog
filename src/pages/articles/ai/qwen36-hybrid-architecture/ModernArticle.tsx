@@ -7,7 +7,7 @@ import Math from "@/components/ui/math";
 import CacheStateViz from "./viz/CacheStateViz";
 import HybridScheduleViz from "./viz/HybridScheduleViz";
 import ServingPathViz from "./viz/ServingPathViz";
-import WeightVramViz from "./viz/WeightVramViz";
+import WeightVramViz from "../model-vram-budgeting/viz/WeightVramViz";
 
 const KV_TERMS = [
   {
@@ -384,44 +384,14 @@ M_\Delta
 
       <section id="weight-vram" className="scroll-mt-20 space-y-7">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <h2>27B에서 VRAM으로: parameter headline보다 실제 checkpoint의 dtype 장부를 먼저 봅니다</h2>
+          <h2>Qwen-specific 적용 예: 48 GiB에서 mixed FP8·KV·Delta state를 함께 셉니다</h2>
           <p className="leading-8">
-            “27B model은 VRAM을 얼마나 쓰는가?”는 먼저 <strong>가중치만의 하한</strong>과 <strong>서빙 전체의 peak</strong>를 나누면 직관적입니다. Parameter가 10억 개 늘 때 BF16은 약 2 GB, FP8은 약 1 GB, INT4 payload는 약 0.5 GB가 늘어납니다. 하지만 실제 quantized checkpoint는 모든 tensor를 같은 dtype으로 바꾸지 않습니다. Scale·zero-point가 추가되고 embedding·normalization·vision·민감한 operator 일부를 BF16으로 남길 수 있으므로 model 이름의 “FP8”만 보고 27B×1 byte로 끝내면 작게 잡힙니다.
+            Parameter·dtype·GB/GiB와 일반적인 admission 절차는 <Link to="/ai/model-vram-budgeting">모델 VRAM 계산 정본</Link>이 소유합니다. 여기서는 그 계산법을 반복해서 가르치지 않고, Qwen3.6의 공식 checkpoint와 16-layer attention KV·48-layer Delta state를 48 GiB 한 장에 대입하는 사례만 봅니다.
           </p>
           <p className="leading-8">
             Qwen3.6-27B의 공식 BF16 index는 27,781,427,952 parameters와 총 55,562,855,904 bytes를 기록합니다. 즉 55.56 GB, binary 단위로 51.75 GiB여서 48 GiB 한 장에는 <em>KV를 만들기 전에도</em> 들어가지 않습니다. 공식 FP8 repository는 약 24.699B parameters를 FP8로, 약 3.084B를 BF16으로 남겨 tensor payload가 30.87 GB, 약 28.75 GiB입니다. Repository 전체 저장량도 약 30.9 GB입니다.
           </p>
         </div>
-
-        <TermBreakdown
-          title="가중치 크기와 실제 서빙 VRAM을 한 숫자로 섞지 않습니다"
-          items={[
-            {
-              term: "Parameter count · 원소가 몇 개인가",
-              description: "27B는 learned scalar 원소 수의 규모입니다. 아직 각 원소가 몇 byte인지와 어떤 device에 복제·분할되는지는 말하지 않습니다.",
-              example: "27.781B를 전부 BF16으로 저장하면 약 55.56 GB입니다.",
-              boundary: "Parameter count만으로 KV·activation·workspace는 계산할 수 없습니다.",
-            },
-            {
-              term: "Checkpoint dtype histogram · 어떤 폭으로 저장했나",
-              description: "Safetensors metadata에서 FP8·BF16·INT4 등 dtype별 parameter 수를 읽고 각각의 byte 폭을 곱합니다.",
-              example: "공식 FP8은 24.699B×1 byte와 3.084B×2 byte를 더해 약 30.87 GB입니다.",
-              boundary: "FP8 checkpoint라는 이름이 모든 parameter·activation·KV를 FP8로 만든다는 뜻은 아닙니다.",
-            },
-            {
-              term: "Weight residency · load 직후 고정되는 바닥",
-              description: "모델 tensor가 GPU에 올라간 뒤 request가 없어도 차지하는 resident memory입니다. TP를 쓰면 대부분 shard되지만 replicated tensor와 engine layout은 따로 확인합니다.",
-              example: "공식 혼합 FP8 payload 28.75 GiB가 48 GiB device의 첫 칸을 차지합니다.",
-              boundary: "Download directory의 압축 파일 크기와 runtime resident bytes가 항상 같지는 않습니다.",
-            },
-            {
-              term: "Runtime headroom · 남은 칸의 용도",
-              description: "남은 VRAM에 attention KV, Delta state, vision activation, CUDA graph, kernel temporary, allocator padding과 안전 여유가 들어갑니다.",
-              example: "공식 FP8+BF16 KV에서 128K request 하나는 known floor가 약 36.89 GiB입니다.",
-              boundary: "48−known floor를 전부 usable KV pool이라고 부르면 OOM을 과소평가합니다.",
-            },
-          ]}
-        />
 
         <div id="weight-bytes" className="scroll-mt-20">
           <ExplainedFormula
@@ -488,37 +458,6 @@ M_{free}
             title="48 GiB 한 장의 known floor와 미지수"
           />
         </div>
-
-        <TermBreakdown
-          title="기동 로그는 미지수를 나중에 추측하지 않게 하는 memory receipt입니다"
-          description="사람이 읽는 첫 140줄 요약과 rotation되는 원본 로그를 함께 남깁니다. 한 줄에 모든 필드를 나열하지 않고 판정 단계별로 묶습니다."
-          items={[
-            {
-              term: "Identity receipt",
-              description: "Model ID, exact revision, checkpoint format, activation dtype와 text-only·multimodal mode를 먼저 남깁니다.",
-              example: "Qwen/Qwen3.6-27B-FP8 · commit hash · safetensors · BF16 activation · language-model-only=false",
-              boundary: "Model 이름만 같아도 conversion·revision·vision 포함 여부가 다르면 같은 memory artifact가 아닙니다.",
-            },
-            {
-              term: "Geometry receipt",
-              description: "Dtype별 parameter count와 loaded weight bytes, attention layer 수, KV heads, head dimension, KV dtype, token당 KV bytes와 request당 recurrent state를 줄마다 기록합니다.",
-              example: "weights 28.75 GiB · attention 16×4×256 · BF16 KV 64 KiB/token · Delta core 144 MiB/request",
-              boundary: "FP8 weights라는 한 줄로 KV dtype이나 recurrent-state dtype을 대체하지 않습니다.",
-            },
-            {
-              term: "Runtime receipt",
-              description: "Max model length, 실제 생성된 KV pool, CUDA graph capture sizes, active backend·fallback, TP·PP와 load 전후 GPU memory를 기록합니다.",
-              example: "128K profile에서 logical floor와 engine reserved·peak를 나란히 남겨 workspace 차이를 역산합니다.",
-              boundary: "nvidia-smi의 한 시점 used memory를 weight나 KV 하나의 값으로 단정하지 않습니다.",
-            },
-            {
-              term: "Retention · redaction receipt",
-              description: "첫 140줄은 빠른 incident 분석용으로 보존하고, 원본 stdout·stderr는 rotate된 파일이나 journal에 더 길게 남깁니다. Access token·prompt secret·signed URL은 저장 전에 지웁니다.",
-              example: "Startup summary 140 lines + size/time rotation + revision별 보관 기한 + redaction test를 한 운영 profile로 고정합니다.",
-              boundary: "140줄에서 잘린 뒤 발생한 dtype upcast·kernel fallback·OOM trace를 잃지 않도록 원본 보관 경로를 별도로 둡니다.",
-            },
-          ]}
-        />
 
         <div id="paper-qwen36-weights" className="scroll-mt-20">
           <CitationBlock source="Qwen3.6-27B · official BF16 safetensors index" citeKey={6} type="code" href="https://huggingface.co/Qwen/Qwen3.6-27B/blob/main/model.safetensors.index.json">

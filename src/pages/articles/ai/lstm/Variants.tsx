@@ -20,11 +20,46 @@ export default function Variants() {
         question="Cell state를 따로 두지 않고 기존 hidden과 candidate를 어떻게 보간할까?"
         idea={<>Update gate zₜ가 기존 state와 candidate 사이의 element-wise interpolation 비율을 정하고, reset gate rₜ는 candidate를 만들 때 과거 state를 얼마나 볼지 조절합니다.</>}
         formula={String.raw`\begin{aligned}r_t&=\sigma(W_r x_t+U_r h_{t-1}+b_r)\\z_t&=\sigma(W_z x_t+U_z h_{t-1}+b_z)\\\widetilde h_t&=\tanh(W_hx_t+U_h(r_t\odot h_{t-1})+b_h)\\h_t&=(1-z_t)\odot h_{t-1}+z_t\odot\widetilde h_t\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+a_r
+  &=\underbrace{W_rx_t}_{\text{현재 input}}
+   +\underbrace{U_rh_{t-1}}_{\text{과거 state}}+b_r\\
+r_t
+  &=\underbrace{\sigma(a_r)}_{\text{0--1 reset 비율}}\\[3pt]
+a_z
+  &=\underbrace{W_zx_t}_{\text{현재 input}}
+   +\underbrace{U_zh_{t-1}}_{\text{과거 state}}+b_z\\
+z_t
+  &=\underbrace{\sigma(a_z)}_{\text{0--1 update 비율}}\\[3pt]
+m_t
+  &=\underbrace{r_t\odot h_{t-1}}_{\text{candidate용 과거 mask}}\\
+\widetilde h_t
+  &=\tanh\!\left(
+      \underbrace{W_hx_t}_{\text{현재 내용}}
+      +\underbrace{U_hm_t}_{\text{허용 history}}+b_h\right)\\[3pt]
+h_t
+  &=\underbrace{(1-z_t)\odot h_{t-1}}_{\text{기존 state 유지}}\\
+  &\quad+\underbrace{z_t\odot\widetilde h_t}_{\text{새 candidate 기록}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\sigma(W_rx_t+U_rh_{t-1}+b_r)`, annotation: ["현재 입력과 과거 state를 합쳐", "candidate용 reset 비율 생성"] },
+          { expression: String.raw`\sigma(W_zx_t+U_zh_{t-1}+b_z)`, annotation: ["유지할 과거와 쓸 새 내용 사이", "각 좌표의 update 비율 생성"] },
+          { expression: String.raw`r_t\odot h_{t-1}`, annotation: ["candidate를 만들기 전에", "과거 state를 reset gate로 거름"] },
+          { expression: String.raw`\tanh(W_hx_t+U_h(r_t\odot h_{t-1})+b_h)`, annotation: ["현재 입력과 허용된 history를 합쳐", "-1과 1 사이 candidate 생성"] },
+          { expression: String.raw`(1-z_t)\odot h_{t-1}`, annotation: ["update하지 않을 비율만큼", "기존 hidden을 그대로 보존"] },
+          { expression: String.raw`z_t\odot\widetilde h_t`, annotation: ["update gate가 연 좌표에", "새 candidate 내용을 기록"] },
+        ]}
         terms={[
           { symbol: "r_t", name: "reset gate", description: "Candidate 계산에서 이전 hidden state의 contribution을 조절합니다." },
           { symbol: "z_t", name: "update gate", description: "기존 state와 새 candidate 사이의 interpolation 비율입니다." },
           { symbol: "\\widetilde h_t", name: "candidate state", description: "현재 input과 gated history에서 만든 새 내용입니다." },
           { symbol: "h_t", name: "single recurrent state", description: "Memory와 공개 output 역할을 한 vector가 함께 맡습니다." },
+          { symbol: "x_t", name: "현재 input", description: "이번 timestep에 새로 들어온 feature vector입니다." },
+          { symbol: "h_{t-1}", name: "이전 hidden state", description: "직전 timestep까지의 recurrent memory입니다." },
+          { symbol: "W_*,U_*", name: "Input·recurrent projection", description: "W는 현재 input, U는 이전 hidden을 각 gate·candidate 좌표로 투영합니다." },
+          { symbol: "b_*", name: "Bias", description: "Input이 0이어도 gate와 candidate의 기본 offset을 학습하게 합니다." },
+          { symbol: "a_r,a_z", name: "Gate preactivation", description: "Sigmoid 전의 현재 input·과거 state affine evidence입니다." },
+          { symbol: "m_t", name: "Reset-filtered history", description: "Candidate에 허용하도록 reset gate를 곱한 이전 hidden입니다." },
         ]}
         assumptions={["Cho 등의 GRU 계열 표기 중 하나이며 reset 적용 위치와 update convention은 구현마다 다를 수 있습니다.", "LSTM과 공정하게 비교하려면 hidden size가 아니라 parameter·FLOP·state memory budget을 맞춥니다."]}
         interpretation="z가 0이면 과거를 유지하고 1이면 candidate로 교체한다. LSTM의 input·forget gate를 하나의 interpolation policy로 결합한 것으로 볼 수 있지만 완전히 같은 parameterization은 아닙니다."

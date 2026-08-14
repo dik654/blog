@@ -108,6 +108,24 @@ function inferOperations(formula: string): FormulaOperationAnnotation[] {
       annotation: ["곱셈 규모를 덧셈 규모로 바꿔", "작은 값도 안정적으로 비교"],
     });
   }
+  if (/\\sigma\b/.test(formula)) {
+    add({
+      expression: String.raw`\sigma(\text{결합한 근거})`,
+      annotation: ["결합한 근거를", "0과 1 사이 gate로 변환"],
+    });
+  }
+  if (/\\tanh\b/.test(formula)) {
+    add({
+      expression: String.raw`\tanh(\text{결합한 내용})`,
+      annotation: ["새로 쓸 내용을", "-1과 1 사이 값으로 제한"],
+    });
+  }
+  if (/\\operatorname\{softmax\}|\\mathrm\{softmax\}|softmax/i.test(formula)) {
+    add({
+      expression: String.raw`\operatorname{softmax}(\text{scores})`,
+      annotation: ["상대 score를 exponentiate·정규화해", "합이 1인 선택 비율 생성"],
+    });
+  }
   if (/\\mathbb\{E\}|\\operatorname\{E\}|\\mathbb E/.test(formula)) {
     add({
       expression: String.raw`\mathbb E[\text{관측량}]`,
@@ -176,29 +194,31 @@ export default function ExplainedFormula({
         </p>
         <div className="mt-2 text-sm leading-6 text-muted-foreground">{idea}</div>
       </div>
-      <div className="min-w-0 overflow-x-auto rounded-lg border border-border/70 bg-background px-4 py-5 sm:px-6">
-        <Math display>{annotatedFormula ?? formula}</Math>
-      </div>
       <div
-        data-formula-operations
-        className="mt-3 rounded-lg border border-border/60 bg-muted/15 px-4 py-4 sm:px-5"
+        data-formula-annotation-mode={
+          annotatedFormula && operations?.length ? "explicit" : "inferred"
+        }
+        className="min-w-0 overflow-x-auto rounded-lg border border-border/70 bg-background px-4 py-5 sm:px-6"
       >
-        <p className="text-xs font-bold text-primary">식 안의 연산 의도</p>
-        <p className="mt-1 text-xs leading-5 text-muted-foreground">
-          기호 이름이 아니라, 이 연산이 왜 필요한지를 underbrace 주석으로 읽습니다.
-        </p>
-        <div className="mt-3 grid min-w-0 gap-2 lg:grid-cols-2">
-          {operationAnnotations.map((operation, index) => (
-            <div
-              key={`${operation.expression}-${index}`}
-              data-formula-operation
-              className="min-w-0 overflow-x-auto rounded-md border border-border/50 bg-background px-3 py-2"
-            >
-              <Math display className="my-0 text-sm">
-                {annotatedOperation(operation)}
-              </Math>
-            </div>
-          ))}
+        <Math display>{annotatedFormula ?? formula}</Math>
+        <div data-formula-operations className="mt-4 border-t border-border/60 pt-4">
+          <p className="text-xs font-bold text-primary">이 식 안에서 연산이 하는 일</p>
+          <p className="mt-1 text-xs leading-5 text-muted-foreground">
+            바로 위 식의 항을 underbrace로 다시 잡아, 각 연산을 왜 하는지 읽습니다.
+          </p>
+          <div className="mt-3 grid min-w-0 gap-2 lg:grid-cols-2">
+            {operationAnnotations.map((operation, index) => (
+              <div
+                key={`${operation.expression}-${index}`}
+                data-formula-operation
+                className="min-w-0 overflow-x-auto rounded-md border border-border/50 bg-muted/10 px-3 py-2"
+              >
+                <Math display className="my-0 text-sm">
+                  {annotatedOperation(operation)}
+                </Math>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
       <FormulaGuide

@@ -12,7 +12,15 @@ const DECODE = [
   ["MTP 후보", "target이 acceptance를 검증"],
 ] as const;
 
-function Lane({ title, items, tone }: { title: string; items: typeof PREFILL; tone: "sky" | "amber" }) {
+function Lane({
+  title,
+  items,
+  tone,
+}: {
+  title: string;
+  items: readonly (readonly [string, string])[];
+  tone: "sky" | "amber";
+}) {
   return (
     <section className="rounded-lg border border-border bg-background p-5">
       <h4 className="text-sm font-bold">{title}</h4>

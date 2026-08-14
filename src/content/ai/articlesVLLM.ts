@@ -249,4 +249,38 @@ export const vllmServingArticles: Article[] = [
     ],
     component: () => import("@/pages/articles/ai/qwen36-hybrid-architecture"),
   },
+  {
+    slug: "model-vram-budgeting",
+    title: "모델 VRAM 계산: 가중치 · KV Cache · Runtime Headroom",
+    subcategory: "ai-llm-serving",
+    sections: [
+      { id: "overview", title: "모델 이름에서 OOM 판정까지" },
+      {
+        id: "weight-residency",
+        title: "Parameter와 dtype에서 weight floor 계산",
+        subsections: [
+          { id: "weight-estimate", title: "Mixed-dtype payload 공식" },
+          { id: "dtype-ledger", title: "BF16·FP8 weight ledger Viz" },
+        ],
+      },
+      {
+        id: "runtime-state",
+        title: "KV·recurrent state·workspace 분리",
+        subsections: [
+          { id: "kv-state", title: "Context와 concurrency의 성장축" },
+          { id: "known-floor", title: "Known floor와 physical peak" },
+        ],
+      },
+      {
+        id: "admission-logs",
+        title: "Admission과 기동 로그 receipt",
+        subsections: [
+          { id: "paper-safetensors", title: "Safetensors metadata 경계" },
+          { id: "paper-qwen-weights", title: "Qwen BF16 payload 적용 예" },
+          { id: "paper-vllm-memory", title: "vLLM physical allocation 경계" },
+        ],
+      },
+    ],
+    component: () => import("@/pages/articles/ai/model-vram-budgeting"),
+  },
 ];

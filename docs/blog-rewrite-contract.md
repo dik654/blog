@@ -73,9 +73,10 @@ build 통과는 완료의 증거가 아니며, 아래 Definition of Done을 모�
 새 본문에서는 `ExplainedFormula`를 사용한다. 식을 먼저 보여 주고 아래에서 사후 설명하지
 않는다. 기호 사전만으로 설명을 끝내지 않고, 곱은 무엇을 결합하거나 mask하는지, 합은 어떤
 기여를 어느 범위까지 누적하는지, 나눗셈은 무엇을 기준으로 정규화하는지를 KaTeX 주석 식으로
-직접 보여 준다. 도메인 의미가 중요한 식은 `annotatedFormula`와 `operations`를 명시하고,
-그 밖의 `ExplainedFormula`도 공통 연산 주석 fallback을 반드시 렌더한다. 단순 표기나 이미
-충분히 설명된 inline math에는 이 블록을 반복하지 않는다.
+직접 보여 준다. 모든 `ExplainedFormula`는 식의 실제 항을 사용하는 `annotatedFormula`와
+도메인 의미를 적은 `operations`를 명시한다. 공통 fallback은 전환 중인 레거시 식이 빈 화면이
+되지 않게 하는 임시 표현일 뿐 완료 근거가 아니다. `audit:formula -- --strict --require-explicit`에서
+식 하나씩 이를 검사한다. 단순 표기나 이미 충분히 설명된 inline math에는 이 블록을 반복하지 않는다.
 
 ## 4. Viz
 
@@ -105,6 +106,10 @@ build 통과는 완료의 증거가 아니며, 아래 Definition of Done을 모�
 
 ## 6. 중복과 확장성
 
+- 현재 공개 article 수·slug·제목을 보존하는 것을 목표로 삼지 않는다. Knowledge graph의 학습 단위가 기존 route 경계를 넘으면 article을 새로 만들고, 한 글에 독립 수업이 여러 개면 분리하며, 같은 수업이 중복되면 병합한다. 잘못된 이름은 바꾸고 더 이상 독립 학습 가치가 없는 route는 redirect를 남긴 뒤 제거할 수 있다.
+- Article CRUD는 `create → canonical owner·catalog·learning/evidence 등록`, `split → concept owner·본문·문제·근거를 새 route로 이동`, `merge → 중복 정의를 한 정본으로 통합`, `rename → 제목·slug·내부 링크·이전 URL redirect 갱신`, `delete → 대체 정본·redirect·orphan 검사`까지 한 작업이다. 파일을 복사하거나 catalog 숫자만 늘리는 것은 create가 아니다.
+- Route topology는 전체 catalog를 주기적으로 다시 계산한다. 처음 소유하는 concept 수, 실제 import closure의 section·길이, 독립 stage와 제목의 병렬 주제를 `npm run audit:topology`로 검토하되, 휴리스틱 결과를 자동 분할 명령으로 사용하지 않고 본문의 학습 질문·선수 경계·canonical ownership으로 최종 판단한다.
+- 한 글은 “제품이나 분야 하나”가 아니라 “독자가 한 번에 쌓을 수 있는 하나의 설명 arc”를 소유한다. 예를 들어 RLHF·DPO·CAI·ORPO·KTO가 한 제목에 있다는 이유로 하나의 글을 유지하지 않으며, 각 방법이 독립된 문제·수식·failure mode·선택 기준을 가지면 별도 글로 분리한다.
 - 공통 정의와 핵심 유도는 하나의 canonical article이 소유한다.
 - 다른 글에서는 필요한 만큼만 요약하고 해당 anchor로 연결한다. 같은 긴 설명과 Viz를 복제하지 않는다.
 - 글 흐름, 근거, Viz, 구현 파일을 분리해 새 모델·논문·개념을 추가할 때 기존 내용을 전부 다시 쓰지 않게 한다.

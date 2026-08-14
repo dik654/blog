@@ -5315,9 +5315,15 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 문서", label: "Qwen/Qwen3.6-27B · official model card", href: "https://huggingface.co/Qwen/Qwen3.6-27B", note: "27B dense·64 layers·3:1 Gated DeltaNet/Attention·native 262,144·extended 1,010,000·multimodal·MTP 공개 범위이며 모든 runtime의 품질·VRAM·latency 보장은 아님" },
     { kind: "공식 코드", label: "Qwen3.6-27B · official config.json", href: "https://huggingface.co/Qwen/Qwen3.6-27B/blob/main/config.json", note: "layer_types·attention/linear head shape·dtype·RoPE·vision·MTP의 machine-readable artifact이며 allocator·kernel physical memory를 단독 확정하지 않음" },
     { kind: "공식 코드", label: "Qwen3.6-27B · BF16 safetensors index", href: "https://huggingface.co/Qwen/Qwen3.6-27B/blob/main/model.safetensors.index.json", note: "27,781,427,952 parameters와 total_size 55,562,855,904 bytes의 공식 weight payload이며 KV·activation·runtime peak는 포함하지 않음" },
-    { kind: "공식 모델", label: "Qwen/Qwen3.6-27B-FP8 · mixed checkpoint", href: "https://huggingface.co/Qwen/Qwen3.6-27B-FP8/tree/main", note: "24.699B FP8·3.084B BF16 parameters와 약 30.9 GB artifact 근거이며 activation·KV cache dtype이나 48 GiB 262K admission을 자동 보장하지 않음" },
+    { kind: "공식 코드", label: "Qwen/Qwen3.6-27B-FP8 · mixed checkpoint", href: "https://huggingface.co/Qwen/Qwen3.6-27B-FP8/tree/main", note: "24.699B FP8·3.084B BF16 parameters와 약 30.9 GB artifact 근거이며 activation·KV cache dtype이나 48 GiB 262K admission을 자동 보장하지 않음" },
     { kind: "핵심 논문", label: "Gated Delta Networks · arXiv 2412.06464", href: "https://arxiv.org/abs/2412.06464", note: "Gating과 delta-rule correction·parallel algorithm·hybrid evaluation 원문이며 Qwen3.6 3:1 비율의 보편 최적성은 아님" },
     { kind: "공식 구현", label: "Transformers · Qwen3.5/Qwen3.6 reference", href: "https://huggingface.co/docs/transformers/model_doc/qwen3_5", note: "Hybrid layer_types·fast-kernel/fallback·multimodal RoPE와 cache reference path이며 모든 serving engine의 production 성능을 대표하지 않음" },
     { kind: "공식 문서", label: "vLLM · Hybrid KV Cache Manager", href: "https://docs.vllm.ai/en/stable/design/hybrid_kv_cache_manager/", note: "서로 다른 cache spec의 group·block sizing·padding trade-off 공식 설계이며 logical model bytes와 실제 device allocation이 같다는 뜻은 아님" },
+  ],
+  "ai/model-vram-budgeting": [
+    { kind: "공식 문서", label: "Hugging Face · Safetensors documentation", href: "https://huggingface.co/docs/safetensors/index", note: "Tensor dtype·shape·contiguous payload metadata를 읽는 format 근거이며 GPU runtime peak를 뜻하지 않음" },
+    { kind: "공식 코드", label: "Qwen3.6-27B · BF16 safetensors index", href: "https://huggingface.co/Qwen/Qwen3.6-27B/blob/main/model.safetensors.index.json", note: "total_size 55,562,855,904 bytes의 exact BF16 weight payload 적용 예이며 KV·workspace는 포함하지 않음" },
+    { kind: "공식 코드", label: "Qwen3.6-27B-FP8 · mixed checkpoint", href: "https://huggingface.co/Qwen/Qwen3.6-27B-FP8/tree/main", note: "FP8·BF16 tensor가 섞인 official artifact 적용 예이며 activation·KV dtype을 자동 결정하지 않음" },
+    { kind: "공식 문서", label: "vLLM · Hybrid KV Cache Manager", href: "https://docs.vllm.ai/en/stable/design/hybrid_kv_cache_manager/", note: "서로 다른 cache spec의 group·page·padding이 physical allocation을 바꾸는 공식 설계 경계" },
   ],
 };

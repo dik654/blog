@@ -14,6 +14,14 @@
 - [x] 전역 concept owner·canonical path·relation·stage 감사: `npm run audit:graph -- --strict`
 - [x] 모든 새 concept가 정확히 한 canonical article에서만 정의되고 `canonicalHref`의 article과 owner가 일치하는지 검사하는 전역 감사
 - [x] 기초과학 concept의 관측량·단위/차원·모델 전제·측정 예·한계와 물리 좌표계 누락을 막는 `scientificGrounding` 감사
+- [x] 공개 catalog 전체를 대상으로 concept·stage·실제 import closure·제목 병렬 주제를 계산하는 `audit:topology` 추가
+
+### 2026-08-15 · 아티클 경계를 고정값이 아닌 CRUD 대상으로 재개방
+
+- [ ] 공개 route 전부를 `keep / create / split / merge / rename / delete` 관점으로 재검토하고, 독립 수업을 한 글에 압축한 route의 concept owner·본문·문제·근거를 실제 새 route로 이동
+- [ ] 이전 URL을 보존하는 redirect·alias 계약과 orphan link 감사를 추가하고 split·merge·rename·delete마다 자동 검사
+- [ ] 모든 `ExplainedFormula`가 generic fallback이 아니라 식의 실제 항과 연산 의도를 명시한 `annotatedFormula`·`operations`를 갖도록 전역 전환
+- [x] 첫 분리 사례 `/ai/model-vram-budgeting`을 범용 VRAM 정본으로 만들고 Qwen 글은 Qwen-specific architecture 적용 예만 소유하도록 중복 축소. Public catalog 391, graph 2,309 concepts·3,390 relations·owner/invariant 0, selected learning·route·Viz·build 통과
 
 ### 2026-08-15 · WEBCAT · Ethereum future roadmap · binary-field proving · permissioned RWA markets
 
