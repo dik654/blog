@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import type { KeyboardEvent as ReactKeyboardEvent } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import type {
   ConceptExplanationContract,
@@ -305,12 +306,48 @@ export default function ArticleLessonFlowViz({
     setPlaying(true);
   };
 
+  const handleKeyboardNavigation = (
+    event: ReactKeyboardEvent<HTMLElement>,
+  ) => {
+    if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) {
+      return;
+    }
+    const target = event.target as HTMLElement;
+    if (
+      target.isContentEditable ||
+      target.tagName === "INPUT" ||
+      target.tagName === "TEXTAREA" ||
+      target.tagName === "SELECT"
+    ) {
+      return;
+    }
+    if (event.key === "ArrowRight") {
+      event.preventDefault();
+      moveForward();
+      return;
+    }
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      moveBackward();
+      return;
+    }
+    if (event.key === " " && event.target === event.currentTarget) {
+      event.preventDefault();
+      togglePlayback();
+    }
+  };
+
   if (!step) return null;
 
   return (
     <figure
       data-viz="lesson-flow-v4"
-      className="not-prose border-y border-border/60 bg-background/65"
+      data-viz-keyboard
+      tabIndex={0}
+      onKeyDown={handleKeyboardNavigation}
+      aria-keyshortcuts="ArrowLeft ArrowRight Space"
+      aria-describedby="lesson-flow-keyboard-help"
+      className="not-prose border-y border-border/60 bg-background/65 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-primary/70"
       aria-label="전체 개념 지도와 선택 개념의 애니메이션 설명"
     >
       <figcaption className="flex flex-col gap-2 border-b border-border/60 px-5 py-4 sm:flex-row sm:items-end sm:justify-between sm:px-6">
@@ -704,6 +741,14 @@ export default function ArticleLessonFlowViz({
                 </button>
               </div>
             </div>
+            <p
+              id="lesson-flow-keyboard-help"
+              className="mt-3 text-center text-[10px] leading-5 text-muted-foreground sm:text-right"
+            >
+              키보드 · <kbd className="font-mono font-bold">←</kbd> 이전 컷 ·{" "}
+              <kbd className="font-mono font-bold">→</kbd> 다음 컷 ·{" "}
+              <kbd className="font-mono font-bold">Space</kbd> 재생/일시정지
+            </p>
           </div>
         </motion.div>
       </div>

@@ -93,6 +93,12 @@ const contract = {
     lessonViz.includes("data-viz-play") &&
     lessonViz.includes("useReducedMotion") &&
     lessonViz.includes("window.setTimeout"),
+  keyboardCutNavigation:
+    lessonViz.includes("data-viz-keyboard") &&
+    lessonViz.includes('event.key === "ArrowRight"') &&
+    lessonViz.includes('event.key === "ArrowLeft"') &&
+    lessonViz.includes('aria-keyshortcuts="ArrowLeft ArrowRight Space"') &&
+    lessonViz.includes("lesson-flow-keyboard-help"),
   legacySharedVizExcluded: !articlePage.includes("ArticleConceptViz"),
   verticalTermBreakdown:
     termBreakdown.includes("data-term-breakdown") &&
