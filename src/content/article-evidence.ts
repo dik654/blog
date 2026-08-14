@@ -3732,10 +3732,26 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
   ],
   "blockchain/cometbft-crypto": withSeriesEvidence(COMETBFT_SERIES_EVIDENCE),
-  "blockchain/cometbft-execution": withSeriesEvidence(COMETBFT_SERIES_EVIDENCE),
-  "blockchain/cometbft-mempool": withSeriesEvidence(COMETBFT_SERIES_EVIDENCE),
-  "blockchain/cometbft-p2p": withSeriesEvidence(COMETBFT_SERIES_EVIDENCE),
-  "blockchain/cometbft-state": withSeriesEvidence(COMETBFT_SERIES_EVIDENCE),
+  "blockchain/cometbft-execution": [
+    { kind: "공식 코드", label: "CometBFT v0.40.0 — state/execution.go", href: "https://github.com/cometbft/cometbft/blob/v0.40.0/state/execution.go", note: "ApplyBlock·FinalizeBlock·result 저장·Commit·mempool Update·State 저장의 pinned 순서" },
+    { kind: "공식 코드", label: "CometBFT v0.40.0 — state/validation.go", href: "https://github.com/cometbft/cometbft/blob/v0.40.0/state/validation.go", note: "Block height·history·commitment·LastCommit·time·evidence 검증 기준" },
+    { kind: "공식 코드", label: "CometBFT v0.40.0 — consensus/replay.go", href: "https://github.com/cometbft/cometbft/blob/v0.40.0/consensus/replay.go", note: "BlockStore·State·application height/AppHash 조합별 restart replay 구현" },
+  ],
+  "blockchain/cometbft-mempool": [
+    { kind: "공식 코드", label: "CometBFT v0.40.0 — mempool/clist_mempool.go", href: "https://github.com/cometbft/cometbft/blob/v0.40.0/mempool/clist_mempool.go", note: "Capacity·cache·CheckTx·reap·Update·recheck의 pinned 구현" },
+    { kind: "공식 코드", label: "CometBFT v0.40.0 — mempool/mempool.go", href: "https://github.com/cometbft/cometbft/blob/v0.40.0/mempool/mempool.go", note: "Mempool interface와 Lock·Update·TxsAvailable contract" },
+    { kind: "공식 코드", label: "CometBFT v0.40.0 — state/execution.go", href: "https://github.com/cometbft/cometbft/blob/v0.40.0/state/execution.go", note: "Application Commit과 mempool flush/Update 사이 동시성 경계" },
+  ],
+  "blockchain/cometbft-p2p": [
+    { kind: "공식 코드", label: "CometBFT v0.40.0 — p2p/conn/connection.go", href: "https://github.com/cometbft/cometbft/blob/v0.40.0/p2p/conn/connection.go", note: "MConnection channel queue·priority scheduler·packet framing의 pinned 구현" },
+    { kind: "공식 코드", label: "CometBFT v0.40.0 — p2p/switch.go", href: "https://github.com/cometbft/cometbft/blob/v0.40.0/p2p/switch.go", note: "Unique channel owner, peer add/remove와 persistent reconnect lifecycle" },
+    { kind: "공식 코드", label: "CometBFT v0.40.0 — p2p/base_reactor.go", href: "https://github.com/cometbft/cometbft/blob/v0.40.0/p2p/base_reactor.go", note: "Reactor GetChannels·Receive·peer callback interface" },
+  ],
+  "blockchain/cometbft-state": [
+    { kind: "공식 코드", label: "CometBFT v0.40.0 — state/state.go · store.go", href: "https://github.com/cometbft/cometbft/blob/v0.40.0/state/state.go", note: "State field·validator snapshots·AppHash와 synchronous persistence schema" },
+    { kind: "공식 코드", label: "CometBFT v0.40.0 — store/store.go", href: "https://github.com/cometbft/cometbft/blob/v0.40.0/store/store.go", note: "BlockStore Base·Height·parts·commit·evidence-aware pruning 구현" },
+    { kind: "공식 문서", label: "CometBFT v0.40.0 — State Sync", href: "https://github.com/cometbft/cometbft/blob/v0.40.0/docs/core/state-sync.md", note: "Snapshot 지원과 trust height/hash/period를 포함한 bootstrap 기준" },
+  ],
   "blockchain/cometbft-types": [
     {
       kind: "공식 규격",
@@ -4710,6 +4726,22 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 규격", label: "RFC 9334 · RATS Architecture", href: "https://www.rfc-editor.org/rfc/rfc9334.html", note: "Attester·Verifier·Relying Party와 evidence·result·appraisal·freshness의 vendor-neutral 정본" },
     { kind: "공식 규격", label: "AMD SEV-SNP Firmware ABI Specification 1.58", href: "https://docs.amd.com/v/u/en-US/56860_PUB_1.58_SEV_SNP", note: "SNP attestation report request·field·signature interface의 vendor 정본" },
   ],
+  "crypto/constraint-systems": [
+    { kind: "핵심 논문", label: "Parno et al. · Pinocchio", href: "https://eprint.iacr.org/2013/279.pdf", note: "Arithmetic circuit→QAP reduction·pairing 기반 public verification과 당시 implementation evaluation의 원 연구" },
+  ],
+  "crypto/snark-overview": [
+    { kind: "핵심 논문", label: "Ben-Sasson et al. · SNARKs for C", href: "https://eprint.iacr.org/2013/507", note: "Publicly-verifiable non-interactive argument·zero knowledge·knowledge soundness와 TinyRAM/QAP prototype의 원 연구" },
+    { kind: "핵심 논문", label: "Groth · Pairing-based Non-interactive Arguments", href: "https://eprint.iacr.org/2016/260.pdf", note: "Groth16의 preprocessing SNARK construction과 proof/verifier size 경계" },
+    { kind: "핵심 논문", label: "Gabizon et al. · PLONK", href: "https://eprint.iacr.org/2019/953.pdf", note: "Universal updatable SRS·permutation argument 계열의 비교 원문" },
+  ],
+  "crypto/groth16": [
+    { kind: "핵심 논문", label: "Groth · On the Size of Pairing-based Non-interactive Arguments", href: "https://eprint.iacr.org/2016/260.pdf", note: "세 group element proof·pairing verification·relation-specific CRS와 security model의 원 연구" },
+    { kind: "공식 코드", label: "ark-groth16 verifier.rs", href: "https://docs.rs/ark-groth16/latest/src/ark_groth16/verifier.rs.html", note: "Prepared VK·public-input MSM·multi-Miller loop·final exponentiation의 versioned Rust source; crate/version pin 필요" },
+  ],
+  "crypto/plonk": [
+    { kind: "핵심 논문", label: "Gabizon·Williamson·Ciobotaru · PLONK", href: "https://eprint.iacr.org/2019/953.pdf", note: "Lagrange-basis gates·permutation grand product·universal updatable SRS construction의 원 연구" },
+    { kind: "핵심 논문", label: "Kate·Zaverucha·Goldberg · Polynomial Commitments", href: "https://www.iacr.org/archive/asiacrypt2010/6477178/6477178.pdf", note: "상수 크기 polynomial commitment와 evaluation opening의 원 연구; PLONK arithmetization 보장은 아님" },
+  ],
   "crypto/crt": [
     { kind: "공식 규격", label: "RFC 8017 · PKCS #1 v2.2", href: "https://www.rfc-editor.org/rfc/rfc8017.html", note: "Two-prime RSA private key의 p·q·dP·dQ·qInv와 RSA primitive 입력·오류 계약" },
     { kind: "보충 읽기", label: "NIST DLMF §27.15 · Chinese Remainder Theorem", href: "https://dlmf.nist.gov/27.15", note: "Pairwise-coprime congruence system의 구성·유일성 표기 reference" },
@@ -4750,5 +4782,41 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 문서", label: "NVIDIA CUDA C++ Programming Guide 12.8.1", href: "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-programming-guide/index.html", note: "Host/device·kernel·grid/block/thread·warp·memory semantics의 version-pinned 정본이며 특정 speedup·block size 보장은 아님" },
     { kind: "공식 문서", label: "NVIDIA CUDA C++ Best Practices Guide 12.8.1", href: "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-best-practices-guide/index.html", note: "APOD·effective bandwidth·coalescing·transfer·occupancy 측정 기준이며 단일 metric의 성능 보장은 아님" },
     { kind: "공식 코드", label: "NVIDIA cuda-samples v12.8", href: "https://github.com/NVIDIA/cuda-samples/tree/v12.8", note: "Vector·reduction·matrix·stream CUDA API pattern의 pinned example source이며 production blockchain 최적 구현이나 benchmark는 아님" },
+  ],
+  "gpu/cuda-matrix-multiply": [
+    { kind: "공식 문서", label: "NVIDIA CUDA C++ Programming Guide 12.8.1", href: "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-programming-guide/index.html", note: "Block·shared memory·barrier의 pinned semantics이며 특정 tile 선택·speedup 보장은 아님" },
+    { kind: "공식 문서", label: "NVIDIA CUDA C++ Best Practices Guide 12.8.1", href: "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-best-practices-guide/index.html", note: "Timing·effective bandwidth·shared-memory matrix 사례의 공식 measurement guidance" },
+    { kind: "공식 코드", label: "NVIDIA cuda-samples v12.8 · matrixMul", href: "https://github.com/NVIDIA/cuda-samples/tree/v12.8/Samples/0_Introduction/matrixMul", note: "Pinned 교육용 tiled kernel source이며 arbitrary-shape production GEMM benchmark가 아님" },
+  ],
+  "gpu/cuda-perf-analysis": [
+    { kind: "공식 문서", label: "NVIDIA CUDA C++ Best Practices Guide 12.8.1", href: "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-best-practices-guide/index.html", note: "APOD·timing·effective bandwidth·Amdahl과 reference validation의 pinned 정본" },
+    { kind: "공식 문서", label: "NVIDIA Nsight Compute 2025.1 User Guide", href: "https://docs.nvidia.com/nsight-compute/2025.1/NsightCompute/index.html", note: "Kernel metric·section·replay semantics의 release-pinned profiler 문서" },
+    { kind: "공식 문서", label: "NVIDIA Nsight Systems 2025.1 User Guide", href: "https://docs.nvidia.com/nsight-systems/2025.1/UserGuide/index.html", note: "CPU/GPU timeline·CUDA trace의 release-pinned profiler 문서" },
+  ],
+  "gpu/gpu-arch-hopper": [
+    { kind: "공식 가이드", label: "NVIDIA Hopper Tuning Guide · CUDA 12.8.1", href: "https://docs.nvidia.com/cuda/archive/12.8.1/hopper-tuning-guide/index.html", note: "Compute capability 9.0 resource·TMA·cluster tuning의 pinned guide" },
+    { kind: "공식 문서", label: "NVIDIA CUDA C++ Programming Guide 12.8.1", href: "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-programming-guide/index.html", note: "Thread block cluster·DSM launch/group semantics의 pinned 정본" },
+    { kind: "공식 문서", label: "NVIDIA Hopper Architecture Whitepaper", href: "https://resources.nvidia.com/en-us-tensor-core/nvidia-hopper-architecture-whitepaper", note: "Hopper architecture·Transformer Engine·TMA claims이며 exact SKU·benchmark 조건 밖으로 확대하지 않음" },
+  ],
+  "gpu/hw-gpu-comparison": [
+    { kind: "공식 문서", label: "NVIDIA GeForce RTX 5090 / RTX 4090 official specifications", href: "https://www.nvidia.com/en-us/geforce/graphics-cards/50-series/rtx-5090/", note: "확인 시점 GeForce architecture·memory·board specs이며 partner board와 workload achieved result는 별도" },
+    { kind: "공식 문서", label: "NVIDIA A100 Tensor Core GPU official product material", href: "https://www.nvidia.com/en-us/data-center/a100/", note: "A100 SKU·memory·MIG·platform capability의 official entry" },
+    { kind: "공식 문서", label: "NVIDIA H100 Tensor Core GPU official product specifications", href: "https://www.nvidia.com/en-us/data-center/h100/", note: "H100 form factor별 precision·HBM·power·interconnect specs이며 peak를 application speedup으로 확대하지 않음" },
+  ],
+  "tee/intel-sgx": [
+    { kind: "공식 문서", label: "Intel SGX Developer Guide", href: "https://download.01.org/intel-sgx/latest/linux-latest/docs/Intel_SGX_Developer_Guide.pdf", note: "EPC·enclave lifecycle·trusted/untrusted application model의 current Intel guide이며 application·side-channel 안전 인증은 아님" },
+    { kind: "공식 문서", label: "Intel SGX Attestation Services", href: "https://www.intel.com/content/www/us/en/developer/tools/software-guard-extensions/attestation-services.html", note: "ECDSA DCAP quote·PCS collateral의 current official surface이며 relying-party authorization은 별도" },
+  ],
+  "tee/amd-sev": [
+    { kind: "공식 문서", label: "AMD Secure Encrypted Virtualization", href: "https://www.amd.com/en/developer/sev.html", note: "SEV·ES·SNP·TIO capability와 official specifications의 current 진입점" },
+    { kind: "공식 규격", label: "AMD SEV-SNP Firmware ABI 1.58", href: "https://docs.amd.com/v/u/en-US/56860_PUB_1.58_SEV_SNP", note: "SNP page state·guest message·attestation report의 versioned firmware ABI" },
+  ],
+  "tee/intel-tdx": [
+    { kind: "공식 문서", label: "Intel TDX Documentation", href: "https://www.intel.com/content/www/us/en/developer/tools/trust-domain-extensions/documentation.html", note: "2026 current baselined module architecture·ABI·source·security·attestation 문서 surface" },
+    { kind: "공식 코드", label: "Intel TDX Module", href: "https://www.intel.com/content/www/us/en/download/738875/intel-trust-domain-extension-intel-tdx-module.html", note: "SEAM-hosted module architecture와 reproducible source entry이며 deployed release manifest가 별도 필요" },
+  ],
+  "tee/arm-cca": [
+    { kind: "공식 문서", label: "Arm Realm Management Extension overview", href: "https://developer.arm.com/community/arm-community-blogs/b/architectures-and-processors-blog/posts/introducing-arms-dynamic-trustzone-technology", note: "RME·GPT·GPC가 granule의 security world assignment를 집행하는 공식 architecture 설명" },
+    { kind: "공식 규격", label: "Arm Realm Management Monitor Architecture DEN0137", href: "https://developer.arm.com/-/cdn-downloads/permalink/Architectures/Armv9/DEN0137_1.0-rel0-rc1_rmm-arch_external.pdf", note: "RMM lifecycle·RMI/RSI·Realm/platform token binding의 revision-pinned architecture" },
   ],
 };

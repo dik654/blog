@@ -75,16 +75,16 @@ export const cosmosArticles: Article[] = [
   /* 4. 블록 실행 (전체 흐름) */
   {
     slug: "cometbft-execution",
-    title: "CometBFT BlockExecutor.ApplyBlock 전체 추적",
+    title: "CometBFT BlockExecutor: 검증·실행·영속화와 replay",
     subcategory: "cosmos-core",
     sections: [
-      { id: "overview", title: "ApplyBlock은 합의 결과를 application state로 반영한다" },
+      { id: "overview", title: "결정된 block과 durable application state는 아직 다르다" },
       {
         id: "validate-block",
-        title: "ValidateBlock (헤더 · 커밋 · 증거 검증)",
+        title: "ValidateBlock: 현재 State의 바로 다음 block인지 검사한다",
       },
-      { id: "execute-block", title: "ApplyBlock 내부 (ABCI 호출 순서)" },
-      { id: "save-state", title: "SaveState & BlockStore 기록" },
+      { id: "execute-block", title: "FinalizeBlock result에서 next State를 계산한다" },
+      { id: "save-state", title: "Result → Commit → State 저장과 crash replay" },
     ],
     component: () => import("@/pages/articles/blockchain/cometbft-execution"),
   },
@@ -106,13 +106,13 @@ export const cosmosArticles: Article[] = [
   /* 6. 멤풀 */
   {
     slug: "cometbft-mempool",
-    title: "CometBFT 멤풀: CListMempool · CheckTx · Recheck",
+    title: "CometBFT mempool: admission · reap · recheck",
     subcategory: "cosmos-core",
     sections: [
-      { id: "overview", title: "Mempool은 합의 전 transaction의 입구와 재검증을 맡는다" },
-      { id: "clist", title: "CListMempool 이중 연결 리스트" },
-      { id: "checktx", title: "CheckTx → ABCI 검증" },
-      { id: "recheck", title: "Recheck & 블록 후 정리" },
+      { id: "overview", title: "Mempool은 node-local 대기실이지 공유 원장이 아니다" },
+      { id: "clist", title: "CList의 local order · reap · availability signal" },
+      { id: "checktx", title: "Capacity · cache · asynchronous CheckTx admission" },
+      { id: "recheck", title: "Commit 뒤 Update · recheck barrier" },
     ],
     component: () => import("@/pages/articles/blockchain/cometbft-mempool"),
   },
@@ -120,16 +120,16 @@ export const cosmosArticles: Article[] = [
   /* 7. 상태 저장 */
   {
     slug: "cometbft-state",
-    title: "CometBFT 상태: State · BlockStore · EvidencePool",
+    title: "CometBFT state: State · BlockStore · state sync · replay",
     subcategory: "cosmos-core",
     sections: [
-      { id: "overview", title: "State store는 합의 결과와 다음 height의 입력을 이어 준다" },
+      { id: "overview", title: "한 node의 durable receipt 네 종류를 구분한다" },
       {
         id: "state-struct",
-        title: "State 구조체 (LastBlockHeight, Validators, AppHash)",
+        title: "State snapshot: 다음 height의 검증 입력",
       },
-      { id: "blockstore", title: "BlockStore (LevelDB 블록 저장)" },
-      { id: "evidence", title: "EvidencePool (비잔틴 증거 수집)" },
+      { id: "blockstore", title: "BlockStore 원본과 evidence-aware retention" },
+      { id: "evidence", title: "State sync trust와 crash replay 경계" },
     ],
     component: () => import("@/pages/articles/blockchain/cometbft-state"),
   },

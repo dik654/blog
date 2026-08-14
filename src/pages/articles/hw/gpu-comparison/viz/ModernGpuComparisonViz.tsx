@@ -1,0 +1,10 @@
+const flow=[
+  ["Workload", "입력 범위·SLA"],
+  ["Must fit", "Memory·software"],
+  ["Measure", "처리량·전력"],
+  ["Scale", "Fabric·topology"],
+  ["Choose", "비용·지원"],
+] as const;
+export function GpuChoiceFlowViz(){return <figure data-viz="gpu-choice-flow" className="not-prose my-9 overflow-hidden rounded-xl border border-border bg-card"><figcaption className="border-b border-border px-5 py-4 sm:px-6"><p className="text-xs font-semibold text-primary">제품명보다 workload부터</p><p className="mt-1 text-base font-bold">GPU 선택은 필수 조건을 통과한 후보의 실측 비교다</p></figcaption><div data-viz-canvas className="grid gap-4 p-5 sm:grid-cols-2 sm:p-6 lg:grid-cols-5">{flow.map(([a,b],i)=><section key={a} className="relative min-w-0 rounded-lg border border-border bg-background p-4"><p className="text-[11px] font-bold text-primary">0{i+1}</p><p className="mt-2 text-sm font-bold">{a}</p><p className="mt-1 text-xs leading-5 text-muted-foreground">{b}</p>{i<flow.length-1?<span aria-hidden className="absolute -right-3 top-1/2 hidden -translate-y-1/2 bg-card px-1 text-muted-foreground lg:block">→</span>:null}</section>)}</div></figure>}
+
+export function FitAxesViz(){const rows=[["Capacity","model·KV·batch·workspace가 들어가는가"],["Bandwidth","token/kernel이 읽는 bytes를 감당하는가"],["Compute","실제 precision·instruction path가 맞는가"],["Fabric","multi-GPU traffic과 topology가 맞는가"],["Operations","ECC·MIG·support·cooling이 필요한가"]] as const;return <figure data-viz="gpu-fit-axes" className="not-prose my-9 rounded-xl border border-border bg-card p-5 sm:p-6"><figcaption><p className="text-xs font-semibold text-primary">같은 비교축을 유지한다</p><p className="mt-1 text-base font-bold">한 축의 최고값이 다른 축의 부족을 지워 주지 않는다</p></figcaption><div data-viz-canvas className="mt-5 grid gap-3">{rows.map(([a,b])=><div key={a} className="grid min-w-0 gap-2 rounded-lg border border-border bg-background p-3 sm:grid-cols-[7rem_1fr]"><strong className="text-sm">{a}</strong><span className="min-w-0 break-words text-xs leading-5 text-muted-foreground">{b}</span></div>)}</div></figure>}

@@ -5842,6 +5842,63 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "project-measurement", rule: "Bad signature·replay·altered measurement·old TCB·debug·expired collateral·unknown field에서 false accept 0을 hard gate로 둔다." },
     ],
   },
+  "constraint-systems": {
+    title: "R1CS·QAP 제약 시스템 글이 소유하는 범위",
+    owns: ["Relation의 public instance·private witness와 R1CS bilinear row", "Bit·range·integer gadget semantic boundary", "R1CS column interpolation과 QAP divisibility·semantic release gate"],
+    reuses: [
+      { label: "Prime-field arithmetic", href: "/crypto/finite-field-theory#prime-field" },
+      { label: "Lagrange interpolation", href: "/crypto/lagrange#formula" },
+      { label: "Vanishing polynomial·NTT domain", href: "/crypto/fft#fft-domain" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "QAP reduction과 performance claim은 Pinocchio 논문의 construction·application·당시 구현 범위에 귀속한다." },
+      { kind: "project-claim", rule: "R1CS/QAP 만족을 원 program 의미·range·provenance나 zero knowledge로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "Valid·invalid·boundary·public-order·remainder parity 뒤 constraints·memory·latency를 비교한다." },
+    ],
+  },
+  "snark-overview": {
+    title: "SNARK 공통 인터페이스·보안·선택 글이 소유하는 범위",
+    owns: ["Setup·Prove·Verify와 relation/instance/witness 소유권", "Completeness·soundness·zero knowledge와 Fiat–Shamir statement binding", "Setup trust·succinctness·prover/verifier 비용의 계열 선택 envelope"],
+    reuses: [
+      { label: "R1CS·QAP relation", href: "/crypto/constraint-systems" },
+      { label: "Commitment binding·hiding", href: "/crypto/crypto-primitives#merkle-commitment" },
+      { label: "Fiat–Shamir commit-first 원리", href: "/crypto/crypto-primitives#schnorr" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "SNARK definition·construction claim은 SNARKs for C와 각 concrete system 원문의 model에 귀속한다." },
+      { kind: "project-claim", rule: "Verifier accept를 external data provenance·authorization·회로 semantic completeness로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "같은 relation·security target·negative corpus에서 setup·prover·verifier·bytes를 함께 비교한다." },
+    ],
+  },
+  groth16: {
+    title: "Groth16 QAP·CRS·proof·pairing 글이 소유하는 범위",
+    owns: ["Relation-specific CRS와 τ·α·β·γ·δ setup boundary", "QAP quotient와 A∈G1·B∈G2·C∈G1 proof", "Public-input IC linear combination·pairing equation·setup release gate"],
+    reuses: [
+      { label: "R1CS→QAP divisibility", href: "/crypto/constraint-systems#qap" },
+      { label: "SNARK security properties", href: "/crypto/snark-overview#security" },
+      { label: "G1·G2·pairing bilinearity", href: "/crypto/elliptic-curves#g1-g2-bn254" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "세-element proof·security·cost claim은 Groth16 원문의 CRS·group·model 범위에 귀속한다." },
+      { kind: "primary-source", rule: "Verifier code path는 링크한 ark-groth16 crate/version source에만 고정하고 production audit로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "Circuit/key hash·ceremony·point/input failure parity 뒤 setup/prove/verify breakdown을 측정한다." },
+    ],
+  },
+  plonk: {
+    title: "PLONK selector·permutation·quotient·opening 글이 소유하는 범위",
+    owns: ["PLONKish selector gate와 witness table", "Copy constraint permutation grand product와 quotient identity", "PCS opening 분리·Fiat–Shamir round order·PLONK release gate"],
+    reuses: [
+      { label: "Finite-field roots-of-unity·NTT", href: "/crypto/fft#fft-domain" },
+      { label: "Commitment binding·hiding", href: "/crypto/crypto-primitives#merkle-commitment" },
+      { label: "KZG polynomial commitment", href: "/crypto/polycommit#kzg10" },
+      { label: "SNARK statement-bound transcript", href: "/crypto/snark-overview#security" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Gate·permutation·universal SRS claim은 PLONK 원문, PCS claim은 KZG 원문의 assumptions 범위에 각각 귀속한다." },
+      { kind: "project-claim", rule: "PLONKish라는 이름을 동일 lookup·PCS·round·proof size·보안 reduction으로 일반화하지 않는다." },
+      { kind: "project-measurement", rule: "Wrong wire·copy·opening·subgroup·round-order failure parity 뒤 rows·degree·FFT/MSM·memory·verify를 비교한다." },
+    ],
+  },
   crt: {
     title: "CRT 글이 소유하는 범위",
     owns: [
@@ -5985,6 +6042,80 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "project-measurement", rule: "Speedup은 같은 input·precision·compiler·driver·GPU에서 CPU parity와 H2D/kernel/D2H critical path를 paired 측정한 결과에만 귀속한다." },
     ],
   },
+  "cuda-matrix-multiply": {
+    title: "CUDA tiled GEMM 적용·측정 글이 소유하는 범위",
+    owns: [
+      "Matrix output의 2D thread mapping과 K reduction 실행 경로",
+      "Shared tile reuse의 arithmetic-intensity budget과 partial-edge predication",
+      "Naive·tiled·library 후보의 correctness-first kernel measurement gate",
+    ],
+    reuses: [
+      { label: "Matrix multiplication 수학 정본", href: "/ai/math-matrices-svd#multiplication" },
+      { label: "CUDA grid·block·2D index", href: "/gpu/cuda-thread-hierarchy#indexing-2d" },
+      { label: "Shared memory·coalescing·bank", href: "/gpu/cuda-shared-memory" },
+      { label: "Block barrier semantics", href: "/gpu/cuda-sync-streams#overview" },
+      { label: "GPU Roofline·occupancy", href: "/gpu/gpu-architecture#gpu-peak-achieved-boundary" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "CUDA execution·barrier semantics는 Toolkit 12.8.1 archive와 target compute capability에 고정한다." },
+      { kind: "primary-source", rule: "matrixMul sample은 v12.8 교육용 source 범위이며 production GEMM benchmark로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "Tile 우위는 edge parity 뒤 동일 M/N/K·dtype·GPU에서 event time·traffic·FLOP/s·occupancy·end-to-end로 비교한다." },
+    ],
+  },
+  "cuda-perf-analysis": {
+    title: "CUDA 측정·병목 가설·ablation 글이 소유하는 범위",
+    owns: [
+      "Warm-up·CUDA event·CPU completion과 반복 분포의 timing protocol",
+      "Achieved FLOP/s·bandwidth·actual traffic을 같은 경계에 둔 ledger",
+      "Systems→Roofline/Amdahl→Compute counter→single change→release loop",
+    ],
+    reuses: [
+      { label: "Host·device·kernel lifecycle", href: "/gpu/cuda-basics#execution-path" },
+      { label: "GPU occupancy와 Roofline 정본", href: "/gpu/gpu-architecture#gpu-latency-hiding-occupancy" },
+      { label: "Stream·event ordering", href: "/gpu/cuda-sync-streams#events" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "Timing·effective bandwidth는 CUDA Best Practices 12.8.1의 measurement semantics에 고정한다." },
+      { kind: "primary-source", rule: "Profiler counter·replay 의미는 Nsight Systems/Compute 2025.1 guide와 supported target 범위에 귀속한다." },
+      { kind: "project-measurement", rule: "Optimization은 pinned workload·software·clock에서 parity·median/p95·achieved metrics·counter 방향을 paired 비교한다." },
+    ],
+  },
+  "gpu-arch-hopper": {
+    title: "Hopper TMA·cluster·precision 적용 글이 소유하는 범위",
+    owns: [
+      "TMA descriptor·arrival barrier·multi-buffer producer–consumer pipeline",
+      "Thread block cluster·DSM의 scope·residency·remote-access 경계",
+      "Transformer Engine precision contract와 Hopper feature compatibility gate",
+    ],
+    reuses: [
+      { label: "GPU SM·memory·occupancy 정본", href: "/gpu/gpu-architecture" },
+      { label: "CUDA block·warp placement", href: "/gpu/cuda-thread-hierarchy" },
+      { label: "Shared memory와 synchronization", href: "/gpu/cuda-shared-memory" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "TMA·cluster semantics는 CUDA/Hopper Tuning Guide 12.8.1과 actual compute capability에 고정한다." },
+      { kind: "primary-source", rule: "Hopper peak·feature 주장은 NVIDIA whitepaper의 exact SKU·precision·sparsity 조건에 귀속한다." },
+      { kind: "project-measurement", rule: "Feature path는 fallback·edge parity·quality 뒤 traffic·FLOP/s·occupancy·stall·end-to-end로 baseline과 비교한다." },
+    ],
+  },
+  "hw-gpu-comparison": {
+    title: "RTX 4090·5090·A100·H100 workload 선택 글이 소유하는 범위",
+    owns: [
+      "GPU 후보 비교용 workload envelope와 exact-SKU normalization",
+      "Weight·state·workspace·headroom capacity와 multi-GPU fabric fit",
+      "Quality·SLA·power·recovery·유효 작업당 비용의 procurement gate",
+    ],
+    reuses: [
+      { label: "GPU Roofline·memory hierarchy", href: "/gpu/gpu-architecture#gpu-peak-achieved-boundary" },
+      { label: "PCIe·NVLink·collective topology", href: "/gpu/hw-network#gpudirect-topology" },
+      { label: "Hopper TMA·Transformer Engine", href: "/gpu/gpu-arch-hopper" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Capacity·bandwidth·precision·power는 확인 시점 NVIDIA official page의 exact SKU·form factor에 고정한다." },
+      { kind: "project-claim", rule: "AI TOPS·TFLOPS·link peak 비율을 application throughput·training speedup으로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "구매 후보는 동일 trace·quality·runtime에서 achieved latency/throughput·power·fabric·failure와 시점별 비용을 비교한다." },
+    ],
+  },
   "bft-comparison": {
     title: "PBFT·HotStuff·Autobahn 비교 글이 소유하는 범위",
     owns: ["PBFT prepared/view-change, HotStuff chained-QC/pacemaker, Autobahn lane/cut의 같은 상태축 비교", "Membership·fault·workload를 고정한 BFT comparison envelope와 blip recovery 판단"],
@@ -6008,6 +6139,54 @@ export const EDITORIAL_BOUNDARIES = {
     owns: ["Height·round·step, weighted +2/3 prevote/precommit과 PoLC higher-round lock transition", "2014 Tendermint draft와 version-pinned CometBFT specification의 역사·현재 경계"],
     reuses: [{ label: "일반 BFT lock·partial-synchrony 정본", href: "/blockchain/bft-theory" }, { label: "현재 CometBFT runtime state machine", href: "/blockchain/cometbft-consensus" }, { label: "ABCI++ application 경계", href: "/blockchain/cometbft-abci" }],
     evidence: [{ kind: "primary-source", rule: "초기 설계는 outdated 표기의 2014 draft에, 현재 state-machine semantics는 링크한 CometBFT v0.38 spec에 귀속한다." }, { kind: "project-measurement", rule: "Release·SHA·genesis·historical voting power를 고정하고 equivocation·stale POLRound·timeout·restart에서 conflict 0·state parity·recovery를 검사한다." }, { kind: "project-claim", rule: "Consensus commit을 deterministic application·external exactly-once나 모든 CometBFT release의 동일 동작으로 확대하지 않는다." }],
+  },
+  "intel-sgx": {
+    title: "Intel SGX vendor 적용 글이 소유하는 범위",
+    owns: ["Enclave·EPC page lifecycle과 MRENCLAVE 중심 초기 identity", "ECALL/OCALL copy·validation·commit 및 SGX-specific release gate"],
+    reuses: [{ label: "Hardware threat model", href: "/tee/hw-security" }, { label: "TEE memory property", href: "/tee/tee-memory" }, { label: "RATS attestation", href: "/tee/tee-attestation" }],
+    evidence: [{ kind: "primary-source", rule: "EPC·ECALL/OCALL·DCAP semantics는 current Intel guide와 attestation service 문서 범위에 귀속한다." }, { kind: "project-measurement", rule: "같은 enclave·SDK·driver·CPU·collateral에서 bounds·OCALL 변조·replay·EPC pressure를 paired 검사한다." }, { kind: "project-claim", rule: "SGX를 application correctness·side-channel resistance·availability 보장으로 확대하지 않는다." }],
+  },
+  "amd-sev": {
+    title: "AMD SEV-SNP vendor 적용 글이 소유하는 범위",
+    owns: ["SEV→ES→SNP property 추가분과 guest/hypervisor boundary", "RMP page state·PVALIDATE·SNP report/TCB binding과 release gate"],
+    reuses: [{ label: "TEE private/shared memory", href: "/tee/tee-memory" }, { label: "Vendor appraisal", href: "/tee/tee-attestation" }, { label: "TCB와 reference value", href: "/tee/tee-tcb" }],
+    evidence: [{ kind: "primary-source", rule: "RMP·guest message·report field는 AMD SEV page와 SNP Firmware ABI 1.58 범위에 귀속한다." }, { kind: "project-measurement", rule: "CPU·firmware·guest·VMM·policy를 고정하고 wrong-owner·shared confusion·old TCB·transition crash를 paired 검사한다." }, { kind: "project-claim", rule: "SEV 세대별 property를 혼합하거나 memory encryption을 device·side-channel·DoS 방어로 확대하지 않는다." }],
+  },
+  "intel-tdx": {
+    title: "Intel TDX vendor 적용 글이 소유하는 범위",
+    owns: ["TD·host·SEAM/TDX module 책임과 private/shared GPA contract", "MRTD/RTMR·TDREPORT·module/CPU TCB binding과 release gate"],
+    reuses: [{ label: "TEE TCB closure", href: "/tee/tee-tcb" }, { label: "TEE memory property", href: "/tee/tee-memory" }, { label: "RATS attestation", href: "/tee/tee-attestation" }],
+    evidence: [{ kind: "primary-source", rule: "TDX architecture·ABI·attestation은 배포 module과 맞는 Intel baselined 문서 revision에 귀속한다." }, { kind: "project-measurement", rule: "Module·loader·CPU·firmware·guest·verifier를 고정하고 owner/shared/TCB/exit fixture를 paired 검사한다." }, { kind: "project-claim", rule: "Moving latest spec이나 TD quote를 배포 일치·application correctness·side-channel 안전 증명으로 쓰지 않는다." }],
+  },
+  "arm-cca": {
+    title: "Arm CCA vendor 적용 글이 소유하는 범위",
+    owns: ["Normal·Realm·RMM·EL3 responsibility와 RMI/RSI boundary", "GPT granule transition·Realm/platform token binding과 release gate"],
+    reuses: [{ label: "TEE TCB closure", href: "/tee/tee-tcb" }, { label: "TEE memory lifecycle", href: "/tee/tee-memory" }, { label: "RATS 역할과 artifact", href: "/tee/tee-attestation" }],
+    evidence: [{ kind: "primary-source", rule: "RME·GPT·RMM·token semantics는 링크한 Arm architecture/revision 범위에 귀속한다." }, { kind: "project-measurement", rule: "RMM·EL3·host·Realm·policy를 고정하고 granule·DMA·challenge·version drift를 paired 검사한다." }, { kind: "project-claim", rule: "Realm token을 device isolation·application correctness·side-channel·availability 보장으로 확대하지 않는다." }],
+  },
+  "cometbft-p2p": {
+    title: "CometBFT v0.40.0 P2P stack 글이 소유하는 범위",
+    owns: ["Transport·MConnection·Switch·Reactor의 message delivery owner와 local receipt", "Channel queue·priority·peer lifecycle의 backpressure release gate"],
+    reuses: [{ label: "일반 process·message·failure model", href: "/blockchain/distributed-systems" }, { label: "CometBFT transaction lifecycle", href: "/blockchain/cometbft" }, { label: "Consensus safety·liveness", href: "/blockchain/smr-theory" }],
+    evidence: [{ kind: "primary-source", rule: "Channel·scheduler·peer/reactor 동작은 CometBFT v0.40.0 p2p source에만 귀속한다." }, { kind: "project-measurement", rule: "Slow·malformed peer와 queue pressure를 고정하고 bounded memory·isolation·GST 뒤 progress를 함께 측정한다." }, { kind: "project-claim", rule: "Send·Receive 성공을 remote processing·CheckTx·commit으로 확대하지 않는다." }],
+  },
+  "cometbft-mempool": {
+    title: "CometBFT v0.40.0 CListMempool 글이 소유하는 범위",
+    owns: ["Capacity·cache·CheckTx·postCheck의 local admission과 reap/availability semantics", "Commit lock·Update·recheck가 application state generation을 넘기는 경계"],
+    reuses: [{ label: "Admission과 commit 분리", href: "/blockchain/cometbft#overview" }, { label: "ABCI CheckTx·Commit authority", href: "/blockchain/cometbft-abci" }, { label: "Block execution ordering", href: "/blockchain/cometbft-execution" }],
+    evidence: [{ kind: "primary-source", rule: "CList·cache·recheck와 Commit lock 순서는 CometBFT v0.40.0 mempool/state source에 귀속한다." }, { kind: "project-measurement", rule: "같은 arrival trace에서 duplicate·capacity race·recheck timeout·late response를 주입해 active candidate와 commit 결과를 검사한다." }, { kind: "project-claim", rule: "CheckTx OK·cache membership·TxsAvailable signal을 inclusion·global order·execution success로 확대하지 않는다." }],
+  },
+  "cometbft-state": {
+    title: "CometBFT v0.40.0 State·BlockStore 글이 소유하는 범위",
+    owns: ["BlockStore·State/validator/params·Finalize response·application durable receipt의 구분", "State sync trust bootstrap, evidence-aware retention과 height/AppHash crash replay"],
+    reuses: [{ label: "Protocol type와 header lag", href: "/blockchain/cometbft-types" }, { label: "ABCI crash recovery", href: "/blockchain/cometbft-abci#finalize-commit" }, { label: "Evidence lifecycle", href: "/blockchain/cometbft-types#evidence" }],
+    evidence: [{ kind: "primary-source", rule: "State field·storage·pruning·state-sync/replay는 CometBFT v0.40.0 source와 guide에 귀속한다." }, { kind: "project-measurement", rule: "Snapshot corruption·trust mismatch·prune·crash cut에서 height/AppHash/state parity와 evidence verification을 검사한다." }, { kind: "project-claim", rule: "Snapshot chunk 수신·가장 높은 height·BlockStore 존재를 trusted application state로 확대하지 않는다." }],
+  },
+  "cometbft-execution": {
+    title: "CometBFT v0.40.0 BlockExecutor 글이 소유하는 범위",
+    owns: ["Current State에 대한 block validation context와 ApplyBlock orchestration", "Finalize result→application Commit→State persistence order와 crash-cut replay"],
+    reuses: [{ label: "ABCI deterministic transition", href: "/blockchain/cometbft-abci#finalize-commit" }, { label: "Commit certificate와 type", href: "/blockchain/cometbft-types" }, { label: "Durable store와 state sync", href: "/blockchain/cometbft-state" }],
+    evidence: [{ kind: "primary-source", rule: "Validation·ApplyBlock·Commit·replay ordering은 CometBFT v0.40.0 state/consensus source에 귀속한다." }, { kind: "project-measurement", rule: "잘못된 history/commitment와 네 crash cut을 재생해 height·AppHash·tx result·balance once parity를 통과시킨다." }, { kind: "project-claim", rule: "Consensus decision·Finalize return·timeout을 application durability나 external exactly-once로 확대하지 않는다." }],
   },
 } as const satisfies Record<string, EditorialBoundary>;
 

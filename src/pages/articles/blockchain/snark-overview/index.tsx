@@ -1,15 +1,5 @@
-import Overview from "./Overview";
-import Components from "./Components";
-import VerifyFlow from "./VerifyFlow";
-import Landscape from "./Landscape";
+import ModernSNARKOverviewArticle from "./ModernArticle";
 
 export default function SNARKOverview() {
-  return (
-    <div className="space-y-12">
-      <Overview />
-      <Components />
-      <VerifyFlow />
-      <Landscape />
-    </div>
-  );
+  return <ModernSNARKOverviewArticle />;
 }
