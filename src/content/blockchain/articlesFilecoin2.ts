@@ -87,9 +87,11 @@ export const filecoin2Articles: Article[] = [
     title: "Filecoin Onchain Cloud 플랫폼",
     subcategory: "fil-hot",
     sections: [
-      { id: "overview", title: "플랫폼 개요" },
-      { id: "pdp-integration", title: "PDP 기반 검증 가능 스토리지" },
-      { id: "settlement", title: "온체인 정산 & 사용량 과금" },
+      { id: "overview", title: "Upload에서 정산까지" },
+      { id: "dataset-service", title: "Dataset service artifact" },
+      { id: "proof-settlement", title: "Proof-gated settlement" },
+      { id: "payment-rail", title: "Payment rail·lockup" },
+      { id: "release-gate", title: "Service release gate" },
     ],
     component: () =>
       import("@/pages/articles/blockchain/filecoin-onchain-cloud"),

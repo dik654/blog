@@ -6832,6 +6832,18 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [{ label: "EVM deterministic execution", href: "/blockchain/evm-fundamentals" }, { label: "Reth concrete architecture", href: "/blockchain/reth" }, { label: "Reth ChainSpec and Fork ID", href: "/blockchain/reth-chainspec" }],
     evidence: [{ kind: "standard", rule: "Engine method·schema·status는 표시한 execution-apis snapshot과 활성 fork version에 귀속한다." }, { kind: "primary-source", rule: "Concrete module·builder·storage path는 pinned Reth v2.2.0에만 귀속하고 generic protocol 경계와 구분한다." }, { kind: "project-measurement", rule: "Exact EL/CL versions·genesis·fork schedule에서 Engine trace·reorg·crash·state-root parity를 검사한다." }, { kind: "project-claim", rule: "EL VALID를 CL finality로, JWT 성공을 correctness로, process health를 compatible node release로 확대하지 않는다." }],
   },
+  "lotus-state": {
+    title: "Lotus StateTree·actor record·HAMT/AMT ownership",
+    owns: ["ID address→actor record→Head CID의 versioned 조회 경계", "HAMT·AMT parameter path와 StateTree snapshot·revert·flush·release gate"],
+    reuses: [{ label: "FVM transactional state receipt", href: "/blockchain/filecoin-fvm#state-commit" }, { label: "Content-addressed artifact", href: "/p2p/content-addressing#overview" }, { label: "Lotus deterministic state replay", href: "/blockchain/lotus-chain#state-replay" }],
+    evidence: [{ kind: "standard", rule: "StateTree protocol 역할은 Filecoin specification과 actor 공식 문서에 귀속한다." }, { kind: "primary-source", rule: "Load·lookup·snapshot·flush facts는 Lotus v1.36.2 commit c6f4d02와 pinned HAMT dependency에만 귀속한다." }, { kind: "project-measurement", rule: "Exact tree/network/bundle/codec parameters에서 actor fields·root·revert/crash parity를 검사한다." }, { kind: "project-claim", rule: "Root parity를 actor logic 안전·chain finality·database durability·fixed latency로 확대하지 않는다." }],
+  },
+  "giwa-chain": {
+    title: "GIWA OP Stack node·head consumption ownership",
+    owns: ["GIWA chain/source/config generation artifact와 op-node·op-reth Engine handoff", "Unsafe·safe·finalized application policy와 node canary·rollback gate"],
+    reuses: [{ label: "Rollup execution·DA·settlement and derivation", href: "/blockchain/rollup-fundamentals" }, { label: "Fork choice와 finality 분리", href: "/blockchain/consensus-comparison#finality" }, { label: "Stablecoin reserve·redemption", href: "/blockchain/stablecoin-overview" }],
+    evidence: [{ kind: "standard", rule: "Generic batch derivation은 표시한 OP Stack specification revision에 귀속한다." }, { kind: "primary-source", rule: "GIWA network facts는 current official docs, concrete service/version facts는 node v0.6.0 commit 8cabd0d5에만 귀속한다." }, { kind: "project-measurement", rule: "Exact genesis·rollup config·L1 origin·binary generation에서 payload/state/head parity와 reorg·restart를 검사한다." }, { kind: "project-claim", rule: "OP Stack 채택·JWT·process health를 mainnet readiness·security inheritance·sequencer liveness·stablecoin peg/compliance 보장으로 확대하지 않는다." }],
+  },
   "filecoin-fvm": {
     title: "FVM message·state·actor-bundle execution ownership",
     owns: ["Message·base state·network version·actor manifest execution envelope", "Nested actor transaction·state-root receipt와 FVM runtime release gate"],
@@ -6855,6 +6867,36 @@ export const EDITORIAL_BOUNDARIES = {
     owns: ["CID·CAR·Piece/deal identity-map artifact", "Multi-path verified retrieval, retention receipt와 integration release gate"],
     reuses: [{ label: "IPFS content addressing", href: "/p2p/content-addressing#overview" }, { label: "Kubo routing·Bitswap·pin", href: "/p2p/kubo#routing-bitswap" }, { label: "Filecoin proof stack", href: "/blockchain/filecoin-proofs#overview" }],
     evidence: [{ kind: "standard", rule: "Routing·Bitswap semantics는 IPFS specs commit ff7230f에 귀속한다." }, { kind: "primary-source", rule: "Kubo implementation은 stable v0.42.0, Filecoin bridge는 Storacha specs commit 3b67918로 pin한다." }, { kind: "project-measurement", rule: "Mapping digest·CID bytes·path latency·pin/deal/proof status와 correlated outages를 측정한다." }, { kind: "project-claim", rule: "Provider ad·pin·deal·proof 한 항목을 possession·retrieval SLA·영구 보존으로 확대하지 않는다." }],
+  },
+  "filecoin-onchain-cloud": {
+    title: "Filecoin Cloud dataset·proof·payment service ownership",
+    owns: ["Dataset-service generation artifact와 proof-gated settlement window", "Payment-rail lockup envelope와 end-to-end service release gate"],
+    reuses: [{ label: "PDP dataset·period·fault state", href: "/blockchain/filecoin-pdp#dataset-artifact" }, { label: "Filecoin proof service boundary", href: "/blockchain/filecoin-proofs#overview" }],
+    evidence: [{ kind: "primary-source", rule: "Service·contract facts는 filecoin-services commit a391c1c, payment facts는 filecoin-pay commit 04ded6a에 귀속한다." }, { kind: "project-measurement", rule: "Upload·dataset·proof-period·rail·retrieval receipts를 같은 service digest와 chain confidence에서 대조한다." }, { kind: "project-claim", rule: "Store·proof·event·lockup 한 항목을 retrieval SLA·durability·영구 보존·solvency로 확대하지 않는다." }],
+  },
+  "lotus-mpool": {
+    title: "Lotus head-relative admission·nonce·gas lifecycle ownership",
+    owns: ["Head-relative message admission과 sender nonce-chain selection", "Gas-estimate context receipt와 head-change/restart release gate"],
+    reuses: [{ label: "FVM message execution envelope", href: "/blockchain/filecoin-fvm#message-envelope" }, { label: "Generic mempool local admission", href: "/blockchain/cometbft-mempool#overview" }],
+    evidence: [{ kind: "primary-source", rule: "Lotus implementation facts는 v1.36.0 commit 154c0c3, effective-premium semantics는 FIP-0054 revision c856d99에 귀속한다." }, { kind: "project-measurement", rule: "Exact head·actor state·network/config에서 admission reasons, nonce packages, gas receipts와 apply/revert/restart parity를 재생한다." }, { kind: "project-claim", rule: "Local admission·estimate·selection을 inclusion·execution success·finality·optimal ordering으로 확대하지 않는다." }],
+  },
+  "initia-evm": {
+    title: "MiniEVM Ethereum-envelope·Cosmos-state integration ownership",
+    owns: ["Ethereum↔Cosmos transaction envelope와 Ante/EVM sequence reconciliation", "Cosmos-backed StateDB overlay·token/precompile keeper boundary와 execution release gate"],
+    reuses: [{ label: "EVM execution·gas·journal semantics", href: "/blockchain/evm-fundamentals" }, { label: "Cosmos BaseApp·Ante·keeper·CacheMultiStore", href: "/blockchain/cosmos-sdk#runtx-pipeline" }, { label: "EVM precompile ABI·gas boundary", href: "/blockchain/evm-advanced#precompile" }],
+    evidence: [{ kind: "primary-source", rule: "Transaction·sequence·StateDB·token/precompile facts는 MiniEVM v1.2.19 commit 27e60c5에만 귀속한다." }, { kind: "standard", rule: "Compatibility surface는 2026-08-14 확인한 Initia 공식 문서와 deployed exact revision을 함께 확인한다." }, { kind: "project-measurement", rule: "같은 pre-state·block context에서 transaction fields·sequence·status·gas·logs·balance·app hash와 crash replay를 대조한다." }, { kind: "project-claim", rule: "Ethereum tooling 호환·RPC hash·EVM success를 mainnet architecture parity·Cosmos commit·finality로 확대하지 않는다." }],
+  },
+  "kohaku-provider": {
+    title: "Kohaku provider API·method provenance·signer boundary ownership",
+    owns: ["Ethers·Viem·Helios·Colibri common provider surface와 result normalization", "Method별 trust provenance·read/signer authority 분리와 adapter release gate"],
+    reuses: [{ label: "Helios proof-bound RPC response", href: "/blockchain/helios#verification" }, { label: "Helios fallback trust boundary", href: "/blockchain/helios#trust-boundary" }],
+    evidence: [{ kind: "primary-source", rule: "Provider interface·adapter·bypass facts는 Kohaku commit 8d5a29e, package 0.1.0-alpha.8에만 귀속한다." }, { kind: "project-measurement", rule: "같은 chain·block fixture에서 method value/error/provenance, silent downgrade와 duplicate submission을 adapter별로 대조한다." }, { kind: "project-claim", rule: "Common API·type parity를 동일 semantics·light-client verification·privacy·production readiness·audit 완료로 확대하지 않는다." }],
+  },
+  "omni-octane": {
+    title: "Omni Octane ABCI·Engine payload integration ownership",
+    owns: ["ABCI proposal의 execution-payload envelope와 proposer build-attempt lifecycle", "Candidate status·CometBFT commit·finalized execution head 분리", "Per-event branch delivery와 pinned integration release gate"],
+    reuses: [{ label: "CometBFT proposal·finalize semantics", href: "/blockchain/cometbft-abci" }, { label: "Engine API method·status lifecycle", href: "/blockchain/node-architecture#payload-state" }, { label: "Client effect boundary", href: "/blockchain/consensus-comparison#smr" }],
+    evidence: [{ kind: "primary-source", rule: "Octane·Halo·Engine adapter facts는 Omni commit 9864f25와 그 go.mod dependencies에만 귀속한다." }, { kind: "standard", rule: "Engine method·schema·status 의미는 표시한 execution-apis snapshot과 active fork/capability에 귀속한다." }, { kind: "project-measurement", rule: "같은 height·payload·client generation에서 build/status/commit/FCU와 observed·committed·failed event branches를 대조한다." }, { kind: "project-claim", rule: "README goal·payload VALID·CometBFT commit·event branch 한 항목을 all-client compatibility·production readiness·cross-chain success로 확대하지 않는다." }],
   },
 } as const satisfies Record<string, EditorialBoundary>;
 

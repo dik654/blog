@@ -3823,14 +3823,23 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 코드", label: "Lotus WinningPoSt prover · v1.36.0", href: "https://github.com/filecoin-project/lotus/blob/154c0c3a46e92006008818bb06aaf959e2e705a9/storage/winning_prover.go", note: "Election challenge/proof adapter이며 block assembly·inclusion을 보장하지 않음" },
     { kind: "공식 문서", label: "Curio sealing design", href: "https://docs.curiostorage.org/design/sealing", note: "HarmonyTasks 기반 current design 설명이며 legacy state 호환·고정 throughput 보장은 아님" },
   ],
-  "blockchain/lotus-mpool": FILECOIN_LOTUS_SERIES_EVIDENCE,
+  "blockchain/lotus-mpool": [
+    { kind: "공식 코드", label: "Lotus messagepool.go · v1.36.0 commit 154c0c3", href: "https://github.com/filecoin-project/lotus/blob/154c0c3a46e92006008818bb06aaf959e2e705a9/chain/messagepool/messagepool.go", note: "Head-relative admission·nonce/replacement·apply/revert lifecycle의 pinned source이며 inclusion·finality·고정 policy 보장은 아님" },
+    { kind: "공식 코드", label: "Lotus selection.go · v1.36.0 commit 154c0c3", href: "https://github.com/filecoin-project/lotus/blob/154c0c3a46e92006008818bb06aaf959e2e705a9/chain/messagepool/selection.go", note: "Sender nonce packages·effective premium·block-budget selection source이며 global/optimal ordering을 뜻하지 않음" },
+    { kind: "공식 코드", label: "Lotus gas.go · v1.36.0 commit 154c0c3", href: "https://github.com/filecoin-project/lotus/blob/154c0c3a46e92006008818bb06aaf959e2e705a9/node/impl/full/gas.go", note: "GasLimit simulation, premium·fee-cap estimators의 pinned source이며 future execution·fee·inclusion 보장은 아님" },
+    { kind: "공식 규격", label: "FIP-0054 · revision c856d99", href: "https://github.com/filecoin-project/FIPs/blob/c856d99b126cb52a0436c4838da55ec84495cfa7/FIPS/fip-0054.md", note: "Effective gas premium selection semantics이며 fee predictability·fair ordering·inclusion 보장은 아님" },
+  ],
   "blockchain/lotus-state": [
-    ...FILECOIN_LOTUS_SERIES_EVIDENCE,
-    source(
-      "공식 문서",
-      OFFICIAL_SOURCES.filecoin.actors,
-      "chain state와 built-in actor의 책임 경계",
-    ),
+    { kind: "공식 규격", label: "Filecoin Specification · State Tree", href: "https://spec.filecoin.io/systems/filecoin_vm/state_tree/", note: "Address→actor-state HAMT의 protocol 구조이며 current Lotus cache·schema·성능 보장은 아님" },
+    { kind: "공식 문서", label: "Filecoin Actors", href: "https://docs.filecoin.io/basics/the-blockchain/actors", note: "Code·state pointer·nonce·balance와 actor model 설명이며 actor bundle·method set의 영구 고정은 아님" },
+    { kind: "공식 코드", label: "Lotus StateTree · v1.36.2 commit c6f4d02", href: "https://github.com/filecoin-project/lotus/blob/c6f4d02400dba55ebc5ab3677ef2ae5a5f4d1aef/chain/state/statetree.go", note: "Versioned load, address resolution, snapshot·revert·flush의 pinned 구현이며 database durability·fixed latency 보장은 아님" },
+    { kind: "공식 코드", label: "go-hamt-ipld v3.4.1 · commit 0be9a0f", href: "https://github.com/filecoin-project/go-hamt-ipld/tree/0be9a0f6b272246618d22f19f95c28e2e043e890", note: "Parameterized HAMT implementation이며 모든 actor collection의 hash·bit width·bucket이 같다는 뜻은 아님" },
+  ],
+  "blockchain/giwa-chain": [
+    { kind: "공식 문서", label: "Introducing GIWA", href: "https://docs.giwa.io/giwa-chain/en", note: "OP Stack 기반 EVM-compatible L2라는 current 공식 설명이며 decentralization·mainnet·fixed performance 보장은 아님" },
+    { kind: "공식 문서", label: "Differences between Ethereum and GIWA", href: "https://docs.giwa.io/giwa-chain/en/network-information/diffs-ethereum-giwa", note: "Sequencer·bridge·mempool과 unsafe/safe/finalized 상태 설명이며 withdrawal 종료·application finality 보장은 아님" },
+    { kind: "공식 규격", label: "OP Stack Derivation Specification", href: "https://specs.optimism.io/protocol/derivation.html", note: "L1 batch input에서 L2 payload·safe chain을 재현하는 generic 규칙이며 GIWA-specific config를 대신하지 않음" },
+    { kind: "공식 코드", label: "giwa-io/node v0.6.0 · commit 8cabd0d5", href: "https://github.com/giwa-io/node/tree/8cabd0d51e7ed2c2200f9c82e26a9c5ec7301722", note: "op-node v1.19.1·op-reth v2.3.3·JWT·Sepolia env의 pinned bundle이며 future/mainnet 호환 보장은 아님" },
   ],
   "blockchain/proofs-porep": [
     { kind: "공식 코드", label: "rust-fil-proofs seal API · commit d451d23", href: "https://github.com/filecoin-project/rust-fil-proofs/blob/d451d23ba6dcabd107e66b2f9c6531887b17fd3d/filecoin-proofs/src/api/seal.rs", note: "PC1·PC2·C1·C2 orchestration snapshot이며 current activation·고정 sealing time은 아님" },
@@ -3856,16 +3865,10 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 코드", label: "IPC CheckpointingFacet · commit bcd7c0d", href: "https://github.com/consensus-shipyard/ipc/blob/bcd7c0d10a93a95b6d28954d482169da4b12479d/contracts/contracts/gateway/router/CheckpointingFacet.sol", note: "Verified checkpoint commit boundary이며 signer quorum·relayer liveness는 별도" },
   ],
   "blockchain/filecoin-onchain-cloud": [
-    source(
-      "공식 문서",
-      OFFICIAL_SOURCES.filecoin.onchainCloud,
-      "service·PDP·payments를 묶는 현재 architecture",
-    ),
-    source(
-      "공식 문서",
-      OFFICIAL_SOURCES.filecoin.pay,
-      "Filecoin Pay의 account·rail·settlement 개념",
-    ),
+    { kind: "공식 규격", label: "Filecoin Services specification · commit a391c1c", href: "https://github.com/FilOzone/filecoin-services/blob/a391c1cd23c95ee8d8eadec462cdc35569ae486d/SPEC.md", note: "Dataset proving·storage payment lifecycle snapshot이며 example prices·기간·retrieval SLA는 아님" },
+    { kind: "공식 코드", label: "FilecoinWarmStorageService.sol · commit a391c1c", href: "https://github.com/FilOzone/filecoin-services/blob/a391c1cd23c95ee8d8eadec462cdc35569ae486d/service_contracts/src/FilecoinWarmStorageService.sol", note: "PDP callbacks·dataset/rail state·termination source이며 off-chain bytes durability를 검증하지 않음" },
+    { kind: "공식 규격", label: "Filecoin Pay specification · commit 04ded6a", href: "https://github.com/FilOzone/filecoin-pay/blob/04ded6af6c15c4b5d98545f393dc656004d4aede/SPEC.md", note: "Accounts·rails·rate·lockup·settlement semantics이며 service quality·solvency·fixed yield 보장은 아님" },
+    { kind: "공식 코드", label: "Synapse StorageManager · commit 44ffc12", href: "https://github.com/FilOzone/synapse-sdk/blob/44ffc12fd9b5390820d9642148f6a36b9b2baed4/packages/synapse-sdk/src/storage/manager.ts", note: "Primary upload·replication·on-chain commits orchestration이며 proof·payment·fixed speed 보장은 아님" },
   ],
   "blockchain/filecoin-pdp": [
     { kind: "공식 문서", label: "FilOzone PDP design · commit 4d2a930", href: "https://github.com/FilOzone/pdp/blob/4d2a930194367477050302792de89e29275a6047/docs/design.md", note: "Dataset·challenge·period·fault와 detection model의 pinned design이며 retrieval SLA는 아님" },
@@ -5272,5 +5275,21 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "핵심 논문", label: "Goldwasser–Micali · Probabilistic Encryption", href: "https://doi.org/10.1016/0022-0000(84)90070-9", note: "Semantic computational security의 기반이며 임의 implementation·profile 안전 보장은 아님" },
     { kind: "공식 규격", label: "NIST SP 800-57 Part 1 Rev. 5", href: "https://csrc.nist.gov/pubs/sp/800/57/pt1/r5/final", note: "Key lifecycle·security-strength guidance이며 system compliance 인증은 아님" },
     { kind: "공식 규격", label: "RFC 5116 · Authenticated Encryption interface", href: "https://www.rfc-editor.org/rfc/rfc5116", note: "AEAD key/nonce/AAD/plaintext interface와 nonce 경계이며 key distribution·authorization을 해결하지 않음" },
+  ],
+  "blockchain/initia-evm": [
+    { kind: "공식 코드", label: "MiniEVM x/evm · v1.2.19", href: "https://github.com/initia-labs/minievm/tree/27e60c548f3e2868f6e6b3cf6456fc9289ce7950/x/evm", note: "Ethereum↔Cosmos transaction 변환·message·sequence boundary의 pinned 근거이며 모든 RPC·fork parity나 commit 보장은 아님" },
+    { kind: "공식 코드", label: "MiniEVM StateDB · v1.2.19", href: "https://github.com/initia-labs/minievm/blob/27e60c548f3e2868f6e6b3cf6456fc9289ce7950/x/evm/state/statedb.go", note: "Persistent/transient stores·snapshot·balance integration의 pinned 근거이며 transient effect를 durable app commit으로 확대하지 않음" },
+    { kind: "공식 문서", label: "Initia · MiniEVM compatibility and changes", href: "https://docs.initia.xyz/home/core-concepts/initia-and-rollups/rollups/vms/minievm/evm-compatibility-and-changes", note: "2026-08-14 current compatibility·known differences 근거이며 future release나 모든 Ethereum tooling 동작을 고정하지 않음" },
+  ],
+  "blockchain/kohaku-provider": [
+    { kind: "공식 코드", label: "Kohaku provider interface · commit 8d5a29e", href: "https://github.com/ethereum/kohaku/blob/8d5a29e3fba806431c881f72c0bc9accb0066ace/packages/provider/src/provider.ts", note: "Common methods·normalized types·TxSigner 분리의 pinned 근거이며 backend semantic·trust parity는 보장하지 않음" },
+    { kind: "공식 코드", label: "Kohaku Helios adapter · commit 8d5a29e", href: "https://github.com/ethereum/kohaku/blob/8d5a29e3fba806431c881f72c0bc9accb0066ace/packages/provider/src/helios/index.ts", note: "Sync/read와 explicit getLogs bypass의 pinned 구현 근거이며 bypass 결과를 light-client verified로 해석하지 않음" },
+    { kind: "공식 코드", label: "Kohaku repository · commit 8d5a29e", href: "https://github.com/ethereum/kohaku/tree/8d5a29e3fba806431c881f72c0bc9accb0066ace", note: "Package layout·version·WIP/unaudited maturity의 pinned 근거이며 provider가 roadmap 전체 privacy 기능이나 production readiness를 가진다는 뜻은 아님" },
+  ],
+  "blockchain/omni-octane": [
+    { kind: "공식 코드", label: "Omni Octane monorepo · commit 9864f25", href: "https://github.com/omni-network/omni/tree/9864f25fa9bcb473ee34d2442012fc5fbd2683ea", note: "Halo·Octane·Engine client의 pinned integration snapshot이며 moving main·all-client compatibility·production readiness를 뜻하지 않음" },
+    { kind: "공식 코드", label: "Octane ABCI proposal bridge · commit 9864f25", href: "https://github.com/omni-network/omni/blob/9864f25fa9bcb473ee34d2442012fc5fbd2683ea/octane/evmengine/keeper/abci.go", note: "PrepareProposal timeout·build/get·single payload transaction source이며 payload ID가 commit·durable identity라는 뜻은 아님" },
+    { kind: "공식 코드", label: "Octane finalized payload/event path · commit 9864f25", href: "https://github.com/omni-network/omni/blob/9864f25fa9bcb473ee34d2442012fc5fbd2683ea/octane/evmengine/keeper/msg_server.go", note: "newPayload·finalized FCU·event delivery·head update ordering source이며 bounded retry·all-event atomicity·external delivery 보장은 아님" },
+    { kind: "공식 규격", label: "Ethereum execution-apis · snapshot 5aebdfdd", href: "https://github.com/ethereum/execution-apis/tree/5aebdfdd45cadeb723be4bd45b4611b71c8b1c85", note: "Versioned Engine methods·schemas·statuses 정본이며 Octane의 ABCI packaging·retry·specific client parity를 정의하지 않음" },
   ],
 };
