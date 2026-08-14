@@ -6700,11 +6700,71 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [{ label: "Hash domain separation", href: "/crypto/hash-theory" }, { label: "Key lifecycle", href: "/isms-aml/isms-encryption#key-lifecycle" }, { label: "EVM execution", href: "/blockchain/evm-fundamentals" }],
     evidence: [{ kind: "standard", rule: "AA semantics는 current ERC-4337/7562, ML-DSA는 FIPS 204와 published errata에 각각 귀속한다." }, { kind: "project-measurement", rule: "Exact chain·EntryPoint·bundler·account/verifier bytecode·FIPS profile에서 gas·negative fixture·on-chain receipt를 측정한다." }, { kind: "project-claim", rule: "ERC-4337 signature freedom·FIPS standard 존재를 EVM native precompile·cheap gas·bundler acceptance·PQ security 전체로 확대하지 않는다." }],
   },
+  "filecoin-proofs": {
+    title: "rust-fil-proofs proof-type·phase·verification stack 글이 소유하는 범위",
+    owns: ["PoRep·WindowPoSt·WinningPoSt API router와 typed phase-output envelope", "Expected statement·proof-byte verification router와 stack release gate"],
+    reuses: [{ label: "Storage-proof claim decomposition", href: "/blockchain/pos-theory" }, { label: "Filecoin GPU phase artifact chain", href: "/gpu/filecoin-gpu-proofs#phase-chain" }],
+    evidence: [{ kind: "primary-source", rule: "API·phase·verification 동작은 rust-fil-proofs commit d451d23와 Filecoin spec commit a950028에 귀속한다." }, { kind: "project-measurement", rule: "Claim/profile/input/cache generation을 고정하고 independent verification 뒤 stage·end-to-end·queue를 측정한다." }, { kind: "project-claim", rule: "API 존재를 current network activation·deadline inclusion·retrieval SLA나 고정 speedup으로 확대하지 않는다." }],
+  },
+  "proofs-porep": {
+    title: "PoRep PC1·PC2·commit artifact 글이 소유하는 범위",
+    owns: ["PC1 ReplicaID·label-store artifact와 PC2 replica/tree commitment artifact", "C1/C2 proof receipt와 classic·NI-PoRep 분리 release gate"],
+    reuses: [{ label: "PoRep relation", href: "/blockchain/pos-theory#porep" }, { label: "Filecoin proof phase artifact chain", href: "/gpu/filecoin-gpu-proofs#phase-chain" }],
+    evidence: [{ kind: "primary-source", rule: "Classic phases는 rust-fil-proofs d451d23·SDR spec a950028, NI-PoRep는 FIP-0090 revision c856d99에 따로 귀속한다." }, { kind: "project-measurement", rule: "같은 sector/profile/generation에서 commitments·proof parity, cache durability·restart와 phase wall time을 확인한다." }, { kind: "project-claim", rule: "NI-PoRep를 classic randomness/artifact와 합치거나 source snapshot을 current activation·고정 sealing time으로 일반화하지 않는다." }],
+  },
+  "proofs-post": {
+    title: "WindowPoSt·WinningPoSt job·submission 글이 소유하는 범위",
+    owns: ["WindowPoSt deadline snapshot·partition receipt와 WinningPoSt election job receipt", "Lotus reorg-aware WindowPoSt submission state와 deadline release gate"],
+    reuses: [{ label: "PoSt fresh challenge", href: "/blockchain/pos-theory#post" }, { label: "Filecoin deadline release gate", href: "/gpu/filecoin-gpu-proofs#release-gate" }],
+    evidence: [{ kind: "primary-source", rule: "Proof API는 rust-fil-proofs d451d23, scheduler·submission은 Lotus v1.36.2 commit c6f4d02에 따로 귀속한다." }, { kind: "project-measurement", rule: "Proof kind·randomness·snapshot·fault policy를 고정하고 independent verify, reorg·deadline·message receipt를 재생한다." }, { kind: "project-claim", rule: "Winning eligibility와 Window maintenance를 섞거나 valid proof를 block/message inclusion·retrieval availability로 확대하지 않는다." }],
+  },
+  "filecoin-pdp": {
+    title: "PDP dataset·challenge·period contract 글이 소유하는 범위",
+    owns: ["Ordered pieces의 logical-array dataset artifact와 sampled Merkle proof receipt", "PDP proving-period success/fault state와 contract-provider release gate"],
+    reuses: [{ label: "Sampling detection probability", href: "/blockchain/pos-theory#por" }, { label: "Storage proof service boundary", href: "/blockchain/pos-theory#overview" }],
+    evidence: [{ kind: "primary-source", rule: "Contract semantics는 FilOzone PDP commit 4d2a930, provider integration은 Curio commit 550f2ee에 각각 귀속한다." }, { kind: "project-measurement", rule: "Dataset revision·seed·period·ABI를 고정하고 local/on-chain parity, deadline·reorg·retry를 재생한다." }, { kind: "project-claim", rule: "Possession receipt를 PoRep encoding·retrieval SLA·future availability 또는 production durability로 확대하지 않는다." }],
+  },
+  "stablecoin-overview": {
+    title: "Stablecoin arrangement·target·backing·stress 글이 소유하는 범위",
+    owns: ["Issuance·redemption·stabilization·transfer function map", "Target·market price·redemption claim과 backing risk", "Depeg·run·oracle·bridge recovery release gate"],
+    reuses: [{ label: "USDC issuer·CCTP", href: "/blockchain/usdc-circle" }, { label: "DAI collateral debt", href: "/blockchain/dai-maker" }],
+    evidence: [{ kind: "primary-source", rule: "Arrangement 경계는 FSB 공식 권고, risk 분류는 BIS 연구에 귀속한다." }, { kind: "project-measurement", rule: "Price·supply·claim·reserve/collateral·queue를 같은 cutoff incident ledger로 재생한다." }, { kind: "project-claim", rule: "Target·market price·유형 이름을 solvency·legal claim·redemption guarantee로 확대하지 않는다." }],
+  },
+  "usdc-circle": {
+    title: "USDC issuer ledger·reserve snapshot·CCTP 글이 소유하는 범위",
+    owns: ["Circle Mint fiat settlement↔native USDC mint/redemption ledger", "Reserve disclosure↔circulation cutoff", "CCTP burn·attestation·mint와 replay/domain release gate"],
+    reuses: [{ label: "Stablecoin target·claim boundary", href: "/blockchain/stablecoin-overview#overview" }],
+    evidence: [{ kind: "primary-source", rule: "Issuer claim은 Circle Transparency/Mint docs, cross-domain behavior는 current CCTP docs와 contract version에 귀속한다." }, { kind: "project-measurement", rule: "Bank·issuer·chain·CCTP receipts를 amount/domain/nonce/block/cutoff로 reconciliation한다." }, { kind: "project-claim", rule: "Assurance·attestation·burn을 audit·instant payout·destination completion·reserve solvency로 확대하지 않는다." }],
+  },
+  "dai-maker": {
+    title: "DAI Vault debt·rate·liquidation·PSM 글이 소유하는 범위",
+    owns: ["Vat collateral·normalized debt·rate state", "Oracle unsafe 판정·Dog/Clip auction 경계", "PSM issuer/capacity risk와 DSS parameter release gate"],
+    reuses: [{ label: "Stablecoin crypto-collateral risk", href: "/blockchain/stablecoin-overview#stabilization-mechanisms" }],
+    evidence: [{ kind: "primary-source", rule: "DSS behavior는 commit fa4f6630, Lite PSM은 dbf00222에 귀속하고 current deployment parameter를 별도 pin한다." }, { kind: "project-measurement", rule: "Vat/Spot/Jug/Dog/Clip/PSM state를 같은 block·deployment manifest에서 failure replay한다." }, { kind: "project-claim", rule: "Historical Maker naming·example threshold·PSM presence를 current Sky 전체·fiat backing·무위험 상환으로 확대하지 않는다." }],
+  },
+  "uniswap-v4": {
+    title: "Uniswap V4 singleton·hook·unlock settlement 글이 소유하는 범위",
+    owns: ["PoolManager singleton과 PoolKey identity", "Hook address permission·custom-accounting boundary", "Unlock currency-delta zero settlement와 core/hook/router release gate"],
+    reuses: [{ label: "V3 concentrated-liquidity math", href: "/blockchain/uniswap-v3#overview" }, { label: "V2 atomic settlement", href: "/blockchain/uniswap-v2#flash-swap" }],
+    evidence: [{ kind: "primary-source", rule: "Runtime semantics는 v4-core v4.0.0 commit e50237c4와 whitepaper에 귀속한다." }, { kind: "project-measurement", rule: "Exact PoolKey·hook codehash/flags·router generation에서 delta/revert/event/gas fixtures를 재생한다." }, { kind: "project-claim", rule: "Valid hook flag·delta zero·singleton을 arbitrary hook safety·price quality·LP return·fixed gas saving으로 확대하지 않는다." }],
+  },
   "pbft-hotstuff-lineage": {
     title: "PBFT·HotStuff·HotStuff-2·Jolteon/Ditto protocol-specific ownership",
     owns: ["PBFT slot admission·prepared/committed-local·client reply·stable-checkpoint lifecycle", "HotStuff safeNode·three-chain·pacemaker boundary와 HotStuff-2 double-certificate view entry", "Jolteon one-lock/two-chain·highQC TC와 Ditto state-aware MVBA rejoin"],
     reuses: [{ label: "BFT quorum and partial synchrony", href: "/blockchain/bft-comparison#quorum-safety" }, { label: "State machine replication", href: "/blockchain/consensus-comparison#smr" }, { label: "Generic lock and view-change evidence", href: "/blockchain/bft-comparison#recovery" }],
     evidence: [{ kind: "primary-source", rule: "각 message·threshold·safety/liveness 주장은 PBFT, HotStuff, HotStuff-2, Jolteon/Ditto 원문에 따로 귀속한다." }, { kind: "project-measurement", rule: "동일 request에서 equivocation·partition·timeout·crash를 넣고 conflict 0, GST/fallback progress, state receipt를 분리 측정한다." }, { kind: "project-claim", rule: "Phase 수·QC 이름·historical prototype을 단일 진화 계보, production durability 또는 고정 latency로 확대하지 않는다." }],
+  },
+  "commonware-primitives-simplex-storage": {
+    title: "Commonware primitives·Simplex·storage route-specific ownership",
+    owns: ["Commonware runtime context·trait composition과 bridge certificate/application receipt boundary", "Commonware Simplex notarize/nullify/finalize·certification·resolver/journal lifecycle", "Commonware MMR bagging과 QMDB Any/Current·batch/prune recovery boundary"],
+    reuses: [{ label: "Generic BFT quorum and partial synchrony", href: "/blockchain/bft-comparison#quorum-safety" }, { label: "State machine replication", href: "/blockchain/consensus-comparison#smr" }, { label: "Existing Commonware crypto P2P", href: "/blockchain/commonware-crypto-p2p" }, { label: "Existing Commonware broadcast", href: "/blockchain/commonware-broadcast" }],
+    evidence: [{ kind: "primary-source", rule: "Current implementation facts는 Commonware tag v2026.7.0 commit 5950bf7과 matching docs.rs source에만 귀속한다." }, { kind: "project-measurement", rule: "동일 request·version·config에서 component receipts, deterministic replay, crash/root/proof parity를 비교한다." }, { kind: "project-claim", rule: "Composable primitive·example bridge·candidate root를 completed framework·production safety·durable client effect로 확대하지 않는다." }],
+  },
+  "tusk-paper-ordering": {
+    title: "Tusk paper asynchronous DAG ordering ownership",
+    owns: ["Tusk shared-coin leader와 f+1 causal support", "Tusk leader-history traversal, asynchronous randomized liveness와 release boundary"],
+    reuses: [{ label: "Narwhal certified DAG", href: "/blockchain/narwhal-deep" }, { label: "Generic DAG linearization", href: "/blockchain/dag-consensus#linearization" }, { label: "Ordering·execution separation", href: "/blockchain/consensus-comparison#smr" }],
+    evidence: [{ kind: "primary-source", rule: "Tusk message model·threshold·liveness·evaluation은 Narwhal and Tusk arXiv 2105.11827에만 귀속한다." }, { kind: "project-measurement", rule: "동일 certified DAG에서 coin/support, arrival permutation, missing payload, partition/restart와 order/state receipt를 재생한다." }, { kind: "project-claim", rule: "Zero-message overhead·expected rounds·historical TPS를 zero network traffic·deterministic SLA·current implementation으로 확대하지 않는다." }],
   },
 } as const satisfies Record<string, EditorialBoundary>;
 

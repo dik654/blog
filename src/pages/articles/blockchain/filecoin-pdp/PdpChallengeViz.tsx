@@ -1,0 +1,4 @@
+export function PdpChallengeViz() {
+  const stages = [["dataset", "piece roots · leaf counts"], ["schedule", "challenge epoch · range"], ["sample", "seed → logical leaf"], ["verify", "Merkle path · next period"]];
+  return <div data-viz="pdp-challenge-receipt" className="rounded-xl border border-border bg-card p-4 sm:p-6"><p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">PDP dataset proving period</p><div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">{stages.map(([title, detail], i) => <div key={title} className="min-w-0 rounded-lg border border-border bg-muted/20 p-4"><span className="grid size-6 place-items-center rounded-full border border-primary/40 text-xs">{i + 1}</span><p className="mt-2 font-semibold">{title}</p><p className="mt-1 break-words text-sm leading-6 text-muted-foreground">{detail}</p></div>)}</div></div>;
+}

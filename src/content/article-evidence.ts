@@ -3827,8 +3827,16 @@ export const ARTICLE_EVIDENCE: Readonly<
       "chain state와 built-in actor의 책임 경계",
     ),
   ],
-  "blockchain/proofs-porep": FILECOIN_PROOFS_SERIES_EVIDENCE,
-  "blockchain/proofs-post": FILECOIN_PROOFS_SERIES_EVIDENCE,
+  "blockchain/proofs-porep": [
+    { kind: "공식 코드", label: "rust-fil-proofs seal API · commit d451d23", href: "https://github.com/filecoin-project/rust-fil-proofs/blob/d451d23ba6dcabd107e66b2f9c6531887b17fd3d/filecoin-proofs/src/api/seal.rs", note: "PC1·PC2·C1·C2 orchestration snapshot이며 current activation·고정 sealing time은 아님" },
+    { kind: "공식 규격", label: "Filecoin SDR specification · commit a950028", href: "https://github.com/filecoin-project/specs/tree/a95002835b34d4042c007feda3fecf5e68e79dfa/content/algorithms/sdr", note: "Replica-specific labels·encoding·commitment construction이며 모든 PoRep/GPU 구현을 뜻하지 않음" },
+    { kind: "공식 문서", label: "FIP-0090 NI-PoRep · revision c856d99", href: "https://github.com/filecoin-project/FIPs/blob/c856d99b126cb52a0436c4838da55ec84495cfa7/FIPS/fip-0090.md", note: "NI-PoRep proposal·activation profile이며 classic phase artifacts와 자동 호환된다는 뜻은 아님" },
+  ],
+  "blockchain/proofs-post": [
+    { kind: "공식 코드", label: "rust-fil-proofs WindowPoSt API · commit d451d23", href: "https://github.com/filecoin-project/rust-fil-proofs/blob/d451d23ba6dcabd107e66b2f9c6531887b17fd3d/filecoin-proofs/src/api/window_post.rs", note: "WindowPoSt generation·verification orchestration이며 current deadline constants·inclusion은 별도" },
+    { kind: "공식 코드", label: "rust-fil-proofs WinningPoSt API · commit d451d23", href: "https://github.com/filecoin-project/rust-fil-proofs/blob/d451d23ba6dcabd107e66b2f9c6531887b17fd3d/filecoin-proofs/src/api/winning_post.rs", note: "Election proof API snapshot이며 block election·inclusion을 보장하지 않음" },
+    { kind: "공식 코드", label: "Lotus WindowPoSt runner · v1.36.2 commit c6f4d02", href: "https://github.com/filecoin-project/lotus/blob/c6f4d02400dba55ebc5ab3677ef2ae5a5f4d1aef/storage/wdpost/wdpost_run.go", note: "Deadline generation·submission·receipt 흐름이며 모든 reorg·congestion 성공률은 아님" },
+  ],
   "blockchain/proofs-snark": FILECOIN_PROOFS_SERIES_EVIDENCE,
   "blockchain/filecoin-fvm": [
     source(
@@ -3868,19 +3876,14 @@ export const ARTICLE_EVIDENCE: Readonly<
     ),
   ],
   "blockchain/filecoin-pdp": [
-    source(
-      "공식 코드",
-      OFFICIAL_SOURCES.filecoin.pdp,
-      "PDP contract와 proof schedule의 현재 설계",
-    ),
+    { kind: "공식 문서", label: "FilOzone PDP design · commit 4d2a930", href: "https://github.com/FilOzone/pdp/blob/4d2a930194367477050302792de89e29275a6047/docs/design.md", note: "Dataset·challenge·period·fault와 detection model의 pinned design이며 retrieval SLA는 아님" },
+    { kind: "공식 코드", label: "PDPVerifier.sol · commit 4d2a930", href: "https://github.com/FilOzone/pdp/blob/4d2a930194367477050302792de89e29275a6047/src/PDPVerifier.sol", note: "Challenge derivation·Merkle verification·contract state snapshot이며 provider durability는 별도" },
+    { kind: "공식 코드", label: "Curio PDP provider API · commit 550f2ee", href: "https://github.com/filecoin-project/curio/blob/550f2ee0aadd3491da2bc71df13673075a803ccb/pdp/README.md", note: "Provider upload·CommP·dataset lifecycle 통합이며 on-chain proof 성공·fixed speed는 아님" },
   ],
   "blockchain/filecoin-proofs": [
-    {
-      kind: "공식 코드",
-      label: "filecoin-project/rust-fil-proofs",
-      href: "https://github.com/filecoin-project/rust-fil-proofs",
-      note: "Filecoin sealing·PoRep·PoSt 구현의 공식 Rust 원본",
-    },
+    { kind: "공식 코드", label: "rust-fil-proofs API · commit d451d23", href: "https://github.com/filecoin-project/rust-fil-proofs/tree/d451d23ba6dcabd107e66b2f9c6531887b17fd3d/filecoin-proofs/src/api", note: "Typed PoRep·Window·Winning API snapshot이며 current activation·fixed performance는 아님" },
+    { kind: "공식 코드", label: "rust-fil-proofs seal verifier · commit d451d23", href: "https://github.com/filecoin-project/rust-fil-proofs/blob/d451d23ba6dcabd107e66b2f9c6531887b17fd3d/filecoin-proofs/src/api/seal.rs", note: "Seal phases·verification·aggregation orchestration이며 ceremony trust·deadline inclusion은 별도" },
+    { kind: "공식 규격", label: "Filecoin proof-of-storage spec · commit a950028", href: "https://github.com/filecoin-project/specs/tree/a95002835b34d4042c007feda3fecf5e68e79dfa/content/algorithms/pos", note: "PoRep·PoSt claim definitions이며 current Lotus scheduler·PDP·retrieval SLA를 뜻하지 않음" },
   ],
   "blockchain/filecoin-storacha": [
     {
@@ -4732,6 +4735,22 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 규격", label: "RFC 9334 · RATS Architecture", href: "https://www.rfc-editor.org/rfc/rfc9334.html", note: "Attester·Verifier·Relying Party와 evidence·result·appraisal·freshness의 vendor-neutral 정본" },
     { kind: "공식 규격", label: "AMD SEV-SNP Firmware ABI Specification 1.58", href: "https://docs.amd.com/v/u/en-US/56860_PUB_1.58_SEV_SNP", note: "SNP attestation report request·field·signature interface의 vendor 정본" },
   ],
+  "blockchain/bplus-tree": [
+    { kind:"핵심 논문", label:"Bayer & McCreight · Organization and Maintenance of Large Ordered Indices", href:"https://doi.org/10.1007/BF00288683", note:"Page-oriented balanced multiway index의 primary paper" },
+    { kind:"공식 코드", label:"PostgreSQL nbtree @ eb983d0", href:"https://github.com/postgres/postgres/tree/eb983d0a94f666d91058552117d029939821d648/src/backend/access/nbtree", note:"Production ordered-index implementation의 pinned source" },
+  ],
+  "blockchain/lsm-tree": [
+    { kind:"핵심 논문", label:"O’Neil et al. · The Log-Structured Merge-Tree", href:"https://doi.org/10.1007/s002360050048", note:"LSM architecture·rolling merge의 primary paper" },
+    { kind:"공식 코드", label:"facebook/rocksdb @ 2dc6bc5", href:"https://github.com/facebook/rocksdb/tree/2dc6bc51b498c7fcae16e78a54de9058181c8b75", note:"WAL·memtable·SST·compaction·stall의 pinned implementation" },
+  ],
+  "blockchain/mdbx-internals": [
+    { kind:"핵심 논문", label:"Chu · MDB: A Memory-Mapped Database and Backend for OpenLDAP", href:"https://www.openldap.org/pub/hyc/mdb-paper.pdf", note:"mmap·CoW·MVCC design lineage의 primary paper" },
+    { kind:"공식 코드", label:"Mithril-mine/libmdbx @ f7a3a93", href:"https://github.com/Mithril-mine/libmdbx/tree/f7a3a9323cacacfa9dc6137ae7a7252a67744ff0", note:"MDBX transaction·page·DUPSORT의 pinned source" },
+  ],
+  "blockchain/merkle-patricia-trie": [
+    { kind:"공식 문서", label:"ethereum.org · Merkle Patricia Trie", href:"https://ethereum.org/developers/docs/data-structures-and-encoding/patricia-merkle-trie/", note:"MPT node/path/root 구조의 official documentation" },
+    { kind:"공식 코드", label:"ethereum/go-ethereum trie @ 6bb0588", href:"https://github.com/ethereum/go-ethereum/tree/6bb0588ad8e7f922e4ad5580f51265a4097af08f/trie", note:"MPT update·encoding·proof의 pinned client source" },
+  ],
   "crypto/elgamal": [
     { kind: "핵심 논문", label: "ElGamal · A Public-Key Cryptosystem and a Signature Scheme Based on Discrete Logarithms", href: "https://doi.org/10.1109/TIT.1985.1057074", note: "Randomized group encryption construction의 primary paper" },
     { kind: "공식 규격", label: "RFC 6090 · Fundamental Elliptic Curve Cryptography Algorithms", href: "https://www.rfc-editor.org/rfc/rfc6090.html", note: "EC group instance·validation/security considerations의 standard reference" },
@@ -5195,6 +5214,24 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 규격", label: "NIST FIPS 204 · ML-DSA", href: "https://csrc.nist.gov/pubs/fips/204/final", note: "ML-DSA algorithm·parameter·encoding의 최종 표준과 errata 진입점이며 EVM integration·gas·recovery 보장은 아님" },
     { kind: "공식 규격", label: "ERC-7562 · Account Abstraction Validation Scope Rules", href: "https://eips.ethereum.org/EIPS/eip-7562", note: "Bundler validation scope·DoS admission 규칙이며 모든 bundler의 PQ verifier 지원을 의미하지 않음" },
   ],
+  "blockchain/stablecoin-overview": [
+    { kind: "공식 문서", label: "FSB · Global Stablecoin Recommendations", href: "https://www.fsb.org/2023/07/high-level-recommendations-for-the-regulation-supervision-and-oversight-of-global-stablecoin-arrangements-final-report/", note: "발행·상환·안정화·transfer·governance 기능을 arrangement로 읽는 2023 공식 권고이며 특정 token safety 보장은 아님" },
+    { kind: "핵심 연구", label: "BIS Working Paper 905 · Stablecoins", href: "https://www.bis.org/publ/work905.htm", note: "Backing·governance·settlement·liquidity risk 비교 근거이며 2026 issuer 상태·regulatory approval을 뜻하지 않음" },
+  ],
+  "blockchain/usdc-circle": [
+    { kind: "공식 문서", label: "Circle · Transparency & Stability", href: "https://www.circle.com/transparency", note: "Reserve disclosure·assurance cadence와 issuer redeemability claim의 확인 진입점이며 real-time proof·즉시 상환 보장은 아님" },
+    { kind: "공식 문서", label: "Circle Mint · How minting works", href: "https://developers.circle.com/circle-mint/concepts/how-minting-works", note: "Eligible account의 fiat funding·mint·redemption lifecycle이며 모든 holder의 직접 상환 자격을 뜻하지 않음" },
+    { kind: "공식 구현", label: "Circle · CCTP Technical Guide", href: "https://developers.circle.com/cctp/references/technical-guide", note: "Burn message·attestation·domain·destination mint protocol이며 reserve solvency·destination app safety 보장은 아님" },
+  ],
+  "blockchain/dai-maker": [
+    { kind: "공식 코드", label: "Sky ecosystem · Multi-Collateral DAI core · fa4f663", href: "https://github.com/sky-ecosystem/dss/tree/fa4f6630afb0624d04a003e920b0d71a00331d98", note: "Vat·Spot·Jug·Dog/Clipper·adapter pinned source이며 current parameter·governance·Sky product 전체를 고정하지 않음" },
+    { kind: "공식 코드", label: "Sky ecosystem · Lite PSM · dbf0022", href: "https://github.com/sky-ecosystem/dss-lite-psm/tree/dbf0022225f645f5697e5517d0cf00810471bccf", note: "PSM·Pocket·Mom·fees·capacity pinned source이며 collateral issuer 무위험·unlimited redemption을 뜻하지 않음" },
+  ],
+  "blockchain/uniswap-v4": [
+    { kind: "공식 코드", label: "Uniswap v4-core v4.0.0 · e50237c", href: "https://github.com/Uniswap/v4-core/tree/e50237c43811bd9b526eff40f26772152a42daba", note: "PoolManager·PoolKey·unlock·delta·hook executable source이며 arbitrary hook/router safety 보장은 아님" },
+    { kind: "공식 코드", label: "Uniswap v4 Hooks.sol · e50237c", href: "https://github.com/Uniswap/v4-core/blob/e50237c43811bd9b526eff40f26772152a42daba/src/libraries/Hooks.sol", note: "Hook address flags·callback validation source이며 hook economic·upgrade·access-control safety 보장은 아님" },
+    { kind: "핵심 논문", label: "Uniswap v4 Core whitepaper", href: "https://app.uniswap.org/whitepaper-v4.pdf", note: "Singleton·hooks·flash accounting architecture 원문이며 fixed gas saving·liquidity·price execution 보장은 아님" },
+  ],
   "blockchain/pbft-deep": [
     { kind: "핵심 논문", label: "Practical Byzantine Fault Tolerance · OSDI 1999", href: "https://www.usenix.org/conference/osdi-99/presentation/practical-byzantine-fault-tolerance", note: "PBFT normal case·view change·checkpoint·client protocol의 원문이며 당시 crypto·NFS 수치를 current deployment 상수로 일반화하지 않음" },
     { kind: "핵심 논문", label: "PBFT §4.2 Normal-Case Operation", href: "https://www.usenix.org/legacy/publications/library/proceedings/osdi99/full_papers/castro/castro_html/node4.html#SECTION00042000000000000000", note: "Prepared·committed-local과 ordered execution의 exact 정의이며 단일 message가 client success를 뜻하지 않음" },
@@ -5214,5 +5251,21 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "핵심 논문", label: "Jolteon and Ditto · arXiv 2106.10362", href: "https://arxiv.org/abs/2106.10362", note: "Two-chain sync path와 state-aware MVBA fallback 원문이며 current Aptos가 paper fallback을 그대로 쓴다고 주장하지 않음" },
     { kind: "핵심 논문", label: "Jolteon and Ditto §3 Jolteon", href: "https://arxiv.org/pdf/2106.10362#page=6", note: "One-chain lock·two-chain commit·highQC TC의 근거이며 TC 자체는 commit certificate가 아님" },
     { kind: "공식 코드", label: "Aptos round manager · aptos-node-v1.48.6", href: "https://github.com/aptos-labs/aptos-core/blob/aptos-node-v1.48.6/consensus/src/round_manager.rs", note: "2026-08-14 pinned Proposal·Vote·QC·TwoChainTimeoutCertificate integration이며 paper Ditto MVBA 구현과 동일시하지 않음" },
+  ],
+  "blockchain/commonware-deep-dive": [
+    { kind: "공식 코드", label: "Commonware monorepo · v2026.7.0 commit 5950bf7", href: "https://github.com/commonwarexyz/monorepo/tree/5950bf7179bb0650a57ed58b9e0478822944b335", note: "2026-08-14 pinned runtime·crypto·P2P·consensus·storage primitives와 stability scope이며 assembled application correctness·fixed SLA 보장은 아님" },
+    { kind: "공식 코드", label: "commonware-bridge validator · v2026.7.0", href: "https://docs.rs/crate/commonware-bridge/2026.7.0/source/src/bin/validator.rs", note: "Runtime·network·Simplex·application의 concrete example wiring이며 모든 Commonware deployment의 표준 architecture·운영 policy는 아님" },
+  ],
+  "blockchain/commonware-simplex": [
+    { kind: "공식 문서", label: "commonware-consensus Simplex · v2026.7.0", href: "https://docs.rs/commonware-consensus/2026.7.0/commonware_consensus/simplex/index.html", note: "Notarize·nullify·finalize, certification, recovery와 stated latency의 pinned 설명이며 arbitrary network의 wall-clock SLA는 아님" },
+    { kind: "공식 코드", label: "Commonware Simplex source · commit 5950bf7", href: "https://github.com/commonwarexyz/monorepo/blob/5950bf7179bb0650a57ed58b9e0478822944b335/consensus/src/simplex/mod.rs", note: "Batcher·Voter·Resolver·Application, lazy verification과 certificate recovery source이며 original Simplex paper와 완전 동일하다는 주장은 아님" },
+  ],
+  "blockchain/commonware-storage": [
+    { kind: "공식 코드", label: "Commonware MMR · v2026.7.0", href: "https://github.com/commonwarexyz/monorepo/blob/5950bf7179bb0650a57ed58b9e0478822944b335/storage/src/merkle/mmr/mod.rs", note: "Location/position·peaks·proof·bagging의 pinned source이며 inclusion이 current value·finality·durability를 보장하지 않음" },
+    { kind: "공식 코드", label: "Commonware QMDB · v2026.7.0", href: "https://github.com/commonwarexyz/monorepo/blob/5950bf7179bb0650a57ed58b9e0478822944b335/storage/src/qmdb/mod.rs", note: "Any·Current variants와 batch→merkleize→apply→sync/prune lifecycle source이며 candidate root를 durable commit으로 확대하지 않음" },
+  ],
+  "blockchain/tusk": [
+    { kind: "핵심 논문", label: "Narwhal and Tusk · arXiv 2105.11827", href: "https://arxiv.org/abs/2105.11827", note: "Certified DAG와 asynchronous shared-coin ordering 원문이며 historical evaluation 수치를 current chain SLA로 일반화하지 않음" },
+    { kind: "핵심 논문", label: "Narwhal and Tusk · Tusk protocol", href: "https://arxiv.org/pdf/2105.11827#page=10", note: "Coin-selected leader·f+1 support·causal history ordering의 근거이며 local arrival order나 deterministic latency bound를 뜻하지 않음" },
   ],
 };

@@ -30,9 +30,10 @@ export const bftNewArticles: Article[] = [
     title: "Tusk (비동기 DAG 합의)",
     subcategory: "bft-consensus",
     sections: [
-      { id: "overview", title: "Tusk 개요" },
-      { id: "async-protocol", title: "비동기 프로토콜 구조" },
-      { id: "comparison", title: "Tusk vs Bullshark" },
+      { id: "overview", title: "Narwhal DAG와 Tusk의 경계" },
+      { id: "coin-support", title: "공통 coin과 f+1 support" },
+      { id: "causal-order", title: "Leader history를 total order로" },
+      { id: "release", title: "비동기 liveness와 release gate" },
     ],
     component: () => import("@/pages/articles/blockchain/tusk"),
   },
