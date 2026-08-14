@@ -46,7 +46,7 @@ export default function ModernFrobeniusArticle() {
           formula={String.raw`\varphi(x)=x^p,\qquad \varphi(a+b)=(a+b)^p=a^p+b^p,\qquad \varphi(ab)=a^pb^p`}
           terms={[
             { symbol: "p", name: "Characteristic prime", description: "Base field Fp의 소수 modulus입니다." },
-            { symbol: "\varphi", name: "Frobenius map", description: "Field 원소를 p제곱하는 함수입니다." },
+            { symbol: String.raw`\varphi`, name: "Frobenius map", description: "Field 원소를 p제곱하는 함수입니다." },
             { symbol: "a,b", name: "Field elements", description: "Fp 또는 그 extension Fp^k의 임의 원소입니다." },
           ]}
           assumptions={["Field의 characteristic이 소수 p이며 exponentiation과 addition이 같은 field 안에서 수행됩니다.", "Fp^k는 irreducible polynomial quotient로 구성돼 모든 nonzero 원소에 inverse가 있습니다.", "구현 representation이 Montgomery form이어도 map 전후의 mathematical field identity는 같아야 합니다."]}
@@ -66,7 +66,7 @@ export default function ModernFrobeniusArticle() {
           terms={[
             { symbol: "k", name: "Extension degree", description: "Fp 위 vector-space dimension이며 field 크기는 p^k입니다." },
             { symbol: "j", name: "Frobenius power", description: "Map을 반복 적용한 횟수입니다." },
-            { symbol: "\varphi^k", name: "Full cycle", description: "모든 Fp^k 원소를 고정하는 identity map입니다." },
+            { symbol: String.raw`\varphi^k`, name: "Full cycle", description: "모든 Fp^k 원소를 고정하는 identity map입니다." },
           ]}
           assumptions={["x는 정확히 Fp^k의 원소이고 field profile이 실행 중 바뀌지 않습니다.", "k는 ambient extension degree이며 subfield 원소는 더 짧은 cycle을 가질 수 있습니다.", "Cycle identity는 coefficient order 검산 하나이지 전체 pairing correctness 증명은 아닙니다."]}
           interpretation="Fp12에서는 φ^12(x)=x를 negative test로 쓸 수 있습니다. 그러나 어떤 x는 Fp2 같은 subfield에 있어 더 일찍 돌아오므로 한 test vector의 정확한 cycle 길이가 항상 12라는 뜻은 아닙니다."
@@ -154,7 +154,7 @@ export default function ModernFrobeniusArticle() {
           formula={String.raw`\varphi(1+u)=(1+u)^3=1+u^3=1+2u,\qquad \varphi^2(1+u)=1+u`}
           terms={[
             { symbol: "u", name: "Extension basis unit", description: "u²+1=0, 즉 u²=2를 만족하는 새 원소입니다." },
-            { symbol: "\varphi", name: "Frobenius", description: "이 degree-2 field에서 세제곱하는 map입니다." },
+            { symbol: String.raw`\varphi`, name: "Frobenius", description: "이 degree-2 field에서 세제곱하는 map입니다." },
             { symbol: "2u", name: "Conjugated coefficient", description: "F3에서 −u와 같은 표현입니다." },
           ]}
           assumptions={["u²+1은 F3에서 root가 없어 irreducible이므로 quotient가 9원소 field입니다.", "Coefficient는 매 연산 뒤 mod 3으로 환원합니다.", "이 단순 부호 반전은 degree-2 예이며 Fp12 전체 slot에 그대로 적용하지 않습니다."]}

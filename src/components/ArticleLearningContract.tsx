@@ -9,6 +9,7 @@ import {
   KNOWLEDGE_EDGES,
   type KnowledgeEdge,
 } from "@/content/knowledge-graph";
+import ArticleLessonFlowViz from "@/components/viz/ArticleLessonFlowViz";
 
 const RELATION_LABEL: Record<KnowledgeEdge["relation"], string> = {
   prerequisite: "먼저 알아야 함",
@@ -155,16 +156,6 @@ function TermCard({
   );
 }
 
-function stageTransition(index: number, length: number) {
-  if (index === 0) return "먼저 확인할 단계";
-  if (index === length - 1) return "마지막으로 확인할 단계";
-  return "그다음 확인할 단계";
-}
-
-function displayStageLabel(label: string) {
-  return label.replace(/^\d{1,2}\s*[·:._-]?\s*/, "");
-}
-
 export function ArticleLessonPrimer({
   contract,
 }: {
@@ -181,53 +172,20 @@ export function ArticleLessonPrimer({
       <div className="border-b border-border/60 bg-muted/20 p-5 sm:p-6">
         <p className="text-xs font-bold text-primary">본문에 들어가기 전에</p>
         <h2 className="mt-2 text-xl font-black leading-8 text-foreground">
-          이 글은 수업을 듣듯 이 순서로 이해합니다
+          새 용어를 하나씩 이해한 뒤 본문에서 조합합니다
         </h2>
         <p className="mt-3 max-w-4xl text-sm leading-7 text-foreground/80">
-          {contract.coreIdea} 아래 순서는 외울 항목의 목록이 아니라, 앞 단계의
-          질문이 다음 단계의 필요성을 만드는 설명 경로입니다. 작은 예를 잡은 뒤
-          실제 본문에서 동작과 실패 경계를 차례로 확인합니다.
+          먼저 익숙한 장면과 질문만 봅니다. 장면을 선택하면 그제야 이름과 정의,
+          필요한 이유, 가장 작은 형태와 실패 경계를 공개합니다. 한 용어를 자기
+          말로 설명할 수 있게 된 뒤 다음 장면으로 넘어가고, 마지막에만 본문에서
+          메커니즘으로 연결합니다.
         </p>
       </div>
 
-      <ol className="divide-y divide-border/60 px-5 sm:px-6">
-        {stages.map((stage, index) => {
-          const concepts = stage.concepts.map(getKnowledgeConcept);
-          const example = contract.conceptExplanations.find((explanation) =>
-            stage.concepts.includes(explanation.id),
-          );
-          return (
-            <li
-              key={`${stage.label}-${index}`}
-              data-lesson-stage
-              className="grid gap-3 py-5 sm:grid-cols-[3rem_1fr] sm:gap-5"
-            >
-              <span className="font-mono text-sm font-black text-primary">
-                {String(index + 1).padStart(2, "0")}
-              </span>
-              <div className="min-w-0">
-                <h3 className="text-base font-bold leading-6 text-foreground">
-                  {stageTransition(index, stages.length)} · {displayStageLabel(stage.label)}
-                </h3>
-                <p className="mt-1.5 text-sm leading-7 text-foreground/75">
-                  {stage.relation}
-                </p>
-                <p className="mt-2 text-sm leading-7 text-muted-foreground">
-                  <strong className="text-foreground/80">핵심 연결:</strong>{" "}
-                  {concepts.map((concept) => concept.label).join(" · ")}. 다음 설명에서
-                  무엇이 입력이고 무엇이 결과인지 구분합니다.
-                </p>
-                {example && (
-                  <p className="mt-2 rounded-lg bg-muted/25 px-3.5 py-3 text-sm leading-7 text-foreground/75">
-                    <strong className="text-foreground">작은 예로 시작하면:</strong>{" "}
-                    {example.workedExample}
-                  </p>
-                )}
-              </div>
-            </li>
-          );
-        })}
-      </ol>
+      <ArticleLessonFlowViz
+        stages={stages}
+        explanations={contract.conceptExplanations}
+      />
 
       <p className="border-t border-border/60 px-5 py-4 text-xs leading-5 text-muted-foreground sm:px-6">
         이제 아래 본문을 처음부터 읽습니다. 용어 사전·개념 그래프·연습문제는
@@ -276,7 +234,7 @@ export default function ArticleLearningContractView({
                 "전문 용어나 수식을 알고 있다고 가정하지 않고, 일상적인 예시에서 시작해 이 글 안에서 필요한 기호와 계산으로 연결합니다."}
             </p>
           ) : (
-            <div className="mt-4 grid gap-4 xl:grid-cols-2">
+            <div className="mt-4 grid gap-4">
               {contract.assumedKnowledge.map((item) => (
                 <TermCard key={item.id} {...item} />
               ))}
@@ -291,7 +249,7 @@ export default function ArticleLearningContractView({
             각 용어를 넓은 카드에서 문장으로 다시 읽습니다. 정의와 이 글에서의
             역할을 구분하고, 필요할 때만 정본 설명으로 이동합니다.
           </p>
-          <div className="mt-4 grid gap-4 xl:grid-cols-2">
+          <div className="mt-4 grid gap-4">
             {contract.introducedHere.map((item) => (
               <TermCard key={item.id} {...item} />
             ))}

@@ -16,8 +16,8 @@ export default function Poseidon() {
         idea="Round constant로 대칭을 깨고, S-box로 비선형성을 넣은 뒤, invertible MDS matrix로 한 좌표의 차이를 전체 state에 확산합니다. Partial round는 S-box를 일부 좌표에만 적용해 회로 비용을 줄이되 그만큼 분석된 round 수가 필요합니다."
         formula={String.raw`\mathbf x^{(r+1)}=M\,S_r\!\left(\mathbf x^{(r)}+\mathbf c^{(r)}\right),\qquad S(x)=x^\alpha`}
         terms={[
-          { symbol: "\mathbf x^{(r)}", name: "state", description: "r번째 round가 받는 t개 field element입니다." },
-          { symbol: "\mathbf c^{(r)}", name: "round constants", description: "각 round와 위치에 고정된 field constants입니다." },
+          { symbol: String.raw`\mathbf x^{(r)}`, name: "state", description: "r번째 round가 받는 t개 field element입니다." },
+          { symbol: String.raw`\mathbf c^{(r)}`, name: "round constants", description: "각 round와 위치에 고정된 field constants입니다." },
           { symbol: "S_r", name: "full 또는 partial S-box layer", description: "모든 좌표 또는 지정된 좌표에 x^α를 적용합니다." },
           { symbol: "M", name: "linear mixing matrix", description: "State 차이를 여러 좌표로 퍼뜨리는 invertible matrix입니다." },
         ]}

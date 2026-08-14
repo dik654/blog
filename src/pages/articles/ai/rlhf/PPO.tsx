@@ -25,10 +25,10 @@ export default function PPO() {
         idea={<>Reward maximization에 reference policy와의 KL cost를 함께 두면, reward가 충분히 좋아질 때만 기존 token distribution을 바꾸게 됩니다. β는 reward 한 단위와 policy drift 한 단위의 환율입니다.</>}
         formula={String.raw`\begin{aligned}\ell_{KL}(x,y)&=\log\frac{\pi_\theta(y\mid x)}{\pi_{ref}(y\mid x)}\\R_{KL}(x,y)&=r_\phi(x,y)-\beta\ell_{KL}(x,y)\\J(\theta)&=\mathbb E_{x\sim\mathcal D,\,y\sim\pi_\theta}[R_{KL}(x,y)]\end{aligned}`}
         terms={[
-          { symbol: "\pi_\theta", name: "policy", description: "응답을 sample하며 update되는 language model입니다." },
-          { symbol: "\pi_{ref}", name: "reference policy", description: "보통 SFT checkpoint를 고정해 drift의 기준으로 사용합니다." },
+          { symbol: String.raw`\pi_\theta`, name: "policy", description: "응답을 sample하며 update되는 language model입니다." },
+          { symbol: String.raw`\pi_{ref}`, name: "reference policy", description: "보통 SFT checkpoint를 고정해 drift의 기준으로 사용합니다." },
           { symbol: "r_\phi", name: "reward model", description: "Preference data에서 학습한 sequence-level proxy score입니다." },
-          { symbol: "\beta", name: "KL coefficient", description: "높을수록 reference 근처의 보수적인 update를 선호합니다." },
+          { symbol: String.raw`\beta`, name: "KL coefficient", description: "높을수록 reference 근처의 보수적인 update를 선호합니다." },
         ]}
         assumptions={["기대값의 응답 y는 현재 policy에서 sample하므로 objective가 online distribution을 따릅니다.", "표시한 log-ratio는 sequence 합으로 구현할 수 있으며 실제 system은 token-level KL shaping을 사용하기도 합니다."]}
         interpretation="KL은 reward hacking을 판별하는 detector가 아니라 policy drift의 비용입니다. 잘못된 reward를 reference 근처에서 최적화하는 shortcut까지 자동으로 막아 주지는 않습니다."
@@ -40,9 +40,9 @@ export default function PPO() {
         formula={String.raw`\begin{aligned}\rho_t&=\frac{\pi_\theta(a_t\mid s_t)}{\pi_{old}(a_t\mid s_t)}\\u_t&=\rho_t\hat A_t\\c_t&=\operatorname{clip}(\rho_t,1-\epsilon,1+\epsilon)\hat A_t\\L^{CLIP}(\theta)&=\mathbb E_t[\min(u_t,c_t)]\end{aligned}`}
         terms={[
           { symbol: "s_t,a_t", name: "state·action", description: "LLM에서는 prompt와 prefix가 state, 다음 token이 action입니다." },
-          { symbol: "\pi_{old}", name: "behavior policy", description: "현재 rollout batch를 생성한 update 이전 policy입니다." },
-          { symbol: "\hat A_t", name: "advantage estimate", description: "선택한 token이 baseline보다 얼마나 나았는지 추정합니다." },
-          { symbol: "\epsilon", name: "clip range", description: "Probability-ratio surrogate의 허용 폭입니다." },
+          { symbol: String.raw`\pi_{old}`, name: "behavior policy", description: "현재 rollout batch를 생성한 update 이전 policy입니다." },
+          { symbol: String.raw`\hat A_t`, name: "advantage estimate", description: "선택한 token이 baseline보다 얼마나 나았는지 추정합니다." },
+          { symbol: String.raw`\epsilon`, name: "clip range", description: "Probability-ratio surrogate의 허용 폭입니다." },
         ]}
         assumptions={["Clipping은 objective의 일부이며 모든 parameter-space 변화에 대한 엄밀한 trust region은 아닙니다.", "Sequence reward를 token advantage로 바꾸는 return·GAE·value fitting 세부가 생략되어 있습니다."]}
         interpretation="Clipped term은 update 안정성을 위한 장치입니다. ε를 특정 상수로 외우기보다 KL, clip fraction, reward와 capability regression을 함께 보며 정합니다."

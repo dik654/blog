@@ -17,7 +17,7 @@ export default function ComplexPlane() {
           { symbol: "a", name: "real part", description: "복소평면의 가로 좌표입니다." },
           { symbol: "b", name: "imaginary coordinate", description: "복소평면의 세로 좌표이며 bi로 적습니다." },
           { symbol: "|z|", name: "magnitude", description: "원점에서 z까지의 Euclidean distance입니다." },
-          { symbol: "\overline z", name: "complex conjugate", description: "회전 방향의 부호를 뒤집은 실수축 대칭점입니다." },
+          { symbol: String.raw`\overline z`, name: "complex conjugate", description: "회전 방향의 부호를 뒤집은 실수축 대칭점입니다." },
         ]}
         assumptions={["a와 b는 실수이며 i는 i²=-1을 만족하도록 확장한 단위입니다."]}
         interpretation="복소수의 magnitude는 vector 길이와 같고 conjugate는 phase 부호를 뒤집습니다. Real signal DFT에서 양·음 frequency coefficient가 conjugate pair를 이루는 이유가 여기서 나옵니다."

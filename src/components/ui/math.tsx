@@ -13,6 +13,10 @@ export default function Math({ children, display = false, className }: Props) {
   const html = katex.renderToString(source, {
     displayMode: display,
     throwOnError: false,
+    // Operation annotations intentionally use Korean inside \text{...}.
+    // KaTeX renders it with the surrounding text font; strict warnings would
+    // otherwise turn every useful annotation into a browser-console warning.
+    strict: "ignore",
   });
   if (display) {
     return (

@@ -42,8 +42,8 @@ export default function ModernTcbArticle() {
           terms={[
             { symbol: "e_i", name: "i번째 event", description: "Firmware image·configuration·bootloader처럼 이번에 측정한 bytes 또는 정의된 event입니다." },
             { symbol: "H", name: "Cryptographic hash", description: "선택한 PCR bank의 hash algorithm입니다." },
-            { symbol: "\|", name: "Concatenation", description: "이전 PCR digest와 새 event digest를 규격의 순서로 결합합니다." },
-            { symbol: "\mathrm{PCR}_i", name: "Extended PCR value", description: "i번째 event까지의 순서에 의존하는 aggregate measurement입니다." },
+            { symbol: String.raw`\|`, name: "Concatenation", description: "이전 PCR digest와 새 event digest를 규격의 순서로 결합합니다." },
+            { symbol: String.raw`\mathrm{PCR}_i`, name: "Extended PCR value", description: "i번째 event까지의 순서에 의존하는 aggregate measurement입니다." },
           ]}
           assumptions={["Verifier가 같은 hash bank·initial PCR·event serialization을 사용합니다.", "Event log의 순서가 실제 extend 순서와 같습니다.", "Hash collision resistance는 event 의미나 reference policy의 정확성을 대신하지 않습니다."]}
           interpretation="Firmware→bootloader와 bootloader→firmware는 같은 두 digest를 써도 보통 다른 PCR을 냅니다. 다만 PCR만으로 어떤 event가 있었는지는 복원할 수 없어 event log가 함께 필요합니다."

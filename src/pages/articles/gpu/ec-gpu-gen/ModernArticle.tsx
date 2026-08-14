@@ -45,7 +45,7 @@ export default function ModernEcGpuGenArticle() {
         {symbol:"B",name:"Backend",description:"CUDA 또는 OpenCL path입니다."},
         {symbol:"V_c",name:"Compiler version",description:"nvcc 또는 OpenCL compiler/driver revision입니다."},
         {symbol:"A",name:"Target architecture",description:"예: CUDA compute capability와 generated code target입니다."},
-        {symbol:"\Phi",name:"Build flags",description:"Optimization, feature flags와 backend-specific arguments입니다."},
+        {symbol:String.raw`\Phi`,name:"Build flags",description:"Optimization, feature flags와 backend-specific arguments입니다."},
       ]} assumptions={["H는 collision-resistant build digest이고 모든 serialized fields는 순서와 encoding이 고정됩니다.","Runtime driver와 device identity처럼 build 뒤 달라질 값은 별도 execution receipt에 남깁니다."]} interpretation="Field와 source가 같아도 sm_80과 sm_90 target 또는 compiler flags가 다르면 K가 달라집니다. Hash 일치는 correctness 증명이 아니라 동일 artifact를 재현했다는 provenance입니다." />
       <div id="paper-ec-gpu-source-builder"><CitationBlock type="code" citeKey={2} source="ec-gpu SourceBuilder · commit 16d38ef" href={`${ECGPU}/ec-gpu-gen/src/source.rs`}><p><strong>문제:</strong> Base/extension fields와 field·FFT·MSM templates를 deterministic source로 조립해야 합니다.</p><p><strong>핵심 기여:</strong> Pinned SourceBuilder의 deduplication, naming과 operation-family assembly를 보여 줍니다.</p><p><strong>중요 가정:</strong> Commit 16d38ef, selected features와 ordered builder inputs를 고정합니다.</p><p><strong>근거 범위:</strong> 링크 revision의 source construction path입니다.</p><p><strong>일반화 금지:</strong> 임의 curve formula의 지원이나 backend compiler parity를 자동 보장하지 않습니다.</p></CitationBlock></div>
     </section>

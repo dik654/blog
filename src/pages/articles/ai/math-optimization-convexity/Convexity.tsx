@@ -32,7 +32,7 @@ export default function Convexity() {
         \end{aligned}`}
         terms={[
           {
-            symbol: "\lambda",
+            symbol: String.raw`\lambda`,
             name: "mixing weight",
             description: "두 점 사이 어디를 볼지 정하는 0과 1 사이의 비율입니다.",
           },
@@ -42,7 +42,7 @@ export default function Convexity() {
             description: "x와 y를 잇는 선분 위의 입력입니다.",
           },
           {
-            symbol: "\lambda f(x)+(1-\lambda)f(y)",
+            symbol: String.raw`\lambda f(x)+(1-\lambda)f(y)`,
             name: "chord height",
             description: "두 graph point를 잇는 직선의 높이입니다.",
           },

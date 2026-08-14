@@ -25,7 +25,7 @@ const SPEEDUP_TERMS = [
     description: "Scheduling·sampling·cache commit·CPU/GPU synchronization 비용입니다.",
   },
   {
-    symbol: "\mathbb{E}[Y_K]",
+    symbol: String.raw`\mathbb{E}[Y_K]`,
     name: "평균 committed length",
     description: "Depth K에서 target verify 한 cycle이 실제 확정한 token 수입니다.",
   },

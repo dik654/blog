@@ -371,7 +371,7 @@ export default function MixtureOfExpertsArticle() {
             { symbol: "n", name: "expert 수", description: "분배 대상 routed expert 개수입니다." },
             { symbol: "q", name: "균등 load", description: "모든 expert가 같은 수를 받는다면 expert당 assignment 수입니다." },
             { symbol: "c_i", name: "실제 expert load", description: "i번째 expert가 받은 assignment 수입니다." },
-            { symbol: "\rho_{\max}", name: "peak load ratio", description: "가장 붐비는 expert가 균등 기준의 몇 배인지 보여 줍니다." },
+            { symbol: String.raw`\rho_{\max}`, name: "peak load ratio", description: "가장 붐비는 expert가 균등 기준의 몇 배인지 보여 줍니다." },
           ]}
           assumptions={[
             "Padding과 masked token을 제외한 실제 routed token을 m으로 셉니다.",

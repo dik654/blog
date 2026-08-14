@@ -38,7 +38,7 @@ export default function Merkleize({
             description: "해당 subtree를 대표하는 32-byte hash입니다.",
           },
           {
-            symbol: "\|",
+            symbol: String.raw`\|`,
             name: "Concatenation",
             description: "왼쪽 32 bytes 뒤에 오른쪽 32 bytes를 붙입니다.",
           },

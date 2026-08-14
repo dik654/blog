@@ -45,10 +45,10 @@ export default function ModernGroth16Article() {
           formula={String.raw`vk_x=IC_0+\sum_{i=1}^{\ell}x_iIC_i,\qquad e(A,B)=e(\alpha_1,\beta_2)\,e(vk_x,\gamma_2)\,e(C,\delta_2)`}
           terms={[
             { symbol: "IC_i", name: "Input coefficients", description: "i번째 public input을 G₁ linear combination에 결속하는 verifying-key 요소입니다." },
-            { symbol: "\ell", name: "Public-input count", description: "Verifier cost에는 적어도 이 linear combination이 포함됩니다." },
+            { symbol: String.raw`\ell`, name: "Public-input count", description: "Verifier cost에는 적어도 이 linear combination이 포함됩니다." },
             { symbol: "A,B,C", name: "Proof elements", description: "각각 G₁, G₂, G₁에 속하며 canonical decode와 subgroup 검사가 필요합니다." },
             { symbol: "e", name: "Bilinear pairing", description: "Source-group scalar relation을 target-group product equation으로 옮깁니다." },
-            { symbol: "\alpha_1,\beta_2,\gamma_2,\delta_2", name: "Verification key anchors", description: "Setup trapdoor와 relation을 결속한 고정 group elements입니다." },
+            { symbol: String.raw`\alpha_1,\beta_2,\gamma_2,\delta_2`, name: "Verification key anchors", description: "Setup trapdoor와 relation을 결속한 고정 group elements입니다." },
           ]}
           assumptions={["Proof와 key points는 identity policy·curve equation·subgroup·canonical encoding 검사를 통과합니다.", "Public input 수·순서·field encoding과 verifying key/circuit identifier가 정확히 일치합니다.", "Pairing library와 final exponentiation이 target curve parameter에서 검증됐습니다."]}
           interpretation="Arkworks 구현은 e(A,B)·e(vkₓ,−γ)·e(C,−δ)=e(α,β)를 multi-Miller loop와 한 final exponentiation으로 계산합니다. 부호가 다른 표현은 같은 식의 이항 결과일 수 있지만 G₁/G₂ 타입과 ordering은 바꿀 수 없습니다."

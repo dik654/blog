@@ -13,7 +13,7 @@ export default function Bases() {
         formula={String.raw`\log_b x=\frac{\log_a x}{\log_a b}`}
         terms={[
           { symbol: "a,b", name: "old·new bases", description: "0보다 크고 1이 아닌 두 기준 배율입니다." },
-          { symbol: "\log_a b", name: "scale conversion", description: "두 log 단위 사이를 바꾸는 고정 상수입니다." },
+          { symbol: String.raw`\log_a b`, name: "scale conversion", description: "두 log 단위 사이를 바꾸는 고정 상수입니다." },
           { symbol: "x", name: "positive value", description: "밑을 바꿔도 원래 값은 변하지 않습니다." },
         ]}
         assumptions={["모든 logarithm은 실수 범위에서 정의되도록 x>0이어야 합니다.", "여러 loss 항을 합칠 때 한 항의 밑만 바꾸면 상대 weight가 바뀔 수 있습니다."]}

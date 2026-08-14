@@ -27,7 +27,7 @@ export default function RewardModel() {
           { symbol: "x", name: "prompt", description: "두 response가 공유하는 조건입니다." },
           { symbol: "y_+,y_-", name: "chosen·rejected", description: "Labeler가 더 낫다고 고른 응답과 비교 대상입니다." },
           { symbol: "r_\phi(x,y)", name: "scalar reward", description: "Parameter φ를 가진 model이 response 전체에 부여한 score입니다." },
-          { symbol: "\sigma", name: "logistic sigmoid", description: "Score 차이를 0과 1 사이의 pairwise probability로 바꿉니다." },
+          { symbol: String.raw`\sigma`, name: "logistic sigmoid", description: "Score 차이를 0과 1 사이의 pairwise probability로 바꿉니다." },
         ]}
         assumptions={["Preference가 score 차이로 설명된다는 Bradley–Terry 가정을 사용합니다.", "같은 prompt 안에서 더한 상수는 score 차이에서 사라지므로 reward의 절대 원점은 식별되지 않습니다."]}
         interpretation="Loss가 낮아졌다는 것은 수집한 pair ordering을 더 잘 설명한다는 뜻입니다. 도움됨·사실성·안전성이 각각 보존되거나 dataset 밖의 응답까지 정확히 평가한다는 보장은 아닙니다."

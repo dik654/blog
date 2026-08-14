@@ -18,7 +18,7 @@ export default function Ed25519() {
         formula={String.raw`r=H(\mathsf{prefix}\Vert M)\bmod L,\quad R=[r]B,\quad k=H(R\Vert A\Vert M)\bmod L,\quad S=(r+ka)\bmod L`}
         terms={[
           { symbol: "a,A=[a]B", name: "signing scalar·public key", description: "Seed hash와 pruning으로 만든 scalar와 encoded Edwards point입니다." },
-          { symbol: "\mathsf{prefix}", name: "nonce prefix", description: "Secret seed hash의 별도 절반으로, message-dependent nonce를 만듭니다." },
+          { symbol: String.raw`\mathsf{prefix}`, name: "nonce prefix", description: "Secret seed hash의 별도 절반으로, message-dependent nonce를 만듭니다." },
           { symbol: "L", name: "base-point order", description: "Scalar arithmetic이 이루어지는 prime order입니다." },
           { symbol: "R,S", name: "signature fields", description: "32-byte encoded point와 canonical scalar로 합계 64 bytes입니다." },
         ]}

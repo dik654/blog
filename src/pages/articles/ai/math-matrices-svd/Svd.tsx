@@ -21,7 +21,7 @@ export default function Svd() {
         formula={String.raw`A=U\Sigma V^\top,\qquad Ax=U\bigl(\Sigma(V^\top x)\bigr),\qquad \sigma_1\ge\sigma_2\ge\cdots\ge0`}
         terms={[
           { symbol: "V", name: "right singular vectors", description: "Input 공간에서 A가 구분하는 orthonormal directions를 column으로 가집니다." },
-          { symbol: "\Sigma", name: "singular values", description: "각 대응 방향을 얼마나 강하게 전달하는지 나타내는 nonnegative diagonal scale입니다." },
+          { symbol: String.raw`\Sigma`, name: "singular values", description: "각 대응 방향을 얼마나 강하게 전달하는지 나타내는 nonnegative diagonal scale입니다." },
           { symbol: "U", name: "left singular vectors", description: "Scaled component가 놓일 output 공간의 orthonormal directions입니다." },
         ]}
         assumptions={["실수 행렬의 SVD를 사용하며 complex matrix에서는 transpose 대신 conjugate transpose를 씁니다.", "Repeated singular value가 있으면 그 부분공간 안의 singular vectors는 하나로 고정되지 않지만 재구성 결과는 유지됩니다."]}

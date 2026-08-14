@@ -14,7 +14,7 @@ export default function RootsOfUnity() {
         idea={<>한 sample마다 −2πk/N만큼 회전하는 복소수를 n번 곱합니다. N번째 sample 뒤에는 phase가 −2πk가 되어 정수 k바퀴를 마치고 다시 1로 돌아옵니다.</>}
         formula={String.raw`\omega_N=e^{-i2\pi/N},\qquad \omega_N^{kn}=e^{-i2\pi kn/N},\qquad \omega_N^N=1`}
         terms={[
-          { symbol: "\omega_N", name: "primitive Nth root", description: "시계 방향으로 한 칸 회전하는 기본 step입니다." },
+          { symbol: String.raw`\omega_N`, name: "primitive Nth root", description: "시계 방향으로 한 칸 회전하는 기본 step입니다." },
           { symbol: "k", name: "frequency index", description: "N sample 동안 도는 바퀴 수를 정합니다." },
           { symbol: "n", name: "sample index", description: "기본 회전 step을 몇 번 적용했는지 나타냅니다." },
         ]}

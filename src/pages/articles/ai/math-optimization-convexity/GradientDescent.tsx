@@ -32,7 +32,7 @@ export default function GradientDescent() {
         terms={[
           { symbol: "x_t", name: "current iterate", description: "Step t에서의 현재 parameter 위치입니다." },
           { symbol: "-\nabla f(x_t)", name: "descent direction", description: "Local linear model에서 objective가 가장 빠르게 줄어드는 방향입니다." },
-          { symbol: "\eta", name: "learning rate", description: "그 방향으로 한 step에 이동할 거리의 scale입니다." },
+          { symbol: String.raw`\eta`, name: "learning rate", description: "그 방향으로 한 step에 이동할 거리의 scale입니다." },
         ]}
         assumptions={[
           "Gradient가 존재하고 Euclidean geometry에서 unconstrained update를 합니다.",

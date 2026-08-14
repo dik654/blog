@@ -37,7 +37,7 @@ export default function InitialValue() {
             description: "시간 t에서 관측할 상태와 전체 변화 경로입니다.",
           },
           {
-            symbol: "\lambda>0",
+            symbol: String.raw`\lambda>0`,
             name: "decay rate",
             description: "시간의 역수 단위를 가지며 감소 속도를 정합니다.",
           },

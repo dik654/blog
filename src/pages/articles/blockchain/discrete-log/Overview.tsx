@@ -25,7 +25,7 @@ export default function Overview() {
         terms={[
           { symbol: "b_i", name: "exponent bit", description: "x의 i번째 binary digit로 0 또는 1입니다." },
           { symbol: "g^{2^i}", name: "successive squares", description: "직전 값을 한 번 square해 얻는 group element입니다." },
-          { symbol: "\ell", name: "bit length", description: "필요한 square step 수의 크기를 정합니다." },
+          { symbol: String.raw`\ell`, name: "bit length", description: "필요한 square step 수의 크기를 정합니다." },
         ]}
         assumptions={["Group operation과 equality가 효율적이고 g·Y encoding이 canonical합니다.", "Side-channel이 중요한 secret exponent 구현은 constant-time algorithm을 별도로 사용합니다."]}
         interpretation="x=13=1101₂이면 g,g²,g⁴,g⁸을 만들고 g·g⁴·g⁸을 곱합니다. 약 log₂x step이라는 정방향 비용만으로 역방향이 어렵다는 사실이 증명되지는 않으며, 다음 절의 공격을 따로 분석해야 합니다."

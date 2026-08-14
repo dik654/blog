@@ -25,7 +25,7 @@ export default function Overview() {
           { symbol: "A", name: "adversarial predictor", description: "정해진 시간·메모리 예산 안에서 실행되는 공격 알고리즘입니다." },
           { symbol: "Y_1,\ldots,Y_k", name: "observed prefix", description: "공격자가 이미 본 generator output bits입니다." },
           { symbol: "Y_{k+1}", name: "next bit", description: "공격자가 아직 보지 못한 예측 대상입니다." },
-          { symbol: "\operatorname{Adv}", name: "prediction advantage", description: "동전 맞히기 1/2보다 더 잘 맞힌 정도입니다." },
+          { symbol: String.raw`\operatorname{Adv}`, name: "prediction advantage", description: "동전 맞히기 1/2보다 더 잘 맞힌 정도입니다." },
         ]}
         assumptions={["Seed와 내부 state는 충분한 min-entropy를 갖고 공격자에게 직접 노출되지 않습니다.", "Security parameter가 커질 때 허용 공격 모델과 negligible의 의미를 함께 정합니다."]}
         interpretation="표본의 0과 1 비율이 절반에 가깝다는 통계 검사는 이 advantage를 제한하지 않습니다. 고정 key로 counter를 암호화한 출력도 고르게 보일 수 있지만 key가 노출되면 완전히 예측됩니다."

@@ -17,8 +17,8 @@ export default function Radians() {
         terms={[
           { symbol: "s", name: "arc length", description: "원 위에서 실제로 이동한 곡선의 길이입니다." },
           { symbol: "r", name: "radius", description: "원의 중심에서 둘레까지의 거리입니다." },
-          { symbol: "\theta", name: "angle in radians", description: "길이÷길이이므로 단위가 상쇄되는 회전량입니다." },
-          { symbol: "\pi", name: "circle constant", description: "원둘레와 지름의 비이며 한 바퀴의 radian 값에 나타납니다." },
+          { symbol: String.raw`\theta`, name: "angle in radians", description: "길이÷길이이므로 단위가 상쇄되는 회전량입니다." },
+          { symbol: String.raw`\pi`, name: "circle constant", description: "원둘레와 지름의 비이며 한 바퀴의 radian 값에 나타납니다." },
         ]}
         assumptions={["원의 중심에서 잰 각도이며 s와 r은 같은 길이 단위를 사용합니다."]}
         interpretation="Radian은 degree를 보기 좋게 바꾼 표기만이 아닙니다. 각도를 길이의 비로 정의하므로 sin의 derivative와 complex exponential의 회전 속도를 자연스럽게 연결합니다."

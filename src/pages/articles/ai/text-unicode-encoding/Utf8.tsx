@@ -16,7 +16,7 @@ export default function Utf8() {
         terms={[
           { symbol: "U+0041", name: "code point A", description: "ASCII와 같은 번호를 유지해 UTF-8 한 byte 0x41이 됩니다." },
           { symbol: "U+AC00", name: "code point 가", description: "Payload bit를 세 UTF-8 byte 0xEA 0xB0 0x80에 나눕니다." },
-          { symbol: "\mathtt{hex}", name: "hexadecimal byte notation", description: "한 byte를 00부터 FF까지 두 자리 16진수로 표시합니다." },
+          { symbol: String.raw`\mathtt{hex}`, name: "hexadecimal byte notation", description: "한 byte를 00부터 FF까지 두 자리 16진수로 표시합니다." },
         ]}
         assumptions={["Unicode scalar value를 RFC 3629의 well-formed UTF-8로 encoding합니다."]}
         interpretation="Byte-level tokenizer는 모든 UTF-8 text를 256개 byte alphabet으로 내릴 수 있지만, 같은 화면 글자가 여러 byte token으로 길어질 수 있습니다."

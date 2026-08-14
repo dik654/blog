@@ -49,8 +49,8 @@ export default function Overview() {
         formula={String.raw`w\leftarrow w+\eta(y-\hat y)x,\qquad b\leftarrow b+\eta(y-\hat y)`}
         terms={[
           { symbol: "y\in\{0,1\}", name: "target", description: "sample의 정답 label입니다." },
-          { symbol: "\hat y", name: "prediction", description: "현재 경계가 낸 0 또는 1입니다." },
-          { symbol: "\eta>0", name: "learning rate", description: "한 mistake가 경계를 움직이는 크기입니다." },
+          { symbol: String.raw`\hat y`, name: "prediction", description: "현재 경계가 낸 0 또는 1입니다." },
+          { symbol: String.raw`\eta>0`, name: "learning rate", description: "한 mistake가 경계를 움직이는 크기입니다." },
         ]}
         assumptions={["sample을 하나씩 보는 online perceptron update입니다.", "training data가 선형 분리 가능할 때 고전적 convergence theorem이 유한 mistake 후 수렴을 보장합니다."]}
         interpretation="정답을 맞히면 y−ŷ=0이므로 update하지 않습니다. 데이터가 선형 분리 불가능하면 이 규칙은 한 경계에 수렴하지 않고 계속 흔들릴 수 있으며, 그 대표 예가 XOR입니다."

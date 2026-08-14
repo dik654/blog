@@ -16,8 +16,8 @@ export default function UnitCircle() {
         formula={String.raw`u(\theta)=(\cos\theta,\sin\theta),\qquad \cos^2\theta+\sin^2\theta=1`}
         terms={[
           { symbol: "u(\theta)", name: "unit-circle point", description: "각도 θ에 놓인 2차원 좌표입니다." },
-          { symbol: "\cos\theta", name: "horizontal coordinate", description: "회전한 점의 가로 성분입니다." },
-          { symbol: "\sin\theta", name: "vertical coordinate", description: "회전한 점의 세로 성분입니다." },
+          { symbol: String.raw`\cos\theta`, name: "horizontal coordinate", description: "회전한 점의 가로 성분입니다." },
+          { symbol: String.raw`\sin\theta`, name: "vertical coordinate", description: "회전한 점의 세로 성분입니다." },
         ]}
         assumptions={["각도 θ는 양의 가로축에서 반시계 방향을 양수로 하며 radian으로 잽니다."]}
         interpretation="Sine과 cosine은 별개의 파형 두 개가 아니라 같은 원운동을 서로 직각인 두 축에서 본 좌표입니다. 그래서 같은 frequency와 90°의 phase 차이를 가집니다."

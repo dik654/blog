@@ -22,11 +22,11 @@ export default function ModernSNARKOverviewArticle() {
           idea={<>Setup은 relation 또는 size bound에 맞는 key를 만들고, prover는 public instance와 private witness를 결합해 proof를 만듭니다. Verifier는 witness를 받지 않습니다.</>}
           formula={String.raw`(pk,vk)\leftarrow\mathsf{Setup}(1^\lambda,R),\qquad \pi\leftarrow\mathsf{Prove}(pk,x,w),\qquad b\leftarrow\mathsf{Verify}(vk,x,\pi)`}
           terms={[
-            { symbol: "\lambda", name: "Security parameter", description: "공격 비용과 error 확률의 목표 크기를 정합니다." },
+            { symbol: String.raw`\lambda`, name: "Security parameter", description: "공격 비용과 error 확률의 목표 크기를 정합니다." },
             { symbol: "R", name: "Relation", description: "Public instance x와 witness w가 만족해야 하는 조건입니다." },
             { symbol: "pk,vk", name: "Proving·verifying key", description: "Scheme에 따라 relation-specific 또는 universal setup에서 파생됩니다." },
             { symbol: "x,w", name: "Instance·witness", description: "x는 verifier에게 공개되고 w는 prover 내부에 남습니다." },
-            { symbol: "\pi,b", name: "Proof·decision", description: "전송되는 proof와 accept/reject bit입니다." },
+            { symbol: String.raw`\pi,b`, name: "Proof·decision", description: "전송되는 proof와 accept/reject bit입니다." },
           ]}
           assumptions={["Relation, field, public-input ordering, encoding과 key identifier가 양쪽에서 같습니다.", "Setup randomness·transcript challenge·prover blinding randomness는 scheme의 보안 요구를 충족합니다.", "Verify의 true는 해당 relation과 assumptions 아래의 cryptographic acceptance이지 외부 data provenance나 authorization이 아닙니다."]}
           interpretation="x=(3,12), w=4이면 completeness는 honest proof가 accept해야 한다고 말합니다. w=5인 거짓 relation을 accept시키기 어렵다는 것은 soundness이고, w=4라는 값에 관해 validity 이외를 드러내지 않는 성질은 zero knowledge입니다."

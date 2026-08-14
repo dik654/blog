@@ -38,7 +38,7 @@ export default function HeunRungeKutta() {
             description: "현재 state에서의 vector-field evaluation입니다.",
           },
           {
-            symbol: "\widetilde x",
+            symbol: String.raw`\widetilde x`,
             name: "Euler predictor",
             description: "끝점 기울기를 평가하기 위한 임시 state입니다.",
           },

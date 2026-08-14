@@ -51,7 +51,7 @@ export default function SentencePiece() {
             description: "Training corpus와 현재 vocabulary 아래에서 추정한 각 piece의 확률입니다.",
           },
           {
-            symbol: "\mathbf s^*",
+            symbol: String.raw`\mathbf s^*`,
             name: "best path",
             description: "보통 Viterbi dynamic programming으로 찾는 최대 score segmentation입니다.",
           },

@@ -42,7 +42,7 @@ export default function Multiproof({
               "Tree node의 위치와 root-to-node path를 담은 양의 정수입니다.",
           },
           {
-            symbol: "\oplus1",
+            symbol: String.raw`\oplus1`,
             name: "Last-bit flip",
             description: "현재 node와 같은 parent를 둔 sibling으로 이동합니다.",
           },

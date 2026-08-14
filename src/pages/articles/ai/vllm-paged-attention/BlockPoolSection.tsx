@@ -3,7 +3,7 @@ import BlockLifecycleViz from "./viz/BlockLifecycleViz";
 
 const REF_TERMS = [
   {
-    symbol: "\mathcal R",
+    symbol: String.raw`\mathcal R`,
     name: "Live request 집합",
     description: "현재 block table을 소유한 active·cached request 집합입니다.",
   },
@@ -13,12 +13,12 @@ const REF_TERMS = [
     description: "Request r이 logical 순서로 참조하는 physical block들의 목록입니다.",
   },
   {
-    symbol: "\operatorname{ref}(b)",
+    symbol: String.raw`\operatorname{ref}(b)`,
     name: "Block reference count",
     description: "Physical block b를 현재 참조하는 block table entry의 수입니다.",
   },
   {
-    symbol: "\mathbf1[\cdot]",
+    symbol: String.raw`\mathbf1[\cdot]`,
     name: "Indicator",
     description: "조건이 참이면 1, 아니면 0을 더하는 표기입니다.",
   },

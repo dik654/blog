@@ -40,7 +40,7 @@ export default function ModernKzgGpuArticle() {
         {symbol:"a_i",name:"Coefficient scalar",description:"GPU MSM의 i번째 scalar입니다."},
         {symbol:"i",name:"Degree/index",description:"Coefficient와 SRS power를 같은 위치로 묶습니다."},
         {symbol:"n",name:"MSM length",description:"Coefficient count이자 SRS prefix length입니다."},
-        {symbol:"\tau",name:"Hidden setup scalar",description:"SRS ceremony가 powers를 만들 때 사용하고 폐기해야 하는 값입니다."},
+        {symbol:String.raw`\tau`,name:"Hidden setup scalar",description:"SRS ceremony가 powers를 만들 때 사용하고 폐기해야 하는 값입니다."},
         {symbol:"[\tau^i]G",name:"SRS point",description:"GPU MSM의 i번째 curve point입니다."},
         {symbol:"G",name:"Group generator",description:"고정 KZG curve subgroup의 generator입니다."},
         {symbol:"C",name:"Commitment",description:"MSM 결과로 얻는 group element입니다."},
@@ -58,7 +58,7 @@ export default function ModernKzgGpuArticle() {
         {symbol:"A_{SRS}",name:"SRS artifact",description:"Curve·degree·basis·validation과 digest입니다."},
         {symbol:"z,y",name:"Opening claim",description:"Evaluation point와 claimed field value입니다."},
         {symbol:"C",name:"Commitment",description:"Validated commitment group encoding입니다."},
-        {symbol:"\pi",name:"Opening proof",description:"Validated quotient commitment encoding입니다."},
+        {symbol:String.raw`\pi`,name:"Opening proof",description:"Validated quotient commitment encoding입니다."},
         {symbol:"v",name:"Verifier result",description:"Pinned independent verifier의 success/failure receipt입니다."},
         {symbol:"b",name:"Backend identity",description:"GPU model, driver, implementation SHA와 artifact key입니다."},
       ]} assumptions={["각 field는 length-delimited canonical encoding이고 verifier version·public inputs를 고정합니다.","Receipt는 verifier의 cryptographic check를 대체하지 않고 그 결과와 provenance를 결속합니다."]} interpretation="같은 C와 π라도 SRS digest가 바뀌면 R이 달라집니다. 오래된 verifier 성공을 새 setup의 승인으로 재사용할 수 없습니다." />

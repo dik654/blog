@@ -43,10 +43,10 @@ export default function ModernPLONKArticle() {
           formula={String.raw`Z(\omega X)=Z(X)\prod_{j\in\{a,b,c\}}\frac{j(X)+\beta\,\mathrm{id}_j(X)+\gamma}{j(X)+\beta\,\sigma_j(X)+\gamma},\qquad Z(1)=1`}
           terms={[
             { symbol: "Z", name: "Grand-product polynomial", description: "Row를 따라 numerator/denominator ratio를 누적합니다." },
-            { symbol: "\omega", name: "Domain generator", description: "X에서 다음 row ωX로 이동시킵니다." },
-            { symbol: "\mathrm{id}_j", name: "Identity labels", description: "각 column·row cell의 원래 위치를 field 원소로 구분합니다." },
-            { symbol: "\sigma_j", name: "Permutation labels", description: "Copy wiring이 가리키는 대상 위치를 encode합니다." },
-            { symbol: "\beta,\gamma", name: "Transcript challenges", description: "Prover가 충돌을 미리 맞추기 어렵게 값과 위치를 무작위 선형 결합합니다." },
+            { symbol: String.raw`\omega`, name: "Domain generator", description: "X에서 다음 row ωX로 이동시킵니다." },
+            { symbol: String.raw`\mathrm{id}_j`, name: "Identity labels", description: "각 column·row cell의 원래 위치를 field 원소로 구분합니다." },
+            { symbol: String.raw`\sigma_j`, name: "Permutation labels", description: "Copy wiring이 가리키는 대상 위치를 encode합니다." },
+            { symbol: String.raw`\beta,\gamma`, name: "Transcript challenges", description: "Prover가 충돌을 미리 맞추기 어렵게 값과 위치를 무작위 선형 결합합니다." },
           ]}
           assumptions={["Wire commitments와 permutation polynomials가 β,γ를 뽑기 전에 transcript에 고정됩니다.", "Denominator zero와 challenge sampling은 protocol이 정한 방식으로 다루며 field가 충분히 큽니다.", "Boundary Z(1)=1과 마지막-row closure, identity-label 충돌 방지가 모두 강제됩니다."]}
           interpretation="두 cell 값이 12와 11인데 같은 copy cycle로 표시되면 random β,γ에서 product가 닫히지 않는 것이 일반적입니다. 그러나 challenge를 prover가 미리 고르거나 boundary를 빼면 조작한 Z를 만들 수 있으므로 recurrence 하나만 검사해서는 안 됩니다."
@@ -65,7 +65,7 @@ export default function ModernPLONKArticle() {
             { symbol: "N", name: "Combined constraint numerator", description: "Gate·permutation·boundary·public-input 식을 challenge α로 분리해 합칩니다." },
             { symbol: "T", name: "Quotient polynomial", description: "N을 domain vanishing polynomial로 나눈 결과입니다." },
             { symbol: "Z_H", name: "Domain vanishing polynomial", description: "n개 evaluation-domain point에서 모두 0입니다." },
-            { symbol: "\zeta", name: "Evaluation challenge", description: "Commitments 뒤 transcript에서 얻는 domain 밖 검사점입니다." },
+            { symbol: String.raw`\zeta`, name: "Evaluation challenge", description: "Commitments 뒤 transcript에서 얻는 domain 밖 검사점입니다." },
             { symbol: "n", name: "Domain size", description: "보통 roots-of-unity FFT가 가능한 2의 거듭제곱으로 padding합니다." },
           ]}
           assumptions={["Commitment scheme의 binding·degree bound·opening soundness와 setup model을 별도로 충족합니다.", "Transcript는 protocol/version, SRS/key ID, circuit, public inputs, 모든 이전 commitment/evaluation을 canonical하게 흡수합니다.", "ζ가 domain이나 forbidden set에 들어가는 경우와 batch challenge collision을 규격대로 처리합니다."]}

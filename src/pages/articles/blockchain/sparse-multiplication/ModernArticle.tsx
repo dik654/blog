@@ -155,7 +155,7 @@ export default function ModernSparseMultiplicationArticle() {
           formula={String.raw`f_{i+1}=f_i^2\,\ell_i(P)\quad\leadsto\quad f_{i+1}=\operatorname{mul\_by\_support}(f_i^2;\,\ell_{s_1},\ell_{s_2},\ell_{s_3})`}
           terms={[
             { symbol: "f_i", name: "Miller accumulator", description: "현재 loop까지 line function 값을 누적한 dense Fp12 원소입니다." },
-            { symbol: "\ell_i(P)", name: "Evaluated line", description: "Twist point 연산의 line을 base-field point P에서 평가해 embedding한 sparse 원소입니다." },
+            { symbol: String.raw`\ell_i(P)`, name: "Evaluated line", description: "Twist point 연산의 line을 base-field point P에서 평가해 embedding한 sparse 원소입니다." },
             { symbol: "s_1,s_2,s_3", name: "Pinned support slots", description: "선택 curve·twist·tower가 정한 nonzero coefficient 위치입니다." },
           ]}
           assumptions={["P·Q가 검증된 subgroup point이고 Miller algorithm과 signed loop parameter가 고정돼 있습니다.", "Line embedding과 sparse helper가 같은 tower basis·coefficient order·non-residue를 사용합니다.", "세 slot 표기는 설명용이며 실제 support 수와 index는 target profile source를 따릅니다."]}

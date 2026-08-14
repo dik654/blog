@@ -48,7 +48,7 @@ export default function VerifyTrace({ title, onCodeRef: _onCodeRef }: Props & { 
           { symbol: "m", name: "Signing root", description: "Header object root와 domain을 SSZ SigningData로 결합한 32-byte root" },
           { symbol: "H_2", name: "Hash to G2", description: "Signing root를 BLS signature group point로 매핑하는 ciphersuite 함수" },
           { symbol: "e", name: "Pairing", description: "G1×G2의 scalar 관계를 target group에서 비교하는 bilinear map" },
-          { symbol: "\Sigma", name: "Aggregate signature", description: "참여 positions의 G2 signatures를 합한 point" },
+          { symbol: String.raw`\Sigma`, name: "Aggregate signature", description: "참여 positions의 G2 signatures를 합한 point" },
         ]}
         assumptions={[
           "Public keys와 signature는 canonical encoding·curve·subgroup·non-identity validation을 통과했습니다.",

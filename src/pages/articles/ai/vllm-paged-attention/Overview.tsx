@@ -38,7 +38,7 @@ const ADDRESS_TERMS = [
     description: "Request r의 i번째 logical block이 연결된 physical block ID입니다.",
   },
   {
-    symbol: "\phi_r(j)",
+    symbol: String.raw`\phi_r(j)`,
     name: "Physical block",
     description: "Logical position j의 KV를 실제로 담고 있는 GPU physical block입니다.",
   },

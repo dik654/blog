@@ -15,6 +15,18 @@
 - [x] 모든 새 concept가 정확히 한 canonical article에서만 정의되고 `canonicalHref`의 article과 owner가 일치하는지 검사하는 전역 감사
 - [x] 기초과학 concept의 관측량·단위/차원·모델 전제·측정 예·한계와 물리 좌표계 누락을 막는 `scientificGrounding` 감사
 
+### 2026-08-14 · 개념별 수업 흐름·수식 연산 주석·설명형 애니메이션
+
+- [x] 공개 386개 글 모두 본문 전에 `익숙한 장면 → 용어 이름과 정의 → 앞뒤 형태 → 작은 예 → 실패 경계`를 5컷으로 한 개념씩 재생하는 공통 수업 Viz를 렌더하고, 첫 컷에서는 정식 용어를 숨기며 마지막 컷 뒤에만 다음 용어로 넘어가도록 변경
+- [x] 공통 수업 Viz에 이전·다음·재생·일시정지와 진행률을 추가하고, `prefers-reduced-motion`에서는 자동 전환과 motion을 비활성화
+- [x] 처음 설명하는 용어와 선수 개념 카드를 모두 단일 열·본문 폭으로 바꿔 긴 설명이 좁은 다단 카드에 갇히지 않도록 교정
+- [x] `ExplainedFormula` 1,037개 모두에 KaTeX `underbrace` 연산 의도 영역을 추가하고, 도메인 식은 `annotatedFormula`·`operations`로 실제 항의 곱·합·mask 이유를 식 안에서 직접 설명할 수 있게 확장
+- [x] `String.raw` 없이 작성되어 JS escape에 노출됐던 KaTeX 기호 141개를 정상화하고, 동일 오류의 재유입을 `audit:formula --strict`에서 차단
+- [x] `filecoin-onchain-cloud`를 dataset record, period state, payment rail 순으로 다시 정의하고 period 판정·rail ledger 갱신·최종 서비스 조합을 각각 재생 가능한 신규 Viz로 구현
+- [x] 모바일 가로표로 남았던 BFT 비교축·합의 계열·Tendermint lock trace를 새 반응형 카드 Viz로 교체해 390px에서 가로 스크롤 제거
+- [x] Playwright Chromium으로 386 route × 390/1440 = 772회 실제 본문 로드 검사: 개념 탭 3,437회 클릭, 수식 2,114회·연산 의도 4,586개·재생 컨트롤 778개 확인, page/Viz/KaTeX/console/page error 0
+- [x] 5컷 재생 교정 뒤 390px에서 386 route를 다시 검사해 수업 Viz가 onboarding·본문보다 먼저 오고, 첫 컷의 정의·형태·예시·경계가 숨겨지며, 익명 장면 탭·page/Viz 폭·console error가 모두 0임을 확인
+
 ## 새 learning contract 기준으로 다시 열어 둔 글
 
 기존의 내용·수식·Viz 검수를 통과했더라도, 핵심 논문이 둘 이상인 전문 글은 선수 개념·학습 결과·논문 내부 해설 경로를 다시 확인한다. 특히 선수 개념은 현재 category에서 멈추지 않고 수학·통계·물리·컴퓨터 구조 등 실제로 필요한 기초까지 재귀적으로 따라간다. 정본 글·anchor·초심자 설명이 비어 있거나 `entryLevel` 글에 닿기 전에 순환하면 상위 글도 완료로 보지 않는다.

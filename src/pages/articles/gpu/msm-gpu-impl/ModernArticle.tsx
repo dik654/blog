@@ -27,7 +27,7 @@ export default function ModernMsmGpuArticle() {
         {symbol:"j",name:"Window index",description:"낮은 bit window부터 높은 window까지의 위치입니다."},
         {symbol:"c",name:"Window bits",description:"한 digit이 소비하는 bit 폭입니다."},
         {symbol:"W",name:"Window count",description:"scalar 전체를 덮는 window 수입니다."},
-        {symbol:"\ell",name:"Scalar bit length",description:"고정한 scalar encoding에서 사용하는 bit 수입니다."},
+        {symbol:String.raw`\ell`,name:"Scalar bit length",description:"고정한 scalar encoding에서 사용하는 bit 수입니다."},
       ]} assumptions={["Scalar encoding·endianness·top-bit 처리와 signed-digit 규칙을 backend revision에 고정합니다.","마지막 window의 유효 bit 수가 c보다 작을 수 있음을 extraction과 bucket mask가 처리합니다."]} interpretation="ℓ=13,c=4이면 W=4입니다. 마지막 window에 1 bit만 있어도 별도 mask가 필요하며, 단순 4-bit digit으로 읽으면 범위를 벗어납니다." />
     </section>
 

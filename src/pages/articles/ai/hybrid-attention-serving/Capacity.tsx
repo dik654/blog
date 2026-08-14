@@ -42,7 +42,7 @@ const LOG_TERMS = [
       "Engine이 cache group과 scheduler 규칙을 반영해 startup log에 표시한 값입니다.",
   },
   {
-    symbol: "\Delta_C",
+    symbol: String.raw`\Delta_C`,
     name: "단위 불일치 residual",
     description:
       "두 concurrency 계산의 차이로, 0이 아니면 표시 token의 의미를 더 확인해야 합니다.",

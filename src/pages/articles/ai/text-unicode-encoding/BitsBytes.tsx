@@ -14,8 +14,8 @@ export default function BitsBytes() {
         idea={<>각 자리마다 두 선택지가 있고 여덟 자리의 선택 수를 곱합니다. 따라서 2를 여덟 번 곱한 2⁸개 pattern이 생기며, unsigned 정수로 읽으면 0부터 255까지입니다.</>}
         formula={String.raw`1\ \mathrm{byte}=8\ \mathrm{bits},\qquad 2^8=256,\qquad 00000000_2\ldots11111111_2=0\ldots255`}
         terms={[
-          { symbol: "\mathrm{bit}", name: "binary digit", description: "0 또는 1인 한 자리입니다." },
-          { symbol: "\mathrm{byte}", name: "eight-bit unit", description: "파일 크기와 UTF-8 code unit을 세는 기본 묶음입니다." },
+          { symbol: String.raw`\mathrm{bit}`, name: "binary digit", description: "0 또는 1인 한 자리입니다." },
+          { symbol: String.raw`\mathrm{byte}`, name: "eight-bit unit", description: "파일 크기와 UTF-8 code unit을 세는 기본 묶음입니다." },
           { symbol: "2^8", name: "number of patterns", description: "각각 두 선택인 여덟 자리의 조합 수입니다." },
         ]}
         assumptions={["현대 일반-purpose system의 8-bit byte를 사용합니다."]}

@@ -28,10 +28,10 @@ export default function ModernConstraintSystemsArticle() {
           idea={<>각 행 i에서 Aᵢ·z와 Bᵢ·z라는 두 선형 조합을 곱하고 Cᵢ·z와 비교합니다. 같은 z를 모든 행이 공유하기 때문에 중간값의 일관성도 강제할 수 있습니다.</>}
           formula={String.raw`\forall i\in\{1,\ldots,m\}:\quad \langle A_i,z\rangle\,\langle B_i,z\rangle=\langle C_i,z\rangle\quad\text{in }\mathbb F_p`}
           terms={[
-            { symbol: "\mathbb F_p", name: "Prime field", description: "모든 덧셈·곱셈이 mod p에서 이루어지는 유한체입니다." },
+            { symbol: String.raw`\mathbb F_p`, name: "Prime field", description: "모든 덧셈·곱셈이 mod p에서 이루어지는 유한체입니다." },
             { symbol: "z", name: "Assignment vector", description: "상수 1, public input, output과 private witness를 정해진 순서로 담습니다." },
             { symbol: "A_i,B_i,C_i", name: "Constraint row", description: "i번째 제약의 세 coefficient vector입니다." },
-            { symbol: "\langle A_i,z\rangle", name: "Linear combination", description: "Coefficient와 assignment의 dot product입니다." },
+            { symbol: String.raw`\langle A_i,z\rangle`, name: "Linear combination", description: "Coefficient와 assignment의 dot product입니다." },
             { symbol: "m", name: "Constraint count", description: "모든 행을 동시에 통과해야 하는 총 제약 수입니다." },
           ]}
           assumptions={["Field modulus p, 변수 순서, public/witness partition이 회로와 key에 동일하게 고정됩니다.", "Integer·bit·range 의미는 field equation만으로 생기지 않으므로 boolean/range gadget을 별도로 넣습니다.", "Witness 생성 성공과 제약 만족을 분리해 검사하며 누락된 제약은 증명 시스템이 복원하지 못합니다."]}

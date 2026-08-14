@@ -116,7 +116,7 @@ export default function ModernKaratsubaArticle() {
             { symbol: "T(n)", name: "n-limb running cost", description: "같은 backend에서 n 크기 operand 두 개를 곱하는 비용입니다." },
             { symbol: "3T(n/2)", name: "Recursive products", description: "절반 크기의 z₀, z₁, z₂ 곱 세 개입니다." },
             { symbol: "cn", name: "Linear combine cost", description: "분할, 합·차, carry, 재결합을 묶은 선형 항입니다." },
-            { symbol: "\log_2 3", name: "Growth exponent", description: "문제 크기 2배마다 leaf가 3배 늘어나는 비율입니다." },
+            { symbol: String.raw`\log_2 3`, name: "Growth exponent", description: "문제 크기 2배마다 leaf가 3배 늘어나는 비율입니다." },
           ]}
           assumptions={["두 operand 크기가 비슷하고 재귀가 고정 cutoff에서 basecase로 끝납니다.", "Addition과 carry 비용이 size에 선형이며 memory hierarchy 효과는 c에 숨깁니다.", "Θ 표기는 충분히 큰 n의 성장률이며 작은 입력 latency를 예측하지 않습니다."]}
           interpretation="지수가 2보다 작아 입력이 커질수록 schoolbook 대비 유리해집니다. 증명은 recurrence tree 각 level의 비용을 더하거나 Master theorem의 a=3,b=2,f(n)=Θ(n)을 적용합니다."

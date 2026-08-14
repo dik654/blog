@@ -26,8 +26,8 @@ export default function KTO() {
         terms={[
           { symbol: "r_\theta", name: "implicit reward", description: "현재 policy가 reference보다 response y를 얼마나 더 선호하는지 나타내는 log-ratio입니다." },
           { symbol: "z_0", name: "reference point", description: "Policy와 reference의 KL을 batch에서 추정해 gain·loss 기준으로 사용합니다." },
-          { symbol: "\lambda_D,\lambda_U", name: "class weights", description: "Desirable·undesirable feedback의 비대칭과 class imbalance를 조절합니다." },
-          { symbol: "\beta", name: "utility scale", description: "Reference point 주변 sigmoid의 민감도를 정합니다." },
+          { symbol: String.raw`\lambda_D,\lambda_U`, name: "class weights", description: "Desirable·undesirable feedback의 비대칭과 class imbalance를 조절합니다." },
+          { symbol: String.raw`\beta`, name: "utility scale", description: "Reference point 주변 sigmoid의 민감도를 정합니다." },
         ]}
         assumptions={["각 example에는 binary label이 있지만 같은 prompt의 짝이 반드시 필요하지는 않습니다.", "표준 KTO는 reference model과 KL estimate를 사용하며 z0를 통한 gradient는 stop-gradient로 다룹니다."]}
         interpretation="KTO는 pair collection 비용을 줄일 수 있지만 binary log가 자동으로 깨끗해지는 것은 아닙니다. 노출되지 않은 응답, 무응답과 실제 dislike를 구분하고 사용자별 feedback propensity를 점검해야 합니다."

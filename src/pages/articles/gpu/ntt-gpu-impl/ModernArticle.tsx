@@ -37,7 +37,7 @@ export default function ModernNttGpuArticle() {
         {symbol:"y",name:"Stage output",description:"Butterfly 결과 buffer이며 in-place일 수도 있습니다."},
         {symbol:"i_0,i_1",name:"Butterfly indices",description:"Stage tile mapping이 정한 두 positions입니다."},
         {symbol:"u,v",name:"Butterfly temporaries",description:"첫 input과 twiddle을 곱한 둘째 input입니다."},
-        {symbol:"\omega",name:"Root of unity",description:"고정 field에서 N차 primitive root입니다."},
+        {symbol:String.raw`\omega`,name:"Root of unity",description:"고정 field에서 N차 primitive root입니다."},
         {symbol:"q(s,j)",name:"Twiddle exponent map",description:"Direction·decimation·stage·offset이 정하는 exponent입니다."},
       ]} assumptions={["모든 연산은 같은 finite field에서 하며 inverse는 inverse root와 최종 N⁻¹ scaling 계약을 따릅니다.","Twiddle layout과 q mapping은 implementation revision에 고정하며 CT와 GS table을 무심코 공유하지 않습니다."]} interpretation="ω table이 맞아도 direction tag가 반대면 round-trip은 실패합니다. 단순 값 checksum보다 field/domain/direction을 포함한 artifact key가 필요합니다." />
       <div id="paper-sppark-ntt"><CitationBlock type="code" citeKey={1} source="sppark ntt.cuh · commit 17278d7" href={SPPARK_NTT}><p><strong>문제:</strong> Direction·input order·coset에 맞춰 CT/GS NTT와 permutation을 조합해야 합니다.</p><p><strong>핵심 기여:</strong> Pinned source는 CT/GS launcher 선택, bit-reversal과 forward/inverse coset power placement를 구현합니다.</p><p><strong>중요 가정:</strong> Commit 17278d7의 NTTParameters, supported field/domain와 stream behavior를 고정합니다.</p><p><strong>근거 범위:</strong> 해당 implementation의 dispatch·ordering path입니다.</p><p><strong>일반화 금지:</strong> 모든 NTT library의 ordering이나 고정 kernel 수·속도를 뜻하지 않습니다.</p></CitationBlock></div>
@@ -63,7 +63,7 @@ export default function ModernNttGpuArticle() {
         {symbol:"B_{req}",name:"Requested bytes",description:"Cache·transaction amplification 전 algorithmic read/write bytes입니다."},
         {symbol:"N",name:"Domain size",description:"Transform field elements 수입니다."},
         {symbol:"s_F",name:"Field element bytes",description:"Device internal representation의 aligned element 크기입니다."},
-        {symbol:"\log_2N",name:"Radix-2 stage count",description:"N이 2의 거듭제곱일 때의 stages 수입니다."},
+        {symbol:String.raw`\log_2N`,name:"Radix-2 stage count",description:"N이 2의 거듭제곱일 때의 stages 수입니다."},
         {symbol:"BW_{req}",name:"Requested bandwidth",description:"Algorithmic bytes를 measured stage time으로 나눈 값입니다."},
         {symbol:"t_{stages}",name:"Stage-chain time",description:"Permutation/transfer 제외 여부를 명시한 NTT kernel events 시간입니다."},
       ]} assumptions={["모든 stage가 out-of-place global pass라는 상한 모델이며 fused shared-memory stages는 이 traffic보다 작을 수 있습니다.","Profiler actual transactions와 cache hit를 별도 기록하며 requested BW를 HBM achieved BW로 부르지 않습니다."]} interpretation="N=8,sF=32B이면 단순 requested traffic은 2×8×32×3=1,536B입니다." />

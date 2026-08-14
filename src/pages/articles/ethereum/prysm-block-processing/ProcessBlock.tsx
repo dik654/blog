@@ -20,9 +20,9 @@ export default function ProcessBlock({ onCodeRef }: { onCodeRef: (key: string, r
         formula={String.raw`R_e' = R_e \oplus H(\sigma_{e,p})`}
         terms={[
           { symbol: "R_e", name: "previous epoch mix", description: "현재 epoch e의 historical-vector 위치에 저장된 32-byte 값입니다." },
-          { symbol: "\sigma_{e,p}", name: "RANDAO reveal", description: "Proposer p가 epoch e와 RANDAO domain에 서명한 BLS signature입니다." },
+          { symbol: String.raw`\sigma_{e,p}`, name: "RANDAO reveal", description: "Proposer p가 epoch e와 RANDAO domain에 서명한 BLS signature입니다." },
           { symbol: "H", name: "hash", description: "Reveal bytes를 mix와 같은 32-byte 폭으로 바꿉니다." },
-          { symbol: "\oplus", name: "bitwise XOR", description: "같은 bit 위치를 배타적 논리합으로 결합합니다." },
+          { symbol: String.raw`\oplus`, name: "bitwise XOR", description: "같은 bit 위치를 배타적 논리합으로 결합합니다." },
         ]}
         assumptions={["Reveal signature, proposer identity, epoch domain을 먼저 검증합니다.", "Vector index와 hash 함수는 활성 fork/preset 규격을 따릅니다."]}
         interpretation="서로 다른 유효 reveal은 mix를 바꿉니다. 그러나 이 식만으로 unbiased public randomness나 proposer honesty가 증명되지는 않습니다."

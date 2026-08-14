@@ -39,7 +39,7 @@ export default function ModernMsmNttArticle() {
       <p>Radix-2 NTT의 한 stage에서는 서로 겹치지 않는 pair가 동시에 butterfly를 수행하지만, stage <code>k+1</code>의 입력은 stage <code>k</code>의 output입니다. Block 안에서 끝나는 작은 stage는 shared memory와 block barrier로 묶을 수 있지만 여러 blocks가 참여하는 경계는 kernel launch를 나누거나 cooperative 조건을 검증해야 합니다.</p>
       <ExplainedFormula question="한 NTT butterfly가 어떤 두 값을 만들며 왜 stage 사이에 synchronization이 필요할까?" idea={<>Pair의 두 input에서 하나는 그대로, 다른 하나는 stage별 twiddle로 곱한 뒤 합과 차를 만듭니다. 다음 stage가 이 두 output을 다시 섞으므로 이전 stage 완료가 선행되어야 합니다.</>} formula={String.raw`u'=u+\omega^k v,\qquad v'=u-\omega^k v`} terms={[
         {symbol:"u,v",name:"Butterfly inputs",description:"현재 stage에서 짝지어진 두 field elements입니다."},
-        {symbol:"\omega",name:"Root of unity",description:"Transform domain을 생성하는 N-th root입니다."},
+        {symbol:String.raw`\omega`,name:"Root of unity",description:"Transform domain을 생성하는 N-th root입니다."},
         {symbol:"k",name:"Twiddle exponent",description:"Stage와 pair index가 정하는 exponent입니다."},
         {symbol:"u',v'",name:"Butterfly outputs",description:"다음 stage가 읽는 두 field elements입니다."},
       ]} assumptions={["Field가 요구한 N-th root를 가지며 addition·subtraction·multiplication은 modulus 안에서 정확합니다.","Index permutation과 twiddle table이 선택한 decimation convention과 일치합니다."]} interpretation="한 stage의 disjoint pairs는 병렬 실행할 수 있지만 같은 buffer의 다음 stage가 먼저 읽으면 race가 생깁니다. 이 식만으로 optimal radix나 memory layout이 결정되지는 않습니다." />

@@ -15,7 +15,7 @@ export default function G1Curve() {
         idea="두 점을 지나는 line slope λ를 계산하고 cubic의 세 intersection x 좌표 합 관계를 사용합니다. Field division은 denominator inverse이므로 P=Q·P=−Q 예외를 먼저 분리합니다."
         formula={String.raw`\lambda=(y_2-y_1)(x_2-x_1)^{-1},\qquad x_3=\lambda^2-x_1-x_2,\qquad y_3=\lambda(x_1-x_3)-y_1`}
         terms={[
-          { symbol: "\lambda", name: "line slope", description: "두 affine points를 잇는 field-valued 기울기입니다." },
+          { symbol: String.raw`\lambda`, name: "line slope", description: "두 affine points를 잇는 field-valued 기울기입니다." },
           { symbol: "(x_3,y_3)", name: "sum point", description: "P+Q의 canonical affine coordinates입니다." },
           { symbol: "(x_2-x_1)^{-1}", name: "field inverse", description: "서로 다른 x 좌표일 때만 정의되는 비싼 연산입니다." },
         ]}
@@ -35,7 +35,7 @@ export default function G1Curve() {
         terms={[
           { symbol: "X,Y,Z", name: "Jacobian coordinates", description: "반복 group operation에 사용하는 projective representation입니다." },
           { symbol: "Z^{-1}", name: "deferred inverse", description: "최종 affine conversion에서 한 번 계산합니다." },
-          { symbol: "\mu", name: "projective scale", description: "0이 아닌 field element로, 같은 affine point의 여러 표현을 만듭니다." },
+          { symbol: String.raw`\mu`, name: "projective scale", description: "0이 아닌 field element로, 같은 affine point의 여러 표현을 만듭니다." },
         ]}
         assumptions={["Z≠0은 finite affine point를 나타내며 Z=0 identity convention을 구현에 고정합니다.", "Equality는 raw tuple 비교가 아니라 cross multiplication 또는 normalization으로 검사합니다."]}
         interpretation="(X,Y,Z)=(20,40,2)와 (5,5,1)이 같은지 raw integer로 비교할 수 없습니다. Mod p에서 X/Z²와 Y/Z³를 비교해야 하며, batch normalization은 여러 Z inverse를 한 번의 inversion과 여러 multiplication으로 줄일 수 있습니다."

@@ -23,10 +23,10 @@ export default function DPO() {
         idea={<>각 response의 log probability가 아니라 policy가 reference보다 그 response를 얼마나 더 선호하게 됐는지 log-ratio를 비교합니다. Chosen의 relative log-ratio가 rejected보다 클수록 sigmoid 안의 margin이 커집니다.</>}
         formula={String.raw`\begin{aligned}r_\theta(x,y)&=\log\frac{\pi_\theta(y\mid x)}{\pi_{ref}(y\mid x)}\\\Delta_\theta&=r_\theta(x,y_+)-r_\theta(x,y_-)\\\mathcal L_{DPO}&=-\mathbb E_{\mathcal D}\log\sigma(\beta\Delta_\theta)\end{aligned}`}
         terms={[
-          { symbol: "\pi_\theta", name: "trainable policy", description: "Preference pair로 update되는 model입니다." },
-          { symbol: "\pi_{ref}", name: "reference policy", description: "보통 SFT checkpoint를 고정한 기준 model입니다." },
-          { symbol: "\Delta_\theta", name: "relative preference margin", description: "Reference 대비 chosen 쪽으로 이동한 정도에서 rejected 쪽 이동을 뺍니다." },
-          { symbol: "\beta", name: "temperature·regularization scale", description: "DPO 유도에서 KL coefficient와 연결되지만 library별 convention을 확인해야 합니다." },
+          { symbol: String.raw`\pi_\theta`, name: "trainable policy", description: "Preference pair로 update되는 model입니다." },
+          { symbol: String.raw`\pi_{ref}`, name: "reference policy", description: "보통 SFT checkpoint를 고정한 기준 model입니다." },
+          { symbol: String.raw`\Delta_\theta`, name: "relative preference margin", description: "Reference 대비 chosen 쪽으로 이동한 정도에서 rejected 쪽 이동을 뺍니다." },
+          { symbol: String.raw`\beta`, name: "temperature·regularization scale", description: "DPO 유도에서 KL coefficient와 연결되지만 library별 convention을 확인해야 합니다." },
         ]}
         assumptions={["같은 prompt의 chosen·rejected pair와 고정 reference log-probability를 사용합니다.", "표준 유도는 KL-regularized reward maximization과 Bradley–Terry preference model을 전제로 합니다."]}
         interpretation="DPO는 별도 scalar reward network와 training 중 online rollout을 제거합니다. Reference, pair quality, offline support와 독립 평가까지 제거하는 방법은 아닙니다."

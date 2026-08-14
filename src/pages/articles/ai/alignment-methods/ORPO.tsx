@@ -23,9 +23,9 @@ export default function ORPO() {
         formula={String.raw`\begin{aligned}o_\theta(y)&=\frac{p_\theta(y\mid x)}{1-p_\theta(y\mid x)}\\\Delta_{OR}&=\log o_\theta(y_+)-\log o_\theta(y_-)\\\mathcal L_{OR}&=-\log\sigma(\Delta_{OR})\\\mathcal L_{ORPO}&=\mathcal L_{SFT}+\lambda\mathcal L_{OR}\end{aligned}`}
         terms={[
           { symbol: "p_\theta(y\mid x)", name: "sequence likelihood", description: "Token log-probability를 sequence 단위로 모은 값이며 length 처리 방식을 명시해야 합니다." },
-          { symbol: "\operatorname{odds}", name: "generation odds", description: "해당 response 확률과 그 외 response 확률의 비입니다." },
-          { symbol: "\mathcal L_{SFT}", name: "chosen NLL", description: "Chosen response 자체를 모방하는 supervised objective입니다." },
-          { symbol: "\lambda", name: "preference weight", description: "Data fit과 chosen–rejected separation 사이의 scale을 정합니다." },
+          { symbol: String.raw`\operatorname{odds}`, name: "generation odds", description: "해당 response 확률과 그 외 response 확률의 비입니다." },
+          { symbol: String.raw`\mathcal L_{SFT}`, name: "chosen NLL", description: "Chosen response 자체를 모방하는 supervised objective입니다." },
+          { symbol: String.raw`\lambda`, name: "preference weight", description: "Data fit과 chosen–rejected separation 사이의 scale을 정합니다." },
         ]}
         assumptions={["같은 prompt의 chosen·rejected pair가 필요하며 ORPO는 pair-free method가 아닙니다.", "극도로 작은 sequence probability에서 odds 계산은 log-space로 안정적으로 구현해야 합니다."]}
         interpretation="ORPO의 ‘한 단계’는 SFT와 preference optimization을 같은 training stage에서 수행한다는 뜻입니다. Data preparation, pair audit와 evaluation이 사라진다는 뜻은 아닙니다."

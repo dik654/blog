@@ -13,7 +13,7 @@ export default function ProductRule() {
         formula={String.raw`\log_a(uv)=\log_a u+\log_a v,\qquad \log_a\!\left(\frac uv\right)=\log_a u-\log_a v`}
         terms={[
           { symbol: "u,v", name: "positive inputs", description: "곱하거나 나눌 0보다 큰 값입니다." },
-          { symbol: "\log_a u", name: "u의 log-scale 위치", description: "밑 a를 기준으로 u가 놓인 지수 좌표입니다." },
+          { symbol: String.raw`\log_a u`, name: "u의 log-scale 위치", description: "밑 a를 기준으로 u가 놓인 지수 좌표입니다." },
           { symbol: "+,-", name: "additive operations", description: "원래 공간의 곱과 나눗셈이 log 공간에서 바뀐 연산입니다." },
         ]}
         assumptions={["u와 v는 모두 양수이고 모든 logarithm의 밑은 같습니다.", "log(u+v)=log u+log v는 일반적으로 성립하지 않습니다."]}

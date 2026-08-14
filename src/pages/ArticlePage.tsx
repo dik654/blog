@@ -3,7 +3,6 @@ import { Suspense, createElement, lazy, useEffect } from "react";
 import { categories, getArticle } from "@/content";
 import ArticleLayout from "@/components/ArticleLayout";
 import ArticleEvidenceRail from "@/components/articles/article-evidence-rail";
-import ArticleConceptViz from "@/components/viz/ArticleConceptViz";
 import ArticleOnboarding from "@/components/ArticleOnboarding";
 import ArticleLearningContractView, {
   ArticleLessonPrimer,
@@ -63,12 +62,12 @@ export default function ArticlePage() {
 
   return (
     <ArticleLayout title={result.article.title}>
+      {learning && <ArticleLessonPrimer contract={learning} />}
       <ArticleOnboarding
         category={result.category}
         article={result.article}
         flow={conceptFlow}
       />
-      {learning && <ArticleLessonPrimer contract={learning} />}
       <div data-article-body>
         <Suspense
           fallback={
@@ -79,7 +78,6 @@ export default function ArticlePage() {
         </Suspense>
       </div>
       {learning && <ArticleLearningContractView contract={learning} />}
-      {conceptFlow && <ArticleConceptViz flow={conceptFlow} />}
       {evidence && (
         <ArticleEvidenceRail items={evidence} paperReadings={learning?.papers} />
       )}

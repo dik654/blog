@@ -21,8 +21,8 @@ export default function LowRank() {
         formula={String.raw`A_k=\sum_{i=1}^{k}\sigma_i u_i v_i^\top,\qquad \min_{\operatorname{rank}(B)\le k}\lVert A-B\rVert_F^2=\lVert A-A_k\rVert_F^2=\sum_{i>k}\sigma_i^2`}
         terms={[
           { symbol: "A_k", name: "truncated SVD", description: "가장 큰 singular value와 대응 vector k쌍만 남긴 rank-k matrix입니다." },
-          { symbol: "\lVert\cdot\rVert_F", name: "Frobenius norm", description: "Matrix 모든 entry의 제곱합에 제곱근을 취한 전체 reconstruction error입니다." },
-          { symbol: "\sum_{i>k}\sigma_i^2", name: "discarded energy", description: "생략한 orthogonal rank-one components의 squared scale 합입니다." },
+          { symbol: String.raw`\lVert\cdot\rVert_F`, name: "Frobenius norm", description: "Matrix 모든 entry의 제곱합에 제곱근을 취한 전체 reconstruction error입니다." },
+          { symbol: String.raw`\sum_{i>k}\sigma_i^2`, name: "discarded energy", description: "생략한 orthogonal rank-one components의 squared scale 합입니다." },
         ]}
         assumptions={["Full data matrix를 알고 exact SVD를 계산하며 rank≤k인 unconstrained real matrix와 비교합니다.", "Frobenius 또는 spectral norm 최적성이지 classification·retrieval·공정성 같은 downstream objective 최적성을 뜻하지 않습니다."]}
         interpretation="작은 singular value를 버리는 것은 matrix reconstruction 관점에서 최선이지만 작은 방향이 task label이나 희귀 집단에 중요할 수 있습니다. k는 설명 분산·memory뿐 아니라 downstream error와 subgroup 성능으로 선택해야 합니다."

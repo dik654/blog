@@ -32,12 +32,12 @@ const GOODPUT_TERMS = [
     description: "측정 구간에 완료된 요청 r이 생성한 token 수입니다.",
   },
   {
-    symbol: "\mathbf{1}[SLO_r]",
+    symbol: String.raw`\mathbf{1}[SLO_r]`,
     name: "SLO 통과 indicator",
     description: "요청 r이 정한 TTFT·ITL·E2E·오류율 기준을 모두 통과하면 1입니다.",
   },
   {
-    symbol: "\Delta t",
+    symbol: String.raw`\Delta t`,
     name: "측정 시간",
     description: "Warm-up과 종료 drain 규칙을 고정한 workload replay 구간입니다.",
   },

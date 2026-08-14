@@ -98,8 +98,8 @@ const CONFIG: Record<ArticleKey, Config> = {
       { symbol: "t_{failure}", name: "Failure time", description: "서비스의 authoritative state가 손상되거나 사용할 수 없어진 시각입니다." },
       { symbol: "t_{latest\\ recoverable}", name: "Latest recoverable point", description: "무결성과 dependency consistency를 검증한 마지막 복구 시점입니다." },
       { symbol: "t_{accepted\\ service}", name: "Accepted service time", description: "기술·업무·보안 oracle과 canary를 통과해 서비스 owner가 승인한 시각입니다." },
-      { symbol: "\mathrm{RPO}_{real}", name: "Realized data loss window", description: "이번 사건에서 되돌아간 시간 범위입니다." },
-      { symbol: "\mathrm{RTO}_{real}", name: "Realized recovery duration", description: "장애부터 업무상 정상화 승인까지 걸린 시간입니다." },
+      { symbol: String.raw`\mathrm{RPO}_{real}`, name: "Realized data loss window", description: "이번 사건에서 되돌아간 시간 범위입니다." },
+      { symbol: String.raw`\mathrm{RTO}_{real}`, name: "Realized recovery duration", description: "장애부터 업무상 정상화 승인까지 걸린 시간입니다." },
     ],
     assumptions: [
       "모든 timestamp는 동기화된 clock과 명확한 timezone을 사용합니다.",
