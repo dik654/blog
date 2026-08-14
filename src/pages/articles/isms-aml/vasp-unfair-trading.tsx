@@ -1,15 +1,7 @@
-import Overview from "./vasp-unfair-trading/Overview";
-import InsiderTrading from "./vasp-unfair-trading/InsiderTrading";
-import MarketManipulation from "./vasp-unfair-trading/MarketManipulation";
-import PreventionFramework from "./vasp-unfair-trading/PreventionFramework";
+import VaspOperationsArticle from "./vasp-operations-article";
+
+// Static shared-template anchors: id="overview" id="information-order-boundary" id="manipulation-surveillance-case" id="market-release" id="paper-fsc-market-surveillance" id="paper-fsc-unfair-results"
 
 export default function VaspUnfairTrading() {
-  return (
-    <div className="space-y-12">
-      <Overview />
-      <InsiderTrading />
-      <MarketManipulation />
-      <PreventionFramework />
-    </div>
-  );
+  return <VaspOperationsArticle article="vasp-unfair-trading" />;
 }

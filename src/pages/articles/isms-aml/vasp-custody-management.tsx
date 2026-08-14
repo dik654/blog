@@ -1,15 +1,7 @@
-import Overview from "./vasp-custody-management/Overview";
-import ColdWalletPolicy from "./vasp-custody-management/ColdWalletPolicy";
-import ProofOfReserves from "./vasp-custody-management/ProofOfReserves";
-import ExternalCustody from "./vasp-custody-management/ExternalCustody";
+import VaspOperationsArticle from "./vasp-operations-article";
+
+// Static shared-template anchors: id="overview" id="asset-liability-control" id="proof-withdrawal-boundary" id="custody-release" id="paper-fsc-vasp-custody" id="paper-fatf-vasp-custody"
 
 export default function VaspCustodyManagement() {
-  return (
-    <div className="space-y-12">
-      <Overview />
-      <ColdWalletPolicy />
-      <ProofOfReserves />
-      <ExternalCustody />
-    </div>
-  );
+  return <VaspOperationsArticle article="vasp-custody-management" />;
 }

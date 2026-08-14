@@ -6652,6 +6652,60 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [{ label: "Groth16 implementation", href: "/blockchain/impl-groth16" }, { label: "GPU proof pipeline", href: "/gpu/gpu-proof-pipeline" }, { label: "CUDA timing", href: "/gpu/cuda-basics" }],
     evidence: [{ kind: "primary-source", rule: "Current behavior는 iden3 rapidsnark commit 81eddf1 source에 귀속하며 CUDA backend가 없음을 명시한다." }, { kind: "project-measurement", rule: "Same WTNS/zkey에서 CPU/GPU stage parity·independent verify 뒤 transfer/queue/kernel/sync/end-to-end를 비교한다." }, { kind: "project-claim", rule: "GPU adapter는 desired hardening이며 current rapidsnark feature·fixed speedup으로 표현하지 않는다." }],
   },
+  "impl-plonk": {
+    title: "Rust PLONK compiler·transcript·receipt 글이 소유하는 범위",
+    owns: ["Circuit row/key compiler artifact와 prover transcript execution plan", "Proof/key serialization receipt와 implementation release gate"],
+    reuses: [{ label: "PLONK protocol", href: "/crypto/plonk" }, { label: "Polynomial commitment", href: "/crypto/kzg" }],
+    evidence: [{ kind: "primary-source", rule: "Protocol은 ePrint 2019/953, 구현은 dusk-network/plonk commit 768cf84에 귀속한다." }, { kind: "project-measurement", rule: "같은 artifact/key/witness에서 independent verify와 stage/end-to-end를 측정한다." }, { kind: "project-claim", rule: "Pinned implementation을 모든 PLONK 변형·lookup·production security로 확대하지 않는다." }],
+  },
+  "proofs-snark": {
+    title: "Bellperson assignment·dispatch·SupraSeal receipt 글이 소유하는 범위",
+    owns: ["Assignment density artifact와 feature-selected prover dispatch", "SupraSeal batch FFI receipt와 backend parity release gate"],
+    reuses: [{ label: "Groth16", href: "/crypto/groth16" }, { label: "GPU proof pipeline", href: "/gpu/filecoin-gpu-proofs" }],
+    evidence: [{ kind: "primary-source", rule: "Current behavior는 bellperson commit 728306c source에 귀속한다." }, { kind: "project-measurement", rule: "같은 circuits/parameters에서 native·GPU·SupraSeal independent verification과 e2e를 비교한다." }, { kind: "project-claim", rule: "FFI path를 memory safety·constant-time·fixed GPU speedup으로 확대하지 않는다." }],
+  },
+  "risc0": {
+    title: "RISC Zero method·session·receipt claim 글이 소유하는 범위",
+    owns: ["Guest ELF·ImageID method artifact와 segment session receipt", "Expected ReceiptClaim·journal binding과 zkVM release gate"],
+    reuses: [{ label: "STARK", href: "/crypto/stark" }, { label: "Hash commitments", href: "/crypto/hash-functions" }],
+    evidence: [{ kind: "primary-source", rule: "Lifecycle과 receipt semantics는 RISC Zero v3.0.6 commit 1cc70cf에 귀속한다." }, { kind: "project-measurement", rule: "같은 guest/ImageID/input에서 native output과 receipt verify 뒤 cycles/e2e를 측정한다." }, { kind: "project-claim", rule: "Journal을 private output으로, ImageID를 source-level identity로, benchmark를 보편 성능으로 확대하지 않는다." }],
+  },
+  "sp1": {
+    title: "SP1 ELF·record·proof-mode receipt 글이 소유하는 범위",
+    owns: ["RV64IM ELF/program-key artifact와 ExecutionRecord shard plan", "Core·compressed·PLONK·Groth16 proof receipt와 backend release gate"],
+    reuses: [{ label: "STARK", href: "/crypto/stark" }, { label: "PLONK", href: "/crypto/plonk" }, { label: "SNARK", href: "/crypto/snark" }],
+    evidence: [{ kind: "primary-source", rule: "Program/record/proof lifecycle은 SP1 v6.4.0 commit f66b4bf에 귀속한다." }, { kind: "project-measurement", rule: "같은 ELF/key/input에서 backend parity와 mode별 verified e2e·bytes·memory를 비교한다." }, { kind: "project-claim", rule: "Proof wrapper validity를 guest correctness·cross-version compatibility·fixed speedup으로 확대하지 않는다." }],
+  },
+  "vasp-custody-management": {
+    title: "VASP asset·liability·custody·PoR 글이 소유하는 범위",
+    owns: ["고객 채무와 통제 가능한 자산·external custodian의 daily reconciliation", "PoR liability boundary와 withdrawal/custody release gate"],
+    reuses: [{ label: "Cryptographic control lifecycle", href: "/isms-aml/isms-encryption#key-lifecycle" }, { label: "Wallet signing trace", href: "/isms-aml/isms-practical-guide#wallet-signing" }, { label: "Audit population coverage", href: "/isms-aml/isms-audit-checklist" }],
+    evidence: [{ kind: "primary-source", rule: "국내 80%·일일 산정은 2026-08-14 현행 금융위 자료에 귀속하고 release마다 재확인한다." }, { kind: "project-measurement", rule: "같은 cutoff·asset·liability population에서 address/custodian/withdrawal/reorg receipts를 재생한다." }, { kind: "project-claim", rule: "PoR ratio·콜드월렛 비율을 solvency·audit·key safety·future withdrawal로 확대하지 않는다." }],
+  },
+  "vasp-wallet-security": {
+    title: "VASP key authority·signing·withdrawal reconciliation 글이 소유하는 범위",
+    owns: ["Hot·warm·cold wallet authority tier와 canonical signing policy enforcement", "Withdrawal chain/ledger reconciliation, recovery generation과 wallet release gate"],
+    reuses: [{ label: "Key lifecycle", href: "/isms-aml/isms-encryption#key-lifecycle" }, { label: "Generic signing approval trace", href: "/isms-aml/isms-practical-guide#wallet-signing" }, { label: "Incident recovery", href: "/isms-aml/isms-incident-response" }],
+    evidence: [{ kind: "primary-source", rule: "국내 이용자 자산 보호 경계는 금융위 현행 자료, risk 원칙은 FATF 공식 guidance에 귀속한다." }, { kind: "project-measurement", rule: "Intent bytes·approval·signer·RPC·confirmation·ledger·recovery를 같은 generation에서 failure replay한다." }, { kind: "project-claim", rule: "HSM·MPC·multisig·signature success를 customer authorization·chain finality·ledger completion으로 확대하지 않는다." }],
+  },
+  "vasp-unfair-trading": {
+    title: "가상자산 market event·surveillance signal·case 글이 소유하는 범위",
+    owns: ["미공개정보 접근과 order-event reconstruction의 time·identity boundary", "Manipulation signal→human case authority와 detector release gate"],
+    reuses: [{ label: "FDS feature lineage", href: "/isms-aml/aml-fds-deep#signal-case-pipeline" }, { label: "Alert·case boundary", href: "/isms-aml/aml-fds-deep" }, { label: "STR decision", href: "/isms-aml/aml-str-reporting" }],
+    evidence: [{ kind: "primary-source", rule: "상시감시·당국 조사 흐름은 2026-08-14 현행 금융위 자료와 법령에 귀속한다." }, { kind: "project-measurement", rule: "Order/access feeds, identity graph, holdout·queue·shadow external effects를 generation별 재생한다." }, { kind: "project-claim", rule: "Cancel ratio·linked account·model score·alert를 위법·유죄·부당이득·자동 고발로 확대하지 않는다." }],
+  },
+  "pq-account": {
+    title: "ERC-4337·ML-DSA verifier·hybrid migration 글이 소유하는 범위",
+    owns: ["UserOperation domain·EntryPoint validation-before-effect와 PQ verifier capability boundary", "FIPS 204 signature artifact와 hybrid key/recovery/rollback release gate"],
+    reuses: [{ label: "Hash domain separation", href: "/crypto/hash-theory" }, { label: "Key lifecycle", href: "/isms-aml/isms-encryption#key-lifecycle" }, { label: "EVM execution", href: "/blockchain/evm-fundamentals" }],
+    evidence: [{ kind: "standard", rule: "AA semantics는 current ERC-4337/7562, ML-DSA는 FIPS 204와 published errata에 각각 귀속한다." }, { kind: "project-measurement", rule: "Exact chain·EntryPoint·bundler·account/verifier bytecode·FIPS profile에서 gas·negative fixture·on-chain receipt를 측정한다." }, { kind: "project-claim", rule: "ERC-4337 signature freedom·FIPS standard 존재를 EVM native precompile·cheap gas·bundler acceptance·PQ security 전체로 확대하지 않는다." }],
+  },
+  "pbft-hotstuff-lineage": {
+    title: "PBFT·HotStuff·HotStuff-2·Jolteon/Ditto protocol-specific ownership",
+    owns: ["PBFT slot admission·prepared/committed-local·client reply·stable-checkpoint lifecycle", "HotStuff safeNode·three-chain·pacemaker boundary와 HotStuff-2 double-certificate view entry", "Jolteon one-lock/two-chain·highQC TC와 Ditto state-aware MVBA rejoin"],
+    reuses: [{ label: "BFT quorum and partial synchrony", href: "/blockchain/bft-comparison#quorum-safety" }, { label: "State machine replication", href: "/blockchain/consensus-comparison#smr" }, { label: "Generic lock and view-change evidence", href: "/blockchain/bft-comparison#recovery" }],
+    evidence: [{ kind: "primary-source", rule: "각 message·threshold·safety/liveness 주장은 PBFT, HotStuff, HotStuff-2, Jolteon/Ditto 원문에 따로 귀속한다." }, { kind: "project-measurement", rule: "동일 request에서 equivocation·partition·timeout·crash를 넣고 conflict 0, GST/fallback progress, state receipt를 분리 측정한다." }, { kind: "project-claim", rule: "Phase 수·QC 이름·historical prototype을 단일 진화 계보, production durability 또는 고정 latency로 확대하지 않는다." }],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

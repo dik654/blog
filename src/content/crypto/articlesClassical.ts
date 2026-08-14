@@ -14,12 +14,13 @@ export const classicalArticles: Article[] = [
   },
   {
     slug: "elgamal",
-    title: "ElGamal 암호",
+    title: "ElGamal: fresh DH mask·IND-CPA와 malleability 경계",
     subcategory: "classical",
     sections: [
-      { id: "overview", title: "ElGamal이란?" },
-      { id: "encrypt-decrypt", title: "암호화와 복호화" },
-      { id: "security", title: "안전성과 응용" },
+      { id: "overview", title: "Fresh DH mask의 입구" },
+      { id: "encrypt-decrypt", title: "암호화·복호화와 수치 예제" },
+      { id: "security", title: "DDH·IND-CPA와 malleability" },
+      { id: "release", title: "Hybrid encryption release gate" },
     ],
     component: () => import("@/pages/articles/crypto/elgamal"),
   },

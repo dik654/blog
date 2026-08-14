@@ -4732,6 +4732,23 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 규격", label: "RFC 9334 · RATS Architecture", href: "https://www.rfc-editor.org/rfc/rfc9334.html", note: "Attester·Verifier·Relying Party와 evidence·result·appraisal·freshness의 vendor-neutral 정본" },
     { kind: "공식 규격", label: "AMD SEV-SNP Firmware ABI Specification 1.58", href: "https://docs.amd.com/v/u/en-US/56860_PUB_1.58_SEV_SNP", note: "SNP attestation report request·field·signature interface의 vendor 정본" },
   ],
+  "crypto/elgamal": [
+    { kind: "핵심 논문", label: "ElGamal · A Public-Key Cryptosystem and a Signature Scheme Based on Discrete Logarithms", href: "https://doi.org/10.1109/TIT.1985.1057074", note: "Randomized group encryption construction의 primary paper" },
+    { kind: "공식 규격", label: "RFC 6090 · Fundamental Elliptic Curve Cryptography Algorithms", href: "https://www.rfc-editor.org/rfc/rfc6090.html", note: "EC group instance·validation/security considerations의 standard reference" },
+  ],
+  "crypto/mpc": [
+    { kind: "핵심 논문", label: "Shamir · How to Share a Secret", href: "https://doi.org/10.1145/359168.359176", note: "Threshold polynomial sharing의 primary paper" },
+    { kind: "핵심 논문", label: "Paillier · Composite Degree Residuosity Cryptosystems", href: "https://link.springer.com/chapter/10.1007/3-540-48910-X_16", note: "Additively homomorphic encryption의 primary paper" },
+    { kind: "공식 코드", label: "bnb-chain/tss-lib @ 3f677ff", href: "https://github.com/bnb-chain/tss-lib/tree/3f677ff761fcf692edb0243a5d812930844d879a", note: "Threshold DKG/MtA/VSS implementation의 pinned source" },
+  ],
+  "crypto/scroll-zkevm": [
+    { kind: "공식 문서", label: "Scroll zkEVM Overview", href: "https://docs.scroll.io/en/technology/zkevm/zkevm-overview/", note: "EVM state-transition validity proof의 official architecture boundary" },
+    { kind: "공식 코드", label: "scroll-tech/zkevm-circuits @ 18f5bc2", href: "https://github.com/scroll-tech/zkevm-circuits/tree/18f5bc268ca11988690c7cf59fc4615372ce99f2", note: "Halo2 trace/table/gadget implementation의 pinned snapshot" },
+  ],
+  "blockchain/railgun": [
+    { kind: "공식 문서", label: "RAILGUN Protocol Wiki", href: "https://docs.railgun.org/wiki", note: "Shielded note·transaction·relayer architecture의 official documentation" },
+    { kind: "공식 코드", label: "Railgun-Privacy/contract @ 30da515", href: "https://github.com/Railgun-Privacy/contract/tree/30da51509975013720529ec146c3cecc0f87088b", note: "Commitment·nullifier·verifier contract state machine의 pinned source" },
+  ],
   "crypto/circom": [
     { kind: "핵심 논문", label: "Circom: A Circuit Description Language", href: "https://eprint.iacr.org/2020/1003.pdf", note: "Template·signal·constraint compiler design의 primary paper" },
     { kind: "공식 코드", label: "iden3/circom @ a100fae", href: "https://github.com/iden3/circom/tree/a100faedb1c62d4d3e1463f8a3f88342d82351cd", note: "Compiler·artifact·tests의 pinned official source" },
@@ -5148,5 +5165,54 @@ export const ARTICLE_EVIDENCE: Readonly<
   "gpu/rapidsnark-gpu": [
     { kind: "공식 코드", label: "iden3 rapidsnark · commit 81eddf1", href: "https://github.com/iden3/rapidsnark/tree/81eddf1a536d26497b237c0b8a04fe90baf7e439", note: "Current C++·Intel/ARM CPU prover와 WTNS/zkey stage source이며 GPU backend 근거는 아님" },
     { kind: "공식 문서", label: "NVIDIA CUDA C++ Best Practices · Timing", href: "https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#timing", note: "Async CUDA timing과 synchronization 방법이며 rapidsnark GPU implementation·speedup 보장은 아님" },
+  ],
+  "blockchain/impl-plonk": [
+    { kind: "핵심 논문", label: "PLONK · ePrint 2019/953", href: "https://eprint.iacr.org/2019/953", note: "Selector·permutation·polynomial commitment protocol의 원문이며 Rust artifact·lookup·고정 성능 보장은 아님" },
+    { kind: "공식 코드", label: "dusk-network/plonk · commit 768cf84", href: "https://github.com/dusk-network/plonk/tree/768cf849826c85441fdb2346c4640239e7b476f5/src", note: "Compiler/prover/key source snapshot이며 모든 PLONK variant·production security를 대표하지 않음" },
+  ],
+  "crypto/risc0": [
+    { kind: "공식 문서", label: "RISC Zero zkVM lifecycle · v3.0.6", href: "https://github.com/risc0/risc0/blob/1cc70cf05033a79ebc90f07c679cb4bd1cd301b9/website/api/zkvm/zkvm-overview.md", note: "Guest ELF→session→receipt→ImageID/journal lifecycle의 pinned 설명이며 고정 성능 보장은 아님" },
+    { kind: "공식 코드", label: "RISC Zero receipt/claim · v3.0.6", href: "https://github.com/risc0/risc0/tree/1cc70cf05033a79ebc90f07c679cb4bd1cd301b9/risc0/zkvm/src", note: "Receipt integrity와 expected claim 비교 source이며 guest logic·journal privacy 보장은 아님" },
+  ],
+  "crypto/sp1": [
+    { kind: "공식 코드", label: "SP1 executor Program·ExecutionRecord · v6.4.0", href: "https://github.com/succinctlabs/sp1/tree/f66b4bff51d0ccff51d152e0f7f66b2ffedf3529/crates/core/executor/src", note: "RV64IM ELF parsing과 record/shard source이며 모든 ELF·optimal shard size 보장은 아님" },
+    { kind: "공식 코드", label: "SP1 SDK proof/prover · v6.4.0", href: "https://github.com/succinctlabs/sp1/tree/f66b4bff51d0ccff51d152e0f7f66b2ffedf3529/crates/sdk/src", note: "Proof modes·public values·vkey checks와 lifecycle source이며 cross-version compatibility·fixed backend speed 보장은 아님" },
+  ],
+  "isms-aml/vasp-custody-management": [
+    { kind: "공식 문서", label: "금융위원회 · 가상자산이용자보호법 시행 Q&A", href: "https://www.fsc.go.kr/po020201/83937", note: "2026-08-14 확인한 국내 콜드월렛 경제적 가치 80%·일일 산정 경계이며 PoR·지급능력·key safety 보장은 아님" },
+    { kind: "공식 가이드", label: "FATF · Updated Guidance for VA and VASPs", href: "https://www.fatf-gafi.org/content/dam/fatf/documents/recommendations/Updated-Guidance-VA-VASP.pdf", note: "VASP와 third-party custody의 risk-based control 원칙이며 특정 wallet·custodian·PoR 제품 승인은 아님" },
+  ],
+  "isms-aml/vasp-wallet-security": [
+    { kind: "공식 문서", label: "금융위원회 · 가상자산이용자보호법 시행 Q&A", href: "https://www.fsc.go.kr/po020201/83937", note: "국내 이용자 자산 보관·손실보호의 현행 상위 경계이며 HSM·MPC·multisig 설계 승인은 아님" },
+    { kind: "공식 가이드", label: "FATF · Updated Guidance for VA and VASPs", href: "https://www.fatf-gafi.org/content/dam/fatf/documents/recommendations/Updated-Guidance-VA-VASP.pdf", note: "VASP ongoing monitoring·risk control 원칙이며 특정 signing·finality·recovery policy를 정하지 않음" },
+  ],
+  "isms-aml/vasp-unfair-trading": [
+    { kind: "공식 문서", label: "금융위원회 · 가상자산 이상거래 상시감시 현장점검", href: "https://www.fsc.go.kr/po010101/82943", note: "거래소의 가격·거래량 상시감시·예방·혐의통보 경계이며 alert가 위법·유죄를 확정하지 않음" },
+    { kind: "공식 문서", label: "금융위원회 · 불공정거래 조사 2년 성과", href: "https://www.fsc.go.kr/po010105/87357", note: "2026-07 공개된 감시→혐의통보→당국 조사 흐름의 snapshot이며 건수·평균을 detector 성능으로 일반화하지 않음" },
+  ],
+  "blockchain/pq-account": [
+    { kind: "공식 규격", label: "ERC-4337 · Account Abstraction Using Alt Mempool", href: "https://eips.ethereum.org/EIPS/eip-4337", note: "UserOperation·bundler·EntryPoint validation/execution 경계이며 ML-DSA·native verifier·block inclusion 보장은 아님" },
+    { kind: "공식 규격", label: "NIST FIPS 204 · ML-DSA", href: "https://csrc.nist.gov/pubs/fips/204/final", note: "ML-DSA algorithm·parameter·encoding의 최종 표준과 errata 진입점이며 EVM integration·gas·recovery 보장은 아님" },
+    { kind: "공식 규격", label: "ERC-7562 · Account Abstraction Validation Scope Rules", href: "https://eips.ethereum.org/EIPS/eip-7562", note: "Bundler validation scope·DoS admission 규칙이며 모든 bundler의 PQ verifier 지원을 의미하지 않음" },
+  ],
+  "blockchain/pbft-deep": [
+    { kind: "핵심 논문", label: "Practical Byzantine Fault Tolerance · OSDI 1999", href: "https://www.usenix.org/conference/osdi-99/presentation/practical-byzantine-fault-tolerance", note: "PBFT normal case·view change·checkpoint·client protocol의 원문이며 당시 crypto·NFS 수치를 current deployment 상수로 일반화하지 않음" },
+    { kind: "핵심 논문", label: "PBFT §4.2 Normal-Case Operation", href: "https://www.usenix.org/legacy/publications/library/proceedings/osdi99/full_papers/castro/castro_html/node4.html#SECTION00042000000000000000", note: "Prepared·committed-local과 ordered execution의 exact 정의이며 단일 message가 client success를 뜻하지 않음" },
+    { kind: "핵심 논문", label: "PBFT §4.3–4.4 Checkpoint and View Change", href: "https://www.usenix.org/legacy/publications/library/proceedings/osdi99/full_papers/castro/castro_html/node4.html#SECTION00043000000000000000", note: "Stable checkpoint·watermark·NEW-VIEW reconstruction 근거이며 local snapshot 하나로 global stability를 주장하지 않음" },
+  ],
+  "blockchain/hotstuff-deep": [
+    { kind: "핵심 논문", label: "HotStuff · arXiv 1803.05069", href: "https://arxiv.org/abs/1803.05069", note: "SafeNode·threshold QC·three-chain·pacemaker 원문이며 paper 수치를 current chain 성능으로 일반화하지 않음" },
+    { kind: "핵심 논문", label: "HotStuff §4–6 SafeNode and Chaining", href: "https://arxiv.org/pdf/1803.05069#page=8", note: "Lock vote rule과 direct one/two/three-chain의 exact 근거이며 block 높이 세 개만으로 commit을 주장하지 않음" },
+    { kind: "공식 구현", label: "libhotstuff prototype · commit 34aa507", href: "https://github.com/hot-stuff/libhotstuff/tree/34aa50796f201aaab91c4db5aae9d3b7aceddb5c", note: "Paper authors의 historical prototype snapshot이며 maintained production support·persistent recovery 보장은 아님" },
+  ],
+  "blockchain/hotstuff2": [
+    { kind: "핵심 논문", label: "HotStuff-2 · ePrint 2023/397", href: "https://eprint.iacr.org/2023/397", note: "Two-phase responsive BFT와 integrated pacemaker 원문이며 모든 view가 wait-free라는 뜻은 아님" },
+    { kind: "핵심 논문", label: "HotStuff-2 §4 Steady-State", href: "https://eprint.iacr.org/2023/397.pdf#page=4", note: "Nested/double certificate와 lock transition의 근거이며 application execution·durability certificate는 아님" },
+    { kind: "핵심 논문", label: "HotStuff-2 §4 Pacemaker", href: "https://eprint.iacr.org/2023/397.pdf#page=6", note: "Previous-view fast entry와 O(Δ) status recovery 경계이며 Δ wait가 모든 view에 필요하다는 뜻은 아님" },
+  ],
+  "blockchain/jolteon-ditto": [
+    { kind: "핵심 논문", label: "Jolteon and Ditto · arXiv 2106.10362", href: "https://arxiv.org/abs/2106.10362", note: "Two-chain sync path와 state-aware MVBA fallback 원문이며 current Aptos가 paper fallback을 그대로 쓴다고 주장하지 않음" },
+    { kind: "핵심 논문", label: "Jolteon and Ditto §3 Jolteon", href: "https://arxiv.org/pdf/2106.10362#page=6", note: "One-chain lock·two-chain commit·highQC TC의 근거이며 TC 자체는 commit certificate가 아님" },
+    { kind: "공식 코드", label: "Aptos round manager · aptos-node-v1.48.6", href: "https://github.com/aptos-labs/aptos-core/blob/aptos-node-v1.48.6/consensus/src/round_manager.rs", note: "2026-08-14 pinned Proposal·Vote·QC·TwoChainTimeoutCertificate integration이며 paper Ditto MVBA 구현과 동일시하지 않음" },
   ],
 };

@@ -1,15 +1,7 @@
-import Overview from "./vasp-wallet-security/Overview";
-import WalletArchitecture from "./vasp-wallet-security/WalletArchitecture";
-import AccessControl from "./vasp-wallet-security/AccessControl";
-import IncidentResponse from "./vasp-wallet-security/IncidentResponse";
+import VaspOperationsArticle from "./vasp-operations-article";
+
+// Static shared-template anchors: id="overview" id="key-signing-boundary" id="withdrawal-operations" id="wallet-release" id="paper-fsc-vasp-wallet" id="paper-fatf-vasp-wallet"
 
 export default function VaspWalletSecurity() {
-  return (
-    <div className="space-y-12">
-      <Overview />
-      <WalletArchitecture />
-      <AccessControl />
-      <IncidentResponse />
-    </div>
-  );
+  return <VaspOperationsArticle article="vasp-wallet-security" />;
 }
