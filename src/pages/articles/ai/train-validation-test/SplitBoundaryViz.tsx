@@ -1,8 +1,8 @@
 import VizFrame from "@/components/viz/VizFrame";
 import {
-  LearningSceneControls,
-  useLearningScenes,
-} from "../deep-learning-overview/viz/LearningSceneControls";
+  AnimatedSceneControls,
+  useAnimatedScenes,
+} from "@/components/viz/AnimatedSceneControls";
 
 const SCENES = ["train", "validation", "test", "재사용 경계"] as const;
 const partitions = [
@@ -12,7 +12,7 @@ const partitions = [
 ] as const;
 
 export default function SplitBoundaryViz() {
-  const scenes = useLearningScenes(SCENES.length);
+  const scenes = useAnimatedScenes(SCENES.length);
   return (
     <VizFrame
       eyebrow="Animated evaluation boundary"
@@ -48,7 +48,7 @@ export default function SplitBoundaryViz() {
           <span aria-hidden className="hidden text-xl font-black text-amber-600 sm:block">↺</span>
           <div><p className="text-xs font-black">test → validation으로 역할 변경</p><p className="mt-1 text-xs text-muted-foreground">새 final holdout 없이는 독립 보고 불가</p></div>
         </div>
-        <LearningSceneControls {...scenes} labels={SCENES} />
+        <AnimatedSceneControls {...scenes} labels={SCENES} />
       </div>
     </VizFrame>
   );

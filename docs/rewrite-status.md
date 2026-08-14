@@ -1162,3 +1162,12 @@
 - 공개 route와 exact learning contract는 419개에서 421개, graph는 2,347 concepts·3,485 relations로 늘었고 owner·isolation·stage invariant는 0이다. 세 route는 각각 정확한 기초 6개+심화 4개와 article-only answer 위치를 가진다.
 - Pixel→edge→part→class representation map, example pair→shared model→update loop, dataset bar→train·validation·test→reuse contamination을 텍스트 storyboard가 아닌 도형·화살표·bar의 새 Viz로 만들었다. 모든 Viz는 `ArrowLeft`·`ArrowRight`와 `Space` 자동 재생을 지원한다.
 - 세 public 수식은 함수 합성, batch 평균·gradient update, observed generalization gap의 각 변환·합·나눗셈·뺄셈 의도를 KaTeX underbrace로 식 안에 직접 표시한다. 390px·1440px에서 document·Viz·visible KaTeX container overflow, KaTeX error, console warning/error, gradient·shadow·굵은 선이 모두 0임을 확인했다.
+
+## 2026-08-15 · Function · derivative · Jacobian CRUD split
+
+- 기존 `ai/math-functions-derivatives-gradients` 한 글에 함께 있던 function mapping·composition, derivative·local linearity·chain rule, gradient·directional derivative·Jacobian을 세 독립 수업으로 분리했다. 기존 route는 derivative 수업으로 좁히고 `ai/math-functions-composition`, `ai/math-gradients-jacobians`를 새로 생성했다.
+- 분리 중 기존 graph에 없던 `function-domain-codomain`, `difference-quotient`, `jacobian-vector-product` 세 canonical concept를 추가하고 7개 관계를 연결했다. 기존 function·composition·limit·derivative·chain rule·gradient·Jacobian owner도 실제 설명 route로 이동해 CRUD와 graph ownership을 함께 갱신했다.
+- 공개 route와 exact learning contract는 421개에서 423개, graph는 2,350 concepts·3,492 relations로 늘었고 owner·isolation·stage invariant는 0이다. 세 route는 topology `keep`, 각각 정확한 기초 6개+심화 4개와 article-only answer 위치를 가진다.
+- Domain→intermediate→codomain 합성, secant→tangent 수렴, inner·outer rate 전달, contour→gradient→Jacobian shape를 도형·곡선·화살표·matrix map으로 표현하는 새 Viz 4개를 만들었다. 모든 장면형 Viz는 `ArrowLeft`·`ArrowRight`와 `Space` 자동 재생을 지원한다.
+- 실제 public closure의 수식 8개를 전부 explicit operation annotation으로 이관했다. Difference quotient의 빼기·나눗셈, chain rule의 local rate 곱, directional derivative의 projection·coordinate contribution, Jacobian의 input→output linear map 의도를 KaTeX 식 안에 직접 표시했고 전역 formula backlog는 983개에서 976개로 줄었다.
+- 390px·1440px 실제 브라우저 6회에서 document·Viz·KaTeX overflow와 KaTeX error, console warning/error, gradient·shadow·굵은 선이 모두 0임을 확인했다. Function Viz의 `→` 이동과 `Space` 자동 재생도 실제 focus 상태에서 검증했다.

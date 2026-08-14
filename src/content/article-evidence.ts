@@ -762,6 +762,20 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "Vector·inner product·orthogonality·projection을 학부 선형대수 흐름에서 확장하는 공개 강의",
     },
   ],
+  "ai/math-functions-composition": [
+    {
+      kind: "보충 읽기",
+      label: "OpenStax Precalculus 2e — Composition of Functions",
+      href: "https://openstax.org/books/precalculus-2e/pages/1-4-composition-of-functions",
+      note: "Function input·output, composition order와 domain restriction을 worked example로 확장",
+    },
+    {
+      kind: "보충 읽기",
+      label: "Deep Learning Book — Deep Feedforward Networks",
+      href: "https://www.deeplearningbook.org/contents/mlp.html",
+      note: "Feedforward network를 parameterized function composition으로 연결",
+    },
+  ],
   "ai/math-functions-derivatives-gradients": [
     {
       kind: "공개 강의",
@@ -769,13 +783,16 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://ocw.mit.edu/courses/18-01sc-single-variable-calculus-fall-2010/pages/1.-differentiation/",
       note: "Difference quotient·derivative·chain rule를 단변수 미적분의 문제와 함께 확장하는 공개 강의",
     },
+    { kind: "보충 읽기", label: "The Matrix Calculus You Need For Deep Learning", href: "https://arxiv.org/abs/1802.01528", note: "Derivative와 chain rule을 deep-learning calculus convention으로 확장" },
+  ],
+  "ai/math-gradients-jacobians": [
     {
       kind: "공개 강의",
-      label:
-        "MIT OpenCourseWare 18.02SC — Chain Rule, Gradient and Directional Derivatives",
+      label: "MIT OpenCourseWare 18.02SC — Gradient and Directional Derivatives",
       href: "https://ocw.mit.edu/courses/18-02sc-multivariable-calculus-fall-2010/pages/2.-partial-derivatives/part-b-chain-rule-gradient-and-directional-derivatives/",
-      note: "편미분·gradient·directional derivative를 다변수 함수의 기하학으로 확장하는 공개 강의",
+      note: "편미분·gradient·directional derivative를 다변수 함수의 기하학으로 확장",
     },
+    { kind: "보충 읽기", label: "The Matrix Calculus You Need For Deep Learning", href: "https://arxiv.org/abs/1802.01528", note: "Gradient·Jacobian·vectorized chain rule의 shape convention을 확장" },
   ],
   "ai/math-probability-expectation-variance": [
     {

@@ -2938,39 +2938,136 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "ai/math-functions-composition": {
+    entryLevel: true,
+    entryNote:
+      "수식이나 미분을 모른다고 가정합니다. 입력 하나와 출력 하나를 연결하는 규칙부터 시작해 domain·codomain shape를 확인한 뒤 두 함수를 합성합니다.",
+    coreIdea:
+      "Function은 허용 input 하나마다 output 하나를 정하는 mapping입니다. Composition은 앞 output을 다음 input으로 넘기는 실행이며, 순서와 domain·codomain compatibility가 전체 계산을 제한합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "function-mapping", role: "Input 하나에 output 하나를 정하는 규칙으로 식과 layer를 읽습니다." },
+      { id: "function-domain-codomain", role: "허용 input 집합과 선언 output 집합으로 값·dtype·shape 계약을 고정합니다." },
+      { id: "function-composition", role: "앞 함수의 output을 다음 함수의 input으로 연결합니다." },
+    ],
+    conceptExplanations: [
+      {
+        id: "function-mapping",
+        sectionId: "overview",
+        intuition: "자판기 버튼 하나를 누르면 약속된 음료 하나가 나오는 입력→출력 규칙입니다.",
+        workedExample: "g(x)=3x+1에서 x=2를 넣으면 output은 7입니다.",
+        boundary: "여러 input이 같은 output으로 모여도 되지만 같은 input이 임의로 두 output을 내면 deterministic function이 아닙니다.",
+      },
+      {
+        id: "function-domain-codomain",
+        sectionId: "shape",
+        intuition: "함수의 inlet과 outlet에 허용 값·shape label을 붙이는 계약입니다.",
+        workedExample: "Image tensor→10 score 함수는 image shape를 domain으로, 길이 10 vector를 codomain으로 선언합니다.",
+        boundary: "실제 output이 모인 range와 선언된 codomain을 같은 집합으로 단정하지 않습니다.",
+      },
+      {
+        id: "function-composition",
+        sectionId: "composition",
+        intuition: "앞 규칙의 output을 다음 규칙의 input으로 그대로 넘기는 pipeline입니다.",
+        workedExample: "g(2)=7 뒤 f(7)=49이므로 (f∘g)(2)=49입니다.",
+        boundary: "f∘g와 g∘f는 일반적으로 다르고 중간 output이 다음 domain에 들어가야 합니다.",
+      },
+    ],
+    conceptStages: [
+      { label: "00 Mapping", relation: "입력 하나가 출력 하나를 정합니다.", concepts: ["function-mapping"] },
+      { label: "01 Shape", relation: "허용 input과 선언 output의 경계를 고정합니다.", concepts: ["function-domain-codomain"] },
+      { label: "02 Compose", relation: "앞 output을 다음 input으로 연결합니다.", concepts: ["function-mapping", "function-domain-codomain", "function-composition"] },
+      { label: "03 Boundary", relation: "순서·shape·정의역 실패를 반례로 확인합니다.", concepts: ["function-composition"] },
+    ],
+    exercises: [
+      { level: "basic", question: "g(x)=3x+1에서 g(2)를 계산하고 input과 output을 구분하세요.", answerChecklist: ["input 2", "rule 3x+1", "output 7", "one output"], requiredConcepts: ["function-mapping"], sectionId: "overview" },
+      { level: "basic", question: "여러 input이 같은 output으로 모이는 mapping이 함수일 수 있는 이유를 설명하세요.", answerChecklist: ["one output per input", "many-to-one allowed", "not one-to-one requirement"], requiredConcepts: ["function-mapping"], sectionId: "overview" },
+      { level: "basic", question: "√x를 real-valued function으로 볼 때 domain 경계를 설명하세요.", answerChecklist: ["x>=0", "real output", "negative excluded", "formula typing"], requiredConcepts: ["function-domain-codomain"], sectionId: "shape" },
+      { level: "basic", question: "Image→10 scores 함수의 domain과 codomain shape를 말하세요.", answerChecklist: ["image tensor", "declared axes", "length 10", "range differs"], requiredConcepts: ["function-domain-codomain"], sectionId: "shape" },
+      { level: "basic", question: "g(x)=3x+1, f(u)=u²에서 f(g(2))를 실행 순서대로 계산하세요.", answerChecklist: ["g first", "middle 7", "f second", "49"], requiredConcepts: ["function-composition"], sectionId: "composition" },
+      { level: "basic", question: "같은 함수로 g(f(2))를 계산하고 f(g(2))와 비교하세요.", answerChecklist: ["f first 4", "g second 13", "49 differs", "order matters"], requiredConcepts: ["function-composition"], sectionId: "boundaries" },
+      { level: "advanced", question: "길이 3 vector를 내는 g와 scalar만 받는 f를 합성할 수 없는 이유와 adapter를 설계하세요.", answerChecklist: ["codomain/domain mismatch", "shape contract", "explicit reduction or projection", "new semantics"], requiredConcepts: ["function-domain-codomain", "function-composition"], sectionId: "boundaries" },
+      { level: "advanced", question: "Partial function의 undefined input을 전체 함수의 실패와 구분해 설명하세요.", answerChecklist: ["declared domain", "outside domain", "not arbitrary output", "caller validation"], requiredConcepts: ["function-mapping", "function-domain-codomain"], sectionId: "boundaries" },
+      { level: "advanced", question: "f∘(g∘h)와 (f∘g)∘h의 실행 순서는 같지만 f∘g와 g∘f는 다른 이유를 설명하세요.", answerChecklist: ["associative grouping", "same h g f order", "not commutative", "counterexample 49/13"], requiredConcepts: ["function-composition"], sectionId: "boundaries" },
+      { level: "advanced", question: "Stateful random program을 순수 deterministic function처럼 기록하면 빠지는 실행 상태를 열거하세요.", answerChecklist: ["random seed", "mutable state", "time or external input", "same x may differ", "expanded input contract"], requiredConcepts: ["function-mapping", "function-domain-codomain"], sectionId: "boundaries" },
+    ],
+    papers: [
+      { title: "OpenStax Precalculus 2e · Composition of Functions", href: "https://openstax.org/books/precalculus-2e/pages/1-4-composition-of-functions", problem: "여러 function의 input·output을 연결해 새 function을 계산합니다.", contribution: "Composition 표기, 평가 순서와 domain 제약을 worked example로 설명합니다.", assumptions: "교재가 선언한 real-valued function과 domain 조건입니다.", evidenceScope: "Precalculus 수준 function composition입니다.", notClaim: "Neural network의 학습 가능성이나 모든 tensor shape를 보장하지 않습니다.", sectionId: "paper-function-composition" },
+      { title: "Deep Learning Book · Deep Feedforward Networks", href: "https://www.deeplearningbook.org/contents/mlp.html", problem: "여러 parameterized function을 연결해 prediction을 만드는 구조를 설명합니다.", contribution: "Feedforward network를 function composition과 computational graph 관점으로 정리합니다.", assumptions: "교재의 model·objective·differentiability 조건입니다.", evidenceScope: "Feedforward network의 구조적 설명입니다.", notClaim: "깊은 모든 model의 optimization·generalization 우월성을 보장하지 않습니다.", sectionId: "paper-network-composition" },
+    ],
+  },
+  "ai/math-gradients-jacobians": {
+    coreIdea:
+      "Partial derivative는 input coordinate 하나의 local rate이고, gradient는 scalar output의 모든 coordinate slope를 vector로 묶습니다. Output도 vector면 Jacobian이 되며 JVP는 input direction의 작은 변화를 output 방향으로 전달합니다.",
+    assumedKnowledge: [
+      { id: "derivative", role: "Coordinate 하나를 움직인 local rate를 계산합니다." },
+      { id: "local-linear-approximation", role: "Jacobian과 gradient를 작은 변화의 1차 map으로 읽습니다." },
+      { id: "coordinate-vector", role: "Input·output coordinate 순서와 vector shape를 맞춥니다." },
+      { id: "dot-product", role: "Gradient의 선택 방향 성분을 directional derivative로 투영합니다." },
+      { id: "euclidean-norm", role: "길이 1인 방향끼리 steepest local rate를 비교합니다." },
+    ],
+    introducedHere: [
+      { id: "partial-derivative", role: "나머지 input을 고정하고 coordinate 하나의 local rate를 분리합니다." },
+      { id: "gradient", role: "Scalar output의 coordinate별 partial derivative를 vector로 묶습니다." },
+      { id: "directional-derivative", role: "Gradient를 선택한 unit direction에 투영해 그 방향 rate를 구합니다." },
+      { id: "jacobian-matrix", role: "Vector output과 vector input 사이 모든 local slope를 matrix로 배열합니다." },
+      { id: "jacobian-vector-product", role: "Input direction을 Jacobian에 적용해 output 변화 방향을 계산합니다." },
+    ],
+    conceptExplanations: [
+      { id: "partial-derivative", sectionId: "overview", intuition: "여러 손잡이 중 하나만 움직이고 나머지를 고정해 민감도를 잽니다.", workedExample: "f=x²+3y에서 ∂f/∂x=2x, ∂f/∂y=3입니다.", boundary: "모든 partial 존재만으로 전체 differentiability를 보장하지 않습니다." },
+      { id: "gradient", sectionId: "gradient-direction", intuition: "각 손잡이의 local slope를 input coordinate 순서대로 모은 vector입니다.", workedExample: "(2,-1)에서 ∇f=(4,3)입니다.", boundary: "Coordinate scale과 norm이 달라지면 크기·steepest 해석도 달라집니다." },
+      { id: "directional-derivative", sectionId: "gradient-direction", intuition: "Gradient에서 선택한 이동 방향 성분만 dot product로 읽습니다.", workedExample: "(4,3)·(3/5,4/5)=24/5입니다.", boundary: "Direction vector를 unit norm으로 맞추지 않으면 이동 속도까지 섞입니다." },
+      { id: "jacobian-matrix", sectionId: "jacobian", intuition: "Output별 gradient를 행으로 쌓은 local linear map입니다.", workedExample: "F=(x+y,xy)의 J는 [[1,1],[y,x]]입니다.", boundary: "문헌별 row·column convention을 확인해야 합니다." },
+      { id: "jacobian-vector-product", sectionId: "jacobian", intuition: "전체 slope table에 input 방향 vector를 앞으로 통과시킵니다.", workedExample: "J(2,3)[.01,-.02]^T=[-.01,-.01]^T입니다.", boundary: "Reverse-mode VJP와 곱 순서·shape·계산 방향이 다릅니다." },
+    ],
+    conceptStages: [
+      { label: "00 Coordinate", relation: "손잡이 하나의 local rate를 분리합니다.", concepts: ["derivative", "partial-derivative"] },
+      { label: "01 Direction", relation: "Coordinate slope를 vector로 묶고 방향 성분을 읽습니다.", concepts: ["gradient", "dot-product", "directional-derivative"] },
+      { label: "02 Matrix", relation: "Output도 여러 개일 때 local map을 행렬로 확장합니다.", concepts: ["jacobian-matrix", "jacobian-vector-product"] },
+      { label: "03 Boundary", relation: "Forward JVP와 reverse VJP의 책임을 구분합니다.", concepts: ["jacobian-vector-product", "vector-jacobian-product"] },
+    ],
+    exercises: [
+      { level: "basic", question: "f=x²+3y에서 두 partial derivative를 계산하세요.", answerChecklist: ["hold y", "2x", "hold x", "3"], requiredConcepts: ["partial-derivative"], sectionId: "overview" },
+      { level: "basic", question: "(2,-1)에서 gradient를 input 순서와 함께 적으세요.", answerChecklist: ["partials 4 and 3", "x y order", "vector (4,3)", "scalar output"], requiredConcepts: ["partial-derivative", "gradient"], sectionId: "gradient-direction" },
+      { level: "basic", question: "Gradient (4,3)의 Euclidean norm을 계산하세요.", answerChecklist: ["sqrt 16+9", "5", "local magnitude", "coordinate caveat"], requiredConcepts: ["gradient", "euclidean-norm"], sectionId: "gradient-direction" },
+      { level: "basic", question: "u=(3/5,4/5) 방향 derivative를 계산하세요.", answerChecklist: ["unit norm", "dot product", "12/5+12/5", "24/5"], requiredConcepts: ["gradient", "directional-derivative", "dot-product"], sectionId: "gradient-direction" },
+      { level: "basic", question: "F=(x+y,xy)의 Jacobian 행·열을 적으세요.", answerChecklist: ["output rows", "input columns", "first row 1 1", "second row y x"], requiredConcepts: ["jacobian-matrix"], sectionId: "jacobian" },
+      { level: "basic", question: "(2,3)에서 v=(.01,-.02)의 JVP를 계산하세요.", answerChecklist: ["J [[1,1],[3,2]]", "row products", "first row -.01", "second row -.01"], requiredConcepts: ["jacobian-matrix", "jacobian-vector-product"], sectionId: "jacobian" },
+      { level: "advanced", question: "Negative gradient가 local steepest decrease인 전제를 설명하세요.", answerChecklist: ["differentiable", "unit Euclidean directions", "Cauchy-Schwarz", "local not finite-step guarantee"], requiredConcepts: ["gradient", "directional-derivative", "euclidean-norm"], sectionId: "gradient-direction" },
+      { level: "advanced", question: "Partial derivative가 모두 존재하지만 differentiability가 실패할 수 있는 이유를 설명하세요.", answerChecklist: ["coordinate slices only", "joint remainder", "continuity or differentiability stronger", "counterexample needed"], requiredConcepts: ["partial-derivative", "local-linear-approximation"], sectionId: "overview" },
+      { level: "advanced", question: "JVP와 VJP의 input/output shape와 계산 방향을 비교하세요.", answerChecklist: ["Jv forward", "input tangent", "vT J reverse", "output cotangent", "no full J required"], requiredConcepts: ["jacobian-vector-product", "vector-jacobian-product"], sectionId: "boundaries" },
+      { level: "advanced", question: "Input coordinate의 단위를 100배 바꾸면 gradient 성분 비교가 달라지는 이유와 대안을 설명하세요.", answerChecklist: ["coordinate dependence", "units", "rescale or metric", "same function meaning", "selection caveat"], requiredConcepts: ["gradient", "directional-derivative"], sectionId: "boundaries" },
+    ],
+    papers: [
+      { title: "MIT OpenCourseWare 18.02SC · Gradient and Directional Derivatives", href: "https://ocw.mit.edu/courses/18-02sc-multivariable-calculus-fall-2010/pages/2.-partial-derivatives/part-b-chain-rule-gradient-and-directional-derivatives/", problem: "다변수 함수의 coordinate별 rate를 방향과 기하로 연결합니다.", contribution: "Partial derivative·gradient·directional derivative를 강의와 문제로 설명합니다.", assumptions: "Multivariable differentiability와 Euclidean coordinate 조건입니다.", evidenceScope: "18.02SC 해당 단원의 계산·기하입니다.", notClaim: "Arbitrary norm·manifold·nonsmooth optimization 결과가 아닙니다.", sectionId: "paper-multivariable-gradient" },
+      { title: "The Matrix Calculus You Need For Deep Learning", href: "https://arxiv.org/abs/1802.01528", problem: "Vector input·output derivative의 shape와 convention 혼동을 줄입니다.", contribution: "Gradient·Jacobian과 vectorized chain rule를 tutorial로 정리합니다.", assumptions: "선언된 numerator-layout와 differentiability입니다.", evidenceScope: "Matrix calculus tutorial과 worked derivation입니다.", notClaim: "모든 autodiff implementation의 memory·performance contract가 아닙니다.", sectionId: "paper-jacobian-calculus" },
+    ],
+  },
   "ai/math-functions-derivatives-gradients": {
     coreIdea:
-      "Derivative는 입력의 아주 작은 변화와 출력 변화 사이의 local rate입니다. 함수가 합성되면 local rate를 chain rule로 곱하고, 입력이 여러 좌표면 partial derivative를 vector로 묶어 gradient를 만듭니다. 매끈하지 않은 점에서는 표준 derivative와 subgradient·구현 convention을 구분해야 합니다.",
+      "Derivative는 두 input의 output 차이를 input 차이로 나눈 difference quotient를 limit으로 local하게 만든 rate입니다. Local linear approximation은 이 rate로 작은 변화를 예측하고, chain rule은 같은 변화가 연속 변환에서 받은 배율을 곱합니다. Nonsmooth point에서는 표준 derivative·subgradient 집합·implementation convention을 구분합니다.",
     assumedKnowledge: [
       {
         id: "scalar-quantity",
         role: "입력 변화량·출력 변화량과 derivative를 숫자 하나의 크기로 읽습니다.",
       },
       {
-        id: "coordinate-vector",
-        role: "여러 입력 좌표와 gradient 성분의 순서가 대응한다는 점을 읽습니다.",
+        id: "function-mapping",
+        role: "서로 가까운 두 input에 같은 function rule을 적용해 output 차이를 만듭니다.",
       },
       {
-        id: "dot-product",
-        role: "Gradient와 unit direction의 dot product를 directional derivative로 해석합니다.",
-      },
-      {
-        id: "euclidean-norm",
-        role: "길이 1인 방향들 사이에서 gradient가 가장 큰 증가율을 주는 방향임을 비교합니다.",
+        id: "function-composition",
+        role: "Chain rule에서 inner output을 outer input으로 잇는 실행 순서를 읽습니다.",
       },
     ],
     introducedHere: [
       {
-        id: "function-mapping",
-        role: "입력이 출력을 정하는 규칙으로 layer와 objective를 읽습니다.",
-      },
-      {
-        id: "function-composition",
-        role: "한 함수의 출력을 다음 함수의 입력으로 연결합니다.",
-      },
-      {
         id: "mathematical-limit",
         role: "점 하나의 함수값과 주변 입력이 가까워질 때의 행동을 구분합니다.",
+      },
+      {
+        id: "difference-quotient",
+        role: "두 input 사이의 output 변화를 input 변화로 나눠 평균 rate를 만듭니다.",
       },
       {
         id: "derivative",
@@ -2985,50 +3082,14 @@ export const ARTICLE_LEARNING: Readonly<
         role: "합성 경로의 local derivative를 곱해 전체 민감도를 계산합니다.",
       },
       {
-        id: "partial-derivative",
-        role: "여러 입력 중 한 좌표만 움직인 민감도를 분리합니다.",
-      },
-      {
-        id: "jacobian-matrix",
-        role: "여러 output과 여러 input 사이의 모든 local rate를 행렬로 배열합니다.",
-      },
-      {
-        id: "gradient",
-        role: "모든 좌표의 partial derivative를 입력과 같은 순서의 vector로 묶습니다.",
-      },
-      {
-        id: "directional-derivative",
-        role: "정해진 방향으로 움직일 때의 local rate를 gradient와 dot product로 구합니다.",
-      },
-      {
         id: "subgradient",
         role: "ReLU처럼 매끈하지 않은 convex corner의 가능한 지지 기울기를 다룹니다.",
       },
     ],
     conceptExplanations: [
       {
-        id: "function-mapping",
-        sectionId: "functions",
-        intuition:
-          "자판기 버튼 하나가 음료 하나를 정하듯, 허용된 입력마다 출력 하나를 정하는 규칙이 함수입니다.",
-        workedExample:
-          "g(x)=3x+1에서 x=2를 넣으면 출력은 7로 정해지고, 같은 입력 2에 임의로 다른 값을 내지 않습니다.",
-        boundary:
-          "함수라는 말은 식이 간단하거나 일대일 대응이라는 뜻이 아닙니다. 서로 다른 입력이 같은 출력을 가질 수 있습니다.",
-      },
-      {
-        id: "function-composition",
-        sectionId: "functions",
-        intuition:
-          "첫 변환의 출력을 다음 변환의 입력으로 넘기는 것으로, 코드의 outer(inner(x))와 같은 실행 순서입니다.",
-        workedExample:
-          "g(x)=3x+1, f(u)=u²이면 x=2에서 g가 7을 만들고 f가 49를 만들어 f(g(2))=49입니다.",
-        boundary:
-          "적용 순서가 바뀌면 일반적으로 다른 함수입니다. f∘g와 g∘f를 같은 계산으로 보면 안 됩니다.",
-      },
-      {
         id: "mathematical-limit",
-        sectionId: "limits",
+        sectionId: "overview",
         intuition:
           "그 점에 직접 도착했을 때의 값보다, 주변 입력들이 계속 가까워질 때 출력이 모이는 곳을 봅니다.",
         workedExample:
@@ -3037,8 +3098,18 @@ export const ARTICLE_LEARNING: Readonly<
           "왼쪽과 오른쪽의 접근값이 다르면 양쪽 극한은 존재하지 않습니다. 함수값과 극한값도 반드시 같지는 않습니다.",
       },
       {
+        id: "difference-quotient",
+        sectionId: "derivative",
+        intuition:
+          "두 output을 빼 변화량을 만든 뒤 두 input의 간격으로 나눠 입력 1단위당 평균 rate로 바꿉니다.",
+        workedExample:
+          "f(x)=x²의 x=3에서 간격 h를 쓰면 quotient는 ((3+h)²−9)/h=6+h입니다.",
+        boundary:
+          "h는 0이 아니며 유한한 h의 평균 rate를 derivative 자체로 부르면 안 됩니다.",
+      },
+      {
         id: "derivative",
-        sectionId: "derivatives",
+        sectionId: "derivative",
         intuition:
           "두 점 사이의 평균 기울기에서 점 사이의 간격을 0에 가깝게 줄여 한 지점의 순간 변화율을 얻습니다.",
         workedExample:
@@ -3048,7 +3119,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         id: "local-linear-approximation",
-        sectionId: "derivatives",
+        sectionId: "local-linearity",
         intuition:
           "매끈한 곡선도 충분히 가까이 확대하면 접선처럼 보이므로 작은 범위에서는 직선 계산으로 변화를 예측할 수 있습니다.",
         workedExample:
@@ -3071,46 +3142,6 @@ export const ARTICLE_LEARNING: Readonly<
           "y=|u|, u=x를 x=0에서 보면 왼쪽 기울기 −1과 오른쪽 기울기 1이 달라 outer derivative가 없으므로 표준 chain rule로 값을 정할 수 없습니다.",
       },
       {
-        id: "partial-derivative",
-        sectionId: "partial-gradient",
-        intuition:
-          "조절 손잡이가 여러 개일 때 나머지는 고정하고 하나만 움직여 그 손잡이의 local sensitivity를 잽니다.",
-        workedExample:
-          "f(x,y)=x²+3y에서 y를 고정하면 ∂f/∂x=2x이고, x를 고정하면 ∂f/∂y=3입니다.",
-        boundary:
-          "모든 partial derivative가 존재해도 함수가 그 점에서 자동으로 미분 가능하거나 매끈하다고 결론낼 수는 없습니다.",
-      },
-      {
-        id: "gradient",
-        sectionId: "partial-gradient",
-        intuition:
-          "각 parameter 손잡이에 붙은 local slope를 parameter와 같은 순서로 모은 vector입니다.",
-        workedExample:
-          "f(x,y)=x²+3y의 (2,−1)에서 gradient는 (4,3)이고 Euclidean 길이는 5입니다.",
-        boundary:
-          "Gradient의 크기와 방향은 coordinate scale과 선택한 geometry에 의존하며, 큰 step에서도 loss 감소를 보장하는 명령이 아닙니다.",
-      },
-      {
-        id: "jacobian-matrix",
-        sectionId: "partial-gradient",
-        intuition:
-          "출력이 하나가 아니라 여러 좌표면 각 output이 각 input 손잡이에 얼마나 민감한지를 표의 행과 열로 정리합니다.",
-        workedExample:
-          "F(x,y)=(x+y,xy)이면 Jacobian은 [[1,1],[y,x]]이고 (2,3)에서는 [[1,1],[3,2]]입니다.",
-        boundary:
-          "Jacobian의 행·열 convention은 표기에 따라 transpose될 수 있으므로 input·output axis와 matrix multiplication 방향을 확인해야 합니다.",
-      },
-      {
-        id: "directional-derivative",
-        sectionId: "partial-gradient",
-        intuition:
-          "x축이나 y축 하나가 아니라 선택한 방향으로 동시에 움직였을 때 함수가 바뀌는 속도입니다.",
-        workedExample:
-          "Gradient (4,3)과 unit direction (3/5,4/5)의 dot product는 24/5이므로 그 방향의 변화율은 4.8입니다.",
-        boundary:
-          "방향 vector를 unit norm으로 맞추지 않으면 방향뿐 아니라 이동 속도까지 곱해져 서로 공정하게 비교할 수 없습니다.",
-      },
-      {
         id: "subgradient",
         sectionId: "nonsmooth",
         intuition:
@@ -3123,66 +3154,32 @@ export const ARTICLE_LEARNING: Readonly<
     ],
     conceptStages: [
       {
-        label: "규칙",
-        relation: "입력과 출력을 정하고 여러 함수를 연결",
-        concepts: ["function-mapping", "function-composition"],
+        label: "00 Average rate",
+        relation: "두 output 차이를 input 차이로 나눠 평균 변화율을 만듭니다.",
+        concepts: ["function-mapping", "difference-quotient"],
       },
       {
-        label: "가까워짐",
-        relation: "두 점의 평균 변화에서 한 점의 local rate로",
+        label: "01 Local rate",
+        relation: "간격을 줄여 한 점의 derivative로 이동합니다.",
         concepts: [
           "mathematical-limit",
+          "difference-quotient",
           "derivative",
           "local-linear-approximation",
         ],
       },
       {
-        label: "합성",
-        relation: "중간값 경로의 local rate를 곱해 전체 rate 계산",
+        label: "02 Chain",
+        relation: "중간값을 지난 연속 local rate를 곱합니다.",
         concepts: ["function-composition", "derivative", "chain-rule"],
       },
       {
-        label: "다변수",
-        relation:
-          "좌표별 민감도를 vector·matrix로 묶고 임의 방향의 변화율 계산",
-        concepts: [
-          "coordinate-vector",
-          "partial-derivative",
-          "gradient",
-          "jacobian-matrix",
-          "dot-product",
-          "directional-derivative",
-        ],
-      },
-      {
-        label: "비매끄러움",
-        relation: "표준 derivative가 없는 지점의 계산 경계",
+        label: "03 Boundary",
+        relation: "표준 derivative와 subgradient·구현 선택을 분리합니다.",
         concepts: ["derivative", "subgradient", "nonlinear-activation"],
-      },
-      {
-        label: "학습",
-        relation: "Chain rule과 gradient를 모델 학습 경로로 재사용",
-        concepts: [
-          "chain-rule",
-          "gradient",
-          "backpropagation",
-          "optimizer-update",
-        ],
       },
     ],
     exercises: [
-      {
-        level: "basic",
-        question:
-          "g(x)=3x+1과 f(u)=u²에서 f(g(2))와 g(f(2))를 계산하고 두 결과가 다른 이유를 설명할 수 있을까요?",
-        answerChecklist: [
-          "g(2)=7 뒤 f(7)=49를 계산한다.",
-          "f(2)=4 뒤 g(4)=13을 계산한다.",
-          "Function composition의 적용 순서가 결과를 바꾼다고 설명한다.",
-        ],
-        requiredConcepts: ["function-mapping", "function-composition"],
-        sectionId: "functions",
-      },
       {
         level: "basic",
         question:
@@ -3193,7 +3190,7 @@ export const ARTICLE_LEARNING: Readonly<
           "함수값과 극한값을 구분한다.",
         ],
         requiredConcepts: ["function-mapping", "mathematical-limit"],
-        sectionId: "limits",
+        sectionId: "overview",
       },
       {
         level: "basic",
@@ -3206,10 +3203,11 @@ export const ARTICLE_LEARNING: Readonly<
         ],
         requiredConcepts: [
           "mathematical-limit",
+          "difference-quotient",
           "derivative",
           "local-linear-approximation",
         ],
-        sectionId: "derivatives",
+        sectionId: "derivative",
       },
       {
         level: "basic",
@@ -3234,59 +3232,21 @@ export const ARTICLE_LEARNING: Readonly<
           "입력 변화나 곡률이 커지면 같은 1차 근사의 오차가 커질 수 있다고 제한한다.",
         ],
         requiredConcepts: ["derivative", "local-linear-approximation"],
-        sectionId: "derivatives",
+        sectionId: "local-linearity",
       },
       {
         level: "basic",
-        question:
-          "f(x,y)=x²+3y의 (2,−1)에서 두 partial derivative와 gradient를 계산하고 각 성분의 순서를 설명할 수 있을까요?",
-        answerChecklist: [
-          "y를 고정해 ∂f/∂x=2x, x를 고정해 ∂f/∂y=3을 구한다.",
-          "(2,−1)에서 두 값이 4와 3이라고 계산한다.",
-          "Input coordinate (x,y)와 같은 순서로 gradient ∇f=(4,3)을 만든다.",
-          "Partial derivative가 모두 존재한다는 사실만으로 모든 점에서 매끄럽다고 일반화하지 않는다.",
-        ],
-        requiredConcepts: [
-          "coordinate-vector",
-          "partial-derivative",
-          "gradient",
-        ],
-        sectionId: "partial-gradient",
+        question: "Difference quotient에서 빼기·나눗셈·limit이 각각 맡는 역할을 설명하세요.",
+        answerChecklist: ["subtract output change", "divide per input unit", "finite h average", "limit localizes", "not plug h=0"],
+        requiredConcepts: ["difference-quotient", "mathematical-limit", "derivative"],
+        sectionId: "derivative",
       },
       {
-        level: "advanced",
-        question:
-          "f(x,y)=x²+3y의 (2,−1)에서 gradient와 unit direction (3/5,4/5)의 directional derivative를 계산하고 의미를 설명할 수 있을까요?",
-        answerChecklist: [
-          "Partial derivative를 구해 gradient (4,3)을 만든다.",
-          "Dot product로 directional derivative 24/5를 계산한다.",
-          "−gradient 방향이 local decrease가 가장 큰 방향임을 Euclidean norm 조건과 함께 설명한다.",
-        ],
-        requiredConcepts: [
-          "partial-derivative",
-          "gradient",
-          "dot-product",
-          "directional-derivative",
-          "euclidean-norm",
-        ],
-        sectionId: "partial-gradient",
-      },
-      {
-        level: "advanced",
-        question:
-          "F(x,y)=(x+y,xy)의 Jacobian을 구하고 (2,3)에서 작은 입력 변화가 두 output에 전달되는 방식을 설명할 수 있을까요?",
-        answerChecklist: [
-          "첫 output의 partial derivative 행을 (1,1)로 구한다.",
-          "둘째 output의 행을 (y,x)로 구해 (2,3)에서 (3,2)를 얻는다.",
-          "Jacobian이 작은 input vector 변화를 output vector 변화로 보내는 local linear map이라고 설명한다.",
-        ],
-        requiredConcepts: [
-          "partial-derivative",
-          "jacobian-matrix",
-          "local-linear-approximation",
-          "coordinate-vector",
-        ],
-        sectionId: "partial-gradient",
+        level: "basic",
+        question: "위치 metre, 시간 second 함수의 derivative 단위를 말하고 3m/1s 계산을 해석하세요.",
+        answerChecklist: ["output/input unit", "m/s", "rate", "unit consistency"],
+        requiredConcepts: ["difference-quotient", "derivative"],
+        sectionId: "derivative",
       },
       {
         level: "advanced",
@@ -3317,6 +3277,24 @@ export const ARTICLE_LEARNING: Readonly<
         requiredConcepts: ["derivative", "subgradient", "nonlinear-activation"],
         sectionId: "nonsmooth",
       },
+      {
+        level: "advanced",
+        question: "f(x)=x²의 x=3에서 Δx=.1과 1의 local-linear error를 비교해 finite step 경계를 설명하세요.",
+        answerChecklist: ["9.6 versus 9.61", ".01 error", "15 versus 16", "1 error", "curvature and step"],
+        requiredConcepts: ["derivative", "local-linear-approximation"],
+        sectionId: "local-linearity",
+      },
+      {
+        level: "advanced",
+        question: "y=f(x)+g(x)처럼 graph가 갈라졌다 합쳐질 때 chain contribution을 왜 더하는지 작은 변화로 설명하세요.",
+        answerChecklist: ["same Δx enters both", "Δf plus Δg", "local products per path", "sum at merge", "not multiply branches"],
+        requiredConcepts: ["derivative", "chain-rule", "function-composition"],
+        sectionId: "chain-rule",
+      },
+    ],
+    papers: [
+      { title: "MIT OpenCourseWare 18.01SC · Differentiation", href: "https://ocw.mit.edu/courses/18-01sc-single-variable-calculus-fall-2010/pages/1.-differentiation/", problem: "평균 변화율에서 derivative와 chain rule까지 계산합니다.", contribution: "Difference quotient·limit·local linearization·chain rule를 강의와 problem set으로 연결합니다.", assumptions: "단변수 함수의 해당 differentiability 조건입니다.", evidenceScope: "18.01SC differentiation 단원입니다.", notClaim: "모든 nonsmooth optimization이나 neural-network convergence를 보장하지 않습니다.", sectionId: "paper-differentiation" },
+      { title: "The Matrix Calculus You Need For Deep Learning", href: "https://arxiv.org/abs/1802.01528", problem: "Deep learning 독자의 scalar·vector chain rule 표기 혼동을 줄입니다.", contribution: "Derivative와 chain rule의 convention을 tutorial로 정리합니다.", assumptions: "선언된 derivative convention과 differentiability입니다.", evidenceScope: "Deep learning용 calculus 표기와 worked derivation입니다.", notClaim: "특정 framework backward의 완전한 specification이 아닙니다.", sectionId: "paper-matrix-calculus" },
     ],
   },
   "ai/math-exponents-logarithms": {

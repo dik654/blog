@@ -2141,7 +2141,15 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Function",
     definition:
       "허용된 입력 하나마다 출력 하나를 정하는 규칙이며, 신경망의 layer와 objective를 같은 입력–출력 언어로 표현합니다.",
-    canonicalHref: "/ai/math-functions-derivatives-gradients#functions",
+    canonicalHref: "/ai/math-functions-composition#overview",
+  },
+  "function-domain-codomain": {
+    id: "function-domain-codomain",
+    domain: "mathematics",
+    label: "Function domain · codomain contract",
+    definition:
+      "함수가 허용하는 input 집합과 output을 놓는 선언 집합을 구분해, 함수 평가와 합성에서 값·dtype·shape가 연결 가능한지 판단하는 계약입니다.",
+    canonicalHref: "/ai/math-functions-composition#shape",
   },
   "function-composition": {
     id: "function-composition",
@@ -2149,7 +2157,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Function composition",
     definition:
       "한 함수의 출력을 다음 함수의 입력으로 이어 전체 변환을 만드는 연산이며, 여러 layer와 계산 그래프의 기본 구조입니다.",
-    canonicalHref: "/ai/math-functions-derivatives-gradients#functions",
+    canonicalHref: "/ai/math-functions-composition#composition",
   },
   "mathematical-limit": {
     id: "mathematical-limit",
@@ -2157,7 +2165,15 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Limit",
     definition:
       "입력이 어떤 값에 한없이 가까워질 때 출력이 가까워지는 값을 다루며, 점 하나의 함수값과 주변의 행동을 구분합니다.",
-    canonicalHref: "/ai/math-functions-derivatives-gradients#limits",
+    canonicalHref: "/ai/math-functions-derivatives-gradients#overview",
+  },
+  "difference-quotient": {
+    id: "difference-quotient",
+    domain: "mathematics",
+    label: "Difference quotient",
+    definition:
+      "서로 다른 두 input에서 생긴 output 차이를 input 차이로 나눠, 아직 유한한 구간에서 측정한 입력 1단위당 평균 변화율입니다.",
+    canonicalHref: "/ai/math-functions-derivatives-gradients#derivative",
   },
   derivative: {
     id: "derivative",
@@ -2165,7 +2181,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Derivative",
     definition:
       "입력의 아주 작은 변화에 대한 출력 변화의 비율로, 한 지점의 local slope와 민감도를 나타냅니다.",
-    canonicalHref: "/ai/math-functions-derivatives-gradients#derivatives",
+    canonicalHref: "/ai/math-functions-derivatives-gradients#derivative",
   },
   "local-linear-approximation": {
     id: "local-linear-approximation",
@@ -2173,7 +2189,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Local linear approximation",
     definition:
       "미분 가능한 함수를 한 점 근처에서 derivative를 기울기로 하는 직선으로 근사하는 관점입니다.",
-    canonicalHref: "/ai/math-functions-derivatives-gradients#derivatives",
+    canonicalHref: "/ai/math-functions-derivatives-gradients#local-linearity",
   },
   "chain-rule": {
     id: "chain-rule",
@@ -2190,7 +2206,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Partial derivative",
     definition:
       "입력이 여러 좌표일 때 나머지 좌표를 고정하고 한 좌표만 바꿔 측정한 local rate입니다.",
-    canonicalHref: "/ai/math-functions-derivatives-gradients#partial-gradient",
+    canonicalHref: "/ai/math-gradients-jacobians#overview",
   },
   "jacobian-matrix": {
     id: "jacobian-matrix",
@@ -2198,7 +2214,15 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Jacobian matrix",
     definition:
       "Vector-valued function의 각 output coordinate를 각 input coordinate로 편미분해 행과 열에 배치한 local linear map입니다.",
-    canonicalHref: "/ai/math-functions-derivatives-gradients#partial-gradient",
+    canonicalHref: "/ai/math-gradients-jacobians#jacobian",
+  },
+  "jacobian-vector-product": {
+    id: "jacobian-vector-product",
+    domain: "mathematics",
+    label: "Jacobian-vector product · JVP",
+    definition:
+      "Jacobian 전체를 물질화하지 않고 input 방향 vector를 local linear map에 앞으로 통과시켜 그 방향의 output 변화 Jv를 계산하는 연산입니다.",
+    canonicalHref: "/ai/math-gradients-jacobians#jacobian",
   },
   "directional-derivative": {
     id: "directional-derivative",
@@ -2206,7 +2230,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Directional derivative",
     definition:
       "여러 입력 좌표를 정해진 unit vector 방향으로 함께 움직일 때 함수가 변하는 local rate입니다.",
-    canonicalHref: "/ai/math-functions-derivatives-gradients#partial-gradient",
+    canonicalHref: "/ai/math-gradients-jacobians#gradient-direction",
   },
   subgradient: {
     id: "subgradient",
@@ -2548,7 +2572,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Gradient",
     definition:
       "각 파라미터를 아주 조금 바꿨을 때 loss가 어느 방향으로 얼마나 변하는지 모은 편미분 벡터입니다.",
-    canonicalHref: "/ai/math-functions-derivatives-gradients#partial-gradient",
+    canonicalHref: "/ai/math-gradients-jacobians#gradient-direction",
   },
   backpropagation: {
     id: "backpropagation",
@@ -19885,6 +19909,18 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     reason: "두 vector 길이의 곱이 dot product 절댓값의 상한입니다.",
   },
   {
+    from: "function-domain-codomain",
+    to: "function-mapping",
+    relation: "constrains",
+    reason: "허용 input과 선언 output 집합이 함수가 정의되는 값·shape 경계를 정합니다.",
+  },
+  {
+    from: "function-domain-codomain",
+    to: "function-composition",
+    relation: "constrains",
+    reason: "앞 함수의 output이 다음 함수의 domain에 들어가야 두 규칙을 합성할 수 있습니다.",
+  },
+  {
     from: "function-mapping",
     to: "function-composition",
     relation: "produces",
@@ -19898,6 +19934,19 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   },
   {
     from: "mathematical-limit",
+    to: "difference-quotient",
+    relation: "prerequisite",
+    reason:
+      "유한 간격에서 측정한 평균 변화율을 어느 값에 가까워지게 할지 limit으로 읽습니다.",
+  },
+  {
+    from: "function-mapping",
+    to: "difference-quotient",
+    relation: "prerequisite",
+    reason: "두 input에 대한 function output을 빼야 유한 구간의 output 변화를 계산할 수 있습니다.",
+  },
+  {
+    from: "difference-quotient",
     to: "derivative",
     relation: "prerequisite",
     reason:
@@ -19947,6 +19996,24 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     to: "jacobian-matrix",
     relation: "produces",
     reason: "Output과 input coordinate의 모든 편미분을 행렬로 배열합니다.",
+  },
+  {
+    from: "jacobian-matrix",
+    to: "jacobian-vector-product",
+    relation: "produces",
+    reason: "Jacobian이 나타내는 local linear map을 선택한 input direction vector에 적용합니다.",
+  },
+  {
+    from: "coordinate-vector",
+    to: "jacobian-vector-product",
+    relation: "prerequisite",
+    reason: "Input coordinate 순서와 맞춘 direction vector가 Jacobian의 열과 곱해집니다.",
+  },
+  {
+    from: "jacobian-vector-product",
+    to: "vector-jacobian-product",
+    relation: "contrasts",
+    reason: "JVP는 input direction을 forward로 보내고 VJP는 output cotangent를 reverse로 보냅니다.",
   },
   {
     from: "jacobian-matrix",

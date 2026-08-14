@@ -1,13 +1,13 @@
 import VizFrame from "@/components/viz/VizFrame";
 import {
-  LearningSceneControls,
-  useLearningScenes,
-} from "../deep-learning-overview/viz/LearningSceneControls";
+  AnimatedSceneControls,
+  useAnimatedScenes,
+} from "@/components/viz/AnimatedSceneControls";
 
 const SCENES = ["example", "batch", "forward", "update"] as const;
 
 export default function TrainingLoopViz() {
-  const scenes = useLearningScenes(SCENES.length);
+  const scenes = useAnimatedScenes(SCENES.length);
   const active = scenes.active;
 
   return (
@@ -62,7 +62,7 @@ export default function TrainingLoopViz() {
             <span>batch</span><span className="text-primary">→</span><span>forward</span><span className="text-primary">→</span><span>loss</span><span className="text-primary">→</span><span>backward</span><span className="text-primary">→</span><span>update</span><span className="text-primary">↺</span>
           </div>
         </div>
-        <LearningSceneControls {...scenes} labels={SCENES} />
+        <AnimatedSceneControls {...scenes} labels={SCENES} />
       </div>
     </VizFrame>
   );

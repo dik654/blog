@@ -1236,10 +1236,8 @@ export const EDITORIAL_BOUNDARIES = {
         label: "Loss·gradient·validation",
         href: "/ai/supervised-learning-loop",
       },
-      {
-        label: "Derivative와 gradient",
-        href: "/ai/math-functions-derivatives-gradients",
-      },
+      { label: "Derivative", href: "/ai/math-functions-derivatives-gradients" },
+      { label: "Gradient", href: "/ai/math-gradients-jacobians" },
       {
         label: "Feature availability와 leakage",
         href: "/ai/feature-engineering#overview",
@@ -5790,7 +5788,9 @@ export const EDITORIAL_BOUNDARIES = {
     ],
     reuses: [
       { label: "Chain rule·reverse-mode autodiff 수학", href: "/ai/reverse-mode-autodiff#reverse-mode" },
-      { label: "함수·미분·gradient 기초", href: "/ai/math-functions-derivatives-gradients" },
+      { label: "함수 합성 기초", href: "/ai/math-functions-composition" },
+      { label: "Derivative·chain rule", href: "/ai/math-functions-derivatives-gradients" },
+      { label: "Gradient·Jacobian", href: "/ai/math-gradients-jacobians" },
       { label: "DeZero Layer·optimizer 확장", href: "/ai/dezero-nn" },
     ],
     evidence: [
@@ -7379,7 +7379,8 @@ export const EDITORIAL_BOUNDARIES = {
       "Activation 저장과 checkpoint recomputation의 compute–memory 경계",
     ],
     reuses: [
-      { label: "미분·chain rule·Jacobian 수학", href: "/ai/math-functions-derivatives-gradients" },
+      { label: "Derivative·chain rule", href: "/ai/math-functions-derivatives-gradients" },
+      { label: "Gradient·Jacobian 수학", href: "/ai/math-gradients-jacobians" },
       { label: "신경망 parameter에 적용한 backprop", href: "/ai/backprop-optimization" },
     ],
     evidence: [
@@ -7463,7 +7464,8 @@ export const EDITORIAL_BOUNDARIES = {
     ],
     reuses: [
       { label: "Time unrolling", href: "/ai/rnn#architecture" },
-      { label: "Chain rule·Jacobian", href: "/ai/math-functions-derivatives-gradients" },
+      { label: "Chain rule", href: "/ai/math-functions-derivatives-gradients#chain-rule" },
+      { label: "Jacobian", href: "/ai/math-gradients-jacobians#jacobian" },
       { label: "LSTM direct retention", href: "/ai/lstm#cell-state" },
     ],
     evidence: [
@@ -7553,6 +7555,59 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [
       { kind: "primary-source", rule: "Assessment·selection·CV estimand claim은 ESL과 분석 논문의 sampling·model 조건에 귀속한다." },
       { kind: "standard", rule: "Test 결과를 본 뒤 생긴 변경은 adaptation으로 기록하고 새 untouched holdout 없이는 final claim을 하지 않는다." },
+    ],
+  },
+  "math-functions-composition": {
+    title: "함수 input·output과 composition 글이 소유하는 범위",
+    owns: [
+      "Deterministic function의 input→output mapping과 many-to-one 경계",
+      "Domain·codomain·range와 tensor dtype·axis·shape compatibility",
+      "Function composition의 실행 순서·중간값·order counterexample",
+    ],
+    reuses: [
+      { label: "Scalar와 vector shape", href: "/ai/math-vectors-inner-products" },
+      { label: "Derivative와 chain rule", href: "/ai/math-functions-derivatives-gradients" },
+      { label: "Gradient와 Jacobian", href: "/ai/math-gradients-jacobians" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Function composition·domain claim은 공개 교재의 선언과 example 범위에 귀속한다." },
+      { kind: "standard", rule: "순수 function 표기와 random·stateful program의 숨은 input state를 구분한다." },
+    ],
+  },
+  "math-functions-derivatives-gradients": {
+    title: "Derivative·local linearity·chain rule 글이 소유하는 범위",
+    owns: [
+      "Difference quotient의 빼기·나눗셈과 limit이 만드는 local rate",
+      "Derivative 단위와 local linear approximation의 finite-step error",
+      "연속 local rate를 곱하는 chain rule과 branch contribution 합산",
+      "표준 derivative·convex subgradient·autodiff convention 경계",
+    ],
+    reuses: [
+      { label: "함수와 composition", href: "/ai/math-functions-composition" },
+      { label: "Gradient와 Jacobian", href: "/ai/math-gradients-jacobians" },
+      { label: "Activation의 실제 local slope", href: "/ai/activation-functions" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Derivative·chain-rule 설명은 MIT calculus의 differentiability 조건과 공개 problem 범위에 귀속한다." },
+      { kind: "standard", rule: "Local approximation을 큰 finite step의 exact equality나 optimizer convergence 보장으로 확대하지 않는다." },
+    ],
+  },
+  "math-gradients-jacobians": {
+    title: "Partial derivative·gradient·Jacobian 글이 소유하는 범위",
+    owns: [
+      "Coordinate 하나를 고정해 재는 partial derivative와 전체 differentiability 경계",
+      "Gradient·directional derivative·Euclidean steepest local direction",
+      "Output-by-input Jacobian shape와 Jacobian-vector product",
+      "Gradient·JVP·VJP의 input/output 방향 차이",
+    ],
+    reuses: [
+      { label: "Vector·dot product·norm", href: "/ai/math-vectors-inner-products" },
+      { label: "Derivative와 local linearity", href: "/ai/math-functions-derivatives-gradients" },
+      { label: "Reverse-mode VJP", href: "/ai/reverse-mode-autodiff" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Gradient·directional derivative claim은 multivariable calculus의 coordinate·norm·differentiability 조건에 귀속한다." },
+      { kind: "standard", rule: "Jacobian row·column convention과 JVP·VJP 곱 방향을 formula shape와 함께 기록한다." },
     ],
   },
 } as const satisfies Record<string, EditorialBoundary>;

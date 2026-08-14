@@ -31,8 +31,8 @@ export default function Overview() {
           각 구현이 근사하는 지점을 먼저 나눠야 합니다.
         </p>
         <p>
-          이 글은 <Link to="/ai/deep-learning-overview#learning-loop">loss·train/validation split</Link>,{" "}
-          <Link to="/ai/math-functions-derivatives-gradients#gradient">derivative와 gradient</Link>,{" "}
+          이 글은 <Link to="/ai/supervised-learning-loop#training-step">loss와 parameter update</Link>,{" "}
+          <Link to="/ai/math-gradients-jacobians#gradient-direction">gradient</Link>,{" "}
           <Link to="/ai/feature-engineering">누출 없는 feature contract</Link>를
           재사용합니다. Category target statistic의 자세한 정의도 앞 글이
           소유하며, 여기서는 boosting update와 결합할 때 생기는 차이만 다룹니다.

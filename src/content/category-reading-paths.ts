@@ -63,7 +63,9 @@ export const CATEGORY_READING_PATHS: Readonly<
     featuredArticles: [
       "deep-learning-overview",
       "math-vectors-inner-products",
+      "math-functions-composition",
       "math-functions-derivatives-gradients",
+      "math-gradients-jacobians",
       "math-exponents-logarithms",
       "math-probability-expectation-variance",
       "math-optimization-convexity",

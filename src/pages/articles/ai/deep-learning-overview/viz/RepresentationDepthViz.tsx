@@ -1,8 +1,8 @@
 import VizFrame from "@/components/viz/VizFrame";
 import {
-  LearningSceneControls,
-  useLearningScenes,
-} from "./LearningSceneControls";
+  AnimatedSceneControls,
+  useAnimatedScenes,
+} from "@/components/viz/AnimatedSceneControls";
 
 const SCENES = ["입력", "국소 표현", "조합 표현", "판정"] as const;
 
@@ -34,7 +34,7 @@ const stages = [
 ] as const;
 
 export default function RepresentationDepthViz() {
-  const scenes = useLearningScenes(SCENES.length);
+  const scenes = useAnimatedScenes(SCENES.length);
 
   return (
     <VizFrame
@@ -87,7 +87,7 @@ export default function RepresentationDepthViz() {
           <Boundary label="목표" value="어떤 차이를 보존할지" active={scenes.active === 3} />
           <Boundary label="깊이" value="작은 변환의 재사용" active={scenes.active >= 1} />
         </div>
-        <LearningSceneControls {...scenes} labels={SCENES} />
+        <AnimatedSceneControls {...scenes} labels={SCENES} />
       </div>
     </VizFrame>
   );

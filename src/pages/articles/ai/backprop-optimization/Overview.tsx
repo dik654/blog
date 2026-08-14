@@ -24,10 +24,11 @@ export default function Overview() {
           softmax–cross-entropy output과 linear tensor에 어떻게 나누는지만 소유합니다.
         </p>
         <p>
-          Derivative·gradient·chain rule 자체가 아직 낯설다면 이 글에서 기호를 추측하지
-          말고 먼저 <Link to="/ai/math-functions-derivatives-gradients">함수·미분·gradient
-          기초 글</Link>을 읽는 편이 빠릅니다. 그 글은 scalar chain rule과 Jacobian까지
-          숫자로 계산합니다.
+          Derivative와 chain rule이 낯설다면 먼저
+          <Link to="/ai/math-functions-derivatives-gradients"> local rate 글</Link>에서
+          곱의 이유를 확인하고, vector shape는
+          <Link to="/ai/math-gradients-jacobians"> gradient·Jacobian 글</Link>에서
+          숫자로 계산하는 편이 빠릅니다.
         </p>
         <p>
           Computational graph·tape·VJP의 실행 원리는

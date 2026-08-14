@@ -37,7 +37,7 @@ export default function Applications() {
           </p>
         </Link>
         <Link
-          to="/ai/math-functions-derivatives-gradients#derivatives"
+          to="/ai/math-functions-derivatives-gradients#derivative"
           className="border-t border-border pt-4"
         >
           <b className="text-sm">Derivative와 local linearity 복습</b>
