@@ -39,7 +39,7 @@ export default function Validation() {
         {validationMoments.map((item) => (
           <article
             key={item.title}
-            className="min-w-0 rounded-2xl border border-border/70 bg-card p-4 shadow-sm"
+            className="min-w-0 rounded-lg border border-border/70 bg-card p-4"
           >
             <h4 className="text-sm font-bold text-foreground">{item.title}</h4>
             <p className="mt-2 text-xs leading-5 text-muted-foreground">

@@ -1,5 +1,6 @@
 import EscalationTemplateVarsViz from "./viz/EscalationTemplateVarsViz";
 import EscalationViz from "./viz/EscalationViz";
+import { CitationBlock } from "@/components/ui/citation";
 
 const evidenceFields = [
   {
@@ -50,7 +51,7 @@ export default function Escalation() {
         {evidenceFields.map((item) => (
           <article
             key={item.title}
-            className="min-w-0 rounded-2xl border border-border/70 bg-card p-4 shadow-sm"
+            className="min-w-0 rounded-lg border border-border/70 bg-card p-4"
           >
             <h4 className="text-sm font-bold text-foreground">{item.title}</h4>
             <p className="mt-2 text-xs leading-5 text-muted-foreground">
@@ -89,8 +90,8 @@ export default function Escalation() {
         <p className="leading-7">
           전송 성공은 사람이 인수했다는 뜻이 아닙니다. target message ID,
           acknowledgement, current owner와 deadline을 저장하고, 응답이 없을 때만
-          다음 route로 escalation합니다. resolved 뒤에는 후속 알림과 자동
-          retry를 함께 닫습니다.
+          다음 route로 escalation합니다. 해결됐다고 확인한 뒤에는 후속 알림과
+          자동 retry를 함께 종료합니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
@@ -113,6 +114,26 @@ export default function Escalation() {
           delivery retry가 task recovery 자체를 다시 실행하지 않도록 두
           pipeline도 분리합니다.
         </p>
+
+        <div id="paper-anthropic-long-running-harness" className="scroll-mt-24">
+          <CitationBlock
+            source="Anthropic — Effective harnesses for long-running agents"
+            href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents"
+            citeKey={3}
+            type="paper"
+          >
+            <p>
+              <strong>문제:</strong> 여러 session에 걸친 agent 작업이 다음 주체에게
+              충분한 상태를 남기지 못해 반복되거나 잘못 이어지는 문제를 다룹니다.
+              <strong>기여:</strong> artifact·progress·검증 가능한 다음 행동을
+              명시적으로 남기는 harness 운영 패턴을 제시합니다. <strong>전제:</strong>
+              coding task와 해당 harness 환경의 경험에 기반합니다.
+              <strong>근거 범위:</strong> 긴 작업 handoff와 검증의 일반 설계
+              근거입니다. <strong>일반화 금지:</strong> Claw의 notifier·acknowledgement
+              구현, 특정 SLA나 모든 domain의 성능 향상을 증명하지 않습니다.
+            </p>
+          </CitationBlock>
+        </div>
       </div>
     </section>
   );

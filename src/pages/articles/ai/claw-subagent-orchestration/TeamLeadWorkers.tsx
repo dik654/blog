@@ -1,4 +1,5 @@
 import TeamLeadFlowViz from "./viz/TeamLeadFlowViz";
+import { CitationBlock } from "@/components/ui/citation";
 
 const responsibilities = [
   {
@@ -46,7 +47,7 @@ export default function TeamLeadWorkers() {
         {responsibilities.map((item) => (
           <article
             key={item.role}
-            className="min-w-0 rounded-2xl border border-border/70 bg-card p-4 shadow-sm"
+            className="min-w-0 rounded-lg border border-border/70 bg-card p-4"
           >
             <h4 className="text-sm font-bold text-foreground">{item.role}</h4>
             <p className="mt-2 text-xs leading-5 text-muted-foreground">
@@ -113,6 +114,27 @@ export default function TeamLeadWorkers() {
           credential과 writable workspace를 함께 회수해야 합니다. 늦게 도착한
           결과에는 generation ID를 붙여 현재 작업에 잘못 합쳐지지 않게 합니다.
         </p>
+
+        <div id="paper-anthropic-multi-agent-research" className="scroll-mt-24">
+          <CitationBlock
+            source="Anthropic — How we built our multi-agent research system"
+            href="https://www.anthropic.com/engineering/multi-agent-research-system"
+            citeKey={2}
+            type="paper"
+          >
+            <p>
+              <strong>문제:</strong> 넓은 research task를 한 agent가 순차 탐색할 때
+              생기는 coverage·context 한계를 다룹니다. <strong>기여:</strong>
+              lead agent가 전략을 세우고 specialized subagent가 병렬 탐색한 뒤
+              결과를 합치는 orchestrator-worker 구조와 운영 경험을 제시합니다.
+              <strong>전제:</strong> research workload, 해당 model·tool·evaluation
+              환경의 사례입니다. <strong>근거 범위:</strong> 역할 분해와 병렬 탐색의
+              설계 근거입니다. <strong>일반화 금지:</strong> 모든 coding task에서
+              비용·latency·품질이 개선되거나 Claw가 같은 runtime을 구현했다는 뜻은
+              아닙니다.
+            </p>
+          </CitationBlock>
+        </div>
       </div>
     </section>
   );

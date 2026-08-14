@@ -15,11 +15,11 @@ const STEPS = [
   },
   {
     label: "Binding Response",
-    body: "XOR-MAPPED-ADDRESS {\n  family: 0x01,           // IPv4\n  port: 5678 XOR 0x2112, // = 0x3744\n  addr: 203.0.113.10 XOR 0x2112A442\n}\n// XOR: NAT/방화벽이 주소를 변조하는 것 방지.\n// 클라이언트가 XOR 해제 → 원본 주소 복원.",
+    body: "XOR-MAPPED-ADDRESS {\n  family: 0x01,           // IPv4\n  port: 5678 XOR 0x2112, // = 0x373C\n  addr: 203.0.113.10 XOR 0x2112A442\n}\n// XOR encoding은 payload 속 address를 ALG가 재작성하는 문제를 줄임.\n// 클라이언트가 XOR 해제 → 관측 주소 복원.",
   },
   {
     label: "외부 주소 획득",
-    body: "port = 0x3744 XOR 0x2112 = 5678\naddr = XOR_addr XOR 0x2112A442 = 203.0.113.10\n\n나의 공인 주소: 203.0.113.10:5678\n→ SDP/ICE candidate로 피어에게 전달.\n// NAT 유형 판별: 두 번째 STUN 서버로 반복.",
+    body: "port = 0x373C XOR 0x2112 = 5678\naddr = XOR_addr XOR 0x2112A442 = 203.0.113.10\n\n이 server가 본 주소: 203.0.113.10:5678\n→ ICE candidate로 피어에게 전달.\n// Mapping/filtering은 별도 behavior test나 실제 check로 확인.",
   },
 ];
 
@@ -110,7 +110,7 @@ export default function STUNViz() {
                 "  addr: 203.0.113.10 XOR 0x2112A442",
                 "}",
                 "",
-                "// XOR: ALG 변조 방지 기법",
+                "// XOR: payload ALG 재작성 완화",
               ].map((t, i) => (
                 <text
                   key={i}
@@ -135,11 +135,11 @@ export default function STUNViz() {
                 주소 복원
               </text>
               {[
-                "port = 0x3744 XOR 0x2112 = 5678",
+                "port = 0x373C XOR 0x2112 = 5678",
                 "addr = XOR_val XOR 0x2112A442",
                 "     = 203.0.113.10",
                 "",
-                "나의 공인: 203.0.113.10:5678",
+                "관측 주소: 203.0.113.10:5678",
                 "→ ICE candidate로 피어에게 전달",
               ].map((t, i) => (
                 <text

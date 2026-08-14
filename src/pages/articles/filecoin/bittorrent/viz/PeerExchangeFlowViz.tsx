@@ -18,10 +18,10 @@ const EDGES: [number, number, string][] = [
   [0, 2, "info_hash"],
   [1, 3, "IP:Port"],
   [2, 3, "피어 발견"],
-  [3, 4, "TCP 연결"],
+  [3, 4, "transport 연결"],
   [4, 5, "보유 조각"],
-  [5, 6, "rarest-first"],
-  [6, 7, "16KB 블록"],
+  [5, 6, "scheduler"],
+  [6, 7, "block"],
 ];
 
 const VIS = [
@@ -41,7 +41,7 @@ const STEPS = [
   { label: "피어 목록 수신" },
   { label: "핸드셰이크" },
   { label: "Bitfield 교환" },
-  { label: "Rarest-first 요청" },
+  { label: "Block 요청" },
   { label: "조각 수신 & 검증" },
 ];
 
@@ -51,8 +51,8 @@ const ANNOT = [
   "활성 피어 IP:Port 수신",
   "info_hash 핸드셰이크",
   "Bitfield 조각 비트맵 교환",
-  "Rarest-first 우선 요청",
-  "16KB 블록 수신+SHA1 검증",
+  "구현 정책으로 block 요청",
+  "Block 수신+v1 piece hash 검증",
 ];
 export default function PeerExchangeFlowViz() {
   return (
@@ -128,7 +128,7 @@ export default function PeerExchangeFlowViz() {
                   rx={5}
                   fill={`${n.color}${glow ? "28" : "10"}`}
                   stroke={n.color}
-                  strokeWidth={glow ? 2 : 1}
+                  strokeWidth={glow ? 1.25 : 1}
                 />
                 <text
                   x={n.x}
@@ -146,7 +146,7 @@ export default function PeerExchangeFlowViz() {
           <motion.g
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            key={step}
+            key={`annotation-${step}`}
           >
             <AnnotationBox
               x={424}

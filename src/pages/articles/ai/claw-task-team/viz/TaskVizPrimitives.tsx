@@ -32,10 +32,10 @@ export function TaskFrame({
   children: ReactNode;
 }) {
   return (
-    <figure className="my-8 overflow-hidden rounded-3xl border border-border/70 bg-gradient-to-br from-background to-muted/40 shadow-sm">
+    <figure data-viz="claw-task-team" data-viz-canvas className="my-8 overflow-hidden rounded-lg border border-border/70 bg-background">
       <div className="p-5 sm:p-7">
         <figcaption className="max-w-3xl">
-          <span className="inline-flex rounded-full bg-foreground px-3 py-1 text-[11px] font-semibold tracking-wide text-background">
+          <span className="inline-flex rounded-md bg-foreground px-3 py-1 text-[11px] font-semibold tracking-wide text-background">
             {label}
           </span>
           <h4 className="mt-3 text-lg font-bold tracking-tight text-foreground sm:text-xl">
@@ -68,7 +68,7 @@ export function TaskSteps({
       {items.map((item) => (
         <section
           key={`${item.label}-${item.title}`}
-          className={`min-w-0 rounded-2xl border p-4 ${tones[item.tone ?? "blue"]}`}
+          className={`min-w-0 rounded-lg border p-4 ${tones[item.tone ?? "blue"]}`}
         >
           <p className="text-[11px] font-bold tracking-wide text-muted-foreground">
             {item.label}
@@ -87,7 +87,7 @@ export function TaskSteps({
 
 export function TaskRule({ children }: { children: ReactNode }) {
   return (
-    <div className="mt-4 rounded-2xl border border-dashed border-border bg-background/75 px-4 py-3 text-sm leading-6 text-foreground">
+    <div className="mt-4 rounded-lg border border-dashed border-border bg-background/75 px-4 py-3 text-sm leading-6 text-foreground">
       {children}
     </div>
   );

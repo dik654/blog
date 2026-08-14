@@ -1,5 +1,6 @@
 import AgentScoreChartViz from "./viz/AgentScoreChartViz";
 import AgentSelectionViz from "./viz/AgentSelectionViz";
+import ExplainedFormula from "@/components/ui/explained-formula";
 
 const selectionSignals = [
   {
@@ -47,7 +48,7 @@ export default function AgentSelection() {
         {selectionSignals.map((item) => (
           <article
             key={item.title}
-            className="min-w-0 rounded-2xl border border-border/70 bg-card p-4 shadow-sm"
+            className="min-w-0 rounded-lg border border-border/70 bg-card p-4"
           >
             <h4 className="text-sm font-bold text-foreground">{item.title}</h4>
             <p className="mt-2 text-xs leading-5 text-muted-foreground">
@@ -95,6 +96,24 @@ export default function AgentSelection() {
           selection bias를 줄이려면 작업 난이도와 유형별로 지표를 나누고, 표본이
           적을 때는 confidence interval을 함께 봅니다.
         </p>
+
+        <ExplainedFormula
+          question="권한 조건을 통과한 후보 중 품질·latency·비용을 어떻게 비교할까?"
+          idea={<>먼저 capability·path·network·isolation 같은 hard constraint를 하나라도 어긴 후보를 제거합니다. 남은 후보에만 같은 작업 slice에서 정규화한 검증 품질은 더하고 latency와 비용은 뺍니다.</>}
+          formula={String.raw`S_i=w_qQ_i-w_lL_i-w_cC_i`}
+          terms={[
+            { symbol: "S_i", name: "candidate score", description: "Hard constraint를 모두 통과한 agent i의 비교 점수입니다." },
+            { symbol: "Q_i", name: "verified quality", description: "같은 task type·난이도 slice에서 verifier가 확인한 품질입니다." },
+            { symbol: "L_i", name: "normalized latency", description: "동일 deadline 기준으로 정규화한 end-to-end latency입니다." },
+            { symbol: "C_i", name: "normalized cost", description: "모델뿐 아니라 handoff·verification·merge를 포함한 비용입니다." },
+            { symbol: "w_q,w_l,w_c", name: "policy weights", description: "Workload가 품질·지연·비용을 얼마나 중요하게 보는지 나타냅니다." },
+          ]}
+          assumptions={[
+            "세 값은 같은 기간·task slice·verifier와 동일한 정규화 범위에서 측정합니다.",
+            "Permission·writable scope·required tool은 점수로 상쇄하지 않고 먼저 fail-closed합니다.",
+          ]}
+          interpretation="w=(0.6,0.25,0.15), Q=.9, L=.4, C=.2이면 S=.41입니다. 점수는 후보끼리 비교하는 정책 도구일 뿐 성공 확률이나 안전성을 증명하지 않으며, 표본이 적으면 uncertainty를 함께 표시해야 합니다."
+        />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
           agent pool은 새 work unit 경계에서 갱신한다

@@ -7,7 +7,7 @@ const STEPS = [
   { label: "Data Relay", desc: "A → TURN → B: 모든 데이터가 TURN 서버를 경유" },
   {
     label: "양방향 중계",
-    desc: "B → TURN → A: 역방향도 TURN 경유. 직접 연결 대비 2x RTT 지연",
+    desc: "B → TURN → A: 역방향도 relay 경유. 추가 지연은 topology에서 측정",
   },
 ];
 
@@ -34,7 +34,7 @@ export default function TURNViz() {
           rx={5}
           fill={C.a + "12"}
           stroke={C.a}
-          strokeWidth={1.3}
+          strokeWidth={1.25}
         />
         <text
           x={50}
@@ -55,7 +55,7 @@ export default function TURNViz() {
           rx={5}
           fill={C.turn + "12"}
           stroke={C.turn}
-          strokeWidth={1.3}
+          strokeWidth={1.25}
         />
         <text
           x={180}
@@ -76,7 +76,7 @@ export default function TURNViz() {
           rx={5}
           fill={C.b + "12"}
           stroke={C.b}
-          strokeWidth={1.3}
+          strokeWidth={1.25}
         />
         <text
           x={310}
@@ -98,7 +98,7 @@ export default function TURNViz() {
               x2={150}
               y2={34}
               stroke={C.a}
-              strokeWidth={1.3}
+              strokeWidth={1.25}
             />
             {step === 0 && (
               <>
@@ -132,7 +132,7 @@ export default function TURNViz() {
               x2={150}
               y2={40}
               stroke={C.a}
-              strokeWidth={1.3}
+              strokeWidth={1.25}
             />
             <line
               x1={210}
@@ -140,7 +140,7 @@ export default function TURNViz() {
               x2={280}
               y2={49}
               stroke={C.turn}
-              strokeWidth={1.3}
+              strokeWidth={1.25}
             />
             <motion.circle
               initial={false}
@@ -187,7 +187,7 @@ export default function TURNViz() {
               fontSize={10}
               fill={C.turn}
             >
-              양방향 중계 (2x RTT)
+              양방향 relay path
             </text>
           </motion.g>
         )}
@@ -202,7 +202,7 @@ export default function TURNViz() {
         ))}
       </div>
       <p className="text-xs font-semibold text-center">{s.label}</p>
-      <p className="text-[10px] text-foreground/50 text-center">{s.desc}</p>
+      <p className="text-[11px] text-foreground/60 text-center">{s.desc}</p>
     </div>
   );
 }

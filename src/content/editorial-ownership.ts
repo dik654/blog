@@ -4929,6 +4929,70 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "project-measurement", rule: "Security bits는 group-specific attacks·multi-target·hardware·implementation leakage와 quantum horizon을 고정한 budget에서만 보고한다." },
     ],
   },
+  "uniswap-v2": {
+    title: "Uniswap V2 글이 소유하는 범위",
+    owns: [
+      "Constant-product reserve invariant·30-bp fee-adjusted balance settlement",
+      "LP share mint·optional protocol fee와 Router quote/execution boundary",
+      "Flash callback atomic repayment·cumulative-price TWAP·release gate",
+    ],
+    reuses: [
+      { label: "Concentrated-liquidity range 확장", href: "/blockchain/uniswap-v3" },
+      { label: "MEV ordering·private path 일반 경계", href: "/blockchain/reth-mev" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Invariant·fee·LP·flash·TWAP claim은 Uniswap V2 whitepaper와 v2-core v1.0.1 commit d2bfbb3649b2에 귀속한다." },
+      { kind: "project-measurement", rule: "Quote·gas·slippage·TWAP 안정성은 factory/pair/router·token behavior·block range를 고정한 replay에만 귀속한다." },
+    ],
+  },
+  "uniswap-v3": {
+    title: "Uniswap V3 글이 소유하는 범위",
+    owns: [
+      "Concentrated-liquidity virtual reserve·range별 token amount",
+      "Tick·sqrtPriceX96·tick spacing·inside fee-growth accounting",
+      "Initialized tick crossing·exact-in/out swap step·release gate",
+    ],
+    reuses: [
+      { label: "Constant-product invariant·input fee settlement", href: "/blockchain/uniswap-v2#overview" },
+      { label: "Router min/max·deadline 실행 경계", href: "/blockchain/uniswap-v2#router-swap" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Range·tick·rounding·fee·swap claim은 V3 whitepaper와 v3-core v1.0.0 commit ef64f51d0f0d에 귀속한다." },
+      { kind: "project-measurement", rule: "Capital efficiency·gas는 같은 pool state·range·fee·path·token decimals에서 amounts/state parity 뒤 비교한다." },
+    ],
+  },
+  "aave-v3": {
+    title: "Aave V3 글이 소유하는 범위",
+    owns: [
+      "Reserve utilization·optimal kink variable/liquidity rate strategy",
+      "Scaled aToken·variable debt와 liquidity/borrow index 회계",
+      "Health factor·close factor liquidation·E-Mode/isolation release boundary",
+    ],
+    reuses: [
+      { label: "Compound single-base·signed principal 비교", href: "/blockchain/compound-v3" },
+      { label: "On-chain cumulative price·window 경계 비교", href: "/blockchain/uniswap-v2#flash-swap" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Index·rate·HF·liquidation claim은 aave-v3-origin commit cff15de6d127의 executable logic에 귀속한다." },
+      { kind: "project-measurement", rule: "Risk parameter·rate·gas는 chain·proxy/implementation·reserve config·oracle snapshot을 고정한 결과에만 귀속한다." },
+    ],
+  },
+  "compound-v3": {
+    title: "Compound V3 · Comet 글이 소유하는 범위",
+    owns: [
+      "Single-base market·signed principal과 supply/borrow index rounding",
+      "독립 supply/borrow kink curve·borrow/liquidation factor 분리",
+      "Reserve-funded absorb·collateral sale gate·release receipt",
+    ],
+    reuses: [
+      { label: "Lending utilization·indexed balance 정본", href: "/blockchain/aave-v3#interest-rate" },
+      { label: "Health factor 방식과의 비교", href: "/blockchain/aave-v3#liquidation" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Principal·rate·factor·absorb·sale claim은 Comet commit f766f51583c2와 official Compound III docs에 귀속한다." },
+      { kind: "project-measurement", rule: "Market parameter·reserves·gas는 proxy/implementation·deployment artifact·oracle·config snapshot을 함께 기록한다." },
+    ],
+  },
   "diffie-hellman": {
     title: "Diffie–Hellman 배포 경계 글이 소유하는 범위",
     owns: [
@@ -5380,6 +5444,78 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "project-claim", rule: "Peer score를 정직성 확률·Sybil 제거·application validity의 자동 보장으로 확대하지 않는다." },
     ],
   },
+  "bittorrent": {
+    title: "BitTorrent metainfo·discovery·peer-wire 글이 소유하는 범위",
+    owns: [
+      "BEP 3 v1 metainfo·info-hash·piece hash의 payload 식별과 무결성 경계",
+      "Tracker·BEP 5 DHT endpoint discovery와 peer handshake·transport의 분리",
+      "Block request·piece 조립·typed timeout/hash-failure retry 운영",
+    ],
+    reuses: [
+      { label: "Kademlia XOR routing과 k-bucket", href: "/p2p/kademlia" },
+      { label: "Kademlia iterative shortlist·timeout", href: "/p2p/kad-lookup" },
+      { label: "DHT Sybil·Eclipse와 peer 독립성", href: "/p2p/dht-security" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "Metainfo·wire는 BEP 3 v1에, trackerless discovery는 Accepted BEP 5에 귀속하고 BEP 52 v2·extension profile을 섞지 않는다." },
+      { kind: "project-claim", rule: "Tracker·DHT endpoint 수, peer ID, piece hash 성공을 seeder 존재·독립 operator·안전한 content·고정 completion time으로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "Scheduler·retry 변경은 같은 torrent·peer fixture에서 completion time·duplicate/hash-failure bytes·timeout·resource를 paired 비교한다." },
+    ],
+  },
+  "discv4": {
+    title: "Ethereum Node Discovery v4 글이 소유하는 범위",
+    owns: [
+      "Signed plaintext UDP packet envelope와 1280-byte wire validation",
+      "Recent PING/PONG endpoint proof와 amplification reply gating",
+      "FINDNODE·NEIGHBORS discovery와 signed ENR sequence update",
+    ],
+    reuses: [
+      { label: "Kademlia XOR distance와 routing table", href: "/p2p/kademlia" },
+      { label: "Iterative lookup shortlist와 종료 receipt", href: "/p2p/kad-lookup" },
+      { label: "DHT view capture와 diversity boundary", href: "/p2p/dht-security" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "Packet·endpoint proof·lookup은 current devp2p discv4 specification에, ENR record는 ENR specification과 identity scheme에 분리해 귀속한다." },
+      { kind: "project-claim", rule: "Packet signature·최근 PONG·높은 ENR sequence를 confidentiality·peer honesty·chain compatibility·영구 reachability로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "Timeout·clock·multi-datagram·amplification 동작은 protocol version과 client SHA를 고정한 packet fixture에서 traffic·accept/reject를 측정한다." },
+    ],
+  },
+  "discv5": {
+    title: "Ethereum Node Discovery v5.1 글이 소유하는 범위",
+    owns: [
+      "WHOAREYOU challenge·identity proof·optional ENR handshake lifecycle",
+      "Ephemeral-static ECDH와 transcript-bound directional AES-GCM key schedule",
+      "Distance-list FINDNODE·multi-packet NODES와 bounded TALK extension",
+    ],
+    reuses: [
+      { label: "Ethereum Node Record structure", href: "/p2p/discv4#enr" },
+      { label: "Kademlia iterative shortlist와 timeout", href: "/p2p/kad-lookup" },
+      { label: "Discv4 signed plaintext 비교", href: "/p2p/discv4#wire" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "Packet·message semantics는 devp2p v5.1 wire에, handshake·key cache·lookup algorithm은 같은 revision의 theory 문서에 귀속한다." },
+      { kind: "project-claim", rule: "Encrypted discovery session을 상위 transport security·application compatibility·Sybil resistance·고정 lookup success로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "Reorder·cache eviction·nonce·partial NODES·TALK resource 동작은 spec revision과 client SHA를 고정해 typed outcome으로 비교한다." },
+    ],
+  },
+  "nat-traversal": {
+    title: "NAT traversal·ICE·DCUtR 글이 소유하는 범위",
+    owns: [
+      "NAT mapping·filtering separation과 STUN observed address evidence",
+      "TURN allocation·permission·refresh lifecycle과 ICE checklist·nomination",
+      "libp2p DCUtR relay-coordinated simultaneous dial·retry·migration",
+    ],
+    reuses: [
+      { label: "libp2p Circuit Relay·Swarm 상태 owner", href: "/p2p/libp2p" },
+      { label: "분산 failure·timeout model", href: "/blockchain/distributed-systems" },
+      { label: "Peer identity·Sybil 독립성 경계", href: "/p2p/dht-security#sybil" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "STUN·TURN·ICE는 각각 RFC 8489·8656·8445에, DCUtR는 Active revision r1 libp2p specification에 귀속한다." },
+      { kind: "project-claim", rule: "Cone 이름·STUN address·높은 ICE priority·simultaneous dial을 direct success·peer identity·relay-free liveness 보장으로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "Direct·relay 선택은 mapping/filtering fixture와 같은 peers·payload에서 connection time·loss·relay bytes·lifecycle·security parity로 비교한다." },
+    ],
+  },
   "rollup-fundamentals": {
     title: "Rollup fundamentals 글이 소유하는 범위",
     owns: [
@@ -5506,6 +5642,150 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "primary-source", rule: "EDA 기법은 NIST handbook의 통계 가정과 scikit-learn 공식 preprocessing boundary에 귀속한다." },
       { kind: "project-claim", rule: "Plot·correlation·missing-rate·p-value를 causal conclusion, 자동 삭제·대체 규칙이나 production 성능으로 확대하지 않는다." },
       { kind: "project-measurement", rule: "모든 변환·가설은 고정 data version·unit·split·slice·metric·holdout과 변경 행 receipt로 비교한다." },
+    ],
+  },
+  "claw-recovery": {
+    title: "Claw Code recovery·stale branch 글이 소유하는 범위",
+    owns: [
+      "Pinned recovery recipe·attempt ledger와 실제 enum·attempt-state snapshot",
+      "Pinned ahead·behind 기반 stale/diverged 판정과 policy action의 실제 범위",
+      "Recovery effect reconciliation·escalation evidence·paired release hardening 계약",
+    ],
+    reuses: [
+      { label: "Agent run·artifact·verifier 계약", href: "/ai/llm-harness" },
+      { label: "Checkpoint·replay·external effect 경계", href: "/ai/agent-frameworks#langchain" },
+      { label: "Permission·approval enforcement", href: "/ai/claw-permissions" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Recipe·ledger·branch freshness 주장은 pinned b71afdd recovery_recipes.rs와 stale_branch.rs 범위에만 귀속한다." },
+      { kind: "project-claim", rule: "Checkpoint·rollback·durable lease·incident acknowledgement는 pinned 구현 완료가 아니라 필요한 hardening contract다." },
+      { kind: "project-measurement", rule: "같은 failure fixture에서 attempt·effect receipt·verifier·escalation과 base/candidate rollback artifact를 비교한다." },
+    ],
+  },
+  "claw-task-team": {
+    title: "Claw Code task packet·registry·team cron 글이 소유하는 범위",
+    owns: [
+      "Pinned TaskPacket schema·validation과 legacy-compatible field contract",
+      "Pinned task registry·lane status projection과 in-memory/durable boundary",
+      "Pinned team cron registry snapshot과 idempotent scheduling·verification hardening",
+    ],
+    reuses: [
+      { label: "Executable plan·dependency graph", href: "/ai/agentic-patterns#plan-execute" },
+      { label: "Delegation artifact ownership", href: "/ai/agentic-patterns#multi-agent" },
+      { label: "Layered verification", href: "/ai/llm-harness#evaluation" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "TaskPacket·registry·cron behavior는 pinned b71afdd source와 same-commit tests에만 귀속한다." },
+      { kind: "project-claim", rule: "Distributed CAS·transactional outbox·durable lease·exactly-once cron은 구현 사실이 아니라 gap으로 표시한다." },
+      { kind: "project-measurement", rule: "중복 create·cycle·stale lease·overlap·crash·partial verifier fixture에서 state와 effect를 재검사한다." },
+    ],
+  },
+  "claw-subagent-orchestration": {
+    title: "Claw Code sub-agent orchestration 글이 소유하는 범위",
+    owns: [
+      "Pinned claw-analog sequential split-session agent runner의 실제 source 범위",
+      "Main·coordinator·worker artifact join과 hard-constraint-first selection 계약",
+      "Delegation budget·capability·cancellation·late-result release gate",
+    ],
+    reuses: [
+      { label: "Agent delegation·artifact ownership", href: "/ai/agentic-patterns#multi-agent" },
+      { label: "Task packet·registry", href: "/ai/claw-task-team" },
+      { label: "Permission·authority ceiling", href: "/ai/claw-permissions" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Pinned agents.rs는 agent spec·permission default·split session과 순차 run만 뒷받침하며 generic parallel team runtime을 증명하지 않는다." },
+      { kind: "standard", rule: "Anthropic multi-agent research 사례는 orchestrator-worker 설계와 평가 경험을 제공하지만 Claw 구현 근거가 아니다." },
+      { kind: "project-measurement", rule: "Single-agent baseline과 같은 task graph의 parallel candidate를 품질·latency·token·merge conflict·permission violation으로 paired 비교한다." },
+    ],
+  },
+  "claw-telemetry": {
+    title: "Claw Code telemetry·usage ledger 글이 소유하는 범위",
+    owns: [
+      "Pinned TelemetryEvent·sink·JSONL/memory surface와 실제 trace-record snapshot",
+      "Pinned usage counter·provider response identity와 estimate/observed 경계",
+      "Trace identity·metric cardinality·versioned pricing·observability-loss release 계약",
+    ],
+    reuses: [
+      { label: "Run artifact provenance", href: "/ai/experiment-tracking" },
+      { label: "Agent trajectory·effect evaluation", href: "/ai/llm-harness#evaluation" },
+      { label: "Provider request·stream identity", href: "/ai/claw-api-client" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Telemetry/usage claim은 pinned telemetry crate와 runtime usage.rs source 범위에만 귀속한다." },
+      { kind: "standard", rule: "OpenTelemetry trace·metric·log와 GenAI semantic convention은 표준 signal vocabulary만 뒷받침하고 Claw exporter correctness를 인증하지 않는다." },
+      { kind: "project-measurement", rule: "Drop·duplicate·retry·high-cardinality·pricing drift·flush failure를 주입해 execution non-blocking과 ledger reconciliation을 확인한다." },
+    ],
+  },
+  "claw-hooks": {
+    title: "Claw Code hook event·subprocess·override 글이 소유하는 범위",
+    owns: [
+      "Pinned PreToolUse·PostToolUse·PostToolUseFailure event와 matcher·순차 runner",
+      "Pinned shell·JSON stdin·environment·stdout·exit status protocol과 결과 합성",
+      "Updated input 재승인, deadline·process-tree·effect cleanup hardening gap",
+    ],
+    reuses: [
+      { label: "Permission policy·context override", href: "/ai/claw-permissions" },
+      { label: "Tool schema·effect enforcement", href: "/ai/claw-tool-system" },
+      { label: "Shell process lifecycle", href: "/ai/claw-bash" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Hook event·protocol·합성·cancel 주장은 pinned b71afdd hooks.rs와 같은 commit test 범위에만 귀속한다." },
+      { kind: "project-claim", rule: "Monotonic permission merge·malformed-output fail-closed·timeout·sandbox·descendant cleanup·updatedInput 재승인은 확인된 구현이 아니라 gap으로 표시한다." },
+      { kind: "project-measurement", rule: "같은 hook·tool·environment에서 output·exit·cancel을 주입해 executor count와 decision·input·cleanup receipt를 base/candidate로 비교한다." },
+    ],
+  },
+  "claw-mcp": {
+    title: "Claw Code MCP lifecycle·transport·tool bridge 글이 소유하는 범위",
+    owns: [
+      "Pinned server bootstrap·stdio manager·discovery·call·shutdown lifecycle",
+      "Pinned Content-Length frame·JSON-RPC version/ID correlation과 revision 경계",
+      "Qualified tool identity·server generation과 degraded retry hardening",
+    ],
+    reuses: [
+      { label: "MCP schema·result 일반 계약", href: "/ai/mcp" },
+      { label: "Extension tool adapter identity", href: "/ai/claw-tool-system#plugin-tools" },
+      { label: "Replay·external effect 경계", href: "/ai/agent-code-mode#effect-atomicity" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Claw MCP 동작은 pinned b71afdd mcp*.rs source와 같은 commit test 범위에만 귀속한다." },
+      { kind: "standard", rule: "MCP 공식 문서는 링크된 revision의 transport·tool contract만 뒷받침하며 pinned Claw 호환을 인증하지 않는다." },
+      { kind: "project-claim", rule: "Hardened lifecycle full integration·schema generation pin·write exactly-once retry는 구현 사실이 아니라 gap으로 표시한다." },
+    ],
+  },
+  "claw-plugin": {
+    title: "Claw Code plugin manifest·registry·process·lifecycle 글이 소유하는 범위",
+    owns: [
+      "Pinned Builtin·Bundled·External discovery, manifest validation과 enabled tool collision",
+      "Pinned PluginTool process protocol과 requiredPermission enforcement gap",
+      "Pinned init/shutdown 순서와 supply-chain·generation·degraded hardening",
+    ],
+    reuses: [
+      { label: "Plugin distribution·permission 일반 경계", href: "/ai/agent-skills#plugins" },
+      { label: "Claw permission executor seam", href: "/ai/claw-permissions#enforcer" },
+      { label: "Claw hook lifecycle", href: "/ai/claw-hooks" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Plugin kind·manifest·registry·process·lifecycle 주장은 pinned b71afdd plugins crate와 같은 commit test에만 귀속한다." },
+      { kind: "standard", rule: "SLSA는 일반 build provenance vocabulary만 제공하며 Claw external plugin의 준수를 인증하지 않는다." },
+      { kind: "project-claim", rule: "Publisher signature·mandatory permission enforcement·sandbox·partial-init rollback·generation drain은 확인된 구현이 아니라 gap이다." },
+    ],
+  },
+  "claw-policy-engine": {
+    title: "Claw Code policy rule·lane context·green contract 글이 소유하는 범위",
+    owns: [
+      "Pinned boolean condition·stable priority·matching action·Chain expansion",
+      "다중 action conflict arbitration과 LaneContext provenance gap",
+      "Pinned GreenLevel·test/base/recovery/flake evidence conjunction",
+    ],
+    reuses: [
+      { label: "Permission authorization decision", href: "/ai/claw-permissions" },
+      { label: "Layered verifier·release gate", href: "/ai/llm-harness#evaluation" },
+      { label: "Run·test artifact provenance", href: "/ai/experiment-tracking#overview" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Policy·green 동작은 pinned b71afdd policy_engine.rs·green_contract.rs와 같은 commit tests에만 귀속한다." },
+      { kind: "project-claim", rule: "Unknown 3값 logic·deny-first arbitration·immutable provenance·executor generation binding은 확인된 구현이 아니라 gap으로 표시한다." },
+      { kind: "project-measurement", rule: "같은 lane·rules·SHA·green evidence에 conflict·stale·forged outcome을 주입해 decision event와 executor effect를 비교한다." },
     ],
   },
 } as const satisfies Record<string, EditorialBoundary>;

@@ -15,6 +15,7 @@ export default function Overview() {
       <h2 className="text-2xl font-bold mb-6">
         Sub-agent는 역할 수가 아니라 경계가 분명할 때 유용하다
       </h2>
+      <ContentBoundary article="claw-subagent-orchestration" />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           긴 작업을 여러 agent에 나누면 탐색 결과가 메인 문맥을 가득 채우는 일을
@@ -28,6 +29,33 @@ export default function Overview() {
           사용자와의 목표를 유지하고, sub-agent는 범위가 좁고 독립적인 산출물을
           반환해야 합니다.
         </p>
+        <p>
+          이 글에서 pinned 구현 사실은 commit <code>b71afdd…</code>의
+          <code>claw-analog agents</code> runner에 한정합니다. 이 source는 agent
+          spec, permission 기본값, split session과 순차 실행을 보여 주지만,
+          아래의 병렬 dependency scheduler·durable cancellation·artifact merge를
+          모두 구현했다는 증거는 아닙니다. 후자는 별도 hardening 계약입니다.
+        </p>
+
+        <div id="paper-claw-analog-agents-source" className="scroll-mt-24">
+          <CitationBlock
+            source="Claw Code claw-analog agents.rs @ b71afdd"
+            href="https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/claw-analog/src/agents.rs"
+            citeKey={1}
+            type="code"
+          >
+            <p>
+              <strong>문제:</strong> 여러 preset의 agent를 동일 workspace와 base
+              session에서 실행합니다. <strong>기여:</strong> pinned source는 agent
+              spec parser, preset별 permission default, split session path와 순차
+              run loop를 제공합니다. <strong>전제:</strong> commit·config·base
+              session과 agent list를 고정합니다. <strong>근거 범위:</strong>
+              claw-analog CLI의 실제 call path입니다. <strong>일반화 금지:</strong>
+              concurrent execution, dependency DAG, shared-file merge, distributed
+              lease와 child cancellation을 제공한다는 뜻은 아닙니다.
+            </p>
+          </CitationBlock>
+        </div>
       </div>
 
       <div className="not-prose my-6 grid gap-3 lg:grid-cols-5">
@@ -74,3 +102,5 @@ export default function Overview() {
     </section>
   );
 }
+import ContentBoundary from "@/components/articles/content-boundary";
+import { CitationBlock } from "@/components/ui/citation";

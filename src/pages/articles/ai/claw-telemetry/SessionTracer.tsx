@@ -50,7 +50,7 @@ export default function SessionTracer() {
           기록합니다. 취소나 panic 경로에서도 종료가 보장되도록 guard 또는
           finally 패턴을 사용하는 것이 좋습니다.
         </p>
-        <div className="not-prose my-6 overflow-x-auto rounded-2xl border border-border/70">
+        <div className="not-prose my-6 overflow-x-auto rounded-lg border border-border/70">
           <table className="w-full min-w-[720px] text-left text-sm">
             <thead className="bg-muted/60 text-xs text-muted-foreground">
               <tr>
@@ -94,7 +94,7 @@ export default function SessionTracer() {
             ],
             ["Gauge", "queue depth·active turns처럼 현재 상태를 나타내는 값"],
           ].map(([title, description]) => (
-            <section key={title} className="rounded-2xl border bg-card p-4">
+            <section key={title} className="rounded-lg border bg-card p-4">
               <h4 className="text-sm font-bold">{title}</h4>
               <p className="mt-2 text-sm leading-6 text-muted-foreground">
                 {description}

@@ -35,7 +35,7 @@ export default function BitTorrentComponentsViz() {
             const active = i === step;
             return (
               <motion.g
-                key={i}
+                key={`component-${comp.tag}`}
                 animate={{
                   scale: active ? 1.08 : 0.92,
                   opacity: active ? 1 : 0.35,
@@ -51,7 +51,7 @@ export default function BitTorrentComponentsViz() {
                   rx={8}
                   fill={comp.c + (active ? "20" : "08")}
                   stroke={comp.c}
-                  strokeWidth={active ? 2 : 1}
+                  strokeWidth={active ? 1.25 : 1}
                   strokeOpacity={active ? 1 : 0.3}
                 />
                 <text
@@ -85,7 +85,7 @@ export default function BitTorrentComponentsViz() {
             [3, 2],
           ].map(([a, b], i) => (
             <motion.line
-              key={i}
+              key={`flow-${a}-${b}`}
               x1={POS[a].x + 100}
               y1={POS[a].y + 20}
               x2={POS[b].x}
@@ -104,7 +104,7 @@ export default function BitTorrentComponentsViz() {
             r={20}
             fill="none"
             stroke={COMPS[step].c}
-            strokeWidth={1.5}
+            strokeWidth={1.25}
             initial={false}
             animate={{ r: 35, opacity: 0 }}
             transition={{ duration: 1, repeat: Infinity }}
@@ -112,7 +112,7 @@ export default function BitTorrentComponentsViz() {
           <motion.g
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            key={step}
+            key={`annotation-${step}`}
           >
             <AnnotationBox
               x={394}

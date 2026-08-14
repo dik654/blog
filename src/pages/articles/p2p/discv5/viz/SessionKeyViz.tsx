@@ -11,11 +11,11 @@ const STEPS = [
   },
   {
     label: "HKDF 키 파생 — write/read 키",
-    body: 'secret = shared_point (33B)\nsalt = challenge_data   // WHOAREYOU 패킷에서\ninfo = "discv5 key agreement" ∥ nodeID_A ∥ nodeID_B\n\nprk = HKDF-Extract(salt, secret)\nout = HKDF-Expand(prk, info, 32)  // 32B\n\nwrite_key = out[0..16]    // AES-128 키 (16B)\nread_key  = out[16..32]   // AES-128 키 (16B)',
+    body: 'secret = shared_point (33B)\nsalt = challenge_data   // WHOAREYOU 패킷에서\ninfo = "discovery v5 key agreement" ∥ nodeID_A ∥ nodeID_B\n\nprk = HKDF-Extract(salt, secret)\nout = HKDF-Expand(prk, info, 32)  // 32B\n\nwrite_key = out[0..16]    // AES-128 키 (16B)\nread_key  = out[16..32]   // AES-128 키 (16B)',
   },
   {
     label: "AES-128-GCM 암호화",
-    body: "nonce = message_counter (12B, 0부터 증가)\naad = masking_iv ∥ static_header  // 추가 인증\n\nciphertext ∥ tag = AES-GCM-Seal(\n  key:   write_key,\n  nonce: nonce,\n  aad:   aad,\n  plain: message_body\n)\n// tag = 16B MAC. 헤더 변조도 감지.",
+    body: "nonce = counter32 ∥ secure_random64  // 12B, unique\naad = masking_iv ∥ header  // static+authdata 인증\n\nciphertext ∥ tag = AES-GCM-Seal(\n  key:   write_key,\n  nonce: nonce,\n  aad:   aad,\n  plain: message_body\n)\n// tag 검증 전 key/session을 수락하지 않음.",
   },
 ];
 
@@ -69,9 +69,9 @@ export default function SessionKeyViz() {
               </text>
               {[
                 "salt = challenge_data  // WHOAREYOU",
-                'info = "discv5 key agreement"∥idA∥idB',
+                'info = "discovery v5 key agreement"',
+                "     ∥ idA ∥ idB",
                 "prk = HKDF-Extract(salt, shared)",
-                "",
                 "out = HKDF-Expand(prk, info, 32)",
                 "write_key = out[0..16]   // 16B",
                 "read_key  = out[16..32]  // 16B",
@@ -99,8 +99,8 @@ export default function SessionKeyViz() {
                 AES-128-GCM
               </text>
               {[
-                "nonce = counter (12B)",
-                "aad = masking_iv ∥ static_header",
+                "nonce = counter32 ∥ random64 (12B)",
+                "aad = masking_iv ∥ header",
                 "",
                 "ct ∥ tag = AES-GCM-Seal(",
                 "  key: write_key,  nonce: nonce,",

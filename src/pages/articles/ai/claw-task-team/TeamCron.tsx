@@ -1,4 +1,5 @@
 import TeamCronViz from "./viz/TeamCronViz";
+import { CitationBlock } from "@/components/ui/citation";
 
 const schedulerRules = [
   {
@@ -43,13 +44,33 @@ export default function TeamCron() {
         <div className="not-prose my-8">
           <TeamCronViz />
         </div>
+
+        <div id="paper-claw-team-cron-source" className="scroll-mt-24">
+          <CitationBlock
+            source="Claw Code team_cron_registry.rs @ b71afdd"
+            href="https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src/team_cron_registry.rs"
+            citeKey={4}
+            type="code"
+          >
+            <p>
+              <strong>문제:</strong> team과 scheduled entry를 typed registry로
+              표현하고 조회합니다. <strong>기여:</strong> pinned source의 실제
+              records·validation·serialization 범위를 확인할 수 있습니다.
+              <strong>전제:</strong> commit·clock·registry input을 고정합니다.
+              <strong>근거 범위:</strong> in-memory registry와 test가 관찰한
+              동작입니다. <strong>일반화 금지:</strong> timezone misfire, distributed
+              claim, overlap cancellation과 exactly-once task creation을 모두
+              구현했다는 뜻은 아닙니다.
+            </p>
+          </CitationBlock>
+        </div>
       </div>
 
       <div className="not-prose my-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {schedulerRules.map((item) => (
           <article
             key={item.title}
-            className="min-w-0 rounded-2xl border border-border/70 bg-card p-4 shadow-sm"
+            className="min-w-0 rounded-lg border border-border/70 bg-card p-4"
           >
             <h4 className="text-sm font-bold text-foreground">{item.title}</h4>
             <p className="mt-2 text-xs leading-5 text-muted-foreground">
@@ -86,9 +107,10 @@ export default function TeamCron() {
         </p>
         <p className="leading-7">
           scheduler loop는 polling 간격에 기대기보다 durable{" "}
-          <code>next_run</code>을 기준으로 due job을 claim합니다. 여러 scheduler
-          instance가 있어도 한 logical run만 task를 만들도록 schedule ID와 예정
-          시각을 idempotency key로 사용합니다.
+          <code>next_run</code>을 기준으로 실행 시각이 된 job을 원자적으로
+          선점(claim)합니다. 여러 scheduler instance가 있어도 한 logical run만
+          task를 만들도록 schedule ID와 예정 시각을 idempotency key로
+          사용합니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">

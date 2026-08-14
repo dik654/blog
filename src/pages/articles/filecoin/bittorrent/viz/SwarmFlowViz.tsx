@@ -4,15 +4,15 @@ import { AnnotationBox } from "@/components/viz/boxes";
 
 const STEPS = [
   { label: ".torrent 파일에서 해시 목록 확인" },
-  { label: "Tracker에서 Seeder/Leecher 목록 획득" },
+  { label: "Tracker/DHT에서 피어 후보 획득" },
   { label: "여러 피어에서 병렬 다운로드" },
   { label: "SHA1 해시로 조각 무결성 검증" },
   { label: "수신 조각을 다른 피어에 재공유" },
 ];
 const ANNOT = [
   "조각별 SHA1 해시 확인",
-  "Tracker 활성 피어 목록",
-  "Tit-for-Tat 병렬 다운로드",
+  "Tracker/DHT endpoint 후보",
+  "여러 피어에서 block 다운로드",
   "SHA1 조각 무결성 검증",
   "조각 재공유 (Seeding)",
 ];
@@ -47,7 +47,7 @@ export default function SwarmFlowViz() {
                   r={16}
                   fill={peerC + "18"}
                   stroke={peerC}
-                  strokeWidth={1.5}
+                  strokeWidth={1.25}
                 />
                 <text
                   x={cx}
@@ -77,7 +77,7 @@ export default function SwarmFlowViz() {
                 rx={6}
                 fill={C[0] + "20"}
                 stroke={C[0]}
-                strokeWidth={1.5}
+                strokeWidth={1.25}
               />
               <text
                 x={200}
@@ -101,7 +101,7 @@ export default function SwarmFlowViz() {
                 rx={6}
                 fill={C[1] + "20"}
                 stroke={C[1]}
-                strokeWidth={1.5}
+                strokeWidth={1.25}
               />
               <text
                 x={200}
@@ -155,7 +155,7 @@ export default function SwarmFlowViz() {
                     x2={200 + Math.cos(ba) * 55}
                     y2={75 + Math.sin(ba) * 45}
                     stroke={C[step]}
-                    strokeWidth={1.5}
+                    strokeWidth={1.25}
                     strokeOpacity={0.3}
                     initial={{ pathLength: 0 }}
                     animate={{ pathLength: 1 }}
@@ -167,7 +167,7 @@ export default function SwarmFlowViz() {
           )}
           {/* step indicator */}
           <motion.text
-            key={step}
+            key={`indicator-${step}`}
             x={200}
             y={148}
             textAnchor="middle"
@@ -180,7 +180,7 @@ export default function SwarmFlowViz() {
             {
               [
                 "해시 확인",
-                "피어 탐색",
+                "후보 탐색",
                 "병렬 다운로드",
                 "SHA1 검증",
                 "조각 재공유",
@@ -190,7 +190,7 @@ export default function SwarmFlowViz() {
           <motion.g
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            key={step}
+            key={`annotation-${step}`}
           >
             <AnnotationBox
               x={394}

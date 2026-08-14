@@ -16,7 +16,7 @@ const STEPS = [
   },
   {
     label: "B → A: WHOAREYOU 챌린지",
-    body: "whoareyou {\n  nonce: A_original_nonce,   // 매칭용\n  id_nonce: random(16),      // 챌린지 값\n  enr_seq: B.enr.seq,       // ENR 버전\n}\nflag = 0x01  // WHOAREYOU 패킷 표시\n// masking: dest_id XOR header → 패킷 은닉.",
+    body: "whoareyou {\n  nonce: A_original_nonce,   // 매칭용\n  id_nonce: random(16),      // 챌린지 값\n  enr_seq: cached A.enr.seq, // 상대 ENR 버전\n}\nflag = 0x01  // WHOAREYOU 패킷 표시\n// header masking: AES-CTR, key=dest_id[:16].",
   },
   {
     label: "A: ECDH + HKDF → 세션 키 도출",
@@ -80,9 +80,9 @@ export default function HandshakeFlowViz() {
                 "whoareyou {",
                 "  nonce: A_nonce,     // 원본 매칭",
                 "  id_nonce: rand(16), // 챌린지",
-                "  enr_seq: B.enr.seq",
+                "  enr_seq: cached A.enr.seq",
                 "}",
-                "flag = 0x01,  masking = dest_id XOR hdr",
+                "flag=0x01, mask=AES-CTR(dest_id[:16])",
               ].map((t, i) => (
                 <text
                   key={i}
@@ -109,9 +109,9 @@ export default function HandshakeFlowViz() {
               {[
                 "eph = secp256k1_keypair()",
                 "shared = ecdh(eph.priv, B.pub)",
-                'input = "discv5 id proof"∥challenge∥eph.pub∥B.id',
+                'input = "discovery v5 identity proof"',
+                "  ∥ challenge ∥ eph.pub ∥ B.id",
                 "id_sig = Sign(A.priv, SHA256(input))",
-                "",
                 "keys = HKDF(shared, challenge, A.id∥B.id)",
                 "write = keys[0..16], read = keys[16..32]",
               ].map((t, i) => (

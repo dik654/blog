@@ -1,4 +1,5 @@
 import TaskStatusViz from "./viz/TaskStatusViz";
+import { CitationBlock } from "@/components/ui/citation";
 
 const registryRecords = [
   {
@@ -34,13 +35,33 @@ export default function Registry() {
         <div className="not-prose my-8">
           <TaskStatusViz />
         </div>
+
+        <div id="paper-claw-task-registry-source" className="scroll-mt-24">
+          <CitationBlock
+            source="Claw Code task_registry.rs @ b71afdd"
+            href="https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src/task_registry.rs"
+            citeKey={2}
+            type="code"
+          >
+            <p>
+              <strong>문제:</strong> task·lane·heartbeat 상태를 machine-readable
+              projection으로 조회합니다. <strong>기여:</strong> pinned source는
+              registry records, lane board와 freshness/status JSON surface를
+              제공합니다. <strong>전제:</strong> 한 process의 canonical state와
+              clock 입력을 고정합니다. <strong>근거 범위:</strong> source와
+              same-commit test가 보이는 상태 projection입니다.
+              <strong>일반화 금지:</strong> multi-instance transaction, durable
+              lease·linearizable transition·crash-safe event log를 보장하지 않습니다.
+            </p>
+          </CitationBlock>
+        </div>
       </div>
 
       <div className="not-prose my-6 grid gap-3 md:grid-cols-3">
         {registryRecords.map((item) => (
           <article
             key={item.title}
-            className="min-w-0 rounded-2xl border border-border/70 bg-card p-4 shadow-sm"
+            className="min-w-0 rounded-lg border border-border/70 bg-card p-4"
           >
             <h4 className="text-sm font-bold text-foreground">{item.title}</h4>
             <p className="mt-2 text-xs leading-5 text-muted-foreground">
@@ -113,6 +134,27 @@ export default function Registry() {
           backend가 달라도 유효 전이, lease와 idempotency contract는 registry
           interface 안에 유지합니다.
         </p>
+
+        <div id="paper-aws-transactional-outbox" className="scroll-mt-24">
+          <CitationBlock
+            source="AWS Prescriptive Guidance — Transactional outbox"
+            href="https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html"
+            citeKey={3}
+            type="paper"
+          >
+            <p>
+              <strong>문제:</strong> database state는 commit됐지만 event publish가
+              실패하거나 반대 순서로 유령 event가 생기는 dual-write 문제를
+              다룹니다. <strong>기여:</strong> business state와 outbox record를 한
+              transaction에 쓰고 별도 relay가 publish하는 패턴을 설명합니다.
+              <strong>전제:</strong> local transaction과 idempotent consumer가
+              필요합니다. <strong>근거 범위:</strong> task transition과 event
+              발행을 함께 복구하는 일반 설계입니다. <strong>일반화 금지:</strong>
+              exactly-once delivery, Claw registry의 현재 구현이나 외부 effect
+              rollback을 증명하지 않습니다.
+            </p>
+          </CitationBlock>
+        </div>
       </div>
     </section>
   );

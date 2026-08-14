@@ -15,6 +15,7 @@ export default function Overview() {
       <h2 className="text-2xl font-bold mb-6">
         TaskPacket은 작업 지시를 검증 가능한 계약으로 바꾼다
       </h2>
+      <ContentBoundary article="claw-task-team" />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           “로그인 버그를 고쳐줘” 같은 요청만 worker에게 넘기면 어디까지 수정해도
@@ -28,6 +29,33 @@ export default function Overview() {
           모델입니다. 업계 표준 용어로 외우기보다, 자연어 작업을 상태 머신과
           검증 루프가 읽을 수 있는 구조로 바꾼다는 역할을 보면 됩니다.
         </p>
+        <p>
+          이 글에서 <strong>PINNED</strong>는 commit <code>b71afdd…</code>의
+          TaskPacket·registry·cron source에서 확인한 범위입니다. Distributed
+          compare-and-set, durable lease, transactional outbox와 exactly-once
+          schedule은 source가 이미 보장하는 기능으로 쓰지 않고 별도의
+          <strong> HARDENING</strong> 계약으로 구분합니다.
+        </p>
+
+        <div id="paper-claw-task-packet-source" className="scroll-mt-24">
+          <CitationBlock
+            source="Claw Code task_packet.rs @ b71afdd"
+            href="https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src/task_packet.rs"
+            citeKey={1}
+            type="code"
+          >
+            <p>
+              <strong>문제:</strong> 자연어 작업을 scope·resource·acceptance·권한·검증
+              field가 있는 typed packet으로 전달합니다. <strong>기여:</strong> pinned
+              source는 legacy field를 보존하면서 richer schema와 validation error를
+              제공합니다. <strong>전제:</strong> commit과 serialized packet을
+              고정합니다. <strong>근거 범위:</strong> schema·serde·validation
+              동작입니다. <strong>일반화 금지:</strong> packet이 좋은 계획을 만들고
+              resource authorization이나 acceptance 실행을 자동으로 강제한다는 뜻은
+              아닙니다.
+            </p>
+          </CitationBlock>
+        </div>
       </div>
 
       <div className="not-prose my-6 grid gap-3 lg:grid-cols-5">
@@ -74,3 +102,5 @@ export default function Overview() {
     </section>
   );
 }
+import ContentBoundary from "@/components/articles/content-boundary";
+import { CitationBlock } from "@/components/ui/citation";

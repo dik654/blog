@@ -9,15 +9,15 @@ const STEPS = [
   { label: "주소 교환", desc: "시그널링 채널로 서로의 외부 주소를 교환" },
   {
     label: "A → B 전송",
-    desc: "A가 B의 외부 주소로 패킷 전송. B의 NAT가 드롭하지만 A의 NAT에 매핑 생성",
+    desc: "A가 B의 관측 주소로 전송. A mapping은 생기지만 B filtering에 막힐 수 있음",
   },
   {
     label: "B → A 전송",
-    desc: "B가 A의 외부 주소로 패킷 전송. A의 NAT 매핑이 존재하므로 통과!",
+    desc: "B도 A의 관측 주소로 전송. 양쪽 mapping/filtering이 허용하면 왕복 성공",
   },
   {
-    label: "직접 연결 성립",
-    desc: "양방향 NAT 매핑 완성. TURN 없이 직접 통신 가능",
+    label: "Direct check 성공",
+    desc: "실제 bidirectional check가 성공한 경우에만 direct path로 이동",
   },
 ];
 
@@ -53,7 +53,7 @@ export default function HolePunchDetailViz() {
               rx={5}
               fill={n.c + "12"}
               stroke={n.c}
-              strokeWidth={1.3}
+              strokeWidth={1.25}
             />
             <text
               x={n.x + 27.5}
@@ -80,7 +80,7 @@ export default function HolePunchDetailViz() {
               x2={235}
               y2={38}
               stroke={C.a}
-              strokeWidth={1.3}
+              strokeWidth={1.25}
             />
             {step === 2 && (
               <>
@@ -99,7 +99,7 @@ export default function HolePunchDetailViz() {
                   fontSize={10}
                   fill={C.nat}
                 >
-                  DROP
+                  DROP?
                 </text>
               </>
             )}
@@ -115,7 +115,7 @@ export default function HolePunchDetailViz() {
               x2={140}
               y2={48}
               stroke={step >= 4 ? C.ok : C.b}
-              strokeWidth={1.3}
+              strokeWidth={1.25}
             />
             {step === 3 && (
               <>
@@ -134,7 +134,7 @@ export default function HolePunchDetailViz() {
                   fontSize={10}
                   fill={C.ok}
                 >
-                  PASS
+                  PASS?
                 </text>
               </>
             )}
@@ -162,7 +162,7 @@ export default function HolePunchDetailViz() {
               fontWeight={600}
               fill={C.ok}
             >
-              Direct Connection
+              Direct if checks pass
             </text>
           </motion.g>
         )}
@@ -177,7 +177,7 @@ export default function HolePunchDetailViz() {
         ))}
       </div>
       <p className="text-xs font-semibold text-center">{s.label}</p>
-      <p className="text-[10px] text-foreground/50 text-center">{s.desc}</p>
+      <p className="text-[11px] text-foreground/60 text-center">{s.desc}</p>
     </div>
   );
 }

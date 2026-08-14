@@ -1,4 +1,6 @@
 import RecipesViz from "./viz/RecipesViz";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import { CitationBlock } from "@/components/ui/citation";
 
 const recipeParts = [
   {
@@ -43,13 +45,33 @@ export default function Recipes() {
         <div className="not-prose my-8">
           <RecipesViz />
         </div>
+
+        <div id="paper-claw-recovery-recipes-source" className="scroll-mt-24">
+          <CitationBlock
+            source="Claw Code recovery_recipes.rs @ b71afdd"
+            href="https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src/recovery_recipes.rs"
+            citeKey={1}
+            type="code"
+          >
+            <p>
+              <strong>문제:</strong> 알려진 failure scenario를 typed recipe와
+              attempt 상태로 표현합니다. <strong>기여:</strong> pinned source는
+              scenario·step·max_attempts·escalation policy와 in-memory ledger를
+              제공합니다. <strong>전제:</strong> commit과 simulated step outcome을
+              고정합니다. <strong>근거 범위:</strong> enum·state transition·unit
+              test가 관찰한 동작입니다. <strong>일반화 금지:</strong> 각 step이 실제
+              Git·MCP·plugin effect를 원자적으로 실행·rollback하고 process restart
+              뒤 ledger를 복구한다는 뜻은 아닙니다.
+            </p>
+          </CitationBlock>
+        </div>
       </div>
 
       <div className="not-prose my-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {recipeParts.map((item) => (
           <article
             key={item.title}
-            className="min-w-0 rounded-2xl border border-border/70 bg-card p-4 shadow-sm"
+            className="min-w-0 rounded-lg border border-border/70 bg-card p-4"
           >
             <h4 className="text-sm font-bold text-foreground">{item.title}</h4>
             <p className="mt-2 text-xs leading-5 text-muted-foreground">
@@ -74,6 +96,22 @@ export default function Recipes() {
           fingerprint가 반복되면 일찍 중단합니다. command가 실패했다고 무조건
           LLM에게 다시 보내는 것은 recovery가 아니라 비용이 큰 반복입니다.
         </p>
+
+        <ExplainedFormula
+          question="현재 attempt 뒤 자동 recovery를 몇 번 더 허용할 수 있을까?"
+          idea={<>전체 한도에서 이미 시작한 attempt 수를 빼되 음수가 되지 않게 합니다. Scenario A가 한도를 다 썼다고 다른 dependency의 budget까지 소모한 것으로 계산하지 않습니다.</>}
+          formula={String.raw`R=\max(0,\,L-A)`}
+          terms={[
+            { symbol: "R", name: "attempts remaining", description: "현재 scenario에서 새로 시작할 수 있는 자동 recovery 횟수입니다." },
+            { symbol: "L", name: "retry limit", description: "정책과 recipe version이 허용한 전체 attempt 상한입니다." },
+            { symbol: "A", name: "attempt count", description: "성공 여부와 관계없이 이미 시작해 ledger에 기록한 attempt 수입니다." },
+          ]}
+          assumptions={[
+            "같은 scenario·recipe version·task generation 안의 attempt만 합산합니다.",
+            "Timeout처럼 결과가 불명확한 attempt도 effect reconciliation 전에는 사용한 횟수로 셉니다.",
+          ]}
+          interpretation="L=2, A=1이면 R=1입니다. 이 값은 재시도 가능 횟수일 뿐 다음 시도가 안전하거나 성공할 확률을 말하지 않으며, 동일 fingerprint 반복이나 destructive step은 R이 남아도 일찍 중단할 수 있습니다."
+        />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
           destructive step 앞에는 recoverable checkpoint를 둔다

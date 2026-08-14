@@ -1,5 +1,7 @@
 import ModelPricingViz from "./viz/ModelPricingViz";
 import UsageTrackerViz from "./viz/UsageTrackerViz";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import { CitationBlock } from "@/components/ui/citation";
 
 const usageRows = [
   [
@@ -41,6 +43,26 @@ export default function Usage() {
 
         <UsageTrackerViz />
 
+        <div id="paper-claw-usage-source" className="scroll-mt-24">
+          <CitationBlock
+            source="Claw Code runtime usage.rs @ b71afdd"
+            href="https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src/usage.rs"
+            citeKey={3}
+            type="code"
+          >
+            <p>
+              <strong>문제:</strong> session의 input·output·cache usage와 request
+              identity를 누적합니다. <strong>기여:</strong> pinned source의 counter,
+              merge·serialization과 source-specific field를 확인할 수 있습니다.
+              <strong>전제:</strong> commit과 provider response usage를 고정합니다.
+              <strong>근거 범위:</strong> runtime usage data model과 test입니다.
+              <strong>일반화 금지:</strong> tokenizer estimate와 청구 usage가 항상
+              같고 retry duplicate·invoice 할인·가격 변경을 자동 조정한다는 뜻은
+              아닙니다.
+            </p>
+          </CitationBlock>
+        </div>
+
         <h3 className="text-xl font-semibold mt-8 mb-3">
           estimate와 observed usage를 다른 필드로 둔다
         </h3>
@@ -61,7 +83,7 @@ export default function Usage() {
           처럼 공통 이름을 참고하되 provider mapping과 convention 버전을 함께
           고정하는 편이 안전합니다.
         </p>
-        <div className="not-prose my-6 overflow-x-auto rounded-2xl border border-border/70">
+        <div className="not-prose my-6 overflow-x-auto rounded-lg border border-border/70">
           <table className="w-full min-w-[720px] text-left text-sm">
             <thead className="bg-muted/60 text-xs text-muted-foreground">
               <tr>
@@ -109,6 +131,23 @@ export default function Usage() {
           있습니다.
         </p>
 
+        <ExplainedFormula
+          question="한 model attempt의 token usage를 당시 가격표로 어떻게 추정할까?"
+          idea={<>Input·output·cache read·cache write를 하나의 token 합계로 뭉치지 않고 각 billable category와 단가를 곱합니다. Retry가 새 response를 만들면 별도 attempt 비용으로 더합니다.</>}
+          formula={String.raw`\widehat C=p_iI+p_oO+p_rR+p_wW`}
+          terms={[
+            { symbol: String.raw`\widehat C`, name: "estimated cost", description: "해당 pricing catalog version으로 계산한 추정 통화 금액입니다." },
+            { symbol: "I,O", name: "input and output tokens", description: "Provider가 보고한 일반 input·output billable token 수입니다." },
+            { symbol: "R,W", name: "cache read and write tokens", description: "Provider 정의에 따른 cache 재사용·생성 token 수입니다." },
+            { symbol: "p_i,p_o,p_r,p_w", name: "versioned unit prices", description: "Request 시점 provider·model·tier·currency의 category별 단가입니다." },
+          ]}
+          assumptions={[
+            "Usage field의 포함 관계와 단가 단위를 provider 문서와 catalog version에 맞춥니다.",
+            "계약 할인·세금·credit·반올림은 로컬 추정식과 별도로 invoice에서 reconciliation합니다.",
+          ]}
+          interpretation="I=1000, O=200, R=500, W=0이고 단가가 각각 1, 4, 0.2, 1.25라는 같은 축의 예라면 추정치는 1900 단가 단위입니다. 이는 billed amount가 아니며 response usage가 unknown이면 0으로 대체하지 않습니다."
+        />
+
         <h3 className="text-xl font-semibold mt-8 mb-3">
           비용은 항상 추정치로 표시하고 청구서와 대조한다
         </h3>
@@ -126,7 +165,7 @@ export default function Usage() {
             ["Estimated", "버전된 가격표로 계산한 통화별 비용"],
             ["Billed", "provider 청구서에서 확인한 최종 금액"],
           ].map(([title, description]) => (
-            <section key={title} className="rounded-2xl border bg-card p-4">
+            <section key={title} className="rounded-lg border bg-card p-4">
               <h4 className="text-sm font-bold">{title}</h4>
               <p className="mt-2 text-sm leading-6 text-muted-foreground">
                 {description}
@@ -158,6 +197,27 @@ export default function Usage() {
           고유 값을 metric label로 만들지 말고 상세 분석은 trace나 usage
           ledger에서 수행합니다.
         </p>
+
+        <div id="paper-otel-genai-semconv" className="scroll-mt-24">
+          <CitationBlock
+            source="OpenTelemetry — Generative AI semantic conventions"
+            href="https://opentelemetry.io/docs/specs/semconv/gen-ai/"
+            citeKey={4}
+            type="paper"
+          >
+            <p>
+              <strong>문제:</strong> Provider마다 model operation·token usage·tool
+              event 이름이 달라 관측 결과를 비교하기 어려운 문제를 다룹니다.
+              <strong>기여:</strong> GenAI trace·metric·event attribute의 공통
+              naming과 stability 상태를 제공합니다. <strong>전제:</strong> convention
+              version과 provider mapping을 함께 기록해야 합니다.
+              <strong>근거 범위:</strong> telemetry field vocabulary와 migration
+              경계입니다. <strong>일반화 금지:</strong> 표준 이름을 사용하면 token
+              accounting·privacy·cost attribution이 자동으로 정확해진다는 뜻은
+              아닙니다.
+            </p>
+          </CitationBlock>
+        </div>
       </div>
     </section>
   );

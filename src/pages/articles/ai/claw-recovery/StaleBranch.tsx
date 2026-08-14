@@ -1,4 +1,5 @@
 import StaleBranchViz from "./viz/StaleBranchViz";
+import { CitationBlock } from "@/components/ui/citation";
 
 const branchSignals = [
   {
@@ -43,13 +44,33 @@ export default function StaleBranch() {
         <div className="not-prose my-8">
           <StaleBranchViz />
         </div>
+
+        <div id="paper-claw-stale-branch-source" className="scroll-mt-24">
+          <CitationBlock
+            source="Claw Code stale_branch.rs @ b71afdd"
+            href="https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src/stale_branch.rs"
+            citeKey={2}
+            type="code"
+          >
+            <p>
+              <strong>문제:</strong> topic branch가 main보다 뒤처졌는지와
+              diverged했는지를 구분합니다. <strong>기여:</strong> pinned source는
+              <code>git rev-list --count</code>와 missing commit subject를 사용해
+              Fresh·Stale·Diverged 및 warn·block·rebase·merge action을 만듭니다.
+              <strong>전제:</strong> repository path와 두 ref, Git command 결과를
+              고정합니다. <strong>근거 범위:</strong> ahead·behind 판정과 action
+              선택입니다. <strong>일반화 금지:</strong> branch age·dirty worktree·PR
+              owner·conflict preview·safe force-push까지 확인한다는 뜻은 아닙니다.
+            </p>
+          </CitationBlock>
+        </div>
       </div>
 
       <div className="not-prose my-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {branchSignals.map((item) => (
           <article
             key={item.title}
-            className="min-w-0 rounded-2xl border border-border/70 bg-card p-4 shadow-sm"
+            className="min-w-0 rounded-lg border border-border/70 bg-card p-4"
           >
             <h4 className="text-sm font-bold text-foreground">{item.title}</h4>
             <p className="mt-2 text-xs leading-5 text-muted-foreground">

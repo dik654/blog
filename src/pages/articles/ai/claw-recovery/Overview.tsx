@@ -18,6 +18,7 @@ export default function Overview() {
       <h2 className="text-2xl font-bold mb-6">
         Recovery는 같은 명령을 다시 실행하는 기능이 아니다
       </h2>
+      <ContentBoundary article="claw-recovery" />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           빌드 실패와 merge conflict는 모두 “작업 실패”로 보이지만 필요한 대응은
@@ -25,6 +26,13 @@ export default function Overview() {
           코드나 오래된 브랜치는 상태를 바꾸지 않고 재시도하면 같은 실패만
           반복합니다. Recovery engine은 실패를 분류하고 현재 상태에 맞는 복구
           절차를 제한된 횟수로 실행합니다.
+        </p>
+        <p>
+          이 글의 <strong>PINNED</strong> 설명은 Claw Code commit
+          <code>b71afdd…</code>의 recipe·ledger·branch 판정에 한정됩니다.
+          Checkpoint, durable lease, 외부 effect reconciliation과 사람의
+          acknowledgement는 source에서 이미 완성된 기능이 아니라 안전한 운영을
+          위해 추가로 검증할 <strong>HARDENING</strong> 계약입니다.
         </p>
       </div>
 
@@ -74,3 +82,4 @@ export default function Overview() {
     </section>
   );
 }
+import ContentBoundary from "@/components/articles/content-boundary";

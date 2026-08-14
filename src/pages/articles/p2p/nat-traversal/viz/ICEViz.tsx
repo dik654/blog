@@ -12,11 +12,11 @@ const STEPS = [
   },
   {
     label: "연결성 검사 (Checks)",
-    body: "모든 후보 쌍에 STUN Binding Request로 양방향 연결 검사.",
+    body: "Prune·정렬된 checklist 후보 쌍에 STUN Binding Request로 연결 검사.",
   },
   {
-    label: "최적 경로 선택",
-    body: "Host(직접) > Reflexive > Relay 우선순위로 가장 좋은 유효 쌍 선택.",
+    label: "성공 경로 nominate",
+    body: "Priority 순으로 검사해 성공한 valid pair를 controlling agent가 nominate.",
   },
 ];
 
@@ -78,7 +78,7 @@ export default function ICEViz() {
                 rx={4}
                 fill={cd.c + "12"}
                 stroke={cd.c}
-                strokeWidth={1.3}
+                strokeWidth={1.25}
               />
               <text
                 x={cd.x + 30}
@@ -122,7 +122,7 @@ export default function ICEViz() {
                 x2={310}
                 y2={42}
                 stroke={C.host}
-                strokeWidth={1.5}
+                strokeWidth={1.25}
               />
               <rect
                 x={168}
@@ -142,7 +142,7 @@ export default function ICEViz() {
                 fontWeight={600}
                 fill={C.host}
               >
-                Best: Host-Host
+                예: nominated pair
               </text>
             </motion.g>
           )}
@@ -156,7 +156,7 @@ export default function ICEViz() {
                 x2={270}
                 y2={75}
                 stroke="#6366f1"
-                strokeWidth={1.3}
+                strokeWidth={1.25}
                 strokeDasharray="4 3"
               />
               <rect
@@ -174,7 +174,7 @@ export default function ICEViz() {
                 fontSize={10}
                 fill="#6366f1"
               >
-                SDP 교환
+                Signaling
               </text>
             </motion.g>
           )}

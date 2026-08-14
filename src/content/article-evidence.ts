@@ -2572,8 +2572,14 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "Least privilege·deny by default·every-request enforcement·negative test의 일반 기준이며 Claw의 준수 인증은 아님",
     },
   ),
-  "ai/claw-hooks": clawEvidence(),
-  "ai/claw-plugin": clawEvidence(),
+  "ai/claw-hooks": clawEvidence(
+    { kind: "공식 코드", label: "Claw Code pinned hook runner", href: "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src/hooks.rs", note: "세 event·matcher·순차 sh -lc subprocess·JSON/stdout/exit 합성·abort polling의 actual source이며 monotonic override·timeout·sandbox·process-tree cleanup 근거는 아님" },
+    { kind: "공식 가이드", label: "Linux man-pages — process groups", href: "https://man7.org/linux/man-pages/man2/setpgid.2.html", note: "Descendant job을 group identity로 signal하기 위한 일반 OS lifecycle 근거이며 pinned hook이 이를 구현했다는 뜻은 아님" },
+  ),
+  "ai/claw-plugin": clawEvidence(
+    { kind: "공식 코드", label: "Claw Code pinned plugins crate", href: "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/plugins/src/lib.rs", note: "PluginKind·manifest validation·registry collision·process execution·init/shutdown의 actual source이며 signature·sandbox·mandatory enforcer·rollback 보장은 아님" },
+    { kind: "공식 규격", label: "SLSA v1.2 levels", href: "https://slsa.dev/spec/v1.2/levels", note: "외부 package build provenance의 일반 assurance vocabulary이며 Claw plugin 준수 인증은 아님" },
+  ),
   "ai/claw-worker-boot": clawEvidence(),
   "ai/claw-compaction": clawEvidence(
     {
@@ -2607,35 +2613,37 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "긴 작업에서 상태·artifact·검증 가능한 다음 행동을 남기는 운영 패턴의 공식 사례이며 Claw 구현 근거는 아님",
     },
   ),
-  "ai/claw-recovery": clawEvidence(),
-  "ai/claw-policy-engine": clawEvidence(),
-  "ai/claw-task-team": clawEvidence(),
-  "ai/claw-subagent-orchestration": clawEvidence(),
-  "ai/claw-telemetry": clawEvidence({
-    kind: "공식 규격",
-    label: "OpenTelemetry specifications",
-    href: "https://opentelemetry.io/docs/specs/",
-    note: "trace·metric·log과 context propagation의 표준 정의",
-  }),
-  "ai/claw-mcp": [
-    {
-      kind: "공식 문서",
-      label: "MCP 2026-07-28 specification announcement",
-      href: "https://blog.modelcontextprotocol.io/posts/2026-07-28/",
-      note: "stateless core·server/discover와 legacy handshake 제거를 확인하는 최신 변경점",
-    },
-    {
-      kind: "공식 문서",
-      label: "MCP standard transports",
-      href: "https://modelcontextprotocol.io/specification/2025-11-25/basic/transports",
-      note: "stdio의 subprocess·stdin/stdout·newline-delimited JSON-RPC 규칙",
-    },
-    {
-      kind: "프로젝트 실측",
-      label: "Claw Code repository snapshot",
-      note: "11개 내부 상태·stdio process·tool registry는 분석 시점의 구현 구조",
-    },
-  ],
+  "ai/claw-recovery": clawEvidence(
+    { kind: "공식 코드", label: "Claw Code pinned recovery recipes", href: "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src/recovery_recipes.rs", note: "Typed scenario·recipe·attempt ledger의 actual snapshot이며 effect execution·durability·rollback 증거는 아님" },
+    { kind: "공식 코드", label: "Claw Code pinned stale branch detector", href: "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src/stale_branch.rs", note: "Ahead·behind·missing subject와 policy action의 source 범위" },
+    { kind: "공식 가이드", label: "Anthropic — Effective harnesses for long-running agents", href: "https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents", note: "Artifact·progress·verification handoff의 일반 운영 사례이며 Claw 구현 근거는 아님" },
+  ),
+  "ai/claw-policy-engine": clawEvidence(
+    { kind: "공식 코드", label: "Claw Code pinned policy engine", href: "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src/policy_engine.rs", note: "Boolean condition·stable priority·matching action·Chain expansion의 actual source이며 conflict arbitration·immutable provenance·effect enforcement 근거는 아님" },
+    { kind: "공식 코드", label: "Claw Code pinned green contract", href: "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src/green_contract.rs", note: "Level·passing command·base freshness·recovery context·blocking flake conjunction의 actual source이며 runner·commit provenance 전체를 보증하지 않음" },
+  ),
+  "ai/claw-task-team": clawEvidence(
+    { kind: "공식 코드", label: "Claw Code pinned TaskPacket", href: "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src/task_packet.rs", note: "Task schema·validation·legacy compatibility의 actual source" },
+    { kind: "공식 코드", label: "Claw Code pinned task registry", href: "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src/task_registry.rs", note: "Registry·lane board·freshness projection이며 distributed transaction 보장은 아님" },
+    { kind: "공식 코드", label: "Claw Code pinned team cron registry", href: "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src/team_cron_registry.rs", note: "Scheduled record·validation source이며 exactly-once scheduler 근거는 아님" },
+    { kind: "공식 가이드", label: "AWS — Transactional outbox", href: "https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html", note: "State·event dual-write 복구의 일반 pattern" },
+  ),
+  "ai/claw-subagent-orchestration": clawEvidence(
+    { kind: "공식 코드", label: "Claw Code pinned claw-analog agents runner", href: "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/claw-analog/src/agents.rs", note: "Agent spec·permission default·split session·sequential runner actual snapshot" },
+    { kind: "공식 가이드", label: "Anthropic multi-agent research system", href: "https://www.anthropic.com/engineering/multi-agent-research-system", note: "Orchestrator-worker research architecture·evaluation 사례이며 Claw parallel runtime 근거는 아님" },
+  ),
+  "ai/claw-telemetry": clawEvidence(
+    { kind: "공식 코드", label: "Claw Code pinned telemetry crate", href: "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/telemetry/src/lib.rs", note: "Typed event·memory/JSONL sink actual snapshot이며 OTLP·bounded queue·redaction 보장은 아님" },
+    { kind: "공식 코드", label: "Claw Code pinned usage ledger", href: "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src/usage.rs", note: "Runtime usage data model source이며 invoice reconciliation 보장은 아님" },
+    { kind: "공식 규격", label: "OpenTelemetry specifications", href: "https://opentelemetry.io/docs/specs/", note: "Trace·metric·log과 context propagation 표준" },
+    { kind: "공식 규격", label: "OpenTelemetry GenAI semantic conventions", href: "https://opentelemetry.io/docs/specs/semconv/gen-ai/", note: "GenAI attribute vocabulary와 stability/version boundary" },
+  ),
+  "ai/claw-mcp": clawEvidence(
+    { kind: "공식 코드", label: "Claw Code pinned MCP stdio and bridge", href: "https://github.com/ultraworkers/claw-code/tree/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src", note: "mcp*.rs의 initialize·Content-Length frame·JSON-RPC ID·discovery·bridge·shutdown actual source이며 최신 MCP revision 호환이나 lifecycle full integration 보장은 아님" },
+    { kind: "공식 문서", label: "MCP 2026-07-28 specification announcement", href: "https://blog.modelcontextprotocol.io/posts/2026-07-28/", note: "해당 revision의 protocol 변경을 확인하는 공식 기록이며 pinned Claw commit의 구현 근거는 아님" },
+    { kind: "공식 규격", label: "MCP 2026-07-28 transports", href: "https://modelcontextprotocol.io/specification/2026-07-28/basic/transports", note: "링크된 revision의 standard transport boundary이며 pinned Content-Length helper가 표준이라는 뜻은 아님" },
+    { kind: "공식 규격", label: "MCP 2026-07-28 tools", href: "https://modelcontextprotocol.io/specification/2026-07-28/server/tools", note: "링크된 revision의 tool discovery·invocation contract이며 server implementation·permission safety를 보장하지 않음" },
+  ),
   "ai/agent-devlog-patterns": [
     {
       kind: "공식 가이드",
@@ -4276,6 +4284,23 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "IPLD Link와 CID가 data model graph를 연결하는 의미",
     },
   ],
+  "blockchain/uniswap-v2": [
+    { kind: "핵심 논문", label: "Uniswap v2 Core whitepaper", href: "https://docs.uniswap.org/whitepaper.pdf", note: "Constant product·price accumulator·flash swap·optional protocol fee의 공식 설계" },
+    { kind: "공식 코드", label: "Uniswap v2-core v1.0.1 @ d2bfbb3649b2", href: "https://github.com/Uniswap/v2-core/tree/d2bfbb3649b265559bec74a7dd878dc1cf01c63c", note: "Pair mint/burn/swap·adjusted K·sqrt(k) fee mint를 고정한 source snapshot" },
+  ],
+  "blockchain/uniswap-v3": [
+    { kind: "핵심 논문", label: "Uniswap v3 Core whitepaper", href: "https://uniswap.org/whitepaper-v3.pdf", note: "Concentrated liquidity·ticks·fee growth·oracle의 공식 설계" },
+    { kind: "공식 코드", label: "Uniswap v3-core v1.0.0 @ ef64f51d0f0d", href: "https://github.com/Uniswap/v3-core/tree/ef64f51d0f0dca5346c903484f3e6a771dd69d59/contracts", note: "Pool·TickMath·SqrtPriceMath·SwapMath의 exact rounding·transition snapshot" },
+  ],
+  "blockchain/aave-v3": [
+    { kind: "공식 코드", label: "Aave DAO aave-v3-origin @ cff15de6d127", href: "https://github.com/aave-dao/aave-v3-origin/tree/cff15de6d1271b0c800fc001f4aea4c263e8a597", note: "V3.1–3.x Pool·reserve index·rate·HF·liquidation·mode source snapshot" },
+    { kind: "공식 문서", label: "Aave V3 introduction", href: "https://aave.com/help/aave-101/introduction-to-aave", note: "공급·aToken·utilization·overcollateralized borrow·liquidation의 공식 사용자 경계" },
+  ],
+  "blockchain/compound-v3": [
+    { kind: "공식 코드", label: "Compound Finance Comet @ f766f51583c2", href: "https://github.com/compound-finance/comet/tree/f766f51583c23acc33b2a7824654ef2029a96804", note: "Signed principal·indexes·rate curves·factors·absorb·collateral sale source snapshot" },
+    { kind: "공식 문서", label: "Compound III documentation", href: "https://docs.compound.finance/", note: "Deployment artifact·single-base market·proxy integration의 공식 기준" },
+    { kind: "공식 문서", label: "Compound III liquidation", href: "https://docs.compound.finance/liquidation/", note: "Reserve-funded absorb·buyCollateral·discount quote의 공식 interface" },
+  ],
   "crypto/crypto-primitives": [
     { kind: "핵심 논문", label: "Poseidon · USENIX Security 2021", href: "https://www.usenix.org/conference/usenixsecurity21/presentation/grassi", note: "Prime-field SPN·HADES round strategy와 회로 비용/공격 분석의 원문" },
     { kind: "공식 규격", label: "RFC 8032 · EdDSA: Ed25519 and Ed448", href: "https://www.rfc-editor.org/rfc/rfc8032.html", note: "Ed25519 curve·seed expansion·encoding·sign/verify·test-vector 계약" },
@@ -4630,6 +4655,25 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "핵심 논문", label: "Demers et al. — Epidemic Algorithms", href: "https://www.cs.cornell.edu/home/rvr/papers/flowgossip.pdf", note: "Anti-entropy·rumor mongering의 확률적 dissemination 원 모델" },
     { kind: "핵심 논문", label: "Das, Gupta & Motivala — SWIM", href: "https://www.cs.cornell.edu/projects/Quicksilver/public_pdfs/SWIM.pdf", note: "Failure detection과 infection-style membership dissemination의 분리" },
     { kind: "공식 규격", label: "libp2p GossipSub v1.1 Specification", href: "https://github.com/libp2p/specs/blob/master/pubsub/gossipsub/gossipsub-v1.1.md", note: "Mesh maintenance·IHAVE/IWANT·peer score와 threshold action 정본" },
+  ],
+  "p2p/bittorrent": [
+    { kind: "공식 규격", label: "BEP 3 — The BitTorrent Protocol Specification", href: "https://www.bittorrent.org/beps/bep_0003.html", note: "Final v1 metainfo·tracker·peer handshake·piece hash·choking wire의 정본이며 BEP 52 v2와 구분" },
+    { kind: "공식 규격", label: "BEP 5 — DHT Protocol", href: "https://www.bittorrent.org/beps/bep_0005.html", note: "Accepted trackerless peer discovery의 KRPC·get_peers·announce_peer·token 경계" },
+  ],
+  "p2p/discv4": [
+    { kind: "공식 규격", label: "Ethereum devp2p — Node Discovery Protocol v4", href: "https://github.com/ethereum/devp2p/blob/master/discv4.md", note: "Current protocol version 4의 identity·endpoint proof·FINDNODE·1280-byte signed plaintext UDP wire" },
+    { kind: "공식 규격", label: "Ethereum devp2p — Ethereum Node Records", href: "https://github.com/ethereum/devp2p/blob/master/enr.md", note: "ENR signature·uint64 sequence·sorted unique key/value와 identity-scheme validation 정본" },
+  ],
+  "p2p/discv5": [
+    { kind: "공식 규격", label: "Ethereum devp2p — Discovery v5.1 Wire Protocol", href: "https://github.com/ethereum/devp2p/blob/master/discv5/discv5-wire.md", note: "Protocol v5.1 packet masking·AES-GCM·WHOAREYOU·FINDNODE/NODES·TALK wire 정본" },
+    { kind: "공식 규격", label: "Ethereum devp2p — Discovery v5.1 Theory", href: "https://github.com/ethereum/devp2p/blob/master/discv5/discv5-theory.md", note: "Identity proof·ephemeral-static ECDH·HKDF directional keys·session cache·lookup algorithm 정본" },
+    { kind: "공식 규격", label: "Ethereum devp2p — Ethereum Node Records", href: "https://github.com/ethereum/devp2p/blob/master/enr.md", note: "Discv5 handshake와 routing이 재사용하는 signed identity·endpoint record 정본" },
+  ],
+  "p2p/nat-traversal": [
+    { kind: "공식 규격", label: "RFC 8489 — STUN", href: "https://www.rfc-editor.org/rfc/rfc8489.html", note: "Binding transaction과 XOR-MAPPED-ADDRESS의 current Standards Track semantics" },
+    { kind: "공식 규격", label: "RFC 8656 — TURN", href: "https://www.rfc-editor.org/rfc/rfc8656.html", note: "Allocation·authentication·permission·channel·refresh·expiry relay lifecycle 정본" },
+    { kind: "공식 규격", label: "RFC 8445 — ICE", href: "https://www.rfc-editor.org/rfc/rfc8445.html", note: "Candidate checklist·pair priority·connectivity check·nomination·restart 정본" },
+    { kind: "공식 규격", label: "libp2p Specification — DCUtR", href: "https://github.com/libp2p/specs/blob/master/relay/DCUtR.md", note: "Active revision r1 Connect·Sync·relay RTT·simultaneous TCP/QUIC direct upgrade 경계" },
   ],
   "blockchain/rollup-fundamentals": [
     { kind: "공식 규격", label: "OP Stack Specification · L2 Chain Derivation", href: "https://specs.optimism.io/protocol/derivation.html", note: "L1 retrieval·frame·channel·batch·payload와 unsafe/safe/finalized reset의 current 공식 경계" },

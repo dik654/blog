@@ -3,20 +3,20 @@ import StepViz from "@/components/ui/step-viz";
 
 const STEPS = [
   {
-    label: "Full Cone NAT",
-    body: "내부 → 외부 매핑 생성 후 어떤 외부 호스트든 해당 매핑으로 접근 가능.",
+    label: "Endpoint-independent mapping",
+    body: "같은 내부 transport address는 destination이 달라도 같은 외부 mapping을 재사용합니다.",
   },
   {
-    label: "Restricted Cone NAT",
-    body: "내부가 먼저 패킷을 보낸 IP만 매핑을 통해 접근 가능. 포트는 무관.",
+    label: "Address-dependent mapping",
+    body: "Remote IP가 달라지면 외부 mapping도 달라집니다. Filtering behavior는 별도입니다.",
   },
   {
-    label: "Port Restricted Cone",
-    body: "내부가 보낸 IP와 포트 조합만 매핑으로 접근 가능.",
+    label: "Address-and-port-dependent mapping",
+    body: "Remote IP 또는 port가 달라지면 외부 mapping도 달라집니다.",
   },
   {
-    label: "Symmetric NAT",
-    body: "목적지(IP:포트)마다 서로 다른 외부 매핑 생성. 홀 펀칭 매우 어려움.",
+    label: "Filtering은 별도",
+    body: "같은 mapping에서도 어떤 remote IP:port의 inbound packet을 허용할지는 따로 검사합니다.",
   },
 ];
 
@@ -41,7 +41,7 @@ export default function NATTypesViz() {
             rx={5}
             fill="#6366f112"
             stroke="#6366f1"
-            strokeWidth={1.3}
+            strokeWidth={1.25}
           />
           <text
             x={40}
@@ -63,7 +63,7 @@ export default function NATTypesViz() {
             rx={6}
             fill={C[step] + "12"}
             stroke={C[step]}
-            strokeWidth={1.5}
+            strokeWidth={1.25}
             animate={{ stroke: C[step] }}
             transition={sp}
           />
@@ -78,7 +78,7 @@ export default function NATTypesViz() {
             NAT
           </text>
           <text x={145} y={78} textAnchor="middle" fontSize={10} fill={C[step]}>
-            {["Full Cone", "Restricted", "Port Restr.", "Symmetric"][step]}
+            {["EIM", "ADM", "APDM", "FILTER"][step]}
           </text>
 
           {/* External hosts */}
@@ -87,14 +87,7 @@ export default function NATTypesViz() {
             { id: "B", y: 60 },
             { id: "C", y: 105 },
           ].map((h, i) => {
-            const allowed =
-              step === 0
-                ? true
-                : step === 1
-                  ? i <= 1
-                  : step === 2
-                    ? i === 0
-                    : i === 0;
+            const allowed = step === 3 ? i === 0 : true;
             return (
               <motion.g
                 key={h.id}
@@ -119,7 +112,7 @@ export default function NATTypesViz() {
                   fontWeight={600}
                   fill={allowed ? C[step] : "#64748b"}
                 >
-                  Host {h.id}
+                  Dest {h.id}
                 </text>
                 {/* Arrow */}
                 <line
@@ -144,8 +137,8 @@ export default function NATTypesViz() {
             stroke="#6366f1"
             strokeWidth={1}
           />
-          {/* Mapping labels for Symmetric */}
-          {step === 3 && (
+          {/* Destination-dependent mapping examples */}
+          {step >= 1 && step <= 2 && (
             <motion.g initial={{ opacity: 0 }} animate={{ opacity: 0.7 }}>
               <text
                 x={232}
