@@ -1,8 +1,13 @@
 import fs from "node:fs";
 import path from "node:path";
+import {
+  collectArticleSourceClosure,
+  loadPublicArticleCatalog,
+} from "./lib/public-article-catalog.mjs";
 
 const roots = process.argv.slice(2).filter((arg) => !arg.startsWith("--"));
 const strict = process.argv.includes("--strict");
+const allArticles = process.argv.includes("--all-articles");
 const targets = roots.length ? roots : ["src/components/viz", "src/pages/articles"];
 const extensions = new Set([".tsx", ".ts", ".jsx", ".js"]);
 
@@ -26,7 +31,17 @@ const rules = [
 ];
 
 const findings = [];
-for (const file of [...new Set(targets.flatMap((target) => collect(target)))]) {
+const files = allArticles
+  ? [
+      ...new Set(
+        (await loadPublicArticleCatalog()).flatMap((article) =>
+          collectArticleSourceClosure(article.sourcePath),
+        ),
+      ),
+    ]
+  : [...new Set(targets.flatMap((target) => collect(target)))];
+
+for (const file of files) {
   const source = fs.readFileSync(file, "utf8");
   for (const { label, severity, pattern } of rules) {
     pattern.lastIndex = 0;
@@ -42,5 +57,5 @@ if (findings.length) {
   console.log(`\n${findings.length}개의 Viz 검토 항목이 있습니다.`);
   if (strict && findings.some(({ severity }) => severity === "error")) process.exitCode = 1;
 } else {
-  console.log("Viz 정적 스타일 검사 통과");
+  console.log(`Viz 정적 스타일 검사 통과: ${files.length}개 실제 source file`);
 }

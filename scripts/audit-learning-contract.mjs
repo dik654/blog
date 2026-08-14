@@ -1,8 +1,10 @@
 import fs from "node:fs";
-import path from "node:path";
 import { ARTICLE_LEARNING } from "../src/content/article-learning.ts";
 import { KNOWLEDGE_CONCEPTS, KNOWLEDGE_EDGES } from "../src/content/knowledge-graph.ts";
-import { loadPublicArticleCatalog } from "./lib/public-article-catalog.mjs";
+import {
+  collectArticleSourceClosure,
+  loadPublicArticleCatalog,
+} from "./lib/public-article-catalog.mjs";
 
 const strict = process.argv.includes("--strict");
 const requireRegistration = process.argv.includes("--require-registration");
@@ -14,78 +16,10 @@ const publicArticleByRoute = new Map(
   publicArticleCatalog.map((article) => [article.route, article]),
 );
 
-function collect(target, files = []) {
-  if (!fs.existsSync(target)) return files;
-  const stat = fs.statSync(target);
-  if (stat.isFile()) {
-    if (/\.tsx?$/.test(target)) files.push(path.resolve(target));
-    return files;
-  }
-  for (const entry of fs.readdirSync(target)) collect(path.join(target, entry), files);
-  return files;
-}
-
-const allArticleFiles = new Set(collect("src/pages/articles"));
-
-function resolveImport(from, specifier) {
-  if (!specifier.startsWith(".")) return undefined;
-  const base = path.resolve(path.dirname(from), specifier);
-  for (const candidate of [base, `${base}.tsx`, `${base}.ts`, path.join(base, "index.tsx")]) {
-    if (allArticleFiles.has(candidate)) return candidate;
-  }
-}
-
-function trace(file, seen = new Set()) {
-  const absolute = path.resolve(file);
-  if (!allArticleFiles.has(absolute) || seen.has(absolute)) return seen;
-  seen.add(absolute);
-  const source = fs.readFileSync(absolute, "utf8");
-  for (const match of source.matchAll(/(?:import|export)\s+(?:[^"']+?\s+from\s+)?["']([^"']+)["']/g)) {
-    const resolved = resolveImport(absolute, match[1]);
-    if (resolved) trace(resolved, seen);
-  }
-  return seen;
-}
-
 function routeFiles(route) {
-  const [category, slug] = route.split("/");
-  const entry = path.join("src/pages/articles", category, `${slug}.tsx`);
-  const directory = path.join("src/pages/articles", category, slug);
-  const files = [];
   const catalogArticle = publicArticleByRoute.get(route);
-  if (catalogArticle) {
-    files.push(...trace(catalogArticle.sourcePath));
-    // Some legacy article contracts intentionally point at sections that are
-    // kept beside the route entry but are not currently imported by its render
-    // component. Preserve that selected-audit source scope while deriving the
-    // directory from the catalog source (not from the public route name).
-    const extension = path.extname(catalogArticle.sourcePath);
-    const sourceDirectory = catalogArticle.sourcePath.slice(0, -extension.length);
-    if (fs.existsSync(sourceDirectory) && fs.statSync(sourceDirectory).isDirectory()) {
-      for (const name of fs.readdirSync(sourceDirectory, { recursive: true })) {
-        const file = path.join(sourceDirectory, name);
-        if (fs.statSync(file).isFile() && /\.tsx?$/.test(file)) files.push(file);
-      }
-    }
-  } else if (fs.existsSync(entry)) {
-    files.push(...trace(entry));
-  }
-  if (!catalogArticle && fs.existsSync(directory)) {
-    for (const name of fs.readdirSync(directory, { recursive: true })) {
-      const file = path.join(directory, name);
-      if (fs.statSync(file).isFile() && /\.tsx?$/.test(file)) files.push(file);
-    }
-  }
-  // Public category and source folder can differ when an article is reused by a
-  // catalog (for example /gpu/hw-network -> pages/articles/hw/network.tsx).
-  // Resolve a unique slug match instead of silently auditing an empty source.
-  if (files.length === 0) {
-    const fallbackEntries = [...allArticleFiles].filter(
-      (file) => path.basename(file) === `${slug}.tsx`,
-    );
-    if (fallbackEntries.length === 1) files.push(...trace(fallbackEntries[0]));
-  }
-  return files;
+  if (!catalogArticle) return [];
+  return collectArticleSourceClosure(catalogArticle.sourcePath);
 }
 
 function evidenceHeavyRoutes() {

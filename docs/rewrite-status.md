@@ -21,6 +21,15 @@
 
 이후 범위를 전체 블로그로 확장했다. 2026-08-14 현재 실제 공개 카탈로그의 고유 article route 386개 전부에 Knowledge graph와 learning contract가 등록되어 미등록 글은 0개다. 386개 모두 새 DoD의 정확한 기초 6개+심화 4개와 본문·근거 anchor까지 strict audit를 통과했으며, 이전 문제 수 기준으로 남아 있던 구계약도 0개다. Audit는 파일시스템의 source folder나 public alias를 별도 article route로 중복 집계하지 않고 `src/content/index.ts`의 실제 공개 카탈로그를 분모로 사용하며, 새 route가 추가되면 분모도 함께 갱신한다. 또한 같은 concept를 두 글이 동시에 새 개념으로 소유하거나 concept의 `canonicalHref`가 실제 owner와 어긋나거나 새 concept가 relation edge 없이 고립되면 해당 글을 완료로 처리하지 않는다. 현재 2,279개 concept·3,331개 relation은 정본 owner 중복·경로 불일치·dangling/self/duplicate edge·고립 node가 모두 0개이며 `audit:graph --strict`를 통과한다. 완료된 정본·응용 글의 상세 근거는 아래 한 곳에서 관리한다.
 
+### 읽기 경험 재구성 및 실제 공개 closure 감사
+
+- [x] Learning contract 전체가 본문 앞에서 수천 px를 차지하던 순서를 `짧은 수업 안내 → 실제 본문 → 용어·개념 그래프·연습문제 복습 → 근거`로 재구성
+- [x] 각 단계에 연결 문장과 작은 worked example을 노출해 정의·수식 목록이 아니라 본문으로 들어가는 설명 경로로 표시
+- [x] “이 글 안에서 처음 설명하는 용어”의 중첩 4열 효과를 제거하고, 본문 크기·긴 행간의 넓은 카드로 교체
+- [x] Learning·article·Viz 전역 audit를 public catalog의 실제 import closure 기준으로 강화해 미참조 legacy sibling 파일이 anchor나 Viz 통과 증거가 되지 않게 함
+- [x] 강화된 closure 감사에서 발견된 `ai/backprop-optimization`의 Loss·Softmax·Cross-entropy 실제 렌더 누락을 복구
+- [x] Playwright Firefox로 공개 386 route × 390/1440 = 772회 검사: 수업 안내→본문→복습 순서, 용어 카드 폭 250px 이상, page·Viz·formula·SVG overflow와 application console failure 0
+
 ### 재귀 선수 지식 경로 — 현재 닫힌 기반
 
 - [x] `벡터·내적·norm`: scalar에서 시작해 projection·Cauchy–Schwarz의 증명 아이디어와 반례까지 연결
@@ -1032,7 +1041,6 @@
 - [x] 전역 `audit:learning --strict --require-registration --all-articles`: 공개 catalog 386/386 등록, 미등록 0개
 - [x] Practical ML → LLM·Agent → Blockchain·Cryptography·P2P·HW/GPU·TEE·ISMS/AML 전체 catalog 이관 완료
 
-- [ ] `npm run audit:articles -- src/pages/articles/ai`의 상위 이관 후보 처리
-  - 다음 후보 재산정
-- [ ] AI 이후 Blockchain · Cryptography · P2P · HW/GPU · TEE · ISMS/AML도 같은 계약으로 감사
-- [ ] sidebar의 단일 소분류 direct navigation과 canonical article 연결 전수 확인
+- [x] `npm run audit:articles -- --strict --all-articles`로 공개 386개 실제 import closure의 material violation 0 확인
+- [x] AI · Blockchain · Cryptography · P2P · HW/GPU · TEE · ISMS/AML 전체를 같은 learning·article·Viz 계약으로 감사
+- [x] Public catalog route-resolution test 4/4와 772회 실제 navigation으로 sidebar/public route·canonical source closure 확인

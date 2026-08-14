@@ -1,9 +1,14 @@
 import fs from "node:fs";
 import path from "node:path";
+import {
+  collectArticleSourceClosure,
+  loadPublicArticleCatalog,
+} from "./lib/public-article-catalog.mjs";
 
-const root = process.argv.slice(2).find((arg) => !arg.startsWith("--")) ?? "src/pages/articles";
+const roots = process.argv.slice(2).filter((arg) => !arg.startsWith("--"));
 const json = process.argv.includes("--json");
 const strict = process.argv.includes("--strict");
+const allArticles = process.argv.includes("--all-articles");
 const sourceExtensions = new Set([".tsx", ".ts"]);
 
 function collect(target, files = []) {
@@ -17,8 +22,8 @@ function collect(target, files = []) {
   return files;
 }
 
-const files = collect(root);
-const fileSet = new Set(files.map((file) => path.resolve(file)));
+const articleFiles = collect("src/pages/articles");
+const fileSet = new Set(articleFiles.map((file) => path.resolve(file)));
 
 function resolveImport(from, specifier) {
   if (!specifier.startsWith(".")) return undefined;
@@ -43,19 +48,30 @@ function trace(entry, seen = new Set()) {
 }
 
 const groups = new Map();
-for (const file of files) {
-  const relative = path.relative("src/pages/articles", file);
-  const parts = relative.split(path.sep);
-  const article = parts.length >= 3 ? parts[1] : path.basename(parts[1] ?? "index", path.extname(parts[1] ?? ""));
-  const group = path.join("src/pages/articles", parts[0], article);
-  if (!groups.has(group)) groups.set(group, []);
-  groups.get(group).push(file);
+if (allArticles) {
+  const catalog = await loadPublicArticleCatalog();
+  for (const article of catalog) {
+    groups.set(article.route, collectArticleSourceClosure(article.sourcePath));
+  }
+} else {
+  const files = [...new Set((roots.length ? roots : ["src/pages/articles"]).flatMap((root) => collect(root)))];
+  for (const file of files) {
+    const relative = path.relative("src/pages/articles", file);
+    const parts = relative.split(path.sep);
+    const article =
+      parts.length >= 3
+        ? parts[1]
+        : path.basename(parts[1] ?? "index", path.extname(parts[1] ?? ""));
+    const group = path.join("src/pages/articles", parts[0], article);
+    if (!groups.has(group)) groups.set(group, []);
+    groups.get(group).push(file);
+  }
 }
 
 const rows = [];
 for (const [group, groupFiles] of groups) {
-  const entry = `${group}.tsx`;
-  const reachable = fs.existsSync(entry) ? [...trace(entry)] : groupFiles;
+  const entry = allArticles ? undefined : `${group}.tsx`;
+  const reachable = entry && fs.existsSync(entry) ? [...trace(entry)] : groupFiles;
   const source = reachable.map((file) => fs.readFileSync(file, "utf8")).join("\n");
   const sectionCount = (source.match(/<section\b/g) ?? []).length;
   // `ExplainedFormula` owns its own display math.  Anything still rendered
@@ -87,7 +103,7 @@ if (json) {
       `${String(row.score).padStart(5)}  ${String(row.displayMath).padStart(7)}  ${String(row.explained).padStart(9)}  ${String(row.viz).padStart(3)}  ${String(row.gradients).padStart(8)}  ${String(row.thickStroke).padStart(5)}  ${row.group}`,
     );
   }
-  console.log(`\n계약 이관 후보 ${rows.length}개 그룹`);
+  console.log(`\n계약 이관 후보 ${rows.length}개 그룹 / 감사 범위 ${groups.size}개 글`);
 }
 
 // A text-only article can legitimately have no Viz.  Keep that as a migration

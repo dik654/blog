@@ -99,10 +99,10 @@ export default function ArticleOnboarding({
         <p className="mt-2 text-sm leading-7 text-foreground/75">
           {learning ? (
             <>
-              아래에서 <strong>핵심 아이디어</strong>를 먼저 확인하고, 낯선
-              용어를 선수 개념과 이 글에서 설명할 개념으로 나눠 봅니다. 본문을
-              읽은 뒤에는 제시된 질문에 답해 보고, 막히는 항목은 연결된 섹션과
-              논문 해설로 바로 돌아갈 수 있습니다.
+              아래의 짧은 수업 안내에서 <strong>핵심 아이디어</strong>와 설명
+              순서를 먼저 잡은 뒤 실제 본문을 처음부터 읽습니다. 다 읽은 뒤에는
+              넓은 용어 카드와 연습문제로 이해를 확인하고, 막히는 항목만 연결된
+              섹션과 논문 해설로 돌아갈 수 있습니다.
             </>
           ) : firstStage && lastStage ? (
             <>

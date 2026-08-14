@@ -5,7 +5,9 @@ import ArticleLayout from "@/components/ArticleLayout";
 import ArticleEvidenceRail from "@/components/articles/article-evidence-rail";
 import ArticleConceptViz from "@/components/viz/ArticleConceptViz";
 import ArticleOnboarding from "@/components/ArticleOnboarding";
-import ArticleLearningContractView from "@/components/ArticleLearningContract";
+import ArticleLearningContractView, {
+  ArticleLessonPrimer,
+} from "@/components/ArticleLearningContract";
 import { ARTICLE_EVIDENCE } from "@/content/article-evidence";
 import { ARTICLE_LEARNING } from "@/content/article-learning";
 import { getArticleConceptFlow } from "@/content/article-guidance";
@@ -66,18 +68,21 @@ export default function ArticlePage() {
         article={result.article}
         flow={conceptFlow}
       />
+      {learning && <ArticleLessonPrimer contract={learning} />}
+      <div data-article-body>
+        <Suspense
+          fallback={
+            <p className="text-muted-foreground animate-pulse">로딩 중...</p>
+          }
+        >
+          {createElement(ArticleComponent)}
+        </Suspense>
+      </div>
       {learning && <ArticleLearningContractView contract={learning} />}
       {conceptFlow && <ArticleConceptViz flow={conceptFlow} />}
       {evidence && (
         <ArticleEvidenceRail items={evidence} paperReadings={learning?.papers} />
       )}
-      <Suspense
-        fallback={
-          <p className="text-muted-foreground animate-pulse">로딩 중...</p>
-        }
-      >
-        {createElement(ArticleComponent)}
-      </Suspense>
     </ArticleLayout>
   );
 }
