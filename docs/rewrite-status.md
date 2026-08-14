@@ -1110,3 +1110,11 @@
 - [x] 주요 수식에 연산 의도를 underbrace로 직접 표시하고 자동 재생·키보드 조작이 가능한 새 flat Viz로 cache 성장과 state update를 시각화
 - [x] 기초 6개+심화 4개, official evidence·graph owner·article-only 역검사와 390px·1440px Playwright·build·전역 audit 완료
 - [x] 공식 BF16 55.56 GB·mixed-FP8 30.87 GB checkpoint payload에서 48 GiB의 32K·128K·262K known floor를 계산하고, FP8 weights≠FP8 KV·workspace 미지수를 새 VRAM Viz와 기동 log receipt로 설명
+# 2026-08-15 · CRUD 중 concept graph 유기적 확장 원칙
+
+- Article create·split·merge·rename·delete 도중 새 학습 단위나 선수·조합 경계가 드러나면 같은 변경에서 graph node·edge·canonical owner를 추가하고, 확장된 그래프로 route 경계를 다시 판단하도록 정본 계약을 보강했다.
+- 현재 article 수와 최초 분할안을 고정값으로 취급하지 않는다. Graph가 새 독립 수업을 드러내면 route를 더 만들고, 중복 owner를 드러내면 병합·redirect 대상으로 되돌린다.
+- 첫 적용에서 `ai/qwen36-hybrid-architecture` 하나를 architecture memory mechanism, request-state runtime, long-context deployment의 세 수업으로 분리했다. 범용 weight·dtype·GB/GiB·VRAM 계산은 `ai/model-vram-budgeting` 정본을 재사용한다.
+- 2-route 중간안의 runtime이 다시 두 학습 arc를 가진다는 topology finding을 받자 `ai/qwen36-long-context-deployment`를 추가 생성했다. 이 과정에서 `qwen36-prefix-state-transaction`, `qwen36-context-support-boundary`를 graph에 새로 소유시키고 7개 관계를 연결했으며, 세 route 모두 topology keep 상태가 됐다.
+- 공개 route·exact learning contract는 408개, graph는 2,322 concepts·3,430 relations·invariant 0이다. 세 route의 수식 7개는 전부 explicit operation annotation이며 390px·1440px에서 document/Viz/KaTeX overflow 0, console warning/error 0을 확인했다.
+- Hybrid schedule·request lifecycle·context envelope Viz는 전체 map을 유지하면서 현재 장면을 확대하고, `ArrowLeft`·`ArrowRight`·`Space` 키와 자동 재생이 실제 동작하도록 검증했다. 전역 formula backlog 1,008개/688 legacy files와 topology split-review 86개는 다음 CRUD 반복에서 계속 줄인다.

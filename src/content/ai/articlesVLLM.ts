@@ -18,7 +18,10 @@ export const vllmServingArticles: Article[] = [
         title: "Iteration-level continuous batching",
         subsections: [
           { id: "paper-orca", title: "Orca의 iteration-level scheduling" },
-          { id: "resource-feasibility", title: "Token·sequence·KV hard budget" },
+          {
+            id: "resource-feasibility",
+            title: "Token·sequence·KV hard budget",
+          },
           { id: "paper-vllm", title: "vLLM·PagedAttention 원 논문의 핵심" },
         ],
       },
@@ -50,7 +53,10 @@ export const vllmServingArticles: Article[] = [
         id: "schedule-method",
         title: "Request progress와 한 GPU step",
         subsections: [
-          { id: "running-waiting-order", title: "RUNNING·WAITING admission 순서" },
+          {
+            id: "running-waiting-order",
+            title: "RUNNING·WAITING admission 순서",
+          },
           { id: "closed-loop-update", title: "Output update와 closed-loop" },
         ],
       },
@@ -83,9 +89,18 @@ export const vllmServingArticles: Article[] = [
         id: "overview",
         title: "Variable-length KV를 block으로 바꾸기",
         subsections: [
-          { id: "logical-physical-address", title: "Logical→physical address translation" },
-          { id: "paper-pagedattention", title: "PagedAttention 원 논문의 핵심" },
-          { id: "memory-kernel-boundary", title: "Manager·kernel·scheduler 책임 경계" },
+          {
+            id: "logical-physical-address",
+            title: "Logical→physical address translation",
+          },
+          {
+            id: "paper-pagedattention",
+            title: "PagedAttention 원 논문의 핵심",
+          },
+          {
+            id: "memory-kernel-boundary",
+            title: "Manager·kernel·scheduler 책임 경계",
+          },
         ],
       },
       {
@@ -109,7 +124,10 @@ export const vllmServingArticles: Article[] = [
         title: "Automatic Prefix Caching",
         subsections: [
           { id: "full-block-boundary", title: "Token·full-block hit 경계" },
-          { id: "paper-radixattention", title: "SGLang·RadixAttention 논문의 핵심" },
+          {
+            id: "paper-radixattention",
+            title: "SGLang·RadixAttention 논문의 핵심",
+          },
           { id: "prefix-operations", title: "Prefix cache 운영 지표" },
         ],
       },
@@ -145,7 +163,10 @@ export const vllmServingArticles: Article[] = [
           { id: "paper-eagle", title: "EAGLE 논문의 feature-level proposal" },
           { id: "paper-mtp", title: "Multi-Token Prediction 원 논문의 핵심" },
           { id: "native-mtp", title: "Native MTP의 serving 경계" },
-          { id: "paper-specinfer", title: "SpecInfer의 token-tree verification" },
+          {
+            id: "paper-specinfer",
+            title: "SpecInfer의 token-tree verification",
+          },
           { id: "serving-break-even", title: "Production 손익분기점" },
           { id: "dynamic-policy", title: "Dynamic speculation 정책" },
         ],
@@ -200,13 +221,13 @@ export const vllmServingArticles: Article[] = [
   },
   {
     slug: "qwen36-hybrid-architecture",
-    title: "Qwen3.6-27B 아키텍처: DeltaNet · Attention · Hybrid Cache",
+    title: "Qwen3.6-27B 아키텍처: Attention과 DeltaNet의 두 기억",
     subcategory: "ai-llm-serving",
     sections: [
-      { id: "overview", title: "64층을 두 종류의 memory로 나누기" },
+      { id: "overview", title: "3 DeltaNet + 1 Attention을 16번 반복" },
       {
         id: "attention-kv",
-        title: "Attention·GQA와 token마다 커지는 KV cache",
+        title: "GQA와 token마다 커지는 KV cache",
         subsections: [
           { id: "kv-bytes", title: "BF16 token당 64 KiB 계산" },
           { id: "paper-qwen36-config", title: "Qwen3.6 공식 config 읽기" },
@@ -221,33 +242,73 @@ export const vllmServingArticles: Article[] = [
           { id: "paper-gated-deltanet", title: "Gated DeltaNet 원 논문" },
         ],
       },
-      {
-        id: "weight-vram",
-        title: "27B parameter에서 48 GiB VRAM 예산으로",
-        subsections: [
-          { id: "weight-bytes", title: "BF16·공식 혼합 FP8 weight byte 계산" },
-          { id: "vram-admission", title: "32K·128K·262K known memory floor" },
-          { id: "paper-qwen36-weights", title: "공식 checkpoint payload 근거" },
-        ],
-      },
+    ],
+    component: () => import("@/pages/articles/ai/qwen36-hybrid-architecture"),
+  },
+  {
+    slug: "qwen36-hybrid-runtime",
+    title: "Qwen3.6 하이브리드 런타임: Prefill · Decode · State Commit",
+    subcategory: "ai-llm-serving",
+    sections: [
+      { id: "overview", title: "두 cache를 한 request state로 관리" },
       {
         id: "hybrid-runtime",
-        title: "Hybrid cache manager가 두 state를 함께 관리하는 법",
-        subsections: [
-          { id: "prefill-decode", title: "Chunked prefill과 recurrent decode" },
-          { id: "paper-vllm-hybrid", title: "vLLM hybrid cache 설계" },
-        ],
+        title: "길이 비례 KV와 request당 고정 state",
       },
       {
-        id: "model-stack",
-        title: "RoPE·FFN·MTP·multimodal token을 같은 stack에 놓기",
+        id: "prefix-transaction",
+        title: "Prefill·decode·MTP의 prefix transaction",
         subsections: [
-          { id: "paper-transformers-qwen35", title: "Transformers reference path" },
-          { id: "release-check", title: "배포 전 확인할 artifact와 측정" },
+          { id: "state-commit", title: "두 cache를 같은 경계에 commit" },
+          { id: "paper-vllm-hybrid", title: "vLLM hybrid cache 설계" },
+          {
+            id: "paper-transformers-runtime",
+            title: "Transformers recurrent reference",
+          },
         ],
       },
     ],
-    component: () => import("@/pages/articles/ai/qwen36-hybrid-architecture"),
+    component: () => import("@/pages/articles/ai/qwen36-hybrid-runtime"),
+  },
+  {
+    slug: "qwen36-long-context-deployment",
+    title: "Qwen3.6 Long Context: mRoPE · Multimodal · 48 GiB 배포",
+    subcategory: "ai-llm-serving",
+    sections: [
+      { id: "overview", title: "위치·memory·retrieval을 분리" },
+      {
+        id: "position-modal",
+        title: "Partial multimodal RoPE와 visual token",
+        subsections: [
+          { id: "partial-rope", title: "256차원 중 64차원 rotary" },
+          {
+            id: "paper-qwen36-model-context",
+            title: "Qwen 공식 context support",
+          },
+          {
+            id: "paper-transformers-qwen35-context",
+            title: "Transformers reference path",
+          },
+        ],
+      },
+      {
+        id: "memory-profile",
+        title: "48 GiB known floor와 미지수",
+        subsections: [
+          { id: "qwen-known-floor", title: "262K profile의 44.89 GiB 바닥" },
+          {
+            id: "paper-qwen36-weights-context",
+            title: "공식 checkpoint payload 근거",
+          },
+        ],
+      },
+      {
+        id: "release-check",
+        title: "Architecture·memory·kernel·quality receipt",
+      },
+    ],
+    component: () =>
+      import("@/pages/articles/ai/qwen36-long-context-deployment"),
   },
   {
     slug: "model-vram-budgeting",

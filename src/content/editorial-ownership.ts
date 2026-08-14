@@ -7125,25 +7125,52 @@ export const EDITORIAL_BOUNDARIES = {
     owns: [
       "공식 layer_types를 48 Gated DeltaNet·16 Gated Attention으로 분리하는 3:1 schedule",
       "Qwen3.6 attention KV의 token당 64 KiB와 DeltaNet FP32 core state의 request당 144 MiB shape 계산",
-      "범용 VRAM 정본을 Qwen 공식 BF16·mixed-FP8 checkpoint와 16-layer KV·48-layer Delta state에 적용한 48 GiB 사례",
-      "Delta-rule prediction-error correction과 recurrent decode·chunked prefill 실행 경계",
-      "Partial multimodal RoPE·dense FFN·MTP·vision tokens를 hybrid serving state에 연결하는 release gate",
+      "Delta-rule prediction-error correction의 감쇠·read·error·key-directed write 연산",
     ],
     reuses: [
       { label: "Attention Q·K·V와 multi-head", href: "/ai/attention-theory" },
       { label: "KV cache·GQA·capacity", href: "/ai/hybrid-attention-serving" },
       { label: "RNN recurrent state와 압축 한계", href: "/ai/rnn" },
-      { label: "Quantized resident-memory ledger", href: "/ai/quantization" },
-      { label: "Resident-memory concurrency bound", href: "/ai/compression-pipeline" },
-      { label: "Model weight·KV·workspace VRAM 계산 정본", href: "/ai/model-vram-budgeting" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "모델명·3:1 layer pattern과 attention·linear head shape는 Qwen3.6-27B 공식 model card·config revision에 귀속한다." },
+      { kind: "primary-source", rule: "Gating·prediction-error correction과 parallel recurrence claim은 Gated Delta Networks 원 논문의 조건에 귀속한다." },
+      { kind: "project-claim", rule: "64 KiB/token KV와 144 MiB core state는 명시한 logical shape·dtype 계산이며 allocator·TP·convolution history를 포함한 physical allocation으로 확대하지 않는다." },
+    ],
+  },
+  "qwen36-hybrid-runtime": {
+    title: "Qwen3.6 hybrid runtime 글이 소유하는 범위",
+    owns: [
+      "Attention KV와 Delta recurrent·convolution state를 request별 성장축으로 분리하는 runtime memory",
+      "Prefill·decode·MTP에서 세 cache를 같은 accepted prefix에 원자적으로 commit·rollback하는 transaction",
+    ],
+    reuses: [
+      { label: "Qwen3.6의 두 memory shape", href: "/ai/qwen36-hybrid-architecture" },
       { label: "vLLM cache block과 hybrid groups", href: "/ai/vllm-paged-attention" },
       { label: "Speculative draft·verify·commit", href: "/ai/vllm-spec-decode" },
     ],
     evidence: [
-      { kind: "primary-source", rule: "모델명·layer pattern·head dimensions·dtype·context·MTP·vision configuration은 Qwen3.6-27B 공식 model card와 config revision에 귀속한다." },
-      { kind: "primary-source", rule: "BF16 total_size와 FP8·BF16 parameter histogram은 각각 official safetensors index와 Qwen3.6-27B-FP8 checkpoint revision에 귀속한다." },
-      { kind: "standard", rule: "Recurrent matrix shape·chunk/recurrent path는 확인한 Transformers reference source에, hybrid block allocation은 확인한 vLLM stable design revision에 귀속한다." },
-      { kind: "project-claim", rule: "28.75 GiB weight·64 KiB/token KV·144 MiB state와 48 GiB known floor는 명시한 artifact·logical shape 계산이며 allocator padding·TP·kernel workspace를 포함한 physical VRAM 또는 262K admission 보장으로 확대하지 않는다." },
+      { kind: "standard", rule: "Hybrid cache grouping은 vLLM stable design에, chunk·recurrent path와 fallback은 확인한 Transformers reference revision에 귀속한다." },
+      { kind: "project-claim", rule: "Prefix transaction은 KV·Delta·convolution state를 같은 accepted boundary에서 비교하는 lifecycle contract이며 특정 engine의 atomic API 존재를 주장하지 않는다." },
+    ],
+  },
+  "qwen36-long-context-deployment": {
+    title: "Qwen3.6 long-context deployment 글이 소유하는 범위",
+    owns: [
+      "Partial multimodal RoPE와 text·image·video token position axes",
+      "Native 262K와 extended 1.01M context의 지원·품질 claim 경계",
+      "Qwen official BF16·mixed-FP8 payload를 48 GiB known floor에 적용하는 계산",
+      "Architecture·memory·kernel·quality receipt로 context profile을 승인하는 release gate",
+    ],
+    reuses: [
+      { label: "Qwen3.6의 두 memory shape", href: "/ai/qwen36-hybrid-architecture" },
+      { label: "Qwen3.6 request state lifecycle", href: "/ai/qwen36-hybrid-runtime" },
+      { label: "Model weight·KV·workspace VRAM 계산 정본", href: "/ai/model-vram-budgeting" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Native·extended context와 modality support는 Qwen 공식 model card에, partial mRoPE layout은 official config·Transformers reference에 귀속한다." },
+      { kind: "primary-source", rule: "BF16 total_size와 FP8·BF16 histogram은 official safetensors index와 mixed-FP8 checkpoint revision에 귀속한다." },
+      { kind: "project-claim", rule: "44.89 GiB known floor와 3.11 GiB 후보 공간은 logical 적용 예이며 physical 262K admission과 retrieval 품질 보장이 아니다." },
     ],
   },
   "model-vram-budgeting": {
@@ -7157,7 +7184,7 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [
       { label: "Quantization과 resident-memory ledger", href: "/ai/quantization" },
       { label: "KV cache와 serving capacity", href: "/ai/hybrid-attention-serving" },
-      { label: "Qwen3.6 hybrid request state 적용", href: "/ai/qwen36-hybrid-architecture" },
+      { label: "Qwen3.6 hybrid request state 적용", href: "/ai/qwen36-hybrid-runtime" },
     ],
     evidence: [
       { kind: "primary-source", rule: "Parameter·dtype·payload는 배포할 exact checkpoint index와 tensor metadata revision에 귀속한다." },

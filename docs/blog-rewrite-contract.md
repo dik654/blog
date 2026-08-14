@@ -117,6 +117,7 @@ build 통과는 완료의 증거가 아니며, 아래 Definition of Done을 모�
 
 ### 6.1 지식 그래프 갱신 규칙
 
+- Article CRUD와 knowledge graph 갱신은 앞뒤로 한 번씩 끝나는 절차가 아니라 같은 편집 안에서 반복한다. 글을 분리·병합·개명하는 중 새 독립 개념, 선수 지식, 조합 경계가 드러나면 node·edge·canonical owner를 즉시 보강하고, 확장된 그래프가 다시 route 경계를 바꾸는지 재검토한다. 처음 만든 route 설계나 현재 article 수를 보존하려고 필요한 node를 누락하거나 한 글에 여러 학습 단위를 되밀어 넣지 않는다.
 - 새 문서·논문·모델을 읽을 때 처음 보는 용어를 발견하면 먼저 knowledge graph에서 같은 concept node와 alias를 검색한다.
 - 기존 node가 있으면 정의를 복제하지 않고 canonical article로 연결하며, 현재 글에는 `prerequisite·produces·optimizes·contrasts·constrains·evaluates·extends` 중 관계와 사용 이유만 추가한다.
 - 기존 node가 없으면 정의·canonical owner·관계 edge를 함께 등록한다. 정본 설명이 아직 없으면 해당 canonical article의 보강 또는 새 글을 미완료 작업으로 등록한다.
