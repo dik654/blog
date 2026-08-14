@@ -16,6 +16,10 @@ const termBreakdown = fs.readFileSync(
   "src/components/articles/term-breakdown.tsx",
   "utf8",
 );
+const denseTermFlow = fs.readFileSync(
+  "src/components/articles/dense-term-flow.tsx",
+  "utf8",
+);
 const globalStyles = fs.readFileSync("src/index.css", "utf8");
 const cloudArticle = fs.readFileSync(
   "src/pages/articles/blockchain/filecoin-onchain-cloud/ModernArticle.tsx",
@@ -85,6 +89,13 @@ const contract = {
     globalStyles.includes("p:has(> strong:nth-of-type(3))") &&
     globalStyles.includes("p:has(> code:nth-of-type(3))") &&
     globalStyles.includes('content: "\\A — ";'),
+  densePlainTextListsBreakLines:
+    articlePage.includes("useDenseTermFlow") &&
+    articlePage.includes("articleBodyRef") &&
+    denseTermFlow.includes("MutationObserver") &&
+    denseTermFlow.includes('split("·")') &&
+    denseTermFlow.includes("marker.dataset.termFlowMarker") &&
+    globalStyles.includes('p[data-dense-term-flow="true"]'),
   cloudTermsSeparated:
     (cloudArticle.match(/<TermBreakdown/g) ?? []).length >= 4 &&
     cloudArticle.includes("Dataset generation을 고정하는 필드") &&

@@ -1,5 +1,5 @@
 import { useParams, useLocation } from "react-router-dom";
-import { Suspense, createElement, lazy, useEffect } from "react";
+import { Suspense, createElement, lazy, useEffect, useRef } from "react";
 import { categories, getArticle } from "@/content";
 import ArticleLayout from "@/components/ArticleLayout";
 import ArticleEvidenceRail from "@/components/articles/article-evidence-rail";
@@ -10,6 +10,7 @@ import ArticleLearningContractView, {
 import { ARTICLE_EVIDENCE } from "@/content/article-evidence";
 import { ARTICLE_LEARNING } from "@/content/article-learning";
 import { getArticleConceptFlow } from "@/content/article-guidance";
+import { useDenseTermFlow } from "@/components/articles/dense-term-flow";
 
 const articleComponents = new Map(
   categories.flatMap((category) =>
@@ -28,6 +29,8 @@ export default function ArticlePage() {
 
   const result = getArticle(category ?? "", articleSlug ?? "");
   const { hash } = useLocation();
+  const articleBodyRef = useRef<HTMLDivElement>(null);
+  useDenseTermFlow(articleBodyRef, `${category ?? ""}/${articleSlug ?? ""}`);
 
   useEffect(() => {
     if (!hash) return;
@@ -68,7 +71,7 @@ export default function ArticlePage() {
         article={result.article}
         flow={conceptFlow}
       />
-      <div data-article-body>
+      <div ref={articleBodyRef} data-article-body>
         <Suspense
           fallback={
             <p className="text-muted-foreground animate-pulse">로딩 중...</p>
@@ -79,7 +82,10 @@ export default function ArticlePage() {
       </div>
       {learning && <ArticleLearningContractView contract={learning} />}
       {evidence && (
-        <ArticleEvidenceRail items={evidence} paperReadings={learning?.papers} />
+        <ArticleEvidenceRail
+          items={evidence}
+          paperReadings={learning?.papers}
+        />
       )}
     </ArticleLayout>
   );

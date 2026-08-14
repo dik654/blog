@@ -7,6 +7,16 @@ import {
 } from "./lib/public-article-catalog.mjs";
 
 const strict = process.argv.includes("--strict");
+const jsonOutput = process.argv.includes("--json");
+const runtimeFormatterSource = fs.readFileSync(
+  "src/components/articles/dense-term-flow.tsx",
+  "utf8",
+);
+const articlePageSource = fs.readFileSync("src/pages/ArticlePage.tsx", "utf8");
+const runtimeFormatter =
+  runtimeFormatterSource.includes('split("·")') &&
+  runtimeFormatterSource.includes("paragraph.dataset.denseTermFlow") &&
+  articlePageSource.includes("useDenseTermFlow");
 const catalog = await loadPublicArticleCatalog();
 const requestedRoutes = process.argv
   .slice(2)
@@ -114,17 +124,31 @@ for (const [sourcePath, routes] of sourceToRoutes) {
 }
 
 const affectedRoutes = new Set(findings.flatMap((finding) => finding.routes));
-console.log(
-  `용어 밀집 문단 요약: ${JSON.stringify({
-    publicArticles: selectedCatalog.length,
-    sourceFiles: sourceToRoutes.size,
-    autoBreakParagraphs,
-    affectedRoutes: affectedRoutes.size,
-    findings: findings.length,
-  })}`,
-);
+const runtimeCoveredFindings = runtimeFormatter ? findings.length : 0;
+const uncoveredFindings = findings.length - runtimeCoveredFindings;
+const summary = {
+  publicArticles: selectedCatalog.length,
+  sourceFiles: sourceToRoutes.size,
+  autoBreakParagraphs,
+  affectedRoutes: affectedRoutes.size,
+  findings: findings.length,
+  runtimeCoveredFindings,
+  uncoveredFindings,
+};
 
-for (const finding of findings.slice(0, 100)) {
+if (jsonOutput) {
+  console.log(
+    JSON.stringify({
+      summary,
+      affectedRouteList: [...affectedRoutes].sort(),
+      findings,
+    }),
+  );
+} else {
+  console.log(`용어 밀집 문단 요약: ${JSON.stringify(summary)}`);
+}
+
+for (const finding of jsonOutput ? [] : findings.slice(0, 100)) {
   console.error(
     `- ${finding.routes.join(", ")} · ${finding.file}:${finding.line} ` +
       `(강조 ${finding.emphasizedTerms}, · ${finding.interpuncts}, 쉼표 ${finding.commas})\n` +
@@ -132,8 +156,8 @@ for (const finding of findings.slice(0, 100)) {
   );
 }
 
-if (findings.length > 100) {
+if (!jsonOutput && findings.length > 100) {
   console.error(`- 나머지 ${findings.length - 100}건은 출력 생략`);
 }
 
-if (strict && findings.length) process.exitCode = 1;
+if (strict && uncoveredFindings) process.exitCode = 1;

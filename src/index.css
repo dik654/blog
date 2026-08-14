@@ -220,4 +220,19 @@
   [data-article-body] p:has(> code:nth-of-type(3)) > code::after {
     content: "" !important;
   }
+
+  /*
+   * 강조 markup이 없는 legacy fixture/receipt 목록도 가운데점마다 실제 줄을
+   * 나눈다. 이는 읽기용 fallback이며, 처음 소개하는 개념은 TermBreakdown에서
+   * 정의·예·경계를 갖춰 설명해야 한다.
+   */
+  [data-article-body] p[data-dense-term-flow="true"] {
+    border-left: 1px solid color-mix(in oklab, var(--primary) 35%, transparent);
+    padding-left: 1rem;
+    line-height: 1.85;
+  }
+  [data-article-body] [data-term-flow-marker="true"] {
+    color: var(--muted-foreground);
+    font-weight: 700;
+  }
 }

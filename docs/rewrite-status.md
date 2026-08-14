@@ -32,9 +32,11 @@
 - [x] `TermBreakdown` 공용 컴포넌트를 추가해 `용어 한 줄 → 상세 설명 → 작은 예 → 다른 필드와의 경계`를 본문 폭의 세로 목록으로 렌더
 - [x] `filecoin-onchain-cloud`의 네 service 기록, dataset generation 12개 필드, store/addPieces receipt, period state 3개 값, payment rail 5개 항목을 장문 나열에서 세로 설명으로 전환
 - [x] 굵게 표시한 용어가 한 문단에 세 개 이상 직접 등장하는 기존 문단 260개는 전역 article style에서 각 용어가 `— 용어`로 새 줄을 소유하도록 보강
+- [x] 강조 markup이 없는 fixture·receipt·benchmark 목록도 전역 렌더 단계에서 가운데점마다 실제 줄을 나누고 `—` 항목으로 표시하도록 보강
 - [x] 실제 공개 import closure 2,640개 파일을 검사하는 `audit:terms`를 추가하고 현재 `filecoin-onchain-cloud`의 밀집 문단 후보가 0임을 확인
 - [x] Playwright 390px 전역 재검사에서 공개 386 route의 실제 렌더 문단 265개·용어 996개에 줄바꿈 규칙이 적용되고 page overflow·style 누락·console error가 모두 0임을 확인
-- [ ] 자동 줄바꿈만으로 의미가 충분하지 않은 168개 공개 글의 210개 후보 문단은 `TermBreakdown` 또는 문단별 정의 절로 계속 전환
+- [x] plain-text 후보가 있는 168 route를 브라우저 35개 단위의 새 세션으로 재검사해 문단 227개·항목 1,360개가 실제 줄바꿈되고 overflow·invalid marker·console error가 0임을 확인
+- [ ] 줄바꿈은 전역 적용됐지만, 그중 실제 새 개념 소개인 문단은 fixture 목록과 분리해 `TermBreakdown` 또는 문단별 정의 절로 계속 전환
 
 ## 새 learning contract 기준으로 다시 열어 둔 글
 
