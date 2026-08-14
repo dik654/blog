@@ -23,7 +23,8 @@
 - [ ] 모든 `ExplainedFormula`가 generic fallback이 아니라 식의 실제 항과 연산 의도를 명시한 `annotatedFormula`·`operations`를 갖도록 전역 전환
 - [x] 첫 분리 사례 `/ai/model-vram-budgeting`을 범용 VRAM 정본으로 만들고 Qwen 글은 Qwen-specific architecture 적용 예만 소유하도록 중복 축소. Public catalog 391, graph 2,309 concepts·3,390 relations·owner/invariant 0, selected learning·route·Viz·build 통과
 - [x] RLHF 한 글에 섞여 있던 DPO·Constitutional AI·ORPO·KTO를 독립 public route로 분리하고 `/ai/rlhf`는 reward model·online PPO만 소유하도록 축소. 다섯 route 모두 topology `keep`, exact 6+4, explicit operation-annotated formula, 신규 keyboard Viz와 selected strict audit 통과
-- [ ] 현재 전역 잔여량: public catalog 395, topology `split-review` 91·`rename-or-split-review` 2, explicit formula 19/1,053·전환 대기 1,034. 휴리스틱 후보는 본문 학습 질문을 확인한 뒤 실제 CRUD한다.
+- [x] MCP의 protocol core·primitive·transport·production operation을 독립 public route로 분리하고 Claw MCP 구현 사례와 소유권을 분리. 네 route 모두 topology `keep`, 새 prerequisite edge 5개, exact 6+4, operation-annotated formula, 자동 재생·키보드 Viz와 selected strict audit 통과
+- [ ] 현재 전역 잔여량: public catalog 398, topology `split-review` 90·`rename-or-split-review` 2, explicit formula 23/1,057·전환 대기 1,034. 휴리스틱 후보는 본문 학습 질문을 확인한 뒤 실제 CRUD한다.
 
 ### 2026-08-15 · WEBCAT · Ethereum future roadmap · binary-field proving · permissioned RWA markets
 

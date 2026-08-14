@@ -681,7 +681,7 @@ export default function ArticleLessonFlowViz({
                   <motion.section
                     key={`${step.id}-example`}
                     data-concept-example
-                    className="min-w-0 border-l-2 border-primary/50 bg-background px-4 py-3 [overflow-wrap:anywhere]"
+                    className="min-w-0 border-l border-primary/50 bg-background px-4 py-3 [overflow-wrap:anywhere]"
                     initial={reduceMotion ? false : { opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                   >
@@ -700,7 +700,7 @@ export default function ArticleLessonFlowViz({
                   <motion.section
                     key={`${step.id}-boundary`}
                     data-concept-boundary
-                    className="min-w-0 border-l-2 border-amber-600/50 bg-background px-4 py-3 [overflow-wrap:anywhere]"
+                    className="min-w-0 border-l border-amber-600/50 bg-background px-4 py-3 [overflow-wrap:anywhere]"
                     initial={reduceMotion ? false : { opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                   >

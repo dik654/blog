@@ -2153,22 +2153,52 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "stateless core와 host·client·server의 현재 책임",
     },
     {
-      kind: "공식 문서",
-      label: "MCP 2026-07-28 — Transports",
-      href: "https://modelcontextprotocol.io/specification/2026-07-28/basic/transports",
-      note: "stdio·Streamable HTTP와 legacy HTTP+SSE 호환 경계",
+      kind: "공식 연구",
+      label: "MCP 2026-07-28 release notes",
+      href: "https://blog.modelcontextprotocol.io/posts/2026-07-28/",
+      note: "handshake 제거·self-describing request·discovery 변경 요약",
     },
+  ],
+  "ai/mcp-primitives": [
     {
       kind: "공식 문서",
       label: "MCP 2026-07-28 — Tools",
       href: "https://modelcontextprotocol.io/specification/2026-07-28/server/tools",
-      note: "inputSchema·outputSchema·structuredContent의 현재 계약",
+      note: "Tool list/call·schema·resultType·MRTR·cache의 현재 계약",
     },
     {
-      kind: "공식 연구",
-      label: "MCP 2026-07-28 release notes",
-      href: "https://blog.modelcontextprotocol.io/posts/2026-07-28/",
-      note: "stateless 전환·MRTR·authorization·deprecation 변경 요약",
+      kind: "공식 규격",
+      label: "JSON Schema 2020-12 Core",
+      href: "https://json-schema.org/draft/2020-12/json-schema-core",
+      note: "MCP schema가 사용하는 JSON instance validation의 구조적 경계",
+    },
+  ],
+  "ai/mcp-transports": [
+    {
+      kind: "공식 문서",
+      label: "MCP 2026-07-28 — Transports",
+      href: "https://modelcontextprotocol.io/specification/2026-07-28/basic/transports",
+      note: "stdio·Streamable HTTP의 배포와 lifecycle 경계",
+    },
+    {
+      kind: "공식 문서",
+      label: "MCP 2026-07-28 — Streamable HTTP",
+      href: "https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/streamable-http",
+      note: "POST·request-scoped SSE·routing header·cancel·subscription wire semantics",
+    },
+  ],
+  "ai/mcp-server-operations": [
+    {
+      kind: "공식 문서",
+      label: "MCP 2026-07-28 — Authorization",
+      href: "https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization",
+      note: "issuer·audience·resource indicator와 remote authorization 경계",
+    },
+    {
+      kind: "공식 문서",
+      label: "MCP 2026-07-28 — Changelog",
+      href: "https://modelcontextprotocol.io/specification/2026-07-28/changelog",
+      note: "extension·deprecation·migration lifecycle의 revision 근거",
     },
   ],
   "ai/agentic-patterns": [

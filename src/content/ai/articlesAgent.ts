@@ -45,16 +45,51 @@ export const agentArticles: Article[] = [
   },
   {
     slug: "mcp-protocol",
-    title: "MCP 2026-07-28: Host · Tools · Stateless Transport",
+    title: "MCP 기초: Host · Client · Server와 Stateless Core",
     subcategory: "ai-agents",
     sections: [
-      { id: "overview", title: "MCP가 왜 필요한가" },
-      { id: "architecture", title: "Host가 소유하는 연결과 권한" },
-      { id: "primitives", title: "Tools · Resources · Prompts" },
-      { id: "transport", title: "stdio · Streamable HTTP" },
-      { id: "implementation", title: "MCP server 구현과 검증" },
+      { id: "overview", title: "MCP가 해결하는 연결 문제" },
+      { id: "roles", title: "Host · Client · Server 한 역할씩" },
+      { id: "request-envelope", title: "Stateless request와 explicit handle" },
+      { id: "next-map", title: "Primitive · transport · 운영으로 확장" },
     ],
     component: () => import("@/pages/articles/ai/mcp-protocol"),
+  },
+  {
+    slug: "mcp-primitives",
+    title: "MCP Primitives: Tool · Resource · Prompt",
+    subcategory: "ai-agents",
+    sections: [
+      { id: "overview", title: "Primitive를 control 방식으로 구분" },
+      { id: "three-primitives", title: "Tool · Resource · Prompt의 형태" },
+      { id: "tool-contract", title: "Schema · result · input required" },
+      { id: "list-cache", title: "목록 cache와 실행 권한 분리" },
+    ],
+    component: () => import("@/pages/articles/ai/mcp-primitives"),
+  },
+  {
+    slug: "mcp-transports",
+    title: "MCP Transports: stdio · Streamable HTTP",
+    subcategory: "ai-agents",
+    sections: [
+      { id: "overview", title: "Message와 운반 경로 분리" },
+      { id: "stdio", title: "Local child process와 pipe" },
+      { id: "streamable-http", title: "Remote endpoint와 routing" },
+      { id: "lifetimes", title: "Response · cancel · subscription 수명" },
+    ],
+    component: () => import("@/pages/articles/ai/mcp-transports"),
+  },
+  {
+    slug: "mcp-server-operations",
+    title: "MCP Server 운영: Authorization · Retry · Receipt",
+    subcategory: "ai-agents",
+    sections: [
+      { id: "overview", title: "Proposal에서 effect까지" },
+      { id: "authorization", title: "네 단계 trust gate" },
+      { id: "retry-receipt", title: "Operation ID와 effect receipt" },
+      { id: "release", title: "Extension · failure · rollback" },
+    ],
+    component: () => import("@/pages/articles/ai/mcp-server-operations"),
   },
 
   /* ── 3. 에이전트 패턴 & 하네스 ── */

@@ -33315,7 +33315,13 @@ export const ARTICLE_LEARNING: Readonly<
         id: "mcp-retry-idempotency-boundary",
         role: "Transport retry가 side effect를 중복시키지 않도록 operation identity와 receipt를 설계합니다.",
       },
-    ],
+    ].filter(({ id }) => [
+      "mcp-integration-protocol-boundary",
+      "mcp-host-client-server-boundary",
+      "mcp-stateless-request-envelope",
+      "mcp-version-capability-discovery",
+      "mcp-explicit-application-handle",
+    ].includes(id)),
     conceptExplanations: [
       {
         id: "mcp-integration-protocol-boundary",
@@ -33467,7 +33473,19 @@ export const ARTICLE_LEARNING: Readonly<
         boundary:
           "HTTP POST라는 이유만으로 retry가 안전하지 않으며 read-only·idempotent·non-idempotent operation을 나누고 ambiguous completion을 조회할 경로가 필요합니다.",
       },
-    ],
+    ].filter(({ id }) => [
+      "mcp-integration-protocol-boundary",
+      "mcp-host-client-server-boundary",
+      "mcp-stateless-request-envelope",
+      "mcp-version-capability-discovery",
+      "mcp-explicit-application-handle",
+    ].includes(id)).map((explanation) => ({
+      ...explanation,
+      sectionId:
+        explanation.id === "mcp-integration-protocol-boundary" ? "overview" :
+        explanation.id === "mcp-host-client-server-boundary" ? "roles" :
+        "request-envelope",
+    })),
     conceptStages: [
       {
         label: "Frame",
@@ -33518,8 +33536,9 @@ export const ARTICLE_LEARNING: Readonly<
           "mcp-extension-deprecation-lifecycle",
         ],
       },
-    ],
+    ].filter(({ label }) => label === "Frame" || label === "Describe"),
     exercises: [
+      ...([
       {
         level: "basic",
         question:
@@ -33702,6 +33721,52 @@ export const ARTICLE_LEARNING: Readonly<
         ],
         sectionId: "implementation",
       },
+      ] satisfies ArticleExercise[]).slice(0, 4).map((exercise, index) => ({
+        ...exercise,
+        sectionId: index === 0 ? "overview" : index === 1 ? "roles" : "request-envelope",
+      })),
+      {
+        level: "basic",
+        question: "Host·client·server가 각각 한 줄로 무엇을 소유하는지 설명하고 local/remote process topology와 구분하라.",
+        answerChecklist: ["host user model policy", "client one server protocol", "server domain capability", "role not process", "local not sandbox"],
+        requiredConcepts: ["mcp-host-client-server-boundary"],
+        sectionId: "roles",
+      },
+      {
+        level: "basic",
+        question: "Host 3개와 service 5개를 전용 adapter와 공통 protocol로 연결할 때 연결 종류를 계산하고 식의 한계를 말하라.",
+        answerChecklist: ["3 times 5 equals 15", "3 plus 5 equals 8", "wire integration only", "authorization remains", "quality remains"],
+        requiredConcepts: ["mcp-integration-protocol-boundary"],
+        sectionId: "roles",
+      },
+      {
+        level: "basic",
+        question: "Self-describing request에 version·client info·capability를 왜 함께 보내는지 설명하라.",
+        answerChecklist: ["no hidden session", "request scoped", "any worker", "compatibility", "not authentication"],
+        requiredConcepts: ["mcp-stateless-request-envelope", "mcp-version-capability-discovery"],
+        sectionId: "request-envelope",
+      },
+      {
+        level: "advanced",
+        question: "ServerInfo를 trust identity로 사용한 설계의 반례와 교정안을 작성하라.",
+        answerChecklist: ["self reported", "TLS identity", "OAuth issuer", "audience", "version compatibility only", "reject mismatch"],
+        requiredConcepts: ["mcp-version-capability-discovery"],
+        sectionId: "request-envelope",
+      },
+      {
+        level: "advanced",
+        question: "Round-robin worker 환경에서 20분 job을 explicit handle로 이어 가는 요청·권한·expiry sequence를 설계하라.",
+        answerChecklist: ["opaque handle", "explicit field", "owner binding", "scope", "authorization each call", "status", "cancel", "expiry"],
+        requiredConcepts: ["mcp-explicit-application-handle", "mcp-stateless-request-envelope"],
+        sectionId: "request-envelope",
+      },
+      {
+        level: "advanced",
+        question: "MCP 호환을 security 보장으로 오해한 integration을 protocol·host·server 책임으로 다시 나누라.",
+        answerChecklist: ["message compatibility", "host exposure", "user consent", "server authorization", "sandbox", "domain correctness", "independent evidence"],
+        requiredConcepts: ["mcp-integration-protocol-boundary", "mcp-host-client-server-boundary"],
+        sectionId: "next-map",
+      },
     ],
     papers: [
       {
@@ -33761,6 +33826,122 @@ export const ARTICLE_LEARNING: Readonly<
           "SSE가 durable queue이거나 network close가 이미 발생한 side effect를 rollback한다는 뜻은 아님",
         sectionId: "paper-mcp-streamable-http",
       },
+    ].slice(0, 2).map((paper, index) => ({
+      ...paper,
+      sectionId: index === 0 ? "paper-mcp-2026-spec" : "paper-mcp-2026-release",
+    })),
+  },
+  "ai/mcp-primitives": {
+    entryLevel: true,
+    entryNote: "MCP core 외의 선행 지식을 가정하지 않습니다. Tool 하나의 control 방식에서 시작해 Resource·Prompt를 대조하고 schema·result·cache로 완성합니다.",
+    coreIdea: "MCP primitive는 모두 model 함수가 아닙니다. Tool은 model-proposed operation, Resource는 URI-addressed context, Prompt는 user-selected template이며 schema·result state·list cache는 각 control boundary를 보존해야 합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "mcp-tool-resource-prompt-boundary", role: "Tool·Resource·Prompt를 control·identity·lifecycle로 구분합니다." },
+      { id: "mcp-json-schema-result-contract", role: "입력·출력 schema와 protocol·tool·input-required 결과를 나눕니다." },
+      { id: "mcp-list-cache-contract", role: "Deterministic list cache와 call-time authorization을 분리합니다." },
+      { id: "mcp-mrtr-input-required", role: "작업 중 필요한 사용자 입력을 새 round trip으로 이어 갑니다." },
+    ],
+    conceptExplanations: [
+      { id: "mcp-tool-resource-prompt-boundary", sectionId: "three-primitives", intuition: "동작 버튼·주소 있는 문서·재사용 양식을 한 서랍에 넣지 않는 구분입니다.", workedExample: "search_issues는 Tool, db://schema는 Resource, review_code는 Prompt입니다.", boundary: "조회라는 이유만으로 Resource가 되지 않으며 control 방식과 lifecycle로 판단합니다." },
+      { id: "mcp-json-schema-result-contract", sectionId: "tool-contract", intuition: "신청서와 영수증의 칸을 정하고 접수 실패·업무 오류·추가 입력을 다른 상태로 표시합니다.", workedExample: "search_issues의 query·limit 입력과 items 결과를 각각 검증합니다.", boundary: "Schema-valid는 authorized·factually correct와 다릅니다." },
+      { id: "mcp-list-cache-contract", sectionId: "list-cache", intuition: "메뉴판을 저장하되 지점·사용자·만료 시각을 함께 적는 것과 같습니다.", workedExample: "tenant·role·server revision을 cache key에 넣고 TTL 뒤 다시 list합니다.", boundary: "Cache된 목록은 현재 실행 권한 영수증이 아닙니다." },
+      { id: "mcp-mrtr-input-required", sectionId: "tool-contract", intuition: "빠진 정보를 실패로 끝내지 않고 질문 형태와 현재 작업 표식을 돌려주는 방식입니다.", workedExample: "예약 날짜 form을 사용자에게 보여 준 뒤 inputResponses로 다시 호출합니다.", boundary: "Model이 민감한 답을 추정하거나 재호출이 이전 effect를 반복해서는 안 됩니다." },
+    ],
+    conceptStages: [
+      { label: "Name", relation: "Control 방식으로 세 primitive를 분리", concepts: ["mcp-tool-resource-prompt-boundary"] },
+      { label: "Contract", relation: "입력·출력·terminal state를 typed contract로 고정", concepts: ["mcp-json-schema-result-contract", "mcp-mrtr-input-required"] },
+      { label: "Reuse", relation: "목록 freshness와 실행 권한을 분리", concepts: ["mcp-list-cache-contract"] },
+    ],
+    exercises: [
+      { level: "basic", question: "search_issues·db://schema·review_code를 Tool·Resource·Prompt로 분류하라.", answerChecklist: ["tool action", "resource URI", "prompt template", "control owner", "lifecycle"], requiredConcepts: ["mcp-tool-resource-prompt-boundary"], sectionId: "three-primitives" },
+      { level: "basic", question: "Read-only search가 Resource가 아니라 Tool일 수 있는 이유를 설명하라.", answerChecklist: ["query", "pagination", "computation", "model proposal", "not side effect only"], requiredConcepts: ["mcp-tool-resource-prompt-boundary"], sectionId: "three-primitives" },
+      { level: "basic", question: "Malformed JSON·DB timeout·금지 project·추가 date를 네 result class로 나누라.", answerChecklist: ["protocol error", "tool error", "authorization", "input required", "complete result"], requiredConcepts: ["mcp-json-schema-result-contract", "mcp-mrtr-input-required"], sectionId: "tool-contract" },
+      { level: "basic", question: "InputSchema와 outputSchema가 각각 언제 무엇을 검사하는지 설명하라.", answerChecklist: ["before call", "arguments", "after work", "structured content", "domain validation separate"], requiredConcepts: ["mcp-json-schema-result-contract"], sectionId: "tool-contract" },
+      { level: "basic", question: "tools/list가 deterministic order를 가져야 하는 이유를 cache와 prompt 관점에서 설명하라.", answerChecklist: ["same set", "stable order", "client cache", "prompt cache", "less churn"], requiredConcepts: ["mcp-list-cache-contract"], sectionId: "list-cache" },
+      { level: "basic", question: "목록 시각 10:00와 TTL 30초에서 재조회 시각을 계산하고 authorization 시점을 말하라.", answerChecklist: ["10:00:30", "TTL addition", "call time", "permission can change", "invalidate early"], requiredConcepts: ["mcp-list-cache-contract"], sectionId: "list-cache" },
+      { level: "advanced", question: "Tenant·user·role별 tool 목록이 다른 cache key와 invalidation contract를 설계하라.", answerChecklist: ["tenant", "user role", "server revision", "TTL", "permission event", "auth each call"], requiredConcepts: ["mcp-list-cache-contract"], sectionId: "list-cache" },
+      { level: "advanced", question: "Schema-valid하지만 업무상 위험한 create_ticket input 반례와 추가 gate를 설계하라.", answerChecklist: ["schema valid", "domain rule", "authorization", "user consent", "effect limit", "audit"], requiredConcepts: ["mcp-json-schema-result-contract"], sectionId: "tool-contract" },
+      { level: "advanced", question: "MRTR 예약 flow가 이전 side effect를 반복하지 않도록 state·identity·consent를 설계하라.", answerChecklist: ["input request", "request state", "new RPC id", "operation identity", "checkpoint", "user consent", "no guessing"], requiredConcepts: ["mcp-mrtr-input-required"], sectionId: "tool-contract" },
+      { level: "advanced", question: "Tool description을 permission으로 사용한 host의 실패 경로와 교정안을 작성하라.", answerChecklist: ["untrusted description", "host exposure", "server auth", "resource ACL", "schema not permission", "negative fixture"], requiredConcepts: ["mcp-tool-resource-prompt-boundary", "mcp-json-schema-result-contract"], sectionId: "overview" },
+    ],
+    papers: [
+      { title: "MCP 2026-07-28 — Tools", href: "https://modelcontextprotocol.io/specification/2026-07-28/server/tools", problem: "Model-controlled action의 discovery·input·result를 상호 운용해야 합니다.", contribution: "Tool list/call·JSON Schema·result type·MRTR·cache semantics를 규정합니다.", assumptions: "해당 revision의 Tool capability를 지원합니다.", evidenceScope: "Tool primitive의 normative contract입니다.", notClaim: "Schema가 authorization·사실성·effect safety를 보장하지 않습니다.", sectionId: "paper-mcp-tools" },
+      { title: "JSON Schema 2020-12 Core", href: "https://json-schema.org/draft/2020-12/json-schema-core", problem: "JSON instance의 구조 제약을 구현체 간 동일하게 표현해야 합니다.", contribution: "Schema vocabulary와 evaluation model을 정의합니다.", assumptions: "MCP가 지정한 dialect와 validator behavior를 고정합니다.", evidenceScope: "JSON 구조 validation에 한정합니다.", notClaim: "Domain correctness·권한·사실성을 검증하지 않습니다.", sectionId: "paper-json-schema" },
+    ],
+  },
+  "ai/mcp-transports": {
+    entryLevel: true,
+    entryNote: "Network를 안다고 가정하지 않습니다. JSON-RPC message 하나가 local child process와 remote endpoint로 이동하는 모습을 대조합니다.",
+    coreIdea: "stdio와 Streamable HTTP는 같은 MCP message를 옮기지만 process ownership·identity·authorization·stream lifetime이 다릅니다. Response·cancel·subscription도 connection이 아니라 논리 수명으로 구분합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "mcp-stdio-streamable-http-boundary", role: "Local pipe와 remote HTTP의 배포·trust 책임을 나눕니다." },
+      { id: "mcp-header-routing-integrity", role: "Routing header와 JSON-RPC body의 method/name 일치를 검사합니다." },
+      { id: "mcp-request-cancellation-subscription-boundary", role: "한 request 취소와 장기 event subscription 수명을 분리합니다." },
+    ],
+    conceptExplanations: [
+      { id: "mcp-stdio-streamable-http-boundary", sectionId: "stdio", intuition: "책상 위 child process와 network 너머 공동 service는 같은 message를 받아도 관리자가 다릅니다.", workedExample: "Formatter는 stdio, enterprise CRM은 Streamable HTTP로 연결합니다.", boundary: "Local은 sandbox와 같지 않고 remote는 HTTP만으로 authorized되지 않습니다." },
+      { id: "mcp-header-routing-integrity", sectionId: "streamable-http", intuition: "상자 겉면의 목적지와 안쪽 송장이 같은지 확인하는 것과 같습니다.", workedExample: "Mcp-Method·Mcp-Name으로 route하고 body와 다르면 HeaderMismatch로 거부합니다.", boundary: "Header 일치가 authentication·body schema validation을 대신하지 않습니다." },
+      { id: "mcp-request-cancellation-subscription-boundary", sectionId: "lifetimes", intuition: "진행 중 인쇄를 멈추는 것과 새 공지를 계속 받는 것은 서로 다른 수명입니다.", workedExample: "Request SSE close는 cancel signal, subscriptions/listen은 장기 event channel입니다.", boundary: "Connection close가 이미 생긴 외부 effect를 rollback하지 않습니다." },
+    ],
+    conceptStages: [
+      { label: "Carry", relation: "같은 message를 local·remote 경계로 운반", concepts: ["mcp-stdio-streamable-http-boundary"] },
+      { label: "Route", relation: "Header index와 body integrity를 함께 검사", concepts: ["mcp-header-routing-integrity"] },
+      { label: "Live", relation: "Response·cancel·subscription 수명을 분리", concepts: ["mcp-request-cancellation-subscription-boundary"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Local formatter와 remote CRM에 stdio·Streamable HTTP를 각각 선택하고 이유를 말하라.", answerChecklist: ["child process", "pipe", "remote POST", "shared service", "different lifecycle"], requiredConcepts: ["mcp-stdio-streamable-http-boundary"], sectionId: "overview" },
+      { level: "basic", question: "stdio의 stdin·stdout·stderr가 각각 무엇을 운반하는지 설명하라.", answerChecklist: ["request", "protocol response", "diagnostic", "no stdout logs", "child lifecycle"], requiredConcepts: ["mcp-stdio-streamable-http-boundary"], sectionId: "stdio" },
+      { level: "basic", question: "Local server도 sandbox가 필요한 이유를 두 권한 예로 설명하라.", answerChecklist: ["same machine", "filesystem permission", "network permission", "process separation insufficient", "least privilege"], requiredConcepts: ["mcp-stdio-streamable-http-boundary"], sectionId: "stdio" },
+      { level: "basic", question: "Streamable HTTP request에서 connection·authorization·routing header·body를 순서대로 구분하라.", answerChecklist: ["TLS origin", "token audience scope", "method name header", "body schema", "independent checks"], requiredConcepts: ["mcp-header-routing-integrity"], sectionId: "streamable-http" },
+      { level: "basic", question: "Header Mcp-Name=search와 body name=delete가 다를 때 처리와 이유를 말하라.", answerChecklist: ["mismatch", "reject", "gateway routing", "policy bypass", "not authentication"], requiredConcepts: ["mcp-header-routing-integrity"], sectionId: "streamable-http" },
+      { level: "basic", question: "Request response·cancel·subscription을 각 수명과 종료 조건으로 나누라.", answerChecklist: ["one request", "cancel signal", "long channel", "independent lifetime", "cleanup"], requiredConcepts: ["mcp-request-cancellation-subscription-boundary"], sectionId: "lifetimes" },
+      { level: "advanced", question: "stdout debug log가 protocol parser를 깨뜨리는 fixture와 관측 항목을 설계하라.", answerChecklist: ["mixed bytes", "parse failure", "stderr", "request id", "process exit", "negative fixture"], requiredConcepts: ["mcp-stdio-streamable-http-boundary"], sectionId: "stdio" },
+      { level: "advanced", question: "Proxy가 duplicate routing header를 normalize할 때 body consistency까지 검증하는 sequence를 설계하라.", answerChecklist: ["duplicate header", "normalization", "body match", "reject ambiguity", "trace", "gateway server both"], requiredConcepts: ["mcp-header-routing-integrity"], sectionId: "streamable-http" },
+      { level: "advanced", question: "Request SSE close 뒤 외부 payment effect가 남은 반례와 status·cleanup contract를 작성하라.", answerChecklist: ["close is signal", "effect may exist", "status lookup", "receipt", "cleanup", "no assumed rollback"], requiredConcepts: ["mcp-request-cancellation-subscription-boundary"], sectionId: "lifetimes" },
+      { level: "advanced", question: "Connect·auth·work·stream 예산을 trace하고 병목별 대응을 고르는 운영안을 작성하라.", answerChecklist: ["four timings", "critical path", "separate trace", "retry attempt", "bottleneck-specific action", "total deadline"], requiredConcepts: ["mcp-stdio-streamable-http-boundary", "mcp-request-cancellation-subscription-boundary"], sectionId: "lifetimes" },
+    ],
+    papers: [
+      { title: "MCP 2026-07-28 — Transports", href: "https://modelcontextprotocol.io/specification/2026-07-28/basic/transports", problem: "MCP message를 local과 remote 환경에서 일관되게 운반해야 합니다.", contribution: "stdio와 Streamable HTTP의 wire·lifecycle·security requirement를 규정합니다.", assumptions: "같은 protocol revision과 transport profile을 사용합니다.", evidenceScope: "표준 transport behavior입니다.", notClaim: "특정 runtime의 안전성과 성능을 인증하지 않습니다.", sectionId: "paper-mcp-transports" },
+      { title: "MCP 2026-07-28 — Streamable HTTP", href: "https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/streamable-http", problem: "HTTP에서 routing·streaming·cancel·subscription을 분리해야 합니다.", contribution: "POST·JSON/request SSE·routing header·consistency semantics를 정의합니다.", assumptions: "Gateway가 header를 보존하고 server가 body를 검증합니다.", evidenceScope: "Streamable HTTP wire semantics입니다.", notClaim: "SSE가 durable queue나 rollback을 제공하지 않습니다.", sectionId: "paper-mcp-http" },
+    ],
+  },
+  "ai/mcp-server-operations": {
+    entryLevel: true,
+    entryNote: "MCP 호출 성공을 production 안전성과 같다고 가정하지 않습니다. Model proposal에서 authorization·effect·receipt로 한 단계씩 진행합니다.",
+    coreIdea: "Production MCP operation은 discovery·proposal·consent·server authorization을 분리하고 stable operation ID와 effect receipt로 ambiguous timeout을 다룹니다. Extension·legacy 경로도 pinned revision과 failure fixture로 배포합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "mcp-authorization-trust-boundary", role: "Discovery부터 server ACL까지 서로 다른 trust gate를 나눕니다." },
+      { id: "mcp-extension-deprecation-lifecycle", role: "Core·extension·legacy compatibility의 release lifecycle을 설계합니다." },
+      { id: "mcp-retry-idempotency-boundary", role: "Operation identity·attempt·effect receipt로 중복 effect를 막습니다." },
+    ],
+    conceptExplanations: [
+      { id: "mcp-authorization-trust-boundary", sectionId: "authorization", intuition: "메뉴판·추천·사용자 확인·출입 카드는 서로 다른 문입니다.", workedExample: "Host가 delete 확인을 받고 server가 token audience·scope·resource ACL을 다시 검사합니다.", boundary: "Description·model reasoning·opaque handle은 권한 증명이 아닙니다." },
+      { id: "mcp-retry-idempotency-boundary", sectionId: "retry-receipt", intuition: "송금 응답을 잃었다고 거래번호를 바꿔 다시 보내지 않고 기존 영수증부터 찾습니다.", workedExample: "create_ticket retry가 stable operationId로 기존 ticket receipt를 반환합니다.", boundary: "HTTP POST나 timeout만으로 미실행을 추정하지 않습니다." },
+      { id: "mcp-extension-deprecation-lifecycle", sectionId: "release", intuition: "공통 도로와 선택 차선, 폐쇄 예정 도로를 같은 기본 경로에 섞지 않는 방식입니다.", workedExample: "Extension capability와 revision을 trace하고 legacy adapter 제거일을 둡니다.", boundary: "Deprecated는 즉시 동작하지 않거나 영구 지원된다는 뜻이 아닙니다." },
+    ],
+    conceptStages: [
+      { label: "Authorize", relation: "Proposal을 현재 policy와 resource 권한으로 검사", concepts: ["mcp-authorization-trust-boundary"] },
+      { label: "Commit", relation: "Operation identity와 receipt로 effect를 한 번만 생성", concepts: ["mcp-retry-idempotency-boundary"] },
+      { label: "Release", relation: "Revision·extension·failure fixture·rollback을 고정", concepts: ["mcp-extension-deprecation-lifecycle"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Discovery·model proposal·user consent·server authorization을 한 줄씩 구분하라.", answerChecklist: ["catalog", "candidate", "user intent", "token ACL", "not interchangeable"], requiredConcepts: ["mcp-authorization-trust-boundary"], sectionId: "authorization" },
+      { level: "basic", question: "Tool description과 serverInfo가 permission proof가 아닌 이유를 설명하라.", answerChecklist: ["self described", "untrusted data", "host policy", "server auth", "identity separate"], requiredConcepts: ["mcp-authorization-trust-boundary"], sectionId: "authorization" },
+      { level: "basic", question: "Operation ID·attempt·effect receipt·status lookup을 각각 정의하라.", answerChecklist: ["logical identity", "network try", "external result", "ambiguous lookup", "separate lifetimes"], requiredConcepts: ["mcp-retry-idempotency-boundary"], sectionId: "retry-receipt" },
+      { level: "basic", question: "세 network attempt 중 첫 attempt만 effect를 만들었다면 E(o)를 계산하라.", answerChecklist: ["indicators 1 0 0", "sum one", "condition satisfied", "attempt not effect", "receipt reuse"], requiredConcepts: ["mcp-retry-idempotency-boundary"], sectionId: "retry-receipt" },
+      { level: "basic", question: "Read retry와 non-idempotent write retry의 차이를 설명하라.", answerChecklist: ["read no new effect", "write duplicate risk", "operation id", "receipt", "status first"], requiredConcepts: ["mcp-retry-idempotency-boundary"], sectionId: "retry-receipt" },
+      { level: "basic", question: "Core·extension·deprecated path를 release config에서 어떻게 분리하는지 설명하라.", answerChecklist: ["small core", "opt in capability", "revision", "compat adapter", "removal window"], requiredConcepts: ["mcp-extension-deprecation-lifecycle"], sectionId: "release" },
+      { level: "advanced", question: "Host 승인만 있고 server ACL이 없는 delete tool의 공격 경로와 교정안을 설계하라.", answerChecklist: ["host compromise", "token audience", "resource ACL", "tenant", "least privilege", "audit"], requiredConcepts: ["mcp-authorization-trust-boundary"], sectionId: "authorization" },
+      { level: "advanced", question: "Response loss 뒤 create_ticket을 안전하게 retry하는 end-to-end sequence를 작성하라.", answerChecklist: ["ambiguous timeout", "stable operation id", "status lookup", "existing receipt", "no duplicate", "new attempt id"], requiredConcepts: ["mcp-retry-idempotency-boundary"], sectionId: "retry-receipt" },
+      { level: "advanced", question: "Receipt retention이 retry window보다 짧을 때 깨지는 invariant와 교정안을 설명하라.", answerChecklist: ["receipt expired", "duplicate effect", "retention longer", "external idempotency", "reject unknown", "monitor"], requiredConcepts: ["mcp-retry-idempotency-boundary"], sectionId: "retry-receipt" },
+      { level: "advanced", question: "Partial frame·late response·권한 변경·legacy client를 포함한 release와 rollback gate를 설계하라.", answerChecklist: ["pinned revisions", "negative fixtures", "effect invariant", "metrics", "legacy usage", "rollback trigger", "audit receipt"], requiredConcepts: ["mcp-extension-deprecation-lifecycle", "mcp-authorization-trust-boundary", "mcp-retry-idempotency-boundary"], sectionId: "release" },
+    ],
+    papers: [
+      { title: "MCP 2026-07-28 — Authorization", href: "https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization", problem: "Remote MCP token을 올바른 issuer·resource에 묶어야 합니다.", contribution: "Authorization discovery·issuer validation·resource indicator를 규정합니다.", assumptions: "Remote HTTP와 해당 authorization profile을 사용합니다.", evidenceScope: "Protocol authorization flow입니다.", notClaim: "Domain ACL·user consent·effect safety를 대신하지 않습니다.", sectionId: "paper-mcp-authorization" },
+      { title: "MCP 2026-07-28 — Changelog", href: "https://modelcontextprotocol.io/specification/2026-07-28/changelog", problem: "Core·extension·deprecated feature의 migration을 revision별로 구분해야 합니다.", contribution: "Breaking change와 lifecycle policy를 기록합니다.", assumptions: "실제 SDK support matrix를 함께 확인합니다.", evidenceScope: "해당 revision의 change lifecycle입니다.", notClaim: "Deprecated가 즉시 삭제되거나 영구 지원된다는 뜻은 아닙니다.", sectionId: "paper-mcp-changelog" },
     ],
   },
   "ai/skills-anatomy": {

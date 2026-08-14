@@ -3057,12 +3057,11 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "mcp-protocol": {
-    title: "MCP protocol 글이 소유하는 범위",
+    title: "MCP core 기초 글이 소유하는 범위",
     owns: [
       "MCP 2026-07-28 stateless request·discovery·explicit handle 계약",
-      "Tool·Resource·Prompt와 schema·resultType·list cache의 primitive 경계",
-      "stdio·Streamable HTTP·routing header·MRTR·cancel·subscription wire semantics",
-      "Authorization·retry·extension·deprecation을 production enforcement에 연결하는 방법",
+      "Host·client·server의 protocol 역할과 process topology의 차이",
+      "공통 wire contract와 domain·security 책임의 경계",
     ],
     reuses: [
       {
@@ -3091,6 +3090,56 @@ export const EDITORIAL_BOUNDARIES = {
         kind: "standard",
         rule: "Discovery metadata·model proposal·opaque handle과 실제 authentication·authorization·user consent를 구분한다.",
       },
+    ],
+  },
+  "mcp-primitives": {
+    title: "MCP primitive 글이 소유하는 범위",
+    owns: [
+      "Tool·Resource·Prompt의 control·identity·lifecycle 구분",
+      "Tool input/output schema와 complete·tool error·input required 결과",
+      "Deterministic list cache와 call-time authorization의 분리",
+    ],
+    reuses: [
+      { label: "MCP host·client·server와 request envelope", href: "/ai/mcp-protocol" },
+      { label: "Agent의 tool proposal과 observation loop", href: "/ai/agentic-patterns" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Primitive와 result field는 MCP 2026-07-28 Tool·Resource·Prompt 문서의 normative 범위로 제한한다." },
+      { kind: "standard", rule: "JSON Schema-valid·domain-valid·authorized·factually correct를 서로 다른 판정으로 유지한다." },
+    ],
+  },
+  "mcp-transports": {
+    title: "MCP transport 글이 소유하는 범위",
+    owns: [
+      "stdio child process·stdin·stdout·stderr의 local lifecycle",
+      "Streamable HTTP의 POST·routing header·body consistency·Origin 경계",
+      "Request response·cancellation·subscription의 서로 다른 수명",
+    ],
+    reuses: [
+      { label: "MCP stateless request envelope", href: "/ai/mcp-protocol" },
+      { label: "MCP Tool 결과와 input-required", href: "/ai/mcp-primitives" },
+      { label: "Sandbox·egress·credential 격리", href: "/ai/agent-sandbox-security" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Wire와 lifecycle 주장은 MCP 2026-07-28 transport·Streamable HTTP normative 문서에 고정한다." },
+      { kind: "standard", rule: "현행 request-scoped SSE와 deprecated legacy HTTP+SSE를 같은 transport로 합치지 않는다." },
+    ],
+  },
+  "mcp-server-operations": {
+    title: "MCP production 운영 글이 소유하는 범위",
+    owns: [
+      "Discovery·model proposal·user consent·server authorization의 trust gate",
+      "Operation identity·attempt·effect receipt·status lookup의 retry contract",
+      "Core·extension·legacy compatibility와 failure-injection release gate",
+    ],
+    reuses: [
+      { label: "MCP primitive schema와 result", href: "/ai/mcp-primitives" },
+      { label: "MCP transport timeout·cancel 경계", href: "/ai/mcp-transports" },
+      { label: "Agent runtime authorization", href: "/ai/agentic-patterns" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Authorization과 lifecycle은 MCP 2026-07-28 specification·changelog·공식 OAuth profile 범위로 제한한다." },
+      { kind: "project-measurement", rule: "Idempotency와 retry 안전성은 duplicate effect·late response·receipt loss fixture 실측으로만 주장한다." },
     ],
   },
   "agent-code-mode": {

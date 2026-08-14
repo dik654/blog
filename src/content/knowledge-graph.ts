@@ -4725,7 +4725,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "MCP host · client · server boundary",
     definition:
       "사용자 경험·model·정책을 소유하는 host, server별 protocol 연결을 담당하는 client, 좁은 domain capability를 제공하는 server의 책임을 분리한 architecture입니다.",
-    canonicalHref: "/ai/mcp-protocol#architecture",
+    canonicalHref: "/ai/mcp-protocol#roles",
   },
   "mcp-stateless-request-envelope": {
     id: "mcp-stateless-request-envelope",
@@ -4734,7 +4734,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "MCP stateless request envelope",
     definition:
       "2026-07-28 core에서 protocol version·client capability·client information을 요청의 _meta에 싣고 server가 이전 initialize session 없이 각 요청을 독립적으로 해석하게 한 message 계약입니다.",
-    canonicalHref: "/ai/mcp-protocol#architecture",
+    canonicalHref: "/ai/mcp-protocol#request-envelope",
   },
   "mcp-version-capability-discovery": {
     id: "mcp-version-capability-discovery",
@@ -4743,7 +4743,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "MCP version · capability discovery",
     definition:
       "Client가 요청별 metadata와 선택적 server/discover로 상대의 protocol version·capability·serverInfo를 확인하되 self-reported metadata를 보안 신원으로 사용하지 않는 negotiation 방식입니다.",
-    canonicalHref: "/ai/mcp-protocol#architecture",
+    canonicalHref: "/ai/mcp-protocol#request-envelope",
   },
   "mcp-explicit-application-handle": {
     id: "mcp-explicit-application-handle",
@@ -4752,7 +4752,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "MCP explicit application handle",
     definition:
       "Protocol session에 숨겨 두던 state 대신 cursor·subscription·server가 발급한 opaque handle처럼 resource의 수명과 소유를 message에 명시해 후속 요청이 참조하도록 하는 상태 표현입니다.",
-    canonicalHref: "/ai/mcp-protocol#architecture",
+    canonicalHref: "/ai/mcp-protocol#request-envelope",
   },
   "mcp-tool-resource-prompt-boundary": {
     id: "mcp-tool-resource-prompt-boundary",
@@ -4761,7 +4761,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "MCP Tool · Resource · Prompt boundary",
     definition:
       "인자를 받아 동작하는 Tool, URI로 식별해 읽는 context인 Resource, 사용자가 선택하는 재사용 message template인 Prompt를 control과 side effect에 따라 구분한 primitive 경계입니다.",
-    canonicalHref: "/ai/mcp-protocol#primitives",
+    canonicalHref: "/ai/mcp-primitives#three-primitives",
   },
   "mcp-json-schema-result-contract": {
     id: "mcp-json-schema-result-contract",
@@ -4770,7 +4770,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "MCP JSON Schema · result contract",
     definition:
       "JSON Schema 2020-12 inputSchema·outputSchema와 structuredContent·resultType을 함께 사용해 요청과 complete·input_required 결과를 검증하고, complete 안의 isError를 protocol error와 구분하는 계약입니다.",
-    canonicalHref: "/ai/mcp-protocol#primitives",
+    canonicalHref: "/ai/mcp-primitives#tool-contract",
   },
   "mcp-list-cache-contract": {
     id: "mcp-list-cache-contract",
@@ -4779,7 +4779,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "MCP list cache contract",
     definition:
       "Tool·Resource·Prompt 목록을 deterministic order로 반환하고 ttlMs·cacheScope로 재사용 범위를 알리되 권한·tenant·version 변화에 맞춰 무효화하는 discovery cache 계약입니다.",
-    canonicalHref: "/ai/mcp-protocol#primitives",
+    canonicalHref: "/ai/mcp-primitives#list-cache",
   },
   "mcp-stdio-streamable-http-boundary": {
     id: "mcp-stdio-streamable-http-boundary",
@@ -4788,7 +4788,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "MCP stdio · Streamable HTTP boundary",
     definition:
       "한 host가 관리하는 local subprocess의 stdin/stdout stream과 원격 endpoint에 POST해 JSON 또는 request-scoped SSE로 응답받는 transport의 배포·인증·관측 책임을 구분합니다.",
-    canonicalHref: "/ai/mcp-protocol#transport",
+    canonicalHref: "/ai/mcp-transports#stdio",
   },
   "mcp-header-routing-integrity": {
     id: "mcp-header-routing-integrity",
@@ -4797,7 +4797,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "MCP HTTP header routing integrity",
     definition:
       "Streamable HTTP의 MCP-Protocol-Version·Mcp-Method·Mcp-Name header와 JSON-RPC body를 일치시켜 gateway가 body를 전부 읽기 전에도 route·policy를 적용하고 mismatch를 거부하게 하는 무결성 계약입니다.",
-    canonicalHref: "/ai/mcp-protocol#transport",
+    canonicalHref: "/ai/mcp-transports#streamable-http",
   },
   "mcp-mrtr-input-required": {
     id: "mcp-mrtr-input-required",
@@ -4806,7 +4806,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "MCP multi-round tool result · input_required",
     definition:
       "Tool이 중간에 resultType=input_required와 입력 요청을 반환하고 client가 inputResponses를 포함해 같은 논리 작업을 다시 호출하여 사용자 추가 입력을 명시적으로 이어가는 multi-round protocol입니다.",
-    canonicalHref: "/ai/mcp-protocol#transport",
+    canonicalHref: "/ai/mcp-primitives#tool-contract",
   },
   "mcp-request-cancellation-subscription-boundary": {
     id: "mcp-request-cancellation-subscription-boundary",
@@ -4815,7 +4815,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "MCP request cancellation · subscription boundary",
     definition:
       "진행 중 요청의 계산을 중단하는 cancellation과 독립된 변경 event를 받기 위한 subscriptions/listen을 수명·channel·재연결 의미에 따라 분리한 비동기 경계입니다.",
-    canonicalHref: "/ai/mcp-protocol#transport",
+    canonicalHref: "/ai/mcp-transports#lifetimes",
   },
   "mcp-authorization-trust-boundary": {
     id: "mcp-authorization-trust-boundary",
@@ -4824,7 +4824,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "MCP authorization · trust boundary",
     definition:
       "Discovery metadata와 model의 tool 제안을 신뢰 증명이나 실행 권한으로 간주하지 않고 host consent·OAuth token audience·server-side authorization·tenant isolation을 실제 enforcement로 두는 보안 경계입니다.",
-    canonicalHref: "/ai/mcp-protocol#implementation",
+    canonicalHref: "/ai/mcp-server-operations#authorization",
   },
   "mcp-extension-deprecation-lifecycle": {
     id: "mcp-extension-deprecation-lifecycle",
@@ -4833,7 +4833,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "MCP extension · deprecation lifecycle",
     definition:
       "작은 stateless core 밖의 기능을 opt-in extension으로 협상하고, deprecated 기능은 명시된 호환 기간과 protocol revision을 따라 격리·제거하는 진화 계약입니다.",
-    canonicalHref: "/ai/mcp-protocol#implementation",
+    canonicalHref: "/ai/mcp-server-operations#release",
   },
   "mcp-retry-idempotency-boundary": {
     id: "mcp-retry-idempotency-boundary",
@@ -4842,7 +4842,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "MCP retry · idempotency boundary",
     definition:
       "Transport 응답을 받지 못했다는 사실과 server가 동작을 실행하지 않았다는 사실을 구분하고 operation key·effect receipt·조회 경로로 중복 side effect를 막는 재시도 계약입니다.",
-    canonicalHref: "/ai/mcp-protocol#implementation",
+    canonicalHref: "/ai/mcp-server-operations#retry-receipt",
   },
   "formal-alphabet-string-language": {
     id: "formal-alphabet-string-language",
@@ -23492,6 +23492,41 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "extends",
     reason:
       "Typed 결과와 effect receipt를 이용해 응답 손실 뒤 중복 실행 여부를 판정합니다.",
+  },
+  {
+    from: "mcp-host-client-server-boundary",
+    to: "mcp-tool-resource-prompt-boundary",
+    relation: "prerequisite",
+    reason:
+      "Host·client·server의 책임을 먼저 나눠야 각 primitive를 누가 발견·제안·제공하는지 구분할 수 있습니다.",
+  },
+  {
+    from: "mcp-stateless-request-envelope",
+    to: "mcp-stdio-streamable-http-boundary",
+    relation: "prerequisite",
+    reason:
+      "Self-describing request의 의미를 고정한 뒤 같은 message를 local pipe와 remote HTTP로 운반합니다.",
+  },
+  {
+    from: "mcp-json-schema-result-contract",
+    to: "mcp-authorization-trust-boundary",
+    relation: "prerequisite",
+    reason:
+      "구조상 유효한 call과 실제 실행 권한을 별도 gate로 두기 위해 schema/result 경계를 먼저 정의합니다.",
+  },
+  {
+    from: "mcp-authorization-trust-boundary",
+    to: "mcp-retry-idempotency-boundary",
+    relation: "constrains",
+    reason:
+      "Retry와 status lookup도 원래 operation과 같은 caller·tenant·resource 권한 안에서만 허용합니다.",
+  },
+  {
+    from: "mcp-retry-idempotency-boundary",
+    to: "mcp-extension-deprecation-lifecycle",
+    relation: "prerequisite",
+    reason:
+      "Extension·legacy rollout 전에 timeout과 중복 effect에 대한 operation receipt invariant를 고정합니다.",
   },
   {
     from: "run-artifact-provenance",
