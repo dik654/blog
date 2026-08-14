@@ -1154,3 +1154,11 @@
 - Value node·operation arrow·save/recompute memory 경계, logits→shared denominator→probability bars, scalar loss→p−y→dW/db/dX를 보여 주는 새 graphical Viz 3개를 만들었다. 모든 Viz는 `ArrowLeft`·`ArrowRight` 장면 이동과 `Space` 자동 재생을 지원한다.
 - 실제 public closure의 수식 6개를 모두 explicit operation annotation으로 이관했다. 긴 underbrace를 의미 단위별 KaTeX 행으로 분해해 390px에서 모든 main·operation 수식이 각각 316/316·290/290에 맞고, 전역 formula backlog는 984개/671 legacy files로 줄었다.
 - 390px·1440px 실제 브라우저 6회에서 document·Viz·KaTeX overflow, clipped descendant, KaTeX error, console warning/error, gradient·shadow·굵은 선이 모두 0임을 확인했고 production build를 통과했다.
+
+## 2026-08-15 · Deep-learning foundations CRUD split
+
+- 기존 `ai/deep-learning-overview`가 representation·depth, supervised training loop, train·validation·test, GPU 병목까지 한꺼번에 소유하던 구조를 재검토했다. 기존 route는 representation·depth로 좁히고 `ai/supervised-learning-loop`, `ai/train-validation-test`를 새로 생성했으며 GPU 병목 owner는 기존 정본 `gpu/cuda-perf-analysis`로 이동했다.
+- CRUD 중 graph에 없던 `representation-objective-bias`, `depth-optimization-boundary`, `validation-selection-feedback`, `test-set-reuse-contamination` 네 canonical concept를 추가하고 8개 관계를 연결했다. Cross-validation은 새 split 기초를 재사용하고, CUDA profiler loop는 compute·memory bottleneck 정의를 선수개념으로 재사용한다.
+- 공개 route와 exact learning contract는 419개에서 421개, graph는 2,347 concepts·3,485 relations로 늘었고 owner·isolation·stage invariant는 0이다. 세 route는 각각 정확한 기초 6개+심화 4개와 article-only answer 위치를 가진다.
+- Pixel→edge→part→class representation map, example pair→shared model→update loop, dataset bar→train·validation·test→reuse contamination을 텍스트 storyboard가 아닌 도형·화살표·bar의 새 Viz로 만들었다. 모든 Viz는 `ArrowLeft`·`ArrowRight`와 `Space` 자동 재생을 지원한다.
+- 세 public 수식은 함수 합성, batch 평균·gradient update, observed generalization gap의 각 변환·합·나눗셈·뺄셈 의도를 KaTeX underbrace로 식 안에 직접 표시한다. 390px·1440px에서 document·Viz·visible KaTeX container overflow, KaTeX error, console warning/error, gradient·shadow·굵은 선이 모두 0임을 확인했다.

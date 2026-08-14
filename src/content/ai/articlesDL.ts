@@ -6,16 +6,39 @@ import { dlFoundation2Articles, dlVisionArticles } from "./articlesDL3";
 export const dlFoundationArticles: Article[] = [
   {
     slug: "deep-learning-overview",
-    title: "딥러닝: 입력에서 학습·평가까지",
+    title: "딥러닝의 출발점: 표현을 층으로 쌓는 이유",
     subcategory: "ai-foundations",
     sections: [
-      { id: "overview", title: "왜 깊은 네트워크인가" },
-      { id: "learning-loop", title: "한 training step의 전체 경로" },
-      { id: "history", title: "딥러닝의 초기 역사" },
-      { id: "acceleration", title: "병목을 줄이는 네 계층" },
-      { id: "applications", title: "입력·목표·구조로 보는 활용" },
+      { id: "overview", title: "Representation은 무엇인가" },
+      { id: "shape", title: "중간 표현의 형태" },
+      { id: "depth", title: "깊이가 만드는 함수 합성" },
+      { id: "boundaries", title: "표현·학습·일반화의 경계" },
     ],
     component: () => import("@/pages/articles/ai/deep-learning-overview"),
+  },
+  {
+    slug: "supervised-learning-loop",
+    title: "지도학습 한 바퀴: example에서 parameter update까지",
+    subcategory: "ai-foundations",
+    sections: [
+      { id: "overview", title: "Input과 target" },
+      { id: "tensor-batch", title: "Tensor와 batch" },
+      { id: "training-step", title: "Forward에서 update까지" },
+      { id: "inference", title: "학습과 inference의 경계" },
+    ],
+    component: () => import("@/pages/articles/ai/supervised-learning-loop"),
+  },
+  {
+    slug: "train-validation-test",
+    title: "Train·validation·test: 데이터 역할을 섞지 않는 법",
+    subcategory: "ai-foundations",
+    sections: [
+      { id: "overview", title: "세 split의 역할" },
+      { id: "selection-feedback", title: "Validation feedback" },
+      { id: "generalization", title: "Generalization과 gap" },
+      { id: "next-protocol", title: "Cross-validation으로 넘기는 경계" },
+    ],
+    component: () => import("@/pages/articles/ai/train-validation-test"),
   },
   {
     slug: "math-vectors-inner-products",

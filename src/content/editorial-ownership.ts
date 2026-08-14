@@ -1200,7 +1200,7 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [
       {
         label: "Input feature·target와 train·validation·test",
-        href: "/ai/deep-learning-overview#learning-loop",
+        href: "/ai/supervised-learning-loop",
       },
       {
         label: "Expectation·variance·conditional probability",
@@ -1234,7 +1234,7 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [
       {
         label: "Loss·gradient·validation",
-        href: "/ai/deep-learning-overview#learning-loop",
+        href: "/ai/supervised-learning-loop",
       },
       {
         label: "Derivative와 gradient",
@@ -1381,7 +1381,7 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [
       {
         label: "Feature·target와 train/validation/test",
-        href: "/ai/deep-learning-overview#learning-loop",
+        href: "/ai/supervised-learning-loop",
       },
       {
         label: "Backpropagation·gradient clipping",
@@ -1424,7 +1424,7 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "Optimizer state와 learning rate", href: "/ai/optimizers" },
       { label: "Warmup·linear·cosine schedule", href: "/ai/lr-scheduling" },
       {
-        label: "Representation learning과 generalization",
+        label: "Representation learning과 depth",
         href: "/ai/deep-learning-overview",
       },
       { label: "Normalization layer의 계산", href: "/ai/normalization" },
@@ -1485,7 +1485,7 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [
       {
         label: "Train·validation·test와 empirical risk",
-        href: "/ai/deep-learning-overview",
+        href: "/ai/train-validation-test",
       },
       {
         label: "Expectation·variance",
@@ -1519,7 +1519,7 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "Image tensor·convolution·spatial prior", href: "/ai/cnn" },
       {
         label: "Train·validation·test와 empirical risk",
-        href: "/ai/deep-learning-overview",
+        href: "/ai/train-validation-test",
       },
       {
         label: "Augmentation distribution과 target transform",
@@ -1706,7 +1706,7 @@ export const EDITORIAL_BOUNDARIES = {
       },
       {
         label: "Train·validation·test와 empirical risk",
-        href: "/ai/deep-learning-overview",
+        href: "/ai/train-validation-test",
       },
       { label: "문장 embedding과 retrieval", href: "/ai/sentence-embeddings" },
     ],
@@ -1776,7 +1776,7 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "Tokenizer/checkpoint compatibility", href: "/ai/tokenizer" },
       {
         label: "Train·validation·test와 generalization",
-        href: "/ai/deep-learning-overview",
+        href: "/ai/train-validation-test",
       },
     ],
     evidence: [
@@ -1884,7 +1884,7 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "Gradient와 optimization", href: "/ai/backprop-optimization" },
       { label: "Tokenizer/checkpoint compatibility", href: "/ai/tokenizer" },
       { label: "SFT response-only loss와 data contract", href: "/ai/sft" },
-      { label: "Train·validation·test", href: "/ai/deep-learning-overview" },
+      { label: "Train·validation·test", href: "/ai/train-validation-test" },
     ],
     evidence: [
       {
@@ -1908,7 +1908,7 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "고전 distillation signal 선택", href: "/ai/knowledge-distillation" },
       { label: "Tokenizer/checkpoint compatibility", href: "/ai/tokenizer" },
       { label: "SFT response-only loss", href: "/ai/sft" },
-      { label: "Train·validation·test", href: "/ai/deep-learning-overview" },
+      { label: "Train·validation·test", href: "/ai/train-validation-test" },
     ],
     evidence: [
       {
@@ -1932,7 +1932,7 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "고전 distillation objective", href: "/ai/knowledge-distillation" },
       { label: "Sequence target과 provenance", href: "/ai/sequence-distillation" },
       { label: "Autoregressive language modeling", href: "/ai/transformer-architecture" },
-      { label: "Train·validation·test", href: "/ai/deep-learning-overview" },
+      { label: "Train·validation·test", href: "/ai/train-validation-test" },
     ],
     evidence: [
       {
@@ -1955,7 +1955,7 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [
       { label: "고전 hard·soft distillation", href: "/ai/knowledge-distillation" },
       { label: "Synthetic sequence provenance", href: "/ai/sequence-distillation" },
-      { label: "Train·validation·test", href: "/ai/deep-learning-overview" },
+      { label: "Train·validation·test", href: "/ai/train-validation-test" },
     ],
     evidence: [
       {
@@ -1988,7 +1988,7 @@ export const EDITORIAL_BOUNDARIES = {
         href: "/ai/knowledge-distillation",
       },
       { label: "LoRA adaptation·merge", href: "/ai/lora-finetuning" },
-      { label: "Train·validation·test", href: "/ai/deep-learning-overview" },
+      { label: "Train·validation·test", href: "/ai/train-validation-test" },
     ],
     evidence: [
       {
@@ -2025,7 +2025,7 @@ export const EDITORIAL_BOUNDARIES = {
         href: "/ai/math-vectors-inner-products",
       },
       { label: "Tokenizer와 truncation", href: "/ai/tokenizer" },
-      { label: "Train·validation·test", href: "/ai/deep-learning-overview" },
+      { label: "Train·validation·test", href: "/ai/train-validation-test" },
       {
         label: "도메인 적응과 RAG/fine-tuning 선택",
         href: "/ai/domain-finetuning",
@@ -2071,7 +2071,7 @@ export const EDITORIAL_BOUNDARIES = {
       },
       {
         label: "Train·validation·test와 generalization",
-        href: "/ai/deep-learning-overview",
+        href: "/ai/train-validation-test",
       },
     ],
     evidence: [
@@ -2138,7 +2138,7 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [
       {
         label: "Train·validation·test의 역할",
-        href: "/ai/deep-learning-overview#learning-loop",
+        href: "/ai/train-validation-test",
       },
       {
         label: "Group·time split과 CV–LB mismatch",
@@ -2179,7 +2179,7 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [
       {
         label: "Train·validation·test와 loss",
-        href: "/ai/deep-learning-overview#learning-loop",
+        href: "/ai/train-validation-test",
       },
       {
         label: "Expectation·variance",
@@ -2226,7 +2226,7 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [
       {
         label: "Train·validation·test의 역할",
-        href: "/ai/deep-learning-overview#learning-loop",
+        href: "/ai/train-validation-test",
       },
       {
         label: "확률분포·기댓값",
@@ -2282,7 +2282,7 @@ export const EDITORIAL_BOUNDARIES = {
       },
       {
         label: "Train·validation·test의 역할",
-        href: "/ai/deep-learning-overview#learning-loop",
+        href: "/ai/train-validation-test",
       },
       {
         label: "OOF prediction과 fold-local 경계",
@@ -2338,7 +2338,7 @@ export const EDITORIAL_BOUNDARIES = {
       },
       {
         label: "Train·validation·test의 역할",
-        href: "/ai/deep-learning-overview#learning-loop",
+        href: "/ai/train-validation-test",
       },
       {
         label: "Class prevalence·PR/ROC·confusion matrix·threshold·calibration",
@@ -2440,7 +2440,7 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [
       {
         label: "Train·validation·test와 generalization",
-        href: "/ai/deep-learning-overview",
+        href: "/ai/train-validation-test",
       },
       {
         label: "Probability·conditional probability",
@@ -2474,7 +2474,7 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [
       {
         label: "Train·validation·test와 generalization",
-        href: "/ai/deep-learning-overview",
+        href: "/ai/train-validation-test",
       },
       { label: "Image tensor와 translation equivariance", href: "/ai/cnn" },
       { label: "Soft target cross-entropy", href: "/ai/cross-entropy" },
@@ -2574,7 +2574,7 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [
       {
         label: "신경망 학습 loop와 representation",
-        href: "/ai/deep-learning-overview",
+        href: "/ai/supervised-learning-loop",
       },
       {
         label: "Chain rule·backpropagation",
@@ -5846,7 +5846,7 @@ export const EDITORIAL_BOUNDARIES = {
     ],
     reuses: [
       { label: "확률변수·평균·분산", href: "/ai/math-probability-expectation-variance" },
-      { label: "Train·validation·test 기초", href: "/ai/deep-learning-overview#learning-loop" },
+      { label: "Train·validation·test 기초", href: "/ai/train-validation-test" },
       { label: "Feature engineering 적용", href: "/ai/feature-engineering" },
       { label: "Time cutoff·rolling-origin", href: "/ai/time-features" },
     ],
@@ -7502,6 +7502,57 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [
       { kind: "primary-source", rule: "GRU와 architecture 비교 claim은 각 논문의 task·configuration·optimizer 범위로 제한한다." },
       { kind: "project-measurement", rule: "같은 input/output·parameter 또는 FLOP·hardware budget에서 latency·state memory·quality를 함께 측정한다." },
+    ],
+  },
+  "deep-learning-overview": {
+    title: "Representation learning·depth 글이 소유하는 범위",
+    owns: [
+      "원시 input과 중간 representation의 구분",
+      "Data·target·loss가 representation을 편향시키는 경계",
+      "중간 계산 재사용으로 읽는 depth efficiency와 optimization 비보장",
+    ],
+    reuses: [
+      { label: "지도학습 한 step", href: "/ai/supervised-learning-loop" },
+      { label: "Train·validation·test", href: "/ai/train-validation-test" },
+      { label: "Backpropagation", href: "/ai/backprop-optimization" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Representation·depth claim은 2015 review와 Telgarsky의 명시된 함수족·근사 조건으로 제한한다." },
+      { kind: "standard", rule: "표현 가능성·optimization·generalization을 서로 다른 주장으로 기록한다." },
+    ],
+  },
+  "supervised-learning-loop": {
+    title: "Input·target에서 training step까지 글이 소유하는 범위",
+    owns: [
+      "Input feature·target example contract와 tensor batch axis",
+      "Parameterized model·forward·loss·backward·optimizer update 순서",
+      "Training과 parameter-fixed inference의 state 경계",
+    ],
+    reuses: [
+      { label: "Loss·backpropagation", href: "/ai/backprop-optimization" },
+      { label: "Optimizer update", href: "/ai/optimizers" },
+      { label: "Train·validation·test", href: "/ai/train-validation-test" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "지도학습 notation과 autodiff 책임은 교과서·survey 범위에 귀속한다." },
+      { kind: "standard", rule: "Batch axis·model parameter·hyperparameter·runtime state를 분리한다." },
+    ],
+  },
+  "train-validation-test": {
+    title: "Train·validation·test 역할 글이 소유하는 범위",
+    owns: [
+      "Parameter 학습·candidate 선택·final assessment의 세 data 역할",
+      "Validation selection feedback과 반복 tuning 기록",
+      "Test 재사용 contamination과 independent final evidence 경계",
+    ],
+    reuses: [
+      { label: "지도학습 한 step", href: "/ai/supervised-learning-loop" },
+      { label: "Cross-validation protocol", href: "/ai/cross-validation" },
+      { label: "Regularization 비교", href: "/ai/regularization-practice" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Assessment·selection·CV estimand claim은 ESL과 분석 논문의 sampling·model 조건에 귀속한다." },
+      { kind: "standard", rule: "Test 결과를 본 뒤 생긴 변경은 adaptation으로 기록하고 새 untouched holdout 없이는 final claim을 하지 않는다." },
     ],
   },
 } as const satisfies Record<string, EditorialBoundary>;

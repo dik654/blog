@@ -77,391 +77,184 @@ export const ARTICLE_LEARNING: Readonly<
   "ai/deep-learning-overview": {
     entryLevel: true,
     entryNote:
-      "수식이나 모델 이름을 알고 있다고 가정하지 않습니다. 입력과 정답을 구분하는 데서 시작해 학습 한 step과 검증까지 이 글 안에서 연결합니다.",
+      "Input·target·gradient를 아직 모른다고 가정합니다. 먼저 representation 하나를 정의하고, 형태를 본 뒤 depth의 함수 합성으로만 확장합니다.",
     coreIdea:
-      "딥러닝은 데이터를 여러 층의 함수로 변환해 표현을 만들고, 예측 오차가 줄어드는 방향을 역전파로 계산해 파라미터를 반복해서 고치는 학습 방식입니다.",
+      "딥러닝의 depth는 작은 변환이 만든 중간 representation을 다음 변환이 재사용하는 함수 합성입니다. 무엇을 보존할지는 objective가 편향하며, 표현 가능성·optimization·generalization은 별도 주장입니다.",
     assumedKnowledge: [],
     introducedHere: [
       {
-        id: "feature-target",
-        role: "한 학습 example에서 모델이 받는 입력과 맞혀야 할 대상을 구분합니다.",
-      },
-      {
-        id: "parameterized-model",
-        role: "신경망을 입력과 파라미터로 출력이 정해지는 함수로 읽습니다.",
-      },
-      {
         id: "representation-learning",
-        role: "여러 층의 중간값을 사람이 고정한 feature가 아니라 objective로 함께 학습하는 표현으로 읽습니다.",
+        role: "Task에 쓸 중간 숫자 표현을 objective와 model parameter로 함께 학습합니다.",
       },
       {
-        id: "tensor-batch",
-        role: "여러 example과 feature를 tensor axis로 묶어 같은 parameter로 함께 계산합니다.",
-      },
-      {
-        id: "train-validation-test",
-        role: "파라미터 학습·선택과 튜닝·최종 일반화 보고에 사용할 example을 분리합니다.",
-      },
-      {
-        id: "training-step",
-        role: "forward·loss·backpropagation·update를 하나의 반복 단위로 연결합니다.",
-      },
-      {
-        id: "generalization",
-        role: "학습 데이터의 암기와 처음 보는 데이터에서의 성능을 분리합니다.",
-      },
-      {
-        id: "forward-pass",
-        role: "현재 파라미터로 입력에서 prediction과 backward용 중간값을 만드는 계산을 구분합니다.",
+        id: "representation-objective-bias",
+        role: "Data·target·loss가 representation이 보존할 차이를 제한하는 경계를 설명합니다.",
       },
       {
         id: "depth-efficiency",
-        role: "깊은 함수 합성이 특정 구조를 더 적은 폭으로 표현할 수 있는 조건과 한계를 설명합니다.",
+        role: "중간 계산 재사용이 특정 compositional function의 표현 비용을 줄이는 조건을 설명합니다.",
       },
       {
-        id: "inference",
-        role: "학습이 끝난 파라미터를 고정한 채 새 입력의 prediction만 계산하는 사용 단계를 분리합니다.",
-      },
-      {
-        id: "compute-memory-bottleneck",
-        role: "Peak FLOPS만 보지 않고 실제 실행을 제한하는 연산·memory traffic·통신을 진단합니다.",
+        id: "depth-optimization-boundary",
+        role: "표현 가능성·optimization·generalization을 서로 다른 주장으로 분리합니다.",
       },
     ],
     conceptExplanations: [
       {
-        id: "feature-target",
-        sectionId: "learning-loop",
-        intuition:
-          "문제집에서 문제에 적힌 정보가 input이고, 채점할 때 비교하는 모범 답이 target입니다. 모델은 input만 받아 target을 맞히는 규칙을 배웁니다.",
-        workedExample:
-          "고양이 사진 분류라면 pixel 값이 x이고 '고양이'라는 class label이 y입니다. 사진 32장을 함께 계산하면 x에는 batch 축이 하나 더 생깁니다.",
-        boundary:
-          "정답 label이 없는 self-supervised·unsupervised 학습에서도 학습용 target은 만들 수 있지만, 사람이 붙인 정답과 같은 뜻이라고 보면 안 됩니다.",
-      },
-      {
-        id: "parameterized-model",
-        sectionId: "learning-loop",
-        intuition:
-          "같은 계산 틀 안에서 조절 가능한 손잡이가 parameter입니다. 학습은 프로그램 구조를 매번 다시 쓰는 대신 이 손잡이의 숫자를 고칩니다.",
-        workedExample:
-          "y=wx+b에서 x=2일 때 w=3, b=1이면 prediction은 7입니다. 여기서 학습되는 값은 x가 아니라 w와 b입니다.",
-        boundary:
-          "Parameter와 사람이 정하는 hyperparameter는 다릅니다. Learning rate나 layer 수는 보통 gradient가 직접 고치는 값이 아닙니다.",
-      },
-      {
         id: "representation-learning",
         sectionId: "overview",
         intuition:
-          "사람이 색·모서리·단어 조합 규칙을 모두 미리 적는 대신, 최종 오차를 줄이는 데 유용한 중간 숫자 표현을 여러 층의 parameter와 함께 배우는 방식입니다.",
+          "Pixel 같은 원시 숫자를 다음 계산이 쓰기 좋은 중간 좌표로 바꾸고, 어떤 좌표를 만들지도 task objective로 함께 배웁니다.",
         workedExample:
-          "이미지 분류 신경망의 앞쪽 층은 pixel에서 edge·texture에 반응하는 값을 만들고 뒤쪽 층은 이를 조합해 class를 구분하는 표현을 만듭니다. 어떤 feature를 쓸지와 classifier가 같은 objective에서 함께 조정됩니다.",
+          "Image classifier는 pixel에서 edge 반응, 반복 texture, object part를 거쳐 class score에 유용한 표현을 만듭니다.",
         boundary:
-          "중간 unit 하나가 사람이 붙인 개념 하나와 정확히 대응하거나 좋은 representation이 모든 downstream task에 그대로 최적이라는 뜻은 아닙니다. 학습 objective·data·architecture가 무엇을 보존할지 제한합니다.",
+          "Hidden coordinate 하나가 사람 개념 하나와 정확히 대응하거나 모든 downstream task에 최적이라는 뜻은 아닙니다.",
       },
       {
-        id: "tensor-batch",
-        sectionId: "learning-loop",
+        id: "representation-objective-bias",
+        sectionId: "overview",
         intuition:
-          "표 한 줄이 한 example이라면 여러 줄을 겹쳐 한 번에 계산하는 묶음이 batch이고, 값과 축을 가진 숫자 배열이 tensor입니다.",
+          "모델은 입력의 모든 차이를 보존하지 않고 현재 loss를 줄이는 데 도움이 되는 차이를 우선 남깁니다.",
         workedExample:
-          "28×28 grayscale image 32장을 묶으면 input tensor shape은 32×28×28이며 첫 축의 32가 batch size입니다.",
+          "동일 사진도 animal classification objective는 얼굴 윤곽을, 촬영지 classification objective는 배경을 더 유용하게 만들 수 있습니다.",
         boundary:
-          "Batch axis를 feature·channel·time axis와 혼동하면 shape는 맞아도 다른 계산이 됩니다. Axis 의미는 model contract와 함께 확인해야 합니다.",
-      },
-      {
-        id: "train-validation-test",
-        sectionId: "learning-loop",
-        intuition:
-          "문제집으로 규칙을 배우고 모의고사로 선택을 조정한 뒤, 마지막 시험은 그 결정이 끝날 때까지 열어보지 않는 평가 분리입니다.",
-        workedExample:
-          "Model weight는 training set으로 학습하고 hyperparameter는 validation score로 고르며, test set은 선택이 끝난 model의 최종 일반화 보고에 한 번 사용합니다.",
-        boundary:
-          "무작위 비율 분할만으로 충분하다는 뜻은 아닙니다. 같은 사람의 반복 기록이나 미래 시점이 섞이지 않도록 실제 배포 단위에 맞춘 group·time split이 필요할 수 있습니다.",
-      },
-      {
-        id: "training-step",
-        sectionId: "learning-loop",
-        intuition:
-          "현재 답을 내고, 얼마나 틀렸는지 재고, 어느 손잡이가 책임이 있는지 계산한 다음, 손잡이를 조금 움직이는 한 바퀴가 training step입니다.",
-        workedExample:
-          "Prediction 0.7과 target 1로 loss를 구한 뒤 backpropagation이 각 weight의 gradient를 만들고 optimizer가 learning rate만큼 weight를 갱신합니다.",
-        boundary:
-          "한 step에서 loss가 줄었다고 일반화 성능이 좋아졌다는 뜻은 아닙니다. Validation data는 parameter update와 분리해 확인해야 합니다.",
-      },
-      {
-        id: "generalization",
-        sectionId: "learning-loop",
-        intuition:
-          "연습문제의 답을 외운 것이 아니라 처음 보는 문제에도 같은 규칙을 적용할 수 있는지를 묻는 개념입니다.",
-        workedExample:
-          "Training accuracy가 100%인데 test accuracy가 70%라면 학습 예시는 잘 맞혔지만 새로운 예시에 대한 generalization gap은 큽니다.",
-        boundary:
-          "Test score 하나도 배포 환경 전체를 보장하지 않습니다. Data distribution이 바뀌면 별도의 out-of-distribution 평가가 필요합니다.",
-      },
-      {
-        id: "forward-pass",
-        sectionId: "learning-loop",
-        intuition:
-          "현재 손잡이 값을 고정한 채 입력을 첫 층부터 마지막 층까지 보내 답과 중간 계산을 만드는 순방향 실행입니다.",
-        workedExample:
-          "x=2, 첫 affine layer가 3x+1을 계산하면 중간값은 7이고, 다음 layer가 이를 class score로 바꾸는 전체 경로가 한 forward pass입니다.",
-        boundary:
-          "Forward pass는 prediction을 만들 뿐 parameter를 고치지 않습니다. Training에서는 뒤이어 loss·backward·update가 오지만 inference에서는 보통 여기서 끝납니다.",
+          "Architecture만 보고 representation quality를 단정하지 않고 data·target·loss를 함께 기록합니다.",
       },
       {
         id: "depth-efficiency",
-        sectionId: "overview",
+        sectionId: "depth",
         intuition:
-          "복잡한 계산을 한 번에 외우는 대신 작은 중간 계산을 층마다 만들고 다음 층에서 재사용하면 특정 함수 구조를 더 적은 unit으로 표현할 수 있습니다.",
+          "앞 층이 만든 작은 계산을 여러 뒤쪽 판단이 공유하면 모든 조합을 한 층에 펼치는 비용을 줄일 수 있습니다.",
         workedExample:
-          "Edge→texture→object part처럼 단계적으로 조합되는 image pattern은 앞 층의 feature를 여러 뒤쪽 판단이 공유할 수 있습니다.",
+          "Edge를 여러 texture가 재사용하고 texture를 여러 object part가 다시 재사용합니다.",
         boundary:
-          "깊이가 항상 더 정확하거나 학습하기 쉽다는 뜻은 아닙니다. Depth-separation 결과는 정해진 함수족·근사 조건의 표현 가능성을 비교하며 optimizer·data·generalization을 보장하지 않습니다.",
+          "Depth separation은 정해진 함수족·근사 조건의 표현 결과이며 실제 학습 성공을 자동 보장하지 않습니다.",
       },
       {
-        id: "inference",
-        sectionId: "learning-loop",
+        id: "depth-optimization-boundary",
+        sectionId: "boundaries",
         intuition:
-          "공부가 끝난 답안 규칙을 바꾸지 않고 새 문제에 적용하는 단계입니다. Gradient를 만들거나 optimizer가 weight를 갱신하지 않습니다.",
+          "함수를 나타낼 수 있는가, parameter를 찾을 수 있는가, 새 data에도 유지되는가는 서로 다른 질문입니다.",
         workedExample:
-          "학습된 image classifier에 사진 한 장을 넣어 class score를 얻을 때는 forward만 실행하며 target label과 backward graph는 필요하지 않습니다.",
+          "더 깊은 network가 target function을 작게 표현해도 poor initialization으로 training loss가 더 높을 수 있습니다.",
         boundary:
-          "Parameter update가 없다는 뜻이지 state와 자원이 전혀 없다는 뜻은 아닙니다. Autoregressive model은 KV cache를 만들 수 있고 batch·latency·memory 제약도 남습니다.",
-      },
-      {
-        id: "compute-memory-bottleneck",
-        sectionId: "acceleration",
-        intuition:
-          "계산기가 느린 이유를 곱셈 수 하나로 단정하지 않고, 산술 장치·memory 이동·kernel utilization·device 통신 중 가장 좁은 구간을 찾는 관점입니다.",
-        workedExample:
-          "GPU peak FLOPS가 두 배인데 weight를 HBM에서 읽는 시간이 같고 SM이 기다린다면 전체 step 시간은 거의 줄지 않을 수 있습니다.",
-        boundary:
-          "Hardware 사양표만으로 병목을 확정할 수 없습니다. 같은 shape·precision·batch·software revision에서 profiler로 achieved throughput과 bytes·idle time을 측정해야 합니다.",
+          "Parameter 수 하나만 맞춘 실험으로 depth의 보편적 우월성을 주장하지 않습니다.",
       },
     ],
     conceptStages: [
       {
-        label: "문제와 데이터",
-        relation: "입력·정답·평가 경계를 먼저 고정",
-        concepts: ["feature-target", "tensor-batch", "train-validation-test"],
+        label: "00 용어",
+        relation: "Representation 하나를 먼저 정의합니다.",
+        concepts: ["representation-learning"],
       },
       {
-        label: "모델 계산",
-        relation: "여러 층의 함수를 합성해 예측과 표현을 생성",
-        concepts: [
-          "parameterized-model",
-          "forward-pass",
-          "representation-learning",
-          "depth-efficiency",
-        ],
+        label: "01 형태",
+        relation: "Objective가 무엇을 보존하도록 만드는지 확인합니다.",
+        concepts: ["representation-learning", "representation-objective-bias"],
       },
       {
-        label: "파라미터 학습",
-        relation: "오차를 재고 각 파라미터의 책임을 계산해 update",
-        concepts: [
-          "loss-objective",
-          "gradient",
-          "backpropagation",
-          "optimizer-update",
-          "training-step",
-        ],
+        label: "02 합성",
+        relation: "중간 표현을 다음 층이 재사용합니다.",
+        concepts: ["depth-efficiency"],
       },
       {
-        label: "검증과 사용",
-        relation: "학습에 쓰지 않은 데이터와 실제 제약에서 확인",
-        concepts: ["generalization", "inference", "compute-memory-bottleneck"],
+        label: "03 경계",
+        relation: "표현·optimization·generalization 주장을 분리합니다.",
+        concepts: ["depth-efficiency", "depth-optimization-boundary"],
       },
     ],
     exercises: [
       {
         level: "basic",
-        question:
-          "고양이 이미지를 분류하는 문제에서 입력 x, target y, parameter θ, prediction, loss는 각각 무엇일까요?",
-        answerChecklist: [
-          "x는 pixel tensor, y는 정답 class label이라고 구분한다.",
-          "θ는 층의 weight·bias이고 prediction은 class별 score 또는 probability라고 설명한다.",
-          "loss는 prediction과 target의 차이를 학습 가능한 scalar로 바꾼 값이라고 설명한다.",
-        ],
-        requiredConcepts: [
-          "feature-target",
-          "tensor-batch",
-          "parameterized-model",
-          "loss-objective",
-        ],
-        sectionId: "learning-loop",
-      },
-      {
-        level: "basic",
-        question:
-          "학습 한 step에서 forward pass, loss, backpropagation, optimizer update는 어떤 순서와 역할로 이어질까요?",
-        answerChecklist: [
-          "Forward pass가 현재 파라미터로 prediction과 중간값을 만든다고 설명한다.",
-          "Loss가 한 개의 scalar objective로 오차를 요약한다고 설명한다.",
-          "Backpropagation이 gradient를 계산하고 optimizer가 그 정보로 파라미터를 갱신한다고 설명한다.",
-        ],
-        requiredConcepts: [
-          "forward-pass",
-          "loss-objective",
-          "backpropagation",
-          "optimizer-update",
-          "training-step",
-        ],
-        sectionId: "learning-loop",
-      },
-      {
-        level: "basic",
-        question:
-          "Training·validation·test set을 나누는 이유와 각 split을 언제 사용하는지 설명할 수 있을까요?",
-        answerChecklist: [
-          "Training set은 gradient update에 사용한다고 설명한다.",
-          "Validation set은 model·hyperparameter 선택에 사용하되 직접 학습시키지 않는다고 설명한다.",
-          "Test set은 선택이 끝난 뒤 일반화 성능을 한 번 확인하는 독립 기준이라고 설명한다.",
-        ],
-        requiredConcepts: ["train-validation-test", "generalization"],
-        sectionId: "learning-loop",
-      },
-      {
-        level: "basic",
-        question:
-          "같은 image classifier에서 training forward와 inference forward가 공유하는 계산과 달라지는 상태를 구분할 수 있을까요?",
-        answerChecklist: [
-          "두 단계 모두 현재 parameter로 input에서 prediction을 만드는 forward pass를 공유한다고 설명한다.",
-          "Training은 target·loss·saved intermediate·backward·optimizer update가 뒤따른다고 설명한다.",
-          "Inference는 parameter를 고정하지만 batch·cache·latency·memory 같은 runtime state는 남을 수 있다고 제한한다.",
-        ],
-        requiredConcepts: ["forward-pass", "inference", "training-step"],
-        sectionId: "learning-loop",
-      },
-      {
-        level: "basic",
-        question:
-          "Representation learning이 수작업 feature pipeline과 다른 점을 image 분류 사례로 설명할 수 있을까요?",
-        answerChecklist: [
-          "수작업 pipeline은 사람이 edge·texture descriptor를 고정한다고 설명한다.",
-          "Representation learning은 중간 feature와 classifier parameter를 같은 objective로 함께 조정한다고 설명한다.",
-          "Hidden unit 하나가 사람 개념 하나를 뜻하거나 모든 downstream task에 최적이라는 주장은 피한다.",
-        ],
-        requiredConcepts: ["representation-learning", "parameterized-model"],
+        question: "Representation과 representation learning을 pixel 예로 구분하세요.",
+        answerChecklist: ["중간 숫자", "pixel input", "task에 유용", "parameter와 함께 학습"],
+        requiredConcepts: ["representation-learning"],
         sectionId: "overview",
       },
       {
         level: "basic",
-        question:
-          "Tensor shape 32×3×224×224에서 각 axis의 의미와 batch가 parameter sharing에 주는 의미를 설명할 수 있을까요?",
-        answerChecklist: [
-          "32는 example 수, 3은 channel, 224×224는 spatial axis라고 구분한다.",
-          "같은 model parameter가 batch의 모든 example에 적용된다고 설명한다.",
-          "Axis 순서는 framework·model contract에 따라 달라질 수 있어 shape 숫자만으로 단정하지 않는다고 말한다.",
-        ],
-        requiredConcepts: ["tensor-batch", "parameterized-model"],
-        sectionId: "learning-loop",
-      },
-      {
-        level: "advanced",
-        question:
-          "은닉층 하나도 연속 함수를 근사할 수 있는데 깊은 네트워크를 쓰는 이유를 표현·학습·비용 관점에서 설명할 수 있을까요?",
-        answerChecklist: [
-          "만능 근사 정리는 필요한 width와 학습 가능성을 보장하지 않는다고 제한한다.",
-          "반복되는 compositional structure는 중간 표현을 재사용하는 깊은 함수가 더 효율적일 수 있다고 설명한다.",
-          "깊이가 늘면 gradient path와 optimization이 어려워져 residual·normalization 같은 설계가 필요하다고 덧붙인다.",
-        ],
-        requiredConcepts: [
-          "representation-learning",
-          "depth-efficiency",
-          "gradient",
-        ],
+        question: "같은 사진에 다른 objective를 주면 representation이 달라질 수 있는 이유를 설명하세요.",
+        answerChecklist: ["data", "target", "loss", "보존할 차이", "architecture alone 아님"],
+        requiredConcepts: ["representation-objective-bias"],
         sectionId: "overview",
       },
       {
-        level: "advanced",
-        question:
-          "Training loss는 계속 낮아지는데 validation loss가 다시 높아질 때 무엇을 의심하고 어떻게 검증해야 할까요?",
-        answerChecklist: [
-          "Optimization 실패가 아니라 training data에 과도하게 맞춘 overfitting 가능성을 먼저 구분한다.",
-          "Split leakage와 train·validation distribution 차이를 확인한다.",
-          "Regularization·data augmentation·early stopping 후보를 독립 validation 조건에서 비교한다.",
-        ],
-        requiredConcepts: [
-          "loss-objective",
-          "train-validation-test",
-          "generalization",
-        ],
-        sectionId: "learning-loop",
-      },
-      {
-        level: "advanced",
-        question:
-          "GPU의 peak FLOPS가 더 높아졌는데 학습 시간이 거의 줄지 않았다면 어떤 병목을 어떤 순서로 확인해야 할까요?",
-        answerChecklist: [
-          "Kernel utilization과 실제 연산량을 먼저 확인한다.",
-          "HBM traffic·activation 저장·cache 재사용을 측정한다.",
-          "Mixed precision의 수치 안정성과 device 간 communication·idle time을 함께 확인한다.",
-        ],
-        requiredConcepts: ["compute-memory-bottleneck", "training-step"],
-        sectionId: "acceleration",
-      },
-      {
-        level: "advanced",
-        question:
-          "같은 parameter 수의 얕고 넓은 network와 깊고 좁은 network를 비교할 때 depth efficiency를 입증할 실험과 비주장을 설계할 수 있을까요?",
-        answerChecklist: [
-          "Parameter·training compute·data·optimizer·evaluation budget을 맞춘다고 명시한다.",
-          "Compositional target과 비구조 target slice를 나누어 representation reuse 가설을 검증한다.",
-          "한 실험의 우위를 모든 dataset·optimizer·depth에 대한 보편 법칙으로 확대하지 않는다.",
-        ],
-        requiredConcepts: [
-          "depth-efficiency",
-          "representation-learning",
-          "generalization",
-        ],
+        level: "basic",
+        question: "Hidden coordinate 하나를 사람 개념 하나로 단정하면 안 되는 이유를 설명하세요.",
+        answerChecklist: ["distributed representation", "objective dependence", "no one-to-one guarantee"],
+        requiredConcepts: ["representation-learning", "representation-objective-bias"],
         sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question: "x→h1→h2→ŷ에서 각 화살표와 중간 h의 역할을 설명하세요.",
+        answerChecklist: ["layer transform", "intermediate representation", "reuse", "task output"],
+        requiredConcepts: ["representation-learning", "depth-efficiency"],
+        sectionId: "depth",
+      },
+      {
+        level: "basic",
+        question: "Edge→texture→part 예에서 depth efficiency가 생기는 지점을 찾으세요.",
+        answerChecklist: ["small transform", "shared intermediate", "composition", "not layer count alone"],
+        requiredConcepts: ["depth-efficiency"],
+        sectionId: "depth",
+      },
+      {
+        level: "basic",
+        question: "표현 가능성·optimization·generalization이 답하는 질문을 각각 구분하세요.",
+        answerChecklist: ["can represent", "can find parameters", "new data", "separate claims"],
+        requiredConcepts: ["depth-optimization-boundary"],
+        sectionId: "boundaries",
+      },
+      {
+        level: "advanced",
+        question: "얕고 넓은 model과 깊고 좁은 model의 표현 비용을 공정하게 비교하는 조건을 설계하세요.",
+        answerChecklist: ["target function family", "approximation error", "parameter/compute budget", "depth and width", "no universal claim"],
+        requiredConcepts: ["depth-efficiency", "depth-optimization-boundary"],
+        sectionId: "boundaries",
+      },
+      {
+        level: "advanced",
+        question: "Classification objective를 바꿨을 때 representation shift를 검증하는 실험을 설계하세요.",
+        answerChecklist: ["same data", "different target/loss", "probe or intervention", "held-out evaluation", "causal caveat"],
+        requiredConcepts: ["representation-objective-bias"],
+        sectionId: "boundaries",
+      },
+      {
+        level: "advanced",
+        question: "Depth separation theorem이 현실 training 결과를 직접 보장하지 않는 이유를 설명하세요.",
+        answerChecklist: ["constructed function family", "approximation condition", "optimization absent", "data/generalization absent"],
+        requiredConcepts: ["depth-efficiency", "depth-optimization-boundary"],
+        sectionId: "boundaries",
+      },
+      {
+        level: "advanced",
+        question: "더 깊은 candidate를 채택할 release evidence를 작성하세요.",
+        answerChecklist: ["same data/objective", "training compute", "multiple seeds", "train and held-out metrics", "latency/memory", "scope limit"],
+        requiredConcepts: ["representation-objective-bias", "depth-optimization-boundary"],
+        sectionId: "boundaries",
       },
     ],
     papers: [
       {
         title: "Deep Learning",
         href: "https://www.nature.com/articles/nature14539",
-        problem:
-          "여러 층의 representation learning과 backpropagation이 당시 성과를 어떻게 연결하는지 정리할 필요",
-        contribution:
-          "Vision·speech·language 사례를 공통된 깊은 표현 학습 관점에서 연결한 2015년 리뷰",
-        assumptions:
-          "미분 가능한 층과 task objective, 충분한 data·compute로 end-to-end optimization할 수 있다는 전제",
-        evidenceScope:
-          "2015년까지 공개된 convolutional·recurrent network의 연구 성과와 저자들의 종합적 해석",
-        notClaim:
-          "특정 architecture가 모든 data type에서 최선이거나 scale만 키우면 일반화가 보장된다는 주장은 아님",
+        problem: "여러 task의 deep learning 성과를 공통된 representation learning 관점으로 설명할 필요",
+        contribution: "여러 층의 representation과 backpropagation을 vision·speech·language 사례에 연결",
+        assumptions: "미분 가능한 model, task objective와 당시의 data·compute 조건",
+        evidenceScope: "2015년까지 review가 정리한 연구와 인용 실험 범위",
+        notClaim: "특정 hidden unit의 의미나 모든 deep architecture의 우월성을 증명하지 않음",
         sectionId: "paper-deep-learning",
       },
       {
         title: "Benefits of Depth in Neural Networks",
         href: "https://arxiv.org/abs/1602.04485",
-        problem:
-          "깊이가 단순히 parameter를 더 쓰는 것과 다른 표현 효율을 주는지 이론적으로 분리하는 문제",
-        contribution:
-          "특정 함수족에서 얕은 network가 깊은 network를 근사하려면 폭이 지수적으로 커지는 depth separation을 증명",
-        assumptions:
-          "논문이 정의한 semi-algebraic gate와 구성한 함수족·근사 조건 안에서 비교한다는 전제",
-        evidenceScope:
-          "ReLU·max 등을 포함하는 이론적 함수족의 worst-case separation 결과",
-        notClaim:
-          "현실의 모든 dataset에서 더 깊은 network가 항상 정확하거나 학습하기 쉽다는 결론은 아님",
+        problem: "Depth가 width와 다른 표현 자원인지 이론적으로 구분",
+        contribution: "특정 함수족에서 깊고 작은 network와 얕고 큰 network의 separation 구성",
+        assumptions: "논문이 정한 semi-algebraic gate·근사 조건",
+        evidenceScope: "구성된 함수족의 representation complexity",
+        notClaim: "현실의 모든 dataset에서 더 깊은 model이 더 잘 학습되거나 일반화한다는 결론이 아님",
         sectionId: "paper-depth-benefit",
-      },
-      {
-        title: "AlexNet",
-        href: "https://papers.nips.cc/paper_files/paper/2012/hash/c399862d3b9d6b76c8436e924a68c45b-Abstract.html",
-        problem:
-          "ImageNet 규모의 고해상도 이미지를 1,000개 class로 분류하면서 기존 오차를 크게 줄이는 문제",
-        contribution:
-          "깊은 convolutional network에 GPU 구현·non-saturating unit·regularization을 결합해 큰 성능 향상을 보임",
-        assumptions:
-          "대규모 labeled image와 당시 ImageNet split·metric, 두 GPU에서 학습하는 실험 조건",
-        evidenceScope:
-          "LSVRC-2010/2012 계열 image classification과 논문 architecture·training recipe",
-        notClaim:
-          "GPU 하나나 ReLU 하나만으로 성과가 생겼거나 같은 recipe가 모든 domain에서 최선이라는 결론은 아님",
-        sectionId: "paper-alexnet",
       },
     ],
   },
@@ -56894,19 +56687,21 @@ export const ARTICLE_LEARNING: Readonly<
     coreIdea: "CUDA 성능 분석은 completion boundary를 고정하고 전체 비중·achieved work를 계산한 뒤 timeline과 최소 counter로 병목 가설 하나를 반증하고 paired ablation으로 채택하는 과정입니다.",
     assumedKnowledge: [],
     introducedHere: [
+      { id: "compute-memory-bottleneck", role: "실행이 compute·memory traffic·launch·communication 중 어디에 제한되는지 분리합니다." },
       { id: "cuda-kernel-timing-protocol", role: "Warm-up·event·sync·반복 분포와 end-to-end 경계를 고정합니다." },
       { id: "cuda-achieved-throughput-ledger", role: "FLOP/s·GB/s·actual traffic을 동일 elapsed boundary에 기록합니다." },
       { id: "cuda-bottleneck-hypothesis-loop", role: "Timeline→bound→counter→single change→verify 순서를 지킵니다." },
       { id: "cuda-performance-ablation-gate", role: "Correctness와 workload slices의 latency·counter 이동으로 변경을 채택합니다." },
     ],
     conceptExplanations: [
+      { id: "compute-memory-bottleneck", sectionId: "overview", intuition: "느린 구간을 곱셈 수 하나로 단정하지 않고 실제로 기다리는 자원을 먼저 찾습니다.", workedExample: "Peak FLOPS가 높아도 HBM traffic이 같고 ready warp가 부족하면 elapsed가 거의 줄지 않을 수 있습니다.", boundary: "Spec sheet만으로 병목을 확정하지 않고 timeline·achieved ledger·counter로 가설을 검사합니다.", counterexample: "Peak의 20%라는 숫자 하나만으로 compute-bound나 memory-bound를 판정할 수 없습니다." },
       { id: "cuda-kernel-timing-protocol", sectionId: "measurement-protocol", intuition: "배달 요청 접수와 배달 완료 시간이 다르듯 launch 반환과 GPU 완료를 구분합니다.", workedExample: "Warm-up 뒤 같은 stream의 start/stop event와 stop sync로 kernel 반복 median/p95를 구합니다.", boundary: "CPU wall time과 GPU event time은 포함 범위가 다르며 concurrent streams도 기록합니다.", counterexample: "Launch call만 CPU timer로 재면 enqueue overhead를 kernel time으로 오해합니다." },
       { id: "cuda-achieved-throughput-ledger", sectionId: "throughput-ledger", intuition: "스펙 peak가 아니라 실제 일을 실제 시간으로 나눠 사용한 자원률을 봅니다.", workedExample: "Defined FLOPs F와 actual DRAM bytes Q를 같은 t로 나눠 achieved FLOP/s·GB/s를 만듭니다.", boundary: "Precision·sparsity·memory level·FLOP convention을 고정해야 비교할 수 있습니다.", counterexample: "FP8 sparse peak와 FP32 CUDA-core kernel을 직접 비교할 수 없습니다." },
       { id: "cuda-bottleneck-hypothesis-loop", sectionId: "profiling", intuition: "진료처럼 큰 구간을 찾고 가능한 원인을 좁힌 뒤 검사 하나로 가설을 반증합니다.", workedExample: "Systems에서 hot kernel을 찾고 Compute에서 actual/requested traffic과 stalls를 본 뒤 layout만 바꿉니다.", boundary: "Counter 상관은 원인 증명이 아니며 profiler replay overhead를 기록합니다.", counterexample: "모든 counter를 먼저 모으면 작은 비핵심 kernel에 시간을 쓸 수 있습니다." },
       { id: "cuda-performance-ablation-gate", sectionId: "release-gate", intuition: "후보가 빨라도 답이 달라지거나 다른 shape에서 느리면 배포 변경으로 채택하지 않습니다.", workedExample: "Reference와 candidate를 같은 receipt에서 parity, median/p95, achieved ledger와 예상 counter 방향으로 비교합니다.", boundary: "한 GPU·shape의 결과만 해당 fixture에 귀속하고 kernel-only와 end-to-end를 분리합니다.", counterexample: "Counter가 좋아졌지만 end-to-end p95가 늘거나 output tolerance가 깨지면 채택 근거가 아닙니다." },
     ],
     conceptStages: [
-      { label: "00 바닥", relation: "Host launch lifecycle과 Roofline 정본을 먼저 재사용합니다.", concepts: ["cuda-host-device-kernel-lifecycle", "gpu-roofline-peak-achieved"] },
+      { label: "00 바닥", relation: "Compute·memory bottleneck을 정의하고 Host lifecycle·Roofline 정본을 재사용합니다.", concepts: ["compute-memory-bottleneck", "cuda-host-device-kernel-lifecycle", "gpu-roofline-peak-achieved"] },
       { label: "01 Time", relation: "비동기 timing 경계를 고정합니다.", concepts: ["cuda-kernel-timing-protocol"] },
       { label: "02 Diagnose", relation: "Achieved ledger와 가설-driven profiler loop를 수행합니다.", concepts: ["cuda-achieved-throughput-ledger", "cuda-bottleneck-hypothesis-loop"] },
       { label: "03 Gate", relation: "Ablation 결과를 채택 조건으로 묶습니다.", concepts: ["cuda-performance-ablation-gate"] },
@@ -61778,6 +61573,90 @@ export const ARTICLE_LEARNING: Readonly<
       { title: "Safetensors documentation", href: "https://huggingface.co/docs/safetensors/index", problem: "Tensor dtype·shape·payload를 안전하게 교환하는 format이 필요합니다.", contribution: "Header metadata와 contiguous tensor bytes를 분리합니다.", assumptions: "배포할 exact artifact revision과 같은 file을 읽습니다.", evidenceScope: "Checkpoint dtype·shape ledger를 읽는 format 근거입니다.", notClaim: "GPU resident peak·KV·workspace 크기를 제공하지 않습니다.", sectionId: "paper-safetensors" },
       { title: "Qwen3.6-27B official BF16 index", href: "https://huggingface.co/Qwen/Qwen3.6-27B/blob/main/model.safetensors.index.json", problem: "27B headline을 exact weight byte로 바꿉니다.", contribution: "total_size 55,562,855,904 bytes를 공개합니다.", assumptions: "해당 official BF16 revision입니다.", evidenceScope: "Qwen 적용 예의 weight payload입니다.", notClaim: "다른 quantization이나 runtime peak가 아닙니다.", sectionId: "paper-qwen-weights" },
       { title: "vLLM Hybrid KV Cache Manager", href: "https://docs.vllm.ai/en/stable/design/hybrid_kv_cache_manager/", problem: "서로 다른 cache specs를 physical blocks에 함께 배치합니다.", contribution: "Cache groups·page sizing·padding constraints를 문서화합니다.", assumptions: "사용한 vLLM revision과 supported model cache specs입니다.", evidenceScope: "Logical bytes와 physical allocation 차이의 구현 근거입니다.", notClaim: "모든 engine·model의 overhead 숫자를 고정하지 않습니다.", sectionId: "paper-vllm-memory" },
+    ],
+  },
+  "ai/supervised-learning-loop": {
+    entryLevel: true,
+    entryNote: "Model 용어를 모른다고 가정합니다. Input·target 한 쌍에서 시작해 tensor batch, forward, loss, backward, update를 하나씩 추가합니다.",
+    coreIdea: "지도학습 한 step은 input·target example을 batch로 묶고 같은 parameterized model로 prediction을 만든 뒤, loss의 gradient를 계산해 optimizer가 parameter를 갱신하는 반복입니다. Inference는 parameter를 고정하고 forward만 재사용합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "feature-target", role: "한 example에서 model이 받는 input과 맞혀야 할 target을 분리합니다." },
+      { id: "tensor-batch", role: "값의 axis 의미와 여러 example을 묶는 batch axis를 구분합니다." },
+      { id: "parameterized-model", role: "입력과 조절 가능한 parameter로 prediction을 만드는 함수를 읽습니다." },
+      { id: "forward-pass", role: "현재 parameter로 prediction과 backward용 중간값을 만드는 실행을 구분합니다." },
+      { id: "training-step", role: "Forward·loss·backward·optimizer update를 한 반복으로 연결합니다." },
+      { id: "inference", role: "학습 뒤 parameter를 고정하고 forward만 쓰는 사용 경계를 분리합니다." },
+    ],
+    conceptExplanations: [
+      { id: "feature-target", sectionId: "overview", intuition: "문제에 주어진 정보가 input이고 채점 기준이 target입니다.", workedExample: "사진 pixel tensor x와 정답 class y를 한 example pair로 둡니다.", boundary: "Target이 input에 섞이면 leakage이며 self-supervised target은 사람이 붙인 label과 다를 수 있습니다." },
+      { id: "tensor-batch", sectionId: "tensor-batch", intuition: "축의 뜻을 가진 숫자 배열이 tensor이고 example 여러 개를 쌓은 축이 batch입니다.", workedExample: "사진 32장의 B×C×H×W는 32×3×224×224입니다.", boundary: "Axis 순서는 framework·model contract에 따라 달라 숫자만 보고 의미를 단정하지 않습니다." },
+      { id: "parameterized-model", sectionId: "overview", intuition: "같은 계산 틀의 조절 가능한 숫자 θ가 parameter입니다.", workedExample: "fθ(x)에서 θ는 weight·bias이고 batch row가 달라도 같은 θ를 공유합니다.", boundary: "Learning rate·layer 수는 보통 gradient가 직접 고치는 parameter가 아닙니다." },
+      { id: "forward-pass", sectionId: "training-step", intuition: "현재 θ를 바꾸지 않고 input을 prediction과 중간값으로 보내는 순방향 계산입니다.", workedExample: "x를 affine·activation·output layer에 차례로 넣어 ŷ를 만듭니다.", boundary: "Prediction을 만들 뿐 parameter update 자체가 아닙니다." },
+      { id: "training-step", sectionId: "training-step", intuition: "현재 답을 만들고 오차와 책임을 계산한 뒤 parameter를 한 번 움직이는 반복입니다.", workedExample: "Batch mean loss를 backward해 gradient를 얻고 optimizer가 θ를 θ′로 바꿉니다.", boundary: "한 step loss 감소가 generalization 향상을 보장하지 않습니다." },
+      { id: "inference", sectionId: "inference", intuition: "학습한 θ를 고정하고 새 input의 prediction만 계산합니다.", workedExample: "Image classifier에 target 없이 사진 한 장을 넣어 class score를 얻습니다.", boundary: "Update가 없어도 KV cache·batch·latency·memory 같은 runtime state는 남을 수 있습니다." },
+    ],
+    conceptStages: [
+      { label: "00 Example", relation: "Input과 target 역할을 먼저 고정합니다.", concepts: ["feature-target"] },
+      { label: "01 Shape", relation: "Example을 tensor batch로 묶고 같은 model을 적용합니다.", concepts: ["tensor-batch", "parameterized-model"] },
+      { label: "02 Step", relation: "Forward 뒤 loss·backward·update를 연결합니다.", concepts: ["forward-pass", "loss-objective", "backpropagation", "optimizer-update", "training-step"] },
+      { label: "03 Use", relation: "Update가 있는 training과 고정 parameter inference를 분리합니다.", concepts: ["training-step", "inference"] },
+    ],
+    exercises: [
+      { level: "basic", question: "고양이 분류의 input x와 target y를 구분하세요.", answerChecklist: ["pixel tensor", "class label", "model sees x", "loss compares y"], requiredConcepts: ["feature-target"], sectionId: "overview" },
+      { level: "basic", question: "Parameterized model의 θ와 hyperparameter를 구분하세요.", answerChecklist: ["weight/bias", "gradient-updated", "learning rate", "not same"], requiredConcepts: ["parameterized-model"], sectionId: "overview" },
+      { level: "basic", question: "32×3×224×224의 axis 의미를 설명하세요.", answerChecklist: ["batch 32", "channel 3", "height", "width", "contract caveat"], requiredConcepts: ["tensor-batch"], sectionId: "tensor-batch" },
+      { level: "basic", question: "Forward pass가 만들고 바꾸지 않는 것을 구분하세요.", answerChecklist: ["prediction", "intermediate", "current parameter", "no update"], requiredConcepts: ["forward-pass", "parameterized-model"], sectionId: "training-step" },
+      { level: "basic", question: "Forward·loss·backward·update 순서와 소유자를 설명하세요.", answerChecklist: ["prediction", "scalar objective", "gradient", "optimizer changes parameter"], requiredConcepts: ["training-step", "forward-pass", "loss-objective", "backpropagation", "optimizer-update"], sectionId: "training-step" },
+      { level: "basic", question: "Training과 inference가 공유하고 다르게 보존하는 state를 설명하세요.", answerChecklist: ["forward shared", "parameter fixed", "no optimizer update", "runtime cache possible"], requiredConcepts: ["training-step", "inference"], sectionId: "inference" },
+      { level: "advanced", question: "Batch mean과 sum reduction이 gradient scale을 어떻게 바꾸는지 설명하세요.", answerChecklist: ["sum contributions", "divide by B", "same examples", "learning-rate interaction"], requiredConcepts: ["tensor-batch", "training-step"], sectionId: "training-step" },
+      { level: "advanced", question: "Shape는 맞지만 batch와 channel axis를 바꾼 반례를 진단하세요.", answerChecklist: ["axis semantics", "model contract", "same numbers insufficient", "fixture"], requiredConcepts: ["tensor-batch"], sectionId: "tensor-batch" },
+      { level: "advanced", question: "Self-supervised target이 supervised label과 다른 경계를 설계하세요.", answerChecklist: ["target derived from input", "no human label required", "prediction task", "leakage boundary"], requiredConcepts: ["feature-target"], sectionId: "overview" },
+      { level: "advanced", question: "Training loop의 재현 receipt와 inference handoff를 작성하세요.", answerChecklist: ["data/batch", "parameter revision", "loss/reduction", "optimizer state", "checkpoint", "fixed inference", "runtime state"], requiredConcepts: ["training-step", "inference"], sectionId: "inference" },
+    ],
+    papers: [
+      { title: "Deep Learning Book · Machine Learning Basics", href: "https://www.deeplearningbook.org/contents/ml.html", problem: "Supervised learning의 data·model·objective 역할을 구분합니다.", contribution: "Learning algorithm과 generalization을 공통 표기로 정리합니다.", assumptions: "명시된 data-generating process와 loss·model family입니다.", evidenceScope: "Supervised learning 기본 정의 범위입니다.", notClaim: "특정 architecture·optimizer의 우월성 보장이 아닙니다.", sectionId: "paper-supervised-learning" },
+      { title: "Automatic Differentiation in Machine Learning: a Survey", href: "https://jmlr.org/papers/v18/17-468.html", problem: "Derivative 계산과 optimization update를 구분합니다.", contribution: "Forward·reverse accumulation과 computational graph 비용을 정리합니다.", assumptions: "Primitive derivative와 추적 가능한 program입니다.", evidenceScope: "Autodiff 원리와 implementation taxonomy입니다.", notClaim: "Optimizer 수렴이나 generalization을 보장하지 않습니다.", sectionId: "paper-autodiff-survey" },
+    ],
+  },
+  "ai/train-validation-test": {
+    entryLevel: true,
+    entryNote: "Model training을 자세히 모른다고 가정합니다. Train·validation·test를 비율이 아니라 서로 다른 결정을 소유하는 data 역할로 정의합니다.",
+    coreIdea: "Train은 parameter 학습, validation은 candidate 선택, test는 선택 종료 뒤 final assessment를 소유합니다. Validation feedback과 test 재사용을 기록해야 generalization evidence를 독립적으로 해석할 수 있습니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "train-validation-test", role: "Parameter 학습·candidate 선택·final assessment data를 분리합니다." },
+      { id: "validation-selection-feedback", role: "Validation score가 hyperparameter·checkpoint 선택으로 돌아가는 경로를 기록합니다." },
+      { id: "test-set-reuse-contamination", role: "Test 결과를 본 뒤 설정을 바꾸면 독립 final evidence를 잃는 경계를 설명합니다." },
+      { id: "generalization", role: "학습에 직접 쓰지 않은 같은 목표의 새 data에서 성능을 유지하는 능력을 구분합니다." },
+    ],
+    conceptExplanations: [
+      { id: "train-validation-test", sectionId: "overview", intuition: "문제집은 weight를 배우고 모의고사는 선택을 조정하며 마지막 시험은 결정이 끝날 때까지 잠급니다.", workedExample: "Train으로 weight를 update하고 validation으로 learning rate를 고른 뒤 test로 frozen procedure를 한 번 평가합니다.", boundary: "고정 random 비율이 모든 group·time deployment에 맞는다는 뜻은 아닙니다." },
+      { id: "validation-selection-feedback", sectionId: "selection-feedback", intuition: "Gradient에 쓰지 않아도 score를 보고 후보를 고르면 validation 정보가 procedure로 돌아갑니다.", workedExample: "Validation loss가 가장 낮은 epoch의 checkpoint를 선택합니다.", boundary: "반복 tuning은 validation noise에도 맞출 수 있어 시도 횟수와 선택 규칙을 기록합니다." },
+      { id: "test-set-reuse-contamination", sectionId: "selection-feedback", intuition: "마지막 시험 점수를 보고 답안 규칙을 고치면 그 시험은 더 이상 마지막 시험이 아닙니다.", workedExample: "Test F1을 보고 threshold를 바꾸면 새 threshold에는 별도 untouched holdout이 필요합니다.", boundary: "Bug fix라도 test feedback 이후라면 adaptation으로 기록합니다." },
+      { id: "generalization", sectionId: "generalization", intuition: "연습 답을 외운 것이 아니라 같은 목표의 새 example에도 규칙을 적용하는 능력입니다.", workedExample: "Train accuracy 100%, test 70%면 observed gap이 큽니다.", boundary: "한 test score가 distribution shift와 미래 배포를 자동 보장하지 않습니다." },
+    ],
+    conceptStages: [
+      { label: "00 Roles", relation: "세 split이 바꿀 수 있는 결정을 분리합니다.", concepts: ["train-validation-test"] },
+      { label: "01 Feedback", relation: "Validation이 candidate selection으로 돌아오는 경로를 기록합니다.", concepts: ["validation-selection-feedback"] },
+      { label: "02 Final", relation: "Test feedback의 재사용 오염을 차단합니다.", concepts: ["test-set-reuse-contamination"] },
+      { label: "03 Evidence", relation: "학습 밖 성능과 실제 split unit 경계를 연결합니다.", concepts: ["generalization", "deployment-matched-validation-risk"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Train·validation·test가 각각 바꿀 수 있는 결정을 설명하세요.", answerChecklist: ["parameter", "candidate/hyperparameter", "final report", "separate roles"], requiredConcepts: ["train-validation-test"], sectionId: "overview" },
+      { level: "basic", question: "Validation으로 checkpoint를 선택하는 것이 feedback인 이유를 설명하세요.", answerChecklist: ["score observed", "candidate selection", "procedure changes", "not gradient requirement"], requiredConcepts: ["validation-selection-feedback"], sectionId: "selection-feedback" },
+      { level: "basic", question: "Test score를 보고 threshold를 바꾼 뒤 필요한 조치를 쓰세요.", answerChecklist: ["test reused", "now selection data", "new untouched holdout", "record adaptation"], requiredConcepts: ["test-set-reuse-contamination"], sectionId: "selection-feedback" },
+      { level: "basic", question: "Training score와 generalization을 구분하세요.", answerChecklist: ["seen data fit", "unseen same goal", "held-out", "distribution caveat"], requiredConcepts: ["generalization"], sectionId: "generalization" },
+      { level: "basic", question: "Validation loss .4와 train loss .25의 observed gap을 계산하세요.", answerChecklist: [".15", "same metric", "diagnostic", "not cause proof"], requiredConcepts: ["generalization"], sectionId: "generalization" },
+      { level: "basic", question: "새 row·새 사람·미래 배포에 맞는 split unit을 구분하세요.", answerChecklist: ["random candidate", "group", "time", "deployment unit"], requiredConcepts: ["train-validation-test", "generalization"], sectionId: "next-protocol" },
+      { level: "advanced", question: "Validation을 100회 반복 tuning할 때 생기는 selection optimism과 기록 항목을 설명하세요.", answerChecklist: ["noise selection", "attempt count", "candidate lineage", "frozen rule", "test"], requiredConcepts: ["validation-selection-feedback"], sectionId: "selection-feedback" },
+      { level: "advanced", question: "Test reuse incident의 evidence ledger를 작성하세요.", answerChecklist: ["first access time", "observed metric", "changes after access", "invalidate final claim", "new holdout"], requiredConcepts: ["test-set-reuse-contamination"], sectionId: "selection-feedback" },
+      { level: "advanced", question: "큰 observed gap의 overfitting·shift·leakage 가설을 분리하는 검사를 설계하세요.", answerChecklist: ["learning curves", "split distribution", "entity/time overlap", "pipeline parity", "independent slice"], requiredConcepts: ["generalization", "train-validation-test"], sectionId: "generalization" },
+      { level: "advanced", question: "Cross-validation으로 넘길 것과 final test로 남길 것을 구분하세요.", answerChecklist: ["selection procedure", "fold-local fit", "group/time unit", "untouched final", "no adaptive reuse"], requiredConcepts: ["train-validation-test", "validation-selection-feedback", "test-set-reuse-contamination"], sectionId: "next-protocol" },
+    ],
+    papers: [
+      { title: "The Elements of Statistical Learning · Model Assessment and Selection", href: "https://hastie.su.domains/ElemStatLearn/", problem: "Training error와 generalization error, model selection과 assessment를 구분합니다.", contribution: "Training·validation·test 역할과 bias–variance 관점을 정리합니다.", assumptions: "Statistical learning의 sampling·loss 조건입니다.", evidenceScope: "교과서의 model assessment·selection 원리입니다.", notClaim: "고정 random 비율이 모든 group·time deployment에 맞는다는 뜻은 아닙니다.", sectionId: "paper-train-test" },
+      { title: "Cross-Validation: What Does It Estimate and How Well Does It Do It?", href: "https://pmc.ncbi.nlm.nih.gov/articles/PMC11412612/", problem: "CV가 특정 fitted model과 learning procedure 중 무엇의 error를 추정하는지 구분합니다.", contribution: "CV estimand와 uncertainty를 분석합니다.", assumptions: "논문의 OLS theorem과 CV construction 조건입니다.", evidenceScope: "논문이 분석한 estimand·coverage 범위입니다.", notClaim: "모든 learner의 finite-sample equality나 독립 test 대체를 보장하지 않습니다.", sectionId: "paper-cv-estimand" },
     ],
   },
 };

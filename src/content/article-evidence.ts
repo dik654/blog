@@ -1000,12 +1000,6 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://arxiv.org/abs/1602.04485",
       note: "특정 함수족에서 깊이와 폭 사이의 지수적 표현 격차를 보인 이론 결과",
     },
-    {
-      kind: "핵심 논문",
-      label: "ImageNet Classification with Deep Convolutional Neural Networks",
-      href: "https://papers.nips.cc/paper_files/paper/2012/hash/c399862d3b9d6b76c8436e924a68c45b-Abstract.html",
-      note: "대규모 image data·깊은 CNN·GPU training recipe를 결합한 AlexNet 실험",
-    },
   ],
   "ai/autoencoder": [
     {
@@ -5439,5 +5433,13 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 코드", label: "Qwen3.6-27B · BF16 safetensors index", href: "https://huggingface.co/Qwen/Qwen3.6-27B/blob/main/model.safetensors.index.json", note: "total_size 55,562,855,904 bytes의 exact BF16 weight payload 적용 예이며 KV·workspace는 포함하지 않음" },
     { kind: "공식 코드", label: "Qwen3.6-27B-FP8 · mixed checkpoint", href: "https://huggingface.co/Qwen/Qwen3.6-27B-FP8/tree/main", note: "FP8·BF16 tensor가 섞인 official artifact 적용 예이며 activation·KV dtype을 자동 결정하지 않음" },
     { kind: "공식 문서", label: "vLLM · Hybrid KV Cache Manager", href: "https://docs.vllm.ai/en/stable/design/hybrid_kv_cache_manager/", note: "서로 다른 cache spec의 group·page·padding이 physical allocation을 바꾸는 공식 설계 경계" },
+  ],
+  "ai/supervised-learning-loop": [
+    { kind: "보충 읽기", label: "Deep Learning Book · Machine Learning Basics", href: "https://www.deeplearningbook.org/contents/ml.html", note: "Input·target·model·objective와 generalization의 기본 역할 정본" },
+    { kind: "핵심 논문", label: "Automatic Differentiation in Machine Learning: a Survey", href: "https://jmlr.org/papers/v18/17-468.html", note: "Forward·reverse derivative 계산과 optimizer update의 책임 분리" },
+  ],
+  "ai/train-validation-test": [
+    { kind: "보충 읽기", label: "The Elements of Statistical Learning · Model Assessment and Selection", href: "https://hastie.su.domains/ElemStatLearn/", note: "Training error·selection·final assessment와 generalization 역할 구분" },
+    { kind: "핵심 논문", label: "Cross-Validation: What Does It Estimate and How Well Does It Do It?", href: "https://pmc.ncbi.nlm.nih.gov/articles/PMC11412612/", note: "Cross-validation estimand와 독립 final evaluation 경계" },
   ],
 };

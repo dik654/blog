@@ -2459,35 +2459,51 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Input feature · target",
     definition:
       "한 example에서 모델에 주는 관측값 x와 모델이 맞히거나 설명해야 하는 기준 y를 구분한 학습 계약입니다.",
-    canonicalHref: "/ai/deep-learning-overview#learning-loop",
+    canonicalHref: "/ai/supervised-learning-loop#overview",
   },
   "tensor-batch": {
     id: "tensor-batch",
     label: "Tensor · batch",
     definition:
       "숫자를 축과 shape가 있는 배열로 표현하고, 여러 example을 batch 축에 묶어 함께 계산합니다.",
-    canonicalHref: "/ai/deep-learning-overview#learning-loop",
+    canonicalHref: "/ai/supervised-learning-loop#tensor-batch",
   },
   "train-validation-test": {
     id: "train-validation-test",
     label: "Train · validation · test split",
     definition:
       "파라미터 학습, 선택과 튜닝, 최종 일반화 보고에 쓰는 데이터를 서로 분리하는 평가 경계입니다.",
-    canonicalHref: "/ai/deep-learning-overview#learning-loop",
+    canonicalHref: "/ai/train-validation-test#overview",
+  },
+  "validation-selection-feedback": {
+    id: "validation-selection-feedback",
+    domain: "machine-learning",
+    label: "Validation selection feedback",
+    definition:
+      "Validation score가 gradient가 아니라 hyperparameter·checkpoint·stopping decision을 통해 학습 procedure로 돌아오는 선택 경로입니다.",
+    canonicalHref: "/ai/train-validation-test#selection-feedback",
+  },
+  "test-set-reuse-contamination": {
+    id: "test-set-reuse-contamination",
+    domain: "machine-learning",
+    label: "Test-set reuse contamination",
+    definition:
+      "Test 결과를 관찰한 뒤 model·threshold·prompt·pipeline을 바꿔 해당 test가 독립 final assessment 역할을 잃은 상태입니다.",
+    canonicalHref: "/ai/train-validation-test#selection-feedback",
   },
   "parameterized-model": {
     id: "parameterized-model",
     label: "Parameterized model",
     definition:
       "입력 x와 학습되는 파라미터 θ를 받아 예측을 내는 함수 fθ(x)입니다.",
-    canonicalHref: "/ai/deep-learning-overview#learning-loop",
+    canonicalHref: "/ai/supervised-learning-loop#overview",
   },
   "forward-pass": {
     id: "forward-pass",
     label: "Forward pass",
     definition:
       "현재 파라미터로 입력을 층마다 변환해 prediction과 역전파에 필요한 중간값을 만드는 계산입니다.",
-    canonicalHref: "/ai/deep-learning-overview#learning-loop",
+    canonicalHref: "/ai/supervised-learning-loop#training-step",
   },
   "representation-learning": {
     id: "representation-learning",
@@ -2496,12 +2512,28 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "Task에 유용한 중간 특징을 사람이 고정하지 않고 objective를 통해 모델 파라미터와 함께 학습합니다.",
     canonicalHref: "/ai/deep-learning-overview#overview",
   },
+  "representation-objective-bias": {
+    id: "representation-objective-bias",
+    domain: "machine-learning",
+    label: "Representation objective bias",
+    definition:
+      "Data·target·loss가 input의 어떤 차이를 중간 representation에 보존하도록 유도하는지 나타내는 학습 경계입니다.",
+    canonicalHref: "/ai/deep-learning-overview#overview",
+  },
   "depth-efficiency": {
     id: "depth-efficiency",
     label: "Depth efficiency",
     definition:
       "반복되는 함수 구조를 여러 층에서 합성하고 중간 표현을 재사용해 특정 함수족을 더 적은 폭으로 나타내는 성질입니다.",
-    canonicalHref: "/ai/deep-learning-overview#overview",
+    canonicalHref: "/ai/deep-learning-overview#depth",
+  },
+  "depth-optimization-boundary": {
+    id: "depth-optimization-boundary",
+    domain: "machine-learning",
+    label: "Depth expressivity · optimization boundary",
+    definition:
+      "깊은 model의 표현 가능성, 유한한 procedure로 parameter를 찾는 optimization, 새 data 성능을 서로 다른 주장으로 분리하는 경계입니다.",
+    canonicalHref: "/ai/deep-learning-overview#boundaries",
   },
   "loss-objective": {
     id: "loss-objective",
@@ -2673,28 +2705,28 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Training step",
     definition:
       "한 batch에 대해 forward pass, loss 계산, backpropagation과 optimizer update를 차례로 수행하는 반복 단위입니다.",
-    canonicalHref: "/ai/deep-learning-overview#learning-loop",
+    canonicalHref: "/ai/supervised-learning-loop#training-step",
   },
   generalization: {
     id: "generalization",
     label: "Generalization",
     definition:
       "학습에 직접 사용하지 않은, 같은 목표의 새 data에서도 유용한 성능을 유지하는 능력입니다.",
-    canonicalHref: "/ai/deep-learning-overview#learning-loop",
+    canonicalHref: "/ai/train-validation-test#generalization",
   },
   inference: {
     id: "inference",
     label: "Inference",
     definition:
       "학습을 마친 파라미터를 고정하고 새 입력에 forward pass를 실행해 prediction을 만드는 단계입니다.",
-    canonicalHref: "/ai/deep-learning-overview#learning-loop",
+    canonicalHref: "/ai/supervised-learning-loop#inference",
   },
   "compute-memory-bottleneck": {
     id: "compute-memory-bottleneck",
     label: "Compute · memory bottleneck",
     definition:
       "실행 시간이 산술 연산량, memory traffic, kernel utilization 또는 device communication 중 무엇에 제한되는지 구분합니다.",
-    canonicalHref: "/ai/deep-learning-overview#acceleration",
+    canonicalHref: "/gpu/cuda-perf-analysis#overview",
   },
   "linear-score": {
     id: "linear-score",
@@ -28901,6 +28933,14 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   { from: "model-vram-known-floor", to: "model-vram-startup-receipt", relation: "prerequisite", reason: "Shape로 계산한 하한과 실제 reserved·peak의 차이를 기록해야 runtime overhead를 재현할 수 있습니다." },
   { from: "resident-memory-concurrency-bound", to: "model-vram-startup-receipt", relation: "evaluates", reason: "실제 request 길이·동시성 분포에서 device capacity를 넘지 않는지 startup receipt로 검증합니다." },
   { from: "model-vram-startup-receipt", to: "qwen36-serving-release-gate", relation: "prerequisite", reason: "범용 weight·cache·workspace receipt를 Qwen3.6의 hybrid architecture와 48 GiB 적용 조건에 사용합니다." },
+  { from: "representation-objective-bias", to: "representation-learning", relation: "constrains", reason: "Data·target·loss가 중간 표현이 보존할 차이를 제한하므로 representation을 architecture만의 결과로 읽지 않습니다." },
+  { from: "representation-learning", to: "depth-efficiency", relation: "prerequisite", reason: "재사용할 중간 representation을 알아야 여러 층의 compositional reuse를 설명할 수 있습니다." },
+  { from: "depth-optimization-boundary", to: "depth-efficiency", relation: "constrains", reason: "표현 비용의 이점을 optimization 성공이나 generalization 보장으로 확대하지 않습니다." },
+  { from: "train-validation-test", to: "validation-selection-feedback", relation: "produces", reason: "Validation split의 score가 hyperparameter·checkpoint 선택으로 돌아가는 정상 feedback 경로를 만듭니다." },
+  { from: "validation-selection-feedback", to: "test-set-reuse-contamination", relation: "contrasts", reason: "선택 feedback은 validation의 역할이지만 같은 feedback을 final test에서 받으면 독립 assessment를 오염시킵니다." },
+  { from: "test-set-reuse-contamination", to: "generalization", relation: "constrains", reason: "재사용된 test score를 독립 generalization evidence로 해석하지 못하게 제한합니다." },
+  { from: "train-validation-test", to: "deployment-matched-validation-risk", relation: "prerequisite", reason: "세 data 역할을 분리한 뒤 실제 배포의 row·group·time unit에 맞는 validation protocol을 설계합니다." },
+  { from: "compute-memory-bottleneck", to: "cuda-bottleneck-hypothesis-loop", relation: "prerequisite", reason: "Compute·memory·launch·communication 후보를 분리해야 profiler counter 하나를 원인으로 단정하지 않는 가설 loop를 시작할 수 있습니다." },
 ];
 
 export function getKnowledgeConcept(id: string): KnowledgeConcept {
