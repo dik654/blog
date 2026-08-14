@@ -1118,3 +1118,12 @@
 - 2-route 중간안의 runtime이 다시 두 학습 arc를 가진다는 topology finding을 받자 `ai/qwen36-long-context-deployment`를 추가 생성했다. 이 과정에서 `qwen36-prefix-state-transaction`, `qwen36-context-support-boundary`를 graph에 새로 소유시키고 7개 관계를 연결했으며, 세 route 모두 topology keep 상태가 됐다.
 - 공개 route·exact learning contract는 408개, graph는 2,322 concepts·3,430 relations·invariant 0이다. 세 route의 수식 7개는 전부 explicit operation annotation이며 390px·1440px에서 document/Viz/KaTeX overflow 0, console warning/error 0을 확인했다.
 - Hybrid schedule·request lifecycle·context envelope Viz는 전체 map을 유지하면서 현재 장면을 확대하고, `ArrowLeft`·`ArrowRight`·`Space` 키와 자동 재생이 실제 동작하도록 검증했다. 전역 formula backlog 1,008개/688 legacy files와 topology split-review 86개는 다음 CRUD 반복에서 계속 줄인다.
+
+## 2026-08-15 · CUDA optimization CRUD split
+
+- 기존 `gpu/cuda-perf-analysis` 한 글에 섞여 있던 측정 경계, register pressure, kernel fusion, persistent kernel을 각각 독립적으로 정의→형태→예시→경계까지 닫히는 네 수업으로 분리했다.
+- 분리 중 기존 graph만으로 설명되지 않던 register residency·spill path·resource release, fusion ROI, persistent worker·queue progress·shutdown drain·release gate 8개를 canonical concept로 추가하고 18개 관계를 연결했다. 기존 live-range·fusion·persistent owner도 새 정본 route로 이동했다.
+- 공개 route와 exact learning contract는 408개에서 411개, graph는 2,330 concepts·3,448 relations로 늘었고 invariant failure·stage warning은 0이다. 네 route 모두 topology `keep`이며 전체 split-review는 86개에서 85개로 줄었다.
+- 수식 7개는 전부 KaTeX 본문 안에 연산 의도를 붙이는 explicit operation annotation으로 작성했다. 측정 경계, live range와 resident warp, small fusion과 Megakernel, persistent work queue는 텍스트 카드가 아니라 도형·timeline·resource map으로 시각화했다.
+- 모든 interactive Viz에서 `ArrowLeft`·`ArrowRight`를 지원하고 장면형 Viz는 `Space` 자동 재생을 지원한다. 390px·1440px 실제 브라우저에서 document/Viz/KaTeX overflow 0, console warning/error 0, gradient·shadow·굵은 선 0을 확인했다.
+- 전역 formula backlog는 1,006개/687 legacy files다. 다음 CRUD 반복에서도 topology 후보를 읽는 동시에 formula operation annotation과 concept graph를 함께 확장한다.

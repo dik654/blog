@@ -4928,11 +4928,20 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "gpu/cuda-perf-analysis": [
     { kind: "공식 문서", label: "NVIDIA CUDA C++ Best Practices Guide 12.8.1", href: "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-best-practices-guide/index.html", note: "APOD·timing·effective bandwidth·Amdahl과 reference validation의 pinned 정본" },
-    { kind: "공식 문서", label: "NVIDIA CUDA C++ Programming Guide 12.8.1", href: "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-programming-guide/index.html", note: "Thread register·SM residency·device-memory-backed local address space와 compiler resource inspection의 pinned semantics" },
     { kind: "공식 문서", label: "NVIDIA Nsight Compute 2025.1 User Guide", href: "https://docs.nvidia.com/nsight-compute/2025.1/NsightCompute/index.html", note: "Kernel metric·section·replay semantics의 release-pinned profiler 문서" },
     { kind: "공식 문서", label: "NVIDIA Nsight Systems 2025.1 User Guide", href: "https://docs.nvidia.com/nsight-systems/2025.1/UserGuide/index.html", note: "CPU/GPU timeline·CUDA trace의 release-pinned profiler 문서" },
+  ],
+  "gpu/cuda-register-pressure": [
+    { kind: "공식 문서", label: "NVIDIA CUDA C++ Programming Guide 12.8.1", href: "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-programming-guide/index.html", note: "Thread register·SM residency·device-memory-backed local address space와 compiler resource inspection의 pinned semantics" },
+    { kind: "공식 문서", label: "NVIDIA Nsight Compute 2025.1 User Guide", href: "https://docs.nvidia.com/nsight-compute/2025.1/NsightCompute/index.html", note: "Launch resource·scheduler·local-memory traffic metric의 release-pinned semantics" },
+  ],
+  "gpu/cuda-kernel-fusion": [
     { kind: "핵심 논문", label: "FlashAttention · IO-Aware Exact Attention", href: "https://arxiv.org/abs/2205.14135", note: "Attention 내부의 tile 단위 HBM IO 절감 근거이며 model-wide Megakernel의 보편적 이득을 뜻하지 않음" },
+    { kind: "공식 문서", label: "NVIDIA CUDA C++ Best Practices Guide 12.8.1", href: "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-best-practices-guide/index.html", note: "Fusion 후보의 timing·effective bandwidth·reference comparison 경계를 고정하는 공식 guide" },
+  ],
+  "gpu/cuda-persistent-kernels": [
     { kind: "핵심 논문", label: "A Study of Persistent Threads Style GPU Programming", href: "https://doi.org/10.1109/InPar.2012.6339596", note: "Persistent worker와 work distribution use cases의 2012 primary study이며 현대 GPU speedup 보장은 아님" },
+    { kind: "공식 문서", label: "NVIDIA CUDA C++ Programming Guide 12.8.1", href: "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-programming-guide/index.html", note: "Grid·block residency·atomic·memory ordering과 cooperative execution primitive의 pinned semantics" },
   ],
   "gpu/gpu-arch-hopper": [
     { kind: "공식 가이드", label: "NVIDIA Hopper Tuning Guide · CUDA 12.8.1", href: "https://docs.nvidia.com/cuda/archive/12.8.1/hopper-tuning-guide/index.html", note: "Compute capability 9.0 resource·TMA·cluster tuning의 pinned guide" },

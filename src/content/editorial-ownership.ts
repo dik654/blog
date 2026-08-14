@@ -6324,8 +6324,6 @@ export const EDITORIAL_BOUNDARIES = {
     owns: [
       "Warm-up·CUDA event·CPU completion과 반복 분포의 timing protocol",
       "Achieved FLOP/s·bandwidth·actual traffic을 같은 경계에 둔 ledger",
-      "Thread register live range·local-memory spill과 occupancy가 순서대로 만드는 resource pressure",
-      "작은 kernel fusion·Megakernel·persistent work queue의 서로 다른 설계 경계",
       "Systems→Roofline/Amdahl→Compute counter→single change→release loop",
     ],
     reuses: [
@@ -6337,10 +6335,64 @@ export const EDITORIAL_BOUNDARIES = {
     ],
     evidence: [
       { kind: "standard", rule: "Timing·effective bandwidth는 CUDA Best Practices 12.8.1의 measurement semantics에 고정한다." },
-      { kind: "standard", rule: "Register·local memory·residency 표현은 CUDA Programming Guide 12.8.1과 실제 target compute capability·compiler report에 고정한다." },
-      { kind: "primary-source", rule: "FlashAttention은 attention 내부 IO-aware tile fusion 범위에, Persistent Threads는 2012 평가 workload 범위에만 귀속한다." },
       { kind: "primary-source", rule: "Profiler counter·replay 의미는 Nsight Systems/Compute 2025.1 guide와 supported target 범위에 귀속한다." },
-      { kind: "project-measurement", rule: "Unfused·small fusion·Megakernel·persistent 후보는 pinned workload·software·clock에서 parity, median/p95, register·spill·shared·traffic·eligible-warp와 counter 방향을 paired 비교한다." },
+      { kind: "project-measurement", rule: "Optimization candidate는 pinned workload·software·clock에서 parity, median/p95와 예상 counter 방향을 paired 비교한다." },
+    ],
+  },
+  "cuda-register-pressure": {
+    title: "CUDA register live range·residency·spill 글이 소유하는 범위",
+    owns: [
+      "Thread-local value의 live range overlap과 compiler register allocation",
+      "Thread·warp·SM register 예산에서 resident warp 상한으로 가는 계산",
+      "Residency 감소 뒤 local-address spill·cache·device-memory로 이어지는 경로",
+    ],
+    reuses: [
+      { label: "GPU occupancy 정본", href: "/gpu/gpu-architecture#gpu-latency-hiding-occupancy" },
+      { label: "GPU memory hierarchy", href: "/gpu/gpu-architecture#gpu-memory-traffic-hierarchy" },
+      { label: "Warp·SM 실행 정본", href: "/gpu/cuda-thread-hierarchy#overview" },
+      { label: "CUDA measurement protocol", href: "/gpu/cuda-perf-analysis#measurement-protocol" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "Register·local memory·residency 표현은 CUDA Programming Guide 12.8.1과 target compute capability·compiler report에 고정한다." },
+      { kind: "primary-source", rule: "Profiler resource·scheduler·memory metric은 Nsight Compute 2025.1 semantics에 귀속한다." },
+      { kind: "project-measurement", rule: "Registers/thread·spill·resident/eligible warps와 kernel·end-to-end elapsed를 같은 candidate receipt에서 비교한다." },
+    ],
+  },
+  "cuda-kernel-fusion": {
+    title: "CUDA small fusion·Megakernel 글이 소유하는 범위",
+    owns: [
+      "Intermediate HBM write/read를 없애는 small-fusion IO boundary",
+      "이질적 stages의 live resource와 scheduling을 한 kernel이 소유하는 Megakernel trade-off",
+      "FlashAttention의 tile-budgeted fusion과 model-wide Megakernel의 구분",
+    ],
+    reuses: [
+      { label: "CUDA performance measurement", href: "/gpu/cuda-perf-analysis" },
+      { label: "Register pressure", href: "/gpu/cuda-register-pressure" },
+      { label: "GPU memory hierarchy", href: "/gpu/gpu-architecture#gpu-memory-traffic-hierarchy" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "FlashAttention은 attention 내부 IO-aware exact tile fusion 범위에만 귀속한다." },
+      { kind: "standard", rule: "Fusion 후보의 timing·traffic·reference comparison은 CUDA Best Practices 12.8.1 경계에 고정한다." },
+      { kind: "project-measurement", rule: "Unfused·small fusion·Megakernel을 parity, median/p95, register·spill·shared·traffic·eligible-warp로 비교한다." },
+    ],
+  },
+  "cuda-persistent-kernels": {
+    title: "CUDA persistent worker·queue·shutdown 글이 소유하는 범위",
+    owns: [
+      "Long-lived resident worker의 resource partition과 다른 GPU work progress 경계",
+      "Bounded queue의 task ticket·backpressure·completion protocol",
+      "Input close→in-flight drain→all-worker exit의 shutdown·failure contract",
+    ],
+    reuses: [
+      { label: "CUDA kernel lifecycle", href: "/gpu/cuda-basics#execution-path" },
+      { label: "CUDA atomic·synchronization", href: "/gpu/cuda-sync-streams" },
+      { label: "Register·residency budget", href: "/gpu/cuda-register-pressure#residency" },
+      { label: "Fusion과 Megakernel", href: "/gpu/cuda-kernel-fusion" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Persistent Threads 성능 결과는 2012년 평가 GPU·runtime·workload에 귀속한다." },
+      { kind: "standard", rule: "Grid·block·atomic·memory-order semantics는 CUDA Programming Guide 12.8.1에 고정한다." },
+      { kind: "project-measurement", rule: "Task loss·duplicate·ordering, queue depth·tail, 다른 stream progress와 clean shutdown을 launch 절감과 함께 검증한다." },
     ],
   },
   "gpu-arch-hopper": {

@@ -1898,6 +1898,69 @@ export const ARTICLE_CONCEPT_FLOWS: Record<string, ConceptFlow> = {
     ],
     "점유율은 목표가 아니라 latency를 숨길 만큼의 병렬성이 있는지 보는 중간 지표입니다.",
   ),
+  "gpu/cuda-register-pressure": flow(
+    "Register resource path",
+    "값의 lifetime이 어떻게 residency와 spill로 이어질까?",
+    [
+      {
+        label: "Live range",
+        detail: "마지막 사용까지 보존할 value 구간을 표시합니다.",
+      },
+      { label: "Register", detail: "겹친 값들을 thread당 slots에 배정합니다." },
+      {
+        label: "Residency",
+        detail: "SM 예산이 resident warps를 먼저 제한합니다.",
+      },
+      {
+        label: "Spill",
+        detail: "부족한 값은 local address와 device memory 경로를 탑니다.",
+      },
+    ],
+    "Spill 0이어도 register 증가로 latency-hiding opportunity가 먼저 줄 수 있습니다.",
+  ),
+  "gpu/cuda-kernel-fusion": flow(
+    "Fusion resource balance",
+    "HBM 왕복을 줄이는 이익이 언제 자원 손실보다 클까?",
+    [
+      {
+        label: "Separate",
+        detail: "각 stage가 독립 launch·resource budget을 가집니다.",
+      },
+      {
+        label: "Small fusion",
+        detail: "인접 elementwise 경계의 intermediate IO를 없앱니다.",
+      },
+      {
+        label: "Megakernel",
+        detail: "이질적 stages의 lifetime과 scheduling을 함께 소유합니다.",
+      },
+      {
+        label: "Gate",
+        detail: "Traffic·register·spill·elapsed를 paired 비교합니다.",
+      },
+    ],
+    "Fusion은 source 크기가 아니라 중간값의 저장 위치와 resource lifetime을 고르는 문제입니다.",
+  ),
+  "gpu/cuda-persistent-kernels": flow(
+    "Persistent worker lifecycle",
+    "Kernel이 계속 살아 있으면 task 경계는 누가 소유할까?",
+    [
+      {
+        label: "Publish",
+        detail: "Producer가 bounded queue에 task를 게시합니다.",
+      },
+      {
+        label: "Ticket",
+        detail: "Resident worker가 원자적으로 소유권을 얻습니다.",
+      },
+      { label: "Complete", detail: "결과와 completion sequence를 공개합니다." },
+      {
+        label: "Drain",
+        detail: "입력을 닫고 in-flight 0 뒤 모든 workers가 종료합니다.",
+      },
+    ],
+    "Launch 절감 대신 queue ordering·backpressure·resource partition·shutdown 계약을 새로 소유합니다.",
+  ),
   "gpu/ec-gpu-ops": flow(
     "곡선점 GPU 연산",
     "큰 정수와 점 연산을 warp에 어떻게 나눌까?",
