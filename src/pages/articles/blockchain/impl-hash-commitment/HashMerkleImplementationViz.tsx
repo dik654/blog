@@ -1,0 +1,6 @@
+export default function HashMerkleImplementationViz() {
+  return <figure data-viz="hash-merkle-implementation" className="not-prose rounded-xl border border-border bg-card p-4 sm:p-6">
+    <figcaption className="mb-5"><p className="text-xs font-semibold text-primary">IMPLEMENTATION SEAMS</p><p className="mt-1 text-sm text-muted-foreground">Primitive보다 경계에서 더 자주 root 호환성과 security가 깨집니다.</p></figcaption>
+    <div className="grid gap-3 lg:grid-cols-[1fr_auto_1fr_auto_1fr] lg:items-center"><div className="rounded-lg border border-border bg-background p-4"><strong className="text-sm">Bytes API</strong><p className="mt-2 text-xs leading-5 text-muted-foreground">stream chunks · finalize<br/>length · endianness</p></div><span className="hidden text-muted-foreground lg:block">→</span><div className="rounded-lg border border-border bg-background p-4"><strong className="text-sm">Typed hash</strong><p className="mt-2 text-xs leading-5 text-muted-foreground">SHA-2 bytes<br/>Poseidon field elements</p></div><span className="hidden text-muted-foreground lg:block">→</span><div className="rounded-lg border border-border bg-background p-4"><strong className="text-sm">Merkle schema</strong><p className="mt-2 text-xs leading-5 text-muted-foreground">leaf/node prefix<br/>index · sibling order</p></div></div>
+  </figure>;
+}

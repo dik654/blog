@@ -5842,6 +5842,30 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "project-measurement", rule: "Bad signature·replay·altered measurement·old TCB·debug·expired collateral·unknown field에서 false accept 0을 hard gate로 둔다." },
     ],
   },
+  "hash-theory": {
+    title: "Hash input·security game·construction 글이 소유하는 범위",
+    owns: ["Canonical bit/byte input과 tuple ambiguity", "Preimage·second-preimage·collision generic boundary", "Merkle–Damgård·sponge construction과 hash release gate"],
+    reuses: [{ label: "Merkle selective opening", href: "/crypto/merkle-tree" }, { label: "Poseidon field permutation", href: "/crypto/poseidon-hash" }],
+    evidence: [{ kind: "standard", rule: "SHA-2/SHA-3 normative claim은 FIPS 180-4/202에 한정한다." }, { kind: "primary-source", rule: "Rust API claim은 pinned RustCrypto source에 한정한다." }, { kind: "project-measurement", rule: "Known vectors와 boundary/differential parity 뒤 성능을 비교한다." }],
+  },
+  "poseidon-hash": {
+    title: "Poseidon profile·HADES round·field sponge 글이 소유하는 범위",
+    owns: ["Poseidon parameter profile", "Power S-box permutation 조건과 MDS diffusion", "Full/partial HADES schedule과 release gate"],
+    reuses: [{ label: "Prime field", href: "/crypto/finite-field" }, { label: "Sponge construction", href: "/crypto/hash-theory#constructions" }],
+    evidence: [{ kind: "primary-source", rule: "Security·constraint claim은 Poseidon 원문 parameter model에 귀속한다." }, { kind: "primary-source", rule: "Poseidon2 source claim은 pinned commit에 한정한다." }, { kind: "project-measurement", rule: "Official vector·inverse·native/circuit parity 뒤 비용을 측정한다." }],
+  },
+  "impl-hash-commitment": {
+    title: "Hash·Poseidon·Merkle 구현 경계 글이 소유하는 범위",
+    owns: ["Rust streaming update/finalize contract", "Byte-to-field serialization boundary", "Merkle leaf/node prefix·index/direction implementation release gate"],
+    reuses: [{ label: "Hash construction", href: "/crypto/hash-theory" }, { label: "Poseidon profile", href: "/crypto/poseidon-hash" }, { label: "Merkle selective opening", href: "/crypto/merkle-tree" }],
+    evidence: [{ kind: "standard", rule: "SHA-2 semantics는 FIPS 180-4에 한정한다." }, { kind: "primary-source", rule: "구현 claim은 pinned arkworks source에 한정한다." }, { kind: "project-measurement", rule: "Malformed encoding/path parity와 reference differential 뒤 비용을 비교한다." }],
+  },
+  proofofsql: {
+    title: "SQL relation·snapshot·opening·transcript 글이 소유하는 범위",
+    owns: ["Typed SQL arithmetization", "Table snapshot schema와 Dory opening boundary", "SQL proof transcript와 correctness/performance release gate"],
+    reuses: [{ label: "Multilinear extension와 sumcheck", href: "/crypto/hyperplonk" }, { label: "Fiat–Shamir", href: "/crypto/zk-theory#noninteractive-boundary" }, { label: "Commitment properties", href: "/crypto/crypto-primitives#merkle-commitment" }],
+    evidence: [{ kind: "primary-source", rule: "지원 SQL/source claim은 pinned Proof-of-SQL commit에 한정한다." }, { kind: "primary-source", rule: "Dory opening claim은 원 논문의 group model에 한정한다." }, { kind: "project-claim", rule: "Proof를 privacy·data availability·freshness 보장으로 확대하지 않는다." }, { kind: "project-measurement", rule: "Wrong semantics/snapshot/result/opening/replay parity 뒤 단계별 비용을 측정한다." }],
+  },
   bulletproofs: {
     title: "Bulletproofs range relation·IPA·aggregation 글이 소유하는 범위",
     owns: ["Committed value bit decomposition과 range relation", "Bulletproofs vector IPA와 logarithmic folding bound", "Aggregation transcript·range-proof release gate"],
@@ -6388,6 +6412,30 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [{ label: "QUIC ACK·loss·flow control", href: "/p2p/quic-fundamentals#overview" }, { label: "TCP transport", href: "/p2p/libp2p-tcp#overview" }, { label: "Noise identity", href: "/p2p/libp2p-noise#overview" }, { label: "Yamux streams", href: "/p2p/libp2p-yamux#overview" }],
     evidence: [{ kind: "primary-source", rule: "PeerId binding·stream·socket reuse·hole punch는 rust-libp2p 0.56.0 QUIC source에 귀속한다." }, { kind: "project-measurement", rule: "Identity mismatch·flow-control stall·stream reset·connection close·hole-punch fallback을 같은 workload에서 측정한다." }, { kind: "project-claim", rule: "QUIC handshake·stream open을 application authorization·durable processing·CID integrity로 확대하지 않는다." }],
   },
+  "isms-backup-recovery": {
+    title: "ISMS backup·recovery 운영 글이 소유하는 범위",
+    owns: ["BIA에서 목표·실제 RPO/RTO를 분리하는 방법", "Backup failure domain·dependency consistency·restore acceptance와 drill release gate"],
+    reuses: [{ label: "KMS key lifecycle", href: "/isms-aml/isms-encryption#key-lifecycle" }, { label: "Run artifact provenance", href: "/ai/agent-devlog-patterns" }],
+    evidence: [{ kind: "standard", rule: "Contingency-planning lifecycle은 NIST SP 800-34 Rev.1 범위에 귀속한다." }, { kind: "primary-source", rule: "국내 인증 확인사항은 2023 KISA 안내서와 2026-08-14 현행 법령을 구분한다." }, { kind: "project-measurement", rule: "삭제·손상·region outage·KMS deny에서 실제 RPO/RTO·업무 oracle·rollback을 측정한다." }],
+  },
+  "isms-incident-response": {
+    title: "ISMS incident-response 운영 글이 소유하는 범위",
+    owns: ["Alert→incident severity·scope·owner 승격과 containment evidence", "Eradication·identity·service·monitoring recovery acceptance와 post-incident control verification"],
+    reuses: [{ label: "Postmortem·lesson 경계", href: "/ai/agent-devlog-patterns" }, { label: "Identity lifecycle", href: "/isms-aml/isms-auth-management" }],
+    evidence: [{ kind: "standard", rule: "Incident-response lifecycle은 NIST SP 800-61 Rev.3 범위에 귀속한다." }, { kind: "primary-source", rule: "국내 인증 확인사항은 KISA 안내서와 incident별 법적 통지 의무를 구분한다." }, { kind: "project-measurement", rule: "False negative·volatile evidence loss·credential residue·recovery relapse를 재생한다." }],
+  },
+  "isms-dev-security": {
+    title: "ISMS secure-development·change 글이 소유하는 범위",
+    owns: ["Threat scenario를 test 가능한 change contract로 바꾸는 방법", "Layered verification·artifact provenance·canary·rollback release gate"],
+    reuses: [{ label: "Run artifact provenance", href: "/ai/agent-devlog-patterns" }, { label: "Application authorization", href: "/isms-aml/isms-access-control" }],
+    evidence: [{ kind: "standard", rule: "Secure-SDLC practice는 NIST SSDF v1.1과 pinned OWASP ASVS release 범위에 귀속한다." }, { kind: "primary-source", rule: "국내 개발·변경관리 확인사항은 KISA 안내서와 현행 조직 policy를 구분한다." }, { kind: "project-measurement", rule: "SAST pass/IDOR fail·artifact mismatch·schema rollback·canary auth failure를 paired 검사한다." }],
+  },
+  "isms-security-infra": {
+    title: "ISMS security-infrastructure 운영 글이 소유하는 범위",
+    owns: ["Firewall·WAF·IDS/IPS·VPN·SIEM의 local decision과 비보장", "Zone·flow policy, telemetry correlation과 paired traffic release gate"],
+    reuses: [{ label: "Network zone·flow policy", href: "/isms-aml/isms-access-control#network-segmentation" }, { label: "Application authorization", href: "/isms-aml/isms-access-control" }],
+    evidence: [{ kind: "standard", rule: "Firewall·log-management 원칙은 NIST SP 800-41 Rev.1·SP 800-92 범위에 귀속한다." }, { kind: "primary-source", rule: "국내 보안시스템 확인사항은 KISA 안내서와 현행 architecture를 구분한다." }, { kind: "project-measurement", rule: "허용·금지·attack·sensor failure traffic에서 signal·action·receipt·latency를 paired 검사한다." }],
+  },
   "msm-gpu-impl": {
     title: "GPU MSM window·bucket·reduction 구현 글이 소유하는 범위",
     owns: ["Signed-window digit 작업표와 partial top-window 처리", "Bucket 충돌 ownership·running-sum reduction과 MSM kernel release gate"],
@@ -6411,6 +6459,54 @@ export const EDITORIAL_BOUNDARIES = {
     owns: ["SRS validation·device residency artifact와 coefficient-SRS MSM binding", "Opening job DAG·verifier receipt와 GPU KZG release/rollback gate"],
     reuses: [{ label: "KZG commitment 정본", href: "/crypto/polycommit#kzg" }, { label: "GPU polynomial operations", href: "/gpu/poly-ops-gpu" }, { label: "GPU MSM implementation", href: "/gpu/msm-gpu-impl" }],
     evidence: [{ kind: "primary-source", rule: "KZG 수학은 원 논문, EIP-4844 reference는 c-kzg v2.1.6, MSM은 sppark commit 17278d7에 귀속한다." }, { kind: "project-measurement", rule: "SRS·form·claim·backend를 고정하고 independent verifier·negative parity 뒤 cold/warm·memory·end-to-end를 비교한다." }, { kind: "project-claim", rule: "MSM kernel time을 KZG/proof speedup으로, c-kzg profile을 모든 KZG batch protocol로 일반화하지 않는다." }],
+  },
+  "gpu-witness-gen": {
+    title: "GPU witness dataflow·frontier·release 글이 소유하는 범위",
+    owns: ["Witness signal producer DAG와 dependency-safe level frontier schedule", "Live signal/instruction/scratch residency와 verifier-first GPU witness release gate"],
+    reuses: [{ label: "R1CS instance·witness relation", href: "/crypto/r1cs" }, { label: "CUDA execution·timing", href: "/gpu/cuda-basics" }, { label: "GPU proof pipeline", href: "/gpu/gpu-proof-pipeline" }],
+    evidence: [{ kind: "primary-source", rule: "Current witness compiler behavior는 Circom v2.2.3, dependency parallelization은 Ou 2023/657에 각각 귀속하며 둘을 이미 통합된 GPU 구현으로 합치지 않는다." }, { kind: "project-measurement", rule: "같은 circuit/input에서 witness bytes·constraint·proof parity 뒤 work/span·live bytes·stage/end-to-end·p95를 비교한다." }, { kind: "project-claim", rule: "Frontier GPU lowering은 desired implementation contract이며 current Circom fact나 보편 speedup이 아니다." }],
+  },
+  "icicle-framework": {
+    title: "ICICLE backend·memory·primitive runtime 글이 소유하는 범위",
+    owns: ["Pinned active-device/backend registration dispatch와 explicit unsupported boundary", "Host/device pointer·stream completion·primitive config receipt와 backend release gate"],
+    reuses: [{ label: "GPU MSM implementation", href: "/gpu/msm-gpu-impl" }, { label: "GPU NTT implementation", href: "/gpu/ntt-gpu-impl" }, { label: "GPU Poseidon implementation", href: "/gpu/poseidon-gpu" }],
+    evidence: [{ kind: "primary-source", rule: "Runtime·memory·primitive behavior는 ICICLE v3.9.0 commit 6b451e6 source/docs에만 귀속한다." }, { kind: "project-measurement", rule: "같은 primitive/profile/input에서 CPU/backend parity·missing/invalid pointer/async/OOM failure 뒤 load·transfer·kernel·sync·verify를 비교한다." }, { kind: "project-claim", rule: "Common API를 모든 field/backend 지원·automatic representation safety·protocol soundness·silent fallback으로 확대하지 않는다." }],
+  },
+  "poseidon-gpu": {
+    title: "GPU Poseidon parameter·round·batch mapping 글이 소유하는 범위",
+    owns: ["Poseidon field/width/round/constants/matrix GPU parameter artifact", "Round lane/barrier mapping, batch-tree frontier와 parity-first kernel release gate"],
+    reuses: [{ label: "Poseidon parameter·round·security 정본", href: "/crypto/poseidon-hash" }, { label: "Prime-field arithmetic", href: "/crypto/field-arithmetic" }, { label: "CUDA synchronization", href: "/gpu/cuda-sync" }],
+    evidence: [{ kind: "primary-source", rule: "Poseidon theory는 원 논문, Filecoin transform은 official spec, ICICLE API는 v3.9.0 pinned page에 각각 귀속한다." }, { kind: "project-measurement", rule: "Parameter digest·field·batch/tree shape를 고정하고 reference/circuit/root/proof parity 뒤 transfer·kernel·sync·verified states/s·p95를 비교한다." }, { kind: "project-claim", rule: "Lane mapping은 measured candidate이며 α·round 수·sparse transform·throughput을 모든 profile의 고정값으로 일반화하지 않는다." }],
+  },
+  "filecoin-gpu-proofs": {
+    title: "Filecoin proof phase·cache·accelerator release 글이 소유하는 범위",
+    owns: ["Pinned seal phase producer/consumer artifact chain과 parameter/cache generation binding", "Bellperson accelerator work split과 independent verifier·deadline rollback gate"],
+    reuses: [{ label: "Generic GPU proof DAG", href: "/gpu/gpu-proof-pipeline" }, { label: "MSM·NTT workload", href: "/gpu/msm-ntt" }, { label: "GPU KZG artifact", href: "/gpu/kzg-gpu" }],
+    evidence: [{ kind: "primary-source", rule: "Filecoin phases/parameters는 rust-fil-proofs commit d451d23, Groth16 accelerator integration은 bellperson commit 728306c에 귀속한다." }, { kind: "project-measurement", rule: "같은 sector/proof/profile/cache generation에서 reference commitments·independent verification 뒤 cold/warm I/O·queue·stage·p95·deadline slack을 비교한다." }, { kind: "project-claim", rule: "Kernel/FFT/MSM speedup을 Filecoin 전체 proof speedup·network deadline·current mainnet dependency로 확대하지 않는다." }],
+  },
+  "libp2p-yamux": {
+    title: "rust-libp2p Yamux stream credit·buffer·failure 글이 소유하는 범위",
+    owns: ["libp2p-yamux 0.47.0의 internal adapter·inbound buffer boundary", "Yamux stream credit와 stream/connection failure-scope release gate"],
+    reuses: [{ label: "libp2p TCP upgrade", href: "/p2p/libp2p-tcp" }, { label: "libp2p Noise identity", href: "/p2p/libp2p-noise" }, { label: "libp2p substream negotiation", href: "/p2p/libp2p#substream" }],
+    evidence: [{ kind: "primary-source", rule: "Wire semantics는 Yamux specification, wrapper facts는 rust-libp2p 0.56.0·libp2p-yamux 0.47.0 source에 귀속한다." }, { kind: "project-measurement", rule: "Slow reader·inbound overflow·adapter branch·reset/close에서 memory·progress·receipt를 paired 재현한다." }, { kind: "project-claim", rule: "Current 256 buffer constant와 stream flush를 SLA·remote delivery·application receipt로 확대하지 않는다." }],
+  },
+  "rqbit": {
+    title: "rqbit peer owner·piece admission·range readiness 글이 소유하는 범위",
+    owns: ["rqbit v8.1.1 peer candidate queue와 in-flight piece owner lifecycle", "Piece hash admission·restart validation·verified range release"],
+    reuses: [{ label: "BitTorrent metainfo·wire 정본", href: "/p2p/bittorrent" }, { label: "Kademlia lookup 정본", href: "/p2p/kademlia" }],
+    evidence: [{ kind: "primary-source", rule: "Scheduling·hash·streaming behavior는 rqbit stable v8.1.1 exact source revision에만 귀속한다." }, { kind: "project-measurement", rule: "Steal race·mismatch·restart·multi-file range에서 owner generation·digest·released bytes를 검증한다." }, { kind: "project-claim", rule: "Peer candidate를 possession proof로, resume bitfield를 absolute integrity proof로, SHA-1을 신규 설계 권고로 확대하지 않는다." }],
+  },
+  "commonware-crypto-p2p": {
+    title: "Commonware authenticated handshake·channel quota 글이 소유하는 범위",
+    owns: ["v2026.7.0 Syn·SynAck·Ack transcript와 directional AEAD counter", "Authenticated channel quota·bounded mux·priority mailbox local admission"],
+    reuses: [{ label: "Authenticated Diffie–Hellman", href: "/crypto/diffie-hellman" }, { label: "Commonware consensus", href: "/blockchain/commonware-consensus" }],
+    evidence: [{ kind: "primary-source", rule: "Handshake·lookup·mux·relay 구현 사실은 Commonware monorepo v2026.7.0 source에만 귀속한다." }, { kind: "project-measurement", rule: "Replay·counter rollback·oversize·slow channel·overflow에서 session·local feedback·application receipt를 분리 측정한다." }, { kind: "project-claim", rule: "Authenticated peer·priority·Feedback::Ok를 payload correctness·remote receipt·consensus ordering으로 확대하지 않는다." }],
+  },
+  "commonware-broadcast": {
+    title: "Commonware buffered broadcast·digest cache 글이 소유하는 범위",
+    owns: ["v2026.7.0 broadcast local Feedback와 digest subscription receipt", "Primary-eligible peer deque·shared item refcount cache lifecycle"],
+    reuses: [{ label: "Commonware authenticated P2P", href: "/blockchain/commonware-crypto-p2p" }, { label: "Total-order broadcast", href: "/blockchain/smr-theory#total-order" }, { label: "Erasure coding", href: "/blockchain/erasure-coding" }],
+    evidence: [{ kind: "primary-source", rule: "Broadcaster·ingress·engine 동작은 commonware-broadcast v2026.7.0 pinned source에만 귀속한다." }, { kind: "project-measurement", rule: "Mailbox·decode·duplicate·deque overflow·primary update·waiter cancel에서 refcount와 typed receipt를 검증한다." }, { kind: "project-claim", rule: "Feedback·subscribe completion·cache refcount를 recipient acknowledgement·quorum·total order·durability로 확대하지 않는다." }],
   },
 } as const satisfies Record<string, EditorialBoundary>;
 

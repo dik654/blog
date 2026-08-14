@@ -1,15 +1,5 @@
-import Overview from "./icicle-framework/Overview";
-import CudaBackend from "./icicle-framework/CudaBackend";
-import Bindings from "./icicle-framework/Bindings";
-import Benchmark from "./icicle-framework/Benchmark";
+import ModernArticle from "./icicle-framework/ModernArticle";
 
 export default function IcicleFrameworkArticle() {
-  return (
-    <>
-      <Overview />
-      <CudaBackend />
-      <Bindings />
-      <Benchmark />
-    </>
-  );
+  return <ModernArticle />;
 }

@@ -4745,6 +4745,23 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 규격", label: "RFC 9334 · RATS Architecture", href: "https://www.rfc-editor.org/rfc/rfc9334.html", note: "Attester·Verifier·Relying Party와 evidence·result·appraisal·freshness의 vendor-neutral 정본" },
     { kind: "공식 규격", label: "AMD SEV-SNP Firmware ABI Specification 1.58", href: "https://docs.amd.com/v/u/en-US/56860_PUB_1.58_SEV_SNP", note: "SNP attestation report request·field·signature interface의 vendor 정본" },
   ],
+  "crypto/hash-theory": [
+    { kind: "공식 규격", label: "NIST FIPS 180-4", href: "https://csrc.nist.gov/pubs/fips/180-4/upd1/final", note: "SHA-2 padding·compression·digest의 normative standard" },
+    { kind: "공식 규격", label: "NIST FIPS 202", href: "https://csrc.nist.gov/pubs/fips/202/final", note: "SHA-3/SHAKE와 KECCAK permutation·suffix의 normative standard" },
+    { kind: "공식 코드", label: "RustCrypto/hashes @ f6c786d", href: "https://github.com/RustCrypto/hashes/tree/f6c786d72ed4d37a32dcd32daa2e7277dd4683e1", note: "Streaming hash implementations/tests의 pinned source" },
+  ],
+  "crypto/poseidon-hash": [
+    { kind: "핵심 논문", label: "Grassi et al. · Poseidon", href: "https://eprint.iacr.org/2019/458.pdf", note: "HADES·field S-box·parameter/security/cost analysis의 원 연구" },
+    { kind: "공식 코드", label: "HorizenLabs/poseidon2 @ 055bde3", href: "https://github.com/HorizenLabs/poseidon2/tree/055bde3f4782731ba5f5ce5888a440a94327eaf3", note: "Poseidon2 parameter·Rust implementation의 pinned source" },
+  ],
+  "blockchain/impl-hash-commitment": [
+    { kind: "공식 규격", label: "NIST FIPS 180-4", href: "https://csrc.nist.gov/pubs/fips/180-4/upd1/final", note: "SHA-2 known-vector compatible semantics" },
+    { kind: "공식 코드", label: "arkworks crypto-primitives @ 7816710", href: "https://github.com/arkworks-rs/crypto-primitives/tree/7816710fc19cd4d18d6239785dac8937d7b9b3ce", note: "Native/circuit hash·Merkle primitives/tests의 pinned source" },
+  ],
+  "crypto/proofofsql": [
+    { kind: "공식 코드", label: "Space and Time Proof of SQL @ 8b0de6b", href: "https://github.com/spaceandtimefdn/sxt-proof-of-sql/tree/8b0de6b9b9c2e2ef6d20e5a9faf833c3ab1d0829", note: "지원 query·protocol·tests·bench의 pinned official source" },
+    { kind: "핵심 논문", label: "Lee · Dory", href: "https://eprint.iacr.org/2020/1274.pdf", note: "Transparent generalized inner-product commitment/opening의 원 연구" },
+  ],
   "crypto/bulletproofs": [
     { kind: "핵심 논문", label: "Bünz et al. · Bulletproofs", href: "https://eprint.iacr.org/2017/1066.pdf", note: "Logarithmic-size inner-product range proof·aggregation과 security/evaluation의 원 연구" },
     { kind: "공식 코드", label: "dalek-cryptography/bulletproofs @ be67b6d", href: "https://github.com/dalek-cryptography/bulletproofs/tree/be67b6d5f5ad1c1f54d5511b52e6d645a1313d07", note: "Ristretto·Merlin transcript·generator/range implementation의 pinned source" },
@@ -4950,6 +4967,24 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 코드", label: "rust-libp2p 0.56.0 QUIC Streams", href: "https://github.com/libp2p/rust-libp2p/blob/libp2p-v0.56.0/transports/quic/src/connection/stream.rs", note: "Bidirectional stream adapter와 reset/close mapping이며 remote durable processing을 보장하지 않음" },
     { kind: "공식 코드", label: "rust-libp2p 0.56.0 QUIC Hole Punching", href: "https://github.com/libp2p/rust-libp2p/blob/libp2p-v0.56.0/transports/quic/src/hole_punching.rs", note: "UDP socket reuse·attempt dedup·timeout 구현이며 모든 NAT의 direct reachability 보장은 아님" },
   ],
+  "isms-aml/isms-backup-recovery": [
+    { kind: "공식 규격", label: "NIST SP 800-34 Rev.1", href: "https://csrc.nist.gov/pubs/sp/800/34/r1/upd1/final", note: "BIA·recovery strategy·testing·maintenance의 일반 contingency-planning 지침이며 특정 RPO/RTO·제품을 정하지 않음" },
+    { kind: "공식 가이드", label: "KISA 2023 ISMS-P 인증기준 안내서", href: "https://pims.kisa.or.kr/board/file/bbs_0000000000000014/21/FILE_000000000001002/202311231554317701147901071.pdf", note: "Backup·복구 확인사항과 결함사례의 국내 인증 해설이며 현행 법령·조직 위험평가를 우선" },
+  ],
+  "isms-aml/isms-incident-response": [
+    { kind: "공식 규격", label: "NIST SP 800-61 Rev.3", href: "https://csrc.nist.gov/pubs/sp/800/61/r3/final", note: "2025 incident-response 권고와 CSF 2.0 통합 범위이며 고정 severity·containment 순서를 정하지 않음" },
+    { kind: "공식 가이드", label: "KISA 2023 ISMS-P 인증기준 안내서", href: "https://pims.kisa.or.kr/board/file/bbs_0000000000000014/21/FILE_000000000001002/202311231554317701147901071.pdf", note: "사고 예방·대응·복구·재발방지의 국내 인증 확인 지점이며 법적 breach 판정을 대신하지 않음" },
+  ],
+  "isms-aml/isms-dev-security": [
+    { kind: "공식 규격", label: "NIST SP 800-218 SSDF v1.1", href: "https://csrc.nist.gov/pubs/sp/800/218/final", note: "Secure software development practice의 final 2022 framework이며 특정 scanner·취약점 0을 보장하지 않음" },
+    { kind: "공식 가이드", label: "OWASP ASVS", href: "https://owasp.org/www-project-application-security-verification-standard/", note: "Application security verification 요구사항이며 business logic·운영·host/network 전체 인증은 아님" },
+    { kind: "공식 가이드", label: "KISA 2023 ISMS-P 인증기준 안내서", href: "https://pims.kisa.or.kr/board/file/bbs_0000000000000014/21/FILE_000000000001002/202311231554317701147901071.pdf", note: "개발보안·변경관리의 국내 인증 확인 지점이며 모든 변경에 같은 toolchain을 요구하지 않음" },
+  ],
+  "isms-aml/isms-security-infra": [
+    { kind: "공식 규격", label: "NIST SP 800-41 Rev.1", href: "https://csrc.nist.gov/pubs/sp/800/41/r1/final", note: "Firewall policy·배치·운영 지침이며 application authorization을 대신하지 않음" },
+    { kind: "공식 규격", label: "NIST SP 800-92", href: "https://csrc.nist.gov/pubs/sp/800/92/final", note: "Security log management 지침이며 수집 자체가 incident detection·clock 정확성을 보장하지 않음" },
+    { kind: "공식 가이드", label: "KISA 2023 ISMS-P 인증기준 안내서", href: "https://pims.kisa.or.kr/board/file/bbs_0000000000000014/21/FILE_000000000001002/202311231554317701147901071.pdf", note: "Network·보안시스템의 국내 인증 확인 지점이며 특정 UTM·SIEM 제품 구매를 요구하지 않음" },
+  ],
   "gpu/msm-gpu-impl": [
     { kind: "공식 코드", label: "sppark MSM · commit 17278d7", href: "https://github.com/supranational/sppark/blob/17278d74295392f9813f009300b257a688422b7a/msm/pippenger.cuh", note: "Signed digit breakdown·bucket accumulation·integration의 pinned source이며 고정 point-op count·speedup은 아님" },
     { kind: "공식 코드", label: "sppark custom sort · commit 17278d7", href: "https://github.com/supranational/sppark/blob/17278d74295392f9813f009300b257a688422b7a/msm/sort.cuh", note: "Digit/index grouping 구현이며 모든 GPU MSM의 보편 필수·최적 전략은 아님" },
@@ -4969,5 +5004,45 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "핵심 논문", label: "KZG · ASIACRYPT 2010", href: "https://www.iacr.org/archive/asiacrypt2010/6477178/6477178.pdf", note: "Degree-bounded SRS·commit/open/verify construction의 원문이며 GPU layout·fixed speedup 근거는 아님" },
     { kind: "공식 구현", label: "ethereum/c-kzg-4844 v2.1.6 · commit 673d93c", href: "https://github.com/ethereum/c-kzg-4844/tree/673d93cdb5b61072f288f08c147c180cf378cb9b", note: "EIP-4844 BLS12-381 setup·compute·verify·test vector profile이며 임의 KZG batch/GPU를 보장하지 않음" },
     { kind: "공식 코드", label: "sppark MSM · commit 17278d7", href: "https://github.com/supranational/sppark/blob/17278d74295392f9813f009300b257a688422b7a/msm/pippenger.cuh", note: "Commitment/proof MSM에 쓸 수 있는 pinned GPU implementation이며 KZG verifier·SRS validation을 대신하지 않음" },
+  ],
+  "gpu/gpu-witness-gen": [
+    { kind: "공식 코드", label: "Circom v2.2.3 · commit ad44e91", href: "https://github.com/iden3/circom/tree/ad44e915a12bb047b05745c2884aad9cc8326bc6", note: "R1CS와 C++/WASM witness calculator를 생성하는 pinned compiler이며 GPU scheduler 구현 근거는 아님" },
+    { kind: "핵심 논문", label: "Automating the Parallelization of Zero-Knowledge Protocols · 2023/657", href: "https://eprint.iacr.org/2023/657", note: "Dependency/live-variable 기반 parallelization 연구이며 모든 circuit의 GPU speedup이나 Circom 통합 완료를 뜻하지 않음" },
+    { kind: "공식 가이드", label: "CUDA C++ Best Practices Guide 12.8.1", href: "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-best-practices-guide/index.html", note: "Event timing·transfer·bandwidth 측정 방법이며 witness correctness와 고정 occupancy를 보장하지 않음" },
+  ],
+  "gpu/icicle-framework": [
+    { kind: "공식 코드", label: "ICICLE v3.9.0 runtime.cpp · commit 6b451e6", href: "https://github.com/ingonyama-zk/icicle/blob/6b451e6ed5dcdd9b49aa5f9d5657e0c00cfab6a2/icicle/src/runtime.cpp", note: "Active device·memory tracker·dynamic backend runtime 구현이며 모든 primitive 지원이나 automatic fallback 근거는 아님" },
+    { kind: "공식 코드", label: "ICICLE v3.9.0 Rust memory wrapper · commit 6b451e6", href: "https://github.com/ingonyama-zk/icicle/blob/6b451e6ed5dcdd9b49aa5f9d5657e0c00cfab6a2/wrappers/rust/icicle-runtime/src/memory.rs", note: "Host/device slice와 sync/async copy API의 pinned source이며 compile-time async completion 증명은 아님" },
+    { kind: "공식 문서", label: "ICICLE v3.9.0 primitive overview · commit 6b451e6", href: "https://github.com/ingonyama-zk/icicle/blob/6b451e6ed5dcdd9b49aa5f9d5657e0c00cfab6a2/docs/docs/icicle/primitives/overview.md", note: "Pinned primitive surface이며 모든 field/backend 조합·protocol soundness를 보장하지 않음" },
+  ],
+  "gpu/poseidon-gpu": [
+    { kind: "핵심 논문", label: "Poseidon · USENIX Security 2021", href: "https://www.usenix.org/system/files/sec21-grassi.pdf", note: "HADES rounds와 parameter/security analysis의 원문이며 CUDA mapping·고정 round/speedup 근거는 아님" },
+    { kind: "공식 규격", label: "Filecoin Specification · Poseidon", href: "https://spec.filecoin.io/algorithms/crypto/poseidon/", note: "Filecoin optimized constants·sparse matrix 설명이며 페이지의 audit status를 넘어 일반화하지 않음" },
+    { kind: "공식 문서", label: "ICICLE v3.9.0 Poseidon · commit 6b451e6", href: "https://github.com/ingonyama-zk/icicle/blob/6b451e6ed5dcdd9b49aa5f9d5657e0c00cfab6a2/docs/docs/icicle/primitives/poseidon.md", note: "Pinned hash_many/profile 문서이며 모든 kernel 내부 mapping·고정 throughput 근거는 아님" },
+  ],
+  "gpu/filecoin-gpu-proofs": [
+    { kind: "공식 코드", label: "rust-fil-proofs seal API · commit d451d23", href: "https://github.com/filecoin-project/rust-fil-proofs/blob/d451d23ba6dcabd107e66b2f9c6531887b17fd3d/filecoin-proofs/src/api/seal.rs", note: "Filecoin seal phase/cache orchestration snapshot이며 현재 network policy·고정 GPU phase 비율을 뜻하지 않음" },
+    { kind: "공식 코드", label: "rust-fil-proofs parameter manifest · commit d451d23", href: "https://github.com/filecoin-project/rust-fil-proofs/blob/d451d23ba6dcabd107e66b2f9c6531887b17fd3d/fil-proofs-param/parameters.json", note: "Pinned parameter identifiers·digest·size inventory이며 trusted setup ceremony나 local file validity의 단독 증거는 아님" },
+    { kind: "공식 코드", label: "bellperson Groth16 prover · commit 728306c", href: "https://github.com/filecoin-project/bellperson/blob/728306c8ee52f53dbd55ea02557affcdfb546ae7/src/groth16/prover/native.rs", note: "FFT/MSM accelerator orchestration snapshot이며 Filecoin 전체 fixed speedup·current mainnet dependency 근거는 아님" },
+  ],
+  "p2p/libp2p-yamux": [
+    { kind: "공식 규격", label: "Yamux specification — stream windows and control frames", href: "https://github.com/hashicorp/yamux/blob/master/spec.md", note: "DATA·WINDOW_UPDATE·PING·GO_AWAY와 stream credit semantics의 primary wire specification이며 peer authentication·payload receipt는 별도" },
+    { kind: "공식 코드", label: "libp2p-yamux 0.47.0 · rust-libp2p 0.56.0", href: "https://github.com/libp2p/rust-libp2p/blob/libp2p-v0.56.0/muxers/yamux/src/lib.rs", note: "0.12·0.13 adapter selection과 bounded inbound buffer의 pinned implementation이며 current constant를 SLA로 일반화하지 않음" },
+    { kind: "공식 코드", label: "rust-libp2p 0.56.0 StreamMuxer", href: "https://github.com/libp2p/rust-libp2p/blob/libp2p-v0.56.0/core/src/muxing.rs", note: "Poll 기반 substream·connection lifecycle contract이며 remote handler 성공이나 exactly-once delivery 근거는 아님" },
+  ],
+  "p2p/rqbit": [
+    { kind: "공식 코드", label: "rqbit v8.1.1 live torrent state", href: "https://github.com/ikatson/rqbit/blob/v8.1.1/crates/librqbit/src/torrent_state/live/mod.rs", note: "Peer queue·in-flight piece ownership·steal/cancel·reconnect의 pinned stable implementation이며 swarm availability 보장은 아님" },
+    { kind: "공식 코드", label: "rqbit v8.1.1 piece file operations", href: "https://github.com/ikatson/rqbit/blob/v8.1.1/crates/librqbit/src/file_ops.rs", note: "Storage range hashing과 valid/broken piece outcome의 pinned code이며 publisher identity나 SHA-1 신규 security 근거는 아님" },
+    { kind: "공식 코드", label: "rqbit v8.1.1 streaming and initialization", href: "https://github.com/ikatson/rqbit/blob/v8.1.1/crates/librqbit/src/torrent_state/streaming.rs", note: "Range-to-piece readiness와 restart path의 pinned implementation이며 HTTP authorization·disk durability는 별도" },
+  ],
+  "blockchain/commonware-crypto-p2p": [
+    { kind: "공식 코드", label: "Commonware v2026.7.0 cryptographic handshake", href: "https://github.com/commonwarexyz/monorepo/blob/v2026.7.0/cryptography/src/handshake.rs", note: "Syn·SynAck·Ack, timestamp·signature·confirmation과 directional AEAD의 pinned implementation이며 application authorization은 별도" },
+    { kind: "공식 코드", label: "Commonware v2026.7.0 authenticated lookup P2P", href: "https://github.com/commonwarexyz/monorepo/tree/v2026.7.0/p2p/src/authenticated/lookup", note: "Known peer set의 channel registration·quota·backlog·message limit 구현이며 consensus order나 payload correctness는 보장하지 않음" },
+    { kind: "공식 코드", label: "Commonware v2026.7.0 mux and relay", href: "https://github.com/commonwarexyz/monorepo/blob/v2026.7.0/p2p/src/utils/mux.rs", note: "Bounded subchannel route와 priority local admission feedback 구현이며 remote durable acceptance는 별도" },
+  ],
+  "blockchain/commonware-broadcast": [
+    { kind: "공식 코드", label: "commonware-broadcast v2026.7.0 Broadcaster", href: "https://github.com/commonwarexyz/monorepo/blob/v2026.7.0/broadcast/src/lib.rs", note: "Typed broadcast와 local Feedback 성공 경계의 pinned trait이며 recipient receipt·total order·durability는 제공하지 않음" },
+    { kind: "공식 코드", label: "commonware-broadcast v2026.7.0 buffered ingress", href: "https://github.com/commonwarexyz/monorepo/blob/v2026.7.0/broadcast/src/buffered/ingress.rs", note: "Bounded mailbox·digest waiter·cancel lifecycle의 pinned implementation이며 network acknowledgement는 별도" },
+    { kind: "공식 코드", label: "commonware-broadcast v2026.7.0 buffered engine", href: "https://github.com/commonwarexyz/monorepo/blob/v2026.7.0/broadcast/src/buffered/engine.rs", note: "Peer deque·digest refcount·primary eligibility cache의 pinned implementation이며 global reliable broadcast는 아님" },
   ],
 };

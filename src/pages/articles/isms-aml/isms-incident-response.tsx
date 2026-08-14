@@ -1,13 +1,5 @@
-import Overview from "./isms-incident-response/Overview";
-import DetectionContainment from "./isms-incident-response/DetectionContainment";
-import RecoveryLessons from "./isms-incident-response/RecoveryLessons";
+import ModernArticle from "./isms-incident-response/ModernArticle";
 
 export default function IsmsIncidentResponse() {
-  return (
-    <div className="space-y-12">
-      <Overview />
-      <DetectionContainment />
-      <RecoveryLessons />
-    </div>
-  );
+  return <ModernArticle />;
 }
