@@ -6922,6 +6922,27 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [{ label: "PQ account migration", href: "/blockchain/pq-account" }, { label: "Binary-field proving", href: "/crypto/binary-field-proving" }],
     evidence: [{ kind: "standard", rule: "Protocol fact는 accepted EIP/spec과 deployment를 확인하고 roadmap·strawmap wording을 채택 완료로 쓰지 않는다." }, { kind: "project-claim", rule: "AI가 만든 proof candidate를 deterministic formal verification 결과로 확대하지 않는다." }],
   },
+  "qwen36-hybrid-architecture": {
+    title: "Qwen3.6-27B hybrid architecture 글이 소유하는 범위",
+    owns: [
+      "공식 layer_types를 48 Gated DeltaNet·16 Gated Attention으로 분리하는 3:1 schedule",
+      "Qwen3.6 attention KV의 token당 64 KiB와 DeltaNet FP32 core state의 request당 144 MiB shape 계산",
+      "Delta-rule prediction-error correction과 recurrent decode·chunked prefill 실행 경계",
+      "Partial multimodal RoPE·dense FFN·MTP·vision tokens를 hybrid serving state에 연결하는 release gate",
+    ],
+    reuses: [
+      { label: "Attention Q·K·V와 multi-head", href: "/ai/attention-theory" },
+      { label: "KV cache·GQA·capacity", href: "/ai/hybrid-attention-serving" },
+      { label: "RNN recurrent state와 압축 한계", href: "/ai/rnn" },
+      { label: "vLLM cache block과 hybrid groups", href: "/ai/vllm-paged-attention" },
+      { label: "Speculative draft·verify·commit", href: "/ai/vllm-spec-decode" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "모델명·layer pattern·head dimensions·dtype·context·MTP·vision configuration은 Qwen3.6-27B 공식 model card와 config revision에 귀속한다." },
+      { kind: "standard", rule: "Recurrent matrix shape·chunk/recurrent path는 확인한 Transformers reference source에, hybrid block allocation은 확인한 vLLM stable design revision에 귀속한다." },
+      { kind: "project-claim", rule: "64 KiB·144 MiB는 명시한 logical shape·dtype 계산이며 allocator padding·TP·kernel workspace를 포함한 physical VRAM 또는 품질·throughput 보장으로 확대하지 않는다." },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

@@ -198,4 +198,46 @@ export const vllmServingArticles: Article[] = [
     ],
     component: () => import("@/pages/articles/ai/hybrid-attention-serving"),
   },
+  {
+    slug: "qwen36-hybrid-architecture",
+    title: "Qwen3.6-27B 아키텍처: DeltaNet · Attention · Hybrid Cache",
+    subcategory: "ai-llm-serving",
+    sections: [
+      { id: "overview", title: "64층을 두 종류의 memory로 나누기" },
+      {
+        id: "attention-kv",
+        title: "Attention·GQA와 token마다 커지는 KV cache",
+        subsections: [
+          { id: "kv-bytes", title: "BF16 token당 64 KiB 계산" },
+          { id: "paper-qwen36-config", title: "Qwen3.6 공식 config 읽기" },
+        ],
+      },
+      {
+        id: "deltanet-state",
+        title: "DeltaNet의 고정 recurrent state와 delta rule",
+        subsections: [
+          { id: "delta-update", title: "읽은 오차만 고쳐 쓰기" },
+          { id: "state-bytes", title: "FP32 core state 144 MiB 계산" },
+          { id: "paper-gated-deltanet", title: "Gated DeltaNet 원 논문" },
+        ],
+      },
+      {
+        id: "hybrid-runtime",
+        title: "Hybrid cache manager가 두 state를 함께 관리하는 법",
+        subsections: [
+          { id: "prefill-decode", title: "Chunked prefill과 recurrent decode" },
+          { id: "paper-vllm-hybrid", title: "vLLM hybrid cache 설계" },
+        ],
+      },
+      {
+        id: "model-stack",
+        title: "RoPE·FFN·MTP·multimodal token을 같은 stack에 놓기",
+        subsections: [
+          { id: "paper-transformers-qwen35", title: "Transformers reference path" },
+          { id: "release-check", title: "배포 전 확인할 artifact와 측정" },
+        ],
+      },
+    ],
+    component: () => import("@/pages/articles/ai/qwen36-hybrid-architecture"),
+  },
 ];

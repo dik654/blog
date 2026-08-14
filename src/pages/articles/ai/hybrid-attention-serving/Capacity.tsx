@@ -75,13 +75,14 @@ export default function Capacity() {
           head_dim 128이라는 작은 shape가 서빙에 유리하다는 결론과 일치합니다.
         </p>
         <p>
-          다만 “토큰당 KV가 Qwen의 20.3%”라는 이론값과 “총 cache token이 Qwen의
+          다만 “토큰당 attention KV가 Qwen의 81.25%”라는 이론값과 “총 cache token이 Qwen의
           3.63배”라는 실측값은 같은 비율일 필요가 없습니다. 총 capacity는{" "}
           <code>남은 KV 예산 ÷ 토큰당 KV byte</code>이기 때문입니다. Weight
           quantization은 토큰당 KV byte를 바꾸지 않더라도 weight를 올린 뒤 남는
-          KV 예산을 바꿀 수 있고, vision encoder·CUDA graph·workspace·TP 구성도
-          모델마다 다릅니다. 토큰당 비용을 검증하려면 startup log의 총 token
-          수뿐 아니라 실제로 KV pool에 예약된 byte도 함께 기록해야 합니다.
+          KV 예산을 바꿀 수 있고, Qwen의 request당 fixed recurrent state,
+          vision encoder·CUDA graph·workspace·TP 구성도 모델마다 다릅니다.
+          토큰당 비용을 검증하려면 startup log의 총 token 수뿐 아니라 실제로 KV
+          pool과 recurrent-state group에 예약된 byte도 함께 기록해야 합니다.
         </p>
 
         <h3 id="capacity-sliding" className="scroll-mt-20">

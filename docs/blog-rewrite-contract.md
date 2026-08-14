@@ -24,6 +24,7 @@ build 통과는 완료의 증거가 아니며, 아래 Definition of Done을 모�
 - 주장을 논문 결과와 일반 법칙으로 혼동하지 않는다. 실험 조건과 적용 범위를 함께 쓴다.
 - Roadmap·strawmap·research prototype·alpha처럼 성숙도가 다른 항목을 한 목록에 섞지 않는다. 각 항목마다 `현재 배포됨 / 채택 검토 중 / 연구 방향 / 실험 결과` 중 상태와 기준 시점을 먼저 표시하고, 방향성을 최종 채택·일정·성능 보장으로 확대하지 않는다.
 - 암호 primitive를 바꾸는 접근과 기존 primitive를 그대로 두고 proof/execution layer를 최적화하는 접근은 별도 설계 축으로 비교한다. Field·instruction 표현의 impedance mismatch, prover·verifier·proof size, 구현 생태계와 cryptanalysis history를 같은 표에서 비교하고 단일 benchmark만으로 장기 primitive 선택을 결론내리지 않는다.
+- Hybrid sequence model은 `전체 layer 수 × KV shape`로 cache를 계산하지 않는다. 먼저 공개 config의 layer pattern을 `full attention / linear attention·recurrent mixer`로 나누고, token 수에 따라 커지는 attention KV와 request마다 고정되는 recurrent·convolution state를 별도 tensor shape·dtype으로 계산한다. Prefill의 chunk/parallel form과 decode의 recurrent form, logical bytes와 allocator·TP·kernel의 physical bytes도 서로 다른 claim으로 표시한다.
 
 ### 2.1 선수 개념과 학습 결과 계약
 

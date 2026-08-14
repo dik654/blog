@@ -1077,10 +1077,19 @@
 - [x] AI / 활성화 함수 — ReLU 계열·smooth activation·gated FFN을 서로 다른 설계 축으로 구분하고, Leaky ReLU·ELU·SwiGLU의 수치 예와 parameter parity까지 기초 6개+심화 4개로 역검사
 - [x] AI / 확률·기댓값·분산 — outcome/event에서 conditional probability·random variable·expectation·variance·LLN·mini-batch estimator까지 확장하고 독립/배반·분산 단위·표본 분산·완전상관 반례를 기초 6개+심화 4개로 역검사
 - [x] AI / Claw Bash — pinned source의 실제 `sh -lc` 실행·first-token/path permission heuristic·16KiB truncation·unshare 상태를 hardening 목표와 분리하고, POSIX expansion·TOCTOU·process-group cleanup 경계를 기초 6개+심화 4개로 역검사
-- [x] 공개 learning contract 386개 전부를 정확한 기초 6개+심화 4개로 통일하고 article-only 역검사·근거 anchor·graph invariant를 통과; 구계약 0개
-- [x] 전역 `audit:learning --strict --require-registration --all-articles`: 공개 catalog 386/386 등록, 미등록 0개
+- [x] 공개 learning contract 390개 전부를 정확한 기초 6개+심화 4개로 통일하고 article-only 역검사·근거 anchor·graph invariant를 통과; 구계약 0개
+- [x] 전역 `audit:learning --strict --require-registration --all-articles`: 공개 catalog 390/390 등록, 미등록 0개
 - [x] Practical ML → LLM·Agent → Blockchain·Cryptography·P2P·HW/GPU·TEE·ISMS/AML 전체 catalog 이관 완료
 
-- [x] `npm run audit:articles -- --strict --all-articles`로 공개 386개 실제 import closure의 material violation 0 확인
+- [x] `npm run audit:articles -- --strict --all-articles`로 공개 390개 실제 import closure의 material violation 0 확인
 - [x] AI · Blockchain · Cryptography · P2P · HW/GPU · TEE · ISMS/AML 전체를 같은 learning·article·Viz 계약으로 감사
 - [x] Public catalog route-resolution test 4/4와 772회 실제 navigation으로 sidebar/public route·canonical source closure 확인
+
+### AI / Qwen3.6-27B hybrid architecture
+
+- [x] 공식 model card·config에서 Qwen3.8이 아니라 Qwen3.6-27B임을 고정하고 64층을 48 Gated DeltaNet + 16 Gated Attention으로 분해
+- [x] Attention·GQA·KV cache와 DeltaNet·delta rule·fast-weight state를 용어 하나씩 정의하고 작은 state Viz 뒤에 hybrid schedule로 조합
+- [x] BF16 attention KV의 token당 64 KiB와 32K·128K·262K logical cache, FP32 recurrent core state의 request당 약 144 MiB를 shape·dtype·allocator 경계와 함께 계산
+- [x] Recurrent decode와 chunked prefill, partial multimodal RoPE·FFN·MTP·vision token budget을 serving 흐름으로 연결
+- [x] 주요 수식에 연산 의도를 underbrace로 직접 표시하고 자동 재생·키보드 조작이 가능한 새 flat Viz로 cache 성장과 state update를 시각화
+- [x] 기초 6개+심화 4개, official evidence·graph owner·article-only 역검사와 390px·1440px Playwright·build·전역 audit 완료

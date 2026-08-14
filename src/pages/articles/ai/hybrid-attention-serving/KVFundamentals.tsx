@@ -233,11 +233,13 @@ B_{token} &= L_{KV}E_{KV}N_{tensor}b_{dtype}
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           예를 들어 BF16 cache라면 K와 V가 각각 2 byte이므로 마지막 두 항은{" "}
-          <code>2×2=4 byte</code>입니다. Qwen 27B 배포본의 project config를{" "}
-          <code>64 layer × KV head 4 × head_dim 256</code>으로 읽으면 token당{" "}
-          <code>64×4×256×2×2 = 262,144 byte</code>, 즉 256 KiB입니다. Muse
+          <code>2×2=4 byte</code>입니다. Qwen3.6-27B는 64개 layer 중 실제 KV를
+          남기는 full-attention layer가 16개이므로 token당{" "}
+          <code>16×4×256×2×2 = 65,536 byte</code>, 즉 64 KiB입니다. Muse
           Glimmer는 <code>52×2×128×2×2 = 53,248 byte</code>, 즉 52 KiB여서 같은
-          dense-allocation 가정에서 Qwen의 약 20.3%만 사용합니다.
+          dense-allocation 가정에서 Qwen attention KV의 81.25%입니다. Qwen의
+          나머지 48개 DeltaNet layer는 별도의 fixed recurrent state를 사용하며,
+          이 계산은 <a href="/ai/qwen36-hybrid-architecture#state-bytes">Qwen3.6 hybrid architecture 글</a>에서 분리합니다.
         </p>
       </div>
 

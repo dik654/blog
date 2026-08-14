@@ -5311,4 +5311,11 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 문서", label: "Ethereum · Quantum resistance roadmap", href: "https://ethereum.org/roadmap/security/quantum-resistance/", note: "Consensus BLS·KZG·account ECDSA·application ZK migration surface의 공식 방향이며 최종 선택·날짜 확정은 아님" },
     { kind: "공식 연구", label: "Lean Ethereum roadmap", href: "https://leanroadmap.org/", note: "FRI·STIR·WHIR formalization milestones의 공개 연구 방향이며 Ethereum 전체 formal verification 완료는 아님" },
   ],
+  "ai/qwen36-hybrid-architecture": [
+    { kind: "공식 문서", label: "Qwen/Qwen3.6-27B · official model card", href: "https://huggingface.co/Qwen/Qwen3.6-27B", note: "27B dense·64 layers·3:1 Gated DeltaNet/Attention·native 262,144·extended 1,010,000·multimodal·MTP 공개 범위이며 모든 runtime의 품질·VRAM·latency 보장은 아님" },
+    { kind: "공식 코드", label: "Qwen3.6-27B · official config.json", href: "https://huggingface.co/Qwen/Qwen3.6-27B/blob/main/config.json", note: "layer_types·attention/linear head shape·dtype·RoPE·vision·MTP의 machine-readable artifact이며 allocator·kernel physical memory를 단독 확정하지 않음" },
+    { kind: "핵심 논문", label: "Gated Delta Networks · arXiv 2412.06464", href: "https://arxiv.org/abs/2412.06464", note: "Gating과 delta-rule correction·parallel algorithm·hybrid evaluation 원문이며 Qwen3.6 3:1 비율의 보편 최적성은 아님" },
+    { kind: "공식 구현", label: "Transformers · Qwen3.5/Qwen3.6 reference", href: "https://huggingface.co/docs/transformers/model_doc/qwen3_5", note: "Hybrid layer_types·fast-kernel/fallback·multimodal RoPE와 cache reference path이며 모든 serving engine의 production 성능을 대표하지 않음" },
+    { kind: "공식 문서", label: "vLLM · Hybrid KV Cache Manager", href: "https://docs.vllm.ai/en/stable/design/hybrid_kv_cache_manager/", note: "서로 다른 cache spec의 group·block sizing·padding trade-off 공식 설계이며 logical model bytes와 실제 device allocation이 같다는 뜻은 아님" },
+  ],
 };

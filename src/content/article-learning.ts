@@ -24549,7 +24549,7 @@ export const ARTICLE_LEARNING: Readonly<
         intuition:
           "한 token이 각 층에 남기는 K/V 표의 칸 수를 센 뒤 칸 하나의 byte를 곱하고 모든 층을 더합니다.",
         workedExample:
-          "64 layer·KV head 4·head_dim 256·K/V 2 tensors·BF16 2 bytes이면 64×4×256×2×2=262,144 bytes, 즉 256 KiB/token입니다.",
+          "Qwen3.6의 64 layer 중 full-attention 16개만 KV를 남기므로 KV head 4·head_dim 256·K/V 2 tensors·BF16 2 bytes이면 16×4×256×2×2=65,536 bytes, 즉 64 KiB/token입니다.",
         boundary:
           "이 값은 uniform dense-allocation 근사이며 layer별 shape·K=V 공유·TP head 복제·block padding·allocator metadata가 있으면 실제 rank별 byte와 달라집니다.",
       },
@@ -24579,7 +24579,7 @@ export const ARTICLE_LEARNING: Readonly<
         intuition:
           "GPU라는 창고에서 model weight와 작업 공간을 먼저 빼고 남은 구역을 token 상자 크기로 나누어 몇 상자를 둘 수 있는지 계산합니다.",
         workedExample:
-          "같은 KV pool에서 B_token이 256 KiB에서 52 KiB로 줄면 uniform 근사의 token slot은 약 4.92배가 되지만, model별 weight·vision encoder·workspace가 다르면 총 실측 비율은 달라집니다.",
+          "같은 KV pool에서 B_token이 64 KiB에서 52 KiB로 줄면 uniform 근사의 token slot은 약 1.23배가 되지만, Qwen의 fixed recurrent state와 model별 weight·vision encoder·workspace가 다르면 총 실측 비율은 달라집니다.",
         boundary:
           "Capacity token은 latency나 실제 사용자 수가 아니며 block rounding·prefix sharing·multimodal token·speculative branch·headroom을 포함한 runtime measurement가 필요합니다.",
       },
@@ -24679,11 +24679,12 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "basic",
         question:
-          "64 layer·KV head 4·head_dim 256·K/V 분리·BF16 cache의 token당 KV byte를 계산하고 KiB로 변환하라.",
+          "Qwen3.6의 64 layer 중 full-attention 16개, KV head 4·head_dim 256·K/V 분리·BF16 cache의 token당 KV byte를 계산하고 KiB로 변환하라.",
         answerChecklist: [
-          "64×4×256×2×2",
-          "262144 bytes",
-          "256 KiB",
+          "16×4×256×2×2",
+          "65536 bytes",
+          "64 KiB",
+          "48 DeltaNet excluded",
           "not weight dtype",
           "uniform dense assumption",
         ],
@@ -24693,11 +24694,12 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "advanced",
         question:
-          "Muse의 52×2×128과 Qwen의 64×4×256을 같은 BF16 dense-allocation 조건에서 비교해 비율을 구하고 총 cache token 비율이 정확히 역수가 아닐 수 있는 이유를 설명하라.",
+          "Muse의 52×2×128과 Qwen의 16×4×256 attention KV를 같은 BF16 dense-allocation 조건에서 비교해 비율을 구하고 총 cache token 비율이 정확히 역수가 아닐 수 있는 이유를 설명하라.",
         answerChecklist: [
-          "13312 vs 65536 element factor",
-          "0.203125",
-          "inverse about 4.92",
+          "13312 vs 16384 element factor",
+          "0.8125",
+          "inverse about 1.23",
+          "Qwen fixed recurrent state",
           "different KV pool bytes",
           "weights/extras/runtime",
           "TP and allocator",
@@ -62535,6 +62537,150 @@ export const ARTICLE_LEARNING: Readonly<
     papers: [
       { title: "Ethereum quantum-resistance roadmap", href: "https://ethereum.org/roadmap/security/quantum-resistance/", problem: "Ethereum cryptographic surfaces의 PQ migration", contribution: "BLS·KZG·ECDSA·application ZK problem map", assumptions: "Roadmap intent와 current page", evidenceScope: "공식 roadmap이 구분한 consensus signature, data-availability commitment, account signature와 application proof migration surface입니다.", notClaim: "특정 PQ signature·commitment·proof system의 최종 선택, EIP acceptance, client 배포나 mainnet activation 날짜를 확정하지 않습니다.", sectionId: "paper-ethereum-security-roadmap" },
       { title: "Lean Ethereum roadmap", href: "https://leanroadmap.org/", problem: "Cryptographic specs의 machine-checked formalization", contribution: "FRI·STIR·WHIR milestones", assumptions: "각 repository와 coverage 별도 확인", evidenceScope: "공개 roadmap에 명시된 FRI·STIR·WHIR formalization milestones와 연결된 component-level proof 범위입니다.", notClaim: "Ethereum 전체 verification 완료 아님", sectionId: "paper-lean-roadmap" },
+    ],
+  },
+  "ai/qwen36-hybrid-architecture": {
+    entryLevel: true,
+    entryNote: "Transformer·KV cache·RNN을 이미 안다고 가정하지 않습니다. Token과 두 memory 형태부터 시작해 공식 config shape를 직접 계산합니다.",
+    coreIdea: "Qwen3.6-27B의 64층은 48 Gated DeltaNet과 16 Gated Attention으로 나뉘므로, context에 비례하는 attention KV와 request당 고정 recurrent state를 별도 shape·dtype·lifecycle로 계산해야 합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "qwen36-hybrid-layer-schedule", role: "16×(3 DeltaNet+1 Attention)에서 48·16·64 layer를 계산합니다." },
+      { id: "qwen36-gated-deltanet-state", role: "Token history 대신 fixed matrix와 convolution history를 request state로 둡니다." },
+      { id: "qwen36-delta-correction-update", role: "Decay→prediction error→key-directed correction→query read를 연산별로 풉니다." },
+      { id: "qwen36-hybrid-request-state", role: "Growing KV blocks와 fixed recurrent state를 같은 accepted prefix에 묶습니다." },
+      { id: "qwen36-partial-multimodal-rope", role: "Head 일부의 rotary dimensions를 text·image·video position axes와 연결합니다." },
+      { id: "qwen36-serving-release-gate", role: "Config·memory·kernel·quality receipts로 deployment profile을 승인합니다." },
+    ],
+    conceptExplanations: [
+      {
+        id: "qwen36-hybrid-layer-schedule",
+        sectionId: "overview",
+        intuition: "과거 기록을 압축하는 mixer 세 개 뒤에 과거 token을 직접 다시 보는 mixer 하나를 배치하고 이 네 칸을 16번 반복합니다.",
+        workedExample: "16×3=48 DeltaNet, 16×1=16 Attention, 합계 64 layer입니다. KV 공식의 L에는 64가 아니라 16을 넣습니다.",
+        boundary: "3:1은 공식 공개 configuration이지 모든 model·task에서 보편적으로 최적인 비율이라는 ablation 결론은 아닙니다.",
+      },
+      {
+        id: "qwen36-gated-deltanet-state",
+        sectionId: "deltanet-state",
+        intuition: "과거 K/V 카드를 줄줄이 보관하는 대신 key로 읽고 value를 고쳐 쓰는 같은 크기의 matrix를 유지합니다.",
+        workedExample: "Reference core state는 layer당 48 heads×128×128 FP32이고 48 layers 합계 144 MiB/request로 context 4K와 262K에서 shape가 같습니다.",
+        boundary: "Fixed state는 free memory가 아니고 active request 수에 비례하며, 과거 token 원본을 보존하지 않아 exact retrieval 충돌이 생길 수 있습니다.",
+      },
+      {
+        id: "qwen36-delta-correction-update",
+        sectionId: "delta-update",
+        intuition: "새 내용을 통째로 더하지 않고 현재 key에서 이미 예측한 값을 뺀 뒤 틀린 양만 다시 씁니다.",
+        workedExample: "감쇠 state가 key에서 3을 예측하고 v=5, β=.25이면 error 2 중 .5를 key 방향 correction으로 씁니다.",
+        boundary: "비슷한 key directions가 같은 matrix coordinates를 공유하면 correction이 다른 association에 영향을 줄 수 있고 q/k normalization·conv·output gate가 실제 구현에 더 있습니다.",
+      },
+      {
+        id: "qwen36-hybrid-request-state",
+        sectionId: "hybrid-runtime",
+        intuition: "한 request가 길어질수록 늘어나는 파일철과 길이와 상관없이 request마다 하나씩 필요한 작업판을 함께 소유합니다.",
+        workedExample: "BF16 logical KV는 token당 64 KiB여서 32K/128K/262K에 2/8/16 GiB이고 core recurrent state는 각 경우 144 MiB입니다.",
+        boundary: "Prefix sharing·TP·allocator padding·conv state·CUDA graph·workspace 때문에 logical 합계와 physical GPU allocation은 다릅니다.",
+      },
+      {
+        id: "qwen36-partial-multimodal-rope",
+        sectionId: "model-stack",
+        intuition: "Attention head 전체가 아니라 일부 좌표에만 위치 회전을 넣고 visual token에는 시간·세로·가로 축을 나눠 전달합니다.",
+        workedExample: "Head dim 256×partial factor .25=64 rotary dimensions이며 config의 mRoPE sections가 temporal·height·width를 구분합니다.",
+        boundary: "RoPE는 위치 표현을 다루며 KV memory·DeltaNet state size를 줄이지 않고 extended context 품질을 단독 보장하지 않습니다.",
+      },
+      {
+        id: "qwen36-serving-release-gate",
+        sectionId: "release-check",
+        intuition: "Config 숫자 하나 대신 구조·memory·kernel·quality가 같은 model generation을 가리키는지 receipts로 맞춥니다.",
+        workedExample: "32K/128K/262K의 logical KV와 actual peak를 비교하고 fast-kernel on/off TTFT·decode, exact retrieval, visual token, MTP rollback을 같은 revision에서 기록합니다.",
+        boundary: "Model card의 supported context와 target workload quality·latency·concurrency 승인은 다른 주장입니다.",
+      },
+    ],
+    conceptStages: [
+      { label: "00 identity", relation: "공식 모델명과 3:1 layer pattern을 먼저 고정", concepts: ["qwen36-hybrid-layer-schedule"] },
+      { label: "01 explicit memory", relation: "Attention Q/K/V·GQA에서 token-growing KV를 계산", concepts: ["kv-cache-decode-state", "grouped-query-kv-sharing", "per-token-kv-byte"] },
+      { label: "02 compressed memory", relation: "Fixed recurrent matrix와 prediction-error correction을 연결", concepts: ["qwen36-gated-deltanet-state", "qwen36-delta-correction-update", "lossy-recurrent-state"] },
+      { label: "03 runtime", relation: "두 cache growth class를 prefill·decode lifecycle에 결합", concepts: ["qwen36-hybrid-request-state", "hybrid-kv-cache-allocation", "chunked-prefill-interleaving"] },
+      { label: "04 stack and release", relation: "Position·FFN·MTP·vision을 분리한 뒤 deployment evidence로 재결합", concepts: ["qwen36-partial-multimodal-rope", "speculative-draft-verify-cycle", "qwen36-serving-release-gate"] },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question: "Qwen3.6-27B의 한 hybrid block과 전체 64 layer에서 DeltaNet·Attention layer 수를 계산하고 KV 공식에 들어갈 L을 고르세요.",
+        answerChecklist: ["3 DeltaNet", "1 Attention", "repeat 16", "48 DeltaNet", "16 Attention", "L_attn=16", "64 total"],
+        requiredConcepts: ["qwen36-hybrid-layer-schedule"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question: "Q heads 24, KV heads 4인 GQA의 group size를 계산하고 왜 cache 폭은 24가 아닌 4로 세는지 설명하세요.",
+        answerChecklist: ["24/4=6", "six Q per KV group", "Q current lookup", "K/V retained", "cache uses H_KV"],
+        requiredConcepts: ["grouped-query-kv-sharing", "kv-cache-decode-state"],
+        sectionId: "attention-kv",
+      },
+      {
+        level: "basic",
+        question: "16 attention layers·K/V 2·KV heads 4·head dim 256·BF16에서 token당 KV byte와 32K context memory를 계산하세요.",
+        answerChecklist: ["16×2×4×256×2", "65536 bytes", "64 KiB/token", "32768 tokens", "2 GiB", "unsharded logical assumption"],
+        requiredConcepts: ["per-token-kv-byte", "qwen36-hybrid-layer-schedule"],
+        sectionId: "kv-bytes",
+      },
+      {
+        level: "basic",
+        question: "Scalar 직관에서 retained prediction=3, v=5, β=.25일 때 delta content를 구하고 왜 v=5를 그대로 더하지 않는지 설명하세요.",
+        answerChecklist: ["error=2", "beta times error=.5", "subtract existing prediction", "avoid duplicate accumulation", "key-directed correction"],
+        requiredConcepts: ["qwen36-delta-correction-update"],
+        sectionId: "delta-update",
+      },
+      {
+        level: "basic",
+        question: "48 layers×48 heads×128×128×FP32 core recurrent state를 MiB로 계산하고 4K와 262K context에서 어떻게 달라지는지 설명하세요.",
+        answerChecklist: ["37748736 elements", "150994944 bytes", "144 MiB", "same shape for both T", "per-request fixed", "conv state excluded"],
+        requiredConcepts: ["qwen36-gated-deltanet-state"],
+        sectionId: "state-bytes",
+      },
+      {
+        level: "basic",
+        question: "RoPE, hybrid memory, FFN, MTP와 vision encoder가 각각 해결하는 문제를 한 줄씩 구분하세요.",
+        answerChecklist: ["position", "sequence memory/mixing", "per-token feature transform", "future draft/prediction", "visual tokenization", "not one mechanism"],
+        requiredConcepts: ["qwen36-partial-multimodal-rope", "qwen36-hybrid-request-state", "speculative-draft-verify-cycle"],
+        sectionId: "model-stack",
+      },
+      {
+        level: "advanced",
+        question: "32K request 8개를 BF16 logical shape로 서빙할 때 attention KV와 core recurrent state 합계를 계산하고 빠진 physical memory 항을 나열하세요.",
+        answerChecklist: ["KV 2 GiB each", "16 GiB total KV", "144 MiB each", "1152 MiB core state", "weights", "conv state", "allocator padding", "workspace/CUDA graph", "TP layout"],
+        requiredConcepts: ["qwen36-hybrid-request-state", "qwen36-gated-deltanet-state"],
+        sectionId: "hybrid-runtime",
+      },
+      {
+        level: "advanced",
+        question: "왜 DeltaNet decode를 T에 O(1)이라고 해도 공짜가 아니며 exact UUID retrieval에서 attention이 남는 이유를 설명하세요.",
+        answerChecklist: ["fixed state shape", "matrix read/write FLOPs", "memory bandwidth", "FFN remains", "compressed collision", "explicit token KV", "O(1) only in T"],
+        requiredConcepts: ["qwen36-gated-deltanet-state", "lossy-recurrent-state", "qwen36-hybrid-layer-schedule"],
+        sectionId: "deltanet-state",
+      },
+      {
+        level: "advanced",
+        question: "Chunked prefill과 speculative MTP reject가 있는 hybrid cache manager에서 state consistency를 지키는 commit·rollback 절차를 설계하세요.",
+        answerChecklist: ["same request generation", "chunk KV append", "final recurrent state", "draft temporary state", "target accepted prefix", "rollback both cache classes", "conv state", "restart test"],
+        requiredConcepts: ["qwen36-hybrid-request-state", "chunked-prefill-interleaving", "speculative-draft-verify-cycle"],
+        sectionId: "prefill-decode",
+      },
+      {
+        level: "advanced",
+        question: "Qwen3.6 262K/extended context 배포의 release matrix를 architecture·memory·kernel·quality receipts로 작성하세요.",
+        answerChecklist: ["model/config revision", "layer/head/dtype dump", "logical vs peak bytes", "prefill/decode separately", "fast kernel/fallback", "native vs extended", "exact retrieval", "multimodal tokens", "MTP acceptance", "rollback profile"],
+        requiredConcepts: ["qwen36-serving-release-gate", "qwen36-partial-multimodal-rope", "qwen36-hybrid-request-state"],
+        sectionId: "release-check",
+      },
+    ],
+    papers: [
+      { title: "Qwen3.6-27B official model card", href: "https://huggingface.co/Qwen/Qwen3.6-27B", problem: "공개 model identity·architecture·modalities·context 범위 식별", contribution: "27B dense·3:1 hybrid·native/extended context·MTP·multimodal 공개", assumptions: "확인한 official repository revision과 model card", evidenceScope: "Qwen3.6-27B 공개 configuration과 support 범위", notClaim: "Qwen3.8 존재나 모든 runtime의 1M 품질·VRAM 보장 아님", sectionId: "paper-qwen36-config" },
+      { title: "Qwen3.6-27B official config.json", href: "https://huggingface.co/Qwen/Qwen3.6-27B/blob/main/config.json", problem: "Layer/head/state shape의 기계적 확인", contribution: "64 layer_types·attention/linear heads·dtype·RoPE·vision·MTP fields", assumptions: "Config와 weights/runtime compatibility", evidenceScope: "이 글의 logical tensor shape와 byte 계산", notClaim: "Allocator·workspace·throughput 확정 아님", sectionId: "paper-qwen36-config" },
+      { title: "Gated Delta Networks", href: "https://arxiv.org/abs/2412.06464", problem: "Linear attention의 recall과 parallel training 효율", contribution: "Adaptive gating+delta update와 parallel/hybrid algorithm", assumptions: "논문의 model·data·benchmark·kernel", evidenceScope: "Gated delta rule의 method와 evaluated trade-off", notClaim: "Qwen 3:1 비율의 보편 최적성 아님", sectionId: "paper-gated-deltanet" },
+      { title: "vLLM Hybrid KV Cache Manager", href: "https://docs.vllm.ai/en/stable/design/hybrid_kv_cache_manager/", problem: "서로 다른 cache spec의 block allocation", contribution: "Cache groups·block size alignment·padding design", assumptions: "확인한 vLLM stable revision과 supported specs", evidenceScope: "Hybrid allocator 공식 설계", notClaim: "Logical bytes와 physical allocation 동일 보장 아님", sectionId: "paper-vllm-hybrid" },
+      { title: "Transformers Qwen3.5/Qwen3.6 reference", href: "https://huggingface.co/docs/transformers/model_doc/qwen3_5", problem: "Hybrid·multimodal checkpoint의 executable reference path", contribution: "Layer dispatch·kernel fallback·mRoPE·cache API", assumptions: "Transformers·kernel·GPU·dtype revisions", evidenceScope: "Reference implementation behavior와 support boundary", notClaim: "모든 serving engine의 production 성능 아님", sectionId: "paper-transformers-qwen35" },
     ],
   },
 };

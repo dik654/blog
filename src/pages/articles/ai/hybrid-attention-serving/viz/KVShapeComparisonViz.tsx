@@ -2,13 +2,13 @@ const MODELS = [
   {
     name: "Qwen 27B 배포본",
     detail: "qwen36-27b-fp8 · 프로젝트 runtime label",
-    layers: 64,
+    layers: 16,
     kvHeads: 4,
     headDim: 256,
-    units: "65,536",
+    units: "16,384",
     factor: "1.00×",
-    bytes: "256 KiB",
-    width: 27,
+    bytes: "64 KiB",
+    width: 7,
     tone: "bg-sky-500",
   },
   {
@@ -18,7 +18,7 @@ const MODELS = [
     kvHeads: 16,
     headDim: 256,
     units: "245,760",
-    factor: "3.75×",
+    factor: "15.0×",
     bytes: "960 KiB",
     width: 100,
     tone: "bg-violet-500",
@@ -30,9 +30,9 @@ const MODELS = [
     kvHeads: 2,
     headDim: 128,
     units: "13,312",
-    factor: "0.203×",
+    factor: "0.813×",
     bytes: "52 KiB",
-    width: 6,
+    width: 5.5,
     tone: "bg-emerald-500",
   },
 ] as const;
@@ -109,13 +109,13 @@ export default function KVShapeComparisonViz() {
         <div className="bg-muted/20 px-5 py-4">
           <p className="text-xs font-bold">Gemma / Qwen</p>
           <p className="mt-1 font-mono text-sm font-black">
-            245,760 ÷ 65,536 = 3.75×
+            245,760 ÷ 16,384 = 15.0×
           </p>
         </div>
         <div className="bg-muted/20 px-5 py-4">
           <p className="text-xs font-bold">Muse / Qwen</p>
           <p className="mt-1 font-mono text-sm font-black">
-            13,312 ÷ 65,536 = 0.203×
+            13,312 ÷ 16,384 = 0.813×
           </p>
         </div>
         <div className="bg-muted/20 px-5 py-4">
