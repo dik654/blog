@@ -31,7 +31,10 @@ export const cosmosArticles: Article[] = [
     title: "CometBFT 타입: Block · Vote · Validator",
     subcategory: "cosmos-core",
     sections: [
-      { id: "overview", title: "핵심 type은 block·vote·commit의 합의 증거를 보존한다" },
+      {
+        id: "overview",
+        title: "핵심 type은 block·vote·commit의 합의 증거를 보존한다",
+      },
       { id: "block-header", title: "Block & Header 구조체" },
       { id: "vote-commit", title: "Vote · Commit · VoteSet" },
       { id: "validator-set", title: "ValidatorSet & 가중 추첨" },
@@ -45,7 +48,11 @@ export const cosmosArticles: Article[] = [
     title: "CometBFT 합의 엔진: receiveRoutine → 라운드 상태 머신",
     subcategory: "cosmos-core",
     sections: [
-      { id: "overview", title: "Consensus state machine은 proposal·prevote·precommit을 round마다 진행한다" },
+      {
+        id: "overview",
+        title:
+          "Consensus state machine은 proposal·prevote·precommit을 round마다 진행한다",
+      },
       { id: "receive-routine", title: "receiveRoutine & handleMsg 디스패치" },
       {
         id: "round-state",
@@ -63,7 +70,10 @@ export const cosmosArticles: Article[] = [
     title: "CometBFT ABCI: PrepareProposal → FinalizeBlock → Commit",
     subcategory: "cosmos-core",
     sections: [
-      { id: "overview", title: "ABCI++는 합의 엔진과 애플리케이션의 상태 전이를 분리한다" },
+      {
+        id: "overview",
+        title: "ABCI++는 합의 엔진과 애플리케이션의 상태 전이를 분리한다",
+      },
       { id: "abci-client", title: "ABCI 클라이언트 (gRPC · 소켓 · 로컬)" },
       { id: "prepare-process", title: "PrepareProposal & ProcessProposal" },
       { id: "finalize-commit", title: "FinalizeBlock & Commit" },
@@ -77,13 +87,22 @@ export const cosmosArticles: Article[] = [
     title: "CometBFT BlockExecutor: 검증·실행·영속화와 replay",
     subcategory: "cosmos-core",
     sections: [
-      { id: "overview", title: "결정된 block과 durable application state는 아직 다르다" },
+      {
+        id: "overview",
+        title: "결정된 block과 durable application state는 아직 다르다",
+      },
       {
         id: "validate-block",
         title: "ValidateBlock: 현재 State의 바로 다음 block인지 검사한다",
       },
-      { id: "execute-block", title: "FinalizeBlock result에서 next State를 계산한다" },
-      { id: "save-state", title: "Result → Commit → State 저장과 crash replay" },
+      {
+        id: "execute-block",
+        title: "FinalizeBlock result에서 next State를 계산한다",
+      },
+      {
+        id: "save-state",
+        title: "Result → Commit → State 저장과 crash replay",
+      },
     ],
     component: () => import("@/pages/articles/blockchain/cometbft-execution"),
   },
@@ -94,7 +113,11 @@ export const cosmosArticles: Article[] = [
     title: "CometBFT P2P: MConnection · Switch · Reactor",
     subcategory: "cosmos-core",
     sections: [
-      { id: "overview", title: "P2P stack은 peer discovery와 channel별 message routing을 분리한다" },
+      {
+        id: "overview",
+        title:
+          "P2P stack은 peer discovery와 channel별 message routing을 분리한다",
+      },
       { id: "mconnection", title: "MConnection 다중화 (채널 프로토콜)" },
       { id: "switch", title: "Switch & Peer 관리" },
       { id: "reactor", title: "Reactor 패턴 (메시지 디스패치)" },
@@ -108,9 +131,18 @@ export const cosmosArticles: Article[] = [
     title: "CometBFT mempool: admission · reap · recheck",
     subcategory: "cosmos-core",
     sections: [
-      { id: "overview", title: "Mempool은 node-local 대기실이지 공유 원장이 아니다" },
-      { id: "clist", title: "CList의 local order · reap · availability signal" },
-      { id: "checktx", title: "Capacity · cache · asynchronous CheckTx admission" },
+      {
+        id: "overview",
+        title: "Mempool은 node-local 대기실이지 공유 원장이 아니다",
+      },
+      {
+        id: "clist",
+        title: "CList의 local order · reap · availability signal",
+      },
+      {
+        id: "checktx",
+        title: "Capacity · cache · asynchronous CheckTx admission",
+      },
       { id: "recheck", title: "Commit 뒤 Update · recheck barrier" },
     ],
     component: () => import("@/pages/articles/blockchain/cometbft-mempool"),
@@ -139,7 +171,10 @@ export const cosmosArticles: Article[] = [
     title: "CometBFT v0.40 crypto: vote signature·Merkle·TMHash",
     subcategory: "cosmos-core",
     sections: [
-      { id: "overview", title: "Validator vote와 user transaction 서명은 다르다" },
+      {
+        id: "overview",
+        title: "Validator vote와 user transaction 서명은 다르다",
+      },
       { id: "ed25519", title: "Ed25519 verifier contract" },
       { id: "merkle", title: "Prefix Merkle commitment" },
       { id: "hash", title: "TMHash 32-byte hash와 20-byte address" },
@@ -173,11 +208,13 @@ export const cosmosArticles: Article[] = [
   },
   {
     slug: "berachain",
-    title: "Berachain BeaconKit (이더리움 CL의 Cosmos 구현)",
+    title: "Berachain — BERA·BGT Proof of Liquidity와 BeaconKit 경계",
     subcategory: "cosmos-evm",
     sections: [
-      { id: "overview", title: "개요" },
-      { id: "pol-architecture", title: "Proof of Liquidity & 모듈 구조" },
+      { id: "overview", title: "BERA·BGT·HONEY 경계" },
+      { id: "pol-flow", title: "PoL reward flow" },
+      { id: "consensus-boundary", title: "BeaconKit consensus 경계" },
+      { id: "berachain-release", title: "State·release gate" },
     ],
     component: () => import("@/pages/articles/blockchain/berachain"),
   },

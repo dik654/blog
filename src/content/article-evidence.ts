@@ -3802,22 +3802,27 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 코드", label: "Lotus v1.36.2 filcns weight.go", href: "https://github.com/filecoin-project/lotus/blob/v1.36.2/chain/consensus/filcns/weight.go", note: "EC chain-weight fixed-point integer 산술의 pinned source이며 irreversible finality 근거는 아님" },
   ],
   "blockchain/ipfs-filecoin-storage": [
-    {
-      kind: "공식 문서",
-      label: "IPFS Docs — How IPFS works",
-      href: "https://docs.ipfs.tech/concepts/how-ipfs-works/",
-      note: "CID·DHT·Bitswap을 거치는 콘텐츠 검색의 역할 경계",
-    },
-    {
-      kind: "공식 문서",
-      label: "Filecoin Docs — How storage works",
-      href: "https://docs.filecoin.io/basics/how-storage-works/",
-      note: "Filecoin의 장기 보관 계약과 retrieval을 구분하는 기준",
-    },
+    { kind: "공식 규격", label: "IPFS Bitswap protocol · commit ff7230f", href: "https://github.com/ipfs/specs/blob/ff7230ffe47f6aa765a105271f6294299e5f233f/src/bitswap-protocol.md", note: "Wantlist·block/presence exchange snapshot이며 provider ad가 possession·durability를 보장하지 않음" },
+    { kind: "공식 규격", label: "IPFS HTTP Routing V1 · commit ff7230f", href: "https://github.com/ipfs/specs/blob/ff7230ffe47f6aa765a105271f6294299e5f233f/src/routing/http-routing-v1.md", note: "Provider candidate schema이며 successful transfer·CID integrity는 별도" },
+    { kind: "공식 코드", label: "Kubo v0.42.0 stable source", href: "https://github.com/ipfs/kubo/tree/v0.42.0", note: "Pin/GC·routing·Bitswap·gateway implementation snapshot이며 remote replication·SLA는 아님" },
+    { kind: "공식 규격", label: "Storacha–Filecoin pipeline · commit 3b67918", href: "https://github.com/storacha/specs/blob/3b6791869635735ddb1a54aed7450ad6ef687c06/w3-filecoin.md", note: "Content/piece/deal receipt bridge이며 offer가 deal·proof·retrieval 성공을 뜻하지 않음" },
   ],
-  "blockchain/lotus-chain": FILECOIN_LOTUS_SERIES_EVIDENCE,
-  "blockchain/lotus-market": FILECOIN_LOTUS_SERIES_EVIDENCE,
-  "blockchain/lotus-miner": FILECOIN_LOTUS_SERIES_EVIDENCE,
+  "blockchain/lotus-chain": [
+    { kind: "공식 코드", label: "Lotus ChainSync · v1.36.0 commit 154c0c3", href: "https://github.com/filecoin-project/lotus/blob/154c0c3a46e92006008818bb06aaf959e2e705a9/chain/sync.go", note: "Header/message 수집·validation·heaviest-tipset refresh의 pinned 구현이며 peer availability·finality 보장은 아님" },
+    { kind: "공식 코드", label: "Lotus StateManager · v1.36.0 commit 154c0c3", href: "https://github.com/filecoin-project/lotus/blob/154c0c3a46e92006008818bb06aaf959e2e705a9/chain/stmgr/execute.go", note: "TipSetState cache·lookup·recompute 경계이며 FVM 전체 semantics·고정 실행 시간은 아님" },
+    { kind: "공식 규격", label: "Filecoin Expected Consensus", href: "https://spec.filecoin.io/algorithms/expected_consensus/", note: "Valid tipset·chain-weight fork choice의 protocol 기준이며 Lotus I/O·F3 finality는 별도" },
+  ],
+  "blockchain/lotus-market": [
+    { kind: "공식 문서", label: "Filecoin direct deal-making", href: "https://docs.filecoin.io/smart-contracts/programmatic-storage/direct-deal-making", note: "Proposal·Boost acceptance·publish·sector completion의 current high-level 경계이며 완료 시간 보장은 아님" },
+    { kind: "공식 문서", label: "Filecoin serving retrievals", href: "https://docs.filecoin.io/basics/how-retrieval-works/serving-retrievals", note: "IPNI discovery와 Graphsync/Bitswap/HTTP delivery 경계이며 availability·무료 retrieval 보장은 아님" },
+    { kind: "공식 코드", label: "Boost · commit 240aa6e", href: "https://github.com/filecoin-project/boost/tree/240aa6e12fbd349a5a3ed702121c3c58050792fc", note: "Current deal/retrieval implementation snapshot이며 모든 provider topology·SLA를 뜻하지 않음" },
+  ],
+  "blockchain/lotus-miner": [
+    { kind: "공식 코드", label: "Lotus sealing pipeline · v1.36.0", href: "https://github.com/filecoin-project/lotus/blob/154c0c3a46e92006008818bb06aaf959e2e705a9/storage/pipeline/states_sealing.go", note: "Legacy lotus-miner PC1/PC2·precommit/commit state source이며 Curio schema와 동일하지 않음" },
+    { kind: "공식 코드", label: "Lotus WindowPoSt runner · v1.36.0", href: "https://github.com/filecoin-project/lotus/blob/154c0c3a46e92006008818bb06aaf959e2e705a9/storage/wdpost/wdpost_run.go", note: "Window generation·verify·submission의 pinned source이며 Winning·deadline success 전체는 별도" },
+    { kind: "공식 코드", label: "Lotus WinningPoSt prover · v1.36.0", href: "https://github.com/filecoin-project/lotus/blob/154c0c3a46e92006008818bb06aaf959e2e705a9/storage/winning_prover.go", note: "Election challenge/proof adapter이며 block assembly·inclusion을 보장하지 않음" },
+    { kind: "공식 문서", label: "Curio sealing design", href: "https://docs.curiostorage.org/design/sealing", note: "HarmonyTasks 기반 current design 설명이며 legacy state 호환·고정 throughput 보장은 아님" },
+  ],
   "blockchain/lotus-mpool": FILECOIN_LOTUS_SERIES_EVIDENCE,
   "blockchain/lotus-state": [
     ...FILECOIN_LOTUS_SERIES_EVIDENCE,
@@ -3839,29 +3844,16 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "blockchain/proofs-snark": FILECOIN_PROOFS_SERIES_EVIDENCE,
   "blockchain/filecoin-fvm": [
-    source(
-      "공식 문서",
-      OFFICIAL_SOURCES.filecoin.fvm,
-      "message execution과 actor runtime의 개념 경계",
-    ),
-    {
-      kind: "공식 코드",
-      label: "filecoin-project/ref-fvm",
-      href: "https://github.com/filecoin-project/ref-fvm",
-      note: "Machine·Executor·Kernel·syscall의 reference implementation",
-    },
+    { kind: "공식 규격", label: "FIP-0030 · Final revision c856d99", href: "https://github.com/filecoin-project/FIPs/blob/c856d99b126cb52a0436c4838da55ec84495cfa7/FIPS/fip-0030.md", note: "FVM 도입과 actor model 규격이며 current gas schedule·actor bundle은 별도" },
+    { kind: "공식 코드", label: "ref-fvm executor · commit ef0a993", href: "https://github.com/filecoin-project/ref-fvm/blob/ef0a99370839e8e453e2fc7bad07228c8be0bdfb/fvm/src/executor/default.rs", note: "Message execution·receipt·state flush snapshot이며 fixed performance는 아님" },
+    { kind: "공식 코드", label: "ref-fvm call manager · commit ef0a993", href: "https://github.com/filecoin-project/ref-fvm/blob/ef0a99370839e8e453e2fc7bad07228c8be0bdfb/fvm/src/call_manager/default.rs", note: "Nested actor transactional state/events 구현 범위이며 outer chain effects 전체를 뜻하지 않음" },
+    { kind: "공식 코드", label: "ref-fvm actor manifest · commit ef0a993", href: "https://github.com/filecoin-project/ref-fvm/blob/ef0a99370839e8e453e2fc7bad07228c8be0bdfb/fvm/src/machine/manifest.rs", note: "Manifest version·required actor lookup snapshot이며 actor security audit는 아님" },
   ],
   "blockchain/filecoin-ipc": [
-    source(
-      "공식 문서",
-      OFFICIAL_SOURCES.ipc.architecture,
-      "subnet과 parent–child 구조의 전체 경계",
-    ),
-    source(
-      "공식 문서",
-      OFFICIAL_SOURCES.ipc.parentChild,
-      "top-down message와 bottom-up checkpoint의 상호작용",
-    ),
+    { kind: "공식 코드", label: "IPC parent–child interactions · commit bcd7c0d", href: "https://github.com/consensus-shipyard/ipc/blob/bcd7c0d10a93a95b6d28954d482169da4b12479d/docs-gitbook/concepts/subnets/parent-child-interactions.md", note: "Checkpoint·parent finality·top/down roles snapshot이며 inherited safety·fixed latency는 아님" },
+    { kind: "공식 규격", label: "IPC validator membership · commit bcd7c0d", href: "https://github.com/consensus-shipyard/ipc/blob/bcd7c0d10a93a95b6d28954d482169da4b12479d/specs/subnet-validator-membership.md", note: "Power-change round trip 설계이며 모든 deployment liveness를 보장하지 않음" },
+    { kind: "공식 코드", label: "IPC TopDownFinalityFacet · commit bcd7c0d", href: "https://github.com/consensus-shipyard/ipc/blob/bcd7c0d10a93a95b6d28954d482169da4b12479d/contracts/contracts/gateway/router/TopDownFinalityFacet.sol", note: "Parent-finality gateway transition snapshot이며 child finality 전체는 별도" },
+    { kind: "공식 코드", label: "IPC CheckpointingFacet · commit bcd7c0d", href: "https://github.com/consensus-shipyard/ipc/blob/bcd7c0d10a93a95b6d28954d482169da4b12479d/contracts/contracts/gateway/router/CheckpointingFacet.sol", note: "Verified checkpoint commit boundary이며 signer quorum·relayer liveness는 별도" },
   ],
   "blockchain/filecoin-onchain-cloud": [
     source(
@@ -3886,12 +3878,10 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 규격", label: "Filecoin proof-of-storage spec · commit a950028", href: "https://github.com/filecoin-project/specs/tree/a95002835b34d4042c007feda3fecf5e68e79dfa/content/algorithms/pos", note: "PoRep·PoSt claim definitions이며 current Lotus scheduler·PDP·retrieval SLA를 뜻하지 않음" },
   ],
   "blockchain/filecoin-storacha": [
-    {
-      kind: "공식 코드",
-      label: "Storacha GitHub organization",
-      href: "https://github.com/storacha",
-      note: "Storacha client·upload·UCAN 구현을 확인하는 공식 저장소 모음",
-    },
+    { kind: "공식 규격", label: "Storacha specs status · commit 3b67918", href: "https://github.com/storacha/specs/blob/3b6791869635735ddb1a54aed7450ad6ef687c06/Readme.md", note: "Stable/reliable/WIP maturity snapshot이며 permanent storage promise는 아님" },
+    { kind: "공식 규격", label: "Storacha Space·Blob specs · commit 3b67918", href: "https://github.com/storacha/specs/blob/3b6791869635735ddb1a54aed7450ad6ef687c06/w3-blob.md", note: "Space capability와 allocate/put/accept receipt chain이며 public retrieval은 별도" },
+    { kind: "공식 규격", label: "Storacha Sharded DAG Index · commit 3b67918", href: "https://github.com/storacha/specs/blob/3b6791869635735ddb1a54aed7450ad6ef687c06/w3-index.md", note: "Root→shard→range mapping artifact이며 shard availability 보장은 아님" },
+    { kind: "공식 규격", label: "Storacha Filecoin pipeline · commit 3b67918", href: "https://github.com/storacha/specs/blob/3b6791869635735ddb1a54aed7450ad6ef687c06/w3-filecoin.md", note: "Offer·aggregation·dealer·tracker protocol이며 deal/proof success·permanence는 아님" },
   ],
   "blockchain/reth": [
     source(
@@ -3930,27 +3920,8 @@ export const ARTICLE_EVIDENCE: Readonly<
     ),
   ],
   "blockchain/filecoin-lotus": [
-    source(
-      "공식 문서",
-      OFFICIAL_SOURCES.filecoin.lotusComponents,
-      "daemon·miner·worker·Boost의 현재 프로세스 경계",
-    ),
-    source(
-      "공식 문서",
-      OFFICIAL_SOURCES.filecoin.actors,
-      "chain state와 built-in actor 역할",
-    ),
-    source(
-      "공식 문서",
-      OFFICIAL_SOURCES.filecoin.fvm,
-      "message 실행과 FVM 경계",
-    ),
-    {
-      kind: "공식 코드",
-      label: "filecoin-project/lotus",
-      href: "https://github.com/filecoin-project/lotus",
-      note: "Lotus daemon·chain·miner 구현의 원본",
-    },
+    { kind: "공식 문서", label: "Lotus suite components", href: "https://docs.filecoin.io/storage-providers/architecture/lotus-components", note: "Daemon·miner/worker·Boost의 process 책임 경계이며 모든 배포 topology를 뜻하지 않음" },
+    { kind: "공식 코드", label: "Lotus v1.36.0 · commit 154c0c3", href: "https://github.com/filecoin-project/lotus/tree/154c0c3a46e92006008818bb06aaf959e2e705a9", note: "2026-08-14 stable source snapshot이며 Curio·Boost 전체와 production SLA를 보장하지 않음" },
   ],
   "gpu/hw-memory": [
     {
@@ -5267,5 +5238,39 @@ export const ARTICLE_EVIDENCE: Readonly<
   "blockchain/tusk": [
     { kind: "핵심 논문", label: "Narwhal and Tusk · arXiv 2105.11827", href: "https://arxiv.org/abs/2105.11827", note: "Certified DAG와 asynchronous shared-coin ordering 원문이며 historical evaluation 수치를 current chain SLA로 일반화하지 않음" },
     { kind: "핵심 논문", label: "Narwhal and Tusk · Tusk protocol", href: "https://arxiv.org/pdf/2105.11827#page=10", note: "Coin-selected leader·f+1 support·causal history ordering의 근거이며 local arrival order나 deterministic latency bound를 뜻하지 않음" },
+  ],
+  "blockchain/evm-fundamentals": [
+    { kind: "공식 규격", label: "Ethereum Yellow Paper · Shanghai version", href: "https://ethereum.github.io/yellowpaper/paper.pdf", note: "256-bit stack machine·execution environment·gas·halt의 형식 정본이며 Shanghai 이후 fork 변화와 client 구현 내부를 고정하지 않음" },
+    { kind: "공식 구현", label: "Ethereum execution-specs · tests@v20.0.1", href: "https://github.com/ethereum/execution-specs/tree/87aba1a38a476b31f819a2390eb481527e6dc683", note: "Pinned executable semantics와 tests artifact이며 production client architecture·성능 근거로 확대하지 않음" },
+  ],
+  "blockchain/evm-advanced": [
+    { kind: "공식 규격", label: "EIP-1014 · Skinny CREATE2", href: "https://eips.ethereum.org/EIPS/eip-1014", note: "CREATE2 address derivation·gas·collision 규칙이며 deployment 성공이나 proxy 보안을 보장하지 않음" },
+    { kind: "공식 규격", label: "Ethereum Yellow Paper · call and creation", href: "https://ethereum.github.io/yellowpaper/paper.pdf", note: "Nested message-call·creation·memory·rollback semantics의 Shanghai 정본이며 이후 fork나 특정 proxy standard 전체 근거는 아님" },
+  ],
+  "blockchain/fork-id": [
+    { kind: "공식 규격", label: "EIP-2124 · Fork identifier", href: "https://eips.ethereum.org/EIPS/eip-2124", note: "Block-number fork hash·next·four-case compatibility 규칙이며 peer honesty·block validity·finality 증명이 아님" },
+    { kind: "공식 규격", label: "EIP-6122 · Fork identifier update", href: "https://eips.ethereum.org/EIPS/eip-6122", note: "Timestamp fork extension의 정본이며 모든 EIP-2124 구현이 자동 호환된다는 뜻은 아님" },
+  ],
+  "blockchain/node-architecture": [
+    { kind: "공식 규격", label: "Ethereum execution-apis · v1.0.0-beta.7", href: "https://github.com/ethereum/execution-apis/tree/5aebdfdd45cadeb723be4bd45b4611b71c8b1c85", note: "Pinned Engine API methods·schemas·statuses 근거이며 특정 client module 배치나 finality를 정의하지 않음" },
+    { kind: "공식 코드", label: "Reth v2.2.0 · execution client", href: "https://github.com/paradigmxyz/reth/tree/88505c7fcbfdebfd3b56d88c86b62e950043c6c4", note: "Concrete execution-client implementation snapshot이며 Ethereum protocol이나 다른 clients의 내부 구조로 일반화하지 않음" },
+  ],
+  "blockchain/curve-stable": [
+    { kind: "핵심 논문", label: "Curve StableSwap whitepaper", href: "https://curve.fi/files/stableswap-paper.pdf", note: "Amplification invariant와 balanced-region slippage의 원 설계이며 peg·solvency·current parameter 보장은 아님" },
+    { kind: "공식 코드", label: "Curve StableSwap-NG · commit 2abe778f", href: "https://github.com/curvefi/stableswap-ng/tree/2abe778f40206a6c0fd108a0a53ad3266cbedeee", note: "Pinned pool/factory·rate·fee implementation이며 모든 historical pool/deployment와 동일하다는 뜻은 아님" },
+  ],
+  "blockchain/rwa-composition": [
+    { kind: "공식 연구", label: "IOSCO · Tokenization of Financial Assets (2025)", href: "https://www.iosco.org/library/pubdocs/pdf/IOSCOPD809.pdf", note: "Authoritative ownership record·legal recognition·custody 위험 분석이며 개별 상품 법률 의견은 아님" },
+    { kind: "공식 연구", label: "BIS · The tokenisation continuum", href: "https://www.bis.org/publ/bisbull72.htm", note: "Core claim layer와 service/governance layer의 개념 근거이며 tokenisation 편익·유동성 보장은 아님" },
+  ],
+  "blockchain/berachain": [
+    { kind: "공식 문서", label: "Berachain · Proof of Liquidity overview", href: "https://docs.berachain.com/general/proof-of-liquidity/overview", note: "2026-08-14 PoL actor·boost·allocation flow의 current docs이며 parameter·APR를 영구 고정하지 않음" },
+    { kind: "공식 문서", label: "Berachain · Reward Vaults", href: "https://docs.berachain.com/general/proof-of-liquidity/reward-vaults", note: "Vault eligibility·stake·reward accounting surface이며 principal·incentive value 보장은 아님" },
+    { kind: "공식 코드", label: "BeaconKit · commit 59c0fd16", href: "https://github.com/berachain/beacon-kit/tree/59c0fd169f024e2a0ca95b4d550012eab3e4fee9", note: "Pinned consensus/execution integration source이며 PoL economics의 safety theorem은 아님" },
+  ],
+  "blockchain/crypto-theory": [
+    { kind: "핵심 논문", label: "Goldwasser–Micali · Probabilistic Encryption", href: "https://doi.org/10.1016/0022-0000(84)90070-9", note: "Semantic computational security의 기반이며 임의 implementation·profile 안전 보장은 아님" },
+    { kind: "공식 규격", label: "NIST SP 800-57 Part 1 Rev. 5", href: "https://csrc.nist.gov/pubs/sp/800/57/pt1/r5/final", note: "Key lifecycle·security-strength guidance이며 system compliance 인증은 아님" },
+    { kind: "공식 규격", label: "RFC 5116 · Authenticated Encryption interface", href: "https://www.rfc-editor.org/rfc/rfc5116", note: "AEAD key/nonce/AAD/plaintext interface와 nonce 경계이며 key distribution·authorization을 해결하지 않음" },
   ],
 };

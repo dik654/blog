@@ -1,13 +1,17 @@
 import type { Article } from "../types";
-import { nodeSections } from "@/pages/articles/ethereum/node-architecture/meta";
 
 export const ethereumArticles: Article[] = [
   /* ── Core Protocol: 이더리움 자체 ── */
   {
     slug: "node-architecture",
-    title: "이더리움 노드 아키텍처 (EL + CL)",
+    title: "이더리움 실행 노드: EL·CL과 Engine API 경계",
     subcategory: "eth-core",
-    sections: nodeSections,
+    sections: [
+      { id: "overview", title: "한 transaction의 노드 경로" },
+      { id: "el-cl-boundary", title: "EL·CL 책임과 Engine API" },
+      { id: "payload-state", title: "Payload 상태와 canonical head" },
+      { id: "release", title: "Crash·reorg·release gate" },
+    ],
     component: () => import("@/pages/articles/ethereum/node-architecture"),
   },
   {
@@ -15,10 +19,10 @@ export const ethereumArticles: Article[] = [
     title: "Fork ID (EIP-2124) 분석",
     subcategory: "eth-core",
     sections: [
-      { id: "overview", title: "개요" },
-      { id: "crc32-enr", title: "CRC32 & ENR" },
-      { id: "pow-to-pos", title: "PoW→PoS 전환" },
-      { id: "test-design", title: "테스트 케이스 설계" },
+      { id: "overview", title: "Fork ID가 거르는 것" },
+      { id: "forkhash", title: "CRC32 누산과 FORK_NEXT" },
+      { id: "validation", title: "로컬·원격 판정 행렬" },
+      { id: "release", title: "경계 테스트와 배포" },
     ],
     component: () => import("@/pages/articles/ethereum/fork-id"),
   },
@@ -27,13 +31,10 @@ export const ethereumArticles: Article[] = [
     title: "EVM 완전 분석: 스택 머신에서 인터프리터까지",
     subcategory: "eth-core",
     sections: [
-      { id: "overview", title: "스택 머신 & 가스 모델" },
-      { id: "execution-flow", title: "트랜잭션 → EVM 실행 흐름" },
-      { id: "call-flow", title: "EVM 구조 & Call() 흐름" },
-      { id: "call-branches", title: "Call() 내부 분기" },
-      { id: "interpreter-loop", title: "인터프리터 루프 (Run)" },
-      { id: "opcodes", title: "EVM 구성요소 & 오피코드" },
-      { id: "state-model", title: "상태 모델: 어카운트 & 트라이" },
+      { id: "overview", title: "Transaction에서 상태 전이까지" },
+      { id: "machine-step", title: "256-bit stack machine" },
+      { id: "gas-state", title: "Gas·memory·state journal" },
+      { id: "release", title: "Halt·revert·release gate" },
     ],
     component: () => import("@/pages/articles/blockchain/evm-fundamentals"),
   },
@@ -42,12 +43,10 @@ export const ethereumArticles: Article[] = [
     title: "EVM 심화: Create · DelegateCall · StaticCall",
     subcategory: "eth-core",
     sections: [
-      { id: "overview", title: "실행 컨텍스트를 읽는 법" },
-      { id: "create-flow", title: "CREATE & CREATE2" },
-      {
-        id: "delegate-static",
-        title: "DelegateCall · StaticCall · Selfdestruct",
-      },
+      { id: "overview", title: "Nested execution frame" },
+      { id: "memory-create", title: "Memory cost와 CREATE2" },
+      { id: "call-context", title: "CALL·DELEGATECALL·STATICCALL" },
+      { id: "release", title: "Nested revert와 release gate" },
     ],
     component: () => import("@/pages/articles/blockchain/evm-advanced"),
   },

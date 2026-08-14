@@ -6766,6 +6766,96 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [{ label: "Narwhal certified DAG", href: "/blockchain/narwhal-deep" }, { label: "Generic DAG linearization", href: "/blockchain/dag-consensus#linearization" }, { label: "Ordering·execution separation", href: "/blockchain/consensus-comparison#smr" }],
     evidence: [{ kind: "primary-source", rule: "Tusk message model·threshold·liveness·evaluation은 Narwhal and Tusk arXiv 2105.11827에만 귀속한다." }, { kind: "project-measurement", rule: "동일 certified DAG에서 coin/support, arrival permutation, missing payload, partition/restart와 order/state receipt를 재생한다." }, { kind: "project-claim", rule: "Zero-message overhead·expected rounds·historical TPS를 zero network traffic·deterministic SLA·current implementation으로 확대하지 않는다." }],
   },
+  "filecoin-lotus": {
+    title: "Lotus suite process·artifact handoff 글이 소유하는 범위",
+    owns: ["Lotus daemon·provider scheduler·worker·Boost process responsibility map", "Tipset·deal·sector·proof·message artifact handoff와 suite release gate"],
+    reuses: [{ label: "Expected Consensus", href: "/blockchain/expected-consensus" }, { label: "Filecoin proof API", href: "/blockchain/filecoin-proofs" }, { label: "Deal lifecycle", href: "/blockchain/lotus-market" }],
+    evidence: [{ kind: "primary-source", rule: "Process 역할은 current official docs, source behavior는 Lotus v1.36.0 commit 154c0c3에 각각 귀속한다." }, { kind: "project-measurement", rule: "같은 network·actor·proof·service manifest에서 artifact lineage, failure recovery와 e2e receipt를 재생한다." }, { kind: "project-claim", rule: "Component 존재·health를 compatible state·deadline success·retrieval SLA로 확대하지 않는다." }],
+  },
+  "lotus-chain": {
+    title: "Lotus ChainSync·state replay·head application 글이 소유하는 범위",
+    owns: ["Header/message stage receipt와 deterministic tipset state replay", "Common-ancestor revert/apply와 ChainSync release gate"],
+    reuses: [{ label: "EC valid tipset·weight", href: "/blockchain/expected-consensus#tipset-weight" }, { label: "F3 finalized prefix", href: "/blockchain/filecoin-f3" }],
+    evidence: [{ kind: "primary-source", rule: "Sync와 replay 구현은 Lotus v1.36.0 commit 154c0c3, fork-choice semantics는 Filecoin spec에 귀속한다." }, { kind: "project-measurement", rule: "같은 gap·peer fixture·store/hardware에서 header/message/validation/execution/store stage와 root/head parity를 비교한다." }, { kind: "project-claim", rule: "더 높은 candidate·warm sync speed·local head를 더 무거운 valid chain·finality·network SLA로 확대하지 않는다." }],
+  },
+  "lotus-market": {
+    title: "Filecoin deal artifact·activation·retrieval 글이 소유하는 범위",
+    owns: ["Proposal·piece·publish/allocation artifact와 sector activation boundary", "Retrieval delivery contract와 legacy/current market migration gate"],
+    reuses: [{ label: "PoRep phase artifacts", href: "/blockchain/proofs-porep" }, { label: "Storage proof·service boundary", href: "/blockchain/pos-theory#overview" }],
+    evidence: [{ kind: "primary-source", rule: "Current flow는 Filecoin docs와 Boost commit 240aa6e에 귀속하고 legacy Lotus markets와 구분한다." }, { kind: "project-measurement", rule: "같은 proposal/PieceCID/chain profile에서 publish·activation·retrieval receipts와 reorg·retry를 재생한다." }, { kind: "project-claim", rule: "Proposal acceptance·publish·storage proof·index result를 sector activation·delivery·payment success로 확대하지 않는다." }],
+  },
+  "lotus-miner": {
+    title: "Lotus provider sector task·proof duty scheduling 글이 소유하는 범위",
+    owns: ["Sector task generation과 sealing artifact→chain milestone bridge", "Winning/Window duty router와 provider scheduler release gate"],
+    reuses: [{ label: "PoRep artifacts", href: "/blockchain/proofs-porep" }, { label: "Window·Winning receipts", href: "/blockchain/proofs-post" }],
+    evidence: [{ kind: "primary-source", rule: "Legacy paths는 Lotus v1.36.0 commit 154c0c3, current task design은 Curio official docs에 따로 귀속한다." }, { kind: "project-measurement", rule: "Same sector/profile/deadline에서 artifact parity·lease/retry·independent proof verify·chain inclusion과 slack을 측정한다." }, { kind: "project-claim", rule: "Proof generation·worker health·평균 stage time을 active sector·block/message inclusion·deadline success로 확대하지 않는다." }],
+  },
+  "curve-stable": {
+    title: "Curve StableSwap invariant·risk 글이 소유하는 범위",
+    owns: ["정규화 balances와 amplification invariant", "A ramp·depeg inventory 경계와 StableSwap release gate"],
+    reuses: [{ label: "Constant-product AMM invariant", href: "/blockchain/uniswap-v2#constant-product" }, { label: "Stablecoin target·redemption 경계", href: "/blockchain/stablecoin-overview#overview" }],
+    evidence: [{ kind: "primary-source", rule: "Invariant와 A의 주장은 StableSwap whitepaper, 구현 주장은 pinned stableswap-ng commit 2abe778f에 귀속한다." }, { kind: "project-measurement", rule: "같은 token/rate/A generation에서 integer D·output·fee·LP supply와 depeg stress를 paired 비교한다." }, { kind: "project-claim", rule: "낮은 slippage를 peg·issuer solvency·LP 무손실 또는 고정 current parameter로 확대하지 않는다." }],
+  },
+  "rwa-composition": {
+    title: "RWA claim·asset·token composition 글이 소유하는 범위",
+    owns: ["Legal claim과 authoritative ownership record의 token linkage", "Issuer/custodian/servicer map·valuation cutoff·DeFi composition release gate"],
+    reuses: [{ label: "Stablecoin arrangement functions", href: "/blockchain/stablecoin-overview#overview" }, { label: "VASP custody reconciliation", href: "/isms-aml/vasp-custody-management#proof-withdrawal-boundary" }],
+    evidence: [{ kind: "primary-source", rule: "Legal/ownership 위험은 IOSCO 2025, claim/service layer는 BIS tokenisation analysis에 귀속한다." }, { kind: "project-measurement", rule: "Legal register·asset/custody·NAV·token supply·cash queue·oracle를 같은 cutoff에서 대조한다." }, { kind: "project-claim", rule: "Token balance·NAV·allowlist를 직접 title·파산격리·즉시 상환·투자 적합성 또는 법률 자문으로 확대하지 않는다." }],
+  },
+  "berachain": {
+    title: "Berachain PoL incentive·consensus boundary 글이 소유하는 범위",
+    owns: ["BERA/BGT/HONEY 기능과 PoL boost·allocation·vault reward lifecycle", "BeaconKit consensus evidence와 reward receipt 분리·release gate"],
+    reuses: [{ label: "CometBFT quorum/finality", href: "/blockchain/cometbft-consensus" }, { label: "Stablecoin system boundary", href: "/blockchain/stablecoin-overview" }],
+    evidence: [{ kind: "primary-source", rule: "PoL·BGT·Reward Vault current facts는 2026-08-14 공식 docs, BeaconKit 구현은 commit 59c0fd16에 귀속한다." }, { kind: "project-measurement", rule: "같은 height·contract generation에서 BERA stake·BGT boost/allocation·vault accounting·block commit receipts를 분리 대조한다." }, { kind: "project-claim", rule: "BGT incentive·vault TVL을 consensus finality·security 비례 증가·고정 APR/parameter로 확대하지 않는다." }],
+  },
+  "crypto-theory": {
+    title: "암호 primitive security-game 공통 언어 글이 소유하는 범위",
+    owns: ["Correctness와 adversarial security 분리·game advantage", "Computational/information-theoretic 경계·assumption reduction·domain artifact release gate"],
+    reuses: [{ label: "Hash security games", href: "/crypto/hash-theory#input-security" }, { label: "Key authority lifecycle", href: "/isms-aml/cryptographic-control#key-lifecycle" }, { label: "Finite-field arithmetic", href: "/crypto/finite-field-theory" }],
+    evidence: [{ kind: "primary-source", rule: "Semantic encryption security는 Goldwasser–Micali, key lifecycle은 NIST SP 800-57, AEAD interface는 RFC 5116에 귀속한다." }, { kind: "project-measurement", rule: "Exact algorithm/profile/domain/encoding/key/nonce generation에서 vectors·negative oracles·interoperability·migration을 재생한다." }, { kind: "project-claim", rule: "Correct output·algorithm name·key length만으로 security game·composition·side-channel·post-quantum 안전을 보장하지 않는다." }],
+  },
+  "ethereum-evm-core-advanced": {
+    title: "EVM fundamentals·advanced route-specific ownership",
+    owns: ["256-bit stack step·execution environment·gas-before-effect와 journaled rollback", "Frame-local memory expansion·CREATE init/runtime address boundary", "CALL·DELEGATECALL·STATICCALL context authority와 nested halt propagation"],
+    reuses: [{ label: "Ethereum MPT state commitment", href: "/blockchain/merkle-patricia-trie" }, { label: "Reth fork-aware block execution", href: "/blockchain/reth-block-execution" }, { label: "Reth EIP-1559 fee market", href: "/blockchain/reth-eip1559" }],
+    evidence: [{ kind: "primary-source", rule: "EVM semantics는 Yellow Paper Shanghai revision, 활성 EIP와 pinned execution-specs fork에 귀속한다." }, { kind: "project-measurement", rule: "같은 transaction·pre-state·fork에서 status·gas·logs·return data·post-state root parity를 비교한다." }, { kind: "project-claim", rule: "Gas를 wall-clock 비용으로, EVM validity를 canonical finality로, CREATE2 주소를 deployment 보장으로 확대하지 않는다." }],
+  },
+  "eip2124-fork-id": {
+    title: "EIP-2124 generic Fork ID ownership",
+    owns: ["Genesis·passed block forks의 CRC32 FORK_HASH와 FORK_NEXT encoding", "Same·remote-subset·remote-superset·incompatible local-head validation", "Fork-boundary·encoding·timestamp-extension release matrix"],
+    reuses: [{ label: "Reth ChainSpec implementation", href: "/blockchain/reth-chainspec" }, { label: "Reth peer/session path", href: "/blockchain/reth-net" }, { label: "Ethereum node Engine boundary", href: "/blockchain/node-architecture" }],
+    evidence: [{ kind: "standard", rule: "Block-number compatibility는 EIP-2124, timestamp extension은 EIP-6122에 각각 귀속한다." }, { kind: "project-measurement", rule: "Fork 직전·경계·직후와 endian·duplicate·stale-next·sync-direction fixtures의 decision reason parity를 검사한다." }, { kind: "project-claim", rule: "CRC32나 handshake accept를 peer honesty·block validity·finality 증명으로 확대하지 않는다." }],
+  },
+  "ethereum-engine-node-boundary": {
+    title: "Ethereum execution node·Engine API ownership",
+    owns: ["Protocol-level EL execution validity와 CL fork-choice/finality authority boundary", "Versioned Engine methods와 payload status lifecycle", "Validated payload·head·safe·finalized·durable state cursor와 reorg/crash release gate"],
+    reuses: [{ label: "EVM deterministic execution", href: "/blockchain/evm-fundamentals" }, { label: "Reth concrete architecture", href: "/blockchain/reth" }, { label: "Reth ChainSpec and Fork ID", href: "/blockchain/reth-chainspec" }],
+    evidence: [{ kind: "standard", rule: "Engine method·schema·status는 표시한 execution-apis snapshot과 활성 fork version에 귀속한다." }, { kind: "primary-source", rule: "Concrete module·builder·storage path는 pinned Reth v2.2.0에만 귀속하고 generic protocol 경계와 구분한다." }, { kind: "project-measurement", rule: "Exact EL/CL versions·genesis·fork schedule에서 Engine trace·reorg·crash·state-root parity를 검사한다." }, { kind: "project-claim", rule: "EL VALID를 CL finality로, JWT 성공을 correctness로, process health를 compatible node release로 확대하지 않는다." }],
+  },
+  "filecoin-fvm": {
+    title: "FVM message·state·actor-bundle execution ownership",
+    owns: ["Message·base state·network version·actor manifest execution envelope", "Nested actor transaction·state-root receipt와 FVM runtime release gate"],
+    reuses: [{ label: "Deterministic state transition", href: "/blockchain/consensus-comparison#smr" }, { label: "Content-addressed artifact", href: "/p2p/content-addressing#overview" }],
+    evidence: [{ kind: "standard", rule: "Protocol 도입은 Final FIP-0030 revision c856d99에 귀속한다." }, { kind: "primary-source", rule: "Executor·transaction·manifest facts는 ref-fvm commit ef0a993에만 귀속한다." }, { kind: "project-measurement", rule: "Exact message/state/version/bundle에서 state·receipt parity와 crash replay를 측정한다." }, { kind: "project-claim", rule: "Reference source를 current activation·actor safety·fixed gas/throughput 보장으로 확대하지 않는다." }],
+  },
+  "filecoin-ipc": {
+    title: "IPC subnet·top-down·bottom-up receipt ownership",
+    owns: ["Subnet genesis·validator-power boot artifact", "Parent-finality top-down과 bottom-up checkpoint·cross-network release receipts"],
+    reuses: [{ label: "BFT quorum intersection", href: "/blockchain/bft-comparison#quorum-safety" }, { label: "State transition과 client effect", href: "/blockchain/consensus-comparison#smr" }],
+    evidence: [{ kind: "primary-source", rule: "IPC semantics와 contracts는 repository commit bcd7c0d에 귀속한다." }, { kind: "project-measurement", rule: "Local·quorum·relay·parent·destination receipts와 stage latency를 같은 message ID로 측정한다." }, { kind: "project-claim", rule: "Parent 존재·checkpoint·relayer 제출을 inherited safety·destination effect·고정 latency로 확대하지 않는다." }],
+  },
+  "filecoin-storacha": {
+    title: "Storacha capability·blob·index·Filecoin receipt ownership",
+    owns: ["Space UCAN capability와 blob effect-chain receipt", "Sharded DAG index artifact와 Filecoin-policy release gate"],
+    reuses: [{ label: "Content-address integrity", href: "/p2p/content-addressing#overview" }, { label: "Filecoin proof service boundary", href: "/blockchain/filecoin-proofs#overview" }],
+    evidence: [{ kind: "standard", rule: "Protocol facts와 maturity는 Storacha specs commit 3b67918에 귀속한다." }, { kind: "project-measurement", rule: "Capability·allocate/put/accept·index range·CID retrieval·Filecoin stage receipts를 각각 재생한다." }, { kind: "project-claim", rule: "Stable/reliable·upload/offer를 public retrieval·deal success·permanent storage로 확대하지 않는다." }],
+  },
+  "ipfs-filecoin-storage": {
+    title: "IPFS content·Filecoin retention integration ownership",
+    owns: ["CID·CAR·Piece/deal identity-map artifact", "Multi-path verified retrieval, retention receipt와 integration release gate"],
+    reuses: [{ label: "IPFS content addressing", href: "/p2p/content-addressing#overview" }, { label: "Kubo routing·Bitswap·pin", href: "/p2p/kubo#routing-bitswap" }, { label: "Filecoin proof stack", href: "/blockchain/filecoin-proofs#overview" }],
+    evidence: [{ kind: "standard", rule: "Routing·Bitswap semantics는 IPFS specs commit ff7230f에 귀속한다." }, { kind: "primary-source", rule: "Kubo implementation은 stable v0.42.0, Filecoin bridge는 Storacha specs commit 3b67918로 pin한다." }, { kind: "project-measurement", rule: "Mapping digest·CID bytes·path latency·pin/deal/proof status와 correlated outages를 측정한다." }, { kind: "project-claim", rule: "Provider ad·pin·deal·proof 한 항목을 possession·retrieval SLA·영구 보존으로 확대하지 않는다." }],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

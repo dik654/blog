@@ -19,7 +19,7 @@
 
 기존의 내용·수식·Viz 검수를 통과했더라도, 핵심 논문이 둘 이상인 전문 글은 선수 개념·학습 결과·논문 내부 해설 경로를 다시 확인한다. 특히 선수 개념은 현재 category에서 멈추지 않고 수학·통계·물리·컴퓨터 구조 등 실제로 필요한 기초까지 재귀적으로 따라간다. 정본 글·anchor·초심자 설명이 비어 있거나 `entryLevel` 글에 닿기 전에 순환하면 상위 글도 완료로 보지 않는다.
 
-이후 범위를 전체 블로그로 확장했다. 2026-08-14 현재 실제 공개 카탈로그에는 고유 article route가 386개 있다. Knowledge graph와 learning contract가 등록된 글은 363개이고 아직 contract가 없는 글은 23개다. 등록된 363개는 모두 새 DoD의 정확한 기초 6개+심화 4개와 본문·근거 anchor까지 strict audit를 통과했으며, 이전 문제 수 기준으로 남아 있던 구계약은 0개다. Audit는 파일시스템의 source folder나 public alias를 별도 article route로 중복 집계하지 않고 `src/content/index.ts`의 실제 공개 카탈로그를 분모로 사용하며, 새 route가 추가되면 분모도 함께 갱신한다. 또한 같은 concept를 두 글이 동시에 새 개념으로 소유하거나 concept의 `canonicalHref`가 실제 owner와 어긋나거나 새 concept가 relation edge 없이 고립되면 해당 글을 완료로 처리하지 않는다. 현재 2,180개 concept·3,171개 relation은 정본 owner 중복·경로 불일치·dangling/self/duplicate edge·고립 node가 모두 0개이며 `audit:graph --strict`를 통과한다. 완료된 정본·응용 글의 상세 근거는 아래 한 곳에서만 관리하므로, 아래 기존 체크 표시는 해당 글의 과거 검수 이력이며 현행 6+4 재검수 전에는 전체 DoD 완료를 뜻하지 않는다.
+이후 범위를 전체 블로그로 확장했다. 2026-08-14 현재 실제 공개 카탈로그에는 고유 article route가 386개 있다. Knowledge graph와 learning contract가 등록된 글은 379개이고 아직 contract가 없는 글은 7개다. 등록된 379개는 모두 새 DoD의 정확한 기초 6개+심화 4개와 본문·근거 anchor까지 strict audit를 통과했으며, 이전 문제 수 기준으로 남아 있던 구계약은 0개다. Audit는 파일시스템의 source folder나 public alias를 별도 article route로 중복 집계하지 않고 `src/content/index.ts`의 실제 공개 카탈로그를 분모로 사용하며, 새 route가 추가되면 분모도 함께 갱신한다. 또한 같은 concept를 두 글이 동시에 새 개념으로 소유하거나 concept의 `canonicalHref`가 실제 owner와 어긋나거나 새 concept가 relation edge 없이 고립되면 해당 글을 완료로 처리하지 않는다. 현재 2,249개 concept·3,270개 relation은 정본 owner 중복·경로 불일치·dangling/self/duplicate edge·고립 node가 모두 0개이며 `audit:graph --strict`를 통과한다. 완료된 정본·응용 글의 상세 근거는 아래 한 곳에서만 관리하므로, 아래 기존 체크 표시는 해당 글의 과거 검수 이력이며 현행 6+4 재검수 전에는 전체 DoD 완료를 뜻하지 않는다.
 
 ### 재귀 선수 지식 경로 — 현재 닫힌 기반
 
@@ -40,8 +40,8 @@
 - [x] `RNN → LSTM → Seq2Seq → Attention`: recurrent state와 시간축 gradient에서 시작해 gated memory·conditional sequence·autoregressive decoding·differentiable memory read까지 연결
 - [x] `Cross-entropy → Attention → Transformer → SFT → RLHF`: log·expectation에서 likelihood objective를 만들고, softmax·attention read·language-model policy와 response-token supervision을 거쳐 preference update까지 선수 경로를 연결
 - [x] `Autoregressive decoding → KV cache → GQA → hybrid allocator → admission`: token당 cache shape와 layer별 보존 길이·runtime group·요청 분포를 동시성 결정으로 연결
-- [x] Knowledge graph 전용 `audit:graph --strict`: 2,180개 concept·3,171개 relation의 owner·canonical path·edge·고립·화면 stage coverage 통과
-- [x] 현재 등록된 363개 글은 canonical owner·anchor·entry-level 재귀 선수 경로·기초 6개+심화 4개 coverage 통과
+- [x] Knowledge graph 전용 `audit:graph --strict`: 2,249개 concept·3,270개 relation의 owner·canonical path·edge·고립·화면 stage coverage 통과
+- [x] 현재 등록된 379개 글은 canonical owner·anchor·entry-level 재귀 선수 경로·기초 6개+심화 4개 coverage 통과
 - [x] 이전 learning contract 40개를 정확한 6+4 문제와 article-only 역검사 기준으로 재개방해 보완
 - [x] 확률·통계 기반 글은 optimizer 소비 경로에서 필요한 범위까지 첫 canonical closure 완료
 - [ ] 물리·컴퓨터 구조 기반 글은 실제 소비 글을 이관하면서 필요한 node부터 같은 방식으로 계속 확장. 분산 시스템은 process·failure·safety/liveness → SMR → permissionless PoW·PoS까지 첫 정본 경로를 닫음
@@ -1028,8 +1028,8 @@
 - [x] AI / 활성화 함수 — ReLU 계열·smooth activation·gated FFN을 서로 다른 설계 축으로 구분하고, Leaky ReLU·ELU·SwiGLU의 수치 예와 parameter parity까지 기초 6개+심화 4개로 역검사
 - [x] AI / 확률·기댓값·분산 — outcome/event에서 conditional probability·random variable·expectation·variance·LLN·mini-batch estimator까지 확장하고 독립/배반·분산 단위·표본 분산·완전상관 반례를 기초 6개+심화 4개로 역검사
 - [x] AI / Claw Bash — pinned source의 실제 `sh -lc` 실행·first-token/path permission heuristic·16KiB truncation·unshare 상태를 hardening 목표와 분리하고, POSIX expansion·TOCTOU·process-group cleanup 경계를 기초 6개+심화 4개로 역검사
-- [x] 등록된 learning contract 151개 전부를 정확한 기초 6개+심화 4개로 통일하고 article-only 역검사·근거 anchor·graph invariant를 통과; 구계약 0개
-- [ ] 전역 audit:learning --require-registration --all-articles: 공개 catalog 386개 중 151개 등록, 235개 미등록. 등록 글도 exact 6+4·article-only 역검사·근거 anchor를 통과할 때만 완료
+- [x] 등록된 learning contract 379개 전부를 정확한 기초 6개+심화 4개로 통일하고 article-only 역검사·근거 anchor·graph invariant를 통과; 구계약 0개
+- [ ] 전역 audit:learning --require-registration --all-articles: 공개 catalog 386개 중 379개 등록, 7개 미등록. 등록 글도 exact 6+4·article-only 역검사·근거 anchor를 통과할 때만 완료
 - [ ] 다음 의존성 순서: Practical ML → LLM·Agent → AI 외 category
 
 - [ ] `npm run audit:articles -- src/pages/articles/ai`의 상위 이관 후보 처리
