@@ -7,6 +7,7 @@ import Math from "@/components/ui/math";
 import CacheStateViz from "./viz/CacheStateViz";
 import HybridScheduleViz from "./viz/HybridScheduleViz";
 import ServingPathViz from "./viz/ServingPathViz";
+import WeightVramViz from "./viz/WeightVramViz";
 
 const KV_TERMS = [
   {
@@ -92,6 +93,34 @@ const STATE_TERMS = [
   },
 ] as const;
 
+const WEIGHT_TERMS = [
+  {
+    symbol: "N_d",
+    name: "dtype d로 저장된 parameter 수",
+    description: "Headline의 총 27B를 한 dtype으로 가정하지 않고 checkpoint가 실제로 FP8·BF16에 배치한 tensor 원소를 따로 셉니다.",
+  },
+  {
+    symbol: "B_d",
+    name: "dtype d의 원소당 byte",
+    description: "BF16·FP16은 2 byte, FP8·INT8은 1 byte입니다. INT4는 payload가 0.5 byte지만 scale·zero-point·packing metadata를 별도로 더합니다.",
+  },
+  {
+    symbol: "M_W",
+    name: "Resident weight payload",
+    description: "Checkpoint의 dtype별 tensor payload를 합한 값입니다. File metadata와 runtime-specific alignment·temporary conversion은 별도입니다.",
+  },
+  {
+    symbol: "M_{known}",
+    name: "알려진 memory floor",
+    description: "Weight, 선택한 context의 attention KV, request당 recurrent state처럼 시작 전에 shape로 계산 가능한 최소 resident 합계입니다.",
+  },
+  {
+    symbol: "M_{free}",
+    name: "남은 후보 공간",
+    description: "GPU capacity에서 known floor를 뺀 값입니다. 이 전부를 KV로 쓸 수 있는 것이 아니라 CUDA graph·workspace·allocator·vision activation과 headroom이 경쟁합니다.",
+  },
+] as const;
+
 const RUNTIME_TERMS = [
   { symbol: "M_W", name: "Model weights", description: "27B dense text backbone과 vision encoder weight의 고정 memory입니다." },
   { symbol: "M_{KV}(T)", name: "Attention KV", description: "16개 attention layer에서 context T에 비례해 늘어나는 memory입니다." },
@@ -112,7 +141,13 @@ export default function ModernArticle() {
             이 구조를 이해하는 첫 질문은 “layer가 몇 개인가?”가 아니라 <strong>각 layer가 과거를 어떤 형태로 들고 있는가?</strong>입니다. 64개 layer 중 48개 Gated DeltaNet layer는 과거를 고정 크기 recurrent state로 압축합니다. 나머지 16개 Gated Attention layer만 과거 token별 K/V를 보존합니다. 그래서 전체 layer 수 64를 KV 공식에 그대로 넣으면 긴 context memory를 네 배로 과대계산합니다. 반대로 DeltaNet state를 0으로 놓으면 active request마다 드는 고정 memory를 빠뜨립니다.
           </p>
           <p className="leading-8">
-            아래에서는 먼저 token·attention·KV cache를 복습합니다. 그 다음 DeltaNet이 “과거를 저장하지 않는다”가 아니라 “다른 shape로 압축한다”는 뜻을 delta rule로 확인합니다. 두 memory를 이해한 뒤에야 hybrid cache manager, prefill·decode, RoPE·FFN·MTP·vision token이 한 request 안에서 어떻게 만나는지 조합합니다.
+            먼저 token과 attention을 복습하고, KV cache가 과거를 어떤 tensor 형태로 남기는지 확인합니다.
+          </p>
+          <p className="leading-8">
+            그 다음 DeltaNet이 과거를 없애는 것이 아니라 다른 shape로 압축한다는 뜻을 delta rule로 확인합니다.
+          </p>
+          <p className="leading-8">
+            마지막으로 실제 checkpoint의 weight residency를 계산한 뒤에야 hybrid cache manager, prefill·decode, RoPE·FFN·MTP와 visual token을 한 request의 VRAM 예산으로 조합합니다.
           </p>
         </div>
 
@@ -343,6 +378,162 @@ M_\Delta
             <p><strong>전제:</strong> 논문의 model scale·training data·benchmark·kernel과 gated delta recurrence 조건입니다.</p>
             <p><strong>근거 범위:</strong> Gating과 delta rule이 상보적이라는 method·evaluation 근거입니다.</p>
             <p><strong>비주장:</strong> Qwen3.6의 3:1 비율이 보편적으로 최적이거나 fixed state가 모든 exact retrieval에서 full attention을 대체한다는 뜻은 아닙니다.</p>
+          </CitationBlock>
+        </div>
+      </section>
+
+      <section id="weight-vram" className="scroll-mt-20 space-y-7">
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <h2>27B에서 VRAM으로: parameter headline보다 실제 checkpoint의 dtype 장부를 먼저 봅니다</h2>
+          <p className="leading-8">
+            “27B model은 VRAM을 얼마나 쓰는가?”는 먼저 <strong>가중치만의 하한</strong>과 <strong>서빙 전체의 peak</strong>를 나누면 직관적입니다. Parameter가 10억 개 늘 때 BF16은 약 2 GB, FP8은 약 1 GB, INT4 payload는 약 0.5 GB가 늘어납니다. 하지만 실제 quantized checkpoint는 모든 tensor를 같은 dtype으로 바꾸지 않습니다. Scale·zero-point가 추가되고 embedding·normalization·vision·민감한 operator 일부를 BF16으로 남길 수 있으므로 model 이름의 “FP8”만 보고 27B×1 byte로 끝내면 작게 잡힙니다.
+          </p>
+          <p className="leading-8">
+            Qwen3.6-27B의 공식 BF16 index는 27,781,427,952 parameters와 총 55,562,855,904 bytes를 기록합니다. 즉 55.56 GB, binary 단위로 51.75 GiB여서 48 GiB 한 장에는 <em>KV를 만들기 전에도</em> 들어가지 않습니다. 공식 FP8 repository는 약 24.699B parameters를 FP8로, 약 3.084B를 BF16으로 남겨 tensor payload가 30.87 GB, 약 28.75 GiB입니다. Repository 전체 저장량도 약 30.9 GB입니다.
+          </p>
+        </div>
+
+        <TermBreakdown
+          title="가중치 크기와 실제 서빙 VRAM을 한 숫자로 섞지 않습니다"
+          items={[
+            {
+              term: "Parameter count · 원소가 몇 개인가",
+              description: "27B는 learned scalar 원소 수의 규모입니다. 아직 각 원소가 몇 byte인지와 어떤 device에 복제·분할되는지는 말하지 않습니다.",
+              example: "27.781B를 전부 BF16으로 저장하면 약 55.56 GB입니다.",
+              boundary: "Parameter count만으로 KV·activation·workspace는 계산할 수 없습니다.",
+            },
+            {
+              term: "Checkpoint dtype histogram · 어떤 폭으로 저장했나",
+              description: "Safetensors metadata에서 FP8·BF16·INT4 등 dtype별 parameter 수를 읽고 각각의 byte 폭을 곱합니다.",
+              example: "공식 FP8은 24.699B×1 byte와 3.084B×2 byte를 더해 약 30.87 GB입니다.",
+              boundary: "FP8 checkpoint라는 이름이 모든 parameter·activation·KV를 FP8로 만든다는 뜻은 아닙니다.",
+            },
+            {
+              term: "Weight residency · load 직후 고정되는 바닥",
+              description: "모델 tensor가 GPU에 올라간 뒤 request가 없어도 차지하는 resident memory입니다. TP를 쓰면 대부분 shard되지만 replicated tensor와 engine layout은 따로 확인합니다.",
+              example: "공식 혼합 FP8 payload 28.75 GiB가 48 GiB device의 첫 칸을 차지합니다.",
+              boundary: "Download directory의 압축 파일 크기와 runtime resident bytes가 항상 같지는 않습니다.",
+            },
+            {
+              term: "Runtime headroom · 남은 칸의 용도",
+              description: "남은 VRAM에 attention KV, Delta state, vision activation, CUDA graph, kernel temporary, allocator padding과 안전 여유가 들어갑니다.",
+              example: "공식 FP8+BF16 KV에서 128K request 하나는 known floor가 약 36.89 GiB입니다.",
+              boundary: "48−known floor를 전부 usable KV pool이라고 부르면 OOM을 과소평가합니다.",
+            },
+          ]}
+        />
+
+        <div id="weight-bytes" className="scroll-mt-20">
+          <ExplainedFormula
+            question="왜 공식 Qwen3.6-27B-FP8 가중치는 27.8 GB가 아니라 약 30.9 GB인가요?"
+            idea={<>전체 parameter에 1 byte를 곱하지 않고, 공식 checkpoint가 FP8로 바꾼 원소와 BF16으로 남긴 원소를 따로 계산합니다.</>}
+            formula={String.raw`M_W=\sum_d N_dB_d`}
+            annotatedFormula={String.raw`\begin{aligned}
+M_W^{BF16}
+  &=\underbrace{27{,}781{,}427{,}952}_{\text{전체 parameters}}
+    \times\underbrace{2\ \mathrm{byte}}_{\text{BF16}}\\
+  &=55.56\ \mathrm{GB}=51.75\ \mathrm{GiB}\\[3pt]
+M_W^{FP8\ mix}
+  &=\underbrace{24{,}699{,}207{,}680\times1}_{\text{FP8 payload}}\\
+  &\quad+\underbrace{3{,}083{,}727{,}792\times2}_{\text{BF16 예외 payload}}\\
+  &=30.87\ \mathrm{GB}=28.75\ \mathrm{GiB}
+\end{aligned}`}
+            operations={[
+              { expression: String.raw`27{,}781{,}427{,}952\times2`, annotation: ["원본 checkpoint의 모든 원소에", "BF16 2 byte를 적용"] },
+              { expression: String.raw`24{,}699{,}207{,}680\times1`, annotation: ["실제로 FP8 변환된 원소만", "1 byte payload로 계산"] },
+              { expression: String.raw`3{,}083{,}727{,}792\times2`, annotation: ["양자화하지 않은 예외 tensor는", "BF16 2 byte로 계속 보존"] },
+              { expression: String.raw`30.87\ \mathrm{GB}`, annotation: ["두 dtype payload를 합쳐", "공식 mixed checkpoint 바닥을 얻음"] },
+            ]}
+            terms={WEIGHT_TERMS}
+            assumptions={[
+              "공식 Hugging Face safetensors metadata의 dtype별 parameter count를 기준으로 합니다.",
+              "GB는 10억 byte, GiB는 2³⁰ byte이므로 같은 payload도 표기 숫자가 다릅니다.",
+              "Scale tensor·file metadata·alignment와 runtime conversion은 checkpoint format에 따라 추가될 수 있으므로 repository의 실제 file size도 함께 확인합니다.",
+            ]}
+            interpretation="BF16은 weight만 48 GiB를 넘습니다. 공식 mixed FP8은 약 28.75 GiB라 한 장에 적재되지만, 남은 약 19.25 GiB가 곧 최대 context 예산은 아닙니다. 그 안에 모든 runtime state와 안전 여유를 넣어야 합니다."
+            title="Parameter count를 dtype별 resident byte로 바꾸기"
+          />
+        </div>
+
+        <WeightVramViz />
+
+        <div id="vram-admission" className="scroll-mt-20">
+          <ExplainedFormula
+            question="공식 혼합 FP8을 48 GiB 한 장에 올렸을 때 262K BF16 KV가 정말 들어간다고 말할 수 있나요?"
+            idea={<>먼저 shape로 확정 가능한 known floor를 더하고, 남은 공간이 workspace와 headroom을 감당하는지는 실제 engine startup allocation으로 판정합니다.</>}
+            formula={String.raw`M_{free}=C_{GPU}-M_{known}`}
+            annotatedFormula={String.raw`\begin{aligned}
+M_{known}(262K)
+  &=\underbrace{28.75}_{\text{mixed FP8 weights}}\\
+  &\quad+\underbrace{16.00}_{\text{BF16 attention KV}}\\
+  &\quad+\underbrace{0.14}_{\text{Delta core state}}\\
+  &=44.89\ \mathrm{GiB}\\[3pt]
+M_{free}
+  &=\underbrace{48.00}_{\text{device capacity}}\\
+  &\quad-\underbrace{44.89}_{\text{known floor}}\\
+  &=3.11\ \mathrm{GiB}
+\end{aligned}`}
+            operations={[
+              { expression: String.raw`28.75+16.00+0.14`, annotation: ["weight·길이 비례 KV·request state를", "같은 GiB 단위로 먼저 합산"] },
+              { expression: String.raw`48.00-44.89`, annotation: ["device capacity에서 known floor를 빼", "workspace가 경쟁할 최대 칸을 계산"] },
+              { expression: String.raw`3.11\ \mathrm{GiB}`, annotation: ["CUDA graph·temporary·allocator·vision을", "아직 넣지 않은 매우 얇은 여유"] },
+            ]}
+            terms={WEIGHT_TERMS}
+            assumptions={[
+              "Batch 1·request 1, unsharded official mixed-FP8 weights와 BF16 attention KV를 가정합니다.",
+              "DeltaNet convolution state, CUDA graph, kernel workspace, allocator padding, vision activation과 engine headroom은 known floor 밖입니다.",
+              "FP8 weight checkpoint는 KV dtype을 자동으로 FP8로 바꾸지 않습니다. KV를 FP8로 바꾸면 별도 backend·scale·quality 검증이 필요합니다.",
+            ]}
+            interpretation="262K가 architecture상 지원돼도 48 GiB 한 장에서 default BF16 KV로 안전하다고 결론낼 수 없습니다. 128K의 known floor는 약 36.89 GiB라 더 현실적이고, 262K는 FP8 KV·text-only·TP·offload 또는 workspace 축소를 별도 검증해야 합니다. 공식 serving 예제가 262K에 TP 8을 사용하는 이유도 이 운영 여유와 관련됩니다."
+            title="48 GiB 한 장의 known floor와 미지수"
+          />
+        </div>
+
+        <TermBreakdown
+          title="기동 로그는 미지수를 나중에 추측하지 않게 하는 memory receipt입니다"
+          description="사람이 읽는 첫 140줄 요약과 rotation되는 원본 로그를 함께 남깁니다. 한 줄에 모든 필드를 나열하지 않고 판정 단계별로 묶습니다."
+          items={[
+            {
+              term: "Identity receipt",
+              description: "Model ID, exact revision, checkpoint format, activation dtype와 text-only·multimodal mode를 먼저 남깁니다.",
+              example: "Qwen/Qwen3.6-27B-FP8 · commit hash · safetensors · BF16 activation · language-model-only=false",
+              boundary: "Model 이름만 같아도 conversion·revision·vision 포함 여부가 다르면 같은 memory artifact가 아닙니다.",
+            },
+            {
+              term: "Geometry receipt",
+              description: "Dtype별 parameter count와 loaded weight bytes, attention layer 수, KV heads, head dimension, KV dtype, token당 KV bytes와 request당 recurrent state를 줄마다 기록합니다.",
+              example: "weights 28.75 GiB · attention 16×4×256 · BF16 KV 64 KiB/token · Delta core 144 MiB/request",
+              boundary: "FP8 weights라는 한 줄로 KV dtype이나 recurrent-state dtype을 대체하지 않습니다.",
+            },
+            {
+              term: "Runtime receipt",
+              description: "Max model length, 실제 생성된 KV pool, CUDA graph capture sizes, active backend·fallback, TP·PP와 load 전후 GPU memory를 기록합니다.",
+              example: "128K profile에서 logical floor와 engine reserved·peak를 나란히 남겨 workspace 차이를 역산합니다.",
+              boundary: "nvidia-smi의 한 시점 used memory를 weight나 KV 하나의 값으로 단정하지 않습니다.",
+            },
+            {
+              term: "Retention · redaction receipt",
+              description: "첫 140줄은 빠른 incident 분석용으로 보존하고, 원본 stdout·stderr는 rotate된 파일이나 journal에 더 길게 남깁니다. Access token·prompt secret·signed URL은 저장 전에 지웁니다.",
+              example: "Startup summary 140 lines + size/time rotation + revision별 보관 기한 + redaction test를 한 운영 profile로 고정합니다.",
+              boundary: "140줄에서 잘린 뒤 발생한 dtype upcast·kernel fallback·OOM trace를 잃지 않도록 원본 보관 경로를 별도로 둡니다.",
+            },
+          ]}
+        />
+
+        <div id="paper-qwen36-weights" className="scroll-mt-20">
+          <CitationBlock source="Qwen3.6-27B · official BF16 safetensors index" citeKey={6} type="code" href="https://huggingface.co/Qwen/Qwen3.6-27B/blob/main/model.safetensors.index.json">
+            <p><strong>문제:</strong> 27B라는 반올림 이름을 실제 BF16 tensor payload byte로 바꿉니다.</p>
+            <p><strong>핵심 기여:</strong> Metadata가 total_size 55,562,855,904 bytes를 제공해 51.75 GiB weight floor를 직접 검산하게 합니다.</p>
+            <p><strong>전제:</strong> 해당 official revision의 sharded safetensors index와 BF16 checkpoint입니다.</p>
+            <p><strong>근거 범위:</strong> BF16 weight payload와 한 장 적재 가능성의 하한을 확인합니다.</p>
+            <p><strong>비주장:</strong> Runtime peak·KV·activation·CUDA graph 또는 다른 quantized artifact의 resident size를 뜻하지 않습니다.</p>
+          </CitationBlock>
+          <CitationBlock source="Qwen · Qwen3.6-27B-FP8 official checkpoint" citeKey={7} type="code" href="https://huggingface.co/Qwen/Qwen3.6-27B-FP8/tree/main">
+            <p><strong>문제:</strong> FP8이라는 label과 실제 mixed-dtype checkpoint payload의 차이를 확인합니다.</p>
+            <p><strong>핵심 기여:</strong> 약 24.699B FP8·3.084B BF16 parameters와 repository 약 30.9 GB를 공개해 dtype별 resident 장부를 만들 수 있습니다.</p>
+            <p><strong>전제:</strong> Official FP8 conversion revision, target runtime의 FP8 kernel 지원과 원본 tensor dtype metadata입니다.</p>
+            <p><strong>근거 범위:</strong> Weight checkpoint의 실제 mixed precision과 file payload를 확인합니다.</p>
+            <p><strong>비주장:</strong> Activation·KV cache까지 FP8이거나 48 GiB 한 장에서 262K·동시 요청이 자동 보장된다는 뜻은 아닙니다.</p>
           </CitationBlock>
         </div>
       </section>

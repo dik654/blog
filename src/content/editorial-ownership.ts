@@ -6927,6 +6927,7 @@ export const EDITORIAL_BOUNDARIES = {
     owns: [
       "공식 layer_types를 48 Gated DeltaNet·16 Gated Attention으로 분리하는 3:1 schedule",
       "Qwen3.6 attention KV의 token당 64 KiB와 DeltaNet FP32 core state의 request당 144 MiB shape 계산",
+      "공식 BF16·mixed-FP8 checkpoint의 dtype별 weight payload와 48 GiB known-floor admission 계산",
       "Delta-rule prediction-error correction과 recurrent decode·chunked prefill 실행 경계",
       "Partial multimodal RoPE·dense FFN·MTP·vision tokens를 hybrid serving state에 연결하는 release gate",
     ],
@@ -6934,13 +6935,16 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "Attention Q·K·V와 multi-head", href: "/ai/attention-theory" },
       { label: "KV cache·GQA·capacity", href: "/ai/hybrid-attention-serving" },
       { label: "RNN recurrent state와 압축 한계", href: "/ai/rnn" },
+      { label: "Quantized resident-memory ledger", href: "/ai/quantization" },
+      { label: "Resident-memory concurrency bound", href: "/ai/compression-pipeline" },
       { label: "vLLM cache block과 hybrid groups", href: "/ai/vllm-paged-attention" },
       { label: "Speculative draft·verify·commit", href: "/ai/vllm-spec-decode" },
     ],
     evidence: [
       { kind: "primary-source", rule: "모델명·layer pattern·head dimensions·dtype·context·MTP·vision configuration은 Qwen3.6-27B 공식 model card와 config revision에 귀속한다." },
+      { kind: "primary-source", rule: "BF16 total_size와 FP8·BF16 parameter histogram은 각각 official safetensors index와 Qwen3.6-27B-FP8 checkpoint revision에 귀속한다." },
       { kind: "standard", rule: "Recurrent matrix shape·chunk/recurrent path는 확인한 Transformers reference source에, hybrid block allocation은 확인한 vLLM stable design revision에 귀속한다." },
-      { kind: "project-claim", rule: "64 KiB·144 MiB는 명시한 logical shape·dtype 계산이며 allocator padding·TP·kernel workspace를 포함한 physical VRAM 또는 품질·throughput 보장으로 확대하지 않는다." },
+      { kind: "project-claim", rule: "28.75 GiB weight·64 KiB/token KV·144 MiB state와 48 GiB known floor는 명시한 artifact·logical shape 계산이며 allocator padding·TP·kernel workspace를 포함한 physical VRAM 또는 262K admission 보장으로 확대하지 않는다." },
     ],
   },
 } as const satisfies Record<string, EditorialBoundary>;

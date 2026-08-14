@@ -222,6 +222,15 @@ export const vllmServingArticles: Article[] = [
         ],
       },
       {
+        id: "weight-vram",
+        title: "27B parameter에서 48 GiB VRAM 예산으로",
+        subsections: [
+          { id: "weight-bytes", title: "BF16·공식 혼합 FP8 weight byte 계산" },
+          { id: "vram-admission", title: "32K·128K·262K known memory floor" },
+          { id: "paper-qwen36-weights", title: "공식 checkpoint payload 근거" },
+        ],
+      },
+      {
         id: "hybrid-runtime",
         title: "Hybrid cache manager가 두 state를 함께 관리하는 법",
         subsections: [

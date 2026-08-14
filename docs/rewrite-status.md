@@ -1093,3 +1093,4 @@
 - [x] Recurrent decode와 chunked prefill, partial multimodal RoPE·FFN·MTP·vision token budget을 serving 흐름으로 연결
 - [x] 주요 수식에 연산 의도를 underbrace로 직접 표시하고 자동 재생·키보드 조작이 가능한 새 flat Viz로 cache 성장과 state update를 시각화
 - [x] 기초 6개+심화 4개, official evidence·graph owner·article-only 역검사와 390px·1440px Playwright·build·전역 audit 완료
+- [x] 공식 BF16 55.56 GB·mixed-FP8 30.87 GB checkpoint payload에서 48 GiB의 32K·128K·262K known floor를 계산하고, FP8 weights≠FP8 KV·workspace 미지수를 새 VRAM Viz와 기동 log receipt로 설명

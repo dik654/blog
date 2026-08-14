@@ -138,6 +138,7 @@ build 통과는 완료의 증거가 아니며, 아래 Definition of Done을 모�
 - [ ] 주요 주장은 원 논문·공식 문서·실측 근거와 연결된다.
 - [ ] 핵심 논문마다 현재 글의 paper reading note 또는 별도 canonical paper article로 이어지는 내부 해설 경로가 있다.
 - [ ] 주요 KaTeX가 질문·아이디어·식·기호·전제·해석 순서를 따른다.
+- [ ] Model VRAM을 다루는 글은 parameter headline×단일 dtype으로 끝내지 않고 실제 checkpoint의 dtype별 tensor payload, GB·GiB 단위, weight residency와 KV·recurrent state·workspace·allocator headroom을 분리해 계산한다.
 - [ ] Viz가 메커니즘을 표현하며 정적 스타일 검사를 통과한다.
 - [ ] canonical article과 선행·후속 링크가 명확하고 긴 중복이 없다.
 - [ ] 새 용어가 knowledge graph의 기존 node에 연결되거나 새 node·edge·canonical owner로 등록됐다.

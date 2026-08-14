@@ -62542,7 +62542,7 @@ export const ARTICLE_LEARNING: Readonly<
   "ai/qwen36-hybrid-architecture": {
     entryLevel: true,
     entryNote: "Transformer·KV cache·RNN을 이미 안다고 가정하지 않습니다. Token과 두 memory 형태부터 시작해 공식 config shape를 직접 계산합니다.",
-    coreIdea: "Qwen3.6-27B의 64층은 48 Gated DeltaNet과 16 Gated Attention으로 나뉘므로, context에 비례하는 attention KV와 request당 고정 recurrent state를 별도 shape·dtype·lifecycle로 계산해야 합니다.",
+    coreIdea: "Qwen3.6-27B의 64층은 48 Gated DeltaNet과 16 Gated Attention으로 나뉘므로, 실제 checkpoint의 dtype별 resident weights·context에 비례하는 attention KV·request당 고정 recurrent state를 별도 shape·dtype·lifecycle로 계산해야 합니다.",
     assumedKnowledge: [],
     introducedHere: [
       { id: "qwen36-hybrid-layer-schedule", role: "16×(3 DeltaNet+1 Attention)에서 48·16·64 layer를 계산합니다." },
@@ -62578,8 +62578,8 @@ export const ARTICLE_LEARNING: Readonly<
         id: "qwen36-hybrid-request-state",
         sectionId: "hybrid-runtime",
         intuition: "한 request가 길어질수록 늘어나는 파일철과 길이와 상관없이 request마다 하나씩 필요한 작업판을 함께 소유합니다.",
-        workedExample: "BF16 logical KV는 token당 64 KiB여서 32K/128K/262K에 2/8/16 GiB이고 core recurrent state는 각 경우 144 MiB입니다.",
-        boundary: "Prefix sharing·TP·allocator padding·conv state·CUDA graph·workspace 때문에 logical 합계와 physical GPU allocation은 다릅니다.",
+        workedExample: "공식 mixed-FP8 weight payload 약 28.75 GiB에 BF16 logical KV 2/8/16 GiB와 core recurrent state 144 MiB를 더하면 32K/128K/262K known floor가 약 30.89/36.89/44.89 GiB입니다.",
+        boundary: "FP8 weights는 FP8 KV를 뜻하지 않으며 prefix sharing·TP·allocator padding·conv state·CUDA graph·workspace 때문에 known floor와 physical GPU peak는 다릅니다.",
       },
       {
         id: "qwen36-partial-multimodal-rope",
@@ -62600,8 +62600,9 @@ export const ARTICLE_LEARNING: Readonly<
       { label: "00 identity", relation: "공식 모델명과 3:1 layer pattern을 먼저 고정", concepts: ["qwen36-hybrid-layer-schedule"] },
       { label: "01 explicit memory", relation: "Attention Q/K/V·GQA에서 token-growing KV를 계산", concepts: ["kv-cache-decode-state", "grouped-query-kv-sharing", "per-token-kv-byte"] },
       { label: "02 compressed memory", relation: "Fixed recurrent matrix와 prediction-error correction을 연결", concepts: ["qwen36-gated-deltanet-state", "qwen36-delta-correction-update", "lossy-recurrent-state"] },
-      { label: "03 runtime", relation: "두 cache growth class를 prefill·decode lifecycle에 결합", concepts: ["qwen36-hybrid-request-state", "hybrid-kv-cache-allocation", "chunked-prefill-interleaving"] },
-      { label: "04 stack and release", relation: "Position·FFN·MTP·vision을 분리한 뒤 deployment evidence로 재결합", concepts: ["qwen36-partial-multimodal-rope", "speculative-draft-verify-cycle", "qwen36-serving-release-gate"] },
+      { label: "03 residency budget", relation: "실제 checkpoint dtype 장부에서 weight floor와 남은 KV·workspace 후보 공간을 계산", concepts: ["quantized-resident-memory-ledger", "kv-pool-capacity-budget", "qwen36-hybrid-request-state"] },
+      { label: "04 runtime", relation: "두 cache growth class를 prefill·decode lifecycle에 결합", concepts: ["qwen36-hybrid-request-state", "hybrid-kv-cache-allocation", "chunked-prefill-interleaving"] },
+      { label: "05 stack and release", relation: "Position·FFN·MTP·vision을 분리한 뒤 deployment evidence로 재결합", concepts: ["qwen36-partial-multimodal-rope", "speculative-draft-verify-cycle", "qwen36-serving-release-gate"] },
     ],
     exercises: [
       {
@@ -62648,10 +62649,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         level: "advanced",
-        question: "32K request 8개를 BF16 logical shape로 서빙할 때 attention KV와 core recurrent state 합계를 계산하고 빠진 physical memory 항을 나열하세요.",
-        answerChecklist: ["KV 2 GiB each", "16 GiB total KV", "144 MiB each", "1152 MiB core state", "weights", "conv state", "allocator padding", "workspace/CUDA graph", "TP layout"],
-        requiredConcepts: ["qwen36-hybrid-request-state", "qwen36-gated-deltanet-state"],
-        sectionId: "hybrid-runtime",
+        question: "공식 BF16과 mixed-FP8 checkpoint의 weight floor를 계산하고, 48 GiB 한 장에서 262K BF16 KV admission을 known floor와 미지수로 판정하세요.",
+        answerChecklist: ["BF16 55.56 GB/51.75 GiB", "BF16 weight alone exceeds 48 GiB", "mixed FP8 30.87 GB/28.75 GiB", "262K BF16 KV 16 GiB", "Delta core 0.14 GiB", "known floor 44.89 GiB", "remaining 3.11 GiB", "workspace/CUDA graph", "FP8 weights not FP8 KV", "measure or use TP/text-only/KV quantization"],
+        requiredConcepts: ["quantized-resident-memory-ledger", "kv-pool-capacity-budget", "qwen36-hybrid-request-state"],
+        sectionId: "weight-vram",
       },
       {
         level: "advanced",
@@ -62678,6 +62679,8 @@ export const ARTICLE_LEARNING: Readonly<
     papers: [
       { title: "Qwen3.6-27B official model card", href: "https://huggingface.co/Qwen/Qwen3.6-27B", problem: "공개 model identity·architecture·modalities·context 범위 식별", contribution: "27B dense·3:1 hybrid·native/extended context·MTP·multimodal 공개", assumptions: "확인한 official repository revision과 model card", evidenceScope: "Qwen3.6-27B 공개 configuration과 support 범위", notClaim: "Qwen3.8 존재나 모든 runtime의 1M 품질·VRAM 보장 아님", sectionId: "paper-qwen36-config" },
       { title: "Qwen3.6-27B official config.json", href: "https://huggingface.co/Qwen/Qwen3.6-27B/blob/main/config.json", problem: "Layer/head/state shape의 기계적 확인", contribution: "64 layer_types·attention/linear heads·dtype·RoPE·vision·MTP fields", assumptions: "Config와 weights/runtime compatibility", evidenceScope: "이 글의 logical tensor shape와 byte 계산", notClaim: "Allocator·workspace·throughput 확정 아님", sectionId: "paper-qwen36-config" },
+      { title: "Qwen3.6-27B official BF16 safetensors index", href: "https://huggingface.co/Qwen/Qwen3.6-27B/blob/main/model.safetensors.index.json", problem: "27B headline을 실제 BF16 payload byte로 변환", contribution: "27,781,427,952 parameters와 total_size 55,562,855,904 bytes artifact", assumptions: "해당 official BF16 checkpoint revision", evidenceScope: "BF16 weight floor와 single-device feasibility", notClaim: "KV·activation·runtime peak 아님", sectionId: "paper-qwen36-weights" },
+      { title: "Qwen3.6-27B-FP8 official checkpoint", href: "https://huggingface.co/Qwen/Qwen3.6-27B-FP8/tree/main", problem: "FP8 label과 실제 mixed-dtype resident payload 구분", contribution: "24.699B FP8·3.084B BF16 parameter histogram과 약 30.9 GB repository", assumptions: "Official FP8 conversion revision과 supported runtime", evidenceScope: "Mixed-precision checkpoint weight floor", notClaim: "Activation·KV도 FP8이거나 48 GiB 262K 보장 아님", sectionId: "paper-qwen36-weights" },
       { title: "Gated Delta Networks", href: "https://arxiv.org/abs/2412.06464", problem: "Linear attention의 recall과 parallel training 효율", contribution: "Adaptive gating+delta update와 parallel/hybrid algorithm", assumptions: "논문의 model·data·benchmark·kernel", evidenceScope: "Gated delta rule의 method와 evaluated trade-off", notClaim: "Qwen 3:1 비율의 보편 최적성 아님", sectionId: "paper-gated-deltanet" },
       { title: "vLLM Hybrid KV Cache Manager", href: "https://docs.vllm.ai/en/stable/design/hybrid_kv_cache_manager/", problem: "서로 다른 cache spec의 block allocation", contribution: "Cache groups·block size alignment·padding design", assumptions: "확인한 vLLM stable revision과 supported specs", evidenceScope: "Hybrid allocator 공식 설계", notClaim: "Logical bytes와 physical allocation 동일 보장 아님", sectionId: "paper-vllm-hybrid" },
       { title: "Transformers Qwen3.5/Qwen3.6 reference", href: "https://huggingface.co/docs/transformers/model_doc/qwen3_5", problem: "Hybrid·multimodal checkpoint의 executable reference path", contribution: "Layer dispatch·kernel fallback·mRoPE·cache API", assumptions: "Transformers·kernel·GPU·dtype revisions", evidenceScope: "Reference implementation behavior와 support boundary", notClaim: "모든 serving engine의 production 성능 아님", sectionId: "paper-transformers-qwen35" },
