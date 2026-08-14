@@ -11,7 +11,7 @@ const Box = ({ x, y, w, text, sub, color, show }: { x: number; y: number; w: num
 );
 
 const Arr = ({ x1, y1, x2, y2, color, show, delay = 0 }: { x1: number; y1: number; x2: number; y2: number; color: string; show: boolean; delay?: number }) => (
-  show ? <motion.line x1={x1} y1={y1} x2={x2} y2={y2} stroke={color} strokeWidth={1.5}
+  show ? <motion.line x1={x1} y1={y1} x2={x2} y2={y2} stroke={color} strokeWidth={1.25}
     initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.4, delay }} /> : null
 );
 

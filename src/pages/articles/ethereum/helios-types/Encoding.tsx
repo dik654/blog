@@ -1,5 +1,6 @@
 import type { CodeRef } from "@/components/code/types";
-import EncodingViz from "./viz/EncodingViz";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import HeliosContractViz from "../helios-contract-viz";
 
 interface Props {
   title: string;
@@ -9,40 +10,36 @@ interface Props {
 export default function Encoding({ title, onCodeRef: _onCodeRef }: Props) {
   return (
     <section id="encoding" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">{title}</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
+      <h2 className="mb-6 text-2xl font-bold">{title}</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          CL 타입은 SSZ(Simple Serialize)로 직렬화한다. 서명 검증 시 Fork와
-          Domain이 결합되어 포크 간 리플레이 공격을 방지한다.
+          SSZ는 object를 canonical bytes로 읽는 규칙과 <code>hash_tree_root</code>를 만드는 규칙을 함께 제공합니다. 그러나 signature가
+          어떤 역할과 chain에서 유효한지는 SSZ root만으로 정해지지 않습니다. Ethereum은 4-byte domain type, active fork version,
+          genesis validators root를 결합해 서명 문맥을 분리합니다.
         </p>
       </div>
-
-      {/* Viz: 3 steps — SSZ 인코딩, Fork 타임라인, Domain 합성 */}
-      <div className="not-prose my-8">
-        <EncodingViz />
-      </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="text-sm border-l-2 border-amber-500/50 pl-3">
-          <strong>{"💡"} SSZ vs RLP</strong>
-          <br />
-          Reth(EL)는 RLP — 가변 길이 접두사로 중첩 구조를 표현한다. SSZ는 고정
-          크기 필드를 바로 연결하여 파싱 O(1)을 달성한다.
-        </p>
-
-        <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          <strong>{"💡"} Domain이 필요한 이유</strong>
-          <br />
-          같은 헤더 메시지라도 SYNC_COMMITTEE(0x07)와 BEACON_PROPOSER(0x00)는
-          다른 도메인을 사용한다. 용도별 서명 분리로 한 서명을 다른 맥락에서
-          재사용할 수 없다.
-        </p>
-
-        <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          <strong>{"💡"} genesis_validators_root의 역할</strong>
-          <br />
-          메인넷과 테스트넷의 genesis_validators_root가 다르다. 따라서 같은 포크
-          버전이라도 네트워크가 다르면 Domain이 달라진다.
+      <HeliosContractViz mode="signing-context" />
+      <ExplainedFormula
+        question="같은 header root의 서명을 다른 duty·fork·network에서 재사용하지 못하게 하려면 무엇을 hash하는가?"
+        idea="먼저 fork와 network를 묶은 ForkData root를 만들고, 앞 28 bytes를 역할을 나타내는 domain type과 연결합니다. 마지막으로 message root와 domain을 SigningData로 묶습니다."
+        formula={String.raw`\begin{aligned} D &= T_{\text{domain}}\;\|\;\operatorname{root}(V_{\text{fork}},G)_{0:28} \\ R_{\text{sign}} &= \operatorname{root}(R_{\text{object}},D) \end{aligned}`}
+        terms={[
+          { symbol: "T_{\\text{domain}}", name: "Domain type", description: "Sync committee·beacon proposer처럼 서명 역할을 구분하는 4-byte 값입니다." },
+          { symbol: "V_{\\text{fork}}", name: "Fork version", description: "Signature epoch에 활성인 consensus fork의 4-byte version입니다." },
+          { symbol: "G", name: "Genesis validators root", description: "서명이 속한 consensus network를 구분합니다." },
+          { symbol: "R_{\\text{object}}", name: "Object root", description: "서명할 message의 SSZ hash-tree-root입니다." },
+          { symbol: "R_{\\text{sign}}", name: "Signing root", description: "BLS verification에 들어가는 최종 32-byte message입니다." },
+        ]}
+        assumptions={[
+          "Signature slot에서 올바른 fork version을 선택합니다.",
+          "Domain type과 genesis root는 target network의 pinned spec에서 가져옵니다.",
+        ]}
+        interpretation="Object bytes가 같아도 domain type·fork version·genesis root 가운데 하나가 바뀌면 signing root가 달라집니다. 반대로 domain 계산만 맞아도 participant set·quorum·Merkle branch 검증은 별도로 필요합니다."
+      />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>
+          고정 예시 slot 8,192를 mainnet preset의 32 slots/epoch, 256 epochs/period로 읽으면 epoch 256, sync committee period 1입니다. 이 계산은
+          어떤 committee를 사용할지 고르지만 그 committee가 trusted state에 포함됐다는 증명까지 대신하지는 않습니다.
         </p>
       </div>
     </section>

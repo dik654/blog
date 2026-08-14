@@ -21,45 +21,45 @@ export default function EngineApi({
         <h3>배경</h3>
         <p>
           Consensus client는 fork choice와 beacon block proposal을 담당하고,
-          execution client는 execution payload를 만들고 검증한다. Engine API가
-          두 client 사이의 versioned protocol이다.
+          execution client는 execution payload를 만들고 검증합니다. Engine API가
+          두 client 사이의 versioned protocol입니다.
         </p>
         <h3>문제</h3>
         <p>
           Head 갱신, payload build 시작, 외부 payload 검증과 local payload
-          조회는 서로 다른 lifecycle을 가진다. 네트워크 fork마다 payload
-          fields가 늘어나므로 unversioned method 하나로 설명할 수도 없다.
+          조회는 서로 다른 lifecycle을 가집니다. 네트워크 fork마다 payload
+          fields가 늘어나므로 unversioned method 하나로 설명할 수도 없습니다.
         </p>
         <h3>아이디어와 구현</h3>
         <ol>
           <li>
             <code>forkchoiceUpdated</code>가 head·safe·finalized references를
-            전달하고, attributes가 있으면 local build job을 시작한다.
+            전달하고, attributes가 있으면 local build job을 시작합니다.
           </li>
           <li>
             <code>getPayload</code>가 payload id에 연결된 local build 결과와
-            fork version에 맞는 부가 fields를 반환한다.
+            fork version에 맞는 부가 fields를 반환합니다.
           </li>
           <li>
             <code>newPayload</code>가 gossip/proposal 경로에서 받은 execution
-            payload를 검증하고 payload status를 반환한다.
+            payload를 검증하고 payload status를 반환합니다.
           </li>
           <li>
-            CL은 status와 fork choice를 사용해 다음 protocol action을 결정한다.
-            EL이 consensus fork choice를 대신하지 않는다.
+            CL은 status와 fork choice를 사용해 다음 protocol action을 결정합니다.
+            EL이 consensus fork choice를 대신하지 않습니다.
           </li>
         </ol>
         <p>
-          Prague는 V4 payload methods에 execution requests를 추가했다. 향후
+          Prague는 V4 payload methods에 execution requests를 추가했습니다. 향후
           fork도 versioned method와 fields를 확장하므로 글은 V1/V2/V3/V4 목록을
           여러 곳에 복제하지 않고 “fork에 맞는 version 선택”을 불변 규칙으로
-          둔다.
+          둡니다.
         </p>
         <p>
           Authenticated endpoint는 기본적으로 localhost:8551이지만
-          address·port는 설정 가능하다. JWT는 256-bit shared secret과 HS256을
+          address·port는 설정할 수 있습니다. JWT는 256-bit shared secret과 HS256을
           사용하는 caller authentication이며, 암호화 채널 자체를 제공하거나 공개
-          노출을 안전하게 만들어 주는 장치는 아니다.
+          노출을 안전하게 만들어 주는 장치는 아닙니다.
         </p>
       </div>
       <div className="not-prose mb-6">

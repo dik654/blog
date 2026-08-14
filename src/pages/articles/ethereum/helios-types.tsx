@@ -7,10 +7,10 @@ export default function HeliosTypes() {
   return (
     <>
       <Overview />
-      <CoreTypes title="4가지 핵심 구조체" onCodeRef={() => {}} />
-      <Encoding title="SSZ + Fork + Domain 인코딩" onCodeRef={() => {}} />
+      <CoreTypes title="Header · Aggregate · Update · Store" onCodeRef={() => {}} />
+      <Encoding title="SSZ · Fork · Domain signing context" onCodeRef={() => {}} />
       <SszInternal
-        title="SSZ 내부 — hash_tree_root + generalized index"
+        title="SSZ proof — object root · generalized index"
         onCodeRef={() => {}}
       />
     </>

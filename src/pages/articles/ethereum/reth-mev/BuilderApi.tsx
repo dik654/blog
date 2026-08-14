@@ -34,6 +34,14 @@ export default function BuilderApi({
           bid submission은 downstream application의 정책이며 Reth node의 local
           payload job과 동일한 코드 경로가 아닙니다.
         </p>
+        <p className="leading-7">
+          예를 들어 slot 12의 parent P에 대해 local candidate L을 계속 갱신하면서
+          relay에서 5·7 ETH bid를 받습니다. 외부 후보는 value만 크다고 즉시
+          선택하지 않고 slot, parent hash, proposer pubkey, fork-specific header,
+          builder signature를 확인합니다. 검증과 body delivery 뒤에도 proposal
+          시간이 남는 cutoff까지만 외부 경로를 허용하며, 그 시점을 지나면 이미
+          준비된 L로 결정 경로를 고정합니다.
+        </p>
       </div>
 
       <h3 className="text-lg font-semibold mb-3">구성요소별 소유권</h3>

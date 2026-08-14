@@ -17,23 +17,20 @@ export default function HeliosBootstrapArticle() {
   return (
     <>
       <Overview onCodeRef={sidebar.open} />
-      <CheckpointSources title="체크포인트 소스 (API · 하드코딩 · 사용자)" />
-      <WeakSubjectivity title="Weak Subjectivity 유효 기간" />
-      <FetchCheckpoint
-        title="fetch_checkpoint() HTTP + SSZ 파싱"
-        onCodeRef={sidebar.open}
-      />
-      <BootstrapResponse title="Bootstrap 응답 구조 (header + committee + branch)" />
+      <CheckpointSources title="체크포인트 소스와 provenance" />
+      <WeakSubjectivity title="Weak subjectivity와 freshness" />
+      <FetchCheckpoint title="Bootstrap 요청·decode 경계" onCodeRef={sidebar.open} />
+      <BootstrapResponse title="Bootstrap 응답의 세 증거" />
       <CommitteeBranch
-        title="committee_branch Merkle 증명 검증"
+        title="Committee Merkle branch 검증"
         onCodeRef={sidebar.open}
       />
       <StoreInit
-        title="Store 초기화 (각 필드의 의미)"
+        title="LightClientStore 원자적 초기화"
         onCodeRef={sidebar.open}
       />
-      <FirstUpdate title="첫 번째 Update 요청" />
-      <ErrorCases title="에러 케이스 (만료 · 네트워크 불일치)" />
+      <FirstUpdate title="첫 update와 확정성 분리" />
+      <ErrorCases title="실패 분류와 release gate" />
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}
         codeRef={sidebar.codeRef}

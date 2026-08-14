@@ -32,6 +32,16 @@ export default function Flashbots({
           없습니다. 운영자는 여러 relay의 latency뿐 아니라 censorship policy,
           payload non-delivery와 fallback readiness를 관측해야 합니다.
         </p>
+        <p className="leading-7">
+          Bid 검증은 relay 이름 확인으로 끝나지 않습니다. 응답의 slot·parent
+          hash·proposer pubkey가 요청과 일치하는지, fork version에 맞는 header인지,
+          builder signature와 block hash/value encoding이 유효한지를 먼저
+          확인합니다. 이 검사를 통과한 후보만 arrival time·검증 시간·delivery
+          reserve가 남은 집합에 넣고 value를 비교합니다. 선택 receipt에는 relay,
+          builder, block hash, advertised value, 도착 시각과 제외 이유를 남겨야
+          사후에 “높은 bid를 놓친 것”과 “invalid bid를 거른 것”을 구분할 수
+          있습니다.
+        </p>
       </div>
 
       <div className="not-prose grid grid-cols-2 gap-2 sm:grid-cols-4 mb-4">
@@ -67,22 +77,22 @@ export default function Flashbots({
         <div className="rounded-xl border border-border/60 p-4">
           <p className="text-sm font-semibold">No bid</p>
           <p className="mt-2 text-xs leading-5 text-foreground/60">
-            유효한 external bid가 없는 정상 결과일 수 있다. local payload 선택
-            가능성을 확인한다.
+            유효한 external bid가 없는 정상 결과일 수 있습니다. Local payload 선택
+            가능성을 확인합니다.
           </p>
         </div>
         <div className="rounded-xl border border-border/60 p-4">
           <p className="text-sm font-semibold">Invalid bid</p>
           <p className="mt-2 text-xs leading-5 text-foreground/60">
             signature, parent, fork fields와 value constraints를 통과하지 못한
-            후보다.
+            후보입니다.
           </p>
         </div>
         <div className="rounded-xl border border-border/60 p-4">
           <p className="text-sm font-semibold">Payload non-delivery</p>
           <p className="mt-2 text-xs leading-5 text-foreground/60">
             blinded block 서명 뒤 body를 받지 못한 별도 failure로 proposer
-            timing과 liveness에 직접 영향을 준다.
+            timing과 liveness에 직접 영향을 줍니다.
           </p>
         </div>
       </div>

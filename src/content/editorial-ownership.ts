@@ -3685,6 +3685,67 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "project-claim", rule: "Native 연산이라는 이유로 gas를 wall-clock 비용이나 library safety 보장으로 확대하지 않는다." },
     ],
   },
+  "helios-update": {
+    title: "Helios light-client update 글이 소유하는 범위",
+    owns: [
+      "Optimistic·finalized dual-header store와 서로 다른 전진 조건",
+      "Network·fork·slot·period·branch·BLS를 묶는 update validation context",
+      "Specification tie-break에 따른 best valid update ordering",
+      "Finalized evidence에 묶인 sync-committee handoff와 release gate",
+    ],
+    reuses: [
+      { label: "Sync committee membership·aggregate signature", href: "/blockchain/prysm-sync-committee" },
+      { label: "BLS aggregate verification", href: "/blockchain/prysm-bls" },
+      { label: "SSZ Merkle branch", href: "/blockchain/prysm-ssz" },
+      { label: "Weak-subjectivity checkpoint", href: "/blockchain/prysm-finality#weak-subjectivity" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "Update field·validation·selection·processing은 consensus-spec v1.6.1의 활성 fork와 network preset에 귀속한다." },
+      { kind: "primary-source", rule: "Store·best update·force update 구현 claim은 Helios 0.11.1 tag의 consensus-core source에 제한한다." },
+      { kind: "project-measurement", rule: "Participation·period·branch·domain·competing update·reorg/restart fixture에서 header·committee parity 뒤 polling 성능을 비교한다." },
+      { kind: "project-claim", rule: "Force update와 release/rollback receipt는 hardening 경계이며 update verification을 full-state transition과 같다고 하지 않는다." },
+    ],
+  },
+  "helios-state": {
+    title: "Helios state proof·cache 글이 소유하는 범위",
+    owns: [
+      "Checkpoint→execution block→state root→storage root의 proof anchor chain",
+      "MPT existence·absence proof와 malformed/truncated proof 구분",
+      "Block hash·storage root·code hash별 cache validity key",
+      "Proof·RLP·root·reorg·cache release gate",
+    ],
+    reuses: [
+      { label: "MPT secure nibble·node·nested commitment", href: "/blockchain/reth-trie" },
+      { label: "Canonical RLP encoding", href: "/blockchain/reth-alloy-primitives#rlp" },
+      { label: "Light-client optimistic/finalized header", href: "/blockchain/helios-update" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "eth_getProof envelope은 EIP-1186과 pinned execution-apis schema를 함께 확인하고 MPT·account commitment는 Yellow Paper snapshot에 귀속한다." },
+      { kind: "primary-source", rule: "Empty-value handling·proof verification·cache key claim은 Helios 0.11.1 source에 제한한다." },
+      { kind: "project-measurement", rule: "Existence/absence·node encoding·wrong root·malformed RLP·reorg fixture에서 value·error·cache identity parity 뒤 성능을 비교한다." },
+      { kind: "project-claim", rule: "Proof 성공을 current head·finality·provider availability의 보장으로 확대하지 않는다." },
+    ],
+  },
+  "helios-execution": {
+    title: "Helios proof-backed execution RPC 글이 소유하는 범위",
+    owns: [
+      "ProofDB synchronous miss→async proof→same-input replay adapter",
+      "Pinned block·state·environment·fork의 proof-backed local execution",
+      "Receipt-root log membership과 Bloom candidate filter의 구분",
+      "Broadcast acknowledgement·verified inclusion boundary와 execution release gate",
+    ],
+    reuses: [
+      { label: "Account·storage proof와 cache identity", href: "/blockchain/helios-state" },
+      { label: "Fork-aware EVM environment", href: "/blockchain/reth-block-execution" },
+      { label: "Ethereum JSON-RPC interface", href: "/blockchain/ethereum-architecture" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "RPC field·result·error는 pinned execution-apis, EVM transition은 pinned execution-specs와 active fork에 귀속한다." },
+      { kind: "primary-source", rule: "ProofDB replay·gas_used·receipt/log verification·broadcast forwarding claim은 Helios 0.11.1 source에 제한한다." },
+      { kind: "project-measurement", rule: "Proof/root/code/receipt mutation·cache miss·reorg·broadcast ambiguity에서 output·root·status parity 뒤 latency·RPC 수를 비교한다." },
+      { kind: "project-claim", rule: "Local call을 transaction inclusion으로, Bloom을 membership proof로, provider acknowledgement를 propagation 보장으로 확대하지 않는다." },
+    ],
+  },
   "reth-trie": {
     title: "Reth Merkle Patricia trie·state-root 글이 소유하는 범위",
     owns: [
@@ -4816,6 +4877,105 @@ export const EDITORIAL_BOUNDARIES = {
         kind: "project-measurement",
         rule: "구현 성능은 같은 field·length·direction·batch에서 direct oracle·round trip·product correctness 뒤 kernel과 end-to-end를 함께 측정한다.",
       },
+    ],
+  },
+  helios: {
+    title: "Helios architecture overview가 소유하는 범위",
+    owns: [
+      "Consensus checkpoint→verified header→execution state proof→local RPC response의 end-to-end join",
+      "Proof-bound response와 unsupported·unavailable·invalid outcome의 구분",
+      "Network·block·root·endpoint·Helios SHA verification receipt",
+      "Adversarial end-to-end parity 뒤 성능을 비교하는 release gate",
+    ],
+    reuses: [
+      { label: "Helios fork별 type과 Store transition", href: "/blockchain/helios-types" },
+      { label: "Helios network·checkpoint config", href: "/blockchain/helios-config" },
+      { label: "Sync committee protocol", href: "/blockchain/prysm-sync-committee" },
+      { label: "EIP-1186 state proof", href: "/blockchain/helios-state" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Crate·RPC·verification path는 표시한 Helios SHA와 supported method/provider capability에 귀속한다." },
+      { kind: "standard", rule: "Consensus light-client와 execution proof 규칙은 고정 consensus-specs fork/preset 및 EIP-1186 범위로 제한한다." },
+      { kind: "project-claim", rule: "Local verified RPC를 full-node 동등성·모든 method 검증·endpoint availability로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "Wrong root/proof·reorg·provider failure parity 뒤 같은 hardware/network에서 latency를 비교한다." },
+    ],
+  },
+  "helios-bootstrap": {
+    title: "Helios bootstrap 글이 소유하는 범위",
+    owns: [
+      "Approved network·checkpoint를 고정한 bootstrap request identity",
+      "Checkpoint header root와 current committee branch의 trust transfer",
+      "Initial LightClientStore generation의 atomic initialization",
+      "첫 update handoff·failure taxonomy·restart release gate",
+    ],
+    reuses: [
+      { label: "Checkpoint source·age·fallback 정책", href: "/blockchain/helios-config#persistence" },
+      { label: "Fork-specific SSZ proof receipt", href: "/blockchain/helios-types#ssz-internal" },
+      { label: "Weak-subjectivity trust anchor", href: "/blockchain/prysm-finality#weak-subjectivity" },
+      { label: "Light-client Store transition", href: "/blockchain/helios-types#core-types" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Checkpoint input/cache/fallback과 HTTP/Store implementation은 표시한 Helios SHA에 귀속한다." },
+      { kind: "standard", rule: "Bootstrap container·branch·initialization은 고정 consensus-specs v1.6.1·fork·preset에 귀속한다." },
+      { kind: "project-claim", rule: "Fallback plurality·freshness·HTTP success를 trusted checkpoint나 valid Store로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "Wrong source/root/branch·stale·truncation·crash parity 뒤 startup latency를 비교한다." },
+    ],
+  },
+  "helios-consensus": {
+    title: "Helios consensus update 글이 소유하는 범위",
+    owns: [
+      "Slot·period·branch·participant·domain·BLS의 cheap-first validation order",
+      "2/3 supermajority와 signature·optimistic·finality decision의 분리",
+      "Current/next committee period handoff와 missing-next recovery",
+      "Fetch·rank·apply·persist reconciliation과 consensus release gate",
+    ],
+    reuses: [
+      { label: "SyncAggregate와 Store type", href: "/blockchain/helios-types#core-types" },
+      { label: "BLS point·domain·pairing 정본", href: "/blockchain/prysm-bls" },
+      { label: "Sync committee membership", href: "/blockchain/prysm-sync-committee" },
+      { label: "SSZ generalized index", href: "/blockchain/prysm-ssz" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Sync integration·Store persistence·runtime behavior는 표시한 Helios SHA와 build/config에 귀속한다." },
+      { kind: "standard", rule: "Participation threshold·update validation·committee period는 고정 consensus-specs v1.6.1과 network preset에 귀속한다." },
+      { kind: "project-claim", rule: "BLS PASS·342 positions·higher slot을 automatic finality나 execution validity로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "341/342·wrong bit/domain/branch·period·reorg·clock·crash parity 뒤 BLS latency와 sync lag를 비교한다." },
+    ],
+  },
+  "helios-types": {
+    title: "Helios light-client 타입 글이 소유하는 범위",
+    owns: [
+      "Pinned Helios snapshot의 fork별 LightClientHeader·Update·Store type 배치",
+      "Update validation 결과를 optimistic/finalized header와 current/next committee에 적용하는 typed transition",
+      "Helios type release에서 bytes·root·branch·pre/post Store를 비교하는 검증 계약",
+    ],
+    reuses: [
+      { label: "SSZ schema·canonical decode·Merkleization", href: "/blockchain/prysm-ssz" },
+      { label: "Sync committee membership·signature 역할", href: "/blockchain/prysm-sync-committee" },
+      { label: "Weak-subjectivity checkpoint", href: "/blockchain/prysm-finality#weak-subjectivity" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Type field·variant·size는 Helios commit 43a8c9f3과 consensus-spec commit 2359a5e3·fork·preset을 함께 고정한다." },
+      { kind: "standard", rule: "SSZ decode·object root·Merkle branch·BLS/domain·Store transition을 서로 다른 검증 단계로 표시한다." },
+      { kind: "project-claim", rule: "Rust type 존재를 runtime validation·memory size·network response size·production safety 보장으로 확대하지 않는다." },
+    ],
+  },
+  "helios-config": {
+    title: "Helios 설정·checkpoint lifecycle 글이 소유하는 범위",
+    owns: [
+      "Pinned Helios의 network default·TOML·CLI·builder normalization과 config provenance",
+      "Network identity bundle·CL/EL endpoint role·checkpoint source/age policy",
+      "FileDB 32-byte checkpoint cache의 current 동작과 crash-safe hardening·release gate의 분리",
+    ],
+    reuses: [
+      { label: "일반 설정 precedence·launch receipt", href: "/blockchain/reth-cli#overview" },
+      { label: "Weak-subjectivity trust anchor", href: "/blockchain/prysm-finality#weak-subjectivity" },
+      { label: "Light-client update와 Store", href: "/blockchain/helios-types" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Default·merge·builder·FileDB 동작은 Helios commit 43a8c9f3의 source와 pinned config 문서에만 귀속한다." },
+      { kind: "standard", rule: "Checkpoint freshness·source trust·bootstrap verification·endpoint availability·local RPC exposure를 별도 경계로 둔다." },
+      { kind: "project-claim", rule: "External checkpoint fallback이나 endpoint 다수결을 trustless·safe로 표현하지 않고 atomic replace는 source fact가 아닌 hardening 요구로 표시한다." },
     ],
   },
 } as const satisfies Record<string, EditorialBoundary>;

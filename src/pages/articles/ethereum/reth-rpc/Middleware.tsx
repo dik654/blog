@@ -14,28 +14,28 @@ export default function Middleware() {
         <h3>배경</h3>
         <p>
           RPC server는 parsing 이전의 connection abuse와 parsing 이후의
-          expensive method abuse를 모두 다뤄야 한다. Public HTTP/WS와
-          authenticated Engine endpoint는 허용 caller가 다르다.
+          expensive method abuse를 모두 다뤄야 합니다. Public HTTP/WS와
+          authenticated Engine endpoint는 허용 caller가 다릅니다.
         </p>
         <h3>문제</h3>
         <p>
-          CORS는 browser origin policy이지 일반 client authentication이 아니다.
+          CORS는 browser origin policy이지 일반 client authentication이 아닙니다.
           Rate limit 하나만으로 request body, response size, concurrent
-          execution과 range query를 모두 보호할 수도 없다. JWT도 bearer secret을
-          읽거나 traffic을 탈취한 공격자에 대한 encryption을 제공하지 않는다.
+          execution과 range query를 모두 보호할 수도 없습니다. JWT도 bearer secret을
+          읽거나 traffic을 탈취한 공격자에 대한 encryption을 제공하지 않습니다.
         </p>
         <h3>아이디어와 구현</h3>
         <p>
           Listener bind address, enabled modules, host/origin checks,
           body/response limits, concurrency/timeout, JWT와 observability를
-          겹친다. 비용이 큰 method는 global transport limit 외에도
-          method-specific range와 result constraints를 가져야 한다.
+          겹칩니다. 비용이 큰 method는 global transport limit 외에도
+          method-specific range와 result constraints를 가져야 합니다.
         </p>
         <p>
           Engine auth는 consensus/execution clients가 공유한 256-bit secret으로
-          HS256 token을 검증한다. Token freshness와 Authorization header를
+          HS256 token을 검증합니다. Token freshness와 Authorization header를
           확인하되 endpoint는 private network boundary에 두고 secret file
-          permissions와 rotation 운영을 별도로 관리한다.
+          permissions와 rotation 운영을 별도로 관리합니다.
         </p>
       </div>
       <ExplainedFormula
@@ -93,8 +93,8 @@ export default function Middleware() {
           <p className="font-semibold">운영 원칙</p>
           <p className="mt-2">
             일반 RPC도 Reth에서 기본 공개되는 것이 아니며 명시적으로 listener와
-            namespaces를 켜야 한다. 기본 port 예시는 배포 편의를 위한 값이지
-            firewall·authentication policy가 아니다.
+            namespaces를 켜야 합니다. 기본 port 예시는 배포 편의를 위한 값이지
+            firewall·authentication policy가 아닙니다.
           </p>
         </div>
       </div>

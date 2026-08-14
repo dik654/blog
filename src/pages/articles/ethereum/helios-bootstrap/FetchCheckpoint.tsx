@@ -1,46 +1,21 @@
-import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
-import { codeRefs } from "./codeRefs";
-import FetchViz from "./viz/FetchViz";
 
-interface Props {
-  onCodeRef: (key: string, ref: CodeRef) => void;
-}
+interface Props { onCodeRef: (key: string, ref: CodeRef) => void }
 
-export default function FetchCheckpoint({
-  title,
-  onCodeRef,
-}: Props & { title: string }) {
+export default function FetchCheckpoint({ title, onCodeRef: _onCodeRef }: Props & { title: string }) {
   return (
     <section id="fetch-checkpoint" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">{title}</h2>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
+      <h2 className="mb-5 text-2xl font-bold">{title}</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          체크포인트 블록 루트를 기반으로 Beacon API에 부트스트랩 데이터를
-          요청한다. 응답의 committee_branch를 Merkle 검증하고, 성공하면
-          LightClientStore를 초기화한다.
+          Client는 trusted root C를 request key로 사용해 <code>LightClientBootstrap</code>을 요청합니다. Transport timeout·HTTP status·response
+          size를 먼저 제한하고, fork context에 맞는 SSZ 또는 API schema로 decode한 뒤에야 cryptographic validation으로 넘깁니다.
+          Decode와 validation은 서로 다른 단계이므로 알 수 없는 fork version이나 trailing data를 임의의 현재 구조로 읽지 않습니다.
         </p>
-      </div>
-
-      <div className="not-prose">
-        <FetchViz />
-        <div className="flex items-center gap-2 mt-3 justify-end">
-          <CodeViewButton
-            onClick={() => onCodeRef("hl-fetch", codeRefs["hl-fetch"])}
-          />
-          <span className="text-[10px] text-muted-foreground">
-            bootstrap.rs — fetch_bootstrap()
-          </span>
-        </div>
-        <div className="flex items-center gap-2 mt-1 justify-end">
-          <CodeViewButton
-            onClick={() => onCodeRef("hl-init", codeRefs["hl-init"])}
-          />
-          <span className="text-[10px] text-muted-foreground">
-            bootstrap.rs — init_store()
-          </span>
-        </div>
+        <p>
+          Retry할 때도 request identity는 network와 C로 고정합니다. Endpoint A가 timeout난 뒤 endpoint B를 쓰는 것은 괜찮지만, retry 도중
+          더 최신이라는 이유로 root를 C′로 바꾸면 다른 trust decision이 됩니다. 그런 변경은 새 checkpoint approval로 기록해야 합니다.
+        </p>
       </div>
     </section>
   );

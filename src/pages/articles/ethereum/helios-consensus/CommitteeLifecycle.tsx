@@ -1,51 +1,43 @@
+import ExplainedFormula from "@/components/ui/explained-formula";
 import type { CodeRef } from "@/components/code/types";
-import CommitteeViz from "./viz/CommitteeViz";
 
-interface Props {
-  title: string;
-  onCodeRef: (key: string, ref: CodeRef) => void;
-}
+interface Props { title: string; onCodeRef: (key: string, ref: CodeRef) => void }
 
-export default function CommitteeLifecycle({
-  title,
-  onCodeRef: _onCodeRef,
-}: Props) {
+export default function CommitteeLifecycle({ title, onCodeRef: _onCodeRef }: Props) {
   return (
     <section id="committee-lifecycle" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">{title}</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
+      <h2 className="mb-5 text-2xl font-bold">{title}</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Sync Committee는 영원하지 않다. 256 에폭(~27시간)마다 교체된다.
-          <br />
-          period = slot / 8192. 경계를 넘으면 current ← next, next ← None.
+          Store는 current와 next committee를 함께 보관해 period 경계 전에 다음 public keys를 검증해 둡니다. Update의 next committee는
+          attested/finalized state의 Merkle branch에 묶여야 하며, 단지 signature가 valid하다는 이유로 교체하지 않습니다. 경계에서는 검증된
+          next를 current로 옮기고 새 next를 채울 수 있는 update를 기다립니다.
         </p>
       </div>
-
-      {/* Viz: 타임라인, 핸드오프 과정, 실패 케이스 */}
-      <div className="not-prose my-8">
-        <CommitteeViz />
-      </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="text-sm border-l-2 border-amber-500/50 pl-3">
-          <strong>{"💡"} 왜 한 period 앞서 받는가</strong>
-          <br />
-          경계에서 즉시 교체하려면 교체 전에 새 위원회를 알아야 한다. 한 period
-          미리 받아서 Merkle 검증해둔다 → 경계에서 지연 없이 전환.
-        </p>
-
-        <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          <strong>{"💡"} Reth 비교</strong>
-          <br />
-          Reth는 BeaconState에서 직접 읽으므로 "미리 받기"가 불필요. Helios는
-          Update 메시지에 의존하므로 한 period 미리 받아야 한다.
-        </p>
-
-        <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          <strong>{"💡"} 핸드오프 실패 시</strong>
-          <br />
-          next_sync_committee 없이 period 경계를 넘으면 서명 검증 불가 →
-          재부트스트랩 필요. 정상 환경에서는 매 12초 폴링하므로 실패는 드물다.
+      <ExplainedFormula
+        question="어떤 sync committee가 signature slot을 담당하는지 어떻게 계산할까요?"
+        idea="Slot을 epoch으로, epoch을 committee period로 두 번 정수 나눗셈합니다. Mainnet preset에서는 두 상수의 곱이 8,192 slots입니다."
+        formula={String.raw`period(s)=\left\lfloor\frac{\lfloor s/S_{epoch}\rfloor}{E_{period}}\right\rfloor=\left\lfloor\frac{s}{8192}\right\rfloor`}
+        terms={[
+          { symbol: "s", name: "Signature slot", description: "Aggregate signature가 생성된 beacon slot" },
+          { symbol: "S_{epoch}", name: "Epoch당 slot", description: "Mainnet preset 예시 32 slots/epoch" },
+          { symbol: "E_{period}", name: "Period당 epoch", description: "Mainnet preset 예시 256 epochs/period" },
+          { symbol: "8192", name: "Period당 slot", description: "32×256 slots; 12초/slot이면 약 27.3시간" },
+          { symbol: "period(s)", name: "Committee period index", description: "해당 signature를 검증할 current/next committee 선택 기준" },
+        ]}
+        assumptions={[
+          "S_epoch와 E_period는 활성 network preset에서 읽고 예시 32·256을 다른 network에 고정하지 않습니다.",
+          "Committee period는 weak-subjectivity period와 다르며 finality 자체의 시간 보장도 아닙니다.",
+          "Spec의 signature-slot/attested-slot 관계와 fork transition validation을 함께 적용합니다.",
+        ]}
+        interpretation="Slot 8,191은 period 0, slot 8,192는 period 1입니다. 따라서 8,192에서 나온 signature를 period 0 committee로 검증하면 안 됩니다. 약 27.3시간은 교체 주기일 뿐 checkpoint 안전 기간이 아닙니다."
+      />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>경계 실패와 재부트스트랩</h3>
+        <p>
+          Next committee를 검증하지 못한 채 period가 넘어가면 새 signature를 확인할 trusted key set이 없습니다. 이때 임의 endpoint의 next
+          committee를 받아 계속하는 대신, 보유한 trusted finalized state에서 연결 가능한 update range를 다시 요청하거나 새 checkpoint를
+          별도 승인해 재부트스트랩합니다. Old current·new next를 섞은 store는 폐기하고 generation 단위로 적용합니다.
         </p>
       </div>
     </section>

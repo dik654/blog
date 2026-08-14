@@ -34,27 +34,27 @@ export default function Notification({
         </div>
         <h3>배경</h3>
         <p>
-          파생 DB는 canonical chain과 같은 transition 순서를 재현해야 한다. 새
-          tip만 보는 것으로는 충분하지 않다.
+          파생 DB는 canonical chain과 같은 transition 순서를 재현해야 합니다. 새
+          tip만 보는 것으로는 충분하지 않습니다.
         </p>
         <h3>문제</h3>
         <p>
           reorg에서 new chain을 먼저 쓰면 old rows와 중복될 수 있고, rollback 중
           실패했는데 checkpoint를 앞당기면 재시작해도 손상 지점을 다시 받지
-          못한다.
+          못합니다.
         </p>
         <h3>아이디어</h3>
         <p>
           notification의 old/new 방향을 보존하고, 파생 저장소 transaction 안에서
           rollback과 apply를 원자적으로 처리한 뒤에만 finished height를
-          전송한다.
+          전송합니다.
         </p>
         <h3>구현</h3>
         <p>
           <code>ChainCommitted</code>, <code>ChainReverted</code>,{" "}
-          <code>ChainReorged</code>를 exhaustive하게 처리한다. 공유된 chain
+          <code>ChainReorged</code>를 exhaustive하게 처리합니다. 공유된 chain
           value의 내부 표현이나 clone 비용을 고정 성능으로 단정하지 않고,
-          extension이 실제로 필요한 block·receipt·state data만 읽는다.
+          extension이 실제로 필요한 block·receipt·state data만 읽습니다.
         </p>
       </div>
 

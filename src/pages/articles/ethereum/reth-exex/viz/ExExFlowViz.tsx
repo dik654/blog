@@ -20,7 +20,7 @@ export default function ExExFlowViz() {
 
           {/* fan-out arrows */}
           {s >= 1 && (
-            <motion.line x1={120} y1={102} x2={168} y2={102} stroke={C.pipeline} strokeWidth={1.5}
+            <motion.line x1={120} y1={102} x2={168} y2={102} stroke={C.pipeline} strokeWidth={1.25}
               initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.4 }} />
           )}
 

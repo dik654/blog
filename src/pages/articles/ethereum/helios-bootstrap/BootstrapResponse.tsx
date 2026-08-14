@@ -1,25 +1,18 @@
-import BootRespViz from "./viz/BootRespViz";
-
 export default function BootstrapResponse({ title }: { title: string }) {
   return (
     <section id="bootstrap-response" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">{title}</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
-        <p className="leading-7">
-          Bootstrap 응답은 3개 필드로 구성된다.
-          <br />
-          header, current_sync_committee, current_sync_committee_branch.
+      <h2 className="mb-5 text-2xl font-bold">{title}</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>
+          응답의 세 부분은 각각 다른 질문에 답합니다. <code>header</code>는 checkpoint root와 state root를 제공하고,
+          <code>current_sync_committee</code>는 이후 update의 public-key 집합이며, <code>current_sync_committee_branch</code>는 그 위원회가
+          header의 state에 실제로 포함됐다는 경로입니다. 하나라도 빠지면 다음 서명을 검증할 신뢰 사슬이 이어지지 않습니다.
         </p>
-        <p className="leading-7">
-          <strong>💡 Reth vs Helios:</strong> Reth는 블록 본문(body)을 전부
-          받는다.
-          <br />
-          Helios는 헤더 + 위원회 + Merkle 증명만 받는다. 데이터 크기가 수천 배
-          작다.
+        <p>
+          “Checkpoint cache는 root 32 bytes”라는 저장 설명은 맞을 수 있지만 bootstrap response와 runtime store에는 header, committee의
+          public keys, aggregate public key, branch와 진행 상태가 더 필요합니다. 그러므로 checkpoint 파일 크기를 전체 memory footprint로
+          일반화하지 않고, 실제 byte 수는 fork schema와 구현 snapshot에서 측정해야 합니다.
         </p>
-      </div>
-      <div className="not-prose">
-        <BootRespViz />
       </div>
     </section>
   );

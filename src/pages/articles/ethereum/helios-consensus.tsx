@@ -13,15 +13,15 @@ export default function HeliosConsensusArticle() {
     <>
       <Overview onCodeRef={sidebar.open} />
       <VerifyTrace
-        title="verify_sync_committee_sig() 5단계 추적"
+        title="Light-client update validation trace"
         onCodeRef={sidebar.open}
       />
       <CommitteeLifecycle
-        title="위원회 교체와 핸드오프"
+        title="Committee period와 핸드오프"
         onCodeRef={sidebar.open}
       />
       <SyncLoop
-        title="Sync Loop — 폴링 · 검증 · 적용 순환"
+        title="Sync loop와 원자적 store 갱신"
         onCodeRef={sidebar.open}
       />
       <CodeSidebar

@@ -20,40 +20,40 @@ export default function EthApi({
         <h3>배경</h3>
         <p>
           <code>eth_*</code> namespace에는 state 조회, EVM simulation,
-          transaction submission과 range search가 함께 있다. 같은 JSON-RPC
-          형태라도 필요한 backend와 비용 특성이 다르다.
+          transaction submission과 range search가 함께 있습니다. 같은 JSON-RPC
+          형태라도 필요한 backend와 비용 특성이 다릅니다.
         </p>
         <h3>문제</h3>
         <p>
           <code>latest</code>, 명시적 block number/hash, safe/finalized 같은
-          selector는 서로 다른 state view를 가리킨다. Pruning 때문에 요청한
+          selector는 서로 다른 state view를 가리킵니다. Pruning 때문에 요청한
           historical state·receipts가 없을 수도 있고, pending view는 canonical
-          state와 txpool overlay를 함께 요구할 수 있다.
+          state와 txpool overlay를 함께 요구할 수 있습니다.
         </p>
         <h3>아이디어와 구현</h3>
         <ol>
           <li>
             Params와 block selector를 decode하고 canonicality requirement를
-            해석한다.
+            해석합니다.
           </li>
           <li>
             Provider가 해당 block의 state·receipt availability를 확인해 일관된
-            view를 고정한다.
+            view를 고정합니다.
           </li>
           <li>
             조회, EVM simulation, txpool submission 또는 indexed scan을 method별
-            service에 위임한다.
+            service에 위임합니다.
           </li>
           <li>
             Missing/pruned state, revert, invalid transaction과 resource limit을
-            구분한 RPC error/result를 반환한다.
+            구분한 RPC error/result를 반환합니다.
           </li>
         </ol>
         <p>
           <code>eth_getLogs</code>는 bloom과 history indices로 후보를 줄일 수
-          있지만 skip 비율은 filter와 데이터에 따라 달라진다.{" "}
+          있지만 skip 비율은 filter와 데이터에 따라 달라집니다.{" "}
           <code>eth_estimateGas</code>도 반복 simulation 전략을 사용할 수 있으나
-          고정 호출 횟수·시간을 보장하지 않는다. Request/result limits는 node
+          고정 호출 횟수·시간을 보장하지 않습니다. Request/result limits는 node
           설정과 제공자 policy다.
         </p>
       </div>

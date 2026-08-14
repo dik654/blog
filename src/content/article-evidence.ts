@@ -3424,8 +3424,33 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "KZG public parameter contribution과 transcript verification의 보안 경계",
     },
   ),
-  "blockchain/reth-exex": withSeriesEvidence(RETH_SERIES_EVIDENCE),
-  "blockchain/reth-mev": withSeriesEvidence(RETH_SERIES_EVIDENCE),
+  "blockchain/reth-exex": withSeriesEvidence(RETH_SERIES_EVIDENCE, {
+    kind: "공식 구현",
+    label: "Reth ExEx source @ 4cf0face",
+    href: "https://github.com/paradigmxyz/reth/tree/4cf0facecda7b4d474c739acef1c0fc2c69a122c/crates/exex",
+    note: "Notification·WAL·finished-height 구현을 고정한 source snapshot",
+  }, {
+    kind: "공식 문서",
+    label: "Reth Execution Extensions documentation",
+    href: "https://reth.rs/exex/overview/",
+    note: "ExEx role·notification·use-case의 공식 안내이며 external exactly-once 보장은 아님",
+  }),
+  "blockchain/reth-mev": withSeriesEvidence(RETH_SERIES_EVIDENCE, {
+    kind: "공식 규격",
+    label: "Ethereum Builder Specifications @ 78a5546d",
+    href: "https://github.com/ethereum/builder-specs/tree/78a5546d9d8253beabf7db8baf988a58abdec87f",
+    note: "Registration·bid header·blinded block·payload delivery protocol snapshot",
+  }, {
+    kind: "공식 구현",
+    label: "Flashbots mev-boost @ 203bb965",
+    href: "https://github.com/flashbots/mev-boost/tree/203bb9659eea613caefd198c67df4c6a8e6bf5d6",
+    note: "Proposer-side relay aggregation implementation snapshot",
+  }, {
+    kind: "공식 구현",
+    label: "Flashbots rbuilder @ 6037fa72",
+    href: "https://github.com/flashbots/rbuilder/tree/6037fa728b13bf1806e16fff2586414216f6b8fa",
+    note: "Reth crates 기반 external builder implementation snapshot",
+  }),
   "blockchain/reth-net": withSeriesEvidence(
     RETH_SERIES_EVIDENCE,
     {
@@ -3483,7 +3508,17 @@ export const ARTICLE_EVIDENCE: Readonly<
     href: "https://github.com/paradigmxyz/reth/tree/v2.2.0/crates/storage/db-api",
     note: "Provider 아래 read transaction·cursor·typed table capability",
   }),
-  "blockchain/reth-rpc": withSeriesEvidence(RETH_SERIES_EVIDENCE),
+  "blockchain/reth-rpc": withSeriesEvidence(RETH_SERIES_EVIDENCE, {
+    kind: "공식 규격",
+    label: "Ethereum Execution APIs @ 742d45db",
+    href: "https://github.com/ethereum/execution-apis/tree/742d45db810b31265c8d3c075af324953330d1ed",
+    note: "Public JSON-RPC와 versioned Engine API wire contract snapshot",
+  }, {
+    kind: "공식 구현",
+    label: "Reth RPC source @ 4cf0face",
+    href: "https://github.com/paradigmxyz/reth/tree/4cf0facecda7b4d474c739acef1c0fc2c69a122c/crates/rpc",
+    note: "Module·middleware·provider wiring의 pinned implementation snapshot",
+  }),
   "blockchain/reth-sync": withSeriesEvidence(
     RETH_SERIES_EVIDENCE,
     source(
@@ -4267,6 +4302,121 @@ export const ARTICLE_EVIDENCE: Readonly<
         "Cooley & Tukey — An Algorithm for the Machine Calculation of Complex Fourier Series",
       href: "https://doi.org/10.1090/S0025-5718-1965-0178586-1",
       note: "Composite-length DFT factorization과 intermediate reuse의 원 논문",
+    },
+  ],
+  "blockchain/helios": [
+    { kind: "공식 코드", label: "a16z/helios source snapshot 43a8c9f", href: "https://github.com/a16z/helios/tree/43a8c9f3cdda41a6f383c4db41d9a83f102638b1", note: "Consensus light client와 execution proof를 local RPC에 연결한 pinned implementation 근거" },
+    { kind: "공식 규격", label: "Ethereum consensus-specs v1.6.1 — Altair light client", href: "https://github.com/ethereum/consensus-specs/tree/v1.6.1/specs/altair/light-client", note: "Trusted checkpoint·bootstrap·update·Store의 consensus protocol 정본" },
+    { kind: "공식 규격", label: "EIP-1186 — eth_getProof", href: "https://eips.ethereum.org/EIPS/eip-1186", note: "Account·storage proof를 execution state root에 검증하는 RPC envelope" },
+  ],
+  "blockchain/helios-bootstrap": [
+    { kind: "공식 코드", label: "a16z/helios checkpoint and Ethereum source @ 43a8c9f", href: "https://github.com/a16z/helios/tree/43a8c9f3cdda41a6f383c4db41d9a83f102638b1/ethereum", note: "Checkpoint input/cache/fallback과 bootstrap integration의 pinned source" },
+    { kind: "공식 규격", label: "Ethereum consensus-specs v1.6.1 — light-client bootstrap", href: "https://github.com/ethereum/consensus-specs/tree/v1.6.1/specs/altair/light-client", note: "LightClientBootstrap container·committee branch·Store initialization 정본" },
+    { kind: "공식 규격", label: "Ethereum consensus-specs v1.6.1 — Weak Subjectivity", href: "https://github.com/ethereum/consensus-specs/blob/v1.6.1/specs/phase0/weak-subjectivity.md", note: "Recent checkpoint trust model과 고정 기간 오해를 구분하는 정본" },
+  ],
+  "blockchain/helios-consensus": [
+    { kind: "공식 코드", label: "a16z/helios Ethereum consensus source @ 43a8c9f", href: "https://github.com/a16z/helios/tree/43a8c9f3cdda41a6f383c4db41d9a83f102638b1/ethereum", note: "Light-client fetch·Store·sync integration의 pinned implementation 근거" },
+    { kind: "공식 규격", label: "Ethereum consensus-specs v1.6.1 — light-client sync protocol", href: "https://github.com/ethereum/consensus-specs/blob/v1.6.1/specs/altair/light-client/sync-protocol.md", note: "Update validation·ranking·optimistic/finalized transition·committee period 규칙" },
+    { kind: "공식 규격", label: "Ethereum consensus-specs v1.6.1 — BLS and domains", href: "https://github.com/ethereum/consensus-specs/tree/v1.6.1/specs", note: "Fork·genesis·duty domain과 aggregate signature 검증 context" },
+  ],
+  "blockchain/helios-update": [
+    {
+      kind: "공식 규격",
+      label: "Ethereum consensus-specs v1.6.1 — light-client sync",
+      href: "https://github.com/ethereum/consensus-specs/tree/5fa6edcca8ab4cf548653e6680b17b9d3e04d225/specs/altair/light-client",
+      note: "Update validation·selection·processing과 optimistic/finalized store의 pinned protocol 정본",
+    },
+    {
+      kind: "공식 코드",
+      label: "Helios 0.11.1 — consensus-core update",
+      href: "https://github.com/a16z/helios/blob/0.11.1/ethereum/consensus-core/src/consensus_core.rs",
+      note: "Verify·apply·best_valid_update·committee handoff·force_update의 stable source snapshot",
+    },
+  ],
+  "blockchain/helios-state": [
+    {
+      kind: "공식 규격",
+      label: "EIP-1186 — eth_getProof",
+      href: "https://eips.ethereum.org/EIPS/eip-1186",
+      note: "Account·storage value와 existence/absence proof를 반환하는 RPC envelope",
+    },
+    {
+      kind: "공식 규격",
+      label: "Ethereum Yellow Paper — pinned state-trie snapshot",
+      href: "https://github.com/ethereum/yellowpaper/blob/efc5f9a1f356cba376c978eedb63cb0363c2aa85/Paper.tex",
+      note: "Secure MPT와 account/storage-root commitment의 고전적 정본",
+    },
+    {
+      kind: "공식 코드",
+      label: "Helios 0.11.1 — execution proof verifier",
+      href: "https://github.com/a16z/helios/blob/0.11.1/core/src/execution/proof.rs",
+      note: "Account·storage·code·receipt proof와 empty-value 처리의 stable source snapshot",
+    },
+  ],
+  "blockchain/helios-execution": [
+    {
+      kind: "공식 규격",
+      label: "Ethereum execution-apis — pinned JSON-RPC schema",
+      href: "https://github.com/ethereum/execution-apis/tree/742d45db810b31265c8d3c075af324953330d1ed",
+      note: "Call·state·logs·broadcast method의 공식 interface와 result/error schema",
+    },
+    {
+      kind: "공식 규격",
+      label: "Ethereum execution-specs — pinned snapshot",
+      href: "https://github.com/ethereum/execution-specs/tree/56e8617b619c0ab22284b140b49cc5501e5e6227",
+      note: "Fork-aware EVM·transaction·block-environment semantics",
+    },
+    {
+      kind: "공식 코드",
+      label: "Helios 0.11.1 — ProofDB and EVM",
+      href: "https://github.com/a16z/helios/tree/0.11.1/revm-utils/src",
+      note: "Pinned-block ProofDB miss·proof fetch·same-input revm replay의 stable implementation",
+    },
+  ],
+  "blockchain/helios-types": [
+    {
+      kind: "공식 코드",
+      label: "a16z/helios consensus types @ 43a8c9f3",
+      href: "https://github.com/a16z/helios/blob/43a8c9f3cdda41a6f383c4db41d9a83f102638b1/ethereum/consensus-core/src/types/mod.rs",
+      note: "LightClientHeader·Update·Store·SyncAggregate의 fork별 Rust type snapshot",
+    },
+    {
+      kind: "공식 규격",
+      label: "Ethereum light-client sync protocol @ 2359a5e3",
+      href: "https://github.com/ethereum/consensus-specs/blob/2359a5e3444635ee2fc2acdea8a759e16391af90/specs/altair/light-client/sync-protocol.md",
+      note: "Light-client container·validation·Store transition의 protocol 기준",
+    },
+    {
+      kind: "공식 규격",
+      label: "Ethereum SSZ specification @ 2359a5e3",
+      href: "https://github.com/ethereum/consensus-specs/blob/2359a5e3444635ee2fc2acdea8a759e16391af90/ssz/simple-serialize.md",
+      note: "Schema·canonical bytes·hash-tree-root 규칙",
+    },
+  ],
+  "blockchain/helios-config": [
+    {
+      kind: "공식 코드",
+      label: "a16z/helios Ethereum config @ 43a8c9f3",
+      href: "https://github.com/a16z/helios/tree/43a8c9f3cdda41a6f383c4db41d9a83f102638b1/ethereum/src/config",
+      note: "Network default·Figment merge·checkpoint·endpoint typed config의 source snapshot",
+    },
+    {
+      kind: "공식 코드",
+      label: "a16z/helios EthereumClientBuilder @ 43a8c9f3",
+      href: "https://github.com/a16z/helios/blob/43a8c9f3cdda41a6f383c4db41d9a83f102638b1/ethereum/src/builder.rs",
+      note: "Explicit builder value와 config fallback을 client construction에 연결하는 구현",
+    },
+    {
+      kind: "공식 문서",
+      label: "a16z/helios operator config @ 43a8c9f3",
+      href: "https://github.com/a16z/helios/blob/43a8c9f3cdda41a6f383c4db41d9a83f102638b1/config.md",
+      note: "Checkpoint age·fallback risk·endpoint·bind·data directory의 operator surface",
+    },
+    {
+      kind: "공식 코드",
+      label: "a16z/helios FileDB @ 43a8c9f3",
+      href: "https://github.com/a16z/helios/blob/43a8c9f3cdda41a6f383c4db41d9a83f102638b1/ethereum/src/database.rs",
+      note: "32-byte checkpoint load/save와 malformed/read-failure fallback의 current 동작",
     },
   ],
 };

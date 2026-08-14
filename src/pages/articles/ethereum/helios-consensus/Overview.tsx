@@ -1,95 +1,35 @@
+import { Link } from "react-router-dom";
+import ContentBoundary from "@/components/articles/content-boundary";
 import type { CodeRef } from "@/components/code/types";
-import OverviewViz from "./viz/OverviewViz";
+import HeliosTrustPathViz from "../helios-trust-path-viz";
 
-interface Props {
-  onCodeRef: (key: string, ref: CodeRef) => void;
-}
+interface Props { onCodeRef: (key: string, ref: CodeRef) => void }
 
 export default function Overview({ onCodeRef: _onCodeRef }: Props) {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">왜 BLS 검증인가</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
+      <h2 className="mb-5 text-2xl font-bold">Sync committee 검증은 “누가 어느 header에 동의했는가”를 작은 상태로 확인한다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="text-lg leading-8">
+          Helios는 모든 validator와 BeaconState를 들고 있지 않습니다. 대신 trusted state에 commitment된 sync committee public keys,
+          update의 512-position participation bits와 한 aggregate signature를 사용해 attested header를 검증합니다. 여기서 512는 mainnet
+          preset의 <em>position 수</em>이며 한 validator가 중복 선택될 수 있으므로 항상 512명의 서로 다른 사람을 뜻하지 않습니다.
+        </p>
         <p>
-          Reth(풀 노드)는 블록의 모든 TX를 실행해서 state_root를 재계산한다 —
-          완벽하지만 비용이 크다.
-          <br />
-          Helios(경량)는 블록을 실행하지 않는다. 512명 Sync Committee의 BLS 집계
-          서명만 검증.
-          <br />
-          같은 목표(블록 헤더 신뢰), 다른 경로.
+          고정 사례로 committee position 512개 중 342개 bit가 켜진 update를 보겠습니다. 이 글은 bit→public key 결속, signing root와
+          BLS, 2/3 supermajority, current/next committee handoff, store 적용을 순서대로 추적합니다. BLS pairing의 수학 정본은{" "}
+          <Link to="/blockchain/prysm-bls">BLS</Link>, committee 선출과 duplicate position은{" "}
+          <Link to="/blockchain/prysm-sync-committee">sync committee</Link> 글을 재사용합니다.
         </p>
       </div>
-
-      {/* Viz: 풀 노드 vs 경량, verify 5단계 파이프라인, 512명 위원회 */}
-      <div className="not-prose my-8">
-        <OverviewViz />
-      </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3 className="text-xl font-semibold mt-2 mb-3">Reth와 비교</h3>
-        <div className="not-prose overflow-x-auto">
-          <table className="w-full text-sm border border-border">
-            <thead>
-              <tr className="bg-muted/30">
-                <th className="text-left px-3 py-2 border-b border-border">
-                  항목
-                </th>
-                <th className="text-left px-3 py-2 border-b border-border">
-                  Reth (풀 노드)
-                </th>
-                <th className="text-left px-3 py-2 border-b border-border text-indigo-600 dark:text-indigo-400">
-                  Helios (경량)
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td className="px-3 py-1.5 border-b border-border/30">
-                  블록 검증
-                </td>
-                <td className="px-3 py-1.5 border-b border-border/30">
-                  TX 전체 실행
-                </td>
-                <td className="px-3 py-1.5 border-b border-border/30 text-indigo-600 dark:text-indigo-400">
-                  BLS 서명 1회 검증
-                </td>
-              </tr>
-              <tr>
-                <td className="px-3 py-1.5 border-b border-border/30">
-                  검증 대상
-                </td>
-                <td className="px-3 py-1.5 border-b border-border/30">
-                  모든 검증자
-                </td>
-                <td className="px-3 py-1.5 border-b border-border/30 text-indigo-600 dark:text-indigo-400">
-                  512명 위원회
-                </td>
-              </tr>
-              <tr>
-                <td className="px-3 py-1.5 border-b border-border/30">비용</td>
-                <td className="px-3 py-1.5 border-b border-border/30">
-                  높음 (CPU + 디스크)
-                </td>
-                <td className="px-3 py-1.5 border-b border-border/30 text-indigo-600 dark:text-indigo-400">
-                  낮음 (~3ms 수학 연산)
-                </td>
-              </tr>
-              <tr>
-                <td className="px-3 py-1.5">보안 가정</td>
-                <td className="px-3 py-1.5">없음 (자체 검증)</td>
-                <td className="px-3 py-1.5 text-indigo-600 dark:text-indigo-400">
-                  위원회 정직 다수
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          <strong>{"💡"}</strong> 512명은 전체 검증자의 0.05%에 불과하지만,
-          RANDAO 무작위 선출 + 32ETH 스테이킹 + 슬래싱이 결합되어 위원회 과반
-          조작의 경제적 비용이 극도로 높다.
+      <ContentBoundary article="helios-consensus" />
+      <HeliosTrustPathViz mode="consensus" />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>Signature valid와 update adopted는 다른 판정입니다</h3>
+        <p>
+          Aggregate signature가 맞아도 signature slot이 미래이거나 committee period가 store와 연결되지 않거나 finality/next-committee
+          Merkle branch가 틀리면 update를 적용할 수 없습니다. 반대로 valid update라도 participation과 relevance에 따라 optimistic header만
+          전진하거나 best-valid 후보로 보관될 수 있습니다. “BLS 한 번 검증하면 block이 finalized된다”는 요약은 이 상태 기계를 지웁니다.
         </p>
       </div>
     </section>

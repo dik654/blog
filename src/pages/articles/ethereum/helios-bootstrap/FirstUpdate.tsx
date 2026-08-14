@@ -1,25 +1,18 @@
-import FirstUpdateViz from "./viz/FirstUpdateViz";
-
 export default function FirstUpdate({ title }: { title: string }) {
   return (
     <section id="first-update" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">{title}</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
-        <p className="leading-7">
-          Store 초기화가 끝나면 Beacon API에 <code>finality_update</code>를
-          요청한다.
-          <br />
-          이것이 부트스트랩 이후 첫 번째 동기화 단계다.
+      <h2 className="mb-5 text-2xl font-bold">{title}</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>
+          초기화 직후에는 update의 signature period가 store의 current committee로 검증 가능한지 먼저 확인합니다. Update가 next committee와
+          branch를 포함하면 이를 현재 trusted state에 결속해 다음 period를 준비하고, finality branch와 participation 조건을 충족한 경우에만
+          finalized header를 전진시킵니다. 더 높은 slot이라는 이유만으로 모든 field를 한꺼번에 덮어쓰지 않습니다.
         </p>
-        <p className="leading-7">
-          <strong>💡 Reth vs Helios:</strong> Reth는 피어에서 블록을 하나씩
-          받는다.
-          <br />
-          Helios는 단일 API 응답으로 최신 finalized 헤더를 즉시 확보한다.
+        <p>
+          Optimistic head는 더 빠르게 움직일 수 있지만 finalized head와 같은 확정성을 뜻하지 않습니다. Application이 잔액 표시에는 optimistic를,
+          큰 가치 이전에는 finalized를 요구한다면 어느 head를 사용했는지 RPC receipt에 명시해야 합니다. 첫 update부터 이 정책이 없으면
+          뒤의 sync loop가 올바르게 돌아도 caller가 서로 다른 확정성의 값을 혼동합니다.
         </p>
-      </div>
-      <div className="not-prose">
-        <FirstUpdateViz />
       </div>
     </section>
   );

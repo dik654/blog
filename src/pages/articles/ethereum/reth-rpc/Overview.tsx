@@ -32,19 +32,19 @@ export default function Overview({
         <p>
           Method implementation에 HTTP/WS, authentication, CORS, request size와
           timeout을 섞으면 transport를 추가하거나 policy를 바꿀 때 비즈니스
-          로직까지 수정해야 한다. 반대로 모든 endpoint를 같은 public boundary로
+          로직까지 수정해야 합니다. 반대로 모든 endpoint를 같은 public boundary로
           열면 Engine API가 노출될 수 있습니다.
         </p>
         <h3>아이디어</h3>
         <p>
           Transport listener와 middleware가 connection policy를 담당하고, typed
-          RPC module이 method·params·result contract를 정의한다. Handler는
+          RPC module이 method·params·result contract를 정의합니다. Handler는
           provider, txpool, EVM과 payload service를 호출하며 protocol error로
           결과를 변환합니다.
         </p>
         <p>
           Reth의 일반 HTTP/WS RPC는 명시적으로 활성화해야 하며 address, port와
-          namespaces를 설정할 수 있다. Engine API는 기본적으로 localhost:8551을
+          namespaces를 설정할 수 있습니다. Engine API는 기본적으로 localhost:8551을
           사용하지만 <code>--authrpc.addr</code>와 <code>--authrpc.port</code>로
           바꿀 수 있으므로 고정 포트로 표현하지 않습니다.
         </p>
