@@ -1870,15 +1870,11 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "knowledge-distillation": {
-    title: "지식 증류 글이 소유하는 범위",
+    title: "고전 지식 증류 글이 소유하는 범위",
     owns: [
-      "Teacher signal을 logit·feature·sequence·self-teacher interface로 구분하는 선택 경계",
+      "Teacher signal을 class logit과 aligned hidden feature interface로 구분하는 선택 경계",
       "Temperature soft target·class odds·hard/soft mixture·T² gradient scale과 KL 방향",
       "서로 다른 hidden dimension·layer·position 사이 feature projection과 alignment 계약",
-      "Cross-tokenizer sequence distillation의 serialization·loss mask와 synthetic slice coverage",
-      "Autoregressive state-distribution mismatch와 fixed/on-policy sequence mixture의 구분",
-      "Student-visited prefix의 dense teacher feedback과 multi-teacher policy-space capability 통합",
-      "Self-distillation generation별 teacher agreement·ground-truth quality·bias inheritance 진단",
     ],
     reuses: [
       {
@@ -1893,11 +1889,82 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [
       {
         kind: "primary-source",
-        rule: "Hinton KD·FitNets·Sequence KD·GKD·MOPD·Born-Again claim은 각 논문의 architecture·data·objective·task·metric 범위로 제한한다.",
+        rule: "Hinton KD·FitNets claim은 각 논문의 architecture·data·objective·task·metric 범위로 제한한다.",
       },
       {
         kind: "standard",
-        rule: "Teacher/base hash·tokenizer·temperature·KL direction/reduction·alpha·feature layer/projection·prompt provenance·generation policy·on/off-policy mixture·domain routing·filter/template/loss mask·split·student-only runtime을 함께 기록한다.",
+        rule: "Teacher/base hash·class order·temperature·KL direction/reduction·alpha·feature layer/projection·split·student-only runtime을 함께 기록한다.",
+      },
+    ],
+  },
+  "sequence-distillation": {
+    title: "Sequence distillation 글이 소유하는 범위",
+    owns: [
+      "Tokenizer가 다른 teacher text를 student target token으로 다시 serialize하는 경계",
+      "Prompt·teacher revision·sampling·filter·student mask를 묶은 generation provenance receipt",
+      "Accepted synthetic data의 target slice coverage·rejection bias·contamination release gate",
+    ],
+    reuses: [
+      { label: "고전 distillation signal 선택", href: "/ai/knowledge-distillation" },
+      { label: "Tokenizer/checkpoint compatibility", href: "/ai/tokenizer" },
+      { label: "SFT response-only loss", href: "/ai/sft" },
+      { label: "Train·validation·test", href: "/ai/deep-learning-overview" },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "Sequence KD claim은 논문의 machine-translation data·teacher decode·student training 범위로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Prompt source/rights·teacher revision·system prompt·sampling·filter/reject reason·student tokenizer/template/mask·slice mixture·decontamination을 함께 기록한다.",
+      },
+    ],
+  },
+  "on-policy-distillation": {
+    title: "On-policy distillation 글이 소유하는 범위",
+    owns: [
+      "Teacher-forced prefix와 student-visited prefix 사이 state-distribution mismatch",
+      "Student rollout에서 teacher token feedback을 받는 on/off-policy mixture와 divergence 방향",
+      "Specialist teacher를 domain routing과 policy-space feedback으로 통합하는 경계",
+    ],
+    reuses: [
+      { label: "고전 distillation objective", href: "/ai/knowledge-distillation" },
+      { label: "Sequence target과 provenance", href: "/ai/sequence-distillation" },
+      { label: "Autoregressive language modeling", href: "/ai/transformer-architecture" },
+      { label: "Train·validation·test", href: "/ai/deep-learning-overview" },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "GKD·MOPD claim은 각 논문의 rollout policy·teacher access·domain·model·metric 범위로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Student checkpoint·rollout seed/prefix·teacher revision·mixture coefficient·KL direction·domain router·cost·independent quality를 함께 기록한다.",
+      },
+    ],
+  },
+  "self-distillation": {
+    title: "Self-distillation 글이 소유하는 범위",
+    owns: [
+      "직전 generation artifact를 frozen teacher로 승격하는 세대 계약",
+      "Teacher agreement와 ground-truth quality를 분리한 bias inheritance audit",
+      "평균 gain·worst-slice regression·inheritance gap을 결합한 반복 중단·rollback gate",
+    ],
+    reuses: [
+      { label: "고전 hard·soft distillation", href: "/ai/knowledge-distillation" },
+      { label: "Synthetic sequence provenance", href: "/ai/sequence-distillation" },
+      { label: "Train·validation·test", href: "/ai/deep-learning-overview" },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "Born-Again claim은 논문의 동일 architecture generation·dataset·metric 범위로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Generation ID·teacher/student hash·data split·seed·teacher agreement·independent quality·worst slice·compute·rollback checkpoint를 함께 기록한다.",
       },
     ],
   },

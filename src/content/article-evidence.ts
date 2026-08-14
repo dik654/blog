@@ -1984,12 +1984,16 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://arxiv.org/abs/1412.6550",
       note: "teacher intermediate representation을 hint로 전달하는 feature distillation",
     },
+  ],
+  "ai/sequence-distillation": [
     {
       kind: "핵심 논문",
       label: "Sequence-Level Knowledge Distillation",
       href: "https://aclanthology.org/D16-1139/",
       note: "teacher가 decoding한 sequence를 student target으로 사용하는 sequence-level distillation",
     },
+  ],
+  "ai/on-policy-distillation": [
     {
       kind: "핵심 논문",
       label:
@@ -2010,6 +2014,8 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://thinkingmachines.ai/blog/on-policy-distillation/",
       note: "student sampling·teacher scoring·per-token reverse KL recipe와 공개 비용 비교",
     },
+  ],
+  "ai/self-distillation": [
     {
       kind: "핵심 논문",
       label: "Born Again Neural Networks",

@@ -183,6 +183,7 @@
     max-width: 100%;
     overflow-x: auto;
     overflow-y: hidden;
+    padding-block: 0.35rem;
     overscroll-behavior-inline: contain;
   }
   article .not-prose {

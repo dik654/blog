@@ -18270,584 +18270,1057 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/knowledge-distillation": {
-    coreIdea:
-      "지식 증류는 큰 teacher weight를 복사하는 방법이 아니라 teacher가 만든 logit distribution·mapped feature·generated sequence·student-visited prefix의 token feedback을 학습 objective와 artifact로 바꾸는 방법입니다. 공유 interface와 sequence를 생성한 policy를 먼저 확인하고 temperature·KL 방향·feature alignment·on/off-policy sampling·provenance를 명시한 뒤 teacher agreement가 아니라 독립 quality와 student-only runtime으로 승인해야 합니다.",
-    assumedKnowledge: [
+    "coreIdea": "고전 지식 증류는 teacher와 student가 공유하는 class 또는 aligned feature interface를 먼저 고정하고 temperature soft target·hard-label anchor·KL 방향·feature bridge를 student-only 품질과 runtime으로 검증합니다.",
+    "assumedKnowledge": [
       {
-        id: "probability-distribution",
-        role: "Teacher와 student의 class probability를 합이 1인 분포로 읽습니다.",
+        "id": "probability-distribution",
+        "role": "Teacher와 student의 class probability를 합이 1인 분포로 읽습니다."
       },
       {
-        id: "softmax-normalization",
-        role: "Logit과 temperature를 categorical probability·odds로 바꿉니다.",
+        "id": "softmax-normalization",
+        "role": "Logit과 temperature를 categorical probability·odds로 바꿉니다."
       },
       {
-        id: "cross-entropy-nll",
-        role: "Hard label과 generated response token의 negative log-likelihood를 계산합니다.",
+        "id": "cross-entropy-nll",
+        "role": "Hard label과 generated response token의 negative log-likelihood를 계산합니다."
       },
       {
-        id: "kl-divergence",
-        role: "Teacher/student distribution의 방향성 있는 차이를 계산합니다.",
+        "id": "kl-divergence",
+        "role": "Teacher/student distribution의 방향성 있는 차이를 계산합니다."
       },
       {
-        id: "gradient",
-        role: "Temperature에 따른 student-logit gradient scale을 읽습니다.",
+        "id": "gradient",
+        "role": "Temperature에 따른 student-logit gradient scale을 읽습니다."
       },
       {
-        id: "matrix-multiplication",
-        role: "Student hidden feature를 teacher dimension으로 projection합니다.",
+        "id": "matrix-multiplication",
+        "role": "Student hidden feature를 teacher dimension으로 projection합니다."
       },
       {
-        id: "tokenizer-checkpoint-compatibility",
-        role: "Teacher text를 student tokenizer·chat template로 다시 serialize합니다.",
-      },
-      {
-        id: "autoregressive-decoding",
-        role: "이전 출력 token이 다음 prefix가 되어 inference state distribution을 바꾸는 과정을 읽습니다.",
-      },
-      {
-        id: "train-validation-test",
-        role: "Teacher/recipe 선택과 마지막 independent evaluation을 분리합니다.",
-      },
+        "id": "train-validation-test",
+        "role": "Teacher/recipe 선택과 마지막 independent evaluation을 분리합니다."
+      }
     ],
-    introducedHere: [
+    "introducedHere": [
       {
-        id: "distillation-signal-interface",
-        role: "Logit·feature·sequence·self-teacher 중 공유 가능한 supervision을 고릅니다.",
+        "id": "distillation-signal-interface",
+        "role": "Logit·feature·sequence·self-teacher 중 공유 가능한 supervision을 고릅니다."
       },
       {
-        id: "temperature-soft-target",
-        role: "Temperature에 따른 class odds와 non-target probability를 계산합니다.",
+        "id": "temperature-soft-target",
+        "role": "Temperature에 따른 class odds와 non-target probability를 계산합니다."
       },
       {
-        id: "hard-soft-distillation-objective",
-        role: "Ground-truth CE와 teacher KL을 alpha로 혼합합니다.",
+        "id": "hard-soft-distillation-objective",
+        "role": "Ground-truth CE와 teacher KL을 alpha로 혼합합니다."
       },
       {
-        id: "distillation-temperature-gradient-scale",
-        role: "큰 T에서 soft-target gradient가 약해지는 1/T² 관계를 설명합니다.",
+        "id": "distillation-temperature-gradient-scale",
+        "role": "큰 T에서 soft-target gradient가 약해지는 1/T² 관계를 설명합니다."
       },
       {
-        id: "distillation-kl-direction",
-        role: "Forward·reverse KL의 expectation과 penalty 차이를 구분합니다.",
+        "id": "distillation-kl-direction",
+        "role": "Forward·reverse KL의 expectation과 penalty 차이를 구분합니다."
       },
       {
-        id: "feature-distillation-alignment",
-        role: "Layer·position·dimension을 projection으로 맞춰 feature loss를 계산합니다.",
-      },
-      {
-        id: "cross-tokenizer-sequence-distillation",
-        role: "Teacher 문자열을 student token NLL target으로 바꿉니다.",
-      },
-      {
-        id: "synthetic-distillation-slice-coverage",
-        role: "생성·filter 뒤 dataset mixture와 target slice의 차이를 계산합니다.",
-      },
-      {
-        id: "autoregressive-state-distribution-mismatch",
-        role: "고정 teacher sequence와 student inference prefix의 분포 차이를 설명합니다.",
-      },
-      {
-        id: "generalized-on-policy-distillation",
-        role: "Fixed sequence와 student rollout의 mixture를 λ로 구성합니다.",
-      },
-      {
-        id: "on-policy-token-teacher-feedback",
-        role: "Student가 방문한 prefix에서 teacher의 dense token signal을 계산합니다.",
-      },
-      {
-        id: "multi-teacher-policy-space-integration",
-        role: "Prompt domain마다 specialist teacher를 골라 하나의 student에 통합합니다.",
-      },
-      {
-        id: "self-distillation-inheritance-audit",
-        role: "Teacher agreement와 ground-truth quality의 세대별 변화를 분리합니다.",
-      },
+        "id": "feature-distillation-alignment",
+        "role": "Layer·position·dimension을 projection으로 맞춰 feature loss를 계산합니다."
+      }
     ],
-    conceptExplanations: [
+    "conceptExplanations": [
       {
-        id: "distillation-signal-interface",
-        sectionId: "overview",
-        intuition:
-          "두 사람이 같은 답안 번호를 공유하면 확률표를 비교할 수 있고, 단어 사전이 다르면 완성된 문장으로 가르쳐야 하는 것처럼 공통 interface에 맞춰 신호를 고릅니다.",
-        workedExample:
-          "같은 1000-class classifier는 logits KL을 쓸 수 있지만 tokenizer가 다른 두 LLM은 vocabulary index가 달라 teacher 문자열을 student tokenizer로 재encode하는 sequence objective가 자연스럽습니다.",
-        boundary:
-          "Teacher가 큰 것만으로 signal이 유효하지 않으며 target domain quality·calibration·rights와 student capacity를 먼저 확인합니다.",
+        "id": "distillation-signal-interface",
+        "sectionId": "overview",
+        "intuition": "두 사람이 같은 답안 번호를 공유하면 확률표를 비교할 수 있고, 단어 사전이 다르면 완성된 문장으로 가르쳐야 하는 것처럼 공통 interface에 맞춰 신호를 고릅니다.",
+        "workedExample": "같은 1000-class classifier는 logits KL을 쓸 수 있지만 tokenizer가 다른 두 LLM은 vocabulary index가 달라 teacher 문자열을 student tokenizer로 재encode하는 sequence objective가 자연스럽습니다.",
+        "boundary": "Teacher가 큰 것만으로 signal이 유효하지 않으며 target domain quality·calibration·rights와 student capacity를 먼저 확인합니다."
       },
       {
-        id: "temperature-soft-target",
-        sectionId: "logit",
-        intuition:
-          "점수 차이를 큰 수로 나누면 1등은 유지되지만 2·3등과의 격차가 줄어 teacher가 무엇을 비슷하게 봤는지 드러납니다.",
-        workedExample:
-          "Logit 차이 4의 class odds는 T=1에서 e^4≈54.6, T=2에서 e^2≈7.4입니다.",
-        boundary:
-          "T는 순서를 바꾸지 않으며 teacher 오류·calibration을 고치지 않고 class/vocabulary support가 같은 경우를 가정합니다.",
+        "id": "temperature-soft-target",
+        "sectionId": "soft-target",
+        "intuition": "점수 차이를 큰 수로 나누면 1등은 유지되지만 2·3등과의 격차가 줄어 teacher가 무엇을 비슷하게 봤는지 드러납니다.",
+        "workedExample": "Logit 차이 4의 class odds는 T=1에서 e^4≈54.6, T=2에서 e^2≈7.4입니다.",
+        "boundary": "T는 순서를 바꾸지 않으며 teacher 오류·calibration을 고치지 않고 class/vocabulary support가 같은 경우를 가정합니다."
       },
       {
-        id: "hard-soft-distillation-objective",
-        sectionId: "logit",
-        intuition:
-          "실제 정답표를 버리지 않고 teacher가 알려 준 유사 class 관계를 보충 교재로 섞습니다.",
-        workedExample:
-          "Alpha=0이면 ordinary CE, alpha=1이면 softened teacher KL만 남으며 중간 alpha는 두 gradient를 합칩니다.",
-        boundary:
-          "Teacher가 틀린 sample에서는 두 항이 충돌할 수 있고 alpha·T·reduction·class weighting을 validation에서 함께 선택합니다.",
+        "id": "hard-soft-distillation-objective",
+        "sectionId": "hard-soft-loss",
+        "intuition": "실제 정답표를 버리지 않고 teacher가 알려 준 유사 class 관계를 보충 교재로 섞습니다.",
+        "workedExample": "Alpha=0이면 ordinary CE, alpha=1이면 softened teacher KL만 남으며 중간 alpha는 두 gradient를 합칩니다.",
+        "boundary": "Teacher가 틀린 sample에서는 두 항이 충돌할 수 있고 alpha·T·reduction·class weighting을 validation에서 함께 선택합니다."
       },
       {
-        id: "distillation-temperature-gradient-scale",
-        sectionId: "logit",
-        intuition:
-          "Temperature로 점수 차이와 미분 민감도를 함께 낮추면 soft-target gradient가 두 경로에서 약해지므로 T²를 곱해 크기를 보정합니다.",
-        workedExample:
-          "Large-T 근사에서 probability residual이 1/T, CE logit derivative가 다시 1/T factor를 가져 전체 scale이 약 1/T²가 됩니다.",
-        boundary:
-          "Centered logit이 T보다 작은 large-T 1차 근사이며 T²가 hard-loss와의 최적 비율이나 optimization 동역학을 자동 보장하지 않습니다.",
-        proofIdea:
-          "Temperature softmax CE의 정확한 logit derivative (p−q)/T를 구하고, e^(z/T)의 1차 전개로 centered probability difference가 O(1/T)임을 대입합니다.",
-        counterexample:
-          "T가 1에 가깝거나 logit 차이가 T보다 매우 크면 large-T linearization이 맞지 않아 gradient ratio가 정확히 1/T²가 아닙니다.",
+        "id": "distillation-temperature-gradient-scale",
+        "sectionId": "hard-soft-loss",
+        "intuition": "Temperature로 점수 차이와 미분 민감도를 함께 낮추면 soft-target gradient가 두 경로에서 약해지므로 T²를 곱해 크기를 보정합니다.",
+        "workedExample": "Large-T 근사에서 probability residual이 1/T, CE logit derivative가 다시 1/T factor를 가져 전체 scale이 약 1/T²가 됩니다.",
+        "boundary": "Centered logit이 T보다 작은 large-T 1차 근사이며 T²가 hard-loss와의 최적 비율이나 optimization 동역학을 자동 보장하지 않습니다.",
+        "proofIdea": "Temperature softmax CE의 정확한 logit derivative (p−q)/T를 구하고, e^(z/T)의 1차 전개로 centered probability difference가 O(1/T)임을 대입합니다.",
+        "counterexample": "T가 1에 가깝거나 logit 차이가 T보다 매우 크면 large-T linearization이 맞지 않아 gradient ratio가 정확히 1/T²가 아닙니다."
       },
       {
-        id: "distillation-kl-direction",
-        sectionId: "logit",
-        intuition:
-          "Teacher가 중요하다고 표시한 모든 class를 빠뜨리지 않게 하는 방향과 student가 고른 class가 teacher에게도 가능한지 묻는 방향은 서로 다른 채점입니다.",
-        workedExample:
-          "Teacher q=(.5,.5), student p=(.99,.01)에서 forward KL은 student가 놓친 두 번째 teacher mode를 q=.5 weight로 강하게 봅니다.",
-        boundary:
-          "Mode-covering/seeking은 일반적 직관이며 finite support·parameterization에 따라 세부 gradient가 달라지고 zero probability는 smoothing/log-softmax가 필요합니다.",
+        "id": "distillation-kl-direction",
+        "sectionId": "hard-soft-loss",
+        "intuition": "Teacher가 중요하다고 표시한 모든 class를 빠뜨리지 않게 하는 방향과 student가 고른 class가 teacher에게도 가능한지 묻는 방향은 서로 다른 채점입니다.",
+        "workedExample": "Teacher q=(.5,.5), student p=(.99,.01)에서 forward KL은 student가 놓친 두 번째 teacher mode를 q=.5 weight로 강하게 봅니다.",
+        "boundary": "Mode-covering/seeking은 일반적 직관이며 finite support·parameterization에 따라 세부 gradient가 달라지고 zero probability는 smoothing/log-softmax가 필요합니다."
       },
       {
-        id: "feature-distillation-alignment",
-        sectionId: "feature",
-        intuition:
-          "해상도와 열 수가 다른 두 표를 바로 빼지 않고 같은 행의 의미를 맞춘 뒤 변환표로 열 수를 맞춥니다.",
-        workedExample:
-          "Student hidden 384를 linear projection으로 teacher 1024에 보낸 뒤 같은 non-padding token의 selected layers에서 MSE를 계산합니다.",
-        boundary:
-          "Hidden coordinate는 고유하지 않고 layer·position mapping이 의미 있어야 하며 feature loss 감소가 downstream gain을 보장하지 않습니다.",
-      },
-      {
-        id: "cross-tokenizer-sequence-distillation",
-        sectionId: "llm",
-        intuition:
-          "Teacher가 쓴 완성 문장을 student의 사전으로 다시 띄어 써서 다음 조각 예측 문제로 학습합니다.",
-        workedExample:
-          "Teacher response string을 student tokenizer가 u1…uL로 나누고 prompt mask 0·assistant response mask 1로 sequence NLL을 계산합니다.",
-        boundary:
-          "Teacher의 token별 전체 distribution은 전달되지 않고 선택한 decoding output·system prompt·filter policy가 supervision이 됩니다.",
-      },
-      {
-        id: "synthetic-distillation-slice-coverage",
-        sectionId: "llm",
-        intuition:
-          "책이 많다는 총 권수보다 필요한 언어·과목·난이도별 선반이 목표 비율로 채워졌는지 봅니다.",
-        workedExample:
-          "Target (.4,.4,.2), accepted (.1,.7,.2)이면 total-variation mixture gap은 .5(.3+.3+0)=.3입니다.",
-        boundary:
-          "Mutually exclusive slice mixture의 count 진단이며 sample correctness·semantic diversity·rare joint slice와 decontamination은 별도로 측정합니다.",
-      },
-      {
-        id: "autoregressive-state-distribution-mismatch",
-        sectionId: "on-policy",
-        intuition:
-          "모범답안의 문장만 따라 쓰다가 시험에서는 자기 앞 문장을 이어 써야 하면, 첫 오타 뒤에는 연습하지 않은 문맥에서 계속 답해야 합니다.",
-        workedExample:
-          "Teacher sequence가 A→B→C인데 student가 A→X를 만들면 다음 training target은 prefix A,B에 있었지만 inference state는 A,X가 됩니다.",
-        boundary:
-          "Exposure bias는 mismatch의 한 원인이며 on-policy sampling만으로 teacher 오류·긴 horizon credit assignment·environment drift가 해결되지는 않습니다.",
-      },
-      {
-        id: "generalized-on-policy-distillation",
-        sectionId: "on-policy",
-        intuition:
-          "고정된 모범답안에서 배우는 비율과 현재 student가 직접 만든 답안을 teacher에게 첨삭받는 비율을 섞습니다.",
-        workedExample:
-          "λ=0이면 fixed response KD, λ=1이면 student rollout에서만 teacher distribution을 비교하고 λ=.5이면 두 minibatch source를 같은 비율로 사용합니다.",
-        boundary:
-          "λ는 teacher 신뢰도나 hard/soft loss weight가 아니라 sequence prefix를 생성한 data source의 비율이며 sampling에는 역전파하지 않습니다.",
-      },
-      {
-        id: "on-policy-token-teacher-feedback",
-        sectionId: "on-policy",
-        intuition:
-          "학생이 실제로 틀린 풀이의 각 줄에서 선생이 다음 한 줄의 선택지를 모두 채점합니다.",
-        workedExample:
-          "Student prefix h_t에서 student·teacher vocabulary distribution의 reverse KL을 계산하고 response 길이 L에 걸쳐 평균합니다.",
-        boundary:
-          "Teacher/student tokenizer support가 맞아야 full-logit KL이 가능하고 dense immediate signal이 sequence outcome의 장기 credit assignment를 대신하지 않습니다.",
-      },
-      {
-        id: "multi-teacher-policy-space-integration",
-        sectionId: "on-policy",
-        intuition:
-          "수학·글쓰기·코딩 답안을 한 선생에게 평균 채점시키지 않고 과목마다 전문 선생에게 보내되 학생은 한 명으로 유지합니다.",
-        workedExample:
-          "Math prompt는 math RL teacher, SWE prompt는 sandbox RL teacher가 같은 shared student rollout을 token별로 채점합니다.",
-        boundary:
-          "Domain routing·teacher origin·prompt mixture가 고정돼야 하며 평균 score가 높아도 worst-domain regression과 general capability를 숨길 수 있습니다.",
-      },
-      {
-        id: "self-distillation-inheritance-audit",
-        sectionId: "self",
-        intuition:
-          "이전 선생의 답을 더 자주 따라 하는지와 실제 정답을 더 자주 맞히는지를 별도 성적표로 봅니다.",
-        workedExample:
-          "Teacher agreement +5%p, ground-truth accuracy −1%p이면 warning R=5−(−1)=6%p입니다.",
-        boundary:
-          "Causal bias 추정치가 아니라 frozen holdout에서 agreement와 task quality를 분리하는 진단이며 open-ended task는 rubric과 similarity 정의가 필요합니다.",
-      },
+        "id": "feature-distillation-alignment",
+        "sectionId": "feature-alignment",
+        "intuition": "해상도와 열 수가 다른 두 표를 바로 빼지 않고 같은 행의 의미를 맞춘 뒤 변환표로 열 수를 맞춥니다.",
+        "workedExample": "Student hidden 384를 linear projection으로 teacher 1024에 보낸 뒤 같은 non-padding token의 selected layers에서 MSE를 계산합니다.",
+        "boundary": "Hidden coordinate는 고유하지 않고 layer·position mapping이 의미 있어야 하며 feature loss 감소가 downstream gain을 보장하지 않습니다."
+      }
     ],
-    conceptStages: [
+    "conceptStages": [
       {
-        label: "Signal boundary",
-        relation:
-          "Teacher/student가 공유하는 output·representation·text interface에서 가능한 objective를 선택",
-        concepts: ["probability-distribution", "distillation-signal-interface"],
+        "label": "00 interface",
+        "relation": "Teacher가 전달할 class·feature interface를 고릅니다.",
+        "concepts": [
+          "probability-distribution",
+          "distillation-signal-interface"
+        ]
       },
       {
-        label: "Logit transfer",
-        relation:
-          "Softmax temperature·KL 방향·hard-label anchor와 gradient scale을 하나의 loss로 연결",
-        concepts: [
+        "label": "01 soft target",
+        "relation": "Temperature와 KL 방향으로 class 관계를 전달합니다.",
+        "concepts": [
           "softmax-normalization",
           "temperature-soft-target",
-          "kl-divergence",
-          "distillation-kl-direction",
-          "cross-entropy-nll",
-          "distillation-temperature-gradient-scale",
-          "hard-soft-distillation-objective",
-        ],
+          "distillation-kl-direction"
+        ]
       },
       {
-        label: "Representation and sequence",
-        relation:
-          "Mapped hidden feature 또는 student-tokenized teacher sequence로 architecture/tokenizer 차이를 넘김",
-        concepts: [
+        "label": "02 objective",
+        "relation": "Hard label과 teacher signal의 gradient scale을 결합합니다.",
+        "concepts": [
+          "cross-entropy-nll",
+          "distillation-temperature-gradient-scale",
+          "hard-soft-distillation-objective"
+        ]
+      },
+      {
+        "label": "03 feature",
+        "relation": "Layer·position·dimension bridge를 고정합니다.",
+        "concepts": [
           "matrix-multiplication",
-          "feature-distillation-alignment",
-          "tokenizer-checkpoint-compatibility",
-          "cross-tokenizer-sequence-distillation",
-          "synthetic-distillation-slice-coverage",
-        ],
-      },
-      {
-        label: "Student-visited states",
-        relation:
-          "Autoregressive mismatch를 확인하고 fixed response와 student rollout의 비율·teacher divergence를 분리",
-        concepts: [
-          "autoregressive-decoding",
-          "autoregressive-state-distribution-mismatch",
-          "generalized-on-policy-distillation",
-          "on-policy-token-teacher-feedback",
-          "multi-teacher-policy-space-integration",
-        ],
-      },
-      {
-        label: "Independent evaluation",
-        relation:
-          "세대별 teacher agreement를 ground-truth/OOD quality와 student runtime에서 분리",
-        concepts: [
-          "train-validation-test",
-          "self-distillation-inheritance-audit",
-        ],
-      },
+          "feature-distillation-alignment"
+        ]
+      }
     ],
-    exercises: [
+    "exercises": [
       {
-        level: "basic",
-        question:
-          "같은 class label을 쓰는 classifier와 tokenizer가 다른 LLM에서 각각 logit·sequence distillation 중 가능한 interface를 고르고 이유를 설명하라.",
-        answerChecklist: [
-          "shared class logits",
-          "KL possible",
-          "different vocabulary indices",
-          "teacher string",
-          "student re-tokenization",
-          "sequence NLL",
+        "level": "basic",
+        "question": "Logit·feature 중 가능한 distillation interface를 고르는 기준을 설명하세요.",
+        "answerChecklist": [
+          "shared class order",
+          "hidden access",
+          "student capacity",
+          "teacher quality"
         ],
-        requiredConcepts: [
-          "distillation-signal-interface",
-          "cross-tokenizer-sequence-distillation",
-          "tokenizer-checkpoint-compatibility",
+        "requiredConcepts": [
+          "distillation-signal-interface"
         ],
-        sectionId: "overview",
+        "sectionId": "overview"
       },
       {
-        level: "basic",
-        question:
-          "Teacher logit 차이가 4일 때 T=1과 T=2의 class odds를 계산하고 순서·sharpness 변화를 설명하라.",
-        answerChecklist: [
-          "e^4 about 54.6",
-          "e^2 about 7.4",
-          "order unchanged",
-          "flatter distribution",
-          "non-target signal",
+        "level": "basic",
+        "question": "Temperature가 class odds를 완만하게 만드는 순서를 설명하세요.",
+        "answerChecklist": [
+          "divide logits",
+          "exponentiate",
+          "normalize",
+          "order preserved"
         ],
-        requiredConcepts: ["temperature-soft-target", "softmax-normalization"],
-        sectionId: "logit",
+        "requiredConcepts": [
+          "temperature-soft-target"
+        ],
+        "sectionId": "soft-target"
       },
       {
-        level: "advanced",
-        question:
-          "Hard CE+forward KL loss에서 alpha=0·1의 경계를 설명하고 teacher 오답 sample의 gradient conflict와 T/alpha ablation을 설계하라.",
-        answerChecklist: [
-          "alpha 0 supervised",
-          "alpha 1 teacher only",
-          "teacher fixed",
-          "same T both sides",
-          "teacher error conflict",
-          "softmax derivative (p-q)/T",
-          "large-T residual scale",
-          "T-squared correction boundary",
-          "validation grid",
-          "slice quality",
-          "test untouched",
+        "level": "basic",
+        "question": "Hard-label과 soft-target loss가 각각 무엇을 고정하는지 설명하세요.",
+        "answerChecklist": [
+          "ground truth",
+          "teacher relation",
+          "alpha",
+          "gradient conflict"
         ],
-        requiredConcepts: [
-          "hard-soft-distillation-objective",
-          "temperature-soft-target",
-          "distillation-temperature-gradient-scale",
-          "gradient",
-          "cross-entropy-nll",
-          "kl-divergence",
-          "train-validation-test",
+        "requiredConcepts": [
+          "hard-soft-distillation-objective"
         ],
-        sectionId: "logit",
+        "sectionId": "hard-soft-loss"
       },
       {
-        level: "basic",
-        question:
-          "q=(.5,.5), p=(.99,.01) 예로 forward/reverse KL의 expectation weight를 비교하고 library input 순서 점검표를 작성하라.",
-        answerChecklist: [
-          "forward weighted by q",
-          "reverse weighted by p",
-          "missing teacher mode",
+        "level": "basic",
+        "question": "Forward KL의 teacher·student 인수 순서를 설명하세요.",
+        "answerChecklist": [
+          "teacher expectation",
+          "student support",
           "not symmetric",
-          "log_target convention",
-          "reduction",
-          "zero numerical handling",
+          "library order"
         ],
-        requiredConcepts: ["distillation-kl-direction", "kl-divergence"],
-        sectionId: "logit",
+        "requiredConcepts": [
+          "distillation-kl-direction"
+        ],
+        "sectionId": "hard-soft-loss"
       },
       {
-        level: "basic",
-        question:
-          "Teacher hidden B×L×1024와 student B×L×384를 distill할 때 필요한 projection shape·mask·layer mapping과 export 항목을 작성하라.",
-        answerChecklist: [
-          "384 to 1024 projection",
+        "level": "basic",
+        "question": "384차원 student와 1024차원 teacher feature 사이에 필요한 bridge를 설명하세요.",
+        "answerChecklist": [
           "layer pair",
-          "same positions",
-          "padding mask",
-          "normalized MSE",
-          "projection training only or export",
-          "task metric",
+          "position alignment",
+          "384 to 1024 projection",
+          "mask"
         ],
-        requiredConcepts: [
-          "feature-distillation-alignment",
-          "matrix-multiplication",
+        "requiredConcepts": [
+          "feature-distillation-alignment"
         ],
-        sectionId: "feature",
+        "sectionId": "feature-alignment"
       },
       {
-        level: "advanced",
-        question:
-          "Target slice mixture (.4,.4,.2), accepted (.1,.7,.2)의 coverage gap을 계산하고 teacher generation provenance·quality·decontamination receipt를 설계하라.",
-        answerChecklist: [
-          "gap .3",
-          "prompt source/rights",
-          "teacher/version/system",
-          "decoding",
-          "filter reason",
-          "dedup",
-          "student tokenizer/template/mask",
-          "independent benchmark",
+        "level": "basic",
+        "question": "Distillation release에서 agreement와 independent quality를 분리하세요.",
+        "answerChecklist": [
+          "teacher agreement",
+          "test quality",
+          "calibration",
+          "student runtime"
         ],
-        requiredConcepts: [
-          "synthetic-distillation-slice-coverage",
+        "requiredConcepts": [
+          "distillation-signal-interface"
+        ],
+        "sectionId": "release-gate"
+      },
+      {
+        "level": "advanced",
+        "question": "Logit 차이 4에서 T=1·2 class odds를 계산하세요.",
+        "answerChecklist": [
+          "e to four",
+          "about 54.6",
+          "e squared",
+          "about 7.4",
+          "same order"
+        ],
+        "requiredConcepts": [
+          "temperature-soft-target"
+        ],
+        "sectionId": "soft-target"
+      },
+      {
+        "level": "advanced",
+        "question": "Alpha=0·1 경계와 teacher 오답 sample의 gradient conflict를 분석하세요.",
+        "answerChecklist": [
+          "supervised only",
+          "teacher only",
+          "opposing gradients",
+          "validation"
+        ],
+        "requiredConcepts": [
+          "hard-soft-distillation-objective"
+        ],
+        "sectionId": "hard-soft-loss"
+      },
+      {
+        "level": "advanced",
+        "question": "큰 T에서 T² 보정이 나오는 두 개의 1/T 요인을 설명하세요.",
+        "answerChecklist": [
+          "softmax derivative",
+          "probability residual",
+          "large T assumption",
+          "not exact always"
+        ],
+        "requiredConcepts": [
+          "distillation-temperature-gradient-scale"
+        ],
+        "sectionId": "hard-soft-loss"
+      },
+      {
+        "level": "advanced",
+        "question": "Feature MSE가 낮아도 task quality가 나빠지는 반례와 ablation을 설계하세요.",
+        "answerChecklist": [
+          "coordinate non-uniqueness",
+          "wrong layer",
+          "output metric",
+          "remove feature loss"
+        ],
+        "requiredConcepts": [
+          "feature-distillation-alignment"
+        ],
+        "sectionId": "feature-alignment"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Distilling the Knowledge in a Neural Network",
+        "href": "https://arxiv.org/abs/1503.02531",
+        "problem": "정확하지만 deployment가 비싼 ensemble·large model behavior를 한 model에 전달하는 문제",
+        "contribution": "Temperature-softened class distribution과 hard target을 혼합한 distillation 및 specialist ensemble",
+        "assumptions": "MNIST·speech acoustic model·논문의 teacher/ensemble/student·temperature·training recipe",
+        "evidenceScope": "논문이 보고한 classification·speech·specialist experiment 범위",
+        "notClaim": "모든 teacher–student architecture·domain에서 작은 student가 teacher 성능을 보존하거나 T²가 최적이라는 뜻은 아님",
+        "sectionId": "paper-hinton-kd"
+      },
+      {
+        "title": "FitNets: Hints for Thin Deep Nets",
+        "href": "https://arxiv.org/abs/1412.6550",
+        "problem": "깊고 얇은 student의 optimization과 teacher/student hidden dimension 차이",
+        "contribution": "Intermediate hint layer와 student regressor를 이용한 two-stage feature distillation",
+        "assumptions": "CNN teacher/student·CIFAR/SVHN·선택된 hint/guided layer와 regressor training",
+        "evidenceScope": "논문의 image classification architecture와 parameter/performance comparison 범위",
+        "notClaim": "임의 Transformer layer 전체를 raw feature MSE로 맞추면 항상 좋아진다는 뜻은 아님",
+        "sectionId": "paper-fitnets"
+      }
+    ]
+  },
+  "ai/sequence-distillation": {
+    "coreIdea": "Sequence distillation은 vocabulary가 다른 teacher output 문자열을 student tokenizer·chat template로 다시 encode하고, generation provenance·slice coverage·contamination을 dataset release 계약으로 관리합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "tokenizer-checkpoint-compatibility",
+        "role": "Teacher text를 student tokenizer·chat template로 다시 serialize합니다."
+      },
+      {
+        "id": "cross-entropy-nll",
+        "role": "Hard label과 generated response token의 negative log-likelihood를 계산합니다."
+      },
+      {
+        "id": "train-validation-test",
+        "role": "Teacher/recipe 선택과 마지막 independent evaluation을 분리합니다."
+      },
+      {
+        "id": "distillation-signal-interface",
+        "role": "공유 logit 대신 text sequence interface를 선택하는 출발점입니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "cross-tokenizer-sequence-distillation",
+        "role": "Teacher 문자열을 student token NLL target으로 바꿉니다."
+      },
+      {
+        "id": "synthetic-distillation-provenance-receipt",
+        "role": "Prompt·teacher·sampling·filter·student serialization을 example에 결속합니다."
+      },
+      {
+        "id": "synthetic-distillation-slice-coverage",
+        "role": "생성·filter 뒤 dataset mixture와 target slice의 차이를 계산합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "cross-tokenizer-sequence-distillation",
+        "sectionId": "sequence-loss",
+        "intuition": "Teacher가 쓴 완성 문장을 student의 사전으로 다시 띄어 써서 다음 조각 예측 문제로 학습합니다.",
+        "workedExample": "Teacher response string을 student tokenizer가 u1…uL로 나누고 prompt mask 0·assistant response mask 1로 sequence NLL을 계산합니다.",
+        "boundary": "Teacher의 token별 전체 distribution은 전달되지 않고 선택한 decoding output·system prompt·filter policy가 supervision이 됩니다."
+      },
+      {
+        "id": "synthetic-distillation-provenance-receipt",
+        "sectionId": "provenance",
+        "intuition": "Teacher가 만든 문장마다 원 요청·모델·sampling·filter·student serialization 영수증을 붙입니다.",
+        "workedExample": "Prompt source와 rights, teacher revision, system prompt, decoding, reject reason, dedup group과 student mask를 한 record로 연결합니다.",
+        "boundary": "Provenance는 correctness label이 아니며 독립 verifier와 benchmark를 대신하지 않습니다."
+      },
+      {
+        "id": "synthetic-distillation-slice-coverage",
+        "sectionId": "provenance",
+        "intuition": "책이 많다는 총 권수보다 필요한 언어·과목·난이도별 선반이 목표 비율로 채워졌는지 봅니다.",
+        "workedExample": "Target (.4,.4,.2), accepted (.1,.7,.2)이면 total-variation mixture gap은 .5(.3+.3+0)=.3입니다.",
+        "boundary": "Mutually exclusive slice mixture의 count 진단이며 sample correctness·semantic diversity·rare joint slice와 decontamination은 별도로 측정합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "00 serialize",
+        "relation": "Teacher text를 student token target으로 바꿉니다.",
+        "concepts": [
+          "tokenizer-checkpoint-compatibility",
+          "cross-tokenizer-sequence-distillation"
+        ]
+      },
+      {
+        "label": "01 receipt",
+        "relation": "Generation과 filter provenance를 example에 결속합니다.",
+        "concepts": [
           "cross-tokenizer-sequence-distillation",
-          "train-validation-test",
-        ],
-        sectionId: "llm",
+          "synthetic-distillation-provenance-receipt"
+        ]
       },
       {
-        level: "basic",
-        question:
-          "Teacher가 만든 A→B→C sequence만 학습한 student가 A→X를 생성했을 때 생기는 state-distribution mismatch와 on-policy 교정 위치를 설명하라.",
-        answerChecklist: [
-          "fixed prefix A,B",
-          "student prefix A,X",
-          "autoregressive feedback",
-          "teacher scores A,X",
-          "next-token dense signal",
-          "student token not ground truth",
+        "label": "02 coverage",
+        "relation": "Accepted dataset mixture와 독립 평가 경계를 확인합니다.",
+        "concepts": [
+          "synthetic-distillation-provenance-receipt",
+          "synthetic-distillation-slice-coverage",
+          "train-validation-test"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "Tokenizer가 다른 teacher·student 사이에서 logit KL 대신 sequence NLL을 쓰는 이유를 설명하세요.",
+        "answerChecklist": [
+          "different vocabulary",
+          "teacher string",
+          "student retokenization",
+          "sequence NLL"
         ],
-        requiredConcepts: [
-          "autoregressive-state-distribution-mismatch",
-          "on-policy-token-teacher-feedback",
+        "requiredConcepts": [
+          "cross-tokenizer-sequence-distillation"
+        ],
+        "sectionId": "overview"
+      },
+      {
+        "level": "basic",
+        "question": "Response-only loss mask가 prompt와 target token을 어떻게 구분하는지 설명하세요.",
+        "answerChecklist": [
+          "prompt context",
+          "response target",
+          "mask zero",
+          "mask one"
+        ],
+        "requiredConcepts": [
+          "cross-tokenizer-sequence-distillation"
+        ],
+        "sectionId": "sequence-loss"
+      },
+      {
+        "level": "basic",
+        "question": "Generation provenance receipt의 핵심 필드를 나열하세요.",
+        "answerChecklist": [
+          "prompt source rights",
+          "teacher revision system",
+          "sampling",
+          "filter verifier",
+          "student template mask"
+        ],
+        "requiredConcepts": [
+          "synthetic-distillation-provenance-receipt"
+        ],
+        "sectionId": "provenance"
+      },
+      {
+        "level": "basic",
+        "question": "Acceptance yield와 slice coverage가 서로 다른 질문에 답하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "accepted over generated",
+          "cost efficiency",
+          "target mixture",
+          "coverage gap"
+        ],
+        "requiredConcepts": [
+          "synthetic-distillation-slice-coverage"
+        ],
+        "sectionId": "provenance"
+      },
+      {
+        "level": "basic",
+        "question": "Teacher text를 quality label로 간주하면 안 되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "teacher errors",
+          "bias",
+          "filter",
+          "independent benchmark"
+        ],
+        "requiredConcepts": [
+          "synthetic-distillation-provenance-receipt"
+        ],
+        "sectionId": "provenance"
+      },
+      {
+        "level": "basic",
+        "question": "Synthetic dataset release에 decontamination과 rights를 포함하세요.",
+        "answerChecklist": [
+          "near duplicate",
+          "benchmark overlap",
+          "license rights",
+          "reject reason"
+        ],
+        "requiredConcepts": [
+          "synthetic-distillation-provenance-receipt"
+        ],
+        "sectionId": "coverage-release"
+      },
+      {
+        "level": "advanced",
+        "question": "Target (.4,.4,.2), accepted (.1,.7,.2)의 coverage gap을 계산하세요.",
+        "answerChecklist": [
+          "absolute differences .3 .3 0",
+          "sum .6",
+          "half",
+          ".3"
+        ],
+        "requiredConcepts": [
+          "synthetic-distillation-slice-coverage"
+        ],
+        "sectionId": "provenance"
+      },
+      {
+        "level": "advanced",
+        "question": "Filter가 rare hard slice를 더 많이 버리는 rejection bias를 진단하세요.",
+        "answerChecklist": [
+          "pre-filter mixture",
+          "reject reason by slice",
+          "accepted mixture",
+          "target gap"
+        ],
+        "requiredConcepts": [
+          "synthetic-distillation-provenance-receipt",
+          "synthetic-distillation-slice-coverage"
+        ],
+        "sectionId": "provenance"
+      },
+      {
+        "level": "advanced",
+        "question": "Retokenization·truncation이 teacher answer의 의미를 깨는 반례와 fixture를 설계하세요.",
+        "answerChecklist": [
+          "special tokens",
+          "assistant boundary",
+          "truncation",
+          "tool arguments",
+          "round trip"
+        ],
+        "requiredConcepts": [
+          "cross-tokenizer-sequence-distillation"
+        ],
+        "sectionId": "sequence-loss"
+      },
+      {
+        "level": "advanced",
+        "question": "Raw generation부터 student release까지 재현 receipt를 설계하세요.",
+        "answerChecklist": [
+          "raw accepted rejected",
+          "hashes revisions",
+          "dedup contamination",
+          "slice metrics",
+          "student test"
+        ],
+        "requiredConcepts": [
+          "synthetic-distillation-provenance-receipt",
+          "synthetic-distillation-slice-coverage"
+        ],
+        "sectionId": "coverage-release"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Sequence-Level Knowledge Distillation",
+        "href": "https://aclanthology.org/D16-1139/",
+        "problem": "Structured sequence output에서 word-level teacher distribution과 autoregressive search space를 작은 NMT student에 전달하는 문제",
+        "contribution": "Teacher beam output을 target sequence로 쓰는 sequence-level KD와 interpolation",
+        "assumptions": "WMT English–German·IWSLT Thai–English·논문의 LSTM NMT·beam/search·BLEU protocol",
+        "evidenceScope": "EMNLP 2016 translation tasks와 student sizes·decoding conditions 범위",
+        "notClaim": "일반 LLM의 reasoning trace·safety·factuality가 teacher sequence 생성만으로 자동 전달된다는 뜻은 아님",
+        "sectionId": "paper-sequence-kd"
+      }
+    ]
+  },
+  "ai/on-policy-distillation": {
+    "coreIdea": "On-policy distillation은 현재 student가 생성한 prefix를 teacher가 다시 채점해 fixed training sequence와 inference visited state의 차이를 줄이고, domain별 specialist feedback을 하나의 policy에 통합합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "autoregressive-decoding",
+        "role": "이전 출력 token이 다음 prefix가 되어 inference state distribution을 바꾸는 과정을 읽습니다."
+      },
+      {
+        "id": "kl-divergence",
+        "role": "Teacher/student distribution의 방향성 있는 차이를 계산합니다."
+      },
+      {
+        "id": "train-validation-test",
+        "role": "Teacher/recipe 선택과 마지막 independent evaluation을 분리합니다."
+      },
+      {
+        "id": "cross-tokenizer-sequence-distillation",
+        "role": "고정 teacher sequence에서 생기는 state mismatch의 출발점입니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "autoregressive-state-distribution-mismatch",
+        "role": "고정 teacher sequence와 student inference prefix의 분포 차이를 설명합니다."
+      },
+      {
+        "id": "generalized-on-policy-distillation",
+        "role": "Fixed sequence와 student rollout의 mixture를 λ로 구성합니다."
+      },
+      {
+        "id": "on-policy-token-teacher-feedback",
+        "role": "Student가 방문한 prefix에서 teacher의 dense token signal을 계산합니다."
+      },
+      {
+        "id": "multi-teacher-policy-space-integration",
+        "role": "Prompt domain마다 specialist teacher를 골라 하나의 student에 통합합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "autoregressive-state-distribution-mismatch",
+        "sectionId": "state-mismatch",
+        "intuition": "모범답안의 문장만 따라 쓰다가 시험에서는 자기 앞 문장을 이어 써야 하면, 첫 오타 뒤에는 연습하지 않은 문맥에서 계속 답해야 합니다.",
+        "workedExample": "Teacher sequence가 A→B→C인데 student가 A→X를 만들면 다음 training target은 prefix A,B에 있었지만 inference state는 A,X가 됩니다.",
+        "boundary": "Exposure bias는 mismatch의 한 원인이며 on-policy sampling만으로 teacher 오류·긴 horizon credit assignment·environment drift가 해결되지는 않습니다."
+      },
+      {
+        "id": "generalized-on-policy-distillation",
+        "sectionId": "state-mismatch",
+        "intuition": "고정된 모범답안에서 배우는 비율과 현재 student가 직접 만든 답안을 teacher에게 첨삭받는 비율을 섞습니다.",
+        "workedExample": "λ=0이면 fixed response KD, λ=1이면 student rollout에서만 teacher distribution을 비교하고 λ=.5이면 두 minibatch source를 같은 비율로 사용합니다.",
+        "boundary": "λ는 teacher 신뢰도나 hard/soft loss weight가 아니라 sequence prefix를 생성한 data source의 비율이며 sampling에는 역전파하지 않습니다."
+      },
+      {
+        "id": "on-policy-token-teacher-feedback",
+        "sectionId": "teacher-feedback",
+        "intuition": "학생이 실제로 틀린 풀이의 각 줄에서 선생이 다음 한 줄의 선택지를 모두 채점합니다.",
+        "workedExample": "Student prefix h_t에서 student·teacher vocabulary distribution의 reverse KL을 계산하고 response 길이 L에 걸쳐 평균합니다.",
+        "boundary": "Teacher/student tokenizer support가 맞아야 full-logit KL이 가능하고 dense immediate signal이 sequence outcome의 장기 credit assignment를 대신하지 않습니다."
+      },
+      {
+        "id": "multi-teacher-policy-space-integration",
+        "sectionId": "multi-teacher",
+        "intuition": "수학·글쓰기·코딩 답안을 한 선생에게 평균 채점시키지 않고 과목마다 전문 선생에게 보내되 학생은 한 명으로 유지합니다.",
+        "workedExample": "Math prompt는 math RL teacher, SWE prompt는 sandbox RL teacher가 같은 shared student rollout을 token별로 채점합니다.",
+        "boundary": "Domain routing·teacher origin·prompt mixture가 고정돼야 하며 평균 score가 높아도 worst-domain regression과 general capability를 숨길 수 있습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "00 mismatch",
+        "relation": "고정 prefix와 student-visited state를 구분합니다.",
+        "concepts": [
           "autoregressive-decoding",
-        ],
-        sectionId: "on-policy",
+          "autoregressive-state-distribution-mismatch"
+        ]
       },
       {
-        level: "basic",
-        question:
-          "GKD에서 λ=0·.5·1이 각각 어느 policy가 만든 response prefix에서 학습하는지 설명하고 teacher weight와 혼동하면 안 되는 이유를 적어라.",
-        answerChecklist: [
-          "lambda 0 fixed",
-          "lambda .5 mixed",
-          "lambda 1 student rollout",
-          "teacher still target",
-          "not confidence weight",
-          "no gradient through sampling",
-        ],
-        requiredConcepts: [
+        "label": "01 mixture",
+        "relation": "Fixed와 student rollout source를 λ로 섞습니다.",
+        "concepts": [
+          "autoregressive-state-distribution-mismatch",
+          "generalized-on-policy-distillation"
+        ]
+      },
+      {
+        "label": "02 feedback",
+        "relation": "같은 visited prefix에서 dense teacher signal을 받습니다.",
+        "concepts": [
           "generalized-on-policy-distillation",
-          "on-policy-token-teacher-feedback",
-        ],
-        sectionId: "on-policy",
+          "on-policy-token-teacher-feedback"
+        ]
       },
       {
-        level: "advanced",
-        question:
-          "Math·instruction·SWE teacher를 한 student에 통합할 때 prompt routing·domain mixture·same-origin 안정성·worst-domain 승인 기준을 작성하라.",
-        answerChecklist: [
-          "domain labels",
-          "rho mixture",
-          "student rollout",
-          "teacher per domain",
-          "same vocabulary",
-          "same-origin or KL audit",
-          "teacher headroom",
-          "worst domain",
-          "general capability",
-          "no weight averaging",
-        ],
-        requiredConcepts: [
+        "label": "03 specialists",
+        "relation": "Domain별 teacher를 shared student에 통합합니다.",
+        "concepts": [
+          "on-policy-token-teacher-feedback",
           "multi-teacher-policy-space-integration",
-          "on-policy-token-teacher-feedback",
-          "train-validation-test",
+          "train-validation-test"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "Teacher A→B→C와 student A→X 예로 state mismatch를 설명하세요.",
+        "answerChecklist": [
+          "fixed A B",
+          "student A X",
+          "feedback loop",
+          "unseen state"
         ],
-        sectionId: "on-policy",
+        "requiredConcepts": [
+          "autoregressive-state-distribution-mismatch"
+        ],
+        "sectionId": "state-mismatch"
       },
       {
-        level: "advanced",
-        question:
-          "Self-distillation 세대에서 agreement +5%p·accuracy −1%p의 R을 계산하고 세대 반복 중단 기준을 slice별로 설계하라.",
-        answerChecklist: [
-          "R 6 percentage points",
-          "agreement not quality",
-          "frozen holdout",
-          "same prediction policy",
-          "worst slice",
-          "marginal gain",
-          "bias drift stop",
-          "student-only runtime",
+        "level": "basic",
+        "question": "λ=0·.5·1이 고르는 prefix source를 설명하세요.",
+        "answerChecklist": [
+          "fixed",
+          "mixed",
+          "student rollout",
+          "not teacher weight"
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
+          "generalized-on-policy-distillation"
+        ],
+        "sectionId": "state-mismatch"
+      },
+      {
+        "level": "basic",
+        "question": "Student rollout sampling에 gradient를 통과시키지 않는 경계를 설명하세요.",
+        "answerChecklist": [
+          "discrete sampling",
+          "stop gradient",
+          "teacher target",
+          "policy update"
+        ],
+        "requiredConcepts": [
+          "generalized-on-policy-distillation"
+        ],
+        "sectionId": "state-mismatch"
+      },
+      {
+        "level": "basic",
+        "question": "같은 prefix에서 teacher token feedback을 계산하는 순서를 설명하세요.",
+        "answerChecklist": [
+          "student prefix",
+          "teacher distribution",
+          "student distribution",
+          "divergence"
+        ],
+        "requiredConcepts": [
+          "on-policy-token-teacher-feedback"
+        ],
+        "sectionId": "teacher-feedback"
+      },
+      {
+        "level": "basic",
+        "question": "Token-level dense feedback과 final sequence reward를 구분하세요.",
+        "answerChecklist": [
+          "next token",
+          "vocabulary support",
+          "immediate",
+          "long horizon separate"
+        ],
+        "requiredConcepts": [
+          "on-policy-token-teacher-feedback"
+        ],
+        "sectionId": "teacher-feedback"
+      },
+      {
+        "level": "basic",
+        "question": "Multi-teacher integration에서 prompt routing이 필요한 이유를 설명하세요.",
+        "answerChecklist": [
+          "domain label",
+          "specialist teacher",
+          "shared student",
+          "no weight averaging"
+        ],
+        "requiredConcepts": [
+          "multi-teacher-policy-space-integration"
+        ],
+        "sectionId": "multi-teacher"
+      },
+      {
+        "level": "advanced",
+        "question": "λ schedule을 높일 때 quality·cost·stability gate를 설계하세요.",
+        "answerChecklist": [
+          "rollout quality",
+          "teacher cost",
+          "divergence",
+          "independent evaluation"
+        ],
+        "requiredConcepts": [
+          "generalized-on-policy-distillation"
+        ],
+        "sectionId": "release-gate"
+      },
+      {
+        "level": "advanced",
+        "question": "Teacher scoring cache가 잘못 재사용되는 prefix-identity 반례를 설계하세요.",
+        "answerChecklist": [
+          "exact prefix",
+          "teacher revision",
+          "temperature",
+          "cache key",
+          "negative fixture"
+        ],
+        "requiredConcepts": [
+          "on-policy-token-teacher-feedback"
+        ],
+        "sectionId": "teacher-feedback"
+      },
+      {
+        "level": "advanced",
+        "question": "ρ=(.5,.3,.2) domain mixture의 batch routing과 worst-domain 검증을 설계하세요.",
+        "answerChecklist": [
+          "domain sample",
+          "student rollout",
+          "teacher route",
+          "weighted loss",
+          "worst domain"
+        ],
+        "requiredConcepts": [
+          "multi-teacher-policy-space-integration"
+        ],
+        "sectionId": "multi-teacher"
+      },
+      {
+        "level": "advanced",
+        "question": "평균 capability는 오르지만 SWE가 하락하는 multi-teacher candidate의 승인 여부를 판단하세요.",
+        "answerChecklist": [
+          "average insufficient",
+          "protected domain",
+          "regression budget",
+          "rollback"
+        ],
+        "requiredConcepts": [
+          "multi-teacher-policy-space-integration"
+        ],
+        "sectionId": "release-gate"
+      }
+    ],
+    "papers": [
+      {
+        "title": "On-Policy Distillation of Language Models: Learning from Self-Generated Mistakes",
+        "href": "https://arxiv.org/abs/2306.13649",
+        "problem": "Autoregressive student가 training의 고정 sequence와 inference의 자기 생성 prefix 사이에서 겪는 state-distribution mismatch",
+        "contribution": "Student-generated output에서 teacher token distribution을 받으며 fixed/on-policy data fraction과 divergence를 분리하는 Generalized KD",
+        "assumptions": "SFT된 T5 teacher/student·XSum/WMT/GSM8K/instruction tasks·논문의 sampling temperature·forward/reverse KL/JSD·평가 protocol",
+        "evidenceScope": "ICLR 2024 논문의 model·task·student capacity·GKD ablation 범위",
+        "notClaim": "모든 decoder-only LLM·agent trajectory에서 λ=1 또는 특정 KL/JSD가 최적이라는 뜻은 아님",
+        "sectionId": "paper-gkd"
+      },
+      {
+        "title": "MOPD: Multi-Teacher On-Policy Distillation for Capability Integration in LLM Post-Training",
+        "href": "https://arxiv.org/abs/2606.30406",
+        "problem": "서로 다른 domain RL capability를 joint/cascade RL의 interference나 weight merge 없이 하나의 LLM에 통합하는 문제",
+        "contribution": "Domain specialist teacher를 독립 훈련한 뒤 prompt-routed teacher가 shared student의 on-policy prefix에 dense token signal을 주는 MOPD",
+        "assumptions": "Same-origin Qwen3-30B-A3B teachers·math/IF/SWE prompt routing·논문의 reverse-KL/top-k implementation·MiMo-V2-Flash 적용",
+        "evidenceScope": "논문이 비교한 domain·model·baseline·headroom closure와 stability ablation 범위",
+        "notClaim": "임의의 다른-origin teacher 조합이 안정적이거나 student가 모든 domain teacher를 항상 넘어선다는 뜻은 아님",
+        "sectionId": "paper-mopd"
+      }
+    ]
+  },
+  "ai/self-distillation": {
+    "coreIdea": "Self-distillation은 승인된 teacher 세대를 freeze하고 새 student 세대만 update하며, teacher agreement·ground-truth quality·worst-slice marginal gain을 분리해 다음 세대 승격 또는 중단을 결정합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "hard-soft-distillation-objective",
+        "role": "이전 세대 soft target과 ground-truth anchor를 함께 사용합니다."
+      },
+      {
+        "id": "train-validation-test",
+        "role": "Teacher/recipe 선택과 마지막 independent evaluation을 분리합니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "self-distillation-generation-contract",
+        "role": "Frozen teacher와 새 student의 generation identity·update 경계를 고정합니다."
+      },
+      {
+        "id": "self-distillation-inheritance-audit",
+        "role": "Teacher agreement와 ground-truth quality의 세대별 변화를 분리합니다."
+      },
+      {
+        "id": "self-distillation-stop-gate",
+        "role": "평균 gain·worst slice·inheritance gap으로 다음 세대 승격을 결정합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "self-distillation-generation-contract",
+        "sectionId": "generation-contract",
+        "intuition": "승인된 이전 세대를 선생으로 동결하고 새 학생만 학습한 뒤 시험을 통과해야 세대 번호를 올립니다.",
+        "workedExample": "G0 checkpoint를 freeze하고 새 seed의 G1만 hard·soft loss로 update한 뒤 승인된 G1만 G2 teacher 후보로 씁니다.",
+        "boundary": "EMA teacher·online mutual learning처럼 teacher가 함께 움직이는 방법은 별도 계약입니다."
+      },
+      {
+        "id": "self-distillation-inheritance-audit",
+        "sectionId": "inheritance-audit",
+        "intuition": "이전 선생의 답을 더 자주 따라 하는지와 실제 정답을 더 자주 맞히는지를 별도 성적표로 봅니다.",
+        "workedExample": "Teacher agreement +5%p, ground-truth accuracy −1%p이면 warning R=5−(−1)=6%p입니다.",
+        "boundary": "Causal bias 추정치가 아니라 frozen holdout에서 agreement와 task quality를 분리하는 진단이며 open-ended task는 rubric과 similarity 정의가 필요합니다."
+      },
+      {
+        "id": "self-distillation-stop-gate",
+        "sectionId": "stop-gate",
+        "intuition": "세대 수가 아니라 평균 개선·보호 slice·bias inheritance가 모두 통과할 때만 반복합니다.",
+        "workedExample": "평균 gain이 ε 이상, worst-slice 하락이 δ 이내, inheritance gap이 τ 이하일 때만 승격합니다.",
+        "boundary": "Threshold는 결과 전에 고정하고 confidence interval·sample size와 함께 해석합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "00 generation",
+        "relation": "Frozen teacher와 새 student artifact를 구분합니다.",
+        "concepts": [
+          "hard-soft-distillation-objective",
+          "self-distillation-generation-contract"
+        ]
+      },
+      {
+        "label": "01 inheritance",
+        "relation": "Agreement와 ground-truth quality 변화를 분리합니다.",
+        "concepts": [
+          "self-distillation-generation-contract",
+          "self-distillation-inheritance-audit"
+        ]
+      },
+      {
+        "label": "02 stop",
+        "relation": "Marginal gain과 worst slice로 다음 세대를 결정합니다.",
+        "concepts": [
           "self-distillation-inheritance-audit",
-          "train-validation-test",
+          "self-distillation-stop-gate",
+          "train-validation-test"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "Self-distillation generation에서 teacher와 student 역할을 구분하세요.",
+        "answerChecklist": [
+          "frozen teacher",
+          "new student",
+          "same task",
+          "separate artifacts"
         ],
-        sectionId: "self",
+        "requiredConcepts": [
+          "self-distillation-generation-contract"
+        ],
+        "sectionId": "overview"
       },
+      {
+        "level": "basic",
+        "question": "Teacher를 한 세대 동안 freeze해야 하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "stable target",
+          "provenance",
+          "only student update",
+          "reproducibility"
+        ],
+        "requiredConcepts": [
+          "self-distillation-generation-contract"
+        ],
+        "sectionId": "generation-contract"
+      },
+      {
+        "level": "basic",
+        "question": "Teacher agreement와 ground-truth quality가 다른 지표인 이유를 설명하세요.",
+        "answerChecklist": [
+          "similarity",
+          "correctness",
+          "shared error",
+          "frozen holdout"
+        ],
+        "requiredConcepts": [
+          "self-distillation-inheritance-audit"
+        ],
+        "sectionId": "inheritance-audit"
+      },
+      {
+        "level": "basic",
+        "question": "Inheritance gap R의 세 항을 설명하세요.",
+        "answerChecklist": [
+          "agreement change",
+          "quality change",
+          "subtract",
+          "percentage points"
+        ],
+        "requiredConcepts": [
+          "self-distillation-inheritance-audit"
+        ],
+        "sectionId": "inheritance-audit"
+      },
+      {
+        "level": "basic",
+        "question": "Stop gate의 평균·worst-slice·inheritance 조건을 설명하세요.",
+        "answerChecklist": [
+          "epsilon",
+          "delta",
+          "tau",
+          "all required"
+        ],
+        "requiredConcepts": [
+          "self-distillation-stop-gate"
+        ],
+        "sectionId": "stop-gate"
+      },
+      {
+        "level": "basic",
+        "question": "세대 candidate가 불통과할 때 rollback artifact를 설명하세요.",
+        "answerChecklist": [
+          "previous approved",
+          "candidate rejected",
+          "receipt",
+          "no promotion"
+        ],
+        "requiredConcepts": [
+          "self-distillation-stop-gate"
+        ],
+        "sectionId": "stop-gate"
+      },
+      {
+        "level": "advanced",
+        "question": "Agreement +5%p, accuracy -1%p의 R을 계산하세요.",
+        "answerChecklist": [
+          "5 minus negative 1",
+          "6 percentage points",
+          "warning",
+          "not causal proof"
+        ],
+        "requiredConcepts": [
+          "self-distillation-inheritance-audit"
+        ],
+        "sectionId": "inheritance-audit"
+      },
+      {
+        "level": "advanced",
+        "question": "평균 +.4%p지만 보호 slice -2%p인 세대를 δ=.5%p에서 판단하세요.",
+        "answerChecklist": [
+          "average positive",
+          "worst slice fails",
+          "delta .5",
+          "reject"
+        ],
+        "requiredConcepts": [
+          "self-distillation-stop-gate"
+        ],
+        "sectionId": "stop-gate"
+      },
+      {
+        "level": "advanced",
+        "question": "G0→G1→G2에서 teacher·student hash와 split을 보존하는 receipt를 설계하세요.",
+        "answerChecklist": [
+          "generation id",
+          "teacher hash",
+          "student init",
+          "data split",
+          "objective",
+          "approval"
+        ],
+        "requiredConcepts": [
+          "self-distillation-generation-contract"
+        ],
+        "sectionId": "generation-contract"
+      },
+      {
+        "level": "advanced",
+        "question": "Self-distillation과 moving EMA teacher를 같은 이름으로 합치면 안 되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "frozen generation",
+          "moving target",
+          "different update graph",
+          "separate algorithm"
+        ],
+        "requiredConcepts": [
+          "self-distillation-generation-contract"
+        ],
+        "sectionId": "generation-contract"
+      }
     ],
-    papers: [
+    "papers": [
       {
-        title: "Distilling the Knowledge in a Neural Network",
-        href: "https://arxiv.org/abs/1503.02531",
-        problem:
-          "정확하지만 deployment가 비싼 ensemble·large model behavior를 한 model에 전달하는 문제",
-        contribution:
-          "Temperature-softened class distribution과 hard target을 혼합한 distillation 및 specialist ensemble",
-        assumptions:
-          "MNIST·speech acoustic model·논문의 teacher/ensemble/student·temperature·training recipe",
-        evidenceScope:
-          "논문이 보고한 classification·speech·specialist experiment 범위",
-        notClaim:
-          "모든 teacher–student architecture·domain에서 작은 student가 teacher 성능을 보존하거나 T²가 최적이라는 뜻은 아님",
-        sectionId: "paper-hinton-kd",
-      },
-      {
-        title: "FitNets: Hints for Thin Deep Nets",
-        href: "https://arxiv.org/abs/1412.6550",
-        problem:
-          "깊고 얇은 student의 optimization과 teacher/student hidden dimension 차이",
-        contribution:
-          "Intermediate hint layer와 student regressor를 이용한 two-stage feature distillation",
-        assumptions:
-          "CNN teacher/student·CIFAR/SVHN·선택된 hint/guided layer와 regressor training",
-        evidenceScope:
-          "논문의 image classification architecture와 parameter/performance comparison 범위",
-        notClaim:
-          "임의 Transformer layer 전체를 raw feature MSE로 맞추면 항상 좋아진다는 뜻은 아님",
-        sectionId: "paper-fitnets",
-      },
-      {
-        title: "Sequence-Level Knowledge Distillation",
-        href: "https://aclanthology.org/D16-1139/",
-        problem:
-          "Structured sequence output에서 word-level teacher distribution과 autoregressive search space를 작은 NMT student에 전달하는 문제",
-        contribution:
-          "Teacher beam output을 target sequence로 쓰는 sequence-level KD와 interpolation",
-        assumptions:
-          "WMT English–German·IWSLT Thai–English·논문의 LSTM NMT·beam/search·BLEU protocol",
-        evidenceScope:
-          "EMNLP 2016 translation tasks와 student sizes·decoding conditions 범위",
-        notClaim:
-          "일반 LLM의 reasoning trace·safety·factuality가 teacher sequence 생성만으로 자동 전달된다는 뜻은 아님",
-        sectionId: "paper-sequence-kd",
-      },
-      {
-        title:
-          "On-Policy Distillation of Language Models: Learning from Self-Generated Mistakes",
-        href: "https://arxiv.org/abs/2306.13649",
-        problem:
-          "Autoregressive student가 training의 고정 sequence와 inference의 자기 생성 prefix 사이에서 겪는 state-distribution mismatch",
-        contribution:
-          "Student-generated output에서 teacher token distribution을 받으며 fixed/on-policy data fraction과 divergence를 분리하는 Generalized KD",
-        assumptions:
-          "SFT된 T5 teacher/student·XSum/WMT/GSM8K/instruction tasks·논문의 sampling temperature·forward/reverse KL/JSD·평가 protocol",
-        evidenceScope:
-          "ICLR 2024 논문의 model·task·student capacity·GKD ablation 범위",
-        notClaim:
-          "모든 decoder-only LLM·agent trajectory에서 λ=1 또는 특정 KL/JSD가 최적이라는 뜻은 아님",
-        sectionId: "paper-gkd",
-      },
-      {
-        title:
-          "MOPD: Multi-Teacher On-Policy Distillation for Capability Integration in LLM Post-Training",
-        href: "https://arxiv.org/abs/2606.30406",
-        problem:
-          "서로 다른 domain RL capability를 joint/cascade RL의 interference나 weight merge 없이 하나의 LLM에 통합하는 문제",
-        contribution:
-          "Domain specialist teacher를 독립 훈련한 뒤 prompt-routed teacher가 shared student의 on-policy prefix에 dense token signal을 주는 MOPD",
-        assumptions:
-          "Same-origin Qwen3-30B-A3B teachers·math/IF/SWE prompt routing·논문의 reverse-KL/top-k implementation·MiMo-V2-Flash 적용",
-        evidenceScope:
-          "논문이 비교한 domain·model·baseline·headroom closure와 stability ablation 범위",
-        notClaim:
-          "임의의 다른-origin teacher 조합이 안정적이거나 student가 모든 domain teacher를 항상 넘어선다는 뜻은 아님",
-        sectionId: "paper-mopd",
-      },
-      {
-        title: "Born Again Neural Networks",
-        href: "https://arxiv.org/abs/1805.04770",
-        problem:
-          "Knowledge distillation 효과가 model compression에서만 오는지와 같은-capacity student에서도 나타나는지",
-        contribution:
-          "동일 architecture의 teacher/student generation과 confidence/non-target class ablation",
-        assumptions:
-          "DenseNet CIFAR·language-modeling task·논문의 generation·objective·evaluation recipe",
-        evidenceScope:
-          "논문의 image/language experiment에서 같은-capacity student가 개선된 관찰 범위",
-        notClaim:
-          "모든 model에서 generation을 반복할수록 계속 성능이 오르거나 bias가 줄어든다는 뜻은 아님",
-        sectionId: "paper-born-again",
-      },
-    ],
+        "title": "Born Again Neural Networks",
+        "href": "https://arxiv.org/abs/1805.04770",
+        "problem": "Knowledge distillation 효과가 model compression에서만 오는지와 같은-capacity student에서도 나타나는지",
+        "contribution": "동일 architecture의 teacher/student generation과 confidence/non-target class ablation",
+        "assumptions": "DenseNet CIFAR·language-modeling task·논문의 generation·objective·evaluation recipe",
+        "evidenceScope": "논문의 image/language experiment에서 같은-capacity student가 개선된 관찰 범위",
+        "notClaim": "모든 model에서 generation을 반복할수록 계속 성능이 오르거나 bias가 줄어든다는 뜻은 아님",
+        "sectionId": "paper-born-again"
+      }
+    ]
   },
   "ai/compression-pipeline": {
     coreIdea:

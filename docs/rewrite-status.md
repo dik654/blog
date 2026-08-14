@@ -26,7 +26,9 @@
 - [x] MCP의 protocol core·primitive·transport·production operation을 독립 public route로 분리하고 Claw MCP 구현 사례와 소유권을 분리. 네 route 모두 topology `keep`, 새 prerequisite edge 5개, exact 6+4, operation-annotated formula, 자동 재생·키보드 Viz와 selected strict audit 통과
 - [x] 서버 network 한 글에 섞여 있던 workload·Ethernet, PCIe·NVLink, RDMA·RoCE, GPU collective를 네 독립 public route로 분리하고 canonical owner·evidence·선행 relation을 새 경계에 맞게 이동. 다섯 기존 수식은 항별 연산 의도를 직접 표시하고, 네 route 모두 도형 기반 자동 재생·키보드 Viz와 390/1440 실브라우저 검수를 통과
 - [x] 활성화 함수 한 글의 11개 독립 concept을 기초 함수·rectifier·smooth/gated FFN 세 route로 분리하고 canonical owner·evidence·exact 6+4를 이동. `negative-slope → self-normalization → smooth gate` 비교 edge를 추가하고, 11개 수식 모두 연산 의도 주석·도형 기반 자동 재생/키보드 Viz로 교체
-- [ ] 현재 전역 잔여량: public catalog 403, topology `split-review` 88·`rename-or-split-review` 2, explicit formula 39/1,058·전환 대기 1,019. 휴리스틱 후보는 본문 학습 질문을 확인한 뒤 실제 CRUD하며 필요한 concept·relation도 함께 확장한다.
+- [x] 지식 증류 한 글을 고전 logit/feature·cross-tokenizer sequence·student-visited on-policy·generation self-distillation 네 route로 분리. Synthetic provenance·self-generation·stop-gate concept 3개와 relation 6개를 새로 만들고 canonical owner·evidence·exact 6+4를 새 경계로 이동
+- [x] 새 네 글의 수식 11개를 모두 domain-specific `annotatedFormula`와 explicit operation으로 작성하고, 공통 operation card의 KaTeX 두 줄 주석 간격·수직 padding을 전역 보강. 도형 기반 4장면 Viz는 화살표 키·Space·자동 재생을 지원하며 390/1440에서 page·Viz·KaTeX overflow와 console error 0을 확인
+- [ ] 현재 전역 잔여량: public catalog 406, topology `split-review` 87·`rename-or-split-review` 2, explicit formula 50/1,058·전환 대기 1,008. 휴리스틱 후보는 본문 학습 질문을 확인한 뒤 실제 CRUD하며 필요한 concept·relation도 함께 확장한다.
 
 ### 2026-08-15 · WEBCAT · Ethereum future roadmap · binary-field proving · permissioned RWA markets
 

@@ -6472,7 +6472,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Temperature-softened target",
     definition:
       "Teacher logit을 양수 temperature로 나눈 뒤 softmax해 class 순서는 유지하면서 확률비를 완만하게 만들고 non-target 관계를 드러내는 distillation target입니다.",
-    canonicalHref: "/ai/knowledge-distillation#logit",
+    canonicalHref: "/ai/knowledge-distillation#soft-target",
   },
   "hard-soft-distillation-objective": {
     id: "hard-soft-distillation-objective",
@@ -6481,7 +6481,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Hard-label · soft-target distillation objective",
     definition:
       "Ground-truth cross-entropy와 teacher-to-student softened KL을 alpha로 혼합해 실제 label anchor와 teacher class relation을 함께 학습하는 objective입니다.",
-    canonicalHref: "/ai/knowledge-distillation#logit",
+    canonicalHref: "/ai/knowledge-distillation#hard-soft-loss",
   },
   "distillation-temperature-gradient-scale": {
     id: "distillation-temperature-gradient-scale",
@@ -6490,7 +6490,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Distillation temperature gradient scale",
     definition:
       "큰 temperature에서 softened probability residual과 logit derivative가 각각 대략 1/T로 줄어 soft-target gradient가 약 1/T² 규모가 되므로 고전 recipe가 T²를 곱해 보정하는 관계입니다.",
-    canonicalHref: "/ai/knowledge-distillation#logit",
+    canonicalHref: "/ai/knowledge-distillation#hard-soft-loss",
   },
   "distillation-kl-direction": {
     id: "distillation-kl-direction",
@@ -6499,7 +6499,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Distillation KL direction",
     definition:
       "Teacher expectation의 forward KL DKL(q_teacher||p_student)와 student expectation의 reverse KL은 인수 순서·누락/mode penalty·gradient가 달라 같은 loss로 바꿔 쓸 수 없다는 경계입니다.",
-    canonicalHref: "/ai/knowledge-distillation#logit",
+    canonicalHref: "/ai/knowledge-distillation#hard-soft-loss",
   },
   "feature-distillation-alignment": {
     id: "feature-distillation-alignment",
@@ -6508,7 +6508,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Feature-distillation alignment",
     definition:
       "서로 다른 teacher/student의 layer·token/spatial position을 대응시키고 trainable projection으로 hidden shape를 맞춘 뒤 masked feature discrepancy를 줄이는 방법입니다.",
-    canonicalHref: "/ai/knowledge-distillation#feature",
+    canonicalHref: "/ai/knowledge-distillation#feature-alignment",
   },
   "cross-tokenizer-sequence-distillation": {
     id: "cross-tokenizer-sequence-distillation",
@@ -6517,7 +6517,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Cross-tokenizer sequence distillation",
     definition:
       "Teacher가 고른 output 문자열을 student tokenizer·chat template로 다시 encode하고 response token NLL로 학습해 vocabulary/timestep가 다른 model 사이에서 behavior를 전달하는 방법입니다.",
-    canonicalHref: "/ai/knowledge-distillation#llm",
+    canonicalHref: "/ai/sequence-distillation#sequence-loss",
   },
   "synthetic-distillation-slice-coverage": {
     id: "synthetic-distillation-slice-coverage",
@@ -6526,7 +6526,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Synthetic-distillation slice coverage",
     definition:
       "Teacher 생성·filter 뒤 남은 언어·domain·difficulty·tool/safety slice mixture를 target mixture와 비교하고 quality·dedup과 함께 dataset coverage를 판단하는 기준입니다.",
-    canonicalHref: "/ai/knowledge-distillation#llm",
+    canonicalHref: "/ai/sequence-distillation#provenance",
   },
   "autoregressive-state-distribution-mismatch": {
     id: "autoregressive-state-distribution-mismatch",
@@ -6535,7 +6535,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Autoregressive state-distribution mismatch",
     definition:
       "고정된 ground-truth·teacher sequence의 prefix에서 학습한 student가 inference에서는 자기 token으로 만든 다른 prefix를 방문하면서 다음-token 오류가 누적되는 train–inference 분포 차이입니다.",
-    canonicalHref: "/ai/knowledge-distillation#on-policy",
+    canonicalHref: "/ai/on-policy-distillation#state-mismatch",
   },
   "generalized-on-policy-distillation": {
     id: "generalized-on-policy-distillation",
@@ -6544,7 +6544,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Generalized on-policy distillation",
     definition:
       "고정 response와 현재 student rollout의 mixture에서 같은 prefix를 teacher가 token distribution으로 채점하고, sampling 과정에는 역전파하지 않은 채 divergence를 줄이는 autoregressive distillation입니다.",
-    canonicalHref: "/ai/knowledge-distillation#on-policy",
+    canonicalHref: "/ai/on-policy-distillation#teacher-feedback",
   },
   "on-policy-token-teacher-feedback": {
     id: "on-policy-token-teacher-feedback",
@@ -6553,7 +6553,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "On-policy token-level teacher feedback",
     definition:
       "현재 student가 생성한 prefix를 teacher와 student 양쪽에 넣고 다음-token 전체 분포의 divergence를 계산해 student가 실제로 방문하는 상태에 dense supervision을 주는 방식입니다.",
-    canonicalHref: "/ai/knowledge-distillation#on-policy",
+    canonicalHref: "/ai/on-policy-distillation#teacher-feedback",
   },
   "multi-teacher-policy-space-integration": {
     id: "multi-teacher-policy-space-integration",
@@ -6562,7 +6562,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Multi-teacher policy-space integration",
     definition:
       "Domain별 specialist checkpoint의 weight를 합치는 대신 prompt domain마다 frozen teacher를 선택하고 공통 student의 on-policy prefix에서 그 teacher의 token distribution을 전달하는 capability 통합 방식입니다.",
-    canonicalHref: "/ai/knowledge-distillation#on-policy",
+    canonicalHref: "/ai/on-policy-distillation#multi-teacher",
   },
   "self-distillation-inheritance-audit": {
     id: "self-distillation-inheritance-audit",
@@ -6571,7 +6571,31 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Self-distillation inheritance audit",
     definition:
       "세대별 teacher agreement 변화와 ground-truth slice quality 변화를 분리해 teacher를 더 닮았지만 정답 성능은 나빠지는 bias inheritance를 찾는 진단입니다.",
-    canonicalHref: "/ai/knowledge-distillation#self",
+    canonicalHref: "/ai/self-distillation#inheritance-audit",
+  },
+  "synthetic-distillation-provenance-receipt": {
+    id: "synthetic-distillation-provenance-receipt",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Synthetic-distillation provenance receipt",
+    definition: "각 teacher-generated example에 prompt source·rights·slice, teacher revision·system·sampling, filter·verifier·dedup 결과와 student serialization을 연결한 재현 artifact입니다.",
+    canonicalHref: "/ai/sequence-distillation#provenance",
+  },
+  "self-distillation-generation-contract": {
+    id: "self-distillation-generation-contract",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Self-distillation generation contract",
+    definition: "승인된 teacher checkpoint를 한 세대 동안 freeze하고 새 student만 hard·soft target으로 update한 뒤 독립 gate 후에만 다음 teacher로 승격하는 경계입니다.",
+    canonicalHref: "/ai/self-distillation#generation-contract",
+  },
+  "self-distillation-stop-gate": {
+    id: "self-distillation-stop-gate",
+    kind: "metric",
+    domain: "machine-learning",
+    label: "Self-distillation stop gate",
+    definition: "평균 marginal gain·worst-slice regression·agreement-quality inheritance gap을 함께 비교해 다음 teacher 세대 승격 또는 rollback을 결정하는 기준입니다.",
+    canonicalHref: "/ai/self-distillation#stop-gate",
   },
   "compression-lever-bottleneck-map": {
     id: "compression-lever-bottleneck-map",
@@ -15879,6 +15903,20 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   },
   {
     from: "cross-tokenizer-sequence-distillation",
+    to: "synthetic-distillation-provenance-receipt",
+    relation: "produces",
+    reason:
+      "Teacher text를 student target으로 바꾸는 과정의 prompt·teacher·sampling·filter·serialization identity를 example에 결속합니다.",
+  },
+  {
+    from: "synthetic-distillation-provenance-receipt",
+    to: "synthetic-distillation-slice-coverage",
+    relation: "prerequisite",
+    reason:
+      "Accepted·rejected example의 source와 slice label을 보존해야 target mixture gap과 contamination을 재현할 수 있습니다.",
+  },
+  {
+    from: "cross-tokenizer-sequence-distillation",
     to: "autoregressive-state-distribution-mismatch",
     relation: "produces",
     reason:
@@ -15934,11 +15972,39 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
       "이전 generation의 soft target을 사용할 때 teacher agreement와 ground-truth gain을 따로 측정합니다.",
   },
   {
+    from: "hard-soft-distillation-objective",
+    to: "self-distillation-generation-contract",
+    relation: "extends",
+    reason:
+      "일반 hard·soft objective를 frozen generation teacher와 새 student만 update하는 반복 경계에 적용합니다.",
+  },
+  {
+    from: "self-distillation-generation-contract",
+    to: "self-distillation-inheritance-audit",
+    relation: "produces",
+    reason:
+      "세대별 teacher·student identity가 고정되어야 agreement와 ground-truth quality 변화를 같은 generation pair에 귀속할 수 있습니다.",
+  },
+  {
     from: "train-validation-test",
     to: "self-distillation-inheritance-audit",
     relation: "constrains",
     reason:
       "세대마다 같은 frozen holdout과 slice membership으로 drift와 marginal gain을 비교합니다.",
+  },
+  {
+    from: "self-distillation-inheritance-audit",
+    to: "self-distillation-stop-gate",
+    relation: "evaluates",
+    reason:
+      "Teacher agreement 증가가 ground-truth improvement를 앞서는 세대를 다음 teacher 승격에서 차단합니다.",
+  },
+  {
+    from: "train-validation-test",
+    to: "self-distillation-stop-gate",
+    relation: "constrains",
+    reason:
+      "평균 gain과 worst-slice regression threshold를 결과 보기 전에 고정한 validation·test 경계에서 평가합니다.",
   },
   {
     from: "scalar-quantity",

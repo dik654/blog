@@ -73,7 +73,7 @@ const runtimeContract = {
   fallback: component.includes("inferOperations(formula)"),
   annotationMode: component.includes("data-formula-annotation-mode"),
   annotationVerticalPadding: mathComponent.includes(
-    "overflow-y-hidden px-1 py-3 text-center",
+    "overflow-y-hidden px-1 py-4 text-center",
   ),
 };
 

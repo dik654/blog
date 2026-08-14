@@ -41,7 +41,7 @@ function annotatedOperation({
 }: FormulaOperationAnnotation) {
   const note = annotationLines(annotation)
     .map((line) => String.raw`\text{${escapeKatexText(line)}}`)
-    .join(String.raw`\\`);
+    .join(String.raw`\\[4pt]`);
   return String.raw`\underbrace{${expression}}_{\substack{${note}}}`;
 }
 
@@ -211,7 +211,7 @@ export default function ExplainedFormula({
               <div
                 key={`${operation.expression}-${index}`}
                 data-formula-operation
-                className="min-w-0 overflow-x-auto rounded-md border border-border/50 bg-muted/10 px-3 py-2"
+                className="min-w-0 overflow-x-auto rounded-md border border-border/50 bg-muted/10 px-3 py-4 sm:px-4"
               >
                 <Math display className="my-0 text-sm">
                   {annotatedOperation(operation)}
