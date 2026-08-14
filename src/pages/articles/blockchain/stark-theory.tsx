@@ -1,19 +1,5 @@
-import Overview from "./stark-theory/Overview";
-import ExecutionTrace from "./stark-theory/ExecutionTrace";
-import AIRConstraints from "./stark-theory/AIRConstraints";
-import LowDegreeExtension from "./stark-theory/LowDegreeExtension";
-import ProofPipeline from "./stark-theory/ProofPipeline";
-import Comparison from "./stark-theory/Comparison";
+import ModernSTARKTheoryArticle from "./stark-theory/ModernArticle";
 
 export default function STARKTheory() {
-  return (
-    <>
-      <Overview />
-      <ExecutionTrace />
-      <AIRConstraints />
-      <LowDegreeExtension />
-      <ProofPipeline />
-      <Comparison />
-    </>
-  );
+  return <ModernSTARKTheoryArticle />;
 }

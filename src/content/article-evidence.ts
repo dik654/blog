@@ -3731,7 +3731,26 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "Event loop·state transition·timeout·WAL 구현을 확인하는 pinned source",
     },
   ],
-  "blockchain/cometbft-crypto": withSeriesEvidence(COMETBFT_SERIES_EVIDENCE),
+  "blockchain/cometbft-crypto": [
+    { kind: "공식 코드", label: "CometBFT v0.40.0 — crypto/ed25519", href: "https://github.com/cometbft/cometbft/blob/v0.40.0/crypto/ed25519/ed25519.go", note: "Fixed key/signature length·ZIP-215 verifier·SHA-256-20 address·batch verifier의 pinned implementation" },
+    { kind: "공식 코드", label: "CometBFT v0.40.0 — crypto/merkle", href: "https://github.com/cometbft/cometbft/tree/v0.40.0/crypto/merkle", note: "Prefix-separated tree·proof·split-point semantics의 pinned source" },
+    { kind: "공식 코드", label: "CometBFT v0.40.0 — crypto/tmhash", href: "https://github.com/cometbft/cometbft/blob/v0.40.0/crypto/tmhash/hash.go", note: "32-byte full hash와 20-byte truncated address hash 경계" },
+  ],
+  "blockchain/cosmos-sdk": [
+    { kind: "공식 코드", label: "Cosmos SDK v0.55.0 — BaseApp", href: "https://github.com/cosmos/cosmos-sdk/tree/v0.55.0/baseapp", note: "ABCI mode·context·block/transaction execution의 pinned implementation" },
+    { kind: "공식 코드", label: "Cosmos SDK v0.55.0 — auth ante · bank MsgServer", href: "https://github.com/cosmos/cosmos-sdk/blob/v0.55.0/x/auth/ante/ante.go", note: "Envelope authorization과 MsgSend business validation의 separation" },
+    { kind: "공식 코드", label: "Cosmos SDK v0.55.0 — CacheMultiStore", href: "https://github.com/cosmos/cosmos-sdk/blob/v0.55.0/store/cachemulti/store.go", note: "Nested cache branch와 Write merge semantics; durable root Commit은 별도" },
+  ],
+  "blockchain/evmos": [
+    { kind: "공식 코드", label: "Evmos v20.0.0 — Ethereum ante", href: "https://github.com/evmos/evmos/tree/v20.0.0/app/ante/evm", note: "Sender recovery·fee·nonce·gas·sequence decorator ordering의 historical pinned source" },
+    { kind: "공식 코드", label: "Evmos v20.0.0 — x/evm", href: "https://github.com/evmos/evmos/tree/v20.0.0/x/evm", note: "EVM keeper·StateDB journal·state transition의 pinned implementation; current cosmos/evm으로 일반화하지 않음" },
+    { kind: "공식 코드", label: "Evmos v20.0.0 — ERC-20 IBC middleware", href: "https://github.com/evmos/evmos/blob/v20.0.0/x/erc20/ibc_middleware.go", note: "Receive·acknowledgement·timeout callback과 token representation 경계" },
+  ],
+  "blockchain/dydx": [
+    { kind: "공식 코드", label: "dYdX v4-chain protocol/v9.6.3 — OrderId", href: "https://github.com/dydxprotocol/v4-chain/blob/protocol/v9.6.3/protocol/x/clob/types/order_id.go", note: "Short-term·stateful·conditional/TWAP flags, state key와 deterministic sort contract" },
+    { kind: "공식 코드", label: "dYdX v4-chain protocol/v9.6.3 — CLOB", href: "https://github.com/dydxprotocol/v4-chain/tree/protocol/v9.6.3/protocol/x/clob", note: "MemClob·proposed operations·match/risk processing의 pinned implementation" },
+    { kind: "공식 코드", label: "dYdX v4-chain protocol/v9.6.3 — Indexer", href: "https://github.com/dydxprotocol/v4-chain/tree/protocol/v9.6.3/indexer", note: "Versioned chain event에서 rebuildable query projection으로 이어지는 source boundary" },
+  ],
   "blockchain/cometbft-execution": [
     { kind: "공식 코드", label: "CometBFT v0.40.0 — state/execution.go", href: "https://github.com/cometbft/cometbft/blob/v0.40.0/state/execution.go", note: "ApplyBlock·FinalizeBlock·result 저장·Commit·mempool Update·State 저장의 pinned 순서" },
     { kind: "공식 코드", label: "CometBFT v0.40.0 — state/validation.go", href: "https://github.com/cometbft/cometbft/blob/v0.40.0/state/validation.go", note: "Block height·history·commitment·LastCommit·time·evidence 검증 기준" },
@@ -4726,6 +4745,21 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 규격", label: "RFC 9334 · RATS Architecture", href: "https://www.rfc-editor.org/rfc/rfc9334.html", note: "Attester·Verifier·Relying Party와 evidence·result·appraisal·freshness의 vendor-neutral 정본" },
     { kind: "공식 규격", label: "AMD SEV-SNP Firmware ABI Specification 1.58", href: "https://docs.amd.com/v/u/en-US/56860_PUB_1.58_SEV_SNP", note: "SNP attestation report request·field·signature interface의 vendor 정본" },
   ],
+  "crypto/polycommit": [
+    { kind: "핵심 논문", label: "Kate·Zaverucha·Goldberg · Polynomial Commitments", href: "https://www.iacr.org/archive/asiacrypt2010/6477178/6477178.pdf", note: "Degree-bounded pairing SRS를 이용한 constant-size polynomial commitment와 evaluation witness의 원 연구" },
+    { kind: "핵심 논문", label: "Bowe·Grigg·Hopwood · Halo", href: "https://eprint.iacr.org/2019/1021.pdf", note: "Inner-product polynomial commitment와 setup-free recursive proof composition의 원 연구" },
+  ],
+  "crypto/fri": [
+    { kind: "핵심 논문", label: "Ben-Sasson et al. · Fast Reed–Solomon IOP of Proximity", href: "https://drops.dagstuhl.de/entities/document/10.4230/LIPIcs.ICALP.2018.14", note: "Reed–Solomon oracle proximity와 recursive even/odd folding·soundness의 원 연구" },
+  ],
+  "crypto/stark-theory": [
+    { kind: "핵심 논문", label: "Ben-Sasson et al. · Scalable, transparent, and post-quantum secure computational integrity", href: "https://eprint.iacr.org/2018/046.pdf", note: "Trace·AIR·oracle commitment·FRI를 잇는 STARK construction과 당시 evaluation의 원 연구" },
+    { kind: "핵심 논문", label: "Ben-Sasson et al. · FRI", href: "https://drops.dagstuhl.de/entities/document/10.4230/LIPIcs.ICALP.2018.14", note: "STARK pipeline의 low-degree proximity 구성요소와 별도 soundness 경계" },
+  ],
+  "crypto/zk-theory": [
+    { kind: "핵심 논문", label: "Goldwasser·Micali·Rackoff · Knowledge Complexity", href: "https://doi.org/10.1137/0218012", note: "Interactive proof와 simulator 기반 zero-knowledge 정의의 토대" },
+    { kind: "핵심 논문", label: "Fiat·Shamir · How To Prove Yourself", href: "https://doi.org/10.1007/3-540-47721-7_12", note: "Public-coin identification challenge를 hash로 바꾸는 non-interactive 변환의 원 연구" },
+  ],
   "crypto/constraint-systems": [
     { kind: "핵심 논문", label: "Parno et al. · Pinocchio", href: "https://eprint.iacr.org/2013/279.pdf", note: "Arithmetic circuit→QAP reduction·pairing 기반 public verification과 당시 implementation evaluation의 원 연구" },
   ],
@@ -4818,5 +4852,47 @@ export const ARTICLE_EVIDENCE: Readonly<
   "tee/arm-cca": [
     { kind: "공식 문서", label: "Arm Realm Management Extension overview", href: "https://developer.arm.com/community/arm-community-blogs/b/architectures-and-processors-blog/posts/introducing-arms-dynamic-trustzone-technology", note: "RME·GPT·GPC가 granule의 security world assignment를 집행하는 공식 architecture 설명" },
     { kind: "공식 규격", label: "Arm Realm Management Monitor Architecture DEN0137", href: "https://developer.arm.com/-/cdn-downloads/permalink/Architectures/Armv9/DEN0137_1.0-rel0-rc1_rmm-arch_external.pdf", note: "RMM lifecycle·RMI/RSI·Realm/platform token binding의 revision-pinned architecture" },
+  ],
+  "tee/op-tee": [
+    { kind: "공식 문서", label: "OP-TEE Core architecture", href: "https://optee.readthedocs.io/en/latest/architecture/core.html", note: "World transition·thread·shared-memory runtime의 공식 설명이며 TA 업무 authorization의 증거는 아님" },
+    { kind: "공식 규격", label: "OP-TEE GlobalPlatform API", href: "https://optee.readthedocs.io/en/4.0.0/architecture/globalplatform_api.html", note: "Context·session·command lifecycle의 versioned interface" },
+    { kind: "공식 문서", label: "OP-TEE Secure Storage", href: "https://optee.readthedocs.io/en/3.13.0/architecture/secure_storage.html", note: "REE FS·RPMB 저장 model과 atomic update 목표이며 freshness property는 backend별 확인" },
+  ],
+  "tee/oasis": [
+    { kind: "공식 문서", label: "Oasis Runtime Layer", href: "https://docs.oasis.io/core/runtime/", note: "Consensus ordering과 runtime compute/storage·discrepancy 경계의 current official entry" },
+    { kind: "공식 규격", label: "Oasis Root Hash service", href: "https://docs.oasis.io/core/consensus/services/roothash/", note: "Executor commitment·runtime root·message processing의 official specification" },
+    { kind: "공식 규격", label: "Oasis Key Manager", href: "https://docs.oasis.io/core/consensus/services/keymanager/", note: "Runtime policy·status·identity 기반 key-manager surface이며 application access control은 별도" },
+  ],
+  "tee/phala": [
+    { kind: "공식 문서", label: "Phala Blockchain Entities", href: "https://docs.phala.network/tech-specs/blockchain/blockchain-entities", note: "Client·worker·gatekeeper와 from/to/nonce payload의 official entity model" },
+    { kind: "공식 문서", label: "Phala Secret Key Hierarchy", href: "https://docs.phala.network/tech-specs/blockchain/secret-key-hierarchy", note: "Worker/gatekeeper identity·communication key hierarchy이며 deployed pRuntime·epoch revision을 별도 고정" },
+  ],
+  "tee/dstack": [
+    { kind: "공식 문서", label: "dstack Getting Started", href: "https://docs.phala.network/dstack/getting-started", note: "dstack-vmm·guest agent·KMS·gateway와 image-build topology의 current entry" },
+    { kind: "공식 문서", label: "dstack Design Documents", href: "https://docs.phala.network/dstack/design-documents", note: "OS·KMS·gateway·published digest·authorization trust path이며 production hardening 인증은 아님" },
+  ],
+  "gpu/msm-ntt": [
+    { kind: "공식 코드", label: "ICICLE v3.9.0 · commit 6b451e6", href: "https://github.com/ingonyama-zk/icicle/tree/6b451e6ed5dcdd9b49aa5f9d5657e0c00cfab6a2", note: "MSM·NTT backend/API의 pinned implementation이며 모든 device·size의 성능·correctness 보장은 아님" },
+    { kind: "공식 코드", label: "sppark · commit 17278d7", href: "https://github.com/supranational/sppark/tree/17278d74295392f9813f009300b257a688422b7a", note: "MSM·NTT·EC/FF·memory CUDA templates의 pinned structure이며 PoC benchmark를 production claim으로 확대하지 않음" },
+    { kind: "공식 가이드", label: "NVIDIA CUDA C++ Programming Guide 12.8.1", href: "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-programming-guide/index.html", note: "Execution·memory·synchronization semantics의 versioned source이며 특정 mapping의 우위는 별도 측정" },
+  ],
+  "gpu/ec-gpu-ops": [
+    { kind: "공식 코드", label: "ec-gpu field.cl · commit 16d38ef", href: "https://github.com/filecoin-project/ec-gpu/blob/16d38ef6715fb1a4968986d3a5635f8bcac6c984/ec-gpu-gen/src/cl/field.cl", note: "32-bit CUDA carry-chain/default field path의 pinned source이며 cycle·register·speedup 수치는 주장하지 않음" },
+    { kind: "공식 코드", label: "ec-gpu ec.cl · commit 16d38ef", href: "https://github.com/filecoin-project/ec-gpu/blob/16d38ef6715fb1a4968986d3a5635f8bcac6c984/ec-gpu-gen/src/cl/ec.cl", note: "a=0 Jacobian double/mixed/full add와 branches의 pinned source이며 모든 curve의 complete formula는 아님" },
+    { kind: "공식 코드", label: "ec-gpu multiexp.cl · commit 16d38ef", href: "https://github.com/filecoin-project/ec-gpu/blob/16d38ef6715fb1a4968986d3a5635f8bcac6c984/ec-gpu-gen/src/cl/multiexp.cl", note: "MSM gid/window/group/bucket mapping의 pinned source이며 보편 optimal Pippenger mapping은 아님" },
+    { kind: "공식 가이드", label: "NVIDIA CUDA C++ Programming Guide 12.8.1", href: "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-programming-guide/index.html", note: "Warp·register·memory semantics의 versioned source이며 occupancy 우위는 별도 측정" },
+  ],
+  "gpu/ec-gpu-gen": [
+    { kind: "공식 코드", label: "ec-gpu GpuField interface · commit 16d38ef", href: "https://github.com/filecoin-project/ec-gpu/blob/16d38ef6715fb1a4968986d3a5635f8bcac6c984/ec-gpu/src/lib.rs", note: "GpuName/GpuField의 실제 parameter surface이며 trait가 constants·curve security를 증명하지 않음" },
+    { kind: "공식 코드", label: "ec-gpu SourceBuilder/artifact · commit 16d38ef", href: "https://github.com/filecoin-project/ec-gpu/blob/16d38ef6715fb1a4968986d3a5635f8bcac6c984/ec-gpu-gen/src/source.rs", note: "Source assembly와 CUDA fatbin/OpenCL source lifecycle의 pinned implementation" },
+    { kind: "공식 코드", label: "ec-gpu Program dispatch · commit 16d38ef", href: "https://github.com/filecoin-project/ec-gpu/blob/16d38ef6715fb1a4968986d3a5635f8bcac6c984/ec-gpu-gen/src/program.rs", note: "Feature/environment/device runtime branch의 pinned source이며 backend parity 보장은 아님" },
+    { kind: "공식 규격", label: "Khronos OpenCL 3.0 Unified Specification", href: "https://registry.khronos.org/OpenCL/specs/3.0-unified/html/OpenCL_API.html", note: "OpenCL program build·queue·memory semantics의 official contract" },
+    { kind: "공식 코드", label: "bellperson build.rs · commit 728306c", href: "https://github.com/filecoin-project/bellperson/blob/728306c8ee52f53dbd55ea02557affcdfb546ae7/build.rs", note: "FFT·G1/G2 multiexp SourceBuilder consumer integration이며 prover 비율·speedup 근거는 아님" },
+  ],
+  "gpu/gpu-proof-pipeline": [
+    { kind: "핵심 논문", label: "Groth16 · IACR ePrint 2016/260", href: "https://eprint.iacr.org/2016/260", note: "QAP setup·A/B/C proof·verification dependency의 원문이며 GPU stage 비율을 제공하지 않음" },
+    { kind: "핵심 논문", label: "PLONK · IACR ePrint 2019/953", href: "https://eprint.iacr.org/2019/953", note: "Permutation·transcript·PCS round dependency의 원문이며 모든 PLONKish 호출 수가 같다는 뜻은 아님" },
+    { kind: "공식 코드", label: "bellperson · commit 728306c", href: "https://github.com/filecoin-project/bellperson/tree/728306c8ee52f53dbd55ea02557affcdfb546ae7", note: "Groth16 FFT/MSM GPU integration·fallback/locking의 pinned source이며 고정 speedup 근거는 아님" },
+    { kind: "공식 코드", label: "ICICLE v3.9.0 · commit 6b451e6", href: "https://github.com/ingonyama-zk/icicle/tree/6b451e6ed5dcdd9b49aa5f9d5657e0c00cfab6a2", note: "MSM·NTT runtime/backend integration surface이며 protocol transcript/verifier를 대신하지 않음" },
   ],
 };

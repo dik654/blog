@@ -5842,6 +5842,62 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "project-measurement", rule: "Bad signature·replay·altered measurement·old TCB·debug·expired collateral·unknown field에서 false accept 0을 hard gate로 둔다." },
     ],
   },
+  polycommit: {
+    title: "Polynomial commitment interface·KZG·IPA 선택 글이 소유하는 범위",
+    owns: ["Commit·Open·Verify와 evaluation claim의 소유권", "KZG quotient·pairing opening과 IPA inner-product opening", "Binding·hiding·degree·setup 분리와 PCS release gate"],
+    reuses: [
+      { label: "Prime-field polynomial과 root bound", href: "/crypto/polynomial" },
+      { label: "Pairing bilinearity", href: "/crypto/elliptic-curves#g1-g2-bn254" },
+      { label: "Commitment binding·hiding", href: "/crypto/crypto-primitives#merkle-commitment" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "KZG claim은 KZG 원문, IPA claim은 Halo 원문의 setup·group·security model 범위에 각각 귀속한다." },
+      { kind: "project-claim", rule: "PCS라는 이름을 hiding·transparent setup·post-quantum·외부 statement validity로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "Wrong value·point·degree·key·subgroup parity 뒤 setup/commit/open/verify·bytes·RSS를 같은 workload에서 비교한다." },
+    ],
+  },
+  fri: {
+    title: "FRI Reed–Solomon proximity·folding·query 글이 소유하는 범위",
+    owns: ["RS oracle membership과 proximity claim", "Even/odd folding·Merkle query transcript", "Sampling intuition과 FRI 전체 soundness 경계·release gate"],
+    reuses: [
+      { label: "Polynomial coefficient·evaluation form", href: "/crypto/polynomial" },
+      { label: "Reed–Solomon encoding", href: "/crypto/reed-solomon" },
+      { label: "Merkle selective opening", href: "/crypto/crypto-primitives#merkle-commitment" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Folding·proximity·soundness claim은 FRI 원문의 field·domain·distance·oracle model 범위에 귀속한다." },
+      { kind: "project-claim", rule: "FRI accept를 AIR completeness·program semantics·STARK 전체 zero knowledge로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "Wrong pair·fold·root·path·final degree·round order parity 뒤 hash/query/proof 비용을 비교한다." },
+    ],
+  },
+  "stark-theory": {
+    title: "STARK trace·AIR·composition·LDE 파이프라인 글이 소유하는 범위",
+    owns: ["Execution trace와 transition·boundary AIR", "Composition polynomial과 LDE·Merkle·FRI 연결", "Transparent/hash/ZK assumption 경계와 STARK release gate"],
+    reuses: [
+      { label: "Finite-field NTT·evaluation domain", href: "/crypto/fft#fft-domain" },
+      { label: "FRI low-degree proximity", href: "/crypto/fri" },
+      { label: "Relation·public input·witness", href: "/crypto/constraint-systems#overview" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "STARK pipeline claim은 STARK 원문, low-degree test claim은 FRI 원문의 모델과 parameter 범위에 각각 귀속한다." },
+      { kind: "project-claim", rule: "Transparent를 assumption-free로, STARK를 자동 zero knowledge나 모든 구현의 post-quantum 보장으로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "Trace·AIR·composition·domain·Merkle·FRI·transcript failure parity 뒤 phase time·RSS·proof bytes·verify cost를 측정한다." },
+    ],
+  },
+  "zk-theory": {
+    title: "Zero knowledge 정의·Sigma·simulation·Fiat–Shamir 글이 소유하는 범위",
+    owns: ["Completeness·soundness·zero knowledge의 속성 분리", "Sigma special soundness와 simulator 정의", "Pedersen hiding/binding·Fiat–Shamir transcript·ZK release gate"],
+    reuses: [
+      { label: "Cyclic group·DLP", href: "/crypto/elliptic-curves" },
+      { label: "Commitment binding·hiding", href: "/crypto/crypto-primitives#merkle-commitment" },
+      { label: "SNARK property와 statement", href: "/crypto/snark-overview#security" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Simulator 기반 ZK 정의는 GMR, hash challenge 변환은 Fiat–Shamir 원문의 protocol·model 범위에 귀속한다." },
+      { kind: "project-claim", rule: "ZK theorem을 side channel·broken randomness·malformed encoding·context replay 방지로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "Wrong witness·statement·subgroup·nonce reuse·context·round order·replay와 simulator distribution을 release 전에 검사한다." },
+    ],
+  },
   "constraint-systems": {
     title: "R1CS·QAP 제약 시스템 글이 소유하는 범위",
     owns: ["Relation의 public instance·private witness와 R1CS bilinear row", "Bit·range·integer gadget semantic boundary", "R1CS column interpolation과 QAP divisibility·semantic release gate"],
@@ -6164,6 +6220,30 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [{ label: "TEE TCB closure", href: "/tee/tee-tcb" }, { label: "TEE memory lifecycle", href: "/tee/tee-memory" }, { label: "RATS 역할과 artifact", href: "/tee/tee-attestation" }],
     evidence: [{ kind: "primary-source", rule: "RME·GPT·RMM·token semantics는 링크한 Arm architecture/revision 범위에 귀속한다." }, { kind: "project-measurement", rule: "RMM·EL3·host·Realm·policy를 고정하고 granule·DMA·challenge·version drift를 paired 검사한다." }, { kind: "project-claim", rule: "Realm token을 device isolation·application correctness·side-channel·availability 보장으로 확대하지 않는다." }],
   },
+  "op-tee": {
+    title: "OP-TEE TA runtime·storage 적용 글이 소유하는 범위",
+    owns: ["TA context·session·command lifecycle과 shared-parameter validation", "Key purpose·secure-storage outcome과 OP-TEE-specific release gate"],
+    reuses: [{ label: "TEE private/shared memory", href: "/tee/tee-memory" }, { label: "TEE TCB closure", href: "/tee/tee-tcb" }, { label: "Attestation 역할과 key release", href: "/tee/tee-attestation" }],
+    evidence: [{ kind: "primary-source", rule: "Core·GlobalPlatform API·secure storage 동작은 링크한 OP-TEE 문서 revision과 platform/backend 범위에 귀속한다." }, { kind: "project-measurement", rule: "같은 TA·platform·input에서 stale session·buffer 변조·power loss·privilege drift를 paired 검사한다." }, { kind: "project-claim", rule: "Secure World entry를 business authorization·rollback freshness·side-channel 안전으로 확대하지 않는다." }],
+  },
+  "oasis": {
+    title: "Oasis consensus·ParaTime·key-manager 연결 글이 소유하는 범위",
+    owns: ["Consensus ordering과 runtime compute/storage responsibility의 분리", "Roothash commitment·key-manager epoch policy와 confidential-runtime release gate"],
+    reuses: [{ label: "Deterministic SMR", href: "/blockchain/smr-theory" }, { label: "CometBFT application boundary", href: "/blockchain/cometbft-abci" }, { label: "TEE attestation", href: "/tee/tee-attestation" }],
+    evidence: [{ kind: "primary-source", rule: "Runtime·roothash·key-manager semantics는 링크한 Oasis Core current docs와 network revision에 귀속한다." }, { kind: "project-measurement", rule: "같은 runtime batch·committee·policy에서 executor mismatch·storage omission·stale identity·epoch retry를 paired 검사한다." }, { kind: "project-claim", rule: "Consensus commit·root equality·key release를 external exactly-once·application authorization으로 확대하지 않는다." }],
+  },
+  "phala": {
+    title: "Phala worker·gatekeeper·Phat Contract 연결 글이 소유하는 범위",
+    owns: ["Worker registration/attestation과 gatekeeper scoped-key distribution", "Contract state와 off-chain effect receipt 및 worker release gate"],
+    reuses: [{ label: "RATS 역할과 artifact", href: "/tee/tee-attestation" }, { label: "SGX vendor boundary", href: "/tee/intel-sgx" }, { label: "External-effect recovery", href: "/ai/agent-devlog-patterns" }],
+    evidence: [{ kind: "primary-source", rule: "Entity·message·key hierarchy는 링크한 Phala technical-spec snapshot과 deployed runtime/chain revision에 귀속한다." }, { kind: "project-measurement", rule: "같은 contract/input에서 replay·stale worker·wrong target·HTTP timeout-after-send를 paired 검사한다." }, { kind: "project-claim", rule: "Worker 등록·TEE execution·scoped key를 remote service honesty·governance·exactly-once로 확대하지 않는다." }],
+  },
+  "dstack": {
+    title: "dstack CVM·manifest·KMS·gateway 연결 글이 소유하는 범위",
+    owns: ["Compose/image manifest와 CVM·OS/event measurement의 workload identity", "App/purpose/epoch key derivation·RA-TLS endpoint와 dstack release gate"],
+    reuses: [{ label: "Intel TDX identity", href: "/tee/intel-tdx" }, { label: "TEE TCB/reference values", href: "/tee/tee-tcb" }, { label: "Fresh attestation channel binding", href: "/tee/tee-attestation" }],
+    evidence: [{ kind: "primary-source", rule: "VMM·guest agent·KMS·gateway와 stated trust path는 링크한 dstack docs/repository release에 귀속한다." }, { kind: "project-measurement", rule: "같은 manifest·platform·policy에서 image drift·quote replay·wrong purpose·KMS crash cut을 paired 검사한다." }, { kind: "project-claim", rule: "Valid TDX quote·tutorial deploy·deterministic derivation을 application correctness·governance·anti-cloning 보장으로 확대하지 않는다." }],
+  },
   "cometbft-p2p": {
     title: "CometBFT v0.40.0 P2P stack 글이 소유하는 범위",
     owns: ["Transport·MConnection·Switch·Reactor의 message delivery owner와 local receipt", "Channel queue·priority·peer lifecycle의 backpressure release gate"],
@@ -6187,6 +6267,54 @@ export const EDITORIAL_BOUNDARIES = {
     owns: ["Current State에 대한 block validation context와 ApplyBlock orchestration", "Finalize result→application Commit→State persistence order와 crash-cut replay"],
     reuses: [{ label: "ABCI deterministic transition", href: "/blockchain/cometbft-abci#finalize-commit" }, { label: "Commit certificate와 type", href: "/blockchain/cometbft-types" }, { label: "Durable store와 state sync", href: "/blockchain/cometbft-state" }],
     evidence: [{ kind: "primary-source", rule: "Validation·ApplyBlock·Commit·replay ordering은 CometBFT v0.40.0 state/consensus source에 귀속한다." }, { kind: "project-measurement", rule: "잘못된 history/commitment와 네 crash cut을 재생해 height·AppHash·tx result·balance once parity를 통과시킨다." }, { kind: "project-claim", rule: "Consensus decision·Finalize return·timeout을 application durability나 external exactly-once로 확대하지 않는다." }],
+  },
+  "msm-ntt": {
+    title: "MSM·NTT GPU workload routing 글이 소유하는 범위",
+    owns: ["고정 proof workload에서 MSM bucket과 NTT stage dependency를 비교하는 경계", "Points·scalars·polynomials·workspace residency와 correctness-first routing gate"],
+    reuses: [{ label: "타원곡선 scalar multiplication", href: "/crypto/elliptic-curves#g1-curve" }, { label: "Finite-field NTT·butterfly", href: "/crypto/fft#butterfly" }, { label: "CUDA lifecycle·measurement", href: "/gpu/cuda-basics#release-gate" }],
+    evidence: [{ kind: "primary-source", rule: "MSM·NTT implementation surface는 pinned ICICLE/sppark revisions와 CUDA 12.8.1 semantics에만 귀속한다." }, { kind: "project-measurement", rule: "Curve·field·domain·representation·batch를 고정하고 CPU parity 뒤 kernel/end-to-end·traffic·stalls를 paired 측정한다." }, { kind: "project-claim", rule: "큰 병렬 workload나 높은 occupancy를 고정 speedup·모든 proof의 병목으로 확대하지 않는다." }],
+  },
+  "ec-gpu-ops": {
+    title: "ec-gpu field·point kernel lowering 글이 소유하는 범위",
+    owns: ["Pinned ec-gpu의 one-work-item 32-bit limb·carry-chain Montgomery lowering", "a=0 Jacobian point kernels와 MSM window/group bucket mapping"],
+    reuses: [{ label: "Field limb·Montgomery 정본", href: "/crypto/field-arithmetic" }, { label: "Jacobian point equivalence", href: "/crypto/elliptic-curves#g1-curve" }, { label: "CUDA warp·memory·timing", href: "/gpu/cuda-basics" }],
+    evidence: [{ kind: "primary-source", rule: "Limb width·carry·point branches·gid mapping은 ec-gpu commit 16d38ef source에만 귀속한다." }, { kind: "project-measurement", rule: "Field/point CPU parity 뒤 valid ops/s·actual DRAM·register/spill·stalls·end-to-end를 같은 workload에서 측정한다." }, { kind: "project-claim", rule: "Warp-cooperative bigint·cycle/register 고정값·occupancy 우위를 pinned ec-gpu 사실로 주장하지 않는다." }],
+  },
+  "ec-gpu-gen": {
+    title: "ec-gpu-gen source·artifact·dispatch 글이 소유하는 범위",
+    owns: ["GpuField parameter snapshot과 SourceBuilder specialization pipeline", "CUDA fatbin/OpenCL source artifact provenance와 unified Program dispatch"],
+    reuses: [{ label: "Finite-field representation", href: "/crypto/field-arithmetic" }, { label: "EC GPU operation lowering", href: "/gpu/ec-gpu-ops" }, { label: "CUDA host/device lifecycle", href: "/gpu/cuda-basics#execution-path" }],
+    evidence: [{ kind: "primary-source", rule: "Trait·SourceBuilder·artifact·Program behavior는 ec-gpu commit 16d38ef와 bellperson commit 728306c에 귀속한다." }, { kind: "project-measurement", rule: "Clean/cache build·cold startup·warm run과 CPU/CUDA/OpenCL parity를 compiler·driver·artifact digest와 함께 측정한다." }, { kind: "project-claim", rule: "Codegen 성공·unified API·feature 지원을 proof correctness·backend parity·current production 상태로 확대하지 않는다." }],
+  },
+  "gpu-proof-pipeline": {
+    title: "GPU proof dependency·memory orchestration 글이 소유하는 범위",
+    owns: ["Protocol stages·transcript·buffers·events의 generation-bound DAG", "Buffer live intervals·stream critical path와 independent-verifier release gate"],
+    reuses: [{ label: "Groth16 protocol", href: "/crypto/groth16" }, { label: "PLONK protocol", href: "/crypto/plonk" }, { label: "MSM·NTT GPU workload", href: "/gpu/msm-ntt" }],
+    evidence: [{ kind: "primary-source", rule: "Protocol dependencies는 Groth16/PLONK 원문, implementation surface는 pinned bellperson/ICICLE revisions에 귀속한다." }, { kind: "project-measurement", rule: "같은 circuit·SRS·input에서 negative parity 뒤 cold/warm·stage/end-to-end·peak live bytes·recovery를 paired 측정한다." }, { kind: "project-claim", rule: "MSM/NTT kernel speedup을 proof 전체 speedup·cryptographic soundness·모든 protocol의 호출 횟수로 확대하지 않는다." }],
+  },
+  "cometbft-crypto": {
+    title: "CometBFT v0.40.0 crypto implementation 글이 소유하는 범위",
+    owns: ["Validator/user crypto role과 Ed25519 verifier instance contract", "Prefix Merkle proof와 TMHash full/truncated length 경계"],
+    reuses: [{ label: "Ed25519·Merkle 일반 primitive", href: "/crypto/crypto-primitives" }, { label: "Canonical vote sign bytes", href: "/blockchain/cometbft-types#vote-commit" }],
+    evidence: [{ kind: "primary-source", rule: "Key length·verify option·prefix tree·hash length은 CometBFT v0.40.0 crypto source에만 귀속한다." }, { kind: "project-measurement", rule: "Canonical fixtures·bad length/domain/proof·batch parity를 release별로 재생한다." }, { kind: "project-claim", rule: "Validator signature를 user authorization·application validity로, root/address를 hiding·availability로 확대하지 않는다." }],
+  },
+  "cosmos-sdk": {
+    title: "Cosmos SDK v0.55.0 transaction execution 글이 소유하는 범위",
+    owns: ["BaseApp mode/branch와 ante→message pipeline", "Keeper capability와 CacheMultiStore child/parent/Commit 경계"],
+    reuses: [{ label: "ABCI candidate·committed authority", href: "/blockchain/cometbft-abci" }, { label: "CometBFT block execution", href: "/blockchain/cometbft-execution" }],
+    evidence: [{ kind: "primary-source", rule: "Mode·ante·bank·cache semantics는 Cosmos SDK v0.55.0 source에 귀속한다." }, { kind: "project-measurement", rule: "Check/Finalize/Simulate, child failure, conflict/retry, result/event/root parity를 pinned wiring에서 재생한다." }, { kind: "project-claim", rule: "CheckTx·child Write·handler return을 inclusion·durable commit·external rollback으로 확대하지 않는다." }],
+  },
+  "evmos": {
+    title: "Evmos v20.0.0 Ethereum/Cosmos bridge 글이 소유하는 범위",
+    owns: ["Ethereum ante에서 Cosmos execution으로의 bridge", "EVM StateDB/revert·token representation·IBC callback 경계"],
+    reuses: [{ label: "Cosmos SDK transaction/cache", href: "/blockchain/cosmos-sdk" }, { label: "CometBFT consensus/application", href: "/blockchain/cometbft" }],
+    evidence: [{ kind: "primary-source", rule: "Evmos 구현 사실은 historical v20.0.0 tag에 귀속하며 current cosmos/evm으로 확대하지 않는다." }, { kind: "project-measurement", rule: "Signer·fee·fork·revert·receipt/state·supply·ack/timeout parity를 같은 config에서 재생한다." }, { kind: "project-claim", rule: "Ante/EVM return/send receipt를 call success·commit·remote finality로 확대하지 않는다." }],
+  },
+  "dydx": {
+    title: "dYdX protocol/v9.6.3 CLOB·settlement 글이 소유하는 범위",
+    owns: ["Short-term/stateful order persistence와 proposer match validation", "Risk settlement와 rebuildable indexer projection 경계"],
+    reuses: [{ label: "CometBFT proposal authority", href: "/blockchain/cometbft-abci#prepare-process" }, { label: "Cosmos SDK state branch", href: "/blockchain/cosmos-sdk#baseapp" }],
+    evidence: [{ kind: "primary-source", rule: "Order flag·MemClob·match/risk·indexer semantics는 dYdX protocol/v9.6.3 source에 귀속한다." }, { kind: "project-measurement", rule: "같은 orders·oracle·subaccounts에서 operations/state/events parity와 duplicate/out-of-order indexer replay를 검사한다." }, { kind: "project-claim", rule: "Local book·proposer operation·indexer API를 global fairness·committed fill·consensus receipt로 확대하지 않는다." }],
   },
 } as const satisfies Record<string, EditorialBoundary>;
 

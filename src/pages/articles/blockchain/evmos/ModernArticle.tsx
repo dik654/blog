@@ -1,0 +1,36 @@
+import ExplainedFormula from "@/components/ui/explained-formula";
+import { CitationBlock } from "@/components/ui/citation-block";
+import { EvmosTxViz, RepresentationViz } from "./viz/ModernEvmosViz";
+
+export default function ModernEvmosArticle() {
+  return <article className="space-y-14">
+    <section id="overview" className="space-y-6">
+      <header className="space-y-3"><p className="text-sm font-semibold text-primary">Evmos v20.0.0 pinned implementation</p><h2 className="text-3xl font-bold tracking-tight">Evmos는 Ethereum transaction semantics를 Cosmos SDK state transition으로 실행하고 CometBFT로 순서를 확정한다</h2></header>
+      <p className="text-lg leading-8 text-foreground/90"><code>Alice→Bob 10</code>이라는 의도는 Cosmos <code>MsgSend</code>이나 Ethereum value transfer로 나타날 수 있지만 bytes, signer recovery, nonce, fee, gas, state owner는 다릅니다. Evmos v20은 Ethereum transaction을 Cosmos message envelope와 ante chain을 거쳐 EVM state transition으로 실행하고, EVM account·code·storage와 Cosmos module state를 하나의 application commit에 연결합니다.</p>
+      <p>이 글은 historical Evmos <code>v20.0.0</code>을 고정합니다. 현재 별도로 개발되는 <code>cosmos/evm</code>의 최신 동작을 혼합해 주장하지 않으며, Cosmos transaction branch의 기본은 <a className="text-primary hover:underline" href="/blockchain/cosmos-sdk#baseapp">Cosmos SDK 정본</a>을 재사용합니다.</p>
+      <EvmosTxViz />
+    </section>
+
+    <section id="evm-module" className="space-y-6">
+      <header><p className="text-sm font-semibold text-primary">01 · Ethereum ante → EVM</p><h2 className="mt-2 text-2xl font-bold">Sender recovery와 Cosmos sequence를 같은 transaction boundary에서 맞춘다</h2></header>
+      <p>Evmos의 ante handler는 Cosmos transaction과 Ethereum transaction path를 구분합니다. Ethereum path는 context setup, mempool/minimum gas price, basic transaction validation, Ethereum signature에서 sender recovery, account nonce·balance·transfer possibility, intrinsic gas, Cosmos account sequence increment을 검사합니다. Validator consensus key의 Ed25519 vote verification과 Alice의 secp256k1 transaction authorization은 서로 다른 계층입니다.</p>
+      <ExplainedFormula question="EIP-1559 transaction이 실제로 지불하는 gas price의 상한은 어떻게 결정되는가?" idea={<>Base fee에 tip cap을 더하되 Alice가 서명한 max fee를 넘지 않게 작은 값을 취합니다. Ante check와 EVM execution이 같은 chain config·base fee를 사용해야 합니다.</>} formula={String.raw`p_{effective}=\min\!\left(f_{max},\;f_{base}+f_{tip}\right),\qquad Fee=G_{used}\,p_{effective}`} terms={[{symbol:"f_{max}",name:"max fee per gas",description:"Sender가 지불을 허용한 gas 당 최대 가격입니다."},{symbol:"f_{base}",name:"block base fee",description:"Chain fee-market state에서 block에 귀속된 기본 fee입니다."},{symbol:"f_{tip}",name:"priority fee cap",description:"Proposer에게 제공하려는 추가 가격의 상한입니다."},{symbol:"G_{used}",name:"used EVM gas",description:"Intrinsic gas와 opcode/state access를 포함한 실제 사용량입니다."}]} assumptions={["Dynamic-fee transaction과 pinned Evmos v20 chain configuration을 사용합니다.","Amounts와 gas price는 chain의 integer denomination precision으로 계산합니다.","Refund, proposer reward/burn의 정확한 분배는 module policy를 따릅니다.","Max fee는 최종 total fee가 아니라 gas 당 상한입니다."]} interpretation="Base fee 20, tip cap 3, max fee 30이면 effective price는 23입니다. Max fee가 21이면 21이 되지만 base fee보다 낮은 transaction은 먼저 유효성 검사에서 거절될 수 있습니다." />
+      <div id="paper-evmos-ante-v20"><CitationBlock source="Evmos v20.0.0 — app/ante/evm" citeKey={1} type="code" href="https://github.com/evmos/evmos/tree/v20.0.0/app/ante/evm"><p><strong>문제:</strong> Ethereum transaction authorization·fee·nonce를 Cosmos SDK ante execution에 연결합니다.</p><p><strong>기여:</strong> Sender recovery, account/transfer/gas validation과 sequence update의 ordered decorators를 구현합니다.</p><p><strong>전제:</strong> Evmos v20 chain config, fee-market state와 x/evm transaction type을 사용합니다.</p><p><strong>근거 범위:</strong> Evmos v20 Ethereum ante path입니다.</p><p><strong>말하지 않는 것:</strong> Ante success를 EVM call success·block inclusion·commit으로 보장하지 않습니다.</p></CitationBlock></div>
+    </section>
+
+    <section id="revenue-module" className="space-y-6">
+      <header><p className="text-sm font-semibold text-primary">02 · StateDB journal</p><h2 className="mt-2 text-2xl font-bold">EVM revert와 Cosmos cache rollback을 하나의 transaction result로 맞춘다</h2></header>
+      <p>EVM은 execution 도중 account balance·nonce, contract code·storage, access list, logs, refund counter를 바꾸며 revert에서 snapshot으로 되돌립니다. Evmos StateDB/journal은 이 변경을 Cosmos context/store와 연결합니다. EVM이 REVERT했는데 Cosmos bank write만 남거나, 반대로 log는 남고 state는 되돌리는 부분 성공을 허용하면 Ethereum receipt semantics과 AppHash가 갈라집니다.</p>
+      <p><code>MsgEthereumTx</code> execution은 EVM response, gas used, logs·contract address와 error를 Cosmos result/event로 옮깁니다. Commit authority는 EVM interpreter return이 아니라 Cosmos SDK block branch와 application Commit에 있으므로 crash test는 transaction return, store version, receipt/log과 balance/nonce를 같은 height에서 대조해야 합니다.</p>
+      <div id="paper-evmos-statedb-v20"><CitationBlock source="Evmos v20.0.0 — x/evm/keeper · x/evm/statedb" citeKey={2} type="code" href="https://github.com/evmos/evmos/tree/v20.0.0/x/evm"><p><strong>문제:</strong> Ethereum state transition·revert·receipt를 Cosmos KV state와 일치시킵니다.</p><p><strong>기여:</strong> EVM keeper, StateDB journal, message server와 result/event conversion을 구현합니다.</p><p><strong>전제:</strong> v20 EVM fork config, Cosmos store/cache semantics와 deterministic block context를 사용합니다.</p><p><strong>근거 범위:</strong> Evmos v20 EVM execution·state bridge입니다.</p><p><strong>말하지 않는 것:</strong> 모든 Ethereum client와 byte-for-byte database schema가 같거나 external side effect가 rollback된다고 말하지 않습니다.</p></CitationBlock></div>
+    </section>
+
+    <section id="ibc-integration" className="space-y-6">
+      <header><p className="text-sm font-semibold text-primary">03 · ERC-20·IBC</p><h2 className="mt-2 text-2xl font-bold">Token amount보다 authoritative representation과 packet acknowledgement를 먼저 본다</h2></header>
+      <p>Native Cosmos coin balance와 ERC-20 contract balance는 서로 다른 store owner에 있습니다. Token-pair conversion은 coin을 escrow/burn하고 ERC-20을 mint하거나 반대 transition을 수행하며, supply conservation과 mapping uniqueness를 같이 검사해야 합니다. IBC transfer는 source/sink zone, denom trace, packet sequence·timeout·acknowledgement이 추가되므로 EVM call success만으로 remote credit를 확정하면 안 됩니다.</p>
+      <RepresentationViz />
+      <div id="paper-evmos-erc20-ibc-v20"><CitationBlock source="Evmos v20.0.0 — x/erc20 IBC middleware" citeKey={3} type="code" href="https://github.com/evmos/evmos/blob/v20.0.0/x/erc20/ibc_middleware.go"><p><strong>문제:</strong> ICS-20 packet lifecycle에 Cosmos coin/ERC-20 representation conversion을 연결합니다.</p><p><strong>기여:</strong> Receive, acknowledgement, timeout callback을 underlying IBC app과 ERC-20 keeper에 연결합니다.</p><p><strong>전제:</strong> v20 token-pair registration, compatible IBC stack와 packet proof/timeout semantics를 사용합니다.</p><p><strong>근거 범위:</strong> Evmos v20 ERC-20 IBC middleware callback boundary입니다.</p><p><strong>말하지 않는 것:</strong> Send receipt를 remote finality로, UI symbol equality를 asset identity로 보장하지 않습니다.</p></CitationBlock></div>
+      <h3 className="text-xl font-semibold">이 글만으로 풀어야 하는 10문제</h3><p>기초 6문제는 transaction envelope, sender/nonce, fee, EVM transition, StateDB/commit, representation을 확인합니다. 심화 4문제는 revert leakage, fork-config drift, token supply mismatch와 IBC ack/timeout release gate를 설계하게 합니다.</p>
+    </section>
+  </article>;
+}

@@ -1,0 +1,11 @@
+const card = "min-w-0 rounded-lg border border-border/70 bg-background p-4";
+
+export function CosmosTxViz() {
+  const steps = [["decode", "Tx bytes → sdk.Tx"], ["ante", "fee·sequence·signature·gas"], ["route", "MsgSend → bank MsgServer"], ["write branch", "Alice −10, Bob +10"], ["Finalize/Commit", "block result → durable version"]];
+  return <figure data-viz="cosmos-sdk-tx" className="not-prose my-8 overflow-hidden rounded-xl border border-border/70 bg-muted/20 p-4 sm:p-6"><figcaption className="mb-5"><p className="text-xs font-bold text-primary">Alice→Bob 10 stake의 application path</p><p className="mt-1 text-sm text-muted-foreground">CheckTx에서 실행한 branch와 block FinalizeBlock의 branch는 목적과 commit authority가 다릅니다.</p></figcaption><div data-viz-canvas className="grid min-w-0 gap-3 sm:grid-cols-2 xl:grid-cols-5">{steps.map(([name, detail], i) => <div className={card} key={name}><span className="text-xs font-bold text-primary">0{i + 1}</span><p className="mt-2 font-semibold">{name}</p><p className="mt-2 text-sm text-muted-foreground">{detail}</p></div>)}</div></figure>;
+}
+
+export function ExecutionModeViz() {
+  const rows = [["CheckTx", "mempool admission", "discard branch", "OK ≠ commit"], ["Simulate", "fee/gas preview", "discard branch", "estimate only"], ["FinalizeBlock", "ordered block execution", "block branch", "Commit이 durable"], ["Query", "versioned read", "no write", "height-bound result"]];
+  return <figure data-viz="cosmos-sdk-modes" className="not-prose my-8 overflow-hidden rounded-xl border border-border/70 bg-muted/20 p-4 sm:p-6"><figcaption className="mb-5"><p className="text-xs font-bold text-primary">Mode별 authority와 write destination</p><p className="mt-1 text-sm text-muted-foreground">같은 handler를 호출해도 context mode와 CacheMultiStore branch가 결과의 권위를 결정합니다.</p></figcaption><div data-viz-canvas className="grid min-w-0 gap-3 md:grid-cols-2">{rows.map(([mode, purpose, write, receipt]) => <div className={card} key={mode}><p className="font-semibold">{mode}</p><p className="mt-2 text-sm text-muted-foreground">{purpose}</p><div className="mt-3 grid gap-2 border-t border-border pt-3 text-sm sm:grid-cols-2"><span>{write}</span><span>{receipt}</span></div></div>)}</div></figure>;
+}

@@ -1,17 +1,5 @@
-import Overview from "./phala/Overview";
-import PhatContract from "./phala/PhatContract";
-import TEEWorker from "./phala/TEEWorker";
-import DistributedCompute from "./phala/DistributedCompute";
-import Tokenomics from "./phala/Tokenomics";
+import ModernArticle from "./phala/ModernArticle";
 
 export default function PhalaArticle() {
-  return (
-    <>
-      <Overview />
-      <PhatContract />
-      <TEEWorker />
-      <DistributedCompute />
-      <Tokenomics />
-    </>
-  );
+  return <ModernArticle />;
 }

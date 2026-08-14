@@ -4,15 +4,14 @@ export const defiArticles: Article[] = [
   /* ── DEX ── */
   {
     slug: "dydx",
-    title: "dYdX v4 (Cosmos SDK 기반 탈중앙화 거래소)",
+    title: "dYdX v4: order gossip에서 deterministic settlement까지",
     subcategory: "defi-dex",
     sections: [
-      { id: "overview", title: "개요" },
-      { id: "orderbook-architecture", title: "오더북 아키텍처" },
-      { id: "matching-engine", title: "매칭 엔진" },
-      { id: "cosmos-integration", title: "Cosmos SDK 통합" },
-      { id: "indexer", title: "인덱서" },
-      { id: "frontend", title: "프론트엔드" },
+      { id: "overview", title: "Transaction과 order는 같은 것이 아니다" },
+      { id: "orderbook-architecture", title: "Short-term·stateful order" },
+      { id: "matching-engine", title: "Proposal operation·matching·risk" },
+      { id: "cosmos-integration", title: "Consensus에서 settlement까지" },
+      { id: "indexer", title: "Indexer projection·replay" },
     ],
     component: () => import("@/pages/articles/blockchain/dydx"),
   },

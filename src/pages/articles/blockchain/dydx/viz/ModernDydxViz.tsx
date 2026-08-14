@@ -1,0 +1,11 @@
+const card = "min-w-0 rounded-lg border border-border/70 bg-background p-4";
+
+export function OrderPathViz() {
+  const rows = [["short-term", "gossip·CheckTx MemClob", "proposed operation에 fill/removal", "block height expiry"], ["long-term", "stateful MsgPlaceOrder", "KV state + MemClob mirror", "block time expiry"], ["conditional", "stateful trigger condition", "trigger 후 active order", "oracle-dependent"]];
+  return <figure data-viz="dydx-order-path" className="not-prose my-8 overflow-hidden rounded-xl border border-border/70 bg-muted/20 p-4 sm:p-6"><figcaption className="mb-5"><p className="text-xs font-bold text-primary">Order class별 persistence·proposal path</p><p className="mt-1 text-sm text-muted-foreground">Order를 받았다는 local receipt와 fill이 consensus state에 반영됐다는 receipt를 구분합니다.</p></figcaption><div data-viz-canvas className="grid min-w-0 gap-3 md:grid-cols-3">{rows.map(([kind, ingress, persisted, expiry]) => <div className={card} key={kind}><p className="font-semibold">{kind}</p><p className="mt-2 text-sm text-muted-foreground">Ingress · {ingress}</p><p className="mt-3 text-sm">Receipt · {persisted}</p><p className="mt-3 border-t border-border pt-3 text-xs">Expiry · {expiry}</p></div>)}</div></figure>;
+}
+
+export function AuthorityViz() {
+  const steps = [["Alice bid·Bob ask", "node-local order views"], ["proposer operations", "candidate ordered matches"], ["replica validation", "order·fill·risk checks"], ["FinalizeBlock", "positions·balances·events"], ["indexer/frontend", "rebuildable query projection"]];
+  return <figure data-viz="dydx-authority" className="not-prose my-8 overflow-hidden rounded-xl border border-border/70 bg-muted/20 p-4 sm:p-6"><figcaption className="mb-5"><p className="text-xs font-bold text-primary">Order intent에서 authoritative settlement까지</p><p className="mt-1 text-sm text-muted-foreground">Frontend의 order status는 편리한 projection이며, 재생성과 chain state 대조가 필요합니다.</p></figcaption><div data-viz-canvas className="grid min-w-0 gap-3 sm:grid-cols-2 xl:grid-cols-5">{steps.map(([name, detail], i) => <div className={card} key={name}><span className="text-xs font-bold text-primary">0{i + 1}</span><p className="mt-2 break-words font-semibold">{name}</p><p className="mt-2 text-sm text-muted-foreground">{detail}</p></div>)}</div></figure>;
+}
