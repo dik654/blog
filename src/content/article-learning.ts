@@ -4283,354 +4283,125 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
-  "ai/math-optimization-convexity": {
-    coreIdea:
-      "Optimization은 objective와 domain에서 minimizer를 찾는 문제입니다. Gradient descent는 local linear model의 negative gradient 방향으로 learning-rate만큼 이동하며, convexity·smoothness·strong convexity 같은 전제가 있을 때만 명시적인 convergence guarantee를 얻습니다.",
+  "ai/math-optimization-objectives": {
+    coreIdea: "Optimization은 decision variable·objective·constraint를 먼저 고정하고 feasible set 안의 minimizer 위치와 minimum value를 분리하는 문제입니다.",
     assumedKnowledge: [
-      {
-        id: "function-mapping",
-        role: "선택 변수를 scalar objective로 보내는 규칙을 읽습니다.",
-      },
-      {
-        id: "local-linear-approximation",
-        role: "현재 gradient가 예측하는 작은 이동의 objective 변화를 읽습니다.",
-      },
-      {
-        id: "gradient",
-        role: "Euclidean geometry에서 가장 빠른 증가 방향과 negative descent direction을 구분합니다.",
-      },
-      {
-        id: "euclidean-norm",
-        role: "Gradient 변화와 step 거리, convergence bound의 크기를 측정합니다.",
-      },
+      { id: "function-mapping", role: "Decision variable을 scalar score로 보내는 objective를 읽습니다." },
     ],
     introducedHere: [
-      {
-        id: "optimization-objective",
-        role: "최소화할 scalar 기준과 허용 domain을 고정합니다.",
-      },
-      {
-        id: "minimizer",
-        role: "Minimum value와 그 값을 만드는 입력 위치를 구분합니다.",
-      },
-      {
-        id: "convex-function",
-        role: "Chord inequality로 local과 global optimum을 연결하는 구조를 판별합니다.",
-      },
-      {
-        id: "gradient-descent",
-        role: "Negative gradient 방향의 반복 update를 정의합니다.",
-      },
-      {
-        id: "learning-rate",
-        role: "Descent direction을 실제 step 크기로 바꿉니다.",
-      },
-      {
-        id: "l-smoothness",
-        role: "Gradient 변화와 local linear approximation 오차를 제한합니다.",
-      },
-      {
-        id: "strong-convexity",
-        role: "Minimizer 주변의 최소 curvature를 정합니다.",
-      },
-      {
-        id: "condition-number",
-        role: "Curvature 불균형과 convergence 난도를 L/μ로 읽습니다.",
-      },
-      {
-        id: "optimization-convergence",
-        role: "전제 아래 objective gap의 반복 수별 상한을 설명합니다.",
-      },
-      {
-        id: "stationary-point",
-        role: "Gradient가 0인 위치와 global optimum을 구분합니다.",
-      },
+      { id: "optimization-objective", role: "선택을 비교할 scalar 점수와 decision variable을 고정합니다." },
+      { id: "optimization-feasible-set", role: "Constraint를 모두 만족하는 제출 가능한 선택만 남깁니다." },
+      { id: "minimizer", role: "Argmin 위치와 minimum value를 분리합니다." },
     ],
     conceptExplanations: [
-      {
-        id: "optimization-objective",
-        sectionId: "objective",
-        intuition:
-          "여러 선택 가운데 무엇이 더 좋은지 숫자 하나로 비교하는 점수판입니다.",
-        workedExample:
-          "f(x)=(x−3)²+2를 최소화하면 x를 3에 가깝게 만드는 선택이 좋습니다.",
-        boundary:
-          "Objective가 실제 task 가치 전체와 같다는 뜻은 아니며 domain·constraint와 함께 정의해야 합니다.",
-      },
-      {
-        id: "minimizer",
-        sectionId: "objective",
-        intuition:
-          "점수판이 가장 낮아지는 위치이며 가장 낮은 점수 자체와 구분합니다.",
-        workedExample:
-          "f(x)=(x−3)²+2의 minimizer는 x*=3이고 minimum value는 f*=2입니다.",
-        boundary:
-          "Minimizer가 없거나 여러 개일 수 있고, local minimizer가 global minimizer와 다를 수 있습니다.",
-      },
-      {
-        id: "convex-function",
-        sectionId: "convexity",
-        intuition:
-          "Graph의 두 점을 줄로 이었을 때 곡선이 줄보다 위로 솟지 않는 함수입니다.",
-        workedExample:
-          "x²은 모든 두 점 사이에서 chord 아래에 있어 convex이고 −x²은 그렇지 않습니다.",
-        boundary:
-          "그릇처럼 보이는 그림만으로 증명할 수 없으며 domain의 모든 두 점과 모든 λ에서 inequality를 확인해야 합니다.",
-      },
-      {
-        id: "gradient-descent",
-        sectionId: "gradient-descent",
-        intuition:
-          "현재 발밑의 가장 가파른 오르막을 재고 정확히 반대 방향으로 작은 발걸음을 반복합니다.",
-        workedExample:
-          "f=x²/2, η=0.5이면 x=4→2→1→0.5로 minimizer 0에 가까워집니다.",
-        boundary:
-          "Negative gradient는 local descent direction일 뿐 큰 step·constraint·nondifferentiability를 자동으로 처리하지 않습니다.",
-      },
-      {
-        id: "learning-rate",
-        sectionId: "gradient-descent",
-        intuition:
-          "방향 정보에 곱해 한 번에 얼마나 멀리 이동할지 정하는 보폭입니다.",
-        workedExample:
-          "f=x²/2에서 η=0.5는 수축하지만 η=3은 4→−8→16으로 발산합니다.",
-        boundary:
-          "같은 숫자도 objective scale·parameterization·optimizer에 따라 다른 실제 update를 만듭니다.",
-      },
-      {
-        id: "l-smoothness",
-        sectionId: "smoothness",
-        intuition:
-          "조금 이동했을 때 경사도가 얼마나 갑자기 바뀔 수 있는지에 상한을 둡니다.",
-        workedExample:
-          "f=ax²/2의 gradient ax는 두 점 사이에서 a배만큼 변하므로 L=a입니다.",
-        boundary:
-          "Smoothness는 convexity가 아니며 전역 L이 지나치게 크거나 존재하지 않을 수도 있습니다.",
-      },
-      {
-        id: "strong-convexity",
-        sectionId: "convergence",
-        intuition:
-          "그릇 바닥이 너무 평평해지지 않도록 최소한의 quadratic 굽음을 요구합니다.",
-        workedExample:
-          "f(x)=μx²/2는 μ-strongly convex이고 minimizer에서 멀어질수록 적어도 μ curvature만큼 증가합니다.",
-        boundary:
-          "일반 deep-network loss에는 전역 strong convexity가 없으므로 같은 linear-rate theorem을 그대로 적용할 수 없습니다.",
-      },
-      {
-        id: "condition-number",
-        sectionId: "convergence",
-        intuition:
-          "가장 가파른 방향과 가장 평평한 방향의 굽음 차이가 얼마나 큰지를 재는 난도 비율입니다.",
-        workedExample:
-          "L=100, μ=1이면 condition number 100이라 fixed-step gradient descent가 좁고 긴 골짜기에서 느립니다.",
-        boundary:
-          "Parameter scaling과 geometry에 따라 값이 달라지며 모든 optimizer의 실제 wall-clock을 하나로 예측하지 않습니다.",
-      },
-      {
-        id: "optimization-convergence",
-        sectionId: "convergence",
-        intuition:
-          "몇 step 뒤 optimum과의 gap이 얼마나 작아지는지 전제와 함께 제한하는 문장입니다.",
-        workedExample:
-          "μ-strong convex·L-smooth에서 η=1/L이면 objective gap은 (1−μ/L)^t배 이하로 줄어드는 bound를 얻습니다.",
-        boundary:
-          "Convexity·smoothness·exact gradient·step-size 조건이 빠지면 결론도 사라집니다. Bound가 실제 속도와 정확히 같다는 뜻도 아닙니다.",
-        proofIdea:
-          "Descent lemma에 gradient step을 대입해 한 step 감소량을 gradient norm으로 제한하고, strong convexity로 gradient norm과 objective gap을 연결해 geometric contraction을 얻습니다.",
-        counterexample:
-          "Convex smooth f=x²/2도 η=2이면 4와 −4 사이를 진동하고 η>2이면 크기가 커지므로 적절한 step-size 전제 없이는 수렴하지 않습니다.",
-      },
-      {
-        id: "stationary-point",
-        sectionId: "nonconvex",
-        intuition:
-          "모든 first-order 방향의 기울기가 0인 평평한 지점이지만 그곳이 바닥이라는 뜻은 아닙니다.",
-        workedExample:
-          "f(x)=x³의 x=0은 derivative 0이지만 local minimum이 아니며, multi-dimensional saddle도 gradient가 0일 수 있습니다.",
-        boundary:
-          "Convex differentiable 함수에서는 stationary point가 global minimizer지만 nonconvex 문제에서는 maximum·saddle을 포함합니다.",
-      },
+      { id: "optimization-objective", sectionId: "overview", intuition: "여러 선택을 같은 숫자 축에서 비교하는 점수판입니다.", workedExample: "f(x)=(x−3)²+2는 x가 3에서 멀수록 큰 penalty를 줍니다.", boundary: "Proxy objective를 실제 task 가치 전체와 동일시하지 않습니다." },
+      { id: "optimization-feasible-set", sectionId: "feasible-set", intuition: "규칙을 모두 지킨 뒤 실제 제출 가능한 선택만 모은 영역입니다.", workedExample: "0≤x≤2의 feasible set은 [0,2]입니다.", boundary: "집합이 비어 있으면 solver보다 problem definition을 먼저 수정합니다." },
+      { id: "minimizer", sectionId: "minimizer", intuition: "점수가 가장 낮아지는 위치이며 가장 낮은 점수 자체와 구분합니다.", workedExample: "Unconstrained 답은 x*=3,f*=2이고 [0,2]에서는 x*=2,f*=3입니다.", boundary: "Minimizer가 없거나 여러 개일 수 있고 local과 global은 비교 범위가 다릅니다." },
     ],
     conceptStages: [
-      {
-        label: "문제",
-        relation: "최소화할 함수와 정답 위치를 구분",
-        concepts: ["function-mapping", "optimization-objective", "minimizer"],
-      },
-      {
-        label: "구조",
-        relation: "Local minimum을 global minimum과 연결할 수 있는지 판별",
-        concepts: ["convex-function", "minimizer"],
-      },
-      {
-        label: "반복",
-        relation: "Local gradient와 step size로 다음 위치 선택",
-        concepts: [
-          "gradient",
-          "local-linear-approximation",
-          "learning-rate",
-          "gradient-descent",
-        ],
-      },
-      {
-        label: "곡률",
-        relation: "Gradient 변화와 안전한 step 범위 제한",
-        concepts: ["l-smoothness", "strong-convexity", "condition-number"],
-      },
-      {
-        label: "보장",
-        relation:
-          "전제에서 objective-gap convergence를 유도하고 nonconvex 경계를 확인",
-        concepts: [
-          "gradient-descent",
-          "optimization-convergence",
-          "stationary-point",
-        ],
-      },
+      { label: "평가", relation: "Decision variable을 scalar objective로 평가", concepts: ["function-mapping", "optimization-objective"] },
+      { label: "허용", relation: "Constraint를 만족하는 선택만 남김", concepts: ["optimization-objective", "optimization-feasible-set"] },
+      { label: "선택", relation: "Feasible candidate 중 최저 위치와 값을 분리", concepts: ["optimization-feasible-set", "minimizer"] },
     ],
     exercises: [
-      {
-        level: "basic",
-        question:
-          "f(x)=(x−3)²+2를 domain x∈[0,2]에서 최소화할 때 minimizer와 minimum value를 구하고 unconstrained 정답과 다른 이유를 설명할 수 있을까요?",
-        answerChecklist: [
-          "Unconstrained minimizer x=3은 domain 밖이라고 판정한다.",
-          "허용 구간에서 3에 가장 가까운 x*=2를 minimizer로 구한다.",
-          "f(2)=3을 minimum value로 계산하고 objective·domain이 함께 문제를 정의한다고 설명한다.",
-        ],
-        requiredConcepts: ["optimization-objective", "minimizer"],
-        sectionId: "objective",
-      },
-      {
-        level: "basic",
-        question:
-          "f(x)=3x²/2의 smoothness constant L을 구하고 x₀=2에서 η=1/L gradient step 한 번을 계산할 수 있을까요?",
-        answerChecklist: [
-          "Gradient f′(x)=3x를 구한다.",
-          "Gradient 차이가 3|x−y|이므로 L=3임을 적는다.",
-          "x₁=2−(1/3)·6=0을 계산한다.",
-        ],
-        requiredConcepts: ["l-smoothness", "gradient-descent", "learning-rate"],
-        sectionId: "smoothness",
-      },
-      {
-        level: "basic",
-        question:
-          "Gradient가 0인 점이 minimum이라고 단정하면 안 되는 이유를 x², −x², x²−y²의 원점으로 구분할 수 있을까요?",
-        answerChecklist: [
-          "세 함수 모두 원점의 gradient가 0임을 확인한다.",
-          "x²의 원점은 minimum, −x²의 원점은 maximum으로 분류한다.",
-          "x²−y²의 원점은 방향에 따라 증가·감소가 갈리는 saddle라고 설명한다.",
-        ],
-        requiredConcepts: ["stationary-point", "gradient"],
-        sectionId: "nonconvex",
-      },
-      {
-        level: "advanced",
-        question:
-          "μ=2, L=8인 strongly convex·smooth objective에서 η=1/L을 쓸 때 condition number와 4 step 뒤 objective-gap bound를 초기 gap의 비율로 계산하고 이 bound의 전제를 적을 수 있을까요?",
-        answerChecklist: [
-          "Condition number L/μ=4를 계산한다.",
-          "한 step contraction upper bound 1−μ/L=3/4를 구한다.",
-          "4 step 후 gap이 초기 gap의 (3/4)⁴=81/256≈0.316 이하라고 계산한다.",
-          "전역 μ-strong convexity·L-smoothness·exact gradient·η=1/L 전제와 upper bound이 실제 경로의 등호를 뜻하지 않음을 명시한다.",
-        ],
-        requiredConcepts: [
-          "strong-convexity",
-          "l-smoothness",
-          "condition-number",
-          "optimization-convergence",
-        ],
-        sectionId: "convergence",
-      },
-      {
-        level: "basic",
-        question:
-          "f(x)=(x−3)²+2의 minimizer와 minimum value를 구하고 argmin과 min의 차이를 설명할 수 있을까요?",
-        answerChecklist: [
-          "x*=3을 minimizer로 구한다.",
-          "f*=2를 minimum value로 구한다.",
-          "입력 위치와 함수값을 구분한다.",
-        ],
-        requiredConcepts: ["optimization-objective", "minimizer"],
-        sectionId: "objective",
-      },
-      {
-        level: "basic",
-        question:
-          "f(x)=x²/2, x0=4에서 η=0.5와 η=3의 첫 세 update를 비교해 learning rate의 역할을 설명할 수 있을까요?",
-        answerChecklist: [
-          "Update x_{t+1}=(1−η)x_t를 유도한다.",
-          "η=0.5는 4→2→1→0.5로 계산한다.",
-          "η=3은 4→−8→16으로 발산한다고 설명한다.",
-        ],
-        requiredConcepts: ["gradient-descent", "learning-rate", "gradient"],
-        sectionId: "gradient-descent",
-      },
-      {
-        level: "basic",
-        question:
-          "Convexity inequality를 이용해 x²이 convex임을 두 점의 square 차이로 설명할 수 있을까요?",
-        answerChecklist: [
-          "λx+(1−λ)y의 제곱과 weighted square를 비교한다.",
-          "차이가 λ(1−λ)(x−y)²≥0임을 보인다.",
-          "모든 λ∈[0,1] 조건을 말한다.",
-        ],
-        requiredConcepts: ["convex-function", "optimization-objective"],
-        sectionId: "convexity",
-      },
-      {
-        level: "advanced",
-        question:
-          "L-smooth descent lemma에서 learning rate 1/L의 gradient step이 objective를 줄이는 이유를 식의 각 항으로 설명할 수 있을까요?",
-        answerChecklist: [
-          "y−x=−∇f(x)/L를 대입한다.",
-          "Linear 항과 quadratic allowance를 합쳐 −||∇f||²/(2L)를 얻는다.",
-          "Smoothness가 없거나 gradient가 0일 때의 경계를 말한다.",
-        ],
-        requiredConcepts: [
-          "l-smoothness",
-          "gradient-descent",
-          "learning-rate",
-          "euclidean-norm",
-        ],
-        sectionId: "smoothness",
-      },
-      {
-        level: "advanced",
-        question:
-          "Strongly convex·smooth convergence bound의 proof idea와 η=2 quadratic 반례를 함께 설명할 수 있을까요?",
-        answerChecklist: [
-          "Descent lemma가 한 step 감소를 준다고 설명한다.",
-          "Strong convexity가 gradient norm과 objective gap을 연결한다고 설명한다.",
-          "f=x²/2, η=2가 진동해 step-size 전제가 필요함을 보인다.",
-        ],
-        requiredConcepts: [
-          "strong-convexity",
-          "l-smoothness",
-          "gradient-descent",
-          "optimization-convergence",
-          "condition-number",
-        ],
-        sectionId: "convergence",
-      },
-      {
-        level: "advanced",
-        question:
-          "Nonconvex neural-network training에서 gradient norm이 작아졌다는 사실만으로 global optimum과 generalization을 결론낼 수 없는 이유는 무엇일까요?",
-        answerChecklist: [
-          "Stationary point가 local maximum·saddle일 수도 있다고 설명한다.",
-          "Nonconvex에서는 convex global-optimality 결론이 사라진다고 말한다.",
-          "Validation metric과 numerical·resource signal을 별도로 확인한다고 제안한다.",
-        ],
-        requiredConcepts: [
-          "stationary-point",
-          "convex-function",
-          "optimization-convergence",
-        ],
-        sectionId: "nonconvex",
-      },
+      { level: "basic", question: "f(x)=(x−3)²+2에서 decision variable과 objective를 식별할 수 있을까요?", answerChecklist: ["바꾸는 선택은 x라고 적는다.", "비교 scalar는 f(x)라고 적는다.", "상수는 decision variable이 아니라고 구분한다."], requiredConcepts: ["optimization-objective"], sectionId: "overview" },
+      { level: "basic", question: "메모리 48GiB 이하 규칙이 objective가 아닌 이유를 설명할 수 있을까요?", answerChecklist: ["Objective는 선택을 비교한다.", "48GiB는 허용 여부를 판정한다.", "허용 선택만 feasible set에 들어간다."], requiredConcepts: ["optimization-objective", "optimization-feasible-set"], sectionId: "feasible-set" },
+      { level: "basic", question: "0≤x≤2의 feasible set과 x=3의 허용 여부를 판정할 수 있을까요?", answerChecklist: ["C=[0,2]라고 쓴다.", "x=3은 upper bound 밖이다.", "낮은 score라도 infeasible이면 답이 아니다."], requiredConcepts: ["optimization-feasible-set"], sectionId: "feasible-set" },
+      { level: "basic", question: "Unconstrained minimizer와 minimum value를 구분할 수 있을까요?", answerChecklist: ["x*=3을 구한다.", "f(3)=2를 계산한다.", "Argmin은 위치, min은 값이라고 말한다."], requiredConcepts: ["optimization-objective", "minimizer"], sectionId: "minimizer" },
+      { level: "basic", question: "같은 objective를 [0,2]에서 최소화할 수 있을까요?", answerChecklist: ["3이 infeasible임을 확인한다.", "x*=2를 고른다.", "f*=3을 계산한다."], requiredConcepts: ["optimization-feasible-set", "minimizer"], sectionId: "boundaries" },
+      { level: "basic", question: "여러 위치가 같은 minimum을 만들 때 argmin을 어떻게 표현할까요?", answerChecklist: ["Argmin은 위치 집합이다.", "Minimum value는 scalar일 수 있다.", "위치와 값을 같은 기호로 쓰지 않는다."], requiredConcepts: ["minimizer"], sectionId: "minimizer" },
+      { level: "advanced", question: "Hard constraint를 penalty로 바꾸면 무엇이 달라질까요?", answerChecklist: ["Hard constraint는 후보를 제외한다.", "Finite penalty는 위반 후보를 남길 수 있다.", "필수 조건은 별도 gate로 둔다."], requiredConcepts: ["optimization-objective", "optimization-feasible-set"], sectionId: "feasible-set" },
+      { level: "advanced", question: "Feasible set이 비었을 때 learning rate 조정이 답이 아닌 이유는 무엇일까요?", answerChecklist: ["허용 candidate가 없다고 진단한다.", "Minimizer domain이 비었다고 말한다.", "Constraint 충돌을 먼저 고친다."], requiredConcepts: ["optimization-feasible-set", "minimizer"], sectionId: "feasible-set" },
+      { level: "advanced", question: "Proxy objective 감소와 제품 가치 악화가 함께 일어나는 반례를 설계할 수 있을까요?", answerChecklist: ["Proxy와 실제 goal을 분리한다.", "다른 safety·quality metric 악화 예를 든다.", "Validation과 release constraint를 추가한다."], requiredConcepts: ["optimization-objective"], sectionId: "boundaries" },
+      { level: "advanced", question: "Interval clipping이 보편 constrained solver가 아닌 이유는 무엇일까요?", answerChecklist: ["1차원 interval projection이라고 식별한다.", "Coupled constraint에는 coordinate clipping이 부족하다.", "Constraint geometry에 맞는 solver가 필요하다."], requiredConcepts: ["optimization-feasible-set", "minimizer"], sectionId: "boundaries" },
+    ],
+  },
+  "ai/math-optimization-convexity": {
+    coreIdea: "Convexity는 chord geometry를, L-smoothness는 gradient 변화 상한을, strong convexity는 최소 curvature를 정하고 condition number L/μ가 불균형을 요약합니다.",
+    assumedKnowledge: [
+      { id: "optimization-objective", role: "구조를 검사할 scalar objective를 읽습니다." },
+      { id: "minimizer", role: "함수 구조가 local과 global 정답을 연결하는 조건을 봅니다." },
+      { id: "gradient", role: "두 위치의 slope 차이를 읽습니다." },
+      { id: "local-linear-approximation", role: "현재 slope의 first-order prediction을 읽습니다." },
+      { id: "euclidean-norm", role: "Gradient 변화와 이동 거리를 비교합니다." },
+    ],
+    introducedHere: [
+      { id: "convex-function", role: "Chord inequality로 global geometry를 판별합니다." },
+      { id: "l-smoothness", role: "Gradient 변화 upper bound를 정의합니다." },
+      { id: "descent-lemma", role: "Linear prediction error를 quadratic allowance로 제한합니다." },
+      { id: "strong-convexity", role: "Minimizer 주변 최소 curvature를 정합니다." },
+      { id: "condition-number", role: "Curvature 불균형을 L/μ로 읽습니다." },
+    ],
+    conceptExplanations: [
+      { id: "convex-function", sectionId: "convexity", intuition: "두 graph point를 이은 줄 위로 함수가 솟지 않습니다.", workedExample: "x^2의 chord gap은 λ(1−λ)(x−y)^2≥0입니다.", boundary: "모든 두 점과 λ∈[0,1]에서 확인합니다." },
+      { id: "l-smoothness", sectionId: "smoothness", intuition: "이동할 때 slope가 얼마나 급히 바뀔지 상한을 둡니다.", workedExample: "f(x)=ax^2/2이면 gradient는 ax입니다. 두 점 x,y에서 gradient 차이는 |ax−ay|=a|x−y|이므로 거리 한 단위당 slope 변화의 가장 작은 상한은 L=a입니다.", boundary: "Smoothness와 convexity는 서로 다른 조건입니다." },
+      { id: "descent-lemma", sectionId: "smoothness", intuition: "Tangent prediction에 curvature 최대 오차를 더한 upper envelope입니다.", workedExample: "f(x+d)≤f(x)+∇f(x)ᵀd+L‖d‖^2/2입니다. 첫 변화 항은 현재 slope가 예측한 이동이고 마지막 항은 slope가 이동 중 바뀔 수 있는 최대 오차입니다.", boundary: "L-smooth domain 밖에는 적용하지 않습니다.", proofIdea: "x에서 x+d까지 직선을 따라 움직이며 gradient를 적분합니다. 출발 gradient가 만드는 선형 변화와 실제 gradient의 차이는 이동 거리 s마다 최대 Ls이므로, 0부터 ‖d‖까지 적분하면 L‖d‖^2/2의 이차 여유가 생깁니다.", counterexample: "f(x)=|x|는 convex이지만 원점에서 gradient가 정의되지 않고 slope가 −1에서 1로 갑자기 뜁니다. 따라서 유한한 L의 smooth gradient를 전제로 한 descent lemma를 원점을 가로질러 그대로 적용할 수 없습니다." },
+      { id: "strong-convexity", sectionId: "curvature-range", intuition: "바닥이 너무 평평하지 않도록 최소 굽음을 요구합니다.", workedExample: "μx^2/2는 μ-strongly convex입니다.", boundary: "일반 deep loss에는 전역 strong convexity가 없습니다." },
+      { id: "condition-number", sectionId: "curvature-range", intuition: "가장 급한 방향과 평평한 방향의 curvature 비입니다.", workedExample: "L=100, μ=1이면 κ=100입니다.", boundary: "Parameter scaling에 따라 달라지며 wall-clock 자체가 아닙니다." },
+    ],
+    conceptStages: [
+      { label: "Chord", relation: "두 점 사이 global shape 판별", concepts: ["optimization-objective", "convex-function"] },
+      { label: "Upper", relation: "Gradient 변화와 tangent error 제한", concepts: ["gradient", "local-linear-approximation", "l-smoothness", "descent-lemma"] },
+      { label: "Lower", relation: "평평함 하한과 minimizer geometry", concepts: ["convex-function", "minimizer", "strong-convexity"] },
+      { label: "Ratio", relation: "Curvature 불균형 요약", concepts: ["l-smoothness", "strong-convexity", "condition-number"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Convexity inequality의 mixed input과 chord를 식별할 수 있을까요?", answerChecklist: ["z=λx+(1−λ)y를 적는다.", "Weighted function values를 chord라 한다.", "f(z)가 chord 이하여야 한다."], requiredConcepts: ["convex-function"], sectionId: "convexity" },
+      { level: "basic", question: "x^2 convexity를 square gap으로 확인할 수 있을까요?", answerChecklist: ["Chord에서 mixed square를 뺀다.", "λ(1−λ)(x−y)^2를 얻는다.", "모든 항이 0 이상이다."], requiredConcepts: ["convex-function"], sectionId: "convexity" },
+      { level: "basic", question: "f=3x^2/2의 L을 구할 수 있을까요?", answerChecklist: ["Gradient 3x를 구한다.", "차이가 3|x−y|이다.", "L=3이다."], requiredConcepts: ["l-smoothness", "gradient"], sectionId: "smoothness" },
+      { level: "basic", question: "Descent lemma의 두 변화 항을 구분할 수 있을까요?", answerChecklist: ["Gradient dot move는 linear prediction이다.", "L norm-square/2는 curvature allowance다.", "전체는 upper bound다."], requiredConcepts: ["descent-lemma", "l-smoothness"], sectionId: "smoothness" },
+      { level: "basic", question: "Strong convexity가 추가하는 조건은 무엇일까요?", answerChecklist: ["Convexity를 먼저 말한다.", "μ>0 최소 curvature를 추가한다.", "바닥이 arbitrarily flat하지 않다."], requiredConcepts: ["convex-function", "strong-convexity"], sectionId: "curvature-range" },
+      { level: "basic", question: "L=12, μ=3의 κ를 계산할 수 있을까요?", answerChecklist: ["κ=4를 계산한다.", "Curvature scale 비라고 한다.", "Runtime seconds가 아니다."], requiredConcepts: ["l-smoothness", "strong-convexity", "condition-number"], sectionId: "curvature-range" },
+      { level: "advanced", question: "Convex nonsmooth와 smooth nonconvex 예를 들 수 있을까요?", answerChecklist: ["|x|를 든다.", "Sinusoid를 든다.", "두 조건은 독립이라고 한다."], requiredConcepts: ["convex-function", "l-smoothness"], sectionId: "smoothness" },
+      { level: "advanced", question: "d=−∇f/L를 descent lemma에 대입할 수 있을까요?", answerChecklist: ["Linear term은 −norm-square/L이다.", "Allowance는 norm-square/(2L)이다.", "합은 −norm-square/(2L)이다."], requiredConcepts: ["descent-lemma", "l-smoothness", "euclidean-norm"], sectionId: "smoothness" },
+      { level: "advanced", question: "κ가 큰 quadratic에서 scalar step이 어려운 이유는 무엇일까요?", answerChecklist: ["큰 L이 step을 제한한다.", "작은 μ 방향의 progress가 느리다.", "한 step으로 두 scale을 맞추기 어렵다."], requiredConcepts: ["condition-number", "l-smoothness", "strong-convexity"], sectionId: "curvature-range" },
+      { level: "advanced", question: "Deep loss에 strong-convex theorem을 그대로 적용하면 안 되는 이유는 무엇일까요?", answerChecklist: ["전역 strong convexity가 없다.", "Symmetry·basin·saddle이 있다.", "조건부 기준선으로만 사용한다."], requiredConcepts: ["convex-function", "strong-convexity"], sectionId: "curvature-range" },
+    ],
+  },
+  "ai/math-gradient-descent-convergence": {
+    coreIdea: "Gradient descent는 negative gradient와 learning rate로 iterate를 만들며 convergence theorem과 runtime stopping signal을 각각의 전제·결론으로 분리합니다.",
+    assumedKnowledge: [
+      { id: "optimization-objective", role: "반복해서 줄일 scalar 기준을 읽습니다." },
+      { id: "minimizer", role: "Objective gap 기준을 읽습니다." },
+      { id: "gradient", role: "Local increase direction을 읽습니다." },
+      { id: "local-linear-approximation", role: "Negative gradient가 local descent인 이유를 읽습니다." },
+      { id: "convex-function", role: "Local progress를 global optimum과 연결합니다." },
+      { id: "l-smoothness", role: "Safe step curvature bound를 재사용합니다." },
+      { id: "descent-lemma", role: "한 step 감소 부등식을 재사용합니다." },
+      { id: "strong-convexity", role: "Gradient와 objective gap을 연결합니다." },
+      { id: "euclidean-norm", role: "Gradient와 update 크기를 측정합니다." },
+    ],
+    introducedHere: [
+      { id: "gradient-descent", role: "Negative gradient를 반복 update로 만듭니다." },
+      { id: "learning-rate", role: "Direction을 correction 크기로 바꿉니다." },
+      { id: "optimization-convergence", role: "Iteration별 objective-gap bound를 읽습니다." },
+      { id: "stationary-point", role: "Minimum·maximum·saddle을 구분합니다." },
+      { id: "optimization-stopping-signal", role: "Stop reason과 release evidence를 분리합니다." },
+    ],
+    conceptExplanations: [
+      { id: "gradient-descent", sectionId: "overview", intuition: "가장 가파른 오르막의 반대로 발걸음을 반복합니다.", workedExample: "f=x²/2, η=.5면 4→2→1입니다.", boundary: "Constraint·nonsmoothness·noise는 추가 처리가 필요합니다." },
+      { id: "learning-rate", sectionId: "overview", intuition: "Direction에 곱하는 보폭입니다.", workedExample: "η=.5는 수축, 2는 진동, 3은 발산합니다.", boundary: "Scale·parameterization·optimizer state에 의존합니다." },
+      { id: "optimization-convergence", sectionId: "convergence", intuition: "몇 step 뒤 gap을 전제와 함께 제한합니다.", workedExample: "Strong convex·smooth에서 gap≤(1−μ/L)^t gap0입니다.", boundary: "Actual equality나 nonconvex global guarantee가 아닙니다.", proofIdea: "Descent lemma와 strong convexity를 이어 contraction을 얻습니다.", counterexample: "f=x²/2도 η=2이면 진동합니다." },
+      { id: "stationary-point", sectionId: "stopping-boundary", intuition: "First-order slope가 0인 지점이지만 바닥이라는 뜻은 아닙니다.", workedExample: "원점은 x²의 minimum, −x²의 maximum, x²−y²의 saddle입니다.", boundary: "Small gradient는 global optimum을 보장하지 않습니다." },
+      { id: "optimization-stopping-signal", sectionId: "stopping-boundary", intuition: "Gradient·update·budget으로 반복 종료 이유를 기록합니다.", workedExample: "어느 tolerance나 budget이 발동했는지 receipt에 남깁니다.", boundary: "Training stop과 model release는 다른 결정입니다." },
+    ],
+    conceptStages: [
+      { label: "방향", relation: "Gradient 부호를 바꿔 descent direction 선택", concepts: ["gradient", "local-linear-approximation", "gradient-descent"] },
+      { label: "보폭", relation: "Direction을 correction으로 변환", concepts: ["learning-rate", "gradient-descent", "l-smoothness", "descent-lemma"] },
+      { label: "보장", relation: "함수 구조와 update에서 gap bound 유도", concepts: ["convex-function", "strong-convexity", "gradient-descent", "optimization-convergence"] },
+      { label: "멈춤", relation: "Stationary proximity와 operational stop 분리", concepts: ["stationary-point", "optimization-stopping-signal"] },
+    ],
+    exercises: [
+      { level: "basic", question: "f=x²/2 update를 (1−η)x_t로 정리할 수 있을까요?", answerChecklist: ["Gradient는 x_t다.", "x_t−ηx_t를 쓴다.", "(1−η)x_t로 묶는다."], requiredConcepts: ["gradient-descent", "learning-rate", "gradient"], sectionId: "update" },
+      { level: "basic", question: "x0=4, η=.5의 첫 세 update는 무엇일까요?", answerChecklist: ["Factor .5를 구한다.", "4→2→1→.5다.", "0으로 수축한다."], requiredConcepts: ["gradient-descent", "learning-rate"], sectionId: "step-size" },
+      { level: "basic", question: "η=2가 수렴하지 않는 이유는 무엇일까요?", answerChecklist: ["Factor는 −1이다.", "Distance가 줄지 않는다.", "4와 −4를 진동한다."], requiredConcepts: ["gradient-descent", "learning-rate"], sectionId: "step-size" },
+      { level: "basic", question: "η=3의 첫 세 위치를 계산할 수 있을까요?", answerChecklist: ["Factor는 −2다.", "4→−8→16이다.", "Magnitude가 커진다."], requiredConcepts: ["gradient-descent", "learning-rate"], sectionId: "step-size" },
+      { level: "basic", question: "Gradient 0인 세 원점을 분류할 수 있을까요?", answerChecklist: ["x²는 minimum이다.", "−x²는 maximum이다.", "x²−y²는 saddle이다."], requiredConcepts: ["stationary-point", "gradient"], sectionId: "stopping-boundary" },
+      { level: "basic", question: "Gradient·update·budget stop의 차이는 무엇일까요?", answerChecklist: ["Gradient는 slope다.", "Update는 actual move다.", "Budget은 resource limit이다."], requiredConcepts: ["optimization-stopping-signal", "learning-rate"], sectionId: "stopping-boundary" },
+      { level: "advanced", question: "μ=2,L=8의 four-step gap bound를 계산할 수 있을까요?", answerChecklist: ["Factor는 3/4다.", "Four-step은 81/256이다.", "Strong convex·smooth·exact gradient 전제를 적는다."], requiredConcepts: ["optimization-convergence", "strong-convexity", "l-smoothness"], sectionId: "convergence" },
+      { level: "advanced", question: "Convergence proof의 두 부등식 역할은 무엇일까요?", answerChecklist: ["Descent lemma가 한 step 감소를 준다.", "Strong convexity가 gradient와 gap을 잇는다.", "둘을 이어 contraction을 얻는다."], requiredConcepts: ["optimization-convergence", "descent-lemma", "strong-convexity"], sectionId: "convergence" },
+      { level: "advanced", question: "Tiny learning rate 때문에 stationary를 오판하지 않는 방법은 무엇일까요?", answerChecklist: ["Update norm은 η 영향도 받는다.", "Gradient norm을 별도로 본다.", "η와 trigger를 receipt에 기록한다."], requiredConcepts: ["learning-rate", "stationary-point", "optimization-stopping-signal"], sectionId: "stopping-boundary" },
+      { level: "advanced", question: "Training stop과 release를 분리한 gate를 설계할 수 있을까요?", answerChecklist: ["Stop reason을 기록한다.", "Held-out quality·safety를 별도 평가한다.", "Resource와 rollback artifact를 남긴다."], requiredConcepts: ["optimization-stopping-signal", "optimization-convergence"], sectionId: "stopping-boundary" },
     ],
   },
   "ai/perceptron": {

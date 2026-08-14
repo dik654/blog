@@ -809,6 +809,20 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "Noise가 있는 관측으로 expectation-defined target에 접근하는 stochastic approximation의 출발점",
     },
   ],
+  "ai/math-optimization-objectives": [
+    {
+      kind: "보충 읽기",
+      label: "Convex Optimization — Boyd and Vandenberghe",
+      href: "https://web.stanford.edu/~boyd/cvxbook/",
+      note: "Decision variable·objective·constraint·feasible set·optimal value를 분리하는 optimization problem 정본",
+    },
+    {
+      kind: "공개 강의",
+      label: "MIT 18.065 — Gradient Descent: Downhill to a Minimum",
+      href: "https://ocw.mit.edu/courses/18-065-matrix-methods-in-data-analysis-signal-processing-and-machine-learning-spring-2018/resources/lecture-22-gradient-descent-downhill-to-a-minimum/",
+      note: "Quadratic objective의 minimum과 level-set geometry를 작은 예제로 연결하는 공개 강의",
+    },
+  ],
   "ai/math-optimization-convexity": [
     {
       kind: "공개 강의",
@@ -821,6 +835,20 @@ export const ARTICLE_EVIDENCE: Readonly<
       label: "Convex Optimization — Boyd and Vandenberghe",
       href: "https://web.stanford.edu/~boyd/cvxbook/",
       note: "Convex set·function·optimality·gradient method의 전제와 보장을 연결하는 공개 교재",
+    },
+  ],
+  "ai/math-gradient-descent-convergence": [
+    {
+      kind: "공개 강의",
+      label: "MIT 18.065 — Gradient Descent: Downhill to a Minimum",
+      href: "https://ocw.mit.edu/courses/18-065-matrix-methods-in-data-analysis-signal-processing-and-machine-learning-spring-2018/resources/lecture-22-gradient-descent-downhill-to-a-minimum/",
+      note: "Quadratic gradient descent의 step size·zig-zag·convergence 경계를 설명하는 공개 강의",
+    },
+    {
+      kind: "보충 읽기",
+      label: "Convex Optimization — Boyd and Vandenberghe",
+      href: "https://web.stanford.edu/~boyd/cvxbook/",
+      note: "Convex·smooth objective에서 first-order method의 전제와 convergence bound를 연결하는 공개 교재",
     },
   ],
   "ai/perceptron": [

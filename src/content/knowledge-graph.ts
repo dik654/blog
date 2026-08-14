@@ -2403,7 +2403,15 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Optimization objective",
     definition:
       "선택 변수를 바꿔 최소화하거나 최대화하려는 scalar 함수와 허용 domain을 함께 둔 optimization 문제의 기준입니다.",
-    canonicalHref: "/ai/math-optimization-convexity#objective",
+    canonicalHref: "/ai/math-optimization-objectives#overview",
+  },
+  "optimization-feasible-set": {
+    id: "optimization-feasible-set",
+    domain: "mathematics",
+    label: "Optimization feasible set",
+    definition:
+      "Optimization problem의 모든 equality·inequality·domain constraint를 동시에 만족해 실제로 선택할 수 있는 decision variable의 집합입니다.",
+    canonicalHref: "/ai/math-optimization-objectives#feasible-set",
   },
   minimizer: {
     id: "minimizer",
@@ -2411,7 +2419,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Minimizer · optimum",
     definition:
       "허용 domain 안에서 objective의 가장 작은 값을 만드는 입력 위치이며 minimum value 자체와 구분합니다.",
-    canonicalHref: "/ai/math-optimization-convexity#objective",
+    canonicalHref: "/ai/math-optimization-objectives#minimizer",
   },
   "convex-function": {
     id: "convex-function",
@@ -2427,7 +2435,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Gradient descent",
     definition:
       "현재 gradient의 반대 방향으로 step을 반복해 differentiable objective를 줄이는 first-order optimization method입니다.",
-    canonicalHref: "/ai/math-optimization-convexity#gradient-descent",
+    canonicalHref: "/ai/math-gradient-descent-convergence#overview",
   },
   "learning-rate": {
     id: "learning-rate",
@@ -2435,7 +2443,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Learning rate · step size",
     definition:
       "Descent direction을 실제 parameter 이동량으로 바꾸는 양수 scale이며 안정성과 수렴 속도를 함께 좌우합니다.",
-    canonicalHref: "/ai/math-optimization-convexity#gradient-descent",
+    canonicalHref: "/ai/math-gradient-descent-convergence#overview",
   },
   "l-smoothness": {
     id: "l-smoothness",
@@ -2445,13 +2453,22 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "두 점의 gradient 차이가 두 점 사이 거리의 L배를 넘지 않아 local linear approximation의 오차를 제한하는 조건입니다.",
     canonicalHref: "/ai/math-optimization-convexity#smoothness",
   },
+  "descent-lemma": {
+    id: "descent-lemma",
+    kind: "theorem",
+    domain: "mathematics",
+    label: "Descent lemma",
+    definition:
+      "L-smooth 함수에서 현재 함수값과 gradient가 만든 linear prediction에 L‖d‖^2/2의 curvature allowance를 더해 이동 뒤 함수값을 위에서 제한하는 부등식입니다.",
+    canonicalHref: "/ai/math-optimization-convexity#smoothness",
+  },
   "strong-convexity": {
     id: "strong-convexity",
     domain: "mathematics",
     label: "Strong convexity",
     definition:
       "Convexity에 양의 quadratic lower curvature를 더해 minimizer 주변에서 objective가 충분히 빠르게 증가하도록 하는 조건입니다.",
-    canonicalHref: "/ai/math-optimization-convexity#convergence",
+    canonicalHref: "/ai/math-optimization-convexity#curvature-range",
   },
   "condition-number": {
     id: "condition-number",
@@ -2459,7 +2476,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Optimization condition number",
     definition:
       "Smoothness L과 strong-convexity μ의 비 L/μ로 curvature 불균형과 first-order convergence 난도를 나타냅니다.",
-    canonicalHref: "/ai/math-optimization-convexity#convergence",
+    canonicalHref: "/ai/math-optimization-convexity#curvature-range",
   },
   "optimization-convergence": {
     id: "optimization-convergence",
@@ -2468,7 +2485,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Gradient-descent convergence guarantee",
     definition:
       "Convexity·smoothness·step-size 같은 명시적 전제 아래 iterate나 objective gap이 optimum에 가까워지는 속도를 제한하는 정리입니다.",
-    canonicalHref: "/ai/math-optimization-convexity#convergence",
+    canonicalHref: "/ai/math-gradient-descent-convergence#convergence",
   },
   "stationary-point": {
     id: "stationary-point",
@@ -2476,7 +2493,15 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Stationary point",
     definition:
       "Gradient가 0이거나 충분히 작은 위치이며 nonconvex 문제에서는 local minimum·maximum·saddle point를 모두 포함할 수 있습니다.",
-    canonicalHref: "/ai/math-optimization-convexity#nonconvex",
+    canonicalHref: "/ai/math-gradient-descent-convergence#stopping-boundary",
+  },
+  "optimization-stopping-signal": {
+    id: "optimization-stopping-signal",
+    domain: "machine-learning",
+    label: "Optimization stopping signal",
+    definition:
+      "Gradient norm·update norm·objective change·iteration or wall-clock budget처럼 optimization 반복을 끝낼지 판정하되 release success와 분리해 기록하는 관측 계약입니다.",
+    canonicalHref: "/ai/math-gradient-descent-convergence#stopping-boundary",
   },
   "feature-target": {
     id: "feature-target",
@@ -20466,6 +20491,24 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
       "Held-out language-model loss를 scale별로 관측하고 경험 곡선을 fit합니다.",
   },
   {
+    from: "function-mapping",
+    to: "optimization-objective",
+    relation: "prerequisite",
+    reason: "Decision variable을 scalar score로 보내는 함수로 objective를 읽습니다.",
+  },
+  {
+    from: "optimization-objective",
+    to: "optimization-feasible-set",
+    relation: "constrains",
+    reason: "같은 score function도 허용 가능한 decision domain과 함께 optimization problem을 이룹니다.",
+  },
+  {
+    from: "optimization-feasible-set",
+    to: "minimizer",
+    relation: "constrains",
+    reason: "Objective가 더 낮더라도 feasible set 밖의 입력은 minimizer 후보에서 제외합니다.",
+  },
+  {
     from: "optimization-objective",
     to: "minimizer",
     relation: "produces",
@@ -20500,6 +20543,24 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     to: "learning-rate",
     relation: "constrains",
     reason: "Gradient 변화의 상한이 안전한 fixed step 범위를 제한합니다.",
+  },
+  {
+    from: "l-smoothness",
+    to: "descent-lemma",
+    relation: "produces",
+    reason: "Gradient 변화 상한을 quadratic curvature allowance로 적분해 이동 뒤 함수값 상한을 만듭니다.",
+  },
+  {
+    from: "descent-lemma",
+    to: "learning-rate",
+    relation: "constrains",
+    reason: "Negative gradient step에서 curvature allowance를 이길 수 있는 fixed-step 범위를 제한합니다.",
+  },
+  {
+    from: "descent-lemma",
+    to: "optimization-convergence",
+    relation: "prerequisite",
+    reason: "한 step objective 감소량을 반복 convergence proof의 출발 부등식으로 제공합니다.",
   },
   {
     from: "convex-function",
@@ -20548,6 +20609,24 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     to: "stationary-point",
     relation: "evaluates",
     reason: "Gradient가 0인 위치를 first-order stationary point로 판별합니다.",
+  },
+  {
+    from: "stationary-point",
+    to: "optimization-stopping-signal",
+    relation: "produces",
+    reason: "Small gradient norm을 first-order stationary proximity를 보는 한 stopping signal로 사용합니다.",
+  },
+  {
+    from: "learning-rate",
+    to: "optimization-stopping-signal",
+    relation: "constrains",
+    reason: "Small update가 작은 gradient 때문인지 작은 learning rate 때문인지 구분해야 합니다.",
+  },
+  {
+    from: "optimization-convergence",
+    to: "optimization-stopping-signal",
+    relation: "contrasts",
+    reason: "Theorem의 asymptotic·finite-step guarantee와 runtime stop trigger를 서로 다른 statement로 분리합니다.",
   },
   {
     from: "convex-function",

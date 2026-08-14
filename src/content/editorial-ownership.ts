@@ -1449,7 +1449,7 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [
       {
         label: "Gradient descent와 smoothness",
-        href: "/ai/math-optimization-convexity",
+        href: "/ai/math-gradient-descent-convergence",
       },
       { label: "SGD·momentum·Adam optimizer state", href: "/ai/optimizers" },
       {
@@ -7608,6 +7608,57 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [
       { kind: "primary-source", rule: "Gradient·directional derivative claim은 multivariable calculus의 coordinate·norm·differentiability 조건에 귀속한다." },
       { kind: "standard", rule: "Jacobian row·column convention과 JVP·VJP 곱 방향을 formula shape와 함께 기록한다." },
+    ],
+  },
+  "math-optimization-objectives": {
+    title: "Optimization objective·feasible set·minimizer 글이 소유하는 범위",
+    owns: [
+      "Decision variable과 scalar objective의 선택·평가 경계",
+      "Hard constraint와 모든 constraint를 만족하는 feasible set",
+      "Argmin 위치·minimum value·constrained minimizer의 구분",
+    ],
+    reuses: [
+      { label: "Function input·output", href: "/ai/math-functions-composition" },
+      { label: "Convexity·smoothness", href: "/ai/math-optimization-convexity" },
+      { label: "Gradient descent 반복", href: "/ai/math-gradient-descent-convergence" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Problem formulation·optimality claim은 Boyd 교재의 declared domain·constraint 조건에 귀속한다." },
+      { kind: "standard", rule: "Proxy objective를 실제 task 가치와 동일시하지 않고 feasible·infeasible 선택을 먼저 분리한다." },
+    ],
+  },
+  "math-optimization-convexity": {
+    title: "Convexity·smoothness·curvature range 글이 소유하는 범위",
+    owns: [
+      "Chord inequality로 정의하는 convex function",
+      "L-smooth gradient 변화 상한과 descent lemma의 curvature allowance",
+      "Strong convexity·condition number의 lower/upper curvature 경계",
+    ],
+    reuses: [
+      { label: "Objective와 feasible set", href: "/ai/math-optimization-objectives" },
+      { label: "Gradient·directional derivative", href: "/ai/math-gradients-jacobians" },
+      { label: "Gradient descent convergence", href: "/ai/math-gradient-descent-convergence" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Convexity·smoothness·strong-convexity claim은 Boyd 교재의 theorem 전제에 귀속한다." },
+      { kind: "standard", rule: "그릇 모양 그림이나 finite sample만으로 전역 convexity를 주장하지 않는다." },
+    ],
+  },
+  "math-gradient-descent-convergence": {
+    title: "Gradient descent·convergence·stopping 글이 소유하는 범위",
+    owns: [
+      "Negative gradient와 learning rate를 결합한 next-iterate rule",
+      "Quadratic의 수축·진동·발산과 smooth strongly-convex convergence bound",
+      "Stationary point·stopping signal·release evidence의 분리",
+    ],
+    reuses: [
+      { label: "Gradient와 local linearity", href: "/ai/math-gradients-jacobians" },
+      { label: "Convexity·curvature 전제", href: "/ai/math-optimization-convexity" },
+      { label: "SGD·Momentum·AdamW", href: "/ai/optimizers" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Quadratic path·first-order bound는 MIT 강의와 Boyd 교재의 stated 조건에 귀속한다." },
+      { kind: "standard", rule: "Small gradient·small update·budget stop을 global optimality나 deployment release와 동일시하지 않는다." },
     ],
   },
 } as const satisfies Record<string, EditorialBoundary>;

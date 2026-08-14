@@ -1171,3 +1171,12 @@
 - Domain→intermediate→codomain 합성, secant→tangent 수렴, inner·outer rate 전달, contour→gradient→Jacobian shape를 도형·곡선·화살표·matrix map으로 표현하는 새 Viz 4개를 만들었다. 모든 장면형 Viz는 `ArrowLeft`·`ArrowRight`와 `Space` 자동 재생을 지원한다.
 - 실제 public closure의 수식 8개를 전부 explicit operation annotation으로 이관했다. Difference quotient의 빼기·나눗셈, chain rule의 local rate 곱, directional derivative의 projection·coordinate contribution, Jacobian의 input→output linear map 의도를 KaTeX 식 안에 직접 표시했고 전역 formula backlog는 983개에서 976개로 줄었다.
 - 390px·1440px 실제 브라우저 6회에서 document·Viz·KaTeX overflow와 KaTeX error, console warning/error, gradient·shadow·굵은 선이 모두 0임을 확인했다. Function Viz의 `→` 이동과 `Space` 자동 재생도 실제 focus 상태에서 검증했다.
+
+## 2026-08-15 · Optimization problem · geometry · convergence CRUD split
+
+- 기존 `ai/math-optimization-convexity` 한 글에 섞여 있던 objective·constraint·minimizer, convexity·smoothness·curvature, gradient descent·step size·convergence·stopping을 세 독립 수업으로 나눴다. 기존 route는 함수 구조로 좁히고 `ai/math-optimization-objectives`, `ai/math-gradient-descent-convergence`를 새로 생성했다.
+- CRUD 과정에서 `optimization-feasible-set`, `descent-lemma`, `optimization-stopping-signal` 세 canonical concept를 새로 만들고 9개 관계를 연결했다. Objective→feasible set→minimizer, smoothness→descent lemma→safe step·convergence, stationary point→operational stop의 소유권을 실제 설명 route와 일치시켰다.
+- 공개 route와 exact learning contract는 423개에서 425개, graph는 2,353 concepts·3,501 relations로 늘었고 owner·isolation·stage invariant는 0이다. 세 route는 모두 topology `keep`이며 각각 정확한 기초 6개+심화 4개와 article-only answer 위치를 가진다.
+- Objective curve와 feasible interval·두 minimizer, chord·tangent·curvature range, learning-rate별 iteration path와 stopping boundary를 곡선·점·범위·궤적으로 표현하는 새 animated Viz 3개를 만들었다. `ArrowLeft`·`ArrowRight`와 `Space` 자동 재생을 실제 focus 상태에서 검증했다.
+- 실제 public closure의 수식 9개를 모두 explicit operation annotation으로 작성했다. Argmin과 minimum의 선택·재평가, projection, chord gap, descent lemma의 linear prediction·quadratic allowance, condition number, update·contraction·gap bound·stopping signal의 연산 의도를 KaTeX 식 안에 직접 표시해 전역 formula backlog를 976개에서 971개로 줄였다.
+- 390px·1440px 실제 브라우저 6회에서 document·Viz·formula·KaTeX overflow와 clipped descendant, KaTeX error, console warning/error, gradient·shadow·굵은 선이 모두 0임을 확인했다. 전체 425개 learning·reading·graph 감사, route-resolution test, TypeScript와 production build도 통과했다.
