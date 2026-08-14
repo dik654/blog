@@ -1136,3 +1136,12 @@
 - Request envelope·regression canary·reasoning branches와 verifier·few-shot context budget·parse/schema/domain/fallback을 텍스트 카드가 아니라 도형과 연결선이 있는 새 flat Viz 5개로 교체했다. 모든 Viz는 `ArrowLeft`·`ArrowRight` 장면 이동과 `Space` 자동 재생을 지원한다.
 - Self-consistency 집계와 structured-output 운영 지표 수식 2개는 합·선택·분모·quantile·repair cost의 의도를 KaTeX 식 안 underbrace로 직접 표시하고, 별도 operation 설명도 같은 순서로 연결했다.
 - 390px·1440px 실제 브라우저에서 네 route의 document/Viz/KaTeX overflow, KaTeX error, console warning/error, gradient·shadow·굵은 선이 모두 0임을 확인했다. 전역 formula backlog는 1,004개/685 legacy files로 줄었으며 다음 CRUD 후보에서도 concept graph 확장과 수식 주석 이관을 함께 수행한다.
+
+## 2026-08-15 · Recurrent learning CRUD split
+
+- 기존 `ai/rnn`과 `ai/lstm` 두 글에 섞여 있던 hidden-state recurrence·language-model objective·BPTT, LSTM dual state·GRU interpolation을 `ai/rnn`, `ai/rnn-language-model`, `ai/bptt`, `ai/lstm`, `ai/gru`의 다섯 독립 수업으로 분리했다.
+- 분리 과정에서 `recurrent-directionality-boundary`, `rnn-shifted-token-pair`, `gru-reset-filtered-candidate`, `gru-update-interpolation` 네 canonical concept를 추가하고 10개 관계를 연결했다. 기존 BPTT·truncation·GRU owner도 실제 설명 route로 이동해 route와 graph의 소유권을 일치시켰다.
+- 공개 route와 exact learning contract는 414개에서 417개, graph는 2,339 concepts·3,468 relations로 늘었고 invariant failure·stage warning은 0이다. 새 다섯 route는 모두 topology `keep`이며 전체 split-review는 84개에서 83개로 줄었다.
+- Hidden-state unrolling·shifted language objective·backward credit와 detach 경계·LSTM cell lane·GRU reset/update 보간을 도형·화살표·bar·timeline으로 표현하는 새 responsive Viz 5개를 만들었다. 모든 Viz는 `ArrowLeft`·`ArrowRight` 장면 이동과 `Space` 자동 재생을 실제로 지원한다.
+- 다섯 글의 수식 13개를 전부 explicit operation annotation으로 이관했다. 특히 GRU update·gradient clipping·Jacobian product·forget retention·parameter/state byte 식에서 곱·합·나눗셈을 하는 이유를 KaTeX 식 안의 다단 underbrace로 직접 설명한다.
+- 390px·1440px 실제 브라우저 10회에서 document/Viz/KaTeX overflow, clipped descendant, KaTeX error, console warning/error, gradient·shadow·굵은 선이 모두 0임을 확인했다. 전역 formula backlog는 992개/678 legacy files로 줄었다.

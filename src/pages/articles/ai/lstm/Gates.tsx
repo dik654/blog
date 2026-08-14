@@ -1,5 +1,4 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
-import LSTMStepTraceViz from "./viz/LSTMStepTraceViz";
 
 export default function Gates() {
   return (
@@ -20,6 +19,19 @@ export default function Gates() {
         question="한 timestep에서 보존·기록·공개 비율을 어떤 입력으로 계산할까?"
         idea={<>현재 input과 이전 hidden state를 한 번 concatenate한 뒤 네 개의 affine output을 한 matrix multiplication으로 계산하고, 세 구간에는 sigmoid를 candidate에는 tanh를 적용합니다.</>}
         formula={String.raw`\begin{aligned}u_t&=[x_t;h_{t-1}]\\a_t&=Wu_t+b\\a_t&=\begin{bmatrix}a_f\\a_i\\a_g\\a_o\end{bmatrix}\\[3pt]f_t&=\sigma(a_f),\quad i_t=\sigma(a_i)\\g_t&=\tanh(a_g),\quad o_t=\sigma(a_o)\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+u_t&=\underbrace{[x_t;h_{t-1}]}_{\text{현재 입력·이전 hidden 결합}}\\
+a_t&=\underbrace{Wu_t+b}_{\text{네 묶음을 한 번에 계산}}\\
+(a_f,a_i,a_g,a_o)&=\underbrace{\operatorname{split}_{4}(a_t)}_{\text{4H를 H씩 분리}}\\
+(f_t,i_t,o_t)&=\underbrace{\sigma(a_f,a_i,a_o)}_{\text{0--1 비율로 제한}}\\
+g_t&=\underbrace{\tanh(a_g)}_{\text{부호 있는 후보값}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`[x_t;h_{t-1}]`, annotation: ["현재 관측과 직전 공개 state를", "하나의 step context로 연결"] },
+          { expression: String.raw`Wu_t+b`, annotation: ["한 matrix multiplication으로", "네 block의 preactivation 동시 계산"] },
+          { expression: String.raw`\operatorname{split}_4(a_t)`, annotation: ["Fused 4H output을 나눠", "각 gate·candidate 역할에 배정"] },
+          { expression: String.raw`\sigma\text{ vs }\tanh`, annotation: ["Gate는 0–1 비율로", "candidate는 −1–1 내용으로 변환"] },
+        ]}
         terms={[
           { symbol: "W", name: "fused projection", description: "네 gate/candidate의 weight를 한 큰 matrix로 묶은 구현입니다." },
           { symbol: "a_f,a_i,a_o", name: "gate logits", description: "sigmoid 전의 unconstrained scores입니다." },
@@ -28,22 +40,6 @@ export default function Gates() {
         ]}
         assumptions={["Gate ordering은 i,f,g,o 또는 i,f,o,g처럼 library마다 다를 수 있으므로 checkpoint layout을 확인합니다.", "Hidden size H라면 fused output은 4H이며 bias·projection variant에 따라 parameter가 달라집니다."]}
         interpretation="수식은 gate 네 개를 별도 matmul로 그려도 구현에서는 하나로 fuse하는 이유를 보여 준다. 같은 checkpoint라도 gate order가 다르면 단순 weight copy가 깨집니다."
-      />
-
-      <LSTMStepTraceViz />
-
-      <ExplainedFormula
-        question="같은 input·hidden 크기에서 LSTM과 GRU의 parameter 예산은 얼마나 다른가?"
-        idea={<>각 affine block은 input D개와 이전 hidden H개를 받아 H개 값을 만들고 bias H개를 더합니다. LSTM은 이 block이 네 개, GRU는 세 개이므로 같은 D·H에서 계수 4와 3의 차이가 납니다.</>}
-        formula={String.raw`\begin{aligned}P_{\rm LSTM}&=4H(D+H+1)\\[2pt]P_{\rm GRU}&=3H(D+H+1)\\[2pt]D&=3,\quad H=2\\P_{\rm LSTM}&=4\cdot2\cdot6=48\end{aligned}`}
-        terms={[
-          { symbol: "D", name: "input width", description: "한 timestep에서 cell에 들어오는 feature 수입니다." },
-          { symbol: "H", name: "hidden width", description: "각 gate·candidate와 recurrent state의 channel 수입니다." },
-          { symbol: "+1", name: "bias term", description: "Affine block마다 output channel H개에 대응하는 bias를 포함합니다." },
-          { symbol: "4,3", name: "affine block count", description: "각각 LSTM의 f·i·g·o와 GRU의 r·z·candidate block 수입니다." },
-        ]}
-        assumptions={["Peephole·projection·layer normalization이 없는 단일 direction 기본 cell입니다.", "Library가 input-hidden과 hidden-hidden bias를 두 벌 두면 저장 parameter 수가 이 식보다 늘 수 있으므로 checkpoint schema를 확인합니다."]}
-        interpretation="같은 D=3,H=2라면 LSTM은 48개, GRU는 36개다. 같은 hidden width 비교는 출발점일 뿐이며 실제 선택에서는 state memory·kernel·quality도 함께 맞춰야 합니다."
       />
 
       <div id="paper-forget-gate" className="not-prose mt-8 scroll-mt-24 border-l border-border/80 pl-4">

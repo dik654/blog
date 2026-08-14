@@ -568,17 +568,21 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://doi.org/10.1207/s15516709cog1402_1",
       note: "simple recurrent network가 시간 구조를 학습하는 방식을 보인 Elman의 논문",
     },
-    {
-      kind: "핵심 논문",
-      label: "Backpropagation Through Time: What It Does and How to Do It",
-      href: "https://doi.org/10.1109/5.58337",
-      note: "순환 시스템에 backpropagation을 적용하는 BPTT를 정리한 논문",
-    },
+  ],
+  "ai/rnn-language-model": [
     {
       kind: "핵심 논문",
       label: "Recurrent Neural Network Based Language Model",
       href: "https://www.fit.vut.cz/research/groups/speech/publi/2010/mikolov_interspeech2010_IS100722.pdf",
       note: "hidden state로 이전 문맥을 요약해 다음 단어를 예측하는 RNN language model의 출발점",
+    },
+  ],
+  "ai/bptt": [
+    {
+      kind: "핵심 논문",
+      label: "Backpropagation Through Time: What It Does and How to Do It",
+      href: "https://doi.org/10.1109/5.58337",
+      note: "순환 시스템에 backpropagation을 적용하는 BPTT를 정리한 논문",
     },
     {
       kind: "핵심 논문",
@@ -601,12 +605,6 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "constant error flow와 gated memory cell을 제안한 LSTM 원 논문",
     },
     {
-      kind: "보충 읽기",
-      label: "Learning Phrase Representations using RNN Encoder–Decoder",
-      href: "https://arxiv.org/abs/1406.1078",
-      note: "encoder–decoder와 GRU 계열의 gated hidden unit을 제안",
-    },
-    {
       kind: "핵심 논문",
       label: "Learning to Forget: Continual Prediction with LSTM",
       href: "https://doi.org/10.1162/089976600300015015",
@@ -617,6 +615,14 @@ export const ARTICLE_EVIDENCE: Readonly<
       label: "LSTM: A Search Space Odyssey",
       href: "https://arxiv.org/abs/1503.04069",
       note: "LSTM component와 forget-gate bias를 대규모 조건에서 비교한 연구",
+    },
+  ],
+  "ai/gru": [
+    {
+      kind: "핵심 논문",
+      label: "Learning Phrase Representations using RNN Encoder–Decoder",
+      href: "https://arxiv.org/abs/1406.1078",
+      note: "encoder–decoder와 GRU 계열의 reset·update gated hidden unit을 제안",
     },
     {
       kind: "보충 읽기",

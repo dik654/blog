@@ -1,6 +1,8 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import M from "@/components/ui/math";
-import RNNStateCompressionViz from "./viz/RNNStateCompressionViz";
+import ContentBoundary from "@/components/articles/content-boundary";
+import TermBreakdown from "@/components/articles/term-breakdown";
+import RecurrentStateFlowViz from "./viz/RecurrentStateFlowViz";
 
 export default function Overview() {
   return (
@@ -22,7 +24,19 @@ export default function Overview() {
         </p>
       </div>
 
-      <RNNStateCompressionViz />
+      <TermBreakdown
+        title="RNN을 읽기 전에 네 이름을 한 줄씩 고정합니다"
+        description="이 네 항을 구분한 뒤에만 하나의 recurrent transition으로 조합합니다."
+        items={[
+          { term: "현재 입력 xₜ", description: "이번 timestep에 새로 관측한 token embedding이나 sensor vector입니다.", example: "문장 ‘개가 사람을’에서 두 번째 step의 x₂는 ‘사람을’ embedding입니다.", boundary: "과거 전체가 아니라 지금 들어온 한 step입니다." },
+          { term: "이전 state hₜ₋₁", description: "직전 step까지의 정보를 H개 좌표로 압축한 vector입니다.", example: "h₁에는 첫 token을 처리한 흔적이 남습니다.", boundary: "원문 token을 주소로 다시 꺼내는 KV 저장소가 아닙니다." },
+          { term: "공유 transition fθ", description: "xₜ와 hₜ₋₁를 받아 hₜ를 만드는 같은 계산 규칙입니다.", example: "세 token을 읽어도 Wₓₕ·Wₕₕ·bₕ는 한 벌을 재사용합니다.", boundary: "시간마다 다른 layer 세 개를 학습하는 것이 아닙니다." },
+          { term: "새 state hₜ", description: "현재 입력까지 반영한 다음 요약이며 다음 step과 output head에 전달됩니다.", example: "x₂=0이어도 h₁의 영향으로 h₂가 0이 아닐 수 있습니다.", boundary: "무엇을 오래 보존할지는 학습 목적과 state capacity에 달렸습니다." },
+        ]}
+      />
+
+      <RecurrentStateFlowViz />
+      <ContentBoundary article="rnn" />
 
       <div id="paper-elman" className="not-prose mt-8 scroll-mt-24 border-l border-border/80 pl-4">
         <p className="text-xs font-bold text-primary">논문 해설 · Finding Structure in Time</p>
@@ -36,6 +50,16 @@ export default function Overview() {
         question="현재 입력과 직전 기억을 같은 크기의 새 state로 어떻게 합칠까?"
         idea={<>두 정보를 각각 linear projection한 뒤 더하고, <M>{"\\tanh"}</M>로 값의 범위를 제한합니다. 같은 transition을 모든 시점에서 반복합니다.</>}
         formula={String.raw`a_t=W_{xh}x_t+W_{hh}h_{t-1}+b_h,\qquad h_t=\tanh(a_t)`}
+        annotatedFormula={String.raw`\begin{aligned}
+a_t&=\underbrace{W_{xh}x_t}_{\text{현재 input을 hidden 좌표로 투영}}\\
+&\quad+\underbrace{W_{hh}h_{t-1}}_{\text{직전 state의 흔적을 전달}}+b_h\\[3pt]
+h_t&=\underbrace{\tanh(a_t)}_{\text{합친 증거를 bounded 새 state로 압축}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`W_{xh}x_t`, annotation: ["현재 input D개를", "hidden H개 좌표로 옮김"] },
+          { expression: String.raw`W_{hh}h_{t-1}`, annotation: ["직전 요약을 변환해", "이번 state에 전달"] },
+          { expression: String.raw`\tanh(a_t)`, annotation: ["두 evidence의 합을", "−1과 1 사이 새 state로 압축"] },
+        ]}
         terms={[
           { symbol: "x_t\\in\\mathbb{R}^{D}", name: "현재 입력", description: "t번째 token embedding 또는 센서 관측입니다." },
           { symbol: "h_t\\in\\mathbb{R}^{H}", name: "hidden state", description: "지금까지의 입력을 H차원으로 요약한 값입니다." },

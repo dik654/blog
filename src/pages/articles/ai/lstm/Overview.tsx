@@ -1,5 +1,7 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
-import LSTMStateContractViz from "./viz/LSTMStateContractViz";
+import ContentBoundary from "@/components/articles/content-boundary";
+import TermBreakdown from "@/components/articles/term-breakdown";
+import LSTMFlowViz from "./viz/LSTMFlowViz";
 
 export default function Overview() {
   return (
@@ -23,7 +25,18 @@ export default function Overview() {
         </p>
       </div>
 
-      <LSTMStateContractViz />
+      <TermBreakdown
+        title="LSTM의 두 state와 세 gate를 먼저 분리합니다"
+        items={[
+          { term: "Cell state Cₜ", description: "이전 값을 forget gate로 보존하고 새 candidate를 input gate로 더하는 memory lane입니다.", boundary: "장기 기억이라는 고정 의미가 아니라 학습된 vector입니다." },
+          { term: "Hidden state hₜ", description: "현재 cell을 tanh로 읽고 output gate만큼 외부와 다음 gate 계산에 공개한 vector입니다.", boundary: "Cₜ와 같은 값도, 별도 원문 저장소도 아닙니다." },
+          { term: "Forget gate fₜ", description: "이전 C의 각 channel을 얼마나 남길지 정합니다.", example: "f=0.9면 그 channel의 direct contribution은 한 step 뒤 90% 남습니다." },
+          { term: "Input gate iₜ", description: "새 candidate gₜ를 cell에 얼마나 기록할지 정합니다." },
+          { term: "Output gate oₜ", description: "현재 cell 내용 중 얼마를 hidden state로 공개할지 정합니다." },
+        ]}
+      />
+      <LSTMFlowViz />
+      <ContentBoundary article="lstm" />
 
       <div id="paper-lstm-original" className="not-prose mt-8 scroll-mt-24 border-l border-border/80 pl-4">
         <p className="text-xs font-bold text-primary">논문 해설 · Long Short-Term Memory</p>
@@ -37,6 +50,18 @@ export default function Overview() {
         question="이전 memory와 현재 input에서 만든 새 정보를 한 recurrent state에 어떻게 합칠까?"
         idea={<>이전 cell Cₜ₋₁에는 forget gate fₜ를, candidate gₜ에는 input gate iₜ를 element-wise로 곱한 뒤 더합니다. Additive merge가 보존 경로와 쓰기 경로를 분리합니다.</>}
         formula={String.raw`\begin{aligned}g_t&=\tanh(W_g[x_t,h_{t-1}]+b_g)\\[2pt]C_t&=f_t\odot C_{t-1}+i_t\odot g_t\\[2pt]h_t&=o_t\odot\tanh(C_t)\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+g_t&=\underbrace{\tanh(W_g[x_t;h_{t-1}]+b_g)}_{\text{현재 evidence에서 새 candidate 생성}}\\
+C_t&=\underbrace{f_t\odot C_{t-1}}_{\text{이전 cell 보존}}
+    +\underbrace{i_t\odot g_t}_{\text{새 candidate 기록}}\\
+h_t&=\underbrace{o_t\odot\tanh(C_t)}_{\text{현재 cell을 필요한 만큼 공개}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\tanh(W_g[x_t;h_{t-1}]+b_g)`, annotation: ["현재 input과 이전 hidden을 합쳐", "signed candidate 내용 생성"] },
+          { expression: String.raw`f_t\odot C_{t-1}`, annotation: ["Forget 비율을 이전 cell에 곱해", "보존할 memory 계산"] },
+          { expression: String.raw`i_t\odot g_t`, annotation: ["Input 비율을 candidate에 곱해", "이번 step에 기록할 내용 계산"] },
+          { expression: String.raw`o_t\odot\tanh(C_t)`, annotation: ["Cell을 bounded하게 읽고 output gate를 곱해", "외부에 공개할 hidden 생성"] },
+        ]}
         terms={[
           { symbol: "C_t", name: "cell state", description: "직접 retention·write 경로를 가진 recurrent memory vector입니다." },
           { symbol: "h_t", name: "hidden state", description: "현재 step의 output이며 다음 gate 계산에도 입력됩니다." },
@@ -61,8 +86,8 @@ export default function Overview() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>RNN 글과 역할을 나눈다</h3>
         <p>
-          Sequence unroll, shared parameter, BPTT와 truncated BPTT의 일반 원리는
-          <a href="/ai/rnn">RNN 정본 글</a>에서 설명한다. 이 글은 그 위에서 LSTM
+          Sequence unroll과 shared parameter는 <a href="/ai/rnn">RNN 정본 글</a>,
+          gradient·truncation은 <a href="/ai/bptt">BPTT 정본 글</a>에서 설명한다. 이 글은 그 위에서 LSTM
           cell의 state transition, direct derivative와 architecture 선택만 다룬다.
           시계열 windowing과 data leakage 같은 적용 문제는
           <a href="/ai/lstm-timeseries">LSTM 시계열 파이프라인 글</a>로 분리한다.

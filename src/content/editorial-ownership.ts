@@ -1743,7 +1743,7 @@ export const EDITORIAL_BOUNDARIES = {
         label: "LoRA parameterization과 target modules",
         href: "/ai/lora-finetuning",
       },
-      { label: "Perplexity와 next-token LM", href: "/ai/rnn#language-model" },
+      { label: "Perplexity와 next-token LM", href: "/ai/rnn-language-model" },
     ],
     evidence: [
       {
@@ -5825,7 +5825,8 @@ export const EDITORIAL_BOUNDARIES = {
       "Dropout mode·RNG checkpoint와 Embedding lookup·scatter-add 규칙",
     ],
     reuses: [
-      { label: "RNN·BPTT·truncation", href: "/ai/rnn" },
+      { label: "RNN state·time unrolling", href: "/ai/rnn" },
+      { label: "BPTT·Jacobian·truncation", href: "/ai/bptt" },
       { label: "LSTM gate와 cell-state 수학", href: "/ai/lstm" },
       { label: "Dropout 정본", href: "/ai/regularization-practice#dropout" },
       { label: "DeZero parameter·optimizer 기반", href: "/ai/dezero-nn" },
@@ -7368,6 +7369,89 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "primary-source", rule: "KTO utility와 결과는 원 논문의 reference·KL estimate·model·dataset·class imbalance 조건에 귀속한다." },
       { kind: "project-measurement", rule: "노출·무응답·사용자별 click propensity와 class balance를 기록하고 pairwise human audit과 behavior regression을 따로 측정한다." },
       { kind: "project-claim", rule: "Pair가 필요 없다는 장점을 binary log의 무편향·clean label·보편적 우월성으로 확대하지 않는다." },
+    ],
+  },
+  "rnn": {
+    title: "RNN hidden state 글이 소유하는 범위",
+    owns: [
+      "현재 input과 이전 hidden에서 다음 hidden을 만드는 recurrent transition",
+      "고정 크기 hidden state의 lossy compression 경계",
+      "공유 cell의 time unrolling과 causal·bidirectional 배포 경계",
+    ],
+    reuses: [
+      { label: "Affine layer와 tanh", href: "/ai/neural-network" },
+      { label: "BPTT와 truncation", href: "/ai/bptt" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Elman network의 주장은 원 논문의 작은 synthetic task·network·training 범위로 제한한다." },
+      { kind: "standard", rule: "Hidden state를 lossless storage나 임의 길이 기억 보장으로 표현하지 않는다." },
+    ],
+  },
+  "rnn-language-model": {
+    title: "RNN language model 글이 소유하는 범위",
+    owns: [
+      "Input과 target을 한 칸 이동한 token-pair objective",
+      "Recurrent state에서 vocabulary logits·probability를 만드는 경로",
+      "동일 tokenizer·corpus·mask 안의 NLL·perplexity 해석",
+    ],
+    reuses: [
+      { label: "RNN hidden state", href: "/ai/rnn" },
+      { label: "Cross-entropy와 NLL", href: "/ai/cross-entropy" },
+      { label: "Teacher forcing·exposure bias", href: "/ai/supervised-fine-tuning#teacher-forcing" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "RNN-LM 결과는 논문의 corpus·vocabulary·architecture·training recipe에 귀속한다." },
+      { kind: "standard", rule: "Perplexity는 corpus·tokenizer·mask·log convention이 같은 evaluation contract 안에서만 비교한다." },
+    ],
+  },
+  "bptt": {
+    title: "BPTT 글이 소유하는 범위",
+    owns: [
+      "Finite time graph의 reverse-mode와 공유 weight contribution 합산",
+      "Recurrent Jacobian product의 vanishing·exploding 경계",
+      "Gradient clipping과 truncated BPTT의 서로 다른 제어 범위",
+    ],
+    reuses: [
+      { label: "Time unrolling", href: "/ai/rnn#architecture" },
+      { label: "Chain rule·Jacobian", href: "/ai/math-functions-derivatives-gradients" },
+      { label: "LSTM direct retention", href: "/ai/lstm#cell-state" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "BPTT·gradient 분석·truncation claim은 각 논문의 differentiability·task·trajectory 조건으로 제한한다." },
+      { kind: "standard", rule: "Forward state horizon, derivative graph horizon, empirical memory를 같은 숫자로 합치지 않는다." },
+    ],
+  },
+  "lstm": {
+    title: "LSTM cell 글이 소유하는 범위",
+    owns: [
+      "Cell state와 hidden state의 두 recurrent path",
+      "Forget·input·output gate의 channel별 보존·기록·공개 역할",
+      "Forget-gate product로 읽는 direct retention contribution",
+    ],
+    reuses: [
+      { label: "RNN transition과 lossy state", href: "/ai/rnn" },
+      { label: "BPTT Jacobian product", href: "/ai/bptt" },
+      { label: "GRU single-state update", href: "/ai/gru" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "원형 LSTM·forget gate·architecture ablation의 서로 다른 논문 범위를 구분한다." },
+      { kind: "standard", rule: "Direct cell contribution과 전체 derivative, inference memory와 training horizon을 구분한다." },
+    ],
+  },
+  "gru": {
+    title: "GRU state update 글이 소유하는 범위",
+    owns: [
+      "Reset gate가 candidate용 history를 거르는 위치",
+      "Candidate 생성과 update gate의 기존 state·candidate interpolation",
+      "LSTM·GRU를 parameter·state·kernel·quality budget에서 비교하는 경계",
+    ],
+    reuses: [
+      { label: "RNN recurrent transition", href: "/ai/rnn" },
+      { label: "LSTM dual-state gate", href: "/ai/lstm" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "GRU와 architecture 비교 claim은 각 논문의 task·configuration·optimizer 범위로 제한한다." },
+      { kind: "project-measurement", rule: "같은 input/output·parameter 또는 FLOP·hardware budget에서 latency·state memory·quality를 함께 측정한다." },
     ],
   },
 } as const satisfies Record<string, EditorialBoundary>;

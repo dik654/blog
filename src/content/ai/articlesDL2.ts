@@ -16,15 +16,33 @@ export const dlNlpArticles: Article[] = [
   },
   {
     slug: "rnn",
-    title: "RNN: 시퀀스를 기억하는 신경망",
+    title: "RNN 기초: hidden state와 시간축 계산",
     subcategory: "ai-nlp",
     sections: [
       { id: "overview", title: "Hidden state는 무엇을 기억하는가" },
       { id: "architecture", title: "Parameter 공유와 시간축 계산" },
-      { id: "language-model", title: "다음 token 분포 학습" },
-      { id: "bptt", title: "Jacobian 곱과 truncated BPTT" },
     ],
     component: () => import("@/pages/articles/ai/rnn"),
+  },
+  {
+    slug: "rnn-language-model",
+    title: "RNN Language Model: shifted token에서 perplexity까지",
+    subcategory: "ai-nlp",
+    sections: [
+      { id: "overview", title: "입력과 정답을 한 칸 이동" },
+      { id: "language-model", title: "State·logits·NLL·perplexity" },
+    ],
+    component: () => import("@/pages/articles/ai/rnn-language-model"),
+  },
+  {
+    slug: "bptt",
+    title: "BPTT: 시간축 gradient와 truncation",
+    subcategory: "ai-nlp",
+    sections: [
+      { id: "overview", title: "시간축 credit assignment" },
+      { id: "bptt", title: "Jacobian·clipping·detach" },
+    ],
+    component: () => import("@/pages/articles/ai/bptt"),
   },
   {
     slug: "lstm",
@@ -34,9 +52,18 @@ export const dlNlpArticles: Article[] = [
       { id: "overview", title: "두 recurrent state의 계산 계약" },
       { id: "gates", title: "Channel별 보존·기록·공개 정책" },
       { id: "cell-state", title: "Forget gate와 direct gradient" },
-      { id: "variants", title: "GRU·양방향 구조·현대 대안" },
     ],
     component: () => import("@/pages/articles/ai/lstm"),
+  },
+  {
+    slug: "gru",
+    title: "GRU: reset candidate와 update interpolation",
+    subcategory: "ai-nlp",
+    sections: [
+      { id: "overview", title: "Reset과 update를 따로 보기" },
+      { id: "state-update", title: "Candidate·interpolation·budget" },
+    ],
+    component: () => import("@/pages/articles/ai/gru"),
   },
   {
     slug: "seq2seq",

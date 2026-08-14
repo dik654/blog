@@ -6634,799 +6634,200 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/rnn": {
-    coreIdea:
-      "RNN은 과거 원문을 다시 읽는 대신 현재 input과 직전 hidden state에 같은 transition을 반복해 고정 크기의 lossy summary를 만듭니다. 학습에서는 이 반복을 시간축 graph로 펼쳐 BPTT를 적용하므로, forward memory와 Jacobian product·truncation이 정하는 gradient horizon을 따로 봐야 합니다.",
-    assumedKnowledge: [
-      {
-        id: "coordinate-vector",
-        role: "각 시점 input과 hidden state의 shape와 좌표를 읽습니다.",
-      },
-      {
-        id: "euclidean-norm",
-        role: "Gradient 전체 크기와 clipping threshold를 계산합니다.",
-      },
-      {
-        id: "affine-layer",
-        role: "Input·이전 state projection과 bias의 preactivation을 계산합니다.",
-      },
-      {
-        id: "tanh-activation",
-        role: "Vanilla cell의 bounded nonlinear state와 derivative saturation을 읽습니다.",
-      },
-      {
-        id: "cross-entropy-nll",
-        role: "다음-token probability에 대한 sequence training objective를 읽습니다.",
-      },
-      {
-        id: "exponentiation",
-        role: "평균 token NLL을 perplexity scale로 되돌립니다.",
-      },
-      {
-        id: "backpropagation",
-        role: "Unrolled graph의 reverse-mode gradient 계산을 이해합니다.",
-      },
-      {
-        id: "jacobian-matrix",
-        role: "한 state transition의 vector-to-vector local sensitivity를 읽습니다.",
-      },
-      {
-        id: "chain-rule",
-        role: "멀리 떨어진 state 사이의 derivative가 ordered Jacobian product가 되는 이유를 읽습니다.",
-      },
-    ],
+    entryLevel: true,
+    entryNote: "Vector·affine·tanh를 모른다고 가정하고 scalar state 두 step에서 시작합니다.",
+    coreIdea: "RNN은 현재 input과 직전 hidden state에 같은 transition을 반복해 고정 크기 lossy summary를 만들며, time unrolling은 parameter 공유와 causal visibility를 드러냅니다.",
+    assumedKnowledge: [],
     introducedHere: [
-      {
-        id: "rnn-state-transition",
-        role: "현재 input과 이전 state에서 같은 cell로 다음 state를 만듭니다.",
-      },
-      {
-        id: "lossy-recurrent-state",
-        role: "과거가 고정 차원 state에 손실 압축되는 경계를 설명합니다.",
-      },
-      {
-        id: "time-unrolling",
-        role: "반복 cell과 공유 parameter를 finite computational graph로 펼칩니다.",
-      },
-      {
-        id: "rnn-language-model",
-        role: "Hidden state를 다음-token distribution으로 투영합니다.",
-      },
-      {
-        id: "perplexity",
-        role: "동일 tokenization에서 평균 NLL을 exponential scale로 비교합니다.",
-      },
-      {
-        id: "bptt",
-        role: "시간축 graph의 shared parameter gradient를 역방향으로 합산합니다.",
-      },
-      {
-        id: "recurrent-jacobian-product",
-        role: "장기 gradient의 방향별 감쇠·증폭 메커니즘을 설명합니다.",
-      },
-      {
-        id: "gradient-norm-clipping",
-        role: "Exploding gradient의 update 크기를 제한합니다.",
-      },
-      {
-        id: "truncated-bptt",
-        role: "Forward state continuity와 backward credit horizon을 분리합니다.",
-      },
+      { id: "rnn-state-transition", role: "현재 input과 이전 state를 다음 state로 합칩니다." },
+      { id: "lossy-recurrent-state", role: "과거가 고정 차원 state에 손실 압축되는 경계를 설명합니다." },
+      { id: "time-unrolling", role: "공유 cell을 finite time graph로 펼칩니다." },
+      { id: "recurrent-directionality-boundary", role: "Causal과 bidirectional recurrence의 future-access 경계를 구분합니다." },
     ],
     conceptExplanations: [
-      {
-        id: "rnn-state-transition",
-        sectionId: "overview",
-        intuition:
-          "같은 작은 계산기를 시간마다 다시 사용해 새 관측과 지금까지의 요약을 다음 요약으로 합칩니다.",
-        workedExample:
-          "h_t=tanh(0.8h_{t-1}+0.5x_t), h0=0, x1=1, x2=0이면 h1≈0.462, h2≈0.354입니다.",
-        boundary:
-          "Sequence가 길어져도 parameter는 늘지 않지만 time-step dependency와 activation memory는 늘어나며 모든 과거를 보존하지 않습니다.",
-      },
-      {
-        id: "lossy-recurrent-state",
-        sectionId: "overview",
-        intuition:
-          "긴 원문을 매번 다시 보는 대신 정해진 H개 숫자로 계속 요약해 전달하는 압축 memory입니다.",
-        workedExample:
-          "서로 다른 두 prefix가 같은 hidden vector로 mapping되면 이후 cell은 그 둘을 state만으로 구분할 수 없습니다.",
-        boundary:
-          "Hidden state는 주소로 원문을 조회하는 storage나 lossless code가 아니며 무엇이 남는지는 task objective와 capacity에 달렸습니다.",
-      },
-      {
-        id: "time-unrolling",
-        sectionId: "architecture",
-        intuition:
-          "원의 self-loop를 실제 실행 순서대로 일렬로 펼쳐 어느 값이 어느 다음 값을 기다리는지 드러냅니다.",
-        workedExample:
-          "길이 3 sequence는 cell call 세 개로 보이지만 모두 같은 Wxh·Whh·bh를 사용하고 activation h1,h2,h3만 달라집니다.",
-        boundary:
-          "그림의 세 cell을 서로 다른 layer·parameter로 세면 안 되며 stacked layer depth와 time depth도 다른 축입니다.",
-      },
-      {
-        id: "rnn-language-model",
-        sectionId: "language-model",
-        intuition:
-          "지금까지 읽은 token을 state 하나에 접고 그 state에서 바로 다음 token 후보들의 probability를 냅니다.",
-        workedExample:
-          "입력 w_t까지 만든 h_t를 vocabulary logits로 투영해 실제 target w_{t+1}의 probability를 높입니다.",
-        boundary:
-          "Model은 원문 prefix에 직접 attention하지 않으며 bidirectional state는 미래 token을 볼 수 있어 causal generation에 그대로 쓸 수 없습니다.",
-      },
-      {
-        id: "perplexity",
-        sectionId: "language-model",
-        intuition:
-          "Log scale의 평균 token surprise를 exponential로 되돌려 같은 평가 계약에서 작은 값이 좋은 척도로 읽습니다.",
-        workedExample:
-          "평균 NLL이 ln 4이면 PPL은 exp(ln4)=4입니다. 균등한 특수 경우에는 네 후보 사이에서 헷갈리는 직관을 줍니다.",
-        boundary:
-          "일반 분포에서 실제 후보 수가 아니며 corpus·tokenizer·mask·log base가 다르면 숫자를 바로 비교할 수 없습니다.",
-      },
-      {
-        id: "bptt",
-        sectionId: "bptt",
-        intuition:
-          "시간마다 복제해 보인 cell graph를 끝에서부터 되짚어 같은 weight가 만든 모든 영향의 gradient를 더합니다.",
-        workedExample:
-          "W_hh가 t=1,2,3 transition에 쓰였다면 세 사용 지점의 parameter derivative contribution을 합쳐 한 W_hh update를 만듭니다.",
-        boundary:
-          "별도의 미분 법칙이 아니라 finite unroll에 적용한 reverse-mode이며 긴 stream 전체를 constant memory로 exact 미분하지는 않습니다.",
-      },
-      {
-        id: "recurrent-jacobian-product",
-        sectionId: "bptt",
-        intuition:
-          "먼 과거의 작은 변화가 현재 state까지 오는 동안 매 transition의 local scale과 rotation을 차례로 통과한 결과입니다.",
-        workedExample:
-          "Scalar local derivative가 매 step 0.5이면 10 step 뒤 민감도는 0.5^10≈0.00098이고 1.2이면 1.2^10≈6.19입니다.",
-        boundary:
-          "Matrix는 방향마다 singular scale이 다르고 순서를 바꿀 수 없으며 spectral radius 하나만으로 nonlinear trajectory 전체를 판정할 수 없습니다.",
-      },
-      {
-        id: "gradient-norm-clipping",
-        sectionId: "bptt",
-        intuition:
-          "Gradient가 너무 커졌을 때 각 성분을 따로 자르지 않고 전체 화살표 방향은 그대로 둔 채 길이만 제한합니다.",
-        workedExample:
-          "g=(6,8)의 norm은 10이므로 threshold c=5이면 g_clip=(3,4)가 됩니다.",
-        boundary:
-          "Exploding update의 안전장치이지 vanishing gradient를 복원하거나 long-term dependency를 자동 학습시키는 방법은 아닙니다.",
-      },
-      {
-        id: "truncated-bptt",
-        sectionId: "bptt",
-        intuition:
-          "다음 chunk가 이전 state 값은 이어받지만 그 값이 만들어진 오래된 계산까지 gradient가 되돌아가지는 않도록 영수증을 끊습니다.",
-        workedExample:
-          "128 token chunk 끝 h128을 detach해 다음 chunk의 h0로 쓰면 forward context는 이어지지만 loss t=256의 gradient는 첫 chunk를 건너지 않습니다.",
-        boundary:
-          "Truncation length는 memory budget과 direct credit horizon을 정하지만 model의 모든 empirical memory를 그 숫자 하나로 규정하지는 않습니다.",
-      },
+      { id: "rnn-state-transition", sectionId: "overview", intuition: "같은 작은 계산기가 새 관측과 직전 메모를 받아 다음 메모를 만듭니다.", workedExample: "h=tanh(0.8h_prev+0.5x), h0=0, x1=1이면 h1≈0.462입니다.", boundary: "Sequence 길이가 늘어도 weight는 한 벌이지만 time dependency와 activation은 늘어납니다." },
+      { id: "lossy-recurrent-state", sectionId: "overview", intuition: "원문을 다시 찾는 대신 H개 숫자로 계속 요약해 넘깁니다.", workedExample: "서로 다른 prefix가 같은 h에 도달하면 같은 다음 x에서 이후 출력도 같아집니다.", boundary: "Hidden state는 주소형 저장소나 lossless code가 아닙니다." },
+      { id: "time-unrolling", sectionId: "architecture", intuition: "Self-loop를 실행 순서대로 펼쳐 어느 state가 다음 state를 기다리는지 봅니다.", workedExample: "길이 3이면 h1,h2,h3 값은 다르지만 Wxh·Whh·b는 모두 같습니다.", boundary: "세 cell을 서로 다른 layer나 parameter로 세지 않습니다." },
+      { id: "recurrent-directionality-boundary", sectionId: "architecture", intuition: "왼쪽에서 온 state만 쓰는지, 오른쪽에서 읽은 state도 합치는지 구분합니다.", workedExample: "Offline tagging은 forward/backward state를 합칠 수 있지만 streaming generation은 미래 state를 쓸 수 없습니다.", boundary: "Bidirectional accuracy 이득은 causal deployment 가능성을 보장하지 않습니다." },
     ],
     conceptStages: [
-      {
-        label: "State",
-        relation: "현재 관측과 직전 요약에서 다음 lossy state 생성",
-        concepts: [
-          "coordinate-vector",
-          "affine-layer",
-          "tanh-activation",
-          "rnn-state-transition",
-          "lossy-recurrent-state",
-        ],
-      },
-      {
-        label: "Time graph",
-        relation: "같은 cell을 sequence 길이만큼 공유해 펼침",
-        concepts: ["rnn-state-transition", "time-unrolling"],
-      },
-      {
-        label: "Prediction",
-        relation: "State를 다음-token distribution과 evaluation으로 연결",
-        concepts: [
-          "lossy-recurrent-state",
-          "rnn-language-model",
-          "cross-entropy-nll",
-          "perplexity",
-        ],
-      },
-      {
-        label: "Backward",
-        relation: "Finite unroll을 역순으로 미분하고 shared contribution 합산",
-        concepts: [
-          "time-unrolling",
-          "backpropagation",
-          "bptt",
-          "recurrent-jacobian-product",
-        ],
-      },
-      {
-        label: "Control",
-        relation: "Exploding update와 credit horizon을 서로 다른 장치로 관리",
-        concepts: [
-          "euclidean-norm",
-          "recurrent-jacobian-product",
-          "gradient-norm-clipping",
-          "truncated-bptt",
-        ],
-      },
+      { label: "00 shape", relation: "Input·state·projection·activation의 한 step 형태를 고정합니다.", concepts: ["coordinate-vector", "affine-layer", "tanh-activation", "rnn-state-transition"] },
+      { label: "01 memory", relation: "고정 state가 과거를 압축하는 한계를 봅니다.", concepts: ["rnn-state-transition", "lossy-recurrent-state"] },
+      { label: "02 time", relation: "같은 cell을 시간축으로 펼칩니다.", concepts: ["rnn-state-transition", "time-unrolling"] },
+      { label: "03 direction", relation: "Causal과 bidirectional visibility를 분리합니다.", concepts: ["time-unrolling", "recurrent-directionality-boundary"] },
     ],
     exercises: [
-      {
-        level: "basic",
-        question:
-          "Scalar RNN h_t=tanh(0.8h_{t-1}+0.5x_t)에서 h0=0, x1=1, x2=0일 때 두 state를 계산하고 과거 흔적을 설명할 수 있을까요?",
-        answerChecklist: [
-          "h1=tanh(0.5)≈0.462를 계산한다.",
-          "h2=tanh(0.8×0.462)≈0.354를 계산한다.",
-          "원문이 아니라 변환된 state로 흔적이 남는다고 설명한다.",
-        ],
-        requiredConcepts: [
-          "rnn-state-transition",
-          "lossy-recurrent-state",
-          "tanh-activation",
-        ],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "Input dimension D=10, hidden dimension H=20, sequence length T=50인 vanilla RNN cell의 parameter 수와 forward 계산 차수를 설명할 수 있을까요?",
-        answerChecklist: [
-          "HD+H²+H=620을 계산한다.",
-          "Forward 차수를 O(T(HD+H²))로 적는다.",
-          "T가 parameter 수는 늘리지 않지만 activation·latency는 늘린다고 구분한다.",
-        ],
-        requiredConcepts: ["rnn-state-transition", "time-unrolling"],
-        sectionId: "architecture",
-      },
-      {
-        level: "basic",
-        question:
-          "평균 token NLL이 ln 4일 때 perplexity를 계산하고 이 값을 서로 다른 tokenizer 모델 사이에 바로 비교하면 안 되는 이유를 말할 수 있을까요?",
-        answerChecklist: [
-          "exp(ln4)=4를 계산한다.",
-          "같은 corpus·tokenization·mask 조건을 명시한다.",
-          "일반 분포에서 실제 후보 개수라는 해석을 제한한다.",
-        ],
-        requiredConcepts: ["cross-entropy-nll", "exponentiation", "perplexity"],
-        sectionId: "language-model",
-      },
-      {
-        level: "basic",
-        question:
-          "서로 다른 두 prefix가 같은 hidden state h에 도달했고 다음 입력 x도 같다면, vanilla RNN이 다음 state와 output만으로 두 prefix를 다시 구분할 수 있는지 설명할 수 있을까요?",
-        answerChecklist: [
-          "같은 deterministic transition f(x,h)는 같은 다음 state를 만든다고 설명한다.",
-          "같은 state에서 만든 output distribution도 같다고 연결한다.",
-          "Hidden state가 원문을 보관하는 storage가 아니라 task에 맞춘 lossy summary임을 말한다.",
-        ],
-        requiredConcepts: ["rnn-state-transition", "lossy-recurrent-state"],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "Token sequence [BOS, 나, 간다, EOS]를 teacher forcing으로 학습할 때 세 input→target pair를 만들고, h_t가 어느 token을 예측하는지 설명할 수 있을까요?",
-        answerChecklist: [
-          "BOS→나, 나→간다, 간다→EOS의 세 pair를 적는다.",
-          "입력 w_t까지 처리한 h_t가 target w_{t+1}을 예측한다고 설명한다.",
-          "Padding position은 loss mask에서 제외하고 BOS/EOS convention은 dataset 계약임을 구분한다.",
-        ],
-        requiredConcepts: ["rnn-language-model", "cross-entropy-nll"],
-        sectionId: "language-model",
-      },
-      {
-        level: "basic",
-        question:
-          "공유 recurrent weight의 세 사용 지점에서 gradient contribution이 각각 2, -1, 3이라면 최종 contribution을 계산하고, 왜 weight를 시점마다 따로 update하지 않는지 설명할 수 있을까요?",
-        answerChecklist: [
-          "2+(-1)+3=4를 계산한다.",
-          "모든 시점이 같은 parameter 한 벌을 공유한다고 설명한다.",
-          "BPTT가 finite unroll의 각 사용 지점에서 온 contribution을 합산한다고 연결한다.",
-        ],
-        requiredConcepts: ["time-unrolling", "backpropagation", "bptt"],
-        sectionId: "bptt",
-      },
-      {
-        level: "advanced",
-        question:
-          "Scalar recurrent local derivative가 매 step 0.5인 경우와 1.2인 경우에 10-step gradient scale을 계산하고 vanishing·exploding을 비교할 수 있을까요?",
-        answerChecklist: [
-          "0.5^10≈0.00098을 계산한다.",
-          "1.2^10≈6.19를 계산한다.",
-          "실제 matrix에서는 방향별 scale과 trajectory-dependent derivative를 봐야 한다고 제한한다.",
-        ],
-        requiredConcepts: [
-          "chain-rule",
-          "jacobian-matrix",
-          "recurrent-jacobian-product",
-        ],
-        sectionId: "bptt",
-      },
-      {
-        level: "advanced",
-        question:
-          "Gradient g=(6,8)에 global norm threshold 5를 적용하고 clipping이 vanishing gradient의 해결책이 아닌 이유를 설명할 수 있을까요?",
-        answerChecklist: [
-          "원래 norm 10과 scale 1/2을 계산한다.",
-          "Clipped vector (3,4)를 구한다.",
-          "큰 update만 줄이고 이미 작은 장기 signal은 키우지 않는다고 설명한다.",
-        ],
-        requiredConcepts: [
-          "euclidean-norm",
-          "gradient-norm-clipping",
-          "recurrent-jacobian-product",
-        ],
-        sectionId: "bptt",
-      },
-      {
-        level: "advanced",
-        question:
-          "128-token truncated BPTT로 1,024-token stream을 처리할 때 forward state history와 direct gradient credit horizon을 구분해 설명할 수 있을까요?",
-        answerChecklist: [
-          "State value는 chunk 사이에 전달된다고 말한다.",
-          "Detach 때문에 gradient graph는 128-token boundary를 건너지 않는다고 설명한다.",
-          "이 숫자가 empirical memory 전체와 동일하지 않음을 제한한다.",
-        ],
-        requiredConcepts: ["lossy-recurrent-state", "bptt", "truncated-bptt"],
-        sectionId: "bptt",
-      },
-      {
-        level: "advanced",
-        question:
-          "Recurrent weight의 대표 scale이 1.1이지만 tanh가 포화돼 한 시점의 derivative가 0.01이라면 local Jacobian scale을 계산하고, weight의 spectral radius만으로 exploding을 판정할 수 없는 이유를 설명할 수 있을까요?",
-        answerChecklist: [
-          "Local scale 1.1×0.01=0.011을 계산한다.",
-          "이 trajectory에서는 반복 곱이 오히려 빠르게 vanishing할 수 있다고 설명한다.",
-          "실제 matrix는 방향·시점·state에 따라 Jacobian이 달라 spectral radius 하나가 충분조건이 아님을 말한다.",
-        ],
-        requiredConcepts: [
-          "tanh-activation",
-          "jacobian-matrix",
-          "recurrent-jacobian-product",
-        ],
-        sectionId: "bptt",
-      },
+      { level: "basic", question: "Scalar RNN h=tanh(0.8h_prev+0.5x), h0=0, x1=1, x2=0의 h1,h2를 계산하세요.", answerChecklist: ["h1=tanh(0.5)", "h1≈0.462", "h2=tanh(0.8×0.462)", "h2≈0.354", "past trace transformed", "same transition"], requiredConcepts: ["rnn-state-transition"], sectionId: "overview" },
+      { level: "basic", question: "x_t와 h_{t-1}, h_t의 역할과 shape를 구분하세요.", answerChecklist: ["current observation", "previous summary", "new summary", "D input", "H hidden", "batch omitted"], requiredConcepts: ["rnn-state-transition", "coordinate-vector"], sectionId: "overview" },
+      { level: "basic", question: "서로 다른 prefix가 같은 h에 도달하면 왜 다음 같은 x에서 구분되지 않나요?", answerChecklist: ["deterministic transition", "same x", "same h", "same next h", "same output condition", "lossy collision"], requiredConcepts: ["lossy-recurrent-state"], sectionId: "overview" },
+      { level: "basic", question: "D=10,H=20 vanilla RNN cell의 parameter 수를 계산하세요.", answerChecklist: ["HD", "H squared", "bias H", "200+400+20", "620", "independent of T"], requiredConcepts: ["rnn-state-transition"], sectionId: "architecture" },
+      { level: "basic", question: "길이 3 unroll에서 공유되는 값과 시점마다 달라지는 값을 나누세요.", answerChecklist: ["shared Wxh", "shared Whh", "shared bias", "different x", "different h", "three calls"], requiredConcepts: ["time-unrolling"], sectionId: "architecture" },
+      { level: "basic", question: "Causal RNN과 bidirectional RNN의 입력 가시성을 비교하세요.", answerChecklist: ["past only", "forward state", "future pass", "combined state", "offline fit", "streaming leak"], requiredConcepts: ["recurrent-directionality-boundary"], sectionId: "architecture" },
+      { level: "advanced", question: "Layer depth와 time depth가 만드는 dependency를 따로 그리세요.", answerChecklist: ["vertical layer edge", "horizontal time edge", "same-layer previous state", "lower-layer same time", "two axes", "latency path", "activation storage"], requiredConcepts: ["time-unrolling"], sectionId: "architecture" },
+      { level: "advanced", question: "Hidden width를 늘리면 lossless memory가 되는가를 collision 관점에서 반박하세요.", answerChecklist: ["finite dimension", "many prefixes", "task objective", "possible collisions", "no address lookup", "capacity tradeoff", "empirical test"], requiredConcepts: ["lossy-recurrent-state"], sectionId: "overview" },
+      { level: "advanced", question: "Offline tagger와 live generator의 recurrent direction release test를 설계하세요.", answerChecklist: ["same fixture", "future perturbation", "causal output unchanged", "bidirectional may change", "latency", "state size", "leakage assertion", "rollback"], requiredConcepts: ["recurrent-directionality-boundary"], sectionId: "architecture" },
+      { level: "advanced", question: "RNN state transition 구현의 shape·weight sharing·reset release gate를 작성하세요.", answerChecklist: ["D/H receipt", "scalar fixture", "shared parameter identity", "sequence reset", "batch isolation", "causal direction", "reference parity", "failure case", "rollback"], requiredConcepts: ["rnn-state-transition", "time-unrolling", "lossy-recurrent-state"], sectionId: "architecture" },
     ],
     papers: [
-      {
-        title: "Finding Structure in Time",
-        href: "https://doi.org/10.1207/s15516709cog1402_1",
-        problem:
-          "Time을 고정 spatial window로 모두 펼치지 않고 connectionist network가 sequence structure를 내부 state로 학습하는 문제",
-        contribution:
-          "직전 hidden activation의 context copy를 다음 처리에 사용한 simple recurrent network와 synthetic sequence 분석",
-        assumptions:
-          "1990년 논문의 작은 network·synthetic language·training procedure와 evaluation 범위를 전제로 읽음",
-        evidenceScope:
-          "논문이 수행한 word·letter prediction 및 hidden-state cluster 분석 범위",
-        notClaim:
-          "Hidden state가 lossless memory이거나 임의 길이 dependency를 항상 학습한다는 보편 보장은 아님",
-        sectionId: "paper-elman",
-      },
-      {
-        title: "Backpropagation Through Time: What It Does and How to Do It",
-        href: "https://doi.org/10.1109/5.58337",
-        problem:
-          "Differentiable dynamic system과 recurrent computation의 parameter derivative를 시간 전체의 dependency에서 정확히 계산하는 문제",
-        contribution:
-          "Time-unrolled system에 ordered derivative·backpropagation을 적용하는 식과 구현 관점 정리",
-        assumptions:
-          "Elementary subsystem이 알려진 continuous differentiable function이고 finite computation을 표현할 수 있다는 조건",
-        evidenceScope:
-          "논문의 dynamic system·pattern recognition·control formulation과 알고리즘 설명 범위",
-        notClaim:
-          "무한 stream을 constant memory로 exact 학습하거나 모든 nondifferentiable system을 그대로 처리한다는 뜻은 아님",
-        sectionId: "paper-bptt",
-      },
-      {
-        title: "Recurrent Neural Network Based Language Model",
-        href: "https://www.fit.vut.cz/research/groups/speech/publi/2010/mikolov_interspeech2010_IS100722.pdf",
-        problem:
-          "고정 n-gram history보다 유연한 context representation으로 다음 word probability를 예측하는 문제",
-        contribution:
-          "Word input과 recurrent hidden state에서 vocabulary distribution을 만드는 RNN language model과 speech-recognition 비교",
-        assumptions:
-          "논문의 corpus·vocabulary·simple RNN·training recipe와 당시 baseline 조건을 전제로 함",
-        evidenceScope:
-          "논문이 보고한 language-model perplexity와 speech-recognition 관련 실험 범위",
-        notClaim:
-          "RNN state가 무한 문맥을 완전 보존하거나 현대 Transformer보다 일반적으로 우수하다는 결론은 아님",
-        sectionId: "paper-rnn-lm",
-      },
-      {
-        title: "On the Difficulty of Training Recurrent Neural Networks",
-        href: "https://arxiv.org/abs/1211.5063",
-        problem:
-          "긴 recurrent trajectory에서 gradient가 사라지거나 폭발해 parameter update가 불안정해지는 메커니즘을 설명하는 문제",
-        contribution:
-          "반복 Jacobian을 분석·기하·동역학 관점으로 해석하고 exploding gradient용 norm clipping을 제안",
-        assumptions:
-          "논문의 differentiable recurrent dynamics·trajectory와 분석 단순화 및 공개 실험 설정을 전제로 함",
-        evidenceScope: "이론적·기하적 분석과 논문 synthetic·language 실험 범위",
-        notClaim:
-          "Spectral radius 하나가 모든 nonlinear trajectory를 판정하거나 clipping이 vanishing gradient도 해결한다는 뜻은 아님",
-        sectionId: "paper-rnn-gradient",
-      },
-      {
-        title:
-          "On Training Recurrent Networks with Truncated Backpropagation Through Time in Speech Recognition",
-        href: "https://arxiv.org/abs/1807.03396",
-        problem:
-          "Speech recognition에서 decoding history와 truncated training이 모델이 사용할 수 있는 장기 의존성에 미치는 영향을 분석하는 문제",
-        contribution:
-          "Online·batch decoding의 function class와 truncated BPTT를 연결하고 context·lookahead 설계를 실험",
-        assumptions:
-          "논문의 speech task·decoding strategy·context frame·recurrent architecture와 evaluation을 전제로 함",
-        evidenceScope:
-          "Subphonetic state·phoneme·word dependency에 대한 논문 분석과 실험 범위",
-        notClaim:
-          "Truncation 길이가 모든 task의 실제 memory 길이와 동일하거나 하나의 universal optimum이라는 결론은 아님",
-        sectionId: "paper-truncated-bptt",
-      },
+      { title: "Finding Structure in Time", href: "https://doi.org/10.1207/s15516709cog1402_1", problem: "고정 window 없이 sequence structure를 내부 state로 학습하는 문제", contribution: "직전 hidden activation의 context copy를 쓰는 simple recurrent network를 제시", assumptions: "1990년의 작은 network·synthetic language·training 조건", evidenceScope: "논문의 word·letter prediction과 hidden-state 분석", notClaim: "Lossless memory나 임의 길이 dependency의 보편 보장이 아님", sectionId: "paper-elman" },
+    ],
+  },
+  "ai/rnn-language-model": {
+    entryLevel: true,
+    entryNote: "Token·probability·log를 모른다고 가정하고 네 token의 shifted pair에서 시작합니다.",
+    coreIdea: "RNN language model은 현재 token까지 만든 lossy state를 vocabulary logits와 probability로 바꾸고 한 칸 뒤 token의 NLL을 학습하며, perplexity는 같은 evaluation contract 안에서만 비교합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "rnn-shifted-token-pair", role: "현재 input과 한 칸 뒤 target을 만듭니다." },
+      { id: "rnn-language-model", role: "Recurrent state를 다음-token distribution으로 투영합니다." },
+      { id: "perplexity", role: "평균 token NLL을 exponential scale로 바꿉니다." },
+    ],
+    conceptExplanations: [
+      { id: "rnn-shifted-token-pair", sectionId: "language-model", intuition: "같은 문장을 입력 줄과 정답 줄로 한 칸 밀어 놓습니다.", workedExample: "[BOS,나,간다,EOS]는 BOS→나, 나→간다, 간다→EOS 세 pair입니다.", boundary: "Padding은 target loss에서 제외하고 BOS/EOS convention을 기록합니다." },
+      { id: "rnn-language-model", sectionId: "language-model", intuition: "지금까지 읽은 prefix를 state에 접고 다음 token 후보 전체를 채점합니다.", workedExample: "h_t를 vocabulary logits z_t로 투영한 뒤 softmax로 p_t를 만듭니다.", boundary: "원문 prefix에 직접 attention하지 않고 현재 state만 조건으로 사용합니다." },
+      { id: "perplexity", sectionId: "language-model", intuition: "평균 log surprise를 exp로 되돌린 같은-contract 평가 척도입니다.", workedExample: "평균 NLL이 ln4면 PPL=4입니다.", boundary: "Tokenizer·corpus·mask·log convention이 다르면 숫자를 바로 비교하지 않습니다." },
+    ],
+    conceptStages: [
+      { label: "00 state", relation: "Prefix를 recurrent state로 압축합니다.", concepts: ["rnn-state-transition", "lossy-recurrent-state"] },
+      { label: "01 pair", relation: "Input과 target을 한 칸 이동합니다.", concepts: ["rnn-shifted-token-pair"] },
+      { label: "02 distribution", relation: "State를 logits와 probability로 바꿉니다.", concepts: ["rnn-language-model", "cross-entropy-nll"] },
+      { label: "03 metric", relation: "평균 NLL을 같은 조건의 PPL로 바꿉니다.", concepts: ["cross-entropy-nll", "exponentiation", "perplexity"] },
+    ],
+    exercises: [
+      { level: "basic", question: "[BOS,나,간다,EOS]의 input-target pair를 만드세요.", answerChecklist: ["BOS to 나", "나 to 간다", "간다 to EOS", "three pairs", "one-step shift", "padding excluded"], requiredConcepts: ["rnn-shifted-token-pair"], sectionId: "language-model" },
+      { level: "basic", question: "h_t,z_t,p_t의 역할을 순서대로 설명하세요.", answerChecklist: ["prefix state", "output projection", "vocabulary logits", "softmax", "sum one", "next-token distribution"], requiredConcepts: ["rnn-language-model"], sectionId: "language-model" },
+      { level: "basic", question: "정답 probability 0.25의 token NLL을 natural log로 쓰세요.", answerChecklist: ["minus log", "-ln0.25", "ln4", "about 1.386", "higher p lower loss", "one target"], requiredConcepts: ["cross-entropy-nll"], sectionId: "language-model" },
+      { level: "basic", question: "평균 NLL이 ln4일 때 perplexity를 계산하세요.", answerChecklist: ["exp", "exp ln4", "4", "positive scale", "lower better", "same contract"], requiredConcepts: ["perplexity", "exponentiation"], sectionId: "language-model" },
+      { level: "basic", question: "RNN-LM이 원문 prefix를 다시 조회하지 않는 이유를 설명하세요.", answerChecklist: ["state compression", "fixed H", "no token address", "output from h", "possible information loss", "contrast attention"], requiredConcepts: ["rnn-language-model", "lossy-recurrent-state"], sectionId: "language-model" },
+      { level: "basic", question: "Training teacher forcing과 generation input의 차이를 설명하세요.", answerChecklist: ["gold previous token", "sampled previous token", "state changes", "error feedback", "exposure bias", "separate evaluation"], requiredConcepts: ["rnn-shifted-token-pair"], sectionId: "language-model" },
+      { level: "advanced", question: "서로 다른 tokenizer의 PPL 12와 9를 바로 비교할 수 없는 이유를 설계 관점에서 설명하세요.", answerChecklist: ["different token units", "different sequence count", "mask convention", "corpus", "log aggregation", "same-contract requirement", "byte-normalized alternative"], requiredConcepts: ["perplexity"], sectionId: "language-model" },
+      { level: "advanced", question: "Padding과 sequence length가 섞인 batch의 token NLL reducer를 설계하세요.", answerChecklist: ["shift first", "valid-token mask", "sum valid NLL", "count valid targets", "divide by count", "not mean of padded rows", "BOS/EOS receipt"], requiredConcepts: ["rnn-shifted-token-pair", "cross-entropy-nll"], sectionId: "language-model" },
+      { level: "advanced", question: "같은 h에 충돌한 두 prefix가 만드는 distribution 반례를 설명하세요.", answerChecklist: ["different prefixes", "same h", "same output projection", "same logits", "same probability", "cannot distinguish", "capacity/evaluation"], requiredConcepts: ["rnn-language-model", "lossy-recurrent-state"], sectionId: "language-model" },
+      { level: "advanced", question: "RNN-LM release gate를 작성하세요.", answerChecklist: ["tokenizer revision", "shift fixture", "padding mask", "logit shape", "probability sum", "NLL parity", "PPL same corpus", "generation regression", "rollback"], requiredConcepts: ["rnn-shifted-token-pair", "rnn-language-model", "perplexity"], sectionId: "language-model" },
+    ],
+    papers: [
+      { title: "Recurrent Neural Network Based Language Model", href: "https://www.fit.vut.cz/research/groups/speech/publi/2010/mikolov_interspeech2010_IS100722.pdf", problem: "고정 n-gram보다 유연한 context로 다음 word probability를 예측하는 문제", contribution: "Word input과 recurrent hidden state에서 vocabulary distribution을 만드는 RNN-LM 제시", assumptions: "논문의 corpus·vocabulary·simple RNN·training recipe", evidenceScope: "보고된 LM perplexity와 speech-recognition 실험", notClaim: "무한 문맥 완전 보존이나 현대 Transformer 대비 보편 우월성이 아님", sectionId: "paper-rnn-lm" },
+    ],
+  },
+  "ai/bptt": {
+    entryLevel: true,
+    entryNote: "미분·Jacobian을 모른다고 가정하고 공유 weight의 시점별 contribution 합에서 시작합니다.",
+    coreIdea: "BPTT는 finite unroll에 reverse-mode를 적용해 공유 parameter gradient를 합치며, recurrent Jacobian product의 크기와 gradient clipping, graph detach는 서로 다른 실패와 horizon을 제어합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "bptt", role: "시간축 graph를 역순으로 미분해 공유 gradient를 합산합니다." },
+      { id: "recurrent-jacobian-product", role: "먼 state 사이 local derivative의 ordered product를 설명합니다." },
+      { id: "gradient-norm-clipping", role: "Exploding update의 전체 norm을 제한합니다." },
+      { id: "truncated-bptt", role: "State value carry와 derivative graph horizon을 분리합니다." },
+    ],
+    conceptExplanations: [
+      { id: "bptt", sectionId: "bptt", intuition: "펼친 계산표를 끝에서 되짚어 같은 weight가 만든 모든 책임을 더합니다.", workedExample: "시점별 contribution 2,-1,3은 한 W update 전에 4로 합칩니다.", boundary: "별도 미분 법칙이 아니라 finite graph의 reverse-mode입니다." },
+      { id: "recurrent-jacobian-product", sectionId: "bptt", intuition: "먼 변화는 매 transition의 회전과 배율을 순서대로 통과합니다.", workedExample: "Scalar local derivative 0.5가 10번이면 0.5^10≈0.00098입니다.", boundary: "Matrix는 방향별 scale과 순서가 달라 spectral radius 하나로 전체 trajectory를 판정하지 않습니다." },
+      { id: "gradient-norm-clipping", sectionId: "bptt", intuition: "너무 긴 gradient 화살표의 방향은 두고 길이만 threshold로 줄입니다.", workedExample: "g=(6,8), c=5면 norm 10이므로 (3,4)가 됩니다.", boundary: "Exploding update를 줄일 뿐 vanishing signal을 키우지 않습니다." },
+      { id: "truncated-bptt", sectionId: "bptt", intuition: "State 값은 다음 chunk로 넘기고 오래된 계산 영수증만 끊습니다.", workedExample: "h128을 detach해 다음 chunk h0로 쓰면 forward context는 이어지지만 gradient는 첫 chunk로 가지 않습니다.", boundary: "Truncation 길이는 direct credit horizon이지 empirical memory 전체가 아닙니다." },
+    ],
+    conceptStages: [
+      { label: "00 graph", relation: "공유 transition을 finite graph로 펼칩니다.", concepts: ["time-unrolling", "backpropagation", "bptt"] },
+      { label: "01 sensitivity", relation: "Local Jacobian을 시간 순서대로 합성합니다.", concepts: ["chain-rule", "jacobian-matrix", "recurrent-jacobian-product"] },
+      { label: "02 norm", relation: "Exploding update 크기를 제한합니다.", concepts: ["euclidean-norm", "recurrent-jacobian-product", "gradient-norm-clipping"] },
+      { label: "03 lifetime", relation: "Value carry와 graph lifetime을 분리합니다.", concepts: ["lossy-recurrent-state", "bptt", "truncated-bptt"] },
+    ],
+    exercises: [
+      { level: "basic", question: "공유 weight contribution 2,-1,3의 최종 gradient를 계산하세요.", answerChecklist: ["sum contributions", "2-1+3", "4", "one shared weight", "one optimizer update", "not per-time weights"], requiredConcepts: ["bptt"], sectionId: "bptt" },
+      { level: "basic", question: "현재 state gradient의 직접 loss 경로와 미래 state 경로를 구분하세요.", answerChecklist: ["current loss derivative", "next-state Jacobian", "future delta", "transpose map", "add paths", "reverse order"], requiredConcepts: ["bptt"], sectionId: "bptt" },
+      { level: "basic", question: "Local derivative 0.5가 10 step 반복될 때 scale을 계산하세요.", answerChecklist: ["0.5 power 10", "0.000976", "about 0.001", "vanishing", "long distance", "scalar simplification"], requiredConcepts: ["recurrent-jacobian-product"], sectionId: "bptt" },
+      { level: "basic", question: "Local derivative 1.2가 10 step 반복될 때 scale을 계산하세요.", answerChecklist: ["1.2 power 10", "about 6.19", "growth", "exploding direction", "not all directions", "trajectory condition"], requiredConcepts: ["recurrent-jacobian-product"], sectionId: "bptt" },
+      { level: "basic", question: "g=(6,8), threshold 5의 global norm clipping 결과를 계산하세요.", answerChecklist: ["norm 10", "scale 0.5", "result 3,4", "direction preserved", "norm 5", "not element clipping"], requiredConcepts: ["gradient-norm-clipping"], sectionId: "bptt" },
+      { level: "basic", question: "128-token truncated BPTT에서 carry되는 것과 끊기는 것을 구분하세요.", answerChecklist: ["hidden value carried", "same sequence", "graph detached", "gradient stops", "activation freed", "forward context continues"], requiredConcepts: ["truncated-bptt"], sectionId: "bptt" },
+      { level: "advanced", question: "Whh scale 1.1, tanh derivative 0.01일 때 local scale과 해석을 쓰세요.", answerChecklist: ["multiply", "0.011", "vanishing possible", "weight alone insufficient", "state dependent derivative", "matrix directions", "trajectory"], requiredConcepts: ["recurrent-jacobian-product"], sectionId: "bptt" },
+      { level: "advanced", question: "Clipping이 vanishing gradient 해결책이 아닌 반례를 설명하세요.", answerChecklist: ["small incoming gradient", "norm below threshold", "min factor one", "unchanged signal", "no amplification", "separate architecture", "measure histogram"], requiredConcepts: ["gradient-norm-clipping", "recurrent-jacobian-product"], sectionId: "bptt" },
+      { level: "advanced", question: "Forward 1024-token state와 128-token credit horizon을 구분하는 experiment를 설계하세요.", answerChecklist: ["carry state across chunks", "detach every 128", "dependency probe distances", "gradient inspection", "behavior memory", "separate metrics", "same weights", "counterexample"], requiredConcepts: ["truncated-bptt", "lossy-recurrent-state"], sectionId: "bptt" },
+      { level: "advanced", question: "BPTT release gate를 작성하세요.", answerChecklist: ["finite unroll reference", "shared gradient sum", "Jacobian fixture", "vanish/explode cases", "clip norm", "detach boundary", "state carry", "memory bound", "rollback"], requiredConcepts: ["bptt", "recurrent-jacobian-product", "gradient-norm-clipping", "truncated-bptt"], sectionId: "bptt" },
+    ],
+    papers: [
+      { title: "Backpropagation Through Time: What It Does and How to Do It", href: "https://doi.org/10.1109/5.58337", problem: "Differentiable dynamic system의 parameter derivative를 시간 dependency 전체에서 계산", contribution: "Time-unrolled system에 ordered derivative와 backpropagation을 적용", assumptions: "Known differentiable subsystem과 finite computation", evidenceScope: "논문의 dynamic-system formulation과 algorithm", notClaim: "무한 stream constant-memory exact 학습을 뜻하지 않음", sectionId: "paper-bptt" },
+      { title: "On the Difficulty of Training Recurrent Neural Networks", href: "https://arxiv.org/abs/1211.5063", problem: "긴 trajectory에서 gradient가 사라지거나 폭발하는 메커니즘", contribution: "반복 Jacobian 분석과 exploding gradient용 norm clipping", assumptions: "논문의 differentiable dynamics·trajectory·실험 조건", evidenceScope: "이론 분석과 synthetic·language experiment", notClaim: "Spectral radius 하나의 보편 판정이나 clipping의 vanishing 해결이 아님", sectionId: "paper-rnn-gradient" },
+      { title: "On Training Recurrent Networks with Truncated BPTT", href: "https://arxiv.org/abs/1807.03396", problem: "Truncation이 학습되는 시간 의존성에 미치는 영향", contribution: "Speech task의 online·batch decoding과 truncated training 분석", assumptions: "논문의 speech task·decoding·architecture", evidenceScope: "논문의 context·lookahead 실험", notClaim: "Truncation 길이가 보편 memory 길이라는 뜻이 아님", sectionId: "paper-truncated-bptt" },
     ],
   },
   "ai/lstm": {
-    coreIdea:
-      "LSTM은 vanilla RNN의 반복 transition을 cell state와 hidden state 두 경로로 나누고, sigmoid gate가 channel별 보존·쓰기·공개 비율을 정하게 합니다. 장기 gradient 개선은 ‘기억한다’는 비유보다 direct cell derivative에 누적되는 forget-gate product와 training truncation 조건으로 읽어야 합니다.",
-    assumedKnowledge: [
-      {
-        id: "rnn-state-transition",
-        role: "LSTM이 확장하는 기준 recurrent cell과 timestep dependency를 읽습니다.",
-      },
-      {
-        id: "lossy-recurrent-state",
-        role: "고정 차원 recurrent state가 과거를 task-dependent하게 압축하는 한계를 유지합니다.",
-      },
-      {
-        id: "recurrent-jacobian-product",
-        role: "Vanilla RNN 장기 gradient path와 LSTM direct cell path를 비교합니다.",
-      },
-      {
-        id: "bptt",
-        role: "LSTM의 time-unrolled shared parameter gradient를 계산합니다.",
-      },
-      {
-        id: "truncated-bptt",
-        role: "State 전달 길이와 direct credit-assignment horizon을 구분합니다.",
-      },
-      {
-        id: "sigmoid-activation",
-        role: "Gate logit을 channel별 0–1 control ratio로 바꿉니다.",
-      },
-      {
-        id: "tanh-activation",
-        role: "Candidate와 공개 cell content의 signed bounded transform을 읽습니다.",
-      },
-      {
-        id: "chain-rule",
-        role: "Direct cell edge의 forget-gate product를 유도합니다.",
-      },
-    ],
+    entryLevel: true,
+    entryNote: "RNN·sigmoid·BPTT를 안다고 가정하지 않고 scalar cell 한 step의 보존·쓰기·공개 계산부터 시작합니다.",
+    coreIdea: "LSTM은 recurrent memory를 cell state와 exposed hidden state로 나누고 sigmoid gate가 channel별 보존·기록·공개 비율을 정하며, direct cell derivative는 forget-gate product로 남습니다.",
+    assumedKnowledge: [],
     introducedHere: [
-      {
-        id: "lstm-dual-state",
-        role: "Additive memory C와 공개 hidden h의 계산 책임을 분리합니다.",
-      },
-      {
-        id: "lstm-soft-gates",
-        role: "보존·쓰기·공개를 channel별 soft ratio로 제어합니다.",
-      },
-      {
-        id: "forget-gate-retention",
-        role: "Cell direct derivative가 horizon 전체에서 남는 양을 계산합니다.",
-      },
-      {
-        id: "gru-state-update",
-        role: "Single hidden state와 update·reset gate의 대안 parameterization을 설명합니다.",
-      },
-      {
-        id: "recurrent-deployment-contract",
-        role: "Architecture를 causal access·state·latency·budget으로 비교합니다.",
-      },
+      { id: "lstm-dual-state", role: "Cell memory와 exposed hidden의 계산 경로를 분리합니다." },
+      { id: "lstm-soft-gates", role: "Forget·input·output의 channel별 비율을 만듭니다." },
+      { id: "forget-gate-retention", role: "Direct cell path의 장기 derivative를 계산합니다." },
     ],
     conceptExplanations: [
-      {
-        id: "lstm-dual-state",
-        sectionId: "overview",
-        intuition:
-          "오래 전달할 장부 C와 지금 다른 layer에 보여 줄 요약 h를 분리해 같은 값을 매번 완전히 다시 쓰지 않습니다.",
-        workedExample:
-          "C_t=f_t⊙C_{t-1}+i_t⊙g_t로 memory를 고치고 h_t=o_t⊙tanh(C_t)만 외부와 다음 gate에 공개합니다.",
-        boundary:
-          "C를 인간이 읽는 장기 의미, h를 단기 의미라고 고정할 수 없으며 둘 다 학습된 vector이고 finite capacity입니다.",
-      },
-      {
-        id: "lstm-soft-gates",
-        sectionId: "gates",
-        intuition:
-          "문 하나를 열고 닫는 hard switch가 아니라 state의 각 channel마다 얼마를 남기고 쓸지 0과 1 사이 비율을 정합니다.",
-        workedExample:
-          "두 channel forget gate가 (0.95,0.10)이면 첫 memory는 대부분 유지하고 둘째는 이번 step에서 거의 지웁니다.",
-        boundary:
-          "Gate가 0 또는 1이어야 하는 것은 아니며 sigmoid saturation은 gate network 자체의 gradient를 작게 만들 수 있습니다.",
-      },
-      {
-        id: "forget-gate-retention",
-        sectionId: "cell-state",
-        intuition:
-          "과거 cell 변화가 direct path로 올 때 매 시점의 forget 비율만큼 연속해서 남습니다.",
-        workedExample:
-          "f=0.99가 100 step 이어지면 retention은 0.99^100≈0.366이고 f=0.9면 약 0.000027입니다.",
-        boundary:
-          "Gate dependency를 통한 indirect path를 제외한 contribution이며 f≈1이 memory 무한 보존이나 전체 gradient 안정성을 보장하지 않습니다.",
-      },
-      {
-        id: "gru-state-update",
-        sectionId: "variants",
-        intuition:
-          "별도 memory 장부 없이 이전 hidden과 새 candidate 사이를 update gate 하나로 부드럽게 섞습니다.",
-        workedExample:
-          "z=0.2이면 h_t=0.8h_{t-1}+0.2h̃_t로 대부분 과거를 유지하고 candidate를 조금 반영합니다.",
-        boundary:
-          "LSTM gate를 단순 삭제한 같은 모델이 아니며 reset 위치·update convention도 implementation마다 다릅니다.",
-      },
-      {
-        id: "recurrent-deployment-contract",
-        sectionId: "variants",
-        intuition:
-          "정확도 표 하나가 아니라 미래를 볼 수 있는지, step마다 기다려야 하는지, 유지할 state와 kernel 비용이 얼마인지 함께 보는 선택 기준입니다.",
-        workedExample:
-          "Bidirectional LSTM은 offline tagging에는 미래 context를 쓰지만 causal streaming에는 쓸 수 없고 unidirectional cell은 H 또는 2H state를 세션마다 유지합니다.",
-        boundary:
-          "옛 논문의 hidden-size 비교를 현재 hardware throughput과 동일시할 수 없으며 parameter·FLOP·memory·quality budget을 맞춰야 합니다.",
-      },
+      { id: "lstm-dual-state", sectionId: "overview", intuition: "보존·쓰기를 하는 메모장 C와 밖에 보여 주는 메모 h를 따로 둡니다.", workedExample: "Cprev=2,f=0.5,i=0.75,g=0.5,o=0.5면 C=1.375,h≈0.44입니다.", boundary: "C를 장기 기억, h를 단기 기억이라는 고정 의미로 해석하지 않습니다." },
+      { id: "lstm-soft-gates", sectionId: "gates", intuition: "세 스위치가 cell 전체를 켜는 대신 channel마다 0–1 비율을 냅니다.", workedExample: "Forget logit 1이면 f=sigmoid(1)≈0.731입니다.", boundary: "Gate order·bias layout·peephole·projection은 implementation마다 다릅니다." },
+      { id: "forget-gate-retention", sectionId: "cell-state", intuition: "Cell direct lane의 한 step 미분에는 forget gate가 그대로 남습니다.", workedExample: "f=0.99가 100 step이면 direct retention은 0.99^100≈0.366입니다.", boundary: "Gate network의 indirect path를 제외한 contribution이며 전체 Jacobian과 같지 않습니다." },
     ],
     conceptStages: [
-      {
-        label: "RNN 병목",
-        relation: "반복 nonlinear Jacobian과 lossy state에서 출발",
-        concepts: [
-          "rnn-state-transition",
-          "lossy-recurrent-state",
-          "recurrent-jacobian-product",
-        ],
-      },
-      {
-        label: "State contract",
-        relation: "Memory와 공개 output을 두 recurrent path로 분리",
-        concepts: ["tanh-activation", "lstm-dual-state"],
-      },
-      {
-        label: "Control",
-        relation: "Sigmoid gate로 channel별 보존·쓰기·공개 결정",
-        concepts: ["sigmoid-activation", "lstm-soft-gates", "lstm-dual-state"],
-      },
-      {
-        label: "Gradient",
-        relation: "Direct cell contribution과 전체 BPTT·truncation 구분",
-        concepts: [
-          "chain-rule",
-          "forget-gate-retention",
-          "bptt",
-          "truncated-bptt",
-        ],
-      },
-      {
-        label: "Alternatives",
-        relation: "Single-state GRU와 deployment budget 비교",
-        concepts: [
-          "lstm-dual-state",
-          "gru-state-update",
-          "recurrent-deployment-contract",
-        ],
-      },
+      { label: "00 baseline", relation: "Vanilla recurrent state와 long gradient 문제를 봅니다.", concepts: ["rnn-state-transition", "lossy-recurrent-state", "recurrent-jacobian-product"] },
+      { label: "01 state", relation: "Memory lane과 exposed hidden을 분리합니다.", concepts: ["tanh-activation", "lstm-dual-state"] },
+      { label: "02 gates", relation: "Channel별 보존·쓰기·공개 비율을 만듭니다.", concepts: ["sigmoid-activation", "lstm-soft-gates", "lstm-dual-state"] },
+      { label: "03 retention", relation: "Direct cell derivative의 horizon을 계산하고, truncated BPTT가 그 학습 경로를 어디서 끊는지 구분합니다.", concepts: ["chain-rule", "lstm-dual-state", "forget-gate-retention", "truncated-bptt"] },
     ],
     exercises: [
-      {
-        level: "basic",
-        question:
-          "C_prev=(2,−1), f=(0.5,0.8), i=(0.25,0.1), g=(4,3)일 때 새 cell state를 channel별로 계산할 수 있을까요?",
-        answerChecklist: [
-          "f⊙C_prev=(1,−0.8)을 계산한다.",
-          "i⊙g=(1,0.3)을 계산한다.",
-          "C=(2,−0.5)를 구하고 element-wise 연산임을 말한다.",
-        ],
-        requiredConcepts: ["lstm-dual-state", "lstm-soft-gates"],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "Forget gate가 모든 step에서 0.99와 0.9일 때 100-step direct retention을 비교하고 한 step의 ‘거의 1’ 직관이 부족한 이유를 설명할 수 있을까요?",
-        answerChecklist: [
-          "0.99^100≈0.366을 계산한다.",
-          "0.9^100≈0.000027을 계산한다.",
-          "Horizon 전체 product를 봐야 한다고 설명한다.",
-        ],
-        requiredConcepts: ["forget-gate-retention", "chain-rule"],
-        sectionId: "cell-state",
-      },
-      {
-        level: "basic",
-        question:
-          "LSTM의 C와 h가 각각 다음 timestep과 외부 layer에 어떻게 전달되는지 계산 경로로 구분할 수 있을까요?",
-        answerChecklist: [
-          "C가 additive retention·write path를 따른다고 말한다.",
-          "h가 output gate와 tanh를 거쳐 공개된다고 말한다.",
-          "장기·단기 의미 label로 고정하지 않는다고 제한한다.",
-        ],
-        requiredConcepts: ["lstm-dual-state", "lstm-soft-gates"],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "한 channel에서 C_prev=2, f=0.5, i=0.75, g=0.5, o=0.5일 때 C와 h를 차례로 계산하고 output gate가 바꾸는 대상을 구분할 수 있을까요?",
-        answerChecklist: [
-          "보존분 1과 기록분 0.375를 더해 C=1.375를 구한다.",
-          "h=0.5×tanh(1.375)≈0.44를 계산한다.",
-          "Output gate는 C의 update가 아니라 외부에 공개되는 h의 비율을 조절한다고 말한다.",
-        ],
-        requiredConcepts: ["lstm-dual-state", "lstm-soft-gates"],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "Peephole과 projection이 없는 LSTM에서 input width D=3, hidden width H=2일 때 fused affine parameter 수를 계산할 수 있을까요?",
-        answerChecklist: [
-          "Gate·candidate 네 block 때문에 4H(D+H+1)을 사용한다.",
-          "4×2×(3+2+1)=48을 계산한다.",
-          "Library의 bias 저장 방식이나 projection variant가 달라지면 checkpoint 수가 바뀔 수 있다고 제한한다.",
-        ],
-        requiredConcepts: ["lstm-soft-gates", "recurrent-deployment-contract"],
-        sectionId: "gates",
-      },
-      {
-        level: "basic",
-        question:
-          "1997년 원형 LSTM과 현재 흔한 forget-gate LSTM을 같은 구조라고 말하면 왜 부정확한지 논문 계보로 설명할 수 있을까요?",
-        answerChecklist: [
-          "원 논문의 memory cell·input/output gate와 constant-error flow를 짚는다.",
-          "Continual prediction 연구에서 adaptive forget gate가 뒤에 추가됐다고 설명한다.",
-          "원 논문이 현대 framework의 모든 gate·ordering·default를 제안했다고 주장하지 않는다.",
-        ],
-        requiredConcepts: ["lstm-dual-state", "lstm-soft-gates"],
-        sectionId: "gates",
-      },
-      {
-        level: "advanced",
-        question:
-          "Forget gate direct derivative product와 LSTM 전체 Jacobian이 같은 값이 아닌 이유를 computational graph의 indirect path로 설명할 수 있을까요?",
-        answerChecklist: [
-          "Direct C_{t-1}→C_t edge derivative가 f_t라고 적는다.",
-          "Gate가 h와 이전 state의 함수라 추가 derivative path가 있음을 말한다.",
-          "Direct retention을 전체 안정성 보장으로 일반화하지 않는다.",
-        ],
-        requiredConcepts: [
-          "lstm-soft-gates",
-          "forget-gate-retention",
-          "recurrent-jacobian-product",
-        ],
-        sectionId: "cell-state",
-      },
-      {
-        level: "advanced",
-        question:
-          "GRU update gate z=0.2일 때 hidden interpolation을 계산하고 LSTM과 공정하게 비교하기 위한 budget 조건을 설계할 수 있을까요?",
-        answerChecklist: [
-          "h_t=0.8h_prev+0.2h_candidate를 적는다.",
-          "GRU single state와 LSTM C·h를 구분한다.",
-          "Parameter·FLOP·state memory·kernel·validation metric을 함께 맞춘다.",
-        ],
-        requiredConcepts: [
-          "gru-state-update",
-          "lstm-dual-state",
-          "recurrent-deployment-contract",
-        ],
-        sectionId: "variants",
-      },
-      {
-        level: "advanced",
-        question:
-          "같은 D=64, H=128인 기본 LSTM과 GRU의 parameter·recurrent state 예산을 계산하고 이것만으로 속도·정확도 우열을 결론 내릴 수 없는 이유를 설명할 수 있을까요?",
-        answerChecklist: [
-          "LSTM은 4×128×(64+128+1)=98,816개, GRU는 3×128×193=74,112개 parameter임을 계산한다.",
-          "Direction·layer당 recurrent state는 LSTM C+h의 2H와 GRU h의 H라고 구분한다.",
-          "Kernel fusion·timestep latency·FLOP·validation metric과 parameter budget을 함께 맞춰야 한다고 설명한다.",
-        ],
-        requiredConcepts: [
-          "lstm-dual-state",
-          "gru-state-update",
-          "recurrent-deployment-contract",
-        ],
-        sectionId: "variants",
-      },
-      {
-        level: "advanced",
-        question:
-          "Bidirectional LSTM이 offline tagging에는 가능하지만 strict streaming generation에는 부적합한 이유를 visibility와 latency 관점에서 설명할 수 있을까요?",
-        answerChecklist: [
-          "Backward direction이 미래 token을 읽는다고 설명한다.",
-          "완전한 sequence 또는 lookahead를 기다리는 latency를 말한다.",
-          "Stacked depth와 bidirectional time direction을 구분한다.",
-        ],
-        requiredConcepts: ["recurrent-deployment-contract", "lstm-dual-state"],
-        sectionId: "variants",
-      },
+      { level: "basic", question: "LSTM의 C_t와 h_t 역할을 구분하세요.", answerChecklist: ["cell memory lane", "additive update", "hidden exposed", "next gates", "output layer", "two states"], requiredConcepts: ["lstm-dual-state"], sectionId: "overview" },
+      { level: "basic", question: "Cprev=2,f=.5,i=.75,g=.5,o=.5의 C와 h를 계산하세요.", answerChecklist: ["retained 1", "write .375", "C 1.375", "tanh C", "times .5", "h about .44"], requiredConcepts: ["lstm-dual-state", "lstm-soft-gates"], sectionId: "overview" },
+      { level: "basic", question: "Forget·input·output gate가 각각 어느 값에 곱해지는지 설명하세요.", answerChecklist: ["f times old C", "i times candidate", "sum new C", "o times tanh C", "channelwise", "different roles"], requiredConcepts: ["lstm-soft-gates"], sectionId: "gates" },
+      { level: "basic", question: "D=3,H=2 기본 LSTM parameter 수를 계산하세요.", answerChecklist: ["four blocks", "D+H+1", "6", "4×2×6", "48", "no peephole projection"], requiredConcepts: ["lstm-soft-gates"], sectionId: "gates" },
+      { level: "basic", question: "Forget bias 1의 초기 gate 값과 20-step retention을 계산하세요.", answerChecklist: ["sigmoid 1", "about .731", "power 20", "about .0019", "not long-memory guarantee", "learned later"], requiredConcepts: ["lstm-soft-gates", "forget-gate-retention"], sectionId: "gates" },
+      { level: "basic", question: "f=0.99가 100 step일 때 direct retention을 계산하세요.", answerChecklist: ["product", ".99 power 100", "about .366", "one channel", "direct path", "still decay"], requiredConcepts: ["forget-gate-retention"], sectionId: "cell-state" },
+      { level: "advanced", question: "Fused 4H gate tensor를 checkpoint에서 잘못된 order로 복사하는 반례를 설명하세요.", answerChecklist: ["same shape", "different gate order", "chunks swapped", "sigmoid/tanh roles", "silent wrong outputs", "layout receipt", "reference parity"], requiredConcepts: ["lstm-soft-gates"], sectionId: "gates" },
+      { level: "advanced", question: "Direct derivative와 full derivative가 다른 이유를 graph path로 설명하세요.", answerChecklist: ["direct C edge", "factor f", "gate depends on h/input", "indirect paths", "cross-channel terms", "sum path contributions", "do not equate"], requiredConcepts: ["forget-gate-retention", "lstm-dual-state"], sectionId: "cell-state" },
+      { level: "advanced", question: "LSTM state가 1024 token을 carry해도 BPTT horizon 128일 수 있는 이유를 설명하세요.", answerChecklist: ["C/h values carry", "chunk detach", "gradient stops", "inference history", "credit horizon", "different metrics", "probe separately"], requiredConcepts: ["lstm-dual-state", "truncated-bptt"], sectionId: "cell-state" },
+      { level: "advanced", question: "LSTM release gate를 작성하세요.", answerChecklist: ["gate layout revision", "scalar step fixture", "C/h reset carry", "f/i/o boundary", "direct retention", "BPTT detach", "reference parity", "gradient norm", "rollback"], requiredConcepts: ["lstm-dual-state", "lstm-soft-gates", "forget-gate-retention"], sectionId: "cell-state" },
     ],
     papers: [
-      {
-        title: "Long Short-Term Memory",
-        href: "https://doi.org/10.1162/neco.1997.9.8.1735",
-        problem:
-          "Long time lag에서 recurrent error가 사라지거나 불안정해져 sequence dependency를 학습하기 어려운 문제",
-        contribution:
-          "Self-connected memory cell과 input·output gate를 통한 constant-error flow architecture 제안",
-        assumptions:
-          "1997년 원형 LSTM의 cell·gate·training setup과 synthetic task를 전제로 읽음",
-        evidenceScope:
-          "논문의 minimal time-lag 및 sequence 실험과 이론적 error-flow 설명 범위",
-        notClaim:
-          "현대 forget-gate LSTM의 모든 식을 원 논문이 제안했거나 vanishing gradient가 완전히 사라진다는 뜻은 아님",
-        sectionId: "paper-lstm-original",
-      },
-      {
-        title: "Learning to Forget: Continual Prediction with LSTM",
-        href: "https://doi.org/10.1162/089976600300015015",
-        problem:
-          "연속 입력에서 episode boundary가 외부 reset으로 주어지지 않을 때 오래된 internal state가 prediction을 방해하는 문제",
-        contribution:
-          "Cell content를 data-dependent하게 reset하는 adaptive forget gate를 LSTM에 추가",
-        assumptions:
-          "논문의 continual sequence·architecture·task와 training conditions를 전제로 함",
-        evidenceScope:
-          "논문의 continual prediction experiments와 forget-gate 분석 범위",
-        notClaim:
-          "모든 task에서 memory를 오래 보존하는 것이 좋거나 특정 forget bias가 universal optimum이라는 뜻은 아님",
-        sectionId: "paper-forget-gate",
-      },
-      {
-        title: "LSTM: A Search Space Odyssey",
-        href: "https://arxiv.org/abs/1503.04069",
-        problem:
-          "LSTM의 여러 component와 variant가 controlled experiment에서 실제로 어느 정도 기여하는지 비교하는 문제",
-        contribution:
-          "여러 task와 대규모 configuration search로 gate·activation·bias 변형을 비교하고 strong baseline을 평가",
-        assumptions:
-          "논문의 task set·optimizer·search range·compute budget과 architecture definitions를 전제로 함",
-        evidenceScope: "논문의 eight tasks와 수천 architecture experiment 범위",
-        notClaim:
-          "특정 variant나 forget bias가 모든 현대 dataset·scale·framework에서 최선이라는 보편 순위는 아님",
-        sectionId: "paper-lstm-odyssey",
-      },
-      {
-        title: "Learning Phrase Representations using RNN Encoder–Decoder",
-        href: "https://arxiv.org/abs/1406.1078",
-        problem:
-          "가변 길이 phrase pair를 continuous representation으로 encode·decode해 translation scoring에 활용하는 문제",
-        contribution:
-          "RNN encoder–decoder와 reset·update gate를 사용하는 gated hidden unit 계열 제안",
-        assumptions:
-          "논문의 phrase table·translation pipeline·hidden size·training·evaluation 조건을 전제로 함",
-        evidenceScope:
-          "Phrase representation과 machine-translation scoring 실험 범위",
-        notClaim:
-          "GRU가 모든 sequence task에서 LSTM보다 작고 빠르며 정확하다는 보편 비교는 아님",
-        sectionId: "paper-gru",
-      },
-      {
-        title: "An Empirical Exploration of Recurrent Network Architectures",
-        href: "https://research.google/pubs/an-empirical-exploration-of-recurrent-network-architectures/",
-        problem:
-          "LSTM·GRU 및 여러 recurrent architecture의 상대 성능을 다양한 task와 hyperparameter 조건에서 비교하는 문제",
-        contribution:
-          "여러 gated unit을 task·configuration별로 대규모 empirical comparison",
-        assumptions:
-          "논문이 탐색한 task distribution·optimizer·hidden size·parameterization과 search budget을 전제로 함",
-        evidenceScope: "논문의 architecture search와 evaluation task 범위",
-        notClaim:
-          "어느 unit도 현대 hardware·kernel·model scale에서 영구적으로 우세하거나 같은 hidden size가 공정한 budget이라는 뜻은 아님",
-        sectionId: "paper-recurrent-comparison",
-      },
+      { title: "Long Short-Term Memory", href: "https://doi.org/10.1162/neco.1997.9.8.1735", problem: "Long time lag에서 recurrent error가 사라지는 문제", contribution: "Memory cell과 multiplicative input·output gate를 제안", assumptions: "원 논문의 cell·task·training 조건", evidenceScope: "원형 memory cell과 constant-error-flow 아이디어", notClaim: "현대 forget-gate 포함 식 전체나 모든 장기 의존 해결이 아님", sectionId: "paper-lstm-original" },
+      { title: "Learning to Forget: Continual Prediction with LSTM", href: "https://doi.org/10.1162/089976600300015015", problem: "Continual sequence에서 오래된 internal state를 지우는 문제", contribution: "기존 memory cell에 forget gate를 추가해 오래된 internal state를 data-dependent하게 지우는 continual-sequence update를 제시", assumptions: "논문의 continual prediction setup", evidenceScope: "Forget-gate architecture와 실험", notClaim: "모든 channel을 오래 보존하는 universal policy가 아님", sectionId: "paper-forget-gate" },
+      { title: "LSTM: A Search Space Odyssey", href: "https://arxiv.org/abs/1503.04069", problem: "LSTM variant component의 효과를 공정하게 비교", contribution: "여러 task와 architecture configuration의 대규모 empirical comparison", assumptions: "논문의 task·search space·optimizer budget", evidenceScope: "보고된 ablation과 forget-bias 관찰", notClaim: "현재 hardware·모든 task의 보편 순위가 아님", sectionId: "paper-lstm-odyssey" },
+    ],
+  },
+  "ai/gru": {
+    entryLevel: true,
+    entryNote: "RNN·LSTM을 안다고 가정하지 않고 reset mask와 update interpolation을 scalar example로 따로 계산합니다.",
+    coreIdea: "GRU는 reset gate로 candidate에 허용할 과거를 고르고, 현재 input과 filtered history에서 candidate를 만든 뒤 update gate로 기존 hidden과 candidate를 보간해 single recurrent state를 갱신합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "gru-reset-filtered-candidate", role: "Reset gate로 candidate용 history를 만들고 새 내용 후보를 계산합니다." },
+      { id: "gru-update-interpolation", role: "기존 state와 candidate에 complementary weight를 줍니다." },
+      { id: "gru-state-update", role: "Reset·candidate·update를 single-state transition으로 조합합니다." },
+      { id: "recurrent-deployment-contract", role: "LSTM·GRU를 같은 resource·quality budget에서 비교합니다." },
+    ],
+    conceptExplanations: [
+      { id: "gru-reset-filtered-candidate", sectionId: "state-update", intuition: "새 내용을 쓰기 전에 과거 메모의 어느 channel을 참고할지 mask합니다.", workedExample: "hprev=(2,-1), r=(0,.5)이면 filtered history는 (0,-.5)입니다.", boundary: "Reset gate는 최종 state를 직접 지우지 않고 candidate input에 작용합니다." },
+      { id: "gru-update-interpolation", sectionId: "state-update", intuition: "기존 메모와 새 후보 사이의 slider를 channel마다 둡니다.", workedExample: "hprev=2,candidate=10,z=.25면 h=.75×2+.25×10=4입니다.", boundary: "표기에 따라 z의 유지·쓰기 convention이 반대일 수 있어 implementation 식을 확인합니다." },
+      { id: "gru-state-update", sectionId: "state-update", intuition: "Reset→candidate→update 세 단계가 hidden state 하나를 다음 hidden으로 바꿉니다.", workedExample: "r로 history를 거른 후보를 만든 뒤 z=0이면 이전 state, z=1이면 candidate를 선택합니다.", boundary: "LSTM을 단순히 gate 하나 줄인 동일 architecture로 보지 않습니다." },
+      { id: "recurrent-deployment-contract", sectionId: "state-update", intuition: "이름 대신 같은 일·예산·hardware에서 결과와 비용을 비교합니다.", workedExample: "D=64,H=128에서 GRU 74,112, LSTM 98,816 parameters와 state H 대 2H를 함께 기록합니다.", boundary: "Parameter 수만으로 latency·accuracy 우열을 결론내리지 않습니다." },
+    ],
+    conceptStages: [
+      { label: "00 baseline", relation: "현재 input과 이전 hidden의 recurrent shape를 고정합니다.", concepts: ["rnn-state-transition", "sigmoid-activation", "tanh-activation"] },
+      { label: "01 reset", relation: "Candidate용 history를 고르고 새 내용을 만듭니다.", concepts: ["gru-reset-filtered-candidate"] },
+      { label: "02 update", relation: "기존 state와 candidate를 보간합니다.", concepts: ["gru-update-interpolation"] },
+      { label: "03 compose", relation: "두 gate를 하나의 single-state transition으로 묶습니다.", concepts: ["gru-reset-filtered-candidate", "gru-update-interpolation", "gru-state-update"] },
+      { label: "04 compare", relation: "LSTM과 resource·quality budget을 맞춥니다.", concepts: ["lstm-dual-state", "lstm-soft-gates", "gru-state-update", "recurrent-deployment-contract"] },
+    ],
+    exercises: [
+      { level: "basic", question: "hprev=(2,-1), r=(0,.5)의 reset-filtered history를 계산하세요.", answerChecklist: ["elementwise multiply", "0×2", ".5×-1", "result 0,-.5", "candidate input", "not final state"], requiredConcepts: ["gru-reset-filtered-candidate"], sectionId: "state-update" },
+      { level: "basic", question: "Reset gate가 최종 h를 직접 지우는 gate가 아닌 이유를 설명하세요.", answerChecklist: ["acts before candidate", "multiplies history", "current input remains", "candidate projection", "update gate chooses final mix", "separate roles"], requiredConcepts: ["gru-reset-filtered-candidate", "gru-update-interpolation"], sectionId: "state-update" },
+      { level: "basic", question: "hprev=2,candidate=10,z=.25의 final h를 계산하세요.", answerChecklist: ["1-z=.75", ".75×2", ".25×10", "1.5+2.5", "h=4", "channelwise interpolation"], requiredConcepts: ["gru-update-interpolation"], sectionId: "state-update" },
+      { level: "basic", question: "z=0과 z=1의 update 결과를 각각 설명하세요.", answerChecklist: ["z0 keep old", "candidate term zero", "z1 old term zero", "write candidate", "soft values between", "chosen convention"], requiredConcepts: ["gru-update-interpolation"], sectionId: "state-update" },
+      { level: "basic", question: "D=3,H=2의 GRU parameter 수를 계산하세요.", answerChecklist: ["three blocks", "D+H+1=6", "3×2×6", "36", "single direction", "no extra projection"], requiredConcepts: ["gru-state-update"], sectionId: "state-update" },
+      { level: "basic", question: "같은 H에서 GRU와 LSTM recurrent state 크기를 비교하세요.", answerChecklist: ["GRU h only", "H values", "LSTM C and h", "2H values", "per layer direction", "dtype bytes separate"], requiredConcepts: ["recurrent-deployment-contract"], sectionId: "state-update" },
+      { level: "advanced", question: "Update convention이 반대인 두 library 사이 checkpoint를 옮기는 parity test를 설계하세요.", answerChecklist: ["read exact equations", "same weights fixture", "z near zero", "z near one", "candidate fixed", "expected keep/write", "gate order", "reference output"], requiredConcepts: ["gru-update-interpolation", "gru-state-update"], sectionId: "state-update" },
+      { level: "advanced", question: "LSTM과 GRU를 같은 hidden width만으로 비교하면 불공정한 이유를 설명하세요.", answerChecklist: ["different parameter count", "different state bytes", "different FLOPs", "kernel fusion", "latency", "quality", "match budget", "same task"], requiredConcepts: ["recurrent-deployment-contract"], sectionId: "state-update" },
+      { level: "advanced", question: "Reset gate가 모두 0이어도 candidate가 0일 필요가 없는 반례를 만드세요.", answerChecklist: ["history removed", "current x remains", "W_h x", "bias remains", "tanh output", "candidate nonzero", "not full reset"], requiredConcepts: ["gru-reset-filtered-candidate"], sectionId: "state-update" },
+      { level: "advanced", question: "GRU release gate를 작성하세요.", answerChecklist: ["equation convention", "gate order", "scalar/vector fixtures", "reset boundary", "update endpoints", "parameter/state receipt", "LSTM matched budget", "latency/quality", "rollback"], requiredConcepts: ["gru-state-update", "recurrent-deployment-contract"], sectionId: "state-update" },
+    ],
+    papers: [
+      { title: "Learning Phrase Representations using RNN Encoder–Decoder", href: "https://arxiv.org/abs/1406.1078", problem: "Variable-length phrase를 fixed vector로 encode해 translation scoring에 쓰는 문제", contribution: "Reset·update gate를 사용하는 gated hidden unit과 encoder-decoder 제안", assumptions: "논문의 phrase-scoring pipeline·data·training 조건", evidenceScope: "제안 unit과 machine-translation experiment", notClaim: "모든 task에서 LSTM보다 작고 빠르며 정확하다는 보편 결론이 아님", sectionId: "paper-gru" },
+      { title: "An Empirical Exploration of Recurrent Network Architectures", href: "https://research.google/pubs/an-empirical-exploration-of-recurrent-network-architectures/", problem: "LSTM·GRU 등 recurrent unit의 상대 성능을 여러 조건에서 비교", contribution: "다양한 task와 hyperparameter configuration의 empirical study", assumptions: "논문의 task distribution·optimizer·search budget", evidenceScope: "보고된 architecture comparison", notClaim: "현재 hardware kernel이나 모든 model scale의 고정 순위가 아님", sectionId: "paper-recurrent-comparison" },
     ],
   },
   "ai/seq2seq": {

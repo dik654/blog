@@ -2879,13 +2879,29 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "하나의 recurrent cell을 sequence의 각 시점에 복제해 보이도록 펼치되 모든 시점이 같은 weight를 공유하는 finite computational graph 표현입니다.",
     canonicalHref: "/ai/rnn#architecture",
   },
+  "recurrent-directionality-boundary": {
+    id: "recurrent-directionality-boundary",
+    domain: "machine-learning",
+    label: "Causal · bidirectional recurrent boundary",
+    definition:
+      "현재와 과거 state만 쓰는 causal recurrence와 전체 sequence의 forward·backward state를 결합하는 bidirectional encoding을 streaming·future-access 조건으로 구분하는 경계입니다.",
+    canonicalHref: "/ai/rnn#architecture",
+  },
+  "rnn-shifted-token-pair": {
+    id: "rnn-shifted-token-pair",
+    domain: "machine-learning",
+    label: "RNN shifted input-target token pair",
+    definition:
+      "현재 token w_t까지 처리한 recurrent state가 바로 다음 token w_{t+1}을 예측하도록 한 sequence를 한 칸 어긋난 input·target pair들로 만드는 language-model training contract입니다.",
+    canonicalHref: "/ai/rnn-language-model#language-model",
+  },
   "rnn-language-model": {
     id: "rnn-language-model",
     domain: "machine-learning",
     label: "RNN language model",
     definition:
       "지금까지의 token context를 recurrent hidden state로 요약하고 그 state에서 다음-token probability distribution을 만드는 autoregressive model입니다.",
-    canonicalHref: "/ai/rnn#language-model",
+    canonicalHref: "/ai/rnn-language-model#language-model",
   },
   perplexity: {
     id: "perplexity",
@@ -2894,7 +2910,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Perplexity",
     definition:
       "동일한 data·tokenization·masking 조건에서 평균 token negative log-likelihood를 exponentiation해 나타낸 language-model 평가량입니다.",
-    canonicalHref: "/ai/rnn#language-model",
+    canonicalHref: "/ai/rnn-language-model#language-model",
   },
   bptt: {
     id: "bptt",
@@ -2902,7 +2918,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Backpropagation through time (BPTT)",
     definition:
       "Recurrent transition을 유한한 시간축 graph로 펼친 뒤 공유 parameter로 들어오는 모든 reverse-mode gradient contribution을 합산하는 계산입니다.",
-    canonicalHref: "/ai/rnn#bptt",
+    canonicalHref: "/ai/bptt#bptt",
   },
   "recurrent-jacobian-product": {
     id: "recurrent-jacobian-product",
@@ -2910,7 +2926,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Recurrent Jacobian product",
     definition:
       "먼 시점 사이의 state 민감도를 각 transition의 local Jacobian을 시간 순서대로 합성해 나타낸 matrix product입니다.",
-    canonicalHref: "/ai/rnn#bptt",
+    canonicalHref: "/ai/bptt#bptt",
   },
   "gradient-norm-clipping": {
     id: "gradient-norm-clipping",
@@ -2918,7 +2934,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Global gradient-norm clipping",
     definition:
       "전체 parameter gradient의 norm이 threshold를 넘을 때 방향을 유지한 채 vector 전체를 같은 비율로 줄이는 update 전 안전장치입니다.",
-    canonicalHref: "/ai/rnn#bptt",
+    canonicalHref: "/ai/bptt#bptt",
   },
   "truncated-bptt": {
     id: "truncated-bptt",
@@ -2926,7 +2942,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Truncated BPTT",
     definition:
       "Hidden state 값은 다음 chunk로 전달하면서 이전 computational graph와의 derivative 연결은 정해진 horizon에서 끊는 recurrent training 방식입니다.",
-    canonicalHref: "/ai/rnn#bptt",
+    canonicalHref: "/ai/bptt#bptt",
   },
   "lstm-dual-state": {
     id: "lstm-dual-state",
@@ -2958,7 +2974,23 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "GRU state update",
     definition:
       "별도 cell state 없이 update gate로 이전 hidden state와 candidate를 channel별 보간하고 reset gate로 candidate의 history 사용량을 조절하는 recurrent transition입니다.",
-    canonicalHref: "/ai/lstm#variants",
+    canonicalHref: "/ai/gru#state-update",
+  },
+  "gru-reset-filtered-candidate": {
+    id: "gru-reset-filtered-candidate",
+    domain: "machine-learning",
+    label: "GRU reset-filtered candidate",
+    definition:
+      "Reset gate를 이전 hidden state에 element-wise로 곱한 history와 현재 input을 합쳐 signed candidate state를 만드는 GRU의 새 내용 생성 경로입니다.",
+    canonicalHref: "/ai/gru#state-update",
+  },
+  "gru-update-interpolation": {
+    id: "gru-update-interpolation",
+    domain: "machine-learning",
+    label: "GRU update interpolation",
+    definition:
+      "Update gate가 각 hidden channel에서 기존 state의 유지 항과 새 candidate의 기록 항에 complementary weight를 주어 다음 single state를 만드는 보간입니다.",
+    canonicalHref: "/ai/gru#state-update",
   },
   "recurrent-deployment-contract": {
     id: "recurrent-deployment-contract",
@@ -2966,7 +2998,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Recurrent deployment contract",
     definition:
       "Causal·bidirectional 여부, streaming state 크기, timestep latency, training parallelism과 resource budget을 함께 고정해 recurrent architecture를 비교하는 기준입니다.",
-    canonicalHref: "/ai/lstm#variants",
+    canonicalHref: "/ai/gru#state-update",
   },
   "conditional-sequence-model": {
     id: "conditional-sequence-model",
@@ -20984,6 +21016,34 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   },
   {
     from: "time-unrolling",
+    to: "recurrent-directionality-boundary",
+    relation: "constrains",
+    reason:
+      "State edge가 과거에서 현재로만 오는지 반대 방향 pass도 사용하는지가 streaming·future visibility를 결정합니다.",
+  },
+  {
+    from: "rnn-state-transition",
+    to: "recurrent-directionality-boundary",
+    relation: "prerequisite",
+    reason:
+      "방향별 transition의 입력 state가 어느 timestep에서 오는지 먼저 정의합니다.",
+  },
+  {
+    from: "rnn-state-transition",
+    to: "rnn-shifted-token-pair",
+    relation: "prerequisite",
+    reason:
+      "현재 token까지 갱신한 state가 한 칸 뒤 target을 예측하는 조건을 만듭니다.",
+  },
+  {
+    from: "rnn-shifted-token-pair",
+    to: "rnn-language-model",
+    relation: "produces",
+    reason:
+      "각 shifted pair가 sequence의 timestep별 next-token distribution training example이 됩니다.",
+  },
+  {
+    from: "time-unrolling",
     to: "rnn-language-model",
     relation: "produces",
     reason:
@@ -21118,6 +21178,48 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "extends",
     reason:
       "보존·쓰기 정책을 update·reset gate와 single-state interpolation으로 다시 parameterize합니다.",
+  },
+  {
+    from: "rnn-state-transition",
+    to: "gru-reset-filtered-candidate",
+    relation: "extends",
+    reason:
+      "Vanilla candidate의 과거 입력 앞에 data-dependent reset mask를 추가합니다.",
+  },
+  {
+    from: "sigmoid-activation",
+    to: "gru-reset-filtered-candidate",
+    relation: "prerequisite",
+    reason:
+      "Reset logit을 각 history channel의 0–1 허용 비율로 바꿉니다.",
+  },
+  {
+    from: "gru-reset-filtered-candidate",
+    to: "gru-update-interpolation",
+    relation: "prerequisite",
+    reason:
+      "Update gate가 선택할 새 내용 후보를 먼저 계산합니다.",
+  },
+  {
+    from: "sigmoid-activation",
+    to: "gru-update-interpolation",
+    relation: "prerequisite",
+    reason:
+      "Update logit을 기존 state와 candidate 사이의 0–1 interpolation 비율로 바꿉니다.",
+  },
+  {
+    from: "gru-reset-filtered-candidate",
+    to: "gru-state-update",
+    relation: "produces",
+    reason:
+      "Reset-filtered history에서 만든 candidate가 GRU transition의 새 내용 항이 됩니다.",
+  },
+  {
+    from: "gru-update-interpolation",
+    to: "gru-state-update",
+    relation: "produces",
+    reason:
+      "기존 state와 candidate를 보간해 최종 single hidden state를 만듭니다.",
   },
   {
     from: "lstm-dual-state",

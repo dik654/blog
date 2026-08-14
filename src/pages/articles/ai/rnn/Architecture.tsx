@@ -1,6 +1,5 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import M from "@/components/ui/math";
-import RNNUnrollViz from "./viz/RNNUnrollViz";
 
 export default function Architecture() {
   return (
@@ -15,12 +14,23 @@ export default function Architecture() {
         </p>
       </div>
 
-      <RNNUnrollViz />
-
       <ExplainedFormula
         question="sequence 길이가 늘 때 parameter와 계산량은 각각 어떻게 변할까?"
         idea={<>weight는 모든 시점이 공유하므로 한 벌만 필요하지만, forward 계산과 training용 activation은 시점 수만큼 생깁니다.</>}
         formula={String.raw`N_{\text{params}}=HD+H^2+H,\qquad C_{\text{forward}}=\mathcal{O}\!\left(T(HD+H^2)\right)`}
+        annotatedFormula={String.raw`\begin{aligned}
+N_{\rm params}
+ &=\underbrace{HD}_{\substack{\text{input D개를}\\\text{hidden H개로 투영}}}\\[-1pt]
+ &\quad+\underbrace{H^2}_{\substack{\text{이전 hidden을}\\\text{새 hidden으로 변환}}}\\[-1pt]
+ &\quad+\underbrace{H}_{\text{좌표별 bias}}\\[3pt]
+C_{\rm forward}
+ &=\underbrace{T}_{\text{같은 cell T회}}
+   \underbrace{\mathcal O(HD+H^2)}_{\substack{\text{한 step의}\\\text{dense 연산}}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`HD+H^2+H`, annotation: ["세 parameter 묶음을 더해", "공유 cell 한 벌의 크기 계산"] },
+          { expression: String.raw`T\,\mathcal O(HD+H^2)`, annotation: ["한 step 비용에 sequence 길이를 곱해", "전체 forward work 계산"] },
+        ]}
         terms={[
           { symbol: "D", name: "input dimension", description: "각 시점 입력 vector의 크기입니다." },
           { symbol: "H", name: "hidden dimension", description: "state vector의 크기입니다." },

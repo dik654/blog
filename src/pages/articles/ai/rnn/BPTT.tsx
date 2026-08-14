@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import M from "@/components/ui/math";
-import BPTTViz from "./viz/BPTTViz";
-import RNNGradientMechanismViz from "./viz/RNNGradientMechanismViz";
+import ContentBoundary from "@/components/articles/content-boundary";
+import TermBreakdown from "@/components/articles/term-breakdown";
+import BPTTLearningFlowViz from "./viz/BPTTLearningFlowViz";
 
 export default function BPTT() {
   return (
@@ -17,7 +18,17 @@ export default function BPTT() {
         </p>
       </div>
 
-      <BPTTViz />
+      <TermBreakdown
+        title="BPTT에서 서로 다른 네 동작을 한 줄씩 봅니다"
+        items={[
+          { term: "Time unroll", description: "공유 cell의 반복 호출을 finite computational graph로 펼칩니다.", boundary: "시점별 node는 값이 다르지만 parameter는 공유합니다." },
+          { term: "Gradient accumulation", description: "같은 weight가 쓰인 모든 시점의 derivative contribution을 더합니다.", example: "2, −1, 3의 contribution은 한 update 전에 4로 합칩니다." },
+          { term: "Jacobian product", description: "먼 state까지 credit이 갈 때 local transition derivative가 순서대로 곱해집니다.", boundary: "Matrix 곱은 방향과 순서가 있어 scalar 배율 하나와 같지 않습니다." },
+          { term: "Truncation·detach", description: "State 값은 다음 chunk로 넘기되 이전 graph로 돌아가는 derivative edge를 끊습니다.", boundary: "Forward history 길이와 direct gradient horizon은 같은 숫자가 아닙니다." },
+        ]}
+      />
+      <BPTTLearningFlowViz />
+      <ContentBoundary article="bptt" />
 
       <div id="paper-bptt" className="not-prose mt-8 scroll-mt-24 border-l border-border/80 pl-4">
         <p className="text-xs font-bold text-primary">논문 해설 · Backpropagation Through Time</p>
@@ -31,6 +42,16 @@ export default function BPTT() {
         question="시점 t의 state는 현재 loss와 미래 loss를 동시에 어떻게 받는가?"
         idea={<>현재 output에서 직접 오는 gradient에, 다음 state를 거쳐 되돌아온 gradient를 더합니다. 이 재귀가 sequence 끝에서 시작해 시간 역방향으로 진행됩니다.</>}
         formula={String.raw`\delta_t\equiv\frac{\partial\mathcal{L}}{\partial h_t}=\frac{\partial\ell_t}{\partial h_t}+\left(\frac{\partial h_{t+1}}{\partial h_t}\right)^{\!\top}\delta_{t+1}`}
+        annotatedFormula={String.raw`\begin{aligned}
+\delta_t
+ &=\underbrace{\frac{\partial\ell_t}{\partial h_t}}_{\text{현재 loss의 직접 책임}}\\
+ &\quad+\underbrace{\left(\frac{\partial h_{t+1}}{\partial h_t}\right)^{\!\top}\delta_{t+1}}_{\text{미래 loss를 다음 state에서 되돌림}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\partial\ell_t/\partial h_t`, annotation: ["현재 timestep output에서", "h_t로 바로 오는 gradient"] },
+          { expression: String.raw`J_{t+1}^{\top}\delta_{t+1}`, annotation: ["다음 state가 받은 미래 책임을", "local Jacobian transpose로 h_t에 전달"] },
+          { expression: String.raw`\text{direct}+\text{future}`, annotation: ["두 계산 graph path를 더해", "현재 state의 전체 책임 구성"] },
+        ]}
         terms={[
           { symbol: "\\delta_t", name: "state gradient", description: "전체 loss가 t시점 hidden state에 얼마나 민감한지 나타냅니다." },
           { symbol: "\\partial\\ell_t/\\partial h_t", name: "현재 시점의 직접 경로", description: "t시점 output loss에서 바로 들어오는 gradient입니다." },
@@ -43,6 +64,18 @@ export default function BPTT() {
         question="k시점 전의 state까지 학습 신호가 가는 동안 왜 크기가 불안정해질까?"
         idea={<>tanh RNN의 한 transition Jacobian은 recurrent weight와 activation derivative의 곱입니다. 먼 과거로 갈수록 이 matrix가 시간 수만큼 연속해서 곱해집니다.</>}
         formula={String.raw`\frac{\partial h_t}{\partial h_{t-k}}=\prod_{j=t-k+1}^{t}\underbrace{\operatorname{diag}\!\left(1-h_j^2\right)W_{hh}}_{J_j}`}
+        annotatedFormula={String.raw`\begin{aligned}
+D_j&=\underbrace{\operatorname{diag}(1-h_j^2)}_{\text{tanh의 국소 기울기}}\\[9pt]
+J_j&=\underbrace{D_j}_{\text{channel별 축소}}\\[-1pt]
+&\quad\times\underbrace{W_{hh}}_{\text{이전 state 방향 변환}}\\[9pt]
+\frac{\partial h_t}{\partial h_{t-k}}
+ &=\underbrace{J_tJ_{t-1}\cdots J_{t-k+1}}_{\substack{\text{k개 local map을}\\\text{시간 순서로 합성}}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\operatorname{diag}(1-h_j^2)`, annotation: ["현재 tanh state의 포화 정도로", "local gradient channel을 축소"] },
+          { expression: String.raw`\operatorname{diag}(1-h_j^2)W_{hh}`, annotation: ["Activation sensitivity와 recurrent map을 합쳐", "한 step Jacobian 생성"] },
+          { expression: String.raw`J_t\cdots J_{t-k+1}`, annotation: ["순서를 유지해 Jacobian을 곱해", "먼 state까지의 sensitivity 계산"] },
+        ]}
         terms={[
           { symbol: "J_j", name: "j시점 local Jacobian", description: "tanh derivative와 recurrent matrix를 합친 transition의 미분입니다." },
           { symbol: "1-h_j^2", name: "tanh derivative", description: "state가 ±1에 가까이 포화할수록 0에 가까워집니다." },
@@ -51,8 +84,6 @@ export default function BPTT() {
         assumptions={["표기 순서는 Jacobian composition을 뜻하며 scalar 곱처럼 교환할 수 없습니다.", "spectral radius 하나만으로 nonlinear trajectory 전체를 정확히 판정할 수는 없습니다."]}
         interpretation="대부분 방향의 배율이 1보다 작으면 vanishing, 일부 방향이 반복해서 1보다 크면 exploding이 생깁니다. Whh뿐 아니라 매 시점 state가 정하는 tanh derivative도 원인입니다."
       />
-
-      <RNNGradientMechanismViz />
 
       <div id="paper-rnn-gradient" className="not-prose mt-8 scroll-mt-24 border-l border-border/80 pl-4">
         <p className="text-xs font-bold text-primary">논문 해설 · On the Difficulty of Training Recurrent Neural Networks</p>
@@ -77,6 +108,15 @@ export default function BPTT() {
         question="gradient 방향은 유지하면서 과도한 update 크기만 제한하려면?"
         idea={<>norm이 threshold 아래면 그대로 두고, 넘을 때만 전체 vector를 같은 비율로 축소합니다.</>}
         formula={String.raw`g_{\text{clip}}=g\cdot\min\!\left(1,\frac{c}{\lVert g\rVert_2}\right)`}
+        annotatedFormula={String.raw`\begin{aligned}
+s&=\underbrace{\min\!\left(1,\frac{c}{\lVert g\rVert_2}\right)}_{\substack{\text{norm이 c를 넘을 때만}\\\text{축소 비율을 1 아래로}}}\\
+g_{\rm clip}&=\underbrace{g}_{\text{원래 방향}}\cdot\underbrace{s}_{\text{같은 비율}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`c/\lVert g\rVert_2`, annotation: ["허용 norm을 현재 norm으로 나눠", "필요한 축소 비율 계산"] },
+          { expression: String.raw`\min(1,c/\lVert g\rVert_2)`, annotation: ["작은 gradient는 1로 유지하고", "큰 gradient만 축소"] },
+          { expression: String.raw`g\times\text{scale}`, annotation: ["모든 성분에 같은 scale을 곱해", "방향을 보존"] },
+        ]}
         terms={[
           { symbol: "g", name: "전체 parameter gradient", description: "optimizer update 전에 모은 gradient vector입니다." },
           { symbol: "c", name: "clip threshold", description: "허용할 global norm의 상한입니다." },

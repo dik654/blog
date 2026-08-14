@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import M from "@/components/ui/math";
-import LanguageModelViz from "./viz/LanguageModelViz";
+import ContentBoundary from "@/components/articles/content-boundary";
+import TermBreakdown from "@/components/articles/term-breakdown";
+import RNNLanguageFlowViz from "./viz/RNNLanguageFlowViz";
 
 export default function LanguageModel() {
   return (
@@ -22,7 +24,19 @@ export default function LanguageModel() {
         </p>
       </div>
 
-      <LanguageModelViz />
+      <TermBreakdown
+        title="다음-token 학습의 다섯 물체를 먼저 분리합니다"
+        items={[
+          { term: "Input token wₜ", description: "현재 step에서 model에 실제로 넣는 token입니다.", example: "입력이 ‘나’라면 정답은 그 다음 token ‘간다’입니다.", boundary: "같은 위치의 token을 그대로 복원하는 목표가 아닙니다." },
+          { term: "Shifted target wₜ₊₁", description: "현재 prefix 다음에 실제로 나타난 한 칸 뒤 token입니다.", example: "[BOS, 나, 간다, EOS]는 BOS→나, 나→간다, 간다→EOS가 됩니다.", boundary: "Padding은 loss mask에서 제외합니다." },
+          { term: "Logit zₜ", description: "Hidden state를 vocabulary 각 token의 정규화 전 점수로 투영한 vector입니다.", boundary: "Probability가 아니므로 합이 1일 필요가 없습니다." },
+          { term: "Probability pₜ", description: "Softmax로 logits를 합이 1인 다음-token distribution으로 바꾼 값입니다.", example: "pₜ[간다]=0.68은 현재 prefix 뒤 ‘간다’에 68% mass를 둔다는 뜻입니다." },
+          { term: "NLL과 perplexity", description: "정답 token의 −log probability를 평균하고, 그 평균을 exp로 되돌린 두 평가 표현입니다.", boundary: "Corpus·tokenizer·mask가 다른 PPL은 숫자만 바로 비교하지 않습니다." },
+        ]}
+      />
+
+      <RNNLanguageFlowViz />
+      <ContentBoundary article="rnn-language-model" />
 
       <div id="paper-rnn-lm" className="not-prose mt-8 scroll-mt-24 border-l border-border/80 pl-4">
         <p className="text-xs font-bold text-primary">논문 해설 · Recurrent Neural Network Based Language Model</p>
@@ -36,6 +50,18 @@ export default function LanguageModel() {
         question="고정 크기 hidden state를 vocabulary 전체의 다음-token probability로 어떻게 바꿀까?"
         idea={<>output projection이 state를 token별 score인 logit으로 바꾸고, softmax가 score의 상대적 차이를 합이 1인 distribution으로 정규화합니다.</>}
         formula={String.raw`e_t=E[w_t],\quad h_t=\operatorname{RNN}(e_t,h_{t-1}),\quad z_t=W_{yh}h_t+b_y,\quad p_t=\operatorname{softmax}(z_t)`}
+        annotatedFormula={String.raw`\begin{aligned}
+e_t&=\underbrace{E[w_t]}_{\text{token ID를 vector로 lookup}}\\
+h_t&=\underbrace{\operatorname{RNN}(e_t,h_{t-1})}_{\text{prefix를 현재 state로 압축}}\\
+z_t&=\underbrace{W_{yh}h_t+b_y}_{\text{vocabulary별 score 생성}}\\
+p_t&=\underbrace{\operatorname{softmax}(z_t)}_{\text{score를 합 1의 probability로 정규화}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`E[w_t]`, annotation: ["Discrete token ID에서", "학습된 input vector를 lookup"] },
+          { expression: String.raw`\operatorname{RNN}(e_t,h_{t-1})`, annotation: ["현재 token과 이전 state를 합쳐", "prefix의 새 lossy summary 생성"] },
+          { expression: String.raw`W_{yh}h_t+b_y`, annotation: ["Hidden state를 projection해", "vocabulary 각 token의 logit 생성"] },
+          { expression: String.raw`\operatorname{softmax}(z_t)`, annotation: ["상대 logit을 exponentiate·normalize해", "다음-token distribution 생성"] },
+        ]}
         terms={[
           { symbol: "E[w_t]", name: "token embedding", description: "discrete token ID를 D차원 연속 vector로 lookup합니다." },
           { symbol: "z_t\\in\\mathbb{R}^{|V|}", name: "logits", description: "vocabulary의 각 token에 대한 정규화 전 score입니다." },
@@ -48,6 +74,16 @@ export default function LanguageModel() {
         question="한 문장에서 어느 시점의 예측을 학습 신호로 사용할까?"
         idea={<>각 시점에서 실제 다음 token의 negative log-probability를 구해 평균냅니다. 한 문장으로 여러 shifted training pair가 생깁니다.</>}
         formula={String.raw`\mathcal{L}_{\text{NLL}}=-\frac{1}{T}\sum_{t=1}^{T}\log p_t\!\left[w_{t+1}\right]`}
+        annotatedFormula={String.raw`\begin{aligned}
+\ell_t&=\underbrace{-\log p_t[w_{t+1}]}_{\text{정답 probability의 surprise}}\\
+\mathcal L_{\rm NLL}
+ &=\underbrace{\frac{1}{T}\sum_{t=1}^{T}\ell_t}_{\text{valid shifted token들의 평균}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`p_t[w_{t+1}]`, annotation: ["분포에서 한 칸 뒤 정답의", "probability만 선택"] },
+          { expression: String.raw`-\log p_t[w_{t+1}]`, annotation: ["작은 정답 probability에", "큰 penalty를 주는 surprise 계산"] },
+          { expression: String.raw`\frac1T\sum_t\ell_t`, annotation: ["Valid target token loss를 합쳐", "token count로 평균"] },
+        ]}
         terms={[
           { symbol: "p_t[w_{t+1}]", name: "정답 token probability", description: "t까지 본 뒤 실제 t+1 token에 model이 배정한 확률입니다." },
           { symbol: "T", name: "loss를 계산한 token 수", description: "padding position은 mask로 합계에서 제외합니다." },
@@ -82,6 +118,10 @@ export default function LanguageModel() {
         question="평균 token loss를 사람이 읽기 쉬운 양의 척도로 바꾸려면?"
         idea={<>natural log 단위의 cross-entropy를 exponential로 되돌립니다. lower is better이지만 data와 tokenization이 같다는 조건이 붙습니다.</>}
         formula={String.raw`\operatorname{PPL}=\exp\!\left(\mathcal{L}_{\text{NLL}}\right)`}
+        annotatedFormula={String.raw`\operatorname{PPL}=\underbrace{\exp(\mathcal L_{\rm NLL})}_{\text{평균 log surprise를 양의 scale로 되돌림}}`}
+        operations={[
+          { expression: String.raw`\exp(\mathcal L_{\rm NLL})`, annotation: ["Log-domain 평균을 exponentiate해", "같은 evaluation contract의 PPL로 변환"] },
+        ]}
         terms={[
           { symbol: "\\mathcal{L}_{\\text{NLL}}", name: "평균 token NLL", description: "동일한 corpus와 masking convention에서 계산한 평균 loss입니다." },
         ]}

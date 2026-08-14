@@ -1,5 +1,4 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
-import GradientRetentionViz from "./viz/GradientRetentionViz";
 
 export default function CellState() {
   return (
@@ -21,6 +20,19 @@ export default function CellState() {
         question="과거 cell Cₖ의 작은 변화가 t step의 cell Cₜ까지 direct path로 얼마나 남는가?"
         idea={<>한 step의 direct edge derivative fⱼ를 chain rule로 모두 곱합니다. Log domain에서는 곱이 합이 되므로 평균 log f가 effective memory horizon을 정합니다.</>}
         formula={String.raw`\begin{aligned}\left.\frac{\partial C_t}{\partial C_{t-1}}\right|_{\rm direct}&=f_t\\[3pt]\left.\frac{\partial C_t}{\partial C_k}\right|_{\rm direct}&=\prod_{j=k+1}^{t}f_j\\[3pt]\log R_{k\to t}&=\sum_{j=k+1}^{t}\log f_j\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+\left.\frac{\partial C_t}{\partial C_{t-1}}\right|_{\rm direct}
+ &=\underbrace{f_t}_{\text{한 step 보존율}}\\[3pt]
+R_{k\to t}
+ &=\underbrace{\prod_{j=k+1}^{t}f_j}_{\text{chain rule 누적}}\\[3pt]
+\log R_{k\to t}
+ &=\underbrace{\sum_{j=k+1}^{t}\log f_j}_{\text{곱을 안정적인 합으로}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\partial C_t/\partial C_{t-1}=f_t`, annotation: ["Cell의 direct edge를 미분해", "한 step retention factor를 얻음"] },
+          { expression: String.raw`\prod_j f_j`, annotation: ["시간 경로의 forget gates를 곱해", "k에서 t까지 남은 direct contribution 계산"] },
+          { expression: String.raw`\sum_j\log f_j`, annotation: ["곱에 log를 취해 합으로 바꿔", "긴 horizon의 감쇠를 안정적으로 분석"] },
+        ]}
         terms={[
           { symbol: "R_{k\to t}", name: "direct retention", description: "k에서 t까지 cell path에 남은 multiplicative contribution입니다." },
           { symbol: "f_j", name: "forget gate", description: "Step j에서 각 state channel을 유지하는 비율입니다." },
@@ -31,7 +43,6 @@ export default function CellState() {
         interpretation="f=0.99도 100 step이면 약 0.366만 남는다. ‘거의 1’이라는 한 step 직관보다 horizon 전체의 product를 확인해야 합니다."
       />
 
-      <GradientRetentionViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Additive path와 residual connection은 닮았지만 같지 않다</h3>
