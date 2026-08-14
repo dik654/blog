@@ -19,7 +19,7 @@
 
 기존의 내용·수식·Viz 검수를 통과했더라도, 핵심 논문이 둘 이상인 전문 글은 선수 개념·학습 결과·논문 내부 해설 경로를 다시 확인한다. 특히 선수 개념은 현재 category에서 멈추지 않고 수학·통계·물리·컴퓨터 구조 등 실제로 필요한 기초까지 재귀적으로 따라간다. 정본 글·anchor·초심자 설명이 비어 있거나 `entryLevel` 글에 닿기 전에 순환하면 상위 글도 완료로 보지 않는다.
 
-이후 범위를 전체 블로그로 확장했다. 2026-08-14 현재 실제 공개 카탈로그에는 고유 article route가 386개 있다. Knowledge graph와 learning contract가 등록된 글은 299개이고 아직 contract가 없는 글은 87개다. 등록된 299개는 모두 새 DoD의 정확한 기초 6개+심화 4개와 본문·근거 anchor까지 strict audit를 통과했으며, 이전 문제 수 기준으로 남아 있던 구계약은 0개다. Audit는 파일시스템의 source folder나 public alias를 별도 article route로 중복 집계하지 않고 `src/content/index.ts`의 실제 공개 카탈로그를 분모로 사용하며, 새 route가 추가되면 분모도 함께 갱신한다. 또한 같은 concept를 두 글이 동시에 새 개념으로 소유하거나 concept의 `canonicalHref`가 실제 owner와 어긋나거나 새 concept가 relation edge 없이 고립되면 해당 글을 완료로 처리하지 않는다. 현재 1,923개 concept·2,810개 relation은 정본 owner 중복·경로 불일치·dangling/self/duplicate edge·고립 node가 모두 0개이며 `audit:graph --strict`를 통과한다. 완료된 정본·응용 글의 상세 근거는 아래 한 곳에서만 관리하므로, 아래 기존 체크 표시는 해당 글의 과거 검수 이력이며 현행 6+4 재검수 전에는 전체 DoD 완료를 뜻하지 않는다.
+이후 범위를 전체 블로그로 확장했다. 2026-08-14 현재 실제 공개 카탈로그에는 고유 article route가 386개 있다. Knowledge graph와 learning contract가 등록된 글은 315개이고 아직 contract가 없는 글은 71개다. 등록된 315개는 모두 새 DoD의 정확한 기초 6개+심화 4개와 본문·근거 anchor까지 strict audit를 통과했으며, 이전 문제 수 기준으로 남아 있던 구계약은 0개다. Audit는 파일시스템의 source folder나 public alias를 별도 article route로 중복 집계하지 않고 `src/content/index.ts`의 실제 공개 카탈로그를 분모로 사용하며, 새 route가 추가되면 분모도 함께 갱신한다. 또한 같은 concept를 두 글이 동시에 새 개념으로 소유하거나 concept의 `canonicalHref`가 실제 owner와 어긋나거나 새 concept가 relation edge 없이 고립되면 해당 글을 완료로 처리하지 않는다. 현재 1,984개 concept·2,890개 relation은 정본 owner 중복·경로 불일치·dangling/self/duplicate edge·고립 node가 모두 0개이며 `audit:graph --strict`를 통과한다. 완료된 정본·응용 글의 상세 근거는 아래 한 곳에서만 관리하므로, 아래 기존 체크 표시는 해당 글의 과거 검수 이력이며 현행 6+4 재검수 전에는 전체 DoD 완료를 뜻하지 않는다.
 
 ### 재귀 선수 지식 경로 — 현재 닫힌 기반
 
@@ -40,8 +40,8 @@
 - [x] `RNN → LSTM → Seq2Seq → Attention`: recurrent state와 시간축 gradient에서 시작해 gated memory·conditional sequence·autoregressive decoding·differentiable memory read까지 연결
 - [x] `Cross-entropy → Attention → Transformer → SFT → RLHF`: log·expectation에서 likelihood objective를 만들고, softmax·attention read·language-model policy와 response-token supervision을 거쳐 preference update까지 선수 경로를 연결
 - [x] `Autoregressive decoding → KV cache → GQA → hybrid allocator → admission`: token당 cache shape와 layer별 보존 길이·runtime group·요청 분포를 동시성 결정으로 연결
-- [x] Knowledge graph 전용 `audit:graph --strict`: 1,923개 concept·2,810개 relation의 owner·canonical path·edge·고립·화면 stage coverage 통과
-- [x] 현재 등록된 299개 글은 canonical owner·anchor·entry-level 재귀 선수 경로·기초 6개+심화 4개 coverage 통과
+- [x] Knowledge graph 전용 `audit:graph --strict`: 1,984개 concept·2,890개 relation의 owner·canonical path·edge·고립·화면 stage coverage 통과
+- [x] 현재 등록된 315개 글은 canonical owner·anchor·entry-level 재귀 선수 경로·기초 6개+심화 4개 coverage 통과
 - [x] 이전 learning contract 40개를 정확한 6+4 문제와 article-only 역검사 기준으로 재개방해 보완
 - [x] 확률·통계 기반 글은 optimizer 소비 경로에서 필요한 범위까지 첫 canonical closure 완료
 - [ ] 물리·컴퓨터 구조 기반 글은 실제 소비 글을 이관하면서 필요한 node부터 같은 방식으로 계속 확장. 분산 시스템은 process·failure·safety/liveness → SMR → permissionless PoW·PoS까지 첫 정본 경로를 닫음

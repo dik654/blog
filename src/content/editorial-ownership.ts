@@ -6436,6 +6436,30 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [{ label: "Network zone·flow policy", href: "/isms-aml/isms-access-control#network-segmentation" }, { label: "Application authorization", href: "/isms-aml/isms-access-control" }],
     evidence: [{ kind: "standard", rule: "Firewall·log-management 원칙은 NIST SP 800-41 Rev.1·SP 800-92 범위에 귀속한다." }, { kind: "primary-source", rule: "국내 보안시스템 확인사항은 KISA 안내서와 현행 architecture를 구분한다." }, { kind: "project-measurement", rule: "허용·금지·attack·sensor failure traffic에서 signal·action·receipt·latency를 paired 검사한다." }],
   },
+  "aml-compliance": {
+    title: "AML/CFT control-chain 운영 글이 소유하는 범위",
+    owns: ["이사회·준법·영업·analyst·감사의 책임 사슬과 customer→transaction→case linkage", "법적 의무·detector·거래 조치·STR 판단 분리와 AML program release gate"],
+    reuses: [{ label: "CDD·실제소유자 정본", href: "/isms-aml/aml-cdd-deep" }, { label: "RBA 정본", href: "/isms-aml/aml-rba-deep" }, { label: "STR 정본", href: "/isms-aml/aml-str-reporting" }],
+    evidence: [{ kind: "standard", rule: "국제 AML/CFT 상위 기준은 FATF Recommendations의 current consolidated version에 귀속한다." }, { kind: "primary-source", rule: "국내 의무는 KoFIU 공식 안내와 2026-08-14 현행 법령·감독 규정을 구분해 확인한다." }, { kind: "project-measurement", rule: "같은 customer·transaction fixture에서 CDD·alert·case·report·receipt와 forbidden effect를 paired 재생한다." }],
+  },
+  "aml-cdd-deep": {
+    title: "CDD·beneficial-owner·EDD 운영 글이 소유하는 범위",
+    owns: ["고객 주장과 독립 verification source를 분리한 identity record", "실제소유자 resolution, 목적·자금 원천 profile과 refresh·EDD 판단", "VASP on-chain 이전과 Travel Rule identity message·receipt 경계"],
+    reuses: [{ label: "AML 전체 통제 사슬", href: "/isms-aml/aml-compliance" }, { label: "위험기반 통제", href: "/isms-aml/aml-rba-deep" }, { label: "STR 판단", href: "/isms-aml/aml-str-reporting" }],
+    evidence: [{ kind: "primary-source", rule: "국내 CDD·실제소유자·확인 불가 절차는 KoFIU 공식 안내와 현행 법령에 귀속한다." }, { kind: "standard", rule: "Digital-ID 사용 원칙은 FATF guidance에 귀속하고 특정 vendor assurance를 일반화하지 않는다." }, { kind: "project-measurement", rule: "Stale source·간접 지분·정보 거부·EDD 누락을 같은 기준일 fixture에서 재생한다." }],
+  },
+  "aml-rba-deep": {
+    title: "AML risk-based approach 글이 소유하는 범위",
+    owns: ["AML scenario·factor·uncertainty와 inherent/control/residual risk의 구분", "비례 통제 선택, calibration·holdout·capacity와 RBA release gate"],
+    reuses: [{ label: "ISMS 위험·잔여위험 정본", href: "/isms-aml/isms-overview#asset-risk" }, { label: "CDD risk profile", href: "/isms-aml/aml-cdd-deep#risk-refresh-edd" }],
+    evidence: [{ kind: "standard", rule: "Risk-based·proportionate measure의 상위 원칙은 FATF Recommendation 1과 current revision에 귀속한다." }, { kind: "primary-source", rule: "국내 mandatory floor·simplified/EDD 허용 조건은 현행 KoFIU 법령·감독 지침으로 확인한다." }, { kind: "project-measurement", rule: "Calibration/holdout 분리, high-risk miss·case age·friction·override·drift를 paired 측정한다." }],
+  },
+  "aml-str-reporting": {
+    title: "STR case·narrative·filing 운영 글이 소유하는 범위",
+    owns: ["Alert·case·합리적 의심·STR의 상태와 authority 경계", "Narrative·evidence·confidentiality와 idempotent filing reconciliation gate"],
+    reuses: [{ label: "CDD profile", href: "/isms-aml/aml-cdd-deep" }, { label: "FDS detector", href: "/isms-aml/aml-fds-deep" }, { label: "Incident evidence 원칙", href: "/isms-aml/isms-incident-response" }],
+    evidence: [{ kind: "primary-source", rule: "국내 STR 요건·흐름·보존·비밀유지는 KoFIU 공식 안내와 2026-08-14 현행 법령에 귀속한다." }, { kind: "project-measurement", rule: "Narrative 누락·duplicate submit·unknown receipt·권한 노출·evidence loss를 failure fixture로 재생한다." }, { kind: "project-claim", rule: "Detector score·STR 제출을 거래 동결·고객 유죄·FIU 수사 착수로 확대하지 않는다." }],
+  },
   "msm-gpu-impl": {
     title: "GPU MSM window·bucket·reduction 구현 글이 소유하는 범위",
     owns: ["Signed-window digit 작업표와 partial top-window 처리", "Bucket 충돌 ownership·running-sum reduction과 MSM kernel release gate"],
@@ -6502,11 +6526,59 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [{ label: "Authenticated Diffie–Hellman", href: "/crypto/diffie-hellman" }, { label: "Commonware consensus", href: "/blockchain/commonware-consensus" }],
     evidence: [{ kind: "primary-source", rule: "Handshake·lookup·mux·relay 구현 사실은 Commonware monorepo v2026.7.0 source에만 귀속한다." }, { kind: "project-measurement", rule: "Replay·counter rollback·oversize·slow channel·overflow에서 session·local feedback·application receipt를 분리 측정한다." }, { kind: "project-claim", rule: "Authenticated peer·priority·Feedback::Ok를 payload correctness·remote receipt·consensus ordering으로 확대하지 않는다." }],
   },
+  "hw-server-vs-desktop": {
+    title: "서버·데스크톱 platform 선택 글이 소유하는 범위",
+    owns: ["Workload resource envelope와 lane·memory·NUMA topology", "BMC/Redfish·serviceability 경계와 fault-injection release gate"],
+    reuses: [{ label: "Memory sizing·ECC·population", href: "/gpu/hw-memory" }, { label: "PCIe bandwidth·topology", href: "/gpu/hw-network#pcie-transaction-bandwidth-latency" }],
+    evidence: [{ kind: "primary-source", rule: "관리 semantics는 pinned DMTF Redfish release, server energy 분류는 ENERGY STAR v4.0에 귀속한다." }, { kind: "project-measurement", rule: "Exact BOM·firmware·trace에서 boot·stress·fault·remote recovery를 paired 측정한다." }, { kind: "project-claim", rule: "Server label·Redfish 지원을 무중단·성능 우위로 확대하지 않는다." }],
+  },
+  "hw-nvme-storage": {
+    title: "NVMe protocol·form-factor·device path 글이 소유하는 범위",
+    owns: ["NVMe protocol과 M.2·U.2/U.3·E1.S mechanical/service 경계", "Controller-to-root lane·thermal·hot-plug release gate"],
+    reuses: [{ label: "PCIe bit/byte·goodput", href: "/gpu/hw-network#pcie-transaction-bandwidth-latency" }, { label: "Storage tier placement", href: "/gpu/hw-storage-comparison" }],
+    evidence: [{ kind: "standard", rule: "Protocol은 NVMe Base 2.2, E1.S mechanical claim은 SFF-TA-1006 Rev 2.0에 고정한다." }, { kind: "project-measurement", rule: "Exact drive·backplane·firmware에서 precondition·steady state·thermal·fault parity를 측정한다." }, { kind: "project-claim", rule: "Form factor나 link peak를 fixed performance·endurance·hot-plug 보장으로 확대하지 않는다." }],
+  },
+  "hw-storage-comparison": {
+    title: "SATA·SAS·NVMe workload tier 비교 글이 소유하는 범위",
+    owns: ["Command·transport·topology 비교와 DWPD/capacity reserve", "Scratch·metadata·durable data의 failure-domain placement와 tier release gate"],
+    reuses: [{ label: "NVMe form factor·lane path", href: "/gpu/hw-nvme-storage" }, { label: "Bit·byte와 PCIe", href: "/gpu/hw-network" }],
+    evidence: [{ kind: "standard", rule: "SATA·SAS naming/spec owner와 SNIA PTS revision을 exact source에 귀속한다." }, { kind: "project-measurement", rule: "Preconditioned steady state와 power-loss·media-error·rebuild 중 integrity/SLO를 비교한다." }, { kind: "project-claim", rule: "Interface peak·RAID·DWPD 하나를 application 성능·backup·durability로 확대하지 않는다." }],
+  },
+  "hw-power-cooling": {
+    title: "서버 입력 전력·rack 냉각 글이 소유하는 범위",
+    owns: ["Wall input과 heat balance, A/B feed N−1 headroom", "Chip-to-facility heat path와 synchronized telemetry fault release gate"],
+    reuses: [{ label: "GPU workload·power procurement", href: "/gpu/hw-gpu-comparison#release-gate" }, { label: "Server workload envelope", href: "/gpu/hw-server-vs-desktop#workload-envelope" }],
+    evidence: [{ kind: "standard", rule: "Server energy measurement은 ENERGY STAR v4.0, PUE는 The Green Grid 정의 범위에 둔다." }, { kind: "project-measurement", rule: "Meter·ambient·firmware·trace를 pin하고 feed/fan/pump 상실의 valid work와 thermal state를 측정한다." }, { kind: "project-claim", rule: "TDP·nameplate·PUE를 target wall power·server efficiency·reliability로 확대하지 않는다." }],
+  },
   "commonware-broadcast": {
     title: "Commonware buffered broadcast·digest cache 글이 소유하는 범위",
     owns: ["v2026.7.0 broadcast local Feedback와 digest subscription receipt", "Primary-eligible peer deque·shared item refcount cache lifecycle"],
     reuses: [{ label: "Commonware authenticated P2P", href: "/blockchain/commonware-crypto-p2p" }, { label: "Total-order broadcast", href: "/blockchain/smr-theory#total-order" }, { label: "Erasure coding", href: "/blockchain/erasure-coding" }],
     evidence: [{ kind: "primary-source", rule: "Broadcaster·ingress·engine 동작은 commonware-broadcast v2026.7.0 pinned source에만 귀속한다." }, { kind: "project-measurement", rule: "Mailbox·decode·duplicate·deque overflow·primary update·waiter cancel에서 refcount와 typed receipt를 검증한다." }, { kind: "project-claim", rule: "Feedback·subscribe completion·cache refcount를 recipient acknowledgement·quorum·total order·durability로 확대하지 않는다." }],
+  },
+  "avalanche-consensus": {
+    title: "Avalanche sampling·Snowflake·Snowball 글이 소유하는 범위",
+    owns: ["Random subsample poll과 alpha 성공 판정", "Snowflake consecutive confidence·Snowball cumulative preference와 probabilistic release envelope"],
+    reuses: [{ label: "Consensus safety·liveness", href: "/blockchain/bft-theory" }, { label: "Finality semantics boundary", href: "/blockchain/consensus-comparison" }],
+    evidence: [{ kind: "primary-source", rule: "Protocol construction은 Snow paper, implementation state는 AvalancheGo v1.14.2 source에 각각 귀속한다." }, { kind: "project-measurement", rule: "Parameter·sampler·fault·network trace를 고정하고 conflict 0과 GST 뒤 progress를 분리 검사한다." }, { kind: "project-claim", rule: "한 poll 확률·default parameter·local decision을 universal finality SLA로 확대하지 않는다." }],
+  },
+  "expected-consensus": {
+    title: "Filecoin EC sortition·tipset·weighted head 글이 소유하는 범위",
+    owns: ["QAP 비례 Poisson win count와 compatible tipset candidate", "Full block validation 뒤 EC chain-weight head selection"],
+    reuses: [{ label: "Fork choice와 finality", href: "/blockchain/consensus-comparison" }, { label: "F3 finalized prefix", href: "/blockchain/filecoin-f3" }],
+    evidence: [{ kind: "primary-source", rule: "EC semantics는 Filecoin spec, exact win/weight 산술은 Lotus v1.36.2 source에 귀속한다." }, { kind: "project-measurement", rule: "Invalid-heavy branch·incompatible tipset·reorg에서 validation receipt와 head transition을 재생한다." }, { kind: "project-claim", rule: "EC head를 irreversible finality나 F3 certificate로 표현하지 않는다." }],
+  },
+  "gossipbft": {
+    title: "GPBFT weighted phases·recovery 글이 소유하는 범위",
+    owns: ["Historical-power strict strong quorum과 phase justification transition", "Base·bottom recovery와 partial-synchrony timeout·rebroadcast"],
+    reuses: [{ label: "Gossipsub dissemination", href: "/p2p/libp2p-gossipsub" }, { label: "BFT quorum intersection", href: "/blockchain/bft-theory" }, { label: "F3 integration", href: "/blockchain/filecoin-f3" }],
+    evidence: [{ kind: "primary-source", rule: "Protocol properties는 FIP-0086, local phase implementation은 go-f3 v0.8.14 source에 귀속한다." }, { kind: "project-measurement", rule: "Wrong domain·80/81 power·partition/GST trace에서 safety와 liveness를 별도 판정한다." }, { kind: "project-claim", rule: "Gossipsub publish·message receipt를 GPBFT decision certificate로 확대하지 않는다." }],
+  },
+  "filecoin-f3": {
+    title: "Filecoin F3 EC integration·certificate sync 글이 소유하는 범위",
+    owns: ["EC proposal·finalized base·versioned power-table instance binding", "Certificate-chain catch-up과 finalized-prefix fork-choice fence"],
+    reuses: [{ label: "Expected Consensus head", href: "/blockchain/expected-consensus" }, { label: "GPBFT quorum·phases", href: "/blockchain/gossipbft" }],
+    evidence: [{ kind: "primary-source", rule: "F3 semantics는 FIP-0086, certificate exchange는 go-f3 v0.8.14, Lotus adapter는 v1.36.2에 각각 귀속한다." }, { kind: "project-measurement", rule: "Stale table·skipped instance·wrong network·F3 halt·conflicting heavy branch를 재생한다." }, { kind: "project-claim", rule: "EC progress나 latest certificate 한 장을 trusted finality·application release로 확대하지 않는다." }],
   },
 } as const satisfies Record<string, EditorialBoundary>;
 

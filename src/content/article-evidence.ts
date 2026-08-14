@@ -3792,27 +3792,14 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
   ],
   "blockchain/filecoin-f3": [
-    {
-      kind: "공식 코드",
-      label: "filecoin-project/go-f3",
-      href: "https://github.com/filecoin-project/go-f3",
-      note: "Filecoin Fast Finality의 현재 Go 구현",
-    },
-    {
-      kind: "공식 규격",
-      label: "FIP-0086 — Fast Finality in Filecoin",
-      href: "https://github.com/filecoin-project/FIPs/blob/master/FIPS/fip-0086.md",
-      note: "F3 도입 목적과 protocol activation의 공식 제안",
-    },
+    { kind: "공식 규격", label: "FIP-0086 · revision c856d99", href: "https://github.com/filecoin-project/FIPs/blob/c856d99b126cb52a0436c4838da55ec84495cfa7/FIPS/fip-0086.md", note: "EC/F3 input, GPBFT certificate, power-table evolution과 finalized-prefix fence의 Final 규격이며 고정 latency SLA는 아님" },
+    { kind: "공식 코드", label: "go-f3 v0.8.14 certificate exchange", href: "https://github.com/filecoin-project/go-f3/tree/v0.8.14/certexchange", note: "Certificate·power-table catch-up의 pinned source이며 peer availability나 initial trust anchor를 보장하지 않음" },
+    { kind: "공식 코드", label: "Lotus v1.36.2 chain/lf3", href: "https://github.com/filecoin-project/lotus/tree/v1.36.2/chain/lf3", note: "EC backend·manifest·power table·certificate API 통합의 pinned source이며 downstream release policy는 별도" },
   ],
   "blockchain/expected-consensus": [
-    ...FILECOIN_LOTUS_SERIES_EVIDENCE,
-    {
-      kind: "공식 규격",
-      label: "Filecoin Specification — Expected Consensus",
-      href: "https://spec.filecoin.io/algorithms/expected_consensus/",
-      note: "sortition·TipSet·chain weight를 정의하는 합의 규격",
-    },
+    { kind: "공식 규격", label: "Filecoin Specification — Expected Consensus", href: "https://spec.filecoin.io/algorithms/expected_consensus/", note: "Sortition·compatible tipset·validation·chain-weight fork choice의 protocol 기준이며 F3 finality는 별도" },
+    { kind: "공식 코드", label: "Lotus v1.36.2 electionproof.go", href: "https://github.com/filecoin-project/lotus/blob/v1.36.2/chain/types/electionproof.go", note: "Poisson inverse-CDF win count의 pinned implementation이며 randomness·block validity 전체를 보장하지 않음" },
+    { kind: "공식 코드", label: "Lotus v1.36.2 filcns weight.go", href: "https://github.com/filecoin-project/lotus/blob/v1.36.2/chain/consensus/filcns/weight.go", note: "EC chain-weight fixed-point integer 산술의 pinned source이며 irreversible finality 근거는 아님" },
   ],
   "blockchain/ipfs-filecoin-storage": [
     {
@@ -4745,6 +4732,10 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 규격", label: "RFC 9334 · RATS Architecture", href: "https://www.rfc-editor.org/rfc/rfc9334.html", note: "Attester·Verifier·Relying Party와 evidence·result·appraisal·freshness의 vendor-neutral 정본" },
     { kind: "공식 규격", label: "AMD SEV-SNP Firmware ABI Specification 1.58", href: "https://docs.amd.com/v/u/en-US/56860_PUB_1.58_SEV_SNP", note: "SNP attestation report request·field·signature interface의 vendor 정본" },
   ],
+  "crypto/extension-field-theory": [{ kind:"핵심 논문", label:"Lidl & Niederreiter · Finite Fields", href:"https://doi.org/10.1017/CBO9780511525926", note:"Minimal polynomial·tower·Frobenius의 수학적 정본" }],
+  "crypto/pairing": [{ kind:"핵심 논문", label:"Miller · Weil Pairing", href:"https://crypto.stanford.edu/miller/miller.pdf", note:"Miller function recurrence 원 연구" },{ kind:"핵심 논문", label:"Hess et al. · Eta Pairing Revisited", href:"https://eprint.iacr.org/2006/110.pdf", note:"Ate-family pairing construction" }],
+  "blockchain/vdf": [{ kind:"핵심 논문", label:"Boneh et al. · VDF", href:"https://eprint.iacr.org/2018/601.pdf", note:"VDF definitions and constructions" },{ kind:"핵심 논문", label:"Wesolowski · Efficient VDF", href:"https://eprint.iacr.org/2018/623.pdf", note:"Quotient proof construction" }],
+  "blockchain/drand": [{ kind:"공식 문서", label:"drand specification", href:"https://docs.drand.love/docs/specification/", note:"Threshold beacon protocol specification" },{ kind:"공식 코드", label:"drand @ 2363f3b", href:"https://github.com/drand/drand/tree/2363f3b9ba5fd6f14e0b84a096b248479790d75d", note:"Pinned official source" }],
   "crypto/hash-theory": [
     { kind: "공식 규격", label: "NIST FIPS 180-4", href: "https://csrc.nist.gov/pubs/fips/180-4/upd1/final", note: "SHA-2 padding·compression·digest의 normative standard" },
     { kind: "공식 규격", label: "NIST FIPS 202", href: "https://csrc.nist.gov/pubs/fips/202/final", note: "SHA-3/SHAKE와 KECCAK permutation·suffix의 normative standard" },
@@ -4985,6 +4976,23 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 규격", label: "NIST SP 800-92", href: "https://csrc.nist.gov/pubs/sp/800/92/final", note: "Security log management 지침이며 수집 자체가 incident detection·clock 정확성을 보장하지 않음" },
     { kind: "공식 가이드", label: "KISA 2023 ISMS-P 인증기준 안내서", href: "https://pims.kisa.or.kr/board/file/bbs_0000000000000014/21/FILE_000000000001002/202311231554317701147901071.pdf", note: "Network·보안시스템의 국내 인증 확인 지점이며 특정 UTM·SIEM 제품 구매를 요구하지 않음" },
   ],
+  "isms-aml/aml-compliance": [
+    { kind: "공식 규격", label: "FATF Recommendations · current consolidated standards", href: "https://www.fatf-gafi.org/en/publications/Fatfrecommendations/Fatf-recommendations.html", note: "CDD·RBA·record keeping·STR·supervision의 국제 상위 기준이며 단일 score·workflow를 요구하지 않음" },
+    { kind: "공식 문서", label: "KoFIU 자금세탁방지 법령 체계", href: "https://www.kofiu.go.kr/kor/law/law.do", note: "국내 법률·시행령·규정의 공식 진입점이며 글 요약이 사건별 법률 검토를 대신하지 않음" },
+  ],
+  "isms-aml/aml-cdd-deep": [
+    { kind: "공식 문서", label: "KoFIU 고객확인제도(CDD)", href: "https://www.kofiu.go.kr/kor/policy/amls05.do", note: "CDD·EDD·실제소유자·확인 불가 절차의 국내 공식 안내이며 vendor KYC pass가 전체 의무를 대신하지 않음" },
+    { kind: "공식 가이드", label: "FATF Guidance on Digital Identity", href: "https://www.fatf-gafi.org/content/dam/fatf-gafi/guidance/Guidance-on-Digital-Identity.pdf.coredownload.pdf", note: "Digital identity assurance를 Recommendation 10 CDD에 위험기반으로 적용하는 guidance이며 목적·자금 원천·실제소유자 확인을 대체하지 않음" },
+    { kind: "공식 문서", label: "금융위원회 특정금융정보법상 Travel Rule 시행 안내", href: "https://www.fsc.go.kr/po010102/77579", note: "2022 시행 당시 VASP 간 이전정보·보존 구조이며 2026-08-14 current law와 확대 개정 effective date를 별도 확인" },
+  ],
+  "isms-aml/aml-rba-deep": [
+    { kind: "공식 규격", label: "FATF Recommendations · Recommendation 1", href: "https://www.fatf-gafi.org/en/publications/Fatfrecommendations/Fatf-recommendations.html", note: "2025 proportionality 개정을 포함한 risk-based approach 상위 기준이며 보편 score·weight·cutoff를 제공하지 않음" },
+    { kind: "공식 가이드", label: "FATF Risk-Based Approach for the Banking Sector", href: "https://www.fatf-gafi.org/en/publications/Fatfrecommendations/Risk-based-approach-banking-sector.html", note: "위험 식별·평가·mitigation·internal control guidance이며 국내 VASP 의무와 actual effectiveness를 대신하지 않음" },
+  ],
+  "isms-aml/aml-str-reporting": [
+    { kind: "공식 문서", label: "KoFIU 의심거래보고(STR)", href: "https://www.kofiu.go.kr/kor/policy/amls03.do", note: "합리적 의심·보고 정보와 KoFIU 처리 흐름의 공식 안내이며 신고가 동결·유죄·수사 착수를 자동 의미하지 않음" },
+    { kind: "공식 문서", label: "KoFIU 특정금융정보법 등 현행 법령", href: "https://www.kofiu.go.kr/kor/law/law.do", note: "보고·보존·비밀유지의 current legal source 진입점이며 기관·사건별 적용은 별도 법률 검토가 필요" },
+  ],
   "gpu/msm-gpu-impl": [
     { kind: "공식 코드", label: "sppark MSM · commit 17278d7", href: "https://github.com/supranational/sppark/blob/17278d74295392f9813f009300b257a688422b7a/msm/pippenger.cuh", note: "Signed digit breakdown·bucket accumulation·integration의 pinned source이며 고정 point-op count·speedup은 아님" },
     { kind: "공식 코드", label: "sppark custom sort · commit 17278d7", href: "https://github.com/supranational/sppark/blob/17278d74295392f9813f009300b257a688422b7a/msm/sort.cuh", note: "Digit/index grouping 구현이며 모든 GPU MSM의 보편 필수·최적 전략은 아님" },
@@ -5040,9 +5048,36 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 코드", label: "Commonware v2026.7.0 authenticated lookup P2P", href: "https://github.com/commonwarexyz/monorepo/tree/v2026.7.0/p2p/src/authenticated/lookup", note: "Known peer set의 channel registration·quota·backlog·message limit 구현이며 consensus order나 payload correctness는 보장하지 않음" },
     { kind: "공식 코드", label: "Commonware v2026.7.0 mux and relay", href: "https://github.com/commonwarexyz/monorepo/blob/v2026.7.0/p2p/src/utils/mux.rs", note: "Bounded subchannel route와 priority local admission feedback 구현이며 remote durable acceptance는 별도" },
   ],
+  "gpu/hw-server-vs-desktop": [
+    { kind: "공식 규격", label: "DMTF Redfish DSP0266 1.23.1 · 2026-01-16", href: "https://www.dmtf.org/standards/redfish", note: "Pinned server management protocol·resource-model 범위이며 hardware redundancy·application availability 보장은 아님" },
+    { kind: "공식 규격", label: "ENERGY STAR Computer Servers Version 4.0 · 2023-04-12", href: "https://www.energystar.gov/products/spec/energy_star_computer_servers_version_4_0_pd", note: "Server category·energy test/reporting 경계이며 target workload fit·availability를 대신하지 않음" },
+  ],
+  "gpu/hw-nvme-storage": [
+    { kind: "공식 규격", label: "NVM Express Base Specification 2.2 · 2025-03-11", href: "https://nvmexpress.org/wp-content/uploads/NVM-Express-Base-Specification-Revision-2.2-2025.03.11-Ratified-1.pdf", note: "NVMe controller·queue·command protocol semantics이며 특정 form factor·성능·hot-plug 보장은 아님" },
+    { kind: "공식 규격", label: "SNIA SFF-TA-1006 Rev 2.0 · E1.S", href: "https://members.snia.org/document/dl/26956", note: "E1.S mechanical attributes·thickness의 pinned specification이며 제품 공급·성능·chassis airflow 보장은 아님" },
+  ],
+  "gpu/hw-storage-comparison": [
+    { kind: "공식 문서", label: "SATA-IO SATA Naming Guidelines", href: "https://sata-io.org/developers/sata-naming-guidelines", note: "SATA revision·SATA 6Gb/s naming/rate 범위이며 achieved payload나 device latency 근거는 아님" },
+    { kind: "공식 규격", label: "INCITS T10 SCSI Storage Interfaces", href: "https://t10.t10.org/", note: "SCSI·SAS specification family의 공식 owner이며 exact device capability·multipath 보장은 아님" },
+    { kind: "공식 규격", label: "SNIA SSS Performance Test Specification 2.0.2", href: "https://www.snia.org/solid-state-sss", note: "SSD preconditioning·steady-state device benchmark 방법이며 filesystem·application durability를 대신하지 않음" },
+  ],
+  "gpu/hw-power-cooling": [
+    { kind: "공식 규격", label: "ENERGY STAR Computer Servers Version 4.0 · 2023-04-12", href: "https://www.energystar.gov/products/spec/energy_star_computer_servers_version_4_0_pd", note: "Server energy certification measurement 경계이며 target workload p95 wall power·thermal fit 보장은 아님" },
+    { kind: "공식 문서", label: "The Green Grid · Power Usage Effectiveness", href: "https://www.thegreengrid.org/node/372", note: "Facility/IT energy ratio 정의이며 server compute efficiency·carbon·reliability 지표는 아님" },
+  ],
   "blockchain/commonware-broadcast": [
     { kind: "공식 코드", label: "commonware-broadcast v2026.7.0 Broadcaster", href: "https://github.com/commonwarexyz/monorepo/blob/v2026.7.0/broadcast/src/lib.rs", note: "Typed broadcast와 local Feedback 성공 경계의 pinned trait이며 recipient receipt·total order·durability는 제공하지 않음" },
     { kind: "공식 코드", label: "commonware-broadcast v2026.7.0 buffered ingress", href: "https://github.com/commonwarexyz/monorepo/blob/v2026.7.0/broadcast/src/buffered/ingress.rs", note: "Bounded mailbox·digest waiter·cancel lifecycle의 pinned implementation이며 network acknowledgement는 별도" },
     { kind: "공식 코드", label: "commonware-broadcast v2026.7.0 buffered engine", href: "https://github.com/commonwarexyz/monorepo/blob/v2026.7.0/broadcast/src/buffered/engine.rs", note: "Peer deque·digest refcount·primary eligibility cache의 pinned implementation이며 global reliable broadcast는 아님" },
+  ],
+  "blockchain/avalanche-consensus": [
+    { kind: "핵심 논문", label: "Snowflake to Avalanche · arXiv 1906.08936", href: "https://arxiv.org/abs/1906.08936", note: "Repeated random subsampling과 metastable consensus family의 원문이며 특정 chain TPS·고정 finality SLA는 아님" },
+    { kind: "공식 코드", label: "AvalancheGo v1.14.2 Snowball parameters", href: "https://github.com/ava-labs/avalanchego/blob/v1.14.2/snow/consensus/snowball/parameters.go", note: "K·alpha·beta parameter validation의 pinned source이며 모든 subnet의 optimal defaults는 아님" },
+    { kind: "공식 코드", label: "AvalancheGo v1.14.2 Snow state", href: "https://github.com/ava-labs/avalanchego/tree/v1.14.2/snow/consensus/snowball", note: "Snowflake consecutive confidence와 Snowball cumulative preference 구현이며 sampler/network 보장은 별도" },
+  ],
+  "blockchain/gossipbft": [
+    { kind: "공식 규격", label: "FIP-0086 GossiPBFT · revision c856d99", href: "https://github.com/filecoin-project/FIPs/blob/c856d99b126cb52a0436c4838da55ec84495cfa7/FIPS/fip-0086.md", note: "Weighted phases·best-effort broadcast·partial-synchrony properties의 Final 규격이며 Gossipsub exactly-once 보장은 아님" },
+    { kind: "공식 코드", label: "go-f3 v0.8.14 gpbft.go", href: "https://github.com/filecoin-project/go-f3/blob/v0.8.14/gpbft/gpbft.go", note: "QUALITY·CONVERGE·PREPARE·COMMIT·DECIDE와 timeout state의 pinned 구현이며 EC validity는 별도" },
+    { kind: "공식 코드", label: "go-f3 v0.8.14 quorum validation", href: "https://github.com/filecoin-project/go-f3/tree/v0.8.14/gpbft", note: "Historical weighted quorum·message validation의 pinned source이며 certificate catch-up 전체는 아님" },
   ],
 };
