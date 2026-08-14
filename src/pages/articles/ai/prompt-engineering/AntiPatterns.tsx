@@ -1,5 +1,5 @@
-import AntiPatternsViz from "./viz/AntiPatternsViz";
-import { AntiPatternListViz, TroubleshootViz } from "./viz/AntiPatternsDetailViz";
+import TermBreakdown from "@/components/articles/term-breakdown";
+import { PromptRegressionViz } from "./viz/PromptContractViz";
 
 export default function AntiPatterns() {
   return (
@@ -23,8 +23,30 @@ export default function AntiPatterns() {
         </p>
       </div>
 
-      <div className="not-prose my-8"><AntiPatternsViz /></div>
-      <div className="not-prose my-8"><AntiPatternListViz /></div>
+      <TermBreakdown
+        title="실패를 문장 취향이 아니라 고칠 계층으로 분류합니다"
+        description="분류가 끝나야 prompt를 고칠지, evidence·decoder·runtime을 고칠지 결정할 수 있습니다."
+        items={[
+          {
+            term: "Instruction failure",
+            description: "목표·우선순위·완료 조건이 모호하거나 서로 충돌한 상태입니다.",
+            example: "'짧고 빠짐없이 자세히'처럼 동시에 만족할 기준이 없는 요청입니다.",
+            boundary: "필요한 사실 자체가 없으면 instruction을 길게 써도 해결되지 않습니다.",
+          },
+          {
+            term: "Evidence failure",
+            description: "판정에 필요한 source가 request에 없거나 신뢰 범위가 표시되지 않은 상태입니다.",
+            example: "최신 주문 상태가 필요한데 주문 API 결과 없이 답을 요구합니다.",
+            boundary: "이 경우 RAG·tool·database lookup이 필요하며 role prompt는 지식을 만들지 못합니다.",
+          },
+          {
+            term: "Enforcement failure",
+            description: "형식·권한·외부 effect를 자연어 instruction만으로 막으려는 상태입니다.",
+            example: "'고객 정보를 보내지 마'라고 쓰고 send tool에는 실제 authorization을 두지 않습니다.",
+            boundary: "Schema는 형식을, runtime policy는 권한과 egress를 각각 강제해야 합니다.",
+          },
+        ]}
+      />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>실패 원인에 맞는 계층을 고친다</h3>
@@ -37,7 +59,7 @@ export default function AntiPatterns() {
         </p>
       </div>
 
-      <div className="not-prose my-8"><TroubleshootViz /></div>
+      <div className="not-prose my-8"><PromptRegressionViz /></div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Prompt·model·template·decoding을 함께 versioning한다</h3>

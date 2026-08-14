@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
+import ContentBoundary from "@/components/articles/content-boundary";
+import TermBreakdown from "@/components/articles/term-breakdown";
+import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
-import StructuredOutputViz from "./viz/StructuredOutputViz";
-import { StrategyViz, BestPracticesViz } from "./viz/StructuredOutputDetailViz";
+import { OutputValidationViz } from "./viz/OutputValidationViz";
 
 const OUTPUT_PATHS = [
   [
@@ -39,7 +41,39 @@ export default function StructuredOutput() {
         </p>
       </div>
 
-      <div className="not-prose my-8"><StructuredOutputViz /></div>
+      <TermBreakdown
+        title="Record를 믿기 전에 네 단어를 한 문씩 통과시킵니다"
+        description="앞 단계 성공이 뒤 단계 성공을 뜻하지 않으므로 각 판정의 입력과 책임을 따로 둡니다."
+        items={[
+          {
+            term: "Parse",
+            description: "문자열이 JSON 같은 문법으로 끝까지 해석되는지 확인합니다.",
+            example: "닫는 괄호가 없거나 code fence가 섞인 output을 syntax failure로 분류합니다.",
+            boundary: "Parse 성공은 field·type·실제 상품 존재를 확인하지 않습니다.",
+          },
+          {
+            term: "Schema validation",
+            description: "Required field·type·enum·null·additional property 규칙을 검사합니다.",
+            example: "status는 matched|unknown|rejected 중 하나이고 item_id는 string|null이어야 합니다.",
+            boundary: "Schema-valid한 가짜 item_id나 근거 없는 값은 여전히 남을 수 있습니다.",
+          },
+          {
+            term: "Domain validation",
+            description: "ID 존재·상태 전이·금액 범위·source span처럼 실제 업무 규칙을 검사합니다.",
+            example: "item_id를 catalog에서 조회하고 evidence가 입력 원문에 존재하는지 확인합니다.",
+            boundary: "Domain service가 가진 snapshot과 권한 범위 밖의 사실을 판정할 수는 없습니다.",
+          },
+          {
+            term: "Bounded fallback",
+            description: "실패 원인을 남기고 제한된 repair 뒤 typed unknown이나 human review로 끝내는 경로입니다.",
+            example: "Repair 한 번 뒤에도 invalid면 원본·수정본·failure stage를 보존하고 review queue로 보냅니다.",
+            boundary: "무제한 retry는 tail latency와 의미 변형을 키우므로 종료 조건이 필요합니다.",
+          },
+        ]}
+      />
+
+      <div className="not-prose my-8"><OutputValidationViz /></div>
+      <ContentBoundary article="prompt-structured-output" />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Syntax·schema·domain semantics를 세 단계로 검사한다</h3>
@@ -59,10 +93,8 @@ export default function StructuredOutput() {
 }`}</code></pre>
       </div>
 
-      <div className="not-prose my-8"><StrategyViz /></div>
-
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3>세 경로는 “형식이 잘 맞는가”와 “얼마나 오래 걸리는가”를 함께 비교합니다</h3>
+        <h3 id="output-paths" className="scroll-mt-24">세 경로는 “형식이 잘 맞는가”와 “얼마나 오래 걸리는가”를 함께 비교합니다</h3>
         <p>
           같은 schema를 전달해도 runtime 경로는 세 가지로 나뉩니다. Prompt-only는
           model에게 규칙을 요청할 뿐이고, <strong>constrained decoding</strong>은
@@ -87,6 +119,7 @@ export default function StructuredOutput() {
         ))}
       </div>
 
+      <div id="output-measurement" className="scroll-mt-24">
       <ExplainedFormula
         question="세 output 경로의 실패 확률과 tail latency를 같은 기준으로 어떻게 측정할까요?"
         idea={(
@@ -103,6 +136,26 @@ export default function StructuredOutput() {
 L_{95}&=\operatorname{percentile}_{0.95}(T_1,\ldots,T_N)\\
 \mathbb E[T_{\mathrm{repair}}]&\approx T_g+T_v+p_0(T_r+T_v)
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+\hat p_{\mathrm{fail}}&=\underbrace{N_{\mathrm{final\;invalid}}/N}_{\text{끝까지 invalid인 요청 비율}}\\[3pt]
+L_{95}&=\underbrace{Q_{0.95}(\{T_i\})}_{\text{95\% 요청이 끝나는 시간 경계}}\\[3pt]
+\mathbb E[T_{\mathrm{repair}}]&\approx\underbrace{T_g+T_v}_{\text{첫 생성·검증}}\\
+&\quad+\underbrace{p_0(T_r+T_v)}_{\text{첫 실패 때만 repair·재검증}}
+\end{aligned}`}
+        operations={[
+          {
+            expression: String.raw`N_{\mathrm{final\;invalid}}/N`,
+            annotation: ["최종 invalid 수를", "같은 paired request 수로 나눕니다"],
+          },
+          {
+            expression: String.raw`\operatorname{percentile}_{0.95}(T_1,\ldots,T_N)`,
+            annotation: ["요청별 wall-clock 시간을 정렬해", "95%가 끝나는 latency 경계를 고릅니다"],
+          },
+          {
+            expression: String.raw`p_0(T_r+T_v)`,
+            annotation: ["첫 검증이 실패할 확률에만", "repair와 재검증 비용을 곱해 기대 비용을 더합니다"],
+          },
+        ]}
         terms={[
           { symbol: "N", name: "paired request count", description: "세 경로에 똑같이 넣는 평가 요청 수입니다." },
           { symbol: "N_{\\mathrm{final\\;invalid}}", name: "final invalid count", description: "허용된 retry와 fallback 뒤에도 syntax·schema·domain validator 중 하나를 통과하지 못한 요청 수입니다." },
@@ -118,8 +171,10 @@ L_{95}&=\operatorname{percentile}_{0.95}(T_1,\ldots,T_N)\\
         ]}
         interpretation="예를 들어 1,000개 요청 중 bounded retry 뒤 8개가 invalid라면 최종 실패율은 0.8%입니다. Constrained decoding의 단일 생성이 조금 느려도 repair 호출이 줄어 p95가 낮아질 수 있으므로, 한 번의 microbenchmark가 아니라 end-to-end 경로로 선택해야 합니다."
       />
+      </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3 id="output-release" className="scroll-mt-24">Repair는 횟수와 종료 상태를 먼저 정합니다</h3>
         <p>
           JSON은 typed API payload에, Markdown은 사람이 읽을 보고서에 적합하고 XML
           tag는 긴 prompt 안에서 instruction·example·evidence의 경계를 표시할 때
@@ -128,20 +183,42 @@ L_{95}&=\operatorname{percentile}_{0.95}(T_1,\ldots,T_N)\\
           아니라 JSON Schema나 grammar로 invalid token을 막는 decoder-level
           constraint를 검토합니다.
         </p>
+        <p>비교 experiment에서는 세 경로를 같은 validator에 통과시킨 뒤 결과를 세 묶음으로 기록합니다.</p>
+        <ul>
+          <li><strong>Validity:</strong> first-pass syntax, final failure, domain validity</li>
+          <li><strong>Latency:</strong> p50·p95 end-to-end와 repair 횟수</li>
+          <li><strong>Cost:</strong> output·repair token, fallback 비율, grammar cold/warm 상태</li>
+        </ul>
         <p>
-          비교 experiment에서는 세 경로 모두 같은 syntax·schema·domain validator를
-          통과시킵니다. First-pass syntax failure, 최종 failure probability, domain
-          validity, p50·p95 latency, output·repair token과 fallback 비율을 요청별로
-          기록합니다. Repair는 같은 오류를 반복하지 않도록 최대 횟수를 정하고,
-          제한을 넘으면 typed <code>unknown</code>이나 사람 검토 queue로 보냅니다.
-          Grammar가 지원하는 schema subset과 decoder version은 결과 receipt에 남기며,
-          token masking의 세부 원리는
+          Repair는 최대 횟수를 넘으면 typed <code>unknown</code>이나 사람 검토 queue로
+          끝냅니다. 지원 schema subset과 decoder version도 receipt에 남깁니다. Token
+          masking의 세부 원리는
           <Link to="/ai/grammar-constrained-generation"> grammar-constrained generation</Link>
           글에서 이어서 확인할 수 있습니다.
         </p>
+        <div id="paper-json-schema" className="not-prose mt-8 scroll-mt-24">
+          <CitationBlock
+            source="JSON Schema Draft 2020-12"
+            citeKey={1}
+            href="https://json-schema.org/draft/2020-12"
+          >
+            Draft 2020-12는 JSON document의 core·validation vocabulary와 meta-schema를
+            정의합니다. Schema validation은 document 구조를 판정하며 catalog ID의
+            실제 존재나 업무 상태 전이를 자동으로 판정하지 않습니다.
+          </CitationBlock>
+        </div>
+        <div id="paper-structured-output" className="not-prose mt-6 scroll-mt-24">
+          <CitationBlock
+            source="Anthropic — Structured outputs"
+            citeKey={2}
+            href="https://platform.claude.com/docs/en/build-with-claude/structured-outputs"
+          >
+            현재 공식 문서는 JSON Schema를 grammar로 compile해 schema-compliant
+            output을 제한하는 경로와 지원 subset·cache 조건을 설명합니다. 이 보장은
+            domain validity·사실성·authorization까지 확장되지 않습니다.
+          </CitationBlock>
+        </div>
       </div>
-
-      <div className="not-prose my-8"><BestPracticesViz /></div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>

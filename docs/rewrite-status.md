@@ -1127,3 +1127,12 @@
 - 수식 7개는 전부 KaTeX 본문 안에 연산 의도를 붙이는 explicit operation annotation으로 작성했다. 측정 경계, live range와 resident warp, small fusion과 Megakernel, persistent work queue는 텍스트 카드가 아니라 도형·timeline·resource map으로 시각화했다.
 - 모든 interactive Viz에서 `ArrowLeft`·`ArrowRight`를 지원하고 장면형 Viz는 `Space` 자동 재생을 지원한다. 390px·1440px 실제 브라우저에서 document/Viz/KaTeX overflow 0, console warning/error 0, gradient·shadow·굵은 선 0을 확인했다.
 - 전역 formula backlog는 1,006개/687 legacy files다. 다음 CRUD 반복에서도 topology 후보를 읽는 동시에 formula operation annotation과 concept graph를 함께 확장한다.
+
+## 2026-08-15 · Prompt engineering CRUD split
+
+- 기존 `ai/prompt-engineering` 한 글에 함께 있던 request contract·회귀 평가, reasoning path·self-consistency, few-shot demonstration, structured-output validation을 각각 독립적으로 정의→형태→작은 예→실패 경계까지 닫히는 네 수업으로 분리했다.
+- 분리하면서 기존 graph에 없던 `prompt-reasoning-verifier-boundary`, `few-shot-context-budget-boundary`, `prompt-output-validation-ladder`, `prompt-output-path-selection`, `prompt-output-bounded-repair` 다섯 canonical concept를 추가하고 10개 관계를 연결했다. 즉 route CRUD가 graph를 확장하고, 확장된 graph의 독립 학습 arc가 다시 네 route 경계를 검증하는 양방향 절차를 적용했다.
+- 공개 route와 exact learning contract는 411개에서 414개, graph는 2,335 concepts·3,458 relations로 늘었고 invariant failure·stage warning은 0이다. 네 route 모두 topology `keep`이며 전체 split-review는 85개에서 84개로 줄었다.
+- Request envelope·regression canary·reasoning branches와 verifier·few-shot context budget·parse/schema/domain/fallback을 텍스트 카드가 아니라 도형과 연결선이 있는 새 flat Viz 5개로 교체했다. 모든 Viz는 `ArrowLeft`·`ArrowRight` 장면 이동과 `Space` 자동 재생을 지원한다.
+- Self-consistency 집계와 structured-output 운영 지표 수식 2개는 합·선택·분모·quantile·repair cost의 의도를 KaTeX 식 안 underbrace로 직접 표시하고, 별도 operation 설명도 같은 순서로 연결했다.
+- 390px·1440px 실제 브라우저에서 네 route의 document/Viz/KaTeX overflow, KaTeX error, console warning/error, gradient·shadow·굵은 선이 모두 0임을 확인했다. 전역 formula backlog는 1,004개/685 legacy files로 줄었으며 다음 CRUD 후보에서도 concept graph 확장과 수식 주석 이관을 함께 수행한다.

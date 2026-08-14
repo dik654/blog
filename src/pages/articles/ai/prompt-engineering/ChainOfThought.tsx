@@ -1,7 +1,8 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
-import CoTViz from "./viz/CoTViz";
-import { VariantsViz, TheoryViz } from "./viz/CoTDetailViz";
+import ContentBoundary from "@/components/articles/content-boundary";
+import TermBreakdown from "@/components/articles/term-breakdown";
+import { ReasoningPathsViz } from "./viz/ReasoningPathsViz";
 
 export default function ChainOfThought() {
   return (
@@ -20,7 +21,33 @@ export default function ChainOfThought() {
         </p>
       </div>
 
-      <div className="not-prose my-8"><CoTViz /></div>
+      <TermBreakdown
+        title="Reasoning 글에서 먼저 구분할 세 대상"
+        description="중간 문장, 최종 답, 외부 판정을 분리해야 조합 단계에서 역할이 섞이지 않습니다."
+        items={[
+          {
+            term: "Reasoning path",
+            description: "문제에서 answer까지 model이 생성한 중간 식·상태·자연어 단계입니다.",
+            example: "거리=속력×시간을 고르고 단위를 맞춘 뒤 숫자를 대입하는 한 풀이입니다.",
+            boundary: "읽기 좋은 path가 실제 내부 causal trace이거나 정답 증명서라는 뜻은 아닙니다.",
+          },
+          {
+            term: "Answer marginalization",
+            description: "여러 path의 문장을 섞지 않고 path마다 추출한 최종 answer의 빈도를 합치는 추정입니다.",
+            example: "42가 4표, 40이 2표, 41이 1표라면 tie rule에 따라 42를 선택합니다.",
+            boundary: "같은 잘못된 전제를 공유하면 agreement가 커도 모두 틀릴 수 있습니다.",
+          },
+          {
+            term: "External verifier",
+            description: "Model 설명 밖에서 계산·단위·source span·tool permission을 판정하는 절차입니다.",
+            example: "산술은 executable test, 검색은 citation span, action은 runtime authorization으로 확인합니다.",
+            boundary: "Verifier가 검사하지 않는 사실성·정책 항목까지 자동으로 보장하지 않습니다.",
+          },
+        ]}
+      />
+
+      <div className="not-prose my-8"><ReasoningPathsViz /></div>
+      <ContentBoundary article="prompt-reasoning" />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
@@ -40,12 +67,29 @@ export default function ChainOfThought() {
         </div>
       </div>
 
-      <div className="not-prose my-8"><VariantsViz /></div>
-
       <ExplainedFormula
         question="여러 reasoning path가 서로 다른 최종 답을 낼 때 self-consistency는 무엇을 계산할까요?"
         idea={<p>같은 question에서 K개의 path와 answer를 sampling한 뒤, answer y를 낸 sample 수를 합산해 가장 많이 지지된 값을 고릅니다. Reasoning 문장을 평균내는 것이 아니라 최종 answer에 대해 sample marginalization을 근사합니다.</p>}
         formula={String.raw`\hat y=\arg\max_{y}\sum_{k=1}^{K}\mathbf{1}\!\left[a_k=y\right]`}
+        annotatedFormula={String.raw`\begin{aligned}
+v_k(y)&=\underbrace{\mathbf 1[a_k=y]}_{\text{k번째 answer가 y이면 1}}\\[3pt]
+c(y)&=\underbrace{\sum_{k=1}^{K}v_k(y)}_{\text{K개 path의 표를 합산}}\\[3pt]
+\hat y&=\underbrace{\arg\max_y c(y)}_{\text{표가 가장 많은 answer 선택}}
+\end{aligned}`}
+        operations={[
+          {
+            expression: String.raw`\mathbf 1[a_k=y]`,
+            annotation: ["각 path의 answer가", "후보 y와 같은지 0 또는 1로 바꿉니다"],
+          },
+          {
+            expression: String.raw`\sum_{k=1}^{K}\mathbf 1[a_k=y]`,
+            annotation: ["K개 indicator를 더해", "후보 y의 표 수를 셉니다"],
+          },
+          {
+            expression: String.raw`\arg\max_y`,
+            annotation: ["후보별 표 수를 비교해", "가장 큰 answer를 선택합니다"],
+          },
+        ]}
         terms={[
           { symbol: "K", name: "sample count", description: "같은 question에서 서로 다른 decoding path를 생성한 횟수입니다." },
           { symbol: "a_k", name: "sampled answer", description: "k번째 reasoning path에서 추출한 최종 answer입니다." },
@@ -70,8 +114,6 @@ export default function ChainOfThought() {
           </CitationBlock>
         </div>
       </div>
-
-      <div className="not-prose my-8"><TheoryViz /></div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <div id="paper-cot-faithfulness" className="not-prose scroll-mt-24">

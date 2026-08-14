@@ -1,6 +1,8 @@
+import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
-import OverviewViz from "./viz/OverviewViz";
-import { PrinciplesViz, HistoryViz } from "./viz/OverviewDetailViz";
+import TermBreakdown from "@/components/articles/term-breakdown";
+import { CitationBlock } from "@/components/ui/citation";
+import { PromptContractViz } from "./viz/PromptContractViz";
 
 export default function Overview() {
   return (
@@ -17,17 +19,47 @@ export default function Overview() {
           <strong> Prompt engineering</strong>은 멋진 문구를 찾는 일이 아니라 이
           빈칸을 하나의 request contract로 만드는 작업입니다.
         </p>
+        <p>좋은 출발점은 여덟 칸을 다음 네 질문으로 묶는 것입니다.</p>
+        <ul>
+          <li><strong>누구를 위해 무엇을 바꾸나:</strong> objective와 audience</li>
+          <li><strong>무엇을 읽고 판단하나:</strong> input과 evidence</li>
+          <li><strong>어디서 멈추거나 거부하나:</strong> constraints와 abstention</li>
+          <li><strong>무엇을 내고 누가 통과시키나:</strong> output과 completion criteria</li>
+        </ul>
         <p>
-          좋은 출발점은 objective·audience·input·evidence·constraints·output·
-          abstention·completion criteria의 여덟 칸입니다. 예를 들어 상담원을 위한
-          고객 문의 요약이라면 원문만 evidence로 사용하고, issue·urgency·근거
-          인용을 output으로 요구하며, 근거가 없으면 추측 대신 unknown을 반환하게
-          합니다. 그다음 schema validator가 field와 type을 확인하고 인용 검사는
-          evidence에 실제 span이 있는지 확인합니다.
+          상담원용 고객 문의 요약이라면 원문만 evidence로 사용합니다. Output은
+          issue·urgency·근거 인용으로 나누고, 근거가 없으면 추측 대신 unknown을
+          반환합니다. Schema validator는 field와 type을, 인용 검사는 실제 span
+          존재를 판정합니다.
         </p>
       </div>
 
-      <div className="not-prose my-8"><OverviewViz /></div>
+      <TermBreakdown
+        title="한 번에 여덟 단어를 외우지 않고 세 역할부터 잡습니다"
+        description="각 역할이 왜 필요한지 이해한 뒤 아래 Viz에서 하나의 request envelope로 조립합니다."
+        items={[
+          {
+            term: "Objective",
+            description: "이번 요청으로 무엇이 달라져야 하는지 한 문장으로 적은 목표입니다.",
+            example: "고객 문의를 상담원이 30초 안에 파악할 수 있게 요약합니다.",
+            boundary: "'전문가처럼 잘 써라'는 persona이지 검증 가능한 objective가 아닙니다.",
+          },
+          {
+            term: "Evidence",
+            description: "답을 만들 때 근거로 사용할 수 있는 입력 자료의 범위입니다.",
+            example: "문의 원문에 실제로 있는 span만 인용하고 외부 추측은 unknown으로 둡니다.",
+            boundary: "Evidence 안의 문장은 분석 대상이지 상위 instruction이 아닙니다.",
+          },
+          {
+            term: "Completion contract",
+            description: "어떤 output을 누가 어떤 검사로 통과시킬지 정한 완료 기준입니다.",
+            example: "issue·urgency·evidence_quote field와 span 존재 검사를 함께 둡니다.",
+            boundary: "Schema 통과는 형식 판정이며 사실성·권한까지 자동으로 증명하지 않습니다.",
+          },
+        ]}
+      />
+
+      <div className="not-prose my-8"><PromptContractViz /></div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Instruction과 evidence를 같은 문장 덩어리에 섞지 않는다</h3>
@@ -42,8 +74,6 @@ export default function Overview() {
         </p>
       </div>
 
-      <div className="not-prose my-8"><PrinciplesViz /></div>
-
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Prompt는 model·context·decoder·validator 사이의 한 계층이다</h3>
         <p>
@@ -56,17 +86,43 @@ export default function Overview() {
         </p>
       </div>
 
-      <div className="not-prose my-8"><HistoryViz /></div>
-
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           따라서 prompt 변경의 완료 조건은 “한 번 보기 좋은 답이 나왔다”가
           아닙니다. 대표 case와 경계 case에서 task quality·constraint violation·
           latency·token cost를 비교하고, 실패 case를 다음 regression suite에
-          추가해야 합니다. 이 글의 뒤쪽에서는 reasoning, structured output,
-          demonstration과 evaluation을 이 계약의 서로 다른 부품으로 다룹니다.
+          추가해야 합니다. 이 계약을 이해한 뒤에는
+          <Link to="/ai/prompt-reasoning"> reasoning path와 verifier</Link>,
+          <Link to="/ai/prompt-few-shot"> few-shot demonstration</Link>,
+          <Link to="/ai/prompt-structured-output"> structured output validator</Link>를
+          각각 독립된 수업에서 한 층씩 쌓습니다.
         </p>
         <ContentBoundary article="prompt-engineering" />
+      </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <div id="paper-prompt-overview" className="not-prose scroll-mt-24">
+          <CitationBlock
+            source="Anthropic — Prompt engineering overview"
+            citeKey={1}
+            href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview"
+          >
+            현재 공식 overview는 prompt를 고치기 전에 success criteria와 empirical
+            test를 먼저 정의하라고 안내합니다. 이는 모든 provider의 보편 API
+            규격이 아니라 Claude prompt를 개선할 때의 현재 product guidance입니다.
+          </CitationBlock>
+        </div>
+        <div id="paper-prompt-best-practices" className="not-prose mt-6 scroll-mt-24">
+          <CitationBlock
+            source="Anthropic — Prompting best practices"
+            citeKey={2}
+            href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+          >
+            공식 best-practice 문서는 명시적인 instruction·example·output format과
+            model migration 차이를 설명합니다. 특정 model 세대의 동작을 다른
+            model·snapshot에 그대로 이식할 수 있다는 보장은 아닙니다.
+          </CitationBlock>
+        </div>
       </div>
     </section>
   );

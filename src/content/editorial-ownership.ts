@@ -3081,12 +3081,12 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "prompt-engineering": {
-    title: "Prompt engineering 글이 소유하는 범위",
+    title: "Prompt request contract 글이 소유하는 범위",
     owns: [
       "Objective·evidence·constraints·output·abstention·completion criteria의 request contract",
-      "Chain-of-thought elicitation·faithfulness 경계와 self-consistency estimator",
-      "Zero/few-shot·demonstration selection·ordering과 in-context learning의 사용 경계",
-      "Structured output 소비자 계약과 prompt·model·template·decoding regression loop",
+      "Instruction과 untrusted evidence의 역할 경계",
+      "Completion criteria와 validator 책임 연결",
+      "Prompt·model·template·decoding regression loop와 portability gate",
     ],
     reuses: [
       {
@@ -3095,13 +3095,13 @@ export const EDITORIAL_BOUNDARIES = {
       },
       {
         label: "CFG·token mask와 syntax/semantic validity",
-        href: "/ai/grammar-constrained-generation",
+        href: "/ai/prompt-structured-output",
       },
       {
-        label: "Fine-tuning과 response loss",
-        href: "/ai/supervised-fine-tuning",
+        label: "Reasoning path와 verifier",
+        href: "/ai/prompt-reasoning",
       },
-      { label: "XML delimiter의 구체적 작성법", href: "/ai/xml-prompting" },
+      { label: "Few-shot demonstration", href: "/ai/prompt-few-shot" },
     ],
     evidence: [
       {
@@ -3111,6 +3111,64 @@ export const EDITORIAL_BOUNDARIES = {
       {
         kind: "standard",
         rule: "Prompt instruction과 runtime authorization·schema validation·domain verification을 서로 대체 가능한 안전장치로 표현하지 않는다.",
+      },
+    ],
+  },
+  "prompt-reasoning": {
+    title: "Reasoning prompting 글이 소유하는 범위",
+    owns: [
+      "Chain-of-thought elicitation과 task 선택 경계",
+      "출력 reasoning과 causal faithfulness의 해석 경계",
+      "Self-consistency answer marginalization과 tie·correlated-error 비용",
+      "계산·검색·tool action별 external verifier 선택",
+    ],
+    reuses: [
+      { label: "Prompt request contract", href: "/ai/prompt-engineering" },
+      { label: "Few-shot worked demonstration", href: "/ai/prompt-few-shot" },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "CoT·self-consistency·faithfulness claim은 각 논문의 model·task·prompt·decoding과 intervention 범위로 제한한다.",
+      },
+    ],
+  },
+  "prompt-few-shot": {
+    title: "Few-shot prompting 글이 소유하는 범위",
+    owns: [
+      "Weight update 없는 in-context demonstration의 형태",
+      "Zero-shot·few-shot·fine-tuning 선택 경계",
+      "Demonstration selection·order·label prior 민감도",
+      "Request마다 반복되는 example token·prefill 비용 경계",
+    ],
+    reuses: [
+      { label: "Prompt request contract", href: "/ai/prompt-engineering" },
+      { label: "Fine-tuning과 response loss", href: "/ai/supervised-fine-tuning" },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "Few-shot와 calibration 결과는 해당 model·classification task·example·ordering 조건을 벗어나 일반화하지 않는다.",
+      },
+    ],
+  },
+  "prompt-structured-output": {
+    title: "Structured output 글이 소유하는 범위",
+    owns: [
+      "Consumer field·type·null·error를 정의하는 output contract",
+      "Parse→schema→domain validation ladder",
+      "Prompt-only·constrained decoding·post-hoc repair 선택 경계",
+      "Bounded retry·typed fallback·release measurement",
+    ],
+    reuses: [
+      { label: "Prompt request contract", href: "/ai/prompt-engineering" },
+      { label: "CFG·token mask 구현", href: "/ai/grammar-constrained-generation" },
+      { label: "XML output parsing", href: "/ai/xml-prompting#parsing" },
+    ],
+    evidence: [
+      {
+        kind: "standard",
+        rule: "Syntax·schema·domain validity를 구분하고 constrained decoding이 실제 ID·권한·사실성까지 보장한다고 표현하지 않는다.",
       },
     ],
   },

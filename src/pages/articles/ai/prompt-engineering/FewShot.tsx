@@ -1,6 +1,7 @@
 import { CitationBlock } from "@/components/ui/citation";
-import FewShotViz from "./viz/FewShotViz";
-import { DesignViz, ICLViz } from "./viz/FewShotDetailViz";
+import ContentBoundary from "@/components/articles/content-boundary";
+import TermBreakdown from "@/components/articles/term-breakdown";
+import { FewShotContextViz } from "./viz/FewShotContextViz";
 
 export default function FewShot() {
   return (
@@ -25,7 +26,33 @@ export default function FewShot() {
         </p>
       </div>
 
-      <div className="not-prose my-8"><FewShotViz /></div>
+      <TermBreakdown
+        title="예시를 넣기 전에 세 가지를 따로 봅니다"
+        description="Demonstration의 형태, 선택 민감도, 반복 비용을 이해한 뒤 하나의 request로 조합합니다."
+        items={[
+          {
+            term: "Demonstration",
+            description: "현재 context 안에 넣는 입력→출력 견본으로, model weight를 바꾸지 않습니다.",
+            example: "'broken'→negative와 'thanks'→positive 같은 실제 serialization의 예시입니다.",
+            boundary: "Context가 끝나면 사라지며 영구 학습이나 새로운 지식 저장이 아닙니다.",
+          },
+          {
+            term: "Selection · order sensitivity",
+            description: "어떤 예시를 고르고 어느 순서로 놓느냐에 따라 prediction이 달라지는 현상입니다.",
+            example: "같은 세 예시의 permutation 10개에서 class별 accuracy와 prediction variance를 비교합니다.",
+            boundary: "한 ordering의 최고 점수만 보고 task rule을 배웠다고 결론내리지 않습니다.",
+          },
+          {
+            term: "Context budget",
+            description: "매 request마다 demonstration token을 다시 prefill하는 반복 비용입니다.",
+            example: "예시 1,200 token을 10만 요청에 넣으면 품질뿐 아니라 TTFT·비용·cache reuse를 비교합니다.",
+            boundary: "높은 volume에서 오래 유지할 behavior라면 fine-tuning이나 별도 classifier가 더 나을 수 있습니다.",
+          },
+        ]}
+      />
+
+      <div className="not-prose my-8"><FewShotContextViz /></div>
+      <ContentBoundary article="prompt-few-shot" />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <div id="paper-gpt3-few-shot" className="not-prose scroll-mt-24">
@@ -37,8 +64,6 @@ export default function FewShot() {
           </CitationBlock>
         </div>
       </div>
-
-      <div className="not-prose my-8"><DesignViz /></div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Example order와 label prior를 흔들어 본다</h3>
@@ -58,8 +83,6 @@ export default function FewShot() {
           </CitationBlock>
         </div>
       </div>
-
-      <div className="not-prose my-8"><ICLViz /></div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>

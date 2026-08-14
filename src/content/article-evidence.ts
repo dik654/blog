@@ -2084,11 +2084,19 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "ai/prompt-engineering": [
     {
-      kind: "핵심 논문",
-      label: "Language Models are Few-Shot Learners",
-      href: "https://arxiv.org/abs/2005.14165",
-      note: "in-context learning과 few-shot prompting의 대표 출발점",
+      kind: "공식 문서",
+      label: "Anthropic — Prompt engineering overview",
+      href: "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview",
+      note: "Success criteria와 empirical test를 prompt tuning보다 먼저 두는 현재 공식 경계",
     },
+    {
+      kind: "공식 문서",
+      label: "Anthropic — Prompting best practices",
+      href: "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices",
+      note: "현재 Claude model의 명시적 instruction·example·format guidance와 migration 경계",
+    },
+  ],
+  "ai/prompt-reasoning": [
     {
       kind: "핵심 논문",
       label:
@@ -2104,15 +2112,37 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
     {
       kind: "핵심 논문",
+      label: "Language Models Don't Always Say What They Think",
+      href: "https://arxiv.org/abs/2305.04388",
+      note: "Bias intervention으로 Chain-of-Thought explanation의 faithfulness 한계를 측정",
+    },
+  ],
+  "ai/prompt-few-shot": [
+    {
+      kind: "핵심 논문",
+      label: "Language Models are Few-Shot Learners",
+      href: "https://arxiv.org/abs/2005.14165",
+      note: "in-context learning과 few-shot prompting의 대표 출발점",
+    },
+    {
+      kind: "핵심 논문",
       label: "Calibrate Before Use",
       href: "https://arxiv.org/abs/2102.09690",
       note: "Few-shot prompt format·example·ordering 민감도와 contextual calibration",
     },
+  ],
+  "ai/prompt-structured-output": [
     {
-      kind: "핵심 논문",
-      label: "Language Models Don't Always Say What They Think",
-      href: "https://arxiv.org/abs/2305.04388",
-      note: "Bias intervention으로 Chain-of-Thought explanation의 faithfulness 한계를 측정",
+      kind: "공식 규격",
+      label: "JSON Schema Draft 2020-12",
+      href: "https://json-schema.org/draft/2020-12",
+      note: "JSON document의 구조·type·validation vocabulary를 정의하는 규격 묶음",
+    },
+    {
+      kind: "공식 문서",
+      label: "Anthropic — Structured outputs",
+      href: "https://platform.claude.com/docs/en/build-with-claude/structured-outputs",
+      note: "JSON Schema 기반 constrained decoding의 현재 API·지원 subset·cache 경계",
     },
   ],
   "ai/xml-prompting": [

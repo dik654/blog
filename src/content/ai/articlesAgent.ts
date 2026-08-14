@@ -4,16 +4,51 @@ export const agentArticles: Article[] = [
   /* ── 1. 프롬프트 기초 ── */
   {
     slug: "prompt-engineering",
-    title: "프롬프트 엔지니어링: 패턴과 안티패턴",
+    title: "프롬프트 요청 계약: 목표·근거·검증·회귀 평가",
     subcategory: "ai-agents",
     sections: [
       { id: "overview", title: "요청의 조건과 출력 형식 설계하기" },
-      { id: "chain-of-thought", title: "Chain-of-Thought & 추론 유도" },
-      { id: "structured-output", title: "구조화된 출력" },
-      { id: "few-shot", title: "Few-shot 예시 설계" },
       { id: "anti-patterns", title: "안티패턴 & 트러블슈팅" },
     ],
     component: () => import("@/pages/articles/ai/prompt-engineering"),
+  },
+  {
+    slug: "prompt-reasoning",
+    title: "Reasoning prompting: CoT·Self-consistency·Verifier",
+    subcategory: "ai-agents",
+    sections: [
+      { id: "overview", title: "Reasoning·answer·verifier 경계" },
+      { id: "chain-of-thought", title: "Reasoning path와 외부 검증" },
+      { id: "paper-chain-of-thought", title: "Chain-of-Thought 원 논문" },
+      { id: "paper-self-consistency", title: "Self-consistency 원 논문" },
+      { id: "paper-cot-faithfulness", title: "Faithfulness 경계" },
+    ],
+    component: () => import("@/pages/articles/ai/prompt-reasoning"),
+  },
+  {
+    slug: "prompt-few-shot",
+    title: "Few-shot prompting: Demonstration·순서·Context 비용",
+    subcategory: "ai-agents",
+    sections: [
+      { id: "overview", title: "Demonstration 한 개의 형태" },
+      { id: "few-shot", title: "In-context demonstration의 형태" },
+      { id: "paper-gpt3-few-shot", title: "GPT-3 few-shot 원 논문" },
+      { id: "paper-calibrate-before-use", title: "순서·label bias 보정" },
+    ],
+    component: () => import("@/pages/articles/ai/prompt-few-shot"),
+  },
+  {
+    slug: "prompt-structured-output",
+    title: "Structured output: Parse·Schema·Domain·Fallback",
+    subcategory: "ai-agents",
+    sections: [
+      { id: "overview", title: "문자열에서 record로" },
+      { id: "structured-output", title: "Output record와 네 단계 validator" },
+      { id: "output-paths", title: "Prompt·constraint·repair 경로" },
+      { id: "output-measurement", title: "실패율·tail latency 측정" },
+      { id: "output-release", title: "Bounded fallback과 release" },
+    ],
+    component: () => import("@/pages/articles/ai/prompt-structured-output"),
   },
   {
     slug: "xml-prompting",

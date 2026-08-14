@@ -4545,7 +4545,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "In-context learning · demonstration",
     definition:
       "Model weight를 update하지 않고 현재 input context의 instruction과 example에서 task·label·format pattern을 조건부로 추론해 completion behavior를 바꾸는 사용 방식입니다.",
-    canonicalHref: "/ai/prompt-engineering#few-shot",
+    canonicalHref: "/ai/prompt-few-shot#few-shot",
   },
   "prompt-zero-few-shot-boundary": {
     id: "prompt-zero-few-shot-boundary",
@@ -4554,7 +4554,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Zero-shot · few-shot prompt boundary",
     definition:
       "자연어 instruction만 주는 zero-shot과 입력·출력 demonstration을 함께 주는 few-shot을 구분하고 example token cost·변경 속도·재현성·fine-tuning 필요성을 비교하는 선택 경계입니다.",
-    canonicalHref: "/ai/prompt-engineering#few-shot",
+    canonicalHref: "/ai/prompt-few-shot#few-shot",
   },
   "chain-of-thought-elicitation": {
     id: "chain-of-thought-elicitation",
@@ -4563,7 +4563,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Chain-of-thought elicitation",
     definition:
       "산술·상식·symbolic reasoning task에서 최종 answer 전에 intermediate reasoning sequence를 생성하도록 instruction이나 worked demonstration으로 유도하는 prompting 계열입니다.",
-    canonicalHref: "/ai/prompt-engineering#chain-of-thought",
+    canonicalHref: "/ai/prompt-reasoning#chain-of-thought",
   },
   "chain-of-thought-faithfulness-boundary": {
     id: "chain-of-thought-faithfulness-boundary",
@@ -4572,7 +4572,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Chain-of-thought faithfulness boundary",
     definition:
       "Model이 출력한 자연어 reasoning이 answer와 함께 생성된 explanation이지 실제 내부 계산의 완전한 causal trace나 truth certificate로 자동 인정되지 않는 해석 경계입니다.",
-    canonicalHref: "/ai/prompt-engineering#chain-of-thought",
+    canonicalHref: "/ai/prompt-reasoning#chain-of-thought",
   },
   "self-consistency-answer-marginalization": {
     id: "self-consistency-answer-marginalization",
@@ -4581,7 +4581,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Self-consistency answer marginalization",
     definition:
       "같은 question에서 여러 reasoning path와 answer를 sampling하고 answer별 sample frequency를 합산해 가장 많이 지지된 answer를 고르는 decoding estimator입니다.",
-    canonicalHref: "/ai/prompt-engineering#chain-of-thought",
+    canonicalHref: "/ai/prompt-reasoning#chain-of-thought",
   },
   "prompt-structured-output-contract": {
     id: "prompt-structured-output-contract",
@@ -4590,7 +4590,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Prompt structured-output contract",
     definition:
       "Downstream consumer에 맞춰 field·type·enum·null·additional property·error representation을 schema로 정하고 syntax validation과 domain semantic validation을 분리한 출력 계약입니다.",
-    canonicalHref: "/ai/prompt-engineering#structured-output",
+    canonicalHref: "/ai/prompt-structured-output#structured-output",
   },
   "demonstration-selection-order-sensitivity": {
     id: "demonstration-selection-order-sensitivity",
@@ -4599,7 +4599,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Demonstration selection · order sensitivity",
     definition:
       "Few-shot prediction이 example의 relevance·coverage·label balance·format뿐 아니라 ordering과 recency에 따라 바뀔 수 있어 permutation·subset·hard-boundary test가 필요한 민감도입니다.",
-    canonicalHref: "/ai/prompt-engineering#few-shot",
+    canonicalHref: "/ai/prompt-few-shot#few-shot",
   },
   "prompt-evaluation-regression-loop": {
     id: "prompt-evaluation-regression-loop",
@@ -4618,6 +4618,51 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     definition:
       "한 model·snapshot·chat template·decoding setting에서 잘 작동한 prompt가 다른 runtime에서도 같은 behavior를 보장하지 않으므로 versioned regression과 canary가 필요하다는 이식성 경계입니다.",
     canonicalHref: "/ai/prompt-engineering#anti-patterns",
+  },
+  "prompt-reasoning-verifier-boundary": {
+    id: "prompt-reasoning-verifier-boundary",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Reasoning path · external verifier boundary",
+    definition:
+      "Model이 생성한 intermediate reasoning과 최종 answer를 계산 test·source span·environment observation·runtime authorization 같은 외부 판정으로 다시 확인하는 책임 경계입니다.",
+    canonicalHref: "/ai/prompt-reasoning#chain-of-thought",
+  },
+  "few-shot-context-budget-boundary": {
+    id: "few-shot-context-budget-boundary",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Few-shot context budget boundary",
+    definition:
+      "Demonstration이 model weight가 아니라 매 request의 context에 들어가므로 example token·prefill latency·request volume·cache reuse와 장기 behavior 유지 비용을 함께 비교하는 선택 경계입니다.",
+    canonicalHref: "/ai/prompt-few-shot#few-shot",
+  },
+  "prompt-output-validation-ladder": {
+    id: "prompt-output-validation-ladder",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Prompt output validation ladder",
+    definition:
+      "Model text를 parse하고 JSON Schema로 구조를 검사한 뒤 실제 ID·상태·근거를 domain service가 판정하는 parse→schema→domain 단계형 검증 계약입니다.",
+    canonicalHref: "/ai/prompt-structured-output#structured-output",
+  },
+  "prompt-output-path-selection": {
+    id: "prompt-output-path-selection",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Prompt-only · constrained · repair path selection",
+    definition:
+      "Prompt-only generation, decoder-level constraint, post-hoc repair를 syntax failure·semantic validity·compile/cache 비용·p95 latency와 retry budget으로 비교하는 실행 경계입니다.",
+    canonicalHref: "/ai/prompt-structured-output#output-paths",
+  },
+  "prompt-output-bounded-repair": {
+    id: "prompt-output-bounded-repair",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Bounded repair · typed fallback",
+    definition:
+      "Invalid output의 원본과 실패 단계를 보존하고 제한된 repair 뒤에도 통과하지 못하면 typed unknown 또는 human review로 종료해 retry 폭주와 의미 변형을 막는 실패 계약입니다.",
+    canonicalHref: "/ai/prompt-structured-output#output-release",
   },
   "xml-prompt-delimiter-boundary": {
     id: "xml-prompt-delimiter-boundary",
@@ -23495,11 +23540,81 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
       "출력 reasoning의 자연스러움과 실제 answer correctness·causal faithfulness를 별도로 검증합니다.",
   },
   {
+    from: "chain-of-thought-elicitation",
+    to: "prompt-reasoning-verifier-boundary",
+    relation: "constrains",
+    reason:
+      "생성한 중간 reasoning은 task에 맞는 계산·source·environment verifier를 통과해야 최종 판정에 사용할 수 있습니다.",
+  },
+  {
+    from: "chain-of-thought-faithfulness-boundary",
+    to: "prompt-reasoning-verifier-boundary",
+    relation: "produces",
+    reason:
+      "자연어 explanation을 truth certificate로 보지 않는 경계에서 외부 verifier 책임을 도출합니다.",
+  },
+  {
+    from: "self-consistency-answer-marginalization",
+    to: "prompt-reasoning-verifier-boundary",
+    relation: "constrains",
+    reason:
+      "다수 answer도 correlated error를 공유할 수 있으므로 선택 결과를 별도 verifier가 확인합니다.",
+  },
+  {
+    from: "in-context-learning-demonstration",
+    to: "few-shot-context-budget-boundary",
+    relation: "produces",
+    reason:
+      "Demonstration이 매 request context에 포함되므로 example token과 prefill 비용이 반복됩니다.",
+  },
+  {
+    from: "prompt-zero-few-shot-boundary",
+    to: "few-shot-context-budget-boundary",
+    relation: "constrains",
+    reason:
+      "Zero-shot·few-shot·fine-tuning 선택에는 품질뿐 아니라 request volume과 지속 비용을 포함합니다.",
+  },
+  {
     from: "prompt-structured-output-contract",
     to: "syntactic-semantic-validity-boundary",
     relation: "extends",
     reason:
       "Prompt가 소비자 schema를 정의한 뒤 constrained decoding과 domain validator가 syntax·semantics를 나눠 강제합니다.",
+  },
+  {
+    from: "prompt-structured-output-contract",
+    to: "prompt-output-validation-ladder",
+    relation: "produces",
+    reason:
+      "Consumer schema에서 parse·schema·domain 판정의 서로 다른 책임과 실패 상태를 도출합니다.",
+  },
+  {
+    from: "syntactic-semantic-validity-boundary",
+    to: "prompt-output-validation-ladder",
+    relation: "prerequisite",
+    reason:
+      "문법·구조가 맞는 것과 실제 ID·근거가 유효한 것을 분리해야 validator 단계를 설계할 수 있습니다.",
+  },
+  {
+    from: "prompt-output-path-selection",
+    to: "prompt-output-validation-ladder",
+    relation: "constrains",
+    reason:
+      "Prompt-only·constrained·repair 중 어느 생성 경로를 쓰더라도 같은 validation ladder로 최종 결과를 비교합니다.",
+  },
+  {
+    from: "prompt-output-validation-ladder",
+    to: "prompt-output-bounded-repair",
+    relation: "produces",
+    reason:
+      "실패 단계를 식별한 뒤 원인별 제한된 repair와 typed fallback 종료 상태를 선택합니다.",
+  },
+  {
+    from: "prompt-output-bounded-repair",
+    to: "prompt-evaluation-regression-loop",
+    relation: "evaluates",
+    reason:
+      "최종 invalid·repair·fallback 비율과 p95 latency를 regression suite의 release metric으로 기록합니다.",
   },
   {
     from: "prompt-completion-verification-contract",
