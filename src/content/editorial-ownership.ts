@@ -6460,6 +6460,30 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [{ label: "CDD profile", href: "/isms-aml/aml-cdd-deep" }, { label: "FDS detector", href: "/isms-aml/aml-fds-deep" }, { label: "Incident evidence 원칙", href: "/isms-aml/isms-incident-response" }],
     evidence: [{ kind: "primary-source", rule: "국내 STR 요건·흐름·보존·비밀유지는 KoFIU 공식 안내와 2026-08-14 현행 법령에 귀속한다." }, { kind: "project-measurement", rule: "Narrative 누락·duplicate submit·unknown receipt·권한 노출·evidence loss를 failure fixture로 재생한다." }, { kind: "project-claim", rule: "Detector score·STR 제출을 거래 동결·고객 유죄·FIU 수사 착수로 확대하지 않는다." }],
   },
+  "aml-fds-deep": {
+    title: "FDS feature·alert·case·capacity 글이 소유하는 범위",
+    owns: ["Point-in-time transaction feature lineage와 rule/model/tag signal", "Alert→human case boundary, threshold capacity와 detector release gate"],
+    reuses: [{ label: "CDD profile", href: "/isms-aml/aml-cdd-deep" }, { label: "STR 판단", href: "/isms-aml/aml-str-reporting" }],
+    evidence: [{ kind: "primary-source", rule: "Monitoring·STR 원칙은 FATF·KoFIU 공식 자료와 2026-08-14 현행 법령에 귀속한다." }, { kind: "project-measurement", rule: "Event-time replay·holdout·queue·shadow canary를 같은 fixture에서 측정한다." }, { kind: "project-claim", rule: "Rule/model/tag score를 identity·범죄·STR·거래 effect로 확대하지 않는다." }],
+  },
+  "isms-audit-checklist": {
+    title: "ISMS scope·population·sample·finding·retest 글이 소유하는 범위",
+    owns: ["Service-dependency scope와 재현 가능한 population·sampling evidence", "Finding root cause·affected population과 independent remediation retest"],
+    reuses: [{ label: "ISMS scope·risk", href: "/isms-aml/isms-overview" }, { label: "운영 evidence", href: "/isms-aml/isms-practical-guide#audit-evidence" }],
+    evidence: [{ kind: "primary-source", rule: "국내 심사 확인사항은 KISA 안내서·적용 공지와 현행 법령에 귀속한다." }, { kind: "project-measurement", rule: "Population query·sample trace·negative retest와 rollback을 같은 기간에 재현한다." }, { kind: "project-claim", rule: "정책 문서·정상 표본·backup success log 하나를 operating effectiveness 전체로 확대하지 않는다." }],
+  },
+  "isms-privacy-lifecycle": {
+    title: "개인정보 purpose·retention·derivative deletion 글이 소유하는 범위",
+    owns: ["개인정보 목적·법적근거·보유시계와 legal-hold ledger", "Primary·파생물·backup restore의 deletion closure와 privacy release gate"],
+    reuses: [{ label: "Backup·restore", href: "/isms-aml/isms-backup-recovery" }, { label: "ISMS-P privacy evidence", href: "/isms-aml/isms-overview" }],
+    evidence: [{ kind: "primary-source", rule: "국내 보유·파기 의무는 2026-08-14 현행 개인정보 보호법·KISA 안내서에 귀속한다." }, { kind: "project-measurement", rule: "Deadline·legal hold·artifact deletion·restore resurrection을 fixed subjects로 재생한다." }, { kind: "project-claim", rule: "분리보관·암호화·가명처리·primary 404를 완전 파기로 확대하지 않는다." }],
+  },
+  "isms-privacy-policy": {
+    title: "개인정보 notice·choice·sharing·runtime parity 글이 소유하는 범위",
+    owns: ["Data inventory와 처리방침 notice·consent receipt의 version parity", "제3자/processor·cookie/SDK flow와 browser/backend release gate"],
+    reuses: [{ label: "개인정보 생명주기", href: "/isms-aml/isms-privacy-lifecycle" }, { label: "Access control", href: "/isms-aml/isms-access-control" }],
+    evidence: [{ kind: "primary-source", rule: "처리방침·행태정보 의무는 현행 개인정보 보호법·표준지침·개인정보위 자료에 귀속한다." }, { kind: "project-measurement", rule: "Accept·reject·withdraw·unknown SDK를 browser network와 backend receipt에서 paired 검사한다." }, { kind: "project-claim", rule: "처리방침 공개·동의 한 번·cookie 명칭을 모든 처리의 적법성으로 확대하지 않는다." }],
+  },
   "msm-gpu-impl": {
     title: "GPU MSM window·bucket·reduction 구현 글이 소유하는 범위",
     owns: ["Signed-window digit 작업표와 partial top-window 처리", "Bucket 충돌 ownership·running-sum reduction과 MSM kernel release gate"],
@@ -6579,6 +6603,54 @@ export const EDITORIAL_BOUNDARIES = {
     owns: ["EC proposal·finalized base·versioned power-table instance binding", "Certificate-chain catch-up과 finalized-prefix fork-choice fence"],
     reuses: [{ label: "Expected Consensus head", href: "/blockchain/expected-consensus" }, { label: "GPBFT quorum·phases", href: "/blockchain/gossipbft" }],
     evidence: [{ kind: "primary-source", rule: "F3 semantics는 FIP-0086, certificate exchange는 go-f3 v0.8.14, Lotus adapter는 v1.36.2에 각각 귀속한다." }, { kind: "project-measurement", rule: "Stale table·skipped instance·wrong network·F3 halt·conflicting heavy branch를 재생한다." }, { kind: "project-claim", rule: "EC progress나 latest certificate 한 장을 trusted finality·application release로 확대하지 않는다." }],
+  },
+  "narwhal-deep": {
+    title: "Narwhal worker·certificate DAG 글이 소유하는 범위",
+    owns: ["Worker payload와 primary header metadata 경계", "Header vote·certificate lifecycle과 causal payload retrieval·GC release"],
+    reuses: [{ label: "Generic certified DAG availability", href: "/blockchain/dag-consensus" }, { label: "Order·execution state separation", href: "/blockchain/consensus-comparison" }],
+    evidence: [{ kind: "primary-source", rule: "Protocol은 Narwhal/Tusk paper, 구현은 archived exact commit e67f915에 각각 귀속한다." }, { kind: "project-measurement", rule: "Wrong domain·missing parent·withheld payload·crash/GC를 certificate-to-execution trace로 재생한다." }, { kind: "project-claim", rule: "Availability certificate를 total order·execution·permanent retention으로 확대하지 않는다." }],
+  },
+  "bullshark-deep": {
+    title: "Bullshark wave·sub-DAG ordering 글이 소유하는 범위",
+    owns: ["Wave leader support와 reachable prior-leader recovery", "Duplicate-free deterministic sub-DAG flatten과 variant release"],
+    reuses: [{ label: "Narwhal certificate DAG", href: "/blockchain/narwhal-deep" }, { label: "Generic DAG anchor linearization", href: "/blockchain/dag-consensus" }],
+    evidence: [{ kind: "primary-source", rule: "Variants는 Bullshark paper, standalone behavior는 archived exact commit e67f915에 귀속한다." }, { kind: "project-measurement", rule: "Causal-link·arrival-order·partition·restart fixtures에서 output digest와 liveness를 분리 검사한다." }, { kind: "project-claim", rule: "Archived f+1 support를 모든 Bullshark variants나 current Sui 상수로 일반화하지 않는다." }],
+  },
+  "autobahn-deep": {
+    title: "Autobahn lane·cut·recovery 글이 소유하는 범위",
+    owns: ["Car PoA lane chain과 certified-tip cut zipper", "Prepare·Confirm fast/slow evidence, TC recovery와 backlog release"],
+    reuses: [{ label: "Partial synchrony", href: "/blockchain/bft-theory" }, { label: "Generic lane-cut recovery", href: "/blockchain/dag-consensus" }],
+    evidence: [{ kind: "primary-source", rule: "Threshold·safety·liveness·seamless 주장은 Autobahn 2401.10369의 model에 귀속한다." }, { kind: "project-measurement", rule: "PoA equivocation·view change·non-monotonic cuts·blip backlog를 payload와 execution까지 재생한다." }, { kind: "project-claim", rule: "PoA를 non-equivocation QC로, cut latency를 end-to-end zero hangover로 확대하지 않는다." }],
+  },
+  "mysticeti": {
+    title: "Mysticeti uncertified vote·decision prefix 글이 소유하는 범위",
+    owns: ["First-support vote와 direct·indirect slot decisions", "UniversalCommitter decided prefix, Sui sub-DAG·FPC release boundary"],
+    reuses: [{ label: "Generic parent-quorum overlap", href: "/blockchain/dag-consensus" }, { label: "Consensus safety·liveness", href: "/blockchain/bft-theory" }],
+    evidence: [{ kind: "primary-source", rule: "Protocol은 Mysticeti paper, current behavior는 Sui mainnet-v1.77.2 exact source에 귀속한다." }, { kind: "project-measurement", rule: "Equivocation·undecided barrier·partition/GST·restart와 feature config를 고정해 재생한다." }, { kind: "project-claim", rule: "Uncertified를 unvalidated로, FPC execution을 checkpoint finality로 표현하지 않는다." }],
+  },
+  "impl-field-arithmetic": {
+    title: "Rust field parameter·serialization·execution 글이 소유하는 범위",
+    owns: ["Versioned field parameter artifact와 canonical/internal serialization boundary", "Carry/reduction execution profile과 parity/codegen release gate"],
+    reuses: [{ label: "Prime field·Montgomery", href: "/crypto/field-arithmetic" }, { label: "Extension field implementation", href: "/crypto/extension-fields" }],
+    evidence: [{ kind: "primary-source", rule: "Implementation 사실은 arkworks algebra commit 6a28df5 source에 귀속한다." }, { kind: "project-measurement", rule: "Exact artifact/compiler/target에서 reference parity·boundary vectors·timing/RSS를 비교한다." }, { kind: "project-claim", rule: "Source-level branchless·microbenchmark를 production constant-time·proof speed로 확대하지 않는다." }],
+  },
+  "impl-elliptic-curve": {
+    title: "Rust curve profile·point admission·pairing release 글이 소유하는 범위",
+    owns: ["Curve/pairing profile artifact와 untrusted point admission", "Coordinate operation profile과 negative-vector pairing release gate"],
+    reuses: [{ label: "Elliptic-curve group", href: "/crypto/elliptic-curves" }, { label: "Field implementation", href: "/blockchain/impl-field-arithmetic" }],
+    evidence: [{ kind: "primary-source", rule: "BN254와 point operation facts는 arkworks commits e2d16a2·6a28df5에 귀속한다." }, { kind: "project-measurement", rule: "Official/reference vectors와 malformed/off-curve/subgroup failures 뒤 stage timings를 비교한다." }, { kind: "project-claim", rule: "On-curve·formula 이름·bilinearity 몇 건을 complete formula·security audit로 확대하지 않는다." }],
+  },
+  "impl-groth16": {
+    title: "Rust Groth16 artifact·prover plan·release 글이 소유하는 범위",
+    owns: ["Relation/witness/domain/key artifact profile과 setup-key admission", "Dependency-aware QAP/MSM execution과 independent-verifier release gate"],
+    reuses: [{ label: "Groth16 protocol", href: "/crypto/groth16" }, { label: "R1CS", href: "/crypto/r1cs" }],
+    evidence: [{ kind: "primary-source", rule: "Protocol은 ePrint 2016/260, Rust layout/prover는 ark-groth16 commit 8f0904a에 귀속한다." }, { kind: "project-measurement", rule: "Same circuit/key/witness에서 negative fixtures·independent verification 뒤 stage/end-to-end·RSS를 측정한다." }, { kind: "project-claim", rule: "Deserialize·proof 생성·MSM speed를 setup provenance·valid proof·end-to-end improvement로 확대하지 않는다." }],
+  },
+  "rapidsnark-gpu": {
+    title: "rapidsnark CPU 사실·proposed GPU adapter 글이 소유하는 범위",
+    owns: ["Pinned WTNS/zkey admission과 current CPU prover stage map", "별도 GPU NTT/MSM adapter boundary와 hybrid fallback/release gate"],
+    reuses: [{ label: "Groth16 implementation", href: "/blockchain/impl-groth16" }, { label: "GPU proof pipeline", href: "/gpu/gpu-proof-pipeline" }, { label: "CUDA timing", href: "/gpu/cuda-basics" }],
+    evidence: [{ kind: "primary-source", rule: "Current behavior는 iden3 rapidsnark commit 81eddf1 source에 귀속하며 CUDA backend가 없음을 명시한다." }, { kind: "project-measurement", rule: "Same WTNS/zkey에서 CPU/GPU stage parity·independent verify 뒤 transfer/queue/kernel/sync/end-to-end를 비교한다." }, { kind: "project-claim", rule: "GPU adapter는 desired hardening이며 current rapidsnark feature·fixed speedup으로 표현하지 않는다." }],
   },
 } as const satisfies Record<string, EditorialBoundary>;
 

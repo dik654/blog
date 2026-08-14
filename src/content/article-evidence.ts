@@ -4732,6 +4732,22 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 규격", label: "RFC 9334 · RATS Architecture", href: "https://www.rfc-editor.org/rfc/rfc9334.html", note: "Attester·Verifier·Relying Party와 evidence·result·appraisal·freshness의 vendor-neutral 정본" },
     { kind: "공식 규격", label: "AMD SEV-SNP Firmware ABI Specification 1.58", href: "https://docs.amd.com/v/u/en-US/56860_PUB_1.58_SEV_SNP", note: "SNP attestation report request·field·signature interface의 vendor 정본" },
   ],
+  "crypto/circom": [
+    { kind: "핵심 논문", label: "Circom: A Circuit Description Language", href: "https://eprint.iacr.org/2020/1003.pdf", note: "Template·signal·constraint compiler design의 primary paper" },
+    { kind: "공식 코드", label: "iden3/circom @ a100fae", href: "https://github.com/iden3/circom/tree/a100faedb1c62d4d3e1463f8a3f88342d82351cd", note: "Compiler·artifact·tests의 pinned official source" },
+  ],
+  "crypto/jolt": [
+    { kind: "핵심 논문", label: "Jolt: SNARKs for Virtual Machines via Lookups", href: "https://eprint.iacr.org/2023/1217.pdf", note: "Lookup-based zkVM arithmetization의 primary paper" },
+    { kind: "공식 코드", label: "a16z/jolt @ 915faf4", href: "https://github.com/a16z/jolt/tree/915faf453f36871249615a7fdf2704d77a88f259", note: "Rust implementation·tests의 pinned official source" },
+  ],
+  "crypto/libiop": [
+    { kind: "핵심 논문", label: "Aurora: Transparent Succinct Arguments for R1CS", href: "https://eprint.iacr.org/2018/828.pdf", note: "R1CS-to-IOP reduction과 transparent argument의 primary paper" },
+    { kind: "공식 코드", label: "scipr-lab/libiop @ a2ed2ec", href: "https://github.com/scipr-lab/libiop/tree/a2ed2ec2f3e85f29b6035951553b02cb737c817a", note: "IOP·BCS components의 pinned research source" },
+  ],
+  "crypto/plonky3": [
+    { kind: "핵심 논문", label: "Scalable, transparent, and post-quantum secure computational integrity", href: "https://eprint.iacr.org/2018/046.pdf", note: "AIR·FRI·hash-based STARK pipeline의 primary paper" },
+    { kind: "공식 코드", label: "Plonky3/Plonky3 @ f5b7977", href: "https://github.com/Plonky3/Plonky3/tree/f5b7977e5c89adc8375b5c63a5a5092985b1f603", note: "Generic config·proof pipeline의 pinned official source" },
+  ],
   "crypto/extension-field-theory": [{ kind:"핵심 논문", label:"Lidl & Niederreiter · Finite Fields", href:"https://doi.org/10.1017/CBO9780511525926", note:"Minimal polynomial·tower·Frobenius의 수학적 정본" }],
   "crypto/pairing": [{ kind:"핵심 논문", label:"Miller · Weil Pairing", href:"https://crypto.stanford.edu/miller/miller.pdf", note:"Miller function recurrence 원 연구" },{ kind:"핵심 논문", label:"Hess et al. · Eta Pairing Revisited", href:"https://eprint.iacr.org/2006/110.pdf", note:"Ate-family pairing construction" }],
   "blockchain/vdf": [{ kind:"핵심 논문", label:"Boneh et al. · VDF", href:"https://eprint.iacr.org/2018/601.pdf", note:"VDF definitions and constructions" },{ kind:"핵심 논문", label:"Wesolowski · Efficient VDF", href:"https://eprint.iacr.org/2018/623.pdf", note:"Quotient proof construction" }],
@@ -4993,6 +5009,23 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 문서", label: "KoFIU 의심거래보고(STR)", href: "https://www.kofiu.go.kr/kor/policy/amls03.do", note: "합리적 의심·보고 정보와 KoFIU 처리 흐름의 공식 안내이며 신고가 동결·유죄·수사 착수를 자동 의미하지 않음" },
     { kind: "공식 문서", label: "KoFIU 특정금융정보법 등 현행 법령", href: "https://www.kofiu.go.kr/kor/law/law.do", note: "보고·보존·비밀유지의 current legal source 진입점이며 기관·사건별 적용은 별도 법률 검토가 필요" },
   ],
+  "isms-aml/aml-fds-deep": [
+    { kind: "공식 가이드", label: "FATF Updated Guidance for VA and VASPs", href: "https://www.fatf-gafi.org/content/dam/fatf/documents/recommendations/Updated-Guidance-VA-VASP.pdf", note: "Ongoing monitoring·automated alert 뒤 expert analysis·rule integrity 원칙이며 특정 detector·tag·cutoff를 승인하지 않음" },
+    { kind: "공식 문서", label: "KoFIU 의심거래보고제도", href: "https://kofiu.go.kr/kor/policy/amls03.do", note: "합리적 의심과 STR 공식 경계이며 alert·case·거래 동결·유죄를 동일시하지 않음" },
+  ],
+  "isms-aml/isms-audit-checklist": [
+    { kind: "공식 가이드", label: "KISA ISMS-P 인증기준 안내서 2023.11", href: "https://pims.kisa.or.kr/board/file/bbs_0000000000000014/21/FILE_000000000001002/202311231554317701147901071.pdf", note: "확인사항·증거자료·결함사례의 공식 해설이며 한 표본·문서 목록이 인증을 보장하지 않음" },
+    { kind: "공식 문서", label: "KISA ISMS-P 공식 자료실", href: "https://pims.kisa.or.kr/", note: "최신 세부점검항목·적용 공지의 공식 진입점이며 신청·심사일의 적용본 재확인 필요" },
+  ],
+  "isms-aml/isms-privacy-lifecycle": [
+    { kind: "공식 문서", label: "개인정보 보호법", href: "https://www.law.go.kr/법령/개인정보보호법", note: "2026-08-14 현행 처리·보유·파기 상위 법률이며 30일 예시는 법정 공통 기간이 아님" },
+    { kind: "공식 가이드", label: "KISA ISMS-P 인증기준 안내서 2023.11", href: "https://pims.kisa.or.kr/board/file/bbs_0000000000000014/21/FILE_000000000001002/202311231554317701147901071.pdf", note: "보유·파기·분리보관 확인사항이며 DB delete 한 건이 파생물·backup 삭제를 증명하지 않음" },
+  ],
+  "isms-aml/isms-privacy-policy": [
+    { kind: "공식 문서", label: "개인정보 보호법", href: "https://www.law.go.kr/법령/개인정보보호법", note: "처리방침·처리근거·제공·위탁·권리의 현행 상위 법률" },
+    { kind: "공식 문서", label: "표준 개인정보 보호지침", href: "https://www.law.go.kr/LSW/admRulInfoP.do?admRulSeq=2100000257592&chrClsCd=010201", note: "구체적·명확한 처리방침 작성 일반 기준이며 예시 복사가 runtime parity를 증명하지 않음" },
+    { kind: "공식 문서", label: "개인정보위 맞춤형 광고 행태정보 정책 방안", href: "https://www.pipc.go.kr/np/cop/bbs/selectBoardArticle.do?bbsId=BS074&mCode=C020010000&nttId=9888", note: "행태정보 고지·적법한 수집·거부 경계이며 후속 guidance와 current flow 재확인 필요" },
+  ],
   "gpu/msm-gpu-impl": [
     { kind: "공식 코드", label: "sppark MSM · commit 17278d7", href: "https://github.com/supranational/sppark/blob/17278d74295392f9813f009300b257a688422b7a/msm/pippenger.cuh", note: "Signed digit breakdown·bucket accumulation·integration의 pinned source이며 고정 point-op count·speedup은 아님" },
     { kind: "공식 코드", label: "sppark custom sort · commit 17278d7", href: "https://github.com/supranational/sppark/blob/17278d74295392f9813f009300b257a688422b7a/msm/sort.cuh", note: "Digit/index grouping 구현이며 모든 GPU MSM의 보편 필수·최적 전략은 아님" },
@@ -5079,5 +5112,41 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 규격", label: "FIP-0086 GossiPBFT · revision c856d99", href: "https://github.com/filecoin-project/FIPs/blob/c856d99b126cb52a0436c4838da55ec84495cfa7/FIPS/fip-0086.md", note: "Weighted phases·best-effort broadcast·partial-synchrony properties의 Final 규격이며 Gossipsub exactly-once 보장은 아님" },
     { kind: "공식 코드", label: "go-f3 v0.8.14 gpbft.go", href: "https://github.com/filecoin-project/go-f3/blob/v0.8.14/gpbft/gpbft.go", note: "QUALITY·CONVERGE·PREPARE·COMMIT·DECIDE와 timeout state의 pinned 구현이며 EC validity는 별도" },
     { kind: "공식 코드", label: "go-f3 v0.8.14 quorum validation", href: "https://github.com/filecoin-project/go-f3/tree/v0.8.14/gpbft", note: "Historical weighted quorum·message validation의 pinned source이며 certificate catch-up 전체는 아님" },
+  ],
+  "blockchain/narwhal-deep": [
+    { kind: "핵심 논문", label: "Narwhal and Tusk · arXiv 2105.11827", href: "https://arxiv.org/abs/2105.11827", note: "Worker/primary 분리와 availability-certificate DAG의 원문이며 논문 TPS·latency를 current Sui 값으로 일반화하지 않음" },
+    { kind: "공식 코드", label: "Archived Narwhal primary types · commit e67f915", href: "https://github.com/MystenLabs/narwhal/blob/e67f91530e6bd4ef7808e42f548f07e58764ec5b/types/src/primary.rs", note: "Header·vote·certificate validation의 pinned historical source이며 maintained current Sui consensus는 아님" },
+    { kind: "공식 코드", label: "Archived Narwhal worker · commit e67f915", href: "https://github.com/MystenLabs/narwhal/tree/e67f91530e6bd4ef7808e42f548f07e58764ec5b/worker/src", note: "Batch dissemination·retrieval implementation이며 permanent retention·total order·execution receipt를 보장하지 않음" },
+  ],
+  "blockchain/bullshark-deep": [
+    { kind: "핵심 논문", label: "Bullshark · arXiv 2201.05677", href: "https://arxiv.org/abs/2201.05677", note: "Wave·leader DAG ordering variants의 원문이며 partial-synchrony와 asynchronous-coin 전제를 서로 바꾸어 쓰지 않음" },
+    { kind: "공식 코드", label: "Archived Bullshark · commit e67f915", href: "https://github.com/MystenLabs/narwhal/blob/e67f91530e6bd4ef7808e42f548f07e58764ec5b/consensus/src/bullshark.rs", note: "Even-round leader·f+1 support의 historical standalone 구현이며 current Sui 또는 모든 paper variant는 아님" },
+    { kind: "공식 코드", label: "Archived Bullshark ordering utils · commit e67f915", href: "https://github.com/MystenLabs/narwhal/blob/e67f91530e6bd4ef7808e42f548f07e58764ec5b/consensus/src/utils.rs", note: "Sub-DAG traversal·ordering의 pinned source이며 transaction fairness·application success는 별도" },
+  ],
+  "blockchain/autobahn-deep": [
+    { kind: "핵심 논문", label: "Autobahn · arXiv 2401.10369", href: "https://arxiv.org/abs/2401.10369", note: "Chained lanes·cut consensus·view change의 primary paper이며 legacy fixed timeout·BLS·TPS를 보편값으로 주장하지 않음" },
+    { kind: "핵심 논문", label: "Autobahn §5.1 Lanes and Cars", href: "https://arxiv.org/pdf/2401.10369#page=9", note: "f+1 PoA와 tip semantics의 근거이며 PoA를 non-equivocation QC·total order로 확대하지 않음" },
+    { kind: "핵심 논문", label: "Autobahn §5.2–5.4 consensus", href: "https://arxiv.org/pdf/2401.10369#page=12", note: "Prepare·Confirm·all-node fast path·TC recovery 근거이며 cut commit이 payload sync·execution 완료를 뜻하지 않음" },
+  ],
+  "blockchain/mysticeti": [
+    { kind: "핵심 논문", label: "Mysticeti · arXiv 2310.14821", href: "https://arxiv.org/abs/2310.14821", note: "Uncertified DAG·direct/indirect decisions·FPC 원문이며 paper 성능과 options를 current deployment 상수로 일반화하지 않음" },
+    { kind: "공식 코드", label: "Sui mainnet-v1.77.2 BaseCommitter", href: "https://github.com/MystenLabs/sui/blob/mainnet-v1.77.2/consensus/core/src/base_committer.rs", note: "Exact tag commit 51d177a의 leader-decision source이며 future ProtocolConfig를 고정하지 않음" },
+    { kind: "공식 코드", label: "Sui mainnet-v1.77.2 consensus core", href: "https://github.com/MystenLabs/sui/tree/mainnet-v1.77.2/consensus/core/src", note: "UniversalCommitter·Linearizer·transaction vote tracking의 pinned source이며 application checkpoint durability는 별도" },
+  ],
+  "blockchain/impl-field-arithmetic": [
+    { kind: "공식 코드", label: "arkworks algebra prime-field model · commit 6a28df5", href: "https://github.com/arkworks-rs/algebra/tree/6a28df57ddf1f0cb9735ec22d6e9e7f8785980b5/ff/src/fields/models/fp", note: "Prime-field configuration과 big-integer implementation의 pinned source이며 custom constants·side-channel audit 보장은 아님" },
+    { kind: "공식 코드", label: "arkworks canonical serialization · commit 6a28df5", href: "https://github.com/arkworks-rs/algebra/blob/6a28df57ddf1f0cb9735ec22d6e9e7f8785980b5/serialize/src/lib.rs", note: "Serialization·validation trait boundary이며 concrete field range와 cross-language parity는 별도" },
+  ],
+  "blockchain/impl-elliptic-curve": [
+    { kind: "공식 코드", label: "arkworks BN254 parameters · commit e2d16a2", href: "https://github.com/arkworks-rs/curves/tree/e2d16a27e2cfa9f972ae9772df827a22730011b4/bn254", note: "BN254 fields·G1/G2·pairing configuration의 pinned source이며 다른 curve/profile 보장은 아님" },
+    { kind: "공식 코드", label: "arkworks short-Weierstrass model · commit 6a28df5", href: "https://github.com/arkworks-rs/algebra/tree/6a28df57ddf1f0cb9735ec22d6e9e7f8785980b5/ec/src/models/short_weierstrass", note: "Affine/projective types와 operation source이며 모든 formula completeness·constant-time 보장은 아님" },
+  ],
+  "blockchain/impl-groth16": [
+    { kind: "핵심 논문", label: "Groth16 · ePrint 2016/260", href: "https://eprint.iacr.org/2016/260", note: "Relation-specific CRS와 3-element proof construction의 원문이며 Rust artifact/ceremony 운영 보장은 아님" },
+    { kind: "공식 코드", label: "arkworks Groth16 data/prover · commit 8f0904a", href: "https://github.com/arkworks-rs/groth16/tree/8f0904a7d7a2c8945bf770bdd3c2081e0be1941a/src", note: "Pinned key/proof structures와 prover path이며 production readiness·fixed speed 보장은 아님" },
+  ],
+  "gpu/rapidsnark-gpu": [
+    { kind: "공식 코드", label: "iden3 rapidsnark · commit 81eddf1", href: "https://github.com/iden3/rapidsnark/tree/81eddf1a536d26497b237c0b8a04fe90baf7e439", note: "Current C++·Intel/ARM CPU prover와 WTNS/zkey stage source이며 GPU backend 근거는 아님" },
+    { kind: "공식 문서", label: "NVIDIA CUDA C++ Best Practices · Timing", href: "https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#timing", note: "Async CUDA timing과 synchronization 방법이며 rapidsnark GPU implementation·speedup 보장은 아님" },
   ],
 };

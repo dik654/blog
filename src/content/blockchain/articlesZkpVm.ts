@@ -3,14 +3,13 @@ import type { Article } from "../types";
 export const zkpVmArticles: Article[] = [
   {
     slug: "circom",
-    title: "Circom: zkSNARK 산술 회로 DSL (R1CS + snarkjs)",
+    title: "Circom: signal·R1CS lowering과 reproducible artifact",
     subcategory: "zkp-groth16-impl",
     sections: [
-      { id: "overview", title: "개요 & 컴파일 파이프라인" },
-      { id: "template-signal", title: "템플릿 & 시그널" },
-      { id: "r1cs-gen", title: "R1CS 제약 생성" },
-      { id: "snarkjs", title: "snarkjs 통합" },
-      { id: "examples", title: "실전 회로 예제" },
+      { id: "overview", title: "3·4=12에서 compiler pipeline까지" },
+      { id: "lowering", title: "Signal·witness·constraint lowering" },
+      { id: "artifacts", title: "R1CS·witness·public layout artifact" },
+      { id: "release", title: "snarkjs release·rollback gate" },
     ],
     component: () => import("@/pages/articles/blockchain/circom"),
   },
@@ -71,11 +70,13 @@ export const zkpVmArticles: Article[] = [
   },
   {
     slug: "jolt",
-    title: "Jolt: Lasso 룩업 기반 RISC-V zkVM (a16z)",
+    title: "Jolt: instruction lookup·sumcheck lowering과 proof receipt",
     subcategory: "zkp-vm",
     sections: [
-      { id: "overview", title: "개요 & Jolt 아키텍처" },
-      { id: "sumcheck", title: "Spartan Sumcheck & 증명 파이프라인" },
+      { id: "overview", title: "ADD instruction에서 zkVM claim까지" },
+      { id: "lookup-sumcheck", title: "Lookup·MLE·sumcheck lowering" },
+      { id: "artifact", title: "Bytecode·trace·claim artifact" },
+      { id: "release", title: "Interpreter parity·release gate" },
     ],
     component: () => import("@/pages/articles/blockchain/jolt"),
   },
