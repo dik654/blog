@@ -2,6 +2,7 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ModernRwaViz from "./viz/ModernRwaViz";
+import PermissionedMarketStackViz from "./viz/PermissionedMarketStackViz";
 
 export default function ModernRwaCompositionArticle() {
   return (
@@ -183,10 +184,18 @@ export default function ModernRwaCompositionArticle() {
           </CitationBlock>
         </div>
       </section>
+      <section id="permissioned-market-stack" className="space-y-6">
+        <header><p className="text-sm font-semibold text-primary">03 · Permissioned market stack</p><h2 className="mt-2 text-2xl font-bold">AMM·compliance·법적 권리·settlement는 한 transaction 안에서도 서로 다른 책임 층이다</h2></header>
+        <p><strong>Tokenized security</strong>는 가격을 추종하는 synthetic token과 다릅니다. Token balance가 배당·이자·상환·의결권 또는 ownership claim을 나타내려면 issuer 문서와 authoritative legal registry가 그 관계를 만들어야 합니다. Permissioned Pool은 그 법적 관계를 생성하지 않고, 이미 정의된 eligibility policy를 거래·LP action에 집행합니다.</p>
+        <PermissionedMarketStackViz />
+        <p><strong>Delivery versus Payment(DvP)</strong>는 asset leg와 cash leg가 함께 성공하거나 함께 실패하도록 결제하는 원칙입니다. Smart contract는 두 token transfers를 atomic하게 만들 수 있지만, offchain cash·custody·legal register가 섞이면 그 외부 receipts와 finality를 다시 reconcile해야 합니다.</p>
+        <ExplainedFormula question="Onchain DvP가 완료됐다고 부르려면 어떤 두 leg가 함께 끝나야 하나요?" idea="같은 settlement identifier에서 cash debit과 security credit이 둘 다 성공하고, 한쪽만 남는 partial outcome을 허용하지 않습니다." formula={String.raw`\begin{aligned}C(s)&=\underbrace{[D_{cash}(s)=1]}_{\text{payment leg 최종 반영}}\\A(s)&=\underbrace{[D_{asset}(s)=1]}_{\text{security leg 최종 반영}}\\DvP(s)&=\underbrace{C(s)\land A(s)}_{\text{같은 settlement에서 둘 다 완료}}\end{aligned}`} terms={[{symbol:"s",name:"Settlement identity",description:"Order·pool·parties·amounts·chain/ledger cutoff를 묶은 ID입니다."},{symbol:"D_cash",name:"Cash-leg receipt",description:"구매 대금 이전의 final outcome입니다."},{symbol:"D_asset",name:"Asset-leg receipt",description:"Tokenized security 이전의 final outcome입니다."},{symbol:"DvP",name:"Delivery-versus-payment verdict",description:"두 leg가 동일 identity에서 함께 완료됐는지 나타냅니다."}]} assumptions={["두 receipts가 같은 parties·amount·cutoff·finality profile을 참조합니다.","Token transfer가 legal registry의 ownership update와 같다는 보장은 별도입니다.","Oracle valuation·KYC·issuer solvency·redemption은 DvP 밖의 경계입니다.","Offchain leg가 있으면 atomic smart-contract execution만으로 완료라 부르지 않습니다."]} interpretation="USDC debit만 1이고 security token credit이 0이면 DvP=0입니다. 둘 다 onchain 성공해도 법적 원장이 authoritative하다면 registry receipt까지 기다립니다." />
+        <p>장기 stack은 issuer·KYC provider·custodian·transfer agent가 사라지는 구조가 아니라 역할이 더 명시적으로 연결되는 구조입니다. Uniswap V4의 <a className="text-primary underline" href="/blockchain/uniswap-v4#permissioned-pools">Permissioned Pools</a>는 trading·liquidity·atomic settlement 층을 제공합니다. Issuance·legal claim·corporate actions·redemption은 각 owner가 계속 책임집니다.</p>
+      </section>
       <section id="rwa-release" className="space-y-6">
         <header>
           <p className="text-sm font-semibold text-primary">
-            03 · release gate
+            04 · release gate
           </p>
           <h2 className="mt-2 text-2xl font-bold">
             Legal opinion·asset ledger·token supply·cash ledger를 같은

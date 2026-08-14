@@ -172,6 +172,18 @@ export const ethereum2Articles: Article[] = [
     component: () => import("@/pages/articles/blockchain/kohaku-provider"),
   },
   {
+    slug: "webcat-frontend-integrity",
+    title: "WEBCAT: 서명 manifest와 frontend code transparency",
+    subcategory: "eth-privacy",
+    sections: [
+      { id: "overview", title: "HTTPS 뒤의 frontend integrity gap" },
+      { id: "signed-manifest", title: "서명 manifest와 재현 가능한 build" },
+      { id: "local-verification", title: "Browser local verification" },
+      { id: "transparency-release", title: "Transparency log·alpha 경계" },
+    ],
+    component: () => import("@/pages/articles/blockchain/webcat-frontend-integrity"),
+  },
+  {
     slug: "pq-account",
     title: "Post-Quantum Account Abstraction",
     subcategory: "eth-privacy",
@@ -182,5 +194,17 @@ export const ethereum2Articles: Article[] = [
       { id: "migration-release", title: "Hybrid migration release gate" },
     ],
     component: () => import("@/pages/articles/blockchain/pq-account"),
+  },
+  {
+    slug: "ethereum-future-roadmap",
+    title: "Ethereum 미래 로드맵: PQ·ZK·formal verification",
+    subcategory: "eth-privacy",
+    sections: [
+      { id: "overview", title: "로드맵 maturity부터 읽기" },
+      { id: "pq-surfaces", title: "Post-Quantum 전환의 네 표면" },
+      { id: "proving-execution", title: "Proving·native rollup·leanISA" },
+      { id: "formal-simplification", title: "AI-assisted formal verification" },
+    ],
+    component: () => import("@/pages/articles/blockchain/ethereum-future-roadmap"),
   },
 ];

@@ -15,6 +15,14 @@
 - [x] 모든 새 concept가 정확히 한 canonical article에서만 정의되고 `canonicalHref`의 article과 owner가 일치하는지 검사하는 전역 감사
 - [x] 기초과학 concept의 관측량·단위/차원·모델 전제·측정 예·한계와 물리 좌표계 누락을 막는 `scientificGrounding` 감사
 
+### 2026-08-15 · WEBCAT · Ethereum future roadmap · binary-field proving · permissioned RWA markets
+
+- [x] WEBCAT을 HTTPS·SRI·CSP와 구분하고 signed manifest → transparency log → browser local verification의 정의·형태·실패 경계를 새 정본 글과 자동 재생 Viz로 설명
+- [x] Ethereum future roadmap을 post-quantum·privacy/verifiability·native rollup·spec simplification 축으로 나누고 현재 배포/채택 검토/연구 방향/실험 결과 상태로 표시
+- [x] Poseidon의 ZK-friendly primitive 선택과 Binius/Flock의 conventional-hash-friendly proving 전환을 binary field 선수 개념·reduced/full-round security margin·조건부 benchmark 경계와 함께 연결
+- [x] Uniswap v4 Permissioned Pools의 adapter·hook·position manager·router를 정의부터 쌓고 RWA legal claim·DvP·issuer allowlist 책임과 연결
+- [x] 신규 3 route 각 기초6+심화4 역검사, graph/evidence/editorial 정합성 완료. Global learning 389/389, graph 2,299 concepts·3,364 relations·invariant 0, selected article/Viz, route tests, tsc·production build·diff-check 통과. Playwright 6 routes×390/1440에서 page·Viz·KaTeX overflow 0, console error/warning 0이며 자동 장면 전환과 모바일 다단 주석 수식을 육안 확인
+
 ### 2026-08-15 · CUDA fusion·Megakernel 바닥 지식 보강
 
 - [x] `/gpu/cuda-perf-analysis`에 kernel launch·HBM 중간값에서 시작해 register live range·spill·occupancy를 먼저 설명하고 작은 fusion과 Megakernel을 구분

@@ -6904,6 +6904,24 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [{ label: "CometBFT proposal·finalize semantics", href: "/blockchain/cometbft-abci" }, { label: "Engine API method·status lifecycle", href: "/blockchain/node-architecture#payload-state" }, { label: "Client effect boundary", href: "/blockchain/consensus-comparison#smr" }],
     evidence: [{ kind: "primary-source", rule: "Octane·Halo·Engine adapter facts는 Omni commit 9864f25와 그 go.mod dependencies에만 귀속한다." }, { kind: "standard", rule: "Engine method·schema·status 의미는 표시한 execution-apis snapshot과 active fork/capability에 귀속한다." }, { kind: "project-measurement", rule: "같은 height·payload·client generation에서 build/status/commit/FCU와 observed·committed·failed event branches를 대조한다." }, { kind: "project-claim", rule: "README goal·payload VALID·CometBFT commit·event branch 한 항목을 all-client compatibility·production readiness·cross-chain success로 확대하지 않는다." }],
   },
+  "webcat-frontend-integrity": {
+    title: "WEBCAT frontend integrity ownership",
+    owns: ["HTTPS 뒤 first-party frontend code integrity gap", "Signed manifest·local verification·transparency enrollment과 alpha release boundary"],
+    reuses: [{ label: "Hash input·security contract", href: "/crypto/hash-theory#input-security" }],
+    evidence: [{ kind: "primary-source", rule: "Architecture는 WEBCAT concepts/FAQ, maturity는 SecureDrop 2026 alpha 발표에 귀속한다." }, { kind: "project-claim", rule: "Manifest 검증을 code correctness·developer honesty·모든 browser 지원으로 확대하지 않는다." }],
+  },
+  "binary-field-proving": {
+    title: "Binary-field proving ownership",
+    owns: ["F₂·binary tower와 Boolean arithmetization fit", "Binius·Flock를 통한 conventional-hash-friendly proving 선택 경계"],
+    reuses: [{ label: "Poseidon field-native hash", href: "/crypto/poseidon-hash#overview" }, { label: "FRI·STARK pipeline", href: "/crypto/stark-theory#overview" }],
+    evidence: [{ kind: "primary-source", rule: "Binius·Flock construction과 benchmark는 각 논문의 exact field·batch·hardware 조건에 귀속한다." }, { kind: "project-claim", rule: "Reduced-round cryptanalysis를 full-round break로, prototype throughput을 Ethereum 채택으로 확대하지 않는다." }],
+  },
+  "ethereum-future-roadmap": {
+    title: "Ethereum future roadmap ownership",
+    owns: ["배포·채택 검토·연구 방향·실험 결과 maturity 분리", "PQ surfaces·proof/execution direction·AI candidate/deterministic verifier 경계"],
+    reuses: [{ label: "PQ account migration", href: "/blockchain/pq-account" }, { label: "Binary-field proving", href: "/crypto/binary-field-proving" }],
+    evidence: [{ kind: "standard", rule: "Protocol fact는 accepted EIP/spec과 deployment를 확인하고 roadmap·strawmap wording을 채택 완료로 쓰지 않는다." }, { kind: "project-claim", rule: "AI가 만든 proof candidate를 deterministic formal verification 결과로 확대하지 않는다." }],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

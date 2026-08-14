@@ -72,9 +72,22 @@ export const zkpMathArticles: Article[] = [
       { id: "profile", title: "Parameter profile" },
       { id: "rounds", title: "S-box·MDS·HADES rounds" },
       { id: "sponge-boundary", title: "Sponge와 byte 경계" },
+      { id: "security-direction", title: "Security margin·proof-layer 전환" },
       { id: "release", title: "Poseidon release gate" },
     ],
     component: () => import("@/pages/articles/blockchain/poseidon-hash"),
+  },
+  {
+    slug: "binary-field-proving",
+    title: "Binary-field proving: Binius·Flock·기존 hash 증명",
+    subcategory: "zkp-math",
+    sections: [
+      { id: "overview", title: "Primitive와 prover 중 무엇을 바꿀까" },
+      { id: "binary-field", title: "F₂·F₂ᵏ와 Boolean workload" },
+      { id: "binius", title: "Binius binary-tower proof" },
+      { id: "flock-selection", title: "Flock·security margin·선택 gate" },
+    ],
+    component: () => import("@/pages/articles/blockchain/binary-field-proving"),
   },
   {
     slug: "lagrange",

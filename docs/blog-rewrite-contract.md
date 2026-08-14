@@ -22,6 +22,8 @@ build 통과는 완료의 증거가 아니며, 아래 Definition of Done을 모�
 - 전문 용어를 없애지 않는다. 업계 표준 용어는 그대로 사용하고 처음 한 번 자연스러운 한국어 설명을 붙인다.
 - 원 논문, 공식 specification, 공식 구현을 우선 근거로 삼는다. 현재 상태가 중요한 내용은 최신 원문을 다시 확인한다.
 - 주장을 논문 결과와 일반 법칙으로 혼동하지 않는다. 실험 조건과 적용 범위를 함께 쓴다.
+- Roadmap·strawmap·research prototype·alpha처럼 성숙도가 다른 항목을 한 목록에 섞지 않는다. 각 항목마다 `현재 배포됨 / 채택 검토 중 / 연구 방향 / 실험 결과` 중 상태와 기준 시점을 먼저 표시하고, 방향성을 최종 채택·일정·성능 보장으로 확대하지 않는다.
+- 암호 primitive를 바꾸는 접근과 기존 primitive를 그대로 두고 proof/execution layer를 최적화하는 접근은 별도 설계 축으로 비교한다. Field·instruction 표현의 impedance mismatch, prover·verifier·proof size, 구현 생태계와 cryptanalysis history를 같은 표에서 비교하고 단일 benchmark만으로 장기 primitive 선택을 결론내리지 않는다.
 
 ### 2.1 선수 개념과 학습 결과 계약
 
@@ -116,6 +118,7 @@ build 통과는 완료의 증거가 아니며, 아래 Definition of Done을 모�
 - 논문 제목은 concept node와 구분한다. 논문은 concept를 제안·검증하는 evidence이며, 방법 자체가 독립적인 학습 대상일 때만 canonical paper article을 소유한다.
 - 새 concept node의 canonical 설명은 그 용어를 모르는 독자를 기준으로 `직관적 상황 → 작은 수치 예 → 표준 용어 → 수식 → 전제·반례` 순서를 갖춘다. 그래프 등록과 사전식 한 줄 정의만으로는 완료되지 않는다.
 - 정리·bound·법칙 노드는 무엇을 세는지, 각 기호를 일상적인 양으로 어떻게 읽는지, 작은 숫자를 대입한 예, 증명 아이디어, 적용할 수 없는 반례를 모두 설명한다.
+- Cryptographic security margin은 `전체 rounds − 현재 공격이 다루는 rounds` 같은 장난감 수치로 직관을 주되, 공격 대상의 field·mode·state width·round profile과 full-round break 여부를 함께 적는다. Reduced-round 공격 개선을 production instance compromise로 쓰지 않고, 반대로 남은 margin을 security proof로 과장하지 않는다.
 - `prerequisite` edge는 AI 개념끼리만 연결하지 않는다. 필요한 수학·통계·물리·시스템 node까지 이어 붙이고, canonical article의 learning contract를 재귀적으로 확인해 선수 지식 경로가 끊기지 않게 한다.
 - 새 글을 완료하기 전에 concept reference가 모두 존재하고, node 간 relation edge와 canonical href가 유효한지 검사한다. `introducedHere`의 각 concept는 블로그 전체에서 정확히 한 글만 소유해야 하며 그 글과 `canonicalHref`의 article이 일치해야 한다. 또한 새 concept마다 최소 한 개 이상의 의미 있는 relation edge가 있어야 하며, 고립 node는 완료로 보지 않는다.
 - `assumedKnowledge`는 화면에서 누락된 항목을 `00 선수 개념` stage로 자동 합성해 본문 흐름 앞에 둔다. `introducedHere`의 새 개념은 반드시 명시적 `conceptStages`에 포함하며, 새 개념 설명에는 있지만 학습 경로에서 찾을 수 없는 상태를 완료로 보지 않는다.

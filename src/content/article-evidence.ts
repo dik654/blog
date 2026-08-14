@@ -4769,6 +4769,7 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "crypto/poseidon-hash": [
     { kind: "핵심 논문", label: "Grassi et al. · Poseidon", href: "https://eprint.iacr.org/2019/458.pdf", note: "HADES·field S-box·parameter/security/cost analysis의 원 연구" },
+    { kind: "후속 분석", label: "Algebraic cryptanalysis of Poseidon", href: "https://eprint.iacr.org/2023/537.pdf", note: "명시된 variant의 reduced-round algebraic attack 분석이며 production full-round Poseidon/Poseidon2 전체가 깨졌다는 뜻은 아님" },
     { kind: "공식 코드", label: "HorizenLabs/poseidon2 @ 055bde3", href: "https://github.com/HorizenLabs/poseidon2/tree/055bde3f4782731ba5f5ce5888a440a94327eaf3", note: "Poseidon2 parameter·Rust implementation의 pinned source" },
   ],
   "blockchain/impl-hash-commitment": [
@@ -5208,6 +5209,8 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 코드", label: "Uniswap v4-core v4.0.0 · e50237c", href: "https://github.com/Uniswap/v4-core/tree/e50237c43811bd9b526eff40f26772152a42daba", note: "PoolManager·PoolKey·unlock·delta·hook executable source이며 arbitrary hook/router safety 보장은 아님" },
     { kind: "공식 코드", label: "Uniswap v4 Hooks.sol · e50237c", href: "https://github.com/Uniswap/v4-core/blob/e50237c43811bd9b526eff40f26772152a42daba/src/libraries/Hooks.sol", note: "Hook address flags·callback validation source이며 hook economic·upgrade·access-control safety 보장은 아님" },
     { kind: "핵심 논문", label: "Uniswap v4 Core whitepaper", href: "https://app.uniswap.org/whitepaper-v4.pdf", note: "Singleton·hooks·flash accounting architecture 원문이며 fixed gas saving·liquidity·price execution 보장은 아님" },
+    { kind: "공식 문서", label: "Uniswap · Permissioned Pools architecture", href: "https://developers.uniswap.org/docs/protocols/v4-hooks/permissioned-pools/architecture", note: "Adapter·permissioned hook·position manager·router 책임과 action flags의 current 공식 구조이며 개별 시장 법률 적합성 보장은 아님" },
+    { kind: "공식 프로젝트 기록", label: "Uniswap Labs · Introducing Permissioned Pools", href: "https://blog.uniswap.org/es-ES/introducing-permissioned-pools-on-uniswap-v4", note: "2026 공개 방향과 named integrations 근거이며 planned authorization·deployment를 완료 상태로 확대하지 않음" },
   ],
   "blockchain/pbft-deep": [
     { kind: "핵심 논문", label: "Practical Byzantine Fault Tolerance · OSDI 1999", href: "https://www.usenix.org/conference/osdi-99/presentation/practical-byzantine-fault-tolerance", note: "PBFT normal case·view change·checkpoint·client protocol의 원문이며 당시 crypto·NFS 수치를 current deployment 상수로 일반화하지 않음" },
@@ -5268,6 +5271,7 @@ export const ARTICLE_EVIDENCE: Readonly<
   "blockchain/rwa-composition": [
     { kind: "공식 연구", label: "IOSCO · Tokenization of Financial Assets (2025)", href: "https://www.iosco.org/library/pubdocs/pdf/IOSCOPD809.pdf", note: "Authoritative ownership record·legal recognition·custody 위험 분석이며 개별 상품 법률 의견은 아님" },
     { kind: "공식 연구", label: "BIS · The tokenisation continuum", href: "https://www.bis.org/publ/bisbull72.htm", note: "Core claim layer와 service/governance layer의 개념 근거이며 tokenisation 편익·유동성 보장은 아님" },
+    { kind: "공식 문서", label: "Uniswap · Permissioned Pools architecture", href: "https://developers.uniswap.org/docs/protocols/v4-hooks/permissioned-pools/architecture", note: "Regulated pool의 compliance execution layer 근거이며 token holder의 법적 권리·issuer solvency·authoritative registry를 만들지는 않음" },
   ],
   "blockchain/berachain": [
     { kind: "공식 문서", label: "Berachain · Proof of Liquidity overview", href: "https://docs.berachain.com/general/proof-of-liquidity/overview", note: "2026-08-14 PoL actor·boost·allocation flow의 current docs이며 parameter·APR를 영구 고정하지 않음" },
@@ -5294,5 +5298,17 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 코드", label: "Octane ABCI proposal bridge · commit 9864f25", href: "https://github.com/omni-network/omni/blob/9864f25fa9bcb473ee34d2442012fc5fbd2683ea/octane/evmengine/keeper/abci.go", note: "PrepareProposal timeout·build/get·single payload transaction source이며 payload ID가 commit·durable identity라는 뜻은 아님" },
     { kind: "공식 코드", label: "Octane finalized payload/event path · commit 9864f25", href: "https://github.com/omni-network/omni/blob/9864f25fa9bcb473ee34d2442012fc5fbd2683ea/octane/evmengine/keeper/msg_server.go", note: "newPayload·finalized FCU·event delivery·head update ordering source이며 bounded retry·all-event atomicity·external delivery 보장은 아님" },
     { kind: "공식 규격", label: "Ethereum execution-apis · snapshot 5aebdfdd", href: "https://github.com/ethereum/execution-apis/tree/5aebdfdd45cadeb723be4bd45b4611b71c8b1c85", note: "Versioned Engine methods·schemas·statuses 정본이며 Octane의 ABCI packaging·retry·specific client parity를 정의하지 않음" },
+  ],
+  "blockchain/webcat-frontend-integrity": [
+    { kind: "공식 문서", label: "WEBCAT · Concepts", href: "https://docs.webcat.tech/concepts.html", note: "Signed manifest·bundle·enrollment·transparency log·browser verification 구성 근거이며 code correctness 보장은 아님" },
+    { kind: "공식 프로젝트 기록", label: "SecureDrop · WEBCAT alpha", href: "https://securedrop.org/news/webcat-alpha/", note: "2026 Firefox extension alpha와 실행 전 enforcement 공개 범위이며 표준 채택·production 완성은 아님" },
+  ],
+  "crypto/binary-field-proving": [
+    { kind: "핵심 논문", label: "Binius · Succinct Arguments over Towers of Binary Fields", href: "https://eprint.iacr.org/2023/1784.pdf", note: "Binary tower argument construction 근거이며 임의 workload 우위·production audit를 뜻하지 않음" },
+    { kind: "핵심 논문", label: "Flock · Fast batched proofs for Boolean computations", href: "https://arxiv.org/abs/2607.27491", note: "Boolean batch proof와 conventional-hash prototype benchmark 근거이며 hardware·batch 조건 밖의 보편 throughput은 아님" },
+  ],
+  "blockchain/ethereum-future-roadmap": [
+    { kind: "공식 문서", label: "Ethereum · Quantum resistance roadmap", href: "https://ethereum.org/roadmap/security/quantum-resistance/", note: "Consensus BLS·KZG·account ECDSA·application ZK migration surface의 공식 방향이며 최종 선택·날짜 확정은 아님" },
+    { kind: "공식 연구", label: "Lean Ethereum roadmap", href: "https://leanroadmap.org/", note: "FRI·STIR·WHIR formalization milestones의 공개 연구 방향이며 Ethereum 전체 formal verification 완료는 아님" },
   ],
 };
