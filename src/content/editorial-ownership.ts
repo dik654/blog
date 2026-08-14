@@ -4929,6 +4929,26 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "project-measurement", rule: "Security bits는 group-specific attacks·multi-target·hardware·implementation leakage와 quantum horizon을 고정한 budget에서만 보고한다." },
     ],
   },
+  "diffie-hellman": {
+    title: "Diffie–Hellman 배포 경계 글이 소유하는 범위",
+    owns: [
+      "Ephemeral public-value 교환에서 raw shared group element까지의 key-agreement flow",
+      "Primitive-specific public-value validation과 authenticated transcript 경계",
+      "Raw DH output의 transcript-bound KDF·direction/purpose key schedule",
+      "Ephemeral secret 폐기·forward secrecy lifecycle과 adversarial release gate",
+    ],
+    reuses: [
+      { label: "Cyclic subgroup와 DLP·CDH·DDH 가정", href: "/crypto/discrete-log" },
+      { label: "Elliptic-curve point·subgroup validation", href: "/crypto/elliptic-curves" },
+      { label: "CSPRNG entropy·clone·reseed lifecycle", href: "/crypto/csprng" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "원래 public-key distribution 아이디어는 Diffie–Hellman 1976 논문의 문제·group model 범위에만 귀속한다." },
+      { kind: "standard", rule: "X25519 acceptance·encoding은 RFC 7748, extract/expand는 RFC 5869, key-establishment validation은 NIST SP 800-56A Rev. 3의 서로 다른 계약으로 표시한다." },
+      { kind: "project-claim", rule: "Raw DH equality를 peer authentication·application key·forward secrecy·post-quantum security의 자동 보장으로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "Malformed/all-zero·MITM·role swap·downgrade·RNG clone·restart와 derived-key parity 뒤 handshake 비용을 비교한다." },
+    ],
+  },
   "elliptic-curves": {
     title: "타원곡선군·BN254 구현 글이 소유하는 범위",
     owns: [
@@ -4946,6 +4966,46 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "standard", rule: "Point encoding·validation은 SEC 1 또는 EIP-196/197의 구체 curve·fork·input contract에 귀속한다." },
       { kind: "project-measurement", rule: "Coordinate/window 최적화는 malformed point·subgroup·official vector·independent parity·constant-time gate 뒤 비교한다." },
       { kind: "project-claim", rule: "Pairing equation 성공을 proof statement provenance·trusted setup·application authorization 전체로 확대하지 않는다." },
+    ],
+  },
+  "field-arithmetic": {
+    title: "유한체 산술 구현 글이 소유하는 범위",
+    owns: [
+      "Canonical bytes·residue·little-endian limb·internal Montgomery representation 경계",
+      "Montgomery REDC와 word-scanning implementation 조건",
+      "Field operator API·zero inverse·constant-time 검토·differential test",
+      "BN254 base/scalar type separation과 correctness-first release gate",
+    ],
+    reuses: [
+      { label: "Field 공리·prime-field inverse", href: "/crypto/finite-field-theory" },
+      { label: "Point coordinate·scalar subgroup 의미", href: "/crypto/elliptic-curves" },
+      { label: "Point·scalar·field domain type 분리", href: "/crypto/crypto-primitives#abelian-group" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Montgomery reduction의 대수는 1985 원 논문의 coprime radix·operand bound 범위에 귀속한다." },
+      { kind: "primary-source", rule: "Rust field trait·backend claim은 ark-ff 0.5.0 tag commit 7ad88c46…에 고정하고 교육용 의사코드와 분리한다." },
+      { kind: "standard", rule: "BN254 Fp/Fp²·group-order 경계는 EIP-197의 protocol-visible parameter 범위로 제한한다." },
+      { kind: "project-measurement", rule: "Canonical·boundary·inverse·cross-field·independent parity·side-channel gate 뒤 target별 throughput을 비교한다." },
+    ],
+  },
+  "extension-fields": {
+    title: "확장체 tower 구현 글이 소유하는 범위",
+    owns: [
+      "Fp→Fp²→Fp⁶→Fp¹² coefficient layout과 pinned non-residue/tower identity",
+      "Quadratic Karatsuba·denominator inversion과 cubic reduction schedule",
+      "Tower-basis Frobenius coefficient table과 비용 장부",
+      "Irreducibility·basis·cycle·serialization·G2/pairing parity release gate",
+    ],
+    reuses: [
+      { label: "Irreducible quotient extension field", href: "/crypto/finite-field-theory#extension-field" },
+      { label: "BN254 G2 twist·subgroup", href: "/crypto/elliptic-curves#g1-g2-bn254" },
+      { label: "Miller loop·final exponentiation", href: "/crypto/pairing" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Concrete coefficient order·non-residue·Frobenius table은 ark-bn254 0.5.0과 curves SHA e2d16a27… snapshot에 귀속한다." },
+      { kind: "standard", rule: "EIP-197은 G2/Fp² wire와 pairing contract 근거이며 내부 Fp⁶/Fp¹² layout 표준으로 확대하지 않는다." },
+      { kind: "project-claim", rule: "Subfield multiplication count를 end-to-end speedup·constant-time·모든 BN254 implementation의 보편 비용으로 표현하지 않는다." },
+      { kind: "project-measurement", rule: "Wrong basis/non-residue/order·Frobenius cycle·independent pairing parity 뒤 mul/square/map 비용을 비교한다." },
     ],
   },
   "finite-field-theory": {
@@ -5144,6 +5204,26 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "project-claim", rule: "Sample 성공·MDS·commitment를 availability·integrity·confidentiality·production safety의 자동 보장으로 확대하지 않는다." },
     ],
   },
+  "reed-solomon": {
+    title: "Reed–Solomon 구현·ZK 연결 글이 소유하는 범위",
+    owns: [
+      "Field·points·n,k·source/systematic mapping·symbol encoding의 code profile identity",
+      "Profile-bound encoding과 object digest·shard index artifact 경로",
+      "Berlekamp–Welch reconstruction과 typed decoder outcome",
+      "Exact membership·proximity 경계와 adversarial implementation release gate",
+    ],
+    reuses: [
+      { label: "RS evaluation code·MDS distance budget", href: "/blockchain/erasure-coding#reed-solomon" },
+      { label: "Field arithmetic·polynomial root bound", href: "/crypto/finite-field-theory" },
+      { label: "k-point Lagrange interpolation", href: "/crypto/lagrange" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Polynomial evaluation construction은 Reed–Solomon 1960 원 논문의 finite-field code 범위에 귀속한다." },
+      { kind: "standard", rule: "Systematic GF(2^m) packet profile은 RFC 5510에만 귀속하고 모든 RS wire layout으로 확대하지 않는다." },
+      { kind: "primary-source", rule: "FRI proximity와 complexity claim은 ICALP 2018 논문의 field·rate·oracle·randomness 조건과 함께 제시한다." },
+      { kind: "project-measurement", rule: "Distance 경계·wrong index/profile/object·malformed·timeout·restart parity 뒤 encode/decode 비용을 비교한다." },
+    ],
+  },
   "aa-fundamentals": {
     title: "Account Abstraction 기초 글이 소유하는 범위",
     owns: [
@@ -5233,6 +5313,199 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "standard", rule: "국내 계정·인증 최소선과 NIST SP 800-63B-4의 미국 기술 지침을 관할·적용 범위가 다른 근거로 분리한다." },
       { kind: "primary-source", rule: "KISA password 심사 해설은 확인 시점 시행 규정·계정 위험·계약 의무와 함께 versioning한다." },
       { kind: "project-claim", rule: "MFA·biometric·OTP·주기 변경·hash algorithm 이름을 phishing resistance·권한 정당성·credential 전수회수로 확대하지 않는다." },
+    ],
+  },
+  "kademlia": {
+    title: "Kademlia XOR distance와 routing table 글이 소유하는 범위",
+    owns: [
+      "XOR ID distance와 LogDist의 prefix 해석",
+      "거리 구간별 bounded k-bucket 표본과 구현 parameter 경계",
+      "Live entry·replacement·revalidation의 routing table 수명 주기",
+    ],
+    reuses: [
+      { label: "반복 FIND_NODE shortlist와 종료", href: "/p2p/kad-lookup" },
+      { label: "Sybil·Eclipse 위협과 diversity 방어", href: "/p2p/dht-security" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "XOR metric·k-bucket 분석은 Kademlia 원 논문에, bucketSize·IP quota·replacement는 확인한 geth source revision에 분리해 귀속한다." },
+      { kind: "project-claim", rule: "XOR proximity·old-node preference·IP quota를 낮은 latency·정직성·Sybil 방지의 보장으로 확대하지 않는다." },
+    ],
+  },
+  "kad-lookup": {
+    title: "Kademlia iterative lookup 글이 소유하는 범위",
+    owns: [
+      "Target distance shortlist와 후보별 query 상태",
+      "Alpha 병렬 FIND_NODE round·unique merge·bounded termination",
+      "Bootstrap·refresh·timeout·late response lookup receipt",
+    ],
+    reuses: [
+      { label: "XOR distance와 k-bucket seed", href: "/p2p/kademlia" },
+      { label: "Adversarial response와 view capture", href: "/p2p/dht-security" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Iterative algorithm은 Kademlia paper에, geth scheduling·wire·validation behavior는 배포 SHA의 공식 source에 각각 귀속한다." },
+      { kind: "project-claim", rule: "기대 logarithmic path를 partition·high churn·adversarial topology의 고정 round·메시지 SLO로 확대하지 않는다." },
+    ],
+  },
+  "dht-security": {
+    title: "DHT Sybil·Eclipse 방어 글이 소유하는 범위",
+    owns: [
+      "Entity와 identity 독립성의 Sybil 경계",
+      "Bootstrap·neighbor·lookup view capture의 Eclipse 경로",
+      "Network diversity와 honest availability를 함께 검증하는 release gate",
+    ],
+    reuses: [
+      { label: "Kademlia routing slot과 entry lifecycle", href: "/p2p/kademlia" },
+      { label: "Kademlia query shortlist와 timeout", href: "/p2p/kad-lookup" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Sybil 개념은 Douceur paper, Eclipse 구현 수치는 당시 Bitcoin paper, geth quota는 current source에 범위를 나눠 귀속한다." },
+      { kind: "project-claim", rule: "IP·ASN diversity·peer score·replacement를 identity 독립성이나 공격 불가능성의 증명으로 확대하지 않는다." },
+    ],
+  },
+  "gossip-fundamentals": {
+    title: "Epidemic dissemination과 GossipSub 글이 소유하는 범위",
+    owns: [
+      "Push·pull epidemic 전파의 직관·평균장 전제·한계",
+      "Membership·overlay·broadcast protocol의 역할 분리",
+      "GossipSub topic mesh·IHAVE/IWANT·validation·peer score 운영",
+    ],
+    reuses: [
+      { label: "Sybil identity와 network diversity 경계", href: "/p2p/dht-security" },
+      { label: "rust-libp2p Swarm의 protocol state owner", href: "/p2p/libp2p" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Epidemic·SWIM 결과는 각 논문 model에, GossipSub parameter·control action은 명시한 specification version에 귀속한다." },
+      { kind: "project-measurement", rule: "Delivery SLO는 topology·traffic·loss·churn·validator·version을 고정해 latency·미전달·duplicate bytes·CPU를 함께 측정한다." },
+      { kind: "project-claim", rule: "Peer score를 정직성 확률·Sybil 제거·application validity의 자동 보장으로 확대하지 않는다." },
+    ],
+  },
+  "rollup-fundamentals": {
+    title: "Rollup fundamentals 글이 소유하는 범위",
+    owns: [
+      "L2 execution·L1 data availability·settlement의 책임과 finality 분리",
+      "L1 input에서 L2 payload를 재현하는 deterministic derivation·reorg reset",
+      "Optimistic fault proof와 validity proof의 검증 경계·운영 비교",
+    ],
+    reuses: [
+      { label: "Consensus fork choice와 finality 분리", href: "/blockchain/consensus-mechanisms#pow" },
+      { label: "Data availability sampling의 증거 경계", href: "/blockchain/erasure-coding#two-dimensional" },
+      { label: "EIP-4844 transaction·sidecar binding", href: "/blockchain/reth-eip4844#overview" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "Derivation·fault-proof 단계는 대상 OP Stack fork와 spec version을 고정하고 다른 rollup으로 일반화하지 않는다." },
+      { kind: "primary-source", rule: "Optimistic·validity 비교는 공식 protocol spec의 claim·proof·DA·finality 의미에 귀속한다." },
+      { kind: "project-claim", rule: "Proof 방식 이름을 privacy·availability·sequencer liveness·고정 withdrawal latency의 보장으로 확대하지 않는다." },
+    ],
+  },
+  "da-theory": {
+    title: "Data availability theory 글이 소유하는 범위",
+    owns: [
+      "Authenticity·encoding validity·network availability의 proof·receipt 분리",
+      "EIP-4844 full sidecar download와 PeerDAS 1D column sampling 경계",
+      "Celestia 2D extended data square와 sampling 전제의 비교",
+    ],
+    reuses: [
+      { label: "Reed–Solomon·rate·2D extension", href: "/blockchain/erasure-coding" },
+      { label: "Finite-field polynomial 표현", href: "/crypto/finite-field-theory#polynomial" },
+      { label: "EIP-4844 versioned-hash binding", href: "/blockchain/reth-eip4844#kzg" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "EIP-4844·EIP-7594와 Celestia app의 encoding·sample 단위를 버전별 공식 규격에 귀속한다." },
+      { kind: "primary-source", rule: "2D DAS와 KZG의 보장은 원 논문의 model·setup·network assumptions 안에서만 해석한다." },
+      { kind: "project-claim", rule: "KZG proof 성공이나 sample 성공을 전체 availability·valid encoding·application validity로 확대하지 않는다." },
+    ],
+  },
+  "longest-chain": {
+    title: "PoW longest-chain 글이 소유하는 범위",
+    owns: [
+      "Valid branch의 target-derived block work와 cumulative chainwork 선택",
+      "Deficit·hash share 기반 catch-up 확률과 whitepaper 모델의 차이",
+      "Common prefix theorem의 proof idea·timing assumptions·failure counterexample",
+    ],
+    reuses: [
+      { label: "Permissionless Sybil resource·PoW 기초", href: "/blockchain/consensus-mechanisms#pow" },
+      { label: "분산 timing·failure model", href: "/blockchain/distributed-systems" },
+      { label: "Safety·liveness와 quorum 기초", href: "/blockchain/smr-theory" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "Chainwork 구현식은 Bitcoin Core의 exact commit·target encoding·difficulty rule을 함께 pin한다." },
+      { kind: "primary-source", rule: "Catch-up·common-prefix bound는 whitepaper와 Backbone 논문의 서로 다른 시작 상태·network model에 귀속한다." },
+      { kind: "project-claim", rule: "고정 confirmation 수를 모든 hash share·partition·eclipse·금액에서 deterministic finality로 표현하지 않는다." },
+    ],
+  },
+  "dezero-autodiff": {
+    title: "DeZero Rust 자동미분 글이 소유하는 범위",
+    owns: [
+      "DeZero 교육 흐름을 Rust Variable·Function·generation graph로 옮긴 구현 계약",
+      "Fan-out gradient 누적·retain_grad·고차미분 recording mode의 수명 경계",
+      "Rc·RefCell·Weak graph 소유권과 중첩·panic-safe recording guard",
+    ],
+    reuses: [
+      { label: "Chain rule·reverse-mode autodiff 수학", href: "/ai/backprop-optimization#chain-rule" },
+      { label: "함수·미분·gradient 기초", href: "/ai/math-functions-derivatives-gradients" },
+      { label: "DeZero Layer·optimizer 확장", href: "/ai/dezero-nn" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "DeZero 기능 계보는 원 프로젝트에, production autograd 동작은 해당 framework 공식 문서와 version에 각각 귀속한다." },
+      { kind: "project-claim", rule: "이 Rust 예제의 API·ownership·수치 결과를 공식 DeZero port나 production 안정성 보장으로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "Forward·gradient·수명·panic 복원은 고정 analytic·finite-difference·reference-count fixture에서 비교한다." },
+    ],
+  },
+  "dezero-nn": {
+    title: "DeZero Rust 신경망 기본 글이 소유하는 범위",
+    owns: [
+      "Layer 재귀 parameter 등록·stable identity와 optimizer state binding",
+      "Linear shape·broadcast·초기화와 activation forward/backward parity",
+      "Training step·checkpoint state closure·continuous/resume release gate",
+    ],
+    reuses: [
+      { label: "Variable·Function 자동미분", href: "/ai/dezero-autodiff" },
+      { label: "Optimizer·Adam·AdamW 정본", href: "/ai/optimizers" },
+      { label: "Regularization 비교", href: "/ai/regularization-practice" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Xavier·Adam·AdamW claim은 각 원 논문의 architecture·optimizer·실험 조건으로 제한한다." },
+      { kind: "project-claim", rule: "교육용 RNG·API·toy loss 감소를 production framework의 재현성·품질·성능으로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "Shape·gradient·parameter coverage·resume parity를 같은 seed·batch·precision·manifest에서 비교한다." },
+    ],
+  },
+  "dezero-advanced": {
+    title: "DeZero Rust 상태형 Layer 글이 소유하는 범위",
+    owns: [
+      "RNN·LSTM state의 reset·carry·detach 수명과 분리·fused gate parity",
+      "LayerNorm feature 축·backward cache와 constant-input 수치 경계",
+      "Dropout mode·RNG checkpoint와 Embedding lookup·scatter-add 규칙",
+    ],
+    reuses: [
+      { label: "RNN·BPTT·truncation", href: "/ai/rnn" },
+      { label: "LSTM gate와 cell-state 수학", href: "/ai/lstm" },
+      { label: "Dropout 정본", href: "/ai/regularization-practice#dropout" },
+      { label: "DeZero parameter·optimizer 기반", href: "/ai/dezero-nn" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "LSTM·LayerNorm·Dropout 구조와 효과는 각 원 논문의 정의·task·실험 범위로 제한한다." },
+      { kind: "project-claim", rule: "교육용 구현의 state·mode API를 특정 production framework와 동일하거나 보편적 최적 설계로 표현하지 않는다." },
+      { kind: "project-measurement", rule: "Gate fusion·normalization·dropout·embedding은 동일 weight·state·RNG·fixture의 forward·gradient·resume parity로 검증한다." },
+    ],
+  },
+  "eda-workflow": {
+    title: "EDA workflow 글이 소유하는 범위",
+    owns: [
+      "Analysis unit·reference population·target 시점과 group·time split 입구",
+      "Distribution·outlier·association·missingness를 slice와 생성 과정에 연결하는 진단",
+      "Fold-local transform과 가설·effect·uncertainty·holdout evidence ledger",
+    ],
+    reuses: [
+      { label: "확률변수·평균·분산", href: "/ai/math-probability-expectation-variance" },
+      { label: "Train·validation·test 기초", href: "/ai/deep-learning-overview#learning-loop" },
+      { label: "Feature engineering 적용", href: "/ai/feature-engineering" },
+      { label: "Time cutoff·rolling-origin", href: "/ai/time-features" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "EDA 기법은 NIST handbook의 통계 가정과 scikit-learn 공식 preprocessing boundary에 귀속한다." },
+      { kind: "project-claim", rule: "Plot·correlation·missing-rate·p-value를 causal conclusion, 자동 삭제·대체 규칙이나 production 성능으로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "모든 변환·가설은 고정 data version·unit·split·slice·metric·holdout과 변경 행 receipt로 비교한다." },
     ],
   },
 } as const satisfies Record<string, EditorialBoundary>;

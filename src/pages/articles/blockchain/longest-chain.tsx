@@ -1,15 +1,5 @@
-import Overview from "./longest-chain/Overview";
-import ChainSelection from "./longest-chain/ChainSelection";
-import Finality from "./longest-chain/Finality";
-import Comparison from "./longest-chain/Comparison";
+import ModernArticle from "./longest-chain/ModernArticle";
 
 export default function LongestChainArticle() {
-  return (
-    <div className="space-y-12">
-      <Overview />
-      <ChainSelection />
-      <Finality />
-      <Comparison />
-    </div>
-  );
+  return <ModernArticle />;
 }

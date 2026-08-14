@@ -37,7 +37,7 @@ export default function ProtocolCompareViz() {
             r={16}
             fill={C[step] + "15"}
             stroke={C[step]}
-            strokeWidth={1.5}
+            strokeWidth={1.25}
           />
           <text
             x={CENTER.x}

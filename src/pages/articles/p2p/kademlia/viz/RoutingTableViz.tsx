@@ -40,7 +40,7 @@ export default function RoutingTableViz() {
             r={12}
             fill="#8b5cf618"
             stroke="#8b5cf6"
-            strokeWidth={1.5}
+            strokeWidth={1.25}
           />
           <text
             x={30}

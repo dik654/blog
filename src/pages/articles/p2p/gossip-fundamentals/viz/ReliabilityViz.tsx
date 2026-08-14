@@ -55,7 +55,7 @@ export default function ReliabilityViz() {
                   r={12}
                   fill={c + "15"}
                   stroke={c}
-                  strokeWidth={active ? 1.5 : 1}
+                  strokeWidth={active ? 1.25 : 1}
                 />
                 <text
                   x={40}
@@ -76,7 +76,7 @@ export default function ReliabilityViz() {
                   rx={4}
                   fill={c + "08"}
                   stroke={c}
-                  strokeWidth={active ? 1.3 : 0.5}
+                  strokeWidth={active ? 1.25 : 0.5}
                 />
                 <text
                   x={80}

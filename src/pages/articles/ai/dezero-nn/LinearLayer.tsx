@@ -1,4 +1,5 @@
 import type { CodeRef } from "@/components/code/types";
+import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefs } from "./codeRefs";
 import LinearViz from "./viz/LinearViz";
 
@@ -16,6 +17,27 @@ export default function LinearLayer({ onCodeRef }: { onCodeRef: (key: string, re
         </p>
       </div>
       <div className="not-prose my-8"><LinearViz onOpenCode={open} /></div>
+      <ExplainedFormula
+        question="Batch 4개, input feature 2개, output 3개인 Linear layer의 shape와 parameter 수는 어떻게 정할까요?"
+        idea={<>각 sample의 길이 2 row가 2×3 weight와 곱해져 길이 3 row가 되고, 길이 3 bias가 모든 sample에 broadcast됩니다. Parameter는 weight 원소와 bias 원소를 더해 셉니다.</>}
+        formula={String.raw`\begin{aligned}
+X&\in\mathbb{R}^{4\times2},\quad
+W\in\mathbb{R}^{2\times3},\quad b\in\mathbb{R}^{3},\\
+Y&=XW+b\in\mathbb{R}^{4\times3},\\
+N_{\mathrm{param}}&=2\cdot3+3=9.
+\end{aligned}`}
+        terms={[
+          { symbol: "4", name: "batch size", description: "같은 weight를 통과하는 sample 수입니다." },
+          { symbol: "2", name: "input dimension", description: "Sample 하나의 feature 수이자 W의 row 수입니다." },
+          { symbol: "3", name: "output dimension", description: "Output feature 수, W의 column 수와 bias 길이입니다." },
+        ]}
+        assumptions={[
+          "Row-major 표기는 설명 편의를 위한 것이며 library memory layout과는 별개입니다.",
+          "Bias는 batch 축에만 broadcast되고 sample마다 별도 parameter가 생기지 않습니다.",
+          "Parameter 수에는 optimizer state와 intermediate activation memory를 포함하지 않습니다.",
+        ]}
+        interpretation="Forward output은 4×3이고 trainable parameter는 9개입니다. Backward에서 dW는 2×3, db는 길이 3, dX는 4×2여야 합니다."
+      />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>backward는 두 개의 행렬곱으로 돌아갑니다</h3>
         <p>

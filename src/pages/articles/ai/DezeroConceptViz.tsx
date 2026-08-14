@@ -27,10 +27,11 @@ export default function DezeroConceptViz({
   return (
     <figure
       data-viz="dezero-concept"
-      className="overflow-hidden rounded-2xl border bg-card shadow-sm"
+      data-viz-canvas
+      className="min-w-0 overflow-hidden rounded-lg border border-border/70 bg-background"
     >
-      <figcaption className="border-b bg-gradient-to-br from-amber-50 via-background to-orange-50 px-5 py-5 dark:from-amber-950/30 dark:via-background dark:to-orange-950/20 sm:px-6">
-        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-amber-700 dark:text-amber-300">
+      <figcaption className="border-b border-border/70 px-5 py-5 sm:px-6">
+        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">
           {eyebrow}
         </p>
         <h3 className="mt-2 text-lg font-bold tracking-tight sm:text-xl">
@@ -45,10 +46,10 @@ export default function DezeroConceptViz({
         {stages.map((stage, index) => (
           <div
             key={`${stage.tag}-${stage.title}`}
-            className="relative min-w-0 rounded-xl border bg-background p-4"
+            className="relative min-w-0 rounded-lg border border-border/70 bg-background p-4"
           >
             <div className="flex items-center justify-between gap-3">
-              <span className="rounded-md bg-amber-100 px-2 py-1 text-xs font-bold text-amber-800 dark:bg-amber-950/60 dark:text-amber-200">
+              <span className="rounded border border-border/70 px-2 py-1 text-xs font-bold text-primary">
                 {stage.tag}
               </span>
               <span className="font-mono text-xs text-muted-foreground">
@@ -60,7 +61,7 @@ export default function DezeroConceptViz({
               {stage.description}
             </p>
             {stage.detail && (
-              <p className="mt-3 break-words rounded-lg bg-muted/60 px-3 py-2 font-mono text-xs leading-5 text-foreground/80">
+              <p className="mt-3 break-words border-l border-border pl-3 font-mono text-xs leading-5 text-foreground/80">
                 {stage.detail}
               </p>
             )}
@@ -69,7 +70,7 @@ export default function DezeroConceptViz({
       </div>
 
       {onOpenCode && codeKey && (
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t bg-muted/25 px-5 py-3">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border/70 px-5 py-3">
           <span className="text-xs leading-5 text-muted-foreground">
             설명과 실제 Rust 구현을 나란히 확인할 수 있습니다.
           </span>

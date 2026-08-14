@@ -4290,10 +4290,26 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "핵심 논문", label: "Pollard · Monte Carlo Methods for Index Computation", href: "https://doi.org/10.1090/S0025-5718-1978-0491431-9", note: "Collision walk로 작은 memory와 expected O(√q)를 만드는 rho 원문" },
     { kind: "핵심 논문", label: "Shanks · Class number, a theory of factorization, and genera", href: "https://www.ams.org/books/pspum/020/", note: "Baby-step/giant-step meet-in-the-middle의 고전적 출처와 범위" },
   ],
+  "crypto/diffie-hellman": [
+    { kind: "핵심 논문", label: "Diffie & Hellman · New Directions in Cryptography", href: "https://ee.stanford.edu/~hellman/publications/24.pdf", note: "공개 채널의 public-key distribution과 exponentiation key-agreement 아이디어 원문" },
+    { kind: "공식 규격", label: "RFC 7748 · X25519 and X448", href: "https://www.rfc-editor.org/rfc/rfc7748.html", note: "Curve·scalar decoding·u-coordinate bytes·DH procedure·test-vector contract" },
+    { kind: "공식 규격", label: "RFC 5869 · HKDF", href: "https://www.rfc-editor.org/rfc/rfc5869.html", note: "Raw shared material의 extract-then-expand와 salt/info·test-vector 계약" },
+    { kind: "공식 규격", label: "NIST SP 800-56A Rev. 3", href: "https://doi.org/10.6028/NIST.SP.800-56Ar3", note: "Discrete-log key establishment의 domain/key validation·derivation·confirmation 범위; 2026 update planning note와 함께 확인" },
+  ],
   "crypto/elliptic-curves": [
     { kind: "공식 규격", label: "SECG SEC 1 v2.0 · Elliptic Curve Cryptography", href: "https://www.secg.org/sec1-v2.pdf", note: "Curve domain·point encoding·public-key validation·ECC primitive 기준" },
     { kind: "공식 규격", label: "EIP-196 · alt_bn128 add and scalar multiplication", href: "https://eips.ethereum.org/EIPS/eip-196", note: "BN254 G1 input·infinity·invalid-point·operation contract" },
     { kind: "공식 규격", label: "EIP-197 · alt_bn128 pairing check", href: "https://eips.ethereum.org/EIPS/eip-197", note: "BN254 G1/G2/GT·Fp² encoding·subgroup·product pairing contract" },
+  ],
+  "crypto/field-arithmetic": [
+    { kind: "핵심 논문", label: "Montgomery · Modular Multiplication Without Trial Division", href: "https://www.ams.org/journals/mcom/1985-44-170/S0025-5718-1985-0777282-X/", note: "Coprime radix representation과 REDC의 대수·operand 조건 원문" },
+    { kind: "공식 코드", label: "arkworks algebra v0.5.0 @ 7ad88c46", href: "https://github.com/arkworks-rs/algebra/tree/7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c/ff/src", note: "Field trait·bigint·Montgomery backend 주장을 고정한 ark-ff 0.5.0 source snapshot" },
+    { kind: "공식 규격", label: "EIP-197 · BN254 field/group boundary", href: "https://eips.ethereum.org/EIPS/eip-197", note: "Base field p·group order q·Fp/Fp² coordinate와 subgroup 요구의 protocol-visible 경계" },
+  ],
+  "crypto/extension-fields": [
+    { kind: "공식 코드", label: "arkworks curves BN254 @ e2d16a27", href: "https://github.com/arkworks-rs/curves/tree/e2d16a27e2cfa9f972ae9772df827a22730011b4/bn254/src/fields", note: "ark-bn254 0.5.0 API와 함께 읽는 concrete non-residue·tower·Frobenius coefficient source snapshot" },
+    { kind: "공식 문서", label: "ark-bn254 0.5.0 crate documentation", href: "https://docs.rs/ark-bn254/0.5.0/ark_bn254/", note: "Fq/Fq2/Fq6/Fq12/Fr public type와 crate version 확인" },
+    { kind: "공식 규격", label: "EIP-197 · BN254 G2 and pairing", href: "https://eips.ethereum.org/EIPS/eip-197", note: "G2 Fp² encoding·subgroup·pairing product의 protocol contract; 내부 Fp12 layout 근거와 구분" },
   ],
   "crypto/finite-field-theory": [
     {
@@ -4454,6 +4470,11 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "32-byte checkpoint load/save와 malformed/read-failure fallback의 current 동작",
     },
   ],
+  "crypto/reed-solomon": [
+    { kind: "핵심 논문", label: "Reed & Solomon · Polynomial Codes over Certain Finite Fields", href: "https://doi.org/10.1137/0108018", note: "Finite-field message polynomial evaluation code의 1960 원문" },
+    { kind: "공식 규격", label: "RFC 5510 · Reed-Solomon FEC", href: "https://www.rfc-editor.org/rfc/rfc5510.html", note: "GF(2^m) systematic packet-erasure profile·symbol identity·MDS 복구 범위" },
+    { kind: "핵심 논문", label: "Fast Reed-Solomon Interactive Oracle Proofs of Proximity", href: "https://doi.org/10.4230/LIPIcs.ICALP.2018.14", note: "FRI의 RS proximity problem·folding protocol·complexity와 soundness 분석" },
+  ],
   "blockchain/erasure-coding": [
     {
       kind: "공식 규격",
@@ -4591,5 +4612,40 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://www.law.go.kr/LSW/admRulInfoP.do?admRulSeq=2100000281400&chrClsCd=010201",
       note: "개인정보 계정·인증수단·변경말소·기록의 현재 법정 최소선(2026-08-14 확인)",
     },
+  ],
+  "p2p/kademlia": [
+    { kind: "핵심 논문", label: "Maymounkov & Mazières — Kademlia", href: "https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf", note: "XOR metric·k-bucket·iterative lookup 원 설계와 분석 전제" },
+    { kind: "공식 코드", label: "go-ethereum — p2p/discover/table.go", href: "https://github.com/ethereum/go-ethereum/blob/master/p2p/discover/table.go", note: "Current bucket·replacement·IP quota·refresh 상수와 구현 경로" },
+  ],
+  "p2p/kad-lookup": [
+    { kind: "핵심 논문", label: "Maymounkov & Mazières — Kademlia lookup", href: "https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf", note: "Alpha 병렬 query·shortlist·closest-node termination의 원 논문 범위" },
+    { kind: "공식 코드", label: "go-ethereum — discovery package", href: "https://github.com/ethereum/go-ethereum/tree/master/p2p/discover", note: "Current discv4/v5 lookup scheduling·validation·refresh 구현이며 배포 SHA를 별도 고정" },
+  ],
+  "p2p/dht-security": [
+    { kind: "핵심 논문", label: "Douceur — The Sybil Attack", href: "https://www.microsoft.com/en-us/research/wp-content/uploads/2002/01/IPTPS2002.pdf", note: "Entity와 여러 identity의 독립성 문제 및 trusted identification 경계" },
+    { kind: "핵심 논문", label: "Heilman et al. — Eclipse Attacks on Bitcoin’s P2P Network", href: "https://www.usenix.org/system/files/conference/usenixsecurity15/sec15-paper-heilman.pdf", note: "Victim view capture 단계와 방어 평가 방법이며 Bitcoin 당시 구현에 범위를 한정" },
+    { kind: "공식 코드", label: "go-ethereum — p2p/discover/table.go", href: "https://github.com/ethereum/go-ethereum/blob/master/p2p/discover/table.go", note: "IP quota·replacement·initialization guard·revalidation의 current 구현 사실" },
+  ],
+  "p2p/gossip-fundamentals": [
+    { kind: "핵심 논문", label: "Demers et al. — Epidemic Algorithms", href: "https://www.cs.cornell.edu/home/rvr/papers/flowgossip.pdf", note: "Anti-entropy·rumor mongering의 확률적 dissemination 원 모델" },
+    { kind: "핵심 논문", label: "Das, Gupta & Motivala — SWIM", href: "https://www.cs.cornell.edu/projects/Quicksilver/public_pdfs/SWIM.pdf", note: "Failure detection과 infection-style membership dissemination의 분리" },
+    { kind: "공식 규격", label: "libp2p GossipSub v1.1 Specification", href: "https://github.com/libp2p/specs/blob/master/pubsub/gossipsub/gossipsub-v1.1.md", note: "Mesh maintenance·IHAVE/IWANT·peer score와 threshold action 정본" },
+  ],
+  "blockchain/rollup-fundamentals": [
+    { kind: "공식 규격", label: "OP Stack Specification · L2 Chain Derivation", href: "https://specs.optimism.io/protocol/derivation.html", note: "L1 retrieval·frame·channel·batch·payload와 unsafe/safe/finalized reset의 current 공식 경계" },
+    { kind: "공식 규격", label: "OP Stack Specification · Fault Proof", href: "https://specs.optimism.io/fault-proof/index.html", note: "Agreed pre-state·L1 data·preimage oracle에서 disputed transition을 재현하는 공식 fault-proof 범위" },
+    { kind: "공식 문서", label: "Ethereum.org · Optimistic rollups", href: "https://ethereum.org/developers/docs/scaling/optimistic-rollups/", note: "Batch data·state commitment·challenge period와 fault proof의 protocol-independent overview" },
+  ],
+  "blockchain/da-theory": [
+    { kind: "공식 규격", label: "EIP-4844 · Shard Blob Transactions", href: "https://eips.ethereum.org/EIPS/eip-4844", note: "Blob transaction·sidecar·KZG commitment·versioned hash와 fixed blob serialization의 공식 경계" },
+    { kind: "핵심 논문", label: "Kate–Zaverucha–Goldberg · Polynomial Commitments", href: "https://www.iacr.org/archive/asiacrypt2010/6477178/6477178.pdf", note: "Constant-size polynomial commitment와 evaluation opening의 원 논문이며 network availability 근거는 아님" },
+    { kind: "공식 규격", label: "EIP-7594 · PeerDAS", href: "https://eips.ethereum.org/EIPS/eip-7594", note: "EIP-4844 blob row의 1D extension·cell proof·data-column custody와 peer sampling 규격" },
+    { kind: "공식 문서", label: "Celestia App Specification · Data Structures", href: "https://celestiaorg.github.io/celestia-app/data_structures.html", note: "Celestia data square·2D Reed–Solomon extension·namespaced commitment의 공식 application 구조" },
+    { kind: "핵심 논문", label: "Fraud and Data Availability Proofs", href: "https://arxiv.org/abs/1809.09044", note: "2D erasure-coded Merkle tree·sampling·invalid-encoding fraud proof의 원 연구" },
+  ],
+  "blockchain/longest-chain": [
+    { kind: "공식 코드", label: "Bitcoin Core · chainwork implementation", href: "https://github.com/bitcoin/bitcoin/blob/master/src/chain.cpp", note: "Compact target를 integer block work로 바꾸고 CBlockIndex에 누적하는 current 구현이며 재현 시 commit pin 필요" },
+    { kind: "핵심 논문", label: "Bitcoin: A Peer-to-Peer Electronic Cash System", href: "https://bitcoin.org/bitcoin.pdf", note: "Cumulative-work chain과 attacker catch-up의 random-walk·Poisson confirmation 모델 원문" },
+    { kind: "핵심 논문", label: "The Bitcoin Backbone Protocol", href: "https://eprint.iacr.org/2014/765.pdf", note: "Common prefix·chain growth·chain quality의 명시적 theorem과 network·honest-power assumptions" },
   ],
 };

@@ -1,4 +1,5 @@
 import DistributionViz from "./viz/DistributionViz";
+import ExplainedFormula from "@/components/ui/explained-formula";
 
 export default function Distribution() {
   return (
@@ -22,6 +23,27 @@ export default function Distribution() {
         </p>
       </div>
       <div className="not-prose my-8"><DistributionViz /></div>
+      <ExplainedFormula
+        question="오른쪽 꼬리가 긴 값에서 IQR로 확인할 후보 경계는 어떻게 계산할까요?"
+        idea={<>가운데 50%를 덮는 Q3−Q1을 scale로 삼고, 양끝에서 그 1.5배보다 멀리 있는 값을 review 후보로 표시합니다. 이는 삭제 명령이 아니라 원자료와 생성 과정을 다시 볼 우선순위입니다.</>}
+        formula={String.raw`\begin{aligned}
+\operatorname{IQR}&=Q_3-Q_1,\\
+Q_1=10,\ Q_3=30&\Rightarrow \operatorname{IQR}=20,\\
+\text{review range}&=[10-1.5(20),\ 30+1.5(20)]\\
+&=[-20,60].
+\end{aligned}`}
+        terms={[
+          { symbol: "Q₁", name: "first quartile", description: "정렬한 sample의 아래 25% 경계입니다." },
+          { symbol: "Q₃", name: "third quartile", description: "정렬한 sample의 아래 75% 경계입니다." },
+          { symbol: "IQR", name: "interquartile range", description: "가운데 50% 폭으로 극단값에 덜 민감한 scale 요약입니다." },
+        ]}
+        assumptions={[
+          "Quartile 계산 convention과 reference population·slice를 함께 고정합니다.",
+          "1.5×IQR은 보편적 오류 판정이나 삭제 규칙이 아닙니다.",
+          "Time·group마다 distribution이 다르면 전체 quartile만으로 판정하지 않습니다.",
+        ]}
+        interpretation="60보다 큰 값은 먼저 확인할 후보지만 실제 대형 주문일 수 있습니다. Source row·unit·업무 상한을 확인한 뒤 수정·제외·유지 결정을 기록합니다."
+      />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>이상값은 오류와 드문 정상 사례를 구분한다</h3>
         <p>

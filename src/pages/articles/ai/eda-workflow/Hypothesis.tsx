@@ -1,4 +1,5 @@
 import HypothesisViz from "./viz/HypothesisViz";
+import ExplainedFormula from "@/components/ui/explained-formula";
 
 export default function Hypothesis() {
   return (
@@ -18,6 +19,26 @@ export default function Hypothesis() {
         </p>
       </div>
       <div className="not-prose my-8"><HypothesisViz /></div>
+      <ExplainedFormula
+        question="두 validation slice의 차이는 p-value 하나가 아니라 어떤 효과와 불확실성으로 남겨야 할까요?"
+        idea={<>먼저 같은 metric 단위의 차이를 effect estimate로 계산하고, resampling이나 model 가정으로 confidence interval을 만듭니다. Interval과 practical threshold를 함께 정하면 sample size가 큰 작은 차이와 실제로 중요한 차이를 구분할 수 있습니다.</>}
+        formula={String.raw`\begin{aligned}
+\widehat{\Delta}&=\bar{y}_A-\bar{y}_B,\\
+\bar{y}_A=12.0\text{ min},\ \bar{y}_B=10.5\text{ min}
+&\Rightarrow \widehat{\Delta}=1.5\text{ min}.
+\end{aligned}`}
+        terms={[
+          { symbol: String.raw`\bar{y}_A,\bar{y}_B`, name: "slice means", description: "같은 metric과 cutoff로 계산한 두 slice의 평균입니다." },
+          { symbol: "Δ̂", name: "estimated effect", description: "A와 B의 관측 평균 차이이며 원래 metric 단위를 유지합니다." },
+          { symbol: "confidence interval", name: "sampling-uncertainty interval", description: "반복 sampling에서 정한 절차가 만드는 estimate 범위입니다." },
+        ]}
+        assumptions={[
+          "두 slice의 analysis unit, cutoff, metric과 missing policy를 동일하게 고정합니다.",
+          "Interval 계산법의 independence·cluster·time dependence 가정을 확인합니다.",
+          "EDA에서 고른 여러 가설을 같은 data로 확정하면 selection bias가 생기므로 별도 holdout이나 multiplicity 계획이 필요합니다.",
+        ]}
+        interpretation="관측 차이는 1.5분입니다. Confidence interval이 practical threshold를 포함하는지와 holdout에서 방향이 재현되는지를 본 뒤에야 intervention 후보로 올립니다."
+      />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>가설에서 피처와 검증 계획을 함께 만든다</h3>
         <p>
@@ -31,6 +52,14 @@ export default function Hypothesis() {
           실제 validation 결과를 연결합니다. 효과가 없었던 가설도 남겨 두면
           같은 아이디어를 반복하는 일을 줄이고, 모델 오류가 발견됐을 때 어떤
           전제부터 다시 확인할지 알 수 있습니다.
+        </p>
+        <p>
+          차트를 많이 살펴본 뒤 가장 큰 차이만 골라 같은 data에서 p-value를
+          보고하면 우연한 pattern을 확정하기 쉽습니다. 탐색 중 만든 가설은
+          ledger에 모두 남기고, confirmatory test의 primary metric·slice·방향·
+          practical threshold와 multiplicity 처리 방식을 미리 정한 다음 별도
+          holdout이나 이후 기간에서 다시 확인합니다. 이때 실패한 가설도 삭제하지
+          않고 data version과 함께 보존해야 선택 과정을 재현할 수 있습니다.
         </p>
       </div>
     </section>

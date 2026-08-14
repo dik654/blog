@@ -1,4 +1,5 @@
 import type { CodeRef } from "@/components/code/types";
+import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefs } from "./codeRefs";
 import DropEmbedViz from "./viz/DropEmbedViz";
 
@@ -16,6 +17,26 @@ export default function DropoutEmbedding({ onCodeRef }: { onCodeRef: (key: strin
         </p>
       </div>
       <div className="not-prose my-8"><DropEmbedViz onOpenCode={open} /></div>
+      <ExplainedFormula
+        question="Inverted dropout은 일부 값을 0으로 만들면서 왜 평균 출력은 유지할까요?"
+        idea={<>Keep probability만큼만 값이 남으므로 남은 값은 그 확률로 나눠 키웁니다. Drop되면 0, keep되면 x/(1-p)가 되고 두 경우의 확률 가중 평균은 원래 x입니다.</>}
+        formula={String.raw`\begin{aligned}
+y&=\frac{m}{1-p}x,\quad m\sim\operatorname{Bernoulli}(1-p),\\
+x=2,\ p=.25&\Rightarrow y\in\{0,\ 2/.75\},\\
+\mathbb{E}[y]&=.25\cdot0+.75\cdot(2/.75)=2.
+\end{aligned}`}
+        terms={[
+          { symbol: "p", name: "drop probability", description: "Train mode에서 activation을 0으로 만드는 확률입니다." },
+          { symbol: "m", name: "keep mask", description: "Forward에서 sampling하고 backward에 그대로 재사용하는 0·1 mask입니다." },
+          { symbol: "1/(1−p)", name: "inverted scale", description: "Keep된 activation을 키워 conditional expectation을 보존합니다." },
+        ]}
+        assumptions={[
+          "Mask sampling이 입력값과 독립이고 0≤p<1입니다.",
+          "식은 train mode이며 eval mode에서는 mask와 scaling 없이 y=x입니다.",
+          "Expectation 유지가 개별 실행의 동일 출력이나 variance 감소를 뜻하지 않습니다.",
+        ]}
+        interpretation="입력 2는 25% 확률로 0, 75% 확률로 약 2.667이 되어 평균은 2입니다. 같은 mask를 backward에 쓰지 않으면 forward에서 선택한 경로와 다른 gradient가 흐릅니다."
+      />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>실행 모드와 랜덤 상태도 재현 대상입니다</h3>
         <p>

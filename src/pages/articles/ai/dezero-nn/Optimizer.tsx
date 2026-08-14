@@ -1,4 +1,5 @@
 import type { CodeRef } from "@/components/code/types";
+import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefs } from "./codeRefs";
 import OptimizerViz from "./viz/OptimizerViz";
 
@@ -16,6 +17,26 @@ export default function Optimizer({ onCodeRef }: { onCodeRef: (key: string, ref:
         </p>
       </div>
       <div className="not-prose my-8"><OptimizerViz onOpenCode={open} /></div>
+      <ExplainedFormula
+        question="SGD 한 step은 parameter를 어느 방향으로 얼마나 움직일까요?"
+        idea={<>Gradient가 loss가 가장 빠르게 커지는 방향을 가리키므로 그 반대 방향으로 learning rate만큼 이동합니다. 이 단순 update를 기준으로 삼으면 Adam의 state와 bias correction이 무엇을 추가하는지 분리해 볼 수 있습니다.</>}
+        formula={String.raw`\begin{aligned}
+\theta_{t+1}&=\theta_t-\eta g_t,\\
+\theta_t=2,\ \eta=0.1,\ g_t=0.5
+&\Rightarrow \theta_{t+1}=1.95.
+\end{aligned}`}
+        terms={[
+          { symbol: "θ_t", name: "current parameter", description: "Update 전에 optimizer가 읽은 parameter 값입니다." },
+          { symbol: "g_t", name: "current gradient", description: "현재 batch loss의 θ에 대한 미분입니다." },
+          { symbol: "η", name: "learning rate", description: "Gradient 방향을 실제 parameter 이동량으로 바꾸는 양수 scale입니다." },
+        ]}
+        assumptions={[
+          "Gradient가 현재 parameter와 같은 update step에서 계산됐습니다.",
+          "이 예제는 momentum·weight decay·gradient clipping이 없는 scalar SGD입니다.",
+          "한 step의 loss 감소는 새 data에서의 성능 향상을 보장하지 않습니다.",
+        ]}
+        interpretation="Gradient 0.5는 θ를 늘리면 loss가 증가한다는 local 신호이므로 θ는 0.05만큼 줄어 1.95가 됩니다."
+      />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>상태는 파라미터와 같은 순서와 shape를 유지해야 합니다</h3>
         <p>

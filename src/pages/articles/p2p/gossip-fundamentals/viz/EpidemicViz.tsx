@@ -90,7 +90,7 @@ export default function EpidemicViz() {
                   r={14}
                   fill={infected ? "#6366f120" : "#64748b08"}
                   stroke={infected ? "#6366f1" : "#64748b"}
-                  strokeWidth={1.3}
+                  strokeWidth={1.25}
                 />
                 {infected && (
                   <motion.circle

@@ -21,6 +21,18 @@ export default function Training({ onCodeRef }: { onCodeRef: (key: string, ref: 
         <p>
           작은 고정 batch에서 loss가 감소하는지 확인하고, 각 연산의 analytic gradient를 finite difference와 비교합니다. 이어서 seed, optimizer step, train/eval mode를 저장해 같은 조건에서 결과가 재현되는지 확인하면, 학습 실패가 데이터 문제인지 자동 미분이나 상태 관리 문제인지 빠르게 분리할 수 있습니다.
         </p>
+        <p>
+          Resume test에서는 연속 20 step과 12 step 뒤 checkpoint를 저장하고 새 process에서 8 step을 이어간 결과를 나란히 비교합니다. Parameter뿐 아니라 안정적인 parameter ID, optimizer <code>m</code>·<code>v</code>, step, RNG state와 data cursor를 복원하고, sample 순서·loss·최종 weight가 허용 오차 안에서 같은지 확인합니다. Weight만 같은 파일은 inference artifact일 수 있지만 학습 재개 checkpoint라고 볼 수는 없습니다.
+        </p>
+        <p>
+          Release fixture에는 정상 고정 batch뿐 아니라 gradient가 없는 parameter,
+          parameter registry 순서 변경, NaN loss, 중간 checkpoint truncate,
+          train/eval mode 누락을 넣습니다. Baseline과 candidate는 같은 data·seed·
+          precision에서 forward, analytic/finite-difference gradient, update receipt,
+          resume 결과를 비교하고 하나라도 contract가 깨지면 이전 artifact와
+          manifest로 되돌립니다. 작은 toy loss 감소만으로 framework 전체의
+          수치 안정성과 실제 model 품질을 보장하지는 않습니다.
+        </p>
       </div>
     </section>
   );

@@ -21,6 +21,9 @@ export default function Memory({ onCodeRef }: { onCodeRef: (key: string, ref: Co
         <p>
           <code>no_grad()</code>는 backpropagation 기록을 잠시 끄고, guard가 스코프를 벗어날 때 이전 설정을 되돌립니다. 단순히 false로 바꿨다가 true로 고정하는 방식과 달리 중첩 호출과 panic에서도 원래 상태를 보존할 수 있습니다. 다만 <code>thread_local!</code>은 같은 스레드 안의 전역 상태이므로, 라이브러리가 커지면 명시적인 execution context로 옮기는 선택지도 검토해야 합니다.
         </p>
+        <p>
+          이 계약은 정상 종료만 시험해서는 부족합니다. Recording=true에서 바깥 <code>no_grad</code>, 안쪽 임시 enable, 안쪽 panic을 차례로 발생시킨 뒤 각 guard가 직전 값을 복원하는지 확인하고, 새 thread가 다른 thread의 mode를 보지 않는지도 검사합니다. <code>Weak</code> 경계는 output을 drop한 뒤 graph node의 strong count가 0으로 돌아오는지를 반복 test해 cycle이 남지 않는지 검증합니다.
+        </p>
       </div>
     </section>
   );

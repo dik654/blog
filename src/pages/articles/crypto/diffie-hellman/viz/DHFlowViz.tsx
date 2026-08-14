@@ -1,221 +1,40 @@
-import { motion } from "framer-motion";
 import StepViz from "@/components/ui/step-viz";
 
-const sp = { type: "spring" as const, bounce: 0.12, duration: 0.5 };
-const C = { a: "#6366f1", b: "#10b981", k: "#f59e0b", bad: "#ef4444" };
-
 const STEPS = [
-  {
-    label: "공개 파라미터 공유",
-    body: "p = 23 (소수), g = 5 (생성원)\n5의 거듭제곱이 {1,...,22}를 전부 순회 → 생성원 조건 충족.\n도청자도 p, g를 알 수 있지만 DLP 때문에 안전.",
-  },
-  {
-    label: "① 비밀 선택 + 공개 값 계산",
-    body: "Alice: a = 6 (비밀), A = gᵃ mod p\n  A = 5⁶ mod 23 = 15625 mod 23 = 8\n\nBob: b = 15 (비밀), B = gᵇ mod p\n  B = 5¹⁵ mod 23 = modpow(5,15,23) = 19",
-  },
-  {
-    label: "② 공개 값 교환",
-    body: "Alice → Bob: A = 8\nBob → Alice: B = 19\n\n도청자: A=8, B=19를 관측하지만\na, b를 구하려면 DLP를 풀어야 함.",
-  },
-  {
-    label: "③ 공유 키 계산",
-    body: "Alice: K = Bᵃ mod p = 19⁶ mod 23\n  = modpow(19, 6, 23) = 2\n\nBob: K = Aᵇ mod p = 8¹⁵ mod 23\n  = modpow(8, 15, 23) = 2\n\n같은 키! gᵃᵇ = 5⁹⁰ mod 23 = 2",
-  },
-  {
-    label: "도청자의 한계",
-    body: "도청자가 아는 것: p=23, g=5, A=8, B=19\nK = gᵃᵇ를 구하려면:\n  8 = 5ᵃ mod 23 → a = ?  (DLP)\n  |Fp*| = 22 → BSGS: O(√22) ≈ 5번\n  |Fp*| = 2²⁵⁶ → O(2¹²⁸) 연산: 불가능.",
-  },
+  { label: "Domain", body: "장난감 F₂₃*, generator g=5와 encoding/order를 양쪽이 합의합니다." },
+  { label: "Ephemeral", body: "Alice a=6→A=8, Bob b=15→B=19를 계산합니다." },
+  { label: "Exchange", body: "A와 B는 공개되며 실제 protocol은 이 값과 role을 인증 transcript에 넣습니다." },
+  { label: "Shared", body: "Alice Bᵃ=2, Bob Aᵇ=2로 같은 raw DH output에 도달합니다." },
+  { label: "Derive", body: "Public-key validation 뒤 transcript-bound KDF로 용도별 key를 만들고 ephemeral secret을 지웁니다." },
 ];
+
+function Party({ name, secret, publicValue, active }: { name: string; secret: string; publicValue: string; active: boolean }) {
+  return (
+    <div className={`min-w-0 rounded-lg border p-4 ${active ? "border-primary/60 bg-primary/5" : "border-border/70 bg-card"}`}>
+      <p className="text-xs font-bold text-primary">{name}</p>
+      <dl className="mt-3 grid grid-cols-[4.5rem_minmax(0,1fr)] gap-2 text-xs leading-5">
+        <dt className="text-muted-foreground">secret</dt><dd className="break-all font-mono">{secret}</dd>
+        <dt className="text-muted-foreground">public</dt><dd className="break-all font-mono">{publicValue}</dd>
+      </dl>
+    </div>
+  );
+}
 
 export default function DHFlowViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
-        <svg
-          viewBox="0 0 490 160"
-          className="w-full max-w-2xl"
-          style={{ height: "auto" }}
-        >
-          {step === 0 && (
-            <motion.g
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={sp}
-            >
-              <text
-                x={20}
-                y={18}
-                fontSize={10}
-                fontWeight={600}
-                fill="var(--foreground)"
-              >
-                공개 파라미터
-              </text>
-              {[
-                "p = 23   // 소수",
-                "g = 5    // 생성원 (원시근)",
-                "",
-                "검증: ord(5) = p-1 = 22",
-                "5¹ = 5, 5² = 2, ..., 5²² = 1 mod 23",
-                "{1,...,22} 전부 순회 ✓",
-              ].map((t, i) => (
-                <text
-                  key={i}
-                  x={20}
-                  y={38 + i * 16}
-                  fontSize={10}
-                  fontFamily="monospace"
-                  fill="var(--foreground)"
-                >
-                  {t}
-                </text>
-              ))}
-            </motion.g>
-          )}
-          {step === 1 && (
-            <motion.g
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={sp}
-            >
-              <text x={20} y={18} fontSize={10} fontWeight={600} fill={C.a}>
-                Alice
-              </text>
-              {[
-                "a = 6       // 비밀키",
-                "A = 5⁶ mod 23",
-                "  = 15625 mod 23 = 8",
-              ].map((t, i) => (
-                <text
-                  key={i}
-                  x={20}
-                  y={38 + i * 16}
-                  fontSize={10}
-                  fontFamily="monospace"
-                  fill={C.a}
-                >
-                  {t}
-                </text>
-              ))}
-              <text x={260} y={18} fontSize={10} fontWeight={600} fill={C.b}>
-                Bob
-              </text>
-              {[
-                "b = 15      // 비밀키",
-                "B = 5¹⁵ mod 23",
-                "  = modpow(5,15,23) = 19",
-              ].map((t, i) => (
-                <text
-                  key={i}
-                  x={260}
-                  y={38 + i * 16}
-                  fontSize={10}
-                  fontFamily="monospace"
-                  fill={C.b}
-                >
-                  {t}
-                </text>
-              ))}
-            </motion.g>
-          )}
-          {step === 2 && (
-            <motion.g
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={sp}
-            >
-              <text
-                x={20}
-                y={18}
-                fontSize={10}
-                fontWeight={600}
-                fill="var(--foreground)"
-              >
-                공개 값 교환
-              </text>
-              {[
-                "Alice → Bob:  A = 8",
-                "Bob → Alice:  B = 19",
-                "",
-                "도청자 관측: A=8, B=19, p=23, g=5",
-                "a = log₅(8) mod 23 = ???  (DLP)",
-              ].map((t, i) => (
-                <text
-                  key={i}
-                  x={20}
-                  y={38 + i * 16}
-                  fontSize={10}
-                  fontFamily="monospace"
-                  fill={i < 2 ? C.k : C.bad}
-                >
-                  {t}
-                </text>
-              ))}
-            </motion.g>
-          )}
-          {step === 3 && (
-            <motion.g
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={sp}
-            >
-              <text x={20} y={18} fontSize={10} fontWeight={600} fill={C.k}>
-                공유 키 계산
-              </text>
-              {[
-                "Alice: K = B^a mod p",
-                "  = 19⁶ mod 23 = 2",
-                "",
-                "Bob:   K = A^b mod p",
-                "  = 8¹⁵ mod 23 = 2",
-                "",
-                "같은 키! g^(ab) = 5⁹⁰ mod 23 = 2",
-              ].map((t, i) => (
-                <text
-                  key={i}
-                  x={20}
-                  y={38 + i * 16}
-                  fontSize={10}
-                  fontFamily="monospace"
-                  fill={C.k}
-                >
-                  {t}
-                </text>
-              ))}
-            </motion.g>
-          )}
-          {step === 4 && (
-            <motion.g
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={sp}
-            >
-              <text x={20} y={18} fontSize={10} fontWeight={600} fill={C.bad}>
-                도청자의 한계
-              </text>
-              {[
-                "Known: p=23, g=5, A=8, B=19",
-                "Need: a = log_g(A) mod p-1",
-                "",
-                "|Fp*| = 22 → BSGS O(√22) ≈ 5번",
-                "|Fp*| = 2²⁵⁶ → O(2¹²⁸) → 불가능",
-                "",
-                "// CDH 가정: g^ab 계산 어려움",
-              ].map((t, i) => (
-                <text
-                  key={i}
-                  x={20}
-                  y={38 + i * 16}
-                  fontSize={10}
-                  fontFamily="monospace"
-                  fill={C.bad}
-                >
-                  {t}
-                </text>
-              ))}
-            </motion.g>
-          )}
-        </svg>
+        <div className="w-full min-w-0 space-y-3">
+          <div className="grid gap-3 md:grid-cols-[1fr_auto_1fr] md:items-center">
+            <Party name="Alice" secret="a=6" publicValue="A=5⁶ mod23=8" active={step === 1 || step === 3} />
+            <div className="rounded-lg border border-border/70 bg-background px-3 py-2 text-center text-xs font-semibold text-muted-foreground">A ⇄ B</div>
+            <Party name="Bob" secret="b=15" publicValue="B=5¹⁵ mod23=19" active={step === 1 || step === 3} />
+          </div>
+          <div className={`rounded-lg border p-4 text-center ${step >= 3 ? "border-emerald-500/50 bg-emerald-500/5" : "border-border/70 bg-card"}`}>
+            <p className="font-mono text-sm font-bold">Bᵃ = 19⁶ = 2 = 8¹⁵ = Aᵇ (mod 23)</p>
+            <p className="mt-2 text-xs leading-5 text-muted-foreground">{step === 4 ? "Z=2는 바로 cipher key가 아니라 authenticated transcript를 포함한 KDF 입력입니다." : "같은 값은 계산했지만 아직 peer identity와 key purpose는 정해지지 않았습니다."}</p>
+          </div>
+        </div>
       )}
     </StepViz>
   );

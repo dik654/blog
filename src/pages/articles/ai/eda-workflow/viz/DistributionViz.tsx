@@ -5,22 +5,22 @@ export default function DistributionViz() {
     ["판정", "같은 split · 원래 단위 metric", "residual과 slice 성능까지 확인합니다."],
   ];
   return (
-    <div data-viz className="rounded-2xl border border-border/70 bg-card/70 p-4 sm:p-6">
-      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-sky-600 dark:text-sky-300">Distribution diagnosis</p>
+    <div data-viz data-viz-canvas className="min-w-0 rounded-lg border border-border/70 bg-background p-4 sm:p-6">
+      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Distribution diagnosis</p>
       <h3 className="mt-1 text-lg font-semibold text-foreground">분포를 본 뒤 곧바로 변환하지 않습니다</h3>
       <div className="mt-5 grid gap-3 md:grid-cols-3">
         {items.map(([step, title, body], index) => (
-          <article key={step} className="rounded-xl border border-sky-500/25 bg-sky-500/[0.05] p-4">
+          <article key={step} className="min-w-0 rounded-lg border border-border/70 p-4">
             <div className="flex items-center gap-3">
-              <span className="flex size-8 items-center justify-center rounded-lg bg-background text-sm font-bold">{index + 1}</span>
-              <p className="text-sm font-semibold text-sky-700 dark:text-sky-200">{step}</p>
+              <span className="flex size-8 items-center justify-center rounded border border-border/70 text-sm font-bold">{index + 1}</span>
+              <p className="text-sm font-semibold text-primary">{step}</p>
             </div>
             <p className="mt-3 font-medium text-foreground">{title}</p>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">{body}</p>
           </article>
         ))}
       </div>
-      <p className="mt-4 rounded-lg bg-muted/70 px-4 py-3 text-sm leading-6 text-muted-foreground">
+      <p className="mt-4 border-l border-border pl-4 text-sm leading-6 text-muted-foreground">
         이상값도 같은 흐름을 따릅니다. 데이터 계약 위반인지 드문 정상 사례인지 확인한 뒤 처리 전후를 비교합니다.
       </p>
     </div>

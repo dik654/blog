@@ -1,4 +1,5 @@
 import CorrelationViz from "./viz/CorrelationViz";
+import ExplainedFormula from "@/components/ui/explained-formula";
 
 export default function Correlation() {
   return (
@@ -19,6 +20,26 @@ export default function Correlation() {
         </p>
       </div>
       <div className="not-prose my-8"><CorrelationViz /></div>
+      <ExplainedFormula
+        question="Pearson correlation은 두 변수의 선형 동행을 어떤 단위 없는 값으로 만들까요?"
+        idea={<>각 값에서 평균을 뺀 deviation의 곱을 더하고, 두 변수의 deviation 크기로 나눕니다. 단위를 제거해 −1에서 1 사이의 선형 동행을 요약하지만 원인 방향이나 비선형 관계는 남기지 않습니다.</>}
+        formula={String.raw`\begin{aligned}
+r_{xy}&=\frac{\sum_i(x_i-\bar{x})(y_i-\bar{y})}
+{\sqrt{\sum_i(x_i-\bar{x})^2}\sqrt{\sum_i(y_i-\bar{y})^2}},\\
+x=[1,2,3],\ y=[2,4,6]&\Rightarrow r_{xy}=1.
+\end{aligned}`}
+        terms={[
+          { symbol: String.raw`\bar{x},\bar{y}`, name: "sample means", description: "각 변수의 reference sample 평균입니다." },
+          { symbol: "r_xy", name: "Pearson correlation", description: "두 변수의 centered linear co-movement를 정규화한 값입니다." },
+          { symbol: "i", name: "paired row", description: "같은 analysis unit에서 관측한 x와 y의 짝입니다." },
+        ]}
+        assumptions={[
+          "각 x_i와 y_i가 같은 unit·시점의 올바른 pair입니다.",
+          "두 변수의 variation이 0이 아니며 극단값과 slice mixture를 별도로 확인합니다.",
+          "r=1은 이 sample의 완전한 선형 관계이지 x가 y의 원인이라는 증거가 아닙니다.",
+        ]}
+        interpretation="y=2x인 세 점은 r=1입니다. 그러나 숨은 group이 x와 y를 함께 바꾸었을 수 있고, U자형처럼 강한 비선형 관계는 r≈0으로 보일 수도 있습니다."
+      />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>중복 피처와 다중공선성은 목적에 따라 다르게 다룬다</h3>
         <p>

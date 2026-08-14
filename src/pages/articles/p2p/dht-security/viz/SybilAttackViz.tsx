@@ -29,7 +29,7 @@ export default function SybilAttackViz() {
             rx={8}
             fill="var(--card)"
             stroke="var(--foreground)"
-            strokeWidth={1.5}
+            strokeWidth={1.25}
           />
           <text
             x={260}
@@ -96,7 +96,7 @@ export default function SybilAttackViz() {
                 rx={6}
                 fill={`${DEFEND}15`}
                 stroke={DEFEND}
-                strokeWidth={1.5}
+                strokeWidth={1.25}
               />
               <text
                 x={182}

@@ -1,4 +1,5 @@
 import type { CodeRef } from "@/components/code/types";
+import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefs } from "./codeRefs";
 import LstmViz from "./viz/LstmViz";
 
@@ -16,6 +17,28 @@ export default function LstmCell({ onCodeRef }: { onCodeRef: (key: string, ref: 
         </p>
       </div>
       <div className="not-prose my-8"><LstmViz onOpenCode={open} /></div>
+      <ExplainedFormula
+        question="Forget·input·output gate는 cell state와 hidden state를 어떤 순서로 바꿀까요?"
+        idea={<>먼저 이전 memory에 forget 비율을 곱하고 새 candidate에 input 비율을 곱해 더합니다. 그다음 갱신된 cell state를 tanh로 제한하고 output gate만큼 외부에 공개합니다.</>}
+        formula={String.raw`\begin{aligned}
+c_t&=f_t c_{t-1}+i_t g_t,\\
+h_t&=o_t\tanh(c_t),\\
+f_t=.8,\ c_{t-1}=1,\ i_t=.25,\ g_t=.4
+&\Rightarrow c_t=.9,\\
+o_t=.5&\Rightarrow h_t\approx.358.
+\end{aligned}`}
+        terms={[
+          { symbol: "f_t", name: "forget gate", description: "이전 cell state를 channel별로 얼마나 유지할지 정합니다." },
+          { symbol: "i_t g_t", name: "gated candidate", description: "새 candidate 중 cell state에 기록할 양입니다." },
+          { symbol: "o_t", name: "output gate", description: "갱신된 cell state에서 hidden state로 공개할 비율입니다." },
+        ]}
+        assumptions={[
+          "이 수치 예제는 hidden dimension 1인 scalar cell이며 실제 model은 element-wise vector 연산입니다.",
+          "Gate 값은 sigmoid output이라 0과 1 사이이고 candidate는 tanh output입니다.",
+          "State value를 다음 chunk로 넘기는 것과 이전 graph를 detach하는 것은 서로 다른 결정입니다.",
+        ]}
+        interpretation="Cell state는 .8+.1=.9가 되고 tanh(.9)≈.716의 절반인 hidden state 약 .358을 출력합니다. Gate별 projection과 state update 순서를 바꾸면 같은 shape라도 다른 cell입니다."
+      />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>한 번의 큰 projection으로 합칠 수도 있습니다</h3>
         <p>

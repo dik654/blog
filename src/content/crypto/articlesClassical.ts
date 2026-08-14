@@ -3,12 +3,12 @@ import type { Article } from "../types";
 export const classicalArticles: Article[] = [
   {
     slug: "diffie-hellman",
-    title: "Diffie-Hellman 키 교환",
+    title: "Diffie–Hellman: 인증·KDF·forward secrecy",
     subcategory: "classical",
     sections: [
-      { id: "overview", title: "키 교환 문제" },
-      { id: "protocol", title: "프로토콜 흐름" },
-      { id: "security", title: "안전성과 한계" },
+      { id: "overview", title: "Raw key agreement의 경계" },
+      { id: "protocol", title: "Public values와 shared output" },
+      { id: "security", title: "인증·KDF·lifecycle·release" },
     ],
     component: () => import("@/pages/articles/crypto/diffie-hellman"),
   },

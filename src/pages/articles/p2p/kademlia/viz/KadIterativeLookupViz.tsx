@@ -69,7 +69,7 @@ function Arrow({
       x2={x2 - nx * 16}
       y2={y2 - ny * 16}
       stroke={color}
-      strokeWidth={1.5}
+      strokeWidth={1.25}
       markerEnd="url(#arr)"
       {...fade(show, delay)}
     />
@@ -173,7 +173,7 @@ export default function KadIterativeLookupViz() {
                   r={14}
                   fill={n.color + "22"}
                   stroke={n.color}
-                  strokeWidth={glow ? 2.5 : 1.2}
+                  strokeWidth={glow ? 1.25 : 1.2}
                 />
                 {glow && (
                   <circle

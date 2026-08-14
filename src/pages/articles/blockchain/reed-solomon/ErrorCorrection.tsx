@@ -1,208 +1,65 @@
-import Math from "@/components/ui/math";
+import { Link } from "react-router-dom";
+import ExplainedFormula from "@/components/ui/explained-formula";
 
 export default function ErrorCorrection() {
   return (
     <section id="error-correction" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">에러 감지 & 복구</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          에러 감지: 왜 가능한가?
-        </h3>
+      <h2 className="mb-5 text-2xl font-bold">
+        Decode: erasure, error, malformed profile을 서로 다른 결과로 낸다
+      </h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          차수 <Math>{"k-1"}</Math> 다항식은 <Math>{"k"}</Math>개 점으로 완전히
-          결정된다.
-          <br />
-          수신된 <Math>{"n"}</Math>개 값이 어떤 차수 <Math>{"k-1"}</Math> 다항식
-          위에도 놓이지 않으면 → 오류가 발생한 것이다
-        </p>
-        <p>
-          기하학적으로: 2차 다항식(포물선) 위의 6개 점 중 하나가 포물선을
-          벗어나면 즉시 감지된다.
-          <br />
-          <Math>{"n - k"}</Math>개의 중복 심볼이 있으면 최대{" "}
-          <Math>{"n - k"}</Math>개의 에러를 <strong>감지</strong>할 수 있다
-        </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">에러 정정: 한계</h3>
-        <p>
-          에러를 <strong>정정</strong>하려면 "어디가 틀렸는지"도 알아내야 한다.
-          <br />
-          위치와 값을 동시에 찾아야 하므로, 에러 하나당 중복 심볼 2개가
-          필요하다:
-        </p>
-        <Math display>
-          {"t \\leq \\left\\lfloor \\frac{n - k}{2} \\right\\rfloor"}
-        </Math>
-        <p>
-          <Math>{"t"}</Math>는 정정 가능한 최대 에러 수다.
-          <br />
-          앞의 예시에서 <Math>{"n=6, k=3"}</Math>이면{" "}
-          <Math>{"t = \\lfloor 3/2 \\rfloor = 1"}</Math>.
-          <br />
-          1개 위치의 에러를 찾아서 고칠 수 있다
-        </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">
-          구체적 예시: 에러 1개 복구 (<Math>{"\\mathbb{F}_7"}</Math>)
-        </h3>
-        <p>
-          올바른 코드워드: <Math>{"[1,\\; 6,\\; 3,\\; 6,\\; 1,\\; 2]"}</Math>.
-          <br />
-          전송 중 위치 2에서 에러 발생 → 수신:{" "}
-          <Math>{"[1,\\; 6,\\; \\mathbf{5},\\; 6,\\; 1,\\; 2]"}</Math>
+          위치를 아는 누락(erasure)은 k개의 검증된 symbol이 남으면 보간합니다.
+          위치를 모르는 잘못된 값(error)은 위치와 값을 함께 찾아야 하므로 parity
+          budget 두 칸을 씁니다. (n,k)의 distance 식과 proof idea는
+          <Link to="/blockchain/erasure-coding#reed-solomon"> canonical 설명</Link>을
+          재사용합니다. 구현 결과는 최소한 <code>Recovered</code>,
+          <code>InsufficientSymbols</code>, <code>TooManyErrors</code>,
+          <code>ProfileMismatch</code>, <code>MalformedSymbol</code>을 구분해야 합니다.
         </p>
       </div>
-
-      <div className="not-prose grid grid-cols-1 gap-3 my-4">
-        {[
-          {
-            step: "1. 에러 감지",
-            desc: "6개 값으로 차수 2 다항식을 피팅하면 불일치 발생 → 에러 존재 확인",
-            color: "indigo",
-          },
-          {
-            step: "2. 에러 위치 탐색",
-            desc: "임의의 5개 점 조합으로 차수 2 다항식을 보간. 나머지 1개 점과 일치하는 조합을 찾는다",
-            color: "emerald",
-          },
-          {
-            step: "3. 복구",
-            desc: "위치 2를 제외한 5개 점 {(0,1),(1,6),(3,6),(4,1),(5,2)}로 보간 → f(x) = 1+2x+3x² 복원. f(2) = 3으로 정정",
-            color: "amber",
-          },
-        ].map((p) => (
-          <div
-            key={p.step}
-            className={`rounded-lg border border-${p.color}-500/20 bg-${p.color}-500/5 p-4`}
-          >
-            <p className={`font-semibold text-sm text-${p.color}-400`}>
-              {p.step}
-            </p>
-            <p className="text-sm mt-1.5 text-foreground/75">{p.desc}</p>
-          </div>
-        ))}
+      <ExplainedFormula
+        question="Error e개와 erasure s개를 함께 unique-decode할 수 있는 경계는 무엇일까요?"
+        idea="Known erasure는 그 좌표를 비교에서 제외하면 되지만 unknown error는 두 후보 codeword 중 어느 쪽이 틀렸는지 분리해야 합니다. 그래서 error 하나가 distance 두 칸을 사용합니다."
+        formula={String.raw`d_{\min}=n-k+1,\qquad 2e+s<d_{\min}\iff2e+s\le n-k`}
+        terms={[
+          { symbol: "e", name: "unknown-position errors", description: "값과 위치를 모두 decoder가 찾아야 하는 corruption 수입니다." },
+          { symbol: "s", name: "known erasures", description: "위치는 알지만 값이 없는 symbol 수입니다." },
+          { symbol: "d_min", name: "minimum distance", description: "서로 다른 두 codeword가 적어도 달라지는 좌표 수입니다." },
+        ]}
+        assumptions={[
+          "평가점과 field가 올바른 (n,k) Reed–Solomon profile입니다.",
+          "Unique decoding 경계이며 list decoding이나 adversarial authenticity 보장은 아닙니다.",
+        ]}
+        interpretation="(10,6)에서 e=1,s=2이면 4≤4라 경계 안입니다. e=2,s=1이면 5≤4가 거짓이므로 unique decode를 보장하지 않습니다. Decoder가 어떤 값을 내놓더라도 commitment와 대조하지 않으면 잘못된 object를 성공으로 오인할 수 있습니다."
+      />
+      <div id="berlekamp-welch" className="scroll-mt-24">
+        <ExplainedFormula
+          question="Unknown error 위치를 모른 채 polynomial을 어떻게 복원할까요?"
+          idea="Error 위치에서는 0이 되는 locator E를 곱해 잘못된 관측을 지웁니다. N=Ep를 별도 미지 polynomial로 두면 각 관측에 대한 식이 coefficient에 선형이 되어 연립방정식으로 풀 수 있습니다."
+          formula={String.raw`N(\alpha_i)=r_iE(\alpha_i),\quad \deg E\le t,\quad \deg N<k+t,\quad p=N/E`}
+          terms={[
+            { symbol: "r_i", name: "received symbol", description: "평가점 α_i에서 받은 값으로 일부는 틀릴 수 있습니다." },
+            { symbol: "E(x)", name: "error locator", description: "Error 좌표 α_i에서 0이 되는 monic polynomial입니다." },
+            { symbol: "N(x)", name: "combined numerator", description: "E(x)p(x)를 나타내도록 함께 푸는 polynomial입니다." },
+            { symbol: "t", name: "error budget", description: "보통 floor((n−k)/2) 이하로 고정한 unique error 수입니다." },
+          ]}
+          assumptions={[
+            "Error 수가 t 이하이고 α_i가 서로 다르며 연립방정식의 rank 조건을 만족합니다.",
+            "해를 얻은 뒤 N이 E로 정확히 나뉘고 recovered p의 degree와 전체 mismatch 수를 다시 확인합니다.",
+          ]}
+          interpretation="GF(7), p(x)=2+3x의 [2,5,1,4]에서 index 2가 6으로 바뀌었다면 E(x)=x−2는 그 위치의 등식을 0=0으로 만들고 나머지 점이 N=Ep를 정합니다. Error budget을 넘으면 non-exact division이나 과도한 mismatch를 성공으로 바꾸지 않고 typed failure로 냅니다."
+        />
       </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3 className="text-xl font-semibold mt-8 mb-3">실전 알고리즘</h3>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>Evaluation code와 cyclic/BCH decoder를 섞지 않는다</h3>
         <p>
-          위의 "모든 조합을 시도하는" 방식은 <Math>{"O(\\binom{n}{k})"}</Math>로
-          느리다.
-          <br />
-          실제로는 Berlekamp-Welch 알고리즘이나 유클리드 알고리즘으로{" "}
-          <Math>{"O(n^2)"}</Math>에 해결한다.
-          <br />
-          핵심은 에러 위치 다항식(Error Locator Polynomial)을 찾는 것이다:
-        </p>
-        <Math display>
-          {"E(x) = \\prod_{i \\in \\text{errors}} (x - \\alpha_i)"}
-        </Math>
-        <p>
-          <Math>{"E(x)"}</Math>의 근이 에러 위치를 알려준다.
-          <br />
-          에러 위치를 알면{" "}
-          <a
-            href="/crypto/lagrange"
-            className="text-indigo-400 hover:underline"
-          >
-            Lagrange 보간
-          </a>
-          으로 올바른 다항식을 복원한다
-        </p>
-      </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          디코딩 알고리즘 심층
-        </h3>
-
-        <h4 className="text-lg font-semibold mt-5 mb-2">문제 정의</h4>
-        <p>
-          수신: <Math>{"r(x) = c(x) + e(x)"}</Math>.<Math>{"c(x)"}</Math>는 원본
-          코드워드(미지), <Math>{"e(x)"}</Math>는 에러 다항식(희소, 가중치{" "}
-          <Math>{"\\leq t"}</Math>). 목표: <Math>{"c(x)"}</Math> 복원
-        </p>
-      </div>
-
-      <div className="not-prose grid grid-cols-1 gap-3 my-3">
-        {[
-          {
-            step: "1단계: Syndrome 계산",
-            desc: "S_j = r(α^j) = c(α^j) + e(α^j) = e(α^j). c(α^j) = 0 (BCH 정의)이므로 syndrome은 에러 정보만 담는다. 2t개 필요: S₁, ..., S_{2t}",
-            color: "indigo",
-          },
-          {
-            step: "2단계: 에러 위치 다항식",
-            desc: "Σ(x) = Π(1 - X_i·x). X_i = α^{i_j} (에러 위치). Newton 항등식으로 Σ 계수에 대한 선형 시스템을 구성",
-            color: "emerald",
-          },
-          {
-            step: "3단계: Berlekamp-Massey",
-            desc: "Syndrome 수열을 생성하는 최소 LFSR을 반복적으로 찾는다. 복잡도: O(t²) = O((n-k)²/4)",
-            color: "amber",
-          },
-          {
-            step: "4단계: Chien 탐색",
-            desc: "Σ(x)의 근을 체의 모든 원소에서 탐색. 근 α^{-i_j} → 위치 i_j. O(n·t)",
-            color: "indigo",
-          },
-          {
-            step: "5단계: Forney 알고리즘",
-            desc: "위치가 알려지면 에러 값 계산: Y_i = -X_i^{1-b} · Ω(X_i⁻¹) / Σ'(X_i⁻¹). Ω(x) = S(x)·Σ(x) mod x^{2t}",
-            color: "emerald",
-          },
-        ].map((p) => (
-          <div
-            key={p.step}
-            className={`rounded-lg border border-${p.color}-500/20 bg-${p.color}-500/5 p-4`}
-          >
-            <p className={`font-semibold text-sm text-${p.color}-400`}>
-              {p.step}
-            </p>
-            <p className="text-sm mt-1.5 text-foreground/75">{p.desc}</p>
-          </div>
-        ))}
-      </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-4">
-        <h4 className="text-lg font-semibold mt-5 mb-2">
-          Berlekamp-Welch (대안, 더 깔끔)
-        </h4>
-        <p>
-          다항식 <Math>{"E(x)"}</Math>(에러 위치), <Math>{"N(x)"}</Math>(분자)를
-          찾는다:
-          <Math>{"N(a_i) = r_i \\cdot E(a_i)"}</Math> (모든 i에 대해).
-          <br />
-          <Math>{"\\deg(N) < k + t"}</Math>, <Math>{"\\deg(E) \\leq t"}</Math>,
-          E는 monic.
-          <br />
-          n개 등식, n개 미지수의 선형 시스템. 가우스 소거{" "}
-          <Math>{"O(n^3)"}</Math>, 최적화 <Math>{"O(n^2)"}</Math>.
-          <br />
-          원본 메시지: <Math>{"m(x) = N(x) / E(x)"}</Math>
-        </p>
-
-        <h4 className="text-lg font-semibold mt-5 mb-2">
-          Guruswami-Sudan 리스트 디코딩
-        </h4>
-        <p>
-          <Math>{"t = (d-1)/2"}</Math> 한계를 초과하여{" "}
-          <Math>{"n - \\sqrt{kn}"}</Math>개 에러까지 정정 가능. 최대{" "}
-          <Math>{"O(n)"}</Math>개의 후보 리스트를 반환한다. 복잡도{" "}
-          <Math>{"O(n^4)"}</Math> (트릭으로 <Math>{"O(n^2)"}</Math>). 코드 기반
-          암호, 심우주 연접 코드에 사용
-        </p>
-
-        <h4 className="text-lg font-semibold mt-5 mb-2">
-          소거(Erasure) 디코딩
-        </h4>
-        <p>
-          소거 = 위치는 알지만 값을 모르는 경우. 에러의 2배인{" "}
-          <Math>{"n - k"}</Math>개까지 정정 가능하다 — 위치를 찾을 필요가
-          없으므로.
-          <br />
-          에러 + 소거 혼합:{" "}
-          <Math>{"2 \\times \\text{에러} + \\text{소거} \\leq n - k"}</Math>
+          Syndrome·Berlekamp–Massey·Chien·Forney 경로는 특정 cyclic RS
+          presentation과 generator/first-root convention을 전제로 합니다.
+          임의 evaluation-point code에 <code>c(α^j)=0</code>을 그대로 적용하면
+          틀립니다. 이 글은 일반 evaluation profile에는 Berlekamp–Welch를
+          설명하고, cyclic decoder를 쓸 때는 generator polynomial·root offset·
+          shortening convention을 별도 profile로 요구합니다.
         </p>
       </div>
     </section>

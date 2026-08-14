@@ -1,4 +1,5 @@
 import type { CodeRef } from "@/components/code/types";
+import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefs } from "./codeRefs";
 import NormViz from "./viz/NormViz";
 
@@ -16,6 +17,27 @@ export default function Normalization({ onCodeRef }: { onCodeRef: (key: string, 
         </p>
       </div>
       <div className="not-prose my-8"><NormViz onOpenCode={open} /></div>
+      <ExplainedFormula
+        question="한 sample의 feature [1,3]을 LayerNorm하면 어떤 값이 될까요?"
+        idea={<>Feature 축 평균을 빼고 같은 축의 population variance로 나눕니다. Epsilon은 분산이 0에 가까울 때 분모가 0이 되는 것을 막고, gamma와 beta가 이후 scale과 shift를 학습합니다.</>}
+        formula={String.raw`\begin{aligned}
+\mu&=(1+3)/2=2,\\
+\sigma^2&=((1-2)^2+(3-2)^2)/2=1,\\
+\hat{x}&=(x-\mu)/\sqrt{\sigma^2+\varepsilon}
+\approx[-1,1].
+\end{aligned}`}
+        terms={[
+          { symbol: "μ", name: "feature mean", description: "이 sample의 정규화 대상 feature 평균입니다." },
+          { symbol: "σ²", name: "population variance", description: "대상 feature 수로 나눈 squared deviation 평균입니다." },
+          { symbol: "ε", name: "stability epsilon", description: "분모가 0 또는 지나치게 작아지는 것을 막는 양수입니다." },
+        ]}
+        assumptions={[
+          "설명에서는 ε가 1보다 매우 작고 gamma=1, beta=0이라 근사값을 [-1,1]로 씁니다.",
+          "정규화 축은 마지막 feature 축이며 batch·time 축과 섞지 않습니다.",
+          "Population variance를 사용하므로 sample variance의 n−1 분모와 구분합니다.",
+        ]}
+        interpretation="정규화된 두 값의 평균은 0에 가깝고 variance는 1에 가깝습니다. 상수 입력에서는 epsilon 덕분에 finite한 0을 내야 합니다."
+      />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>정규화 축과 수치 안정성을 테스트합니다</h3>
         <p>

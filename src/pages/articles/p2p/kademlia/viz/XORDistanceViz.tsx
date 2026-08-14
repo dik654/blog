@@ -51,7 +51,7 @@ export default function XORDistanceViz() {
                   rx={4}
                   fill={pf ? "#6366f118" : "#6366f108"}
                   stroke={pf ? "#6366f1" : "#6366f130"}
-                  strokeWidth={pf ? 1.5 : 0.8}
+                  strokeWidth={pf ? 1.25 : 0.8}
                 />
                 <text
                   x={x + BW / 2}
@@ -81,7 +81,7 @@ export default function XORDistanceViz() {
                   rx={4}
                   fill={pf ? "#10b98118" : "#10b98108"}
                   stroke={pf ? "#10b981" : "#10b98130"}
-                  strokeWidth={pf ? 1.5 : 0.8}
+                  strokeWidth={pf ? 1.25 : 0.8}
                 />
                 <text
                   x={x + BW / 2}
@@ -117,7 +117,7 @@ export default function XORDistanceViz() {
                     rx={4}
                     fill={isDiff ? "#f59e0b18" : "transparent"}
                     stroke={isDiff ? "#f59e0b" : "#f59e0b30"}
-                    strokeWidth={isDiff ? 1.5 : 0.8}
+                    strokeWidth={isDiff ? 1.25 : 0.8}
                   />
                   <text
                     x={x + BW / 2}
@@ -146,7 +146,7 @@ export default function XORDistanceViz() {
                 x2={X0 + PREFIX * (BW + BG) - BG}
                 y2={146}
                 stroke="#8b5cf6"
-                strokeWidth={1.5}
+                strokeWidth={1.25}
               />
               <line
                 x1={X0}
@@ -154,7 +154,7 @@ export default function XORDistanceViz() {
                 x2={X0}
                 y2={150}
                 stroke="#8b5cf6"
-                strokeWidth={1.5}
+                strokeWidth={1.25}
               />
               <line
                 x1={X0 + PREFIX * (BW + BG) - BG}
@@ -162,7 +162,7 @@ export default function XORDistanceViz() {
                 x2={X0 + PREFIX * (BW + BG) - BG}
                 y2={150}
                 stroke="#8b5cf6"
-                strokeWidth={1.5}
+                strokeWidth={1.25}
               />
               <text
                 x={X0 + (PREFIX * (BW + BG)) / 2 - 3}

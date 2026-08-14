@@ -28,7 +28,7 @@ export default function EclipseAttackViz() {
             rx={8}
             fill="var(--card)"
             stroke="var(--foreground)"
-            strokeWidth={1.5}
+            strokeWidth={1.25}
           />
           <text
             x={260}

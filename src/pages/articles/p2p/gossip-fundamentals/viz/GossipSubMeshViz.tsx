@@ -85,7 +85,7 @@ export default function GossipSubMeshViz() {
                 x2={t.x}
                 y2={t.y}
                 stroke="#6366f1"
-                strokeWidth={1.3}
+                strokeWidth={1.25}
               />
               {show && (
                 <motion.circle
@@ -154,7 +154,7 @@ export default function GossipSubMeshViz() {
               rx={5}
               fill={p.color + "12"}
               stroke={p.color}
-              strokeWidth={1.3}
+              strokeWidth={1.25}
             />
             <text
               x={p.x + BW / 2}
