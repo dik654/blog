@@ -1,67 +1,87 @@
 import RemoteViz from "./viz/RemoteViz";
 import WsProtocolViz from "./viz/WsProtocolViz";
+import { CitationBlock } from "@/components/ui/citation";
 
-const permissionBinding = [
-  ["tool", "정확한 tool 이름과 canonical arguments"],
-  ["resource", "대상 path·URL·digest와 workspace identity"],
-  ["attempt", "session·request·attempt ID와 만료 시각"],
-  ["decision", "한 번만 소비되는 allow 또는 deny"],
+const sourceBoundary = [
+  ["환경 해석", "remote flag·session ID·base URL과 proxy enable flag를 읽는다"],
+  ["활성 조건", "remote·proxy·session ID·token이 모두 있을 때만 proxy state를 켠다"],
+  ["연결 재료", "WebSocket URL, CA bundle과 subprocess proxy 환경 변수를 조립한다"],
+  ["구현 밖", "socket transport·ack/replay·permission binding은 이 source에 없다"],
 ] as const;
 
 export default function Remote() {
   return (
     <section id="remote" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">
-        원격 세션은 입력·권한·출력을 authenticated channel로 묶는다
+        Remote helper와 원격 세션 protocol은 서로 다른 계층이다
       </h2>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          원격 실행에서는 로컬 CLI가 화면과 사용자 입력을 담당하고, remote
-          runtime이 workspace·provider·tool을 실제로 다룹니다. 화면이 같아도
-          신뢰 경계는 달라집니다. remote는 파일과 command에 접근할 수 있고,
-          local은 remote가 보낸 permission prompt가 지금 보고 있는 세션의
-          요청인지 확인해야 합니다.
+          <strong>upstream proxy</strong>는 application의 외부 API 요청을 중간
+          process로 보내는 연결 방식입니다. pinned <code>remote.rs</code>는 remote
+          mode를 환경 변수에서 읽고, token file·CA bundle·proxy URL을 조립해
+          subprocess 환경으로 전달합니다. 여기까지는 연결을 준비하는 bootstrap
+          data이며 WebSocket session protocol 전체는 아닙니다.
         </p>
         <p className="leading-7">
-          그래서 WebSocket 연결 하나를 열었다는 사실만으로는 충분하지 않습니다.
-          TLS/WSS로 server identity를 확인하고, 짧게 살아 있는 credential을
-          session에 묶으며, protocol version·request ID·sequence를 포함한
-          구조화된 message로 양쪽 상태를 맞춰야 합니다.
+          따라서 이 글은 먼저 현재 구현이 실제로 보장하는 활성 조건을 확인한 뒤,
+          장시간 원격 session에 필요하지만 아직 이 파일에서 확인되지 않는
+          sequence·ack·resume·permission 계약을 hardening 목표로 확장합니다. 이
+          경계를 지우면 URL을 만들었다는 사실을 안전한 remote execution이
+          완성됐다는 근거로 오해하게 됩니다.
         </p>
+
+        <div id="paper-claw-remote-source" className="scroll-mt-24">
+          <CitationBlock
+            source="Claw Code remote proxy bootstrap @ b71afdd"
+            href="https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src/remote.rs"
+            citeKey={5}
+            type="code"
+          >
+            <p>
+              <strong>문제:</strong> remote upstream proxy에 필요한 환경, token,
+              CA와 URL을 결정적으로 조립합니다. <strong>기여:</strong> pinned
+              source는 <code>RemoteSessionContext</code>, 네 조건의
+              <code>should_enable</code>, ws/wss URL 변환, NO_PROXY 목록과 subprocess
+              환경 생성을 구현합니다. <strong>전제:</strong> commit, environment
+              map, token·CA path와 base URL을 고정합니다. <strong>근거 범위:</strong>
+              proxy bootstrap data와 unit test입니다. <strong>일반화 금지:</strong>
+              WebSocket 연결·인증 handshake·message envelope·ack/replay,
+              permission binding, redaction과 remote process lifecycle이 구현됐다는
+              증거는 아닙니다.
+            </p>
+          </CitationBlock>
+        </div>
 
         <div className="not-prose my-8">
           <RemoteViz />
         </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
-          protocol envelope가 재연결의 기준점이다
+          네 조건이 모두 참일 때만 proxy state를 활성화한다
         </h3>
         <p className="leading-7">
-          message type만 보내면 duplicate와 순서 뒤바뀜을 구분하기 어렵습니다.
-          모든 message에 protocol version, session ID, request ID, monotonic
-          sequence와 payload type을 넣고, receiver는 마지막으로 처리한
-          sequence를 acknowledge합니다. 재연결할 때 client가 마지막 ack를 보내면
-          server는 보존된 범위만 replay하거나 snapshot을 다시 전송할 수
-          있습니다.
+          현재 <code>should_enable</code>은 remote flag, upstream-proxy flag,
+          non-empty session ID와 읽을 수 있는 token을 모두 요구합니다. 하나라도
+          빠지면 disabled state를 반환하므로 subprocess proxy 환경도 만들지
+          않습니다. 이 조건은 “준비 자료가 모두 있다”는 판정일 뿐 token의 서명,
+          audience·expiry나 server identity까지 검증했다는 판정은 아닙니다.
         </p>
         <p className="leading-7">
-          stream이 producer보다 느리면 queue를 무한히 늘리지 말고 backpressure와
-          size limit를 적용합니다. text delta는 합칠 수 있어도 permission, tool
-          result와 terminal state는 유실하면 안 되므로 message 종류별 보존
-          정책도 달라야 합니다.
+          <code>https://</code> base URL은 <code>wss://</code>로,
+          <code>http://</code>는 <code>ws://</code>로 바꾼 뒤 고정 path를 붙입니다.
+          문자열 변환과 TLS 인증은 별개입니다. 실제 connector에서는 CA bundle을
+          사용해 certificate와 hostname을 검증하고, production에서 평문
+          <code>ws://</code>를 허용할지 명시적인 policy가 필요합니다.
         </p>
-
-        <div className="not-prose my-8">
-          <WsProtocolViz />
-        </div>
       </div>
 
-      <div className="not-prose my-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {permissionBinding.map(([title, body]) => (
+      <div className="not-prose my-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {sourceBoundary.map(([title, body]) => (
           <article
             key={title}
-            className="min-w-0 rounded-2xl border border-border/70 bg-card p-4 shadow-sm"
+            className="min-w-0 rounded-lg border border-border/70 bg-card p-4"
           >
             <h4 className="text-sm font-bold text-foreground">{title}</h4>
             <p className="mt-2 text-xs leading-5 text-muted-foreground">
@@ -73,53 +93,37 @@ export default function Remote() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3 className="text-xl font-semibold mt-8 mb-3">
-          permission 응답은 정확한 action에만 쓸 수 있다
+          아래 protocol은 현재 근거가 아니라 다음 hardening 계약이다
         </h3>
         <p className="leading-7">
-          remote가 “Bash를 허용할까요?”처럼 모호한 prompt를 보내면 local
-          사용자는 무엇을 승인하는지 알 수 없습니다. prompt에는 canonical
-          command, working directory, affected resource와 risk summary가
-          포함돼야 하며, 응답은 session·request·attempt에 암호학적으로 또는
-          server-side state로 결합해야 합니다.
-        </p>
-        <p className="leading-7">
-          허용 결정은 한 번 소비하고 짧은 시간 뒤 만료합니다. remote가
-          argument를 바꾸거나 retry attempt가 달라지면 새 결정을 받아야 하므로,
-          과거의 allow를 비슷한 command에 재사용할 수 없습니다.
+          장시간 연결에서는 network가 끊긴 뒤 같은 event가 다시 오거나 일부가
+          빠질 수 있습니다. 이때 protocol version, session·request identity와
+          monotonic sequence를 가진 envelope가 있어야 duplicate와 gap을 구분할 수
+          있습니다. Receiver의 마지막 처리 sequence를 ack하고, 보존 범위 안에서
+          replay하거나 현재 snapshot을 다시 보내는 규칙도 필요합니다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">
-          연결이 끊기면 새 privileged action을 멈춘다
-        </h3>
-        <p className="leading-7">
-          연결이 사라졌다고 이미 승인된 원자적 작업을 무조건 kill하면 더 큰
-          손상이 생길 수 있습니다. 실행 중 action은 정의된 cancellation policy에
-          따라 완료하거나 중단하되, 새 privileged action과 새 permission
-          prompt는 기본적으로 pause합니다. reconnect timeout이 끝나면 child
-          process와 lease를 정리하고 결과를 durable log에 남깁니다.
-        </p>
-        <p className="leading-7">
-          resume은 session token만 확인하지 않고 마지막 ack와 runtime
-          generation도 확인합니다. server가 재시작돼 generation이 바뀌었다면
-          이전 stream을 이어 붙이지 말고 현재 state snapshot부터 다시 동기화해야
-          합니다.
-        </p>
+        <div className="not-prose my-8">
+          <WsProtocolViz />
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
-          upstream proxy는 provider credential의 경계를 정한다
+          Permission은 사용자가 본 정확한 action에만 결합한다
         </h3>
         <p className="leading-7">
-          remote runtime이 provider API를 호출한다면 credential을 어느 쪽이
-          보관하는지 먼저 정해야 합니다. local secret을 WebSocket payload로
-          그대로 전달하기보다 remote 전용 credential이나 짧은 delegated token을
-          사용하는 편이 낫습니다. proxy log에는 Authorization header, prompt의
-          secret과 provider response의 민감 정보를 redaction합니다.
+          원격 runtime이 privileged tool을 실행한다면 prompt에는 canonical
+          arguments, resource, session·request·attempt와 만료 시각이 필요합니다.
+          허용 결정은 한 번 소비하고, argument나 attempt가 달라지면 다시 승인을
+          받아야 합니다. 그렇지 않으면 과거의 모호한 “허용”을 다른 command에
+          재사용할 수 있습니다.
         </p>
         <p className="leading-7">
-          local과 remote의 결과가 같아 보여도 network failure, credential
-          scope와 audit owner는 달라집니다. mode 차이를 추상화하되, 사용자가
-          보안과 장애 책임의 차이를 확인할 수 있는 진단 정보는 숨기지 않아야
-          합니다.
+          연결이 끊기면 새 privileged action을 pause하고, 이미 시작한 action은
+          명시된 cancellation policy에 따라 처리해야 합니다. 느린 client에는
+          bounded queue와 backpressure를 적용하되, permission·tool result·terminal
+          state를 text delta처럼 임의로 버려서는 안 됩니다. 이 요구사항은
+          <code>remote.rs</code>의 현재 구현 설명이 아니라 release 전에 별도
+          protocol test로 증명할 항목입니다.
         </p>
       </div>
     </section>

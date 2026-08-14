@@ -1,60 +1,23 @@
-export default function Applications() {
-  const items = [
-    {
-      name: "Diffie-Hellman 키 교환",
-      desc: "Alice가 gᵃ, Bob이 gᵇ를 공개. 둘 다 gᵃᵇ를 계산할 수 있지만, 도청자는 gᵃ와 gᵇ로부터 gᵃᵇ를 구할 수 없다 (CDH 가정).",
-      color: "indigo",
-      href: "/crypto/diffie-hellman",
-    },
-    {
-      name: "Schnorr 서명 / 식별",
-      desc: "공개키 y = gˣ에 대해 비밀키 x를 알고 있음을 증명. DLP가 어려우므로 y에서 x를 역추적 불가.",
-      color: "emerald",
-      href: "/crypto/zk-theory#schnorr",
-    },
-    {
-      name: "ElGamal 암호",
-      desc: "수신자의 공개키 gˣ로 메시지를 암호화. DLP 난이도가 복호화 불가능성을 보장.",
-      color: "amber",
-      href: "/crypto/elgamal",
-    },
-    {
-      name: "ECDLP — 타원곡선 버전",
-      desc: "유한체 위 타원곡선군에서의 이산로그. 같은 안전성을 더 짧은 키(256-bit)로 달성.",
-      color: "indigo",
-      href: "/crypto/elliptic-curves",
-    },
-  ];
+import { Link } from "react-router-dom";
 
+export default function Applications() {
   return (
     <section id="applications" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">암호학 응용</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
+      <h2 className="mb-6 text-2xl font-bold">프로토콜은 DLP·CDH·DDH를 같은 가정으로 취급하지 않는다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          DLP의 일방향성을 기반으로 한 암호 프로토콜들이다.
-          <br />
-          각각 "정방향은 쉽고 역방향은 어렵다"는 동일한 원리를 다른 방식으로
-          활용한다.
+          DLP는 Y=gˣ에서 x를 찾는 문제입니다. Computational Diffie–Hellman(CDH)은 gᵃ,gᵇ에서 gᵃᵇ를 계산하는 문제이고, Decisional Diffie–Hellman(DDH)은 (gᵃ,gᵇ,gᶜ)에서 c=ab인지 구분하는 문제입니다. DLP를 풀면 CDH도 풀 수 있지만 반대 방향이 자동으로 성립하지 않으며, pairing group처럼 DDH가 쉬워도 DLP는 어렵게 설계된 환경도 있습니다.
         </p>
-      </div>
-      <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {items.map((p) => (
-          <div
-            key={p.name}
-            className={`rounded-lg border border-${p.color}-500/20 bg-${p.color}-500/5 p-4`}
-          >
-            <p className={`font-semibold text-sm text-${p.color}-400`}>
-              {p.href ? (
-                <a href={p.href} className="hover:underline">
-                  {p.name} →
-                </a>
-              ) : (
-                p.name
-              )}
-            </p>
-            <p className="text-sm mt-1.5 text-foreground/75">{p.desc}</p>
-          </div>
-        ))}
+        <p>
+          <Link to="/crypto/diffie-hellman">Diffie–Hellman</Link>은 CDH/DDH 계열 가정을, <Link to="/crypto/elgamal">ElGamal</Link>의 confidentiality는 보통 DDH와 message encoding 조건을, <Link to="/crypto/crypto-primitives#schnorr">Schnorr</Link>는 knowledge-of-secret와 signature reduction을 사용합니다. “DLP 기반”이라는 한 줄만으로 각 protocol의 exact security property를 대체할 수 없습니다.
+        </p>
+        <h3>Parameter 선택과 release gate</h3>
+        <p>
+          Run receipt에는 group/curve 이름뿐 아니라 parameter version, full group·subgroup order, generator, cofactor, point encoding, validation policy와 library SHA를 고정합니다. Toy group·small subgroup·identity·noncanonical point·wrong curve·out-of-range scalar를 reject하고, official vector 및 independent implementation과 public key·shared secret·signature parity를 맞춥니다. 그 뒤 target hardware의 scalar multiplication과 attack budget을 비교합니다.
+        </p>
+        <p>
+          Shor algorithm을 실행할 충분히 큰 fault-tolerant quantum computer가 있다면 DLP 계열은 polynomial time에 풀립니다. 현재 classical security estimate와 post-quantum migration horizon을 분리해 기록하며, “오늘 실용적 quantum attack이 없다”를 장기 기록의 안전성으로 확대하지 않습니다.
+        </p>
       </div>
     </section>
   );

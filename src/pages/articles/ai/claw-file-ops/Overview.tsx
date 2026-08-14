@@ -1,3 +1,5 @@
+import { CitationBlock } from "@/components/ui/citation";
+
 const operations = [
   ["read_file", "읽기", "offset과 limit으로 필요한 구간만 가져옵니다."],
   ["glob_search", "탐색", "파일 이름 패턴으로 후보를 좁힙니다."],
@@ -20,15 +22,38 @@ export default function Overview() {
           필요합니다. Claw Code의 파일 도구는 이 과정을 작은 연산으로 나눕니다.
         </p>
         <p>
-          도구 이름과 개수는 분석한 저장소 스냅샷을 기준으로 하지만, 읽기와
-          변경을 별도 권한으로 나누고 모든 경로를 워크스페이스 경계 안에서
-          해석한다는 원칙은 다른 에이전트 런타임에도 그대로 적용할 수 있습니다.
+          이 글은 commit <code>b71afdd</code>를 기준으로 합니다. 현재 구현은
+          10 MB read cap, NUL byte 기반 binary 차단, line offset·limit, hard-coded
+          directory 제외, glob 최대 100개와 regex grep을 제공합니다. 쓰기와
+          edit는 직접 file을 갱신하며 expected digest나 atomic rename을 요구하지
+          않으므로, 현재 기능과 production hardening을 분리해서 읽어야 합니다.
         </p>
+
+        <div id="paper-claw-file-ops-source" className="scroll-mt-24">
+          <CitationBlock
+            source="Claw Code file operations @ b71afdd"
+            href="https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src/file_ops.rs"
+            citeKey={1}
+            type="code"
+          >
+            <p>
+              <strong>문제:</strong> workspace 안에서 bounded read, write, edit,
+              glob과 grep primitive를 제공합니다. <strong>기여:</strong> pinned
+              source는 line range, size·binary guard, canonical containment,
+              WalkDir glob과 regex scan을 구현합니다. <strong>전제:</strong> commit,
+              canonical workspace root, file tree와 request를 고정합니다.
+              <strong> 근거 범위:</strong> 이 source와 unit test의 실제 동작입니다.
+              <strong> 일반화 금지:</strong> handle-bound open, expected digest,
+              unique edit, atomic replacement, stable cursor·snapshot과 multi-file
+              transaction까지 구현됐다는 뜻은 아닙니다.
+            </p>
+          </CitationBlock>
+        </div>
       </div>
 
       <div className="not-prose my-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
         {operations.map(([name, kind, description]) => (
-          <div key={name} className="rounded-xl border bg-card p-4">
+          <div key={name} className="min-w-0 rounded-lg border bg-card p-4">
             <span className="text-xs font-medium text-muted-foreground">
               {kind}
             </span>
@@ -74,7 +99,8 @@ export default function Overview() {
 
         <h3 className="text-xl font-semibold mt-8 mb-3">이 글의 읽기 순서</h3>
         <p>
-          <strong>읽기와 쓰기</strong>에서 부분 읽기와 원자적 교체 방식을 확인한
+          <strong>읽기와 쓰기</strong>에서 현재 부분 읽기·직접 쓰기와 원자적 교체
+          hardening의 차이를 확인한
           뒤,
           <strong>검색</strong>에서 큰 저장소의 후보를 줄이는 흐름을 살펴보면
           됩니다. 마지막 <strong>경계 검사</strong>에서는 경로 정규화, 심볼릭

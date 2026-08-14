@@ -1,15 +1,16 @@
 import InitViz from "./viz/InitViz";
+import { CitationBlock } from "@/components/ui/citation";
 
 const ownershipRows = [
   [
     "프로젝트 설정",
-    ".claw/config.json",
-    "팀이 공유할 기본값만 기록하고 secret은 넣지 않습니다.",
+    ".claw/settings.json · .claw.json",
+    "Pinned init이 없을 때만 starter 값을 만들며 secret을 넣지 않습니다.",
   ],
   [
     "에이전트 지침",
-    ".claw/AGENTS.md",
-    "감지한 명령은 초안으로 표시하고 사람이 검토합니다.",
+    "CLAUDE.md",
+    "감지한 언어·검증 명령의 초안을 만들되 기존 파일은 건너뜁니다.",
   ],
   [
     "런타임 데이터",
@@ -18,8 +19,8 @@ const ownershipRows = [
   ],
   [
     "인증 정보",
-    "OS keychain 또는 credential helper",
-    "저장소 파일에 생성하지 않습니다.",
+    "init artifact 아님",
+    "환경 변수·credential subsystem의 책임이며 repository에 만들지 않습니다.",
   ],
 ];
 
@@ -27,7 +28,7 @@ export default function Init() {
   return (
     <section id="init" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">
-        프로젝트 초기화는 감지가 아니라 안전한 병합이다
+        프로젝트 초기화는 create-if-missing과 안전한 변경 계획을 구분한다
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
@@ -38,17 +39,45 @@ export default function Init() {
           아닙니다.
         </p>
 
+        <div id="paper-claw-init-source" className="scroll-mt-24">
+          <CitationBlock
+            source="Claw Code repository init @ b71afdd"
+            href="https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/rusty-claude-cli/src/init.rs"
+            citeKey={4}
+            type="code"
+          >
+            <p>
+              <strong>문제:</strong> 기존 repository에 starter config·guidance·ignore
+              entry를 반복 실행 가능하게 추가합니다. <strong>기여:</strong> pinned
+              source는 create-if-missing, gitignore entry 추가, stack detection과
+              structured InitReport를 구현합니다. <strong>전제:</strong> commit과
+              실행 cwd·기존 file bytes를 고정합니다. <strong>근거 범위:</strong>
+              source와 idempotency test가 다루는 artifact입니다. <strong>일반화
+              금지:</strong> 전체 diff preview·transaction·atomic rename·rollback이나
+              실행 capability 승인까지 구현됐다는 뜻은 아닙니다.
+            </p>
+          </CitationBlock>
+        </div>
+
         <InitViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
-          inspect와 apply를 분리한다
+          Pinned source와 원하는 inspect·plan·apply를 분리한다
         </h3>
         <p>
-          init을 한 함수에서 바로 기록하면 어떤 파일이 바뀔지 확인하기 어렵고,
-          중간 실패 때 부분 생성물이 남습니다. 먼저 read-only inspect 단계에서
-          저장소 루트, 기존 설정, 언어와 빌드 도구의 시그널, ignore 규칙을
-          수집합니다. 그 결과로 change plan과 diff를 만든 뒤 대화형 확인 또는
-          명시적 <code>--yes</code> 정책을 거쳐 apply하는 편이 안전합니다.
+          Pinned <code>initialize_repo</code>는 <code>.claw</code> directory와 두
+          starter setting file을 없을 때 만들고, <code>.gitignore</code>에는 필요한
+          entry를 추가하며, 기존 <code>CLAUDE.md</code>는 덮어쓰지 않습니다. 각
+          artifact status는 created·updated·partial·deferred·skipped로 보고하지만,
+          모든 변경을 먼저 모아 diff로 보여준 뒤 한 번에 commit하는 transaction은
+          아닙니다.
+        </p>
+        <p>
+          더 강한 설계에서는 read-only inspect가 기존 digest와 stack signal을
+          모으고, plan이 create·append·skip·conflict와 diff를 만든 뒤, 사용자가
+          확인한 plan만 apply합니다. 이 구분은 중간 실패와 concurrent edit를
+          다루기 위한 hardening 목표이며 현재 pinned source의 완료 기능으로
+          소개하지 않습니다.
         </p>
         <div className="not-prose my-6 grid gap-3 md:grid-cols-3">
           {[
@@ -61,7 +90,7 @@ export default function Init() {
           ].map(([title, description]) => (
             <section
               key={title}
-              className="rounded-2xl border border-border/70 bg-card p-4"
+              className="rounded-lg border border-border/70 bg-card p-4"
             >
               <h4 className="text-sm font-bold">{title}</h4>
               <p className="mt-2 text-sm leading-6 text-muted-foreground">
@@ -82,7 +111,7 @@ export default function Init() {
           실제로 선언된 script를 우선하고, 추정한 명령은 “제안”으로 표시해야
           합니다.
         </p>
-        <div className="not-prose my-6 overflow-x-auto rounded-2xl border border-border/70">
+        <div className="not-prose my-6 overflow-x-auto rounded-lg border border-border/70">
           <table className="w-full min-w-[640px] text-left text-sm">
             <thead className="bg-muted/60 text-xs text-muted-foreground">
               <tr>
@@ -136,7 +165,7 @@ export default function Init() {
           실수로 커밋하거나 세션 로그를 팀 설정처럼 공유하는 일을 줄일 수
           있습니다.
         </p>
-        <div className="not-prose my-6 overflow-x-auto rounded-2xl border border-border/70">
+        <div className="not-prose my-6 overflow-x-auto rounded-lg border border-border/70">
           <table className="w-full min-w-[680px] text-left text-sm">
             <thead className="bg-muted/60 text-xs text-muted-foreground">
               <tr>
@@ -167,8 +196,11 @@ export default function Init() {
           실행했을 때 새 변경이 없어야 하며, 도구가 생성한 block에는 marker와
           schema version을 남겨 자기 영역만 갱신해야 합니다. marker 밖의 사용자
           편집이나 알 수 없는 기존 설정은 자동 덮어쓰지 말고 conflict로
-          보고합니다. 파일 기록은 같은 디렉터리의 임시 파일에 쓴 뒤 atomic
-          rename하고, 실패하면 이전 파일이 그대로 남아야 합니다.
+          보고합니다. Pinned source는 create-if-missing과 exact ignore-entry 확인으로
+          반복 실행의 대부분을 안정화하지만 marker 기반 block ownership이나
+          expected digest는 없습니다. 임시 파일·fsync·atomic rename과 plan-wide
+          rollback 역시 source에서 확인되지 않으므로 production hardening 항목으로
+          남깁니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">

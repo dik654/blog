@@ -1,172 +1,42 @@
+import ContentBoundary from "@/components/articles/content-boundary";
+import { Link } from "react-router-dom";
 import AAModelViz from "./viz/AAModelViz";
 
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">
-        EOA vs CA: Account Abstraction 필요성
-      </h2>
-      <div className="not-prose mb-8">
-        <AAModelViz />
-      </div>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          이더리움 계정은 EOA(Externally Owned Account)와 CA(Contract Account)
-          두 종류입니다.
-          <br />
-          EOA만이 트랜잭션을 개시할 수 있고, 반드시 ECDSA 서명이 필요합니다.
-          <br />이 제약이 사용자 경험과 보안 모두에 한계를 만듭니다.
+      <h2 className="mb-6 text-2xl font-bold">Account Abstraction은 계정을 없애는 기술이 아니라 검증 규칙을 코드로 옮기는 기술입니다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>
+          전통적인 EOA(Externally Owned Account)는 protocol이 정한 secp256k1 서명과 nonce 규칙으로 transaction을 시작합니다.
+          구현이 단순한 대신, 잃어버린 키를 다른 정책으로 복구하거나 특정 앱에만 하루 0.1 ETH를 허용하는 session key를 계정 자체가 판단할 수 없습니다.
+          Account Abstraction(AA)은 이 <strong>validation policy</strong>를 smart-account code가 실행하게 하여 signer·복구·batch·fee payer를 프로그래밍할 수 있게 합니다.
         </p>
-
-        <h3>EOA의 한계</h3>
-        <p className="leading-7">
-          시드 구문 분실 시 자산 영구 손실. 서명 알고리즘 변경 불가.
-          <br />
-          가스비를 반드시 ETH로 지불. 단일 트랜잭션에 하나의 작업만 가능.
-          <br />
-          소셜 복구, 일일 한도 등 프로그래머블 보안 정책을 적용할 수 없습니다.
+        <p>
+          이 글은 “Alice가 USDC approve와 swap을 한 번에 실행하되, 30분짜리 session key는 Router 한 곳에 100 USDC까지만 쓰고,
+          ETH가 없는 첫 사용자의 gas는 dApp paymaster가 내준다”는 사례를 끝까지 추적합니다. 요청을 만드는 주체, 검증하는 주체, gas를 먼저 내는 주체와 실제 side effect owner를 나누면
+          ERC-4337, EIP-7702, native AA라는 이름이 어디서 갈라지는지 자연스럽게 보입니다.
         </p>
-
-        <h3>Account Abstraction (AA)</h3>
-        <p className="leading-7">
-          AA는 계정의 유효성 검증 로직을 프로그래밍 가능하게 합니다.
-          <br />
-          서명 알고리즘, 가스 지불 방식, 트랜잭션 배치를 스마트 컨트랙트
-          레벨에서 커스터마이즈할 수 있습니다.
+        <p>
+          Transaction·nonce·receipt의 바닥은 <Link to="/blockchain/evm-fundamentals">EVM 기초</Link>에서 확장합니다. 이 글만 읽어도 흐름을 따라갈 수 있도록,
+          nonce는 같은 권한 요청의 replay를 막는 순서표이고 receipt는 chain에 포함된 실행 결과라는 직관을 먼저 사용합니다.
         </p>
       </div>
+      <ContentBoundary article="aa-fundamentals" />
+      <AAModelViz />
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          EOA vs CA 기술적 비교
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-          <div className="rounded-xl border p-4 bg-card">
-            <h4 className="font-semibold mb-2">
-              EOA (Externally Owned Account)
-            </h4>
-            <ul className="text-sm space-y-1.5 list-disc list-inside">
-              <li>
-                주소 = <code>keccak256(pubkey)[12:]</code>
-              </li>
-              <li>비밀키: ECDSA secp256k1</li>
-              <li>트랜잭션 개시 가능, 서명 필수</li>
-              <li>코드/스토리지 없음</li>
-              <li>생성 비용 무료 (온체인 액션 불필요)</li>
-            </ul>
-          </div>
-          <div className="rounded-xl border p-4 bg-card">
-            <h4 className="font-semibold mb-2">CA (Contract Account)</h4>
-            <ul className="text-sm space-y-1.5 list-disc list-inside">
-              <li>
-                주소 = <code>keccak256(rlp([sender, nonce]))[12:]</code> 또는
-                CREATE2
-              </li>
-              <li>트랜잭션 개시 불가 (pre-AA)</li>
-              <li>코드: EVM 바이트코드</li>
-              <li>
-                스토리지: 2<sup>256</sup> 슬롯
-              </li>
-              <li>생성 비용: 배포 가스</li>
-            </ul>
-          </div>
-        </div>
-
-        <h4 className="font-semibold mt-6 mb-3">Pre-AA 트랜잭션 흐름</h4>
-        <div className="rounded-xl border p-4 bg-card text-sm mb-6">
-          <p>
-            User(EOA) → 개인키로 서명 → EVM: <code>tx.from</code>은 EOA여야 함 →
-            ECDSA 검증(내장, 변경 불가) → 실행: 전송 또는 컨트랙트 호출
-          </p>
-        </div>
-
-        <h4 className="font-semibold mt-6 mb-3">EOA 모델의 한계</h4>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-6">
-          <div className="rounded-xl border p-4 bg-card">
-            <p className="font-semibold text-sm mb-1">1. 고정 서명 알고리즘</p>
-            <p className="text-sm text-muted-foreground">
-              ECDSA secp256k1만 사용. 포스트퀀텀 서명, 생체인증(Passkey), BLS
-              집계 불가.
-            </p>
-          </div>
-          <div className="rounded-xl border p-4 bg-card">
-            <p className="font-semibold text-sm mb-1">2. 고정 수수료 토큰</p>
-            <p className="text-sm text-muted-foreground">
-              가스비로 ETH만 가능. 사용자는 반드시 ETH를 보유해야 하며, 온보딩
-              마찰 발생.
-            </p>
-          </div>
-          <div className="rounded-xl border p-4 bg-card">
-            <p className="font-semibold text-sm mb-1">3. 단일 호출</p>
-            <p className="text-sm text-muted-foreground">
-              <code>approve</code> + <code>swap</code> = 2개 트랜잭션, 2개 서명
-              필요.
-            </p>
-          </div>
-          <div className="rounded-xl border p-4 bg-card">
-            <p className="font-semibold text-sm mb-1">4. 복구 불가</p>
-            <p className="text-sm text-muted-foreground">
-              시드 분실 = 자산 영구 손실. 소셜 리커버리 없음.
-            </p>
-          </div>
-          <div className="rounded-xl border p-4 bg-card">
-            <p className="font-semibold text-sm mb-1">5. 지출 한도 없음</p>
-            <p className="text-sm text-muted-foreground">
-              모든 서명이 전체 권한 부여. 시간 제한 키 불가.
-            </p>
-          </div>
-        </div>
-
-        <h4 className="font-semibold mt-6 mb-3">AA가 해제하는 것</h4>
-        <div className="rounded-xl border p-4 bg-card text-sm mb-6">
-          <p className="mb-2">
-            <code>validateUserOp()</code> — 검증 로직이 프로그래밍 가능해집니다.
-          </p>
-          <p className="text-muted-foreground">
-            ECDSA, WebAuthn, 멀티시그, ZK proof, 시간 기반 검증, 소셜 리커버리
-            등 자유롭게 구현할 수 있습니다.
-          </p>
-        </div>
-
-        <h4 className="font-semibold mt-6 mb-3">AA 역사</h4>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div className="rounded-xl border p-4 bg-card">
-            <p className="font-semibold text-sm">2016 — EIP-86</p>
-            <p className="text-sm text-muted-foreground">
-              Vitalik의 원래 제안. 프로토콜 레벨, 미구현 (너무 복잡).
-            </p>
-          </div>
-          <div className="rounded-xl border p-4 bg-card">
-            <p className="font-semibold text-sm">2019 — Argent, Gnosis Safe</p>
-            <p className="text-sm text-muted-foreground">
-              멀티시그 지갑으로 EOA 모델 우회. 배포에 여전히 EOA + 가스 필요.
-            </p>
-          </div>
-          <div className="rounded-xl border p-4 bg-card">
-            <p className="font-semibold text-sm">2020 — EIP-2938</p>
-            <p className="text-sm text-muted-foreground">
-              AA 전용 트랜잭션 타입 제안. 프로토콜 침습성으로 거부.
-            </p>
-          </div>
-          <div className="rounded-xl border p-4 bg-card">
-            <p className="font-semibold text-sm">2021 — ERC-4337</p>
-            <p className="text-sm text-muted-foreground">
-              프로토콜 변경 없이 alt mempool + EntryPoint로 구현.
-            </p>
-          </div>
-          <div className="rounded-xl border p-4 bg-card">
-            <p className="font-semibold text-sm">2023 — ERC-4337 메인넷 배포</p>
-            <p className="text-sm text-muted-foreground">
-              이더리움 메인넷에서 프로덕션 가동.
-            </p>
-          </div>
-          <div className="rounded-xl border p-4 bg-card">
-            <p className="font-semibold text-sm">2024+ — EIP-7702 / EIP-7701</p>
-            <p className="text-sm text-muted-foreground">
-              EOA→스마트 컨트랙트 위임 + 프로토콜 레벨 Native AA 로드맵.
-            </p>
-          </div>
-        </div>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>먼저 네 가지 책임을 분리합니다</h3>
+        <ul>
+          <li><strong>Authorization:</strong> 누가 어느 chain·account·nonce·call을 승인했는지 확인합니다.</li>
+          <li><strong>Admission:</strong> 지금 포함 가능한 요청인지 simulation하고, 값싼 spam이 mempool 자원을 고갈시키지 않게 제한합니다.</li>
+          <li><strong>Gas payment:</strong> account와 paymaster 가운데 누가 최대 비용을 먼저 부담하고 남은 금액을 정산할지 정합니다.</li>
+          <li><strong>Execution:</strong> validation을 통과한 call을 실행하고 effect·gas·failure를 event와 receipt로 남깁니다.</li>
+        </ul>
+        <p>
+          “스마트 지갑이라서 안전하다”는 결론은 나오지 않습니다. 계정 코드가 복잡해질수록 signature domain, upgrade authority, session capability, paymaster budget과 recovery governance를 따로 시험해야 합니다.
+          AA는 안전 정책을 <em>가능하게</em> 할 뿐, 올바른 정책을 자동으로 만들어 주지 않습니다.
+        </p>
       </div>
     </section>
   );

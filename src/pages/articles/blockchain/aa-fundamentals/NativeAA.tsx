@@ -1,303 +1,65 @@
+import ExplainedFormula from "@/components/ui/explained-formula";
+import { CitationBlock } from "@/components/ui/citation";
 import NativeAAViz from "./viz/NativeAAViz";
 
 export default function NativeAA() {
   return (
     <section id="native-aa" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">
-        Native AA: EIP-7701 & RIP-7560
-      </h2>
-      <div className="not-prose mb-8">
-        <NativeAAViz />
-      </div>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          ERC-4337은 프로토콜 변경 없이 AA를 구현하지만, Bundler 인프라와
-          EntryPoint 컨트랙트 호출 오버헤드가 존재합니다.
-          <br />
-          Native AA는 프로토콜 레벨에서 AA를 지원하여 이 오버헤드를 제거합니다.
+      <h2 className="mb-6 text-2xl font-bold">EIP-7702 delegation과 native AA proposal은 같은 단계가 아닙니다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>
+          2026-08-14 기준 EIP-7702는 <strong>Final</strong>인 type-4 transaction 규칙입니다. EOA가 authorization tuple에 서명하면 client는 해당 계정 code에
+          <code>0xef0100 || delegate_address</code>라는 delegation indicator를 기록하고, 이후 실행은 delegate code를 EOA storage·balance context에서 사용합니다.
+          반면 EIP-7701은 validation·execution phase를 protocol transaction으로 제공하려던 <strong>Withdrawn proposal</strong>입니다. 둘을 “도입된 native AA” 하나로 묶으면 현재 지원 상태를 잘못 전달합니다.
         </p>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 my-6">
-          <div className="rounded-xl border border-sky-200 dark:border-sky-800 p-4 bg-card">
-            <h4 className="font-semibold text-sm mb-2">EIP-7701: Native AA</h4>
-            <p className="text-sm text-muted-foreground">
-              EVM 프로토콜에 AA 직접 내장. Bundler/EntryPoint 불필요. 계정
-              코드에 <code>validateTransaction()</code> 구현. EL이 직접 검증 및
-              실행.
-            </p>
-          </div>
-          <div className="rounded-xl border border-emerald-200 dark:border-emerald-800 p-4 bg-card">
-            <h4 className="font-semibold text-sm mb-2">
-              RIP-7560: Rollup Native AA
-            </h4>
-            <p className="text-sm text-muted-foreground">
-              L2 롤업용 AA 표준. EntryPoint 로직을 프리컴파일로 구현. 컨트랙트
-              호출 오버헤드 제거.
-            </p>
-          </div>
-          <div className="rounded-xl border border-amber-200 dark:border-amber-800 p-4 bg-card">
-            <h4 className="font-semibold text-sm mb-2">
-              ERC-4337 vs Native AA
-            </h4>
-            <p className="text-sm text-muted-foreground">
-              ERC-4337: 프로토콜 변경 없음, Bundler 필요. Native AA: 프로토콜
-              변경 필요, 낮은 가스, 간단한 구조. 장기적으로 대체 전망.
-            </p>
-          </div>
-        </div>
-        <p className="leading-7">
-          zkSync Era, StarkNet 등 일부 L2는 이미 Native AA를 구현했습니다.
-          <br />
-          이더리움 L1은 EIP-7701로 점진적 도입을 논의 중입니다.
+      </div>
+      <NativeAAViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>EIP-7702 authorization은 실행 call과 별도이며 persistent합니다</h3>
+        <p>
+          Tuple은 <code>[chain_id, address, nonce, y_parity, r, s]</code>를 담습니다. Client는 chain·nonce·signature·authority code 조건을 확인한 뒤 delegation을 기록하며,
+          outer transaction execution이 revert하더라도 이미 처리된 delegation indicator는 자동으로 되돌아가지 않습니다. 따라서 wallet은 dApp이 임의 delegate authorization을 제안하게 해서는 안 되며,
+          delegate code hash·upgrade authority·initialization·storage layout을 고위험 배포처럼 검토해야 합니다.
         </p>
       </div>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          Native AA 구현 및 비교
-        </h3>
+      <ExplainedFormula
+        question="EIP-7702 authorization이 다른 chain이나 다른 delegate로 재사용되지 않게 무엇을 서명할까요?"
+        idea="Authorization의 용도 표식과 chain·delegate·nonce를 함께 RLP encode한 뒤 hash합니다. Chain ID 0은 여러 chain에서 유효하도록 의도한 예외이므로 더 강한 deployment 동일성 검사가 필요합니다."
+        formula={String.raw`m=\operatorname{keccak256}(\mathtt{0x05}\,\|\,\operatorname{rlp}([c,a,n]))`}
+        terms={[
+          { symbol: "c", name: "Chain ID", description: "Authorization이 유효한 chain이며 0은 chain-independent 선택입니다." },
+          { symbol: "a", name: "Delegate address", description: "EOA context에서 실행할 code pointer입니다." },
+          { symbol: "n", name: "Authority nonce", description: "같은 authorization의 replay와 ordering을 제한합니다." },
+          { symbol: String.raw`\mathtt{0x05}`, name: "Magic", description: "일반 transaction signature와 authorization domain을 분리합니다." },
+        ]}
+        assumptions={[
+          "secp256k1 signature recovery와 low-s 규칙을 별도로 검증합니다.",
+          "Delegate address의 code가 여러 chain에서 같다는 사실은 chain ID 0만으로 보장되지 않습니다.",
+          "Authorization 유효성은 delegate contract의 안전한 권한·upgrade·storage 설계를 보증하지 않습니다.",
+        ]}
+        interpretation="같은 nonce라도 c나 a가 바뀌면 signed message가 달라집니다. 그러나 c=0을 선택하면 cross-chain replay가 의도된 만큼, code identity와 initialization을 chain마다 확인해야 합니다."
+      />
 
-        <h4 className="font-semibold mt-4 mb-3">타임라인</h4>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-          <div className="rounded-xl border p-3 bg-card">
-            <p className="font-semibold text-sm">2020</p>
-            <p className="text-sm text-muted-foreground">
-              EIP-2938 (Native AA tx) — 거부
-            </p>
-          </div>
-          <div className="rounded-xl border p-3 bg-card">
-            <p className="font-semibold text-sm">2021</p>
-            <p className="text-sm text-muted-foreground">
-              ERC-4337 (pseudo-AA) — 채택
-            </p>
-          </div>
-          <div className="rounded-xl border p-3 bg-card">
-            <p className="font-semibold text-sm">2023</p>
-            <p className="text-sm text-muted-foreground">
-              EIP-7702 (EOA에 코드 설정) — 단순 징검다리
-            </p>
-          </div>
-          <div className="rounded-xl border p-3 bg-card">
-            <p className="font-semibold text-sm">2024</p>
-            <p className="text-sm text-muted-foreground">
-              EIP-7701 / RIP-7560 (Native AA) — 제안
-            </p>
-          </div>
-        </div>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>어떤 경로를 고를지는 기능 수가 아니라 배포 경계로 결정합니다</h3>
+        <p>
+          ERC-4337은 현재 chain에서 지원되는 EntryPoint·bundler·paymaster ecosystem이 필요하고, EIP-7702는 type-4 transaction과 안전한 delegate implementation이 필요합니다.
+          Native AA는 각 chain의 protocol/RIP 구현 상태를 따로 확인해야 합니다. Migration 전에는 기존 EOA key가 남기는 authority, account address 보존, module storage 충돌,
+          revoke/upgrade 경로와 기존 dApp의 <code>tx.origin</code>·code-size 가정을 test matrix로 고정합니다.
+        </p>
+      </div>
 
-        <h4 className="font-semibold mt-6 mb-3">
-          EIP-7702: Set EOA Code (Pectra, 2025)
-        </h4>
-        <div className="rounded-xl border p-4 bg-card text-sm mb-6">
-          <p className="mb-2">
-            EOA가 스마트 컨트랙트에 위임. 새 tx 타입 <code>0x04</code>:{" "}
-            <code>authorization_list</code> 포함.
-          </p>
-          <p className="mb-2 text-muted-foreground">
-            효과: EOA 코드가 <code>0xef0100 ++ address</code>로 설정 → EOA가
-            스마트 컨트랙트 코드를 실행.
-          </p>
-          <div className="grid grid-cols-2 gap-3 mt-3">
-            <div>
-              <p className="font-semibold text-xs mb-1">장점</p>
-              <ul className="list-disc list-inside text-xs text-muted-foreground space-y-0.5">
-                <li>기존 EOA가 스마트 지갑으로 변환</li>
-                <li>배포 불필요</li>
-                <li>취소 가능 (새 auth가 이전 대체)</li>
-              </ul>
-            </div>
-            <div>
-              <p className="font-semibold text-xs mb-1">주의</p>
-              <ul className="list-disc list-inside text-xs text-muted-foreground space-y-0.5">
-                <li>스토리지는 여전히 EOA 소유</li>
-                <li>nonce는 매 tx마다 증가</li>
-                <li>인증에 서명 여전히 필요</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <h4 className="font-semibold mt-6 mb-3">EIP-7701 실행 페이즈</h4>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-          <div className="rounded-xl border p-3 bg-card">
-            <p className="font-semibold text-sm mb-1">1. Validation</p>
-            <p className="text-xs text-muted-foreground">
-              <code>sender.validateTransaction(tx)</code> — 가스 제한 프레임에서
-              계정 코드가 검증
-            </p>
-          </div>
-          <div className="rounded-xl border p-3 bg-card">
-            <p className="font-semibold text-sm mb-1">2. Paymaster (선택)</p>
-            <p className="text-xs text-muted-foreground">
-              <code>paymaster.validatePaymasterTransaction(tx)</code>
-            </p>
-          </div>
-          <div className="rounded-xl border p-3 bg-card">
-            <p className="font-semibold text-sm mb-1">3. Execution</p>
-            <p className="text-xs text-muted-foreground">
-              <code>sender.executeTransaction(tx)</code>
-            </p>
-          </div>
-          <div className="rounded-xl border p-3 bg-card">
-            <p className="font-semibold text-sm mb-1">4. Post-op (선택)</p>
-            <p className="text-xs text-muted-foreground">
-              <code>paymaster.postPaymasterTransaction()</code>
-            </p>
-          </div>
-        </div>
-        <div className="rounded-xl border p-3 bg-card text-sm mb-6">
-          <p>
-            모든 페이즈가 하나의 트랜잭션 내에서 실행 (Bundler 불필요). 가스
-            규칙: 검증/실행/postop 별도 예산.
-          </p>
-        </div>
-
-        <h4 className="font-semibold mt-6 mb-3">RIP-7560 (Rollup Native AA)</h4>
-        <div className="rounded-xl border p-4 bg-card text-sm mb-6">
-          <p>
-            EIP-7701과 동일하나 Rollup Improvement Proposal. L2 우선 타겟 (배포
-            용이). 참조 구현: Geth 7560 브랜치.
-          </p>
-        </div>
-
-        <h4 className="font-semibold mt-6 mb-3">
-          실제 구현: zkSync Era & StarkNet
-        </h4>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-          <div className="rounded-xl border p-4 bg-card">
-            <p className="font-semibold text-sm mb-2">zkSync Era (2023~)</p>
-            <p className="text-sm text-muted-foreground mb-2">
-              모든 계정이 스마트 컨트랙트 (EOA 없음).
-            </p>
-            <ul className="text-xs text-muted-foreground space-y-1 list-disc list-inside">
-              <li>
-                <code>validateTransaction()</code> — 검증
-              </li>
-              <li>
-                <code>executeTransaction()</code> — 실행
-              </li>
-              <li>
-                <code>payForTransaction()</code> — 가스 지불
-              </li>
-            </ul>
-            <p className="text-xs text-muted-foreground mt-2">
-              DefaultAccount: ECDSA 호환. 커스텀: 멀티시그, MPC, 소셜 리커버리.
-            </p>
-          </div>
-          <div className="rounded-xl border p-4 bg-card">
-            <p className="font-semibold text-sm mb-2">StarkNet (2020~)</p>
-            <p className="text-sm text-muted-foreground mb-2">
-              모든 계정이 컨트랙트. Cairo 언어로 계정 로직 작성.
-            </p>
-            <ul className="text-xs text-muted-foreground space-y-1 list-disc list-inside">
-              <li>
-                <code>__validate__</code> 엔트리포인트
-              </li>
-              <li>
-                <code>__execute__</code> 엔트리포인트
-              </li>
-              <li>
-                <code>__validate_declare__</code> /{" "}
-                <code>__validate_deploy__</code>
-              </li>
-            </ul>
-            <p className="text-xs text-muted-foreground mt-2">
-              <code>from</code> 필드 없음 (컨트랙트가 자체 검증). 내장 서명 스킴
-              없음 — 100% 커스터마이즈.
-            </p>
-          </div>
-        </div>
-
-        <h4 className="font-semibold mt-6 mb-3">비교 매트릭스</h4>
-        <div className="overflow-x-auto mb-6">
-          <table className="w-full text-sm border-collapse">
-            <thead>
-              <tr className="border-b">
-                <th className="text-left p-2"></th>
-                <th className="text-left p-2">ERC-4337</th>
-                <th className="text-left p-2">EIP-7702</th>
-                <th className="text-left p-2">EIP-7701</th>
-                <th className="text-left p-2">zkSync</th>
-              </tr>
-            </thead>
-            <tbody className="text-muted-foreground">
-              <tr className="border-b">
-                <td className="p-2 font-medium text-foreground">
-                  프로토콜 변경
-                </td>
-                <td className="p-2">없음</td>
-                <td className="p-2">최소</td>
-                <td className="p-2">전면</td>
-                <td className="p-2">Yes</td>
-              </tr>
-              <tr className="border-b">
-                <td className="p-2 font-medium text-foreground">
-                  Bundler 필요
-                </td>
-                <td className="p-2">Yes</td>
-                <td className="p-2">No</td>
-                <td className="p-2">No</td>
-                <td className="p-2">No</td>
-              </tr>
-              <tr className="border-b">
-                <td className="p-2 font-medium text-foreground">EOA 지원</td>
-                <td className="p-2">공존</td>
-                <td className="p-2">위임</td>
-                <td className="p-2">공존</td>
-                <td className="p-2">없음</td>
-              </tr>
-              <tr className="border-b">
-                <td className="p-2 font-medium text-foreground">가스 비용</td>
-                <td className="p-2">높음</td>
-                <td className="p-2">중간</td>
-                <td className="p-2">낮음</td>
-                <td className="p-2">낮음</td>
-              </tr>
-              <tr className="border-b">
-                <td className="p-2 font-medium text-foreground">상태</td>
-                <td className="p-2">All EVM</td>
-                <td className="p-2">Pectra+</td>
-                <td className="p-2">제안</td>
-                <td className="p-2">운영중</td>
-              </tr>
-              <tr>
-                <td className="p-2 font-medium text-foreground">복잡도</td>
-                <td className="p-2">높음</td>
-                <td className="p-2">낮음</td>
-                <td className="p-2">중간</td>
-                <td className="p-2">중간</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <h4 className="font-semibold mt-6 mb-3">보안 고려사항 (Native AA)</h4>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div className="rounded-xl border p-4 bg-card">
-            <p className="font-semibold text-sm mb-1">1. Griefing 공격</p>
-            <p className="text-sm text-muted-foreground">
-              무효 검증이 블록 가스 낭비. 대응: 발신자별 속도 제한, 검증 가스
-              상한.
-            </p>
-          </div>
-          <div className="rounded-xl border p-4 bg-card">
-            <p className="font-semibold text-sm mb-1">2. 검증 프론트러닝</p>
-            <p className="text-sm text-muted-foreground">
-              공격자가 동일 검증 제출하여 nonce 소진. 대응: 원자적 검증+실행.
-            </p>
-          </div>
-          <div className="rounded-xl border p-4 bg-card">
-            <p className="font-semibold text-sm mb-1">3. 스토리지 접근</p>
-            <p className="text-sm text-muted-foreground">
-              검증 중 임의 스토리지 읽기 가능. 대응: 검증 가스 제한, EVM 규칙.
-            </p>
-          </div>
-          <div className="rounded-xl border p-4 bg-card">
-            <p className="font-semibold text-sm mb-1">4. 교차 계정 호출</p>
-            <p className="text-sm text-muted-foreground">
-              DoS 또는 재진입 가능. 대응: RIP-7562 옵코드/스토리지 제한.
-            </p>
-          </div>
-        </div>
+      <div id="paper-eip7702-delegation" className="scroll-mt-24">
+        <CitationBlock source="EIP-7702 · Set Code for EOAs" href="https://eips.ethereum.org/EIPS/eip-7702" citeKey={3}>
+          문제: 기존 EOA 주소를 유지하면서 batching·sponsorship·권한 축소를 가능하게 해야 합니다. 기여: type-4 transaction, authorization tuple과 persistent delegation indicator를 규정합니다. 전제: Final spec·활성 fork·delegate code를 고정합니다. 근거 범위: protocol delegation semantics입니다. 비주장: delegate contract의 보안·ERC-4337 호환성·완전한 key abstraction을 자동 보장하지 않습니다.
+        </CitationBlock>
+      </div>
+      <div id="paper-eip7701-native-status" className="scroll-mt-24">
+        <CitationBlock source="EIP-7701 · Native Account Abstraction (Withdrawn)" href="https://eips.ethereum.org/EIPS/eip-7701" citeKey={4}>
+          문제: validation·execution·paymaster phase를 protocol transaction에 직접 넣는 설계를 탐색했습니다. 기여: role별 frame과 gas accounting proposal을 제시했습니다. 전제: 문서 상태가 Withdrawn임을 함께 표시합니다. 근거 범위: 설계 비교와 실패한 proposal의 아이디어입니다. 비주장: Ethereum L1에 배포되었거나 ERC-4337을 대체할 확정 roadmap이라고 말하지 않습니다.
+        </CitationBlock>
       </div>
     </section>
   );

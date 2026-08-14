@@ -1,4 +1,6 @@
 import PromptCacheViz from "./viz/PromptCacheViz";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import { CitationBlock } from "@/components/ui/citation";
 
 const cacheMetrics = [
   ["Read", "cache에서 재사용한 input token"],
@@ -16,21 +18,44 @@ export default function PromptCache() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          prompt cache는 같은 질문의 답을 저장하는 response cache가 아닙니다.
-          provider가 tools, system instruction와 이전 message로 이루어진 동일한
-          prompt prefix의 model 계산을 재사용해 input 처리 비용과 time to first
-          token을 줄이는 기능입니다. 이후 suffix와 새 output은 여전히
-          처리합니다.
+          먼저 이름이 비슷한 두 cache를 분리해야 합니다. Provider prompt cache는
+          tools, system instruction와 이전 message로 이루어진 동일한 prefix의
+          model 계산을 재사용하지만 suffix와 새 output은 계속 계산합니다. 반면
+          response cache는 동일한 전체 request에 과거 response를 그대로 돌려주므로
+          sampling·최신 데이터·side effect 의미가 달라집니다.
         </p>
         <p className="leading-7">
-          cache key, breakpoint, 최소 길이, TTL, usage field와 가격은
-          provider·model 세대·platform에 따라 달라집니다. 그래서 내부{" "}
-          <code>PromptCache</code>는 provider cache의 복사본이 아니라 stable
-          prefix를 설계하고 usage를 해석하는 policy layer여야 합니다.
+          Pinned Claw <code>PromptCache</code>는 둘을 함께 다룹니다. Provider가
+          반환한 cache creation/read token을 추적하는 동시에, 전체
+          <code>MessageRequest</code> fingerprint로 response를 로컬 파일에 약 30초
+          저장하는 completion cache도 갖습니다. 따라서 이 구현을 설명할 때
+          “prompt caching은 response cache가 아니다”로 끝내면 실제 source의
+          민감한 response 저장과 stale-answer 위험을 놓칩니다.
         </p>
 
         <div className="not-prose my-8">
           <PromptCacheViz />
+        </div>
+
+        <div id="paper-claw-prompt-cache-source" className="scroll-mt-24">
+          <CitationBlock
+            source="Claw Code PromptCache @ b71afdd"
+            href="https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/api/src/prompt_cache.rs"
+            citeKey={4}
+            type="code"
+          >
+            <p>
+              <strong>문제:</strong> 짧은 재요청의 response 재사용과 provider cache
+              usage·break를 session별로 기록합니다. <strong>기여:</strong> pinned
+              source는 30초 completion TTL, 5분 prompt continuity window, request
+              fingerprint와 JSON persistence를 구현합니다. <strong>전제:</strong>
+              commit·config home·session ID·request serializer를 고정합니다.
+              <strong> 근거 범위:</strong> 로컬 cache와 계측의 실제 동작입니다.
+              <strong> 일반화 금지:</strong> provider-side cache 생성, 암호학적
+              confidentiality, atomic persistence나 side-effect-safe replay를
+              보장하지 않습니다.
+            </p>
+          </CitationBlock>
         </div>
       </div>
 
@@ -38,7 +63,7 @@ export default function PromptCache() {
         {cacheMetrics.map(([title, body]) => (
           <article
             key={title}
-            className="min-w-0 rounded-2xl border border-border/70 bg-card p-4 shadow-sm"
+            className="min-w-0 rounded-lg border border-border/70 bg-card p-4"
           >
             <h4 className="text-sm font-bold text-foreground">{title}</h4>
             <p className="mt-2 text-xs leading-5 text-muted-foreground">
@@ -114,6 +139,25 @@ export default function PromptCache() {
           계산합니다.
         </p>
 
+        <ExplainedFormula
+          question="Provider cache가 실제 input 비용을 얼마나 줄였는지 어떻게 계산할까?"
+          idea={<>요청 수가 아니라 token 종류별 단가를 곱합니다. Cache가 없었다면 모든 prefix token이 일반 input이었을 비용과, 실제 creation·read·uncached input 비용의 차이를 같은 가격표 version에서 비교합니다.</>}
+          formula={String.raw`\begin{aligned}C_{\mathrm{actual}}&=p_uU+p_wW+p_rR+p_oO\\S&=C_{\mathrm{baseline}}-C_{\mathrm{actual}}\end{aligned}`}
+          terms={[
+            { symbol: "U", name: "uncached input tokens", description: "Cache에 포함되지 않아 일반 input 단가가 적용된 token 수입니다." },
+            { symbol: "W", name: "cache creation tokens", description: "새 prefix 계산을 cache에 쓰면서 provider가 보고한 token 수입니다." },
+            { symbol: "R", name: "cache read tokens", description: "기존 prefix 계산을 재사용했다고 provider가 보고한 token 수입니다." },
+            { symbol: "O", name: "output tokens", description: "Caching과 무관하게 새로 생성된 output token 수입니다." },
+            { symbol: "p_u,p_w,p_r,p_o", name: "versioned unit prices", description: "요청 시점 provider·model·TTL tier의 token별 단가입니다." },
+          ]}
+          assumptions={[
+            "Baseline과 actual은 같은 request content·model·output을 비교하고 가격표 version을 고정합니다.",
+            "Provider usage field가 creation·read·uncached token을 구분해 보고한다는 전제가 필요합니다.",
+            "Latency와 local completion-cache hit는 이 비용식과 별도 지표로 측정합니다.",
+          ]}
+          interpretation="S가 양수면 해당 workload와 가격표에서 비용이 줄었습니다. 단일 request hit rate만으로는 긴 miss를 숨길 수 있고, 이 식은 응답 품질·staleness·privacy나 provider cache 격리를 보장하지 않습니다."
+        />
+
         <h3 className="text-xl font-semibold mt-8 mb-3">
           miss 원인을 prefix segment 단위로 관측한다
         </h3>
@@ -127,6 +171,25 @@ export default function PromptCache() {
           raw prompt를 observability backend에 보내는 것은 cache 진단보다 큰
           privacy 문제가 될 수 있습니다. keyed digest, byte·token count와
           redacted change category를 기본으로 사용하고 원문 접근은 제한합니다.
+        </p>
+
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          로컬 completion cache는 별도의 correctness·privacy 경계다
+        </h3>
+        <p className="leading-7">
+          Pinned 구현은 직렬화한 전체 request를 FNV-1a 계열 fingerprint로 만들고,
+          response JSON을 session cache directory에 기록합니다. 이 hash는 빠른 key일
+          뿐 MAC이나 암호화가 아니므로 secret 보호·tenant isolation·tamper proof로
+          해석할 수 없습니다. Directory permission, at-rest encryption, quota와
+          삭제 정책을 별도로 검증해야 합니다.
+        </p>
+        <p className="leading-7">
+          Tool 실행을 유도할 수 있는 response를 그대로 replay하면 같은 tool call이
+          다시 제안될 수 있습니다. Runtime은 cache source를 event에 표시하고 새
+          permission·idempotency·effect receipt를 거치게 해야 하며, time-sensitive
+          prompt·nondeterministic sampling·external state read에는 completion cache를
+          끄거나 key에 relevant state version을 포함해야 합니다. Pinned source에
+          이 모든 보강이 구현됐다고 주장하지 않습니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
@@ -155,6 +218,25 @@ export default function PromptCache() {
           데이터를 cacheable prefix에 넣기 전에 현재 data policy와 enterprise
           계약을 확인합니다.
         </p>
+
+        <div id="paper-provider-prompt-cache" className="scroll-mt-24">
+          <CitationBlock
+            source="Anthropic — Prompt caching"
+            href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+            citeKey={5}
+          >
+            <p>
+              <strong>문제:</strong> 반복되는 긴 prefix 계산을 provider에서 재사용해
+              input latency와 비용을 줄입니다. <strong>기여:</strong> 공식 문서는
+              cacheable prefix, automatic/explicit control, TTL과 usage field의 현재
+              의미를 설명합니다. <strong>전제:</strong> 지원 model·platform·최소
+              길이·가격표를 요청 시점 문서에서 확인합니다. <strong>근거 범위:</strong>
+              Anthropic provider cache입니다. <strong>일반화 금지:</strong> OpenAI의
+              cache 정책, Claw의 로컬 response cache 또는 항상 hit한다는 보장은
+              아닙니다.
+            </p>
+          </CitationBlock>
+        </div>
       </div>
     </section>
   );

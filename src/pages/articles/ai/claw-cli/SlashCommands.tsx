@@ -1,4 +1,5 @@
 import SlashCommandViz from "./viz/SlashCommandViz";
+import { CitationBlock } from "@/components/ui/citation";
 
 const commandGroups = [
   {
@@ -35,6 +36,26 @@ export default function SlashCommands() {
 
         <SlashCommandViz />
 
+        <div id="paper-claw-command-source" className="scroll-mt-24">
+          <CitationBlock
+            source="Claw Code command registry @ b71afdd"
+            href="https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/commands/src/lib.rs"
+            citeKey={2}
+            type="code"
+          >
+            <p>
+              <strong>문제:</strong> REPL 입력을 로컬 command identity·argument와
+              model prompt로 나눕니다. <strong>기여:</strong> pinned source는
+              SlashCommandSpec registry, alias·help metadata와 parser/handler surface를
+              제공합니다. <strong>전제:</strong> commit과 interactive/resume mode를
+              고정합니다. <strong>근거 범위:</strong> 등록된 metadata와 실제 parse
+              branch입니다. <strong>일반화 금지:</strong> 모든 argument가 shell-like
+              quote·escape grammar를 지원하거나 각 handler가 transaction이라는
+              뜻은 아닙니다.
+            </p>
+          </CitationBlock>
+        </div>
+
         <h3 className="text-xl font-semibold mt-8 mb-3">
           명령 이름보다 효과를 먼저 분류한다
         </h3>
@@ -48,7 +69,7 @@ export default function SlashCommands() {
           {commandGroups.map((group) => (
             <section
               key={group.title}
-              className="rounded-2xl border border-border/70 bg-card p-4"
+              className="rounded-lg border border-border/70 bg-card p-4"
             >
               <h4 className="text-sm font-bold">{group.title}</h4>
               <code className="mt-2 block break-words text-xs text-primary">
@@ -73,14 +94,21 @@ export default function SlashCommands() {
           파서와 레지스트리의 최소 계약
         </h3>
         <p>
-          첫 공백에서 무조건 문자열을 자르면 인용된 경로나 JSON 인자를 망가뜨릴
-          수 있으므로, parser는 quote와 escape 규칙을 명시해야 합니다. 조회
-          단계에서는 canonical name과 alias를 정규화하되 같은 이름을 두 핸들러가
-          차지하면 시작 시점에 실패시키는 편이 안전합니다. 도움말과 자동완성도
-          별도 목록을 만들지 말고 이 레지스트리의 metadata에서 생성해야 문서와
-          실제 동작이 어긋나지 않습니다.
+          Pinned parser는 command name과 여러 argument를 주로
+          <code>split_whitespace</code>와 <code>split_once</code>로 나눕니다. 따라서
+          단순 subcommand에는 충분하지만 공백이 든 path나 JSON을 shell처럼 quote해
+          복원하는 일반 parser라고 말할 수 없습니다. 각 command가 remainder를
+          통째로 받는지 token 단위로 받는지 source와 fixture로 확인해야 합니다.
         </p>
-        <div className="not-prose my-6 overflow-hidden rounded-2xl border border-border/70">
+        <p>
+          더 넓은 argument를 지원하려면 quote·escape grammar를 명시하거나 JSON
+          input mode를 별도로 두고, parse error에 위치를 포함해야 합니다. 조회
+          단계에서는 canonical name과 alias 충돌을 startup에 거부하며, 도움말과
+          completion은 같은 registry metadata에서 생성해야 문서와 실제 동작이
+          어긋나지 않습니다. 이 문단은 pinned source의 구현 완료를 주장하는 것이
+          아니라 안정적인 command contract의 선택 기준입니다.
+        </p>
+        <div className="not-prose my-6 overflow-hidden rounded-lg border border-border/70">
           <div className="grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-4">
             {[
               ["name · aliases", "충돌 없는 명령 identity"],

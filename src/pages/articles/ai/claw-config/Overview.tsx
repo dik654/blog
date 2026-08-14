@@ -1,37 +1,59 @@
+import { CitationBlock } from "@/components/ui/citation";
+
 const sources = [
-  ["기본값", "프로그램이 동작할 수 있는 안전한 출발점"],
-  ["사용자 설정", "계정 또는 장비 전반에 적용할 선택"],
-  ["프로젝트 설정", "저장소와 함께 공유할 팀 규칙"],
-  ["환경 변수", "배포 환경과 secret manager에서 주입할 값"],
-  ["CLI 인자", "이번 실행에만 적용할 명시적 override"],
-];
+  ["USER", "사용자 홈에서 읽은 낮은 우선순위의 파일 설정"],
+  ["PROJECT", "프로젝트가 공유하는 파일 설정"],
+  ["LOCAL", "현재 장비에만 두는 가장 높은 파일 우선순위"],
+] as const;
 
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">
-        설정은 여러 출처를 합치되 출처를 잃지 않아야 한다
+        설정 loader의 핵심은 최종 값과 출처를 함께 남기는 것이다
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          CLI 에이전트의 설정은 한 파일에서 끝나지 않습니다. 프로그램 기본값,
-          사용자 설정, 프로젝트 설정, 환경 변수와 실행 인자가 같은 항목을 서로
-          다르게 지정할 수 있습니다. Config loader의 역할은 값을 읽는 데 그치지
-          않고, 우선순위를 일관되게 적용하고 최종 값이 어디에서 왔는지 설명하는
-          것입니다.
+          설정 파일은 프로그램의 동작을 바꾸는 JSON 문서입니다. 여러 파일이 같은
+          값을 지정하면 나중 파일이 앞선 값을 덮을 수 있으므로, loader는 단순히
+          JSON을 읽는 함수가 아닙니다. 발견 순서, 재귀 병합과 최종 값의 출처인
+          <strong> provenance</strong>까지 함께 계산해야 합니다.
         </p>
         <p>
-          아래 순서는 분석한 구현을 이해하기 위한 일반적인 cascade이며, 실제
-          항목별 예외는 코드에서 확인해야 합니다. 특히 권한을 넓히는 설정과 인증
-          정보는 단순한 “마지막 값 우선”만으로 처리하지 않는 편이 안전합니다.
+          이 글은 commit <code>b71afdd</code>를 고정해 읽습니다. 그 snapshot의
+          <code>ConfigLoader</code>가 직접 관리하는 출처는 USER, PROJECT,
+          LOCAL 세 종류이며, 발견된 파일을 낮은 우선순위부터 deep merge합니다.
+          환경 변수와 CLI 인자는 더 바깥 실행 계층에서 적용할 수 있지만, 이 loader
+          자체의 다섯 단계 cascade라고 주장하면 실제 코드보다 넓은 설명이 됩니다.
         </p>
+
+        <div id="paper-claw-config-source" className="scroll-mt-24">
+          <CitationBlock
+            source="Claw Code config loader @ b71afdd"
+            href="https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src/config.rs"
+            citeKey={1}
+            type="code"
+          >
+            <p>
+              <strong>문제:</strong> 여러 위치의 JSON 설정을 결정적인 순서로
+              합치고 최종 field의 출처를 설명해야 합니다. <strong>기여:</strong>
+              pinned source는 USER·PROJECT·LOCAL 발견 순서, recursive merge,
+              winner·shadowed provenance를 구현합니다. <strong>전제:</strong>
+              commit, 실행 directory, home/config path와 file bytes를 고정합니다.
+              <strong> 근거 범위:</strong> 이 loader가 읽는 file source와 inspection
+              결과입니다. <strong>일반화 금지:</strong> 모든 environment·CLI
+              override, secret storage, schema validation과 권한 축소가 이 파일에서
+              완결된다는 뜻은 아닙니다.
+            </p>
+          </CitationBlock>
+        </div>
       </div>
 
-      <div className="not-prose my-6 grid gap-3 lg:grid-cols-5">
+      <div className="not-prose my-6 grid gap-4 sm:grid-cols-3">
         {sources.map(([source, description], index) => (
-          <div key={source} className="rounded-xl border bg-card p-4">
+          <div key={source} className="min-w-0 rounded-lg border bg-card p-4">
             <span className="text-xs text-muted-foreground">
-              우선순위 {index + 1}
+              파일 우선순위 {index + 1}
             </span>
             <strong className="mt-1 block text-sm">{source}</strong>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
@@ -46,8 +68,10 @@ export default function Overview() {
           병합과 검증은 별도 단계다
         </h3>
         <p>
-          각 출처를 파싱한 뒤에는 필드 단위로 값을 합치고, 최종
-          <code>AppConfig</code>를 만든 다음 교차 필드 제약을 검증해야 합니다.
+          <code>deep merge</code>는 object 안쪽의 field를 재귀적으로 합치고,
+          scalar나 array처럼 더 쪼개지지 않는 값은 높은 우선순위 값으로 바꾸는
+          규칙입니다. 그 뒤 최종 <code>AppConfig</code>를 만들고 교차 필드 제약을
+          별도로 검증해야 합니다.
           예를 들어 원격 공급자를 선택했는데 인증 정보가 없거나, read-only
           모드와 쓰기 전용 기능을 함께 켠 경우는 개별 필드의 타입만으로 발견하기
           어렵습니다. 오류 메시지에는 잘못된 값뿐 아니라 어느 설정 파일이나 환경
@@ -59,16 +83,18 @@ export default function Overview() {
         </h3>
         <p>
           API key나 OAuth token을 프로젝트 설정에 저장하면 저장소와 로그를 통해
-          노출될 수 있습니다. 일반 옵션은 파일에 두더라도 secret은 OS keychain,
-          환경 변수, 전용 secret store로 분리하고, 진단 출력에서는 값을
-          마스킹해야 합니다. 원격 설정을 받아오는 경우에는 서명·TLS·캐시 만료와
-          장애 시 fallback 정책도 필요합니다.
+          노출될 수 있습니다. 일반적인 hardening에서는 OS keychain이나 전용
+          secret store를 사용하지만, 이 snapshot의 OAuth 구현은 별도 credentials
+          JSON을 임시 파일에 쓴 뒤 rename합니다. 따라서 “권장 저장 방식”과 “현재
+          구현 방식”을 구분하고, 진단 출력의 redaction·파일 권한·crash durability를
+          별도로 검증해야 합니다.
         </p>
         <p>
           다음에는 <strong>bootstrap</strong>에서 설정 출처를 발견하는 순서를,
           <strong>OAuth</strong>에서 인증 정보의 저장과 갱신을 확인하면 됩니다.
-          마지막 <strong>remote config</strong>는 네트워크 실패와 로컬
-          override가 동시에 있을 때 어떤 값을 선택하는지 다룹니다.
+          마지막 <strong>remote</strong>에서는 환경 변수로 upstream proxy를
+          준비하는 현재 helper와, 별도 transport가 갖춰야 할 session protocol을
+          구분합니다.
         </p>
       </div>
     </section>

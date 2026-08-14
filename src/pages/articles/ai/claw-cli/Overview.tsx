@@ -1,4 +1,5 @@
 import ReplLoopViz from "./viz/ReplLoopViz";
+import { CitationBlock } from "@/components/ui/citation";
 
 export default function Overview() {
   return (
@@ -7,13 +8,46 @@ export default function Overview() {
         CLI는 입력창이 아니라 런타임의 제어면이다
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
+        <p className="text-lg leading-8">
           코딩 에이전트의 CLI를 단순한 채팅 입력창으로 보면 설계 책임을 놓치기
           쉽습니다. CLI는 세션을 시작하고, 로컬 제어 명령과 모델에 보낼
           프롬프트를 나누며, tool call과 권한 요청을 사용자에게 보여주는 실행
           인터페이스입니다. 따라서 대화형 REPL(Read-Eval-Print Loop)이면서
           런타임을 조작하는 control plane 역할도 맡습니다.
         </p>
+        <p>
+          이 글의 핵심 아이디어는 입력·실행 상태·표시를 한 덩어리로 만들지 않는
+          것입니다. REPL은 한 줄을 반복해서 읽고(Read), 입력 종류를 판정해
+          실행하고(Eval), 결과를 보여주는(Print) loop입니다. 여기서 slash
+          command는 로컬 제어, 일반 프롬프트는 model turn, renderer는 구조화된
+          event의 projection으로 분리해야 취소·재시도·CI 출력에서도 같은 의미를
+          유지할 수 있습니다.
+        </p>
+        <p>
+          구현 설명은 독립 공개 Claw Code commit <code>b71afdd…</code>의
+          <code>commands</code>와 <code>rusty-claude-cli</code> source에 한정합니다.
+          제안하는 reducer·inspect/plan/apply·atomic update가 source에 없으면
+          현재 기능이 아니라 hardening contract로 표시합니다.
+        </p>
+
+        <div id="paper-claw-cli-source" className="scroll-mt-24">
+          <CitationBlock
+            source="Claw Code CLI entry @ b71afdd"
+            href="https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/rusty-claude-cli/src/main.rs"
+            citeKey={1}
+            type="code"
+          >
+            <p>
+              <strong>문제:</strong> interactive REPL·one-shot command·session·provider
+              event를 한 binary entry에서 조정합니다. <strong>기여:</strong> pinned
+              source는 input dispatch와 runtime 연결, streaming 표시 경로를
+              제공합니다. <strong>전제:</strong> commit·terminal mode·CLI args·config를
+              고정합니다. <strong>근거 범위:</strong> 이 entry가 실제 호출하는
+              command와 renderer입니다. <strong>일반화 금지:</strong> 모든 terminal,
+              crash recovery, remote UI나 private product 내부구조의 보장은 아닙니다.
+            </p>
+          </CitationBlock>
+        </div>
 
         <ReplLoopViz />
 
@@ -39,6 +73,13 @@ export default function Overview() {
           제어를 제거하고 순서가 보존된 JSONL 같은 형식을 제공해야 합니다. 실행
           이벤트를 먼저 구조화해 두면 두 표현 방식을 하나의 코어 위에 올릴 수
           있습니다.
+        </p>
+        <p>
+          한 turn의 최소 receipt에는 input kind, session·turn ID, command 또는
+          prompt identity, event sequence, tool/permission terminal state, exit code와
+          output mode가 들어갑니다. 이 receipt를 기준으로 TTY와 JSONL을 비교하면
+          색상이나 줄바꿈 차이를 무시하면서도 실행 의미가 사라지지 않았는지 확인할
+          수 있습니다.
         </p>
         <p>
           아래에서는 먼저 slash command의 로컬 실행 계약을 정리하고, 이어서

@@ -3,7 +3,7 @@ import { FileFrame, FileRule, FileSteps } from "./FileVizPrimitives";
 export default function PathAttackVectorsViz() {
   return (
     <FileFrame
-      label="PLATFORM-SPECIFIC ESCAPES"
+      label="HARDENING TEST MATRIX"
       title="같은 containment 원칙도 platform마다 확인할 object가 다르다"
       description="POSIX symlink와 mount, Windows reparse point와 device path, 존재하지 않는 새 target을 별도 case로 다룹니다."
       note="portable string normalization은 첫 단계일 뿐이며 platform handle API와 회귀 test가 필요합니다."

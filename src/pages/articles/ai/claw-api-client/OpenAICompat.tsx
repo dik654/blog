@@ -1,5 +1,6 @@
 import FormatConversionViz from "./viz/FormatConversionViz";
 import ProviderCompatMatrixViz from "./viz/ProviderCompatMatrixViz";
+import { CitationBlock } from "@/components/ui/citation";
 
 const compatibilityAxes = [
   ["Request", "role·content block·tool schema·model option"],
@@ -32,13 +33,33 @@ export default function OpenAICompat() {
         <div className="not-prose my-8">
           <FormatConversionViz />
         </div>
+
+        <div id="paper-claw-openai-compat-source" className="scroll-mt-24">
+          <CitationBlock
+            source="Claw Code OpenAI-compatible adapter @ b71afdd"
+            href="https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/api/src/providers/openai_compat.rs"
+            citeKey={3}
+            type="code"
+          >
+            <p>
+              <strong>문제:</strong> OpenAI와 비슷한 Chat Completions wire
+              format을 쓰는 여러 endpoint를 공통 event로 내립니다. <strong>기여:</strong>
+              pinned source는 provider profile, request 변환, chunk state와 retry
+              경로를 구현합니다. <strong>전제:</strong> commit·provider·model·base
+              URL·fixture를 고정합니다. <strong>근거 범위:</strong> 이 source가
+              명시적으로 parse하는 field와 test입니다. <strong>일반화 금지:</strong>
+              OpenAI-compatible 표기가 Responses API·reasoning·tool delta·usage의
+              완전한 의미 일치를 인증하지 않습니다.
+            </p>
+          </CitationBlock>
+        </div>
       </div>
 
       <div className="not-prose my-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {compatibilityAxes.map(([title, body]) => (
           <article
             key={title}
-            className="min-w-0 rounded-2xl border border-border/70 bg-card p-4 shadow-sm"
+            className="min-w-0 rounded-lg border border-border/70 bg-card p-4"
           >
             <h4 className="text-sm font-bold text-foreground">{title}</h4>
             <p className="mt-2 text-xs leading-5 text-muted-foreground">
@@ -106,6 +127,15 @@ export default function OpenAICompat() {
           strict structured output, parallel tool call, usage timing, unknown
           event와 mid-stream error를 fixture로 두고 expected internal event
           sequence를 비교합니다.
+        </p>
+        <p className="leading-7">
+          최소 fixture에는 text-only, 두 개의 interleaved tool call,
+          <code>tool_calls: null</code>, malformed argument JSON, 마지막 chunk에만
+          usage가 있는 경우와 중간 EOF를 넣습니다. PASS는 HTTP 200이 아니라 공통
+          event 순서·call identity·terminal outcome·usage source가 선언한 허용
+          범위에서 일치한다는 뜻입니다. Provider나 model revision이 바뀌면 이
+          판정도 만료되므로 profile에는 client SHA와 fixture version을 함께
+          남깁니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">

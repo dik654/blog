@@ -1,4 +1,5 @@
 import AnthropicSseViz from "./viz/AnthropicSseViz";
+import { CitationBlock } from "@/components/ui/citation";
 
 const streamState = [
   ["Message", "message ID·model·start/stop·usage"],
@@ -39,7 +40,7 @@ export default function Anthropic() {
         {streamState.map(([title, body]) => (
           <article
             key={title}
-            className="min-w-0 rounded-2xl border border-border/70 bg-card p-4 shadow-sm"
+            className="min-w-0 rounded-lg border border-border/70 bg-card p-4"
           >
             <h4 className="text-sm font-bold text-foreground">{title}</h4>
             <p className="mt-2 text-xs leading-5 text-muted-foreground">
@@ -81,17 +82,32 @@ export default function Anthropic() {
           공식 문서는 message start, content block start·delta·stop, message
           delta와 message stop 사이에 ping과 error가 올 수 있고 앞으로 새 event
           type이 추가될 수 있다고 설명합니다. 따라서 unknown event를 전체 stream
-          corruption으로 처리하지 말고 telemetry에 남긴 뒤 안전하게 건너뜁니다.
-          현재 event 구조는
-          <a
-            href="https://platform.claude.com/docs/en/build-with-claude/streaming"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Anthropic 공식 streaming 문서
-          </a>
-          에서 확인할 수 있습니다.
+          corruption으로 처리하지 말고 telemetry에 남긴 뒤 안전하게 건너뛰는
+          forward-compatible 정책이 필요합니다. 다만 pinned <code>SseParser</code>
+          는 frame을 공통 <code>StreamEvent</code> enum으로 곧바로 deserialize하므로
+          새 event가 enum에 없으면 parse error가 될 수 있고, 내부 buffer에도
+          명시적인 최대 크기가 없습니다. 이는 구현 완료 사실이 아니라 contract
+          test와 bounded framing으로 보강해야 할 지점입니다.
         </p>
+
+        <div id="paper-claw-streaming-spec" className="scroll-mt-24">
+          <CitationBlock
+            source="Anthropic Messages API — Streaming messages"
+            href="https://platform.claude.com/docs/en/build-with-claude/streaming"
+            citeKey={2}
+          >
+            <p>
+              <strong>문제:</strong> message와 content block이 여러 SSE frame으로
+              나뉘어 도착할 때 lifecycle을 복원해야 합니다. <strong>기여:</strong>
+              공식 문서는 event 순서, delta 종류, ping·error와 새 event type 가능성을
+              정의합니다. <strong>전제:</strong> 현재 API version·model·beta와 HTTP
+              transport를 고정합니다. <strong>근거 범위:</strong> Anthropic wire
+              protocol의 event semantics입니다. <strong>일반화 금지:</strong> Claw
+              parser가 모든 frame size·unknown event·network EOF를 이미 안전하게
+              처리한다는 증거는 아닙니다.
+            </p>
+          </CitationBlock>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
           tool input은 block 종료 전까지 JSON 문자열 조각이다
@@ -108,6 +124,14 @@ export default function Anthropic() {
           사용하지 않습니다. block stop 없이 connection이 끊기거나 message
           error가 오면 해당 tool call은 incomplete로 폐기하고 executor에 넘기지
           않습니다.
+        </p>
+        <p className="leading-7">
+          예를 들어 block 0의 조각이 <code>{`{"path":"src/`}</code>, block
+          1의 조각이 <code>{`{"query":"auth"}`}</code>, 다시 block 0의
+          <code>{`login.ts"}`}</code> 순서로 오면 index별 buffer 두 개가
+          필요합니다. Block 0이 stop되어 완성된 JSON이 되었더라도 message-level
+          error가 뒤따를 수 있으므로, parser의 “문법 완성”과 runtime의 “실행 가능
+          call commit”도 구분해야 합니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">

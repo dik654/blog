@@ -3,10 +3,10 @@ import { CliFrame, CliRule, CliSteps } from "./CliVizPrimitives";
 export default function InitViz() {
   return (
     <CliFrame
-      label="SAFE BOOTSTRAP"
-      title="감지 결과는 초안이고 기존 파일이 우선이다"
-      description="init은 프로젝트 시그널을 읽어 변경 계획을 만든 뒤, 사용자가 확인한 파일만 원자적으로 기록해야 합니다."
-      note="package.json이나 Cargo.toml은 힌트이지 권한이 아닙니다. 감지한 명령을 곧바로 실행하지 말고, 생성할 설정과 제외 경로만 제안합니다."
+      label="HARDENING TARGET"
+      title="Pinned create-if-missing에서 inspect·plan·apply로 확장한다"
+      description="현재 source는 기존 주요 파일을 건너뛰며 starter artifact를 바로 기록합니다. 아래는 preview·conflict·crash recovery를 추가할 때의 목표 흐름입니다."
+      note="아래 네 단계와 atomic rename은 pinned 구현 완료 사실이 아닙니다. package.json이나 Cargo.toml은 힌트이지 실행 권한이 아닙니다."
     >
       <CliSteps
         items={[

@@ -1,22 +1,24 @@
-import PowerTableViz from "./viz/PowerTableViz";
+import CryptoFoundationsViz from "../crypto-foundations-viz";
 
 export default function PowerTable() {
   return (
     <section id="power-table" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">거듭제곱 테이블</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
+      <h2 className="mb-6 text-2xl font-bold">작은 거듭제곱 표로 해·주기·실패 조건을 확인한다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          g=3이 mod 17의 <strong>생성원(generator)</strong>이면, 3의 거듭제곱이
-          1부터 16까지 모든 값을 정확히 한 번씩 순환한다.
-          <br />
-          이 순환 순서가 무작위처럼 뒤섞여 보이기 때문에 y로부터 x를 역추적하기
-          어렵다.
-          <br />
-          패턴이 없다는 것이 이산로그 문제의 난이도를 직관적으로 보여준다.
+          Mod 17의 nonzero multiplicative group은 order 16입니다. g=3의 거듭제곱은 x=0…15에서 모든 nonzero residue를 한 번씩 방문하므로 order 16의 generator입니다. y=5는 x=5에서 나오고, x=21도 같은 값을 내지만 21≡5 mod 16이므로 discrete log는 subgroup order를 법으로 읽습니다.
         </p>
       </div>
-      <div className="not-prose">
-        <PowerTableViz />
+      <CryptoFoundationsViz mode="power-cycle" />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>Generator가 아니면 해의 범위가 달라집니다</h3>
+        <p>
+          g=4는 mod 17에서 4,16,13,1의 네 값만 순환해 order 4입니다. 따라서 Y=3에 대한 log base 4는 존재하지 않고, Y=13이라면 x≡3 mod 4인 여러 정수 표현이 같은 group element를 냅니다. Protocol이 full group order를 기대하면서 작은-order input을 받아들이면 secret scalar의 residue가 새어 나올 수 있으므로, public input의 canonical encoding·identity 금지·subgroup membership을 검증합니다.
+        </p>
+        <h3>표의 ‘뒤섞임’은 security proof가 아닙니다</h3>
+        <p>
+          작은 숫자에서 규칙이 눈에 안 보인다는 관찰은 학습 직관일 뿐입니다. 실제 비용은 group representation을 이용하는 알고리즘에 달려 있습니다. Generic group에서는 BSGS와 Pollard rho가 대략 √q scale을 만들지만, Fp*의 DLP에는 index calculus 계열이 group representation을 활용합니다. 반면 적절한 elliptic-curve group에는 알려진 subexponential generic shortcut이 없다는 차이가 parameter size 선택에 반영됩니다.
+        </p>
       </div>
     </section>
   );

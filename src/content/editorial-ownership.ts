@@ -769,6 +769,82 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "claw-api-client": {
+    title: "Claw Code provider API·stream·cache 글이 소유하는 범위",
+    owns: [
+      "Pinned ProviderClient·MessageRequest·StreamEvent와 provider adapter의 실제 semantic 변환 범위",
+      "Pinned SSE frame assembly와 Anthropic block lifecycle의 current behavior·buffer/unknown-event/EOF gap",
+      "OpenAI-compatible provider·model별 capability matrix와 unsupported downgrade release contract",
+      "Pinned local completion response cache와 provider prompt-prefix cache의 비용·정합성·side-effect 경계",
+    ],
+    reuses: [
+      { label: "Claw 전체 crate·runtime architecture snapshot", href: "/ai/claw-overview" },
+      { label: "Session turn·tool result persistence", href: "/ai/claw-session" },
+      { label: "Tool identity·schema·dispatch", href: "/ai/claw-tool-system" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "API type·parser·adapter·local cache 주장은 ultraworkers/claw-code commit b71afddae100ced324457337925a694686b8fef2 source와 같은 commit test에만 귀속한다." },
+      { kind: "standard", rule: "Anthropic streaming·prompt caching 공식 문서는 provider wire/cache semantics만 뒷받침하며 pinned client correctness를 인증하지 않는다." },
+      { kind: "project-claim", rule: "Unknown event tolerance·bounded frame·all-compatible parity·side-effect-safe response replay는 확인된 구현이 아니라 hardening gap으로 표시한다." },
+    ],
+  },
+  "claw-cli": {
+    title: "Claw Code CLI command·render·init 글이 소유하는 범위",
+    owns: [
+      "Pinned REPL·one-shot input에서 local command 또는 runtime·renderer로 이어지는 dispatch 경계",
+      "Pinned SlashCommandSpec registry와 handler별 split parser의 실제 grammar 한계",
+      "Pinned Markdown StreamRenderBuffer와 normalized event reducer hardening의 구분",
+      "Pinned repository init create-if-missing·gitignore idempotency와 transactional init gap",
+    ],
+    reuses: [
+      { label: "Provider common event와 streaming parser", href: "/ai/claw-api-client" },
+      { label: "Session persistence·resume", href: "/ai/claw-session" },
+      { label: "File mutation·workspace boundary", href: "/ai/claw-file-ops" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "CLI entry·command registry·renderer·init 주장은 pinned b71afdd source와 unit test에만 귀속한다." },
+      { kind: "project-claim", rule: "일반 quote grammar·network exactly-once·Unicode 전체·inspect-plan-atomic-apply는 현재 구현이 아니라 별도 hardening contract다." },
+      { kind: "project-measurement", rule: "Release는 같은 input event log와 repository fixture에서 TTY/JSONL parity·duplicate/gap·concurrent/crash init을 base/candidate로 비교한다." },
+    ],
+  },
+  "claw-config": {
+    title: "Claw Code config·bootstrap·OAuth·remote 글이 소유하는 범위",
+    owns: [
+      "Pinned USER·PROJECT·LOCAL deep merge와 field winner·shadowed provenance",
+      "Pinned BootstrapPlan order·dedupe와 trust/readiness/cleanup 미구현 범위",
+      "Pinned OAuth PKCE·state·request·callback parsing·credentials JSON persistence helper 경계",
+      "Pinned remote proxy environment·token·CA·URL 조립과 authenticated session protocol gap",
+    ],
+    reuses: [
+      { label: "Claw 전체 runtime owner와 pinned snapshot", href: "/ai/claw-overview" },
+      { label: "Permission·approval policy owner", href: "/ai/claw-permissions" },
+      { label: "Remote event reducer·resume state", href: "/ai/claw-cli#rendering" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Config·bootstrap·OAuth·remote behavior는 pinned commit의 각 runtime source와 test에만 귀속한다." },
+      { kind: "standard", rule: "RFC 7636·8252는 PKCE와 native app profile을 설명하지만 Claw listener·storage implementation의 인증 근거가 아니다." },
+      { kind: "project-claim", rule: "OS keychain·state single-use listener·readiness cleanup·ack/replay permission protocol은 구현 사실이 아니라 명시적 gap이다." },
+    ],
+  },
+  "claw-file-ops": {
+    title: "Claw Code file read·mutation·search·boundary 글이 소유하는 범위",
+    owns: [
+      "Pinned 10 MB·NUL guard·line range read와 byte snapshot 한계",
+      "Pinned direct write·first/all edit와 expected digest·unique count·atomic replacement gap",
+      "Pinned glob ignore·modified-time 100 cap과 regex grep limit·offset semantics",
+      "Pinned canonical Path containment wrapper와 missing target·TOCTOU·handle-bound open gap",
+    ],
+    reuses: [
+      { label: "Bash path·effect TOCTOU owner", href: "/ai/claw-bash#validation-pipeline" },
+      { label: "Permission decision·executor enforcement", href: "/ai/claw-permissions" },
+      { label: "Run artifact·digest provenance", href: "/ai/experiment-tracking#overview" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Read·write·edit·glob·grep·boundary 주장은 pinned file_ops.rs와 same-commit tests에만 귀속한다." },
+      { kind: "standard", rule: "openat2와 CWE-367은 Linux resolution·TOCTOU 일반 근거이며 Claw hardening 완료나 portable solution의 증거가 아니다." },
+      { kind: "project-claim", rule: "Expected digest·atomic rename·stable snapshot cursor·handle-bound open은 현재 구현이 아니라 검증할 hardening gap이다." },
+    ],
+  },
   "claw-permissions": {
     title:
       "Claw Code permission policy·approval·enforcement 글이 소유하는 범위",
@@ -4801,6 +4877,77 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "crypto-primitives": {
+    title: "암호 프리미티브 조합 글이 소유하는 범위",
+    owns: [
+      "Poseidon field-native permutation과 sponge security/circuit-cost 경계",
+      "Merkle selective opening과 commitment binding·hiding 분리",
+      "Schnorr Fiat–Shamir transcript와 Ed25519 instance 계약",
+      "Point·scalar·field·protocol domain의 구현 타입 분리",
+    ],
+    reuses: [
+      { label: "유한체 arithmetic·multiplicative order", href: "/crypto/finite-field-theory" },
+      { label: "DLP와 generic square-root attacks", href: "/crypto/discrete-log" },
+      { label: "Elliptic-curve point·subgroup 구현", href: "/crypto/elliptic-curves" },
+      { label: "CSPRNG·nonce lifecycle", href: "/crypto/csprng" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Poseidon 비용·보안 주장은 논문의 field·width·S-box·matrix·round parameter 범위에만 귀속한다." },
+      { kind: "standard", rule: "Schnorr BIP 340과 RFC 8032 Ed25519의 curve·transcript·encoding·variant를 서로 바꾸어 일반화하지 않는다." },
+      { kind: "project-measurement", rule: "회로 constraint·proof time·verification time은 같은 field·arity·input·backend에서 vector parity 뒤 비교한다." },
+    ],
+  },
+  csprng: {
+    title: "CSPRNG entropy·state lifecycle 글이 소유하는 범위",
+    owns: [
+      "Entropy source→health/conditioning→DRBG state→reseed pipeline",
+      "Next-output unpredictability와 min-entropy guessing bound",
+      "State compromise의 backtracking·future recovery 분리",
+      "Key·nonce·token consumer와 fork/clone/snapshot release gate",
+    ],
+    reuses: [],
+    evidence: [
+      { kind: "standard", rule: "DRBG mechanism과 entropy-source validation은 NIST SP 800-90A/90B의 서로 다른 책임과 version에 귀속한다." },
+      { kind: "primary-source", rule: "Weak-key 수치는 Heninger et al.의 2012 corpus·device population·분석 범위를 벗어나 일반화하지 않는다." },
+      { kind: "project-measurement", rule: "Boot·fork·clone·snapshot·state disclosure·reseed failure parity 뒤 duplicate와 throughput을 비교한다." },
+    ],
+  },
+  "discrete-log": {
+    title: "이산로그 문제·공격 비용 글이 소유하는 범위",
+    owns: [
+      "Known-order cyclic subgroup의 DLP 해와 forward/reverse 비용 비대칭",
+      "Small-order·outside-subgroup 해 존재 경계",
+      "BSGS meet-in-the-middle와 Pollard rho square-root cost",
+      "DLP·CDH·DDH 가정 분리와 parameter release gate",
+    ],
+    reuses: [
+      { label: "Finite-field multiplicative order·generator", href: "/crypto/finite-field-theory#prime-field" },
+      { label: "Elliptic-curve subgroup와 scalar multiplication", href: "/crypto/elliptic-curves" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "BSGS·Pollard rho cost는 논문이 분석한 group model·order·expected/probabilistic 조건과 함께 제시한다." },
+      { kind: "project-measurement", rule: "Security bits는 group-specific attacks·multi-target·hardware·implementation leakage와 quantum horizon을 고정한 budget에서만 보고한다." },
+    ],
+  },
+  "elliptic-curves": {
+    title: "타원곡선군·BN254 구현 글이 소유하는 범위",
+    owns: [
+      "Nonsingular finite-field curve point group과 scalar multiplication",
+      "Canonical decode·on-curve·identity·prime-subgroup validation",
+      "Affine/Jacobian equivalence와 inversion 비용 trade-off",
+      "BN254 G1·G2 twist·GT pairing boundary와 implementation release gate",
+    ],
+    reuses: [
+      { label: "Prime-field inverse와 extension-field quotient", href: "/crypto/finite-field-theory" },
+      { label: "DLP·generic square-root attack", href: "/crypto/discrete-log" },
+      { label: "Miller loop·final exponentiation", href: "/crypto/pairing" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "Point encoding·validation은 SEC 1 또는 EIP-196/197의 구체 curve·fork·input contract에 귀속한다." },
+      { kind: "project-measurement", rule: "Coordinate/window 최적화는 malformed point·subgroup·official vector·independent parity·constant-time gate 뒤 비교한다." },
+      { kind: "project-claim", rule: "Pairing equation 성공을 proof statement provenance·trusted setup·application authorization 전체로 확대하지 않는다." },
+    ],
+  },
   "finite-field-theory": {
     title: "유한체 이론 글이 소유하는 범위",
     owns: [
@@ -4976,6 +5123,116 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "primary-source", rule: "Default·merge·builder·FileDB 동작은 Helios commit 43a8c9f3의 source와 pinned config 문서에만 귀속한다." },
       { kind: "standard", rule: "Checkpoint freshness·source trust·bootstrap verification·endpoint availability·local RPC exposure를 별도 경계로 둔다." },
       { kind: "project-claim", rule: "External checkpoint fallback이나 endpoint 다수결을 trustless·safe로 표현하지 않고 atomic replace는 source fact가 아닌 hardening 요구로 표시한다." },
+    ],
+  },
+  "erasure-coding": {
+    title: "Erasure coding 기초 글이 소유하는 범위",
+    owns: [
+      "(n,k) symbol identity·rate·overhead·erasure/error recovery contract",
+      "Reed–Solomon evaluation·interpolation·distance budget의 초심자 수치 경로",
+      "2D extension·DAS sampling bound와 Celestia 계열·Ethereum PeerDAS 구현 경계",
+      "RS·RaptorQ·LDPC workload 선택과 correctness-first release gate",
+    ],
+    reuses: [
+      { label: "Field 연산·polynomial root bound", href: "/crypto/finite-field-theory" },
+      { label: "Lagrange interpolation", href: "/crypto/lagrange" },
+      { label: "Ethereum blob·KZG·PeerDAS", href: "/blockchain/da-theory" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "RS·RaptorQ·LDPC의 protocol profile은 RFC 5510·6330·5170에 각각 귀속하고 family 전체의 보편 성능으로 확대하지 않는다." },
+      { kind: "primary-source", rule: "2D DAS construction은 Al-Bassam et al. 논문에, Ethereum의 current 1D row extension·column sampling은 EIP-7594에 분리해 귀속한다." },
+      { kind: "project-claim", rule: "Sample 성공·MDS·commitment를 availability·integrity·confidentiality·production safety의 자동 보장으로 확대하지 않는다." },
+    ],
+  },
+  "aa-fundamentals": {
+    title: "Account Abstraction 기초 글이 소유하는 범위",
+    owns: [
+      "고정 EOA validation과 programmable smart-account policy의 책임 경계",
+      "ERC-4337 UserOperation·Bundler·EntryPoint·Paymaster의 end-to-end lifecycle",
+      "EIP-7702 Final delegation과 Withdrawn native-AA proposal의 현재 상태 구분",
+      "Session capability·recovery governance·paymaster budget의 release gate",
+    ],
+    reuses: [
+      { label: "Ethereum transaction·nonce·receipt", href: "/blockchain/evm-fundamentals" },
+      { label: "EIP-1559 fee market", href: "/blockchain/reth-eip1559" },
+      { label: "Elliptic-curve signature 기초", href: "/crypto/elliptic-curves" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "ERC-4337·ERC-7562·EIP-7702·EIP-7701의 status와 version을 2026-08-14 현재 공식 EIP 문서에 귀속한다." },
+      { kind: "project-claim", rule: "Smart account·passkey·batch·paymaster를 자동 보안·무료 gas·inclusion guarantee로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "Replay·mutable-state invalidation·budget exhaustion·timeout·recovery conflict parity 뒤 gas·latency를 비교한다." },
+    ],
+  },
+  "isms-overview": {
+    title: "ISMS-P 관리체계 개요 글이 소유하는 범위",
+    owns: [
+      "인증범위·서비스 의존성에서 위험 시나리오·잔여위험까지의 관리체계 입구",
+      "정책·구현·운영·효과검증을 잇는 control-evidence chain",
+      "표본심사·근본원인·영향 모집단·재검증·사후관리의 개선 loop",
+    ],
+    reuses: [
+      { label: "VASP control·evidence 실전", href: "/isms-aml/isms-practical-guide" },
+      { label: "Access decision과 DB audit", href: "/isms-aml/isms-access-control" },
+      { label: "MFA·password·계정 lifecycle", href: "/isms-aml/isms-auth-management" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "의무대상·유효기간·사후관리는 2026-08-14 현재 시행 중인 대한민국 법령과 KISA 안내를 구분해 표시한다." },
+      { kind: "primary-source", rule: "인증기준 해설은 KISA 2023.11 안내서에 귀속하고 이후 법령·고시 개정과 충돌하면 현행 규정을 우선한다." },
+      { kind: "project-claim", rule: "인증·점수·표본 적합을 침해 방지·범위 밖 안전·향후 변경의 보장으로 확대하지 않는다." },
+    ],
+  },
+  "isms-practical-guide": {
+    title: "VASP ISMS 실전 글이 소유하는 범위",
+    owns: [
+      "고객 요청·원장·wallet·chain을 잇는 VASP service-control trace",
+      "Crypto parameter lifecycle·secure-SDLC release evidence·wallet signing receipt",
+      "모집단·표본·source provenance를 가진 재현 가능한 audit evidence",
+    ],
+    reuses: [
+      { label: "ISMS 범위·위험·심사 loop", href: "/isms-aml/isms-overview" },
+      { label: "DB JIT session·entitlement review", href: "/isms-aml/isms-access-control#db-access-control" },
+      { label: "Password hash·MFA·credential lifecycle", href: "/isms-aml/isms-auth-management" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "VASP 신고와 개인정보 안전조치는 2026-08-14 현재 시행 조문·관할·대상 범위를 함께 표시한다." },
+      { kind: "primary-source", rule: "ISMS 결함·증적 해설은 KISA 안내서에 귀속하고 익명 경험담을 보편 심사 규칙으로 만들지 않는다." },
+      { kind: "project-claim", rule: "제품 도입·scanner pass·wallet 이름·캡처 한 장을 통제 효과나 신고 수리 보장으로 확대하지 않는다." },
+    ],
+  },
+  "isms-access-control": {
+    title: "접근통제 글이 소유하는 범위",
+    owns: [
+      "Identity·session·policy decision·enforcement·audit·revocation의 request path",
+      "직접·역할 grant와 조건·deny를 적용한 effective permission set",
+      "Network reachability 경계와 privileged DB session·entitlement reconciliation",
+    ],
+    reuses: [
+      { label: "인증 factor와 account lifecycle", href: "/isms-aml/isms-auth-management" },
+      { label: "ISMS control-evidence chain", href: "/isms-aml/isms-overview#protection-measures" },
+      { label: "VASP DB·wallet trace 적용", href: "/isms-aml/isms-practical-guide" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "국내 최소 권한·기록 요구는 제2026-9호 고시에, zero-trust 설계는 별도 NIST 기술 reference에 귀속한다." },
+      { kind: "primary-source", rule: "KISA 2023.11 접근통제 해설은 2026-08-14 시행 법령·실제 위험평가와 함께 적용한다." },
+      { kind: "project-claim", rule: "VPN·동일 zone·RBAC role·접근제어 제품을 identity·업무 authorization·감사 효과의 보장으로 확대하지 않는다." },
+    ],
+  },
+  "isms-auth-management": {
+    title: "인증·계정관리 글이 소유하는 범위",
+    owns: [
+      "Authentication·authorization 경계와 factor 독립성·phishing resistance",
+      "Online rate limit와 offline password-hash 비용·migration·reset 경로",
+      "Joiner·mover·leaver에서 account·authenticator·token·grant를 회수하는 lifecycle",
+    ],
+    reuses: [
+      { label: "Resource-action 권한과 JIT session", href: "/isms-aml/isms-access-control" },
+      { label: "ISMS 위험·control evidence loop", href: "/isms-aml/isms-overview" },
+      { label: "VASP crypto·wallet 적용", href: "/isms-aml/isms-practical-guide#crypto-auth" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "국내 계정·인증 최소선과 NIST SP 800-63B-4의 미국 기술 지침을 관할·적용 범위가 다른 근거로 분리한다." },
+      { kind: "primary-source", rule: "KISA password 심사 해설은 확인 시점 시행 규정·계정 위험·계약 의무와 함께 versioning한다." },
+      { kind: "project-claim", rule: "MFA·biometric·OTP·주기 변경·hash algorithm 이름을 phishing resistance·권한 정당성·credential 전수회수로 확대하지 않는다." },
     ],
   },
 } as const satisfies Record<string, EditorialBoundary>;

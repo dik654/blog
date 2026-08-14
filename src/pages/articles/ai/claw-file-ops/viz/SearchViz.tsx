@@ -6,7 +6,7 @@ export default function SearchViz() {
       label="TOP-DOWN REPOSITORY SEARCH"
       title="filename에서 content로 좁히고 필요한 range만 읽는다"
       description="glob과 grep은 서로 대체하는 도구가 아니라 큰 repository의 후보를 단계적으로 줄이는 두 검색 축입니다."
-      note="ignore·hidden·symlink 정책과 truncation을 결과에 표시해 ‘없음’과 ‘검색하지 않음’을 구분합니다."
+      note="Pinned glob은 최대 100개·수정시각 순서이고 grep offset은 cursor가 아닙니다. Stable snapshot pagination은 hardening 목표입니다."
     >
       <FileSteps
         items={[
@@ -25,7 +25,7 @@ export default function SearchViz() {
           {
             label: "03",
             title: "Grep content",
-            body: "literal 또는 bounded regex로 match 좌표를 찾습니다.",
+            body: "Pinned 구현은 Rust regex로 path와 line match를 찾습니다.",
             tone: "amber",
           },
           {
@@ -37,8 +37,8 @@ export default function SearchViz() {
         ]}
       />
       <FileRule>
-        결과는 stable order와 cursor를 사용하고 match·file·byte budget을 각각
-        제한합니다.
+        현재 limit·offset과 별개로 stable cursor·scan byte·deadline은 추가
+        설계가 필요합니다.
       </FileRule>
     </FileFrame>
   );

@@ -32,7 +32,7 @@ export function ProviderFrame({
   children: ReactNode;
 }) {
   return (
-    <figure className="my-8 overflow-hidden rounded-3xl border border-border/70 bg-gradient-to-br from-background to-muted/40 shadow-sm">
+    <figure data-viz="provider-contract" className="my-10 overflow-hidden rounded-xl border border-border/70 bg-card">
       <div className="p-5 sm:p-7">
         <figcaption className="max-w-3xl">
           <span className="inline-flex rounded-full bg-foreground px-3 py-1 text-[11px] font-semibold tracking-wide text-background">
@@ -45,7 +45,7 @@ export function ProviderFrame({
             {description}
           </p>
         </figcaption>
-        <div className="mt-6">{children}</div>
+        <div className="mt-7">{children}</div>
       </div>
       <div className="border-t border-border/70 bg-muted/30 px-5 py-3 text-xs leading-5 text-muted-foreground sm:px-7">
         {note}
@@ -63,12 +63,12 @@ export function ProviderSteps({
 }) {
   return (
     <div
-      className={`grid gap-3 ${columns === 3 ? "sm:grid-cols-3" : "sm:grid-cols-2 lg:grid-cols-4"}`}
+      className={`grid gap-4 sm:gap-5 ${columns === 3 ? "sm:grid-cols-3" : "sm:grid-cols-2 lg:grid-cols-4"}`}
     >
       {items.map((item) => (
         <section
           key={`${item.label}-${item.title}`}
-          className={`min-w-0 rounded-2xl border p-4 ${tones[item.tone ?? "blue"]}`}
+          className={`min-w-0 rounded-lg border p-4 ${tones[item.tone ?? "blue"]}`}
         >
           <p className="text-[11px] font-bold tracking-wide text-muted-foreground">
             {item.label}
@@ -87,7 +87,7 @@ export function ProviderSteps({
 
 export function ProviderRule({ children }: { children: ReactNode }) {
   return (
-    <div className="mt-4 rounded-2xl border border-dashed border-border bg-background/75 px-4 py-3 text-sm leading-6 text-foreground">
+    <div className="mt-5 rounded-lg border border-border/80 bg-background px-4 py-3 text-sm leading-6 text-foreground">
       {children}
     </div>
   );

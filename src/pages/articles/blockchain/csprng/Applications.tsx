@@ -1,232 +1,41 @@
-import M from "@/components/ui/math";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import { CitationBlock } from "@/components/ui/citation";
 
 export default function Applications() {
-  const items = [
-    {
-      name: "Schnorr / Sigma 프로토콜",
-      desc: "커밋 r, 챌린지 e 모두 CSPRNG에서 생성. r이 예측 가능하면 비밀키 x가 노출된다.",
-      color: "indigo",
-      href: "/crypto/zk-theory#sigma-protocol",
-    },
-    {
-      name: "TLS 핸드셰이크",
-      desc: "세션키 협상 시 클라이언트/서버 랜덤 32바이트. 예측 가능하면 세션 탈취.",
-      color: "emerald",
-    },
-    {
-      name: "지갑 개인키 생성",
-      desc: "BIP-39 니모닉, secp256k1 개인키 모두 CSPRNG 의존. 엔트로피 부족 시 자산 탈취.",
-      color: "amber",
-    },
-    {
-      name: "Nonce 생성",
-      desc: "ECDSA, EdDSA 서명의 nonce가 재사용 또는 예측되면 개인키 복원 가능 (Sony PS3 해킹 사례).",
-      color: "indigo",
-    },
-  ];
-
   return (
     <section id="applications" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">암호학에서의 사용</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
+      <h2 className="mb-6 text-2xl font-bold">키·nonce·token은 서로 다른 randomness 계약을 가진다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          암호 프로토콜의 모든 비밀값은 CSPRNG에서 생성된다.
-          <br />
-          랜덤이 깨지면 알고리즘 자체의 수학적 안전성과 무관하게 시스템 전체가
-          무너진다.
+          Private key는 높은 entropy와 장기 secrecy가 필요하고, AEAD nonce는 scheme에 따라 비밀일 필요는 없어도 같은 key 아래 uniqueness가 핵심일 수 있습니다. Signature nonce는 반복·편향·노출이 private key 방정식으로 이어질 수 있으며, password reset token은 online guess budget과 만료·single use까지 포함합니다. 따라서 모든 필드에 같은 <code>randomBytes(32)</code>를 넣고 끝내지 않고 domain·길이·중복 정책·저장과 crash recovery를 기록합니다.
         </p>
       </div>
-      <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {items.map((p) => (
-          <div
-            key={p.name}
-            className={`rounded-lg border border-${p.color}-500/20 bg-${p.color}-500/5 p-4`}
-          >
-            <p className={`font-semibold text-sm text-${p.color}-400`}>
-              {p.href ? (
-                <a href={p.href} className="hover:underline">
-                  {p.name} →
-                </a>
-              ) : (
-                p.name
-              )}
-            </p>
-            <p className="text-sm mt-1.5 text-foreground/75">{p.desc}</p>
-          </div>
-        ))}
+      <ExplainedFormula
+        question="같은 ECDSA nonce k로 두 메시지를 서명하면 private key d를 어떻게 복구할까요?"
+        idea="두 서명의 s 식을 빼면 private-key 항은 사라지지 않고 nonce inverse가 공통이므로 먼저 k를 얻습니다. 이후 공개된 r,h,s와 k로 d를 직접 풉니다."
+        formula={String.raw`k=(h_1-h_2)(s_1-s_2)^{-1}\bmod n,\qquad d=(s_1k-h_1)r^{-1}\bmod n`}
+        terms={[
+          { symbol: "h_1,h_2", name: "message digests", description: "서명된 서로 다른 메시지의 공개 hash scalars입니다." },
+          { symbol: "r,s_1,s_2", name: "signature values", description: "같은 nonce 때문에 r이 같아진 두 공개 서명입니다." },
+          { symbol: "k", name: "reused nonce", description: "첫 식으로 복구되는 비밀 scalar입니다." },
+          { symbol: "d", name: "private key", description: "Nonce를 안 뒤 두 번째 식으로 복구되는 signing key입니다." },
+        ]}
+        assumptions={["두 서명이 같은 curve order n·private key·nonce를 사용하고 필요한 차이의 inverse가 존재합니다.", "실제 parsing에서는 low-s normalization·hash-to-scalar·signature convention을 scheme 규격대로 적용합니다."]}
+        interpretation="Nonce가 완전히 같지 않아도 일부 bit bias나 correlation이 많은 서명에 누적되면 lattice attack이 가능할 수 있습니다. 그래서 검증된 deterministic nonce scheme이나 OS CSPRNG를 사용하고 자체 counter/시간 seed를 만들지 않습니다."
+      />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>운영 release gate</h3>
+        <p>
+          동일 image로 부팅한 VM·container, fork 직후 parent/child, snapshot restore, entropy API 실패, short read, crash 뒤 counter rollback, state disclosure 전후 reseed를 fixture로 만듭니다. 각 run에는 OS/kernel·runtime·library version, API, boot/fork/snapshot identity, request length와 failure policy를 남깁니다. Output이 서로 다르다는 관찰은 필요한 smoke test일 뿐 security proof가 아니며, known-answer vector·state transition test·duplicate detector와 protocol-level negative test를 함께 통과한 뒤 throughput을 봅니다.
+        </p>
+        <p>
+          OS API가 unavailable이면 약한 fallback으로 내려가지 않고 secret 생성 자체를 중단합니다. Test 환경의 fixed seed는 재현성에는 유용하지만 production secret path와 type/API를 분리해야 하며, log·core dump·telemetry에 state나 raw entropy를 남기지 않습니다.
+        </p>
       </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          ECDSA Nonce 재사용 취약점
-        </h3>
-
-        {/* ECDSA 서명 과정 */}
-        <div className="not-prose rounded-lg border bg-card p-4 mb-4">
-          <div className="text-sm font-semibold mb-3">ECDSA 서명 과정</div>
-          <ol className="text-sm text-muted-foreground space-y-1 list-decimal list-inside">
-            <li>
-              <M>{"k \\leftarrow \\text{random (nonce)}"}</M>
-            </li>
-            <li>
-              <M>{"R = k \\cdot G"}</M>, <M>{"r = R_x \\bmod n"}</M>
-            </li>
-            <li>
-              <M>
-                {
-                  "s = k^{-1} \\cdot (\\text{hash}(m) + r \\cdot \\text{priv}) \\bmod n"
-                }
-              </M>
-            </li>
-            <li>
-              서명 = <M>{"(r, s)"}</M>
-            </li>
-          </ol>
-        </div>
-
-        {/* Nonce 재사용 공격 */}
-        <div className="not-prose rounded-lg border-l-4 border-l-red-500 bg-card p-4 mb-6">
-          <div className="text-sm font-semibold text-red-600 dark:text-red-400 mb-3">
-            Nonce 재사용 시 (같은 k로 2개 서명)
-          </div>
-          <div className="text-sm text-muted-foreground space-y-2">
-            <p>두 서명에서:</p>
-            <M display>
-              {
-                "s_1 = \\underbrace{k^{-1}}_{\\text{nonce 역원}} (\\underbrace{h_1}_{\\text{메시지①해시}} + \\underbrace{r}_{\\text{서명 r값}} \\cdot \\underbrace{\\text{priv}}_{\\text{개인키}}) \\bmod n"
-              }
-            </M>
-            <p className="text-sm text-muted-foreground mt-2">
-              <M>{"s_1"}</M>: 첫 번째 서명의 <M>s</M>값. <M>k</M>: nonce (같은
-              값 재사용됨). <M>n</M>: 곡선 차수
-            </p>
-            <M display>
-              {
-                "s_2 = \\underbrace{k^{-1}}_{\\text{동일 nonce!}} (\\underbrace{h_2}_{\\text{메시지②해시}} + r \\cdot \\text{priv}) \\bmod n"
-              }
-            </M>
-            <p className="text-sm text-muted-foreground mt-2">
-              같은 <M>k</M>를 사용하므로 <M>r</M>도 동일. 두 식의 차이에서{" "}
-              <M>k</M>를 역산할 수 있음
-            </p>
-            <p>두 식을 빼면:</p>
-            <M display>
-              {
-                "k = \\frac{\\overbrace{h_1 - h_2}^{\\text{해시 차이 (공개)}}}{\\underbrace{s_1 - s_2}_{\\text{서명 차이 (공개)}}} \\bmod n"
-              }
-            </M>
-            <p className="text-sm text-muted-foreground mt-2">
-              <M>{"h_1, h_2"}</M>: 메시지 해시 (공개), <M>{"s_1, s_2"}</M>:
-              서명값 (공개). 모든 값이 공개이므로 <M>k</M> 즉시 복원
-            </p>
-            <p>
-              <M>k</M>를 알면 개인키 복원:
-            </p>
-            <M display>
-              {
-                "\\text{priv} = \\frac{\\overbrace{s_1 \\cdot k}^{\\text{복원된 k 대입}} - \\underbrace{h_1}_{\\text{메시지 해시}}}{\\underbrace{r}_{\\text{서명 r값}}} \\bmod n"
-              }
-            </M>
-            <p className="text-sm text-muted-foreground mt-2">
-              <M>k</M>가 복원되면 원래 서명 공식을 역산하여 개인키{" "}
-              <M>{"\\text{priv}"}</M> 추출 가능
-            </p>
-            <p className="font-semibold text-red-600 dark:text-red-400">
-              &rarr; 완전한 개인키 복원
-            </p>
-          </div>
-        </div>
-
-        {/* 실제 사례 */}
-        <h4 className="text-lg font-semibold mt-5 mb-3">실제 사례</h4>
-        <div className="not-prose grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
-          <div className="rounded-lg border-l-4 border-l-red-500 bg-card p-4">
-            <div className="text-sm font-semibold text-red-600 dark:text-red-400 mb-2">
-              Sony PS3 (2010)
-            </div>
-            <ul className="text-sm text-muted-foreground space-y-1">
-              <li>ECDSA firmware 서명</li>
-              <li>
-                모든 서명에 같은 <code>k</code> 사용
-              </li>
-              <li>Master signing key 복원</li>
-              <li>Custom firmware 가능</li>
-            </ul>
-          </div>
-          <div className="rounded-lg border-l-4 border-l-red-500 bg-card p-4">
-            <div className="text-sm font-semibold text-red-600 dark:text-red-400 mb-2">
-              Bitcoin Android Wallet (2013)
-            </div>
-            <ul className="text-sm text-muted-foreground space-y-1">
-              <li>
-                <code>SecureRandom</code> 버그
-              </li>
-              <li>Nonce 재사용</li>
-              <li>여러 지갑 도난</li>
-            </ul>
-          </div>
-          <div className="rounded-lg border-l-4 border-l-red-500 bg-card p-4">
-            <div className="text-sm font-semibold text-red-600 dark:text-red-400 mb-2">
-              Blockchain 거래 분석
-            </div>
-            <ul className="text-sm text-muted-foreground space-y-1">
-              <li>수백 BTC 계좌에서 반복 nonce 발견</li>
-              <li>지속적 자금 도난</li>
-            </ul>
-          </div>
-        </div>
-
-        {/* Deterministic ECDSA */}
-        <div className="not-prose rounded-lg border-l-4 border-l-emerald-500 bg-card p-4 mb-6">
-          <div className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 mb-2">
-            Deterministic ECDSA (RFC 6979)
-          </div>
-          <p className="text-sm text-muted-foreground mb-2">
-            <M>{"k = \\text{HMAC}(\\text{priv}, \\text{hash}(m))"}</M> &mdash;
-            nonce를 메시지와 개인키로 결정론적 도출. RNG 불필요, 재사용 불가능.
-          </p>
-          <div className="text-sm font-semibold mb-1">현대 권장</div>
-          <ul className="text-sm text-muted-foreground space-y-1">
-            <li>Ed25519 (deterministic by design)</li>
-            <li>RFC 6979 ECDSA</li>
-            <li>Schnorr signatures</li>
-          </ul>
-        </div>
-
-        {/* 기타 랜덤 실패 */}
-        <h4 className="text-lg font-semibold mt-5 mb-3">기타 랜덤 실패 사례</h4>
-        <div className="not-prose grid grid-cols-1 md:grid-cols-3 gap-3 mb-2">
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold mb-2">
-              Debian OpenSSL (2008)
-            </div>
-            <ul className="text-sm text-muted-foreground space-y-1">
-              <li>Valgrind warning 제거 &rarr; entropy 0</li>
-              <li>PID만으로 키 생성</li>
-              <li>수백만 SSH/SSL 키 교체</li>
-            </ul>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold mb-2">
-              Dual_EC_DRBG (2013)
-            </div>
-            <ul className="text-sm text-muted-foreground space-y-1">
-              <li>NSA가 P, Q 파라미터 선택</li>
-              <li>출력 예측 가능 의혹</li>
-              <li>RSA가 $10M에 사용 권고</li>
-            </ul>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold mb-2">
-              Infineon ROCA (2017)
-            </div>
-            <ul className="text-sm text-muted-foreground space-y-1">
-              <li>RSA 키 생성 취약</li>
-              <li>Estonian IDs 이동 필요</li>
-              <li>10억 키 영향</li>
-            </ul>
-          </div>
-        </div>
+      <div id="paper-heninger-weak-keys" className="scroll-mt-24">
+        <CitationBlock source="Heninger et al. · Mining Your Ps and Qs (USENIX Security 2012)" href="https://www.usenix.org/conference/usenixsecurity12/technical-sessions/presentation/heninger" citeKey={4}>
+          문제: 실제 TLS·SSH device의 faulty random generation이 공개키에 어느 정도 나타나는지 측정합니다. 기여: Internet-scale key corpus에서 shared RSA factors와 DSA nonce 문제를 찾아 private key 복구 가능성을 실증했습니다. 전제: 당시 관측 corpus·protocol·device population과 분석 방법에 한정합니다. 근거 범위: weak randomness의 실세계 영향입니다. 비주장: 오늘날 모든 OS RNG의 실패율이나 특정 entropy source의 보편적 품질을 말하지 않습니다.
+        </CitationBlock>
       </div>
     </section>
   );

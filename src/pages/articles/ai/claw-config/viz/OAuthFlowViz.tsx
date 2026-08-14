@@ -3,7 +3,7 @@ import { ConfigFrame, ConfigRule, ConfigSteps } from "./ConfigVizPrimitives";
 export default function OAuthFlowViz() {
   return (
     <ConfigFrame
-      label="AUTHORIZATION CODE + PKCE"
+      label="STANDARD + PINNED HELPERS"
       title="verifier·state·callback을 하나의 login attempt로 묶는다"
       description="browser에서 받은 code는 state를 검증한 뒤 동일한 verifier와 redirect URI로 한 번만 교환합니다."
       note="지원 endpoint·scope·redirect 규칙은 OAuth 일반론이 아니라 provider의 공식 문서와 client registration에서 확인합니다."
@@ -25,20 +25,20 @@ export default function OAuthFlowViz() {
           {
             label: "03",
             title: "Validate callback",
-            body: "loopback path·state·single use를 확인합니다.",
+            body: "표준상 path·state·single use를 확인합니다. Pinned source는 parsing helper까지 제공합니다.",
             tone: "amber",
           },
           {
             label: "04",
             title: "Exchange & store",
-            body: "verifier로 token을 교환하고 secret store에 저장합니다.",
+            body: "verifier로 교환합니다. Pinned source의 저장 대상은 credentials.json입니다.",
             tone: "emerald",
           },
         ]}
       />
       <ConfigRule>
-        callback code와 token은 URL log, telemetry와 일반 config file에 남기지
-        않습니다.
+        Pinned helper가 없는 listener·state 소비·redaction은 상위 flow에서 별도
+        검증해야 합니다.
       </ConfigRule>
     </ConfigFrame>
   );

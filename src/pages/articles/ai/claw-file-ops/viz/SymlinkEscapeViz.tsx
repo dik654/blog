@@ -3,10 +3,10 @@ import { FileFrame, FileRule, FileSteps } from "./FileVizPrimitives";
 export default function SymlinkEscapeViz() {
   return (
     <FileFrame
-      label="REAL TARGET BOUNDARY"
+      label="CURRENT GAP → HARDENING"
       title="입력 path가 아니라 실제로 열 object를 판정한다"
       description="lexical normalization과 canonicalization 뒤에도 race-resistant open과 sandbox mount가 필요합니다."
-      note="문자열 prefix 비교만으로는 비슷한 directory 이름, symlink·junction과 검사 후 교체를 막을 수 없습니다."
+      note="Pinned wrapper는 canonical Path prefix를 검사하지만 actual open과 결합되지 않습니다. Handle-bound open은 다음 hardening 단계입니다."
     >
       <FileSteps
         items={[

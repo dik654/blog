@@ -1,134 +1,40 @@
-import BabyGiantViz from "./viz/BabyGiantViz";
-import Math from "@/components/ui/math";
-import FormulaGuide from "@/components/ui/formula-guide";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import { CitationBlock } from "@/components/ui/citation";
+import CryptoFoundationsViz from "../crypto-foundations-viz";
 
 export default function BabyGiant() {
   return (
     <section id="baby-giant" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Baby-step Giant-step</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
+      <h2 className="mb-6 text-2xl font-bold">Baby-step Giant-step: 시간과 메모리를 √q로 맞바꾼다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Bitcoin은 secp256k1(256-bit), Ed25519도 256-bit 키를 쓴다. 왜
-          128-bit가 아니라 256-bit일까?
-          <br />
-          역방향 전수 탐색은 O(p)이지만, Baby-step Giant-step 알고리즘은 O(√p)에
-          풀 수 있다.
-          <br />
-          즉 실제 안전성은 키 크기의 절반이다 — 256-bit 키의 안전성은 √(2²⁵⁶) =
-          2¹²⁸ = 128-bit.
-          <br />
-          2¹²⁸ ≈ 3.4 × 10³⁸. 초당 10¹²번 연산하는 컴퓨터 10억 대를 동원해도
-          10¹⁰년(우주 나이) 이상 걸린다.
-          <br />
-          NIST는 2030년 이후에도 128-bit를 안전 기준으로 권고하며, AES-128도
-          같은 수준이다.
-          <br />이 알고리즘의 존재가 실무에서 키 크기를 결정하는 근거이므로,
-          원리를 알아야 한다.
-        </p>
-
-        <h3>수식 전개</h3>
-        <p>
-          <Math>{"q"}</Math>는 군의 위수 — mod p에서 0을 제외한 {"{"}1, 2, 3, …,
-          p−1{"}"} 의 개수다.
-          <br />
-          p=17이면 <Math>{"q = p-1 = 16"}</Math>, 즉 x가 될 수 있는 후보는
-          0~15의 16개.
-          <br />이 16개를 효율적으로 탐색하는 것이 목표다.
-        </p>
-        <p>
-          <strong>① 분해:</strong> 어떤 정수든 <Math>{"m"}</Math>으로 나누면
-          몫과 나머지로 쓸 수 있다.
-          <br />
-          <Math>{"m = \\lceil\\sqrt{q}\\rceil"}</Math>로 잡으면 몫과 나머지 모두
-          0~m−1 범위가 되어, q개를 전수 탐색하는 대신 m×m 격자로 분할할 수 있다.
-        </p>
-        <Math display>
-          {
-            "\\underbrace{x}_{\\text{정수}} = \\underbrace{i}_{\\text{몫}} \\cdot \\underbrace{m}_{\\lceil\\sqrt{q}\\rceil} + \\underbrace{j}_{\\text{나머지}}"
-          }
-        </Math>
-        <FormulaGuide
-          title="지수 탐색 공간을 √q씩 나누기"
-          terms={[
-            {
-              symbol: "q",
-              name: "부분군의 위수",
-              description:
-                "가능한 이산로그 지수의 범위이며 반드시 p-1 전체와 같지는 않습니다.",
-            },
-            {
-              symbol: "m=\\lceil\\sqrt q\\rceil",
-              name: "한 축의 크기",
-              description: "q개 후보를 약 √q×√q 격자로 나누기 위해 선택합니다.",
-            },
-            {
-              symbol: "i",
-              name: "Giant-step 인덱스",
-              description: "m칸 단위로 얼마나 이동했는지를 나타냅니다.",
-            },
-            {
-              symbol: "j",
-              name: "Baby-step 인덱스",
-              description: "미리 계산한 gʲ 테이블 안의 나머지 위치입니다.",
-            },
-          ]}
-          assumptions={[
-            "g가 생성하는 위수 q의 순환부분군 안에 y가 있어 y=gˣ인 해가 존재합니다.",
-            "군 연산과 역원 계산이 가능하며, hash table은 baby-step 값을 충돌 없이 비교할 수 있어야 합니다.",
-          ]}
-          interpretation="시간을 공짜로 줄이는 것이 아니라 q번의 전수 탐색을 약 √q번 계산과 √q개 저장 공간으로 바꿉니다. 따라서 generic discrete-log의 보안 비트는 군 위수 비트의 대략 절반입니다."
-        />
-        <p>
-          <strong>② 양변에 g를 씌우기:</strong>
-          <Math display>
-            {"g^x = g^{i \\cdot m + j} = g^{i \\cdot m} \\cdot g^j"}
-          </Math>
-        </p>
-        <p>
-          <strong>③</strong> <Math>{"y = g^x"}</Math> 이므로:
-          <Math display>{"y = g^{i \\cdot m} \\cdot g^j"}</Math>
-        </p>
-        <p>
-          <strong>④ 양변에서</strong> <Math>{"g^j"}</Math>를 이항:
-          <Math display>{"y \\cdot g^{-j} = g^{i \\cdot m} = (g^m)^i"}</Math>
-        </p>
-        <p>
-          <strong>⑤ 알고리즘:</strong>
-          <br />
-          Baby-step — <Math>{"g^j"}</Math> 값 (j=0~m−1)을 미리 계산해 테이블에
-          저장.
-          <br />
-          Giant-step — y를 <Math>{"g^m"}</Math>으로 한 번씩 나누며 (
-          <Math>
-            {"y,\\; y \\cdot g^{-m},\\; y \\cdot g^{-2m},\\; \\ldots"}
-          </Math>
-          ) 결과가 Baby 테이블에 있는지 검색한다.
-          <br />
-          매칭되면 나눈 횟수가 i, 테이블에서 찾은 위치가 j →{" "}
-          <Math>{"x = i \\cdot m + j"}</Math>.
+          q개 지수를 차례로 시험하는 대신 x를 i·m+j로 분해합니다. j 방향의 baby-step gʲ를 hash table에 저장하고, Y에 g⁻ᵐ을 반복 곱하는 giant-step이 table과 만나는 순간 i,j를 얻습니다. 이는 연산을 없애는 것이 아니라 동일한 중간값을 저장해 meet-in-the-middle하는 time–memory trade-off입니다.
         </p>
       </div>
-      <div className="not-prose mb-8">
-        <BabyGiantViz />
+      <CryptoFoundationsViz mode="bsgs-grid" />
+      <ExplainedFormula
+        question="왜 baby table과 giant walk의 만남이 x를 복원할까요?"
+        idea="m=ceil(√q)로 두면 0≤x&lt;q인 모든 지수를 x=im+j로 쓸 수 있습니다. Y=gˣ의 양변에 g⁻ⁱᵐ을 곱하면 저장한 baby-step gʲ와 같아집니다."
+        formula={String.raw`m=\lceil\sqrt q\rceil,\quad x=im+j,\quad Y(g^{-m})^i=g^j\quad\Longrightarrow\quad x=im+j\pmod q`}
+        terms={[
+          { symbol: "q", name: "subgroup order", description: "찾는 exponent가 mod q에서 놓이는 후보 공간 크기입니다." },
+          { symbol: "m", name: "split width", description: "Baby와 giant 두 축을 비슷한 크기로 만드는 ceil(√q)입니다." },
+          { symbol: "j", name: "baby index", description: "Table에 저장한 gʲ의 위치입니다." },
+          { symbol: "i", name: "giant index", description: "Y에서 gᵐ 단위로 뒤로 이동한 횟수입니다." },
+        ]}
+        assumptions={["Y가 g가 생성하는 알려진 order q subgroup 안에 있어 해가 존재합니다.", "Group equality와 inverse가 정확하고 table key encoding이 canonical합니다."]}
+        interpretation="q=16이면 m=4이고 Y=5, g=3에서 g⁻⁴≡4 mod 17입니다. 5·4≡3이 baby table의 j=1과 만나므로 i=1, x=1·4+1=5입니다. 일반 비용은 O(√q) time과 O(√q) memory입니다."
+      />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>Pollard rho와 실제 security bits</h3>
+        <p>
+          Pollard rho는 group element를 pseudo-random walk로 순회하다 collision을 찾아 선형 congruence를 풀어 log를 얻습니다. 저장 table을 줄이고 기대 O(√q) group operations를 유지하지만 probabilistic runtime, distinguished points와 parallelization 조건이 있습니다. Prime-order q가 약 2²⁵⁶이면 generic square-root scale은 약 2¹²⁸이지만, 이것을 곧바로 “128-bit 보안”으로 보고하려면 curve-specific attacks, multi-target, hardware, protocol leakage와 quantum threat를 함께 제외하거나 평가해야 합니다.
+        </p>
       </div>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3>그래서 DLP는 안전한가?</h3>
-        <p>
-          O(√p) 알고리즘이 있다고 DLP가 깨진 것은 아니다.
-          <br />
-          이 알고리즘의 존재를 이미 알고 있기 때문에, 처음부터 키 크기를 2배로
-          설정한다.
-          <br />
-          2¹²⁸번 연산은 현재 전 세계 컴퓨터를 동원해도 우주 나이(~10¹⁰년)보다
-          오래 걸린다.
-        </p>
-        <p>
-          핵심은 "깨는 방법이 없다"가 아니라 "최선의 방법을 써도 비용이
-          천문학적"이라는 점이다.
-          <br />
-          암호학의 안전성은 항상 "알려진 최선의 공격 대비 충분한 마진"으로
-          정의된다.
-        </p>
+      <div id="paper-shanks-bsgs" className="scroll-mt-24">
+        <CitationBlock source="Shanks (1971) · Class number, a theory of factorization, and genera" href="https://www.ams.org/books/pspum/020/" citeKey={2}>
+          문제: 큰 순환 구조에서 index와 관련 number-theoretic 값을 전수 탐색보다 빠르게 계산합니다. 기여: baby-step/giant-step의 meet-in-the-middle 전략으로 알려진 방법의 고전적 출처입니다. 전제: finite cyclic group operation·order bound·table lookup이 가능합니다. 근거 범위: square-root time–memory algorithm의 기원과 구조입니다. 비주장: 오늘날 모든 DLP implementation의 최적 constant·parallel speedup·curve별 security를 정하지 않습니다.
+        </CitationBlock>
       </div>
     </section>
   );

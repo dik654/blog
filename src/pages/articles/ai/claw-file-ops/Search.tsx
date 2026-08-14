@@ -1,31 +1,32 @@
 import SearchViz from "./viz/SearchViz";
 
 const outputModes = [
-  ["Files", "어느 file에 match가 있는지 path만 반환"],
-  ["Count", "file별 또는 전체 match count를 반환"],
-  ["Content", "line·column·preview와 context line을 반환"],
-  ["Cursor", "truncated 이후 같은 snapshot의 다음 결과를 요청"],
+  ["files_with_matches", "match가 있는 path를 반환하며 기본 limit은 250개다"],
+  ["count", "file별 path와 전체 regex match 수를 반환한다"],
+  ["content", "match 주변 line을 path·line number와 함께 문자열로 반환한다"],
+  ["offset/head_limit", "결과 배열을 자르지만 snapshot-bound cursor는 아니다"],
 ] as const;
 
 export default function Search() {
   return (
     <section id="search" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">
-        glob은 후보 file을 찾고 grep은 필요한 내용만 좁힌다
+        현재 glob·grep 동작을 알고 top-down 검색 budget을 설계한다
       </h2>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          큰 repository를 효율적으로 읽으려면 먼저 filename과 directory 구조로
-          후보를 줄이고, 그 안에서 content match를 찾은 뒤 필요한 file range만
-          읽어야 합니다. <code>glob_search</code>와 <code>grep_search</code>의
-          분리는 이 top-down 탐색 흐름을 tool interface로 표현합니다.
+          큰 repository에서는 파일을 전부 읽기보다 이름으로 후보를 찾고, 내용
+          match로 좁힌 뒤 필요한 line range만 읽는 편이 빠릅니다. 이
+          <strong> top-down search</strong>에서 glob은 path pattern, grep은 content
+          pattern을 담당합니다.
         </p>
         <p className="leading-7">
-          검색은 read-only이지만 무해하지는 않습니다. secret file 이름과 내용도
-          노출할 수 있고, 무제한 regex와 결과는 CPU·memory·LLM context를
-          고갈시킬 수 있으므로 file read와 같은 boundary·permission·output
-          budget을 적용해야 합니다.
+          pinned 구현의 glob과 grep은 같은 정책을 공유하지 않습니다. Glob은 여섯
+          directory를 건너뛰고 수정 시각 내림차순으로 최대 100개를 반환합니다.
+          Grep은 process 안에서 Rust regex로 WalkDir file을 읽으며, glob·extension
+          filter와 output mode를 적용합니다. 외부 <code>rg</code>를 실행하는
+          wrapper가 아닙니다.
         </p>
 
         <div className="not-prose my-8">
@@ -33,82 +34,79 @@ export default function Search() {
         </div>
       </div>
 
-      <div className="not-prose my-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="not-prose my-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {outputModes.map(([title, body]) => (
           <article
             key={title}
-            className="min-w-0 rounded-2xl border border-border/70 bg-card p-4 shadow-sm"
+            className="min-w-0 rounded-lg border border-border/70 bg-card p-4"
           >
-            <h4 className="text-sm font-bold text-foreground">{title}</h4>
-            <p className="mt-2 text-xs leading-5 text-muted-foreground">
-              {body}
-            </p>
+            <h4 className="break-words text-sm font-bold text-foreground">{title}</h4>
+            <p className="mt-2 text-xs leading-5 text-muted-foreground">{body}</p>
           </article>
         ))}
       </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3 className="text-xl font-semibold mt-8 mb-3">
-          ignore와 symlink 정책을 결과에 드러낸다
+          glob은 이름 후보를 최대 100개로 제한한다
         </h3>
         <p className="leading-7">
-          기본 검색은 보통 <code>.gitignore</code>, hidden file, vendor
-          directory와 binary file을 제외하지만 이는 library마다 다른 선택입니다.
-          request와 result에 적용된 ignore source, hidden·follow-symlink flag와
-          excluded count를 표시해야 “없다”와 “검색하지 않았다”를 구분할 수
-          있습니다.
+          Glob pattern을 base directory와 결합하고, brace expression은 여러
+          pattern으로 확장합니다. WalkDir가 만난 regular file 중 pattern과 맞는
+          path를 중복 제거하며 <code>.git</code>, <code>node_modules</code>,
+          <code>.build</code>, <code>target</code>, <code>dist</code>,
+          <code>coverage</code> directory를 제외합니다.
         </p>
         <p className="leading-7">
-          symlink를 따라가도록 허용해도 실제 target이 workspace boundary 안인지
-          file마다 확인합니다. directory cycle을 감지하고 maximum depth와
-          visited inode 또는 platform identity를 사용해 무한 순회를 막습니다.
+          결과는 normalized path 순서가 아니라 metadata modified time의
+          내림차순으로 정렬하고 100개 뒤를 잘라 <code>truncated</code>를 표시합니다.
+          따라서 시간이 같은 file의 tie-break, repository snapshot과 다음 page를
+          잇는 cursor는 없습니다. “최신 파일 우선” 결과와 “재현 가능한 전체
+          열거”를 같은 계약으로 생각하면 안 됩니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
-          literal search를 기본으로 하고 regex 비용을 제한한다
+          grep은 regex와 세 output mode를 직접 구현한다
         </h3>
         <p className="leading-7">
-          사용자가 정규식을 요구하지 않았다면 literal search가 더 예측 가능하고
-          빠릅니다. regex mode는 compile error를 구조화해 반환하고 pattern
-          length, file size, total scan bytes와 deadline을 제한합니다. 가능하면
-          catastrophic backtracking을 피하는 engine을 사용합니다.
+          Pattern은 Rust <code>regex</code> crate로 compile하며 case-insensitive와
+          dot-matches-newline option을 받을 수 있습니다. 이 engine은 backtracking
+          regex와 다른 계산 특성을 갖지만, source에는 scan byte·deadline·memory
+          budget이 별도로 보이지 않습니다. 큰 tree나 긴 file의 resource limit은
+          release 전에 따로 측정해야 합니다.
         </p>
         <p className="leading-7">
-          외부 <code>rg</code> 같은 search executable을 사용할 때는 shell
-          string을 만들지 않고 argv로 pattern과 path를 전달합니다. exit code에서
-          “match 없음”과 execution error를 구분하고 stderr를 bounded
-          diagnostic으로 보존합니다.
+          <code>content</code> mode는 match line의 before·after context를 문자열로
+          쌓습니다. 가까운 두 match의 context가 겹치면 같은 line이 반복될 수 있고,
+          binary나 decode 실패 file은 읽지 못한 이유를 결과에 넣지 않고 건너뜁니다.
+          그래서 “match 없음”과 “일부 file을 검색하지 못함”을 결과만으로 완전히
+          구분하기 어렵습니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
-          결과 순서와 pagination을 안정화한다
+          Offset은 cursor가 아니며 repository 변경을 감지하지 않는다
         </h3>
         <p className="leading-7">
-          filesystem traversal order는 환경마다 달라질 수 있으므로 normalized
-          path, line과 column으로 정렬합니다. 최대 file 수, match 수, preview
-          byte와 total output byte를 각각 제한하고, 잘렸다면 정확한 reason과
-          cursor를 반환합니다.
+          <code>head_limit</code>과 <code>offset</code>은 만들어진 vector에
+          <code>skip</code>과 <code>truncate</code>를 적용합니다. Query digest,
+          ignore policy와 filesystem snapshot identity를 포함하지 않으므로, file이
+          추가·삭제된 뒤 같은 offset을 보내면 누락이나 중복이 생길 수 있습니다.
         </p>
         <p className="leading-7">
-          cursor에는 query digest, ignore config와 search snapshot identity를
-          넣어 다른 query의 offset으로 재사용되지 않게 합니다. repository가 크게
-          바뀌었다면 오래된 cursor를 이어 붙이기보다 새 검색을 요구합니다.
+          Hardening된 pagination은 normalized path·line·column의 stable ordering,
+          query digest와 snapshot version을 cursor에 묶어야 합니다. 현재 API를
+          사용할 때는 offset을 “같은 순간의 다음 page”로 믿지 말고, truncated
+          결과를 좁힐 새 glob·path·regex 조건으로 이어가는 편이 안전합니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
-          preview는 다음 read를 위한 좌표다
+          Release gate는 정상 예시보다 adversarial repository를 사용한다
         </h3>
         <p className="leading-7">
-          content mode는 path, line·column, bounded preview와 앞뒤 context를
-          반환하되 full file을 반복해서 싣지 않습니다. line number는 text
-          encoding과 newline 기준을 명시하고, preview가 잘렸다면 match span이
-          어느 byte에 있는지도 보존합니다.
-        </p>
-        <p className="leading-7">
-          검색 직후 file이 바뀔 수 있으므로 result의 digest나 observed
-          metadata를 다음 <code>read_file</code> 요청에 전달할 수 있습니다. read
-          시점에 version이 다르면 line number를 그대로 믿지 않고 새 search 또는
-          context refresh를 수행합니다.
+          100개를 넘는 동일 수정시각 file, unreadable UTF-8, symlink loop, 매우 긴
+          line, overlap context, offset 도중 file churn을 fixture로 만듭니다. 각
+          test에서 scanned file·byte·elapsed·truncation reason을 관찰할 수 있어야
+          검색 비용과 누락을 설명할 수 있습니다.
         </p>
       </div>
     </section>

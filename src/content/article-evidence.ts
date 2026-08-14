@@ -2389,7 +2389,12 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "Pinned fixture가 관찰하는 deterministic behavior 범위이며 live provider·sandbox·OS·production quality를 보증하지 않음",
     },
   ),
-  "ai/claw-cli": clawEvidence(),
+  "ai/claw-cli": clawEvidence(
+    { kind: "공식 코드", label: "Claw Code pinned CLI entry", href: "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/rusty-claude-cli/src/main.rs", note: "REPL·one-shot dispatch와 runtime·renderer 연결의 pinned 범위이며 모든 terminal·crash recovery 보장은 아님" },
+    { kind: "공식 코드", label: "Claw Code pinned command registry", href: "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/commands/src/lib.rs", note: "SlashCommandSpec·alias·help와 handler parser surface이며 일반 shell quote grammar 보장은 아님" },
+    { kind: "공식 코드", label: "Claw Code pinned terminal renderer", href: "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/rusty-claude-cli/src/render.rs", note: "Markdown parser와 StreamRenderBuffer safe boundary·flush의 실제 source" },
+    { kind: "공식 코드", label: "Claw Code pinned repository init", href: "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/rusty-claude-cli/src/init.rs", note: "Create-if-missing·gitignore idempotency artifact이며 transaction·atomic rename·rollback 근거는 아님" },
+  ),
   "ai/claw-session": clawEvidence(
     {
       kind: "공식 코드",
@@ -2460,7 +2465,11 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "Plugin tool manifest·required permission·command execution source이며 MCP lifecycle·generation pin 보증은 아님",
     },
   ),
-  "ai/claw-file-ops": clawEvidence(),
+  "ai/claw-file-ops": clawEvidence(
+    { kind: "공식 코드", label: "Claw Code pinned file operations", href: "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src/file_ops.rs", note: "10 MB·binary·line read, direct write/edit, glob·regex grep와 canonical wrapper의 실제 snapshot" },
+    { kind: "공식 문서", label: "Linux man-pages — openat2(2)", href: "https://man7.org/linux/man-pages/man2/openat2.2.html", note: "Dirfd 아래 pathname resolution restrictions의 Linux 근거이며 portable authorization·Claw 구현 완료는 아님" },
+    { kind: "공식 문서", label: "MITRE CWE-367 — TOCTOU", href: "https://cwe.mitre.org/data/definitions/367.html", note: "검사와 사용 사이 resource 변경이라는 일반 weakness와 mitigation 경계" },
+  ),
   "ai/claw-bash": [
     {
       kind: "공식 코드",
@@ -2511,13 +2520,20 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "Process group·session semantics의 OS 근거이며 pinned Claw timeout path가 descendant signal·wait·cleanup을 구현했다는 증거는 아님",
     },
   ],
-  "ai/claw-api-client": clawEvidence(),
-  "ai/claw-config": clawEvidence({
-    kind: "공식 규격",
-    label: "RFC 8252 — OAuth 2.0 for Native Apps",
-    href: "https://www.rfc-editor.org/rfc/rfc8252",
-    note: "로컬 loopback redirect와 네이티브 앱 인증 흐름의 표준",
-  }),
+  "ai/claw-api-client": clawEvidence(
+    { kind: "공식 코드", label: "Claw Code pinned API client", href: "https://github.com/ultraworkers/claw-code/tree/b71afddae100ced324457337925a694686b8fef2/rust/crates/api/src", note: "ProviderClient·MessageRequest·StreamEvent·adapter와 cache의 pinned source 범위" },
+    { kind: "공식 문서", label: "Anthropic Messages API — Streaming", href: "https://platform.claude.com/docs/en/build-with-claude/streaming", note: "Anthropic SSE event·content block lifecycle의 공식 wire semantics이며 Claw parser 보증은 아님" },
+    { kind: "공식 문서", label: "Anthropic — Prompt caching", href: "https://platform.claude.com/docs/en/build-with-claude/prompt-caching", note: "Provider prefix cache와 usage·TTL의 공식 계약이며 local response cache의 안전성 근거는 아님" },
+    { kind: "공식 문서", label: "OpenAI — Prompt caching", href: "https://developers.openai.com/api/docs/guides/prompt-caching", note: "OpenAI provider-side prefix reuse와 usage 관찰의 공식 범위" },
+  ),
+  "ai/claw-config": clawEvidence(
+    { kind: "공식 코드", label: "Claw Code pinned config loader", href: "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src/config.rs", note: "USER·PROJECT·LOCAL deep merge와 field provenance의 actual source" },
+    { kind: "공식 코드", label: "Claw Code pinned BootstrapPlan", href: "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src/bootstrap.rs", note: "Ordered·deduplicated step plan이며 trust-aware execution·readiness·cleanup 보장은 아님" },
+    { kind: "공식 코드", label: "Claw Code pinned OAuth helpers", href: "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src/oauth.rs", note: "PKCE·state·request·callback parsing과 credentials JSON persistence source" },
+    { kind: "공식 코드", label: "Claw Code pinned remote proxy bootstrap", href: "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src/remote.rs", note: "Environment·token·CA·URL·proxy subprocess env source이며 session protocol 근거는 아님" },
+    { kind: "공식 규격", label: "RFC 7636 — PKCE", href: "https://www.rfc-editor.org/rfc/rfc7636", note: "Verifier·S256 challenge의 protocol 기준" },
+    { kind: "공식 규격", label: "RFC 8252 — OAuth 2.0 for Native Apps", href: "https://www.rfc-editor.org/rfc/rfc8252", note: "External browser와 loopback redirect의 native-app profile" },
+  ),
   "ai/claw-permissions": clawEvidence(
     {
       kind: "공식 코드",
@@ -4260,6 +4276,25 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "IPLD Link와 CID가 data model graph를 연결하는 의미",
     },
   ],
+  "crypto/crypto-primitives": [
+    { kind: "핵심 논문", label: "Poseidon · USENIX Security 2021", href: "https://www.usenix.org/conference/usenixsecurity21/presentation/grassi", note: "Prime-field SPN·HADES round strategy와 회로 비용/공격 분석의 원문" },
+    { kind: "공식 규격", label: "RFC 8032 · EdDSA: Ed25519 and Ed448", href: "https://www.rfc-editor.org/rfc/rfc8032.html", note: "Ed25519 curve·seed expansion·encoding·sign/verify·test-vector 계약" },
+    { kind: "공식 규격", label: "BIP 340 · Schnorr Signatures for secp256k1", href: "https://bips.dev/340/", note: "Tagged hash·x-only key·auxiliary nonce와 exact Schnorr byte contract" },
+  ],
+  "crypto/csprng": [
+    { kind: "공식 규격", label: "NIST SP 800-90A Rev.1 · DRBG", href: "https://csrc.nist.gov/pubs/sp/800/90/a/r1/final", note: "Hash/HMAC/CTR_DRBG instantiate·generate·reseed state-transition 정본" },
+    { kind: "공식 규격", label: "NIST SP 800-90B · Entropy Sources", href: "https://csrc.nist.gov/pubs/sp/800/90/b/final", note: "Noise-source min-entropy·conditioning·health-test validation 정본" },
+    { kind: "핵심 논문", label: "Mining Your Ps and Qs · USENIX Security 2012", href: "https://www.usenix.org/conference/usenixsecurity12/technical-sessions/presentation/heninger", note: "낮은 entropy가 실제 TLS·SSH key compromise로 이어진 관측 범위" },
+  ],
+  "crypto/discrete-log": [
+    { kind: "핵심 논문", label: "Pollard · Monte Carlo Methods for Index Computation", href: "https://doi.org/10.1090/S0025-5718-1978-0491431-9", note: "Collision walk로 작은 memory와 expected O(√q)를 만드는 rho 원문" },
+    { kind: "핵심 논문", label: "Shanks · Class number, a theory of factorization, and genera", href: "https://www.ams.org/books/pspum/020/", note: "Baby-step/giant-step meet-in-the-middle의 고전적 출처와 범위" },
+  ],
+  "crypto/elliptic-curves": [
+    { kind: "공식 규격", label: "SECG SEC 1 v2.0 · Elliptic Curve Cryptography", href: "https://www.secg.org/sec1-v2.pdf", note: "Curve domain·point encoding·public-key validation·ECC primitive 기준" },
+    { kind: "공식 규격", label: "EIP-196 · alt_bn128 add and scalar multiplication", href: "https://eips.ethereum.org/EIPS/eip-196", note: "BN254 G1 input·infinity·invalid-point·operation contract" },
+    { kind: "공식 규격", label: "EIP-197 · alt_bn128 pairing check", href: "https://eips.ethereum.org/EIPS/eip-197", note: "BN254 G1/G2/GT·Fp² encoding·subgroup·product pairing contract" },
+  ],
   "crypto/finite-field-theory": [
     {
       kind: "공식 규격",
@@ -4417,6 +4452,144 @@ export const ARTICLE_EVIDENCE: Readonly<
       label: "a16z/helios FileDB @ 43a8c9f3",
       href: "https://github.com/a16z/helios/blob/43a8c9f3cdda41a6f383c4db41d9a83f102638b1/ethereum/src/database.rs",
       note: "32-byte checkpoint load/save와 malformed/read-failure fallback의 current 동작",
+    },
+  ],
+  "blockchain/erasure-coding": [
+    {
+      kind: "공식 규격",
+      label: "RFC 5510 · Reed-Solomon FEC",
+      href: "https://www.rfc-editor.org/rfc/rfc5510.html",
+      note: "GF(2^m) packet erasure profile·systematic MDS·symbol identity의 표준 범위",
+    },
+    {
+      kind: "핵심 논문",
+      label: "Fraud and Data Availability Proofs",
+      href: "https://arxiv.org/abs/1809.09044",
+      note: "2D erasure-coded Merkle tree·sampling·invalid-encoding fraud proof construction",
+    },
+    {
+      kind: "공식 규격",
+      label: "EIP-7594 · PeerDAS",
+      href: "https://eips.ethereum.org/EIPS/eip-7594",
+      note: "Ethereum blob row의 1D extension·cell KZG proof·column custody와 sampling",
+    },
+    {
+      kind: "공식 규격",
+      label: "RFC 6330 · RaptorQ FEC",
+      href: "https://www.rfc-editor.org/rfc/rfc6330.html",
+      note: "Rateless source·repair symbol identity와 compliant decoder 요구",
+    },
+    {
+      kind: "공식 규격",
+      label: "RFC 5170 · LDPC Staircase and Triangle FEC",
+      href: "https://www.rfc-editor.org/rfc/rfc5170.html",
+      note: "Sparse graph 기반 large-object FEC의 구체 profile",
+    },
+  ],
+  "blockchain/aa-fundamentals": [
+    {
+      kind: "공식 규격",
+      label: "ERC-4337 · Account Abstraction Using Alt Mempool",
+      href: "https://eips.ethereum.org/EIPS/eip-4337",
+      note: "UserOperation·Bundler·EntryPoint·Paymaster의 protocol contract",
+    },
+    {
+      kind: "공식 규격",
+      label: "ERC-7562 · Validation Scope Rules",
+      href: "https://eips.ethereum.org/EIPS/eip-7562",
+      note: "Bundler admission의 opcode·storage·reputation·second-validation 경계",
+    },
+    {
+      kind: "공식 규격",
+      label: "EIP-7702 · Set Code for EOAs (Final)",
+      href: "https://eips.ethereum.org/EIPS/eip-7702",
+      note: "Type-4 authorization tuple과 persistent delegation indicator",
+    },
+    {
+      kind: "공식 규격",
+      label: "EIP-7701 · Native Account Abstraction (Withdrawn)",
+      href: "https://eips.ethereum.org/EIPS/eip-7701",
+      note: "Withdrawn proposal의 validation/execution role 설계와 현재 상태",
+    },
+  ],
+  "isms-aml/isms-overview": [
+    {
+      kind: "공식 규격",
+      label: "정보통신망법 제47조 · 2026-07-07 시행",
+      href: "https://law.go.kr/LSW/lsLawLinkInfo.do?chrClsCd=010202&lsJoLnkSeq=900628579",
+      note: "대한민국 ISMS 의무·3년 유효기간·연 1회 이상 사후관리의 현재 법적 틀(2026-08-14 확인)",
+    },
+    {
+      kind: "공식 문서",
+      label: "KISA ISMS-P 인증대상 안내",
+      href: "https://www.isms-p.or.kr/cert/aply/selectCertTrgtDetail.do",
+      note: "ISP·IDC·매출·이용자 기준과 자율신청을 구분하는 현재 제도 안내(개별 법률판단 아님)",
+    },
+    {
+      kind: "공식 가이드",
+      label: "KISA ISMS-P 인증기준 안내서 2023.11",
+      href: "https://www.isms-p.or.kr/ntcn/rcsrm/selectGnrlRcsrmList.do",
+      note: "관리체계·보호대책·개인정보 기준의 확인사항·결함·증적 해설이며 현행 법령과 함께 적용",
+    },
+  ],
+  "isms-aml/isms-practical-guide": [
+    {
+      kind: "공식 규격",
+      label: "특정금융정보법 시행령 제10조의11 · VASP 신고",
+      href: "https://law.go.kr/LSW/lsLinkCommonInfo.do?chrClsCd=010202&lspttninfSeq=167095",
+      note: "VASP 신고 첨부서류에 정보보호 관리체계 인증 자료를 두는 대한민국 현행 조문(2026-08-14 확인)",
+    },
+    {
+      kind: "공식 가이드",
+      label: "KISA ISMS-P 인증기준 안내서 2023.11",
+      href: "https://www.isms-p.or.kr/ntcn/rcsrm/selectGnrlRcsrmList.do",
+      note: "Control gap·결함·운영 증적을 해석하는 출발점이며 제품·주기의 유일한 구현 기준은 아님",
+    },
+    {
+      kind: "공식 규격",
+      label: "개인정보의 안전성 확보조치 기준 제2026-9호",
+      href: "https://www.law.go.kr/LSW/admRulInfoP.do?admRulSeq=2100000281400&chrClsCd=010201",
+      note: "최소 권한·변경말소·권한 기록·개인별 계정·인증수단의 현재 법정 최소선(2026-08-14 확인)",
+    },
+  ],
+  "isms-aml/isms-access-control": [
+    {
+      kind: "공식 가이드",
+      label: "KISA ISMS-P 인증기준 안내서 · 2.5·2.6",
+      href: "https://www.isms-p.or.kr/ntcn/rcsrm/selectGnrlRcsrmList.do",
+      note: "인증·권한관리와 network·system·application 접근통제의 심사 해설",
+    },
+    {
+      kind: "공식 연구",
+      label: "NIST SP 800-207 · Zero Trust Architecture",
+      href: "https://csrc.nist.gov/pubs/sp/800/207/final",
+      note: "Network 위치와 identity·resource authorization을 분리하는 기술 reference이며 한국 법적 의무의 대체가 아님",
+    },
+    {
+      kind: "공식 규격",
+      label: "개인정보의 안전성 확보조치 기준 제2026-9호",
+      href: "https://www.law.go.kr/LSW/admRulInfoP.do?admRulSeq=2100000281400&chrClsCd=010201",
+      note: "개인정보처리시스템 최소 권한·회수·3년 기록·공유 제한의 현재 법정 기준(2026-08-14 확인)",
+    },
+  ],
+  "isms-aml/isms-auth-management": [
+    {
+      kind: "공식 가이드",
+      label: "KISA ISMS-P 인증기준 안내서 · 2.5 인증 및 권한관리",
+      href: "https://www.isms-p.or.kr/ntcn/rcsrm/selectGnrlRcsrmList.do",
+      note: "계정·식별·인증·비밀번호의 심사 해설이며 현행 법령·조직 위험과 함께 적용",
+    },
+    {
+      kind: "공식 규격",
+      label: "NIST SP 800-63B-4 · Authenticator Management",
+      href: "https://pages.nist.gov/800-63-4/sp800-63b/authenticators/",
+      note: "Password·MFA·phishing resistance·recovery의 기술 기준이며 한국 법적 의무의 대체가 아님",
+    },
+    {
+      kind: "공식 규격",
+      label: "개인정보의 안전성 확보조치 기준 제2026-9호",
+      href: "https://www.law.go.kr/LSW/admRulInfoP.do?admRulSeq=2100000281400&chrClsCd=010201",
+      note: "개인정보 계정·인증수단·변경말소·기록의 현재 법정 최소선(2026-08-14 확인)",
     },
   ],
 };

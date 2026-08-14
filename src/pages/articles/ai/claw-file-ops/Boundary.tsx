@@ -1,5 +1,6 @@
 import PathAttackVectorsViz from "./viz/PathAttackVectorsViz";
 import SymlinkEscapeViz from "./viz/SymlinkEscapeViz";
+import { CitationBlock } from "@/components/ui/citation";
 
 const platformRisks = [
   ["POSIX", "symlink·hard link·mount point·rename race"],
@@ -12,7 +13,7 @@ export default function Boundary() {
   return (
     <section id="boundary" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">
-        Workspace boundary는 문자열 검사가 아니라 실제 file open 경계다
+        현재 canonical path 검사에서 실제 file open 경계로 확장한다
       </h2>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
@@ -25,8 +26,16 @@ export default function Boundary() {
         <p className="leading-7">
           따라서 path authorization은 canonical target 확인, component 기반
           containment, race-resistant open과 sandbox mount를 겹쳐 사용합니다. 각
-          계층이 막는 문제가 다르므로 <code>startsWith</code> 한 번이나
+          계층이 막는 문제가 다르므로 문자열 prefix 비교 한 번이나
           blacklist로 대체할 수 없습니다.
+        </p>
+        <p className="leading-7">
+          pinned workspace wrapper는 existing target을 canonicalize한 뒤 Rust
+          <code>Path::starts_with</code>로 canonical root의 component prefix인지
+          확인합니다. 단순 문자열 prefix보다는 강하지만, 검사 뒤 실제
+          read·write가 path를 다시 resolve하므로 check-use race가 남습니다. Missing
+          target은 parent canonicalization이 실패하면 lexical parent를 사용할 수
+          있어 nested create의 보장도 더 약합니다.
         </p>
 
         <div className="not-prose my-8">
@@ -42,7 +51,7 @@ export default function Boundary() {
         {platformRisks.map(([title, body]) => (
           <article
             key={title}
-            className="min-w-0 rounded-2xl border border-border/70 bg-card p-4 shadow-sm"
+            className="min-w-0 rounded-lg border border-border/70 bg-card p-4"
           >
             <h4 className="text-sm font-bold text-foreground">{title}</h4>
             <p className="mt-2 text-xs leading-5 text-muted-foreground">
@@ -102,6 +111,46 @@ export default function Boundary() {
           경계로 두면 application-level 검사가 실패해도 host 전체로 피해가
           번지는 것을 줄일 수 있습니다.
         </p>
+
+        <div id="paper-openat2-boundary" className="scroll-mt-24">
+          <CitationBlock
+            source="Linux openat2(2) — pathname resolution restrictions"
+            href="https://man7.org/linux/man-pages/man2/openat2.2.html"
+            citeKey={2}
+          >
+            <p>
+              <strong>문제:</strong> untrusted path를 directory handle 아래에서
+              resolve할 때 escape와 symlink traversal을 제한합니다.
+              <strong> 기여:</strong> <code>RESOLVE_BENEATH</code>,
+              <code>RESOLVE_IN_ROOT</code>, <code>RESOLVE_NO_SYMLINKS</code> 같은
+              kernel-enforced resolution flag를 정의합니다. <strong>전제:</strong>
+              Linux kernel 지원, trusted dirfd와 필요한 link policy를 고정합니다.
+              <strong> 근거 범위:</strong> 한 open operation의 Linux pathname
+              resolution입니다. <strong>일반화 금지:</strong> Windows·macOS portable
+              API, authorization policy, content version과 multi-file transaction까지
+              제공하는 것은 아닙니다.
+            </p>
+          </CitationBlock>
+        </div>
+
+        <div id="paper-cwe-toctou" className="scroll-mt-24">
+          <CitationBlock
+            source="CWE-367 — Time-of-check Time-of-use Race Condition"
+            href="https://cwe.mitre.org/data/definitions/367.html"
+            citeKey={3}
+          >
+            <p>
+              <strong>문제:</strong> resource를 검사한 뒤 사용하기 전에 상태가
+              바뀌어 검사가 무효화됩니다. <strong>기여:</strong> check와 use 사이
+              window를 줄이고 동일 handle·locking 등으로 상태 결합을 강화하는
+              weakness model을 제공합니다. <strong>전제:</strong> 공격자 또는 다른
+              process가 그 사이 resource를 바꿀 수 있습니다. <strong>근거 범위:</strong>
+              race weakness와 mitigation 방향입니다. <strong>일반화 금지:</strong>
+              canonicalize 한 번, hash 비교 한 번이나 특정 OS API 하나가 모든
+              filesystem race를 제거한다는 증거는 아닙니다.
+            </p>
+          </CitationBlock>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
           민감 file 정책과 workspace containment를 분리한다

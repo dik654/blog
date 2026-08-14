@@ -1,5 +1,6 @@
 import BootTimingViz from "./viz/BootTimingViz";
 import BootstrapViz from "./viz/BootstrapViz";
+import { CitationBlock } from "@/components/ui/citation";
 
 const readiness = [
   ["설정", "최종 값과 provenance를 검증했다"],
@@ -12,23 +13,42 @@ export default function Bootstrap() {
   return (
     <section id="bootstrap" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">
-        Bootstrap은 신뢰 경계가 준비된 뒤 side effect를 연다
+        현재 BootstrapPlan과 production readiness를 구분해서 읽는다
       </h2>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          bootstrap의 핵심은 단계가 몇 개인지가 아니라 의존 순서입니다. 설정과
-          workspace를 확정하기 전에 plugin을 실행하거나 MCP server를 띄우면,
-          아직 신뢰 수준도 모르는 코드가 process와 network 권한을 먼저 갖게
-          됩니다. 따라서 로컬 계산, 신뢰 결정, 외부 side effect, readiness
-          공개의 순서를 지켜야 합니다.
+          bootstrap은 프로그램이 요청을 받기 전에 필요한 구성요소를 준비하는
+          과정입니다. 여기서 <strong>plan</strong>은 어떤 작업을 어떤 순서로
+          시도할지 적은 목록이고, <strong>readiness</strong>는 실제 구성요소가
+          사용할 수 있는 상태라는 관찰 결과입니다. 둘은 같은 것이 아닙니다.
         </p>
         <p className="leading-7">
-          분석한 구현의 <code>BootstrapPhase</code> 이름은 진행 상황을 관찰하기
-          위한 내부 모델입니다. phase enum 자체를 설계의 정답으로 보기보다, 각
-          phase가 어떤 자원을 만들고 실패할 때 무엇을 정리해야 하는지 확인하는
-          편이 중요합니다.
+          pinned <code>bootstrap.rs</code>의 <code>BootstrapPlan</code>은 enum
+          단계의 순서를 보관하고 중복을 제거합니다. 이 파일만으로 plugin을 실제로
+          spawn했는지, trust가 검증됐는지, health check가 통과했는지, 실패한
+          resource를 정리했는지는 증명할 수 없습니다. 아래 그림은 이 gap을 메울
+          production hardening 목표입니다.
         </p>
+
+        <div id="paper-claw-bootstrap-source" className="scroll-mt-24">
+          <CitationBlock
+            source="Claw Code BootstrapPlan @ b71afdd"
+            href="https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src/bootstrap.rs"
+            citeKey={2}
+            type="code"
+          >
+            <p>
+              <strong>문제:</strong> startup 단계의 순서와 중복을 결정적으로
+              표현합니다. <strong>기여:</strong> pinned source는 bootstrap step
+              enum, ordered plan과 deduplication을 제공합니다. <strong>전제:</strong>
+              commit과 plan 입력을 고정합니다. <strong>근거 범위:</strong> 계획의
+              구조와 순서입니다. <strong>일반화 금지:</strong> trust-aware 실행,
+              병렬 startup, readiness probe, cancellation과 역순 cleanup을 이미
+              구현했다는 증거는 아닙니다.
+            </p>
+          </CitationBlock>
+        </div>
 
         <div className="not-prose my-8">
           <BootstrapViz />
@@ -38,10 +58,10 @@ export default function Bootstrap() {
           외부 process는 trust 결정 뒤에 시작한다
         </h3>
         <p className="leading-7">
-          먼저 config를 병합하고 canonical workspace path와 source provenance를
-          계산합니다. 그다음 project config, plugin manifest와 executable의 신뢰
-          여부를 평가하며, 여기까지는 가능한 한 process 생성이나 network 요청
-          없이 끝내는 편이 좋습니다.
+          hardening된 실행기라면 먼저 config를 병합하고 canonical workspace
+          path와 source provenance를 계산해야 합니다. 그다음 project config,
+          plugin manifest와 executable의 신뢰 여부를 평가하며, 여기까지는 가능한
+          한 process 생성이나 network 요청 없이 끝내는 편이 좋습니다.
         </p>
         <p className="leading-7">
           신뢰 결정이 끝난 뒤에만 provider 연결, plugin enable, MCP spawn과 hook
@@ -55,7 +75,7 @@ export default function Bootstrap() {
         {readiness.map(([title, body]) => (
           <article
             key={title}
-            className="min-w-0 rounded-2xl border border-border/70 bg-card p-4 shadow-sm"
+            className="min-w-0 rounded-lg border border-border/70 bg-card p-4"
           >
             <h4 className="text-sm font-bold text-foreground">{title}</h4>
             <p className="mt-2 text-xs leading-5 text-muted-foreground">

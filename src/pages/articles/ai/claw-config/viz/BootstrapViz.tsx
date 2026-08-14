@@ -3,10 +3,10 @@ import { ConfigFrame, ConfigRule, ConfigSteps } from "./ConfigVizPrimitives";
 export default function BootstrapViz() {
   return (
     <ConfigFrame
-      label="TRUSTED BOOT"
-      title="외부 side effect는 신뢰 결정 뒤에 연다"
+      label="HARDENING TARGET"
+      title="BootstrapPlan을 trust-aware 실행기로 확장한다"
       description="로컬 해석과 trust resolution을 끝낸 뒤 provider·plugin·MCP를 시작하고, 필수 capability가 검증돼야 Ready가 됩니다."
-      note="phase 이름과 개수는 구현마다 달라도, trust 이전에 외부 process를 만들지 않는 순서는 유지합니다."
+      note="Pinned source가 보장하는 것은 ordered·deduplicated plan입니다. 이 그림의 trust·readiness·cleanup은 검증해야 할 다음 계약입니다."
     >
       <ConfigSteps
         items={[

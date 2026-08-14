@@ -3,10 +3,10 @@ import { ConfigFrame, ConfigRule, ConfigSteps } from "./ConfigVizPrimitives";
 export default function WsProtocolViz() {
   return (
     <ConfigFrame
-      label="VERSIONED ENVELOPE"
+      label="HARDENING TARGET"
       title="sequence와 ack가 stream resume의 기준이 된다"
       description="message type 외에 protocol·session·request·sequence를 보내야 duplicate, 순서 역전과 재연결을 처리할 수 있습니다."
-      note="text delta는 합칠 수 있지만 permission·tool result·terminal state는 durable delivery 정책이 필요합니다."
+      note="이 contract는 pinned remote.rs에 구현됐다는 설명이 아니라 별도 transport가 증명해야 할 release criterion입니다."
     >
       <ConfigSteps
         items={[

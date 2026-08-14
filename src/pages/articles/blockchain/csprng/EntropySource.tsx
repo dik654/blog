@@ -1,262 +1,52 @@
-import M from "@/components/ui/math";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import { CitationBlock } from "@/components/ui/citation";
 
 export default function EntropySource() {
-  const sources = [
-    {
-      name: "하드웨어 (RDRAND/RDSEED)",
-      desc: "CPU 내장 열 잡음 기반 난수 명령어. Intel Ivy Bridge 이후 지원.",
-      color: "amber",
-    },
-    {
-      name: "커널 이벤트",
-      desc: "키보드·마우스 타이밍, 디스크 I/O 지터, 네트워크 인터럽트 간격 등.",
-      color: "indigo",
-    },
-    {
-      name: "/dev/urandom (Linux)",
-      desc: "커널 엔트로피 풀에서 ChaCha20 기반 CSPRNG으로 난수 생성. 블로킹 없이 항상 즉시 반환.",
-      color: "emerald",
-    },
-    {
-      name: "BCryptGenRandom (Windows)",
-      desc: "Windows CNG 프레임워크의 CSPRNG. AES-CTR-DRBG 기반.",
-      color: "emerald",
-    },
-  ];
-
   return (
     <section id="entropy-source" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">엔트로피 소스</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
+      <h2 className="mb-6 text-2xl font-bold">Entropy source: 가장 쉬운 추측을 기준으로 seed를 평가한다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          CSPRNG의 안전성은 시드의 엔트로피(무작위성)에 의존한다.
-          <br />
-          엔트로피가 부족하면 아무리 좋은 알고리즘이라도 출력이 예측 가능해진다.
-          <br />
-          2012년 연구에서 공유 호스팅 서버의 낮은 엔트로피로 수천 개의 RSA 키가
-          뚫린 사례가 있다.
+          Entropy는 파일 크기나 sample 수가 아니라 공격자가 모르는 불확실성입니다. Timing jitter 1,024개를 모았다고 1,024-bit entropy가 생기지 않습니다. Sample들이 correlated하거나 VM host가 schedule을 관찰하고 있다면 가장 가능성 높은 raw sequence의 확률이 큽니다. Noise source model, digitization, restart behavior, conditioning과 continuous health tests를 하나의 pipeline으로 평가해야 합니다.
         </p>
       </div>
-      <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {sources.map((s) => (
-          <div
-            key={s.name}
-            className={`rounded-lg border border-${s.color}-500/20 bg-${s.color}-500/5 p-4`}
-          >
-            <p className={`font-semibold text-sm text-${s.color}-400`}>
-              {s.name}
-            </p>
-            <p className="text-sm mt-1.5 text-foreground/75">{s.desc}</p>
-          </div>
-        ))}
+      <ExplainedFormula
+        question="공격자가 한 번에 맞힐 가능성이 가장 큰 raw outcome으로부터 몇 bit를 보수적으로 셀까요?"
+        idea="Shannon entropy의 평균 대신 가장 높은 확률 pmax 하나를 봅니다. 가장 쉬운 결과가 1/8 확률이라면 최악의 한 번 추측에 대해 3-bit보다 강하다고 말할 수 없습니다."
+        formula={String.raw`H_\infty(X)=-\log_2\!\left(\max_x \Pr[X=x]\right)`}
+        terms={[
+          { symbol: "X", name: "raw-source random variable", description: "고정한 sampling window에서 관찰한 outcome입니다." },
+          { symbol: "p_{\max}", name: "most likely outcome probability", description: "공격자 관점에서 가장 잘 맞힐 수 있는 값의 확률입니다." },
+          { symbol: "H_\infty", name: "min-entropy", description: "최선의 단일 guess에 대응하는 보수적 bit 수입니다." },
+        ]}
+        assumptions={["확률은 실제 deployment 환경과 공격자의 side information을 반영한 source model에서 추정합니다.", "독립성을 검증하지 않은 sample의 min-entropy를 단순 합산하지 않습니다."]}
+        interpretation="pmax=1/8이면 H∞=3 bits입니다. 128-bit key buffer에 이 source를 반복 복사해도 seed entropy는 3 bits를 넘지 않으며, hash conditioning은 entropy를 정돈할 수 있지만 새 entropy를 만들어내지 않습니다."
+      />
+      <ExplainedFormula
+        question="h bit의 min-entropy만 가진 seed로 만든 256-bit key는 얼마나 강할까요?"
+        idea="Generator output 길이가 길어져도 공격자는 가능한 seed를 열거해 key 후보를 재생성할 수 있습니다. Guessing work의 상한은 출력 길이가 아니라 seed의 실제 entropy와 DRBG security strength 중 작은 값에 묶입니다."
+        formula={String.raw`b_{\mathrm{effective}}\le \min\!\left(H_\infty(S),\,b_{\mathrm{DRBG}},\,b_{\mathrm{key}}\right)`}
+        terms={[
+          { symbol: "S", name: "seed material", description: "Instantiate에 들어간 전체 entropy-bearing input입니다." },
+          { symbol: "b_{DRBG}", name: "DRBG security strength", description: "선택한 mechanism·parameter가 목표로 하는 최대 strength입니다." },
+          { symbol: "b_{key}", name: "key strength ceiling", description: "생성하려는 key algorithm의 독립적인 보안 상한입니다." },
+        ]}
+        assumptions={["공격자가 output이나 public key로 seed candidate를 판별할 수 있는 상황을 고려합니다.", "Entropy estimate가 deployment·boot·clone 상태에서 유효합니다."]}
+        interpretation="8-bit seed로 256-bit key를 만들면 공격자는 256개 seed만 재생하면 됩니다. Output length를 늘리거나 statistical test를 통과해도 유효 보안 강도는 8 bits를 넘지 않습니다."
+      />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>수집·conditioning·health test의 역할</h3>
+        <p>
+          Raw noise는 bias와 correlation을 가질 수 있으므로 approved conditioning function으로 고정 길이 seed material을 만듭니다. Conditioning은 분포를 다루기 쉽게 만들지만 source failure를 감추는 장치가 아닙니다. Repetition count와 adaptive proportion 같은 online health test는 갑자기 stuck된 source를 빠르게 검출하고 fail closed해야 하며, offline statistical suite의 합격만으로 entropy rate를 인증하지 않습니다.
+        </p>
+        <p>
+          단일 CPU instruction·시간·PID·network event만 독립 source라고 가정하지 않습니다. 여러 source를 섞을 때도 “각각 64-bit”를 더하는 대신 하나가 다른 하나를 관찰·조작할 수 있는지 분석합니다. VM image를 복제하거나 process를 fork하면 DRBG state도 복제될 수 있으므로 OS의 fork safety와 reseed semantics를 확인하고, container마다 같은 image secret을 seed로 쓰지 않습니다.
+        </p>
       </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          엔트로피 측정과 수집
-        </h3>
-
-        {/* 엔트로피 개념 */}
-        <div className="not-prose rounded-lg border bg-card p-4 mb-4">
-          <div className="text-sm font-semibold mb-3">
-            엔트로피 (Entropy) 정의
-          </div>
-          <div className="space-y-2 text-sm text-muted-foreground">
-            <div>
-              <span className="font-medium text-foreground">
-                Shannon Entropy:
-              </span>{" "}
-              <M display>
-                {
-                  "H(X) = -\\sum \\underbrace{p(x)}_{\\text{사건 확률}} \\cdot \\underbrace{\\log_2 p(x)}_{\\text{정보량 (bits)}}"
-                }
-              </M>
-              <p className="text-sm text-muted-foreground mt-2">
-                <M>{"H(X)"}</M>: 확률변수 <M>X</M>의 평균 불확실성. 모든 사건이
-                동일 확률이면 최대, 한 사건이 확실하면 0
-              </p>
-            </div>
-            <div>
-              <span className="font-medium text-foreground">
-                Min-Entropy (암호학 관점):
-              </span>{" "}
-              <M display>
-                {
-                  "H_{\\min}(X) = -\\log_2(\\underbrace{\\max\\, p(x)}_{\\text{가장 높은 확률}})"
-                }
-              </M>
-              <p className="text-sm text-muted-foreground mt-2">
-                <M>{"H_{\\min}"}</M>: 최악의 경우 불확실성. 가장 예측하기 쉬운
-                사건의 확률만 고려 &mdash; CSPRNG 시드 품질 기준
-              </p>
-            </div>
-            <p>
-              <span className="font-medium text-foreground">Full entropy:</span>{" "}
-              <M>{"H_{\\min}(X) = |X|"}</M> (모든 bit 독립)
-            </p>
-          </div>
-        </div>
-
-        {/* 엔트로피 소스 비교 */}
-        <h4 className="text-lg font-semibold mt-5 mb-3">엔트로피 소스 비교</h4>
-        <div className="not-prose overflow-x-auto mb-6">
-          <table className="w-full text-sm border-collapse">
-            <thead>
-              <tr className="border-b text-left">
-                <th className="p-2 font-semibold">소스</th>
-                <th className="p-2 font-semibold">속도</th>
-                <th className="p-2 font-semibold">품질</th>
-                <th className="p-2 font-semibold">신뢰성</th>
-              </tr>
-            </thead>
-            <tbody className="text-muted-foreground">
-              <tr className="border-b border-border/50">
-                <td className="p-2">RDRAND</td>
-                <td className="p-2">매우빠름</td>
-                <td className="p-2">양호</td>
-                <td className="p-2">중간*</td>
-              </tr>
-              <tr className="border-b border-border/50">
-                <td className="p-2">RDSEED</td>
-                <td className="p-2">빠름</td>
-                <td className="p-2">높음</td>
-                <td className="p-2">중간*</td>
-              </tr>
-              <tr className="border-b border-border/50">
-                <td className="p-2">Keyboard timing</td>
-                <td className="p-2">느림</td>
-                <td className="p-2">높음</td>
-                <td className="p-2">높음</td>
-              </tr>
-              <tr className="border-b border-border/50">
-                <td className="p-2">Disk I/O</td>
-                <td className="p-2">느림</td>
-                <td className="p-2">중간</td>
-                <td className="p-2">높음</td>
-              </tr>
-              <tr className="border-b border-border/50">
-                <td className="p-2">Network jitter</td>
-                <td className="p-2">중간</td>
-                <td className="p-2">중간</td>
-                <td className="p-2">높음</td>
-              </tr>
-              <tr className="border-b border-border/50">
-                <td className="p-2">Thermal noise HW</td>
-                <td className="p-2">중간</td>
-                <td className="p-2">매우높음</td>
-                <td className="p-2">매우높음</td>
-              </tr>
-              <tr>
-                <td className="p-2">Quantum RNG</td>
-                <td className="p-2">느림</td>
-                <td className="p-2">완벽</td>
-                <td className="p-2">매우높음</td>
-              </tr>
-            </tbody>
-          </table>
-          <p className="text-xs text-muted-foreground mt-1">
-            * Intel backdoor 의혹 (추측)
-          </p>
-        </div>
-
-        {/* 엔트로피 수집 단계 */}
-        <h4 className="text-lg font-semibold mt-5 mb-3">엔트로피 수집 단계</h4>
-        <div className="not-prose grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-          <div className="rounded-lg border bg-card p-3 text-center">
-            <div className="text-xs font-mono text-muted-foreground mb-1">
-              Step 1
-            </div>
-            <div className="text-sm font-semibold mb-1">Raw Source 수집</div>
-          </div>
-          <div className="rounded-lg border bg-card p-3 text-center">
-            <div className="text-xs font-mono text-muted-foreground mb-1">
-              Step 2
-            </div>
-            <div className="text-sm font-semibold mb-1">Whitening</div>
-            <p className="text-xs text-muted-foreground">
-              von Neumann &mdash; Bias 제거
-            </p>
-          </div>
-          <div className="rounded-lg border bg-card p-3 text-center">
-            <div className="text-xs font-mono text-muted-foreground mb-1">
-              Step 3
-            </div>
-            <div className="text-sm font-semibold mb-1">Conditioning</div>
-            <p className="text-xs text-muted-foreground">
-              SHA-256, BLAKE2 &mdash; Min-entropy 확보
-            </p>
-          </div>
-          <div className="rounded-lg border bg-card p-3 text-center">
-            <div className="text-xs font-mono text-muted-foreground mb-1">
-              Step 4
-            </div>
-            <div className="text-sm font-semibold mb-1">DRBG 입력</div>
-          </div>
-        </div>
-
-        {/* Linux Entropy Pool */}
-        <div className="not-prose rounded-lg border bg-card p-4 mb-6">
-          <div className="text-sm font-semibold mb-2">Linux Entropy Pool</div>
-          <ul className="text-sm text-muted-foreground space-y-1">
-            <li>
-              <code>/dev/random</code>: entropy estimate 추적
-            </li>
-            <li>소스: Interrupts, I/O, typing, keyboard</li>
-            <li>
-              Debian/Ubuntu: <code>rngd</code> 서비스
-            </li>
-            <li>
-              가상머신: <code>virtio-rng</code> driver
-            </li>
-          </ul>
-        </div>
-
-        {/* 진단 */}
-        <div className="not-prose rounded-lg border bg-card p-4 mb-6">
-          <div className="text-sm font-semibold mb-2">진단 도구</div>
-          <ul className="text-sm text-muted-foreground space-y-1">
-            <li>
-              <code>/proc/sys/kernel/random/entropy_avail</code> &mdash; Linux
-              entropy pool 잔량 (256+ 유지 권장)
-            </li>
-            <li>
-              <code>rngtest</code>, <code>ent</code>, <code>Dieharder</code>{" "}
-              &mdash; 품질 검증 도구
-            </li>
-          </ul>
-        </div>
-
-        {/* 공격 사례 */}
-        <h4 className="text-lg font-semibold mt-5 mb-3">공격 사례</h4>
-        <div className="not-prose grid grid-cols-1 md:grid-cols-3 gap-3 mb-2">
-          <div className="rounded-lg border-l-4 border-l-red-500 bg-card p-4">
-            <div className="text-sm font-semibold text-red-600 dark:text-red-400 mb-2">
-              2008 Debian OpenSSL
-            </div>
-            <ul className="text-sm text-muted-foreground space-y-1">
-              <li>Seed 공간 32,768로 축소</li>
-              <li>수백만 RSA 키 compromised</li>
-            </ul>
-          </div>
-          <div className="rounded-lg border-l-4 border-l-red-500 bg-card p-4">
-            <div className="text-sm font-semibold text-red-600 dark:text-red-400 mb-2">
-              2012 Heninger et al.
-            </div>
-            <ul className="text-sm text-muted-foreground space-y-1">
-              <li>공유 호스팅 저엔트로피</li>
-              <li>수천 키 동일 나머지</li>
-            </ul>
-          </div>
-          <div className="rounded-lg border-l-4 border-l-red-500 bg-card p-4">
-            <div className="text-sm font-semibold text-red-600 dark:text-red-400 mb-2">
-              2013 PlayStation 3
-            </div>
-            <ul className="text-sm text-muted-foreground space-y-1">
-              <li>ECDSA nonce 재사용</li>
-              <li>Master signing key 복원</li>
-            </ul>
-          </div>
-        </div>
+      <div id="paper-nist-entropy-source" className="scroll-mt-24">
+        <CitationBlock source="NIST SP 800-90B · Entropy Sources" href="https://csrc.nist.gov/pubs/sp/800/90/b/final" citeKey={3}>
+          문제: Noise source가 실제로 제공하는 entropy를 모델링·검증하고 고장을 감지합니다. 기여: IID/non-IID min-entropy estimation, conditioning와 startup/continuous health test 요구를 정의합니다. 전제: raw data collection과 operating condition을 고정하고 문서화합니다. 근거 범위: entropy-source validation입니다. 비주장: DRBG algorithm의 generate security나 application key lifecycle을 대신하지 않습니다.
+        </CitationBlock>
       </div>
     </section>
   );

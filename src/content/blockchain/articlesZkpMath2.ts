@@ -4,15 +4,15 @@ import type { Article } from "../types";
 export const zkpMath2Articles: Article[] = [
   {
     slug: "crypto-primitives",
-    title: "ZK 암호 프리미티브",
+    title: "ZK 암호 프리미티브: 보장·조합·실패 조건",
     subcategory: "zkp-math",
     sections: [
-      { id: "overview", title: "프리미티브 보장 지도" },
-      { id: "poseidon", title: "Poseidon 해시" },
-      { id: "merkle-commitment", title: "Merkle Tree & Commitment" },
-      { id: "schnorr", title: "Schnorr 서명" },
-      { id: "ed25519", title: "Ed25519" },
-      { id: "abelian-group", title: "아벨군" },
+      { id: "overview", title: "프리미티브별 보장 지도" },
+      { id: "poseidon", title: "Poseidon field permutation" },
+      { id: "merkle-commitment", title: "Merkle opening·binding·hiding" },
+      { id: "schnorr", title: "Schnorr transcript·nonce" },
+      { id: "ed25519", title: "Ed25519 instance 계약" },
+      { id: "abelian-group", title: "Group·field·domain 타입" },
     ],
     component: () => import("@/pages/articles/blockchain/crypto-primitives"),
   },
