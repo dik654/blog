@@ -47,7 +47,7 @@ const contract = {
   reviewAfterBody:
     bodyIndex !== -1 && reviewIndex !== -1 && bodyIndex < reviewIndex,
   newLessonVizMounted: contractView.includes("<ArticleLessonFlowViz"),
-  newLessonVizMarker: lessonViz.includes('data-viz="lesson-flow-v3"'),
+  newLessonVizMarker: lessonViz.includes('data-viz="lesson-flow-v4"'),
   interactiveStageControl:
     lessonViz.includes('role="tablist"') && lessonViz.includes("setActive"),
   everyConceptBecomesStep:
@@ -61,19 +61,33 @@ const contract = {
     lessonViz.includes("data-concept-boundary"),
   sceneBeforeFormalTerm:
     lessonViz.indexOf("먼저 볼 장면") !== -1 &&
-    lessonViz.indexOf("이 장면에 붙이는 이름") !== -1 &&
+    lessonViz.indexOf("이 장면의 개념") !== -1 &&
     lessonViz.indexOf("먼저 볼 장면") <
-      lessonViz.indexOf("이 장면에 붙이는 이름"),
+      lessonViz.indexOf("이 장면의 개념"),
   fiveCutProgressiveReveal:
     lessonViz.includes('["장면", "정의", "형태", "예시", "경계"]') &&
     lessonViz.includes("reveal >= 1") &&
     lessonViz.includes("reveal >= 2") &&
     lessonViz.includes("reveal >= 3") &&
     lessonViz.includes("reveal >= 4"),
-  futureTermNotPreExposed:
-    !lessonViz.includes("{candidate.concept.label}") &&
-    lessonViz.includes("다음 개념의 출발 장면") &&
-    !contractView.includes("{contract.coreIdea}"),
+  overviewMapAlwaysVisible:
+    lessonViz.includes("data-lesson-overview-map") &&
+    lessonViz.includes("{candidate.concept.label}") &&
+    lessonViz.includes("Always-visible map") &&
+    lessonViz.includes("data-concept-storyboard"),
+  diagramGrammarNotTextCards:
+    lessonViz.includes("data-concept-glyph") &&
+    lessonViz.includes("data-shape-legend") &&
+    lessonViz.includes('type ShapeKind = "input" | "process" | "decision" | "store" | "state"') &&
+    lessonViz.includes("<polygon") &&
+    lessonViz.includes("<circle") &&
+    lessonViz.includes("<ellipse") &&
+    lessonViz.includes("<rect") &&
+    lessonViz.includes("<FlowShape") &&
+    lessonViz.includes("data-flow-arrow") &&
+    lessonViz.includes("data-stage-flow-arrow") &&
+    lessonViz.includes("strokeDashoffset"),
+  fullExplanationVisibleByDefault: lessonViz.includes("useState(4)"),
   compositionAfterConcepts: lessonViz.includes("data-concept-composition"),
   explanatoryPlayback:
     lessonViz.includes("data-viz-play") &&

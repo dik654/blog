@@ -17,7 +17,8 @@
 
 ### 2026-08-14 · 개념별 수업 흐름·수식 연산 주석·설명형 애니메이션
 
-- [x] 공개 386개 글 모두 본문 전에 `익숙한 장면 → 용어 이름과 정의 → 앞뒤 형태 → 작은 예 → 실패 경계`를 5컷으로 한 개념씩 재생하는 공통 수업 Viz를 렌더하고, 첫 컷에서는 정식 용어를 숨기며 마지막 컷 뒤에만 다음 용어로 넘어가도록 변경
+- [x] 공개 386개 글 모두 본문 전에 실제 개념명·단계 연결이 항상 보이는 overview map과 `익숙한 장면 → 용어 이름과 정의 → 앞뒤 형태 → 작은 예 → 실패 경계` 스토리보드를 렌더하고, 재생 시에는 이를 5컷으로 설명하도록 변경
+- [x] overview map을 텍스트 카드 목록에서 입력(평행사변형)·처리(원)·판정(마름모)·기록(원통)·상태(둥근 사각형) 도형과 SVG 화살표를 쓰는 흐름도로 교체하고, 선택한 개념의 Before → Now → Next도 같은 도형 문법으로 확대. 재생 중에는 점선 연결이 진행 방향으로 이동
 - [x] 공통 수업 Viz에 이전·다음·재생·일시정지와 진행률을 추가하고, `prefers-reduced-motion`에서는 자동 전환과 motion을 비활성화
 - [x] 처음 설명하는 용어와 선수 개념 카드를 모두 단일 열·본문 폭으로 바꿔 긴 설명이 좁은 다단 카드에 갇히지 않도록 교정
 - [x] `ExplainedFormula` 1,037개 모두에 KaTeX `underbrace` 연산 의도 영역을 추가하고, 도메인 식은 `annotatedFormula`·`operations`로 실제 항의 곱·합·mask 이유를 식 안에서 직접 설명할 수 있게 확장
@@ -25,7 +26,8 @@
 - [x] `filecoin-onchain-cloud`를 dataset record, period state, payment rail 순으로 다시 정의하고 period 판정·rail ledger 갱신·최종 서비스 조합을 각각 재생 가능한 신규 Viz로 구현
 - [x] 모바일 가로표로 남았던 BFT 비교축·합의 계열·Tendermint lock trace를 새 반응형 카드 Viz로 교체해 390px에서 가로 스크롤 제거
 - [x] Playwright Chromium으로 386 route × 390/1440 = 772회 실제 본문 로드 검사: 개념 탭 3,437회 클릭, 수식 2,114회·연산 의도 4,586개·재생 컨트롤 778개 확인, page/Viz/KaTeX/console/page error 0
-- [x] 5컷 재생 교정 뒤 390px에서 386 route를 다시 검사해 수업 Viz가 onboarding·본문보다 먼저 오고, 첫 컷의 정의·형태·예시·경계가 숨겨지며, 익명 장면 탭·page/Viz 폭·console error가 모두 0임을 확인
+- [x] 5컷 재생 교정 뒤 390px에서 386 route를 다시 검사해 수업 Viz가 onboarding·본문보다 먼저 오고 page/Viz 폭·console error가 모두 0임을 확인
+- [x] 도형 흐름 최종형을 Playwright로 공개 386 route × 390/1440 = 772 viewport 재검사: overview 도형 3,437개, 확대 도형 1,158개, 단계 1,797개와 단계 연결선 1,411개를 확인했고 누락·폭 넘침·console/page error 0
 
 ### 2026-08-14 · 용어 밀집 문단을 세로 설명으로 전환
 

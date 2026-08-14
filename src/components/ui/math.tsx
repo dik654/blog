@@ -22,7 +22,7 @@ export default function Math({ children, display = false, className }: Props) {
     return (
       <div
         data-math-display="true"
-        className={`not-prose my-3 max-w-full overflow-x-auto overflow-y-hidden px-1 py-1 text-center ${className ?? ""}`}
+        className={`not-prose my-3 max-w-full overflow-x-auto overflow-y-hidden px-1 py-3 text-center ${className ?? ""}`}
         dangerouslySetInnerHTML={{ __html: html }}
       />
     );

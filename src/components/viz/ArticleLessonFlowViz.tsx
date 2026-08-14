@@ -6,6 +6,192 @@ import type {
 } from "@/content/article-learning";
 import { getKnowledgeConcept } from "@/content/knowledge-graph";
 
+const REVEAL_LABELS = ["장면", "정의", "형태", "예시", "경계"] as const;
+
+type ShapeKind = "input" | "process" | "decision" | "store" | "state";
+
+interface VisualConcept {
+  id: string;
+  label: string;
+  definition: string;
+}
+
+function shapeKind(concept: VisualConcept): ShapeKind {
+  const source =
+    `${concept.id} ${concept.label} ${concept.definition}`.toLowerCase();
+  if (
+    /receipt|artifact|record|cache|memory|database|store|storage|ledger|dataset|log|snapshot/.test(
+      source,
+    )
+  ) {
+    return "store";
+  }
+  if (
+    /gate|validation|verify|verification|approval|policy|condition|threshold|release|admission|decision|판정|검증|선택/.test(
+      source,
+    )
+  ) {
+    return "decision";
+  }
+  if (
+    /update|pass|training|transform|execution|encoding|decoding|aggregation|schedule|optimizer|backprop|process/.test(
+      source,
+    )
+  ) {
+    return "process";
+  }
+  if (
+    /input|feature|target|token|message|request|vector|tensor|parameter|data/.test(
+      source,
+    )
+  ) {
+    return "input";
+  }
+  return "state";
+}
+
+function ConceptGlyph({
+  concept,
+  index,
+  selected = false,
+  large = false,
+}: {
+  concept: VisualConcept;
+  index: number | string;
+  selected?: boolean;
+  large?: boolean;
+}) {
+  const kind = shapeKind(concept);
+  const shapeClass = selected
+    ? "fill-primary/10 stroke-primary"
+    : "fill-background stroke-border";
+  const textClass = selected ? "fill-primary" : "fill-muted-foreground";
+
+  return (
+    <svg
+      data-concept-glyph={kind}
+      viewBox="0 0 72 56"
+      role="img"
+      aria-label={`${concept.label} · ${kind}`}
+      className={large ? "h-20 w-24" : "h-14 w-[4.5rem]"}
+    >
+      <title>{concept.label}</title>
+      {kind === "input" ? (
+        <polygon
+          points="13,8 67,8 59,48 5,48"
+          className={shapeClass}
+          strokeWidth="1.25"
+        />
+      ) : null}
+      {kind === "process" ? (
+        <circle
+          cx="36"
+          cy="28"
+          r="22"
+          className={shapeClass}
+          strokeWidth="1.25"
+        />
+      ) : null}
+      {kind === "decision" ? (
+        <polygon
+          points="36,5 68,28 36,51 4,28"
+          className={shapeClass}
+          strokeWidth="1.25"
+        />
+      ) : null}
+      {kind === "store" ? (
+        <g className={shapeClass} strokeWidth="1.25">
+          <path d="M10 15v26c0 5 12 9 26 9s26-4 26-9V15" />
+          <ellipse cx="36" cy="15" rx="26" ry="9" />
+          <path d="M10 29c0 5 12 9 26 9s26-4 26-9" fill="none" />
+        </g>
+      ) : null}
+      {kind === "state" ? (
+        <rect
+          x="7"
+          y="9"
+          width="58"
+          height="38"
+          rx="9"
+          className={shapeClass}
+          strokeWidth="1.25"
+        />
+      ) : null}
+      <text
+        x="36"
+        y="31"
+        textAnchor="middle"
+        className={`${textClass} font-mono text-[10px] font-black`}
+      >
+        {typeof index === "number" ? String(index).padStart(2, "0") : index}
+      </text>
+    </svg>
+  );
+}
+
+function FlowArrow({
+  active = false,
+  compact = false,
+}: {
+  active?: boolean;
+  compact?: boolean;
+}) {
+  return (
+    <motion.svg
+      data-flow-arrow
+      viewBox="0 0 48 14"
+      aria-hidden="true"
+      className={compact ? "h-3 w-5 shrink-0" : "h-4 w-10 shrink-0"}
+    >
+      <motion.path
+        d="M2 7H40"
+        fill="none"
+        className="stroke-muted-foreground/55"
+        strokeWidth="1.25"
+        strokeDasharray="4 4"
+        animate={active ? { strokeDashoffset: [8, 0] } : undefined}
+        transition={
+          active ? { duration: 0.8, repeat: Infinity, ease: "linear" } : undefined
+        }
+      />
+      <path
+        d="m34 2 7 5-7 5"
+        fill="none"
+        className="stroke-primary/70"
+        strokeWidth="1.25"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </motion.svg>
+  );
+}
+
+function FlowShape({
+  concept,
+  index,
+  caption,
+  selected = false,
+}: {
+  concept: VisualConcept;
+  index: number | string;
+  caption: string;
+  selected?: boolean;
+}) {
+  return (
+    <div className="flex min-w-0 flex-1 flex-col items-center text-center">
+      <p className="text-[9px] font-black uppercase tracking-[0.12em] text-muted-foreground">
+        {caption}
+      </p>
+      <ConceptGlyph concept={concept} index={index} selected={selected} large />
+      <p
+        className={`max-w-40 break-words text-xs font-bold leading-5 ${selected ? "text-primary" : "text-foreground/75"}`}
+      >
+        {concept.label}
+      </p>
+    </div>
+  );
+}
+
 export default function ArticleLessonFlowViz({
   stages,
   explanations,
@@ -31,8 +217,23 @@ export default function ArticleLessonFlowViz({
     );
   }, [explanations, stages]);
 
+  const stageGroups = useMemo(
+    () =>
+      stages
+        .map((stage, stageIndex) => ({
+          stage,
+          stageIndex,
+          steps: conceptSteps
+            .map((candidate, index) => ({ candidate, index }))
+            .filter(({ candidate }) => candidate.stage === stage),
+        }))
+        .filter(({ steps }) => steps.length > 0),
+    [conceptSteps, stages],
+  );
+
   const [active, setActive] = useState(0);
-  const [reveal, setReveal] = useState(0);
+  // 한눈에 보는 지도를 우선한다. 재생을 시작할 때만 5컷을 다시 펼친다.
+  const [reveal, setReveal] = useState(4);
   const [playing, setPlaying] = useState(false);
   const reduceMotion = useReducedMotion();
   const safeActive = Math.min(active, Math.max(conceptSteps.length - 1, 0));
@@ -53,9 +254,15 @@ export default function ArticleLessonFlowViz({
         return;
       }
       setPlaying(false);
-    }, 2200);
+    }, 1800);
     return () => window.clearTimeout(timer);
   }, [conceptSteps.length, playing, reduceMotion, reveal, safeActive]);
+
+  const selectConcept = (index: number) => {
+    setPlaying(false);
+    setActive(index);
+    setReveal(4);
+  };
 
   const moveBackward = () => {
     setPlaying(false);
@@ -77,246 +284,379 @@ export default function ArticleLessonFlowViz({
     }
     if (safeActive < conceptSteps.length - 1) {
       setActive((current) => current + 1);
+      setReveal(4);
+    }
+  };
+
+  const togglePlayback = () => {
+    if (reduceMotion) return;
+    if (playing) {
+      setPlaying(false);
+      return;
+    }
+    if (reveal === 4) {
+      if (safeActive < conceptSteps.length - 1) {
+        setActive((current) => current + 1);
+      } else {
+        setActive(0);
+      }
       setReveal(0);
     }
+    setPlaying(true);
   };
 
   if (!step) return null;
 
   return (
     <figure
-      data-viz="lesson-flow-v3"
+      data-viz="lesson-flow-v4"
       className="not-prose border-y border-border/60 bg-background/65"
-      aria-label="새 용어를 하나씩 이해하는 수업 흐름"
+      aria-label="전체 개념 지도와 선택 개념의 애니메이션 설명"
     >
       <figcaption className="flex flex-col gap-2 border-b border-border/60 px-5 py-4 sm:flex-row sm:items-end sm:justify-between sm:px-6">
         <div>
-          <p className="text-xs font-bold text-primary">
-            ONE CONCEPT AT A TIME
-          </p>
+          <p className="text-xs font-bold text-primary">CONCEPT FLOW MAP</p>
           <h3 className="mt-1 text-base font-bold text-foreground">
-            용어 하나를 이해한 뒤에만 다음 용어로 넘어갑니다
+            전체 흐름을 먼저 보고, 한 노드씩 확대합니다
           </h3>
         </div>
-        <p className="max-w-md text-xs leading-5 text-muted-foreground">
-          정의 → 필요한 이유 → 작은 형태 → 실패 경계를 먼저 보고, 모든
-          구성요소를 확인한 뒤 본문에서 조합합니다.
+        <p className="max-w-lg text-xs leading-5 text-muted-foreground">
+          위 지도에는 이 글의 실제 개념명과 연결 순서가 항상 보입니다. 노드를
+          고르면 아래 스토리보드가 장면·정의·형태·예시·경계를 함께 보여 줍니다.
         </p>
       </figcaption>
 
-      <div
-        data-viz-canvas
-        className="grid min-w-0 gap-4 px-5 py-5 sm:px-6 sm:py-6 lg:grid-cols-[15rem_minmax(0,1fr)]"
-      >
-        <div className="space-y-2" role="tablist" aria-label="이 글의 새 용어">
-          {conceptSteps.map((candidate, index) => {
-            const selected = index === safeActive;
-            return (
-              <button
-                key={candidate.id}
-                type="button"
-                role="tab"
-                aria-selected={selected}
-                onClick={() => {
-                  setPlaying(false);
-                  setActive(index);
-                  setReveal(0);
-                }}
-                className={`grid w-full min-w-0 grid-cols-[2rem_1fr_auto] items-start gap-2 rounded-lg border px-3 py-2.5 text-left transition-colors ${
-                  selected
-                    ? "border-primary/55 bg-primary/[0.055]"
-                    : "border-border/65 bg-background hover:border-primary/30"
-                }`}
+      <div data-viz-canvas className="min-w-0 px-4 py-5 sm:px-6 sm:py-6">
+        <div
+          data-lesson-overview-map
+          className="overflow-hidden rounded-xl border border-border/65 bg-card"
+        >
+          <div className="flex items-center justify-between gap-3 border-b border-border/55 bg-muted/20 px-4 py-3">
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-[0.16em] text-primary">
+                Always-visible map
+              </p>
+              <p className="mt-1 text-xs font-semibold text-foreground/75">
+                {stageGroups.length}개 단계 · {conceptSteps.length}개 개념
+              </p>
+            </div>
+            <div
+              data-shape-legend
+              className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1 text-[9px] text-muted-foreground"
+            >
+              <span>▱ 입력</span>
+              <span>○ 처리</span>
+              <span>◇ 판정</span>
+              <span>▰ 기록</span>
+              <span>▢ 상태</span>
+            </div>
+          </div>
+
+          <div role="tablist" aria-label="이 글의 전체 개념 지도">
+            {stageGroups.map(({ stage, stageIndex, steps }, groupIndex) => (
+              <section
+                key={`${stage.label}-${stageIndex}`}
+                data-lesson-stage
+                className="relative grid min-w-0 gap-3 border-b border-border/55 px-4 py-4 last:border-b-0 md:grid-cols-[10rem_minmax(0,1fr)] md:items-center"
               >
-                <span className="font-mono text-[11px] font-black text-primary">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <span className="min-w-0 break-words text-xs font-bold leading-5 text-foreground">
-                  장면 {String(index + 1).padStart(2, "0")} 보기
-                </span>
-                <span
-                  className="text-[10px] text-muted-foreground"
-                  aria-hidden="true"
-                >
-                  {selected ? "●" : "○"}
-                </span>
-              </button>
-            );
-          })}
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-[10px] font-black text-primary">
+                      {String(groupIndex + 1).padStart(2, "0")}
+                    </span>
+                    <p className="text-xs font-black leading-5 text-foreground">
+                      {stage.label}
+                    </p>
+                  </div>
+                  <p className="mt-1 text-[10px] leading-4 text-muted-foreground">
+                    {stage.relation}
+                  </p>
+                </div>
+
+                <div className="flex min-w-0 flex-wrap items-center gap-2">
+                  {steps.map(({ candidate, index }, conceptIndex) => {
+                    const selected = index === safeActive;
+                    return (
+                      <div
+                        key={candidate.id}
+                        className="flex min-w-0 items-center gap-2"
+                      >
+                        {conceptIndex > 0 ? (
+                          <FlowArrow
+                            compact
+                            active={playing && index === safeActive}
+                          />
+                        ) : null}
+                        <button
+                          type="button"
+                          role="tab"
+                          aria-selected={selected}
+                          aria-label={`${index + 1}. ${candidate.concept.label}`}
+                          onClick={() => selectConcept(index)}
+                          className={`relative flex w-[7.25rem] min-w-0 flex-col items-center rounded-lg px-1.5 py-1 text-center transition-colors ${
+                            selected
+                              ? "bg-primary/[0.065] text-primary"
+                              : "text-foreground hover:bg-muted/35"
+                          }`}
+                        >
+                          {selected ? (
+                            <motion.span
+                              layoutId="lesson-active-node"
+                              className="absolute -left-1 -top-1 size-2.5 rounded-full bg-primary"
+                              animate={
+                                reduceMotion
+                                  ? undefined
+                                  : {
+                                      scale: [1, 1.45, 1],
+                                      opacity: [1, 0.55, 1],
+                                    }
+                              }
+                              transition={{ duration: 1.8, repeat: Infinity }}
+                            />
+                          ) : null}
+                          <ConceptGlyph
+                            concept={candidate.concept}
+                            index={index + 1}
+                            selected={selected}
+                          />
+                          <span className="-mt-1 block break-words text-[10px] font-bold leading-4">
+                            {candidate.concept.label}
+                          </span>
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {groupIndex < stageGroups.length - 1 ? (
+                  <div
+                    data-stage-flow-arrow
+                    className="col-span-full flex justify-center pt-1"
+                    aria-hidden="true"
+                  >
+                    <span className="rotate-90">
+                      <FlowArrow
+                        compact
+                        active={playing && step.stage === stage}
+                      />
+                    </span>
+                  </div>
+                ) : null}
+              </section>
+            ))}
+          </div>
         </div>
 
         <motion.div
           key={step.id}
           data-concept-step={step.id}
           role="tabpanel"
-          className="min-w-0 rounded-xl border border-border/65 bg-muted/[0.12] p-4 sm:p-5"
+          className="mt-4 min-w-0 overflow-hidden rounded-xl border border-border/65 bg-muted/[0.1]"
           initial={reduceMotion ? false : { opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.28, ease: "easeOut" }}
         >
-          <p className="font-mono text-[11px] font-black text-primary">
-            SCENE {String(safeActive + 1).padStart(2, "0")}
-          </p>
-
-          <div
-            className="mt-3 grid grid-cols-5 gap-1.5"
-            aria-label="현재 용어의 설명 단계"
-          >
-            {["장면", "정의", "형태", "예시", "경계"].map((label, index) => (
-              <div
-                key={label}
-                className={`rounded-md border px-1.5 py-2 text-center text-[10px] font-bold transition-colors ${
-                  index <= reveal
-                    ? "border-primary/40 bg-primary/[0.055] text-primary"
-                    : "border-border/55 bg-background text-muted-foreground"
-                }`}
-              >
-                {label}
-              </div>
-            ))}
+          <div className="flex flex-col gap-3 border-b border-border/55 bg-background px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="min-w-0">
+              <p className="font-mono text-[10px] font-black text-primary">
+                FOCUS {String(safeActive + 1).padStart(2, "0")} ·{" "}
+                {step.stage.label}
+              </p>
+              <h4 className="mt-1 break-words text-lg font-black leading-7 text-foreground">
+                {step.concept.label}
+              </h4>
+            </div>
+            <div
+              className="grid grid-cols-5 gap-1.5"
+              aria-label="현재 개념의 설명 단계"
+            >
+              {REVEAL_LABELS.map((label, index) => (
+                <button
+                  key={label}
+                  type="button"
+                  onClick={() => {
+                    setPlaying(false);
+                    setReveal(index);
+                  }}
+                  className={`rounded-md border px-2 py-1.5 text-[10px] font-bold transition-colors ${
+                    index <= reveal
+                      ? "border-primary/40 bg-primary/[0.055] text-primary"
+                      : "border-border/55 bg-background text-muted-foreground"
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
           </div>
 
-          <motion.section
-            data-concept-intuition
-            className="mt-3 min-w-0 rounded-lg border border-primary/25 bg-primary/[0.035] p-4 [overflow-wrap:anywhere] sm:p-5"
-            initial={reduceMotion ? false : { opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <p className="text-[11px] font-bold text-primary">먼저 볼 장면</p>
-            <p className="mt-1.5 text-sm leading-7 text-foreground/85">
-              {step.explanation?.intuition ?? step.stage.relation}
-            </p>
-            {reveal === 0 ? (
-              <p className="mt-3 border-t border-primary/15 pt-3 text-xs leading-5 text-muted-foreground">
-                아직 용어 이름은 외우지 않습니다. 이 장면에서 무엇을 구분해야
-                하는지 먼저 떠올린 뒤 다음 컷을 엽니다.
-              </p>
-            ) : null}
-          </motion.section>
-
-          <AnimatePresence initial={false}>
-            {reveal >= 1 ? (
+          <div data-concept-storyboard className="min-w-0 p-4 sm:p-5">
+            <div className="grid min-w-0 gap-3 lg:grid-cols-[minmax(0,1fr)_2rem_minmax(0,1fr)] lg:items-stretch">
               <motion.section
-                key={`${step.id}-definition`}
-                data-concept-definition
-                className="mt-4 min-w-0 rounded-lg border border-border/60 bg-background p-4 [overflow-wrap:anywhere] sm:p-5"
-                initial={reduceMotion ? false : { opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.28 }}
+                data-concept-intuition
+                className="relative min-w-0 overflow-hidden rounded-xl border border-primary/30 bg-primary/[0.04] p-4 [overflow-wrap:anywhere] sm:p-5"
+                initial={reduceMotion ? false : { opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
               >
-                <p className="text-[11px] font-bold text-muted-foreground">
-                  이 장면에 붙이는 이름
+                <div
+                  className="absolute right-3 top-3 flex gap-1"
+                  aria-hidden="true"
+                >
+                  <span className="size-1.5 rounded-full bg-primary/65" />
+                  <span className="size-1.5 rounded-full bg-primary/30" />
+                  <span className="size-1.5 rounded-full bg-primary/15" />
+                </div>
+                <p className="text-[10px] font-black uppercase tracking-[0.14em] text-primary">
+                  먼저 볼 장면
                 </p>
-                <h4 className="mt-1 text-xl font-black leading-8 text-foreground">
-                  {step.concept.label}
-                </h4>
-                <p className="mt-2 text-sm leading-7 text-foreground/80">
-                  {step.concept.definition}
+                <p className="mt-3 text-sm font-semibold leading-7 text-foreground/85">
+                  {step.explanation?.intuition ?? step.stage.relation}
                 </p>
               </motion.section>
-            ) : null}
-          </AnimatePresence>
 
-          <AnimatePresence initial={false}>
-            {reveal >= 2 ? (
               <motion.div
-                key={`${step.id}-shape`}
-                data-concept-shape
-                className="mt-4 grid min-w-0 gap-2 rounded-lg border border-border/60 bg-background p-3 sm:grid-cols-[1fr_auto_1fr_auto_1fr] sm:items-stretch"
-                aria-label={`${step.concept.label}의 앞뒤 관계`}
-                initial={reduceMotion ? false : { opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.28 }}
+                className="flex items-center justify-center"
+                aria-hidden="true"
+                animate={
+                  playing && !reduceMotion
+                    ? { x: [-3, 3, -3], opacity: [0.45, 1, 0.45] }
+                    : undefined
+                }
+                transition={{ duration: 1.2, repeat: Infinity }}
               >
-                <div className="rounded-md border border-border/55 bg-muted/10 p-3">
-                  <p className="text-[10px] font-bold text-muted-foreground">
-                    이전 질문
-                  </p>
-                  <p className="mt-1 break-words text-xs font-semibold leading-5 text-foreground/75">
-                    {previous ? "앞 장면에서 확인한 조건" : "출발 장면과 관찰"}
-                  </p>
-                </div>
-                <span
-                  className="self-center text-center text-muted-foreground"
-                  aria-hidden="true"
-                >
-                  →
+                <span className="rotate-90 lg:rotate-0">
+                  <FlowArrow active={playing} />
                 </span>
-                <div className="rounded-md border border-primary/35 bg-primary/[0.045] p-3">
-                  <p className="text-[10px] font-bold text-primary">
-                    지금 이해할 형태
-                  </p>
-                  <p className="mt-1 break-words text-xs font-black leading-5 text-foreground">
-                    {step.concept.label}
-                  </p>
-                  <p className="mt-1 text-[11px] leading-5 text-muted-foreground">
-                    {step.stage.relation}
-                  </p>
-                </div>
-                <span
-                  className="self-center text-center text-muted-foreground"
-                  aria-hidden="true"
-                >
-                  →
-                </span>
-                <div className="rounded-md border border-border/55 bg-muted/10 p-3">
-                  <p className="text-[10px] font-bold text-muted-foreground">
-                    다음에 연결할 것
-                  </p>
-                  <p className="mt-1 break-words text-xs font-semibold leading-5 text-foreground/75">
-                    {next
-                      ? "다음 개념의 출발 장면"
-                      : "전체 메커니즘에서의 조합"}
-                  </p>
-                </div>
               </motion.div>
-            ) : null}
-          </AnimatePresence>
 
-          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              <AnimatePresence initial={false}>
+                {reveal >= 1 ? (
+                  <motion.section
+                    key={`${step.id}-definition`}
+                    data-concept-definition
+                    className="min-w-0 rounded-xl border border-border/65 bg-background p-4 [overflow-wrap:anywhere] sm:p-5"
+                    initial={reduceMotion ? false : { opacity: 0, scale: 0.97 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.28 }}
+                  >
+                    <p className="text-[10px] font-black uppercase tracking-[0.14em] text-muted-foreground">
+                      이 장면의 개념
+                    </p>
+                    <div className="mt-3 flex items-start gap-3">
+                      <span className="flex size-9 shrink-0 items-center justify-center rounded-full border border-primary/35 bg-primary/[0.06] font-mono text-[10px] font-black text-primary">
+                        {String(safeActive + 1).padStart(2, "0")}
+                      </span>
+                      <div className="min-w-0">
+                        <h5 className="break-words text-lg font-black leading-7 text-foreground">
+                          {step.concept.label}
+                        </h5>
+                        <p className="mt-1.5 text-sm leading-7 text-foreground/75">
+                          {step.concept.definition}
+                        </p>
+                      </div>
+                    </div>
+                  </motion.section>
+                ) : (
+                  <div className="flex min-h-36 items-center justify-center rounded-xl border border-dashed border-border/65 bg-background px-4 text-center text-xs leading-5 text-muted-foreground">
+                    장면을 먼저 본 뒤 ‘정의’ 컷에서 이름을 연결합니다.
+                  </div>
+                )}
+              </AnimatePresence>
+            </div>
+
             <AnimatePresence initial={false}>
-              {reveal >= 3 ? (
-                <motion.section
-                  key={`${step.id}-example`}
-                  data-concept-example
-                  className="min-w-0 rounded-lg border border-border/60 bg-background p-4 [overflow-wrap:anywhere]"
-                  initial={reduceMotion ? false : { opacity: 0, y: 10 }}
+              {reveal >= 2 ? (
+                <motion.div
+                  key={`${step.id}-shape`}
+                  data-concept-shape
+                  className="mt-3 flex min-w-0 flex-col items-center gap-2 rounded-xl border border-border/60 bg-background p-4 sm:flex-row sm:justify-center"
+                  aria-label={`${step.concept.label}의 전체 연결 위치`}
+                  initial={reduceMotion ? false : { opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.28 }}
                 >
-                  <p className="text-[11px] font-bold text-primary">
-                    작은 예로 형태 확인
-                  </p>
-                  <p className="mt-1.5 text-xs leading-6 text-foreground/75">
-                    {step.explanation?.workedExample ??
-                      "현재 글의 가장 작은 입력 하나가 이 개념을 지나 어떤 결과가 되는지 확인합니다."}
-                  </p>
-                </motion.section>
+                  <FlowShape
+                    concept={
+                      previous ?? {
+                        id: "scene-input",
+                        label: "출발 장면과 관찰",
+                        definition:
+                          "현재 개념을 필요하게 만든 입력 장면입니다.",
+                      }
+                    }
+                    index={safeActive > 0 ? safeActive : "IN"}
+                    caption="Before"
+                  />
+                  <span className="rotate-90 self-center sm:rotate-0">
+                    <FlowArrow active={playing} />
+                  </span>
+                  <FlowShape
+                    concept={step.concept}
+                    index={safeActive + 1}
+                    caption="Now"
+                    selected
+                  />
+                  <span className="rotate-90 self-center sm:rotate-0">
+                    <FlowArrow active={playing} />
+                  </span>
+                  <FlowShape
+                    concept={
+                      next ?? {
+                        id: "composition-output",
+                        label: "전체 메커니즘에서 조합",
+                        definition: "각 개념을 이해한 뒤 연결한 결과입니다.",
+                      }
+                    }
+                    index={next ? safeActive + 2 : "OUT"}
+                    caption="Next"
+                  />
+                </motion.div>
               ) : null}
             </AnimatePresence>
-            <AnimatePresence initial={false}>
-              {reveal >= 4 ? (
-                <motion.section
-                  key={`${step.id}-boundary`}
-                  data-concept-boundary
-                  className="min-w-0 rounded-lg border border-amber-600/25 bg-amber-500/[0.035] p-4 [overflow-wrap:anywhere]"
-                  initial={reduceMotion ? false : { opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.28 }}
-                >
-                  <p className="text-[11px] font-bold text-amber-700 dark:text-amber-300">
-                    아직 섞지 말아야 할 경계
-                  </p>
-                  <p className="mt-1.5 text-xs leading-6 text-foreground/75">
-                    {step.explanation?.boundary ??
-                      "이 개념 하나의 성공을 뒤 단계 전체의 성공으로 확대하지 않습니다."}
-                  </p>
-                </motion.section>
-              ) : null}
-            </AnimatePresence>
+
+            <div className="mt-3 grid gap-3 sm:grid-cols-2">
+              <AnimatePresence initial={false}>
+                {reveal >= 3 ? (
+                  <motion.section
+                    key={`${step.id}-example`}
+                    data-concept-example
+                    className="min-w-0 border-l-2 border-primary/50 bg-background px-4 py-3 [overflow-wrap:anywhere]"
+                    initial={reduceMotion ? false : { opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                  >
+                    <p className="text-[10px] font-black uppercase tracking-[0.12em] text-primary">
+                      작은 예
+                    </p>
+                    <p className="mt-1.5 text-xs leading-6 text-foreground/75">
+                      {step.explanation?.workedExample ??
+                        "가장 작은 입력 하나가 이 개념을 지나 어떤 결과가 되는지 확인합니다."}
+                    </p>
+                  </motion.section>
+                ) : null}
+              </AnimatePresence>
+              <AnimatePresence initial={false}>
+                {reveal >= 4 ? (
+                  <motion.section
+                    key={`${step.id}-boundary`}
+                    data-concept-boundary
+                    className="min-w-0 border-l-2 border-amber-600/50 bg-background px-4 py-3 [overflow-wrap:anywhere]"
+                    initial={reduceMotion ? false : { opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                  >
+                    <p className="text-[10px] font-black uppercase tracking-[0.12em] text-amber-700 dark:text-amber-300">
+                      적용 경계
+                    </p>
+                    <p className="mt-1.5 text-xs leading-6 text-foreground/75">
+                      {step.explanation?.boundary ??
+                        "이 개념 하나의 성공을 뒤 단계 전체의 성공으로 확대하지 않습니다."}
+                    </p>
+                  </motion.section>
+                ) : null}
+              </AnimatePresence>
+            </div>
           </div>
 
-          <div className="mt-4 border-t border-border/60 pt-4">
+          <div className="border-t border-border/60 bg-background px-4 py-4 sm:px-5">
             <div className="h-1 overflow-hidden rounded-full bg-muted">
               <motion.div
                 className="h-full bg-primary/70"
@@ -328,14 +668,14 @@ export default function ArticleLessonFlowViz({
             </div>
             <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
               <p className="text-xs text-muted-foreground">
-                용어 {safeActive + 1}/{conceptSteps.length} · 컷 {reveal + 1}/5
+                개념 {safeActive + 1}/{conceptSteps.length} · 컷 {reveal + 1}/5
               </p>
               <div className="flex flex-wrap items-center justify-end gap-2">
                 <button
                   type="button"
                   onClick={moveBackward}
                   disabled={safeActive === 0 && reveal === 0}
-                  className="rounded-md border border-border/70 bg-background px-3 py-1.5 text-xs font-bold text-foreground transition-colors hover:border-primary/40 hover:text-primary"
+                  className="rounded-md border border-border/70 bg-background px-3 py-1.5 text-xs font-bold text-foreground transition-colors hover:border-primary/40 hover:text-primary disabled:opacity-40"
                 >
                   ← 이전 컷
                 </button>
@@ -343,7 +683,7 @@ export default function ArticleLessonFlowViz({
                   data-viz-play
                   type="button"
                   disabled={Boolean(reduceMotion)}
-                  onClick={() => setPlaying((current) => !current)}
+                  onClick={togglePlayback}
                   className="rounded-md border border-primary/35 bg-primary/[0.045] px-3 py-1.5 text-xs font-bold text-primary transition-colors hover:bg-primary/[0.08] disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {reduceMotion
@@ -358,7 +698,7 @@ export default function ArticleLessonFlowViz({
                   disabled={
                     safeActive === conceptSteps.length - 1 && reveal === 4
                   }
-                  className="rounded-md border border-border/70 bg-background px-3 py-1.5 text-xs font-bold text-foreground transition-colors hover:border-primary/40 hover:text-primary"
+                  className="rounded-md border border-border/70 bg-background px-3 py-1.5 text-xs font-bold text-foreground transition-colors hover:border-primary/40 hover:text-primary disabled:opacity-40"
                 >
                   다음 컷 →
                 </button>
@@ -372,8 +712,9 @@ export default function ArticleLessonFlowViz({
         data-concept-composition
         className="border-t border-border/60 px-5 py-4 text-xs leading-5 text-muted-foreground sm:px-6"
       >
-        위 용어를 각각 설명할 수 있게 된 뒤에만 아래 본문에서 서로 연결합니다.
-        하나라도 낯설면 조합 문장을 외우지 말고 해당 용어 단계로 돌아갑니다.
+        위 지도에서 전체 위치를 먼저 확인하고, 낯선 노드만 확대해 읽습니다. 각
+        개념을 설명할 수 있게 된 뒤 아래 본문에서 하나의 메커니즘으로
+        조합합니다.
       </p>
     </figure>
   );

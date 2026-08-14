@@ -31,11 +31,15 @@ const component = fs.readFileSync(
   "src/components/ui/explained-formula.tsx",
   "utf8",
 );
+const mathComponent = fs.readFileSync("src/components/ui/math.tsx", "utf8");
 const runtimeContract = {
   underbrace: component.includes(String.raw`\underbrace`),
   operationRegion: component.includes("data-formula-operations"),
   operationItem: component.includes("data-formula-operation"),
   fallback: component.includes("inferOperations(formula)"),
+  annotationVerticalPadding: mathComponent.includes(
+    "overflow-y-hidden px-1 py-3 text-center",
+  ),
 };
 
 const failures = [];
