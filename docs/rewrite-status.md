@@ -15,6 +15,13 @@
 - [x] 모든 새 concept가 정확히 한 canonical article에서만 정의되고 `canonicalHref`의 article과 owner가 일치하는지 검사하는 전역 감사
 - [x] 기초과학 concept의 관측량·단위/차원·모델 전제·측정 예·한계와 물리 좌표계 누락을 막는 `scientificGrounding` 감사
 
+### 2026-08-15 · CUDA fusion·Megakernel 바닥 지식 보강
+
+- [x] `/gpu/cuda-perf-analysis`에 kernel launch·HBM 중간값에서 시작해 register live range·spill·occupancy를 먼저 설명하고 작은 fusion과 Megakernel을 구분
+- [x] Unfused → small fusion → Megakernel pressure → FlashAttention tile → persistent work queue를 도형과 재생으로 보여 주는 신규 Viz, 32/64/128/255 registers/thread별 resident warp 계산 Viz 추가
+- [x] Fusion ROI와 register-limited residency 식을 모바일 3행 식으로 나누고 각 곱·나눗셈·합·차의 의도를 KaTeX underbrace로 직접 주석 처리했으며 FlashAttention을 IO-aware tile fusion 사례로 연결
+- [x] 신규 canonical concepts 4개·relation 12개, 기초6+심화4, CUDA 12.8.1·FlashAttention·Persistent Threads evidence를 갱신. Learning 386/386, graph 2,283 concepts·3,343 relations·invariant 0, article/Viz/formula/reading strict, tsc·production build·diff-check 통과. Playwright 390/1440에서 page·모든 Viz·KaTeX overflow 0, style 위반 0, console error/warning 0이며 장면 탭·자동 재생·128 registers→16/64 warps 상태 전환을 실제 확인
+
 ### 2026-08-14 · 개념별 수업 흐름·수식 연산 주석·설명형 애니메이션
 
 - [x] 공개 386개 글 모두 본문 전에 실제 개념명·단계 연결이 항상 보이는 overview map과 `익숙한 장면 → 용어 이름과 정의 → 앞뒤 형태 → 작은 예 → 실패 경계` 스토리보드를 렌더하고, 재생 시에는 이를 5컷으로 설명하도록 변경
@@ -44,7 +51,7 @@
 
 기존의 내용·수식·Viz 검수를 통과했더라도, 핵심 논문이 둘 이상인 전문 글은 선수 개념·학습 결과·논문 내부 해설 경로를 다시 확인한다. 특히 선수 개념은 현재 category에서 멈추지 않고 수학·통계·물리·컴퓨터 구조 등 실제로 필요한 기초까지 재귀적으로 따라간다. 정본 글·anchor·초심자 설명이 비어 있거나 `entryLevel` 글에 닿기 전에 순환하면 상위 글도 완료로 보지 않는다.
 
-이후 범위를 전체 블로그로 확장했다. 2026-08-14 현재 실제 공개 카탈로그의 고유 article route 386개 전부에 Knowledge graph와 learning contract가 등록되어 미등록 글은 0개다. 386개 모두 새 DoD의 정확한 기초 6개+심화 4개와 본문·근거 anchor까지 strict audit를 통과했으며, 이전 문제 수 기준으로 남아 있던 구계약도 0개다. Audit는 파일시스템의 source folder나 public alias를 별도 article route로 중복 집계하지 않고 `src/content/index.ts`의 실제 공개 카탈로그를 분모로 사용하며, 새 route가 추가되면 분모도 함께 갱신한다. 또한 같은 concept를 두 글이 동시에 새 개념으로 소유하거나 concept의 `canonicalHref`가 실제 owner와 어긋나거나 새 concept가 relation edge 없이 고립되면 해당 글을 완료로 처리하지 않는다. 현재 2,279개 concept·3,331개 relation은 정본 owner 중복·경로 불일치·dangling/self/duplicate edge·고립 node가 모두 0개이며 `audit:graph --strict`를 통과한다. 완료된 정본·응용 글의 상세 근거는 아래 한 곳에서 관리한다.
+이후 범위를 전체 블로그로 확장했다. 2026-08-14 현재 실제 공개 카탈로그의 고유 article route 386개 전부에 Knowledge graph와 learning contract가 등록되어 미등록 글은 0개다. 386개 모두 새 DoD의 정확한 기초 6개+심화 4개와 본문·근거 anchor까지 strict audit를 통과했으며, 이전 문제 수 기준으로 남아 있던 구계약도 0개다. Audit는 파일시스템의 source folder나 public alias를 별도 article route로 중복 집계하지 않고 `src/content/index.ts`의 실제 공개 카탈로그를 분모로 사용하며, 새 route가 추가되면 분모도 함께 갱신한다. 또한 같은 concept를 두 글이 동시에 새 개념으로 소유하거나 concept의 `canonicalHref`가 실제 owner와 어긋나거나 새 concept가 relation edge 없이 고립되면 해당 글을 완료로 처리하지 않는다. 현재 2,283개 concept·3,343개 relation은 정본 owner 중복·경로 불일치·dangling/self/duplicate edge·고립 node가 모두 0개이며 `audit:graph --strict`를 통과한다. 완료된 정본·응용 글의 상세 근거는 아래 한 곳에서 관리한다.
 
 ### 읽기 경험 재구성 및 실제 공개 closure 감사
 
@@ -74,7 +81,7 @@
 - [x] `RNN → LSTM → Seq2Seq → Attention`: recurrent state와 시간축 gradient에서 시작해 gated memory·conditional sequence·autoregressive decoding·differentiable memory read까지 연결
 - [x] `Cross-entropy → Attention → Transformer → SFT → RLHF`: log·expectation에서 likelihood objective를 만들고, softmax·attention read·language-model policy와 response-token supervision을 거쳐 preference update까지 선수 경로를 연결
 - [x] `Autoregressive decoding → KV cache → GQA → hybrid allocator → admission`: token당 cache shape와 layer별 보존 길이·runtime group·요청 분포를 동시성 결정으로 연결
-- [x] Knowledge graph 전용 `audit:graph --strict`: 2,279개 concept·3,331개 relation의 owner·canonical path·edge·고립·화면 stage coverage 통과
+- [x] Knowledge graph 전용 `audit:graph --strict`: 2,283개 concept·3,343개 relation의 owner·canonical path·edge·고립·화면 stage coverage 통과
 - [x] 공개 catalog 386개 글은 모두 canonical owner·anchor·entry-level 재귀 선수 경로·기초 6개+심화 4개 coverage 통과
 - [x] 이전 learning contract 40개를 정확한 6+4 문제와 article-only 역검사 기준으로 재개방해 보완
 - [x] 확률·통계 기반 글은 optimizer 소비 경로에서 필요한 범위까지 첫 canonical closure 완료

@@ -141,13 +141,15 @@ const gpu: Category = {
     },
     {
       slug: "cuda-perf-analysis",
-      title: "CUDA 성능 분석: 암달 법칙, 점유율",
+      title: "CUDA 성능 분석: register, fusion, Megakernel",
       subcategory: "gpu-fundamentals",
       sections: [
         { id: "overview", title: "병목 가설 분석 loop" },
         { id: "measurement-protocol", title: "Warm-up과 timing 경계" },
         { id: "amdahl", title: "Amdahl과 Roofline" },
-        { id: "occupancy", title: "Occupancy와 counters" },
+        { id: "register-pressure", title: "Register pressure·spill·occupancy" },
+        { id: "fusion-megakernel", title: "작은 fusion과 Megakernel" },
+        { id: "persistent-kernel", title: "Persistent kernel과 work queue" },
         { id: "profiling", title: "Nsight 분석 순서" },
         { id: "release-gate", title: "Performance ablation gate" },
       ],

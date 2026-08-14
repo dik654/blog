@@ -17,6 +17,7 @@ build 통과는 완료의 증거가 아니며, 아래 Definition of Done을 모�
 
 - 정의와 사용처만 나열한 개론으로 끝내지 않는다.
 - 각 핵심 개념은 `해결하려는 문제`, `아이디어`, `계산 경로`, `성립 전제`, `trade-off`, `실제 선택 기준`까지 다룬다.
+- Kernel fusion처럼 한 비용을 줄이는 성능 최적화는 절감한 launch·traffic만 쓰지 않는다. 새로 늘어난 register live range·shared memory·occupancy 제약·spill·divergence·scheduling 비용을 같은 실행 경계에서 보여 주고, 작은 수치 반례와 end-to-end ROI gate까지 설명한다. Thread당 한도와 SM 전체 자원처럼 단위가 다른 숫자를 같은 한도로 표현하지 않는다.
 - 초심자에게 필요한 선수 개념은 처음 등장할 때 한 문단 또는 연결 글로 설명한다.
 - 전문 용어를 없애지 않는다. 업계 표준 용어는 그대로 사용하고 처음 한 번 자연스러운 한국어 설명을 붙인다.
 - 원 논문, 공식 specification, 공식 구현을 우선 근거로 삼는다. 현재 상태가 중요한 내용은 최신 원문을 다시 확인한다.

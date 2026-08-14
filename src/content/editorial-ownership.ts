@@ -6171,17 +6171,23 @@ export const EDITORIAL_BOUNDARIES = {
     owns: [
       "Warm-up·CUDA event·CPU completion과 반복 분포의 timing protocol",
       "Achieved FLOP/s·bandwidth·actual traffic을 같은 경계에 둔 ledger",
+      "Thread register live range·local-memory spill과 occupancy가 순서대로 만드는 resource pressure",
+      "작은 kernel fusion·Megakernel·persistent work queue의 서로 다른 설계 경계",
       "Systems→Roofline/Amdahl→Compute counter→single change→release loop",
     ],
     reuses: [
       { label: "Host·device·kernel lifecycle", href: "/gpu/cuda-basics#execution-path" },
       { label: "GPU occupancy와 Roofline 정본", href: "/gpu/gpu-architecture#gpu-latency-hiding-occupancy" },
+      { label: "GPU HBM·L2·shared·register hierarchy", href: "/gpu/gpu-architecture#gpu-memory-traffic-hierarchy" },
+      { label: "Warp·SM SIMT 실행 정본", href: "/gpu/cuda-thread-hierarchy#overview" },
       { label: "Stream·event ordering", href: "/gpu/cuda-sync-streams#events" },
     ],
     evidence: [
       { kind: "standard", rule: "Timing·effective bandwidth는 CUDA Best Practices 12.8.1의 measurement semantics에 고정한다." },
+      { kind: "standard", rule: "Register·local memory·residency 표현은 CUDA Programming Guide 12.8.1과 실제 target compute capability·compiler report에 고정한다." },
+      { kind: "primary-source", rule: "FlashAttention은 attention 내부 IO-aware tile fusion 범위에, Persistent Threads는 2012 평가 workload 범위에만 귀속한다." },
       { kind: "primary-source", rule: "Profiler counter·replay 의미는 Nsight Systems/Compute 2025.1 guide와 supported target 범위에 귀속한다." },
-      { kind: "project-measurement", rule: "Optimization은 pinned workload·software·clock에서 parity·median/p95·achieved metrics·counter 방향을 paired 비교한다." },
+      { kind: "project-measurement", rule: "Unfused·small fusion·Megakernel·persistent 후보는 pinned workload·software·clock에서 parity, median/p95, register·spill·shared·traffic·eligible-warp와 counter 방향을 paired 비교한다." },
     ],
   },
   "gpu-arch-hopper": {
