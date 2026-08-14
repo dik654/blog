@@ -25,7 +25,8 @@
 - [x] RLHF 한 글에 섞여 있던 DPO·Constitutional AI·ORPO·KTO를 독립 public route로 분리하고 `/ai/rlhf`는 reward model·online PPO만 소유하도록 축소. 다섯 route 모두 topology `keep`, exact 6+4, explicit operation-annotated formula, 신규 keyboard Viz와 selected strict audit 통과
 - [x] MCP의 protocol core·primitive·transport·production operation을 독립 public route로 분리하고 Claw MCP 구현 사례와 소유권을 분리. 네 route 모두 topology `keep`, 새 prerequisite edge 5개, exact 6+4, operation-annotated formula, 자동 재생·키보드 Viz와 selected strict audit 통과
 - [x] 서버 network 한 글에 섞여 있던 workload·Ethernet, PCIe·NVLink, RDMA·RoCE, GPU collective를 네 독립 public route로 분리하고 canonical owner·evidence·선행 relation을 새 경계에 맞게 이동. 다섯 기존 수식은 항별 연산 의도를 직접 표시하고, 네 route 모두 도형 기반 자동 재생·키보드 Viz와 390/1440 실브라우저 검수를 통과
-- [ ] 현재 전역 잔여량: public catalog 401, topology `split-review` 89·`rename-or-split-review` 2, explicit formula 28/1,057·전환 대기 1,029. 휴리스틱 후보는 본문 학습 질문을 확인한 뒤 실제 CRUD하며 필요한 concept·relation도 함께 확장한다.
+- [x] 활성화 함수 한 글의 11개 독립 concept을 기초 함수·rectifier·smooth/gated FFN 세 route로 분리하고 canonical owner·evidence·exact 6+4를 이동. `negative-slope → self-normalization → smooth gate` 비교 edge를 추가하고, 11개 수식 모두 연산 의도 주석·도형 기반 자동 재생/키보드 Viz로 교체
+- [ ] 현재 전역 잔여량: public catalog 403, topology `split-review` 88·`rename-or-split-review` 2, explicit formula 39/1,058·전환 대기 1,019. 휴리스틱 후보는 본문 학습 질문을 확인한 뒤 실제 CRUD하며 필요한 concept·relation도 함께 확장한다.
 
 ### 2026-08-15 · WEBCAT · Ethereum future roadmap · binary-field proving · permissioned RWA markets
 

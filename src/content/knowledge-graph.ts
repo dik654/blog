@@ -2758,7 +2758,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "ReLU activation",
     definition:
       "음수 입력은 0으로 자르고 양수 입력은 그대로 통과시켜 양수 구간의 local derivative 1을 유지하는 rectifier입니다.",
-    canonicalHref: "/ai/activation-functions#relu",
+    canonicalHref: "/ai/rectifier-activations#relu",
   },
   "dying-relu": {
     id: "dying-relu",
@@ -2766,7 +2766,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Dying ReLU",
     definition:
       "뉴런의 pre-activation이 계속 음수에 머물러 output과 local derivative가 모두 0이 되고 update signal이 끊기는 실패 상태입니다.",
-    canonicalHref: "/ai/activation-functions#relu",
+    canonicalHref: "/ai/rectifier-activations#dying-relu",
   },
   "negative-slope-rectifier": {
     id: "negative-slope-rectifier",
@@ -2774,7 +2774,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Leaky ReLU · PReLU",
     definition:
       "Rectifier의 음수 구간에 고정 또는 학습되는 작은 slope를 남겨 local gradient가 완전히 끊기는 문제를 완화합니다.",
-    canonicalHref: "/ai/activation-functions#relu-variants",
+    canonicalHref: "/ai/rectifier-activations#negative-slope",
   },
   "self-normalizing-activation": {
     id: "self-normalizing-activation",
@@ -2782,7 +2782,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "SELU · self-normalization",
     definition:
       "정해진 SELU 상수·초기화·architecture 조건에서 층별 activation의 평균과 분산이 fixed point 근처로 돌아오게 하는 설계입니다.",
-    canonicalHref: "/ai/activation-functions#relu-variants",
+    canonicalHref: "/ai/rectifier-activations#self-normalization",
   },
   "smooth-self-gating": {
     id: "smooth-self-gating",
@@ -2790,7 +2790,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "GELU · SiLU self-gating",
     definition:
       "입력 자체에 입력 크기로 정한 연속적인 0–1 gate를 곱해 hard threshold 대신 부드러운 통과량을 만드는 activation 계열입니다.",
-    canonicalHref: "/ai/activation-functions#relu-variants",
+    canonicalHref: "/ai/gated-activations#gelu-silu",
   },
   "gated-ffn": {
     id: "gated-ffn",
@@ -2798,7 +2798,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Gated FFN · SwiGLU",
     definition:
       "Gate projection과 value projection을 따로 계산해 element-wise 곱으로 결합한 뒤 output projection을 적용하는 feed-forward 구조입니다.",
-    canonicalHref: "/ai/activation-functions#relu-variants",
+    canonicalHref: "/ai/gated-activations#gated-ffn",
   },
   "multilayer-perceptron": {
     id: "multilayer-perceptron",
@@ -20708,6 +20708,20 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "extends",
     reason:
       "SwiGLU는 self-gate를 별도 gate·value projection의 multiplicative structure로 확장합니다.",
+  },
+  {
+    from: "negative-slope-rectifier",
+    to: "self-normalizing-activation",
+    relation: "contrasts",
+    reason:
+      "Negative slope 하나로 gradient 통로를 남기는 설계와 함수·초기화·dropout을 묶은 signal-distribution recipe를 구분합니다.",
+  },
+  {
+    from: "self-normalizing-activation",
+    to: "smooth-self-gating",
+    relation: "contrasts",
+    reason:
+      "층별 mean·variance fixed point를 겨냥하는 SELU와 input별 통과량을 정하는 smooth self-gate는 서로 다른 문제를 해결합니다.",
   },
   {
     from: "affine-layer",

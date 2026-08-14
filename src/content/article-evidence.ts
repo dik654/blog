@@ -865,9 +865,23 @@ export const ARTICLE_EVIDENCE: Readonly<
   "ai/activation-functions": [
     {
       kind: "핵심 논문",
+      label: "Efficient BackProp",
+      href: "http://yann.lecun.com/exdb/publis/pdf/lecun-98b.pdf",
+      note: "입력 scaling·activation centering·saturation을 함께 다룬 기반 해설",
+    },
+    {
+      kind: "핵심 논문",
+      label: "Understanding the Difficulty of Training Deep Feedforward Neural Networks",
+      href: "https://proceedings.mlr.press/v9/glorot10a.html",
+      note: "Sigmoid·tanh saturation과 initialization scale의 상호작용",
+    },
+  ],
+  "ai/rectifier-activations": [
+    {
+      kind: "핵심 논문",
       label: "Rectified Linear Units Improve Restricted Boltzmann Machines",
       href: "https://www.cs.toronto.edu/~fritz/absps/reluICML.pdf",
-      note: "ReLU를 깊은 representation 학습에 적용한 초기 기준 논문",
+      note: "Rectified unit의 초기 해석과 실험",
     },
     {
       kind: "핵심 논문",
@@ -887,6 +901,8 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://arxiv.org/abs/1706.02515",
       note: "SELU의 fixed point와 자기정규화가 성립하는 조건",
     },
+  ],
+  "ai/gated-activations": [
     {
       kind: "핵심 논문",
       label: "Gaussian Error Linear Units",

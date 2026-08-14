@@ -1113,7 +1113,7 @@ export const EDITORIAL_BOUNDARIES = {
         label: "Attention score와 multi-head 유도",
         href: "/ai/attention-theory",
       },
-      { label: "Activation과 gated FFN", href: "/ai/activation-functions" },
+      { label: "Activation과 gated FFN", href: "/ai/gated-activations" },
       { label: "RoPE·YaRN context 확장", href: "/ai/yarn-rope-extension" },
       { label: "Cross-entropy", href: "/ai/cross-entropy" },
     ],
@@ -7007,6 +7007,51 @@ export const EDITORIAL_BOUNDARIES = {
     owns: ["배포·채택 검토·연구 방향·실험 결과 maturity 분리", "PQ surfaces·proof/execution direction·AI candidate/deterministic verifier 경계"],
     reuses: [{ label: "PQ account migration", href: "/blockchain/pq-account" }, { label: "Binary-field proving", href: "/crypto/binary-field-proving" }],
     evidence: [{ kind: "standard", rule: "Protocol fact는 accepted EIP/spec과 deployment를 확인하고 roadmap·strawmap wording을 채택 완료로 쓰지 않는다." }, { kind: "project-claim", rule: "AI가 만든 proof candidate를 deterministic formal verification 결과로 확대하지 않는다." }],
+  },
+  "activation-functions": {
+    title: "활성화 함수 기초 글이 소유하는 범위",
+    owns: [
+      "Affine score와 activation output·local slope의 첫 연결",
+      "Step·sigmoid·tanh의 출력 의미와 saturation 경계",
+    ],
+    reuses: [
+      { label: "Rectifier와 dying path", href: "/ai/rectifier-activations" },
+      { label: "GELU·SiLU·SwiGLU", href: "/ai/gated-activations" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Sigmoid·tanh saturation과 scaling claim은 Efficient BackProp과 Glorot 분석 범위로 제한한다." },
+      { kind: "standard", rule: "출력 범위·local derivative·불연속 convention을 같은 함수 계약으로 기록한다." },
+    ],
+  },
+  "rectifier-activations": {
+    title: "Rectifier 활성화 글이 소유하는 범위",
+    owns: [
+      "ReLU hinge의 forward·backward mask와 dying-state 진단",
+      "Leaky·PReLU의 음수 경로와 SELU recipe의 조건 경계",
+    ],
+    reuses: [
+      { label: "Saturation과 local slope 기초", href: "/ai/activation-functions" },
+      { label: "Smooth self-gate", href: "/ai/gated-activations" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "ReLU·PReLU·ELU·SELU claim은 각 원 논문의 architecture·초기화·실험 조건으로 제한한다." },
+      { kind: "project-measurement", rule: "Dead-unit 판정은 한 sample의 0이 아니라 여러 batch의 pre-activation·mask·update norm으로 측정한다." },
+    ],
+  },
+  "gated-activations": {
+    title: "Smooth·gated 활성화 글이 소유하는 범위",
+    owns: [
+      "GELU·SiLU의 scalar self-gate와 곱셈 의도",
+      "SwiGLU gate·value·output projection과 parameter parity",
+    ],
+    reuses: [
+      { label: "Step·sigmoid·tanh 기초", href: "/ai/activation-functions" },
+      { label: "ReLU와 negative slope", href: "/ai/rectifier-activations" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "GELU·Swish·SwiGLU claim은 원 논문의 search·model·parameter-matching 조건으로 제한한다." },
+      { kind: "project-measurement", rule: "Scalar curve와 gated FFN을 구분하고 parameter·FLOP·kernel·latency를 같은 예산에서 비교한다." },
+    ],
   },
   "qwen36-hybrid-architecture": {
     title: "Qwen3.6-27B hybrid architecture 글이 소유하는 범위",

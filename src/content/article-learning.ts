@@ -5607,38 +5607,11 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/activation-functions": {
+    entryLevel: true,
+    entryNote: "함수·미분을 이미 안다고 가정하지 않고 숫자 하나의 forward 값과 local slope부터 설명합니다.",
     coreIdea:
       "Activation function은 affine layer 사이에 비선형성을 넣어 표현의 collapse를 막는 동시에 backward에서 곱해지는 local derivative를 정합니다. 각 선택지는 같은 계보의 최신 버전이 아니라 포화, dead unit, signal scale, smooth gating, gated FFN이라는 서로 다른 문제와 비용을 다룹니다.",
-    assumedKnowledge: [
-      {
-        id: "function-mapping",
-        role: "Activation을 scalar 또는 vector input을 output으로 바꾸는 함수로 읽습니다.",
-      },
-      {
-        id: "function-composition",
-        role: "Affine layer와 activation이 번갈아 합성되는 실행 경로를 읽습니다.",
-      },
-      {
-        id: "derivative",
-        role: "Activation의 local slope가 backward signal에 미치는 영향을 계산합니다.",
-      },
-      {
-        id: "chain-rule",
-        role: "여러 layer의 local derivative가 gradient 경로에서 곱해지는 이유를 연결합니다.",
-      },
-      {
-        id: "subgradient",
-        role: "ReLU의 0처럼 표준 derivative가 없는 지점과 구현 convention을 구분합니다.",
-      },
-      {
-        id: "affine-collapse",
-        role: "Activation이 없을 때 깊은 affine chain이 하나로 합쳐지는 한계를 출발점으로 삼습니다.",
-      },
-      {
-        id: "initialization-scale",
-        role: "Activation 선택을 입력 분포와 초기 signal scale에서 분리하지 않고 비교합니다.",
-      },
-    ],
+    assumedKnowledge: [],
     introducedHere: [
       {
         id: "nonlinear-activation",
@@ -5659,30 +5632,6 @@ export const ARTICLE_LEARNING: Readonly<
       {
         id: "tanh-activation",
         role: "0 중심의 signed bounded activation과 recurrent candidate 역할을 구분합니다.",
-      },
-      {
-        id: "relu-activation",
-        role: "양수 구간의 비포화 경로와 음수 구간의 sparse path를 설명합니다.",
-      },
-      {
-        id: "dying-relu",
-        role: "음수 pre-activation에 갇힌 unit의 update 경로가 끊기는 실패를 진단합니다.",
-      },
-      {
-        id: "negative-slope-rectifier",
-        role: "음수 구간에 고정·학습 slope를 남기는 Leaky ReLU와 PReLU를 비교합니다.",
-      },
-      {
-        id: "self-normalizing-activation",
-        role: "SELU의 함수·상수·초기화·dropout 조건을 하나의 설계로 설명합니다.",
-      },
-      {
-        id: "smooth-self-gating",
-        role: "GELU와 SiLU가 input-dependent smooth gate를 만드는 아이디어를 설명합니다.",
-      },
-      {
-        id: "gated-ffn",
-        role: "SwiGLU가 activation 교체가 아니라 별도 gate·value projection을 쓰는 FFN 구조임을 구분합니다.",
       },
     ],
     conceptExplanations: [
@@ -5736,372 +5685,106 @@ export const ARTICLE_LEARNING: Readonly<
         boundary:
           "0 중심이라는 장점이 saturation을 없애지는 않습니다. 큰 |x|에서는 derivative 1−tanh²(x)가 0에 접근합니다.",
       },
-      {
-        id: "relu-activation",
-        sectionId: "relu",
-        intuition:
-          "음수는 0으로 자르고 양수는 그대로 통과시켜 양수 영역의 local derivative를 1로 유지합니다.",
-        workedExample:
-          "Input −2, 0.5, 3은 output 0, 0.5, 3이 되며 0.5와 3의 backward local derivative는 1입니다.",
-        boundary:
-          "x=0의 표준 derivative는 없고 음수 영역 derivative는 0입니다. ReLU 하나가 전체 network의 vanishing gradient를 해결하지는 않습니다.",
-      },
-      {
-        id: "dying-relu",
-        sectionId: "relu",
-        intuition:
-          "뉴런의 모든 pre-activation이 음수가 되어 forward output과 backward local derivative가 계속 0인 상태입니다.",
-        workedExample:
-          "큰 update 뒤 bias가 매우 음수가 되면 batch의 모든 z가 음수가 되고 해당 unit의 weight gradient도 0으로 남을 수 있습니다.",
-        boundary:
-          "한 batch에서 activation이 0인 것과 영구적인 dead unit은 다릅니다. 여러 batch와 training step의 분포를 확인해야 합니다.",
-      },
-      {
-        id: "negative-slope-rectifier",
-        sectionId: "relu-variants",
-        intuition:
-          "ReLU가 끊었던 음수 구간에 작은 직선 경로를 남겨 upstream gradient가 완전히 0이 되지 않게 합니다.",
-        workedExample:
-          "Leaky slope a=0.01이면 x=−2의 output은 −0.02이고 local derivative는 0.01입니다. PReLU는 이 a를 data로 학습합니다.",
-        boundary:
-          "Dead unit 위험 하나를 완화할 뿐 optimization 전체를 해결하지 않으며, PReLU는 parameter와 자유도가 추가됩니다.",
-      },
-      {
-        id: "self-normalizing-activation",
-        sectionId: "relu-variants",
-        intuition:
-          "SELU와 정해진 초기화·architecture를 함께 사용해 층별 평균과 분산이 안정된 값 근처로 돌아오게 합니다.",
-        workedExample:
-          "α≈1.6733, λ≈1.0507과 LeCun normal initialization, AlphaDropout을 함께 사용하는 것이 self-normalizing recipe입니다.",
-        boundary:
-          "SELU 함수 하나만 교체한다고 arbitrary residual·convolutional network에서 BatchNorm이 자동으로 필요 없어지는 것은 아닙니다.",
-      },
-      {
-        id: "smooth-self-gating",
-        sectionId: "relu-variants",
-        intuition:
-          "입력 x에 x가 정한 0–1 gate를 곱해 hard threshold 대신 연속적인 통과량을 만듭니다.",
-        workedExample:
-          "GELU는 xΦ(x), SiLU는 xσ(x)로 같은 scalar가 value이자 gate의 입력 역할을 합니다.",
-        boundary:
-          "Smooth하거나 최신이라는 이유만으로 모든 task에서 우위가 보장되지는 않으며 dtype·kernel·architecture를 포함해 비교해야 합니다.",
-      },
-      {
-        id: "gated-ffn",
-        sectionId: "relu-variants",
-        intuition:
-          "한 projection의 scalar activation이 아니라 gate feature와 value feature를 서로 다른 weight로 만들고 곱하는 구조입니다.",
-        workedExample:
-          "SwiGLU는 SiLU(xWg)⊙(xWv)를 계산한 뒤 Wo로 model dimension에 되돌립니다.",
-        boundary:
-          "Plain FFN보다 projection이 하나 더 있으므로 같은 intermediate width로 비교하면 parameter와 FLOP 예산이 더 큽니다.",
-      },
     ],
     conceptStages: [
-      {
-        label: "표현",
-        relation: "Affine collapse를 막는 nonlinear mapping",
-        concepts: [
-          "affine-collapse",
-          "nonlinear-activation",
-          "function-composition",
-        ],
-      },
-      {
-        label: "초기 결정",
-        relation: "Hard threshold에서 differentiable training path로 이동",
-        concepts: [
-          "step-activation",
-          "derivative",
-          "sigmoid-activation",
-          "tanh-activation",
-        ],
-      },
-      {
-        label: "Gradient 경로",
-        relation: "포화와 rectifier의 local derivative를 비교",
-        concepts: [
-          "chain-rule",
-          "activation-saturation",
-          "relu-activation",
-          "dying-relu",
-          "subgradient",
-        ],
-      },
-      {
-        label: "분포 제어",
-        relation: "음수 slope·포화·fixed point로 signal을 조절",
-        concepts: [
-          "negative-slope-rectifier",
-          "self-normalizing-activation",
-          "initialization-scale",
-        ],
-      },
-      {
-        label: "조건부 통과",
-        relation: "Smooth self-gate에서 별도 gated projection으로 확장",
-        concepts: ["smooth-self-gating", "gated-ffn"],
-      },
+      { label: "00 response", relation: "Affine score와 nonlinear output을 구분합니다.", concepts: ["nonlinear-activation"] },
+      { label: "01 threshold", relation: "Hard decision과 gradient 경계를 봅니다.", concepts: ["step-activation"] },
+      { label: "02 bounded curves", relation: "0–1과 signed output의 saturation을 비교합니다.", concepts: ["sigmoid-activation", "activation-saturation", "tanh-activation"] },
     ],
     exercises: [
-      {
-        level: "basic",
-        question:
-          "Activation이 없는 affine layer 두 개가 하나로 합쳐지는 이유와 nonlinear activation이 이 결합을 막는 이유를 설명할 수 있을까요?",
-        answerChecklist: [
-          "두 affine 식을 대입해 effective weight와 bias로 묶는다.",
-          "Activation이 input 영역별로 다른 mapping을 만든다고 설명한다.",
-          "Nonlinearity가 학습 가능성 자체를 보장하지는 않는다고 제한한다.",
-        ],
-        requiredConcepts: [
-          "affine-collapse",
-          "nonlinear-activation",
-          "function-composition",
-        ],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "Step function이 hard prediction에는 쓸 수 있지만 hidden layer의 표준 backpropagation에는 맞지 않는 이유를 derivative로 설명할 수 있을까요?",
-        answerChecklist: [
-          "Threshold 밖의 derivative가 모두 0이라고 설명한다.",
-          "Threshold에서는 불연속이라 표준 derivative가 없다고 말한다.",
-          "Surrogate gradient는 forward와 backward 계약을 다르게 둔 별도 설계라고 구분한다.",
-        ],
-        requiredConcepts: ["step-activation", "derivative", "chain-rule"],
-        sectionId: "step-function",
-      },
-      {
-        level: "basic",
-        question:
-          "Sigmoid와 tanh의 output 범위·x=0 derivative·포화 구간을 비교하고 서로 다른 사용 의미를 말할 수 있을까요?",
-        answerChecklist: [
-          "Sigmoid는 0–1과 derivative 0.25, tanh는 −1–1과 derivative 1이라고 비교한다.",
-          "둘 다 큰 |x|에서 포화한다고 설명한다.",
-          "Sigmoid는 probability·gate, tanh는 signed candidate에 적합하다고 구분한다.",
-        ],
-        requiredConcepts: [
-          "sigmoid-activation",
-          "tanh-activation",
-          "activation-saturation",
-        ],
-        sectionId: "tanh",
-      },
-      {
-        level: "basic",
-        question:
-          "ReLU의 양수·음수·0에서 output과 backward local derivative를 각각 설명할 수 있을까요?",
-        answerChecklist: [
-          "양수에서는 identity와 derivative 1이라고 말한다.",
-          "음수에서는 output·derivative가 0이라고 말한다.",
-          "0에서는 표준 derivative가 없고 구현 convention이 필요하다고 구분한다.",
-        ],
-        requiredConcepts: ["relu-activation", "subgradient", "derivative"],
-        sectionId: "relu",
-      },
-      {
-        level: "basic",
-        question:
-          "입력 x=−2와 음수 slope a=0.01에서 ReLU와 Leaky ReLU의 output·local derivative를 계산하고 update 경로의 차이를 설명할 수 있을까요?",
-        answerChecklist: [
-          "ReLU output 0과 음수 구간 derivative 0을 적는다.",
-          "Leaky ReLU output −0.02와 derivative 0.01을 계산한다.",
-          "Upstream gradient가 Leaky 경로에서는 0.01배로 남는다고 설명한다.",
-          "작은 slope가 optimization 전체나 dead unit의 모든 원인을 해결하지는 않는다고 제한한다.",
-        ],
-        requiredConcepts: [
-          "relu-activation",
-          "negative-slope-rectifier",
-          "derivative",
-        ],
-        sectionId: "relu-variants",
-      },
-      {
-        level: "basic",
-        question:
-          "Bias를 제외하고 model dimension d=512, intermediate width m=2,048인 plain FFN과 같은 width의 SwiGLU parameter 수를 계산하고 공정한 비교에 필요한 gated width를 구할 수 있을까요?",
-        answerChecklist: [
-          "Plain FFN을 2dm=2,097,152 parameter로 계산한다.",
-          "같은 width SwiGLU를 3dm=3,145,728 parameter로 계산한다.",
-          "Parameter parity를 위해 m_gated≈(2/3)×2,048≈1,365로 줄인다고 계산한다.",
-          "실제 비교에서는 bias·FLOP·kernel implementation도 함께 고정한다고 제한한다.",
-        ],
-        requiredConcepts: ["gated-ffn", "function-composition"],
-        sectionId: "relu-variants",
-      },
-      {
-        level: "advanced",
-        question:
-          "Dying ReLU를 training log와 activation 통계로 어떻게 확인하고 Leaky ReLU·초기화·learning rate 중 무엇을 왜 점검할지 설명할 수 있을까요?",
-        answerChecklist: [
-          "여러 batch에서 unit의 pre-activation과 output이 계속 음수·0인지 확인한다.",
-          "큰 learning rate와 initialization scale이 분포를 음수로 밀었는지 점검한다.",
-          "Leaky slope는 끊긴 local gradient만 복원하며 원인 전체를 해결하지는 않는다고 제한한다.",
-        ],
-        requiredConcepts: [
-          "dying-relu",
-          "relu-activation",
-          "negative-slope-rectifier",
-          "initialization-scale",
-        ],
-        sectionId: "relu",
-      },
-      {
-        level: "advanced",
-        question:
-          "SELU의 self-normalization 주장을 activation 함수 하나의 속성으로 읽으면 안 되는 이유와 필요한 조건을 설명할 수 있을까요?",
-        answerChecklist: [
-          "α·λ의 fixed constants와 mean·variance mapping을 말한다.",
-          "LeCun initialization과 feed-forward 가정, AlphaDropout 조건을 포함한다.",
-          "임의의 residual·normalization architecture에 자동 적용되는 결론이 아니라고 제한한다.",
-        ],
-        requiredConcepts: [
-          "self-normalizing-activation",
-          "activation-saturation",
-          "initialization-scale",
-        ],
-        sectionId: "relu-variants",
-      },
-      {
-        level: "advanced",
-        question:
-          "GELU·SiLU와 SwiGLU의 차이를 scalar self-gate와 두-branch FFN 구조, parameter budget 관점에서 설명할 수 있을까요?",
-        answerChecklist: [
-          "GELU와 SiLU는 같은 scalar input에 input-dependent gate를 곱한다고 설명한다.",
-          "SwiGLU는 Wg와 Wv의 서로 다른 projection을 element-wise 곱한다고 설명한다.",
-          "같은 budget 비교에서는 gated intermediate width를 대략 plain의 2/3로 맞추는 이유를 말한다.",
-        ],
-        requiredConcepts: [
-          "smooth-self-gating",
-          "gated-ffn",
-          "function-composition",
-        ],
-        sectionId: "relu-variants",
-      },
-      {
-        level: "advanced",
-        question:
-          "x=−5, α=1인 ELU와 slope 0.01인 Leaky ReLU의 output·local derivative를 근사해 음수 포화와 선형 꼬리의 trade-off를 비교할 수 있을까요?",
-        answerChecklist: [
-          "ELU output e⁻⁵−1≈−0.993과 derivative e⁻⁵≈0.0067을 계산한다.",
-          "Leaky ReLU output −0.05와 derivative 0.01을 계산한다.",
-          "ELU는 output 하한으로 큰 음수 variation을 제한하지만 derivative도 0에 접근한다고 설명한다.",
-          "Leaky ReLU는 일정한 음수 gradient를 남기지만 음수 값의 크기를 계속 통과시킨다고 비교한다.",
-        ],
-        requiredConcepts: [
-          "activation-saturation",
-          "negative-slope-rectifier",
-          "derivative",
-        ],
-        sectionId: "relu-variants",
-      },
+      { level: "basic", question: "Activation이 affine score와 다음 layer의 값을 어떻게 구분하는지 설명하세요.", answerChecklist: ["z=xW+b", "a=f(z)", "forward value", "local slope"], requiredConcepts: ["nonlinear-activation"], sectionId: "overview" },
+      { level: "basic", question: "Activation이 없을 때 깊은 affine chain의 표현력이 제한되는 이유를 설명하세요.", answerChecklist: ["affine composition", "effective weight", "region-dependent mapping", "nonlinearity boundary"], requiredConcepts: ["nonlinear-activation"], sectionId: "overview" },
+      { level: "basic", question: "Step function의 output과 threshold 밖 derivative를 설명하세요.", answerChecklist: ["0 or 1", "threshold", "flat region", "derivative zero"], requiredConcepts: ["step-activation"], sectionId: "step-function" },
+      { level: "basic", question: "Step function을 hidden backprop activation으로 바로 쓰기 어려운 이유를 설명하세요.", answerChecklist: ["discontinuity", "zero slope", "gradient path", "surrogate is separate"], requiredConcepts: ["step-activation"], sectionId: "step-function" },
+      { level: "basic", question: "Sigmoid가 logit을 0–1 비율로 바꾸는 계산을 설명하세요.", answerChecklist: ["exponential", "normalization", "range", "probability or gate"], requiredConcepts: ["sigmoid-activation"], sectionId: "sigmoid" },
+      { level: "basic", question: "Tanh가 sigmoid와 다른 output 의미를 갖는 이유를 설명하세요.", answerChecklist: ["minus one to one", "signed state", "zero centered", "still saturates"], requiredConcepts: ["tanh-activation", "activation-saturation"], sectionId: "tanh" },
+      { level: "advanced", question: "z=0과 z=10에서 sigmoid output과 local slope를 비교하세요.", answerChecklist: ["0.5", "0.25", "near one", "near zero slope", "saturation"], requiredConcepts: ["sigmoid-activation", "activation-saturation"], sectionId: "sigmoid" },
+      { level: "advanced", question: "h=tanh(z)의 derivative 1-h²가 saturation을 드러내는 방식을 설명하세요.", answerChecklist: ["h zero gives slope one", "h near plus or minus one", "square", "slope near zero"], requiredConcepts: ["tanh-activation", "activation-saturation"], sectionId: "tanh" },
+      { level: "advanced", question: "Sigmoid를 probability로 읽을 때 필요한 target·loss 경계를 설명하세요.", answerChecklist: ["Bernoulli", "logit", "matching loss", "hidden activation differs"], requiredConcepts: ["sigmoid-activation"], sectionId: "sigmoid" },
+      { level: "advanced", question: "Step·sigmoid·tanh를 output 의미와 실패 구간 기준으로 선택하세요.", answerChecklist: ["hard decision", "zero-one ratio", "signed state", "saturation", "architecture validation"], requiredConcepts: ["step-activation", "sigmoid-activation", "tanh-activation", "activation-saturation"], sectionId: "comparison" },
     ],
     papers: [
-      {
-        title: "Rectified Linear Units Improve Restricted Boltzmann Machines",
-        href: "https://www.cs.toronto.edu/~fritz/absps/reluICML.pdf",
-        problem:
-          "Binary stochastic hidden unit의 표현을 더 풍부한 rectified unit으로 바꾸면서 학습 가능한 representation을 만드는 문제",
-        contribution:
-          "Rectified linear unit을 noisy replicated binary unit 관점으로 설명하고 restricted Boltzmann machine 실험에서 평가",
-        assumptions:
-          "논문의 RBM architecture·training recipe와 당시 image·speech representation 설정을 전제로 함",
-        evidenceScope:
-          "2010년 rectified unit의 초기 이론 해석과 RBM 중심의 실험 결과 범위",
-        notClaim:
-          "ReLU가 모든 deep architecture와 dataset에서 다른 activation보다 항상 우수하다는 증명은 아님",
-        sectionId: "paper-relu",
-      },
-      {
-        title: "Delving Deep into Rectifiers",
-        href: "https://arxiv.org/abs/1502.01852",
-        problem:
-          "Rectifier의 음수 구간과 깊은 network 초기 signal scale을 함께 개선하는 문제",
-        contribution:
-          "PReLU와 rectifier-aware initialization을 제안하고 ImageNet network에서 평가",
-        assumptions:
-          "논문의 convolutional architecture·ImageNet training·parameterization 조건을 전제로 함",
-        evidenceScope:
-          "PReLU와 initialization을 결합한 2015년 vision 실험 및 분석 범위",
-        notClaim:
-          "학습되는 negative slope 하나가 모든 dead unit이나 optimization 실패를 해결한다는 결론은 아님",
-        sectionId: "paper-prelu",
-      },
-      {
-        title: "Fast and Accurate Deep Network Learning by ELUs",
-        href: "https://arxiv.org/abs/1511.07289",
-        problem:
-          "Rectifier network의 positive mean shift와 학습 속도를 개선하는 activation을 찾는 문제",
-        contribution:
-          "음수 포화 구간을 가진 ELU를 제안하고 당시 vision benchmark에서 ReLU 계열과 비교",
-        assumptions:
-          "논문의 architecture·initialization·optimizer와 ELU 계산 조건에서 비교한다는 전제",
-        evidenceScope:
-          "2015년 feed-forward·convolutional network의 학습 속도와 accuracy 실험 범위",
-        notClaim:
-          "Negative saturation이 모든 gradient 소실을 막거나 현대 architecture에서 항상 유리하다는 결론은 아님",
-        sectionId: "paper-elu",
-      },
-      {
-        title: "Self-Normalizing Neural Networks",
-        href: "https://arxiv.org/abs/1706.02515",
-        problem:
-          "Normalization layer 없이 깊은 feed-forward network의 activation mean·variance를 안정화하는 문제",
-        contribution:
-          "SELU의 fixed point와 contraction 조건, AlphaDropout을 포함한 self-normalizing recipe를 제안",
-        assumptions:
-          "독립에 가까운 입력·fan-in·LeCun initialization과 논문이 정한 network 조건을 전제로 함",
-        evidenceScope:
-          "Self-normalization의 수학적 조건과 논문 benchmark에서의 실험 범위",
-        notClaim:
-          "SELU 함수만 넣으면 임의의 CNN·RNN·Transformer가 자동으로 정규화된다는 주장은 아님",
-        sectionId: "paper-selu",
-      },
-      {
-        title: "Gaussian Error Linear Units",
-        href: "https://arxiv.org/abs/1606.08415",
-        problem:
-          "입력의 부호만 hard하게 자르지 않고 크기에 따라 연속적으로 input을 gate하는 문제",
-        contribution:
-          "xΦ(x) 형태의 GELU와 stochastic regularization 관점을 제안하고 여러 task에서 평가",
-        assumptions:
-          "Gaussian CDF 또는 근사 구현과 논문의 architecture·training 조건에서 비교한다는 전제",
-        evidenceScope: "GELU의 정의·해석과 2016년 당시 실험 결과 범위",
-        notClaim:
-          "Gaussian CDF를 사용했다는 사실만으로 모든 모델에서 ReLU보다 낫다는 증명은 아님",
-        sectionId: "paper-gelu",
-      },
-      {
-        title: "Searching for Activation Functions",
-        href: "https://arxiv.org/abs/1710.05941",
-        problem:
-          "사람이 정한 소수 activation을 넘어 search space에서 학습 성능이 좋은 함수를 찾는 문제",
-        contribution:
-          "자동 탐색으로 Swish 계열을 발견하고 여러 image architecture에서 scale별 성능을 비교",
-        assumptions:
-          "논문이 정한 search space·proxy task·architecture와 compute budget을 전제로 함",
-        evidenceScope:
-          "Activation search 절차와 선택된 vision benchmark 실험 범위",
-        notClaim:
-          "Swish가 탐색됐다는 이유로 다른 domain·hardware·model size에서도 자동으로 최적이라는 결론은 아님",
-        sectionId: "paper-swish",
-      },
-      {
-        title: "GLU Variants Improve Transformer",
-        href: "https://arxiv.org/abs/2002.05202",
-        problem:
-          "Transformer FFN의 activation과 multiplicative gating을 같은 parameter budget에서 비교하는 문제",
-        contribution:
-          "ReGLU·GEGLU·SwiGLU 등 gated FFN variant를 T5 계열 pretraining에서 비교",
-        assumptions:
-          "Gated FFN의 width를 조정한 parameter matching과 논문의 pretraining·evaluation recipe를 전제로 함",
-        evidenceScope:
-          "Transformer feed-forward sublayer의 GLU variant에 대한 controlled experiment 범위",
-        notClaim:
-          "SwiGLU를 scalar activation 하나로 바꾸기만 하면 같은 결과가 나거나 모든 architecture에 최적이라는 뜻은 아님",
-        sectionId: "paper-swiglu",
-      },
+      { title: "Efficient BackProp", href: "http://yann.lecun.com/exdb/publis/pdf/lecun-98b.pdf", problem: "Gradient network의 input·activation scaling을 안정화합니다.", contribution: "Centering·normalization·sigmoid family의 실용 원칙을 연결합니다.", assumptions: "당시 feed-forward architecture와 분석 조건입니다.", evidenceScope: "Sigmoid·tanh scale과 saturation의 기반입니다.", notClaim: "현대 모든 architecture의 최적 activation을 정하지 않습니다.", sectionId: "paper-efficient-backprop" },
+      { title: "Understanding the Difficulty of Training Deep Feedforward Neural Networks", href: "https://proceedings.mlr.press/v9/glorot10a.html", problem: "깊은 network의 saturation과 signal scale 붕괴를 분석합니다.", contribution: "Activation statistics와 fan-in·fan-out initialization을 연결합니다.", assumptions: "논문의 sigmoid·tanh network와 실험 조건입니다.", evidenceScope: "Saturation과 initialization의 상호작용입니다.", notClaim: "Xavier 하나가 모든 구조에 최적이라는 뜻은 아닙니다.", sectionId: "paper-glorot-saturation" },
+    ],
+  },
+  "ai/rectifier-activations": {
+    coreIdea: "ReLU의 hinge와 backward mask를 먼저 이해한 뒤, 계속 닫힌 unit·음수 slope·self-normalizing recipe를 서로 다른 해결책으로 구분합니다.",
+    assumedKnowledge: [
+      { id: "nonlinear-activation", role: "Activation이 forward 값과 local slope를 함께 정한다는 기초입니다." },
+      { id: "activation-saturation", role: "평평한 response 구간과 약한 gradient를 비교하는 기준입니다." },
+    ],
+    introducedHere: [
+      { id: "relu-activation", role: "0에서 꺾이는 forward 값과 양수·음수 backward mask를 설명합니다." },
+      { id: "dying-relu", role: "여러 batch에서 계속 닫힌 unit의 관측 가능한 실패 상태를 정의합니다." },
+      { id: "negative-slope-rectifier", role: "음수 구간에 고정·학습 slope를 남기는 설계를 구분합니다." },
+      { id: "self-normalizing-activation", role: "SELU 함수와 초기화·dropout·architecture 조건을 한 recipe로 묶습니다." },
+    ],
+    conceptExplanations: [
+      { id: "relu-activation", sectionId: "relu", intuition: "음수는 0으로 자르고 양수는 그대로 통과시키는 hinge입니다.", workedExample: "z=-2이면 output·mask가 0이고 z=3이면 output 3·mask 1입니다.", boundary: "0의 derivative convention과 전체 network gradient는 별도입니다." },
+      { id: "dying-relu", sectionId: "dying-relu", intuition: "한 번 0이 아니라 여러 batch에서 pre-activation과 update 경로가 계속 닫힌 상태입니다.", workedExample: "K개 batch의 최대 z도 0 이하이고 update norm도 0이면 dead 후보입니다.", boundary: "관측 window와 이후 회복 여부를 함께 기록합니다." },
+      { id: "negative-slope-rectifier", sectionId: "negative-slope", intuition: "음수 branch에 작은 직선 slope를 남겨 gradient가 완전히 끊기지 않게 합니다.", workedExample: "z=-2, a=.01이면 output -.02와 local slope .01입니다.", boundary: "Leaky는 a를 고정하고 PReLU는 scope별 parameter로 학습합니다." },
+      { id: "self-normalizing-activation", sectionId: "self-normalization", intuition: "SELU 상수·초기화·dropout 조건으로 mean·variance fixed point를 겨냥합니다.", workedExample: "α≈1.6733, λ≈1.0507, LeCun normal과 AlphaDropout을 함께 둡니다.", boundary: "함수 하나만 임의의 residual·convolution 구조에 넣은 주장이 아닙니다." },
+    ],
+    conceptStages: [
+      { label: "00 hinge", relation: "ReLU forward와 backward mask를 고정합니다.", concepts: ["nonlinear-activation", "relu-activation"] },
+      { label: "01 failure", relation: "계속 닫힌 update path를 관측합니다.", concepts: ["relu-activation", "dying-relu"] },
+      { label: "02 repair", relation: "음수 slope와 distribution recipe를 구분합니다.", concepts: ["negative-slope-rectifier", "self-normalizing-activation"] },
+    ],
+    exercises: [
+      { level: "basic", question: "ReLU의 양수·음수 forward와 backward mask를 설명하세요.", answerChecklist: ["negative zero", "positive identity", "mask zero or one", "zero convention"], requiredConcepts: ["relu-activation"], sectionId: "relu" },
+      { level: "basic", question: "한 sample의 0 activation과 dying ReLU를 구분하세요.", answerChecklist: ["multiple batches", "pre-activation", "mask", "update norm"], requiredConcepts: ["dying-relu"], sectionId: "dying-relu" },
+      { level: "basic", question: "Leaky ReLU에서 음수 slope가 필요한 이유를 설명하세요.", answerChecklist: ["negative branch", "small slope", "gradient path", "not full cure"], requiredConcepts: ["negative-slope-rectifier"], sectionId: "negative-slope" },
+      { level: "basic", question: "Leaky ReLU와 PReLU의 slope 소유권을 구분하세요.", answerChecklist: ["fixed hyperparameter", "learned parameter", "scope", "extra freedom"], requiredConcepts: ["negative-slope-rectifier"], sectionId: "negative-slope" },
+      { level: "basic", question: "SELU의 α와 λ가 각각 무엇을 조절하는지 설명하세요.", answerChecklist: ["negative saturation", "output scale", "mean variance", "fixed constants"], requiredConcepts: ["self-normalizing-activation"], sectionId: "self-normalization" },
+      { level: "basic", question: "SELU를 함수 하나가 아닌 recipe로 읽어야 하는 이유를 설명하세요.", answerChecklist: ["LeCun normal", "feed-forward assumptions", "AlphaDropout", "architecture boundary"], requiredConcepts: ["self-normalizing-activation"], sectionId: "self-normalization" },
+      { level: "advanced", question: "z=-2, a=.01에서 ReLU와 Leaky ReLU의 output·slope를 계산하세요.", answerChecklist: ["ReLU zero", "ReLU slope zero", "Leaky -.02", "Leaky slope .01"], requiredConcepts: ["relu-activation", "negative-slope-rectifier"], sectionId: "negative-slope" },
+      { level: "advanced", question: "Dead-unit monitor의 window와 release condition을 설계하세요.", answerChecklist: ["K batches", "activation rate", "update norm", "recovery", "threshold version"], requiredConcepts: ["dying-relu"], sectionId: "dying-relu" },
+      { level: "advanced", question: "Negative slope와 SELU가 해결하는 문제를 비교하세요.", answerChecklist: ["local gradient path", "distribution fixed point", "different assumptions", "contrasts"], requiredConcepts: ["negative-slope-rectifier", "self-normalizing-activation"], sectionId: "comparison" },
+      { level: "advanced", question: "Activation 후보를 공정하게 비교할 측정 artifact를 설계하세요.", answerChecklist: ["same seed", "initialization", "optimizer", "histogram", "dead rate", "latency"], requiredConcepts: ["relu-activation", "dying-relu", "negative-slope-rectifier"], sectionId: "comparison" },
+    ],
+    papers: [
+      { title: "Rectified Linear Units Improve Restricted Boltzmann Machines", href: "https://www.cs.toronto.edu/~fritz/absps/reluICML.pdf", problem: "학습 가능한 rectified representation을 만듭니다.", contribution: "Rectified unit의 초기 해석과 실험을 제공합니다.", assumptions: "논문의 RBM·training·dataset 조건입니다.", evidenceScope: "2010년 초기 rectifier 결과입니다.", notClaim: "모든 deep architecture의 보편적 우월성은 아닙니다.", sectionId: "paper-relu" },
+      { title: "Delving Deep into Rectifiers", href: "https://arxiv.org/abs/1502.01852", problem: "음수 구간과 초기 signal scale을 개선합니다.", contribution: "PReLU와 rectifier-aware initialization을 제안합니다.", assumptions: "논문의 CNN·ImageNet 조건입니다.", evidenceScope: "PReLU와 초기화의 vision 실험입니다.", notClaim: "Slope 하나가 모든 optimization 실패를 해결하지 않습니다.", sectionId: "paper-prelu" },
+      { title: "Fast and Accurate Deep Network Learning by ELUs", href: "https://arxiv.org/abs/1511.07289", problem: "Positive mean shift와 학습 속도를 개선합니다.", contribution: "음수 포화 구간을 가진 ELU를 제안하고 ReLU 계열과 당시 vision benchmark에서 비교합니다.", assumptions: "논문의 architecture·optimizer 조건입니다.", evidenceScope: "ELU의 당시 benchmark입니다.", notClaim: "모든 vanishing gradient를 막지 않습니다.", sectionId: "paper-elu" },
+      { title: "Self-Normalizing Neural Networks", href: "https://arxiv.org/abs/1706.02515", problem: "층별 mean·variance를 안정화합니다.", contribution: "SELU fixed point와 AlphaDropout recipe를 제안합니다.", assumptions: "독립 입력·LeCun initialization·논문 구조입니다.", evidenceScope: "Self-normalization 조건과 benchmark입니다.", notClaim: "함수만 교체한 임의 구조에 자동 적용되지 않습니다.", sectionId: "paper-selu" },
+    ],
+  },
+  "ai/gated-activations": {
+    coreIdea: "GELU·SiLU의 scalar self-gate에서 출발해 gate와 value를 별도 projection으로 만드는 SwiGLU로 확장하고, 곱셈 의도와 parameter parity를 함께 계산합니다.",
+    assumedKnowledge: [
+      { id: "nonlinear-activation", role: "Scalar response가 값과 local slope를 정한다는 기초입니다." },
+      { id: "sigmoid-activation", role: "0–1 통과 비율을 만드는 gate의 출발점입니다." },
+    ],
+    introducedHere: [
+      { id: "smooth-self-gating", role: "GELU·SiLU에서 input-dependent 통과 비율을 원래 값에 곱하는 의도를 설명합니다." },
+      { id: "gated-ffn", role: "SwiGLU의 gate·value·output projection과 공정한 parameter budget을 설명합니다." },
+    ],
+    conceptExplanations: [
+      { id: "smooth-self-gating", sectionId: "gelu-silu", intuition: "Input이 자기 통과 비율을 만들고 그 비율을 원래 signed value에 곱합니다.", workedExample: "GELU는 xΦ(x), SiLU는 xσ(x)로 큰 양수는 거의 통과하고 큰 음수는 억제합니다.", boundary: "Smooth하다는 이유만으로 모든 task·kernel에서 우위가 보장되지 않습니다." },
+      { id: "gated-ffn", sectionId: "gated-ffn", intuition: "Gate와 value를 서로 다른 projection으로 만든 뒤 같은 coordinate끼리 곱는 FFN 구조입니다.", workedExample: "SiLU(xWg)⊙(xWv)를 Wo로 model dimension에 되돌립니다.", boundary: "Projection이 세 개이므로 같은 width 비교는 parameter·FLOP가 공정하지 않습니다." },
+    ],
+    conceptStages: [
+      { label: "00 self gate", relation: "Scalar value와 pass ratio를 분리합니다.", concepts: ["sigmoid-activation", "smooth-self-gating"] },
+      { label: "01 branches", relation: "Gate·value projection을 곱해 조건부 feature를 만듭니다.", concepts: ["smooth-self-gating", "gated-ffn"] },
+      { label: "02 budget", relation: "세 projection의 parameter와 kernel 비용을 맞춥니다.", concepts: ["gated-ffn"] },
+    ],
+    exercises: [
+      { level: "basic", question: "GELU의 Φ(x)가 무엇을 정하는지 설명하세요.", answerChecklist: ["Gaussian CDF", "pass ratio", "multiply x", "smooth gate"], requiredConcepts: ["smooth-self-gating"], sectionId: "gelu-silu" },
+      { level: "basic", question: "SiLU에서 xσ(x)의 곱셈 의도를 설명하세요.", answerChecklist: ["sigmoid ratio", "original signed value", "multiplication", "continuous response"], requiredConcepts: ["smooth-self-gating"], sectionId: "gelu-silu" },
+      { level: "basic", question: "GELU와 SiLU gate의 차이를 설명하세요.", answerChecklist: ["Phi", "sigmoid", "same self-gate pattern", "implementation"], requiredConcepts: ["smooth-self-gating"], sectionId: "gelu-silu" },
+      { level: "basic", question: "SwiGLU의 Wg와 Wv가 서로 다른 이유를 설명하세요.", answerChecklist: ["gate basis", "value basis", "separate projections", "element-wise product"], requiredConcepts: ["gated-ffn"], sectionId: "gated-ffn" },
+      { level: "basic", question: "SwiGLU의 element-wise 곱과 Wo의 역할을 설명하세요.", answerChecklist: ["same coordinates", "conditional feature", "output projection", "residual dimension"], requiredConcepts: ["gated-ffn"], sectionId: "gated-ffn" },
+      { level: "basic", question: "Scalar activation과 gated FFN을 같은 것으로 부르면 안 되는 이유를 설명하세요.", answerChecklist: ["one projection", "two branches", "multiplication", "architecture boundary"], requiredConcepts: ["smooth-self-gating", "gated-ffn"], sectionId: "comparison" },
+      { level: "advanced", question: "Plain FFN과 gated FFN의 parameter 식을 유도하세요.", answerChecklist: ["2dm", "3dm_g", "three matrices", "bias excluded"], requiredConcepts: ["gated-ffn"], sectionId: "parameter-budget" },
+      { level: "advanced", question: "d=512, m=2048에서 plain·same-width gated parameter와 parity width를 계산하세요.", answerChecklist: ["2097152", "3145728", "two thirds", "about 1365"], requiredConcepts: ["gated-ffn"], sectionId: "parameter-budget" },
+      { level: "advanced", question: "Parameter parity가 latency parity를 보장하지 않는 이유를 설명하세요.", answerChecklist: ["FLOP", "memory traffic", "fusion", "dtype", "hardware"], requiredConcepts: ["gated-ffn"], sectionId: "parameter-budget" },
+      { level: "advanced", question: "GELU·SiLU·SwiGLU 비교 실험의 release gate를 설계하세요.", answerChecklist: ["scalar versus structure", "same budget", "training tokens", "kernel", "quality", "latency"], requiredConcepts: ["smooth-self-gating", "gated-ffn"], sectionId: "comparison" },
+    ],
+    papers: [
+      { title: "Gaussian Error Linear Units", href: "https://arxiv.org/abs/1606.08415", problem: "Input을 hard threshold 대신 크기에 따라 연속적으로 gate합니다.", contribution: "xΦ(x) 형태의 GELU와 stochastic regularization 관점을 제안하고 여러 task에서 평가합니다.", assumptions: "Gaussian CDF 또는 명시된 근사 구현과 논문의 architecture·training 조건을 전제로 합니다.", evidenceScope: "GELU의 정의·확률적 해석과 2016년 논문이 보고한 benchmark 결과 범위입니다.", notClaim: "모든 모델에서 ReLU보다 낫다는 증명은 아닙니다.", sectionId: "paper-gelu" },
+      { title: "Searching for Activation Functions", href: "https://arxiv.org/abs/1710.05941", problem: "Activation search space에서 유용한 함수를 찾습니다.", contribution: "Swish 계열을 발견하고 비교합니다.", assumptions: "Search·proxy task·compute 조건입니다.", evidenceScope: "Activation search와 vision benchmark입니다.", notClaim: "모든 domain의 자동 최적점은 아닙니다.", sectionId: "paper-swish" },
+      { title: "GLU Variants Improve Transformer", href: "https://arxiv.org/abs/2002.05202", problem: "Gated FFN을 공정한 budget으로 비교합니다.", contribution: "ReGLU·GEGLU·SwiGLU를 비교합니다.", assumptions: "Width-matched T5 pretraining 조건입니다.", evidenceScope: "Transformer FFN controlled experiment입니다.", notClaim: "SwiGLU가 scalar activation 하나라는 뜻은 아닙니다.", sectionId: "paper-swiglu" },
     ],
   },
   "ai/backprop-optimization": {
