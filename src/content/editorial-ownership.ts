@@ -5842,6 +5842,30 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "project-measurement", rule: "Bad signature·replay·altered measurement·old TCB·debug·expired collateral·unknown field에서 false accept 0을 hard gate로 둔다." },
     ],
   },
+  bulletproofs: {
+    title: "Bulletproofs range relation·IPA·aggregation 글이 소유하는 범위",
+    owns: ["Committed value bit decomposition과 range relation", "Bulletproofs vector IPA와 logarithmic folding bound", "Aggregation transcript·range-proof release gate"],
+    reuses: [{ label: "Pedersen hiding·binding", href: "/crypto/zk-theory#simulation" }, { label: "Dot product", href: "/ai/math-vectors-inner-products#dot-product" }, { label: "Fiat–Shamir statement binding", href: "/crypto/zk-theory#noninteractive-boundary" }],
+    evidence: [{ kind: "primary-source", rule: "Protocol/security/benchmark claim은 Bulletproofs 원문 범위에 귀속한다." }, { kind: "primary-source", rule: "구현 claim은 pinned dalek commit의 Ristretto·transcript source에 한정한다." }, { kind: "project-measurement", rule: "Out-of-range·wrong commitment/domain/generator parity 뒤 prove/verify/bytes/RSS를 비교한다." }],
+  },
+  halo2: {
+    title: "Halo2 columns·regions·proof profile 글이 소유하는 범위",
+    owns: ["Typed columns·regions·rotations layout", "Gate·copy·lookup constraint boundary", "Pinned Zcash IPA keygen/prove/verify profile과 release gate"],
+    reuses: [{ label: "PLONK selector·permutation", href: "/crypto/plonk" }, { label: "IPA PCS", href: "/crypto/polycommit#schemes" }, { label: "KZG profile contrast", href: "/crypto/polycommit#commit-open" }],
+    evidence: [{ kind: "primary-source", rule: "Accumulation 배경은 Halo 원문, API/source claim은 pinned zcash/halo2 commit에 각각 귀속한다." }, { kind: "project-claim", rule: "Halo2 이름만으로 IPA/KZG·curve·proof format을 일반화하지 않는다." }, { kind: "project-measurement", rule: "Selector/copy/range/instance/key failure와 MockProver/real verifier parity 뒤 비용을 측정한다." }],
+  },
+  hyperplonk: {
+    title: "HyperPlonk MLE·sumcheck·custom-gate 글이 소유하는 범위",
+    owns: ["Boolean hypercube multilinear extension", "Sumcheck round와 degree/field soundness", "HyperPlonk gate/permutation/PCS boundary와 release gate"],
+    reuses: [{ label: "PLONK gate·copy", href: "/crypto/plonk" }, { label: "Polynomial root bound", href: "/crypto/polynomial" }, { label: "Polynomial commitment", href: "/crypto/polycommit" }],
+    evidence: [{ kind: "primary-source", rule: "Linear-time·custom gate·security claim은 HyperPlonk 원문 model에 귀속한다." }, { kind: "primary-source", rule: "구현 claim은 pinned Espresso source와 unaudited disclaimer에 한정한다." }, { kind: "project-measurement", rule: "Wrong round/degree/copy/opening parity 뒤 MLE/sumcheck/PCS phase와 RSS를 비교한다." }],
+  },
+  nova: {
+    title: "Nova relaxed R1CS·NIFS·IVC 글이 소유하는 범위",
+    owns: ["IVC state/step relation", "Relaxed R1CS cross term과 NIFS folding", "Folding·compression·ZK boundary와 resume release gate"],
+    reuses: [{ label: "R1CS row", href: "/crypto/constraint-systems#r1cs" }, { label: "Commitment binding/hiding", href: "/crypto/zk-theory#simulation" }, { label: "SNARK succinctness cost", href: "/crypto/snark-overview#selection" }],
+    evidence: [{ kind: "primary-source", rule: "Relaxed R1CS·NIFS·IVC claim은 Nova 원문 model에 귀속한다." }, { kind: "primary-source", rule: "Backend/source claim은 pinned microsoft/Nova commit에 한정한다." }, { kind: "project-measurement", rule: "Wrong state/index/T/E/challenge/resume parity 뒤 per-step과 final compression costs를 분리한다." }],
+  },
   polycommit: {
     title: "Polynomial commitment interface·KZG·IPA 선택 글이 소유하는 범위",
     owns: ["Commit·Open·Verify와 evaluation claim의 소유권", "KZG quotient·pairing opening과 IPA inner-product opening", "Binding·hiding·degree·setup 분리와 PCS release gate"],
@@ -6220,6 +6244,30 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [{ label: "TEE TCB closure", href: "/tee/tee-tcb" }, { label: "TEE memory lifecycle", href: "/tee/tee-memory" }, { label: "RATS 역할과 artifact", href: "/tee/tee-attestation" }],
     evidence: [{ kind: "primary-source", rule: "RME·GPT·RMM·token semantics는 링크한 Arm architecture/revision 범위에 귀속한다." }, { kind: "project-measurement", rule: "RMM·EL3·host·Realm·policy를 고정하고 granule·DMA·challenge·version drift를 paired 검사한다." }, { kind: "project-claim", rule: "Realm token을 device isolation·application correctness·side-channel·availability 보장으로 확대하지 않는다." }],
   },
+  keylime: {
+    title: "Keylime agent·verifier·IMA/boot policy·release 글이 소유하는 범위",
+    owns: ["Keylime registrar/agent/verifier/tenant evidence flow", "Fresh TPM quote와 IMA·measured-boot policy appraisal", "Keylime-specific release·revocation gate"],
+    reuses: [{ label: "TPM PCR·event log", href: "/tee/tee-tcb" }, { label: "RATS roles·channel binding", href: "/tee/tee-attestation" }],
+    evidence: [{ kind: "primary-source", rule: "Keylime 동작은 current official architecture·verifier API·runtime IMA·measured-boot docs 범위에 귀속한다." }, { kind: "project-measurement", rule: "같은 agent·policy에서 replay·IMA drift·unknown boot image·recipient substitution을 검사한다." }, { kind: "project-claim", rule: "Quote/PCR replay 성공을 reference policy 적합성·business authorization으로 확대하지 않는다." }],
+  },
+  "tee-sealing": {
+    title: "TEE sealing identity·blob·migration 글이 소유하는 범위",
+    owns: ["MRENCLAVE/MRSIGNER identity policy와 SVN·purpose scope", "Sealing key context·AEAD blob·upgrade migration gate"],
+    reuses: [{ label: "TEE memory·replay boundary", href: "/tee/tee-memory" }, { label: "Intel SGX identity", href: "/tee/intel-sgx" }],
+    evidence: [{ kind: "primary-source", rule: "SGX sealing policy는 Intel official sealing 문서, AEAD는 NIST SP 800-38D 범위에 귀속한다." }, { kind: "project-measurement", rule: "Tag 변조·old blob·wrong signer/SVN·migration crash를 paired 검사한다." }, { kind: "project-claim", rule: "Sealing을 rollback protection·backup availability·side-channel defense로 확대하지 않는다." }],
+  },
+  "tee-sidechannel": {
+    title: "TEE side-channel observable·mitigation 측정 글이 소유하는 범위",
+    owns: ["Secret→microarchitectural state→measurement→inference leakage model", "Cache·transient execution 경계와 measurement release gate"],
+    reuses: [{ label: "TEE private/shared memory", href: "/tee/tee-memory" }, { label: "Hardware threat model", href: "/tee/hw-security" }],
+    evidence: [{ kind: "primary-source", rule: "Spectre와 cache-AES 주장은 원 논문의 공격 조건·실험 범위에 한정한다." }, { kind: "primary-source", rule: "Mitigation guidance는 current Intel secure-coding guidance 범위에 귀속한다." }, { kind: "project-measurement", rule: "Binary·CPU·microcode·clock·corpus를 고정하고 holdout leakage와 performance를 비교한다." }],
+  },
+  "isms-encryption": {
+    title: "ISMS 데이터 보호·password hash·key lifecycle 글이 소유하는 범위",
+    owns: ["Reversible data와 password primitive 선택", "DEK/KEK envelope와 rotation·backup·revoke·recovery gate"],
+    reuses: [{ label: "암호학 기초", href: "/crypto/crypto-basics" }, { label: "인증 관리", href: "/isms-aml/isms-auth-management" }],
+    evidence: [{ kind: "standard", rule: "Key lifecycle은 NIST SP 800-57 Part 1 Rev.5 범위에 귀속한다." }, { kind: "standard", rule: "Password·storage 권고는 검증 시점의 OWASP guidance로 versioning한다." }, { kind: "project-measurement", rule: "DB/hash 유출·unauthorized decrypt·partial rotation·backup loss를 재생한다." }],
+  },
   "op-tee": {
     title: "OP-TEE TA runtime·storage 적용 글이 소유하는 범위",
     owns: ["TA context·session·command lifecycle과 shared-parameter validation", "Key purpose·secure-storage outcome과 OP-TEE-specific release gate"],
@@ -6315,6 +6363,54 @@ export const EDITORIAL_BOUNDARIES = {
     owns: ["Short-term/stateful order persistence와 proposer match validation", "Risk settlement와 rebuildable indexer projection 경계"],
     reuses: [{ label: "CometBFT proposal authority", href: "/blockchain/cometbft-abci#prepare-process" }, { label: "Cosmos SDK state branch", href: "/blockchain/cosmos-sdk#baseapp" }],
     evidence: [{ kind: "primary-source", rule: "Order flag·MemClob·match/risk·indexer semantics는 dYdX protocol/v9.6.3 source에 귀속한다." }, { kind: "project-measurement", rule: "같은 orders·oracle·subaccounts에서 operations/state/events parity와 duplicate/out-of-order indexer replay를 검사한다." }, { kind: "project-claim", rule: "Local book·proposer operation·indexer API를 global fairness·committed fill·consensus receipt로 확대하지 않는다." }],
+  },
+  "iroh": {
+    title: "Iroh endpoint·ALPN·path selection 글이 소유하는 범위",
+    owns: ["Iroh v1.0.3 EndpointAddr identity/address와 ALPN handler 경계", "Direct·relay tier, biased RTT path selection과 failure/retry release gate"],
+    reuses: [{ label: "Content address integrity", href: "/p2p/content-addressing#overview" }, { label: "Kademlia provider routing", href: "/p2p/kademlia#overview" }, { label: "QUIC transport semantics", href: "/p2p/quic-fundamentals#overview" }],
+    evidence: [{ kind: "primary-source", rule: "Endpoint·ALPN·path state와 selector constants는 iroh v1.0.3 source에만 귀속한다." }, { kind: "project-measurement", rule: "Direct/relay RTT·switch count·fallback·identity/ALPN failure와 CID verification을 같은 trace에서 측정한다." }, { kind: "project-claim", rule: "Iroh connection success를 CID provider discovery·content possession·application authorization으로 확대하지 않는다." }],
+  },
+  "kubo": {
+    title: "Kubo provider·Bitswap·pin/GC 글이 소유하는 범위",
+    owns: ["Kubo v0.43.0 provider candidate와 Bitswap block receipt 경계", "Local pin roots·GC protection과 gateway content release gate"],
+    reuses: [{ label: "CID·Merkle DAG", href: "/p2p/content-addressing#overview" }, { label: "Kademlia lookup", href: "/p2p/kademlia#overview" }, { label: "libp2p transport", href: "/p2p/libp2p#overview" }],
+    evidence: [{ kind: "primary-source", rule: "Provider/route·Bitswap wiring·pin/GC behavior는 Kubo v0.43.0 source에 귀속한다." }, { kind: "project-measurement", rule: "Stale provider·partial DAG·hash mismatch·shared pin·GC survival을 two-node fixture에서 측정한다." }, { kind: "project-claim", rule: "Provider record·pin·HTTP 200을 current possession·replication·content integrity로 확대하지 않는다." }],
+  },
+  "libp2p-gossipsub": {
+    title: "rust-libp2p GossipSub implementation 글이 소유하는 범위",
+    owns: ["0.56.0 publish cache·heartbeat mesh/gossip promise lifecycle", "Local peer score thresholds와 application validation/retry gate"],
+    reuses: [{ label: "Generic GossipSub dual path", href: "/p2p/gossip-fundamentals#gossipsub" }, { label: "CID integrity", href: "/p2p/content-addressing#overview" }],
+    evidence: [{ kind: "primary-source", rule: "Publish·heartbeat·score·validation behavior는 rust-libp2p 0.56.0 source에 귀속한다." }, { kind: "project-measurement", rule: "Duplicate·promise timeout·validation delay·score decay·mesh partition을 pinned config에서 재생한다." }, { kind: "project-claim", rule: "Publish success·message ID·peer score를 durable delivery·content integrity·global reputation으로 확대하지 않는다." }],
+  },
+  "libp2p-quic": {
+    title: "rust-libp2p QUIC transport implementation 글이 소유하는 범위",
+    owns: ["0.56.0 multiaddr→TLS PeerId binding과 native QUIC stream adapter", "UDP socket reuse hole punch와 stream/connection release gate"],
+    reuses: [{ label: "QUIC ACK·loss·flow control", href: "/p2p/quic-fundamentals#overview" }, { label: "TCP transport", href: "/p2p/libp2p-tcp#overview" }, { label: "Noise identity", href: "/p2p/libp2p-noise#overview" }, { label: "Yamux streams", href: "/p2p/libp2p-yamux#overview" }],
+    evidence: [{ kind: "primary-source", rule: "PeerId binding·stream·socket reuse·hole punch는 rust-libp2p 0.56.0 QUIC source에 귀속한다." }, { kind: "project-measurement", rule: "Identity mismatch·flow-control stall·stream reset·connection close·hole-punch fallback을 같은 workload에서 측정한다." }, { kind: "project-claim", rule: "QUIC handshake·stream open을 application authorization·durable processing·CID integrity로 확대하지 않는다." }],
+  },
+  "msm-gpu-impl": {
+    title: "GPU MSM window·bucket·reduction 구현 글이 소유하는 범위",
+    owns: ["Signed-window digit 작업표와 partial top-window 처리", "Bucket 충돌 ownership·running-sum reduction과 MSM kernel release gate"],
+    reuses: [{ label: "EC scalar multiplication", href: "/crypto/elliptic-curves#g1-curve" }, { label: "CUDA memory·timing", href: "/gpu/cuda-basics" }, { label: "Proof workload routing", href: "/gpu/msm-ntt" }],
+    evidence: [{ kind: "primary-source", rule: "Digit·sort·accumulate·integrate 동작은 sppark commit 17278d7 source에만 귀속한다." }, { kind: "project-measurement", rule: "같은 curve·n·scalar 분포에서 reference parity 뒤 stage/end-to-end·traffic·stalls를 paired 측정한다." }, { kind: "project-claim", rule: "Window 폭·sort 전략·occupancy·kernel speedup을 보편 최적값이나 proof 전체 speedup으로 확대하지 않는다." }],
+  },
+  "ntt-gpu-impl": {
+    title: "GPU NTT stage·twiddle·order 구현 글이 소유하는 범위",
+    owns: ["Butterfly stage-tile mapping과 twiddle artifact contract", "CT/GS order·bit-reversal buffer plan과 NTT kernel release gate"],
+    reuses: [{ label: "Finite-field NTT", href: "/crypto/fft" }, { label: "CUDA shared memory", href: "/gpu/cuda-shared-memory" }, { label: "CUDA timing", href: "/gpu/cuda-perf-analysis" }],
+    evidence: [{ kind: "primary-source", rule: "CT/GS·bit reversal·coset placement은 sppark commit 17278d7 source에 귀속한다." }, { kind: "project-measurement", rule: "Field/domain/order를 고정하고 DFT·round-trip·convolution parity 뒤 traffic·stalls·end-to-end를 측정한다." }, { kind: "project-claim", rule: "특정 radix·tile·shared-memory fusion·occupancy를 모든 domain의 우위로 일반화하지 않는다." }],
+  },
+  "poly-ops-gpu": {
+    title: "GPU polynomial representation·recurrence 글이 소유하는 범위",
+    owns: ["Form/domain/order/generation이 붙은 device polynomial artifact", "Coset twist·NTT plan과 Horner/synthetic-division recurrence batch mapping"],
+    reuses: [{ label: "Polynomial coefficient·evaluation", href: "/crypto/polynomials" }, { label: "NTT", href: "/crypto/fft" }, { label: "GPU NTT implementation", href: "/gpu/ntt-gpu-impl" }],
+    evidence: [{ kind: "primary-source", rule: "Coset pass 위치와 reference behavior는 pinned sppark·c-kzg·ICICLE revisions에 귀속한다." }, { kind: "project-measurement", rule: "Form/domain mismatch와 exact identities 뒤 requested/actual traffic·element/s·end-to-end를 비교한다." }, { kind: "project-claim", rule: "한 polynomial의 Horner/division coefficients가 독립이라는 주장이나 element/s를 proof/s로 확대하지 않는다." }],
+  },
+  "kzg-gpu": {
+    title: "GPU KZG SRS·MSM·opening artifact 글이 소유하는 범위",
+    owns: ["SRS validation·device residency artifact와 coefficient-SRS MSM binding", "Opening job DAG·verifier receipt와 GPU KZG release/rollback gate"],
+    reuses: [{ label: "KZG commitment 정본", href: "/crypto/polycommit#kzg" }, { label: "GPU polynomial operations", href: "/gpu/poly-ops-gpu" }, { label: "GPU MSM implementation", href: "/gpu/msm-gpu-impl" }],
+    evidence: [{ kind: "primary-source", rule: "KZG 수학은 원 논문, EIP-4844 reference는 c-kzg v2.1.6, MSM은 sppark commit 17278d7에 귀속한다." }, { kind: "project-measurement", rule: "SRS·form·claim·backend를 고정하고 independent verifier·negative parity 뒤 cold/warm·memory·end-to-end를 비교한다." }, { kind: "project-claim", rule: "MSM kernel time을 KZG/proof speedup으로, c-kzg profile을 모든 KZG batch protocol로 일반화하지 않는다." }],
   },
 } as const satisfies Record<string, EditorialBoundary>;
 

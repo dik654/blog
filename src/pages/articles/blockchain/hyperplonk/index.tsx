@@ -1,15 +1,5 @@
-import Overview from "./Overview";
-import Multilinear from "./Multilinear";
-import Sumcheck from "./Sumcheck";
-import Comparison from "./Comparison";
+import ModernHyperPlonkArticle from "./ModernArticle";
 
 export default function HyperPlonk() {
-  return (
-    <>
-      <Overview />
-      <Multilinear />
-      <Sumcheck />
-      <Comparison />
-    </>
-  );
+  return <ModernHyperPlonkArticle />;
 }

@@ -88,12 +88,13 @@ const ismsAmlArticles: Article[] = [
   },
   {
     slug: "isms-encryption",
-    title: "암호화 적용 — 키관리·해시·시크릿 매니저",
+    title: "암호화 적용 — 데이터·비밀번호·키 수명주기",
     subcategory: "isms-crypto",
     sections: [
-      { id: "overview", title: "암호화가 필요한 곳" },
-      { id: "password-hashing", title: "비밀번호 해싱 전략" },
-      { id: "key-management", title: "키 관리와 시크릿 관리" },
+      { id: "overview", title: "복호화 허가에서 시작" },
+      { id: "data-password-boundary", title: "데이터와 비밀번호 경계" },
+      { id: "key-lifecycle", title: "DEK·KEK 수명주기" },
+      { id: "release-gate", title: "Rotation·Recovery gate" },
     ],
     component: () => import("@/pages/articles/isms-aml/isms-encryption"),
   },
