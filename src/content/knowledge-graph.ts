@@ -2270,7 +2270,31 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Softmax normalization",
     definition:
       "서로 배타적인 후보의 실수 logit을 지수화한 뒤 공동 합으로 나누어, 순서를 보존하면서 합이 1인 categorical probability distribution으로 바꾸는 함수입니다.",
-    canonicalHref: "/ai/backprop-optimization#softmax",
+    canonicalHref: "/ai/softmax#overview",
+  },
+  "softmax-max-shift-invariance": {
+    id: "softmax-max-shift-invariance",
+    domain: "machine-learning",
+    label: "Softmax max-shift invariance",
+    definition:
+      "모든 logit에서 같은 상수를 빼면 numerator와 denominator에 같은 exponential factor가 생겨 probability가 변하지 않는 성질입니다.",
+    canonicalHref: "/ai/softmax#overview",
+  },
+  "softmax-temperature-scaling": {
+    id: "softmax-temperature-scaling",
+    domain: "machine-learning",
+    label: "Softmax temperature scaling",
+    definition:
+      "양수 temperature로 모든 logit을 나눠 class 순서는 유지하면서 상대 간격과 probability concentration을 조절하는 변환입니다.",
+    canonicalHref: "/ai/softmax#temperature",
+  },
+  "softmax-categorical-output-boundary": {
+    id: "softmax-categorical-output-boundary",
+    domain: "machine-learning",
+    label: "Categorical output boundary",
+    definition:
+      "서로 배타적인 class의 공동 probability에는 softmax를, 여러 label이 동시에 참일 수 있는 출력에는 독립 sigmoid를 사용하는 의미 경계입니다.",
+    canonicalHref: "/ai/softmax#output-boundary",
   },
   "probability-event": {
     id: "probability-event",
@@ -2507,7 +2531,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Computational graph",
     definition:
       "값을 node로, 값을 만드는 primitive operation과 dependency를 edge로 나타내 forward 계산과 derivative 경로를 추적하는 graph입니다.",
-    canonicalHref: "/ai/backprop-optimization#overview",
+    canonicalHref: "/ai/reverse-mode-autodiff#overview",
   },
   "autodiff-tape": {
     id: "autodiff-tape",
@@ -2515,7 +2539,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Autodiff tape · saved tensor",
     definition:
       "Forward 실행 중 operation 순서와 backward의 local derivative에 필요한 중간값을 기록한 실행 상태입니다.",
-    canonicalHref: "/ai/backprop-optimization#forward-pass",
+    canonicalHref: "/ai/reverse-mode-autodiff#tape",
   },
   "reverse-mode-autodiff": {
     id: "reverse-mode-autodiff",
@@ -2523,7 +2547,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Reverse-mode automatic differentiation",
     definition:
       "Scalar output의 seed derivative에서 graph를 역순으로 순회하며 많은 input parameter의 gradient를 한 번에 누적하는 autodiff 방식입니다.",
-    canonicalHref: "/ai/backprop-optimization#chain-rule",
+    canonicalHref: "/ai/reverse-mode-autodiff#reverse-mode",
   },
   "vector-jacobian-product": {
     id: "vector-jacobian-product",
@@ -2531,7 +2555,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Vector–Jacobian product (VJP)",
     definition:
       "뒤에서 온 cotangent vector와 현재 operation의 local Jacobian을 곱해 input 쪽 cotangent만 계산하는 연산입니다.",
-    canonicalHref: "/ai/backprop-optimization#chain-rule",
+    canonicalHref: "/ai/reverse-mode-autodiff#reverse-mode",
   },
   "fanout-gradient-accumulation": {
     id: "fanout-gradient-accumulation",
@@ -2539,7 +2563,15 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Fan-out gradient accumulation",
     definition:
       "같은 값이 여러 downstream 경로에 사용될 때 각 경로가 보내는 partial derivative contribution을 모두 더해 전체 derivative를 만드는 규칙입니다.",
-    canonicalHref: "/ai/backprop-optimization#chain-rule",
+    canonicalHref: "/ai/reverse-mode-autodiff#reverse-mode",
+  },
+  "autodiff-save-recompute-boundary": {
+    id: "autodiff-save-recompute-boundary",
+    domain: "computer-science",
+    label: "Autodiff save–recompute boundary",
+    definition:
+      "Backward에 필요한 forward 중간값을 memory에 저장할지 checkpoint에서 다시 계산할지 정하는 compute–memory 수명 경계입니다.",
+    canonicalHref: "/ai/reverse-mode-autodiff#save-recompute",
   },
   "fused-softmax-cross-entropy-gradient": {
     id: "fused-softmax-cross-entropy-gradient",
@@ -2547,7 +2579,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Fused softmax–cross-entropy gradient",
     definition:
       "Categorical softmax와 negative log-likelihood를 함께 미분해 logit gradient를 predicted distribution minus target distribution으로 계산하는 경로입니다.",
-    canonicalHref: "/ai/backprop-optimization#backprop-derivation",
+    canonicalHref: "/ai/backprop-optimization#tensor-backward",
   },
   "batched-linear-backward": {
     id: "batched-linear-backward",
@@ -2555,7 +2587,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Batched linear backward",
     definition:
       "Z=XW+b의 upstream matrix G에서 XᵀG, row sum, GWᵀ로 weight·bias·input gradient를 계산하는 tensor contract입니다.",
-    canonicalHref: "/ai/backprop-optimization#backprop-derivation",
+    canonicalHref: "/ai/backprop-optimization#tensor-backward",
   },
   "training-intervention": {
     id: "training-intervention",
@@ -2563,7 +2595,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Training intervention point",
     definition:
       "Objective·gradient·optimizer·activation·data·stopping 중 regularization이나 안정화 기법이 training loop의 어느 지점을 바꾸는지 구분하는 기준입니다.",
-    canonicalHref: "/ai/backprop-optimization#regularization",
+    canonicalHref: "/ai/backprop-optimization#overview",
   },
   "optimizer-update": {
     id: "optimizer-update",
@@ -14554,6 +14586,15 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
+  { from: "softmax-normalization", to: "softmax-max-shift-invariance", relation: "produces", reason: "공동 numerator와 denominator의 같은 exponential factor가 약분됩니다." },
+  { from: "softmax-normalization", to: "softmax-temperature-scaling", relation: "extends", reason: "같은 normalization 전에 logit 간격을 양수 scale로 조절합니다." },
+  { from: "softmax-categorical-output-boundary", to: "softmax-normalization", relation: "constrains", reason: "서로 배타적인 categorical output일 때만 공동 class 경쟁을 적용합니다." },
+  { from: "autodiff-tape", to: "reverse-mode-autodiff", relation: "prerequisite", reason: "Reverse traversal이 local derivative와 필요한 forward 값을 tape에서 읽습니다." },
+  { from: "reverse-mode-autodiff", to: "vector-jacobian-product", relation: "produces", reason: "각 reverse operation은 upstream cotangent와 local Jacobian의 필요한 product만 계산합니다." },
+  { from: "autodiff-tape", to: "autodiff-save-recompute-boundary", relation: "constrains", reason: "Saved tensor 수명과 크기가 checkpoint·recompute 선택의 memory 기준이 됩니다." },
+  { from: "autodiff-save-recompute-boundary", to: "reverse-mode-autodiff", relation: "optimizes", reason: "같은 derivative를 유지하면서 저장량과 recomputation 비용을 교환합니다." },
+  { from: "softmax-normalization", to: "fused-softmax-cross-entropy-gradient", relation: "prerequisite", reason: "Categorical softmax와 NLL을 함께 미분해 logit error를 만듭니다." },
+  { from: "batched-linear-backward", to: "backpropagation", relation: "produces", reason: "Weight·bias gradient와 앞 layer input gradient를 만들어 network reverse flow를 이어갑니다." },
   { from: "matrix-multiplication", to: "cuda-gemm-output-mapping", relation: "prerequisite", reason: "Row–column reduction의 수학 의미를 2D CUDA output threads에 배치합니다." },
   { from: "cuda-global-index", to: "cuda-gemm-output-mapping", relation: "prerequisite", reason: "2D global row·column index가 각 output owner를 정합니다." },
   { from: "cuda-gemm-output-mapping", to: "cuda-gemm-tile-reuse-budget", relation: "optimizes", reason: "같은 output 계산에서 반복되는 A·B global load를 block reuse로 줄입니다." },

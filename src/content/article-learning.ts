@@ -5787,449 +5787,124 @@ export const ARTICLE_LEARNING: Readonly<
       { title: "GLU Variants Improve Transformer", href: "https://arxiv.org/abs/2002.05202", problem: "Gated FFN을 공정한 budget으로 비교합니다.", contribution: "ReGLU·GEGLU·SwiGLU를 비교합니다.", assumptions: "Width-matched T5 pretraining 조건입니다.", evidenceScope: "Transformer FFN controlled experiment입니다.", notClaim: "SwiGLU가 scalar activation 하나라는 뜻은 아닙니다.", sectionId: "paper-swiglu" },
     ],
   },
-  "ai/backprop-optimization": {
-    coreIdea:
-      "Backpropagation은 scalar loss에서 계산 graph를 거꾸로 순회하며 local derivative를 VJP로 연결하고, 같은 값이 여러 경로에 쓰이면 contribution을 더해 모든 parameter gradient를 계산합니다. Gradient를 실제 parameter 변화로 바꾸는 optimizer와는 별도 책임입니다.",
-    assumedKnowledge: [
-      {
-        id: "function-composition",
-        role: "Network를 primitive function과 layer가 연결된 합성 함수로 읽습니다.",
-      },
-      {
-        id: "chain-rule",
-        role: "Local derivative를 연결해 전체 loss derivative를 얻는 수학적 정본입니다.",
-      },
-      {
-        id: "jacobian-matrix",
-        role: "Vector-valued operation의 input–output local rate를 matrix로 읽습니다.",
-      },
-      {
-        id: "gradient",
-        role: "Scalar loss의 parameter별 partial derivative를 parameter shape에 맞춰 묶습니다.",
-      },
-      {
-        id: "exponentiation",
-        role: "Softmax가 logit을 순서를 보존하는 양수 weight로 바꾸는 계산을 읽습니다.",
-      },
-      {
-        id: "probability-distribution",
-        role: "서로 배타적인 categorical class의 probability 합이 1이어야 한다는 계약을 읽습니다.",
-      },
-      {
-        id: "batch-linear-layer",
-        role: "Z=XW+b의 forward shape와 parameter sharing을 backward 식의 기준으로 사용합니다.",
-      },
-      {
-        id: "prediction-contract",
-        role: "Categorical logits·softmax·target distribution의 통계적 의미를 고정합니다.",
-      },
-      {
-        id: "nonlinear-activation",
-        role: "Activation의 local derivative가 layer 사이의 gradient 경로에 들어갑니다.",
-      },
-    ],
+  "ai/reverse-mode-autodiff": {
+    coreIdea: "Reverse-mode autodiff는 forward computational graph와 saved tape를 기준으로 scalar loss의 책임을 역순 VJP로 보내고, 여러 branch에서 돌아온 contribution을 합쳐 input gradient를 계산합니다.",
+    entryLevel: true,
+    assumedKnowledge: [],
     introducedHere: [
-      {
-        id: "computational-graph",
-        role: "Forward value와 operation dependency를 graph로 드러내 reverse traversal 경로를 정합니다.",
-      },
-      {
-        id: "autodiff-tape",
-        role: "Backward local rule에 필요한 forward 중간값과 operation 순서를 저장합니다.",
-      },
-      {
-        id: "loss-objective",
-        role: "Model output과 target의 불일치를 reverse mode가 시작할 scalar 하나로 줄입니다.",
-      },
-      {
-        id: "softmax-normalization",
-        role: "Categorical logits을 class들이 서로 경쟁하는 공동 probability distribution으로 바꿉니다.",
-      },
-      {
-        id: "reverse-mode-autodiff",
-        role: "Scalar output에서 많은 input parameter의 gradient를 한 reverse pass로 누적합니다.",
-      },
-      {
-        id: "vector-jacobian-product",
-        role: "Jacobian 전체를 materialize하지 않고 upstream cotangent에 필요한 product만 계산합니다.",
-      },
-      {
-        id: "fanout-gradient-accumulation",
-        role: "같은 value를 사용한 여러 downstream branch의 gradient contribution을 합칩니다.",
-      },
-      {
-        id: "backpropagation",
-        role: "Reverse-mode autodiff를 multi-layer network의 hidden parameter 학습에 적용합니다.",
-      },
-      {
-        id: "fused-softmax-cross-entropy-gradient",
-        role: "Softmax와 NLL의 chain rule을 합쳐 logit gradient ŷ−y를 얻습니다.",
-      },
-      {
-        id: "batched-linear-backward",
-        role: "Upstream G에서 weight·bias·input gradient를 shape에 맞게 계산합니다.",
-      },
-      {
-        id: "training-intervention",
-        role: "Regularization과 안정화 기법이 objective·gradient·update·data 중 어디에 개입하는지 구분합니다.",
-      },
+      { id: "computational-graph", role: "값과 primitive operation dependency를 node와 edge로 나타냅니다." },
+      { id: "autodiff-tape", role: "Backward local rule이 요구하는 forward 값과 operation 순서를 기록합니다." },
+      { id: "reverse-mode-autodiff", role: "Scalar output에서 graph를 역순으로 순회해 많은 input gradient를 계산합니다." },
+      { id: "vector-jacobian-product", role: "Full Jacobian을 만들지 않고 upstream cotangent가 묻는 방향만 계산합니다." },
+      { id: "fanout-gradient-accumulation", role: "한 값의 여러 사용처에서 돌아온 gradient contribution을 합칩니다." },
+      { id: "autodiff-save-recompute-boundary", role: "Forward 값을 저장할지 backward에서 재계산할지 memory와 compute로 선택합니다." },
     ],
     conceptExplanations: [
-      {
-        id: "computational-graph",
-        sectionId: "overview",
-        intuition:
-          "계산 결과를 점으로, 그 값을 만든 operation과 의존 관계를 화살표로 나타낸 실행 지도입니다.",
-        workedExample:
-          "a=wx, L=a²이면 w와 x가 multiply node에서 a를 만들고 a가 square node에서 scalar L을 만듭니다.",
-        boundary:
-          "Graph 그림은 함수의 실행 dependency를 나타내며, neural network architecture의 고수준 block diagram과 항상 같은 granularity는 아닙니다.",
-      },
-      {
-        id: "autodiff-tape",
-        sectionId: "forward-pass",
-        intuition:
-          "Forward 때 지나간 길과 backward에서 다시 볼 중간값을 적어 둔 영수증처럼 작동합니다.",
-        workedExample:
-          "Z=XW+b, A=f(Z)에서 weight gradient에는 X가, activation backward에는 Z 또는 A가 필요해 saved tensor로 보관합니다.",
-        boundary:
-          "모든 값을 저장하면 memory가 커집니다. Checkpointing은 일부를 버리고 backward 때 다시 계산하는 compute–memory trade-off입니다.",
-      },
-      {
-        id: "loss-objective",
-        sectionId: "loss-function",
-        intuition:
-          "여러 sample과 output coordinate의 오차를 parameter update 방향을 정할 숫자 하나로 모은 기준입니다.",
-        workedExample:
-          "회귀 prediction 2와 target 3의 squared error는 (2−3)²=1이고, batch에서는 sample loss를 평균해 scalar를 만듭니다.",
-        boundary:
-          "Loss가 작다는 사실은 task의 모든 가치와 generalization을 보장하지 않습니다. Output meaning과 noise assumption에 맞는 objective가 필요합니다.",
-      },
-      {
-        id: "softmax-normalization",
-        sectionId: "softmax",
-        intuition:
-          "서로 배타적인 후보의 점수를 양수 표로 바꾼 뒤 전체 표 수로 나누어, 한 후보가 커지면 다른 후보의 몫이 함께 작아지는 공동 확률을 만듭니다.",
-        workedExample:
-          "Logit이 (log 2,0)이면 지수 weight는 (2,1)이므로 probability는 (2/3,1/3)입니다. 두 logit에 같은 100을 더해도 비율은 같습니다.",
-        boundary:
-          "Softmax는 서로 배타적인 categorical 후보를 위한 함수입니다. 여러 label이 동시에 참일 수 있는 multi-label 문제에는 class별 sigmoid를 사용합니다.",
-      },
-      {
-        id: "reverse-mode-autodiff",
-        sectionId: "chain-rule",
-        intuition:
-          "최종 scalar의 derivative 1에서 시작해 계산 순서를 거꾸로 따라가며 각 input이 loss에 미친 책임을 누적합니다.",
-        workedExample:
-          "a=3×2=6, L=a²=36이면 dL/da=12를 먼저 얻고 da/dw=x=2를 곱해 dL/dw=24를 얻습니다.",
-        boundary:
-          "Scalar output과 많은 input에 유리합니다. Output이 많고 input이 적으면 forward mode가 더 적합할 수 있습니다.",
-      },
-      {
-        id: "vector-jacobian-product",
-        sectionId: "chain-rule",
-        intuition:
-          "Local Jacobian 표 전체를 만들지 않고 뒤에서 온 질문 vector가 요구하는 방향의 답만 계산합니다.",
-        workedExample:
-          "Upstream cotangent ȳ와 y=f(x)의 Jacobian Jf를 곱한 ȳJf가 x에 보낼 cotangent입니다.",
-        boundary:
-          "Row·column convention에 따라 transpose 위치가 바뀝니다. Shape와 input·output axis를 명시해야 같은 식을 비교할 수 있습니다.",
-      },
-      {
-        id: "fanout-gradient-accumulation",
-        sectionId: "chain-rule",
-        intuition:
-          "한 값이 여러 계산에 재사용되면 각 사용처가 보내는 책임을 모두 더해야 전체 책임이 됩니다.",
-        workedExample:
-          "L=x²+3x이면 square branch가 2x, linear branch가 3을 보내므로 dL/dx=2x+3입니다.",
-        boundary:
-          "Framework의 .grad 누적은 graph fan-out뿐 아니라 여러 backward call·micro-batch에서도 생기므로 step 경계를 명시해야 합니다.",
-      },
-      {
-        id: "backpropagation",
-        sectionId: "overview",
-        intuition:
-          "정답을 직접 주지 않은 hidden parameter까지 output error의 derivative를 보내 학습시키는 효율적인 책임 배분 계산입니다.",
-        workedExample:
-          "Output loss에서 시작한 gradient가 output weight, activation, hidden weight 순서로 local VJP를 거쳐 전달됩니다.",
-        boundary:
-          "Backpropagation은 gradient를 계산할 뿐 update rule·learning rate·global optimum·generalization을 보장하지 않습니다.",
-      },
-      {
-        id: "fused-softmax-cross-entropy-gradient",
-        sectionId: "backprop-derivation",
-        intuition:
-          "Softmax의 class 간 coupling과 정답 negative log의 derivative를 함께 정리해 간단한 logit error vector를 얻습니다.",
-        workedExample:
-          "Prediction (0.7,0.2,0.1)과 one-hot target (1,0,0)이면 logit gradient는 (−0.3,0.2,0.1)입니다.",
-        boundary:
-          "Softmax 단독 Jacobian이 identity라는 뜻이 아니며, categorical target과 loss reduction 조건에서 얻는 fused 결과입니다.",
-      },
-      {
-        id: "batched-linear-backward",
-        sectionId: "backprop-derivation",
-        intuition:
-          "각 sample의 input과 output error contribution을 batch 전체에서 합쳐 공유 weight의 gradient를 만듭니다.",
-        workedExample:
-          "Z=XW+b와 upstream G에서 dW=XᵀG, db는 G의 row sum, dX=GWᵀ이며 결과 shape는 원래 variable과 같습니다.",
-        boundary:
-          "Framework가 W를 transpose해 저장하거나 batch reduction이 mean이면 transpose 위치와 1/B scale이 달라질 수 있습니다.",
-      },
-      {
-        id: "training-intervention",
-        sectionId: "regularization",
-        intuition:
-          "기법 이름을 외우기보다 training loop에서 어떤 값과 시점을 바꾸는지 표시하는 진단 기준입니다.",
-        workedExample:
-          "Label smoothing은 objective, clipping은 gradient, AdamW는 update, dropout은 activation path, augmentation은 data distribution을 바꿉니다.",
-        boundary:
-          "서로 다른 지점의 개입이 같은 validation gain을 보여도 계산 비용·failure mode·상호작용이 같다는 뜻은 아닙니다.",
-      },
+      { id: "computational-graph", sectionId: "overview", intuition: "값은 node, 값을 만든 operation은 화살표인 실행 지도입니다.", workedExample: "w=3, x=2에서 a=wx=6, L=a²=36의 두 operation을 연결합니다.", boundary: "Neural architecture block diagram보다 더 작은 primitive 실행 단위입니다." },
+      { id: "autodiff-tape", sectionId: "tape", intuition: "거꾸로 계산할 때 다시 볼 값과 순서를 적은 영수증입니다.", workedExample: "Z=XW+b에서 dW를 만들 X와 activation derivative에 필요한 Z를 저장합니다.", boundary: "모든 값을 저장하면 training memory가 커집니다." },
+      { id: "reverse-mode-autodiff", sectionId: "reverse-mode", intuition: "Loss의 책임을 forward와 반대 방향으로 보냅니다.", workedExample: "dL/da=12와 da/dw=2를 곱해 dL/dw=24를 얻습니다.", boundary: "Scalar output과 많은 input에 특히 유리합니다." },
+      { id: "vector-jacobian-product", sectionId: "reverse-mode", intuition: "Jacobian 표 전체 대신 지금 필요한 한 방향의 곱만 구합니다.", workedExample: "upstream cotangent ȳ와 local Jacobian J를 곱해 x̄를 만듭니다.", boundary: "Row·column convention에 따라 transpose 위치가 달라집니다." },
+      { id: "fanout-gradient-accumulation", sectionId: "reverse-mode", intuition: "같은 값이 갈라졌다면 돌아오는 책임을 모두 더합니다.", workedExample: "L=x²+3x에서 dL/dx=2x+3입니다.", boundary: "Micro-batch 누적과 graph fan-out 누적은 원인이 다릅니다." },
+      { id: "autodiff-save-recompute-boundary", sectionId: "save-recompute", intuition: "Memory를 아끼려면 중간값 일부를 버리고 backward에서 다시 계산합니다.", workedExample: "a=wx를 저장하지 않고 checkpoint 입력에서 다시 계산합니다.", boundary: "Gradient 식은 같지만 compute·memory·random-state 재현 비용은 달라집니다." },
     ],
     conceptStages: [
-      {
-        label: "Forward",
-        relation: "Operation dependency와 backward용 중간값 기록",
-        concepts: [
-          "function-composition",
-          "computational-graph",
-          "autodiff-tape",
-          "batch-linear-layer",
-          "nonlinear-activation",
-        ],
-      },
-      {
-        label: "Probability",
-        relation: "Categorical logits을 공동 probability로 정규화",
-        concepts: [
-          "exponentiation",
-          "probability-distribution",
-          "prediction-contract",
-          "softmax-normalization",
-        ],
-      },
-      {
-        label: "Scalar seed",
-        relation: "Model output을 optimization 기준 하나로 축약",
-        concepts: [
-          "softmax-normalization",
-          "prediction-contract",
-          "loss-objective",
-        ],
-      },
-      {
-        label: "Reverse",
-        relation: "Chain rule을 VJP로 계산하고 branch contribution 합산",
-        concepts: [
-          "chain-rule",
-          "jacobian-matrix",
-          "vector-jacobian-product",
-          "fanout-gradient-accumulation",
-          "reverse-mode-autodiff",
-          "backpropagation",
-        ],
-      },
-      {
-        label: "Tensor backward",
-        relation: "Output error를 parameter와 input shape로 분배",
-        concepts: [
-          "fused-softmax-cross-entropy-gradient",
-          "batched-linear-backward",
-          "gradient",
-        ],
-      },
-      {
-        label: "Update와 개입",
-        relation: "Gradient 계산과 parameter update·regularization을 분리",
-        concepts: ["gradient", "optimizer-update", "training-intervention"],
-      },
+      { label: "00 graph", relation: "Forward dependency를 먼저 고정", concepts: ["computational-graph"] },
+      { label: "01 tape", relation: "Backward가 요구할 상태를 기록", concepts: ["computational-graph", "autodiff-tape"] },
+      { label: "02 reverse", relation: "VJP와 branch sum으로 책임을 역전파", concepts: ["reverse-mode-autodiff", "vector-jacobian-product", "fanout-gradient-accumulation"] },
+      { label: "03 memory", relation: "Saved tensor와 recomputation을 선택", concepts: ["autodiff-tape", "autodiff-save-recompute-boundary"] },
     ],
     exercises: [
-      {
-        level: "basic",
-        question:
-          "Logit이 (log 2,0)일 때 softmax probability를 계산하고 두 logit에 같은 상수를 더해도 결과가 같은 이유를 설명할 수 있을까요?",
-        answerChecklist: [
-          "지수 weight (2,1)을 얻는다.",
-          "공동 합 3으로 나눠 probability (2/3,1/3)을 계산한다.",
-          "공통 상수의 지수 배율이 분자와 분모에서 약분된다고 설명한다.",
-        ],
-        requiredConcepts: [
-          "exponentiation",
-          "probability-distribution",
-          "softmax-normalization",
-        ],
-        sectionId: "softmax",
-      },
-      {
-        level: "basic",
-        question:
-          "a=wx, L=a²에서 w=3, x=2일 때 forward 값과 dL/dw를 reverse 순서로 계산할 수 있을까요?",
-        answerChecklist: [
-          "a=6과 L=36을 forward에서 계산한다.",
-          "dL/da=12와 da/dw=2를 구한다.",
-          "Chain rule로 dL/dw=24를 얻는다.",
-        ],
-        requiredConcepts: [
-          "computational-graph",
-          "chain-rule",
-          "reverse-mode-autodiff",
-        ],
-        sectionId: "chain-rule",
-      },
-      {
-        level: "basic",
-        question:
-          "Forward pass가 prediction만 만들지 않고 X·Z·activation mask 같은 tensor를 저장하는 이유와 checkpointing의 trade-off를 설명할 수 있을까요?",
-        answerChecklist: [
-          "Backward local derivative가 forward 중간값을 다시 사용한다고 설명한다.",
-          "저장량이 training memory를 키운다고 말한다.",
-          "Checkpointing은 저장 대신 recomputation compute를 사용한다고 설명한다.",
-        ],
-        requiredConcepts: [
-          "autodiff-tape",
-          "computational-graph",
-          "backpropagation",
-        ],
-        sectionId: "forward-pass",
-      },
-      {
-        level: "basic",
-        question:
-          "L=x²+3x에서 x가 두 branch에 쓰일 때 dL/dx를 구하고 gradient contribution을 더해야 하는 이유를 설명할 수 있을까요?",
-        answerChecklist: [
-          "Square branch의 derivative 2x를 구한다.",
-          "Linear branch의 derivative 3을 구한다.",
-          "Fan-out contribution을 더해 2x+3을 얻는다.",
-        ],
-        requiredConcepts: [
-          "computational-graph",
-          "fanout-gradient-accumulation",
-          "chain-rule",
-        ],
-        sectionId: "chain-rule",
-      },
-      {
-        level: "basic",
-        question:
-          "정답 class probability가 0.8인 one-hot classification 한 건의 cross-entropy loss를 계산하고 probability가 0에 가까워질수록 penalty가 커지는 이유를 설명할 수 있을까요?",
-        answerChecklist: [
-          "One-hot target에서는 정답 항만 남아 −log(0.8)≈0.223임을 계산한다.",
-          "−log p가 p→0에서 커진다고 설명한다.",
-          "Log의 밑과 batch reduction을 고정해야 수치를 비교할 수 있다고 제한한다.",
-        ],
-        requiredConcepts: ["loss-objective", "probability-distribution"],
-        sectionId: "loss-function",
-      },
-      {
-        level: "basic",
-        question:
-          "현재 parameter θ=2, gradient 0.5, learning rate 0.1인 SGD 한 step의 새 parameter를 계산하고 gradient 계산과 optimizer update가 다른 단계인 이유를 설명할 수 있을까요?",
-        answerChecklist: [
-          "θ_new=2−0.1×0.5=1.95를 계산한다.",
-          "Backprop은 현재 parameter에서 gradient를 계산한다고 말한다.",
-          "Optimizer가 learning rate와 state를 사용해 실제 parameter를 바꾼다고 구분한다.",
-        ],
-        requiredConcepts: ["gradient", "optimizer-update"],
-        sectionId: "regularization",
-      },
-      {
-        level: "advanced",
-        question:
-          "Reverse-mode autodiff가 scalar loss와 수백만 parameter의 neural network에 적합한 이유를 Jacobian 전체와 VJP의 비용 차이로 설명할 수 있을까요?",
-        answerChecklist: [
-          "Scalar output seed에서 모든 input 쪽 cotangent를 한 reverse pass로 누적한다고 설명한다.",
-          "Operation별 full Jacobian을 저장하지 않고 VJP만 계산한다고 설명한다.",
-          "Output이 많고 input이 적은 경우 forward mode가 유리할 수 있다고 경계를 말한다.",
-        ],
-        requiredConcepts: [
-          "jacobian-matrix",
-          "vector-jacobian-product",
-          "reverse-mode-autodiff",
-          "backpropagation",
-        ],
-        sectionId: "chain-rule",
-      },
-      {
-        level: "advanced",
-        question:
-          "Prediction (0.7,0.2,0.1), one-hot target (1,0,0)의 fused logit gradient를 구하고 각 부호의 update 의미를 설명할 수 있을까요?",
-        answerChecklist: [
-          "ŷ−y=(−0.3,0.2,0.1)을 계산한다.",
-          "Target logit은 높이는 방향, 나머지는 낮추는 방향이라고 해석한다.",
-          "Softmax 단독 derivative가 아니라 cross-entropy와 합친 결과라고 제한한다.",
-        ],
-        requiredConcepts: [
-          "prediction-contract",
-          "fused-softmax-cross-entropy-gradient",
-          "chain-rule",
-        ],
-        sectionId: "backprop-derivation",
-      },
-      {
-        level: "advanced",
-        question:
-          "X가 B×Din, W가 Din×Dout, upstream G가 B×Dout일 때 dW·db·dX의 식과 shape를 유도할 수 있을까요?",
-        answerChecklist: [
-          "dW=XᵀG가 Din×Dout임을 확인한다.",
-          "db는 batch row sum으로 Dout이라고 설명한다.",
-          "dX=GWᵀ가 B×Din으로 앞 layer shape를 복원한다고 설명한다.",
-        ],
-        requiredConcepts: [
-          "batch-linear-layer",
-          "batched-linear-backward",
-          "gradient",
-        ],
-        sectionId: "backprop-derivation",
-      },
-      {
-        level: "advanced",
-        question:
-          "Label smoothing·gradient clipping·AdamW·dropout·augmentation·early stopping이 training loop의 어느 지점에 개입하는지 구분할 수 있을까요?",
-        answerChecklist: [
-          "Objective·gradient·optimizer·activation·data·checkpoint selection으로 각각 분류한다.",
-          "같은 regularization이라는 이름이 같은 mechanism을 뜻하지 않는다고 설명한다.",
-          "Ablation에서 개입 지점과 비용을 함께 고정해야 한다고 말한다.",
-        ],
-        requiredConcepts: [
-          "training-intervention",
-          "gradient",
-          "optimizer-update",
-        ],
-        sectionId: "regularization",
-      },
+      { level: "basic", question: "a=wx, L=a²의 computational graph를 그리세요.", answerChecklist: ["w·x node", "a", "square node", "L"], requiredConcepts: ["computational-graph"], sectionId: "overview" },
+      { level: "basic", question: "w=3, x=2의 forward 값을 계산하세요.", answerChecklist: ["a=6", "L=36", "forward order"], requiredConcepts: ["computational-graph"], sectionId: "overview" },
+      { level: "basic", question: "Tape가 X와 Z를 저장하는 이유를 설명하세요.", answerChecklist: ["local derivative", "saved tensor", "operation order"], requiredConcepts: ["autodiff-tape"], sectionId: "tape" },
+      { level: "basic", question: "같은 예에서 dL/dw=24를 reverse 순서로 계산하세요.", answerChecklist: ["seed 1", "dL/da=12", "da/dw=2", "24"], requiredConcepts: ["reverse-mode-autodiff"], sectionId: "reverse-mode" },
+      { level: "basic", question: "VJP가 full Jacobian과 다른 점을 설명하세요.", answerChecklist: ["upstream cotangent", "local Jacobian", "needed direction", "no materialization"], requiredConcepts: ["vector-jacobian-product"], sectionId: "reverse-mode" },
+      { level: "basic", question: "L=x²+3x의 branch gradient를 합치세요.", answerChecklist: ["2x", "3", "sum", "2x+3"], requiredConcepts: ["fanout-gradient-accumulation"], sectionId: "reverse-mode" },
+      { level: "advanced", question: "Reverse mode가 scalar loss와 많은 parameter에 유리한 이유를 설명하세요.", answerChecklist: ["one scalar seed", "one reverse traversal", "many inputs", "forward-mode boundary"], requiredConcepts: ["reverse-mode-autodiff", "vector-jacobian-product"], sectionId: "reverse-mode" },
+      { level: "advanced", question: "Checkpointing의 memory·compute trade-off를 설계하세요.", answerChecklist: ["save subset", "recompute", "memory decreases", "compute increases"], requiredConcepts: ["autodiff-save-recompute-boundary"], sectionId: "save-recompute" },
+      { level: "advanced", question: "In-place update가 tape를 깨뜨릴 수 있는 이유를 설명하세요.", answerChecklist: ["saved value", "version", "local derivative", "mutation boundary"], requiredConcepts: ["autodiff-tape", "autodiff-save-recompute-boundary"], sectionId: "save-recompute" },
+      { level: "advanced", question: "Fan-out 누적과 micro-batch 누적을 구분하세요.", answerChecklist: ["same graph value", "multiple backward calls", "sum-of-paths", "step reset"], requiredConcepts: ["fanout-gradient-accumulation"], sectionId: "reverse-mode" },
     ],
     papers: [
-      {
-        title: "Learning Representations by Back-propagating Errors",
-        href: "https://www.nature.com/articles/323533a0",
-        problem:
-          "Hidden unit에 직접 target을 주지 않고 multi-layer network의 connection strength를 학습하는 문제",
-        contribution:
-          "Output error derivative를 layer 반대 방향으로 전파해 hidden representation을 학습하는 절차와 사례를 제시",
-        assumptions:
-          "Differentiable unit과 supervised target, 논문의 작은 network·dataset·training 조건을 전제로 함",
-        evidenceScope:
-          "1986년 family-tree·text-to-speech 사례와 backpropagation 계산 설명 범위",
-        notClaim:
-          "현대 대규모 network의 optimization·generalization이나 global optimum을 자동으로 보장하는 논문은 아님",
-        sectionId: "paper-backprop",
-      },
-      {
-        title: "Automatic Differentiation in Machine Learning: a Survey",
-        href: "https://jmlr.org/papers/v18/17-468.html",
-        problem:
-          "Derivative 계산을 finite difference·symbolic differentiation·automatic differentiation 관점에서 구분하고 비용을 정리하는 문제",
-        contribution:
-          "Forward·reverse accumulation의 algebra와 implementation, machine learning에서의 사용 범위를 체계적으로 정리",
-        assumptions:
-          "Primitive operation의 derivative가 주어지고 실행 graph를 추적할 수 있는 differentiable program을 전제로 함",
-        evidenceScope:
-          "2018년까지의 autodiff 원리·system design·machine learning 활용을 정리한 survey 범위",
-        notClaim:
-          "Autodiff가 함수의 미분 가능성이나 optimization 수렴·수치 안정성을 자동으로 해결한다는 뜻은 아님",
-        sectionId: "paper-autodiff",
-      },
+      { title: "Automatic Differentiation in Machine Learning: a Survey", href: "https://jmlr.org/papers/v18/17-468.html", problem: "Derivative 계산 방법과 비용을 구분합니다.", contribution: "Forward·reverse accumulation과 구현을 정리합니다.", assumptions: "Primitive derivative와 추적 가능한 실행 graph를 전제로 합니다.", evidenceScope: "Autodiff 원리와 system design survey 범위입니다.", notClaim: "Optimization 수렴을 보장하지 않습니다.", sectionId: "paper-autodiff" },
+    ],
+  },
+  "ai/softmax": {
+    coreIdea: "Softmax는 categorical logits을 양수 weight로 바꾸고 모든 class가 공유하는 분모로 나눠 합이 1인 공동 확률을 만들며, max shift는 값을 안정화하고 temperature는 상대 간격을 조절합니다.",
+    entryLevel: true,
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "softmax-normalization", role: "서로 배타적인 class score를 공동 확률 분포로 정규화합니다." },
+      { id: "softmax-max-shift-invariance", role: "모든 logit에서 같은 최대값을 빼도 확률 비율이 같음을 이용합니다." },
+      { id: "softmax-temperature-scaling", role: "양수 temperature로 logit 간격과 분포 날카로움을 조절합니다." },
+      { id: "softmax-categorical-output-boundary", role: "서로 배타적인 class와 multi-label sigmoid 문제를 구분합니다." },
+    ],
+    conceptExplanations: [
+      { id: "softmax-normalization", sectionId: "overview", intuition: "모든 후보가 하나의 확률 예산을 나눠 갖습니다.", workedExample: "Weight (2,1)은 probability (2/3,1/3)이 됩니다.", boundary: "각 class를 독립적으로 켜는 함수가 아니며 서로 배타적인 categorical 후보에서만 공동 probability로 해석합니다." },
+      { id: "softmax-max-shift-invariance", sectionId: "overview", intuition: "공통 상수는 분자와 분모에서 같은 배율로 약분됩니다.", workedExample: "(log2,0)과 (log2+100,100)은 같은 확률입니다.", boundary: "Scale을 곱하는 것은 분포를 바꿉니다." },
+      { id: "softmax-temperature-scaling", sectionId: "temperature", intuition: "Logit 차이를 softmax 전에 확대하거나 축소합니다.", workedExample: "T가 커지면 같은 logits의 probability가 더 평평해집니다.", boundary: "모델마다 logit scale이 달라 같은 T의 효과가 같지 않습니다." },
+      { id: "softmax-categorical-output-boundary", sectionId: "output-boundary", intuition: "하나만 참인 후보는 공동 예산, 여러 개가 참이면 독립 switch입니다.", workedExample: "고양이·개 중 하나는 softmax, 실내·야간 동시 label은 sigmoid입니다.", boundary: "Output semantics를 확인하지 않고 normalization을 고르면 안 됩니다." },
+    ],
+    conceptStages: [
+      { label: "00 score", relation: "Logit은 아직 확률이 아님", concepts: ["softmax-normalization"] },
+      { label: "01 normalize", relation: "양수 weight와 공동 분모 생성", concepts: ["softmax-normalization", "softmax-max-shift-invariance"] },
+      { label: "02 scale", relation: "Temperature로 상대 간격 조절", concepts: ["softmax-temperature-scaling"] },
+      { label: "03 boundary", relation: "Categorical과 multi-label을 분리", concepts: ["softmax-categorical-output-boundary"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Logit과 probability의 차이를 설명하세요.", answerChecklist: ["unbounded score", "normalization", "sum one"], requiredConcepts: ["softmax-normalization"], sectionId: "overview" },
+      { level: "basic", question: "Weight (2,1)의 softmax probability를 계산하세요.", answerChecklist: ["sum 3", "2/3", "1/3"], requiredConcepts: ["softmax-normalization"], sectionId: "overview" },
+      { level: "basic", question: "공동 분모가 class 경쟁을 만드는 이유를 설명하세요.", answerChecklist: ["shared sum", "one increases", "others share less"], requiredConcepts: ["softmax-normalization"], sectionId: "overview" },
+      { level: "basic", question: "Max shift가 확률을 보존하는 이유를 설명하세요.", answerChecklist: ["common factor", "numerator", "denominator", "cancel"], requiredConcepts: ["softmax-max-shift-invariance"], sectionId: "overview" },
+      { level: "basic", question: "Temperature가 작아질 때 분포가 어떻게 변하는지 설명하세요.", answerChecklist: ["logit gap increases", "sharper", "same rank"], requiredConcepts: ["softmax-temperature-scaling"], sectionId: "temperature" },
+      { level: "basic", question: "Categorical과 multi-label output에 맞는 함수를 고르세요.", answerChecklist: ["exclusive softmax", "simultaneous sigmoid", "output semantics"], requiredConcepts: ["softmax-categorical-output-boundary"], sectionId: "output-boundary" },
+      { level: "advanced", question: "(1001,1000)의 stable softmax 계산 순서를 제시하세요.", answerChecklist: ["subtract 1001", "(0,-1)", "exp", "normalize"], requiredConcepts: ["softmax-max-shift-invariance"], sectionId: "overview" },
+      { level: "advanced", question: "T→0과 T→∞의 분포 경계를 설명하세요.", answerChecklist: ["argmax concentration", "uniform limit", "T positive"], requiredConcepts: ["softmax-temperature-scaling"], sectionId: "temperature" },
+      { level: "advanced", question: "Softmax가 translation invariant지만 scale invariant는 아닌 이유를 설명하세요.", answerChecklist: ["common additive factor cancels", "multiplication changes gaps", "probability changes"], requiredConcepts: ["softmax-max-shift-invariance", "softmax-temperature-scaling"], sectionId: "temperature" },
+      { level: "advanced", question: "잘못된 output contract의 반례를 설계하세요.", answerChecklist: ["two simultaneous labels", "softmax forces competition", "sigmoid alternative", "loss contract"], requiredConcepts: ["softmax-categorical-output-boundary"], sectionId: "output-boundary" },
+    ],
+    papers: [
+      { title: "Deep Learning", href: "https://www.deeplearningbook.org/contents/mlp.html", problem: "Output unit과 loss의 확률 계약을 정리합니다.", contribution: "Softmax classifier와 numerical stability를 설명합니다.", assumptions: "Categorical mutually-exclusive label을 전제로 합니다.", evidenceScope: "Softmax output unit의 교과서적 정의 범위입니다.", notClaim: "모든 classification이 categorical이라는 뜻은 아닙니다.", sectionId: "paper-softmax" },
+    ],
+  },
+  "ai/backprop-optimization": {
+    coreIdea: "Neural-network backpropagation은 scalar loss에서 시작한 output error를 layer별 local derivative로 분배해 parameter와 input gradient를 계산하며, 실제 parameter update는 optimizer에 넘깁니다.",
+    entryLevel: true,
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "loss-objective", role: "Model error를 reverse pass가 시작할 scalar 하나로 모읍니다." },
+      { id: "backpropagation", role: "Reverse-mode autodiff를 multi-layer network parameter에 적용합니다." },
+      { id: "fused-softmax-cross-entropy-gradient", role: "Categorical output의 logit gradient를 prediction minus target으로 계산합니다." },
+      { id: "batched-linear-backward", role: "Upstream matrix를 weight·bias·input gradient shape로 분배합니다." },
+      { id: "training-intervention", role: "Gradient 계산과 optimizer·regularization 개입 지점을 구분합니다." },
+    ],
+    conceptExplanations: [
+      { id: "loss-objective", sectionId: "loss-function", intuition: "여러 output error를 backward seed 하나로 모읍니다.", workedExample: "정답 확률 0.8의 NLL은 약 0.223입니다.", boundary: "Loss 하나가 task의 모든 가치를 대변하지는 않습니다." },
+      { id: "backpropagation", sectionId: "overview", intuition: "Output error의 책임을 hidden parameter까지 보냅니다.", workedExample: "Loss에서 output weight, activation, hidden weight 순으로 gradient를 전달합니다.", boundary: "Gradient 계산이지 update rule이 아닙니다." },
+      { id: "fused-softmax-cross-entropy-gradient", sectionId: "tensor-backward", intuition: "Softmax와 NLL을 함께 미분해 간단한 error vector를 만듭니다.", workedExample: "(0.7,0.2,0.1)−(1,0,0)=(−0.3,0.2,0.1)입니다.", boundary: "Softmax 단독 Jacobian이 identity라는 뜻이 아닙니다." },
+      { id: "batched-linear-backward", sectionId: "tensor-backward", intuition: "Batch의 input과 error를 각 원래 tensor shape의 책임으로 모읍니다.", workedExample: "dW=XᵀG, db=row-sum(G), dX=GWᵀ입니다.", boundary: "Weight 저장 convention과 loss reduction을 고정해야 합니다." },
+      { id: "training-intervention", sectionId: "overview", intuition: "Gradient 계산 뒤의 update와 다른 training 개입을 섞지 않습니다.", workedExample: "Backprop은 gradient, optimizer는 parameter update를 소유합니다.", boundary: "Regularization 세부 정본은 별도 글이 소유합니다." },
+    ],
+    conceptStages: [
+      { label: "00 scalar seed", relation: "Prediction error를 scalar loss로 모음", concepts: ["loss-objective"] },
+      { label: "01 output error", relation: "Categorical output의 logit 책임 생성", concepts: ["fused-softmax-cross-entropy-gradient"] },
+      { label: "02 tensor backward", relation: "Error를 weight·bias·input shape로 분배", concepts: ["backpropagation", "batched-linear-backward"] },
+      { label: "03 handoff", relation: "Gradient 계산과 update를 분리", concepts: ["training-intervention"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Backpropagation과 optimizer의 책임을 구분하세요.", answerChecklist: ["gradient calculation", "parameter update", "separate stages"], requiredConcepts: ["backpropagation", "training-intervention"], sectionId: "overview" },
+      { level: "basic", question: "Scalar loss가 필요한 이유를 설명하세요.", answerChecklist: ["single seed", "model error", "reverse pass"], requiredConcepts: ["loss-objective"], sectionId: "loss-function" },
+      { level: "basic", question: "정답 확률 0.8의 NLL을 계산하세요.", answerChecklist: ["-log 0.8", "about 0.223", "natural log"], requiredConcepts: ["loss-objective"], sectionId: "loss-function" },
+      { level: "basic", question: "Prediction과 one-hot target에서 p−y를 계산하세요.", answerChecklist: ["subtract componentwise", "target negative", "others positive"], requiredConcepts: ["fused-softmax-cross-entropy-gradient"], sectionId: "tensor-backward" },
+      { level: "basic", question: "dW=XᵀG가 공유 weight의 gradient인 이유를 설명하세요.", answerChecklist: ["input-error product", "batch accumulation", "weight shape"], requiredConcepts: ["batched-linear-backward"], sectionId: "tensor-backward" },
+      { level: "basic", question: "db가 G의 row sum인 이유를 설명하세요.", answerChecklist: ["bias broadcast", "every sample", "sum contributions"], requiredConcepts: ["batched-linear-backward"], sectionId: "tensor-backward" },
+      { level: "advanced", question: "Softmax–CE fused gradient의 전제와 경계를 설명하세요.", answerChecklist: ["categorical", "target distribution", "loss reduction", "not softmax alone"], requiredConcepts: ["fused-softmax-cross-entropy-gradient"], sectionId: "tensor-backward" },
+      { level: "advanced", question: "X·W·G shape에서 dW·db·dX shape를 유도하세요.", answerChecklist: ["X transpose", "row sum", "W transpose", "original shapes"], requiredConcepts: ["batched-linear-backward"], sectionId: "tensor-backward" },
+      { level: "advanced", question: "Batch mean reduction이 gradient에 주는 scale을 설명하세요.", answerChecklist: ["sum versus mean", "1/B", "all gradients", "comparison condition"], requiredConcepts: ["batched-linear-backward"], sectionId: "tensor-backward" },
+      { level: "advanced", question: "Backprop·clipping·AdamW·dropout의 개입 지점을 구분하세요.", answerChecklist: ["gradient calculation", "gradient intervention", "optimizer update", "activation path"], requiredConcepts: ["training-intervention"], sectionId: "overview" },
+    ],
+    papers: [
+      { title: "Learning Representations by Back-propagating Errors", href: "https://www.nature.com/articles/323533a0", problem: "Hidden unit에 직접 target 없이 multi-layer weight를 학습합니다.", contribution: "Output error derivative를 layer 반대 방향으로 전달합니다.", assumptions: "Differentiable unit과 supervised target을 전제로 합니다.", evidenceScope: "1986년 사례와 backprop 계산 설명 범위입니다.", notClaim: "현대 network의 수렴과 일반화를 보장하지 않습니다.", sectionId: "paper-backprop" },
     ],
   },
   "ai/optimizers": {

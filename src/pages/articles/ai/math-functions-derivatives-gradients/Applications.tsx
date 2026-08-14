@@ -9,7 +9,7 @@ const links = [
   {
     title: "Backpropagation",
     detail: "계산 그래프의 local derivative를 뒤에서 앞으로 재사용하는 reverse-mode 계산으로 확장합니다.",
-    href: "/ai/backprop-optimization#chain-rule",
+    href: "/ai/reverse-mode-autodiff#reverse-mode",
   },
   {
     title: "Optimizer",

@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import LossViz from "./viz/LossViz";
 
 export default function LossFunction() {
   return (
@@ -13,7 +12,6 @@ export default function LossFunction() {
           단순한 “분포용 loss”라기보다 방향과 support를 고려해야 하는 divergence다.
         </p>
       </div>
-      <LossViz />
       <div className="not-prose mt-6 rounded-2xl border border-sky-200 bg-sky-50/60 p-5 dark:border-sky-900 dark:bg-sky-950/20">
         <p className="text-sm font-semibold">Cross-entropy와 KL의 정의는 기준 글에 모았습니다</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">

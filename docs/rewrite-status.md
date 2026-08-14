@@ -1145,3 +1145,12 @@
 - Hidden-state unrolling·shifted language objective·backward credit와 detach 경계·LSTM cell lane·GRU reset/update 보간을 도형·화살표·bar·timeline으로 표현하는 새 responsive Viz 5개를 만들었다. 모든 Viz는 `ArrowLeft`·`ArrowRight` 장면 이동과 `Space` 자동 재생을 실제로 지원한다.
 - 다섯 글의 수식 13개를 전부 explicit operation annotation으로 이관했다. 특히 GRU update·gradient clipping·Jacobian product·forget retention·parameter/state byte 식에서 곱·합·나눗셈을 하는 이유를 KaTeX 식 안의 다단 underbrace로 직접 설명한다.
 - 390px·1440px 실제 브라우저 10회에서 document/Viz/KaTeX overflow, clipped descendant, KaTeX error, console warning/error, gradient·shadow·굵은 선이 모두 0임을 확인했다. 전역 formula backlog는 992개/678 legacy files로 줄었다.
+
+## 2026-08-15 · Backpropagation learning CRUD split
+
+- 기존 `ai/backprop-optimization` 한 글에서 computational graph·autodiff tape·VJP, softmax normalization·temperature, neural-network tensor backward를 각각 `ai/reverse-mode-autodiff`, `ai/softmax`, `ai/backprop-optimization` 세 수업으로 분리했다. Cross-entropy·optimizer·regularization 중복 section은 실제 public closure에서 제거하고 기존 정본 글로 연결했다.
+- 분리 중 `autodiff-save-recompute-boundary`, `softmax-max-shift-invariance`, `softmax-temperature-scaling`, `softmax-categorical-output-boundary` 네 canonical concept가 독립 학습 단위임을 확인해 graph에 추가하고 9개 신규 관계를 연결했다. 기존 computational graph·tape·reverse mode·VJP·fan-out owner도 실제 설명 route로 이동했다.
+- 공개 route와 exact learning contract는 417개에서 419개, graph는 2,343 concepts·3,477 relations로 늘었고 invariant failure·stage warning은 0이다. 세 route 모두 topology `keep`이며 전체 split-review는 83개에서 82개로 줄었다.
+- Value node·operation arrow·save/recompute memory 경계, logits→shared denominator→probability bars, scalar loss→p−y→dW/db/dX를 보여 주는 새 graphical Viz 3개를 만들었다. 모든 Viz는 `ArrowLeft`·`ArrowRight` 장면 이동과 `Space` 자동 재생을 지원한다.
+- 실제 public closure의 수식 6개를 모두 explicit operation annotation으로 이관했다. 긴 underbrace를 의미 단위별 KaTeX 행으로 분해해 390px에서 모든 main·operation 수식이 각각 316/316·290/290에 맞고, 전역 formula backlog는 984개/671 legacy files로 줄었다.
+- 390px·1440px 실제 브라우저 6회에서 document·Viz·KaTeX overflow, clipped descendant, KaTeX error, console warning/error, gradient·shadow·굵은 선이 모두 0임을 확인했고 production build를 통과했다.

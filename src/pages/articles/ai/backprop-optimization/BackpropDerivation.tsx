@@ -1,10 +1,9 @@
 import { Link } from "react-router-dom";
 import ExplainedFormula from "@/components/ui/explained-formula";
-import BackpropShapeViz from "./viz/BackpropShapeViz";
 
 export default function BackpropDerivation() {
   return (
-    <section id="backprop-derivation" className="mb-16 scroll-mt-20">
+    <section id="tensor-backward" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Fused output gradient를 linear layer까지 전파한다</h2>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
@@ -21,6 +20,12 @@ export default function BackpropDerivation() {
         question="softmax와 cross-entropy를 연달아 미분하면 logit별 gradient가 왜 prediction−label이 될까?"
         idea={<>softmax Jacobian과 negative log-likelihood derivative를 chain rule로 합치면 공통 항이 소거됩니다. Target class에는 확률을 올리는 방향, 나머지에는 내리는 방향의 gradient가 남습니다.</>}
         formula={String.raw`\begin{aligned}\hat y&=\operatorname{softmax}(z)\\L&=-\sum_c y_c\log\hat y_c\\\frac{\partial L}{\partial z}&=\hat y-y\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}\hat y&=\underbrace{\operatorname{softmax}(z)}_{\substack{\text{logit을 공동}\text{class 확률로 변환}}}\\[5pt]L&=\underbrace{-\sum_c y_c\log\hat y_c}_{\substack{\text{정답 class에 준 확률을}\text{scalar penalty로 모음}}}\\[5pt]\frac{\partial L}{\partial z}&=\underbrace{\hat y-y}_{\substack{\text{예측 몫에서 목표 몫을 빼}\text{logit별 수정 책임 생성}}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`\operatorname{softmax}(z)`, annotation: ["unconstrained score를", "합이 1인 class probability로 변환"] },
+          { expression: String.raw`-\sum_cy_c\log\hat y_c`, annotation: ["정답에 배정한 작은 확률을 크게 벌하고", "class contribution을 scalar loss로 합침"] },
+          { expression: String.raw`\hat y-y`, annotation: ["과대 예측은 양수, 과소 예측은 음수로", "logit 수정 방향을 표시"] },
+        ]}
         terms={[
           { symbol: "z", name: "logits", description: "softmax 전의 unconstrained class score입니다." },
           { symbol: "\\hat y", name: "predicted distribution", description: "softmax로 얻은 class probability입니다." },
@@ -44,6 +49,12 @@ export default function BackpropDerivation() {
         question="logit gradient G를 weight·bias·input gradient로 어떻게 나눌까?"
         idea={<>forward Z=XW+1bᵀ의 differential dZ=dXW+XdW+1dbᵀ에서 각 variable의 coefficient를 모으면 shape가 맞는 세 gradient가 나옵니다.</>}
         formula={String.raw`\begin{aligned}G&=\frac{\partial L}{\partial Z}\\\frac{\partial L}{\partial W}&=X^\top G\\\frac{\partial L}{\partial b}&=\sum_{r=1}^{B}G_{r,:}\\\frac{\partial L}{\partial X}&=GW^\top\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}G&=\underbrace{\frac{\partial L}{\partial Z}}_{\substack{\text{sample별}\text{output 책임}}}\\[7pt]\frac{\partial L}{\partial W}&=\underbrace{X^\top G}_{\substack{\text{input-error를}\text{batch 합산}}}\\[7pt]\frac{\partial L}{\partial b}&=\underbrace{\sum_{r=1}^{B}G_{r,:}}_{\substack{\text{broadcast bias의}\text{row 책임 합산}}}\\[7pt]\frac{\partial L}{\partial X}&=\underbrace{GW^\top}_{\substack{\text{앞 layer 축으로}\text{책임을 되돌림}}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`X^\top G`, annotation: ["각 input과 output error를 짝지어", "공유 weight의 batch gradient를 만듦"] },
+          { expression: String.raw`\sum_rG_{r,:}`, annotation: ["broadcast된 bias가 받은 sample별 기여를", "bias shape 하나로 합침"] },
+          { expression: String.raw`GW^\top`, annotation: ["output 축의 책임을 weight transpose에 곱해", "앞 layer input 축으로 전달"] },
+        ]}
         terms={[
           { symbol: "G", name: "upstream matrix", description: "각 sample·output feature에 대한 loss derivative입니다." },
           { symbol: "X^\\top G", name: "weight gradient", description: "batch sample의 input–error outer product를 합친 결과입니다." },
@@ -54,7 +65,6 @@ export default function BackpropDerivation() {
         interpretation="transpose 위치는 암기 항목이 아니라 결과 shape가 원래 variable shape와 같아야 한다는 조건에서 정해집니다."
       />
 
-      <BackpropShapeViz />
     </section>
   );
 }

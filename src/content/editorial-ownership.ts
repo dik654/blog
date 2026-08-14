@@ -322,7 +322,7 @@ export const EDITORIAL_BOUNDARIES = {
       },
       {
         label: "Logit·softmax normalization과 class coupling",
-        href: "/ai/backprop-optimization#softmax",
+        href: "/ai/softmax#overview",
       },
       {
         label: "Prompt contract·few-shot·model-version regression",
@@ -3359,7 +3359,7 @@ export const EDITORIAL_BOUNDARIES = {
       },
       {
         label: "Softmax 계산과 gradient",
-        href: "/ai/backprop-optimization#softmax",
+        href: "/ai/softmax#overview",
       },
       {
         label: "Kimi K3의 LatentMoE 확장",
@@ -5789,7 +5789,7 @@ export const EDITORIAL_BOUNDARIES = {
       "Rc·RefCell·Weak graph 소유권과 중첩·panic-safe recording guard",
     ],
     reuses: [
-      { label: "Chain rule·reverse-mode autodiff 수학", href: "/ai/backprop-optimization#chain-rule" },
+      { label: "Chain rule·reverse-mode autodiff 수학", href: "/ai/reverse-mode-autodiff#reverse-mode" },
       { label: "함수·미분·gradient 기초", href: "/ai/math-functions-derivatives-gradients" },
       { label: "DeZero Layer·optimizer 확장", href: "/ai/dezero-nn" },
     ],
@@ -7369,6 +7369,56 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "primary-source", rule: "KTO utility와 결과는 원 논문의 reference·KL estimate·model·dataset·class imbalance 조건에 귀속한다." },
       { kind: "project-measurement", rule: "노출·무응답·사용자별 click propensity와 class balance를 기록하고 pairwise human audit과 behavior regression을 따로 측정한다." },
       { kind: "project-claim", rule: "Pair가 필요 없다는 장점을 binary log의 무편향·clean label·보편적 우월성으로 확대하지 않는다." },
+    ],
+  },
+  "reverse-mode-autodiff": {
+    title: "Reverse-mode autodiff 글이 소유하는 범위",
+    owns: [
+      "Computational graph·autodiff tape·saved tensor의 실행 의미",
+      "Scalar seed에서 VJP와 fan-out sum으로 input 책임을 누적하는 reverse mode",
+      "Activation 저장과 checkpoint recomputation의 compute–memory 경계",
+    ],
+    reuses: [
+      { label: "미분·chain rule·Jacobian 수학", href: "/ai/math-functions-derivatives-gradients" },
+      { label: "신경망 parameter에 적용한 backprop", href: "/ai/backprop-optimization" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Autodiff 비용·동작 claim은 primitive derivative와 추적 가능한 program이라는 survey 전제로 제한한다." },
+      { kind: "standard", rule: "Tape 저장과 recompute를 같은 memory·compute·random-state 조건에서 비교한다." },
+    ],
+  },
+  "softmax": {
+    title: "Softmax 글이 소유하는 범위",
+    owns: [
+      "Logit을 categorical 공동 probability로 바꾸는 exponential normalization",
+      "Maximum-logit shift invariance와 temperature scaling",
+      "서로 배타적인 categorical output과 multi-label sigmoid의 의미 경계",
+    ],
+    reuses: [
+      { label: "Cross-entropy·NLL·likelihood", href: "/ai/cross-entropy" },
+      { label: "Fused softmax–CE gradient", href: "/ai/backprop-optimization#tensor-backward" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "Softmax는 mutually-exclusive categorical output 계약 안에서만 공동 class probability로 해석한다." },
+      { kind: "project-measurement", rule: "Temperature 효과는 같은 logits·dtype·calibration set에서 probability와 downstream metric을 함께 기록한다." },
+    ],
+  },
+  "backprop-optimization": {
+    title: "신경망 backprop 글이 소유하는 범위",
+    owns: [
+      "Scalar loss에서 neural parameter까지 error derivative를 보내는 application boundary",
+      "Fused softmax–cross-entropy logit gradient와 batched linear backward",
+      "Gradient 계산과 optimizer·regularization intervention의 책임 분리",
+    ],
+    reuses: [
+      { label: "Reverse-mode autodiff·VJP", href: "/ai/reverse-mode-autodiff" },
+      { label: "Softmax normalization", href: "/ai/softmax" },
+      { label: "Optimizer update", href: "/ai/optimizers" },
+      { label: "Regularization 실무", href: "/ai/regularization-practice" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Backprop 역사·효율 claim은 원 논문의 differentiable supervised network와 사례 범위로 제한한다." },
+      { kind: "standard", rule: "Gradient 계산, gradient intervention, optimizer update를 서로 다른 stage로 기록한다." },
     ],
   },
   "rnn": {

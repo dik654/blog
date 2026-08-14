@@ -854,18 +854,28 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "Categorical output에서 raw logits·target·reduction의 실제 tensor contract",
     },
   ],
+  "ai/reverse-mode-autodiff": [
+    {
+      kind: "핵심 연구",
+      label: "Automatic Differentiation in Machine Learning: a Survey",
+      href: "https://jmlr.org/papers/v18/17-468.html",
+      note: "finite difference·symbolic differentiation·forward/reverse-mode autodiff의 계산 차이를 정리한 survey",
+    },
+  ],
+  "ai/softmax": [
+    {
+      kind: "보충 읽기",
+      label: "Deep Learning · Output Units",
+      href: "https://www.deeplearningbook.org/contents/mlp.html",
+      note: "softmax classifier·categorical likelihood·수치 안정성의 정본 설명",
+    },
+  ],
   "ai/backprop-optimization": [
     {
       kind: "핵심 논문",
       label: "Learning Representations by Back-propagating Errors",
       href: "https://www.nature.com/articles/323533a0",
       note: "chain rule로 hidden weight의 error contribution을 계산하는 원문",
-    },
-    {
-      kind: "핵심 연구",
-      label: "Automatic Differentiation in Machine Learning: a Survey",
-      href: "https://jmlr.org/papers/v18/17-468.html",
-      note: "finite difference·symbolic differentiation·forward/reverse-mode autodiff의 계산 차이를 정리한 survey",
     },
   ],
   "ai/activation-functions": [

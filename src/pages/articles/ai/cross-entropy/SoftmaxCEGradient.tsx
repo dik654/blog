@@ -18,7 +18,7 @@ export default function SoftmaxCEGradient() {
         <p>
           이 절은 cross-entropy 관점에서 그 결과를 사용한다. 계산 graph를 거꾸로
           따라가며 이 식을 유도하는 정본 설명은
-          {" "}<Link to="/ai/backprop-optimization#backprop-derivation">
+          {" "}<Link to="/ai/backprop-optimization#tensor-backward">
             역전파 아티클의 softmax–cross-entropy 미분
           </Link>
           에서 이어서 볼 수 있다.

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import TrainingStepContractViz from "./viz/TrainingStepContractViz";
+import BackpropTensorViz from "./viz/BackpropTensorViz";
 
 export default function Overview() {
   return (
@@ -11,47 +11,33 @@ export default function Overview() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="text-lg leading-8">
           신경망 학습에서는 하나의 예측 오차가 수많은 parameter 각각에 얼마나
-          민감한지 계산해야 한다. Parameter를 하나씩 조금 바꾸고 loss를 다시
+          민감한지 계산해야 합니다. Parameter를 하나씩 조금 바꾸고 loss를 다시
           측정하면 비용이 parameter 수에 비례하므로, 계산 graph를 출력에서 입력
           방향으로 한 번 거슬러 올라가며 중간 derivative를 재사용한다. 이 계산이
           <strong> backpropagation</strong>이며, 더 넓게는 scalar output에 대한
-          reverse-mode automatic differentiation의 neural-network 적용이다.
+          reverse-mode automatic differentiation의 neural-network 적용입니다.
         </p>
         <p>
-          Backpropagation은 gradient를 계산하지만 parameter를 직접 바꾸지 않는다.
+          Backpropagation은 gradient를 계산하지만 parameter를 직접 바꾸지 않습니다.
           계산된 gradient를 momentum이나 Adam state와 결합해 update를 만드는 쪽은
-          optimizer의 책임이다. 이 글은 이 경계를 먼저 고정한 뒤 forward tape,
-          chain rule과 VJP, softmax-cross-entropy의 fused gradient, matrix
-          backward를 차례로 연결한다.
+          optimizer의 책임입니다. 이 글은 scalar loss가 만든 error를
+          softmax–cross-entropy output과 linear tensor에 어떻게 나누는지만 소유합니다.
         </p>
         <p>
           Derivative·gradient·chain rule 자체가 아직 낯설다면 이 글에서 기호를 추측하지
           말고 먼저 <Link to="/ai/math-functions-derivatives-gradients">함수·미분·gradient
           기초 글</Link>을 읽는 편이 빠릅니다. 그 글은 scalar chain rule과 Jacobian까지
-          숫자로 계산하고, 여기서는 그 정본을 실제 autodiff 실행으로 확장합니다.
-        </p>
-      </div>
-
-      <TrainingStepContractViz />
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3>Finite difference·symbolic differentiation·autodiff는 다르다</h3>
-        <p id="paper-autodiff" className="scroll-mt-20">
-          Finite difference는 parameter를 조금 바꾼 뒤 함숫값 차이로 derivative를
-          근사하므로 parameter 수만큼 forward가 필요하고 step-size error가 생긴다.
-          Symbolic differentiation은 대수식을 직접 변형하다 expression이 커질 수
-          있다. Autodiff는 실행한 primitive operation의 정확한 local derivative를
-          chain rule로 조합한다. Backpropagation은 그 reverse accumulation을 neural
-          network에 적용한 이름이다.
+          숫자로 계산합니다.
         </p>
         <p>
-          이 관계는
-          <a href="https://jmlr.org/papers/v18/17-468.html" target="_blank" rel="noreferrer"> automatic differentiation survey</a>에서
-          더 엄밀하게 확인할 수 있다. 역사적으로 neural network의 hidden
-          representation 학습을 널리 알린 사례는
-          <a href="https://doi.org/10.1038/323533a0" target="_blank" rel="noreferrer"> Rumelhart·Hinton·Williams의 1986년 논문</a>이다.
+          Computational graph·tape·VJP의 실행 원리는
+          <Link to="/ai/reverse-mode-autodiff"> reverse-mode autodiff 글</Link>,
+          categorical normalization은 <Link to="/ai/softmax">softmax 글</Link>에서
+          하나씩 익힌 뒤 이 글에서 조합할 수 있습니다.
         </p>
       </div>
+
+      <BackpropTensorViz />
 
       <div className="not-prose mt-8 rounded-lg border border-border/70 bg-muted/20 px-4 py-3 font-mono text-sm leading-6 text-muted-foreground">
         <strong className="text-foreground">PyTorch contract:</strong>{" "}
