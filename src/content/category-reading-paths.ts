@@ -68,6 +68,8 @@ export const CATEGORY_READING_PATHS: Readonly<
       "math-gradients-jacobians",
       "math-exponents-logarithms",
       "math-probability-expectation-variance",
+      "math-random-variables-expectation",
+      "math-variance-sampling",
       "math-optimization-objectives",
       "math-optimization-convexity",
       "math-gradient-descent-convergence",

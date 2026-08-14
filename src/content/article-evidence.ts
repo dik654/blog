@@ -797,16 +797,43 @@ export const ARTICLE_EVIDENCE: Readonly<
   "ai/math-probability-expectation-variance": [
     {
       kind: "공개 강의",
-      label:
-        "MIT OpenCourseWare 6.041SC — Probability Models and Discrete Random Variables",
-      href: "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/",
-      note: "Outcome·random variable·expectation·variance와 반복 실험을 문제와 함께 확장하는 공개 강의",
+      label: "MIT 6.041SC — Probability Models",
+      href: "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/#probability-model",
+      note: "Experiment·sample space·outcome·event·probability mass를 하나의 discrete model로 확장",
+    },
+    {
+      kind: "공개 강의",
+      label: "MIT 6.041SC — Conditioning and Independence",
+      href: "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/#conditioning",
+      note: "Conditioning·multiplication rule·independence를 서로 다른 질문으로 분리",
+    },
+  ],
+  "ai/math-random-variables-expectation": [
+    {
+      kind: "공개 강의",
+      label: "MIT 6.041SC — Discrete Random Variables",
+      href: "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/#random-variables",
+      note: "Outcome을 scalar value와 induced distribution으로 보내는 random-variable 관점을 확장",
+    },
+    {
+      kind: "공개 강의",
+      label: "MIT 6.041SC — Expectation",
+      href: "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/#expectation",
+      note: "Probability-weighted center·linearity와 nonlinear transform 경계를 확장",
+    },
+  ],
+  "ai/math-variance-sampling": [
+    {
+      kind: "공개 강의",
+      label: "MIT 6.041SC — Variance and Laws of Large Numbers",
+      href: "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/#variance-and-lln",
+      note: "Population spread·sample estimator·sample-average concentration의 조건을 확장",
     },
     {
       kind: "핵심 논문",
-      label: "A Stochastic Approximation Method",
+      label: "Robbins–Monro — A Stochastic Approximation Method",
       href: "https://doi.org/10.1214/aoms/1177729586",
-      note: "Noise가 있는 관측으로 expectation-defined target에 접근하는 stochastic approximation의 출발점",
+      note: "Noise observation으로 expectation-defined target에 접근하는 stochastic approximation의 원형",
     },
   ],
   "ai/math-optimization-objectives": [

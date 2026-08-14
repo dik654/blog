@@ -2327,7 +2327,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     definition:
       "Sample space에서 관심 있는 outcome을 하나 이상 묶은 부분집합이며, event의 probability는 그 안에 포함된 outcome mass의 합입니다.",
     canonicalHref:
-      "/ai/math-probability-expectation-variance#conditional-probability",
+      "/ai/math-probability-expectation-variance#outcomes",
   },
   "conditional-probability": {
     id: "conditional-probability",
@@ -2346,7 +2346,16 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     definition:
       "여러 변수가 함께 나타날 joint probability를 정해진 순서의 conditional probability product로 정확히 분해하는 항등식입니다.",
     canonicalHref:
-      "/ai/math-probability-expectation-variance#conditional-probability",
+      "/ai/math-probability-expectation-variance#chain-rule",
+  },
+  "probability-independence": {
+    id: "probability-independence",
+    domain: "statistics",
+    label: "Probabilistic independence",
+    definition:
+      "한 event를 알게 되어도 다른 event의 probability가 바뀌지 않아 joint mass가 marginal mass의 곱으로 분해되는 관계입니다.",
+    canonicalHref:
+      "/ai/math-probability-expectation-variance#independence-boundary",
   },
   "random-variable": {
     id: "random-variable",
@@ -2354,7 +2363,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Random variable",
     definition:
       "Sample space의 outcome을 계산 가능한 실수값으로 보내는 함수이며, 그 값의 불확실성은 induced distribution으로 표현합니다.",
-    canonicalHref: "/ai/math-probability-expectation-variance#random-variable",
+    canonicalHref: "/ai/math-random-variables-expectation#overview",
   },
   expectation: {
     id: "expectation",
@@ -2362,7 +2371,17 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Expectation",
     definition:
       "Random variable의 가능한 값을 probability로 가중해 더한 distribution의 중심이며, 한 번의 관측값을 예언하는 값은 아닙니다.",
-    canonicalHref: "/ai/math-probability-expectation-variance#expectation",
+    canonicalHref: "/ai/math-random-variables-expectation#expectation",
+  },
+  "expectation-linearity": {
+    id: "expectation-linearity",
+    kind: "theorem",
+    domain: "statistics",
+    label: "Linearity of expectation",
+    definition:
+      "Random variables의 dependence와 무관하게 finite expectation의 합과 fixed scalar를 expectation 밖으로 분배할 수 있는 항등식입니다.",
+    canonicalHref:
+      "/ai/math-random-variables-expectation#transform-boundary",
   },
   variance: {
     id: "variance",
@@ -2370,7 +2389,15 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Variance · standard deviation",
     definition:
       "Random variable이 expectation에서 떨어진 편차의 제곱을 평균내 distribution의 흩어짐을 측정합니다.",
-    canonicalHref: "/ai/math-probability-expectation-variance#variance",
+    canonicalHref: "/ai/math-variance-sampling#variance",
+  },
+  "standard-deviation": {
+    id: "standard-deviation",
+    domain: "statistics",
+    label: "Standard deviation",
+    definition:
+      "Variance의 square root를 취해 random variable과 같은 measurement unit으로 되돌린 spread scale입니다.",
+    canonicalHref: "/ai/math-variance-sampling#variance",
   },
   "sample-mean": {
     id: "sample-mean",
@@ -2378,7 +2405,15 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Sample mean",
     definition:
       "관측한 sample들의 산술평균으로 population expectation을 추정하며, 독립·동일분포 조건에서 variance가 sample 수에 반비례합니다.",
-    canonicalHref: "/ai/math-probability-expectation-variance#sample-mean",
+    canonicalHref: "/ai/math-variance-sampling#sample-estimation",
+  },
+  "sample-variance-estimator": {
+    id: "sample-variance-estimator",
+    domain: "statistics",
+    label: "Sample variance estimator",
+    definition:
+      "같은 sample에서 추정한 mean 주변 square-deviation 합을 n−1로 나눠 i.i.d. population variance를 unbiased하게 추정하는 통계량입니다.",
+    canonicalHref: "/ai/math-variance-sampling#sample-estimation",
   },
   "law-of-large-numbers": {
     id: "law-of-large-numbers",
@@ -2387,7 +2422,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Law of large numbers",
     definition:
       "적절한 조건에서 독립 반복 sample의 평균이 sample 수가 커질수록 population expectation에 가까워진다는 정리입니다.",
-    canonicalHref: "/ai/math-probability-expectation-variance#sample-mean",
+    canonicalHref: "/ai/math-variance-sampling#law-of-large-numbers",
   },
   "stochastic-gradient-estimator": {
     id: "stochastic-gradient-estimator",
@@ -2395,7 +2430,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Stochastic gradient estimator",
     definition:
       "무작위로 뽑은 sample 또는 mini-batch의 loss gradient를 평균해 전체 empirical gradient를 추정하는 random vector입니다.",
-    canonicalHref: "/ai/math-probability-expectation-variance#gradient-noise",
+    canonicalHref: "/ai/math-variance-sampling#gradient-estimator",
   },
   "optimization-objective": {
     id: "optimization-objective",
@@ -20142,6 +20177,20 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
       "조건부확률 정의를 곱셈 형태로 바꾸고 순서대로 반복해 joint probability를 분해합니다.",
   },
   {
+    from: "conditional-probability",
+    to: "probability-independence",
+    relation: "constrains",
+    reason:
+      "Conditioning 뒤 probability가 원래 marginal과 같은지로 independence를 판정합니다.",
+  },
+  {
+    from: "probability-event",
+    to: "probability-independence",
+    relation: "prerequisite",
+    reason:
+      "두 event의 intersection과 marginal mass를 비교해야 independence를 정의할 수 있습니다.",
+  },
+  {
     from: "sample-space",
     to: "random-variable",
     relation: "prerequisite",
@@ -20163,9 +20212,30 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   },
   {
     from: "expectation",
+    to: "expectation-linearity",
+    relation: "produces",
+    reason:
+      "Probability-weighted sum의 distributivity에서 expectation linearity를 얻습니다.",
+  },
+  {
+    from: "expectation-linearity",
+    to: "stochastic-gradient-estimator",
+    relation: "prerequisite",
+    reason:
+      "Mini-batch average의 expectation을 sample별 expected gradient로 분배합니다.",
+  },
+  {
+    from: "expectation",
     to: "variance",
     relation: "prerequisite",
     reason: "Expectation을 중심으로 squared deviation을 평균냅니다.",
+  },
+  {
+    from: "variance",
+    to: "standard-deviation",
+    relation: "produces",
+    reason:
+      "Variance에 square root를 취해 원래 random-variable unit의 spread scale을 만듭니다.",
   },
   {
     from: "random-variable",
@@ -20184,6 +20254,27 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     to: "sample-mean",
     relation: "constrains",
     reason: "독립 평균의 variance와 standard error를 정합니다.",
+  },
+  {
+    from: "sample-mean",
+    to: "sample-variance-estimator",
+    relation: "prerequisite",
+    reason:
+      "Unknown population mean 대신 같은 sample의 mean을 deviation 기준으로 사용합니다.",
+  },
+  {
+    from: "variance",
+    to: "sample-variance-estimator",
+    relation: "evaluates",
+    reason:
+      "Repeated i.i.d. sampling에서 estimator가 복원하려는 population spread입니다.",
+  },
+  {
+    from: "sample-variance-estimator",
+    to: "law-of-large-numbers",
+    relation: "contrasts",
+    reason:
+      "Finite sample spread estimation과 sample mean의 asymptotic concentration을 구분합니다.",
   },
   {
     from: "sample-mean",

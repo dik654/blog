@@ -28,7 +28,7 @@ export default function Overview() {
         </p>
         <p>
           이 글은 <Link to="/ai/deep-learning-overview#learning-loop">input feature와 target, train·validation·test</Link>,{" "}
-          <Link to="/ai/math-probability-expectation-variance#expectation">평균과 분산</Link>을
+          <Link to="/ai/math-variance-sampling#variance">평균과 분산</Link>을
           재사용합니다. 먼저 예측 행의 시간 경계를 고정한 뒤 수치형 변환,
           category 인코딩, interaction과 집계로 확장하고, 마지막에 selection과
           training-serving parity를 확인합니다.

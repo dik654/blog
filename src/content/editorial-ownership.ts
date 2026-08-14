@@ -131,8 +131,8 @@ export const EDITORIAL_BOUNDARIES = {
         href: "/ai/math-functions-derivatives-gradients",
       },
       {
-        label: "확률변수·Gaussian variance",
-        href: "/ai/math-probability-expectation-variance",
+        label: "Variance·standard deviation",
+        href: "/ai/math-variance-sampling",
       },
       { label: "지수함수", href: "/ai/math-exponents-logarithms" },
       {
@@ -1163,9 +1163,10 @@ export const EDITORIAL_BOUNDARIES = {
     ],
     reuses: [
       {
-        label: "확률분포·조건부확률·기대값",
+        label: "확률분포·조건부확률",
         href: "/ai/math-probability-expectation-variance",
       },
+      { label: "Random variable·expectation", href: "/ai/math-random-variables-expectation" },
       {
         label: "Logarithm·곱의 합 변환",
         href: "/ai/math-exponents-logarithms",
@@ -1203,9 +1204,11 @@ export const EDITORIAL_BOUNDARIES = {
         href: "/ai/supervised-learning-loop",
       },
       {
-        label: "Expectation·variance·conditional probability",
+        label: "Conditional probability",
         href: "/ai/math-probability-expectation-variance",
       },
+      { label: "Expectation", href: "/ai/math-random-variables-expectation" },
+      { label: "Variance", href: "/ai/math-variance-sampling" },
       { label: "EDA의 분포·결측·가설", href: "/ai/eda-workflow" },
       {
         label: "Tabular augmentation의 split 경계",
@@ -1486,9 +1489,10 @@ export const EDITORIAL_BOUNDARIES = {
         href: "/ai/train-validation-test",
       },
       {
-        label: "Expectation·variance",
-        href: "/ai/math-probability-expectation-variance",
+        label: "Expectation",
+        href: "/ai/math-random-variables-expectation",
       },
+      { label: "Variance", href: "/ai/math-variance-sampling" },
       { label: "SGD·Adam optimizer state", href: "/ai/optimizers" },
       { label: "Learning-rate scheduler와 plateau", href: "/ai/lr-scheduling" },
       { label: "Mixup·CutMix target", href: "/ai/data-augmentation" },
@@ -1606,7 +1610,7 @@ export const EDITORIAL_BOUNDARIES = {
       },
       {
         label: "Expectation과 paired average",
-        href: "/ai/math-probability-expectation-variance",
+        href: "/ai/math-random-variables-expectation",
       },
     ],
     evidence: [
@@ -2180,9 +2184,10 @@ export const EDITORIAL_BOUNDARIES = {
         href: "/ai/train-validation-test",
       },
       {
-        label: "Expectation·variance",
-        href: "/ai/math-probability-expectation-variance",
+        label: "Expectation",
+        href: "/ai/math-random-variables-expectation",
       },
+      { label: "Variance", href: "/ai/math-variance-sampling" },
       {
         label: "Competition evaluation contract와 selection bias",
         href: "/ai/competition-workflow",
@@ -2227,9 +2232,10 @@ export const EDITORIAL_BOUNDARIES = {
         href: "/ai/train-validation-test",
       },
       {
-        label: "확률분포·기댓값",
+        label: "확률분포",
         href: "/ai/math-probability-expectation-variance",
       },
+      { label: "Random variable·expectation", href: "/ai/math-random-variables-expectation" },
       {
         label: "지수·로그와 orders of magnitude",
         href: "/ai/math-exponents-logarithms",
@@ -2276,7 +2282,7 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [
       {
         label: "Expectation·variance·covariance",
-        href: "/ai/math-probability-expectation-variance",
+        href: "/ai/math-variance-sampling",
       },
       {
         label: "Train·validation·test의 역할",
@@ -2331,9 +2337,10 @@ export const EDITORIAL_BOUNDARIES = {
     ],
     reuses: [
       {
-        label: "기댓값·조건부확률",
+        label: "조건부확률",
         href: "/ai/math-probability-expectation-variance",
       },
+      { label: "기댓값", href: "/ai/math-random-variables-expectation" },
       {
         label: "Train·validation·test의 역할",
         href: "/ai/train-validation-test",
@@ -2392,9 +2399,11 @@ export const EDITORIAL_BOUNDARIES = {
         href: "/ai/training-pipeline",
       },
       {
-        label: "확률분포·기댓값·분산",
+        label: "확률분포",
         href: "/ai/math-probability-expectation-variance",
       },
+      { label: "기댓값", href: "/ai/math-random-variables-expectation" },
+      { label: "분산", href: "/ai/math-variance-sampling" },
       {
         label: "Evaluation metric reducer·guardrail",
         href: "/ai/evaluation-metrics",
@@ -2510,9 +2519,11 @@ export const EDITORIAL_BOUNDARIES = {
         href: "/ai/math-exponents-logarithms",
       },
       {
-        label: "확률분포·기댓값·표본평균",
+        label: "확률분포",
         href: "/ai/math-probability-expectation-variance",
       },
+      { label: "기댓값", href: "/ai/math-random-variables-expectation" },
+      { label: "표본평균", href: "/ai/math-variance-sampling" },
       {
         label: "Chain rule·backpropagation",
         href: "/ai/backprop-optimization",
@@ -2611,9 +2622,11 @@ export const EDITORIAL_BOUNDARIES = {
       },
       { label: "Deterministic autoencoder", href: "/ai/autoencoder" },
       {
-        label: "Probability·expectation·variance",
+        label: "Probability",
         href: "/ai/math-probability-expectation-variance",
       },
+      { label: "Expectation", href: "/ai/math-random-variables-expectation" },
+      { label: "Variance", href: "/ai/math-variance-sampling" },
       { label: "Likelihood·entropy·KL divergence", href: "/ai/cross-entropy" },
       { label: "Diffusion과 latent diffusion", href: "/ai/diffusion-models" },
     ],
@@ -2642,9 +2655,10 @@ export const EDITORIAL_BOUNDARIES = {
         href: "/ai/generative-theory",
       },
       {
-        label: "Probability·expectation",
+        label: "Probability",
         href: "/ai/math-probability-expectation-variance",
       },
+      { label: "Expectation", href: "/ai/math-random-variables-expectation" },
       {
         label: "Chain rule·VJP·backpropagation",
         href: "/ai/backprop-optimization",
@@ -2677,9 +2691,11 @@ export const EDITORIAL_BOUNDARIES = {
         href: "/ai/generative-theory",
       },
       {
-        label: "Probability·expectation·variance",
+        label: "Probability",
         href: "/ai/math-probability-expectation-variance",
       },
+      { label: "Expectation", href: "/ai/math-random-variables-expectation" },
+      { label: "Variance", href: "/ai/math-variance-sampling" },
       { label: "VAE·latent representation", href: "/ai/vae" },
       { label: "CNN·receptive field", href: "/ai/cnn" },
       { label: "Attention·cross-attention", href: "/ai/attention-theory" },
@@ -3550,9 +3566,10 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [
       { label: "Autoregressive decoding", href: "/ai/seq2seq#decoder" },
       {
-        label: "확률분포·조건부확률·기댓값",
+        label: "확률분포·조건부확률",
         href: "/ai/math-probability-expectation-variance",
       },
+      { label: "기댓값", href: "/ai/math-random-variables-expectation" },
       {
         label: "KV cache와 serving capacity",
         href: "/ai/hybrid-attention-serving#kv-shape",
@@ -5004,9 +5021,10 @@ export const EDITORIAL_BOUNDARIES = {
         href: "/ai/time-features",
       },
       {
-        label: "확률변수·평균·분산",
-        href: "/ai/math-probability-expectation-variance",
+        label: "확률변수·평균",
+        href: "/ai/math-random-variables-expectation",
       },
+      { label: "분산·표본평균", href: "/ai/math-variance-sampling" },
       { label: "LSTM forecasting pipeline", href: "/ai/lstm-timeseries" },
     ],
     evidence: [
@@ -5030,9 +5048,11 @@ export const EDITORIAL_BOUNDARIES = {
     ],
     reuses: [
       {
-        label: "확률분포·random variable·평균·분산",
+        label: "확률분포",
         href: "/ai/math-probability-expectation-variance",
       },
+      { label: "Random variable·평균", href: "/ai/math-random-variables-expectation" },
+      { label: "분산", href: "/ai/math-variance-sampling" },
       {
         label: "Ranking·threshold·calibration 경계",
         href: "/ai/imbalanced-data#overview",
@@ -5845,7 +5865,8 @@ export const EDITORIAL_BOUNDARIES = {
       "Fold-local transform과 가설·effect·uncertainty·holdout evidence ledger",
     ],
     reuses: [
-      { label: "확률변수·평균·분산", href: "/ai/math-probability-expectation-variance" },
+      { label: "확률변수·평균", href: "/ai/math-random-variables-expectation" },
+      { label: "분산·표본평균", href: "/ai/math-variance-sampling" },
       { label: "Train·validation·test 기초", href: "/ai/train-validation-test" },
       { label: "Feature engineering 적용", href: "/ai/feature-engineering" },
       { label: "Time cutoff·rolling-origin", href: "/ai/time-features" },
@@ -7659,6 +7680,60 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [
       { kind: "primary-source", rule: "Quadratic path·first-order bound는 MIT 강의와 Boyd 교재의 stated 조건에 귀속한다." },
       { kind: "standard", rule: "Small gradient·small update·budget stop을 global optimality나 deployment release와 동일시하지 않는다." },
+    ],
+  },
+  "math-probability-expectation-variance": {
+    title: "Probability experiment·event·conditioning 글이 소유하는 범위",
+    owns: [
+      "Experiment·sample space·outcome·probability distribution의 서로 다른 역할",
+      "Event를 outcome 부분집합으로 만들고 mass를 합산하는 계산",
+      "Conditional probability의 재정규화와 probability chain rule",
+      "Independence와 mutually exclusive의 구분 및 zero-mass condition 경계",
+    ],
+    reuses: [
+      { label: "Random variable·expectation", href: "/ai/math-random-variables-expectation" },
+      { label: "Variance·sampling", href: "/ai/math-variance-sampling" },
+      { label: "Logarithm과 likelihood", href: "/ai/math-exponents-logarithms" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Probability model·conditioning·independence claim은 MIT 6.041SC의 stated sample space와 positive conditioning-mass 조건에 귀속한다." },
+      { kind: "standard", rule: "Equally likely·independent·causal 관계를 관측이나 문제 선언 없이 자동 가정하지 않는다." },
+    ],
+  },
+  "math-random-variables-expectation": {
+    title: "Random variable·expectation 글이 소유하는 범위",
+    owns: [
+      "Outcome을 scalar value로 보내는 deterministic random-variable mapping",
+      "같은 value로 간 outcome mass를 합치는 induced distribution",
+      "Expectation의 probability-weighted center와 unit",
+      "Expectation linearity와 nonlinear transform 교환 실패 경계",
+    ],
+    reuses: [
+      { label: "Sample space·probability event", href: "/ai/math-probability-expectation-variance" },
+      { label: "Variance·sample estimator", href: "/ai/math-variance-sampling" },
+      { label: "Function mapping", href: "/ai/math-functions-composition" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Random-variable mapping·PMF·expectation claim은 MIT 6.041SC의 discrete model과 integrability 범위에 귀속한다." },
+      { kind: "standard", rule: "Expectation을 next observation·mode·반드시 가능한 outcome value와 동일시하지 않는다." },
+    ],
+  },
+  "math-variance-sampling": {
+    title: "Variance·sample estimator·mini-batch 글이 소유하는 범위",
+    owns: [
+      "Variance와 standard deviation의 square-unit·original-unit 구분",
+      "Sample mean과 n−1 sample-variance estimator의 서로 다른 target",
+      "Large-number concentration과 independence·moment 조건",
+      "Mini-batch stochastic-gradient estimator의 unbiasedness·variance·sampling boundary",
+    ],
+    reuses: [
+      { label: "Random variable·expectation linearity", href: "/ai/math-random-variables-expectation" },
+      { label: "Gradient vector", href: "/ai/math-gradients-jacobians" },
+      { label: "Optimizer update", href: "/ai/optimizers" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Variance·LLN claim은 MIT 6.041SC의 independence·finite-moment 조건에, stochastic approximation claim은 Robbins–Monro 원문의 범위에 귀속한다." },
+      { kind: "standard", rule: "Unbiasedness·variance 감소·finite-step descent·nonconvex global convergence를 서로 다른 보장으로 기록한다." },
     ],
   },
 } as const satisfies Record<string, EditorialBoundary>;

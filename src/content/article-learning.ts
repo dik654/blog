@@ -3519,415 +3519,137 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/math-probability-expectation-variance": {
-    coreIdea:
-      "Probability model은 outcome·event·sample space와 mass를 정하고, conditional probability는 새 정보 안에서 mass를 다시 읽습니다. Random variable은 outcome을 숫자로 바꾸며 expectation·variance·sample mean은 중심과 흔들림을 계산합니다. 독립 평균의 1/B 감소와 그 실패 조건을 알아야 mini-batch gradient를 stochastic estimate로 정확히 읽을 수 있습니다.",
+    coreIdea: "Probability model은 experiment·sample space·outcome을 고정하고 distribution mass로 event를 평가합니다. Conditioning은 남은 mass를 다시 정규화하고 chain rule은 joint mass를 conditional product로 복원합니다.",
     assumedKnowledge: [
-      {
-        id: "scalar-quantity",
-        role: "Outcome에 배정된 확률과 random variable 값을 숫자 하나로 계산합니다.",
-      },
-      {
-        id: "coordinate-vector",
-        role: "Sample gradient가 scalar가 아니라 parameter 좌표와 같은 순서의 random vector일 수 있음을 읽습니다.",
-      },
-      {
-        id: "gradient",
-        role: "Example별 loss에서 얻은 parameter sensitivity를 mini-batch 평균의 대상으로 사용합니다.",
-      },
+      { id: "scalar-quantity", role: "Probability mass와 event 비율을 scalar로 계산합니다." },
     ],
     introducedHere: [
-      {
-        id: "sample-space",
-        role: "실험에서 가능한 outcome 전체와 실제 관측 하나를 구분합니다.",
-      },
-      {
-        id: "probability-distribution",
-        role: "Outcome 또는 값에 probability mass를 배정합니다.",
-      },
-      {
-        id: "probability-event",
-        role: "Sample space 안에서 질문에 해당하는 outcome을 부분집합으로 묶습니다.",
-      },
-      {
-        id: "conditional-probability",
-        role: "새로운 조건을 알게 된 뒤 남은 outcome 안에서 probability를 다시 정규화합니다.",
-      },
-      {
-        id: "probability-chain-rule",
-        role: "Joint probability를 순서가 있는 conditional probability의 곱으로 분해합니다.",
-      },
-      {
-        id: "random-variable",
-        role: "Outcome을 계산 가능한 숫자로 보내는 함수를 정의합니다.",
-      },
-      {
-        id: "expectation",
-        role: "Distribution의 probability-weighted center를 계산합니다.",
-      },
-      {
-        id: "variance",
-        role: "Expectation 주변의 squared deviation을 평균내 흔들림을 측정합니다.",
-      },
-      {
-        id: "sample-mean",
-        role: "관측한 일부의 평균으로 population expectation을 추정합니다.",
-      },
-      {
-        id: "law-of-large-numbers",
-        role: "Sample mean이 population expectation에 가까워지는 조건과 한계를 설명합니다.",
-      },
-      {
-        id: "stochastic-gradient-estimator",
-        role: "Mini-batch gradient를 전체 empirical gradient의 random vector estimate로 읽습니다.",
-      },
+      { id: "sample-space", role: "실험의 가능한 outcome 전체와 관측 하나를 분리합니다." },
+      { id: "probability-distribution", role: "Outcome에 nonnegative mass를 배정하고 합을 1로 만듭니다." },
+      { id: "probability-event", role: "질문에 해당하는 outcome을 부분집합으로 묶습니다." },
+      { id: "conditional-probability", role: "조건 안의 mass를 새 전체로 다시 정규화합니다." },
+      { id: "probability-chain-rule", role: "Joint probability를 prefix별 conditional product로 분해합니다." },
+      { id: "probability-independence", role: "Conditioning 뒤 probability가 바뀌지 않는 관계를 판정합니다." },
     ],
     conceptExplanations: [
-      {
-        id: "sample-space",
-        sectionId: "outcomes",
-        intuition:
-          "아직 결과를 모르는 절차가 실험이고, 가능한 답안 전체가 sample space이며 실제로 나온 답 하나가 outcome입니다.",
-        workedExample:
-          "공정한 동전을 두 번 던지면 Ω={HH,HT,TH,TT}이고 한 번 실행해 HT가 나왔다면 HT가 관측 outcome입니다.",
-        boundary:
-          "Sample space의 granularity를 먼저 고정해야 합니다. 앞면 수만 기록하는 것과 순서를 기록하는 것은 서로 다른 outcome 표현입니다.",
-      },
-      {
-        id: "probability-distribution",
-        sectionId: "outcomes",
-        intuition:
-          "가능한 결과마다 전체 1을 나누어 가진 nonnegative mass를 배정하는 규칙입니다.",
-        workedExample:
-          "공정하고 독립인 두 toss의 네 outcome에는 각각 probability 1/4가 배정됩니다.",
-        boundary:
-          "Probability가 같다는 가정은 실험 설계에서 나와야 합니다. 공정성·독립성을 관측 없이 자동으로 전제하면 안 됩니다.",
-      },
-      {
-        id: "probability-event",
-        sectionId: "conditional-probability",
-        intuition:
-          "Sample space에서 현재 질문과 관련된 outcome만 하나의 집합으로 묶은 것입니다.",
-        workedExample:
-          "두 번의 coin toss에서 ‘앞면이 정확히 한 번’인 event A는 {HT,TH}이고 P(A)=1/2입니다.",
-        boundary:
-          "Event는 outcome 하나와 같을 수도 있지만 일반적으로 여러 outcome의 집합입니다. 서로 겹치는 event의 probability를 단순히 더하면 intersection을 두 번 셉니다. 확률이 양수인 두 event의 상호배타는 독립과 양립하지 않습니다.",
-      },
-      {
-        id: "conditional-probability",
-        sectionId: "conditional-probability",
-        intuition:
-          "조건이 참이라는 정보를 받으면 조건 밖의 경우를 제외하고, 남은 경우들의 probability 합이 다시 1이 되도록 비율을 계산합니다.",
-        workedExample:
-          "A={HT,TH}, B={HH,HT}이면 A∩B={HT}이므로 P(A|B)=(1/4)/(1/2)=1/2입니다.",
-        boundary:
-          "P(B)=0이면 비율로 정의할 수 없습니다. P(A|B)는 A와 B의 유사도나 인과관계를 자동으로 뜻하지 않습니다.",
-      },
-      {
-        id: "probability-chain-rule",
-        sectionId: "conditional-probability",
-        intuition:
-          "긴 결과를 한 번에 맞힐 확률을, 지금까지 본 결과를 조건으로 다음 결과 하나씩 맞힐 확률의 곱으로 바꿉니다.",
-        workedExample:
-          "주머니에 빨간 공 2개와 파란 공 1개가 있을 때 비복원으로 빨강 두 개를 뽑을 확률은 P(R₁)P(R₂|R₁)=(2/3)(1/2)=1/3입니다.",
-        boundary:
-          "연쇄법칙은 독립성을 가정하지 않습니다. 반대로 conditional term을 marginal probability로 바꾸는 P(A∩B)=P(A)P(B)는 독립일 때만 가능합니다.",
-        proofIdea:
-          "조건부확률 정의 P(A|B)=P(A∩B)/P(B)를 P(A∩B)=P(A|B)P(B)로 정리합니다. 세 변수 이상에서는 앞의 joint event를 다시 같은 방식으로 분해해 product를 얻습니다.",
-        counterexample:
-          "P(B)=0인 event에는 이 비율 정의를 적용할 수 없습니다. 또 카드나 공을 비복원 추출할 때 P(R₂|R₁)를 P(R₂)로 바꾸면 의존성을 버려 잘못된 값을 얻습니다.",
-      },
-      {
-        id: "random-variable",
-        sectionId: "random-variable",
-        intuition:
-          "Outcome에 숫자 이름표를 붙이는 함수로, 질문에 필요한 계산만 남깁니다.",
-        workedExample:
-          "앞면 개수 X는 HH를 2, HT와 TH를 1, TT를 0으로 보냅니다.",
-        boundary:
-          "Random variable은 outcome 자체가 아니며 같은 실험에도 보상·횟수·gradient처럼 여러 random variable을 정의할 수 있습니다.",
-      },
-      {
-        id: "expectation",
-        sectionId: "expectation",
-        intuition:
-          "가능한 값이 probability만큼 힘을 주는 수직선의 무게중심입니다.",
-        workedExample:
-          "X가 0,1,2를 probability 1/4,1/2,1/4로 가지면 E[X]=1이고, g(X)=X²이면 E[g(X)]=3/2입니다.",
-        boundary:
-          "Expectation은 다음 관측이 반드시 갖는 값이나 가장 자주 나오는 값이 아닙니다. 비선형 g에는 일반적으로 E[g(X)]=g(E[X])가 성립하지 않으며 heavy-tail에서는 expectation이 유한하게 존재하지 않을 수 있습니다.",
-      },
-      {
-        id: "variance",
-        sectionId: "variance",
-        intuition:
-          "각 값이 중심에서 떨어진 거리를 제곱해 평균낸 distribution의 흔들림입니다.",
-        workedExample:
-          "두 toss의 앞면 수는 mean 1, variance 1/2 앞면², standard deviation 약 0.707 앞면입니다. 값 1,2,3이 모집단 전체면 variance는 2/3이고 표본의 unbiased estimate는 1입니다.",
-        boundary:
-          "같은 mean이라고 같은 distribution은 아닙니다. Variance는 원래 단위의 제곱이고 standard deviation만 원래 단위입니다. 모집단의 기술량과 n·n−1 표본 추정량을 구분해야 하며 infinite second moment에는 finite variance 계산을 적용할 수 없습니다.",
-      },
-      {
-        id: "sample-mean",
-        sectionId: "sample-mean",
-        intuition:
-          "Population 전체를 보지 못할 때 관측한 값들을 똑같은 비중으로 합쳐 중심을 추정합니다.",
-        workedExample:
-          "독립 sample 네 개의 평균은 개별 variance σ² 대신 variance σ²/4를 가집니다.",
-        boundary:
-          "상관된 sample이나 편향된 sampling에서는 1/B variance 감소와 unbiasedness가 그대로 성립하지 않습니다.",
-      },
-      {
-        id: "law-of-large-numbers",
-        sectionId: "sample-mean",
-        intuition:
-          "독립 반복의 평균은 sample 수가 커질수록 population mean에서 크게 벗어나기 어려워진다는 정리입니다.",
-        workedExample:
-          "Finite variance이면 Chebyshev bound P(|X̄−μ|≥ε)≤σ²/(Bε²)가 B와 함께 0으로 줄어듭니다.",
-        boundary:
-          "유한 sample에서 정확한 일치나 고정 오차 안의 성공을 보장하지 않고, 독립성·동일분포·moment 조건이 깨진 모든 과정에 같은 버전을 적용할 수 없습니다.",
-        proofIdea:
-          "Sample mean의 expectation은 μ이고 독립성으로 variance가 σ²/B가 됩니다. Chebyshev inequality를 적용해 ε 이상 벗어날 probability가 B가 커질수록 0이 됨을 보입니다.",
-        counterexample:
-          "모든 X_i가 하나의 같은 random value Z를 복제한다면 X̄_B=Z라 variance가 줄지 않습니다. Cauchy sample은 finite mean 조건도 만족하지 않습니다.",
-      },
-      {
-        id: "stochastic-gradient-estimator",
-        sectionId: "gradient-noise",
-        intuition:
-          "전체 dataset을 모두 보지 않고 무작위 일부가 가리키는 평균 방향으로 전체 방향을 추정합니다.",
-        workedExample:
-          "균등 mini-batch B의 g_B=(1/B)Σ∇ℓ_i는 expectation에서 full empirical gradient와 같습니다.",
-        boundary:
-          "Unbiased라고 variance가 작거나 한 step마다 loss가 감소하는 것은 아닙니다. Sampling probability와 sample weight가 objective와 맞아야 하며, 같은 균등 index를 batch의 모든 자리에 복제하면 unbiased여도 variance가 1/B로 줄지 않습니다.",
-      },
+      { id: "sample-space", sectionId: "overview", intuition: "가능한 답안 전체와 실제로 나온 답 하나를 구분하는 실험의 출발점입니다.", workedExample: "두 coin toss의 Ω는 {HH,HT,TH,TT}이고 HT는 outcome 하나입니다.", boundary: "앞면 수만 기록하면 {0,1,2}라는 다른 granularity의 sample space가 됩니다." },
+      { id: "probability-distribution", sectionId: "outcomes", intuition: "가능한 outcome들이 전체 1을 나누어 갖는 mass 배정 규칙입니다.", workedExample: "공정하고 독립인 두 toss의 네 ordered outcome은 각각 probability 1/4입니다.", boundary: "Equal mass와 independence는 model assumption이며 관측 없이 자동으로 주어지지 않습니다." },
+      { id: "probability-event", sectionId: "outcomes", intuition: "현재 질문에 답하는 outcome들을 하나의 부분집합으로 묶은 것입니다.", workedExample: "앞면이 정확히 한 번인 event A={HT,TH}이고 P(A)=1/2입니다.", boundary: "겹치는 event를 더할 때 intersection을 두 번 세지 않으며 event와 outcome 하나를 항상 같다고 보지 않습니다." },
+      { id: "conditional-probability", sectionId: "conditional-probability", intuition: "조건 밖의 경우를 제외하고 남은 mass 합이 다시 1이 되도록 target 비율을 계산합니다.", workedExample: "A={HT,TH}, B={HH,HT}이면 P(A|B)=(1/4)/(1/2)=1/2입니다.", boundary: "P(B)=0이면 비율로 정의할 수 없고 conditional association은 causality를 자동으로 뜻하지 않습니다." },
+      { id: "probability-chain-rule", sectionId: "chain-rule", intuition: "긴 joint 결과를 지금까지 본 prefix 뒤의 다음 결과 비율로 한 단계씩 나눕니다.", workedExample: "P(y1,y2,y3)=P(y1)P(y2|y1)P(y3|y1,y2)입니다.", boundary: "Chain rule 자체는 independence를 가정하지 않습니다.", proofIdea: "P(A|B)=P(A∩B)/P(B)를 P(A∩B)=P(A|B)P(B)로 정리하고 prefix joint에 반복 적용해 product를 얻습니다.", counterexample: "비복원 추출에서 conditional term을 marginal로 바꾸면 앞 선택이 뒤 확률을 바꾼다는 dependence를 잃습니다." },
+      { id: "probability-independence", sectionId: "independence-boundary", intuition: "한 event를 알아도 다른 event의 probability가 바뀌지 않는 관계입니다.", workedExample: "서로 독립인 두 fair coin toss의 첫 결과와 둘째 결과는 joint mass가 marginal product와 같습니다.", boundary: "Positive-mass mutually exclusive event는 intersection 0이지만 marginal product는 양수라 independent가 아닙니다." },
     ],
     conceptStages: [
-      {
-        label: "실험",
-        relation: "가능한 결과와 probability mass를 먼저 고정",
-        concepts: ["sample-space", "probability-distribution"],
-      },
-      {
-        label: "조건",
-        relation: "관심 event를 묶고 새 정보 안에서 probability를 다시 계산",
-        concepts: [
-          "sample-space",
-          "probability-event",
-          "conditional-probability",
-        ],
-      },
-      {
-        label: "연쇄",
-        relation: "여러 단계의 joint probability를 conditional product로 분해",
-        concepts: ["conditional-probability", "probability-chain-rule"],
-      },
-      {
-        label: "수치화",
-        relation: "Outcome을 계산 가능한 값으로 변환",
-        concepts: [
-          "sample-space",
-          "random-variable",
-          "probability-distribution",
-        ],
-      },
-      {
-        label: "요약",
-        relation: "Distribution의 중심과 흩어짐 계산",
-        concepts: ["random-variable", "expectation", "variance"],
-      },
-      {
-        label: "추정",
-        relation: "반복 sample 평균으로 population center에 접근",
-        concepts: [
-          "sample-mean",
-          "expectation",
-          "variance",
-          "law-of-large-numbers",
-        ],
-      },
-      {
-        label: "학습",
-        relation: "Example gradient 평균을 full gradient estimate로 사용",
-        concepts: ["gradient", "sample-mean", "stochastic-gradient-estimator"],
-      },
+      { label: "Model", relation: "가능한 경우와 mass 배정", concepts: ["sample-space", "probability-distribution"] },
+      { label: "Question", relation: "질문에 맞는 outcome 부분집합", concepts: ["sample-space", "probability-distribution", "probability-event"] },
+      { label: "Condition", relation: "새 전체 안에서 target mass 재정규화", concepts: ["probability-event", "conditional-probability"] },
+      { label: "Compose", relation: "Joint mass를 conditional product로 복원", concepts: ["conditional-probability", "probability-chain-rule"] },
+      { label: "Boundary", relation: "정보 불변과 동시 불가능 구분", concepts: ["probability-event", "conditional-probability", "probability-independence"] },
     ],
     exercises: [
-      {
-        level: "basic",
-        question:
-          "공정한 동전을 두 번 던질 때 sample space·관측 outcome·앞면이 정확히 한 번인 event를 구분하고 event probability를 계산할 수 있을까요?",
-        answerChecklist: [
-          "Ω={HH,HT,TH,TT}를 적는다.",
-          "한 번의 관측 HT는 outcome 하나이고 A={HT,TH}는 event라는 차이를 설명한다.",
-          "서로 겹치지 않는 HT와 TH의 mass를 더해 P(A)=1/2를 계산한다.",
-          "각 outcome mass가 0 이상이고 전체 합이 1인지 확인한다.",
-        ],
-        requiredConcepts: [
-          "sample-space",
-          "probability-distribution",
-          "probability-event",
-        ],
-        sectionId: "outcomes",
-      },
-      {
-        level: "basic",
-        question:
-          "A를 앞면이 정확히 한 번인 event, B를 첫 toss가 H인 event로 둘 때 P(A|B)를 계산하고 P(B)=0인 조건에서는 왜 같은 비율을 쓸 수 없는지 설명할 수 있을까요?",
-        answerChecklist: [
-          "A={HT,TH}, B={HH,HT}, A∩B={HT}를 구분한다.",
-          "P(A∩B)=1/4와 P(B)=1/2를 계산한다.",
-          "P(A|B)=1/2로 다시 정규화한다.",
-          "P(B)=0이면 나눌 mass가 없어 event 비율로서 조건부확률이 정의되지 않는다고 말한다.",
-        ],
-        requiredConcepts: [
-          "probability-event",
-          "conditional-probability",
-          "probability-distribution",
-        ],
-        sectionId: "conditional-probability",
-      },
-      {
-        level: "basic",
-        question:
-          "앞면 수 random variable X의 distribution을 만든 뒤 E[X²]를 계산하고 (E[X])²와 다른 이유를 설명할 수 있을까요?",
-        answerChecklist: [
-          "X=0,1,2의 probability를 1/4,1/2,1/4로 합산한다.",
-          "E[X]=1과 E[X²]=3/2를 각각 probability-weighted sum으로 계산한다.",
-          "g(x)=x²가 비선형이므로 E[g(X)]와 g(E[X])를 바꿔 쓸 수 없다고 설명한다.",
-        ],
-        requiredConcepts: [
-          "probability-distribution",
-          "random-variable",
-          "expectation",
-        ],
-        sectionId: "expectation",
-      },
-      {
-        level: "basic",
-        question:
-          "앞면 수 X의 expectation·variance·standard deviation을 계산하고 variance와 standard deviation의 단위를 구분할 수 있을까요?",
-        answerChecklist: [
-          "E[X]=1을 probability-weighted sum으로 계산한다.",
-          "Var(X)=1/2를 squared deviation average로 계산한다.",
-          "Standard deviation을 √(1/2)≈0.707로 계산한다.",
-          "X의 단위가 앞면이면 variance는 앞면²이고 standard deviation은 앞면이라고 설명한다.",
-        ],
-        requiredConcepts: ["random-variable", "expectation", "variance"],
-        sectionId: "variance",
-      },
-      {
-        level: "basic",
-        question:
-          "관측값 1,2,3이 모집단 전체인 경우와 더 큰 모집단에서 뽑은 표본인 경우의 분산을 각각 계산하고 n과 n−1 분모의 목적을 구분할 수 있을까요?",
-        answerChecklist: [
-          "평균 2와 제곱편차 합 2를 계산한다.",
-          "세 값이 모집단 전체라면 population variance가 2/3이라고 계산한다.",
-          "i.i.d. 표본으로 population variance를 추정하면 biased n 분모는 2/3, unbiased n−1 분모는 1이라고 계산한다.",
-          "Unbiased는 이번 estimate가 참값과 같다는 뜻이 아니라 반복 표집한 expectation의 성질이라고 설명한다.",
-        ],
-        requiredConcepts: ["expectation", "variance", "sample-mean"],
-        sectionId: "variance",
-      },
-      {
-        level: "basic",
-        question:
-          "독립 sample의 batch size가 1에서 16으로 늘 때 sample mean의 variance·standard deviation이 어떻게 바뀌는지 계산하고 큰 수의 법칙이 유한 batch에 보장하지 않는 것을 말할 수 있을까요?",
-        answerChecklist: [
-          "Variance는 σ²에서 σ²/16으로 줄인다고 계산한다.",
-          "Standard deviation은 σ에서 σ/4로 줄인다고 계산한다.",
-          "독립·동일분포와 finite variance 전제를 말한다.",
-          "큰 수의 법칙은 B→∞의 확률수렴이며 유한 B의 정확한 일치나 고정 오차 안 성공을 보장하지 않는다고 제한한다.",
-        ],
-        requiredConcepts: ["sample-mean", "variance", "law-of-large-numbers"],
-        sectionId: "sample-mean",
-      },
-      {
-        level: "advanced",
-        question:
-          "세 token y₁,y₂,y₃의 joint probability를 연쇄법칙으로 분해하고 독립과 상호배타를 각각 적용했을 때 무엇이 달라지는지 설명할 수 있을까요?",
-        answerChecklist: [
-          "P(y₁,y₂,y₃)=P(y₁)P(y₂|y₁)P(y₃|y₁,y₂)를 적는다.",
-          "연쇄법칙은 이전 token 의존성을 conditional term에 남기며 독립성을 가정하지 않는다고 설명한다.",
-          "모든 conditional을 marginal로 바꾸려면 독립성이라는 추가 전제가 필요하다고 말한다.",
-          "확률이 양수인 상호배타 event는 intersection probability가 0이라 product가 양수인 독립 조건을 만족하지 못한다고 설명한다.",
-        ],
-        requiredConcepts: [
-          "probability-event",
-          "conditional-probability",
-          "probability-chain-rule",
-        ],
-        sectionId: "conditional-probability",
-      },
-      {
-        level: "advanced",
-        question:
-          "큰 수의 법칙의 proof idea를 expectation·variance·Chebyshev inequality로 설명하고 완전 상관 sample에는 왜 같은 결론을 적용할 수 없는지 보일 수 있을까요?",
-        answerChecklist: [
-          "Sample mean expectation이 μ로 유지됨을 말한다.",
-          "독립성으로 variance가 σ²/B가 됨을 설명한다.",
-          "Chebyshev bound σ²/(Bε²)가 B→∞에서 0이 되어 확률수렴을 얻는다고 설명한다.",
-          "모든 sample이 같은 Z이면 X̄_B=Z라 variance가 줄지 않는다고 반례를 든다.",
-          "유한 B의 exact 또는 guaranteed error bound로 과장하지 않는다.",
-        ],
-        requiredConcepts: [
-          "sample-mean",
-          "expectation",
-          "variance",
-          "law-of-large-numbers",
-        ],
-        sectionId: "sample-mean",
-      },
-      {
-        level: "advanced",
-        question:
-          "균등 mini-batch gradient가 full empirical gradient의 unbiased estimator인 이유를 보이고, 모든 batch 자리가 같은 균등 index를 복제하는 경우 variance가 줄지 않는 반례를 만들 수 있을까요?",
-        answerChecklist: [
-          "Expectation의 선형성으로 example gradient 평균의 expectation이 full empirical gradient가 됨을 보인다.",
-          "Sampling probability와 loss weighting이 objective와 맞아야 한다고 전제를 확인한다.",
-          "J를 한 번 균등 추출하고 I₁=⋯=I_B=J로 두면 g_B=∇ℓ_J라고 계산한다.",
-          "이 estimate는 unbiased이지만 한 sample gradient와 variance가 같아 1/B 감소가 없다고 설명한다.",
-          "Unbiasedness·작은 variance·finite-step descent를 서로 다른 성질로 구분한다.",
-        ],
-        requiredConcepts: [
-          "expectation",
-          "variance",
-          "sample-mean",
-          "gradient",
-          "stochastic-gradient-estimator",
-        ],
-        sectionId: "gradient-noise",
-      },
-      {
-        level: "advanced",
-        question:
-          "i.i.d. 표본에서 n 분모 표본분산의 expectation이 (n−1)σ²/n이 되는 이유를 보이고 n−1 보정의 적용 범위를 설명할 수 있을까요?",
-        answerChecklist: [
-          "Σ(Xᵢ−X̄)²=Σ(Xᵢ−μ)²−n(X̄−μ)² 항등식을 사용한다.",
-          "각 항의 expectation이 nσ²와 nVar(X̄)=σ²가 되어 제곱편차 합의 expectation이 (n−1)σ²임을 보인다.",
-          "n으로 나누면 (n−1)σ²/n이라 downward bias가 있고 n−1로 나누면 σ²라고 계산한다.",
-          "i.i.d.·finite variance·n>1 전제를 명시한다.",
-          "Population descriptive variance나 ML objective에 언제나 n−1을 강제하는 규칙은 아니라고 제한한다.",
-        ],
-        requiredConcepts: ["expectation", "variance", "sample-mean"],
-        sectionId: "variance",
-      },
+      { level: "basic", question: "두 coin toss에서 experiment·sample space·outcome 하나를 구분할 수 있을까요?", answerChecklist: ["Experiment는 두 번 던지는 절차다.", "Ω={HH,HT,TH,TT}다.", "HT는 outcome 하나다."], requiredConcepts: ["sample-space"], sectionId: "overview" },
+      { level: "basic", question: "공정하고 독립인 두 toss outcome mass가 probability law인지 검산할 수 있을까요?", answerChecklist: ["각 mass는 1/4이다.", "모두 nonnegative다.", "네 mass 합은 1이다."], requiredConcepts: ["sample-space", "probability-distribution"], sectionId: "outcomes" },
+      { level: "basic", question: "앞면이 정확히 한 번인 event와 probability를 계산할 수 있을까요?", answerChecklist: ["A={HT,TH}다.", "Outcome 두 개를 묶은 event다.", "P(A)=1/2다."], requiredConcepts: ["probability-event", "probability-distribution"], sectionId: "outcomes" },
+      { level: "basic", question: "첫 toss가 H라는 조건에서 정확히 한 번 H일 probability를 계산할 수 있을까요?", answerChecklist: ["B={HH,HT}다.", "A∩B={HT}다.", "(1/4)/(1/2)=1/2다."], requiredConcepts: ["probability-event", "conditional-probability"], sectionId: "conditional-probability" },
+      { level: "basic", question: "세 token joint probability를 chain rule로 분해할 수 있을까요?", answerChecklist: ["첫 marginal을 쓴다.", "둘째는 첫 token을 조건으로 둔다.", "셋째는 두-token prefix를 조건으로 둔다."], requiredConcepts: ["conditional-probability", "probability-chain-rule"], sectionId: "chain-rule" },
+      { level: "basic", question: "Independent와 mutually exclusive를 한 식씩 구분할 수 있을까요?", answerChecklist: ["Independent는 joint=product다.", "Mutually exclusive는 intersection empty다.", "둘 다 positive면 동시에 성립하지 않는다."], requiredConcepts: ["probability-event", "probability-independence"], sectionId: "independence-boundary" },
+      { level: "advanced", question: "첫 toss H probability가 0.7인 independent biased coin의 네 outcome distribution을 만들 수 있을까요?", answerChecklist: ["HH=.49다.", "HT와 TH=.21씩이다.", "TT=.09이며 합은 1이다."], requiredConcepts: ["probability-distribution", "probability-independence"], sectionId: "outcomes" },
+      { level: "advanced", question: "P(B)=0일 때 event-ratio conditional probability를 쓸 수 없는 이유는 무엇일까요?", answerChecklist: ["분모 mass가 0이다.", "0으로 나눌 수 없다.", "새 전체로 재정규화할 outcome mass가 없다."], requiredConcepts: ["conditional-probability"], sectionId: "conditional-probability" },
+      { level: "advanced", question: "Chain rule과 independence assumption의 차이를 비복원 추출로 설명할 수 있을까요?", answerChecklist: ["Chain rule은 conditional을 유지한다.", "첫 추출 뒤 구성비가 바뀐다.", "Conditional을 marginal로 바꾸면 오답이다."], requiredConcepts: ["probability-chain-rule", "probability-independence"], sectionId: "chain-rule" },
+      { level: "advanced", question: "Positive-mass mutually exclusive event가 independent일 수 없음을 증명할 수 있을까요?", answerChecklist: ["Intersection probability는 0이다.", "Marginal product는 positive다.", "Independent equality와 모순이다."], requiredConcepts: ["probability-event", "probability-independence"], sectionId: "independence-boundary" },
     ],
     papers: [
-      {
-        title: "A Stochastic Approximation Method",
-        href: "https://doi.org/10.1214/aoms/1177729586",
-        problem:
-          "함수의 정확한 값을 직접 알 수 없고 noise가 섞인 관측만 얻을 때 expectation으로 정의된 root를 반복적으로 찾는 문제",
-        contribution:
-          "관측에 기반한 recursive update와 감소하는 step-size 조건 아래 stochastic approximation의 수렴 틀을 제시",
-        assumptions:
-          "관측의 조건부 expectation과 variance, 목표 함수의 단조성, step-size sequence 등 원 논문의 명시 조건을 전제로 함",
-        evidenceScope:
-          "1951년 one-dimensional stochastic root-finding 문제와 수렴 논증의 범위",
-        notClaim:
-          "현대 nonconvex neural network에서 arbitrary mini-batch SGD가 언제나 global optimum으로 수렴한다는 주장은 아님",
-        sectionId: "paper-robbins-monro",
-      },
+      { title: "MIT 6.041SC — Probability models", href: "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/#probability-model", problem: "실험·경우·event·mass를 구분하는 문제", contribution: "Discrete probability model과 axioms를 체계화", assumptions: "명시된 sample space와 probability law", evidenceScope: "Probability model·event 계산", notClaim: "현실 outcome이 자동으로 equally likely하다는 주장이 아님", sectionId: "paper-probability-model" },
+      { title: "MIT 6.041SC — Conditioning and independence", href: "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/#conditioning", problem: "새 정보 뒤 probability와 joint mass를 계산하는 문제", contribution: "Conditioning·multiplication rule·independence를 분리", assumptions: "Positive conditioning mass와 stated model", evidenceScope: "Conditional probability·chain rule", notClaim: "Association가 causality라는 주장이 아님", sectionId: "paper-conditional-chain" },
+    ],
+  },
+  "ai/math-random-variables-expectation": {
+    coreIdea: "Random variable은 outcome을 질문에 필요한 숫자로 보내고 induced distribution은 같은 값으로 간 mass를 합칩니다. Expectation은 그 값들의 probability-weighted center이며 linearity와 nonlinear transform 경계를 구분해야 합니다.",
+    assumedKnowledge: [
+      { id: "sample-space", role: "Random variable의 input outcome을 읽습니다." },
+      { id: "probability-distribution", role: "Outcome과 value에 배정된 mass를 읽습니다." },
+      { id: "probability-event", role: "{X=x}를 outcome event로 읽습니다." },
+    ],
+    introducedHere: [
+      { id: "random-variable", role: "Outcome을 계산 가능한 scalar로 보내는 함수를 정의합니다." },
+      { id: "expectation", role: "값과 probability mass의 weighted center를 계산합니다." },
+      { id: "expectation-linearity", role: "합과 fixed scalar를 expectation 밖으로 분배합니다." },
+    ],
+    conceptExplanations: [
+      { id: "random-variable", sectionId: "overview", intuition: "Outcome 전체에서 질문에 필요한 숫자 좌표 하나만 꺼내는 function입니다.", workedExample: "앞면 수 X는 HH→2, HT·TH→1, TT→0으로 보냅니다.", boundary: "같은 값으로 간 outcome의 원래 순서 정보는 random variable 값만으로 복구할 수 없습니다." },
+      { id: "expectation", sectionId: "expectation", intuition: "가능한 값이 나타날 probability만큼 center를 끌어당기는 무게중심입니다.", workedExample: "0·1/4+1·1/2+2·1/4=1입니다.", boundary: "다음 sample·mode·반드시 가능한 값과 동의어가 아니며 expectation이 존재하지 않는 heavy tail도 있습니다." },
+      { id: "expectation-linearity", sectionId: "transform-boundary", intuition: "Probability-weighted sum의 distributivity 때문에 합과 scalar를 각 expectation으로 나눌 수 있습니다.", workedExample: "E[2X+3Y]=2E[X]+3E[Y]이며 X,Y independence는 필요하지 않습니다.", boundary: "Nonlinear square에는 E[X^2]=(E[X])^2가 일반적으로 성립하지 않습니다.", proofIdea: "Outcome별 aX+bY에 probability를 곱한 sum을 분배하고 fixed scalar를 밖으로 꺼내 두 weighted sum으로 나눕니다.", counterexample: "앞면 수 X는 E[X^2]=3/2지만 (E[X])^2=1이라 nonlinear transform과 expectation을 교환할 수 없습니다." },
+    ],
+    conceptStages: [
+      { label: "Map", relation: "Outcome을 scalar value로 변환", concepts: ["sample-space", "random-variable"] },
+      { label: "Mass", relation: "같은 값으로 간 outcome mass 합산", concepts: ["probability-event", "probability-distribution", "random-variable"] },
+      { label: "Center", relation: "값과 mass의 weighted sum", concepts: ["random-variable", "expectation"] },
+      { label: "Algebra", relation: "Linear combination과 nonlinear 경계", concepts: ["expectation", "expectation-linearity"] },
+    ],
+    exercises: [
+      { level: "basic", question: "두 toss outcome을 앞면 수 X로 매핑할 수 있을까요?", answerChecklist: ["HH는 2다.", "HT와 TH는 1이다.", "TT는 0이다."], requiredConcepts: ["sample-space", "random-variable"], sectionId: "mapping" },
+      { level: "basic", question: "Random variable이 random function이 아니라는 뜻은 무엇일까요?", answerChecklist: ["같은 outcome에는 같은 값을 준다.", "Outcome이 random하다.", "X는 deterministic mapping이다."], requiredConcepts: ["random-variable"], sectionId: "overview" },
+      { level: "basic", question: "P(X=0),P(X=1),P(X=2)를 계산할 수 있을까요?", answerChecklist: ["0은 1/4이다.", "1은 HT와 TH를 합쳐 1/2다.", "2는 1/4이다."], requiredConcepts: ["probability-distribution", "random-variable"], sectionId: "distribution" },
+      { level: "basic", question: "앞면 수 expectation을 weighted sum으로 계산할 수 있을까요?", answerChecklist: ["값에 mass를 곱한다.", "0+1/2+1/2를 더한다.", "E[X]=1이다."], requiredConcepts: ["random-variable", "expectation"], sectionId: "expectation" },
+      { level: "basic", question: "Expectation과 mode를 구분할 수 있을까요?", answerChecklist: ["Expectation은 weighted center다.", "Mode는 가장 큰 mass의 값이다.", "둘은 같지 않을 수 있다."], requiredConcepts: ["expectation"], sectionId: "expectation" },
+      { level: "basic", question: "E[2X+3]을 E[X]로 계산할 수 있을까요?", answerChecklist: ["2를 밖으로 꺼낸다.", "상수 expectation은 3이다.", "E[X]=1이면 결과 5다."], requiredConcepts: ["expectation", "expectation-linearity"], sectionId: "transform-boundary" },
+      { level: "advanced", question: "서로 다른 outcome이 같은 X 값으로 갈 때 잃는 정보는 무엇일까요?", answerChecklist: ["HT와 TH를 구분 못한다.", "Value distribution에는 합친 mass만 남는다.", "질문에 따라 다른 random variable이 필요하다."], requiredConcepts: ["random-variable"], sectionId: "mapping" },
+      { level: "advanced", question: "E[X^2]와 (E[X])^2를 계산해 nonlinear 경계를 보일 수 있을까요?", answerChecklist: ["E[X^2]=3/2다.", "E[X]=1이라 square는 1이다.", "Spread 때문에 다르다."], requiredConcepts: ["expectation", "expectation-linearity"], sectionId: "transform-boundary" },
+      { level: "advanced", question: "Dependent X,Y에도 expectation linearity가 성립하는 이유는 무엇일까요?", answerChecklist: ["Joint outcome별 weighted sum을 쓴다.", "Addition distributivity를 사용한다.", "Independence factorization이 필요 없다."], requiredConcepts: ["expectation-linearity"], sectionId: "transform-boundary" },
+      { level: "advanced", question: "Expectation이 sample space의 가능한 값이 아닐 수 있는 예를 만들 수 있을까요?", answerChecklist: ["Fair coin indicator 0/1을 든다.", "Expectation은 1/2다.", "한 toss outcome value는 1/2가 아니다."], requiredConcepts: ["random-variable", "expectation"], sectionId: "expectation" },
+    ],
+    papers: [
+      { title: "MIT 6.041SC — Discrete random variables", href: "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/#random-variables", problem: "Outcome을 값과 induced distribution으로 바꾸는 문제", contribution: "Random variable과 PMF를 function 관점으로 체계화", assumptions: "Discrete sample space와 probability law", evidenceScope: "Discrete random variable·PMF", notClaim: "Value가 outcome 정보를 모두 보존한다는 주장이 아님", sectionId: "paper-random-variable" },
+      { title: "MIT 6.041SC — Expectation", href: "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/#expectation", problem: "Distribution center와 sum의 expectation을 계산하는 문제", contribution: "Weighted sum과 linearity를 설명", assumptions: "Relevant finite expectation", evidenceScope: "Discrete expectation·linearity", notClaim: "Expectation이 다음 sample을 예측한다는 주장이 아님", sectionId: "paper-expectation" },
+    ],
+  },
+  "ai/math-variance-sampling": {
+    coreIdea: "Variance와 standard deviation은 population spread를 서로 다른 단위로 표현하고 sample mean·sample variance는 관측 일부로 center와 spread를 추정합니다. Independence·sampling weights·moment 조건을 확인해야 1/B와 stochastic-gradient 보장을 사용할 수 있습니다.",
+    assumedKnowledge: [
+      { id: "random-variable", role: "관측값을 random value로 읽습니다." },
+      { id: "expectation", role: "Variance와 estimator의 population center를 읽습니다." },
+      { id: "expectation-linearity", role: "Mini-batch average의 expectation을 분배합니다." },
+      { id: "gradient", role: "Example별 loss sensitivity를 random vector sample로 읽습니다." },
+      { id: "coordinate-vector", role: "Gradient estimator의 shape를 parameter vector와 맞춥니다." },
+    ],
+    introducedHere: [
+      { id: "variance", role: "Center 주변 squared deviation의 population average를 계산합니다." },
+      { id: "standard-deviation", role: "Spread를 original measurement unit으로 되돌립니다." },
+      { id: "sample-mean", role: "Finite sample average로 population expectation을 추정합니다." },
+      { id: "sample-variance-estimator", role: "n−1 correction으로 population variance를 추정합니다." },
+      { id: "law-of-large-numbers", role: "Sample mean의 asymptotic concentration 조건을 설명합니다." },
+      { id: "stochastic-gradient-estimator", role: "Mini-batch average를 full empirical gradient estimate로 읽습니다." },
+    ],
+    conceptExplanations: [
+      { id: "variance", sectionId: "variance", intuition: "Center에서의 signed deviation을 square해 direction을 없애고 큰 deviation을 강조한 spread입니다.", workedExample: "앞면 수 0,1,2의 mean 1 주변 squared-deviation average는 1/2입니다.", boundary: "Variance unit은 X unit의 square이고 infinite second moment에는 finite variance가 없습니다." },
+      { id: "standard-deviation", sectionId: "variance", intuition: "Variance에 root를 취해 X와 같은 unit으로 돌아온 spread scale입니다.", workedExample: "Variance 1/2 앞면^2이면 standard deviation은 약 0.707 앞면입니다.", boundary: "각 sample이 mean에서 항상 standard deviation만큼 떨어진다는 뜻은 아닙니다." },
+      { id: "sample-mean", sectionId: "sample-estimation", intuition: "Population 전체 대신 관측한 B개 값에 같은 비중을 주어 center를 추정합니다.", workedExample: "1,2,3의 sample mean은 2입니다.", boundary: "Biased sampling과 dependence가 있으면 target center나 1/B variance law가 깨질 수 있습니다." },
+      { id: "sample-variance-estimator", sectionId: "sample-estimation", intuition: "같은 sample로 mean을 추정해 잃은 자유도 하나를 반영해 population spread를 추정합니다.", workedExample: "1,2,3의 square-deviation sum 2를 n−1=2로 나눠 s^2=1을 얻습니다.", boundary: "세 값 자체의 descriptive population variance 2/3과 unknown population estimator 1은 질문이 다릅니다." },
+      { id: "law-of-large-numbers", sectionId: "law-of-large-numbers", intuition: "Independent repeated average가 population mean에서 크게 벗어날 probability가 sample 수와 함께 작아지는 정리입니다.", workedExample: "Finite variance Chebyshev bound σ^2/(Bε^2)는 B가 커지면 0으로 갑니다.", boundary: "Finite B exact equality나 arbitrary dependent·heavy-tail sequence를 보장하지 않습니다.", proofIdea: "Expectation linearity로 sample mean center는 μ이고 independence로 variance는 σ^2/B입니다. Chebyshev inequality를 적용해 fixed ε 밖의 probability upper bound가 0으로 감을 보입니다.", counterexample: "모든 sample이 같은 random Z의 복제면 average도 Z라 variance가 줄지 않고, Cauchy sample에는 finite mean 조건도 없습니다." },
+      { id: "stochastic-gradient-estimator", sectionId: "gradient-estimator", intuition: "Random example gradient를 평균해 dataset 전체 empirical gradient direction을 추정합니다.", workedExample: "Uniform indices의 batch mean gradient expectation은 N개 full gradient average와 같습니다.", boundary: "Unbiasedness는 low variance·한 step loss 감소·nonconvex global convergence와 다른 성질입니다." },
+    ],
+    conceptStages: [
+      { label: "Spread", relation: "Center 주변 deviation의 scale 측정", concepts: ["random-variable", "expectation", "variance", "standard-deviation"] },
+      { label: "Estimate", relation: "Finite observations로 center와 spread 추정", concepts: ["sample-mean", "sample-variance-estimator", "variance"] },
+      { label: "Concentrate", relation: "Independent average의 1/B noise와 asymptotic limit", concepts: ["sample-mean", "variance", "law-of-large-numbers"] },
+      { label: "Train", relation: "Example gradient 평균을 full direction estimate로 사용", concepts: ["gradient", "expectation-linearity", "sample-mean", "stochastic-gradient-estimator"] },
+      { label: "Boundary", relation: "Correlation·bias·moment failure 분리", concepts: ["variance", "sample-mean", "law-of-large-numbers", "stochastic-gradient-estimator"] },
+    ],
+    exercises: [
+      { level: "basic", question: "앞면 수 X의 variance를 계산할 수 있을까요?", answerChecklist: ["Mean은 1이다.", "Squared deviations는 1,0,1이다.", "Probability average는 1/2다."], requiredConcepts: ["variance", "expectation"], sectionId: "variance" },
+      { level: "basic", question: "Variance 1/2 앞면^2에서 standard deviation과 단위를 구할 수 있을까요?", answerChecklist: ["Square root를 취한다.", "약 .707이다.", "Unit은 앞면이다."], requiredConcepts: ["variance", "standard-deviation"], sectionId: "variance" },
+      { level: "basic", question: "1,2,3의 sample mean을 계산할 수 있을까요?", answerChecklist: ["합은 6이다.", "n=3으로 나눈다.", "Mean은 2다."], requiredConcepts: ["sample-mean"], sectionId: "sample-estimation" },
+      { level: "basic", question: "1,2,3의 sample variance estimator를 계산할 수 있을까요?", answerChecklist: ["Square-deviation sum은 2다.", "n−1은 2다.", "s^2=1이다."], requiredConcepts: ["sample-mean", "sample-variance-estimator"], sectionId: "sample-estimation" },
+      { level: "basic", question: "Batch size 1에서 16으로 늘 때 mean variance와 standard deviation은 어떻게 바뀔까요?", answerChecklist: ["Variance는 σ^2/16이다.", "Standard deviation은 σ/4다.", "Independence를 명시한다."], requiredConcepts: ["sample-mean", "variance", "standard-deviation"], sectionId: "law-of-large-numbers" },
+      { level: "basic", question: "Uniform mini-batch gradient가 무엇을 추정할까요?", answerChecklist: ["Example gradient를 평균한다.", "Full empirical gradient를 target으로 한다.", "Estimator는 random vector다."], requiredConcepts: ["sample-mean", "stochastic-gradient-estimator", "gradient"], sectionId: "gradient-estimator" },
+      { level: "advanced", question: "왜 sample variance에서 n−1 correction이 필요한지 expectation으로 설명할 수 있을까요?", answerChecklist: ["Sample mean 추정으로 자유도 하나를 쓴다.", "Square sum expectation은 (n−1)σ^2다.", "n−1로 나누면 unbiased다."], requiredConcepts: ["sample-variance-estimator", "variance"], sectionId: "sample-estimation" },
+      { level: "advanced", question: "큰 수의 법칙 proof idea를 variance와 Chebyshev로 설명할 수 있을까요?", answerChecklist: ["Mean center는 μ다.", "Variance는 σ^2/B다.", "Error probability bound가 0으로 간다."], requiredConcepts: ["sample-mean", "variance", "law-of-large-numbers"], sectionId: "law-of-large-numbers" },
+      { level: "advanced", question: "같은 index를 batch 전체에 복제하면 왜 1/B variance 감소가 사라질까요?", answerChecklist: ["모든 I_j가 같은 J다.", "Batch mean은 한 sample gradient와 같다.", "Unbiased여도 variance는 그대로다."], requiredConcepts: ["sample-mean", "variance", "stochastic-gradient-estimator"], sectionId: "boundaries" },
+      { level: "advanced", question: "Sampling probability가 objective weight와 다를 때 estimator를 어떻게 진단할까요?", answerChecklist: ["Expected contribution weight를 계산한다.", "Full empirical weight 1/N과 비교한다.", "Importance correction 또는 sampler 변경을 제안한다."], requiredConcepts: ["expectation-linearity", "stochastic-gradient-estimator"], sectionId: "boundaries" },
+    ],
+    papers: [
+      { title: "MIT 6.041SC — Variance and laws of large numbers", href: "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/#variance-and-lln", problem: "Population spread와 sample-average reliability를 구분하는 문제", contribution: "Variance·sample mean·large-number behavior를 연결", assumptions: "Stated independence·moment conditions", evidenceScope: "Discrete variance·sampling average·LLN", notClaim: "모든 dependent data에 1/B가 성립한다는 주장이 아님", sectionId: "paper-variance-sampling" },
+      { title: "A Stochastic Approximation Method", href: "https://doi.org/10.1214/aoms/1177729586", problem: "Noise observation으로 expectation-defined target에 접근하는 문제", contribution: "Recursive stochastic approximation 수렴 틀 제시", assumptions: "Original conditional expectation·variance·step-size conditions", evidenceScope: "1951 one-dimensional stochastic root finding", notClaim: "Arbitrary nonconvex SGD global convergence 주장이 아님", sectionId: "paper-robbins-monro" },
     ],
   },
   "ai/math-differential-equations-numerical-solvers": {

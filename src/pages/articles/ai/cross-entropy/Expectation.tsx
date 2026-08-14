@@ -8,7 +8,7 @@ export default function Expectation({ title }: { title?: string }) {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          <Link to="/ai/math-probability-expectation-variance#expectation">기댓값 정본</Link>에서
+          <Link to="/ai/math-random-variables-expectation#expectation">기댓값 정본</Link>에서
           정의한 확률 가중 평균을 surprisal에 적용합니다. 자주 발생하는 사건의 비용에는
           큰 비중을, 드문 사건의 비용에는 작은 비중을 주므로 한 번의 관측 비용을
           distribution 전체의 평균 비용으로 바꿀 수 있습니다.

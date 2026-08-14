@@ -1180,3 +1180,12 @@
 - Objective curve와 feasible interval·두 minimizer, chord·tangent·curvature range, learning-rate별 iteration path와 stopping boundary를 곡선·점·범위·궤적으로 표현하는 새 animated Viz 3개를 만들었다. `ArrowLeft`·`ArrowRight`와 `Space` 자동 재생을 실제 focus 상태에서 검증했다.
 - 실제 public closure의 수식 9개를 모두 explicit operation annotation으로 작성했다. Argmin과 minimum의 선택·재평가, projection, chord gap, descent lemma의 linear prediction·quadratic allowance, condition number, update·contraction·gap bound·stopping signal의 연산 의도를 KaTeX 식 안에 직접 표시해 전역 formula backlog를 976개에서 971개로 줄였다.
 - 390px·1440px 실제 브라우저 6회에서 document·Viz·formula·KaTeX overflow와 clipped descendant, KaTeX error, console warning/error, gradient·shadow·굵은 선이 모두 0임을 확인했다. 전체 425개 learning·reading·graph 감사, route-resolution test, TypeScript와 production build도 통과했다.
+
+## 2026-08-15 · Probability · expectation · sampling CRUD split
+
+- 기존 `ai/math-probability-expectation-variance` 한 글에 섞여 있던 experiment·event·conditioning, random-variable mapping·expectation, variance·finite-sample estimator·mini-batch noise를 세 독립 수업으로 분리했다. 기존 route는 경우와 조건부확률로 좁히고 `ai/math-random-variables-expectation`, `ai/math-variance-sampling`을 새로 생성했다.
+- CRUD 과정에서 `probability-independence`, `expectation-linearity`, `standard-deviation`, `sample-variance-estimator` 네 canonical concept를 추가하고 8개 관계를 연결했다. Random variable·expectation·variance·sample mean·LLN·stochastic-gradient owner를 실제 설명 route로 이동하고, 다른 글의 재사용 링크도 새 정본 경계에 맞춰 분리했다.
+- 공개 route와 exact learning contract는 425개에서 427개, graph는 2,357 concepts·3,509 relations로 늘었고 owner·isolation·stage invariant는 0이다. 세 route는 모두 topology `keep`이며 각각 정확한 기초 6개+심화 4개와 article-only answer 위치를 가진다.
+- Coin-outcome tree→event→conditioning→chain rule, outcome→numeric value→induced mass→expectation, center→squared deviation→sample mean→1/B noise→gradient estimator를 도형·선·분포·bar로 표현하는 새 animated Viz 3개를 만들었다. 모든 Viz에서 `ArrowLeft`·`ArrowRight`와 `Space` 자동 재생을 실제 focus 상태로 검증했다.
+- 실제 public closure의 수식 14개를 모두 explicit operation annotation으로 작성했다. Intersection 선택·conditional renormalization·chain product, value-mass 합산·weighted center·linearity, squared deviation·n−1 correction·1/B·Chebyshev·mini-batch expectation의 각 연산 의도를 KaTeX 식 안에 직접 표시하고 모바일 다단식으로 정리해 전역 backlog를 971개에서 959개로 줄였다.
+- 390px·1440px 실제 브라우저 6회에서 document·Viz·모든 main/operation KaTeX overflow와 clipped descendant, KaTeX error, console warning/error, gradient·shadow·굵은 선이 모두 0임을 확인했다. 전체 427개 learning·reading·graph 감사, route-resolution test, TypeScript와 production build도 통과했다.
