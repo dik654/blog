@@ -57,7 +57,7 @@ export default function GroupedValidationArticle() {
       <section id="boundary" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">Patient가 달라도 같은 household·site라면 더 높은 group이 남습니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert"><p>Group key는 한 번 정하고 끝나는 label이 아닙니다. Patient·household·hospital처럼 중첩된 원인을 그려 보고 실제 deployment novelty와 가장 가까운 층을 우선 격리합니다. Fold마다 group 수·row 수·class ratio·site coverage를 함께 보고합니다.</p></div>
-        <div id="paper-group-split" className="not-prose mt-8"><CitationBlock source="scikit-learn — Grouped cross-validation iterators" citeKey={1} type="documentation" href="https://scikit-learn.org/stable/modules/cross_validation.html#cross-validation-iterators-for-grouped-data">
+        <div id="paper-group-split" className="not-prose mt-8"><CitationBlock source="scikit-learn — Grouped cross-validation iterators" citeKey={1} type="paper" href="https://scikit-learn.org/stable/modules/cross_validation.html#cross-validation-iterators-for-grouped-data">
           GroupKFold·StratifiedGroupKFold 등 group-aware splitter의 현재 의미를 설명합니다. 올바른 group key를 library가 찾아 준다는 뜻은 아닙니다.
         </CitationBlock></div>
       </section>

@@ -1462,26 +1462,17 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "tube masking 기반 self-supervised video pretraining",
     },
   ],
-  "ai/competition-workflow": [
-    {
-      kind: "핵심 논문",
-      label: "Hidden Technical Debt in Machine Learning Systems",
-      href: "https://papers.nips.cc/paper/5656-hidden-technical-debt-in-machine-learning-systems",
-      note: "data dependency·configuration·monitoring을 포함한 ML system risk의 기준 연구",
-    },
-    {
-      kind: "핵심 논문",
-      label: "On Over-fitting in Model Selection and Subsequent Selection Bias",
-      href: "https://www.jmlr.org/papers/v11/cawley10a.html",
-      note: "유한 validation criterion의 variance와 반복 model selection이 만드는 선택 편향",
-    },
-    {
-      kind: "핵심 논문",
-      label:
-        "The Ladder: A Reliable Leaderboard for Machine Learning Competitions",
-      href: "https://proceedings.mlr.press/v37/blum15.html",
-      note: "반복적·적응적 submission이 leaderboard holdout에 overfit하는 문제와 제한적 score 공개",
-    },
+  "ai/competition-workflow": [],
+  "ai/model-selection-bias": [
+    { kind: "핵심 논문", label: "On Over-fitting in Model Selection and Subsequent Selection Bias", href: "https://www.jmlr.org/papers/v11/cawley10a.html", note: "Finite validation criterion의 variance와 반복 selection이 만드는 편향" },
+  ],
+  "ai/prediction-time-feature-availability": [],
+  "ai/competition-baseline": [
+    { kind: "핵심 논문", label: "Hidden Technical Debt in Machine Learning Systems", href: "https://papers.nips.cc/paper/5656-hidden-technical-debt-in-machine-learning-systems", note: "Data·configuration·feedback dependency를 포함한 ML system risk taxonomy" },
+  ],
+  "ai/paired-experiment-design": [],
+  "ai/competition-submission-control": [
+    { kind: "핵심 논문", label: "The Ladder: A Reliable Leaderboard for Machine Learning Competitions", href: "https://proceedings.mlr.press/v37/blum15.html", note: "적응적 submission과 leaderboard holdout overfitting 문제" },
   ],
   "ai/cross-validation": [
     { kind: "공식 문서", label: "scikit-learn: Cross-validation — evaluating estimator performance", href: "https://scikit-learn.org/stable/modules/cross_validation.html", note: "K-fold·group·time splitter의 서로 다른 data assumption과 current API" },

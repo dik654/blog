@@ -2173,45 +2173,44 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "competition-workflow": {
-    title: "대회 워크플로우 글이 소유하는 범위",
+    title: "Prediction evaluation contract 글이 소유하는 범위",
     owns: [
-      "Row·prediction cutoff·metric unit/direction과 local/public/private 역할을 고정한 평가 계약",
-      "Entity/group·available time·shift를 추적하는 EDA 위험표와 leakage 판정",
-      "Naive predictor에서 OOF·test prediction·submission까지 이어지는 baseline artifact chain",
-      "한 가설·한 변경·paired fold/slice delta·cost gate로 구성한 실험 decision log",
-      "Adaptive leaderboard feedback budget과 최종 candidate·retrain·submission provenance",
+      "Prediction row·cutoff·target horizon의 identity와 time boundary",
+      "Metric unit·reducer·weight·direction 계약",
+      "Local selection·public feedback·private final evaluation의 역할 분리",
     ],
-    reuses: [
-      {
-        label: "Train·validation·test의 역할",
-        href: "/ai/train-validation-test",
-      },
-      {
-        label: "Group·time split과 CV–LB mismatch",
-        href: "/ai/cross-validation",
-      },
-      { label: "Metric 정의와 계산", href: "/ai/evaluation-metrics" },
-      {
-        label: "Run·artifact provenance",
-        href: "/ai/training-pipeline#logging",
-      },
-      { label: "OOF ensemble·error diversity", href: "/ai/ensemble-methods" },
-      { label: "실험 tracking과 비교", href: "/ai/experiment-tracking" },
-    ],
-    evidence: [
-      {
-        kind: "primary-source",
-        rule: "Model-selection bias·Ladder·ML technical-debt claim은 각 논문의 finite-sample/adaptive setting과 system 사례 범위로 제한한다.",
-      },
-      {
-        kind: "standard",
-        rule: "Data/row/group/time·split/fold·metric/weight·code/config/seed/environment·OOF/test/submission checksum·feedback/decision을 함께 기록한다.",
-      },
-      {
-        kind: "project-claim",
-        rule: "Evaluation contract·OOF coverage·paired delta·feedback budget 수식은 대회 참가자의 audit를 위한 이 글의 계약이며 플랫폼 보장으로 표현하지 않는다.",
-      },
-    ],
+    reuses: [{ label: "Train·validation·test", href: "/ai/train-validation-test" }],
+    evidence: [{ kind: "standard", rule: "Row key·cutoff·target window·metric reducer·evaluation role을 함께 versioning한다." }],
+  },
+  "model-selection-bias": {
+    title: "Maximum-selection optimism 글이 소유하는 범위",
+    owns: ["True score·validation noise·observed score의 분리", "여러 noisy candidates의 argmax가 만드는 selection optimism", "Candidate budget·adaptive search·fresh final evaluation 경계"],
+    reuses: [{ label: "Expectation", href: "/ai/math-random-variables-expectation" }],
+    evidence: [{ kind: "primary-source", rule: "Selection-bias claim은 Cawley·Talbot의 finite validation·model-selection setting 범위로 제한한다." }],
+  },
+  "prediction-time-feature-availability": {
+    title: "Prediction-time feature availability 글이 소유하는 범위",
+    owns: ["Event time·available time·prediction cutoff의 구분", "Feature에서 source record·join·window·revision으로 이어지는 lineage", "Latest source arrival과 cutoff를 비교하는 admission fixture"],
+    reuses: [{ label: "Fold-local fitted state", href: "/ai/fold-local-validation" }],
+    evidence: [{ kind: "standard", rule: "Source ID·event/available time·timezone·join/window/fallback revision을 함께 기록한다." }],
+  },
+  "competition-baseline": {
+    title: "Competition baseline artifact 글이 소유하는 범위",
+    owns: ["Data snapshot에서 split·OOF·test·metric·submission으로 이어지는 첫 완결 chain", "표준 partition K-fold의 row별 OOF coverage invariant", "Run·prediction·metric·file checksum의 replayable lineage"],
+    reuses: [{ label: "OOF risk", href: "/ai/oof-risk-estimation" }, { label: "Run provenance", href: "/ai/training-pipeline#logging" }],
+    evidence: [{ kind: "primary-source", rule: "System debt claim은 Hidden Technical Debt의 taxonomy·사례 범위로 제한한다." }],
+  },
+  "paired-experiment-design": {
+    title: "One-hypothesis paired experiment 글이 소유하는 범위",
+    owns: ["Failure slice·원인 가설·한 축의 변경·예상 결과·adoption gate", "같은 fold에서 candidate와 baseline을 빼는 paired delta", "Fold·slice·latency·memory·interaction의 채택 경계"],
+    reuses: [{ label: "Baseline artifact", href: "/ai/competition-baseline" }],
+    evidence: [{ kind: "project-claim", rule: "Paired delta와 adoption gate는 동일 protocol의 실험 audit 규칙이며 독립 표본 theorem으로 확대하지 않는다." }],
+  },
+  "competition-submission-control": {
+    title: "Competition submission control 글이 소유하는 범위",
+    owns: ["Submission 수와 decision-changing external feedback 수의 구분", "사전 feedback budget·freeze·새 holdout 종료 조건", "Candidate·retrain·inference·row order·checksum·rollback manifest"],
+    reuses: [{ label: "Validation feedback audit", href: "/ai/validation-feedback-audit" }],
+    evidence: [{ kind: "primary-source", rule: "Adaptive leaderboard claim은 The Ladder의 model·mechanism·experiment 범위로 제한한다." }],
   },
   "cross-validation": {
     title: "배포 질문과 validation estimand 글이 소유하는 범위",
@@ -2299,7 +2298,7 @@ export const EDITORIAL_BOUNDARIES = {
     ],
     reuses: [
       { label: "OOF risk", href: "/ai/oof-risk-estimation" },
-      { label: "Selection optimism", href: "/ai/competition-workflow" },
+      { label: "Selection optimism", href: "/ai/model-selection-bias" },
     ],
     evidence: [{ kind: "primary-source", rule: "Adaptive leaderboard claim은 The Ladder의 문제 설정과 보장 범위로 제한한다." }],
   },
@@ -2501,7 +2500,7 @@ export const EDITORIAL_BOUNDARIES = {
       },
       {
         label: "Competition experiment decision log",
-        href: "/ai/competition-workflow#iteration",
+        href: "/ai/paired-experiment-design#paired-delta",
       },
     ],
     evidence: [

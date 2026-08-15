@@ -69,7 +69,7 @@ export default function CrossValidationFoundationArticle() {
         <h2 className="mb-5 text-2xl font-bold">배포 분포가 바뀌면 과거 CV는 새 환경을 보장하지 않습니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert"><p>좋은 split은 알려진 배포 질문을 재연할 뿐입니다. 새 국가·새 sensor·정책 변경처럼 분포가 바뀌면 새 기간이나 site에서 다시 검증하고 monitoring을 연결해야 합니다.</p></div>
         <div id="paper-cv-foundation" className="not-prose mt-8">
-          <CitationBlock source="scikit-learn — Cross-validation: evaluating estimator performance" citeKey={1} type="documentation" href="https://scikit-learn.org/stable/modules/cross_validation.html">
+          <CitationBlock source="scikit-learn — Cross-validation: evaluating estimator performance" citeKey={1} type="paper" href="https://scikit-learn.org/stable/modules/cross_validation.html">
             KFold·GroupKFold·TimeSeriesSplit의 현재 splitter semantics를 확인하는 공식 문서입니다. Class 이름 선택만으로 deployment unit과 leakage boundary가 자동 결정된다는 근거는 아닙니다.
           </CitationBlock>
         </div>

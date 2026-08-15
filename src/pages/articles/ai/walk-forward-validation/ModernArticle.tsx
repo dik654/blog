@@ -53,7 +53,7 @@ export default function WalkForwardValidationArticle() {
       <section id="boundary" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">Expanding과 rolling window는 production retraining policy에 맞춥니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert"><p>Expanding window는 사용 가능한 모든 과거를 누적하고, rolling window는 최근 고정 길이만 남깁니다. Concept drift 때문에 오래된 data를 버리는 production이면 backtest도 같은 정책을 써야 합니다. Entity가 반복되면 시간 방향 위에 group 경계도 추가합니다.</p></div>
-        <div id="paper-walk-forward" className="not-prose mt-8"><CitationBlock source="scikit-learn — TimeSeriesSplit" citeKey={1} type="documentation" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit.html">
+        <div id="paper-walk-forward" className="not-prose mt-8"><CitationBlock source="scikit-learn — TimeSeriesSplit" citeKey={1} type="paper" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit.html">
           순서가 있는 data에서 successive training sets가 누적되는 현재 splitter API와 gap parameter를 설명합니다. Label delay와 overlapping target purge가 자동 처리된다는 뜻은 아닙니다.
         </CitationBlock></div>
       </section>

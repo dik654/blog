@@ -48,7 +48,7 @@ export default function FoldLocalValidationArticle() {
       <section id="boundary" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">External pretrained transform도 source와 overlap을 기록합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert"><p>공개 corpus에서 미리 학습한 tokenizer나 embedding은 fold마다 다시 fit하지 않을 수 있습니다. 대신 source revision, 목적, evaluation entity와의 overlap을 기록해야 외부 정보 사용 범위를 판단할 수 있습니다.</p></div>
-        <div id="paper-fold-local" className="not-prose mt-8"><CitationBlock source="scikit-learn — Pipeline and cross-validation" citeKey={1} type="documentation" href="https://scikit-learn.org/stable/modules/compose.html#pipeline-chaining-estimators">
+        <div id="paper-fold-local" className="not-prose mt-8"><CitationBlock source="scikit-learn — Pipeline and cross-validation" citeKey={1} type="paper" href="https://scikit-learn.org/stable/modules/compose.html#pipeline-chaining-estimators">
           Pipeline이 transform fit과 estimator fit을 같은 cross-validation 경계 안에서 실행하는 현재 API 근거입니다. 임의 custom code가 자동으로 leakage-safe하다는 뜻은 아닙니다.
         </CitationBlock></div>
       </section>

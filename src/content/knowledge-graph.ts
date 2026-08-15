@@ -7236,7 +7236,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Maximum-selection optimism",
     definition:
       "여러 noisy validation estimate의 최댓값으로 후보를 고르면 maximum의 convexity 때문에 선택된 관측 성능의 기대값이 후보 true mean의 최댓값보다 작지 않아 낙관적 선택이 생길 수 있다는 결과입니다.",
-    canonicalHref: "/ai/competition-workflow#overview",
+    canonicalHref: "/ai/model-selection-bias#maximum",
   },
   "prediction-time-feature-availability": {
     id: "prediction-time-feature-availability",
@@ -7244,7 +7244,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Prediction-time feature availability",
     definition:
       "Feature가 참조한 모든 source event의 실제 available time이 해당 row의 prediction cutoff보다 이른지 lineage로 검사하는 leakage 경계입니다.",
-    canonicalHref: "/ai/competition-workflow#eda-phase",
+    canonicalHref: "/ai/prediction-time-feature-availability#overview",
   },
   "competition-oof-coverage": {
     id: "competition-oof-coverage",
@@ -7253,7 +7253,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Out-of-fold row coverage",
     definition:
       "표준 partition형 K-fold에서 각 train row가 자신을 학습에 사용하지 않은 fold model의 validation prediction을 정확히 한 번 받았는지 세는 무결성 검사입니다.",
-    canonicalHref: "/ai/competition-workflow#baseline",
+    canonicalHref: "/ai/competition-baseline#coverage",
   },
   "competition-baseline-artifact": {
     id: "competition-baseline-artifact",
@@ -7261,7 +7261,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Competition baseline artifact",
     definition:
       "Data snapshot·split manifest·resolved run·OOF/test prediction·metric report·submission checksum을 한 revision에서 재생성할 수 있게 연결한 첫 end-to-end 기준점입니다.",
-    canonicalHref: "/ai/competition-workflow#baseline",
+    canonicalHref: "/ai/competition-baseline#artifact",
   },
   "one-hypothesis-experiment-contract": {
     id: "one-hypothesis-experiment-contract",
@@ -7269,7 +7269,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "One-hypothesis experiment contract",
     definition:
       "관찰한 failure slice·원인 가설·한 축의 변경·예상 결과·비용·채택 기준을 실행 전에 기록하고 동일 protocol의 baseline과 비교하는 실험 규칙입니다.",
-    canonicalHref: "/ai/competition-workflow#iteration",
+    canonicalHref: "/ai/paired-experiment-design#overview",
   },
   "paired-fold-experiment-delta": {
     id: "paired-fold-experiment-delta",
@@ -7278,7 +7278,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Paired fold experiment delta",
     definition:
       "같은 fold·행·metric에서 candidate score와 baseline score를 빼 fold별 개선을 만들고 평균·흔들림·slice 방향을 함께 보는 비교 통계입니다.",
-    canonicalHref: "/ai/competition-workflow#iteration",
+    canonicalHref: "/ai/paired-experiment-design#paired-delta",
   },
   "leaderboard-adaptive-feedback-budget": {
     id: "leaderboard-adaptive-feedback-budget",
@@ -7287,7 +7287,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Adaptive leaderboard feedback budget",
     definition:
       "Public leaderboard 결과가 후속 model·feature·weight 선택을 바꾼 횟수와 결정 근거를 사전 한도 안에서 기록해 holdout의 반복 사용을 통제하는 운영 지표입니다.",
-    canonicalHref: "/ai/competition-workflow#final",
+    canonicalHref: "/ai/competition-submission-control#feedback",
   },
   "competition-submission-manifest": {
     id: "competition-submission-manifest",
@@ -7295,7 +7295,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Competition submission manifest",
     definition:
       "Candidate/run ID·code/data/split/preprocess/checkpoint·OOF report·retrain 여부·inference environment·row order·file checksum을 제출 파일과 연결한 최종 lineage입니다.",
-    canonicalHref: "/ai/competition-workflow#final",
+    canonicalHref: "/ai/competition-submission-control#manifest",
   },
   "deployment-matched-validation-risk": {
     id: "deployment-matched-validation-risk",

@@ -19673,440 +19673,191 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/competition-workflow": {
-    coreIdea:
-      "예측 대회 워크플로우는 높은 점수를 빨리 찾는 요령이 아니라 row·cutoff·metric을 고정한 평가 계약에서 시작해 leakage-safe EDA, 완전한 OOF baseline, 한 가설씩의 paired comparison, adaptive leaderboard feedback 통제와 최종 submission provenance로 선택 편향을 줄이는 과정입니다.",
+    coreIdea: "Prediction evaluation contract는 model을 만들기 전에 한 row의 identity·cutoff·target horizon·metric reducer와 local/public/private data가 바꿀 수 있는 결정을 고정하는 문서입니다.",
     assumedKnowledge: [
-      {
-        id: "train-validation-test",
-        role: "Parameter 학습·candidate 선택·최종 일반화 보고에 쓰는 data 역할을 구분합니다.",
-      },
-      {
-        id: "reproducible-training-run-contract",
-        role: "Data·split·config·code·environment·state·metric을 한 run으로 묶습니다.",
-      },
-      {
-        id: "run-artifact-provenance",
-        role: "Run에서 OOF·checkpoint·evaluation·submission artifact까지 lineage를 연결합니다.",
-      },
+      { id: "train-validation-test", role: "학습·선택·최종 보고 data의 역할을 분리합니다." },
+      { id: "reproducible-training-run-contract", role: "Contract revision을 run lineage에 연결합니다." },
     ],
-    introducedHere: [
-      {
-        id: "competition-evaluation-contract",
-        role: "Row·cutoff·target·metric과 local/public/private 평가 역할을 먼저 고정합니다.",
-      },
-      {
-        id: "model-selection-maximum-optimism",
-        role: "여러 noisy score 중 최대를 고를 때 생기는 낙관적 선택 편향을 설명합니다.",
-      },
-      {
-        id: "prediction-time-feature-availability",
-        role: "Feature source가 prediction cutoff 이전에 실제 사용 가능했는지 검사합니다.",
-      },
-      {
-        id: "competition-oof-coverage",
-        role: "모든 train row의 out-of-fold prediction이 정확히 한 번 존재하는지 확인합니다.",
-      },
-      {
-        id: "competition-baseline-artifact",
-        role: "원본 입력부터 metric·submission까지 재현되는 첫 end-to-end 기준점을 만듭니다.",
-      },
-      {
-        id: "one-hypothesis-experiment-contract",
-        role: "Failure slice·가설·한 변경·채택 기준을 실행 전에 고정합니다.",
-      },
-      {
-        id: "paired-fold-experiment-delta",
-        role: "같은 fold에서 candidate와 baseline의 변화와 흔들림을 비교합니다.",
-      },
-      {
-        id: "leaderboard-adaptive-feedback-budget",
-        role: "Public score가 후속 선택을 바꾼 adaptive feedback 횟수를 제한하고 기록합니다.",
-      },
-      {
-        id: "competition-submission-manifest",
-        role: "최종 후보·retrain·inference·row order·file checksum을 제출과 연결합니다.",
-      },
-    ],
-    conceptExplanations: [
-      {
-        id: "competition-evaluation-contract",
-        sectionId: "overview",
-        intuition:
-          "시험을 풀기 전에 문항 단위·채점법·연습 점수와 최종 점수의 역할을 먼저 정하는 것과 같습니다.",
-        workedExample:
-          "환자 방문 1건을 행으로 두고 24시간 이전 정보로 재입원을 예측하며 AUROC를 patient-group split OOF에서 계산한다고 기록합니다.",
-        boundary:
-          "대회 test 생성 방식과 실제 deployment 질문이 다르면 둘을 같은 성능으로 해석하지 않고 두 계약을 나란히 둡니다.",
-      },
-      {
-        id: "model-selection-maximum-optimism",
-        sectionId: "overview",
-        intuition:
-          "실력이 같은 사람도 시험을 여러 번 보고 가장 높은 점수만 남기면 평소 실력보다 좋아 보입니다.",
-        workedExample:
-          "True gain이 모두 0인 후보 50개의 validation noise 중 최대가 +.01이면 그 후보의 관측 개선은 실력과 우연을 함께 선택한 값입니다.",
-        boundary:
-          "모든 한 번의 maximum이 낙관적이라는 뜻이 아니며 noise dependence·candidate true means·adaptive search가 실제 gap을 바꿉니다.",
-        proofIdea:
-          "Max는 convex function이므로 Jensen inequality로 E[max_j X_j]≥max_j E[X_j]이고 X_j=mu_j+epsilon_j, E[epsilon_j]=0을 대입합니다.",
-        counterexample:
-          "후보가 하나뿐이면 max 선택이 없고 unbiased noise 아래 expected observed score는 그 후보 true mean과 같습니다.",
-      },
-      {
-        id: "prediction-time-feature-availability",
-        sectionId: "eda-phase",
-        intuition:
-          "예측 버튼을 누른 순간 책상 위에 없던 자료는 나중에 데이터베이스에 들어왔어도 입력으로 쓰면 안 됩니다.",
-        workedExample:
-          "Cutoff가 10:00인데 검사 event 09:50이 결과 확정 10:20이면 event time은 과거여도 available time이 미래라 feature에서 제외합니다.",
-        boundary:
-          "Source time만 검사해도 전체 data로 fit한 encoder·normalizer·target statistic에서 validation 정보가 섞일 수 있습니다.",
-      },
-      {
-        id: "competition-oof-coverage",
-        sectionId: "baseline",
-        intuition:
-          "각 학생이 자신을 가르치지 않은 선생에게 정확히 한 번 시험받았는지 출석표로 확인합니다.",
-        workedExample:
-          "5-fold에서 row 17이 V2에만 있으면 c17=1이고 V2와 V4에 동시에 있으면 c17=2라 중복 오류입니다.",
-        boundary:
-          "Repeated CV는 coverage가 반복 횟수이며, group/time leakage가 없다는 사실은 coverage count만으로 증명되지 않습니다.",
-      },
-      {
-        id: "competition-baseline-artifact",
-        sectionId: "baseline",
-        intuition:
-          "첫 기준점은 작은 부품이 아니라 재료를 넣어 완제품과 검사표가 나오는 최소 생산 라인입니다.",
-        workedExample:
-          "Data hash d1·fold f2·config c3·code g4에서 OOF parquet, test parquet, metric JSON과 submission SHA256을 한 run에 저장합니다.",
-        boundary:
-          "같은 score를 수작업 notebook에서 재현하는 것만으로 environment·row order·artifact lineage가 보장되지는 않습니다.",
-      },
-      {
-        id: "one-hypothesis-experiment-contract",
-        sectionId: "iteration",
-        intuition:
-          "한 번에 레버 하나만 바꾸고 어떤 계기판이 얼마나 움직이면 성공인지 먼저 적습니다.",
-        workedExample:
-          "Rare category 합침이 Group C recall 저하 원인이라는 가설로 encoder만 바꾸고 Group C +.02·global noninferior·p95 +3ms 이하를 gate로 둡니다.",
-        boundary:
-          "상호작용을 연구할 때는 여러 축을 바꿀 수 있지만 factorial design과 interaction term으로 질문을 명시해야 합니다.",
-      },
-      {
-        id: "paired-fold-experiment-delta",
-        sectionId: "iteration",
-        intuition:
-          "서로 다른 시험 점수를 비교하지 않고 같은 시험에서 두 방법의 차이를 학생별로 짝지어 봅니다.",
-        workedExample:
-          "Fold delta가 .006,.004,-.001,.005,.003이면 mean .0034이고 부호가 대부분 같지만 fold별 표와 slice를 함께 봅니다.",
-        boundary:
-          "K-fold training sets가 겹치므로 단순 SE를 독립 표본의 확정적 p-value처럼 사용하지 않습니다.",
-      },
-      {
-        id: "leaderboard-adaptive-feedback-budget",
-        sectionId: "final",
-        intuition:
-          "정답 힌트를 보고 답을 바꾼 횟수를 세어 공개 점수를 사실상 추가 학습 데이터로 무제한 쓰지 않게 합니다.",
-        workedExample:
-          "제출 20회 중 schema 수정 4회, 동일 후보 재실행 2회, public score로 다음 선택을 바꾼 6회라면 B_used=6입니다.",
-        boundary:
-          "Budget은 adaptive overfit을 제거하는 theorem이 아니며 public/private shift·sample size·score precision도 별도로 작용합니다.",
-      },
-      {
-        id: "competition-submission-manifest",
-        sectionId: "final",
-        intuition:
-          "최종 택배 상자에 어느 생산 라인과 검사표에서 나온 물건인지 추적 번호를 붙입니다.",
-        workedExample:
-          "Run r7·checkpoint h8·retrain yes·image digest·row ID count/order·missing/range pass·submission SHA256 s9를 한 manifest로 저장합니다.",
-        boundary:
-          "Manifest는 잘못된 model 선택을 고쳐주지 않지만 결과가 달라졌을 때 원인을 재현하고 이전 후보로 돌아갈 수 있게 합니다.",
-      },
-    ],
+    introducedHere: [{ id: "competition-evaluation-contract", role: "Prediction row·cutoff·target·metric과 evaluation roles를 한 계약으로 고정합니다." }],
+    conceptExplanations: [{ id: "competition-evaluation-contract", sectionId: "overview", intuition: "시험을 풀기 전에 문항 단위·채점법·연습 점수와 최종 점수의 역할을 적습니다.", workedExample: "Patient visit 한 건에서 10:00 이전 정보로 24시간 재입원을 예측하고 patient-group OOF AUROC로 선택한다고 씁니다.", boundary: "대회 test와 실제 deployment 질문이 다르면 두 계약을 나란히 두고 같은 성능으로 해석하지 않습니다." }],
     conceptStages: [
-      {
-        label: "Evaluation question",
-        relation:
-          "Row·cutoff·metric 역할을 고정하고 noisy maximum의 선택 편향을 인식",
-        concepts: [
-          "train-validation-test",
-          "competition-evaluation-contract",
-          "model-selection-maximum-optimism",
-        ],
-      },
-      {
-        label: "Information boundary",
-        relation: "Entity·time·shift를 EDA 위험표와 split manifest로 변환",
-        concepts: [
-          "competition-evaluation-contract",
-          "prediction-time-feature-availability",
-        ],
-      },
-      {
-        label: "First complete system",
-        relation:
-          "모든 train row의 OOF coverage와 end-to-end artifact chain을 검사",
-        concepts: [
-          "competition-oof-coverage",
-          "reproducible-training-run-contract",
-          "competition-baseline-artifact",
-        ],
-      },
-      {
-        label: "Controlled search",
-        relation: "한 가설의 변경을 동일 fold의 paired delta·slice·cost로 판정",
-        concepts: [
-          "one-hypothesis-experiment-contract",
-          "paired-fold-experiment-delta",
-          "model-selection-maximum-optimism",
-        ],
-      },
-      {
-        label: "Final handoff",
-        relation:
-          "Adaptive public feedback을 통제하고 후보·retrain·submission lineage를 봉인",
-        concepts: [
-          "leaderboard-adaptive-feedback-budget",
-          "run-artifact-provenance",
-          "competition-submission-manifest",
-        ],
-      },
+      { label: "Row", relation: "Prediction 하나의 entity·stable ID를 고정", concepts: ["competition-evaluation-contract"] },
+      { label: "Cutoff", relation: "Input information의 마지막 available time을 고정", concepts: ["competition-evaluation-contract"] },
+      { label: "Target·metric", relation: "Future window·label·reducer·direction을 고정", concepts: ["competition-evaluation-contract"] },
+      { label: "Roles", relation: "Local selection·public feedback·private final을 분리", concepts: ["train-validation-test", "competition-evaluation-contract"] },
     ],
     exercises: [
-      {
-        level: "basic",
-        question:
-          "환자 재입원 예측 대회의 row·prediction cutoff·target·metric·local/public/private 역할을 한 문단의 평가 계약으로 작성하라.",
-        answerChecklist: [
-          "row identity",
-          "patient/group unit",
-          "cutoff",
-          "target horizon",
-          "metric direction/reducer",
-          "local selection",
-          "public feedback",
-          "private final",
-        ],
-        requiredConcepts: [
-          "competition-evaluation-contract",
-          "train-validation-test",
-        ],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "실제 성능이 모두 0.70이라고 가정한 후보 A·B·C의 validation 점수가 0.69·0.74·0.71일 때 선택 결과와 낙관 오차를 계산하고 독립 final 평가가 필요한 이유를 설명하라.",
-        answerChecklist: [
-          "B를 선택",
-          "관측 .74와 실제 .70의 차이 .04",
-          "argmax가 양의 noise를 함께 선택",
-          "후보가 많을수록 우연한 고점 기회 증가",
-          "모든 trial에서 반드시 낙관적이라는 뜻은 아님",
-          "independent final evaluation",
-        ],
-        requiredConcepts: ["model-selection-maximum-optimism"],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "Event time 09:50·available time 10:20·prediction cutoff 10:00인 검사값과 09:40에 확정된 값을 feature로 사용할 수 있는지 판정하라.",
-        answerChecklist: [
-          "first unusable",
-          "available after cutoff",
-          "event time insufficient",
-          "second usable",
-          "lineage",
-          "cutoff fixture",
-        ],
-        requiredConcepts: ["prediction-time-feature-availability"],
-        sectionId: "eda-phase",
-      },
-      {
-        level: "advanced",
-        question:
-          "같은 환자·촬영 세션의 파생 행과 미래 집계·전체 데이터 target encoding이 있는 dataset의 EDA 위험표와 leakage test를 설계하라.",
-        answerChecklist: [
-          "row/group IDs",
-          "session/source relation",
-          "cutoff",
-          "available time",
-          "fold intersection",
-          "transform fit on train fold",
-          "test-only shift",
-          "blacklist",
-        ],
-        requiredConcepts: [
-          "prediction-time-feature-availability",
-          "competition-evaluation-contract",
-        ],
-        sectionId: "eda-phase",
-      },
-      {
-        level: "basic",
-        question:
-          "5-fold manifest에서 OOF coverage count가 [1,1,0,2,1]일 때 누락·중복 행을 찾고 metric 계산을 중단해야 하는 이유를 설명하라.",
-        answerChecklist: [
-          "third missing",
-          "fourth duplicate",
-          "coverage invariant",
-          "biased metric denominator",
-          "repair manifest",
-          "group/time separate",
-        ],
-        requiredConcepts: ["competition-oof-coverage"],
-        sectionId: "baseline",
-      },
-      {
-        level: "advanced",
-        question:
-          "Raw input부터 OOF·test prediction·metric report·submission까지 같은 명령으로 재현되는 baseline manifest의 필드와 무결성 검사를 설계하라.",
-        answerChecklist: [
-          "data/schema hash",
-          "split row/group IDs",
-          "config/seed/code/environment",
-          "OOF row/fold",
-          "test row ID",
-          "metric global/fold/slice",
-          "submission order/range",
-          "checksums",
-        ],
-        requiredConcepts: [
-          "competition-baseline-artifact",
-          "competition-oof-coverage",
-          "reproducible-training-run-contract",
-        ],
-        sectionId: "baseline",
-      },
-      {
-        level: "basic",
-        question:
-          "Fold paired delta .006,.004,-.001,.005,.003의 평균을 계산하고 전체 평균만으로 candidate를 즉시 채택하면 안 되는 이유를 적어라.",
-        answerChecklist: [
-          "mean .0034",
-          "one negative fold",
-          "same fold protocol",
-          "spread/SE",
-          "slice",
-          "latency/memory",
-          "K-fold dependence caveat",
-        ],
-        requiredConcepts: ["paired-fold-experiment-delta"],
-        sectionId: "iteration",
-      },
-      {
-        level: "advanced",
-        question:
-          "Group C recall 저하를 해결하기 위한 관찰·가설·한 변경·예상 결과·채택 gate·reject 이후 다음 질문을 포함한 실험 receipt를 작성하라.",
-        answerChecklist: [
-          "failure slice",
-          "causal hypothesis",
-          "single axis",
-          "same protocol",
-          "paired delta",
-          "global noninferiority",
-          "cost gate",
-          "artifact diff",
-          "decision",
-        ],
-        requiredConcepts: [
-          "one-hypothesis-experiment-contract",
-          "paired-fold-experiment-delta",
-          "competition-baseline-artifact",
-        ],
-        sectionId: "iteration",
-      },
-      {
-        level: "basic",
-        question:
-          "제출 20회 중 schema 수정 4회·동일 candidate 재실행 2회·public score로 다음 선택을 바꾼 6회의 adaptive feedback used를 계산하라.",
-        answerChecklist: [
-          "B used 6",
-          "not all submissions",
-          "decision-changing feedback",
-          "predeclared cap",
-          "log prior/next decision",
-          "not a generalization guarantee",
-        ],
-        requiredConcepts: ["leaderboard-adaptive-feedback-budget"],
-        sectionId: "final",
-      },
-      {
-        level: "advanced",
-        question:
-          "OOF 후보 A·B·C에서 평균·fold SD·error correlation·p95를 이용해 single·ensemble·retrain 후보를 정하고 rollback 가능한 submission manifest를 작성하라.",
-        answerChecklist: [
-          "quality direction",
-          "variance",
-          "same-row error diversity",
-          "cost",
-          "local gate",
-          "adaptive feedback log",
-          "retrain new artifact",
-          "run/checkpoint hashes",
-          "row order/range",
-          "submission checksum",
-          "rollback candidate",
-        ],
-        requiredConcepts: [
-          "paired-fold-experiment-delta",
-          "leaderboard-adaptive-feedback-budget",
-          "competition-submission-manifest",
-          "run-artifact-provenance",
-        ],
-        sectionId: "final",
-      },
+      {level:"basic",question:"Patient visit prediction row의 stable identity를 설계하세요.",answerChecklist:["patient ID","visit ID","one output","one target","unique key","schema"],requiredConcepts:["competition-evaluation-contract"],sectionId:"overview"},
+      {level:"basic",question:"Prediction cutoff와 target horizon을 구분하세요.",answerChecklist:["input boundary","future window","different sides","time convention","no overlap","version"],requiredConcepts:["competition-evaluation-contract"],sectionId:"target"},
+      {level:"basic",question:"10:00 cutoff와 24시간 horizon의 target window를 쓰세요.",answerChecklist:["open after cutoff","ends next day 10","endpoint rule","future events","binary label","timezone"],requiredConcepts:["competition-evaluation-contract"],sectionId:"target"},
+      {level:"basic",question:"Visit 평균과 patient 평균 metric이 다른 이유를 설명하세요.",answerChecklist:["row unit","group reducer","different weights","different estimand","metric contract","report both"],requiredConcepts:["competition-evaluation-contract"],sectionId:"metric"},
+      {level:"basic",question:"Higher-is-better와 lower-is-better direction을 계약에 넣는 이유를 쓰세요.",answerChecklist:["selection order","sign","loss vs score","consistent comparison","leaderboard","predeclare"],requiredConcepts:["competition-evaluation-contract"],sectionId:"metric"},
+      {level:"basic",question:"Local·public·private evaluation의 역할을 구분하세요.",answerChecklist:["local selection","public limited feedback","private final","decision rights","no reuse","manifest"],requiredConcepts:["competition-evaluation-contract"],sectionId:"roles"},
+      {level:"advanced",question:"Row·cutoff·target·metric·evaluation roles를 한 contract로 작성하세요.",answerChecklist:["identity","cutoff","horizon","label","reducer","direction","local","public","private"],requiredConcepts:["competition-evaluation-contract"],sectionId:"roles"},
+      {level:"advanced",question:"대회 row와 deployment unit이 다른 반례를 설명하세요.",answerChecklist:["competition row","deployment entity","different aggregation","different split","different claim","parallel contracts"],requiredConcepts:["competition-evaluation-contract"],sectionId:"roles"},
+      {level:"advanced",question:"Target window endpoint가 바뀔 때 label fixture를 설계하세요.",answerChecklist:["left endpoint","right endpoint","boundary event","timezone","expected label","version"],requiredConcepts:["competition-evaluation-contract"],sectionId:"target"},
+      {level:"advanced",question:"Final data를 본 뒤 model을 바꿨을 때 평가 역할 변화를 설명하세요.",answerChecklist:["feedback observed","decision changed","becomes selection data","not final","new holdout","audit"],requiredConcepts:["competition-evaluation-contract"],sectionId:"roles"},
     ],
-    papers: [
-      {
-        title: "Hidden Technical Debt in Machine Learning Systems",
-        href: "https://papers.nips.cc/paper/2015/hash/86df7dcfd896fcaf2674f757a2463eba-Abstract.html",
-        problem:
-          "Model code 밖의 data dependency·configuration·feedback·consumer와 system boundary가 누적시키는 ML 유지보수 비용",
-        contribution:
-          "ML-specific technical debt의 risk factor와 system-level anti-pattern을 software-engineering 관점에서 분류",
-        assumptions:
-          "저자들이 관찰한 production ML system 사례와 2015년 당시 tooling·organization·deployment context",
-        evidenceScope:
-          "Boundary erosion·entanglement·hidden feedback loop·data/config dependency 등 taxonomy와 사례 범위",
-        notClaim:
-          "특정 tracking tool·manifest schema·대회 workflow가 우승 또는 production reliability를 자동 보장한다는 뜻은 아님",
-        sectionId: "paper-hidden-debt",
-      },
-      {
-        title:
-          "On Over-fitting in Model Selection and Subsequent Selection Bias in Performance Evaluation",
-        href: "https://www.jmlr.org/papers/v11/cawley10a.html",
-        problem:
-          "Finite validation/CV criterion을 최적화하는 model selection도 training처럼 overfit하고 subsequent performance report를 편향시킬 수 있는 문제",
-        contribution:
-          "Model-selection criterion의 bias뿐 아니라 variance가 중요함을 분석하고 selection overfit과 evaluation bias 사례를 제시",
-        assumptions:
-          "논문의 algorithms·datasets·cross-validation estimators·nested/evaluation protocols와 finite-sample setting",
-        evidenceScope:
-          "논문 실험에서 model-selection overfit이 알고리즘 간 차이에 필적할 수 있었던 결과와 일반적 mechanism",
-        notClaim:
-          "항상 fixed K-fold가 잘못되거나 특정 fold 수·submission budget이 모든 dataset에 최적이라는 뜻은 아님",
-        sectionId: "paper-selection-bias",
-      },
-      {
-        title:
-          "The Ladder: A Reliable Leaderboard for Machine Learning Competitions",
-        href: "https://proceedings.mlr.press/v37/blum15.html",
-        problem:
-          "참가자가 holdout score를 반복 확인하고 다음 submission을 적응적으로 고를 때 leaderboard가 true performance를 충실히 나타내기 어려운 문제",
-        contribution:
-          "Competition에 맞춘 leaderboard accuracy를 정의하고 제한적 score update를 사용하는 Ladder와 adaptive setting의 이론 보장·공격/real submission 평가를 제안",
-        assumptions:
-          "논문의 fully adaptive estimation model·loss/score setting·Ladder variants·Kaggle submission experiment",
-        evidenceScope:
-          "논문의 leaderboard accuracy theorem과 simulation/adversarial/real submission utility 범위",
-        notClaim:
-          "참가자가 제출 횟수만 줄이면 private score가 보장되거나 모든 현재 competition platform이 Ladder를 사용한다는 뜻은 아님",
-        sectionId: "paper-ladder",
-      },
+    papers: [],
+  },
+  "ai/model-selection-bias": {
+    coreIdea: "Model-selection bias는 true score에 finite-validation noise가 더해진 여러 observed scores에서 maximum을 고를 때 양의 noise까지 선택해 관측 최고점이 낙관적으로 보일 수 있는 현상입니다.",
+    assumedKnowledge: [
+      { id: "expectation", role: "Noise와 selected score의 반복 평균을 읽습니다." },
+      { id: "competition-evaluation-contract", role: "같은 metric·validation data에서 candidates를 비교합니다." },
     ],
+    introducedHere: [{ id: "model-selection-maximum-optimism", role: "Noisy validation candidates의 maximum이 만드는 선택 낙관을 설명합니다." }],
+    conceptExplanations: [{ id: "model-selection-maximum-optimism", sectionId: "maximum", intuition: "실력이 같은 사람도 시험을 여러 번 보고 가장 높은 점수만 남기면 평소보다 좋아 보입니다.", workedExample: "True .70인 A·B·C가 .69·.74·.71이면 B를 고르고 관측 낙관은 .04입니다.", boundary: "모든 시행의 maximum이 반드시 낙관적이거나 같은 크기로 편향된다는 뜻은 아닙니다.", proofIdea: "Maximum은 convex이므로 E[max X]≥max E[X]입니다.", counterexample: "후보가 하나뿐이면 maximum 선택이 없어 unbiased noise의 기대는 true mean입니다." }],
+    conceptStages: [
+      {label:"Truth",relation:"후보별 population mean을 구분",concepts:["expectation","model-selection-maximum-optimism"]},
+      {label:"Noise",relation:"Finite validation의 observed score를 생성",concepts:["competition-evaluation-contract","model-selection-maximum-optimism"]},
+      {label:"Argmax",relation:"관측 최고점의 quality와 noise를 함께 선택",concepts:["model-selection-maximum-optimism"]},
+      {label:"Fresh test",relation:"Frozen candidate를 unused data에서 재평가",concepts:["train-validation-test","model-selection-maximum-optimism"]},
+    ],
+    exercises: [
+      {level:"basic",question:"True score·validation noise·observed score를 구분하세요.",answerChecklist:["mu","epsilon","X","sum","population","finite sample"],requiredConcepts:["model-selection-maximum-optimism"],sectionId:"overview"},
+      {level:"basic",question:"True .70 후보들의 .69·.74·.71에서 선택과 낙관을 계산하세요.",answerChecklist:["choose B",".74",".70",".04","positive noise","fresh test"],requiredConcepts:["model-selection-maximum-optimism"],sectionId:"maximum"},
+      {level:"basic",question:"후보가 하나일 때 maximum-selection 효과가 사라지는 이유를 쓰세요.",answerChecklist:["one candidate","no comparison","no argmax search","unbiased noise","expected X=mu","counterexample"],requiredConcepts:["model-selection-maximum-optimism"],sectionId:"maximum"},
+      {level:"basic",question:"Candidate 수가 늘면 우연한 고점 기회가 늘어나는 이유를 설명하세요.",answerChecklist:["more draws","noise extremes","maximum","same validation","selection pressure","not quality"],requiredConcepts:["model-selection-maximum-optimism"],sectionId:"budget"},
+      {level:"basic",question:"Validation sample이 작을 때 selection bias 위험이 커지는 이유를 쓰세요.",answerChecklist:["higher variance","noisier score","argmax","unstable ranks","more optimism","fresh data"],requiredConcepts:["model-selection-maximum-optimism"],sectionId:"budget"},
+      {level:"basic",question:"Independent final evaluation의 candidate freeze 조건을 설명하세요.",answerChecklist:["selection complete","recipe frozen","unused data","one evaluation","no retuning","report"],requiredConcepts:["model-selection-maximum-optimism"],sectionId:"boundary"},
+      {level:"advanced",question:"Maximum inequality의 score 합성·argmax·expectation 의도를 설명하세요.",answerChecklist:["mu plus epsilon","observed X","argmax","convex max","expectation inequality","optimism"],requiredConcepts:["model-selection-maximum-optimism"],sectionId:"maximum"},
+      {level:"advanced",question:"Correlated candidate noise가 independent 후보 intuition을 바꾸는 이유를 설명하세요.",answerChecklist:["shared folds","correlated errors","fewer effective draws","still adaptive","unknown magnitude","record family"],requiredConcepts:["model-selection-maximum-optimism"],sectionId:"budget"},
+      {level:"advanced",question:"Adaptive search history를 포함한 selection audit를 설계하세요.",answerChecklist:["candidate lineage","observed scores","next proposal","decision changes","budget","final holdout"],requiredConcepts:["model-selection-maximum-optimism"],sectionId:"budget"},
+      {level:"advanced",question:"Nested evaluation이 필요한 model-selection workflow를 설계하세요.",answerChecklist:["inner selection","outer evaluation","fold separation","full procedure","aggregate outer","final report"],requiredConcepts:["model-selection-maximum-optimism"],sectionId:"boundary"},
+    ],
+    papers: [{title:"On Over-fitting in Model Selection and Subsequent Selection Bias in Performance Evaluation",href:"https://www.jmlr.org/papers/v11/cawley10a.html",problem:"Finite validation criterion을 최적화하는 model selection의 overfit과 evaluation bias",contribution:"Selection criterion variance의 중요성과 empirical bias 사례 분석",assumptions:"논문의 algorithms·datasets·CV protocols와 finite-sample setting",evidenceScope:"JMLR 분석·experiments와 일반 mechanism",notClaim:"모든 K-fold·maximum이 같은 크기로 편향된다는 뜻은 아님",sectionId:"paper-model-selection-bias"}],
+  },
+  "ai/prediction-time-feature-availability": {
+    coreIdea: "Prediction-time feature availability는 feature가 참조한 모든 source record의 실제 system arrival이 해당 row cutoff보다 이른지 lineage로 검사해 과거에 발생했지만 당시 알 수 없던 정보를 제거하는 경계입니다.",
+    assumedKnowledge: [
+      {id:"competition-evaluation-contract",role:"Prediction row와 cutoff를 가져옵니다."},
+      {id:"fold-local-statistic",role:"Point-in-time source와 별개인 fitted-state leakage를 구분합니다."},
+    ],
+    introducedHere: [{id:"prediction-time-feature-availability",role:"Event time과 available time을 분리하고 latest dependency arrival을 cutoff와 비교합니다."}],
+    conceptExplanations: [{id:"prediction-time-feature-availability",sectionId:"overview",intuition:"예측 버튼을 누른 순간 책상 위에 없던 자료는 나중에 database에 들어왔어도 input이 아닙니다.",workedExample:"09:50 검사 결과가 10:20 확정되면 10:00 prediction에는 사용할 수 없습니다.",boundary:"Source time만 맞아도 full-data transform·future join·batch-serving skew가 남을 수 있습니다."}],
+    conceptStages: [
+      {label:"Event",relation:"현실에서 source 사건이 발생",concepts:["competition-evaluation-contract","prediction-time-feature-availability"]},
+      {label:"Arrival",relation:"System에서 record가 조회 가능해짐",concepts:["prediction-time-feature-availability"]},
+      {label:"Cutoff",relation:"Latest dependency arrival을 row cutoff와 비교",concepts:["prediction-time-feature-availability"]},
+      {label:"Trace",relation:"Feature에서 source IDs·join·window revision을 복원",concepts:["reproducible-training-run-contract","prediction-time-feature-availability"]},
+    ],
+    exercises: [
+      {level:"basic",question:"Event time과 available time을 구분하세요.",answerChecklist:["occurrence","system arrival","can differ","batch delay","approval delay","cutoff uses arrival"],requiredConcepts:["prediction-time-feature-availability"],sectionId:"overview"},
+      {level:"basic",question:"09:50 event·10:20 arrival·10:00 cutoff의 사용 가능 여부를 판정하세요.",answerChecklist:["unusable","arrival after cutoff","event insufficient","exclude","lineage","fixture"],requiredConcepts:["prediction-time-feature-availability"],sectionId:"fixture"},
+      {level:"basic",question:"Feature lineage에 넣을 source 관련 필드를 쓰세요.",answerChecklist:["source IDs","entity key","event time","available time","join revision","window"],requiredConcepts:["prediction-time-feature-availability"],sectionId:"lineage"},
+      {level:"basic",question:"여러 source를 읽는 feature의 완성 시각이 maximum인 이유를 설명하세요.",answerChecklist:["all dependencies needed","latest arrival","max","one late source","not reproducible earlier","cutoff compare"],requiredConcepts:["prediction-time-feature-availability"],sectionId:"fixture"},
+      {level:"basic",question:"Available time과 cutoff가 같은 경우 endpoint rule이 필요한 이유를 쓰세요.",answerChecklist:["equality case","strict vs inclusive","system ordering","race","predeclare","fixture"],requiredConcepts:["prediction-time-feature-availability"],sectionId:"fixture"},
+      {level:"basic",question:"Missing fallback도 lineage에 포함할 이유를 설명하세요.",answerChecklist:["source absent","fallback value","decision path","revision","serving parity","audit"],requiredConcepts:["prediction-time-feature-availability"],sectionId:"lineage"},
+      {level:"advanced",question:"Source lineage→latest arrival→cutoff admission 식의 연산을 설명하세요.",answerChecklist:["recover sources","available times","max","compare cutoff","indicator","reject late"],requiredConcepts:["prediction-time-feature-availability"],sectionId:"fixture"},
+      {level:"advanced",question:"Future dimension-table latest join의 leakage 반례를 설계하세요.",answerChecklist:["as-of missing","future correction","latest join","cutoff","point-in-time join","fixture"],requiredConcepts:["prediction-time-feature-availability"],sectionId:"boundary"},
+      {level:"advanced",question:"Fold-local statistic과 availability를 모두 지켜야 하는 이유를 설명하세요.",answerChecklist:["source boundary","fitted state boundary","different leaks","train-only fit","cutoff-only rows","both tests"],requiredConcepts:["prediction-time-feature-availability","fold-local-statistic"],sectionId:"boundary"},
+      {level:"advanced",question:"Batch feature와 online feature parity test를 설계하세요.",answerChecklist:["same cutoff rows","same source revision","same join","same fallback","value tolerance","diff provenance"],requiredConcepts:["prediction-time-feature-availability"],sectionId:"boundary"},
+    ],
+    papers: [],
+  },
+  "ai/competition-baseline": {
+    coreIdea: "Competition baseline은 data snapshot·split manifest·OOF/test prediction·metric report·submission checksum을 같은 command와 revision에서 재생성하는 첫 end-to-end artifact chain입니다.",
+    assumedKnowledge: [
+      {id:"competition-evaluation-contract",role:"Row·cutoff·target·metric을 고정합니다."},
+      {id:"pooled-oof-risk-estimate",role:"OOF predictions에서 risk를 계산합니다."},
+      {id:"run-artifact-provenance",role:"Run과 generated artifacts를 연결합니다."},
+    ],
+    introducedHere: [
+      {id:"competition-oof-coverage",role:"각 train row의 unseen prediction이 standard K-fold에서 정확히 한 번 존재하는지 검사합니다."},
+      {id:"competition-baseline-artifact",role:"Input에서 submission까지 재현 가능한 첫 기준 artifact chain을 만듭니다."},
+    ],
+    conceptExplanations: [
+      {id:"competition-oof-coverage",sectionId:"coverage",intuition:"각 학생이 자신을 가르치지 않은 선생에게 정확히 한 번 시험받았는지 출석표로 셉니다.",workedExample:"[1,1,0,2,1]이면 세 번째는 누락, 네 번째는 중복입니다.",boundary:"Repeated CV는 expected count가 다르며 group/time leakage는 coverage만으로 증명되지 않습니다."},
+      {id:"competition-baseline-artifact",sectionId:"artifact",intuition:"첫 기준점은 작은 부품이 아니라 재료를 넣어 완제품과 검사표가 나오는 최소 생산 라인입니다.",workedExample:"Data d1·split f2·config c3·code g4에서 OOF/test parquet, metric JSON, submission SHA를 만듭니다.",boundary:"재현 가능한 score가 높은 품질이나 올바른 evaluation contract를 자동 보장하지 않습니다."},
+    ],
+    conceptStages: [
+      {label:"Input",relation:"Data snapshot과 split manifest를 고정",concepts:["competition-evaluation-contract","run-artifact-provenance"]},
+      {label:"OOF",relation:"각 train row에 unseen prediction 한 개를 생성",concepts:["competition-oof-coverage","pooled-oof-risk-estimate"]},
+      {label:"Measure",relation:"OOF에서 global·fold·slice report를 생성",concepts:["competition-baseline-artifact"]},
+      {label:"Submit",relation:"Test row order·range·checksum을 봉인",concepts:["competition-baseline-artifact","run-artifact-provenance"]},
+    ],
+    exercises: [
+      {level:"basic",question:"Small model과 complete baseline artifact를 구분하세요.",answerChecklist:["model only","end-to-end chain","data","split","predictions","submission"],requiredConcepts:["competition-baseline-artifact"],sectionId:"overview"},
+      {level:"basic",question:"Coverage [1,1,0,2,1]의 누락과 중복 row를 찾으세요.",answerChecklist:["third missing","fourth duplicate","zero","two","stop metric","repair"],requiredConcepts:["competition-oof-coverage"],sectionId:"coverage"},
+      {level:"basic",question:"Standard K-fold OOF coverage가 1이어야 하는 이유를 설명하세요.",answerChecklist:["one validation fold","unseen prediction","all rows","no duplicate","metric denominator","partition"],requiredConcepts:["competition-oof-coverage"],sectionId:"coverage"},
+      {level:"basic",question:"Baseline input artifact 두 개를 쓰세요.",answerChecklist:["data snapshot","schema hash","split manifest","row IDs","group time","version"],requiredConcepts:["competition-baseline-artifact"],sectionId:"overview"},
+      {level:"basic",question:"OOF와 test prediction artifact의 row identity 차이를 설명하세요.",answerChecklist:["train rows","fold IDs","unseen target","test rows","submission order","stable IDs"],requiredConcepts:["competition-baseline-artifact"],sectionId:"artifact"},
+      {level:"basic",question:"Submission checksum이 필요한 이유를 설명하세요.",answerChecklist:["file identity","row order","postprocess","upload trace","reproduce","compare"],requiredConcepts:["competition-baseline-artifact"],sectionId:"artifact"},
+      {level:"advanced",question:"Coverage indicator→sum→global invariant 식을 설명하세요.",answerChecklist:["membership","indicator","sum folds","row count","forall rows","approve"],requiredConcepts:["competition-oof-coverage"],sectionId:"coverage"},
+      {level:"advanced",question:"Raw input에서 submission까지 baseline manifest를 설계하세요.",answerChecklist:["data hash","split","code config env","OOF","test","metric","row order","checksum"],requiredConcepts:["competition-baseline-artifact","competition-oof-coverage"],sectionId:"artifact"},
+      {level:"advanced",question:"Repeated CV의 coverage rule을 일반화하세요.",answerChecklist:["repeat count","expected R","one per repeat","aggregate policy","provenance","not standard one"],requiredConcepts:["competition-oof-coverage"],sectionId:"boundary"},
+      {level:"advanced",question:"재현 가능하지만 잘못된 baseline 반례를 설명하세요.",answerChecklist:["wrong target","leakage","fully reproducible","bad contract","quality not guaranteed","fix question"],requiredConcepts:["competition-baseline-artifact"],sectionId:"boundary"},
+    ],
+    papers: [{title:"Hidden Technical Debt in Machine Learning Systems",href:"https://papers.nips.cc/paper/2015/hash/86df7dcfd896fcaf2674f757a2463eba-Abstract.html",problem:"Model code 밖의 data·config·feedback·consumer dependency가 만드는 ML system risk",contribution:"ML-specific technical debt taxonomy와 system anti-pattern 분류",assumptions:"Production ML system 사례와 2015 tooling context",evidenceScope:"Boundary erosion·hidden feedback·data/config dependency taxonomy",notClaim:"특정 manifest schema가 reliability를 자동 보장한다는 뜻은 아님",sectionId:"paper-baseline-debt"}],
+  },
+  "ai/paired-experiment-design": {
+    coreIdea: "Paired experiment는 failure slice·원인 가설·한 축의 변경·예상 결과·quality/cost gate를 실행 전에 고정하고 같은 fold에서 baseline과 candidate를 빼 change effect를 판단하는 실험입니다.",
+    assumedKnowledge: [
+      {id:"competition-baseline-artifact",role:"Candidate가 바꿀 재현 가능한 기준점을 제공합니다."},
+      {id:"variance",role:"Fold별 delta의 흔들림을 읽습니다."},
+    ],
+    introducedHere: [
+      {id:"one-hypothesis-experiment-contract",role:"관찰·가설·한 변경·예상 결과·gate를 한 receipt로 고정합니다."},
+      {id:"paired-fold-experiment-delta",role:"같은 held-out rows에서 candidate와 baseline score를 빼 비교합니다."},
+    ],
+    conceptExplanations: [
+      {id:"one-hypothesis-experiment-contract",sectionId:"overview",intuition:"한 번에 레버 하나만 바꾸고 어느 계기판이 얼마나 움직이면 성공인지 먼저 씁니다.",workedExample:"Rare-category encoding만 바꾸고 Group C recall +.02·global noninferior·p95 +3ms 이하를 gate로 둡니다.",boundary:"상호작용을 연구하면 factorial design과 interaction question을 명시합니다."},
+      {id:"paired-fold-experiment-delta",sectionId:"paired-delta",intuition:"서로 다른 시험 점수가 아니라 같은 시험에서 두 방법의 차이를 봅니다.",workedExample:".006,.004,-.001,.005,.003의 평균은 .0034이며 fold별 방향도 함께 봅니다.",boundary:"K-fold training sets가 겹치므로 단순 SE를 독립 표본 p-value처럼 읽지 않습니다."},
+    ],
+    conceptStages: [
+      {label:"Observe",relation:"Global 평균 안의 failure slice를 특정",concepts:["competition-baseline-artifact","one-hypothesis-experiment-contract"]},
+      {label:"Hypothesize",relation:"Testable cause와 예상 결과를 기록",concepts:["one-hypothesis-experiment-contract"]},
+      {label:"Pair",relation:"같은 fold에서 baseline과 candidate를 비교",concepts:["paired-fold-experiment-delta"]},
+      {label:"Decide",relation:"Quality·slice·cost gate로 accept/reject",concepts:["one-hypothesis-experiment-contract","paired-fold-experiment-delta"]},
+    ],
+    exercises: [
+      {level:"basic",question:"Failure slice와 causal hypothesis를 구분하세요.",answerChecklist:["observed subset","error evidence","proposed cause","testable","not same","expected result"],requiredConcepts:["one-hypothesis-experiment-contract"],sectionId:"overview"},
+      {level:"basic",question:"Single-axis change가 필요한 이유를 설명하세요.",answerChecklist:["attribute effect","one variable","same protocol","interaction caveat","artifact diff","next question"],requiredConcepts:["one-hypothesis-experiment-contract"],sectionId:"change"},
+      {level:"basic",question:"Adoption gate에 넣을 네 목적을 쓰세요.",answerChecklist:["global quality","slice quality","latency","memory","thresholds","predeclare"],requiredConcepts:["one-hypothesis-experiment-contract"],sectionId:"change"},
+      {level:"basic",question:"Fold delta .006,.004,-.001,.005,.003의 평균을 계산하세요.",answerChecklist:["sum .017","divide five",".0034","one negative","paired folds","inspect spread"],requiredConcepts:["paired-fold-experiment-delta"],sectionId:"paired-delta"},
+      {level:"basic",question:"서로 다른 folds의 score를 빼면 안 되는 이유를 쓰세요.",answerChecklist:["different rows","difficulty confounded","unpaired","same fold needed","same metric","same weights"],requiredConcepts:["paired-fold-experiment-delta"],sectionId:"paired-delta"},
+      {level:"basic",question:"Reject 결과도 artifact로 남길 이유를 설명하세요.",answerChecklist:["avoid repeat","narrow hypothesis","negative evidence","cost","decision trace","next experiment"],requiredConcepts:["one-hypothesis-experiment-contract"],sectionId:"change"},
+      {level:"advanced",question:"Failure→hypothesis→one change→gate receipt를 설계하세요.",answerChecklist:["slice","cause","single axis","expected result","same protocol","quality gate","cost gate","decision"],requiredConcepts:["one-hypothesis-experiment-contract"],sectionId:"overview"},
+      {level:"advanced",question:"Paired delta의 subtraction·average·deviation 연산을 설명하세요.",answerChecklist:["same fold subtraction","effect","sum deltas","divide K","deviation","stability"],requiredConcepts:["paired-fold-experiment-delta"],sectionId:"paired-delta"},
+      {level:"advanced",question:"두 축 interaction을 factorial question으로 설계하세요.",answerChecklist:["factor A","factor B","four cells","main effects","interaction","same folds"],requiredConcepts:["one-hypothesis-experiment-contract"],sectionId:"boundary"},
+      {level:"advanced",question:"Mean delta가 양수지만 한 critical slice가 악화된 채택 판단을 설계하세요.",answerChecklist:["global gain","slice regression","predeclared gate","reject or exception","cost","document"],requiredConcepts:["paired-fold-experiment-delta"],sectionId:"boundary"},
+    ],
+    papers: [],
+  },
+  "ai/competition-submission-control": {
+    coreIdea: "Submission control은 upload 횟수와 external score가 후속 선택을 바꾼 adaptive feedback 횟수를 구분해 사전 budget에서 candidate를 동결하고, run·retrain·inference·row order·checksum·rollback을 final manifest로 봉인하는 절차입니다.",
+    assumedKnowledge: [
+      {id:"model-selection-maximum-optimism",role:"External score를 반복 선택에 쓸 때 생기는 낙관을 설명합니다."},
+      {id:"run-artifact-provenance",role:"Candidate와 generated submission을 연결합니다."},
+    ],
+    introducedHere: [
+      {id:"leaderboard-adaptive-feedback-budget",role:"Public result가 다음 선택을 바꾼 횟수를 제한하고 셉니다."},
+      {id:"competition-submission-manifest",role:"Candidate부터 uploaded file까지 rollback 가능한 lineage를 봉인합니다."},
+    ],
+    conceptExplanations: [
+      {id:"leaderboard-adaptive-feedback-budget",sectionId:"feedback",intuition:"정답 힌트를 보고 답을 바꾼 횟수를 세어 public score를 무제한 추가 학습 data로 쓰지 않게 합니다.",workedExample:"20 uploads 중 public score로 다음 선택을 바꾼 6회면 B_used=6입니다.",boundary:"Budget은 adaptive overfit을 제거하는 theorem이 아니며 sample shift와 score precision도 작용합니다."},
+      {id:"competition-submission-manifest",sectionId:"manifest",intuition:"최종 택배 상자에 어느 생산 라인과 검사표에서 나온 물건인지 추적 번호를 붙입니다.",workedExample:"Run r7·checkpoint h8·retrain yes·image digest·row order·submission SHA s9를 저장합니다.",boundary:"Manifest는 잘못된 candidate 선택을 고치지 않지만 replay·diff·rollback을 가능하게 합니다."},
+    ],
+    conceptStages: [
+      {label:"Submit",relation:"Prediction artifact를 external evaluator에 전달",concepts:["run-artifact-provenance","competition-submission-manifest"]},
+      {label:"Count",relation:"Decision-changing feedback만 budget에 누적",concepts:["leaderboard-adaptive-feedback-budget","model-selection-maximum-optimism"]},
+      {label:"Freeze",relation:"사전 budget·stop condition에서 recipe를 동결",concepts:["leaderboard-adaptive-feedback-budget"]},
+      {label:"Seal",relation:"Candidate·retrain·inference·file lineage를 manifest로 봉인",concepts:["competition-submission-manifest"]},
+    ],
+    exercises: [
+      {level:"basic",question:"Submission count와 adaptive feedback count를 구분하세요.",answerChecklist:["all uploads","observed result","decision change","not all count","separate ledgers","budget"],requiredConcepts:["leaderboard-adaptive-feedback-budget"],sectionId:"overview"},
+      {level:"basic",question:"20 submissions 중 decision-changing feedback 6회의 B_used를 계산하세요.",answerChecklist:["six","not twenty","indicator","sum","schema fixes zero","repeats zero"],requiredConcepts:["leaderboard-adaptive-feedback-budget"],sectionId:"feedback"},
+      {level:"basic",question:"Schema fix가 adaptive count 0일 수 있는 조건을 설명하세요.",answerChecklist:["no score-driven choice","same candidate","format only","record submission","indicator zero","verify"],requiredConcepts:["leaderboard-adaptive-feedback-budget"],sectionId:"feedback"},
+      {level:"basic",question:"Candidate freeze가 필요한 이유를 설명하세요.",answerChecklist:["stop selection","protect final","budget reached","recipe fixed","no retune","new holdout if changed"],requiredConcepts:["leaderboard-adaptive-feedback-budget"],sectionId:"boundary"},
+      {level:"basic",question:"Final manifest의 candidate lineage 필드를 쓰세요.",answerChecklist:["run ID","code","data","split","preprocess","checkpoint"],requiredConcepts:["competition-submission-manifest"],sectionId:"manifest"},
+      {level:"basic",question:"Submission file integrity 필드를 쓰세요.",answerChecklist:["row count","row order","missing","range","checksum","uploaded ID"],requiredConcepts:["competition-submission-manifest"],sectionId:"manifest"},
+      {level:"advanced",question:"Feedback indicator→sum→freeze 식의 연산을 설명하세요.",answerChecklist:["compare decisions","because of feedback","indicator","sum adaptive","compare cap","freeze"],requiredConcepts:["leaderboard-adaptive-feedback-budget"],sectionId:"feedback"},
+      {level:"advanced",question:"Candidate retrain과 OOF candidate의 lineage를 설계하세요.",answerChecklist:["selected run","OOF report","retrain flag","full data recipe","new checkpoint","link both"],requiredConcepts:["competition-submission-manifest"],sectionId:"manifest"},
+      {level:"advanced",question:"Final score를 보고 다시 고친 경우 필요한 조치를 쓰세요.",answerChecklist:["final consumed","becomes selection","record adaptation","new independent data","new manifest","freeze again"],requiredConcepts:["leaderboard-adaptive-feedback-budget","competition-submission-manifest"],sectionId:"boundary"},
+      {level:"advanced",question:"Rollback 가능한 submission manifest를 설계하세요.",answerChecklist:["current artifact","previous artifact","checksums","environment","row order","decision reason","rollback command"],requiredConcepts:["competition-submission-manifest"],sectionId:"boundary"},
+    ],
+    papers: [{title:"The Ladder: A Reliable Leaderboard for Machine Learning Competitions",href:"https://proceedings.mlr.press/v37/blum15.html",problem:"Adaptive submissions가 leaderboard holdout에 overfit하는 문제",contribution:"Limited score update mechanism과 adaptive setting의 분석",assumptions:"논문의 loss·leaderboard mechanism·submission experiments",evidenceScope:"ICML 2015 theorem과 simulation·real submission results",notClaim:"Upload 횟수만 줄이면 private score가 보장된다는 뜻은 아님",sectionId:"paper-submission-control"}],
   },
   "ai/cross-validation": {
     coreIdea: "교차검증은 split 이름을 고르는 기술이 아니라 배포에서 새로 만날 단위와 loss의 기대값을 먼저 정의하고 그 질문을 과거 data의 분할로 재연하는 평가 설계입니다.",
