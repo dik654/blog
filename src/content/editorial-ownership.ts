@@ -1579,19 +1579,60 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [{ kind: "primary-source", rule: "Label smoothing claim은 Inception 논문의 formulation·ImageNet recipe 범위로 제한한다." }, { kind: "standard", rule: "K·ε·target formula·class weight·ignore index·reduction·calibration을 기록한다." }],
   },
   "image-classification-pipeline": {
-    title: "이미지 분류 파이프라인 글이 소유하는 범위",
+    title: "이미지 분류 데이터 경계 글이 소유하는 범위",
     owns: [
       "같은 원본·대상·촬영 세션의 sample identity와 deployment 단위 group split",
-      "Pretrained image input contract와 architecture 후보의 paired quality·runtime budget 비교",
-      "Resolution stage와 confidence-gated pseudo-label의 class별 precision·coverage audit",
-      "Logit→calibrated probability→TTA/ensemble→decision으로 이어지는 versioned inference contract",
+      "Split·class map·input·model·quality·runtime을 묶은 baseline receipt와 reproduction gate",
     ],
     reuses: [
-      { label: "Image tensor·convolution·spatial prior", href: "/ai/cnn" },
       {
         label: "Train·validation·test와 empirical risk",
         href: "/ai/train-validation-test",
       },
+      { label: "Image tensor와 source lineage", href: "/ai/cnn" },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "Group-aware split은 GroupKFold의 non-overlap semantics와 caller-provided group 가정 범위로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Identity rule·split digest·class map·input transform·weight·seed·metric·runtime을 함께 기록한다.",
+      },
+    ],
+  },
+  "image-backbone-scaling": {
+    title: "이미지 backbone scaling 글이 소유하는 범위",
+    owns: [
+      "Resolution이 CNN spatial area와 global-attention pair cost에 미치는 차수",
+      "Depth·width·resolution compound scaling heuristic과 target runtime frontier",
+      "같은 input·fine-tuning budget에서 backbone quality·latency·memory를 고르는 절차",
+    ],
+    reuses: [
+      { label: "CNN spatial geometry", href: "/ai/cnn" },
+      { label: "ViT patch와 attention", href: "/ai/vision-transformer" },
+      { label: "Pretrained handoff", href: "/ai/transfer-learning-practice" },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "EfficientNet·ConvNeXt·ViT claim은 각 논문의 data·pretraining·architecture·evaluation 범위로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "FLOPs와 실측 p50/p95·throughput·memory를 분리하고 target runtime 조건을 고정한다.",
+      },
+    ],
+  },
+  "image-training-stages": {
+    title: "이미지 training stage 글이 소유하는 범위",
+    owns: [
+      "Resolution 변경 시 batch·crop·optimizer clock·position state를 넘기는 stage boundary",
+      "Weak-view confidence gate와 strong-view consistency의 pseudo-label objective",
+      "Class별 pseudo-label precision·coverage와 rollback release gate",
+    ],
+    reuses: [
       {
         label: "Augmentation distribution과 target transform",
         href: "/ai/data-augmentation",
@@ -1600,6 +1641,27 @@ export const EDITORIAL_BOUNDARIES = {
         label: "Pretrained handoff와 fine-tuning scope",
         href: "/ai/transfer-learning-practice",
       },
+      { label: "Cross-entropy", href: "/ai/cross-entropy" },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "RandAugment·FixMatch claim은 논문의 operation set·label regime·benchmark·unlabeled distribution 범위로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Stage handoff와 teacher·pool·threshold·class별 precision·coverage·rollback을 generation별로 기록한다.",
+      },
+    ],
+  },
+  "image-probability-decisions": {
+    title: "이미지 probability·decision 글이 소유하는 범위",
+    owns: [
+      "Logit·probability·hard action을 분리하는 inference state boundary",
+      "Scalar temperature scaling과 calibration split selection",
+      "Calibration→TTA→ensemble→threshold 순서와 versioned serving contract",
+    ],
+    reuses: [
       {
         label: "Calibration·threshold·precision/recall",
         href: "/ai/imbalanced-data",
@@ -1612,11 +1674,11 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [
       {
         kind: "primary-source",
-        rule: "EfficientNet·ConvNeXt·ViT·RandAugment·FixMatch·temperature-scaling claim은 각 논문의 data·architecture·pretraining·evaluation 범위로 제한한다.",
+        rule: "Temperature-scaling claim은 Guo et al.의 base models·held-out validation·in-distribution evaluation 범위로 제한한다.",
       },
       {
         kind: "standard",
-        rule: "Identity·split manifest·class mapping·input transform·weight revision·seed·metric·slice·latency·calibration·decision parameter를 함께 기록한다.",
+        rule: "Class mapping·calibration split·temperature·TTA·model weights·threshold·latency·rollback을 적용 순서와 함께 기록한다.",
       },
     ],
   },

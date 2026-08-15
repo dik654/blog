@@ -1385,24 +1385,40 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "ai/image-classification-pipeline": [
     {
+      kind: "공식 문서",
+      label: "scikit-learn GroupKFold",
+      href: "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupKFold.html",
+      note: "non-overlapping group을 cross-validation fold로 배정하는 API contract",
+    },
+    {
+      kind: "핵심 논문",
+      label: "Improving Reproducibility in Machine Learning Research",
+      href: "https://www.jmlr.org/papers/v22/20-303.html",
+      note: "data·code·hyperparameter·result artifact의 reproducibility checklist",
+    },
+  ],
+  "ai/image-backbone-scaling": [
+    {
       kind: "핵심 논문",
       label:
         "EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks",
-      href: "https://arxiv.org/abs/1905.11946",
+      href: "https://proceedings.mlr.press/v97/tan19a.html",
       note: "depth·width·resolution을 함께 조정하는 compound scaling",
     },
     {
       kind: "핵심 논문",
       label: "A ConvNet for the 2020s",
-      href: "https://arxiv.org/abs/2201.03545",
+      href: "https://openaccess.thecvf.com/content/CVPR2022/html/Liu_A_ConvNet_for_the_2020s_CVPR_2022_paper.html",
       note: "Transformer 설계 선택을 convolutional network에 적용한 ConvNeXt",
     },
     {
       kind: "핵심 논문",
       label: "An Image is Worth 16x16 Words",
-      href: "https://arxiv.org/abs/2010.11929",
+      href: "https://openreview.net/forum?id=YicbFdNTTy",
       note: "image patch를 token으로 처리하는 Vision Transformer 원 논문",
     },
+  ],
+  "ai/image-training-stages": [
     {
       kind: "핵심 논문",
       label: "RandAugment: Practical Automated Data Augmentation",
@@ -1416,6 +1432,8 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://proceedings.neurips.cc/paper/2020/hash/06964dce9addb1c5cb5d6e3d9838f733-Abstract.html",
       note: "weak-view confidence pseudo-label과 strong-view consistency를 결합한 semi-supervised 학습",
     },
+  ],
+  "ai/image-probability-decisions": [
     {
       kind: "핵심 논문",
       label: "On Calibration of Modern Neural Networks",

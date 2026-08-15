@@ -11933,45 +11933,9 @@ export const ARTICLE_LEARNING: Readonly<
   },
   "ai/image-classification-pipeline": {
     coreIdea:
-      "이미지 분류 파이프라인은 architecture 이름을 고르는 순서가 아니라 deployment에서 새 sample로 셀 identity를 먼저 고정하고, pretrained input contract와 quality–runtime budget 안에서 backbone·augmentation·resolution·pseudo-label을 한 축씩 비교한 뒤, logit·probability·decision을 분리해 versioning하는 과정입니다.",
-    assumedKnowledge: [
-      {
-        id: "train-validation-test",
-        role: "Parameter fitting·pipeline selection·최종 test의 sample 사용을 분리합니다.",
-      },
-      {
-        id: "empirical-risk",
-        role: "Validation examples의 평균 loss를 같은 preprocessing과 denominator로 계산합니다.",
-      },
-      {
-        id: "tensor-batch",
-        role: "Image의 batch·channel·height·width axis를 읽습니다.",
-      },
-      {
-        id: "convolution-spatial-geometry",
-        role: "Resolution·stride가 CNN feature-map area를 어떻게 바꾸는지 계산합니다.",
-      },
-      {
-        id: "self-attention",
-        role: "Patch token 수가 global pairwise attention cost를 바꾸는 이유를 읽습니다.",
-      },
-      {
-        id: "pretrained-handoff-contract",
-        role: "Weight와 architecture·preprocessing revision을 함께 target model에 넘깁니다.",
-      },
-      {
-        id: "augmentation-risk-objective",
-        role: "Transform distribution과 target map을 training objective 일부로 읽습니다.",
-      },
-      {
-        id: "cross-entropy-nll",
-        role: "Supervised·pseudo-label·calibration NLL을 계산합니다.",
-      },
-      {
-        id: "conditional-probability",
-        role: "Predicted confidence와 실제 correctness frequency의 관계를 해석합니다.",
-      },
-    ],
+      "이미지 분류 실험은 파일을 먼저 나누는 일이 아니라 배포에서 독립적으로 만날 identity를 정의하고, 그 group split과 class·input·model·quality·runtime 조건을 한 baseline receipt로 고정하는 일에서 시작합니다.",
+    entryLevel: true,
+    assumedKnowledge: [],
     introducedHere: [
       {
         id: "image-identity-group-split",
@@ -11981,39 +11945,11 @@ export const ARTICLE_LEARNING: Readonly<
         id: "image-pipeline-baseline-receipt",
         role: "Data·input·model·quality·runtime 조건을 하나의 재현 가능한 기준선으로 저장합니다.",
       },
-      {
-        id: "resolution-compute-scaling",
-        role: "Image 한 변 증가가 CNN과 global-attention ViT cost에 미치는 차수를 비교합니다.",
-      },
-      {
-        id: "compound-model-scaling",
-        role: "Depth·width·resolution을 하나의 resource coefficient로 균형 있게 키우는 heuristic을 읽습니다.",
-      },
-      {
-        id: "backbone-budget-comparison",
-        role: "후보 architecture를 같은 target evidence와 실제 runtime budget에서 선택합니다.",
-      },
-      {
-        id: "resolution-stage-boundary",
-        role: "Resolution 변경을 batch·crop·schedule state가 바뀌는 새 training stage로 기록합니다.",
-      },
-      {
-        id: "confidence-gated-pseudo-label",
-        role: "Weak-view confidence로 선택한 unlabeled sample의 strong-view consistency를 학습합니다.",
-      },
-      {
-        id: "temperature-scaling-calibration",
-        role: "고정 logit의 argmax는 유지하며 scalar temperature로 probability confidence를 맞춥니다.",
-      },
-      {
-        id: "image-inference-decision-contract",
-        role: "Calibration·TTA·ensemble·threshold 순서와 parameter를 serving artifact로 묶습니다.",
-      },
     ],
     conceptExplanations: [
       {
         id: "image-identity-group-split",
-        sectionId: "overview",
+        sectionId: "identity",
         intuition:
           "같은 사람을 여러 각도에서 찍은 사진은 파일이 여러 개여도 시험에서는 한 사람으로 취급해 한쪽 split에만 둡니다.",
         workedExample:
@@ -12023,7 +11959,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         id: "image-pipeline-baseline-receipt",
-        sectionId: "overview",
+        sectionId: "baseline",
         intuition:
           "요리 결과를 비교하려면 재료 목록과 조리법뿐 아니라 같은 시식표와 조리 시간까지 한 영수증에 남겨야 합니다.",
         workedExample:
@@ -12031,298 +11967,422 @@ export const ARTICLE_LEARNING: Readonly<
         boundary:
           "Checkpoint weight만 저장하면 class order·normalization·threshold를 복원할 수 없으며 실험마다 search budget이 다르면 model effect를 비교할 수 없습니다.",
       },
-      {
-        id: "resolution-compute-scaling",
-        sectionId: "backbone",
-        intuition:
-          "사진 한 변을 두 배로 만들면 pixel은 네 배지만 모든 patch 쌍을 비교하는 표의 칸은 열여섯 배가 됩니다.",
-        workedExample:
-          "P=16에서 r=224이면 N=196, r=448이면 N=784이고 attention score entries는 38,416에서 614,656으로 16배가 됩니다.",
-        boundary:
-          "식은 global attention 지배항이며 local/window attention·kernel fusion·memory traffic을 생략하므로 실제 latency는 runtime에서 측정해야 합니다.",
-      },
-      {
-        id: "compound-model-scaling",
-        sectionId: "backbone",
-        intuition:
-          "건물 층수만 높이기보다 각 층의 너비와 도면 해상도를 함께 늘려 한쪽 병목이 전체 성능을 막지 않게 합니다.",
-        workedExample:
-          "φ가 1 증가할 때 d=α^φ, w=β^φ, r=γ^φ로 키우고 convolutional cost 근사 αβ²γ²≈2를 만족하도록 baseline search에서 비율을 고릅니다.",
-        boundary:
-          "EfficientNet 논문의 heuristic과 NAS baseline 조건이며 α·β·γ가 다른 architecture·accelerator의 최적 비율이라는 theorem은 아닙니다.",
-      },
-      {
-        id: "backbone-budget-comparison",
-        sectionId: "backbone",
-        intuition:
-          "후보의 시험 점수만이 아니라 정해진 장비에서 답을 내는 시간과 동시에 처리할 수 있는 양까지 같은 표에서 고릅니다.",
-        workedExample:
-          "세 후보를 같은 split·resolution·five seeds·20 trial budget으로 fine-tune하고 macro recall±SE, p95 batch-1 latency, throughput, peak memory를 비교합니다.",
-        boundary:
-          "FLOPs·parameter 수는 latency proxy일 뿐이며 pretrained data·recipe가 다르면 architecture만의 인과 효과로 해석할 수 없습니다.",
-      },
-      {
-        id: "resolution-stage-boundary",
-        sectionId: "training",
-        intuition:
-          "작은 사진 연습에서 큰 사진 연습으로 넘어가면 같은 수업의 다음 날이 아니라 문제 크기와 한 번에 푸는 수가 바뀐 새 단계입니다.",
-        workedExample:
-          "160px stage 뒤 320px로 바꾸며 batch 256→64, crop scale·LR local clock·ViT position interpolation을 stage manifest에 함께 기록합니다.",
-        boundary:
-          "Resolution gain을 단순히 더 많은 updates의 효과와 섞으면 안 되며 원본 object detail이 없으면 upsampling은 새 정보를 만들지 못합니다.",
-      },
-      {
-        id: "confidence-gated-pseudo-label",
-        sectionId: "training",
-        intuition:
-          "모델이 약하게 바꾼 사진에서 충분히 확신한 임시 답만 골라, 강하게 바꾼 같은 사진에도 답을 유지하도록 연습합니다.",
-        workedExample:
-          "τ=.95에서 class A는 precision .98/coverage .60, class B는 .82/.08이면 전체 선택 수가 좋아 보여도 B pseudo-label은 재조정하거나 제외합니다.",
-        boundary:
-          "Confidence는 correctness가 아니며 out-of-domain unlabeled data·class imbalance·confirmation bias에서는 높은 threshold도 오류 증폭을 막지 못할 수 있습니다.",
-      },
-      {
-        id: "temperature-scaling-calibration",
-        sectionId: "postprocess",
-        intuition:
-          "정답 순서는 그대로 두고 점수표의 자신감 눈금만 한 개의 온도 손잡이로 완만하거나 뾰족하게 조정합니다.",
-        workedExample:
-          "Logits (4,2,0)에 T=2를 적용하면 (2,1,0)의 softmax가 되어 top class는 같지만 maximum probability는 낮아집니다.",
-        boundary:
-          "Scalar T는 ranking·accuracy·class-specific 오류를 고치지 않으며 calibration split과 다른 deployment shift에서 다시 틀어질 수 있습니다.",
-      },
-      {
-        id: "image-inference-decision-contract",
-        sectionId: "postprocess",
-        intuition:
-          "원점수에서 최종 경보까지 거치는 눈금 보정·여러 표 합치기·기준선 적용 순서를 하나의 조리법으로 묶습니다.",
-        workedExample:
-          "Class map v3 → resize/crop v5 → model A/B probability → T=1.7 → valid flip TTA → weights (.7,.3) → class threshold를 artifact에 저장합니다.",
-        boundary:
-          "Logit average와 probability average는 같지 않고 class order·calibration이 다른 model을 그대로 평균하면 threshold 의미가 무너집니다.",
-      },
     ],
     conceptStages: [
       {
-        label: "Data boundary",
-        relation: "Deployment identity로 split하고 비교 기준을 고정",
+        label: "Source unit",
+        relation: "파일과 실제 배포 identity를 분리",
+        concepts: ["image-identity-group-split"],
+      },
+      {
+        label: "Group split",
+        relation: "Identity 집합의 train·validation overlap을 차단",
+        concepts: ["train-validation-test", "image-identity-group-split"],
+      },
+      {
+        label: "Baseline receipt",
+        relation: "Data·input·model·quality·runtime을 한 generation으로 고정",
         concepts: [
-          "train-validation-test",
           "image-identity-group-split",
           "image-pipeline-baseline-receipt",
         ],
       },
       {
-        label: "Backbone budget",
-        relation:
-          "Spatial geometry와 attention cost에서 후보를 만들고 target runtime으로 선택",
-        concepts: [
-          "convolution-spatial-geometry",
-          "self-attention",
-          "resolution-compute-scaling",
-          "compound-model-scaling",
-          "pretrained-handoff-contract",
-          "backbone-budget-comparison",
-        ],
-      },
-      {
-        label: "Training stages",
-        relation:
-          "허용 transform과 resolution boundary 뒤 unlabeled consistency를 선택적으로 추가",
-        concepts: [
-          "augmentation-risk-objective",
-          "resolution-stage-boundary",
-          "cross-entropy-nll",
-          "confidence-gated-pseudo-label",
-        ],
-      },
-      {
-        label: "Probability·decision",
-        relation: "Logit confidence를 보정하고 운영 action까지 versioning",
-        concepts: [
-          "conditional-probability",
-          "temperature-scaling-calibration",
-          "backbone-budget-comparison",
-          "image-inference-decision-contract",
-        ],
+        label: "Reproduction gate",
+        relation: "Split·preprocessing·logit·metric parity를 재생",
+        concepts: ["image-pipeline-baseline-receipt", "empirical-risk"],
       },
     ],
     exercises: [
       {
         level: "basic",
         question:
-          "같은 환자의 세 촬영본과 다른 환자의 두 촬영본을 train·validation에 나누고 group-overlap 검사와 split artifact를 작성하라.",
+          "Source object·derivative image·identity group의 차이를 상품 crop 예로 설명하라.",
         answerChecklist: [
-          "patient identity key",
-          "same patient one split",
-          "empty group intersection",
-          "near-duplicate check",
-          "split digest",
+          "source product",
+          "derived crops",
+          "shared identity key",
           "deployment unit",
+        ],
+        requiredConcepts: ["image-identity-group-split"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "같은 환자의 세 촬영본을 어느 split에 배정해야 하는지와 이유를 적어라.",
+        answerChecklist: [
+          "patient identity",
+          "same group",
+          "one split",
+          "memorization risk",
         ],
         requiredConcepts: [
           "image-identity-group-split",
           "train-validation-test",
         ],
-        sectionId: "overview",
+        sectionId: "identity",
+      },
+      {
+        level: "basic",
+        question:
+          "Train과 validation group set으로 overlap O와 pass indicator를 계산하라.",
+        answerChecklist: [
+          "group sets",
+          "intersection",
+          "overlap size",
+          "pass only at zero",
+        ],
+        requiredConcepts: ["image-identity-group-split"],
+        sectionId: "identity",
+      },
+      {
+        level: "basic",
+        question:
+          "Exact hash만으로 near-duplicate leakage를 막을 수 없는 이유를 설명하라.",
+        answerChecklist: ["crop", "resize", "compression", "source lineage"],
+        requiredConcepts: ["image-identity-group-split"],
+        sectionId: "identity",
+      },
+      {
+        level: "basic",
+        question:
+          "Baseline receipt의 data·input·model·evaluation 필드를 하나씩 적어라.",
+        answerChecklist: [
+          "split digest",
+          "preprocessing",
+          "weight revision",
+          "metric/runtime",
+        ],
+        requiredConcepts: ["image-pipeline-baseline-receipt"],
+        sectionId: "baseline",
+      },
+      {
+        level: "basic",
+        question:
+          "Candidate와 baseline의 paired quality gain을 seed 두 개의 수치로 계산하라.",
+        answerChecklist: [
+          "same seeds",
+          "two differences",
+          "mean difference",
+          "direction fixed",
+        ],
+        requiredConcepts: ["image-pipeline-baseline-receipt", "empirical-risk"],
+        sectionId: "baseline",
       },
       {
         level: "advanced",
         question:
-          "Image classifier baseline receipt에 data·input·model·training·quality·system 필드를 설계하고 두 run의 공정 비교 test를 작성하라.",
+          "Patient·device·time가 얽힌 deployment에서 group split과 별도 holdout axes를 설계하라.",
         answerChecklist: [
-          "split/class map",
-          "preprocessing",
-          "weight revision",
-          "seeds/search budget",
-          "NLL/slices",
-          "p95/memory",
-          "one changed axis",
+          "patient group",
+          "device slice",
+          "time cutoff",
+          "no overlap",
+          "deployment rationale",
+          "manifest",
         ],
-        requiredConcepts: ["image-pipeline-baseline-receipt", "empirical-risk"],
+        requiredConcepts: [
+          "image-identity-group-split",
+          "train-validation-test",
+        ],
+        sectionId: "identity",
+      },
+      {
+        level: "advanced",
+        question:
+          "Checkpoint만 남긴 실험을 재현 가능하게 만들 baseline receipt 복구 계획을 작성하라.",
+        answerChecklist: [
+          "data revision",
+          "class order",
+          "input transform",
+          "training seeds",
+          "metrics",
+          "hardware",
+          "unknown fields",
+        ],
+        requiredConcepts: ["image-pipeline-baseline-receipt"],
+        sectionId: "baseline",
+      },
+      {
+        level: "advanced",
+        question:
+          "Quality가 올랐지만 p95 budget을 넘은 candidate의 release 판정과 증거를 작성하라.",
+        answerChecklist: [
+          "paired gain",
+          "latency budget",
+          "AND gate",
+          "reject",
+          "same runtime",
+          "receipt",
+        ],
+        requiredConcepts: ["image-pipeline-baseline-receipt"],
+        sectionId: "baseline",
+      },
+      {
+        level: "advanced",
+        question:
+          "Data generation을 다시 만들었을 때 split·preprocessing·logit·metric parity gate를 설계하라.",
+        answerChecklist: [
+          "split digest",
+          "class parity",
+          "transform parity",
+          "logit tolerance",
+          "denominator",
+          "rollback",
+        ],
+        requiredConcepts: [
+          "image-pipeline-baseline-receipt",
+          "image-identity-group-split",
+        ],
+        sectionId: "release",
+      },
+    ],
+    papers: [
+      {
+        title: "GroupKFold",
+        href: "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupKFold.html",
+        problem:
+          "Related samples가 train과 validation fold를 함께 건너는 leakage 문제",
+        contribution:
+          "Non-overlapping group을 fold 단위로 배정하는 splitter contract",
+        assumptions:
+          "Caller가 sample별 올바른 group identity를 제공한다는 가정",
+        evidenceScope:
+          "Scikit-learn GroupKFold API와 non-overlap semantics 범위",
+        notClaim:
+          "API가 identity를 발견하거나 time·site shift를 자동으로 모사한다는 뜻은 아님",
+        sectionId: "paper-group-kfold",
+      },
+      {
+        title: "Improving Reproducibility in Machine Learning Research",
+        href: "https://www.jmlr.org/papers/v22/20-303.html",
+        problem:
+          "Data·code·hyperparameter·result reporting 누락으로 재현이 어려운 문제",
+        contribution:
+          "ML 연구 artifact와 reporting의 reproducibility checklist와 관찰",
+        assumptions: "논문의 conference process와 empirical survey 범위",
+        evidenceScope:
+          "재현 가능한 experiment receipt와 reporting practice의 근거 범위",
+        notClaim:
+          "Checklist 충족만으로 scientific claim이나 production parity가 증명된다는 뜻은 아님",
+        sectionId: "paper-ml-checklist",
+      },
+    ],
+  },
+  "ai/image-backbone-scaling": {
+    coreIdea:
+      "이미지 backbone은 pixels를 reusable representation으로 바꾸는 model body이며, resolution이 CNN area와 global-attention pair cost를 다르게 키우는 방식을 계산하고 depth·width·resolution 후보를 같은 target runtime frontier에서 고릅니다.",
+    entryLevel: true,
+    assumedKnowledge: [],
+    introducedHere: [
+      {
+        id: "resolution-compute-scaling",
+        role: "Input side와 patch 수가 CNN area·global attention pair cost를 어떻게 키우는지 계산합니다.",
+      },
+      {
+        id: "compound-model-scaling",
+        role: "Depth·width·resolution을 하나의 resource step으로 함께 움직이는 heuristic을 읽습니다.",
+      },
+      {
+        id: "backbone-budget-comparison",
+        role: "같은 evidence에서 quality·latency·throughput·memory frontier로 후보를 선택합니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "resolution-compute-scaling",
+        sectionId: "resolution-cost",
+        intuition:
+          "사진 한 변을 두 배로 만들면 pixel은 네 배지만 모든 patch 쌍을 비교하는 칸은 열여섯 배가 됩니다.",
+        workedExample:
+          "P=16에서 224px는 196 tokens, 448px는 784 tokens이고 pair entries는 38,416에서 614,656으로 증가합니다.",
+        boundary:
+          "Global attention 지배항이며 local attention·kernel·memory traffic을 생략하므로 실제 latency는 측정합니다.",
+      },
+      {
+        id: "compound-model-scaling",
+        sectionId: "compound-scaling",
+        intuition:
+          "층수만 높이지 않고 층수·채널·도면 크기를 한 resource 단계에서 함께 조절합니다.",
+        workedExample:
+          "φ가 1 늘 때 d=α^φ, w=β^φ, r=γ^φ로 키우고 αβ²γ²≈2인 후보를 만듭니다.",
+        boundary:
+          "EfficientNet의 convolutional heuristic이며 다른 architecture·accelerator의 최적 비율 theorem이 아닙니다.",
+      },
+      {
+        id: "backbone-budget-comparison",
+        sectionId: "budget-comparison",
+        intuition:
+          "시험 점수뿐 아니라 정해진 장비에서 답을 내는 시간과 memory까지 같은 표에서 봅니다.",
+        workedExample:
+          "같은 split·input·five seeds에서 macro recall, p95, throughput과 peak memory를 비교합니다.",
+        boundary:
+          "FLOPs·parameters는 latency proxy이고 pretraining recipe가 다르면 architecture만의 인과 효과가 아닙니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "Representation",
+        relation: "Pixels를 local feature 또는 patch tokens로 변환",
+        concepts: ["convolution-spatial-geometry", "self-attention"],
+      },
+      {
+        label: "Resolution cost",
+        relation: "Area와 token-pair 증가율을 계산",
+        concepts: ["resolution-compute-scaling"],
+      },
+      {
+        label: "Scaling family",
+        relation: "Depth·width·resolution 후보를 함께 생성",
+        concepts: ["resolution-compute-scaling", "compound-model-scaling"],
+      },
+      {
+        label: "Runtime frontier",
+        relation: "Pretrained handoff와 target budget으로 선택",
+        concepts: ["pretrained-handoff-contract", "backbone-budget-comparison"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question: "Backbone과 classifier head가 각각 소유하는 변환을 설명하라.",
+        answerChecklist: [
+          "pixels",
+          "representation",
+          "class logits",
+          "separate head",
+        ],
+        requiredConcepts: ["backbone-budget-comparison"],
         sectionId: "overview",
       },
       {
         level: "basic",
         question:
-          "Patch 16에서 224→448 resolution 변경 시 token 수와 global attention score entry 배수를 계산하고 convolution area 배수와 비교하라.",
+          "CNN local window와 ViT global patch relation의 차이를 설명하라.",
         answerChecklist: [
-          "196 tokens",
-          "784 tokens",
-          "4× token count",
-          "16× pair entries",
-          "4× pixel area",
-          "latency caveat",
+          "local convolution",
+          "shared kernel",
+          "patch tokens",
+          "global pairs",
         ],
-        requiredConcepts: ["resolution-compute-scaling", "self-attention"],
-        sectionId: "backbone",
+        requiredConcepts: ["resolution-compute-scaling"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question: "P=16에서 224px와 448px의 patch token 수를 계산하라.",
+        answerChecklist: [
+          "14 per axis",
+          "196 tokens",
+          "28 per axis",
+          "784 tokens",
+        ],
+        requiredConcepts: ["resolution-compute-scaling"],
+        sectionId: "resolution-cost",
       },
       {
         level: "basic",
         question:
-          "같은 validation split에서 후보 A는 macro recall .84·p95 14ms·3.1GB, 후보 B는 .86·p95 27ms·4.6GB다. 배포 한도가 p95 20ms·4GB일 때 선택하고, 품질 하나만으로 고르면 안 되는 이유를 설명하라.",
+          "Input side를 두 배로 할 때 CNN spatial area와 global pair entries의 배수를 비교하라.",
         answerChecklist: [
-          "same input and split",
-          "same tuning budget",
-          "candidate A passes",
-          "candidate B fails latency",
-          "candidate B fails memory",
-          "pretraining revision stated",
-          "target runtime measurement",
+          "4× area",
+          "4× tokens",
+          "16× pairs",
+          "latency caveat",
+        ],
+        requiredConcepts: ["resolution-compute-scaling"],
+        sectionId: "resolution-cost",
+      },
+      {
+        level: "basic",
+        question: "Compound scaling의 φ·α·β·γ와 근사 budget 식을 설명하라.",
+        answerChecklist: [
+          "common step",
+          "depth ratio",
+          "width ratio",
+          "resolution ratio",
+          "αβ²γ²≈2",
+        ],
+        requiredConcepts: ["compound-model-scaling"],
+        sectionId: "compound-scaling",
+      },
+      {
+        level: "basic",
+        question:
+          "Recall .84·p95 14ms 후보 A와 recall .86·p95 27ms 후보 B를 p95 20ms 한도에서 선택하라.",
+        answerChecklist: [
+          "same evidence",
+          "A passes",
+          "B fails latency",
+          "quality not enough",
+        ],
+        requiredConcepts: ["backbone-budget-comparison"],
+        sectionId: "budget-comparison",
+      },
+      {
+        level: "advanced",
+        question:
+          "224→448 변경의 CNN·ViT cost 차수를 유도하고 실제 profiler에서 확인할 항목을 설계하라.",
+        answerChecklist: [
+          "token derivation",
+          "area 4×",
+          "pairs 16×",
+          "kernel",
+          "memory traffic",
+          "p95",
+        ],
+        requiredConcepts: ["resolution-compute-scaling"],
+        sectionId: "resolution-cost",
+      },
+      {
+        level: "advanced",
+        question:
+          "Compound family에서 세 축을 한꺼번에 바꾼 결과를 해석할 때 필요한 ablation과 한계를 작성하라.",
+        answerChecklist: [
+          "three axes",
+          "compute approximation",
+          "baseline search",
+          "paired ablation",
+          "target hardware",
+          "not theorem",
+        ],
+        requiredConcepts: ["compound-model-scaling"],
+        sectionId: "compound-scaling",
+      },
+      {
+        level: "advanced",
+        question:
+          "CNN·ViT 후보의 pretraining 차이를 숨기지 않는 공정 비교 receipt를 설계하라.",
+        answerChecklist: [
+          "weight revision",
+          "pretraining scope",
+          "input parity",
+          "fine-tuning budget",
+          "seeds",
+          "uncertainty",
+          "license",
         ],
         requiredConcepts: [
-          "compound-model-scaling",
           "backbone-budget-comparison",
           "pretrained-handoff-contract",
         ],
-        sectionId: "backbone",
-      },
-      {
-        level: "basic",
-        question:
-          "좌우 방향이 진단 label을 바꾸는 의료 image에서 horizontal flip과 밝기 변화 중 어떤 augmentation을 baseline에 넣을지 정하고, transform과 target map을 함께 적어라.",
-        answerChecklist: [
-          "label semantics first",
-          "horizontal flip rejected or relabeled",
-          "brightness range bounded",
-          "target map stated",
-          "train only",
-          "validation unchanged",
-        ],
-        requiredConcepts: ["augmentation-risk-objective"],
-        sectionId: "training",
-      },
-      {
-        level: "basic",
-        question:
-          "160px stage에서 batch 256으로 학습하다 320px에서 memory 때문에 batch 64로 바꾼다. 새 stage manifest에 반드시 함께 바꿔 기록할 항목과 단순 upsampling의 한계를 설명하라.",
-        answerChecklist: [
-          "stage boundary",
-          "batch 256 to 64",
-          "crop and object scale",
-          "local learning-rate clock",
-          "checkpoint handoff",
-          "upsampling adds no detail",
-        ],
-        requiredConcepts: ["resolution-stage-boundary"],
-        sectionId: "training",
+        sectionId: "budget-comparison",
       },
       {
         level: "advanced",
         question:
-          "160→320 progressive-resizing run에서 새 stage로 저장할 batch·crop·schedule·position·checkpoint state와 resolution ablation을 설계하라.",
+          "Quality·p95·throughput·memory에서 Pareto frontier와 release gate를 설계하라.",
         answerChecklist: [
-          "stage boundary",
-          "effective batch",
-          "crop/object scale",
-          "local LR clock",
-          "position handling",
-          "same update budget",
-          "small-object slice",
-          "latency",
+          "same split",
+          "quality direction",
+          "hard budgets",
+          "nondominated candidates",
+          "runtime conditions",
+          "rollback",
         ],
-        requiredConcepts: [
-          "resolution-stage-boundary",
-          "augmentation-risk-objective",
-        ],
-        sectionId: "training",
-      },
-      {
-        level: "advanced",
-        question:
-          "τ=.95 pseudo-label system에서 class별 precision·coverage 표, weak/strong augmentation 검증과 confirmation-bias rollback 규칙을 설계하라.",
-        answerChecklist: [
-          "teacher state",
-          "weak/strong views",
-          "class precision",
-          "class coverage",
-          "unlabeled provenance",
-          "validation isolated",
-          "rollback threshold",
-        ],
-        requiredConcepts: [
-          "confidence-gated-pseudo-label",
-          "cross-entropy-nll",
-        ],
-        sectionId: "training",
-      },
-      {
-        level: "basic",
-        question:
-          "Logits (4,2,0)에 T=2를 적용한 softmax를 계산하고 argmax와 confidence가 어떻게 달라지는지 설명하라.",
-        answerChecklist: [
-          "scaled logits (2,1,0)",
-          "softmax calculation",
-          "same argmax",
-          "lower maximum probability",
-          "calibration not accuracy",
-        ],
-        requiredConcepts: [
-          "temperature-scaling-calibration",
-          "conditional-probability",
-        ],
-        sectionId: "postprocess",
-      },
-      {
-        level: "advanced",
-        question:
-          "두 model·두 TTA의 class probability를 가중 결합해 threshold action까지 만드는 versioned artifact와 OOF selection protocol을 설계하라.",
-        answerChecklist: [
-          "class order parity",
-          "transform validity",
-          "calibration order",
-          "nonnegative weights sum 1",
-          "OOF marginal gain",
-          "threshold/cost",
-          "latency",
-          "untouched test",
-        ],
-        requiredConcepts: [
-          "image-inference-decision-contract",
-          "backbone-budget-comparison",
-          "temperature-scaling-calibration",
-        ],
-        sectionId: "postprocess",
+        requiredConcepts: ["backbone-budget-comparison"],
+        sectionId: "budget-comparison",
       },
     ],
     papers: [
@@ -12330,93 +12390,492 @@ export const ARTICLE_LEARNING: Readonly<
         title:
           "EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks",
         href: "https://proceedings.mlr.press/v97/tan19a.html",
-        problem:
-          "고정 resource에서 ConvNet depth·width·resolution을 어떻게 늘릴지 정하는 문제",
-        contribution:
-          "세 축을 compound coefficient로 함께 조절하는 scaling method와 NAS EfficientNet family",
+        problem: "Fixed resource에서 ConvNet capacity axes를 키우는 문제",
+        contribution: "Depth·width·resolution compound scaling",
         assumptions:
-          "논문의 MobileNet·ResNet scaling 관찰, NAS baseline, ImageNet와 transfer benchmark·hardware 조건",
-        evidenceScope:
-          "PMLR 논문의 scaling ablation과 accuracy–efficiency 비교 범위",
+          "NAS baseline·ImageNet·transfer와 convolutional compute 근사",
+        evidenceScope: "Scaling ablation과 accuracy–efficiency 비교",
         notClaim:
-          "원 논문의 constants·B7·FLOPs 순위가 모든 target data·runtime에서 최적이라는 뜻은 아님",
+          "Constants와 ranking이 모든 target runtime에서 최적이라는 뜻은 아님",
         sectionId: "paper-efficientnet",
       },
       {
         title: "A ConvNet for the 2020s",
         href: "https://openaccess.thecvf.com/content/CVPR2022/html/Liu_A_ConvNet_for_the_2020s_CVPR_2022_paper.html",
-        problem:
-          "Transformer 시대에 standard ConvNet design space를 현대 training·architecture 선택으로 재검토하는 문제",
-        contribution:
-          "ResNet에서 recipe·macro·ResNeXt·inverted bottleneck·large kernel 등을 단계적으로 바꾼 ConvNeXt family",
-        assumptions:
-          "ImageNet-1K/22K pretraining·downstream detection/segmentation, 논문의 training recipe와 accelerator",
-        evidenceScope:
-          "CVPR 논문의 cumulative modernization ablation과 benchmark 범위",
-        notClaim:
-          "LayerNorm·large kernel 등 한 변경만으로 모든 CNN이 ViT보다 우월하다는 인과 결론은 아님",
+        problem: "Modern recipe에서 standard ConvNet design space를 재검토",
+        contribution: "ResNet에서 여러 design 선택을 단계적으로 바꾼 ConvNeXt",
+        assumptions: "논문의 pretraining·downstream·accelerator 조건",
+        evidenceScope: "Cumulative ablation과 benchmark",
+        notClaim: "한 block 변경의 보편적 우위를 뜻하지 않음",
         sectionId: "paper-convnext",
       },
       {
-        title:
-          "An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale",
+        title: "An Image is Worth 16x16 Words",
         href: "https://openreview.net/forum?id=YicbFdNTTy",
-        problem:
-          "Convolution-specific architecture 없이 image patch sequence에 Transformer를 적용할 수 있는지 검증",
-        contribution:
-          "Patch projection·position embedding·class token과 large-scale supervised pretraining 후 transfer",
-        assumptions:
-          "ImageNet-21k·JFT 등 원 논문의 data scale·compute·pretraining/fine-tuning recipe",
-        evidenceScope:
-          "ICLR 논문의 image classification transfer benchmark와 scaling 관찰 범위",
-        notClaim:
-          "작은 target dataset에서 scratch ViT가 CNN보다 항상 data-efficient하다는 뜻은 아님",
+        problem: "Image patches에 Transformer를 적용하는 문제",
+        contribution: "Patch projection과 large-scale pretraining 후 transfer",
+        assumptions: "원 논문의 data·compute·fine-tuning recipe",
+        evidenceScope: "Image classification transfer와 scaling",
+        notClaim: "작은 dataset scratch ViT의 보편적 우위를 뜻하지 않음",
         sectionId: "paper-vit",
       },
+    ],
+  },
+  "ai/image-training-stages": {
+    coreIdea:
+      "이미지 training stage는 input·optimization·position state가 같은 실행 구간이며, resolution handoff를 별도 generation으로 기록한 뒤 weak-view confidence gate와 strong-view consistency를 class별 precision·coverage release 조건으로 검증합니다.",
+    entryLevel: true,
+    assumedKnowledge: [],
+    introducedHere: [
+      {
+        id: "resolution-stage-boundary",
+        role: "Resolution 변경을 batch·crop·schedule·position state가 바뀌는 새 stage로 기록합니다.",
+      },
+      {
+        id: "confidence-gated-pseudo-label",
+        role: "Weak-view confidence로 admitted한 unlabeled image의 strong-view consistency를 학습합니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "resolution-stage-boundary",
+        sectionId: "resolution-stage",
+        intuition:
+          "작은 사진 연습에서 큰 사진 연습으로 가면 문제 크기와 한 번에 보는 수가 함께 바뀐 새 수업입니다.",
+        workedExample:
+          "160px batch256 뒤 320px batch64로 바꾸며 crop·LR clock·position interpolation·checkpoint를 handoff manifest에 남깁니다.",
+        boundary:
+          "Upsampling은 없는 detail을 만들지 않으며 resolution gain을 더 많은 updates와 섞지 않습니다.",
+      },
+      {
+        id: "confidence-gated-pseudo-label",
+        sectionId: "pseudo-label",
+        intuition:
+          "약하게 바꾼 사진에서 확신한 임시 답만 골라 강하게 바꾼 같은 사진에서도 답을 유지하게 합니다.",
+        workedExample:
+          "τ=.95에서 class A precision .98/coverage .60과 B .82/.08을 따로 보고 B stage를 rollback합니다.",
+        boundary:
+          "Confidence는 correctness가 아니며 OOD·imbalance·confirmation bias에서 오류를 증폭할 수 있습니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "Supervised baseline",
+        relation: "Split·input·checkpoint·metric을 고정",
+        concepts: ["image-pipeline-baseline-receipt"],
+      },
+      {
+        label: "Resolution handoff",
+        relation: "Batch·crop·clock·position을 새 stage로 이동",
+        concepts: ["resolution-stage-boundary"],
+      },
+      {
+        label: "Pseudo-label admission",
+        relation: "Weak view confidence로 unlabeled rows를 선택",
+        concepts: ["confidence-gated-pseudo-label"],
+      },
+      {
+        label: "Consistency release",
+        relation: "Strong-view CE와 class별 precision·coverage를 평가",
+        concepts: ["cross-entropy-nll", "confidence-gated-pseudo-label"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "Training stage의 input·optimization·position state를 각각 설명하라.",
+        answerChecklist: [
+          "resolution/crop",
+          "checkpoint/optimizer",
+          "effective batch/clock",
+          "position state",
+        ],
+        requiredConcepts: ["resolution-stage-boundary"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "Per-device batch64·4 GPUs·accumulation2의 effective batch를 계산하라.",
+        answerChecklist: ["64×4", "micro batch256", "×2", "effective512"],
+        requiredConcepts: ["resolution-stage-boundary"],
+        sectionId: "resolution-stage",
+      },
+      {
+        level: "basic",
+        question: "160→320 resolution handoff manifest에 필요한 필드를 적어라.",
+        answerChecklist: [
+          "checkpoint",
+          "batch",
+          "crop",
+          "LR clock",
+          "position",
+          "split",
+        ],
+        requiredConcepts: ["resolution-stage-boundary"],
+        sectionId: "resolution-stage",
+      },
+      {
+        level: "basic",
+        question: "Weak view와 strong view의 서로 다른 역할을 설명하라.",
+        answerChecklist: [
+          "weak belief",
+          "pseudo-label",
+          "strong perturbation",
+          "consistency target",
+        ],
+        requiredConcepts: ["confidence-gated-pseudo-label"],
+        sectionId: "pseudo-label",
+      },
+      {
+        level: "basic",
+        question:
+          "qmax .96·threshold .95와 qmax .91 row의 admission indicator를 계산하라.",
+        answerChecklist: [
+          "first 1",
+          "second 0",
+          "threshold comparison",
+          "only admitted CE",
+        ],
+        requiredConcepts: ["confidence-gated-pseudo-label"],
+        sectionId: "pseudo-label",
+      },
+      {
+        level: "basic",
+        question:
+          "Pseudo-label precision과 coverage를 class별로 봐야 하는 이유를 설명하라.",
+        answerChecklist: [
+          "confidence not correctness",
+          "minority disappearance",
+          "class precision",
+          "class coverage",
+        ],
+        requiredConcepts: ["confidence-gated-pseudo-label"],
+        sectionId: "release",
+      },
+      {
+        level: "advanced",
+        question:
+          "160→320 gain과 update-count effect를 분리하는 paired ablation을 설계하라.",
+        answerChecklist: [
+          "same split",
+          "same exposure",
+          "stage boundary",
+          "crop parity",
+          "small-object slice",
+          "latency",
+        ],
+        requiredConcepts: ["resolution-stage-boundary"],
+        sectionId: "resolution-stage",
+      },
+      {
+        level: "advanced",
+        question:
+          "Class A .98/.60, B .82/.08인 precision/coverage table의 release 판정을 작성하라.",
+        answerChecklist: [
+          "A acceptable",
+          "B risk",
+          "no global average",
+          "threshold/class policy",
+          "rollback",
+          "teacher revision",
+        ],
+        requiredConcepts: ["confidence-gated-pseudo-label"],
+        sectionId: "release",
+      },
+      {
+        level: "advanced",
+        question:
+          "OOD unlabeled pool이 pseudo-label stage를 오염시키는 경로와 controls를 설계하라.",
+        answerChecklist: [
+          "pool provenance",
+          "OOD detection",
+          "high-confidence error",
+          "validation isolation",
+          "class slices",
+          "quarantine",
+        ],
+        requiredConcepts: ["confidence-gated-pseudo-label"],
+        sectionId: "release",
+      },
+      {
+        level: "advanced",
+        question:
+          "Resolution과 pseudo-label을 동시에 켠 실패 run의 원인을 분리하고 rollback 계획을 작성하라.",
+        answerChecklist: [
+          "two changed axes",
+          "return baseline",
+          "resolution only",
+          "pseudo only",
+          "receipts",
+          "rollback generation",
+        ],
+        requiredConcepts: [
+          "resolution-stage-boundary",
+          "confidence-gated-pseudo-label",
+        ],
+        sectionId: "release",
+      },
+    ],
+    papers: [
       {
         title:
           "RandAugment: Practical Automated Data Augmentation with a Reduced Search Space",
         href: "https://proceedings.neurips.cc/paper/2020/hash/d85b63ef0ccb114d0a3bb7b7d808028f-Abstract.html",
-        problem:
-          "Operation별 policy search가 비싸고 proxy task의 최적 policy가 target task에 맞지 않을 수 있는 문제",
-        contribution:
-          "Operation 수 N과 공통 magnitude M 중심으로 search space를 줄여 target task에서 직접 탐색",
-        assumptions:
-          "논문 operation set과 CIFAR·SVHN·ImageNet·COCO models·training recipes",
-        evidenceScope:
-          "NeurIPS 논문의 reduced search space와 benchmark improvement 범위",
-        notClaim:
-          "모든 domain에서 동일 operation·magnitude가 label을 보존하거나 최적이라는 뜻은 아님",
+        problem: "Augmentation policy search가 크고 proxy에 의존하는 문제",
+        contribution: "Operation 수와 공통 magnitude의 작은 search space",
+        assumptions: "논문 operation set·benchmarks·training recipes",
+        evidenceScope: "Reduced search와 benchmark improvement",
+        notClaim: "모든 domain의 label preservation을 보장하지 않음",
         sectionId: "paper-randaugment",
       },
       {
         title:
           "FixMatch: Simplifying Semi-Supervised Learning with Consistency and Confidence",
         href: "https://proceedings.neurips.cc/paper/2020/hash/06964dce9addb1c5cb5d6e3d9838f733-Abstract.html",
-        problem:
-          "적은 labeled image와 많은 unlabeled image를 단순한 consistency objective로 활용하는 문제",
-        contribution:
-          "Weak-view confidence threshold의 hard pseudo-label과 strong-view consistency 결합",
+        problem: "적은 labels와 많은 unlabeled images를 활용하는 문제",
+        contribution: "Weak confidence pseudo-label과 strong consistency 결합",
         assumptions:
-          "논문 label regime·class-balanced benchmarks·augmentation·optimizer·unlabeled distribution",
-        evidenceScope: "CIFAR·SVHN·STL benchmark와 논문 ablation 범위",
-        notClaim:
-          "Confidence threshold 하나가 arbitrary OOD·imbalanced unlabeled pool의 label quality를 보장한다는 뜻은 아님",
+          "논문의 label regime·balanced benchmarks·unlabeled distribution",
+        evidenceScope: "CIFAR·SVHN·STL과 ablation",
+        notClaim: "Threshold 하나가 OOD·imbalanced pool 품질을 보장하지 않음",
         sectionId: "paper-fixmatch",
       },
+    ],
+  },
+  "ai/image-probability-decisions": {
+    coreIdea:
+      "이미지 inference에서는 logit·calibrated probability·hard action을 분리하고, scalar temperature·valid TTA·ensemble weight·class threshold를 selection split과 적용 순서까지 포함한 versioned decision artifact로 고정합니다.",
+    entryLevel: true,
+    assumedKnowledge: [],
+    introducedHere: [
+      {
+        id: "temperature-scaling-calibration",
+        role: "고정 logits의 argmax를 유지하며 scalar temperature로 confidence scale을 맞춥니다.",
+      },
+      {
+        id: "image-inference-decision-contract",
+        role: "Calibration·TTA·ensemble·threshold의 순서와 parameter를 serving artifact로 묶습니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "temperature-scaling-calibration",
+        sectionId: "temperature",
+        intuition:
+          "정답 순서는 그대로 두고 자신감 눈금만 온도 손잡이로 평평하거나 뾰족하게 조정합니다.",
+        workedExample:
+          "Logits (4,2,0)에 T=2를 적용해 (2,1,0)으로 만들면 top class는 같고 maximum probability는 낮아집니다.",
+        boundary:
+          "Scalar T는 ranking·accuracy·class-specific 오류를 고치지 않으며 shift에서 다시 틀어질 수 있습니다.",
+      },
+      {
+        id: "image-inference-decision-contract",
+        sectionId: "decision-contract",
+        intuition:
+          "Raw score에서 action까지 거치는 보정·결합·기준 적용 순서를 하나의 조리법으로 묶습니다.",
+        workedExample:
+          "Class map v3→input v5→T=1.7→flip TTA→weights(.7,.3)→class threshold를 generation에 저장합니다.",
+        boundary:
+          "Logit average와 probability average는 같지 않고 class order가 다른 outputs를 결합하면 의미가 무너집니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "Raw score",
+        relation: "Model head가 class logits를 생성",
+        concepts: ["cross-entropy-nll"],
+      },
+      {
+        label: "Probability scale",
+        relation: "Calibration split으로 temperature를 선택",
+        concepts: [
+          "conditional-probability",
+          "temperature-scaling-calibration",
+        ],
+      },
+      {
+        label: "Aggregation",
+        relation: "Valid TTA와 model outputs를 같은 class 의미로 결합",
+        concepts: [
+          "temperature-scaling-calibration",
+          "image-inference-decision-contract",
+        ],
+      },
+      {
+        label: "Action release",
+        relation: "Threshold·reject·latency와 untouched test를 고정",
+        concepts: [
+          "image-inference-decision-contract",
+          "train-validation-test",
+        ],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question: "Logit·probability·decision의 차이를 한 예로 설명하라.",
+        answerChecklist: [
+          "raw score",
+          "normalized vector",
+          "calibration",
+          "hard action",
+        ],
+        requiredConcepts: [
+          "temperature-scaling-calibration",
+          "image-inference-decision-contract",
+        ],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question: "Logits (4,2,0)을 T=2로 scale한 값을 계산하라.",
+        answerChecklist: [
+          "divide by 2",
+          "(2,1,0)",
+          "same order",
+          "flatter softmax",
+        ],
+        requiredConcepts: ["temperature-scaling-calibration"],
+        sectionId: "temperature",
+      },
+      {
+        level: "basic",
+        question:
+          "양수 scalar temperature가 argmax를 바꾸지 않는 이유를 설명하라.",
+        answerChecklist: [
+          "same positive divisor",
+          "monotonic order",
+          "softmax monotonic",
+          "ties unchanged",
+        ],
+        requiredConcepts: ["temperature-scaling-calibration"],
+        sectionId: "temperature",
+      },
+      {
+        level: "basic",
+        question:
+          "Calibration split이 model fitting과 final test에서 분리되어야 하는 이유를 설명하라.",
+        answerChecklist: [
+          "fit T only",
+          "selection contamination",
+          "untouched test",
+          "deployment representation",
+        ],
+        requiredConcepts: [
+          "temperature-scaling-calibration",
+          "train-validation-test",
+        ],
+        sectionId: "temperature",
+      },
+      {
+        level: "basic",
+        question:
+          "두 valid TTA probabilities의 평균을 계산하고 invalid transform을 제외하라.",
+        answerChecklist: [
+          "same class order",
+          "two probabilities",
+          "arithmetic mean",
+          "label preservation",
+        ],
+        requiredConcepts: ["image-inference-decision-contract"],
+        sectionId: "decision-contract",
+      },
+      {
+        level: "basic",
+        question:
+          "Decision artifact의 model·calibration·aggregation·action generation 필드를 적어라.",
+        answerChecklist: [
+          "model/class map",
+          "T/split",
+          "TTA/weights",
+          "threshold/reject",
+        ],
+        requiredConcepts: ["image-inference-decision-contract"],
+        sectionId: "release",
+      },
+      {
+        level: "advanced",
+        question:
+          "Calibration→TTA→ensemble→threshold 순서를 바꿨을 때 생기는 의미 차이를 분석하라.",
+        answerChecklist: [
+          "logit vs probability",
+          "per-model calibration",
+          "class parity",
+          "aggregation order",
+          "threshold last",
+          "versioning",
+        ],
+        requiredConcepts: [
+          "temperature-scaling-calibration",
+          "image-inference-decision-contract",
+        ],
+        sectionId: "decision-contract",
+      },
+      {
+        level: "advanced",
+        question:
+          "False-positive cost와 review capacity로 class threshold를 고르는 protocol을 설계하라.",
+        answerChecklist: [
+          "calibrated probability",
+          "cost/capacity",
+          "precision recall",
+          "selection split",
+          "slice",
+          "rollback",
+        ],
+        requiredConcepts: ["image-inference-decision-contract"],
+        sectionId: "decision-contract",
+      },
+      {
+        level: "advanced",
+        question:
+          "Deployment shift 뒤 scalar T가 실패했는지 진단하고 대응하라.",
+        answerChecklist: [
+          "reliability by slice",
+          "NLL/Brier",
+          "shift",
+          "new calibration data",
+          "freeze model",
+          "rollback T",
+        ],
+        requiredConcepts: ["temperature-scaling-calibration"],
+        sectionId: "release",
+      },
+      {
+        level: "advanced",
+        question:
+          "두 models·두 TTA·reject option의 untouched-test release artifact를 설계하라.",
+        answerChecklist: [
+          "class order",
+          "model revisions",
+          "TTA validity",
+          "weights sum1",
+          "temperature",
+          "reject",
+          "latency",
+          "test once",
+        ],
+        requiredConcepts: [
+          "image-inference-decision-contract",
+          "temperature-scaling-calibration",
+        ],
+        sectionId: "release",
+      },
+    ],
+    papers: [
       {
         title: "On Calibration of Modern Neural Networks",
         href: "https://proceedings.mlr.press/v70/guo17a.html",
         problem:
-          "Classifier confidence가 실제 correctness likelihood와 일치하지 않는 calibration 문제",
+          "Classifier confidence와 empirical correctness가 일치하지 않는 문제",
         contribution:
-          "Architecture·training factors 분석과 scalar temperature scaling 등 post-hoc method 비교",
-        assumptions:
-          "논문의 image·document classification datasets·base models와 held-out validation setting",
-        evidenceScope:
-          "ICML 논문의 in-distribution calibration metric과 method comparison 범위",
+          "Architecture·training factors와 scalar temperature scaling 비교",
+        assumptions: "논문의 datasets·base models·held-out validation",
+        evidenceScope: "In-distribution calibration metric과 methods",
         notClaim:
-          "Scalar temperature가 모든 class·shift·decision cost에서 calibration을 보장한다는 뜻은 아님",
+          "Scalar T가 모든 class·shift·decision cost를 해결한다는 뜻은 아님",
         sectionId: "paper-calibration",
       },
     ],

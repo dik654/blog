@@ -6054,7 +6054,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Image identity group split",
     definition:
       "같은 사람·상품·원본·촬영 세션에서 파생된 image를 하나의 group으로 묶고 group 집합이 train·validation 사이에서 겹치지 않게 나누는 평가 경계입니다.",
-    canonicalHref: "/ai/image-classification-pipeline#overview",
+    canonicalHref: "/ai/image-classification-pipeline#identity",
   },
   "image-pipeline-baseline-receipt": {
     id: "image-pipeline-baseline-receipt",
@@ -6063,7 +6063,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Image pipeline baseline receipt",
     definition:
       "Split manifest·class mapping·preprocessing·weight revision·training budget·quality slice·runtime measurement를 한 실험 artifact로 고정한 기준선입니다.",
-    canonicalHref: "/ai/image-classification-pipeline#overview",
+    canonicalHref: "/ai/image-classification-pipeline#baseline",
   },
   "resolution-compute-scaling": {
     id: "resolution-compute-scaling",
@@ -6072,7 +6072,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Resolution–compute scaling",
     definition:
       "Input 한 변과 patch·feature-map 크기가 convolution과 global attention의 연산량·memory·latency를 서로 다른 차수로 바꾸는 resource 관계입니다.",
-    canonicalHref: "/ai/image-classification-pipeline#backbone",
+    canonicalHref: "/ai/image-backbone-scaling#resolution-cost",
   },
   "compound-model-scaling": {
     id: "compound-model-scaling",
@@ -6081,7 +6081,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Compound depth·width·resolution scaling",
     definition:
       "하나의 resource coefficient로 network depth·channel width·input resolution을 정해진 비율로 함께 늘려 capacity 축의 균형을 찾는 scaling heuristic입니다.",
-    canonicalHref: "/ai/image-classification-pipeline#backbone",
+    canonicalHref: "/ai/image-backbone-scaling#compound-scaling",
   },
   "backbone-budget-comparison": {
     id: "backbone-budget-comparison",
@@ -6090,7 +6090,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Backbone quality–runtime budget comparison",
     definition:
       "같은 target split·input·fine-tuning search budget에서 후보 backbone의 quality·uncertainty·p50/p95 latency·throughput·peak memory를 함께 비교하는 선택 절차입니다.",
-    canonicalHref: "/ai/image-classification-pipeline#backbone",
+    canonicalHref: "/ai/image-backbone-scaling#budget-comparison",
   },
   "resolution-stage-boundary": {
     id: "resolution-stage-boundary",
@@ -6099,7 +6099,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Resolution training-stage boundary",
     definition:
       "Image resolution 변경을 batch·crop distribution·optimizer schedule·position state가 함께 바뀌는 새로운 training stage로 기록하는 실행 경계입니다.",
-    canonicalHref: "/ai/image-classification-pipeline#training",
+    canonicalHref: "/ai/image-training-stages#resolution-stage",
   },
   "confidence-gated-pseudo-label": {
     id: "confidence-gated-pseudo-label",
@@ -6108,7 +6108,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Confidence-gated pseudo-label consistency",
     definition:
       "Weak augmentation prediction의 maximum confidence가 threshold 이상인 unlabeled sample만 hard pseudo-label로 선택해 strong augmentation prediction을 학습하는 semi-supervised objective입니다.",
-    canonicalHref: "/ai/image-classification-pipeline#training",
+    canonicalHref: "/ai/image-training-stages#pseudo-label",
   },
   "temperature-scaling-calibration": {
     id: "temperature-scaling-calibration",
@@ -6117,7 +6117,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Temperature scaling calibration",
     definition:
       "고정된 multi-class logit을 하나의 양수 temperature로 나눈 뒤 softmax하고 calibration split의 NLL로 temperature를 선택하는 post-hoc probability calibration입니다.",
-    canonicalHref: "/ai/image-classification-pipeline#postprocess",
+    canonicalHref: "/ai/image-probability-decisions#temperature",
   },
   "image-inference-decision-contract": {
     id: "image-inference-decision-contract",
@@ -6126,7 +6126,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Image inference decision contract",
     definition:
       "Class mapping·preprocessing·calibration·TTA·ensemble weights·threshold 또는 reject policy를 순서와 selection split까지 포함해 versioning한 serving 규칙입니다.",
-    canonicalHref: "/ai/image-classification-pipeline#postprocess",
+    canonicalHref: "/ai/image-probability-decisions#decision-contract",
   },
   "vit-patch-sequence-contract": {
     id: "vit-patch-sequence-contract",
@@ -17152,6 +17152,13 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     reason: "고정된 split manifest가 모든 후보 비교의 data 기준입니다.",
   },
   {
+    from: "image-pipeline-baseline-receipt",
+    to: "backbone-budget-comparison",
+    relation: "constrains",
+    reason:
+      "고정 split·input·quality·runtime receipt가 backbone 후보의 공정 비교 좌우 항을 정의합니다.",
+  },
+  {
     from: "convolution-spatial-geometry",
     to: "resolution-compute-scaling",
     relation: "prerequisite",
@@ -17187,6 +17194,13 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
       "Weight뿐 아니라 input transform과 architecture revision을 동일하게 넘깁니다.",
   },
   {
+    from: "image-pipeline-baseline-receipt",
+    to: "resolution-stage-boundary",
+    relation: "prerequisite",
+    reason:
+      "이전 generation의 split·input·checkpoint·metric receipt가 새 resolution stage의 handoff 기준입니다.",
+  },
+  {
     from: "augmentation-risk-objective",
     to: "resolution-stage-boundary",
     relation: "constrains",
@@ -17205,6 +17219,13 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     to: "confidence-gated-pseudo-label",
     relation: "optimizes",
     reason: "선택된 pseudo-label과 strong-view prediction의 CE를 줄입니다.",
+  },
+  {
+    from: "confidence-gated-pseudo-label",
+    to: "image-inference-decision-contract",
+    relation: "constrains",
+    reason:
+      "Pseudo-label stage가 만든 model generation과 class별 error profile을 calibration·threshold artifact에 결속합니다.",
   },
   {
     from: "conditional-probability",

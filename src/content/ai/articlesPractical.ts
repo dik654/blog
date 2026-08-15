@@ -304,16 +304,52 @@ const pipelineArticles: Article[] = [
 const cvArticles: Article[] = [
   {
     slug: "image-classification-pipeline",
-    title: "이미지 분류 파이프라인: Data Boundary에서 Decision까지",
+    title: "이미지 분류 데이터 경계: Identity Split과 Baseline Receipt",
     subcategory: "ai-practical-cv",
     sections: [
-      { id: "overview", title: "Identity Group Split과 Baseline Receipt" },
-      { id: "backbone", title: "Spatial Prior·Scaling·Runtime Budget" },
-      { id: "training", title: "Augmentation·Resolution·Pseudo-label" },
-      { id: "postprocess", title: "Logit·Calibration·Decision Contract" },
+      { id: "overview", title: "Image Sample과 Deployment Unit" },
+      { id: "identity", title: "Identity Group Split" },
+      { id: "baseline", title: "Baseline Receipt" },
+      { id: "release", title: "Leakage·Reproduction Gate" },
     ],
     component: () =>
       import("@/pages/articles/ai/image-classification-pipeline"),
+  },
+  {
+    slug: "image-backbone-scaling",
+    title: "이미지 Backbone 선택: Resolution Cost와 Runtime Budget",
+    subcategory: "ai-practical-cv",
+    sections: [
+      { id: "overview", title: "Backbone이 소유하는 변환" },
+      { id: "resolution-cost", title: "CNN·ViT Resolution Cost" },
+      { id: "compound-scaling", title: "Depth·Width·Resolution 조합" },
+      { id: "budget-comparison", title: "Quality–Runtime Frontier" },
+    ],
+    component: () => import("@/pages/articles/ai/image-backbone-scaling"),
+  },
+  {
+    slug: "image-training-stages",
+    title: "이미지 학습 단계: Resolution Handoff와 Pseudo-label",
+    subcategory: "ai-practical-cv",
+    sections: [
+      { id: "overview", title: "한 번에 한 Stage만 변경" },
+      { id: "resolution-stage", title: "Progressive Resolution Boundary" },
+      { id: "pseudo-label", title: "Weak→Strong Consistency" },
+      { id: "release", title: "Precision·Coverage·Rollback" },
+    ],
+    component: () => import("@/pages/articles/ai/image-training-stages"),
+  },
+  {
+    slug: "image-probability-decisions",
+    title: "이미지 확률과 판정: Logit·Calibration·Decision Contract",
+    subcategory: "ai-practical-cv",
+    sections: [
+      { id: "overview", title: "Score·Probability·Action 분리" },
+      { id: "temperature", title: "Temperature Scaling" },
+      { id: "decision-contract", title: "TTA·Ensemble·Threshold" },
+      { id: "release", title: "Selection Split과 Release" },
+    ],
+    component: () => import("@/pages/articles/ai/image-probability-decisions"),
   },
   {
     slug: "vision-transformer",
