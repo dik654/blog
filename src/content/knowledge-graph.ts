@@ -4100,7 +4100,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Deterministic runtime control flow",
     definition:
       "Loop·branch·sort·aggregation·bounded concurrency 같은 명시적 program semantics를 매 단계 model 추론 대신 일반 runtime이 반복 가능하게 수행하는 실행 특성입니다.",
-    canonicalHref: "/ai/agent-code-mode#execution",
+    canonicalHref: "/ai/code-mode-runtime-contracts#overview",
   },
   "code-mode-capability-binding": {
     id: "code-mode-capability-binding",
@@ -4109,7 +4109,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Code Mode capability binding",
     definition:
       "Model이 만든 program에 범용 network·credential을 주지 않고 요청에 필요한 typed tool·resource·account scope만 실행 API로 연결하는 authorization 경계입니다.",
-    canonicalHref: "/ai/agent-code-mode#capability-binding",
+    canonicalHref: "/ai/code-mode-runtime-contracts#capability",
   },
   "code-mode-effect-atomicity": {
     id: "code-mode-effect-atomicity",
@@ -4118,7 +4118,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Code Mode effect · atomicity boundary",
     definition:
       "Program 한 번의 실행과 여러 외부 write의 transaction은 다르므로 부분 성공·retry·idempotency·compensation·approval을 별도 effect contract로 관리하는 경계입니다.",
-    canonicalHref: "/ai/agent-code-mode#effect-atomicity",
+    canonicalHref: "/ai/code-mode-runtime-contracts#effects",
   },
   "code-mode-result-contract": {
     id: "code-mode-result-contract",
@@ -4127,7 +4127,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Code Mode result · disclosure contract",
     definition:
       "Sandbox가 model로 반환할 schema·row count·byte/token budget·redaction·error detail·provenance를 제한해 중간 data의 재노출과 context 폭증을 막는 출력 계약입니다.",
-    canonicalHref: "/ai/agent-code-mode#result-contract",
+    canonicalHref: "/ai/code-mode-runtime-contracts#result-contract",
   },
   "code-mode-decision-boundary": {
     id: "code-mode-decision-boundary",
@@ -23057,6 +23057,13 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
       "Program의 loop·branch·sort·concurrency를 일반 runtime이 실행합니다.",
   },
   {
+    from: "deterministic-runtime-control-flow",
+    to: "code-mode-capability-binding",
+    relation: "constrains",
+    reason:
+      "Runtime이 어떤 branch를 실행하더라도 호출할 수 있는 tool·resource·account는 request에 바인딩한 capability 안으로 제한합니다.",
+  },
+  {
     from: "code-mode-program-ir",
     to: "sandbox-local-intermediate-data",
     relation: "produces",
@@ -23097,6 +23104,13 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "constrains",
     reason:
       "Write tool을 binding할 때 approval·idempotency·transaction·compensation을 별도 effect policy로 적용합니다.",
+  },
+  {
+    from: "code-mode-capability-binding",
+    to: "code-mode-result-contract",
+    relation: "constrains",
+    reason:
+      "허용된 source capability에서 얻은 data라도 model 경계를 나갈 때는 별도 schema·redaction·size·provenance 계약을 통과시킵니다.",
   },
   {
     from: "sandbox-local-intermediate-data",

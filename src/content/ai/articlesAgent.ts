@@ -156,16 +156,27 @@ export const agentArticles: Article[] = [
   },
   {
     slug: "agent-code-mode",
-    title: "Code Mode: 도구 호출을 프로그램으로 묶는 에이전트 실행 패턴",
+    title: "Code Mode: Tool 왕복을 Program으로 접는 실행 패턴",
     subcategory: "ai-agents",
     sections: [
-      { id: "overview", title: "Code Mode란 무엇인가" },
-      { id: "cost-model", title: "왜 토큰이 줄어드는가" },
-      { id: "execution", title: "실행 파이프라인" },
-      { id: "security", title: "샌드박스와 권한 경계" },
-      { id: "decision", title: "언제 쓰고 언제 쓰지 않는가" },
+      { id: "overview", title: "Tool 왕복과 Program IR" },
+      { id: "tool-discovery", title: "선택적 Schema Loading" },
+      { id: "data-reduction", title: "Local Data와 Token 경계" },
+      { id: "decision", title: "실행 방식 선택" },
     ],
     component: () => import("@/pages/articles/ai/agent-code-mode"),
+  },
+  {
+    slug: "code-mode-runtime-contracts",
+    title: "Code Mode Runtime: Capability·Result·Effect 계약",
+    subcategory: "ai-agents",
+    sections: [
+      { id: "overview", title: "Deterministic Control Flow" },
+      { id: "capability", title: "Capability Binding" },
+      { id: "result-contract", title: "Result Disclosure" },
+      { id: "effects", title: "Partial Effect와 Retry" },
+    ],
+    component: () => import("@/pages/articles/ai/code-mode-runtime-contracts"),
   },
   {
     slug: "agent-sandbox-security",

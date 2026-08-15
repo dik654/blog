@@ -3335,11 +3335,19 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://blog.cloudflare.com/code-mode-mcp/",
       note: "MCP binding과 sandbox program 실행",
     },
+  ],
+  "ai/code-mode-runtime-contracts": [
     {
       kind: "공식 문서",
       label: "TanStack AI — Code Mode",
       href: "https://tanstack.com/ai/latest/docs/code-mode/code-mode",
-      note: "typed tool program을 만드는 구현 예시",
+      note: "typed tool program과 runtime integration의 구현 범위",
+    },
+    {
+      kind: "공식 문서",
+      label: "Cloudflare — Code Mode for MCP",
+      href: "https://blog.cloudflare.com/code-mode-mcp/",
+      note: "MCP capability를 sandbox binding으로 노출하는 구현 사례",
     },
   ],
   "ai/agent-sandbox-security": [

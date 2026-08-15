@@ -1224,3 +1224,11 @@
 - Leaf region→negative gradient→additive ensemble, G·H row→histogram→split gain, row·column·leaf의 서로 다른 비용 축, permutation prefix→gradient→symmetric tree를 새 flat animated 도형 Viz 4개로 만들었다. 모바일에서는 연결 화살표를 세로 방향으로 전환하고 모든 Viz가 `ArrowLeft`·`ArrowRight` 장면 이동과 `Space` 자동 재생을 지원한다.
 - 실제 public closure의 수식 6개를 전부 explicit operation annotation으로 작성했다. Indicator activation, loss derivative 반전, shrinkage, leaf curvature normalization, child-parent split comparison, GOSS sampling 보정, prefix exclusion·prediction·loss slope의 각 의도를 KaTeX 식 안에 직접 표시해 전역 backlog를 933개에서 928개로 줄였다.
 - 390px·1440px 실제 브라우저 8회에서 document·Viz·formula·main/operation KaTeX overflow, console warning/error, gradient·shadow·굵은 선이 모두 0임을 확인했다. CatBoost 식은 prefix 생성→현재 row prediction→loss slope→부호 반전의 다단식으로 교정했고, 장면 0→1과 재생 false→true의 키보드 상태 전이도 검증했다.
+
+## 2026-08-15 · Code Mode pattern · runtime contracts CRUD split
+
+- 기존 `ai/agent-code-mode`의 10개 concept를 graph component와 failure owner로 다시 읽었다. Tool 왕복→program IR→선택 schema→local reduction→token cost→실행 방식 선택은 기존 route에 남기고, runtime control→capability→result disclosure→partial external effect는 새 `ai/code-mode-runtime-contracts`로 분리했다.
+- 기존 concept 4개의 canonical owner를 새 route로 이동하고, graph에 없던 `deterministic runtime control → capability binding → result contract` 내부 관계 2개를 보강했다. 공개 route와 exact learning contract는 438개에서 439개, relation은 3,531개에서 3,533개가 됐으며 2,362 concepts의 owner·isolation·stage invariant는 0이다.
+- 반복 model→tool→result 왕복과 sandbox program·local row reduction·bounded result, program control flow와 capability gate·result receipt·다섯 write의 partial outcome을 새 flat animated 도형 Viz 2개로 표현했다. Legacy section 5개와 data/Viz 4개를 actual closure에서 삭제했고 두 route 모두 topology `keep`이 되어 전체 split-review는 74개에서 73개로 줄었다.
+- Cost formula는 round 한 번→round 합→program 고정비→bounded result→선택 순서로, result formula는 project→redact→row gate→byte gate→receipt 순서로, retry formula는 committed→unknown→blocked→retry 순서로 나눠 모든 연산 의도를 KaTeX 식 안에 직접 표시했다. 전역 formula backlog는 928개에서 927개로 줄었다.
+- 390px·1440px 실제 브라우저 4회에서 document·Viz·main/operation KaTeX overflow, console warning/error, gradient·shadow·굵은 선이 모두 0임을 확인했다. Runtime Viz의 장면 0→1과 Space 재생 false→true 전이도 실제 focus 상태에서 검증했다.

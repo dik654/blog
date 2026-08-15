@@ -32345,418 +32345,184 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/agent-code-mode": {
+    entryLevel: true,
+    entryNote: "Tool call 한 번의 왕복부터 시작해 program IR과 local reduction을 쌓습니다.",
     coreIdea:
-      "Code Mode는 Coding Agent의 별칭이 아니라, 여러 tool call과 loop·branch·data reduction을 model의 반복 round 대신 sandbox program으로 표현하는 실행 패턴입니다. 이득은 code가 짧아서가 아니라 중간 data와 반복 inference를 model context 밖으로 옮길 때 생기며, typed API와 별도로 capability·result·effect 경계를 설계해야 합니다.",
-    assumedKnowledge: [
-      {
-        id: "process-container-resource-boundary",
-        role: "Model-generated program을 실행할 sandbox가 host에서 어떤 resource를 볼 수 있는지 구분합니다.",
-      },
-      {
-        id: "sandbox-workload-control-matrix",
-        role: "요청에 필요한 credential·network·tool·storage·lifecycle만 program에 연결합니다.",
-      },
-    ],
+      "Code Mode는 여러 tool call과 loop·branch·data reduction을 반복 model round 대신 sandbox program으로 표현하는 실행 패턴입니다. 이득은 code 길이가 아니라 중간 data와 판단 왕복을 model context 밖으로 옮길 때 생기며, 단순 call·agent loop·승인 workflow와 같은 조건에서 비교해야 합니다.",
+    assumedKnowledge: [],
     introducedHere: [
-      {
-        id: "tool-call-round-trip",
-        role: "일반 agent가 tool 결과마다 model inference로 돌아오는 실행 단위를 설명합니다.",
-      },
-      {
-        id: "code-mode-program-ir",
-        role: "여러 tool workflow를 한 program이라는 중간 실행 표현으로 바꿉니다.",
-      },
-      {
-        id: "tool-discovery-schema-loading",
-        role: "전체 schema 대신 선택한 tool signature만 context와 program API에 넣습니다.",
-      },
-      {
-        id: "sandbox-local-intermediate-data",
-        role: "대량 중간 결과를 model에 보내지 않고 sandbox에서 축소합니다.",
-      },
-      {
-        id: "code-mode-token-cost-boundary",
-        role: "추가 program token과 제거되는 round/result token을 같은 조건에서 비교합니다.",
-      },
-      {
-        id: "deterministic-runtime-control-flow",
-        role: "반복·분기·정렬·병렬 호출을 language runtime이 수행하게 합니다.",
-      },
-      {
-        id: "code-mode-capability-binding",
-        role: "Program에 허용된 typed tool·resource·account만 연결합니다.",
-      },
-      {
-        id: "code-mode-effect-atomicity",
-        role: "여러 write의 부분 성공·retry·idempotency를 program 실행과 분리합니다.",
-      },
-      {
-        id: "code-mode-result-contract",
-        role: "최종 반환 schema·budget·redaction·provenance를 제한합니다.",
-      },
-      {
-        id: "code-mode-decision-boundary",
-        role: "Direct call·agent loop·Code Mode·deterministic workflow를 작업 특성으로 고릅니다.",
-      },
+      { id: "tool-call-round-trip", role: "Inference→execution→observation 왕복 한 번을 정의합니다." },
+      { id: "code-mode-program-ir", role: "여러 tool workflow를 한 program 중간 표현으로 바꿉니다." },
+      { id: "tool-discovery-schema-loading", role: "선택한 tool signature만 context와 API에 load합니다." },
+      { id: "sandbox-local-intermediate-data", role: "대량 중간 결과를 sandbox에서 축소합니다." },
+      { id: "code-mode-token-cost-boundary", role: "Program overhead와 제거되는 왕복 token을 비교합니다." },
+      { id: "code-mode-decision-boundary", role: "Task shape에 맞는 실행 방식을 고릅니다." },
     ],
     conceptExplanations: [
       {
         id: "tool-call-round-trip",
-        sectionId: "code-mode-definition",
-        intuition:
-          "작업자가 전화로 한 단계 지시하고 결과를 다시 들은 뒤 다음 지시를 내리는 왕복 한 번과 같습니다.",
-        workedExample:
-          "Model이 listIssues를 호출하고 10,000건을 context로 받은 뒤 다시 getIssue·filter·sort를 판단하면 각 tool 전후가 별도 inference round가 됩니다.",
-        boundary:
-          "Framework가 여러 tool call을 한 response에 묶거나 result를 압축·cache할 수 있으므로 tool 하나가 항상 model round 하나 또는 전체 context 재청구를 뜻하지는 않습니다.",
+        sectionId: "overview",
+        intuition: "한 단계 지시하고 결과를 들은 뒤 다음 지시를 내리는 왕복입니다.",
+        workedExample: "Issue 목록을 받은 뒤 다음 getIssue를 고르기 위해 model이 다시 inference합니다.",
+        boundary: "Framework가 여러 call을 묶을 수 있어 tool 하나가 항상 round 하나라는 뜻은 아닙니다.",
       },
       {
         id: "code-mode-program-ir",
-        sectionId: "code-mode-definition",
-        intuition:
-          "여러 번 말로 지시할 절차를 loop·if·function이 있는 짧은 작업지로 한 번 작성해 실행기에 넘기는 방식입니다.",
-        workedExample:
-          "Model이 GitHub issues를 조회해 security label·unassigned 조건으로 filter하고 team별 reduce하는 TypeScript program을 만들면 sandbox가 call과 control flow를 수행합니다.",
-        boundary:
-          "Code Mode는 표준 protocol이나 Coding Agent의 동의어가 아니며 TypeScript·Python·DSL 등 구현 표면과 sandbox capability는 product마다 다릅니다.",
+        sectionId: "overview",
+        intuition: "여러 번 말로 지시할 절차를 loop·if·function 작업지 하나로 적습니다.",
+        workedExample: "List→filter→groupBy를 TypeScript program으로 만들어 sandbox에 넘깁니다.",
+        boundary: "단일 표준 protocol이 아니며 language·sandbox·binding은 product마다 다릅니다.",
       },
       {
         id: "tool-discovery-schema-loading",
         sectionId: "tool-discovery",
-        intuition:
-          "도서관의 모든 책 내용을 들고 다니지 않고 catalogue에서 후보를 찾은 뒤 필요한 책만 펼치는 것과 같습니다.",
-        workedExample:
-          "수천 tool의 name·description index에서 GitHub read tools를 찾고 listIssues/getIssue의 signature와 account scope만 current program API에 load합니다.",
-        boundary:
-          "Discovery가 잘못된 tool을 누락하거나 공격적 description을 선택할 수 있고 schema를 덜 읽는 것만으로 tool authorization·semantic correctness가 보장되지는 않습니다.",
+        intuition: "모든 책을 들고 다니지 않고 index에서 고른 책만 펼칩니다.",
+        workedExample: "수천 tools 중 listIssues·getIssue signature와 target organization scope만 load합니다.",
+        boundary: "Discovery miss·authorization·semantic correctness는 schema 절감으로 해결되지 않습니다.",
       },
       {
         id: "sandbox-local-intermediate-data",
-        sectionId: "code-mode-cost",
-        intuition:
-          "창고의 물건을 작업실에서 분류해 최종 집계표만 전달하고 모든 원본 상자를 회의실에 들이지 않는 방식입니다.",
-        workedExample:
-          "DB 100,000 rows를 sandbox variable에서 filter·groupBy해 team별 count 20개만 model로 반환하면 원본 row token이 context에 들어오지 않습니다.",
-        boundary:
-          "Model context 노출을 줄여도 sandbox memory·log·exception·tool trace·final result에서 sensitive data가 새어 나갈 수 있으므로 privacy가 자동 보장되지는 않습니다.",
+        sectionId: "data-reduction",
+        intuition: "원본 상자는 작업실에서 분류하고 집계표만 회의실로 보냅니다.",
+        workedExample: "100,000 rows를 local filter·groupBy해 count 20개만 model로 반환합니다.",
+        boundary: "Log·exception·trace·final result의 민감정보 노출은 별도로 막아야 합니다.",
       },
       {
         id: "code-mode-token-cost-boundary",
-        sectionId: "code-mode-cost",
-        intuition:
-          "새 작업지를 쓰는 비용과 매 단계 회의·자료 재전달 비용 중 어느 쪽이 작은지 비교하는 손익분기점입니다.",
-        workedExample:
-          "200-token program이 10,000-row result와 20 model round를 제거하면 이득일 수 있지만 한 번의 weather call에는 discovery·program·sandbox startup이 추가 overhead가 됩니다.",
-        boundary:
-          "본문 식은 token 구조 비교이고 provider cache·parallelism·CPU latency·tool billing·compile failure·quality correction을 포함한 실제 invoice나 latency 공식이 아닙니다.",
-      },
-      {
-        id: "deterministic-runtime-control-flow",
-        sectionId: "execution",
-        intuition:
-          "횟수 세기·정렬·조건 분기는 매번 사람에게 물어보지 않고 계산기가 같은 규칙으로 수행하게 하는 편이 정확합니다.",
-        workedExample:
-          "for loop·filter·sort·Promise.all·try/catch를 sandbox runtime이 실행하고 model은 어떤 computation을 할지와 final interpretation에 집중합니다.",
-        boundary:
-          "Runtime control flow가 deterministic해도 tool response·external state·network error·time·unordered concurrency는 달라질 수 있고 semantic intent 판단까지 CPU가 대신하지는 않습니다.",
-      },
-      {
-        id: "code-mode-capability-binding",
-        sectionId: "capability-binding",
-        intuition:
-          "Program에 컴퓨터 전체 열쇠를 주는 대신 이번 작업에 필요한 API의 특정 계정·read operation만 임시로 연결하는 방식입니다.",
-        workedExample:
-          "GitHub issue 분석 program에는 read-only list/get binding과 target organization scope만 주고 shell·ambient network·write token·host filesystem은 연결하지 않습니다.",
-        boundary:
-          "TypeScript typecheck는 argument shape를 검사할 뿐 read tool의 실제 side effect·credential scope·data exfiltration을 막지 않으며 proxy의 server-side authorization이 필요합니다.",
-      },
-      {
-        id: "code-mode-effect-atomicity",
-        sectionId: "effect-atomicity",
-        intuition:
-          "한 장의 작업지에 다섯 결제를 적었다고 해서 다섯 결제가 한꺼번에 성공하거나 모두 취소되는 것은 아닙니다.",
-        workedExample:
-          "세 번째 write tool에서 timeout이 나면 앞선 두 write는 완료됐을 수 있으므로 idempotency key·transaction·receipt·compensation과 retry policy를 effect별로 둡니다.",
-        boundary:
-          "Sandbox process transaction과 external API transaction은 다르고 try/catch·program retry만으로 exactly-once effect가 보장되지 않으며 고위험 작업은 human approval이 필요할 수 있습니다.",
-      },
-      {
-        id: "code-mode-result-contract",
-        sectionId: "result-contract",
-        intuition:
-          "작업실에서 회의실로 보낼 보고서의 열·행 수·민감정보 가림·출처를 미리 정해 원본이 다시 쏟아지지 않게 합니다.",
-        workedExample:
-          "Final result를 team,count,topIssueUrl schema·최대 50 rows·32KB로 제한하고 secret pattern을 redact하며 source tool call IDs와 truncation flag를 함께 반환합니다.",
-        boundary:
-          "Schema가 맞아도 사실성·completeness·authorization이 보장되지 않고 지나친 truncation은 중요한 exception을 숨길 수 있어 error·omission semantics를 명시해야 합니다.",
+        sectionId: "data-reduction",
+        intuition: "Program 작업지 비용과 반복 회의·자료 재전달 비용의 손익분기점입니다.",
+        workedExample: "Loop 2,010 token과 discovery·program·result 400 token을 같은 quality에서 비교합니다.",
+        boundary: "Provider cache·CPU·tool billing·latency·compile failure까지 포함한 invoice 공식은 아닙니다.",
       },
       {
         id: "code-mode-decision-boundary",
         sectionId: "decision",
-        intuition:
-          "한 번 물어볼 일, 대화를 거쳐 판단할 일, 많은 자료를 계산할 일, 승인이 필요한 일을 같은 실행 방식으로 처리하지 않는 선택표입니다.",
-        workedExample:
-          "Weather 한 번은 direct call, 단계마다 의미 판단이 필요한 조사에는 agent loop, 대량 filter에는 Code Mode, 결제·삭제에는 deterministic workflow와 approval을 기본값으로 둡니다.",
-        boundary:
-          "Code Mode가 direct calling의 상위 버전이 아니며 model capability·tool latency·data size·effect risk가 바뀌면 같은 task의 최적 선택도 달라집니다.",
+        intuition: "한 번 조회·의미 판단·대량 계산·고위험 effect를 같은 실행 방식에 넣지 않습니다.",
+        workedExample: "날씨는 direct call, 조사는 agent loop, 대량 집계는 Code Mode, 결제는 승인 workflow를 씁니다.",
+        boundary: "Data size·tool latency·model capability가 바뀌면 선택도 바뀝니다.",
       },
     ],
     conceptStages: [
-      {
-        label: "Compare",
-        relation: "Tool별 model round와 program 중간 표현의 차이를 먼저 확인",
-        concepts: ["tool-call-round-trip", "code-mode-program-ir"],
-      },
-      {
-        label: "Reduce",
-        relation:
-          "선택 schema와 sandbox-local data reduction으로 context 이동을 줄임",
-        concepts: [
-          "tool-discovery-schema-loading",
-          "sandbox-local-intermediate-data",
-          "code-mode-token-cost-boundary",
-        ],
-      },
-      {
-        label: "Execute",
-        relation:
-          "Loop·branch·concurrency를 runtime에 맡기고 capability만 binding",
-        concepts: [
-          "deterministic-runtime-control-flow",
-          "code-mode-capability-binding",
-        ],
-      },
-      {
-        label: "Contain",
-        relation:
-          "Final disclosure와 partial external effects를 별도 계약으로 제한",
-        concepts: ["code-mode-result-contract", "code-mode-effect-atomicity"],
-      },
-      {
-        label: "Choose",
-        relation:
-          "Data volume·semantic judgment·effect risk로 실행 패턴을 선택",
-        concepts: [
-          "code-mode-decision-boundary",
-          "code-mode-token-cost-boundary",
-        ],
-      },
+      { label: "00 round", relation: "Tool 왕복과 program 표현을 비교합니다.", concepts: ["tool-call-round-trip", "code-mode-program-ir"] },
+      { label: "01 discover", relation: "필요한 tool schema만 펼칩니다.", concepts: ["tool-discovery-schema-loading"] },
+      { label: "02 reduce", relation: "중간 data와 token 이동을 줄입니다.", concepts: ["sandbox-local-intermediate-data", "code-mode-token-cost-boundary"] },
+      { label: "03 choose", relation: "작업 모양에 맞는 실행 방식을 고릅니다.", concepts: ["code-mode-decision-boundary"] },
     ],
     exercises: [
-      {
-        level: "basic",
-        question:
-          "일반 tool calling과 Code Mode의 model→execution→observation 순서를 각각 그리고 model round 수가 달라지는 지점을 설명하라.",
-        answerChecklist: [
-          "tool call",
-          "result to context",
-          "next inference",
-          "program generation",
-          "sandbox calls",
-          "final result",
-          "not coding agent",
-        ],
-        requiredConcepts: ["tool-call-round-trip", "code-mode-program-ir"],
-        sectionId: "code-mode-definition",
-      },
-      {
-        level: "basic",
-        question:
-          "100개 tool schema 중 3개만 필요한 요청에서 discovery와 selective loading이 줄이는 context와 줄이지 못하는 위험을 쓰라.",
-        answerChecklist: [
-          "name/description index",
-          "3 signatures",
-          "schema tokens",
-          "discovery miss",
-          "authorization separate",
-          "semantic correctness",
-        ],
-        requiredConcepts: ["tool-discovery-schema-loading"],
-        sectionId: "tool-discovery",
-      },
-      {
-        level: "basic",
-        question:
-          "DB 100,000 rows를 평균 하나로 줄이는 작업에서 model context에 들어가는 data를 tool loop와 Code Mode로 비교하라.",
-        answerChecklist: [
-          "intermediate rows",
-          "sandbox variable",
-          "aggregation",
-          "final scalar",
-          "token movement",
-          "logs/privacy caveat",
-        ],
-        requiredConcepts: ["sandbox-local-intermediate-data"],
-        sectionId: "code-mode-cost",
-      },
-      {
-        level: "basic",
-        question:
-          "세 tool round마다 prompt 100·schema 50·result 500·decision 20 token이 들고, Code Mode는 discovery 100·program 200·final result 100 token이 든다고 가정할 때 두 경로의 이동 token을 계산하고 이 숫자가 실제 비용 전체는 아닌 이유를 설명하라.",
-        answerChecklist: [
-          "tool loop 3×(100+50+500+20)=2,010",
-          "Code Mode 100+200+100=400",
-          "1,610 token 차이",
-          "같은 task와 final quality",
-          "provider cache 별도",
-          "sandbox CPU·tool billing·latency 별도",
-          "compile/retry 별도",
-        ],
-        requiredConcepts: ["code-mode-token-cost-boundary"],
-        sectionId: "code-mode-cost",
-      },
-      {
-        level: "basic",
-        question:
-          "for·if·sort·Promise.all을 runtime에 맡길 수 있는 이유와 여전히 model 판단이 필요한 부분을 구분하라.",
-        answerChecklist: [
-          "explicit semantics",
-          "repeatability",
-          "bounded concurrency",
-          "external nondeterminism",
-          "semantic intent",
-          "final interpretation",
-        ],
-        requiredConcepts: ["deterministic-runtime-control-flow"],
-        sectionId: "execution",
-      },
-      {
-        level: "advanced",
-        question:
-          "GitHub security issue 집계 program에 필요한 최소 tool·resource·credential binding과 negative test를 설계하라.",
-        answerChecklist: [
-          "read-only tools",
-          "org/repo scope",
-          "no shell",
-          "no ambient network",
-          "no write token",
-          "rate budget",
-          "denied calls",
-          "audit",
-        ],
-        requiredConcepts: ["code-mode-capability-binding"],
-        sectionId: "capability-binding",
-      },
-      {
-        level: "basic",
-        question:
-          "Typecheck가 통과한 program도 안전하지 않은 예를 세 가지 들고 type과 capability 경계를 구분하라.",
-        answerChecklist: [
-          "infinite loop/budget",
-          "exfiltration",
-          "repeated write",
-          "type shape",
-          "authorization",
-          "sandbox",
-          "effect policy",
-        ],
-        requiredConcepts: [
-          "code-mode-capability-binding",
-          "code-mode-effect-atomicity",
-        ],
-        sectionId: "security",
-      },
-      {
-        level: "advanced",
-        question:
-          "다섯 write 중 세 번째 timeout 상황에 대해 retry·idempotency·transaction·compensation·approval contract를 설계하라.",
-        answerChecklist: [
-          "partial success",
-          "receipt",
-          "idempotency key",
-          "transaction scope",
-          "compensation",
-          "unknown outcome",
-          "approval",
-          "no exactly once assumption",
-        ],
-        requiredConcepts: ["code-mode-effect-atomicity"],
-        sectionId: "effect-atomicity",
-      },
-      {
-        level: "advanced",
-        question:
-          "민감한 10,000-row tool result에서 model로 반환할 schema·budget·redaction·provenance·error semantics를 설계하라.",
-        answerChecklist: [
-          "allowed fields",
-          "row/byte limit",
-          "aggregate",
-          "redaction",
-          "source IDs",
-          "truncation",
-          "omission",
-          "log retention",
-          "privacy not automatic",
-        ],
-        requiredConcepts: [
-          "code-mode-result-contract",
-          "sandbox-local-intermediate-data",
-        ],
-        sectionId: "result-contract",
-      },
-      {
-        level: "advanced",
-        question:
-          "날씨 조회·대량 issue 집계·여러 source 조사·결제 workflow를 direct call·agent loop·Code Mode·deterministic workflow에 배치하고 이유를 설명하라.",
-        answerChecklist: [
-          "single call",
-          "data reduction",
-          "semantic judgment",
-          "parallelism",
-          "effect risk",
-          "approval",
-          "hybrid",
-          "measurement",
-        ],
-        requiredConcepts: ["code-mode-decision-boundary"],
-        sectionId: "decision",
-      },
+      { level: "basic", question: "일반 tool loop의 inference→execution→observation 순서를 설명하세요.", answerChecklist: ["model chooses tool", "execution", "result", "context", "next inference", "round boundary"], requiredConcepts: ["tool-call-round-trip"], sectionId: "overview" },
+      { level: "basic", question: "Code Mode program IR이 tool call 목록보다 더 표현하는 것을 설명하세요.", answerChecklist: ["variables", "loop", "branch", "error handling", "multiple calls", "runtime"], requiredConcepts: ["code-mode-program-ir"], sectionId: "overview" },
+      { level: "basic", question: "100개 tool 중 3개만 쓸 때 discovery와 schema loading 흐름을 설명하세요.", answerChecklist: ["index", "candidate search", "three signatures", "scope", "context reduction", "authorization separate"], requiredConcepts: ["tool-discovery-schema-loading"], sectionId: "tool-discovery" },
+      { level: "basic", question: "100,000 rows를 20개 count로 줄일 때 model 경계를 건너는 data를 비교하세요.", answerChecklist: ["raw rows", "sandbox variable", "filter", "group", "20 counts", "logs caveat"], requiredConcepts: ["sandbox-local-intermediate-data"], sectionId: "data-reduction" },
+      { level: "basic", question: "세 round 2,010 token과 Code Mode 400 token의 차이를 계산하세요.", answerChecklist: ["2010", "400", "subtract", "1610", "same quality", "token-only"], requiredConcepts: ["code-mode-token-cost-boundary"], sectionId: "data-reduction" },
+      { level: "basic", question: "날씨·조사·대량 집계·결제를 네 실행 방식에 배치하세요.", answerChecklist: ["direct call", "agent loop", "Code Mode", "approved workflow", "data volume", "effect risk"], requiredConcepts: ["code-mode-decision-boundary"], sectionId: "decision" },
+      { level: "advanced", question: "Selective schema loading이 잘못된 tool 선택과 권한 문제를 해결하지 못하는 이유를 설명하세요.", answerChecklist: ["description index", "discovery miss", "malicious description", "signature only", "authorization separate", "semantic validation"], requiredConcepts: ["tool-discovery-schema-loading"], sectionId: "tool-discovery" },
+      { level: "advanced", question: "Provider cache가 강한 환경에서 Code Mode 비용 비교 fixture를 설계하세요.", answerChecklist: ["same task", "same final quality", "cached prompt", "tool latency", "sandbox startup", "token and wall time"], requiredConcepts: ["code-mode-token-cost-boundary"], sectionId: "data-reduction" },
+      { level: "advanced", question: "Local reduction이 privacy를 자동 보장하지 않는 leak paths를 설명하세요.", answerChecklist: ["memory", "debug log", "exception", "tool trace", "final result", "retention"], requiredConcepts: ["sandbox-local-intermediate-data"], sectionId: "data-reduction" },
+      { level: "advanced", question: "한 task 안에서 agent 판단과 Code Mode 계산을 조합하는 hybrid boundary를 설계하세요.", answerChecklist: ["semantic selection", "tool choice", "program computation", "bounded result", "effect approval", "measurement"], requiredConcepts: ["code-mode-program-ir", "code-mode-decision-boundary"], sectionId: "decision" },
     ],
     papers: [
       {
         title: "Anthropic: Code execution with MCP",
         href: "https://www.anthropic.com/engineering/code-execution-with-mcp",
-        problem:
-          "많은 MCP tool schema와 대량 중간 result가 model context를 차지하고 sequential round trip을 늘리는 문제",
-        contribution:
-          "Code execution environment에서 MCP tools를 programmatically 조합하고 중간 data를 local 처리하는 pattern을 설명",
-        assumptions:
-          "Anthropic이 설명한 MCP/code execution architecture·tool binding·sandbox와 example workload",
-        evidenceScope:
-          "Programmatic tool orchestration과 context/data-movement 감소의 설계 rationale",
-        notClaim:
-          "MCP 표준이 Code Mode를 규정하거나 모든 단순 tool call·provider에서 token·latency가 줄고 안전성이 자동 보장된다는 뜻은 아님",
+        problem: "많은 MCP schema와 대량 중간 result가 context와 sequential round trip을 늘리는 문제",
+        contribution: "Code environment에서 tools를 조합하고 중간 data를 local 처리하는 pattern",
+        assumptions: "Anthropic이 설명한 architecture·binding·sandbox와 example workload",
+        evidenceScope: "Programmatic orchestration과 context 이동 감소의 설계 rationale",
+        notClaim: "모든 단순 call·provider에서 token·latency가 줄거나 안전성이 자동 보장된다는 뜻은 아님",
         sectionId: "paper-anthropic-code-execution",
       },
       {
         title: "Cloudflare: Code Mode for MCP",
         href: "https://blog.cloudflare.com/code-mode-mcp/",
-        problem:
-          "MCP tool을 하나씩 model call로 조합할 때 schema/context overhead와 orchestration round가 커지는 문제",
-        contribution:
-          "MCP server를 typed sandbox binding으로 노출해 model-generated program이 여러 tool과 data transformation을 실행하는 구현을 공개",
-        assumptions:
-          "Cloudflare runtime·binding·sandbox·supported language와 문서 example",
-        evidenceScope:
-          "Cloudflare가 Code Mode라 부르는 execution surface와 구현상 장점",
-        notClaim:
-          "Code Mode라는 이름의 단일 산업 표준이 있거나 Cloudflare의 보안·성능 특성이 다른 runtime에 그대로 적용된다는 뜻은 아님",
+        problem: "MCP tools를 model round마다 조합할 때 생기는 schema·data overhead",
+        contribution: "MCP server를 typed sandbox binding으로 노출하는 Code Mode 구현",
+        assumptions: "Cloudflare runtime·binding·supported language와 문서 example",
+        evidenceScope: "Cloudflare가 Code Mode라 부르는 execution surface",
+        notClaim: "단일 산업 표준이거나 다른 runtime도 같은 성능·보안을 갖는다는 뜻은 아님",
         sectionId: "paper-cloudflare-code-mode",
       },
+    ],
+  },
+  "ai/code-mode-runtime-contracts": {
+    entryLevel: true,
+    entryNote: "Runtime control flow와 외부 state를 분리하는 데서 시작합니다.",
+    coreIdea:
+      "Model-generated program의 명시적 control flow는 runtime이 반복 가능하게 실행하지만, typecheck는 authority가 아니고 sandbox process는 external transaction이 아닙니다. 따라서 capability binding, result disclosure, partial effect receipt를 서로 다른 계약으로 둡니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "deterministic-runtime-control-flow", role: "명시적 loop·branch와 외부 비결정성을 구분합니다." },
+      { id: "code-mode-capability-binding", role: "요청별 tool·resource·account authority를 연결합니다." },
+      { id: "code-mode-result-contract", role: "반환 schema·크기·redaction·provenance를 제한합니다." },
+      { id: "code-mode-effect-atomicity", role: "Partial write·unknown outcome·retry를 receipt로 조정합니다." },
+    ],
+    conceptExplanations: [
+      {
+        id: "deterministic-runtime-control-flow",
+        sectionId: "overview",
+        intuition: "횟수·정렬·조건 분기는 매번 model에 묻지 않고 runtime rule로 실행합니다.",
+        workedExample: "같은 array의 filter·sort·reduce는 반복 가능하지만 API response는 달라질 수 있습니다.",
+        boundary: "Tool response·time·network·concurrent effects까지 deterministic해지는 것은 아닙니다.",
+      },
+      {
+        id: "code-mode-capability-binding",
+        sectionId: "capability",
+        intuition: "컴퓨터 전체 열쇠 대신 이번 요청의 API·account·operation 열쇠만 연결합니다.",
+        workedExample: "Target org의 repo.read만 주고 shell·ambient network·host filesystem은 거절합니다.",
+        boundary: "Typecheck는 side effect·credential scope·exfiltration을 막지 않습니다.",
+      },
+      {
+        id: "code-mode-result-contract",
+        sectionId: "result-contract",
+        intuition: "작업실에서 내보낼 보고서의 열·행·byte·가림·출처를 미리 정합니다.",
+        workedExample: "team,count,url만 50 rows·32 KiB로 반환하고 source IDs와 truncation flag를 붙입니다.",
+        boundary: "Schema-valid가 factual·complete·authorized라는 뜻은 아닙니다.",
+      },
+      {
+        id: "code-mode-effect-atomicity",
+        sectionId: "effects",
+        intuition: "한 program의 다섯 write가 하나의 transaction은 아닙니다.",
+        workedExample: "Write 1·2 뒤 3 timeout이면 receipt를 조회하고 미시작 4·5만 즉시 retry합니다.",
+        boundary: "Try/catch·process retry만으로 exactly-once나 cross-service atomicity가 생기지 않습니다.",
+      },
+    ],
+    conceptStages: [
+      { label: "00 execute", relation: "명시적 control flow를 runtime이 실행합니다.", concepts: ["deterministic-runtime-control-flow"] },
+      { label: "01 authorize", relation: "허용 capability만 program에 연결합니다.", concepts: ["code-mode-capability-binding"] },
+      { label: "02 disclose", relation: "Final result의 외부 노출을 제한합니다.", concepts: ["code-mode-result-contract"] },
+      { label: "03 reconcile", relation: "External effect receipt와 retry를 조정합니다.", concepts: ["code-mode-effect-atomicity"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Runtime control flow가 deterministic해도 API 결과가 달라질 수 있는 이유를 설명하세요.", answerChecklist: ["loop semantics", "same code", "external state", "network", "time", "separate boundary"], requiredConcepts: ["deterministic-runtime-control-flow"], sectionId: "overview" },
+      { level: "basic", question: "Type과 capability가 각각 제한하는 것을 구분하세요.", answerChecklist: ["argument shape", "return shape", "tool identity", "account scope", "operation", "server authorization"], requiredConcepts: ["code-mode-capability-binding"], sectionId: "capability" },
+      { level: "basic", question: "Issue 분석 program의 최소 capability를 설계하세요.", answerChecklist: ["repo read", "target org", "no shell", "no ambient network", "no host fs", "denied test"], requiredConcepts: ["code-mode-capability-binding"], sectionId: "capability" },
+      { level: "basic", question: "Result contract가 제한할 다섯 항을 설명하세요.", answerChecklist: ["schema", "row limit", "byte limit", "redaction", "source IDs", "truncation"], requiredConcepts: ["code-mode-result-contract"], sectionId: "result-contract" },
+      { level: "basic", question: "50 rows 제한만 있고 byte 제한이 없을 때의 우회를 설명하세요.", answerChecklist: ["one large row", "blob", "row passes", "bytes explode", "dual budget", "context"], requiredConcepts: ["code-mode-result-contract"], sectionId: "result-contract" },
+      { level: "basic", question: "Write 1·2 성공 뒤 3 timeout인 effect 상태를 분류하세요.", answerChecklist: ["one committed", "two committed", "three unknown", "four not started", "five not started", "receipt lookup"], requiredConcepts: ["code-mode-effect-atomicity"], sectionId: "effects" },
+      { level: "advanced", question: "Bounded concurrency에서 deterministic control과 nondeterministic completion을 함께 test하세요.", answerChecklist: ["fixed input", "concurrency bound", "completion order", "stable reducer", "tool fixture", "repeat runs"], requiredConcepts: ["deterministic-runtime-control-flow"], sectionId: "overview" },
+      { level: "advanced", question: "허용 tool이 data를 외부로 보내는 capability confusion 반례를 설계하세요.", answerChecklist: ["typed call", "allowed tool", "hidden side effect", "destination scope", "proxy policy", "negative test"], requiredConcepts: ["code-mode-capability-binding"], sectionId: "capability" },
+      { level: "advanced", question: "Truncation이 중요한 exception을 숨기지 않게 result semantics를 설계하세요.", answerChecklist: ["truncated flag", "omitted count", "error channel", "source IDs", "stable ordering", "consumer policy"], requiredConcepts: ["code-mode-result-contract"], sectionId: "result-contract" },
+      { level: "advanced", question: "Unknown effect를 포함한 retry·idempotency·compensation·approval contract를 설계하세요.", answerChecklist: ["stable key", "receipt", "unknown lookup", "exclude committed", "compensation", "human approval"], requiredConcepts: ["code-mode-effect-atomicity"], sectionId: "effects" },
+    ],
+    papers: [
       {
         title: "TanStack AI: Code Mode",
         href: "https://tanstack.com/ai/latest/docs/code-mode/code-mode",
-        problem:
-          "여러 typed tool을 반복·분기·병렬 workflow로 조합하는 agent execution을 library interface로 제공하는 문제",
-        contribution:
-          "TypeScript code generation·typed tool API·execution integration의 공식 사용법을 문서화",
-        assumptions:
-          "해당 TanStack AI version·runtime adapter·sandbox/tool configuration",
-        evidenceScope:
-          "TanStack 구현에서 Code Mode의 API와 type-oriented developer experience",
-        notClaim:
-          "TypeScript type이 authorization·effect atomicity·privacy를 보장하거나 모든 task에서 direct tool calling보다 우월하다는 뜻은 아님",
+        problem: "Typed tools를 반복·분기·병렬 program으로 조합하는 interface",
+        contribution: "TypeScript generation과 typed tool execution integration",
+        assumptions: "해당 library version·adapter·sandbox와 tool configuration",
+        evidenceScope: "TanStack 구현의 API와 type-oriented developer surface",
+        notClaim: "Type이 authorization·effect atomicity·privacy를 보장한다는 뜻은 아님",
         sectionId: "paper-tanstack-code-mode",
+      },
+      {
+        title: "Cloudflare: Code Mode for MCP runtime",
+        href: "https://blog.cloudflare.com/code-mode-mcp/",
+        problem: "Model-generated code에 MCP capability를 runtime binding으로 연결하는 문제",
+        contribution: "Typed binding과 sandbox execution surface의 구현 사례",
+        assumptions: "Cloudflare runtime·binding·sandbox와 문서 example",
+        evidenceScope: "해당 구현에서 program과 capability를 연결하는 경로",
+        notClaim: "External API의 multi-write atomicity나 exactly-once를 runtime이 제공한다는 뜻은 아님",
+        sectionId: "paper-cloudflare-runtime",
       },
     ],
   },

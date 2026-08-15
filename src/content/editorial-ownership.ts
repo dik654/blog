@@ -3438,11 +3438,11 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "agent-code-mode": {
-    title: "Code Mode 글이 소유하는 범위",
+    title: "Code Mode 실행 패턴 글이 소유하는 범위",
     owns: [
       "tool call 연속과 sandbox program 실행의 차이",
       "반복·분기·중간 데이터가 context 밖에서 처리될 때의 비용 모델",
-      "MCP capability·grammar·sandbox를 결합한 실행 경계",
+      "tool discovery·local reduction과 direct call·agent loop·program 선택 경계",
     ],
     reuses: [
       { label: "MCP의 tool·resource 계약", href: "/ai/mcp-protocol" },
@@ -3453,6 +3453,26 @@ export const EDITORIAL_BOUNDARIES = {
       {
         kind: "primary-source",
         rule: "Code Mode라는 이름을 쓰는 구현의 실제 실행 모델을 공식 문서와 구분해 인용한다.",
+      },
+    ],
+  },
+  "code-mode-runtime-contracts": {
+    title: "Code Mode runtime 계약 글이 소유하는 범위",
+    owns: [
+      "Program의 deterministic control flow와 외부 상태 비결정성 경계",
+      "요청별 typed tool·resource·account capability binding",
+      "Final result의 schema·크기·redaction·provenance disclosure 계약",
+      "여러 external write의 partial success·receipt·retry·compensation 경계",
+    ],
+    reuses: [
+      { label: "Code Mode program IR와 local data", href: "/ai/agent-code-mode" },
+      { label: "Process·container resource boundary", href: "/ai/agent-sandbox-security" },
+      { label: "하네스의 승인·검증 계층", href: "/ai/llm-harness" },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "Typed program surface의 기능과 authorization·atomicity 보장을 분리해, 각 구현의 공식 문서 범위로만 주장한다.",
       },
     ],
   },
