@@ -94,17 +94,69 @@ const llmBaseArticles: Article[] = [
   },
   {
     slug: "grammar-constrained-generation",
-    title: "문법 제약 생성: PDA에서 XGrammar까지",
+    title: "Formal language: symbol에서 derivation까지",
     subcategory: "ai-llm-theory",
     sections: [
-      { id: "overview", title: "프롬프트가 아니라 디코더에서 막는다" },
-      { id: "formal-language", title: "CFG와 PDA가 필요한 이유" },
-      { id: "tree-sitter", title: "Tree-sitter와 무엇이 다른가" },
-      { id: "decoder", title: "문법 상태에서 token mask까지" },
-      { id: "serving", title: "서빙·에이전트 구현 경계" },
+      { id: "alphabet", title: "Symbol과 alphabet" },
+      { id: "string-language", title: "String과 language membership" },
+      { id: "derivation", title: "Terminal·nonterminal·production" },
+      { id: "next", title: "중첩 memory로 이동" },
     ],
     component: () =>
       import("@/pages/articles/ai/grammar-constrained-generation"),
+  },
+  {
+    slug: "cfg-pushdown-automata",
+    title: "CFG와 PDA: recursive nesting을 stack으로 기억하기",
+    subcategory: "ai-llm-theory",
+    sections: [
+      { id: "finite-memory", title: "Finite-state memory 한계" },
+      { id: "cfg-recursion", title: "Context-free recursion" },
+      { id: "pda-stack", title: "Pushdown stack" },
+      { id: "implementation-boundary", title: "이론과 parser 구현 경계" },
+    ],
+    component: () => import("@/pages/articles/ai/cfg-pushdown-automata"),
+  },
+  {
+    slug: "incremental-parsing-tree-sitter",
+    title: "Tree-sitter: source edit와 incremental syntax tree",
+    subcategory: "ai-llm-theory",
+    sections: [
+      { id: "source-tree", title: "Source와 concrete syntax tree" },
+      { id: "incremental-update", title: "Edit와 subtree reuse" },
+      { id: "error-recovery", title: "불완전 source의 error recovery" },
+      { id: "decoder-boundary", title: "Decoder matcher와의 경계" },
+    ],
+    component: () =>
+      import("@/pages/articles/ai/incremental-parsing-tree-sitter"),
+  },
+  {
+    slug: "grammar-tokenizer-decoding",
+    title: "Grammar decoding: tokenizer compilation과 token mask",
+    subcategory: "ai-llm-theory",
+    sections: [
+      { id: "token-boundary", title: "Grammar symbol과 model token" },
+      {
+        id: "tokenizer-compilation",
+        title: "Vocabulary transition compilation",
+      },
+      { id: "token-mask", title: "Logit mask와 softmax" },
+      { id: "matcher-boundary", title: "State accept·EOS·dead end" },
+    ],
+    component: () => import("@/pages/articles/ai/grammar-tokenizer-decoding"),
+  },
+  {
+    slug: "structured-generation-serving",
+    title: "Structured generation serving: cache·state·semantic gate",
+    subcategory: "ai-llm-theory",
+    sections: [
+      { id: "request-schema", title: "Request별 schema" },
+      { id: "dynamic-schema-cache", title: "Compile cache identity" },
+      { id: "sequence-state", title: "Sequence별 matcher state" },
+      { id: "semantic-policy", title: "Syntax 뒤 semantic policy" },
+    ],
+    component: () =>
+      import("@/pages/articles/ai/structured-generation-serving"),
   },
   {
     slug: "mixture-of-experts",

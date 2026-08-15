@@ -33153,7 +33153,7 @@ export const ARTICLE_LEARNING: Readonly<
   "ai/grammar-constrained-generation": {
     entryLevel: true,
     coreIdea:
-      "문법 제약 생성은 모델에게 JSON을 부탁하는 prompt 기법이 아니라, alphabet·string·grammar에서 출발한 parser/matcher state를 tokenizer vocabulary와 compile하고 매 decoding step의 불가능한 token logit을 −∞로 가리는 실행 방식입니다. 이 과정은 syntax와 schema를 강제하지만 사실성·권한·안전 같은 의미 검증은 별도 계층에 남습니다.",
+      "Formal language는 symbol을 모은 alphabet, symbol의 순서인 string, 허용 string의 집합인 language를 먼저 구분하고 terminal·nonterminal·production의 derivation으로 그 집합을 표현합니다.",
     assumedKnowledge: [],
     introducedHere: [
       {
@@ -33164,43 +33164,11 @@ export const ARTICLE_LEARNING: Readonly<
         id: "grammar-production-derivation",
         role: "Terminal·nonterminal·production이 유효한 string을 만드는 과정을 설명합니다.",
       },
-      {
-        id: "finite-automaton-memory-boundary",
-        role: "유한 state만으로 임의 깊이 중첩을 기억할 수 없는 이유를 구분합니다.",
-      },
-      {
-        id: "context-free-grammar-recursion",
-        role: "Recursive production이 JSON·괄호의 nested structure를 표현하게 합니다.",
-      },
-      {
-        id: "pushdown-automaton-stack",
-        role: "Stack push/pop으로 열린 delimiter를 추적하는 PDA 직관을 제공합니다.",
-      },
-      {
-        id: "incremental-parser-boundary",
-        role: "Tree-sitter의 source-tree 갱신과 decoder matcher의 next-token mask를 구분합니다.",
-      },
-      {
-        id: "grammar-tokenizer-compilation",
-        role: "Character grammar를 multi-character model token과 연결합니다.",
-      },
-      {
-        id: "constrained-decoding-token-mask",
-        role: "현재 state에서 금지 token의 probability를 0으로 만듭니다.",
-      },
-      {
-        id: "syntactic-semantic-validity-boundary",
-        role: "Parse/schema 유효성과 세계·정책 의미의 타당성을 분리합니다.",
-      },
-      {
-        id: "dynamic-schema-mask-cache",
-        role: "Request별 schema와 sequence state가 compile/mask cache에 주는 영향을 다룹니다.",
-      },
     ],
     conceptExplanations: [
       {
         id: "formal-alphabet-string-language",
-        sectionId: "formal-basics",
+        sectionId: "alphabet",
         intuition:
           "레고 블록의 가능한 종류가 alphabet, 블록을 순서대로 이은 한 작품이 string, 규칙에 맞는 작품 전체가 language라고 볼 수 있습니다.",
         workedExample:
@@ -33210,7 +33178,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         id: "grammar-production-derivation",
-        sectionId: "formal-basics",
+        sectionId: "derivation",
         intuition:
           "완성품에 남는 terminal과 아직 조립법을 펼쳐야 하는 nonterminal 이름을 production rule로 하나씩 치환하는 과정입니다.",
         workedExample:
@@ -33218,335 +33186,136 @@ export const ARTICLE_LEARNING: Readonly<
         boundary:
           "한 grammar가 같은 string을 여러 방식으로 derive하는 ambiguity가 있을 수 있고 grammar가 semantic uniqueness나 evaluation order를 자동으로 정하지 않습니다.",
       },
-      {
-        id: "finite-automaton-memory-boundary",
-        sectionId: "cfg-pda",
-        intuition:
-          "상태 번호가 유한하면 지금까지 열린 괄호 수가 제한 없이 커질 때 각각을 영원히 다른 상태로 기억할 수 없습니다.",
-        workedExample:
-          "최대 깊이 3만 허용하면 유한 state로 괄호 수 0·1·2·3을 나타낼 수 있지만 임의 깊이 balanced parentheses는 고정된 유한 state 집합으로 정확히 구분하지 못합니다.",
-        boundary:
-          "실제 system이 maximum nesting depth를 고정하면 finite approximation이 가능하고 regex engine의 backreference·recursion extension은 이론적 regular expression과 같지 않을 수 있습니다.",
-      },
-      {
-        id: "context-free-grammar-recursion",
-        sectionId: "cfg-pda",
-        intuition:
-          "상자 안에 또 같은 종류의 상자를 넣는 rule이 자기 자신을 다시 부르면 깊이를 미리 정하지 않고 nested structure를 표현할 수 있습니다.",
-        workedExample:
-          "value→array와 array→[ values? ], values→value (, value)*가 서로 재귀해 [[0],1] 같은 nested JSON array를 생성합니다.",
-        boundary:
-          "CFG만으로 identifier declaration-before-use·type compatibility·cross-field equality 같은 context-sensitive semantic constraint를 모두 표현하기 어렵습니다.",
-      },
-      {
-        id: "pushdown-automaton-stack",
-        sectionId: "cfg-pda",
-        intuition:
-          "열린 괄호를 stack에 쌓고 닫는 괄호가 나오면 가장 최근 것을 꺼내는 LIFO 메모리로 nesting을 추적합니다.",
-        workedExample:
-          "(()())를 왼쪽부터 읽으며 (마다 push, )마다 pop하면 마지막에 empty stack이 되지만 (()))는 empty 상태에서 pop하려 해 reject됩니다.",
-        boundary:
-          "PDA는 이론적 recognition model이며 실제 XGrammar·LR·Earley parser가 문자 그대로 하나의 PDA object로 구현된다는 뜻이나 arbitrary program semantics를 판정한다는 뜻은 아닙니다.",
-      },
-      {
-        id: "incremental-parser-boundary",
-        sectionId: "tree-sitter",
-        intuition:
-          "완성·편집 중인 문서를 다시 읽어 tree를 고치는 도구와 아직 쓰지 않은 다음 글자를 제한하는 도구는 grammar 뿌리가 같아도 역할이 다릅니다.",
-        workedExample:
-          "Tree-sitter는 source edit range와 old tree에서 새 concrete syntax tree를 만들고 decoder matcher는 generated prefix state에서 vocabulary bitmask를 만듭니다.",
-        boundary:
-          "Tree-sitter의 error recovery는 invalid code에서도 useful tree를 만드는 목표이고 constrained decoding의 invalid continuation 차단과 동일한 acceptance semantics가 아닙니다.",
-      },
-      {
-        id: "grammar-tokenizer-compilation",
-        sectionId: "tokenizer-compilation",
-        intuition:
-          "문법이 한 글자씩 허용 여부를 말해도 모델의 한 token이 여러 글자를 담으므로 token 전체를 넣었을 때의 state 변화를 미리 계산해야 합니다.",
-        workedExample:
-          '현재 JSON prefix가 {"age":이면 token ` 42}`는 숫자와 object close를 함께 소비하므로 각 byte가 순서대로 valid하고 최종 matcher state가 어디인지 확인합니다.',
-        boundary:
-          "Vocabulary·byte fallback·UTF-8 normalization·added token이 바뀌면 compiled mask cache를 그대로 재사용할 수 없고 string escape·partial token 처리를 구현해야 합니다.",
-      },
-      {
-        id: "constrained-decoding-token-mask",
-        sectionId: "decoder",
-        intuition:
-          "모델의 후보 점수판에서 문법상 불가능한 후보를 지운 뒤 남은 후보끼리만 확률을 다시 나눕니다.",
-        workedExample:
-          '{"age": prefix에서 schema가 integer를 요구하면 quote로 string을 여는 token을 mask하고 number prefix·whitespace·valid terminator token만 허용합니다.',
-        boundary:
-          "Allowed set 안에서는 model이 사실과 다른 숫자를 고를 수 있고 empty allowed set·EOS·top-k 적용 순서를 잘못 구현하면 dead end나 schema violation이 생길 수 있습니다.",
-      },
-      {
-        id: "syntactic-semantic-validity-boundary",
-        sectionId: "validity-boundary",
-        intuition:
-          "주소 형식이 맞는 것과 그 주소에 실제 사람이 살며 배송 권한이 있는 것은 서로 다른 확인입니다.",
-        workedExample:
-          '{"user_id":123,"amount":999999}가 JSON Schema를 통과해도 user 123의 존재·잔액·결제 권한·fraud policy는 database와 authorization validator가 확인합니다.',
-        boundary:
-          "JSON Schema의 supported keyword 범위도 engine마다 다를 수 있고 parseable output을 곧 executable·safe·true output으로 취급하면 안 됩니다.",
-      },
-      {
-        id: "dynamic-schema-mask-cache",
-        sectionId: "dynamic-schema-cache",
-        intuition:
-          "모든 요청이 같은 양식을 쓰면 도장을 재사용할 수 있지만 tool 목록과 parameter가 매번 바뀌면 공통 조각만 재사용해야 합니다.",
-        workedExample:
-          "Request A의 weather/search tool union과 B의 payment/refund union은 전체 grammar identity가 다르지만 JSON string·number·common envelope 하위 grammar는 cache 재사용 후보가 됩니다.",
-        boundary:
-          "Cache hit가 높아도 sequence별 matcher state update·GPU mask apply 비용은 남고 stale schema·tokenizer/version key를 재사용하면 잘못된 token을 허용할 수 있습니다.",
-      },
     ],
     conceptStages: [
-      {
-        label: "Define",
-        relation:
-          "Symbol·string·language와 production derivation을 무선수로 정의",
-        concepts: [
-          "formal-alphabet-string-language",
-          "grammar-production-derivation",
-        ],
-      },
-      {
-        label: "Remember",
-        relation: "Finite state 한계에서 recursive CFG와 PDA stack으로 확장",
-        concepts: [
-          "finite-automaton-memory-boundary",
-          "context-free-grammar-recursion",
-          "pushdown-automaton-stack",
-        ],
-      },
-      {
-        label: "Separate",
-        relation:
-          "Incremental source parser와 generation matcher의 입출력을 구분",
-        concepts: ["incremental-parser-boundary"],
-      },
-      {
-        label: "Compile",
-        relation:
-          "Character grammar를 tokenizer vocabulary와 연결해 token mask 생성",
-        concepts: [
-          "grammar-tokenizer-compilation",
-          "constrained-decoding-token-mask",
-        ],
-      },
-      {
-        label: "Serve",
-        relation: "동적 schema cache와 semantic validator의 책임을 분리",
-        concepts: [
-          "dynamic-schema-mask-cache",
-          "syntactic-semantic-validity-boundary",
-        ],
-      },
+      { label: "00 define", relation: "Symbol에서 language membership까지 정의합니다.", concepts: ["formal-alphabet-string-language"] },
+      { label: "01 derive", relation: "Production으로 start symbol을 terminal string으로 전개합니다.", concepts: ["grammar-production-derivation"] },
     ],
     exercises: [
-      {
-        level: "basic",
-        question:
-          "Alphabet·string·language를 괄호 예로 각각 정의하고 language에 속하는 string과 속하지 않는 string을 들라.",
-        answerChecklist: [
-          "finite symbols",
-          "ordered string",
-          "set of valid strings",
-          "valid example",
-          "invalid example",
-          "empty string if relevant",
-        ],
-        requiredConcepts: ["formal-alphabet-string-language"],
-        sectionId: "formal-basics",
-      },
-      {
-        level: "basic",
-        question:
-          "value→array→[values]를 이용해 [0]의 derivation을 terminal·nonterminal로 나누어 쓰라.",
-        answerChecklist: [
-          "start symbol",
-          "production sequence",
-          "terminal",
-          "nonterminal",
-          "final string",
-        ],
-        requiredConcepts: ["grammar-production-derivation"],
-        sectionId: "formal-basics",
-      },
-      {
-        level: "basic",
-        question:
-          "문자열 `(()())`를 왼쪽부터 읽으며 stack depth를 기록하고, `())`가 어느 위치에서 reject되는지 설명하라.",
-        answerChecklist: [
-          "push on open",
-          "depths 1,2,1,2,1,0",
-          "pop on close",
-          "accept at empty end",
-          "extra close in `())`",
-          "negative-depth reject",
-          "unbounded depth needs stack",
-        ],
-        requiredConcepts: [
-          "finite-automaton-memory-boundary",
-          "pushdown-automaton-stack",
-        ],
-        sectionId: "cfg-pda",
-      },
-      {
-        level: "basic",
-        question:
-          "JSON array/object가 CFG recursion으로 중첩되는 production을 쓰고 CFG만으로 확인하기 어려운 semantic constraint를 하나 들라.",
-        answerChecklist: [
-          "recursive value",
-          "array/object",
-          "nested example",
-          "type/name/cross-field semantic",
-          "validator",
-        ],
-        requiredConcepts: ["context-free-grammar-recursion"],
-        sectionId: "cfg-pda",
-      },
-      {
-        level: "basic",
-        question:
-          "Tree-sitter와 constrained decoder의 입력·출력·오류 처리 목표를 세 축으로 비교하라.",
-        answerChecklist: [
-          "source+old tree",
-          "CST",
-          "edit/error recovery",
-          "prefix+logits",
-          "token mask",
-          "prevent invalid continuation",
-        ],
-        requiredConcepts: ["incremental-parser-boundary"],
-        sectionId: "tree-sitter",
-      },
-      {
-        level: "advanced",
-        question:
-          "한 token이 ` 42}`를 담을 때 character grammar가 token 전체를 검사해야 하는 과정을 byte/character state transition으로 설명하라.",
-        answerChecklist: [
-          "multi-character token",
-          "sequential consume",
-          "number",
-          "closing brace",
-          "final state",
-          "UTF-8/tokenizer",
-          "cache key",
-        ],
-        requiredConcepts: ["grammar-tokenizer-compilation"],
-        sectionId: "tokenizer-compilation",
-      },
-      {
-        level: "basic",
-        question:
-          "Allowed set A(s) 밖 token logit을 −∞로 바꾸면 softmax probability가 0이 되는 이유를 설명하라.",
-        answerChecklist: [
-          "exp(-infinity)=0",
-          "renormalize",
-          "allowed logits",
-          "mask before sampling",
-          "state accept",
-        ],
-        requiredConcepts: ["constrained-decoding-token-mask"],
-        sectionId: "decoder",
-      },
-      {
-        level: "advanced",
-        question:
-          "top-k/top-p와 grammar mask의 적용 순서가 잘못되면 생길 수 있는 dead end를 예로 들고 올바른 sampler contract를 설계하라.",
-        answerChecklist: [
-          "mask first/compatible integration",
-          "valid set",
-          "top-k removed valid token",
-          "empty set",
-          "EOS",
-          "fallback forbidden",
-          "tests",
-        ],
-        requiredConcepts: ["constrained-decoding-token-mask"],
-        sectionId: "decoder",
-      },
-      {
-        level: "advanced",
-        question:
-          "Schema-valid 결제 JSON이 semantic-invalid일 수 있는 조건과 validator·authorization·policy 단계의 책임을 나누라.",
-        answerChecklist: [
-          "parse/type/enum",
-          "entity existence",
-          "authorization",
-          "balance/business invariant",
-          "safety",
-          "no execution from syntax alone",
-        ],
-        requiredConcepts: ["syntactic-semantic-validity-boundary"],
-        sectionId: "validity-boundary",
-      },
-      {
-        level: "advanced",
-        question:
-          "요청별 tool schema가 달라지는 batched serving에서 compile cache key·subgrammar reuse·sequence matcher state·GPU mask 비용을 포함한 ledger를 설계하라.",
-        answerChecklist: [
-          "schema identity",
-          "tokenizer/version",
-          "shared subgrammar",
-          "per-sequence state",
-          "compile latency",
-          "cache hit",
-          "mask apply",
-          "stale invalidation",
-        ],
-        requiredConcepts: ["dynamic-schema-mask-cache"],
-        sectionId: "dynamic-schema-cache",
-      },
+      { level: "basic", question: "Symbol과 alphabet의 차이를 괄호 예제로 설명하세요.", answerChecklist: ["symbol one mark", "finite set", "Sigma", "open bracket", "close bracket", "not ordered"], requiredConcepts: ["formal-alphabet-string-language"], sectionId: "alphabet" },
+      { level: "basic", question: "Alphabet에서 string을 만드는 순서와 길이를 설명하세요.", answerChecklist: ["ordered sequence", "symbols", "length three", "[0]", "empty string", "order matters"], requiredConcepts: ["formal-alphabet-string-language"], sectionId: "string-language" },
+      { level: "basic", question: "Sigma star와 특정 language L의 포함 관계를 설명하세요.", answerChecklist: ["all finite strings", "subset", "membership", "accept", "reject", "rule"], requiredConcepts: ["formal-alphabet-string-language"], sectionId: "string-language" },
+      { level: "basic", question: "[0], ][, [01을 membership 결과와 함께 분류하세요.", answerChecklist: ["[0] accept", "][ reject", "[01 reject", "first close", "unclosed", "rule"], requiredConcepts: ["formal-alphabet-string-language"], sectionId: "string-language" },
+      { level: "basic", question: "Terminal과 nonterminal의 역할을 array grammar에서 나누세요.", answerChecklist: ["terminal remains", "nonterminal expands", "brackets", "zero", "value", "array"], requiredConcepts: ["grammar-production-derivation"], sectionId: "derivation" },
+      { level: "basic", question: "Start symbol에서 [0]까지 production sequence를 쓰세요.", answerChecklist: ["start", "array", "value", "production", "terminal", "final string"], requiredConcepts: ["grammar-production-derivation"], sectionId: "derivation" },
+      { level: "advanced", question: "같은 alphabet으로 서로 다른 language 두 개를 설계하세요.", answerChecklist: ["same Sigma", "two rules", "membership difference", "example", "counterexample", "language subset"], requiredConcepts: ["formal-alphabet-string-language"], sectionId: "string-language" },
+      { level: "advanced", question: "빈 string epsilon을 포함하는 language의 membership fixture를 만드세요.", answerChecklist: ["epsilon", "length zero", "include rule", "nonempty", "accept", "reject"], requiredConcepts: ["formal-alphabet-string-language"], sectionId: "string-language" },
+      { level: "advanced", question: "Ambiguous derivation이 semantic uniqueness를 보장하지 않는 이유를 설명하세요.", answerChecklist: ["same string", "multiple derivations", "grammar", "semantic separate", "evaluation order", "boundary"], requiredConcepts: ["grammar-production-derivation"], sectionId: "derivation" },
+      { level: "advanced", question: "Formal symbol과 tokenizer token을 같은 단위로 두면 생기는 오류를 설명하세요.", answerChecklist: ["multi-byte", "multi-character token", "formal symbol", "tokenizer", "compilation needed", "boundary"], requiredConcepts: ["formal-alphabet-string-language"], sectionId: "next" },
     ],
-    papers: [
-      {
-        title: "Tree-sitter documentation",
-        href: "https://tree-sitter.github.io/tree-sitter/",
-        problem:
-          "편집 중인 source code에서 전체 파일을 매번 다시 parse하지 않고 useful syntax tree를 유지하는 문제",
-        contribution:
-          "Parser generator·incremental parsing·concrete syntax tree·error recovery interface를 제공",
-        assumptions:
-          "선택 language grammar·Tree-sitter runtime/version과 edit range·old tree가 올바르게 제공됨",
-        evidenceScope:
-          "Existing source text를 incremental parse해 CST를 갱신하는 project goal과 API",
-        notClaim:
-          "LLM logits를 mask하거나 arbitrary program type·semantic correctness를 검증하는 decoder라는 뜻은 아님",
-        sectionId: "paper-tree-sitter",
-      },
-      {
-        title: "XGrammar: Constrained Decoding",
-        href: "https://xgrammar.mlc.ai/docs/start/constrained_decoding.html",
-        problem:
-          "LLM decoding 중 JSON Schema·regex·EBNF를 위반하는 token을 sampling 전에 제거하는 문제",
-        contribution:
-          "Grammar compiler·tokenizer info·stateful matcher·next-token bitmask·accept-token workflow를 공식 문서화",
-        assumptions:
-          "지원 grammar/schema subset·tokenizer encoding·engine integration과 mask application order",
-        evidenceScope:
-          "XGrammar API에서 grammar state와 vocabulary mask를 연결하는 실행 경로",
-        notClaim:
-          "Schema-valid output의 truth·authorization·safety를 보장하거나 모든 model/runtime에서 zero overhead라는 뜻은 아님",
-        sectionId: "paper-xgrammar-decoding",
-      },
-      {
-        title:
-          "XGrammar 2: Flexible and Efficient Structured Generation for Agents",
-        href: "https://arxiv.org/abs/2601.04426",
-        problem:
-          "Agent request마다 tool/tag/schema가 달라져 grammar compilation·mask cache reuse가 어려워지는 문제",
-        contribution:
-          "Dynamic structured generation을 위한 grammar organization·Earley 기반 mask cache와 reusable structure를 제안",
-        assumptions:
-          "논문 engine·model·tokenizer·schema distribution·benchmark·hardware 조건",
-        evidenceScope:
-          "보고된 dynamic agent schema 처리 architecture와 실험 범위",
-        notClaim:
-          "모든 serving framework·schema·batch에서 같은 speedup이 재현되거나 semantic validation이 해결된다는 뜻은 아님",
-        sectionId: "paper-xgrammar2",
-      },
+  },
+  "ai/cfg-pushdown-automata": {
+    entryLevel: true,
+    coreIdea: "Finite automaton은 유한 state만 기억하지만 recursive CFG의 임의 깊이 중첩은 PDA의 LIFO stack으로 열린 구조를 push하고 닫을 때 pop해 추적할 수 있습니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "finite-automaton-memory-boundary", role: "유한 state가 임의 깊이 nesting을 모두 기억하지 못하는 한계를 정의합니다." },
+      { id: "context-free-grammar-recursion", role: "Recursive production으로 깊이를 미리 고정하지 않는 구조를 표현합니다." },
+      { id: "pushdown-automaton-stack", role: "Control state에 LIFO stack을 더해 열린 delimiter를 추적합니다." },
     ],
+    conceptExplanations: [
+      { id: "finite-automaton-memory-boundary", sectionId: "finite-memory", intuition: "유한한 상태 번호만으로는 제한 없이 커지는 열린 괄호 수를 모두 다른 상태로 기억할 수 없습니다.", workedExample: "최대 깊이 3이면 state 0·1·2·3으로 근사할 수 있지만 arbitrary balanced parentheses에는 고정 상한이 없습니다.", boundary: "제품이 maximum depth를 고정하면 finite approximation이 가능하지만 이론적 무한 언어와는 다릅니다." },
+      { id: "context-free-grammar-recursion", sectionId: "cfg-recursion", intuition: "상자 안에 같은 종류의 상자를 다시 넣는 production으로 nesting depth를 미리 정하지 않습니다.", workedExample: "value→array와 array→[values]가 서로 돌아 [[0],1]을 derive합니다.", boundary: "Declaration-before-use나 cross-field equality 같은 semantic constraint를 CFG만으로 모두 표현하지 않습니다." },
+      { id: "pushdown-automaton-stack", sectionId: "pda-stack", intuition: "열린 괄호를 쌓고 가장 최근 것을 먼저 꺼내 닫는 LIFO memory입니다.", workedExample: "(()())는 depth 0→1→2→1→2→1→0으로 끝나 accept합니다.", boundary: "PDA는 계산 모델이며 실제 LR·Earley parser가 단순 stack 하나로만 구현된다는 뜻은 아닙니다." },
+    ],
+    conceptStages: [
+      { label: "00 limit", relation: "Finite control state의 memory 한계를 먼저 봅니다.", concepts: ["finite-automaton-memory-boundary"] },
+      { label: "01 express", relation: "Recursive production으로 nested language를 표현합니다.", concepts: ["context-free-grammar-recursion"] },
+      { label: "02 remember", relation: "PDA stack으로 열린 구조를 실행 중 기억합니다.", concepts: ["pushdown-automaton-stack"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Finite automaton의 control state가 유한하다는 뜻을 설명하세요.", answerChecklist: ["finite set", "current state", "transition", "input", "no unbounded counter", "recognition"], requiredConcepts: ["finite-automaton-memory-boundary"], sectionId: "finite-memory" },
+      { level: "basic", question: "최대 깊이 3 괄호를 finite state로 근사하는 state를 쓰세요.", answerChecklist: ["state zero", "one", "two", "three", "reject overflow", "fixed bound"], requiredConcepts: ["finite-automaton-memory-boundary"], sectionId: "finite-memory" },
+      { level: "basic", question: "JSON array가 CFG recursion으로 자신을 포함하는 production을 쓰세요.", answerChecklist: ["value", "array", "values", "recursive reference", "nested example", "terminal"], requiredConcepts: ["context-free-grammar-recursion"], sectionId: "cfg-recursion" },
+      { level: "basic", question: "여는 괄호와 닫는 괄호에서 stack이 어떻게 바뀌는지 설명하세요.", answerChecklist: ["push open", "pop close", "LIFO", "recent open", "state", "delimiter"], requiredConcepts: ["pushdown-automaton-stack"], sectionId: "pda-stack" },
+      { level: "basic", question: "(()())의 depth sequence와 최종 accept 조건을 계산하세요.", answerChecklist: ["1,2,1,2,1,0", "plus one", "minus one", "never negative", "empty end", "accept"], requiredConcepts: ["pushdown-automaton-stack"], sectionId: "pda-stack" },
+      { level: "basic", question: "())가 어느 step에서 reject되는지 depth로 설명하세요.", answerChecklist: ["1", "0", "minus one", "empty pop", "negative depth", "reject"], requiredConcepts: ["pushdown-automaton-stack"], sectionId: "pda-stack" },
+      { level: "advanced", question: "입력이 끝났지만 stack이 남는 counterexample을 설계하세요.", answerChecklist: ["unclosed open", "positive depth", "end of input", "not accept", "example", "fixture"], requiredConcepts: ["pushdown-automaton-stack"], sectionId: "pda-stack" },
+      { level: "advanced", question: "CFG만으로 확인하기 어려운 semantic constraint 두 개를 드세요.", answerChecklist: ["declaration", "type", "cross-field", "context-sensitive", "validator", "separate layer"], requiredConcepts: ["context-free-grammar-recursion"], sectionId: "cfg-recursion" },
+      { level: "advanced", question: "PDA 이론 모델과 LR 또는 Earley 구현을 동일시하면 안 되는 이유를 설명하세요.", answerChecklist: ["theory model", "implementation", "tables", "cache", "error recovery", "same language not same structure"], requiredConcepts: ["pushdown-automaton-stack"], sectionId: "implementation-boundary" },
+      { level: "advanced", question: "Depth limit을 둔 production parser의 release boundary를 설계하세요.", answerChecklist: ["maximum depth", "resource bound", "reject reason", "fixture", "stack cleanup", "documented limit"], requiredConcepts: ["finite-automaton-memory-boundary", "pushdown-automaton-stack"], sectionId: "implementation-boundary" },
+    ],
+  },
+  "ai/incremental-parsing-tree-sitter": {
+    entryLevel: true,
+    coreIdea: "Tree-sitter는 이미 존재하는 source와 old tree를 받아 바뀐 범위의 concrete syntax tree를 갱신하며, generated prefix에서 next-token mask를 만드는 decoder matcher와 입출력·오류 목표가 다릅니다.",
+    assumedKnowledge: [],
+    introducedHere: [{ id: "incremental-parser-boundary", role: "Source-tree incremental parsing과 generation matcher의 책임을 분리합니다." }],
+    conceptExplanations: [{ id: "incremental-parser-boundary", sectionId: "source-tree", intuition: "이미 쓴 문서를 고쳐 tree를 갱신하는 도구와 아직 쓰지 않은 다음 token을 제한하는 도구를 구분합니다.", workedExample: "Tree-sitter는 source+old tree→new CST이고 matcher는 prefix+vocabulary→bitmask입니다.", boundary: "Error recovery가 invalid continuation을 허용하는 decoder semantics라는 뜻은 아닙니다." }],
+    conceptStages: [{ label: "00 parse", relation: "Source·tree·edit를 정의하고 decoder matcher와 경계를 분리합니다.", concepts: ["incremental-parser-boundary"] }],
+    exercises: [
+      { level: "basic", question: "Incremental parser의 입력과 출력을 각각 설명하세요.", answerChecklist: ["source", "old tree optional", "edit", "new tree", "ranges", "parser"], requiredConcepts: ["incremental-parser-boundary"], sectionId: "source-tree" },
+      { level: "basic", question: "Concrete syntax tree가 punctuation을 보존하는 이유를 설명하세요.", answerChecklist: ["concrete", "punctuation", "source range", "editor", "object", "pair"], requiredConcepts: ["incremental-parser-boundary"], sectionId: "source-tree" },
+      { level: "basic", question: "숫자 1을 10으로 바꿀 때 edit range가 담아야 할 변화를 쓰세요.", answerChecklist: ["start byte", "old end", "new end", "one byte growth", "old tree", "reparse"], requiredConcepts: ["incremental-parser-boundary"], sectionId: "incremental-update" },
+      { level: "basic", question: "Unchanged subtree reuse가 editor feedback을 빠르게 하는 이유를 설명하세요.", answerChecklist: ["old tree", "unchanged", "reuse", "less work", "highlight", "navigation"], requiredConcepts: ["incremental-parser-boundary"], sectionId: "incremental-update" },
+      { level: "basic", question: "편집 중 불완전한 source에서 error recovery가 필요한 이유를 설명하세요.", answerChecklist: ["incomplete source", "keystroke", "error node", "partial tree", "feedback", "not total reject"], requiredConcepts: ["incremental-parser-boundary"], sectionId: "error-recovery" },
+      { level: "basic", question: "Tree-sitter와 decoder matcher의 출력을 비교하세요.", answerChecklist: ["CST", "token mask", "existing source", "generated prefix", "analysis", "sampling"], requiredConcepts: ["incremental-parser-boundary"], sectionId: "decoder-boundary" },
+      { level: "advanced", question: "잘못된 edit range가 subtree reuse에 주는 위험을 설명하세요.", answerChecklist: ["stale range", "wrong reuse", "tree mismatch", "byte offset", "fixture", "full reparse fallback"], requiredConcepts: ["incremental-parser-boundary"], sectionId: "incremental-update" },
+      { level: "advanced", question: "Error-tolerant tree와 accepted program을 구분하는 release gate를 설계하세요.", answerChecklist: ["error node", "editor usable", "compile", "typecheck", "acceptance", "release"], requiredConcepts: ["incremental-parser-boundary"], sectionId: "error-recovery" },
+      { level: "advanced", question: "Code Mode에서 decoder와 Tree-sitter를 함께 쓰는 순서를 설계하세요.", answerChecklist: ["mask generation", "complete output", "parse", "tree", "compiler", "semantic check"], requiredConcepts: ["incremental-parser-boundary"], sectionId: "decoder-boundary" },
+      { level: "advanced", question: "Incremental parser를 semantic type checker로 오해한 반례를 드세요.", answerChecklist: ["parseable", "undefined name", "type error", "tree exists", "semantic phase", "boundary"], requiredConcepts: ["incremental-parser-boundary"], sectionId: "decoder-boundary" },
+    ],
+    papers: [{ title: "Tree-sitter documentation", href: "https://tree-sitter.github.io/tree-sitter/", problem: "편집 중 source를 매번 전체 parse하지 않고 useful syntax tree를 유지하는 문제", contribution: "Incremental parsing·concrete syntax tree·error recovery interface를 제공", assumptions: "Language grammar·runtime version·edit range와 optional old tree가 올바름", evidenceScope: "Existing source에서 CST를 incrementally 갱신하는 공식 project goal과 interface", notClaim: "LLM logits mask나 program semantic correctness를 제공한다는 뜻은 아님", sectionId: "paper-tree-sitter" }],
+  },
+  "ai/grammar-tokenizer-decoding": {
+    entryLevel: true,
+    coreIdea: "Character grammar를 multi-byte tokenizer vocabulary와 compile해 token 전체 transition을 검사하고, invalid token의 logit을 −∞로 보내 softmax probability를 0으로 만듭니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "grammar-tokenizer-compilation", role: "Grammar state를 tokenizer vocabulary의 token 전체 transition과 연결합니다." },
+      { id: "constrained-decoding-token-mask", role: "Invalid token logit을 제거하고 allowed candidates만 재정규화합니다." },
+    ],
+    conceptExplanations: [
+      { id: "grammar-tokenizer-compilation", sectionId: "tokenizer-compilation", intuition: "한 token이 여러 문자를 담으므로 token 전체를 넣었을 때의 state 이동을 계산합니다.", workedExample: "{\"age\": prefix에서 token ` 42}`의 space·digit·close를 순서대로 consume합니다.", boundary: "Tokenizer·normalization·added token revision이 바뀌면 compiled artifact를 무효화합니다." },
+      { id: "constrained-decoding-token-mask", sectionId: "token-mask", intuition: "불가능한 후보 점수를 지운 뒤 가능한 후보끼리만 probability를 다시 나눕니다.", workedExample: "Integer 위치에서 string quote token은 −∞, number token은 원래 logit을 유지합니다.", boundary: "Allowed value가 factual·authorized·safe하다는 보장은 아닙니다." },
+    ],
+    conceptStages: [
+      { label: "00 compile", relation: "Character grammar를 token transition으로 바꿉니다.", concepts: ["grammar-tokenizer-compilation"] },
+      { label: "01 mask", relation: "Invalid logits를 제거하고 sampling합니다.", concepts: ["constrained-decoding-token-mask"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Formal grammar symbol과 vocabulary token의 차이를 설명하세요.", answerChecklist: ["character rule", "token", "multi-byte", "multi-character", "not identical", "compile"], requiredConcepts: ["grammar-tokenizer-compilation"], sectionId: "token-boundary" },
+      { level: "basic", question: "Grammar state s와 token v_i가 각각 무엇인지 설명하세요.", answerChecklist: ["prefix", "state", "vocabulary index", "bytes", "transition", "request"], requiredConcepts: ["grammar-tokenizer-compilation"], sectionId: "token-boundary" },
+      { level: "basic", question: "Token ` 42}`를 matcher가 검사하는 순서를 쓰세요.", answerChecklist: ["space", "4", "2", "close", "intermediate validity", "final state"], requiredConcepts: ["grammar-tokenizer-compilation"], sectionId: "tokenizer-compilation" },
+      { level: "basic", question: "Allowed token bitmask [1,0,1,0]의 의미를 설명하세요.", answerChecklist: ["indices", "zero forbidden", "one allowed", "vocabulary", "current state", "sampling"], requiredConcepts: ["constrained-decoding-token-mask"], sectionId: "token-boundary" },
+      { level: "basic", question: "Minus infinity mask가 probability 0을 만드는 이유를 설명하세요.", answerChecklist: ["exp negative infinity", "zero", "softmax numerator", "forbidden", "renormalize", "allowed"], requiredConcepts: ["constrained-decoding-token-mask"], sectionId: "token-mask" },
+      { level: "basic", question: "선택 token을 accept한 뒤 matcher state가 바뀌는 이유를 설명하세요.", answerChecklist: ["selected token", "consume", "new prefix", "new state", "new allowed set", "next step"], requiredConcepts: ["constrained-decoding-token-mask"], sectionId: "matcher-boundary" },
+      { level: "advanced", question: "Tokenizer revision을 cache key에서 빼면 생기는 반례를 설계하세요.", answerChecklist: ["changed token IDs", "same schema", "stale table", "wrong allow", "invalidate", "version key"], requiredConcepts: ["grammar-tokenizer-compilation"], sectionId: "tokenizer-compilation" },
+      { level: "advanced", question: "Grammar mask와 top-k 적용 순서가 만드는 dead end를 설명하세요.", answerChecklist: ["valid token", "top-k removes", "mask", "empty set", "order", "fixture"], requiredConcepts: ["constrained-decoding-token-mask"], sectionId: "matcher-boundary" },
+      { level: "advanced", question: "EOS와 empty allowed set 처리 계약을 설계하세요.", answerChecklist: ["EOS valid only complete", "empty set", "reject", "no unsafe fallback", "error reason", "test"], requiredConcepts: ["constrained-decoding-token-mask"], sectionId: "matcher-boundary" },
+      { level: "advanced", question: "Mask가 사실성이나 authorization을 보장하지 못하는 예를 드세요.", answerChecklist: ["schema valid", "false value", "user ID", "permission", "semantic validator", "boundary"], requiredConcepts: ["constrained-decoding-token-mask"], sectionId: "token-mask" },
+    ],
+    papers: [{ title: "XGrammar: Constrained Decoding", href: "https://xgrammar.mlc.ai/docs/start/constrained_decoding.html", problem: "LLM decoding 중 grammar를 위반하는 token을 sampling 전에 제거하는 문제", contribution: "Grammar compiler·tokenizer info·stateful matcher·bitmask·accept workflow를 문서화", assumptions: "지원 grammar subset·tokenizer encoding·engine integration과 mask 순서가 올바름", evidenceScope: "XGrammar API에서 grammar state와 vocabulary mask를 연결하는 공식 실행 경로", notClaim: "Output truth·authorization·safety 또는 모든 runtime의 zero overhead를 보장한다는 뜻은 아님", sectionId: "paper-xgrammar-decoding" }],
+  },
+  "ai/structured-generation-serving": {
+    entryLevel: true,
+    coreIdea: "Dynamic structured serving은 schema·tokenizer·engine identity로 compiled grammar를 cache하고 sequence별 matcher state를 분리하며 syntax-valid output 뒤에 semantic validator와 policy를 둡니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "dynamic-schema-mask-cache", role: "Dynamic tool schema의 compile key와 sequence state lifetime을 정의합니다." },
+      { id: "syntactic-semantic-validity-boundary", role: "Parse/schema success와 세계·권한·정책 의미를 분리합니다." },
+    ],
+    conceptExplanations: [
+      { id: "dynamic-schema-mask-cache", sectionId: "dynamic-schema-cache", intuition: "양식·tokenizer·compiler가 모두 같을 때만 같은 도장을 재사용합니다.", workedExample: "Schema hash+tokenizer revision+engine revision이 같은 request만 compiled artifact를 공유합니다.", boundary: "Artifact를 공유해도 generated prefix matcher state는 sequence별입니다." },
+      { id: "syntactic-semantic-validity-boundary", sectionId: "semantic-policy", intuition: "주소 형식이 맞는 것과 실제 권한 있는 주소인 것은 다른 검사입니다.", workedExample: "Schema-valid payment도 user 존재·잔액·authorization·limit을 별도 검사합니다.", boundary: "Parseable output을 곧바로 executable·safe·true로 취급하지 않습니다." },
+    ],
+    conceptStages: [
+      { label: "00 cache", relation: "Dynamic schema artifact와 sequence state를 관리합니다.", concepts: ["dynamic-schema-mask-cache"] },
+      { label: "01 validate", relation: "Syntax 뒤 semantic policy를 적용합니다.", concepts: ["syntactic-semantic-validity-boundary"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Request schema가 tool name과 parameter shape를 어떻게 제한하는지 설명하세요.", answerChecklist: ["tool union", "parameters", "request", "allowed", "shape", "not policy"], requiredConcepts: ["dynamic-schema-mask-cache"], sectionId: "request-schema" },
+      { level: "basic", question: "Compile key에 schema·tokenizer·engine identity가 모두 필요한 이유를 설명하세요.", answerChecklist: ["schema", "tokenizer", "engine", "AND", "cache identity", "stale prevention"], requiredConcepts: ["dynamic-schema-mask-cache"], sectionId: "dynamic-schema-cache" },
+      { level: "basic", question: "Schema는 같고 tokenizer가 다를 때 cache hit H를 계산하세요.", answerChecklist: ["schema equal", "tokenizer unequal", "AND false", "H zero", "recompile", "safety"], requiredConcepts: ["dynamic-schema-mask-cache"], sectionId: "dynamic-schema-cache" },
+      { level: "basic", question: "Compiled artifact와 matcher state의 공유 범위를 비교하세요.", answerChecklist: ["artifact readonly", "shared", "state per sequence", "prefix", "mask", "lifetime"], requiredConcepts: ["dynamic-schema-mask-cache"], sectionId: "sequence-state" },
+      { level: "basic", question: "Schema-valid payment가 semantic-invalid일 수 있는 이유를 설명하세요.", answerChecklist: ["parse", "type", "user existence", "balance", "authorization", "policy"], requiredConcepts: ["syntactic-semantic-validity-boundary"], sectionId: "semantic-policy" },
+      { level: "basic", question: "Syntax validator와 semantic validator의 입력과 출력을 나누세요.", answerChecklist: ["text/object", "parse/schema", "world state", "policy", "approve/reject", "separate"], requiredConcepts: ["syntactic-semantic-validity-boundary"], sectionId: "semantic-policy" },
+      { level: "advanced", question: "Dynamic tool union에서 subgrammar reuse와 full grammar identity를 함께 설계하세요.", answerChecklist: ["tool union", "common number/string", "subgrammar", "full identity", "compile latency", "correctness"], requiredConcepts: ["dynamic-schema-mask-cache"], sectionId: "dynamic-schema-cache" },
+      { level: "advanced", question: "Continuous batching에서 matcher state 회수 조건을 설계하세요.", answerChecklist: ["sequence finish", "cancel", "error", "state cleanup", "mask buffer", "no cross-request reuse"], requiredConcepts: ["dynamic-schema-mask-cache"], sectionId: "sequence-state" },
+      { level: "advanced", question: "Stale compiled artifact가 금지 tool을 허용하는 반례를 만드세요.", answerChecklist: ["old schema", "removed tool", "cache hit", "wrong mask", "invalidate", "release fixture"], requiredConcepts: ["dynamic-schema-mask-cache"], sectionId: "dynamic-schema-cache" },
+      { level: "advanced", question: "Syntax success에서 실행 승인까지 validator pipeline을 설계하세요.", answerChecklist: ["parse", "schema", "entity lookup", "authorization", "business policy", "execution gate"], requiredConcepts: ["syntactic-semantic-validity-boundary"], sectionId: "semantic-policy" },
+    ],
+    papers: [{ title: "XGrammar 2: Agentic Structured Generation", href: "https://arxiv.org/abs/2601.04426", problem: "Agent request마다 tool·tag·schema가 달라 compilation과 mask reuse가 어려운 문제", contribution: "Dynamic structured generation을 위한 grammar organization과 reusable mask-cache structure를 제안", assumptions: "논문 engine·model·tokenizer·schema distribution·benchmark·hardware 조건", evidenceScope: "보고된 dynamic agent schema processing architecture와 측정 범위", notClaim: "모든 serving framework에서 같은 speedup 또는 semantic safety가 보장된다는 뜻은 아님", sectionId: "paper-xgrammar2" }],
   },
   "ai/agent-code-mode": {
     entryLevel: true,

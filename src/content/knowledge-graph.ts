@@ -5281,7 +5281,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Alphabet · string · formal language",
     definition:
       "유한한 symbol 집합을 alphabet, symbol의 유한 순서를 string, 어떤 규칙을 만족하는 string의 집합을 formal language로 두는 문법 이론의 최소 출발점입니다.",
-    canonicalHref: "/ai/grammar-constrained-generation#formal-basics",
+    canonicalHref: "/ai/grammar-constrained-generation#alphabet",
   },
   "grammar-production-derivation": {
     id: "grammar-production-derivation",
@@ -5290,7 +5290,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Grammar production · derivation",
     definition:
       "Terminal·nonterminal과 production rule로 start symbol을 반복 치환해 language의 유효한 string을 만들어 내는 문법 표현입니다.",
-    canonicalHref: "/ai/grammar-constrained-generation#formal-basics",
+    canonicalHref: "/ai/grammar-constrained-generation#derivation",
   },
   "finite-automaton-memory-boundary": {
     id: "finite-automaton-memory-boundary",
@@ -5299,7 +5299,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Finite automaton memory boundary",
     definition:
       "현재 상태가 유한 집합 중 하나이므로 임의 깊이의 열린 중첩 수를 정확히 기억할 수 없는 finite-state recognition의 표현 한계입니다.",
-    canonicalHref: "/ai/grammar-constrained-generation#cfg-pda",
+    canonicalHref: "/ai/cfg-pushdown-automata#finite-memory",
   },
   "context-free-grammar-recursion": {
     id: "context-free-grammar-recursion",
@@ -5308,7 +5308,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Context-free grammar · recursive nesting",
     definition:
       "각 production의 왼쪽이 하나의 nonterminal이고 rule이 자기 자신을 간접·직접 참조할 수 있어 JSON·괄호·expression의 임의 중첩을 표현하는 grammar 계층입니다.",
-    canonicalHref: "/ai/grammar-constrained-generation#cfg-pda",
+    canonicalHref: "/ai/cfg-pushdown-automata#cfg-recursion",
   },
   "pushdown-automaton-stack": {
     id: "pushdown-automaton-stack",
@@ -5317,7 +5317,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Pushdown automaton · stack",
     definition:
       "유한 control state에 LIFO stack을 더해 열린 delimiter·recursive call처럼 나중에 역순으로 닫아야 하는 임의 깊이 상태를 push/pop으로 추적하는 계산 모델입니다.",
-    canonicalHref: "/ai/grammar-constrained-generation#cfg-pda",
+    canonicalHref: "/ai/cfg-pushdown-automata#pda-stack",
   },
   "incremental-parser-boundary": {
     id: "incremental-parser-boundary",
@@ -5326,7 +5326,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Incremental parser · decoder matcher boundary",
     definition:
       "이미 존재하는 edited source에서 syntax tree를 갱신하는 incremental parser와 생성 prefix에서 다음 허용 token을 계산하는 decoder matcher의 입력·출력·오류 목표를 구분한 경계입니다.",
-    canonicalHref: "/ai/grammar-constrained-generation#tree-sitter",
+    canonicalHref: "/ai/incremental-parsing-tree-sitter#source-tree",
   },
   "grammar-tokenizer-compilation": {
     id: "grammar-tokenizer-compilation",
@@ -5335,7 +5335,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Grammar · tokenizer compilation",
     definition:
       "문자 단위 grammar state와 여러 byte/문자를 담는 model vocabulary token을 연결해 각 token 전체가 유효한 continuation인지 미리 계산·cache하는 과정입니다.",
-    canonicalHref: "/ai/grammar-constrained-generation#tokenizer-compilation",
+    canonicalHref: "/ai/grammar-tokenizer-decoding#tokenizer-compilation",
   },
   "constrained-decoding-token-mask": {
     id: "constrained-decoding-token-mask",
@@ -5344,7 +5344,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Grammar-constrained token mask",
     definition:
       "현재 matcher state에서 허용되지 않은 vocabulary token의 logit을 sampling 전 −∞로 바꾸고 허용 token만 정규화해 다음 token을 선택하는 decoding 제약입니다.",
-    canonicalHref: "/ai/grammar-constrained-generation#decoder",
+    canonicalHref: "/ai/grammar-tokenizer-decoding#token-mask",
   },
   "syntactic-semantic-validity-boundary": {
     id: "syntactic-semantic-validity-boundary",
@@ -5353,7 +5353,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Syntactic · semantic validity boundary",
     definition:
       "출력이 grammar/schema를 parse하고 type·enum을 만족하는 구조적 유효성과 ID 존재·권한·금액·명령 안전성 같은 세계·정책 의미가 올바른지를 분리한 경계입니다.",
-    canonicalHref: "/ai/grammar-constrained-generation#validity-boundary",
+    canonicalHref: "/ai/structured-generation-serving#semantic-policy",
   },
   "dynamic-schema-mask-cache": {
     id: "dynamic-schema-mask-cache",
@@ -5362,7 +5362,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Dynamic schema · mask cache boundary",
     definition:
       "요청별 tool/schema 변화가 compiled grammar·matcher mask cache identity와 batch sequence별 state를 어떻게 바꾸는지 관리하는 serving 경계입니다.",
-    canonicalHref: "/ai/grammar-constrained-generation#dynamic-schema-cache",
+    canonicalHref: "/ai/structured-generation-serving#dynamic-schema-cache",
   },
   "retrieval-robustness-axis": {
     id: "retrieval-robustness-axis",
@@ -24308,6 +24308,13 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "constrains",
     reason:
       "Batch의 sequence마다 matcher state가 달라 요청별 mask update와 serving 비용이 생깁니다.",
+  },
+  {
+    from: "dynamic-schema-mask-cache",
+    to: "syntactic-semantic-validity-boundary",
+    relation: "constrains",
+    reason:
+      "Compiled grammar와 sequence matcher가 syntax-valid output을 만든 뒤에도 world state·authorization·business policy의 semantic 승인을 별도 gate로 적용합니다.",
   },
   {
     from: "bit-byte",

@@ -3203,24 +3203,30 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "동일 max_model_len 65,536에서 KV 97,216·88,824·352,736과 concurrency 5.17×·1.36×·5.38×. Qwen 행은 두 로그의 token 단위가 일치하지 않으므로 별도 해석",
     },
   ],
-  "ai/grammar-constrained-generation": [
-    {
-      kind: "공식 문서",
-      label: "XGrammar — Constrained Decoding",
-      href: "https://xgrammar.mlc.ai/docs/start/constrained_decoding.html",
-      note: "grammar state와 token mask의 실제 API",
-    },
-    {
-      kind: "핵심 논문",
-      label: "XGrammar 2",
-      href: "https://arxiv.org/abs/2601.04426",
-      note: "agentic structured generation의 동적 제약",
-    },
+  "ai/grammar-constrained-generation": [],
+  "ai/cfg-pushdown-automata": [],
+  "ai/incremental-parsing-tree-sitter": [
     {
       kind: "공식 문서",
       label: "Tree-sitter documentation",
       href: "https://tree-sitter.github.io/tree-sitter/",
-      note: "incremental parser와 concrete syntax tree",
+      note: "incremental parser와 concrete syntax tree의 공식 경계",
+    },
+  ],
+  "ai/grammar-tokenizer-decoding": [
+    {
+      kind: "공식 문서",
+      label: "XGrammar — Constrained Decoding",
+      href: "https://xgrammar.mlc.ai/docs/start/constrained_decoding.html",
+      note: "grammar compile·matcher state·token mask의 공식 API",
+    },
+  ],
+  "ai/structured-generation-serving": [
+    {
+      kind: "핵심 논문",
+      label: "XGrammar 2",
+      href: "https://arxiv.org/abs/2601.04426",
+      note: "agentic structured generation의 동적 schema와 cache 경계",
     },
   ],
   "ai/sparse-autoencoder": [

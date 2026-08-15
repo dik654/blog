@@ -4156,25 +4156,42 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "grammar-constrained-generation": {
-    title: "문법 제약 생성 글이 소유하는 범위",
+    title: "Formal language 기초 글이 소유하는 범위",
     owns: [
-      "CFG·PDA·parser state가 token mask로 이어지는 경로",
-      "Tree-sitter의 incremental parsing과 LLM decoding의 차이",
-      "schema compiler·tokenizer·decoder가 만나는 구현 경계",
+      "Symbol·alphabet·string·language의 최소 정의",
+      "Terminal·nonterminal·production derivation의 출발점",
     ],
-    reuses: [
-      {
-        label: "프롬프트 수준 structured output",
-        href: "/ai/prompt-engineering",
-      },
-      { label: "Code Mode의 program 실행", href: "/ai/agent-code-mode" },
-    ],
+    reuses: [],
     evidence: [
       {
-        kind: "primary-source",
-        rule: "XGrammar·Tree-sitter·JSON Schema 동작은 각 프로젝트 공식 문서를 따른다.",
+        kind: "standard",
+        rule: "이 글은 formal language의 보편 정의만 소유하고 parser 구현 주장은 뒤 글로 넘긴다.",
       },
     ],
+  },
+  "cfg-pushdown-automata": {
+    title: "CFG와 PDA 글이 소유하는 범위",
+    owns: ["Finite-state memory 한계", "Recursive CFG와 PDA stack의 대응", "Depth accept·reject와 구현 경계"],
+    reuses: [{ label: "Formal language 기초", href: "/ai/grammar-constrained-generation" }],
+    evidence: [{ kind: "standard", rule: "PDA는 계산 모델로 설명하며 특정 parser 제품의 내부 자료구조라고 단정하지 않는다." }],
+  },
+  "incremental-parsing-tree-sitter": {
+    title: "Incremental parsing 글이 소유하는 범위",
+    owns: ["Source·CST·edit range의 형태", "Unchanged subtree reuse와 error recovery", "Tree-sitter와 generation matcher의 입출력 경계"],
+    reuses: [{ label: "CFG와 stack memory", href: "/ai/cfg-pushdown-automata" }],
+    evidence: [{ kind: "primary-source", rule: "Tree-sitter의 기능은 공식 문서에 확인되는 incremental parsing 범위로만 주장한다." }],
+  },
+  "grammar-tokenizer-decoding": {
+    title: "Grammar token mask 글이 소유하는 범위",
+    owns: ["Grammar와 tokenizer vocabulary의 compilation", "Allowed-token bitmask와 logit masking", "Matcher accept·EOS·dead-end 경계"],
+    reuses: [{ label: "Formal language 기초", href: "/ai/grammar-constrained-generation" }, { label: "CFG와 PDA", href: "/ai/cfg-pushdown-automata" }],
+    evidence: [{ kind: "primary-source", rule: "XGrammar의 compile·matcher·mask workflow는 공식 문서 범위로만 주장한다." }],
+  },
+  "structured-generation-serving": {
+    title: "Structured generation serving 글이 소유하는 범위",
+    owns: ["Dynamic schema compile cache identity", "Sequence별 matcher state lifetime", "Syntax-valid와 semantic execution policy 경계"],
+    reuses: [{ label: "Grammar token masking", href: "/ai/grammar-tokenizer-decoding" }, { label: "Code Mode program 실행", href: "/ai/agent-code-mode" }],
+    evidence: [{ kind: "primary-source", rule: "Dynamic schema·cache 성능 주장은 XGrammar 2의 engine·model·workload 범위와 함께 표시한다." }],
   },
   "mixture-of-experts": {
     title: "Mixture-of-Experts 정본이 소유하는 범위",
