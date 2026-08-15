@@ -625,7 +625,7 @@ export const EDITORIAL_BOUNDARIES = {
       },
       {
         label: "Context compaction fidelity",
-        href: "/ai/context-engineering#memory",
+        href: "/ai/agent-memory-lifecycle#compaction",
       },
       {
         label: "Artifact content digest와 run lineage",
@@ -963,11 +963,11 @@ export const EDITORIAL_BOUNDARIES = {
       },
       {
         label: "Compaction state fidelity와 working-memory 경계",
-        href: "/ai/context-engineering#memory",
+        href: "/ai/agent-memory-lifecycle#compaction",
       },
       {
         label: "Output reserve를 포함한 context token budget",
-        href: "/ai/context-engineering#optimization",
+        href: "/ai/context-window-optimization#budget",
       },
       {
         label: "Claw session message·tool correlation·effect reconciliation",
@@ -3089,30 +3089,47 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "context-engineering": {
-    title: "컨텍스트 엔지니어링 글이 소유하는 범위",
+    title: "Context state 기초 글이 소유하는 범위",
     owns: [
-      "한 generation이 실제로 읽는 context state와 selection·injection·compaction·isolation lifecycle",
-      "Working state와 long-term memory의 수명·provenance·삭제 경계",
-      "Source별 token budget·lost-in-the-middle position 평가·stable-prefix cache의 운영 경계",
+      "Model weight·external store·candidate·이번 generation token state의 구분",
+      "Select·inject·compact·isolate curation lifecycle의 공통 흐름",
     ],
     reuses: [
-      {
-        label: "RAG indexing·retrieval·reranking·citation 평가",
-        href: "/ai/rag-pipeline",
-      },
-      { label: "하네스의 run contract·권한·검증", href: "/ai/llm-harness" },
-      { label: "Compaction 구현과 상태 보존", href: "/ai/claw-compaction" },
+      { label: "Instruction·data·runtime 권한 경계", href: "/ai/context-instruction-boundaries" },
+      { label: "Fragment provenance와 freshness", href: "/ai/context-provenance-freshness" },
+      { label: "Memory 수명과 compaction fidelity", href: "/ai/agent-memory-lifecycle" },
+      { label: "Token budget·position·cache", href: "/ai/context-window-optimization" },
     ],
     evidence: [
       {
         kind: "primary-source",
-        rule: "Lost in the Middle·MemGPT는 논문의 task·model·system 조건 안에서만 해석한다.",
-      },
-      {
-        kind: "primary-source",
-        rule: "Anthropic의 context engineering·context management 내용은 해당 제품 사례와 공개일을 표시하고 보편 법칙으로 확대하지 않는다.",
+        rule: "Anthropic context engineering의 curation pattern은 공개된 제품 경험과 시점 범위로 제한하고 보편 정량 법칙으로 확대하지 않는다.",
       },
     ],
+  },
+  "context-instruction-boundaries": {
+    title: "Instruction·data·runtime 경계 글이 소유하는 범위",
+    owns: ["Instruction·untrusted data·runtime enforcement의 책임 분리", "Schema·authorization·policy gate와 effect receipt release test"],
+    reuses: [{ label: "현재 generation의 context state", href: "/ai/context-engineering" }, { label: "하네스 capability와 verifier", href: "/ai/llm-harness" }],
+    evidence: [{ kind: "standard", rule: "OWASP guidance를 application threat model과 runtime capability에 맞게 적용하며 완전한 injection 방어로 주장하지 않는다." }],
+  },
+  "context-provenance-freshness": {
+    title: "Context provenance 글이 소유하는 범위",
+    owns: ["Retrieved fragment의 source·revision·validity·ACL·derivation receipt", "Canonical source와 version rule에 따른 stale conflict 해결"],
+    reuses: [{ label: "RAG indexing·retrieval·reranking 구현", href: "/ai/rag-pipeline" }, { label: "Context selection lifecycle", href: "/ai/context-engineering#curation" }],
+    evidence: [{ kind: "standard", rule: "W3C PROV-O는 provenance 표현 model로만 재사용하며 truth·relevance·ACL 판정기로 확대하지 않는다." }],
+  },
+  "agent-memory-lifecycle": {
+    title: "Agent memory lifecycle 글이 소유하는 범위",
+    owns: ["Working state·long-term memory·artifact·procedure의 수명·source·delete 경계", "Compaction fidelity schema와 fresh-context resume replay"],
+    reuses: [{ label: "Fragment provenance와 freshness", href: "/ai/context-provenance-freshness" }, { label: "Claw compaction 구현", href: "/ai/claw-compaction" }],
+    evidence: [{ kind: "primary-source", rule: "MemGPT·Anthropic context management 결과는 각 model·task·product 조건 안에서만 해석한다." }],
+  },
+  "context-window-optimization": {
+    title: "Context window 최적화 글이 소유하는 범위",
+    owns: ["Output reserve를 포함한 source별 serialized token ledger", "Evidence position utilization 평가와 stable-prefix cache invalidation"],
+    reuses: [{ label: "Context curation lifecycle", href: "/ai/context-engineering#curation" }, { label: "Compaction fidelity", href: "/ai/agent-memory-lifecycle#compaction" }],
+    evidence: [{ kind: "primary-source", rule: "Lost in the Middle의 위치 민감도는 논문의 model·task·context 조건으로 제한하고 고정된 U자 법칙으로 일반화하지 않는다." }],
   },
   "sionic-eureka": {
     title: "EUREKA가 소유하는 범위",
@@ -3420,7 +3437,7 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [
       {
         label: "System instruction·untrusted data·runtime enforcement",
-        href: "/ai/context-engineering#system-prompt",
+        href: "/ai/context-instruction-boundaries#overview",
       },
       {
         label: "CFG·token mask와 syntax/semantic validity",
@@ -6753,7 +6770,7 @@ export const EDITORIAL_BOUNDARIES = {
     ],
     reuses: [
       { label: "Scaled dot-product attention", href: "/ai/transformer-architecture#attention-boundary" },
-      { label: "Lost in the middle 평가", href: "/ai/context-engineering#optimization" },
+      { label: "Lost in the middle 평가", href: "/ai/context-window-optimization#position" },
       { label: "Hybrid KV block 회수", href: "/ai/hybrid-kv-cache-allocation#kv-cache" },
     ],
     evidence: [

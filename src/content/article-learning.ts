@@ -30166,411 +30166,172 @@ export const ARTICLE_LEARNING: Readonly<
   },
   "ai/context-engineering": {
     entryLevel: true,
-    entryNote:
-      "Context window·RAG·memory를 알고 있다고 가정하지 않습니다. 한 번의 generation에서 model이 실제로 읽는 token 집합부터 시작합니다.",
-    coreIdea:
-      "Context engineering은 모든 기록을 긴 prompt에 넣는 일이 아니라, 현재 generation에 필요한 instruction·evidence·state를 provenance와 token budget 안에서 선택·주입하고 오래된 내용은 검증 가능한 형태로 compaction하거나 격리하는 lifecycle입니다. 외부 memory와 RAG는 context 후보를 제공할 뿐 자동으로 model의 기억이나 정답이 되지 않습니다.",
+    entryNote: "Context window·RAG·memory를 모른다고 가정하고 model weight·외부 store·이번 request token을 구분하는 데서 시작합니다.",
+    coreIdea: "Context engineering은 저장된 정보 전체를 prompt에 넣는 일이 아니라, 현재 generation이 읽을 후보를 선택하고 역할과 source를 보존해 token state로 직렬화하며 오래된 state를 compact·isolate하는 lifecycle입니다.",
     assumedKnowledge: [],
     introducedHere: [
-      {
-        id: "llm-inference-context-state",
-        role: "Model weight·외부 storage와 현재 request의 token state를 구분합니다.",
-      },
-      {
-        id: "context-curation-lifecycle",
-        role: "Selection·injection·compaction·isolation을 한 lifecycle로 연결합니다.",
-      },
-      {
-        id: "instruction-data-enforcement-boundary",
-        role: "System instruction·untrusted data·application guardrail의 책임을 나눕니다.",
-      },
-      {
-        id: "context-source-provenance-freshness",
-        role: "검색·memory fragment의 source·version·시점·신뢰도를 보존합니다.",
-      },
-      {
-        id: "working-state-long-term-memory-boundary",
-        role: "현재 run 상태와 세션을 넘어 보존할 memory를 수명으로 분리합니다.",
-      },
-      {
-        id: "context-compaction-fidelity",
-        role: "요약 뒤에도 행동을 바꾸는 상태가 남았는지 replay로 확인합니다.",
-      },
-      {
-        id: "context-token-budget-allocation",
-        role: "Output reserve를 포함해 source별 tokenizer token을 합산합니다.",
-      },
-      {
-        id: "lost-in-middle-position-evaluation",
-        role: "길이와 evidence 위치에 따른 context utilization을 측정합니다.",
-      },
-      {
-        id: "stable-prefix-cache-boundary",
-        role: "Prefill 계산 재사용과 context 의미·freshness를 분리합니다.",
-      },
+      { id: "llm-inference-context-state", role: "Model weight·외부 store·현재 request token state를 구분합니다." },
+      { id: "context-curation-lifecycle", role: "Select·inject·compact·isolate를 반복 lifecycle로 연결합니다." },
     ],
     conceptExplanations: [
-      {
-        id: "llm-inference-context-state",
-        sectionId: "overview",
-        intuition:
-          "책장 전체가 외부 지식이고 지금 책상 위에 펼친 몇 장이 model이 이번 답에서 실제로 읽는 context입니다.",
-        workedExample:
-          "같은 model weight라도 system instruction, user request, retrieved policy v7, 최근 tool result가 request에 포함되면 그 token들만 이번 generation의 context state가 됩니다.",
-        boundary:
-          "Vector DB·memory file·이전 대화가 존재한다는 사실만으로 model이 그것을 읽는 것은 아니며, context에 serialize되지 않은 정보는 현재 inference에 직접 사용되지 않습니다.",
-      },
-      {
-        id: "context-curation-lifecycle",
-        sectionId: "overview",
-        intuition:
-          "필요한 자료를 고르고 출처표와 함께 책상에 놓고, 오래된 메모는 핵심 상태만 남기며, 서로 섞이면 안 되는 문서는 다른 폴더에 두는 과정입니다.",
-        workedExample:
-          "지원 agent가 현재 ticket·최신 policy만 선택하고 instruction과 user text를 구획해 주입하며 stale tool output은 receipt만 남기고 다른 tenant history는 격리합니다.",
-        boundary:
-          "Context를 짧게 만드는 것 자체가 목표가 아니며 필요한 근거를 제거하면 recall과 작업 연속성이 떨어집니다. 선택은 실제 task evaluation으로 검증해야 합니다.",
-      },
-      {
-        id: "instruction-data-enforcement-boundary",
-        sectionId: "system-prompt",
-        intuition:
-          "업무 지시서, 분석할 고객 문서, 출입문 잠금장치는 모두 중요하지만 같은 종류의 통제는 아닙니다.",
-        workedExample:
-          "System prompt는 '개인정보를 내보내지 말라'고 설명하고 retrieved email은 untrusted data로 인용하며 runtime은 외부 전송 tool의 destination과 redaction을 실제로 검사합니다.",
-        boundary:
-          "Prompt priority는 security boundary가 아니고 retrieved 문서의 명령문을 instruction으로 실행하면 prompt injection이 됩니다. 강제 규칙은 application authorization·validation에 남겨야 합니다.",
-      },
-      {
-        id: "context-source-provenance-freshness",
-        sectionId: "rag",
-        intuition:
-          "복사한 문장 옆에 원본 문서·판·가져온 시각·유효기간을 붙여 어느 내용을 믿고 갱신할지 알게 합니다.",
-        workedExample:
-          "휴가 규정 chunk에 policy-v7, document URI, section, updatedAt, retrievedAt, ACL scope를 붙이면 v6 memory와 충돌할 때 최신 정본을 선택할 수 있습니다.",
-        boundary:
-          "Metadata가 있다고 내용이 사실인 것은 아니며 source trust·access control·retrieval recall·citation support를 별도로 평가해야 합니다.",
-      },
-      {
-        id: "working-state-long-term-memory-boundary",
-        sectionId: "memory",
-        intuition:
-          "오늘 작업의 할 일 목록과 여러 달 재사용할 사용자 선호를 같은 서랍에 영구 보관하지 않습니다.",
-        workedExample:
-          "현재 migration의 failed test와 next file은 working state이고 사용자가 저장에 동의한 언어 선호는 long-term memory이며 procedure는 versioned skill 문서에 둡니다.",
-        boundary:
-          "Model 안에 자동으로 생기는 인간식 장기 기억이 아니며 동의·수명·source·갱신·삭제·tenant isolation이 없으면 stale fact와 privacy 문제가 생깁니다.",
-      },
-      {
-        id: "context-compaction-fidelity",
-        sectionId: "memory",
-        intuition:
-          "긴 작업 일지를 짧게 줄이되 다음 작업자가 결정을 뒤집지 않도록 목표·이유·미완료·증거를 보존합니다.",
-        workedExample:
-          "Tool 원문 50개를 artifact URI와 checksum으로 옮기고 summary에는 chosen design, rejected alternative reason, failing test, current commit, next action을 남긴 뒤 새 context에서 replay합니다.",
-        boundary:
-          "요약이 자연스럽다는 것과 state가 충실하다는 것은 다릅니다. 나중에 중요해질 세부를 잃을 수 있으므로 recall 우선 tuning·source link·resume test가 필요합니다.",
-      },
-      {
-        id: "context-token-budget-allocation",
-        sectionId: "optimization",
-        intuition:
-          "가방의 총 용량에서 돌아오는 길에 필요한 공간을 먼저 남긴 뒤 지침·현재 일·근거·기록·tool 결과의 부피를 따로 셉니다.",
-        workedExample:
-          "128k limit에서 16k output reserve를 두고 system 8k, task 4k, retrieval 40k, history 30k, tool 20k를 합산하면 118k로 남은 10k를 알 수 있습니다.",
-        boundary:
-          "Token 합은 품질 함수가 아니며 provider serialization·special token·tool schema를 실제 tokenizer로 세야 합니다. Cache hit도 context token의 의미상 혼잡을 제거하지 않습니다.",
-      },
-      {
-        id: "lost-in-middle-position-evaluation",
-        sectionId: "optimization",
-        intuition:
-          "같은 단서를 책의 앞·가운데·끝에 번갈아 두고 주변 방해 문서 수만 통제해 어느 위치에서 놓치는지 검사합니다.",
-        workedExample:
-          "같은 key-value fact를 20개 document 중 1·10·20번째에 두고 model·prompt·distractor를 고정해 exact match와 citation support를 위치별로 비교합니다.",
-        boundary:
-          "원 논문의 관측이 모든 model·task에 같은 모양으로 재현된다는 법칙은 아니며 needle retrieval 하나만으로 multi-hop reasoning·real RAG quality를 대표할 수 없습니다.",
-      },
-      {
-        id: "stable-prefix-cache-boundary",
-        sectionId: "optimization",
-        intuition:
-          "매번 같은 책의 앞부분을 다시 읽는 계산을 재사용하는 것이지, 그 내용이 최신이거나 정답이라고 인증하는 기능은 아닙니다.",
-        workedExample:
-          "동일 system instruction과 tool schema prefix 뒤에 user request를 두면 provider 조건이 맞을 때 prefill cache를 재사용하지만 policy version이 바뀌면 cache key를 무효화합니다.",
-        boundary:
-          "Provider마다 prefix identity·minimum length·TTL·할인·privacy 조건이 다르고 cache는 output reserve·lost-in-middle·stale instruction 문제를 해결하지 않습니다.",
-      },
+      { id: "llm-inference-context-state", sectionId: "overview", intuition: "책장 전체가 외부 store라면 이번 답을 위해 책상 위에 펼친 몇 장만 inference context입니다.", workedExample: "Policy store 100만 token 중 selector가 v7 section 4k와 tool receipt 2k를 골라 직렬화하면 model이 직접 읽는 external evidence는 6k입니다.", boundary: "Store에 존재하거나 embedding된 정보는 context에 serialize되기 전까지 현재 generation이 직접 읽지 않습니다." },
+      { id: "context-curation-lifecycle", sectionId: "curation", intuition: "자료를 고르고 표지를 붙여 책상에 놓고, 오래된 일지는 핵심 상태만 남기고, 다른 tenant 문서는 별도 방에 두는 과정입니다.", workedExample: "현재 ticket·최신 policy를 선택하고 instruction/data로 구획해 주입하며 tool 원문은 artifact receipt로 줄이고 tenant history를 분리합니다.", boundary: "Token을 줄이는 것 자체가 목표가 아니며 objective·decision·unresolved·artifact·next action을 잃으면 compaction 실패입니다." },
     ],
     conceptStages: [
-      {
-        label: "Define",
-        relation: "현재 inference가 실제로 읽는 token state를 외부 지식과 분리",
-        concepts: ["llm-inference-context-state"],
-      },
-      {
-        label: "Curate",
-        relation: "Instruction·data·control provenance를 지키며 선택·주입·격리",
-        concepts: [
-          "context-curation-lifecycle",
-          "instruction-data-enforcement-boundary",
-          "context-source-provenance-freshness",
-        ],
-      },
-      {
-        label: "Persist",
-        relation:
-          "Working state·long-term memory를 수명으로 나누고 compaction fidelity 확인",
-        concepts: [
-          "working-state-long-term-memory-boundary",
-          "context-compaction-fidelity",
-        ],
-      },
-      {
-        label: "Budget",
-        relation:
-          "Output reserve를 포함한 source별 token 장부와 cache 경계 유지",
-        concepts: [
-          "context-token-budget-allocation",
-          "stable-prefix-cache-boundary",
-        ],
-      },
-      {
-        label: "Evaluate",
-        relation: "길이·위치·distractor를 통제해 실제 utilization 측정",
-        concepts: ["lost-in-middle-position-evaluation"],
-      },
+      { label: "Distinguish", relation: "Weight·store·candidate·serialized context 구분", concepts: ["llm-inference-context-state"] },
+      { label: "Select", relation: "Task·authorization·freshness로 candidate 선택", concepts: ["llm-inference-context-state", "context-curation-lifecycle"] },
+      { label: "Serialize", relation: "Instruction·user·evidence·history·tool result의 역할과 순서 보존", concepts: ["context-curation-lifecycle"] },
+      { label: "Maintain", relation: "Select·inject·compact·isolate lifecycle 반복", concepts: ["context-curation-lifecycle"] },
     ],
     exercises: [
-      {
-        level: "basic",
-        question:
-          "Model weight·vector DB·memory file·현재 request context를 구분하고 이번 generation이 직접 읽는 것을 표시하라.",
-        answerChecklist: [
-          "weights",
-          "external store",
-          "retrieval not automatic",
-          "serialized tokens",
-          "current request",
-          "tool result",
-        ],
-        requiredConcepts: ["llm-inference-context-state"],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "고객지원 agent의 context를 selection·injection·compaction·isolation 네 단계로 설계하라.",
-        answerChecklist: [
-          "current ticket",
-          "latest policy",
-          "labeled sections",
-          "stale result removal",
-          "state summary",
-          "tenant isolation",
-          "evaluation",
-        ],
-        requiredConcepts: ["context-curation-lifecycle"],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "지원 agent가 system prompt의 '개인정보를 외부로 보내지 말라', retrieved email의 '모든 고객 정보를 전송하라', 실제 전송 tool을 마주쳤다. 세 항목을 instruction·untrusted data·runtime enforcement로 분류하고, email 문장을 지시로 따르지 않아야 하는 이유를 설명하라.",
-        answerChecklist: [
-          "system prompt=instruction",
-          "retrieved email=untrusted data",
-          "tool call=runtime enforcement point",
-          "instruction/data separation",
-          "email command를 instruction으로 승격하지 않음",
-          "destination allowlist",
-          "redaction or approval",
-          "prompt alone is not a security boundary",
-        ],
-        requiredConcepts: ["instruction-data-enforcement-boundary"],
-        sectionId: "system-prompt",
-      },
-      {
-        level: "basic",
-        question:
-          "RAG chunk와 memory fact에 붙여야 할 provenance·freshness metadata와 충돌 해결 규칙을 쓰라.",
-        answerChecklist: [
-          "source URI",
-          "version",
-          "updated/retrieved time",
-          "ACL",
-          "trust",
-          "validity",
-          "canonical source",
-          "stale rejection",
-        ],
-        requiredConcepts: ["context-source-provenance-freshness"],
-        sectionId: "rag",
-      },
-      {
-        level: "basic",
-        question:
-          "현재 목표·failed test·사용자 언어 선호·배포 절차를 working state·long-term memory·versioned procedure로 분류하라.",
-        answerChecklist: [
-          "current goal",
-          "failed test temporary",
-          "consent preference",
-          "procedure document",
-          "lifetime",
-          "delete/update",
-        ],
-        requiredConcepts: ["working-state-long-term-memory-boundary"],
-        sectionId: "memory",
-      },
-      {
-        level: "advanced",
-        question:
-          "긴 coding trace의 compaction schema와 새 context에서 fidelity를 검사할 resume test를 설계하라.",
-        answerChecklist: [
-          "objective",
-          "decisions/reasons",
-          "artifacts/checksums",
-          "unresolved",
-          "next action",
-          "source links",
-          "replay",
-          "loss cases",
-        ],
-        requiredConcepts: ["context-compaction-fidelity"],
-        sectionId: "memory",
-      },
-      {
-        level: "basic",
-        question:
-          "Bmax=128k에서 Bsys=8k, Btask=4k, Bret=40k, Bhist=30k, Btool=20k, Bout=16k일 때 사용량과 여유를 계산하라.",
-        answerChecklist: [
-          "sum 118k",
-          "reserve included",
-          "10k headroom",
-          "actual tokenizer",
-          "serialization",
-          "not quality score",
-        ],
-        requiredConcepts: ["context-token-budget-allocation"],
-        sectionId: "optimization",
-      },
-      {
-        level: "advanced",
-        question:
-          "같은 evidence를 앞·가운데·끝에 둔 long-context evaluation matrix를 만들고 통제 변수와 metric을 적으라.",
-        answerChecklist: [
-          "same evidence",
-          "same distractors",
-          "position",
-          "length",
-          "model/prompt fixed",
-          "exact match",
-          "citation",
-          "multi-hop slice",
-          "confidence",
-        ],
-        requiredConcepts: ["lost-in-middle-position-evaluation"],
-        sectionId: "optimization",
-      },
-      {
-        level: "advanced",
-        question:
-          "Prompt cache hit rate를 높이면서 stale policy를 재사용하지 않는 prefix identity·version·invalidation contract를 설계하라.",
-        answerChecklist: [
-          "stable prefix",
-          "policy version",
-          "tool schema version",
-          "provider rules",
-          "TTL",
-          "invalidate",
-          "privacy",
-          "hit not correctness",
-        ],
-        requiredConcepts: ["stable-prefix-cache-boundary"],
-        sectionId: "optimization",
-      },
-      {
-        level: "advanced",
-        question:
-          "Context 한도는 남지만 distractor가 많아 품질이 떨어지는 경우 selection·budget·position evaluation을 함께 고치는 실험을 설계하라.",
-        answerChecklist: [
-          "not capacity only",
-          "relevance filter",
-          "provenance",
-          "position slices",
-          "distractor count",
-          "quality",
-          "latency/token",
-          "ablation",
-        ],
-        requiredConcepts: [
-          "context-curation-lifecycle",
-          "context-token-budget-allocation",
-          "lost-in-middle-position-evaluation",
-        ],
-        sectionId: "optimization",
-      },
+      { level: "basic", question: "Model weight·external store·context candidate·inference context를 구분하라.", answerChecklist: ["weight=trained parameter", "store=external", "candidate not yet read", "serialized tokens", "current generation", "direct access boundary"], requiredConcepts: ["llm-inference-context-state"], sectionId: "overview" },
+      { level: "basic", question: "Policy store에 문서가 있어도 model이 현재 답에서 모를 수 있는 세 경로를 쓰라.", answerChecklist: ["retrieval miss", "selector exclusion", "ACL rejection", "serialization", "not automatic memory"], requiredConcepts: ["llm-inference-context-state"], sectionId: "overview" },
+      { level: "basic", question: "Store→select→serialize→generation 흐름에서 각 단계의 input과 output을 쓰라.", answerChecklist: ["candidate store", "task", "authorization", "freshness", "selected fragments", "ordered messages", "tokens"], requiredConcepts: ["llm-inference-context-state", "context-curation-lifecycle"], sectionId: "context-state" },
+      { level: "basic", question: "Select·inject·compact·isolate를 고객지원 agent 사례에 적용하라.", answerChecklist: ["current ticket", "latest policy", "labeled injection", "artifact receipt", "state summary", "tenant isolation"], requiredConcepts: ["context-curation-lifecycle"], sectionId: "curation" },
+      { level: "basic", question: "Context를 짧게 만드는 것과 high-signal context를 만드는 차이를 설명하라.", answerChecklist: ["not length alone", "required evidence", "distractor", "provenance", "task evaluation", "recall"], requiredConcepts: ["context-curation-lifecycle"], sectionId: "curation" },
+      { level: "basic", question: "Instruction·retrieved data·working state·tool result를 serialization 순서와 label로 배치하라.", answerChecklist: ["instruction role", "user task", "evidence label", "state", "typed tool result", "source identity"], requiredConcepts: ["llm-inference-context-state"], sectionId: "context-state" },
+      { level: "advanced", question: "같은 store에서 tenant A request context를 만드는 selector contract를 설계하라.", answerChecklist: ["tenant identity", "ACL", "task relevance", "freshness", "reject path", "audit receipt", "no cross-tenant history"], requiredConcepts: ["context-curation-lifecycle"], sectionId: "curation" },
+      { level: "advanced", question: "Context에 들어온 fragment가 거짓일 수 있는 이유와 이후 검증 owner를 쓰라.", answerChecklist: ["serialization not truth", "source trust", "citation support", "runtime validator", "provenance route", "conflict rule"], requiredConcepts: ["llm-inference-context-state"], sectionId: "boundary" },
+      { level: "advanced", question: "긴 tool output을 compact할 때 summary와 artifact에 각각 남길 필드를 나누라.", answerChecklist: ["objective", "decision", "unresolved", "next action", "artifact URI", "digest", "source", "resume test"], requiredConcepts: ["context-curation-lifecycle"], sectionId: "curation" },
+      { level: "advanced", question: "Context failure를 권한·provenance·memory·capacity route로 분류하는 triage를 만들라.", answerChecklist: ["instruction/data/runtime", "source/version", "state lifetime", "compaction", "token budget", "position utilization", "cache boundary"], requiredConcepts: ["context-curation-lifecycle"], sectionId: "boundary" },
     ],
     papers: [
-      {
-        title: "Anthropic — Effective context engineering for AI agents",
-        href: "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
-        problem:
-          "긴 horizon agent에서 system prompt·tool·retrieved data·message history가 계속 쌓일 때 유한 context의 signal을 유지하는 문제",
-        contribution:
-          "Context curation을 prompt보다 넓게 정의하고 just-in-time retrieval·progressive disclosure·compaction·structured note·sub-agent 선택 기준을 설명",
-        assumptions:
-          "Anthropic의 model·agent product·customer experience와 2025년 공개 시점의 관찰",
-        evidenceScope:
-          "공식 engineering guide의 설계 rationale와 product pattern",
-        notClaim:
-          "Attention budget이 정량적으로 고정돼 있거나 모든 model·task에서 같은 구성·성능이 보장된다는 뜻은 아님",
-        sectionId: "paper-anthropic-context-engineering",
-      },
-      {
-        title: "Lost in the Middle: How Language Models Use Long Contexts",
-        href: "https://arxiv.org/abs/2307.03172",
-        problem:
-          "명목상 긴 context를 받는 language model이 relevant information을 위치와 길이에 무관하게 실제로 활용하는지 측정하는 문제",
-        contribution:
-          "Multi-document QA와 key-value retrieval에서 relevant evidence 위치를 바꾼 evaluation protocol과 위치 민감도 관측을 제시",
-        assumptions:
-          "논문의 model·prompt·dataset·context length·retrieval arrangement",
-        evidenceScope:
-          "해당 long-context model과 두 task에서 evidence 위치에 따른 성능 변화",
-        notClaim:
-          "모든 최신 model·task가 동일한 U자형 곡선을 보이거나 앞뒤 복제로 문제가 일반적으로 해결된다는 뜻은 아님",
-        sectionId: "paper-lost-in-middle",
-      },
-      {
-        title: "MemGPT: Towards LLMs as Operating Systems",
-        href: "https://arxiv.org/abs/2310.08560",
-        problem:
-          "고정 context window를 넘는 document와 multi-session interaction의 상태를 model이 필요할 때 사용할 수 있게 관리하는 문제",
-        contribution:
-          "OS memory hierarchy에서 영감을 받은 virtual context management와 memory tier 이동·interrupt control을 제안",
-        assumptions:
-          "논문의 underlying model·memory implementation·document analysis·multi-session chat evaluation",
-        evidenceScope:
-          "MemGPT system과 공개 task에서의 extended-context management 결과",
-        notClaim:
-          "외부 memory가 무제한·무손실 인간 기억이 되거나 모든 agent·model에서 같은 성능을 보장한다는 뜻은 아님",
-        sectionId: "paper-memgpt",
-      },
-      {
-        title: "Anthropic — Managing context on the Claude Developer Platform",
-        href: "https://claude.com/blog/context-management",
-        problem:
-          "장기 tool-using agent에서 stale tool result가 context를 채우고 session을 넘는 중요한 state가 사라지는 문제",
-        contribution:
-          "Context editing과 client-side file memory tool을 공개하고 내부 agentic-search·100-turn evaluation 결과를 보고",
-        assumptions:
-          "Claude Sonnet 4.5·공개된 platform feature·Anthropic 내부 evaluation 조건",
-        evidenceScope:
-          "해당 product feature의 동작 경계와 보고된 내부 measurement",
-        notClaim:
-          "29%·39%·84% 수치가 다른 model·agent·dataset에서도 재현되는 일반적인 compaction 법칙이라는 뜻은 아님",
-        sectionId: "paper-anthropic-context-management",
-      },
+      { title: "Anthropic — Effective context engineering for AI agents", href: "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents", problem: "긴 horizon agent에서 system·tool·retrieved data·history가 쌓일 때 유한 context의 signal을 유지하는 문제", contribution: "Context를 inference token state로 정의하고 just-in-time retrieval·compaction·structured note를 설명", assumptions: "2025년 공개된 Anthropic product·customer experience와 당시 model/tool 조건", evidenceScope: "공식 engineering guide의 설계 rationale와 product pattern", notClaim: "모든 model·task에서 같은 구성·성능이나 정량 attention budget이 보장된다는 뜻은 아님", sectionId: "paper-anthropic-context-engineering" },
+    ],
+  },
+  "ai/context-instruction-boundaries": {
+    entryLevel: true,
+    entryNote: "System prompt·prompt injection·tool permission을 모른다고 가정하고 instruction·data·runtime을 한 층씩 정의합니다.",
+    coreIdea: "Instruction은 행동을 설명하고 external content는 분석할 untrusted data이며 schema·authorization·policy는 runtime이 effect를 강제하는 gate입니다. Prompt priority를 capability boundary로 오인하지 않습니다.",
+    assumedKnowledge: [],
+    introducedHere: [{ id: "instruction-data-enforcement-boundary", role: "Instruction·untrusted data·runtime enforcement의 책임과 실패를 분리합니다." }],
+    conceptExplanations: [
+      { id: "instruction-data-enforcement-boundary", sectionId: "overview", intuition: "업무 지시서, 읽을 고객 문서, 잠긴 출입문은 모두 중요하지만 같은 통제가 아닙니다.", workedExample: "System은 개인정보 반출 금지를 설명하고 email의 명령문은 data로 인용하며 runtime은 export schema·caller capability·destination policy를 검사합니다.", boundary: "Prompt priority는 model input의 해석 순서이지 filesystem·network capability나 deterministic security boundary가 아닙니다." },
+    ],
+    conceptStages: [
+      { label: "Name", relation: "Instruction·untrusted data·runtime enforcement 정의", concepts: ["instruction-data-enforcement-boundary"] },
+      { label: "Separate", relation: "Retrieved command를 data lane에 유지", concepts: ["instruction-data-enforcement-boundary"] },
+      { label: "Gate", relation: "Schema·authorization·policy AND로 effect 허용", concepts: ["instruction-data-enforcement-boundary"] },
+      { label: "Audit", relation: "Effect receipt와 bypass path로 release 판정", concepts: ["instruction-data-enforcement-boundary"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Instruction·untrusted data·runtime enforcement를 각각 정의하라.", answerChecklist: ["behavior guidance", "analysis target", "application control", "different owners", "different failures"], requiredConcepts: ["instruction-data-enforcement-boundary"], sectionId: "overview" },
+      { level: "basic", question: "Retrieved email의 명령문을 왜 system instruction으로 승격하지 않는지 설명하라.", answerChecklist: ["external source", "untrusted data", "prompt injection", "provenance label", "no authority transfer"], requiredConcepts: ["instruction-data-enforcement-boundary"], sectionId: "three-layers" },
+      { level: "basic", question: "Prompt의 금지 문구와 outbound deny policy의 차이를 쓰라.", answerChecklist: ["probabilistic guidance", "deterministic gate", "capability", "destination", "failure mode"], requiredConcepts: ["instruction-data-enforcement-boundary"], sectionId: "three-layers" },
+      { level: "basic", question: "Tool proposal이 통과해야 할 schema·authorization·policy gate를 설명하라.", answerChecklist: ["input type", "caller identity", "capability", "runtime state", "all gates", "explicit rejection"], requiredConcepts: ["instruction-data-enforcement-boundary"], sectionId: "attack-path" },
+      { level: "basic", question: "Effect receipt에 남길 다섯 필드를 쓰라.", answerChecklist: ["operation ID", "action", "destination", "redaction", "approval", "result"], requiredConcepts: ["instruction-data-enforcement-boundary"], sectionId: "overview" },
+      { level: "basic", question: "Model이 tool call을 제안했지만 caller capability가 없을 때 state transition을 쓰라.", answerChecklist: ["proposal only", "authorization false", "no effect", "typed reject", "next observation"], requiredConcepts: ["instruction-data-enforcement-boundary"], sectionId: "attack-path" },
+      { level: "advanced", question: "Direct tool·plugin·sub-agent·retry가 같은 export policy를 통과하는지 시험하라.", answerChecklist: ["all effect paths", "same policy", "nested delegation", "cached approval", "retry", "receipt", "bypass fixture"], requiredConcepts: ["instruction-data-enforcement-boundary"], sectionId: "release" },
+      { level: "advanced", question: "Confused-deputy 공격에서 caller와 resource owner를 분리해 authorization rule을 설계하라.", answerChecklist: ["caller identity", "resource owner", "delegated scope", "purpose", "least privilege", "deny default"], requiredConcepts: ["instruction-data-enforcement-boundary"], sectionId: "release" },
+      { level: "advanced", question: "Schema는 통과하지만 policy가 거부하는 외부 전송 예시를 만들라.", answerChecklist: ["valid shape", "forbidden destination", "sensitive field", "redaction", "approval", "no write"], requiredConcepts: ["instruction-data-enforcement-boundary"], sectionId: "attack-path" },
+      { level: "advanced", question: "Prompt injection 문자열 corpus와 runtime bypass test가 왜 둘 다 필요한지 설명하라.", answerChecklist: ["model behavior", "execution path", "defense layers", "false confidence", "effect owner", "release gate"], requiredConcepts: ["instruction-data-enforcement-boundary"], sectionId: "release" },
+    ],
+    papers: [
+      { title: "OWASP — LLM Prompt Injection Prevention Cheat Sheet", href: "https://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html", problem: "External content가 model instruction처럼 작동해 data exfiltration·unauthorized action을 유도하는 문제", contribution: "Instruction/data separation·least privilege·approval·output monitoring을 defense-in-depth로 정리", assumptions: "OWASP community guidance와 application별 threat model·tool capability", evidenceScope: "Prompt injection 방어의 설계·검토 checklist", notClaim: "Cheat sheet 적용만으로 모든 injection과 runtime bypass가 제거된다는 뜻은 아님", sectionId: "paper-owasp-prompt-injection" },
+    ],
+  },
+  "ai/context-provenance-freshness": {
+    entryLevel: true,
+    entryNote: "RAG 구현을 모른다고 가정하고 retrieved text 한 조각의 source receipt부터 시작합니다.",
+    coreIdea: "Context fragment는 text뿐 아니라 source identity·revision·validity·access scope·derivation을 함께 보존해야 하며 conflict는 similarity가 아니라 canonical source와 version rule로 해결합니다.",
+    assumedKnowledge: [],
+    introducedHere: [{ id: "context-source-provenance-freshness", role: "Fragment의 원본·revision·시점·권한·derivation을 보존하고 stale conflict를 판정합니다." }],
+    conceptExplanations: [
+      { id: "context-source-provenance-freshness", sectionId: "overview", intuition: "복사한 문장 옆에 원본 문서·판·가져온 시각·유효기간·읽기 권한을 붙여 다시 추적하게 합니다.", workedExample: "휴가 규정 chunk에 policy URI·section 4·v7·digest·updatedAt·retrievedAt·ACL을 붙여 stale v6 memory와 충돌할 때 v7을 고릅니다.", boundary: "Metadata가 있다고 내용이 사실이거나 relevant하다는 뜻은 아니며 trust·retrieval recall·citation support는 별도 평가입니다." },
+    ],
+    conceptStages: [
+      { label: "Shape", relation: "Text와 source receipt를 한 typed fragment로 묶음", concepts: ["context-source-provenance-freshness"] },
+      { label: "Trace", relation: "Entity·activity·agent와 derivation 역추적", concepts: ["context-source-provenance-freshness"] },
+      { label: "Resolve", relation: "ACL·validity·canonical priority·revision으로 conflict 해결", concepts: ["context-source-provenance-freshness"] },
+      { label: "Release", relation: "Reverse trace·stale·cross-tenant fixture 검사", concepts: ["context-source-provenance-freshness"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Retrieved fragment receipt의 source·revision·time·scope 필드를 쓰라.", answerChecklist: ["URI", "section", "version", "digest", "updatedAt", "retrievedAt", "validity", "ACL"], requiredConcepts: ["context-source-provenance-freshness"], sectionId: "overview" },
+      { level: "basic", question: "Text와 citation URL을 별도 배열에 두면 생기는 failure를 설명하라.", answerChecklist: ["reorder", "dedup", "rerank", "broken pairing", "typed record"], requiredConcepts: ["context-source-provenance-freshness"], sectionId: "fragment-shape" },
+      { level: "basic", question: "Event time·updatedAt·retrievedAt·validUntil의 차이를 설명하라.", answerChecklist: ["fact time", "source update", "retrieval time", "expiry", "query time"], requiredConcepts: ["context-source-provenance-freshness"], sectionId: "overview" },
+      { level: "basic", question: "v6와 v7 policy가 같이 검색될 때 v7을 고르는 순서를 쓰라.", answerChecklist: ["ACL", "validity", "canonical source", "revision order", "similarity later"], requiredConcepts: ["context-source-provenance-freshness"], sectionId: "conflict" },
+      { level: "basic", question: "Source provenance가 truth와 relevance를 자동 보장하지 않는 이유를 쓰라.", answerChecklist: ["traceability only", "source may be wrong", "trust", "relevance", "citation support"], requiredConcepts: ["context-source-provenance-freshness"], sectionId: "overview" },
+      { level: "basic", question: "원문→chunk→index→reranked result의 derivation을 record로 표현하라.", answerChecklist: ["entity", "activity", "agent", "derivedFrom", "digest", "retrieval run"], requiredConcepts: ["context-source-provenance-freshness"], sectionId: "fragment-shape" },
+      { level: "advanced", question: "ACL metadata가 없는 fragment의 fail-closed 처리와 review path를 설계하라.", answerChecklist: ["deny default", "quarantine", "owner", "manual review", "audit log", "no silent allow"], requiredConcepts: ["context-source-provenance-freshness"], sectionId: "conflict" },
+      { level: "advanced", question: "Index 갱신 중 old·new revision이 공존하는 stale conflict fixture를 설계하라.", answerChecklist: ["same source", "two revisions", "validity", "canonical priority", "expected reject", "citation"], requiredConcepts: ["context-source-provenance-freshness"], sectionId: "release" },
+      { level: "advanced", question: "Tenant B fragment가 tenant A context에 섞이지 않는 reverse-trace test를 만들라.", answerChecklist: ["tenant identity", "ACL scope", "request owner", "selector", "serialized context", "reject evidence"], requiredConcepts: ["context-source-provenance-freshness"], sectionId: "release" },
+      { level: "advanced", question: "Source priority와 semantic similarity가 충돌할 때 ranking policy를 설계하라.", answerChecklist: ["hard eligibility first", "canonical source", "validity", "revision", "similarity within eligible", "explain decision"], requiredConcepts: ["context-source-provenance-freshness"], sectionId: "conflict" },
+    ],
+    papers: [
+      { title: "W3C Recommendation — PROV-O", href: "https://www.w3.org/TR/prov-o/", problem: "서로 다른 system에서 생성된 정보의 entity·activity·agent와 derivation을 교환 가능한 형태로 표현하는 문제", contribution: "PROV data model을 OWL2 ontology로 정의하고 generation·use·derivation·attribution 관계를 제공", assumptions: "W3C PROV model과 domain-specific specialization", evidenceScope: "Provenance representation·interchange의 normative vocabulary", notClaim: "PROV-O가 retrieval relevance·source truth·ACL을 자동 판정한다는 뜻은 아님", sectionId: "paper-w3c-prov" },
+    ],
+  },
+  "ai/agent-memory-lifecycle": {
+    entryLevel: true,
+    entryNote: "Human memory 비유를 전제로 하지 않고 application이 보존하는 typed state와 수명부터 시작합니다.",
+    coreIdea: "현재 run의 working state, 동의된 long-term memory, 원문 artifact, versioned procedure를 수명·source·owner·expiry·delete path로 분리하고 compaction 뒤에는 resume replay로 행동 결정 state의 fidelity를 확인합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "working-state-long-term-memory-boundary", role: "현재 run state와 session 간 재사용 memory를 수명·동의·삭제로 구분합니다." },
+      { id: "context-compaction-fidelity", role: "Summary가 다음 행동을 바꾸는 state를 원 trace와 같은 값·source로 복원하는지 측정합니다." },
+    ],
+    conceptExplanations: [
+      { id: "working-state-long-term-memory-boundary", sectionId: "overview", intuition: "오늘 할 일과 여러 달 재사용할 사용자 선호, 긴 원문 log, 반복 절차를 같은 서랍에 영구 보관하지 않습니다.", workedExample: "현재 migration의 failed test는 working state, 동의된 언어 선호는 long-term memory, stdout은 artifact, build 절차는 versioned procedure입니다.", boundary: "Model 안에 자동으로 생기는 인간식 장기 기억이 아니며 source·동의·expiry·update·delete·tenant isolation이 필요합니다." },
+      { id: "context-compaction-fidelity", sectionId: "compaction", intuition: "긴 일지를 줄여도 다음 작업자가 결정을 뒤집지 않게 objective·reason·unresolved·artifact·next action을 보존합니다.", workedExample: "50개 tool 원문은 URI·digest로 옮기고 6개 필수 state key 중 4개만 정확히 복원되면 fidelity는 4/6입니다.", boundary: "요약 문장이 자연스럽거나 짧다는 것과 state가 충실하다는 것은 다르며 already-executed effect도 별도 보존해야 합니다." },
+    ],
+    conceptStages: [
+      { label: "Classify", relation: "Working state·memory·artifact·procedure를 수명으로 분류", concepts: ["working-state-long-term-memory-boundary"] },
+      { label: "Govern", relation: "Owner·source·consent·expiry·delete path 부착", concepts: ["context-source-provenance-freshness", "working-state-long-term-memory-boundary"] },
+      { label: "Compact", relation: "필수 state schema와 artifact receipt 보존", concepts: ["working-state-long-term-memory-boundary", "context-compaction-fidelity"] },
+      { label: "Resume", relation: "새 context에서 원 trace와 next action replay", concepts: ["context-compaction-fidelity"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Goal·failed test·user preference·stdout·procedure를 네 저장 유형으로 분류하라.", answerChecklist: ["working state", "long-term memory", "artifact", "versioned procedure", "reason"], requiredConcepts: ["working-state-long-term-memory-boundary"], sectionId: "overview" },
+      { level: "basic", question: "Long-term memory record에 source·owner·expiry·delete 필드를 설계하라.", answerChecklist: ["user/tenant", "source", "consent", "createdAt", "expiresAt", "update", "delete path"], requiredConcepts: ["working-state-long-term-memory-boundary"], sectionId: "lifetimes" },
+      { level: "basic", question: "긴 tool output을 summary에 복사하지 않고 artifact로 보존하는 이유를 쓰라.", answerChecklist: ["context cost", "raw fidelity", "URI", "digest", "producer", "reopen"], requiredConcepts: ["working-state-long-term-memory-boundary"], sectionId: "overview" },
+      { level: "basic", question: "Compaction이 보존해야 할 여섯 필수 state key를 쓰라.", answerChecklist: ["goal", "decision", "reason", "unresolved", "artifact", "next action"], requiredConcepts: ["context-compaction-fidelity"], sectionId: "compaction" },
+      { level: "basic", question: "필수 key 6개 중 4개가 정확할 때 fidelity를 계산하고 해석하라.", answerChecklist: ["4/6", "value and source", "not prose quality", "release failure"], requiredConcepts: ["context-compaction-fidelity"], sectionId: "compaction" },
+      { level: "basic", question: "Working state 종료와 long-term memory 삭제의 서로 다른 trigger를 쓰라.", answerChecklist: ["run completion", "checkpoint", "user request", "expiry", "tenant removal", "index/cache deletion"], requiredConcepts: ["working-state-long-term-memory-boundary"], sectionId: "lifetimes" },
+      { level: "advanced", question: "새 context만으로 objective·decision·unresolved·next action을 복원하는 resume test를 설계하라.", answerChecklist: ["fresh session", "compacted input only", "state questions", "trace comparison", "safe next action", "failure threshold"], requiredConcepts: ["context-compaction-fidelity"], sectionId: "resume" },
+      { level: "advanced", question: "Compaction 뒤 이미 실행한 payment write를 반복하지 않게 state schema를 보강하라.", answerChecklist: ["effect receipt", "operation ID", "status", "destination", "retry policy", "idempotency", "no duplicate"], requiredConcepts: ["context-compaction-fidelity"], sectionId: "resume" },
+      { level: "advanced", question: "User preference가 stale·conflicting일 때 memory update rule을 설계하라.", answerChecklist: ["source", "timestamp", "explicit correction", "canonical latest", "expiry", "audit history", "delete"], requiredConcepts: ["working-state-long-term-memory-boundary", "context-source-provenance-freshness"], sectionId: "lifetimes" },
+      { level: "advanced", question: "Fidelity 1.0이어도 release할 수 없는 privacy·authorization 반례를 두 개 쓰라.", answerChecklist: ["sensitive value retained", "wrong tenant", "expired consent", "unauthorized artifact", "separate gates"], requiredConcepts: ["context-compaction-fidelity"], sectionId: "resume" },
+    ],
+    papers: [
+      { title: "MemGPT: Towards LLMs as Operating Systems", href: "https://arxiv.org/abs/2310.08560", problem: "고정 context window를 넘는 document와 multi-session state를 필요할 때 사용할 수 있게 관리하는 문제", contribution: "OS memory hierarchy에서 영감을 받은 virtual context management와 tier 이동을 제안", assumptions: "논문의 model·memory implementation·document analysis·chat evaluation", evidenceScope: "MemGPT system과 공개 task의 extended-context management", notClaim: "외부 memory가 무제한·무손실 인간 기억이 되거나 모든 agent에서 같은 성능을 보장한다는 뜻은 아님", sectionId: "paper-memgpt" },
+      { title: "Anthropic — Managing context on the Claude Developer Platform", href: "https://claude.com/blog/context-management", problem: "긴 agent run에서 stale tool result와 durable note가 context를 잠식하는 문제", contribution: "Context editing과 client-side file memory tool의 product boundary와 내부 evaluation을 설명", assumptions: "공개 시점의 Claude product·model·agentic-search 조건", evidenceScope: "Anthropic platform의 context-management 기능과 측정", notClaim: "모든 model·workload에서 같은 compaction 성능이 보장된다는 뜻은 아님", sectionId: "paper-anthropic-context-management" },
+    ],
+  },
+  "ai/context-window-optimization": {
+    entryLevel: true,
+    entryNote: "Token budget·lost in the middle·prompt cache를 모른다고 가정하고 capacity·utilization·calculation reuse를 분리합니다.",
+    coreIdea: "Output reserve를 포함한 source별 token 장부로 capacity를 맞추고 evidence position·distractor 실험으로 utilization을 측정하며 stable prefix cache는 freshness와 분리된 prefill 계산 재사용으로 관리합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "context-token-budget-allocation", role: "Source별 serialized token과 output reserve·headroom을 계산합니다." },
+      { id: "lost-in-middle-position-evaluation", role: "Evidence 위치·길이·distractor를 통제해 실제 utilization을 측정합니다." },
+      { id: "stable-prefix-cache-boundary", role: "동일 prefix 계산 재사용과 의미·freshness·correctness를 분리합니다." },
+    ],
+    conceptExplanations: [
+      { id: "context-token-budget-allocation", sectionId: "budget", intuition: "가방 용량에서 돌아올 때 필요한 공간을 먼저 남기고 지침·질문·근거·기록·tool 결과를 따로 셉니다.", workedExample: "128k limit에 sys 8k·task 4k·retrieval 40k·history 30k·tool 20k·output 16k면 118k를 쓰고 10k가 남습니다.", boundary: "Token 합은 품질 함수가 아니며 provider serialization·special token·tool schema를 실제 tokenizer로 세야 합니다." },
+      { id: "lost-in-middle-position-evaluation", sectionId: "position", intuition: "같은 단서를 앞·가운데·끝에 번갈아 두고 주변 방해 문서 수를 고정해 놓치는 위치를 찾습니다.", workedExample: "같은 fact를 20개 document 중 1·10·20번째에 두고 exact answer·citation·multi-hop score를 비교합니다.", boundary: "원 논문의 관측이 모든 model·task에서 같은 U자형 곡선으로 재현되는 법칙은 아닙니다." },
+      { id: "stable-prefix-cache-boundary", sectionId: "cache", intuition: "매번 같은 책의 앞부분을 다시 읽는 계산을 재사용할 뿐 그 내용이 최신이거나 정답이라고 인증하지 않습니다.", workedExample: "System instruction·tool schema prefix의 policy revision이 바뀌면 cache identity를 바꾸고 old prefix를 invalidate합니다.", boundary: "Provider마다 identity·minimum length·TTL·billing·privacy 조건이 다르고 cache hit는 token crowding을 제거하지 않습니다." },
+    ],
+    conceptStages: [
+      { label: "Budget", relation: "Output reserve 포함 source별 token 장부와 headroom 계산", concepts: ["context-token-budget-allocation"] },
+      { label: "Position", relation: "같은 evidence의 front·middle·end utilization 측정", concepts: ["lost-in-middle-position-evaluation", "context-token-budget-allocation"] },
+      { label: "Cache", relation: "Stable prefix identity와 version invalidation 분리", concepts: ["stable-prefix-cache-boundary", "context-token-budget-allocation"] },
+      { label: "Release", relation: "Capacity·quality·latency·freshness gate를 함께 판정", concepts: ["context-token-budget-allocation", "lost-in-middle-position-evaluation", "stable-prefix-cache-boundary"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Capacity·utilization·prompt-cache reuse를 각각 정의하라.", answerChecklist: ["token limit", "evidence use", "prefill reuse", "different metrics", "different failures"], requiredConcepts: ["context-token-budget-allocation", "lost-in-middle-position-evaluation", "stable-prefix-cache-boundary"], sectionId: "overview" },
+      { level: "basic", question: "128k 예시의 used token과 headroom을 계산하라.", answerChecklist: ["8+4+40+30+20+16", "118k", "10k", "output reserve"], requiredConcepts: ["context-token-budget-allocation"], sectionId: "budget" },
+      { level: "basic", question: "실제 token budget에서 provider serialization을 포함해야 하는 이유를 쓰라.", answerChecklist: ["special tokens", "role wrapper", "tool schema", "actual tokenizer", "hard limit"], requiredConcepts: ["context-token-budget-allocation"], sectionId: "budget" },
+      { level: "basic", question: "앞·가운데·끝 position experiment의 통제 변수를 쓰라.", answerChecklist: ["same evidence", "same question", "same distractors", "same model", "same prompt", "position only"], requiredConcepts: ["lost-in-middle-position-evaluation"], sectionId: "position" },
+      { level: "basic", question: "Prompt cache가 해결하는 문제와 해결하지 않는 문제를 나누라.", answerChecklist: ["prefill compute", "latency/cost", "not freshness", "not correctness", "not headroom", "not utilization"], requiredConcepts: ["stable-prefix-cache-boundary"], sectionId: "cache" },
+      { level: "basic", question: "Policy revision 변경 시 prefix cache identity에 포함할 값을 쓰라.", answerChecklist: ["policy version", "tool schema version", "model", "tokenizer", "invalidate", "TTL"], requiredConcepts: ["stable-prefix-cache-boundary"], sectionId: "cache" },
+      { level: "advanced", question: "Capacity는 통과하지만 distractor 때문에 실패하는 ablation을 설계하라.", answerChecklist: ["fixed length", "relevance filter", "distractor count", "position", "answer", "citation", "latency"], requiredConcepts: ["lost-in-middle-position-evaluation", "context-token-budget-allocation"], sectionId: "position" },
+      { level: "advanced", question: "Cache hit rate를 높이면서 stale policy를 막는 version·invalidation contract를 설계하라.", answerChecklist: ["stable prefix", "versioned identity", "change trigger", "invalidate", "provider rule", "audit"], requiredConcepts: ["stable-prefix-cache-boundary"], sectionId: "cache" },
+      { level: "advanced", question: "Output reserve가 부족할 때 source별 축약·artifact 이동 순서를 설계하라.", answerChecklist: ["protect instruction/task", "fresh evidence", "remove distractor", "artifact URI", "compact history", "tool receipt", "reject if unsafe"], requiredConcepts: ["context-token-budget-allocation"], sectionId: "budget" },
+      { level: "advanced", question: "긴 context release gate에 quality·latency·cost·freshness를 함께 넣어라.", answerChecklist: ["answer quality", "citation support", "position slices", "latency", "token cost", "cache hit", "freshness", "rollback"], requiredConcepts: ["context-token-budget-allocation", "lost-in-middle-position-evaluation", "stable-prefix-cache-boundary"], sectionId: "cache" },
+    ],
+    papers: [
+      { title: "Lost in the Middle: How Language Models Use Long Contexts", href: "https://arxiv.org/abs/2307.03172", problem: "긴 context를 받는 model이 relevant information을 위치와 길이에 무관하게 실제 활용하는지 측정하는 문제", contribution: "Multi-document QA와 key-value retrieval에서 evidence 위치를 바꾼 evaluation protocol과 위치 민감도 관측을 제시", assumptions: "논문의 model·prompt·dataset·context length·retrieval arrangement", evidenceScope: "해당 long-context model과 두 task의 evidence 위치별 성능", notClaim: "모든 최신 model·task가 같은 U자형 곡선을 보이거나 앞뒤 복제로 문제가 해결된다는 뜻은 아님", sectionId: "paper-lost-in-middle" },
     ],
   },
   "ai/prompt-engineering": {

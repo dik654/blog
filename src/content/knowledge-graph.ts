@@ -4333,7 +4333,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Context selection · injection · compaction · isolation",
     definition:
       "가능한 정보 전체에서 현재 run에 필요한 항목을 고르고, source와 우선순위를 보존해 주입하며, 오래된 상태를 압축하고 서로 오염되면 안 되는 범위를 격리하는 lifecycle입니다.",
-    canonicalHref: "/ai/context-engineering#overview",
+    canonicalHref: "/ai/context-engineering#curation",
   },
   "instruction-data-enforcement-boundary": {
     id: "instruction-data-enforcement-boundary",
@@ -4342,7 +4342,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Instruction · data · enforcement boundary",
     definition:
       "Model에 행동 원칙을 전달하는 instruction, 인용·분석할 untrusted data, 실제 권한·schema·policy를 강제하는 application control을 서로 다른 계층으로 유지하는 경계입니다.",
-    canonicalHref: "/ai/context-engineering#system-prompt",
+    canonicalHref: "/ai/context-instruction-boundaries#overview",
   },
   "context-source-provenance-freshness": {
     id: "context-source-provenance-freshness",
@@ -4351,7 +4351,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Context provenance · freshness",
     definition:
       "Context fragment마다 원본 identity·version·retrieval time·validity interval·trust level을 남겨 오래되거나 충돌한 정보를 다음 판단의 정본으로 오인하지 않게 하는 계약입니다.",
-    canonicalHref: "/ai/context-engineering#rag",
+    canonicalHref: "/ai/context-provenance-freshness#overview",
   },
   "working-state-long-term-memory-boundary": {
     id: "working-state-long-term-memory-boundary",
@@ -4360,7 +4360,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Working state · long-term memory boundary",
     definition:
       "현재 goal·plan·recent evidence처럼 run 종료와 함께 폐기할 상태와 여러 session에서 재사용할 동의된 사실·preference·procedure를 수명·source·삭제 정책으로 분리하는 경계입니다.",
-    canonicalHref: "/ai/context-engineering#memory",
+    canonicalHref: "/ai/agent-memory-lifecycle#overview",
   },
   "context-compaction-fidelity": {
     id: "context-compaction-fidelity",
@@ -4369,7 +4369,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Context compaction state fidelity",
     definition:
       "긴 history를 줄인 뒤에도 현재 objective·결정 이유·unresolved issue·artifact identity·next action처럼 이후 행동을 바꾸는 상태가 보존되는지 원 trace와 replay로 확인하는 계약입니다.",
-    canonicalHref: "/ai/context-engineering#memory",
+    canonicalHref: "/ai/agent-memory-lifecycle#compaction",
   },
   "context-token-budget-allocation": {
     id: "context-token-budget-allocation",
@@ -4378,7 +4378,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Context token-budget allocation",
     definition:
       "Model limit에서 output reserve를 먼저 확보하고 instruction·task·retrieval·history·tool result가 사용하는 token을 source별로 합산해 선택·축약·거부 시점을 정하는 장부입니다.",
-    canonicalHref: "/ai/context-engineering#optimization",
+    canonicalHref: "/ai/context-window-optimization#budget",
   },
   "lost-in-middle-position-evaluation": {
     id: "lost-in-middle-position-evaluation",
@@ -4387,7 +4387,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Lost-in-the-middle position evaluation",
     definition:
       "같은 relevant evidence와 distractor를 유지한 채 evidence 위치·context length·질문 유형을 바꿔 long-context utilization의 위치 민감도를 측정하는 평가 방법입니다.",
-    canonicalHref: "/ai/context-engineering#optimization",
+    canonicalHref: "/ai/context-window-optimization#position",
   },
   "stable-prefix-cache-boundary": {
     id: "stable-prefix-cache-boundary",
@@ -4396,7 +4396,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Stable-prefix prompt-cache boundary",
     definition:
       "반복되는 동일 prefix의 prefill 계산 재사용과 context 의미·freshness·output correctness를 분리해, cache identity·provider 조건·invalidation을 관리하는 경계입니다.",
-    canonicalHref: "/ai/context-engineering#optimization",
+    canonicalHref: "/ai/context-window-optimization#cache",
   },
   "agent-observation-action-loop": {
     id: "agent-observation-action-loop",
@@ -23788,6 +23788,13 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "produces",
     reason:
       "Just-in-time으로 찾은 정본의 source·version·retrieval time을 context fragment에 함께 남깁니다.",
+  },
+  {
+    from: "context-curation-lifecycle",
+    to: "context-source-provenance-freshness",
+    relation: "constrains",
+    reason:
+      "현재 task에 맞는 fragment를 선택하더라도 source identity·revision·freshness를 잃지 않아야 다음 conflict와 citation을 검증할 수 있습니다.",
   },
   {
     from: "context-source-provenance-freshness",

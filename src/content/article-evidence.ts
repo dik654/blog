@@ -2242,12 +2242,24 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
       note: "Selection·just-in-time retrieval·compaction·structured note·sub-agent를 context curation 관점에서 설명",
     },
+  ],
+  "ai/context-instruction-boundaries": [
     {
-      kind: "핵심 논문",
-      label: "Lost in the Middle",
-      href: "https://arxiv.org/abs/2307.03172",
-      note: "긴 문맥에서 정보 위치에 따라 활용 성능이 달라지는 현상",
+      kind: "공식 가이드",
+      label: "OWASP — LLM Prompt Injection Prevention Cheat Sheet",
+      href: "https://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html",
+      note: "Instruction·external data separation, least privilege, approval와 output monitoring의 defense-in-depth 경계",
     },
+  ],
+  "ai/context-provenance-freshness": [
+    {
+      kind: "공식 규격",
+      label: "W3C Recommendation — PROV-O",
+      href: "https://www.w3.org/TR/prov-o/",
+      note: "Entity·Activity·Agent와 generation·use·derivation을 표현하는 provenance interchange model",
+    },
+  ],
+  "ai/agent-memory-lifecycle": [
     {
       kind: "핵심 논문",
       label: "MemGPT: Towards LLMs as Operating Systems",
@@ -2259,6 +2271,14 @@ export const ARTICLE_EVIDENCE: Readonly<
       label: "Anthropic — Managing context on the Claude Developer Platform",
       href: "https://claude.com/blog/context-management",
       note: "Context editing과 file-based memory tool의 제품 경계·내부 평가 조건",
+    },
+  ],
+  "ai/context-window-optimization": [
+    {
+      kind: "핵심 논문",
+      label: "Lost in the Middle",
+      href: "https://arxiv.org/abs/2307.03172",
+      note: "긴 문맥에서 정보 위치에 따라 활용 성능이 달라지는 조건을 측정",
     },
   ],
   "ai/mcp-protocol": [
