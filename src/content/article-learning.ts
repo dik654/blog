@@ -20356,503 +20356,178 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/hyperparameter-tuning": {
-    coreIdea:
-      "하이퍼파라미터 튜닝은 sampler 이름을 고르는 일이 아니라 배포를 모사한 동일 validation 계약에서 configuration을 제한된 자원으로 비교하고, typed·conditional·feasible search space와 complete/pruned/failed history를 보존한 뒤 선택에 쓰지 않은 outer data에서 최종 절차를 평가하는 실험입니다.",
-    assumedKnowledge: [
-      {
-        id: "train-validation-test",
-        role: "Weight fitting·configuration selection·최종 outer evaluation의 data 역할을 분리합니다.",
-      },
-      {
-        id: "probability-distribution",
-        role: "Random·log-uniform sampling과 promising region의 확률 질량을 읽습니다.",
-      },
-      {
-        id: "expectation",
-        role: "반복 trial·seed의 평균 validation risk와 선택된 score의 해석을 연결합니다.",
-      },
-      {
-        id: "logarithm",
-        role: "Orders of magnitude가 중요한 positive parameter를 log scale에서 sampling합니다.",
-      },
-      {
-        id: "deployment-matched-validation-risk",
-        role: "모든 trial이 같은 배포 unit·split·metric을 평가하게 합니다.",
-      },
-      {
-        id: "model-selection-maximum-optimism",
-        role: "여러 noisy trial 중 최적 validation score를 고를 때 생기는 낙관을 설명합니다.",
-      },
-      {
-        id: "reproducible-training-run-contract",
-        role: "Data·config·code·seed·environment·artifact를 trial record로 연결합니다.",
-      },
-    ],
+    entryLevel: true,
+    entryNote: "Parameter와 hyperparameter를 처음 구분하는 데서 시작해 trial·study·validation·outer evaluation을 한 단계씩 쌓습니다.",
+    coreIdea: "튜닝은 동일한 실험 계약에서 configuration을 비교하고 validation으로 선택한 뒤, 선택에 쓰지 않은 outer data에서 고정된 절차를 평가하는 과정입니다.",
+    assumedKnowledge: [],
     introducedHere: [
-      {
-        id: "hpo-selection-evaluation-contract",
-        role: "동일 조건에서 configuration을 선택하고 별도 outer data에서 최종 평가합니다.",
-      },
-      {
-        id: "random-search-hit-probability",
-        role: "Sampling distribution의 유망 영역과 trial budget을 성공 확률로 연결합니다.",
-      },
-      {
-        id: "adaptive-trial-proposal-history",
-        role: "완료·중단·실패 history를 다음 configuration 제안에 사용하는 구조를 구분합니다.",
-      },
-      {
-        id: "tpe-density-ratio",
-        role: "좋은 trial과 나머지의 configuration density ratio로 TPE의 후보 선호를 읽습니다.",
-      },
-      {
-        id: "log-uniform-parameter-sampling",
-        role: "Positive parameter의 각 order of magnitude에 같은 sampling 비중을 줍니다.",
-      },
-      {
-        id: "typed-conditional-search-space",
-        role: "Parameter type·scale·bounds와 parent-child branch를 명시합니다.",
-      },
-      {
-        id: "feasible-search-space-constraint",
-        role: "Branch·memory·compatibility hard constraint를 만족하는 후보만 남깁니다.",
-      },
-      {
-        id: "comparable-fidelity-resource",
-        role: "중간 score를 비교할 update·token·sample 등 공통 resource 단위를 정합니다.",
-      },
-      {
-        id: "successive-halving-resource-allocation",
-        role: "낮은 fidelity의 후보 수를 줄이고 살아남은 후보의 resource를 늘립니다.",
-      },
-      {
-        id: "hpo-pareto-dominance",
-        role: "Quality·latency·memory에서 지배당하지 않는 full-budget 후보를 남깁니다.",
-      },
+      { id: "hpo-selection-evaluation-contract", role: "Trial 비교·validation 선택·outer evaluation의 data 역할을 분리합니다." },
+      { id: "random-search-hit-probability", role: "Sampling distribution의 유망 영역과 trial budget을 성공 확률로 연결합니다." },
     ],
     conceptExplanations: [
-      {
-        id: "hpo-selection-evaluation-contract",
-        sectionId: "overview",
-        intuition:
-          "같은 시험지와 제한 시간으로 여러 학습법을 고른 뒤, 고르는 데 쓰지 않은 새 시험으로 선택 절차를 확인합니다.",
-        workedExample:
-          "같은 five-fold manifest·20k updates·macro recall에서 40 configurations를 비교하고 선택된 config를 untouched outer fold에서 세 seeds로 평가합니다.",
-        boundary:
-          "Outer score를 본 뒤 범위·sampler·config를 바꾸면 그 data도 selection에 사용된 것이므로 더는 독립 final evaluation이 아닙니다.",
-      },
-      {
-        id: "random-search-hit-probability",
-        sectionId: "overview",
-        intuition:
-          "당첨 구역이 전체 추첨함의 5%라면 여러 번 독립적으로 뽑을수록 한 번 이상 만날 가능성이 커집니다.",
-        workedExample:
-          "p=.05일 때 N=20이면 1−.95²⁰≈.642, N=60이면 약 .954이므로 95% hit를 원하면 약 59회가 필요합니다.",
-        boundary:
-          "실제 p는 모르고 trial이 독립이라는 단순 모델이며 넓거나 잘못된 sampling distribution에서는 유망 영역의 질량 자체가 매우 작을 수 있습니다.",
-      },
-      {
-        id: "adaptive-trial-proposal-history",
-        sectionId: "optuna",
-        intuition:
-          "이전 시식 결과를 보고 다음 조합을 고르되 아직 끝나지 않은 요리와 실패한 요리를 결과 없음으로 뭉개지 않습니다.",
-        workedExample:
-          "History에 λ, validation loss, resource step, COMPLETE/PRUNED/FAIL, worker start time을 저장하고 sampler가 완료된 관측으로 41번째 후보를 제안합니다.",
-        boundary:
-          "Score noise·작은 warmup history·많은 병렬 pending trial에서는 adaptive sampler가 우연한 pattern이나 오래된 history를 따라갈 수 있습니다.",
-      },
-      {
-        id: "tpe-density-ratio",
-        sectionId: "optuna",
-        intuition:
-          "좋은 결과에서 자주 보이지만 나쁜 결과에서는 드문 설정을 다시 시험합니다.",
-        workedExample:
-          "Loss 하위 20%를 good으로 나누고 lr≈3e−4 근처의 l=.30, g=.05라면 density ratio 6으로 높은 후보가 됩니다.",
-        boundary:
-          "Quantile·prior·독립/다변량 density와 candidate 수 등 구현 규칙에 민감하며 높은 ratio가 인과적 최적성을 보장하지 않습니다.",
-      },
-      {
-        id: "log-uniform-parameter-sampling",
-        sectionId: "search-space",
-        intuition:
-          "자에서 같은 길이만큼 뽑는 대신 10배씩 커지는 칸마다 같은 표를 줍니다.",
-        workedExample:
-          "Learning rate 범위 10⁻⁵–10⁻¹에서는 네 decade가 각각 25% 확률을 가지므로 10⁻⁵–10⁻⁴와 10⁻²–10⁻¹을 같은 비중으로 봅니다.",
-        boundary:
-          "0·음수를 포함하거나 additive 차이가 자연스러운 parameter에는 맞지 않으며 log scale을 쓴다는 사실이 좋은 bounds를 대신하지 않습니다.",
-      },
-      {
-        id: "typed-conditional-search-space",
-        sectionId: "search-space",
-        intuition:
-          "주문한 본체에 맞는 옵션만 보여 주듯 optimizer를 고른 뒤에만 해당 child parameter를 생성합니다.",
-        workedExample:
-          "optimizer∈{AdamW,SGD}이고 optimizer=SGD일 때만 momentum∈[0, .99]를 만들며 depth는 4–16 integer로 제한합니다.",
-        boundary:
-          "Branch를 잘못 숨기면 가능한 모델을 제거하고, 조건 없는 Cartesian product는 의미 없는 값과 duplicate semantics로 budget을 낭비합니다.",
-      },
-      {
-        id: "feasible-search-space-constraint",
-        sectionId: "search-space",
-        intuition:
-          "경기 참가 신청 전에 규격과 안전 한도를 통과할 수 없는 조합을 걸러냅니다.",
-        workedExample:
-          "예상 peak m̂=22GB이고 안전 상한 Mmax=20GB인 batch·resolution 조합은 제안하지 않되 실제 예상 밖 OOM은 FAIL로 기록합니다.",
-        boundary:
-          "Resource estimator에는 오차가 있어 headroom과 실측이 필요하고 지나치게 보수적인 constraint는 유망한 configuration을 사전에 제거합니다.",
-      },
-      {
-        id: "comparable-fidelity-resource",
-        sectionId: "pruning",
-        intuition:
-          "달린 시간을 비교할 때 한 선수의 한 바퀴와 다른 선수의 한 걸음을 같은 단계라고 부르지 않습니다.",
-        workedExample:
-          "Batch가 32와 128인 trial을 epoch 1에서 비교하지 않고 optimizer update 2,000 또는 processed token 10M에서 같은 validation fixture를 계산합니다.",
-        boundary:
-          "같은 update 수여도 architecture별 compute·data order·warmup 비율이 달라 fidelity가 완전히 동등하지 않을 수 있어 wall time과 curve를 함께 봅니다.",
-      },
-      {
-        id: "successive-halving-resource-allocation",
-        sectionId: "pruning",
-        intuition:
-          "많은 후보를 짧게 예선한 뒤 일부만 더 긴 본선에 올려 제한된 자원을 집중합니다.",
-        workedExample:
-          "η=3에서 27개를 r updates로 평가하고 9개를 3r, 3개를 9r로 올린 뒤 finalist를 pruning 없이 full budget으로 재학습합니다.",
-        boundary:
-          "초기 순위와 최종 순위의 상관이 약하거나 slow starter가 체계적으로 존재하면 좋은 후보를 일찍 제거할 수 있습니다.",
-      },
-      {
-        id: "hpo-pareto-dominance",
-        sectionId: "pruning",
-        intuition:
-          "모든 평가에서 더 나쁜 후보는 제외하고, 정확도와 속도 사이에서 실제 선택이 필요한 후보만 남깁니다.",
-        workedExample:
-          "A(.20 loss,10ms,4GB)는 B(.22,12ms,5GB)를 지배하지만 C(.18,15ms,3GB)와는 서로 다른 장점이 있어 둘 다 frontier에 남습니다.",
-        boundary:
-          "Hard safety·compatibility를 먼저 적용하고 반복 noise와 실질 차이 tolerance를 반영해야 하며 frontier가 하나의 최종 선택을 자동으로 정하지 않습니다.",
-      },
+      { id: "hpo-selection-evaluation-contract", sectionId: "selection-contract", intuition: "같은 시험으로 여러 학습 설정을 고른 뒤 아직 열지 않은 시험으로 선택이 끝난 절차를 평가합니다.", workedExample: "같은 folds·20k updates·metric으로 40 configurations를 비교하고 선택된 설정을 outer fold에서 세 seeds로 평가합니다.", boundary: "Outer 결과를 본 뒤 설정을 바꾸면 그 data도 selection에 사용된 것입니다." },
+      { id: "random-search-hit-probability", sectionId: "trial-budget", intuition: "당첨 영역의 크기와 추첨 횟수로 적어도 한 번 만날 가능성을 계산합니다.", workedExample: "p=.05일 때 20회 hit 확률은 약 .64, 60회는 약 .95입니다.", boundary: "p를 실제로 안다는 뜻이 아니며 invalid trials와 dependent proposals에는 그대로 적용하지 않습니다." },
     ],
     conceptStages: [
-      {
-        label: "Selection contract",
-        relation:
-          "배포 risk·공정한 trial 비교·독립 outer evaluation을 먼저 고정",
-        concepts: [
-          "deployment-matched-validation-risk",
-          "hpo-selection-evaluation-contract",
-          "model-selection-maximum-optimism",
-        ],
-      },
-      {
-        label: "Budget baseline",
-        relation: "Sampling distribution의 유망 질량과 random trial 수를 연결",
-        concepts: ["probability-distribution", "random-search-hit-probability"],
-      },
-      {
-        label: "Sequential proposal",
-        relation:
-          "Trial history로 다음 후보를 제안하고 TPE density ratio로 구체화",
-        concepts: [
-          "reproducible-training-run-contract",
-          "adaptive-trial-proposal-history",
-          "tpe-density-ratio",
-        ],
-      },
-      {
-        label: "Space model",
-        relation:
-          "Log scale·type·conditional branch·hard feasibility를 versioning",
-        concepts: [
-          "logarithm",
-          "log-uniform-parameter-sampling",
-          "typed-conditional-search-space",
-          "feasible-search-space-constraint",
-        ],
-      },
-      {
-        label: "Resource allocation",
-        relation: "동일 fidelity에서 비교한 뒤 일부 후보에 자원을 집중",
-        concepts: [
-          "comparable-fidelity-resource",
-          "successive-halving-resource-allocation",
-        ],
-      },
-      {
-        label: "Final choice",
-        relation:
-          "Full-budget 재실행 뒤 non-dominated 후보와 outer evidence를 함께 선택",
-        concepts: [
-          "successive-halving-resource-allocation",
-          "hpo-pareto-dominance",
-          "hpo-selection-evaluation-contract",
-        ],
-      },
+      { label: "계약", relation: "configuration·trial·study와 공정한 비교 조건을 고정", concepts: ["hpo-selection-evaluation-contract"] },
+      { label: "예산", relation: "sampling mass와 trial 수로 탐색 가능성을 계산", concepts: ["random-search-hit-probability"] },
+      { label: "평가", relation: "validation 선택 뒤 untouched outer data에서 절차 보고", concepts: ["hpo-selection-evaluation-contract"] },
     ],
     exercises: [
-      {
-        level: "basic",
-        question:
-          "Model weight와 learning rate를 parameter·hyperparameter로 구분하고 train·validation·outer data가 각각 무엇을 결정하는지 설명하라.",
-        answerChecklist: [
-          "weight parameter",
-          "learning rate hyperparameter",
-          "train fits weights",
-          "validation selects configuration",
-          "outer evaluates selected procedure",
-          "no reuse after outer",
-        ],
-        requiredConcepts: [
-          "hpo-selection-evaluation-contract",
-          "train-validation-test",
-        ],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "Promising region의 sampling mass가 .05일 때 random trial 20회와 60회의 한 번 이상 hit 확률을 계산하라.",
-        answerChecklist: [
-          "1-.95^20",
-          "about .642",
-          "1-.95^60",
-          "about .954",
-          "independence assumption",
-          "p depends on distribution",
-        ],
-        requiredConcepts: ["random-search-hit-probability"],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "한 Study의 trial 8개가 COMPLETE 5개·PRUNED 2개·FAIL 1개일 때, 세 상태가 뜻하는 결과와 Storage에 모두 남겨야 할 정보를 구분하라.",
-        answerChecklist: [
-          "COMPLETE final objective",
-          "PRUNED comparable resource step",
-          "PRUNED intermediate values",
-          "FAIL has no comparable objective",
-          "configuration and distribution",
-          "state and failure reason",
-          "do not delete or rank failures",
-        ],
-        requiredConcepts: [
-          "adaptive-trial-proposal-history",
-          "reproducible-training-run-contract",
-        ],
-        sectionId: "optuna",
-      },
-      {
-        level: "basic",
-        question:
-          "TPE에서 good density .30, other density .05인 후보의 density ratio를 계산하고 무엇을 뜻하는지 설명하라.",
-        answerChecklist: [
-          "ratio 6",
-          "common in good",
-          "rarer in other",
-          "preferred candidate",
-          "not causal guarantee",
-          "quantile dependence",
-        ],
-        requiredConcepts: ["tpe-density-ratio"],
-        sectionId: "optuna",
-      },
-      {
-        level: "advanced",
-        question:
-          "16개 병렬 worker가 TPE study를 실행할 때 pending trial·retry·FAIL이 history와 재현성에 미치는 영향을 반영한 storage schema를 작성하라.",
-        answerChecklist: [
-          "configuration/distribution",
-          "state",
-          "resource/intermediate values",
-          "start/end/worker",
-          "pending visibility",
-          "retry identity",
-          "failure reason",
-          "sampler seed/version",
-          "study/space revision",
-          "artifact links",
-        ],
-        requiredConcepts: [
-          "adaptive-trial-proposal-history",
-          "reproducible-training-run-contract",
-        ],
-        sectionId: "optuna",
-      },
-      {
-        level: "basic",
-        question:
-          "10^-5에서 10^-1까지 log-uniform learning-rate space에서 각 decade의 sampling probability를 계산하라.",
-        answerChecklist: [
-          "four decades",
-          "each .25",
-          "log coordinates",
-          "positive bounds",
-          "not linear uniform",
-        ],
-        requiredConcepts: ["log-uniform-parameter-sampling", "logarithm"],
-        sectionId: "search-space",
-      },
-      {
-        level: "advanced",
-        question:
-          "AdamW·SGD optimizer branch와 batch·resolution memory constraint를 가진 versioned search-space manifest를 설계하라.",
-        answerChecklist: [
-          "categorical parent",
-          "SGD momentum child",
-          "AdamW beta/weight decay semantics",
-          "integer/float types",
-          "log scale",
-          "bounds rationale",
-          "effective batch",
-          "memory estimate/headroom",
-          "FAIL recording",
-          "version digest",
-        ],
-        requiredConcepts: [
-          "typed-conditional-search-space",
-          "feasible-search-space-constraint",
-          "log-uniform-parameter-sampling",
-        ],
-        sectionId: "search-space",
-      },
-      {
-        level: "basic",
-        question:
-          "Reduction factor η=3인 successive halving에서 27개 후보를 시작할 때 세 rung의 후보 수와 resource 배수를 계산하라.",
-        answerChecklist: [
-          "27 at r",
-          "9 at 3r",
-          "3 at 9r",
-          "top one third",
-          "comparable resource",
-          "final rerun",
-        ],
-        requiredConcepts: [
-          "successive-halving-resource-allocation",
-          "comparable-fidelity-resource",
-        ],
-        sectionId: "pruning",
-      },
-      {
-        level: "advanced",
-        question:
-          "Warmup이 긴 schedule이 조기 중단으로 사라지는 반례를 만들고 completed pilot로 pruning safety를 감사하는 절차를 설계하라.",
-        answerChecklist: [
-          "slow starter curve",
-          "same intermediate step",
-          "early/final rank relation",
-          "warmup grace",
-          "pruned cohort comparison",
-          "full-budget sample",
-          "false-prune rate",
-          "resource savings",
-          "policy version",
-        ],
-        requiredConcepts: [
-          "comparable-fidelity-resource",
-          "successive-halving-resource-allocation",
-        ],
-        sectionId: "pruning",
-      },
-      {
-        level: "advanced",
-        question:
-          "A(.20 loss,10ms,4GB), B(.22,12ms,5GB), C(.18,15ms,3GB)의 dominance를 판정하고 hard gate·noise tolerance·outer score를 포함한 선택표를 작성하라.",
-        answerChecklist: [
-          "A dominates B",
-          "A/C trade off",
-          "B removed",
-          "hard constraints first",
-          "metric direction",
-          "repeat uncertainty",
-          "practical tolerance",
-          "outer evaluation",
-          "operations chooses final",
-        ],
-        requiredConcepts: [
-          "hpo-pareto-dominance",
-          "hpo-selection-evaluation-contract",
-        ],
-        sectionId: "pruning",
-      },
+      { level: "basic", question: "Parameter와 hyperparameter를 예와 함께 구분하세요.", answerChecklist: ["weight", "training updates weight", "learning rate", "fixed before trial", "configuration", "not interchangeable"], requiredConcepts: ["hpo-selection-evaluation-contract"], sectionId: "overview" },
+      { level: "basic", question: "Configuration·trial·study를 순서대로 정의하세요.", answerChecklist: ["setting bundle", "one execution", "shared objective", "history", "resource", "revision"], requiredConcepts: ["hpo-selection-evaluation-contract"], sectionId: "overview" },
+      { level: "basic", question: "모든 trials에서 같아야 할 네 조건을 쓰세요.", answerChecklist: ["split", "metric", "training resource", "seed policy", "configuration only changes", "comparison"], requiredConcepts: ["hpo-selection-evaluation-contract"], sectionId: "selection-contract" },
+      { level: "basic", question: "Validation과 outer data의 역할을 구분하세요.", answerChecklist: ["validation selects", "outer unused", "fixed procedure", "one report", "change consumes outer", "new data"], requiredConcepts: ["hpo-selection-evaluation-contract"], sectionId: "selection-contract" },
+      { level: "basic", question: "p=.05, N=20의 hit probability를 계산하세요.", answerChecklist: ["miss .95", "power 20", "subtract from one", "about .64", "independence", "promising mass"], requiredConcepts: ["random-search-hit-probability"], sectionId: "trial-budget" },
+      { level: "basic", question: "Trial budget에 기록할 항목을 쓰세요.", answerChecklist: ["max trials", "wall clock", "per-trial resource", "failure rule", "candidate families", "stop tolerance"], requiredConcepts: ["random-search-hit-probability"], sectionId: "trial-budget" },
+      { level: "advanced", question: "Selection 식의 feasible set·argmin·outer 연산 의도를 설명하세요.", answerChecklist: ["budget filter", "same validation", "returns configuration", "outer unused", "procedure fixed", "risk report"], requiredConcepts: ["hpo-selection-evaluation-contract"], sectionId: "selection-contract" },
+      { level: "advanced", question: "Hit probability 식을 complement event에서 유도하세요.", answerChecklist: ["one miss", "independent misses", "all miss power", "complement", "at least one", "assumption"], requiredConcepts: ["random-search-hit-probability"], sectionId: "trial-budget" },
+      { level: "advanced", question: "Outer 결과를 본 뒤 space를 바꾼 경우 다음 절차를 설계하세요.", answerChecklist: ["outer consumed", "record adaptation", "new study revision", "new independent data", "freeze", "report both"], requiredConcepts: ["hpo-selection-evaluation-contract"], sectionId: "outer-evaluation" },
+      { level: "advanced", question: "공정한 tuning receipt를 설계하세요.", answerChecklist: ["split digest", "metric revision", "search space", "budget", "trial states", "selected config", "outer result", "stop rule"], requiredConcepts: ["hpo-selection-evaluation-contract", "random-search-hit-probability"], sectionId: "outer-evaluation" },
     ],
     papers: [
-      {
-        title: "Random Search for Hyper-Parameter Optimization",
-        href: "https://www.jmlr.org/papers/v13/bergstra12a.html",
-        problem:
-          "Grid·manual search가 많은 hyperparameter의 Cartesian coordinates를 반복하면서 중요한 축을 충분히 탐색하지 못하는 문제",
-        contribution:
-          "일부 hyperparameter만 dataset별 성능에 중요할 때 random search가 중요한 축에서 더 많은 서로 다른 값을 시험하는 이유를 이론·Gaussian-process 분석과 neural-network/DBN 실험으로 제시",
-        assumptions:
-          "논문의 fixed search domains·finite budgets·neural-network/DBN tasks·dataset별 response-surface 분석",
-        evidenceScope:
-          "JMLR 논문의 grid/manual/random 비교와 parameter importance 분석 범위",
-        notClaim:
-          "모든 objective·dimension·prior와 무한 budget에서 random search가 grid·sequential method보다 항상 우월하다는 theorem은 아님",
-        sectionId: "paper-random-search",
-      },
-      {
-        title:
-          "Optuna: A Next-generation Hyperparameter Optimization Framework",
-        href: "https://arxiv.org/abs/1907.10902",
-        problem:
-          "Static search-space 정의와 search/pruning/distributed experiment 관리가 복잡한 HPO software 문제",
-        contribution:
-          "Define-by-run API·search/pruning integration·lightweight부터 distributed까지 확장 가능한 architecture와 Optuna 구현",
-        assumptions:
-          "2019년 논문 version의 API·samplers/pruners·benchmark tasks·distributed architecture",
-        evidenceScope:
-          "논문의 software design criteria·implementation·reported experiments와 applications 범위",
-        notClaim:
-          "현재 Optuna default sampler나 모든 API behavior가 논문 version과 같거나 어떤 task에서도 최적이라는 뜻은 아님",
-        sectionId: "paper-optuna",
-      },
-      {
-        title: "Algorithms for Hyper-Parameter Optimization",
-        href: "https://papers.nips.cc/paper/4443-algorithms-for-hyper-parameter-optimization",
-        problem:
-          "비싸고 conditional한 high-dimensional hyperparameter objective에서 다음 configuration을 효율적으로 고르는 문제",
-        contribution:
-          "Sequential model-based optimization 안에서 TPE가 p(configuration|score)를 good/other density로 나누어 expected improvement와 연결하는 방법",
-        assumptions:
-          "논문의 density estimators·quantile rule·conditional spaces·neural-network/DBN experiments",
-        evidenceScope: "NeurIPS 2011 논문의 TPE derivation과 비교 실험 범위",
-        notClaim:
-          "간단한 l/g 직관이 현재 Optuna TPE의 모든 option을 설명하거나 global optimum 수렴을 자동 보장한다는 뜻은 아님",
-        sectionId: "paper-tpe",
-      },
-      {
-        title:
-          "Hyperband: A Novel Bandit-Based Approach to Hyperparameter Optimization",
-        href: "https://www.jmlr.org/papers/v18/16-558.html",
-        problem:
-          "어떤 configuration에 얼마나 많은 finite training resource를 배정해야 할지 사전에 알기 어려운 문제",
-        contribution:
-          "Infinite-armed bandit 관점에서 여러 bracket과 successive halving을 결합해 탐색 폭과 개별 fidelity를 적응적으로 배분",
-        assumptions:
-          "Predefined resource·paper bandit setting·evaluated deep-learning/kernel tasks·resource-to-loss trajectories",
-        evidenceScope:
-          "JMLR 논문의 theoretical analysis와 benchmark speedup 범위",
-        notClaim:
-          "초기 성능과 최종 성능이 무관한 workload나 모든 scheduler에서 같은 speedup을 보장한다는 뜻은 아님",
-        sectionId: "paper-hyperband",
-      },
-      {
-        title: "Optuna — Study API",
-        href: "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.study.Study.html",
-        problem:
-          "Optimization task·trial history·sampler·pruner·storage를 현재 library API에서 생성·재개·조회하는 문제",
-        contribution:
-          "Study abstraction과 optimize/ask/tell/trial access, sampler·pruner·storage parameter의 현재 공식 semantics 문서화",
-        assumptions:
-          "설치한 Optuna stable version·storage backend·sampler/pruner class와 documented API",
-        evidenceScope:
-          "현재 공식 문서가 명시한 Study와 related API behavior 범위",
-        notClaim:
-          "Default configuration이 reproducibility·distributed ordering·좋은 search result를 자동 보장한다는 뜻은 아님",
-        sectionId: "standard-optuna-study",
-      },
+      { title: "Random Search for Hyper-Parameter Optimization", href: "https://www.jmlr.org/papers/v13/bergstra12a.html", problem: "Grid가 중요하지 않은 axes를 반복하는 문제", contribution: "Random search가 중요한 axes에서 더 다양한 값을 보는 분석과 실험", assumptions: "논문의 fixed domains·tasks·budgets", evidenceScope: "JMLR 2012 experiments와 GP analysis", notClaim: "모든 objective에서 random이 항상 최적이라는 뜻은 아님", sectionId: "paper-random-search" },
+    ],
+  },
+  "ai/adaptive-hyperparameter-search": {
+    entryLevel: true,
+    entryNote: "History 한 행의 configuration·score·state부터 시작해 surrogate·acquisition·TPE로 진행합니다.",
+    coreIdea: "적응형 탐색은 완료·중단·실패·실행 중 trial history를 다음 configuration 제안의 입력으로 사용하는 sequential search입니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "adaptive-trial-proposal-history", role: "관측된 trials와 상태가 다음 proposal의 입력이 되는 구조를 설명합니다." },
+      { id: "tpe-density-ratio", role: "Good과 other configuration density ratio로 TPE의 선호를 읽습니다." },
+    ],
+    conceptExplanations: [
+      { id: "adaptive-trial-proposal-history", sectionId: "proposal-loop", intuition: "이전 시식 결과와 실패 이유를 보고 다음 조합을 정하되 아직 조리 중인 후보도 구분합니다.", workedExample: "40 trial rows의 configuration·score·state로 41번째 candidate를 제안합니다.", boundary: "비교 조건이 다르거나 pending 결과가 많으면 history가 왜곡됩니다." },
+      { id: "tpe-density-ratio", sectionId: "tpe", intuition: "좋은 결과에서 자주 보이지만 나머지에서는 드문 설정을 다시 시험합니다.", workedExample: "good density .30, other density .05이면 ratio 6입니다.", boundary: "높은 ratio는 관측 history 안의 preference이지 인과적 최적성 보장이 아닙니다." },
+    ],
+    conceptStages: [
+      { label: "관측", relation: "configuration·score·state를 proposal 시점 history로 보존", concepts: ["adaptive-trial-proposal-history"] },
+      { label: "제안", relation: "history로 acquisition을 계산해 feasible candidate 선택", concepts: ["adaptive-trial-proposal-history"] },
+      { label: "TPE", relation: "good/other density ratio로 proposal preference 구체화", concepts: ["tpe-density-ratio"] },
+    ],
+    exercises: [
+      { level: "basic", question: "History row의 최소 fields를 쓰세요.", answerChecklist: ["configuration", "score", "resource step", "state", "time", "worker"], requiredConcepts: ["adaptive-trial-proposal-history"], sectionId: "overview" },
+      { level: "basic", question: "Surrogate와 acquisition을 구분하세요.", answerChecklist: ["approximate observations", "candidate value", "exploit", "explore", "proposal", "sampler-specific"], requiredConcepts: ["adaptive-trial-proposal-history"], sectionId: "overview" },
+      { level: "basic", question: "COMPLETE·PRUNED·FAIL·PENDING을 구분하세요.", answerChecklist: ["final objective", "intermediate stop", "no comparable result", "running", "do not delete", "reason"], requiredConcepts: ["adaptive-trial-proposal-history"], sectionId: "parallel-boundary" },
+      { level: "basic", question: "TPE의 good과 other cohorts를 설명하세요.", answerChecklist: ["score quantile", "minimization direction", "good density", "other density", "same history", "not truth"], requiredConcepts: ["tpe-density-ratio"], sectionId: "tpe" },
+      { level: "basic", question: "l=.30, g=.05의 ratio를 계산하세요.", answerChecklist: ["divide", "six", "good common", "other rare", "preference", "not guarantee"], requiredConcepts: ["tpe-density-ratio"], sectionId: "tpe" },
+      { level: "basic", question: "Parallel proposals가 sequential history와 다른 이유를 설명하세요.", answerChecklist: ["pending", "results unavailable", "same snapshot", "duplicate risk", "worker", "record timing"], requiredConcepts: ["adaptive-trial-proposal-history"], sectionId: "parallel-boundary" },
+      { level: "advanced", question: "Proposal 식의 history·value·argmax 연산 의도를 설명하세요.", answerChecklist: ["collect evidence", "condition on history", "score candidate", "feasible filter", "maximize", "next config"], requiredConcepts: ["adaptive-trial-proposal-history"], sectionId: "proposal-loop" },
+      { level: "advanced", question: "TPE density-ratio 식의 각 연산 의도를 설명하세요.", answerChecklist: ["split by threshold", "conditional good", "conditional other", "divide", "penalize common both", "proposal"], requiredConcepts: ["tpe-density-ratio"], sectionId: "tpe" },
+      { level: "advanced", question: "FAIL을 임의의 큰 loss로 바꿀 때 생기는 문제를 분석하세요.", answerChecklist: ["failure cause", "not objective", "surrogate distortion", "feasibility", "preserve state", "separate model"], requiredConcepts: ["adaptive-trial-proposal-history"], sectionId: "parallel-boundary" },
+      { level: "advanced", question: "Adaptive sampler를 random baseline과 공정하게 비교하세요.", answerChecklist: ["same space", "same budget", "same seeds", "same parallelism", "multiple studies", "outer evaluation"], requiredConcepts: ["adaptive-trial-proposal-history", "tpe-density-ratio"], sectionId: "parallel-boundary" },
+    ],
+    papers: [
+      { title: "Optuna: A Next-generation Hyperparameter Optimization Framework", href: "https://arxiv.org/abs/1907.10902", problem: "Conditional space와 pruning을 함께 관리하기 어려운 문제", contribution: "Define-by-run API와 study architecture", assumptions: "2019 version·tasks·samplers", evidenceScope: "System design과 reported experiments", notClaim: "현재 defaults의 보편적 우월성을 뜻하지 않음", sectionId: "paper-optuna" },
+      { title: "Algorithms for Hyper-Parameter Optimization", href: "https://papers.nips.cc/paper/4443-algorithms-for-hyper-parameter-optimization", problem: "비싸고 conditional한 objective의 sequential search", contribution: "TPE good/other density formulation", assumptions: "논문의 estimators·quantile·domains", evidenceScope: "Derivation과 experiments", notClaim: "Global optimum 또는 현재 모든 TPE option을 보장하지 않음", sectionId: "paper-tpe" },
+    ],
+  },
+  "ai/search-space-design": {
+    entryLevel: true,
+    entryNote: "값의 type부터 시작해 log scale·conditional branch·resource constraint를 한 단계씩 추가합니다.",
+    coreIdea: "Search space는 parameter의 type·scale·bounds·conditional existence와 hard feasibility를 함께 정해 configuration을 생성하는 versioned 규칙입니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "log-uniform-parameter-sampling", role: "Positive parameter의 orders of magnitude에 같은 확률을 줍니다." },
+      { id: "typed-conditional-search-space", role: "Type·scale·bounds와 parent-child 존재 조건을 정의합니다." },
+      { id: "feasible-search-space-constraint", role: "Resource·compatibility hard constraint를 통과한 후보만 남깁니다." },
+    ],
+    conceptExplanations: [
+      { id: "log-uniform-parameter-sampling", sectionId: "scale", intuition: "자릿수가 같은 구간마다 같은 수의 표를 줍니다.", workedExample: "1e-5~1e-1 네 decades가 각각 25% 확률을 가집니다.", boundary: "0·음수 또는 additive scale에는 그대로 쓰지 않습니다." },
+      { id: "typed-conditional-search-space", sectionId: "conditional-space", intuition: "본체를 고른 뒤 그 본체에 존재하는 옵션만 엽니다.", workedExample: "SGD branch에서만 momentum을 생성합니다.", boundary: "없는 child를 0으로 채우면 실제 0과 의미가 중복됩니다." },
+      { id: "feasible-search-space-constraint", sectionId: "conditional-space", intuition: "경기 전에 규격을 통과할 수 없는 조합을 제외합니다.", workedExample: "예상 22GB 후보를 20GB hard limit에서 제안하지 않습니다.", boundary: "Estimator error의 실제 OOM은 FAIL evidence로 남깁니다." },
+    ],
+    conceptStages: [
+      { label: "형태", relation: "Parameter type·scale·bounds를 고정", concepts: ["log-uniform-parameter-sampling", "typed-conditional-search-space"] },
+      { label: "분기", relation: "Parent 선택에 맞는 child만 생성", concepts: ["typed-conditional-search-space"] },
+      { label: "실행", relation: "Hard constraints를 통과한 후보만 제안", concepts: ["feasible-search-space-constraint"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Type·scale·condition·constraint를 구분하세요.", answerChecklist: ["continuous/integer/category", "linear/log", "parent-child", "hard limit", "generation rule", "version"], requiredConcepts: ["typed-conditional-search-space"], sectionId: "overview" },
+      { level: "basic", question: "Learning rate에 log sampling이 자연스러운 이유를 설명하세요.", answerChecklist: ["positive", "multiplicative", "orders magnitude", "equal decades", "not guarantee", "bounds"], requiredConcepts: ["log-uniform-parameter-sampling"], sectionId: "scale" },
+      { level: "basic", question: "1e-5~1e-1의 각 decade probability를 계산하세요.", answerChecklist: ["four decades", "equal log length", "one fourth", "25 percent", "uniform log", "restore exp"], requiredConcepts: ["log-uniform-parameter-sampling"], sectionId: "scale" },
+      { level: "basic", question: "SGD와 AdamW의 conditional children을 설계하세요.", answerChecklist: ["parent optimizer", "SGD momentum", "Adam betas", "only active branch", "no dummy zero", "typed"], requiredConcepts: ["typed-conditional-search-space"], sectionId: "conditional-space" },
+      { level: "basic", question: "Feasible constraint와 FAIL을 구분하세요.", answerChecklist: ["precheck", "estimate", "hard bound", "unexpected runtime", "record fail", "do not rank"], requiredConcepts: ["feasible-search-space-constraint"], sectionId: "conditional-space" },
+      { level: "basic", question: "Boundary가 반복 선택될 때 할 일을 쓰세요.", answerChecklist: ["diagnose", "pilot", "failure distribution", "new revision", "new study", "do not mutate silently"], requiredConcepts: ["typed-conditional-search-space"], sectionId: "versioning" },
+      { level: "advanced", question: "Log-uniform 식의 uniform·affine map·exp 의도를 설명하세요.", answerChecklist: ["sample position", "log interval width", "shift lower", "log coordinate", "exp restore", "positive bounds"], requiredConcepts: ["log-uniform-parameter-sampling"], sectionId: "scale" },
+      { level: "advanced", question: "Branch·resource gates의 곱 의도를 설명하세요.", answerChecklist: ["branch indicator", "resource indicator", "binary", "multiply AND", "feasible set", "hard before objective"], requiredConcepts: ["typed-conditional-search-space", "feasible-search-space-constraint"], sectionId: "conditional-space" },
+      { level: "advanced", question: "너무 넓은 space가 fixed budget에서 불리한 이유를 분석하세요.", answerChecklist: ["probability mass", "same trials", "promising region smaller", "invalid combinations", "pilot prior", "revision"], requiredConcepts: ["log-uniform-parameter-sampling", "feasible-search-space-constraint"], sectionId: "versioning" },
+      { level: "advanced", question: "Search-space manifest를 설계하세요.", answerChecklist: ["types", "scales", "bounds", "conditions", "constraints", "units", "revision", "rationale"], requiredConcepts: ["typed-conditional-search-space", "feasible-search-space-constraint"], sectionId: "versioning" },
+    ],
+    papers: [
+      { title: "Optuna: A Next-generation Hyperparameter Optimization Framework", href: "https://arxiv.org/abs/1907.10902", problem: "Static space에서 conditional branches를 표현하기 어려운 문제", contribution: "Define-by-run search-space interface", assumptions: "논문의 Optuna version과 tasks", evidenceScope: "논문이 제시한 define-by-run architecture와 conditional-space usage 범위", notClaim: "API가 좋은 bounds를 자동 설계한다는 뜻은 아님", sectionId: "paper-optuna-space" },
+    ],
+  },
+  "ai/multi-fidelity-pruning": {
+    entryLevel: true,
+    entryNote: "Resource coordinate와 rung부터 정의한 뒤 successive halving·false-prune audit·full-budget 재평가로 진행합니다.",
+    coreIdea: "Multi-fidelity pruning은 같은 중간 resource에서 후보를 비교해 일부에 더 많은 자원을 주되, late bloomer를 잃는 비용을 별도로 감사하는 자원 배분 정책입니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "comparable-fidelity-resource", role: "Trial 사이에서 같은 학습 진척을 뜻하는 resource coordinate를 정합니다." },
+      { id: "successive-halving-resource-allocation", role: "Rung마다 후보 수를 줄이고 survivor resource를 늘립니다." },
+      { id: "pruning-false-negative-audit", role: "중단했을 late bloomer가 full budget에서는 finalist인지 감사합니다." },
+    ],
+    conceptExplanations: [
+      { id: "comparable-fidelity-resource", sectionId: "overview", intuition: "한 선수의 한 바퀴와 다른 선수의 한 걸음을 같은 단계로 부르지 않습니다.", workedExample: "Batch가 달라도 2k optimizer updates에서 같은 validation을 계산합니다.", boundary: "같은 updates도 compute·warmup이 완전히 같다는 뜻은 아닙니다." },
+      { id: "successive-halving-resource-allocation", sectionId: "successive-halving", intuition: "많은 후보를 짧게 예선하고 상위 일부만 긴 본선으로 보냅니다.", workedExample: "27@r에서 9@3r, 3@9r로 줄입니다.", boundary: "초기 순위가 최종 순위와 무관하면 좋은 후보를 버릴 수 있습니다." },
+      { id: "pruning-false-negative-audit", sectionId: "false-prune-audit", intuition: "일찍 탈락한 선수 일부를 끝까지 달리게 해 놓친 우승 후보를 셉니다.", workedExample: "중단 대상 shadow runs 20개 중 4개가 finalist이면 관측 miss rate는 20%입니다.", boundary: "Counterfactual을 관측할 cohort와 finalist 기준을 사전에 정합니다." },
+    ],
+    conceptStages: [
+      { label: "좌표", relation: "같은 resource에서 intermediate score를 비교", concepts: ["comparable-fidelity-resource"] },
+      { label: "배분", relation: "Survivor 수를 줄이고 resource를 확대", concepts: ["successive-halving-resource-allocation"] },
+      { label: "감사", relation: "절약과 false-prune 비용을 함께 측정", concepts: ["pruning-false-negative-audit"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Epoch와 comparable resource를 구분하세요.", answerChecklist: ["batch differs", "updates", "tokens", "same progress", "validation fixture", "epoch insufficient"], requiredConcepts: ["comparable-fidelity-resource"], sectionId: "overview" },
+      { level: "basic", question: "Rung와 survivor를 정의하세요.", answerChecklist: ["resource checkpoint", "same step", "rank", "policy", "advance subset", "not permanent truth"], requiredConcepts: ["successive-halving-resource-allocation"], sectionId: "overview" },
+      { level: "basic", question: "27@r, eta=3의 다음 두 rungs를 계산하세요.", answerChecklist: ["9 at 3r", "3 at 9r", "divide candidates", "multiply resource", "same rung", "budget"], requiredConcepts: ["successive-halving-resource-allocation"], sectionId: "successive-halving" },
+      { level: "basic", question: "Slow starter가 false prune되는 이유를 설명하세요.", answerChecklist: ["low early rank", "warmup", "high final rank", "policy bias", "grace period", "audit"], requiredConcepts: ["pruning-false-negative-audit"], sectionId: "false-prune-audit" },
+      { level: "basic", question: "Shadow cohort의 역할을 설명하세요.", answerChecklist: ["would prune", "continue subset", "observe counterfactual", "finalist", "miss rate", "cost"], requiredConcepts: ["pruning-false-negative-audit"], sectionId: "false-prune-audit" },
+      { level: "basic", question: "Finalists를 다시 실행하는 조건을 쓰세요.", answerChecklist: ["pruning off", "full budget", "multiple seeds", "outer data", "hard constraints", "receipt"], requiredConcepts: ["successive-halving-resource-allocation"], sectionId: "release" },
+      { level: "advanced", question: "Successive-halving 식의 나눗셈·곱셈 의도를 설명하세요.", answerChecklist: ["candidate reduction", "resource increase", "rung index", "total budget", "floor", "survivors"], requiredConcepts: ["successive-halving-resource-allocation"], sectionId: "successive-halving" },
+      { level: "advanced", question: "False-prune 식의 indicators·product·ratio 의도를 설명하세요.", answerChecklist: ["policy decision", "finalist outcome", "AND product", "count misses", "divide pruned", "rate"], requiredConcepts: ["pruning-false-negative-audit"], sectionId: "false-prune-audit" },
+      { level: "advanced", question: "Pruning policy의 family bias audit를 설계하세요.", answerChecklist: ["cohorts", "model family", "schedule", "same resource", "shadow runs", "miss rate", "uncertainty"], requiredConcepts: ["comparable-fidelity-resource", "pruning-false-negative-audit"], sectionId: "false-prune-audit" },
+      { level: "advanced", question: "Pruning release receipt를 설계하세요.", answerChecklist: ["coordinate", "rungs", "eta", "grace", "states", "saved resource", "false prune", "full rerun"], requiredConcepts: ["successive-halving-resource-allocation", "pruning-false-negative-audit"], sectionId: "release" },
+    ],
+    papers: [
+      { title: "Hyperband: A Novel Bandit-Based Approach to Hyperparameter Optimization", href: "https://www.jmlr.org/papers/v18/16-558.html", problem: "Finite training resource의 configuration별 배분 문제", contribution: "Brackets와 successive halving의 결합", assumptions: "Resource가 fidelity를 높이는 논문 setting과 tasks", evidenceScope: "Theory와 benchmark speedup", notClaim: "모든 early-to-final curve에서 같은 speedup을 보장하지 않음", sectionId: "paper-hyperband" },
+    ],
+  },
+  "ai/multi-objective-hpo": {
+    entryLevel: true,
+    entryNote: "Objective·hard constraint를 구분한 뒤 dominance·frontier·반복 안정성·최종 selection receipt로 진행합니다.",
+    coreIdea: "Multi-objective HPO는 hard constraints를 통과한 후보 중 다른 후보에 지배당하지 않은 trade-offs를 남기고, 반복 측정과 outer evaluation 뒤 정책 책임자가 하나를 선택하는 절차입니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "hpo-pareto-dominance", role: "모든 목적에서 나쁘지 않고 하나에서 더 좋은 후보 관계를 정의합니다." },
+      { id: "hpo-pareto-selection-receipt", role: "Frontier와 최종 선택·rollback 이유를 evidence로 보존합니다." },
+    ],
+    conceptExplanations: [
+      { id: "hpo-pareto-dominance", sectionId: "dominance", intuition: "모든 경기에서 나쁘지 않고 적어도 하나에서 더 좋은 후보만 상대를 탈락시킵니다.", workedExample: "A(.20,10ms,4GB)는 B(.22,12ms,5GB)를 지배하지만 C(.18,15ms,3GB)와는 trade-off입니다.", boundary: "Hard constraints와 measurement tolerance를 먼저 적용합니다." },
+      { id: "hpo-pareto-selection-receipt", sectionId: "selection-receipt", intuition: "남은 후보 중 하나를 고른 이유와 되돌아갈 후보를 영수증처럼 남깁니다.", workedExample: "100ms SLA 안에서 outer loss가 가장 낮은 C를 승인하고 A를 rollback으로 기록합니다.", boundary: "Frontier 계산은 business preference나 책임자를 대신하지 않습니다." },
+    ],
+    conceptStages: [
+      { label: "통과", relation: "Hard constraints를 통과한 candidates만 비교", concepts: ["hpo-pareto-dominance"] },
+      { label: "경계", relation: "Tolerance-aware non-dominated frontier 계산", concepts: ["hpo-pareto-dominance"] },
+      { label: "선택", relation: "반복·outer evidence와 최종 이유를 receipt로 보존", concepts: ["hpo-pareto-selection-receipt"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Objective와 hard constraint를 구분하세요.", answerChecklist: ["optimize direction", "continuous preference", "must pass", "reject", "unit", "predeclare"], requiredConcepts: ["hpo-pareto-dominance"], sectionId: "overview" },
+      { level: "basic", question: "Pareto dominance를 말로 정의하세요.", answerChecklist: ["all no worse", "one strictly better", "same directions", "feasible", "tolerance", "not weighted sum"], requiredConcepts: ["hpo-pareto-dominance"], sectionId: "dominance" },
+      { level: "basic", question: "A·B·C 예에서 지배 관계를 판정하세요.", answerChecklist: ["A dominates B", "A vs C tradeoff", "loss", "latency", "memory", "frontier"], requiredConcepts: ["hpo-pareto-dominance"], sectionId: "dominance" },
+      { level: "basic", question: "Tolerance가 필요한 이유를 설명하세요.", answerChecklist: ["measurement noise", "practical difference", "avoid unstable dominance", "per objective", "predeclare", "repeat"], requiredConcepts: ["hpo-pareto-dominance"], sectionId: "dominance" },
+      { level: "basic", question: "Dominance stability를 계산하는 자료를 쓰세요.", answerChecklist: ["repeats", "same fixture", "indicator", "count", "divide R", "uncertainty"], requiredConcepts: ["hpo-pareto-dominance"], sectionId: "uncertainty" },
+      { level: "basic", question: "Selection receipt의 최소 fields를 쓰세요.", answerChecklist: ["objectives", "directions", "constraints", "tolerances", "frontier", "winner", "reason", "rollback"], requiredConcepts: ["hpo-pareto-selection-receipt"], sectionId: "selection-receipt" },
+      { level: "advanced", question: "Dominance 식의 gates·product·sum 의도를 설명하세요.", answerChecklist: ["objective comparison", "tolerance", "all AND", "strict wins count", "at least one", "dominance"], requiredConcepts: ["hpo-pareto-dominance"], sectionId: "dominance" },
+      { level: "advanced", question: "Stability proportion 식의 indicator·sum·division 의도를 설명하세요.", answerChecklist: ["repeat event", "binary", "count", "total repeats", "proportion", "not certainty"], requiredConcepts: ["hpo-pareto-dominance"], sectionId: "uncertainty" },
+      { level: "advanced", question: "Weighted sum 하나로 합칠 때 숨는 결정을 분석하세요.", answerChecklist: ["units", "weights", "compensation", "hard constraint", "nonconvex frontier", "stakeholder"], requiredConcepts: ["hpo-pareto-dominance"], sectionId: "selection-receipt" },
+      { level: "advanced", question: "Pareto 후보의 final selection protocol을 설계하세요.", answerChecklist: ["feasible first", "repeat", "outer data", "SLA", "responsible owner", "receipt", "rollback", "monitor"], requiredConcepts: ["hpo-pareto-dominance", "hpo-pareto-selection-receipt"], sectionId: "selection-receipt" },
+    ],
+    papers: [
+      { title: "Optuna multi-objective optimization documentation", href: "https://optuna.readthedocs.io/en/stable/tutorial/20_recipes/002_multi_objective.html", problem: "여러 objective directions와 Pareto trials를 API에서 다루는 문제", contribution: "Current multi-objective study example", assumptions: "설치한 Optuna version과 objective code", evidenceScope: "공식 문서가 설명하는 multi-objective study와 Pareto-trial API usage 범위", notClaim: "Business preference나 safety constraint를 자동 결정하지 않음", sectionId: "paper-multiobjective-optuna" },
     ],
   },
   "ai/ensemble-methods": {

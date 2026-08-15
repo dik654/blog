@@ -7548,7 +7548,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Hyperparameter search–selection–evaluation contract",
     definition:
       "동일 split·metric·training resource·seed policy에서 configuration을 비교해 validation으로 하나를 선택하고, 선택에 사용하지 않은 outer data에서 그 절차를 다시 평가하는 계약입니다.",
-    canonicalHref: "/ai/hyperparameter-tuning#overview",
+    canonicalHref: "/ai/hyperparameter-tuning#selection-contract",
   },
   "random-search-hit-probability": {
     id: "random-search-hit-probability",
@@ -7557,7 +7557,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Random-search hit probability",
     definition:
       "Sampling distribution에서 promising region의 확률 질량이 p일 때 N번의 독립 trial이 그 영역을 적어도 한 번 만날 확률 1−(1−p)^N입니다.",
-    canonicalHref: "/ai/hyperparameter-tuning#overview",
+    canonicalHref: "/ai/hyperparameter-tuning#trial-budget",
   },
   "adaptive-trial-proposal-history": {
     id: "adaptive-trial-proposal-history",
@@ -7566,7 +7566,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Adaptive trial proposal history",
     definition:
       "완료·중단·실패 configuration과 관측값의 history로 surrogate 또는 acquisition rule을 갱신해 다음 configuration을 제안하는 sequential search 구조입니다.",
-    canonicalHref: "/ai/hyperparameter-tuning#optuna",
+    canonicalHref: "/ai/adaptive-hyperparameter-search#proposal-loop",
   },
   "tpe-density-ratio": {
     id: "tpe-density-ratio",
@@ -7575,7 +7575,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Tree-structured Parzen estimator density ratio",
     definition:
       "관측 score를 좋은 집합과 나머지로 나누고 configuration의 조건부 밀도 l(λ)와 g(λ)를 추정해 l/g가 큰 후보를 선호하는 TPE의 핵심 관점입니다.",
-    canonicalHref: "/ai/hyperparameter-tuning#optuna",
+    canonicalHref: "/ai/adaptive-hyperparameter-search#tpe",
   },
   "log-uniform-parameter-sampling": {
     id: "log-uniform-parameter-sampling",
@@ -7584,7 +7584,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Log-uniform parameter sampling",
     definition:
       "양의 parameter를 log 좌표에서 균등하게 뽑아 orders of magnitude마다 같은 확률을 주는 sampling distribution입니다.",
-    canonicalHref: "/ai/hyperparameter-tuning#search-space",
+    canonicalHref: "/ai/search-space-design#scale",
   },
   "typed-conditional-search-space": {
     id: "typed-conditional-search-space",
@@ -7592,7 +7592,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Typed conditional search space",
     definition:
       "각 hyperparameter의 continuous·integer·categorical type, sampling scale, bounds와 parent choice에 따른 child parameter 존재 조건을 명시한 configuration 공간입니다.",
-    canonicalHref: "/ai/hyperparameter-tuning#search-space",
+    canonicalHref: "/ai/search-space-design#conditional-space",
   },
   "feasible-search-space-constraint": {
     id: "feasible-search-space-constraint",
@@ -7600,7 +7600,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Feasible search-space constraint",
     definition:
       "Branch validity와 memory·latency·compatibility 같은 hard constraint를 만족해 실제 실행 가능한 configuration만 전체 공간에서 남기는 경계입니다.",
-    canonicalHref: "/ai/hyperparameter-tuning#search-space",
+    canonicalHref: "/ai/search-space-design#conditional-space",
   },
   "comparable-fidelity-resource": {
     id: "comparable-fidelity-resource",
@@ -7608,7 +7608,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Comparable fidelity resource",
     definition:
       "Trial 사이에서 같은 양의 학습 진척을 뜻하도록 정의한 optimizer update·processed token·sample·data fraction 같은 중간 평가 단위입니다.",
-    canonicalHref: "/ai/hyperparameter-tuning#pruning",
+    canonicalHref: "/ai/multi-fidelity-pruning#overview",
   },
   "successive-halving-resource-allocation": {
     id: "successive-halving-resource-allocation",
@@ -7617,7 +7617,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Successive-halving resource allocation",
     definition:
       "같은 fidelity에서 비교한 configuration 중 상위 일부만 유지하고 살아남은 후보의 resource를 일정 비율로 늘리는 multi-fidelity 자원 배분 방법입니다.",
-    canonicalHref: "/ai/hyperparameter-tuning#pruning",
+    canonicalHref: "/ai/multi-fidelity-pruning#successive-halving",
   },
   "hpo-pareto-dominance": {
     id: "hpo-pareto-dominance",
@@ -7626,7 +7626,24 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Hyperparameter-study Pareto dominance",
     definition:
       "Hard constraint를 통과한 두 trial에서 한 후보가 quality·latency·memory 등 모든 목적에 나쁘지 않고 적어도 하나에서 더 좋으면 다른 후보를 지배한다고 판정하는 다목적 선택 기준입니다.",
-    canonicalHref: "/ai/hyperparameter-tuning#pruning",
+    canonicalHref: "/ai/multi-objective-hpo#dominance",
+  },
+  "pruning-false-negative-audit": {
+    id: "pruning-false-negative-audit",
+    kind: "metric",
+    domain: "machine-learning",
+    label: "Pruning false-negative audit",
+    definition:
+      "Pruning policy가 중단했을 후보 중 full-budget counterfactual에서 feasible finalist가 되는 late bloomer의 비율과 cohort 분포를 측정하는 정책 감사입니다.",
+    canonicalHref: "/ai/multi-fidelity-pruning#false-prune-audit",
+  },
+  "hpo-pareto-selection-receipt": {
+    id: "hpo-pareto-selection-receipt",
+    domain: "machine-learning",
+    label: "Pareto selection receipt",
+    definition:
+      "Objective 방향·단위, hard constraints, tolerance, repetitions, frontier revision과 최종 후보·rollback 선택 이유를 묶어 보존하는 다목적 선택 기록입니다.",
+    canonicalHref: "/ai/multi-objective-hpo#selection-receipt",
   },
   "oof-error-covariance": {
     id: "oof-error-covariance",
@@ -16055,11 +16072,46 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
       "Pruned search 뒤 full-budget로 재평가한 feasible 후보들을 다목적 frontier에서 비교합니다.",
   },
   {
+    from: "successive-halving-resource-allocation",
+    to: "pruning-false-negative-audit",
+    relation: "evaluates",
+    reason:
+      "중단했을 후보의 full-budget counterfactual을 일부 관측해 late bloomer를 놓친 비율을 측정합니다.",
+  },
+  {
+    from: "comparable-fidelity-resource",
+    to: "pruning-false-negative-audit",
+    relation: "prerequisite",
+    reason:
+      "같은 resource 좌표의 중간 관측을 써야 pruning decision과 full-budget 결과를 비교할 수 있습니다.",
+  },
+  {
+    from: "pruning-false-negative-audit",
+    to: "hpo-pareto-dominance",
+    relation: "constrains",
+    reason:
+      "Slow-starter 편향을 감사한 뒤 full-budget feasible finalists로 Pareto frontier를 만듭니다.",
+  },
+  {
     from: "feasible-search-space-constraint",
     to: "hpo-pareto-dominance",
     relation: "constrains",
     reason:
       "Hard constraint를 실패한 후보는 다른 목적 이득으로 frontier에 들어오지 못하게 합니다.",
+  },
+  {
+    from: "hpo-pareto-dominance",
+    to: "hpo-pareto-selection-receipt",
+    relation: "produces",
+    reason:
+      "Non-dominated 후보들과 objective·tolerance를 최종 선택·rollback 이유와 함께 기록합니다.",
+  },
+  {
+    from: "hpo-selection-evaluation-contract",
+    to: "hpo-pareto-selection-receipt",
+    relation: "constrains",
+    reason:
+      "Pareto 후보 선택과 outer evaluation의 data 역할을 receipt에서 분리합니다.",
   },
   {
     from: "competition-evaluation-contract",

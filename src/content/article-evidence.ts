@@ -1593,31 +1593,19 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://www.jmlr.org/papers/v13/bergstra12a.html",
       note: "일부 축만 중요한 공간에서 grid보다 서로 다른 중요 값들을 더 많이 시험하는 random search 분석",
     },
-    {
-      kind: "핵심 논문",
-      label: "Optuna: A Next-generation Hyperparameter Optimization Framework",
-      href: "https://arxiv.org/abs/1907.10902",
-      note: "define-by-run search space와 pruning을 포함한 Optuna 설계",
-    },
-    {
-      kind: "핵심 논문",
-      label: "Algorithms for Hyper-Parameter Optimization",
-      href: "https://papers.nips.cc/paper/4443-algorithms-for-hyper-parameter-optimization",
-      note: "조건부 search space를 다루는 TPE의 p(configuration | score) 밀도 모델",
-    },
-    {
-      kind: "핵심 논문",
-      label:
-        "Hyperband: A Novel Bandit-Based Approach to Hyperparameter Optimization",
-      href: "https://www.jmlr.org/papers/v18/16-558.html",
-      note: "Successive halving과 여러 bracket으로 configuration별 resource를 적응적으로 배분하는 방법",
-    },
-    {
-      kind: "공식 문서",
-      label: "Optuna — Study API",
-      href: "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.study.Study.html",
-      note: "study·trial history·sampler·pruner·storage의 현재 API 계약",
-    },
+  ],
+  "ai/adaptive-hyperparameter-search": [
+    { kind: "핵심 논문", label: "Optuna: A Next-generation Hyperparameter Optimization Framework", href: "https://arxiv.org/abs/1907.10902", note: "define-by-run·study·trial·sampler·pruner·storage architecture" },
+    { kind: "핵심 논문", label: "Algorithms for Hyper-Parameter Optimization", href: "https://papers.nips.cc/paper/4443-algorithms-for-hyper-parameter-optimization", note: "TPE의 good/other configuration density model" },
+  ],
+  "ai/search-space-design": [
+    { kind: "핵심 논문", label: "Optuna: A Next-generation Hyperparameter Optimization Framework", href: "https://arxiv.org/abs/1907.10902", note: "Conditional search space를 코드에서 구성하는 define-by-run 설계" },
+  ],
+  "ai/multi-fidelity-pruning": [
+    { kind: "핵심 논문", label: "Hyperband: A Novel Bandit-Based Approach to Hyperparameter Optimization", href: "https://www.jmlr.org/papers/v18/16-558.html", note: "Successive halving과 bracket을 통한 resource allocation" },
+  ],
+  "ai/multi-objective-hpo": [
+    { kind: "공식 문서", label: "Optuna — Multi-objective optimization", href: "https://optuna.readthedocs.io/en/stable/tutorial/20_recipes/002_multi_objective.html", note: "Multiple directions와 Pareto trials의 current API example" },
   ],
   "ai/ensemble-methods": [
     {

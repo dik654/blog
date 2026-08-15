@@ -2483,57 +2483,42 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [{ kind: "primary-source", rule: "Adaptive leaderboard claim은 The Ladder의 문제 설정과 보장 범위로 제한한다." }],
   },
   "hyperparameter-tuning": {
-    title: "하이퍼파라미터 튜닝 글이 소유하는 범위",
+    title: "튜닝 계약과 trial budget 글이 소유하는 범위",
     owns: [
-      "Parameter와 hyperparameter의 구분 및 search·selection·independent evaluation 계약",
-      "Grid·random·sequential proposal의 차이와 random-search hit probability",
-      "Optuna Study·Trial·sampler·pruner·storage의 역할 및 TPE density-ratio 직관",
-      "Type·scale·conditional dependency·resource constraint를 포함한 versioned search space",
-      "Comparable fidelity·successive halving·slow-starter bias·full-budget 재평가",
-      "Multi-objective Pareto dominance와 complete/pruned/failed trial lineage",
+      "Parameter·hyperparameter와 configuration·trial·study·outer evaluation의 구분",
+      "동일 split·metric·resource·seed policy를 쓰는 selection contract",
+      "Random-search hit probability와 trial·wall-clock 종료 조건",
+      "선택이 끝난 procedure의 independent outer report",
     ],
     reuses: [
-      {
-        label: "Train·validation·test의 역할",
-        href: "/ai/train-validation-test",
-      },
-      {
-        label: "확률분포",
-        href: "/ai/math-probability-expectation-variance",
-      },
-      { label: "Random variable·expectation", href: "/ai/math-random-variables-expectation" },
-      {
-        label: "지수·로그와 orders of magnitude",
-        href: "/ai/math-exponents-logarithms",
-      },
-      { label: "배포를 모사하는 교차검증", href: "/ai/cross-validation" },
-      {
-        label: "Maximum-selection optimism",
-        href: "/ai/competition-workflow#overview",
-      },
-      {
-        label: "재현 가능한 training run",
-        href: "/ai/training-pipeline#overview",
-      },
+      { label: "Train·validation·test", href: "/ai/train-validation-test" },
+      { label: "Selection optimism", href: "/ai/model-selection-bias" },
     ],
-    evidence: [
-      {
-        kind: "primary-source",
-        rule: "Random search·TPE·Hyperband·Optuna claim은 각 원 논문의 search domain·task·resource·software version 범위로 제한한다.",
-      },
-      {
-        kind: "standard",
-        rule: "현재 Optuna Study API semantics는 stable 공식 문서와 설치 version 범위로 제한한다.",
-      },
-      {
-        kind: "standard",
-        rule: "Data/split/metric·space version·sampler/pruner/storage·trial state/resource/seed·code/environment/artifact·outer evaluation을 함께 기록한다.",
-      },
-      {
-        kind: "project-claim",
-        rule: "Hit probability·feasible set·Pareto 식은 탐색 계약을 설명하기 위한 일반 수학이며 특정 sampler의 성능 보장으로 표현하지 않는다.",
-      },
-    ],
+    evidence: [{ kind: "primary-source", rule: "Random-search claim은 논문의 domains·tasks와 확률 가정 범위로 제한한다." }],
+  },
+  "adaptive-hyperparameter-search": {
+    title: "적응형 탐색 글이 소유하는 범위",
+    owns: ["Trial history·surrogate·acquisition·proposal의 구분", "TPE good/other density ratio", "COMPLETE·PRUNED·FAIL·PENDING과 parallel proposal boundary"],
+    reuses: [{ label: "Tuning contract", href: "/ai/hyperparameter-tuning" }, { label: "Probability distribution", href: "/ai/math-probability-expectation-variance" }],
+    evidence: [{ kind: "primary-source", rule: "Optuna·TPE claim은 원 논문과 해당 API version의 설계 범위로 제한한다." }],
+  },
+  "search-space-design": {
+    title: "Search space 설계 글이 소유하는 범위",
+    owns: ["Parameter type·scale·bounds", "Log-uniform sampling", "Conditional branch와 feasible resource constraint", "Search-space revision 경계"],
+    reuses: [{ label: "Logarithm", href: "/ai/math-exponents-logarithms" }, { label: "Trial budget", href: "/ai/hyperparameter-tuning#trial-budget" }],
+    evidence: [{ kind: "primary-source", rule: "Define-by-run은 conditional-space 표현 근거이며 좋은 bounds의 자동 보장으로 표현하지 않는다." }],
+  },
+  "multi-fidelity-pruning": {
+    title: "Multi-fidelity pruning 글이 소유하는 범위",
+    owns: ["Comparable resource coordinate와 rung", "Successive-halving candidate/resource schedule", "False-prune late-bloomer audit", "Full-budget 재평가와 pruning receipt"],
+    reuses: [{ label: "Tuning contract", href: "/ai/hyperparameter-tuning" }, { label: "Trial history", href: "/ai/adaptive-hyperparameter-search" }],
+    evidence: [{ kind: "primary-source", rule: "Hyperband speedup은 논문의 fidelity 구조·tasks·resource 전제 범위로 제한한다." }],
+  },
+  "multi-objective-hpo": {
+    title: "Multi-objective HPO 글이 소유하는 범위",
+    owns: ["Objective와 hard constraint의 분리", "Tolerance-aware Pareto dominance", "Repeated-measurement frontier stability", "최종 configuration·rollback selection receipt"],
+    reuses: [{ label: "Feasible search space", href: "/ai/search-space-design#conditional-space" }, { label: "Outer evaluation", href: "/ai/hyperparameter-tuning#outer-evaluation" }],
+    evidence: [{ kind: "standard", rule: "Optuna API는 frontier 계산 도구이며 business preference·안전 constraint의 자동 결정으로 표현하지 않는다." }],
   },
   "ensemble-methods": {
     title: "앙상블 글이 소유하는 범위",
