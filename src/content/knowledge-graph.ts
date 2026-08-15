@@ -7708,6 +7708,15 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "관측값을 바로 전역 평균하지 않고 query·환자·고객 같은 decision unit 안에서 먼저 집계한 뒤 unit·slice·global 순서와 weight를 고정해 평균내는 방법입니다.",
     canonicalHref: "/ai/evaluation-metrics#overview",
   },
+  "regression-residual-penalty": {
+    id: "regression-residual-penalty",
+    kind: "method",
+    domain: "statistics",
+    label: "Regression residual · penalty",
+    definition:
+      "실제값에서 point prediction을 뺀 signed residual과, 그 residual에 absolute·squared 같은 비용 곡선을 적용한 penalty를 구분하는 회귀 평가 형태입니다.",
+    canonicalHref: "/ai/regression-metrics#residual-penalty",
+  },
   "absolute-squared-risk-bayes-act": {
     id: "absolute-squared-risk-bayes-act",
     kind: "theorem",
@@ -7715,7 +7724,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Absolute–squared risk Bayes acts",
     definition:
       "조건부 squared-error risk를 최소화하는 point prediction은 조건부 평균이고, absolute-error risk를 최소화하는 point prediction은 조건부 중앙값이라는 결과입니다.",
-    canonicalHref: "/ai/evaluation-metrics#regression",
+    canonicalHref: "/ai/regression-metrics#bayes-act",
   },
   "prediction-interval-coverage-width": {
     id: "prediction-interval-coverage-width",
@@ -7724,7 +7733,16 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Prediction-interval coverage · width",
     definition:
       "예측 구간이 실제 outcome을 포함한 비율과 같은 target 단위의 평균 구간 폭을 분리해, 포함률만 높이는 지나치게 넓은 구간을 구분하는 평가 쌍입니다.",
-    canonicalHref: "/ai/evaluation-metrics#regression",
+    canonicalHref: "/ai/regression-metrics#interval",
+  },
+  "classification-evaluation-layer-separation": {
+    id: "classification-evaluation-layer-separation",
+    kind: "method",
+    domain: "statistics",
+    label: "Classification ranking · probability · action layers",
+    definition:
+      "같은 classifier output을 score ordering, probability semantics, threshold 뒤의 hard action이라는 세 층으로 나누어 서로 다른 metric으로 평가하는 계약입니다.",
+    canonicalHref: "/ai/classification-metrics#overview",
   },
   "strictly-proper-probability-score": {
     id: "strictly-proper-probability-score",
@@ -7733,7 +7751,25 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Strictly proper probability score",
     definition:
       "실제 조건부 outcome distribution을 그대로 보고할 때만 expected score가 유일하게 최적이 되어 probability forecast를 과장하거나 축소할 유인을 만들지 않는 scoring-rule 성질입니다.",
-    canonicalHref: "/ai/evaluation-metrics#classification",
+    canonicalHref: "/ai/classification-metrics#proper-score",
+  },
+  "threshold-expected-decision-cost": {
+    id: "threshold-expected-decision-cost",
+    kind: "metric",
+    domain: "statistics",
+    label: "Threshold expected decision cost",
+    definition:
+      "Probability를 threshold와 비교해 hard action을 만든 뒤 false-negative·false-positive 등 outcome별 비용을 곱해 decision unit당 평균하는 operating-point metric입니다.",
+    canonicalHref: "/ai/classification-metrics#threshold",
+  },
+  "ranked-list-evaluation-unit": {
+    id: "ranked-list-evaluation-unit",
+    kind: "method",
+    domain: "statistics",
+    label: "Ranked-list evaluation unit",
+    definition:
+      "Query 하나, candidate items의 순서, relevance labels와 관찰 깊이 k를 하나의 독립 평가 단위로 고정한 뒤 query-level metric을 먼저 계산하는 계약입니다.",
+    canonicalHref: "/ai/ranking-metrics#overview",
   },
   "ndcg-graded-discount": {
     id: "ndcg-graded-discount",
@@ -7742,7 +7778,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "NDCG graded relevance · rank discount",
     definition:
       "Rank별 graded relevance gain에 position discount를 적용한 DCG를 같은 judged set의 ideal DCG로 나누어 상단의 높은 relevance를 보상하는 query-level ranking metric입니다.",
-    canonicalHref: "/ai/evaluation-metrics#ranking",
+    canonicalHref: "/ai/ranking-metrics#ndcg",
   },
   "query-macro-traffic-reducer": {
     id: "query-macro-traffic-reducer",
@@ -7751,7 +7787,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Query-macro · traffic-weighted reducer",
     definition:
       "고유 query마다 같은 weight를 주는 macro 평균과 실제 query 발생량을 weight로 주는 traffic 평균을 구분해 query 종류와 사용자 요청 traffic이라는 서로 다른 population을 평가하는 집계 규칙입니다.",
-    canonicalHref: "/ai/evaluation-metrics#ranking",
+    canonicalHref: "/ai/ranking-metrics#query-population",
   },
   "incomplete-relevance-judgment": {
     id: "incomplete-relevance-judgment",
@@ -7759,7 +7795,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Incomplete relevance judgment",
     definition:
       "검색 candidate 중 일부만 relevance 평가를 받아 unjudged item을 negative로 간주할 때 새로운 relevant item을 찾은 system이 부당하게 감점될 수 있는 ranking-evaluation 정보 결손입니다.",
-    canonicalHref: "/ai/evaluation-metrics#ranking",
+    canonicalHref: "/ai/ranking-metrics#judgment-boundary",
   },
   "surrogate-selection-policy-boundary": {
     id: "surrogate-selection-policy-boundary",
@@ -7767,7 +7803,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Surrogate–selection–policy boundary",
     definition:
       "Training data로 differentiable surrogate와 model parameters를 학습하고 validation·OOF prediction으로 configuration과 decision policy를 고른 뒤 untouched outer data에서 완성된 procedure를 평가하는 정보 경계입니다.",
-    canonicalHref: "/ai/evaluation-metrics#optimization",
+    canonicalHref: "/ai/metric-selection-protocol#information-boundary",
   },
   "metric-guardrail-feasible-selection": {
     id: "metric-guardrail-feasible-selection",
@@ -7776,7 +7812,15 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Metric-guardrail feasible selection",
     definition:
       "Worst-slice error·coverage·latency 같은 hard guardrail을 모두 통과한 candidate 집합을 먼저 만든 뒤 그 안에서 primary metric을 최적화하는 model-selection 방법입니다.",
-    canonicalHref: "/ai/evaluation-metrics#optimization",
+    canonicalHref: "/ai/metric-selection-protocol#guardrails",
+  },
+  "metric-selection-receipt": {
+    id: "metric-selection-receipt",
+    domain: "machine-learning",
+    label: "Metric-selection receipt",
+    definition:
+      "Train·validation·outer data revisions, candidate lineage, metric reducer·slice·policy와 guardrail·rollback rule을 묶어 선택 과정을 재현하는 evidence artifact입니다.",
+    canonicalHref: "/ai/metric-selection-protocol#receipt",
   },
   "experiment-spec-attempt-identity": {
     id: "experiment-spec-attempt-identity",
@@ -15667,6 +15711,20 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
       "의사결정 unit과 배포 weight가 관측·unit·slice의 집계 순서를 정합니다.",
   },
   {
+    from: "decision-cost-metric-contract",
+    to: "regression-residual-penalty",
+    relation: "constrains",
+    reason:
+      "실제 outcome cost가 residual에 absolute·squared 등 어떤 penalty를 적용할지 정합니다.",
+  },
+  {
+    from: "regression-residual-penalty",
+    to: "absolute-squared-risk-bayes-act",
+    relation: "produces",
+    reason:
+      "Residual에 선택한 penalty를 population에서 평균하면 서로 다른 Bayes point target이 생깁니다.",
+  },
+  {
     from: "expectation",
     to: "absolute-squared-risk-bayes-act",
     relation: "prerequisite",
@@ -15688,6 +15746,41 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
       "실제 조건부 positive probability와 model이 보고한 probability의 expected loss를 비교합니다.",
   },
   {
+    from: "decision-cost-metric-contract",
+    to: "classification-evaluation-layer-separation",
+    relation: "constrains",
+    reason:
+      "배포 decision을 평가하려면 score ordering·probability report·threshold action을 별도 층으로 고정합니다.",
+  },
+  {
+    from: "ranking-decision-calibration",
+    to: "classification-evaluation-layer-separation",
+    relation: "prerequisite",
+    reason:
+      "Ordering·calibration·decision이라는 기존 구분을 classifier evaluation report의 세 층으로 사용합니다.",
+  },
+  {
+    from: "classification-evaluation-layer-separation",
+    to: "strictly-proper-probability-score",
+    relation: "constrains",
+    reason:
+      "Probability layer에서는 hard action metric 대신 정직한 probability report를 보상하는 score를 사용합니다.",
+  },
+  {
+    from: "classification-evaluation-layer-separation",
+    to: "threshold-expected-decision-cost",
+    relation: "produces",
+    reason:
+      "Probability layer의 output에 operating threshold를 적용해 action layer의 비용을 계산합니다.",
+  },
+  {
+    from: "strictly-proper-probability-score",
+    to: "threshold-expected-decision-cost",
+    relation: "prerequisite",
+    reason:
+      "Probability semantics를 별도로 검증한 뒤 그 probability에 threshold policy를 적용합니다.",
+  },
+  {
     from: "probability-calibration",
     to: "strictly-proper-probability-score",
     relation: "evaluates",
@@ -15707,6 +15800,27 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "extends",
     reason:
       "여러 relevant documents의 coverage에서 graded relevance와 rank position 품질로 확장합니다.",
+  },
+  {
+    from: "decision-cost-metric-contract",
+    to: "ranked-list-evaluation-unit",
+    relation: "constrains",
+    reason:
+      "검색·추천에서는 query와 ranked list를 한 decision unit으로 고정한 뒤 metric을 계산합니다.",
+  },
+  {
+    from: "ranked-list-evaluation-unit",
+    to: "ndcg-graded-discount",
+    relation: "prerequisite",
+    reason:
+      "Query·candidate order·relevance labels·depth k가 고정되어야 DCG와 NDCG를 계산할 수 있습니다.",
+  },
+  {
+    from: "ranked-list-evaluation-unit",
+    to: "incomplete-relevance-judgment",
+    relation: "constrains",
+    reason:
+      "한 query의 candidate 목록에서 relevance가 판정되지 않은 items를 별도 상태로 보존합니다.",
   },
   {
     from: "hierarchical-metric-reducer",
@@ -15742,6 +15856,20 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "produces",
     reason:
       "Validation prediction에서 primary metric과 hard guardrail을 계산해 feasible candidates를 선택합니다.",
+  },
+  {
+    from: "surrogate-selection-policy-boundary",
+    to: "metric-selection-receipt",
+    relation: "produces",
+    reason:
+      "Fit·configuration·policy·outer evaluation의 data revisions와 선택 결과를 하나의 receipt로 남깁니다.",
+  },
+  {
+    from: "metric-guardrail-feasible-selection",
+    to: "metric-selection-receipt",
+    relation: "produces",
+    reason:
+      "Guardrail bounds·feasible candidates·primary winner와 reject/rollback rule을 receipt에 기록합니다.",
   },
   {
     from: "hpo-selection-evaluation-contract",

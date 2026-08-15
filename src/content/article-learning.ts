@@ -21277,478 +21277,450 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/evaluation-metrics": {
+    entryLevel: true,
+    entryNote:
+      "Metric 이름을 안다고 가정하지 않습니다. Prediction 한 건을 action으로 바꾸고 outcome cost를 붙인 뒤, 반복 관측을 decision unit과 slice 순서로 줄이는 형태부터 시작합니다.",
     coreIdea:
-      "평가 지표는 model 이름별 점수를 나열하는 도구가 아니라 배포 decision unit·prediction-to-action policy·오류 비용·reducer를 고정한 뒤, 회귀의 residual risk, 분류의 ranking/probability/decision, 검색의 graded relevance와 query population을 각각 맞는 metric으로 측정하고 surrogate 학습·validation 선택·운영 policy·outer test의 정보 경계를 지키는 계약입니다.",
-    assumedKnowledge: [
-      {
-        id: "expectation",
-        role: "배포 population에서 action별 오류 비용과 conditional regression risk의 평균을 읽습니다.",
-      },
-      {
-        id: "conditional-probability",
-        role: "Binary outcome의 실제 positive probability와 model report를 비교합니다.",
-      },
-      {
-        id: "train-validation-test",
-        role: "Parameter 학습·configuration/policy 선택·마지막 evaluation data를 분리합니다.",
-      },
-      {
-        id: "ranking-decision-calibration",
-        role: "Classification score ordering·probability 의미·threshold action을 서로 다른 평가 층으로 가져옵니다.",
-      },
-      {
-        id: "probability-calibration",
-        role: "예측 probability와 empirical frequency의 일치를 reliability 관점에서 연결합니다.",
-      },
-      {
-        id: "multipositive-retrieval-metrics",
-        role: "한 query의 여러 relevant documents와 Recall@k·NDCG@k의 역할을 가져옵니다.",
-      },
-      {
-        id: "hpo-selection-evaluation-contract",
-        role: "Validation metric으로 고른 candidate를 사용하지 않은 outer data에서 평가합니다.",
-      },
-    ],
+      "평가의 출발점은 점수 이름이 아니라 decision unit·prediction·action·error cost이며, 관측을 바로 평균하지 않고 unit→slice→global 순서로 집계해야 목표 population의 risk를 읽을 수 있습니다.",
+    assumedKnowledge: [],
     introducedHere: [
       {
         id: "decision-cost-metric-contract",
-        role: "Decision unit·action·outcome cost·evaluation weight로 offline metric의 목표를 정의합니다.",
+        role: "Decision unit·prediction·action·outcome cost를 한 평가 질문으로 묶습니다.",
       },
       {
         id: "hierarchical-metric-reducer",
-        role: "관측·unit·slice·global의 집계 순서와 weight를 고정합니다.",
-      },
-      {
-        id: "absolute-squared-risk-bayes-act",
-        role: "Absolute·squared loss가 각각 조건부 중앙값·평균을 목표로 하는 이유를 설명합니다.",
-      },
-      {
-        id: "prediction-interval-coverage-width",
-        role: "Prediction interval의 포함률과 폭을 서로 다른 평가 축으로 측정합니다.",
-      },
-      {
-        id: "strictly-proper-probability-score",
-        role: "Probability forecast가 실제 conditional probability를 정직하게 보고하도록 만드는 scoring-rule 성질을 증명합니다.",
-      },
-      {
-        id: "ndcg-graded-discount",
-        role: "Graded relevance gain과 rank discount를 query별 ideal ordering으로 정규화합니다.",
-      },
-      {
-        id: "query-macro-traffic-reducer",
-        role: "고유 query 종류와 실제 query traffic이라는 두 population 평균을 구분합니다.",
-      },
-      {
-        id: "incomplete-relevance-judgment",
-        role: "Unjudged document를 negative로 처리할 때 생기는 ranking metric bias를 진단합니다.",
-      },
-      {
-        id: "surrogate-selection-policy-boundary",
-        role: "Training surrogate·validation selection·운영 policy·outer report의 data 역할을 분리합니다.",
-      },
-      {
-        id: "metric-guardrail-feasible-selection",
-        role: "Hard guardrail을 통과한 candidate 안에서만 primary metric을 최적화합니다.",
+        role: "Observation을 unit 안에서 먼저 줄이고 slice와 global로 집계합니다.",
       },
     ],
     conceptExplanations: [
       {
         id: "decision-cost-metric-contract",
-        sectionId: "overview",
+        sectionId: "action-cost",
         intuition:
-          "시험 점수부터 고르는 대신 실제로 어떤 결정을 내리고 틀렸을 때 누가 어떤 손해를 보는지 먼저 적는 일입니다.",
+          "시험 점수부터 고르는 대신 어떤 결정을 내리고 틀렸을 때 누가 어떤 손해를 보는지 먼저 적습니다.",
         workedExample:
-          "연체 심사에서 probability를 threshold로 대기열 action으로 바꾸고 false negative 비용을 false positive의 20배로 두어 expected cost를 계산합니다.",
+          "연체 probability .73을 threshold .70으로 review action에 연결하고 false negative 비용을 false positive의 20배로 둡니다.",
         boundary:
-          "오류 비용을 모르거나 evaluation population이 배포와 다르면 offline metric은 실제 business outcome의 보장이 아니라 제한된 proxy입니다.",
+          "비용 또는 배포 population을 모르면 offline metric은 business outcome의 보장이 아니라 제한된 proxy입니다.",
       },
       {
         id: "hierarchical-metric-reducer",
-        sectionId: "overview",
+        sectionId: "reducer",
         intuition:
-          "한 사람이 사진을 천 장 냈다고 다른 사람보다 천 배 큰 표를 주지 않고 먼저 사람별 점수를 만든 뒤 평균냅니다.",
+          "한 환자가 사진을 천 장 냈다고 다른 환자보다 천 배 큰 표를 주지 않고 먼저 환자별 점수를 만듭니다.",
         workedExample:
-          "환자 A의 영상 100개와 B의 영상 1개를 각각 환자별 mean loss로 줄인 뒤 두 환자 loss를 1:1로 평균합니다.",
+          "환자 A의 100개 loss가 1이고 B·C의 한 개 loss가 0이면 row 평균은 .98, patient macro는 .33입니다.",
         boundary:
-          "실제 traffic 경험을 추정하려면 occurrence weight가 맞을 수 있으므로 macro가 언제나 옳다는 뜻은 아니며 목표 population을 명시해야 합니다.",
-      },
-      {
-        id: "absolute-squared-risk-bayes-act",
-        sectionId: "regression",
-        intuition:
-          "제곱 비용은 먼 값이 평균을 강하게 끌어당기고 절댓값 비용은 예측값 양쪽의 사례 수가 균형인 지점에서 멈춥니다.",
-        workedExample:
-          "Y가 0일 확률 .9, 100일 확률 .1이면 squared-risk minimizer는 평균 10이고 absolute-risk minimizer는 중앙값 0입니다.",
-        boundary:
-          "Population conditional minimizer에 대한 결과이며 finite evaluation set에서 항상 한 metric의 model 순위가 다른 metric보다 낫다는 뜻은 아닙니다.",
-        proofIdea:
-          "Squared risk를 a로 미분하면 2(a−E[Y|x])가 되어 조건부 평균에서 0입니다. Absolute risk의 subgradient는 a 왼쪽 probability에서 오른쪽 probability를 뺀 값이므로 mass가 절반씩 나뉘는 중앙값에서 0을 포함합니다.",
-        counterexample:
-          "조건부 분포가 평균과 중앙값이 같은 대칭 분포라면 두 loss가 서로 다른 point target을 만든다는 차이는 사라지지만 큰 residual의 finite penalty는 여전히 다릅니다.",
-      },
-      {
-        id: "prediction-interval-coverage-width",
-        sectionId: "regression",
-        intuition:
-          "정답을 빠뜨리지 않으려고 모든 숫자를 덮는 구간을 내면 포함률은 높지만 예측으로 쓸 정보가 없습니다.",
-        workedExample:
-          "Nominal 90% interval 후보 A와 B가 각각 empirical coverage .91이라면 target 단위 평균 폭이 12인 A와 30인 B를 분리해 비교합니다.",
-        boundary:
-          "전체 empirical coverage는 subgroup·horizon별 conditional coverage나 distribution shift 이후의 coverage를 보장하지 않습니다.",
-      },
-      {
-        id: "strictly-proper-probability-score",
-        sectionId: "classification",
-        intuition:
-          "비가 올 확률을 실제로 70%라고 믿는 예보자가 90%라고 과장해 장기 평균 점수를 더 얻을 수 없게 만든 채점법입니다.",
-        workedExample:
-          "실제 p=.7인데 q=.9를 보고하면 Brier expected-loss regret는 (.9−.7)²=.04이고 q=.7에서만 0입니다.",
-        boundary:
-          "Scoring rule의 population 성질이며 model capacity·finite sample·calibration split·distribution shift 문제를 자동으로 해결하지 않습니다.",
-        proofIdea:
-          "Y가 Bernoulli(p)일 때 E[(Y−q)²]=p(1−q)²+(1−p)q²로 전개하고 q=p의 값을 빼면 교차항이 상쇄되어 (q−p)²만 남습니다.",
-        counterexample:
-          "Accuracy처럼 q를 threshold 뒤의 0/1 decision으로만 채점하면 p=.51과 p=.99를 모두 1로 보고해도 같은 점수를 받아 정직한 probability report가 유일한 최적이 아닙니다.",
-      },
-      {
-        id: "ndcg-graded-discount",
-        sectionId: "ranking",
-        intuition:
-          "매우 유용한 문서를 위에 놓을수록 큰 점수를 주되 같은 정답 목록에서 가능한 최고 순서와 비교해 query별 0에서 1 사이로 맞춥니다.",
-        workedExample:
-          "Relevance 3 문서를 rank 1에 두면 gain 7을 온전히 얻지만 rank 3에서는 log2(4)=2로 나뉘어 3.5만 기여합니다.",
-        boundary:
-          "Gain mapping·discount·k는 사용자 행동의 가정이고 diversity·freshness·latency를 측정하지 않으며 IDCG=0 query 처리 규칙이 필요합니다.",
-      },
-      {
-        id: "query-macro-traffic-reducer",
-        sectionId: "ranking",
-        intuition:
-          "검색어 종류마다 한 표를 줄지 실제로 입력된 횟수만큼 표를 줄지 선택하는 서로 다른 평균입니다.",
-        workedExample:
-          "NDCG가 1인 query A가 99회, NDCG가 0인 B가 1회 발생하면 macro는 .5이고 traffic-weighted 평균은 .99입니다.",
-        boundary:
-          "Macro는 tail query를, traffic 평균은 head query를 상대적으로 강조하므로 candidate 결과를 본 뒤 유리한 reducer를 고르면 안 됩니다.",
-      },
-      {
-        id: "incomplete-relevance-judgment",
-        sectionId: "ranking",
-        intuition:
-          "채점자가 확인하지 않은 새 답안을 오답으로 처리하면 기존 답안만 되풀이하는 참가자가 유리해질 수 있습니다.",
-        workedExample:
-          "Top 10 중 6개만 judged이고 나머지 4개에 실제 relevant 문서가 있어도 unjudged=negative 규칙에서는 해당 gain이 모두 0이 됩니다.",
-        boundary:
-          "Unjudged rate 보고만으로 진짜 relevance를 알 수 없으며 pooling 확대·추가 judging·robust metric 등 평가 설계가 필요합니다.",
-      },
-      {
-        id: "surrogate-selection-policy-boundary",
-        sectionId: "optimization",
-        intuition:
-          "문제집으로 model weight를 배우고 모의고사로 설정과 threshold를 고른 뒤 마지막 시험에서는 더 이상 설정을 바꾸지 않습니다.",
-        workedExample:
-          "Training cross-entropy로 weights를 학습하고 OOF expected cost로 configuration과 threshold를 선택한 뒤 untouched site의 test cost를 보고합니다.",
-        boundary:
-          "Validation을 반복해 고른 모든 preprocessing·checkpoint·calibrator·threshold는 하나의 adaptive selection procedure이며 test를 본 뒤 바꾸면 새 outer data가 필요합니다.",
-      },
-      {
-        id: "metric-guardrail-feasible-selection",
-        sectionId: "optimization",
-        intuition:
-          "안전 규격을 통과하지 못한 자동차는 연비 순위표에 올리지 않고 규격을 통과한 후보끼리만 효율을 비교합니다.",
-        workedExample:
-          "Worst-language recall≥.80, p95≤100ms를 모두 만족하는 checkpoints만 남기고 그 안에서 macro error가 가장 낮은 후보를 선택합니다.",
-        boundary:
-          "Noisy metric의 tolerance·sample minimum과 infeasible일 때의 reject 규칙이 필요하며 결과를 본 뒤 bound를 완화하면 guardrail 의미가 사라집니다.",
+          "실제 traffic 경험을 추정할 때는 occurrence weight가 맞을 수 있으므로 목표 population을 먼저 명시합니다.",
       },
     ],
     conceptStages: [
       {
-        label: "Decision contract",
-        relation:
-          "배포 unit·action·error cost를 정의하고 관측에서 slice까지 reducer를 고정",
+        label: "00 Decision",
+        relation: "Prediction을 action으로 바꾸고 outcome별 cost를 붙입니다.",
+        concepts: ["decision-cost-metric-contract"],
+      },
+      {
+        label: "01 Aggregate",
+        relation: "Observation을 unit·slice·global 순서로 줄입니다.",
         concepts: [
-          "expectation",
           "decision-cost-metric-contract",
           "hierarchical-metric-reducer",
-        ],
-      },
-      {
-        label: "Numeric prediction",
-        relation:
-          "Residual penalty가 목표 중심값을 바꾸고 interval은 coverage와 width로 분리",
-        concepts: [
-          "absolute-squared-risk-bayes-act",
-          "prediction-interval-coverage-width",
-        ],
-      },
-      {
-        label: "Classification",
-        relation:
-          "Ordering·probability·hard decision을 분리하고 정직한 probability score를 사용",
-        concepts: [
-          "ranking-decision-calibration",
-          "probability-calibration",
-          "strictly-proper-probability-score",
-        ],
-      },
-      {
-        label: "Search and recommendation",
-        relation:
-          "Graded relevance·position·query population·judgment coverage를 함께 평가",
-        concepts: [
-          "multipositive-retrieval-metrics",
-          "ndcg-graded-discount",
-          "query-macro-traffic-reducer",
-          "incomplete-relevance-judgment",
-        ],
-      },
-      {
-        label: "Selection boundary",
-        relation:
-          "Surrogate fitting과 policy selection을 분리하고 hard guardrail 뒤 primary metric을 비교",
-        concepts: [
-          "train-validation-test",
-          "surrogate-selection-policy-boundary",
-          "metric-guardrail-feasible-selection",
-          "hpo-selection-evaluation-contract",
         ],
       },
     ],
     exercises: [
       {
         level: "basic",
-        question:
-          "질병 alert 문제에서 decision unit·prediction·action·false-positive/false-negative cost·evaluation weight를 포함한 metric contract를 작성하라.",
-        answerChecklist: [
-          "patient or encounter unit",
-          "probability prediction",
-          "threshold action",
-          "FP/FN outcomes",
-          "cost ratio",
-          "deployment population",
-          "weight/reducer",
-          "proxy caveat",
-        ],
+        question: "연체 심사에서 prediction과 action을 각각 한 문장으로 정의하세요.",
+        answerChecklist: ["probability score", "threshold policy", "review or approve", "not the same object"],
         requiredConcepts: ["decision-cost-metric-contract"],
         sectionId: "overview",
       },
       {
         level: "basic",
-        question:
-          "환자 A의 100개 영상 loss가 모두 1이고 B의 10개·C의 1개 영상 loss가 모두 0일 때 row 평균과 patient macro 평균을 계산하고 두 값이 답하는 질문을 구분하라.",
-        answerChecklist: [
-          "row 평균 100/111≈.901",
-          "환자별 평균은 1,0,0",
-          "patient macro 1/3≈.333",
-          "within-patient reduce",
-          "row-volume weighting",
-          "independent unit count",
-          "predeclared reducer",
-        ],
-        requiredConcepts: ["hierarchical-metric-reducer"],
+        question: "환자·query·주문 예에서 decision unit이 dataset row와 다를 수 있는 이유를 설명하세요.",
+        answerChecklist: ["one business decision", "repeated observations", "identity grouping", "row count differs"],
+        requiredConcepts: ["decision-cost-metric-contract"],
         sectionId: "overview",
       },
       {
         level: "basic",
-        question:
-          "Residual [1,1,1,9]의 MAE와 RMSE를 계산하고 큰 오류 비용이 선형인지 제곱인지에 따라 어떤 metric이 맞는지 설명하라.",
-        answerChecklist: [
-          "MAE 3",
-          "MSE 21",
-          "RMSE about 4.58",
-          "same target unit",
-          "quadratic emphasis",
-          "cost assumption",
-        ],
-        requiredConcepts: ["absolute-squared-risk-bayes-act"],
-        sectionId: "regression",
-      },
-      {
-        level: "advanced",
-        question:
-          "Y=0 with .9, Y=100 with .1인 조건부 분포에서 L1·L2 Bayes act를 구하고 derivative/subgradient proof idea와 대칭분포 반례를 설명하라.",
-        answerChecklist: [
-          "mean 10",
-          "median 0",
-          "squared derivative",
-          "absolute left/right mass",
-          "finite vs population",
-          "symmetric mean median",
-          "moment assumption",
-        ],
-        requiredConcepts: ["absolute-squared-risk-bayes-act"],
-        sectionId: "regression",
+        question: "False negative 비용 20, false positive 비용 1인 classification metric contract를 작성하세요.",
+        answerChecklist: ["prediction", "threshold action", "FN outcome", "FP outcome", "cost ratio", "population"],
+        requiredConcepts: ["decision-cost-metric-contract"],
+        sectionId: "action-cost",
       },
       {
         level: "basic",
-        question:
-          "90% prediction interval 후보 A(.91 coverage, width 12)와 B(.94, width 30)를 coverage guardrail과 width로 비교하라.",
-        answerChecklist: [
-          "both pass .90",
-          "A narrower",
-          "coverage sampling uncertainty",
-          "subgroup coverage",
-          "same units",
-          "no universal winner without policy",
-        ],
-        requiredConcepts: ["prediction-interval-coverage-width"],
-        sectionId: "regression",
-      },
-      {
-        level: "advanced",
-        question:
-          "Binary Brier loss의 expected regret가 (q−p)^2임을 전개하고 accuracy가 strictly proper하지 않은 반례를 작성하라.",
-        answerChecklist: [
-          "Bernoulli expectation",
-          "expand terms",
-          "subtract at q=p",
-          "nonnegative square",
-          "unique minimum",
-          "threshold accuracy",
-          "p .51 vs .99 same action",
-          "finite-sample caveat",
-        ],
-        requiredConcepts: ["strictly-proper-probability-score"],
-        sectionId: "classification",
+        question: "Evaluation distribution과 deployment distribution이 다를 때 score를 그대로 business risk로 부르면 안 되는 이유를 설명하세요.",
+        answerChecklist: ["different population", "proxy only", "slice or weight", "shift caveat"],
+        requiredConcepts: ["decision-cost-metric-contract"],
+        sectionId: "action-cost",
       },
       {
         level: "basic",
-        question:
-          "Classification report를 ranking·probability·decision 세 층으로 나누고 각 층에 metric과 답하는 질문을 하나씩 배치하라.",
-        answerChecklist: [
-          "AUC ordering",
-          "Brier or log loss probability",
-          "precision/recall/cost threshold",
-          "prevalence",
-          "not interchangeable",
-          "threshold selected on validation",
-        ],
-        requiredConcepts: [
-          "ranking-decision-calibration",
-          "strictly-proper-probability-score",
-        ],
-        sectionId: "classification",
+        question: "환자 A의 100개 loss가 1이고 B·C의 한 개 loss가 0일 때 row 평균과 patient macro를 계산하세요.",
+        answerChecklist: ["100/102", "about .98", "(1+0+0)/3", "about .33", "different estimands"],
+        requiredConcepts: ["hierarchical-metric-reducer"],
+        sectionId: "reducer",
       },
       {
         level: "basic",
-        question:
-          "Relevance [3,0,2]인 rank 1–3 결과의 DCG@3을 계산하고 IDCG ordering을 작성하라.",
-        answerChecklist: [
-          "gain 7,0,3",
-          "discount 1, log2 3, 2",
-          "DCG 8.5",
-          "ideal [3,2,0]",
-          "normalize by IDCG",
-          "gain mapping assumption",
-        ],
-        requiredConcepts: ["ndcg-graded-discount"],
-        sectionId: "ranking",
+        question: "Observation→unit→slice→global reducer의 순서를 설명하세요.",
+        answerChecklist: ["within-unit reduce", "unit average", "slice report", "predeclared weights"],
+        requiredConcepts: ["hierarchical-metric-reducer"],
+        sectionId: "reducer",
       },
       {
         level: "advanced",
-        question:
-          "Query A metric 1·traffic 99, B metric 0·traffic 1인 평가에서 macro와 traffic score를 계산하고 unjudged documents가 많은 경우의 audit를 설계하라.",
-        answerChecklist: [
-          "macro .5",
-          "traffic .99",
-          "different populations",
-          "query identity",
-          "judged coverage",
-          "unjudged rate",
-          "pooling/source",
-          "slice",
-          "no automatic negative assumption",
-        ],
-        requiredConcepts: [
-          "query-macro-traffic-reducer",
-          "incomplete-relevance-judgment",
-        ],
-        sectionId: "ranking",
+        question: "Patient macro와 image-row weighted metric이 서로 다른 model을 고르는 반례를 설계하세요.",
+        answerChecklist: ["unequal images per patient", "model A frequent patient", "model B rare patients", "two rankings", "target population"],
+        requiredConcepts: ["hierarchical-metric-reducer"],
+        sectionId: "reducer",
       },
       {
         level: "advanced",
-        question:
-          "Cross-entropy로 학습하고 validation F1과 latency·worst-language recall로 선택하는 system의 train/select/policy/outer data와 feasible candidate rule을 설계하라.",
-        answerChecklist: [
-          "train fits theta",
-          "validation selects lambda",
-          "validation/OOF threshold",
-          "primary F1 direction",
-          "latency bound",
-          "worst-language bound",
-          "reject infeasible",
-          "untouched outer",
-          "no retune",
-          "receipt fields",
-        ],
-        requiredConcepts: [
-          "surrogate-selection-policy-boundary",
-          "metric-guardrail-feasible-selection",
-          "hpo-selection-evaluation-contract",
-        ],
-        sectionId: "optimization",
+        question: "Region slice weight를 결과를 본 뒤 바꿨을 때 생기는 selection bias와 방지 receipt를 설계하세요.",
+        answerChecklist: ["post-hoc weighting", "adaptive choice", "frozen weights", "data revision", "outer report"],
+        requiredConcepts: ["hierarchical-metric-reducer"],
+        sectionId: "reducer",
       },
+      {
+        level: "advanced",
+        question: "비용을 모르는 상황에서 metric 후보를 고를 때 무엇을 별도 열로 보고할지 설계하세요.",
+        answerChecklist: ["ranking or residual metric", "confusion or error slices", "capacity", "cost scenarios", "no false business claim"],
+        requiredConcepts: ["decision-cost-metric-contract"],
+        sectionId: "map",
+      },
+      {
+        level: "advanced",
+        question: "한 evaluation receipt에 decision unit·policy·cost·reducer·slice를 재현 가능하게 기록하세요.",
+        answerChecklist: ["unit identity", "prediction revision", "action rule", "cost table", "weights", "slice definitions", "data checksum"],
+        requiredConcepts: [
+          "decision-cost-metric-contract",
+          "hierarchical-metric-reducer",
+        ],
+        sectionId: "map",
+      },
+    ],
+    papers: [
+      {
+        title: "scikit-learn — Metrics and scoring",
+        href: "https://scikit-learn.org/stable/modules/model_evaluation.html",
+        problem: "Estimator score와 classification·regression·ranking scorer의 방향·parameter를 일관되게 사용하는 문제",
+        contribution: "현재 stable metric API·callable scorer·negative-loss convention과 multi-metric evaluation을 문서화",
+        assumptions: "설치한 stable version과 label·sample-weight·shape semantics",
+        evidenceScope: "공식 문서가 명시한 metric definitions와 API behavior",
+        notClaim: "Default scorer가 deployment cost·decision unit·slice reducer를 자동 설계한다는 뜻은 아님",
+        sectionId: "standard-sklearn-metrics",
+      },
+    ],
+  },
+  "ai/regression-metrics": {
+    entryLevel: true,
+    entryNote:
+      "회귀 metric을 안다고 가정하지 않습니다. Actual과 prediction을 같은 수직선에 놓고 residual을 만든 뒤 absolute·squared penalty와 interval로 확장합니다.",
+    coreIdea:
+      "회귀 평가는 signed residual과 penalty를 구분하고, absolute/squared conditional risk가 각각 중앙값/평균을 목표로 하는 이유와 interval의 coverage/width trade-off를 함께 읽는 수업입니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      {
+        id: "regression-residual-penalty",
+        role: "Actual−prediction residual과 그 위에 적용한 absolute·squared 비용을 분리합니다.",
+      },
+      {
+        id: "absolute-squared-risk-bayes-act",
+        role: "Absolute와 squared risk가 각각 중앙값과 평균을 선택하는 이유를 설명합니다.",
+      },
+      {
+        id: "prediction-interval-coverage-width",
+        role: "Prediction interval의 포함률과 폭을 서로 다른 평가 축으로 측정합니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "regression-residual-penalty",
+        sectionId: "residual-penalty",
+        intuition: "Actual과 prediction 사이 거리에는 방향이 있고, metric은 그 거리에 비용 곡선을 씌웁니다.",
+        workedExample: "[1,1,1,9]에서 MAE는 3, RMSE는 √21≈4.58입니다.",
+        boundary: "Residual r와 absolute penalty |r|·squared penalty r²는 서로 다른 객체입니다.",
+      },
+      {
+        id: "absolute-squared-risk-bayes-act",
+        sectionId: "bayes-act",
+        intuition: "제곱 비용은 먼 값이 평균을 끌고, 절댓값 비용은 양쪽 사례 수가 균형인 중앙값에서 멈춥니다.",
+        workedExample: "Y=0 with .9, Y=100 with .1이면 squared target은 10, absolute target은 0입니다.",
+        boundary: "Population minimizer에 대한 결과이며 finite test set의 model 순위를 보장하지 않습니다.",
+        proofIdea: "Squared risk derivative는 2(a−E[Y|x])이고 absolute risk subgradient는 좌우 mass 차이입니다.",
+        counterexample: "대칭 분포에서는 평균과 중앙값이 같아 target 차이가 사라질 수 있습니다.",
+      },
+      {
+        id: "prediction-interval-coverage-width",
+        sectionId: "interval",
+        intuition: "모든 숫자를 덮는 구간은 정답을 놓치지 않지만 결정에 쓸 정보도 거의 없습니다.",
+        workedExample: "두 후보가 coverage .91이면 평균 폭 12와 30을 별도 축으로 비교합니다.",
+        boundary: "전체 coverage는 subgroup·horizon별 conditional coverage를 보장하지 않습니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 Residual",
+        relation: "Actual과 prediction의 signed 차이와 penalty를 구분합니다.",
+        concepts: ["regression-residual-penalty"],
+      },
+      {
+        label: "01 Point target",
+        relation: "Penalty의 population 평균이 목표 중심값을 바꿉니다.",
+        concepts: [
+          "regression-residual-penalty",
+          "absolute-squared-risk-bayes-act",
+        ],
+      },
+      {
+        label: "02 Interval",
+        relation: "Point prediction을 coverage와 width가 있는 범위 예측으로 확장합니다.",
+        concepts: ["prediction-interval-coverage-width"],
+      },
+    ],
+    exercises: [
+      { level: "basic", question: "Actual 42, prediction 35의 residual과 방향을 설명하세요.", answerChecklist: ["42-35", "+7", "underprediction", "same unit"], requiredConcepts: ["regression-residual-penalty"], sectionId: "overview" },
+      { level: "basic", question: "Residual과 penalty를 구분하고 |r|과 r²의 의미를 설명하세요.", answerChecklist: ["signed difference", "absolute removes sign", "squared amplifies", "cost choice"], requiredConcepts: ["regression-residual-penalty"], sectionId: "overview" },
+      { level: "basic", question: "Residual [1,1,1,9]의 MAE와 RMSE를 계산하세요.", answerChecklist: ["MAE 3", "MSE 21", "RMSE about 4.58", "large error contribution"], requiredConcepts: ["regression-residual-penalty"], sectionId: "residual-penalty" },
+      { level: "basic", question: "Squared loss가 큰 residual을 더 강조하는 이유를 multiplication 단계로 설명하세요.", answerChecklist: ["r times r", "9 becomes 81", "average", "square root only restores unit"], requiredConcepts: ["regression-residual-penalty"], sectionId: "residual-penalty" },
+      { level: "basic", question: "Y=0 with .9, Y=100 with .1의 mean과 median을 구하세요.", answerChecklist: ["mean 10", "median 0", "different targets", "rare large value"], requiredConcepts: ["absolute-squared-risk-bayes-act"], sectionId: "bayes-act" },
+      { level: "basic", question: "Prediction interval coverage와 width가 답하는 질문을 구분하세요.", answerChecklist: ["contains actual", "fraction covered", "upper-lower", "informativeness"], requiredConcepts: ["prediction-interval-coverage-width"], sectionId: "interval" },
+      { level: "advanced", question: "Squared-risk minimizer가 조건부 평균인 derivative proof를 전개하세요.", answerChecklist: ["conditional expectation", "differentiate", "2(a-EY)", "zero at mean", "second moment"], requiredConcepts: ["absolute-squared-risk-bayes-act"], sectionId: "bayes-act" },
+      { level: "advanced", question: "Absolute-risk minimizer가 조건부 중앙값인 subgradient proof idea를 설명하세요.", answerChecklist: ["left mass", "right mass", "slope sign", "median", "nonunique interval"], requiredConcepts: ["absolute-squared-risk-bayes-act"], sectionId: "bayes-act" },
+      { level: "advanced", question: "90% interval A(.91,width12)와 B(.94,width30)의 release rule을 설계하세요.", answerChecklist: ["coverage guardrail", "sampling uncertainty", "A narrower", "subgroup coverage", "same units"], requiredConcepts: ["prediction-interval-coverage-width"], sectionId: "interval" },
+      { level: "advanced", question: "Log target을 원래 단위로 되돌릴 때 MAE·RMSE receipt에 필요한 항목을 설계하세요.", answerChecklist: ["transform version", "inverse rule", "bias correction", "original unit", "same evaluation rows", "rollback"], requiredConcepts: ["regression-residual-penalty"], sectionId: "interval" },
     ],
     papers: [
       {
         title: "Regression Quantiles",
         href: "https://doi.org/10.2307/1913643",
-        problem:
-          "조건부 평균 하나가 아니라 outcome distribution의 서로 다른 conditional quantile을 regression으로 추정하는 문제",
-        contribution:
-          "Asymmetric absolute loss를 사용하는 linear regression quantile의 formulation·estimation과 이론을 제시",
-        assumptions:
-          "논문의 linear specification·quantile loss·error/distribution assumptions와 1978년 estimation setting",
-        evidenceScope:
-          "Econometrica 논문의 quantile-regression 정의·이론·examples 범위",
-        notClaim:
-          "임의의 두 quantile prediction이 finite sample·distribution shift에서 nominal interval coverage를 자동 보장한다는 뜻은 아님",
+        problem: "조건부 평균 하나를 넘어 outcome distribution의 conditional quantile을 regression으로 추정하는 문제",
+        contribution: "Asymmetric absolute loss를 사용하는 linear regression quantile의 formulation과 이론을 제시",
+        assumptions: "논문의 linear specification·quantile loss·error/distribution assumptions",
+        evidenceScope: "Econometrica 논문의 quantile-regression 정의·이론·examples",
+        notClaim: "임의의 두 quantile prediction이 shift에서도 nominal interval coverage를 자동 보장한다는 뜻은 아님",
         sectionId: "paper-regression-quantiles",
       },
+    ],
+  },
+  "ai/classification-metrics": {
+    entryLevel: true,
+    entryNote:
+      "AUC나 calibration을 안다고 가정하지 않습니다. 하나의 score 축에서 순서를 보고, probability 빈도를 확인하고, threshold로 action을 자르는 세 층부터 시작합니다.",
+    coreIdea:
+      "Classifier 평가는 score ordering·probability semantics·threshold action을 분리하고, probability layer에서는 strictly proper score를, action layer에서는 outcome별 expected cost를 사용합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      {
+        id: "classification-evaluation-layer-separation",
+        role: "Ranking·probability·action을 서로 다른 평가 층으로 고정합니다.",
+      },
+      {
+        id: "strictly-proper-probability-score",
+        role: "실제 conditional probability를 정직하게 보고하게 만드는 score 성질을 증명합니다.",
+      },
+      {
+        id: "threshold-expected-decision-cost",
+        role: "Threshold 뒤의 FP·FN action 비용을 decision unit당 평균합니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "classification-evaluation-layer-separation",
+        sectionId: "overview",
+        intuition: "줄 세우기, 확률 말하기, 실제 행동하기는 같은 output에서 시작하지만 서로 다른 시험입니다.",
+        workedExample: "AUC는 ordering, Brier는 .8의 의미, confusion cost는 threshold .7의 action을 봅니다.",
+        boundary: "한 층의 개선이 다른 두 층의 개선을 자동으로 뜻하지 않습니다.",
+      },
+      {
+        id: "strictly-proper-probability-score",
+        sectionId: "proper-score",
+        intuition: "실제 비 확률을 70%라 믿는 예보자가 90%로 과장해 장기 점수를 더 얻지 못하게 합니다.",
+        workedExample: "p=.7, q=.9의 Brier expected regret는 (.9−.7)²=.04입니다.",
+        boundary: "Population score 성질이며 finite sample·model capacity·shift를 자동 해결하지 않습니다.",
+        proofIdea: "Bernoulli 두 outcome의 expected squared error를 전개하고 q=p risk를 빼면 (q−p)²가 남습니다.",
+        counterexample: "Accuracy는 p=.51과 p=.99를 같은 hard class 1로 보아 정직한 probability를 유일하게 보상하지 않습니다.",
+      },
+      {
+        id: "threshold-expected-decision-cost",
+        sectionId: "threshold",
+        intuition: "Probability 축에 칼날을 놓아 왼쪽과 오른쪽을 서로 다른 action으로 보내고 틀린 branch의 가격을 셉니다.",
+        workedExample: "FN cost 20, FP cost 1이면 낮은 threshold가 alert를 늘려도 총비용을 줄일 수 있습니다.",
+        boundary: "Threshold는 prevalence·capacity·cost가 바뀌면 다시 검증해야 하며 test에서 맞추지 않습니다.",
+      },
+    ],
+    conceptStages: [
+      { label: "00 Layers", relation: "Score·probability·action의 출력 형태를 분리합니다.", concepts: ["classification-evaluation-layer-separation"] },
+      { label: "01 Probability", relation: "Probability report를 proper score로 평가합니다.", concepts: ["classification-evaluation-layer-separation", "strictly-proper-probability-score"] },
+      { label: "02 Action", relation: "Threshold로 hard action을 만들고 outcome cost를 계산합니다.", concepts: ["classification-evaluation-layer-separation", "threshold-expected-decision-cost"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Score·probability·action을 한 예로 구분하세요.", answerChecklist: ["raw ordering score", "frequency claim", "threshold", "business action"], requiredConcepts: ["classification-evaluation-layer-separation"], sectionId: "overview" },
+      { level: "basic", question: "AUC가 높아도 calibration이 나쁠 수 있는 예를 설명하세요.", answerChecklist: ["correct ordering", ".51/.49 scores", "probability meaning separate", "not interchangeable"], requiredConcepts: ["classification-evaluation-layer-separation"], sectionId: "overview" },
+      { level: "basic", question: "Ranking·probability·action 층에 metric을 하나씩 배치하세요.", answerChecklist: ["AUC", "Brier or log loss", "precision recall or cost", "three questions"], requiredConcepts: ["classification-evaluation-layer-separation"], sectionId: "overview" },
+      { level: "basic", question: "p=.7, q=.9의 Brier expected regret를 계산하세요.", answerChecklist: ["q-p .2", "square .04", "nonnegative", "truthful minimum"], requiredConcepts: ["strictly-proper-probability-score"], sectionId: "proper-score" },
+      { level: "basic", question: "Accuracy가 strictly proper probability score가 아닌 이유를 설명하세요.", answerChecklist: ["thresholded action", ".51 and .99 same class", "no unique truthful report", "probability lost"], requiredConcepts: ["strictly-proper-probability-score"], sectionId: "proper-score" },
+      { level: "basic", question: "Threshold가 낮아질 때 alert volume·FN·FP가 어떻게 변할 수 있는지 설명하세요.", answerChecklist: ["more positives", "FN down", "FP up", "capacity tradeoff"], requiredConcepts: ["threshold-expected-decision-cost"], sectionId: "threshold" },
+      { level: "advanced", question: "Bernoulli Brier expected regret가 (q-p)^2임을 전개하세요.", answerChecklist: ["positive branch", "negative branch", "expand", "subtract R(p)", "cross terms cancel", "unique minimum"], requiredConcepts: ["strictly-proper-probability-score"], sectionId: "proper-score" },
+      { level: "advanced", question: "FN 비용20·FP 비용1과 review capacity를 포함한 threshold selection을 설계하세요.", answerChecklist: ["validation predictions", "cost curve", "alert count", "capacity guardrail", "frozen tau", "outer test"], requiredConcepts: ["threshold-expected-decision-cost"], sectionId: "threshold" },
+      { level: "advanced", question: "Ordering은 개선됐지만 probability와 action cost가 악화된 candidate report를 작성하세요.", answerChecklist: ["AUC up", "Brier worse", "fixed-threshold cost worse", "no release", "separate diagnosis"], requiredConcepts: ["classification-evaluation-layer-separation"], sectionId: "report" },
+      { level: "advanced", question: "분류 release receipt에 세 층과 slice를 재현 가능하게 기록하세요.", answerChecklist: ["score revision", "calibration split", "proper score", "threshold", "confusion counts", "costs", "alert volume", "slices"], requiredConcepts: ["classification-evaluation-layer-separation", "threshold-expected-decision-cost"], sectionId: "report" },
+    ],
+    papers: [
       {
         title: "Strictly Proper Scoring Rules, Prediction, and Estimation",
         href: "https://doi.org/10.1198/016214506000001437",
-        problem:
-          "Probabilistic forecast가 실제 belief distribution을 정직하게 보고하도록 평가하고 prediction·estimation에 사용할 loss를 구성하는 문제",
-        contribution:
-          "General probability spaces에서 proper/strictly proper scoring rule의 이론과 convex function·entropy·Bregman divergence 관계 및 examples를 정리·확장",
-        assumptions:
-          "논문의 probability-space·regularity·orientation convention과 각 scoring-rule example의 조건",
-        evidenceScope:
-          "JASA 2007 review/development 논문의 theorem·representation·examples 범위",
-        notClaim:
-          "Proper score 하나가 finite sample의 calibration·discrimination·subgroup·decision cost를 모두 보장한다는 뜻은 아님",
+        problem: "Probabilistic forecast가 실제 belief distribution을 정직하게 보고하도록 평가하는 문제",
+        contribution: "Proper scoring rule의 일반 이론과 convex function·entropy·Bregman divergence 관계를 정리",
+        assumptions: "논문의 probability-space·regularity·orientation convention",
+        evidenceScope: "JASA 논문의 theorem·representation·examples",
+        notClaim: "Proper score 하나가 finite calibration·ranking·subgroup·decision cost를 모두 보장한다는 뜻은 아님",
         sectionId: "paper-proper-scoring-rules",
       },
+    ],
+  },
+  "ai/ranking-metrics": {
+    entryLevel: true,
+    entryNote:
+      "MRR이나 NDCG를 안다고 가정하지 않습니다. Query 하나, candidate 순서, relevance label과 사용자가 보는 깊이 k를 먼저 그림으로 고정합니다.",
+    coreIdea:
+      "Ranking 평가는 query 하나의 ranked list에서 relevance gain과 position discount를 계산하고, query-level score를 macro 또는 traffic population으로 집계하며 unjudged item을 자동 negative로 만들지 않습니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "ranked-list-evaluation-unit", role: "Query·candidate order·relevance·depth k를 한 평가 단위로 고정합니다." },
+      { id: "ndcg-graded-discount", role: "Relevance gain과 rank discount를 ideal ordering으로 정규화합니다." },
+      { id: "query-macro-traffic-reducer", role: "Query 종류와 실제 traffic이라는 두 population 평균을 구분합니다." },
+      { id: "incomplete-relevance-judgment", role: "Unjudged item을 negative로 처리할 때 생기는 평가 bias를 진단합니다." },
+    ],
+    conceptExplanations: [
+      {
+        id: "ranked-list-evaluation-unit",
+        sectionId: "overview",
+        intuition: "검색 한 번의 질문과 그 답안 순서를 한 시험지로 묶고 시험지별 점수를 먼저 만듭니다.",
+        workedExample: "Query q의 top 3 results와 relevance [3,0,2], k=3을 한 evaluation unit으로 고정합니다.",
+        boundary: "Candidate generation이 놓친 문서는 ranker metric만으로 복구하거나 평가할 수 없습니다.",
+      },
+      {
+        id: "ndcg-graded-discount",
+        sectionId: "ndcg",
+        intuition: "매우 유용한 문서를 위에 둘수록 큰 gain을 주고 같은 답안 목록의 최고 순서와 비교합니다.",
+        workedExample: "Relevance 3의 gain 7은 rank1에서 7, rank3에서 7/2=3.5만 기여합니다.",
+        boundary: "Gain·discount·k는 사용자 행동 가정이며 diversity·freshness·latency를 측정하지 않습니다.",
+      },
+      {
+        id: "query-macro-traffic-reducer",
+        sectionId: "query-population",
+        intuition: "검색어 종류마다 한 표를 줄지 실제 입력 횟수만큼 표를 줄지 선택합니다.",
+        workedExample: "A metric1 traffic99, B metric0 traffic1이면 macro .5, traffic .99입니다.",
+        boundary: "두 평균은 서로 다른 population을 답하므로 결과를 본 뒤 유리한 쪽으로 바꾸지 않습니다.",
+      },
+      {
+        id: "incomplete-relevance-judgment",
+        sectionId: "judgment-boundary",
+        intuition: "채점자가 아직 보지 않은 새 답안을 오답 처리하면 기존 답안만 반복하는 system이 유리해집니다.",
+        workedExample: "Top10 중 6개만 judged이면 나머지 4개의 실제 relevant gain이 0으로 잘릴 수 있습니다.",
+        boundary: "Unjudged rate 보고만으로 relevance를 알 수 없으므로 pooling 확대나 추가 judging이 필요합니다.",
+      },
+    ],
+    conceptStages: [
+      { label: "00 Unit", relation: "Query와 ranked list의 평가 형태를 고정합니다.", concepts: ["ranked-list-evaluation-unit"] },
+      { label: "01 Score", relation: "Graded relevance와 position에서 query-level score를 만듭니다.", concepts: ["ranked-list-evaluation-unit", "ndcg-graded-discount"] },
+      { label: "02 Population", relation: "Query scores를 macro 또는 traffic으로 집계합니다.", concepts: ["query-macro-traffic-reducer"] },
+      { label: "03 Judgment", relation: "Relevance 결손이 metric을 왜곡하는 경계를 검사합니다.", concepts: ["incomplete-relevance-judgment"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Ranking evaluation unit의 query·candidate·relevance·k를 정의하세요.", answerChecklist: ["one query", "ordered candidates", "labels", "visible depth"], requiredConcepts: ["ranked-list-evaluation-unit"], sectionId: "overview" },
+      { level: "basic", question: "MRR·Recall@k·NDCG@k가 맞는 사용자 질문을 각각 연결하세요.", answerChecklist: ["first relevant", "many relevant recovered", "graded relevance order", "UI k"], requiredConcepts: ["ranked-list-evaluation-unit"], sectionId: "overview" },
+      { level: "basic", question: "Relevance [3,0,2]의 gain과 DCG@3을 계산하세요.", answerChecklist: ["gain 7,0,3", "discount 1,log2(3),2", "DCG 8.5"], requiredConcepts: ["ndcg-graded-discount"], sectionId: "ndcg" },
+      { level: "basic", question: "IDCG와 NDCG normalization의 의미를 설명하세요.", answerChecklist: ["ideal ordering", "[3,2,0]", "divide DCG", "same judged set"], requiredConcepts: ["ndcg-graded-discount"], sectionId: "ndcg" },
+      { level: "basic", question: "A metric1 traffic99, B metric0 traffic1의 macro와 traffic 평균을 계산하세요.", answerChecklist: ["macro .5", "traffic .99", "query kinds", "request experience"], requiredConcepts: ["query-macro-traffic-reducer"], sectionId: "query-population" },
+      { level: "basic", question: "Unjudged item과 negative label을 구분하세요.", answerChecklist: ["not assessed", "known irrelevant", "do not collapse", "coverage"], requiredConcepts: ["incomplete-relevance-judgment"], sectionId: "judgment-boundary" },
+      { level: "advanced", question: "Gain mapping과 k를 바꾸면 candidate 순위가 바뀌는 반례를 설계하세요.", answerChecklist: ["two rankings", "high relevance deep", "binary vs graded", "k boundary", "different winner"], requiredConcepts: ["ndcg-graded-discount"], sectionId: "ndcg" },
+      { level: "advanced", question: "Head 개선과 tail 악화가 macro·traffic에서 반대로 보이는 실험을 설계하세요.", answerChecklist: ["head high n", "tail many unique", "per-query scores", "two reducers", "predeclare population"], requiredConcepts: ["query-macro-traffic-reducer"], sectionId: "query-population" },
+      { level: "advanced", question: "새 retriever가 unjudged documents를 많이 찾았을 때 evaluation audit를 설계하세요.", answerChecklist: ["judged coverage", "unjudged rate", "pooling source", "additional judging", "slices", "no automatic negative"], requiredConcepts: ["incomplete-relevance-judgment"], sectionId: "judgment-boundary" },
+      { level: "advanced", question: "Query identity·labels·k·pooling·reducer를 포함한 ranking receipt를 작성하세요.", answerChecklist: ["query canonicalization", "candidate source", "label scale", "k", "unjudged policy", "macro and traffic", "data revision"], requiredConcepts: ["ranked-list-evaluation-unit", "incomplete-relevance-judgment"], sectionId: "judgment-boundary" },
+    ],
+    papers: [
       {
         title: "Cumulated Gain-based Evaluation of IR Techniques",
         href: "https://doi.org/10.1145/582415.582418",
-        problem:
-          "Binary relevant/nonrelevant와 set-based recall/precision만으로 graded relevance와 rank position의 사용자 utility를 충분히 반영하기 어려운 문제",
-        contribution:
-          "Cumulative gain·discounted cumulative gain·normalized variants를 제안하고 graded relevance IR evaluation을 전개",
-        assumptions:
-          "논문의 relevance scale·discount/user persistence interpretation·test collections와 evaluated IR methods",
-        evidenceScope:
-          "ACM TOIS 2002의 metric definitions·analysis·reported experiments 범위",
-        notClaim:
-          "NDCG discount가 모든 UI의 실제 examination probability이거나 diversity·freshness·latency를 포함한다는 뜻은 아님",
+        problem: "Binary relevance와 set-based metrics만으로 graded relevance와 rank position을 반영하기 어려운 문제",
+        contribution: "Cumulative gain·discounted cumulative gain·normalized variants를 제안",
+        assumptions: "논문의 relevance scale·discount interpretation·test collections",
+        evidenceScope: "ACM TOIS 2002의 metric definitions·analysis·experiments",
+        notClaim: "NDCG가 모든 UI 행동이나 diversity·freshness·latency를 포함한다는 뜻은 아님",
         sectionId: "paper-cumulative-gain",
       },
+    ],
+  },
+  "ai/metric-selection-protocol": {
+    entryLevel: true,
+    entryNote:
+      "Optimization을 안다고 가정하지 않습니다. Train은 weight, validation은 configuration과 threshold, test는 완성된 procedure의 보고만 담당하는 데이터 역할부터 시작합니다.",
+    coreIdea:
+      "Model selection은 surrogate fitting·configuration/policy selection·outer reporting을 분리하고 hard guardrail을 모두 통과한 feasible candidates 안에서만 primary metric을 비교한 뒤 전체 선택 과정을 receipt로 남깁니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "surrogate-selection-policy-boundary", role: "Fit·configuration·policy·outer report의 data 역할을 분리합니다." },
+      { id: "metric-guardrail-feasible-selection", role: "Hard guardrail을 통과한 후보 안에서 primary metric을 비교합니다." },
+      { id: "metric-selection-receipt", role: "Data·candidate·metric·release rule을 한 evidence artifact로 묶습니다." },
+    ],
+    conceptExplanations: [
+      {
+        id: "surrogate-selection-policy-boundary",
+        sectionId: "information-boundary",
+        intuition: "문제집으로 weight를 배우고 모의고사로 설정과 threshold를 고른 뒤 마지막 시험에서는 더 이상 바꾸지 않습니다.",
+        workedExample: "Training cross-entropy로 weights를 학습하고 OOF F1로 checkpoint와 threshold를 고른 뒤 untouched site에서 cost를 보고합니다.",
+        boundary: "Validation을 반복해 고른 모든 preprocessing·checkpoint·calibrator·threshold는 adaptive selection입니다.",
+      },
+      {
+        id: "metric-guardrail-feasible-selection",
+        sectionId: "guardrails",
+        intuition: "안전 규격을 통과하지 못한 자동차는 연비 순위표에 올리지 않습니다.",
+        workedExample: "Worst-language recall≥.80, p95≤100ms를 모두 만족한 checkpoints 안에서 macro error를 비교합니다.",
+        boundary: "Noisy metric tolerance와 infeasible reject rule이 필요하며 결과 뒤 bound 완화는 guardrail을 무효화합니다.",
+      },
+      {
+        id: "metric-selection-receipt",
+        sectionId: "receipt",
+        intuition: "Winner 숫자 하나 대신 어떤 data와 규칙이 그 winner를 만들었는지 영수증으로 남깁니다.",
+        workedExample: "Data revisions, checkpoint digest, threshold .72, slice weights, latency bound와 rollback owner를 함께 저장합니다.",
+        boundary: "Metric 값만 저장하면 같은 candidate population과 adaptive selection path를 재생할 수 없습니다.",
+      },
+    ],
+    conceptStages: [
+      { label: "00 Fit/select", relation: "Data마다 바꿀 수 있는 parameter를 제한합니다.", concepts: ["surrogate-selection-policy-boundary"] },
+      { label: "01 Feasible", relation: "Hard bounds를 모두 통과한 candidate set을 만듭니다.", concepts: ["surrogate-selection-policy-boundary", "metric-guardrail-feasible-selection"] },
+      { label: "02 Receipt", relation: "Selection과 outer report의 입력·결과를 봉인합니다.", concepts: ["metric-selection-receipt"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Train·validation·test가 각각 결정할 수 있는 값을 설명하세요.", answerChecklist: ["train theta", "validation lambda", "validation tau", "test reports only"], requiredConcepts: ["surrogate-selection-policy-boundary"], sectionId: "overview" },
+      { level: "basic", question: "Surrogate loss와 final metric이 다를 수 있는 이유를 설명하세요.", answerChecklist: ["differentiability", "batch ordering", "business action", "separate roles"], requiredConcepts: ["surrogate-selection-policy-boundary"], sectionId: "overview" },
+      { level: "basic", question: "Test F1을 보고 threshold를 바꾸면 어떤 정보 경계가 깨지는지 설명하세요.", answerChecklist: ["test becomes validation", "adaptive selection", "optimism", "new outer data"], requiredConcepts: ["surrogate-selection-policy-boundary"], sectionId: "information-boundary" },
+      { level: "basic", question: "Configuration λ와 policy τ의 예를 각각 두 개 드세요.", answerChecklist: ["architecture or regularization", "checkpoint", "threshold", "top-k"], requiredConcepts: ["surrogate-selection-policy-boundary"], sectionId: "information-boundary" },
+      { level: "basic", question: "Worst-language recall과 p95 latency를 hard guardrail로 쓰는 feasible rule을 작성하세요.", answerChecklist: ["recall lower bound", "latency upper bound", "AND", "reject failures"], requiredConcepts: ["metric-guardrail-feasible-selection"], sectionId: "guardrails" },
+      { level: "basic", question: "Metric-selection receipt의 네 범주를 나열하세요.", answerChecklist: ["data boundary", "candidate lineage", "metric contract", "release rule"], requiredConcepts: ["metric-selection-receipt"], sectionId: "receipt" },
+      { level: "advanced", question: "Cross-entropy training·validation F1·threshold cost·outer test의 전체 procedure를 설계하세요.", answerChecklist: ["fit theta", "select lambda", "select tau", "frozen metric", "untouched outer", "no retune"], requiredConcepts: ["surrogate-selection-policy-boundary"], sectionId: "information-boundary" },
+      { level: "advanced", question: "Primary metric 개선이 subgroup guardrail 악화를 가리는 weighted-sum 반례를 설계하세요.", answerChecklist: ["average improvement", "slice failure", "weighted sum passes", "feasible set rejects", "predeclared bound"], requiredConcepts: ["metric-guardrail-feasible-selection"], sectionId: "guardrails" },
+      { level: "advanced", question: "Noisy latency와 recall measurement를 위한 tolerance·sample minimum rule을 설계하세요.", answerChecklist: ["repeats", "confidence or quantile", "sample minimum", "bound direction", "reject inconclusive"], requiredConcepts: ["metric-guardrail-feasible-selection"], sectionId: "guardrails" },
+      { level: "advanced", question: "재현 가능한 selection receipt와 rollback 조건을 설계하세요.", answerChecklist: ["data hashes", "candidate hashes", "selection history", "metric reducer", "bounds", "outer report", "rollback owner"], requiredConcepts: ["metric-selection-receipt"], sectionId: "receipt" },
+    ],
+    papers: [
       {
         title: "scikit-learn — Metrics and scoring",
         href: "https://scikit-learn.org/stable/modules/model_evaluation.html",
-        problem:
-          "현재 estimator·cross-validation API에서 classification·regression·ranking scorer의 orientation·parameters·multi-metric evaluation을 일관되게 사용하는 문제",
-        contribution:
-          "Scoring parameter·callable scorer·negative-loss convention·metric APIs와 examples를 현재 stable 문서로 제공",
-        assumptions:
-          "설치한 scikit-learn stable version·metric parameters·label/weight/shape semantics",
-        evidenceScope:
-          "공식 문서에 명시된 현재 API behavior와 definitions 범위",
-        notClaim:
-          "Default scorer가 deployment cost·unit reducer·subgroup guardrail을 자동으로 정한다는 뜻은 아님",
-        sectionId: "standard-sklearn-metrics",
+        problem: "Cross-validation에서 scorer 방향·parameter·multi-metric 결과를 일관되게 사용하는 문제",
+        contribution: "Scoring parameter·callable scorer·negative-loss convention과 multi-metric evaluation을 문서화",
+        assumptions: "현재 stable API와 설치 version의 estimator·label semantics",
+        evidenceScope: "공식 문서가 명시한 scorer와 metric API behavior",
+        notClaim: "Library가 train/select/test 경계나 조직의 guardrail을 자동 설계한다는 뜻은 아님",
+        sectionId: "standard-selection-metrics",
       },
     ],
   },

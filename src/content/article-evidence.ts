@@ -1647,28 +1647,42 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "ai/evaluation-metrics": [
     {
+      kind: "공식 문서",
+      label: "scikit-learn: Metrics and scoring",
+      href: "https://scikit-learn.org/stable/modules/model_evaluation.html",
+      note: "classification·regression·ranking metric의 정의와 API",
+    },
+  ],
+  "ai/regression-metrics": [
+    {
       kind: "핵심 논문",
       label: "Regression Quantiles",
       href: "https://doi.org/10.2307/1913643",
       note: "Absolute-loss 기반 conditional quantile regression과 조건부 평균을 넘어선 회귀 target",
     },
+  ],
+  "ai/classification-metrics": [
     {
       kind: "핵심 논문",
       label: "Strictly Proper Scoring Rules, Prediction, and Estimation",
       href: "https://doi.org/10.1198/016214506000001437",
       note: "실제 probability distribution의 정직한 보고를 유도하는 proper scoring rule의 일반 이론",
     },
+  ],
+  "ai/ranking-metrics": [
     {
       kind: "핵심 논문",
       label: "Cumulated Gain-based Evaluation of IR Techniques",
       href: "https://doi.org/10.1145/582415.582418",
       note: "Graded relevance와 rank discount를 반영하는 cumulative gain·normalized evaluation",
     },
+  ],
+  "ai/metric-selection-protocol": [
     {
       kind: "공식 문서",
       label: "scikit-learn: Metrics and scoring",
       href: "https://scikit-learn.org/stable/modules/model_evaluation.html",
-      note: "classification·regression·ranking metric의 정의와 API",
+      note: "Scorer 방향·parameter·multi-metric evaluation의 현재 API semantics",
     },
   ],
   "ai/experiment-tracking": [

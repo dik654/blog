@@ -2591,47 +2591,18 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "evaluation-metrics": {
-    title: "평가 지표 글이 소유하는 범위",
+    title: "평가 설계 글이 소유하는 범위",
     owns: [
       "배포 decision unit·prediction-to-action policy·오류 비용·weight로 구성한 metric 계약",
-      "관측·entity/query·slice·global의 hierarchical reducer와 macro·traffic population의 구분",
-      "MAE·RMSE의 residual penalty와 absolute/squared risk가 목표로 하는 중앙값·평균",
-      "Prediction interval의 empirical coverage·width 및 전체·conditional coverage 경계",
-      "Classification ranking·probability·decision 층과 strictly proper probability score의 의미",
-      "Recall·MRR·MAP·NDCG의 질문, graded relevance·rank discount·incomplete judgment 경계",
-      "Training surrogate·validation selection·policy tuning·outer test와 hard guardrail 선택",
+      "관측·decision unit·slice·global의 hierarchical reducer와 목표 population의 구분",
     ],
     reuses: [
-      {
-        label: "조건부확률",
-        href: "/ai/math-probability-expectation-variance",
-      },
       { label: "기댓값", href: "/ai/math-random-variables-expectation" },
-      {
-        label: "Train·validation·test의 역할",
-        href: "/ai/train-validation-test",
-      },
-      {
-        label: "Class prevalence·PR/ROC·confusion matrix·threshold·calibration",
-        href: "/ai/imbalanced-data",
-      },
-      {
-        label: "Multi-positive retrieval의 Recall@k·NDCG@k",
-        href: "/ai/sentence-embeddings#evaluation",
-      },
-      {
-        label: "Fold·OOF와 deployment-matched validation",
-        href: "/ai/cross-validation",
-      },
-      {
-        label: "Configuration selection과 outer evaluation",
-        href: "/ai/hyperparameter-tuning",
-      },
     ],
     evidence: [
       {
         kind: "primary-source",
-        rule: "Regression quantile·proper scoring rule·NDCG claim은 각 원 논문의 loss·probability-space·relevance/discount 조건으로 제한한다.",
+        rule: "Metric API와 scorer semantics는 공식 문서가 명시한 version·parameter 범위로 제한한다.",
       },
       {
         kind: "standard",
@@ -2639,12 +2610,78 @@ export const EDITORIAL_BOUNDARIES = {
       },
       {
         kind: "standard",
-        rule: "Decision unit/distribution·prediction/action·cost·target/positive/relevance·k/threshold·weight/reducer/slice·candidate/data checksum을 metric receipt에 함께 기록한다.",
+        rule: "Decision unit/distribution·prediction/action·cost·weight/reducer/slice를 metric receipt에 함께 기록한다.",
       },
       {
         kind: "project-claim",
-        rule: "Decision-risk·hierarchical reducer·feasible guardrail 수식은 평가 설계를 감사하기 위한 일반 계약이며 특정 metric이나 model의 성능 보장이 아니다.",
+        rule: "Decision-risk와 hierarchical reducer 수식은 평가 설계를 감사하기 위한 일반 계약이며 특정 metric이나 model의 성능 보장이 아니다.",
       },
+    ],
+  },
+  "regression-metrics": {
+    title: "회귀 평가 글이 소유하는 범위",
+    owns: [
+      "Residual·absolute/squared penalty와 MAE·RMSE 계산",
+      "Absolute/squared conditional risk가 목표로 하는 중앙값·평균",
+      "Prediction interval의 empirical coverage·width 및 conditional coverage 경계",
+    ],
+    reuses: [
+      { label: "평가 decision unit과 reducer", href: "/ai/evaluation-metrics" },
+      { label: "기댓값", href: "/ai/math-random-variables-expectation" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Regression quantile claim은 원 논문의 loss·linear specification·distribution 조건으로 제한한다." },
+      { kind: "project-claim", rule: "Residual·coverage 계산 예는 metric 동작을 설명하며 특정 model 우월성을 보장하지 않는다." },
+    ],
+  },
+  "classification-metrics": {
+    title: "분류 평가 글이 소유하는 범위",
+    owns: [
+      "Score ranking·probability semantics·threshold action이라는 세 evaluation layer",
+      "Strictly proper binary Brier score와 probability misreport regret",
+      "Threshold별 false-negative/false-positive expected decision cost",
+    ],
+    reuses: [
+      { label: "평가 decision cost", href: "/ai/evaluation-metrics" },
+      { label: "Class prevalence·PR/ROC·confusion matrix", href: "/ai/imbalanced-data" },
+      { label: "Probability calibration", href: "/ai/image-probability-decisions" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Proper scoring rule claim은 원 논문의 probability-space·regularity·orientation 조건으로 제한한다." },
+      { kind: "project-claim", rule: "Threshold cost 식은 사전에 비용과 population을 정한 binary decision에만 적용한다." },
+    ],
+  },
+  "ranking-metrics": {
+    title: "검색·추천 평가 글이 소유하는 범위",
+    owns: [
+      "Query·candidate·relevance·depth k의 ranked-list evaluation unit",
+      "NDCG의 graded gain·position discount·ideal normalization",
+      "Query macro·traffic-weighted population reducer와 incomplete judgment audit",
+    ],
+    reuses: [
+      { label: "평가 unit과 reducer", href: "/ai/evaluation-metrics" },
+      { label: "Multi-positive retrieval", href: "/ai/sentence-embeddings#evaluation" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "NDCG claim은 원 논문의 relevance scale·discount interpretation·test collection 범위로 제한한다." },
+      { kind: "project-claim", rule: "Query macro와 traffic 예시는 서로 다른 population 정의를 보일 뿐 하나를 보편적으로 권하지 않는다." },
+    ],
+  },
+  "metric-selection-protocol": {
+    title: "Metric selection protocol 글이 소유하는 범위",
+    owns: [
+      "Training surrogate·validation configuration·decision policy·outer test의 정보 경계",
+      "Hard guardrail의 feasible set을 만든 뒤 primary metric으로 선택하는 절차",
+      "Data·candidate·metric·release rule을 묶은 selection receipt",
+    ],
+    reuses: [
+      { label: "Train·validation·test", href: "/ai/train-validation-test" },
+      { label: "Hyperparameter selection", href: "/ai/hyperparameter-tuning" },
+      { label: "Metric decision contract", href: "/ai/evaluation-metrics" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "Metric·scorer API claim은 현재 stable scikit-learn 문서와 설치 version으로 제한한다." },
+      { kind: "project-claim", rule: "Feasible-set 수식은 감사 가능한 selection 계약이며 generalization guarantee가 아니다." },
     ],
   },
   "experiment-tracking": {
