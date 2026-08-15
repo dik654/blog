@@ -21400,461 +21400,138 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/experiment-tracking": {
-    coreIdea:
-      "실험 추적은 dashboard에 metric을 모으는 일이 아니라 content-addressed input specification과 실제 execution attempt를 분리하고, immutable artifact·metric progress 좌표·mutable alias event·metadata/object-store integrity를 연결한 provenance를 보존한 뒤 목적에 맞는 재현 수준을 깨끗한 environment에서 검사하는 운영 계약입니다.",
-    assumedKnowledge: [
-      {
-        id: "reproducible-training-run-contract",
-        role: "Data·split·resolved config·code·environment·metric·artifact가 한 training run을 이루는 정본 계약을 가져옵니다.",
-      },
-      {
-        id: "run-artifact-provenance",
-        role: "Run ID에서 checkpoint·prediction·evaluation report로 이어지는 양방향 lineage를 재사용합니다.",
-      },
-      {
-        id: "effective-batch-update-clock",
-        role: "Micro-batch iteration과 실제 optimizer update·processed sample/token clock을 구분합니다.",
-      },
-      {
-        id: "probability-distribution",
-        role: "Pseudo-random stream과 stochastic training 결과의 반복 분포를 읽습니다.",
-      },
-      {
-        id: "variance",
-        role: "여러 seed reproduction metric의 평균뿐 아니라 spread와 uncertainty를 비교합니다.",
-      },
-      {
-        id: "metric-guardrail-feasible-selection",
-        role: "Reproduced candidate가 통과해야 할 primary metric·critical slice·latency guardrail을 가져옵니다.",
-      },
-    ],
+    coreIdea: "결과 숫자에서 immutable inputs까지 돌아갈 수 있도록 experiment specification, execution attempt, content-addressed artifact와 provenance edge를 분리해 기록합니다.",
+    assumedKnowledge: [],
     introducedHere: [
-      {
-        id: "experiment-spec-attempt-identity",
-        role: "같은 실행 조건의 digest와 seed·retry·worker별 실제 attempt를 서로 다른 identity로 기록합니다.",
-      },
-      {
-        id: "content-addressed-artifact-reference",
-        role: "Artifact location과 실제 bytes·schema·producer를 함께 검증합니다.",
-      },
-      {
-        id: "metric-progress-coordinate",
-        role: "Learning curve의 step을 update·processed unit·wall time의 비교 가능한 좌표로 바꿉니다.",
-      },
-      {
-        id: "mutable-alias-resolution-receipt",
-        role: "움직이는 alias가 승인 시점에 가리킨 immutable version을 고정합니다.",
-      },
-      {
-        id: "tracking-store-artifact-integrity",
-        role: "Metadata backend와 artifact object store가 함께 복구되고 reference가 유효한지 검사합니다.",
-      },
-      {
-        id: "registry-deployment-version-parity",
-        role: "Registry의 승인 model과 실제 endpoint가 로드한 model·serving revision을 대조합니다.",
-      },
-      {
-        id: "reproduction-equivalence-level",
-        role: "Bitwise·numerical·statistical·behavioral 중 필요한 재현 acceptance level을 선언합니다.",
-      },
-      {
-        id: "hierarchical-random-seed-derivation",
-        role: "Root seed에서 rank·worker·epoch별 독립 random stream을 결정적으로 파생합니다.",
-      },
-      {
-        id: "clean-room-reproduction-test",
-        role: "빈 environment에서 input부터 결과까지 재생하고 first divergence와 acceptance를 판정합니다.",
-      },
+      { id: "experiment-spec-attempt-identity", role: "실행 조건 digest와 실제 seed·retry·worker attempt를 분리합니다." },
+      { id: "content-addressed-artifact-reference", role: "Artifact 위치·bytes digest·schema·producer를 한 reference로 묶습니다." },
     ],
     conceptExplanations: [
-      {
-        id: "experiment-spec-attempt-identity",
-        sectionId: "overview",
-        intuition:
-          "같은 요리법과 재료 목록이더라도 실제로 세 번 조리했다면 요리법 ID 하나와 조리 기록 세 개가 필요합니다.",
-        workedExample:
-          "Code/data/split/resolved-config/image/command digest 9d34…는 같게 두고 seed 1·2와 worker retry 1을 각각 다른 attempt ID로 저장합니다.",
-        boundary:
-          "External API response·mutable table·uncommitted code diff가 snapshot되지 않았다면 겉보기 config가 같아도 같은 specification이라고 볼 수 없습니다.",
-      },
-      {
-        id: "content-addressed-artifact-reference",
-        sectionId: "overview",
-        intuition:
-          "창고 주소만 적지 않고 상자 내용의 지문과 내용물을 읽는 설명서, 만든 작업 기록을 함께 붙입니다.",
-        workedExample:
-          "s3 URI와 SHA-256 digest, prediction schema v3, 128MB, producer attempt 7fa2를 저장하고 소비 전에 bytes와 row/class mapping을 검사합니다.",
-        boundary:
-          "Serialization·compression이 달라지면 physical bytes digest가 달라질 수 있으므로 logical content digest를 쓸 때 canonicalization 규칙을 명시해야 합니다.",
-      },
-      {
-        id: "metric-progress-coordinate",
-        sectionId: "wandb",
-        intuition:
-          "두 주자의 1,000걸음을 비교하기 전에 보폭·거리·시간 중 어느 축이 같은 학습 자원을 뜻하는지 맞춥니다.",
-        workedExample:
-          "Run A update 1,000=1M tokens, B update 1,000=4M tokens라면 token 1M 지점에서는 A의 update 1,000과 B의 update 250을 비교합니다.",
-        boundary:
-          "같은 token 수여도 data order·model compute·warmup 비율은 다를 수 있어 update·wall time·hardware를 함께 기록합니다.",
-      },
-      {
-        id: "mutable-alias-resolution-receipt",
-        sectionId: "wandb",
-        intuition:
-          "‘현재 우승자’라는 표지는 다음 주에 다른 선수에게 옮길 수 있으므로 오늘 승인서에는 선수의 고정 번호도 함께 적습니다.",
-        workedExample:
-          "2026-08-13 10:00 candidate alias가 model:v17을 가리켰다면 receipt에 alias·v17·digest·approver·timestamp를 고정합니다.",
-        boundary:
-          "Alias만 pin하면 재할당 뒤 과거 report가 다른 artifact를 뜻하고, version만 저장하면 운영자가 사용하는 promotion intent와 event history를 잃습니다.",
-      },
-      {
-        id: "tracking-store-artifact-integrity",
-        sectionId: "mlflow",
-        intuition:
-          "도서관 목록과 실제 서고를 따로 관리하더라도 목록에 있는 책이 서고에 있고 열 수 있어야 합니다.",
-        workedExample:
-          "Backend run의 required artifact URI를 service role로 읽어 digest·signature를 확인하고 database/object backups가 같은 recovery point로 복원되는지 연습합니다.",
-        boundary:
-          "Run page metadata가 남았다는 사실은 object availability를 보장하지 않으며 transient network error와 permanent deletion을 구분해야 합니다.",
-      },
-      {
-        id: "registry-deployment-version-parity",
-        sectionId: "mlflow",
-        intuition:
-          "명단에 승인됐다고 적힌 제품과 실제 매장 진열 제품의 serial number가 같은지 확인합니다.",
-        workedExample:
-          "Registry champion→model v12/digest ab7c와 endpoint startup probe의 model v12/digest ab7c·serving config c41d를 대조합니다.",
-        boundary:
-          "A/B·canary rollout에서는 여러 approved versions가 의도적으로 공존할 수 있으므로 endpoint·traffic fraction·rollout ID를 포함해야 합니다.",
-      },
-      {
-        id: "reproduction-equivalence-level",
-        sectionId: "reproducibility",
-        intuition:
-          "문서를 글자 하나까지 같게 복사할지, 숫자 오차만 작으면 되는지, 여러 번의 평균 성능이 같으면 되는지 목적에 따라 정합니다.",
-        workedExample:
-          "CPU audit artifact는 digest exact를, GPU training은 prediction atol/rtol과 고정 seed set의 mean±spread·critical-slice bound를 요구합니다.",
-        boundary:
-          "Tolerance를 reference 결과를 본 뒤 넓히면 acceptance가 선택에 맞춰지고, 평균만 맞아도 tail failure가 달라질 수 있습니다.",
-      },
-      {
-        id: "hierarchical-random-seed-derivation",
-        sectionId: "reproducibility",
-        intuition:
-          "가족 이름 하나에서 구성원별 주소를 규칙적으로 만들되 모든 구성원이 똑같은 난수 순서를 쓰지 않게 합니다.",
-        workedExample:
-          "Root seed 42와 runID·rank 3·worker 5·epoch 2를 hash해 해당 loader의 child seed를 만들고 manifest에 algorithm/version을 남깁니다.",
-        boundary:
-          "Worker 수·sharding·sampler cursor가 달라지면 seed 식이 같아도 sample-to-stream mapping이 달라지고 nondeterministic kernel은 별도입니다.",
-      },
-      {
-        id: "clean-room-reproduction-test",
-        sectionId: "reproducibility",
-        intuition:
-          "개발자 laptop에 우연히 남은 file과 cache를 쓰지 않고 빈 방에서 봉인된 재료와 설명서만으로 결과를 만듭니다.",
-        workedExample:
-          "Fresh worker가 input digests와 container image·command를 받아 실행하고 first divergent sample/update, output digest, numeric diff, metric/slice tolerance를 report합니다.",
-        boundary:
-          "Clean run 한 번의 통과는 future library/hardware release나 deployment distribution의 영구 재현을 보장하지 않으며 주기적 fixture가 필요합니다.",
-      },
+      { id: "experiment-spec-attempt-identity", sectionId: "spec-attempt", intuition: "같은 요리법으로 여러 번 조리하면 요리법 ID 하나와 조리 기록 여러 개가 필요합니다.", workedExample: "같은 code·data·config digest 아래 seed 1과 seed 2, retry 1을 별도 attempt로 남깁니다.", boundary: "Mutable data와 외부 응답이 snapshot되지 않았다면 같은 specification이 아닙니다." },
+      { id: "content-addressed-artifact-reference", sectionId: "artifact-reference", intuition: "창고 주소뿐 아니라 상자 내용의 지문과 설명서, 만든 실행을 함께 붙입니다.", workedExample: "URI·SHA-256·prediction schema·size·producer attempt를 저장하고 소비 전에 다시 검사합니다.", boundary: "같은 logical content라도 serialization이 다르면 bytes digest가 달라질 수 있습니다." },
     ],
     conceptStages: [
-      {
-        label: "Identity",
-        relation:
-          "기존 run contract를 immutable specification과 여러 execution attempts로 분리",
-        concepts: [
-          "reproducible-training-run-contract",
-          "run-artifact-provenance",
-          "experiment-spec-attempt-identity",
-        ],
-      },
-      {
-        label: "Artifact lineage",
-        relation:
-          "Output location·content·schema·producer를 검증 가능한 reference로 연결",
-        concepts: [
-          "experiment-spec-attempt-identity",
-          "content-addressed-artifact-reference",
-        ],
-      },
-      {
-        label: "Experiment UI mapping",
-        relation:
-          "Metric clock과 immutable version·mutable alias를 W&B primitives에 대응",
-        concepts: [
-          "effective-batch-update-clock",
-          "metric-progress-coordinate",
-          "mutable-alias-resolution-receipt",
-        ],
-      },
-      {
-        label: "Storage and promotion",
-        relation:
-          "MLflow metadata/object lifecycle을 보존하고 registry와 endpoint version을 대조",
-        concepts: [
-          "tracking-store-artifact-integrity",
-          "registry-deployment-version-parity",
-          "content-addressed-artifact-reference",
-        ],
-      },
-      {
-        label: "Reproduction acceptance",
-        relation:
-          "Random streams와 필요한 같음의 수준을 고정해 clean environment에서 검사",
-        concepts: [
-          "probability-distribution",
-          "variance",
-          "hierarchical-random-seed-derivation",
-          "reproduction-equivalence-level",
-          "clean-room-reproduction-test",
-          "metric-guardrail-feasible-selection",
-        ],
-      },
+      { label: "Specification", relation: "Immutable inputs를 정규화해 실행 조건 identity를 고정", concepts: ["experiment-spec-attempt-identity"] },
+      { label: "Attempt", relation: "Seed·retry·worker를 실제 실행 identity로 분리", concepts: ["experiment-spec-attempt-identity"] },
+      { label: "Artifact", relation: "Output bytes와 schema·producer를 provenance edge로 연결", concepts: ["experiment-spec-attempt-identity", "content-addressed-artifact-reference"] },
     ],
     exercises: [
-      {
-        level: "basic",
-        question:
-          "Code·data·split·resolved config가 같은 seed 1·2 run과 seed 2 retry run의 spec digest와 attempt IDs를 설계하라.",
-        answerChecklist: [
-          "one shared spec digest",
-          "seed 1 attempt",
-          "seed 2 attempt",
-          "retry separate",
-          "worker/status",
-          "no overwrite",
-          "human name not identity",
-        ],
-        requiredConcepts: ["experiment-spec-attempt-identity"],
-        sectionId: "overview",
-      },
-      {
-        level: "advanced",
-        question:
-          "Mutable dataset·external API·uncommitted diff를 쓰는 training run을 동일 specification으로 다시 만드는 snapshot·digest·redaction manifest를 설계하라.",
-        answerChecklist: [
-          "data as-of/content",
-          "API response or version",
-          "git commit and diff",
-          "resolved config",
-          "image/dependencies",
-          "command",
-          "secret version not value",
-          "canonical hashing",
-          "attempt status",
-        ],
-        requiredConcepts: [
-          "experiment-spec-attempt-identity",
-          "content-addressed-artifact-reference",
-        ],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "Artifact URI가 같지만 bytes가 달라진 경우와 bytes는 같지만 prediction schema class order가 달라진 경우를 각각 판정하라.",
-        answerChecklist: [
-          "URI insufficient",
-          "digest mismatch first fails",
-          "same bytes",
-          "schema mismatch still fails",
-          "producer link",
-          "row/class fixture",
-        ],
-        requiredConcepts: ["content-addressed-artifact-reference"],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "Run A update 1000=1M tokens, B update 1000=4M tokens일 때 token budget 1M에서 비교할 좌표와 필요한 W&B fields를 작성하라.",
-        answerChecklist: [
-          "A update 1000",
-          "B update 250",
-          "processed token field",
-          "define custom axis",
-          "validation artifact",
-          "wall time/hardware",
-        ],
-        requiredConcepts: ["metric-progress-coordinate"],
-        sectionId: "wandb",
-      },
-      {
-        level: "basic",
-        question:
-          "같은 candidate alias가 월요일에는 v17, 화요일에는 v18을 가리킬 때 alias 문자열만으로 실행 artifact를 식별할 수 없는 이유와 rollback에 남겨야 할 최소 receipt를 설명하라.",
-        answerChecklist: [
-          "alias mutable",
-          "v17/v18 immutable",
-          "digest",
-          "resolve timestamp",
-          "resolved version pin",
-          "deployment/approval event",
-          "rollback version/config",
-          "audit history",
-        ],
-        requiredConcepts: [
-          "mutable-alias-resolution-receipt",
-          "registry-deployment-version-parity",
-        ],
-        sectionId: "wandb",
-      },
-      {
-        level: "basic",
-        question:
-          "MLflow backend에는 run이 남았지만 model object가 삭제된 경우 replayable predicate의 어느 조건이 실패하는지 설명하라.",
-        answerChecklist: [
-          "metadata exists",
-          "artifact exists false",
-          "cannot load/digest",
-          "dangling reference",
-          "exclude approval",
-          "retention/backup repair",
-        ],
-        requiredConcepts: ["tracking-store-artifact-integrity"],
-        sectionId: "mlflow",
-      },
-      {
-        level: "advanced",
-        question:
-          "PostgreSQL backend와 S3 artifact store를 쓰는 self-hosted MLflow의 backup·restore·schema migration·credential·integrity drill을 설계하라.",
-        answerChecklist: [
-          "consistent recovery point",
-          "database backup",
-          "object versioning",
-          "migration backup",
-          "server/client access model",
-          "encryption",
-          "required artifact job",
-          "digest/schema",
-          "restore exercise",
-          "RPO/RTO",
-        ],
-        requiredConcepts: ["tracking-store-artifact-integrity"],
-        sectionId: "mlflow",
-      },
-      {
-        level: "basic",
-        question:
-          "Bitwise·numerical·statistical·behavioral 재현을 각각 하나의 검사 예와 연결하고 GPU training에 필요한 수준을 선택하라.",
-        answerChecklist: [
-          "digest exact",
-          "atol/rtol",
-          "seed mean/spread",
-          "metric/slice guardrail",
-          "purpose-specific",
-          "not seed-only",
-          "predeclared tolerance",
-        ],
-        requiredConcepts: ["reproduction-equivalence-level"],
-        sectionId: "reproducibility",
-      },
-      {
-        level: "advanced",
-        question:
-          "Root seed에서 8 ranks×4 workers×epochs의 child streams를 만들고 resume·worker-count 변경 반례까지 포함한 random manifest를 작성하라.",
-        answerChecklist: [
-          "stable tuple",
-          "hash/mix",
-          "rank worker epoch",
-          "algorithm/version",
-          "RNG state",
-          "sampler cursor",
-          "resume",
-          "worker count changes mapping",
-          "kernel nondeterminism separate",
-        ],
-        requiredConcepts: ["hierarchical-random-seed-derivation"],
-        sectionId: "reproducibility",
-      },
-      {
-        level: "advanced",
-        question:
-          "새 worker에서 reference run을 재생하는 clean-room CI의 input verification·execution·first-divergence·artifact/metric acceptance·lineage 검사를 설계하라.",
-        answerChecklist: [
-          "immutable input digest",
-          "fresh image/environment",
-          "exact command",
-          "seed/topology",
-          "exit and required artifacts",
-          "schema/digest or numeric diff",
-          "metric mean/spread",
-          "critical slices",
-          "first divergent step",
-          "registry/deployment trace",
-          "receipt",
-        ],
-        requiredConcepts: [
-          "clean-room-reproduction-test",
-          "reproduction-equivalence-level",
-          "registry-deployment-version-parity",
-        ],
-        sectionId: "reproducibility",
-      },
+      { level: "basic", question: "같은 spec 아래 seed 1·2와 retry 1의 identity를 설계하라.", answerChecklist: ["shared digest", "seed 1", "seed 2", "retry separate", "worker", "no overwrite"], requiredConcepts: ["experiment-spec-attempt-identity"], sectionId: "spec-attempt" },
+      { level: "basic", question: "Spec digest에 포함할 여섯 입력을 열거하라.", answerChecklist: ["code", "data", "split", "config", "environment", "command"], requiredConcepts: ["experiment-spec-attempt-identity"], sectionId: "spec-attempt" },
+      { level: "basic", question: "Run name이 identity가 될 수 없는 이유를 설명하라.", answerChecklist: ["mutable", "not unique", "human label", "digest identity", "attempt coordinates", "audit"], requiredConcepts: ["experiment-spec-attempt-identity"], sectionId: "overview" },
+      { level: "basic", question: "Artifact reference의 다섯 필드를 작성하라.", answerChecklist: ["URI", "digest", "schema", "size", "producer", "version"], requiredConcepts: ["content-addressed-artifact-reference"], sectionId: "artifact-reference" },
+      { level: "basic", question: "URI는 같지만 bytes가 달라진 artifact를 판정하라.", answerChecklist: ["rehash", "digest mismatch", "fail", "no overwrite", "producer", "incident"], requiredConcepts: ["content-addressed-artifact-reference"], sectionId: "artifact-reference" },
+      { level: "basic", question: "실패 attempt에 남길 receipt를 설명하라.", answerChecklist: ["exit code", "last step", "stderr", "partial outputs", "required checks", "status"], requiredConcepts: ["experiment-spec-attempt-identity"], sectionId: "provenance-receipt" },
+      { level: "advanced", question: "Mutable dataset과 API 응답을 immutable spec으로 만드는 manifest를 설계하라.", answerChecklist: ["data as-of", "API snapshot", "git revision", "resolved config", "image", "canonical encode"], requiredConcepts: ["experiment-spec-attempt-identity", "content-addressed-artifact-reference"], sectionId: "spec-attempt" },
+      { level: "advanced", question: "같은 bytes지만 class order schema가 다른 prediction을 판정하라.", answerChecklist: ["digest same", "schema mismatch", "semantic failure", "class fixture", "producer", "new version"], requiredConcepts: ["content-addressed-artifact-reference"], sectionId: "artifact-reference" },
+      { level: "advanced", question: "Report에서 input까지 reverse traversal을 설계하라.", answerChecklist: ["report", "prediction", "checkpoint", "attempt", "spec", "immutable inputs"], requiredConcepts: ["experiment-spec-attempt-identity", "content-addressed-artifact-reference"], sectionId: "provenance-receipt" },
+      { level: "advanced", question: "Artifact retention이 metadata보다 짧을 때 failure와 repair를 설계하라.", answerChecklist: ["dangling URI", "availability", "retention", "backup", "restore drill", "failure status"], requiredConcepts: ["content-addressed-artifact-reference"], sectionId: "artifact-reference" },
     ],
     papers: [
-      {
-        title: "W&B — Log objects and media · Artifact aliases",
-        href: "https://docs.wandb.ai/guides/track/log/",
-        problem:
-          "Run history의 metric을 명시적인 step axis에 기록하고 artifact version을 stable/mutable reference로 탐색하는 현재 API 문제",
-        contribution:
-          "wandb.log 기본 step·define_metric custom axis와 unique artifact versions·custom/protected aliases의 현재 semantics 문서화",
-        assumptions:
-          "현재 W&B SDK/Registry version·workspace policy·user-defined metric/artifact schema와 access configuration",
-        evidenceScope:
-          "공식 문서가 설명하는 현재 logging·axis·version·alias API behavior 범위",
-        notClaim:
-          "Automatic logging과 alias가 split correctness·artifact immutability·data governance·reproduction을 자동 보장한다는 뜻은 아님",
-        sectionId: "standard-wandb-tracking",
-      },
-      {
-        title: "Accelerating the Machine Learning Lifecycle with MLflow",
-        href: "https://people.eecs.berkeley.edu/~alig/papers/mlflow.pdf",
-        problem:
-          "여러 ML libraries·languages·deployment systems에서 experiment·reproducible run·model packaging을 공통으로 관리하기 어려운 lifecycle 문제",
-        contribution:
-          "MLflow Tracking·Projects·Models의 초기 open interface와 system design·use cases 제시",
-        assumptions:
-          "2018년 MLflow 초기 component/API·당시 community/use cases와 system goals",
-        evidenceScope:
-          "Project paper의 motivation·initial design·reported adoption/examples 범위",
-        notClaim:
-          "현재 backend/artifact store·registry alias·stage semantics가 초기 논문과 같거나 모든 조직에서 MLflow가 최선이라는 뜻은 아님",
-        sectionId: "paper-mlflow-lifecycle",
-      },
-      {
-        title: "Improving Reproducibility in Machine Learning Research",
-        href: "https://www.jmlr.org/papers/v22/20-303.html",
-        problem:
-          "ML research 결과의 reliability를 확인하고 code·data·experiment detail을 충분히 공개·검사하기 어려운 문제",
-        contribution:
-          "NeurIPS 2019의 code submission policy·reproducibility challenge·ML reproducibility checklist 도입과 관찰을 보고",
-        assumptions:
-          "해당 conference program·submission population·policy/challenge/checklist implementation과 authors' analyses",
-        evidenceScope:
-          "JMLR report에 기술된 program design·participation·survey/observation·lessons 범위",
-        notClaim:
-          "특정 tracker·seed policy가 모든 연구 결과를 재현시키거나 program 관찰이 전체 ML community의 causal effect를 증명한다는 뜻은 아님",
-        sectionId: "paper-ml-reproducibility",
-      },
-      {
-        title: "PyTorch — Reproducibility",
-        href: "https://docs.pytorch.org/docs/stable/notes/randomness.html",
-        problem:
-          "PyTorch program의 random sources와 nondeterministic operations를 통제하고 release/platform/device별 재현 한계를 이해하는 문제",
-        contribution:
-          "Randomness control·deterministic algorithm configuration·CUDA behavior와 performance trade-off의 현재 공식 guidance",
-        assumptions:
-          "설치한 PyTorch release·operator·device/backend·documented environment variables와 algorithm support",
-        evidenceScope:
-          "현재 공식 문서가 명시한 PyTorch reproducibility behavior와 caveats 범위",
-        notClaim:
-          "Seed와 deterministic setting이 data snapshot·external API·distributed topology·artifact lineage까지 보장한다는 뜻은 아님",
-        sectionId: "standard-pytorch-reproducibility",
-      },
+      { title: "Accelerating the Machine Learning Lifecycle with MLflow", href: "https://people.eecs.berkeley.edu/~alig/papers/mlflow.pdf", problem: "서로 다른 ML library와 deployment의 experiment·run·model lifecycle을 공통 관리하기 어려움", contribution: "Tracking·Projects·Models의 초기 open interface 제안", assumptions: "2018년 초기 MLflow architecture와 사례", evidenceScope: "논문의 design과 reported use cases", notClaim: "현재 registry API가 논문과 동일하거나 provenance가 자동 완성된다는 뜻은 아님", sectionId: "paper-mlflow-lifecycle" },
     ],
+    entryLevel: true,
+  },
+  "ai/learning-curve-tracking": {
+    coreIdea: "Metric을 불분명한 step이 아니라 optimizer update·processed units·wall time 좌표에 놓고 같은 자원 지점과 같은 evaluation contract에서 비교합니다.",
+    assumedKnowledge: [],
+    introducedHere: [{ id: "metric-progress-coordinate", role: "Learning curve 관측마다 update·처리량·시간을 보존합니다." }],
+    conceptExplanations: [
+      { id: "metric-progress-coordinate", sectionId: "progress-coordinate", intuition: "두 주자를 걸음 수로만 비교하지 않고 거리와 시간도 같은 축으로 맞춥니다.", workedExample: "A의 update 1000과 B의 update 250이 모두 1M token이면 그 두 관측을 비교합니다.", boundary: "같은 token 수라도 evaluation fixture·data order·hardware가 다르면 해석을 분리합니다." },
+    ],
+    conceptStages: [
+      { label: "Observation", relation: "Metric에 update·processed-unit·time 좌표를 결합", concepts: ["metric-progress-coordinate"] },
+      { label: "Alignment", relation: "두 run에서 같은 자원 budget에 가장 가까운 관측을 선택", concepts: ["metric-progress-coordinate"] },
+      { label: "Receipt", relation: "Checkpoint·evaluation fixture·metric definition을 point에 연결", concepts: ["metric-progress-coordinate"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Metric observation tuple의 네 필드를 쓰라.", answerChecklist: ["update", "processed units", "wall time", "metric", "definition", "unit"], requiredConcepts: ["metric-progress-coordinate"], sectionId: "progress-coordinate" },
+      { level: "basic", question: "Logging call과 optimizer update가 다른 예를 설명하라.", answerChecklist: ["microbatch", "accumulation", "one step", "logging independent", "counter", "policy"], requiredConcepts: ["metric-progress-coordinate"], sectionId: "overview" },
+      { level: "basic", question: "A update1000=1M, B update1000=4M일 때 1M 비교 좌표를 계산하라.", answerChecklist: ["A 1000", "B 250", "same tokens", "not same update", "metric definition", "hardware"], requiredConcepts: ["metric-progress-coordinate"], sectionId: "comparison-boundary" },
+      { level: "basic", question: "Processed units를 budget으로 나누는 이유를 설명하라.", answerChecklist: ["normalization", "different budgets", "ratio", "same unit", "zero to one", "not quality"], requiredConcepts: ["metric-progress-coordinate"], sectionId: "progress-coordinate" },
+      { level: "basic", question: "Curve point의 evaluation receipt 필드를 열거하라.", answerChecklist: ["checkpoint digest", "dataset", "slice", "metric version", "reducer", "hardware"], requiredConcepts: ["metric-progress-coordinate"], sectionId: "logging-receipt" },
+      { level: "basic", question: "같은 metric 이름을 바로 비교할 수 없는 반례를 들라.", answerChecklist: ["different reducer", "different slice", "same name", "definition ID", "direction", "reject"], requiredConcepts: ["metric-progress-coordinate"], sectionId: "logging-receipt" },
+      { level: "advanced", question: "목표 token 지점의 nearest observation 선택식을 적용하라.", answerChecklist: ["target", "absolute distance", "argmin A", "argmin B", "tolerance", "delta"], requiredConcepts: ["metric-progress-coordinate"], sectionId: "comparison-boundary" },
+      { level: "advanced", question: "Logging 간격이 너무 큰 경우 interpolation policy를 설계하라.", answerChecklist: ["max gap", "nearest", "interpolation", "flag", "no extrapolation", "failure"], requiredConcepts: ["metric-progress-coordinate"], sectionId: "comparison-boundary" },
+      { level: "advanced", question: "Quality와 system speed 차이를 분리하는 비교표를 설계하라.", answerChecklist: ["tokens", "updates", "wall time", "hardware", "quality", "throughput"], requiredConcepts: ["metric-progress-coordinate"], sectionId: "comparison-boundary" },
+      { level: "advanced", question: "Resume 뒤 curve가 되감기는 오류의 원인과 guard를 설계하라.", answerChecklist: ["counter reset", "global offset", "checkpoint cursor", "monotonicity", "duplicate", "receipt"], requiredConcepts: ["metric-progress-coordinate"], sectionId: "logging-receipt" },
+    ],
+    papers: [
+      { title: "Weights & Biases: Log data with experiments", href: "https://docs.wandb.ai/guides/track/log/", problem: "Run의 metric·media·custom step을 일관되게 기록해야 함", contribution: "Logging history와 step metric의 공식 interface 설명", assumptions: "설치 SDK와 service version에 따른 동작 차이", evidenceScope: "현재 공식 logging semantics", notClaim: "Metric 정의와 공정한 비교가 자동 보장된다는 뜻은 아님", sectionId: "standard-wandb-tracking" },
+    ],
+    entryLevel: true,
+  },
+  "ai/model-artifact-registry": {
+    coreIdea: "Metadata backend와 artifact store를 함께 검증하고 mutable alias를 immutable version으로 resolve한 promotion receipt를 실제 endpoint와 대조합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "tracking-store-artifact-integrity", role: "Backend metadata와 artifact objects가 함께 복구되는지 검사합니다." },
+      { id: "mutable-alias-resolution-receipt", role: "Alias가 승인 시점에 가리킨 immutable version을 고정합니다." },
+      { id: "registry-deployment-version-parity", role: "Registry와 실제 endpoint가 같은 artifact·config를 쓰는지 대조합니다." },
+    ],
+    conceptExplanations: [
+      { id: "tracking-store-artifact-integrity", sectionId: "store-integrity", intuition: "도서관 목록과 실제 서고가 둘 다 복구되어야 책을 다시 읽을 수 있습니다.", workedExample: "Backend URI가 가리키는 model object의 존재·readability·digest·schema를 모두 검사합니다.", boundary: "Database row만 남아도 replayable run은 아닙니다." },
+      { id: "mutable-alias-resolution-receipt", sectionId: "alias-promotion", intuition: "오늘의 우승자 표지는 옮겨가므로 승인서에는 고정 선수 번호를 적습니다.", workedExample: "candidate를 v17로 resolve하고 digest·policy·approver·time을 receipt에 고정합니다.", boundary: "Alias만 저장하면 재할당 뒤 과거 승인을 재현할 수 없습니다." },
+      { id: "registry-deployment-version-parity", sectionId: "deployment-parity", intuition: "승인 명단의 제품과 매장에 놓인 제품의 serial number가 같은지 봅니다.", workedExample: "Registry v21 digest와 endpoint startup attestation의 model·container·config digest를 비교합니다.", boundary: "Canary에서는 여러 approved version과 traffic fraction이 의도적으로 공존할 수 있습니다." },
+    ],
+    conceptStages: [
+      { label: "Storage", relation: "Metadata와 required artifacts의 공동 integrity를 검사", concepts: ["tracking-store-artifact-integrity"] },
+      { label: "Promotion", relation: "Mutable alias를 immutable version·digest receipt로 고정", concepts: ["tracking-store-artifact-integrity", "mutable-alias-resolution-receipt"] },
+      { label: "Deployment", relation: "Promotion receipt와 runtime attestation을 대조", concepts: ["mutable-alias-resolution-receipt", "registry-deployment-version-parity"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Backend store와 artifact store의 역할을 구분하라.", answerChecklist: ["run metadata", "metrics", "URI", "weights", "large objects", "separate lifecycle"], requiredConcepts: ["tracking-store-artifact-integrity"], sectionId: "overview" },
+      { level: "basic", question: "Required artifact 하나의 네 integrity 검사를 쓰라.", answerChecklist: ["exists", "readable", "digest", "schema", "all required", "fail closed"], requiredConcepts: ["tracking-store-artifact-integrity"], sectionId: "store-integrity" },
+      { level: "basic", question: "DB row는 있지만 object가 삭제된 run을 판정하라.", answerChecklist: ["metadata true", "exists false", "replay false", "dangling", "exclude promotion", "repair"], requiredConcepts: ["tracking-store-artifact-integrity"], sectionId: "store-integrity" },
+      { level: "basic", question: "Immutable version과 mutable alias를 구분하라.", answerChecklist: ["version fixed", "alias moves", "intent", "resolve", "history", "receipt"], requiredConcepts: ["mutable-alias-resolution-receipt"], sectionId: "alias-promotion" },
+      { level: "basic", question: "Promotion receipt의 일곱 필드를 쓰라.", answerChecklist: ["model", "alias", "version", "digest", "policy", "approver", "time"], requiredConcepts: ["mutable-alias-resolution-receipt"], sectionId: "alias-promotion" },
+      { level: "basic", question: "Registry champion v21, endpoint v17인 상태를 판정하라.", answerChecklist: ["registry valid", "endpoint stale", "parity false", "runtime probe", "rollout", "repair"], requiredConcepts: ["registry-deployment-version-parity"], sectionId: "deployment-parity" },
+      { level: "advanced", question: "Backend DB와 object store의 공동 restore drill을 설계하라.", answerChecklist: ["recovery point", "DB restore", "object versioning", "credentials", "digest job", "RPO/RTO"], requiredConcepts: ["tracking-store-artifact-integrity"], sectionId: "store-integrity" },
+      { level: "advanced", question: "Alias 재할당 뒤 과거 승인을 감사하는 절차를 설계하라.", answerChecklist: ["alias history", "resolve time", "version", "digest", "approver", "policy revision"], requiredConcepts: ["mutable-alias-resolution-receipt"], sectionId: "alias-promotion" },
+      { level: "advanced", question: "Canary 두 version의 deployment parity receipt를 설계하라.", answerChecklist: ["rollout ID", "approved versions", "endpoint", "traffic fraction", "artifact digest", "serving config"], requiredConcepts: ["registry-deployment-version-parity"], sectionId: "deployment-parity" },
+      { level: "advanced", question: "Registry pointer는 맞지만 object bytes가 변한 사건을 탐지하라.", answerChecklist: ["load bytes", "rehash", "digest mismatch", "quarantine", "audit event", "restore"], requiredConcepts: ["tracking-store-artifact-integrity", "registry-deployment-version-parity"], sectionId: "store-integrity" },
+    ],
+    papers: [
+      { title: "MLflow Artifact Stores", href: "https://mlflow.org/docs/latest/self-hosting/architecture/artifact-store/", problem: "Run metadata와 큰 artifact의 storage 역할을 구분해야 함", contribution: "Backend store와 artifact store의 책임·access configuration 설명", assumptions: "Deployment mode와 provider 설정에 따라 경로가 달라짐", evidenceScope: "현재 MLflow self-hosting architecture", notClaim: "공동 backup과 digest 검증이 자동 완성된다는 뜻은 아님", sectionId: "paper-mlflow-artifact-store" },
+      { title: "MLflow Model Registry Workflows", href: "https://mlflow.org/docs/latest/ml/model-registry/workflow/", problem: "Registered versions를 검토·조직·배포에 연결해야 함", contribution: "Version·tag·mutable alias와 alias loading workflow 설명", assumptions: "Self-hosted registry의 supported backend requirement", evidenceScope: "현재 공식 registry workflow", notClaim: "Alias 자체가 승인 통제와 immutable receipt를 제공한다는 뜻은 아님", sectionId: "paper-mlflow-registry" },
+    ],
+    entryLevel: true,
+  },
+  "ai/reproducible-ml-execution": {
+    coreIdea: "Bitwise·numeric·statistical·behavioral 중 필요한 재현 수준을 먼저 선언하고, 계층적 random streams와 immutable inputs로 clean-room test를 수행합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "reproduction-equivalence-level", role: "재실행 결과를 같다고 볼 acceptance 수준을 선언합니다." },
+      { id: "hierarchical-random-seed-derivation", role: "Root seed에서 병렬 실행 좌표별 random stream을 파생합니다." },
+      { id: "clean-room-reproduction-test", role: "빈 environment에서 first divergence와 acceptance를 검사합니다." },
+    ],
+    conceptExplanations: [
+      { id: "reproduction-equivalence-level", sectionId: "equivalence-level", intuition: "문서를 글자까지 같게 복사할지 뜻과 통계만 같으면 될지 목적에 따라 정합니다.", workedExample: "CPU artifact는 digest exact, GPU tensor는 atol·rtol, 여러 seed는 mean·spread를 검사합니다.", boundary: "결과를 본 뒤 tolerance를 넓히면 acceptance가 사후 선택됩니다." },
+      { id: "hierarchical-random-seed-derivation", sectionId: "seed-tree", intuition: "가족 이름 하나에서 구성원별 주소를 규칙적으로 만들되 같은 주소를 복사하지 않습니다.", workedExample: "Root seed와 run·rank·worker·epoch를 hash해 loader별 child seed를 만듭니다.", boundary: "Worker 수와 sampler topology가 바뀌면 sample-to-stream mapping도 달라집니다." },
+      { id: "clean-room-reproduction-test", sectionId: "clean-room", intuition: "개발 laptop의 cache 없이 봉인된 재료와 설명서만으로 다시 만듭니다.", workedExample: "Fresh worker가 input digest와 image·command를 받아 실행하고 최초로 달라진 artifact를 보고합니다.", boundary: "한 번 통과해도 미래 library·hardware release까지 영구 보장하지 않습니다." },
+    ],
+    conceptStages: [
+      { label: "Equality", relation: "목적에 맞는 재현 acceptance level과 tolerance를 선언", concepts: ["reproduction-equivalence-level"] },
+      { label: "Random streams", relation: "Root seed에서 역할·병렬 좌표별 child streams 파생", concepts: ["hierarchical-random-seed-derivation", "reproduction-equivalence-level"] },
+      { label: "Clean room", relation: "숨은 state 없이 재실행하고 first divergence 판정", concepts: ["hierarchical-random-seed-derivation", "clean-room-reproduction-test", "reproduction-equivalence-level"] },
+    ],
+    exercises: [
+      { level: "basic", question: "재현 equality의 네 수준을 예와 연결하라.", answerChecklist: ["bitwise", "numeric", "statistical", "behavioral", "example", "purpose"], requiredConcepts: ["reproduction-equivalence-level"], sectionId: "overview" },
+      { level: "basic", question: "Absolute와 relative tolerance를 함께 쓰는 이유를 설명하라.", answerChecklist: ["near zero", "large values", "sum threshold", "predeclare", "all elements", "NaN policy"], requiredConcepts: ["reproduction-equivalence-level"], sectionId: "equivalence-level" },
+      { level: "basic", question: "Seed 하나만 고정해도 재현되지 않는 이유를 세 개 들라.", answerChecklist: ["parallel reduction", "library", "hardware", "data order", "hidden state", "algorithm"], requiredConcepts: ["reproduction-equivalence-level"], sectionId: "overview" },
+      { level: "basic", question: "Child seed derivation tuple의 좌표를 쓰라.", answerChecklist: ["root", "domain", "run", "rank", "worker", "epoch"], requiredConcepts: ["hierarchical-random-seed-derivation"], sectionId: "seed-tree" },
+      { level: "basic", question: "모든 worker에 같은 seed를 복사하는 반례를 설명하라.", answerChecklist: ["same stream", "duplicate augmentation", "correlation", "worker coordinate", "hash", "separation"], requiredConcepts: ["hierarchical-random-seed-derivation"], sectionId: "seed-tree" },
+      { level: "basic", question: "Clean-room test의 입력과 출력 receipt를 쓰라.", answerChecklist: ["input digest", "image", "command", "artifacts", "metrics", "first divergence"], requiredConcepts: ["clean-room-reproduction-test"], sectionId: "clean-room" },
+      { level: "advanced", question: "GPU training의 numeric·statistical·behavioral gate를 함께 설계하라.", answerChecklist: ["tensor tolerance", "seed set", "mean", "spread", "critical slices", "latency guard"], requiredConcepts: ["reproduction-equivalence-level"], sectionId: "equivalence-level" },
+      { level: "advanced", question: "8 ranks×4 workers의 seed manifest와 resume 정책을 설계하라.", answerChecklist: ["stable tuple", "hash version", "rank", "worker", "RNG state", "sampler cursor"], requiredConcepts: ["hierarchical-random-seed-derivation"], sectionId: "seed-tree" },
+      { level: "advanced", question: "Worker 수 변경이 seed tree에 미치는 반례와 대응을 설명하라.", answerChecklist: ["mapping changes", "sample order", "topology receipt", "reject exact claim", "statistical level", "new attempt"], requiredConcepts: ["hierarchical-random-seed-derivation", "reproduction-equivalence-level"], sectionId: "seed-tree" },
+      { level: "advanced", question: "Clean-room CI에서 first divergence를 찾는 순서를 설계하라.", answerChecklist: ["inputs", "environment", "intermediate artifact", "output tensor", "metric", "slice gate"], requiredConcepts: ["clean-room-reproduction-test", "reproduction-equivalence-level"], sectionId: "clean-room" },
+    ],
+    papers: [
+      { title: "Machine Learning: The High Interest Credit Card of Technical Debt", href: "https://research.google/pubs/machine-learning-the-high-interest-credit-card-of-technical-debt/", problem: "숨은 data dependency·configuration·pipeline debt가 ML system 신뢰성을 약화함", contribution: "ML-specific technical debt와 boundary erosion을 구조화", assumptions: "조직·production ML 관점의 position paper", evidenceScope: "숨은 coupling과 configuration debt의 위험", notClaim: "특정 reproduction protocol의 표준은 아님", sectionId: "paper-ml-reproducibility" },
+      { title: "PyTorch Reproducibility", href: "https://docs.pytorch.org/docs/stable/notes/randomness.html", problem: "RNG·algorithm·platform 차이가 동일 코드 결과를 바꿀 수 있음", contribution: "Randomness 제어와 deterministic algorithm의 공식 경계 설명", assumptions: "Release·platform·device가 달라지면 완전 재현이 보장되지 않음", evidenceScope: "PyTorch execution randomness control", notClaim: "Seed 설정만으로 data·artifact·environment 재현이 완성된다는 뜻은 아님", sectionId: "standard-pytorch-reproducibility" },
+    ],
+    entryLevel: true,
   },
   "ai/mixture-of-experts": {
     coreIdea:

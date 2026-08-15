@@ -1675,28 +1675,40 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "ai/experiment-tracking": [
     {
-      kind: "공식 문서",
-      label: "Weights & Biases: Metric logging and artifact aliases",
-      href: "https://docs.wandb.ai/guides/track/log/",
-      note: "log step·custom metric axis와 immutable artifact version·mutable alias의 현재 semantics",
-    },
-    {
       kind: "핵심 논문",
       label: "Accelerating the Machine Learning Lifecycle with MLflow",
       href: "https://people.eecs.berkeley.edu/~alig/papers/mlflow.pdf",
-      note: "Experiment tracking·reproducible projects·model packaging을 공통 lifecycle interface로 만든 초기 MLflow 설계",
+      note: "Experiment·run·artifact를 공통 lifecycle interface로 연결한 초기 MLflow 설계",
+    },
+  ],
+  "ai/learning-curve-tracking": [
+    {
+      kind: "공식 문서",
+      label: "Weights & Biases: Log data with experiments",
+      href: "https://docs.wandb.ai/guides/track/log/",
+      note: "metric history·step·custom progress axis를 기록하는 현재 공식 semantics",
+    },
+  ],
+  "ai/model-artifact-registry": [
+    {
+      kind: "공식 문서",
+      label: "MLflow Artifact Stores",
+      href: "https://mlflow.org/docs/latest/self-hosting/architecture/artifact-store/",
+      note: "Backend metadata와 artifact object store의 현재 책임·access 경계",
     },
     {
       kind: "공식 문서",
-      label: "MLflow Architecture and Model Registry Workflows",
-      href: "https://mlflow.org/docs/latest/self-hosting/architecture/overview/",
-      note: "현재 backend/artifact store 경계와 model stages deprecation·version tags/aliases workflow",
+      label: "MLflow Model Registry Workflows",
+      href: "https://mlflow.org/docs/latest/ml/model-registry/workflow/",
+      note: "Immutable versions·tags·mutable aliases와 alias-based loading의 현재 workflow",
     },
+  ],
+  "ai/reproducible-ml-execution": [
     {
       kind: "핵심 논문",
-      label: "Improving Reproducibility in Machine Learning Research",
-      href: "https://www.jmlr.org/papers/v22/20-303.html",
-      note: "NeurIPS reproducibility program의 code policy·challenge·checklist와 관찰",
+      label: "Machine Learning: The High Interest Credit Card of Technical Debt",
+      href: "https://research.google/pubs/machine-learning-the-high-interest-credit-card-of-technical-debt/",
+      note: "Hidden data dependency·configuration·pipeline coupling이 만드는 ML system debt",
     },
     {
       kind: "공식 문서",

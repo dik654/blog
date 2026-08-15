@@ -2670,58 +2670,40 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "experiment-tracking": {
-    title: "실험 추적 글이 소유하는 범위",
-    owns: [
-      "Experiment specification digest와 seed·retry·worker별 execution attempt identity의 분리",
-      "URI·content digest·schema·size·producer를 포함한 immutable artifact reference",
-      "Optimizer update·processed sample/token·wall time을 함께 보존하는 metric progress 좌표",
-      "W&B artifact version·mutable alias와 승인 시점 resolution receipt의 경계",
-      "MLflow backend metadata·artifact object store의 backup·retention·access·integrity lifecycle",
-      "Registry alias·immutable model version과 실제 deployment revision의 parity",
-      "Bitwise·numerical·statistical·behavioral reproduction acceptance와 hierarchical random streams",
-      "Clean environment에서 first divergence·artifact·metric을 검사하는 reproduction test",
-    ],
-    reuses: [
-      {
-        label: "Training run·checkpoint·metric provenance",
-        href: "/ai/training-pipeline",
-      },
-      {
-        label: "확률분포",
-        href: "/ai/math-probability-expectation-variance",
-      },
-      { label: "기댓값", href: "/ai/math-random-variables-expectation" },
-      { label: "분산", href: "/ai/math-variance-sampling" },
-      {
-        label: "Evaluation metric reducer·guardrail",
-        href: "/ai/evaluation-metrics",
-      },
-      {
-        label: "Hyperparameter study history·outer evaluation",
-        href: "/ai/hyperparameter-tuning",
-      },
-      {
-        label: "Competition experiment decision log",
-        href: "/ai/paired-experiment-design#paired-delta",
-      },
-    ],
+    title: "실험 provenance 글이 소유하는 범위",
+    owns: ["Experiment specification digest와 execution attempt identity의 분리", "URI·digest·schema·size·producer를 포함한 immutable artifact reference", "실패 attempt까지 보존하는 provenance receipt"],
+    reuses: [{ label: "Training run lineage", href: "/ai/training-pipeline" }, { label: "Evaluation selection receipt", href: "/ai/metric-selection-protocol" }],
     evidence: [
-      {
-        kind: "primary-source",
-        rule: "MLflow component와 reproducibility-program claim은 초기 project paper와 JMLR report의 시대·program·observational 범위로 제한한다.",
-      },
-      {
-        kind: "standard",
-        rule: "W&B step/alias와 MLflow store/registry semantics는 현재 공식 문서와 설치 version 범위로 제한하고 stage deprecation을 반영한다.",
-      },
-      {
-        kind: "standard",
-        rule: "Spec/attempt ID·input/output digest/schema·progress axes·status/failure·alias/version event·store backup/access·reproduction level/tolerance를 함께 기록한다.",
-      },
-      {
-        kind: "project-claim",
-        rule: "Digest tuple·replayable predicate·seed derivation·acceptance 식은 추적 계약을 설명하는 일반 설계이며 tool이 자동으로 보장하는 theorem이 아니다.",
-      },
+      { kind: "primary-source", rule: "MLflow 초기 component claim은 project paper의 시대·design 범위로 제한한다." },
+      { kind: "project-claim", rule: "Digest tuple과 provenance DAG는 일반 추적 설계이며 특정 tool의 자동 보장이 아니다." },
+    ],
+  },
+  "learning-curve-tracking": {
+    title: "Learning curve 추적 글이 소유하는 범위",
+    owns: ["Metric observation의 update·processed-unit·wall-time 좌표", "서로 다른 logging 간격을 같은 자원 budget에 정렬하는 비교 경계", "Checkpoint·evaluation fixture·metric definition을 묶은 point receipt"],
+    reuses: [{ label: "Effective batch update clock", href: "/ai/batch-size#effective-batch" }, { label: "Evaluation metric definition", href: "/ai/evaluation-metrics" }],
+    evidence: [
+      { kind: "standard", rule: "W&B logging과 step semantics는 현재 공식 문서와 설치 SDK version 범위로 제한한다." },
+      { kind: "project-claim", rule: "Nearest-point alignment 식은 비교 protocol이며 unbiased model comparison theorem이 아니다." },
+    ],
+  },
+  "model-artifact-registry": {
+    title: "Model artifact registry 글이 소유하는 범위",
+    owns: ["Backend metadata와 artifact object store의 공동 integrity lifecycle", "Mutable alias를 immutable version으로 고정하는 promotion receipt", "Registry version과 실제 endpoint artifact·serving config parity"],
+    reuses: [{ label: "Content-addressed artifact", href: "/ai/experiment-tracking#artifact-reference" }, { label: "Deployment release gate", href: "/ai/model-deployment" }],
+    evidence: [
+      { kind: "standard", rule: "MLflow store·registry·alias semantics는 현재 공식 문서와 배포 mode 범위로 제한한다." },
+      { kind: "project-claim", rule: "Replayable predicate와 promotion receipt는 일반 운영 계약이며 registry가 자동 제공하는 보안 theorem이 아니다." },
+    ],
+  },
+  "reproducible-ml-execution": {
+    title: "ML 재현 실행 글이 소유하는 범위",
+    owns: ["Bitwise·numeric·statistical·behavioral reproduction equivalence", "Root seed에서 병렬 좌표별 child stream을 만드는 계층적 derivation", "빈 environment의 first-divergence clean-room test"],
+    reuses: [{ label: "확률분포와 분산", href: "/ai/math-variance-sampling" }, { label: "Metric guardrail", href: "/ai/metric-selection-protocol#guardrails" }],
+    evidence: [
+      { kind: "primary-source", rule: "ML technical-debt claim은 해당 position paper의 production-system framing으로 제한한다." },
+      { kind: "standard", rule: "PyTorch determinism claim은 공식 문서가 명시한 release·platform·device 범위를 넘기지 않는다." },
+      { kind: "project-claim", rule: "Tolerance·seed derivation·clean-room gate는 명시적 재현 protocol이지 영구 동일성 보장이 아니다." },
     ],
   },
   "imbalanced-data": {

@@ -1084,18 +1084,51 @@ const strategyArticles: Article[] = [
   },
   {
     slug: "experiment-tracking",
-    title: "실험 관리: Run 기록에서 Provenance Graph까지",
+    title: "실험 Provenance: Spec에서 Artifact까지",
     subcategory: "ai-practical-strategy",
     sections: [
       { id: "overview", title: "결과를 다시 만드는 provenance" },
-      { id: "wandb", title: "Run · config · artifact lineage" },
-      { id: "mlflow", title: "Tracking · artifact · registry 경계" },
-      {
-        id: "reproducibility",
-        title: "Input · execution · tolerance contract",
-      },
+      { id: "spec-attempt", title: "Spec과 attempt의 분리" },
+      { id: "artifact-reference", title: "Artifact reference" },
+      { id: "provenance-receipt", title: "실패까지 남기는 receipt" },
     ],
     component: () => import("@/pages/articles/ai/experiment-tracking"),
+  },
+  {
+    slug: "learning-curve-tracking",
+    title: "Learning Curve 추적: Step을 비교 가능한 좌표로",
+    subcategory: "ai-practical-strategy",
+    sections: [
+      { id: "overview", title: "Metric observation의 형태" },
+      { id: "progress-coordinate", title: "Update · 처리량 · 시간" },
+      { id: "comparison-boundary", title: "같은 자원 지점 정렬" },
+      { id: "logging-receipt", title: "Evaluation receipt" },
+    ],
+    component: () => import("@/pages/articles/ai/learning-curve-tracking"),
+  },
+  {
+    slug: "model-artifact-registry",
+    title: "Model Artifact Registry: Store에서 Deployment까지",
+    subcategory: "ai-practical-strategy",
+    sections: [
+      { id: "overview", title: "Registry의 네 대상" },
+      { id: "store-integrity", title: "Metadata · object integrity" },
+      { id: "alias-promotion", title: "Alias promotion receipt" },
+      { id: "deployment-parity", title: "Registry · endpoint parity" },
+    ],
+    component: () => import("@/pages/articles/ai/model-artifact-registry"),
+  },
+  {
+    slug: "reproducible-ml-execution",
+    title: "ML 재현 실행: Equality Level에서 Clean Room까지",
+    subcategory: "ai-practical-strategy",
+    sections: [
+      { id: "overview", title: "재현의 네 수준" },
+      { id: "equivalence-level", title: "Numeric equality gate" },
+      { id: "seed-tree", title: "Hierarchical seed tree" },
+      { id: "clean-room", title: "Clean-room test" },
+    ],
+    component: () => import("@/pages/articles/ai/reproducible-ml-execution"),
   },
 ];
 

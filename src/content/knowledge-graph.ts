@@ -7845,7 +7845,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Experiment specification · attempt identity",
     definition:
       "Code·data·split·resolved config·environment·command의 content digest로 실행 조건을 식별하고, seed·retry·worker를 별도 attempt ID에 포함해 같은 조건의 반복 실행을 덮어쓰지 않는 규칙입니다.",
-    canonicalHref: "/ai/experiment-tracking#overview",
+    canonicalHref: "/ai/experiment-tracking#spec-attempt",
   },
   "content-addressed-artifact-reference": {
     id: "content-addressed-artifact-reference",
@@ -7853,7 +7853,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Content-addressed artifact reference",
     definition:
       "Artifact의 URI뿐 아니라 bytes digest·schema version·size·producer run을 함께 저장해 위치가 움직이거나 덮어써져도 정확한 내용과 의미를 검증하는 reference입니다.",
-    canonicalHref: "/ai/experiment-tracking#overview",
+    canonicalHref: "/ai/experiment-tracking#artifact-reference",
   },
   "metric-progress-coordinate": {
     id: "metric-progress-coordinate",
@@ -7862,7 +7862,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Metric progress coordinate",
     definition:
       "Learning curve의 각 관측에 optimizer update·processed sample/token·wall time을 함께 기록해 서로 다른 batch·accumulation·hardware run을 같은 학습 자원 축에서 비교하는 좌표 계약입니다.",
-    canonicalHref: "/ai/experiment-tracking#wandb",
+    canonicalHref: "/ai/learning-curve-tracking#progress-coordinate",
   },
   "mutable-alias-resolution-receipt": {
     id: "mutable-alias-resolution-receipt",
@@ -7870,7 +7870,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Mutable-alias resolution receipt",
     definition:
       "latest·candidate·champion 같은 움직이는 alias가 승인·배포 시점에 가리킨 immutable artifact version과 digest·승인자·시각을 별도 event로 고정하는 기록입니다.",
-    canonicalHref: "/ai/experiment-tracking#wandb",
+    canonicalHref: "/ai/model-artifact-registry#alias-promotion",
   },
   "tracking-store-artifact-integrity": {
     id: "tracking-store-artifact-integrity",
@@ -7878,7 +7878,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Tracking-store · artifact-store integrity",
     definition:
       "Run metadata database의 필수 artifact URI가 실제 object store에서 읽히고 digest·schema가 일치하며 backup·retention·access lifecycle이 함께 복구되는지 검사하는 저장 경계입니다.",
-    canonicalHref: "/ai/experiment-tracking#mlflow",
+    canonicalHref: "/ai/model-artifact-registry#store-integrity",
   },
   "registry-deployment-version-parity": {
     id: "registry-deployment-version-parity",
@@ -7886,7 +7886,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Registry–deployment version parity",
     definition:
       "Registry alias가 resolve한 immutable model version·artifact digest와 실제 endpoint가 로드한 model·serving config revision이 일치하는지 deployment receipt와 runtime probe로 확인하는 조건입니다.",
-    canonicalHref: "/ai/experiment-tracking#mlflow",
+    canonicalHref: "/ai/model-artifact-registry#deployment-parity",
   },
   "reproduction-equivalence-level": {
     id: "reproduction-equivalence-level",
@@ -7894,7 +7894,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Reproduction equivalence level",
     definition:
       "재실행 결과의 같음을 bitwise artifact equality, tensor numeric tolerance, repeated-seed statistical agreement, production behavior guardrail로 나누고 목적에 맞는 acceptance level을 선언하는 계약입니다.",
-    canonicalHref: "/ai/experiment-tracking#reproducibility",
+    canonicalHref: "/ai/reproducible-ml-execution#equivalence-level",
   },
   "hierarchical-random-seed-derivation": {
     id: "hierarchical-random-seed-derivation",
@@ -7903,7 +7903,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Hierarchical random-seed derivation",
     definition:
       "Root seed와 stable run·rank·worker·epoch coordinates를 결정적으로 섞어 병렬 random streams를 분리하고 같은 execution topology에서 다시 계산하는 방법입니다.",
-    canonicalHref: "/ai/experiment-tracking#reproducibility",
+    canonicalHref: "/ai/reproducible-ml-execution#seed-tree",
   },
   "clean-room-reproduction-test": {
     id: "clean-room-reproduction-test",
@@ -7912,7 +7912,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Clean-room reproduction test",
     definition:
       "개발 machine의 숨은 state를 사용하지 않는 빈 environment에서 immutable inputs와 command로 실행한 뒤 first divergence·artifact·metric·slice acceptance를 검사하는 재현 시험입니다.",
-    canonicalHref: "/ai/experiment-tracking#reproducibility",
+    canonicalHref: "/ai/reproducible-ml-execution#clean-room",
   },
   "reasoning-recipe-reproduction-scope": {
     id: "reasoning-recipe-reproduction-scope",
