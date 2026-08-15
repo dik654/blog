@@ -1422,7 +1422,7 @@ export const EDITORIAL_BOUNDARIES = {
       },
       {
         label: "Early stopping과 regularization 선택",
-        href: "/ai/regularization-practice#early-stopping",
+        href: "/ai/early-stopping#state-machine",
       },
     ],
     evidence: [
@@ -1488,7 +1488,7 @@ export const EDITORIAL_BOUNDARIES = {
       },
       {
         label: "Early stopping과 best checkpoint",
-        href: "/ai/regularization-practice#early-stopping",
+        href: "/ai/early-stopping#state-machine",
       },
     ],
     evidence: [
@@ -1503,12 +1503,9 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "regularization-practice": {
-    title: "Regularization 실전 글이 소유하는 범위",
+    title: "Generalization gap 진단 글이 소유하는 범위",
     owns: [
       "Observed train–validation gap의 원인 audit와 one-axis regularization ablation",
-      "Inverted dropout의 expectation·variance·drop unit·train/eval state",
-      "Plain SGD의 L2–decay 등가와 AdamW decoupling·parameter-group coverage",
-      "Early-stopping state와 best artifact 분리, uniform label smoothing과 soft-target composition",
     ],
     reuses: [
       {
@@ -1520,21 +1517,45 @@ export const EDITORIAL_BOUNDARIES = {
         href: "/ai/math-random-variables-expectation",
       },
       { label: "Variance", href: "/ai/math-variance-sampling" },
-      { label: "SGD·Adam optimizer state", href: "/ai/optimizers" },
-      { label: "Learning-rate scheduler와 plateau", href: "/ai/lr-scheduling" },
-      { label: "Mixup·CutMix target", href: "/ai/data-augmentation" },
-      { label: "Softmax cross-entropy", href: "/ai/cross-entropy" },
+      { label: "Dropout", href: "/ai/dropout-regularization" },
+      { label: "Weight decay", href: "/ai/weight-decay" },
+      { label: "Early stopping", href: "/ai/early-stopping" },
+      { label: "Label smoothing", href: "/ai/label-smoothing" },
     ],
     evidence: [
       {
         kind: "primary-source",
-        rule: "Dropout·AdamW·early stopping·label smoothing claim은 각 논문의 architecture·data·objective·evaluation 범위로 제한한다.",
+        rule: "Regularization 분류와 selection claim은 인용한 교재·논문의 objective·evaluation 범위로 제한한다.",
       },
       {
         kind: "standard",
         rule: "Split·baseline·regularizer scope/strength·seed·update budget·best/last artifact·calibration·slice·system cost를 기록한다.",
       },
     ],
+  },
+  "dropout-regularization": {
+    title: "Dropout 글이 소유하는 범위",
+    owns: ["Bernoulli activation mask와 inverted scaling", "Dropout train·eval mode와 mask-sharing 경계"],
+    reuses: [{ label: "Expectation·variance", href: "/ai/math-random-variables-expectation" }, { label: "Regularizer 선택", href: "/ai/regularization-practice" }],
+    evidence: [{ kind: "primary-source", rule: "Dropout 효과는 원 논문의 architecture·dataset·training 조건으로 제한한다." }, { kind: "standard", rule: "p·mask axis·module mode·RNG·MC inference 여부를 기록한다." }],
+  },
+  "weight-decay": {
+    title: "Weight decay 글이 소유하는 범위",
+    owns: ["Plain SGD의 L2–decay 등가", "AdamW decoupling과 parameter-group exact coverage"],
+    reuses: [{ label: "SGD·Adam state", href: "/ai/optimizers" }, { label: "Learning-rate schedule", href: "/ai/lr-scheduling" }],
+    evidence: [{ kind: "primary-source", rule: "AdamW의 등가·분리 주장은 논문의 optimizer 정의와 실험 범위로 제한한다." }, { kind: "standard", rule: "Optimizer·LR schedule·λ·update 수·group identity·resume test를 함께 기록한다." }],
+  },
+  "early-stopping": {
+    title: "Early stopping 글이 소유하는 범위",
+    owns: ["Validation best·counter·patience state machine", "Stop event와 immutable best artifact의 분리"],
+    reuses: [{ label: "Train·validation·test", href: "/ai/train-validation-test" }, { label: "Scheduler와 evaluation cadence", href: "/ai/lr-scheduling" }],
+    evidence: [{ kind: "primary-source", rule: "Stopping criterion의 효과는 논문의 task·metric·cadence 조건으로 제한한다." }, { kind: "standard", rule: "Metric direction·δ·patience·cadence·best/stop index·artifact digest를 기록한다." }],
+  },
+  "label-smoothing": {
+    title: "Label smoothing 글이 소유하는 범위",
+    owns: ["One-hot과 K-class uniform distribution의 ε mixture", "Mixup 등 soft-target 조합의 최종 probability audit"],
+    reuses: [{ label: "Cross-entropy", href: "/ai/cross-entropy" }, { label: "Mixup·CutMix", href: "/ai/data-augmentation" }],
+    evidence: [{ kind: "primary-source", rule: "Label smoothing claim은 Inception 논문의 formulation·ImageNet recipe 범위로 제한한다." }, { kind: "standard", rule: "K·ε·target formula·class weight·ignore index·reduction·calibration을 기록한다." }],
   },
   "image-classification-pipeline": {
     title: "이미지 분류 파이프라인 글이 소유하는 범위",
@@ -6190,7 +6211,7 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "RNN state·time unrolling", href: "/ai/rnn" },
       { label: "BPTT·Jacobian·truncation", href: "/ai/bptt" },
       { label: "LSTM gate와 cell-state 수학", href: "/ai/lstm" },
-      { label: "Dropout 정본", href: "/ai/regularization-practice#dropout" },
+      { label: "Dropout 정본", href: "/ai/dropout-regularization" },
       { label: "DeZero parameter·optimizer 기반", href: "/ai/dezero-nn" },
     ],
     evidence: [

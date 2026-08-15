@@ -513,8 +513,8 @@ export default function ArticleLearningContractView({
                           정답 체크리스트
                         </summary>
                         <ul className="mt-2 space-y-1.5 pl-4">
-                          {exercise.answerChecklist.map((item) => (
-                            <li key={item}>· {item}</li>
+                          {exercise.answerChecklist.map((item, itemIndex) => (
+                            <li key={`${item}-${itemIndex}`}>· {item}</li>
                           ))}
                         </ul>
                       </details>

@@ -1630,7 +1630,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Inverted dropout mask",
     definition:
       "Train mode에서 activation에 Bernoulli keep mask를 곱하고 keep probability로 나눠 conditional expectation은 유지하면서 p/(1−p)에 비례하는 noise variance를 추가하는 연산입니다.",
-    canonicalHref: "/ai/regularization-practice#dropout",
+    canonicalHref: "/ai/dropout-regularization#mask",
   },
   "dropout-train-eval-contract": {
     id: "dropout-train-eval-contract",
@@ -1638,7 +1638,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Dropout train–eval contract",
     definition:
       "Training에서는 선택한 element·channel·region 단위 mask를 sampling하고 evaluation에서는 stochastic mask와 추가 scaling 없이 전체 path를 사용하는 module-state 규칙입니다.",
-    canonicalHref: "/ai/regularization-practice#dropout",
+    canonicalHref: "/ai/dropout-regularization#mode",
   },
   "l2-sgd-decay-equivalence": {
     id: "l2-sgd-decay-equivalence",
@@ -1647,7 +1647,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "L2–SGD weight-decay equivalence",
     definition:
       "Plain scalar-step SGD에서 λ‖w‖²/2 penalty gradient가 update를 (1−ηλ)w−ηg로 만들어 multiplicative weight decay와 같은 형태가 되는 등가 관계입니다.",
-    canonicalHref: "/ai/regularization-practice#weight-decay",
+    canonicalHref: "/ai/weight-decay#sgd-equivalence",
   },
   "decoupled-adaptive-weight-decay": {
     id: "decoupled-adaptive-weight-decay",
@@ -1656,7 +1656,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Decoupled adaptive weight decay",
     definition:
       "Adaptive optimizer의 moment·variance preconditioning에는 data gradient만 넣고 λw shrinkage는 별도 parameter update로 적용하는 AdamW 계열 규칙입니다.",
-    canonicalHref: "/ai/regularization-practice#weight-decay",
+    canonicalHref: "/ai/weight-decay#adamw",
   },
   "weight-decay-param-group-coverage": {
     id: "weight-decay-param-group-coverage",
@@ -1665,7 +1665,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Decay param-group coverage test",
     definition:
       "Decay와 no-decay parameter 집합의 합집합이 모든 trainable parameter이고 교집합은 비어 있으며 optimizer state load 뒤 identity가 유지되는지 검사하는 test입니다.",
-    canonicalHref: "/ai/regularization-practice#weight-decay",
+    canonicalHref: "/ai/weight-decay#parameter-groups",
   },
   "early-stopping-state-machine": {
     id: "early-stopping-state-machine",
@@ -1674,7 +1674,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Early-stopping state machine",
     definition:
       "Validation event마다 best metric·minimum improvement·bad-event counter·patience를 갱신해 stop event와 best snapshot artifact를 서로 분리하는 model-selection 규칙입니다.",
-    canonicalHref: "/ai/regularization-practice#early-stopping",
+    canonicalHref: "/ai/early-stopping#state-machine",
   },
   "best-checkpoint-artifact": {
     id: "best-checkpoint-artifact",
@@ -1682,7 +1682,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Best-checkpoint artifact",
     definition:
       "선택 metric이 가장 좋았던 evaluation의 immutable model state와 update·config·metric receipt를 저장해 마지막 in-memory state와 분리한 산출물입니다.",
-    canonicalHref: "/ai/regularization-practice#early-stopping",
+    canonicalHref: "/ai/early-stopping#stop-and-restore",
   },
   "uniform-label-smoothing": {
     id: "uniform-label-smoothing",
@@ -1691,7 +1691,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Uniform label smoothing",
     definition:
       "One-hot target을 (1−ε) 비율로 유지하고 ε만큼 K-class uniform distribution과 섞어 soft-target cross-entropy를 만드는 regularization입니다.",
-    canonicalHref: "/ai/regularization-practice#label-smoothing",
+    canonicalHref: "/ai/label-smoothing#target",
   },
   "soft-target-composition-audit": {
     id: "soft-target-composition-audit",
@@ -1700,7 +1700,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Soft-target composition audit",
     definition:
       "Label smoothing·Mixup·CutMix·distillation을 함께 쓸 때 최종 target probability의 합·entropy·class별 영향과 loss reduction을 직접 계산해 중복 regularization을 확인하는 절차입니다.",
-    canonicalHref: "/ai/regularization-practice#label-smoothing",
+    canonicalHref: "/ai/label-smoothing#composition",
   },
   "deterministic-autoencoder-contract": {
     id: "deterministic-autoencoder-contract",

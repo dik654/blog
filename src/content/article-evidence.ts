@@ -1346,28 +1346,41 @@ export const ARTICLE_EVIDENCE: Readonly<
   "ai/regularization-practice": [
     {
       kind: "핵심 논문",
-      label:
-        "Dropout: A Simple Way to Prevent Neural Networks from Overfitting",
-      href: "https://jmlr.org/papers/v15/srivastava14a.html",
-      note: "activation을 stochastic하게 생략하는 dropout과 approximate model averaging",
+      label: "Deep Learning — Regularization for Deep Learning",
+      href: "https://www.deeplearningbook.org/contents/regularization.html",
+      note: "generalization 진단 뒤 제약과 penalty를 비교하는 넓은 regularization 계보",
     },
+  ],
+  "ai/dropout-regularization": [
+    {
+      kind: "핵심 논문",
+      label: "Dropout: A Simple Way to Prevent Neural Networks from Overfitting",
+      href: "https://jmlr.org/papers/v15/srivastava14a.html",
+      note: "Bernoulli unit removal과 test-time scaled-network 근사의 원 논문",
+    },
+  ],
+  "ai/weight-decay": [
     {
       kind: "핵심 논문",
       label: "Decoupled Weight Decay Regularization",
       href: "https://arxiv.org/abs/1711.05101",
-      note: "adaptive gradient update에서 weight decay를 분리한 AdamW",
+      note: "adaptive task update에서 direct parameter shrink를 분리한 AdamW",
     },
+  ],
+  "ai/early-stopping": [
     {
       kind: "핵심 논문",
       label: "Early Stopping — but when?",
-      href: "https://link.springer.com/chapter/10.1007/3-540-49430-8_3",
-      note: "validation trajectory에서 stopping criterion을 선택하는 고전적 분석",
+      href: "https://pubmed.ncbi.nlm.nih.gov/12662814/",
+      note: "validation trajectory의 stopping criterion과 training-time trade-off",
     },
+  ],
+  "ai/label-smoothing": [
     {
       kind: "핵심 논문",
       label: "Rethinking the Inception Architecture for Computer Vision",
       href: "https://arxiv.org/abs/1512.00567",
-      note: "label smoothing regularization을 포함한 Inception-v3 학습 설계",
+      note: "one-hot target을 uniform distribution과 섞는 label smoothing formulation",
     },
   ],
   "ai/image-classification-pipeline": [

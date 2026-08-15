@@ -1,17 +1,1 @@
-import Overview from "./regularization-practice/Overview";
-import Dropout from "./regularization-practice/Dropout";
-import WeightDecay from "./regularization-practice/WeightDecay";
-import EarlyStopping from "./regularization-practice/EarlyStopping";
-import LabelSmoothing from "./regularization-practice/LabelSmoothing";
-
-export default function RegularizationPracticeArticle() {
-  return (
-    <div className="space-y-12">
-      <Overview />
-      <Dropout />
-      <WeightDecay />
-      <EarlyStopping />
-      <LabelSmoothing />
-    </div>
-  );
-}
+export { default } from "./regularization-practice/FoundationArticle";

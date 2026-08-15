@@ -11127,518 +11127,1140 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/regularization-practice": {
-    coreIdea:
-      "Regularization은 validation gap을 발견하자마자 기법을 쌓는 일이 아니라 data boundary·pipeline·noise·shift를 먼저 배제하고, activation·parameter update·trajectory selection·target distribution 중 한 자유도만 제한해 같은 seeds와 budget에서 fit·generalization·slice·calibration을 비교하는 과정입니다.",
-    assumedKnowledge: [
+    "entryLevel": true,
+    "entryNote": "Empirical risk와 validation gap을 처음 보는 독자도 두 평균을 따로 정의한 뒤 원인 감사와 한 축 ablation으로 진행합니다.",
+    "coreIdea": "Observed generalization gap은 같은 checkpoint·loss로 계산한 validation risk에서 training risk를 뺀 유한-split 진단값입니다. Leakage·pipeline mismatch·noise·shift를 배제한 뒤에만 같은 seeds와 budget의 one-axis regularization ablation을 수행합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
       {
-        id: "empirical-risk",
-        role: "Train과 validation examples의 같은 loss 평균을 계산합니다.",
+        "id": "observed-generalization-gap",
+        "role": "두 empirical risk의 차이를 원인 감사가 필요한 진단값으로 정의합니다."
       },
       {
-        id: "train-validation-test",
-        role: "Parameter fitting·regularizer selection·최종 보고의 data 사용을 분리합니다.",
-      },
-      {
-        id: "expectation",
-        role: "Dropout Bernoulli mask의 평균과 label distribution 평균을 읽습니다.",
-      },
-      {
-        id: "variance",
-        role: "Dropout noise와 finite validation·seed variation의 흔들림을 해석합니다.",
-      },
-      {
-        id: "gradient-descent",
-        role: "L2 penalty gradient가 SGD update로 들어가는 계산을 읽습니다.",
-      },
-      {
-        id: "momentum-state",
-        role: "Adam moment·variance가 parameter별 update를 precondition한다는 점을 재사용합니다.",
-      },
-      {
-        id: "cross-entropy-nll",
-        role: "One-hot과 probability target의 cross-entropy를 계산합니다.",
-      },
-      {
-        id: "resume-state-closure",
-        role: "Best와 last checkpoint를 durable artifact로 저장하고 새 process에서 복원합니다.",
-      },
+        "id": "regularization-ablation-contract",
+        "role": "동일 seed·split·budget에서 regularization 한 축만 비교합니다."
+      }
     ],
-    introducedHere: [
+    "conceptExplanations": [
       {
-        id: "observed-generalization-gap",
-        role: "동일 loss의 validation–train 차이를 원인 audit가 필요한 진단값으로 사용합니다.",
+        "id": "observed-generalization-gap",
+        "sectionId": "gap",
+        "intuition": "연습문제와 처음 보는 모의고사를 같은 채점법으로 잰 평균 오차의 차이입니다.",
+        "workedExample": "Train NLL .18, validation NLL .31이면 G=.13입니다.",
+        "boundary": "Gap 하나는 overfitting의 충분조건이 아니며 leakage·noise·shift도 같은 모양을 만듭니다.",
+        "counterexample": "Train .80, validation .82의 작은 gap은 좋은 일반화가 아니라 underfitting입니다."
       },
       {
-        id: "regularization-ablation-contract",
-        role: "한 regularization 축만 바꿔 fit·validation·slice·cost를 공정하게 비교합니다.",
-      },
-      {
-        id: "inverted-dropout-mask",
-        role: "Bernoulli mask와 1/q scaling의 expectation·variance를 계산합니다.",
-      },
-      {
-        id: "dropout-train-eval-contract",
-        role: "Mask sampling 단위와 train/eval module behavior를 고정합니다.",
-      },
-      {
-        id: "l2-sgd-decay-equivalence",
-        role: "Plain SGD에서 quadratic penalty와 multiplicative decay가 같은 update임을 보입니다.",
-      },
-      {
-        id: "decoupled-adaptive-weight-decay",
-        role: "AdamW가 λw를 adaptive moment 경로에서 분리하는 이유를 설명합니다.",
-      },
-      {
-        id: "weight-decay-param-group-coverage",
-        role: "Decay/no-decay parameter 집합의 누락·중복과 resume identity를 검사합니다.",
-      },
-      {
-        id: "early-stopping-state-machine",
-        role: "Best·threshold·bad counter·patience로 stop event를 정의합니다.",
-      },
-      {
-        id: "best-checkpoint-artifact",
-        role: "Stop 시점의 last model과 반환할 best snapshot을 분리합니다.",
-      },
-      {
-        id: "uniform-label-smoothing",
-        role: "One-hot target과 K-class uniform distribution을 ε로 섞습니다.",
-      },
-      {
-        id: "soft-target-composition-audit",
-        role: "Smoothing·Mixup·CutMix·distillation 결합의 최종 target을 계산합니다.",
-      },
+        "id": "regularization-ablation-contract",
+        "sectionId": "ablation",
+        "intuition": "같은 조건의 두 실험에서 치료제 한 성분만 바꿔 효과와 부작용을 비교합니다.",
+        "workedExample": "동일 five seeds·30k updates에서 baseline과 dropout p=.1의 paired validation gain을 계산합니다.",
+        "boundary": "Search budget·stopping policy가 다르면 regularizer와 model-selection 효과가 섞입니다.",
+        "counterexample": "후보만 두 배 오래 tuning하고 validation gain을 regularizer 효과라고 부르면 불공정합니다."
+      }
     ],
-    conceptExplanations: [
+    "conceptStages": [
       {
-        id: "observed-generalization-gap",
-        sectionId: "overview",
-        intuition:
-          "연습문제와 처음 보는 모의고사에서 같은 채점법으로 잰 평균 오차의 차이입니다.",
-        workedExample:
-          "Update 5000에서 train NLL=.18, validation NLL=.31이면 observed gap G=.13이며 update별 trace와 class/source slices를 함께 봅니다.",
-        boundary:
-          "Training loss도 높은 작은 gap은 underfitting이고 leakage·preprocessing mismatch·shift도 큰 gap을 만들 수 있어 overfitting의 충분조건이 아닙니다.",
+        "label": "01 두 위험",
+        "relation": "Train과 validation empirical risk를 같은 단위로 정의합니다.",
+        "concepts": [
+          "empirical-risk"
+        ]
       },
       {
-        id: "regularization-ablation-contract",
-        sectionId: "overview",
-        intuition:
-          "치료제를 한꺼번에 섞지 않고 같은 환자 조건에서 한 성분만 바꿔 효과와 부작용을 비교합니다.",
-        workedExample:
-          "같은 five seeds·30k updates에서 baseline과 dropout p=.1만 비교해 validation paired gain·train fit·worst slice·wall time을 기록합니다.",
-        boundary:
-          "각 후보의 tuning trials·augmentation·stopping policy가 다르면 regularizer 효과와 search/model-selection 효과가 섞입니다.",
+        "label": "02 차이",
+        "relation": "두 위험에서 관측 gap을 만듭니다.",
+        "concepts": [
+          "observed-generalization-gap"
+        ]
       },
       {
-        id: "inverted-dropout-mask",
-        sectionId: "dropout",
-        intuition:
-          "일부 통로를 무작위로 끄되 살아남은 통로를 1/q배 키워 여러 mask를 평균했을 때 원래 신호 크기를 유지합니다.",
-        workedExample:
-          "h=2, p=.25, q=.75이면 h̃는 확률 .75로 2/.75, 확률 .25로 0이고 평균은 2, variance는 (.25/.75)·4=4/3입니다.",
-        boundary:
-          "Expectation 유지가 individual forward·nonlinear downstream output의 equality를 보장하지 않으며 mask를 공유하는 channel dropout은 covariance가 다릅니다.",
-      },
-      {
-        id: "dropout-train-eval-contract",
-        sectionId: "dropout",
-        intuition:
-          "연습 때만 통로를 가리고 시험 때는 모든 통로를 켜는 mode switch입니다.",
-        workedExample:
-          "Train mode의 두 forward는 다른 mask와 output을 낼 수 있지만 eval mode에서는 같은 input·state로 같은 output을 내야 합니다.",
-        boundary:
-          "MC dropout처럼 stochastic inference가 목적이면 별도 sampling count·aggregation·uncertainty calibration protocol이 필요합니다.",
-      },
-      {
-        id: "l2-sgd-decay-equivalence",
-        sectionId: "weight-decay",
-        intuition:
-          "Quadratic penalty의 gradient가 현재 weight 방향이어서 scalar SGD에서는 기존 weight를 일정 비율 줄이는 식으로 정리됩니다.",
-        workedExample:
-          "w=10, η=.1, λ=.02, data gradient 3이면 next w=(1−.002)10−.3=9.68입니다.",
-        boundary:
-          "Momentum과 adaptive coordinate scaling이 있으면 penalty gradient history와 direct shrinkage가 일반적으로 같지 않습니다.",
-      },
-      {
-        id: "decoupled-adaptive-weight-decay",
-        sectionId: "weight-decay",
-        intuition:
-          "Adam은 data gradient의 좌표별 눈금만 조정하고 parameter 축소는 그 눈금 밖에서 별도로 계산합니다.",
-        workedExample:
-          "Preconditioner가 coordinate별 .1과 10이면 L2의 λw도 두 scale로 변형되지만 AdamW decay ηλw는 두 coordinate에 같은 multiplicative factor를 적용합니다.",
-        boundary:
-          "Decoupling이 λ를 LR·training length와 무관하게 만들지는 않으며 normalized parameters·bias를 no-decay로 둘지는 recipe별 검증 대상입니다.",
-      },
-      {
-        id: "weight-decay-param-group-coverage",
-        sectionId: "weight-decay",
-        intuition:
-          "모든 trainable parameter가 decay 또는 no-decay 명단에 정확히 한 번만 등장하는지 대조합니다.",
-        workedExample:
-          "Matrix weights는 decay, bias·normalization scale은 no-decay로 분류한 뒤 union count=all trainable count, intersection=0을 assert합니다.",
-        boundary:
-          "이름 substring만 쓰면 custom module을 오분류할 수 있고 optimizer state load는 parameter ID 순서를 자동 검증하지 않을 수 있습니다.",
-      },
-      {
-        id: "early-stopping-state-machine",
-        sectionId: "early-stopping",
-        intuition:
-          "점수가 충분히 좋아지면 best를 바꾸고 그렇지 않은 모의시험 횟수를 세다가 기다릴 한도를 넘으면 멈춥니다.",
-        workedExample:
-          "Val losses .42,.38,.39,.40,.41, δ=0, P=2이면 eval2 snapshot이 best이고 eval5에서 bad count 3으로 stop합니다.",
-        boundary:
-          "Patience는 evaluation events이므로 cadence가 바뀌면 허용 updates도 달라지며 plateau scheduler·cycle과 순서를 맞춰야 합니다.",
-      },
-      {
-        id: "best-checkpoint-artifact",
-        sectionId: "early-stopping",
-        intuition:
-          "멈춘 날의 답안이 아니라 가장 잘 본 날 복사해 둔 답안과 채점 영수증을 반환합니다.",
-        workedExample:
-          "Eval2에서 model/optimizer/update/config digest를 durable checkpoint로 저장하고 eval5 stop 뒤 새 process에서 eval2 model metric .38을 재현합니다.",
-        boundary:
-          "state_dict의 얕은 in-memory reference는 이후 update와 함께 바뀔 수 있고 best metric 하나만으로 preprocessing·label mapping을 복원할 수 없습니다.",
-      },
-      {
-        id: "uniform-label-smoothing",
-        sectionId: "label-smoothing",
-        intuition:
-          "정답 class의 확률 질량 일부를 없애는 대신 모든 class에 똑같이 조금씩 나눠 줍니다.",
-        workedExample:
-          "K=4, ε=.1, target c2이면 ỹ=(.025,.925,.025,.025)이고 합은 1입니다.",
-        boundary:
-          "Uniform prior가 실제 annotator confusion·class similarity를 나타낸다는 보장은 없고 accuracy gain이 calibration gain을 뜻하지 않습니다.",
-      },
-      {
-        id: "soft-target-composition-audit",
-        sectionId: "label-smoothing",
-        intuition:
-          "여러 soft-label 기법을 겹쳤을 때 최종 정답표가 얼마나 평평해졌는지 한 번 더 계산합니다.",
-        workedExample:
-          "Mixup λ=.7로 c1/c2를 섞은 target에 ε=.1 smoothing을 적용하면 .9·(.7,.3,0,0)+.1·(.25,.25,.25,.25)를 계산해 loss에 넣습니다.",
-        boundary:
-          "Framework의 적용 순서·class weights·ignore index가 다르면 effective target과 reduction이 달라지므로 이름만으로 조합을 추론하면 안 됩니다.",
-      },
-    ],
-    conceptStages: [
-      {
-        label: "Diagnose",
-        relation:
-          "같은 loss의 train/validation gap을 data boundary·noise·shift와 함께 점검",
-        concepts: [
-          "empirical-risk",
+        "label": "03 원인",
+        "relation": "Leakage·pipeline·noise·shift를 배제합니다.",
+        "concepts": [
           "train-validation-test",
-          "observed-generalization-gap",
-        ],
+          "observed-generalization-gap"
+        ]
       },
       {
-        label: "Activation",
-        relation: "Bernoulli noise와 module mode로 representation path를 제한",
-        concepts: [
-          "expectation",
-          "variance",
-          "inverted-dropout-mask",
-          "dropout-train-eval-contract",
-        ],
-      },
-      {
-        label: "Parameter",
-        relation:
-          "SGD L2 등가에서 adaptive decoupling과 exact parameter coverage로 확장",
-        concepts: [
-          "gradient-descent",
-          "momentum-state",
-          "l2-sgd-decay-equivalence",
-          "decoupled-adaptive-weight-decay",
-          "weight-decay-param-group-coverage",
-        ],
-      },
-      {
-        label: "Trajectory",
-        relation:
-          "Validation state machine에서 stop과 immutable best artifact를 분리",
-        concepts: [
-          "train-validation-test",
-          "early-stopping-state-machine",
-          "best-checkpoint-artifact",
-          "resume-state-closure",
-        ],
-      },
-      {
-        label: "Target·selection",
-        relation:
-          "Uniform soft target와 다른 regularizer의 한 축 ablation으로 최종 선택",
-        concepts: [
-          "cross-entropy-nll",
-          "uniform-label-smoothing",
-          "soft-target-composition-audit",
-          "regularization-ablation-contract",
-        ],
-      },
+        "label": "04 선택",
+        "relation": "한 regularization 축만 paired comparison합니다.",
+        "concepts": [
+          "regularization-ablation-contract"
+        ]
+      }
     ],
-    exercises: [
+    "exercises": [
       {
-        level: "basic",
-        question:
-          "Train loss .18, validation loss .31에서 observed gap을 계산하고 overfitting을 선언하기 전 확인할 네 원인을 적어라.",
-        answerChecklist: [
-          "G=.13",
+        "level": "basic",
+        "question": "Train .18, validation .31의 observed gap을 계산하세요.",
+        "answerChecklist": [
+          ".13",
+          "validation minus train",
+          "same checkpoint",
+          "same loss"
+        ],
+        "requiredConcepts": [
+          "observed-generalization-gap"
+        ],
+        "sectionId": "gap"
+      },
+      {
+        "level": "basic",
+        "question": "Train .80, validation .82가 작은 gap이어도 성공이 아닌 이유를 설명하세요.",
+        "answerChecklist": [
+          "gap .02",
+          "high absolute train loss",
+          "underfitting",
+          "inspect fit"
+        ],
+        "requiredConcepts": [
+          "observed-generalization-gap"
+        ],
+        "sectionId": "gap"
+      },
+      {
+        "level": "basic",
+        "question": "Gap을 overfitting으로 부르기 전에 확인할 네 원인을 쓰세요.",
+        "answerChecklist": [
           "split leakage",
-          "preprocessing/metric parity",
+          "pipeline mismatch",
           "label noise",
-          "distribution shift",
-          "absolute train fit",
+          "distribution shift"
         ],
-        requiredConcepts: [
-          "observed-generalization-gap",
-          "train-validation-test",
+        "requiredConcepts": [
+          "observed-generalization-gap"
         ],
-        sectionId: "overview",
+        "sectionId": "audit"
       },
       {
-        level: "basic",
-        question:
-          "Dropout·weight decay·early stopping·label smoothing이 activation·parameter update·trajectory·target 중 어느 경계를 바꾸는지 구분하고 선택 기준을 적어라.",
-        answerChecklist: [
-          "dropout changes train-time activation paths",
-          "weight decay adds parameter shrinkage",
-          "early stopping selects a checkpoint on the trajectory",
-          "label smoothing changes target distribution",
-          "diagnose gap and underfitting before selection",
-          "one-change ablation",
+        "level": "basic",
+        "question": "Train과 validation에서 같아야 하는 계산 계약을 쓰세요.",
+        "answerChecklist": [
+          "checkpoint",
+          "preprocessing",
+          "loss",
+          "denominator",
+          "label mapping"
         ],
-        requiredConcepts: [
-          "inverted-dropout-mask",
-          "decoupled-adaptive-weight-decay",
-          "early-stopping-state-machine",
-          "uniform-label-smoothing",
+        "requiredConcepts": [
+          "observed-generalization-gap"
         ],
-        sectionId: "overview",
+        "sectionId": "gap"
       },
       {
-        level: "advanced",
-        question:
-          "Baseline과 regularizer 하나를 five seeds로 비교하는 paired ablation 표와 accept/reject 규칙을 설계하라.",
-        answerChecklist: [
-          "same split/seeds",
-          "same updates/search",
-          "paired validation gain",
-          "train fit",
+        "level": "basic",
+        "question": "Regularization이 바꾸는 네 축을 예로 구분하세요.",
+        "answerChecklist": [
+          "activation dropout",
+          "parameter decay",
+          "trajectory stopping",
+          "target smoothing"
+        ],
+        "requiredConcepts": [
+          "regularization-ablation-contract"
+        ],
+        "sectionId": "overview"
+      },
+      {
+        "level": "basic",
+        "question": "Untouched test를 regularizer 선택에 쓰면 안 되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "selection leakage",
+          "optimistic bias",
+          "validation for selection",
+          "test once"
+        ],
+        "requiredConcepts": [
+          "regularization-ablation-contract"
+        ],
+        "sectionId": "ablation"
+      },
+      {
+        "level": "advanced",
+        "question": "Five-seed paired ablation 표를 설계하세요.",
+        "answerChecklist": [
+          "same seeds",
+          "same split",
+          "same updates",
+          "paired gain",
           "uncertainty",
-          "worst slice/calibration",
-          "cost",
-          "untouched test",
+          "train fit",
+          "slice",
+          "cost"
         ],
-        requiredConcepts: ["regularization-ablation-contract", "variance"],
-        sectionId: "overview",
+        "requiredConcepts": [
+          "regularization-ablation-contract"
+        ],
+        "sectionId": "ablation"
       },
       {
-        level: "basic",
-        question:
-          "h=2, p=.25인 inverted dropout output의 가능한 값·확률·expectation·variance를 계산하라.",
-        answerChecklist: [
+        "level": "advanced",
+        "question": "Leakage가 큰 gap을 만드는 entity fixture를 설계하세요.",
+        "answerChecklist": [
+          "same entity",
+          "cross split",
+          "memorized identity",
+          "group split",
+          "gap changes"
+        ],
+        "requiredConcepts": [
+          "observed-generalization-gap"
+        ],
+        "sectionId": "audit"
+      },
+      {
+        "level": "advanced",
+        "question": "Validation gain과 training-fit 붕괴가 함께 온 후보의 판정 규칙을 작성하세요.",
+        "answerChecklist": [
+          "gain",
+          "fit drop",
+          "strength reduction",
+          "worst slice",
+          "reject or retune"
+        ],
+        "requiredConcepts": [
+          "regularization-ablation-contract"
+        ],
+        "sectionId": "ablation"
+      },
+      {
+        "level": "advanced",
+        "question": "Gap diagnosis와 model-selection receipt를 작성하세요.",
+        "answerChecklist": [
+          "split digest",
+          "checkpoint",
+          "loss parity",
+          "cause audit",
+          "seed pairs",
+          "budget",
+          "test locked",
+          "rollback"
+        ],
+        "requiredConcepts": [
+          "observed-generalization-gap",
+          "regularization-ablation-contract"
+        ],
+        "sectionId": "ablation"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Deep Learning — Regularization for Deep Learning",
+        "href": "https://www.deeplearningbook.org/contents/regularization.html",
+        "problem": "학습 자유도와 generalization을 제어하는 방법을 분류합니다.",
+        "contribution": "Penalty·ensemble·early stopping 등 regularization 계보를 정리합니다.",
+        "assumptions": "책의 supervised-learning 정의와 예시 범위입니다.",
+        "evidenceScope": "Chapter 7의 개념적 분류와 분석 범위입니다.",
+        "notClaim": "모든 기법의 보편 순위나 특정 hyperparameter를 제시하지 않습니다.",
+        "sectionId": "paper-regularization-selection"
+      }
+    ]
+  },
+  "ai/dropout-regularization": {
+    "entryLevel": true,
+    "entryNote": "Activation 하나에 0/1 mask를 붙이는 그림에서 시작해 expectation·variance·module mode를 순서대로 쌓습니다.",
+    "coreIdea": "Inverted dropout은 train mode에서 Bernoulli keep mask로 activation 경로를 sampling하고 살아남은 값을 keep probability로 나눠 conditional mean을 보존하며 noise를 추가합니다. Eval mode는 별도 stochastic protocol이 없으면 mask 없이 전체 경로를 사용합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "inverted-dropout-mask",
+        "role": "Bernoulli mask·1/q scaling·expectation·variance를 정의합니다."
+      },
+      {
+        "id": "dropout-train-eval-contract",
+        "role": "Mask 단위와 train/eval behavior의 경계를 소유합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "inverted-dropout-mask",
+        "sectionId": "mask",
+        "intuition": "통로 일부를 동전 던지기로 끄되 살아남은 통로를 키워 장기 평균 크기를 맞춥니다.",
+        "workedExample": "h=2,p=.25이면 8/3이 .75 확률, 0이 .25 확률이고 평균 2, 분산 4/3입니다.",
+        "boundary": "평균 보존이 개별 forward나 nonlinear output의 equality를 뜻하지 않습니다.",
+        "counterexample": "ReLU 뒤 E[f(h̃)]와 f(E[h̃])는 일반적으로 다릅니다."
+      },
+      {
+        "id": "dropout-train-eval-contract",
+        "sectionId": "mode",
+        "intuition": "연습 때만 통로를 가리고 시험 때는 모든 통로를 켭니다.",
+        "workedExample": "Train 두 forward는 다른 output이지만 eval 두 forward는 같은 input·state에서 같습니다.",
+        "boundary": "MC dropout은 sampling count·aggregation·calibration을 가진 별도 inference protocol입니다.",
+        "counterexample": "Evaluation에서 실수로 train mode를 유지하면 metric이 RNG에 따라 흔들립니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 값",
+        "relation": "Dropout 전 activation을 고정합니다.",
+        "concepts": [
+          "expectation"
+        ]
+      },
+      {
+        "label": "02 선택",
+        "relation": "Bernoulli mask로 경로를 고릅니다.",
+        "concepts": [
+          "inverted-dropout-mask"
+        ]
+      },
+      {
+        "label": "03 보정",
+        "relation": "1/q scaling으로 평균과 variance를 계산합니다.",
+        "concepts": [
+          "variance",
+          "inverted-dropout-mask"
+        ]
+      },
+      {
+        "label": "04 모드",
+        "relation": "Train sampling과 deterministic eval을 분리합니다.",
+        "concepts": [
+          "dropout-train-eval-contract"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "h=2,p=.25일 때 keep probability를 계산하세요.",
+        "answerChecklist": [
           "q=.75",
+          "q=1-p"
+        ],
+        "requiredConcepts": [
+          "inverted-dropout-mask"
+        ],
+        "sectionId": "mask"
+      },
+      {
+        "level": "basic",
+        "question": "같은 조건에서 h̃의 가능한 값과 확률을 쓰세요.",
+        "answerChecklist": [
           "8/3 with .75",
-          "0 with .25",
+          "0 with .25"
+        ],
+        "requiredConcepts": [
+          "inverted-dropout-mask"
+        ],
+        "sectionId": "mask"
+      },
+      {
+        "level": "basic",
+        "question": "h̃의 expectation과 variance를 계산하세요.",
+        "answerChecklist": [
           "mean 2",
           "variance 4/3",
+          "p/q h squared"
         ],
-        requiredConcepts: ["inverted-dropout-mask", "expectation", "variance"],
-        sectionId: "dropout",
+        "requiredConcepts": [
+          "inverted-dropout-mask"
+        ],
+        "sectionId": "mask"
       },
       {
-        level: "basic",
-        question:
-          "Data gradient가 0이고 w=10, η=.1, λ=.02인 plain-SGD decay에서 shrink factor와 다음 weight를 계산하고 LR가 decay에 미치는 영향을 설명하라.",
-        answerChecklist: [
-          "shrink factor 1-eta lambda=.998",
-          "next weight 9.98",
-          "zero data-gradient condition",
-          "per-update shrink changes with LR",
-          "training length changes cumulative shrink",
+        "level": "basic",
+        "question": "Inverted dropout에서 살아남은 activation을 1/q로 나누는 이유를 설명하세요.",
+        "answerChecklist": [
+          "mask reduces mean by q",
+          "restore conditional mean",
+          "not individual equality"
         ],
-        requiredConcepts: ["l2-sgd-decay-equivalence"],
-        sectionId: "weight-decay",
+        "requiredConcepts": [
+          "inverted-dropout-mask"
+        ],
+        "sectionId": "mask"
       },
       {
-        level: "advanced",
-        question:
-          "Element·channel dropout의 mask-sharing 차이와 train/eval parity·MC dropout 분리 test를 설계하라.",
-        answerChecklist: [
+        "level": "basic",
+        "question": "train()과 eval()의 dropout 동작을 비교하세요.",
+        "answerChecklist": [
+          "train samples mask",
+          "train scales",
+          "eval all paths",
+          "eval no extra scale"
+        ],
+        "requiredConcepts": [
+          "dropout-train-eval-contract"
+        ],
+        "sectionId": "mode"
+      },
+      {
+        "level": "basic",
+        "question": "Element dropout과 channel dropout의 차이를 쓰세요.",
+        "answerChecklist": [
           "mask shape",
-          "covariance",
-          "train stochastic",
+          "shared across spatial positions",
+          "covariance differs"
+        ],
+        "requiredConcepts": [
+          "dropout-train-eval-contract"
+        ],
+        "sectionId": "mode"
+      },
+      {
+        "level": "advanced",
+        "question": "Train/eval parity test를 설계하세요.",
+        "answerChecklist": [
+          "fixed state",
+          "seeded train variation",
           "eval deterministic",
-          "MC protocol separate",
-          "seed/statistics",
+          "mean comparison",
+          "mode assertion"
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
           "inverted-dropout-mask",
-          "dropout-train-eval-contract",
+          "dropout-train-eval-contract"
         ],
-        sectionId: "dropout",
+        "sectionId": "mode"
       },
       {
-        level: "advanced",
-        question:
-          "w=10, g=3, η=.1, λ=.02의 SGD+L2 update를 계산하고 coordinate preconditioner (.1,10)에서 Adam L2와 AdamW가 달라지는 이유를 설명하라.",
-        answerChecklist: [
-          "w_next=9.68",
-          "penalty gradient λw",
-          "P acts on L2",
-          "decay outside P",
-          "LR×λ interaction",
+        "level": "advanced",
+        "question": "Nonlinearity가 expectation equality를 깨는 반례를 만드세요.",
+        "answerChecklist": [
+          "two mask outcomes",
+          "nonlinear f",
+          "E f differs",
+          "f E differs"
         ],
-        requiredConcepts: [
-          "l2-sgd-decay-equivalence",
+        "requiredConcepts": [
+          "inverted-dropout-mask"
+        ],
+        "sectionId": "boundary"
+      },
+      {
+        "level": "advanced",
+        "question": "MC dropout inference protocol을 일반 eval과 분리해 작성하세요.",
+        "answerChecklist": [
+          "explicit mode",
+          "sample count",
+          "aggregation",
+          "uncertainty metric",
+          "calibration",
+          "latency"
+        ],
+        "requiredConcepts": [
+          "dropout-train-eval-contract"
+        ],
+        "sectionId": "boundary"
+      },
+      {
+        "level": "advanced",
+        "question": "Dropout p 후보의 release ablation을 설계하세요.",
+        "answerChecklist": [
+          "same seeds",
+          "same updates",
+          "train fit",
+          "validation",
+          "slice",
+          "latency",
+          "mode test",
+          "rollback"
+        ],
+        "requiredConcepts": [
+          "inverted-dropout-mask",
+          "dropout-train-eval-contract"
+        ],
+        "sectionId": "boundary"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Dropout: A Simple Way to Prevent Neural Networks from Overfitting",
+        "href": "https://www.jmlr.org/papers/v15/srivastava14a.html",
+        "problem": "Large networks의 co-adaptation과 explicit ensemble 비용을 줄입니다.",
+        "contribution": "Training-time random unit removal과 test-time scaled-network approximation을 제시합니다.",
+        "assumptions": "논문 architecture·drop probability·dataset·training recipe입니다.",
+        "evidenceScope": "JMLR supervised benchmark와 분석 범위입니다.",
+        "notClaim": "모든 pretrained·normalized architecture에서 개선을 보장하지 않습니다.",
+        "sectionId": "paper-dropout"
+      }
+    ]
+  },
+  "ai/weight-decay": {
+    "entryLevel": true,
+    "entryNote": "Scalar weight 하나와 data gradient부터 시작해 L2–SGD 등가, AdamW 분리, parameter-group coverage를 순서대로 봅니다.",
+    "coreIdea": "Plain scalar-step SGD에서는 L2 penalty gradient λw가 multiplicative shrink와 같은 update로 정리되지만 adaptive preconditioning에서는 penalty gradient와 direct decay가 달라집니다. AdamW는 task direction과 shrink를 분리하고 모든 trainable parameter의 group identity를 검증합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "l2-sgd-decay-equivalence",
+        "role": "Quadratic penalty gradient와 scalar SGD shrink의 등가를 정의합니다."
+      },
+      {
+        "id": "decoupled-adaptive-weight-decay",
+        "role": "AdamW가 task preconditioning과 direct shrink를 분리하는 경계를 소유합니다."
+      },
+      {
+        "id": "weight-decay-param-group-coverage",
+        "role": "Decay/no-decay 집합의 exact coverage와 resume identity를 검사합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "l2-sgd-decay-equivalence",
+        "sectionId": "sgd-equivalence",
+        "intuition": "큰 weight를 원점으로 당기는 gradient가 SGD 식에서 일정 비율 축소로 정리됩니다.",
+        "workedExample": "w=10,η=.1,λ=.02,g=3이면 w+=9.68입니다.",
+        "boundary": "Momentum·adaptive coordinate scale이 들어가면 일반적으로 direct shrink와 같지 않습니다.",
+        "counterexample": "Adam의 v가 좌표마다 다르면 λw도 서로 다른 denominator로 나뉩니다."
+      },
+      {
+        "id": "decoupled-adaptive-weight-decay",
+        "sectionId": "adamw",
+        "intuition": "Task gradient의 좌표별 눈금과 weight를 줄이는 자를 따로 둡니다.",
+        "workedExample": "Task gradient가 0이어도 AdamW는 w=10을 .998×10=9.98로 줄입니다.",
+        "boundary": "Decoupling이 λ를 LR·update 수와 무관하게 만들지는 않습니다.",
+        "counterexample": "Schedule이 두 배 길면 같은 η·λ라도 누적 shrink가 달라집니다."
+      },
+      {
+        "id": "weight-decay-param-group-coverage",
+        "sectionId": "parameter-groups",
+        "intuition": "모든 trainable parameter가 두 명단 중 정확히 하나에 있는지 출석부를 맞춥니다.",
+        "workedExample": "Matrix weights는 D, bias·norm scale은 N이고 union count=all, intersection=0을 assert합니다.",
+        "boundary": "이름 substring만으로 custom module을 안전하게 분류할 수 없습니다.",
+        "counterexample": "Resume 때 parameter order가 바뀌면 optimizer state가 다른 identity에 붙을 수 있습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 gradient",
+        "relation": "Data gradient와 quadratic penalty gradient를 분리합니다.",
+        "concepts": [
+          "gradient-descent",
+          "l2-sgd-decay-equivalence"
+        ]
+      },
+      {
+        "label": "02 SGD",
+        "relation": "Scalar step에서 multiplicative shrink를 유도합니다.",
+        "concepts": [
+          "l2-sgd-decay-equivalence"
+        ]
+      },
+      {
+        "label": "03 AdamW",
+        "relation": "Adaptive task path와 direct shrink를 분리합니다.",
+        "concepts": [
+          "momentum-state",
+          "decoupled-adaptive-weight-decay"
+        ]
+      },
+      {
+        "label": "04 groups",
+        "relation": "Parameter identity coverage와 resume를 검사합니다.",
+        "concepts": [
+          "weight-decay-param-group-coverage"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "w=10,η=.1,λ=.02,g=3의 SGD+L2 update를 계산하세요.",
+        "answerChecklist": [
+          "lambda w=.2",
+          "g total 3.2",
+          "step .32",
+          "w next 9.68"
+        ],
+        "requiredConcepts": [
+          "l2-sgd-decay-equivalence"
+        ],
+        "sectionId": "sgd-equivalence"
+      },
+      {
+        "level": "basic",
+        "question": "Data gradient 0일 때 같은 값의 shrink factor와 w+를 계산하세요.",
+        "answerChecklist": [
+          "factor .998",
+          "w next 9.98"
+        ],
+        "requiredConcepts": [
+          "l2-sgd-decay-equivalence"
+        ],
+        "sectionId": "sgd-equivalence"
+      },
+      {
+        "level": "basic",
+        "question": "L2 penalty를 미분하면 λw가 되는 이유를 쓰세요.",
+        "answerChecklist": [
+          "lambda over 2",
+          "derivative squared norm",
+          "lambda w"
+        ],
+        "requiredConcepts": [
+          "l2-sgd-decay-equivalence"
+        ],
+        "sectionId": "sgd-equivalence"
+      },
+      {
+        "level": "basic",
+        "question": "Adam L2와 AdamW에서 λw가 통과하는 경로를 비교하세요.",
+        "answerChecklist": [
+          "L2 enters moments",
+          "L2 preconditioned",
+          "AdamW outside",
+          "direct shrink"
+        ],
+        "requiredConcepts": [
+          "decoupled-adaptive-weight-decay"
+        ],
+        "sectionId": "adamw"
+      },
+      {
+        "level": "basic",
+        "question": "LR schedule이 누적 decay를 바꾸는 이유를 설명하세요.",
+        "answerChecklist": [
+          "factor per step 1-eta lambda",
+          "eta varies",
+          "product over steps",
+          "training length"
+        ],
+        "requiredConcepts": [
+          "decoupled-adaptive-weight-decay"
+        ],
+        "sectionId": "adamw"
+      },
+      {
+        "level": "basic",
+        "question": "D와 N의 coverage 두 식을 쓰세요.",
+        "answerChecklist": [
+          "union all trainable",
+          "intersection empty",
+          "identity based"
+        ],
+        "requiredConcepts": [
+          "weight-decay-param-group-coverage"
+        ],
+        "sectionId": "parameter-groups"
+      },
+      {
+        "level": "advanced",
+        "question": "Coordinate preconditioner .1과 10에서 Adam L2와 AdamW 차이를 설명하세요.",
+        "answerChecklist": [
+          "penalty transformed by P",
+          "different coordinate shrink",
+          "AdamW same factor",
+          "task direction separate"
+        ],
+        "requiredConcepts": [
+          "decoupled-adaptive-weight-decay"
+        ],
+        "sectionId": "adamw"
+      },
+      {
+        "level": "advanced",
+        "question": "Custom module의 parameter group 검사기를 설계하세요.",
+        "answerChecklist": [
+          "object identity",
+          "explicit policy",
+          "union",
+          "intersection",
+          "unclassified fail",
+          "duplicate fail"
+        ],
+        "requiredConcepts": [
+          "weight-decay-param-group-coverage"
+        ],
+        "sectionId": "parameter-groups"
+      },
+      {
+        "level": "advanced",
+        "question": "Resume 뒤 group ordering mismatch fixture를 설계하세요.",
+        "answerChecklist": [
+          "save names or ids",
+          "reorder",
+          "load state",
+          "detect mismatch",
+          "fail closed"
+        ],
+        "requiredConcepts": [
+          "weight-decay-param-group-coverage"
+        ],
+        "sectionId": "parameter-groups"
+      },
+      {
+        "level": "advanced",
+        "question": "Weight-decay release receipt를 작성하세요.",
+        "answerChecklist": [
+          "optimizer/version",
+          "lr schedule",
+          "lambda",
+          "update count",
+          "group manifest",
+          "norm trace",
+          "validation",
+          "resume test"
+        ],
+        "requiredConcepts": [
           "decoupled-adaptive-weight-decay",
+          "weight-decay-param-group-coverage"
         ],
-        sectionId: "weight-decay",
+        "sectionId": "parameter-groups"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Decoupled Weight Decay Regularization",
+        "href": "https://arxiv.org/abs/1711.05101",
+        "problem": "Adaptive optimizer에서 L2와 weight decay를 같은 것으로 부르는 불일치를 다룹니다.",
+        "contribution": "Task-gradient update와 multiplicative shrink를 분리한 AdamW·SGDW를 제안합니다.",
+        "assumptions": "논문의 optimizer 정의·architecture·training recipe입니다.",
+        "evidenceScope": "논문의 analysis와 CIFAR/ImageNet32 실험 범위입니다.",
+        "notClaim": "특정 λ나 no-decay grouping이 모든 model에 최적이라는 뜻은 아닙니다.",
+        "sectionId": "paper-adamw"
+      }
+    ]
+  },
+  "ai/early-stopping": {
+    "entryLevel": true,
+    "entryNote": "Validation event 하나와 best metric 하나에서 시작해 counter·patience·artifact 복원을 순서대로 쌓습니다.",
+    "coreIdea": "Early stopping은 validation event마다 best metric·minimum improvement·bad-event counter를 갱신하고 patience를 초과할 때 stop하되, 반환하는 model은 stop 시점의 last가 아니라 재현 가능한 immutable best checkpoint인 trajectory-selection state machine입니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "early-stopping-state-machine",
+        "role": "Best·threshold·counter·patience의 transition과 stop event를 정의합니다."
       },
       {
-        level: "basic",
-        question:
-          "Val losses .42,.38,.39,.40,.41, δ=0, P=2에서 best eval·stop eval·반환 checkpoint를 계산하라.",
-        answerChecklist: [
-          "best eval2",
-          "bad counts 1/2/3",
-          "stop eval5",
-          "return eval2",
-          "last differs",
-        ],
-        requiredConcepts: [
-          "early-stopping-state-machine",
+        "id": "best-checkpoint-artifact",
+        "role": "Stop 시점의 last와 반환할 immutable best receipt를 분리합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "early-stopping-state-machine",
+        "sectionId": "state-machine",
+        "intuition": "모의시험 점수가 충분히 좋아지면 기록을 바꾸고 아니면 기다린 횟수를 셉니다.",
+        "workedExample": ".42,.38,.39,.40,.41,δ=0,P=2에서 eval5에 counter 3으로 stop합니다.",
+        "boundary": "Patience는 evaluation event 수여서 cadence가 바뀌면 허용 update 수도 달라집니다.",
+        "counterexample": "매 100 update와 매 1000 update에서 P=2는 같은 training budget이 아닙니다."
+      },
+      {
+        "id": "best-checkpoint-artifact",
+        "sectionId": "stop-and-restore",
+        "intuition": "멈춘 날의 답안이 아니라 가장 잘 본 날 복사한 답안과 영수증을 반환합니다.",
+        "workedExample": "Eval2의 model·optimizer·config digest를 저장하고 eval5 stop 뒤 eval2를 복원합니다.",
+        "boundary": "In-memory shallow reference는 이후 update와 함께 바뀔 수 있습니다.",
+        "counterexample": "Best metric 숫자만 저장하면 preprocessing과 label mapping을 재현할 수 없습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 event",
+        "relation": "Validation cadence와 metric direction을 고정합니다.",
+        "concepts": [
+          "train-validation-test"
+        ]
+      },
+      {
+        "label": "02 state",
+        "relation": "Best·threshold·counter를 갱신합니다.",
+        "concepts": [
+          "early-stopping-state-machine"
+        ]
+      },
+      {
+        "label": "03 stop",
+        "relation": "Patience를 처음 초과한 event를 찾습니다.",
+        "concepts": [
+          "early-stopping-state-machine"
+        ]
+      },
+      {
+        "label": "04 restore",
+        "relation": "Last와 best artifact를 분리해 복원합니다.",
+        "concepts": [
           "best-checkpoint-artifact",
+          "resume-state-closure"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": ".42,.38,.39,.40,.41,δ=0,P=2의 best와 stop eval을 계산하세요.",
+        "answerChecklist": [
+          "best eval2",
+          "bad 1 2 3",
+          "stop eval5"
         ],
-        sectionId: "early-stopping",
+        "requiredConcepts": [
+          "early-stopping-state-machine"
+        ],
+        "sectionId": "state-machine"
       },
       {
-        level: "basic",
-        question:
-          "K=4, ε=.1이고 두 번째 class가 정답일 때 uniform label-smoothing target을 계산하고 합이 1인지 확인하라.",
-        answerChecklist: [
-          "off-target epsilon/K=.025",
-          "target 1-epsilon+epsilon/K=.925",
-          "vector (.025,.925,.025,.025)",
-          "sum equals 1",
-          "not an annotator-uncertainty model",
+        "level": "basic",
+        "question": "같은 예에서 반환할 checkpoint를 고르세요.",
+        "answerChecklist": [
+          "eval2",
+          "not eval5",
+          "best artifact"
         ],
-        requiredConcepts: ["uniform-label-smoothing", "cross-entropy-nll"],
-        sectionId: "label-smoothing",
+        "requiredConcepts": [
+          "best-checkpoint-artifact"
+        ],
+        "sectionId": "stop-and-restore"
       },
       {
-        level: "advanced",
-        question:
-          "K=4, ε=.1 label smoothing target과 λ=.7 c1/c2 Mixup 뒤 smoothing target을 계산하고 entropy·class-slice ablation을 설계하라.",
-        answerChecklist: [
-          "(.025,.925,.025,.025)",
-          "composition order",
-          "(.655,.295,.025,.025)",
-          "sum=1",
-          "four-way ablation",
-          "class slices/NLL/ECE",
+        "level": "basic",
+        "question": "min_delta가 필요한 이유를 설명하세요.",
+        "answerChecklist": [
+          "metric noise",
+          "minimum improvement",
+          "avoid tiny reset",
+          "direction"
         ],
-        requiredConcepts: [
-          "uniform-label-smoothing",
-          "soft-target-composition-audit",
+        "requiredConcepts": [
+          "early-stopping-state-machine"
+        ],
+        "sectionId": "state-machine"
+      },
+      {
+        "level": "basic",
+        "question": "Patience의 단위가 update가 아닌 이유를 설명하세요.",
+        "answerChecklist": [
+          "evaluation events",
+          "cadence",
+          "updates differ"
+        ],
+        "requiredConcepts": [
+          "early-stopping-state-machine"
+        ],
+        "sectionId": "overview"
+      },
+      {
+        "level": "basic",
+        "question": "Stop event와 best event를 구분하세요.",
+        "answerChecklist": [
+          "stop when counter exceeds",
+          "best on improvement",
+          "different indices"
+        ],
+        "requiredConcepts": [
+          "early-stopping-state-machine",
+          "best-checkpoint-artifact"
+        ],
+        "sectionId": "stop-and-restore"
+      },
+      {
+        "level": "basic",
+        "question": "Best artifact에 model 외 필요한 항목을 쓰세요.",
+        "answerChecklist": [
+          "optimizer",
+          "scheduler",
+          "update",
+          "config digest",
+          "metric receipt",
+          "data contract"
+        ],
+        "requiredConcepts": [
+          "best-checkpoint-artifact"
+        ],
+        "sectionId": "artifact"
+      },
+      {
+        "level": "advanced",
+        "question": "Maximize metric에 맞게 transition inequality를 바꾸세요.",
+        "answerChecklist": [
+          "greater than best plus delta",
+          "direction explicit",
+          "tie rule"
+        ],
+        "requiredConcepts": [
+          "early-stopping-state-machine"
+        ],
+        "sectionId": "state-machine"
+      },
+      {
+        "level": "advanced",
+        "question": "Cadence 100과 1000 update의 P=2 budget 차이를 계산하세요.",
+        "answerChecklist": [
+          "200 or 2000 update intervals",
+          "not equivalent",
+          "record cadence"
+        ],
+        "requiredConcepts": [
+          "early-stopping-state-machine"
+        ],
+        "sectionId": "state-machine"
+      },
+      {
+        "level": "advanced",
+        "question": "Shallow state_dict reference failure fixture를 설계하세요.",
+        "answerChecklist": [
+          "save reference",
+          "continue updates",
+          "best mutates",
+          "deep copy or durable file",
+          "reproduce"
+        ],
+        "requiredConcepts": [
+          "best-checkpoint-artifact"
+        ],
+        "sectionId": "artifact"
+      },
+      {
+        "level": "advanced",
+        "question": "Early-stopping release receipt를 작성하세요.",
+        "answerChecklist": [
+          "metric/direction",
+          "delta",
+          "patience",
+          "cadence",
+          "best/stop",
+          "artifact digest",
+          "fresh restore",
+          "rollback"
+        ],
+        "requiredConcepts": [
+          "early-stopping-state-machine",
+          "best-checkpoint-artifact"
+        ],
+        "sectionId": "artifact"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Early Stopping — but when?",
+        "href": "https://pubmed.ncbi.nlm.nih.gov/12662814/",
+        "problem": "Validation trajectory에서 generalization과 training cost를 맞바꾸는 stopping criterion을 비교합니다.",
+        "contribution": "여러 automatic criterion의 empirical comparison과 trade-off를 제시합니다.",
+        "assumptions": "논문의 tasks·cross-validation measurement·criterion 정의입니다.",
+        "evidenceScope": "보고된 generalization/time comparison 범위입니다.",
+        "notClaim": "특정 patience와 min_delta가 현대 architecture의 보편 default라는 뜻은 아닙니다.",
+        "sectionId": "paper-early-stopping"
+      }
+    ]
+  },
+  "ai/label-smoothing": {
+    "entryLevel": true,
+    "entryNote": "One-hot vector와 uniform vector를 각각 그린 뒤 ε mixture·cross-entropy·Mixup 조합으로 진행합니다.",
+    "coreIdea": "Uniform label smoothing은 one-hot target의 1−ε를 유지하고 ε를 K-class uniform distribution으로 나눠 soft target을 만듭니다. Cross-entropy는 이 질량으로 class log probability를 가중하며 다른 soft-target 기법과 겹치면 최종 distribution을 직접 계산합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "uniform-label-smoothing",
+        "role": "One-hot과 uniform prior의 ε mixture를 정의합니다."
+      },
+      {
+        "id": "soft-target-composition-audit",
+        "role": "Mixup·CutMix·distillation과 조합한 최종 target을 검사합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "uniform-label-smoothing",
+        "sectionId": "target",
+        "intuition": "정답표의 질량 일부를 모든 선택지에 조금씩 나눕니다.",
+        "workedExample": "K=4,ε=.1,target c2이면 (.025,.925,.025,.025)입니다.",
+        "boundary": "Uniform prior는 annotator confusion·class similarity의 실제 model이 아닙니다.",
+        "counterexample": "Calibration metric은 좋아지지 않는데 accuracy만 오를 수 있습니다."
+      },
+      {
+        "id": "soft-target-composition-audit",
+        "sectionId": "composition",
+        "intuition": "이미 부드러운 정답표에 다른 기법을 겹치면 최종 질량을 다시 계산합니다.",
+        "workedExample": "λ=.7 c1/c2 Mixup 뒤 ε=.1 smoothing은 (.655,.295,.025,.025)입니다.",
+        "boundary": "Framework의 적용 순서·class weight·ignore index가 다르면 effective loss가 달라집니다.",
+        "counterexample": "Mixup target과 smoothing을 각각 loss에 따로 더하면 의도한 mixture와 다를 수 있습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 hard target",
+        "relation": "One-hot과 class count를 정의합니다.",
+        "concepts": [
+          "cross-entropy-nll"
+        ]
+      },
+      {
+        "label": "02 uniform",
+        "relation": "1/K prior와 ε를 분리합니다.",
+        "concepts": [
+          "uniform-label-smoothing"
+        ]
+      },
+      {
+        "label": "03 loss",
+        "relation": "Soft target으로 log probability를 가중합니다.",
+        "concepts": [
           "cross-entropy-nll",
+          "uniform-label-smoothing"
+        ]
+      },
+      {
+        "label": "04 composition",
+        "relation": "다른 soft target 뒤 최종 질량을 audit합니다.",
+        "concepts": [
+          "soft-target-composition-audit"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "K=4의 uniform prior를 쓰세요.",
+        "answerChecklist": [
+          ".25 each",
+          "sum 1"
         ],
-        sectionId: "label-smoothing",
+        "requiredConcepts": [
+          "uniform-label-smoothing"
+        ],
+        "sectionId": "overview"
       },
+      {
+        "level": "basic",
+        "question": "K=4,ε=.1,target c2의 smoothed target을 계산하세요.",
+        "answerChecklist": [
+          ".025",
+          ".925",
+          ".025",
+          ".025",
+          "sum 1"
+        ],
+        "requiredConcepts": [
+          "uniform-label-smoothing"
+        ],
+        "sectionId": "target"
+      },
+      {
+        "level": "basic",
+        "question": "Target class도 ε/K를 받는 이유를 설명하세요.",
+        "answerChecklist": [
+          "keep 1-epsilon",
+          "uniform includes target",
+          "add epsilon over K"
+        ],
+        "requiredConcepts": [
+          "uniform-label-smoothing"
+        ],
+        "sectionId": "target"
+      },
+      {
+        "level": "basic",
+        "question": "Soft-target cross-entropy가 무엇을 합하는지 설명하세요.",
+        "answerChecklist": [
+          "all classes",
+          "target mass",
+          "negative log probability",
+          "sum"
+        ],
+        "requiredConcepts": [
+          "uniform-label-smoothing"
+        ],
+        "sectionId": "loss"
+      },
+      {
+        "level": "basic",
+        "question": "Uniform smoothing과 annotator confusion model을 구분하세요.",
+        "answerChecklist": [
+          "uniform prior",
+          "not class similarity",
+          "not empirical confusion"
+        ],
+        "requiredConcepts": [
+          "uniform-label-smoothing"
+        ],
+        "sectionId": "overview"
+      },
+      {
+        "level": "basic",
+        "question": "ε=0과 ε가 1에 가까울 때 target을 비교하세요.",
+        "answerChecklist": [
+          "epsilon zero one-hot",
+          "near one near uniform",
+          "signal weakens"
+        ],
+        "requiredConcepts": [
+          "uniform-label-smoothing"
+        ],
+        "sectionId": "target"
+      },
+      {
+        "level": "advanced",
+        "question": "λ=.7 c1/c2 Mixup 뒤 ε=.1 smoothing target을 계산하세요.",
+        "answerChecklist": [
+          "mixed .7 .3 0 0",
+          "times .9",
+          "plus .025 each",
+          ".655 .295 .025 .025"
+        ],
+        "requiredConcepts": [
+          "soft-target-composition-audit"
+        ],
+        "sectionId": "composition"
+      },
+      {
+        "level": "advanced",
+        "question": "Smoothing·Mixup 2x2 ablation을 설계하세요.",
+        "answerChecklist": [
+          "none",
+          "smoothing",
+          "mixup",
+          "both",
+          "same seeds",
+          "NLL",
+          "ECE",
+          "slices"
+        ],
+        "requiredConcepts": [
+          "soft-target-composition-audit"
+        ],
+        "sectionId": "composition"
+      },
+      {
+        "level": "advanced",
+        "question": "Class weight와 smoothing 적용 순서가 다른 fixture를 설계하세요.",
+        "answerChecklist": [
+          "same logits",
+          "same target",
+          "two orders",
+          "effective class mass",
+          "loss differs"
+        ],
+        "requiredConcepts": [
+          "soft-target-composition-audit"
+        ],
+        "sectionId": "composition"
+      },
+      {
+        "level": "advanced",
+        "question": "Label-smoothing release receipt를 작성하세요.",
+        "answerChecklist": [
+          "K",
+          "epsilon",
+          "target formula",
+          "framework version",
+          "class weights",
+          "ignore index",
+          "accuracy",
+          "NLL/ECE",
+          "rollback"
+        ],
+        "requiredConcepts": [
+          "uniform-label-smoothing",
+          "soft-target-composition-audit"
+        ],
+        "sectionId": "composition"
+      }
     ],
-    papers: [
+    "papers": [
       {
-        title:
-          "Dropout: A Simple Way to Prevent Neural Networks from Overfitting",
-        href: "https://www.jmlr.org/papers/v15/srivastava14a.html",
-        problem:
-          "Large networks의 co-adaptation과 expensive explicit ensemble을 줄이는 문제",
-        contribution:
-          "Training-time random unit removal과 test-time unthinned-network approximation",
-        assumptions:
-          "논문 architectures·drop probabilities·vision/speech/document/bioinformatics datasets",
-        evidenceScope:
-          "JMLR 논문의 supervised benchmark와 practical training analysis 범위",
-        notClaim:
-          "Dropout이 모든 pretrained·normalized architecture의 generalization을 개선한다는 보장은 아님",
-        sectionId: "paper-dropout",
-      },
-      {
-        title: "Decoupled Weight Decay Regularization",
-        href: "https://arxiv.org/abs/1711.05101",
-        problem:
-          "Adaptive optimizer에서 L2 regularization을 weight decay라고 부를 때 생기는 inequivalence",
-        contribution:
-          "Loss-gradient update와 multiplicative weight decay를 분리한 AdamW/SGDW",
-        assumptions:
-          "논문의 SGD/Adam definitions·image classification architectures·training recipes",
-        evidenceScope: "CIFAR/ImageNet32 experiments와 paper analysis 범위",
-        notClaim:
-          "하나의 weight-decay coefficient나 no-decay grouping이 모든 model에서 최적이라는 결론은 아님",
-        sectionId: "paper-adamw",
-      },
-      {
-        title: "PyTorch — AdamW",
-        href: "https://docs.pytorch.org/docs/stable/generated/torch.optim.AdamW.html",
-        problem:
-          "Decoupled decay와 optimizer param-group/state를 현재 API에서 구현·복원하는 문제",
-        contribution:
-          "AdamW update·parameters·state_dict와 momentum/variance 밖 decay behavior 문서화",
-        assumptions:
-          "사용 중인 stable PyTorch version과 exact param-group ordering",
-        evidenceScope:
-          "현재 공식 API algorithm·state serialization behavior 범위",
-        notClaim:
-          "Default lr·betas·weight_decay가 모든 task의 최적값이라는 뜻은 아님",
-        sectionId: "docs-pytorch-adamw",
-      },
-      {
-        title: "Early Stopping — but when?",
-        href: "https://pubmed.ncbi.nlm.nih.gov/12662814/",
-        problem:
-          "Validation trajectory에서 generalization과 training cost를 맞바꾸는 stopping criterion 선택",
-        contribution:
-          "여러 automatic stopping criteria의 empirical comparison과 slower-criterion trade-off",
-        assumptions:
-          "논문의 neural-network tasks·cross-validation measurement·criterion definitions",
-        evidenceScope:
-          "논문 experiment에서 보고한 generalization/time comparison 범위",
-        notClaim:
-          "특정 patience와 min_delta가 현대 architecture의 보편 default라는 결론은 아님",
-        sectionId: "paper-early-stopping",
-      },
-      {
-        title: "Rethinking the Inception Architecture for Computer Vision",
-        href: "https://arxiv.org/abs/1512.00567",
-        problem:
-          "Inception architecture scaling과 classification training regularization 개선",
-        contribution:
-          "Inception-v3 design changes와 one-hot target을 uniform prior와 섞는 label smoothing",
-        assumptions:
-          "ImageNet·Inception architecture·논문의 distributed training recipe",
-        evidenceScope:
-          "논문의 image-classification experiments와 label-smoothing formulation 범위",
-        notClaim:
-          "Uniform smoothing이 모든 probability calibration·distillation·class-imbalance 문제를 해결한다는 결론은 아님",
-        sectionId: "paper-label-smoothing",
-      },
-      {
-        title: "PyTorch — CrossEntropyLoss",
-        href: "https://docs.pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html",
-        problem:
-          "Class-index와 soft probability target·weight·reduction·label smoothing의 API behavior",
-        contribution:
-          "Logit/target shapes·two target modes·uniform label_smoothing과 reduction 정의",
-        assumptions:
-          "현재 stable PyTorch version·valid target probability·declared class count",
-        evidenceScope:
-          "공식 loss calculation과 target validation responsibility 범위",
-        notClaim:
-          "Framework가 custom probability target의 합·범위를 모두 검증하거나 smoothing이 calibration을 보장한다는 뜻은 아님",
-        sectionId: "docs-pytorch-label-smoothing",
-      },
-    ],
+        "title": "Rethinking the Inception Architecture for Computer Vision",
+        "href": "https://arxiv.org/abs/1512.00567",
+        "problem": "Inception architecture scaling과 classification training regularization을 개선합니다.",
+        "contribution": "Inception-v3 changes와 one-hot target을 uniform prior와 섞는 label smoothing을 제시합니다.",
+        "assumptions": "ImageNet·Inception·논문의 distributed training recipe입니다.",
+        "evidenceScope": "논문의 classification 실험과 smoothing formulation 범위입니다.",
+        "notClaim": "모든 calibration·class-imbalance·distillation 문제를 해결한다는 뜻은 아닙니다.",
+        "sectionId": "paper-label-smoothing"
+      }
+    ]
   },
   "ai/image-classification-pipeline": {
     coreIdea:
