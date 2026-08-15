@@ -6385,7 +6385,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Contrastive pair semantics",
     definition:
       "두 sample 관계를 task 의미가 같은 positive, 구분해야 하는 negative, 근거가 부족한 unknown으로 나누어 embedding 학습 신호와 제외 조건을 정하는 규칙입니다.",
-    canonicalHref: "/ai/contrastive-learning#overview",
+    canonicalHref: "/ai/contrastive-learning#pair-contract",
   },
   "positive-transformation-invariance": {
     id: "positive-transformation-invariance",
@@ -6394,7 +6394,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Positive-transformation invariance",
     definition:
       "허용한 augmentation transformation 전후의 입력이 target 의미를 유지하므로 representation도 그 변화에 민감하지 않아야 한다는 대조 학습의 가정입니다.",
-    canonicalHref: "/ai/contrastive-learning#overview",
+    canonicalHref: "/ai/contrastive-learning#projection",
   },
   "projection-head-boundary": {
     id: "projection-head-boundary",
@@ -6412,7 +6412,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Normalized embedding cosine–distance equivalence",
     definition:
       "L2 norm이 1인 두 embedding에서는 squared Euclidean distance가 2−2 cosine similarity이므로 두 측정이 반대 방향의 같은 이웃 순서를 만든다는 동치입니다.",
-    canonicalHref: "/ai/contrastive-learning#triplet",
+    canonicalHref: "/ai/triplet-metric-learning#geometry",
   },
   "ntxent-inbatch-objective": {
     id: "ntxent-inbatch-objective",
@@ -6421,7 +6421,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "NT-Xent in-batch objective",
     definition:
       "Anchor와 같은 원본에서 나온 view의 temperature-scaled similarity를 분자로, anchor 자신을 제외한 batch view의 similarity 합을 분모로 두는 normalized contrastive objective입니다.",
-    canonicalHref: "/ai/contrastive-learning#simclr",
+    canonicalHref: "/ai/simclr-infonce#objective",
   },
   "temperature-negative-weighting": {
     id: "temperature-negative-weighting",
@@ -6430,7 +6430,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Temperature-based negative weighting",
     definition:
       "Similarity logit을 양수 temperature로 나누어 softmax 후보 비율과 가까운 negative의 gradient 비중을 조절하는 mechanism입니다.",
-    canonicalHref: "/ai/contrastive-learning#simclr",
+    canonicalHref: "/ai/simclr-infonce#temperature",
   },
   "triplet-relative-margin": {
     id: "triplet-relative-margin",
@@ -6439,7 +6439,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Triplet relative margin",
     definition:
       "Anchor-negative 거리가 anchor-positive 거리보다 margin만큼 크지 않은 위반량에 hinge loss를 부여하는 relative metric-learning objective입니다.",
-    canonicalHref: "/ai/contrastive-learning#triplet",
+    canonicalHref: "/ai/triplet-metric-learning#margin",
   },
   "hard-negative-mining-snapshot": {
     id: "hard-negative-mining-snapshot",
@@ -6448,7 +6448,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Hard-negative mining snapshot",
     definition:
       "Miner encoder·corpus index·candidate depth·similarity·duplicate/multi-positive filter를 versioning해 선택된 negative 집합을 재현하는 data artifact입니다.",
-    canonicalHref: "/ai/contrastive-learning#triplet",
+    canonicalHref: "/ai/triplet-metric-learning#mining",
   },
   "supervised-multipositive-objective": {
     id: "supervised-multipositive-objective",
@@ -6457,7 +6457,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Supervised multi-positive contrastive objective",
     definition:
       "각 anchor에 대해 batch 안의 same-label positive log-probability를 positive-set 크기로 평균하고 다른 sample과 상대 비교하는 supervised contrastive loss입니다.",
-    canonicalHref: "/ai/contrastive-learning#supervised",
+    canonicalHref: "/ai/supervised-contrastive-learning#objective",
   },
   "false-negative-pair-audit": {
     id: "false-negative-pair-audit",
@@ -6466,7 +6466,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "False-negative pair audit",
     definition:
       "Negative 후보를 difficulty·domain 등으로 층화 표본 추출해 실제 positive 또는 관련 sample의 비율과 판정 신뢰도를 측정하는 검수 절차입니다.",
-    canonicalHref: "/ai/contrastive-learning#application",
+    canonicalHref: "/ai/contrastive-evaluation#pair-audit",
   },
   "contrastive-downstream-evaluation-loop": {
     id: "contrastive-downstream-evaluation-loop",
@@ -6475,7 +6475,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Contrastive downstream evaluation loop",
     definition:
       "Pair·augmentation·miner revision을 동일 split·seed의 retrieval·probe 등 downstream metric과 error slice로 평가하고 실패 관계를 다음 data version에 반영하는 절차입니다.",
-    canonicalHref: "/ai/contrastive-learning#application",
+    canonicalHref: "/ai/contrastive-evaluation#downstream",
   },
   "domain-adaptation-gap-diagnosis": {
     id: "domain-adaptation-gap-diagnosis",

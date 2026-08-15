@@ -1733,40 +1733,30 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "contrastive-learning": {
-    title: "대조 학습 글이 소유하는 범위",
+    title: "Contrastive pair contract 글이 소유하는 범위",
     owns: [
       "Positive·negative·unknown pair가 보존하거나 구분하는 의미와 불변성 계약",
-      "Encoder representation·projection embedding·normalization·NT-Xent temperature의 연결",
-      "Triplet relative margin과 easy·semi-hard·hard mining, false-negative filtering 경계",
-      "Supervised multi-positive batch 조건과 pair audit→downstream evaluation feedback loop",
+      "Encoder representation h와 projection embedding z의 handoff·normalization 경계",
     ],
     reuses: [
       {
         label: "벡터·norm·내적·cosine",
         href: "/ai/math-vectors-inner-products",
       },
-      { label: "Softmax와 cross-entropy", href: "/ai/cross-entropy" },
       {
         label: "Augmentation과 label preservation",
         href: "/ai/data-augmentation",
       },
-      {
-        label: "Train·validation·test와 empirical risk",
-        href: "/ai/train-validation-test",
-      },
-      { label: "문장 embedding과 retrieval", href: "/ai/sentence-embeddings" },
     ],
     evidence: [
-      {
-        kind: "primary-source",
-        rule: "SimCLR·FaceNet·Supervised Contrastive Learning의 주장은 각 논문의 data·architecture·batch·mining·evaluation 조건으로 제한한다.",
-      },
-      {
-        kind: "standard",
-        rule: "Pair relation·augmentation·normalization·temperature·margin·sampler·miner/index revision·seed·downstream metric을 함께 기록한다.",
-      },
+      { kind: "primary-source", rule: "Alignment·uniformity 분석은 논문의 normalized representation·objective 가정 안에서 해석한다." },
+      { kind: "standard", rule: "Pair relation·relation source·augmentation revision·encoder/projection handoff를 함께 기록한다." },
     ],
   },
+  "simclr-infonce": { title: "SimCLR·NT-Xent 글이 소유하는 범위", owns: ["두 augmentation view와 2B in-batch candidate shape", "NT-Xent 분자·분모·self mask와 temperature weighting"], reuses: [{ label: "Pair 의미와 projection", href: "/ai/contrastive-learning" }, { label: "Softmax와 cross-entropy", href: "/ai/cross-entropy" }], evidence: [{ kind: "primary-source", rule: "SimCLR claim은 ImageNet·ResNet·논문의 augmentation·batch·schedule 범위로 제한한다." }, { kind: "standard", rule: "Augmentation·sampler·batch·temperature·projection revision과 downstream probe를 함께 기록한다." }] },
+  "triplet-metric-learning": { title: "Triplet metric learning 글이 소유하는 범위", owns: ["Unit embedding의 cosine–squared-distance 동치", "Triplet relative margin과 versioned hard-negative mining"], reuses: [{ label: "Pair 의미", href: "/ai/contrastive-learning" }, { label: "벡터·norm·내적", href: "/ai/math-vectors-inner-products" }], evidence: [{ kind: "primary-source", rule: "FaceNet margin·mining 결과는 얼굴 identity data와 해당 architecture 범위로 제한한다." }, { kind: "standard", rule: "Distance·normalization·margin·miner encoder·index snapshot·filter revision을 함께 기록한다." }] },
+  "supervised-contrastive-learning": { title: "Supervised contrastive 글이 소유하는 범위", owns: ["Label을 anchor별 positive set P(i)로 바꾸는 관계", "Multi-positive 평균 loss·valid-anchor·sampler 경계"], reuses: [{ label: "Pair 의미와 projection", href: "/ai/contrastive-learning" }, { label: "Softmax와 cross-entropy", href: "/ai/cross-entropy" }], evidence: [{ kind: "primary-source", rule: "Supervised contrastive 결과는 논문의 label·dataset·augmentation·batch recipe 범위로 제한한다." }, { kind: "standard", rule: "Positive relation·label hierarchy·sampler·valid-anchor count·subgroup metric을 기록한다." }] },
+  "contrastive-evaluation": { title: "Contrastive evaluation 글이 소유하는 범위", owns: ["Bucket별 false-negative pair audit", "동일 split·seed downstream paired evaluation과 data revision loop"], reuses: [{ label: "Triplet miner receipt", href: "/ai/triplet-metric-learning#mining" }, { label: "Train·validation·test", href: "/ai/train-validation-test" }], evidence: [{ kind: "primary-source", rule: "False-negative bias 연구의 objective 가정과 실험 범위를 human audit 결과로 오인하지 않는다." }, { kind: "standard", rule: "Bucket·rubric·agreement·split·seed·metric·artifact revision을 함께 기록한다." }] },
   "domain-finetuning": {
     title: "도메인 적응 글이 소유하는 범위",
     owns: [
@@ -1815,10 +1805,8 @@ export const EDITORIAL_BOUNDARIES = {
         label: "BERT token visibility와 cross/bi encoder 경계",
         href: "/ai/bert",
       },
-      {
-        label: "Pair semantics·cosine·hard negative",
-        href: "/ai/contrastive-learning",
-      },
+      { label: "Contrastive pair semantics", href: "/ai/contrastive-learning" },
+      { label: "Cosine·triplet·hard negative", href: "/ai/triplet-metric-learning" },
       { label: "Tokenizer/checkpoint compatibility", href: "/ai/tokenizer" },
       {
         label: "Train·validation·test와 generalization",
@@ -3140,7 +3128,8 @@ export const EDITORIAL_BOUNDARIES = {
     ],
     reuses: [
       { label: "문장 임베딩의 기본 구조", href: "/ai/sentence-embeddings" },
-      { label: "대조 학습과 hard negative", href: "/ai/contrastive-learning" },
+      { label: "대조 학습 pair 의미", href: "/ai/contrastive-learning" },
+      { label: "Hard-negative mining", href: "/ai/triplet-metric-learning#mining" },
       { label: "지식 증류의 일반 원리", href: "/ai/knowledge-distillation" },
       { label: "RAG 검색·평가 경계", href: "/ai/rag-pipeline" },
     ],

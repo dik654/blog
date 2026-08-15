@@ -1696,24 +1696,15 @@ export const ARTICLE_EVIDENCE: Readonly<
   "ai/contrastive-learning": [
     {
       kind: "핵심 논문",
-      label:
-        "A Simple Framework for Contrastive Learning of Visual Representations",
-      href: "https://proceedings.mlr.press/v119/chen20j.html",
-      note: "augmentation·projection head·NT-Xent로 구성한 SimCLR의 기준 논문",
-    },
-    {
-      kind: "핵심 논문",
-      label: "FaceNet: A Unified Embedding for Face Recognition and Clustering",
-      href: "https://openaccess.thecvf.com/content_cvpr_2015/html/Schroff_FaceNet_A_Unified_2015_CVPR_paper.html",
-      note: "triplet loss와 online triplet mining을 적용한 metric-learning 기준 연구",
-    },
-    {
-      kind: "핵심 논문",
-      label: "Supervised Contrastive Learning",
-      href: "https://papers.nips.cc/paper_files/paper/2020/hash/d89a66c7c80a29b1bdbab0f2a1a94af8-Abstract.html",
-      note: "같은 class의 여러 sample을 positive로 사용하는 supervised contrastive objective",
+      label: "Understanding Contrastive Representation Learning through Alignment and Uniformity",
+      href: "https://proceedings.mlr.press/v119/wang20k.html",
+      note: "positive alignment와 normalized hypersphere uniformity를 분리해 분석",
     },
   ],
+  "ai/simclr-infonce": [{ kind: "핵심 논문", label: "A Simple Framework for Contrastive Learning of Visual Representations", href: "https://proceedings.mlr.press/v119/chen20j.html", note: "augmentation·projection head·NT-Xent로 구성한 SimCLR의 기준 논문" }],
+  "ai/triplet-metric-learning": [{ kind: "핵심 논문", label: "FaceNet: A Unified Embedding for Face Recognition and Clustering", href: "https://openaccess.thecvf.com/content_cvpr_2015/html/Schroff_FaceNet_A_Unified_2015_CVPR_paper.html", note: "unit embedding·triplet loss·online semi-hard mining의 기준 연구" }],
+  "ai/supervised-contrastive-learning": [{ kind: "핵심 논문", label: "Supervised Contrastive Learning", href: "https://papers.nips.cc/paper_files/paper/2020/hash/d89a66c7c80a29b1bdbab0f2a1a94af8-Abstract.html", note: "같은 class의 여러 sample을 positive로 사용하는 objective" }],
+  "ai/contrastive-evaluation": [{ kind: "핵심 논문", label: "Debiased Contrastive Learning", href: "https://proceedings.neurips.cc/paper/2020/hash/63c3ddcc7b23daa1e42dc41f9a44a873-Abstract.html", note: "Unlabeled negative 안의 hidden positive가 만드는 sampling bias 분석" }],
   "ai/vae": [
     {
       kind: "핵심 논문",

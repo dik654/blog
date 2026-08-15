@@ -14603,461 +14603,180 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/contrastive-learning": {
-    coreIdea:
-      "대조 학습은 loss 이름을 고르는 문제보다 어떤 두 입력의 의미를 보존하고 어떤 관계를 구분할지 정하는 pair-labeling 문제입니다. Encoder representation과 projection embedding을 분리하고, normalization·temperature·margin·batch/miner가 만드는 상대 비교를 계산한 뒤, false-negative audit와 동일 seed downstream 평가로 실제 유용성을 확인해야 합니다.",
-    assumedKnowledge: [
-      {
-        id: "euclidean-norm",
-        role: "Embedding을 unit vector로 정규화하고 거리 scale을 읽습니다.",
-      },
-      {
-        id: "dot-product",
-        role: "정규화 벡터의 내적을 cosine similarity로 해석합니다.",
-      },
-      {
-        id: "softmax-normalization",
-        role: "Similarity logit이 후보별 상대 weight가 되는 과정을 읽습니다.",
-      },
-      {
-        id: "cross-entropy-nll",
-        role: "Positive 후보의 negative log-probability로 NT-Xent를 읽습니다.",
-      },
-      {
-        id: "augmentation-risk-objective",
-        role: "Transformation distribution이 positive relation을 만드는 전제를 확인합니다.",
-      },
-      {
-        id: "train-validation-test",
-        role: "Pair/miner 선택과 최종 downstream test를 분리합니다.",
-      },
-      {
-        id: "variance",
-        role: "Collapse signal과 seed별 paired gain uncertainty를 구분합니다.",
-      },
-    ],
+    entryLevel: true,
+    entryNote: "벡터·loss를 모른다고 가정하고 두 sample을 왜 같거나 다르게 볼지부터 시작합니다.",
+    coreIdea: "Contrastive learning의 첫 계약은 loss가 아니라 positive·negative·unknown pair 의미이며, encoder h와 projection z를 분리하고 normalization 뒤 비교 공간을 만듭니다.",
+    assumedKnowledge: [],
     introducedHere: [
-      {
-        id: "contrastive-pair-semantics",
-        role: "Positive·negative·unknown 관계가 보존·구분·보류할 의미를 정의합니다.",
-      },
-      {
-        id: "positive-transformation-invariance",
-        role: "Positive augmentation이 task label을 유지한다는 가정을 작성하고 반례로 검사합니다.",
-      },
-      {
-        id: "projection-head-boundary",
-        role: "Downstream representation h와 contrastive embedding z의 역할을 분리합니다.",
-      },
-      {
-        id: "normalized-embedding-cosine",
-        role: "L2 normalization 뒤 내적·cosine·squared Euclidean 순위의 관계를 계산합니다.",
-      },
-      {
-        id: "ntxent-inbatch-objective",
-        role: "2B view의 positive 분자와 self를 제외한 후보 분모를 읽습니다.",
-      },
-      {
-        id: "temperature-negative-weighting",
-        role: "Temperature가 similarity 차이와 hard-negative gradient 비중을 어떻게 바꾸는지 계산합니다.",
-      },
-      {
-        id: "triplet-relative-margin",
-        role: "Anchor-positive와 anchor-negative 거리 차이의 hinge 조건을 계산합니다.",
-      },
-      {
-        id: "hard-negative-mining-snapshot",
-        role: "Miner·index·candidate depth·filter를 재현 가능한 data revision으로 기록합니다.",
-      },
-      {
-        id: "supervised-multipositive-objective",
-        role: "Anchor별 positive 집합과 유효 batch 조건을 정의합니다.",
-      },
-      {
-        id: "false-negative-pair-audit",
-        role: "난이도·domain 구간별 hidden positive 비율을 표본 검수합니다.",
-      },
-      {
-        id: "contrastive-downstream-evaluation-loop",
-        role: "Pair revision에서 paired-seed downstream metric과 error review까지 연결합니다.",
-      },
+      { id: "contrastive-pair-semantics", role: "Positive·negative·unknown 관계를 task 의미로 정의합니다." },
+      { id: "positive-transformation-invariance", role: "Positive augmentation이 target 의미를 보존한다는 가정을 검사합니다." },
+      { id: "projection-head-boundary", role: "Downstream representation h와 loss 전용 projection z를 구분합니다." },
     ],
     conceptExplanations: [
-      {
-        id: "contrastive-pair-semantics",
-        sectionId: "overview",
-        intuition:
-          "모델에게 두 사진이 같거나 다르다고 직접 말하는 대신, 가까워져야 할 쌍과 멀어져야 할 쌍을 채점표로 줍니다.",
-        workedExample:
-          "같은 상품의 밝기 변화는 positive, 다른 SKU는 negative, 중복 상품 여부를 모르는 판매자 이미지는 unknown으로 두고 loss에서 제외합니다.",
-        boundary:
-          "Positive는 모든 속성이 동일하다는 뜻이 아니라 현재 task에서 보존할 의미가 같다는 뜻입니다.",
-      },
-      {
-        id: "positive-transformation-invariance",
-        sectionId: "overview",
-        intuition:
-          "Positive로 묶은 변화는 예측에 쓰지 말라고 가르치는 것과 같습니다.",
-        workedExample:
-          "숫자 인식에서 작은 translation은 label을 유지할 수 있지만 6을 뒤집어 9가 되는 rotation은 positive transformation이 아닙니다.",
-        boundary:
-          "도메인과 target에 따라 label-preserving transformation이 달라지며 augmentation 이름만으로 보장되지 않습니다.",
-      },
-      {
-        id: "projection-head-boundary",
-        sectionId: "overview",
-        intuition:
-          "Encoder가 만든 업무용 표현 h와 contrastive 채점 전용 표현 z 사이에 작은 변환기를 둡니다.",
-        workedExample:
-          "ResNet output h를 2-layer MLP와 normalization으로 z로 바꾸어 loss를 계산하고 linear probe에는 h를 사용합니다.",
-        boundary:
-          "Projection head를 버리는 규칙은 SimCLR recipe이며 모든 contrastive method가 같은 handoff를 쓰는 것은 아닙니다.",
-      },
-      {
-        id: "normalized-embedding-cosine",
-        sectionId: "triplet",
-        intuition:
-          "모든 화살표 길이를 1로 맞추면 방향의 내적이 cosine이고 두 끝점 거리도 같은 순서를 냅니다.",
-        workedExample:
-          "Cosine .8인 unit vectors의 squared Euclidean distance는 2−2(.8)=.4입니다.",
-        boundary:
-          "정규화하지 않은 embedding이나 Mahalanobis·learned distance에서는 이 동치가 성립하지 않습니다.",
-        proofIdea:
-          "||u−v||²을 ||u||²+||v||²−2uᵀv로 전개하고 두 norm 제곱을 1로 대입합니다.",
-        counterexample:
-          "u=(1,0), v=(2,0)은 cosine 1이지만 squared distance 1이므로 normalization 없이 같은 양으로 볼 수 없습니다.",
-      },
-      {
-        id: "ntxent-inbatch-objective",
-        sectionId: "simclr",
-        intuition:
-          "Anchor가 batch의 여러 후보 중 같은 원본에서 나온 짝을 맞히는 분류 문제로 바꿉니다.",
-        workedExample:
-          "B=3이면 view 6개이고 anchor 자신을 제외한 5개 후보 가운데 positive 하나를 맞히며 반대 방향도 별도 anchor로 계산합니다.",
-        boundary:
-          "다른 원본을 모두 negative로 보는 in-batch 가정 때문에 semantic duplicate와 같은 class가 false negative가 될 수 있습니다.",
-      },
-      {
-        id: "temperature-negative-weighting",
-        sectionId: "simclr",
-        intuition:
-          "Temperature는 similarity 점수의 확대 배율이라 작을수록 가장 가까운 후보 차이를 크게 봅니다.",
-        workedExample:
-          "Similarity 차이 .1은 tau=1에서 weight ratio 약 1.11, tau=.1에서 e¹≈2.72가 됩니다.",
-        boundary:
-          "낮은 temperature는 잘못 붙은 hard negative의 영향도 키우므로 독립적인 품질 knob가 아닙니다.",
-      },
-      {
-        id: "triplet-relative-margin",
-        sectionId: "triplet",
-        intuition:
-          "Negative가 positive보다 최소 m만큼 멀리 있으면 통과, 아니면 부족한 거리만큼 벌점을 줍니다.",
-        workedExample:
-          "d(a,p)=.4,d(a,n)=.5,m=.2이면 loss [.4−.5+.2]+=.1입니다.",
-        boundary:
-          "Margin 값은 distance 종류와 normalization scale에 의존하고 loss 0이 전체 retrieval 품질을 보장하지 않습니다.",
-      },
-      {
-        id: "hard-negative-mining-snapshot",
-        sectionId: "triplet",
-        intuition:
-          "현재 모델이 자주 헷갈리는 후보를 모으되 어떤 모델과 index가 뽑았는지를 data version으로 남깁니다.",
-        workedExample:
-          "Encoder hash E7·corpus snapshot C3·top-100·duplicate/multi-positive filter F2에서 semi-hard 15개를 저장합니다.",
-        boundary:
-          "가장 가까운 후보는 정보량이 큰 negative가 아니라 label이 빠진 positive일 수 있어 relation audit가 먼저입니다.",
-      },
-      {
-        id: "supervised-multipositive-objective",
-        sectionId: "supervised",
-        intuition:
-          "같은 class 친구 여러 명을 모두 positive로 두고 각 친구가 다른 class보다 높은 점수를 받도록 평균합니다.",
-        workedExample:
-          "Anchor A1과 같은 label의 A2,A3가 batch에 있으면 |P(i)|=2이며 두 log-probability를 평균합니다.",
-        boundary:
-          "P(i)가 비면 loss가 정의되지 않고 coarse·hierarchical label은 중요한 subgroup 차이를 지울 수 있습니다.",
-      },
-      {
-        id: "false-negative-pair-audit",
-        sectionId: "application",
-        intuition:
-          "모델이 어려워하는 negative 중 실제 정답이 섞였는지 사람이 구간별로 표본 검사합니다.",
-        workedExample:
-          "Top-10 similarity bucket 100개를 검토해 12개가 관련 문서면 추정 false-negative 비율은 .12입니다.",
-        boundary:
-          "편의 표본이나 불명확한 rubric의 비율은 corpus 전체 위험으로 일반화할 수 없으며 agreement와 confidence interval이 필요합니다.",
-      },
-      {
-        id: "contrastive-downstream-evaluation-loop",
-        sectionId: "application",
-        intuition:
-          "Embedding 모양이 좋아 보이는지보다 최종 업무가 같은 조건에서 실제로 나아졌는지 보고 실패 쌍을 다음 data에 반영합니다.",
-        workedExample:
-          "같은 split·seed 5개에서 baseline과 새 encoder의 NDCG 차이를 계산하고 domain worst slice와 함께 pair revision을 결정합니다.",
-        boundary:
-          "Linear probe·retrieval·clustering은 서로 다른 능력을 재므로 실제 deployment task 하나를 주지표로 미리 고정합니다.",
-      },
+      { id: "contrastive-pair-semantics", sectionId: "overview", intuition: "가까워질 pair·멀어질 pair·판단을 보류할 pair를 먼저 적습니다.", workedExample: "같은 SKU crop은 positive, 다른 SKU는 negative, 중복 여부 미확인 이미지는 unknown입니다.", boundary: "다른 file이나 record라는 이유만으로 negative가 되지 않습니다." },
+      { id: "positive-transformation-invariance", sectionId: "pair-contract", intuition: "Positive로 묶은 변화는 task가 무시해도 된다고 가르칩니다.", workedExample: "상품 밝기 변화는 허용할 수 있지만 병변 색 변화는 label을 바꿀 수 있습니다.", boundary: "Augmentation 이름이 같아도 domain별 label preservation은 다릅니다." },
+      { id: "projection-head-boundary", sectionId: "projection", intuition: "업무용 표현 h와 contrastive 채점용 표현 z를 서로 다른 artifact로 봅니다.", workedExample: "Encoder h를 MLP g로 z̃로 바꾸고 normalize한 z에서 loss를 계산합니다.", boundary: "학습 뒤 h와 z 중 무엇을 배포할지는 method contract에 남깁니다." },
     ],
     conceptStages: [
-      {
-        label: "Meaning contract",
-        relation:
-          "Task 의미에서 positive·negative·unknown과 허용 transformation을 정의",
-        concepts: [
-          "contrastive-pair-semantics",
-          "positive-transformation-invariance",
-        ],
-      },
-      {
-        label: "Embedding geometry",
-        relation:
-          "Encoder h와 projection z를 나누고 unit-vector similarity를 계산",
-        concepts: [
-          "projection-head-boundary",
-          "euclidean-norm",
-          "dot-product",
-          "normalized-embedding-cosine",
-        ],
-      },
-      {
-        label: "Relative objectives",
-        relation:
-          "In-batch classification·temperature·triplet margin·multi-positive의 후보 관계를 비교",
-        concepts: [
-          "ntxent-inbatch-objective",
-          "temperature-negative-weighting",
-          "triplet-relative-margin",
-          "supervised-multipositive-objective",
-        ],
-      },
-      {
-        label: "Data and evaluation loop",
-        relation:
-          "Versioned mining과 false-negative audit를 downstream paired evaluation으로 연결",
-        concepts: [
-          "hard-negative-mining-snapshot",
-          "false-negative-pair-audit",
-          "contrastive-downstream-evaluation-loop",
-        ],
-      },
+      { label: "Name", relation: "Task 의미로 pair relation 정의", concepts: ["contrastive-pair-semantics"] },
+      { label: "Test", relation: "Positive transformation의 label 보존 반례 검사", concepts: ["positive-transformation-invariance", "contrastive-pair-semantics"] },
+      { label: "Encode", relation: "입력을 downstream representation h로 변환", concepts: ["projection-head-boundary"] },
+      { label: "Project", relation: "h를 loss 공간 z로 옮기고 handoff 기록", concepts: ["projection-head-boundary"] },
     ],
     exercises: [
-      {
-        level: "basic",
-        question:
-          "상품 검색과 피부 병변 분류에서 밝기·crop·색 변화 쌍을 positive·negative·unknown으로 분류하고 서로 다른 이유를 설명하라.",
-        answerChecklist: [
-          "task meaning",
-          "invariance",
-          "skin-color counterexample",
-          "unknown relation",
-          "label-preservation audit",
-        ],
-        requiredConcepts: [
-          "contrastive-pair-semantics",
-          "positive-transformation-invariance",
-        ],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "v=(3,4)를 L2 normalize하고 u=(1,0)과 cosine similarity를 계산한 뒤 h와 z의 용도를 구분하라.",
-        answerChecklist: [
-          "norm 5",
-          "z=(.6,.8)",
-          "cosine .6",
-          "h downstream",
-          "z contrastive",
-        ],
-        requiredConcepts: [
-          "euclidean-norm",
-          "dot-product",
-          "projection-head-boundary",
-          "normalized-embedding-cosine",
-        ],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "B=3인 SimCLR batch에서 view 수, anchor별 후보 수, positive 수와 symmetric anchor 횟수를 계산하라.",
-        answerChecklist: [
-          "6 views",
-          "5 candidates",
-          "1 positive",
-          "6 anchors",
-          "other-source false-negative caveat",
-        ],
-        requiredConcepts: ["ntxent-inbatch-objective"],
-        sectionId: "simclr",
-      },
-      {
-        level: "advanced",
-        question:
-          "Similarity 차이 .1에서 tau=1과 .1의 candidate weight ratio를 계산하고 mislabeled hard negative가 있을 때 tradeoff를 설명하라.",
-        answerChecklist: [
-          "exp(.1)",
-          "about 1.11",
-          "exp(1)",
-          "about 2.72",
-          "sharper weighting",
-          "false-negative amplification",
-        ],
-        requiredConcepts: [
-          "temperature-negative-weighting",
-          "false-negative-pair-audit",
-        ],
-        sectionId: "simclr",
-      },
-      {
-        level: "basic",
-        question:
-          "d(a,p)=.4, d(a,n)=.9와 .5, margin=.2인 두 triplet loss를 계산하고 easy·semi-hard 여부를 판정하라.",
-        answerChecklist: ["0", ".1", "easy", "semi-hard", "hinge boundary"],
-        requiredConcepts: ["triplet-relative-margin"],
-        sectionId: "triplet",
-      },
-      {
-        level: "advanced",
-        question:
-          "Unit vectors에서 squared Euclidean=2−2cos를 유도하고 normalization이 없을 때 반례를 제시한 뒤 miner manifest를 설계하라.",
-        answerChecklist: [
-          "norm expansion",
-          "unit norms",
-          "monotone ranking",
-          "non-unit counterexample",
-          "encoder hash",
-          "index snapshot",
-          "depth/filter revision",
-        ],
-        requiredConcepts: [
-          "normalized-embedding-cosine",
-          "hard-negative-mining-snapshot",
-        ],
-        sectionId: "triplet",
-      },
-      {
-        level: "basic",
-        question:
-          "Batch [A1,A2,A3,B1,C1]에서 anchor A1과 C1의 P(i)를 쓰고 C1 처리 규칙을 설명하라.",
-        answerChecklist: [
-          "P(A1)={A2,A3}",
-          "size 2",
-          "P(C1)=empty",
-          "exclude or class-aware sampler",
-          "valid-anchor count",
-        ],
-        requiredConcepts: ["supervised-multipositive-objective"],
-        sectionId: "supervised",
-      },
-      {
-        level: "advanced",
-        question:
-          "Similarity·domain별 hard-negative audit와 5-seed downstream paired evaluation을 설계하고 miner 교체 판단 기준을 작성하라.",
-        answerChecklist: [
-          "stratified random review",
-          "relation rubric",
-          "false-negative rate",
-          "annotator agreement",
-          "same split/seeds",
-          "paired gain variance",
-          "worst domain",
-          "artifact revision",
-        ],
-        requiredConcepts: [
-          "hard-negative-mining-snapshot",
-          "false-negative-pair-audit",
-          "contrastive-downstream-evaluation-loop",
-        ],
-        sectionId: "application",
-      },
-      {
-        level: "basic",
-        question:
-          "Encoder가 h=(3,4), projection head가 z=(0,5)를 만들었다. 각각 normalize하고 contrastive loss와 downstream classifier가 어느 표현을 쓰는지 구분하라.",
-        answerChecklist: [
-          "normalized h=(.6,.8)",
-          "normalized z=(0,1)",
-          "contrastive loss uses z",
-          "downstream commonly uses h",
-          "projection boundary explicit",
-          "pooling and head in artifact",
-        ],
-        requiredConcepts: [
-          "projection-head-boundary",
-          "normalized-embedding-cosine",
-        ],
-        sectionId: "overview",
-      },
-      {
-        level: "advanced",
-        question:
-          "새 miner의 high-similarity 후보 50개 중 12개가 실제 positive였고 paired seed gain은 [.02,-.01,0,.01,-.02]였다. 두 값을 계산하고 채택 여부를 정하라.",
-        answerChecklist: [
-          "false-negative rate=.24",
-          "mean paired gain=0",
-          "do not adopt yet",
-          "review pair policy",
-          "filter hidden positives",
-          "same split and seeds",
-          "bucket uncertainty",
-        ],
-        requiredConcepts: [
-          "false-negative-pair-audit",
-          "contrastive-downstream-evaluation-loop",
-          "hard-negative-mining-snapshot",
-        ],
-        sectionId: "application",
-      },
+      { level: "basic", question: "Positive·negative·unknown pair를 각각 정의하라.", answerChecklist: ["same task meaning", "must distinguish", "insufficient evidence", "loss inclusion", "task-specific"], requiredConcepts: ["contrastive-pair-semantics"], sectionId: "overview" },
+      { level: "basic", question: "상품 이미지 세 쌍을 positive·negative·unknown으로 분류하라.", answerChecklist: ["same SKU crop", "different SKU", "unverified duplicate", "reason", "unknown exclusion"], requiredConcepts: ["contrastive-pair-semantics"], sectionId: "pair-contract" },
+      { level: "basic", question: "Positive transformation이 invariance를 만드는 이유를 설명하라.", answerChecklist: ["two views", "same relation", "pull together", "ignored change", "target meaning"], requiredConcepts: ["positive-transformation-invariance"], sectionId: "pair-contract" },
+      { level: "basic", question: "상품과 피부 병변에서 color jitter의 관계가 다른 이유를 쓰라.", answerChecklist: ["domain", "target label", "product identity", "diagnostic color", "counterexample"], requiredConcepts: ["positive-transformation-invariance"], sectionId: "overview" },
+      { level: "basic", question: "Encoder h와 projection z의 용도를 구분하라.", answerChecklist: ["encoder", "downstream h", "projection head", "loss z", "handoff"], requiredConcepts: ["projection-head-boundary"], sectionId: "projection" },
+      { level: "basic", question: "z̃=(3,4)를 normalize하고 (1,0)과 cosine을 계산하라.", answerChecklist: ["norm 5", "z=(.6,.8)", "dot product", ".6", "unit direction"], requiredConcepts: ["projection-head-boundary"], sectionId: "projection" },
+      { level: "advanced", question: "Pair receipt schema를 설계하라.", answerChecklist: ["left/right IDs", "relation", "source", "confidence", "augmentation revision", "unknown", "reviewer"], requiredConcepts: ["contrastive-pair-semantics"], sectionId: "pair-contract" },
+      { level: "advanced", question: "Positive augmentation이 label을 파괴하는 반례 fixture를 설계하라.", answerChecklist: ["target", "transformation", "before/after label", "human review", "reject rule", "version"], requiredConcepts: ["positive-transformation-invariance"], sectionId: "release" },
+      { level: "advanced", question: "Projection head를 잘못 배포한 failure를 진단하라.", answerChecklist: ["h vs z", "checkpoint", "pooling", "normalization", "downstream regression", "artifact metadata"], requiredConcepts: ["projection-head-boundary"], sectionId: "release" },
+      { level: "advanced", question: "SimCLR·triplet·supervised route를 고르는 relation triage를 작성하라.", answerChecklist: ["augmentation pair", "triplet relation", "label multipositive", "unknown", "pair audit", "objective after relation"], requiredConcepts: ["contrastive-pair-semantics", "projection-head-boundary"], sectionId: "release" },
     ],
     papers: [
-      {
-        title:
-          "A Simple Framework for Contrastive Learning of Visual Representations",
-        href: "https://proceedings.mlr.press/v119/chen20j.html",
-        problem:
-          "Label 없이 image representation을 학습할 때 augmentation·architecture·objective recipe가 성능에 미치는 영향을 분리하는 문제",
-        contribution:
-          "두 augmented view·shared encoder·nonlinear projection head·normalized temperature-scaled cross-entropy로 구성한 SimCLR과 ablation",
-        assumptions:
-          "ImageNet·ResNet·large batch·논문의 augmentation와 training schedule",
-        evidenceScope:
-          "ICML 논문의 linear evaluation·semi-supervised transfer와 component ablation 범위",
-        notClaim:
-          "큰 batch·특정 temperature·color augmentation이 모든 modality와 semantic task의 최적 default라는 뜻은 아님",
-        sectionId: "paper-simclr",
-      },
-      {
-        title:
-          "FaceNet: A Unified Embedding for Face Recognition and Clustering",
-        href: "https://openaccess.thecvf.com/content_cvpr_2015/html/Schroff_FaceNet_A_Unified_2015_CVPR_paper.html",
-        problem:
-          "얼굴 verification·recognition·clustering에 공통으로 쓸 compact Euclidean embedding을 직접 학습하는 문제",
-        contribution:
-          "Unit embedding의 triplet loss와 online semi-hard triplet selection을 사용한 FaceNet",
-        assumptions:
-          "얼굴 identity labels·논문의 network·triplet generation·dataset와 evaluation protocol",
-        evidenceScope:
-          "CVPR 논문의 face verification·recognition·clustering 결과 범위",
-        notClaim:
-          "FaceNet margin과 mining policy가 임의 retrieval corpus의 보편적 설정이라는 뜻은 아님",
-        sectionId: "paper-facenet",
-      },
-      {
-        title: "Supervised Contrastive Learning",
-        href: "https://papers.nips.cc/paper_files/paper/2020/hash/d89a66c7c80a29b1bdbab0f2a1a94af8-Abstract.html",
-        problem:
-          "Label을 활용하면서 class 내 여러 sample을 한 positive로 확장해 representation을 학습하는 문제",
-        contribution:
-          "Anchor별 same-class positive set을 평균하는 supervised contrastive objective와 cross-entropy comparison",
-        assumptions:
-          "ImageNet·CIFAR·ResNet·논문의 augmentation·batch·two-stage classifier recipe",
-        evidenceScope:
-          "NeurIPS 논문의 classification accuracy·robustness와 ablation 범위",
-        notClaim:
-          "Coarse·hierarchical·noisy label에서 모든 same-label pair가 의미상 positive라는 뜻은 아님",
-        sectionId: "paper-supcon",
-      },
+      { title: "Understanding Contrastive Representation Learning through Alignment and Uniformity", href: "https://proceedings.mlr.press/v119/wang20k.html", problem: "Contrastive objective가 normalized representation geometry에 주는 효과를 해석하는 문제", contribution: "Positive alignment와 hypersphere uniformity 관점 및 asymptotic 분석", assumptions: "Normalized representation과 논문의 loss·distribution·evaluation 설정", evidenceScope: "ICML 논문이 제시한 alignment·uniformity 이론과 image representation 실험·평가 조건의 범위", notClaim: "모든 task의 pair relation·augmentation이 자동으로 옳다는 뜻은 아님", sectionId: "paper-alignment-uniformity" },
+    ],
+  },
+  "ai/simclr-infonce": {
+    entryLevel: true,
+    entryNote: "Pair·softmax를 모른다고 가정하고 한 원본에서 두 view가 생기는 batch shape부터 시작합니다.",
+    coreIdea: "SimCLR은 B개 원본에서 2B view를 만들고 anchor 자신을 제외한 후보 가운데 같은 원본 positive를 맞히는 NT-Xent 분류 문제를 구성하며 temperature와 false-negative 품질을 함께 평가합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "ntxent-inbatch-objective", role: "Positive 분자와 self 제외 candidate 분모를 가진 in-batch objective를 계산합니다." },
+      { id: "temperature-negative-weighting", role: "Temperature가 candidate weight ratio와 false-negative 영향에 미치는 효과를 계산합니다." },
+    ],
+    conceptExplanations: [
+      { id: "ntxent-inbatch-objective", sectionId: "objective", intuition: "Anchor가 batch 후보 중 같은 원본 view를 맞히는 분류 문제입니다.", workedExample: "B=3이면 view 6개, anchor 자신을 뺀 후보 5개, positive 1개입니다.", boundary: "다른 source view가 semantic duplicate면 false negative가 됩니다." },
+      { id: "temperature-negative-weighting", sectionId: "temperature", intuition: "Temperature는 similarity 점수의 확대 배율입니다.", workedExample: "차이 .1은 τ=1에서 ratio 1.11, τ=.1에서 2.72입니다.", boundary: "작은 τ는 mislabeled hard negative의 영향도 키웁니다." },
+    ],
+    conceptStages: [
+      { label: "Views", relation: "한 원본에서 독립 augmentation 두 개 생성", concepts: ["ntxent-inbatch-objective"] },
+      { label: "Batch", relation: "2B view와 self 제외 candidate set 구성", concepts: ["ntxent-inbatch-objective"] },
+      { label: "Normalize", relation: "Positive score를 candidate score 합으로 정규화", concepts: ["ntxent-inbatch-objective", "temperature-negative-weighting"] },
+      { label: "Stress", relation: "Temperature와 false-negative collision 동시 평가", concepts: ["temperature-negative-weighting"] },
+    ],
+    exercises: [
+      { level: "basic", question: "B=3에서 view·anchor·candidate·positive 수를 계산하라.", answerChecklist: ["6 views", "6 anchors", "5 candidates", "1 positive", "symmetric directions"], requiredConcepts: ["ntxent-inbatch-objective"], sectionId: "batch" },
+      { level: "basic", question: "Source sample과 augmented view를 구분하라.", answerChecklist: ["original", "two transformations", "encoder inputs", "shared identity", "relation assumption"], requiredConcepts: ["ntxent-inbatch-objective"], sectionId: "overview" },
+      { level: "basic", question: "NT-Xent 분자와 분모에 들어가는 항을 쓰라.", answerChecklist: ["positive exp score", "all non-self candidates", "self mask", "temperature", "normalization"], requiredConcepts: ["ntxent-inbatch-objective"], sectionId: "objective" },
+      { level: "basic", question: "왜 i→j와 j→i를 모두 계산하는지 설명하라.", answerChecklist: ["directional anchor", "different denominator owner", "two losses", "average", "same pair"], requiredConcepts: ["ntxent-inbatch-objective"], sectionId: "batch" },
+      { level: "basic", question: "Similarity 차이 .1에서 τ=1의 ratio를 계산하라.", answerChecklist: ["exp(.1)", "about 1.11", "relative weight", "positive tau"], requiredConcepts: ["temperature-negative-weighting"], sectionId: "temperature" },
+      { level: "basic", question: "τ=.1에서 같은 차이의 ratio를 계산하라.", answerChecklist: ["exp(1)", "about 2.72", "sharper", "negative importance"], requiredConcepts: ["temperature-negative-weighting"], sectionId: "temperature" },
+      { level: "advanced", question: "Semantic duplicate가 있는 in-batch failure를 설계하라.", answerChecklist: ["different source IDs", "same meaning", "denominator", "repulsion", "duplicate filter", "pair audit"], requiredConcepts: ["ntxent-inbatch-objective"], sectionId: "temperature" },
+      { level: "advanced", question: "Temperature sweep를 negative 품질과 함께 평가하라.", answerChecklist: ["fixed batch", "tau grid", "FN buckets", "loss", "linear probe", "worst slice", "paired seeds"], requiredConcepts: ["temperature-negative-weighting"], sectionId: "temperature" },
+      { level: "advanced", question: "SimCLR training artifact receipt를 작성하라.", answerChecklist: ["source dataset", "augmentation revision", "sampler", "batch", "temperature", "encoder", "projection", "seed"], requiredConcepts: ["ntxent-inbatch-objective", "temperature-negative-weighting"], sectionId: "temperature" },
+      { level: "advanced", question: "Large batch를 채택하지 않을 반례를 제시하라.", answerChecklist: ["more candidates", "more collisions", "memory/compute", "false negatives", "downstream no gain", "release gate"], requiredConcepts: ["ntxent-inbatch-objective", "temperature-negative-weighting"], sectionId: "temperature" },
+    ],
+    papers: [
+      { title: "A Simple Framework for Contrastive Learning of Visual Representations", href: "https://proceedings.mlr.press/v119/chen20j.html", problem: "Label 없이 image representation을 학습할 때 augmentation·projection·objective recipe를 비교하는 문제", contribution: "두 view·shared encoder·projection head·NT-Xent로 구성한 SimCLR과 ablation", assumptions: "ImageNet·ResNet·large batch·논문의 augmentation와 schedule", evidenceScope: "ICML 논문의 linear evaluation·transfer와 ablation", notClaim: "특정 batch·temperature·augmentation이 모든 modality의 최적 default라는 뜻은 아님", sectionId: "paper-simclr" },
+    ],
+  },
+  "ai/triplet-metric-learning": {
+    entryLevel: true,
+    entryNote: "거리·cosine·mining을 모른다고 가정하고 anchor·positive·negative 세 자리부터 시작합니다.",
+    coreIdea: "Triplet learning은 unit embedding geometry에서 positive와 negative의 상대 거리 margin을 학습하며, hard negative를 miner·index·filter가 versioned된 data artifact로 관리합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "normalized-embedding-cosine", role: "Unit embedding의 cosine과 squared Euclidean 순위 동치를 유도합니다." },
+      { id: "triplet-relative-margin", role: "Positive·negative 거리 차이의 hinge margin을 계산합니다." },
+      { id: "hard-negative-mining-snapshot", role: "Miner·index·depth·filter를 재현 가능한 candidate artifact로 기록합니다." },
+    ],
+    conceptExplanations: [
+      { id: "normalized-embedding-cosine", sectionId: "geometry", intuition: "모든 화살표 길이를 1로 맞추면 방향이 가까울수록 끝점 거리도 작습니다.", workedExample: "Cosine .8이면 squared distance 2−1.6=.4입니다.", boundary: "정규화하지 않은 vector에는 성립하지 않습니다.", proofIdea: "차이 제곱을 norm 두 개와 내적으로 전개합니다.", counterexample: "(1,0)과 (2,0)은 cosine 1이지만 distance 1입니다." },
+      { id: "triplet-relative-margin", sectionId: "margin", intuition: "Negative가 positive보다 m만큼 더 멀면 통과하고 부족한 거리만 벌점으로 남깁니다.", workedExample: "Positive 거리 .4, negative 거리 .5, margin .2이면 .4−.5+.2=.1이어서 hinge loss .1이 남습니다.", boundary: "Margin은 distance·normalization scale에 종속됩니다." },
+      { id: "hard-negative-mining-snapshot", sectionId: "mining", intuition: "현재 모델이 헷갈리는 후보를 뽑되 선택 조건 전체를 versioning합니다.", workedExample: "Encoder E7·index C3·top100·filter F2의 semi-hard 후보를 저장합니다.", boundary: "가장 가까운 후보가 label이 누락된 positive일 수 있습니다." },
+    ],
+    conceptStages: [
+      { label: "Geometry", relation: "Unit normalization에서 cosine·distance 동치 확인", concepts: ["normalized-embedding-cosine"] },
+      { label: "Triplet", relation: "Anchor·positive·negative 거리 측정", concepts: ["normalized-embedding-cosine", "triplet-relative-margin"] },
+      { label: "Margin", relation: "Relative ordering 위반량을 hinge loss로 변환", concepts: ["triplet-relative-margin"] },
+      { label: "Mine", relation: "난이도 후보와 source revision 보존", concepts: ["triplet-relative-margin", "hard-negative-mining-snapshot"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Anchor·positive·negative·margin을 정의하라.", answerChecklist: ["reference", "same relation", "different relation", "distance", "minimum gap"], requiredConcepts: ["triplet-relative-margin"], sectionId: "overview" },
+      { level: "basic", question: "Cosine .8인 unit vectors의 squared distance를 계산하라.", answerChecklist: ["2-2cos", "1.6", ".4", "unit assumption"], requiredConcepts: ["normalized-embedding-cosine"], sectionId: "geometry" },
+      { level: "basic", question: "정규화 없는 cosine-distance 반례를 쓰라.", answerChecklist: ["(1,0)", "(2,0)", "cosine 1", "distance 1", "assumption failure"], requiredConcepts: ["normalized-embedding-cosine"], sectionId: "geometry" },
+      { level: "basic", question: "d(a,p)=.4,d(a,n)=.9,m=.2의 loss를 계산하라.", answerChecklist: ["-.3", "max zero", "loss 0", "easy", "condition satisfied"], requiredConcepts: ["triplet-relative-margin"], sectionId: "margin" },
+      { level: "basic", question: "Negative가 .5일 때 loss와 상태를 계산하라.", answerChecklist: [".1", "positive violation", "semi-hard", "gradient"], requiredConcepts: ["triplet-relative-margin"], sectionId: "margin" },
+      { level: "basic", question: "Miner snapshot의 필드를 쓰라.", answerChecklist: ["encoder hash", "corpus", "index", "depth", "similarity", "filters", "timestamp"], requiredConcepts: ["hard-negative-mining-snapshot"], sectionId: "mining" },
+      { level: "advanced", question: "Cosine-distance 동치를 유도하라.", answerChecklist: ["difference expansion", "two norms", "unit substitution", "inner product", "monotone ranking"], requiredConcepts: ["normalized-embedding-cosine"], sectionId: "geometry" },
+      { level: "advanced", question: "Random·semi-hard·hard bucket 평가를 설계하라.", answerChecklist: ["definitions", "same encoder", "FN audit", "loss", "downstream", "worst bucket"], requiredConcepts: ["triplet-relative-margin", "hard-negative-mining-snapshot"], sectionId: "mining" },
+      { level: "advanced", question: "Offline miner가 stale해지는 fixture를 설계하라.", answerChecklist: ["encoder revision", "old index", "candidate drift", "regeneration trigger", "receipt", "rollback"], requiredConcepts: ["hard-negative-mining-snapshot"], sectionId: "mining" },
+      { level: "advanced", question: "Triplet release receipt를 작성하라.", answerChecklist: ["pair source", "normalization", "distance", "margin", "miner revision", "FN rate", "downstream", "fallback"], requiredConcepts: ["normalized-embedding-cosine", "triplet-relative-margin", "hard-negative-mining-snapshot"], sectionId: "mining" },
+    ],
+    papers: [
+      { title: "FaceNet: A Unified Embedding for Face Recognition and Clustering", href: "https://openaccess.thecvf.com/content_cvpr_2015/html/Schroff_FaceNet_A_Unified_2015_CVPR_paper.html", problem: "Verification·recognition·clustering에 공통으로 쓸 compact face embedding을 학습하는 문제", contribution: "Unit embedding·triplet loss·online semi-hard selection을 사용한 FaceNet", assumptions: "얼굴 identity labels·논문의 network·dataset·evaluation", evidenceScope: "CVPR 논문의 face task 결과", notClaim: "FaceNet margin과 mining이 임의 retrieval corpus의 기본값이라는 뜻은 아님", sectionId: "paper-facenet" },
+    ],
+  },
+  "ai/supervised-contrastive-learning": {
+    entryLevel: true,
+    entryNote: "Multi-positive loss를 모른다고 가정하고 batch label에서 P(i)를 만드는 과정부터 시작합니다.",
+    coreIdea: "Supervised contrastive learning은 same-label sample을 anchor별 positive set으로 펼쳐 log-probability를 평균하지만 empty positive·coarse hierarchy·sampler prior 경계를 별도로 관리합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "supervised-multipositive-objective", role: "Positive set P(i)·valid anchor·multi-positive 평균 objective를 계산합니다." },
+    ],
+    conceptExplanations: [
+      { id: "supervised-multipositive-objective", sectionId: "objective", intuition: "같은 class 친구 여러 명을 모두 positive로 두고 각 선택 loss를 평균합니다.", workedExample: "A1의 P(i)={A2,A3}이면 두 log-probability를 평균합니다.", boundary: "P(i)가 비면 정의되지 않고 coarse label은 subgroup 차이를 지울 수 있습니다." },
+    ],
+    conceptStages: [
+      { label: "Labels", relation: "Batch label과 relation rule 확인", concepts: ["supervised-multipositive-objective"] },
+      { label: "Set", relation: "Anchor별 P(i)와 valid anchor 구성", concepts: ["supervised-multipositive-objective"] },
+      { label: "Average", relation: "Positive별 log-probability 평균", concepts: ["supervised-multipositive-objective"] },
+      { label: "Release", relation: "Sampler·hierarchy·subgroup metric 검사", concepts: ["supervised-multipositive-objective"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Batch [A1,A2,A3,B1,C1]에서 P(A1)을 쓰라.", answerChecklist: ["exclude anchor", "A2", "A3", "size 2", "same relation"], requiredConcepts: ["supervised-multipositive-objective"], sectionId: "positive-set" },
+      { level: "basic", question: "Batch에서 같은 label sample이 없는 anchor C1의 P(C1)과 안전한 처리 규칙을 쓰라.", answerChecklist: ["empty", "undefined division", "exclude", "sampler alternative", "valid count"], requiredConcepts: ["supervised-multipositive-objective"], sectionId: "positive-set" },
+      { level: "basic", question: "Same-label positive와 same-source view를 구분하라.", answerChecklist: ["label relation", "source identity", "multiple positives", "augmentation", "different assumptions"], requiredConcepts: ["supervised-multipositive-objective"], sectionId: "overview" },
+      { level: "basic", question: "Multi-positive loss에서 |P(i)|로 나누는 이유를 설명하라.", answerChecklist: ["sum positives", "count", "anchor average", "class composition", "not global prior"], requiredConcepts: ["supervised-multipositive-objective"], sectionId: "objective" },
+      { level: "basic", question: "Class-aware sampler의 목적과 위험을 쓰라.", answerChecklist: ["positive availability", "batch balance", "changed prior", "calibration", "record composition"], requiredConcepts: ["supervised-multipositive-objective"], sectionId: "positive-set" },
+      { level: "basic", question: "Coarse label이 subgroup을 지우는 예를 쓰라.", answerChecklist: ["same top label", "different subgroup", "forced pull", "worst slice", "hierarchy rule"], requiredConcepts: ["supervised-multipositive-objective"], sectionId: "release" },
+      { level: "advanced", question: "Multi-label positive relation을 설계하라.", answerChecklist: ["label set", "overlap threshold", "confidence", "unknown", "weighting", "audit"], requiredConcepts: ["supervised-multipositive-objective"], sectionId: "positive-set" },
+      { level: "advanced", question: "Valid-anchor normalization bug fixture를 설계하라.", answerChecklist: ["empty anchors", "NaN", "silent drop", "count exposed", "expected mean", "test"], requiredConcepts: ["supervised-multipositive-objective"], sectionId: "objective" },
+      { level: "advanced", question: "Frozen probe·fine-tuning·retrieval 평가를 비교하라.", answerChecklist: ["same checkpoint", "different capability", "primary metric", "original prior", "subgroup", "paired baseline"], requiredConcepts: ["supervised-multipositive-objective"], sectionId: "release" },
+      { level: "advanced", question: "Supervised contrastive release receipt를 작성하라.", answerChecklist: ["label revision", "positive rule", "sampler", "valid anchors", "temperature", "encoder", "subgroup metric", "rollback"], requiredConcepts: ["supervised-multipositive-objective"], sectionId: "release" },
+    ],
+    papers: [
+      { title: "Supervised Contrastive Learning", href: "https://papers.nips.cc/paper_files/paper/2020/hash/d89a66c7c80a29b1bdbab0f2a1a94af8-Abstract.html", problem: "Label을 활용해 class 내 여러 sample을 positive로 확장하는 문제", contribution: "Anchor별 same-class positive set을 평균하는 objective와 classification comparison", assumptions: "ImageNet·CIFAR·ResNet·논문의 augmentation·batch recipe", evidenceScope: "NeurIPS 논문의 accuracy·robustness와 ablation", notClaim: "Coarse·hierarchical·noisy label의 모든 same-label pair가 의미상 같다는 뜻은 아님", sectionId: "paper-supcon" },
+    ],
+  },
+  "ai/contrastive-evaluation": {
+    entryLevel: true,
+    entryNote: "Embedding metric을 모른다고 가정하고 miner candidate receipt와 human pair verdict부터 시작합니다.",
+    coreIdea: "Contrastive evaluation은 similarity·domain bucket별 false-negative pair audit와 같은 split·seed의 downstream paired gain을 함께 보고 실패 pair를 다음 data revision으로 되돌리되 독립 test를 selection에 재사용하지 않습니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "false-negative-pair-audit", role: "Candidate bucket별 hidden positive 비율과 판정 신뢰도를 측정합니다." },
+      { id: "contrastive-downstream-evaluation-loop", role: "동일 split·seed metric과 error pair를 다음 artifact revision에 연결합니다." },
+    ],
+    conceptExplanations: [
+      { id: "false-negative-pair-audit", sectionId: "pair-audit", intuition: "모델이 어려워하는 negative 중 실제 정답이 섞였는지 구간별로 사람이 검사합니다.", workedExample: "50개 중 12개가 관련 문서면 관측 비율은 .24입니다.", boundary: "편의 표본 결과를 corpus 전체로 바로 일반화하지 않습니다." },
+      { id: "contrastive-downstream-evaluation-loop", sectionId: "downstream", intuition: "Embedding 모양보다 최종 task가 같은 조건에서 나아졌는지 보고 실패 pair를 다음 data에 반영합니다.", workedExample: "같은 seed 5개의 NDCG 차이를 평균하고 worst domain을 함께 봅니다.", boundary: "독립 test를 반복 pair 선택에 쓰면 selection feedback가 됩니다." },
+    ],
+    conceptStages: [
+      { label: "Receipt", relation: "Miner·index·bucket candidate 모집단 고정", concepts: ["false-negative-pair-audit"] },
+      { label: "Audit", relation: "Stratified review와 relation verdict 측정", concepts: ["false-negative-pair-audit"] },
+      { label: "Compare", relation: "동일 split·seed paired downstream 차이 계산", concepts: ["contrastive-downstream-evaluation-loop"] },
+      { label: "Revise", relation: "Failure pair를 다음 data artifact로 환류", concepts: ["false-negative-pair-audit", "contrastive-downstream-evaluation-loop"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Candidate receipt의 필드를 쓰라.", answerChecklist: ["miner encoder", "corpus", "index", "depth", "similarity", "filter", "revision"], requiredConcepts: ["false-negative-pair-audit"], sectionId: "overview" },
+      { level: "basic", question: "50개 중 12개 hidden positive의 비율을 계산하라.", answerChecklist: ["12/50", ".24", "24 percent", "bucket scope", "uncertainty"], requiredConcepts: ["false-negative-pair-audit"], sectionId: "pair-audit" },
+      { level: "basic", question: "Similarity·domain stratified audit를 설명하라.", answerChecklist: ["buckets", "random sample", "rubric", "verdict", "agreement", "per-bucket rate"], requiredConcepts: ["false-negative-pair-audit"], sectionId: "pair-audit" },
+      { level: "basic", question: "Unknown verdict를 negative count에 넣지 않는 이유를 쓰라.", answerChecklist: ["insufficient evidence", "not negative", "separate count", "review", "bias"], requiredConcepts: ["false-negative-pair-audit"], sectionId: "pair-audit" },
+      { level: "basic", question: "Paired downstream difference를 정의하라.", answerChecklist: ["same split", "same seed", "new metric", "baseline metric", "subtraction"], requiredConcepts: ["contrastive-downstream-evaluation-loop"], sectionId: "downstream" },
+      { level: "basic", question: "Gain [.02,-.01,0,.01,-.02]의 평균을 계산하라.", answerChecklist: ["sum zero", "divide five", "mean zero", "variance", "no adoption"], requiredConcepts: ["contrastive-downstream-evaluation-loop"], sectionId: "downstream" },
+      { level: "advanced", question: "Pair audit rubric와 agreement 절차를 설계하라.", answerChecklist: ["positive/negative/unknown", "task meaning", "independent reviewers", "agreement", "adjudication", "version"], requiredConcepts: ["false-negative-pair-audit"], sectionId: "pair-audit" },
+      { level: "advanced", question: "Loss는 낮지만 downstream gain이 없는 triage를 설계하라.", answerChecklist: ["augmentation", "shortcut", "FN rate", "projection handoff", "metric", "slice", "paired seeds"], requiredConcepts: ["false-negative-pair-audit", "contrastive-downstream-evaluation-loop"], sectionId: "downstream" },
+      { level: "advanced", question: "Test feedback leakage를 막는 revision loop를 설계하라.", answerChecklist: ["validation selection", "frozen test", "one final use", "artifact revision", "new test if needed", "audit log"], requiredConcepts: ["contrastive-downstream-evaluation-loop"], sectionId: "release" },
+      { level: "advanced", question: "Contrastive release receipt를 작성하라.", answerChecklist: ["candidate revision", "bucket sample", "FN rate", "agreement", "split/seeds", "mean/variance", "worst slice", "decision"], requiredConcepts: ["false-negative-pair-audit", "contrastive-downstream-evaluation-loop"], sectionId: "release" },
+    ],
+    papers: [
+      { title: "Debiased Contrastive Learning", href: "https://proceedings.neurips.cc/paper/2020/hash/63c3ddcc7b23daa1e42dc41f9a44a873-Abstract.html", problem: "Unlabeled negative sample에 같은 latent class positive가 섞이는 sampling bias", contribution: "Class prior를 이용해 false-negative effect를 보정하는 contrastive objective", assumptions: "논문의 latent-class model·prior·datasets·evaluation", evidenceScope: "NeurIPS 논문의 false-negative sampling-bias 이론과 CIFAR·ImageNet 계열 representation 실험 범위", notClaim: "Human relation audit·domain rubric·모든 hidden positive 문제를 자동 해결한다는 뜻은 아님", sectionId: "paper-debiased-contrastive" },
     ],
   },
   "ai/domain-finetuning": {

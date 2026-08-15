@@ -9,7 +9,7 @@ export default function Overview() {
     <div className="prose prose-neutral dark:prose-invert max-w-none">
       <p className="text-lg leading-8">Transformer encoder는 입력 token마다 contextual hidden state를 만듭니다. 검색 시스템은 query 하나를 수백만 문서와 비교해야 하므로, 가변 길이 token sequence를 고정 길이 vector 하나로 줄이고 문서 vector를 미리 저장합니다. 이때 pooling은 계산 방법일 뿐이며, 관련 문장이 가까워지도록 학습한 관계가 없으면 cosine 값에 검색 의미가 생긴다고 보장할 수 없습니다.</p>
       <p>예를 들어 일반 BERT의 <code>[CLS]</code> state나 token 평균을 바로 사용해도 숫자는 나오지만, 원래 masked-language-model objective는 문장 간 cosine 순서를 직접 학습하지 않았습니다. Sentence embedding model은 query–document·paraphrase·entailment 같은 positive와 negative 관계를 추가 objective로 학습합니다.</p>
-      <p>Token hidden state와 attention mask는 <Link to="/ai/bert">BERT 정본</Link>, pair·temperature·hard negative는 <Link to="/ai/contrastive-learning">대조 학습 정본</Link>에서 자세히 다룹니다. 여기서는 sequence를 문장 vector로 만드는 계약과 retrieval architecture·평가로 이어지는 부분을 설명합니다.</p>
+      <p>Token hidden state와 attention mask는 <Link to="/ai/bert">BERT 정본</Link>, pair 의미는 <Link to="/ai/contrastive-learning">대조 학습 기초</Link>, temperature는 <Link to="/ai/simclr-infonce">SimCLR·NT-Xent</Link>, hard negative는 <Link to="/ai/triplet-metric-learning">Triplet metric learning</Link>에서 자세히 다룹니다. 여기서는 sequence를 문장 vector로 만드는 계약과 retrieval architecture·평가로 이어지는 부분을 설명합니다.</p>
     </div>
     <ContentBoundary article="sentence-embeddings" />
     <ExplainedFormula
