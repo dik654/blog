@@ -6896,7 +6896,16 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Pruning mask · density · sparsity",
     definition:
       "Weight와 같은 shape의 binary mask를 곱해 연결을 남기거나 제거하고, 전체 대상 중 mask가 0인 비율을 sparsity로 계산하는 기본 계약입니다.",
-    canonicalHref: "/ai/pruning#overview",
+    canonicalHref: "/ai/pruning#mask-shape",
+  },
+  "pruning-removal-unit-runtime-contract": {
+    id: "pruning-removal-unit-runtime-contract",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Pruning removal-unit · runtime contract",
+    definition:
+      "Individual weight·local N:M group·channel 같은 제거 단위를 실제 sparse payload·supported tactic·축소된 dense shape 중 어느 consumer로 넘길지 고정하는 handoff 계약입니다.",
+    canonicalHref: "/ai/pruning#removal-unit",
   },
   "sparse-storage-break-even": {
     id: "sparse-storage-break-even",
@@ -6905,7 +6914,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Sparse storage break-even",
     definition:
       "남은 value와 그 위치 index·구조 metadata의 합이 dense value payload보다 작아지는 density 임계값으로, 0이 있다는 사실과 실제 저장 절감을 구분합니다.",
-    canonicalHref: "/ai/pruning#unstructured",
+    canonicalHref: "/ai/unstructured-pruning#storage-break-even",
   },
   "movement-pruning-score": {
     id: "movement-pruning-score",
@@ -6914,7 +6923,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Movement pruning score",
     definition:
       "Pretrained weight의 현재 크기만 보지 않고 downstream fine-tuning 중 task gradient가 연결을 0에서 멀어지게 하는지 또는 0 쪽으로 움직이는지를 mask score에 누적하는 1차 pruning 방법입니다.",
-    canonicalHref: "/ai/pruning#unstructured",
+    canonicalHref: "/ai/unstructured-pruning#movement-score",
   },
   "structured-pruning-shape-propagation": {
     id: "structured-pruning-shape-propagation",
@@ -6923,7 +6932,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Structured-pruning shape propagation",
     definition:
       "Channel·neuron·head 같은 단위를 제거할 때 현재 output과 다음 input, residual·normalization·projection의 공유 dimension을 함께 바꿔 실제 dense graph를 줄이는 계약입니다.",
-    canonicalHref: "/ai/pruning#structured",
+    canonicalHref: "/ai/structured-pruning#shape-propagation",
   },
   "nm-semi-structured-constraint": {
     id: "nm-semi-structured-constraint",
@@ -6932,7 +6941,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "N:M semi-structured sparsity",
     definition:
       "Kernel이 정한 reduction axis의 모든 M개 local group에서 정확히 N개 weight만 남기는 pattern 제약으로, 전체 density만 같은 arbitrary sparsity와 다릅니다.",
-    canonicalHref: "/ai/pruning#structured",
+    canonicalHref: "/ai/structured-pruning#nm-pattern",
   },
   "llm-pruning-calibration-coverage": {
     id: "llm-pruning-calibration-coverage",
@@ -6941,7 +6950,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "LLM pruning calibration coverage",
     definition:
       "One-shot pruning이 importance를 계산할 때 수집하는 layer activation이 deployment의 언어·domain·sequence length·prompt format slice를 얼마나 대표하는지 기록하는 계약입니다.",
-    canonicalHref: "/ai/pruning#llm",
+    canonicalHref: "/ai/one-shot-llm-pruning#overview",
   },
   "sparsegpt-layer-reconstruction": {
     id: "sparsegpt-layer-reconstruction",
@@ -6950,7 +6959,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "SparseGPT layer reconstruction",
     definition:
       "Sparsity mask 아래에서 calibration input X에 대한 original layer output XW와 pruned·compensated output의 차이를 approximate second-order update로 줄이는 one-shot pruning 방법입니다.",
-    canonicalHref: "/ai/pruning#llm",
+    canonicalHref: "/ai/one-shot-llm-pruning#reconstruction",
   },
   "wanda-activation-aware-score": {
     id: "wanda-activation-aware-score",
@@ -6959,7 +6968,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Wanda activation-aware score",
     definition:
       "각 weight magnitude에 대응 input activation column norm을 곱해 per-output 범위에서 작은 연결을 고르는, weight update 없는 LLM pruning score입니다.",
-    canonicalHref: "/ai/pruning#llm",
+    canonicalHref: "/ai/one-shot-llm-pruning#calibration",
   },
   "fixed-mask-recovery-invariant": {
     id: "fixed-mask-recovery-invariant",
@@ -6968,7 +6977,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Fixed-mask recovery invariant",
     definition:
       "Pruning 뒤 fine-tuning·distillation을 해도 parameter와 optimizer state 모두에 같은 mask를 적용해 제거된 연결이 다시 0이 아닌 값으로 돌아오지 않게 하는 불변식입니다.",
-    canonicalHref: "/ai/pruning#recovery",
+    canonicalHref: "/ai/pruning-recovery-deployment#mask-invariant",
   },
   "pruning-deployment-frontier": {
     id: "pruning-deployment-frontier",
@@ -6977,7 +6986,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Pruning deployment frontier",
     definition:
       "Sparsity 숫자 하나가 아니라 artifact byte·quality slice·target-engine sparse tactic coverage·memory·latency를 같은 dense baseline과 비교해 지배되지 않는 배포 후보를 고르는 기준입니다.",
-    canonicalHref: "/ai/pruning#recovery",
+    canonicalHref: "/ai/pruning-recovery-deployment#release",
   },
   "distillation-signal-interface": {
     id: "distillation-signal-interface",
@@ -16864,6 +16873,34 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
       "남은 수·전체 수와 0에서 1 사이의 density·sparsity 비율을 계산합니다.",
   },
   {
+    from: "pruning-mask-sparsity",
+    to: "pruning-removal-unit-runtime-contract",
+    relation: "produces",
+    reason:
+      "Mask의 제거 결정을 individual weight·N:M group·channel 단위와 그 소비 artifact로 구체화합니다.",
+  },
+  {
+    from: "pruning-removal-unit-runtime-contract",
+    to: "sparse-storage-break-even",
+    relation: "constrains",
+    reason:
+      "Individual-weight handoff를 선택하면 value·index·metadata sparse payload의 손익분기를 계산해야 합니다.",
+  },
+  {
+    from: "pruning-removal-unit-runtime-contract",
+    to: "structured-pruning-shape-propagation",
+    relation: "constrains",
+    reason:
+      "Channel·head handoff를 선택하면 producer output과 consumer input dimension을 함께 줄여야 합니다.",
+  },
+  {
+    from: "pruning-removal-unit-runtime-contract",
+    to: "nm-semi-structured-constraint",
+    relation: "constrains",
+    reason:
+      "N:M handoff를 선택하면 target kernel axis의 모든 local group eligibility가 필요합니다.",
+  },
+  {
     from: "bit-byte",
     to: "sparse-storage-break-even",
     relation: "prerequisite",
@@ -16909,6 +16946,13 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "extends",
     reason:
       "전체 sparsity를 모든 local M개 group의 정확한 N개 retention 제약으로 강화합니다.",
+  },
+  {
+    from: "structured-pruning-shape-propagation",
+    to: "nm-semi-structured-constraint",
+    relation: "contrasts",
+    reason:
+      "Dense tensor dimension을 줄이는 graph rewrite와 shape는 유지한 채 local pattern을 제한하는 sparse tactic을 구분합니다.",
   },
   {
     from: "train-validation-test",

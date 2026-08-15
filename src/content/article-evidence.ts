@@ -2158,31 +2158,49 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "ai/pruning": [
     {
-      kind: "핵심 논문",
-      label: "Movement Pruning: Adaptive Sparsity by Fine-Tuning",
-      href: "https://arxiv.org/abs/2005.07683",
-      note: "fine-tuning 중 weight 변화 방향으로 sparsity를 학습하는 기준 논문",
+      "kind": "공식 가이드",
+      "label": "PyTorch Pruning Tutorial",
+      "href": "https://docs.pytorch.org/tutorials/intermediate/pruning_tutorial.html",
+      "note": "Parameter·mask·pruning reparameterization의 기본 구현 경계"
+    }
+  ],
+  "ai/unstructured-pruning": [
+    {
+      "kind": "핵심 논문",
+      "label": "Movement Pruning",
+      "href": "https://arxiv.org/abs/2005.07683",
+      "note": "Fine-tuning 중 task-adaptive movement score"
+    }
+  ],
+  "ai/structured-pruning": [
+    {
+      "kind": "공식 문서",
+      "label": "TensorRT Structured Sparsity",
+      "href": "https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/advanced.html#structured-sparsity",
+      "note": "2:4 eligibility와 실제 tactic 선택 경계"
+    }
+  ],
+  "ai/one-shot-llm-pruning": [
+    {
+      "kind": "핵심 논문",
+      "label": "SparseGPT",
+      "href": "https://arxiv.org/abs/2301.00774",
+      "note": "Approximate second-order one-shot layer reconstruction"
     },
     {
-      kind: "핵심 논문",
-      label:
-        "SparseGPT: Massive Language Models Can Be Accurately Pruned in One-Shot",
-      href: "https://arxiv.org/abs/2301.00774",
-      note: "layer-wise reconstruction을 이용한 one-shot LLM pruning",
-    },
+      "kind": "핵심 논문",
+      "label": "Wanda",
+      "href": "https://arxiv.org/abs/2306.11695",
+      "note": "Magnitude와 activation norm을 결합한 one-shot score"
+    }
+  ],
+  "ai/pruning-recovery-deployment": [
     {
-      kind: "핵심 논문",
-      label:
-        "A Simple and Effective Pruning Approach for Large Language Models",
-      href: "https://arxiv.org/abs/2306.11695",
-      note: "weight magnitude와 activation norm을 사용하는 Wanda pruning",
-    },
-    {
-      kind: "공식 문서",
-      label: "TensorRT structured sparsity requirements",
-      href: "https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/data-formats-tensors.html#sparsity",
-      note: "2:4 pattern의 검사 축·precision·builder flag와 실제 sparse tactic 선택 조건",
-    },
+      "kind": "공식 문서",
+      "label": "TensorRT Structured Sparsity",
+      "href": "https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/advanced.html#structured-sparsity",
+      "note": "Eligible layer·chosen tactic·runtime measurement을 구분하는 배포 근거"
+    }
   ],
   "ai/knowledge-distillation": [
     {

@@ -2127,45 +2127,128 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [{ label: "Dtype별 exact weight payload", href: "/ai/model-vram-budgeting" }, { label: "Qwen hybrid request state", href: "/ai/qwen36-hybrid-runtime" }, { label: "통합 compression pipeline", href: "/ai/compression-pipeline" }],
     evidence: [{ kind: "primary-source", rule: "Low-precision kernel 지원 claim은 exact engine·GPU·operator·shape와 측정 trace에 제한한다." }, { kind: "project-measurement", rule: "같은 workload·quality·concurrency에서 startup peak·fallback·p50/p95·throughput을 기록한다." }],
   },
-  pruning: {
-    title: "프루닝 글이 소유하는 범위",
-    owns: [
-      "Binary mask·density·sparsity의 정확한 분모와 zero value·removed connection의 구분",
-      "Unstructured sparse value/index 손익분기와 magnitude·movement importance의 선택 경계",
-      "Channel·head·block의 graph shape propagation과 N:M local pattern 제약",
-      "SparseGPT layer reconstruction과 Wanda activation-aware score의 계산·calibration 경계",
-      "Fixed-mask recovery 불변식과 artifact·quality·target-runtime을 함께 보는 승인 기준",
+  "pruning": {
+    "title": "Pruning foundations 글이 소유하는 범위",
+    "owns": [
+      "Binary mask·density·sparsity의 분모와 dense zero의 경계",
+      "Weight·N:M group·channel removal unit에서 runtime consumer로의 handoff"
     ],
-    reuses: [
-      { label: "Matrix multiplication·norm", href: "/ai/math-matrices-svd" },
+    "reuses": [
       {
-        label: "Gradient와 optimizer state",
-        href: "/ai/backprop-optimization",
+        "label": "Unstructured importance와 payload",
+        "href": "/ai/unstructured-pruning"
       },
       {
-        label: "Bit·byte 저장량 계산",
-        href: "/ai/text-unicode-encoding#bits-bytes",
-      },
-      {
-        label: "양자화의 artifact/kernel 및 Amdahl 경계",
-        href: "/ai/quantized-model-deployment#runtime-release",
-      },
-      { label: "통합 compression pipeline", href: "/ai/compression-pipeline" },
+        "label": "Structured shape와 N:M",
+        "href": "/ai/structured-pruning"
+      }
     ],
-    evidence: [
+    "evidence": [
       {
-        kind: "primary-source",
-        rule: "Movement Pruning·SparseGPT·Wanda claim은 각 논문의 model·data·sparsity pattern·calibration·task 범위로 제한한다.",
-      },
-      {
-        kind: "primary-source",
-        rule: "2:4 지원은 현재 target TensorRT/cuSPARSELt 문서의 axis·dtype·operator·shape·tactic 조건으로 확인한다.",
-      },
-      {
-        kind: "standard",
-        rule: "Base hash·target tensor·mask scope·score·sparsity schedule·calibration/recovery data·artifact format·engine build log·kernel coverage·quality·memory·latency를 함께 기록한다.",
-      },
+        "kind": "project-measurement",
+        "rule": "Sparsity는 target tensor·분모·mask hash·artifact consumer와 함께 기록한다."
+      }
+    ]
+  },
+  "unstructured-pruning": {
+    "title": "Unstructured pruning 글이 소유하는 범위",
+    "owns": [
+      "Magnitude·movement 기반 individual-weight selection",
+      "Value·index·metadata sparse payload 손익분기"
     ],
+    "reuses": [
+      {
+        "label": "Mask와 removal unit",
+        "href": "/ai/pruning"
+      },
+      {
+        "label": "Recovery와 runtime release",
+        "href": "/ai/pruning-recovery-deployment"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "Movement claim은 논문의 model·task·schedule 범위로 제한한다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "Sparse storage와 latency는 실제 format·kernel에서 별도로 측정한다."
+      }
+    ]
+  },
+  "structured-pruning": {
+    "title": "Structured pruning 글이 소유하는 범위",
+    "owns": [
+      "Channel·head 제거의 graph shape propagation",
+      "N:M local-group eligibility와 chosen tactic 경계"
+    ],
+    "reuses": [
+      {
+        "label": "Mask와 removal unit",
+        "href": "/ai/pruning"
+      },
+      {
+        "label": "Runtime release frontier",
+        "href": "/ai/pruning-recovery-deployment"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "standard",
+        "rule": "N:M 지원은 target runtime·GPU·axis·dtype·operator 문서로 확인한다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "Export shape·build log·latency를 같은 workload에서 함께 검증한다."
+      }
+    ]
+  },
+  "one-shot-llm-pruning": {
+    "title": "One-shot LLM pruning 글이 소유하는 범위",
+    "owns": [
+      "LLM calibration prompt와 layer activation coverage",
+      "SparseGPT reconstruction과 Wanda activation-aware score의 다른 method boundary"
+    ],
+    "reuses": [
+      {
+        "label": "Pruning mask",
+        "href": "/ai/pruning"
+      },
+      {
+        "label": "Train·validation·test 분리",
+        "href": "/ai/train-validation-test-split"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "SparseGPT·Wanda 결과는 각 논문의 checkpoint·calibration·pattern·metric 범위로 제한한다."
+      }
+    ]
+  },
+  "pruning-recovery-deployment": {
+    "title": "Pruning recovery·deployment 글이 소유하는 범위",
+    "owns": [
+      "Fixed mask를 parameter와 optimizer state에 유지하는 불변식",
+      "Artifact·quality·chosen tactic·memory·latency의 release frontier"
+    ],
+    "reuses": [
+      {
+        "label": "Removal unit과 mask",
+        "href": "/ai/pruning"
+      },
+      {
+        "label": "Amdahl runtime 상한",
+        "href": "/ai/quantized-model-deployment#runtime-release"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "project-measurement",
+        "rule": "같은 base·workload·engine에서 artifact byte·slice quality·build trace·p50/p95·throughput을 기록한다."
+      }
+    ]
   },
   "knowledge-distillation": {
     title: "고전 지식 증류 글이 소유하는 범위",

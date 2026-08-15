@@ -16795,484 +16795,1134 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/pruning": {
-    coreIdea:
-      "프루닝은 weight에 0을 많이 기록하는 작업이 아니라 제거 단위·mask 제약을 실제 artifact와 target operator가 활용하게 만드는 압축입니다. Binary mask와 sparsity에서 시작해 value/index 손익분기, magnitude·movement importance, structured shape와 N:M pattern, SparseGPT·Wanda calibration, fixed-mask recovery를 구분하고 quality·memory·latency를 같은 dense baseline에서 검증해야 합니다.",
-    assumedKnowledge: [
+    "entryLevel": true,
+    "entryNote": "Weight·mask·density를 처음 본다고 가정하고 숫자 하나와 0/1 표에서 시작합니다.",
+    "coreIdea": "Pruning의 첫 계약은 0을 많이 쓰는 것이 아니라 제거 대상·분모·removal unit·runtime consumer를 한 generation으로 고정하는 것입니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
       {
-        id: "scalar-quantity",
-        role: "남은 weight 수와 density·sparsity 비율을 계산합니다.",
+        "id": "pruning-mask-sparsity",
+        "role": "Binary mask에서 남은 비율과 제거 비율을 계산합니다."
       },
       {
-        id: "bit-byte",
-        role: "Dense value와 sparse value·index·metadata 저장량을 같은 byte로 비교합니다.",
-      },
-      {
-        id: "matrix-multiplication",
-        role: "Structured shape와 XW layer-output reconstruction을 계산합니다.",
-      },
-      {
-        id: "gradient",
-        role: "Fine-tuning loss가 weight·mask score에 주는 1차 movement 신호를 읽습니다.",
-      },
-      {
-        id: "gradient-descent",
-        role: "Recovery update 뒤 mask projection을 적용합니다.",
-      },
-      {
-        id: "train-validation-test",
-        role: "Calibration·recovery 선택 data와 마지막 test를 분리합니다.",
-      },
-      {
-        id: "quantized-kernel-amdahl-bound",
-        role: "일부 operator만 sparse kernel을 쓸 때 end-to-end 속도 상한을 재사용합니다.",
-      },
+        "id": "pruning-removal-unit-runtime-contract",
+        "role": "Weight·N:M group·channel 제거가 어떤 artifact와 kernel로 이어지는지 구분합니다."
+      }
     ],
-    introducedHere: [
+    "conceptExplanations": [
       {
-        id: "pruning-mask-sparsity",
-        role: "Binary mask·density·sparsity의 대상과 분모를 계산합니다.",
+        "id": "pruning-mask-sparsity",
+        "sectionId": "mask-shape",
+        "intuition": "전등마다 사용할지 표시하는 0/1 스위치를 붙이고 꺼 둔 비율을 셉니다.",
+        "workedExample": "10개 중 mask 1이 4개면 density .4, sparsity .6입니다.",
+        "boundary": "Dense tensor의 숫자 0은 sparse artifact나 제거된 계산을 자동 의미하지 않습니다."
       },
       {
-        id: "sparse-storage-break-even",
-        role: "Value·index·metadata를 포함해 sparse format이 작아지는 density 임계값을 구합니다.",
-      },
-      {
-        id: "movement-pruning-score",
-        role: "Weight magnitude와 fine-tuning movement 기반 importance를 구분합니다.",
-      },
-      {
-        id: "structured-pruning-shape-propagation",
-        role: "Channel·head 제거를 연결된 tensor shape와 dense 계산량으로 전파합니다.",
-      },
-      {
-        id: "nm-semi-structured-constraint",
-        role: "전체 sparsity와 모든 local group의 N:M 적격성을 구분합니다.",
-      },
-      {
-        id: "llm-pruning-calibration-coverage",
-        role: "언어·domain·length·prompt slice별 activation 대표성을 확인합니다.",
-      },
-      {
-        id: "sparsegpt-layer-reconstruction",
-        role: "Sparsity 제약 아래 calibration layer-output 오차를 읽습니다.",
-      },
-      {
-        id: "wanda-activation-aware-score",
-        role: "Weight magnitude와 input channel norm을 곱해 importance를 계산합니다.",
-      },
-      {
-        id: "fixed-mask-recovery-invariant",
-        role: "Parameter와 optimizer state에서 제거한 연결이 다시 살아나지 않게 합니다.",
-      },
-      {
-        id: "pruning-deployment-frontier",
-        role: "Artifact byte·quality slice·kernel coverage·memory·latency를 함께 비교합니다.",
-      },
+        "id": "pruning-removal-unit-runtime-contract",
+        "sectionId": "removal-unit",
+        "intuition": "낱개 부품·네 칸 묶음·통로 전체 중 무엇을 철거할지 정하면 운반 상자와 실행 장비도 달라집니다.",
+        "workedExample": "Individual weight는 value+index, 2:4는 local pattern, channel은 줄어든 dense shape로 넘깁니다.",
+        "boundary": "같은 50%라도 removal unit과 target consumer가 다르면 저장·연산·latency 의미가 다릅니다."
+      }
     ],
-    conceptExplanations: [
+    "conceptStages": [
       {
-        id: "pruning-mask-sparsity",
-        sectionId: "overview",
-        intuition:
-          "전등마다 사용할지 말지를 표시한 스위치를 붙이고 꺼 둔 스위치의 비율을 세는 것과 같습니다.",
-        workedExample:
-          "Weight 10개 중 mask의 1이 4개면 density=.4, sparsity=1−.4=.6입니다.",
-        boundary:
-          "대상 layer를 제외했는지와 global/layer 분모를 함께 적어야 하며 dense tensor에 숫자 0이 있다는 사실만으로 제거된 sparse 연결이 되지는 않습니다.",
+        "label": "00 Weight",
+        "relation": "원래 weight와 숫자 0을 구분합니다.",
+        "concepts": [
+          "pruning-mask-sparsity"
+        ]
       },
       {
-        id: "sparse-storage-break-even",
-        sectionId: "unstructured",
-        intuition:
-          "빈 칸을 생략하면 값은 줄지만 각 값이 원래 어느 칸에 있었는지 주소표를 함께 보관해야 합니다.",
-        workedExample:
-          "FP16 value 2 byte와 32-bit index 4 byte, metadata 0의 단순 모델에서는 density가 1/3 미만, 즉 sparsity가 66.7% 초과일 때만 sparse payload가 dense보다 작습니다.",
-        boundary:
-          "CSR·block sparse의 pointer·alignment·allocator와 on-disk compression은 달라 실제 format byte를 측정해야 하며 저장 이득이 latency 이득을 보장하지 않습니다.",
-        proofIdea:
-          "두 payload를 N으로 나눈 뒤 rho(bv+bi)+Bmeta/N < bv를 rho에 대해 정리하면 본문의 임계값이 됩니다.",
-        counterexample:
-          "2:4처럼 위치 metadata를 매우 작게 encoding하거나 dense file compressor가 긴 zero run을 압축하면 value마다 4-byte index를 둔 예의 임계값은 적용되지 않습니다.",
+        "label": "01 Mask",
+        "relation": "Binary mask를 적용해 제거 연결을 표시합니다.",
+        "concepts": [
+          "pruning-mask-sparsity"
+        ]
       },
       {
-        id: "movement-pruning-score",
-        sectionId: "unstructured",
-        intuition:
-          "현재 위치가 아니라 downstream task를 배우는 동안 연결이 0에서 멀어지는지 0 쪽으로 움직이는지를 관찰합니다.",
-        workedExample:
-          "w=.1, dL/dw=-2이면 −gradient×weight=.2로 0에서 멀어지는 신호이고, w=.1, dL/dw=2이면 −.2로 0 쪽 신호입니다.",
-        boundary:
-          "부호 직관은 한 step의 local gradient이며 실제 hard/soft movement algorithm의 mask parameter·threshold schedule 전체나 여러 weight의 상호작용을 대신하지 않습니다.",
-      },
-      {
-        id: "structured-pruning-shape-propagation",
-        sectionId: "structured",
-        intuition:
-          "중간 수도관 하나를 없애면 앞 배출구와 뒤 유입구의 개수를 함께 맞춰야 실제 배관이 작아집니다.",
-        workedExample:
-          "Linear의 input·output width를 각각 .75로 줄이면 주된 dense multiply-add 근사는 원래의 .75×.75=.5625가 됩니다.",
-        boundary:
-          "Residual·norm·group·projection dependency와 alignment를 실제 graph에서 고쳐야 하며 FLOPs 감소와 end-to-end latency 감소는 동일하지 않습니다.",
-      },
-      {
-        id: "nm-semi-structured-constraint",
-        sectionId: "structured",
-        intuition:
-          "전체 시험에서 절반만 고르는 것이 아니라 매 네 명의 조마다 반드시 두 명씩 고르는 규칙입니다.",
-        workedExample:
-          "[1100|1010]은 2:4지만 [1110|1000]은 전체 density .5여도 첫 group에 3개가 남아 부적격입니다.",
-        boundary:
-          "남긴 수 N을 먼저 쓰는 convention·reduction axis·layout·dtype·operator를 고정하고 compiler가 실제 sparse tactic을 골랐는지 확인합니다.",
-      },
-      {
-        id: "llm-pruning-calibration-coverage",
-        sectionId: "llm",
-        intuition:
-          "어떤 길을 자주 쓰는지 작은 교통 표본으로 판단하므로 그 표본에 야간·주말·지역 경로가 빠지면 중요한 도로를 없앨 수 있습니다.",
-        workedExample:
-          "짧은 영어 prose만으로 X를 수집한 mask와 한국어·code·long prompt slice를 포함한 mask를 각 held-out slice의 perplexity와 task metric으로 비교합니다.",
-        boundary:
-          "Label-free activation sample이어도 아무 text나 동등하지 않으며 tokenizer·sequence packing·attention mask·sample count와 seed를 기록합니다.",
-      },
-      {
-        id: "sparsegpt-layer-reconstruction",
-        sectionId: "llm",
-        intuition:
-          "부품 하나를 빼고 끝내지 않고 대표 입력에서 원래 출력을 가장 비슷하게 내도록 남은 부품을 조정합니다.",
-        workedExample:
-          "X의 첫 channel norm이 두 번째보다 10배 크면 같은 weight error라도 첫 direction이 output reconstruction objective에 더 크게 반영됩니다.",
-        boundary:
-          "Layer-local proxy와 approximate Hessian update이며 전체 generation quality·distribution 밖 input·sparse runtime 성능을 보장하지 않습니다.",
-      },
-      {
-        id: "wanda-activation-aware-score",
-        sectionId: "llm",
-        intuition:
-          "부품 자체 크기와 실제 사용 빈도·세기를 곱해, 작지만 자주 쓰이는 부품을 보호합니다.",
-        workedExample:
-          "같은 |w|=.2에서 activation norm 1과 10이면 Wanda score는 .2와 2여서 첫 연결을 먼저 제거합니다.",
-        boundary:
-          "Per-output grouping·activation collection recipe가 결과를 바꾸며 second-order compensation이나 weight update를 수행하지 않습니다.",
-      },
-      {
-        id: "fixed-mask-recovery-invariant",
-        sectionId: "recovery",
-        intuition:
-          "철거하기로 한 문은 보수 공사 중에도 매 step 다시 봉인하고, 이전에 쌓인 관성 상태도 함께 비웁니다.",
-        workedExample:
-          "M_i=0이면 W_i=.4, gradient=-3, momentum=.2여도 parameter update와 optimizer state update 뒤 mask를 곱해 둘 다 0으로 유지합니다.",
-        boundary:
-          "Fixed-mask recovery에 대한 규칙이며 dynamic sparse training처럼 연결을 다시 배정하는 알고리즘에는 적용하지 않습니다.",
-      },
-      {
-        id: "pruning-deployment-frontier",
-        sectionId: "recovery",
-        intuition:
-          "더 sparse한 후보가 아니라 품질 기준을 지키면서 실제 파일·메모리·시간 중 필요한 축을 개선한 후보를 남깁니다.",
-        workedExample:
-          "A는 60% sparse지만 dense tactic·p95 10ms, B는 50% 2:4이며 sparse tactic·p95 7ms이고 둘 다 quality gate를 통과했다면 latency 목표에서는 B를 선택합니다.",
-        boundary:
-          "같은 base·batch·sequence·concurrency·engine에서 dense baseline과 비교하고 average perplexity만으로 language·domain·long-context regression을 숨기지 않습니다.",
-      },
-    ],
-    conceptStages: [
-      {
-        label: "Mask semantics",
-        relation:
-          "Binary mask의 density·sparsity를 실제 value/index storage 손익분기로 연결",
-        concepts: [
-          "scalar-quantity",
-          "bit-byte",
+        "label": "02 Unit",
+        "relation": "Weight·N:M group·channel 중 제거 단위를 고릅니다.",
+        "concepts": [
           "pruning-mask-sparsity",
-          "sparse-storage-break-even",
-        ],
+          "pruning-removal-unit-runtime-contract"
+        ]
       },
       {
-        label: "Selection and structure",
-        relation:
-          "Gradient movement로 weight를 고르거나 graph shape·local N:M 제약으로 제거 단위를 제한",
-        concepts: [
-          "gradient",
-          "movement-pruning-score",
-          "matrix-multiplication",
-          "structured-pruning-shape-propagation",
-          "nm-semi-structured-constraint",
-        ],
-      },
-      {
-        label: "LLM one-shot",
-        relation:
-          "Calibration coverage가 SparseGPT reconstruction과 Wanda score가 보는 input importance를 정함",
-        concepts: [
-          "train-validation-test",
-          "llm-pruning-calibration-coverage",
-          "sparsegpt-layer-reconstruction",
-          "wanda-activation-aware-score",
-        ],
-      },
-      {
-        label: "Recovery and deployment",
-        relation:
-          "Mask 불변식을 지킨 checkpoint를 artifact·quality·target runtime frontier에서 승인",
-        concepts: [
-          "gradient-descent",
-          "fixed-mask-recovery-invariant",
-          "quantized-kernel-amdahl-bound",
-          "pruning-deployment-frontier",
-        ],
-      },
+        "label": "03 Handoff",
+        "relation": "Removal unit을 artifact와 runtime consumer로 넘깁니다.",
+        "concepts": [
+          "pruning-removal-unit-runtime-contract"
+        ]
+      }
     ],
-    exercises: [
+    "exercises": [
       {
-        level: "basic",
-        question:
-          "Weight 10개 중 4개를 남긴 mask의 density·sparsity를 계산하고 dense zero와 removed connection의 차이를 설명하라.",
-        answerChecklist: [
+        "level": "basic",
+        "question": "Weight 10개 중 4개를 남긴 mask의 density와 sparsity를 계산하세요.",
+        "answerChecklist": [
+          "kept 4",
+          "total 10",
           "density .4",
-          "sparsity .6",
-          "mask denominator",
-          "dense zero not sufficient",
+          "sparsity .6"
+        ],
+        "requiredConcepts": [
+          "pruning-mask-sparsity"
+        ],
+        "sectionId": "mask-shape"
+      },
+      {
+        "level": "basic",
+        "question": "Weight·mask·masked weight를 각각 정의하세요.",
+        "answerChecklist": [
+          "learned value",
+          "binary selector",
+          "elementwise product",
+          "same shape"
+        ],
+        "requiredConcepts": [
+          "pruning-mask-sparsity"
+        ],
+        "sectionId": "overview"
+      },
+      {
+        "level": "basic",
+        "question": "Dense tensor의 숫자 0과 제거 연결이 다른 이유를 설명하세요.",
+        "answerChecklist": [
+          "value only",
+          "mask semantics",
+          "dense shape",
+          "kernel still computes"
+        ],
+        "requiredConcepts": [
+          "pruning-mask-sparsity"
+        ],
+        "sectionId": "mask-shape"
+      },
+      {
+        "level": "basic",
+        "question": "Individual weight·2:4 group·channel 제거 단위를 비교하세요.",
+        "answerChecklist": [
+          "irregular index",
+          "local pattern",
+          "shape reduction",
+          "different consumers"
+        ],
+        "requiredConcepts": [
+          "pruning-removal-unit-runtime-contract"
+        ],
+        "sectionId": "removal-unit"
+      },
+      {
+        "level": "basic",
+        "question": "전체 sparsity와 layer sparsity의 분모가 다른 예를 만드세요.",
+        "answerChecklist": [
           "target tensors",
+          "excluded layer",
+          "different N",
+          "record denominator"
         ],
-        requiredConcepts: ["pruning-mask-sparsity", "scalar-quantity"],
-        sectionId: "overview",
+        "requiredConcepts": [
+          "pruning-mask-sparsity"
+        ],
+        "sectionId": "mask-shape"
       },
       {
-        level: "advanced",
-        question:
-          "Value 2 byte·index 4 byte·metadata 0인 sparse format의 저장 손익분기를 유도하고 metadata와 block encoding 반례를 설명하라.",
-        answerChecklist: [
-          "rho(2+4)<2",
-          "rho<1/3",
-          "sparsity>2/3",
-          "proof algebra",
-          "metadata raises requirement",
-          "block/N:M counterexample",
-          "latency separate",
+        "level": "basic",
+        "question": "Pruning handoff receipt의 최소 항목을 쓰세요.",
+        "answerChecklist": [
+          "base",
+          "target tensor",
+          "mask generation",
+          "denominator",
+          "removal unit",
+          "consumer"
         ],
-        requiredConcepts: [
-          "sparse-storage-break-even",
-          "bit-byte",
+        "requiredConcepts": [
+          "pruning-removal-unit-runtime-contract"
+        ],
+        "sectionId": "handoff"
+      },
+      {
+        "level": "advanced",
+        "question": "같은 50% mask 세 개를 unstructured·2:4·channel artifact로 분기하세요.",
+        "answerChecklist": [
+          "same count",
+          "value index",
+          "local eligibility",
+          "new shape",
+          "kernel boundary"
+        ],
+        "requiredConcepts": [
           "pruning-mask-sparsity",
+          "pruning-removal-unit-runtime-contract"
         ],
-        sectionId: "unstructured",
+        "sectionId": "removal-unit"
       },
       {
-        level: "basic",
-        question:
-          "w=.1에서 gradient가 -2인 경우와 2인 경우의 -gradient×weight movement 신호를 계산하고 magnitude와 다른 결정을 설명하라.",
-        answerChecklist: [
+        "level": "advanced",
+        "question": "Mask와 exported artifact가 다른 generation인 실패를 진단하세요.",
+        "answerChecklist": [
+          "generation mismatch",
+          "wrong coordinates",
+          "shape drift",
+          "hash receipt",
+          "reject"
+        ],
+        "requiredConcepts": [
+          "pruning-removal-unit-runtime-contract"
+        ],
+        "sectionId": "handoff"
+      },
+      {
+        "level": "advanced",
+        "question": "Embedding을 제외할 때 model-wide sparsity를 다시 계산하는 예를 만드세요.",
+        "answerChecklist": [
+          "included count",
+          "excluded count",
+          "kept count",
+          "new denominator",
+          "disclose"
+        ],
+        "requiredConcepts": [
+          "pruning-mask-sparsity"
+        ],
+        "sectionId": "mask-shape"
+      },
+      {
+        "level": "advanced",
+        "question": "Sparsity가 늘었지만 latency가 그대로인 반례를 설명하세요.",
+        "answerChecklist": [
+          "dense storage",
+          "dense GEMM",
+          "no supported consumer",
+          "same shape",
+          "measure"
+        ],
+        "requiredConcepts": [
+          "pruning-removal-unit-runtime-contract"
+        ],
+        "sectionId": "handoff"
+      }
+    ]
+  },
+  "ai/unstructured-pruning": {
+    "entryLevel": true,
+    "entryNote": "Mask를 안다고 가정하지 않고 개별 weight score와 value·index payload를 각각 정의합니다.",
+    "coreIdea": "Unstructured pruning은 개별 weight를 자유롭게 고르는 대신 불규칙한 위치 index와 sparse access 비용을 부담하므로 importance·storage break-even·target kernel을 분리해 평가합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "sparse-storage-break-even",
+        "role": "Value·index·metadata를 포함한 density 임계값을 계산합니다."
+      },
+      {
+        "id": "movement-pruning-score",
+        "role": "Magnitude와 task fine-tuning movement의 다른 선택 근거를 구분합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "sparse-storage-break-even",
+        "sectionId": "storage-break-even",
+        "intuition": "빈 칸을 생략하는 대신 남은 값의 주소표를 함께 보관합니다.",
+        "workedExample": "Value 2 byte·index 4 byte라면 metadata 0에서 density 1/3 미만이어야 작습니다.",
+        "boundary": "CSR·block·N:M마다 metadata가 다르고 저장 이득이 latency 이득을 보장하지 않습니다.",
+        "proofIdea": "Dense와 sparse byte를 N으로 나누고 rho(bv+bi)+Bm/N < bv를 rho에 대해 정리합니다.",
+        "counterexample": "Block 하나가 위치 metadata를 공유하거나 2:4가 작은 pattern metadata를 쓰면 value마다 4-byte index를 둔 임계값은 적용되지 않습니다."
+      },
+      {
+        "id": "movement-pruning-score",
+        "sectionId": "movement-score",
+        "intuition": "현재 크기가 아니라 task를 배우며 연결이 0에서 멀어지는지 봅니다.",
+        "workedExample": "w=.1,g=-2이면 -gw=.2, g=2이면 -.2입니다.",
+        "boundary": "실제 방법의 mask parameter·schedule과 여러 weight interaction을 한 step 식이 대신하지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "00 Score",
+        "relation": "Magnitude 또는 movement로 개별 weight 중요도를 만듭니다.",
+        "concepts": [
+          "movement-pruning-score"
+        ]
+      },
+      {
+        "label": "01 Mask",
+        "relation": "Sparsity budget 안에서 불규칙한 좌표를 고릅니다.",
+        "concepts": [
+          "pruning-mask-sparsity",
+          "movement-pruning-score"
+        ]
+      },
+      {
+        "label": "02 Encode",
+        "relation": "남은 value와 위치 index·metadata를 저장합니다.",
+        "concepts": [
+          "sparse-storage-break-even"
+        ]
+      },
+      {
+        "label": "03 Measure",
+        "relation": "Payload와 target sparse kernel을 별도로 측정합니다.",
+        "concepts": [
+          "sparse-storage-break-even"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "Magnitude score와 movement score의 입력을 비교하세요.",
+        "answerChecklist": [
+          "absolute weight",
+          "task gradient",
+          "fine tuning path",
+          "different evidence"
+        ],
+        "requiredConcepts": [
+          "movement-pruning-score"
+        ],
+        "sectionId": "overview"
+      },
+      {
+        "level": "basic",
+        "question": "FP16 value 2 byte·index 4 byte의 metadata 없는 임계 density를 계산하세요.",
+        "answerChecklist": [
+          "rho times 6",
+          "dense 2",
+          "rho below one third",
+          "sparsity above two thirds"
+        ],
+        "requiredConcepts": [
+          "sparse-storage-break-even"
+        ],
+        "sectionId": "storage-break-even"
+      },
+      {
+        "level": "basic",
+        "question": "N=1000,density .25에서 dense와 sparse raw byte를 계산하세요.",
+        "answerChecklist": [
+          "dense 2000",
+          "kept 250",
+          "sparse 1500",
+          "500 saving"
+        ],
+        "requiredConcepts": [
+          "sparse-storage-break-even"
+        ],
+        "sectionId": "storage-break-even"
+      },
+      {
+        "level": "basic",
+        "question": "w=.1,g=-2와 g=2의 movement 신호를 계산하세요.",
+        "answerChecklist": [
           ".2",
           "-.2",
           "away from zero",
-          "toward zero",
-          "task data dependent",
-          "local approximation",
+          "toward zero"
         ],
-        requiredConcepts: ["movement-pruning-score", "gradient"],
-        sectionId: "unstructured",
+        "requiredConcepts": [
+          "movement-pruning-score"
+        ],
+        "sectionId": "movement-score"
       },
       {
-        level: "basic",
-        question:
-          "Input·output width를 각각 75% 남긴 linear layer의 주된 계산 비율을 구하고 latency가 같은 비율로 줄지 않는 이유를 적어라.",
-        answerChecklist: [
-          ".75*.75",
-          ".5625",
-          "43.75 percent arithmetic reduction",
-          "graph propagation",
+        "level": "basic",
+        "question": "Global과 layer-wise selection의 차이를 설명하세요.",
+        "answerChecklist": [
+          "shared ranking",
+          "per layer budget",
+          "scale difference",
+          "record policy"
+        ],
+        "requiredConcepts": [
+          "movement-pruning-score"
+        ],
+        "sectionId": "overview"
+      },
+      {
+        "level": "basic",
+        "question": "작은 sparse file이 느릴 수 있는 이유를 쓰세요.",
+        "answerChecklist": [
+          "indices",
+          "irregular gather",
+          "occupancy",
+          "kernel support",
+          "separate gate"
+        ],
+        "requiredConcepts": [
+          "sparse-storage-break-even"
+        ],
+        "sectionId": "storage-break-even"
+      },
+      {
+        "level": "advanced",
+        "question": "Metadata가 N당 .2 byte일 때 임계 density 식을 계산하세요.",
+        "answerChecklist": [
+          "subtract metadata per element",
+          "1.8 numerator",
+          "divide 6",
+          ".3 density",
+          "70 percent sparsity"
+        ],
+        "requiredConcepts": [
+          "sparse-storage-break-even"
+        ],
+        "sectionId": "storage-break-even"
+      },
+      {
+        "level": "advanced",
+        "question": "Block sparse format이 value당 index 모델보다 유리한 반례를 만드세요.",
+        "answerChecklist": [
+          "shared index",
+          "block descriptor",
+          "local density",
           "alignment",
-          "memory/launch",
+          "new measurement"
         ],
-        requiredConcepts: [
-          "structured-pruning-shape-propagation",
-          "matrix-multiplication",
+        "requiredConcepts": [
+          "sparse-storage-break-even"
         ],
-        sectionId: "structured",
+        "sectionId": "storage-break-even"
       },
       {
-        level: "basic",
-        question:
-          "[1100|1010]과 [1110|1000]의 전체 density를 구하고 2:4 적격 여부와 검사 축·kernel 조건을 설명하라.",
-        answerChecklist: [
-          "both density .5",
-          "first eligible",
-          "second ineligible",
-          "every local group",
-          "reduction axis",
-          "dtype/operator",
-          "tactic log",
-        ],
-        requiredConcepts: [
-          "nm-semi-structured-constraint",
-          "pruning-mask-sparsity",
-        ],
-        sectionId: "structured",
-      },
-      {
-        level: "advanced",
-        question:
-          "같은 |w|=.2와 activation norm 1·10에서 Wanda score를 계산하고 SparseGPT와의 차이, multilingual calibration ablation을 설계하라.",
-        answerChecklist: [
-          ".2 and 2",
-          "prune smaller",
-          "per-output",
-          "SparseGPT reconstruction",
-          "second-order compensation",
-          "language/length/prompt slices",
-          "held-out metrics",
+        "level": "advanced",
+        "question": "Magnitude와 movement를 같은 sparsity에서 비교하는 실험을 설계하세요.",
+        "answerChecklist": [
+          "same base",
+          "same target layers",
           "same sparsity",
+          "task data",
+          "quality slices",
+          "runtime"
         ],
-        requiredConcepts: [
-          "wanda-activation-aware-score",
-          "sparsegpt-layer-reconstruction",
-          "llm-pruning-calibration-coverage",
-          "train-validation-test",
+        "requiredConcepts": [
+          "movement-pruning-score"
         ],
-        sectionId: "llm",
+        "sectionId": "movement-score"
       },
       {
-        level: "basic",
-        question:
-          "M_i=0인 weight·gradient·momentum이 0이 아닐 때 fixed-mask recovery 한 step 뒤 parameter와 optimizer state를 계산하고 test를 설계하라.",
-        answerChecklist: [
-          "both zero",
-          "mask after update",
-          "optimizer state masked",
-          "checkpoint assertion",
-          "dynamic sparse exception",
+        "level": "advanced",
+        "question": "Movement score가 domain shift에서 실패하는 반례를 설명하세요.",
+        "answerChecklist": [
+          "training domain",
+          "gradient dependence",
+          "missing slice",
+          "held out",
+          "recalibrate"
         ],
-        requiredConcepts: ["fixed-mask-recovery-invariant", "gradient-descent"],
-        sectionId: "recovery",
+        "requiredConcepts": [
+          "movement-pruning-score"
+        ],
+        "sectionId": "movement-score"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Movement Pruning: Adaptive Sparsity by Fine-Tuning",
+        "href": "https://arxiv.org/abs/2005.07683",
+        "problem": "Magnitude pruning이 downstream adaptation을 놓칩니다.",
+        "contribution": "Task objective와 mask score를 함께 학습합니다.",
+        "assumptions": "논문의 BERT·task·schedule·distillation 조건입니다.",
+        "evidenceScope": "해당 sparsity·quality experiment 범위입니다.",
+        "notClaim": "모든 model과 runtime의 보편 무손실 비율이 아닙니다.",
+        "sectionId": "paper-movement-pruning"
+      }
+    ]
+  },
+  "ai/structured-pruning": {
+    "entryLevel": true,
+    "entryNote": "Matrix shape를 처음 본다고 가정하고 channel 하나가 앞 output과 뒤 input을 잇는 그림에서 시작합니다.",
+    "coreIdea": "Structured pruning은 연결된 tensor dimension을 함께 줄여 작은 dense graph를 만들며, N:M은 shape 대신 모든 local group의 pattern을 제한하는 별도 hardware contract입니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "structured-pruning-shape-propagation",
+        "role": "Channel·head 제거를 연결된 tensor dimension으로 전파합니다."
       },
       {
-        level: "basic",
-        question:
-          "Dense weight 1,000개를 FP16으로 저장할 때와 density .25 sparse format에서 value 2 byte·index 4 byte를 쓸 때 byte 수를 계산하고 어느 쪽이 더 작은지 판단하라.",
-        answerChecklist: [
-          "dense 2000 bytes",
-          "250 nonzeros",
-          "sparse 1500 bytes",
-          "500-byte saving",
-          "metadata excluded",
-          "latency separate",
-        ],
-        requiredConcepts: [
-          "sparse-storage-break-even",
-          "bit-byte",
-          "pruning-mask-sparsity",
-        ],
-        sectionId: "unstructured",
+        "id": "nm-semi-structured-constraint",
+        "role": "모든 local group의 N:M eligibility를 검사합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "structured-pruning-shape-propagation",
+        "sectionId": "shape-propagation",
+        "intuition": "중간 수도관 하나를 없애면 앞 배출구와 뒤 유입구를 함께 줄입니다.",
+        "workedExample": "Input·output width를 각각 .75 남기면 주된 dense arithmetic은 .5625가 남습니다.",
+        "boundary": "Residual·norm·projection·alignment를 고쳐야 하며 FLOPs와 latency 비율은 다릅니다."
       },
       {
-        level: "advanced",
-        question:
-          "같은 sparsity .5인 unstructured mask와 2:4 mask를 target engine에 빌드한다. 2:4만 sparse kernel을 지원할 때 eligibility→chosen tactic→실측 latency를 잇는 승인 receipt를 설계하라.",
-        answerChecklist: [
-          "same global sparsity",
-          "2:4 local eligibility",
-          "reduction axis",
-          "dtype and operator",
-          "builder flag",
-          "chosen tactic log",
-          "measure latency",
-        ],
-        requiredConcepts: [
-          "nm-semi-structured-constraint",
-          "pruning-deployment-frontier",
-        ],
-        sectionId: "structured",
+        "id": "nm-semi-structured-constraint",
+        "sectionId": "nm-pattern",
+        "intuition": "전체 절반이 아니라 네 명의 각 조마다 두 명을 남기는 규칙입니다.",
+        "workedExample": "[1100|1010]은 2:4이고 [1110|1000]은 전체 .5여도 부적격입니다.",
+        "boundary": "Axis·layout·dtype·operator와 실제 chosen tactic을 함께 확인합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "00 Dependency",
+        "relation": "현재 output과 다음 input의 공유 dimension을 찾습니다.",
+        "concepts": [
+          "structured-pruning-shape-propagation"
+        ]
       },
       {
-        level: "advanced",
-        question:
-          "Unstructured 60%와 2:4 50%, channel-pruned 후보를 artifact byte·slice quality·build log·memory·prefill/decode p95로 비교하는 배포 receipt를 작성하라.",
-        answerChecklist: [
-          "same dense baseline",
-          "target tensors",
-          "actual artifact bytes",
-          "language/domain/long slices",
-          "eligible vs chosen tactics",
-          "peak memory",
-          "prefill/decode",
-          "batch/sequence/concurrency",
-          "quality gates",
-          "Pareto decision",
-        ],
-        requiredConcepts: [
-          "pruning-deployment-frontier",
-          "sparse-storage-break-even",
-          "nm-semi-structured-constraint",
+        "label": "01 Shape",
+        "relation": "Channel·head 제거를 graph 전체에 전파합니다.",
+        "concepts": [
+          "structured-pruning-shape-propagation"
+        ]
+      },
+      {
+        "label": "02 Pattern",
+        "relation": "Shape 유지 경로에서는 local N:M을 검사합니다.",
+        "concepts": [
+          "nm-semi-structured-constraint"
+        ]
+      },
+      {
+        "label": "03 Compile",
+        "relation": "Export shape 또는 sparse tactic 선택을 검증합니다.",
+        "concepts": [
           "structured-pruning-shape-propagation",
-          "quantized-kernel-amdahl-bound",
+          "nm-semi-structured-constraint"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "Channel pruning이 앞 output과 뒤 input을 함께 바꾸는 이유를 설명하세요.",
+        "answerChecklist": [
+          "shared dimension",
+          "producer output",
+          "consumer input",
+          "graph propagation"
         ],
-        sectionId: "recovery",
+        "requiredConcepts": [
+          "structured-pruning-shape-propagation"
+        ],
+        "sectionId": "overview"
       },
+      {
+        "level": "basic",
+        "question": "Input·output .75 retention의 arithmetic 비율을 계산하세요.",
+        "answerChecklist": [
+          ".75 times .75",
+          ".5625",
+          "43.75 reduction",
+          "not latency"
+        ],
+        "requiredConcepts": [
+          "structured-pruning-shape-propagation"
+        ],
+        "sectionId": "shape-propagation"
+      },
+      {
+        "level": "basic",
+        "question": "Head 제거 뒤 hidden width를 원래대로 채우는 반례를 설명하세요.",
+        "answerChecklist": [
+          "head removed",
+          "projection remains",
+          "dense shape unchanged",
+          "parameter vs latency"
+        ],
+        "requiredConcepts": [
+          "structured-pruning-shape-propagation"
+        ],
+        "sectionId": "overview"
+      },
+      {
+        "level": "basic",
+        "question": "[1100|1010]의 2:4 적격성을 판정하세요.",
+        "answerChecklist": [
+          "two groups",
+          "two kept each",
+          "eligible",
+          "axis fixed"
+        ],
+        "requiredConcepts": [
+          "nm-semi-structured-constraint"
+        ],
+        "sectionId": "nm-pattern"
+      },
+      {
+        "level": "basic",
+        "question": "[1110|1000]이 전체 density .5인데 부적격인 이유를 쓰세요.",
+        "answerChecklist": [
+          "3 and 1",
+          "local rule",
+          "global count insufficient",
+          "ineligible"
+        ],
+        "requiredConcepts": [
+          "nm-semi-structured-constraint"
+        ],
+        "sectionId": "nm-pattern"
+      },
+      {
+        "level": "basic",
+        "question": "Eligible과 chosen tactic을 구분하세요.",
+        "answerChecklist": [
+          "mask pattern",
+          "supported dtype op",
+          "builder choice",
+          "benchmark"
+        ],
+        "requiredConcepts": [
+          "nm-semi-structured-constraint"
+        ],
+        "sectionId": "paper-structured-sparsity"
+      },
+      {
+        "level": "advanced",
+        "question": "Residual block channel pruning dependency graph를 설계하세요.",
+        "answerChecklist": [
+          "main path",
+          "skip path",
+          "norm",
+          "projection",
+          "shared indices",
+          "shape test"
+        ],
+        "requiredConcepts": [
+          "structured-pruning-shape-propagation"
+        ],
+        "sectionId": "shape-propagation"
+      },
+      {
+        "level": "advanced",
+        "question": "FLOPs .5625인데 latency .8인 반례를 진단하세요.",
+        "answerChecklist": [
+          "memory",
+          "launch",
+          "alignment",
+          "occupancy",
+          "measure"
+        ],
+        "requiredConcepts": [
+          "structured-pruning-shape-propagation"
+        ],
+        "sectionId": "shape-propagation"
+      },
+      {
+        "level": "advanced",
+        "question": "2:4 mask의 axis permutation 오류를 탐지하는 test를 설계하세요.",
+        "answerChecklist": [
+          "layout",
+          "reduction axis",
+          "group counts",
+          "serialization",
+          "kernel log"
+        ],
+        "requiredConcepts": [
+          "nm-semi-structured-constraint"
+        ],
+        "sectionId": "nm-pattern"
+      },
+      {
+        "level": "advanced",
+        "question": "Channel-pruned와 2:4 후보를 같은 workload에서 비교하세요.",
+        "answerChecklist": [
+          "same base",
+          "quality gate",
+          "artifact shape",
+          "tactic",
+          "memory",
+          "p95"
+        ],
+        "requiredConcepts": [
+          "structured-pruning-shape-propagation",
+          "nm-semi-structured-constraint"
+        ],
+        "sectionId": "paper-structured-sparsity"
+      }
     ],
-    papers: [
+    "papers": [
       {
-        title: "Movement Pruning: Adaptive Sparsity by Fine-Tuning",
-        href: "https://arxiv.org/abs/2005.07683",
-        problem:
-          "Magnitude pruning이 pretrained Transformer의 downstream fine-tuning 중 task-adaptive movement를 놓치는 문제",
-        contribution:
-          "Mask score를 task objective와 함께 학습해 weight가 0에서 멀어지거나 가까워지는 방향을 반영하는 first-order pruning",
-        assumptions:
-          "BERT-family pretrained checkpoints·GLUE/SQuAD transfer tasks·논문의 hard/soft movement schedule과 distillation setting",
-        evidenceScope:
-          "논문의 task·sparsity·training recipe와 high-sparsity comparison 범위",
-        notClaim:
-          "3% parameter 결과가 모든 architecture·domain·runtime에서 무손실인 보편 비율이라는 뜻은 아님",
-        sectionId: "paper-movement-pruning",
+        "title": "NVIDIA TensorRT Structured Sparsity",
+        "href": "https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/advanced.html#structured-sparsity",
+        "problem": "2:4 weights를 지원 tactic으로 실행합니다.",
+        "contribution": "Eligibility·precision·builder와 tactic 조건을 문서화합니다.",
+        "assumptions": "해당 TensorRT·GPU·operator입니다.",
+        "evidenceScope": "Structured sparsity build와 inference 범위입니다.",
+        "notClaim": "모든 eligible layer가 빠른 sparse tactic을 선택한다는 뜻은 아닙니다.",
+        "sectionId": "paper-structured-sparsity"
+      }
+    ]
+  },
+  "ai/one-shot-llm-pruning": {
+    "entryLevel": true,
+    "entryNote": "LLM layer activation을 처음 본다고 가정하고 prompt가 X라는 숫자 표를 만드는 흐름부터 시작합니다.",
+    "coreIdea": "One-shot LLM pruning은 작은 calibration prompt에서 layer input X를 수집하고 SparseGPT reconstruction 또는 Wanda activation-aware score로 mask를 만들므로 표본 coverage와 method boundary를 함께 검증해야 합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "llm-pruning-calibration-coverage",
+        "role": "언어·domain·length·prompt slice의 activation 대표성을 검사합니다."
       },
       {
-        title:
-          "SparseGPT: Massive Language Models Can Be Accurately Pruned in One-Shot",
-        href: "https://arxiv.org/abs/2301.00774",
-        problem:
-          "수십억 parameter GPT-family model을 full retraining 없이 높은 sparsity로 줄이면서 layer output을 보존하는 문제",
-        contribution:
-          "Approximate second-order information과 blockwise weight compensation을 이용한 layer-wise one-shot reconstruction",
-        assumptions:
-          "OPT·BLOOM checkpoints·논문의 calibration sample·damping/order·unstructured/2:4/4:8 pattern·hardware 구현",
-        evidenceScope:
-          "논문의 perplexity·zero-shot tasks·pruning time과 model/sparsity 범위",
-        notClaim:
-          "모든 최신 LLM·language·long-context traffic에서 50–60% sparsity가 negligible loss이거나 같은 runtime speedup을 낸다는 뜻은 아님",
-        sectionId: "paper-sparsegpt",
+        "id": "sparsegpt-layer-reconstruction",
+        "role": "Calibration X에서 원래와 후보 layer output 차이를 줄입니다."
       },
       {
-        title:
-          "A Simple and Effective Pruning Approach for Large Language Models",
-        href: "https://arxiv.org/abs/2306.11695",
-        problem:
-          "LLM pruning에서 retraining이나 second-order reconstruction 비용 없이 activation-sensitive importance를 얻는 문제",
-        contribution:
-          "Per-output 범위의 weight magnitude×input activation norm score와 update-free pruning",
-        assumptions:
-          "LLaMA·LLaMA-2 checkpoints·논문의 calibration data·sparsity pattern·language benchmarks",
-        evidenceScope:
-          "논문에서 magnitude·SparseGPT 계열과 비교한 perplexity·zero-shot accuracy 범위",
-        notClaim:
-          "Wanda가 모든 model·multilingual traffic·sparsity·runtime에서 다른 method보다 우월하다는 뜻은 아님",
-        sectionId: "paper-wanda",
-      },
-      {
-        title: "TensorRT structured sparsity requirements",
-        href: "https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/data-formats-tensors.html#sparsity",
-        problem:
-          "2:4 weight pattern을 실제 supported convolution·MatrixMultiply tactic으로 선택하는 조건을 명확히 하는 문제",
-        contribution:
-          "Operation별 검사 축·precision·builder flag·eligibility와 chosen sparse tactic log를 공식 문서화",
-        assumptions:
-          "해당 TensorRT release·supported NVIDIA architecture·operator shape·layout·precision과 engine builder",
-        evidenceScope:
-          "TensorRT가 정의한 2:4 validation과 tactic-selection 동작 범위",
-        notClaim:
-          "2:4 적격 layer가 항상 sparse tactic을 사용하거나 dense 대비 고정 speedup을 얻는다는 뜻은 아님",
-        sectionId: "spec-tensorrt-sparsity",
-      },
+        "id": "wanda-activation-aware-score",
+        "role": "Weight magnitude와 input channel norm을 곱합니다."
+      }
     ],
+    "conceptExplanations": [
+      {
+        "id": "llm-pruning-calibration-coverage",
+        "sectionId": "overview",
+        "intuition": "교통 표본에 야간·지역 도로가 빠지면 중요한 길을 없앨 수 있습니다.",
+        "workedExample": "한국어·영어·code·long prompt mask를 같은 held-out slices에서 비교합니다.",
+        "boundary": "Label-free 표본이어도 tokenizer·packing·attention mask·seed를 기록합니다."
+      },
+      {
+        "id": "sparsegpt-layer-reconstruction",
+        "sectionId": "reconstruction",
+        "intuition": "부품을 뺀 뒤 대표 input에서 원래 layer 답과 비슷하도록 남은 부품을 조정합니다.",
+        "workedExample": "같은 weight error도 X가 크게 쓰는 channel이면 output residual이 큽니다.",
+        "boundary": "Layer-local proxy이며 전체 generation·runtime을 보장하지 않습니다."
+      },
+      {
+        "id": "wanda-activation-aware-score",
+        "sectionId": "calibration",
+        "intuition": "부품 크기와 실제 사용 강도를 곱해 작지만 자주 쓰는 연결을 보호합니다.",
+        "workedExample": "|w|=.2, norm 1·10이면 score .2·2입니다.",
+        "boundary": "Weight update와 second-order compensation을 하지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "00 Sample",
+        "relation": "Deployment slices를 대표하는 prompts를 모읍니다.",
+        "concepts": [
+          "llm-pruning-calibration-coverage"
+        ]
+      },
+      {
+        "label": "01 Observe",
+        "relation": "Prompt에서 layer input X를 기록합니다.",
+        "concepts": [
+          "llm-pruning-calibration-coverage"
+        ]
+      },
+      {
+        "label": "02 Score",
+        "relation": "SparseGPT 또는 Wanda로 mask 후보를 만듭니다.",
+        "concepts": [
+          "sparsegpt-layer-reconstruction",
+          "wanda-activation-aware-score"
+        ]
+      },
+      {
+        "label": "03 Validate",
+        "relation": "같은 sparsity의 후보를 held-out slices에서 비교합니다.",
+        "concepts": [
+          "llm-pruning-calibration-coverage",
+          "sparsegpt-layer-reconstruction",
+          "wanda-activation-aware-score"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "Calibration prompt와 final test의 역할을 구분하세요.",
+        "answerChecklist": [
+          "importance sample",
+          "held out evaluation",
+          "no leakage",
+          "same artifact"
+        ],
+        "requiredConcepts": [
+          "llm-pruning-calibration-coverage"
+        ],
+        "sectionId": "overview"
+      },
+      {
+        "level": "basic",
+        "question": "Layer input X가 어디서 생기는지 설명하세요.",
+        "answerChecklist": [
+          "prompt tokens",
+          "forward pass",
+          "specific layer",
+          "activation matrix"
+        ],
+        "requiredConcepts": [
+          "llm-pruning-calibration-coverage"
+        ],
+        "sectionId": "overview"
+      },
+      {
+        "level": "basic",
+        "question": "|w|=.2,norm 1·10의 Wanda score를 계산하세요.",
+        "answerChecklist": [
+          ".2",
+          "2",
+          "protect second",
+          "per output"
+        ],
+        "requiredConcepts": [
+          "wanda-activation-aware-score"
+        ],
+        "sectionId": "calibration"
+      },
+      {
+        "level": "basic",
+        "question": "Wanda가 magnitude만 쓰지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "input usage",
+          "channel norm",
+          "output effect",
+          "calibration dependent"
+        ],
+        "requiredConcepts": [
+          "wanda-activation-aware-score"
+        ],
+        "sectionId": "calibration"
+      },
+      {
+        "level": "basic",
+        "question": "SparseGPT residual R=XE의 각 물체를 설명하세요.",
+        "answerChecklist": [
+          "weight error",
+          "layer input",
+          "output residual",
+          "matrix product"
+        ],
+        "requiredConcepts": [
+          "sparsegpt-layer-reconstruction"
+        ],
+        "sectionId": "reconstruction"
+      },
+      {
+        "level": "basic",
+        "question": "SparseGPT와 Wanda의 보정 차이를 비교하세요.",
+        "answerChecklist": [
+          "reconstruction",
+          "second order",
+          "compensation",
+          "score only",
+          "no update"
+        ],
+        "requiredConcepts": [
+          "sparsegpt-layer-reconstruction",
+          "wanda-activation-aware-score"
+        ],
+        "sectionId": "papers"
+      },
+      {
+        "level": "advanced",
+        "question": "Multilingual calibration ablation을 설계하세요.",
+        "answerChecklist": [
+          "same base",
+          "same sparsity",
+          "language slices",
+          "length",
+          "held out",
+          "seed"
+        ],
+        "requiredConcepts": [
+          "llm-pruning-calibration-coverage"
+        ],
+        "sectionId": "overview"
+      },
+      {
+        "level": "advanced",
+        "question": "같은 weight norm인데 다른 X로 residual이 달라지는 2x2 예를 만드세요.",
+        "answerChecklist": [
+          "matrix shapes",
+          "same E norm",
+          "different X",
+          "compute XE",
+          "interpret"
+        ],
+        "requiredConcepts": [
+          "sparsegpt-layer-reconstruction"
+        ],
+        "sectionId": "reconstruction"
+      },
+      {
+        "level": "advanced",
+        "question": "짧은 영어 calibration이 long Korean에서 실패하는 반례를 진단하세요.",
+        "answerChecklist": [
+          "coverage gap",
+          "activation shift",
+          "worst slice",
+          "new sample",
+          "revalidate"
+        ],
+        "requiredConcepts": [
+          "llm-pruning-calibration-coverage",
+          "wanda-activation-aware-score"
+        ],
+        "sectionId": "calibration"
+      },
+      {
+        "level": "advanced",
+        "question": "SparseGPT·Wanda release comparison을 설계하세요.",
+        "answerChecklist": [
+          "same base",
+          "same pattern",
+          "same calibration",
+          "quality slices",
+          "artifact",
+          "runtime"
+        ],
+        "requiredConcepts": [
+          "sparsegpt-layer-reconstruction",
+          "wanda-activation-aware-score",
+          "llm-pruning-calibration-coverage"
+        ],
+        "sectionId": "papers"
+      }
+    ],
+    "papers": [
+      {
+        "title": "SparseGPT",
+        "href": "https://arxiv.org/abs/2301.00774",
+        "problem": "대형 GPT를 retraining 없이 pruning합니다.",
+        "contribution": "Approximate second-order layer reconstruction을 제시합니다.",
+        "assumptions": "논문의 checkpoints·calibration·patterns입니다.",
+        "evidenceScope": "해당 perplexity·task·time 범위입니다.",
+        "notClaim": "모든 LLM과 runtime의 무손실·속도 보장이 아닙니다.",
+        "sectionId": "paper-sparsegpt"
+      },
+      {
+        "title": "Wanda",
+        "href": "https://arxiv.org/abs/2306.11695",
+        "problem": "가벼운 LLM importance score가 필요합니다.",
+        "contribution": "Magnitude와 input activation norm을 결합합니다.",
+        "assumptions": "논문의 model·sample·grouping입니다.",
+        "evidenceScope": "해당 quality comparison 범위입니다.",
+        "notClaim": "SparseGPT와 같은 보정이나 모든 traffic 우위를 뜻하지 않습니다.",
+        "sectionId": "paper-wanda"
+      }
+    ]
+  },
+  "ai/pruning-recovery-deployment": {
+    "entryLevel": true,
+    "entryNote": "Optimizer state와 sparse kernel을 모른다고 가정하고 fixed mask·state·artifact·release를 한 단계씩 정의합니다.",
+    "coreIdea": "Fixed-mask recovery는 parameter와 optimizer state의 제거 위치를 계속 0으로 유지하며, 배포는 sparsity 수치가 아니라 artifact byte·slice quality·chosen tactic·memory·latency frontier로 승인합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "fixed-mask-recovery-invariant",
+        "role": "Parameter와 optimizer state의 제거 위치를 매 step 0으로 유지합니다."
+      },
+      {
+        "id": "pruning-deployment-frontier",
+        "role": "Quality gate 아래 artifact·memory·latency의 지배되지 않는 후보를 고릅니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "fixed-mask-recovery-invariant",
+        "sectionId": "mask-invariant",
+        "intuition": "철거한 문은 보수 중에도 매 step 다시 봉인하고 관성 상태도 비웁니다.",
+        "workedExample": "M_i=0이면 W·gradient·momentum과 무관하게 다음 W_i와 U_i는 0입니다.",
+        "boundary": "Fixed-mask recovery 계약이며 dynamic sparse training에는 적용하지 않습니다."
+      },
+      {
+        "id": "pruning-deployment-frontier",
+        "sectionId": "release",
+        "intuition": "더 sparse한 후보보다 품질을 지키며 필요한 운영 축을 개선한 후보를 남깁니다.",
+        "workedExample": "60% irregular p95 10ms보다 50% 2:4 p95 7ms가 latency 목표에 낫습니다.",
+        "boundary": "같은 base·workload·engine에서 비교하고 average quality로 worst slice를 숨기지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "00 Freeze",
+        "relation": "Mask와 checkpoint generation을 고정합니다.",
+        "concepts": [
+          "fixed-mask-recovery-invariant"
+        ]
+      },
+      {
+        "label": "01 Recover",
+        "relation": "Weight와 optimizer state에 mask를 재적용합니다.",
+        "concepts": [
+          "fixed-mask-recovery-invariant"
+        ]
+      },
+      {
+        "label": "02 Build",
+        "relation": "Packing·eligibility·chosen tactic·fallback을 기록합니다.",
+        "concepts": [
+          "pruning-deployment-frontier"
+        ]
+      },
+      {
+        "label": "03 Release",
+        "relation": "Quality·memory·latency frontier에서 후보를 승인합니다.",
+        "concepts": [
+          "fixed-mask-recovery-invariant",
+          "pruning-deployment-frontier",
+          "quantized-kernel-amdahl-bound"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "Fixed-mask recovery와 dynamic sparse training을 구분하세요.",
+        "answerChecklist": [
+          "mask fixed",
+          "no regrowth",
+          "dynamic reallocates",
+          "different contract"
+        ],
+        "requiredConcepts": [
+          "fixed-mask-recovery-invariant"
+        ],
+        "sectionId": "overview"
+      },
+      {
+        "level": "basic",
+        "question": "M_i=0인 한 step 뒤 W_i와 U_i를 계산하세요.",
+        "answerChecklist": [
+          "weight zero",
+          "state zero",
+          "mask after update",
+          "independent of gradient"
+        ],
+        "requiredConcepts": [
+          "fixed-mask-recovery-invariant"
+        ],
+        "sectionId": "mask-invariant"
+      },
+      {
+        "level": "basic",
+        "question": "Gradient만 mask하면 부족한 이유를 설명하세요.",
+        "answerChecklist": [
+          "momentum remains",
+          "next update",
+          "regrowth",
+          "mask state"
+        ],
+        "requiredConcepts": [
+          "fixed-mask-recovery-invariant"
+        ],
+        "sectionId": "mask-invariant"
+      },
+      {
+        "level": "basic",
+        "question": "Eligible operator와 chosen tactic을 구분하세요.",
+        "answerChecklist": [
+          "pattern supported",
+          "builder benchmark",
+          "actual selection",
+          "log"
+        ],
+        "requiredConcepts": [
+          "pruning-deployment-frontier"
+        ],
+        "sectionId": "runtime-receipt"
+      },
+      {
+        "level": "basic",
+        "question": "f=.4,kernel speedup 2의 end-to-end 상한을 계산하세요.",
+        "answerChecklist": [
+          "fixed .6",
+          "accelerated .2",
+          "total .8",
+          "1.25x"
+        ],
+        "requiredConcepts": [
+          "pruning-deployment-frontier",
+          "quantized-kernel-amdahl-bound"
+        ],
+        "sectionId": "runtime-receipt"
+      },
+      {
+        "level": "basic",
+        "question": "Release frontier의 quality·resource 항목을 쓰세요.",
+        "answerChecklist": [
+          "artifact bytes",
+          "quality slices",
+          "peak memory",
+          "p50 p95",
+          "throughput"
+        ],
+        "requiredConcepts": [
+          "pruning-deployment-frontier"
+        ],
+        "sectionId": "release"
+      },
+      {
+        "level": "advanced",
+        "question": "Optimizer checkpoint reload 뒤 mask invariant test를 설계하세요.",
+        "answerChecklist": [
+          "load state",
+          "nonzero removed slot",
+          "one step",
+          "assert W zero",
+          "assert U zero",
+          "export"
+        ],
+        "requiredConcepts": [
+          "fixed-mask-recovery-invariant"
+        ],
+        "sectionId": "mask-invariant"
+      },
+      {
+        "level": "advanced",
+        "question": "60% irregular과 50% 2:4의 Pareto 결정을 만드세요.",
+        "answerChecklist": [
+          "same baseline",
+          "quality gates",
+          "artifact bytes",
+          "chosen tactic",
+          "p95",
+          "goal"
+        ],
+        "requiredConcepts": [
+          "pruning-deployment-frontier"
+        ],
+        "sectionId": "release"
+      },
+      {
+        "level": "advanced",
+        "question": "Sparsity가 늘고 quality도 유지됐지만 release를 거부하는 반례를 만드세요.",
+        "answerChecklist": [
+          "dense fallback",
+          "no memory gain",
+          "latency regression",
+          "engineering cost",
+          "reject"
+        ],
+        "requiredConcepts": [
+          "pruning-deployment-frontier"
+        ],
+        "sectionId": "runtime-receipt"
+      },
+      {
+        "level": "advanced",
+        "question": "Pruning artifact release receipt를 설계하세요.",
+        "answerChecklist": [
+          "base hash",
+          "mask hash",
+          "recovery recipe",
+          "artifact format",
+          "build log",
+          "quality slices",
+          "memory",
+          "latency"
+        ],
+        "requiredConcepts": [
+          "fixed-mask-recovery-invariant",
+          "pruning-deployment-frontier"
+        ],
+        "sectionId": "release"
+      }
+    ]
   },
   "ai/knowledge-distillation": {
     "coreIdea": "고전 지식 증류는 teacher와 student가 공유하는 class 또는 aligned feature interface를 먼저 고정하고 temperature soft target·hard-label anchor·KL 방향·feature bridge를 student-only 품질과 runtime으로 검증합니다.",
