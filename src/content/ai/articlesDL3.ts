@@ -36,7 +36,8 @@ export const dlFoundation2Articles: Article[] = [
       { id: "masking", title: "Visible·masked patch" },
       { id: "choice", title: "Intervention 선택 경계" },
     ],
-    component: () => import("@/pages/articles/ai/denoising-masked-autoencoders"),
+    component: () =>
+      import("@/pages/articles/ai/denoising-masked-autoencoders"),
   },
   {
     slug: "reconstruction-anomaly-detection",
@@ -48,7 +49,8 @@ export const dlFoundation2Articles: Article[] = [
       { id: "failure", title: "Score overlap 반례" },
       { id: "release", title: "운영 receipt와 drift" },
     ],
-    component: () => import("@/pages/articles/ai/reconstruction-anomaly-detection"),
+    component: () =>
+      import("@/pages/articles/ai/reconstruction-anomaly-detection"),
   },
 ];
 
@@ -56,17 +58,65 @@ export const dlFoundation2Articles: Article[] = [
 export const dlVisionArticles: Article[] = [
   {
     slug: "cnn",
-    title: "CNN: 합성곱 신경망의 원리와 진화",
+    title: "CNN 기초: Image Grid에서 Shared Kernel까지",
     subcategory: "ai-vision",
     sections: [
-      { id: "overview", title: "Image tensor와 구조적 가정" },
-      { id: "convolution-layer", title: "Local operator와 spatial geometry" },
-      { id: "inductive-bias", title: "Equivariance와 receptive field" },
-      { id: "architectures", title: "비용·최적화 bottleneck" },
-      { id: "applications", title: "Spatial task와 transfer" },
-      { id: "cnn-vs-transformer", title: "Prior·cost 선택" },
+      { id: "overview", title: "Image Tensor와 Local Window" },
+      { id: "local-operator", title: "Cross-correlation 한 칸" },
+      { id: "shared-kernel", title: "Weight Sharing" },
+      { id: "output-geometry", title: "Stride·Padding·Dilation Shape" },
     ],
     component: () => import("@/pages/articles/ai/cnn"),
+  },
+  {
+    slug: "cnn-translation-equivariance",
+    title: "CNN Translation Equivariance: 이동 관계와 반례",
+    subcategory: "ai-vision",
+    sections: [
+      { id: "overview", title: "Equivariance와 Invariance" },
+      { id: "equivariance", title: "Shared Operator 증명" },
+      { id: "counterexamples", title: "Stride·Boundary 반례" },
+      { id: "release", title: "Shift Test" },
+    ],
+    component: () => import("@/pages/articles/ai/cnn-translation-equivariance"),
+  },
+  {
+    slug: "cnn-receptive-fields",
+    title: "CNN Receptive Field: 연결 범위·실제 영향·Dilation",
+    subcategory: "ai-vision",
+    sections: [
+      { id: "overview", title: "Theoretical·Effective 범위" },
+      { id: "theoretical", title: "Layer별 범위 누적" },
+      { id: "effective", title: "Gradient·Perturbation 측정" },
+      { id: "dilation", title: "Dilation과 Gridding" },
+    ],
+    component: () => import("@/pages/articles/ai/cnn-receptive-fields"),
+  },
+  {
+    slug: "depthwise-separable-convolution",
+    title: "Depthwise Separable Convolution: 공간 필터와 채널 혼합",
+    subcategory: "ai-vision",
+    sections: [
+      { id: "overview", title: "Depthwise·Pointwise 분리" },
+      { id: "cost", title: "MAC 비율 계산" },
+      { id: "runtime", title: "실제 Device 경계" },
+      { id: "paper-mobilenet", title: "MobileNet 근거" },
+    ],
+    component: () =>
+      import("@/pages/articles/ai/depthwise-separable-convolution"),
+  },
+  {
+    slug: "vision-task-spatial-contracts",
+    title: "Vision Task Spatial Contracts: Class·Box·Mask·Image",
+    subcategory: "ai-vision",
+    sections: [
+      { id: "overview", title: "Prediction Unit" },
+      { id: "output-shapes", title: "Task별 Output Shape" },
+      { id: "preservation", title: "Spatial Evidence 보존" },
+      { id: "release", title: "Task별 Release Metric" },
+    ],
+    component: () =>
+      import("@/pages/articles/ai/vision-task-spatial-contracts"),
   },
   {
     slug: "resnet",

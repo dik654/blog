@@ -1104,35 +1104,36 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [{ kind: "primary-source", rule: "Sentence embedding claim은 pooling·supervision·retrieval setting을 함께 기록한다." }],
   },
  cnn: {
-    title: "CNN 글이 소유하는 범위",
-    owns: [
-      "Image tensor의 channel·spatial axes와 local cross-correlation 계산",
-      "Kernel weight sharing·output geometry·translation equivariance의 전제와 경계",
-      "Theoretical·effective receptive field와 dilation·downsampling 선택",
-      "Dense·depthwise separable convolution 및 task별 spatial-output 계약",
-    ],
-    reuses: [
-      {
-        label: "Vector·dot product와 tensor 기본기",
-        href: "/ai/math-vectors-inner-products",
-      },
-      { label: "Sampling·Nyquist·aliasing", href: "/ai/fft" },
-      { label: "Activation function", href: "/ai/activation-functions" },
-      { label: "ResNet residual path", href: "/ai/resnet" },
-      { label: "Vision Transformer", href: "/ai/vision-transformer" },
-    ],
-    evidence: [
-      {
-        kind: "primary-source",
-        rule: "LeNet·AlexNet·effective receptive field·dilation·MobileNet·ConvNeXt·ViT claim은 각 논문의 dataset·architecture·compute 범위로 제한한다.",
-      },
-      {
-        kind: "standard",
-        rule: "Tensor layout·padding convention·groups·stride와 parameter·MAC·latency를 재현 가능한 실행 계약으로 기록한다.",
-      },
-    ],
+    title: "CNN local operator 글이 소유하는 범위",
+    owns: ["Image tensor axes, local cross-correlation, shared kernel과 output geometry"],
+    reuses: [{ label: "Tensor와 dot product 기초", href: "/ai/linear-algebra" }],
+    evidence: [{ kind: "primary-source", rule: "역사·system claim은 LeNet 논문의 document-recognition 조건에 귀속한다." }],
   },
-  "transformer-architecture": {
+  "cnn-translation-equivariance": {
+    title: "CNN translation equivariance 글이 소유하는 범위",
+    owns: ["Input/output translation 대응, invariance 경계와 stride·padding 반례"],
+    reuses: [{ label: "Shared local operator", href: "/ai/cnn" }],
+    evidence: [{ kind: "primary-source", rule: "Shift-stability 개선 claim은 논문의 architecture·filter·shift protocol 안에서 해석한다." }],
+  },
+  "cnn-receptive-fields": {
+    title: "CNN receptive field 글이 소유하는 범위",
+    owns: ["Theoretical jump/span 누적, effective influence 측정과 dilation·gridding 경계"],
+    reuses: [{ label: "Convolution geometry", href: "/ai/cnn#output-geometry" }],
+    evidence: [{ kind: "primary-source", rule: "ERF shape와 dilation 결과는 각 논문의 network·measurement·dense-task 범위에 귀속한다." }],
+  },
+  "depthwise-separable-convolution": {
+    title: "Depthwise separable convolution 글이 소유하는 범위",
+    owns: ["Depthwise spatial filtering·pointwise channel mixing과 MAC·runtime 경계"],
+    reuses: [{ label: "Shared cross-correlation", href: "/ai/cnn#local-operator" }],
+    evidence: [{ kind: "project-measurement", rule: "MAC 계산 뒤 target device의 latency·traffic·energy·quality를 별도로 측정한다." }],
+  },
+  "vision-task-spatial-contracts": {
+    title: "Vision task spatial contract 글이 소유하는 범위",
+    owns: ["Classification·detection·segmentation·restoration prediction unit와 output coordinate 보존 계약"],
+    reuses: [{ label: "Receptive field와 output geometry", href: "/ai/cnn-receptive-fields" }],
+    evidence: [{ kind: "primary-source", rule: "Dense prediction claim은 FCN의 dataset·architecture·metric 범위에서 해석하고 task별 release evidence를 별도 수집한다." }],
+  },
+ "transformer-architecture": {
     title: "Transformer architecture 글이 소유하는 범위",
     owns: [
       "Token ID·position·attention mask·loss mask에서 hidden state로 이어지는 tensor 계약",

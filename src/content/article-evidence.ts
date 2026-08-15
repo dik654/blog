@@ -431,50 +431,22 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
   ],
   "ai/cnn": [
-    {
-      kind: "핵심 논문",
-      label: "Gradient-Based Learning Applied to Document Recognition",
-      href: "https://doi.org/10.1109/5.726791",
-      note: "LeNet 계열 convolutional network와 document recognition을 정리한 논문",
-    },
-    {
-      kind: "핵심 논문",
-      label: "ImageNet Classification with Deep Convolutional Neural Networks",
-      href: "https://proceedings.neurips.cc/paper/2012/hash/c399862d3b9d6b76c8436e924a68c45b-Abstract.html",
-      note: "GPU로 학습한 AlexNet이 large-scale image classification에서 보인 결과",
-    },
-    {
-      kind: "보충 읽기",
-      label: "A ConvNet for the 2020s",
-      href: "https://arxiv.org/abs/2201.03545",
-      note: "현대 Transformer 설계 선택을 순수 convolutional network에 적용한 ConvNeXt",
-    },
-    {
-      kind: "핵심 논문",
-      label: "Understanding the Effective Receptive Field in Deep CNNs",
-      href: "https://arxiv.org/abs/1701.04128",
-      note: "이론적 receptive field와 실제 gradient 영향이 집중된 effective receptive field의 차이",
-    },
-    {
-      kind: "핵심 논문",
-      label: "Multi-Scale Context Aggregation by Dilated Convolutions",
-      href: "https://arxiv.org/abs/1511.07122",
-      note: "해상도를 유지하면서 dilation으로 receptive field를 넓히는 dense prediction 설계",
-    },
-    {
-      kind: "핵심 논문",
-      label: "MobileNets",
-      href: "https://arxiv.org/abs/1704.04861",
-      note: "Depthwise separable convolution으로 spatial filtering과 channel mixing 비용을 분리",
-    },
-    {
-      kind: "핵심 논문",
-      label: "An Image is Worth 16×16 Words",
-      href: "https://arxiv.org/abs/2010.11929",
-      note: "큰-scale pretraining에서 pure Transformer가 image patch sequence를 처리한 ViT 원 논문",
-    },
+    { kind: "핵심 논문", label: "Gradient-Based Learning Applied to Document Recognition", href: "https://doi.org/10.1109/5.726791", note: "LeNet convolution·subsampling·classifier를 document recognition에 연결한 근거" },
   ],
-  "ai/word2vec": [
+  "ai/cnn-translation-equivariance": [
+    { kind: "핵심 논문", label: "Making Convolutional Networks Shift-Invariant Again", href: "https://arxiv.org/abs/1904.11486", note: "Downsampling aliasing과 작은 input shift stability를 분석한 근거" },
+  ],
+  "ai/cnn-receptive-fields": [
+    { kind: "핵심 논문", label: "Understanding the Effective Receptive Field", href: "https://arxiv.org/abs/1701.04128", note: "Theoretical connectivity와 measured influence distribution의 차이" },
+    { kind: "핵심 논문", label: "Multi-Scale Context Aggregation by Dilated Convolutions", href: "https://arxiv.org/abs/1511.07122", note: "Resolution을 즉시 낮추지 않는 dilated context aggregation" },
+  ],
+  "ai/depthwise-separable-convolution": [
+    { kind: "핵심 논문", label: "MobileNets", href: "https://arxiv.org/abs/1704.04861", note: "Depthwise separable convolution의 accuracy–resource trade-off" },
+  ],
+  "ai/vision-task-spatial-contracts": [
+    { kind: "핵심 논문", label: "Fully Convolutional Networks", href: "https://arxiv.org/abs/1411.4038", note: "Image-level network를 dense spatial output과 skip architecture로 전환" },
+  ],
+ "ai/word2vec": [
     {
       kind: "핵심 논문",
       label: "Efficient Estimation of Word Representations in Vector Space",

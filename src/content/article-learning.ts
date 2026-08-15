@@ -42186,503 +42186,174 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/cnn": {
-    coreIdea:
-      "CNN은 image를 단순한 긴 vector로 보지 않고, 가까운 좌표의 관계와 같은 pattern이 위치를 옮겨도 반복된다는 prior를 local connectivity와 shared kernel에 넣습니다. 이 계산은 parameter를 줄이면서 translation-equivariant feature map을 만들지만, stride·padding·finite boundary·task head가 그 성질과 보존되는 spatial information을 바꿉니다.",
-    assumedKnowledge: [
-      {
-        id: "coordinate-vector",
-        role: "Pixel channel과 local patch를 순서 있는 수의 묶음으로 읽습니다.",
-      },
-      {
-        id: "dot-product",
-        role: "Local patch와 kernel의 원소별 곱을 더해 output scalar 하나를 계산합니다.",
-      },
-      {
-        id: "tensor-batch",
-        role: "여러 image와 channel·height·width axis를 한 tensor로 묶습니다.",
-      },
-      {
-        id: "nonlinear-activation",
-        role: "Convolution을 여러 층 합성할 때 전체가 linear operator 하나로 collapse하지 않도록 합니다.",
-      },
-      {
-        id: "sampling-nyquist-boundary",
-        role: "Stride와 pooling으로 spatial grid를 줄일 때 aliasing이 생기는 조건을 설명합니다.",
-      },
-      {
-        id: "prediction-contract",
-        role: "Classification·detection·segmentation이 요구하는 output 단위를 구분합니다.",
-      },
-    ],
+    entryLevel: true,
+    entryNote: "Pixel grid와 작은 window에서 시작해 output cell 하나를 직접 계산합니다.",
+    coreIdea: "CNN의 기초 operator는 channel·row·column image tensor의 local window와 shared kernel을 같은 offset끼리 곱해 더하고, stride·padding·dilation이 정한 시작점마다 반복하는 cross-correlation입니다.",
+    assumedKnowledge: [],
     introducedHere: [
-      {
-        id: "image-tensor-layout",
-        role: "Image input의 channel·height·width 축과 pixel 좌표·값 범위를 고정합니다.",
-      },
-      {
-        id: "cnn-cross-correlation",
-        role: "Local window와 learned kernel에서 feature value 하나를 계산합니다.",
-      },
-      {
-        id: "convolution-weight-sharing",
-        role: "같은 kernel을 모든 위치에 재사용하는 parameterization을 설명합니다.",
-      },
-      {
-        id: "convolution-spatial-geometry",
-        role: "Kernel·stride·padding·dilation에서 output shape와 읽는 좌표를 계산합니다.",
-      },
-      {
-        id: "translation-equivariance",
-        role: "Input 이동과 feature-map 이동이 대응하는 조건과 반례를 구분합니다.",
-      },
-      {
-        id: "cnn-receptive-field",
-        role: "Hidden unit이 graph상 연결된 원 input 범위를 layer별로 계산합니다.",
-      },
-      {
-        id: "effective-receptive-field",
-        role: "이론적 연결 범위와 실제 영향 분포를 분리합니다.",
-      },
-      {
-        id: "dilated-convolution",
-        role: "해상도를 즉시 줄이지 않고 kernel span을 넓히는 방법과 gridding 경계를 설명합니다.",
-      },
-      {
-        id: "depthwise-separable-convolution",
-        role: "Spatial filtering과 channel mixing을 나눠 비용을 계산합니다.",
-      },
-      {
-        id: "cnn-task-spatial-contract",
-        role: "Task별로 보존해야 할 위치 정보와 head output을 결정합니다.",
-      },
+      { id: "image-tensor-layout", role: "Image의 batch·channel·height·width 축과 좌표 frame을 고정합니다." },
+      { id: "cnn-cross-correlation", role: "Local patch와 kernel에서 output scalar 하나를 계산합니다." },
+      { id: "convolution-weight-sharing", role: "같은 kernel을 여러 spatial 위치에 재사용합니다." },
+      { id: "convolution-spatial-geometry", role: "Kernel·stride·padding·dilation으로 output grid를 계산합니다." },
     ],
     conceptExplanations: [
-      {
-        id: "image-tensor-layout",
-        sectionId: "overview",
-        intuition:
-          "흑백 표 한 장에 색 성분별 표를 겹치고, 여러 장을 batch로 묶은 것이 image tensor입니다.",
-        workedExample:
-          "RGB image 32장이 224×224라면 NCHW layout은 32×3×224×224이고 한 sample의 좌표는 channel c, row h, column w로 지정합니다.",
-        boundary:
-          "Pixel 값은 물체 자체가 아니라 sensor·color space·resize·normalization을 거친 측정값입니다. NCHW와 NHWC를 혼동하면 같은 숫자 배열도 다른 image로 계산됩니다.",
-        scientificGrounding: {
-          observable:
-            "Sensor가 위치별로 기록한 빛의 intensity 또는 preprocessing 뒤의 channel 값입니다.",
-          unitsAndDimensions:
-            "Raw photon·voltage 단위는 camera pipeline에서 digital count로 바뀌며 model input은 보통 0–255 정수나 0–1·standardized dimensionless value입니다. Height·width는 pixel count입니다.",
-          modelAssumptions:
-            "Regular rectangular grid와 고정 channel meaning·color transform·resize convention을 가정합니다.",
-          measurementExample:
-            "224×224 RGB input은 각 위치의 red·green·blue 측정 세 개를 갖지만 crop과 resize가 원 scene의 field of view와 spatial frequency를 바꿉니다.",
-          invalidConditions:
-            "Irregular point cloud·event camera·누락 pixel·다른 color calibration을 같은 grid tensor로 무비판적으로 취급하면 locality와 channel 의미가 달라집니다.",
-          referenceFrame:
-            "Pixel translation과 receptive field는 resize·crop 뒤 image coordinate frame을 기준으로 하며 실제 세계의 meter 좌표와 동일하지 않습니다.",
-        },
-      },
-      {
-        id: "cnn-cross-correlation",
-        sectionId: "convolution-layer",
-        intuition:
-          "작은 투명 필름의 숫자를 image 위 한 칸에 포갠 뒤 같은 자리를 곱해 더하고, 필름을 옆으로 옮겨 같은 계산을 반복합니다.",
-        workedExample:
-          "2×2 patch [[1,2],[3,4]]와 kernel [[1,0],[0,−1]]의 score는 1−4=−3입니다. Library는 보통 kernel을 뒤집지 않는 cross-correlation을 계산합니다.",
-        boundary:
-          "학습된 kernel이 반드시 사람에게 보이는 edge detector가 되는 것은 아니며 convolution theorem의 circular·linear convolution 정의와 library operator convention을 구분해야 합니다.",
-      },
-      {
-        id: "convolution-weight-sharing",
-        sectionId: "convolution-layer",
-        intuition:
-          "왼쪽 위의 세로선을 찾는 규칙과 오른쪽 아래의 세로선을 찾는 규칙을 따로 외우지 않고 같은 detector를 여러 위치에서 사용합니다.",
-        workedExample:
-          "3×3·Cin=3·Cout=32 dense convolution은 image resolution과 무관하게 bias 제외 3×3×3×32=864 weights를 공유합니다.",
-        boundary:
-          "공유가 data의 symmetry와 맞을 때 유리합니다. 절대 위치마다 규칙이 달라지는 task에서는 position channel·boundary 처리·unshared operator가 필요할 수 있습니다.",
-      },
-      {
-        id: "convolution-spatial-geometry",
-        sectionId: "convolution-layer",
-        intuition:
-          "Kernel이 차지하는 실제 span을 input 위에 놓고 stride만큼 출발점을 옮길 수 있는 횟수를 세면 output 크기가 됩니다.",
-        workedExample:
-          "H=7,k=3,p=1,s=2,dilation=1이면 floor((7+2−2−1)/2+1)=4이므로 output height는 4입니다.",
-        boundary:
-          "‘same’이라는 이름만으로 좌우 padding과 output shape를 확정할 수 없습니다. 짝수 kernel·stride>1·asymmetric padding은 framework convention을 확인해야 합니다.",
-      },
-      {
-        id: "translation-equivariance",
-        sectionId: "inductive-bias",
-        intuition:
-          "물체를 오른쪽으로 옮기면 같은 detector의 반응 위치도 오른쪽으로 옮겨가는 성질입니다. 반응 값 자체가 항상 같다는 invariance와 다릅니다.",
-        workedExample:
-          "무한 grid에서 stride-1 shared convolution은 input을 1 pixel 옮겼을 때 feature map도 1칸 옮깁니다.",
-        boundary:
-          "Zero padding boundary·stride>1 subsampling·crop·pooling은 한 pixel 이동에 대한 exact equality를 깨뜨릴 수 있습니다.",
-        proofIdea:
-          "Shared cross-correlation 합에서 translated input X[r−a]를 대입하고 index를 r′=r−a로 바꾸면 원 output의 좌표만 a만큼 이동한 식이 됩니다.",
-        counterexample:
-          "Stride 2에서 input을 1 pixel 옮기면 sampling phase가 바뀌므로 output을 정수 한 칸 이동한 결과와 일반적으로 같지 않습니다.",
-      },
-      {
-        id: "cnn-receptive-field",
-        sectionId: "inductive-bias",
-        intuition:
-          "위쪽 unit 하나에서 계산 graph를 아래로 따라갔을 때 닿을 수 있는 원 image의 주소 범위입니다.",
-        workedExample:
-          "Stride 1인 3×3 convolution 두 층은 한 축에서 3 뒤에 2를 더해 5×5 theoretical receptive field를 가집니다.",
-        boundary:
-          "연결되어 있다는 사실은 같은 영향력을 뜻하지 않습니다. Branch·padding·dilation이 있으면 path와 valid 좌표를 함께 추적해야 합니다.",
-      },
-      {
-        id: "effective-receptive-field",
-        sectionId: "inductive-bias",
-        intuition:
-          "큰 theoretical 창 안에서도 실제 prediction을 크게 흔드는 pixel은 중심 등 일부에 더 모일 수 있습니다.",
-        workedExample:
-          "Output scalar를 input pixel마다 미분해 |∂y/∂xᵢⱼ| heatmap을 만들면 graph상 범위와 실제 gradient 집중도를 비교할 수 있습니다.",
-        boundary:
-          "한 input·checkpoint·output과 gradient 정의에 의존하는 측정입니다. 특정 논문이 관찰한 Gaussian-like 분포를 모든 architecture의 엄밀한 고정 법칙으로 취급하면 안 됩니다.",
-      },
-      {
-        id: "dilated-convolution",
-        sectionId: "inductive-bias",
-        intuition:
-          "Kernel tap 수를 늘리지 않고 tap 사이에 빈 칸을 두어 더 넓은 좌표를 살펴봅니다.",
-        workedExample:
-          "k=3,dilation=2이면 한 축의 실제 span은 2(3−1)+1=5이지만 학습 tap은 여전히 3개입니다.",
-        boundary:
-          "연속한 모든 좌표를 읽는 5-wide kernel과 같지 않습니다. 여러 dilation pattern이 겹치지 않으면 gridding artifact와 local detail 손실이 나타날 수 있습니다.",
-      },
-      {
-        id: "depthwise-separable-convolution",
-        sectionId: "architectures",
-        intuition:
-          "각 channel 안에서 모양을 찾는 일과 여러 channel을 섞어 새 feature를 만드는 일을 두 단계로 나눕니다.",
-        workedExample:
-          "k=3,Cin=32,Cout=64라면 위치당 dense MAC은 18,432, separable은 288+2,048=2,336으로 줄어듭니다.",
-        boundary:
-          "MAC 수 감소가 device latency와 같은 비율로 이어지지 않습니다. Memory traffic·kernel launch·vectorization과 accuracy를 같은 hardware에서 측정해야 합니다.",
-      },
-      {
-        id: "cnn-task-spatial-contract",
-        sectionId: "applications",
-        intuition:
-          "사진 하나에 이름표를 붙이는 일과 모든 pixel에 이름표를 붙이는 일은 마지막에 남겨야 할 위치 정보가 다릅니다.",
-        workedExample:
-          "Classification은 H×W를 global pool할 수 있지만 segmentation은 각 output pixel을 input coordinate에 대응시키므로 stride·upsampling·skip feature를 추적합니다.",
-        boundary:
-          "같은 backbone accuracy가 detection·segmentation·restoration quality를 보장하지 않습니다. Resolution·head·label geometry와 metric을 task별로 정해야 합니다.",
-      },
+      { id: "image-tensor-layout", sectionId: "overview", intuition: "색 성분별 숫자 표를 겹치고 여러 장을 batch로 묶은 것이 image tensor입니다.", workedExample: "RGB image 8장이 32×32이면 NCHW는 [8,3,32,32]입니다.", boundary: "NCHW와 NHWC, color·resize·normalization을 혼동하면 같은 숫자도 다른 image로 해석됩니다." },
+      { id: "cnn-cross-correlation", sectionId: "local-operator", intuition: "작은 숫자 필름을 image 위 한 위치에 포개고 같은 칸끼리 곱해 더합니다.", workedExample: "Patch [[1,2],[3,4]]와 kernel [[1,0],[0,−1]]의 score는 −3입니다.", boundary: "Library는 보통 kernel을 뒤집지 않는 cross-correlation을 계산하며 학습 kernel이 사람이 이름 붙인 edge detector라고 보장되지 않습니다." },
+      { id: "convolution-weight-sharing", sectionId: "shared-kernel", intuition: "같은 detector를 왼쪽 위와 오른쪽 아래에 따로 저장하지 않고 이동해 재사용합니다.", workedExample: "3×3,Cin=3,Cout=32는 resolution과 무관하게 bias 제외 864 weights입니다.", boundary: "Resolution이 커지면 parameter는 같아도 output cell·FLOPs·activation memory는 늘어납니다." },
+      { id: "convolution-spatial-geometry", sectionId: "output-geometry", intuition: "Padding된 축에 실제 kernel span을 놓고 stride만큼 움직일 수 있는 시작점 수를 셉니다.", workedExample: "H=7,K=3,P=1,S=2,D=1이면 output height 4입니다.", boundary: "same 이름만으로 asymmetric padding·ceil mode·짝수 kernel 동작을 확정하지 않습니다." },
     ],
     conceptStages: [
-      {
-        label: "측정과 축",
-        relation:
-          "Sensor·preprocessing 결과를 channel과 spatial coordinate가 있는 tensor로 고정",
-        concepts: ["tensor-batch", "image-tensor-layout"],
-      },
-      {
-        label: "Local operator",
-        relation: "Patch–kernel dot product를 위치마다 같은 parameter로 반복",
-        concepts: [
-          "coordinate-vector",
-          "dot-product",
-          "cnn-cross-correlation",
-          "convolution-weight-sharing",
-        ],
-      },
-      {
-        label: "공간 geometry",
-        relation: "Output grid·boundary·sampling phase와 이동 대칭을 계산",
-        concepts: [
-          "convolution-spatial-geometry",
-          "translation-equivariance",
-          "sampling-nyquist-boundary",
-        ],
-      },
-      {
-        label: "Context 범위",
-        relation: "Graph상 연결 범위와 실제 영향 분포를 나누고 dilation을 선택",
-        concepts: [
-          "cnn-receptive-field",
-          "effective-receptive-field",
-          "dilated-convolution",
-        ],
-      },
-      {
-        label: "구조와 task",
-        relation:
-          "연산 분해와 output spatial granularity를 data·hardware 기준으로 결정",
-        concepts: [
-          "depthwise-separable-convolution",
-          "cnn-task-spatial-contract",
-          "prediction-contract",
-        ],
-      },
+      { label: "01 tensor", relation: "Image measurement를 channel과 spatial coordinate로 고정합니다.", concepts: ["image-tensor-layout"] },
+      { label: "02 local score", relation: "Patch와 kernel의 같은 offset을 곱해 더합니다.", concepts: ["cnn-cross-correlation"] },
+      { label: "03 share", relation: "같은 kernel을 여러 시작 위치에 적용합니다.", concepts: ["convolution-weight-sharing"] },
+      { label: "04 geometry", relation: "Span·padding·stride로 output grid를 계산합니다.", concepts: ["convolution-spatial-geometry"] },
     ],
     exercises: [
-      {
-        level: "basic",
-        question:
-          "Batch 8의 32×32 RGB image를 NCHW와 NHWC shape으로 각각 쓰고 각 축이 무엇을 측정하는지 설명할 수 있을까요?",
-        answerChecklist: [
-          "NCHW=8×3×32×32를 쓴다.",
-          "NHWC=8×32×32×3을 쓴다.",
-          "Pixel coordinate와 channel 값이 sensor·preprocessing coordinate라는 점을 말한다.",
-        ],
-        requiredConcepts: ["tensor-batch", "image-tensor-layout"],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "5×5 single-channel input에 3×3 all-one kernel, stride 1, padding 0을 적용할 때 output shape·parameter 수와 첫 output 값을 계산할 수 있을까요?",
-        answerChecklist: [
-          "Output 3×3을 계산한다.",
-          "Bias 제외 parameter 9개를 계산한다.",
-          "첫 3×3 patch의 9개 값을 더한다고 설명한다.",
-        ],
-        requiredConcepts: [
-          "cnn-cross-correlation",
-          "convolution-spatial-geometry",
-          "convolution-weight-sharing",
-        ],
-        sectionId: "convolution-layer",
-      },
-      {
-        level: "basic",
-        question:
-          "H=28,k=3,p=1,s=2,dilation=1과 dilation=2의 output height를 각각 계산하고 차이를 설명할 수 있을까요?",
-        answerChecklist: [
-          "Dilation 1은 14를 계산한다.",
-          "Dilation 2는 13을 계산한다.",
-          "Dilation이 effective kernel span을 3에서 5로 바꾼다고 설명한다.",
-        ],
-        requiredConcepts: [
-          "convolution-spatial-geometry",
-          "dilated-convolution",
-        ],
-        sectionId: "convolution-layer",
-      },
-      {
-        level: "basic",
-        question:
-          "2×2 patch [[1,2],[3,4]]와 kernel [[1,0],[0,−1]]의 cross-correlation score를 계산하고 library 연산을 관례상 convolution이라고 부르는 이유를 설명할 수 있을까요?",
-        answerChecklist: [
-          "1·1+2·0+3·0+4·(−1)=−3을 계산한다.",
-          "Library가 보통 kernel을 뒤집지 않는 cross-correlation을 수행한다고 말한다.",
-          "Kernel 자체를 학습하므로 convention 차이를 parameter가 흡수한다고 설명한다.",
-        ],
-        requiredConcepts: ["dot-product", "cnn-cross-correlation"],
-        sectionId: "convolution-layer",
-      },
-      {
-        level: "basic",
-        question:
-          "3×3, Cin=3, Cout=32인 bias 포함 dense convolution의 parameter 수를 계산하고 input이 32×32에서 224×224로 바뀌어도 parameter 수가 같은 이유를 설명할 수 있을까요?",
-        answerChecklist: [
-          "3·3·3·32+32=896을 계산한다.",
-          "같은 kernel을 모든 spatial position에 공유하므로 H와 W가 parameter 식에 없다고 설명한다.",
-          "Resolution이 커지면 FLOPs와 activation memory는 늘 수 있다고 구분한다.",
-        ],
-        requiredConcepts: [
-          "convolution-weight-sharing",
-          "convolution-spatial-geometry",
-        ],
-        sectionId: "convolution-layer",
-      },
-      {
-        level: "basic",
-        question:
-          "고양이 image를 오른쪽으로 한 칸 옮겼을 때 feature map도 옮겨지는 경우와 최종 class score가 그대로인 경우를 equivariance와 invariance로 각각 분류할 수 있을까요?",
-        answerChecklist: [
-          "Feature 위치가 같은 양만큼 이동하는 관계를 translation equivariance라고 분류한다.",
-          "최종 class score가 이동 전후 같아지는 관계를 invariance라고 분류한다.",
-          "Stride·zero padding·finite boundary가 exact equivariance를 깰 수 있다고 말한다.",
-        ],
-        requiredConcepts: [
-          "translation-equivariance",
-          "convolution-weight-sharing",
-        ],
-        sectionId: "inductive-bias",
-      },
-      {
-        level: "advanced",
-        question:
-          "Stride-1 shared convolution의 translation equivariance를 index 치환으로 설명하고 stride 2·zero padding 반례를 만들 수 있을까요?",
-        answerChecklist: [
-          "Translated input을 합에 대입해 index를 치환한다.",
-          "Kernel에 output 위치 parameter가 없음을 사용한다.",
-          "한-pixel shift의 sampling phase 또는 boundary가 equality를 깨는 수치 예를 든다.",
-        ],
-        requiredConcepts: [
-          "cnn-cross-correlation",
-          "convolution-weight-sharing",
-          "translation-equivariance",
-          "convolution-spatial-geometry",
-        ],
-        sectionId: "inductive-bias",
-      },
-      {
-        level: "advanced",
-        question:
-          "3×3 convolution 세 층의 theoretical receptive field를 계산하고 effective receptive field를 실제 checkpoint에서 측정하는 실험을 설계할 수 있을까요?",
-        answerChecklist: [
-          "Stride 1이면 3→5→7을 계산한다.",
-          "Output scalar의 input gradient 또는 perturbation map을 정의한다.",
-          "여러 image·위치에서 영향 분포와 theoretical mask를 비교하고 checkpoint 의존성을 제한한다.",
-        ],
-        requiredConcepts: ["cnn-receptive-field", "effective-receptive-field"],
-        sectionId: "inductive-bias",
-      },
-      {
-        level: "advanced",
-        question:
-          "k=3,Cin=64,Cout=128,H=W=56에서 dense와 depthwise separable convolution의 MAC 비율을 계산하고 실제 latency가 다를 수 있는 이유를 설명할 수 있을까요?",
-        answerChecklist: [
-          "공통 HW를 소거하고 dense 3²·64·128과 separable 3²·64+64·128을 비교한다.",
-          "비율이 약 0.119임을 계산한다.",
-          "Memory traffic·kernel efficiency·launch overhead·device를 별도 측정한다.",
-        ],
-        requiredConcepts: [
-          "depthwise-separable-convolution",
-          "cnn-cross-correlation",
-        ],
-        sectionId: "architectures",
-      },
-      {
-        level: "advanced",
-        question:
-          "작은 물체 segmentation을 위해 CNN backbone을 고를 때 classification accuracy 하나로 결정하면 안 되는 이유와 평가표를 설계할 수 있을까요?",
-        answerChecklist: [
-          "Output stride·receptive field·boundary detail과 feature pyramid를 비교한다.",
-          "IoU 또는 boundary metric과 small-object subset을 포함한다.",
-          "Latency·activation memory·resolution·pretraining recipe를 같은 조건에서 기록한다.",
-        ],
-        requiredConcepts: [
-          "cnn-task-spatial-contract",
-          "cnn-receptive-field",
-          "convolution-spatial-geometry",
-          "depthwise-separable-convolution",
-        ],
-        sectionId: "applications",
-      },
+      { level: "basic", question: "Batch 8의 32×32 RGB image를 NCHW와 NHWC로 쓰세요.", answerChecklist: ["8×3×32×32", "8×32×32×3", "batch", "channel", "height", "width"], requiredConcepts: ["image-tensor-layout"], sectionId: "overview" },
+      { level: "basic", question: "2×2 patch와 [[1,0],[0,−1]] kernel의 score를 계산하세요.", answerChecklist: ["same offset", "1×1", "2×0", "3×0", "4×−1", "sum −3"], requiredConcepts: ["cnn-cross-correlation"], sectionId: "local-operator" },
+      { level: "basic", question: "Cross-correlation과 수학적 convolution의 kernel convention을 구분하세요.", answerChecklist: ["library no flip", "mathematical flip", "learned weights", "operator receipt", "same output shape", "name convention"], requiredConcepts: ["cnn-cross-correlation"], sectionId: "local-operator" },
+      { level: "basic", question: "3×3,Cin=3,Cout=32 convolution의 bias 제외 parameter를 계산하세요.", answerChecklist: ["3×3", "×3", "×32", "864", "H/W 없음", "shared"], requiredConcepts: ["convolution-weight-sharing"], sectionId: "shared-kernel" },
+      { level: "basic", question: "H=7,K=3,P=1,S=2,D=1 output height를 계산하세요.", answerChecklist: ["span 3", "padded 9", "room 6", "divide 2", "plus 1", "4"], requiredConcepts: ["convolution-spatial-geometry"], sectionId: "output-geometry" },
+      { level: "basic", question: "Resolution이 커질 때 parameter와 compute가 어떻게 달라지는지 설명하세요.", answerChecklist: ["kernel parameters same", "more positions", "FLOPs increase", "activation increase", "output geometry", "same channels assumption"], requiredConcepts: ["convolution-weight-sharing", "convolution-spatial-geometry"], sectionId: "shared-kernel" },
+      { level: "advanced", question: "Layout mismatch 반례와 fail-fast fixture를 설계하세요.", answerChecklist: ["NCHW/NHWC", "same shape ambiguity", "channel pattern fixture", "dtype/range", "expected output", "reject mismatch"], requiredConcepts: ["image-tensor-layout"], sectionId: "overview" },
+      { level: "advanced", question: "Even kernel·stride>1·same padding 구현 차이를 검증하세요.", answerChecklist: ["asymmetric sides", "floor/ceil", "framework version", "fixed tensor", "expected coordinates", "shape receipt"], requiredConcepts: ["convolution-spatial-geometry"], sectionId: "output-geometry" },
+      { level: "advanced", question: "Local operator implementation parity test를 설계하세요.", answerChecklist: ["fixed patch", "fixed kernel", "bias", "layout", "padding", "dtype tolerance", "output cells", "rollback"], requiredConcepts: ["cnn-cross-correlation", "convolution-spatial-geometry"], sectionId: "local-operator" },
+      { level: "advanced", question: "Shared kernel prior가 맞지 않는 absolute-position task 반례를 설계하세요.", answerChecklist: ["same pattern different location", "different label", "sharing conflict", "position channel", "boundary cue", "paired comparison"], requiredConcepts: ["convolution-weight-sharing"], sectionId: "shared-kernel" },
     ],
     papers: [
-      {
-        title: "Gradient-Based Learning Applied to Document Recognition",
-        href: "https://doi.org/10.1109/5.726791",
-        problem:
-          "Handcrafted feature와 분리된 classifier 대신 document image에서 feature extraction과 recognition을 end-to-end gradient로 학습하는 문제",
-        contribution:
-          "LeNet 계열 convolution·subsampling·classifier와 graph transformer를 문서 인식 system에 연결",
-        assumptions:
-          "당시 document dataset·image preprocessing·architecture와 compute 조건을 전제로 함",
-        evidenceScope:
-          "Handwritten character·check recognition 등 논문이 다룬 document recognition system 범위",
-        notClaim:
-          "현대 CNN의 모든 구성 요소를 이 논문 하나가 처음 제안했거나 모든 vision task에서 같은 recipe가 최선이라는 뜻은 아님",
-        sectionId: "paper-lenet",
-      },
-      {
-        title:
-          "ImageNet Classification with Deep Convolutional Neural Networks",
-        href: "https://proceedings.neurips.cc/paper/2012/hash/c399862d3b9d6b76c8436e924a68c45b-Abstract.html",
-        problem:
-          "Million-scale high-resolution image와 1,000 class를 충분한 capacity로 학습하는 문제",
-        contribution:
-          "Deep CNN에 GPU convolution·ReLU·augmentation·dropout을 결합해 ImageNet 성능을 크게 개선",
-        assumptions:
-          "ImageNet 2010/2012 data·two-GPU implementation·architecture·training recipe를 전제로 함",
-        evidenceScope:
-          "논문의 ImageNet classification error와 architecture·training 비교 범위",
-        notClaim:
-          "Reported gain이 convolution 또는 GPU 하나의 단독 효과이거나 오늘날 recipe에도 그대로 최적이라는 뜻은 아님",
-        sectionId: "paper-alexnet",
-      },
-      {
-        title:
-          "Understanding the Effective Receptive Field in Deep Convolutional Neural Networks",
-        href: "https://arxiv.org/abs/1701.04128",
-        problem:
-          "Theoretical receptive field 크기만으로 hidden unit이 실제 사용하는 image 영역을 설명하기 어려운 문제",
-        contribution:
-          "Effective receptive field를 정의하고 여러 architecture 요소에 따른 영향 분포를 이론·실험으로 분석",
-        assumptions:
-          "논문의 initialization·network family·gradient 기반 측정과 실험 조건을 전제로 함",
-        evidenceScope:
-          "분석한 architecture에서 ERF 크기·shape와 nonlinear·dropout·subsampling·skip 효과 범위",
-        notClaim:
-          "모든 trained CNN의 영향 분포가 언제나 같은 Gaussian이거나 ERF 하나로 model behavior가 완전히 설명된다는 뜻은 아님",
-        sectionId: "paper-effective-receptive-field",
-      },
-      {
-        title: "Multi-Scale Context Aggregation by Dilated Convolutions",
-        href: "https://arxiv.org/abs/1511.07122",
-        problem:
-          "Dense prediction에서 spatial resolution을 잃지 않고 더 넓은 context를 모으는 문제",
-        contribution:
-          "Dilated convolution으로 multi-scale context module을 구성하고 semantic segmentation에서 평가",
-        assumptions:
-          "논문의 front-end·context module·segmentation dataset과 training 조건을 전제로 함",
-        evidenceScope:
-          "VOC 등 논문이 보고한 dense prediction architecture·결과 범위",
-        notClaim:
-          "Dilation이 모든 gridding·aliasing·경계 문제를 해결하거나 모든 task에서 downsampling보다 낫다는 뜻은 아님",
-        sectionId: "paper-dilated-convolution",
-      },
-      {
-        title:
-          "MobileNets: Efficient Convolutional Neural Networks for Mobile Vision Applications",
-        href: "https://arxiv.org/abs/1704.04861",
-        problem:
-          "Mobile·embedded compute budget에서 CNN accuracy와 cost를 조절하는 문제",
-        contribution:
-          "Depthwise separable convolution과 width·resolution multiplier를 이용한 model family 제안",
-        assumptions:
-          "논문의 MAC 회계·ImageNet training·target use case와 당시 hardware 조건을 전제로 함",
-        evidenceScope:
-          "ImageNet과 detection·fine-grained 등 논문에 보고된 accuracy–resource trade-off 범위",
-        notClaim:
-          "MAC 감소가 모든 accelerator에서 같은 latency·energy 감소를 만들거나 quality loss가 없다는 뜻은 아님",
-        sectionId: "paper-mobilenet",
-      },
-      {
-        title: "A ConvNet for the 2020s",
-        href: "https://arxiv.org/abs/2201.03545",
-        problem:
-          "Transformer 시대의 training·architecture 선택과 비교할 때 classic ResNet design의 경쟁력을 공정하게 재검토하는 문제",
-        contribution:
-          "ResNet baseline을 단계적으로 modernize해 pure ConvNet인 ConvNeXt를 구성",
-        assumptions:
-          "ImageNet-1K/22K pretraining·downstream transfer·논문의 staged recipe와 compute를 전제로 함",
-        evidenceScope:
-          "논문의 classification·detection·segmentation 결과와 단계별 design study 범위",
-        notClaim:
-          "Large kernel이나 LayerNorm 하나가 단독으로 모든 개선을 만들었거나 CNN이 모든 Transformer를 앞선다는 뜻은 아님",
-        sectionId: "paper-convnext",
-      },
-      {
-        title:
-          "An Image is Worth 16×16 Words: Transformers for Image Recognition at Scale",
-        href: "https://arxiv.org/abs/2010.11929",
-        problem:
-          "Convolution-specific operator 없이 image patch sequence를 Transformer로 학습하고 transfer할 수 있는지 확인하는 문제",
-        contribution:
-          "Patch embedding과 pure Transformer encoder를 large-scale pretraining 뒤 image recognition에 transfer",
-        assumptions:
-          "JFT/ImageNet pretraining scale·patch size·augmentation·compute와 downstream setting을 전제로 함",
-        evidenceScope:
-          "논문의 image classification transfer와 data-scale 비교 범위",
-        notClaim:
-          "ViT가 제한된 data·모든 resolution·latency budget에서 CNN보다 항상 우월하거나 attention이 자동으로 올바른 global relation을 배운다는 뜻은 아님",
-        sectionId: "paper-vit",
-      },
+      { title: "Gradient-Based Learning Applied to Document Recognition", href: "https://doi.org/10.1109/5.726791", problem: "Handcrafted feature와 classifier를 분리하지 않고 document image에서 end-to-end 학습하는 문제", contribution: "LeNet convolution·subsampling·classifier를 document recognition system에 연결", assumptions: "당시 dataset·preprocessing·architecture·compute를 전제로 함", evidenceScope: "논문의 character·document recognition 결과 범위", notClaim: "현대 CNN의 모든 요소를 처음 제안했거나 모든 vision task의 최적 recipe라는 뜻은 아님", sectionId: "paper-lenet" },
     ],
   },
-  "ai/bert": {
+  "ai/cnn-translation-equivariance": {
+    entryLevel: true,
+    entryNote: "Pattern 위치와 feature peak 위치를 함께 표시해 이동 관계부터 봅니다.",
+    coreIdea: "Translation equivariance는 input shift가 output feature shift로 대응하는 성질이며 shared stride-1 operator에서 나타나지만 stride phase·finite boundary·pooling이 exact equality를 깰 수 있습니다.",
+    assumedKnowledge: [],
+    introducedHere: [{ id: "translation-equivariance", role: "Input translation과 output translation의 대응 및 invariance와의 경계를 정의합니다." }],
+    conceptExplanations: [
+      { id: "translation-equivariance", sectionId: "equivariance", intuition: "물체를 오른쪽으로 옮기면 detector 반응 위치도 오른쪽으로 옮겨갑니다.", workedExample: "Stride-1 shared kernel에서 input을 1칸 shift하면 center feature peak도 1칸 shift합니다.", boundary: "Zero padding·stride>1·crop·pooling은 exact equality를 깰 수 있고 최종 score 불변성과 다릅니다.", proofIdea: "Translated input을 shared cross-correlation 합에 넣고 index를 치환하면 원 output의 좌표만 이동한 식이 됩니다.", counterexample: "Stride 2에서는 1-pixel input shift가 sampling phase를 바꿔 단순 output shift가 되지 않습니다." },
+    ],
+    conceptStages: [
+      { label: "01 transform", relation: "Input pattern을 integer offset만큼 이동합니다.", concepts: ["translation-equivariance"] },
+      { label: "02 shared response", relation: "같은 local operator의 response 좌표를 비교합니다.", concepts: ["translation-equivariance"] },
+      { label: "03 counterexample", relation: "Stride와 boundary에서 equality가 깨지는 조건을 찾습니다.", concepts: ["translation-equivariance"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Equivariance와 invariance를 구분하세요.", answerChecklist: ["input transform", "output transform", "same relation", "invariant same value", "feature vs score", "example"], requiredConcepts: ["translation-equivariance"], sectionId: "overview" },
+      { level: "basic", question: "Shared kernel이 왜 필요한지 설명하세요.", answerChecklist: ["same weights", "no position-specific parameter", "shifted patch", "same score rule", "output coordinate", "prior"], requiredConcepts: ["translation-equivariance"], sectionId: "equivariance" },
+      { level: "basic", question: "Stride-1 한 pixel shift의 expected output을 설명하세요.", answerChecklist: ["input +1", "feature +1", "same values interior", "boundary excluded", "coordinate frame", "not class invariance"], requiredConcepts: ["translation-equivariance"], sectionId: "equivariance" },
+      { level: "basic", question: "Stride 2가 한 pixel shift를 깨는 이유를 설명하세요.", answerChecklist: ["sampling phase", "even/odd", "not integer output shift", "subsampling", "aliasing", "counterexample"], requiredConcepts: ["translation-equivariance"], sectionId: "counterexamples" },
+      { level: "basic", question: "Zero padding boundary 반례를 설명하세요.", answerChecklist: ["virtual zeros", "pattern enters/leaves", "different neighborhood", "finite grid", "center vs edge", "equality broken"], requiredConcepts: ["translation-equivariance"], sectionId: "counterexamples" },
+      { level: "basic", question: "Global pooling이 만드는 invariance 직관을 설명하세요.", answerChecklist: ["shifted feature map", "aggregate positions", "same aggregate possible", "detail lost", "boundary caveat", "not exact guarantee"], requiredConcepts: ["translation-equivariance"], sectionId: "counterexamples" },
+      { level: "advanced", question: "Index substitution proof를 전개하세요.", answerChecklist: ["define T_a", "substitute x[r-a]", "shared w", "change index", "f(x)[p-a]", "assumptions"], requiredConcepts: ["translation-equivariance"], sectionId: "equivariance" },
+      { level: "advanced", question: "Shift sensitivity benchmark를 설계하세요.", answerChecklist: ["integer shifts", "center/boundary", "one/stride multiple", "inverse shift feature", "difference metric", "same checkpoint"], requiredConcepts: ["translation-equivariance"], sectionId: "release" },
+      { level: "advanced", question: "Augmentation robustness와 exact equivariance를 분리 검증하세요.", answerChecklist: ["learned robustness", "mathematical equality", "unseen shifts", "feature-level metric", "task metric", "confidence"], requiredConcepts: ["translation-equivariance"], sectionId: "release" },
+      { level: "advanced", question: "Anti-alias candidate release gate를 설계하세요.", answerChecklist: ["baseline parity", "shift slices", "quality", "latency", "resolution", "boundary", "version", "rollback"], requiredConcepts: ["translation-equivariance"], sectionId: "release" },
+    ],
+    papers: [
+      { title: "Making Convolutional Networks Shift-Invariant Again", href: "https://arxiv.org/abs/1904.11486", problem: "작은 input shift와 downsampling aliasing이 output stability를 깨는 문제", contribution: "Anti-aliased downsampling을 제안하고 shift stability를 평가", assumptions: "논문의 architecture·filter·dataset·shift protocol을 전제로 함", evidenceScope: "분석한 CNN의 shift stability와 task 결과 범위", notClaim: "모든 shift robustness나 exact group equivariance를 자동 보장한다는 뜻은 아님", sectionId: "paper-shift-invariance" },
+    ],
+  },
+  "ai/cnn-receptive-fields": {
+    entryLevel: true,
+    entryNote: "Hidden unit 하나에서 input까지 연결선을 거꾸로 따라가며 범위를 셉니다.",
+    coreIdea: "Theoretical receptive field는 graph상 연결된 input span이고 effective receptive field는 특정 checkpoint·sample·output에서 실제 영향이 집중된 분포이며 dilation은 tap 간격으로 theoretical span을 넓힙니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "cnn-receptive-field", role: "Layer별 kernel·stride·dilation로 theoretical input span을 누적합니다." },
+      { id: "effective-receptive-field", role: "실제 output sensitivity가 분포한 input 영역을 측정합니다." },
+      { id: "dilated-convolution", role: "Tap 수 없이 tap 간격을 벌려 span을 넓힙니다." },
+    ],
+    conceptExplanations: [
+      { id: "cnn-receptive-field", sectionId: "theoretical", intuition: "위 unit에서 계산선을 아래로 따라갔을 때 닿는 원 image 주소 범위입니다.", workedExample: "Stride-1 3×3 convolution 세 층은 3→5→7 span입니다.", boundary: "연결됐다는 사실이 같은 영향력을 뜻하지 않고 branch·padding은 path별로 봅니다." },
+      { id: "effective-receptive-field", sectionId: "effective", intuition: "연결된 큰 창 안에서 실제 prediction을 크게 흔드는 pixel의 영향 지도입니다.", workedExample: "Output scalar의 input gradient absolute value를 여러 image에서 heatmap으로 비교합니다.", boundary: "Checkpoint·sample·output·측정 방법에 의존하며 Gaussian-like 관찰을 고정 법칙으로 보지 않습니다." },
+      { id: "dilated-convolution", sectionId: "dilation", intuition: "Kernel tap 사이에 빈 칸을 두어 같은 tap 수로 더 먼 좌표를 읽습니다.", workedExample: "k=3,d=2는 0·2·4 세 좌표를 읽어 span 5를 만듭니다.", boundary: "Dense 5-wide kernel이 아니며 겹침이 부족하면 gridding artifact가 생깁니다." },
+    ],
+    conceptStages: [
+      { label: "01 graph span", relation: "Layer별 jump와 span을 누적합니다.", concepts: ["cnn-receptive-field"] },
+      { label: "02 measured influence", relation: "Gradient·perturbation으로 실제 영향 분포를 측정합니다.", concepts: ["effective-receptive-field"] },
+      { label: "03 sparse expansion", relation: "Dilation으로 tap 간격과 gridding 경계를 봅니다.", concepts: ["dilated-convolution"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Stride-1 3×3 두 층의 receptive field를 계산하세요.", answerChecklist: ["first 3", "add 2", "second 5", "one axis", "5×5", "theoretical"], requiredConcepts: ["cnn-receptive-field"], sectionId: "theoretical" },
+      { level: "basic", question: "Receptive-field 계산에서 jump j가 나타내는 원 input 좌표 간격과 stride를 쌓을 때의 갱신을 설명하세요.", answerChecklist: ["neighbor hidden units", "original input distance", "stride product", "per axis", "not RF size", "initial 1"], requiredConcepts: ["cnn-receptive-field"], sectionId: "theoretical" },
+      { level: "basic", question: "Theoretical과 effective field를 구분하세요.", answerChecklist: ["graph connectivity", "measured influence", "checkpoint dependence", "sample dependence", "large vs concentrated", "different claims"], requiredConcepts: ["cnn-receptive-field", "effective-receptive-field"], sectionId: "overview" },
+      { level: "basic", question: "Effective field 측정법 하나를 설명하세요.", answerChecklist: ["choose output", "input gradient or perturb", "absolute sensitivity", "heatmap", "multiple images", "same checkpoint"], requiredConcepts: ["effective-receptive-field"], sectionId: "effective" },
+      { level: "basic", question: "k=3,d=2의 span과 읽는 좌표를 적으세요.", answerChecklist: ["span 5", "three taps", "0 2 4", "skip 1 3", "same parameters", "not dense"], requiredConcepts: ["dilated-convolution"], sectionId: "dilation" },
+      { level: "basic", question: "Dilation gridding을 설명하세요.", answerChecklist: ["sparse taps", "repeated pattern", "uncovered coordinates", "local detail", "multiple rates", "counterexample"], requiredConcepts: ["dilated-convolution"], sectionId: "dilation" },
+      { level: "advanced", question: "Mixed stride·dilation network의 jump와 RF를 계산하세요.", answerChecklist: ["initialize j=1 r=1", "layer order", "j update", "span update", "units", "final value"], requiredConcepts: ["cnn-receptive-field", "dilated-convolution"], sectionId: "theoretical" },
+      { level: "advanced", question: "ERF 비교 experiment를 설계하세요.", answerChecklist: ["same output", "same normalization", "multiple samples", "gradient/perturbation", "mass radius", "confidence", "failure images"], requiredConcepts: ["effective-receptive-field"], sectionId: "effective" },
+      { level: "advanced", question: "Large theoretical RF가 context use를 보장하지 않는 반례를 설명하세요.", answerChecklist: ["weak outer gradients", "saturation", "learned weights", "center concentration", "sample-specific", "measure actual influence"], requiredConcepts: ["cnn-receptive-field", "effective-receptive-field"], sectionId: "effective" },
+      { level: "advanced", question: "Dilation candidate release gate를 설계하세요.", answerChecklist: ["same resolution", "same compute budget", "boundary slices", "gridding images", "quality", "latency", "ERF", "rollback"], requiredConcepts: ["dilated-convolution", "effective-receptive-field"], sectionId: "dilation" },
+    ],
+    papers: [
+      { title: "Understanding the Effective Receptive Field", href: "https://arxiv.org/abs/1701.04128", problem: "Theoretical 크기만으로 hidden unit의 실제 image 영향 범위를 설명하기 어려운 문제", contribution: "Effective receptive field를 정의하고 architecture 요소별 영향 분포를 분석", assumptions: "논문의 initialization·network·gradient 측정을 전제로 함", evidenceScope: "분석한 architecture의 ERF size·shape 결과 범위", notClaim: "모든 trained CNN의 영향 분포가 같은 고정 법칙이라는 뜻은 아님", sectionId: "paper-effective-receptive-field" },
+      { title: "Multi-Scale Context Aggregation by Dilated Convolutions", href: "https://arxiv.org/abs/1511.07122", problem: "Dense prediction에서 resolution을 잃지 않고 넓은 context를 모으는 문제", contribution: "Dilated convolution multi-scale context module을 제안", assumptions: "논문의 segmentation architecture·dataset·training을 전제로 함", evidenceScope: "논문이 보고한 dense prediction 결과 범위", notClaim: "모든 gridding·aliasing·boundary 문제를 해결한다는 뜻은 아님", sectionId: "paper-dilated-convolution" },
+    ],
+  },
+  "ai/depthwise-separable-convolution": {
+    entryLevel: true,
+    entryNote: "Spatial filtering과 channel mixing을 두 그림으로 나눠 각 MAC를 셉니다.",
+    coreIdea: "Depthwise separable convolution은 channel별 k×k spatial filtering과 1×1 channel mixing으로 dense convolution을 분해해 MAC를 줄이지만 실제 latency·traffic·quality는 device에서 따로 측정해야 합니다.",
+    assumedKnowledge: [],
+    introducedHere: [{ id: "depthwise-separable-convolution", role: "Depthwise spatial filter와 pointwise channel mixer의 계산·runtime 경계를 정의합니다." }],
+    conceptExplanations: [
+      { id: "depthwise-separable-convolution", sectionId: "overview", intuition: "각 색상 층 안에서 모양을 찾은 뒤 같은 pixel의 여러 층을 섞습니다.", workedExample: "k=3,Cin=64,Cout=128의 위치당 separable/dense MAC 비율은 약 0.119입니다.", boundary: "MAC 감소가 device latency나 energy와 같은 비율이라는 뜻은 아니며 intermediate traffic·kernel 효율과 quality를 측정합니다." },
+    ],
+    conceptStages: [
+      { label: "01 dense baseline", relation: "Spatial tap과 channel pair를 함께 계산합니다.", concepts: ["depthwise-separable-convolution"] },
+      { label: "02 depthwise", relation: "Channel별 spatial filtering으로 분리합니다.", concepts: ["depthwise-separable-convolution"] },
+      { label: "03 pointwise", relation: "1×1에서 channel을 혼합합니다.", concepts: ["depthwise-separable-convolution"] },
+      { label: "04 runtime", relation: "MAC 뒤 traffic·latency·quality를 측정합니다.", concepts: ["depthwise-separable-convolution"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Dense 위치당 MAC 식을 쓰세요.", answerChecklist: ["k squared", "Cin", "Cout", "multiply", "spatial common omitted", "channel pairs"], requiredConcepts: ["depthwise-separable-convolution"], sectionId: "cost" },
+      { level: "basic", question: "Depthwise 위치당 MAC를 쓰세요.", answerChecklist: ["k squared", "Cin", "no Cout mixing", "per channel", "spatial filter", "output channels interim Cin"], requiredConcepts: ["depthwise-separable-convolution"], sectionId: "cost" },
+      { level: "basic", question: "Pointwise 위치당 MAC를 쓰세요.", answerChecklist: ["1×1", "Cin", "Cout", "same location", "channel mix", "no spatial neighborhood"], requiredConcepts: ["depthwise-separable-convolution"], sectionId: "cost" },
+      { level: "basic", question: "k=3,Cin=32,Cout=64의 dense와 separable MAC를 계산하세요.", answerChecklist: ["18432 dense", "288 depthwise", "2048 pointwise", "2336 total", "ratio", "same output geometry"], requiredConcepts: ["depthwise-separable-convolution"], sectionId: "cost" },
+      { level: "basic", question: "Depthwise와 pointwise 역할을 구분하세요.", answerChecklist: ["within channel spatial", "across channel mixing", "two operators", "intermediate feature", "order", "shared spatial locations"], requiredConcepts: ["depthwise-separable-convolution"], sectionId: "overview" },
+      { level: "basic", question: "MAC와 latency가 다른 이유를 설명하세요.", answerChecklist: ["memory traffic", "launch", "vectorization", "kernel support", "batch/shape", "measure device"], requiredConcepts: ["depthwise-separable-convolution"], sectionId: "runtime" },
+      { level: "advanced", question: "Dense와 separable benchmark를 설계하세요.", answerChecklist: ["same input/output", "same dtype/layout", "warmup", "median/p95", "traffic", "energy", "quality", "versions"], requiredConcepts: ["depthwise-separable-convolution"], sectionId: "runtime" },
+      { level: "advanced", question: "Intermediate write가 이득을 줄이는 반례를 설명하세요.", answerChecklist: ["two kernels", "write depthwise", "read pointwise", "low arithmetic intensity", "small tensor", "fusion candidate"], requiredConcepts: ["depthwise-separable-convolution"], sectionId: "runtime" },
+      { level: "advanced", question: "Width multiplier 비교에서 공정한 축을 정하세요.", answerChecklist: ["channels changed", "parameters", "MAC", "latency", "activation", "accuracy", "same resolution", "training recipe"], requiredConcepts: ["depthwise-separable-convolution"], sectionId: "paper-mobilenet" },
+      { level: "advanced", question: "Deployment release gate를 설계하세요.", answerChecklist: ["quality threshold", "device latency", "energy", "memory", "shape slices", "fallback dense", "artifact version", "rollback"], requiredConcepts: ["depthwise-separable-convolution"], sectionId: "runtime" },
+    ],
+    papers: [
+      { title: "MobileNets", href: "https://arxiv.org/abs/1704.04861", problem: "Mobile compute budget에서 CNN accuracy와 cost를 조절하는 문제", contribution: "Depthwise separable convolution과 width·resolution multiplier를 제안", assumptions: "논문의 MAC 회계·ImageNet recipe·hardware 시대를 전제로 함", evidenceScope: "논문이 보고한 accuracy-resource trade-off 범위", notClaim: "MAC 감소가 모든 accelerator에서 같은 latency·energy 감소를 보장한다는 뜻은 아님", sectionId: "paper-mobilenet" },
+    ],
+  },
+  "ai/vision-task-spatial-contracts": {
+    entryLevel: true,
+    entryNote: "Image·object·pixel 중 task가 답해야 할 단위를 먼저 고릅니다.",
+    coreIdea: "Vision task spatial contract는 classification·detection·segmentation·restoration의 prediction unit과 output coordinate를 먼저 정하고 backbone이 보존해야 할 resolution·boundary·multi-scale evidence를 역으로 결정합니다.",
+    assumedKnowledge: [],
+    introducedHere: [{ id: "cnn-task-spatial-contract", role: "Vision task별 prediction unit·output tensor와 보존할 spatial detail을 정합니다." }],
+    conceptExplanations: [
+      { id: "cnn-task-spatial-contract", sectionId: "overview", intuition: "사진 하나에 이름표를 붙이는 일과 모든 pixel에 이름표를 붙이는 일은 남겨야 할 좌표가 다릅니다.", workedExample: "Classification은 spatial pool 뒤 B×C, segmentation은 output grid를 유지해 B×C×Ho×Wo를 만듭니다.", boundary: "Classification accuracy가 detection·segmentation·restoration quality를 보장하지 않으며 task별 label geometry·metric·resolution이 필요합니다." },
+    ],
+    conceptStages: [
+      { label: "01 prediction unit", relation: "Image·object·pixel·output image 중 답 단위를 정합니다.", concepts: ["cnn-task-spatial-contract"] },
+      { label: "02 output tensor", relation: "Class·box·mask·image output axis를 정의합니다.", concepts: ["cnn-task-spatial-contract"] },
+      { label: "03 preserve evidence", relation: "Output stride·multi-scale·skip path를 선택합니다.", concepts: ["cnn-task-spatial-contract"] },
+      { label: "04 release", relation: "Task별 quality slice와 cost로 승인합니다.", concepts: ["cnn-task-spatial-contract"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Classification output unit과 shape를 설명하세요.", answerChecklist: ["per image", "B×C", "spatial pool", "class logits", "fixed vector", "label map"], requiredConcepts: ["cnn-task-spatial-contract"], sectionId: "output-shapes" },
+      { level: "basic", question: "Detection output unit을 설명하세요.", answerChecklist: ["per object", "class", "four box coordinates", "K candidates", "image frame", "matching/NMS implementation"], requiredConcepts: ["cnn-task-spatial-contract"], sectionId: "output-shapes" },
+      { level: "basic", question: "Segmentation output shape를 설명하세요.", answerChecklist: ["per pixel", "B×C×Ho×Wo", "spatial grid", "label alignment", "upsampling", "boundary"], requiredConcepts: ["cnn-task-spatial-contract"], sectionId: "output-shapes" },
+      { level: "basic", question: "Restoration이 보존할 정보를 설명하세요.", answerChecklist: ["output image", "coordinate alignment", "color", "texture", "global structure", "metric"], requiredConcepts: ["cnn-task-spatial-contract"], sectionId: "overview" },
+      { level: "basic", question: "Output stride의 의미를 설명하세요.", answerChecklist: ["feature-cell spacing", "input pixels", "downsampling product", "small object", "boundary detail", "not RF same"], requiredConcepts: ["cnn-task-spatial-contract"], sectionId: "preservation" },
+      { level: "basic", question: "Skip path가 segmentation에 필요한 이유를 설명하세요.", answerChecklist: ["high-resolution feature", "encoder detail", "decoder", "boundary", "alignment", "not automatic recovery"], requiredConcepts: ["cnn-task-spatial-contract"], sectionId: "preservation" },
+      { level: "advanced", question: "Small-object detection backbone 비교표를 설계하세요.", answerChecklist: ["input resolution", "output stride", "multi-scale", "AP small", "latency", "activation memory", "same training", "failure images"], requiredConcepts: ["cnn-task-spatial-contract"], sectionId: "release" },
+      { level: "advanced", question: "Classification winner가 segmentation에서 지는 반례를 설명하세요.", answerChecklist: ["global pooled invariant", "coarse stride", "boundary lost", "head cannot recover", "IoU/boundary metric", "different task contract"], requiredConcepts: ["cnn-task-spatial-contract"], sectionId: "release" },
+      { level: "advanced", question: "Resize·crop coordinate receipt를 설계하세요.", answerChecklist: ["original size", "scale", "crop offset", "padding", "label transform", "inverse map", "augmentation seed", "version"], requiredConcepts: ["cnn-task-spatial-contract"], sectionId: "preservation" },
+      { level: "advanced", question: "Vision task release gate를 설계하세요.", answerChecklist: ["prediction unit", "output shape", "task metric", "failure slices", "latency", "memory", "pretraining/head budget", "rollback"], requiredConcepts: ["cnn-task-spatial-contract"], sectionId: "release" },
+    ],
+    papers: [
+      { title: "Fully Convolutional Networks for Semantic Segmentation", href: "https://arxiv.org/abs/1411.4038", problem: "Classification network를 image-aligned dense prediction으로 바꾸는 문제", contribution: "Fully convolutional prediction과 coarse·fine skip architecture를 제안", assumptions: "논문의 architecture·dataset·upsampling·training을 전제로 함", evidenceScope: "논문이 보고한 semantic segmentation 결과 범위", notClaim: "모든 modern segmentation head나 detection·restoration metric을 규정한다는 뜻은 아님", sectionId: "paper-fcn" },
+    ],
+  },
+ "ai/bert": {
     entryLevel: true,
     entryNote: "Attention 이름부터 외우지 않고 query 하나가 어느 token을 볼 수 있는지 그림으로 확인합니다.",
     coreIdea: "BERT encoder는 입력 전체가 주어진 상태에서 각 실제 token이 왼쪽과 오른쪽의 실제 token을 읽어 contextual state를 만들고 PAD key는 닫습니다.",

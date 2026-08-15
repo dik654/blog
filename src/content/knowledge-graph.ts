@@ -567,7 +567,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "CNN cross-correlation operator",
     definition:
       "작은 kernel과 input의 local window를 같은 channel·offset끼리 곱해 더하고, 학습된 kernel을 모든 spatial 위치에 반복 적용하는 연산입니다.",
-    canonicalHref: "/ai/cnn#convolution-layer",
+    canonicalHref: "/ai/cnn#local-operator",
   },
   "convolution-weight-sharing": {
     id: "convolution-weight-sharing",
@@ -575,7 +575,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Local connectivity · weight sharing",
     definition:
       "각 output이 가까운 input만 읽도록 연결 범위를 제한하고 동일 kernel parameter를 여러 spatial 위치에서 재사용하는 CNN의 parameterization입니다.",
-    canonicalHref: "/ai/cnn#convolution-layer",
+    canonicalHref: "/ai/cnn#shared-kernel",
   },
   "convolution-spatial-geometry": {
     id: "convolution-spatial-geometry",
@@ -583,7 +583,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Convolution spatial geometry",
     definition:
       "Kernel size·stride·padding·dilation이 읽는 input 좌표와 output grid의 크기·간격·경계 처리를 정하는 shape 계약입니다.",
-    canonicalHref: "/ai/cnn#convolution-layer",
+    canonicalHref: "/ai/cnn#output-geometry",
   },
   "translation-equivariance": {
     id: "translation-equivariance",
@@ -592,7 +592,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Translation equivariance",
     definition:
       "같은 local operator를 위치에 공유하면 이상적인 stride-1·일관된 boundary 조건에서 input translation이 output의 같은 translation으로 대응한다는 성질입니다.",
-    canonicalHref: "/ai/cnn#inductive-bias",
+    canonicalHref: "/ai/cnn-translation-equivariance#equivariance",
   },
   "cnn-receptive-field": {
     id: "cnn-receptive-field",
@@ -600,7 +600,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Theoretical receptive field",
     definition:
       "특정 hidden unit과 계산 그래프를 통해 연결된 원래 input 좌표 범위로, layer별 kernel·stride·dilation을 따라 누적됩니다.",
-    canonicalHref: "/ai/cnn#inductive-bias",
+    canonicalHref: "/ai/cnn-receptive-fields#theoretical",
   },
   "effective-receptive-field": {
     id: "effective-receptive-field",
@@ -608,7 +608,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Effective receptive field",
     definition:
       "이론적으로 연결된 범위 중 실제 output 변화나 gradient에 의미 있게 기여하는 영역과 그 영향 분포입니다.",
-    canonicalHref: "/ai/cnn#inductive-bias",
+    canonicalHref: "/ai/cnn-receptive-fields#effective",
   },
   "dilated-convolution": {
     id: "dilated-convolution",
@@ -617,7 +617,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Dilated convolution",
     definition:
       "Kernel tap 사이를 일정 간격으로 벌려 spatial resolution을 즉시 낮추지 않고 theoretical receptive field를 넓히는 convolution입니다.",
-    canonicalHref: "/ai/cnn#inductive-bias",
+    canonicalHref: "/ai/cnn-receptive-fields#dilation",
   },
   "depthwise-separable-convolution": {
     id: "depthwise-separable-convolution",
@@ -626,7 +626,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Depthwise separable convolution",
     definition:
       "Channel별 spatial filtering을 하는 depthwise convolution과 channel을 섞는 1×1 pointwise convolution으로 dense convolution을 분해한 연산입니다.",
-    canonicalHref: "/ai/cnn#architectures",
+    canonicalHref: "/ai/depthwise-separable-convolution#overview",
   },
   "cnn-task-spatial-contract": {
     id: "cnn-task-spatial-contract",
@@ -634,7 +634,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Vision task spatial-output contract",
     definition:
       "Classification·detection·segmentation·restoration이 각각 image·object·pixel 단위로 요구하는 출력과 보존해야 할 spatial detail을 정한 계약입니다.",
-    canonicalHref: "/ai/cnn#applications",
+    canonicalHref: "/ai/vision-task-spatial-contracts#overview",
   },
   "optimization-degradation": {
     id: "optimization-degradation",
