@@ -1364,25 +1364,39 @@ export const ARTICLE_EVIDENCE: Readonly<
       kind: "공식 문서",
       label: "PyTorch — Learning Rate Scheduler",
       href: "https://docs.pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate",
-      note: "StepLR·ExponentialLR·CosineAnnealingLR·OneCycleLR의 현재 API와 step 순서",
+      note: "Optimizer update 뒤 scheduler 호출과 state·parameter-group LR의 현재 API semantics",
     },
+  ],
+  "ai/lr-decay-policies": [
+    {
+      kind: "공식 문서",
+      label: "PyTorch — LRScheduler and ReduceLROnPlateau",
+      href: "https://docs.pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate",
+      note: "StepLR·ExponentialLR의 clock 입력과 ReduceLROnPlateau의 metric 입력을 구분",
+    },
+  ],
+  "ai/cosine-restart-scheduling": [
     {
       kind: "핵심 논문",
       label: "SGDR: Stochastic Gradient Descent with Warm Restarts",
       href: "https://arxiv.org/abs/1608.03983",
-      note: "cosine annealing과 warm restart를 제안하고 anytime performance를 평가",
+      note: "cosine annealing과 partial warm restart·cycle expansion을 제안",
     },
+  ],
+  "ai/one-cycle-scheduling": [
     {
       kind: "핵심 논문",
       label: "Super-Convergence: Very Fast Training Using Large Learning Rates",
       href: "https://arxiv.org/abs/1708.07120",
-      note: "큰 maximum learning rate와 one-cycle policy의 조건부 빠른 수렴 현상",
+      note: "큰 maximum learning rate와 one-cycle policy·range-test 관찰의 조건부 범위",
     },
+  ],
+  "ai/warmup-scheduling": [
     {
       kind: "핵심 논문",
       label: "On the Adequacy of Untuned Warmup for Adaptive Optimization",
       href: "https://arxiv.org/abs/1910.04209",
-      note: "adaptive optimizer의 초기 variance와 warmup schedule을 분석",
+      note: "Adam 초기 update magnitude와 simple untuned linear warmup을 분석",
     },
   ],
   "ai/regularization-practice": [

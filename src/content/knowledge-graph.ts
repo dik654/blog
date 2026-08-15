@@ -1632,7 +1632,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Open-loop learning-rate decay",
     definition:
       "Validation 결과가 아니라 미리 정한 update milestone이나 decay factor만으로 learning rate를 낮추는 step·exponential 계열 정책입니다.",
-    canonicalHref: "/ai/lr-scheduling#step-exponential",
+    canonicalHref: "/ai/lr-decay-policies#open-loop",
   },
   "metric-triggered-lr-decay": {
     id: "metric-triggered-lr-decay",
@@ -1641,7 +1641,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Metric-triggered learning-rate decay",
     definition:
       "Validation metric의 best·threshold·patience·cooldown state를 관찰해 개선이 멈췄다고 판정할 때 learning rate를 낮추는 closed-loop 정책입니다.",
-    canonicalHref: "/ai/lr-scheduling#step-exponential",
+    canonicalHref: "/ai/lr-decay-policies#metric-trigger",
   },
   "cosine-annealing-progress": {
     id: "cosine-annealing-progress",
@@ -1650,7 +1650,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Cosine annealing progress",
     definition:
       "Cycle 진행률 t/T를 cosine 반 주기에 넣어 maximum과 minimum learning rate 사이를 시작과 끝에서 완만하게 보간하는 schedule입니다.",
-    canonicalHref: "/ai/lr-scheduling#cosine",
+    canonicalHref: "/ai/cosine-restart-scheduling#cosine-progress",
   },
   "warm-restart-state-boundary": {
     id: "warm-restart-state-boundary",
@@ -1659,7 +1659,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Warm-restart state boundary",
     definition:
       "Cosine cycle 경계에서 learning rate는 다시 높이되 model과 optimizer learning state는 이어가는 restart 규칙입니다.",
-    canonicalHref: "/ai/lr-scheduling#cosine",
+    canonicalHref: "/ai/cosine-restart-scheduling#restart-state",
   },
   "one-cycle-policy": {
     id: "one-cycle-policy",
@@ -1668,7 +1668,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "One-cycle policy",
     definition:
       "고정된 total update budget 안에서 learning rate를 maximum까지 올렸다가 very small final value로 내리고 선택적으로 momentum을 반대 방향으로 움직이는 정책입니다.",
-    canonicalHref: "/ai/lr-scheduling#onecycle",
+    canonicalHref: "/ai/one-cycle-scheduling#one-cycle",
   },
   "learning-rate-range-test": {
     id: "learning-rate-range-test",
@@ -1677,7 +1677,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Learning-rate range test",
     definition:
       "짧은 진단 run에서 learning rate를 점차 올리며 loss 감소 구간과 instability 시작점을 관찰해 maximum LR 후보를 만드는 실험입니다.",
-    canonicalHref: "/ai/lr-scheduling#onecycle",
+    canonicalHref: "/ai/one-cycle-scheduling#range-test",
   },
   "warmup-main-schedule-composition": {
     id: "warmup-main-schedule-composition",
@@ -1686,7 +1686,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Warmup–main schedule composition",
     definition:
       "처음 W updates의 rising LR와 남은 T−W updates의 본 schedule을 같은 peak boundary와 local clock으로 이어 붙이는 piecewise schedule입니다.",
-    canonicalHref: "/ai/lr-scheduling#warmup",
+    canonicalHref: "/ai/warmup-scheduling#composition",
   },
   "adaptive-update-magnitude-diagnostic": {
     id: "adaptive-update-magnitude-diagnostic",
@@ -1695,7 +1695,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Adaptive update-magnitude diagnostic",
     definition:
       "Adaptive optimizer의 normalized direction과 scheduled LR가 만든 실제 parameter displacement를 parameter norm·gradient norm·overflow와 함께 추적하는 안정성 진단입니다.",
-    canonicalHref: "/ai/lr-scheduling#warmup",
+    canonicalHref: "/ai/warmup-scheduling#update-magnitude",
   },
   "observed-generalization-gap": {
     id: "observed-generalization-gap",
@@ -20280,6 +20280,20 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
       "Total budget과 update clock 위에 milestone 또는 반복 decay factor를 배치합니다.",
   },
   {
+    from: "learning-rate-schedule-contract",
+    to: "metric-triggered-lr-decay",
+    relation: "produces",
+    reason:
+      "Schedule state와 call event 계약 위에 validation metric·patience transition을 배치합니다.",
+  },
+  {
+    from: "open-loop-lr-decay",
+    to: "metric-triggered-lr-decay",
+    relation: "contrasts",
+    reason:
+      "미리 정한 update clock만 읽는 policy와 validation event·patience state를 읽는 policy를 구분합니다.",
+  },
+  {
     from: "train-validation-test",
     to: "metric-triggered-lr-decay",
     relation: "constrains",
@@ -20320,6 +20334,13 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "extends",
     reason:
       "Global budget을 warmup과 남은 main schedule의 local clocks로 분할합니다.",
+  },
+  {
+    from: "warmup-main-schedule-composition",
+    to: "cosine-annealing-progress",
+    relation: "constrains",
+    reason:
+      "Warmup을 제외한 T−W와 local cursor t−W를 cosine cycle의 progress input으로 고정합니다.",
   },
   {
     from: "momentum-state",

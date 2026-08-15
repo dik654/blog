@@ -1490,19 +1490,17 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "lr-scheduling": {
-    title: "Learning-rate scheduling 글이 소유하는 범위",
+    title: "Learning-rate schedule contract 글이 소유하는 범위",
     owns: [
       "Optimizer update clock·total budget·scheduler state를 묶는 schedule contract",
-      "Step·exponential의 open-loop decay와 validation-driven plateau trigger의 차이",
-      "Cosine progress·warm restart·OneCycle phase와 range-test 해석",
-      "Warmup과 본 schedule의 boundary·local clock, adaptive update magnitude 진단",
+      "Parameter-group LR·call order·continuous versus resumed trajectory parity",
     ],
     reuses: [
       {
         label: "Gradient descent와 smoothness",
         href: "/ai/math-gradient-descent-convergence",
       },
-      { label: "SGD·momentum·Adam optimizer state", href: "/ai/optimizers" },
+      { label: "SGD update state", href: "/ai/optimizers" },
       {
         label: "Effective batch·update clock·resume state",
         href: "/ai/training-pipeline",
@@ -1514,13 +1512,74 @@ export const EDITORIAL_BOUNDARIES = {
     ],
     evidence: [
       {
-        kind: "primary-source",
-        rule: "SGDR·Super-Convergence·untuned warmup의 효과는 각 논문의 optimizer·architecture·dataset·budget 범위로 제한한다.",
+        kind: "standard",
+        rule: "Scheduler call order와 state semantics는 사용 중인 PyTorch version의 공식 문서로 고정한다.",
       },
       {
         kind: "standard",
-        rule: "Scheduler class·version·initial/peak/final LR·warmup·total updates·call event·state·resume trace를 함께 기록한다.",
+        rule: "Scheduler class·version·param group·total updates·call event·state·resume trace를 함께 기록한다.",
       },
+    ],
+  },
+  "lr-decay-policies": {
+    title: "Learning-rate decay policy 글이 소유하는 범위",
+    owns: [
+      "Step·exponential open-loop decay의 clock과 factor semantics",
+      "Validation metric·threshold·patience·cooldown 기반 plateau state machine",
+      "Decay와 early stopping의 event ordering",
+    ],
+    reuses: [
+      { label: "Update clock과 scheduler state", href: "/ai/lr-scheduling" },
+      { label: "Validation split", href: "/ai/train-validation-test" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "Scheduler class·call unit·metric direction·threshold mode·patience·cooldown·state를 기록한다." },
+      { kind: "primary-source", rule: "API 동작은 사용 중인 PyTorch stable 공식 문서 범위로 제한한다." },
+    ],
+  },
+  "cosine-restart-scheduling": {
+    title: "Cosine annealing·warm restart 글이 소유하는 범위",
+    owns: [
+      "Cycle-local progress의 cosine interpolation",
+      "LR phase reset과 model·optimizer state 보존 경계",
+      "Single cosine과 restart의 equal-compute comparison",
+    ],
+    reuses: [{ label: "Schedule clock·resume", href: "/ai/lr-scheduling" }],
+    evidence: [
+      { kind: "primary-source", rule: "SGDR 효과는 원 논문의 SGD·architecture·dataset·budget 범위로 제한한다." },
+      { kind: "standard", rule: "Peak/min LR·cycle length·multiplier·cursor·optimizer-state policy를 기록한다." },
+    ],
+  },
+  "one-cycle-scheduling": {
+    title: "LR range test·OneCycle 글이 소유하는 범위",
+    owns: [
+      "Log-scale range-test trace와 instability boundary",
+      "Total budget의 rise·decay phase와 inverse momentum",
+      "Divergence rollback과 diagnostic-state disposal",
+    ],
+    reuses: [
+      { label: "Schedule update clock", href: "/ai/lr-scheduling" },
+      { label: "Momentum state", href: "/ai/momentum-optimizer" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Super-convergence claim은 논문의 optimizer·vision benchmark·regularization 조건으로 제한한다." },
+      { kind: "standard", rule: "Range-test fixture·smoothing·max candidates·phase parameters·rollback을 기록한다." },
+    ],
+  },
+  "warmup-scheduling": {
+    title: "Learning-rate warmup 글이 소유하는 범위",
+    owns: [
+      "Warmup W와 main T−W의 peak boundary·local clock composition",
+      "Actual displacement와 parameter norm의 relative-update diagnostic",
+      "Warmup이 가리지 못하는 data·normalization·loss-scale failure",
+    ],
+    reuses: [
+      { label: "Schedule clock·resume", href: "/ai/lr-scheduling" },
+      { label: "Adam moment state", href: "/ai/adam-optimizer" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Untuned warmup의 rule of thumb은 논문의 Adam·β₂·architecture·dataset 범위로 제한한다." },
+      { kind: "standard", rule: "W·start/peak LR·main length·local cursor·relative update·overflow를 기록한다." },
     ],
   },
   "regularization-practice": {

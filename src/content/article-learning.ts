@@ -10057,449 +10057,1129 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/lr-scheduling": {
-    coreIdea:
-      "Learning-rate scheduling은 유행하는 곡선을 고르는 일이 아니라 optimizer update를 공통 시간축으로 정하고, initial·peak·final LR와 warmup·decay·metric trigger·resume state가 같은 trajectory를 재현하도록 만드는 실행 계약입니다.",
-    assumedKnowledge: [
+    "entryLevel": true,
+    "entryNote": "Optimizer update 사건 하나에서 시작해 clock·budget·schedule state·resume을 순서대로 정의합니다.",
+    "coreIdea": "Learning-rate schedule은 optimizer update index와 복원 가능한 state를 읽어 parameter group별 step-size scale을 반환하는 실행 계약입니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
       {
-        id: "gradient-descent",
-        role: "Gradient 반대 방향의 반복 update가 objective를 줄이는 기본 계산을 읽습니다.",
-      },
-      {
-        id: "learning-rate",
-        role: "Optimizer direction에 곱하는 step size의 의미를 재사용합니다.",
-      },
-      {
-        id: "optimizer-update",
-        role: "Gradient·momentum·adaptive state에서 실제 parameter displacement가 만들어지는 경계를 구분합니다.",
-      },
-      {
-        id: "momentum-state",
-        role: "SGD momentum과 Adam moment가 raw gradient와 다른 update direction을 만든다는 점을 읽습니다.",
-      },
-      {
-        id: "effective-batch-update-clock",
-        role: "Micro-batch·accumulation·world size를 optimizer update 시간축으로 바꿉니다.",
-      },
-      {
-        id: "resume-state-closure",
-        role: "Scheduler cursor와 optimizer state가 checkpoint에 포함되어야 함을 재사용합니다.",
-      },
-      {
-        id: "train-validation-test",
-        role: "Plateau trigger와 schedule 선택을 validation에 한정하고 final test를 보존합니다.",
-      },
+        "id": "learning-rate-schedule-contract",
+        "role": "Update clock·total budget·call event·state·resume을 하나의 schedule 계약으로 묶습니다."
+      }
     ],
-    introducedHere: [
+    "conceptExplanations": [
       {
-        id: "learning-rate-schedule-contract",
-        role: "Update index·budget·call event·state·resume을 하나의 schedule 정의로 묶습니다.",
-      },
-      {
-        id: "open-loop-lr-decay",
-        role: "Step·exponential decay를 validation과 무관한 deterministic clock으로 정의합니다.",
-      },
-      {
-        id: "metric-triggered-lr-decay",
-        role: "Validation metric·threshold·patience·cooldown으로 plateau decay를 결정합니다.",
-      },
-      {
-        id: "cosine-annealing-progress",
-        role: "Cycle 진행률로 peak와 minimum 사이를 cosine 보간합니다.",
-      },
-      {
-        id: "warm-restart-state-boundary",
-        role: "Cycle 경계에서 LR와 model·optimizer state 중 무엇을 restart하는지 구분합니다.",
-      },
-      {
-        id: "one-cycle-policy",
-        role: "한 run의 LR 상승·하강과 inverse momentum phase를 total budget에 배치합니다.",
-      },
-      {
-        id: "learning-rate-range-test",
-        role: "Loss trace에서 maximum LR의 진단 후보와 instability boundary를 찾습니다.",
-      },
-      {
-        id: "warmup-main-schedule-composition",
-        role: "Warmup W와 본 schedule T−W를 연속 경계와 local clock으로 연결합니다.",
-      },
-      {
-        id: "adaptive-update-magnitude-diagnostic",
-        role: "Warmup이 실제 displacement와 초기 instability를 줄이는지 측정합니다.",
-      },
+        "id": "learning-rate-schedule-contract",
+        "sectionId": "update-clock",
+        "intuition": "학습 달력에서 parameter가 실제로 바뀐 날만 세고 그날의 보폭을 정하는 규칙입니다.",
+        "workedExample": "Effective batch 512로 sample 51,200개를 10 epochs 학습하면 100 updates/epoch, T=1,000입니다.",
+        "boundary": "Micro-batch·backward·epoch와 optimizer update를 혼동하거나 scheduler call order를 빼면 같은 이름의 곡선도 다른 trajectory가 됩니다."
+      }
     ],
-    conceptExplanations: [
+    "conceptStages": [
       {
-        id: "learning-rate-schedule-contract",
-        sectionId: "overview",
-        intuition:
-          "학습의 달력에서 날짜를 epoch라고 막연히 쓰지 않고 parameter가 실제로 바뀐 횟수를 세어 그날의 이동 크기를 정하는 규칙입니다.",
-        workedExample:
-          "Per-rank batch 16·accumulation 4·world size 8이면 update당 512 samples이고 N=51200이면 epoch당 100 updates입니다. 10 epochs의 schedule budget은 T=1000입니다.",
-        boundary:
-          "Drop-last·distributed padding·variable token count·skipped AMP update가 있으면 계산상 update와 실제 parameter change를 함께 기록해야 합니다.",
+        "label": "01 사건",
+        "relation": "Micro-batch와 parameter update를 구분",
+        "concepts": [
+          "optimizer-update"
+        ]
       },
       {
-        id: "open-loop-lr-decay",
-        sectionId: "step-exponential",
-        intuition:
-          "시계를 보고 정해진 때마다 계단을 내려가거나 매 걸음 같은 비율로 높이를 줄이는 정책입니다.",
-        workedExample:
-          "η0=.1, γ=.5, K=100이면 step LR는 t=0~99에 .1, 100~199에 .05이고, exponential로 .1에서 .001을 1000 updates에 잇는 γ는 (.001/.1)^(1/1000)입니다.",
-        boundary:
-          "Epoch마다 호출한 γ와 batch마다 호출한 γ는 전혀 다른 decay이며 final LR가 작다는 사실만으로 validation 성능이 좋아지지는 않습니다.",
-      },
-      {
-        id: "metric-triggered-lr-decay",
-        sectionId: "step-exponential",
-        intuition:
-          "날짜가 아니라 모의시험 점수가 충분히 나아지지 않은 횟수를 보고 다음 학습 속도를 낮춥니다.",
-        workedExample:
-          "Min-mode val loss best=.50, abs threshold=.01, patience=2에서 .495·.498·.497은 .49보다 작지 않아 세 번째 intolerable evaluation 뒤 factor를 적용하는 식으로 policy를 명시합니다.",
-        boundary:
-          "Metric noise·evaluation cadence·missing evaluation이 trigger state를 바꾸며 early stopping patience와 충돌할 수 있습니다.",
-      },
-      {
-        id: "cosine-annealing-progress",
-        sectionId: "cosine",
-        intuition:
-          "남은 거리의 비율을 반원 각도로 바꿔 시작과 끝에서는 천천히, 가운데에서는 빠르게 LR를 낮춥니다.",
-        workedExample:
-          "ηmax=.1, ηmin=0, t/T=.5이면 cos(π/2)=0이므로 ηt=.05입니다.",
-        boundary:
-          "Warmup을 제외하지 않고 T_max를 전체 budget으로 쓰면 run 끝에서 intended ηmin에 도달하지 않으며 비선형 objective의 수렴 보장과는 별개입니다.",
-      },
-      {
-        id: "warm-restart-state-boundary",
-        sectionId: "cosine",
-        intuition:
-          "다음 바퀴에서 보폭은 다시 키우지만 지금까지 온 위치와 운동 습관은 그대로 이어가는 restart입니다.",
-        workedExample:
-          "Cycle 끝 LR=.001 뒤 다음 cycle 첫 LR=.1로 올리되 θ와 momentum buffer는 보존하고 cycle cursor만 0으로 되돌립니다.",
-        boundary:
-          "Cold restart처럼 model·optimizer를 초기화하거나 단일 CosineAnnealingLR을 restart policy로 오해하면 다른 실험이 됩니다.",
-      },
-      {
-        id: "one-cycle-policy",
-        sectionId: "onecycle",
-        intuition:
-          "한 번의 여행에서 먼저 보폭을 키워 넓게 탐색하고 남은 구간에서 보폭을 아주 작게 줄여 마무리합니다.",
-        workedExample:
-          "T=1000, p=.3이면 300 updates에 max LR에 도달하고 나머지 700 updates에서 final LR로 낮추며 momentum은 반대 방향으로 움직일 수 있습니다.",
-        boundary:
-          "PyTorch default two-phase와 원 논문 three-phase는 같지 않으며 max LR가 과하면 regularization이 아니라 divergence가 됩니다.",
-      },
-      {
-        id: "learning-rate-range-test",
-        sectionId: "onecycle",
-        intuition:
-          "짧은 시험에서 보폭을 계속 키워 loss가 좋아지는 범위와 무너지기 시작하는 경계를 찾습니다.",
-        workedExample:
-          "Log-scale로 1e-6에서 1까지 LR를 올렸을 때 loss가 1e-3부터 감소하고 .2에서 급증하면 .2보다 충분히 낮은 max candidates를 full validation run에서 비교합니다.",
-        boundary:
-          "한 noisy batch trace는 optimum이 아니며 optimizer·batch·augmentation·initialization을 바꾸면 test도 다시 해야 합니다.",
-      },
-      {
-        id: "warmup-main-schedule-composition",
-        sectionId: "warmup",
-        intuition:
-          "출발 구간과 본 경로가 같은 지점에서 만나도록 거리계 두 개의 시작점을 맞추는 piecewise 함수입니다.",
-        workedExample:
-          "T=1000, W=100이면 t=100에서 peak에 도달하고 cosine은 local step 0부터 900 updates 동안 진행해 t=1000에서 minimum에 도달합니다.",
-        boundary:
-          "Warmup 100과 cosine T_max=1000을 단순히 직렬로 붙이면 총 1100 updates가 필요하거나 t=1000에서 minimum 이전에 끝납니다.",
-      },
-      {
-        id: "adaptive-update-magnitude-diagnostic",
-        sectionId: "warmup",
-        intuition:
-          "표시된 LR만 보지 않고 optimizer가 실제로 parameter를 얼마나 움직였는지 현재 parameter 크기에 대한 비율로 확인합니다.",
-        workedExample:
-          "Parameter norm 50, first update norm .5이면 relative update .01이고 warmup 뒤 .05라면 .001로 줄었는지 loss spike·overflow와 함께 봅니다.",
-        boundary:
-          "작은 update가 더 좋은 학습을 뜻하지 않으며 decoupled weight decay와 AMP skipped step을 제외하면 진단이 잘못될 수 있습니다.",
-      },
-    ],
-    conceptStages: [
-      {
-        label: "Clock",
-        relation:
-          "Batch execution을 optimizer update와 total budget으로 정규화",
-        concepts: [
+        "label": "02 Clock",
+        "relation": "Update index와 total budget을 확정",
+        "concepts": [
           "effective-batch-update-clock",
-          "optimizer-update",
-          "learning-rate",
-          "learning-rate-schedule-contract",
-        ],
+          "learning-rate-schedule-contract"
+        ]
       },
       {
-        label: "Decay trigger",
-        relation: "정해진 update와 validation event 기반 감소를 분리",
-        concepts: [
+        "label": "03 Scale",
+        "relation": "Clock·state에서 current LR를 반환",
+        "concepts": [
           "learning-rate-schedule-contract",
+          "learning-rate"
+        ]
+      },
+      {
+        "label": "04 Resume",
+        "relation": "Scheduler·optimizer state와 call order를 복원",
+        "concepts": [
+          "learning-rate-schedule-contract",
+          "resume-state-closure"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "Micro-batch와 optimizer update의 차이를 설명하세요.",
+        "answerChecklist": [
+          "backward can repeat",
+          "parameter changes once",
+          "optimizer.step event",
+          "separate counters"
+        ],
+        "requiredConcepts": [
+          "learning-rate-schedule-contract"
+        ],
+        "sectionId": "overview"
+      },
+      {
+        "level": "basic",
+        "question": "Bμ=16,A=4,W=8일 때 effective batch를 계산하세요.",
+        "answerChecklist": [
+          "16 times 4 times 8",
+          "512 samples",
+          "one update",
+          "same rank sync"
+        ],
+        "requiredConcepts": [
+          "learning-rate-schedule-contract"
+        ],
+        "sectionId": "update-clock"
+      },
+      {
+        "level": "basic",
+        "question": "N=51,200,B_eff=512일 때 updates/epoch를 계산하세요.",
+        "answerChecklist": [
+          "divide dataset",
+          "100 updates",
+          "last-batch convention",
+          "update unit"
+        ],
+        "requiredConcepts": [
+          "learning-rate-schedule-contract"
+        ],
+        "sectionId": "update-clock"
+      },
+      {
+        "level": "basic",
+        "question": "10 epochs와 100 updates/epoch에서 total T를 계산하세요.",
+        "answerChecklist": [
+          "10 times 100",
+          "1000 updates",
+          "total budget",
+          "scheduler clock"
+        ],
+        "requiredConcepts": [
+          "learning-rate-schedule-contract"
+        ],
+        "sectionId": "update-clock"
+      },
+      {
+        "level": "basic",
+        "question": "Schedule S(t,state,config)가 반환하는 값과 입력을 설명하세요.",
+        "answerChecklist": [
+          "current learning rate",
+          "update index",
+          "scheduler state",
+          "configuration"
+        ],
+        "requiredConcepts": [
+          "learning-rate-schedule-contract"
+        ],
+        "sectionId": "schedule-function"
+      },
+      {
+        "level": "basic",
+        "question": "같은 LR라도 displacement가 달라지는 이유를 설명하세요.",
+        "answerChecklist": [
+          "optimizer direction differs",
+          "LR is scale",
+          "parameter group",
+          "measure delta"
+        ],
+        "requiredConcepts": [
+          "learning-rate-schedule-contract"
+        ],
+        "sectionId": "schedule-function"
+      },
+      {
+        "level": "advanced",
+        "question": "AMP overflow로 update가 skip된 run의 scheduler clock policy를 설계하세요.",
+        "answerChecklist": [
+          "detect skipped step",
+          "do not silently advance or document policy",
+          "global update",
+          "LR trace",
+          "loss scale event",
+          "resume parity"
+        ],
+        "requiredConcepts": [
+          "learning-rate-schedule-contract"
+        ],
+        "sectionId": "update-clock"
+      },
+      {
+        "level": "advanced",
+        "question": "Parameter group 두 개의 schedule receipt를 설계하세요.",
+        "answerChecklist": [
+          "group identity",
+          "base LR",
+          "current LR",
+          "update index",
+          "scheduler class and version",
+          "state"
+        ],
+        "requiredConcepts": [
+          "learning-rate-schedule-contract"
+        ],
+        "sectionId": "schedule-function"
+      },
+      {
+        "level": "advanced",
+        "question": "연속 1000과 600+resume+400 trajectory parity test를 설계하세요.",
+        "answerChecklist": [
+          "same data and seed",
+          "scheduler state",
+          "optimizer state",
+          "global update",
+          "LR trace equality",
+          "parameter tolerance",
+          "call order"
+        ],
+        "requiredConcepts": [
+          "learning-rate-schedule-contract"
+        ],
+        "sectionId": "resume-boundary"
+      },
+      {
+        "level": "advanced",
+        "question": "Batch topology 변경 뒤 schedule migration과 rollback을 설계하세요.",
+        "answerChecklist": [
+          "old effective batch",
+          "new effective batch",
+          "budget conversion",
+          "milestone conversion",
+          "canary trace",
+          "checkpoint",
+          "rollback"
+        ],
+        "requiredConcepts": [
+          "learning-rate-schedule-contract"
+        ],
+        "sectionId": "resume-boundary"
+      }
+    ],
+    "papers": [
+      {
+        "title": "PyTorch — How to adjust learning rate",
+        "href": "https://docs.pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate",
+        "problem": "Optimizer와 scheduler 호출 순서·state를 일관되게 사용하는 문제",
+        "contribution": "현재 LRScheduler 종류와 optimizer.step 뒤 scheduler.step semantics를 문서화",
+        "assumptions": "사용 중인 PyTorch version·scheduler class·parameter groups",
+        "evidenceScope": "현재 PyTorch stable의 scheduler 호출 순서·state-dict·parameter-group API 동작과 공식 예제 범위",
+        "notClaim": "특정 곡선이 모든 model에서 최선이라는 추천은 아님",
+        "sectionId": "docs-pytorch-scheduler"
+      }
+    ]
+  },
+  "ai/lr-decay-policies": {
+    "entryLevel": true,
+    "entryNote": "LR 감소 결과보다 clock 입력과 validation-event 입력을 먼저 나눕니다.",
+    "coreIdea": "Open-loop decay는 미리 정한 clock만 읽고 metric-triggered decay는 validation improvement와 patience state를 읽으므로 호출·checkpoint·stopping 경계가 다릅니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "open-loop-lr-decay",
+        "role": "Step·exponential decay를 deterministic update-clock policy로 정의합니다."
+      },
+      {
+        "id": "metric-triggered-lr-decay",
+        "role": "Validation metric·threshold·patience·cooldown으로 decay event를 만듭니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "open-loop-lr-decay",
+        "sectionId": "open-loop",
+        "intuition": "달력만 보고 정해진 날 계단을 내려가거나 매일 같은 비율로 보폭을 줄입니다.",
+        "workedExample": "η0=.1,γ=.5,K=100이면 t=250의 Step LR는 .025입니다.",
+        "boundary": "Epoch 호출과 update 호출은 전혀 다른 decay 속도를 만들며 validation 개선을 관찰하지 않습니다."
+      },
+      {
+        "id": "metric-triggered-lr-decay",
+        "sectionId": "metric-trigger",
+        "intuition": "모의시험 점수가 충분히 좋아지지 않은 횟수를 세어 다음 보폭을 줄입니다.",
+        "workedExample": "Min-mode best=.50,δ=.01에서 .495는 .49보다 작지 않아 bad-count가 증가합니다.",
+        "boundary": "Metric noise·cadence·missing evaluation·cooldown과 early-stopping 순서를 저장해야 합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 Clock input",
+        "relation": "Milestone·factor로 deterministic decay",
+        "concepts": [
+          "open-loop-lr-decay"
+        ]
+      },
+      {
+        "label": "02 Metric input",
+        "relation": "Validation event와 meaningful threshold 판정",
+        "concepts": [
+          "metric-triggered-lr-decay"
+        ]
+      },
+      {
+        "label": "03 State",
+        "relation": "Cursor 또는 best·bad-count·cooldown 저장",
+        "concepts": [
           "open-loop-lr-decay",
-          "train-validation-test",
-          "metric-triggered-lr-decay",
-        ],
+          "metric-triggered-lr-decay"
+        ]
       },
       {
-        label: "Budget curve",
-        relation: "진행률을 cosine cycle 또는 OneCycle phases로 변환",
-        concepts: [
-          "cosine-annealing-progress",
-          "warm-restart-state-boundary",
-          "learning-rate-range-test",
-          "one-cycle-policy",
-        ],
-      },
-      {
-        label: "Warmup boundary",
-        relation:
-          "초기 rising schedule과 남은 main schedule의 local clock 연결",
-        concepts: [
-          "warmup-main-schedule-composition",
-          "adaptive-update-magnitude-diagnostic",
-          "momentum-state",
-        ],
-      },
-      {
-        label: "Evidence·resume",
-        relation:
-          "Validation·LR trace·scheduler state로 동일 trajectory와 조건부 gain 검증",
-        concepts: [
-          "train-validation-test",
-          "resume-state-closure",
-          "learning-rate-schedule-contract",
-          "adaptive-update-magnitude-diagnostic",
-        ],
-      },
+        "label": "04 Selection",
+        "relation": "Decay와 stopping 순서·trace를 검증",
+        "concepts": [
+          "metric-triggered-lr-decay"
+        ]
+      }
     ],
-    exercises: [
+    "exercises": [
       {
-        level: "basic",
-        question:
-          "N=51200, per-rank micro-batch 16, accumulation 4, world size 8, epochs 10일 때 effective batch·updates/epoch·total updates를 계산하라.",
-        answerChecklist: [
-          "B_eff=512",
-          "100 updates/epoch",
-          "T=1000",
-          "drop-last assumption",
-          "scheduler per update",
-        ],
-        requiredConcepts: [
-          "effective-batch-update-clock",
-          "learning-rate-schedule-contract",
-        ],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "Scalar parameter θ=3, optimizer direction u=4, learning rate η=.05일 때 displacement와 다음 parameter를 계산하고 LR의 역할을 설명하라.",
-        answerChecklist: [
-          "Delta theta=-.2",
-          "theta next=2.8",
-          "LR scales optimizer direction",
-          "same LR can yield different displacement when direction changes",
-        ],
-        requiredConcepts: ["learning-rate", "optimizer-update"],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "η0=.1, γ=.5, K=100인 step schedule의 t=99·100·250 LR를 계산하고 호출 단위를 적어라.",
-        answerChecklist: [
+        "level": "basic",
+        "question": "η0=.1,γ=.5,K=100의 t=99 LR를 계산하세요.",
+        "answerChecklist": [
+          "floor zero",
           ".1",
+          "before milestone",
+          "update clock"
+        ],
+        "requiredConcepts": [
+          "open-loop-lr-decay"
+        ],
+        "sectionId": "open-loop"
+      },
+      {
+        "level": "basic",
+        "question": "같은 설정에서 t=100 LR를 계산하세요.",
+        "answerChecklist": [
+          "floor one",
           ".05",
+          "factor once",
+          "boundary"
+        ],
+        "requiredConcepts": [
+          "open-loop-lr-decay"
+        ],
+        "sectionId": "open-loop"
+      },
+      {
+        "level": "basic",
+        "question": "같은 설정에서 t=250 LR를 계산하세요.",
+        "answerChecklist": [
+          "floor two",
           ".025",
-          "floor(t/K)",
-          "optimizer-update clock",
+          "factor twice",
+          "not .0125"
         ],
-        requiredConcepts: ["open-loop-lr-decay"],
-        sectionId: "step-exponential",
+        "requiredConcepts": [
+          "open-loop-lr-decay"
+        ],
+        "sectionId": "open-loop"
       },
       {
-        level: "basic",
-        question:
-          "Exponential schedule이 η0=.1에서 두 updates 뒤 η2=.01에 도달하도록 γ와 η1을 계산하고 epoch 호출이 다른 schedule인 이유를 설명하라.",
-        answerChecklist: [
-          "gamma=sqrt(.1) about .316",
-          "eta1 about .0316",
-          "eta2=.01",
-          "t is optimizer-update index",
-          "epoch invocation changes decay frequency",
+        "level": "basic",
+        "question": "Step과 exponential decay의 factor 적용 차이를 설명하세요.",
+        "answerChecklist": [
+          "milestone count",
+          "every call",
+          "same gamma differs",
+          "call unit"
         ],
-        requiredConcepts: ["open-loop-lr-decay"],
-        sectionId: "step-exponential",
+        "requiredConcepts": [
+          "open-loop-lr-decay"
+        ],
+        "sectionId": "open-loop"
       },
       {
-        level: "advanced",
-        question:
-          "Noisy validation metric에서 ReduceLROnPlateau와 early stopping의 threshold·patience·cooldown·호출 순서·resume state를 설계하라.",
-        answerChecklist: [
+        "level": "basic",
+        "question": "Min-mode best=.50,δ=.01,current=.48의 improvement를 판정하세요.",
+        "answerChecklist": [
+          "threshold boundary .49",
+          ".48 smaller",
+          "improvement true",
+          "counter reset"
+        ],
+        "requiredConcepts": [
+          "metric-triggered-lr-decay"
+        ],
+        "sectionId": "metric-trigger"
+      },
+      {
+        "level": "basic",
+        "question": "Patience와 cooldown의 역할을 구분하세요.",
+        "answerChecklist": [
+          "bad-event allowance",
+          "post-decay hold",
+          "different counters",
+          "validation cadence"
+        ],
+        "requiredConcepts": [
+          "metric-triggered-lr-decay"
+        ],
+        "sectionId": "metric-trigger"
+      },
+      {
+        "level": "advanced",
+        "question": "Epoch 호출과 update 호출의 final LR 차이를 재현하는 test를 설계하세요.",
+        "answerChecklist": [
+          "same gamma",
+          "call counts",
+          "LR trace",
+          "final LR",
+          "framework version",
+          "assert unit"
+        ],
+        "requiredConcepts": [
+          "open-loop-lr-decay"
+        ],
+        "sectionId": "open-loop"
+      },
+      {
+        "level": "advanced",
+        "question": "Noisy metric의 threshold·patience policy를 설계하세요.",
+        "answerChecklist": [
           "metric direction",
-          "meaningful threshold",
+          "absolute or relative threshold",
           "evaluation cadence",
-          "decay before stopping opportunity",
-          "best/bad-count/cooldown state",
-          "trace",
+          "bad-count",
+          "cooldown",
+          "trace"
         ],
-        requiredConcepts: [
-          "metric-triggered-lr-decay",
-          "train-validation-test",
-          "resume-state-closure",
+        "requiredConcepts": [
+          "metric-triggered-lr-decay"
         ],
-        sectionId: "step-exponential",
+        "sectionId": "metric-trigger"
       },
       {
-        level: "basic",
-        question:
-          "ηmax=.1, ηmin=.001인 cosine에서 t/T=0,.5,1의 LR를 계산하고 warmup 100/total 1000일 때 cosine T를 정하라.",
-        answerChecklist: [".1", ".0505", ".001", "T_main=900", "local t-W"],
-        requiredConcepts: [
+        "level": "advanced",
+        "question": "Plateau decay와 early stopping이 충돌하지 않게 순서를 설계하세요.",
+        "answerChecklist": [
+          "shared metric",
+          "separate state",
+          "decay opportunity",
+          "stopping patience",
+          "best artifact",
+          "event trace"
+        ],
+        "requiredConcepts": [
+          "metric-triggered-lr-decay"
+        ],
+        "sectionId": "selection-boundary"
+      },
+      {
+        "level": "advanced",
+        "question": "Open-loop와 metric-triggered checkpoint·rollback을 비교하세요.",
+        "answerChecklist": [
+          "cursor milestones",
+          "best metric",
+          "bad-count cooldown",
+          "current group LR",
+          "resume parity",
+          "rollback"
+        ],
+        "requiredConcepts": [
+          "open-loop-lr-decay",
+          "metric-triggered-lr-decay"
+        ],
+        "sectionId": "selection-boundary"
+      }
+    ],
+    "papers": [
+      {
+        "title": "PyTorch — LRScheduler and ReduceLROnPlateau",
+        "href": "https://docs.pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate",
+        "problem": "Clock-driven scheduler와 validation-driven decay의 호출 semantics 구분",
+        "contribution": "StepLR·ExponentialLR와 ReduceLROnPlateau API·호출 순서를 문서화",
+        "assumptions": "현재 PyTorch version과 scheduler 설정",
+        "evidenceScope": "PyTorch API behavior",
+        "notClaim": "Default patience·factor가 모든 task의 최적값이라는 뜻은 아님",
+        "sectionId": "docs-pytorch-decay"
+      }
+    ]
+  },
+  "ai/cosine-restart-scheduling": {
+    "entryLevel": true,
+    "entryNote": "0–1 progress와 peak·minimum 두 endpoint를 먼저 그린 뒤 restart state를 분리합니다.",
+    "coreIdea": "Cosine annealing은 cycle-local progress를 peak와 minimum 사이의 scale로 보간하며 warm restart는 LR phase만 되돌리고 model·optimizer learning state는 이어갑니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "cosine-annealing-progress",
+        "role": "Cycle progress를 cosine 반 주기 scale로 변환합니다."
+      },
+      {
+        "id": "warm-restart-state-boundary",
+        "role": "Cycle cursor·LR phase와 model·optimizer state의 restart 범위를 분리합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "cosine-annealing-progress",
+        "sectionId": "cosine-progress",
+        "intuition": "반원 위를 0에서 π까지 걸으며 시작과 끝에서는 천천히, 가운데서는 빠르게 보폭을 줄입니다.",
+        "workedExample": "ηmax=.1,ηmin=.001,r=.5이면 a=.5이고 η=.0505입니다.",
+        "boundary": "t와 T는 cycle-local clock이며 smooth curve가 nonconvex convergence를 보장하지 않습니다."
+      },
+      {
+        "id": "warm-restart-state-boundary",
+        "sectionId": "restart-state",
+        "intuition": "다음 바퀴에서 보폭 표시는 되돌리지만 지금까지 온 위치와 운동 memory는 이어갑니다.",
+        "workedExample": "Cycle 끝 .001 뒤 .1로 LR를 올리되 θ와 momentum buffer를 보존합니다.",
+        "boundary": "Model·optimizer를 초기화하는 cold restart나 restart 없는 single cosine과 다릅니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 Progress",
+        "relation": "Local update를 cycle length로 정규화",
+        "concepts": [
+          "cosine-annealing-progress"
+        ]
+      },
+      {
+        "label": "02 Interpolation",
+        "relation": "Progress를 peak–minimum scale로 변환",
+        "concepts": [
+          "cosine-annealing-progress"
+        ]
+      },
+      {
+        "label": "03 Restart",
+        "relation": "Cycle cursor와 LR phase를 reset",
+        "concepts": [
+          "warm-restart-state-boundary"
+        ]
+      },
+      {
+        "label": "04 Preserve",
+        "relation": "Model·optimizer state와 compute comparison 유지",
+        "concepts": [
           "cosine-annealing-progress",
-          "warmup-main-schedule-composition",
+          "warm-restart-state-boundary"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "r=0에서 cosine scale과 LR endpoint를 설명하세요.",
+        "answerChecklist": [
+          "cos zero angle one",
+          "scale one",
+          "peak LR",
+          "cycle start"
         ],
-        sectionId: "cosine",
+        "requiredConcepts": [
+          "cosine-annealing-progress"
+        ],
+        "sectionId": "cosine-progress"
       },
       {
-        level: "basic",
-        question:
-          "Start LR 0, peak .1, W=2, total T=6인 warmup+main schedule에서 t=0·1·2 LR와 main length·t=3의 local cursor를 계산하라.",
-        answerChecklist: [
-          "warmup values 0, .05, .1",
-          "main length 4",
-          "local cursor k=t-W",
-          "t=3 gives k=1",
-          "resume restores global and local schedule state",
+        "level": "basic",
+        "question": "r=.5에서 ηmax=.1,ηmin=.001의 LR를 계산하세요.",
+        "answerChecklist": [
+          "cos pi over two zero",
+          "scale .5",
+          "range .099",
+          ".0505"
         ],
-        requiredConcepts: [
-          "warmup-main-schedule-composition",
-          "learning-rate-schedule-contract",
+        "requiredConcepts": [
+          "cosine-annealing-progress"
         ],
-        sectionId: "warmup",
+        "sectionId": "cosine-progress"
       },
       {
-        level: "advanced",
-        question:
-          "Single cosine과 SGDR warm restart의 cycle cursor·LR·model·optimizer state 차이를 표로 만들고 같은 compute 비교를 설계하라.",
-        answerChecklist: [
-          "single monotonic cursor",
-          "cycle reset",
+        "level": "basic",
+        "question": "r=1에서 cosine scale과 LR endpoint를 설명하세요.",
+        "answerChecklist": [
+          "cos pi minus one",
+          "scale zero",
+          "minimum LR",
+          "cycle end"
+        ],
+        "requiredConcepts": [
+          "cosine-annealing-progress"
+        ],
+        "sectionId": "cosine-progress"
+      },
+      {
+        "level": "basic",
+        "question": "Global update와 cycle-local update의 차이를 설명하세요.",
+        "answerChecklist": [
+          "cycle offset",
+          "local reset",
+          "same global run",
+          "T local"
+        ],
+        "requiredConcepts": [
+          "cosine-annealing-progress"
+        ],
+        "sectionId": "cosine-progress"
+      },
+      {
+        "level": "basic",
+        "question": "Warm restart에서 reset되는 state를 나열하세요.",
+        "answerChecklist": [
+          "cycle cursor",
+          "LR phase",
+          "possibly next length",
+          "not model"
+        ],
+        "requiredConcepts": [
+          "warm-restart-state-boundary"
+        ],
+        "sectionId": "restart-state"
+      },
+      {
+        "level": "basic",
+        "question": "Warm restart에서 보존되는 state를 나열하세요.",
+        "answerChecklist": [
+          "parameters",
+          "optimizer memory",
+          "data progress",
+          "random state receipt"
+        ],
+        "requiredConcepts": [
+          "warm-restart-state-boundary"
+        ],
+        "sectionId": "restart-state"
+      },
+      {
+        "level": "advanced",
+        "question": "T0=100,m=2인 세 cycle 길이와 누적 boundary를 계산하세요.",
+        "answerChecklist": [
+          "100 200 400",
+          "boundaries 100 300 700",
+          "local reset",
+          "global monotonic",
           "LR restart",
-          "weights retained",
-          "optimizer state decision",
+          "budget"
+        ],
+        "requiredConcepts": [
+          "warm-restart-state-boundary"
+        ],
+        "sectionId": "restart-state"
+      },
+      {
+        "level": "advanced",
+        "question": "Single cosine과 warm restart를 같은 compute로 비교하세요.",
+        "answerChecklist": [
+          "same init",
+          "same optimizer",
+          "same data order",
           "equal updates",
-          "validation",
+          "fixed eval cadence",
+          "final and anytime metrics"
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
           "cosine-annealing-progress",
-          "warm-restart-state-boundary",
-          "train-validation-test",
+          "warm-restart-state-boundary"
         ],
-        sectionId: "cosine",
+        "sectionId": "comparison-boundary"
       },
       {
-        level: "advanced",
-        question:
-          "T=1000, p=.3인 OneCycle의 phase boundary를 계산하고 LR range test에서 max candidate를 정한 뒤 divergence rollback rule을 작성하라.",
-        answerChecklist: [
-          "T_up=300",
-          "700 decay",
-          "range test log LR",
-          "candidate below instability",
-          "momentum direction",
-          "nonfinite/loss threshold rollback",
+        "level": "advanced",
+        "question": "Warmup 100 뒤 cosine total 1000의 local length·cursor를 설계하세요.",
+        "answerChecklist": [
+          "main length 900",
+          "global 100 local zero",
+          "endpoint match",
+          "no extra 100",
+          "LR trace",
+          "resume"
         ],
-        requiredConcepts: [
-          "one-cycle-policy",
+        "requiredConcepts": [
+          "cosine-annealing-progress"
+        ],
+        "sectionId": "comparison-boundary"
+      },
+      {
+        "level": "advanced",
+        "question": "Cycle 경계 resume off-by-one을 잡는 test와 rollback을 설계하세요.",
+        "answerChecklist": [
+          "checkpoint before boundary",
+          "restore cursor",
+          "group LR",
+          "optimizer state",
+          "continuous trace equality",
+          "parameter tolerance",
+          "rollback"
+        ],
+        "requiredConcepts": [
+          "warm-restart-state-boundary"
+        ],
+        "sectionId": "comparison-boundary"
+      }
+    ],
+    "papers": [
+      {
+        "title": "SGDR: Stochastic Gradient Descent with Warm Restarts",
+        "href": "https://arxiv.org/abs/1608.03983",
+        "problem": "SGD training의 anytime performance와 decay schedule 선택 문제",
+        "contribution": "Cosine annealing과 partial warm restart·cycle 확장 규칙 제안",
+        "assumptions": "논문의 SGD 계열·architecture·dataset·budget",
+        "evidenceScope": "CIFAR·EEG·downsampled ImageNet experiments",
+        "notClaim": "모든 optimizer와 task에서 restart가 single cosine보다 우월하다는 보장은 아님",
+        "sectionId": "paper-sgdr"
+      }
+    ]
+  },
+  "ai/one-cycle-scheduling": {
+    "entryLevel": true,
+    "entryNote": "짧은 LR 진단 run과 실제 OneCycle run을 먼저 분리합니다.",
+    "coreIdea": "LR range test는 instability boundary 아래의 max-LR 후보를 만들고 OneCycle은 total update 안에 rise·decay와 선택적 inverse-momentum phase를 배치합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "learning-rate-range-test",
+        "role": "Loss trace에서 LR instability boundary와 maximum 후보를 찾습니다."
+      },
+      {
+        "id": "one-cycle-policy",
+        "role": "한 run의 LR 상승·하강과 inverse momentum phase를 total budget에 배치합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "learning-rate-range-test",
+        "sectionId": "range-test",
+        "intuition": "짧은 시험에서 보폭을 계속 키워 좋아지는 구간과 무너지기 시작하는 경계를 표시합니다.",
+        "workedExample": "1e-6→1에서 loss가 1e-3부터 감소하고 .2에서 급증하면 .2 아래 후보를 full run에서 비교합니다.",
+        "boundary": "Noisy trace 하나는 optimum이 아니며 optimizer·batch·augmentation 변경 뒤 재사용하지 않습니다."
+      },
+      {
+        "id": "one-cycle-policy",
+        "sectionId": "one-cycle",
+        "intuition": "한 여행에서 보폭을 키워 탐색한 뒤 매우 작게 줄여 마무리합니다.",
+        "workedExample": "T=1000,p=.3이면 rise 300, decay 700 updates입니다.",
+        "boundary": "Two-phase·three-phase·interpolation·momentum 설정과 divergence rollback이 다르면 다른 policy입니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 Diagnostic",
+        "relation": "Log-scale LR와 loss trace 생성",
+        "concepts": [
+          "learning-rate-range-test"
+        ]
+      },
+      {
+        "label": "02 Candidate",
+        "relation": "Instability 아래 max-LR 후보 제한",
+        "concepts": [
+          "learning-rate-range-test"
+        ]
+      },
+      {
+        "label": "03 Phases",
+        "relation": "Total budget을 rise와 decay로 분할",
+        "concepts": [
+          "one-cycle-policy"
+        ]
+      },
+      {
+        "label": "04 Release",
+        "relation": "Momentum·divergence·rollback을 검증",
+        "concepts": [
           "learning-rate-range-test",
-          "momentum-state",
+          "one-cycle-policy"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "Range test가 실제 training run과 다른 이유를 설명하세요.",
+        "answerChecklist": [
+          "diagnostic run",
+          "LR sweep",
+          "discard or rollback state",
+          "candidate only"
         ],
-        sectionId: "onecycle",
+        "requiredConcepts": [
+          "learning-rate-range-test"
+        ],
+        "sectionId": "overview"
       },
       {
-        level: "advanced",
-        question:
-          "Warmup+cosine run이 resume 뒤 다른 LR를 낸 원인을 global/local clocks와 checkpoint state에서 찾고 continuous-versus-resumed test를 설계하라.",
-        answerChecklist: [
+        "level": "basic",
+        "question": "ηstart=1e-4,ηend=1e-2,R=2의 multiplier를 계산하세요.",
+        "answerChecklist": [
+          "ratio 100",
+          "square root",
+          "gamma 10",
+          "log spacing"
+        ],
+        "requiredConcepts": [
+          "learning-rate-range-test"
+        ],
+        "sectionId": "range-test"
+      },
+      {
+        "level": "basic",
+        "question": "Instability boundary의 관측 신호를 세 가지 적으세요.",
+        "answerChecklist": [
+          "loss spike",
+          "nonfinite",
+          "gradient overflow",
+          "predefined rule"
+        ],
+        "requiredConcepts": [
+          "learning-rate-range-test"
+        ],
+        "sectionId": "range-test"
+      },
+      {
+        "level": "basic",
+        "question": "T=1000,p=.3의 rise와 decay 길이를 계산하세요.",
+        "answerChecklist": [
+          "300 rise",
+          "700 decay",
+          "optimizer updates",
+          "floor convention"
+        ],
+        "requiredConcepts": [
+          "one-cycle-policy"
+        ],
+        "sectionId": "one-cycle"
+      },
+      {
+        "level": "basic",
+        "question": "Rise와 decay local progress를 구분하세요.",
+        "answerChecklist": [
+          "rise starts zero",
+          "rise ends one",
+          "decay offset",
+          "decay ends one"
+        ],
+        "requiredConcepts": [
+          "one-cycle-policy"
+        ],
+        "sectionId": "one-cycle"
+      },
+      {
+        "level": "basic",
+        "question": "Inverse momentum의 방향을 설명하세요.",
+        "answerChecklist": [
+          "LR up momentum down",
+          "LR down momentum up",
+          "optimizer support",
+          "separate config"
+        ],
+        "requiredConcepts": [
+          "one-cycle-policy"
+        ],
+        "sectionId": "one-cycle"
+      },
+      {
+        "level": "advanced",
+        "question": "Noisy range-test trace에서 max 후보를 고르는 protocol을 설계하세요.",
+        "answerChecklist": [
+          "fixed smoothing",
+          "instability rule",
+          "candidate below boundary",
+          "multiple candidates",
+          "full validation run",
+          "repeat seed"
+        ],
+        "requiredConcepts": [
+          "learning-rate-range-test"
+        ],
+        "sectionId": "range-test"
+      },
+      {
+        "level": "advanced",
+        "question": "Two-phase와 three-phase OneCycle receipt를 비교하세요.",
+        "answerChecklist": [
+          "phase count",
+          "initial max final LR",
+          "rise fraction",
+          "interpolation",
+          "momentum range",
+          "framework flag"
+        ],
+        "requiredConcepts": [
+          "one-cycle-policy"
+        ],
+        "sectionId": "one-cycle"
+      },
+      {
+        "level": "advanced",
+        "question": "Streaming run처럼 T를 모를 때 OneCycle의 경계와 대안을 설명하세요.",
+        "answerChecklist": [
+          "needs total budget",
+          "phase drift",
+          "cannot infer final",
+          "open-loop alternative",
+          "checkpoint policy",
+          "not silent resize"
+        ],
+        "requiredConcepts": [
+          "one-cycle-policy"
+        ],
+        "sectionId": "release-boundary"
+      },
+      {
+        "level": "advanced",
+        "question": "Divergence rollback gate를 설계하세요.",
+        "answerChecklist": [
+          "nonfinite loss",
+          "loss ratio",
+          "gradient overflow",
+          "update norm",
+          "healthy checkpoint",
+          "discard diagnostic state",
+          "rollback"
+        ],
+        "requiredConcepts": [
+          "learning-rate-range-test",
+          "one-cycle-policy"
+        ],
+        "sectionId": "release-boundary"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Super-Convergence: Very Fast Training of Neural Networks Using Large Learning Rates",
+        "href": "https://arxiv.org/abs/1708.07120",
+        "problem": "적은 iterations로 deep network를 학습하면서 generalization을 유지할 조건 탐색",
+        "contribution": "큰 maximum LR를 포함한 one-cycle policy와 range-test 관찰",
+        "assumptions": "논문의 vision architectures·datasets·optimizer·regularization",
+        "evidenceScope": "논문이 보고한 CIFAR·MNIST·ImageNet vision architecture와 optimizer·regularization 실험 범위",
+        "notClaim": "같은 speedup이나 큰 LR 이점이 임의의 LLM·optimizer에서 재현된다는 결론은 아님",
+        "sectionId": "paper-super-convergence"
+      }
+    ]
+  },
+  "ai/warmup-scheduling": {
+    "entryLevel": true,
+    "entryNote": "Warmup length·peak boundary·main local cursor·relative update를 하나씩 정의합니다.",
+    "coreIdea": "Warmup은 처음 W updates의 rising LR와 남은 T−W updates의 main schedule을 연속 경계로 합성하고 실제 relative parameter update가 안정되는지 검증하는 도구입니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "warmup-main-schedule-composition",
+        "role": "Warmup W와 main schedule T−W를 peak boundary와 local clock으로 연결합니다."
+      },
+      {
+        "id": "adaptive-update-magnitude-diagnostic",
+        "role": "Scheduled LR가 만든 실제 displacement를 parameter scale·overflow와 함께 측정합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "warmup-main-schedule-composition",
+        "sectionId": "composition",
+        "intuition": "출발 경사로와 본 도로가 같은 높이에서 만나도록 각 구간의 거리계를 따로 맞춥니다.",
+        "workedExample": "T=1000,W=100이면 global t=100에서 main k=0, main length는 900입니다.",
+        "boundary": "Warmup 100 앞에 T_max=1000을 그대로 붙이면 total 1100이 되어 intended end가 밀립니다."
+      },
+      {
+        "id": "adaptive-update-magnitude-diagnostic",
+        "sectionId": "update-magnitude",
+        "intuition": "표시된 보폭이 아니라 실제로 움직인 거리와 현재 몸집의 비율을 잽니다.",
+        "workedExample": "||Δθ||=.5,||θ||=50이면 relative update ρ=.01입니다.",
+        "boundary": "작은 update가 더 좋은 학습을 뜻하지 않으며 decay·AMP skip·parameter group을 분리해야 합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 Reserve",
+        "relation": "Total budget 앞의 W updates를 warmup으로 예약",
+        "concepts": [
+          "warmup-main-schedule-composition"
+        ]
+      },
+      {
+        "label": "02 Boundary",
+        "relation": "Warmup end와 main start LR를 일치",
+        "concepts": [
+          "warmup-main-schedule-composition"
+        ]
+      },
+      {
+        "label": "03 Local clock",
+        "relation": "Global t에서 W를 빼 main cursor 생성",
+        "concepts": [
+          "warmup-main-schedule-composition"
+        ]
+      },
+      {
+        "label": "04 Diagnose",
+        "relation": "실제 displacement·parameter scale·overflow 검증",
+        "concepts": [
+          "adaptive-update-magnitude-diagnostic"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "T=1000,W=100의 main schedule length를 계산하세요.",
+        "answerChecklist": [
+          "1000 minus 100",
+          "900 updates",
+          "main local length",
+          "same total budget"
+        ],
+        "requiredConcepts": [
+          "warmup-main-schedule-composition"
+        ],
+        "sectionId": "composition"
+      },
+      {
+        "level": "basic",
+        "question": "Global t=100과 101의 main local cursor를 계산하세요.",
+        "answerChecklist": [
+          "zero",
+          "one",
+          "subtract W",
+          "boundary"
+        ],
+        "requiredConcepts": [
+          "warmup-main-schedule-composition"
+        ],
+        "sectionId": "composition"
+      },
+      {
+        "level": "basic",
+        "question": "Start 0,peak .1,W=2의 t=0,1,2 LR를 계산하세요.",
+        "answerChecklist": [
+          "0",
+          ".05",
+          ".1",
+          "linear interpolation"
+        ],
+        "requiredConcepts": [
+          "warmup-main-schedule-composition"
+        ],
+        "sectionId": "composition"
+      },
+      {
+        "level": "basic",
+        "question": "Warmup end와 main start가 같아야 하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "continuity",
+          "no LR jump",
+          "same peak",
+          "boundary convention"
+        ],
+        "requiredConcepts": [
+          "warmup-main-schedule-composition"
+        ],
+        "sectionId": "composition"
+      },
+      {
+        "level": "basic",
+        "question": "||Δθ||=.5,||θ||=50의 relative update를 계산하세요.",
+        "answerChecklist": [
+          "divide norms",
+          ".01",
+          "dimensionless",
+          "before-update denominator"
+        ],
+        "requiredConcepts": [
+          "adaptive-update-magnitude-diagnostic"
+        ],
+        "sectionId": "update-magnitude"
+      },
+      {
+        "level": "basic",
+        "question": "AMP skipped update를 relative-update trace에 표시하는 법을 설명하세요.",
+        "answerChecklist": [
+          "delta zero",
+          "skip flag",
+          "loss scale event",
+          "do not advance silently"
+        ],
+        "requiredConcepts": [
+          "adaptive-update-magnitude-diagnostic"
+        ],
+        "sectionId": "update-magnitude"
+      },
+      {
+        "level": "advanced",
+        "question": "Warmup+cosine의 endpoint drift 반례를 고치세요.",
+        "answerChecklist": [
+          "wrong T max 1000",
+          "main length 900",
+          "local cursor",
+          "peak continuity",
+          "end at total 1000",
+          "LR trace"
+        ],
+        "requiredConcepts": [
+          "warmup-main-schedule-composition"
+        ],
+        "sectionId": "composition"
+      },
+      {
+        "level": "advanced",
+        "question": "Warmup 필요성을 relative-update experiment로 검증하세요.",
+        "answerChecklist": [
+          "same init data",
+          "no warmup baseline",
+          "rho trace",
+          "loss spike",
+          "overflow",
+          "validation"
+        ],
+        "requiredConcepts": [
+          "adaptive-update-magnitude-diagnostic"
+        ],
+        "sectionId": "update-magnitude"
+      },
+      {
+        "level": "advanced",
+        "question": "NaN 원인을 warmup으로 감추지 않는 failure tree를 설계하세요.",
+        "answerChecklist": [
+          "data corruption",
+          "normalization",
+          "loss scale",
+          "peak LR",
+          "parameter group",
+          "fixed fixture",
+          "rollback"
+        ],
+        "requiredConcepts": [
+          "adaptive-update-magnitude-diagnostic"
+        ],
+        "sectionId": "failure-boundary"
+      },
+      {
+        "level": "advanced",
+        "question": "Continuous와 resumed warmup-main parity test를 설계하세요.",
+        "answerChecklist": [
           "global update",
           "warmup boundary",
           "main local cursor",
           "scheduler state",
           "optimizer state",
           "LR trace equality",
-          "parameter tolerance",
+          "parameter tolerance"
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
           "warmup-main-schedule-composition",
-          "learning-rate-schedule-contract",
-          "resume-state-closure",
+          "adaptive-update-magnitude-diagnostic"
         ],
-        sectionId: "warmup",
-      },
+        "sectionId": "failure-boundary"
+      }
     ],
-    papers: [
+    "papers": [
       {
-        title: "PyTorch — Learning Rate Scheduler",
-        href: "https://docs.pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate",
-        problem:
-          "Optimizer update와 여러 scheduler API의 호출 순서·state를 일관되게 사용하는 문제",
-        contribution:
-          "LRScheduler 종류·optimizer.step 뒤 호출·chaining과 ReduceLROnPlateau 구분을 문서화",
-        assumptions:
-          "사용 중인 stable PyTorch version·scheduler class·optimizer param groups",
-        evidenceScope: "현재 PyTorch API와 example의 호출 semantics 범위",
-        notClaim:
-          "특정 scheduler와 hyperparameter가 모든 model에서 가장 정확하다는 recommendation은 아님",
-        sectionId: "docs-pytorch-scheduler",
-      },
-      {
-        title: "SGDR: Stochastic Gradient Descent with Warm Restarts",
-        href: "https://arxiv.org/abs/1608.03983",
-        problem:
-          "SGD training의 anytime performance와 decay schedule 선택 문제",
-        contribution:
-          "Cosine annealing과 partial warm restart schedule 및 cycle 확장 규칙",
-        assumptions:
-          "SGD 계열·논문의 CIFAR/EEG/downsampled ImageNet architectures와 training budgets",
-        evidenceScope: "논문 benchmark·snapshot/anytime evaluation 범위",
-        notClaim:
-          "Warm restart가 모든 optimizer·dataset에서 single cosine보다 우월하다는 보장은 아님",
-        sectionId: "paper-sgdr",
-      },
-      {
-        title:
-          "Super-Convergence: Very Fast Training of Neural Networks Using Large Learning Rates",
-        href: "https://arxiv.org/abs/1708.07120",
-        problem:
-          "Deep network를 적은 iterations로 학습하면서 generalization을 유지하는 조건 탐색",
-        contribution:
-          "큰 maximum LR를 포함한 one-cycle policy·range-test 관찰·regularization balance",
-        assumptions:
-          "논문 vision architectures·datasets·optimizer·regularization 조합",
-        evidenceScope:
-          "CIFAR/MNIST/ImageNet experiment와 논문이 보고한 fast convergence 범위",
-        notClaim:
-          "Order-of-magnitude speedup이나 큰 LR가 임의의 LLM·optimizer에서 재현된다는 결론은 아님",
-        sectionId: "paper-super-convergence",
-      },
-      {
-        title: "On the Adequacy of Untuned Warmup for Adaptive Optimization",
-        href: "https://arxiv.org/abs/1910.04209",
-        problem:
-          "Adam warmup의 필요 원인과 costly schedule tuning을 설명하는 문제",
-        contribution:
-          "Adaptive update magnitude를 중심으로 한 분석과 simple untuned linear warmup 비교",
-        assumptions:
-          "Adam·β2와 논문의 architecture·dataset·optimization settings",
-        evidenceScope:
-          "논문이 비교한 RAdam·linear warmup practical settings와 rule-of-thumb 범위",
-        notClaim:
-          "제안한 W가 모든 adaptive optimizer·model의 이론적 최적값이라는 결론은 아님",
-        sectionId: "paper-untuned-warmup",
-      },
-    ],
+        "title": "On the Adequacy of Untuned Warmup for Adaptive Optimization",
+        "href": "https://arxiv.org/abs/1910.04209",
+        "problem": "Adam warmup 필요성의 설명과 costly tuning 문제",
+        "contribution": "Adaptive update magnitude 중심 분석과 simple untuned warmup 비교",
+        "assumptions": "Adam·beta2와 논문의 architecture·dataset·settings",
+        "evidenceScope": "논문 practical experiments와 rule of thumb",
+        "notClaim": "제안 길이가 모든 model·optimizer의 이론적 최적값이라는 뜻은 아님",
+        "sectionId": "paper-untuned-warmup"
+      }
+    ]
   },
   "ai/regularization-practice": {
     "entryLevel": true,
