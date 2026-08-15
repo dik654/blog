@@ -20,7 +20,7 @@ export default function ConceptLadderViz({
         data-viz-canvas
         role="img"
         aria-label={`${title} 개념 조합 지도`}
-        className="grid gap-3 md:grid-cols-4"
+        className="grid min-w-0 gap-3 md:grid-flow-col md:auto-cols-fr"
       >
         {steps.map((step, index) => (
           <div

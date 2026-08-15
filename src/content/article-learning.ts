@@ -32527,498 +32527,1200 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/agent-sandbox-security": {
-    entryLevel: true,
-    coreIdea:
-      "에이전트 sandbox 보안은 경고 개수나 runtime 이름으로 결정하지 않습니다. Container가 어떤 process boundary인지부터 시작해 signal→capability→boundary crossing→impact 경로를 그리고, identity·egress·kernel·filesystem·device·lifecycle을 서로 대체하지 않는 통제로 끊은 뒤 실제 차단 결과를 검증해야 합니다.",
-    assumedKnowledge: [],
-    introducedHere: [
+    "entryLevel": true,
+    "coreIdea": "Container 보안은 제품 이름에서 시작하지 않습니다. Host kernel 위 process를 놓고 namespace가 보이는 자원을, cgroup이 사용할 양을 제한하는 형태를 익힌 뒤 signal→capability→boundary crossing→impact 경로와 container root의 실제 blast radius를 판단합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
       {
-        id: "process-container-resource-boundary",
-        role: "Container가 host kernel 위 process에 적용한 resource view·limit이라는 출발점을 설명합니다.",
+        "id": "process-container-resource-boundary",
+        "role": "Container를 별도 machine이 아니라 정책을 적용받는 host process로 정의합니다."
       },
       {
-        id: "agent-attack-path-completion",
-        role: "낮은 수준의 signal이 실제 impact까지 이어지는 edge가 모두 열려 있는지 추적합니다.",
+        "id": "linux-namespace-resource-view",
+        "role": "PID·mount·network 같은 자원의 보이는 이름과 범위를 분리합니다."
       },
       {
-        id: "container-root-host-boundary",
-        role: "Container UID 0과 host root를 구분하면서 escape·mount 결합의 blast radius를 판단합니다.",
+        "id": "linux-cgroup-resource-budget",
+        "role": "CPU·memory·PID·I/O 사용량의 측정·제한을 namespace와 구분합니다."
       },
       {
-        id: "syscall-filter-kernel-isolation-boundary",
-        role: "Seccomp filtering과 별도 userspace/guest kernel isolation을 구분합니다.",
+        "id": "agent-attack-path-completion",
+        "role": "관찰 signal에서 실제 impact까지 열린 capability edge를 추적합니다."
       },
       {
-        id: "sandbox-runtime-isolation-spectrum",
-        role: "runc·gVisor·Kata를 호환성·kernel surface·기동·memory 조건으로 비교합니다.",
-      },
-      {
-        id: "kubernetes-workload-identity-boundary",
-        role: "ServiceAccount token 주입과 RBAC authorization을 분리해 최소화합니다.",
-      },
-      {
-        id: "egress-allowlist-enforcement",
-        role: "Policy YAML이 아니라 CNI·DNS·proxy가 실제 destination을 차단하는지 확인합니다.",
-      },
-      {
-        id: "sandbox-writable-surface-lifetime",
-        role: "Read-only root 밖 writable path의 size·owner·session 폐기를 관리합니다.",
-      },
-      {
-        id: "gpu-device-isolation-boundary",
-        role: "nvproxy와 VFIO가 추가하는 host-driver·VMM·IOMMU 신뢰 경계를 비교합니다.",
-      },
-      {
-        id: "sandbox-workload-control-matrix",
-        role: "Workload trust와 필요한 capability에서 독립 방어층을 선택하고 검증합니다.",
-      },
+        "id": "container-root-host-boundary",
+        "role": "Container UID 0과 host root를 구분하고 열린 host edge의 blast radius를 봅니다."
+      }
     ],
-    conceptExplanations: [
+    "conceptExplanations": [
       {
-        id: "process-container-resource-boundary",
-        sectionId: "container-boundary",
-        intuition:
-          "같은 건물의 공용 기반 시설을 쓰면서 방마다 보이는 문·창고와 전기 사용량을 제한한 상태에 가깝고, 건물을 새로 지은 VM과는 다릅니다.",
-        workedExample:
-          "runc container process는 별도 PID·mount·network namespace와 memory cgroup을 가질 수 있지만 system call은 여전히 host Linux kernel이 처리합니다.",
-        boundary:
-          "Namespace·cgroup만으로 credential·egress·kernel exploit·writable volume이 자동 차단되지 않고 Kubernetes Pod라는 이름도 별도 kernel isolation을 보장하지 않습니다.",
+        "id": "process-container-resource-boundary",
+        "sectionId": "overview",
+        "intuition": "Container는 새 컴퓨터보다 한 process에 여러 Linux 정책을 묶은 실행 형태로 이해하는 편이 정확합니다.",
+        "workedExample": "Agent process에 namespace view와 memory·PID budget을 붙여도 system call의 최종 처리자는 host kernel입니다.",
+        "boundary": "Kubernetes Pod나 별도 filesystem view가 guest kernel isolation을 자동으로 만들지는 않습니다."
       },
       {
-        id: "agent-attack-path-completion",
-        sectionId: "attack-path-model",
-        intuition:
-          "경보음 하나보다 공격자가 목표까지 건너야 하는 다리들이 모두 놓여 있는지 보고, 가장 확실하게 끊을 다리를 찾는 방법입니다.",
-        workedExample:
-          "내부 port scan 뒤 metadata endpoint route, 읽을 수 있는 credential, control-plane permission, 외부 egress가 모두 있으면 credential theft와 exfiltration path를 high priority로 올립니다.",
-        boundary:
-          "Boolean path model은 확률이나 CVSS 점수를 계산하지 않고 unknown vulnerability·side channel·alternative path를 모두 열거했다는 보장도 없으므로 layered test와 trace가 필요합니다.",
+        "id": "linux-namespace-resource-view",
+        "sectionId": "namespace",
+        "intuition": "같은 건물 안에서도 방마다 보이는 문 번호와 창고 목록을 다르게 보여 주는 자원 view입니다.",
+        "workedExample": "Host PID 43120이 container에서는 PID 12로 보이고 전체 mount 대신 /workspace만 보일 수 있습니다.",
+        "boundary": "Namespace는 CPU·memory 사용량을 제한하거나 허용 syscall을 대신 처리하지 않습니다."
       },
       {
-        id: "container-root-host-boundary",
-        sectionId: "container-root-boundary",
-        intuition:
-          "방 안에서 가장 높은 권한을 가져도 건물 관리자는 아니지만, 공용 설비로 통하는 문이 열리면 피해가 커질 수 있는 관계입니다.",
-        workedExample:
-          "User namespace remapping 없이 UID 0인 process에 hostPath와 과도한 capability가 주어지거나 runtime escape가 성공하면 host 자원에 미치는 blast radius가 non-root보다 커집니다.",
-        boundary:
-          "Container root가 즉시 host root라는 말도 틀리고 namespace가 있으니 안전하다는 말도 틀리며 runAsNonRoot는 guest kernel·seccomp·mount·egress 통제를 대신하지 않습니다.",
+        "id": "linux-cgroup-resource-budget",
+        "sectionId": "cgroup",
+        "intuition": "보이는 자원 이름이 아니라 전기·물처럼 얼마나 쓸 수 있는지를 정하는 계량기입니다.",
+        "workedExample": "2 GiB memory limit에서 1.5 GiB를 쓰면 새 작업의 headroom은 0.5 GiB입니다.",
+        "boundary": "Cgroup은 file·network destination·credential visibility를 결정하지 않습니다."
       },
       {
-        id: "syscall-filter-kernel-isolation-boundary",
-        sectionId: "runtime",
-        intuition:
-          "같은 창구에 낼 수 있는 신청서 종류를 줄이는 것과 아예 다른 기관의 창구를 거치게 하는 것은 서로 다른 방어입니다.",
-        workedExample:
-          "Seccomp RuntimeDefault는 runc process의 syscall을 줄이지만 host kernel이 처리하고, gVisor는 Sentry가 많은 Linux API를 userspace에서 처리하며 Kata는 guest kernel을 둡니다.",
-        boundary:
-          "Syscall 수가 적다는 사실만으로 exploitability 순위가 정해지지 않고 filesystem·network·credential policy와 device ioctl surface도 별도로 봐야 합니다.",
+        "id": "agent-attack-path-completion",
+        "sectionId": "attack-path",
+        "intuition": "경고 하나의 이름보다 목표까지 이어지는 다리가 모두 놓였는지 확인하는 방법입니다.",
+        "workedExample": "Metadata request 뒤 token 응답·control-plane permission·외부 POST가 모두 가능하면 credential theft path가 완성됩니다.",
+        "boundary": "0/1 path 식은 확률·CVSS가 아니고 알려지지 않은 우회 경로의 부재도 보장하지 않습니다."
       },
       {
-        id: "sandbox-runtime-isolation-spectrum",
-        sectionId: "runtime",
-        intuition:
-          "가장 두꺼운 벽 하나를 고르는 문제가 아니라 벽의 재료·문 크기·출입 속도·들어갈 장비를 workload에 맞추는 선택입니다.",
-        workedExample:
-          "신뢰하는 내부 service는 hardened runc로 시작하고, 임의 code session은 gVisor compatibility test를 거치며, guest-kernel 경계가 필요한 장기 workload는 Kata의 기동·memory overhead를 예산에 넣습니다.",
-        boundary:
-          "runc<gVisor<Kata 같은 단일 순위는 workload compatibility·host patching·VMM/device path·operator maturity를 설명하지 못하고 모든 cloud에서 nested virtualization이 가능한 것도 아닙니다.",
-      },
-      {
-        id: "kubernetes-workload-identity-boundary",
-        sectionId: "kubernetes",
-        intuition:
-          "출입증을 자동으로 주지 않는 설정과 출입증을 받았을 때 어느 방까지 들어갈 수 있는지 정하는 권한표는 서로 다릅니다.",
-        workedExample:
-          "API가 필요 없는 agent Pod는 automountServiceAccountToken:false를 두고, 필요한 worker는 전용 ServiceAccount와 특정 namespace resource·verb만 허용한 RoleBinding을 사용합니다.",
-        boundary:
-          "Token 자동 mount를 꺼도 environment·secret volume·tool credential이 사라지지 않고 최소 RBAC도 network exfiltration이나 host kernel escape를 차단하지 않습니다.",
-      },
-      {
-        id: "egress-allowlist-enforcement",
-        sectionId: "egress",
-        intuition:
-          "출입 금지 표지판을 붙였는지가 아니라 실제 경비원이 모든 출구에서 목적지를 확인하는지 시험하는 문제입니다.",
-        workedExample:
-          "Namespace default-deny 뒤 kube-dns proxy와 api.example.com:443만 허용하고 metadata·private service·임의 public domain의 connect/DNS test가 차단되는지 flow log로 확인합니다.",
-        boundary:
-          "표준 NetworkPolicy는 CNI 집행이 필요하고 FQDN·L7·explicit deny·hostNetwork를 모두 정의하지 않으며 DNS wildcard가 query-name exfiltration을 자동으로 막지 않습니다.",
-      },
-      {
-        id: "sandbox-writable-surface-lifetime",
-        sectionId: "kubernetes",
-        intuition:
-          "건물 전체에 쓸 수 없게 하는 대신 작업대 몇 곳만 크기와 사용 시간을 정해 열고 세션이 끝나면 깨끗이 비우는 방식입니다.",
-        workedExample:
-          "readOnlyRootFilesystem:true를 두고 /workspace와 /tmp에 sizeLimit이 있는 emptyDir만 mount하며 session 종료 후 Pod·volume을 폐기하고 cross-session residue test를 합니다.",
-        boundary:
-          "Read-only root는 writable volume·memory execution·interpreter pipe·external storage를 차단하지 않으며 emptyDir도 node disk/memory pressure와 sensitive residue를 별도로 관리해야 합니다.",
-      },
-      {
-        id: "gpu-device-isolation-boundary",
-        sectionId: "gpu",
-        intuition:
-          "Sandbox 벽에 GPU라는 큰 장비용 통로를 추가하면 통로를 검사하는 proxy나 장비를 guest에 넘기는 IOMMU가 새 경계가 됩니다.",
-        workedExample:
-          "gVisor nvproxy는 지원 ioctl을 host NVIDIA driver로 중개하고 Kata는 VFIO로 device를 guest에 assign하므로 driver version·GPU model·VMM·IOMMU·operator lifecycle을 같은 compatibility matrix에서 test합니다.",
-        boundary:
-          "CPU syscall 격리 결과를 GPU ioctl에 그대로 적용하거나 H100 지원을 B300으로 외삽할 수 없고 passthrough가 multi-GPU fabric·reset·sharing을 자동 지원하지 않습니다.",
-      },
-      {
-        id: "sandbox-workload-control-matrix",
-        sectionId: "decision",
-        intuition:
-          "제품 이름부터 고르는 대신 작업에 필요한 열쇠·통로·작업대·장비·사용 시간을 먼저 적고 각 위험을 끊는 통제를 배치하는 표입니다.",
-        workedExample:
-          "사용자 생성 code에는 session-scoped gVisor/Kata, no token, proxy-only egress, limited workspace, CPU/memory/PID limit, trace와 destroy test를 한 row로 승인합니다.",
-        boundary:
-          "Matrix는 제품 구매 체크리스트가 아니라 실제 deployment identity에 대한 test contract이며 control 하나의 존재나 benchmark overhead만으로 production safety를 선언하지 않습니다.",
-      },
+        "id": "container-root-host-boundary",
+        "sectionId": "container-root",
+        "intuition": "방 안의 최고 권한과 건물 전체의 관리자 권한을 구분하되 공용 설비로 열린 문을 함께 보는 경계입니다.",
+        "workedExample": "UID 0에 hostPath·과도한 capability·runtime escape가 결합되면 host 영향이 커집니다.",
+        "boundary": "Container root가 즉시 host root라는 말도, namespace가 있으니 무해하다는 말도 틀립니다."
+      }
     ],
-    conceptStages: [
+    "conceptStages": [
       {
-        label: "Ground",
-        relation:
-          "Container process와 host kernel의 실제 resource boundary를 확인",
-        concepts: [
-          "process-container-resource-boundary",
+        "label": "Process",
+        "relation": "Host kernel 위 실행 상태를 먼저 고정",
+        "concepts": [
+          "process-container-resource-boundary"
+        ]
+      },
+      {
+        "label": "View and budget",
+        "relation": "보이는 자원과 사용할 양을 독립 축으로 분리",
+        "concepts": [
+          "linux-namespace-resource-view",
+          "linux-cgroup-resource-budget",
+          "process-container-resource-boundary"
+        ]
+      },
+      {
+        "label": "Trace",
+        "relation": "Signal에서 impact까지 열린 edge를 추적",
+        "concepts": [
+          "agent-attack-path-completion"
+        ]
+      },
+      {
+        "label": "Privilege",
+        "relation": "Container UID 0과 host 권한의 결합 위험을 판정",
+        "concepts": [
           "container-root-host-boundary",
-        ],
-      },
-      {
-        label: "Trace",
-        relation:
-          "Signal에서 capability·boundary crossing·impact까지 열린 path를 찾음",
-        concepts: ["agent-attack-path-completion"],
-      },
-      {
-        label: "Isolate",
-        relation: "Syscall filter와 userspace/guest kernel runtime을 구분",
-        concepts: [
-          "syscall-filter-kernel-isolation-boundary",
-          "sandbox-runtime-isolation-spectrum",
-        ],
-      },
-      {
-        label: "Constrain",
-        relation:
-          "Identity·egress·writable surface·GPU device를 독립적으로 제한",
-        concepts: [
-          "kubernetes-workload-identity-boundary",
-          "egress-allowlist-enforcement",
-          "sandbox-writable-surface-lifetime",
-          "gpu-device-isolation-boundary",
-        ],
-      },
-      {
-        label: "Verify",
-        relation:
-          "Workload trust와 필요한 capability별 control matrix를 실제 차단 test로 승인",
-        concepts: [
-          "sandbox-workload-control-matrix",
-          "agent-attack-path-completion",
-        ],
-      },
+          "agent-attack-path-completion"
+        ]
+      }
     ],
-    exercises: [
+    "exercises": [
       {
-        level: "basic",
-        question:
-          "일반 runc container와 VM의 kernel 경계를 process·namespace·cgroup 관점에서 비교하라.",
-        answerChecklist: [
+        "level": "basic",
+        "question": "Linux process와 일반 runc container의 관계를 host kernel 관점에서 설명하라.",
+        "answerChecklist": [
+          "program state",
           "process",
+          "policy bundle",
           "host kernel shared",
-          "namespace view",
-          "cgroup limit",
-          "guest kernel",
           "not a small VM",
+          "system call"
         ],
-        requiredConcepts: ["process-container-resource-boundary"],
-        sectionId: "container-boundary",
+        "requiredConcepts": [
+          "process-container-resource-boundary"
+        ],
+        "sectionId": "overview"
       },
       {
-        level: "basic",
-        question:
-          "컨테이너에서 /etc/passwd 읽기, 169.254.169.254 접근, 외부 POST가 차례로 관측됐을 때 각각을 signal·capability·boundary crossing·impact로 분류하고 첫 관측만으로 침해가 확정되지 않는 이유를 설명하라.",
-        answerChecklist: [
-          "passwd read는 조사 signal",
-          "metadata reachability는 network capability",
-          "credential 응답 획득은 boundary crossing",
-          "외부 POST는 egress path",
-          "실제 secret 전송이 impact",
-          "단일 signal과 완성된 attack path 구분",
-          "trace로 edge 확인",
+        "level": "basic",
+        "question": "PID·mount·network namespace가 process에 제공하는 형태를 예로 설명하라.",
+        "answerChecklist": [
+          "resource view",
+          "PID mapping",
+          "mount view",
+          "network view",
+          "same host",
+          "not budget"
         ],
-        requiredConcepts: [
-          "agent-attack-path-completion",
-          "kubernetes-workload-identity-boundary",
-          "egress-allowlist-enforcement",
+        "requiredConcepts": [
+          "linux-namespace-resource-view"
         ],
-        sectionId: "attack-path-model",
+        "sectionId": "namespace"
       },
       {
-        level: "basic",
-        question:
-          "Container UID 0이 곧 host root라는 설명과 아무 위험이 없다는 설명이 모두 틀린 이유를 쓰라.",
-        answerChecklist: [
-          "namespace/capabilities",
+        "level": "basic",
+        "question": "Cgroup과 namespace가 서로 대신할 수 없는 이유를 memory와 mount 예로 설명하라.",
+        "answerChecklist": [
+          "usage limit",
+          "memory",
+          "PID or CPU",
+          "mount visibility",
+          "independent axes",
+          "controller"
+        ],
+        "requiredConcepts": [
+          "linux-cgroup-resource-budget",
+          "linux-namespace-resource-view"
+        ],
+        "sectionId": "cgroup"
+      },
+      {
+        "level": "basic",
+        "question": "2 GiB limit에서 1.5 GiB 사용 중인 cgroup의 headroom을 계산하고 usage가 limit를 넘을 때 0으로 자르는 이유를 쓰라.",
+        "answerChecklist": [
+          "0.5 GiB",
+          "limit minus usage",
+          "max zero",
+          "same units",
+          "over limit",
+          "not negative budget"
+        ],
+        "requiredConcepts": [
+          "linux-cgroup-resource-budget"
+        ],
+        "sectionId": "cgroup"
+      },
+      {
+        "level": "basic",
+        "question": "Metadata endpoint 요청에서 secret 유출까지 signal·capability·crossing·impact를 나누라.",
+        "answerChecklist": [
+          "request signal",
+          "network route",
+          "token response",
+          "permission",
+          "egress",
+          "impact",
+          "all edges"
+        ],
+        "requiredConcepts": [
+          "agent-attack-path-completion"
+        ],
+        "sectionId": "attack-path"
+      },
+      {
+        "level": "basic",
+        "question": "Container UID 0과 host root가 같은 말이 아닌 이유를 namespace·capability로 설명하라.",
+        "answerChecklist": [
+          "namespace",
+          "capability",
+          "user mapping",
           "not immediate host root",
-          "user namespace mapping",
           "host mount",
-          "escape",
-          "blast radius",
-          "runAsNonRoot",
+          "escape"
         ],
-        requiredConcepts: ["container-root-host-boundary"],
-        sectionId: "container-root-boundary",
+        "requiredConcepts": [
+          "container-root-host-boundary"
+        ],
+        "sectionId": "container-root"
       },
       {
-        level: "basic",
-        question:
-          "seccomp·gVisor·Kata가 system call과 kernel을 어디서 처리하는지 비교하라.",
-        answerChecklist: [
-          "filter",
+        "level": "advanced",
+        "question": "Namespace만 있고 cgroup이 없는 agent process와 cgroup만 있고 mount namespace가 없는 process의 서로 다른 failure를 설계하라.",
+        "answerChecklist": [
+          "resource exhaustion",
+          "host mount visibility",
+          "independent controls",
+          "CPU or memory",
+          "file exposure",
+          "negative test"
+        ],
+        "requiredConcepts": [
+          "linux-namespace-resource-view",
+          "linux-cgroup-resource-budget"
+        ],
+        "sectionId": "cgroup"
+      },
+      {
+        "level": "advanced",
+        "question": "내부 port scan에서 control-plane write까지 두 개의 가능한 attack path를 그리고 각각 한 edge를 끊어라.",
+        "answerChecklist": [
+          "two paths",
+          "signal",
+          "capability",
+          "boundary crossing",
+          "impact",
+          "different controls",
+          "retest"
+        ],
+        "requiredConcepts": [
+          "agent-attack-path-completion"
+        ],
+        "sectionId": "attack-path"
+      },
+      {
+        "level": "advanced",
+        "question": "runAsNonRoot가 있어도 위험한 counterexample과 UID 0이어도 host impact가 제한되는 counterexample을 각각 작성하라.",
+        "answerChecklist": [
+          "non-root with token or mount",
+          "UID0 isolated",
+          "capability",
+          "user namespace",
+          "runtime escape",
+          "blast radius"
+        ],
+        "requiredConcepts": [
+          "container-root-host-boundary",
+          "agent-attack-path-completion"
+        ],
+        "sectionId": "container-root"
+      },
+      {
+        "level": "advanced",
+        "question": "Process·namespace·cgroup inventory를 attack-path 검토의 입력 receipt로 설계하라.",
+        "answerChecklist": [
+          "process identity",
+          "namespace IDs",
+          "mounts",
+          "routes",
+          "cgroup limits",
+          "credentials",
+          "timestamp",
+          "revision"
+        ],
+        "requiredConcepts": [
+          "process-container-resource-boundary",
+          "linux-namespace-resource-view",
+          "linux-cgroup-resource-budget",
+          "agent-attack-path-completion"
+        ],
+        "sectionId": "attack-path"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Linux namespaces manual",
+        "href": "https://man7.org/linux/man-pages/man7/namespaces.7.html",
+        "problem": "Process마다 서로 다른 system resource view를 제공하는 문제",
+        "contribution": "Namespace 종류와 격리되는 global resource를 정의",
+        "assumptions": "Linux kernel namespace semantics와 process membership",
+        "evidenceScope": "PID·mount·network·user namespace가 바꾸는 view",
+        "notClaim": "Resource budget·syscall filtering·kernel separation까지 제공한다는 뜻은 아님",
+        "sectionId": "paper-linux-namespaces"
+      },
+      {
+        "title": "Linux kernel Control Group v2",
+        "href": "https://docs.kernel.org/admin-guide/cgroup-v2.html",
+        "problem": "Process 집합의 resource consumption을 계층적으로 배분·측정하는 문제",
+        "contribution": "Cgroup v2 hierarchy와 controller interface를 정의",
+        "assumptions": "Kernel controller 활성화·delegation·runtime configuration",
+        "evidenceScope": "CPU·memory·I/O·PID accounting과 limit",
+        "notClaim": "Namespace·network·credential 격리를 대신한다는 뜻은 아님",
+        "sectionId": "paper-linux-cgroup"
+      },
+      {
+        "title": "Linux capabilities manual",
+        "href": "https://man7.org/linux/man-pages/man7/capabilities.7.html",
+        "problem": "All-powerful root 권한을 작은 privilege 단위로 나누는 문제",
+        "contribution": "Capability 집합과 process privilege checks를 정의",
+        "assumptions": "Kernel·user namespace·runtime capability configuration",
+        "evidenceScope": "UID 0과 capability가 허용하는 privileged operation",
+        "notClaim": "Capability drop 하나로 모든 host escape path가 사라진다는 뜻은 아님",
+        "sectionId": "paper-linux-capabilities"
+      }
+    ]
+  },
+  "ai/sandbox-runtime-isolation": {
+    "entryLevel": true,
+    "coreIdea": "Sandbox runtime은 보안 순위표가 아니라 system call 처리 경로의 선택입니다. Application→host kernel 기본 경로에서 seccomp filter, gVisor application kernel, Kata guest kernel을 한 경계씩 추가하고 isolation·compatibility·startup·memory gate를 모두 통과한 runtime만 workload에 승인합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "linux-syscall-host-kernel-path",
+        "role": "Application 요청이 host kernel service로 들어가는 기본 경로를 정의합니다."
+      },
+      {
+        "id": "syscall-filter-kernel-isolation-boundary",
+        "role": "Seccomp filtering과 처리 kernel을 바꾸는 isolation을 구분합니다."
+      },
+      {
+        "id": "sandbox-application-kernel-mediation",
+        "role": "gVisor Sentry가 Linux API를 userspace에서 중개하는 형태를 설명합니다."
+      },
+      {
+        "id": "sandbox-guest-kernel-boundary",
+        "role": "Kata guest kernel·VMM이 만드는 별도 kernel 경계를 설명합니다."
+      },
+      {
+        "id": "sandbox-runtime-isolation-spectrum",
+        "role": "격리·호환성·기동·memory를 독립 gate로 비교합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "linux-syscall-host-kernel-path",
+        "sectionId": "overview",
+        "intuition": "Application이 kernel 기능을 요청하는 기본 문을 먼저 알아야 이후 경로 차이를 볼 수 있습니다.",
+        "workedExample": "runc process의 open 호출은 namespace view를 적용받지만 최종 처리는 host Linux kernel이 합니다.",
+        "boundary": "System call 경로는 file permission·network route·credential policy와 별개입니다."
+      },
+      {
+        "id": "syscall-filter-kernel-isolation-boundary",
+        "sectionId": "seccomp",
+        "intuition": "같은 창구에 낼 신청서 종류를 줄이는 filter와 다른 기관의 창구를 거치는 isolation을 구분합니다.",
+        "workedExample": "RuntimeDefault는 일부 syscall을 막지만 허용 syscall은 host kernel로 들어갑니다.",
+        "boundary": "허용 syscall 수만으로 exploitability를 정하거나 filesystem·egress를 대신할 수 없습니다."
+      },
+      {
+        "id": "sandbox-application-kernel-mediation",
+        "sectionId": "application-kernel",
+        "intuition": "Sentry가 application과 host kernel 사이에서 Linux System API의 상당 부분을 구현하는 userspace 경계입니다.",
+        "workedExample": "File open은 Sentry와 Gofer/LISAFS를 거쳐 제한된 host interface만 사용합니다.",
+        "boundary": "Hardware VM과 같지 않고 모든 syscall·filesystem·GPU workload가 호환되지 않습니다."
+      },
+      {
+        "id": "sandbox-guest-kernel-boundary",
+        "sectionId": "guest-kernel",
+        "intuition": "Workload의 syscall을 VM 안 guest kernel이 처리하게 하는 경계입니다.",
+        "workedExample": "Kata workload는 guest kernel과 VMM을 거쳐 host·hardware와 상호작용합니다.",
+        "boundary": "기동·memory·VMM·nested virtualization·device 조건을 함께 지불합니다."
+      },
+      {
+        "id": "sandbox-runtime-isolation-spectrum",
+        "sectionId": "runtime-spectrum",
+        "intuition": "벽의 두께 하나가 아니라 surface·호환성·기동·memory·운영 성숙도를 여러 축으로 고릅니다.",
+        "workedExample": "짧은 untrusted session은 gVisor 호환성을 시험하고 guest-kernel 요구 workload는 Kata의 startup budget까지 검증합니다.",
+        "boundary": "runc<gVisor<Kata 단일 순위나 benchmark 하나로 production을 승인하지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "Base path",
+        "relation": "Application에서 host kernel로 가는 system call 경로를 고정",
+        "concepts": [
+          "linux-syscall-host-kernel-path"
+        ]
+      },
+      {
+        "label": "Filter",
+        "relation": "공유 host kernel 앞에서 요청 종류를 제한",
+        "concepts": [
+          "syscall-filter-kernel-isolation-boundary",
+          "linux-syscall-host-kernel-path"
+        ]
+      },
+      {
+        "label": "Mediate",
+        "relation": "Userspace application kernel이 API를 중개",
+        "concepts": [
+          "sandbox-application-kernel-mediation"
+        ]
+      },
+      {
+        "label": "Separate",
+        "relation": "Guest kernel과 VMM으로 처리 경계를 이동",
+        "concepts": [
+          "sandbox-guest-kernel-boundary"
+        ]
+      },
+      {
+        "label": "Select",
+        "relation": "격리·호환성·비용 gate로 runtime을 승인",
+        "concepts": [
+          "sandbox-runtime-isolation-spectrum",
+          "sandbox-application-kernel-mediation",
+          "sandbox-guest-kernel-boundary"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "Application의 open 요청이 일반 runc container에서 처리되는 경로를 설명하라.",
+        "answerChecklist": [
+          "application",
+          "syscall entry",
+          "namespace view",
           "host kernel",
-          "Sentry userspace",
+          "resource",
+          "shared kernel"
+        ],
+        "requiredConcepts": [
+          "linux-syscall-host-kernel-path"
+        ],
+        "sectionId": "overview"
+      },
+      {
+        "level": "basic",
+        "question": "Seccomp filter가 하는 일과 하지 않는 일을 구분하라.",
+        "answerChecklist": [
+          "allow deny",
+          "syscall",
+          "host kernel remains",
+          "not filesystem",
+          "not network",
+          "profile"
+        ],
+        "requiredConcepts": [
+          "syscall-filter-kernel-isolation-boundary"
+        ],
+        "sectionId": "seccomp"
+      },
+      {
+        "level": "basic",
+        "question": "gVisor Sentry를 seccomp profile과 같은 것으로 보면 안 되는 이유를 쓰라.",
+        "answerChecklist": [
+          "application kernel",
+          "userspace",
+          "API implementation",
+          "limited host interface",
+          "not just filter",
+          "compatibility"
+        ],
+        "requiredConcepts": [
+          "sandbox-application-kernel-mediation",
+          "syscall-filter-kernel-isolation-boundary"
+        ],
+        "sectionId": "application-kernel"
+      },
+      {
+        "level": "basic",
+        "question": "Kata guest-kernel 경로를 application에서 hardware까지 순서대로 그려라.",
+        "answerChecklist": [
+          "application",
           "guest kernel",
           "VMM",
-          "compatibility",
-          "not filesystem/network replacement",
+          "host",
+          "hardware virtualization",
+          "separate kernel"
         ],
-        requiredConcepts: [
-          "syscall-filter-kernel-isolation-boundary",
-          "sandbox-runtime-isolation-spectrum",
+        "requiredConcepts": [
+          "sandbox-guest-kernel-boundary"
         ],
-        sectionId: "runtime",
+        "sectionId": "guest-kernel"
       },
       {
-        level: "advanced",
-        question:
-          "DB I/O가 많은 plugin workload와 짧은 untrusted code session에 서로 다른 runtime acceptance test를 설계하라.",
-        answerChecklist: [
+        "level": "basic",
+        "question": "runc·gVisor·Kata를 host surface·compatibility·startup 세 축으로 비교하라.",
+        "answerChecklist": [
+          "shared kernel",
+          "Sentry",
+          "guest kernel",
+          "compatibility",
+          "startup",
+          "no total order"
+        ],
+        "requiredConcepts": [
+          "sandbox-runtime-isolation-spectrum"
+        ],
+        "sectionId": "runtime-spectrum"
+      },
+      {
+        "level": "basic",
+        "question": "Isolation gate는 통과했지만 compatibility gate가 실패한 예를 들고 release 판정을 하라.",
+        "answerChecklist": [
+          "isolation true",
+          "compatibility false",
+          "required syscall",
+          "reject",
+          "fallback",
+          "receipt"
+        ],
+        "requiredConcepts": [
+          "sandbox-runtime-isolation-spectrum"
+        ],
+        "sectionId": "runtime-spectrum"
+      },
+      {
+        "level": "advanced",
+        "question": "DB I/O가 많은 plugin workload에 세 runtime acceptance fixture를 설계하라.",
+        "answerChecklist": [
+          "same image",
+          "syscall suite",
+          "filesystem I/O",
+          "tail latency",
+          "startup",
+          "memory",
+          "negative test",
+          "upgrade"
+        ],
+        "requiredConcepts": [
+          "sandbox-runtime-isolation-spectrum",
+          "sandbox-application-kernel-mediation",
+          "sandbox-guest-kernel-boundary"
+        ],
+        "sectionId": "runtime-spectrum"
+      },
+      {
+        "level": "advanced",
+        "question": "Custom seccomp allowlist를 만들고 kernel·runtime upgrade 때 회귀를 검출하는 절차를 설계하라.",
+        "answerChecklist": [
+          "trace",
+          "baseline",
+          "allowlist",
+          "deny test",
+          "kernel revision",
+          "runtime revision",
+          "rollback"
+        ],
+        "requiredConcepts": [
+          "syscall-filter-kernel-isolation-boundary"
+        ],
+        "sectionId": "seccomp"
+      },
+      {
+        "level": "advanced",
+        "question": "gVisor와 Kata에서 같은 file-open workload의 trust boundary와 남는 host component를 비교하라.",
+        "answerChecklist": [
+          "Sentry",
+          "Gofer",
+          "guest kernel",
+          "VMM",
+          "host filesystem path",
+          "patching",
+          "not equivalent"
+        ],
+        "requiredConcepts": [
+          "sandbox-application-kernel-mediation",
+          "sandbox-guest-kernel-boundary"
+        ],
+        "sectionId": "guest-kernel"
+      },
+      {
+        "level": "advanced",
+        "question": "신뢰도와 session lifetime이 다른 두 workload에 서로 다른 runtime을 선택하고 failure fallback을 작성하라.",
+        "answerChecklist": [
           "trust",
-          "syscall/I/O profile",
+          "lifetime",
+          "isolation requirement",
           "compatibility",
           "startup",
           "memory",
-          "throughput/tail",
-          "escape boundary",
           "fallback",
-          "upgrade test",
+          "release gate"
         ],
-        requiredConcepts: ["sandbox-runtime-isolation-spectrum"],
-        sectionId: "runtime",
+        "requiredConcepts": [
+          "sandbox-runtime-isolation-spectrum"
+        ],
+        "sectionId": "runtime-spectrum"
+      }
+    ],
+    "papers": [
+      {
+        "title": "gVisor Security Model",
+        "href": "https://gvisor.dev/docs/architecture_guide/security/",
+        "problem": "Container application이 넓은 host-kernel surface에 직접 의존하는 문제",
+        "contribution": "Sentry application kernel과 제한된 host interface의 security model",
+        "assumptions": "지원 platform·runsc configuration·host patch",
+        "evidenceScope": "gVisor가 Linux API를 중개해 host surface를 줄이는 구조",
+        "notClaim": "Hardware VM과 같거나 모든 workload가 호환된다는 뜻은 아님",
+        "sectionId": "paper-gvisor-security"
       },
       {
-        level: "basic",
-        question:
-          "automountServiceAccountToken:false와 최소 RBAC이 서로 대신할 수 없는 이유를 예로 설명하라.",
-        answerChecklist: [
-          "token injection",
-          "authorization",
-          "dedicated SA",
-          "Role verbs/resources",
-          "other credentials",
-          "audit",
-        ],
-        requiredConcepts: ["kubernetes-workload-identity-boundary"],
-        sectionId: "kubernetes",
+        "title": "Kata Containers virtualization design",
+        "href": "https://github.com/kata-containers/kata-containers/blob/main/docs/design/virtualization.md",
+        "problem": "Container workflow를 유지하면서 host와 다른 kernel boundary를 두는 문제",
+        "contribution": "Kata agent·guest·VMM과 hypervisor capability를 문서화",
+        "assumptions": "선택 VMM·hardware virtualization·image·cloud support",
+        "evidenceScope": "Guest-kernel architecture와 VMM별 기능 차이",
+        "notClaim": "모든 cloud·device에서 같은 호환성·비용을 보장한다는 뜻은 아님",
+        "sectionId": "paper-kata-virtualization"
+      }
+    ]
+  },
+  "ai/sandbox-gpu-isolation": {
+    "entryLevel": true,
+    "coreIdea": "GPU sandbox는 CPU runtime의 부록이 아닙니다. GPU device request가 nvproxy를 거쳐 host driver로 가는 경로와 VFIO·IOMMU를 거쳐 guest에 할당되는 경로를 분리하고, GPU·driver·runtime·VMM·reset 조합의 실제 receipt로만 release합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "gpu-device-isolation-boundary",
+        "role": "GPU workload가 신뢰하는 driver·VMM·IOMMU·device lifecycle을 정의합니다."
       },
       {
-        level: "advanced",
-        question:
-          "default-deny부터 FQDN API allowlist까지 단계별 egress test를 설계하고 DNS tunneling·metadata·hostNetwork 한계를 포함하라.",
-        answerChecklist: [
+        "id": "gpu-ioctl-proxy-mediation",
+        "role": "nvproxy가 지원 ioctl을 검사해 host driver로 중개하는 형태를 설명합니다."
+      },
+      {
+        "id": "gpu-vfio-device-assignment",
+        "role": "VFIO·IOMMU로 GPU를 guest에 할당하는 형태를 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "gpu-device-isolation-boundary",
+        "sectionId": "overview",
+        "intuition": "CPU sandbox 벽에 GPU라는 별도 장비 통로를 열면 driver·DMA·reset이 새 trust boundary가 됩니다.",
+        "workedExample": "CUDA process가 gVisor 안에 있어도 ioctl은 nvproxy를 거쳐 host NVIDIA driver로 들어갈 수 있습니다.",
+        "boundary": "CPU syscall 결과를 GPU path에 그대로 외삽하거나 한 세대 support를 다른 GPU에 적용하면 안 됩니다."
+      },
+      {
+        "id": "gpu-ioctl-proxy-mediation",
+        "sectionId": "ioctl-proxy",
+        "intuition": "Proxy가 GPU command를 decode·validate한 뒤 허용된 요청만 host driver로 전달합니다.",
+        "workedExample": "문서 support matrix 안 ioctl은 중개하고 unknown command나 unsupported capability는 거절합니다.",
+        "boundary": "Host driver가 사라지는 것이 아니며 matrix 밖 기능·보안을 보장하지 않습니다."
+      },
+      {
+        "id": "gpu-vfio-device-assignment",
+        "sectionId": "vfio",
+        "intuition": "GPU를 guest에 할당하고 IOMMU가 device DMA의 address 범위를 제한합니다.",
+        "workedExample": "Kata guest driver가 VFIO GPU를 쓰고 host operator·device plugin·CDI가 lifecycle을 조정합니다.",
+        "boundary": "Reset·sharing·multi-GPU fabric·nested virtualization은 별도 검증 항목입니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "Find path",
+        "relation": "GPU request가 통과하는 driver·memory 경계를 찾음",
+        "concepts": [
+          "gpu-device-isolation-boundary"
+        ]
+      },
+      {
+        "label": "Proxy",
+        "relation": "Ioctl validation 뒤 host driver로 중개",
+        "concepts": [
+          "gpu-ioctl-proxy-mediation",
+          "gpu-device-isolation-boundary"
+        ]
+      },
+      {
+        "label": "Assign",
+        "relation": "Guest driver·VFIO·IOMMU로 device를 할당",
+        "concepts": [
+          "gpu-vfio-device-assignment",
+          "gpu-device-isolation-boundary"
+        ]
+      },
+      {
+        "label": "Release",
+        "relation": "전체 component generation과 reset test를 승인",
+        "concepts": [
+          "gpu-device-isolation-boundary",
+          "gpu-ioctl-proxy-mediation",
+          "gpu-vfio-device-assignment"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "CPU syscall sandbox와 GPU device boundary가 별도인 이유를 설명하라.",
+        "answerChecklist": [
+          "device ioctl",
+          "driver",
+          "DMA",
+          "reset",
+          "CPU path",
+          "separate trust"
+        ],
+        "requiredConcepts": [
+          "gpu-device-isolation-boundary"
+        ],
+        "sectionId": "overview"
+      },
+      {
+        "level": "basic",
+        "question": "nvproxy path를 CUDA process에서 GPU까지 순서대로 그려라.",
+        "answerChecklist": [
+          "CUDA process",
+          "nvproxy",
+          "decode validate",
+          "host driver",
+          "GPU",
+          "allowlist"
+        ],
+        "requiredConcepts": [
+          "gpu-ioctl-proxy-mediation"
+        ],
+        "sectionId": "ioctl-proxy"
+      },
+      {
+        "level": "basic",
+        "question": "nvproxy가 host NVIDIA driver를 trust boundary에서 제거하지 않는 이유를 쓰라.",
+        "answerChecklist": [
+          "proxy",
+          "allowed ioctl",
+          "host driver remains",
+          "patching",
+          "support matrix",
+          "not guest driver"
+        ],
+        "requiredConcepts": [
+          "gpu-ioctl-proxy-mediation"
+        ],
+        "sectionId": "ioctl-proxy"
+      },
+      {
+        "level": "basic",
+        "question": "VFIO·VMM·IOMMU·guest driver의 역할을 각각 구분하라.",
+        "answerChecklist": [
+          "assignment",
+          "virtual PCI",
+          "DMA translation",
+          "guest driver",
+          "VMM",
+          "host lifecycle"
+        ],
+        "requiredConcepts": [
+          "gpu-vfio-device-assignment"
+        ],
+        "sectionId": "vfio"
+      },
+      {
+        "level": "basic",
+        "question": "GPU detection과 CUDA sample만 통과했지만 release하면 안 되는 이유를 reset test로 설명하라.",
+        "answerChecklist": [
+          "functional only",
+          "reset",
+          "destroy",
+          "negative test",
+          "release zero",
+          "receipt"
+        ],
+        "requiredConcepts": [
+          "gpu-device-isolation-boundary"
+        ],
+        "sectionId": "compatibility"
+      },
+      {
+        "level": "basic",
+        "question": "H100에서 검증한 gVisor GPU 결과를 B300에 그대로 적용할 수 없는 이유를 쓰라.",
+        "answerChecklist": [
+          "GPU model",
+          "driver",
+          "ioctl support",
+          "generation",
+          "no extrapolation",
+          "retest"
+        ],
+        "requiredConcepts": [
+          "gpu-ioctl-proxy-mediation",
+          "gpu-device-isolation-boundary"
+        ],
+        "sectionId": "compatibility"
+      },
+      {
+        "level": "advanced",
+        "question": "nvproxy와 VFIO를 host driver·guest driver·IOMMU·VMM 관점으로 비교하라.",
+        "answerChecklist": [
+          "proxy path",
+          "host driver",
+          "guest driver",
+          "VFIO",
+          "IOMMU",
+          "VMM",
+          "different boundaries"
+        ],
+        "requiredConcepts": [
+          "gpu-ioctl-proxy-mediation",
+          "gpu-vfio-device-assignment"
+        ],
+        "sectionId": "vfio"
+      },
+      {
+        "level": "advanced",
+        "question": "GPU·driver·runtime·operator·reset을 묶은 compatibility generation schema를 설계하라.",
+        "answerChecklist": [
+          "GPU firmware",
+          "driver ABI",
+          "runtime revision",
+          "operator CDI",
+          "VMM IOMMU",
+          "reset",
+          "timestamp",
+          "receipt"
+        ],
+        "requiredConcepts": [
+          "gpu-device-isolation-boundary"
+        ],
+        "sectionId": "compatibility"
+      },
+      {
+        "level": "advanced",
+        "question": "Multi-GPU fabric workload에서 단일 GPU passthrough test가 놓치는 failure를 세 가지 설계하라.",
+        "answerChecklist": [
+          "peer access",
+          "fabric topology",
+          "reset scope",
+          "sharing",
+          "IOMMU group",
+          "negative test"
+        ],
+        "requiredConcepts": [
+          "gpu-vfio-device-assignment",
+          "gpu-device-isolation-boundary"
+        ],
+        "sectionId": "compatibility"
+      },
+      {
+        "level": "advanced",
+        "question": "GPU sandbox release에서 기능은 통과했지만 격리나 lifecycle이 실패한 두 counterexample과 rollback을 작성하라.",
+        "answerChecklist": [
+          "functional pass",
+          "isolation fail",
+          "lifecycle fail",
+          "AND gate",
+          "rollback",
+          "quarantine",
+          "evidence"
+        ],
+        "requiredConcepts": [
+          "gpu-device-isolation-boundary",
+          "gpu-ioctl-proxy-mediation",
+          "gpu-vfio-device-assignment"
+        ],
+        "sectionId": "compatibility"
+      }
+    ],
+    "papers": [
+      {
+        "title": "gVisor GPU Support",
+        "href": "https://gvisor.dev/docs/user_guide/gpu/",
+        "problem": "gVisor 안 CUDA workload가 NVIDIA device interface를 제한적으로 쓰는 문제",
+        "contribution": "nvproxy architecture와 지원 GPU·driver·capability 범위를 문서화",
+        "assumptions": "Support matrix의 runsc·GPU·driver 조합",
+        "evidenceScope": "Ioctl validation·mediation과 남는 host-driver boundary",
+        "notClaim": "임의 GPU·CUDA 기능 지원이나 host driver 취약점 제거를 뜻하지 않음",
+        "sectionId": "paper-gvisor-gpu"
+      },
+      {
+        "title": "Kata NVIDIA GPU passthrough",
+        "href": "https://github.com/kata-containers/kata-containers/blob/main/docs/use-cases/NVIDIA-GPU-passthrough-and-Kata-QEMU.md",
+        "problem": "NVIDIA GPU를 Kata guest에 assign하는 문제",
+        "contribution": "IOMMU·VFIO·VMM·NVIDIA stack 구성 경로를 공개",
+        "assumptions": "검증된 hardware·VMM·kernel·driver·operator",
+        "evidenceScope": "GPU assignment와 필요한 lifecycle component",
+        "notClaim": "모든 VMM·fabric·sharing·reset 환경을 보장한다는 뜻은 아님",
+        "sectionId": "paper-kata-gpu"
+      }
+    ]
+  },
+  "ai/sandbox-deployment-controls": {
+    "entryLevel": true,
+    "coreIdea": "Sandbox 배포는 ServiceAccount identity, projected token, RBAC permission, egress, writable storage를 각각 정의하고 실제 차단 결과를 확인한 뒤 workload control matrix로 결합합니다. 한 control의 존재는 다른 경계를 대신하지 않습니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "kubernetes-serviceaccount-token-projection",
+        "role": "Workload identity material이 Pod에 들어오는 audience·expiry·automount 경계를 설명합니다."
+      },
+      {
+        "id": "kubernetes-rbac-authorization-scope",
+        "role": "인증된 subject의 verb·resource·namespace permission을 설명합니다."
+      },
+      {
+        "id": "kubernetes-workload-identity-boundary",
+        "role": "Token 주입과 RBAC authorization을 독립 gate로 결합합니다."
+      },
+      {
+        "id": "egress-allowlist-enforcement",
+        "role": "Default-deny에서 필요한 destination만 열고 실제 집행을 검증합니다."
+      },
+      {
+        "id": "sandbox-writable-surface-lifetime",
+        "role": "Writable path의 size·owner·session lifetime·폐기를 관리합니다."
+      },
+      {
+        "id": "sandbox-workload-control-matrix",
+        "role": "Workload capability와 독립 control receipt를 한 release 판단으로 묶습니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "kubernetes-serviceaccount-token-projection",
+        "sectionId": "service-account-token",
+        "intuition": "ServiceAccount identity를 증명하는 audience·expiry token을 Pod에 전달하거나 자동 mount를 끄는 경계입니다.",
+        "workedExample": "API가 필요 없는 agent는 automountServiceAccountToken:false, 필요한 worker는 짧은 lifetime·명시 audience token을 사용합니다.",
+        "boundary": "자동 mount를 꺼도 Secret volume·environment·tool credential은 사라지지 않습니다."
+      },
+      {
+        "id": "kubernetes-rbac-authorization-scope",
+        "sectionId": "rbac",
+        "intuition": "인증된 identity가 어떤 verb를 어느 resource·namespace에 실행할지 정하는 permission 범위입니다.",
+        "workedExample": "agent-reader는 jobs get/list만 받고 secrets read와 deployments create는 받지 않습니다.",
+        "boundary": "최소 RBAC은 external API·filesystem·host kernel을 제한하지 않습니다."
+      },
+      {
+        "id": "kubernetes-workload-identity-boundary",
+        "sectionId": "rbac",
+        "intuition": "Token 존재와 permission rule match를 분리해 identity material과 API authority를 함께 최소화합니다.",
+        "workedExample": "유효 token이 있어도 create deployments rule이 없으면 요청은 거절됩니다.",
+        "boundary": "Token 없음과 permission 없음은 다른 상태이며 둘 다 inventory해야 합니다."
+      },
+      {
+        "id": "egress-allowlist-enforcement",
+        "sectionId": "egress",
+        "intuition": "Policy 객체가 아니라 실제 CNI·DNS proxy·gateway가 destination을 default-deny에서 허용 목록으로 집행하는지 보는 경계입니다.",
+        "workedExample": "DNS와 api.example.com:443만 열고 metadata·private service·다른 domain이 차단되는지 flow log로 확인합니다.",
+        "boundary": "표준 NetworkPolicy는 FQDN·explicit deny·hostNetwork·DNS tunneling을 모두 정의하지 않습니다."
+      },
+      {
+        "id": "sandbox-writable-surface-lifetime",
+        "sectionId": "writable-surface",
+        "intuition": "Read-only root 밖 writable path의 type·size·owner·session lifetime·폐기를 제한합니다.",
+        "workedExample": "/tmp와 /workspace만 sizeLimit emptyDir로 열고 Pod 종료 때 volume destroy receipt를 남깁니다.",
+        "boundary": "Read-only root는 memory execution·external storage·node pressure를 해결하지 않습니다."
+      },
+      {
+        "id": "sandbox-workload-control-matrix",
+        "sectionId": "control-matrix",
+        "intuition": "Workload trust와 필요한 capability를 행에 두고 identity·network·runtime·storage·lifecycle control과 negative test를 열로 승인합니다.",
+        "workedExample": "사용자 code는 no token, proxy-only egress, gVisor/Kata, 5 GiB workspace, 20-minute destroy를 한 row로 가집니다.",
+        "boundary": "제품 목록이나 control object 존재만으로 production safety를 선언하지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "Identify",
+        "relation": "ServiceAccount token이 workload에 들어오는 범위를 고정",
+        "concepts": [
+          "kubernetes-serviceaccount-token-projection"
+        ]
+      },
+      {
+        "label": "Authorize",
+        "relation": "Verb·resource·namespace permission과 token을 분리",
+        "concepts": [
+          "kubernetes-rbac-authorization-scope",
+          "kubernetes-workload-identity-boundary"
+        ]
+      },
+      {
+        "label": "Constrain",
+        "relation": "Network destination과 writable surface를 독립 제한",
+        "concepts": [
+          "egress-allowlist-enforcement",
+          "sandbox-writable-surface-lifetime"
+        ]
+      },
+      {
+        "label": "Release",
+        "relation": "Workload별 control과 negative test receipt를 결합",
+        "concepts": [
+          "sandbox-workload-control-matrix",
+          "kubernetes-workload-identity-boundary",
+          "egress-allowlist-enforcement",
+          "sandbox-writable-surface-lifetime"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "ServiceAccount와 projected token을 identity 이름과 증명서로 구분하라.",
+        "answerChecklist": [
+          "namespaced identity",
+          "token material",
+          "audience",
+          "expiry",
+          "mount",
+          "different roles"
+        ],
+        "requiredConcepts": [
+          "kubernetes-serviceaccount-token-projection"
+        ],
+        "sectionId": "service-account-token"
+      },
+      {
+        "level": "basic",
+        "question": "automountServiceAccountToken:false가 제거하는 것과 제거하지 않는 것을 설명하라.",
+        "answerChecklist": [
+          "default token mount",
+          "not RBAC",
+          "not secret volume",
+          "not environment",
+          "tool credentials",
+          "inventory"
+        ],
+        "requiredConcepts": [
+          "kubernetes-serviceaccount-token-projection"
+        ],
+        "sectionId": "service-account-token"
+      },
+      {
+        "level": "basic",
+        "question": "RBAC Role의 verb·resource·namespace를 jobs get 예로 설명하라.",
+        "answerChecklist": [
+          "subject",
+          "binding",
+          "get",
+          "jobs",
+          "namespace",
+          "deny other resource"
+        ],
+        "requiredConcepts": [
+          "kubernetes-rbac-authorization-scope"
+        ],
+        "sectionId": "rbac"
+      },
+      {
+        "level": "basic",
+        "question": "유효 token이 있어도 API request가 거절되는 예를 authorization 식으로 설명하라.",
+        "answerChecklist": [
+          "authentication",
+          "verb gate",
+          "resource gate",
+          "namespace gate",
+          "AND",
+          "deny"
+        ],
+        "requiredConcepts": [
+          "kubernetes-workload-identity-boundary",
+          "kubernetes-rbac-authorization-scope"
+        ],
+        "sectionId": "rbac"
+      },
+      {
+        "level": "basic",
+        "question": "Default-deny 뒤 exact FQDN API를 여는 egress 단계와 negative test를 작성하라.",
+        "answerChecklist": [
           "CNI enforcement",
           "default deny",
           "DNS proxy",
-          "FQDN destination",
-          "443 not enough",
-          "metadata",
-          "private CIDR",
-          "DNS query",
-          "hostNetwork",
-          "flow logs",
+          "FQDN port",
+          "metadata deny",
+          "other domain deny",
+          "flow log"
         ],
-        requiredConcepts: ["egress-allowlist-enforcement"],
-        sectionId: "egress",
+        "requiredConcepts": [
+          "egress-allowlist-enforcement"
+        ],
+        "sectionId": "egress"
       },
       {
-        level: "basic",
-        question:
-          "readOnlyRootFilesystem를 켠 agent Pod에 /tmp와 /workspace가 필요한 경우 path·size·lifetime 계약을 작성하라.",
-        answerChecklist: [
-          "read-only root",
+        "level": "basic",
+        "question": "Read-only root가 있는 Pod에 /tmp와 /workspace 계약을 작성하라.",
+        "answerChecklist": [
+          "writable paths",
           "emptyDir",
           "sizeLimit",
-          "ownership",
+          "owner",
           "session",
           "destroy",
+          "residue"
+        ],
+        "requiredConcepts": [
+          "sandbox-writable-surface-lifetime"
+        ],
+        "sectionId": "writable-surface"
+      },
+      {
+        "level": "advanced",
+        "question": "Token·RBAC·egress가 결합된 credential exfiltration path를 그리고 서로 다른 두 edge를 끊어라.",
+        "answerChecklist": [
+          "token",
+          "permission",
+          "secret read",
+          "egress",
+          "two controls",
+          "negative test",
+          "audit"
+        ],
+        "requiredConcepts": [
+          "kubernetes-workload-identity-boundary",
+          "egress-allowlist-enforcement"
+        ],
+        "sectionId": "control-matrix"
+      },
+      {
+        "level": "advanced",
+        "question": "DNS 관찰 rule과 destination allowlist를 분리하고 DNS tunneling·hostNetwork 한계를 포함한 test를 설계하라.",
+        "answerChecklist": [
+          "DNS proxy",
+          "query allow",
+          "toFQDNs",
+          "destination",
+          "tunneling",
+          "hostNetwork",
+          "metadata",
+          "flow logs"
+        ],
+        "requiredConcepts": [
+          "egress-allowlist-enforcement"
+        ],
+        "sectionId": "egress"
+      },
+      {
+        "level": "advanced",
+        "question": "Cross-session residue와 node disk pressure를 검출하는 writable-surface lifecycle test를 설계하라.",
+        "answerChecklist": [
+          "session ID",
+          "size limit",
+          "cleanup",
+          "next session",
           "residue",
-          "in-memory execution caveat",
+          "node pressure",
+          "destroy receipt"
         ],
-        requiredConcepts: ["sandbox-writable-surface-lifetime"],
-        sectionId: "kubernetes",
+        "requiredConcepts": [
+          "sandbox-writable-surface-lifetime"
+        ],
+        "sectionId": "writable-surface"
       },
       {
-        level: "advanced",
-        question:
-          "GPU sandbox에서 nvproxy와 VFIO를 host driver·guest·IOMMU·VMM·device reset 관점으로 비교하는 compatibility matrix를 작성하라.",
-        answerChecklist: [
-          "ioctl proxy",
-          "host driver",
-          "VFIO",
-          "guest driver",
-          "IOMMU",
-          "VMM",
-          "GPU/driver matrix",
-          "operator/CDI",
-          "reset",
-          "multi-GPU",
-          "no extrapolation",
-        ],
-        requiredConcepts: ["gpu-device-isolation-boundary"],
-        sectionId: "gpu",
-      },
-      {
-        level: "advanced",
-        question:
-          "신뢰하는 내부 service·부분 신뢰 plugin·사용자 생성 code 세 종류에 identity/network/kernel/storage/lifecycle control matrix와 failure test를 설계하라.",
-        answerChecklist: [
-          "trust",
+        "level": "advanced",
+        "question": "신뢰하는 service와 사용자 생성 code에 서로 다른 identity·network·storage·lifecycle matrix와 rollback을 작성하라.",
+        "answerChecklist": [
+          "two workload rows",
           "required capability",
-          "RBAC/token",
+          "token RBAC",
           "egress",
           "runtime",
-          "writable paths",
-          "limits",
-          "session destroy",
-          "GPU if needed",
+          "storage",
+          "lifetime",
           "negative tests",
-          "trace",
+          "rollback"
         ],
-        requiredConcepts: ["sandbox-workload-control-matrix"],
-        sectionId: "decision",
-      },
+        "requiredConcepts": [
+          "sandbox-workload-control-matrix",
+          "kubernetes-workload-identity-boundary",
+          "egress-allowlist-enforcement",
+          "sandbox-writable-surface-lifetime"
+        ],
+        "sectionId": "control-matrix"
+      }
     ],
-    papers: [
+    "papers": [
       {
-        title: "gVisor Security Model",
-        href: "https://gvisor.dev/docs/architecture_guide/security/",
-        problem:
-          "Container가 host kernel system-call surface에 직접 의존할 때 kernel vulnerability가 sandbox escape path가 되는 문제",
-        contribution:
-          "Sentry application kernel·host syscall allowlist·filesystem mediation을 포함한 gVisor trust boundary를 문서화",
-        assumptions:
-          "지원 platform·runsc configuration·host patching과 문서에 명시된 security model",
-        evidenceScope:
-          "gVisor가 host interface를 줄이는 architecture와 남는 trust boundary",
-        notClaim:
-          "Hardware VM과 같은 경계이거나 모든 Linux syscall·filesystem·GPU workload가 호환되고 vulnerability가 없다는 뜻은 아님",
-        sectionId: "paper-gvisor-security",
+        "title": "Kubernetes Service Accounts",
+        "href": "https://kubernetes.io/docs/concepts/security/service-accounts/",
+        "problem": "Pod workload에 identity와 bounded token을 제공하는 문제",
+        "contribution": "ServiceAccount·token projection·automount semantics를 정의",
+        "assumptions": "Cluster version·audience·expiry·projection",
+        "evidenceScope": "Identity 이름과 token delivery behavior",
+        "notClaim": "Token을 끄면 다른 credential·permission도 사라진다는 뜻은 아님",
+        "sectionId": "paper-service-account"
       },
       {
-        title: "Kata Containers virtualization design",
-        href: "https://github.com/kata-containers/kata-containers/blob/main/docs/design/virtualization.md",
-        problem:
-          "Container UX를 유지하면서 workload를 host kernel과 다른 guest kernel·hardware virtualization 경계에 두는 문제",
-        contribution:
-          "Kata agent·runtime·guest·VMM과 여러 hypervisor capability의 architecture를 공개",
-        assumptions:
-          "선택 VMM·host virtualization·cloud nested support·image/agent configuration",
-        evidenceScope: "Guest-kernel isolation architecture와 VMM별 기능 차이",
-        notClaim:
-          "모든 cloud·GPU·filesystem에서 같은 support·startup·memory overhead를 보장하거나 가장 안전한 VMM을 하나로 정한다는 뜻은 아님",
-        sectionId: "paper-kata-virtualization",
+        "title": "Kubernetes Network Policies",
+        "href": "https://kubernetes.io/docs/concepts/services-networking/network-policies/",
+        "problem": "Pod traffic을 direction·peer·port에 따라 격리하는 문제",
+        "contribution": "Ingress/egress isolation과 additive allow semantics를 정의",
+        "assumptions": "CNI가 NetworkPolicy를 지원·집행",
+        "evidenceScope": "표준 L3/L4 policy와 connection allow behavior",
+        "notClaim": "YAML만으로 FQDN·explicit deny·hostNetwork가 보장된다는 뜻은 아님",
+        "sectionId": "paper-network-policy"
       },
       {
-        title: "Kubernetes Network Policies",
-        href: "https://kubernetes.io/docs/concepts/services-networking/network-policies/",
-        problem:
-          "Pod traffic을 selector·direction·peer·port에 따라 격리하고 필요한 connection만 허용하는 문제",
-        contribution:
-          "Ingress/egress isolation과 additive allow rule의 표준 semantics를 정의",
-        assumptions:
-          "Cluster CNI가 NetworkPolicy를 지원·집행하고 Pod selector·namespace label·IP behavior가 문서 조건과 일치",
-        evidenceScope: "표준 L3/L4 policy object와 connection allow semantics",
-        notClaim:
-          "Policy YAML만 만들면 집행되거나 FQDN·explicit deny·hostNetwork·L7·flow log가 표준으로 보장된다는 뜻은 아님",
-        sectionId: "paper-network-policy",
+        "title": "Cilium DNS and FQDN policies",
+        "href": "https://docs.cilium.io/en/stable/security/dns/",
+        "problem": "변하는 domain IP를 egress identity와 연결하는 문제",
+        "contribution": "DNS proxy observation과 toFQDNs mapping을 제공",
+        "assumptions": "Cilium DNS proxy·cluster DNS path·version",
+        "evidenceScope": "DNS 응답을 destination policy에 연결하는 semantics",
+        "notClaim": "Wildcard DNS query가 tunneling·TLS 내용을 검증한다는 뜻은 아님",
+        "sectionId": "paper-cilium-fqdn"
       },
       {
-        title: "Cilium DNS and FQDN policies",
-        href: "https://docs.cilium.io/en/stable/security/dns/",
-        problem:
-          "IP가 바뀌는 외부 domain을 DNS identity와 연결해 egress allowlist로 집행하는 문제",
-        contribution:
-          "DNS proxy rule·toFQDNs selector·cached IP mapping의 Cilium semantics를 문서화",
-        assumptions:
-          "Cilium DNS proxy·supported protocol·cluster DNS path와 policy version",
-        evidenceScope:
-          "Cilium에서 DNS 관찰과 FQDN destination policy가 동작하는 방식",
-        notClaim:
-          "Wildcard DNS query 허용이 DNS tunneling을 막거나 TLS content·API authorization·모든 NAT path를 검증한다는 뜻은 아님",
-        sectionId: "paper-cilium-fqdn",
-      },
-      {
-        title: "Kubernetes Service Accounts",
-        href: "https://kubernetes.io/docs/concepts/security/service-accounts/",
-        problem:
-          "Pod workload가 Kubernetes API에 인증할 identity와 token을 안전하게 부여하는 문제",
-        contribution:
-          "ServiceAccount identity·token projection·automount control의 공식 semantics를 문서화",
-        assumptions:
-          "사용 cluster version·token projection·RBAC admission·audience/lifetime configuration",
-        evidenceScope: "Workload identity와 token injection behavior",
-        notClaim:
-          "자동 mount를 끄면 모든 credential이 제거되거나 Role/Binding 권한·network access까지 사라진다는 뜻은 아님",
-        sectionId: "paper-service-account",
-      },
-      {
-        title: "Kubernetes Pod Security Standards and seccomp",
-        href: "https://kubernetes.io/docs/concepts/security/pod-security-standards/",
-        problem:
-          "Pod의 privileged namespace·capability·user·seccomp 설정을 일관된 baseline/restricted profile로 제한하는 문제",
-        contribution:
-          "Restricted profile 요구와 RuntimeDefault·Localhost seccomp 적용 경계를 공식화",
-        assumptions:
-          "Cluster version·Pod Security admission·runtime seccomp support와 workload compatibility test",
-        evidenceScope:
-          "Pod spec 수준의 hardening requirement와 syscall-profile 적용",
-        notClaim:
-          "PSS·RuntimeDefault가 guest kernel·NetworkPolicy·RBAC·image provenance·runtime monitoring을 대신한다는 뜻은 아님",
-        sectionId: "paper-pod-security-seccomp",
-      },
-      {
-        title: "gVisor GPU Support",
-        href: "https://gvisor.dev/docs/user_guide/gpu/",
-        problem:
-          "gVisor sandbox 안 CUDA workload가 host NVIDIA driver와 제한된 interface로 통신하는 문제",
-        contribution:
-          "nvproxy architecture와 지원 driver·GPU·capability·configuration 범위를 문서화",
-        assumptions:
-          "문서 support matrix에 포함된 GPU/driver/runsc·host patch 조합",
-        evidenceScope: "nvproxy가 GPU ioctl을 중개하는 방식과 지원 범위",
-        notClaim:
-          "임의 B300·driver·CUDA 기능이 지원되거나 host GPU driver vulnerability가 guest driver에 완전히 격리된다는 뜻은 아님",
-        sectionId: "paper-gvisor-gpu",
-      },
-      {
-        title: "Kata NVIDIA GPU passthrough",
-        href: "https://github.com/kata-containers/kata-containers/blob/main/docs/use-cases/NVIDIA-GPU-passthrough-and-Kata-QEMU.md",
-        problem:
-          "NVIDIA GPU를 VFIO로 Kata guest에 assign하고 container orchestration lifecycle과 연결하는 문제",
-        contribution:
-          "IOMMU·VFIO·QEMU/Kata·NVIDIA stack을 이용한 passthrough 구성 예를 공개",
-        assumptions:
-          "문서가 검증한 hardware·VMM·kernel·driver·operator/device-plugin configuration",
-        evidenceScope:
-          "Kata guest로 GPU를 넘기는 deployment path와 필요한 구성 요소",
-        notClaim:
-          "모든 VMM·GPU fabric·multi-GPU·sharing·reset·cloud VM에서 같은 isolation과 기능을 보장한다는 뜻은 아님",
-        sectionId: "paper-kata-gpu",
-      },
-    ],
+        "title": "Kubernetes Pod Security Standards",
+        "href": "https://kubernetes.io/docs/concepts/security/pod-security-standards/",
+        "problem": "Privileged Pod 설정을 일관되게 제한하는 문제",
+        "contribution": "Baseline·Restricted profile 요구를 정의",
+        "assumptions": "Cluster version·Pod Security admission·runtime support",
+        "evidenceScope": "Host access·privilege·user·seccomp 기본 경계",
+        "notClaim": "Guest kernel·egress·RBAC·session cleanup을 대신한다는 뜻은 아님",
+        "sectionId": "paper-pod-security"
+      }
+    ]
   },
   "gpu/b300-switchless-network": {
     coreIdea:

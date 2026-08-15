@@ -3353,19 +3353,45 @@ export const ARTICLE_EVIDENCE: Readonly<
   "ai/agent-sandbox-security": [
     source(
       "공식 문서",
-      AGENT_SECURITY_SOURCES.podSecurity,
-      "기본 Pod 보안 경계",
+      AGENT_SECURITY_SOURCES.linuxNamespaces,
+      "Process별 PID·mount·network·user resource view",
     ),
     source(
       "공식 문서",
+      AGENT_SECURITY_SOURCES.linuxCgroupV2,
+      "CPU·memory·PID·I/O resource budget",
+    ),
+    source(
+      "공식 문서",
+      AGENT_SECURITY_SOURCES.linuxCapabilities,
+      "Container root와 capability privilege 경계",
+    ),
+  ],
+  "ai/sandbox-runtime-isolation": [
+    source(
+      "공식 문서",
       AGENT_SECURITY_SOURCES.gvisorSecurity,
-      "userspace kernel 보안 모델",
+      "Sentry application-kernel mediation과 host interface",
     ),
     source(
       "공식 문서",
       AGENT_SECURITY_SOURCES.kataVirtualization,
-      "guest-kernel VM 경계",
+      "Guest-kernel·VMM 기반 runtime isolation",
     ),
+  ],
+  "ai/sandbox-gpu-isolation": [
+    source(
+      "공식 문서",
+      AGENT_SECURITY_SOURCES.gvisorGpu,
+      "nvproxy GPU ioctl mediation과 support matrix",
+    ),
+    source(
+      "공식 문서",
+      AGENT_SECURITY_SOURCES.kataGpu,
+      "VFIO·IOMMU 기반 Kata GPU assignment",
+    ),
+  ],
+  "ai/sandbox-deployment-controls": [
     source(
       "공식 문서",
       AGENT_SECURITY_SOURCES.networkPolicy,
@@ -3379,13 +3405,8 @@ export const ARTICLE_EVIDENCE: Readonly<
     ),
     source(
       "공식 문서",
-      AGENT_SECURITY_SOURCES.gvisorGpu,
-      "nvproxy GPU ioctl mediation과 support matrix",
-    ),
-    source(
-      "공식 문서",
-      AGENT_SECURITY_SOURCES.kataGpu,
-      "VFIO 기반 Kata GPU passthrough 구성 경계",
+      AGENT_SECURITY_SOURCES.podSecurity,
+      "Pod privilege·user·seccomp 기본 경계",
     ),
   ],
   "ai/sionic-eureka": [

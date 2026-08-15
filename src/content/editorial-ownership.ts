@@ -3192,11 +3192,11 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "agent-sandbox-security": {
-    title: "에이전트 샌드박스 글이 소유하는 범위",
+    title: "Container 보안 기초 글이 소유하는 범위",
     owns: [
-      "위협을 signal·egress·credential·kernel boundary로 나누는 판단법",
-      "runc·seccomp·gVisor·Kata 선택 기준",
-      "Kubernetes RBAC·NetworkPolicy·RuntimeClass를 결합한 배포 패턴",
+      "Process·namespace·cgroup의 서로 다른 resource boundary",
+      "Signal에서 impact까지 열린 attack path를 추적하는 방법",
+      "Container root와 host root의 privilege 경계",
     ],
     reuses: [
       { label: "Claude Code 도구·권한 모델", href: "/ai/claude-code" },
@@ -3210,6 +3210,71 @@ export const EDITORIAL_BOUNDARIES = {
       {
         kind: "project-claim",
         rule: "회사 사용 사례와 성능 수치는 출처·환경이 없으면 일반 결론으로 쓰지 않는다.",
+      },
+    ],
+  },
+  "sandbox-runtime-isolation": {
+    title: "Sandbox runtime 격리 글이 소유하는 범위",
+    owns: [
+      "Application에서 kernel로 가는 system-call 처리 경로",
+      "Seccomp filter·gVisor application kernel·Kata guest kernel의 차이",
+      "Isolation·compatibility·startup·memory acceptance gate",
+    ],
+    reuses: [
+      { label: "Container process·namespace·cgroup 기초", href: "/ai/agent-sandbox-security" },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "Runtime boundary와 지원 범위는 gVisor·Kata 공식 architecture 문서로 제한한다.",
+      },
+      {
+        kind: "project-measurement",
+        rule: "호환성·기동·memory 결과는 image·kernel·runtime revision이 있는 fixture에 귀속한다.",
+      },
+    ],
+  },
+  "sandbox-gpu-isolation": {
+    title: "GPU sandbox 격리 글이 소유하는 범위",
+    owns: [
+      "GPU device request가 추가하는 driver·DMA·reset 경계",
+      "nvproxy ioctl mediation과 VFIO·IOMMU device assignment의 차이",
+      "GPU·driver·runtime·VMM·lifecycle generation release",
+    ],
+    reuses: [
+      { label: "Sandbox runtime 처리 경로", href: "/ai/sandbox-runtime-isolation" },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "GPU support는 gVisor·Kata 공식 support matrix와 deployment 문서 범위로 제한한다.",
+      },
+      {
+        kind: "project-measurement",
+        rule: "기능·isolation·reset 결과는 GPU·driver·runtime·operator generation에 귀속한다.",
+      },
+    ],
+  },
+  "sandbox-deployment-controls": {
+    title: "Sandbox Kubernetes 배포 통제 글이 소유하는 범위",
+    owns: [
+      "ServiceAccount token projection과 RBAC authorization의 분리",
+      "Egress allowlist의 실제 enforcement와 writable surface lifetime",
+      "Identity·network·runtime·storage·lifecycle workload control matrix",
+    ],
+    reuses: [
+      { label: "Container attack-path 기초", href: "/ai/agent-sandbox-security" },
+      { label: "Runtime isolation 선택", href: "/ai/sandbox-runtime-isolation" },
+      { label: "GPU device isolation", href: "/ai/sandbox-gpu-isolation" },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "Identity·NetworkPolicy·Pod Security semantics는 Kubernetes·Cilium 공식 문서로 제한한다.",
+      },
+      {
+        kind: "project-measurement",
+        rule: "실제 차단 여부는 deployment identity·CNI·flow log·negative test receipt에 귀속한다.",
       },
     ],
   },

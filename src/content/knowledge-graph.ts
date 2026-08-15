@@ -3965,7 +3965,25 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Process · container resource boundary",
     definition:
       "Container를 별도 machine으로 보지 않고 host kernel 위 process에 namespace·cgroup·mount·capability 정책을 적용해 보이는 자원과 사용 한도를 제한한 실행 경계로 이해하는 개념입니다.",
-    canonicalHref: "/ai/agent-sandbox-security#container-boundary",
+    canonicalHref: "/ai/agent-sandbox-security#overview",
+  },
+  "linux-namespace-resource-view": {
+    id: "linux-namespace-resource-view",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Linux namespace resource view",
+    definition:
+      "Process가 볼 PID·mount·network·hostname·user ID 같은 global resource의 이름과 범위를 별도 view로 매핑하는 Linux 격리 개념입니다.",
+    canonicalHref: "/ai/agent-sandbox-security#namespace",
+  },
+  "linux-cgroup-resource-budget": {
+    id: "linux-cgroup-resource-budget",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Linux cgroup resource budget",
+    definition:
+      "Process 집합의 CPU·memory·PID·I/O 사용량을 hierarchy와 controller로 측정하고 제한하는 Linux resource budget 개념입니다.",
+    canonicalHref: "/ai/agent-sandbox-security#cgroup",
   },
   "agent-attack-path-completion": {
     id: "agent-attack-path-completion",
@@ -3974,7 +3992,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Agent attack-path completion",
     definition:
       "관찰된 signal 하나의 이름이 아니라 input→execution→보유 capability→boundary crossing→impact로 이어지는 path의 모든 edge가 실제로 허용되는지 추적해 위험 우선순위를 정하는 방법입니다.",
-    canonicalHref: "/ai/agent-sandbox-security#attack-path-model",
+    canonicalHref: "/ai/agent-sandbox-security#attack-path",
   },
   "container-root-host-boundary": {
     id: "container-root-host-boundary",
@@ -3983,7 +4001,16 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Container root · host root boundary",
     definition:
       "Container UID 0의 process 권한을 namespace·capability·user-ID mapping·mount·runtime escape 조건과 함께 보아 host root 권한과 동일시하지 않으면서 blast radius를 판단하는 경계입니다.",
-    canonicalHref: "/ai/agent-sandbox-security#container-root-boundary",
+    canonicalHref: "/ai/agent-sandbox-security#container-root",
+  },
+  "linux-syscall-host-kernel-path": {
+    id: "linux-syscall-host-kernel-path",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Linux syscall · host-kernel path",
+    definition:
+      "Application이 file·network·process·device 기능을 system call로 요청하고 host kernel이 이를 처리하는 기본 실행 경로입니다.",
+    canonicalHref: "/ai/sandbox-runtime-isolation#overview",
   },
   "syscall-filter-kernel-isolation-boundary": {
     id: "syscall-filter-kernel-isolation-boundary",
@@ -3992,7 +4019,25 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Syscall filter · kernel isolation boundary",
     definition:
       "Host kernel을 계속 공유한 채 허용 syscall을 줄이는 seccomp와 userspace application kernel 또는 guest kernel로 host 접촉면을 바꾸는 runtime isolation을 구분한 경계입니다.",
-    canonicalHref: "/ai/agent-sandbox-security#runtime",
+    canonicalHref: "/ai/sandbox-runtime-isolation#seccomp",
+  },
+  "sandbox-application-kernel-mediation": {
+    id: "sandbox-application-kernel-mediation",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Sandbox application-kernel mediation",
+    definition:
+      "Userspace application kernel이 Linux System API의 상당 부분을 구현하고 제한된 host interface만 사용하도록 중개해 host kernel 접촉면을 줄이는 격리 형태입니다.",
+    canonicalHref: "/ai/sandbox-runtime-isolation#application-kernel",
+  },
+  "sandbox-guest-kernel-boundary": {
+    id: "sandbox-guest-kernel-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Sandbox guest-kernel boundary",
+    definition:
+      "Workload의 system call을 guest kernel이 처리하고 VMM·hardware virtualization을 통해 host kernel과 분리하는 sandbox 실행 경계입니다.",
+    canonicalHref: "/ai/sandbox-runtime-isolation#guest-kernel",
   },
   "sandbox-runtime-isolation-spectrum": {
     id: "sandbox-runtime-isolation-spectrum",
@@ -4001,7 +4046,25 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Sandbox runtime isolation spectrum",
     definition:
       "runc·seccomp·gVisor·Kata를 단일 순위가 아니라 공유 kernel surface·guest boundary·호환성·기동·memory·device 조건의 서로 다른 조합으로 비교하는 선택 축입니다.",
-    canonicalHref: "/ai/agent-sandbox-security#runtime",
+    canonicalHref: "/ai/sandbox-runtime-isolation#runtime-spectrum",
+  },
+  "kubernetes-serviceaccount-token-projection": {
+    id: "kubernetes-serviceaccount-token-projection",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Kubernetes ServiceAccount token projection",
+    definition:
+      "Namespaced workload identity를 증명하는 audience·expiry가 있는 token을 Pod에 주입·갱신하거나 자동 mount를 끄는 credential delivery 경계입니다.",
+    canonicalHref: "/ai/sandbox-deployment-controls#service-account-token",
+  },
+  "kubernetes-rbac-authorization-scope": {
+    id: "kubernetes-rbac-authorization-scope",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Kubernetes RBAC authorization scope",
+    definition:
+      "인증된 subject에 허용할 API verb·resource·namespace를 Role/ClusterRole과 Binding으로 연결한 authorization 범위입니다.",
+    canonicalHref: "/ai/sandbox-deployment-controls#rbac",
   },
   "kubernetes-workload-identity-boundary": {
     id: "kubernetes-workload-identity-boundary",
@@ -4010,7 +4073,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Kubernetes workload identity · RBAC boundary",
     definition:
       "Pod에 주입되는 ServiceAccount token과 API server에서 허용하는 Role/Binding을 분리해 token 존재·권한·수명·audience를 함께 최소화하는 control-plane identity 경계입니다.",
-    canonicalHref: "/ai/agent-sandbox-security#kubernetes",
+    canonicalHref: "/ai/sandbox-deployment-controls#rbac",
   },
   "egress-allowlist-enforcement": {
     id: "egress-allowlist-enforcement",
@@ -4019,7 +4082,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Egress allowlist · enforcement boundary",
     definition:
       "Policy object의 존재가 아니라 실제 CNI·DNS proxy·egress gateway가 workload의 destination·port·domain·protocol을 default-deny에서 허용 목록으로 집행하는지 검증하는 경계입니다.",
-    canonicalHref: "/ai/agent-sandbox-security#egress",
+    canonicalHref: "/ai/sandbox-deployment-controls#egress",
   },
   "sandbox-writable-surface-lifetime": {
     id: "sandbox-writable-surface-lifetime",
@@ -4028,7 +4091,25 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Sandbox writable surface · lifetime",
     definition:
       "Read-only root와 별도로 쓰기 가능한 volume·tmp·cache의 path·size·owner·session lifetime·폐기 시점을 제한해 persistence와 cross-session residue를 줄이는 storage 계약입니다.",
-    canonicalHref: "/ai/agent-sandbox-security#kubernetes",
+    canonicalHref: "/ai/sandbox-deployment-controls#writable-surface",
+  },
+  "gpu-ioctl-proxy-mediation": {
+    id: "gpu-ioctl-proxy-mediation",
+    kind: "concept",
+    domain: "computer-science",
+    label: "GPU ioctl-proxy mediation",
+    definition:
+      "Sandbox가 GPU ioctl을 decode·validate·copy한 뒤 허용된 요청만 host driver로 전달하는 device-interface 중개 경계입니다.",
+    canonicalHref: "/ai/sandbox-gpu-isolation#ioctl-proxy",
+  },
+  "gpu-vfio-device-assignment": {
+    id: "gpu-vfio-device-assignment",
+    kind: "concept",
+    domain: "computer-science",
+    label: "GPU VFIO device assignment",
+    definition:
+      "GPU를 VFIO device로 guest VM에 할당하고 IOMMU가 device DMA의 address translation·access 범위를 제한하는 passthrough 배치 형태입니다.",
+    canonicalHref: "/ai/sandbox-gpu-isolation#vfio",
   },
   "gpu-device-isolation-boundary": {
     id: "gpu-device-isolation-boundary",
@@ -4037,7 +4118,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "GPU device isolation boundary",
     definition:
       "GPU ioctl proxy 또는 VFIO passthrough가 host driver·VMM·IOMMU·device lifecycle 중 어느 경계를 신뢰하는지와 지원 matrix를 함께 보는 sandbox device 계약입니다.",
-    canonicalHref: "/ai/agent-sandbox-security#gpu",
+    canonicalHref: "/ai/sandbox-gpu-isolation#overview",
   },
   "sandbox-workload-control-matrix": {
     id: "sandbox-workload-control-matrix",
@@ -4046,7 +4127,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Sandbox workload · control matrix",
     definition:
       "실행 code의 신뢰도와 필요한 credential·network·filesystem·GPU·session lifetime을 먼저 적고 identity·egress·kernel·storage·lifecycle 통제를 독립 열로 승인하는 선택 방법입니다.",
-    canonicalHref: "/ai/agent-sandbox-security#decision",
+    canonicalHref: "/ai/sandbox-deployment-controls#control-matrix",
   },
   "tool-call-round-trip": {
     id: "tool-call-round-trip",
@@ -22946,6 +23027,20 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
       "정상 ledger와 link-loss ledger를 비교해 대체 path 없는 direct topology의 감지·격리·회복 동작을 승인합니다.",
   },
   {
+    from: "linux-namespace-resource-view",
+    to: "process-container-resource-boundary",
+    relation: "produces",
+    reason:
+      "Container process가 보는 PID·mount·network 범위를 namespace view가 구성합니다.",
+  },
+  {
+    from: "linux-cgroup-resource-budget",
+    to: "process-container-resource-boundary",
+    relation: "produces",
+    reason:
+      "Container process 집합이 사용할 CPU·memory·PID 양을 cgroup budget이 제한합니다.",
+  },
+  {
     from: "process-container-resource-boundary",
     to: "agent-attack-path-completion",
     relation: "prerequisite",
@@ -22967,11 +23062,60 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
       "Host kernel을 공유하는 기본 container에서 syscall filtering과 별도 kernel boundary의 차이를 비교합니다.",
   },
   {
+    from: "linux-syscall-host-kernel-path",
+    to: "syscall-filter-kernel-isolation-boundary",
+    relation: "prerequisite",
+    reason:
+      "기본 application→host-kernel 요청 경로를 알아야 filter와 별도 kernel mediation의 차이를 설명할 수 있습니다.",
+  },
+  {
     from: "syscall-filter-kernel-isolation-boundary",
     to: "sandbox-runtime-isolation-spectrum",
     relation: "produces",
     reason:
       "runc·gVisor·Kata가 system call과 kernel을 어느 경계에서 처리하는지 비교 축을 만듭니다.",
+  },
+  {
+    from: "syscall-filter-kernel-isolation-boundary",
+    to: "sandbox-application-kernel-mediation",
+    relation: "contrasts",
+    reason:
+      "Host-kernel entry를 거르는 filter와 Linux API를 userspace에서 구현하는 mediation은 요청 처리 위치가 다릅니다.",
+  },
+  {
+    from: "syscall-filter-kernel-isolation-boundary",
+    to: "sandbox-guest-kernel-boundary",
+    relation: "contrasts",
+    reason:
+      "공유 host kernel의 syscall filter와 guest kernel·VMM 경계는 서로 다른 isolation surface를 만듭니다.",
+  },
+  {
+    from: "sandbox-application-kernel-mediation",
+    to: "sandbox-runtime-isolation-spectrum",
+    relation: "produces",
+    reason:
+      "Application-kernel mediation의 host surface·호환성·기동 비용이 runtime 비교 축을 만듭니다.",
+  },
+  {
+    from: "sandbox-guest-kernel-boundary",
+    to: "sandbox-runtime-isolation-spectrum",
+    relation: "produces",
+    reason:
+      "Guest-kernel·VMM 경계의 isolation과 기동·memory 비용이 runtime 비교 축을 만듭니다.",
+  },
+  {
+    from: "kubernetes-serviceaccount-token-projection",
+    to: "kubernetes-workload-identity-boundary",
+    relation: "prerequisite",
+    reason:
+      "Workload identity boundary를 판단하려면 identity material이 Pod에 언제·어떤 audience와 lifetime으로 들어오는지 알아야 합니다.",
+  },
+  {
+    from: "kubernetes-rbac-authorization-scope",
+    to: "kubernetes-workload-identity-boundary",
+    relation: "prerequisite",
+    reason:
+      "Token의 존재와 별개로 API verb·resource·namespace permission 범위를 확인해야 identity 경계가 완성됩니다.",
   },
   {
     from: "agent-attack-path-completion",
@@ -23000,6 +23144,20 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "extends",
     reason:
       "GPU가 필요하면 nvproxy 또는 VFIO가 추가하는 host driver·VMM·IOMMU trust boundary를 runtime 선택에 더합니다.",
+  },
+  {
+    from: "gpu-ioctl-proxy-mediation",
+    to: "gpu-device-isolation-boundary",
+    relation: "produces",
+    reason:
+      "허용 ioctl을 host driver로 중개하는 proxy path가 GPU sandbox의 한 device trust boundary를 구성합니다.",
+  },
+  {
+    from: "gpu-vfio-device-assignment",
+    to: "gpu-device-isolation-boundary",
+    relation: "produces",
+    reason:
+      "Guest driver·VMM·IOMMU를 통한 device assignment가 GPU sandbox의 다른 trust boundary를 구성합니다.",
   },
   {
     from: "kubernetes-workload-identity-boundary",

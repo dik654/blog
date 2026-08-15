@@ -28,7 +28,7 @@
 - [x] 활성화 함수 한 글의 11개 독립 concept을 기초 함수·rectifier·smooth/gated FFN 세 route로 분리하고 canonical owner·evidence·exact 6+4를 이동. `negative-slope → self-normalization → smooth gate` 비교 edge를 추가하고, 11개 수식 모두 연산 의도 주석·도형 기반 자동 재생/키보드 Viz로 교체
 - [x] 지식 증류 한 글을 고전 logit/feature·cross-tokenizer sequence·student-visited on-policy·generation self-distillation 네 route로 분리. Synthetic provenance·self-generation·stop-gate concept 3개와 relation 6개를 새로 만들고 canonical owner·evidence·exact 6+4를 새 경계로 이동
 - [x] 새 네 글의 수식 11개를 모두 domain-specific `annotatedFormula`와 explicit operation으로 작성하고, 공통 operation card의 KaTeX 두 줄 주석 간격·수직 padding을 전역 보강. 도형 기반 4장면 Viz는 화살표 키·Space·자동 재생을 지원하며 390/1440에서 page·Viz·KaTeX overflow와 console error 0을 확인
-- [ ] 현재 전역 잔여량: public catalog 406, topology `split-review` 87·`rename-or-split-review` 2, explicit formula 50/1,058·전환 대기 1,008. 휴리스틱 후보는 본문 학습 질문을 확인한 뒤 실제 CRUD하며 필요한 concept·relation도 함께 확장한다.
+- [ ] 현재 전역 잔여량: public catalog 442, topology `split-review` 72·`rename-or-split-review` 2, explicit formula 156/1,082·전환 대기 926. 휴리스틱 후보는 본문 학습 질문을 확인한 뒤 실제 CRUD하며 필요한 concept·relation도 함께 확장한다.
 
 ### 2026-08-15 · WEBCAT · Ethereum future roadmap · binary-field proving · permissioned RWA markets
 
@@ -1232,3 +1232,11 @@
 - 반복 model→tool→result 왕복과 sandbox program·local row reduction·bounded result, program control flow와 capability gate·result receipt·다섯 write의 partial outcome을 새 flat animated 도형 Viz 2개로 표현했다. Legacy section 5개와 data/Viz 4개를 actual closure에서 삭제했고 두 route 모두 topology `keep`이 되어 전체 split-review는 74개에서 73개로 줄었다.
 - Cost formula는 round 한 번→round 합→program 고정비→bounded result→선택 순서로, result formula는 project→redact→row gate→byte gate→receipt 순서로, retry formula는 committed→unknown→blocked→retry 순서로 나눠 모든 연산 의도를 KaTeX 식 안에 직접 표시했다. 전역 formula backlog는 928개에서 927개로 줄었다.
 - 390px·1440px 실제 브라우저 4회에서 document·Viz·main/operation KaTeX overflow, console warning/error, gradient·shadow·굵은 선이 모두 0임을 확인했다. Runtime Viz의 장면 0→1과 Space 재생 false→true 전이도 실제 focus 상태에서 검증했다.
+
+## 2026-08-15 · Container · runtime · GPU · deployment sandbox CRUD split
+
+- 기존 `ai/agent-sandbox-security` 한 글에 섞여 있던 process·namespace·cgroup·attack path, seccomp·gVisor·Kata runtime, GPU device path, Kubernetes identity·egress·storage를 네 독립 수업으로 분리했다. 기존 route는 container 보안 기초로 좁히고 `ai/sandbox-runtime-isolation`, `ai/sandbox-gpu-isolation`, `ai/sandbox-deployment-controls`를 새로 생성했으며 legacy section 7개와 legacy Viz 2개를 actual closure에서 삭제했다.
+- CRUD 과정에서 기존 graph가 한 node에 숨기던 namespace/cgroup, syscall/application kernel/guest kernel, ioctl proxy/VFIO, ServiceAccount token/RBAC을 각각 독립 canonical concept로 올렸다. 신규 concept 9개와 relation 11개를 추가하고 기존 10개 owner를 실제 설명 route로 이동해 공개 route·exact contract는 439→442개, graph는 2,362→2,371 concepts·3,533→3,544 relations가 되었으며 invariant·stage warning은 0이다.
+- Host process 위 namespace view·cgroup meter·attack path, syscall 처리 위치가 seccomp→Sentry→guest kernel로 바뀌는 경로, nvproxy와 VFIO/IOMMU의 두 GPU path, Pod를 identity·egress·storage·release gate로 감싸는 구조를 새 flat animated 도형 Viz 4개로 표현했다. 모든 Viz에서 `ArrowLeft`·`ArrowRight`와 `Space` 자동 재생을 실제 focus 상태로 검증했다.
+- Headroom·attack-path AND·runtime acceptance·GPU generation·RBAC authorization의 수식 5개를 모두 domain-specific `annotatedFormula`와 explicit operation으로 작성했다. 390px에서 긴 attack-path·RBAC 주석을 의미 단위 다단식으로 교정해 모든 main/operation KaTeX가 각각 316/316·290/290에 맞았다.
+- 5단계 이상 `ConceptLadderViz`가 desktop grid row 끝에서 11px 넘치던 공통 문제를 단일 `grid-flow-col` composition으로 교정했다. 390px·1440px 실제 브라우저 8회에서 document·모든 Viz canvas·formula overflow, KaTeX error, console warning/error, gradient·shadow·굵은 선이 모두 0이며 8 screenshots를 육안 검수했다. 전체 learning·reading·graph·article·Viz·formula 감사와 route test·TypeScript를 통과했다.
