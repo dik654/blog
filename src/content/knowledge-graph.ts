@@ -1863,7 +1863,15 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Gaussian forward diffusion",
     definition:
       "Clean data에 작은 Gaussian transition을 단계별로 적용해 signal을 줄이고 noise를 늘리며, 마지막 distribution을 simple prior에 가깝게 만드는 고정 corruption process입니다.",
-    canonicalHref: "/ai/diffusion-models#forward-reverse",
+    canonicalHref: "/ai/diffusion-models#corruption",
+  },
+  "diffusion-training-sampling-contract": {
+    id: "diffusion-training-sampling-contract",
+    domain: "machine-learning",
+    label: "Diffusion training–sampling contract",
+    definition:
+      "Training에서는 clean sample·time·noise로 임의 noisy pair를 한 번에 만들고, sampling에서는 terminal noise에서 learned denoiser를 여러 번 호출한다는 두 algorithm의 실행 경계입니다.",
+    canonicalHref: "/ai/diffusion-models#corruption",
   },
   "cumulative-noise-schedule": {
     id: "cumulative-noise-schedule",
@@ -1872,7 +1880,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Cumulative diffusion schedule",
     definition:
       "Independent Gaussian transition의 합성으로 임의 timestep의 noisy sample을 clean data와 Gaussian noise의 닫힌 linear combination으로 직접 만드는 관계입니다.",
-    canonicalHref: "/ai/diffusion-models#forward-reverse",
+    canonicalHref: "/ai/diffusion-models#schedule",
   },
   "diffusion-prediction-target": {
     id: "diffusion-prediction-target",
@@ -1881,7 +1889,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Diffusion prediction target",
     definition:
       "같은 noisy state를 설명하는 noise ε·clean data x0·velocity v·score 중 network가 직접 예측할 quantity를 선택하고 noise level별 loss weighting을 정하는 계약입니다.",
-    canonicalHref: "/ai/diffusion-models#forward-reverse",
+    canonicalHref: "/ai/diffusion-models#target",
   },
   "diffusion-score-identity": {
     id: "diffusion-score-identity",
@@ -1890,7 +1898,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Gaussian noise–score identity",
     definition:
       "Gaussian-perturbed conditional distribution에서 noisy state의 score가 추가된 noise를 negative noise-scale로 나눈 값이며, conditional expectation으로 marginal score와 noise predictor를 연결하는 관계입니다.",
-    canonicalHref: "/ai/diffusion-models#forward-reverse",
+    canonicalHref: "/ai/diffusion-models#score",
   },
   "reverse-time-sde": {
     id: "reverse-time-sde",
@@ -1899,7 +1907,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Reverse-time SDE",
     definition:
       "Forward SDE의 drift와 diffusion coefficient에 time-dependent score correction을 더하면 terminal prior에서 data distribution으로 돌아가는 reverse-time stochastic process를 얻는 관계입니다.",
-    canonicalHref: "/ai/diffusion-models#continuous-time",
+    canonicalHref: "/ai/diffusion-continuous-time#reverse-sde",
   },
   "probability-flow-ode": {
     id: "probability-flow-ode",
@@ -1908,7 +1916,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Probability-flow ODE",
     definition:
       "Reverse SDE의 score correction 중 절반을 deterministic drift에 넣어 각 시간의 marginal distribution은 같지만 random path는 다른 ODE를 만드는 관계입니다.",
-    canonicalHref: "/ai/diffusion-models#continuous-time",
+    canonicalHref: "/ai/diffusion-continuous-time#probability-flow",
   },
   "flow-matching-objective": {
     id: "flow-matching-objective",
@@ -1917,7 +1925,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Conditional flow-matching objective",
     definition:
       "Sample하기 쉬운 conditional probability path의 target velocity를 regression하면 그 conditional field의 posterior average인 marginal vector field를 학습할 수 있다는 simulation-free training 원리입니다.",
-    canonicalHref: "/ai/diffusion-models#continuous-time",
+    canonicalHref: "/ai/diffusion-continuous-time#flow-matching",
   },
   "network-function-evaluations": {
     id: "network-function-evaluations",
@@ -1926,7 +1934,15 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Network function evaluations (NFE)",
     definition:
       "Sampler 한 번이 denoiser·score·velocity network를 실제로 호출한 횟수로, solver step 수와 같지 않을 수 있는 inference compute 지표입니다.",
-    canonicalHref: "/ai/diffusion-models#continuous-time",
+    canonicalHref: "/ai/diffusion-continuous-time#solver-budget",
+  },
+  "learned-field-solver-contract": {
+    id: "learned-field-solver-contract",
+    domain: "machine-learning",
+    label: "Learned-field solver contract",
+    definition:
+      "Learned score·velocity field와 time grid·numerical update·precision·tolerance를 결합하고 field approximation error와 discretization error를 분리하는 generative execution 계약입니다.",
+    canonicalHref: "/ai/diffusion-continuous-time#solver-budget",
   },
   "diffusion-backbone-contract": {
     id: "diffusion-backbone-contract",
@@ -1934,7 +1950,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Diffusion backbone contract",
     definition:
       "Noisy tensor·time embedding·condition을 입력받아 선택한 prediction target과 같은 shape의 output을 내는 U-Net·DiT 등 denoiser architecture의 interface입니다.",
-    canonicalHref: "/ai/diffusion-models#unet",
+    canonicalHref: "/ai/diffusion-models#target",
   },
   "latent-diffusion-bottleneck": {
     id: "latent-diffusion-bottleneck",
@@ -1942,7 +1958,15 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Latent diffusion bottleneck",
     definition:
       "Pretrained autoencoder가 image를 더 작은 spatial latent로 압축한 뒤 그 공간에서 diffusion을 수행해 compute를 줄이는 대신 reconstruction ceiling을 도입하는 설계입니다.",
-    canonicalHref: "/ai/diffusion-models#stable-diffusion",
+    canonicalHref: "/ai/latent-diffusion-guidance#compression",
+  },
+  "latent-diffusion-component-contract": {
+    id: "latent-diffusion-component-contract",
+    domain: "machine-learning",
+    label: "Latent diffusion component contract",
+    definition:
+      "Autoencoder·condition encoder·denoiser·scheduler·sampler·decoder의 tensor shape·numeric scale·artifact revision과 failure ownership을 따로 기록하는 pipeline interface입니다.",
+    canonicalHref: "/ai/latent-diffusion-guidance#pipeline",
   },
   "classifier-free-guidance": {
     id: "classifier-free-guidance",
@@ -1951,7 +1975,15 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Classifier-free guidance",
     definition:
       "Condition dropout으로 한 model에 unconditional·conditional prediction을 함께 학습하고 sampling 때 두 prediction의 차이를 scale해 condition adherence를 조절하는 방법입니다.",
-    canonicalHref: "/ai/diffusion-models#stable-diffusion",
+    canonicalHref: "/ai/latent-diffusion-guidance#guidance",
+  },
+  "conditional-diffusion-release-gate": {
+    id: "conditional-diffusion-release-gate",
+    domain: "machine-learning",
+    label: "Conditional diffusion release gate",
+    definition:
+      "Autoencoder reconstruction·sample quality·mode coverage·condition adherence·latency를 versioned threshold로 각각 판정하고 모든 필수 gate를 통과할 때만 배포하는 acceptance 계약입니다.",
+    canonicalHref: "/ai/latent-diffusion-guidance#evaluation",
   },
   "amortized-variational-inference": {
     id: "amortized-variational-inference",
@@ -18365,6 +18397,13 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   },
   {
     from: "gaussian-forward-diffusion",
+    to: "diffusion-training-sampling-contract",
+    relation: "produces",
+    reason:
+      "Forward corruption은 training pair를 만들고, learned reverse update와 분리해 sampling contract를 정의합니다.",
+  },
+  {
+    from: "gaussian-forward-diffusion",
     to: "cumulative-noise-schedule",
     relation: "produces",
     reason:
@@ -18440,11 +18479,46 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
       "Heun step 하나는 일반적으로 learned field를 두 번 평가하므로 step과 NFE가 다릅니다.",
   },
   {
+    from: "diffusion-score-identity",
+    to: "learned-field-solver-contract",
+    relation: "prerequisite",
+    reason:
+      "Continuous sampler가 적분할 neural score field와 그 approximation error를 제공합니다.",
+  },
+  {
+    from: "explicit-euler-method",
+    to: "learned-field-solver-contract",
+    relation: "prerequisite",
+    reason:
+      "Learned field를 finite time grid에서 실제 tensor update로 바꾸는 기본 solver를 제공합니다.",
+  },
+  {
+    from: "heun-second-order-method",
+    to: "learned-field-solver-contract",
+    relation: "extends",
+    reason:
+      "두 field evaluation으로 discretization error를 줄이는 higher-order update로 확장합니다.",
+  },
+  {
+    from: "learned-field-solver-contract",
+    to: "network-function-evaluations",
+    relation: "produces",
+    reason:
+      "Time grid와 update rule이 learned network의 실제 호출 ledger를 결정합니다.",
+  },
+  {
     from: "diffusion-prediction-target",
     to: "diffusion-backbone-contract",
     relation: "constrains",
     reason:
       "Backbone output의 shape·scale·conditioning interface는 선택한 target에 맞아야 합니다.",
+  },
+  {
+    from: "diffusion-backbone-contract",
+    to: "diffusion-training-sampling-contract",
+    relation: "constrains",
+    reason:
+      "Training target을 내는 tensor interface와 sampling 중 반복 호출할 input contract를 고정합니다.",
   },
   {
     from: "amortized-variational-inference",
@@ -18461,6 +18535,20 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
       "동일한 denoising contract를 pixel 대신 compressed spatial latent에서 실행합니다.",
   },
   {
+    from: "latent-diffusion-bottleneck",
+    to: "latent-diffusion-component-contract",
+    relation: "prerequisite",
+    reason:
+      "Pixel·latent 사이 lossy interface와 numeric scale을 pipeline artifact에 포함합니다.",
+  },
+  {
+    from: "diffusion-backbone-contract",
+    to: "latent-diffusion-component-contract",
+    relation: "prerequisite",
+    reason:
+      "Latent-shaped denoiser input·time·condition·prediction output 계약을 제공합니다.",
+  },
+  {
     from: "conditional-probability",
     to: "classifier-free-guidance",
     relation: "prerequisite",
@@ -18468,11 +18556,39 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
       "Conditional·unconditional prediction과 condition dropout을 구분합니다.",
   },
   {
+    from: "latent-diffusion-component-contract",
+    to: "classifier-free-guidance",
+    relation: "constrains",
+    reason:
+      "Condition encoder와 denoiser branch batching·prediction parameterization이 guidance 계산을 고정합니다.",
+  },
+  {
     from: "classifier-free-guidance",
     to: "generative-evaluation-boundary",
     relation: "evaluates",
     reason:
       "Guidance scale이 condition adherence·diversity·artifact·NFE를 함께 바꾸므로 분리 평가합니다.",
+  },
+  {
+    from: "latent-diffusion-component-contract",
+    to: "conditional-diffusion-release-gate",
+    relation: "produces",
+    reason:
+      "Versioned component receipt가 reconstruction·latency·correctness 판정 대상을 제공합니다.",
+  },
+  {
+    from: "classifier-free-guidance",
+    to: "conditional-diffusion-release-gate",
+    relation: "constrains",
+    reason:
+      "Guidance scale과 branch compute가 condition adherence·diversity·latency gate를 함께 바꿉니다.",
+  },
+  {
+    from: "generative-evaluation-boundary",
+    to: "conditional-diffusion-release-gate",
+    relation: "prerequisite",
+    reason:
+      "Quality·coverage·condition adherence·cost를 서로 상쇄하지 않는 평가 축으로 제공합니다.",
   },
   {
     from: "latent-variable-marginalization",

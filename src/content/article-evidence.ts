@@ -1827,33 +1827,37 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
     {
       kind: "핵심 논문",
+      label: "U-Net: Convolutional Networks for Biomedical Image Segmentation",
+      href: "https://arxiv.org/abs/1505.04597",
+      note: "Contracting·expanding path와 long skip connection의 원 구조",
+    },
+  ],
+  "ai/diffusion-continuous-time": [
+    {
+      kind: "핵심 논문",
       label: "Score-Based Generative Modeling through SDEs",
       href: "https://arxiv.org/abs/2011.13456",
-      note: "연속시간 SDE와 probability flow ODE",
+      note: "Reverse-time SDE와 probability-flow ODE의 정본",
     },
     {
       kind: "핵심 논문",
       label: "Flow Matching for Generative Modeling",
       href: "https://arxiv.org/abs/2210.02747",
-      note: "velocity field를 직접 학습하는 flow matching",
+      note: "Conditional velocity regression의 정본",
     },
+  ],
+  "ai/latent-diffusion-guidance": [
     {
       kind: "핵심 논문",
       label: "High-Resolution Image Synthesis with Latent Diffusion Models",
       href: "https://arxiv.org/abs/2112.10752",
-      note: "Stable Diffusion의 latent-space 생성 경로",
-    },
-    {
-      kind: "핵심 논문",
-      label: "U-Net: Convolutional Networks for Biomedical Image Segmentation",
-      href: "https://arxiv.org/abs/1505.04597",
-      note: "Contracting·expanding path와 long skip connection의 원 구조",
+      note: "Autoencoder latent-space denoising의 정본",
     },
     {
       kind: "핵심 논문",
       label: "Classifier-Free Diffusion Guidance",
       href: "https://arxiv.org/abs/2207.12598",
-      note: "Conditional·unconditional score를 결합하는 CFG의 원문",
+      note: "Conditional·unconditional prediction 결합의 정본",
     },
   ],
   "ai/yarn-rope-extension": [

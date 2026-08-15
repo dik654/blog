@@ -137,7 +137,7 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "지수함수", href: "/ai/math-exponents-logarithms" },
       {
         label: "Diffusion·score·flow의 적용",
-        href: "/ai/diffusion-models",
+        href: "/ai/diffusion-continuous-time",
       },
     ],
     evidence: [
@@ -2628,7 +2628,7 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "Expectation", href: "/ai/math-random-variables-expectation" },
       { label: "Variance", href: "/ai/math-variance-sampling" },
       { label: "Likelihood·entropy·KL divergence", href: "/ai/cross-entropy" },
-      { label: "Diffusion과 latent diffusion", href: "/ai/diffusion-models" },
+      { label: "Latent diffusion과 CFG", href: "/ai/latent-diffusion-guidance" },
     ],
     evidence: [
       {
@@ -2773,12 +2773,12 @@ export const EDITORIAL_BOUNDARIES = {
     ]
   },
   "diffusion-models": {
-    title: "Diffusion model 글이 소유하는 범위",
+    title: "Discrete diffusion 기초 글이 소유하는 범위",
     owns: [
-      "Gaussian forward noising·cumulative schedule·임의 timestep sampling의 연결",
-      "Reverse parameterization·noise/score/x0/v target과 sampler의 분리",
-      "Forward SDE·reverse-time SDE·probability-flow ODE·flow matching의 수학적 관계와 차이",
-      "NFE·solver error·U-Net/DiT·latent diffusion·CFG를 포함한 생성 pipeline의 재현 계약",
+      "Training pair 생성과 iterative sampling loop의 경계",
+      "Gaussian forward noising·cumulative schedule·임의 timestep sampling",
+      "Noise·x0·v·score prediction target과 backbone tensor interface",
+      "Gaussian conditional noise–score identity와 marginal score 경계",
     ],
     reuses: [
       {
@@ -2791,19 +2791,54 @@ export const EDITORIAL_BOUNDARIES = {
       },
       { label: "Expectation", href: "/ai/math-random-variables-expectation" },
       { label: "Variance", href: "/ai/math-variance-sampling" },
-      { label: "VAE·latent representation", href: "/ai/vae" },
       { label: "CNN·receptive field", href: "/ai/cnn" },
       { label: "Attention·cross-attention", href: "/ai/attention-theory" },
     ],
     evidence: [
       {
         kind: "primary-source",
-        rule: "DDPM·score-SDE·flow matching·latent diffusion·CFG claim은 각 논문의 process·objective·solver·dataset 조건으로 제한한다.",
+        rule: "DDPM·U-Net claim은 각 논문의 corruption·target·architecture·dataset 조건으로 제한한다.",
       },
       {
         kind: "standard",
-        rule: "Prediction target·noise schedule·sampler·step·NFE·guidance·autoencoder·precision을 분리해 재현 가능한 inference contract로 기록한다.",
+        rule: "Prediction target·noise schedule·backbone shape와 sampler steps·NFE를 분리해 기록한다.",
       },
+    ],
+  },
+  "diffusion-continuous-time": {
+    title: "Continuous diffusion 글이 소유하는 범위",
+    owns: [
+      "Reverse-time SDE의 score correction과 stochastic path",
+      "Probability-flow ODE의 same-marginal·different-path 경계",
+      "Conditional flow-matching path·coupling·velocity objective",
+      "Learned-field error·solver discretization·NFE·wall-clock ledger",
+    ],
+    reuses: [
+      { label: "Discrete diffusion과 noise–score identity", href: "/ai/diffusion-models" },
+      { label: "ODE·SDE와 numerical solver", href: "/ai/math-differential-equations-numerical-solvers" },
+      { label: "Score function field", href: "/ai/score-based-modeling" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Score-SDE·flow-matching claim은 각 theorem의 regularity·path·coupling·experiment 범위로 제한한다." },
+      { kind: "standard", rule: "Field checkpoint·time grid·solver·precision·NFE·wall-clock을 하나의 versioned sampler receipt로 기록한다." },
+    ],
+  },
+  "latent-diffusion-guidance": {
+    title: "Latent diffusion·CFG 글이 소유하는 범위",
+    owns: [
+      "Pixel↔latent lossy bottleneck과 reconstruction ceiling",
+      "Autoencoder·conditioner·denoiser·sampler·decoder component contract",
+      "Classifier-free guidance의 conditional direction과 compute trade-off",
+      "Reconstruction·quality·coverage·condition·latency release gate",
+    ],
+    reuses: [
+      { label: "Discrete diffusion target와 backbone", href: "/ai/diffusion-models" },
+      { label: "VAE·latent representation", href: "/ai/vae" },
+      { label: "생성 모델 평가 경계", href: "/ai/generative-theory" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Latent diffusion·CFG claim은 autoencoder·condition dropout·dataset·metric 조건으로 제한한다." },
+      { kind: "standard", rule: "Component revision·latent shape·scale·target·sampler·guidance·precision·evaluator를 release receipt에 함께 기록한다." },
     ],
   },
   "open-r1": {

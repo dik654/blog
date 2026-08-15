@@ -39611,517 +39611,782 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/diffusion-models": {
-    coreIdea:
-      "Diffusion model은 data를 Gaussian noise로 보내는 forward process를 고정한 뒤 각 noise level에서 reverse direction을 예측합니다. Discrete DDPM의 noise target은 perturbed density의 score와 연결되고, continuous time에서는 reverse SDE·probability-flow ODE·flow matching으로 확장됩니다. 실제 품질과 비용은 network만이 아니라 schedule·parameterization·solver·NFE·latent bottleneck·guidance의 결합으로 결정됩니다.",
-    assumedKnowledge: [
+    "entryLevel": true,
+    "coreIdea": "이 글은 diffusion training pair와 sampling loop를 먼저 분리하고, Gaussian forward corruption·cumulative schedule·prediction target·noise–score identity·backbone tensor contract를 하나씩 쌓습니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
       {
-        id: "probability-distribution",
-        role: "Data·perturbed marginal·Gaussian prior를 구분합니다.",
+        "id": "diffusion-training-sampling-contract",
+        "role": "한 번에 만드는 training pair와 반복 reverse sampling을 분리합니다."
       },
       {
-        id: "conditional-probability",
-        role: "q(xₜ|x₀), conditional generation과 condition dropout을 읽습니다.",
+        "id": "gaussian-forward-diffusion",
+        "role": "Signal retention과 independent Gaussian noise로 noisy state를 만듭니다."
       },
       {
-        id: "expectation",
-        role: "Timestep·data·noise sampling에 대한 training objective를 해석합니다.",
+        "id": "cumulative-noise-schedule",
+        "role": "여러 transition을 접어 임의 timestep sample을 직접 만듭니다."
       },
       {
-        id: "variance",
-        role: "Noise variance·standard deviation·schedule scale을 구분합니다.",
+        "id": "diffusion-prediction-target",
+        "role": "Network가 ε·x0·v·score 중 무엇을 직접 맞힐지 정합니다."
       },
       {
-        id: "score-function-field",
-        role: "Log density의 data-coordinate gradient를 local direction field로 읽습니다.",
+        "id": "diffusion-score-identity",
+        "role": "Gaussian noise prediction을 density score 방향으로 바꿉니다."
       },
       {
-        id: "diffusion-score-parameterization",
-        role: "Noise·score·x₀·velocity target이 known scale로 연결됨을 재사용합니다.",
-      },
-      {
-        id: "stochastic-differential-equation",
-        role: "Forward drift와 Brownian diffusion increment를 구분합니다.",
-      },
-      {
-        id: "explicit-euler-method",
-        role: "Learned field를 finite step으로 적분하는 가장 단순한 sampler를 읽습니다.",
-      },
-      {
-        id: "heun-second-order-method",
-        role: "Step 수와 function evaluation 수가 다를 수 있음을 계산합니다.",
-      },
-      {
-        id: "amortized-variational-inference",
-        role: "Latent diffusion의 pretrained encoder·decoder interface를 읽습니다.",
-      },
+        "id": "diffusion-backbone-contract",
+        "role": "Noisy tensor·time·condition에서 same-shaped target을 내는 interface를 고정합니다."
+      }
     ],
-    introducedHere: [
+    "conceptExplanations": [
       {
-        id: "gaussian-forward-diffusion",
-        role: "Data를 단계별 Gaussian transition으로 simple prior에 보냅니다.",
+        "id": "diffusion-training-sampling-contract",
+        "sectionId": "corruption",
+        "intuition": "Training은 clean sample·time·noise로 한 noisy pair를 만들고, sampling은 terminal noise에서 denoiser를 반복 호출합니다.",
+        "workedExample": "Training t=700 pair 하나와 sampling 30 solver steps는 다른 algorithm입니다.",
+        "boundary": "Forward steps·sampler steps·NFE를 같은 숫자로 놓지 않습니다."
       },
       {
-        id: "cumulative-noise-schedule",
-        role: "중간 transition 없이 임의 timestep sample을 직접 만듭니다.",
+        "id": "gaussian-forward-diffusion",
+        "sectionId": "corruption",
+        "intuition": "이전 signal을 조금 줄이고 independent Gaussian noise를 더하는 고정 corruption입니다.",
+        "workedExample": "βt=0.01이면 signal scale √0.99, 새 noise variance 0.01입니다.",
+        "boundary": "실제 sensor damage를 관측한 model일 필요가 없습니다."
       },
       {
-        id: "diffusion-prediction-target",
-        role: "ε·x₀·v·score 중 network output과 weighting을 고정합니다.",
+        "id": "cumulative-noise-schedule",
+        "sectionId": "schedule",
+        "intuition": "Step별 signal variance retention을 곱해 원본이 t까지 남긴 몫을 구합니다.",
+        "workedExample": "β1=0.1, β2=0.2면 ᾱ2=0.72, noise variance는 0.28입니다.",
+        "boundary": "Independent Gaussian 합성의 closed form이며 임의 corruption에 적용되지 않습니다.",
+        "proofIdea": "Gaussian transition을 재귀 대입하면 signal coefficient가 √α의 곱, independent noise variance 합은 1−ᾱ로 정리됩니다.",
+        "counterexample": "Heavy-tailed non-Gaussian transition family가 합성에 닫혀 있지 않으면 standard Gaussian 하나로 정확히 접을 수 없습니다."
       },
       {
-        id: "diffusion-score-identity",
-        role: "Gaussian noise target과 conditional·marginal score의 관계를 유도합니다.",
+        "id": "diffusion-prediction-target",
+        "sectionId": "target",
+        "intuition": "같은 noisy state에서 noise·clean sample·velocity·score 중 network가 직접 근사할 양을 고릅니다.",
+        "workedExample": "ε̂에서 x̂0=(xt−σε̂)/α로 바꿀 수 있지만 작은 α에서는 error가 증폭됩니다.",
+        "boundary": "Algebraic convertibility가 같은 numerical optimization을 보장하지 않습니다."
       },
       {
-        id: "reverse-time-sde",
-        role: "Score correction으로 terminal noise에서 data로 돌아오는 stochastic dynamics를 만듭니다.",
+        "id": "diffusion-backbone-contract",
+        "sectionId": "target",
+        "intuition": "Architecture 이름보다 noisy tensor·time·condition input과 target-shaped output을 먼저 고정합니다.",
+        "workedExample": "B×4×64×64 latent와 time B, text B×L×D에서 B×4×64×64 ε̂를 냅니다.",
+        "boundary": "모든 diffusion이 U-Net·cross-attention을 쓰지 않습니다."
       },
       {
-        id: "probability-flow-ode",
-        role: "같은 time marginal을 갖는 deterministic dynamics를 구분합니다.",
-      },
-      {
-        id: "flow-matching-objective",
-        role: "Conditional path의 velocity를 simulation 없이 regression합니다.",
-      },
-      {
-        id: "network-function-evaluations",
-        role: "Sampler가 learned field를 실제로 호출한 횟수를 측정합니다.",
-      },
-      {
-        id: "diffusion-backbone-contract",
-        role: "U-Net·DiT의 noisy input·time·condition·target output interface를 고정합니다.",
-      },
-      {
-        id: "latent-diffusion-bottleneck",
-        role: "Compressed latent의 compute 이득과 reconstruction ceiling을 함께 봅니다.",
-      },
-      {
-        id: "classifier-free-guidance",
-        role: "Conditional·unconditional prediction 차이와 fidelity–diversity trade-off를 조절합니다.",
-      },
+        "id": "diffusion-score-identity",
+        "sectionId": "score",
+        "intuition": "Gaussian log density의 gradient는 conditional center에서 벗어난 noise의 반대 방향입니다.",
+        "workedExample": "σt=0.5, ε=2이면 conditional score는 −4입니다.",
+        "boundary": "Marginal score는 가능한 x0의 posterior average이며 한 conditional pair와 같지 않습니다.",
+        "proofIdea": "Gaussian quadratic log density를 xt로 미분하고 xt−αx0=σε를 대입합니다.",
+        "counterexample": "Non-Gaussian corruption에서는 score가 일반적으로 −ε/σ인 linear relation이 아닙니다."
+      }
     ],
-    conceptExplanations: [
+    "conceptStages": [
       {
-        id: "gaussian-forward-diffusion",
-        sectionId: "forward-reverse",
-        intuition:
-          "원본을 바로 맞히게 하지 않고, 알아볼 수 있는 상태부터 거의 noise인 상태까지 난이도가 다른 복원 문제를 만듭니다.",
-        workedExample:
-          "βt=0.01이면 한 transition은 이전 signal scale √0.99를 남기고 variance 0.01의 Gaussian noise를 더합니다.",
-        boundary:
-          "Forward process는 data에서 관측한 물리적 손상 과정일 필요가 없고, 일반 DDPM에서는 학습 전에 정한 model design입니다.",
+        "label": "Separate",
+        "relation": "Training pair와 sampling loop를 구분",
+        "concepts": [
+          "diffusion-training-sampling-contract"
+        ]
       },
       {
-        id: "cumulative-noise-schedule",
-        sectionId: "forward-reverse",
-        intuition:
-          "작은 Gaussian noise를 여러 번 더한 결과를 signal 한 항과 Gaussian noise 한 항으로 합쳐 임의 난이도의 문제를 바로 만듭니다.",
-        workedExample:
-          "ᾱt=0.64이면 xₜ=0.8x₀+0.6ε이므로 signal variance 0.64와 noise variance 0.36이 합쳐집니다.",
-        boundary:
-          "Isotropic Gaussian Markov transition의 closed form이며 임의의 non-Gaussian corruption이나 learned forward process에 그대로 적용되지 않습니다.",
-        proofIdea:
-          "Gaussian transition을 재귀 대입하면 이전 independent noise의 linear combination도 Gaussian이고, signal coefficient는 √α의 곱 √ᾱt, 전체 noise variance는 1−ᾱt로 귀납적으로 정리됩니다.",
-        counterexample:
-          "각 step noise가 heavy-tailed non-Gaussian이고 합성 family가 닫혀 있지 않으면 하나의 standard Gaussian ε와 같은 closed form으로 정확히 바꿀 수 없습니다.",
+        "label": "Corrupt",
+        "relation": "Gaussian transition과 cumulative schedule로 noisy state 생성",
+        "concepts": [
+          "probability-distribution",
+          "variance",
+          "gaussian-forward-diffusion",
+          "cumulative-noise-schedule"
+        ]
       },
       {
-        id: "diffusion-prediction-target",
-        sectionId: "forward-reverse",
-        intuition:
-          "같은 noisy point에서 원본·추가 noise·복원 방향을 서로 바꿔 계산할 수 있지만 어떤 quantity를 직접 맞히느냐가 noise level별 학습 신호를 바꿉니다.",
-        workedExample:
-          "xₜ=αx₀+σε에서 ε̂를 얻으면 x̂₀=(xₜ−σε̂)/α로 바꿀 수 있지만 α가 매우 작을 때 error가 1/α만큼 증폭됩니다.",
-        boundary:
-          "Algebraic convertibility가 finite precision·loss weighting·network capacity에서 같은 optimization을 보장하지 않습니다.",
+        "label": "Predict",
+        "relation": "Target와 tensor interface를 고정",
+        "concepts": [
+          "diffusion-prediction-target",
+          "diffusion-backbone-contract"
+        ]
       },
       {
-        id: "diffusion-score-identity",
-        sectionId: "forward-reverse",
-        intuition:
-          "Gaussian bell curve에서 중심으로 돌아가는 화살표는 현재 벗어난 noise를 음수로 바꾼 방향입니다.",
-        workedExample:
-          "Noise standard deviation σt=0.5이고 실제 ε=2이면 conditional score는 −ε/σt=−4입니다.",
-        boundary:
-          "Conditional score와 perturbed marginal score를 동일시하지 않습니다. Marginal score는 xₜ가 주어졌을 때 가능한 x₀들의 posterior average입니다.",
-        proofIdea:
-          "Gaussian log density −||xₜ−αx₀||²/(2σ²)를 xₜ로 미분해 −(xₜ−αx₀)/σ²를 얻고 xₜ−αx₀=σε를 대입합니다. MSE의 conditional-mean optimum으로 marginal identity를 연결합니다.",
-        counterexample:
-          "Non-Gaussian corruption에서는 log-density derivative가 일반적으로 −ε/σ인 linear relation이 아니므로 같은 변환을 쓸 수 없습니다.",
-      },
-      {
-        id: "reverse-time-sde",
-        sectionId: "continuous-time",
-        intuition:
-          "퍼지는 random walk를 거꾸로 돌리려면 시간 방향만 바꾸는 것이 아니라 현재 density가 높은 쪽을 알려 주는 score correction이 필요합니다.",
-        workedExample:
-          "Forward drift f와 diffusion g가 주어지면 reverse drift는 f−g²score이고 terminal prior sample에서 t=T→0으로 적분합니다.",
-        boundary:
-          "True score·regularity·continuous integration의 이론입니다. Neural approximation과 finite solver에서는 exact data sample 보장이 사라집니다.",
-        proofIdea:
-          "Forward density의 Fokker–Planck equation과 reverse-time process의 density evolution을 일치시키면 probability current를 되돌리는 drift correction −g²∇log pt가 필요합니다.",
-        counterexample:
-          "Score를 0으로 놓고 forward drift만 역방향으로 적분하면 diffusion으로 퍼진 probability mass를 data modes로 모을 정보가 없어 올바른 reverse marginal을 얻지 못합니다.",
-      },
-      {
-        id: "probability-flow-ode",
-        sectionId: "continuous-time",
-        intuition:
-          "Random diffusion이 density를 바꾸는 효과를 deterministic velocity에 옮겨 같은 시간별 분포를 다른 개별 경로로 운반합니다.",
-        workedExample:
-          "Reverse SDE의 score coefficient가 −g²라면 probability-flow ODE에서는 −g²/2가 되고 Brownian term은 없습니다.",
-        boundary:
-          "동일한 것은 time marginal이며 initial noise별 trajectory와 finite-step sample은 SDE와 같지 않습니다.",
-        proofIdea:
-          "ODE continuity equation의 drift를 f−g²score/2로 두면 score identity p·∇log p=∇p를 통해 forward SDE의 Fokker–Planck equation과 같은 density derivative가 됩니다.",
-        counterexample:
-          "같은 initial noise에 SDE와 ODE를 실행하면 한쪽은 Brownian randomness가 계속 들어오고 다른 쪽은 deterministic이므로 pathwise equality가 성립하지 않습니다.",
-      },
-      {
-        id: "flow-matching-objective",
-        sectionId: "continuous-time",
-        intuition:
-          "전체 distribution velocity를 직접 알기 어려우므로 endpoint가 정해진 쉬운 작은 길들의 속도를 가르치고, network가 같은 위치에서 가능한 속도의 평균을 배우게 합니다.",
-        workedExample:
-          "직선 interpolation xt=(1−t)x0+tx1에서는 conditional target velocity u=x1−x0를 simulation 없이 계산할 수 있습니다.",
-        boundary:
-          "Probability path·endpoint coupling을 고르는 일이 사라지지 않으며 diffusion score objective와 같은 식이라고 단정하지 않습니다.",
-        proofIdea:
-          "Squared error의 pointwise minimizer는 E[u|xt,t]이고, conditional continuity equation을 endpoint에 대해 평균하면 이 posterior-average field가 marginal path의 continuity equation을 만족합니다.",
-        counterexample:
-          "Target velocity가 chosen path와 일치하지 않거나 path가 singular한데 regularity를 무시하면 regression loss가 작아도 의도한 marginal transport를 만들지 못합니다.",
-      },
-      {
-        id: "network-function-evaluations",
-        sectionId: "continuous-time",
-        intuition:
-          "달력에서 몇 걸음 갔는지가 아니라 비싼 denoiser에게 실제로 몇 번 물었는지를 셉니다.",
-        workedExample:
-          "4-step Heun sampler는 step마다 predictor·corrector 두 번을 부르면 8 NFE이고, CFG 두 branch를 별도 실행하면 compute contract가 다시 달라집니다.",
-        boundary:
-          "NFE가 같아도 network size·resolution·batch·precision·kernel과 guidance batching에 따라 wall-clock이 다릅니다.",
-      },
-      {
-        id: "diffusion-backbone-contract",
-        sectionId: "unet",
-        intuition:
-          "Backbone 이름보다 noisy tensor와 noise level·condition을 받아 어떤 target shape를 내는지가 핵심 interface입니다.",
-        workedExample:
-          "Latent tensor B×4×64×64와 timestep B, text B×L×D를 받아 ε prediction B×4×64×64를 냅니다.",
-        boundary:
-          "모든 diffusion이 U-Net·cross-attention을 쓰지 않습니다. DiT와 modality-specific backbone도 같은 외부 contract를 구현할 수 있습니다.",
-      },
-      {
-        id: "latent-diffusion-bottleneck",
-        sectionId: "stable-diffusion",
-        intuition:
-          "큰 pixel grid 대신 압축된 spatial latent에서 반복 denoising해 매 evaluation의 계산량을 줄입니다.",
-        workedExample:
-          "512×512 RGB를 8배 spatial downsampling한 4×64×64 latent로 옮기면 denoiser의 spatial positions가 크게 줄지만 encoder·decoder 비용과 reconstruction error가 추가됩니다.",
-        boundary:
-          "압축률만으로 총 speedup이 정해지지 않으며 autoencoder가 버린 detail·latent scaling·decoder artifact를 diffusion이 원본에서 되찾을 수 없습니다.",
-      },
-      {
-        id: "classifier-free-guidance",
-        sectionId: "stable-diffusion",
-        intuition:
-          "Prompt가 있을 때와 없을 때의 예측 차이를 prompt가 미는 방향으로 보고 sampling 때 그 방향을 증폭합니다.",
-        workedExample:
-          "Unconditional εu=2, conditional εc=1.5, w=3이면 guided prediction은 2+3(−0.5)=0.5입니다.",
-        boundary:
-          "w=1은 conditional prediction이며 보편적 최적 scale이 아닙니다. 큰 w는 alignment와 함께 saturation·artifact·diversity loss를 만들 수 있습니다.",
-      },
+        "label": "Direction",
+        "relation": "Noise target을 density score로 변환",
+        "concepts": [
+          "conditional-probability",
+          "score-function-field",
+          "diffusion-score-identity"
+        ]
+      }
     ],
-    conceptStages: [
+    "exercises": [
       {
-        label: "Forward",
-        relation: "Data에서 임의 noise level training pair 생성",
-        concepts: ["gaussian-forward-diffusion", "cumulative-noise-schedule"],
-      },
-      {
-        label: "Target",
-        relation: "Network output과 score direction 연결",
-        concepts: ["diffusion-prediction-target", "diffusion-score-identity"],
-      },
-      {
-        label: "Dynamics",
-        relation: "Discrete reverse를 SDE·ODE·direct velocity로 확장",
-        concepts: [
-          "vector-field-trajectory",
-          "reverse-time-sde",
-          "probability-flow-ode",
-          "flow-matching-objective",
+        "level": "basic",
+        "question": "Training pair 생성과 sampling loop가 각각 무엇을 반복하는지 구분할 수 있을까요?",
+        "answerChecklist": [
+          "Training은 x0,t,ε로 xt를 한 번에 만든다고 말한다.",
+          "Sampling은 terminal noise에서 learned network를 여러 번 호출한다고 말한다.",
+          "Forward T·sampler step·NFE를 분리한다."
         ],
-      },
-      {
-        label: "Compute",
-        relation: "Solver update와 actual network calls 분리",
-        concepts: [
-          "explicit-euler-method",
-          "heun-second-order-method",
-          "network-function-evaluations",
+        "requiredConcepts": [
+          "diffusion-training-sampling-contract"
         ],
+        "sectionId": "corruption"
       },
       {
-        label: "Pipeline",
-        relation: "Backbone·latent compression·condition guidance 결합",
-        concepts: [
-          "diffusion-backbone-contract",
-          "latent-diffusion-bottleneck",
-          "classifier-free-guidance",
-          "generative-evaluation-boundary",
+        "level": "basic",
+        "question": "βt=0.01인 한 step의 signal scale과 새 noise variance를 계산할 수 있을까요?",
+        "answerChecklist": [
+          "Signal scale √0.99를 적는다.",
+          "Noise scale 0.1과 variance 0.01을 구분한다."
         ],
+        "requiredConcepts": [
+          "gaussian-forward-diffusion",
+          "variance"
+        ],
+        "sectionId": "corruption"
       },
-    ],
-    exercises: [
       {
-        level: "basic",
-        question:
-          "ᾱt=0.64, scalar x₀=2, ε=−1일 때 xₜ와 signal/noise scale을 계산할 수 있을까요?",
-        answerChecklist: [
+        "level": "basic",
+        "question": "β1=0.1, β2=0.2에서 α1·α2·ᾱ2와 noise variance를 계산할 수 있을까요?",
+        "answerChecklist": [
+          "α1=0.9, α2=0.8을 계산한다.",
+          "ᾱ2=0.72를 계산한다.",
+          "Noise variance 0.28을 적는다."
+        ],
+        "requiredConcepts": [
+          "cumulative-noise-schedule"
+        ],
+        "sectionId": "schedule"
+      },
+      {
+        "level": "basic",
+        "question": "ᾱt=0.64, x0=2, ε=−1일 때 xt를 계산할 수 있을까요?",
+        "answerChecklist": [
           "Signal scale 0.8을 구한다.",
           "Noise scale 0.6을 구한다.",
-          "xₜ=1.0을 계산한다.",
+          "xt=1.0을 계산한다."
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
+          "cumulative-noise-schedule"
+        ],
+        "sectionId": "schedule"
+      },
+      {
+        "level": "basic",
+        "question": "Latent denoiser의 input·condition·output shape 예를 적고 U-Net이 필수인지 말할 수 있을까요?",
+        "answerChecklist": [
+          "B×4×64×64 input과 same-shaped prediction을 적는다.",
+          "Time B와 optional text B×L×D를 적는다.",
+          "DiT도 같은 외부 contract를 구현할 수 있다고 말한다."
+        ],
+        "requiredConcepts": [
+          "diffusion-backbone-contract"
+        ],
+        "sectionId": "target"
+      },
+      {
+        "level": "basic",
+        "question": "σt=0.5, ε=2일 때 conditional score를 계산하고 방향을 설명할 수 있을까요?",
+        "answerChecklist": [
+          "−ε/σt=−4를 계산한다.",
+          "Conditional center 쪽 방향이라고 말한다."
+        ],
+        "requiredConcepts": [
+          "diffusion-score-identity"
+        ],
+        "sectionId": "score"
+      },
+      {
+        "level": "advanced",
+        "question": "Cumulative Gaussian closed form이 나오는 이유와 실패하는 corruption 반례를 설명할 수 있을까요?",
+        "answerChecklist": [
+          "Signal coefficient가 √α의 곱임을 보인다.",
+          "Independent Gaussian 합의 variance가 1−ᾱ임을 보인다.",
+          "Non-Gaussian family 반례를 든다."
+        ],
+        "requiredConcepts": [
           "gaussian-forward-diffusion",
-          "cumulative-noise-schedule",
-          "variance",
+          "cumulative-noise-schedule"
         ],
-        sectionId: "forward-reverse",
+        "sectionId": "schedule"
       },
       {
-        level: "basic",
-        question:
-          "두 forward step의 β₁=0.10, β₂=0.20일 때 α₁·α₂·ᾱ₂와 x₀·noise의 scale을 계산하고, β가 network parameter인지 구분할 수 있을까요?",
-        answerChecklist: [
-          "α₁=0.90, α₂=0.80, ᾱ₂=0.72를 계산한다.",
-          "Signal scale √0.72와 noise scale √0.28을 적는다.",
-          "β schedule은 학습 전에 정하는 corruption schedule이며 denoiser parameter가 아니라고 말한다.",
+        "level": "advanced",
+        "question": "Gaussian conditional score를 유도하고 marginal score와 구분할 수 있을까요?",
+        "answerChecklist": [
+          "Quadratic log density를 xt로 미분한다.",
+          "−ε/σ를 얻는다.",
+          "Marginal은 posterior average라고 구분한다."
         ],
-        requiredConcepts: [
-          "gaussian-forward-diffusion",
-          "cumulative-noise-schedule",
-        ],
-        sectionId: "forward-reverse",
-      },
-      {
-        level: "basic",
-        question:
-          "Diffusion U-Net의 down path·middle·up path·long skip·timestep embedding이 각각 맡는 역할을 입력→출력 순서로 설명할 수 있을까요?",
-        answerChecklist: [
-          "Down path는 resolution을 줄이며 context를 모으고 up path는 resolution을 복원한다고 말한다.",
-          "Long skip은 같은 spatial scale의 detail을 전달한다고 말한다.",
-          "Timestep embedding은 같은 noisy tensor라도 noise level에 맞는 denoising 방향을 고르게 한다고 말한다.",
-        ],
-        requiredConcepts: ["diffusion-backbone-contract"],
-        sectionId: "unet",
-      },
-      {
-        level: "basic",
-        question:
-          "64×64 pixel grid를 8×8 spatial latent로 줄이면 denoiser가 보는 위치 수가 몇 배 줄어드는지 계산하고, 이 값만으로 생성 속도와 품질을 확정할 수 없는 이유를 말할 수 있을까요?",
-        answerChecklist: [
-          "4096/64=64이므로 spatial 위치 수가 64배 줄어든다고 계산한다.",
-          "Channel 수·network width·attention·NFE가 달라 실제 FLOPs와 latency가 정확히 64배가 되지는 않는다고 말한다.",
-          "Autoencoder reconstruction ceiling과 latent scaling을 별도 평가한다고 말한다.",
-        ],
-        requiredConcepts: [
-          "latent-diffusion-bottleneck",
-          "generative-evaluation-boundary",
-        ],
-        sectionId: "stable-diffusion",
-      },
-      {
-        level: "advanced",
-        question:
-          "Gaussian conditional score를 유도하고 conditional score와 marginal score가 다른 이유를 설명할 수 있을까요?",
-        answerChecklist: [
-          "Gaussian log density를 xₜ로 미분한다.",
-          "−ε/√(1−ᾱt)를 얻는다.",
-          "Marginal은 posterior average라고 구분한다.",
-        ],
-        requiredConcepts: [
+        "requiredConcepts": [
           "diffusion-score-identity",
-          "score-function-field",
           "conditional-probability",
+          "score-function-field"
         ],
-        sectionId: "forward-reverse",
+        "sectionId": "score"
       },
       {
-        level: "advanced",
-        question:
-          "Reverse-time SDE와 probability-flow ODE의 score coefficient·random term·같아지는 대상을 비교할 수 있을까요?",
-        answerChecklist: [
-          "Score coefficient −g²와 −g²/2를 구분한다.",
-          "SDE에 Brownian term이 남음을 적는다.",
-          "같은 것은 time marginal이지 path가 아니라고 말한다.",
+        "level": "advanced",
+        "question": "ε prediction과 x0 prediction이 algebraically 바뀌어도 optimization이 같지 않은 이유를 설명할 수 있을까요?",
+        "answerChecklist": [
+          "변환식을 적는다.",
+          "작은 α의 error amplification을 설명한다.",
+          "Weighting·finite precision·capacity를 기록한다."
         ],
-        requiredConcepts: [
-          "reverse-time-sde",
-          "probability-flow-ode",
+        "requiredConcepts": [
+          "diffusion-prediction-target"
+        ],
+        "sectionId": "target"
+      },
+      {
+        "level": "advanced",
+        "question": "Training loss와 sampling quality가 어긋난 run을 진단할 contract를 설계할 수 있을까요?",
+        "answerChecklist": [
+          "Target·weighting·schedule을 기록한다.",
+          "Sampler·steps·NFE를 별도 기록한다.",
+          "Backbone shape·checkpoint·evaluation을 고정한다."
+        ],
+        "requiredConcepts": [
+          "diffusion-training-sampling-contract",
+          "diffusion-prediction-target",
+          "diffusion-backbone-contract"
+        ],
+        "sectionId": "target"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Denoising Diffusion Probabilistic Models",
+        "href": "https://arxiv.org/abs/2006.11239",
+        "problem": "Tractable forward noising과 learned reverse process로 sample을 생성하는 문제",
+        "contribution": "Gaussian chain·variational bound·score matching과 simplified noise prediction 연결",
+        "assumptions": "논문의 Gaussian schedule·parameterization·U-Net·sampling setup",
+        "evidenceScope": "CIFAR-10·LSUN likelihood·FID와 reported samples",
+        "notClaim": "모든 diffusion이 1,000 steps·동일 U-Net·동일 target을 쓴다는 뜻이 아님",
+        "sectionId": "paper-ddpm"
+      },
+      {
+        "title": "U-Net: Convolutional Networks for Biomedical Image Segmentation",
+        "href": "https://arxiv.org/abs/1505.04597",
+        "problem": "Context와 localization을 함께 얻는 segmentation 문제",
+        "contribution": "Contracting·expanding path와 same-scale long skip",
+        "assumptions": "원 biomedical segmentation architecture",
+        "evidenceScope": "논문의 microscopy segmentation results",
+        "notClaim": "원 U-Net이 timestep·attention diffusion backbone과 동일하지 않음",
+        "sectionId": "paper-unet"
+      }
+    ]
+  },
+  "ai/diffusion-continuous-time": {
+    "entryLevel": true,
+    "coreIdea": "이 글은 SDE의 drift·Brownian path를 정의한 뒤 reverse score correction, same-marginal probability-flow ODE, direct velocity regression, finite solver·NFE contract를 순서대로 조합합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "reverse-time-sde",
+        "role": "Score correction으로 terminal noise를 data 쪽으로 운반하는 stochastic dynamics를 만듭니다."
+      },
+      {
+        "id": "probability-flow-ode",
+        "role": "같은 time marginal을 deterministic path로 운반합니다."
+      },
+      {
+        "id": "flow-matching-objective",
+        "role": "Chosen conditional path의 velocity를 직접 regression합니다."
+      },
+      {
+        "id": "learned-field-solver-contract",
+        "role": "Field error와 finite integration error를 분리합니다."
+      },
+      {
+        "id": "network-function-evaluations",
+        "role": "Learned network의 실제 호출 횟수를 셉니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "reverse-time-sde",
+        "sectionId": "reverse-sde",
+        "intuition": "Forward diffusion으로 퍼진 mass를 score 방향으로 회수하면서 reverse Brownian path를 유지합니다.",
+        "workedExample": "f=0,g=1,score=−2이면 score drift correction은 +2입니다.",
+        "boundary": "True score·continuous integration 이론과 neural finite solver를 구분합니다.",
+        "proofIdea": "Fokker–Planck probability current를 reverse density evolution과 맞추면 −g² score drift가 필요합니다.",
+        "counterexample": "Score를 0으로 놓으면 data modes로 모을 density 정보가 없습니다."
+      },
+      {
+        "id": "probability-flow-ode",
+        "sectionId": "probability-flow",
+        "intuition": "Diffusion effect를 deterministic velocity로 옮겨 SDE와 같은 time marginal을 만듭니다.",
+        "workedExample": "Reverse SDE coefficient −g²와 달리 ODE는 −g²/2이고 Brownian term이 없습니다.",
+        "boundary": "Marginal equality이지 pathwise equality가 아닙니다.",
+        "proofIdea": "Continuity equation에 f−g²score/2를 넣고 p score=∇p를 쓰면 SDE density derivative와 일치합니다.",
+        "counterexample": "같은 initial noise라도 SDE는 새 randomness가 들어오므로 ODE path와 같지 않습니다."
+      },
+      {
+        "id": "flow-matching-objective",
+        "sectionId": "flow-matching",
+        "intuition": "쉬운 conditional path의 velocity를 target으로 주고 network가 posterior-average marginal field를 배웁니다.",
+        "workedExample": "직선 path는 u=x1−x0입니다.",
+        "boundary": "Path·endpoint coupling이 별도 설계입니다.",
+        "proofIdea": "Squared-error minimizer E[u|xt,t]와 conditional continuity equation의 endpoint 평균을 연결합니다.",
+        "counterexample": "잘못된 target velocity나 singular path는 작은 regression loss로 원하는 transport를 보장하지 않습니다."
+      },
+      {
+        "id": "learned-field-solver-contract",
+        "sectionId": "solver-budget",
+        "intuition": "Learned continuous direction과 time grid·update·precision을 결합해 finite sample을 만듭니다.",
+        "workedExample": "Euler 20 step과 Heun 10 step은 둘 다 nominal 20 NFE일 수 있습니다.",
+        "boundary": "Higher order가 field approximation error를 제거하지 않습니다."
+      },
+      {
+        "id": "network-function-evaluations",
+        "sectionId": "solver-budget",
+        "intuition": "Sampler가 비싼 denoiser·score·velocity network를 실제로 부른 횟수입니다.",
+        "workedExample": "Heun 4 step은 보통 8 NFE입니다.",
+        "boundary": "NFE가 같아도 network·shape·precision·kernel이 다르면 latency가 다릅니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "Stochastic",
+        "relation": "Drift·Brownian noise와 reverse score correction",
+        "concepts": [
           "stochastic-differential-equation",
-        ],
-        sectionId: "continuous-time",
+          "score-function-field",
+          "reverse-time-sde"
+        ]
       },
       {
-        level: "advanced",
-        question:
-          "직선 conditional path의 flow-matching target을 계산하고 score-SDE training과 동일시할 수 없는 이유를 설명할 수 있을까요?",
-        answerChecklist: [
-          "xt=(1−t)x0+tx1을 미분해 u=x1−x0를 얻는다.",
-          "Squared-error optimum이 conditional mean임을 말한다.",
-          "Path·coupling·target이 별도 설계라고 구분한다.",
-        ],
-        requiredConcepts: [
-          "flow-matching-objective",
+        "label": "Deterministic",
+        "relation": "Same-marginal ODE로 전환",
+        "concepts": [
           "vector-field-trajectory",
-          "expectation",
-        ],
-        sectionId: "continuous-time",
+          "probability-flow-ode"
+        ]
       },
       {
-        level: "basic",
-        question:
-          "20-step Euler와 10-step Heun의 NFE를 계산하고 같은 latency라고 결론 내릴 수 없는 이유를 말할 수 있을까요?",
-        answerChecklist: [
-          "둘 다 nominal 20 NFE임을 계산한다.",
-          "Network·batch·precision·implementation을 함께 기록한다.",
-          "Error order와 learned-field error를 분리한다.",
-        ],
-        requiredConcepts: [
+        "label": "Direct field",
+        "relation": "Conditional path velocity를 regression",
+        "concepts": [
+          "expectation",
+          "flow-matching-objective"
+        ]
+      },
+      {
+        "label": "Execute",
+        "relation": "Finite solver error와 model-call budget 기록",
+        "concepts": [
           "explicit-euler-method",
           "heun-second-order-method",
-          "network-function-evaluations",
+          "learned-field-solver-contract",
+          "network-function-evaluations"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "SDE의 drift와 Brownian increment가 각각 무엇을 뜻하는지 설명할 수 있을까요?",
+        "answerChecklist": [
+          "Drift는 평균 deterministic direction이라고 말한다.",
+          "Brownian increment는 같은 initial state에서도 random path를 만든다고 말한다."
         ],
-        sectionId: "continuous-time",
+        "requiredConcepts": [
+          "stochastic-differential-equation"
+        ],
+        "sectionId": "reverse-sde"
       },
       {
-        level: "advanced",
-        question:
-          "Pixel diffusion과 latent diffusion을 같은 denoiser budget에서 비교하는 재현 실험을 설계할 수 있을까요?",
-        answerChecklist: [
-          "Autoencoder·latent shape·scaling과 reconstruction ceiling을 기록한다.",
-          "Denoiser FLOPs·NFE·wall-clock·memory를 분리한다.",
-          "Quality·coverage·condition adherence를 같은 evaluator에서 비교한다.",
+        "level": "basic",
+        "question": "f=0,g=1,score=−2일 때 reverse score drift correction을 계산할 수 있을까요?",
+        "answerChecklist": [
+          "−g²score=+2를 계산한다.",
+          "Score가 density가 높은 방향을 준다고 말한다."
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
+          "reverse-time-sde"
+        ],
+        "sectionId": "reverse-sde"
+      },
+      {
+        "level": "basic",
+        "question": "Reverse SDE와 probability-flow ODE의 score coefficient·random term·같은 대상을 비교할 수 있을까요?",
+        "answerChecklist": [
+          "−g²와 −g²/2를 구분한다.",
+          "SDE에 Brownian term이 남는다고 말한다.",
+          "같은 것은 time marginal이라고 말한다."
+        ],
+        "requiredConcepts": [
+          "reverse-time-sde",
+          "probability-flow-ode"
+        ],
+        "sectionId": "probability-flow"
+      },
+      {
+        "level": "basic",
+        "question": "x0=1,x1=5인 직선 path에서 t=0.25 state와 velocity를 계산할 수 있을까요?",
+        "answerChecklist": [
+          "xt=2를 계산한다.",
+          "u=x1−x0=4를 계산한다."
+        ],
+        "requiredConcepts": [
+          "flow-matching-objective"
+        ],
+        "sectionId": "flow-matching"
+      },
+      {
+        "level": "basic",
+        "question": "20-step Euler와 10-step Heun의 nominal NFE를 계산할 수 있을까요?",
+        "answerChecklist": [
+          "Euler가 20 NFE임을 적는다.",
+          "Heun이 step당 두 번이면 20 NFE임을 적는다."
+        ],
+        "requiredConcepts": [
+          "network-function-evaluations",
+          "explicit-euler-method",
+          "heun-second-order-method"
+        ],
+        "sectionId": "solver-budget"
+      },
+      {
+        "level": "basic",
+        "question": "Field error와 discretization error를 각각 어떻게 줄이는지 구분할 수 있을까요?",
+        "answerChecklist": [
+          "Field error는 model·data·objective와 관련된다고 말한다.",
+          "Discretization error는 step size·solver order와 관련된다고 말한다."
+        ],
+        "requiredConcepts": [
+          "learned-field-solver-contract"
+        ],
+        "sectionId": "solver-budget"
+      },
+      {
+        "level": "advanced",
+        "question": "Reverse score correction이 필요한 이유를 probability current 관점에서 설명할 수 있을까요?",
+        "answerChecklist": [
+          "Forward diffusion이 density를 퍼뜨림을 말한다.",
+          "−g²score가 reverse current를 만든다고 말한다.",
+          "True score·regularity 전제를 적는다."
+        ],
+        "requiredConcepts": [
+          "reverse-time-sde",
+          "score-function-field"
+        ],
+        "sectionId": "reverse-sde"
+      },
+      {
+        "level": "advanced",
+        "question": "SDE와 probability-flow ODE가 pathwise 같지 않은 counterexample을 설명할 수 있을까요?",
+        "answerChecklist": [
+          "같은 initial noise를 둔다.",
+          "SDE에 새 Brownian randomness가 들어옴을 말한다.",
+          "Marginal equality와 path equality를 구분한다."
+        ],
+        "requiredConcepts": [
+          "reverse-time-sde",
+          "probability-flow-ode"
+        ],
+        "sectionId": "probability-flow"
+      },
+      {
+        "level": "advanced",
+        "question": "Flow-matching path와 endpoint coupling을 바꿀 때 기록해야 할 것을 설계할 수 있을까요?",
+        "answerChecklist": [
+          "Source·target coupling을 기록한다.",
+          "Interpolation path와 velocity target을 기록한다.",
+          "Trajectory straightness·quality·NFE를 별도 평가한다."
+        ],
+        "requiredConcepts": [
+          "flow-matching-objective"
+        ],
+        "sectionId": "flow-matching"
+      },
+      {
+        "level": "advanced",
+        "question": "두 sampler를 공정하게 비교하는 benchmark receipt를 설계할 수 있을까요?",
+        "answerChecklist": [
+          "같은 field checkpoint·initial noise·time interval을 고정한다.",
+          "Solver·grid·tolerance·NFE를 기록한다.",
+          "Wall-clock·memory·quality를 target hardware에서 측정한다."
+        ],
+        "requiredConcepts": [
+          "learned-field-solver-contract",
+          "network-function-evaluations"
+        ],
+        "sectionId": "solver-budget"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Score-Based Generative Modeling through Stochastic Differential Equations",
+        "href": "https://arxiv.org/abs/2011.13456",
+        "problem": "Discrete score models를 continuous dynamics와 solver로 통합",
+        "contribution": "Forward·reverse SDE, predictor-corrector와 probability-flow ODE",
+        "assumptions": "SDE regularity·true score와 neural finite solver 구분",
+        "evidenceScope": "Image generation·likelihood·inverse-problem experiments",
+        "notClaim": "SDE·ODE path가 같거나 finite NFE에서 exact sample을 보장하지 않음",
+        "sectionId": "paper-score-sde"
+      },
+      {
+        "title": "Flow Matching for Generative Modeling",
+        "href": "https://arxiv.org/abs/2210.02747",
+        "problem": "Continuous normalizing flow를 ODE simulation 없이 학습",
+        "contribution": "Conditional path velocity regression과 marginal vector-field 연결",
+        "assumptions": "Tractable path·velocity·coupling과 논문 setup",
+        "evidenceScope": "Diffusion·OT path likelihood와 sample comparison",
+        "notClaim": "임의 path가 같은 straightness·quality·NFE를 보장하지 않음",
+        "sectionId": "paper-flow-matching"
+      }
+    ]
+  },
+  "ai/latent-diffusion-guidance": {
+    "entryLevel": true,
+    "coreIdea": "이 글은 lossy pixel↔latent bottleneck을 먼저 정의하고, component artifact·scale contract, classifier-free guidance의 incremental direction, 품질·coverage·condition·latency release gate를 순서대로 조합합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "latent-diffusion-bottleneck",
+        "role": "작은 spatial latent에서 반복 denoising해 compute와 reconstruction ceiling을 교환합니다."
+      },
+      {
+        "id": "latent-diffusion-component-contract",
+        "role": "Autoencoder·conditioner·denoiser·sampler·decoder의 shape·scale·revision을 분리합니다."
+      },
+      {
+        "id": "classifier-free-guidance",
+        "role": "Conditional과 unconditional prediction 차이를 condition-only direction으로 사용합니다."
+      },
+      {
+        "id": "conditional-diffusion-release-gate",
+        "role": "Reconstruction·quality·coverage·condition·latency를 모두 통과시킵니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "latent-diffusion-bottleneck",
+        "sectionId": "compression",
+        "intuition": "큰 pixel grid 대신 compressed spatial latent에서 denoising합니다.",
+        "workedExample": "512×512를 8배씩 줄이면 64×64이고 positions가 64배 줄어듭니다.",
+        "boundary": "실제 speedup은 channel·network·attention·NFE에 달리고 reconstruction detail은 복구할 수 없습니다."
+      },
+      {
+        "id": "latent-diffusion-component-contract",
+        "sectionId": "pipeline",
+        "intuition": "제품 이름 대신 component별 tensor shape·scale·artifact revision·failure owner를 기록합니다.",
+        "workedExample": "Encoder 3×512×512→4×64×64, denoiser same-shaped output, decoder reverse interface를 기록합니다.",
+        "boundary": "같은 Stable Diffusion 이름도 version별 text length·latent scale·target·sampler가 다릅니다."
+      },
+      {
+        "id": "classifier-free-guidance",
+        "sectionId": "guidance",
+        "intuition": "Unconditional 방향에 conditional−unconditional incremental direction을 scale해 더합니다.",
+        "workedExample": "εu=2,εc=1.5면 w=1에서 1.5, w=3에서 0.5입니다.",
+        "boundary": "큰 w가 항상 좋지 않고 artifact·diversity loss·branch compute를 만듭니다."
+      },
+      {
+        "id": "conditional-diffusion-release-gate",
+        "sectionId": "evaluation",
+        "intuition": "서로 다른 stage의 필수 metric을 평균으로 상쇄하지 않고 boolean gate로 모두 판정합니다.",
+        "workedExample": "FID가 좋아도 reconstruction·coverage·condition·latency 중 하나가 실패하면 release하지 않습니다.",
+        "boundary": "Threshold는 dataset·sample count·hardware·artifact revision과 함께 versioned합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "Compress",
+        "relation": "Pixel과 latent 사이 lossy interface",
+        "concepts": [
+          "amortized-variational-inference",
+          "latent-diffusion-bottleneck"
+        ]
+      },
+      {
+        "label": "Compose",
+        "relation": "Versioned component와 numeric scale 연결",
+        "concepts": [
           "diffusion-backbone-contract",
+          "latent-diffusion-component-contract"
+        ]
+      },
+      {
+        "label": "Guide",
+        "relation": "Condition-only direction을 sampling에 추가",
+        "concepts": [
+          "conditional-probability",
+          "classifier-free-guidance"
+        ]
+      },
+      {
+        "label": "Release",
+        "relation": "Quality·coverage·condition·cost를 분리 판정",
+        "concepts": [
+          "generative-evaluation-boundary",
+          "network-function-evaluations",
+          "conditional-diffusion-release-gate"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "512×512 image를 spatial factor 8로 줄일 때 latent grid와 position 감소 배율을 계산할 수 있을까요?",
+        "answerChecklist": [
+          "64×64 grid를 계산한다.",
+          "Positions가 64배 줄어든다고 계산한다.",
+          "End-to-end speedup과 구분한다."
+        ],
+        "requiredConcepts": [
+          "latent-diffusion-bottleneck"
+        ],
+        "sectionId": "compression"
+      },
+      {
+        "level": "basic",
+        "question": "Autoencoder·conditioner·denoiser/sampler·decoder가 각각 소유하는 input과 output을 말할 수 있을까요?",
+        "answerChecklist": [
+          "Pixel→latent encoder를 말한다.",
+          "Text→condition representation을 말한다.",
+          "Latent update와 pixel decode를 분리한다."
+        ],
+        "requiredConcepts": [
+          "latent-diffusion-component-contract"
+        ],
+        "sectionId": "pipeline"
+      },
+      {
+        "level": "basic",
+        "question": "z=sE(x)에서 scale s를 checkpoint contract로 기록해야 하는 이유를 설명할 수 있을까요?",
+        "answerChecklist": [
+          "Latent numeric distribution을 denoiser expectation과 맞춘다고 말한다.",
+          "Decode 전에 scale convention을 되돌린다고 말한다."
+        ],
+        "requiredConcepts": [
+          "latent-diffusion-component-contract"
+        ],
+        "sectionId": "pipeline"
+      },
+      {
+        "level": "basic",
+        "question": "εu=2, εc=1.5일 때 w=1과 w=3 guided prediction을 계산할 수 있을까요?",
+        "answerChecklist": [
+          "w=1에서 1.5를 계산한다.",
+          "w=3에서 0.5를 계산한다."
+        ],
+        "requiredConcepts": [
+          "classifier-free-guidance"
+        ],
+        "sectionId": "guidance"
+      },
+      {
+        "level": "basic",
+        "question": "왜 w=1이 conditional prediction과 같고 w=0이 unconditional prediction인지 식으로 보일 수 있을까요?",
+        "answerChecklist": [
+          "각 w를 식에 대입한다.",
+          "차이 항의 역할을 말한다."
+        ],
+        "requiredConcepts": [
+          "classifier-free-guidance"
+        ],
+        "sectionId": "guidance"
+      },
+      {
+        "level": "basic",
+        "question": "Conditional diffusion release gate의 다섯 축을 열거할 수 있을까요?",
+        "answerChecklist": [
+          "Reconstruction·quality·coverage를 적는다.",
+          "Condition adherence·latency를 적는다.",
+          "모두 AND로 판정한다고 말한다."
+        ],
+        "requiredConcepts": [
+          "conditional-diffusion-release-gate"
+        ],
+        "sectionId": "evaluation"
+      },
+      {
+        "level": "advanced",
+        "question": "Pixel diffusion과 latent diffusion의 공정 비교 실험을 설계할 수 있을까요?",
+        "answerChecklist": [
+          "Data·resolution·condition·compute budget을 맞춘다.",
+          "Autoencoder reconstruction ceiling을 별도 측정한다.",
+          "NFE·wall-clock·memory·quality·coverage를 기록한다."
+        ],
+        "requiredConcepts": [
           "latent-diffusion-bottleneck",
-          "network-function-evaluations",
-          "generative-evaluation-boundary",
+          "latent-diffusion-component-contract",
+          "network-function-evaluations"
         ],
-        sectionId: "stable-diffusion",
+        "sectionId": "evaluation"
       },
       {
-        level: "basic",
-        question:
-          "Unconditional prediction εu=2, conditional prediction εc=1.5일 때 CFG의 w=1과 w=3 결과를 계산하고, 큰 w가 무조건 좋은 설정이 아닌 이유를 말할 수 있을까요?",
-        answerChecklist: [
-          "w=1에서 2+1(1.5−2)=1.5로 conditional prediction과 같음을 보인다.",
-          "w=3에서 2+3(1.5−2)=0.5를 계산한다.",
-          "큰 w는 alignment와 함께 artifact·diversity 감소를 만들 수 있고 두 branch의 실제 비용도 기록한다고 말한다.",
+        "level": "advanced",
+        "question": "잘못된 latent scale이 shape 검사에는 통과하면서 sample을 망칠 수 있는 이유를 설명할 수 있을까요?",
+        "answerChecklist": [
+          "Tensor shape는 같음을 말한다.",
+          "Schedule SNR와 denoiser input distribution이 어긋남을 말한다.",
+          "Encoder·decoder·scale revision을 함께 검증한다."
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
+          "latent-diffusion-component-contract"
+        ],
+        "sectionId": "pipeline"
+      },
+      {
+        "level": "advanced",
+        "question": "Guidance scale sweep에서 fidelity·diversity·compute trade-off를 재현 가능하게 평가할 수 있을까요?",
+        "answerChecklist": [
+          "Checkpoint·sampler·steps·seed를 고정한다.",
+          "w별 condition adherence·quality·coverage를 측정한다.",
+          "Branch batching·NFE·latency를 기록한다."
+        ],
+        "requiredConcepts": [
           "classifier-free-guidance",
-          "network-function-evaluations",
-          "generative-evaluation-boundary",
+          "conditional-diffusion-release-gate"
         ],
-        sectionId: "stable-diffusion",
+        "sectionId": "evaluation"
       },
+      {
+        "level": "advanced",
+        "question": "Release receipt에 보존해야 할 artifact와 metric provenance를 설계할 수 있을까요?",
+        "answerChecklist": [
+          "Autoencoder·text encoder·denoiser·scheduler·sampler revisions를 적는다.",
+          "Latent shape·scale·target·precision·w를 적는다.",
+          "Evaluator·dataset·sample count·hardware·threshold를 적는다."
+        ],
+        "requiredConcepts": [
+          "latent-diffusion-component-contract",
+          "conditional-diffusion-release-gate"
+        ],
+        "sectionId": "evaluation"
+      }
     ],
-    papers: [
+    "papers": [
       {
-        title: "Denoising Diffusion Probabilistic Models",
-        href: "https://arxiv.org/abs/2006.11239",
-        problem:
-          "Tractable forward noising과 learned reverse process로 high-quality sample을 생성하는 문제",
-        contribution:
-          "Weighted variational bound·denoising score matching 연결과 simplified noise-prediction objective",
-        assumptions:
-          "Gaussian Markov schedule·parameterization·U-Net과 논문의 sampling setup",
-        evidenceScope:
-          "CIFAR-10·LSUN likelihood·FID·sample과 progressive decompression 범위",
-        notClaim:
-          "모든 diffusion variant가 같은 objective·1,000 step·architecture를 사용한다는 뜻은 아님",
-        sectionId: "paper-ddpm",
+        "title": "High-Resolution Image Synthesis with Latent Diffusion Models",
+        "href": "https://arxiv.org/abs/2112.10752",
+        "problem": "Pixel-space diffusion의 높은 training·sampling compute",
+        "contribution": "Pretrained autoencoder latent denoising과 cross-attention conditioning",
+        "assumptions": "Autoencoder compression·latent scale·U-Net·dataset configuration",
+        "evidenceScope": "Generation·inpainting·super-resolution experiments",
+        "notClaim": "Compression이 lossless이거나 모든 modality에서 같은 speedup을 보장하지 않음",
+        "sectionId": "paper-latent-diffusion"
       },
       {
-        title:
-          "Score-Based Generative Modeling through Stochastic Differential Equations",
-        href: "https://arxiv.org/abs/2011.13456",
-        problem:
-          "Discrete score·diffusion model을 continuous-time dynamics와 solver로 통합하는 문제",
-        contribution:
-          "Forward·reverse SDE, predictor-corrector와 probability-flow ODE 제시",
-        assumptions:
-          "SDE regularity·true score 이론과 neural approximation·finite solver를 구분",
-        evidenceScope:
-          "논문의 image generation·likelihood·inverse-problem 실험 범위",
-        notClaim:
-          "SDE와 ODE path가 같거나 finite NFE에서 exact sample을 보장한다는 뜻은 아님",
-        sectionId: "paper-score-sde",
-      },
-      {
-        title: "Flow Matching for Generative Modeling",
-        href: "https://arxiv.org/abs/2210.02747",
-        problem:
-          "Continuous normalizing flow를 ODE simulation 없이 large scale로 학습하는 문제",
-        contribution:
-          "Conditional probability path의 velocity regression과 marginal vector-field 연결",
-        assumptions:
-          "Tractable conditional path·velocity·coupling과 논문의 ImageNet setup",
-        evidenceScope:
-          "Diffusion·OT paths의 likelihood·sample quality·sampling 비교 범위",
-        notClaim:
-          "임의의 path 선택이 같은 품질·straightness·NFE를 보장한다는 뜻은 아님",
-        sectionId: "paper-flow-matching",
-      },
-      {
-        title:
-          "U-Net: Convolutional Networks for Biomedical Image Segmentation",
-        href: "https://arxiv.org/abs/1505.04597",
-        problem:
-          "적은 biomedical image에서 precise localization과 context를 함께 얻는 segmentation 문제",
-        contribution:
-          "Contracting·expanding path와 same-scale long skip architecture",
-        assumptions: "원 segmentation architecture·augmentation·dataset 조건",
-        evidenceScope: "논문의 microscopy segmentation 결과 범위",
-        notClaim:
-          "원 U-Net이 timestep·attention을 포함한 diffusion denoiser와 동일하다는 뜻은 아님",
-        sectionId: "paper-unet",
-      },
-      {
-        title: "High-Resolution Image Synthesis with Latent Diffusion Models",
-        href: "https://arxiv.org/abs/2112.10752",
-        problem:
-          "Pixel-space diffusion의 높은 training·sampling compute를 줄이는 문제",
-        contribution:
-          "Pretrained autoencoder latent의 diffusion과 cross-attention conditioning",
-        assumptions:
-          "Autoencoder compression·latent scaling·U-Net·dataset과 task별 configuration",
-        evidenceScope:
-          "논문의 inpainting·generation·super-resolution quality와 compute 비교 범위",
-        notClaim:
-          "Latent compression이 lossless이거나 모든 resolution·modality에서 같은 이득이라는 뜻은 아님",
-        sectionId: "paper-latent-diffusion",
-      },
-      {
-        title: "Classifier-Free Diffusion Guidance",
-        href: "https://arxiv.org/abs/2207.12598",
-        problem:
-          "별도 classifier gradient 없이 conditional sample quality와 diversity를 조절하는 문제",
-        contribution:
-          "Condition dropout으로 joint conditional·unconditional model을 학습하고 score를 결합",
-        assumptions:
-          "Conditional diffusion·dropout·guidance formulation과 논문의 evaluation setup",
-        evidenceScope: "ImageNet class-conditional IS·FID trade-off 범위",
-        notClaim:
-          "큰 guidance scale이 항상 더 좋거나 추가 compute·diversity cost가 없다는 뜻은 아님",
-        sectionId: "paper-classifier-free-guidance",
-      },
-    ],
+        "title": "Classifier-Free Diffusion Guidance",
+        "href": "https://arxiv.org/abs/2207.12598",
+        "problem": "별도 classifier 없이 conditional fidelity와 diversity를 조절",
+        "contribution": "Condition dropout과 conditional·unconditional score 결합",
+        "assumptions": "Conditional diffusion·dropout·guidance formulation",
+        "evidenceScope": "ImageNet IS·FID trade-off",
+        "notClaim": "큰 guidance scale이 항상 좋거나 추가 compute가 없다는 뜻이 아님",
+        "sectionId": "paper-classifier-free-guidance"
+      }
+    ]
   },
   "ai/gan": {
     "coreIdea": "GAN의 첫 글은 latent prior를 generator로 data space에 보내 implicit sample distribution을 만들고, discriminator의 real·fake 비교에서 generator signal을 얻는 최소 계약만 설명합니다. Density·inverse·game convergence는 자동으로 따라오지 않습니다.",
