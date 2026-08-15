@@ -2470,472 +2470,151 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/word2vec": {
-    coreIdea:
-      "Word2Vec은 corpus에서 뽑은 local word–context 관측을 예측 문제로 바꿉니다. CBOW는 주변에서 center를, Skip-gram은 center에서 주변을 예측하며, SGNS는 vocabulary 전체 확률 대신 관측 pair와 noise pair를 구분합니다. 따라서 결과 vector의 기하는 corpus·tokenizer·window·noise·subsampling·objective가 함께 만든 static representation입니다.",
-    assumedKnowledge: [
-      {
-        id: "tokenizer-pipeline-contract",
-        role: "Corpus가 어떤 vocabulary ID sequence와 sentence boundary로 바뀌는지 고정합니다.",
-      },
-      {
-        id: "one-hot-identifier",
-        role: "Vocabulary ID가 의미 vector가 아니라 matrix row를 고르는 주소임을 구분합니다.",
-      },
-      {
-        id: "distributional-hypothesis",
-        role: "Local context prediction을 의미 evidence로 사용하는 배경 가정과 한계를 읽습니다.",
-      },
-      {
-        id: "word-context-matrix",
-        role: "Window에서 만든 pair가 explicit count representation과 공유하는 관측 단위를 이해합니다.",
-      },
-      {
-        id: "dot-product",
-        role: "Input·output embedding row의 pair score를 계산합니다.",
-      },
-      {
-        id: "probability-distribution",
-        role: "Vocabulary softmax와 negative-sampling noise에 probability mass를 배정합니다.",
-      },
-      {
-        id: "softmax-normalization",
-        role: "Vocabulary logits를 categorical word probability로 바꿉니다.",
-      },
-      {
-        id: "sigmoid-activation",
-        role: "SGNS pair score를 positive label의 logistic probability로 바꿉니다.",
-      },
-      {
-        id: "sgns-shifted-pmi",
-        role: "SGNS와 corpus statistic의 이론적 연결은 분산 의미론 정본에서 재사용합니다.",
-      },
-      {
-        id: "cosine-similarity",
-        role: "학습된 nonzero vector의 방향 근접도를 intrinsic하게 측정합니다.",
-      },
-      {
-        id: "static-contextual-representation",
-        role: "Word type별 lookup 결과와 문장 instance별 hidden state를 구분합니다.",
-      },
-    ],
+    entryLevel: true,
+    entryNote: "단어가 이미 vector라고 가정하지 않습니다. 문자열이 ID가 되고, ID가 두 table의 row를 고르며, window가 학습 pair를 만드는 순서부터 시작합니다.",
+    coreIdea: "Word2Vec의 출발점은 의미 vector가 아니라 versioned corpus ID와 local word–context pair입니다. 같은 word도 center와 context 역할에서 서로 다른 table row를 사용합니다.",
+    assumedKnowledge: [],
     introducedHere: [
-      {
-        id: "word-embedding-lookup",
-        role: "One-hot matrix product와 sparse row lookup이 같은 dense vector를 고르는 과정을 계산합니다.",
-      },
-      {
-        id: "dynamic-context-window",
-        role: "최대 window 안에서 거리에 따른 pair sampling 빈도를 만듭니다.",
-      },
-      {
-        id: "cbow-objective",
-        role: "주변 embedding을 모아 center word를 예측하는 계산과 손실을 읽습니다.",
-      },
-      {
-        id: "skipgram-objective",
-        role: "Center word에서 관측 context를 예측하는 pair별 계산을 읽습니다.",
-      },
-      {
-        id: "hierarchical-softmax",
-        role: "Flat vocabulary 확률을 tree path의 binary probability product로 다시 parameterize합니다.",
-      },
-      {
-        id: "sgns-objective",
-        role: "Positive·noise pair의 logistic objective와 sparse row update를 계산합니다.",
-      },
-      {
-        id: "negative-sampling-distribution",
-        role: "Negative context를 뽑는 frequency-smoothed distribution과 k의 영향을 분리합니다.",
-      },
-      {
-        id: "frequent-word-subsampling",
-        role: "고빈도 token을 일부 제거해 training pair 분포와 compute를 바꿉니다.",
-      },
-      {
-        id: "fasttext-subword-embedding",
-        role: "Word row 하나를 character n-gram row들의 합으로 확장합니다.",
-      },
-      {
-        id: "static-embedding-artifact",
-        role: "Embedding matrix와 vocabulary·corpus·sampling recipe를 함께 versioning합니다.",
-      },
+      { id: "word-embedding-lookup", role: "Vocabulary ID가 trainable matrix row를 고르는 과정을 읽습니다." },
+      { id: "word2vec-dual-embedding-table", role: "Center input table과 context output table을 분리합니다." },
+      { id: "dynamic-context-window", role: "거리별 pair 관측 빈도를 만드는 radius sampling을 계산합니다." },
+      { id: "word-context-pair-sampling-receipt", role: "Corpus에서 pair까지의 recipe와 random draw를 재현 가능한 artifact로 묶습니다." },
     ],
     conceptExplanations: [
-      {
-        id: "word-embedding-lookup",
-        sectionId: "overview",
-        intuition:
-          "도서관 청구기호가 책 내용 자체는 아니지만 정확한 책 한 권을 꺼내듯, word ID가 trainable table의 row 하나를 고릅니다.",
-        workedExample:
-          "Vocabulary size V=10,000, dimension d=300이면 W shape은 10,000×300이고 ID 42는 W[42]의 300개 값을 반환합니다.",
-        boundary:
-          "Input W와 output W′는 같은 shape이어도 서로 다른 parameter입니다. Vocabulary ID 순서가 바뀌면 기존 checkpoint row의 의미가 깨집니다.",
-      },
-      {
-        id: "dynamic-context-window",
-        sectionId: "overview",
-        intuition:
-          "항상 최대 반경의 모든 이웃을 쓰지 않고 매번 실제 반경을 뽑으면 가까운 이웃은 여러 반경에 포함되어 더 자주 학습됩니다.",
-        workedExample:
-          "최대 radius 5에서 actual radius를 1..5로 균일하게 뽑으면 거리 1 pair는 항상, 거리 5 pair는 1/5의 example에서만 포함됩니다.",
-        boundary:
-          "거리별 weighting heuristic이며 syntax·semantics를 자동 분리하지 않습니다. Sentence boundary와 tokenizer가 달라지면 동일 radius의 언어적 범위도 달라집니다.",
-      },
-      {
-        id: "cbow-objective",
-        sectionId: "models",
-        intuition:
-          "문장에서 가운데가 가려졌을 때 주변 단어의 정보를 한 바구니에 모아 빠진 단어를 맞히는 문제입니다.",
-        workedExample:
-          "‘따뜻한 [ ]에서 잠든다’의 세 context row를 평균한 h와 output table의 모든 row를 내적해 ‘창가’를 높은 확률로 만듭니다.",
-        boundary:
-          "Bagging은 context order와 개별 contribution을 잃습니다. 실제 구현의 합·평균·position weight와 dynamic window를 확인해야 합니다.",
-      },
-      {
-        id: "skipgram-objective",
-        sectionId: "models",
-        intuition:
-          "Center word 하나를 보고 주변에 올 법한 단어들을 pair 하나씩 맞히므로 한 위치에서 여러 training example이 생깁니다.",
-        workedExample:
-          "Center ‘창가에서’와 radius 2라면 (‘창가에서’, ‘고양이는’), (‘창가에서’, ‘따뜻한’), (‘창가에서’, ‘잠든다’)를 각각 학습합니다.",
-        boundary:
-          "Rare word가 더 많은 direct pair update를 받을 수 있다는 경향은 corpus·subsampling·budget에 의존합니다. 항상 CBOW보다 우수하다는 법칙은 아닙니다.",
-      },
-      {
-        id: "hierarchical-softmax",
-        sectionId: "models",
-        intuition:
-          "10만 개 후보를 한 번에 비교하지 않고 주소를 찾는 이진 질문을 root에서 leaf까지 차례로 답합니다.",
-        workedExample:
-          "Balanced binary tree의 vocabulary 65,536개라면 한 word의 path는 약 16개 binary decision으로 표현됩니다.",
-        boundary:
-          "O(log V) 경로 길이는 tree balance와 구현에 의존하며, tree 구조가 word probability parameter sharing과 error pattern을 바꿉니다. Flat softmax의 단순 근사와 같지 않습니다.",
-      },
-      {
-        id: "sgns-objective",
-        sectionId: "training",
-        intuition:
-          "실제로 함께 나온 pair에는 ‘진짜’ label을, 임의로 뽑은 pair에는 ‘noise’ label을 주어 두 종류를 가르는 score를 학습합니다.",
-        workedExample:
-          "Positive (‘창가’, ‘따뜻한’) 하나와 negative (‘창가’, ‘위성’) 다섯 개를 쓰면 center row, positive output row와 선택된 다섯 output row만 이번 step에 참여합니다.",
-        boundary:
-          "SGNS는 normalized vocabulary probability를 출력하지 않습니다. Accidental positive 처리·duplicate negative·reduction convention에 따라 gradient가 달라집니다.",
-      },
-      {
-        id: "negative-sampling-distribution",
-        sectionId: "training",
-        intuition:
-          "쉬운 오답과 자주 헷갈리는 오답이 얼마나 뽑힐지를 정하는 출제 분포입니다. 학습 문제의 난이도와 class prior를 동시에 바꿉니다.",
-        workedExample:
-          "Unigram count f(c)에 3/4 power를 적용해 다시 정규화하면 고빈도 context의 비중을 낮추면서도 uniform보다 자주 뽑습니다.",
-        boundary:
-          "3/4 exponent는 원 논문의 empirical design입니다. k나 distribution을 바꾸면 compute뿐 아니라 shifted optimum이 달라져 같은 objective 비교가 아닙니다.",
-      },
-      {
-        id: "frequent-word-subsampling",
-        sectionId: "training",
-        intuition:
-          "거의 모든 문장에 나오는 token을 일부 건너뛰어 정보가 적은 반복 update를 줄이고 상대적으로 드문 pair에 예산을 씁니다.",
-        workedExample:
-          "‘the’가 corpus에서 매우 높은 frequency라면 frequency-dependent keep probability로 일부 occurrence를 pair 생성 전에 제거합니다.",
-        boundary:
-          "Stop-word 삭제와 완전히 같은 정책이 아니며 tokenizer·언어·corpus 규모에 따라 중요한 function-word relation까지 잃을 수 있습니다.",
-      },
-      {
-        id: "fasttext-subword-embedding",
-        sectionId: "applications",
-        intuition:
-          "처음 보는 긴 단어도 이미 본 철자 조각들의 vector를 조립해 대략적인 representation을 만듭니다.",
-        workedExample:
-          "‘running’의 boundary가 포함된 character n-gram rows를 합치면 ‘runner’와 일부 parameter를 공유하고 OOV word도 hash bucket row를 사용할 수 있습니다.",
-        boundary:
-          "Character form이 비슷하다고 의미가 비슷한 것은 아니며 hash collision이 있습니다. 문장별 다의성을 해결하는 contextual model은 아닙니다.",
-      },
-      {
-        id: "static-embedding-artifact",
-        sectionId: "applications",
-        intuition:
-          "벡터 파일은 좌표만 담은 표이므로 어느 단어가 어느 row인지와 어떤 data recipe로 만들었는지를 함께 보관해야 해석할 수 있습니다.",
-        workedExample:
-          "Matrix checksum과 함께 vocabulary index, tokenizer·case policy, corpus cutoff, window, min-count, negative distribution, seed와 평가표를 release manifest에 기록합니다.",
-        boundary:
-          "같은 dimension·파일 형식만으로 호환되지 않습니다. Corpus가 갱신되면 좌표계가 회전할 수 있어 row-wise regression threshold도 alignment 없이 비교하면 안 됩니다.",
-      },
+      { id: "word-embedding-lookup", sectionId: "overview", intuition: "도서관 청구기호가 책 내용은 아니지만 한 책을 꺼내듯 word ID가 table row 하나를 고릅니다.", workedExample: "V=5,d=3인 table에서 ID 2는 length-5 one-hot product 또는 gather로 W[2]의 세 값을 읽습니다.", boundary: "ID 숫자의 차이는 의미 거리가 아니며 vocabulary order가 바뀌면 같은 row number의 의미도 바뀝니다." },
+      { id: "word2vec-dual-embedding-table", sectionId: "dual-tables", intuition: "같은 배우도 질문하는 역할과 정답 후보 역할에서 다른 메모장을 쓰듯 center와 context parameter를 분리합니다.", workedExample: "ID 2는 center일 때 W[2], context일 때 W′[2]를 읽고 두 row는 서로 다른 gradient를 받습니다.", boundary: "두 table의 shape가 같아도 값을 공유하지 않습니다. 배포 시 input·output·합·평균 중 어느 row를 내보냈는지 기록합니다." },
+      { id: "dynamic-context-window", sectionId: "window", intuition: "매번 실제 반경을 뽑으면 가까운 이웃은 여러 반경에 걸쳐 더 자주 선택됩니다.", workedExample: "Maximum radius 5에서 거리 1은 5/5, 거리 3은 3/5, 거리 5는 1/5로 포함됩니다.", boundary: "거리 sampling heuristic일 뿐 syntax를 자동 인식하지 않으며 sentence boundary를 넘어가면 안 됩니다." },
+      { id: "word-context-pair-sampling-receipt", sectionId: "pairs", intuition: "완성된 pairs만 저장하는 대신 어떤 corpus와 주사위가 그 pairs를 만들었는지 영수증으로 남깁니다.", workedExample: "Corpus r7, tokenizer t3, radius 5, subsampling threshold 10^-5, seed 42를 함께 기록해 같은 pair stream을 재생합니다.", boundary: "Corpus checksum만 같아도 tokenizer·boundary·sampling seed가 다르면 pair population은 달라집니다." },
     ],
     conceptStages: [
-      {
-        label: "입력 계약",
-        relation: "Versioned token ID에서 trainable input·output rows 선택",
-        concepts: [
-          "tokenizer-pipeline-contract",
-          "one-hot-identifier",
-          "word-embedding-lookup",
-        ],
-      },
-      {
-        label: "Pair 생성",
-        relation:
-          "Local context 관측을 거리와 빈도 정책이 있는 examples로 변환",
-        concepts: [
-          "distributional-hypothesis",
-          "word-context-matrix",
-          "dynamic-context-window",
-          "frequent-word-subsampling",
-        ],
-      },
-      {
-        label: "예측 방향",
-        relation: "주변→center와 center→주변 categorical objective 비교",
-        concepts: [
-          "cbow-objective",
-          "skipgram-objective",
-          "softmax-normalization",
-        ],
-      },
-      {
-        label: "비용 전환",
-        relation:
-          "Flat vocabulary normalization을 tree path 또는 sampled binary objective로 교체",
-        concepts: [
-          "hierarchical-softmax",
-          "negative-sampling-distribution",
-          "sigmoid-activation",
-          "logarithm",
-          "sgns-objective",
-        ],
-      },
-      {
-        label: "해석과 배포",
-        relation:
-          "Corpus statistic 연결을 재사용하고 static representation의 확장·artifact 경계 검증",
-        concepts: [
-          "sgns-shifted-pmi",
-          "cosine-similarity",
-          "fasttext-subword-embedding",
-          "static-contextual-representation",
-          "static-embedding-artifact",
-        ],
-      },
+      { label: "00 ID", relation: "Word ID가 dense row의 주소가 됩니다.", concepts: ["word-embedding-lookup"] },
+      { label: "01 Role", relation: "Center와 context가 별도 parameter table을 읽습니다.", concepts: ["word-embedding-lookup", "word2vec-dual-embedding-table"] },
+      { label: "02 Window", relation: "실제 radius가 local pair의 포함 여부를 정합니다.", concepts: ["dynamic-context-window"] },
+      { label: "03 Receipt", relation: "입력과 sampling recipe를 묶어 pair population을 재현합니다.", concepts: ["dynamic-context-window", "word-context-pair-sampling-receipt"] },
     ],
     exercises: [
-      {
-        level: "basic",
-        question:
-          "V=5, d=3인 embedding table과 word ID 2가 주어졌을 때 one-hot matrix multiplication과 index lookup이 같은 row를 반환함을 보일 수 있을까요?",
-        answerChecklist: [
-          "ID 2 위치만 1인 length-5 vector를 만든다.",
-          "One-hot×W가 W[2] 이외 row를 0으로 만든다고 계산한다.",
-          "실제 구현은 sparse gather로 같은 값을 얻는다고 설명한다.",
-        ],
-        requiredConcepts: ["one-hot-identifier", "word-embedding-lookup"],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "Token 다섯 개와 maximum radius 2가 주어졌을 때 가운데 token의 Skip-gram pairs와 CBOW example을 각각 만들 수 있을까요?",
-        answerChecklist: [
-          "Center를 제외한 최대 네 context 위치를 찾는다.",
-          "Skip-gram은 center–context pair 여러 개를 만든다.",
-          "CBOW는 context 집합 하나에서 center target 하나를 만든다.",
-        ],
-        requiredConcepts: [
-          "dynamic-context-window",
-          "cbow-objective",
-          "skipgram-objective",
-        ],
-        sectionId: "models",
-      },
-      {
-        level: "basic",
-        question:
-          "Vocabulary V=100,000, balanced tree depth 17, negative k=10일 때 한 example의 output score 수를 비교하고 세 방법의 objective 차이를 설명할 수 있을까요?",
-        answerChecklist: [
-          "Full softmax 약 100,000개, hierarchical 약 17개, SGNS 11개 score를 비교한다.",
-          "Hierarchical는 leaf path probability라고 설명한다.",
-          "SGNS는 normalized vocabulary probability가 아닌 binary discrimination이라고 구분한다.",
-        ],
-        requiredConcepts: [
-          "softmax-normalization",
-          "hierarchical-softmax",
-          "sgns-objective",
-        ],
-        sectionId: "models",
-      },
-      {
-        level: "basic",
-        question:
-          "같은 word w에 input table row v_w와 output/context table row v′_w가 따로 있는 이유와 학습 뒤 하나의 embedding artifact를 만들 때 선택할 수 있는 방법을 설명할 수 있을까요?",
-        answerChecklist: [
-          "Center/input 역할과 context/output 역할의 parameter가 분리된다고 말한다.",
-          "같은 word ID라도 두 row가 다른 update를 받는다고 설명한다.",
-          "Input row·output row·두 row의 합/평균 중 무엇을 내보냈는지 artifact에 기록한다고 말한다.",
-        ],
-        requiredConcepts: [
-          "word-embedding-lookup",
-          "static-embedding-artifact",
-        ],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "SGNS에서 positive 한 개와 negative k=2를 사용할 때 어떤 embedding row와 dot product가 한 example에 참여하는지 나열하고 vocabulary V 전체를 읽지 않는 이유를 설명할 수 있을까요?",
-        answerChecklist: [
-          "Center input row 하나를 고른다.",
-          "Positive output row 하나와 negative output row 두 개를 고른다.",
-          "총 세 dot-product를 계산한다고 말한다.",
-          "전체 vocabulary softmax가 아니라 sampled binary objective라고 구분한다.",
-        ],
-        requiredConcepts: ["sgns-objective", "negative-sampling-distribution"],
-        sectionId: "training",
-      },
-      {
-        level: "basic",
-        question:
-          "‘bank’가 금융기관과 강둑 문장에 각각 등장할 때 Word2Vec·FastText·contextual embedding이 반환하는 표현을 비교할 수 있을까요?",
-        answerChecklist: [
-          "Word2Vec은 word type당 같은 static row를 반환한다고 말한다.",
-          "FastText는 character n-gram을 합쳐 OOV·형태 정보를 보강하지만 문맥별 sense를 직접 나누지 않는다고 말한다.",
-          "Contextual model은 주변 문장을 다시 forward해 token별 state를 만든다고 구분한다.",
-        ],
-        requiredConcepts: [
-          "fasttext-subword-embedding",
-          "static-contextual-representation",
-        ],
-        sectionId: "applications",
-      },
-      {
-        level: "advanced",
-        question:
-          "Positive score 1.0, negative scores 0과 −1인 SGNS example의 log-likelihood 항을 식에 대입하고 각 score를 어느 방향으로 바꿔야 하는지 설명할 수 있을까요?",
-        answerChecklist: [
-          "Positive에는 log σ(1), negative에는 log σ(0)와 log σ(1)을 대입한다.",
-          "Positive score는 높이고 원래 negative score는 낮추는 방향을 말한다.",
-          "Loss는 log-likelihood의 음수라고 구분한다.",
-        ],
-        requiredConcepts: [
-          "dot-product",
-          "sigmoid-activation",
-          "sgns-objective",
-        ],
-        sectionId: "training",
-      },
-      {
-        level: "advanced",
-        question:
-          "Negative sample k를 5에서 20으로 늘릴 때 compute, class prior와 shifted-PMI optimum이 어떻게 달라지는지 설명할 수 있을까요?",
-        answerChecklist: [
-          "선택된 negative row와 dot-product 수가 약 네 배로 증가한다고 설명한다.",
-          "Negative class prior가 커진다고 말한다.",
-          "Optimum shift가 −log 5에서 −log 20으로 더 낮아진다고 연결한다.",
-        ],
-        requiredConcepts: [
-          "negative-sampling-distribution",
-          "sgns-objective",
-          "sgns-shifted-pmi",
-          "logarithm",
-        ],
-        sectionId: "training",
-      },
-      {
-        level: "advanced",
-        question:
-          "두 Word2Vec artifact를 공정하게 비교하고 rollback할 수 있는 manifest와 평가 항목을 설계할 수 있을까요?",
-        answerChecklist: [
-          "Vocabulary ID·tokenization·corpus cutoff·window·subsampling·noise·k·seed를 기록한다.",
-          "Matrix·vocabulary checksum과 code version을 묶는다.",
-          "Intrinsic neighbor·analogy와 downstream·subgroup·OOV 평가를 분리하고 rollback artifact를 보존한다.",
-        ],
-        requiredConcepts: [
-          "static-embedding-artifact",
-          "cosine-similarity",
-          "fasttext-subword-embedding",
-          "static-contextual-representation",
-        ],
-        sectionId: "applications",
-      },
-      {
-        level: "advanced",
-        question:
-          "SGNS가 만든 vocabulary dot score를 softmax probability처럼 바로 해석하면 왜 틀리는지 objective·normalizer·noise prior 관점에서 설명하고 probability가 필요할 때의 대조 실험을 설계할 수 있을까요?",
-        answerChecklist: [
-          "SGNS는 positive/noise binary discrimination objective라고 말한다.",
-          "Vocabulary 전체를 공동 normalizer로 사용하지 않는다고 설명한다.",
-          "Score optimum이 corpus와 noise distribution·k의 영향을 받는다고 말한다.",
-          "같은 corpus·split에서 full/hierarchical softmax likelihood 또는 별도 calibrated head와 비교한다고 제안한다.",
-        ],
-        requiredConcepts: [
-          "sgns-objective",
-          "negative-sampling-distribution",
-          "softmax-normalization",
-          "static-embedding-artifact",
-        ],
-        sectionId: "training",
-      },
+      { level: "basic", question: "V=5,d=3 table에서 ID 2의 one-hot product와 row lookup 결과를 설명하세요.", answerChecklist: ["length-5 one-hot", "index 2만 1", "W[2]", "three scalars"], requiredConcepts: ["word-embedding-lookup"], sectionId: "overview" },
+      { level: "basic", question: "Vocabulary ID 자체를 의미 좌표로 사용하면 안 되는 이유를 설명하세요.", answerChecklist: ["address only", "arbitrary ordering", "no metric", "row carries values"], requiredConcepts: ["word-embedding-lookup"], sectionId: "overview" },
+      { level: "basic", question: "같은 word ID가 W와 W′에서 고르는 row와 역할을 각각 말하세요.", answerChecklist: ["input center", "output context", "separate parameters", "different gradients"], requiredConcepts: ["word2vec-dual-embedding-table"], sectionId: "dual-tables" },
+      { level: "basic", question: "V=10,000,d=300일 때 W와 W′의 shape와 총 scalar 수를 계산하세요.", answerChecklist: ["two 10000x300 tables", "3 million each", "6 million total", "dtype separate"], requiredConcepts: ["word2vec-dual-embedding-table"], sectionId: "dual-tables" },
+      { level: "basic", question: "Maximum radius 5에서 거리 3 context의 포함 확률을 계산하세요.", answerChecklist: ["r in 1..5", "r>=3", "three valid draws", "3/5"], requiredConcepts: ["dynamic-context-window"], sectionId: "window" },
+      { level: "basic", question: "Pair receipt가 반드시 가져야 할 네 종류의 revision을 나열하세요.", answerChecklist: ["corpus", "tokenizer vocabulary", "window or filters", "seed"], requiredConcepts: ["word-context-pair-sampling-receipt"], sectionId: "pairs" },
+      { level: "advanced", question: "Vocabulary ordering만 바뀐 checkpoint를 기존 matrix와 함께 배포했을 때 실패를 진단하세요.", answerChecklist: ["same ID new word", "row semantic corruption", "checksum mismatch", "rollback manifest"], requiredConcepts: ["word-embedding-lookup", "word2vec-dual-embedding-table"], sectionId: "dual-tables" },
+      { level: "advanced", question: "Maximum radius 4의 장기 sampling에서 거리별 기대 포함 비율을 계산하고 검증 실험을 설계하세요.", answerChecklist: ["4/4 3/4 2/4 1/4", "large draw count", "seeded histogram", "sentence-edge exclusion"], requiredConcepts: ["dynamic-context-window"], sectionId: "window" },
+      { level: "advanced", question: "두 run의 pair count가 다른 원인을 receipt만으로 좁히는 순서를 설계하세요.", answerChecklist: ["corpus and tokenizer", "sentence boundary", "window recipe", "filters and seed"], requiredConcepts: ["word-context-pair-sampling-receipt"], sectionId: "pairs" },
+      { level: "advanced", question: "Pair stream 재생 결과가 달라졌을 때 release를 중단할 조건과 rollback evidence를 설계하세요.", answerChecklist: ["pair checksum", "sampled trace", "version mismatch owner", "last known receipt"], requiredConcepts: ["dynamic-context-window", "word-context-pair-sampling-receipt"], sectionId: "pairs" },
     ],
     papers: [
-      {
-        title: "Efficient Estimation of Word Representations in Vector Space",
-        href: "https://arxiv.org/abs/1301.3781",
-        problem:
-          "Billion-token corpus와 큰 vocabulary에서 유용한 dense word representation을 현실적인 계산량으로 학습하는 문제",
-        contribution:
-          "주변에서 center를 예측하는 CBOW와 center에서 주변을 예측하는 Skip-gram architecture 및 효율 실험을 제시",
-        assumptions:
-          "논문의 word-level vocabulary·window·hierarchical softmax와 당시 corpus·analogy evaluation 설정을 전제로 함",
-        evidenceScope:
-          "CBOW·Skip-gram 구조와 논문에 보고된 training speed·semantic·syntactic analogy 결과 범위",
-        notClaim:
-          "Dense word vector의 최초 발명이나 모든 언어·task에서 동일한 hyperparameter가 최적이라는 뜻은 아님",
-        sectionId: "paper-word2vec-original",
-      },
-      {
-        title:
-          "Distributed Representations of Words and Phrases and their Compositionality",
-        href: "https://arxiv.org/abs/1310.4546",
-        problem:
-          "큰 vocabulary의 softmax 비용과 고빈도 word가 training pair를 지배하며 phrase meaning을 단어 합만으로 나타내기 어려운 문제",
-        contribution:
-          "Negative sampling·frequent-word subsampling과 phrase detection을 결합한 Word2Vec 확장 recipe를 제안",
-        assumptions:
-          "논문의 unigram 3/4 noise·subsampling 식·corpus와 analogy evaluation 조건을 전제로 함",
-        evidenceScope:
-          "Sampling 방법과 phrase representation 및 논문에 보고된 accuracy·speed 범위",
-        notClaim:
-          "3/4 exponent와 sample 수가 모든 corpus에 최적이거나 SGNS가 calibrated word probability를 출력한다는 뜻은 아님",
-        sectionId: "paper-negative-sampling",
-      },
-      {
-        title: "Neural Word Embedding as Implicit Matrix Factorization",
-        href: "https://proceedings.neurips.cc/paper_files/paper/2014/hash/b78666971ceae55a8e87efb7cbfd9ad4-Abstract.html",
-        problem:
-          "SGNS의 learned score가 explicit corpus count와 어떤 관계를 갖는지 설명하는 문제",
-        contribution:
-          "SGNS cell objective의 optimum을 shifted-PMI matrix factorization으로 해석",
-        assumptions:
-          "독립 cell score·지정된 noise distribution과 논문의 수학적 분석 조건을 전제로 함",
-        evidenceScope:
-          "SGNS objective와 shifted-PMI 사이의 이론적 관계 및 비교 실험 범위",
-        notClaim:
-          "실제 finite-dimensional embedding의 모든 dot product가 분석식과 정확히 일치한다는 뜻은 아님",
-        internalHref: "/ai/distributional-semantics#paper-sgns-factorization",
-      },
-      {
-        title: "Enriching Word Vectors with Subword Information",
-        href: "https://aclanthology.org/Q17-1010/",
-        problem:
-          "Word-level static embedding이 morphology를 공유하지 못하고 vocabulary 밖 word에 vector를 주기 어려운 문제",
-        contribution:
-          "Word와 boundary-marked character n-gram vector를 합산하는 Skip-gram extension을 제안",
-        assumptions:
-          "논문의 n-gram range·hash buckets·language corpora·word similarity와 analogy 평가 설정을 전제로 함",
-        evidenceScope:
-          "Subword static representation과 논문에 보고된 morphology·rare/OOV word 결과 범위",
-        notClaim:
-          "Character similarity가 항상 semantic similarity이거나 문장별 sense를 구분하는 contextual model이라는 뜻은 아님",
-        sectionId: "paper-fasttext",
-      },
+      { title: "Efficient Estimation of Word Representations in Vector Space", href: "https://arxiv.org/abs/1301.3781", problem: "큰 corpus와 vocabulary에서 dense word representation을 현실적인 계산량으로 학습합니다.", contribution: "CBOW와 Skip-gram architecture 및 local context 학습 실험을 제시합니다.", assumptions: "논문의 word vocabulary·window·corpus·training recipe를 전제로 합니다.", evidenceScope: "Word2Vec 입력·window·architecture와 보고된 speed·analogy 결과 범위입니다.", notClaim: "ID ordering이나 특정 window가 모든 언어와 task에서 최적이라는 뜻은 아닙니다.", sectionId: "paper-word2vec-original" },
+    ],
+  },
+  "ai/word2vec-prediction-objectives": {
+    entryLevel: true,
+    entryNote: "Softmax를 안다고 가정하지 않습니다. 같은 local window를 주변→center와 center→주변이라는 두 prediction 모양으로 바꾸는 데서 시작합니다.",
+    coreIdea: "CBOW와 Skip-gram은 같은 word–context 관측을 반대 방향의 prediction examples로 만들고, hierarchical softmax는 target 확률을 binary-tree path probability로 다시 구성합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "cbow-objective", role: "Context rows를 모아 center word 하나를 예측합니다." },
+      { id: "skipgram-objective", role: "Center row에서 context마다 별도 target을 예측합니다." },
+      { id: "hierarchical-softmax", role: "Vocabulary leaf 확률을 root-to-leaf decisions의 곱으로 계산합니다." },
+    ],
+    conceptExplanations: [
+      { id: "cbow-objective", sectionId: "cbow", intuition: "가운데 빈칸을 주변 단어 묶음으로 맞히는 문제입니다.", workedExample: "세 context rows를 평균한 h를 output table의 모든 center 후보와 비교합니다.", boundary: "Context order와 개별 contribution을 잃으며 sum·mean·position weighting은 같은 계산이 아닙니다." },
+      { id: "skipgram-objective", sectionId: "skipgram", intuition: "가운데 단어를 보고 주변 각 단어를 별도의 정답으로 맞힙니다.", workedExample: "Radius 2에서 유효 context가 네 개면 center 하나가 네 categorical examples를 만듭니다.", boundary: "Rare-word 이점은 corpus와 budget에 따른 경향이며 CBOW보다 항상 우수하다는 법칙이 아닙니다." },
+      { id: "hierarchical-softmax", sectionId: "hierarchical", intuition: "10만 후보를 한꺼번에 비교하지 않고 target 주소를 찾는 binary questions를 차례로 답합니다.", workedExample: "Balanced tree에서 65,536 leaves의 target은 약 16 node decisions으로 도달합니다.", boundary: "Tree가 parameter sharing과 error pattern을 바꾸므로 flat softmax의 동일 distribution을 단순히 캐시한 것이 아닙니다." },
+    ],
+    conceptStages: [
+      { label: "00 Window", relation: "같은 center와 context 관측을 고정합니다.", concepts: ["cbow-objective", "skipgram-objective"] },
+      { label: "01 CBOW", relation: "여러 context를 모아 center 하나를 예측합니다.", concepts: ["cbow-objective"] },
+      { label: "02 Skip-gram", relation: "Center에서 context별 example을 펼칩니다.", concepts: ["skipgram-objective"] },
+      { label: "03 Tree", relation: "Target 확률을 binary path로 다시 parameterize합니다.", concepts: ["skipgram-objective", "hierarchical-softmax"] },
+    ],
+    exercises: [
+      { level: "basic", question: "다섯-token window에서 CBOW의 input과 target을 구분하세요.", answerChecklist: ["center excluded", "context rows", "aggregate", "one center target"], requiredConcepts: ["cbow-objective"], sectionId: "cbow" },
+      { level: "basic", question: "Context rows 세 개를 sum 대신 mean으로 모으는 이유를 설명하세요.", answerChecklist: ["sum first", "divide by count", "window-size normalization", "order still absent"], requiredConcepts: ["cbow-objective"], sectionId: "cbow" },
+      { level: "basic", question: "Radius 2 Skip-gram에서 center 하나가 만드는 examples를 나열하세요.", answerChecklist: ["center condition", "each context target", "up to four pairs", "boundary exclusion"], requiredConcepts: ["skipgram-objective"], sectionId: "skipgram" },
+      { level: "basic", question: "CBOW와 Skip-gram의 prediction arrow를 반대로 그리세요.", answerChecklist: ["contexts to center", "center to contexts", "same observation", "different examples"], requiredConcepts: ["cbow-objective", "skipgram-objective"], sectionId: "overview" },
+      { level: "basic", question: "Balanced tree의 vocabulary 1024개에서 target path 길이를 계산하세요.", answerChecklist: ["2^10", "about 10 decisions", "root to leaf", "not 1024 logits"], requiredConcepts: ["hierarchical-softmax"], sectionId: "hierarchical" },
+      { level: "basic", question: "Hierarchical softmax의 leaf probability가 어떻게 만들어지는지 설명하세요.", answerChecklist: ["path nodes", "left right probabilities", "multiply decisions", "target leaf"], requiredConcepts: ["hierarchical-softmax"], sectionId: "hierarchical" },
+      { level: "advanced", question: "Context가 2개와 6개인 CBOW examples의 sum·mean logits 차이를 분석하세요.", answerChecklist: ["sum magnitude differs", "mean normalizes count", "direction may differ", "recipe fixed"], requiredConcepts: ["cbow-objective"], sectionId: "cbow" },
+      { level: "advanced", question: "같은 corpus budget에서 CBOW와 Skip-gram example 수·gradient path를 비교하세요.", answerChecklist: ["one vs many examples", "shared center", "context-specific errors", "throughput tradeoff"], requiredConcepts: ["cbow-objective", "skipgram-objective"], sectionId: "skipgram" },
+      { level: "advanced", question: "빈도가 치우친 tree와 balanced tree가 rare word의 path와 update sharing을 어떻게 바꾸는지 설명하세요.", answerChecklist: ["path length", "internal parameters", "frequency-dependent sharing", "not same model"], requiredConcepts: ["hierarchical-softmax"], sectionId: "hierarchical" },
+      { level: "advanced", question: "Flat softmax와 hierarchical softmax를 공정하게 비교할 benchmark를 설계하세요.", answerChecklist: ["same corpus pairs", "same dimension budget", "likelihood and latency", "tree artifact"], requiredConcepts: ["cbow-objective", "skipgram-objective", "hierarchical-softmax"], sectionId: "hierarchical" },
+    ],
+    papers: [
+      { title: "Efficient Estimation of Word Representations in Vector Space", href: "https://arxiv.org/abs/1301.3781#page=3", problem: "큰 vocabulary에서 prediction-based word representation을 효율적으로 학습합니다.", contribution: "CBOW·Skip-gram 방향과 hierarchical softmax를 비교합니다.", assumptions: "논문의 corpus·window·tree·analogy setting을 전제로 합니다.", evidenceScope: "세 objective 구조와 논문에 보고된 계산·평가 범위입니다.", notClaim: "한 objective가 모든 언어·빈도 구간에서 항상 우수하다는 뜻은 아닙니다.", sectionId: "paper-word2vec-objectives" },
+    ],
+  },
+  "ai/word2vec-negative-sampling": {
+    entryLevel: true,
+    entryNote: "Negative sample을 오답 단어라고만 부르지 않고 positive pair·noise distribution·binary label·sparse row update를 차례로 정의합니다.",
+    coreIdea: "SGNS는 vocabulary probability를 근사하지 않고 관측 pair와 sampled noise pair를 구분합니다. Noise와 subsampling 정책은 compute뿐 아니라 학습 분포와 optimum을 바꿉니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "sgns-objective", role: "Positive score를 올리고 sampled negative scores를 내리는 logistic loss를 계산합니다." },
+      { id: "negative-sampling-distribution", role: "Noise context를 고르는 normalized frequency distribution을 만듭니다." },
+      { id: "frequent-word-subsampling", role: "Pair 생성 전에 고빈도 token occurrence를 제거합니다." },
+    ],
+    conceptExplanations: [
+      { id: "sgns-objective", sectionId: "sgns", intuition: "실제 함께 나온 pair와 출제 분포가 만든 가짜 pair를 구분하는 binary 문제입니다.", workedExample: "Positive 한 개와 k=2 negatives면 center row 하나, positive output row 하나와 negative output rows 두 개가 세 dot scores를 만듭니다.", boundary: "Vocabulary 전체 normalizer가 없으므로 score를 calibrated word probability로 읽지 않습니다." },
+      { id: "negative-sampling-distribution", sectionId: "noise", intuition: "어떤 오답을 얼마나 자주 보여줄지 정하는 출제 분포입니다.", workedExample: "Counts 10,000과 100의 raw ratio 100:1은 3/4 power 뒤 약 31.6:1로 완화됩니다.", boundary: "Exponent 3/4와 k는 empirical choices이며 바꾸면 compute와 objective optimum이 함께 바뀝니다." },
+      { id: "frequent-word-subsampling", sectionId: "subsampling", intuition: "거의 모든 문장에 나오는 token occurrence 일부를 window 전에 건너뜁니다.", workedExample: "고빈도 ‘the’ occurrence 일부가 제거되면 그 token을 지나 새 이웃 pair가 생길 수도 있습니다.", boundary: "Noise contexts를 추가하는 negative sampling과 달리 positive-pair population 자체를 바꿉니다." },
+    ],
+    conceptStages: [
+      { label: "00 Positive", relation: "Corpus에서 관측한 pair에 label 1을 줍니다.", concepts: ["sgns-objective"] },
+      { label: "01 Noise", relation: "Frequency-smoothed distribution에서 label-0 contexts를 뽑습니다.", concepts: ["negative-sampling-distribution"] },
+      { label: "02 Loss", relation: "Positive와 noise dot scores에 logistic loss를 적용합니다.", concepts: ["sgns-objective", "negative-sampling-distribution"] },
+      { label: "03 Pair filter", relation: "고빈도 occurrence를 pair 생성 전에 줄입니다.", concepts: ["frequent-word-subsampling"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Positive 한 개와 k=2일 때 참여하는 rows와 dot-product 수를 말하세요.", answerChecklist: ["one center row", "one positive row", "two noise rows", "three dot products"], requiredConcepts: ["sgns-objective"], sectionId: "sgns" },
+      { level: "basic", question: "Positive와 negative score의 gradient가 원하는 방향을 설명하세요.", answerChecklist: ["positive up", "negative down", "sigmoid labels", "loss minimized"], requiredConcepts: ["sgns-objective"], sectionId: "sgns" },
+      { level: "basic", question: "SGNS score를 vocabulary probability라고 부를 수 없는 이유를 설명하세요.", answerChecklist: ["binary objective", "sampled rows", "no vocabulary normalizer", "noise prior"], requiredConcepts: ["sgns-objective", "negative-sampling-distribution"], sectionId: "sgns" },
+      { level: "basic", question: "Counts 10,000과 100에 3/4 power를 적용한 상대 비율을 계산하세요.", answerChecklist: ["100 ratio", "raise to 0.75", "about 31.6", "renormalize"], requiredConcepts: ["negative-sampling-distribution"], sectionId: "noise" },
+      { level: "basic", question: "Noise sampling과 frequent-word subsampling의 적용 시점을 구분하세요.", answerChecklist: ["noise after positive pair", "label zero contexts", "subsampling before window", "positive population changes"], requiredConcepts: ["negative-sampling-distribution", "frequent-word-subsampling"], sectionId: "subsampling" },
+      { level: "basic", question: "Subsampling receipt에 기록할 입력을 나열하세요.", answerChecklist: ["frequency table", "threshold and formula", "seed", "corpus tokenizer revision"], requiredConcepts: ["frequent-word-subsampling"], sectionId: "subsampling" },
+      { level: "advanced", question: "Positive score 1, negatives 0과 -1을 loss에 대입해 각 항을 쓰세요.", answerChecklist: ["-log sigma 1", "-log sigma 0", "-log sigma 1 for neg -1", "direction"], requiredConcepts: ["sgns-objective"], sectionId: "sgns" },
+      { level: "advanced", question: "k를 5에서 20으로 늘릴 때 compute와 learned score boundary를 설명하세요.", answerChecklist: ["fourfold negative scores", "class prior changes", "not same objective", "measure quality and latency"], requiredConcepts: ["sgns-objective", "negative-sampling-distribution"], sectionId: "noise" },
+      { level: "advanced", question: "Accidental positive와 duplicate negatives를 처리하는 두 정책을 비교하세요.", answerChecklist: ["detect observed pair", "resample or retain", "deduplicate or weight", "receipt required"], requiredConcepts: ["sgns-objective", "negative-sampling-distribution"], sectionId: "noise" },
+      { level: "advanced", question: "Subsampling 전후 pair histogram과 downstream 결과를 비교하는 release gate를 설계하세요.", answerChecklist: ["token keep rates", "distance pair histogram", "fixed budget", "rollback threshold"], requiredConcepts: ["frequent-word-subsampling", "sgns-objective"], sectionId: "subsampling" },
+    ],
+    papers: [
+      { title: "Distributed Representations of Words and Phrases and their Compositionality", href: "https://arxiv.org/abs/1310.4546", problem: "큰 vocabulary 비용과 고빈도 word가 training을 지배하는 문제를 다룹니다.", contribution: "Negative sampling과 frequent-word subsampling recipe를 제안합니다.", assumptions: "논문의 unigram 3/4 noise·threshold·corpus·analogy evaluation을 전제로 합니다.", evidenceScope: "Sampling objective와 논문에 보고된 speed·accuracy 범위입니다.", notClaim: "3/4 exponent·k·threshold가 모든 corpus에서 최적이거나 SGNS가 calibrated probability를 낸다는 뜻은 아닙니다.", sectionId: "paper-negative-sampling" },
+    ],
+  },
+  "ai/subword-static-embeddings": {
+    entryLevel: true,
+    entryNote: "OOV·character n-gram·hash bucket·static representation을 먼저 정의하고 word가 subword rows의 합으로 만들어지는 과정을 봅니다.",
+    coreIdea: "Subword static embedding은 word 문자열을 character n-grams로 분해해 공유 bucket rows를 합칩니다. OOV를 표현할 수 있지만 문장 instance마다 달라지는 contextual state는 아닙니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "fasttext-subword-embedding", role: "Character n-gram bucket rows를 합쳐 word와 OOV vector를 만듭니다." },
+      { id: "static-embedding-artifact", role: "문자열에서 row와 vector까지의 모든 revision을 한 release contract로 묶습니다." },
+    ],
+    conceptExplanations: [
+      { id: "fasttext-subword-embedding", sectionId: "ngrams", intuition: "처음 보는 합성어도 이미 배운 글자 조각들의 좌표를 모아 임시 주소를 만드는 방식입니다.", workedExample: "‘running’의 <ru, run, unn, ing, ng> bucket rows를 더해 vocabulary 밖에서도 vector를 만듭니다.", boundary: "Hash collision로 unrelated n-grams가 row를 공유하며 같은 spelling의 문장별 sense를 구분하지 않습니다." },
+      { id: "static-embedding-artifact", sectionId: "release", intuition: "좌표 파일만 넘기지 않고 그 좌표의 row 이름표와 생성 recipe를 같은 봉투에 넣습니다.", workedExample: "Vocabulary·n-gram range·hash·bucket 수·matrices·corpus cutoff·seed·평가표 checksum을 한 manifest에 기록합니다.", boundary: "Dimension과 dtype이 같아도 vocabulary나 hash가 다르면 row 의미와 OOV 합성이 호환되지 않습니다." },
+    ],
+    conceptStages: [
+      { label: "00 OOV", relation: "전용 word row가 없는 입력 경계를 확인합니다.", concepts: ["fasttext-subword-embedding"] },
+      { label: "01 N-gram", relation: "문자열을 boundary-marked character 조각으로 나눕니다.", concepts: ["fasttext-subword-embedding"] },
+      { label: "02 Compose", relation: "Hash bucket rows를 합쳐 static vector를 만듭니다.", concepts: ["fasttext-subword-embedding"] },
+      { label: "03 Release", relation: "문자열-to-vector 경로와 evidence를 versioning합니다.", concepts: ["fasttext-subword-embedding", "static-embedding-artifact"] },
+    ],
+    exercises: [
+      { level: "basic", question: "OOV가 무엇이고 word-only lookup이 왜 vector를 만들지 못하는지 설명하세요.", answerChecklist: ["not in vocabulary", "no dedicated row", "unknown policy", "string still available"], requiredConcepts: ["fasttext-subword-embedding"], sectionId: "overview" },
+      { level: "basic", question: "‘run’에 boundary를 붙여 길이 3 n-grams 예시를 만드세요.", answerChecklist: ["boundary symbols", "sliding characters", "examples such as <ru run un>", "fixed normalization"], requiredConcepts: ["fasttext-subword-embedding"], sectionId: "ngrams" },
+      { level: "basic", question: "Hash bucket이 필요한 이유와 collision 의미를 설명하세요.", answerChecklist: ["bounded table", "hash modulo B", "shared row", "collision allowed"], requiredConcepts: ["fasttext-subword-embedding"], sectionId: "ngrams" },
+      { level: "basic", question: "Vocabulary word와 OOV word의 vector 합성 항을 비교하세요.", answerChecklist: ["word row if known", "subword rows", "OOV no word row", "same dimension"], requiredConcepts: ["fasttext-subword-embedding"], sectionId: "ngrams" },
+      { level: "basic", question: "Subword static embedding과 contextual embedding을 구분하세요.", answerChecklist: ["same string same vector", "character sharing", "sentence forward absent", "sense not separated"], requiredConcepts: ["fasttext-subword-embedding"], sectionId: "static-contextual" },
+      { level: "basic", question: "Release manifest의 row identity 항목을 네 개 나열하세요.", answerChecklist: ["vocabulary", "normalization", "ngram range", "hash and buckets"], requiredConcepts: ["static-embedding-artifact"], sectionId: "release" },
+      { level: "advanced", question: "두 n-gram이 collision한 경우 forward와 gradient sharing을 설명하세요.", answerChecklist: ["same bucket ID", "same row contribution", "gradients accumulate", "possible interference"], requiredConcepts: ["fasttext-subword-embedding"], sectionId: "ngrams" },
+      { level: "advanced", question: "Unicode normalization revision이 달라졌을 때 OOV vector가 변하는 경로를 추적하세요.", answerChecklist: ["characters change", "ngrams change", "hash IDs change", "manifest incompatibility"], requiredConcepts: ["fasttext-subword-embedding", "static-embedding-artifact"], sectionId: "release" },
+      { level: "advanced", question: "두 static artifacts의 neighbor quality를 공정하게 비교하는 평가를 설계하세요.", answerChecklist: ["same text normalization", "same query set", "OOV subgroup", "downstream and rollback"], requiredConcepts: ["static-embedding-artifact"], sectionId: "release" },
+      { level: "advanced", question: "Hash bucket 수를 줄이는 release의 memory 이득과 collision 위험을 함께 판정하세요.", answerChecklist: ["row count memory", "collision rate", "OOV and subgroup metrics", "compatibility or rollback"], requiredConcepts: ["fasttext-subword-embedding", "static-embedding-artifact"], sectionId: "release" },
+    ],
+    papers: [
+      { title: "Enriching Word Vectors with Subword Information", href: "https://aclanthology.org/Q17-1010/", problem: "Word-level static embedding이 morphology를 공유하지 못하고 OOV에 vector를 주기 어려운 문제를 다룹니다.", contribution: "Word와 boundary-marked character n-gram vectors를 합산하는 방법을 제안합니다.", assumptions: "논문의 n-gram range·hash buckets·language corpora·evaluation setting을 전제로 합니다.", evidenceScope: "Subword static representation과 morphology·rare/OOV 결과 범위입니다.", notClaim: "Character similarity가 항상 semantic similarity이거나 contextual sense를 만든다는 뜻은 아닙니다.", sectionId: "paper-fasttext" },
     ],
   },
   "ai/math-functions-composition": {

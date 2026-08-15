@@ -1046,12 +1046,10 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   word2vec: {
-    title: "Word2Vec 글이 소유하는 범위",
+    title: "Word2Vec 입력·pair 생성 글이 소유하는 범위",
     owns: [
-      "Corpus token에서 dynamic window로 CBOW·Skip-gram training example을 만드는 절차",
-      "Input·output embedding table과 full·hierarchical softmax의 prediction 계산",
-      "SGNS의 positive·noise pair objective와 sparse parameter update",
-      "Frequent-word subsampling·noise distribution·fastText 확장의 실무 경계",
+      "Vocabulary ID가 input·output embedding table의 역할별 row를 고르는 절차",
+      "Dynamic window와 versioned receipt가 local word–context pair를 만드는 경계",
     ],
     reuses: [
       { label: "Tokenizer와 vocabulary 계약", href: "/ai/tokenizer" },
@@ -1059,19 +1057,46 @@ export const EDITORIAL_BOUNDARIES = {
         label: "분산 가정·PMI·shifted-PMI·cosine",
         href: "/ai/distributional-semantics",
       },
-      { label: "Sigmoid·softmax activation", href: "/ai/activation-functions" },
-      { label: "문장 임베딩과 retrieval", href: "/ai/sentence-embeddings" },
+      { label: "CBOW·Skip-gram·hierarchical softmax", href: "/ai/word2vec-prediction-objectives" },
+      { label: "SGNS와 sampling", href: "/ai/word2vec-negative-sampling" },
     ],
     evidence: [
       {
         kind: "primary-source",
-        rule: "CBOW·Skip-gram·negative sampling·subsampling·fastText claim은 원 논문의 corpus·objective·평가 조건으로 제한한다.",
+        rule: "Word ID·dual table·window claim은 원 논문의 corpus·architecture·sampling 범위로 제한한다.",
       },
       {
         kind: "standard",
-        rule: "Vocabulary·window·noise distribution·sample 수·subsampling·seed를 재현 가능한 training artifact로 기록한다.",
+        rule: "Corpus·vocabulary·sentence boundary·window draw·frequency filter·seed를 pair receipt로 기록한다.",
       },
     ],
+  },
+  "word2vec-prediction-objectives": {
+    title: "Word2Vec prediction objectives 글이 소유하는 범위",
+    owns: ["같은 window를 CBOW·Skip-gram examples로 바꾸고 hierarchical tree path로 target probability를 구성하는 계산"],
+    reuses: [
+      { label: "Word ID·dual table·pair receipt", href: "/ai/word2vec" },
+      { label: "Softmax activation", href: "/ai/activation-functions" },
+    ],
+    evidence: [{ kind: "primary-source", rule: "Objective 비교는 원 Word2Vec 논문의 corpus·tree·evaluation 조건으로 제한한다." }],
+  },
+  "word2vec-negative-sampling": {
+    title: "Word2Vec negative sampling 글이 소유하는 범위",
+    owns: ["Positive·noise pair의 SGNS logistic objective, noise distribution과 frequent-token subsampling의 서로 다른 적용 경계"],
+    reuses: [
+      { label: "Word–context pair receipt", href: "/ai/word2vec" },
+      { label: "Shifted-PMI 해석", href: "/ai/distributional-semantics" },
+    ],
+    evidence: [{ kind: "primary-source", rule: "3/4 noise·subsampling·k claim은 원 논문의 recipe와 평가 범위로 제한한다." }],
+  },
+  "subword-static-embeddings": {
+    title: "Subword static embeddings 글이 소유하는 범위",
+    owns: ["Character n-gram hash rows로 OOV vector를 합성하고 문자열-to-vector artifact를 호환 가능하게 release하는 계약"],
+    reuses: [
+      { label: "Word lookup foundation", href: "/ai/word2vec" },
+      { label: "Static과 contextual representation", href: "/ai/distributional-semantics" },
+    ],
+    evidence: [{ kind: "primary-source", rule: "Subword composition과 OOV claim은 fastText 논문의 n-gram·hash·language setting으로 제한한다." }],
   },
   bert: {
     title: "BERT encoder visibility 글이 소유하는 범위",

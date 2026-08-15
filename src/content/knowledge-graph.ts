@@ -398,6 +398,22 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "Vocabulary ID가 가리키는 trainable matrix row를 dense word vector로 읽는 연산으로, one-hot vector와 matrix의 곱을 sparse index access로 계산한 것과 같습니다.",
     canonicalHref: "/ai/word2vec#overview",
   },
+  "word2vec-dual-embedding-table": {
+    id: "word2vec-dual-embedding-table",
+    domain: "machine-learning",
+    label: "Word2Vec dual embedding table",
+    definition:
+      "같은 vocabulary ID도 center 역할에서는 input table W를, context·target 역할에서는 별도 output table W′를 읽고 서로 다른 gradient로 갱신하는 parameter boundary입니다.",
+    canonicalHref: "/ai/word2vec#dual-tables",
+  },
+  "word-context-pair-sampling-receipt": {
+    id: "word-context-pair-sampling-receipt",
+    domain: "machine-learning",
+    label: "Word–context pair sampling receipt",
+    definition:
+      "Corpus·tokenizer·vocabulary·sentence boundary·window draw·frequency filter·random seed를 함께 versioning해 같은 positive training-pair population을 재현하는 artifact contract입니다.",
+    canonicalHref: "/ai/word2vec#pairs",
+  },
   "dynamic-context-window": {
     id: "dynamic-context-window",
     kind: "method",
@@ -405,7 +421,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Dynamic context window",
     definition:
       "정해진 최대 반경 안에서 example마다 실제 window radius를 sampling해 가까운 word pair가 먼 pair보다 더 자주 학습되게 하는 Word2Vec sampling 방법입니다.",
-    canonicalHref: "/ai/word2vec#overview",
+    canonicalHref: "/ai/word2vec#window",
   },
   "cbow-objective": {
     id: "cbow-objective",
@@ -414,7 +430,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "CBOW objective",
     definition:
       "주변 context word의 embedding을 합치거나 평균내 center word의 categorical distribution을 예측하는 Word2Vec 학습 objective입니다.",
-    canonicalHref: "/ai/word2vec#models",
+    canonicalHref: "/ai/word2vec-prediction-objectives#cbow",
   },
   "skipgram-objective": {
     id: "skipgram-objective",
@@ -423,7 +439,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Skip-gram objective",
     definition:
       "Center word embedding을 조건으로 local window에서 관측한 context word를 하나씩 예측하도록 word–context pair를 학습하는 objective입니다.",
-    canonicalHref: "/ai/word2vec#models",
+    canonicalHref: "/ai/word2vec-prediction-objectives#skipgram",
   },
   "hierarchical-softmax": {
     id: "hierarchical-softmax",
@@ -432,7 +448,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Hierarchical softmax",
     definition:
       "Vocabulary word를 binary tree의 leaf로 놓고 root에서 해당 leaf까지의 binary decision probability를 곱해 word probability를 계산하는 parameterization입니다.",
-    canonicalHref: "/ai/word2vec#models",
+    canonicalHref: "/ai/word2vec-prediction-objectives#hierarchical",
   },
   "sgns-objective": {
     id: "sgns-objective",
@@ -441,7 +457,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Skip-gram with negative sampling · SGNS",
     definition:
       "관측된 center–context pair의 sigmoid score는 높이고 noise distribution에서 뽑은 pair의 score는 낮추는 binary logistic objective입니다.",
-    canonicalHref: "/ai/word2vec#training",
+    canonicalHref: "/ai/word2vec-negative-sampling#sgns",
   },
   "negative-sampling-distribution": {
     id: "negative-sampling-distribution",
@@ -449,7 +465,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Negative-sampling noise distribution",
     definition:
       "관측되지 않은 비교 context를 뽑는 probability distribution으로, sample 수와 frequency smoothing이 SGNS의 compute와 optimum score를 함께 바꿉니다.",
-    canonicalHref: "/ai/word2vec#training",
+    canonicalHref: "/ai/word2vec-negative-sampling#noise",
   },
   "frequent-word-subsampling": {
     id: "frequent-word-subsampling",
@@ -458,7 +474,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Frequent-word subsampling",
     definition:
       "Corpus에서 지나치게 자주 나타나는 word token을 frequency-dependent probability로 일부 버려 pair 분포와 training compute를 바꾸는 Word2Vec heuristic입니다.",
-    canonicalHref: "/ai/word2vec#training",
+    canonicalHref: "/ai/word2vec-negative-sampling#subsampling",
   },
   "fasttext-subword-embedding": {
     id: "fasttext-subword-embedding",
@@ -467,7 +483,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "fastText subword embedding",
     definition:
       "Word를 character n-gram들의 trainable vector 합으로 나타내 형태가 비슷한 단어와 vocabulary 밖 단어가 subword parameter를 공유하게 하는 static embedding 방법입니다.",
-    canonicalHref: "/ai/word2vec#applications",
+    canonicalHref: "/ai/subword-static-embeddings#ngrams",
   },
   "static-embedding-artifact": {
     id: "static-embedding-artifact",
@@ -475,7 +491,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Static embedding artifact contract",
     definition:
       "Embedding matrix와 vocabulary ID, tokenizer·corpus·window·sampling·seed·evaluation metadata를 함께 versioning해야 row의 의미를 재현할 수 있다는 배포 계약입니다.",
-    canonicalHref: "/ai/word2vec#applications",
+    canonicalHref: "/ai/subword-static-embeddings#release",
   },
   "bidirectional-encoder-visibility": {
     id: "bidirectional-encoder-visibility",
@@ -18252,6 +18268,20 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     reason: "Sparse symbol ID가 trainable matrix의 dense row를 선택합니다.",
   },
   {
+    from: "word-embedding-lookup",
+    to: "word2vec-dual-embedding-table",
+    relation: "extends",
+    reason:
+      "단일 row lookup을 center input과 context output의 역할별 두 table access로 확장합니다.",
+  },
+  {
+    from: "tokenizer-pipeline-contract",
+    to: "word-context-pair-sampling-receipt",
+    relation: "prerequisite",
+    reason:
+      "문자열을 재현 가능한 vocabulary ID sequence와 sentence boundary로 먼저 고정합니다.",
+  },
+  {
     from: "tokenizer-pipeline-contract",
     to: "dynamic-context-window",
     relation: "prerequisite",
@@ -18266,17 +18296,45 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
       "고정 집계표 대신 pair sampling 단계에서 거리별 관측 빈도를 바꿉니다.",
   },
   {
-    from: "word-embedding-lookup",
+    from: "dynamic-context-window",
+    to: "word-context-pair-sampling-receipt",
+    relation: "produces",
+    reason:
+      "Maximum radius와 실제 radius draw가 어떤 local pairs를 생성했는지 receipt에 포함합니다.",
+  },
+  {
+    from: "frequent-word-subsampling",
+    to: "word-context-pair-sampling-receipt",
+    relation: "constrains",
+    reason:
+      "Pair 생성 전에 제거한 token occurrences가 positive-pair population을 바꿉니다.",
+  },
+  {
+    from: "word2vec-dual-embedding-table",
     to: "cbow-objective",
     relation: "prerequisite",
     reason:
       "여러 context ID가 가리키는 dense rows를 평균해 center prediction을 만듭니다.",
   },
   {
-    from: "word-embedding-lookup",
+    from: "word2vec-dual-embedding-table",
     to: "skipgram-objective",
     relation: "prerequisite",
     reason: "Center와 context ID가 input·output embedding row를 선택합니다.",
+  },
+  {
+    from: "word-context-pair-sampling-receipt",
+    to: "cbow-objective",
+    relation: "prerequisite",
+    reason:
+      "Versioned context set과 center target이 CBOW example의 입력·정답을 정의합니다.",
+  },
+  {
+    from: "word-context-pair-sampling-receipt",
+    to: "skipgram-objective",
+    relation: "prerequisite",
+    reason:
+      "Versioned center–context observations가 Skip-gram의 pair별 targets를 정의합니다.",
   },
   {
     from: "softmax-normalization",
@@ -18305,6 +18363,13 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "extends",
     reason:
       "Categorical context prediction을 sampled binary pair discrimination으로 바꿉니다.",
+  },
+  {
+    from: "word-context-pair-sampling-receipt",
+    to: "sgns-objective",
+    relation: "prerequisite",
+    reason:
+      "Receipt가 재현한 관측 pair가 SGNS의 label-1 examples가 됩니다.",
   },
   {
     from: "probability-distribution",
@@ -18360,6 +18425,13 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "contrasts",
     reason:
       "Subword 합도 word별 static representation이며 문장 instance별 hidden state와 구분됩니다.",
+  },
+  {
+    from: "fasttext-subword-embedding",
+    to: "static-embedding-artifact",
+    relation: "produces",
+    reason:
+      "Word·subword rows와 문자열-to-bucket recipe를 함께 versioning한 static release를 만듭니다.",
   },
   {
     from: "word-embedding-lookup",

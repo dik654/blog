@@ -390,15 +390,51 @@ export const dlFoundationArticles: Article[] = [
   },
   {
     slug: "word2vec",
-    title: "Word2Vec: 단어 임베딩의 원리",
+    title: "Word2Vec 기초: Word ID에서 Context Pair까지",
     subcategory: "ai-foundations",
     sections: [
-      { id: "overview", title: "Corpus window와 학습 pair" },
-      { id: "models", title: "CBOW·Skip-gram과 softmax 병목" },
-      { id: "training", title: "SGNS·negative sampling·shifted PMI" },
-      { id: "applications", title: "Vector geometry와 표현의 경계" },
+      { id: "overview", title: "ID에서 trainable row로" },
+      { id: "dual-tables", title: "Input·output table" },
+      { id: "window", title: "Context window의 형태" },
+      { id: "pairs", title: "Versioned pair receipt" },
     ],
     component: () => import("@/pages/articles/ai/word2vec"),
+  },
+  {
+    slug: "word2vec-prediction-objectives",
+    title: "Word2Vec Objectives: CBOW·Skip-gram·Hierarchical Softmax",
+    subcategory: "ai-foundations",
+    sections: [
+      { id: "overview", title: "예측 방향 먼저 고르기" },
+      { id: "cbow", title: "Context에서 center로" },
+      { id: "skipgram", title: "Center에서 context로" },
+      { id: "hierarchical", title: "Vocabulary를 tree path로" },
+    ],
+    component: () => import("@/pages/articles/ai/word2vec-prediction-objectives"),
+  },
+  {
+    slug: "word2vec-negative-sampling",
+    title: "Word2Vec Negative Sampling: Pair Discrimination과 Update",
+    subcategory: "ai-foundations",
+    sections: [
+      { id: "overview", title: "Full softmax에서 sampled pair로" },
+      { id: "sgns", title: "Positive·noise logistic loss" },
+      { id: "noise", title: "Noise distribution과 k" },
+      { id: "subsampling", title: "고빈도 token을 덜 보기" },
+    ],
+    component: () => import("@/pages/articles/ai/word2vec-negative-sampling"),
+  },
+  {
+    slug: "subword-static-embeddings",
+    title: "Subword Static Embeddings: fastText에서 Release까지",
+    subcategory: "ai-foundations",
+    sections: [
+      { id: "overview", title: "Word row의 OOV 경계" },
+      { id: "ngrams", title: "Character n-gram 합" },
+      { id: "static-contextual", title: "Static과 contextual" },
+      { id: "release", title: "Vocabulary·matrix artifact" },
+    ],
+    component: () => import("@/pages/articles/ai/subword-static-embeddings"),
   },
 ];
 

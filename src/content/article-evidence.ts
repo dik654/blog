@@ -446,18 +446,28 @@ export const ARTICLE_EVIDENCE: Readonly<
   "ai/vision-task-spatial-contracts": [
     { kind: "핵심 논문", label: "Fully Convolutional Networks", href: "https://arxiv.org/abs/1411.4038", note: "Image-level network를 dense spatial output과 skip architecture로 전환" },
   ],
- "ai/word2vec": [
+  "ai/word2vec": [
     {
       kind: "핵심 논문",
       label: "Efficient Estimation of Word Representations in Vector Space",
       href: "https://arxiv.org/abs/1301.3781",
-      note: "CBOW·Skip-gram의 최초 제안",
+      note: "Vocabulary row lookup·local context window·CBOW·Skip-gram 입력 경계를 제시한 원 연구",
     },
+  ],
+  "ai/word2vec-prediction-objectives": [
+    {
+      kind: "핵심 논문",
+      label: "Efficient Estimation of Word Representations in Vector Space",
+      href: "https://arxiv.org/abs/1301.3781#page=3",
+      note: "CBOW·Skip-gram prediction direction과 hierarchical softmax 비교",
+    },
+  ],
+  "ai/word2vec-negative-sampling": [
     {
       kind: "핵심 논문",
       label: "Distributed Representations of Words and Phrases",
       href: "https://arxiv.org/abs/1310.4546",
-      note: "negative sampling과 phrase 학습을 확장한 후속 논문",
+      note: "Negative sampling·unigram 3/4 noise·frequent-word subsampling을 확장한 후속 연구",
     },
     {
       kind: "보충 읽기",
@@ -465,8 +475,10 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://proceedings.neurips.cc/paper_files/paper/2014/hash/b78666971ceae55a8e87efb7cbfd9ad4-Abstract.html",
       note: "SGNS의 dot product를 shifted-PMI word–context matrix factorization으로 분석",
     },
+  ],
+  "ai/subword-static-embeddings": [
     {
-      kind: "보충 읽기",
+      kind: "핵심 논문",
       label: "Enriching Word Vectors with Subword Information",
       href: "https://aclanthology.org/Q17-1010/",
       note: "Character n-gram 합으로 morphology와 OOV 한계를 보강한 fastText 연구",
