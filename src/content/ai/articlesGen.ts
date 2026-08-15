@@ -3,15 +3,78 @@ import type { Article } from "../types";
 export const genArticles: Article[] = [
   {
     slug: "generative-theory",
-    title: "생성 모델 지도: likelihood에서 diffusion까지",
+    title: "생성 모델의 출발점: observation·distribution·평가",
     subcategory: "ai-generative",
     sections: [
-      { id: "overview", title: "생성 모델을 비교하는 축" },
-      { id: "likelihood", title: "Likelihood와 autoregressive 모델" },
-      { id: "latent", title: "Latent variable: VAE와 flow" },
-      { id: "implicit", title: "GAN·score·diffusion의 연결" },
+      { id: "overview", title: "Observation과 distribution" },
+      { id: "tractability", title: "직접 계산할 연산" },
+      { id: "evaluation", title: "Likelihood와 평가 경계" },
+      { id: "family-map", title: "다음 학습 경로" },
     ],
     component: () => import("@/pages/articles/ai/generative-theory"),
+  },
+  {
+    slug: "autoregressive-generative-models",
+    title: "자기회귀 생성 모델: prefix conditional을 곱하는 이유",
+    subcategory: "ai-generative",
+    sections: [
+      { id: "sequence", title: "Token·prefix·conditional" },
+      { id: "factorization", title: "Chain-rule factorization" },
+      { id: "train-sample", title: "Training과 sampling" },
+      { id: "boundary", title: "Ordering·exposure·latency" },
+    ],
+    component: () =>
+      import("@/pages/articles/ai/autoregressive-generative-models"),
+  },
+  {
+    slug: "latent-variable-generative-models",
+    title: "잠재변수 생성 모델: 숨은 원인·marginalization·ELBO",
+    subcategory: "ai-generative",
+    sections: [
+      { id: "latent-cause", title: "Latent cause와 네 분포" },
+      { id: "marginalization", title: "숨은 원인을 가중해 합하기" },
+      { id: "elbo", title: "Approximate posterior와 ELBO" },
+      { id: "paper-aevb", title: "AEVB 근거와 경계" },
+    ],
+    component: () =>
+      import("@/pages/articles/ai/latent-variable-generative-models"),
+  },
+  {
+    slug: "normalizing-flows",
+    title: "Normalizing flow: 가역 좌표와 density 보정",
+    subcategory: "ai-generative",
+    sections: [
+      { id: "bijection", title: "Base·bijection·Jacobian" },
+      { id: "change-of-variables", title: "Volume을 보정하는 이유" },
+      { id: "failure-boundary", title: "가역성의 대가" },
+      { id: "paper-real-nvp", title: "Real NVP 근거와 경계" },
+    ],
+    component: () => import("@/pages/articles/ai/normalizing-flows"),
+  },
+  {
+    slug: "adversarial-density-ratios",
+    title: "GAN density ratio: discriminator가 비교하는 것",
+    subcategory: "ai-generative",
+    sections: [
+      { id: "two-sources", title: "Real과 generated source" },
+      { id: "optimal-ratio", title: "Optimal discriminator ratio" },
+      { id: "training-boundary", title: "이론과 실제 training" },
+      { id: "paper-gan", title: "Original GAN 근거와 경계" },
+    ],
+    component: () => import("@/pages/articles/ai/adversarial-density-ratios"),
+  },
+  {
+    slug: "score-based-generative-models",
+    title: "Score 기반 생성 모델: local direction에서 diffusion까지",
+    subcategory: "ai-generative",
+    sections: [
+      { id: "score-field", title: "Density와 score field" },
+      { id: "gaussian-score", title: "Gaussian score의 minus" },
+      { id: "noise-score", title: "Noise predictor와 score" },
+      { id: "papers-score", title: "NCSN·DDPM 근거와 경계" },
+    ],
+    component: () =>
+      import("@/pages/articles/ai/score-based-generative-models"),
   },
   {
     slug: "vae",

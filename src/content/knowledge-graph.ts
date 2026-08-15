@@ -740,7 +740,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Autoregressive generative factorization",
     definition:
       "Joint distribution을 정한 순서의 prefix-conditional product로 정확히 분해해 likelihood를 위치별로 학습하고 sample을 앞에서부터 생성하는 방법입니다.",
-    canonicalHref: "/ai/generative-theory#likelihood",
+    canonicalHref: "/ai/autoregressive-generative-models#factorization",
   },
   "latent-variable-marginalization": {
     id: "latent-variable-marginalization",
@@ -748,7 +748,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Latent-variable marginalization",
     definition:
       "관측되지 않는 생성 원인 z의 모든 가능한 값을 joint density p(x,z)에서 적분하거나 합해 observation density p(x)를 얻는 계산입니다.",
-    canonicalHref: "/ai/generative-theory#latent",
+    canonicalHref: "/ai/latent-variable-generative-models#marginalization",
   },
   "evidence-lower-bound": {
     id: "evidence-lower-bound",
@@ -757,7 +757,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Evidence lower bound (ELBO)",
     definition:
       "임의의 approximate posterior q(z|x)에 대해 log evidence가 reconstruction expectation에서 prior KL을 뺀 값 이상이며, 차이는 q와 true posterior의 KL이라는 관계입니다.",
-    canonicalHref: "/ai/generative-theory#latent",
+    canonicalHref: "/ai/latent-variable-generative-models#elbo",
   },
   "normalizing-flow-change-of-variables": {
     id: "normalizing-flow-change-of-variables",
@@ -766,7 +766,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Normalizing-flow change of variables",
     definition:
       "Differentiable bijection으로 좌표를 바꿀 때 probability mass를 보존하도록 density에 inverse Jacobian determinant를 곱하는 변화변수 공식입니다.",
-    canonicalHref: "/ai/generative-theory#latent",
+    canonicalHref: "/ai/normalizing-flows#change-of-variables",
   },
   "adversarial-density-ratio": {
     id: "adversarial-density-ratio",
@@ -775,7 +775,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "GAN optimal-discriminator density ratio",
     definition:
       "고정된 generator와 무제한 discriminator에서 original GAN objective의 점별 최적값이 pdata/(pdata+pg)이고, 이를 대입한 value가 Jensen–Shannon divergence와 연결되는 관계입니다.",
-    canonicalHref: "/ai/generative-theory#implicit",
+    canonicalHref: "/ai/adversarial-density-ratios#optimal-ratio",
   },
   "score-function-field": {
     id: "score-function-field",
@@ -783,7 +783,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Score function field",
     definition:
       "각 위치 x에서 log density가 가장 빠르게 증가하는 방향을 나타내는 vector field ∇x log p(x)로, density의 normalization constant 없이도 local 방향을 제공합니다.",
-    canonicalHref: "/ai/generative-theory#implicit",
+    canonicalHref: "/ai/score-based-generative-models#gaussian-score",
   },
   "diffusion-score-parameterization": {
     id: "diffusion-score-parameterization",
@@ -792,7 +792,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Diffusion noise–score parameterization",
     definition:
       "Gaussian forward process에서 noise predictor·clean-data predictor·velocity predictor를 time-dependent score와 알려진 scale 관계로 연결해 학습 target을 고르는 방식입니다.",
-    canonicalHref: "/ai/generative-theory#implicit",
+    canonicalHref: "/ai/score-based-generative-models#noise-score",
   },
   "generative-evaluation-boundary": {
     id: "generative-evaluation-boundary",

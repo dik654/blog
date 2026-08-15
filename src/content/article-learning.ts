@@ -6843,483 +6843,1309 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/generative-theory": {
-    coreIdea:
-      "생성 모델은 관측 sample을 외우는 대신 그 뒤의 data distribution을 근사합니다. Autoregressive model·VAE·normalizing flow·GAN·diffusion은 단일 진화 순서가 아니라, normalized likelihood·latent inference·sampling speed·구조 제약 중 무엇을 직접 계산하고 무엇을 근사할지 서로 다르게 선택한 family입니다.",
-    assumedKnowledge: [
+    "entryLevel": true,
+    "entryNote": "확률모형을 처음 본다고 가정하고 observation·condition·distribution을 하나씩 정의합니다.",
+    "coreIdea": "생성 문제는 observation과 condition의 support를 먼저 고정하고, density·inference·sampling 중 필요한 연산과 likelihood·quality·coverage·latency 평가 축을 분리해 model family를 선택합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
       {
-        id: "probability-distribution",
-        role: "가능한 observation에 probability mass 또는 density를 배정하는 규칙을 읽습니다.",
+        "id": "generative-distribution-contract",
+        "role": "Observation·condition·support와 새 sample의 의미를 고정합니다."
       },
       {
-        id: "conditional-probability",
-        role: "Condition c가 주어진 p(x|c)와 unconditional p(x)를 구분합니다.",
+        "id": "density-sampling-tractability",
+        "role": "Density·inference·sampling 중 실제 계산 가능한 연산을 구분합니다."
       },
       {
-        id: "probability-chain-rule",
-        role: "Joint distribution을 prefix별 conditional product로 정확히 분해합니다.",
-      },
-      {
-        id: "expectation",
-        role: "Distribution 아래의 평균 objective와 latent marginalization을 계산합니다.",
-      },
-      {
-        id: "logarithm",
-        role: "Probability product를 log-probability의 합으로 바꿉니다.",
-      },
-      {
-        id: "maximum-likelihood",
-        role: "관측 data의 likelihood를 높이는 parameter estimation 원리를 사용합니다.",
-      },
-      {
-        id: "kl-divergence",
-        role: "방향이 있는 distribution 차이와 ELBO gap을 읽습니다.",
-      },
+        "id": "generative-evaluation-boundary",
+        "role": "Likelihood·quality·coverage·조건 충실도·latency를 별도 평가 축으로 둡니다."
+      }
     ],
-    introducedHere: [
+    "conceptExplanations": [
       {
-        id: "generative-distribution-contract",
-        role: "Observation·condition·support와 생성 목표를 먼저 고정합니다.",
+        "id": "generative-distribution-contract",
+        "sectionId": "overview",
+        "intuition": "사진 한 장이 아니라 사진이 나올 수 있는 영역 전체의 규칙을 배웁니다.",
+        "workedExample": "x를 256×256 RGB image, c를 '검은 고양이' prompt, support를 pixel range와 data population으로 고정합니다.",
+        "boundary": "새 sample이라는 사실이 quality·안전·저작권을 자동 보장하지 않습니다."
       },
       {
-        id: "density-sampling-tractability",
-        role: "Density·likelihood·inference·sampling에서 family마다 치르는 비용을 비교합니다.",
+        "id": "density-sampling-tractability",
+        "sectionId": "tractability",
+        "intuition": "주소별 확률을 읽는 지도와 새 경로를 뽑는 내비게이션은 서로 다른 기능입니다.",
+        "workedExample": "Autoregressive는 likelihood를 직접 계산하지만 순차 sample하고 GAN은 빠르게 sample하지만 normalized density를 직접 계산하지 않습니다.",
+        "boundary": "수학적 존재와 제한된 시간·메모리에서 실제 계산 가능함을 구분합니다."
       },
       {
-        id: "autoregressive-generative-factorization",
-        role: "Exact chain-rule likelihood와 sequential sampling의 맞바꿈을 설명합니다.",
-      },
-      {
-        id: "latent-variable-marginalization",
-        role: "보이지 않는 생성 원인 z를 합하거나 적분해 p(x)를 얻습니다.",
-      },
-      {
-        id: "evidence-lower-bound",
-        role: "VAE objective가 log evidence의 lower bound인 이유와 gap을 유도합니다.",
-      },
-      {
-        id: "normalizing-flow-change-of-variables",
-        role: "가역 좌표 변환의 volume 변화로 density를 보정합니다.",
-      },
-      {
-        id: "adversarial-density-ratio",
-        role: "GAN discriminator의 이상적 optimum과 실제 학습의 경계를 구분합니다.",
-      },
-      {
-        id: "score-function-field",
-        role: "Density 값 대신 log-density가 증가하는 local vector field를 정의합니다.",
-      },
-      {
-        id: "diffusion-score-parameterization",
-        role: "Gaussian noise prediction과 time-dependent score의 scale 관계를 연결합니다.",
-      },
-      {
-        id: "generative-evaluation-boundary",
-        role: "Likelihood·quality·coverage·조건 충실도·latency를 서로 다른 평가 축으로 둡니다.",
-      },
+        "id": "generative-evaluation-boundary",
+        "sectionId": "evaluation",
+        "intuition": "선명도·다양성·prompt 충실도·속도를 한 자로 재지 않습니다.",
+        "workedExample": "Held-out NLL, quality, coverage, condition score, p95 latency를 별도 열에 둡니다.",
+        "boundary": "FID나 NLL 하나로 family를 총서열화하지 않습니다."
+      }
     ],
-    conceptExplanations: [
+    "conceptStages": [
       {
-        id: "generative-distribution-contract",
-        sectionId: "overview",
-        intuition:
-          "사진 한 장을 복사하는 대신 사진이 나올 법한 영역 전체의 규칙을 배우고, 조건 c가 있으면 그 조건에 맞는 영역으로 범위를 좁힙니다.",
-        workedExample:
-          "고양이 사진 생성은 x=image인 p(x)를, '검은 고양이' prompt 조건 생성은 p(x|c='검은 고양이')를 모델링합니다.",
-        boundary:
-          "Training sample에 높은 probability를 주는 것과 새로운 sample·조건 충실도·저작권 안전성을 만족하는 것은 서로 다른 평가 문제입니다.",
+        "label": "00 Define",
+        "relation": "Observation·condition·support를 고정합니다.",
+        "concepts": [
+          "generative-distribution-contract"
+        ]
       },
       {
-        id: "density-sampling-tractability",
-        sectionId: "overview",
-        intuition:
-          "같은 도시를 설명해도 모든 주소의 확률을 계산하는 지도, 빠르게 길을 뽑는 내비게이션, 현재 위치를 역추적하는 도구는 서로 다른 기능입니다.",
-        workedExample:
-          "Autoregressive model은 token likelihood가 tractable하지만 sample을 T번 순차 생성하고, flow는 양방향 계산을 얻는 대신 invertibility를 요구하며, GAN은 한 번에 sample하지만 normalized density를 직접 계산하지 않습니다.",
-        boundary:
-          "Explicit·implicit이라는 두 칸만으로 family를 총서열화하지 않습니다. Diffusion처럼 variational·score·SDE·ODE 관점이 함께 있는 경우도 있습니다.",
-      },
-      {
-        id: "autoregressive-generative-factorization",
-        sectionId: "likelihood",
-        intuition:
-          "문장 전체 확률을 첫 단어, 첫 단어를 본 둘째 단어, 앞 prefix를 본 다음 단어의 확률을 차례로 곱해 계산합니다.",
-        workedExample:
-          "두 binary token이면 p(1,0)=p(x1=1)p(x2=0|x1=1)입니다. Training은 두 target conditional을 병렬 계산할 수 있지만 sampling은 x1을 뽑아야 x2 조건이 정해집니다.",
-        boundary:
-          "Chain-rule factorization 자체는 exact하지만 ordering·conditional model capacity·finite-data optimization은 approximation과 inductive bias를 만듭니다.",
-      },
-      {
-        id: "latent-variable-marginalization",
-        sectionId: "latent",
-        intuition:
-          "사진 x가 어떤 조명·자세·배경 z에서 나왔는지 모르면 가능한 모든 z의 설명을 가중해 합칩니다.",
-        workedExample:
-          "Discrete z가 두 개인 mixture라면 p(x)=p(x|z=0)p(z=0)+p(x|z=1)p(z=1)입니다. Continuous z에서는 이 합이 integral이 됩니다.",
-        boundary:
-          "Latent z가 사람이 붙인 의미와 일치하거나 identifiable하다고 자동으로 보장되지 않으며, high-dimensional integral은 계산하기 어려울 수 있습니다.",
-      },
-      {
-        id: "evidence-lower-bound",
-        sectionId: "latent",
-        intuition:
-          "True posterior를 바로 알 수 없으므로 계산 가능한 q를 중간 발판으로 쓰며, q가 posterior와 다를수록 log evidence 아래로 내려간 간격이 생깁니다.",
-        workedExample:
-          "q(z|x)=pθ(z|x)이면 KL(q||pθ)=0이어서 ELBO=log pθ(x)입니다. q family가 한 mode만 표현하면 reconstruction이 좋아도 gap이 남을 수 있습니다.",
-        boundary:
-          "ELBO 증가는 log evidence의 lower bound가 높아졌다는 뜻이지 sample perceptual quality나 disentanglement가 반드시 좋아졌다는 뜻은 아닙니다.",
-        proofIdea:
-          "log p(x)=Eq[log p(x,z)−log q(z|x)]+KL(q(z|x)||p(z|x))로 항을 더하고 빼면, KL의 non-negativity 때문에 첫 항인 ELBO가 lower bound가 됩니다.",
-        counterexample:
-          "q가 true posterior의 중요한 mode에 mass를 전혀 두지 못하면 reverse KL이 그 mode를 평균하지 못하고 bound가 매우 느슨할 수 있습니다. q가 posterior와 같지 않은데 ELBO를 exact likelihood로 부르면 틀립니다.",
-      },
-      {
-        id: "normalizing-flow-change-of-variables",
-        sectionId: "latent",
-        intuition:
-          "고무판의 작은 칸을 두 배 넓히면 그 칸에 있던 probability mass는 같으므로 단위 면적당 density는 절반이 됩니다.",
-        workedExample:
-          "1D에서 x=2z이면 z=x/2이고 |dz/dx|=1/2이므로 pX(x)=pZ(x/2)/2입니다.",
-        boundary:
-          "일대일 inverse와 Jacobian determinant가 계산 가능해야 합니다. Dimension을 줄이거나 many-to-one decoder를 쓰면 이 단일-inverse 공식은 그대로 적용되지 않습니다.",
-        proofIdea:
-          "아주 작은 region의 probability mass pX(x)dx와 pZ(z)dz를 같게 놓고 dz=|det(∂z/∂x)|dx를 대입하면 density 보정항이 나옵니다.",
-        counterexample:
-          "x=z²는 z와 −z가 같은 x로 가므로 bijection이 아닙니다. 한 inverse branch의 determinant만 곱하면 다른 branch의 probability mass를 누락합니다.",
-      },
-      {
-        id: "adversarial-density-ratio",
-        sectionId: "implicit",
-        intuition:
-          "두 상자에서 나온 sample을 구분하는 최적 판별기의 확률은 그 위치에서 real density가 두 density 합 중 차지하는 비율입니다.",
-        workedExample:
-          "pdata(x)=3, pg(x)=1에 비례하는 위치라면 optimal D*(x)=3/(3+1)=0.75입니다. 두 분포가 같아지면 모든 위치에서 0.5가 됩니다.",
-        boundary:
-          "이 결과는 고정 G, 충분한 discriminator capacity와 pointwise optimum을 전제로 합니다. Finite network의 alternating gradient descent가 equilibrium에 도달한다는 수렴 정리가 아닙니다.",
-        proofIdea:
-          "각 x에서 a log D+b log(1−D)를 D로 미분해 0으로 두면 D*=a/(a+b)를 얻고, 이를 value에 대입하면 −log4+2·JSD(pdata||pg)가 됩니다.",
-        counterexample:
-          "Discriminator class가 상수 D=1/2 하나뿐이면 서로 전혀 다른 pdata와 pg도 구분하지 못합니다. 이 경우 낮은 adversarial signal은 distribution equality의 증거가 아닙니다.",
-      },
-      {
-        id: "score-function-field",
-        sectionId: "implicit",
-        intuition:
-          "등고선 지도에서 현재 점의 고도가 가장 빠르게 높아지는 화살표처럼, score는 log density가 증가하는 local 방향을 가리킵니다.",
-        workedExample:
-          "1D standard Gaussian의 log p(x)=constant−x²/2이므로 score는 −x입니다. x=2에서는 왼쪽인 −2 방향을 가리킵니다.",
-        boundary:
-          "Score는 normalized density 값이나 global mode label을 직접 주지 않습니다. Data manifold 밖과 low-density region에서 finite-sample estimation이 어려울 수 있습니다.",
-      },
-      {
-        id: "diffusion-score-parameterization",
-        sectionId: "implicit",
-        intuition:
-          "얼마나 섞였는지 아는 Gaussian noise를 맞히면 현재 noisy point에서 깨끗한 data 쪽으로 돌아갈 방향도 scale 변환으로 얻을 수 있습니다.",
-        workedExample:
-          "VP process에서 xt=√ᾱt x0+√(1−ᾱt)ε이면 ε predictor와 score는 sθ=−εθ/√(1−ᾱt) 관계를 가집니다.",
-        boundary:
-          "표시한 식은 Gaussian VP process와 ε-prediction convention입니다. VE process·v-prediction·loss weighting·solver discretization에서는 scale과 target이 달라집니다.",
-      },
-      {
-        id: "generative-evaluation-boundary",
-        sectionId: "overview",
-        intuition:
-          "사진의 선명도, 다양한 장면을 빠뜨리지 않는 coverage, prompt 충실도와 생성 시간을 한 자로 잴 수 없는 것과 같습니다.",
-        workedExample:
-          "두 모델의 held-out NLL·FID·precision/recall·CLIP condition score·NFE·wall-clock latency를 각각 열로 두고 같은 dataset·sample count·preprocessing을 기록합니다.",
-        boundary:
-          "FID 하나나 선별 sample grid만으로 likelihood·mode coverage·memorization·human utility를 결론 내리지 않습니다. Metric의 feature extractor와 sample count도 결과 일부입니다.",
-      },
-    ],
-    conceptStages: [
-      {
-        label: "생성 목표",
-        relation: "Observation·condition·support와 원하는 output을 먼저 정의",
-        concepts: [
-          "probability-distribution",
-          "conditional-probability",
+        "label": "01 Compute",
+        "relation": "필요한 density·inference·sampling 연산을 고릅니다.",
+        "concepts": [
           "generative-distribution-contract",
-        ],
+          "density-sampling-tractability"
+        ]
       },
       {
-        label: "비교 좌표",
-        relation:
-          "Density·likelihood·inference·sampling에서 직접 얻는 quantity를 구분",
-        concepts: [
-          "generative-distribution-contract",
+        "label": "02 Evaluate",
+        "relation": "서로 다른 결과와 비용을 별도 축에서 측정합니다.",
+        "concepts": [
           "density-sampling-tractability",
-        ],
+          "generative-evaluation-boundary"
+        ]
       },
       {
-        label: "Likelihood 경로",
-        relation:
-          "Chain rule 또는 latent integration·변환으로 normalized density 구성",
-        concepts: [
-          "probability-chain-rule",
-          "autoregressive-generative-factorization",
+        "label": "03 Route",
+        "relation": "선택한 연산을 소유한 family 글로 이동합니다.",
+        "concepts": [
+          "generative-evaluation-boundary"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "sectionId": "overview",
+        "requiredConcepts": [
+          "generative-distribution-contract"
+        ],
+        "question": "고양이 생성의 x·c·support를 정의하세요.",
+        "answerChecklist": [
+          "x image shape",
+          "c prompt",
+          "pixel support",
+          "new sample"
+        ]
+      },
+      {
+        "level": "basic",
+        "sectionId": "overview",
+        "requiredConcepts": [
+          "generative-distribution-contract"
+        ],
+        "question": "p(x)와 p(x|c)의 질문 차이를 설명하세요.",
+        "answerChecklist": [
+          "unconditional",
+          "condition fixed",
+          "same observation",
+          "support"
+        ]
+      },
+      {
+        "level": "basic",
+        "sectionId": "tractability",
+        "requiredConcepts": [
+          "density-sampling-tractability"
+        ],
+        "question": "Density evaluation·latent inference·sampling을 구분하세요.",
+        "answerChecklist": [
+          "score observation",
+          "infer hidden cause",
+          "draw new sample",
+          "different operations"
+        ]
+      },
+      {
+        "level": "basic",
+        "sectionId": "evaluation",
+        "requiredConcepts": [
+          "density-sampling-tractability"
+        ],
+        "question": ".8과 .25 probability의 likelihood·log-likelihood·평균 NLL을 계산하세요.",
+        "answerChecklist": [
+          "product .2",
+          "log about -1.609",
+          "average NLL about .805",
+          "not quality"
+        ]
+      },
+      {
+        "level": "basic",
+        "sectionId": "tractability",
+        "requiredConcepts": [
+          "density-sampling-tractability"
+        ],
+        "question": "Autoregressive·flow·GAN의 직접 계산 가능한 양을 비교하세요.",
+        "answerChecklist": [
+          "AR likelihood",
+          "flow inverse density",
+          "GAN sample signal",
+          "constraints"
+        ]
+      },
+      {
+        "level": "basic",
+        "sectionId": "evaluation",
+        "requiredConcepts": [
+          "generative-evaluation-boundary"
+        ],
+        "question": "생성 모델 release 표의 다섯 평가 열을 쓰세요.",
+        "answerChecklist": [
+          "NLL",
+          "quality",
+          "coverage",
+          "condition",
+          "latency"
+        ]
+      },
+      {
+        "level": "advanced",
+        "sectionId": "evaluation",
+        "requiredConcepts": [
+          "generative-distribution-contract"
+        ],
+        "question": "Continuous density 값과 point probability를 혼동한 예를 고치세요.",
+        "answerChecklist": [
+          "density unit",
+          "region mass",
+          "support",
+          "same preprocessing",
+          "no direct probability"
+        ]
+      },
+      {
+        "level": "advanced",
+        "sectionId": "tractability",
+        "requiredConcepts": [
+          "density-sampling-tractability"
+        ],
+        "question": "Exact density와 low-latency sampling 요구가 충돌하는 제품의 후보표를 만드세요.",
+        "answerChecklist": [
+          "required operation",
+          "AR path",
+          "flow constraint",
+          "GAN boundary",
+          "measure"
+        ]
+      },
+      {
+        "level": "advanced",
+        "sectionId": "evaluation",
+        "requiredConcepts": [
+          "generative-evaluation-boundary"
+        ],
+        "question": "NLL은 좋지만 coverage가 나쁜 후보를 판정하세요.",
+        "answerChecklist": [
+          "separate metrics",
+          "held-out protocol",
+          "missing modes",
+          "product requirement",
+          "no total rank"
+        ]
+      },
+      {
+        "level": "advanced",
+        "sectionId": "family-map",
+        "requiredConcepts": [
+          "generative-distribution-contract",
+          "generative-evaluation-boundary"
+        ],
+        "question": "Family selection release receipt를 작성하세요.",
+        "answerChecklist": [
+          "data contract",
+          "required operations",
+          "quality slices",
+          "latency hardware",
+          "rollback"
+        ]
+      }
+    ]
+  },
+  "ai/autoregressive-generative-models": {
+    "entryLevel": true,
+    "entryNote": "Token·prefix·conditional을 처음 정의하고 두 token 예에서 chain rule을 계산합니다.",
+    "coreIdea": "Autoregressive model은 joint sequence probability를 prefix conditional의 exact product로 분해해 teacher-forced likelihood를 학습하지만 generation은 앞 token이 다음 조건을 만들기 때문에 순차 dependency를 가집니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "autoregressive-generative-factorization",
+        "role": "Joint sequence를 prefix conditional product로 분해하고 training과 sampling 경계를 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "autoregressive-generative-factorization",
+        "sectionId": "factorization",
+        "intuition": "첫 event가 일어나고 그 결과 뒤 다음 event도 일어날 확률을 한 경로에서 차례로 곱합니다.",
+        "workedExample": "p(x1=1)=.6, p(x2=0|x1=1)=.5이면 joint p(1,0)=.3입니다.",
+        "boundary": "Factorization은 exact하지만 ordering·conditional capacity·sampled-prefix error는 별도입니다.",
+        "proofIdea": "Conditional definition p(a,b)=p(a)p(b|a)를 T개 위치로 반복 적용합니다.",
+        "counterexample": "Conditional을 더하면 mutually exclusive alternative를 계산할 뿐 같은 sequence path의 joint가 아닙니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "00 Token",
+        "relation": "Token과 prefix를 정의합니다.",
+        "concepts": [
+          "autoregressive-generative-factorization"
+        ]
+      },
+      {
+        "label": "01 Factor",
+        "relation": "Conditional을 곱해 joint를 만듭니다.",
+        "concepts": [
+          "autoregressive-generative-factorization"
+        ]
+      },
+      {
+        "label": "02 Train",
+        "relation": "Known targets를 병렬 점수화합니다.",
+        "concepts": [
+          "autoregressive-generative-factorization"
+        ]
+      },
+      {
+        "label": "03 Sample",
+        "relation": "생성의 순차 dependency를 측정합니다.",
+        "concepts": [
+          "autoregressive-generative-factorization"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "sectionId": "sequence",
+        "requiredConcepts": [
+          "autoregressive-generative-factorization"
+        ],
+        "question": "Token과 prefix를 t=4에서 정의하세요.",
+        "answerChecklist": [
+          "x4 current",
+          "x1 to x3 prefix",
+          "ordering",
+          "conditional"
+        ]
+      },
+      {
+        "level": "basic",
+        "sectionId": "factorization",
+        "requiredConcepts": [
+          "autoregressive-generative-factorization"
+        ],
+        "question": "p(x1=.6)과 conditional .5의 joint를 계산하세요.",
+        "answerChecklist": [
+          "multiply",
+          "0.3",
+          "same event path",
+          "not sum"
+        ]
+      },
+      {
+        "level": "basic",
+        "sectionId": "factorization",
+        "requiredConcepts": [
+          "autoregressive-generative-factorization"
+        ],
+        "question": "세 token chain-rule factorization을 쓰세요.",
+        "answerChecklist": [
+          "first marginal",
+          "second conditional",
+          "third conditional",
+          "product"
+        ]
+      },
+      {
+        "level": "basic",
+        "sectionId": "factorization",
+        "requiredConcepts": [
+          "autoregressive-generative-factorization"
+        ],
+        "question": "Log가 product를 sum으로 바꾸는 이유를 설명하세요.",
+        "answerChecklist": [
+          "log product",
+          "token terms",
+          "numerical stability",
+          "NLL"
+        ]
+      },
+      {
+        "level": "basic",
+        "sectionId": "train-sample",
+        "requiredConcepts": [
+          "autoregressive-generative-factorization"
+        ],
+        "question": "Teacher forcing과 sampling을 비교하세요.",
+        "answerChecklist": [
+          "targets known",
+          "parallel scores",
+          "sample prefix",
+          "sequential decisions"
+        ]
+      },
+      {
+        "level": "basic",
+        "sectionId": "train-sample",
+        "requiredConcepts": [
+          "autoregressive-generative-factorization"
+        ],
+        "question": "KV cache가 없애는 것과 못 없애는 것을 구분하세요.",
+        "answerChecklist": [
+          "projection recompute",
+          "stored KV",
+          "token dependency remains",
+          "memory grows"
+        ]
+      },
+      {
+        "level": "advanced",
+        "sectionId": "boundary",
+        "requiredConcepts": [
+          "autoregressive-generative-factorization"
+        ],
+        "question": "Ordering을 바꿔도 joint가 exact한 조건과 학습 난이도 변화를 설명하세요.",
+        "answerChecklist": [
+          "chain rule exact",
+          "different conditional",
+          "capacity",
+          "inductive bias",
+          "compare"
+        ]
+      },
+      {
+        "level": "advanced",
+        "sectionId": "boundary",
+        "requiredConcepts": [
+          "autoregressive-generative-factorization"
+        ],
+        "question": "True prefix 학습과 sampled prefix 생성의 exposure 반례를 만드세요.",
+        "answerChecklist": [
+          "early wrong token",
+          "shifted prefix",
+          "unseen state",
+          "error propagation",
+          "evaluate"
+        ]
+      },
+      {
+        "level": "advanced",
+        "sectionId": "train-sample",
+        "requiredConcepts": [
+          "autoregressive-generative-factorization"
+        ],
+        "question": "T가 두 배일 때 sequential decode critical path를 분석하세요.",
+        "answerChecklist": [
+          "T decisions",
+          "per-token cost",
+          "cache",
+          "batching boundary",
+          "latency measure"
+        ]
+      },
+      {
+        "level": "advanced",
+        "sectionId": "boundary",
+        "requiredConcepts": [
+          "autoregressive-generative-factorization"
+        ],
+        "question": "AR release receipt를 작성하세요.",
+        "answerChecklist": [
+          "tokenizer",
+          "ordering",
+          "NLL",
+          "tokens per second",
+          "TTFT",
+          "memory",
+          "rollback"
+        ]
+      }
+    ]
+  },
+  "ai/latent-variable-generative-models": {
+    "entryLevel": true,
+    "entryNote": "숨은 원인 z·prior·decoder·posterior를 두 branch mixture로 하나씩 정의합니다.",
+    "coreIdea": "Latent-variable model은 관측하지 않은 생성 원인 z의 joint contribution을 모두 합해 p(x)를 만들고, posterior가 어렵다면 q(z|x)로 계산 가능한 ELBO를 최적화하되 inference gap을 exact likelihood와 구분합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "latent-variable-marginalization",
+        "role": "숨은 branch의 prior와 conditional을 곱해 합산합니다."
+      },
+      {
+        "id": "evidence-lower-bound",
+        "role": "Approximate posterior로 계산한 bound와 true posterior gap을 분리합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "latent-variable-marginalization",
+        "sectionId": "marginalization",
+        "intuition": "어느 원인이었는지 모르므로 각 원인이 선택되고 x도 나올 확률을 모두 더합니다.",
+        "workedExample": ".75×.2+.25×.8=.35입니다.",
+        "boundary": "연속 고차원 z에서는 integral이 intractable할 수 있고 z의 의미는 자동 식별되지 않습니다."
+      },
+      {
+        "id": "evidence-lower-bound",
+        "sectionId": "elbo",
+        "intuition": "계산 가능한 q를 발판으로 쓰고 true posterior와 다른 만큼 아래에 남습니다.",
+        "workedExample": "q=p(z|x)이면 KL gap이 0이라 ELBO=log p(x)입니다.",
+        "boundary": "ELBO 증가는 perceptual quality·disentanglement의 자동 개선이 아닙니다.",
+        "proofIdea": "ELBO에 KL(q||p(z|x))를 더하면 log p(x)가 되는 항등식과 KL≥0을 사용합니다.",
+        "counterexample": "q가 posterior의 중요한 mode를 놓치면 gap이 크며 ELBO를 exact likelihood로 부를 수 없습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "00 Cause",
+        "relation": "Prior와 latent cause를 둡니다.",
+        "concepts": [
+          "latent-variable-marginalization"
+        ]
+      },
+      {
+        "label": "01 Sum",
+        "relation": "모든 branch contribution을 합합니다.",
+        "concepts": [
+          "latent-variable-marginalization"
+        ]
+      },
+      {
+        "label": "02 Infer",
+        "relation": "q로 posterior를 근사합니다.",
+        "concepts": [
           "latent-variable-marginalization",
-          "evidence-lower-bound",
-          "normalizing-flow-change-of-variables",
-        ],
+          "evidence-lower-bound"
+        ]
       },
       {
-        label: "Comparison·score 경로",
-        relation:
-          "Normalized density 대신 sample ratio 또는 local density direction 학습",
-        concepts: [
-          "adversarial-density-ratio",
+        "label": "03 Bound",
+        "relation": "ELBO와 inference gap을 구분합니다.",
+        "concepts": [
+          "evidence-lower-bound"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "sectionId": "latent-cause",
+        "requiredConcepts": [
+          "latent-variable-marginalization"
+        ],
+        "question": "Prior·decoder·marginal·posterior를 정의하세요.",
+        "answerChecklist": [
+          "p(z)",
+          "p(x|z)",
+          "p(x)",
+          "p(z|x)"
+        ]
+      },
+      {
+        "level": "basic",
+        "sectionId": "marginalization",
+        "requiredConcepts": [
+          "latent-variable-marginalization"
+        ],
+        "question": ".75,.2,.25,.8 mixture의 p(x)를 계산하세요.",
+        "answerChecklist": [
+          ".15 contribution",
+          ".20 contribution",
+          "sum .35",
+          "latent unobserved"
+        ]
+      },
+      {
+        "level": "basic",
+        "sectionId": "marginalization",
+        "requiredConcepts": [
+          "latent-variable-marginalization"
+        ],
+        "question": "Discrete sum이 continuous z에서 무엇으로 바뀌는지 말하세요.",
+        "answerChecklist": [
+          "integral",
+          "joint density",
+          "all z",
+          "tractability"
+        ]
+      },
+      {
+        "level": "basic",
+        "sectionId": "elbo",
+        "requiredConcepts": [
+          "evidence-lower-bound"
+        ],
+        "question": "Approximate posterior q의 역할을 설명하세요.",
+        "answerChecklist": [
+          "encoder",
+          "amortized",
+          "tractable",
+          "not true posterior"
+        ]
+      },
+      {
+        "level": "basic",
+        "sectionId": "elbo",
+        "requiredConcepts": [
+          "evidence-lower-bound"
+        ],
+        "question": "ELBO의 reconstruction과 prior KL을 구분하세요.",
+        "answerChecklist": [
+          "expected log likelihood",
+          "q samples",
+          "KL to prior",
+          "subtract"
+        ]
+      },
+      {
+        "level": "basic",
+        "sectionId": "elbo",
+        "requiredConcepts": [
+          "evidence-lower-bound"
+        ],
+        "question": "ELBO equality 조건을 말하세요.",
+        "answerChecklist": [
+          "q equals posterior",
+          "gap KL zero",
+          "ELBO equals log evidence",
+          "condition"
+        ]
+      },
+      {
+        "level": "advanced",
+        "sectionId": "elbo",
+        "requiredConcepts": [
+          "evidence-lower-bound"
+        ],
+        "question": "ELBO와 log evidence 사이의 항등식을 KL non-negativity까지 사용해 단계별로 유도하세요.",
+        "answerChecklist": [
+          "add subtract log q",
+          "expectation",
+          "posterior Bayes",
+          "KL gap",
+          "nonnegative"
+        ]
+      },
+      {
+        "level": "advanced",
+        "sectionId": "elbo",
+        "requiredConcepts": [
+          "evidence-lower-bound"
+        ],
+        "question": "q가 한 posterior mode를 놓치는 반례를 만드세요.",
+        "answerChecklist": [
+          "multimodal posterior",
+          "restricted q",
+          "missing mass",
+          "positive gap",
+          "not exact"
+        ]
+      },
+      {
+        "level": "advanced",
+        "sectionId": "latent-cause",
+        "requiredConcepts": [
+          "latent-variable-marginalization"
+        ],
+        "question": "Latent가 사람이 붙인 의미와 다를 수 있는 반례를 설명하세요.",
+        "answerChecklist": [
+          "rotation",
+          "nonidentifiability",
+          "same likelihood",
+          "semantic not guaranteed",
+          "probe"
+        ]
+      },
+      {
+        "level": "advanced",
+        "sectionId": "elbo",
+        "requiredConcepts": [
+          "latent-variable-marginalization",
+          "evidence-lower-bound"
+        ],
+        "question": "Latent model release receipt를 작성하세요.",
+        "answerChecklist": [
+          "prior",
+          "decoder likelihood",
+          "q family",
+          "ELBO gap estimate",
+          "quality",
+          "rollback"
+        ]
+      }
+    ],
+    "papers": [
+      {
+        "title": "Auto-Encoding Variational Bayes",
+        "href": "https://arxiv.org/abs/1312.6114",
+        "problem": "Intractable posterior가 있는 latent model 학습",
+        "contribution": "Amortized encoder와 reparameterization estimator",
+        "assumptions": "논문의 differentiable latent family·estimator",
+        "evidenceScope": "논문이 제시한 ELBO estimator 유도와 MNIST·Frey Face 실험 범위",
+        "notClaim": "Disentanglement·perceptual quality 자동 보장이 아님",
+        "sectionId": "paper-aevb"
+      }
+    ]
+  },
+  "ai/normalizing-flows": {
+    "entryLevel": true,
+    "entryNote": "Base coordinate·bijection·Jacobian을 1D x=2z 예로 정의합니다.",
+    "coreIdea": "Normalizing flow는 tractable base density를 differentiable bijection으로 data space에 옮기고 inverse Jacobian determinant로 local volume 변화를 보정해 exact sampling·inference·likelihood를 연결합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "normalizing-flow-change-of-variables",
+        "role": "가역 좌표 변환의 volume 변화만큼 density를 보정합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "normalizing-flow-change-of-variables",
+        "sectionId": "change-of-variables",
+        "intuition": "고무판 칸을 두 배 넓혀도 안의 probability mass는 같으므로 density는 절반이 됩니다.",
+        "workedExample": "x=2z이면 z=x/2, |dz/dx|=1/2라 pX(x)=pZ(x/2)/2입니다.",
+        "boundary": "같은 dimension의 differentiable bijection과 tractable inverse·determinant가 필요합니다.",
+        "proofIdea": "작은 region의 mass pX(x)dx=pZ(z)dz와 dz=|det ∂z/∂x|dx를 결합합니다.",
+        "counterexample": "x=z²는 두 inverse branch가 있어 한 branch의 determinant만 쓰면 mass를 누락합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "00 Base",
+        "relation": "쉬운 base density를 둡니다.",
+        "concepts": [
+          "normalizing-flow-change-of-variables"
+        ]
+      },
+      {
+        "label": "01 Transform",
+        "relation": "Bijection으로 data 좌표를 만듭니다.",
+        "concepts": [
+          "normalizing-flow-change-of-variables"
+        ]
+      },
+      {
+        "label": "02 Correct",
+        "relation": "Jacobian으로 density를 보정합니다.",
+        "concepts": [
+          "normalizing-flow-change-of-variables"
+        ]
+      },
+      {
+        "label": "03 Verify",
+        "relation": "Inverse·likelihood·sample과 실패 경계를 검사합니다.",
+        "concepts": [
+          "normalizing-flow-change-of-variables"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "sectionId": "bijection",
+        "requiredConcepts": [
+          "normalizing-flow-change-of-variables"
+        ],
+        "question": "Base z와 data x의 역할을 구분하세요.",
+        "answerChecklist": [
+          "easy density",
+          "sample z",
+          "forward x",
+          "same dimension"
+        ]
+      },
+      {
+        "level": "basic",
+        "sectionId": "bijection",
+        "requiredConcepts": [
+          "normalizing-flow-change-of-variables"
+        ],
+        "question": "Bijection의 forward와 inverse를 쓰세요.",
+        "answerChecklist": [
+          "x=f(z)",
+          "z=f inverse x",
+          "one to one",
+          "both computable"
+        ]
+      },
+      {
+        "level": "basic",
+        "sectionId": "change-of-variables",
+        "requiredConcepts": [
+          "normalizing-flow-change-of-variables"
+        ],
+        "question": "x=2z의 inverse derivative를 계산하세요.",
+        "answerChecklist": [
+          "z=x/2",
+          "derivative 1/2",
+          "absolute",
+          "volume ratio"
+        ]
+      },
+      {
+        "level": "basic",
+        "sectionId": "change-of-variables",
+        "requiredConcepts": [
+          "normalizing-flow-change-of-variables"
+        ],
+        "question": "pX(x)=pZ(x/2)/2를 계산하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "base location",
+          "stretched length",
+          "same mass",
+          "half density"
+        ]
+      },
+      {
+        "level": "basic",
+        "sectionId": "change-of-variables",
+        "requiredConcepts": [
+          "normalizing-flow-change-of-variables"
+        ],
+        "question": "Jacobian determinant가 high dimension에서 뜻하는 것을 설명하세요.",
+        "answerChecklist": [
+          "local volume",
+          "matrix derivative",
+          "determinant scalar",
+          "absolute"
+        ]
+      },
+      {
+        "level": "basic",
+        "sectionId": "bijection",
+        "requiredConcepts": [
+          "normalizing-flow-change-of-variables"
+        ],
+        "question": "Flow가 직접 제공하는 세 연산을 말하세요.",
+        "answerChecklist": [
+          "sample",
+          "inverse latent",
+          "exact density",
+          "architecture constraint"
+        ]
+      },
+      {
+        "level": "advanced",
+        "sectionId": "failure-boundary",
+        "requiredConcepts": [
+          "normalizing-flow-change-of-variables"
+        ],
+        "question": "x=z²에 단일 inverse 공식을 쓰면 안 되는 이유를 증명하세요.",
+        "answerChecklist": [
+          "z plus minus",
+          "two branches",
+          "not bijection",
+          "missing mass",
+          "sum branches"
+        ]
+      },
+      {
+        "level": "advanced",
+        "sectionId": "failure-boundary",
+        "requiredConcepts": [
+          "normalizing-flow-change-of-variables"
+        ],
+        "question": "Dimension을 줄이는 decoder가 flow 공식과 충돌하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "dimension mismatch",
+          "no bijection",
+          "singular Jacobian",
+          "different model"
+        ]
+      },
+      {
+        "level": "advanced",
+        "sectionId": "failure-boundary",
+        "requiredConcepts": [
+          "normalizing-flow-change-of-variables"
+        ],
+        "question": "Exact likelihood와 perceptual quality가 다르게 순위화되는 평가를 설계하세요.",
+        "answerChecklist": [
+          "held-out NLL",
+          "sample quality",
+          "same data",
+          "separate columns",
+          "no total rank"
+        ]
+      },
+      {
+        "level": "advanced",
+        "sectionId": "failure-boundary",
+        "requiredConcepts": [
+          "normalizing-flow-change-of-variables"
+        ],
+        "question": "Flow release receipt를 작성하세요.",
+        "answerChecklist": [
+          "base",
+          "transform stack",
+          "inverse parity",
+          "log determinant",
+          "NLL",
+          "latency",
+          "rollback"
+        ]
+      }
+    ],
+    "papers": [
+      {
+        "title": "Density Estimation using Real NVP",
+        "href": "https://arxiv.org/abs/1605.08803",
+        "problem": "High-dimensional exact density와 sampling 양립",
+        "contribution": "Affine coupling과 multi-scale flow",
+        "assumptions": "Differentiable bijection·tractable inverse와 determinant",
+        "evidenceScope": "논문의 likelihood·sample 실험",
+        "notClaim": "Perceptual quality 우위나 가역성의 무비용을 뜻하지 않음",
+        "sectionId": "paper-real-nvp"
+      }
+    ]
+  },
+  "ai/adversarial-density-ratios": {
+    "entryLevel": true,
+    "entryNote": "Real source·generated source·discriminator를 하나씩 정의하고 3:1 예를 계산합니다.",
+    "coreIdea": "GAN discriminator는 고정 generator와 충분한 capacity에서 real density를 real+generated density 합으로 나눈 source posterior를 내지만, 이 이상적 density-ratio 결과는 finite alternating training의 수렴 보장이 아닙니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "adversarial-density-ratio",
+        "role": "Optimal discriminator의 source ratio와 실제 training 경계를 구분합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "adversarial-density-ratio",
+        "sectionId": "optimal-ratio",
+        "intuition": "두 상자에서 나온 물건 중 현재 모양 x가 어느 상자 출신인지 local 비율로 판정합니다.",
+        "workedExample": "Real과 generated density 비가 3:1이면 D*=3/(3+1)=.75입니다.",
+        "boundary": "고정 G·무제한 D·pointwise optimum 전제이며 D=.5만으로 distribution equality를 결론내리지 않습니다.",
+        "proofIdea": "a log D+b log(1-D)를 D로 미분해 0으로 두면 D*=a/(a+b)입니다.",
+        "counterexample": "상수 .5만 출력하는 discriminator는 전혀 다른 두 distribution도 구분하지 못합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "00 Sources",
+        "relation": "Real과 generated source를 분리합니다.",
+        "concepts": [
+          "adversarial-density-ratio"
+        ]
+      },
+      {
+        "label": "01 Compare",
+        "relation": "같은 x의 local density를 비교합니다.",
+        "concepts": [
+          "adversarial-density-ratio"
+        ]
+      },
+      {
+        "label": "02 Normalize",
+        "relation": "Real 몫을 전체 source contribution으로 나눕니다.",
+        "concepts": [
+          "adversarial-density-ratio"
+        ]
+      },
+      {
+        "label": "03 Bound",
+        "relation": "이론적 optimum과 finite training을 구분합니다.",
+        "concepts": [
+          "adversarial-density-ratio"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "sectionId": "two-sources",
+        "requiredConcepts": [
+          "adversarial-density-ratio"
+        ],
+        "question": "같은 위치 x에서 real source의 p_data와 generator source의 p_g가 각각 무엇을 뜻하는지 정의하세요.",
+        "answerChecklist": [
+          "real source",
+          "generator source",
+          "same x",
+          "not sample list"
+        ]
+      },
+      {
+        "level": "basic",
+        "sectionId": "two-sources",
+        "requiredConcepts": [
+          "adversarial-density-ratio"
+        ],
+        "question": "Discriminator output의 의미를 설명하세요.",
+        "answerChecklist": [
+          "source probability",
+          "real label",
+          "local signal",
+          "not density"
+        ]
+      },
+      {
+        "level": "basic",
+        "sectionId": "optimal-ratio",
+        "requiredConcepts": [
+          "adversarial-density-ratio"
+        ],
+        "question": "3:1 density에서 D*를 계산하세요.",
+        "answerChecklist": [
+          "sum 4",
+          "real 3",
+          "divide",
+          "0.75"
+        ]
+      },
+      {
+        "level": "basic",
+        "sectionId": "optimal-ratio",
+        "requiredConcepts": [
+          "adversarial-density-ratio"
+        ],
+        "question": "두 density가 같을 때 D*를 계산하세요.",
+        "answerChecklist": [
+          "a equals b",
+          "a over 2a",
+          "0.5",
+          "ideal condition"
+        ]
+      },
+      {
+        "level": "basic",
+        "sectionId": "optimal-ratio",
+        "requiredConcepts": [
+          "adversarial-density-ratio"
+        ],
+        "question": "왜 denominator가 두 density의 합인지 설명하세요.",
+        "answerChecklist": [
+          "two sources",
+          "total contribution",
+          "normalize",
+          "posterior"
+        ]
+      },
+      {
+        "level": "basic",
+        "sectionId": "two-sources",
+        "requiredConcepts": [
+          "adversarial-density-ratio"
+        ],
+        "question": "Density ratio와 normalized generator density를 구분하세요.",
+        "answerChecklist": [
+          "relative source",
+          "no pg normalization output",
+          "sample comparison",
+          "boundary"
+        ]
+      },
+      {
+        "level": "advanced",
+        "sectionId": "optimal-ratio",
+        "requiredConcepts": [
+          "adversarial-density-ratio"
+        ],
+        "question": "Optimal discriminator를 pointwise 미분해 유도하세요.",
+        "answerChecklist": [
+          "a log D",
+          "b log one minus D",
+          "derivative zero",
+          "a over a plus b"
+        ]
+      },
+      {
+        "level": "advanced",
+        "sectionId": "training-boundary",
+        "requiredConcepts": [
+          "adversarial-density-ratio"
+        ],
+        "question": "D=.5인데 distribution이 다른 반례를 만드세요.",
+        "answerChecklist": [
+          "constant class",
+          "insufficient capacity",
+          "different supports",
+          "same output",
+          "not equality"
+        ]
+      },
+      {
+        "level": "advanced",
+        "sectionId": "training-boundary",
+        "requiredConcepts": [
+          "adversarial-density-ratio"
+        ],
+        "question": "이론적 JSD optimum과 alternating dynamics를 구분하세요.",
+        "answerChecklist": [
+          "fixed G",
+          "optimal D",
+          "finite steps",
+          "moving objective",
+          "mode collapse"
+        ]
+      },
+      {
+        "level": "advanced",
+        "sectionId": "training-boundary",
+        "requiredConcepts": [
+          "adversarial-density-ratio"
+        ],
+        "question": "Adversarial signal release receipt를 작성하세요.",
+        "answerChecklist": [
+          "data split",
+          "G D capacity",
+          "loss",
+          "coverage",
+          "stability seeds",
+          "rollback"
+        ]
+      }
+    ],
+    "papers": [
+      {
+        "title": "Generative Adversarial Nets",
+        "href": "https://arxiv.org/abs/1406.2661",
+        "problem": "Normalized generator likelihood 없는 분포 학습",
+        "contribution": "Minimax game과 optimal discriminator 분석",
+        "assumptions": "충분한 capacity·고정 generator·pointwise optimum",
+        "evidenceScope": "원 논문의 optimal-discriminator 정리와 MNIST·TFD·CIFAR-10 sample 실험 범위",
+        "notClaim": "Finite alternating training의 수렴 보장이 아님",
+        "sectionId": "paper-gan"
+      }
+    ]
+  },
+  "ai/score-based-generative-models": {
+    "entryLevel": true,
+    "entryNote": "Density·log density·gradient를 1D Gaussian에서 정의한 뒤 diffusion noise predictor와 연결합니다.",
+    "coreIdea": "Score는 log density의 local ascent direction이고, VP Gaussian diffusion의 noise predictor는 corruption 반대 방향을 noise standard deviation으로 나눠 score로 변환하므로 minus와 scale correction의 역할을 각각 설명해야 합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "score-function-field",
+        "role": "한 distribution의 log-density local direction을 정의합니다."
+      },
+      {
+        "id": "diffusion-score-parameterization",
+        "role": "Predicted noise의 방향과 scale을 score 단위로 변환합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "score-function-field",
+        "sectionId": "gaussian-score",
+        "intuition": "등고선 지도에서 현재 점의 고도가 가장 빨리 높아지는 화살표입니다.",
+        "workedExample": "Standard Gaussian에서 score=-x이므로 x=2에서는 -2로 원점 쪽입니다.",
+        "boundary": "Normalized density 값·global mode label·finite-step convergence를 직접 주지 않습니다."
+      },
+      {
+        "id": "diffusion-score-parameterization",
+        "sectionId": "noise-score",
+        "intuition": "더한 noise의 반대편으로 돌아가되 noise level마다 자의 눈금을 맞춥니다.",
+        "workedExample": "Noise standard deviation .5와 εθ=.8이면 score=-.8/.5=-1.6입니다.",
+        "boundary": "VP Gaussian ε-prediction 식이며 VE·v-prediction·solver에서는 scale과 target이 달라집니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "00 Density",
+        "relation": "한 distribution과 log density를 정의합니다.",
+        "concepts": [
+          "score-function-field"
+        ]
+      },
+      {
+        "label": "01 Direction",
+        "relation": "Coordinate gradient로 local score를 만듭니다.",
+        "concepts": [
+          "score-function-field"
+        ]
+      },
+      {
+        "label": "02 Corrupt",
+        "relation": "Clean signal과 Gaussian noise를 알려진 scale로 섞습니다.",
+        "concepts": [
           "score-function-field",
-          "diffusion-score-parameterization",
-        ],
+          "diffusion-score-parameterization"
+        ]
       },
       {
-        label: "평가",
-        relation: "이론적 quantity와 실제 quality·coverage·조건·비용을 분리",
-        concepts: [
-          "density-sampling-tractability",
-          "generative-evaluation-boundary",
-        ],
-      },
+        "label": "03 Reverse",
+        "relation": "Noise direction을 뒤집고 scale을 맞춥니다.",
+        "concepts": [
+          "diffusion-score-parameterization"
+        ]
+      }
     ],
-    exercises: [
+    "exercises": [
       {
-        level: "basic",
-        question:
-          "고양이 사진 생성과 '검은 고양이' prompt 조건 생성을 p(x)와 p(x|c)로 구분하고 x·c·support를 정의할 수 있을까요?",
-        answerChecklist: [
-          "x를 image tensor로 정의한다.",
-          "c를 text condition으로 정의한다.",
-          "Pixel range·resolution·data population과 새 sample 기준을 적는다.",
+        "level": "basic",
+        "sectionId": "score-field",
+        "requiredConcepts": [
+          "score-function-field"
         ],
-        requiredConcepts: [
-          "generative-distribution-contract",
-          "conditional-probability",
-        ],
-        sectionId: "overview",
+        "question": "Density·log density·score를 구분하세요.",
+        "answerChecklist": [
+          "p x",
+          "log p x",
+          "coordinate gradient",
+          "different quantities"
+        ]
       },
       {
-        level: "basic",
-        question:
-          "Binary sequence x1=1,x2=0의 joint probability를 두 conditional로 분해하고 training과 sampling의 실행 차이를 설명할 수 있을까요?",
-        answerChecklist: [
-          "p(1,0)=p(x1=1)p(x2=0|x1=1)을 쓴다.",
-          "Log-likelihood가 두 log term의 합임을 말한다.",
-          "Teacher-forced training과 sequential sampling을 구분한다.",
+        "level": "basic",
+        "sectionId": "gaussian-score",
+        "requiredConcepts": [
+          "score-function-field"
         ],
-        requiredConcepts: [
-          "probability-chain-rule",
-          "autoregressive-generative-factorization",
-        ],
-        sectionId: "likelihood",
+        "question": "Standard Gaussian의 log density와 score를 쓰세요.",
+        "answerChecklist": [
+          "constant minus x squared over two",
+          "differentiate",
+          "minus x",
+          "constant vanishes"
+        ]
       },
       {
-        level: "basic",
-        question:
-          "Autoregressive·flow·GAN·diffusion을 likelihood 계산·구조 제약·sampling 경로·latency로 비교해 요구에 맞는 후보를 고를 수 있을까요?",
-        answerChecklist: [
-          "Autoregressive는 exact chain-rule likelihood와 sequential sampling을 함께 적는다.",
-          "Flow는 exact density·양방향 계산과 bijection/Jacobian 제약을 함께 적는다.",
-          "GAN은 normalized density 없이 빠른 generator sample을, diffusion은 score와 여러 network evaluation을 쓴다고 구분한다.",
+        "level": "basic",
+        "sectionId": "gaussian-score",
+        "requiredConcepts": [
+          "score-function-field"
         ],
-        requiredConcepts: [
-          "density-sampling-tractability",
-          "autoregressive-generative-factorization",
-          "normalizing-flow-change-of-variables",
-          "adversarial-density-ratio",
-          "diffusion-score-parameterization",
-        ],
-        sectionId: "overview",
+        "question": "x=2와 x=-1의 score 방향을 계산하세요.",
+        "answerChecklist": [
+          "-2 left",
+          "1 right",
+          "toward zero",
+          "local direction"
+        ]
       },
       {
-        level: "basic",
-        question:
-          "두 observation에 model probability 0.8과 0.25가 주어졌을 때 dataset likelihood·log-likelihood·평균 NLL을 계산할 수 있을까요?",
-        answerChecklist: [
-          "Likelihood 0.8×0.25=0.2를 계산한다.",
-          "Log-likelihood log 0.2≈−1.609를 계산한다.",
-          "평균 NLL이 약 0.805이며 NLL만으로 perceptual quality를 결론낼 수 없다고 말한다.",
+        "level": "basic",
+        "sectionId": "noise-score",
+        "requiredConcepts": [
+          "diffusion-score-parameterization"
         ],
-        requiredConcepts: ["logarithm", "maximum-likelihood"],
-        sectionId: "likelihood",
+        "question": "VP forward 식의 clean signal과 noise 항을 구분하세요.",
+        "answerChecklist": [
+          "sqrt alpha x0",
+          "sqrt one minus alpha epsilon",
+          "known scales",
+          "xt"
+        ]
       },
       {
-        level: "basic",
-        question:
-          "두 값의 discrete latent z에서 prior와 conditional probability가 주어졌을 때 p(x)를 marginalize할 수 있을까요?",
-        answerChecklist: [
-          "p(z=0)=0.75와 p(z=1)=0.25를 각각 conditional에 곱한다.",
-          "0.75×0.2+0.25×0.8=0.35를 계산한다.",
-          "Continuous high-dimensional z에서는 합이 적분으로 바뀌어 intractable할 수 있다고 설명한다.",
+        "level": "basic",
+        "sectionId": "noise-score",
+        "requiredConcepts": [
+          "diffusion-score-parameterization"
         ],
-        requiredConcepts: ["expectation", "latent-variable-marginalization"],
-        sectionId: "latent",
+        "question": "εθ 앞에 minus가 붙는 이유를 설명하세요.",
+        "answerChecklist": [
+          "noise outward direction",
+          "reverse",
+          "high density",
+          "clean direction"
+        ]
       },
       {
-        level: "basic",
-        question:
-          "Real과 generated density 비가 3:1인 위치의 optimal discriminator와 standard Gaussian의 x=2에서 score를 각각 계산하고 두 신호의 차이를 설명할 수 있을까요?",
-        answerChecklist: [
-          "D*(x)=3/(3+1)=0.75를 계산한다.",
-          "Gaussian score ∇x log p(x)=−x이므로 x=2에서 −2를 계산한다.",
-          "Discriminator는 두 분포의 비교 비율, score는 한 분포 log-density의 local 방향이며 둘 다 normalized density 자체는 아니라고 구분한다.",
+        "level": "basic",
+        "sectionId": "noise-score",
+        "requiredConcepts": [
+          "diffusion-score-parameterization"
         ],
-        requiredConcepts: ["adversarial-density-ratio", "score-function-field"],
-        sectionId: "implicit",
+        "question": "Noise scale .5와 εθ=.8의 score를 계산하세요.",
+        "answerChecklist": [
+          "minus .8",
+          "divide .5",
+          "-1.6",
+          "units"
+        ]
       },
       {
-        level: "advanced",
-        question:
-          "Maximum likelihood의 NLL이 forward KL과 θ에 무관한 data entropy로 분해되는 식을 유도하고 coverage 해석의 한계를 말할 수 있을까요?",
-        answerChecklist: [
-          "−Epdata log pθ에 log pdata를 더하고 뺀다.",
-          "H(pdata)+KL(pdata||pθ)를 얻는다.",
-          "Finite data·misspecification·perceptual quality 한계를 구분한다.",
+        "level": "advanced",
+        "sectionId": "gaussian-score",
+        "requiredConcepts": [
+          "score-function-field"
         ],
-        requiredConcepts: [
-          "maximum-likelihood",
-          "kl-divergence",
-          "density-sampling-tractability",
-        ],
-        sectionId: "likelihood",
+        "question": "Normalization constant 없이 score를 계산할 수 있는 이유를 유도하세요.",
+        "answerChecklist": [
+          "log unnormalized",
+          "add constant",
+          "gradient constant zero",
+          "local only"
+        ]
       },
       {
-        level: "advanced",
-        question:
-          "ELBO를 유도하고 equality 조건과 bound가 느슨해지는 q family 반례를 제시할 수 있을까요?",
-        answerChecklist: [
-          "q를 곱하고 나누거나 KL 항을 더하고 뺀다.",
-          "ELBO+KL(q||posterior)=log evidence를 얻는다.",
-          "q=posterior equality와 missing-mode 반례를 설명한다.",
+        "level": "advanced",
+        "sectionId": "noise-score",
+        "requiredConcepts": [
+          "diffusion-score-parameterization"
         ],
-        requiredConcepts: [
-          "latent-variable-marginalization",
-          "evidence-lower-bound",
-          "kl-divergence",
-        ],
-        sectionId: "latent",
+        "question": "Minus는 맞지만 noise scale division을 뺀 반례를 설명하세요.",
+        "answerChecklist": [
+          "different t",
+          "different sigma",
+          "mismatched magnitude",
+          "wrong gradient units",
+          "sampling drift"
+        ]
       },
       {
-        level: "advanced",
-        question:
-          "z가 standard Gaussian이고 x=2z인 1D flow의 pX(x)를 계산한 뒤 x=z²에 같은 공식을 바로 쓰면 안 되는 이유를 설명할 수 있을까요?",
-        answerChecklist: [
-          "z=x/2와 inverse derivative 1/2을 구한다.",
-          "pX(x)=pZ(x/2)/2를 쓴다.",
-          "x=z²의 두 inverse branch와 non-bijection을 지적한다.",
+        "level": "advanced",
+        "sectionId": "noise-score",
+        "requiredConcepts": [
+          "diffusion-score-parameterization"
         ],
-        requiredConcepts: [
-          "normalizing-flow-change-of-variables",
-          "probability-distribution",
-        ],
-        sectionId: "latent",
+        "question": "VP ε-prediction 식을 VE 또는 v-prediction에 그대로 쓰면 안 되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "different forward",
+          "different target",
+          "scale mapping",
+          "convention receipt",
+          "derive"
+        ]
       },
       {
-        level: "advanced",
-        question:
-          "Original GAN의 optimal discriminator를 유도하고 D=1/2가 distribution equality를 뜻하지 않는 finite-capacity 반례를 만들 수 있을까요?",
-        answerChecklist: [
-          "Pointwise objective를 미분해 pdata/(pdata+pg)를 얻는다.",
-          "대입하면 JSD와 연결됨을 설명한다.",
-          "상수 discriminator class 또는 미최적화 상태를 반례로 든다.",
+        "level": "advanced",
+        "sectionId": "papers-score",
+        "requiredConcepts": [
+          "score-function-field",
+          "diffusion-score-parameterization"
         ],
-        requiredConcepts: [
-          "adversarial-density-ratio",
-          "probability-distribution",
-        ],
-        sectionId: "implicit",
-      },
+        "question": "Score model release receipt를 작성하세요.",
+        "answerChecklist": [
+          "forward process",
+          "schedule",
+          "target convention",
+          "solver NFE",
+          "quality coverage",
+          "latency",
+          "rollback"
+        ]
+      }
     ],
-    papers: [
+    "papers": [
       {
-        title: "Auto-Encoding Variational Bayes",
-        href: "https://arxiv.org/abs/1312.6114",
-        problem:
-          "Intractable posterior가 있는 continuous latent-variable model을 gradient로 효율적으로 학습하는 문제",
-        contribution:
-          "Reparameterization estimator와 amortized recognition model로 variational lower bound를 최적화",
-        assumptions:
-          "논문의 latent distribution·differentiability·Monte Carlo estimator와 dataset·architecture 조건",
-        evidenceScope:
-          "ELBO estimator 유도와 MNIST·Frey Face 등 논문 실험 범위",
-        notClaim:
-          "ELBO가 exact likelihood이거나 좋은 perceptual sample·disentanglement를 자동 보장한다는 뜻은 아님",
-        sectionId: "paper-vae-map",
+        "title": "Generative Modeling by Estimating Gradients of the Data Distribution",
+        "href": "https://arxiv.org/abs/1907.05600",
+        "problem": "Data manifold 주변 score estimation과 sampling",
+        "contribution": "Noise-conditioned score와 annealed Langevin dynamics",
+        "assumptions": "Noise perturbation·finite schedule·논문 architecture",
+        "evidenceScope": "Score objective와 image 실험",
+        "notClaim": "Finite-step sample이 exact distribution이라는 보장이 아님",
+        "sectionId": "papers-score"
       },
       {
-        title: "Generative Adversarial Nets",
-        href: "https://arxiv.org/abs/1406.2661",
-        problem:
-          "Generator의 normalized likelihood를 계산하지 않고 data distribution에서 sample하는 model을 학습하는 문제",
-        contribution:
-          "Generator와 discriminator의 minimax game 및 optimal discriminator·global equilibrium 분석",
-        assumptions:
-          "충분한 capacity, 고정 generator에 대한 discriminator optimum과 논문의 alternating procedure를 구분",
-        evidenceScope: "논문의 이론 정리와 MNIST·TFD·CIFAR-10 sample 평가 범위",
-        notClaim:
-          "Finite GAN training의 수렴·mode coverage·metric 우위를 보장한다는 뜻은 아님",
-        sectionId: "paper-gan-map",
-      },
-      {
-        title: "Density Estimation using Real NVP",
-        href: "https://arxiv.org/abs/1605.08803",
-        problem:
-          "High-dimensional data에서 exact likelihood·sampling·latent inference를 모두 tractable하게 만드는 문제",
-        contribution:
-          "Affine coupling layer와 multi-scale architecture를 이용한 invertible density model",
-        assumptions:
-          "Differentiable bijection·같은 dimension·tractable inverse와 determinant 구조",
-        evidenceScope:
-          "CIFAR-10·ImageNet·LSUN 등 논문의 log-likelihood와 sample·latent manipulation 범위",
-        notClaim:
-          "높은 likelihood가 perceptual quality와 같은 순위를 만들거나 가역성 제약이 공짜라는 뜻은 아님",
-        sectionId: "paper-real-nvp",
-      },
-      {
-        title: "Denoising Diffusion Probabilistic Models",
-        href: "https://arxiv.org/abs/2006.11239",
-        problem:
-          "고정 forward noising의 reverse transition을 학습해 high-quality image를 생성하는 문제",
-        contribution:
-          "Weighted variational bound와 denoising score matching의 연결 및 simplified noise-prediction objective",
-        assumptions:
-          "Gaussian Markov process·schedule·parameterization과 논문의 architecture·sampling steps",
-        evidenceScope: "CIFAR-10·LSUN 등의 likelihood·FID·sample 결과 범위",
-        notClaim:
-          "모든 diffusion variant가 같은 objective·step 수·latency를 갖거나 exact reverse를 푼다는 뜻은 아님",
-        sectionId: "paper-ddpm-map",
-      },
-      {
-        title:
-          "Generative Modeling by Estimating Gradients of the Data Distribution",
-        href: "https://arxiv.org/abs/1907.05600",
-        problem:
-          "Low-dimensional data manifold에서 score matching과 Langevin sampling이 겪는 low-density·mixing 문제",
-        contribution:
-          "여러 noise scale의 score network와 annealed Langevin dynamics 제안",
-        assumptions:
-          "Noise-perturbed distributions·score estimator·finite Langevin schedule과 image experiment 조건",
-        evidenceScope: "CIFAR-10·CelebA·LSUN의 sample quality와 ablation 범위",
-        notClaim:
-          "Finite-step annealed Langevin sample이 exact data distribution이거나 density value를 직접 제공한다는 뜻은 아님",
-        sectionId: "paper-ncsn-map",
-      },
-      {
-        title:
-          "Score-Based Generative Modeling through Stochastic Differential Equations",
-        href: "https://arxiv.org/abs/2011.13456",
-        problem:
-          "Discrete noise-level score models를 continuous-time framework에서 통합하고 sampling·likelihood 경로를 설계하는 문제",
-        contribution:
-          "Forward SDE·reverse-time SDE·predictor-corrector와 probability-flow ODE 제시",
-        assumptions:
-          "SDE regularity·정확한 score의 이론과 neural approximation·numerical solver를 구분",
-        evidenceScope:
-          "논문의 image generation·likelihood·inverse problem 실험과 solver 범위",
-        notClaim:
-          "ODE와 SDE sample path가 같거나 임의의 적은 NFE에서도 같은 quality를 보장한다는 뜻은 아님",
-        sectionId: "paper-score-sde-map",
-      },
-    ],
+        "title": "Denoising Diffusion Probabilistic Models",
+        "href": "https://arxiv.org/abs/2006.11239",
+        "problem": "Gaussian noising의 reverse process 학습",
+        "contribution": "Variational bound와 noise-prediction objective 연결",
+        "assumptions": "논문의 VP schedule·parameterization·sampling steps",
+        "evidenceScope": "해당 likelihood·FID·sample 결과",
+        "notClaim": "모든 sampler가 같은 step·latency를 갖는다는 뜻이 아님",
+        "sectionId": "papers-score"
+      }
+    ]
   },
   "ai/feature-engineering": {
     coreIdea:

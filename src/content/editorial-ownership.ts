@@ -1213,41 +1213,148 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "generative-theory": {
-    title: "생성 모델 이론 글이 소유하는 범위",
-    owns: [
-      "관측 sample·data distribution·conditional generation의 문제 정의",
-      "Likelihood 계산 가능성·sampling path·inference·evaluation을 나눈 공통 비교 축",
-      "Autoregressive factorization·latent marginalization·ELBO·change of variables의 연결",
-      "Adversarial comparison·score field·diffusion parameterization의 전제와 이론적 경계",
+    "title": "생성 문제와 평가 지도가 소유하는 범위",
+    "owns": [
+      "Observation·condition·support의 생성 계약",
+      "Density·inference·sampling의 tractability 구분",
+      "Likelihood·quality·coverage·조건·latency의 평가 경계"
     ],
-    reuses: [
+    "reuses": [
       {
-        label: "확률분포·조건부확률",
-        href: "/ai/math-probability-expectation-variance",
+        "label": "확률분포·조건부확률",
+        "href": "/ai/math-probability-expectation-variance"
       },
-      { label: "Random variable·expectation", href: "/ai/math-random-variables-expectation" },
       {
-        label: "Logarithm·곱의 합 변환",
-        href: "/ai/math-exponents-logarithms",
-      },
-      { label: "Likelihood·entropy·KL divergence", href: "/ai/cross-entropy" },
-      { label: "VAE 세부 유도와 구현", href: "/ai/vae" },
-      { label: "GAN objective와 안정화", href: "/ai/gan" },
-      {
-        label: "Diffusion·SDE·ODE·flow matching",
-        href: "/ai/diffusion-models",
-      },
+        "label": "Likelihood·KL",
+        "href": "/ai/cross-entropy"
+      }
     ],
-    evidence: [
+    "evidence": [
       {
-        kind: "primary-source",
-        rule: "VAE·GAN·Real NVP·DDPM·NCSN·Score-SDE claim은 각 논문의 objective·architecture·dataset·sampling 조건 안에서 읽는다.",
-      },
-      {
-        kind: "standard",
-        rule: "Likelihood·sample quality·coverage·condition adherence·latency는 하나의 점수로 합치지 않고 model output과 deployment 계약에 맞게 따로 평가한다.",
-      },
+        "kind": "standard",
+        "rule": "생성 family는 하나의 metric으로 총서열화하지 않고 동일 data·preprocessing·hardware에서 필요한 양을 따로 측정한다."
+      }
+    ]
+  },
+  "autoregressive-generative-models": {
+    "title": "자기회귀 factorization 글이 소유하는 범위",
+    "owns": [
+      "Token·prefix·conditional의 정의",
+      "Chain-rule joint factorization",
+      "Teacher forcing과 sequential sampling 경계"
     ],
+    "reuses": [
+      {
+        "label": "확률 chain rule",
+        "href": "/ai/math-probability-expectation-variance"
+      },
+      {
+        "label": "Transformer와 KV cache",
+        "href": "/ai/transformer-architecture"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "standard",
+        "rule": "Factorization의 exactness와 learned conditional·ordering·decode latency를 분리한다."
+      }
+    ]
+  },
+  "latent-variable-generative-models": {
+    "title": "잠재변수와 ELBO 글이 소유하는 범위",
+    "owns": [
+      "Prior·decoder·marginal·posterior 정의",
+      "Latent marginalization",
+      "ELBO와 inference gap"
+    ],
+    "reuses": [
+      {
+        "label": "Expectation·KL",
+        "href": "/ai/cross-entropy"
+      },
+      {
+        "label": "VAE 구현",
+        "href": "/ai/vae"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "ELBO·reparameterization claim은 AEVB의 estimator와 latent family 전제 안에서 읽는다."
+      }
+    ]
+  },
+  "normalizing-flows": {
+    "title": "Normalizing flow 글이 소유하는 범위",
+    "owns": [
+      "Base density와 bijection",
+      "Jacobian volume correction",
+      "Exact likelihood와 가역성 경계"
+    ],
+    "reuses": [
+      {
+        "label": "Jacobian",
+        "href": "/ai/multivariable-calculus"
+      },
+      {
+        "label": "확률분포",
+        "href": "/ai/math-probability-expectation-variance"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "Real NVP claim은 affine coupling·같은 dimension·tractable determinant 조건 안에서 읽는다."
+      }
+    ]
+  },
+  "adversarial-density-ratios": {
+    "title": "GAN density-ratio 글이 소유하는 범위",
+    "owns": [
+      "Real·generated source 구분",
+      "Optimal discriminator ratio",
+      "이상적 optimum과 finite training 경계"
+    ],
+    "reuses": [
+      {
+        "label": "GAN objective와 training",
+        "href": "/ai/gan"
+      },
+      {
+        "label": "Jensen–Shannon divergence",
+        "href": "/ai/cross-entropy"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "Optimal ratio와 equilibrium은 original GAN의 capacity·pointwise optimum 전제와 실제 alternating dynamics를 구분한다."
+      }
+    ]
+  },
+  "score-based-generative-models": {
+    "title": "Score와 diffusion parameterization 글이 소유하는 범위",
+    "owns": [
+      "Log-density local score",
+      "Gaussian score의 방향",
+      "VP noise predictor와 score의 scale 변환"
+    ],
+    "reuses": [
+      {
+        "label": "Gradient",
+        "href": "/ai/math-derivatives"
+      },
+      {
+        "label": "Diffusion 구현·sampling",
+        "href": "/ai/diffusion-models"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "NCSN·DDPM claim은 noise process·target convention·sampling schedule을 함께 고정한다."
+      }
+    ]
   },
   "feature-engineering": {
     title: "피처 엔지니어링 글이 소유하는 범위",

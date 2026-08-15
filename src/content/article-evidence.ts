@@ -301,45 +301,45 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "Rare positive class에서 ROC와 PR이 보여 주는 질문의 차이",
     },
   ],
-  "ai/generative-theory": [
+  "ai/generative-theory": [],
+  "ai/autoregressive-generative-models": [],
+  "ai/latent-variable-generative-models": [
     {
-      kind: "핵심 논문",
-      label: "Auto-Encoding Variational Bayes",
-      href: "https://arxiv.org/abs/1312.6114",
-      note: "Variational inference와 reparameterization을 이용한 VAE의 출발점",
+      "kind": "핵심 논문",
+      "label": "Auto-Encoding Variational Bayes",
+      "href": "https://arxiv.org/abs/1312.6114",
+      "note": "Variational inference와 reparameterization을 이용한 VAE의 출발점"
+    }
+  ],
+  "ai/normalizing-flows": [
+    {
+      "kind": "핵심 논문",
+      "label": "Density Estimation using Real NVP",
+      "href": "https://arxiv.org/abs/1605.08803",
+      "note": "가역 coupling transform으로 exact likelihood와 sampling을 구성"
+    }
+  ],
+  "ai/adversarial-density-ratios": [
+    {
+      "kind": "핵심 논문",
+      "label": "Generative Adversarial Nets",
+      "href": "https://arxiv.org/abs/1406.2661",
+      "note": "Generator와 discriminator의 minimax objective 및 optimal ratio 분석"
+    }
+  ],
+  "ai/score-based-generative-models": [
+    {
+      "kind": "핵심 논문",
+      "label": "Generative Modeling by Estimating Gradients of the Data Distribution",
+      "href": "https://arxiv.org/abs/1907.05600",
+      "note": "여러 noise level의 score estimation과 annealed Langevin sampling"
     },
     {
-      kind: "핵심 논문",
-      label: "Generative Adversarial Nets",
-      href: "https://arxiv.org/abs/1406.2661",
-      note: "Generator와 discriminator의 minimax objective를 제안한 GAN 원 논문",
-    },
-    {
-      kind: "핵심 논문",
-      label: "Density Estimation using Real NVP",
-      href: "https://arxiv.org/abs/1605.08803",
-      note: "가역 coupling transform으로 exact likelihood와 sampling을 구성",
-    },
-    {
-      kind: "핵심 논문",
-      label: "Denoising Diffusion Probabilistic Models",
-      href: "https://arxiv.org/abs/2006.11239",
-      note: "Denoising objective와 iterative reverse process의 기준 논문",
-    },
-    {
-      kind: "핵심 논문",
-      label:
-        "Generative Modeling by Estimating Gradients of the Data Distribution",
-      href: "https://arxiv.org/abs/1907.05600",
-      note: "여러 noise level의 score estimation과 annealed Langevin sampling",
-    },
-    {
-      kind: "핵심 논문",
-      label:
-        "Score-Based Generative Modeling through Stochastic Differential Equations",
-      href: "https://arxiv.org/abs/2011.13456",
-      note: "Reverse-time SDE와 probability-flow ODE를 하나의 continuous-time framework로 연결",
-    },
+      "kind": "핵심 논문",
+      "label": "Denoising Diffusion Probabilistic Models",
+      "href": "https://arxiv.org/abs/2006.11239",
+      "note": "Denoising objective와 iterative reverse process의 기준 논문"
+    }
   ],
   "ai/transformer-architecture": [
     {
