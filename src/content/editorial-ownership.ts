@@ -1074,41 +1074,36 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   bert: {
-    title: "BERT 글이 소유하는 범위",
-    owns: [
-      "Encoder의 양방향 visibility와 token·position·segment·padding 입력 계약",
-      "MLM selected position·80/10/10 corruption·loss target의 구분",
-      "NSP를 RoBERTa·ALBERT·ELECTRA가 바꾼 목적과 비교 증거의 경계",
-      "Sequence·token·span task head와 cross-encoder·bi-encoder transfer interface",
-    ],
-    reuses: [
-      { label: "WordPiece·special token·ID 호환성", href: "/ai/tokenizer" },
-      {
-        label: "Transformer block·position·visibility",
-        href: "/ai/transformer-architecture",
-      },
-      { label: "Q·K·V와 self-attention 계산", href: "/ai/attention-theory" },
-      {
-        label: "Static·contextual representation 경계",
-        href: "/ai/distributional-semantics",
-      },
-      {
-        label: "Sentence embedding과 retrieval 평가",
-        href: "/ai/sentence-embeddings",
-      },
-    ],
-    evidence: [
-      {
-        kind: "primary-source",
-        rule: "BERT·RoBERTa·ALBERT·ELECTRA·Sentence-BERT claim은 각 논문의 data·compute·task와 동시 변경 사항 안에서 해석한다.",
-      },
-      {
-        kind: "standard",
-        rule: "Input ID·mask·type·position shape와 checkpoint 호환성은 현재 library의 공식 API 계약까지 함께 확인한다.",
-      },
-    ],
+    title: "BERT encoder visibility 글이 소유하는 범위",
+    owns: ["Query가 양쪽 실제 token을 읽고 PAD key를 닫아 contextual state를 만드는 visibility 계약"],
+    reuses: [{ label: "Q·K·V와 attention score", href: "/ai/attention-theory" }],
+    evidence: [{ kind: "primary-source", rule: "BERT encoder claim은 원 논문의 입력·architecture 범위에서 해석한다." }],
   },
-  cnn: {
+  "bert-input-packing": {
+    title: "BERT input packing 글이 소유하는 범위",
+    owns: ["CLS·SEP·PAD와 token·position·segment·attention-mask tensor의 slot 정렬 계약"],
+    reuses: [{ label: "Tokenizer vocabulary와 checkpoint 호환성", href: "/ai/tokenizer" }],
+    evidence: [{ kind: "standard", rule: "Tensor shape와 optional input은 선택한 library·checkpoint version으로 확인한다." }],
+  },
+  "bert-mlm-corruption": {
+    title: "BERT MLM corruption 글이 소유하는 범위",
+    owns: ["Target selection, 80·10·10 input corruption과 selected-position original-token loss"],
+    reuses: [{ label: "Categorical negative log-likelihood", href: "/ai/cross-entropy" }],
+    evidence: [{ kind: "primary-source", rule: "Selection·branch 비율은 원 BERT recipe와 후속 변경을 구분한다." }],
+  },
+  "bert-pretraining-objectives": {
+    title: "BERT 후속 objective 글이 소유하는 범위",
+    owns: ["NSP·SOP·RTD의 example construction, prediction unit, compute 비교 경계"],
+    reuses: [{ label: "BERT MLM baseline", href: "/ai/bert-mlm-corruption" }],
+    evidence: [{ kind: "primary-source", rule: "RoBERTa·ALBERT·ELECTRA 결과는 동시 변경된 data·architecture·compute 안에서 해석한다." }],
+  },
+  "bert-task-heads": {
+    title: "BERT task head 글이 소유하는 범위",
+    owns: ["Sequence·token·span output shape와 cross-encoder·bi-encoder retrieval 경계"],
+    reuses: [{ label: "BERT contextual state", href: "/ai/bert" }],
+    evidence: [{ kind: "primary-source", rule: "Sentence embedding claim은 pooling·supervision·retrieval setting을 함께 기록한다." }],
+  },
+ cnn: {
     title: "CNN 글이 소유하는 범위",
     owns: [
       "Image tensor의 channel·spatial axes와 local cross-correlation 계산",

@@ -483,7 +483,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Bidirectional encoder visibility",
     definition:
       "각 실제 token query가 왼쪽과 오른쪽의 실제 token key를 모두 읽되 padding은 제외하도록 attention visibility를 구성하는 encoder 입력 계약입니다.",
-    canonicalHref: "/ai/bert#overview",
+    canonicalHref: "/ai/bert#visibility",
   },
   "bert-input-packing": {
     id: "bert-input-packing",
@@ -491,7 +491,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "BERT input packing",
     definition:
       "WordPiece IDs에 CLS·SEP·PAD를 배치하고 absolute position ID, token-type ID와 padding attention mask를 함께 만들어 encoder input을 구성하는 계약입니다.",
-    canonicalHref: "/ai/bert#input-format",
+    canonicalHref: "/ai/bert-input-packing#aligned-tensors",
   },
   "masked-language-modeling": {
     id: "masked-language-modeling",
@@ -500,7 +500,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Masked language modeling · MLM",
     definition:
       "입력 위치 일부를 고른 뒤 token을 mask·random·unchanged branch로 오염시키고, 선택된 위치에서 원래 vocabulary ID의 negative log-likelihood만 계산하는 pretraining objective입니다.",
-    canonicalHref: "/ai/bert#pre-training",
+    canonicalHref: "/ai/bert-mlm-corruption#objective",
   },
   "bert-corruption-policy": {
     id: "bert-corruption-policy",
@@ -508,7 +508,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "BERT 15% · 80/10/10 corruption policy",
     definition:
       "원 BERT에서 전체 위치 약 15%를 prediction 대상으로 고르고 그 안에서 80% MASK, 10% random, 10% unchanged input을 사용하는 data corruption recipe입니다.",
-    canonicalHref: "/ai/bert#pre-training",
+    canonicalHref: "/ai/bert-mlm-corruption#corruption",
   },
   "next-sentence-prediction": {
     id: "next-sentence-prediction",
@@ -517,7 +517,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Next sentence prediction · NSP",
     definition:
       "Segment B가 segment A의 실제 다음 문장인지 random sentence인지 CLS representation으로 분류하는 원 BERT의 auxiliary pretraining objective입니다.",
-    canonicalHref: "/ai/bert#pre-training",
+    canonicalHref: "/ai/bert-pretraining-objectives#nsp-sop",
   },
   "sentence-order-prediction": {
     id: "sentence-order-prediction",
@@ -526,7 +526,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Sentence-order prediction · SOP",
     definition:
       "같은 문서에서 이어지는 두 segment의 정상 순서와 뒤집힌 순서를 구분해 inter-sentence coherence를 학습하는 ALBERT의 auxiliary objective입니다.",
-    canonicalHref: "/ai/bert#pre-training",
+    canonicalHref: "/ai/bert-pretraining-objectives#nsp-sop",
   },
   "replaced-token-detection": {
     id: "replaced-token-detection",
@@ -535,7 +535,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Replaced-token detection · RTD",
     definition:
       "작은 generator가 일부 위치에 넣은 token인지 원래 data token인지 discriminator가 각 입력 위치에서 binary classification하는 ELECTRA pretraining objective입니다.",
-    canonicalHref: "/ai/bert#pre-training",
+    canonicalHref: "/ai/bert-pretraining-objectives#rtd",
   },
   "bert-task-head": {
     id: "bert-task-head",
@@ -543,7 +543,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "BERT task head",
     definition:
       "Sequence·token·span task가 요구하는 출력 단위에 맞춰 CLS 또는 각 token hidden state를 label logits이나 start·end score로 투영하는 downstream interface입니다.",
-    canonicalHref: "/ai/bert#fine-tuning",
+    canonicalHref: "/ai/bert-task-heads#task-head",
   },
   "cross-bi-encoder-boundary": {
     id: "cross-bi-encoder-boundary",
@@ -551,7 +551,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Cross-encoder · bi-encoder boundary",
     definition:
       "두 text를 함께 encoding해 token-level interaction score를 내는 cross-encoder와 각각 독립적으로 encoding해 재사용 가능한 vector를 만드는 bi-encoder의 품질·계산 경계입니다.",
-    canonicalHref: "/ai/bert#fine-tuning",
+    canonicalHref: "/ai/bert-task-heads#retrieval",
   },
   "image-tensor-layout": {
     id: "image-tensor-layout",

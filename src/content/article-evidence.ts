@@ -381,45 +381,23 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
   ],
   "ai/bert": [
-    {
-      kind: "핵심 논문",
-      label: "BERT: Pre-training of Deep Bidirectional Transformers",
-      href: "https://arxiv.org/abs/1810.04805",
-      note: "MLM·NSP와 encoder-only 사전학습의 원문",
-    },
-    {
-      kind: "핵심 논문",
-      label: "RoBERTa: A Robustly Optimized BERT Pretraining Approach",
-      href: "https://arxiv.org/abs/1907.11692",
-      note: "data·batch·dynamic masking과 NSP 제거를 포함해 BERT recipe를 재검토",
-    },
-    {
-      kind: "핵심 논문",
-      label:
-        "ELECTRA: Pre-training Text Encoders as Discriminators Rather Than Generators",
-      href: "https://arxiv.org/abs/2003.10555",
-      note: "replaced-token detection으로 encoder pretraining objective를 바꾼 연구",
-    },
-    {
-      kind: "핵심 논문",
-      label: "ALBERT: A Lite BERT for Self-supervised Learning",
-      href: "https://arxiv.org/abs/1909.11942",
-      note: "Factorized embedding·cross-layer sharing과 sentence-order prediction으로 BERT를 재설계",
-    },
-    {
-      kind: "핵심 논문",
-      label: "Sentence-BERT",
-      href: "https://arxiv.org/abs/1908.10084",
-      note: "문장 pair를 매번 함께 encoding하는 cross-encoder 비용을 siamese sentence embedding으로 바꾼 연구",
-    },
-    {
-      kind: "공식 문서",
-      label: "Hugging Face Transformers — BERT",
-      href: "https://huggingface.co/docs/transformers/model_doc/bert",
-      note: "input_ids·attention_mask·token_type_ids·position_ids와 task head의 현재 API 계약",
-    },
+    { kind: "핵심 논문", label: "BERT: Pre-training of Deep Bidirectional Transformers", href: "https://arxiv.org/abs/1810.04805", note: "양방향 encoder visibility와 BERT pretraining의 원문" },
   ],
-  "ai/resnet": [
+  "ai/bert-input-packing": [
+    { kind: "공식 문서", label: "Hugging Face Transformers — BERT inputs", href: "https://huggingface.co/docs/transformers/model_doc/bert", note: "input_ids·attention_mask·token_type_ids·position_ids의 현재 API 계약" },
+  ],
+  "ai/bert-mlm-corruption": [
+    { kind: "핵심 논문", label: "BERT masked language modeling", href: "https://arxiv.org/abs/1810.04805", note: "15% selection과 selected 위치의 80·10·10 corruption 근거" },
+  ],
+  "ai/bert-pretraining-objectives": [
+    { kind: "핵심 논문", label: "RoBERTa", href: "https://arxiv.org/abs/1907.11692", note: "BERT recipe와 NSP 제거를 함께 재검토" },
+    { kind: "핵심 논문", label: "ALBERT", href: "https://arxiv.org/abs/1909.11942", note: "Sentence-order prediction과 parameter-efficient architecture" },
+    { kind: "핵심 논문", label: "ELECTRA", href: "https://arxiv.org/abs/2003.10555", note: "Replaced-token detection의 generator·discriminator 설계" },
+  ],
+  "ai/bert-task-heads": [
+    { kind: "핵심 논문", label: "Sentence-BERT", href: "https://arxiv.org/abs/1908.10084", note: "Cross-encoder 비용을 independent sentence embedding과 retrieval로 전환" },
+  ],
+ "ai/resnet": [
     {
       kind: "핵심 논문",
       label: "Deep Residual Learning for Image Recognition",

@@ -42683,483 +42683,179 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/bert": {
-    coreIdea:
-      "BERT는 다음 token을 생성하는 decoder가 아니라 입력 전체에서 각 token의 contextual representation을 만드는 Transformer encoder입니다. 양쪽 실제 token을 읽는 visibility 때문에 정답 위치를 그대로 복사하지 못하도록 MLM corruption을 사용하며, pretraining 뒤에는 sequence·token·span 등 task의 출력 단위에 맞는 head와 함께 encoder를 fine-tuning합니다.",
-    assumedKnowledge: [
-      {
-        id: "tokenizer-checkpoint-compatibility",
-        role: "WordPiece와 CLS·SEP·PAD ID가 checkpoint embedding row와 일치하는지 확인합니다.",
-      },
-      {
-        id: "token-embedding",
-        role: "Discrete token·position·segment ID가 같은 hidden width의 vector row가 되는 과정을 읽습니다.",
-      },
-      {
-        id: "position-signal",
-        role: "원 BERT의 learned absolute position embedding과 maximum position 범위를 읽습니다.",
-      },
-      {
-        id: "attention-visibility",
-        role: "Causal·bidirectional·padding mask가 허용하는 query–key 관계를 구분합니다.",
-      },
-      {
-        id: "self-attention",
-        role: "같은 input sequence에서 token별 contextual hidden state를 만드는 계산을 재사용합니다.",
-      },
-      {
-        id: "cross-entropy-nll",
-        role: "MLM selected token과 downstream class의 정답 probability를 학습하는 loss를 읽습니다.",
-      },
-      {
-        id: "softmax-normalization",
-        role: "Vocabulary·class logits를 categorical probability로 바꿉니다.",
-      },
-      {
-        id: "static-contextual-representation",
-        role: "Word type별 static vector와 문장 instance별 BERT state를 구분합니다.",
-      },
-      {
-        id: "cosine-similarity",
-        role: "Bi-encoder가 독립적으로 만든 nonzero sentence vector를 비교하는 metric을 읽습니다.",
-      },
-    ],
+    entryLevel: true,
+    entryNote: "Attention 이름부터 외우지 않고 query 하나가 어느 token을 볼 수 있는지 그림으로 확인합니다.",
+    coreIdea: "BERT encoder는 입력 전체가 주어진 상태에서 각 실제 token이 왼쪽과 오른쪽의 실제 token을 읽어 contextual state를 만들고 PAD key는 닫습니다.",
+    assumedKnowledge: [],
     introducedHere: [
-      {
-        id: "bidirectional-encoder-visibility",
-        role: "모든 실제 token의 양쪽 context를 허용하고 padding은 제외하는 BERT attention 범위를 정의합니다.",
-      },
-      {
-        id: "bert-input-packing",
-        role: "CLS·SEP·PAD와 token·position·segment·attention-mask tensor의 역할을 구분합니다.",
-      },
-      {
-        id: "masked-language-modeling",
-        role: "오염된 sequence에서 선택 위치의 원래 vocabulary ID만 복원하는 objective를 계산합니다.",
-      },
-      {
-        id: "bert-corruption-policy",
-        role: "전체 위치 15% selection과 그 안의 80/10/10 input branch를 정확히 분리합니다.",
-      },
-      {
-        id: "next-sentence-prediction",
-        role: "원 BERT의 segment-level auxiliary objective와 encoder 정의를 구분합니다.",
-      },
-      {
-        id: "sentence-order-prediction",
-        role: "ALBERT가 같은 문서 segment의 순서 정보에 집중한 대안을 비교합니다.",
-      },
-      {
-        id: "replaced-token-detection",
-        role: "ELECTRA가 모든 위치에 가까운 binary supervision을 주는 방식을 MLM과 비교합니다.",
-      },
-      {
-        id: "bert-task-head",
-        role: "Sequence·token·span target이 어느 hidden state와 output shape를 읽는지 정합니다.",
-      },
-      {
-        id: "cross-bi-encoder-boundary",
-        role: "Text pair 상호작용 품질과 embedding 재사용 비용의 trade-off를 구분합니다.",
-      },
+      { id: "bidirectional-encoder-visibility", role: "Query별로 양쪽 실제 key를 열고 padding key를 닫는 encoder visibility를 정의합니다." },
     ],
     conceptExplanations: [
       {
         id: "bidirectional-encoder-visibility",
-        sectionId: "overview",
-        intuition:
-          "빈칸을 중심으로 왼쪽 문장과 오른쪽 문장을 모두 펼쳐 놓고 답을 추론하는 독해 방식입니다. 미래 token을 숨기는 생성 문제와 읽기 권한이 다릅니다.",
-        workedExample:
-          "‘나는 은행에서 [MASK]을 받았다’에서 mask 위치는 ‘은행에서’와 뒤의 ‘받았다’를 함께 읽어 ‘대출’ 후보를 표현할 수 있습니다.",
-        boundary:
-          "양쪽을 본다는 것은 두 방향으로 autoregressive generation한다는 뜻이 아닙니다. Padding은 보지 않아야 하고 unobserved future를 요구하는 strict streaming에는 그대로 사용할 수 없습니다.",
-      },
-      {
-        id: "bert-input-packing",
-        sectionId: "input-format",
-        intuition:
-          "두 문장을 한 상자에 넣되 시작·경계·빈 칸 표지와 각 물건의 위치·소속표를 따로 붙이는 과정입니다.",
-        workedExample:
-          "문장 pair는 [CLS] A [SEP] B [SEP] 뒤 [PAD]를 붙이고, 같은 길이의 token IDs·position IDs·token-type IDs·attention mask를 만듭니다.",
-        boundary:
-          "MASK token과 padding mask는 다릅니다. Library·checkpoint마다 type-vocab size·padding side·position limit·special-token IDs를 확인해야 합니다.",
-      },
-      {
-        id: "masked-language-modeling",
-        sectionId: "pre-training",
-        intuition:
-          "문장의 일부 답을 가리거나 바꿔 놓고 주변 단서를 이용해 원래 답을 맞히는 self-supervised 문제입니다.",
-        workedExample:
-          "Selected 위치 i의 input이 [MASK] 또는 random/unchanged가 되어도 target x_i는 corruption 전 token이고 loss는 i∈M에서만 계산합니다.",
-        boundary:
-          "전체 sequence joint likelihood나 left-to-right next-token likelihood가 아닙니다. Selection·corruption·loss mask와 dynamic masking policy를 함께 기록해야 합니다.",
-      },
-      {
-        id: "bert-corruption-policy",
-        sectionId: "pre-training",
-        intuition:
-          "먼저 시험 문제로 낼 위치를 고른 뒤, 그 문제의 힌트를 세 방식으로 보여 주는 2단계 sampling입니다.",
-        workedExample:
-          "Token 10,000개라면 기대상 1,500개가 target이고 그중 약 1,200개가 MASK, 150개가 random, 150개가 unchanged input이 됩니다.",
-        boundary:
-          "전체 위치의 80%를 mask하지 않습니다. 기대값은 실제 batch의 정확한 개수를 보장하지 않으며 special·padding token exclusion 정책이 필요합니다.",
-      },
-      {
-        id: "next-sentence-prediction",
-        sectionId: "pre-training",
-        intuition:
-          "두 segment가 실제 문서에서 바로 이어졌는지를 CLS에서 맞히는 원 BERT의 보조 시험입니다.",
-        workedExample:
-          "Positive에는 실제 다음 segment, negative에는 corpus에서 뽑은 random segment를 B로 넣고 IsNext/NotNext를 분류합니다.",
-        boundary:
-          "Topic 차이만으로 풀릴 수 있으며 BERT encoder의 필수 정의가 아닙니다. RoBERTa는 다른 data·batch·mask·training 변경과 함께 NSP를 제거했습니다.",
-      },
-      {
-        id: "sentence-order-prediction",
-        sectionId: "pre-training",
-        intuition:
-          "서로 무관한 문서를 가르는 대신 같은 문서의 두 구간이 정상 순서인지 뒤집혔는지를 맞혀 문장 간 coherence에 집중합니다.",
-        workedExample:
-          "같은 문서의 segment A,B에서 positive는 A→B, negative는 B→A로 구성해 순서를 분류합니다.",
-        boundary:
-          "ALBERT의 parameter factorization·layer sharing·training recipe와 함께 평가됐습니다. SOP 단독 효과를 다른 architecture에 그대로 이식해 보장할 수 없습니다.",
-      },
-      {
-        id: "replaced-token-detection",
-        sectionId: "pre-training",
-        intuition:
-          "빈칸 답 하나를 맞히는 대신 문장 모든 자리의 단어가 원본인지 교체품인지 검사하는 문제입니다.",
-        workedExample:
-          "Generator가 ‘고양이는 우유를 마신다’를 ‘고양이는 물을 마신다’로 바꾸면 discriminator는 각 위치에서 original/replaced label을 예측합니다.",
-        boundary:
-          "Generator가 우연히 원래 token을 뽑은 경우의 label convention과 generator/discriminator compute가 필요합니다. 모든 위치가 항상 어려운 negative는 아닙니다.",
-      },
-      {
-        id: "bert-task-head",
-        sectionId: "fine-tuning",
-        intuition:
-          "공통 encoder가 만든 자료를 문제지의 답안 형식에 맞춰 읽는 마지막 얇은 층입니다.",
-        workedExample:
-          "3-class sequence 분류는 CLS→3 logits, NER는 각 token→label logits, extractive QA는 각 token→start·end logits를 만듭니다.",
-        boundary:
-          "CLS가 보편적인 sentence similarity vector라는 뜻은 아닙니다. Truncation·label alignment·subword aggregation과 encoder freeze 여부가 task마다 다릅니다.",
-      },
-      {
-        id: "cross-bi-encoder-boundary",
-        sectionId: "fine-tuning",
-        intuition:
-          "두 문서를 한 방에서 함께 비교하면 정교하지만 매 pair마다 다시 만나야 하고, 따로 요약해 두면 빠르게 재사용할 수 있지만 직접 대화는 줄어듭니다.",
-        workedExample:
-          "문서 100만 개 검색에서 bi-encoder는 document vectors를 미리 저장하지만 cross-encoder는 query마다 후보 pair를 함께 forward해 reranking합니다.",
-        boundary:
-          "Vanilla BERT CLS를 저장하는 것만으로 강한 bi-encoder가 되지 않습니다. Pair supervision·pooling·negative sampling과 retrieval metric이 필요합니다.",
+        sectionId: "visibility",
+        intuition: "문장 전체를 펼쳐 놓고 현재 단어의 뜻을 왼쪽과 오른쪽 단서로 함께 고치는 독해 방식입니다.",
+        workedExample: "‘은행에서 대출을 받았다’의 ‘은행’ state는 뒤의 ‘대출’을 읽어 금융기관 의미를 강화하지만 PAD slot은 읽지 않습니다.",
+        boundary: "양방향 visibility는 두 방향으로 문장을 생성한다는 뜻이 아니며, 아직 도착하지 않은 future token을 요구하는 streaming decoder와 다릅니다.",
       },
     ],
     conceptStages: [
-      {
-        label: "입력과 visibility",
-        relation:
-          "WordPiece ID를 segment·position과 함께 packing하고 양쪽 실제 token만 허용",
-        concepts: [
-          "tokenizer-checkpoint-compatibility",
-          "token-embedding",
-          "position-signal",
-          "attention-visibility",
-          "self-attention",
-          "bert-input-packing",
-          "bidirectional-encoder-visibility",
-        ],
-      },
-      {
-        label: "Corruption",
-        relation:
-          "정답 복사를 막기 위해 target 위치와 input replacement를 따로 sampling",
-        concepts: [
-          "bert-corruption-policy",
-          "bidirectional-encoder-visibility",
-          "masked-language-modeling",
-          "cross-entropy-nll",
-        ],
-      },
-      {
-        label: "Recipe 비교",
-        relation:
-          "문장 관계와 token supervision bottleneck을 후속 objective로 비교",
-        concepts: [
-          "next-sentence-prediction",
-          "sentence-order-prediction",
-          "replaced-token-detection",
-          "masked-language-modeling",
-        ],
-      },
-      {
-        label: "Transfer",
-        relation: "Contextual state를 task output shape에 맞춰 fine-tuning",
-        concepts: [
-          "static-contextual-representation",
-          "bert-task-head",
-          "softmax-normalization",
-        ],
-      },
-      {
-        label: "Retrieval 경계",
-        relation:
-          "Pair-level interaction과 독립 embedding 재사용의 품질·비용 비교",
-        concepts: [
-          "bert-task-head",
-          "cosine-similarity",
-          "cross-bi-encoder-boundary",
-        ],
-      },
+      { label: "01 query", relation: "뜻을 다시 만들 token 위치를 하나 고릅니다.", concepts: ["bidirectional-encoder-visibility"] },
+      { label: "02 visible keys", relation: "왼쪽·현재·오른쪽 실제 token을 열고 PAD를 닫습니다.", concepts: ["bidirectional-encoder-visibility"] },
+      { label: "03 contextual state", relation: "허용 key의 value를 가중합해 현재 위치 state를 만듭니다.", concepts: ["bidirectional-encoder-visibility"] },
     ],
     exercises: [
-      {
-        level: "basic",
-        question:
-          "같은 길이 5의 sequence에서 causal decoder와 BERT encoder의 query 위치 2가 볼 수 있는 key를 비교하고 PAD가 있을 때 mask를 수정할 수 있을까요?",
-        answerChecklist: [
-          "Causal query 2는 key 0,1,2만 본다고 설명한다.",
-          "BERT query 2는 실제 token 0…4를 양쪽으로 본다고 비교한다.",
-          "PAD key에는 방향과 무관하게 −∞ additive mask를 적용한다고 말한다.",
-        ],
-        requiredConcepts: [
-          "attention-visibility",
-          "bidirectional-encoder-visibility",
-        ],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "문장 pair를 [CLS] A [SEP] B [SEP]와 PAD로 묶을 때 token·position·type·attention mask를 각각 만들고 의미를 설명할 수 있을까요?",
-        answerChecklist: [
-          "Special token을 포함한 token ID sequence를 만든다.",
-          "Position은 순서대로, type은 A/B segment에 맞춰 배정한다.",
-          "실제 token은 attention 1, PAD는 0으로 구분하고 MASK token과 혼동하지 않는다.",
-        ],
-        requiredConcepts: [
-          "tokenizer-checkpoint-compatibility",
-          "position-signal",
-          "bert-input-packing",
-        ],
-        sectionId: "input-format",
-      },
-      {
-        level: "basic",
-        question:
-          "Token 10,000개의 원 BERT corruption에서 기대 target·MASK·random·unchanged 수를 계산하고 loss가 어디에서 계산되는지 설명할 수 있을까요?",
-        answerChecklist: [
-          "Target 1,500개를 계산한다.",
-          "MASK 1,200개, random 150개, unchanged 150개를 계산한다.",
-          "세 branch 모두 selected 위치의 원래 token에 loss를 계산한다고 설명한다.",
-        ],
-        requiredConcepts: [
-          "bert-corruption-policy",
-          "masked-language-modeling",
-          "cross-entropy-nll",
-        ],
-        sectionId: "pre-training",
-      },
-      {
-        level: "basic",
-        question:
-          "감성 분류와 다음 token 생성을 비교할 때 원형 BERT encoder가 어느 작업에 바로 맞고, 왜 자유 형식 생성 model과 같지 않은지 설명할 수 있을까요?",
-        answerChecklist: [
-          "BERT encoder는 실제 input token의 왼쪽·오른쪽을 함께 읽어 contextual state를 만든다고 설명한다.",
-          "감성 분류는 CLS 등 input representation에 task head를 붙일 수 있다고 말한다.",
-          "원형 BERT에는 left-to-right generation head·causal decoding loop·cross-attention decoder가 없다고 구분한다.",
-        ],
-        requiredConcepts: [
-          "bidirectional-encoder-visibility",
-          "bert-task-head",
-        ],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "Encoder output shape가 [B,L,H]일 때 3-class sequence 분류, C-label NER, extractive QA의 output shape와 읽는 hidden state를 각각 적을 수 있을까요?",
-        answerChecklist: [
-          "Sequence 분류는 CLS 또는 pooler를 읽어 [B,3]을 만든다.",
-          "NER는 각 token state를 읽어 [B,L,C]를 만든다.",
-          "QA는 각 token 위치의 start·end score 두 개의 [B,L] tensor를 만든다.",
-        ],
-        requiredConcepts: ["bert-task-head"],
-        sectionId: "fine-tuning",
-      },
-      {
-        level: "basic",
-        question:
-          "[MASK] token과 padding attention mask가 각각 무엇을 바꾸는지 설명하고, PAD에 MLM target loss를 주면 안 되는 이유를 말할 수 있을까요?",
-        answerChecklist: [
-          "[MASK]는 선택된 원 token을 오염시키는 실제 vocabulary token이라고 설명한다.",
-          "Padding mask는 PAD key의 attention logit을 −∞로 만들어 weight를 0으로 만든다고 설명한다.",
-          "PAD는 문장 내용이 아니라 batch 길이 맞춤이므로 attention과 task/MLM loss에서 제외한다고 말한다.",
-        ],
-        requiredConcepts: [
-          "bert-input-packing",
-          "masked-language-modeling",
-          "attention-visibility",
-        ],
-        sectionId: "input-format",
-      },
-      {
-        level: "advanced",
-        question:
-          "RoBERTa 결과만 보고 NSP가 언제나 해롭다고 결론낼 수 없는 이유와 이를 분리할 controlled experiment를 설계할 수 있을까요?",
-        answerChecklist: [
-          "Data size·batch·training length·dynamic masking도 함께 바뀌었다고 지적한다.",
-          "같은 architecture·data·token budget·mask policy에서 NSP on/off만 비교한다.",
-          "여러 sentence-pair와 single-sentence downstream task를 별도로 평가한다.",
-        ],
-        requiredConcepts: [
-          "next-sentence-prediction",
-          "masked-language-modeling",
-        ],
-        sectionId: "pre-training",
-      },
-      {
-        level: "advanced",
-        question:
-          "MLM·SOP·RTD가 label을 만드는 위치와 예측 단위를 비교하고 같은 compute에서 sample efficiency를 평가하는 표를 설계할 수 있을까요?",
-        answerChecklist: [
-          "MLM은 selected 위치의 vocabulary ID, SOP는 CLS의 pair order, RTD는 각 위치의 binary label이라고 구분한다.",
-          "Generator 비용과 discriminator token 수를 포함해 compute를 맞춘다.",
-          "Held-out MLM/RTD loss보다 공통 downstream metric과 wall-clock·memory를 함께 비교한다.",
-        ],
-        requiredConcepts: [
-          "masked-language-modeling",
-          "sentence-order-prediction",
-          "replaced-token-detection",
-        ],
-        sectionId: "pre-training",
-      },
-      {
-        level: "advanced",
-        question:
-          "문서 100만 개 검색에서 cross-encoder와 bi-encoder를 조합한 retrieval pipeline을 설계하고 quality·latency·memory 측정 지점을 정할 수 있을까요?",
-        answerChecklist: [
-          "Bi-encoder document vector를 미리 계산해 ANN 후보를 찾는다.",
-          "상위 후보만 query와 함께 cross-encoder로 reranking한다.",
-          "Recall@k·NDCG·encoding/index memory·p50/p95 latency와 truncation을 분리 측정한다.",
-        ],
-        requiredConcepts: [
-          "bert-task-head",
-          "cross-bi-encoder-boundary",
-          "cosine-similarity",
-        ],
-        sectionId: "fine-tuning",
-      },
-      {
-        level: "advanced",
-        question:
-          "Bidirectional encoder가 원래 token을 그대로 본 채 모든 위치의 token ID를 예측하도록 하면 왜 copy shortcut이 생기는지 설명하고 corruption의 효과를 분리하는 실험을 설계할 수 있을까요?",
-        answerChecklist: [
-          "Query 위치가 자기 token을 볼 수 있으면 주변 문맥 없이 입력 embedding을 복사해 정답을 맞힐 수 있다고 설명한다.",
-          "Prediction target 위치와 model에 보이는 corrupted input을 분리해야 한다고 말한다.",
-          "같은 architecture·data·token budget에서 uncorrupted all-position objective와 selected-position corruption을 비교한다.",
-          "Held-out reconstruction뿐 아니라 공통 downstream task와 compute를 함께 측정한다.",
-        ],
-        requiredConcepts: [
-          "bidirectional-encoder-visibility",
-          "masked-language-modeling",
-          "bert-corruption-policy",
-        ],
-        sectionId: "pre-training",
-      },
+      { level: "basic", question: "길이 5 문장에서 query 2가 읽을 수 있는 실제 key를 적으세요.", answerChecklist: ["0", "1", "2", "3", "4", "양쪽 허용"], requiredConcepts: ["bidirectional-encoder-visibility"], sectionId: "visibility" },
+      { level: "basic", question: "마지막 두 slot이 PAD이면 query 1의 visible set을 적으세요.", answerChecklist: ["0", "1", "2", "PAD 3 제외", "PAD 4 제외", "mask"], requiredConcepts: ["bidirectional-encoder-visibility"], sectionId: "visibility" },
+      { level: "basic", question: "Causal decoder의 query 2와 BERT query 2를 비교하세요.", answerChecklist: ["causal 0..2", "BERT future actual token 허용", "padding 별도", "generation과 encoding 구분", "visibility contract", "same attention score form"], requiredConcepts: ["bidirectional-encoder-visibility"], sectionId: "encoder-boundary" },
+      { level: "basic", question: "Visibility set과 attention weight의 역할을 구분하세요.", answerChecklist: ["set은 허용 여부", "score는 관련성", "softmax는 허용 key 안에서", "weight 합 1", "value 결합", "PAD weight 0"], requiredConcepts: ["bidirectional-encoder-visibility"], sectionId: "visibility" },
+      { level: "basic", question: "문맥에 따라 같은 token state가 달라지는 예를 드세요.", answerChecklist: ["같은 표면 token", "서로 다른 좌우 단서", "다른 attention", "다른 contextual state", "token type과 instance 구분", "구체 문장"], requiredConcepts: ["bidirectional-encoder-visibility"], sectionId: "overview" },
+      { level: "basic", question: "양방향이라는 말을 생성 방향으로 오해하면 안 되는 이유를 설명하세요.", answerChecklist: ["입력 전체가 먼저 존재", "encoder state", "next-token loop 없음", "causal mask 없음", "future 생성 아님", "task head 별도"], requiredConcepts: ["bidirectional-encoder-visibility"], sectionId: "encoder-boundary" },
+      { level: "advanced", question: "PAD mask를 빠뜨린 batch가 만드는 반례를 설계하세요.", answerChecklist: ["서로 다른 실제 길이", "PAD key 열림", "PAD embedding 유입", "길이와 prediction 상관", "mask 수정", "paired output 비교"], requiredConcepts: ["bidirectional-encoder-visibility"], sectionId: "encoder-boundary" },
+      { level: "advanced", question: "Strict streaming에 BERT visibility를 그대로 쓸 수 없는 이유와 대안을 설명하세요.", answerChecklist: ["future 미도착", "전체 입력 전제 위반", "latency", "causal/chunk mask", "quality trade-off", "boundary 명시"], requiredConcepts: ["bidirectional-encoder-visibility"], sectionId: "encoder-boundary" },
+      { level: "advanced", question: "같은 token의 static embedding과 contextual state를 분리 측정하세요.", answerChecklist: ["embedding row 고정", "문장 pair 변경", "같은 checkpoint", "visibility map", "state cosine 또는 distance", "문맥 원인 해석"], requiredConcepts: ["bidirectional-encoder-visibility"], sectionId: "visibility" },
+      { level: "advanced", question: "Visibility 구현 변경의 release test를 설계하세요.", answerChecklist: ["fixed tensor", "expected visible set", "PAD 반례", "causal 반례", "state parity", "dtype tolerance", "version receipt", "rollback"], requiredConcepts: ["bidirectional-encoder-visibility"], sectionId: "encoder-boundary" },
     ],
     papers: [
-      {
-        title:
-          "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding",
-        href: "https://arxiv.org/abs/1810.04805",
-        problem:
-          "Task별 labeled data가 적을 때 unlabeled text에서 깊은 양방향 encoder representation을 미리 학습해 transfer하는 문제",
-        contribution:
-          "Transformer encoder에 MLM·NSP pretraining과 얇은 task head의 end-to-end fine-tuning recipe를 결합",
-        assumptions:
-          "BookCorpus·Wikipedia, WordPiece, 원 논문의 base/large architecture·training budget과 11개 NLP task 설정을 전제로 함",
-        evidenceScope:
-          "BERT architecture·pretraining recipe와 GLUE·MultiNLI·SQuAD 등 원 논문의 fine-tuning 결과 범위",
-        notClaim:
-          "모든 encoder가 NSP를 필요로 하거나 양방향 visibility가 autoregressive generation에도 그대로 적합하다는 뜻은 아님",
-        sectionId: "paper-bert",
-      },
-      {
-        title: "RoBERTa: A Robustly Optimized BERT Pretraining Approach",
-        href: "https://arxiv.org/abs/1907.11692",
-        problem:
-          "비싼 pretraining과 서로 다른 private data·hyperparameter 때문에 BERT 후속 방법의 개선 원인을 공정하게 비교하기 어려운 문제",
-        contribution:
-          "Data·batch·training duration·sequence length·dynamic masking·NSP를 재검토한 BERT replication study를 수행",
-        assumptions:
-          "논문이 사용한 더 큰 corpus·training budget·byte-level BPE와 downstream benchmark 조건을 전제로 함",
-        evidenceScope:
-          "변경한 BERT recipe의 ablation과 GLUE·RACE·SQuAD 보고 결과 범위",
-        notClaim:
-          "NSP 제거 하나가 모든 개선을 만들었거나 어떤 규모에서도 NSP가 항상 해롭다는 단독 인과 결론은 아님",
-        sectionId: "paper-roberta",
-      },
-      {
-        title:
-          "ALBERT: A Lite BERT for Self-supervised Learning of Language Representations",
-        href: "https://arxiv.org/abs/1909.11942",
-        problem:
-          "BERT parameter 확대가 memory와 training time에 막히고 inter-sentence task의 supervision을 개선해야 하는 문제",
-        contribution:
-          "Factorized embedding parameterization·cross-layer sharing과 sentence-order prediction을 결합",
-        assumptions:
-          "논문의 parameter sharing·corpus·optimization·SOP construction과 GLUE·RACE·SQuAD 평가를 전제로 함",
-        evidenceScope:
-          "ALBERT parameter efficiency·scaling과 multi-sentence downstream 결과 범위",
-        notClaim:
-          "SOP 단독 효과가 parameter sharing·model scale과 무관하게 모든 encoder에서 재현된다는 뜻은 아님",
-        sectionId: "paper-albert",
-      },
-      {
-        title:
-          "ELECTRA: Pre-training Text Encoders as Discriminators Rather Than Generators",
-        href: "https://arxiv.org/abs/2003.10555",
-        problem:
-          "MLM이 입력의 작은 selected subset에서만 token identity loss를 계산해 compute 대비 supervision이 sparse한 문제",
-        contribution:
-          "작은 generator의 replacement를 각 위치에서 판별하는 replaced-token detection pretraining을 제안",
-        assumptions:
-          "Generator·discriminator size와 sampling, data·compute 회계 및 논문의 GLUE·SQuAD 설정을 전제로 함",
-        evidenceScope:
-          "RTD sample efficiency와 논문이 비교한 model size·compute·downstream 결과 범위",
-        notClaim:
-          "모든 generator quality·scale·language에서 RTD가 MLM보다 우수하거나 generation model에 그대로 적합하다는 뜻은 아님",
-        sectionId: "paper-electra",
-      },
-      {
-        title: "Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks",
-        href: "https://arxiv.org/abs/1908.10084",
-        problem:
-          "문장 pair를 BERT cross-encoder로 매번 함께 처리할 때 대규모 similarity search의 조합 수와 latency가 커지는 문제",
-        contribution:
-          "Siamese/triplet network와 pooling으로 독립 sentence embeddings를 학습해 cosine search를 가능하게 함",
-        assumptions:
-          "NLI·STS supervision, 논문의 pooling·loss와 semantic textual similarity evaluation을 전제로 함",
-        evidenceScope:
-          "Sentence-BERT의 STS quality와 pair search speed 비교 범위",
-        notClaim:
-          "Vanilla CLS가 별도 학습 없이 강한 sentence embedding이거나 bi-encoder가 cross-encoder 품질을 항상 유지한다는 뜻은 아님",
-        sectionId: "paper-sentence-bert",
-      },
-      {
-        title: "Hugging Face Transformers — BERT",
-        href: "https://huggingface.co/docs/transformers/model_doc/bert",
-        problem:
-          "현재 library에서 BERT checkpoint에 전달할 input tensor와 반환 state·task head shape를 정확히 맞추는 문제",
-        contribution:
-          "BertConfig·BertModel과 task-specific classes의 input IDs·mask·type·position·output API를 문서화",
-        assumptions:
-          "문서가 가리키는 현재 Transformers version과 선택한 pretrained checkpoint config를 전제로 함",
-        evidenceScope:
-          "현재 Hugging Face BERT implementation의 public API·shape·configuration 범위",
-        notClaim:
-          "원 논문의 모든 역사적 preprocessing을 규정하거나 다른 framework의 구현이 byte-for-byte 같다는 뜻은 아님",
-        sectionId: "paper-bert-api",
-      },
+      { title: "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding", href: "https://arxiv.org/abs/1810.04805", problem: "Unlabeled text에서 깊은 양방향 encoder representation을 미리 학습하는 문제", contribution: "Transformer encoder의 deep bidirectional pretraining과 downstream fine-tuning recipe를 제안", assumptions: "원 논문의 corpus·WordPiece·architecture·training budget을 전제로 함", evidenceScope: "BERT encoder와 원 논문 downstream 결과 범위", notClaim: "양방향 encoder가 autoregressive generation에 그대로 적합하거나 모든 후속 recipe가 동일하다는 뜻은 아님", sectionId: "paper-bert" },
+    ],
+  },
+  "ai/bert-input-packing": {
+    entryLevel: true,
+    entryNote: "문장 내용을 넣기 전에 같은 길이의 네 tensor가 어떤 역할을 갖는지 한 줄씩 봅니다.",
+    coreIdea: "BERT input packing은 token ID 줄에 special token을 놓고 position·segment·padding visibility 줄을 같은 slot에 정렬하는 입력 계약입니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "bert-input-packing", role: "CLS·SEP·PAD와 token·position·segment·mask tensor를 같은 길이로 정렬합니다." },
+    ],
+    conceptExplanations: [
+      { id: "bert-input-packing", sectionId: "aligned-tensors", intuition: "문장 조각마다 내용표·좌석 번호·소속표·출입표를 같은 칸에 겹쳐 붙입니다.", workedExample: "[CLS] A [SEP] B [SEP] [PAD]의 각 slot에 token ID, 0..5 position, A/B type, 실제 1·PAD 0 mask를 맞춥니다.", boundary: "[MASK]는 vocabulary token이고 attention mask는 key visibility tensor이며 서로 바꿔 쓸 수 없습니다." },
+    ],
+    conceptStages: [
+      { label: "01 token row", relation: "CLS·SEP·PAD를 포함한 token slot을 만듭니다.", concepts: ["bert-input-packing"] },
+      { label: "02 aligned rows", relation: "Position·segment·attention mask를 같은 길이로 맞춥니다.", concepts: ["bert-input-packing"] },
+      { label: "03 embedding input", relation: "세 embedding row를 더하고 mask는 attention에 따로 적용합니다.", concepts: ["bert-input-packing"] },
+    ],
+    exercises: [
+      { level: "basic", question: "문장 pair의 special-token 순서를 적으세요.", answerChecklist: ["CLS", "A", "SEP", "B", "SEP", "필요시 PAD"], requiredConcepts: ["bert-input-packing"], sectionId: "special-tokens" },
+      { level: "basic", question: "input_ids의 역할을 설명하세요.", answerChecklist: ["vocabulary row", "special token ID", "shape B×L", "integer", "checkpoint tokenizer", "내용 identity"], requiredConcepts: ["bert-input-packing"], sectionId: "overview" },
+      { level: "basic", question: "position_ids와 token_type_ids를 구분하세요.", answerChecklist: ["slot 순서", "segment 소속", "같은 길이", "embedding lookup", "checkpoint 범위", "optional behavior 확인"], requiredConcepts: ["bert-input-packing"], sectionId: "aligned-tensors" },
+      { level: "basic", question: "attention_mask에서 실제 token과 PAD 값을 적으세요.", answerChecklist: ["실제 1", "PAD 0", "key visibility", "MASK token과 다름", "loss mask와 다름", "shape 정렬"], requiredConcepts: ["bert-input-packing"], sectionId: "aligned-tensors" },
+      { level: "basic", question: "각 slot embedding을 만드는 세 항을 적으세요.", answerChecklist: ["token row", "position row", "segment row", "같은 hidden width", "coordinate sum", "mask는 더하지 않음"], requiredConcepts: ["bert-input-packing"], sectionId: "aligned-tensors" },
+      { level: "basic", question: "CLS·SEP·PAD의 역할을 각각 설명하세요.", answerChecklist: ["sequence head", "segment boundary", "length fill", "실제 내용과 구분", "ID는 tokenizer config", "PAD 닫힘"], requiredConcepts: ["bert-input-packing"], sectionId: "special-tokens" },
+      { level: "advanced", question: "Left padding과 right padding이 바뀌면 함께 검토할 tensor를 적으세요.", answerChecklist: ["position", "attention mask", "labels", "special token location", "pooling assumption", "train serve parity"], requiredConcepts: ["bert-input-packing"], sectionId: "boundary" },
+      { level: "advanced", question: "Tokenizer와 checkpoint가 어긋난 반례를 설계하세요.", answerChecklist: ["same integer different row meaning", "special ID mismatch", "vocab digest", "checkpoint digest", "fixture", "fail closed"], requiredConcepts: ["bert-input-packing"], sectionId: "boundary" },
+      { level: "advanced", question: "Truncation이 pair task의 증거를 지우는 사례와 완화책을 설명하세요.", answerChecklist: ["max length", "A/B allocation", "evidence 위치", "truncation side", "retained-span metric", "receipt"], requiredConcepts: ["bert-input-packing"], sectionId: "boundary" },
+      { level: "advanced", question: "Packing 구현 release receipt를 설계하세요.", answerChecklist: ["tokenizer revision", "special IDs", "max length", "padding side", "truncation", "four tensor shapes", "fixture values", "rollback"], requiredConcepts: ["bert-input-packing"], sectionId: "boundary" },
+    ],
+    papers: [
+      { title: "Hugging Face Transformers — BERT inputs", href: "https://huggingface.co/docs/transformers/model_doc/bert", problem: "현재 library에서 BERT checkpoint input tensor와 shape를 정확히 맞추는 문제", contribution: "Input IDs·mask·type·position tensor의 public API를 문서화", assumptions: "선택한 Transformers version과 checkpoint config를 전제로 함", evidenceScope: "현재 BERT implementation public input contract 범위", notClaim: "모든 checkpoint가 optional tensor를 같은 방식으로 사용하거나 원 논문의 모든 preprocessing을 고정한다는 뜻은 아님", sectionId: "paper-bert-input" },
+    ],
+  },
+  "ai/bert-mlm-corruption": {
+    entryLevel: true,
+    entryNote: "어느 위치를 문제로 고르는지와 model에 어떤 힌트를 보여 주는지를 두 단계로 나눠 봅니다.",
+    coreIdea: "MLM은 target 위치를 먼저 고르고 input만 80·10·10 branch로 오염한 뒤, 선택 위치에서 오염 전 token의 negative log-likelihood를 계산합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "masked-language-modeling", role: "선택 위치에서 원 token을 복원하는 objective를 정의합니다." },
+      { id: "bert-corruption-policy", role: "15% selection 뒤 80·10·10 input branch를 적용합니다." },
+    ],
+    conceptExplanations: [
+      { id: "bert-corruption-policy", sectionId: "corruption", intuition: "시험 문제를 먼저 고르고 각 문제의 힌트를 가림·오답·원문 세 방식으로 보여 줍니다.", workedExample: "10,000 token이면 기대상 target 1,500, MASK 1,200, random 150, unchanged 150입니다.", boundary: "전체 token의 80%를 mask하는 것이 아니고 actual batch count는 기대값과 다를 수 있습니다." },
+      { id: "masked-language-modeling", sectionId: "objective", intuition: "오염된 문장 전체를 읽되 시험으로 고른 자리의 원래 답만 채점합니다.", workedExample: "Input이 random token으로 바뀌어도 target x_i는 corruption 전 token이고 loss는 i∈M에서만 계산합니다.", boundary: "전체 sequence likelihood나 left-to-right next-token objective가 아니며 special·PAD exclusion이 필요합니다." },
+    ],
+    conceptStages: [
+      { label: "01 select", relation: "전체에서 target set M을 고릅니다.", concepts: ["bert-corruption-policy"] },
+      { label: "02 corrupt", relation: "M의 input을 80·10·10 branch로 바꿉니다.", concepts: ["bert-corruption-policy"] },
+      { label: "03 restore", relation: "M에서 원 token probability를 학습합니다.", concepts: ["masked-language-modeling"] },
+    ],
+    exercises: [
+      { level: "basic", question: "10,000 token의 기대 target 수를 계산하세요.", answerChecklist: ["N=10000", "selection 0.15", "multiply", "1500", "expected value", "special exclusion 별도"], requiredConcepts: ["bert-corruption-policy"], sectionId: "corruption" },
+      { level: "basic", question: "선택된 1,500개를 80·10·10으로 나누세요.", answerChecklist: ["1200 MASK", "150 random", "150 unchanged", "selected set 안의 비율", "합 1500", "기대값"], requiredConcepts: ["bert-corruption-policy"], sectionId: "corruption" },
+      { level: "basic", question: "Corrupted input과 target을 구분하세요.", answerChecklist: ["input x tilde", "target original x", "same position", "branch와 무관", "selection set", "copy 방지"], requiredConcepts: ["masked-language-modeling", "bert-corruption-policy"], sectionId: "overview" },
+      { level: "basic", question: "MLM loss가 계산되는 위치를 적으세요.", answerChecklist: ["i in M", "PAD 제외", "special 제외 policy", "negative log", "original vocabulary ID", "context whole input"], requiredConcepts: ["masked-language-modeling"], sectionId: "objective" },
+      { level: "basic", question: "Unchanged branch에도 loss를 주는 이유를 설명하세요.", answerChecklist: ["selected target", "input만 unchanged", "target remains original", "train test token mismatch 완화 의도", "copy risk 존재", "branch probability"], requiredConcepts: ["masked-language-modeling", "bert-corruption-policy"], sectionId: "corruption" },
+      { level: "basic", question: "MLM과 next-token prediction을 구분하세요.", answerChecklist: ["bidirectional context", "selected positions", "corrupted input", "not causal", "not every next token", "encoder objective"], requiredConcepts: ["masked-language-modeling"], sectionId: "boundary" },
+      { level: "advanced", question: "Copy shortcut 반례를 설계하세요.", answerChecklist: ["uncorrupted input", "self position visible", "embedding copy", "low loss without context", "corruption intervention", "downstream comparison"], requiredConcepts: ["masked-language-modeling", "bert-corruption-policy"], sectionId: "boundary" },
+      { level: "advanced", question: "Dynamic masking과 static masking을 비교하는 실험을 설계하세요.", answerChecklist: ["same corpus", "same token budget", "mask resampling", "unique targets", "compute parity", "downstream metrics"], requiredConcepts: ["bert-corruption-policy"], sectionId: "boundary" },
+      { level: "advanced", question: "Random token policy가 label leakage를 만드는 반례를 찾으세요.", answerChecklist: ["special token 제외", "original token 재추출 convention", "frequency bias", "vocab range", "seed", "receipt"], requiredConcepts: ["bert-corruption-policy"], sectionId: "boundary" },
+      { level: "advanced", question: "MLM data pipeline release gate를 설계하세요.", answerChecklist: ["selection rate", "branch rate", "special exclusion", "target preservation", "loss mask", "seed", "fixture counts", "rollback"], requiredConcepts: ["masked-language-modeling", "bert-corruption-policy"], sectionId: "boundary" },
+    ],
+    papers: [
+      { title: "BERT — Masked Language Model", href: "https://arxiv.org/abs/1810.04805", problem: "양방향 encoder가 자기 token을 그대로 복사하지 않고 문맥 표현을 학습하는 문제", contribution: "15% selection과 80·10·10 corruption을 이용한 masked-token prediction을 제안", assumptions: "원 BERT corpus·tokenizer·sampling·training recipe를 전제로 함", evidenceScope: "원 논문의 MLM construction과 BERT pretraining 결과 범위", notClaim: "모든 후속 encoder가 같은 비율을 써야 하거나 기대 count가 매 batch 정확히 일치한다는 뜻은 아님", sectionId: "paper-bert-mlm" },
+    ],
+  },
+  "ai/bert-pretraining-objectives": {
+    entryLevel: true,
+    entryNote: "모델 이름을 외우기 전에 example을 어떻게 만들고 어느 위치에 어떤 label을 붙이는지 비교합니다.",
+    coreIdea: "NSP·SOP·RTD는 loss 모양보다 pair 또는 token example construction과 prediction unit이 다르므로 architecture·data·compute를 맞춘 뒤 비교해야 합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "next-sentence-prediction", role: "실제 다음 segment와 random segment를 CLS에서 분류합니다." },
+      { id: "sentence-order-prediction", role: "같은 문서 segment의 정상·역순을 분류합니다." },
+      { id: "replaced-token-detection", role: "각 token이 original인지 generator replacement인지 분류합니다." },
+    ],
+    conceptExplanations: [
+      { id: "next-sentence-prediction", sectionId: "nsp-sop", intuition: "두 문장이 실제로 이어졌는지 무관한 문장이 붙었는지 맞힙니다.", workedExample: "Positive는 A의 실제 다음 B, negative는 corpus random B로 pair를 만듭니다.", boundary: "Topic 차이 shortcut이 가능하고 BERT encoder 정의 자체는 아닙니다." },
+      { id: "sentence-order-prediction", sectionId: "nsp-sop", intuition: "같은 글 안의 두 조각이 올바른 순서인지 뒤집혔는지 맞힙니다.", workedExample: "Positive A→B와 negative B→A를 같은 document에서 만듭니다.", boundary: "ALBERT의 다른 architecture·recipe 변경과 분리해 평가해야 합니다." },
+      { id: "replaced-token-detection", sectionId: "rtd", intuition: "문장의 각 자리에서 원본 단어인지 교체된 단어인지 검사합니다.", workedExample: "Generator가 우유를 물로 바꾸면 discriminator가 각 eligible 위치에 original/replaced label을 냅니다.", boundary: "Generator compute와 원 token 재생성 label convention을 함께 고정해야 합니다." },
+    ],
+    conceptStages: [
+      { label: "01 pair labels", relation: "NSP와 SOP의 pair construction을 비교합니다.", concepts: ["next-sentence-prediction", "sentence-order-prediction"] },
+      { label: "02 token labels", relation: "RTD의 generator replacement와 position label을 정의합니다.", concepts: ["replaced-token-detection"] },
+      { label: "03 controlled comparison", relation: "Data·architecture·compute를 맞추고 downstream evidence를 비교합니다.", concepts: ["next-sentence-prediction", "sentence-order-prediction", "replaced-token-detection"] },
+    ],
+    exercises: [
+      { level: "basic", question: "NSP positive와 negative pair를 만드세요.", answerChecklist: ["segment A", "actual next B", "random B", "binary label", "CLS", "document source"], requiredConcepts: ["next-sentence-prediction"], sectionId: "nsp-sop" },
+      { level: "basic", question: "SOP positive와 negative pair를 만드세요.", answerChecklist: ["same document", "A then B", "B then A", "binary label", "order signal", "topic controlled"], requiredConcepts: ["sentence-order-prediction"], sectionId: "nsp-sop" },
+      { level: "basic", question: "NSP와 SOP의 loss가 같아도 supervision이 다른 이유를 설명하세요.", answerChecklist: ["binary BCE", "pair distribution", "random document", "same document reverse", "shortcut 차이", "label source"], requiredConcepts: ["next-sentence-prediction", "sentence-order-prediction"], sectionId: "nsp-sop" },
+      { level: "basic", question: "RTD generator와 discriminator 역할을 구분하세요.", answerChecklist: ["generator replacement 제안", "corrupted sequence", "discriminator each position", "original/replaced label", "two compute owners", "shared example"], requiredConcepts: ["replaced-token-detection"], sectionId: "rtd" },
+      { level: "basic", question: "RTD가 MLM보다 조밀한 supervision을 줄 수 있는 이유를 설명하세요.", answerChecklist: ["eligible positions", "binary label each", "MLM selected subset", "vocabulary vs binary", "generator cost", "not all hard negatives"], requiredConcepts: ["replaced-token-detection"], sectionId: "rtd" },
+      { level: "basic", question: "Generator가 원 token을 다시 뽑았을 때 필요한 convention을 설명하세요.", answerChecklist: ["input equals original", "label definition", "implementation consistency", "loss impact", "metric receipt", "boundary"], requiredConcepts: ["replaced-token-detection"], sectionId: "rtd" },
+      { level: "advanced", question: "RoBERTa만 보고 NSP가 항상 해롭다고 결론낼 수 없는 이유를 설명하세요.", answerChecklist: ["data changed", "batch changed", "training length changed", "dynamic masking", "tokenizer", "controlled ablation"], requiredConcepts: ["next-sentence-prediction"], sectionId: "comparison" },
+      { level: "advanced", question: "SOP 단독 효과를 재는 experiment를 설계하세요.", answerChecklist: ["same architecture", "same sharing", "same corpus", "same compute", "NSP/SOP only axis", "sentence tasks", "confidence"], requiredConcepts: ["sentence-order-prediction"], sectionId: "comparison" },
+      { level: "advanced", question: "MLM과 RTD를 같은 compute에서 비교하는 ledger를 설계하세요.", answerChecklist: ["generator FLOPs", "discriminator FLOPs", "tokens", "wall time", "memory", "downstream metric", "multiple seeds", "failure slices"], requiredConcepts: ["replaced-token-detection"], sectionId: "comparison" },
+      { level: "advanced", question: "세 objective의 release comparison을 설계하세요.", answerChecklist: ["example construction receipt", "label unit", "architecture parity", "data parity", "compute parity", "common transfer", "negative cases", "rollback"], requiredConcepts: ["next-sentence-prediction", "sentence-order-prediction", "replaced-token-detection"], sectionId: "comparison" },
+    ],
+    papers: [
+      { title: "RoBERTa", href: "https://arxiv.org/abs/1907.11692", problem: "BERT recipe 변경의 원인을 공정하게 비교하기 어려운 문제", contribution: "Data·batch·training·dynamic masking·NSP를 함께 재검토", assumptions: "논문의 larger corpus·budget·tokenizer와 benchmark를 전제로 함", evidenceScope: "RoBERTa ablation과 downstream 결과 범위", notClaim: "NSP 제거 하나가 모든 개선을 만들었다는 단독 인과 주장은 아님", sectionId: "paper-roberta" },
+      { title: "ALBERT", href: "https://arxiv.org/abs/1909.11942", problem: "Parameter 효율과 inter-sentence supervision을 함께 개선하는 문제", contribution: "Factorization·sharing과 sentence-order prediction을 결합", assumptions: "논문의 architecture·corpus·optimization을 전제로 함", evidenceScope: "ALBERT의 parameter efficiency와 downstream 결과 범위", notClaim: "SOP 단독 효과가 모든 encoder에서 재현된다는 뜻은 아님", sectionId: "paper-albert" },
+      { title: "ELECTRA", href: "https://arxiv.org/abs/2003.10555", problem: "MLM supervision이 selected subset에만 생기는 compute 효율 문제", contribution: "Generator replacement와 token-level discriminator RTD를 제안", assumptions: "Generator size·sampling·data·compute 회계를 전제로 함", evidenceScope: "논문이 비교한 model size·compute·downstream 결과 범위", notClaim: "모든 generator·scale·language에서 RTD가 우월하다는 뜻은 아님", sectionId: "paper-electra" },
+    ],
+  },
+  "ai/bert-task-heads": {
+    entryLevel: true,
+    entryNote: "Encoder output B×L×H에서 task가 답으로 요구하는 축 하나를 먼저 고릅니다.",
+    coreIdea: "BERT task head는 sequence·token·span prediction 단위에 맞는 hidden row와 output shape를 선택하며, retrieval에서는 pair interaction과 vector 재사용 사이 경계를 선택합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "bert-task-head", role: "Sequence·token·span target에 맞는 hidden state와 output tensor를 연결합니다." },
+      { id: "cross-bi-encoder-boundary", role: "Pair interaction 품질과 independent embedding 재사용 비용을 구분합니다." },
+    ],
+    conceptExplanations: [
+      { id: "bert-task-head", sectionId: "task-head", intuition: "공통 encoder의 표에서 문제지가 요구하는 행과 답안 열만 읽는 얇은 층입니다.", workedExample: "3-class 분류는 CLS→B×3, NER는 모든 token→B×L×C, QA는 모든 token→start/end B×L을 만듭니다.", boundary: "CLS가 모든 task의 보편 sentence vector라는 뜻은 아니며 label alignment와 truncation이 task별로 다릅니다." },
+      { id: "cross-bi-encoder-boundary", sectionId: "retrieval", intuition: "두 문서를 함께 읽으면 정교하지만 매 pair를 다시 계산하고, 따로 요약하면 빠르게 재사용하지만 직접 상호작용이 줄어듭니다.", workedExample: "문서 100만 개는 bi-encoder index로 후보를 찾고 상위 k만 cross-encoder로 rerank합니다.", boundary: "Vanilla CLS를 저장하는 것만으로 강한 bi-encoder가 되지 않으며 pair supervision·pooling·negative sampling이 필요합니다." },
+    ],
+    conceptStages: [
+      { label: "01 prediction unit", relation: "Sequence·token·span 중 답 단위를 고릅니다.", concepts: ["bert-task-head"] },
+      { label: "02 output shape", relation: "읽을 hidden row와 logits axis를 맞춥니다.", concepts: ["bert-task-head"] },
+      { label: "03 retrieval boundary", relation: "Cross interaction과 embedding reuse를 조합합니다.", concepts: ["cross-bi-encoder-boundary"] },
+    ],
+    exercises: [
+      { level: "basic", question: "3-class sequence classification output shape를 적으세요.", answerChecklist: ["input B×L×H", "CLS row", "B×H", "linear", "B×3", "softmax"], requiredConcepts: ["bert-task-head"], sectionId: "task-head" },
+      { level: "basic", question: "NER output shape를 적으세요.", answerChecklist: ["all token rows", "B×L×H", "linear H×C", "B×L×C", "subword labels", "padding loss mask"], requiredConcepts: ["bert-task-head"], sectionId: "token-span" },
+      { level: "basic", question: "Extractive QA output을 설명하세요.", answerChecklist: ["all positions", "start score", "end score", "two B×L", "span constraint", "truncation"], requiredConcepts: ["bert-task-head"], sectionId: "token-span" },
+      { level: "basic", question: "Sequence head와 token head가 읽는 state를 구분하세요.", answerChecklist: ["CLS one row", "all rows", "different prediction unit", "different output axes", "same encoder possible", "labels aligned"], requiredConcepts: ["bert-task-head"], sectionId: "overview" },
+      { level: "basic", question: "Cross-encoder의 입력과 비용을 설명하세요.", answerChecklist: ["pair packed together", "token interaction", "one score", "per pair forward", "higher latency", "reranking"], requiredConcepts: ["cross-bi-encoder-boundary"], sectionId: "retrieval" },
+      { level: "basic", question: "Bi-encoder의 입력과 이점을 설명하세요.", answerChecklist: ["texts encoded separately", "vector pooling", "document reuse", "ANN index", "similarity", "interaction reduced"], requiredConcepts: ["cross-bi-encoder-boundary"], sectionId: "retrieval" },
+      { level: "advanced", question: "100만 문서 retrieval pipeline을 설계하세요.", answerChecklist: ["offline document vectors", "ANN recall", "top k", "cross rerank", "Recall@k", "NDCG", "latency", "memory"], requiredConcepts: ["cross-bi-encoder-boundary", "bert-task-head"], sectionId: "retrieval" },
+      { level: "advanced", question: "Subword NER label alignment 반례와 해결책을 설명하세요.", answerChecklist: ["word split", "first/all-piece policy", "ignore index", "tokenizer offsets", "padding", "train serve parity"], requiredConcepts: ["bert-task-head"], sectionId: "token-span" },
+      { level: "advanced", question: "Long document truncation이 QA를 망치는 경우를 검증하세요.", answerChecklist: ["answer outside window", "stride", "offset map", "no-answer convention", "retained-answer metric", "latency cost"], requiredConcepts: ["bert-task-head"], sectionId: "token-span" },
+      { level: "advanced", question: "Task-head release gate를 설계하세요.", answerChecklist: ["input shape", "label map", "pooling", "truncation", "loss mask", "fixed fixture", "quality slices", "rollback"], requiredConcepts: ["bert-task-head", "cross-bi-encoder-boundary"], sectionId: "retrieval" },
+    ],
+    papers: [
+      { title: "Sentence-BERT", href: "https://arxiv.org/abs/1908.10084", problem: "Cross-encoder pair 계산이 대규모 similarity search에서 너무 비싼 문제", contribution: "Siamese/triplet structure와 pooling으로 재사용 가능한 sentence embedding을 학습", assumptions: "논문의 NLI·STS supervision·pooling·loss를 전제로 함", evidenceScope: "Sentence-BERT STS quality와 pair-search speed 범위", notClaim: "Vanilla CLS가 추가 학습 없이 강하거나 bi-encoder가 cross-encoder 품질을 항상 유지한다는 뜻은 아님", sectionId: "paper-sentence-bert" },
     ],
   },
   "ai/cross-entropy": {
