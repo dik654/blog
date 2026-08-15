@@ -1973,18 +1973,28 @@ export const ARTICLE_EVIDENCE: Readonly<
   "ai/domain-finetuning": [
     {
       kind: "핵심 논문",
-      label:
-        "Don’t Stop Pretraining: Adapt Language Models to Domains and Tasks",
-      href: "https://aclanthology.org/2020.acl-main.740/",
-      note: "domain-adaptive·task-adaptive pretraining의 효과와 단계 비교",
+      label: "Retrieval-Augmented Generation",
+      href: "https://arxiv.org/abs/2005.11401",
+      note: "외부 retrieval memory와 parametric generation을 결합하는 경계",
     },
     {
-      kind: "후속 분석",
-      label:
-        "Investigating Catastrophic Forgetting During Continual Training for Neural Machine Translation",
-      href: "https://aclanthology.org/2020.coling-main.381/",
-      note: "순차 domain adaptation에서 module·parameter 변화와 이전 domain 성능 저하 분석",
+      kind: "핵심 논문",
+      label: "LoRA",
+      href: "https://arxiv.org/abs/2106.09685",
+      note: "weight adaptation의 trainable scope를 줄이는 저랭크 update",
     },
+  ],
+  "ai/continued-pretraining": [
+    { kind: "핵심 논문", label: "Don’t Stop Pretraining", href: "https://aclanthology.org/2020.acl-main.740/", note: "DAPT·TAPT corpus와 downstream experiment의 원 연구" },
+    { kind: "후속 분석", label: "Catastrophic Forgetting During Continual NMT", href: "https://aclanthology.org/2020.coling-main.381/", note: "순차 domain training의 이전 domain 성능 저하 분석" },
+  ],
+  "ai/domain-task-finetuning": [
+    { kind: "핵심 논문", label: "Training language models to follow instructions with human feedback", href: "https://arxiv.org/abs/2203.02155", note: "Demonstration SFT와 preference pipeline의 학습 경계" },
+    { kind: "핵심 논문", label: "LoRA", href: "https://arxiv.org/abs/2106.09685", note: "Full update와 구분되는 low-rank trainable scope" },
+  ],
+  "ai/domain-data-governance": [
+    { kind: "핵심 논문", label: "Datasheets for Datasets", href: "https://arxiv.org/abs/1803.09010", note: "Dataset source·collection·use·maintenance documentation" },
+    { kind: "핵심 논문", label: "Model Cards for Model Reporting", href: "https://arxiv.org/abs/1810.03993", note: "Intended use·evaluation slice·limitation reporting" },
   ],
   "ai/compression-pipeline": [
     {

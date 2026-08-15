@@ -1758,39 +1758,28 @@ export const EDITORIAL_BOUNDARIES = {
   "supervised-contrastive-learning": { title: "Supervised contrastive 글이 소유하는 범위", owns: ["Label을 anchor별 positive set P(i)로 바꾸는 관계", "Multi-positive 평균 loss·valid-anchor·sampler 경계"], reuses: [{ label: "Pair 의미와 projection", href: "/ai/contrastive-learning" }, { label: "Softmax와 cross-entropy", href: "/ai/cross-entropy" }], evidence: [{ kind: "primary-source", rule: "Supervised contrastive 결과는 논문의 label·dataset·augmentation·batch recipe 범위로 제한한다." }, { kind: "standard", rule: "Positive relation·label hierarchy·sampler·valid-anchor count·subgroup metric을 기록한다." }] },
   "contrastive-evaluation": { title: "Contrastive evaluation 글이 소유하는 범위", owns: ["Bucket별 false-negative pair audit", "동일 split·seed downstream paired evaluation과 data revision loop"], reuses: [{ label: "Triplet miner receipt", href: "/ai/triplet-metric-learning#mining" }, { label: "Train·validation·test", href: "/ai/train-validation-test" }], evidence: [{ kind: "primary-source", rule: "False-negative bias 연구의 objective 가정과 실험 범위를 human audit 결과로 오인하지 않는다." }, { kind: "standard", rule: "Bucket·rubric·agreement·split·seed·metric·artifact revision을 함께 기록한다." }] },
   "domain-finetuning": {
-    title: "도메인 적응 글이 소유하는 범위",
-    owns: [
-      "Language/style·fact freshness·task behavior·system constraint를 분리하고 최소 개입을 고르는 진단",
-      "DAPT/TAPT corpus boundary·domain/general mixture·token budget과 checkpoint gain–forgetting 선택",
-      "Task demonstration의 input·target·loss·update·evaluation 계약과 full/PEFT 비교",
-      "유전체·의료·제조의 family/entity/time split과 license·consent·deletion provenance·coverage",
-    ],
-    reuses: [
-      {
-        label: "Pretrained handoff·distribution shift·negative transfer",
-        href: "/ai/transfer-learning-practice",
-      },
-      {
-        label: "Response-only SFT·packing·chat template",
-        href: "/ai/supervised-fine-tuning",
-      },
-      { label: "RAG retrieval·citation·freshness", href: "/ai/rag-pipeline" },
-      {
-        label: "LoRA parameterization과 target modules",
-        href: "/ai/lora-finetuning",
-      },
-      { label: "Perplexity와 next-token LM", href: "/ai/rnn-language-model" },
-    ],
-    evidence: [
-      {
-        kind: "primary-source",
-        rule: "DAPT/TAPT·catastrophic forgetting claim은 각 논문의 model·corpus·objective·task·evaluation 범위로 제한한다.",
-      },
-      {
-        kind: "standard",
-        rule: "Base checkpoint·tokenizer·corpus provenance·dedup/decontamination·mixture·token/update budget·loss mask·split·general regression·system cost를 함께 기록한다.",
-      },
-    ],
+    title: "도메인 적응 선택 글이 소유하는 범위",
+    owns: ["Language·fresh fact·behavior·system gap 진단", "Retrieval–weight 저장 경계와 최소 개입 release"],
+    reuses: [{ label: "Distribution shift", href: "/ai/transfer-learning-practice#domain-shift" }, { label: "RAG pipeline", href: "/ai/rag-pipeline" }, { label: "LoRA", href: "/ai/lora-finetuning" }],
+    evidence: [{ kind: "primary-source", rule: "RAG·LoRA claim은 논문의 model·data·task 범위로 제한한다." }, { kind: "standard", rule: "실패 slice·candidate·target/general/system metric·threshold·rollback을 함께 기록한다." }],
+  },
+  "continued-pretraining": {
+    title: "Continued pretraining 글이 소유하는 범위",
+    owns: ["Domain corpus preparation manifest와 domain/general mixture", "Comparable perplexity와 gain–forgetting checkpoint 선택"],
+    reuses: [{ label: "DAPT·TAPT 경계", href: "/ai/transfer-learning-practice" }, { label: "NLL과 perplexity", href: "/ai/rnn-language-model" }],
+    evidence: [{ kind: "primary-source", rule: "DAPT/TAPT·forgetting claim은 각 논문의 corpus·objective·task 범위로 제한한다." }, { kind: "standard", rule: "Source·rights·dedup·overlap·mixture·token budget·checkpoint metric을 기록한다." }],
+  },
+  "domain-task-finetuning": {
+    title: "Domain task fine-tuning 글이 소유하는 범위",
+    owns: ["Input·target·loss·evaluation demonstration contract", "Full·LoRA·frozen update scope와 비보상 행동 release gate"],
+    reuses: [{ label: "SFT·response-only loss", href: "/ai/supervised-fine-tuning" }, { label: "LoRA parameterization", href: "/ai/lora-finetuning" }],
+    evidence: [{ kind: "primary-source", rule: "Instruction SFT와 LoRA 결과는 각 논문의 prompt·annotator·model·target-module 범위로 제한한다." }, { kind: "standard", rule: "Template·mask·scope·optimizer·format·factuality·abstention·regression을 기록한다." }],
+  },
+  "domain-data-governance": {
+    title: "Domain data governance 글이 소유하는 범위",
+    owns: ["Entity·family·time split과 rights/deletion lineage", "독립 slice evidence coverage와 deployment claim boundary"],
+    reuses: [{ label: "Train·validation·test", href: "/ai/train-validation-test" }, { label: "Run artifact provenance", href: "/ai/mlops" }],
+    evidence: [{ kind: "primary-source", rule: "Datasheet·model-card framework가 실제 consent·independence·runtime enforcement를 보장한다고 과장하지 않는다." }, { kind: "standard", rule: "Group key·time cutoff·rights·derivative·required cell·fallback을 기록한다." }],
   },
   "sentence-embeddings": {
     title: "문장 임베딩 글이 소유하는 범위",

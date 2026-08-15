@@ -6560,7 +6560,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Domain-adaptation gap diagnosis",
     definition:
       "도메인 오류를 language/style distribution·factual freshness·task behavior·system constraint 결함으로 분해해 RAG·continued pretraining·SFT·PEFT 후보와 검증 지표를 연결하는 진단입니다.",
-    canonicalHref: "/ai/domain-finetuning#overview",
+    canonicalHref: "/ai/domain-finetuning#evidence",
   },
   "minimum-domain-intervention-selection": {
     id: "minimum-domain-intervention-selection",
@@ -6569,7 +6569,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Minimum domain-intervention selection",
     definition:
       "같은 target validation에서 gain을 최대화하되 general regression과 학습·서빙 비용의 사전 한도를 만족하는 가장 작은 adaptation 후보를 선택하는 계약입니다.",
-    canonicalHref: "/ai/domain-finetuning#overview",
+    canonicalHref: "/ai/domain-finetuning#release",
   },
   "domain-corpus-mixture-objective": {
     id: "domain-corpus-mixture-objective",
@@ -6578,7 +6578,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Domain/general corpus-mixture objective",
     definition:
       "Domain corpus와 general replay corpus의 self-supervised token loss expectation을 mixture weight로 결합해 continued-pretraining exposure를 정하는 objective입니다.",
-    canonicalHref: "/ai/domain-finetuning#continued-pretrain",
+    canonicalHref: "/ai/continued-pretraining#corpus-mixture",
   },
   "domain-perplexity-comparison-contract": {
     id: "domain-perplexity-comparison-contract",
@@ -6587,7 +6587,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Comparable domain-perplexity contract",
     definition:
       "Tokenizer·normalization·context·stride·target mask·token-weighted reduction이 같은 held-out domain corpus에서만 average NLL과 perplexity를 비교하는 조건입니다.",
-    canonicalHref: "/ai/domain-finetuning#continued-pretrain",
+    canonicalHref: "/ai/continued-pretraining#comparable-perplexity",
   },
   "adaptation-gain-forgetting-frontier": {
     id: "adaptation-gain-forgetting-frontier",
@@ -6596,7 +6596,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Adaptation gain–forgetting frontier",
     definition:
       "Base checkpoint 대비 domain metric 향상과 general regression metric 하락을 checkpoint별로 함께 표시해 회귀 budget 안의 선택지를 찾는 비교입니다.",
-    canonicalHref: "/ai/domain-finetuning#continued-pretrain",
+    canonicalHref: "/ai/continued-pretraining#forgetting-release",
   },
   "domain-task-demonstration-contract": {
     id: "domain-task-demonstration-contract",
@@ -6605,7 +6605,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Domain task-demonstration contract",
     definition:
       "Prompt roles·context/truncation·response schema/label·loss mask·trainable scope·evaluation을 domain SFT example과 run에 함께 고정하는 규칙입니다.",
-    canonicalHref: "/ai/domain-finetuning#task-finetune",
+    canonicalHref: "/ai/domain-task-finetuning#overview",
   },
   "domain-entity-time-split": {
     id: "domain-entity-time-split",
@@ -6614,7 +6614,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Domain entity–time split",
     definition:
       "Patient·gene family·machine/lot·source lineage 같은 공유 원인 group을 split 사이에서 격리하고 필요하면 training 최대 시각이 test 최소 시각보다 앞서게 하는 평가 경계입니다.",
-    canonicalHref: "/ai/domain-finetuning#genomic",
+    canonicalHref: "/ai/domain-data-governance#group-time-split",
   },
   "domain-data-rights-provenance": {
     id: "domain-data-rights-provenance",
@@ -6623,7 +6623,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Domain data-rights provenance",
     definition:
       "Source·entity·license·consent purpose·retention/deletion scope를 transformation·synthetic derivative·training shard·model run까지 연결하는 권리와 lineage manifest입니다.",
-    canonicalHref: "/ai/domain-finetuning#genomic",
+    canonicalHref: "/ai/domain-data-governance#rights-lineage",
   },
   "domain-slice-evidence-coverage": {
     id: "domain-slice-evidence-coverage",
@@ -6632,7 +6632,52 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Domain-slice evidence coverage",
     definition:
       "기관·계통·장비·condition 등 required cell마다 독립 group 수를 세고 최소 evidence count를 충족한 cell 비율과 빈 cell을 함께 보고하는 metric입니다.",
-    canonicalHref: "/ai/domain-finetuning#genomic",
+    canonicalHref: "/ai/domain-data-governance#coverage-release",
+  },
+  "retrieval-weight-adaptation-boundary": {
+    id: "retrieval-weight-adaptation-boundary",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Retrieval–weight adaptation boundary",
+    definition:
+      "최신성·출처·즉시 삭제가 필요한 사실은 외부 retrieval artifact에 두고 반복되는 언어·행동 pattern은 model weight adaptation 후보로 두는 저장 위치 경계입니다.",
+    canonicalHref: "/ai/domain-finetuning#candidates",
+  },
+  "domain-corpus-preparation-manifest": {
+    id: "domain-corpus-preparation-manifest",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Domain corpus preparation manifest",
+    definition:
+      "Continued pretraining corpus의 source·license·date·family·dedup·evaluation-overlap·token budget·sampling revision을 연결한 입력 artifact입니다.",
+    canonicalHref: "/ai/continued-pretraining#corpus-mixture",
+  },
+  "domain-update-scope-receipt": {
+    id: "domain-update-scope-receipt",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Domain update-scope receipt",
+    definition:
+      "같은 demonstration과 optimization budget에서 full fine-tuning·LoRA·frozen head가 실제로 바꾼 parameter·optimizer state·merge·runtime artifact를 기록한 비교 receipt입니다.",
+    canonicalHref: "/ai/domain-task-finetuning#update-scope",
+  },
+  "domain-behavior-release-gate": {
+    id: "domain-behavior-release-gate",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Domain behavior release gate",
+    definition:
+      "Format validity·source-grounded content·abstention·domain slice·general regression threshold를 서로 상쇄하지 않는 조건으로 묶어 task-adapted model을 판정하는 gate입니다.",
+    canonicalHref: "/ai/domain-task-finetuning#evaluation",
+  },
+  "domain-deployment-claim-boundary": {
+    id: "domain-deployment-claim-boundary",
+    kind: "concept",
+    domain: "statistics",
+    label: "Domain deployment-claim boundary",
+    definition:
+      "독립 group·기관·기간·장비·condition별 evidence가 충분한 cell과 abstention·human-review 조건까지만 model의 유효 범위로 주장하는 경계입니다.",
+    canonicalHref: "/ai/domain-data-governance#coverage-release",
   },
   "sentence-pooling-mask-contract": {
     id: "sentence-pooling-mask-contract",
@@ -17594,6 +17639,90 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "extends",
     reason:
       "Code·data·checkpoint lineage에 license·consent·retention·deletion 권리 정보를 추가합니다.",
+  },
+  {
+    from: "domain-adaptation-gap-diagnosis",
+    to: "retrieval-weight-adaptation-boundary",
+    relation: "produces",
+    reason:
+      "Fresh fact와 반복 language·behavior pattern을 분리해 정보의 저장 위치 후보를 정합니다.",
+  },
+  {
+    from: "rag-stage-success-trace",
+    to: "retrieval-weight-adaptation-boundary",
+    relation: "prerequisite",
+    reason:
+      "Retrieval만 추가한 baseline이 실패를 회복하는지 stage evidence로 확인합니다.",
+  },
+  {
+    from: "retrieval-weight-adaptation-boundary",
+    to: "minimum-domain-intervention-selection",
+    relation: "constrains",
+    reason:
+      "최신성·citation·삭제 요구는 외부 retrieval을 우선하고 반복 pattern은 weight adaptation 후보로 제한합니다.",
+  },
+  {
+    from: "run-artifact-provenance",
+    to: "domain-corpus-preparation-manifest",
+    relation: "extends",
+    reason:
+      "일반 run lineage에 corpus source·rights·dedup·overlap·token budget을 추가합니다.",
+  },
+  {
+    from: "domain-corpus-preparation-manifest",
+    to: "domain-corpus-mixture-objective",
+    relation: "constrains",
+    reason:
+      "검증된 domain·general corpus revision과 실제 sampling 비율만 mixture objective에 들어가게 합니다.",
+  },
+  {
+    from: "domain-task-demonstration-contract",
+    to: "domain-update-scope-receipt",
+    relation: "produces",
+    reason:
+      "같은 example·loss·budget에서 full·LoRA·frozen head의 변경 범위를 비교합니다.",
+  },
+  {
+    from: "adaptation-scope-comparison",
+    to: "domain-update-scope-receipt",
+    relation: "extends",
+    reason:
+      "일반 adaptation scope 비교를 optimizer state·merge·runtime artifact까지 구체화합니다.",
+  },
+  {
+    from: "domain-update-scope-receipt",
+    to: "domain-behavior-release-gate",
+    relation: "produces",
+    reason:
+      "각 update scope가 만든 format·content·abstention·general 결과를 release 후보로 전달합니다.",
+  },
+  {
+    from: "domain-task-demonstration-contract",
+    to: "domain-behavior-release-gate",
+    relation: "constrains",
+    reason:
+      "Training에서 약속한 schema·label·abstention을 동일한 평가 gate로 검사합니다.",
+  },
+  {
+    from: "domain-entity-time-split",
+    to: "domain-deployment-claim-boundary",
+    relation: "constrains",
+    reason:
+      "실제 새 entity·family·future event를 반영한 독립 평가만 배포 주장에 사용합니다.",
+  },
+  {
+    from: "domain-slice-evidence-coverage",
+    to: "domain-deployment-claim-boundary",
+    relation: "evaluates",
+    reason:
+      "기관·기간·장비·condition별 독립 근거가 충분한 cell을 주장 가능 범위로 표시합니다.",
+  },
+  {
+    from: "domain-data-rights-provenance",
+    to: "domain-deployment-claim-boundary",
+    relation: "constrains",
+    reason:
+      "사용·보유·삭제 권리가 허용되는 data lineage 안에서만 성능과 배포 범위를 주장합니다.",
   },
   {
     from: "coordinate-vector",

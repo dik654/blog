@@ -13,7 +13,7 @@ const catalog = await loadPublicArticleCatalog({ root: repoRoot });
 const byRoute = new Map(catalog.map((article) => [article.route, article]));
 
 test("public catalog is the complete article route set without filesystem phantoms", () => {
-  assert.equal(catalog.length, 487);
+  assert.equal(catalog.length, 490);
   assert.equal(byRoute.size, catalog.length);
 
   for (const route of [
@@ -46,6 +46,9 @@ test("public catalog is the complete article route set without filesystem phanto
     "ai/cnn-receptive-fields",
     "ai/depthwise-separable-convolution",
     "ai/vision-task-spatial-contracts",
+    "ai/continued-pretraining",
+    "ai/domain-task-finetuning",
+    "ai/domain-data-governance",
   ]) {
     assert.ok(byRoute.has(route), `public route가 누락되었습니다: ${route}`);
   }

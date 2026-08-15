@@ -14780,455 +14780,159 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/domain-finetuning": {
-    coreIdea:
-      "도메인 적응은 모델을 무조건 더 학습시키는 과정이 아닙니다. Language/style·fact freshness·task behavior·system constraint 중 결함을 먼저 진단하고 no-adaptation·RAG·DAPT/TAPT·SFT·PEFT를 같은 target/general/system 조건에서 비교한 뒤, corpus lineage·entity/time split·forgetting budget을 만족하는 가장 작은 개입을 선택해야 합니다.",
-    assumedKnowledge: [
-      {
-        id: "continued-domain-task-pretraining",
-        role: "Unlabeled domain/task corpus에서 self-supervised objective를 이어가는 DAPT/TAPT 경계를 재사용합니다.",
-      },
-      {
-        id: "covariate-label-concept-shift",
-        role: "Source와 target에서 달라진 probability relation을 구분합니다.",
-      },
-      {
-        id: "negative-transfer-diagnostic",
-        role: "Adaptation이 단순 base보다 target·source slice를 해치는지 확인합니다.",
-      },
-      {
-        id: "adaptation-scope-comparison",
-        role: "No adaptation·fixed·partial·full·PEFT 후보를 동일 조건에서 비교합니다.",
-      },
-      {
-        id: "cross-entropy-nll",
-        role: "Language-model token NLL과 supervised target NLL을 읽습니다.",
-      },
-      {
-        id: "exponentiation",
-        role: "평균 token NLL을 perplexity로 되돌립니다.",
-      },
-      {
-        id: "expectation",
-        role: "Domain/general corpus mixture objective와 checkpoint average를 계산합니다.",
-      },
-      {
-        id: "train-validation-test",
-        role: "Corpus·intervention selection과 마지막 target test를 분리합니다.",
-      },
-      {
-        id: "sft",
-        role: "Demonstration response를 모방하는 supervised adaptation을 구분합니다.",
-      },
-      {
-        id: "response-loss-mask",
-        role: "Prompt context와 채점할 response token을 분리합니다.",
-      },
-      {
-        id: "run-artifact-provenance",
-        role: "Data·config·checkpoint·evaluation을 한 run lineage로 연결합니다.",
-      },
-    ],
+    entryLevel: true,
+    entryNote: "Fine-tuning 방법을 모른다고 가정하고 실패 sample에서 부족한 능력의 이름을 붙이는 일부터 시작합니다.",
+    coreIdea: "도메인 적응은 language·fresh fact·behavior·system gap을 분리하고 retrieval과 weight adaptation의 저장 경계를 이해한 뒤, 같은 평가에서 제약을 만족하는 가장 작은 개입을 고르는 과정입니다.",
+    assumedKnowledge: [],
     introducedHere: [
-      {
-        id: "domain-adaptation-gap-diagnosis",
-        role: "Language/style·fact freshness·task behavior·system constraint의 결함을 서로 다른 개입 후보로 연결합니다.",
-      },
-      {
-        id: "minimum-domain-intervention-selection",
-        role: "Target gain·general regression budget·system budget으로 최소 개입을 선택합니다.",
-      },
-      {
-        id: "domain-corpus-mixture-objective",
-        role: "Domain corpus와 general replay의 token-level objective mixture를 구성합니다.",
-      },
-      {
-        id: "domain-perplexity-comparison-contract",
-        role: "Tokenizer·mask·context·reduction이 같은 조건에서만 domain perplexity를 비교합니다.",
-      },
-      {
-        id: "adaptation-gain-forgetting-frontier",
-        role: "Checkpoint별 domain gain과 general forgetting을 함께 기록합니다.",
-      },
-      {
-        id: "domain-task-demonstration-contract",
-        role: "Input·target·loss mask·update scope·evaluation을 task adaptation example과 묶습니다.",
-      },
-      {
-        id: "domain-entity-time-split",
-        role: "Patient·gene family·machine/lot·source lineage와 future cutoff로 split independence를 정합니다.",
-      },
-      {
-        id: "domain-data-rights-provenance",
-        role: "License·consent purpose·retention·deletion과 synthetic derivative를 source까지 추적합니다.",
-      },
-      {
-        id: "domain-slice-evidence-coverage",
-        role: "기관·계통·장비·condition cell의 독립 group 수와 빈 근거를 보고합니다.",
-      },
+      { id: "domain-adaptation-gap-diagnosis", role: "관찰한 실패를 language·fact·behavior·system gap으로 분해합니다." },
+      { id: "retrieval-weight-adaptation-boundary", role: "최신 사실을 외부 retrieval에 둘지 반복 pattern을 weight에 넣을지 구분합니다." },
+      { id: "minimum-domain-intervention-selection", role: "Target gain·general regression·cost 제약 안에서 가장 작은 후보를 고릅니다." },
     ],
     conceptExplanations: [
-      {
-        id: "domain-adaptation-gap-diagnosis",
-        sectionId: "overview",
-        intuition:
-          "시험을 못 본 이유가 교과서 언어를 못 읽어서인지, 최신 자료가 없어서인지, 답안 형식을 몰라서인지 먼저 구분합니다.",
-        workedExample:
-          "최신 약가 질의는 RAG, 특허 문체 이해는 DAPT 후보, JSON 추출 실패는 SFT 후보, memory 제약은 LoRA/compression 후보로 놓습니다.",
-        boundary:
-          "현실 결함은 여러 축이 겹치므로 baseline과 error slice로 각 가설을 검증하고 방법 이름만으로 진단하지 않습니다.",
-      },
-      {
-        id: "minimum-domain-intervention-selection",
-        sectionId: "overview",
-        intuition:
-          "목표 점수와 회귀·비용 한도를 만족하는 후보 가운데 가장 작은 공사를 고릅니다.",
-        workedExample:
-          "RAG와 DAPT가 target +3점인데 RAG는 general 회귀 0·즉시 갱신, DAPT는 −2점·재학습 필요라면 freshness 문제에는 RAG를 우선합니다.",
-        boundary:
-          "복잡도 최소화만으로 privacy·latency·retrieval availability가 무시되지 않게 hard constraint를 함께 둡니다.",
-      },
-      {
-        id: "domain-corpus-mixture-objective",
-        sectionId: "continued-pretrain",
-        intuition:
-          "전문 교재만 계속 보지 않고 기존 일반 교재도 일정 비율 복습하도록 한 update 안의 표본 비율을 정합니다.",
-        workedExample:
-          "lambda=.8이면 기대상 domain token loss 80%, general replay loss 20%를 같은 reduction에서 합칩니다.",
-        boundary:
-          "Replay가 기존 pretraining distribution 전체를 대표하지 않고 lambda 하나가 forgetting을 보장하지 않으므로 general regression suite가 필요합니다.",
-      },
-      {
-        id: "domain-perplexity-comparison-contract",
-        sectionId: "continued-pretrain",
-        intuition:
-          "모델이 다음 token을 평균적으로 얼마나 놀라워하는지 보되 문제를 쪼개는 tokenizer와 채점 위치가 같을 때만 비교합니다.",
-        workedExample:
-          "평균 NLL=ln4이면 PPL=4이며 같은 tokenizer·context에서 base PPL 6보다 낮습니다.",
-        boundary:
-          "낮은 PPL은 target classification·factuality·safety 개선의 충분조건이 아니고 tokenizer가 다르면 숫자를 직접 비교할 수 없습니다.",
-      },
-      {
-        id: "adaptation-gain-forgetting-frontier",
-        sectionId: "continued-pretrain",
-        intuition:
-          "새 과목 점수가 오른 만큼 이전 과목 점수가 얼마나 떨어졌는지 checkpoint마다 함께 적습니다.",
-        workedExample:
-          "Step 10k는 domain +4/general −.5, step 30k는 +4.2/−5라면 regression budget 1 안에서는 10k를 선택합니다.",
-        boundary:
-          "General suite가 측정하지 않은 capability 보존은 보장되지 않고 metric 방향·decoding 조건을 통일해야 합니다.",
-      },
-      {
-        id: "domain-task-demonstration-contract",
-        sectionId: "task-finetune",
-        intuition:
-          "질문과 모범 답만 저장하지 않고 어떤 문맥을 읽고 어느 token을 채점하며 어느 parameter를 바꿀지 함께 적습니다.",
-        workedExample:
-          "System/user template·8k truncation·JSON response·assistant-only mask·LoRA target·time holdout를 dataset/run manifest에 연결합니다.",
-        boundary:
-          "Schema 정확도와 내용 사실성은 별도 metric이며 SFT가 최신 외부 사실을 안정적으로 저장하거나 citation을 제공한다고 보장하지 않습니다.",
-      },
-      {
-        id: "domain-entity-time-split",
-        sectionId: "genomic",
-        intuition:
-          "파일은 달라도 같은 환자·가족·장비에서 나온 친척 문제는 한쪽 시험지에만 둡니다.",
-        workedExample:
-          "같은 gene family sequence는 한 split에 묶고 제조 train lot의 최대 timestamp가 test lot의 최소 timestamp보다 앞서게 합니다.",
-        boundary:
-          "어떤 group과 time cutoff가 맞는지는 새 환자·새 기관·미래 event 등 실제 deployment 단위에 따라 달라집니다.",
-      },
-      {
-        id: "domain-data-rights-provenance",
-        sectionId: "genomic",
-        intuition:
-          "데이터가 어디서 왔는지뿐 아니라 어떤 목적으로 언제까지 쓸 수 있고 삭제 시 어떤 파생물을 지워야 하는지 적는 장부입니다.",
-        workedExample:
-          "Source record→deidentified corpus→synthetic generator/checkpoint→training shard→model run을 license·consent·deletion ID로 연결합니다.",
-        boundary:
-          "공개 접근 가능성과 model training·재배포 동의는 같지 않으며 anonymization만으로 재식별 위험이 사라지지 않습니다.",
-      },
-      {
-        id: "domain-slice-evidence-coverage",
-        sectionId: "genomic",
-        intuition:
-          "평균 점수 뒤에 숨은 기관·계통·장비별 빈 칸을 독립 대상 수로 확인합니다.",
-        workedExample:
-          "12 required cells 중 nmin=30인 독립 group을 가진 cell이 9개면 coverage=.75이고 나머지 3개는 배포 근거가 부족합니다.",
-        boundary:
-          "Count threshold는 representative sampling·uncertainty·fairness를 대신하지 않으며 privacy-safe reporting이 필요합니다.",
-      },
+      { id: "domain-adaptation-gap-diagnosis", sectionId: "overview", intuition: "시험을 못 본 이유가 교재 언어·최신 자료·답안 형식·시험장 자원 중 무엇인지 먼저 찾습니다.", workedExample: "특허 문체는 DAPT, 오늘 약가는 RAG, JSON schema는 SFT, VRAM은 PEFT 후보로 둡니다.", boundary: "한 실패에 여러 원인이 겹칠 수 있어 baseline과 error slice로 가설을 검증합니다." },
+      { id: "retrieval-weight-adaptation-boundary", sectionId: "candidates", intuition: "자주 바뀌는 사실은 꺼내 바꿀 수 있는 서랍에, 반복되는 읽기·행동 습관은 model 내부에 둡니다.", workedExample: "오늘 약가와 citation은 RAG index에 두고 특허 문장 구조 적응은 weight update 후보로 둡니다.", boundary: "RAG도 retrieval miss가 있고 weight adaptation도 특정 사실의 출처·삭제를 보장하지 않습니다." },
+      { id: "minimum-domain-intervention-selection", sectionId: "release", intuition: "목표 점수와 회귀·비용 한도를 만족하는 후보 중 가장 작은 공사를 고릅니다.", workedExample: "RAG +3/general 0/cost2와 DAPT +4/general -2/cost4에서 ε=1,B=3이면 RAG를 고릅니다.", boundary: "Privacy·safety 같은 비보상 조건은 평균 cost에 섞지 않고 hard gate로 둡니다." },
     ],
     conceptStages: [
-      {
-        label: "Gap diagnosis",
-        relation:
-          "Distribution shift와 error evidence를 language·fact·behavior·system 결함으로 분리",
-        concepts: [
-          "covariate-label-concept-shift",
-          "domain-adaptation-gap-diagnosis",
-          "minimum-domain-intervention-selection",
-        ],
-      },
-      {
-        label: "Corpus adaptation",
-        relation:
-          "DAPT/TAPT data mixture와 comparable perplexity를 만들고 gain–forgetting frontier에서 checkpoint 선택",
-        concepts: [
-          "continued-domain-task-pretraining",
-          "domain-corpus-mixture-objective",
-          "cross-entropy-nll",
-          "exponentiation",
-          "perplexity",
-          "domain-perplexity-comparison-contract",
-          "adaptation-gain-forgetting-frontier",
-          "negative-transfer-diagnostic",
-        ],
-      },
-      {
-        label: "Behavior adaptation",
-        relation:
-          "SFT demonstration의 context·target·loss·update·evaluation 경계를 고정",
-        concepts: [
-          "sft",
-          "response-loss-mask",
-          "domain-task-demonstration-contract",
-          "adaptation-scope-comparison",
-        ],
-      },
-      {
-        label: "Scientific data boundary",
-        relation:
-          "Entity/time independence와 rights lineage·slice coverage로 claim 범위 제한",
-        concepts: [
-          "domain-entity-time-split",
-          "domain-data-rights-provenance",
-          "domain-slice-evidence-coverage",
-          "run-artifact-provenance",
-        ],
-      },
+      { label: "01 Failure", relation: "실패 sample과 system trace를 수집합니다.", concepts: ["domain-adaptation-gap-diagnosis"] },
+      { label: "02 Diagnosis", relation: "부족한 능력과 정보 저장 위치를 구분합니다.", concepts: ["domain-adaptation-gap-diagnosis", "retrieval-weight-adaptation-boundary"] },
+      { label: "03 Candidates", relation: "Prompt·RAG·pretraining·SFT·PEFT를 작은 순서로 비교합니다.", concepts: ["retrieval-weight-adaptation-boundary"] },
+      { label: "04 Release", relation: "회귀·비용 제약 안의 최소 개입을 선택합니다.", concepts: ["minimum-domain-intervention-selection"] },
     ],
     exercises: [
-      {
-        level: "basic",
-        question:
-          "최신 약가 질의·특허 문체 분류·JSON 추출·GPU memory 제약을 각각 진단하고 첫 intervention과 평가를 고르라.",
-        answerChecklist: [
-          "fresh fact→RAG",
-          "language/style→DAPT",
-          "behavior→SFT",
-          "system→PEFT/compression",
-          "baseline",
-          "target/general/system metrics",
-        ],
-        requiredConcepts: [
-          "domain-adaptation-gap-diagnosis",
-          "minimum-domain-intervention-selection",
-        ],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "Prompt·RAG·DAPT의 (target gain, general change, cost)가 각각 (1,0,1)·(3,0,2)·(4,-2,4)이고 ε=1, B=3일 때 탈락 후보와 선택 후보를 계산하라.",
-        answerChecklist: [
-          "prompt eligible",
-          "RAG eligible",
-          "DAPT violates regression budget",
-          "DAPT exceeds cost budget",
-          "RAG selected",
-          "same evaluation conditions",
-        ],
-        requiredConcepts: [
-          "minimum-domain-intervention-selection",
-          "adaptation-scope-comparison",
-        ],
-        sectionId: "overview",
-      },
-      {
-        level: "advanced",
-        question:
-          "No adaptation·RAG·DAPT·SFT 후보의 target gain·general regression·cost table과 epsilon/B 제약 기반 선택 규칙을 설계하라.",
-        answerChecklist: [
-          "same base/split",
-          "target paired gain",
-          "general regression",
-          "cost units",
-          "epsilon fixed",
-          "budget fixed",
-          "smallest intervention",
-          "untouched test",
-        ],
-        requiredConcepts: [
-          "minimum-domain-intervention-selection",
-          "adaptation-scope-comparison",
-          "train-validation-test",
-        ],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "lambda=.8인 domain/general mixture objective를 쓰고 domain loss 2, general loss 3일 때 mixed loss를 계산하라.",
-        answerChecklist: [
-          ".8×2",
-          ".2×3",
-          "2.2",
-          "same reduction",
-          "lambda not guarantee",
-        ],
-        requiredConcepts: ["domain-corpus-mixture-objective", "expectation"],
-        sectionId: "continued-pretrain",
-      },
-      {
-        level: "basic",
-        question:
-          "평균 domain token NLL=ln4일 때 perplexity를 계산하고 tokenizer가 다른 model과 직접 비교할 수 없는 이유를 설명하라.",
-        answerChecklist: [
-          "PPL 4",
-          "exponentiation",
-          "same tokenizer",
-          "same mask/context",
-          "not downstream guarantee",
-        ],
-        requiredConcepts: [
-          "domain-perplexity-comparison-contract",
-          "perplexity",
-          "exponentiation",
-        ],
-        sectionId: "continued-pretrain",
-      },
-      {
-        level: "advanced",
-        question:
-          "DAPT checkpoint 10k·20k·30k의 domain/general metric과 update cost에서 gain–forgetting frontier·early stop·rollback rule을 설계하라.",
-        answerChecklist: [
-          "base reference",
-          "domain gain",
-          "forgetting gap",
-          "regression budget",
-          "Pareto/frontier",
-          "checkpoint interval",
-          "cost",
-          "rollback artifact",
-        ],
-        requiredConcepts: [
-          "adaptation-gain-forgetting-frontier",
-          "negative-transfer-diagnostic",
-          "run-artifact-provenance",
-        ],
-        sectionId: "continued-pretrain",
-      },
-      {
-        level: "advanced",
-        question:
-          "Domain instruction dataset의 multi-turn template·truncation·response mask·full/LoRA 비교·format/factuality/general 평가 계약을 작성하라.",
-        answerChecklist: [
-          "roles/template",
-          "context boundary",
-          "assistant target",
-          "loss mask",
-          "same data/update",
-          "trainable scope",
-          "format metric",
-          "factuality",
-          "general regression",
-        ],
-        requiredConcepts: [
-          "domain-task-demonstration-contract",
-          "response-loss-mask",
-          "adaptation-scope-comparison",
-        ],
-        sectionId: "task-finetune",
-      },
-      {
-        level: "basic",
-        question:
-          "길이 6인 SFT sequence의 loss mask가 [0,0,0,1,1,1]이고 response token NLL이 .2,.4,.8일 때 response-only mean loss를 계산하고 앞 세 token의 역할을 설명하라.",
-        answerChecklist: [
-          "response token count 3",
-          "loss 1.4/3",
-          "approximately .467",
-          "prompt excluded from loss",
-          "prompt remains attention context",
-          "loss mask differs from attention mask",
-        ],
-        requiredConcepts: [
-          "domain-task-demonstration-contract",
-          "response-loss-mask",
-        ],
-        sectionId: "task-finetune",
-      },
-      {
-        level: "basic",
-        question:
-          "같은 환자의 visits·같은 gene family sequences·같은 machine의 future lot을 train/val/test에 배치하고 group intersection·time 검사를 작성하라.",
-        answerChecklist: [
-          "patient group",
-          "family group",
-          "machine/lot",
-          "empty intersections",
-          "max train time<min test",
-          "deployment unit",
-        ],
-        requiredConcepts: ["domain-entity-time-split"],
-        sectionId: "genomic",
-      },
-      {
-        level: "advanced",
-        question:
-          "두 기관·세 장비·rare condition corpus의 license/consent/deletion lineage와 required-cell coverage report를 설계하라.",
-        answerChecklist: [
-          "source/entity",
-          "license",
-          "consent purpose",
-          "retention/deletion",
-          "derivative lineage",
-          "independent group count",
-          "nmin",
-          "empty cells preserved",
-          "deployment restriction",
-        ],
-        requiredConcepts: [
-          "domain-data-rights-provenance",
-          "domain-slice-evidence-coverage",
-          "run-artifact-provenance",
-        ],
-        sectionId: "genomic",
-      },
+      { level: "basic", question: "특허 문체·오늘 약가·JSON 실패·VRAM 부족을 네 gap으로 분류하세요.", answerChecklist: ["language", "fresh fact", "behavior", "system"], requiredConcepts: ["domain-adaptation-gap-diagnosis"], sectionId: "overview" },
+      { level: "basic", question: "같은 실패를 재현할 세 baseline을 쓰세요.", answerChecklist: ["base", "domain prompt", "retrieval", "same validation"], requiredConcepts: ["domain-adaptation-gap-diagnosis"], sectionId: "evidence" },
+      { level: "basic", question: "최신 약가에 RAG가 weight update보다 먼저인 이유를 설명하세요.", answerChecklist: ["freshness", "citation", "replace", "delete"], requiredConcepts: ["retrieval-weight-adaptation-boundary"], sectionId: "candidates" },
+      { level: "basic", question: "SFT와 PEFT가 같은 축의 용어가 아닌 이유를 설명하세요.", answerChecklist: ["behavior objective", "update scope", "can combine", "separate choice"], requiredConcepts: ["domain-adaptation-gap-diagnosis"], sectionId: "candidates" },
+      { level: "basic", question: "ε=1,B=3일 때 RAG(3,0,2)와 DAPT(4,-2,4) 중 후보를 고르세요.", answerChecklist: ["RAG eligible", "DAPT regression fail", "DAPT cost fail", "choose RAG"], requiredConcepts: ["minimum-domain-intervention-selection"], sectionId: "release" },
+      { level: "basic", question: "개입 비교에서 같게 둘 조건 네 개를 쓰세요.", answerChecklist: ["base", "split", "seed", "evaluation revision"], requiredConcepts: ["minimum-domain-intervention-selection"], sectionId: "release" },
+      { level: "advanced", question: "겹친 language·freshness gap을 분리할 ablation을 설계하세요.", answerChecklist: ["error slice", "retrieval only", "DAPT only", "combined", "same test", "evidence"], requiredConcepts: ["domain-adaptation-gap-diagnosis", "retrieval-weight-adaptation-boundary"], sectionId: "evidence" },
+      { level: "advanced", question: "삭제 요구가 있는 내부 지식의 retrieval-vs-weight 결정을 작성하세요.", answerChecklist: ["source artifact", "delete path", "citation", "weight trace limit", "fallback"], requiredConcepts: ["retrieval-weight-adaptation-boundary"], sectionId: "candidates" },
+      { level: "advanced", question: "Target·general·latency·memory의 비보상 release table을 설계하세요.", answerChecklist: ["paired gain", "regression budget", "latency unit", "memory unit", "hard gates", "test untouched"], requiredConcepts: ["minimum-domain-intervention-selection"], sectionId: "release" },
+      { level: "advanced", question: "선택한 개입의 rollback receipt를 작성하세요.", answerChecklist: ["candidate revision", "data or index", "metrics", "thresholds", "artifact", "rollback trigger"], requiredConcepts: ["minimum-domain-intervention-selection", "retrieval-weight-adaptation-boundary"], sectionId: "release" },
     ],
     papers: [
-      {
-        title:
-          "Don’t Stop Pretraining: Adapt Language Models to Domains and Tasks",
-        href: "https://aclanthology.org/2020.acl-main.740/",
-        problem:
-          "Broad-coverage language model을 target domain 또는 task의 unlabeled corpus에 계속 pretraining할 때 추가 이득이 있는지 평가",
-        contribution:
-          "RoBERTa의 DAPT·TAPT·data selection을 네 domains와 여덟 classification tasks에서 체계적으로 비교",
-        assumptions:
-          "RoBERTa·MLM·biomedical/CS/news/reviews corpus·논문의 classification protocol와 compute",
-        evidenceScope:
-          "ACL 논문의 high/low-resource settings·DAPT/TAPT와 data-selection experiments 범위",
-        notClaim:
-          "모든 modality·corpus에서 continued pretraining이 RAG·SFT보다 낫고 catastrophic forgetting이 없다는 뜻은 아님",
-        sectionId: "paper-dapt",
-      },
-      {
-        title:
-          "Investigating Catastrophic Forgetting During Continual Training for Neural Machine Translation",
-        href: "https://aclanthology.org/2020.coling-main.381/",
-        problem:
-          "순차 domain training에서 이전 domain 번역 성능이 왜 저하되는지 module과 parameter 수준에서 분석",
-        contribution:
-          "NMT의 domain/general 관련 module 및 parameter 변화와 forgetting 관계를 여러 language/domain 조건에서 실험",
-        assumptions:
-          "Neural machine translation·논문의 languages·domains·architecture·continual-training order",
-        evidenceScope:
-          "COLING 논문의 NMT forgetting measurement와 module/parameter analysis 범위",
-        notClaim:
-          "모든 decoder-only LLM에서 동일 layer·parameter가 general/domain knowledge를 같은 방식으로 담당한다는 뜻은 아님",
-        sectionId: "paper-forgetting",
-      },
+      { title: "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks", href: "https://arxiv.org/abs/2005.11401", problem: "Parametric model만으로 최신·근거 지식을 다루기 어려운 문제입니다.", contribution: "검색한 non-parametric memory와 generator를 결합합니다.", assumptions: "논문의 Wikipedia index·retriever·tasks·model입니다.", evidenceScope: "논문 knowledge-intensive QA와 generation experiment 범위입니다.", notClaim: "모든 retrieval이 정확하거나 citation·freshness가 자동 보장된다는 뜻은 아닙니다.", sectionId: "paper-rag" },
+      { title: "LoRA: Low-Rank Adaptation of Large Language Models", href: "https://arxiv.org/abs/2106.09685", problem: "큰 model 전체를 task마다 fine-tune·저장하는 비용입니다.", contribution: "Frozen weight에 저랭크 trainable update를 추가합니다.", assumptions: "논문의 target modules·ranks·models·tasks입니다.", evidenceScope: "논문의 parameter·quality·throughput 비교 범위입니다.", notClaim: "Trainable parameter 감소가 모든 runtime memory·latency·품질을 개선한다는 뜻은 아닙니다.", sectionId: "paper-lora" },
+    ],
+  },
+  "ai/continued-pretraining": {
+    entryLevel: true,
+    entryNote: "Pretraining을 모른다고 가정하고 unlabeled 문장의 다음 token을 다시 예측하는 그림부터 시작합니다.",
+    coreIdea: "Continued pretraining은 versioned domain corpus와 general replay를 token mixture로 학습하고 comparable perplexity와 gain–forgetting frontier로 checkpoint를 고르는 과정입니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "domain-corpus-preparation-manifest", role: "Corpus source·rights·dedup·overlap·token budget을 고정합니다." },
+      { id: "domain-corpus-mixture-objective", role: "Domain과 general replay token loss를 λ로 결합합니다." },
+      { id: "domain-perplexity-comparison-contract", role: "같은 tokenizer·mask·context에서만 perplexity를 비교합니다." },
+      { id: "adaptation-gain-forgetting-frontier", role: "Checkpoint별 domain gain과 general forgetting을 함께 봅니다." },
+    ],
+    conceptExplanations: [
+      { id: "domain-corpus-preparation-manifest", sectionId: "corpus-mixture", intuition: "교재 묶음마다 출처·중복·시험 답안 포함 여부를 적은 입고 장부입니다.", workedExample: "Source family A 40%, cutoff 2025-12, MinHash dedup v3, eval overlap 0을 기록합니다.", boundary: "문서 수가 많아도 boilerplate 한 source가 반복되면 독립 corpus가 아닙니다." },
+      { id: "domain-corpus-mixture-objective", sectionId: "corpus-mixture", intuition: "전문 교재와 일반 교재를 λ 대 1-λ로 번갈아 복습합니다.", workedExample: "λ=.8, domain loss2, general loss3이면 mixed loss는 2.2입니다.", boundary: "λ는 forgetting을 보장하지 않아 별도 general evaluation이 필요합니다." },
+      { id: "domain-perplexity-comparison-contract", sectionId: "comparable-perplexity", intuition: "같은 채점 단위로 model이 다음 token을 얼마나 놀라워하는지 비교합니다.", workedExample: "평균 NLL=ln4이면 PPL=4입니다.", boundary: "Tokenizer·context·mask가 다르거나 downstream task가 다르면 숫자를 직접 순위로 쓰지 않습니다." },
+      { id: "adaptation-gain-forgetting-frontier", sectionId: "forgetting-release", intuition: "새 과목 점수와 잃은 이전 과목 점수를 checkpoint마다 같은 표에 둡니다.", workedExample: "10k는 +4/-.5, 30k는 +4.2/-5이면 ε=1에서 10k를 고릅니다.", boundary: "General suite 밖의 능력 보존까지 증명하지 않습니다." },
+    ],
+    conceptStages: [
+      { label: "01 Corpus", relation: "Source·rights·dedup·overlap을 고정합니다.", concepts: ["domain-corpus-preparation-manifest"] },
+      { label: "02 Mixture", relation: "Domain과 replay token exposure를 결합합니다.", concepts: ["domain-corpus-mixture-objective"] },
+      { label: "03 Measure", relation: "동일 조건의 domain fit을 계산합니다.", concepts: ["domain-perplexity-comparison-contract"] },
+      { label: "04 Checkpoint", relation: "Gain과 forgetting 예산으로 release합니다.", concepts: ["adaptation-gain-forgetting-frontier"] },
+    ],
+    exercises: [
+      { level: "basic", question: "DAPT와 TAPT corpus 범위를 구분하세요.", answerChecklist: ["broad domain", "task-near inputs", "unlabeled", "same LM objective"], requiredConcepts: ["domain-corpus-preparation-manifest"], sectionId: "overview" },
+      { level: "basic", question: "Corpus manifest 필드 여섯 개를 쓰세요.", answerChecklist: ["source", "license", "date", "family", "dedup", "eval overlap"], requiredConcepts: ["domain-corpus-preparation-manifest"], sectionId: "corpus-mixture" },
+      { level: "basic", question: "λ=.8, domain loss2, general loss3의 mixed loss를 계산하세요.", answerChecklist: [".8 times 2", ".2 times 3", "2.2", "same reduction"], requiredConcepts: ["domain-corpus-mixture-objective"], sectionId: "corpus-mixture" },
+      { level: "basic", question: "평균 NLL=ln4의 perplexity를 계산하세요.", answerChecklist: ["exponentiate", "4", "same tokenizer", "same mask"], requiredConcepts: ["domain-perplexity-comparison-contract"], sectionId: "comparable-perplexity" },
+      { level: "basic", question: "Tokenizer가 다른 두 perplexity를 직접 비교할 수 없는 이유를 설명하세요.", answerChecklist: ["token units differ", "normalization", "context", "not comparable"], requiredConcepts: ["domain-perplexity-comparison-contract"], sectionId: "comparable-perplexity" },
+      { level: "basic", question: "10k +4/-.5와 30k +4.2/-5를 ε=1에서 선택하세요.", answerChecklist: ["base reference", "10k passes", "30k fails", "choose 10k"], requiredConcepts: ["adaptation-gain-forgetting-frontier"], sectionId: "forgetting-release" },
+      { level: "advanced", question: "Corpus 중복·boilerplate·evaluation derivative audit를 설계하세요.", answerChecklist: ["document family", "near duplicate", "source weights", "derived eval", "report"], requiredConcepts: ["domain-corpus-preparation-manifest"], sectionId: "corpus-mixture" },
+      { level: "advanced", question: "λ·learning rate·token budget ablation을 설계하세요.", answerChecklist: ["one factor", "same seed", "domain metric", "general metric", "cost", "checkpoints"], requiredConcepts: ["domain-corpus-mixture-objective", "adaptation-gain-forgetting-frontier"], sectionId: "forgetting-release" },
+      { level: "advanced", question: "Comparable perplexity evaluation receipt를 작성하세요.", answerChecklist: ["tokenizer", "normalization", "context", "stride", "mask", "token reduction"], requiredConcepts: ["domain-perplexity-comparison-contract"], sectionId: "comparable-perplexity" },
+      { level: "advanced", question: "Continued-pretraining rollback receipt를 작성하세요.", answerChecklist: ["corpus revision", "mixture", "base", "checkpoint", "frontier", "thresholds", "rollback"], requiredConcepts: ["domain-corpus-preparation-manifest", "adaptation-gain-forgetting-frontier"], sectionId: "forgetting-release" },
+    ],
+    papers: [
+      { title: "Don’t Stop Pretraining", href: "https://aclanthology.org/2020.acl-main.740/", problem: "Target domain·task의 unlabeled corpus에서 continued pretraining 이득을 평가합니다.", contribution: "RoBERTa DAPT·TAPT를 네 domains와 여덟 tasks에서 비교합니다.", assumptions: "RoBERTa·MLM·논문 corpus와 classification protocol입니다.", evidenceScope: "논문의 high/low-resource DAPT·TAPT experiments입니다.", notClaim: "모든 LLM·domain에서 RAG·SFT보다 우월하다는 뜻은 아닙니다.", sectionId: "paper-dapt" },
+      { title: "Investigating Catastrophic Forgetting During Continual Training for NMT", href: "https://aclanthology.org/2020.coling-main.381/", problem: "순차 domain training의 이전 domain 성능 저하를 분석합니다.", contribution: "NMT module·parameter 변화와 forgetting 관계를 실험합니다.", assumptions: "논문의 NMT languages·domains·architecture입니다.", evidenceScope: "NMT continual-training forgetting 분석 범위입니다.", notClaim: "모든 decoder LLM의 같은 layer가 같은 원인을 갖는다는 뜻은 아닙니다.", sectionId: "paper-forgetting" },
+    ],
+  },
+  "ai/domain-task-finetuning": {
+    entryLevel: true,
+    entryNote: "SFT를 모른다고 가정하고 input 한 건과 원하는 response 한 건의 형태부터 시작합니다.",
+    coreIdea: "Domain task fine-tuning은 input·target·loss·evaluation demonstration을 고정하고 full·LoRA·frozen update scope를 같은 조건에서 비교한 뒤 비보상 행동 gate로 release합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "domain-task-demonstration-contract", role: "Input·target·loss·evaluation을 example과 묶습니다." },
+      { id: "domain-update-scope-receipt", role: "Full·LoRA·frozen head가 바꾼 state와 runtime artifact를 기록합니다." },
+      { id: "domain-behavior-release-gate", role: "Format·content·abstention·general regression을 별도 gate로 판정합니다." },
+    ],
+    conceptExplanations: [
+      { id: "domain-task-demonstration-contract", sectionId: "overview", intuition: "질문·모범답뿐 아니라 읽을 문맥과 거절 조건까지 한 답안 예시에 적습니다.", workedExample: "System/user·8k truncation·JSON schema·assistant-only mask·time holdout를 묶습니다.", boundary: "Schema 성공과 내용 사실성은 별도 metric입니다." },
+      { id: "domain-update-scope-receipt", sectionId: "update-scope", intuition: "같은 교재로 공부하되 책 전체·메모지·마지막 답안지만 바꾼 경우를 구분합니다.", workedExample: "Full all weights, LoRA q/v rank16, frozen encoder+12-class head의 optimizer state와 artifact를 비교합니다.", boundary: "Trainable parameter가 적다고 wall time·serving memory·품질이 항상 좋아지지 않습니다." },
+      { id: "domain-behavior-release-gate", sectionId: "evaluation", intuition: "형식만 예쁜 오답이 평균 점수로 통과하지 못하게 시험 문을 따로 둡니다.", workedExample: "Format 1, factuality 0, abstention 1, general 1이면 곱 gate는 0입니다.", boundary: "Threshold는 test를 보기 전에 정하고 human-review capacity도 포함합니다." },
+    ],
+    conceptStages: [
+      { label: "01 Example", relation: "Input과 target behavior를 고정합니다.", concepts: ["domain-task-demonstration-contract"] },
+      { label: "02 Loss", relation: "읽을 token과 채점할 token을 분리합니다.", concepts: ["domain-task-demonstration-contract"] },
+      { label: "03 Update", relation: "바뀌는 parameter와 artifact를 비교합니다.", concepts: ["domain-update-scope-receipt"] },
+      { label: "04 Release", relation: "행동·회귀 gate를 모두 통과합니다.", concepts: ["domain-behavior-release-gate"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Domain demonstration의 네 계약을 쓰세요.", answerChecklist: ["input", "target", "loss", "evaluation"], requiredConcepts: ["domain-task-demonstration-contract"], sectionId: "overview" },
+      { level: "basic", question: "Mask [0,0,0,1,1,1]과 NLL [.2,.4,.8]의 loss를 계산하세요.", answerChecklist: ["sum 1.4", "count 3", "about .467", "prompt context"], requiredConcepts: ["domain-task-demonstration-contract"], sectionId: "demonstration" },
+      { level: "basic", question: "Loss mask와 attention mask를 구분하세요.", answerChecklist: ["score tokens", "visibility tokens", "prompt loss zero", "prompt still read"], requiredConcepts: ["domain-task-demonstration-contract"], sectionId: "demonstration" },
+      { level: "basic", question: "Full·LoRA·frozen head가 바꾸는 parameter 범위를 구분하세요.", answerChecklist: ["all weights", "adapter", "head only", "base frozen"], requiredConcepts: ["domain-update-scope-receipt"], sectionId: "update-scope" },
+      { level: "basic", question: "Update-scope 비교에서 같게 둘 조건을 쓰세요.", answerChecklist: ["base", "data order", "steps", "seed", "decoding"], requiredConcepts: ["domain-update-scope-receipt"], sectionId: "update-scope" },
+      { level: "basic", question: "Format 1·factuality 0·abstention 1·general 1의 release gate를 계산하세요.", answerChecklist: ["multiply", "zero", "reject", "no compensation"], requiredConcepts: ["domain-behavior-release-gate"], sectionId: "evaluation" },
+      { level: "advanced", question: "Multi-turn assistant-only target receipt를 설계하세요.", answerChecklist: ["roles", "template", "turn target", "mask", "truncation", "replay"], requiredConcepts: ["domain-task-demonstration-contract"], sectionId: "demonstration" },
+      { level: "advanced", question: "Full과 LoRA의 품질·memory·latency 비교를 설계하세요.", answerChecklist: ["same budget", "target modules", "optimizer memory", "merge", "throughput", "quality"], requiredConcepts: ["domain-update-scope-receipt"], sectionId: "update-scope" },
+      { level: "advanced", question: "Rare intent·abstention을 포함한 비보상 gate를 설계하세요.", answerChecklist: ["format", "factuality", "rare slice", "abstention", "general", "thresholds"], requiredConcepts: ["domain-behavior-release-gate"], sectionId: "evaluation" },
+      { level: "advanced", question: "Task-adapted model rollback receipt를 작성하세요.", answerChecklist: ["dataset", "template", "mask", "scope", "metrics", "artifact", "trigger"], requiredConcepts: ["domain-task-demonstration-contract", "domain-update-scope-receipt", "domain-behavior-release-gate"], sectionId: "evaluation" },
+    ],
+    papers: [
+      { title: "Training language models to follow instructions with human feedback", href: "https://arxiv.org/abs/2203.02155", problem: "Next-token pretraining만으로 user intent를 따르기 어려운 문제입니다.", contribution: "Demonstration SFT와 human preference pipeline을 제시합니다.", assumptions: "논문의 annotators·prompt distribution·models입니다.", evidenceScope: "InstructGPT의 SFT·reward·PPO evaluation 범위입니다.", notClaim: "모든 domain schema·factuality·safety를 자동 해결한다는 뜻은 아닙니다.", sectionId: "paper-instructgpt" },
+      { title: "LoRA: Low-Rank Adaptation of Large Language Models", href: "https://arxiv.org/abs/2106.09685", problem: "Task별 full fine-tuning의 parameter·storage 비용입니다.", contribution: "Frozen weights에 저랭크 trainable matrices를 추가합니다.", assumptions: "논문의 ranks·target modules·tasks입니다.", evidenceScope: "논문의 parameter efficiency와 quality experiments입니다.", notClaim: "모든 task에서 full fine-tuning보다 우월하다는 뜻은 아닙니다.", sectionId: "paper-lora-task" },
+    ],
+  },
+  "ai/domain-data-governance": {
+    entryLevel: true,
+    entryNote: "통계 split을 모른다고 가정하고 같은 환자의 두 visit이 독립된 두 사람이 아닌 이유부터 시작합니다.",
+    coreIdea: "전문 데이터는 row가 아닌 공유 원인 group과 time으로 split하고 rights lineage와 독립 slice coverage가 뒷받침하는 범위까지만 배포 성능을 주장해야 합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "domain-entity-time-split", role: "Entity·family·lot·source lineage를 격리하고 future cutoff를 둡니다." },
+      { id: "domain-data-rights-provenance", role: "License·consent·retention·deletion을 derivative와 run까지 잇습니다." },
+      { id: "domain-slice-evidence-coverage", role: "Required cell마다 독립 group 수와 빈 근거를 보고합니다." },
+      { id: "domain-deployment-claim-boundary", role: "검증한 기관·기간·장비·condition과 fallback까지만 유효 범위로 주장합니다." },
+    ],
+    conceptExplanations: [
+      { id: "domain-entity-time-split", sectionId: "group-time-split", intuition: "같은 환자·가족·장비에서 나온 친척 문제를 한 시험지 쪽에만 둡니다.", workedExample: "같은 gene family는 한 split에 묶고 max train time보다 min test time을 뒤에 둡니다.", boundary: "새 환자·새 기관·미래 event 중 실제 배포 단위에 맞춰 group과 time을 고릅니다." },
+      { id: "domain-data-rights-provenance", sectionId: "rights-lineage", intuition: "데이터가 어디서 왔고 왜·언제까지 쓸 수 있으며 삭제 시 어디까지 지울지 적는 장부입니다.", workedExample: "Source→deidentified corpus→synthetic generator→shard→run을 consent와 deletion ID로 잇습니다.", boundary: "공개 접근과 training·재배포 동의는 같지 않습니다." },
+      { id: "domain-slice-evidence-coverage", sectionId: "coverage-release", intuition: "평균 점수 뒤 기관·장비별 빈 칸을 독립 대상 수로 확인합니다.", workedExample: "12 cells 중 9개가 독립 group 30개 이상이면 coverage=.75입니다.", boundary: "Count threshold가 대표성·uncertainty·fairness를 보장하지 않습니다." },
+      { id: "domain-deployment-claim-boundary", sectionId: "coverage-release", intuition: "시험해 본 교실과 조건까지만 model이 유효하다고 말합니다.", workedExample: "기관 A·B, 2025 data, scanner X에서만 자동 처리하고 다른 cell은 human review로 보냅니다.", boundary: "Model card 문구만으로 runtime monitoring과 권리 enforcement가 생기지 않습니다." },
+    ],
+    conceptStages: [
+      { label: "01 Unit", relation: "Row 뒤 공유 원인과 배포 단위를 찾습니다.", concepts: ["domain-entity-time-split"] },
+      { label: "02 Split", relation: "Group과 future time을 격리합니다.", concepts: ["domain-entity-time-split"] },
+      { label: "03 Rights", relation: "Source에서 derivative·run까지 권리를 잇습니다.", concepts: ["domain-data-rights-provenance"] },
+      { label: "04 Claim", relation: "독립 evidence가 있는 cell까지만 주장합니다.", concepts: ["domain-slice-evidence-coverage", "domain-deployment-claim-boundary"] },
+    ],
+    exercises: [
+      { level: "basic", question: "같은 환자의 여러 visit을 같은 split에 둬야 하는 이유를 설명하세요.", answerChecklist: ["shared entity", "not independent", "memorization", "group split"], requiredConcepts: ["domain-entity-time-split"], sectionId: "overview" },
+      { level: "basic", question: "Group intersection 세 개와 future-time 조건을 쓰세요.", answerChecklist: ["train val empty", "train test empty", "val test empty", "max train before min test"], requiredConcepts: ["domain-entity-time-split"], sectionId: "group-time-split" },
+      { level: "basic", question: "새 환자·새 기관·미래 lot에서 group key가 달라지는 이유를 설명하세요.", answerChecklist: ["deployment unit", "patient", "site", "machine time"], requiredConcepts: ["domain-entity-time-split"], sectionId: "group-time-split" },
+      { level: "basic", question: "Rights lineage의 네 필드를 쓰세요.", answerChecklist: ["source", "license", "consent purpose", "retention deletion"], requiredConcepts: ["domain-data-rights-provenance"], sectionId: "rights-lineage" },
+      { level: "basic", question: "Synthetic data도 source lineage가 필요한 이유를 설명하세요.", answerChecklist: ["original source", "generator", "filter revision", "delete reach"], requiredConcepts: ["domain-data-rights-provenance"], sectionId: "rights-lineage" },
+      { level: "basic", question: "12 cells 중 9개가 nmin을 넘을 때 coverage를 계산하세요.", answerChecklist: ["9 divided by 12", ".75", "independent groups", "empty cells retained"], requiredConcepts: ["domain-slice-evidence-coverage"], sectionId: "coverage-release" },
+      { level: "advanced", question: "Gene family homology와 future collection을 함께 막는 split을 설계하세요.", answerChecklist: ["family grouping", "similarity threshold", "date cutoff", "no overlap", "sensitivity"], requiredConcepts: ["domain-entity-time-split"], sectionId: "group-time-split" },
+      { level: "advanced", question: "삭제 요청의 shard·checkpoint·serving reach를 설계하세요.", answerChecklist: ["source id", "derivatives", "shards", "runs", "checkpoints", "redeploy"], requiredConcepts: ["domain-data-rights-provenance"], sectionId: "rights-lineage" },
+      { level: "advanced", question: "기관×장비×condition coverage report를 설계하세요.", answerChecklist: ["required cells", "independent groups", "nmin", "empty cells", "uncertainty", "privacy"], requiredConcepts: ["domain-slice-evidence-coverage"], sectionId: "coverage-release" },
+      { level: "advanced", question: "검증되지 않은 cell을 human review로 보내는 claim boundary를 작성하세요.", answerChecklist: ["validated cells", "time range", "device", "abstain", "human review", "monitoring"], requiredConcepts: ["domain-deployment-claim-boundary", "domain-slice-evidence-coverage"], sectionId: "coverage-release" },
+    ],
+    papers: [
+      { title: "Datasheets for Datasets", href: "https://arxiv.org/abs/1803.09010", problem: "Dataset의 생성·구성·사용 맥락이 전달되지 않는 문제입니다.", contribution: "동기·구성·수집·전처리·배포·유지 질문을 체계화합니다.", assumptions: "작성자가 lineage와 사용 정보를 조사·공개할 수 있습니다.", evidenceScope: "Dataset documentation framework와 사례 범위입니다.", notClaim: "문서 작성만으로 consent·공정성·독립성이 보장된다는 뜻은 아닙니다.", sectionId: "paper-datasheets" },
+      { title: "Model Cards for Model Reporting", href: "https://arxiv.org/abs/1810.03993", problem: "Model의 intended use·평가 조건·제한이 배포자에게 전달되지 않는 문제입니다.", contribution: "용도·성능·subgroup·윤리·주의사항 보고 형식을 제안합니다.", assumptions: "관련 evaluation과 stakeholder 정보가 제공됩니다.", evidenceScope: "Model-card reporting framework와 사례 범위입니다.", notClaim: "보고서가 runtime monitoring·권리 enforcement를 대신한다는 뜻은 아닙니다.", sectionId: "paper-model-cards" },
     ],
   },
   "ai/sentence-embeddings": {
