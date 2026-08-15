@@ -16627,476 +16627,171 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/quantization": {
-    coreIdea:
-      "양자화는 float tensor를 적은 bit codebook으로 근사하는 수치 계약입니다. Scale·zero-point·rounding·clipping과 공유 granularity에서 시작해 PTQ calibration·QAT surrogate gradient·GPTQ/AWQ output reconstruction을 구분하고, numerical format·artifact container·kernel을 연결한 뒤 weight 외 activation·KV·workspace와 end-to-end latency를 실제 workload에서 검증해야 합니다.",
-    assumedKnowledge: [
-      {
-        id: "scalar-quantity",
-        role: "Float 값·scale·zero-point·error에 작은 수를 대입합니다.",
-      },
-      {
-        id: "bit-byte",
-        role: "b-bit code 수와 parameter payload를 byte로 계산합니다.",
-      },
-      {
-        id: "matrix-multiplication",
-        role: "Calibration activation과 float/quantized weight의 layer output을 비교합니다.",
-      },
-      {
-        id: "empirical-risk",
-        role: "Fake-quantized forward의 training loss를 QAT update와 연결합니다.",
-      },
-      {
-        id: "train-validation-test",
-        role: "Calibration·mixed precision 선택과 마지막 quality test를 분리합니다.",
-      },
-    ],
+    coreIdea: "Quantization은 연속 실수 하나를 scale·zero-point로 integer 눈금에 옮기고 round·clip한 뒤 근사 실수로 복원하는 표현 계약이며, rounding과 clipping의 원인을 분리해야 합니다.",
+    entryLevel: true,
+    assumedKnowledge: [],
     introducedHere: [
-      {
-        id: "affine-uniform-quantizer",
-        role: "실수를 integer code로 round·clip하고 scale로 복원합니다.",
-      },
-      {
-        id: "quantization-rounding-clipping-error",
-        role: "Range 안 반올림과 range 밖 포화 오차의 다른 bound를 계산합니다.",
-      },
-      {
-        id: "quantization-scale-granularity",
-        role: "Per-tensor·channel·group scale의 error·metadata·kernel tradeoff를 설명합니다.",
-      },
-      {
-        id: "ptq-calibration-coverage",
-        role: "분리된 traffic slice에서 layer saturation과 regression을 측정합니다.",
-      },
-      {
-        id: "qat-fake-quant-ste",
-        role: "Forward의 discrete error와 backward surrogate gradient를 구분합니다.",
-      },
-      {
-        id: "quantized-layer-output-reconstruction",
-        role: "Calibration input에서 XW와 XŴ 차이를 줄이는 objective를 읽습니다.",
-      },
-      {
-        id: "quantization-method-format-boundary",
-        role: "GPTQ/AWQ method·INT/FP format·W/A/KV dtype·GGUF container를 구분합니다.",
-      },
-      {
-        id: "quantized-resident-memory-ledger",
-        role: "Weight·scale·activation·KV·workspace·headroom별 peak memory를 계산합니다.",
-      },
-      {
-        id: "quantized-kernel-amdahl-bound",
-        role: "Low-bit operator fraction과 kernel speedup으로 end-to-end 상한을 계산합니다.",
-      },
+      { id: "affine-uniform-quantizer", role: "Scale·zero-point·round·clip·dequantize 순서로 code를 만듭니다." },
+      { id: "quantization-rounding-clipping-error", role: "Range 안 반올림과 밖 포화의 다른 오차를 구분합니다." },
     ],
     conceptExplanations: [
-      {
-        id: "affine-uniform-quantizer",
-        sectionId: "overview",
-        intuition:
-          "연속된 실수 자를 일정 간격의 눈금표로 바꾸고 각 값을 가장 가까운 눈금 번호로 저장하는 방법입니다.",
-        workedExample:
-          "Signed INT2 code {-2,-1,0,1}, s=1,z=0에서 x=-1,0,.7,2는 q=-1,0,1,1이고 복원값은 -1,0,1,1입니다.",
-        boundary:
-          "INT affine 식은 FP8·FP4 exponent/mantissa와 block/microscaling format 전체를 설명하지 않으며 rounding·signed range·zero-point convention을 같이 적어야 합니다.",
-      },
-      {
-        id: "quantization-rounding-clipping-error",
-        sectionId: "overview",
-        intuition:
-          "눈금 사이 값은 반 칸 이내로 이동하지만 자의 끝을 넘은 값은 끝점에 붙어 원래 값이 멀수록 오차가 커집니다.",
-        workedExample:
-          "s=1의 representable range [-2,1]에서 .7→1은 error -.3인 rounding이고 2→1은 error 1인 clipping입니다.",
-        boundary:
-          "s/2 bound는 uniform grid 안에서 nearest rounding할 때만 성립하고 clipping·stochastic rounding·nonuniform codebook에는 그대로 적용하지 않습니다.",
-      },
-      {
-        id: "quantization-scale-granularity",
-        sectionId: "ptq",
-        intuition:
-          "학생 전체가 같은 자 하나를 쓰는 대신 반이나 소그룹마다 범위에 맞는 자를 주면 측정은 촘촘해지지만 자 정보를 더 보관해야 합니다.",
-        workedExample:
-          "4096 weights를 group 128로 나누면 32 scales가 필요하고 scale 2 byte·zero point 1 byte라면 raw metadata 96 byte가 추가됩니다.",
-        boundary:
-          "작은 group이 항상 task quality를 높이지 않고 format alignment·scale load·kernel packing과 calibration noise가 실제 이득을 바꿉니다.",
-      },
-      {
-        id: "ptq-calibration-coverage",
-        sectionId: "ptq",
-        intuition:
-          "연습 표본으로 정한 자의 범위가 실제 입력에서도 충분한지 layer와 traffic 구간별로 넘친 값의 비율을 셉니다.",
-        workedExample:
-          "전체 saturation .01%여도 긴 한국어 query의 layer 20에서 4%라면 해당 slice 표본 보강과 layer bypass를 비교합니다.",
-        boundary:
-          "낮은 saturation이 낮은 task error를 보장하지 않으며 중요한 channel·structured output·long-context regression과 runtime fallback을 따로 봅니다.",
-      },
-      {
-        id: "qat-fake-quant-ste",
-        sectionId: "qat",
-        intuition:
-          "앞으로 갈 때는 계단을 밟지만 뒤로 학습 신호를 보낼 때만 그 계단을 완만한 경사처럼 취급합니다.",
-        workedExample:
-          "x가 range 안이면 dFQ/dx≈1로 upstream gradient를 통과시키고 range 밖이면 0으로 막은 뒤 float master weight를 update합니다.",
-        boundary:
-          "STE는 진짜 round derivative가 아닌 surrogate이고 variant·observer freeze·data·optimizer와 converted kernel 결과에 따라 품질이 달라집니다.",
-      },
-      {
-        id: "quantized-layer-output-reconstruction",
-        sectionId: "gptq-awq",
-        intuition:
-          "Weight 숫자 자체보다 실제 input을 통과한 layer 답이 얼마나 달라지는지를 줄입니다.",
-        workedExample:
-          "두 weight channel error가 같아도 calibration X의 첫 channel norm이 10배 크면 XᵀX가 그 방향 output error를 더 크게 가중합니다.",
-        boundary:
-          "한 layer의 calibration reconstruction은 전체 autoregressive trajectory·task loss와 같지 않으며 distribution 밖 input과 kernel 성능을 보장하지 않습니다.",
-      },
-      {
-        id: "quantization-method-format-boundary",
-        sectionId: "gptq-awq",
-        intuition:
-          "짐을 줄이는 방법, 숫자를 적는 표기법, 어느 짐을 줄였는지, 이를 담은 상자는 각각 다른 선택입니다.",
-        workedExample:
-          "AWQ는 weight 변환 method, INT4는 numerical format, W4A16은 weight/activation 조합, GGUF는 tensor encoding과 metadata를 담는 container입니다.",
-        boundary:
-          "파일명이나 4-bit label만으로 exact codebook·group size·base revision·quality·supported kernel을 확정하지 않습니다.",
-      },
-      {
-        id: "quantized-resident-memory-ledger",
-        sectionId: "practice",
-        intuition:
-          "창고에서 상자 하나만 작아져도 선반·작업대·임시 보관 공간이 그대로면 전체 공간은 같은 비율로 줄지 않습니다.",
-        workedExample:
-          "Weights 14→3.5GB, metadata .3GB, activation+KV 7GB, workspace/headroom 3GB이면 peak는 24→13.8GB로 줄어 기존의 57.5%가 됩니다.",
-        boundary:
-          "Context·batch·concurrency를 키우면 KV와 activation이 다시 늘고 paging·offload가 있으면 host/device resident와 transfer를 분리해야 합니다.",
-      },
-      {
-        id: "quantized-kernel-amdahl-bound",
-        sectionId: "practice",
-        intuition:
-          "전체 작업 중 빨라진 구간만 시간이 줄고 sampling·communication·fallback처럼 그대로인 구간은 남아 전체 속도 향상을 제한합니다.",
-        workedExample:
-          "Baseline 시간의 p=.6만 Sq=2배 빨라지면 전체 speedup 상한은 1/(.4+.3)=1.43배입니다.",
-        boundary:
-          "같은 workload에서 독립 구간 시간을 단순 합산한 상한이며 batch·overlap·capacity 변화로 실행 schedule이 바뀌면 trace를 다시 측정합니다.",
-        proofIdea:
-          "Baseline total time을 1로 놓으면 개선되지 않은 시간은 1-p, 개선된 시간 p는 Sq로 나누어 총 (1-p)+p/Sq가 되므로 speedup은 그 역수입니다.",
-        counterexample:
-          "Quantization으로 memory에 맞지 않던 batch가 들어가 paging 자체가 사라지면 단순히 기존 quantized-kernel fraction만 바뀐 것이 아니므로 이전 p를 사용한 상한은 적용할 수 없습니다.",
-      },
+      { id: "affine-uniform-quantizer", sectionId: "affine-map", intuition: "연속된 자를 일정 간격의 유한한 눈금표로 바꾸는 규칙입니다.", workedExample: "s=.5,z=0,x=.7이면 q=1이고 복원값은 .5입니다.", boundary: "FP8 exponent·mantissa format 전체를 설명하는 식은 아닙니다." },
+      { id: "quantization-rounding-clipping-error", sectionId: "error-shape", intuition: "Range 안에서는 가까운 눈금으로, 밖에서는 끝 눈금으로 이동합니다.", workedExample: "s=1, range [-2,1]에서 .7→1은 rounding이고 2→1은 clipping입니다.", boundary: "s/2 bound는 nearest rounding과 range 안에서만 성립합니다." },
     ],
     conceptStages: [
-      {
-        label: "Numeric approximation",
-        relation:
-          "Bit codebook에 scale·zero-point로 매핑하고 rounding·clipping 오차를 분리",
-        concepts: [
-          "scalar-quantity",
-          "bit-byte",
-          "affine-uniform-quantizer",
-          "quantization-rounding-clipping-error",
-        ],
-      },
-      {
-        label: "Post-training calibration",
-        relation:
-          "Scale 공유 범위와 representative sample이 saturation·mixed precision을 정함",
-        concepts: [
-          "quantization-scale-granularity",
-          "ptq-calibration-coverage",
-          "train-validation-test",
-        ],
-      },
-      {
-        label: "Adaptation and reconstruction",
-        relation:
-          "QAT surrogate update와 calibration output reconstruction을 서로 다른 보정으로 비교",
-        concepts: [
-          "empirical-risk",
-          "matrix-multiplication",
-          "qat-fake-quant-ste",
-          "quantized-layer-output-reconstruction",
-        ],
-      },
-      {
-        label: "Artifact and runtime",
-        relation:
-          "Method·format·container를 runtime resident memory와 kernel speedup 상한으로 연결",
-        concepts: [
-          "quantization-method-format-boundary",
-          "quantized-resident-memory-ledger",
-          "quantized-kernel-amdahl-bound",
-        ],
-      },
+      { label: "00 objects", relation: "Codebook·scale·zero-point를 먼저 정의합니다.", concepts: ["affine-uniform-quantizer"] },
+      { label: "01 mapping", relation: "나누기·이동·round·clip·복원 순서를 계산합니다.", concepts: ["affine-uniform-quantizer"] },
+      { label: "02 error", relation: "Range 안 rounding과 밖 clipping을 분리합니다.", concepts: ["affine-uniform-quantizer", "quantization-rounding-clipping-error"] },
+      { label: "03 boundary", relation: "Affine INT와 FP8 format 경계를 남깁니다.", concepts: ["quantization-rounding-clipping-error"] },
     ],
     exercises: [
-      {
-        level: "basic",
-        question:
-          "Signed INT2 {-2,-1,0,1}, s=1,z=0에서 x=[-1,0,.7,2]의 code·복원값·오차를 계산하고 rounding과 clipping을 구분하라.",
-        answerChecklist: [
-          "codes -1,0,1,1",
-          "reconstruction -1,0,1,1",
-          "errors 0,0,-.3,1",
-          ".7 rounding",
-          "2 clipping",
-          "range convention",
-        ],
-        requiredConcepts: [
-          "affine-uniform-quantizer",
-          "quantization-rounding-clipping-error",
-          "bit-byte",
-        ],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "7B weight를 FP16에서 packed INT4로 바꿀 때 raw payload를 각각 계산하고, 14GB→3.5GB가 peak VRAM 4배 절감을 뜻하지 않는 이유를 적어라.",
-        answerChecklist: [
-          "FP16 2 bytes per weight",
-          "FP16 raw 14GB",
-          "INT4 .5 byte per weight",
-          "INT4 raw 3.5GB",
-          "scale and packing metadata",
-          "activation and KV unchanged",
-          "workspace and headroom",
-        ],
-        requiredConcepts: ["bit-byte", "quantized-resident-memory-ledger"],
-        sectionId: "practice",
-      },
-      {
-        level: "advanced",
-        question:
-          "Per-tensor·per-channel·group-128 quantization을 scale 수·metadata·outlier 영향·target kernel layout로 비교하라.",
-        answerChecklist: [
-          "shared scale scopes",
-          "4096/128=32 groups",
-          "scale/zero-point bytes",
-          "local range",
-          "outlier contamination",
-          "packing support",
-          "quality not guaranteed",
-        ],
-        requiredConcepts: [
-          "quantization-scale-granularity",
-          "affine-uniform-quantizer",
-        ],
-        sectionId: "ptq",
-      },
-      {
-        level: "basic",
-        question:
-          "전체 saturation .01%와 긴 한국어 slice 특정 layer 4%를 관측했을 때 PTQ calibration을 어떻게 진단하고 다음 후보를 만들지 설명하라.",
-        answerChecklist: [
-          "worst slice",
-          "layer localization",
-          "calibration coverage",
-          "sample augmentation",
-          "high-precision bypass",
-          "same validation",
-          "test untouched",
-        ],
-        requiredConcepts: [
-          "ptq-calibration-coverage",
-          "train-validation-test",
-          "quantization-rounding-clipping-error",
-        ],
-        sectionId: "ptq",
-      },
-      {
-        level: "advanced",
-        question:
-          "QAT fake-quant forward와 STE backward를 계산 graph로 그리고 true rounding derivative와 다른 이유, export 후 재검증 항목을 설명하라.",
-        answerChecklist: [
-          "float master",
-          "round/clip/dequant forward",
-          "zero true derivative almost everywhere",
-          "surrogate 1 in range",
-          "observer freeze",
-          "convert graph",
-          "fallback",
-          "actual kernel quality",
-        ],
-        requiredConcepts: ["qat-fake-quant-ste", "empirical-risk"],
-        sectionId: "qat",
-      },
-      {
-        level: "basic",
-        question:
-          "Label 없이 빠르게 변환해야 하는 후보와, PTQ가 quality gate를 넘지 못했지만 학습 data·compute가 있는 후보를 각각 PTQ·QAT에 배치하고 공통 배포 검증을 적어라.",
-        answerChecklist: [
-          "frozen checkpoint plus representative calibration to PTQ",
-          "failed PTQ plus training budget to QAT candidate",
-          "fake quant only training simulation",
-          "converted artifact",
-          "actual low-bit kernel",
-          "same quality workload",
-          "latency and peak memory",
-        ],
-        requiredConcepts: [
-          "ptq-calibration-coverage",
-          "qat-fake-quant-ste",
-          "quantization-method-format-boundary",
-        ],
-        sectionId: "qat",
-      },
-      {
-        level: "advanced",
-        question:
-          "같은 Frobenius weight error가 activation channel 크기에 따라 다른 output error를 만드는 2×2 예를 만들고 XᵀX objective를 해석하라.",
-        answerChecklist: [
-          "matrix dimensions",
-          "two error directions",
-          "activation magnitudes",
-          "XW-XW-hat",
-          "X^T X weighting",
-          "layer proxy",
-          "task limitation",
-        ],
-        requiredConcepts: [
-          "quantized-layer-output-reconstruction",
-          "matrix-multiplication",
-          "ptq-calibration-coverage",
-        ],
-        sectionId: "gptq-awq",
-      },
-      {
-        level: "basic",
-        question:
-          "AWQ·INT4·W4A16·GGUF를 각각 method·numerical format·tensor/compute 조합·container로 분류하고 파일명만으로 알 수 없는 항목을 적어라.",
-        answerChecklist: [
-          "AWQ method",
-          "INT4 format",
-          "W4A16 dtype combination",
-          "GGUF container",
-          "group/codebook",
-          "base revision",
-          "kernel",
-          "quality",
-        ],
-        requiredConcepts: ["quantization-method-format-boundary"],
-        sectionId: "gptq-awq",
-      },
-      {
-        level: "basic",
-        question:
-          "Weights 14→3.5GB, scale .3GB, activation+KV 7GB, workspace/headroom 3GB에서 FP와 W4 peak·절감률을 계산하라.",
-        answerChecklist: [
-          "FP 24GB",
-          "W4 13.8GB",
-          "10.2GB reduction",
-          "42.5 percent reduction",
-          "57.5 percent remains",
-          "not 4x",
-          "KV unchanged",
-        ],
-        requiredConcepts: ["quantized-resident-memory-ledger", "bit-byte"],
-        sectionId: "practice",
-      },
-      {
-        level: "advanced",
-        question:
-          "Baseline latency의 60%를 low-bit kernel이 2배 가속할 때 Amdahl 상한을 계산하고 fallback·batch 확대 반례를 포함한 benchmark receipt를 설계하라.",
-        answerChecklist: [
-          "p=.6",
-          "Sq=2",
-          "1/(.4+.3)",
-          "1.43x",
-          "operator trace",
-          "fallback",
-          "same workload",
-          "batch schedule change",
-          "quality guardrail",
-        ],
-        requiredConcepts: [
-          "quantized-kernel-amdahl-bound",
-          "quantization-method-format-boundary",
-          "quantized-resident-memory-ledger",
-        ],
-        sectionId: "practice",
-      },
+      { level: "basic", question: "Codebook·scale·zero-point·code를 한 줄씩 정의하세요.", answerChecklist: ["finite codes", "step width", "zero location", "stored q", "not same object"], requiredConcepts: ["affine-uniform-quantizer"], sectionId: "overview" },
+      { level: "basic", question: "s=.5,z=0,x=.7의 q와 복원값을 계산하세요.", answerChecklist: ["divide 1.4", "round 1", "clip in range", "q 1", "x-hat .5"], requiredConcepts: ["affine-uniform-quantizer"], sectionId: "affine-map" },
+      { level: "basic", question: "Zero-point를 빼고 scale을 곱하는 이유를 설명하세요.", answerChecklist: ["undo integer offset", "restore float units", "approximation", "metadata required"], requiredConcepts: ["affine-uniform-quantizer"], sectionId: "affine-map" },
+      { level: "basic", question: "Signed INT2 codebook과 signed convention을 쓰세요.", answerChecklist: ["four codes", "-2", "-1", "0", "1", "finite range"], requiredConcepts: ["affine-uniform-quantizer"], sectionId: "overview" },
+      { level: "basic", question: ".7→1과 2→1의 오차 원인을 구분하세요.", answerChecklist: ["rounding", "clipping", "range", "endpoint", "different bound"], requiredConcepts: ["quantization-rounding-clipping-error"], sectionId: "error-shape" },
+      { level: "basic", question: "Affine INT와 FP8을 같은 8-bit로 보면 안 되는 이유를 설명하세요.", answerChecklist: ["integer grid", "exponent", "mantissa", "scaling recipe", "different codebook"], requiredConcepts: ["affine-uniform-quantizer"], sectionId: "format-boundary" },
+      { level: "advanced", question: "Range를 넓힐 때 rounding과 clipping이 어떻게 교환되는지 설명하세요.", answerChecklist: ["same code count", "larger scale", "coarser center", "fewer clipped tails", "tradeoff"], requiredConcepts: ["quantization-rounding-clipping-error"], sectionId: "error-shape" },
+      { level: "advanced", question: "Asymmetric zero-point 예를 만들고 encode·decode를 계산하세요.", answerChecklist: ["nonzero z", "zero maps exactly", "round", "clip", "subtract z", "multiply s"], requiredConcepts: ["affine-uniform-quantizer"], sectionId: "affine-map" },
+      { level: "advanced", question: "s/2 bound가 깨지는 반례 두 개를 쓰세요.", answerChecklist: ["clipping", "outlier distance", "stochastic or nonuniform", "assumption boundary"], requiredConcepts: ["quantization-rounding-clipping-error"], sectionId: "error-shape" },
+      { level: "advanced", question: "Quantizer artifact receipt의 최소 항목을 설계하세요.", answerChecklist: ["codebook", "signed range", "scale", "zero point", "rounding tie", "granularity", "dtype"], requiredConcepts: ["affine-uniform-quantizer", "quantization-rounding-clipping-error"], sectionId: "format-boundary" },
     ],
     papers: [
-      {
-        title:
-          "Quantization and Training of Neural Networks for Efficient Integer-Arithmetic-Only Inference",
-        href: "https://arxiv.org/abs/1712.05877",
-        problem:
-          "Integer-only hardware에서 neural-network inference를 효율화하면서 quantization accuracy를 보존하는 문제",
-        contribution:
-          "Affine quantization·integer arithmetic path와 quantization-aware training procedure의 공동 설계",
-        assumptions:
-          "논문의 MobileNet·ImageNet/COCO·CPU integer kernel·training recipe",
-        evidenceScope:
-          "원 논문이 평가한 image classification/detection와 당시 device latency 범위",
-        notClaim:
-          "같은 QAT recipe가 LLM·FP8·모든 accelerator에서 동일 정확도와 speedup을 보장한다는 뜻은 아님",
-        sectionId: "paper-integer-qat",
-      },
-      {
-        title:
-          "SmoothQuant: Accurate and Efficient Post-Training Quantization for Large Language Models",
-        href: "https://proceedings.mlr.press/v202/xiao23c.html",
-        problem:
-          "LLM activation outlier 때문에 hardware-efficient W8A8 PTQ가 어려운 문제",
-        contribution:
-          "Equivalent channel scaling으로 quantization 난이도를 activation에서 weight로 옮기는 training-free transformation",
-        assumptions:
-          "OPT·BLOOM·GLM 계열, calibration statistics, 논문의 W8A8 kernels·hardware·tasks",
-        evidenceScope:
-          "ICML 논문의 LLM perplexity/task와 serving experiments 범위",
-        notClaim:
-          "모든 model·4-bit format·runtime에서 outlier와 성능 문제가 같은 방식으로 해결된다는 뜻은 아님",
-        sectionId: "paper-smoothquant",
-      },
-      {
-        title:
-          "GPTQ: Accurate Post-Training Quantization for Generative Pre-trained Transformers",
-        href: "https://arxiv.org/abs/2210.17323",
-        problem:
-          "매우 큰 generative Transformer를 one-shot low-bit weight로 바꾸면서 output reconstruction과 quantization 시간을 관리하는 문제",
-        contribution:
-          "Approximate second-order information과 blockwise sequential update를 이용한 weight-only PTQ",
-        assumptions:
-          "OPT-family models·calibration data·damping/ordering·논문의 A100/A6000 kernels",
-        evidenceScope:
-          "논문의 2–4 bit perplexity·task·quantization time·end-to-end speed experiments 범위",
-        notClaim:
-          "모든 현대 architecture와 engine에서 negligible loss나 동일 speedup이 보장된다는 뜻은 아님",
-        sectionId: "paper-gptq",
-      },
-      {
-        title:
-          "AWQ: Activation-aware Weight Quantization for LLM Compression and Acceleration",
-        href: "https://arxiv.org/abs/2306.00978",
-        problem:
-          "LLM/VLM의 low-bit weight-only quantization에서 salient channel error를 hardware-friendly하게 줄이는 문제",
-        contribution:
-          "Activation statistics 기반 salient weight 식별과 equivalent scaling, TinyChat packed kernels",
-        assumptions:
-          "논문의 LLM/VLM checkpoints·calibration·W4 group/layout·desktop/mobile devices",
-        evidenceScope:
-          "논문의 language/model tasks와 TinyChat latency/throughput 범위",
-        notClaim:
-          "1% salient 관찰·3x speedup·generalization이 모든 model과 runtime의 고정 성질이라는 뜻은 아님",
-        sectionId: "paper-awq",
-      },
-      {
-        title: "GGUF specification",
-        href: "https://github.com/ggml-org/ggml/blob/master/docs/gguf.md",
-        problem:
-          "GGML executor가 model tensor·architecture·tokenizer·quantization metadata를 명확하고 확장 가능하게 저장·로드하는 문제",
-        contribution:
-          "Versioned header, typed key-value metadata, aligned tensor information/data와 encoding type 규격",
-        assumptions:
-          "해당 specification revision과 이를 구현하는 reader/runtime의 architecture·type support",
-        evidenceScope:
-          "GGUF binary container·standard metadata·tensor layout의 공식 문서 범위",
-        notClaim:
-          "GGUF 파일명만으로 quantization algorithm·base identity·quality·kernel speed를 모두 보장한다는 뜻은 아님",
-        sectionId: "spec-gguf",
-      },
+      { title: "Transformer Engine FP8 Current Scaling", href: "https://docs.nvidia.com/deeplearning/transformer-engine/user-guide/features/low_precision_training/fp8_current_scaling/fp8_current_scaling.html", problem: "FP8의 제한된 dynamic range에서 tensor를 표현합니다.", contribution: "E4M3·E5M2와 amax 기반 scaling 단계를 문서화합니다.", assumptions: "Transformer Engine 2.16과 지원 GPU·shape입니다.", evidenceScope: "FP8 format과 scaling recipe입니다.", notClaim: "Affine INT와 같거나 모든 operator가 FP8이라는 뜻은 아닙니다.", sectionId: "paper-transformer-engine-fp8" },
+    ],
+  },
+  "ai/ptq-calibration": {
+    coreIdea: "PTQ calibration은 학습된 checkpoint를 고정하고 representative inputs로 scale sharing과 range를 정한 뒤 별도 traffic slice에서 saturation·task regression·fallback을 검증해 deployable artifact를 만드는 절차입니다.",
+    entryLevel: true,
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "quantization-scale-granularity", role: "Tensor·channel·group이 scale을 공유하는 범위를 정합니다." },
+      { id: "ptq-calibration-coverage", role: "Layer·traffic slice별 saturation과 regression을 검사합니다." },
+    ],
+    conceptExplanations: [
+      { id: "quantization-scale-granularity", sectionId: "scale-granularity", intuition: "모든 값이 같은 자를 쓸지 작은 그룹마다 다른 자를 쓸지 정합니다.", workedExample: "4096 weights를 group 128로 나누면 scale 32개가 필요합니다.", boundary: "작은 group이 항상 task quality나 kernel speed를 높이지 않습니다." },
+      { id: "ptq-calibration-coverage", sectionId: "coverage", intuition: "연습 표본으로 만든 자가 실제 traffic에서도 넘치지 않는지 구간별로 봅니다.", workedExample: "전체 .01%여도 긴 한국어 layer 20이 4%면 worst slice는 실패 후보입니다.", boundary: "낮은 saturation만으로 task quality를 보장하지 않습니다." },
+    ],
+    conceptStages: [
+      { label: "00 checkpoint", relation: "Float checkpoint와 calibration data 역할을 분리합니다.", concepts: ["affine-uniform-quantizer", "quantization-scale-granularity"] },
+      { label: "01 observe", relation: "공유 범위마다 tensor 통계를 모읍니다.", concepts: ["quantization-scale-granularity"] },
+      { label: "02 validate", relation: "분리된 layer·slice의 포화를 계산합니다.", concepts: ["quantization-rounding-clipping-error", "ptq-calibration-coverage"] },
+      { label: "03 release", relation: "Scale·packing·fallback을 artifact로 고정합니다.", concepts: ["quantization-scale-granularity", "ptq-calibration-coverage"] },
+    ],
+    exercises: [
+      { level: "basic", question: "PTQ에서 checkpoint·observer·calibration set·artifact를 정의하세요.", answerChecklist: ["frozen weights", "collect stats", "representative inputs", "converted operators", "separate roles"], requiredConcepts: ["ptq-calibration-coverage"], sectionId: "overview" },
+      { level: "basic", question: "Per-tensor·per-channel·group scale을 비교하세요.", answerChecklist: ["sharing scope", "metadata", "local range", "outlier", "kernel layout"], requiredConcepts: ["quantization-scale-granularity"], sectionId: "scale-granularity" },
+      { level: "basic", question: "4096/group128의 group 수와 2+1 byte metadata를 계산하세요.", answerChecklist: ["32 groups", "3 bytes each", "96 bytes", "raw only", "alignment excluded"], requiredConcepts: ["quantization-scale-granularity"], sectionId: "scale-granularity" },
+      { level: "basic", question: "Calibration과 validation을 분리하는 이유를 설명하세요.", answerChecklist: ["scale selection", "unseen check", "avoid leakage", "test untouched", "same artifact"], requiredConcepts: ["ptq-calibration-coverage"], sectionId: "coverage" },
+      { level: "basic", question: "Saturation indicator와 rate를 말로 풀이하세요.", answerChecklist: ["outside range", "0 or 1", "sum clipped", "divide element count", "per layer slice"], requiredConcepts: ["ptq-calibration-coverage"], sectionId: "coverage" },
+      { level: "basic", question: "전체 .01%·특정 slice 4%를 어떻게 해석할지 설명하세요.", answerChecklist: ["average hides", "worst slice", "layer localization", "sample coverage", "candidate fix"], requiredConcepts: ["ptq-calibration-coverage"], sectionId: "coverage" },
+      { level: "advanced", question: "Group size를 줄이는 ablation receipt를 설계하세요.", answerChecklist: ["same checkpoint", "group sizes", "metadata", "packing", "task slices", "latency", "peak"], requiredConcepts: ["quantization-scale-granularity"], sectionId: "scale-granularity" },
+      { level: "advanced", question: "Calibration 표본 보강과 layer bypass를 비교하는 실험을 설계하세요.", answerChecklist: ["same validation", "worst layer", "new samples", "higher precision bypass", "quality", "fallback"], requiredConcepts: ["ptq-calibration-coverage"], sectionId: "release" },
+      { level: "advanced", question: "낮은 saturation인데 task가 나빠지는 반례를 만드세요.", answerChecklist: ["important channel", "small element rate", "large downstream effect", "task metric", "saturation insufficient"], requiredConcepts: ["ptq-calibration-coverage"], sectionId: "coverage" },
+      { level: "advanced", question: "PTQ release receipt를 작성하세요.", answerChecklist: ["base hash", "calibration slices", "observer", "scale layout", "packing", "fallback", "quality slices", "runtime"], requiredConcepts: ["quantization-scale-granularity", "ptq-calibration-coverage"], sectionId: "release" },
+    ],
+    papers: [
+      { title: "SmoothQuant", href: "https://proceedings.mlr.press/v202/xiao23c.html", problem: "LLM activation outlier가 W8A8 PTQ를 어렵게 합니다.", contribution: "동등한 channel scaling으로 난이도를 activation에서 weight로 옮깁니다.", assumptions: "논문의 model·calibration·INT8 kernel 조건입니다.", evidenceScope: "SmoothQuant 변환과 실험입니다.", notClaim: "모든 model·bit width의 품질과 속도를 보장하지 않습니다.", sectionId: "paper-smoothquant" },
+    ],
+  },
+  "ai/quantization-aware-training": {
+    coreIdea: "QAT는 float master weight를 유지하고 forward에는 fake quantization을 넣어 배포 오차를 노출하며, backward에는 STE surrogate를 사용한 뒤 converted artifact와 실제 kernel에서 다시 검증하는 재학습 절차입니다.",
+    entryLevel: true,
+    assumedKnowledge: [],
+    introducedHere: [{ id: "qat-fake-quant-ste", role: "Fake-quant forward와 surrogate backward를 분리합니다." }],
+    conceptExplanations: [
+      { id: "qat-fake-quant-ste", sectionId: "ste", intuition: "앞으로 갈 때는 계단을 밟고 뒤로 신호를 보낼 때만 경사로처럼 취급합니다.", workedExample: "Range 안에서는 dFQ/dx≈1, 밖에서는 0으로 두어 upstream gradient를 float master에 보냅니다.", boundary: "STE는 round의 참 derivative도 discrete optimum의 보장도 아닙니다." },
+    ],
+    conceptStages: [
+      { label: "00 master", relation: "Float master weight와 optimizer state를 유지합니다.", concepts: ["qat-fake-quant-ste"] },
+      { label: "01 forward", relation: "Round·clip·dequantize 오차를 task loss에 노출합니다.", concepts: ["affine-uniform-quantizer", "qat-fake-quant-ste"] },
+      { label: "02 backward", relation: "STE gate로 surrogate gradient를 전달합니다.", concepts: ["qat-fake-quant-ste"] },
+      { label: "03 export", relation: "Converted graph와 실제 kernel parity를 검증합니다.", concepts: ["qat-fake-quant-ste"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Float master·fake quantizer·STE·converted artifact를 정의하세요.", answerChecklist: ["trainable float", "forward error", "surrogate backward", "deploy graph", "different objects"], requiredConcepts: ["qat-fake-quant-ste"], sectionId: "overview" },
+      { level: "basic", question: "Fake quantization이 quantize 뒤 dequantize하는 이유를 설명하세요.", answerChecklist: ["low-bit error", "float interface", "round", "clip", "next operator"], requiredConcepts: ["qat-fake-quant-ste"], sectionId: "fake-quant" },
+      { level: "basic", question: "QAT와 PTQ를 data·optimizer 관점에서 비교하세요.", answerChecklist: ["PTQ frozen", "calibration", "QAT training", "optimizer trajectory", "compute budget"], requiredConcepts: ["qat-fake-quant-ste"], sectionId: "overview" },
+      { level: "basic", question: "Range 안과 밖의 STE derivative를 쓰세요.", answerChecklist: ["inside one", "outside zero", "indicator", "surrogate", "not true derivative"], requiredConcepts: ["qat-fake-quant-ste"], sectionId: "ste" },
+      { level: "basic", question: "Observer freeze가 recipe 일부인 이유를 설명하세요.", answerChecklist: ["range changes", "forward changes", "gradient trajectory", "record timing", "reproducibility"], requiredConcepts: ["qat-fake-quant-ste"], sectionId: "fake-quant" },
+      { level: "basic", question: "Fake-quant checkpoint만으로 release하면 안 되는 이유를 쓰세요.", answerChecklist: ["simulation", "convert graph", "packing", "fallback", "actual kernel", "quality"], requiredConcepts: ["qat-fake-quant-ste"], sectionId: "release" },
+      { level: "advanced", question: "True round derivative와 STE를 비교하는 graph를 설명하세요.", answerChecklist: ["piecewise constant", "zero almost everywhere", "identity inside", "gate outside", "bias", "optimization utility"], requiredConcepts: ["qat-fake-quant-ste"], sectionId: "ste" },
+      { level: "advanced", question: "PTQ 실패 뒤 QAT 후보를 여는 decision rule을 설계하세요.", answerChecklist: ["PTQ quality failure", "training data", "compute", "same validation", "converted artifact", "runtime gate"], requiredConcepts: ["qat-fake-quant-ste"], sectionId: "release" },
+      { level: "advanced", question: "STE variant 두 개의 ablation을 설계하세요.", answerChecklist: ["same initialization", "outside gradient", "scale gradient", "freeze", "task slices", "export parity"], requiredConcepts: ["qat-fake-quant-ste"], sectionId: "ste" },
+      { level: "advanced", question: "QAT release receipt를 작성하세요.", answerChecklist: ["base revision", "data", "optimizer", "STE rule", "observer freeze", "convert revision", "fallback", "kernel trace"], requiredConcepts: ["qat-fake-quant-ste"], sectionId: "release" },
+    ],
+    papers: [
+      { title: "Quantization and Training of Neural Networks", href: "https://arxiv.org/abs/1712.05877", problem: "Integer-only inference를 위한 quantized training이 필요합니다.", contribution: "Affine quantization과 QAT procedure를 제시합니다.", assumptions: "논문의 MobileNet·ImageNet·COCO·CPU 조건입니다.", evidenceScope: "Training과 integer inference 설계입니다.", notClaim: "현대 LLM·FP8·모든 accelerator에 같은 recipe를 보장하지 않습니다.", sectionId: "paper-integer-qat" },
+    ],
+  },
+  "ai/weight-only-quantization": {
+    coreIdea: "Weight-only quantization은 activation을 높은 precision으로 남기고 low-bit weight를 만들며, calibration activation에서 layer output을 보존하는 objective와 GPTQ·AWQ method, numerical format·execution profile·container를 서로 다른 층으로 구분합니다.",
+    entryLevel: true,
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "quantized-layer-output-reconstruction", role: "XW와 XŴ의 layer output 차이를 최소화합니다." },
+      { id: "quantization-method-format-boundary", role: "Method·format·W/A/KV profile·container·kernel을 구분합니다." },
+    ],
+    conceptExplanations: [
+      { id: "quantized-layer-output-reconstruction", sectionId: "output-reconstruction", intuition: "Weight 숫자보다 실제 input을 통과한 layer 답이 얼마나 변하는지 봅니다.", workedExample: "큰 activation channel의 같은 weight error는 output을 더 크게 바꿉니다.", boundary: "한 layer reconstruction은 전체 autoregressive task loss와 같지 않습니다." },
+      { id: "quantization-method-format-boundary", sectionId: "artifact-boundary", intuition: "짐을 줄이는 방법·숫자 표기·짐 조합·상자·운반 장비를 구분합니다.", workedExample: "AWQ method, INT4 format, W4A16 profile, GGUF container입니다.", boundary: "4-bit 파일명만으로 codebook·group·kernel·quality를 확정하지 않습니다." },
+    ],
+    conceptStages: [
+      { label: "00 profile", relation: "Weight-only와 activation·KV precision을 분리합니다.", concepts: ["quantization-method-format-boundary"] },
+      { label: "01 objective", relation: "Calibration activation으로 layer output error를 측정합니다.", concepts: ["quantized-layer-output-reconstruction"] },
+      { label: "02 method", relation: "GPTQ와 AWQ의 다른 보정 경로를 비교합니다.", concepts: ["quantized-layer-output-reconstruction"] },
+      { label: "03 artifact", relation: "Method에서 format·container·kernel까지 연결합니다.", concepts: ["quantized-layer-output-reconstruction", "quantization-method-format-boundary"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Weight-only에서 줄어드는 tensor와 남는 tensor를 쓰세요.", answerChecklist: ["weights low bit", "activations higher", "KV separate", "accumulation separate", "profile explicit"], requiredConcepts: ["quantization-method-format-boundary"], sectionId: "overview" },
+      { level: "basic", question: "Layer-output reconstruction 식에서 W·W-hat·X·E가 각각 어떤 tensor인지, 서로 어떤 shape로 곱해지고 E가 output error로 어떻게 전파되는지 설명하세요.", answerChecklist: ["float weight", "quantized weight", "calibration activation", "difference", "matrix dimensions"], requiredConcepts: ["quantized-layer-output-reconstruction"], sectionId: "output-reconstruction" },
+      { level: "basic", question: "왜 X를 weight error에 곱하는지 설명하세요.", answerChecklist: ["input frequency", "activation magnitude", "output effect", "channel weighting", "layer proxy"], requiredConcepts: ["quantized-layer-output-reconstruction"], sectionId: "output-reconstruction" },
+      { level: "basic", question: "GPTQ와 AWQ의 핵심 보정 차이를 말하세요.", answerChecklist: ["second order", "column correction", "activation salience", "equivalent scaling", "same goal"], requiredConcepts: ["quantized-layer-output-reconstruction"], sectionId: "gptq-awq" },
+      { level: "basic", question: "AWQ·INT4·W4A16·GGUF를 분류하세요.", answerChecklist: ["method", "format", "execution profile", "container", "not interchangeable"], requiredConcepts: ["quantization-method-format-boundary"], sectionId: "artifact-boundary" },
+      { level: "basic", question: "GGUF 이름만으로 모르는 항목을 쓰세요.", answerChecklist: ["method", "codebook", "group size", "base revision", "kernel", "quality"], requiredConcepts: ["quantization-method-format-boundary"], sectionId: "artifact-boundary" },
+      { level: "advanced", question: "2x2 X와 두 error direction으로 output error 차이를 만드세요.", answerChecklist: ["dimensions", "same weight norm", "different activation", "XE", "Frobenius", "interpretation"], requiredConcepts: ["quantized-layer-output-reconstruction"], sectionId: "output-reconstruction" },
+      { level: "advanced", question: "Equivalent scaling이 float function을 유지하는 이유를 증명하세요.", answerChecklist: ["diagonal D", "D inverse", "association", "cancel", "quantized result differs"], requiredConcepts: ["quantized-layer-output-reconstruction"], sectionId: "gptq-awq" },
+      { level: "advanced", question: "GPTQ와 AWQ를 같은 runtime에서 비교하는 실험을 설계하세요.", answerChecklist: ["same base", "same bit group", "same kernel", "calibration", "quality slices", "latency", "peak"], requiredConcepts: ["quantized-layer-output-reconstruction", "quantization-method-format-boundary"], sectionId: "gptq-awq" },
+      { level: "advanced", question: "Weight-only artifact receipt를 작성하세요.", answerChecklist: ["base hash", "method revision", "format", "group", "W/A/KV dtype", "container", "kernel", "fallback"], requiredConcepts: ["quantization-method-format-boundary"], sectionId: "artifact-boundary" },
+    ],
+    papers: [
+      { title: "GPTQ", href: "https://arxiv.org/abs/2210.17323", problem: "대형 model의 one-shot weight quantization입니다.", contribution: "Approximate second-order blockwise 보정을 제시합니다.", assumptions: "논문의 model·hardware·kernel 조건입니다.", evidenceScope: "GPTQ algorithm과 실험입니다.", notClaim: "모든 4-bit artifact의 고정 speedup이 아닙니다.", sectionId: "paper-gptq" },
+      { title: "AWQ", href: "https://arxiv.org/abs/2306.00978", problem: "Salient activation channel에서 작은 weight error도 output을 크게 바꾸는 weight-only quantization 문제입니다.", contribution: "Calibration activation으로 salient channel을 찾고 equivalent scaling으로 effective quantization resolution을 높이는 방법을 제시합니다.", assumptions: "논문에 포함된 LLM/VLM checkpoint, calibration sample, W4 group·packing, TinyChat kernel과 device 조건입니다.", evidenceScope: "AWQ의 activation-aware search·scaling algorithm과 논문에 보고된 perplexity·zero-shot·TinyChat latency 결과 범위입니다.", notClaim: "GPTQ와 같은 method이거나 임의의 4-bit container·GPU runtime에서 같은 품질·속도를 낸다는 뜻은 아닙니다.", sectionId: "paper-awq" },
+      { title: "GGUF specification", href: "https://github.com/ggml-org/ggml/blob/master/docs/gguf.md", problem: "Tensor와 typed metadata를 교환합니다.", contribution: "Header·metadata·tensor layout을 규정합니다.", assumptions: "사용하는 GGUF version과 tensor type입니다.", evidenceScope: "Container semantics입니다.", notClaim: "Method·quality·kernel을 보장하지 않습니다.", sectionId: "spec-gguf" },
+    ],
+  },
+  "ai/quantized-model-deployment": {
+    coreIdea: "Quantized model 배포는 parameter count를 dtype별 weight bytes로 바꾸고 metadata·activation·KV/recurrent state·workspace·headroom을 따로 합산한 뒤 실제 low-bit operator 비율과 end-to-end trace로 capacity와 speed를 각각 release합니다.",
+    entryLevel: true,
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "quantized-resident-memory-ledger", role: "Weight 밖의 request·workspace memory를 함께 계산합니다." },
+      { id: "quantized-kernel-amdahl-bound", role: "Low-bit kernel 비율이 전체 speedup을 제한함을 계산합니다." },
+    ],
+    conceptExplanations: [
+      { id: "quantized-resident-memory-ledger", sectionId: "resident-ledger", intuition: "창고의 weight 상자만 줄여도 작업대와 임시 보관 공간은 그대로 남습니다.", workedExample: "Weights 14→3.5GB, metadata .3, activation+state 7, workspace+headroom 3이면 peak 24→13.8GB입니다.", boundary: "Context·batch·concurrency와 offload가 바뀌면 다시 계산합니다." },
+      { id: "quantized-kernel-amdahl-bound", sectionId: "runtime-release", intuition: "전체 중 실제로 바뀐 구간만 빨라지고 sampling·communication·fallback처럼 바뀌지 않은 시간은 그대로 남아 전체 향상을 제한합니다.", workedExample: "Baseline을 1로 두고 p=.6만 2배 빨라지면 남은 시간은 .4+.6/2=.7이므로 전체 상한은 1/.7=1.43배입니다.", boundary: "Batch·overlap·paging topology가 바뀌면 실행 schedule 자체가 달라지므로 기존 p를 재사용하지 않습니다.", proofIdea: "Baseline total time을 1로 정규화하면 개선되지 않은 시간은 1-p이고, 개선되는 p 구간은 Sq배 빨라져 p/Sq가 됩니다. 개선 뒤 total time은 두 항의 합이며 speedup은 baseline time 1을 그 합으로 나눈 역수입니다.", counterexample: "Quantization 덕분에 이전에는 memory에 들어가지 않던 batch가 들어가 paging이나 host transfer가 통째로 사라지면 단순히 기존 kernel 구간 p만 빨라진 것이 아닙니다. 이 경우 이전 Amdahl 분해를 재사용하지 않고 새 execution trace에서 p를 다시 측정합니다." },
+    ],
+    conceptStages: [
+      { label: "00 weight", relation: "Parameter count와 dtype histogram으로 weight floor를 계산합니다.", concepts: ["quantization-method-format-boundary", "quantized-resident-memory-ledger"] },
+      { label: "01 state", relation: "Activation·KV·recurrent state를 workload별로 더합니다.", concepts: ["quantized-resident-memory-ledger"] },
+      { label: "02 peak", relation: "Workspace·allocator·headroom을 더해 GPU admission을 판단합니다.", concepts: ["quantized-resident-memory-ledger"] },
+      { label: "03 runtime", relation: "실제 low-bit operator fraction으로 speedup을 검증합니다.", concepts: ["quantized-resident-memory-ledger", "quantized-kernel-amdahl-bound"] },
+    ],
+    exercises: [
+      { level: "basic", question: "27B weights를 BF16·FP8·INT4 raw GB로 계산하세요.", answerChecklist: ["54GB", "27GB", "13.5GB", "bits divide 8", "metadata excluded"], requiredConcepts: ["quantized-resident-memory-ledger"], sectionId: "weight-budget" },
+      { level: "basic", question: "FP8 model label만으로 exact weight bytes를 확정할 수 없는 이유를 설명하세요.", answerChecklist: ["mixed dtype", "exceptions", "scale metadata", "tensor histogram", "artifact revision"], requiredConcepts: ["quantized-resident-memory-ledger"], sectionId: "weight-budget" },
+      { level: "basic", question: "Weight-only가 자동으로 줄이지 않는 memory를 쓰세요.", answerChecklist: ["activation", "KV", "recurrent state", "workspace", "allocator", "headroom"], requiredConcepts: ["quantized-resident-memory-ledger"], sectionId: "resident-ledger" },
+      { level: "basic", question: "14→3.5,.3,7,3GB 예의 두 peak와 절감을 계산하세요.", answerChecklist: ["24GB", "13.8GB", "10.2GB", "42.5 percent", "not four times"], requiredConcepts: ["quantized-resident-memory-ledger"], sectionId: "resident-ledger" },
+      { level: "basic", question: "FP8 weights와 KV dtype을 분리해야 하는 이유를 설명하세요.", answerChecklist: ["checkpoint dtype", "runtime cache", "separate config", "context growth", "quality"], requiredConcepts: ["quantized-resident-memory-ledger"], sectionId: "resident-ledger" },
+      { level: "basic", question: "p=.6,Sq=2의 Amdahl speedup을 계산하세요.", answerChecklist: [".4 unchanged", ".3 accelerated", ".7 total", "1.43x", "upper bound"], requiredConcepts: ["quantized-kernel-amdahl-bound"], sectionId: "runtime-release" },
+      { level: "advanced", question: "48GiB GPU admission 장부를 설계하세요.", answerChecklist: ["exact weights", "metadata", "KV", "fixed state", "activation", "workspace", "headroom", "GiB"], requiredConcepts: ["quantized-resident-memory-ledger"], sectionId: "resident-ledger" },
+      { level: "advanced", question: "Hybrid attention model의 request state를 장부에 넣는 법을 설명하세요.", answerChecklist: ["attention KV grows T", "recurrent fixed T", "per request", "concurrency", "weights shared", "workspace separate"], requiredConcepts: ["quantized-resident-memory-ledger"], sectionId: "resident-ledger" },
+      { level: "advanced", question: "File 4배 축소인데 latency 1.1배인 trace를 진단하세요.", answerChecklist: ["operator fraction", "fallback", "dequant", "bandwidth", "unchanged stages", "measure p", "quality parity"], requiredConcepts: ["quantized-kernel-amdahl-bound"], sectionId: "runtime-release" },
+      { level: "advanced", question: "Quantized deployment release receipt를 작성하세요.", answerChecklist: ["artifact hash", "dtype ledger", "memory profile", "engine kernel", "fallback", "quality slices", "p95 throughput", "peak"], requiredConcepts: ["quantized-resident-memory-ledger", "quantized-kernel-amdahl-bound"], sectionId: "runtime-release" },
+    ],
+    papers: [
+      { title: "Transformer Engine FP8 and FP4 primer", href: "https://docs.nvidia.com/deeplearning/transformer-engine/user-guide/examples/fp8_primer.html", problem: "Low-precision format·scale·hardware recipe를 연결합니다.", contribution: "FP8·MXFP8·NVFP4 지원 경계를 문서화합니다.", assumptions: "Transformer Engine 2.16과 대상 GPU입니다.", evidenceScope: "지원 recipe·format·shape입니다.", notClaim: "Model label만으로 모든 operator가 해당 kernel을 쓴다는 뜻은 아닙니다.", sectionId: "paper-transformer-engine-fp8" },
     ],
   },
   "ai/pruning": {

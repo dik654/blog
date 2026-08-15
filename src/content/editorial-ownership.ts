@@ -2076,33 +2076,22 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [{ kind: "primary-source", rule: "MTEB 결과는 benchmark snapshot·task·language·metric 범위로 제한한다." }, { kind: "standard", rule: "Corpus·labels·tie convention·slice thresholds·ANN settings·hardware·concurrency·actual cost를 함께 기록한다." }],
   },
   quantization: {
-    title: "양자화 글이 소유하는 범위",
+    title: "양자화 기초 글이 소유하는 범위",
     owns: [
       "Affine INT quantizer의 scale·zero-point·round·clip과 rounding/clipping error 경계",
-      "Per-tensor·channel·group scale, static/dynamic calibration, PTQ saturation·mixed-precision 판단",
-      "QAT fake quantization·STE와 GPTQ/AWQ layer-output reconstruction의 서로 다른 보정 경로",
-      "Numerical format·tensor dtype 조합·method·GGUF container·runtime kernel의 추상화 경계",
-      "Weight·activation·KV·workspace resident memory와 Amdahl 기반 end-to-end speedup 검증",
+      "Affine integer codebook과 FP8 exponent·mantissa format의 경계",
     ],
     reuses: [
       {
         label: "Bit·byte와 code pattern",
         href: "/ai/text-unicode-encoding#bits-bytes",
       },
-      {
-        label: "Matrix multiplication과 Frobenius norm",
-        href: "/ai/math-matrices-svd",
-      },
-      { label: "Training loss와 gradient", href: "/ai/backprop-optimization" },
-      {
-        label: "통합 compression stage와 benchmark",
-        href: "/ai/compression-pipeline",
-      },
+      { label: "후속 PTQ calibration", href: "/ai/ptq-calibration" },
     ],
     evidence: [
       {
         kind: "primary-source",
-        rule: "Integer QAT·SmoothQuant·GPTQ·AWQ claim은 각 논문의 model·data·bit/group·kernel·hardware·task 범위로 제한한다.",
+        rule: "FP8 format·scaling claim은 Transformer Engine의 해당 version·GPU·shape 범위로 제한한다.",
       },
       {
         kind: "primary-source",
@@ -2113,6 +2102,30 @@ export const EDITORIAL_BOUNDARIES = {
         rule: "Base hash·target tensor·codebook·scale granularity/dtype·calibration·compute/accumulation/KV dtype·engine/kernel/fallback·quality·latency·memory를 함께 기록한다.",
       },
     ],
+  },
+  "ptq-calibration": {
+    title: "PTQ calibration 글이 소유하는 범위",
+    owns: ["Per-tensor·channel·group scale 공유 범위", "Calibration set과 validation slice의 saturation·artifact release 경계"],
+    reuses: [{ label: "Quantizer의 scale·clipping", href: "/ai/quantization" }, { label: "Train·validation·test", href: "/ai/train-validation-test" }],
+    evidence: [{ kind: "primary-source", rule: "SmoothQuant claim은 논문의 model·calibration·INT8 kernel·hardware 범위로 제한한다." }],
+  },
+  "quantization-aware-training": {
+    title: "QAT 글이 소유하는 범위",
+    owns: ["Float master·fake-quant forward·STE backward의 학습 graph", "Converted artifact와 실제 low-bit kernel의 release 경계"],
+    reuses: [{ label: "Quantizer의 round·clip", href: "/ai/quantization" }, { label: "Loss와 backpropagation", href: "/ai/backprop-optimization" }],
+    evidence: [{ kind: "primary-source", rule: "Integer QAT 결과는 논문의 model·data·hardware와 surrogate recipe 범위로 제한한다." }],
+  },
+  "weight-only-quantization": {
+    title: "Weight-only quantization 글이 소유하는 범위",
+    owns: ["Calibration activation 기반 layer-output reconstruction", "GPTQ·AWQ method와 numerical format·execution profile·container 경계"],
+    reuses: [{ label: "Matrix multiplication과 Frobenius norm", href: "/ai/math-matrices-svd" }, { label: "PTQ calibration", href: "/ai/ptq-calibration" }],
+    evidence: [{ kind: "primary-source", rule: "GPTQ·AWQ 품질·속도 claim은 논문의 model·bit/group·kernel·hardware 범위로 제한한다." }],
+  },
+  "quantized-model-deployment": {
+    title: "Quantized model 배포 글이 소유하는 범위",
+    owns: ["Quantized weights·metadata·activation·request state·workspace의 resident-memory 장부", "Low-bit kernel fraction과 end-to-end speedup release gate"],
+    reuses: [{ label: "Dtype별 exact weight payload", href: "/ai/model-vram-budgeting" }, { label: "Qwen hybrid request state", href: "/ai/qwen36-hybrid-runtime" }, { label: "통합 compression pipeline", href: "/ai/compression-pipeline" }],
+    evidence: [{ kind: "primary-source", rule: "Low-precision kernel 지원 claim은 exact engine·GPU·operator·shape와 측정 trace에 제한한다." }, { kind: "project-measurement", rule: "같은 workload·quality·concurrency에서 startup peak·fallback·p50/p95·throughput을 기록한다." }],
   },
   pruning: {
     title: "프루닝 글이 소유하는 범위",
@@ -2135,7 +2148,7 @@ export const EDITORIAL_BOUNDARIES = {
       },
       {
         label: "양자화의 artifact/kernel 및 Amdahl 경계",
-        href: "/ai/quantization#practice",
+        href: "/ai/quantized-model-deployment#runtime-release",
       },
       { label: "통합 compression pipeline", href: "/ai/compression-pipeline" },
     ],

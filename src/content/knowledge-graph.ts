@@ -6815,7 +6815,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Affine uniform quantizer",
     definition:
       "실수 값을 양의 scale로 나누고 zero-point를 더한 뒤 round·clip해 유한 integer code로 바꾸며, scale과 zero-point로 근사 실수를 복원하는 quantization 규약입니다.",
-    canonicalHref: "/ai/quantization#overview",
+    canonicalHref: "/ai/quantization#affine-map",
   },
   "quantization-rounding-clipping-error": {
     id: "quantization-rounding-clipping-error",
@@ -6824,7 +6824,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Quantization rounding · clipping error",
     definition:
       "Uniform representable range 안에서는 nearest grid point까지의 반 칸 rounding error가, range 밖에서는 endpoint와 원래 값의 거리인 clipping error가 생기는 오차 분해입니다.",
-    canonicalHref: "/ai/quantization#overview",
+    canonicalHref: "/ai/quantization#error-shape",
   },
   "quantization-scale-granularity": {
     id: "quantization-scale-granularity",
@@ -6833,7 +6833,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Quantization scale granularity",
     definition:
       "Scale과 zero-point를 tensor 전체·channel·고정-size group 중 어느 값 집합이 공유할지 정하고 metadata·packing·error를 함께 바꾸는 규약입니다.",
-    canonicalHref: "/ai/quantization#ptq",
+    canonicalHref: "/ai/ptq-calibration#scale-granularity",
   },
   "ptq-calibration-coverage": {
     id: "ptq-calibration-coverage",
@@ -6842,7 +6842,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "PTQ calibration coverage",
     definition:
       "Calibration에서 정한 range를 분리된 traffic slice에 적용해 layer별 saturation과 task regression을 측정하고 representative input 범위를 점검하는 절차입니다.",
-    canonicalHref: "/ai/quantization#ptq",
+    canonicalHref: "/ai/ptq-calibration#coverage",
   },
   "qat-fake-quant-ste": {
     id: "qat-fake-quant-ste",
@@ -6851,7 +6851,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "QAT fake quantization · STE",
     definition:
       "Forward에서는 quantize–dequantize로 rounding·clipping error를 모사하고 backward에서는 representable range 안의 derivative를 identity로 근사해 float master weight를 학습하는 방법입니다.",
-    canonicalHref: "/ai/quantization#qat",
+    canonicalHref: "/ai/quantization-aware-training#ste",
   },
   "quantized-layer-output-reconstruction": {
     id: "quantized-layer-output-reconstruction",
@@ -6860,7 +6860,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Quantized layer-output reconstruction",
     definition:
       "Element-wise weight 거리 대신 calibration activation X에서 float와 quantized layer output XW·XŴ의 Frobenius 차이를 최소화해 input-sensitive error를 보정하는 objective입니다.",
-    canonicalHref: "/ai/quantization#gptq-awq",
+    canonicalHref: "/ai/weight-only-quantization#output-reconstruction",
   },
   "quantization-method-format-boundary": {
     id: "quantization-method-format-boundary",
@@ -6869,7 +6869,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Quantization method · numerical format · container boundary",
     definition:
       "GPTQ·AWQ 같은 weight 변환 method, INT4·FP8 같은 numerical format, W4A16 같은 tensor/compute 조합과 GGUF 같은 file container를 서로 다른 추상화 층으로 구분하는 경계입니다.",
-    canonicalHref: "/ai/quantization#gptq-awq",
+    canonicalHref: "/ai/weight-only-quantization#artifact-boundary",
   },
   "quantized-resident-memory-ledger": {
     id: "quantized-resident-memory-ledger",
@@ -6878,7 +6878,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Quantized resident-memory ledger",
     definition:
       "Peak memory를 packed weights·scale metadata·activations·KV cache·workspace·allocator headroom으로 분리해 weight-only quantization의 실제 capacity 효과를 측정하는 장부입니다.",
-    canonicalHref: "/ai/quantization#practice",
+    canonicalHref: "/ai/quantized-model-deployment#resident-ledger",
   },
   "quantized-kernel-amdahl-bound": {
     id: "quantized-kernel-amdahl-bound",
@@ -6887,7 +6887,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Quantized-kernel Amdahl bound",
     definition:
       "전체 latency 중 low-bit kernel로 대체되는 비율 p만 Sq배 빨라진다면 나머지 시간 때문에 end-to-end speedup이 1/((1−p)+p/Sq)를 넘지 못한다는 상한입니다.",
-    canonicalHref: "/ai/quantization#practice",
+    canonicalHref: "/ai/quantized-model-deployment#runtime-release",
   },
   "pruning-mask-sparsity": {
     id: "pruning-mask-sparsity",
@@ -30426,6 +30426,8 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   { from: "speculative-draft-verify-cycle", to: "qwen36-serving-release-gate", relation: "constrains", reason: "MTP 후보의 accept/reject 뒤 KV와 recurrent state가 같은 committed prefix에 있어야 합니다." },
   { from: "bit-byte", to: "model-weight-payload-ledger", relation: "prerequisite", reason: "Parameter 원소 수를 실제 byte·GB·GiB payload로 환산하는 단위 기반을 제공합니다." },
   { from: "quantized-resident-memory-ledger", to: "model-weight-payload-ledger", relation: "extends", reason: "일반 quantization resident-memory 장부를 dtype별 checkpoint payload 계산 절차로 구체화합니다." },
+  { from: "quantization-method-format-boundary", to: "model-weight-payload-ledger", relation: "prerequisite", reason: "Method·format·execution profile·container를 분리해야 checkpoint tensor의 실제 dtype별 weight payload를 올바르게 집계할 수 있습니다." },
+  { from: "model-vram-startup-receipt", to: "quantized-kernel-amdahl-bound", relation: "evaluates", reason: "실제 startup peak와 operator fallback trace가 capacity 절감과 end-to-end speedup을 함께 release할 근거를 제공합니다." },
   { from: "kv-cache-decode-state", to: "model-request-memory-growth-classes", relation: "prerequisite", reason: "Token별 K/V가 context에 비례해 자라는 request memory 축을 제공합니다." },
   { from: "lossy-recurrent-state", to: "model-request-memory-growth-classes", relation: "prerequisite", reason: "과거를 fixed-shape state에 압축하는 request당 고정 memory 축을 제공합니다." },
   { from: "model-weight-payload-ledger", to: "model-vram-known-floor", relation: "produces", reason: "Dtype별 weight payload가 request가 없어도 resident하는 known floor의 첫 항이 됩니다." },

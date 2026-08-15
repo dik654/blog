@@ -2135,39 +2135,26 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "ai/quantization": [
     {
-      kind: "핵심 논문",
-      label:
-        "Quantization and Training of Neural Networks for Efficient Integer-Arithmetic-Only Inference",
-      href: "https://arxiv.org/abs/1712.05877",
-      note: "affine integer quantization·integer-only execution과 quantization-aware training의 기준 연구",
+      kind: "공식 문서",
+      label: "Transformer Engine FP8 Current Scaling",
+      href: "https://docs.nvidia.com/deeplearning/transformer-engine/user-guide/features/low_precision_training/fp8_current_scaling/fp8_current_scaling.html",
+      note: "E4M3·E5M2와 amax 기반 scaling을 affine integer quantizer와 구분하는 공식 설명",
     },
-    {
-      kind: "핵심 논문",
-      label:
-        "SmoothQuant: Accurate and Efficient Post-Training Quantization for Large Language Models",
-      href: "https://proceedings.mlr.press/v202/xiao23c.html",
-      note: "activation outlier 난이도를 equivalent channel scaling으로 weight에 이동하는 W8A8 PTQ",
-    },
-    {
-      kind: "핵심 논문",
-      label:
-        "GPTQ: Accurate Post-Training Quantization for Generative Pre-trained Transformers",
-      href: "https://arxiv.org/abs/2210.17323",
-      note: "Hessian 정보를 이용한 weight-only post-training quantization",
-    },
-    {
-      kind: "핵심 논문",
-      label:
-        "AWQ: Activation-aware Weight Quantization for LLM Compression and Acceleration",
-      href: "https://arxiv.org/abs/2306.00978",
-      note: "activation 분포를 이용해 중요한 weight를 보호하는 양자화",
-    },
-    {
-      kind: "공식 규격",
-      label: "GGUF specification",
-      href: "https://github.com/ggml-org/ggml/blob/master/docs/gguf.md",
-      note: "tensor와 metadata를 저장하는 GGUF file format 규격",
-    },
+  ],
+  "ai/ptq-calibration": [
+    { kind: "핵심 논문", label: "SmoothQuant", href: "https://proceedings.mlr.press/v202/xiao23c.html", note: "Activation outlier 난이도를 equivalent scaling으로 이동하는 W8A8 PTQ" },
+  ],
+  "ai/quantization-aware-training": [
+    { kind: "핵심 논문", label: "Quantization and Training of Neural Networks", href: "https://arxiv.org/abs/1712.05877", note: "Affine integer quantization과 quantization-aware training의 기준 연구" },
+  ],
+  "ai/weight-only-quantization": [
+    { kind: "핵심 논문", label: "GPTQ", href: "https://arxiv.org/abs/2210.17323", note: "Approximate second-order weight-only PTQ" },
+    { kind: "핵심 논문", label: "AWQ", href: "https://arxiv.org/abs/2306.00978", note: "Activation-aware salient weight 보호" },
+    { kind: "공식 규격", label: "GGUF specification", href: "https://github.com/ggml-org/ggml/blob/master/docs/gguf.md", note: "Tensor·typed metadata container 규격" },
+  ],
+  "ai/quantized-model-deployment": [
+    { kind: "공식 문서", label: "NVIDIA Transformer Engine FP8 primer", href: "https://docs.nvidia.com/deeplearning/transformer-engine/user-guide/examples/fp8_primer.html", note: "FP8·MXFP8·NVFP4 format과 scaling recipe·지원 경계" },
+    { kind: "공식 문서", label: "Safetensors documentation", href: "https://huggingface.co/docs/safetensors/index", note: "Exact tensor dtype·shape·payload ledger를 읽는 checkpoint format" },
   ],
   "ai/pruning": [
     {
