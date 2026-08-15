@@ -62,17 +62,51 @@ const dataArticles: Article[] = [
 const tabularArticles: Article[] = [
   {
     slug: "gradient-boosting",
-    title: "Gradient Boosting: 원리와 세 구현의 설계 차이",
+    title: "Gradient Boosting 기초: Tree에서 Functional Gradient까지",
     subcategory: "ai-practical-tabular",
     sections: [
-      { id: "overview", title: "한 Tree와 세 구현의 공통 지도" },
-      { id: "boosting", title: "함수 Gradient를 따르는 순차 학습" },
-      { id: "xgboost", title: "XGBoost: 2차 Gain과 Histogram" },
-      { id: "lightgbm", title: "LightGBM: GOSS·EFB·Leaf-wise" },
-      { id: "catboost", title: "CatBoost: Ordered Boosting" },
-      { id: "comparison", title: "같은 Data·예산·Hardware로 비교" },
+      { id: "overview", title: "한 Tree의 함수 형태" },
+      { id: "functional-gradient", title: "Negative functional gradient" },
+      { id: "shrinkage", title: "Shrinkage와 early stopping" },
+      { id: "comparison", title: "공정한 library 비교" },
     ],
     component: () => import("@/pages/articles/ai/gradient-boosting"),
+  },
+  {
+    slug: "xgboost-tree-objective",
+    title: "XGBoost Tree Objective: G·H Leaf에서 Histogram Split까지",
+    subcategory: "ai-practical-tabular",
+    sections: [
+      { id: "overview", title: "G·H와 leaf update" },
+      { id: "split-gain", title: "Parent·child split gain" },
+      { id: "histogram", title: "Histogram approximation" },
+      { id: "evidence", title: "Capacity·builder·device 경계" },
+    ],
+    component: () => import("@/pages/articles/ai/xgboost-tree-objective"),
+  },
+  {
+    slug: "lightgbm-efficient-trees",
+    title: "LightGBM: GOSS·EFB·Leaf-wise를 비용 축으로 읽기",
+    subcategory: "ai-practical-tabular",
+    sections: [
+      { id: "overview", title: "GOSS row sampling" },
+      { id: "bundling", title: "EFB sparse columns" },
+      { id: "leaf-growth", title: "Leaf-wise budget" },
+      { id: "evidence", title: "세 failure owner" },
+    ],
+    component: () => import("@/pages/articles/ai/lightgbm-efficient-trees"),
+  },
+  {
+    slug: "catboost-ordered-learning",
+    title: "CatBoost Ordered Learning: Prefix Gradient와 Symmetric Tree",
+    subcategory: "ai-practical-tabular",
+    sections: [
+      { id: "overview", title: "Prediction shift와 prefix" },
+      { id: "prefix-gradient", title: "Ordered pseudo-residual" },
+      { id: "symmetric-tree", title: "Oblivious tree shape" },
+      { id: "evidence", title: "두 leakage 경로" },
+    ],
+    component: () => import("@/pages/articles/ai/catboost-ordered-learning"),
   },
   {
     slug: "tabular-deep-learning",

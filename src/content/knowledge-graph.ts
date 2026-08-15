@@ -1042,7 +1042,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Functional gradient boosting",
     definition:
       "현재 prediction score에서 loss의 negative derivative를 sample별 target으로 만들고 base learner가 그 방향을 근사하도록 stagewise additive function을 갱신하는 방법입니다.",
-    canonicalHref: "/ai/gradient-boosting#boosting",
+    canonicalHref: "/ai/gradient-boosting#functional-gradient",
   },
   "boosting-shrinkage-early-stopping": {
     id: "boosting-shrinkage-early-stopping",
@@ -1051,7 +1051,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Boosting shrinkage · early stopping",
     definition:
       "새 tree contribution을 learning rate로 줄이고 independent validation curve에서 best round를 선택해 additive ensemble의 step size와 length를 함께 제어하는 방법입니다.",
-    canonicalHref: "/ai/gradient-boosting#boosting",
+    canonicalHref: "/ai/gradient-boosting#shrinkage",
   },
   "xgboost-second-order-gain": {
     id: "xgboost-second-order-gain",
@@ -1060,7 +1060,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "XGBoost second-order split gain",
     definition:
       "Loss의 first·second derivative 합과 leaf complexity penalty로 parent를 두 child로 나눌 때의 local quadratic objective improvement를 계산하는 split criterion입니다.",
-    canonicalHref: "/ai/gradient-boosting#xgboost",
+    canonicalHref: "/ai/xgboost-tree-objective#split-gain",
   },
   "histogram-split-approximation": {
     id: "histogram-split-approximation",
@@ -1069,7 +1069,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Histogram split approximation",
     definition:
       "연속 feature 값을 유한 bin으로 묶고 bin별 gradient statistics를 누적해 평가할 threshold 수와 row scan 비용을 줄이는 tree-building 방법입니다.",
-    canonicalHref: "/ai/gradient-boosting#xgboost",
+    canonicalHref: "/ai/xgboost-tree-objective#histogram",
   },
   "lightgbm-goss": {
     id: "lightgbm-goss",
@@ -1078,7 +1078,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Gradient-based One-Side Sampling · GOSS",
     definition:
       "큰 gradient sample은 유지하고 작은 gradient sample은 일부만 뽑아 sampling weight를 보정함으로써 더 적은 row로 split gain을 추정하는 방법입니다.",
-    canonicalHref: "/ai/gradient-boosting#lightgbm",
+    canonicalHref: "/ai/lightgbm-efficient-trees#overview",
   },
   "lightgbm-exclusive-feature-bundling": {
     id: "lightgbm-exclusive-feature-bundling",
@@ -1087,7 +1087,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Exclusive Feature Bundling · EFB",
     definition:
       "동시에 non-zero인 경우가 드문 sparse features를 충돌을 관리하며 하나의 bundled feature로 묶어 effective feature count를 줄이는 방법입니다.",
-    canonicalHref: "/ai/gradient-boosting#lightgbm",
+    canonicalHref: "/ai/lightgbm-efficient-trees#bundling",
   },
   "leaf-wise-tree-growth": {
     id: "leaf-wise-tree-growth",
@@ -1096,7 +1096,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Leaf-wise tree growth",
     definition:
       "같은 depth의 node를 함께 확장하는 대신 현재 estimated gain이 가장 큰 terminal leaf를 우선 분할해 leaf budget을 비대칭적으로 배분하는 성장 규칙입니다.",
-    canonicalHref: "/ai/gradient-boosting#lightgbm",
+    canonicalHref: "/ai/lightgbm-efficient-trees#leaf-growth",
   },
   "catboost-ordered-boosting": {
     id: "catboost-ordered-boosting",
@@ -1105,7 +1105,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "CatBoost ordered boosting",
     definition:
       "Permutation에서 현재 row보다 앞선 sample로 만든 prefix model의 prediction에서 그 row의 gradient target을 계산해 prediction shift를 줄이는 boosting 방법입니다.",
-    canonicalHref: "/ai/gradient-boosting#catboost",
+    canonicalHref: "/ai/catboost-ordered-learning#overview",
   },
   "oblivious-symmetric-tree": {
     id: "oblivious-symmetric-tree",
@@ -1113,7 +1113,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Oblivious · symmetric decision tree",
     definition:
       "같은 depth의 모든 node가 동일한 feature와 threshold split을 사용해 모든 root-to-leaf path가 규칙적인 binary code가 되는 tree 구조입니다.",
-    canonicalHref: "/ai/gradient-boosting#catboost",
+    canonicalHref: "/ai/catboost-ordered-learning#symmetric-tree",
   },
   "gbm-comparison-contract": {
     id: "gbm-comparison-contract",
@@ -18900,6 +18900,13 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
       "Gradient magnitude를 이용해 split statistic을 추정할 row 수를 줄입니다.",
   },
   {
+    from: "lightgbm-goss",
+    to: "lightgbm-exclusive-feature-bundling",
+    relation: "contrasts",
+    reason:
+      "GOSS는 split statistic에 참여할 row 축을 줄이고 EFB는 함께 scan할 sparse column 축을 줄이므로, 두 근사를 같은 sampling 기법으로 섞지 않습니다.",
+  },
+  {
     from: "histogram-split-approximation",
     to: "lightgbm-exclusive-feature-bundling",
     relation: "extends",
@@ -18912,6 +18919,13 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "optimizes",
     reason:
       "현재 estimated gain이 가장 큰 leaf에 다음 split budget을 우선 배분합니다.",
+  },
+  {
+    from: "lightgbm-exclusive-feature-bundling",
+    to: "leaf-wise-tree-growth",
+    relation: "prerequisite",
+    reason:
+      "Bundle histogram에서 계산한 candidate gain 장부가 다음에 확장할 leaf를 고르는 입력이 됩니다.",
   },
   {
     from: "functional-gradient-boosting",
@@ -18933,6 +18947,13 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "extends",
     reason:
       "각 depth의 모든 node가 같은 split을 쓰도록 leaf region partition을 규칙적으로 제한합니다.",
+  },
+  {
+    from: "catboost-ordered-boosting",
+    to: "oblivious-symmetric-tree",
+    relation: "constrains",
+    reason:
+      "Prefix model이 만든 누출 완화 gradient를 fitting하되, 같은 depth가 동일 split을 쓰는 symmetric function family 안에서 tree를 선택합니다.",
   },
   {
     from: "boosting-shrinkage-early-stopping",

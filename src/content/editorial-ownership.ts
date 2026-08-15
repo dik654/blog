@@ -1227,39 +1227,28 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "gradient-boosting": {
-    title: "Gradient boosting 글이 소유하는 범위",
-    owns: [
-      "Piecewise-constant decision tree와 functional negative-gradient boosting의 공통 계산",
-      "Shrinkage·tree capacity·early stopping의 ensemble length 선택",
-      "XGBoost 2차 gain·histogram, LightGBM GOSS/EFB·leaf-wise, CatBoost ordered boosting·symmetric tree의 차이",
-      "동일 feature·split·search·hardware budget의 GBM 비교 계약",
-    ],
-    reuses: [
-      {
-        label: "Loss·gradient·validation",
-        href: "/ai/supervised-learning-loop",
-      },
-      { label: "Derivative", href: "/ai/math-functions-derivatives-gradients" },
-      { label: "Gradient", href: "/ai/math-gradients-jacobians" },
-      {
-        label: "Feature availability와 leakage",
-        href: "/ai/feature-engineering#overview",
-      },
-      {
-        label: "Cross-fitted target encoding",
-        href: "/ai/feature-engineering#categorical",
-      },
-    ],
-    evidence: [
-      {
-        kind: "primary-source",
-        rule: "Gradient Boosting·XGBoost·LightGBM·CatBoost claim은 각 논문의 objective·algorithm·dataset·hardware·baseline 조건으로 제한한다.",
-      },
-      {
-        kind: "standard",
-        rule: "Loss·score/link·tree growth·leaf/depth·learning rate·round·sampling·bin·category/missing·split·search budget·hardware를 비교 계약으로 기록한다.",
-      },
-    ],
+    title:"Gradient boosting 기초 글이 소유하는 범위",
+    owns:["Piecewise-constant tree 함수","Negative functional gradient와 additive update","Shrinkage·early stopping과 공정 GBM 비교 계약"],
+    reuses:[{label:"Loss·gradient·validation",href:"/ai/supervised-learning-loop"},{label:"세 구현의 상세 차이",href:"/ai/xgboost-tree-objective"}],
+    evidence:[{kind:"primary-source",rule:"Friedman 원문의 differentiable-loss·base-learner 조건으로 제한한다."},{kind:"standard",rule:"Split·feature·search·hardware budget을 같은 비교 장부에 기록한다."}],
+  },
+  "xgboost-tree-objective": {
+    title:"XGBoost objective 글이 소유하는 범위",
+    owns:["G·H·λ leaf update","Parent·children·γ split gain","Histogram threshold approximation"],
+    reuses:[{label:"Functional gradient boosting",href:"/ai/gradient-boosting"},{label:"공정 비교 계약",href:"/ai/gradient-boosting#comparison"}],
+    evidence:[{kind:"primary-source",rule:"XGBoost 논문의 objective·builder·hardware 조건으로 제한한다."},{kind:"project-claim",rule:"Current version·device의 speed와 determinism은 별도 재측정한다."}],
+  },
+  "lightgbm-efficient-trees": {
+    title:"LightGBM 효율 글이 소유하는 범위",
+    owns:["GOSS row sampling과 보정","EFB sparse-column bundling","Leaf-wise growth와 depth 경계"],
+    reuses:[{label:"Functional gradient boosting",href:"/ai/gradient-boosting"},{label:"Histogram split",href:"/ai/xgboost-tree-objective#histogram"}],
+    evidence:[{kind:"primary-source",rule:"LightGBM 논문의 dataset·implementation·hardware 조건으로 제한한다."},{kind:"project-claim",rule:"GOSS variance·EFB collision·leaf depth를 별도 metric으로 재검증한다."}],
+  },
+  "catboost-ordered-learning": {
+    title:"CatBoost ordered learning 글이 소유하는 범위",
+    owns:["Permutation-prefix prediction과 pseudo-residual","Ordered statistic과 ordered boosting 경계","Oblivious symmetric tree shape"],
+    reuses:[{label:"Functional gradient boosting",href:"/ai/gradient-boosting"},{label:"Cross-fitted categorical encoding",href:"/ai/feature-engineering#categorical"}],
+    evidence:[{kind:"primary-source",rule:"CatBoost 논문의 permutation·dataset·baseline 조건으로 제한한다."},{kind:"standard",rule:"External validation·time/group split은 ordered training과 별도로 유지한다."}],
   },
   "tabular-deep-learning": {
     title: "테이블 딥러닝 글이 소유하는 범위",

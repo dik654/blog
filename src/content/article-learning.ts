@@ -8336,450 +8336,146 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/gradient-boosting": {
-    coreIdea:
-      "Gradient boosting은 feature split로 만든 작은 piecewise-constant tree를 순차적으로 더해 현재 prediction에서 loss가 줄어드는 함수 방향을 근사합니다. XGBoost·LightGBM·CatBoost는 이 공통 update 위에서 split 통계·sampling·tree growth·ordering·system cost를 서로 다르게 설계합니다.",
-    assumedKnowledge: [
-      {
-        id: "feature-target",
-        role: "Tree가 split할 input과 loss가 비교할 target을 구분합니다.",
-      },
-      {
-        id: "loss-objective",
-        role: "현재 score를 어느 방향으로 고쳐야 하는지 정의합니다.",
-      },
-      {
-        id: "gradient",
-        role: "Loss의 negative derivative를 pseudo-residual target으로 읽습니다.",
-      },
-      {
-        id: "train-validation-test",
-        role: "Early stopping·library selection·최종 test를 분리합니다.",
-      },
-      {
-        id: "feature-availability-contract",
-        role: "세 구현에 같은 leakage-free feature artifact를 제공합니다.",
-      },
-      {
-        id: "cross-fitted-target-encoding",
-        role: "CatBoost의 category statistic과 ordered gradient update를 서로 다른 누출 제어로 구분합니다.",
-      },
-    ],
+    entryLevel: true,
+    entryNote: "Tree·gradient를 모른다고 가정하고 leaf region 하나에서 시작합니다.",
+    coreIdea: "Gradient boosting은 piecewise-constant tree가 현재 prediction의 negative loss derivative를 근사하도록 순차적으로 더하고, shrinkage·validation으로 step과 ensemble length를 제어합니다.",
+    assumedKnowledge: [],
     introducedHere: [
-      {
-        id: "decision-tree-piecewise-constant",
-        role: "Split과 leaf value로 한 tree의 prediction 함수를 정의합니다.",
-      },
-      {
-        id: "functional-gradient-boosting",
-        role: "Negative loss derivative를 weak tree가 근사하는 additive update를 정의합니다.",
-      },
-      {
-        id: "boosting-shrinkage-early-stopping",
-        role: "Learning rate와 round 수를 함께 제어합니다.",
-      },
-      {
-        id: "xgboost-second-order-gain",
-        role: "G·H 합과 leaf penalty로 candidate split의 local improvement를 계산합니다.",
-      },
-      {
-        id: "histogram-split-approximation",
-        role: "연속값을 bin으로 묶어 평가 threshold와 scan 비용을 줄입니다.",
-      },
-      {
-        id: "lightgbm-goss",
-        role: "Gradient magnitude 기반 row sampling과 보정으로 split 통계를 근사합니다.",
-      },
-      {
-        id: "lightgbm-exclusive-feature-bundling",
-        role: "상호 배타적 sparse feature를 묶어 effective column 수를 줄입니다.",
-      },
-      {
-        id: "leaf-wise-tree-growth",
-        role: "가장 큰 현재 gain에 leaf budget을 집중합니다.",
-      },
-      {
-        id: "catboost-ordered-boosting",
-        role: "Prefix model prediction에서 현재 row의 gradient target을 계산합니다.",
-      },
-      {
-        id: "oblivious-symmetric-tree",
-        role: "같은 depth의 split을 공유하는 규칙적인 tree 구조를 구분합니다.",
-      },
-      {
-        id: "gbm-comparison-contract",
-        role: "세 library를 같은 data·search·system 예산으로 비교합니다.",
-      },
+      { id: "decision-tree-piecewise-constant", role: "Split region과 leaf constant로 tree 함수를 정의합니다." },
+      { id: "functional-gradient-boosting", role: "Negative loss derivative를 새 tree의 pseudo-target으로 만듭니다." },
+      { id: "boosting-shrinkage-early-stopping", role: "Learning rate와 validation-selected round를 함께 제어합니다." },
+      { id: "gbm-comparison-contract", role: "세 library를 같은 data·search·system budget에서 비교합니다." },
     ],
     conceptExplanations: [
-      {
-        id: "decision-tree-piecewise-constant",
-        sectionId: "overview",
-        intuition:
-          "연속된 예·아니오 질문으로 입력 공간을 칸으로 나눈 뒤 각 칸에 하나의 prediction 값을 적어 둔 함수입니다.",
-        workedExample:
-          "면적 60㎡ 이하 leaf는 3억, 초과 leaf는 6억을 출력하면 두 구간을 가진 regression tree입니다.",
-        boundary:
-          "Leaf value는 classification probability 자체가 아니라 additive logit일 수 있으며 category·missing routing은 구현마다 다릅니다.",
-      },
-      {
-        id: "functional-gradient-boosting",
-        sectionId: "boosting",
-        intuition:
-          "현재 답에서 loss를 가장 빨리 줄일 sample별 방향을 새 정답표로 만들고 작은 tree가 그 방향을 따라가게 합니다.",
-        workedExample:
-          "Squared loss에서 y=7, F=4면 negative derivative는 3이며 새 tree가 2.4를 예측하고 η=.2이면 score는 4.48이 됩니다.",
-        boundary:
-          "Squared loss 외에는 y−F와 같지 않을 수 있고 weak tree가 function gradient를 완벽히 표현한다는 보장도 없습니다.",
-      },
-      {
-        id: "boosting-shrinkage-early-stopping",
-        sectionId: "boosting",
-        intuition:
-          "한 tree의 목소리를 줄이는 learning rate와 몇 그루까지 들을지 정하는 validation stop을 함께 조절합니다.",
-        workedExample:
-          "η=.05는 η=.2보다 tree 한 그루의 update가 4분의 1이므로 같은 함수에 도달하려면 대체로 더 많은 round가 필요합니다.",
-        boundary:
-          "작은 learning rate가 자동으로 과적합을 막거나 항상 더 좋은 minimum을 보장하지 않으며 training budget도 함께 달라집니다.",
-      },
-      {
-        id: "xgboost-second-order-gain",
-        sectionId: "xgboost",
-        intuition:
-          "Split 전후의 loss 경사와 휘어짐을 leaf별로 모아 두 child가 parent보다 얼마나 나은지 계산한 장부입니다.",
-        workedExample:
-          "왼쪽과 오른쪽의 G²/(H+λ) 합에서 parent 항과 γ를 빼 양수인 candidate를 split 후보로 봅니다.",
-        boundary:
-          "Training objective의 local quadratic approximation이며 positive gain이 unseen validation improvement를 보장하지 않습니다.",
-      },
-      {
-        id: "histogram-split-approximation",
-        sectionId: "xgboost",
-        intuition:
-          "서로 가까운 연속값을 같은 통에 넣고 통별 gradient 장부를 만들어 모든 고유값을 threshold로 시험하지 않습니다.",
-        workedExample:
-          "나이 10만 개 고유값을 256 bins로 압축하면 split 후보와 statistics storage를 크게 줄일 수 있습니다.",
-        boundary:
-          "Bin 수가 작으면 threshold 해상도가 줄고 current version·device마다 builder와 deterministic behavior가 다를 수 있습니다.",
-      },
-      {
-        id: "lightgbm-goss",
-        sectionId: "lightgbm",
-        intuition:
-          "아직 크게 틀린 sample은 모두 남기고 이미 작은 gradient를 가진 sample은 일부만 대표로 뽑아 split 장부를 근사합니다.",
-        workedExample:
-          "상위 a=20%는 유지하고 나머지에서 b=10%를 뽑으면 sampled small-gradient sum에 .8/.1=8의 weight를 적용합니다.",
-        boundary:
-          "Hard-example loss가 아니라 split statistic sampling이며 작은-gradient subsample의 variance와 실제 boosting mode를 확인해야 합니다.",
-      },
-      {
-        id: "lightgbm-exclusive-feature-bundling",
-        sectionId: "lightgbm",
-        intuition:
-          "거의 동시에 켜지지 않는 sparse switch 여러 개를 서로 다른 값 범위에 배치해 한 column처럼 운반합니다.",
-        workedExample:
-          "One-hot A와 B가 한 row에서 동시에 1이 아니면 offset을 달리해 한 bundled bin coordinate로 표현할 수 있습니다.",
-        boundary:
-          "동시 non-zero 충돌이 많으면 정보가 섞이며 optimal bundling 문제 자체는 어렵기 때문에 구현은 근사를 사용합니다.",
-      },
-      {
-        id: "leaf-wise-tree-growth",
-        sectionId: "lightgbm",
-        intuition:
-          "모든 가지를 같은 높이로 키우지 않고 현재 loss를 가장 많이 줄이는 한 가지에 다음 split을 집중합니다.",
-        workedExample:
-          "Root 뒤 오른쪽 leaf gain이 가장 크면 왼쪽을 그대로 둔 채 오른쪽을 다시 쪼개 비대칭 tree를 만듭니다.",
-        boundary:
-          "같은 leaf 수에서 training loss를 빠르게 줄일 수 있지만 작은 leaf와 깊은 branch의 과적합 가능성이 커집니다.",
-      },
-      {
-        id: "catboost-ordered-boosting",
-        sectionId: "catboost",
-        intuition:
-          "학생 B의 오답 방향을 정할 때 B의 답을 이미 외운 model이 아니라 B보다 앞선 학생들만 본 model로 채점합니다.",
-        workedExample:
-          "Permutation A,C,B,D에서 B의 gradient는 A와 C만 학습한 prefix model F^(<B)(x_B)에서 계산합니다.",
-        boundary:
-          "외부 validation split이나 시간·group boundary를 대체하지 않으며 category statistic ordering과 gradient ordering은 구분해야 합니다.",
-      },
-      {
-        id: "oblivious-symmetric-tree",
-        sectionId: "catboost",
-        intuition:
-          "같은 층의 모든 갈림길에 똑같은 질문을 놓아 root-to-leaf path를 규칙적인 bit pattern으로 만듭니다.",
-        workedExample:
-          "Depth 1에서 age<30을 골랐다면 그 depth의 모든 node가 age<30 조건을 사용해 네 leaf path를 만듭니다.",
-        boundary:
-          "규칙적인 inference와 regularization 이점이 있을 수 있지만 비대칭 관계를 같은 budget으로 가장 잘 표현한다는 뜻은 아닙니다.",
-      },
-      {
-        id: "gbm-comparison-contract",
-        sectionId: "comparison",
-        intuition:
-          "세 선수를 같은 경기장·연습 시간·장비·채점표에 놓고 각자의 훈련법만 다르게 비교하는 계약입니다.",
-        workedExample:
-          "같은 time split, feature artifact, 50 tuning trials, CPU thread, early-stop rule로 quality·memory·latency를 측정합니다.",
-        boundary:
-          "Depth나 round 숫자를 그대로 같게 하는 것은 library별 tree growth와 default가 달라 공정한 capacity match가 아닐 수 있습니다.",
-      },
+      { id: "decision-tree-piecewise-constant", sectionId: "overview", intuition: "예·아니오 질문으로 input 공간을 칸으로 나누고 칸마다 상수 값을 둡니다.", workedExample: "60㎡ 이하 3억, 초과 6억인 두-leaf tree를 만듭니다.", boundary: "Leaf value는 probability가 아니라 additive score일 수 있습니다." },
+      { id: "functional-gradient-boosting", sectionId: "functional-gradient", intuition: "현재 답에서 loss가 줄어드는 sample별 방향을 새 정답표로 만들어 tree가 근사합니다.", workedExample: "y=7,F=4,h=2.4,η=.2면 squared residual 3과 새 score 4.48입니다.", boundary: "Squared loss 밖에서는 residual이 y−F와 다릅니다." },
+      { id: "boosting-shrinkage-early-stopping", sectionId: "shrinkage", intuition: "Tree 한 그루의 목소리와 들을 tree 수를 함께 고릅니다.", workedExample: "η=.05는 η=.2보다 한 update가 1/4이라 보통 더 많은 round가 필요합니다.", boundary: "작은 η가 자동으로 overfit을 막지 않습니다." },
+      { id: "gbm-comparison-contract", sectionId: "comparison", intuition: "세 선수를 같은 data·연습 시간·장비·채점표에 둡니다.", workedExample: "같은 time split·50 trials·threads·early stop을 씁니다.", boundary: "Depth·round 숫자만 같게 하는 것은 capacity match가 아닐 수 있습니다." },
     ],
     conceptStages: [
-      {
-        label: "한 tree",
-        relation: "Feature split로 input을 leaf region의 상수 score로 변환",
-        concepts: ["feature-target", "decision-tree-piecewise-constant"],
-      },
-      {
-        label: "공통 boosting",
-        relation:
-          "Loss derivative를 weak tree로 근사하고 shrinkage·validation stop으로 합성",
-        concepts: [
-          "loss-objective",
-          "gradient",
-          "functional-gradient-boosting",
-          "boosting-shrinkage-early-stopping",
-        ],
-      },
-      {
-        label: "Split·sampling system",
-        relation:
-          "2차 gain·histogram·row/column 압축·leaf allocation으로 tree builder 최적화",
-        concepts: [
-          "xgboost-second-order-gain",
-          "histogram-split-approximation",
-          "lightgbm-goss",
-          "lightgbm-exclusive-feature-bundling",
-          "leaf-wise-tree-growth",
-        ],
-      },
-      {
-        label: "Ordering과 비교",
-        relation:
-          "Prefix prediction·symmetric tree를 구분하고 같은 실험 계약으로 선택",
-        concepts: [
-          "cross-fitted-target-encoding",
-          "catboost-ordered-boosting",
-          "oblivious-symmetric-tree",
-          "feature-availability-contract",
-          "gbm-comparison-contract",
-        ],
-      },
+      { label: "00 tree", relation: "Input을 leaf 상수 함수로 바꿉니다.", concepts: ["decision-tree-piecewise-constant"] },
+      { label: "01 direction", relation: "Loss 감소 방향을 tree가 근사합니다.", concepts: ["functional-gradient-boosting"] },
+      { label: "02 control", relation: "Step과 ensemble length를 선택합니다.", concepts: ["boosting-shrinkage-early-stopping"] },
+      { label: "03 compare", relation: "같은 예산에서 구현을 비교합니다.", concepts: ["gbm-comparison-contract"] },
     ],
     exercises: [
-      {
-        level: "basic",
-        question:
-          "두 leaf regression tree를 indicator sum으로 쓰고 면적 55㎡와 75㎡가 각각 어떤 value를 받는지 계산하라.",
-        answerChecklist: [
-          "leaf regions",
-          "one active indicator",
-          "piecewise constant output",
-        ],
-        requiredConcepts: ["decision-tree-piecewise-constant"],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "Squared loss에서 y=7, F₀=4, h₁=2.4, η=.2일 때 pseudo-residual과 새 score를 계산하라.",
-        answerChecklist: ["r=3", "F₁=4.48", "tree approximation", "shrinkage"],
-        requiredConcepts: [
-          "functional-gradient-boosting",
-          "boosting-shrinkage-early-stopping",
-        ],
-        sectionId: "boosting",
-      },
-      {
-        level: "basic",
-        question:
-          "XGBoost 설정에서 `max_depth`·`min_child_weight`와 `max_bin`·`device`를 model capacity에 직접 관여하는 항과 후보 탐색·실행 방식에 관여하는 항으로 나누고, 같은 값 비교가 왜 공정하지 않을 수 있는지 설명하라.",
-        answerChecklist: [
-          "max_depth·min_child_weight는 함수 capacity와 regularization에 관여",
-          "max_bin은 threshold 후보 해상도에 관여",
-          "device는 실행 경로와 비용에 관여",
-          "histogram은 threshold를 근사할 수 있음",
-          "동일 data·hardware에서 benchmark",
-        ],
-        requiredConcepts: [
-          "xgboost-second-order-gain",
-          "histogram-split-approximation",
-        ],
-        sectionId: "xgboost",
-      },
-      {
-        level: "advanced",
-        question:
-          "Squared loss residual과 logistic loss pseudo-residual이 같은 공식이 아닌 이유를 derivative 정의에서 설명하라.",
-        answerChecklist: [
-          "negative loss derivative",
-          "score space",
-          "squared special case",
-          "probability link",
-        ],
-        requiredConcepts: ["functional-gradient-boosting", "loss-objective"],
-        sectionId: "boosting",
-      },
-      {
-        level: "advanced",
-        question:
-          "주어진 G_L·H_L·G_R·H_R·λ·γ로 XGBoost split gain을 계산하고 histogram bin 수가 후보에 미치는 영향을 설명하라.",
-        answerChecklist: [
-          "child terms",
-          "parent term",
-          "split penalty",
-          "local objective",
-          "threshold approximation",
-        ],
-        requiredConcepts: [
-          "xgboost-second-order-gain",
-          "histogram-split-approximation",
-        ],
-        sectionId: "xgboost",
-      },
-      {
-        level: "advanced",
-        question:
-          "GOSS에서 a=.2, b=.1일 때 small-gradient sample의 보정 weight를 계산하고 EFB와 줄이는 축이 어떻게 다른지 설명하라.",
-        answerChecklist: [
-          "weight=8",
-          "row sampling",
-          "feature bundling",
-          "sampling variance",
-          "sparse collision",
-        ],
-        requiredConcepts: [
-          "lightgbm-goss",
-          "lightgbm-exclusive-feature-bundling",
-        ],
-        sectionId: "lightgbm",
-      },
-      {
-        level: "basic",
-        question:
-          "현재 terminal leaf 세 개의 candidate gain이 각각 3·7·5라면 leaf-wise growth가 어느 leaf를 확장하는지 고르고, 작은 dataset에서 함께 제한할 항목을 설명하라.",
-        answerChecklist: [
-          "gain 7인 leaf 선택",
-          "같은 depth 전체가 아니라 현재 최고 gain 하나를 확장",
-          "한 branch가 깊어질 수 있음",
-          "num_leaves 제한",
-          "min_data_in_leaf와 max depth 검토",
-        ],
-        requiredConcepts: ["leaf-wise-tree-growth"],
-        sectionId: "lightgbm",
-      },
-      {
-        level: "basic",
-        question:
-          "Permutation A,C,B,D에서 B의 ordered pseudo-residual을 만들 때 prefix model이 사용할 row와 제외할 row를 쓰라.",
-        answerChecklist: [
-          "use A,C",
-          "exclude B,D",
-          "prefix prediction",
-          "external validation separate",
-        ],
-        requiredConcepts: ["catboost-ordered-boosting"],
-        sectionId: "catboost",
-      },
-      {
-        level: "basic",
-        question:
-          "XGBoost·LightGBM·CatBoost를 첫 비교할 때 depth와 round 수만 같게 두는 대신 반드시 고정해야 할 data·search·system 조건을 세 가지 이상 쓰고, 최종 test를 언제 여는지 설명하라.",
-        answerChecklist: [
-          "동일 group·time split과 leakage-free feature artifact",
-          "동일 metric·early stopping",
-          "같은 tuning trial 또는 wall-clock budget",
-          "같은 hardware·thread 조건",
-          "quality뿐 아니라 latency·memory 기록",
-          "library 선택과 tuning 뒤 최종 test 공개",
-        ],
-        requiredConcepts: [
-          "gbm-comparison-contract",
-          "feature-availability-contract",
-          "train-validation-test",
-        ],
-        sectionId: "comparison",
-      },
-      {
-        level: "advanced",
-        question:
-          "XGBoost·LightGBM·CatBoost를 선택하기 위한 data·model·search·system 비교표와 최종 test 공개 시점을 설계하라.",
-        answerChecklist: [
-          "same split/artifact",
-          "capacity mapping",
-          "trial or wall-clock budget",
-          "hardware",
-          "quality variance",
-          "latency/memory",
-          "test after selection",
-        ],
-        requiredConcepts: [
-          "gbm-comparison-contract",
-          "feature-availability-contract",
-          "train-validation-test",
-        ],
-        sectionId: "comparison",
-      },
+      { level:"basic",question:"두 leaf tree를 indicator sum으로 쓰고 55㎡와 75㎡ output을 계산하세요.",answerChecklist:["two regions","one active indicator","55 in first","first value","75 in second","second value"],requiredConcepts:["decision-tree-piecewise-constant"],sectionId:"overview" },
+      { level:"basic",question:"Leaf value가 classification probability와 항상 같지 않은 이유를 설명하세요.",answerChecklist:["additive score","logit","link function","one leaf","implementation","interpretation boundary"],requiredConcepts:["decision-tree-piecewise-constant"],sectionId:"overview" },
+      { level:"basic",question:"Squared loss에서 y=7,F=4의 pseudo-residual을 계산하세요.",answerChecklist:["current score four","target seven","negative derivative","residual three","squared special case","not general"],requiredConcepts:["functional-gradient-boosting"],sectionId:"functional-gradient" },
+      { level:"basic",question:"h=2.4,η=.2일 때 F=4의 새 score를 계산하세요.",answerChecklist:["multiply .2","update .48","add to four","4.48","shrinkage","tree approximation"],requiredConcepts:["functional-gradient-boosting","boosting-shrinkage-early-stopping"],sectionId:"functional-gradient" },
+      { level:"basic",question:"Learning rate와 round 수가 함께 움직이는 이유를 설명하세요.",answerChecklist:["step size","smaller update","more rounds","validation curve","best iteration","joint search"],requiredConcepts:["boosting-shrinkage-early-stopping"],sectionId:"shrinkage" },
+      { level:"basic",question:"Early stopping에 validation을 쓰고 test는 나중에 여는 이유를 설명하세요.",answerChecklist:["training fit","validation selection","best round","test untouched","after library choice","generalization report"],requiredConcepts:["boosting-shrinkage-early-stopping"],sectionId:"shrinkage" },
+      { level:"advanced",question:"Logistic loss residual이 y−F와 같지 않은 이유를 설명하세요.",answerChecklist:["score space","link function","loss derivative","probability","squared special case","negative gradient"],requiredConcepts:["functional-gradient-boosting"],sectionId:"functional-gradient" },
+      { level:"advanced",question:"작은 η가 overfit을 자동으로 막지 않는 반례를 설명하세요.",answerChecklist:["many rounds","fit noise","validation needed","capacity","budget","no guarantee"],requiredConcepts:["boosting-shrinkage-early-stopping"],sectionId:"shrinkage" },
+      { level:"advanced",question:"세 GBM을 공정하게 비교할 data·search·system 조건을 설계하세요.",answerChecklist:["same split","same features","same metric","same search budget","same hardware","latency memory"],requiredConcepts:["gbm-comparison-contract"],sectionId:"comparison" },
+      { level:"advanced",question:"Depth와 round만 같은 비교가 불공정할 수 있는 이유를 설명하세요.",answerChecklist:["growth policy","leaf count","defaults","sampling","capacity mismatch","common budget"],requiredConcepts:["gbm-comparison-contract"],sectionId:"comparison" },
     ],
     papers: [
-      {
-        title: "Greedy Function Approximation: A Gradient Boosting Machine",
-        href: "https://doi.org/10.1214/aos/1013203451",
-        problem:
-          "일반 differentiable loss에서 stagewise additive model을 어떤 방향으로 확장할지 정하는 문제",
-        contribution:
-          "Function-space steepest descent와 negative-gradient base-learner fitting의 일반화",
-        assumptions:
-          "Differentiable loss·허용 base learner family·stagewise numerical optimization이라는 전제",
-        evidenceScope:
-          "논문의 population·sample algorithm formulation과 regression·classification 실험 범위",
-        notClaim:
-          "Finite tree ensemble이 global optimum·calibration·모든 dataset 우위를 보장한다는 결론은 아님",
-        sectionId: "paper-gradient-boosting",
-      },
-      {
-        title: "XGBoost: A Scalable Tree Boosting System",
-        href: "https://arxiv.org/abs/1603.02754",
-        problem:
-          "Regularized tree boosting을 sparse·대규모 data에서 end-to-end로 확장하는 문제",
-        contribution:
-          "Second-order regularized objective·sparsity-aware split·weighted quantile sketch와 system optimization",
-        assumptions:
-          "논문의 objective·builder·hardware·dataset와 당시 baseline 구현 조건",
-        evidenceScope:
-          "KDD 2016 논문의 billion-scale system 및 공개 task benchmark 범위",
-        notClaim:
-          "모든 data 크기·current version·device에서 가장 빠르거나 정확하다는 결론은 아님",
-        sectionId: "paper-xgboost",
-      },
-      {
-        title: "LightGBM: A Highly Efficient Gradient Boosting Decision Tree",
-        href: "https://proceedings.neurips.cc/paper/2017/hash/6449f44a102fde848669bdd9eb6b76fa-Abstract.html",
-        problem:
-          "High-dimensional·large-data GBDT에서 모든 row와 feature split을 scan하는 비용",
-        contribution:
-          "Large-gradient retention과 weighted sampling의 GOSS, sparse exclusive feature의 EFB",
-        assumptions:
-          "Gradient-based split gain·small-gradient random sample·sparse exclusivity와 논문 benchmark 조건",
-        evidenceScope:
-          "NeurIPS 2017 공개 dataset에서 conventional GBDT 대비 training efficiency·accuracy 실험",
-        notClaim:
-          "논문 속 최대 속도 향상이 모든 current LightGBM option·hardware에서 재현된다는 결론은 아님",
-        sectionId: "paper-lightgbm",
-      },
-      {
-        title: "CatBoost: Unbiased Boosting with Categorical Features",
-        href: "https://proceedings.neurips.cc/paper/2018/hash/14491b756b3a51daac41c24863285549-Abstract.html",
-        problem:
-          "Target statistic과 standard boosting이 training·unseen prediction 사이에 만드는 prediction shift",
-        contribution:
-          "Permutation-driven ordered boosting과 ordered categorical statistic의 분석·구현",
-        assumptions:
-          "논문의 permutation·category process·symmetric tree와 benchmark·tuning 조건",
-        evidenceScope:
-          "NeurIPS 2018의 prediction-shift analysis와 여러 public dataset 비교 범위",
-        notClaim:
-          "Categorical feature가 있으면 모든 조건에서 CatBoost가 automatic winner라는 결론은 아님",
-        sectionId: "paper-catboost-boosting",
-      },
+      { title:"Greedy Function Approximation",href:"https://doi.org/10.1214/aos/1013203451",problem:"일반 differentiable loss의 stagewise additive 방향",contribution:"Function-space negative-gradient base-learner fitting",assumptions:"Differentiable loss·base learner family·stagewise optimization",evidenceScope:"논문의 algorithm formulation과 regression·classification 실험",notClaim:"Finite ensemble의 global optimum·calibration·모든 dataset 우위",sectionId:"paper-gradient-boosting" },
+    ],
+  },
+  "ai/xgboost-tree-objective": {
+    entryLevel: true,
+    entryNote: "Hessian을 모른다고 가정하고 slope와 curvature를 leaf 장부로 정의합니다.",
+    coreIdea: "XGBoost는 현재 loss의 first·second derivative 합으로 regularized leaf update와 parent-to-children split gain을 계산하고, histogram bin으로 threshold 후보를 줄입니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id:"xgboost-second-order-gain",role:"G·H·λ로 leaf update와 split gain을 계산합니다." },
+      { id:"histogram-split-approximation",role:"Raw values를 bin별 derivative 장부로 압축합니다." },
+    ],
+    conceptExplanations: [
+      { id:"xgboost-second-order-gain",sectionId:"overview",intuition:"Leaf rows의 loss 방향과 휘어짐을 더해 상수 update 크기를 정합니다.",workedExample:"G=−6,H=2,λ=1이면 w*=2입니다.",boundary:"현재 score 주변 local quadratic objective입니다." },
+      { id:"histogram-split-approximation",sectionId:"histogram",intuition:"가까운 연속값을 같은 통에 넣고 통별 G·H를 scan합니다.",workedExample:"10만 고유값을 256 bins로 줄입니다.",boundary:"Bin이 적으면 threshold 해상도가 줄어듭니다." },
+    ],
+    conceptStages: [
+      { label:"00 leaf",relation:"Derivative 합으로 leaf update를 계산합니다.",concepts:["xgboost-second-order-gain"] },
+      { label:"01 split",relation:"Children score와 parent score를 비교합니다.",concepts:["xgboost-second-order-gain"] },
+      { label:"02 histogram",relation:"Candidate threshold를 bin으로 줄입니다.",concepts:["histogram-split-approximation"] },
+    ],
+    exercises: [
+      {level:"basic",question:"G와 H가 각각 무엇을 합한 값인지 설명하세요.",answerChecklist:["first derivative","second derivative","leaf rows","direction","curvature","current score"],requiredConcepts:["xgboost-second-order-gain"],sectionId:"overview"},
+      {level:"basic",question:"G=−6,H=2,λ=1의 leaf weight를 계산하세요.",answerChecklist:["minus G","six","H plus lambda","three","divide","weight two"],requiredConcepts:["xgboost-second-order-gain"],sectionId:"overview"},
+      {level:"basic",question:"λ가 leaf update를 줄이는 이유를 설명하세요.",answerChecklist:["denominator","add penalty","larger denominator","smaller weight","regularization","local objective"],requiredConcepts:["xgboost-second-order-gain"],sectionId:"overview"},
+      {level:"basic",question:"Split gain의 child·parent·γ 항 역할을 설명하세요.",answerChecklist:["left score","right score","add children","subtract parent","subtract split cost","positive candidate"],requiredConcepts:["xgboost-second-order-gain"],sectionId:"split-gain"},
+      {level:"basic",question:"Gain≤0인 candidate를 버리는 이유를 설명하세요.",answerChecklist:["no local improvement","parent baseline","structure cost","regularized objective","training criterion","not validation"],requiredConcepts:["xgboost-second-order-gain"],sectionId:"split-gain"},
+      {level:"basic",question:"Histogram이 raw threshold 수를 줄이는 흐름을 설명하세요.",answerChecklist:["raw values","quantile bins","per-bin G H","prefix scan","fewer candidates","approximation"],requiredConcepts:["histogram-split-approximation"],sectionId:"histogram"},
+      {level:"advanced",question:"Positive gain이 validation improvement를 보장하지 않는 이유를 설명하세요.",answerChecklist:["training local","quadratic approximation","sampling","overfit","validation distribution","regularization"],requiredConcepts:["xgboost-second-order-gain"],sectionId:"split-gain"},
+      {level:"advanced",question:"max_bin을 줄였을 때 speed와 quality 경계를 설명하세요.",answerChecklist:["fewer thresholds","less storage","faster scan","coarser resolution","miss split","benchmark"],requiredConcepts:["histogram-split-approximation"],sectionId:"histogram"},
+      {level:"advanced",question:"max_depth·max_bin·device를 capacity·search·runtime으로 구분하세요.",answerChecklist:["depth capacity","bin resolution","device execution","different owners","same data","measure cost"],requiredConcepts:["xgboost-second-order-gain","histogram-split-approximation"],sectionId:"evidence"},
+      {level:"advanced",question:"XGBoost claim을 current GPU version에 일반화하려면 필요한 재검증을 설명하세요.",answerChecklist:["version","builder","device","dataset","determinism","quality latency"],requiredConcepts:["histogram-split-approximation"],sectionId:"evidence"},
+    ],
+    papers:[
+      {title:"XGBoost: A Scalable Tree Boosting System",href:"https://arxiv.org/abs/1603.02754",problem:"Regularized boosting의 sparse·large-data 확장",contribution:"Second-order objective·sparsity-aware split·weighted sketch",assumptions:"논문 builder·hardware·dataset·당시 baseline",evidenceScope:"KDD 2016 objective와 공개 scale benchmark",notClaim:"모든 current version·device·dataset의 보편 우위",sectionId:"paper-xgboost"},
+    ],
+  },
+  "ai/lightgbm-efficient-trees": {
+    entryLevel: true,
+    entryNote: "Table의 row·column·tree leaf를 서로 다른 비용 축으로 정의합니다.",
+    coreIdea: "LightGBM은 GOSS로 split-statistic rows, EFB로 sparse columns, leaf-wise growth로 다음 split budget을 줄이며 각 축에 sampling variance·collision·deep-branch 경계가 있습니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      {id:"lightgbm-goss",role:"큰-gradient row 유지와 small-row 보정 weight를 계산합니다."},
+      {id:"lightgbm-exclusive-feature-bundling",role:"Exclusive sparse columns를 offset bin으로 묶습니다."},
+      {id:"leaf-wise-tree-growth",role:"최고 gain leaf에 다음 split을 배정합니다."},
+    ],
+    conceptExplanations:[
+      {id:"lightgbm-goss",sectionId:"overview",intuition:"크게 틀린 rows는 남기고 작은-gradient rows는 일부만 대표로 뽑습니다.",workedExample:"a=.2,b=.1이면 small-row weight는 8입니다.",boundary:"Loss weighting이 아니라 split-statistic sampling입니다."},
+      {id:"lightgbm-exclusive-feature-bundling",sectionId:"bundling",intuition:"동시에 켜지지 않는 sparse switches를 한 column의 다른 bin 범위에 둡니다.",workedExample:"One-hot A와 B에 다른 offsets를 줍니다.",boundary:"동시 nonzero 충돌이 많으면 정보가 섞입니다."},
+      {id:"leaf-wise-tree-growth",sectionId:"leaf-growth",intuition:"모든 가지가 아니라 현재 gain이 가장 큰 leaf 하나를 키웁니다.",workedExample:"Gain 3·7·5면 7인 leaf를 확장합니다.",boundary:"깊은 작은 leaf가 overfit할 수 있습니다."},
+    ],
+    conceptStages:[
+      {label:"00 rows",relation:"GOSS로 row scan을 줄입니다.",concepts:["lightgbm-goss"]},
+      {label:"01 columns",relation:"EFB로 sparse column 수를 줄입니다.",concepts:["lightgbm-exclusive-feature-bundling"]},
+      {label:"02 leaves",relation:"최고 gain leaf에 budget을 배정합니다.",concepts:["leaf-wise-tree-growth"]},
+    ],
+    exercises:[
+      {level:"basic",question:"GOSS가 유지·sampling하는 두 row 집단을 설명하세요.",answerChecklist:["large gradient","keep all","remaining rows","sample b","different roles","split statistics"],requiredConcepts:["lightgbm-goss"],sectionId:"overview"},
+      {level:"basic",question:"a=.2,b=.1의 small-row weight를 계산하세요.",answerChecklist:["one minus a",".8","divide by .1","eight","statistic correction","not loss weight"],requiredConcepts:["lightgbm-goss"],sectionId:"overview"},
+      {level:"basic",question:"GOSS가 hard-example loss가 아닌 이유를 설명하세요.",answerChecklist:["row sampling","split builder","gradient magnitude","statistic weight","objective unchanged","variance"],requiredConcepts:["lightgbm-goss"],sectionId:"overview"},
+      {level:"basic",question:"Exclusive sparse features를 bundle할 수 있는 조건을 설명하세요.",answerChecklist:["mostly zero","rare simultaneous nonzero","offset bins","one coordinate","recover identity","collision bound"],requiredConcepts:["lightgbm-exclusive-feature-bundling"],sectionId:"bundling"},
+      {level:"basic",question:"EFB 충돌이 만드는 failure를 설명하세요.",answerChecklist:["same row nonzero","ambiguous bundle","mixed value","information loss","approximation","measure conflict"],requiredConcepts:["lightgbm-exclusive-feature-bundling"],sectionId:"bundling"},
+      {level:"basic",question:"Leaf gains 3·7·5에서 다음 split을 고르세요.",answerChecklist:["gain seven","one leaf only","not level-wise","asymmetric tree","leaf budget","training gain"],requiredConcepts:["leaf-wise-tree-growth"],sectionId:"leaf-growth"},
+      {level:"advanced",question:"GOSS estimator variance를 평가할 fixture를 설계하세요.",answerChecklist:["same rows","full baseline","multiple seeds","gradient slices","gain error","quality"],requiredConcepts:["lightgbm-goss"],sectionId:"evidence"},
+      {level:"advanced",question:"EFB와 GOSS가 줄이는 축이 다른 이유를 설명하세요.",answerChecklist:["rows","columns","sampling","bundling","variance","collision"],requiredConcepts:["lightgbm-goss","lightgbm-exclusive-feature-bundling"],sectionId:"evidence"},
+      {level:"advanced",question:"Leaf-wise overfit을 제한할 parameter와 진단을 설명하세요.",answerChecklist:["num leaves","min data leaf","max depth","depth distribution","validation","small dataset"],requiredConcepts:["leaf-wise-tree-growth"],sectionId:"leaf-growth"},
+      {level:"advanced",question:"세 LightGBM 기법의 failure owner를 따로 설계하세요.",answerChecklist:["GOSS variance","EFB collision","leaf depth","separate metrics","version","rollback"],requiredConcepts:["lightgbm-goss","lightgbm-exclusive-feature-bundling","leaf-wise-tree-growth"],sectionId:"evidence"},
+    ],
+    papers:[
+      {title:"LightGBM",href:"https://proceedings.neurips.cc/paper/2017/hash/6449f44a102fde848669bdd9eb6b76fa-Abstract.html",problem:"Large rows·sparse columns의 GBDT scan 비용",contribution:"GOSS row sampling과 EFB column bundling",assumptions:"논문 dataset·implementation·hardware·baseline",evidenceScope:"NeurIPS 2017 algorithm과 공개 quality·speed 비교",notClaim:"모든 modern version·dense dataset·device의 보편 우위",sectionId:"paper-lightgbm"},
+    ],
+  },
+  "ai/catboost-ordered-learning": {
+    entryLevel: true,
+    entryNote: "Permutation prefix와 현재 row의 관계부터 시작합니다.",
+    coreIdea: "CatBoost ordered boosting은 현재 row를 보지 않은 prefix model에서 pseudo-residual을 계산해 prediction shift를 줄이고, symmetric tree는 별도로 function shape를 규칙화합니다.",
+    assumedKnowledge: [],
+    introducedHere:[
+      {id:"catboost-ordered-boosting",role:"Permutation prefix prediction에서 current-row gradient를 계산합니다."},
+      {id:"oblivious-symmetric-tree",role:"같은 depth가 동일 split을 쓰는 tree shape를 정의합니다."},
+    ],
+    conceptExplanations:[
+      {id:"catboost-ordered-boosting",sectionId:"overview",intuition:"학생 B의 오답 방향을 B를 이미 본 model이 아니라 앞선 학생만 본 model로 채점합니다.",workedExample:"A,C,B,D에서 B의 prefix는 A,C입니다.",boundary:"External validation·time split을 대체하지 않습니다."},
+      {id:"oblivious-symmetric-tree",sectionId:"symmetric-tree",intuition:"같은 depth의 모든 갈림길에 같은 질문을 둡니다.",workedExample:"Depth 0 age, depth 1 income 질문을 모든 node가 공유합니다.",boundary:"비대칭 관계의 최적 표현을 보장하지 않습니다."},
+    ],
+    conceptStages:[
+      {label:"00 permute",relation:"현재 row 앞의 prefix를 고정합니다.",concepts:["catboost-ordered-boosting"]},
+      {label:"01 gradient",relation:"Prefix prediction에서 residual을 만듭니다.",concepts:["catboost-ordered-boosting"]},
+      {label:"02 tree",relation:"Symmetric split path로 function을 제한합니다.",concepts:["oblivious-symmetric-tree"]},
+    ],
+    exercises:[
+      {level:"basic",question:"A,C,B,D에서 B gradient model이 쓸 rows를 고르세요.",answerChecklist:["use A","use C","exclude B","exclude D","prefix","current row unseen"],requiredConcepts:["catboost-ordered-boosting"],sectionId:"overview"},
+      {level:"basic",question:"B의 label이 gradient 계산과 prefix fit에서 어떻게 다르게 쓰이는지 설명하세요.",answerChecklist:["label in loss","not prefix fit","prediction from A C","current row","slope","no self fit"],requiredConcepts:["catboost-ordered-boosting"],sectionId:"prefix-gradient"},
+      {level:"basic",question:"Full model prediction이 prediction shift를 만들 수 있는 이유를 설명하세요.",answerChecklist:["model saw row","target influence","optimistic prediction","residual biased","self leakage","prefix remedy"],requiredConcepts:["catboost-ordered-boosting"],sectionId:"prefix-gradient"},
+      {level:"basic",question:"Ordered target statistic과 ordered boosting을 구분하세요.",answerChecklist:["category encoding","gradient prediction","different artifacts","both ordering","separate leakage","separate tests"],requiredConcepts:["catboost-ordered-boosting"],sectionId:"evidence"},
+      {level:"basic",question:"Symmetric tree가 같은 depth에서 공유하는 것을 설명하세요.",answerChecklist:["same feature","same threshold","all nodes","depth rule","binary path","regular structure"],requiredConcepts:["oblivious-symmetric-tree"],sectionId:"symmetric-tree"},
+      {level:"basic",question:"Depth 2 symmetric tree의 leaf path 수를 계산하세요.",answerChecklist:["two binary decisions","two squared","four leaves","same depth rules","bit code","complete paths"],requiredConcepts:["oblivious-symmetric-tree"],sectionId:"symmetric-tree"},
+      {level:"advanced",question:"Ordered boosting이 external validation을 대체하지 않는 이유를 설명하세요.",answerChecklist:["training prediction shift","model selection","future distribution","time split","validation untouched","different boundary"],requiredConcepts:["catboost-ordered-boosting"],sectionId:"evidence"},
+      {level:"advanced",question:"Permutation·time order가 충돌하는 dataset의 실험 경계를 설계하세요.",answerChecklist:["event time split","train-only permutation","group boundary","no future rows","validation","version"],requiredConcepts:["catboost-ordered-boosting"],sectionId:"evidence"},
+      {level:"advanced",question:"Symmetric tree의 regular inference와 representation tradeoff를 설명하세요.",answerChecklist:["same rules","regular path","fast lookup","restricted shape","asymmetric relation","capacity match"],requiredConcepts:["oblivious-symmetric-tree"],sectionId:"symmetric-tree"},
+      {level:"advanced",question:"CatBoost release fixture에 넣을 leakage·shape 검사를 설계하세요.",answerChecklist:["prefix exclusion","category statistic","time leakage","permutation seed","tree symmetry","held-out metric"],requiredConcepts:["catboost-ordered-boosting","oblivious-symmetric-tree"],sectionId:"evidence"},
+    ],
+    papers:[
+      {title:"CatBoost",href:"https://proceedings.neurips.cc/paper/2018/hash/14491b756b3a51daac41c24863285549-Abstract.html",problem:"Target statistics와 boosting prediction shift",contribution:"Ordered statistics·ordered boosting·symmetric-tree implementation",assumptions:"논문 permutation·dataset·implementation·baseline",evidenceScope:"NeurIPS 2018 analysis와 공개 quality·runtime 비교",notClaim:"모든 categorical dataset·time split·current version의 보편 우위",sectionId:"paper-catboost"},
     ],
   },
   "ai/tabular-deep-learning": {

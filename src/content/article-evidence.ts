@@ -1168,30 +1168,16 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
   ],
   "ai/gradient-boosting": [
-    {
-      kind: "핵심 논문",
-      label: "Greedy Function Approximation: A Gradient Boosting Machine",
-      href: "https://doi.org/10.1214/aos/1013203451",
-      note: "함수 공간에서 negative gradient를 근사하는 gradient boosting의 원문",
-    },
-    {
-      kind: "핵심 논문",
-      label: "XGBoost: A Scalable Tree Boosting System",
-      href: "https://arxiv.org/abs/1603.02754",
-      note: "regularized objective·sparsity-aware split·weighted quantile sketch",
-    },
-    {
-      kind: "핵심 논문",
-      label: "LightGBM: A Highly Efficient Gradient Boosting Decision Tree",
-      href: "https://proceedings.neurips.cc/paper/2017/hash/6449f44a102fde848669bdd9eb6b76fa-Abstract.html",
-      note: "GOSS와 EFB를 제안한 LightGBM 원 논문",
-    },
-    {
-      kind: "핵심 논문",
-      label: "CatBoost: unbiased boosting with categorical features",
-      href: "https://proceedings.neurips.cc/paper/2018/hash/14491b756b3a51daac41c24863285549-Abstract.html",
-      note: "prediction shift와 ordered boosting·categorical statistic 분석",
-    },
+    { kind:"핵심 논문",label:"Greedy Function Approximation",href:"https://doi.org/10.1214/aos/1013203451",note:"함수 공간 negative-gradient boosting 원문" },
+  ],
+  "ai/xgboost-tree-objective": [
+    { kind:"핵심 논문",label:"XGBoost",href:"https://arxiv.org/abs/1603.02754",note:"2차 regularized objective·sparsity-aware split·weighted sketch" },
+  ],
+  "ai/lightgbm-efficient-trees": [
+    { kind:"핵심 논문",label:"LightGBM",href:"https://proceedings.neurips.cc/paper/2017/hash/6449f44a102fde848669bdd9eb6b76fa-Abstract.html",note:"GOSS row sampling과 EFB column bundling" },
+  ],
+  "ai/catboost-ordered-learning": [
+    { kind:"핵심 논문",label:"CatBoost",href:"https://proceedings.neurips.cc/paper/2018/hash/14491b756b3a51daac41c24863285549-Abstract.html",note:"Prediction shift·ordered boosting·categorical statistic 분석" },
   ],
   "ai/tabular-deep-learning": [
     {

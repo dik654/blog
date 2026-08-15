@@ -39,16 +39,23 @@ export function TermLesson({
 }) {
   return (
     <section className="not-prose min-w-0 border border-border bg-background p-5 sm:p-7">
-      <p className="text-xs font-black tracking-[0.14em] text-primary">용어 하나</p>
+      <p className="text-xs font-black tracking-[0.14em] text-primary">
+        용어 하나
+      </p>
       <h3 className="mt-2 break-words text-xl font-black leading-8">{name}</h3>
-      <div className="mt-3 max-w-3xl text-sm leading-7 text-foreground">{oneLine}</div>
+      <div className="mt-3 max-w-3xl text-sm leading-7 text-foreground">
+        {oneLine}
+      </div>
       <dl className="mt-6 grid min-w-0 gap-5 md:grid-cols-3">
         {[
           ["형태", shape],
           ["작은 예", example],
           ["여기서 멈출 경계", boundary],
         ].map(([label, value]) => (
-          <div key={label as string} className="min-w-0 border-t border-border pt-3">
+          <div
+            key={label as string}
+            className="min-w-0 border-t border-border pt-3"
+          >
             <dt className="text-xs font-black text-primary">{label}</dt>
             <dd className="mt-2 break-words text-sm leading-7 text-muted-foreground">
               {value}
@@ -82,7 +89,10 @@ export function EvidenceGrid({
         ["근거 범위", scope],
         ["일반화 금지", notClaim],
       ].map(([label, value]) => (
-        <div key={label} className="grid gap-1 sm:grid-cols-[7rem_minmax(0,1fr)]">
+        <div
+          key={label}
+          className="grid gap-1 sm:grid-cols-[7rem_minmax(0,1fr)]"
+        >
           <dt className="font-black text-foreground">{label}</dt>
           <dd className="min-w-0 break-words text-muted-foreground">{value}</dd>
         </div>
@@ -147,6 +157,8 @@ export function StoryShell({
     <figure
       data-viz="animated-story"
       data-viz-canvas="story-canvas"
+      data-story-index={step}
+      data-story-playing={playing ? "true" : "false"}
       tabIndex={0}
       onKeyDown={onKeyDown}
       className="not-prose min-w-0 overflow-hidden border border-border bg-background outline-none focus-visible:ring-2 focus-visible:ring-primary"
@@ -156,7 +168,9 @@ export function StoryShell({
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <h3 className="text-lg font-black">{title}</h3>
-            <p className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">{subtitle}</p>
+            <p className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">
+              {subtitle}
+            </p>
           </div>
           <button
             type="button"
@@ -215,7 +229,9 @@ export function NodeBox({
       }`}
     >
       <p className="break-words text-sm font-black">{title}</p>
-      <p className="mt-2 break-words text-xs leading-5 text-muted-foreground">{detail}</p>
+      <p className="mt-2 break-words text-xs leading-5 text-muted-foreground">
+        {detail}
+      </p>
     </div>
   );
 }
