@@ -906,7 +906,24 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Affine annotation transform",
     definition:
       "Image point를 p′=Ap+t로 옮긴 것과 동일한 map을 box corner·mask·keypoint에 적용하고 crop boundary에서 validity를 다시 검사하는 방법입니다.",
-    canonicalHref: "/ai/data-augmentation#geometric",
+    canonicalHref: "/ai/image-augmentation-transforms#visibility",
+  },
+  "transformed-annotation-visibility-rule": {
+    id: "transformed-annotation-visibility-rule",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Transformed annotation visibility rule",
+    definition:
+      "기하 변환과 canvas clip 뒤 남은 object 면적·크기·keypoint 유효성을 계산해 annotation을 keep·drop·ignore로 판정하는 규칙입니다.",
+    canonicalHref: "/ai/image-augmentation-transforms#visibility",
+  },
+  "photometric-augmentation-contract": {
+    id: "photometric-augmentation-contract",
+    domain: "machine-learning",
+    label: "Photometric augmentation contract",
+    definition:
+      "배포 camera·조명·compression에서 생길 brightness·contrast·hue·noise 범위를 target signal을 지우지 않는 선에서 sampling하는 계약입니다.",
+    canonicalHref: "/ai/image-augmentation-transforms#photometric",
   },
   "normalization-input-contract": {
     id: "normalization-input-contract",
@@ -914,7 +931,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Normalization input contract",
     definition:
       "Input channel의 단위와 range를 정한 뒤 고정된 center와 scale로 좌표를 바꾸고 train·validation·serving에 동일하게 적용하는 preprocessing 계약입니다.",
-    canonicalHref: "/ai/data-augmentation#color",
+    canonicalHref: "/ai/image-augmentation-transforms#normalization",
   },
   "mixup-convex-target": {
     id: "mixup-convex-target",
@@ -923,7 +940,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Mixup convex input–target interpolation",
     definition:
       "두 training input을 coefficient λ로 선형 보간하고 두 target distribution도 같은 λ로 보간해 sample 사이의 단순한 behavior를 유도하는 방법입니다.",
-    canonicalHref: "/ai/data-augmentation#advanced",
+    canonicalHref: "/ai/mixup-cutmix#mixup",
   },
   "cutmix-area-target": {
     id: "cutmix-area-target",
@@ -932,7 +949,16 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "CutMix area-based target",
     definition:
       "두 image의 spatial region을 binary mask로 결합하고 clipping 후 실제 visible area 비율로 classification target을 섞는 방법입니다.",
-    canonicalHref: "/ai/data-augmentation#advanced",
+    canonicalHref: "/ai/mixup-cutmix#cutmix",
+  },
+  "mosaic-annotation-composition": {
+    id: "mosaic-annotation-composition",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Mosaic annotation composition",
+    definition:
+      "여러 image를 tile별 resize·offset으로 한 canvas에 배치하고 각 box·mask·keypoint를 변환·clip·filter한 뒤 합치는 target composition입니다.",
+    canonicalHref: "/ai/mixup-cutmix#mosaic",
   },
   "tabular-synthesis-validity": {
     id: "tabular-synthesis-validity",
@@ -940,7 +966,31 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Tabular synthesis validity",
     definition:
       "Synthetic row가 column range뿐 아니라 row relation·entity consistency·temporal order·training-fold boundary를 보존하는지 검사하는 계약입니다.",
-    canonicalHref: "/ai/data-augmentation#tabular",
+    canonicalHref: "/ai/tabular-data-synthesis#overview",
+  },
+  "tabular-synthesis-constraint-ledger": {
+    id: "tabular-synthesis-constraint-ledger",
+    domain: "machine-learning",
+    label: "Tabular synthesis constraint ledger",
+    definition:
+      "Synthetic row가 지켜야 할 column range·cross-column relation·entity state·temporal order와 failure action을 versioning한 실행 규칙 목록입니다.",
+    canonicalHref: "/ai/tabular-data-synthesis#constraints",
+  },
+  "tabular-synthesis-split-locality": {
+    id: "tabular-synthesis-split-locality",
+    domain: "machine-learning",
+    label: "Split-local tabular synthesis",
+    definition:
+      "Neighbor·statistics·generator를 split 이후 training fold에만 fit하고 validation·test row를 source나 fitting signal로 사용하지 않는 경계입니다.",
+    canonicalHref: "/ai/tabular-data-synthesis#split-local",
+  },
+  "synthetic-data-utility-privacy-boundary": {
+    id: "synthetic-data-utility-privacy-boundary",
+    domain: "machine-learning",
+    label: "Synthetic-data utility–privacy boundary",
+    definition:
+      "Downstream utility·constraint pass와 exact duplicate·nearest-real·membership leakage를 서로 상쇄하지 않는 별도 release axis로 평가하는 경계입니다.",
+    canonicalHref: "/ai/tabular-data-synthesis#audit",
   },
   "augmentation-evaluation-boundary": {
     id: "augmentation-evaluation-boundary",
@@ -948,7 +998,33 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Augmentation evaluation boundary",
     definition:
       "Stochastic train distribution, deterministic validation, fixed robustness slice, inverse-mapped TTA를 분리하고 accuracy·calibration·class slice·latency를 별도로 측정하는 평가 원칙입니다.",
-    canonicalHref: "/ai/data-augmentation#pipeline",
+    canonicalHref: "/ai/augmentation-evaluation#clean-robust",
+  },
+  "augmentation-policy-artifact": {
+    id: "augmentation-policy-artifact",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Augmentation policy artifact",
+    definition:
+      "Transform family·parameter range·확률·순서·input unit·target-map revision·seed를 재현 가능하게 묶은 실행 artifact입니다.",
+    canonicalHref: "/ai/augmentation-evaluation#overview",
+  },
+  "test-time-augmentation-inverse-map": {
+    id: "test-time-augmentation-inverse-map",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Test-time augmentation inverse map",
+    definition:
+      "각 inference view의 box·mask·heatmap prediction을 원래 input coordinate로 되돌린 뒤 같은 위치와 class order에서 결합하는 방법입니다.",
+    canonicalHref: "/ai/augmentation-evaluation#tta",
+  },
+  "augmentation-release-gate": {
+    id: "augmentation-release-gate",
+    domain: "machine-learning",
+    label: "Augmentation release gate",
+    definition:
+      "같은 split·seed의 paired clean gain, fixed robustness slice, calibration, subgroup, latency와 rollback 조건으로 policy rollout을 판정하는 gate입니다.",
+    canonicalHref: "/ai/augmentation-evaluation#release",
   },
   "feature-availability-contract": {
     id: "feature-availability-contract",
@@ -19815,11 +19891,32 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
       "같은 geometric parameter를 image point와 structured annotation에 적용합니다.",
   },
   {
+    from: "affine-annotation-transform",
+    to: "transformed-annotation-visibility-rule",
+    relation: "produces",
+    reason:
+      "변환된 annotation을 canvas에서 clip한 뒤 남은 면적과 유효성을 판정합니다.",
+  },
+  {
+    from: "label-preserving-transformation",
+    to: "photometric-augmentation-contract",
+    relation: "extends",
+    reason:
+      "Label 의미를 보존하는 범위를 camera·조명·pixel-value 변화에 구체화합니다.",
+  },
+  {
     from: "tensor-batch",
     to: "normalization-input-contract",
     relation: "prerequisite",
     reason:
       "Channel·spatial·batch axis를 구분해 channel별 center와 scale을 적용합니다.",
+  },
+  {
+    from: "photometric-augmentation-contract",
+    to: "normalization-input-contract",
+    relation: "contrasts",
+    reason:
+      "Random pixel-value variation과 deterministic model-input coordinate conversion을 분리합니다.",
   },
   {
     from: "conditional-probability",
@@ -19843,6 +19940,20 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
       "전체 tensor의 선형 보간 대신 spatial mask와 visible area로 mixing coefficient를 정합니다.",
   },
   {
+    from: "augmentation-target-map",
+    to: "mosaic-annotation-composition",
+    relation: "extends",
+    reason:
+      "Tile별 resize·offset·clip을 여러 source annotation에 적용해 하나의 target set으로 합칩니다.",
+  },
+  {
+    from: "cutmix-area-target",
+    to: "mosaic-annotation-composition",
+    relation: "contrasts",
+    reason:
+      "Classification area target과 structured annotation union의 서로 다른 target rule을 구분합니다.",
+  },
+  {
     from: "train-validation-test",
     to: "tabular-synthesis-validity",
     relation: "constrains",
@@ -19850,11 +19961,74 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
       "Neighbor selection과 row synthesis를 split 이후 training fold로 제한해 leakage를 막습니다.",
   },
   {
+    from: "tabular-synthesis-constraint-ledger",
+    to: "tabular-synthesis-validity",
+    relation: "constrains",
+    reason:
+      "Column·relation·entity·time rule을 모두 통과한 synthetic row만 유효하다고 판정합니다.",
+  },
+  {
+    from: "train-validation-test",
+    to: "tabular-synthesis-split-locality",
+    relation: "constrains",
+    reason:
+      "Neighbor·generator·statistics fitting을 training fold 내부로 제한합니다.",
+  },
+  {
+    from: "tabular-synthesis-split-locality",
+    to: "tabular-synthesis-validity",
+    relation: "prerequisite",
+    reason:
+      "Row 내용뿐 아니라 source와 fitting provenance가 split boundary를 지켜야 유효합니다.",
+  },
+  {
+    from: "tabular-synthesis-validity",
+    to: "synthetic-data-utility-privacy-boundary",
+    relation: "evaluates",
+    reason:
+      "Constraint를 통과한 synthetic data도 utility와 memorization·privacy를 별도 axis에서 평가합니다.",
+  },
+  {
     from: "augmentation-risk-objective",
     to: "augmentation-evaluation-boundary",
     relation: "evaluates",
     reason:
       "바뀐 training distribution의 이득을 원본 validation과 고정 robustness slice에서 분리해 측정합니다.",
+  },
+  {
+    from: "augmentation-policy-artifact",
+    to: "augmentation-risk-objective",
+    relation: "constrains",
+    reason:
+      "실제 sampling distribution의 operation·range·probability·order를 versioned artifact로 고정합니다.",
+  },
+  {
+    from: "augmentation-target-map",
+    to: "test-time-augmentation-inverse-map",
+    relation: "prerequisite",
+    reason:
+      "Training 때 정의한 spatial target geometry를 inference output의 역변환에도 적용합니다.",
+  },
+  {
+    from: "test-time-augmentation-inverse-map",
+    to: "augmentation-evaluation-boundary",
+    relation: "extends",
+    reason:
+      "TTA prediction을 base coordinate로 정렬한 뒤 quality와 추가 runtime cost를 평가합니다.",
+  },
+  {
+    from: "augmentation-policy-artifact",
+    to: "augmentation-release-gate",
+    relation: "prerequisite",
+    reason:
+      "Paired experiment와 rollback이 동일 policy revision을 가리키게 합니다.",
+  },
+  {
+    from: "augmentation-evaluation-boundary",
+    to: "augmentation-release-gate",
+    relation: "produces",
+    reason:
+      "Clean·robustness·calibration·slice·latency evidence를 rollout decision으로 묶습니다.",
   },
   {
     from: "function-composition",

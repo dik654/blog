@@ -9,7 +9,7 @@ export default function Training() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           첫 run은 pretrained input contract와 최소한의 crop·flip만 사용합니다.
-          이후 RandAugment·Mixup·CutMix는 <Link to="/ai/data-augmentation">증강 정본</Link>의
+          이후 RandAugment는 <Link to="/ai/data-augmentation">증강 기초</Link>, Mixup·CutMix는 <Link to="/ai/mixup-cutmix">sample mixing 정본</Link>의
           target 변환 규칙을 재사용하되, target domain에서 의미가 유지되는지 따로
           확인합니다. 좌우가 진단 의미를 바꾸는 의료 image나 글자 방향이 중요한
           문서에는 흔한 flip·rotation도 잘못된 label을 만들 수 있습니다.

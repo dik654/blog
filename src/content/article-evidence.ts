@@ -1116,15 +1116,53 @@ export const ARTICLE_EVIDENCE: Readonly<
   "ai/data-augmentation": [
     {
       kind: "핵심 논문",
+      label: "RandAugment",
+      href: "https://arxiv.org/abs/1909.13719",
+      note: "operation 수와 magnitude로 augmentation policy search를 단순화한 근거",
+    },
+  ],
+  "ai/image-augmentation-transforms": [
+    {
+      kind: "핵심 논문",
+      label: "Albumentations",
+      href: "https://doi.org/10.3390/info11020125",
+      note: "image와 structured annotation에 같은 transform을 적용하는 library scope",
+    },
+  ],
+  "ai/mixup-cutmix": [
+    {
+      kind: "핵심 논문",
       label: "mixup: Beyond Empirical Risk Minimization",
       href: "https://arxiv.org/abs/1710.09412",
-      note: "입력과 label의 convex combination을 사용하는 regularization",
+      note: "input과 target의 convex combination을 사용하는 regularization",
     },
     {
       kind: "핵심 논문",
       label: "CutMix: Regularization Strategy to Train Strong Classifiers",
-      href: "https://arxiv.org/abs/1905.04899",
-      note: "이미지 영역과 label 비율을 함께 섞는 augmentation",
+      href: "https://openaccess.thecvf.com/content_ICCV_2019/html/Yun_CutMix_Regularization_Strategy_to_Train_Strong_Classifiers_With_Localizable_Features_ICCV_2019_paper.html",
+      note: "image region과 visible-area target을 함께 섞는 방법",
+    },
+  ],
+  "ai/tabular-data-synthesis": [
+    {
+      kind: "핵심 논문",
+      label: "SMOTE",
+      href: "https://www.jair.org/index.php/jair/article/view/10302",
+      note: "training-fold minority neighbor 사이 interpolation의 원 방법",
+    },
+    {
+      kind: "핵심 논문",
+      label: "CTGAN",
+      href: "https://arxiv.org/abs/1907.00503",
+      note: "mixed continuous·discrete tabular distribution의 conditional generation",
+    },
+  ],
+  "ai/augmentation-evaluation": [
+    {
+      kind: "핵심 논문",
+      label: "AugMix",
+      href: "https://arxiv.org/abs/1912.02781",
+      note: "고정 corruption benchmark에서 robustness와 uncertainty를 평가한 방법",
     },
   ],
   "ai/imbalanced-data": [

@@ -1246,7 +1246,7 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "EDA의 분포·결측·가설", href: "/ai/eda-workflow" },
       {
         label: "Tabular augmentation의 split 경계",
-        href: "/ai/data-augmentation#tabular",
+        href: "/ai/tabular-data-synthesis#split-local",
       },
     ],
     evidence: [
@@ -1550,7 +1550,7 @@ export const EDITORIAL_BOUNDARIES = {
   "label-smoothing": {
     title: "Label smoothing 글이 소유하는 범위",
     owns: ["One-hot과 K-class uniform distribution의 ε mixture", "Mixup 등 soft-target 조합의 최종 probability audit"],
-    reuses: [{ label: "Cross-entropy", href: "/ai/cross-entropy" }, { label: "Mixup·CutMix", href: "/ai/data-augmentation" }],
+    reuses: [{ label: "Cross-entropy", href: "/ai/cross-entropy" }, { label: "Mixup·CutMix", href: "/ai/mixup-cutmix" }],
     evidence: [{ kind: "primary-source", rule: "Label smoothing claim은 Inception 논문의 formulation·ImageNet recipe 범위로 제한한다." }, { kind: "standard", rule: "K·ε·target formula·class weight·ignore index·reduction·calibration을 기록한다." }],
   },
   "image-classification-pipeline": {
@@ -2531,7 +2531,7 @@ export const EDITORIAL_BOUNDARIES = {
         label: "Cross-entropy와 softmax probability",
         href: "/ai/cross-entropy",
       },
-      { label: "Augmentation과 split leakage", href: "/ai/data-augmentation" },
+      { label: "Synthetic row와 split-local synthesis", href: "/ai/tabular-data-synthesis#split-local" },
     ],
     evidence: [
       {
@@ -2545,39 +2545,51 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "data-augmentation": {
-    title: "Data augmentation 글이 소유하는 범위",
+    title: "Data augmentation 기초 글이 소유하는 범위",
     owns: [
       "Augmentation distribution·target transform·label-preservation의 data contract",
-      "Affine image 좌표와 box·mask·keypoint annotation 동기화",
-      "Mixup soft target·CutMix area target·Mosaic annotation의 서로 다른 가정",
-      "Tabular synthesis validity와 train·validation·robustness·TTA pipeline 경계",
+      "Random transform expectation을 포함한 augmented empirical risk",
     ],
     reuses: [
       {
         label: "Train·validation·test와 generalization",
         href: "/ai/train-validation-test",
       },
-      { label: "Image tensor와 translation equivariance", href: "/ai/cnn" },
-      { label: "Soft target cross-entropy", href: "/ai/cross-entropy" },
-      {
-        label: "SMOTE·class imbalance와 threshold",
-        href: "/ai/imbalanced-data",
-      },
-      {
-        label: "Regularization 선택과 validation",
-        href: "/ai/regularization-practice",
-      },
     ],
     evidence: [
       {
         kind: "primary-source",
-        rule: "Mixup·CutMix·RandAugment claim은 각 논문의 dataset·model·operation·target 조건으로 제한한다.",
+        rule: "RandAugment claim은 논문의 dataset·model·operation·target 조건으로 제한한다.",
       },
       {
         kind: "standard",
-        rule: "Transform·parameter range·probability·order·input unit·annotation map·split·seed·evaluation slice를 재현 가능한 data contract로 기록한다.",
+        rule: "Transform·parameter range·probability·target map·split·seed를 재현 가능한 pair contract로 기록한다.",
       },
     ],
+  },
+  "image-augmentation-transforms": {
+    title: "Image augmentation transform 글이 소유하는 범위",
+    owns: ["Affine annotation과 clip 뒤 visibility rule", "Photometric label boundary와 deterministic normalization"],
+    reuses: [{ label: "Image tensor와 spatial geometry", href: "/ai/cnn" }, { label: "Augmentation target map", href: "/ai/data-augmentation#target-map" }],
+    evidence: [{ kind: "primary-source", rule: "Albumentations claim은 논문 version의 API·target type·benchmark 범위로 제한한다." }, { kind: "standard", rule: "Coordinate convention·A·t·visibility threshold·color range·input unit·normalization revision을 기록한다." }],
+  },
+  "mixup-cutmix": {
+    title: "Sample mixing 글이 소유하는 범위",
+    owns: ["Mixup convex input·target interpolation", "CutMix visible-area target", "Mosaic structured annotation composition"],
+    reuses: [{ label: "Soft-target cross-entropy", href: "/ai/cross-entropy" }, { label: "Target map 기초", href: "/ai/data-augmentation#target-map" }],
+    evidence: [{ kind: "primary-source", rule: "Mixup·CutMix claim은 논문의 tensor space·area approximation·dataset 조건으로 제한한다." }, { kind: "standard", rule: "Source IDs·λ·mask·tile map·target mass·clip/filter result를 저장한다." }],
+  },
+  "tabular-data-synthesis": {
+    title: "Tabular data synthesis 글이 소유하는 범위",
+    owns: ["Schema·relation·entity·time constraint ledger", "Training-fold-only fitting과 utility·privacy gate"],
+    reuses: [{ label: "Train·validation·test", href: "/ai/train-validation-test" }, { label: "Class imbalance와 threshold", href: "/ai/imbalanced-data" }],
+    evidence: [{ kind: "primary-source", rule: "SMOTE·CTGAN claim은 각 논문의 feature geometry·schema·dataset·evaluation 범위로 제한한다." }, { kind: "standard", rule: "Schema·constraint ledger·split digest·source lineage·utility·privacy metric을 기록한다." }],
+  },
+  "augmentation-evaluation": {
+    title: "Augmentation evaluation 글이 소유하는 범위",
+    owns: ["Versioned policy artifact와 clean·robustness 평가 분리", "TTA inverse mapping과 paired release·rollback gate"],
+    reuses: [{ label: "Augmentation objective", href: "/ai/data-augmentation#objective" }, { label: "Image target geometry", href: "/ai/image-augmentation-transforms#visibility" }],
+    evidence: [{ kind: "primary-source", rule: "AugMix claim은 논문의 operation set·corruption benchmark·architecture 범위로 제한한다." }, { kind: "standard", rule: "Policy revision·clean/shift fixture·inverse map·paired seeds·latency·rollback을 기록한다." }],
   },
   "cross-entropy": {
     title: "Cross-entropy 글이 소유하는 범위",

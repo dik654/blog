@@ -38036,430 +38036,196 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/data-augmentation": {
-    coreIdea:
-      "Data augmentation은 원본을 복제하는 기법이 아니라 배포 환경에서 허용할 transformation distribution과 target 변환 규칙을 training objective에 넣는 모델링입니다. 효과를 주장하려면 label preservation·split isolation·annotation consistency를 먼저 확인하고 원본 validation과 고정 robustness slice에서 따로 평가해야 합니다.",
-    assumedKnowledge: [
-      {
-        id: "train-validation-test",
-        role: "Augmentation과 synthetic sample 생성을 training fold 안으로 제한합니다.",
-      },
-      {
-        id: "empirical-risk",
-        role: "원본 sample 평균이 transform expectation을 포함한 objective로 바뀌는 과정을 읽습니다.",
-      },
-      {
-        id: "expectation",
-        role: "Random transform parameter와 sample pair에 대한 평균 loss를 해석합니다.",
-      },
-      {
-        id: "linear-map-matrix",
-        role: "Affine image 좌표 p′=Ap+t와 annotation 변환을 계산합니다.",
-      },
-      {
-        id: "tensor-batch",
-        role: "Channel·spatial·batch axis와 Mixup tensor 연산을 구분합니다.",
-      },
-      {
-        id: "conditional-probability",
-        role: "One-hot과 soft target을 class probability distribution으로 읽습니다.",
-      },
-      {
-        id: "cross-entropy-nll",
-        role: "Mixup·CutMix의 soft target을 loss에 넣는 방법을 재사용합니다.",
-      },
-      {
-        id: "translation-equivariance",
-        role: "Input 이동과 feature map 이동, task-level invariance의 차이를 구분합니다.",
-      },
-    ],
+    entryLevel: true,
+    entryNote: "Augmentation 이름을 모른다고 가정하고 배포에서 무엇이 달라져도 target이 같아야 하는지부터 시작합니다.",
+    coreIdea: "Data augmentation은 허용한 transformation distribution과 같은 parameter를 쓰는 target map을 training risk에 넣는 모델링입니다.",
+    assumedKnowledge: [],
     introducedHere: [
-      {
-        id: "augmentation-risk-objective",
-        role: "Training sample과 random transform에 대한 평균 loss를 정의합니다.",
-      },
-      {
-        id: "label-preserving-transformation",
-        role: "배포 현실성과 target 의미를 보존하는 허용 transformation을 정합니다.",
-      },
-      {
-        id: "augmentation-target-map",
-        role: "Class·soft label·box·mask·keypoint를 input transform과 함께 갱신합니다.",
-      },
-      {
-        id: "affine-annotation-transform",
-        role: "Geometric matrix와 translation을 annotation 좌표에 동일하게 적용합니다.",
-      },
-      {
-        id: "normalization-input-contract",
-        role: "Color augmentation과 deterministic channel normalization을 분리합니다.",
-      },
-      {
-        id: "mixup-convex-target",
-        role: "두 input과 target을 같은 coefficient로 보간합니다.",
-      },
-      {
-        id: "cutmix-area-target",
-        role: "Spatial mask와 실제 visible area로 classification target을 섞습니다.",
-      },
-      {
-        id: "tabular-synthesis-validity",
-        role: "Column·row·entity·time·split constraint를 synthetic row에 적용합니다.",
-      },
-      {
-        id: "augmentation-evaluation-boundary",
-        role: "Train augmentation·validation·robustness slice·TTA의 목적과 metric을 분리합니다.",
-      },
+      { id: "label-preserving-transformation", role: "현재 task에서 target 의미를 보존하는 변화의 범위를 정의합니다." },
+      { id: "augmentation-target-map", role: "Input과 class·box·mask·keypoint target을 같은 parameter로 갱신합니다." },
+      { id: "augmentation-risk-objective", role: "Sample 평균 안에 random transform expectation을 넣습니다." },
     ],
     conceptExplanations: [
-      {
-        id: "augmentation-risk-objective",
-        sectionId: "overview",
-        intuition:
-          "사진 한 장을 반복해서 보여 주는 대신 매번 허용한 조명과 자세를 다르게 뽑아 그 범위 전체에서 평균적으로 맞히게 합니다.",
-        workedExample:
-          "10,000개 train image마다 horizontal flip을 probability 0.5로 sampling하면 epoch마다 기대상 절반이 뒤집히지만 dataset file 수는 그대로입니다.",
-        boundary:
-          "Transform expectation이 실제 deployment distribution과 같다는 보장은 없으며 policy가 잘못되면 label noise를 추가합니다.",
-      },
-      {
-        id: "label-preserving-transformation",
-        sectionId: "overview",
-        intuition:
-          "고양이를 좌우로 뒤집어도 고양이지만 숫자 6을 회전해 9로 만들면 같은 정답을 붙일 수 없습니다.",
-        workedExample:
-          "Street photo classification에서는 작은 brightness change를 허용해도 traffic-light color recognition에서는 hue shift 범위를 훨씬 좁혀야 합니다.",
-        boundary:
-          "불변식은 dataset 종류가 아니라 구체적인 task target과 배포 환경에 따라 달라집니다.",
-      },
-      {
-        id: "augmentation-target-map",
-        sectionId: "overview",
-        intuition:
-          "사진과 정답 메모를 같은 투명 필름에 올려놓고 함께 움직여야 서로 어긋나지 않습니다.",
-        workedExample:
-          "Detection image를 오른쪽으로 12px 옮기면 모든 box x coordinate와 keypoint도 12px 이동합니다.",
-        boundary:
-          "Classification label이 그대로인 transform도 localization annotation에는 identity target map이 아닐 수 있습니다.",
-      },
-      {
-        id: "affine-annotation-transform",
-        sectionId: "geometric",
-        intuition:
-          "Image canvas를 회전시키는 같은 자를 box corner와 keypoint에도 적용합니다.",
-        workedExample:
-          "Point p=(10,5)를 identity A와 translation t=(12,0)로 옮기면 p′=(22,5)입니다.",
-        boundary:
-          "Rotation 뒤 axis-aligned box는 네 corner를 모두 변환해 다시 감싸야 하며 crop 후 invisible object 처리 규칙이 필요합니다.",
-      },
-      {
-        id: "normalization-input-contract",
-        sectionId: "color",
-        intuition:
-          "Random하게 조명을 바꾸는 일과 온도계를 섭씨 눈금에 맞추는 일은 다릅니다.",
-        workedExample:
-          "0–1 red channel x=0.7, μ=0.5, σ=0.2이면 normalized value는 1.0입니다.",
-        boundary:
-          "0–255 image에 0–1 scale의 μ·σ를 바로 쓰면 단위가 맞지 않으며 ImageNet statistics는 universal constant가 아닙니다.",
-      },
-      {
-        id: "mixup-convex-target",
-        sectionId: "advanced",
-        intuition:
-          "두 사진을 70:30으로 겹쳤다면 정답도 두 class를 70:30 probability로 가르칩니다.",
-        workedExample:
-          "λ=0.7, cat one-hot과 dog one-hot을 섞으면 soft target은 [cat .7, dog .3]입니다.",
-        boundary:
-          "Feature의 linear interpolation이 의미 없는 discrete·causal·physical domain에서는 mixed input이 비현실적일 수 있습니다.",
-      },
-      {
-        id: "cutmix-area-target",
-        sectionId: "advanced",
-        intuition:
-          "사진 일부를 다른 사진 조각으로 바꾸고, 최종 화면에서 보이는 면적만큼 두 label의 비중을 정합니다.",
-        workedExample:
-          "100×100 canvas에서 sample j patch가 2,500 pixels면 i의 area target weight는 0.75, j는 0.25입니다.",
-        boundary:
-          "면적이 class evidence와 비례한다는 것은 classification 근사이며 small object·localization task에는 별도 annotation rule이 필요합니다.",
-      },
-      {
-        id: "tabular-synthesis-validity",
-        sectionId: "tabular",
-        intuition:
-          "각 숫자가 정상 범위여도 한 사람의 기록으로 함께 존재할 수 없는 조합이면 가짜 row입니다.",
-        workedExample:
-          "계약 시작일과 종료일을 따로 보간해 종료일<시작일이 되면 column range는 통과해도 row constraint는 실패합니다.",
-        boundary:
-          "SMOTE·noise injection 같은 합성도 split 전에 수행하면 validation information이 training에 들어갈 수 있습니다.",
-      },
-      {
-        id: "augmentation-evaluation-boundary",
-        sectionId: "pipeline",
-        intuition:
-          "연습할 때 문제를 흔드는 것, 원래 시험을 보는 것, 태풍 상황만 따로 시험하는 것을 서로 다른 점수표로 관리합니다.",
-        workedExample:
-          "Clean validation accuracy, fixed low-light slice accuracy, calibration ECE, TTA latency를 별도 column으로 비교합니다.",
-        boundary:
-          "Random augmented validation 하나만으로 baseline을 선택하면 seed noise와 변환 난이도가 model quality에 섞입니다.",
-      },
+      { id: "label-preserving-transformation", sectionId: "overview", intuition: "고양이 사진의 작은 crop은 고양이를 유지하지만 숫자 6을 회전하면 9가 될 수 있습니다.", workedExample: "상품 분류는 ±10% brightness를 허용하되 신호등 색 분류는 hue 변화 범위를 0으로 둘 수 있습니다.", boundary: "같은 transform 이름도 task target과 deployment 환경이 달라지면 허용 범위가 달라집니다." },
+      { id: "augmentation-target-map", sectionId: "target-map", intuition: "사진과 정답 투명 필름을 같은 손으로 함께 움직여야 서로 어긋나지 않습니다.", workedExample: "Image를 오른쪽 12px 옮기면 box와 keypoint x 좌표에도 12를 더합니다.", boundary: "Classification label이 그대로여도 localization target이 identity map이라는 뜻은 아닙니다." },
+      { id: "augmentation-risk-objective", sectionId: "objective", intuition: "원본 한 장을 복제하지 않고 매 step 다른 허용 변화를 뽑아 그 범위 전체의 평균 error를 줄입니다.", workedExample: "N=100, 각 image에 probability .5 flip을 sampling해 sample과 transform randomness를 함께 평균합니다.", boundary: "Policy가 deployment보다 넓으면 robustness가 아니라 label noise를 학습합니다." },
     ],
     conceptStages: [
-      {
-        label: "허용 변화",
-        relation:
-          "Deployment variation과 target semantics에서 transform family를 정의",
-        concepts: [
-          "label-preserving-transformation",
-          "augmentation-target-map",
-        ],
-      },
-      {
-        label: "학습 objective",
-        relation:
-          "Training fold에서 transform을 sampling해 empirical risk를 확장",
-        concepts: ["augmentation-risk-objective", "train-validation-test"],
-      },
-      {
-        label: "Modality별 target",
-        relation:
-          "좌표·channel·soft label·row constraint를 같은 transform과 동기화",
-        concepts: [
-          "affine-annotation-transform",
-          "normalization-input-contract",
-          "mixup-convex-target",
-          "cutmix-area-target",
-          "tabular-synthesis-validity",
-        ],
-      },
-      {
-        label: "검증과 운영",
-        relation: "Clean·robustness·TTA를 분리해 품질과 비용을 측정",
-        concepts: ["augmentation-evaluation-boundary"],
-      },
+      { label: "01 의미", relation: "배포에서 target이 유지되는 변화 범위를 고정합니다.", concepts: ["label-preserving-transformation"] },
+      { label: "02 Pair", relation: "같은 parameter로 input과 target을 만듭니다.", concepts: ["augmentation-target-map"] },
+      { label: "03 Objective", relation: "Transform randomness를 empirical risk에 평균합니다.", concepts: ["augmentation-risk-objective"] },
+      { label: "04 Boundary", relation: "Label counterexample과 split isolation을 검사합니다.", concepts: ["label-preserving-transformation", "augmentation-target-map", "augmentation-risk-objective"] },
     ],
     exercises: [
-      {
-        level: "basic",
-        question:
-          "문자 인식과 자연 사진 분류에서 horizontal flip이 서로 다른 label-preservation 판단을 받는 이유를 설명하라.",
-        answerChecklist: [
-          "task target",
-          "direction semantics",
-          "deployment plausibility",
-        ],
-        requiredConcepts: ["label-preserving-transformation"],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "Point (10,5)를 오른쪽 12px 평행 이동하고 같은 transform을 keypoint와 box에 적용하는 절차를 쓰라.",
-        answerChecklist: [
-          "p′=(22,5)",
-          "같은 random parameter",
-          "box corner 변환",
-          "boundary clip",
-        ],
-        requiredConcepts: [
-          "affine-annotation-transform",
-          "augmentation-target-map",
-        ],
-        sectionId: "geometric",
-      },
-      {
-        level: "basic",
-        question:
-          "100×100 image의 box (10,20,30,40)를 horizontal flip했을 때 새 x 좌표를 계산하고 image만 flip했을 때 생기는 annotation corruption을 설명하라.",
-        answerChecklist: [
-          "known geometry",
-          "seed·parameter capture",
-          "corner or mask overlay",
-          "visible-area assertion",
-        ],
-        requiredConcepts: [
-          "affine-annotation-transform",
-          "augmentation-evaluation-boundary",
-        ],
-        sectionId: "geometric",
-      },
-      {
-        level: "basic",
-        question:
-          "λ=0.7인 Mixup의 cat·dog soft target과 100×100 image에서 2,500 pixel을 dog patch로 바꾼 CutMix target을 계산하라.",
-        answerChecklist: [
-          "Mixup cat .7 dog .3",
-          "CutMix cat .75 dog .25",
-          "soft-target loss",
-        ],
-        requiredConcepts: ["mixup-convex-target", "cutmix-area-target"],
-        sectionId: "advanced",
-      },
-      {
-        level: "advanced",
-        question:
-          "CutMix area ratio가 label evidence를 잘못 나타내는 반례를 만들고 detection task에서 필요한 대체 annotation rule을 제안하라.",
-        answerChecklist: [
-          "small or nonuniform object",
-          "area assumption failure",
-          "box·mask transfer",
-          "clipping/filtering",
-        ],
-        requiredConcepts: ["cutmix-area-target", "augmentation-target-map"],
-        sectionId: "advanced",
-      },
-      {
-        level: "advanced",
-        question:
-          "Temporal tabular dataset에서 SMOTE를 적용할 때 leakage를 피하는 split·neighbor·constraint 검사 순서를 작성하라.",
-        answerChecklist: [
-          "entity/time split first",
-          "training-fold neighbors only",
-          "row relation",
-          "future leakage check",
-        ],
-        requiredConcepts: [
-          "tabular-synthesis-validity",
-          "train-validation-test",
-        ],
-        sectionId: "tabular",
-      },
-      {
-        level: "advanced",
-        question:
-          "새 augmentation policy를 production 후보로 승인하기 위한 clean·robustness·calibration·TTA cost 평가표를 설계하라.",
-        answerChecklist: [
-          "deterministic validation",
-          "fixed shift slices",
-          "class/worst-group metric",
-          "calibration",
-          "latency",
-          "seeded ablation",
-        ],
-        requiredConcepts: [
-          "augmentation-evaluation-boundary",
-          "augmentation-risk-objective",
-        ],
-        sectionId: "pipeline",
-      },
-      {
-        level: "basic",
-        question:
-          "Train에서는 random crop을 쓰고 validation에서는 center crop을 쓴다. 같은 validation image를 두 번 평가했을 때 prediction이 달라지는 fixture를 작성하고 transform manifest에 남길 항목을 적어라.",
-        answerChecklist: [
-          "train stochastic",
-          "validation deterministic",
-          "seed or no randomness",
-          "resize and crop revision",
-          "same tensor hash",
-          "prediction parity",
-        ],
-        requiredConcepts: [
-          "augmentation-risk-objective",
-          "augmentation-evaluation-boundary",
-        ],
-        sectionId: "pipeline",
-      },
-      {
-        level: "basic",
-        question:
-          "Minority 시계열 row에 SMOTE neighbor가 미래 timestamp에서 선택되는 경우를 찾아 왜 금지해야 하는지 설명하고 허용 neighbor 조건을 적어라.",
-        answerChecklist: [
-          "query timestamp",
-          "future neighbor rejected",
-          "train fold only",
-          "entity/group boundary",
-          "feature constraints",
-          "lineage",
-        ],
-        requiredConcepts: [
-          "tabular-synthesis-validity",
-          "train-validation-test",
-        ],
-        sectionId: "tabular",
-      },
-      {
-        level: "advanced",
-        question:
-          "Crop·Mixup·CutMix·TTA를 baseline에 순차 추가할 때 clean metric·shift slice·calibration·latency의 interaction을 분리하는 factorial release 실험을 설계하라.",
-        answerChecklist: [
-          "same split and seeds",
-          "single-stage candidates",
-          "combined candidate",
-          "label-map validity",
-          "clean metric",
-          "shift slices",
-          "calibration",
-          "TTA latency",
-          "rollback",
-        ],
-        requiredConcepts: [
-          "augmentation-risk-objective",
-          "augmentation-evaluation-boundary",
-          "mixup-convex-target",
-          "cutmix-area-target",
-        ],
-        sectionId: "pipeline",
-      },
+      { level: "basic", question: "상품 분류와 숫자 인식에서 horizontal flip 판단이 다른 이유를 설명하세요.", answerChecklist: ["task target", "direction semantics", "deployment variation", "allow or reject"], requiredConcepts: ["label-preserving-transformation"], sectionId: "overview" },
+      { level: "basic", question: "Augmentation distribution에 transform 이름 외에 저장할 항목을 쓰세요.", answerChecklist: ["parameter range", "probability", "order", "revision", "seed"], requiredConcepts: ["label-preserving-transformation"], sectionId: "overview" },
+      { level: "basic", question: "Detection image를 오른쪽 12px 옮길 때 input과 target map을 쓰세요.", answerChecklist: ["same parameter", "image translation", "box x plus 12", "keypoint x plus 12"], requiredConcepts: ["augmentation-target-map"], sectionId: "target-map" },
+      { level: "basic", question: "N=100인 augmented empirical risk 식의 두 평균 축을 설명하세요.", answerChecklist: ["100 source samples", "sum divided by N", "transform expectation", "task loss"], requiredConcepts: ["augmentation-risk-objective"], sectionId: "objective" },
+      { level: "basic", question: "Input과 target에 서로 다른 random angle을 쓰면 왜 잘못된 pair인지 설명하세요.", answerChecklist: ["shared omega", "annotation mismatch", "wrong supervision", "replay receipt"], requiredConcepts: ["augmentation-target-map", "augmentation-risk-objective"], sectionId: "objective" },
+      { level: "basic", question: "Augmentation을 validation과 test에 stochastic하게 섞지 않는 이유를 설명하세요.", answerChecklist: ["training distribution only", "fixed evaluation", "seed noise separation", "test isolation"], requiredConcepts: ["augmentation-risk-objective"], sectionId: "boundary" },
+      { level: "advanced", question: "색이 target인 task에서 label-preservation counterexample fixture를 설계하세요.", answerChecklist: ["target semantics", "color transform", "before and after label", "reject range", "domain slice"], requiredConcepts: ["label-preserving-transformation"], sectionId: "boundary" },
+      { level: "advanced", question: "Class·box·mask가 함께 있는 sample의 target-map receipt를 설계하세요.", answerChecklist: ["source id", "transform revision", "sampled parameter", "class rule", "coordinate rule", "mask rule"], requiredConcepts: ["augmentation-target-map"], sectionId: "target-map" },
+      { level: "advanced", question: "원본 training risk와 augmented risk를 같은 seed에서 비교하는 실험을 설계하세요.", answerChecklist: ["same split", "same seeds", "one policy change", "clean metric", "robustness slice", "paired difference"], requiredConcepts: ["augmentation-risk-objective"], sectionId: "boundary" },
+      { level: "advanced", question: "Foundation policy release receipt와 rollback 조건을 작성하세요.", answerChecklist: ["deployment variation", "policy revision", "target map", "split digest", "counterexamples", "clean baseline", "rollback"], requiredConcepts: ["label-preserving-transformation", "augmentation-target-map", "augmentation-risk-objective"], sectionId: "boundary" },
     ],
     papers: [
-      {
-        title:
-          "RandAugment: Practical Automated Data Augmentation with a Reduced Search Space",
-        href: "https://arxiv.org/abs/1909.13719",
-        problem: "AutoAugment의 별도 proxy search와 큰 policy search cost",
-        contribution:
-          "Operation count N과 공통 magnitude M으로 search space를 줄인 target-task policy",
-        assumptions:
-          "정해진 image operation set·model·dataset과 validation protocol",
-        evidenceScope:
-          "CIFAR·SVHN·ImageNet classification과 COCO detection의 논문 실험",
-        notClaim:
-          "두 hyperparameter가 domain invariant나 label preservation을 자동으로 찾아준다는 결론은 아님",
-        sectionId: "paper-randaugment",
-      },
-      {
-        title: "mixup: Beyond Empirical Risk Minimization",
-        href: "https://arxiv.org/abs/1710.09412",
-        problem: "Large model의 memorization과 sample 사이의 급격한 behavior",
-        contribution:
-          "Input과 label의 convex combination으로 vicinal training distribution 구성",
-        assumptions:
-          "같은 tensor space의 pair·soft target loss·Beta mixing과 논문 dataset 조건",
-        evidenceScope:
-          "ImageNet·CIFAR·speech·UCI와 논문에서 보고한 robustness 실험",
-        notClaim:
-          "모든 feature space의 linear interpolation이 realistic하거나 causal하다는 결론은 아님",
-        sectionId: "paper-mixup",
-      },
-      {
-        title:
-          "CutMix: Regularization Strategy to Train Strong Classifiers with Localizable Features",
-        href: "https://openaccess.thecvf.com/content_ICCV_2019/html/Yun_CutMix_Regularization_Strategy_to_Train_Strong_Classifiers_With_Localizable_Features_ICCV_2019_paper.html",
-        problem:
-          "Regional dropout이 informative pixel을 버리고 Mixup이 localizable feature를 흐릴 수 있는 문제",
-        contribution:
-          "Image patch 교체와 visible-area-proportional classification target",
-        assumptions:
-          "Image classification의 area-evidence approximation·mask sampling·논문 architecture와 dataset",
-        evidenceScope:
-          "CIFAR·ImageNet classification/localization과 transfer 실험",
-        notClaim:
-          "Area ratio만으로 detection·segmentation target까지 올바르게 갱신된다는 결론은 아님",
-        sectionId: "paper-cutmix",
-      },
-      {
-        title: "Albumentations: Fast and Flexible Image Augmentations",
-        href: "https://doi.org/10.3390/info11020125",
-        problem:
-          "다양한 image augmentation을 빠르고 조합 가능하게 적용하는 engineering 문제",
-        contribution: "OpenCV 기반 transform library와 performance benchmark",
-        assumptions:
-          "논문 version의 library·hardware·benchmark와 image-task scope",
-        evidenceScope:
-          "지원 transform·composition API와 논문 runtime benchmark",
-        notClaim:
-          "Library에 있는 transform이 현재 task의 label을 보존하거나 최적 policy라는 결론은 아님",
-        sectionId: "paper-albumentations",
-      },
+      { title: "RandAugment: Practical Automated Data Augmentation with a Reduced Search Space", href: "https://arxiv.org/abs/1909.13719", problem: "AutoAugment의 별도 proxy search와 큰 policy search cost를 줄입니다.", contribution: "Operation count와 공통 magnitude로 target-task search space를 단순화합니다.", assumptions: "정해진 image operation set·model·dataset·validation protocol입니다.", evidenceScope: "CIFAR·SVHN·ImageNet classification과 COCO detection 실험 범위입니다.", notClaim: "두 parameter가 모든 domain의 label invariance를 자동으로 찾는다는 결론은 아닙니다.", sectionId: "paper-randaugment" },
+    ],
+  },
+  "ai/image-augmentation-transforms": {
+    entryLevel: true,
+    entryNote: "Image coordinate·channel을 모른다고 가정하고 한 pixel·box·channel 값이 변하는 그림부터 시작합니다.",
+    coreIdea: "Image transform은 spatial coordinate를 바꾸는 geometry와 pixel value를 바꾸는 photometry를 분리하고, annotation visibility와 deterministic normalization을 별도 계약으로 둡니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "affine-annotation-transform", role: "Image와 annotation에 같은 matrix·translation을 적용합니다." },
+      { id: "transformed-annotation-visibility-rule", role: "Clip 뒤 보이는 면적으로 keep·drop·ignore를 판정합니다." },
+      { id: "photometric-augmentation-contract", role: "Camera·조명 변화 중 target signal을 보존하는 pixel-value 범위를 정합니다." },
+      { id: "normalization-input-contract", role: "Train·validation·serving의 고정 channel 좌표를 맞춥니다." },
+    ],
+    conceptExplanations: [
+      { id: "affine-annotation-transform", sectionId: "overview", intuition: "Image canvas에 쓴 같은 자를 box corner와 keypoint에도 적용합니다.", workedExample: "p=(10,5), A=I, t=(12,0)이면 p′=(22,5)입니다.", boundary: "Rotation 뒤 axis-aligned box는 네 corner를 모두 옮겨 다시 감싸야 합니다." },
+      { id: "transformed-annotation-visibility-rule", sectionId: "visibility", intuition: "Object가 canvas 밖으로 밀리면 남아 있는 부분만 보고 학습 target으로 쓸지 정합니다.", workedExample: "변환 뒤 box 100px² 중 30px²만 보이면 visible ratio는 .30입니다.", boundary: "Threshold와 tiny-object rule은 task별이며 class label 유지와 localization validity는 다릅니다." },
+      { id: "photometric-augmentation-contract", sectionId: "photometric", intuition: "조명 변화는 연습하되 신호등 색처럼 정답 자체인 색은 지우지 않습니다.", workedExample: "Low-light camera의 measured exposure 범위 안에서 brightness를 sampling하고 hue는 0으로 둡니다.", boundary: "Brightness·contrast·hue의 보편 안전 범위는 없으며 sensor와 target별 counterexample이 필요합니다." },
+      { id: "normalization-input-contract", sectionId: "normalization", intuition: "Random 조명 변화와 온도계를 같은 눈금으로 맞추는 일은 서로 다른 단계입니다.", workedExample: "x=.7, μ=.5, σ=.2이면 normalized value는 1.0입니다.", boundary: "0–255 x에 0–1 μ·σ를 쓰면 단위가 다르며 ImageNet statistics는 보편 상수가 아닙니다." },
+    ],
+    conceptStages: [
+      { label: "01 Geometry", relation: "한 spatial map을 pixel과 annotation에 공유합니다.", concepts: ["affine-annotation-transform"] },
+      { label: "02 Visibility", relation: "Clip 뒤 남은 object validity를 판정합니다.", concepts: ["transformed-annotation-visibility-rule"] },
+      { label: "03 Photometry", relation: "Pixel-value 변화가 target signal을 보존하는지 제한합니다.", concepts: ["photometric-augmentation-contract"] },
+      { label: "04 Input", relation: "Random transform 뒤 deterministic model coordinate를 맞춥니다.", concepts: ["normalization-input-contract"] },
+    ],
+    exercises: [
+      { level: "basic", question: "p=(10,5), A=I, t=(12,0)의 transformed point를 계산하세요.", answerChecklist: ["matrix identity", "translation addition", "p prime (22,5)", "same map"], requiredConcepts: ["affine-annotation-transform"], sectionId: "overview" },
+      { level: "basic", question: "회전한 box에서 네 corner를 모두 변환해야 하는 이유를 설명하세요.", answerChecklist: ["rotated corners", "new min max", "axis-aligned bbox", "two corners insufficient"], requiredConcepts: ["affine-annotation-transform"], sectionId: "visibility" },
+      { level: "basic", question: "100px² object 중 30px²가 보일 때 visible ratio와 threshold .4 판정을 계산하세요.", answerChecklist: ["30/100", "0.30", "below 0.4", "drop or ignore"], requiredConcepts: ["transformed-annotation-visibility-rule"], sectionId: "visibility" },
+      { level: "basic", question: "신호등 색 분류에서 brightness와 hue 범위를 다르게 정해야 하는 이유를 쓰세요.", answerChecklist: ["camera variation", "color is target", "bounded brightness", "hue rejected"], requiredConcepts: ["photometric-augmentation-contract"], sectionId: "photometric" },
+      { level: "basic", question: "x=.7, μ=.5, σ=.2의 normalized value를 계산하세요.", answerChecklist: [".7-.5=.2", ".2/.2", "1.0", "same units"], requiredConcepts: ["normalization-input-contract"], sectionId: "normalization" },
+      { level: "basic", question: "Color jitter와 normalization의 역할·randomness·적용 위치를 비교하세요.", answerChecklist: ["random variation", "fixed coordinate", "jitter before normalization", "serving parity"], requiredConcepts: ["photometric-augmentation-contract", "normalization-input-contract"], sectionId: "normalization" },
+      { level: "advanced", question: "Detection affine transform의 box·mask·keypoint fixture를 설계하세요.", answerChecklist: ["shared A and t", "four corners", "mask interpolation", "keypoint visibility", "canvas clip", "seed replay"], requiredConcepts: ["affine-annotation-transform", "transformed-annotation-visibility-rule"], sectionId: "visibility" },
+      { level: "advanced", question: "작은 object가 crop으로 사라지는 failure slice와 keep rule을 설계하세요.", answerChecklist: ["object-size bucket", "visible ratio", "minimum pixels", "class slice", "drop rule", "counterexample"], requiredConcepts: ["transformed-annotation-visibility-rule"], sectionId: "visibility" },
+      { level: "advanced", question: "Sensor shift를 근거로 photometric policy를 만드는 절차를 작성하세요.", answerChecklist: ["deployment capture", "channel semantics", "measured range", "single-family ablation", "worst group", "rollback"], requiredConcepts: ["photometric-augmentation-contract"], sectionId: "photometric" },
+      { level: "advanced", question: "Image input contract release receipt를 작성하세요.", answerChecklist: ["pixel unit", "transform order", "interpolation", "border mode", "mean and scale", "weight revision", "serving fixture"], requiredConcepts: ["normalization-input-contract", "affine-annotation-transform", "photometric-augmentation-contract"], sectionId: "normalization" },
+    ],
+    papers: [
+      { title: "Albumentations: Fast and Flexible Image Augmentations", href: "https://doi.org/10.3390/info11020125", problem: "Image와 여러 annotation type에 augmentation을 빠르고 조합 가능하게 적용합니다.", contribution: "OpenCV 기반 transform library와 composition·runtime benchmark를 제시합니다.", assumptions: "논문 version의 API·hardware·image task와 supported targets입니다.", evidenceScope: "지원 transform·multi-target composition과 논문 benchmark 범위입니다.", notClaim: "Library operation이 현재 task의 label을 보존하거나 최적 범위라는 결론은 아닙니다.", sectionId: "paper-albumentations" },
+    ],
+  },
+  "ai/mixup-cutmix": {
+    entryLevel: true,
+    entryNote: "One-hot과 soft target을 모른다고 가정하고 두 사진과 두 정답을 같은 비율로 섞는 예부터 시작합니다.",
+    coreIdea: "Mixup·CutMix·Mosaic은 여러 source input을 조합하므로 input composition과 target composition을 같은 receipt로 고정해야 합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "mixup-convex-target", role: "두 input과 target distribution을 같은 coefficient로 보간합니다." },
+      { id: "cutmix-area-target", role: "Spatial mask의 실제 visible area로 classification target을 섞습니다." },
+      { id: "mosaic-annotation-composition", role: "Tile별 transform과 structured annotation을 한 canvas target으로 합칩니다." },
+    ],
+    conceptExplanations: [
+      { id: "mixup-convex-target", sectionId: "mixup", intuition: "두 사진을 70:30으로 겹치면 정답도 두 class를 70:30으로 가르칩니다.", workedExample: "λ=.7이면 cat·dog target은 [.7,.3]입니다.", boundary: "Discrete·causal feature에서 linear interpolation은 비현실적일 수 있습니다." },
+      { id: "cutmix-area-target", sectionId: "cutmix", intuition: "화면에서 실제 보이는 두 사진의 면적만큼 class target 비율을 정합니다.", workedExample: "100×100 중 j patch가 2,500px이면 i:j target은 .75:.25입니다.", boundary: "Area가 semantic evidence와 비례한다는 image-classification 근사입니다." },
+      { id: "mosaic-annotation-composition", sectionId: "mosaic", intuition: "네 사진을 한 판에 붙일 때 각 정답 스티커도 resize·offset·clip해 새 판에 붙입니다.", workedExample: "Tile x offset 160이면 그 tile의 box x 좌표에 160을 더한 뒤 canvas에서 clip합니다.", boundary: "Box·mask·keypoint는 class area target 하나로 대체할 수 없습니다." },
+    ],
+    conceptStages: [
+      { label: "01 Sources", relation: "Source input과 target IDs를 한 receipt로 고정합니다.", concepts: ["mixup-convex-target"] },
+      { label: "02 Convex", relation: "같은 λ로 tensor와 probability mass를 보간합니다.", concepts: ["mixup-convex-target"] },
+      { label: "03 Spatial", relation: "Visible mask area로 classification target을 만듭니다.", concepts: ["cutmix-area-target"] },
+      { label: "04 Structured", relation: "Tile transform 뒤 annotation set을 합칩니다.", concepts: ["mosaic-annotation-composition"] },
+    ],
+    exercises: [
+      { level: "basic", question: "λ=.7인 cat·dog Mixup target을 계산하세요.", answerChecklist: ["cat .7", "dog .3", "sum 1", "same lambda input"], requiredConcepts: ["mixup-convex-target"], sectionId: "mixup" },
+      { level: "basic", question: "α가 λ distribution에 미치는 역할을 설명하세요.", answerChecklist: ["Beta shape", "endpoints or center", "strength parameter", "not class weight"], requiredConcepts: ["mixup-convex-target"], sectionId: "mixup" },
+      { level: "basic", question: "100×100 canvas에서 j patch가 2500px일 때 target 비율을 계산하세요.", answerChecklist: ["area .25", "i .75", "j .25", "clipped mask"], requiredConcepts: ["cutmix-area-target"], sectionId: "cutmix" },
+      { level: "basic", question: "CutMix에서 nominal patch size 대신 final mask를 쓰는 이유를 설명하세요.", answerChecklist: ["canvas clipping", "actual visible pixels", "recompute area", "target match"], requiredConcepts: ["cutmix-area-target"], sectionId: "cutmix" },
+      { level: "basic", question: "Mosaic tile에 x offset 160을 적용할 때 box 좌표 변화를 쓰세요.", answerChecklist: ["resize first", "x plus 160", "canvas clip", "same tile transform"], requiredConcepts: ["mosaic-annotation-composition"], sectionId: "mosaic" },
+      { level: "basic", question: "Mixup soft target과 Mosaic annotation union이 다른 이유를 설명하세요.", answerChecklist: ["probability distribution", "structured set", "area approximation", "coordinate transform"], requiredConcepts: ["mixup-convex-target", "mosaic-annotation-composition"], sectionId: "overview" },
+      { level: "advanced", question: "Fine-grained 작은 object task의 CutMix 반례를 설계하세요.", answerChecklist: ["small object", "area evidence mismatch", "class slice", "localization metric", "reject or bound"], requiredConcepts: ["cutmix-area-target"], sectionId: "cutmix" },
+      { level: "advanced", question: "Mosaic box·mask·keypoint composition fixture를 설계하세요.", answerChecklist: ["four source ids", "tile resize", "offset", "clip", "visible filter", "annotation union"], requiredConcepts: ["mosaic-annotation-composition"], sectionId: "mosaic" },
+      { level: "advanced", question: "Mixup과 CutMix 조합 시 final soft-target mass audit를 설계하세요.", answerChecklist: ["composition order", "source weights", "mass sum 1", "same input evidence", "loss support", "replay"], requiredConcepts: ["mixup-convex-target", "cutmix-area-target"], sectionId: "cutmix" },
+      { level: "advanced", question: "세 mixing family의 paired release 실험을 설계하세요.", answerChecklist: ["same split", "same seeds", "one family per run", "clean metric", "localization slice", "calibration", "rollback"], requiredConcepts: ["mixup-convex-target", "cutmix-area-target", "mosaic-annotation-composition"], sectionId: "mosaic" },
+    ],
+    papers: [
+      { title: "mixup: Beyond Empirical Risk Minimization", href: "https://arxiv.org/abs/1710.09412", problem: "Large model의 memorization과 sample 사이 급격한 behavior를 완화합니다.", contribution: "Input과 label의 convex combination으로 vicinal training distribution을 구성합니다.", assumptions: "같은 tensor space·soft-target loss·Beta mixing과 논문 dataset입니다.", evidenceScope: "ImageNet·CIFAR·speech·UCI의 논문 실험 범위입니다.", notClaim: "모든 feature interpolation이 realistic하거나 causal하다는 결론은 아닙니다.", sectionId: "paper-mixup" },
+      { title: "CutMix: Regularization Strategy to Train Strong Classifiers with Localizable Features", href: "https://openaccess.thecvf.com/content_ICCV_2019/html/Yun_CutMix_Regularization_Strategy_to_Train_Strong_Classifiers_With_Localizable_Features_ICCV_2019_paper.html", problem: "Regional dropout이 informative pixel을 버리고 Mixup이 localizable feature를 흐릴 수 있습니다.", contribution: "Image patch 교체와 visible-area-proportional classification target을 제시합니다.", assumptions: "Image classification의 area-evidence approximation·mask sampling·논문 dataset입니다.", evidenceScope: "CIFAR·ImageNet classification·localization과 transfer 실험 범위입니다.", notClaim: "Area ratio만으로 detection·segmentation target까지 갱신된다는 결론은 아닙니다.", sectionId: "paper-cutmix" },
+    ],
+  },
+  "ai/tabular-data-synthesis": {
+    entryLevel: true,
+    entryNote: "Table generator를 모른다고 가정하고 정상 범위의 column이 모여도 불가능한 row가 될 수 있는 예부터 시작합니다.",
+    coreIdea: "Tabular synthesis는 schema와 cross-column·entity·time constraint를 지키고 training fold 안에서만 fit한 뒤 utility와 privacy를 별도로 평가해야 합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "tabular-synthesis-validity", role: "Column·row·entity·time·provenance를 모두 포함한 row validity를 정의합니다." },
+      { id: "tabular-synthesis-constraint-ledger", role: "Hard constraint와 failure action을 실행 가능한 ledger로 고정합니다." },
+      { id: "tabular-synthesis-split-locality", role: "Neighbor·generator·statistics를 training fold에만 fit합니다." },
+      { id: "synthetic-data-utility-privacy-boundary", role: "Utility와 memorization·privacy를 별도 release axis로 둡니다." },
+    ],
+    conceptExplanations: [
+      { id: "tabular-synthesis-validity", sectionId: "overview", intuition: "각 숫자가 정상이어도 한 사람의 기록으로 함께 존재할 수 없으면 가짜 row입니다.", workedExample: "종료일이 시작일보다 빠르면 두 date range는 정상이어도 row는 invalid입니다.", boundary: "Column histogram similarity만으로 relational·temporal validity를 보장하지 않습니다." },
+      { id: "tabular-synthesis-constraint-ledger", sectionId: "constraints", intuition: "사람이 기억하던 업무 규칙을 generator 뒤에서 실행하는 체크리스트로 만듭니다.", workedExample: "start≤end, subtotal sum=total, closed account balance=0을 각각 versioned rule로 둡니다.", boundary: "Hard rule과 선호 distribution을 같은 pass/fail로 섞지 않습니다." },
+      { id: "tabular-synthesis-split-locality", sectionId: "split-local", intuition: "모의고사 답의 위치를 본 뒤 연습문제를 만들지 않도록 source pool을 train에 가둡니다.", workedExample: "SMOTE neighbor i,j를 I_train에서만 고르고 validation row는 distance index에도 넣지 않습니다.", boundary: "Synthesis 후 split하면 validation geometry와 rare rows가 training signal에 누출됩니다." },
+      { id: "synthetic-data-utility-privacy-boundary", sectionId: "audit", intuition: "예측에 유용한 복사본이 원본 사람을 드러내면 release할 수 없습니다.", workedExample: "Downstream AUC가 올라도 exact duplicate와 membership attack success가 gate를 넘으면 rollback합니다.", boundary: "Aggregate similarity나 utility가 individual privacy를 증명하지 않습니다." },
+    ],
+    conceptStages: [
+      { label: "01 Row", relation: "가능한 row의 schema와 관계를 정의합니다.", concepts: ["tabular-synthesis-validity"] },
+      { label: "02 Rules", relation: "여러 column·entity·time constraint를 실행합니다.", concepts: ["tabular-synthesis-constraint-ledger"] },
+      { label: "03 Split", relation: "Fitting과 sampling source를 training fold에 제한합니다.", concepts: ["tabular-synthesis-split-locality"] },
+      { label: "04 Audit", relation: "Utility와 privacy를 별도 gate로 평가합니다.", concepts: ["synthetic-data-utility-privacy-boundary"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Column range는 통과하지만 종료일<시작일인 row가 invalid인 이유를 설명하세요.", answerChecklist: ["column valid", "cross-column invalid", "temporal relation", "row rejected"], requiredConcepts: ["tabular-synthesis-validity"], sectionId: "overview" },
+      { level: "basic", question: "Constraint ledger의 네 종류 rule을 예와 함께 쓰세요.", answerChecklist: ["range", "cross-column", "entity state", "temporal order", "failure action"], requiredConcepts: ["tabular-synthesis-constraint-ledger"], sectionId: "constraints" },
+      { level: "basic", question: "start≤end와 subtotal sum=total을 admission 계산에 넣는 방법을 설명하세요.", answerChecklist: ["two indicators", "product or all", "one failure zero", "versioned tolerance"], requiredConcepts: ["tabular-synthesis-constraint-ledger"], sectionId: "constraints" },
+      { level: "basic", question: "왜 split 전에 SMOTE neighbor를 찾으면 leakage인지 설명하세요.", answerChecklist: ["validation geometry", "neighbor index fit", "training receives information", "split first"], requiredConcepts: ["tabular-synthesis-split-locality"], sectionId: "split-local" },
+      { level: "basic", question: "x_i와 x_j 사이 λ interpolation 식의 각 항을 설명하세요.", answerChecklist: ["anchor", "neighbor direction", "lambda movement", "train indices"], requiredConcepts: ["tabular-synthesis-split-locality"], sectionId: "split-local" },
+      { level: "basic", question: "Synthetic data utility와 privacy metric을 별도 column으로 둘 이유를 설명하세요.", answerChecklist: ["downstream utility", "duplicate", "membership", "no averaging away"], requiredConcepts: ["synthetic-data-utility-privacy-boundary"], sectionId: "audit" },
+      { level: "advanced", question: "Mixed numeric·categorical·date schema의 generator admission ledger를 설계하세요.", answerChecklist: ["unit and type", "categorical vocabulary", "date order", "entity rule", "tolerance", "reject receipt"], requiredConcepts: ["tabular-synthesis-validity", "tabular-synthesis-constraint-ledger"], sectionId: "constraints" },
+      { level: "advanced", question: "Entity와 time가 있는 dataset의 split-local synthesis 절차를 작성하세요.", answerChecklist: ["entity grouping", "time cutoff", "split digest", "train-only fit", "train-only sample", "lineage"], requiredConcepts: ["tabular-synthesis-split-locality"], sectionId: "split-local" },
+      { level: "advanced", question: "Utility가 높지만 rare-row duplicate가 많은 후보의 release 결정을 내리세요.", answerChecklist: ["utility evidence", "rare duplicate failure", "privacy gate", "reject", "generator revision", "retest"], requiredConcepts: ["synthetic-data-utility-privacy-boundary"], sectionId: "audit" },
+      { level: "advanced", question: "Tabular synthesis release receipt를 작성하세요.", answerChecklist: ["schema", "constraint ledger", "split digest", "generator revision", "source lineage", "utility slices", "privacy attacks", "rollback"], requiredConcepts: ["tabular-synthesis-validity", "tabular-synthesis-constraint-ledger", "tabular-synthesis-split-locality", "synthetic-data-utility-privacy-boundary"], sectionId: "audit" },
+    ],
+    papers: [
+      { title: "SMOTE: Synthetic Minority Over-sampling Technique", href: "https://www.jair.org/index.php/jair/article/view/10302", problem: "Minority class의 sparse sample과 classifier bias를 완화합니다.", contribution: "Minority examples와 feature-space neighbor 사이 interpolation을 제시합니다.", assumptions: "Distance가 의미 있는 feature representation·training-only resampling·논문 datasets입니다.", evidenceScope: "논문의 classifier·dataset·ROC 평가 범위입니다.", notClaim: "Mixed feature·temporal constraint·privacy를 자동으로 해결한다는 결론은 아닙니다.", sectionId: "paper-smote" },
+      { title: "Modeling Tabular data using Conditional GAN", href: "https://arxiv.org/abs/1907.00503", problem: "Mixed continuous·discrete column과 imbalance가 있는 table generation을 다룹니다.", contribution: "Mode-specific normalization과 conditional training을 쓰는 CTGAN을 제시합니다.", assumptions: "논문 datasets·schema transformation·GAN training과 benchmark protocol입니다.", evidenceScope: "Synthetic likelihood와 downstream utility benchmark 범위입니다.", notClaim: "Business constraint나 record-level privacy가 자동으로 보장된다는 결론은 아닙니다.", sectionId: "paper-ctgan" },
+    ],
+  },
+  "ai/augmentation-evaluation": {
+    entryLevel: true,
+    entryNote: "Ablation·TTA를 모른다고 가정하고 한 policy config와 clean score 한 칸부터 시작합니다.",
+    coreIdea: "Augmentation policy를 versioned artifact로 고정하고 clean·fixed robustness를 분리하며 TTA spatial output을 inverse-map한 뒤 paired quality·cost gate로 release합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "augmentation-policy-artifact", role: "Transform range·probability·order·target map·seed를 실행 artifact로 묶습니다." },
+      { id: "augmentation-evaluation-boundary", role: "Stochastic training·clean validation·fixed robustness·TTA 목적을 분리합니다." },
+      { id: "test-time-augmentation-inverse-map", role: "Spatial output을 원래 coordinate로 되돌린 뒤 결합합니다." },
+      { id: "augmentation-release-gate", role: "Paired gain·slice·calibration·latency·rollback으로 rollout을 판정합니다." },
+    ],
+    conceptExplanations: [
+      { id: "augmentation-policy-artifact", sectionId: "overview", intuition: "레시피 이름이 아니라 재료 양·순서·온도까지 적어야 같은 결과를 다시 만듭니다.", workedExample: "flip p=.5→brightness ±.1→normalize v3, seed 17, target-map v2를 한 artifact에 저장합니다.", boundary: "Transform 이름만 같아도 범위·순서·input unit이 다르면 다른 training distribution입니다." },
+      { id: "augmentation-evaluation-boundary", sectionId: "clean-robust", intuition: "원래 시험과 폭우 상황 시험을 별도 점수표로 두어 난이도와 실력을 섞지 않습니다.", workedExample: "Clean accuracy .86과 fixed low-light accuracy .71, ECE .06을 별도 column으로 기록합니다.", boundary: "매번 random augmented validation을 뽑으면 seed noise와 model quality가 섞입니다." },
+      { id: "test-time-augmentation-inverse-map", sectionId: "tta", intuition: "뒤집힌 지도에서 찾은 위치를 원래 지도 좌표로 되돌린 뒤 표시를 합칩니다.", workedExample: "Horizontal-flip mask prediction을 다시 flip해 base mask와 pixelwise 평균합니다.", boundary: "Classification probability는 좌표 역변환이 없을 수 있지만 box·mask·keypoint는 정렬이 필수입니다." },
+      { id: "augmentation-release-gate", sectionId: "release", intuition: "평균 점수 하나가 아니라 금지 slice와 비용까지 모두 통과해야 policy를 배포합니다.", workedExample: "Five-seed clean gain>0, low-light non-inferiority, ECE≤.05, p95≤20ms를 모두 만족할 때 release합니다.", boundary: "한 metric의 큰 gain으로 subgroup failure나 latency breach를 상쇄하지 않습니다." },
+    ],
+    conceptStages: [
+      { label: "01 Artifact", relation: "비교할 policy revision을 고정합니다.", concepts: ["augmentation-policy-artifact"] },
+      { label: "02 Evidence", relation: "Clean과 fixed robustness score를 분리합니다.", concepts: ["augmentation-evaluation-boundary"] },
+      { label: "03 TTA", relation: "Spatial prediction을 base coordinate로 정렬합니다.", concepts: ["test-time-augmentation-inverse-map"] },
+      { label: "04 Gate", relation: "Paired quality·cost·rollback으로 rollout을 결정합니다.", concepts: ["augmentation-release-gate"] },
+    ],
+    exercises: [
+      { level: "basic", question: "재현 가능한 augmentation policy artifact 필드를 쓰세요.", answerChecklist: ["operations", "ranges", "probabilities", "order", "input unit", "target map", "seed"], requiredConcepts: ["augmentation-policy-artifact"], sectionId: "overview" },
+      { level: "basic", question: "Clean validation과 fixed low-light slice가 답하는 질문을 구분하세요.", answerChecklist: ["original task quality", "specific shift robustness", "separate columns", "fixed fixtures"], requiredConcepts: ["augmentation-evaluation-boundary"], sectionId: "clean-robust" },
+      { level: "basic", question: "Random augmented validation을 model selection에 쓰기 어려운 이유를 설명하세요.", answerChecklist: ["changing difficulty", "seed noise", "model quality mixed", "fixed evaluation"], requiredConcepts: ["augmentation-evaluation-boundary"], sectionId: "clean-robust" },
+      { level: "basic", question: "Horizontal-flip mask TTA의 prediction 결합 순서를 쓰세요.", answerChecklist: ["flip input", "predict", "inverse flip output", "same coordinates", "average"], requiredConcepts: ["test-time-augmentation-inverse-map"], sectionId: "tta" },
+      { level: "basic", question: "K=4 TTA가 inference cost에 미치는 항목을 쓰세요.", answerChecklist: ["four views", "extra forward passes", "latency", "memory or batching", "SLA"], requiredConcepts: ["test-time-augmentation-inverse-map"], sectionId: "tta" },
+      { level: "basic", question: "Paired five-seed ablation에서 baseline과 candidate를 공정하게 비교하는 조건을 쓰세요.", answerChecklist: ["same split", "same seeds", "same budget", "one policy change", "paired delta"], requiredConcepts: ["augmentation-release-gate"], sectionId: "release" },
+      { level: "advanced", question: "Clean gain은 있지만 subgroup accuracy가 하락한 policy의 release 결정을 내리세요.", answerChecklist: ["clean evidence", "subgroup failure", "non-compensating gate", "reject or revise", "rollback"], requiredConcepts: ["augmentation-evaluation-boundary", "augmentation-release-gate"], sectionId: "release" },
+      { level: "advanced", question: "Detection TTA의 box inverse-map·NMS·class-order artifact를 설계하세요.", answerChecklist: ["view transform", "inverse coordinates", "class map", "score space", "NMS order", "latency"], requiredConcepts: ["test-time-augmentation-inverse-map"], sectionId: "tta" },
+      { level: "advanced", question: "Policy family별 clean·robust·calibration·latency ablation 표를 설계하세요.", answerChecklist: ["baseline", "one family each", "paired seeds", "clean", "robust slices", "calibration", "latency", "confidence interval"], requiredConcepts: ["augmentation-policy-artifact", "augmentation-evaluation-boundary", "augmentation-release-gate"], sectionId: "release" },
+      { level: "advanced", question: "Augmentation release receipt와 automatic rollback rule을 작성하세요.", answerChecklist: ["policy revision", "split digest", "seed set", "paired metrics", "forbidden slices", "TTA cost", "thresholds", "rollback artifact"], requiredConcepts: ["augmentation-policy-artifact", "augmentation-evaluation-boundary", "test-time-augmentation-inverse-map", "augmentation-release-gate"], sectionId: "release" },
+    ],
+    papers: [
+      { title: "AugMix: A Simple Data Processing Method to Improve Robustness and Uncertainty", href: "https://arxiv.org/abs/1912.02781", problem: "Image corruption에서 robustness와 uncertainty가 함께 악화되는 문제를 다룹니다.", contribution: "여러 augmentation chain 혼합과 consistency objective를 제시합니다.", assumptions: "정해진 operation set·image classification architecture·corruption benchmarks입니다.", evidenceScope: "CIFAR·ImageNet corruption robustness와 uncertainty 실험 범위입니다.", notClaim: "임의의 domain shift나 production TTA latency까지 보장한다는 결론은 아닙니다.", sectionId: "paper-augmix" },
     ],
   },
   "ai/autoencoder": {

@@ -24,7 +24,7 @@ export default function Overview() {
           Oversampling·SMOTE는 training distribution을 바꾸고, class weight·focal
           loss는 gradient 기여를 바꾸며, threshold는 학습이 끝난 score를 운영
           decision으로 바꿉니다. 같은 문제를 푸는 상위 호환 기법들이 아닙니다.
-          Resampling은 <Link to="/ai/data-augmentation">data augmentation의 split 경계</Link>,
+          Resampling은 <Link to="/ai/tabular-data-synthesis#split-local">tabular synthesis의 split-local 경계</Link>,
           probability loss는 <Link to="/ai/cross-entropy">likelihood·cross-entropy</Link>를
           재사용합니다.
         </p>
