@@ -2037,7 +2037,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Implicit generator pushforward",
     definition:
       "쉽게 sample할 수 있는 latent prior를 differentiable generator로 data space에 보내 normalized output density를 직접 계산하지 않고 sample distribution을 정의하는 방식입니다.",
-    canonicalHref: "/ai/gan#overview",
+    canonicalHref: "/ai/gan#distribution",
   },
   "non-saturating-generator-objective": {
     id: "non-saturating-generator-objective",
@@ -2046,7 +2046,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Non-saturating GAN objective",
     definition:
       "초기 discriminator가 fake를 잘 구분할 때 minimax generator gradient가 약해지는 문제를 줄이려고 generator가 −log D(G(z))를 최소화하는 실전 objective입니다.",
-    canonicalHref: "/ai/gan#overview",
+    canonicalHref: "/ai/gan#objective",
   },
   "alternating-adversarial-optimization": {
     id: "alternating-adversarial-optimization",
@@ -2054,7 +2054,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Alternating adversarial optimization",
     definition:
       "Generator와 discriminator가 서로 다른 objective·optimizer·parameter snapshot에서 번갈아 update하며 상대가 만든 학습 신호를 계속 바꾸는 two-player optimization입니다.",
-    canonicalHref: "/ai/gan#training",
+    canonicalHref: "/ai/gan-training-dynamics#alternating",
   },
   "gan-mode-collapse": {
     id: "gan-mode-collapse",
@@ -2062,7 +2062,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "GAN mode collapse",
     definition:
       "서로 다른 latent input이 소수의 비슷한 output 영역으로 mapping되어 일부 high-quality sample은 만들지만 target distribution의 mode coverage가 부족해지는 failure mode입니다.",
-    canonicalHref: "/ai/gan#training",
+    canonicalHref: "/ai/gan-training-dynamics#mode-collapse",
   },
   "lipschitz-function-constraint": {
     id: "lipschitz-function-constraint",
@@ -2070,7 +2070,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Lipschitz function constraint",
     definition:
       "입력 두 점의 거리보다 함수 출력 차이가 정해진 상수배 이상 빠르게 커지지 않도록 |f(x)−f(y)|≤L||x−y||로 제한하는 regularity 조건입니다.",
-    canonicalHref: "/ai/gan#training",
+    canonicalHref: "/ai/gan-wasserstein-critics#lipschitz",
   },
   "wasserstein-critic-dual": {
     id: "wasserstein-critic-dual",
@@ -2079,7 +2079,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Wasserstein-1 critic dual",
     definition:
       "적절한 조건에서 두 distribution의 Wasserstein-1 distance가 모든 1-Lipschitz function이 만드는 expectation 차이의 supremum과 같다는 Kantorovich–Rubinstein dual 관계입니다.",
-    canonicalHref: "/ai/gan#training",
+    canonicalHref: "/ai/gan-wasserstein-critics#wasserstein-dual",
   },
   "wgan-gradient-penalty": {
     id: "wgan-gradient-penalty",
@@ -2088,7 +2088,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "WGAN gradient penalty",
     definition:
       "Real과 generated sample 사이의 sampled point에서 critic input-gradient norm이 1에서 벗어난 정도를 벌점으로 주어 Lipschitz 조건을 근사하는 regularizer입니다.",
-    canonicalHref: "/ai/gan#training",
+    canonicalHref: "/ai/gan-wasserstein-critics#gradient-penalty",
   },
   "spectral-normalization": {
     id: "spectral-normalization",
@@ -2097,7 +2097,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Spectral normalization",
     definition:
       "Linear weight를 largest singular value로 나눠 해당 layer의 Euclidean operator norm을 제한하고 discriminator의 민감도를 제어하는 normalization입니다.",
-    canonicalHref: "/ai/gan#training",
+    canonicalHref: "/ai/gan-wasserstein-critics#spectral-normalization",
   },
   "frechet-inception-distance": {
     id: "frechet-inception-distance",
@@ -2106,7 +2106,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Fréchet Inception Distance (FID)",
     definition:
       "고정 feature extractor의 real·generated feature를 Gaussian으로 근사하고 두 집합의 mean과 covariance 차이로 sample distribution을 비교하는 finite-sample metric입니다.",
-    canonicalHref: "/ai/gan#variants",
+    canonicalHref: "/ai/gan-conditional-evaluation#fid",
   },
   "generative-precision-recall": {
     id: "generative-precision-recall",
@@ -2115,7 +2115,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Generative precision · recall",
     definition:
       "Generated distribution의 sample quality에 가까운 precision과 target distribution의 mode coverage에 가까운 recall을 별도 축으로 나타내 scalar metric 하나의 failure ambiguity를 줄이는 평가 관점입니다.",
-    canonicalHref: "/ai/gan#variants",
+    canonicalHref: "/ai/gan-conditional-evaluation#precision-recall",
   },
   "conditional-adversarial-generation": {
     id: "conditional-adversarial-generation",
@@ -2124,7 +2124,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Conditional adversarial generation",
     definition:
       "Condition c를 generator와 discriminator의 입력 또는 projection score에 포함해 marginal p(x)가 아니라 conditional distribution p(x|c)를 adversarial하게 맞추는 방법입니다.",
-    canonicalHref: "/ai/gan#variants",
+    canonicalHref: "/ai/gan-conditional-evaluation#conditioning",
   },
   "two-timescale-game-convergence": {
     id: "two-timescale-game-convergence",
@@ -2133,7 +2133,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Two-time-scale GAN convergence conditions",
     definition:
       "두 player의 stochastic update가 서로 다른 감소 step-size sequence를 사용하고 regularity·noise·stability 조건을 만족할 때 slower iterate 관점의 local stationary Nash equilibrium으로 수렴한다는 분석 틀입니다.",
-    canonicalHref: "/ai/gan#training",
+    canonicalHref: "/ai/gan-training-dynamics#game-dynamics",
   },
   "function-mapping": {
     id: "function-mapping",
@@ -19842,6 +19842,27 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "evaluates",
     reason:
       "High-quality 소수 mode만 만드는 경우 precision과 recall의 비대칭으로 드러낼 수 있습니다.",
+  },
+  {
+    from: "conditional-adversarial-generation",
+    to: "frechet-inception-distance",
+    relation: "evaluates",
+    reason:
+      "Condition별 sample set을 같은 feature protocol로 보내 중심과 covariance 차이를 비교합니다.",
+  },
+  {
+    from: "conditional-adversarial-generation",
+    to: "generative-precision-recall",
+    relation: "evaluates",
+    reason:
+      "Condition adherence와 함께 class별 sample quality·target coverage를 분리해 평가합니다.",
+  },
+  {
+    from: "two-timescale-game-convergence",
+    to: "lipschitz-function-constraint",
+    relation: "contrasts",
+    reason:
+      "Optimizer time-scale convergence 조건과 critic function smoothness 조건은 서로 다른 안정성 경계입니다.",
   },
   {
     from: "roots-of-unity",

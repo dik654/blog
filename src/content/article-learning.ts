@@ -40124,539 +40124,934 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/gan": {
-    coreIdea:
-      "GAN은 generator density를 직접 계산하는 대신 real sample과 generated sample을 구분하는 adversarial function에서 학습 방향을 얻습니다. Optimal discriminator 정리는 density-ratio와 equilibrium을 설명하지만 실제 학습은 두 optimizer가 서로의 objective를 계속 바꾸는 dynamical system이므로 gradient quality·function constraint·mode coverage를 별도로 진단해야 합니다.",
-    assumedKnowledge: [
+    "coreIdea": "GAN의 첫 글은 latent prior를 generator로 data space에 보내 implicit sample distribution을 만들고, discriminator의 real·fake 비교에서 generator signal을 얻는 최소 계약만 설명합니다. Density·inverse·game convergence는 자동으로 따라오지 않습니다.",
+    "assumedKnowledge": [
       {
-        id: "probability-distribution",
-        role: "Latent prior·data distribution·generator output distribution을 구분합니다.",
+        "id": "probability-distribution",
+        "role": "latent·real·generated distribution을 구분합니다."
       },
       {
-        id: "expectation",
-        role: "Real·latent mini-batch가 population objective를 근사하는 방식을 읽습니다.",
+        "id": "expectation",
+        "role": "mini-batch가 population objective를 근사함을 읽습니다."
       },
       {
-        id: "logarithm",
-        role: "Logistic discriminator와 non-saturating negative-log objective를 해석합니다.",
+        "id": "logarithm",
+        "role": "negative-log generator cost를 해석합니다."
       },
       {
-        id: "chain-rule",
-        role: "Discriminator의 data-space signal을 generator parameter까지 합성합니다.",
-      },
-      {
-        id: "vector-jacobian-product",
-        role: "Generated sample gradient를 generator weight gradient로 pull back합니다.",
-      },
-      {
-        id: "optimizer-update",
-        role: "G와 D의 별도 optimizer·learning rate·update 순서를 추적합니다.",
-      },
-      {
-        id: "singular-value-decomposition",
-        role: "Spectral norm이 linear operator의 최대 확대율인 이유를 읽습니다.",
-      },
-      {
-        id: "adversarial-density-ratio",
-        role: "생성 모델 지도에서 optimal discriminator 정리의 전제와 JSD 연결을 재사용합니다.",
-      },
-      {
-        id: "generative-evaluation-boundary",
-        role: "Likelihood·sample quality·coverage·condition·latency를 분리합니다.",
-      },
+        "id": "adversarial-density-ratio",
+        "role": "ideal discriminator ratio의 전제와 의미를 재사용합니다."
+      }
     ],
-    introducedHere: [
+    "introducedHere": [
       {
-        id: "implicit-generator-pushforward",
-        role: "Latent prior와 generator mapping만으로 sample distribution을 정의합니다.",
+        "id": "implicit-generator-pushforward",
+        "role": "latent mass를 learned mapping으로 data space에 옮깁니다."
       },
       {
-        id: "non-saturating-generator-objective",
-        role: "Original minimax와 실전 generator gradient의 차이를 구분합니다.",
-      },
-      {
-        id: "alternating-adversarial-optimization",
-        role: "Detach·optimizer·update ratio가 있는 two-player training loop를 고정합니다.",
-      },
-      {
-        id: "two-timescale-game-convergence",
-        role: "TTUR 수렴 정리의 step-size·regularity·local equilibrium 전제를 제한합니다.",
-      },
-      {
-        id: "gan-mode-collapse",
-        role: "Sample fidelity와 distribution coverage가 갈라지는 failure mode를 진단합니다.",
-      },
-      {
-        id: "lipschitz-function-constraint",
-        role: "Critic input 변화와 output 변화의 최대 비율을 제한합니다.",
-      },
-      {
-        id: "wasserstein-critic-dual",
-        role: "Wasserstein-1 distance를 1-Lipschitz critic의 expectation gap으로 바꿉니다.",
-      },
-      {
-        id: "wgan-gradient-penalty",
-        role: "Sampled input-gradient penalty와 정확한 global constraint를 구분합니다.",
-      },
-      {
-        id: "spectral-normalization",
-        role: "Weight operator norm으로 layer sensitivity를 제한합니다.",
-      },
-      {
-        id: "frechet-inception-distance",
-        role: "Fixed feature에서 real·generated set의 mean·covariance 차이를 측정합니다.",
-      },
-      {
-        id: "generative-precision-recall",
-        role: "Quality와 mode coverage를 두 평가 축으로 나눕니다.",
-      },
-      {
-        id: "conditional-adversarial-generation",
-        role: "Condition을 G와 D에 제공해 p(x|c)를 겨냥합니다.",
-      },
+        "id": "non-saturating-generator-objective",
+        "role": "초기 fake score가 낮을 때 generator signal을 강화합니다."
+      }
     ],
-    conceptExplanations: [
+    "conceptExplanations": [
       {
-        id: "implicit-generator-pushforward",
-        sectionId: "overview",
-        intuition:
-          "간단한 난수표 z를 복잡한 변환기에 넣어 이미지 x̃를 뽑으면 출력들을 모은 분포가 생깁니다. 각 이미지의 density 값을 계산하지 않아도 sample은 만들 수 있습니다.",
-        workedExample:
-          "z∼N(0,I2)를 G:R²→R^{3×64×64}에 넣으면 batch 32의 generated tensor는 32×3×64×64이고 이 mapping의 pushforward가 pg입니다.",
-        boundary:
-          "Generator가 many-to-one이거나 latent dimension이 작으면 output density를 일반적인 change-of-variables로 계산할 수 없습니다. 기본 GAN은 inverse encoder도 제공하지 않습니다.",
+        "id": "implicit-generator-pushforward",
+        "sectionId": "distribution",
+        "intuition": "Latent point를 generator에 넣어 sample을 만들고, 그 output들의 분포를 p_g라 부릅니다.",
+        "workedExample": "z batch 32×2가 G를 지나 32×3×64×64 image가 됩니다.",
+        "boundary": "Sample density·inverse encoder·likelihood는 자동 제공되지 않습니다."
       },
       {
-        id: "non-saturating-generator-objective",
-        sectionId: "overview",
-        intuition:
-          "D가 fake에 거의 0을 줄 때 '더 fake가 되지 않게' 하는 minimax 신호보다 'real score를 높여라'라는 −logD 목표가 더 강한 기울기를 줍니다.",
-        workedExample:
-          "D=σ(a)일 때 non-saturating loss −logσ(a)의 logit derivative는 σ(a)−1이므로 D≈0에서 약 −1입니다. Saturating log(1−D)의 derivative는 −D라 0에 가깝습니다.",
-        boundary:
-          "Per-step gradient가 강해지는 heuristic이며 global convergence·coverage 보장이 아닙니다. WGAN·hinge loss와 같은 다른 objective에는 동일 수식을 적용하지 않습니다.",
-      },
-      {
-        id: "alternating-adversarial-optimization",
-        sectionId: "training",
-        intuition:
-          "두 사람이 서로의 전략을 보고 번갈아 규칙을 고치므로 한 사람의 loss landscape도 상대 update 뒤에는 달라집니다.",
-        workedExample:
-          "D step은 fake=G(z).detach()로 D weight만 update하고, G step은 D weight를 고정하되 D(G(z))의 input gradient를 유지해 G까지 backpropagate합니다.",
-        boundary:
-          "D output 전체를 detach하면 G gradient가 사라집니다. Loss 감소 하나를 고정 scalar objective의 수렴처럼 해석하지 않습니다.",
-      },
-      {
-        id: "two-timescale-game-convergence",
-        sectionId: "training",
-        intuition:
-          "빠른 player가 느린 player의 현재 위치에서 충분히 적응하고, 느린 player는 그 거의 평형인 반응을 따라 움직인다고 보는 분석입니다.",
-        workedExample:
-          "Step-size a_n,b_n가 모두 합은 무한·제곱합은 유한이고 a_n/b_n→0이면 한 iterate가 상대적으로 느린 time scale에 놓입니다. 여기에 noise·boundedness·local stability 조건이 더 필요합니다.",
-        boundary:
-          "고정 Adam learning rate와 finite training, arbitrary deep network가 이 stochastic-approximation 전제를 자동 만족하지 않습니다. 결론도 global optimum이 아닌 local stationary Nash equilibrium입니다.",
-        proofIdea:
-          "빠른 iterate가 고정된 느린 parameter에 대한 limiting ODE equilibrium을 추적한다고 본 뒤, 그 equilibrium response를 대입한 느린 ODE의 local asymptotic stability를 사용합니다.",
-        counterexample:
-          "Bilinear minmax xy에서 같은 고정 step-size simultaneous gradient descent-ascent는 원점 주위를 돌거나 발산할 수 있습니다. 두 loss가 유한하다는 사실만으로 convergence하지 않습니다.",
-      },
-      {
-        id: "gan-mode-collapse",
-        sectionId: "training",
-        intuition:
-          "다양한 주문 번호 z가 모두 현재 판별기를 잘 속이는 몇 가지 메뉴로만 연결되어, 보기 좋은 결과는 있지만 메뉴판 전체를 덮지 못한 상태입니다.",
-        workedExample:
-          "8-mode Gaussian target에서 10,000 sample을 cluster해 2개 mode에 95%가 몰리고 nearest-neighbor diversity가 낮다면 fidelity와 별개로 coverage failure입니다.",
-        boundary:
-          "Loss oscillation이나 중복 sample 하나만으로 collapse를 확정하지 않습니다. Target modes·feature representation·sample count가 있는 coverage metric과 latent sensitivity를 함께 봅니다.",
-      },
-      {
-        id: "lipschitz-function-constraint",
-        sectionId: "training",
-        intuition:
-          "입력을 조금 움직였을 때 critic score가 절벽처럼 무한히 뛰지 못하도록 최대 경사를 제한합니다.",
-        workedExample:
-          "1-Lipschitz f라면 ||x−y||2=0.2일 때 |f(x)−f(y)|≤0.2여야 합니다.",
-        boundary:
-          "Differentiable 영역의 gradient norm≤1은 연결된 convex domain에서 충분한 조건으로 연결되지만 sampled point 일부에서만 측정한 penalty는 global 보장이 아닙니다.",
-      },
-      {
-        id: "wasserstein-critic-dual",
-        sectionId: "training",
-        intuition:
-          "직접 mass 이동 계획을 모두 계산하는 대신, 너무 가파르지 않은 점수 함수가 real과 fake 평균을 얼마나 벌릴 수 있는지 찾습니다.",
-        workedExample:
-          "1D point masses δ0와 δ2에서 f(x)=−x는 1-Lipschitz이고 Eδ0f−Eδ2f=2이므로 W1=2에 도달합니다.",
-        boundary:
-          "Critic이 1-Lipschitz family를 충분히 근사하고 잘 최적화돼야 distance 해석이 가능합니다. 출력은 probability가 아니므로 sigmoid calibration으로 읽지 않습니다.",
-        proofIdea:
-          "Kantorovich primal의 transport cost에 대한 linear-program dual을 취하면 potential 차이 제약이 나오고 metric cost에서는 이를 1-Lipschitz function supremum으로 정리합니다.",
-        counterexample:
-          "Constraint 없이 f를 c배 할 수 있으면 real–fake expectation gap도 무한히 키울 수 있어 distance가 정의되지 않습니다.",
-      },
-      {
-        id: "wgan-gradient-penalty",
-        sectionId: "training",
-        intuition:
-          "Real과 fake를 이은 몇 개의 선 위에서 critic 경사를 재고 1에서 벗어나면 벌점을 줍니다.",
-        workedExample:
-          "||∇x̂f||=1.5, λ=10이면 해당 sample penalty는 10(0.5)²=2.5입니다.",
-        boundary:
-          "Interpolation distribution에 대한 soft penalty이며 전체 공간의 exact constraint가 아닙니다. λ·critic steps·normalization과 architecture를 함께 검증합니다.",
-      },
-      {
-        id: "spectral-normalization",
-        sectionId: "training",
-        intuition:
-          "Weight matrix가 어떤 input 방향을 가장 많이 늘리는지 재고 그 배율로 나눠 layer의 최대 확대율을 1로 맞춥니다.",
-        workedExample:
-          "W=diag(3,1)이면 σmax=3이고 W̄=diag(1,1/3)이라 L2 operator norm이 1입니다.",
-        boundary:
-          "Power iteration은 근사이고 nonlinear activation·residual·convolution composition까지 포함한 전체 network의 tight global Lipschitz constant나 좋은 G를 보장하지 않습니다.",
-        proofIdea:
-          "SVD W=UΣVᵀ에서 ||Wx||2/||x||2의 supremum은 가장 큰 singular value σ1이므로 W/σ1의 operator norm은 1입니다.",
-        counterexample:
-          "각 layer norm이 1이어도 bias·skip addition·여러 branch의 합을 회계하지 않으면 전체 network bound를 1로 단정할 수 없습니다.",
-      },
-      {
-        id: "frechet-inception-distance",
-        sectionId: "variants",
-        intuition:
-          "두 sample 집합을 같은 feature 좌표로 옮긴 뒤 중심 위치와 퍼짐의 모양을 비교합니다.",
-        workedExample:
-          "1D feature에서 real N(0,1), generated N(2,1)이면 FID=|0−2|²+1+1−2√1=4입니다.",
-        boundary:
-          "Feature를 Gaussian moment 두 개로 요약하며 finite-sample bias·encoder·resize·reference split에 의존합니다. Memorization·condition correctness·rare mode를 단독으로 증명하지 않습니다.",
-      },
-      {
-        id: "generative-precision-recall",
-        sectionId: "variants",
-        intuition:
-          "만든 sample이 target 영역 안에 드는 비율과 target의 다양한 영역을 얼마나 덮는지를 분리해 봅니다.",
-        workedExample:
-          "8개 target mode 중 2개에서만 매우 선명한 sample을 만들면 precision은 높고 recall은 낮을 수 있습니다.",
-        boundary:
-          "정의와 구현에 따라 manifold approximation이 다르며 feature space가 의미적 품질을 완전히 나타내지 않습니다. Classification precision·recall과 같은 confusion-matrix 정의로 혼동하지 않습니다.",
-      },
-      {
-        id: "conditional-adversarial-generation",
-        sectionId: "variants",
-        intuition:
-          "Generator에게 주문 c를 주는 것뿐 아니라 discriminator도 주문과 결과가 맞는지 함께 보게 해야 조건별 분포를 비교할 수 있습니다.",
-        workedExample:
-          "Class c를 G(z,c)와 D(x,c)에 모두 입력하고 class-balanced batch에서 real/fake loss를 계산해 label별 coverage를 평가합니다.",
-        boundary:
-          "Condition injection은 adherence 보장이 아닙니다. Imbalanced c·classifier shortcut·unseen composition과 condition-specific diversity를 별도 측정합니다.",
-      },
+        "id": "non-saturating-generator-objective",
+        "sectionId": "objective",
+        "intuition": "Fake score를 더 낮추지 않는 minimax 항 대신 real score를 높이는 −log D(G(z))를 씁니다.",
+        "workedExample": "D=0.01이면 logit gradient magnitude가 약 0.99입니다.",
+        "boundary": "강한 한-step signal이 convergence·coverage를 보장하지 않습니다."
+      }
     ],
-    conceptStages: [
+    "conceptStages": [
       {
-        label: "Distribution",
-        relation:
-          "Latent prior를 generator로 보내 implicit sample distribution 구성",
-        concepts: [
+        "label": "Sample",
+        "relation": "latent prior를 data-shaped sample로 변환",
+        "concepts": [
           "probability-distribution",
-          "implicit-generator-pushforward",
-        ],
+          "implicit-generator-pushforward"
+        ]
       },
       {
-        label: "Ratio signal",
-        relation:
-          "Real·fake classifier의 ideal density ratio와 practical generator gradient 분리",
-        concepts: [
-          "adversarial-density-ratio",
+        "label": "Compare",
+        "relation": "real·generated source score를 비교",
+        "concepts": [
+          "adversarial-density-ratio"
+        ]
+      },
+      {
+        "label": "Signal",
+        "relation": "negative-log score를 generator direction으로 변환",
+        "concepts": [
+          "logarithm",
           "non-saturating-generator-objective",
-          "vector-jacobian-product",
-        ],
-      },
-      {
-        label: "Game",
-        relation: "두 optimizer·detach·time scale과 collapse dynamics 추적",
-        concepts: [
-          "alternating-adversarial-optimization",
-          "two-timescale-game-convergence",
-          "gan-mode-collapse",
-        ],
-      },
-      {
-        label: "Critic constraint",
-        relation:
-          "Wasserstein dual의 function class를 GP 또는 spectral weight로 근사",
-        concepts: [
-          "lipschitz-function-constraint",
-          "wasserstein-critic-dual",
-          "wgan-gradient-penalty",
-          "spectral-normalization",
-        ],
-      },
-      {
-        label: "Condition·evaluation",
-        relation:
-          "조건별 distribution과 sample quality·coverage·latency를 분리",
-        concepts: [
-          "conditional-adversarial-generation",
-          "frechet-inception-distance",
-          "generative-precision-recall",
-          "generative-evaluation-boundary",
-        ],
-      },
+          "chain-rule",
+          "generative-evaluation-boundary"
+        ]
+      }
     ],
-    exercises: [
+    "exercises": [
       {
-        level: "basic",
-        question:
-          "Batch 64, latent dimension 128, RGB 64×64 GAN의 z·G(z)·D logit shape와 D/G step의 detach 위치를 적을 수 있을까요?",
-        answerChecklist: [
-          "z=64×128, G(z)=64×3×64×64, D logit=64 또는 64×1을 적는다.",
-          "D step에서 G(z)를 detach한다.",
-          "G step에서는 D weight update만 막고 D input gradient는 유지한다.",
+        "level": "basic",
+        "question": "Latent z와 generated x̃의 역할·shape를 적을 수 있을까요?",
+        "answerChecklist": [
+          "z는 prior sample, x̃=G(z)는 data-shaped sample이라고 구분한다.",
+          "Batch 32 예의 32×2→32×3×64×64 shape를 적는다."
         ],
-        requiredConcepts: [
-          "implicit-generator-pushforward",
-          "alternating-adversarial-optimization",
+        "requiredConcepts": [
+          "implicit-generator-pushforward"
         ],
-        sectionId: "training",
+        "sectionId": "distribution"
       },
       {
-        level: "basic",
-        question:
-          "Original GAN의 한 mini-batch에서 real x·latent z·generated x̃가 어느 network를 통과하고, discriminator와 generator가 각각 어느 score를 바꾸려 하는지 분류할 수 있을까요?",
-        answerChecklist: [
-          "z를 G에 넣어 x̃를 만들고 x와 x̃를 D에 넣는 경로를 적는다.",
-          "D는 D(x)를 높이고 D(x̃)를 낮추도록 학습한다고 말한다.",
-          "Non-saturating G는 D(x̃)를 높이되 normalized density나 inverse encoder를 직접 얻는 것은 아니라고 말한다.",
+        "level": "basic",
+        "question": "Implicit generator가 제공하는 것과 제공하지 않는 것을 나눌 수 있을까요?",
+        "answerChecklist": [
+          "Forward sampling path를 적는다.",
+          "Exact likelihood와 inverse encoder는 자동 제공되지 않는다고 말한다."
         ],
-        requiredConcepts: [
-          "implicit-generator-pushforward",
-          "alternating-adversarial-optimization",
+        "requiredConcepts": [
+          "implicit-generator-pushforward"
+        ],
+        "sectionId": "distribution"
+      },
+      {
+        "level": "basic",
+        "question": "p_data=0.6, p_g=0.2에서 ideal D*를 계산할 수 있을까요?",
+        "answerChecklist": [
+          "0.6/(0.6+0.2)=0.75를 계산한다.",
+          "Fixed G·optimal D 전제를 적는다."
+        ],
+        "requiredConcepts": [
+          "adversarial-density-ratio"
+        ],
+        "sectionId": "discriminator"
+      },
+      {
+        "level": "basic",
+        "question": "실제 D=0.5만 보고 두 분포가 같다고 할 수 없는 이유는 무엇일까요?",
+        "answerChecklist": [
+          "Underfit 또는 상수 discriminator 반례를 든다.",
+          "Ideal ratio 정리와 finite network를 구분한다."
+        ],
+        "requiredConcepts": [
+          "adversarial-density-ratio"
+        ],
+        "sectionId": "discriminator"
+      },
+      {
+        "level": "basic",
+        "question": "Non-saturating generator objective가 높이려는 score를 적을 수 있을까요?",
+        "answerChecklist": [
+          "−log D(G(z))를 적는다.",
+          "D weight는 고정해도 input gradient는 통과한다고 말한다."
+        ],
+        "requiredConcepts": [
+          "non-saturating-generator-objective"
+        ],
+        "sectionId": "objective"
+      },
+      {
+        "level": "basic",
+        "question": "GAN sampling contract가 density contract와 다른 이유는 무엇일까요?",
+        "answerChecklist": [
+          "Sample 생성과 normalized density evaluation을 구분한다.",
+          "Many-to-one mapping 경계를 든다."
+        ],
+        "requiredConcepts": [
+          "implicit-generator-pushforward"
+        ],
+        "sectionId": "boundary"
+      },
+      {
+        "level": "advanced",
+        "question": "D=0.01에서 saturating과 non-saturating logit gradient를 비교할 수 있을까요?",
+        "answerChecklist": [
+          "약 0.01과 0.99를 계산한다.",
+          "Global convergence 보장은 아니라고 제한한다."
+        ],
+        "requiredConcepts": [
           "non-saturating-generator-objective",
+          "chain-rule"
         ],
-        sectionId: "overview",
+        "sectionId": "objective"
       },
       {
-        level: "basic",
-        question:
-          "Target이 같은 크기의 8개 mode인데 10,000개 generated sample의 95%가 2개 mode에 몰렸다면 어떤 실패를 의심하고, 선명한 sample 몇 장만으로 반박할 수 없는 이유를 말할 수 있을까요?",
-        answerChecklist: [
-          "Mode collapse 또는 낮은 target coverage를 의심한다.",
-          "Fidelity가 높아도 6개 mode를 놓치므로 quality와 coverage를 분리한다.",
-          "Mode별 count·generative recall·latent sensitivity를 보고 중복 sample 하나나 loss만으로 확정하지 않는다고 말한다.",
+        "level": "advanced",
+        "question": "Optimal discriminator 식을 source-mixture 관점에서 유도할 수 있을까요?",
+        "answerChecklist": [
+          "분모를 두 source mass 합으로 설명한다.",
+          "Pointwise optimum과 training dynamics를 분리한다."
         ],
-        requiredConcepts: ["gan-mode-collapse", "generative-precision-recall"],
-        sectionId: "training",
+        "requiredConcepts": [
+          "adversarial-density-ratio"
+        ],
+        "sectionId": "discriminator"
       },
       {
-        level: "basic",
-        question:
-          "두 점의 거리가 0.2인데 critic score 차이가 0.3이라면 1-Lipschitz 조건을 만족하는지 판단하고, sampled gradient penalty만으로 전체 공간의 조건을 보장할 수 없는 이유를 말할 수 있을까요?",
-        answerChecklist: [
-          "1-Lipschitz라면 score 차이가 0.2 이하여야 하므로 위반이라고 판단한다.",
-          "조건 |f(x)−f(y)|≤||x−y||을 적는다.",
-          "WGAN-GP는 real–fake interpolation의 일부 sampled point만 검사하므로 global guarantee가 아니라고 말한다.",
+        "level": "advanced",
+        "question": "Pushforward density를 일반 change-of-variables로 계산하기 어려운 반례를 들 수 있을까요?",
+        "answerChecklist": [
+          "Latent dimension이 작거나 mapping이 many-to-one인 경우를 든다.",
+          "Sampling은 여전히 가능하다고 말한다."
         ],
-        requiredConcepts: [
-          "lipschitz-function-constraint",
-          "wgan-gradient-penalty",
+        "requiredConcepts": [
+          "implicit-generator-pushforward"
         ],
-        sectionId: "training",
+        "sectionId": "distribution"
       },
       {
-        level: "basic",
-        question:
-          "어떤 x에서 pdata(x)=0.6, pg(x)=0.2일 때 ideal D*(x)를 계산하고, 실제 discriminator가 1/2를 냈다는 사실만으로 두 분포가 같다고 결론 내릴 수 없는 이유를 말할 수 있을까요?",
-        answerChecklist: [
-          "D*=0.6/(0.6+0.2)=0.75를 계산한다.",
-          "D*=pdata/(pdata+pg)는 고정 G·충분한 capacity·optimal D라는 전제를 쓴다고 말한다.",
-          "상수 1/2만 출력하거나 underfit한 finite discriminator를 반례로 든다.",
+        "level": "advanced",
+        "question": "GAN·VAE·flow의 sample·density·inverse 계약을 비교할 수 있을까요?",
+        "answerChecklist": [
+          "GAN은 sample path 중심이라고 말한다.",
+          "다른 family의 tractability를 별도 비교한다."
         ],
-        requiredConcepts: [
-          "adversarial-density-ratio",
-          "probability-distribution",
+        "requiredConcepts": [
+          "implicit-generator-pushforward",
+          "generative-evaluation-boundary"
         ],
-        sectionId: "overview",
+        "sectionId": "boundary"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Generative Adversarial Nets",
+        "href": "https://arxiv.org/abs/1406.2661",
+        "problem": "Likelihood 없이 generator를 data distribution에 맞추는 문제",
+        "contribution": "Generator·discriminator game과 ideal optimal-D 분석",
+        "assumptions": "Arbitrary capacity·fixed G·ideal D optimization",
+        "evidenceScope": "논문 proposition·algorithm·reported experiments",
+        "notClaim": "Finite neural GAN의 global convergence 보장이 아님",
+        "sectionId": "paper-original-gan"
+      }
+    ]
+  },
+  "ai/gan-training-dynamics": {
+    "coreIdea": "GAN training은 한 scalar loss의 descent가 아니라 두 optimizer가 상대의 objective를 계속 바꾸는 game입니다. Detach 경계, data-space gradient의 pullback, time-scale 전제, mode coverage를 순서대로 분리합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "implicit-generator-pushforward",
+        "role": "G(z)의 data-space sample path를 사용합니다."
       },
       {
-        level: "basic",
-        question:
-          "D=0.01일 때 minimax와 non-saturating generator의 logit gradient 크기를 각각 약 0.01과 0.99로 비교하고, 이 차이가 보장하지 않는 것을 말할 수 있을까요?",
-        answerChecklist: [
-          "Saturating derivative 크기는 D에 비례해 약 0.01이라고 계산한다.",
-          "Non-saturating derivative |D−1|은 약 0.99라고 계산한다.",
-          "같은 equilibrium을 겨냥해도 강한 한 step의 signal이 global convergence나 mode coverage를 보장하지는 않는다고 말한다.",
-        ],
-        requiredConcepts: ["non-saturating-generator-objective", "chain-rule"],
-        sectionId: "overview",
+        "id": "non-saturating-generator-objective",
+        "role": "G step의 practical objective를 사용합니다."
       },
       {
-        level: "advanced",
-        question:
-          "Bilinear minmax 반례와 TTUR의 주요 전제를 이용해 'GAN loss가 내려가니 수렴했다'는 주장을 반박할 수 있을까요?",
-        answerChecklist: [
-          "Moving opponent 때문에 고정 scalar descent가 아님을 말한다.",
-          "Bilinear rotation 또는 발산을 계산한다.",
-          "Step-size separation·noise·boundedness·local stability와 local Nash 범위를 적는다.",
-        ],
-        requiredConcepts: [
+        "id": "chain-rule",
+        "role": "D signal을 G parameter까지 합성합니다."
+      },
+      {
+        "id": "vector-jacobian-product",
+        "role": "Data-space vector를 parameter gradient로 당깁니다."
+      },
+      {
+        "id": "optimizer-update",
+        "role": "별도 optimizer와 step snapshot을 추적합니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "alternating-adversarial-optimization",
+        "role": "D와 G의 update·detach 경계를 고정합니다."
+      },
+      {
+        "id": "two-timescale-game-convergence",
+        "role": "TTUR의 감소 step-size·local stability 범위를 제한합니다."
+      },
+      {
+        "id": "gan-mode-collapse",
+        "role": "Sample quality와 target coverage가 갈리는 failure를 진단합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "alternating-adversarial-optimization",
+        "sectionId": "alternating",
+        "intuition": "D step과 G step이 서로 다른 graph와 parameter owner를 가집니다.",
+        "workedExample": "D step은 G(z).detach(), G step은 D를 통과해 G만 update합니다.",
+        "boundary": "두 loss를 고정 scalar objective 하나로 합치지 않습니다."
+      },
+      {
+        "id": "two-timescale-game-convergence",
+        "sectionId": "game-dynamics",
+        "intuition": "빠른 player가 느린 player의 현재 상태에서 적응한다고 보는 local stochastic approximation입니다.",
+        "workedExample": "a_n/b_n→0과 합·제곱합 조건을 점검합니다.",
+        "boundary": "고정-rate Adam finite run의 global convergence 정리가 아닙니다.",
+        "proofIdea": "빠른 iterate가 느린 parameter를 거의 고정한 limiting ODE의 local response를 추적한다고 본 뒤, 그 response를 대입한 느린 ODE의 local asymptotic stability를 사용합니다.",
+        "counterexample": "Bilinear min_x max_y xy의 fixed-step simultaneous update는 equilibrium 원점으로 내려가지 않고 회전하거나 step size에 따라 발산합니다."
+      },
+      {
+        "id": "gan-mode-collapse",
+        "sectionId": "mode-collapse",
+        "intuition": "다른 latent가 소수 output mode로 몰려 fidelity와 coverage가 갈립니다.",
+        "workedExample": "8 mode 중 95%가 2개에 몰리면 recall failure를 의심합니다.",
+        "boundary": "Loss oscillation 하나만으로 확정하지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "Alternate",
+        "relation": "D와 G parameter owner를 분리",
+        "concepts": [
           "alternating-adversarial-optimization",
-          "two-timescale-game-convergence",
-        ],
-        sectionId: "training",
+          "optimizer-update"
+        ]
       },
       {
-        level: "advanced",
-        question:
-          "δ0와 δ2의 W1 dual 값을 구하고 constraint가 없을 때 critic gap이 무한해지는 이유를 설명할 수 있을까요?",
-        answerChecklist: [
-          "1-Lipschitz f=−x로 gap 2를 구한다.",
-          "Primal mass 이동 cost도 2임을 말한다.",
-          "f를 scaling하면 unconstrained supremum이 발산함을 보인다.",
-        ],
-        requiredConcepts: [
-          "lipschitz-function-constraint",
-          "wasserstein-critic-dual",
-        ],
-        sectionId: "training",
+        "label": "Pull back",
+        "relation": "D의 sample direction을 G parameter로 전달",
+        "concepts": [
+          "chain-rule",
+          "vector-jacobian-product"
+        ]
       },
       {
-        level: "advanced",
-        question:
-          "WGAN-GP와 spectral normalization의 적용 대상·비용·보장 범위를 비교하고 각각의 수치 예를 계산할 수 있을까요?",
-        answerChecklist: [
-          "Input-gradient sampled penalty와 weight operator rescale을 구분한다.",
-          "Norm 1.5, λ10 penalty 2.5를 계산한다.",
-          "diag(3,1)을 σmax=3으로 나눈다.",
-        ],
-        requiredConcepts: [
-          "wgan-gradient-penalty",
-          "spectral-normalization",
-          "singular-value-decomposition",
-        ],
-        sectionId: "training",
+        "label": "Dynamics",
+        "relation": "움직이는 상대와 time scale을 분석",
+        "concepts": [
+          "two-timescale-game-convergence"
+        ]
       },
       {
-        level: "advanced",
-        question:
-          "두 conditional GAN을 FID 하나로 순위 매기지 않는 평가표를 설계하고 mode collapse를 찾아낼 수 있을까요?",
-        answerChecklist: [
-          "FID pipeline·sample count·split을 고정한다.",
-          "Generative precision/recall과 class별 condition accuracy·diversity를 추가한다.",
-          "Nearest-neighbor memorization과 latency·hardware를 별도 기록한다.",
+        "label": "Diagnose",
+        "relation": "quality와 mode coverage를 분리",
+        "concepts": [
+          "gan-mode-collapse"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "D step과 G step의 update owner를 나눌 수 있을까요?",
+        "answerChecklist": [
+          "D step은 D만 update한다.",
+          "G step은 G만 update한다."
         ],
-        requiredConcepts: [
-          "conditional-adversarial-generation",
-          "frechet-inception-distance",
-          "generative-precision-recall",
+        "requiredConcepts": [
+          "alternating-adversarial-optimization"
+        ],
+        "sectionId": "alternating"
+      },
+      {
+        "level": "basic",
+        "question": "어느 step에서 G(z)를 detach하는지 말할 수 있을까요?",
+        "answerChecklist": [
+          "D step에서 detach한다.",
+          "G step에서는 D input gradient를 유지한다."
+        ],
+        "requiredConcepts": [
+          "alternating-adversarial-optimization"
+        ],
+        "sectionId": "gradient-path"
+      },
+      {
+        "level": "basic",
+        "question": "Batch 64 GAN의 z·G(z)·D logit shape를 적을 수 있을까요?",
+        "answerChecklist": [
+          "64×128, 64×3×64×64, 64×1을 적는다.",
+          "Detach가 shape를 바꾸지 않는다고 말한다."
+        ],
+        "requiredConcepts": [
+          "alternating-adversarial-optimization"
+        ],
+        "sectionId": "gradient-path"
+      },
+      {
+        "level": "basic",
+        "question": "GAN loss 감소가 고정-objective convergence가 아닌 이유는 무엇일까요?",
+        "answerChecklist": [
+          "상대 update가 landscape를 바꾼다고 말한다.",
+          "Player별 loss를 분리한다."
+        ],
+        "requiredConcepts": [
+          "alternating-adversarial-optimization"
+        ],
+        "sectionId": "game-dynamics"
+      },
+      {
+        "level": "basic",
+        "question": "8 mode 중 2개에 95%가 몰리면 무엇을 의심할까요?",
+        "answerChecklist": [
+          "Mode collapse·낮은 coverage를 말한다.",
+          "선명한 몇 장은 반박이 아니라고 말한다."
+        ],
+        "requiredConcepts": [
+          "gan-mode-collapse"
+        ],
+        "sectionId": "mode-collapse"
+      },
+      {
+        "level": "basic",
+        "question": "Mode collapse 진단에 어떤 세 축을 기록할까요?",
+        "answerChecklist": [
+          "Quality·coverage·dynamics를 적는다.",
+          "Mode count·recall·latent sensitivity 예를 든다."
+        ],
+        "requiredConcepts": [
+          "gan-mode-collapse"
+        ],
+        "sectionId": "mode-collapse"
+      },
+      {
+        "level": "advanced",
+        "question": "J_G^T∇_x loss 식을 연산 순서로 설명할 수 있을까요?",
+        "answerChecklist": [
+          "D가 data-space vector를 만든다.",
+          "Jacobian transpose가 parameter space로 pull back한다."
+        ],
+        "requiredConcepts": [
+          "alternating-adversarial-optimization",
+          "vector-jacobian-product"
+        ],
+        "sectionId": "gradient-path"
+      },
+      {
+        "level": "advanced",
+        "question": "Bilinear minmax update가 회전하는 이유를 계산할 수 있을까요?",
+        "answerChecklist": [
+          "x와 y update 식을 적는다.",
+          "Fixed step에서 radius가 줄지 않을 수 있음을 보인다."
+        ],
+        "requiredConcepts": [
+          "two-timescale-game-convergence"
+        ],
+        "sectionId": "game-dynamics"
+      },
+      {
+        "level": "advanced",
+        "question": "TTUR 정리를 finite Adam recipe로 오해하지 않을 수 있을까요?",
+        "answerChecklist": [
+          "Step-size separation·noise·boundedness·local stability를 적는다.",
+          "결론이 local stationary Nash임을 제한한다."
+        ],
+        "requiredConcepts": [
+          "two-timescale-game-convergence"
+        ],
+        "sectionId": "game-dynamics"
+      },
+      {
+        "level": "advanced",
+        "question": "Loss가 좋아져도 collapse할 수 있는 feedback 경로를 설명할 수 있을까요?",
+        "answerChecklist": [
+          "좁은 high-score region으로 z가 몰릴 수 있다고 말한다.",
+          "D 반응 뒤 oscillation할 수 있다고 말한다."
+        ],
+        "requiredConcepts": [
           "gan-mode-collapse",
+          "alternating-adversarial-optimization"
         ],
-        sectionId: "variants",
-      },
+        "sectionId": "mode-collapse"
+      }
     ],
-    papers: [
+    "papers": [
       {
-        title: "Generative Adversarial Nets",
-        href: "https://arxiv.org/abs/1406.2661",
-        problem:
-          "Normalized likelihood와 Markov chain 없이 generator를 data distribution에 맞추는 문제",
-        contribution:
-          "Generator·discriminator minimax game과 optimal discriminator·global equilibrium 분석",
-        assumptions:
-          "Arbitrary function capacity·고정 G의 optimal D·ideal game과 finite alternating training을 구분",
-        evidenceScope:
-          "논문의 proposition·algorithm과 MNIST·TFD·CIFAR-10 qualitative/quantitative 평가 범위",
-        notClaim:
-          "Finite deep GAN의 global convergence·mode coverage·calibrated density-ratio를 보장한다는 뜻은 아님",
-        sectionId: "paper-original-gan",
+        "title": "GANs Trained by a Two Time-Scale Update Rule",
+        "href": "https://arxiv.org/abs/1706.08500",
+        "problem": "두 player의 다른 update 속도에서 local convergence를 분석",
+        "contribution": "TTUR stochastic-approximation 조건",
+        "assumptions": "감소 step-size·noise·boundedness·local ODE stability",
+        "evidenceScope": "논문 정리와 reported experiments",
+        "notClaim": "고정-rate deep GAN의 global Nash 수렴 보장이 아님",
+        "sectionId": "paper-ttur"
+      }
+    ]
+  },
+  "ai/gan-wasserstein-critics": {
+    "coreIdea": "Wasserstein GAN은 critic output을 probability가 아니라 constrained real score로 바꾸고, 1-Lipschitz function family의 expectation gap으로 transport geometry를 근사합니다. Gradient penalty와 spectral normalization은 서로 다른 위치의 근사 제약입니다.",
+    "assumedKnowledge": [
+      {
+        "id": "probability-distribution",
+        "role": "Real·generated expectation을 구분합니다."
       },
       {
-        title: "Wasserstein GAN",
-        href: "https://arxiv.org/abs/1701.07875",
-        problem:
-          "Support가 떨어진 distribution에서 JS·KL 기반 signal과 GAN training instability를 분석하는 문제",
-        contribution:
-          "Earth-Mover distance의 continuity 관점과 1-Lipschitz neural critic algorithm 제안",
-        assumptions:
-          "Compact/metric space·moment·function regularity 및 weight clipping neural approximation",
-        evidenceScope:
-          "논문의 topology·continuity 정리와 toy·image training 실험 범위",
-        notClaim:
-          "Weight clipping이 exact Lipschitz constraint이거나 mode collapse를 모든 설정에서 제거한다는 뜻은 아님",
-        sectionId: "paper-wgan",
+        "id": "expectation",
+        "role": "Critic population gap을 읽습니다."
       },
       {
-        title: "Improved Training of Wasserstein GANs",
-        href: "https://arxiv.org/abs/1704.00028",
-        problem:
-          "WGAN weight clipping이 critic capacity·gradient에 만드는 문제",
-        contribution:
-          "Real–fake interpolation의 critic input-gradient norm penalty 제안",
-        assumptions:
-          "Sampled interpolation distribution·penalty coefficient와 논문의 critic architecture·update recipe",
-        evidenceScope:
-          "Toy distribution·CIFAR-10·LSUN·language model 등 논문 실험 범위",
-        notClaim:
-          "전체 input space의 exact 1-Lipschitz 또는 모든 GAN 안정성을 보장한다는 뜻은 아님",
-        sectionId: "paper-wgan-gp",
+        "id": "singular-value-decomposition",
+        "role": "Largest singular value와 operator norm을 읽습니다."
       },
       {
-        title: "Spectral Normalization for Generative Adversarial Networks",
-        href: "https://arxiv.org/abs/1802.05957",
-        problem:
-          "Discriminator function의 sensitivity를 계산 효율적으로 제어하는 문제",
-        contribution:
-          "Weight largest singular value를 이용한 spectral normalization 제안",
-        assumptions:
-          "Power-iteration approximation·layer composition과 논문의 architecture·dataset 조건",
-        evidenceScope:
-          "CIFAR-10·STL-10·ImageNet의 training·sample quality 비교 범위",
-        notClaim:
-          "Layer norm 제한이 전체 network의 tight global bound나 game convergence를 보장한다는 뜻은 아님",
-        sectionId: "paper-spectral-normalization",
-      },
-      {
-        title:
-          "GANs Trained by a Two Time-Scale Update Rule Converge to a Local Nash Equilibrium",
-        href: "https://arxiv.org/abs/1706.08500",
-        problem:
-          "G와 D의 서로 다른 update 속도에서 stochastic game convergence와 sample metric을 분석하는 문제",
-        contribution:
-          "TTUR의 local stationary Nash convergence 조건과 Fréchet Inception Distance 제시",
-        assumptions:
-          "두 step-size sequence·regularity·noise·stability 가정과 finite Adam practice를 구분",
-        evidenceScope:
-          "논문의 stochastic-approximation 정리와 GAN experiments·FID comparison 범위",
-        notClaim:
-          "고정 learning-rate deep GAN이 global Nash로 수렴하거나 FID 하나가 모든 품질을 측정한다는 뜻은 아님",
-        sectionId: "paper-ttur-fid",
-      },
-      {
-        title: "Assessing Generative Models via Precision and Recall",
-        href: "https://arxiv.org/abs/1806.00035",
-        problem:
-          "FID 같은 scalar가 sample quality와 target coverage의 다른 failure를 구분하지 못하는 문제",
-        contribution:
-          "Distribution precision·recall curve와 finite-sample algorithm 제안",
-        assumptions:
-          "선택한 representation·manifold approximation·sample count와 논문 비교 protocol",
-        evidenceScope: "GAN·VAE variant의 synthetic/image evaluation 범위",
-        notClaim:
-          "모든 semantic quality·diversity를 완전히 측정하거나 classifier precision/recall과 같은 정의라는 뜻은 아님",
-        sectionId: "paper-generative-pr",
-      },
-      {
-        title: "Conditional Generative Adversarial Nets",
-        href: "https://arxiv.org/abs/1411.1784",
-        problem:
-          "Unconditional adversarial model을 label·context별 distribution 생성으로 확장하는 문제",
-        contribution:
-          "Condition y를 generator와 discriminator 모두에 제공하는 conditional GAN 제안",
-        assumptions:
-          "논문의 concatenation architecture·MNIST label과 preliminary image-tagging setup",
-        evidenceScope:
-          "논문이 보고한 class-conditioned digit generation과 tagging example 범위",
-        notClaim:
-          "Condition injection만으로 adherence·compositional generalization·balanced coverage를 보장한다는 뜻은 아님",
-        sectionId: "paper-conditional-gan",
-      },
+        "id": "gan-mode-collapse",
+        "role": "Signal 개선과 coverage 보장을 구분합니다."
+      }
     ],
+    "introducedHere": [
+      {
+        "id": "lipschitz-function-constraint",
+        "role": "Input distance 대비 output 변화율을 제한합니다."
+      },
+      {
+        "id": "wasserstein-critic-dual",
+        "role": "Transport cost를 constrained critic gap으로 바꿉니다."
+      },
+      {
+        "id": "wgan-gradient-penalty",
+        "role": "Sampled input-gradient slope를 벌점화합니다."
+      },
+      {
+        "id": "spectral-normalization",
+        "role": "Weight operator의 최대 확대율을 제한합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "lipschitz-function-constraint",
+        "sectionId": "lipschitz",
+        "intuition": "Score 변화가 input distance의 L배를 넘지 못하게 합니다.",
+        "workedExample": "거리 0.2에서 score 차이 0.3이면 1-Lipschitz 위반입니다.",
+        "boundary": "Sampled gradient와 global function bound를 구분합니다."
+      },
+      {
+        "id": "wasserstein-critic-dual",
+        "sectionId": "wasserstein-dual",
+        "intuition": "1-Lipschitz critic의 최대 expectation gap으로 W1을 읽습니다.",
+        "workedExample": "δ0와 δ2에서 f=−x가 gap 2를 만듭니다.",
+        "boundary": "Constraint 없는 score scaling은 발산합니다.",
+        "proofIdea": "Transport primal의 cost에 대한 linear-program dual potential을 만들고, metric cost의 potential 차이 제약을 1-Lipschitz function family로 정리합니다.",
+        "counterexample": "Function constraint를 제거하면 임의 critic f를 c배해 real–fake expectation gap도 c배로 키울 수 있어 supremum이 무한대가 됩니다."
+      },
+      {
+        "id": "wgan-gradient-penalty",
+        "sectionId": "gradient-penalty",
+        "intuition": "Real–fake interpolation에서 input-gradient norm을 1에 가깝게 합니다.",
+        "workedExample": "norm 1.5, λ10이면 2.5입니다.",
+        "boundary": "전체 domain의 exact constraint가 아닙니다."
+      },
+      {
+        "id": "spectral-normalization",
+        "sectionId": "spectral-normalization",
+        "intuition": "Weight를 largest singular value로 나눕니다.",
+        "workedExample": "diag(3,1)을 3으로 나눕니다.",
+        "boundary": "전체 network tight bound나 generator quality 보장이 아닙니다.",
+        "proofIdea": "SVD W=UΣVᵀ에서 unit input을 가장 크게 확대하는 비율이 σmax이므로 W를 σmax로 나누면 해당 linear operator의 Euclidean norm은 1이 됩니다.",
+        "counterexample": "Norm 1인 두 branch를 residual로 더하면 output sensitivity upper bound가 2까지 갈 수 있어 layer별 normalization만으로 전체 network norm 1을 단정할 수 없습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "Bound",
+        "relation": "critic의 output 변화 scale을 고정",
+        "concepts": [
+          "lipschitz-function-constraint"
+        ]
+      },
+      {
+        "label": "Measure",
+        "relation": "constrained gap으로 transport distance를 읽음",
+        "concepts": [
+          "wasserstein-critic-dual",
+          "expectation"
+        ]
+      },
+      {
+        "label": "Sample path",
+        "relation": "input-gradient local penalty 적용",
+        "concepts": [
+          "wgan-gradient-penalty"
+        ]
+      },
+      {
+        "label": "Weight",
+        "relation": "operator norm rescale 적용",
+        "concepts": [
+          "spectral-normalization",
+          "singular-value-decomposition"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "거리 0.2, score 차이 0.3의 1-Lipschitz 여부를 판단할 수 있을까요?",
+        "answerChecklist": [
+          "0.3>0.2이므로 위반이라고 판단한다.",
+          "부등식을 적는다."
+        ],
+        "requiredConcepts": [
+          "lipschitz-function-constraint"
+        ],
+        "sectionId": "lipschitz"
+      },
+      {
+        "level": "basic",
+        "question": "WGAN critic output을 probability로 읽으면 안 되는 이유는 무엇일까요?",
+        "answerChecklist": [
+          "Real-valued expectation gap이라고 말한다.",
+          "Sigmoid calibration 계약이 없다고 말한다."
+        ],
+        "requiredConcepts": [
+          "wasserstein-critic-dual"
+        ],
+        "sectionId": "wasserstein-dual"
+      },
+      {
+        "level": "basic",
+        "question": "δ0와 δ2의 W1 값을 구할 수 있을까요?",
+        "answerChecklist": [
+          "Mass 이동 거리 2를 적는다.",
+          "f=−x의 dual gap 2를 계산한다."
+        ],
+        "requiredConcepts": [
+          "wasserstein-critic-dual"
+        ],
+        "sectionId": "wasserstein-dual"
+      },
+      {
+        "level": "basic",
+        "question": "Norm 1.5, λ10의 GP를 계산할 수 있을까요?",
+        "answerChecklist": [
+          "10(1.5−1)^2=2.5를 계산한다.",
+          "Sampled local penalty라고 말한다."
+        ],
+        "requiredConcepts": [
+          "wgan-gradient-penalty"
+        ],
+        "sectionId": "gradient-penalty"
+      },
+      {
+        "level": "basic",
+        "question": "diag(3,1)을 spectral normalize할 수 있을까요?",
+        "answerChecklist": [
+          "σmax=3을 구한다.",
+          "diag(1,1/3)을 적는다."
+        ],
+        "requiredConcepts": [
+          "spectral-normalization"
+        ],
+        "sectionId": "spectral-normalization"
+      },
+      {
+        "level": "basic",
+        "question": "GP가 global Lipschitz를 증명하지 못하는 이유는 무엇일까요?",
+        "answerChecklist": [
+          "일부 interpolation point만 잰다고 말한다.",
+          "Soft penalty임을 말한다."
+        ],
+        "requiredConcepts": [
+          "wgan-gradient-penalty",
+          "lipschitz-function-constraint"
+        ],
+        "sectionId": "gradient-penalty"
+      },
+      {
+        "level": "advanced",
+        "question": "Constraint가 없을 때 critic supremum이 발산함을 설명할 수 있을까요?",
+        "answerChecklist": [
+          "f를 c배하면 gap도 c배라고 말한다.",
+          "Function scale constraint 필요성을 연결한다."
+        ],
+        "requiredConcepts": [
+          "wasserstein-critic-dual",
+          "lipschitz-function-constraint"
+        ],
+        "sectionId": "wasserstein-dual"
+      },
+      {
+        "level": "advanced",
+        "question": "GP와 weight clipping의 failure boundary를 비교할 수 있을까요?",
+        "answerChecklist": [
+          "Clipping은 capacity를 거칠게 제한한다고 말한다.",
+          "GP는 extra gradient cost와 sampled scope를 가진다고 말한다."
+        ],
+        "requiredConcepts": [
+          "wgan-gradient-penalty"
+        ],
+        "sectionId": "gradient-penalty"
+      },
+      {
+        "level": "advanced",
+        "question": "Layer norm 1이 network norm 1을 자동 보장하지 않는 반례를 들 수 있을까요?",
+        "answerChecklist": [
+          "Residual addition 또는 branch sum을 든다.",
+          "Composition accounting이 필요하다고 말한다."
+        ],
+        "requiredConcepts": [
+          "spectral-normalization"
+        ],
+        "sectionId": "spectral-normalization"
+      },
+      {
+        "level": "advanced",
+        "question": "GP와 SN을 적용 대상·비용·보장으로 비교할 수 있을까요?",
+        "answerChecklist": [
+          "Input-gradient sample과 weight operator를 구분한다.",
+          "Data-dependent backward와 weight rescale 비용을 구분한다."
+        ],
+        "requiredConcepts": [
+          "wgan-gradient-penalty",
+          "spectral-normalization"
+        ],
+        "sectionId": "spectral-normalization"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Wasserstein GAN",
+        "href": "https://arxiv.org/abs/1701.07875",
+        "problem": "떨어진 support에서 유용한 generator signal 문제",
+        "contribution": "W1 topology와 constrained critic objective",
+        "assumptions": "Metric·moment 조건과 function class",
+        "evidenceScope": "논문 정리·algorithm·experiments",
+        "notClaim": "Weight clipping이 exact constraint라는 뜻이 아님",
+        "sectionId": "paper-wgan"
+      },
+      {
+        "title": "Improved Training of Wasserstein GANs",
+        "href": "https://arxiv.org/abs/1704.00028",
+        "problem": "Weight clipping pathology",
+        "contribution": "Sampled input-gradient penalty",
+        "assumptions": "Interpolation distribution·λ·critic recipe",
+        "evidenceScope": "논문의 toy distribution·CIFAR-10·LSUN·language-model critic experiments와 stated architecture 범위",
+        "notClaim": "Global exact 1-Lipschitz 보장이 아님",
+        "sectionId": "paper-wgan-gp"
+      }
+    ]
+  },
+  "ai/gan-conditional-evaluation": {
+    "coreIdea": "Conditional GAN은 condition을 G와 D 양쪽에 연결해 p(x|c)를 겨냥하고, 평가는 FID 하나로 줄이기 전에 condition correctness·sample quality·target coverage·cost를 분리해 고정합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "implicit-generator-pushforward",
+        "role": "Conditional generator의 sample path를 재사용합니다."
+      },
+      {
+        "id": "probability-distribution",
+        "role": "Condition별 distribution을 구분합니다."
+      },
+      {
+        "id": "gan-mode-collapse",
+        "role": "Fidelity와 coverage failure를 구분합니다."
+      },
+      {
+        "id": "generative-evaluation-boundary",
+        "role": "Metric·protocol·cost를 분리합니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "conditional-adversarial-generation",
+        "role": "Condition을 G와 D 양쪽에 연결합니다."
+      },
+      {
+        "id": "frechet-inception-distance",
+        "role": "Fixed feature mean·covariance를 비교합니다."
+      },
+      {
+        "id": "generative-precision-recall",
+        "role": "Quality와 target coverage를 별도 축으로 기록합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "conditional-adversarial-generation",
+        "sectionId": "conditioning",
+        "intuition": "Condition이 생성 주문이면서 D의 pairing 검사 입력입니다.",
+        "workedExample": "G(z,cat)과 D(x,cat)를 함께 학습합니다.",
+        "boundary": "Condition injection만으로 adherence·diversity를 보장하지 않습니다."
+      },
+      {
+        "id": "frechet-inception-distance",
+        "sectionId": "fid",
+        "intuition": "Fixed feature cloud의 center와 covariance를 비교합니다.",
+        "workedExample": "1D N(0,1)과 N(2,1)의 FID는 4입니다.",
+        "boundary": "Encoder·resize·sample count·split에 의존합니다."
+      },
+      {
+        "id": "generative-precision-recall",
+        "sectionId": "precision-recall",
+        "intuition": "Generated quality와 target coverage를 분리합니다.",
+        "workedExample": "8 mode 중 2개만 선명하면 precision high·recall low일 수 있습니다.",
+        "boundary": "Classifier precision/recall과 같은 정의가 아닙니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "Condition",
+        "relation": "G 생성과 D pairing에 같은 c를 연결",
+        "concepts": [
+          "conditional-adversarial-generation"
+        ]
+      },
+      {
+        "label": "Embed",
+        "relation": "같은 fixed feature space로 두 sample set을 이동",
+        "concepts": [
+          "frechet-inception-distance"
+        ]
+      },
+      {
+        "label": "Separate",
+        "relation": "quality와 target coverage를 분리",
+        "concepts": [
+          "generative-precision-recall",
+          "gan-mode-collapse"
+        ]
+      },
+      {
+        "label": "Protocol",
+        "relation": "metric input·reference·cost를 고정",
+        "concepts": [
+          "generative-evaluation-boundary"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "Condition c를 G와 D 양쪽에 주는 이유를 말할 수 있을까요?",
+        "answerChecklist": [
+          "G는 requested sample을 만든다.",
+          "D는 sample-condition pairing을 검사한다."
+        ],
+        "requiredConcepts": [
+          "conditional-adversarial-generation"
+        ],
+        "sectionId": "conditioning"
+      },
+      {
+        "level": "basic",
+        "question": "G에만 label을 주었을 때 남는 failure는 무엇일까요?",
+        "answerChecklist": [
+          "D가 label adherence를 직접 비교하지 못한다고 말한다.",
+          "Condition shortcut·imbalance를 든다."
+        ],
+        "requiredConcepts": [
+          "conditional-adversarial-generation"
+        ],
+        "sectionId": "conditioning"
+      },
+      {
+        "level": "basic",
+        "question": "1D N(0,1)과 N(2,1)의 FID를 계산할 수 있을까요?",
+        "answerChecklist": [
+          "Mean gap square 4를 계산한다.",
+          "Covariance term은 0이라고 말한다."
+        ],
+        "requiredConcepts": [
+          "frechet-inception-distance"
+        ],
+        "sectionId": "fid"
+      },
+      {
+        "level": "basic",
+        "question": "FID 비교 전에 어떤 protocol을 고정해야 할까요?",
+        "answerChecklist": [
+          "Extractor·resize·sample count·reference split을 적는다.",
+          "같은 preprocessing을 사용한다."
+        ],
+        "requiredConcepts": [
+          "frechet-inception-distance"
+        ],
+        "sectionId": "fid"
+      },
+      {
+        "level": "basic",
+        "question": "8 mode 중 2개만 선명할 때 precision·recall을 분류할 수 있을까요?",
+        "answerChecklist": [
+          "Precision은 높을 수 있다고 말한다.",
+          "Recall은 낮다고 말한다."
+        ],
+        "requiredConcepts": [
+          "generative-precision-recall",
+          "gan-mode-collapse"
+        ],
+        "sectionId": "precision-recall"
+      },
+      {
+        "level": "basic",
+        "question": "한 이미지와 FID 하나로 조건 생성기를 고르면 안 되는 이유는 무엇일까요?",
+        "answerChecklist": [
+          "Condition correctness와 coverage를 놓친다.",
+          "Latency·memory도 별도라고 말한다."
+        ],
+        "requiredConcepts": [
+          "generative-precision-recall",
+          "frechet-inception-distance"
+        ],
+        "sectionId": "evaluation-protocol"
+      },
+      {
+        "level": "advanced",
+        "question": "Mean은 같고 covariance만 다른 두 feature cloud를 FID가 구분하는 이유를 설명할 수 있을까요?",
+        "answerChecklist": [
+          "Covariance trace term을 지목한다.",
+          "Gaussian moment 요약 한계도 말한다."
+        ],
+        "requiredConcepts": [
+          "frechet-inception-distance"
+        ],
+        "sectionId": "fid"
+      },
+      {
+        "level": "advanced",
+        "question": "Quality와 coverage가 반대로 움직이는 두 모델 평가표를 설계할 수 있을까요?",
+        "answerChecklist": [
+          "Precision·recall을 별도 column으로 둔다.",
+          "Sample budget·feature space를 고정한다."
+        ],
+        "requiredConcepts": [
+          "generative-precision-recall"
+        ],
+        "sectionId": "precision-recall"
+      },
+      {
+        "level": "advanced",
+        "question": "Class imbalance가 conditional evaluation을 왜곡하는 경로를 설명할 수 있을까요?",
+        "answerChecklist": [
+          "Marginal metric이 frequent class를 과대 반영한다고 말한다.",
+          "Class-balanced·class-wise metric을 제안한다."
+        ],
+        "requiredConcepts": [
+          "conditional-adversarial-generation"
+        ],
+        "sectionId": "conditioning"
+      },
+      {
+        "level": "advanced",
+        "question": "FID가 낮아도 memorization을 배제할 수 없는 반례를 들 수 있을까요?",
+        "answerChecklist": [
+          "Training sample 복제도 moment를 맞출 수 있다고 말한다.",
+          "Nearest-neighbor·duplicate 검사를 추가한다."
+        ],
+        "requiredConcepts": [
+          "frechet-inception-distance",
+          "generative-precision-recall"
+        ],
+        "sectionId": "evaluation-protocol"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Conditional Generative Adversarial Nets",
+        "href": "https://arxiv.org/abs/1411.1784",
+        "problem": "Label·context별 generation 확장",
+        "contribution": "Condition y를 generator input과 discriminator comparison 양쪽에 제공해 marginal game을 conditional distribution game으로 확장",
+        "assumptions": "논문의 architecture·datasets",
+        "evidenceScope": "Class-conditioned generation experiments",
+        "notClaim": "Adherence·balanced coverage 보장이 아님",
+        "sectionId": "paper-conditional-gan"
+      },
+      {
+        "title": "Assessing Generative Models via Precision and Recall",
+        "href": "https://arxiv.org/abs/1806.00035",
+        "problem": "Scalar metric의 quality·coverage 혼합",
+        "contribution": "Distribution precision·recall 분해",
+        "assumptions": "Fixed representation·manifold approximation·sample count",
+        "evidenceScope": "논문의 synthetic·image evaluation",
+        "notClaim": "모든 semantic quality를 완전히 측정하지 않음",
+        "sectionId": "paper-generative-pr"
+      }
+    ]
   },
   "ai/resnet": {
     coreIdea:

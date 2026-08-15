@@ -1770,47 +1770,53 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "ai/gan": [
     {
-      kind: "핵심 논문",
-      label: "Generative Adversarial Nets",
-      href: "https://arxiv.org/abs/1406.2661",
-      note: "generator·discriminator minimax game의 원문",
+      "kind": "핵심 논문",
+      "label": "Generative Adversarial Nets",
+      "href": "https://arxiv.org/abs/1406.2661",
+      "note": "Implicit generator·minimax game·optimal discriminator의 출발점"
+    }
+  ],
+  "ai/gan-training-dynamics": [
+    {
+      "kind": "핵심 논문",
+      "label": "GANs Trained by a Two Time-Scale Update Rule",
+      "href": "https://arxiv.org/abs/1706.08500",
+      "note": "두 optimizer time scale의 local convergence 조건과 FID 제안"
+    }
+  ],
+  "ai/gan-wasserstein-critics": [
+    {
+      "kind": "핵심 논문",
+      "label": "Wasserstein GAN",
+      "href": "https://arxiv.org/abs/1701.07875",
+      "note": "Transport topology와 1-Lipschitz critic objective"
     },
     {
-      kind: "핵심 논문",
-      label: "Unsupervised Representation Learning with DCGANs",
-      href: "https://arxiv.org/abs/1511.06434",
-      note: "Convolutional GAN architecture와 training guideline의 기준",
+      "kind": "핵심 논문",
+      "label": "Improved Training of Wasserstein GANs",
+      "href": "https://arxiv.org/abs/1704.00028",
+      "note": "Weight clipping 대신 sampled gradient penalty"
     },
     {
-      kind: "핵심 논문",
-      label: "Improved Training of Wasserstein GANs",
-      href: "https://arxiv.org/abs/1704.00028",
-      note: "Weight clipping을 gradient penalty로 바꾼 WGAN-GP",
+      "kind": "핵심 논문",
+      "label": "Spectral Normalization for GANs",
+      "href": "https://arxiv.org/abs/1802.05957",
+      "note": "Weight operator norm을 제한하는 discriminator regularization"
+    }
+  ],
+  "ai/gan-conditional-evaluation": [
+    {
+      "kind": "핵심 논문",
+      "label": "Conditional Generative Adversarial Nets",
+      "href": "https://arxiv.org/abs/1411.1784",
+      "note": "Condition을 generator와 discriminator 양쪽에 제공"
     },
     {
-      kind: "핵심 논문",
-      label: "Wasserstein GAN",
-      href: "https://arxiv.org/abs/1701.07875",
-      note: "Distribution support가 떨어진 상황의 gradient 문제와 Wasserstein critic의 출발점",
-    },
-    {
-      kind: "핵심 논문",
-      label: "Spectral Normalization for GANs",
-      href: "https://arxiv.org/abs/1802.05957",
-      note: "Discriminator linear layer의 operator norm을 제한하는 경량 regularization",
-    },
-    {
-      kind: "평가 논문",
-      label: "GANs Trained by a Two Time-Scale Update Rule",
-      href: "https://arxiv.org/abs/1706.08500",
-      note: "Generator·discriminator의 별도 learning rate와 FID metric 제안",
-    },
-    {
-      kind: "핵심 논문",
-      label: "A Style-Based Generator Architecture for GANs",
-      href: "https://arxiv.org/abs/1812.04948",
-      note: "Mapping network와 layer-wise style control을 제안한 StyleGAN",
-    },
+      "kind": "평가 논문",
+      "label": "Assessing Generative Models via Precision and Recall",
+      "href": "https://arxiv.org/abs/1806.00035",
+      "note": "Sample quality와 target coverage를 두 축으로 분리"
+    }
   ],
   "ai/diffusion-models": [
     {

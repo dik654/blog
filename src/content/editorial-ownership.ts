@@ -2641,41 +2641,136 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
-  gan: {
-    title: "GAN 글이 소유하는 범위",
-    owns: [
-      "Generator pushforward distribution·discriminator density-ratio·non-saturating gradient의 연결",
-      "두 optimizer의 alternating game·detach boundary·mode collapse 진단",
-      "Wasserstein critic·Lipschitz constraint·gradient penalty·spectral normalization의 차이",
-      "Conditional generation과 FID·precision/recall·latency를 분리한 평가 계약",
+  "gan": {
+    "title": "GAN foundation 글이 소유하는 범위",
+    "owns": [
+      "Latent prior를 generator로 보낸 implicit sample distribution",
+      "Ideal discriminator density-ratio의 전제와 finite D 경계",
+      "Non-saturating generator signal과 sampling·density·inverse 구분"
     ],
-    reuses: [
+    "reuses": [
       {
-        label: "생성 모델 family의 공통 비교 지도",
-        href: "/ai/generative-theory",
+        "label": "생성 모델 family 지도",
+        "href": "/ai/generative-theory"
       },
       {
-        label: "Probability",
-        href: "/ai/math-probability-expectation-variance",
+        "label": "Probability",
+        "href": "/ai/math-probability-expectation-variance"
       },
-      { label: "Expectation", href: "/ai/math-random-variables-expectation" },
       {
-        label: "Chain rule·VJP·backpropagation",
-        href: "/ai/backprop-optimization",
-      },
-      { label: "Matrix·singular value", href: "/ai/math-matrices-svd" },
-      { label: "Diffusion sampling path", href: "/ai/diffusion-models" },
+        "label": "Expectation",
+        "href": "/ai/math-random-variables-expectation"
+      }
     ],
-    evidence: [
+    "evidence": [
       {
-        kind: "primary-source",
-        rule: "GAN·WGAN·WGAN-GP·spectral normalization·TTUR/FID·precision/recall claim은 각 정리의 function class와 논문 실험 조건으로 제한한다.",
+        "kind": "primary-source",
+        "rule": "Original GAN의 optimal-D·equilibrium claim은 arbitrary capacity와 ideal optimization 전제로 제한한다."
       },
       {
-        kind: "standard",
-        rule: "G·D loss·update ratio·detach 위치·regularizer·sample count·feature extractor·hardware를 재현 가능한 game과 evaluation 계약으로 기록한다.",
-      },
+        "kind": "standard",
+        "rule": "Latent·generated tensor shape와 sampling·likelihood·inverse 제공 여부를 분리 기록한다."
+      }
+    ]
+  },
+  "gan-training-dynamics": {
+    "title": "GAN training dynamics 글이 소유하는 범위",
+    "owns": [
+      "D/G alternating step·optimizer·detach 경계",
+      "Discriminator data-space signal의 generator parameter pullback",
+      "Bilinear rotation·TTUR local convergence 전제",
+      "Mode collapse의 quality·coverage·dynamics 진단"
     ],
+    "reuses": [
+      {
+        "label": "GAN generator·objective",
+        "href": "/ai/gan"
+      },
+      {
+        "label": "Chain rule·VJP",
+        "href": "/ai/backprop-optimization"
+      },
+      {
+        "label": "Optimizer update",
+        "href": "/ai/optimizers"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "TTUR claim은 감소 step-size·noise·boundedness·local stability 전제로 제한한다."
+      },
+      {
+        "kind": "standard",
+        "rule": "D/G loss·update ratio·detach 위치·mode count·sample budget을 같은 training receipt에 기록한다."
+      }
+    ]
+  },
+  "gan-wasserstein-critics": {
+    "title": "Wasserstein critic 글이 소유하는 범위",
+    "owns": [
+      "Lipschitz function constraint와 critic score scale",
+      "Kantorovich–Rubinstein dual의 transport interpretation",
+      "WGAN-GP sampled input-gradient penalty",
+      "Spectral normalization의 layer operator-norm 경계"
+    ],
+    "reuses": [
+      {
+        "label": "GAN training failure",
+        "href": "/ai/gan-training-dynamics"
+      },
+      {
+        "label": "Expectation",
+        "href": "/ai/math-random-variables-expectation"
+      },
+      {
+        "label": "Matrix·singular value",
+        "href": "/ai/math-matrices-svd"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "WGAN·GP·SN claim은 각 논문의 function class·sampling path·operator approximation으로 제한한다."
+      },
+      {
+        "kind": "standard",
+        "rule": "Critic output semantics·constraint 위치·λ·power iteration·extra backward 비용을 기록한다."
+      }
+    ]
+  },
+  "gan-conditional-evaluation": {
+    "title": "Conditional GAN 평가 글이 소유하는 범위",
+    "owns": [
+      "Condition을 G와 D 양쪽에 연결한 p(x|c) game",
+      "Fixed feature mean·covariance의 FID protocol",
+      "Generative precision과 target coverage recall의 분리",
+      "Condition correctness·diversity·latency를 포함한 evaluation contract"
+    ],
+    "reuses": [
+      {
+        "label": "GAN sample distribution",
+        "href": "/ai/gan"
+      },
+      {
+        "label": "Mode collapse",
+        "href": "/ai/gan-training-dynamics"
+      },
+      {
+        "label": "생성 모델 공통 평가 경계",
+        "href": "/ai/generative-theory"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "Conditional GAN·FID·precision/recall claim은 각 representation·sample count·dataset 조건으로 제한한다."
+      },
+      {
+        "kind": "standard",
+        "rule": "Feature extractor·resize·reference split·seed·condition distribution·hardware를 고정한다."
+      }
+    ]
   },
   "diffusion-models": {
     title: "Diffusion model 글이 소유하는 범위",
