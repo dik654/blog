@@ -2842,7 +2842,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Optimizer update",
     definition:
       "Gradient와 optimizer state를 이용해 다음 step의 파라미터를 정하는 규칙입니다.",
-    canonicalHref: "/ai/optimizers#overview",
+    canonicalHref: "/ai/optimizers#update-contract",
   },
   "sgd-update": {
     id: "sgd-update",
@@ -2850,7 +2850,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Mini-batch SGD update",
     definition:
       "현재 mini-batch gradient estimate의 반대 방향으로 learning-rate만큼 parameter를 이동하는 기준 optimizer update입니다.",
-    canonicalHref: "/ai/optimizers#sgd",
+    canonicalHref: "/ai/optimizers#sgd-update",
   },
   "gradient-accumulation": {
     id: "gradient-accumulation",
@@ -2858,7 +2858,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Gradient accumulation",
     definition:
       "Parameter를 갱신하지 않은 채 여러 micro-batch gradient를 합산·평균한 뒤 한 번 update해 큰 effective batch를 구성합니다.",
-    canonicalHref: "/ai/optimizers#batch-variants",
+    canonicalHref: "/ai/optimizers#effective-batch",
   },
   "exponential-moving-average": {
     id: "exponential-moving-average",
@@ -2866,7 +2866,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Exponential moving average",
     definition:
       "과거 값에 시간에 따라 지수적으로 작아지는 weight를 부여해 전체 history를 state 하나로 요약하는 재귀 평균입니다.",
-    canonicalHref: "/ai/optimizers#momentum",
+    canonicalHref: "/ai/momentum-optimizer#ema",
   },
   "momentum-state": {
     id: "momentum-state",
@@ -2874,7 +2874,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Momentum velocity",
     definition:
       "과거 gradient 방향을 지수적으로 감쇠해 누적함으로써 일관된 방향은 강화하고 번갈아 나타나는 방향은 상쇄하는 optimizer state입니다.",
-    canonicalHref: "/ai/optimizers#momentum",
+    canonicalHref: "/ai/momentum-optimizer#velocity",
   },
   "raw-gradient-moments": {
     id: "raw-gradient-moments",
@@ -2882,7 +2882,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Gradient raw moments",
     definition:
       "Adam이 gradient와 gradient 제곱의 exponential average로 추적하는 first·second raw moment이며 centered variance와 구분합니다.",
-    canonicalHref: "/ai/optimizers#adam",
+    canonicalHref: "/ai/adam-optimizer#moments",
   },
   "ema-bias-correction": {
     id: "ema-bias-correction",
@@ -2890,7 +2890,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "EMA initialization bias correction",
     definition:
       "0에서 시작한 exponential moving average가 초기에 작게 추정되는 효과를 1−βᵗ로 나누어 보정합니다.",
-    canonicalHref: "/ai/optimizers#adam",
+    canonicalHref: "/ai/adam-optimizer#bias-correction",
   },
   "adaptive-preconditioning": {
     id: "adaptive-preconditioning",
@@ -2898,15 +2898,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Adaptive diagonal preconditioning",
     definition:
       "Coordinate별 gradient history scale로 update를 나누어 하나의 global learning rate를 서로 다른 effective step으로 바꿉니다.",
-    canonicalHref: "/ai/optimizers#adam",
-  },
-  "decoupled-weight-decay": {
-    id: "decoupled-weight-decay",
-    domain: "machine-learning",
-    label: "Decoupled weight decay",
-    definition:
-      "Weight shrinkage를 adaptive gradient transformation 안에 넣지 않고 parameter update의 별도 항으로 적용합니다.",
-    canonicalHref: "/ai/optimizers#adamw",
+    canonicalHref: "/ai/adam-optimizer#preconditioning",
   },
   "training-step": {
     id: "training-step",
@@ -22102,13 +22094,13 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   },
   {
     from: "adaptive-preconditioning",
-    to: "decoupled-weight-decay",
+    to: "decoupled-adaptive-weight-decay",
     relation: "contrasts",
     reason:
       "Task gradient의 adaptive scale과 direct parameter shrinkage를 분리합니다.",
   },
   {
-    from: "decoupled-weight-decay",
+    from: "decoupled-adaptive-weight-decay",
     to: "optimizer-update",
     relation: "extends",
     reason: "Adaptive task update에 별도의 multiplicative shrink를 추가합니다.",

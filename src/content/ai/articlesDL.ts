@@ -124,7 +124,8 @@ export const dlFoundationArticles: Article[] = [
       { id: "chain-rule", title: "연결된 rate를 곱하는 이유" },
       { id: "nonsmooth", title: "Subgradient와 구현 경계" },
     ],
-    component: () => import("@/pages/articles/ai/math-functions-derivatives-gradients"),
+    component: () =>
+      import("@/pages/articles/ai/math-functions-derivatives-gradients"),
   },
   {
     slug: "math-gradients-jacobians",
@@ -170,7 +171,8 @@ export const dlFoundationArticles: Article[] = [
   },
   {
     slug: "math-probability-expectation-variance",
-    title: "Probability experiment와 conditional probability: 경우를 먼저 세는 법",
+    title:
+      "Probability experiment와 conditional probability: 경우를 먼저 세는 법",
     subcategory: "ai-foundations",
     sections: [
       { id: "overview", title: "실험·sample space·outcome" },
@@ -245,7 +247,8 @@ export const dlFoundationArticles: Article[] = [
       { id: "convergence", title: "Convergence guarantee" },
       { id: "stopping-boundary", title: "Stationary와 stopping signal" },
     ],
-    component: () => import("@/pages/articles/ai/math-gradient-descent-convergence"),
+    component: () =>
+      import("@/pages/articles/ai/math-gradient-descent-convergence"),
   },
   {
     slug: "perceptron",
@@ -349,17 +352,42 @@ export const dlFoundationArticles: Article[] = [
   },
   {
     slug: "optimizers",
-    title: "옵티마이저: SGD에서 AdamW까지",
+    title: "SGD와 Effective Batch: Gradient를 한 Update로",
     subcategory: "ai-foundations",
     sections: [
-      { id: "overview", title: "Gradient를 parameter update로 바꾸기" },
-      { id: "sgd", title: "SGD (확률적 경사 하강법)" },
-      { id: "batch-variants", title: "Batch / Stochastic / Mini-batch" },
-      { id: "momentum", title: "Momentum (관성)" },
-      { id: "adam", title: "Adam (적응적 학습률)" },
-      { id: "adamw", title: "AdamW (Decoupled Weight Decay)" },
+      { id: "overview", title: "Gradient와 update의 역할" },
+      { id: "update-contract", title: "Update contract" },
+      { id: "gradient-estimate", title: "Mini-batch estimate" },
+      { id: "sgd-update", title: "SGD update" },
+      { id: "effective-batch", title: "Gradient accumulation" },
+      { id: "release-boundary", title: "Update receipt" },
     ],
     component: () => import("@/pages/articles/ai/optimizers"),
+  },
+  {
+    slug: "momentum-optimizer",
+    title: "Momentum: Gradient History를 Velocity로",
+    subcategory: "ai-foundations",
+    sections: [
+      { id: "overview", title: "왜 과거 방향을 기억하나" },
+      { id: "ema", title: "Exponential moving average" },
+      { id: "velocity", title: "Momentum velocity" },
+      { id: "damping-boundary", title: "Overshoot와 검증 경계" },
+    ],
+    component: () => import("@/pages/articles/ai/momentum-optimizer"),
+  },
+  {
+    slug: "adam-optimizer",
+    title: "Adam: Raw Moments에서 Adaptive Step까지",
+    subcategory: "ai-foundations",
+    sections: [
+      { id: "overview", title: "두 optimizer state" },
+      { id: "moments", title: "First·second raw moments" },
+      { id: "bias-correction", title: "Initialization bias correction" },
+      { id: "preconditioning", title: "Coordinate preconditioning" },
+      { id: "release-boundary", title: "State와 convergence 경계" },
+    ],
+    component: () => import("@/pages/articles/ai/adam-optimizer"),
   },
   {
     slug: "cross-entropy",
@@ -410,7 +438,8 @@ export const dlFoundationArticles: Article[] = [
       { id: "skipgram", title: "Center에서 context로" },
       { id: "hierarchical", title: "Vocabulary를 tree path로" },
     ],
-    component: () => import("@/pages/articles/ai/word2vec-prediction-objectives"),
+    component: () =>
+      import("@/pages/articles/ai/word2vec-prediction-objectives"),
   },
   {
     slug: "word2vec-negative-sampling",

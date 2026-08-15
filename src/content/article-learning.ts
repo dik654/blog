@@ -4851,404 +4851,110 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/optimizers": {
-    coreIdea:
-      "Optimizer는 stochastic gradient estimate를 실제 parameter update로 바꿉니다. SGD는 현재 estimate와 global learning rate를 쓰고, Momentum은 과거 방향의 EMA를, Adam은 gradient raw moments와 bias correction을, AdamW는 adaptive task update와 direct weight shrinkage의 분리를 추가합니다.",
-    assumedKnowledge: [
-      {
-        id: "gradient",
-        role: "Loss의 parameter별 local sensitivity와 negative descent direction을 읽습니다.",
-      },
-      {
-        id: "stochastic-gradient-estimator",
-        role: "Mini-batch gradient를 full empirical gradient의 noisy estimate로 해석합니다.",
-      },
-      {
-        id: "expectation",
-        role: "Sampling을 반복했을 때 gradient estimate가 가리키는 population 기준을 해석합니다.",
-      },
-      {
-        id: "variance",
-        role: "Batch와 gradient sequence의 흔들림을 second raw moment와 구분합니다.",
-      },
-      {
-        id: "gradient-descent",
-        role: "Negative gradient와 learning rate로 만드는 기준 first-order update입니다.",
-      },
-      {
-        id: "optimization-convergence",
-        role: "Optimizer 수렴 주장에 필요한 objective·smoothness·step-size 전제를 확인합니다.",
-      },
-    ],
+    entryLevel: true,
+    entryNote: "Gradient와 parameter를 처음 보는 독자도 scalar update와 micro-batch 장부에서 시작합니다.",
+    coreIdea: "SGD의 출발점은 backward가 만든 noisy gradient estimate와 optimizer가 소유하는 parameter displacement를 분리하고, 여러 micro-batch를 한 update clock에 정확히 묶는 것입니다.",
+    assumedKnowledge: [],
     introducedHere: [
-      {
-        id: "optimizer-update",
-        role: "Gradient와 optimizer state에서 다음 parameter를 정하는 공통 책임을 정의합니다.",
-      },
-      {
-        id: "sgd-update",
-        role: "현재 mini-batch gradient에 global learning rate를 곱하는 기준 update를 만듭니다.",
-      },
-      {
-        id: "gradient-accumulation",
-        role: "여러 micro-batch gradient를 한 effective batch update로 합칩니다.",
-      },
-      {
-        id: "exponential-moving-average",
-        role: "과거 gradient에 지수적으로 작아지는 weight를 주어 state 하나로 요약합니다.",
-      },
-      {
-        id: "momentum-state",
-        role: "일관된 gradient 방향은 강화하고 번갈아 나타나는 좌표는 상쇄합니다.",
-      },
-      {
-        id: "raw-gradient-moments",
-        role: "Adam의 first·second raw moment EMA를 centered variance와 구분합니다.",
-      },
-      {
-        id: "ema-bias-correction",
-        role: "0 initialization이 초기 EMA를 작게 만드는 효과를 보정합니다.",
-      },
-      {
-        id: "adaptive-preconditioning",
-        role: "Squared-gradient history로 coordinate별 effective step을 조절합니다.",
-      },
-      {
-        id: "decoupled-weight-decay",
-        role: "Adam adaptation과 weight shrinkage를 서로 다른 update 항으로 분리합니다.",
-      },
+      { id: "optimizer-update", role: "Gradient와 optimizer state를 실제 parameter displacement로 바꾸는 책임을 정의합니다." },
+      { id: "sgd-update", role: "현재 mini-batch gradient의 반대 방향에 global learning rate를 곱합니다." },
+      { id: "gradient-accumulation", role: "여러 micro-batch gradient를 parameter update 하나로 합칩니다." },
     ],
     conceptExplanations: [
-      {
-        id: "optimizer-update",
-        sectionId: "overview",
-        intuition:
-          "Backpropagation이 알려 준 방향을 실제 parameter 이동으로 바꾸는 운전 규칙입니다.",
-        workedExample:
-          "같은 gradient (2,−1)을 받아도 SGD는 η를 곱하고 Adam은 coordinate별 history scale로 나눈 뒤 이동합니다.",
-        boundary:
-          "Optimizer는 gradient를 계산하지 않으며 global optimum이나 generalization을 단독으로 보장하지 않습니다.",
-      },
-      {
-        id: "sgd-update",
-        sectionId: "sgd",
-        intuition:
-          "현재 mini-batch가 가리킨 uphill 방향의 정반대로 정해진 보폭만큼 이동합니다.",
-        workedExample:
-          "g=4, η=0.1이면 parameter update는 −0.4이며 θ=3은 2.6이 됩니다.",
-        boundary:
-          "Estimate noise와 curvature 때문에 한 step의 loss가 항상 줄지는 않으며 convergence에는 schedule·objective 전제가 필요합니다.",
-      },
-      {
-        id: "gradient-accumulation",
-        sectionId: "batch-variants",
-        intuition:
-          "Memory에 한 번에 넣지 못하는 큰 batch를 여러 조각으로 계산해 gradient 장부에 모읍니다.",
-        workedExample:
-          "Micro-batch 4를 8번 평균내고 한 번 update하면 effective batch 32입니다.",
-        boundary:
-          "Loss scale을 맞추고 중간 update를 하지 않아야 합니다. BatchNorm·dropout·data order까지 큰 batch와 완전히 같지는 않습니다.",
-      },
-      {
-        id: "exponential-moving-average",
-        sectionId: "momentum",
-        intuition:
-          "과거 전체를 저장하지 않고 오래된 값일수록 β의 거듭제곱만큼 희미하게 남기는 평균입니다.",
-        workedExample:
-          "β=0.9이면 10 step 전 gradient의 현재 weight는 0.9¹⁰≈0.35입니다.",
-        boundary:
-          "Hard window의 최근 10개 평균이 아니며 (1−β)를 쓰는 normalized EMA와 쓰지 않는 momentum convention의 scale을 구분해야 합니다.",
-      },
-      {
-        id: "momentum-state",
-        sectionId: "momentum",
-        intuition:
-          "여러 step 동안 유지되는 방향을 관성처럼 누적하고 좌우로 번갈아 나오는 방향은 상쇄합니다.",
-        workedExample:
-          "Gradient가 계속 +1이면 unnormalized β=0.9 velocity는 1,1.9,2.71로 커집니다.",
-        boundary:
-          "Momentum이 saddle을 항상 탈출하거나 overshoot를 없앤다는 보장은 없으며 β·η·curvature 상호작용을 봐야 합니다.",
-      },
-      {
-        id: "raw-gradient-moments",
-        sectionId: "adam",
-        intuition:
-          "Gradient의 signed center와 squared scale을 각각 최근 history에서 추적하는 두 장부입니다.",
-        workedExample:
-          "β₁=0.9, β₂=0.999, 첫 gradient g=2이면 m₁=0.2, v₁=0.004입니다.",
-        boundary:
-          "v는 E[g²] 계열의 raw second moment이며 E[(g−E[g])²]인 centered variance와 같지 않습니다.",
-      },
-      {
-        id: "ema-bias-correction",
-        sectionId: "adam",
-        intuition:
-          "빈 장부 0에서 시작해 초기에 실제보다 작은 EMA를 분모 1−βᵗ로 되돌립니다.",
-        workedExample:
-          "Constant g에서 첫 m₁=(1−β₁)g를 1−β₁로 나누면 g를 복원합니다.",
-        boundary:
-          "Bias correction은 gradient estimator의 dataset sampling bias나 model bias를 고치는 장치가 아닙니다.",
-      },
-      {
-        id: "adaptive-preconditioning",
-        sectionId: "adam",
-        intuition:
-          "최근 squared gradient가 큰 좌표는 짧게, 작은 좌표는 상대적으로 길게 걷도록 coordinate scale을 바꿉니다.",
-        workedExample:
-          "같은 m̂이라도 v̂=100인 좌표는 √v̂=10으로 나누고 v̂=1인 좌표는 1로 나눕니다.",
-        boundary:
-          "Full Hessian을 사용하는 second-order method가 아니며 ε와 precision·scale에 따라 작은 coordinate update가 달라집니다.",
-      },
-      {
-        id: "decoupled-weight-decay",
-        sectionId: "adamw",
-        intuition:
-          "Task gradient의 방향 조절과 weight 자체를 조금 줄이는 규칙을 서로 다른 항으로 둡니다.",
-        workedExample:
-          "Task gradient가 0이어도 AdamW는 θ를 매 step (1−ηλ)배로 줄입니다.",
-        boundary:
-          "Weight norm 감소가 validation 향상을 자동 보장하지 않으며 parameter group과 library convention을 확인해야 합니다.",
-      },
+      { id: "optimizer-update", sectionId: "update-contract", intuition: "Backward가 방향을 알려 주면 optimizer가 실제 보폭과 다음 위치를 정합니다.", workedExample: "Gradient g=4를 받은 SGD는 η=.1에서 displacement −.4를 만들지만 Adam은 history scale을 추가로 사용합니다.", boundary: "Optimizer는 gradient 자체를 계산하거나 global optimum·generalization을 보장하지 않습니다." },
+      { id: "sgd-update", sectionId: "sgd-update", intuition: "현재 batch가 가리킨 uphill 방향을 뒤집고 learning rate만큼 걷습니다.", workedExample: "θ=3,g=4,η=.1이면 Δ=−.4, θ+=2.6입니다.", boundary: "Noisy estimate와 curvature 때문에 한 step loss가 항상 감소하지는 않습니다." },
+      { id: "gradient-accumulation", sectionId: "effective-batch", intuition: "Memory에 못 넣는 큰 batch를 여러 조각으로 계산해 같은 gradient 장부에 모읍니다.", workedExample: "Micro-batch 4를 8번 평균하고 한 번 update하면 effective batch는 32입니다.", boundary: "Loss scale과 update 경계를 맞춰도 BatchNorm·dropout·data order까지 단일 batch와 완전히 같지는 않습니다." },
     ],
     conceptStages: [
-      {
-        label: "입력 signal",
-        relation:
-          "Backprop gradient와 sampling noise를 optimizer input으로 고정",
-        concepts: [
-          "gradient",
-          "expectation",
-          "variance",
-          "stochastic-gradient-estimator",
-        ],
-      },
-      {
-        label: "기준 update",
-        relation: "Global learning rate로 negative stochastic gradient step",
-        concepts: [
-          "gradient-descent",
-          "learning-rate",
-          "sgd-update",
-          "optimizer-update",
-        ],
-      },
-      {
-        label: "Batch",
-        relation: "Micro-batch 평균과 effective update 경계",
-        concepts: ["gradient-accumulation", "stochastic-gradient-estimator"],
-      },
-      {
-        label: "History",
-        relation: "Gradient sequence를 exponential state로 요약",
-        concepts: [
-          "exponential-moving-average",
-          "momentum-state",
-          "raw-gradient-moments",
-        ],
-      },
-      {
-        label: "Adaptive scale",
-        relation: "초기 bias를 보정하고 coordinate별 step 구성",
-        concepts: [
-          "raw-gradient-moments",
-          "ema-bias-correction",
-          "adaptive-preconditioning",
-          "optimizer-update",
-        ],
-      },
-      {
-        label: "Regularization",
-        relation: "Adaptive task update와 direct shrink 분리",
-        concepts: [
-          "adaptive-preconditioning",
-          "decoupled-weight-decay",
-          "optimizer-update",
-        ],
-      },
-      {
-        label: "검증",
-        relation: "Convergence 전제와 실제 validation·resource signal 분리",
-        concepts: ["optimization-convergence", "optimizer-update"],
-      },
+      { label: "책임 분리", relation: "Backward gradient와 optimizer displacement를 구분", concepts: ["optimizer-update"] },
+      { label: "기준 이동", relation: "Gradient 부호를 뒤집고 learning rate를 적용", concepts: ["sgd-update"] },
+      { label: "Update clock", relation: "Micro-batch gradient를 평균한 뒤 한 번만 parameter 변경", concepts: ["gradient-accumulation", "optimizer-update"] },
     ],
     exercises: [
-      {
-        level: "basic",
-        question:
-          "Mini-batch gradient g=(4,−2), learning rate η=0.1, parameter θ=(1,3)일 때 SGD의 다음 parameter를 계산할 수 있을까요?",
-        answerChecklist: [
-          "Update −ηg=(−0.4,0.2)를 계산한다.",
-          "θ_next=(0.6,3.2)를 구한다.",
-          "Gradient와 update의 부호를 구분한다.",
-        ],
-        requiredConcepts: ["gradient", "learning-rate", "sgd-update"],
-        sectionId: "sgd",
-      },
-      {
-        level: "basic",
-        question:
-          "Micro-batch 4를 8번 accumulation할 때 effective batch와 loss scale 조건을 설명할 수 있을까요?",
-        answerChecklist: [
-          "Effective batch 32를 계산한다.",
-          "각 micro gradient를 1/8로 평균내거나 전체 loss reduction을 맞춘다.",
-          "중간에 optimizer step을 하지 않는다고 설명한다.",
-        ],
-        requiredConcepts: [
-          "gradient-accumulation",
-          "stochastic-gradient-estimator",
-        ],
-        sectionId: "batch-variants",
-      },
-      {
-        level: "basic",
-        question:
-          "β=0.9, 초기 velocity 0, gradient가 1,1,1일 때 unnormalized momentum velocity 세 값을 계산할 수 있을까요?",
-        answerChecklist: [
-          "v1=1을 계산한다.",
-          "v2=1.9와 v3=2.71을 계산한다.",
-          "Normalized EMA convention과 scale이 다름을 말한다.",
-        ],
-        requiredConcepts: ["exponential-moving-average", "momentum-state"],
-        sectionId: "momentum",
-      },
-      {
-        level: "basic",
-        question:
-          "Backpropagation과 optimizer가 training step에서 각각 무엇을 계산하며, 같은 gradient를 받아도 SGD와 Adam의 update가 달라지는 이유를 설명할 수 있을까요?",
-        answerChecklist: [
-          "Backpropagation은 loss의 parameter별 gradient를 계산한다고 말한다.",
-          "Optimizer는 gradient와 자신의 state를 다음 parameter update로 바꾼다고 말한다.",
-          "SGD는 global learning rate를, Adam은 coordinate별 moment history scale을 사용한다고 구분한다.",
-          "Optimizer가 gradient 자체나 global optimum을 자동으로 만들어 주는 것은 아니라고 제한한다.",
-        ],
-        requiredConcepts: ["gradient", "optimizer-update", "sgd-update"],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "Adam에서 β₁=0.9, β₂=0.999, m₀=v₀=0, 첫 gradient g=2일 때 m₁·v₁과 bias-corrected m̂₁·v̂₁을 계산할 수 있을까요?",
-        answerChecklist: [
-          "m₁=(1−0.9)×2=0.2를 계산한다.",
-          "v₁=(1−0.999)×2²=0.004를 계산한다.",
-          "m̂₁=0.2/0.1=2와 v̂₁=0.004/0.001=4를 얻는다.",
-          "v가 centered variance가 아니라 squared-gradient raw moment라고 구분한다.",
-        ],
-        requiredConcepts: [
-          "raw-gradient-moments",
-          "ema-bias-correction",
-          "adaptive-preconditioning",
-        ],
-        sectionId: "adam",
-      },
-      {
-        level: "basic",
-        question:
-          "Task gradient가 0인 AdamW parameter θ=10에 η=0.01, λ=0.1을 적용하면 다음 θ는 얼마이고, 이 계산이 Adam 안의 L2 penalty와 다른 이유는 무엇일까요?",
-        answerChecklist: [
-          "Shrink factor 1−ηλ=0.999를 계산한다.",
-          "θ_next=0.999×10=9.99를 구한다.",
-          "AdamW decay가 task-gradient moment state와 별도 항이라고 설명한다.",
-          "Adam 내부 L2 penalty는 λθ가 m·v에 들어가 coordinate scaling을 받는다고 구분한다.",
-        ],
-        requiredConcepts: [
-          "decoupled-weight-decay",
-          "adaptive-preconditioning",
-          "optimizer-update",
-        ],
-        sectionId: "adamw",
-      },
-      {
-        level: "advanced",
-        question:
-          "Adam의 v가 gradient variance와 같지 않은 이유를 first·second raw moment와 centered second moment로 설명할 수 있을까요?",
-        answerChecklist: [
-          "v가 squared gradient EMA인 E[g²] 계열이라고 설명한다.",
-          "Variance는 E[g²]−E[g]² 또는 centered deviation이라고 구분한다.",
-          "m과 v가 서로 다른 decay를 써 단순 subtraction도 바로 적용할 수 없다고 제한한다.",
-        ],
-        requiredConcepts: [
-          "variance",
-          "raw-gradient-moments",
-          "exponential-moving-average",
-        ],
-        sectionId: "adam",
-      },
-      {
-        level: "advanced",
-        question:
-          "Constant first gradient에서 Adam bias correction이 m̂₁=g와 v̂₁=g²를 복원하는 과정을 계산할 수 있을까요?",
-        answerChecklist: [
-          "m1=(1−β1)g와 v1=(1−β2)g²를 적는다.",
-          "각각 1−βᵗ로 나눠 g와 g²를 얻는다.",
-          "Dataset sampling bias를 고치는 것이 아니라고 제한한다.",
-        ],
-        requiredConcepts: ["raw-gradient-moments", "ema-bias-correction"],
-        sectionId: "adam",
-      },
-      {
-        level: "advanced",
-        question:
-          "Adam 안의 L2 penalty와 AdamW direct decay가 같은 update가 아닌 이유를 v state와 coordinate scale로 설명할 수 있을까요?",
-        answerChecklist: [
-          "L2는 λθ가 g에 들어가 m·v를 모두 바꾼다고 설명한다.",
-          "AdamW는 task gradient와 별도로 −ηλθ를 적용한다고 적는다.",
-          "Plain SGD의 equivalence를 adaptive method에 일반화하면 안 된다고 말한다.",
-        ],
-        requiredConcepts: [
-          "adaptive-preconditioning",
-          "decoupled-weight-decay",
-          "optimizer-update",
-        ],
-        sectionId: "adamw",
-      },
-      {
-        level: "advanced",
-        question:
-          "두 optimizer를 비교할 때 epoch 수 하나로 결론내릴 수 없는 이유와 고정해야 할 실험 조건을 설계할 수 있을까요?",
-        answerChecklist: [
-          "Initial checkpoint·data order·effective batch·schedule·budget을 고정한다.",
-          "Training objective·validation metric·wall-clock·memory를 함께 측정한다.",
-          "Convex convergence theorem과 nonconvex empirical result의 범위를 구분한다.",
-        ],
-        requiredConcepts: [
-          "optimizer-update",
-          "optimization-convergence",
-          "stochastic-gradient-estimator",
-        ],
-        sectionId: "overview",
-      },
+      { level: "basic", question: "Backpropagation과 optimizer가 각각 만드는 값을 구분하세요.", answerChecklist: ["gradient", "optimizer state", "displacement", "next parameter"], requiredConcepts: ["optimizer-update"], sectionId: "update-contract" },
+      { level: "basic", question: "θ=3,g=4,η=.1인 scalar SGD의 다음 θ를 계산하세요.", answerChecklist: ["negative gradient", "delta -.4", "theta 2.6"], requiredConcepts: ["sgd-update"], sectionId: "sgd-update" },
+      { level: "basic", question: "θ=(1,3),g=(4,-2),η=.1의 다음 parameter를 계산하세요.", answerChecklist: ["delta (-.4,.2)", "theta (.6,3.2)", "coordinate-wise"], requiredConcepts: ["sgd-update"], sectionId: "sgd-update" },
+      { level: "basic", question: "Micro-batch 4를 8회 accumulation할 때 effective batch를 계산하세요.", answerChecklist: ["4 times 8", "32", "one update"], requiredConcepts: ["gradient-accumulation"], sectionId: "effective-batch" },
+      { level: "basic", question: "Accumulation 중 optimizer.step을 호출하면 안 되는 이유를 설명하세요.", answerChecklist: ["parameter snapshot changes", "not one mean", "eight updates"], requiredConcepts: ["gradient-accumulation", "optimizer-update"], sectionId: "effective-batch" },
+      { level: "basic", question: "Mean-loss convention에서 K개 micro gradient를 어떻게 scale해야 하나요?", answerChecklist: ["sum", "divide by K", "same objective scale"], requiredConcepts: ["gradient-accumulation"], sectionId: "effective-batch" },
+      { level: "advanced", question: "Data-parallel world size 4, micro-batch 2, accumulation 8의 effective batch와 update clock을 설계하세요.", answerChecklist: ["2 times 8 times 4", "64", "all-reduce convention", "one optimizer step"], requiredConcepts: ["gradient-accumulation", "optimizer-update"], sectionId: "effective-batch" },
+      { level: "advanced", question: "SGD 한 step에서 loss가 증가할 수 있는 반례와 진단을 설명하세요.", answerChecklist: ["noisy batch", "large LR or curvature", "full or validation metric", "trajectory"], requiredConcepts: ["sgd-update"], sectionId: "sgd-update" },
+      { level: "advanced", question: "Accumulation과 true large batch가 다른 실행을 만드는 조건을 분석하세요.", answerChecklist: ["BatchNorm", "dropout masks", "data order", "loss reduction", "paired test"], requiredConcepts: ["gradient-accumulation"], sectionId: "release-boundary" },
+      { level: "advanced", question: "SGD update release receipt와 resume test를 설계하세요.", answerChecklist: ["parameter revision", "gradient reduction", "micro and accumulation", "LR", "update index", "skip state", "rollback"], requiredConcepts: ["optimizer-update", "sgd-update", "gradient-accumulation"], sectionId: "release-boundary" },
     ],
     papers: [
-      {
-        title: "Adam: A Method for Stochastic Optimization",
-        href: "https://arxiv.org/abs/1412.6980",
-        problem:
-          "Noisy objective에서 gradient coordinate scale과 sparse signal 차이를 global learning rate 하나로 다루기 어려운 문제",
-        contribution:
-          "First·second raw moment EMA와 initialization bias correction을 결합한 coordinate-wise adaptive update",
-        assumptions:
-          "논문의 stochastic objective·bounded-gradient·convex regret analysis 조건과 공개 실험 설정을 전제로 읽음",
-        evidenceScope:
-          "원 논문의 convex online analysis와 logistic regression·MLP·CNN·autoencoder 실험 범위",
-        notClaim:
-          "모든 nonconvex model에서 기본 hyperparameter가 최선이거나 SGD보다 generalization이 항상 우수하다는 결론은 아님",
-        sectionId: "paper-adam",
-      },
-      {
-        title: "Decoupled Weight Decay Regularization",
-        href: "https://arxiv.org/abs/1711.05101",
-        problem:
-          "Adaptive gradient method에서 L2 penalty와 direct weight decay가 동일하지 않아 shrinkage가 coordinate adaptation에 섞이는 문제",
-        contribution:
-          "Weight decay를 adaptive gradient calculation 밖의 별도 parameter shrinkage 항으로 분리",
-        assumptions:
-          "논문에서 분석·실험한 optimizer convention, schedule, image classification과 language-model 조건을 전제로 함",
-        evidenceScope:
-          "SGD·Adam 계열의 regularization 비교와 논문 benchmark 범위",
-        notClaim:
-          "AdamW가 모든 architecture·dataset·budget에서 가장 좋은 optimizer라는 결론은 아님",
-        sectionId: "paper-adamw",
-      },
+      { title: "A Stochastic Approximation Method", href: "https://doi.org/10.1214/aoms/1177729586", problem: "Noisy observation으로 미지의 root를 반복 추정하는 문제", contribution: "감소 step을 쓰는 stochastic approximation의 출발점을 제시", assumptions: "논문의 regression function·noise·step-size 조건", evidenceScope: "원 논문의 scalar stochastic-approximation 이론", notClaim: "현대 mini-batch SGD의 모든 nonconvex convergence나 generalization을 자동 보장한다는 뜻은 아님", sectionId: "paper-robbins-monro" },
+    ],
+  },
+  "ai/momentum-optimizer": {
+    entryLevel: true,
+    entryNote: "과거 전체를 저장하지 않는 재귀 평균과 velocity의 차이부터 시작합니다.",
+    coreIdea: "Momentum은 gradient history를 exponential state 하나로 압축해 일관된 방향을 강화하지만, decay convention·learning rate·curvature가 만든 overshoot를 함께 검증해야 합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "exponential-moving-average", role: "오래된 signal에 β의 거듭제곱 weight를 주어 history를 state 하나로 요약합니다." },
+      { id: "momentum-state", role: "감쇠된 과거 gradient와 현재 gradient를 합쳐 parameter update direction을 만듭니다." },
+    ],
+    conceptExplanations: [
+      { id: "exponential-moving-average", sectionId: "ema", intuition: "오래된 메모일수록 투명하게 만들어 한 장의 현재 메모에 겹칩니다.", workedExample: "β=.9이면 10 step 전 signal의 상대 weight는 .9¹⁰≈.35입니다.", boundary: "최근 10개 hard-window 평균이 아니며 normalized·unnormalized convention을 구분합니다." },
+      { id: "momentum-state", sectionId: "velocity", intuition: "계속 같은 방향은 관성처럼 커지고 좌우로 번갈아 나온 방향은 상쇄됩니다.", workedExample: "v₀=0,β=.9,g=1,1,1이면 velocity는 1,1.9,2.71입니다.", boundary: "큰 β와 η는 minimum을 지나칠 수 있으며 saddle 탈출이나 convergence를 자동 보장하지 않습니다." },
+    ],
+    conceptStages: [
+      { label: "History", relation: "과거 gradient를 time-decayed state로 요약", concepts: ["exponential-moving-average"] },
+      { label: "Velocity", relation: "EMA 계열 state를 optimizer direction으로 사용", concepts: ["momentum-state"] },
+      { label: "Boundary", relation: "Oscillation 감소와 overshoot·stale direction을 함께 측정", concepts: ["exponential-moving-average", "momentum-state"] },
+    ],
+    exercises: [
+      { level: "basic", question: "β=.9일 때 10 step 전 signal의 상대 weight를 계산하세요.", answerChecklist: [".9 power 10", "about .349", "exponential decay"], requiredConcepts: ["exponential-moving-average"], sectionId: "ema" },
+      { level: "basic", question: "Normalized EMA에서 과거 보존분과 현재 신규분을 쓰세요.", answerChecklist: ["beta m previous", "one minus beta times g", "sum"], requiredConcepts: ["exponential-moving-average"], sectionId: "ema" },
+      { level: "basic", question: "β=.9,g=1,1,1인 unnormalized velocity 세 값을 계산하세요.", answerChecklist: ["1", "1.9", "2.71"], requiredConcepts: ["momentum-state"], sectionId: "velocity" },
+      { level: "basic", question: "Alternating gradient +1,-1,+1에서 상쇄가 일어나는 이유를 설명하세요.", answerChecklist: ["decayed prior", "opposite sign", "partial cancellation"], requiredConcepts: ["momentum-state"], sectionId: "velocity" },
+      { level: "basic", question: "EMA와 최근 K개 단순 평균의 차이를 설명하세요.", answerChecklist: ["no hard cutoff", "geometric weights", "one state"], requiredConcepts: ["exponential-moving-average"], sectionId: "ema" },
+      { level: "basic", question: "Velocity를 parameter update로 바꾸는 η의 역할을 설명하세요.", answerChecklist: ["global scale", "subtract velocity", "displacement"], requiredConcepts: ["momentum-state"], sectionId: "velocity" },
+      { level: "advanced", question: "Normalized EMA와 unnormalized momentum 값을 혼용하면 생기는 scale 오류를 계산하세요.", answerChecklist: ["one minus beta factor", "different steady state", "LR interaction", "convention receipt"], requiredConcepts: ["exponential-moving-average", "momentum-state"], sectionId: "velocity" },
+      { level: "advanced", question: "Sharp quadratic에서 momentum overshoot가 생기는 경로를 설명하세요.", answerChecklist: ["stored velocity", "minimum crossing", "late reversal", "beta LR curvature"], requiredConcepts: ["momentum-state"], sectionId: "damping-boundary" },
+      { level: "advanced", question: "SGD와 momentum을 공정하게 비교하는 trajectory 실험을 설계하세요.", answerChecklist: ["same init", "same data order", "same effective batch", "same budget", "loss update norm validation"], requiredConcepts: ["momentum-state"], sectionId: "damping-boundary" },
+      { level: "advanced", question: "Momentum checkpoint와 release gate를 설계하세요.", answerChecklist: ["parameter identity", "velocity", "beta", "LR schedule", "update index", "resume parity", "rollback"], requiredConcepts: ["exponential-moving-average", "momentum-state"], sectionId: "damping-boundary" },
+    ],
+    papers: [
+      { title: "Some Methods of Speeding Up the Convergence of Iteration Methods", href: "https://doi.org/10.1016/0041-5553(64)90137-5", problem: "현재 iterate 하나만 사용하는 반복법이 narrow curvature에서 느리게 전진하고 방향을 번갈아 바꾸는 수렴 문제", contribution: "이전 iterate를 사용하는 multi-step acceleration 계열을 분석", assumptions: "논문의 objective·iteration·parameter 조건", evidenceScope: "원문의 deterministic iteration 분석", notClaim: "현대 stochastic deep network에서 β=.9가 보편 최적이거나 overshoot가 사라진다는 뜻은 아님", sectionId: "paper-polyak" },
+    ],
+  },
+  "ai/adam-optimizer": {
+    entryLevel: true,
+    entryNote: "Signed gradient·squared gradient 두 숫자 장부에서 시작해 bias correction과 coordinate scale을 쌓습니다.",
+    coreIdea: "Adam은 gradient의 first·second raw-moment EMA를 따로 추적하고 초기 0 bias를 보정한 뒤 coordinate별 history scale로 나누지만, centered variance·full curvature·보편 convergence와 동일시하면 안 됩니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "raw-gradient-moments", role: "Gradient와 gradient 제곱의 EMA를 first·second raw moment로 추적합니다." },
+      { id: "ema-bias-correction", role: "0 initialization 때문에 초기 EMA가 작아지는 scale을 1−βᵗ로 보정합니다." },
+      { id: "adaptive-preconditioning", role: "Squared-gradient history로 coordinate별 effective step을 조절합니다." },
+    ],
+    conceptExplanations: [
+      { id: "raw-gradient-moments", sectionId: "moments", intuition: "Signed 방향 장부와 부호 없는 squared magnitude 장부를 따로 유지합니다.", workedExample: "β₁=.9,β₂=.999,g=2이면 첫 m=.2, v=.004입니다.", boundary: "v는 E[g²] 계열이며 centered variance E[(g−E[g])²]가 아닙니다." },
+      { id: "ema-bias-correction", sectionId: "bias-correction", intuition: "빈 장부 0에서 시작해 초기에 작아진 EMA를 지금까지 들어온 coefficient mass로 나눕니다.", workedExample: "m₁=.2를 1−.9=.1로 나누면 m̂₁=2입니다.", boundary: "Dataset sampling bias나 model bias를 교정하는 장치가 아닙니다." },
+      { id: "adaptive-preconditioning", sectionId: "preconditioning", intuition: "최근 gradient가 컸던 좌표는 짧게, 작았던 좌표는 상대적으로 길게 걷습니다.", workedExample: "같은 m̂에서 v̂=1은 1로, v̂=100은 10으로 나눕니다.", boundary: "Diagonal history scale이지 full Hessian inverse가 아니며 ε·dtype·trajectory에 의존합니다." },
+    ],
+    conceptStages: [
+      { label: "Moment state", relation: "Signed gradient와 squared scale을 별도 EMA로 저장", concepts: ["raw-gradient-moments"] },
+      { label: "Initialization", relation: "두 state의 누적 coefficient mass를 보정", concepts: ["ema-bias-correction"] },
+      { label: "Adaptive step", relation: "Corrected direction을 coordinate scale로 나눔", concepts: ["adaptive-preconditioning"] },
+    ],
+    exercises: [
+      { level: "basic", question: "β₁=.9,β₂=.999,g=2,m₀=v₀=0의 m₁과 v₁을 계산하세요.", answerChecklist: ["m .2", "g squared 4", "v .004"], requiredConcepts: ["raw-gradient-moments"], sectionId: "moments" },
+      { level: "basic", question: "v가 centered gradient variance가 아닌 이유를 설명하세요.", answerChecklist: ["EMA of g squared", "no mean subtraction", "raw second moment"], requiredConcepts: ["raw-gradient-moments"], sectionId: "moments" },
+      { level: "basic", question: "첫 step의 m̂₁과 v̂₁을 계산하세요.", answerChecklist: ["divide by .1", "divide by .001", "m hat 2", "v hat 4"], requiredConcepts: ["ema-bias-correction"], sectionId: "bias-correction" },
+      { level: "basic", question: "Bias correction의 t가 무엇을 세는지 설명하세요.", answerChecklist: ["optimizer updates", "not micro batches", "skip convention"], requiredConcepts: ["ema-bias-correction"], sectionId: "bias-correction" },
+      { level: "basic", question: "같은 m̂에서 v̂=1과 100의 denominator를 비교하세요.", answerChecklist: ["1", "10", "second step one tenth"], requiredConcepts: ["adaptive-preconditioning"], sectionId: "preconditioning" },
+      { level: "basic", question: "ε가 denominator에 필요한 이유를 설명하세요.", answerChecklist: ["zero division", "tiny scale", "precision convention"], requiredConcepts: ["adaptive-preconditioning"], sectionId: "preconditioning" },
+      { level: "advanced", question: "m과 v가 서로 다른 decay를 쓸 때 variance처럼 m²를 빼면 안 되는 이유를 설명하세요.", answerChecklist: ["different weighting", "different time scale", "not matched moments", "centered definition absent"], requiredConcepts: ["raw-gradient-moments"], sectionId: "moments" },
+      { level: "advanced", question: "Adam state가 특정 convex sequence에서 convergence를 방해할 수 있는 경로를 설명하세요.", answerChecklist: ["history-dependent denominator", "effective step", "counterexample scope", "not universal divergence"], requiredConcepts: ["adaptive-preconditioning"], sectionId: "release-boundary" },
+      { level: "advanced", question: "Adam과 SGD를 공정하게 비교하는 실험을 설계하세요.", answerChecklist: ["same init and data", "same update budget", "tuned LR", "training and validation", "memory and wall time"], requiredConcepts: ["raw-gradient-moments", "adaptive-preconditioning"], sectionId: "release-boundary" },
+      { level: "advanced", question: "Adam checkpoint·resume release gate를 설계하세요.", answerChecklist: ["parameter identity", "m v step", "beta epsilon dtype", "LR schedule", "skip order", "resume parity", "rollback"], requiredConcepts: ["raw-gradient-moments", "ema-bias-correction", "adaptive-preconditioning"], sectionId: "release-boundary" },
+    ],
+    papers: [
+      { title: "Adam: A Method for Stochastic Optimization", href: "https://arxiv.org/abs/1412.6980", problem: "Noisy·sparse gradient의 coordinate scale 차이", contribution: "First·second raw-moment EMA와 initialization bias correction을 결합한 adaptive update", assumptions: "논문의 stochastic objective·bounded-gradient·online convex analysis와 실험 조건", evidenceScope: "원문의 regret analysis와 공개 benchmark", notClaim: "모든 nonconvex model에서 기본 hyperparameter가 최선이거나 SGD보다 항상 우월하다는 뜻은 아님", sectionId: "paper-adam" },
+      { title: "On the Convergence of Adam and Beyond", href: "https://arxiv.org/abs/1904.09237", problem: "Adaptive history가 특정 convex example에서 convergence를 깨뜨릴 수 있는 문제", contribution: "Failure example과 장기 memory 조건을 분석", assumptions: "논문의 convex online optimization construction", evidenceScope: "Adam convergence claim의 경계와 제안 variant", notClaim: "모든 실제 Adam training이 발산한다는 뜻은 아님", sectionId: "paper-adam-convergence" },
     ],
   },
   "ai/rnn": {

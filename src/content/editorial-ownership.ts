@@ -8359,6 +8359,24 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "standard", rule: "Unbiasedness·variance 감소·finite-step descent·nonconvex global convergence를 서로 다른 보장으로 기록한다." },
     ],
   },
+  optimizers: {
+    title: "SGD와 effective-batch 글이 소유하는 범위",
+    owns: ["Gradient 계산과 optimizer displacement의 책임 경계", "Mini-batch SGD와 accumulation update clock"],
+    reuses: [{ label: "Gradient·backpropagation", href: "/ai/backprop-optimization" }, { label: "Stochastic gradient estimator", href: "/ai/math-variance-sampling#mini-batch" }],
+    evidence: [{ kind: "primary-source", rule: "Stochastic approximation claim은 Robbins–Monro의 noise·step 조건 범위로 제한한다." }, { kind: "standard", rule: "Loss reduction·micro-batch·accumulation·world size·LR·update index를 함께 기록한다." }],
+  },
+  "momentum-optimizer": {
+    title: "Momentum optimizer 글이 소유하는 범위",
+    owns: ["Exponential moving average의 시간 감쇠", "Momentum velocity의 방향 강화·상쇄와 overshoot 경계"],
+    reuses: [{ label: "SGD update", href: "/ai/optimizers#sgd-update" }],
+    evidence: [{ kind: "primary-source", rule: "Momentum acceleration claim은 Polyak 원문의 objective·iteration 조건으로 제한한다." }, { kind: "standard", rule: "Momentum convention·β·LR·trajectory·update norm을 함께 기록한다." }],
+  },
+  "adam-optimizer": {
+    title: "Adam optimizer 글이 소유하는 범위",
+    owns: ["Gradient first·second raw-moment state", "EMA initialization bias correction과 diagonal preconditioning"],
+    reuses: [{ label: "EMA와 momentum", href: "/ai/momentum-optimizer" }, { label: "Decoupled weight decay", href: "/ai/weight-decay#adamw" }],
+    evidence: [{ kind: "primary-source", rule: "Adam update·convergence claim은 원 논문과 후속 counterexample의 stated objective·online setting 범위로 제한한다." }, { kind: "standard", rule: "m·v·step·β·ε·dtype·skip order와 parameter identity를 checkpoint에 기록한다." }],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

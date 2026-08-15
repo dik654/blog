@@ -975,15 +975,31 @@ export const ARTICLE_EVIDENCE: Readonly<
   "ai/optimizers": [
     {
       kind: "핵심 논문",
+      label: "A Stochastic Approximation Method",
+      href: "https://doi.org/10.1214/aoms/1177729586",
+      note: "Noisy observation과 반복 step을 연결한 stochastic approximation 출발점",
+    },
+  ],
+  "ai/momentum-optimizer": [
+    {
+      kind: "핵심 논문",
+      label: "Some Methods of Speeding Up the Convergence of Iteration Methods",
+      href: "https://doi.org/10.1016/0041-5553(64)90137-5",
+      note: "이전 iterate를 사용하는 multi-step acceleration의 고전 분석",
+    },
+  ],
+  "ai/adam-optimizer": [
+    {
+      kind: "핵심 논문",
       label: "Adam: A Method for Stochastic Optimization",
       href: "https://arxiv.org/abs/1412.6980",
-      note: "1·2차 moment와 bias correction을 결합한 Adam 원문",
+      note: "1·2차 raw moment와 bias correction을 결합한 Adam 원문",
     },
     {
       kind: "핵심 논문",
-      label: "Decoupled Weight Decay Regularization",
-      href: "https://arxiv.org/abs/1711.05101",
-      note: "L2 penalty와 adaptive optimizer의 weight decay를 구분한 AdamW 원문",
+      label: "On the Convergence of Adam and Beyond",
+      href: "https://arxiv.org/abs/1904.09237",
+      note: "Adaptive history가 만드는 convergence failure example과 경계",
     },
   ],
   "ai/cross-entropy": [
