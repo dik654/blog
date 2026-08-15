@@ -3083,6 +3083,14 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "지금까지의 token context를 recurrent hidden state로 요약하고 그 state에서 다음-token probability distribution을 만드는 autoregressive model입니다.",
     canonicalHref: "/ai/rnn-language-model#language-model",
   },
+  "vocabulary-logit-head": {
+    id: "vocabulary-logit-head",
+    domain: "machine-learning",
+    label: "Vocabulary logit head",
+    definition:
+      "Hidden representation H개를 vocabulary의 각 token에 대응하는 정규화 전 score |V|개로 affine projection하는 language-model output layer입니다.",
+    canonicalHref: "/ai/rnn-language-model#language-model",
+  },
   perplexity: {
     id: "perplexity",
     kind: "metric",
@@ -21662,6 +21670,34 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "produces",
     reason:
       "각 shifted pair가 sequence의 timestep별 next-token distribution training example이 됩니다.",
+  },
+  {
+    from: "lossy-recurrent-state",
+    to: "vocabulary-logit-head",
+    relation: "prerequisite",
+    reason:
+      "Output head는 원문 token 전체가 아니라 현재 hidden state의 H개 좌표만 입력으로 받습니다.",
+  },
+  {
+    from: "rnn-shifted-token-pair",
+    to: "vocabulary-logit-head",
+    relation: "constrains",
+    reason:
+      "한 칸 뒤 target의 vocabulary ID가 output logit vector에서 선택할 정답 row를 정합니다.",
+  },
+  {
+    from: "vocabulary-logit-head",
+    to: "rnn-language-model",
+    relation: "produces",
+    reason:
+      "Vocabulary별 logit을 softmax로 정규화해 recurrent state 조건의 다음-token distribution을 만듭니다.",
+  },
+  {
+    from: "softmax-normalization",
+    to: "rnn-language-model",
+    relation: "prerequisite",
+    reason:
+      "Vocabulary logit의 exponential mass를 공동 denominator로 나눠 합이 1인 categorical distribution을 만듭니다.",
   },
   {
     from: "time-unrolling",

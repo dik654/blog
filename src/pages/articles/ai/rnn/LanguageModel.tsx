@@ -25,11 +25,12 @@ export default function LanguageModel() {
       </div>
 
       <TermBreakdown
-        title="다음-token 학습의 다섯 물체를 먼저 분리합니다"
+        title="다음-token 학습의 여섯 물체를 먼저 분리합니다"
         items={[
           { term: "Input token wₜ", description: "현재 step에서 model에 실제로 넣는 token입니다.", example: "입력이 ‘나’라면 정답은 그 다음 token ‘간다’입니다.", boundary: "같은 위치의 token을 그대로 복원하는 목표가 아닙니다." },
           { term: "Shifted target wₜ₊₁", description: "현재 prefix 다음에 실제로 나타난 한 칸 뒤 token입니다.", example: "[BOS, 나, 간다, EOS]는 BOS→나, 나→간다, 간다→EOS가 됩니다.", boundary: "Padding은 loss mask에서 제외합니다." },
-          { term: "Logit zₜ", description: "Hidden state를 vocabulary 각 token의 정규화 전 점수로 투영한 vector입니다.", boundary: "Probability가 아니므로 합이 1일 필요가 없습니다." },
+          { term: "Vocabulary logit head Wᵧₕ,bᵧ", description: "H개 hidden 좌표를 vocabulary token 수 |V|만큼의 score로 펼치는 affine output layer입니다.", example: "H=2이고 vocabulary가 3개면 Wᵧₕ는 3×2이고, hₜ 하나에서 logit 3개를 만듭니다.", boundary: "State를 저장하는 memory가 아니라 현재 state를 읽어 score를 만드는 projection입니다." },
+          { term: "Logit zₜ", description: "Output head가 vocabulary의 각 token에 붙인 정규화 전 점수 vector입니다.", boundary: "Probability가 아니므로 합이 1일 필요가 없습니다." },
           { term: "Probability pₜ", description: "Softmax로 logits를 합이 1인 다음-token distribution으로 바꾼 값입니다.", example: "pₜ[간다]=0.68은 현재 prefix 뒤 ‘간다’에 68% mass를 둔다는 뜻입니다." },
           { term: "NLL과 perplexity", description: "정답 token의 −log probability를 평균하고, 그 평균을 exp로 되돌린 두 평가 표현입니다.", boundary: "Corpus·tokenizer·mask가 다른 PPL은 숫자만 바로 비교하지 않습니다." },
         ]}

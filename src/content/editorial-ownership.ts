@@ -7734,6 +7734,7 @@ export const EDITORIAL_BOUNDARIES = {
     title: "RNN language model 글이 소유하는 범위",
     owns: [
       "Input과 target을 한 칸 이동한 token-pair objective",
+      "Hidden state를 vocabulary logit으로 투영하는 output head",
       "Recurrent state에서 vocabulary logits·probability를 만드는 경로",
       "동일 tokenizer·corpus·mask 안의 NLL·perplexity 해석",
     ],

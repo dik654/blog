@@ -1249,3 +1249,11 @@
 - Evidence→Change→Decision→Rule, Audience→Verify→Publish→Trace, Context→Options→Decision→History, Observe→Narrow→Test→Maintain을 flat 도형 pipeline으로 보여 주는 새 animated Viz 4개를 만들었다. 모바일은 세로 흐름, desktop은 가로 흐름으로 재배치하며 `ArrowLeft`·`ArrowRight`와 `Space` 자동 재생을 실제 focus 상태에서 검증했다.
 - 이 배치에는 계산 수식이 없어 설명과 무관한 식을 인위적으로 추가하지 않았다. 전역 formula 감사는 1,082개 중 explicit operation annotation 156개, 대기 926개·636 files 상태로 그대로 통과했다.
 - 390px·1440px 실제 브라우저 8회에서 document·모든 Viz·descendant overflow, console warning/error, gradient·shadow·굵은 선이 모두 0임을 확인하고 8 screenshots를 육안 검수했다. 전체 445개 learning·reading·graph·article·Viz·formula·term·topology 감사, route-resolution test, TypeScript와 production build를 통과했다.
+
+## 2026-08-15 · RNN · language-model graph-guided CRUD correction
+
+- `ai/rnn-language-model`의 기존 topology `merge-review`를 보고 처음에는 `ai/rnn`으로 병합했지만, 합친 결과가 7 concept·7 stage의 `split-review`가 되는 것을 즉시 확인했다. 병합을 유지하지 않고 두 route를 각각 완결된 4-stage 수업으로 되돌렸다. CRUD 결정을 고정 route 수나 첫 heuristic에 맞추지 않고 graph→route→graph로 재검증한 사례다.
+- LM 본문에는 이미 hidden state에서 vocabulary score를 만드는 계산이 있었지만 graph에는 독립 이름이 없었다. 이를 `vocabulary-logit-head` canonical concept로 승격하고 lossy state·shifted target·softmax·RNN-LM에 4개 관계로 연결했다. Graph는 2,380 concepts·3,560 relations가 되었고 445 public routes·exact contracts의 owner·isolation·stage invariant는 0이다.
+- 두 route는 topology `keep`이 되었고 전역 summary는 keep 372·rename-or-split-review 2·split-review 71이다. RNN은 state transition→lossy state→unroll→direction, RNN-LM은 shifted pair→vocabulary logit head→probability→NLL/PPL을 각각 소유한다.
+- 기존 텍스트 카드 중심 Viz를 현재 input·이전 state 원, 공유 transition 마름모, time rail, causal/bidirectional arrow, shifted token rail, state 육각형, vocabulary probability bar, loss 원형 pipeline으로 다시 그렸다. Active 장면에는 pulse animation을 넣고 `ArrowLeft`·`ArrowRight`와 `Space` 자동 재생을 실제 focus 상태에서 검증했다.
+- 두 route의 기존 수식 5개는 모두 operation별 `annotatedFormula`·`operations` 계약을 유지한다. 390px·1440px 실제 브라우저 4회에서 document·Viz·모든 descendant·formula overflow, console warning/error, gradient·shadow·굵은 선이 모두 0이며 두 route의 정적 learning·graph·article·Viz·term·route·TypeScript 검사를 통과했다.
