@@ -2924,29 +2924,40 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
   ],
   "ai/kimi-k3-architecture": [
-    source(
-      "공식 코드",
-      KIMI_K3_SOURCE,
-      "model summary·weights·technical report",
-    ),
+    source("공식 코드", KIMI_K3_SOURCE, "model summary·weights·technical report"),
     {
       kind: "핵심 논문",
       label: "Kimi K3: Open Frontier Intelligence",
       href: "https://arxiv.org/abs/2607.24653",
-      note: "2.8T configuration과 sequence·depth·width·training·serving의 공식 기술 보고서",
+      note: "전체 configuration과 sequence·depth·width 통합 scaling claim",
     },
+  ],
+  "ai/kimi-k3-sequence-mixer": [
     {
       kind: "핵심 논문",
-      label: "Kimi Linear: An Expressive, Efficient Attention Architecture",
+      label: "Kimi Linear",
       href: "https://arxiv.org/abs/2510.26692",
-      note: "KDA의 선행 구조와 recurrent-state 설계",
+      note: "KDA recurrence·bounded decay·chunk algorithm·hybrid schedule",
     },
+    source("공식 코드", KIMI_K3_SOURCE, "K3 69 KDA·24 Gated MLA configuration"),
+  ],
+  "ai/kimi-k3-depth-routing": [
     {
       kind: "핵심 논문",
       label: "Attention Residuals",
       href: "https://arxiv.org/abs/2603.15031",
-      note: "Depth pseudo-query와 Full·Block AttnRes의 공식 방법·복잡도·실험",
+      note: "Depth pseudo-query와 Full·Block AttnRes 방법·복잡도·실험",
     },
+    source("공식 코드", KIMI_K3_SOURCE, "K3 93-layer·8-block integration"),
+  ],
+  "ai/kimi-k3-latent-moe": [
+    {
+      kind: "핵심 논문",
+      label: "Kimi K3: Stable LatentMoE",
+      href: "https://arxiv.org/abs/2607.24653",
+      note: "Latent width·SiTU-GLU·RMSNorm·Quantile Balancing",
+    },
+    source("공식 코드", KIMI_K3_SOURCE, "K3 896/16 routed·2 shared expert configuration"),
   ],
   "ai/hybrid-attention-serving": [
     {

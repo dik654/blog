@@ -3522,28 +3522,68 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "kimi-k3-architecture": {
-    title: "Kimi K3 구조 글이 소유하는 범위",
+    title: "Kimi K3 전체 구조 글이 소유하는 범위",
     owns: [
-      "KDA recurrence·bounded decay와 23×(3 KDA+1 MLA)+final MLA sequence schedule",
-      "Full Attention Residuals에서 K3의 8-block state bound로 내려가는 depth 경로",
-      "LatentMoE·RMSNorm·SiTU-GLU·Quantile Balancing의 width·activation·load 계산",
-      "공개 configuration·component method·종합 scaling·harness benchmark의 evidence boundary",
+      "Sequence·depth·width를 독립 정보 이동 축으로 분해하는 전체 지도",
+      "69 KDA·24 MLA·93 main layer configuration 장부",
+      "Configuration·component·통합 scaling·benchmark evidence boundary",
     ],
     reuses: [
-      { label: "Attention 기본 원리", href: "/ai/attention-theory" },
-      { label: "MoE router·load·system cost", href: "/ai/mixture-of-experts" },
-      { label: "YaRN·RoPE 확장", href: "/ai/yarn-rope-extension" },
-      { label: "증류의 일반 분류", href: "/ai/knowledge-distillation" },
+      { label: "KDA와 Gated MLA", href: "/ai/kimi-k3-sequence-mixer" },
+      { label: "Block Attention Residuals", href: "/ai/kimi-k3-depth-routing" },
+      { label: "Stable LatentMoE", href: "/ai/kimi-k3-latent-moe" },
     ],
     evidence: [
-      {
-        kind: "primary-source",
-        rule: "크기·layer·expert·context와 KDA·AttnRes·Stable LatentMoE 식은 Kimi K3·Kimi Linear·Attention Residuals 원문을 따른다.",
-      },
-      {
-        kind: "project-claim",
-        rule: "왜 3:1인지, 특정 구성의 기여도처럼 ablation이 없는 해석은 추론으로 표시한다.",
-      },
+      { kind: "primary-source", rule: "공식 report·repository의 versioned configuration을 사용한다." },
+      { kind: "project-claim", rule: "약 2.5×는 통합 claim이며 component별 인과로 재분배하지 않는다." },
+    ],
+  },
+  "kimi-k3-sequence-mixer": {
+    title: "K3 sequence mixer 글이 소유하는 범위",
+    owns: [
+      "KDA retain·delta correction·read state",
+      "Lower-bounded decay와 cumulative retention 경계",
+      "3 KDA+1 Gated MLA schedule·latent cache·NoPE 경계",
+    ],
+    reuses: [
+      { label: "K3 전체 축 지도", href: "/ai/kimi-k3-architecture" },
+      { label: "Attention 기본 원리", href: "/ai/attention-theory" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Kimi Linear의 식·실험 조건과 K3의 실제 layer count를 분리한다." },
+      { kind: "project-claim", rule: "KV·throughput 수치를 model scale·kernel·hardware 밖으로 일반화하지 않는다." },
+    ],
+  },
+  "kimi-k3-depth-routing": {
+    title: "K3 depth routing 글이 소유하는 범위",
+    owns: [
+      "Layer pseudo-query와 depth key/value weighted read",
+      "Full·Block AttnRes source granularity",
+      "93 layer·12-layer block·8 block source-state 경계",
+    ],
+    reuses: [
+      { label: "K3 전체 축 지도", href: "/ai/kimi-k3-architecture" },
+      { label: "Residual과 normalization", href: "/ai/transformer-architecture#transformer-block" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Attention Residuals의 method·complexity·experiment 범위를 따른다." },
+      { kind: "project-claim", rule: "Depth weight를 semantic causality나 total-memory 절감률로 해석하지 않는다." },
+    ],
+  },
+  "kimi-k3-latent-moe": {
+    title: "K3 Stable LatentMoE 글이 소유하는 범위",
+    owns: [
+      "7168→3584→7168 routed width factorization과 shared path",
+      "SiTU-GLU coordinate soft cap과 RMSNorm 경계",
+      "Quantile Balancing target·next-step bias·histogram approximation",
+    ],
+    reuses: [
+      { label: "K3 전체 축 지도", href: "/ai/kimi-k3-architecture" },
+      { label: "MoE router와 system cost", href: "/ai/mixture-of-experts" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "K3 report의 Stable LatentMoE 식·configuration을 따른다." },
+      { kind: "project-claim", rule: "Width·activation·load 장치를 전체 scaling의 독립 원인으로 과장하지 않는다." },
     ],
   },
   "hybrid-attention-serving": {

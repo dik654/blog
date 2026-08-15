@@ -22488,479 +22488,255 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/kimi-k3-architecture": {
+    entryLevel: true,
+    entryNote:
+      "Transformer·MoE를 아직 모른다고 가정하고, K3를 sequence·depth·width 세 질문으로 먼저 분해합니다.",
     coreIdea:
-      "Kimi K3는 큰 MoE 하나가 아니라 sequence의 KDA+Gated MLA, depth의 Block Attention Residuals, width의 Stable LatentMoE를 결합해 각 축의 정보 이동 비용을 따로 재배분한 system입니다. 공개 configuration·component method·종합 scaling claim·harness benchmark의 근거 강도도 분리해 읽어야 합니다.",
-    assumedKnowledge: [
-      {
-        id: "attention-query-key-value",
-        role: "Query로 key를 비교하고 value를 읽는 attention의 주소·내용 역할을 재사용합니다.",
-      },
-      {
-        id: "rnn-state-transition",
-        role: "Token 순서에 따라 이전 state를 다음 state로 넘기는 recurrence를 읽습니다.",
-      },
-      {
-        id: "lossy-recurrent-state",
-        role: "고정 크기 state가 과거 token을 원형 그대로 보존하지 않는 압축 한계를 확인합니다.",
-      },
-      {
-        id: "multi-head-attention",
-        role: "여러 attention head와 causal global interaction의 기본 경로를 재사용합니다.",
-      },
-      {
-        id: "position-signal",
-        role: "명시적 positional encoding과 causal mask·recurrence의 순서 신호를 구분합니다.",
-      },
-      {
-        id: "residual-normalization",
-        role: "직전 state와 sublayer update를 더하는 표준 depth 경로를 출발점으로 삼습니다.",
-      },
-      {
-        id: "conditional-expert-ffn",
-        role: "Expert·router·Top-k의 일반 정의는 MoE 정본에서 재사용합니다.",
-      },
-      {
-        id: "expert-load-balance-target",
-        role: "mk/n 균등 load와 hot expert 진단을 Quantile Balancing의 목표로 사용합니다.",
-      },
-      {
-        id: "gated-ffn",
-        role: "Gate·value branch를 곱하는 SwiGLU 구조에서 SiTU-GLU를 확장합니다.",
-      },
-      {
-        id: "empirical-scaling-law",
-        role: "같은 loss에 도달하는 compute 비교를 관측 범위 안의 경험 claim으로 읽습니다.",
-      },
-    ],
+      "K3는 긴 token history, 깊은 layer source, 넓은 expert compute를 서로 다른 축으로 나누고 KDA–MLA·Block AttnRes·Stable LatentMoE에 맡긴 system입니다. 전체 scaling claim은 component별 인과 주장과 분리합니다.",
+    assumedKnowledge: [],
     introducedHere: [
       {
-        id: "kda-channelwise-delta-state",
-        role: "Sequence history를 고정 state에 retain·correct·read하는 KDA recurrence를 계산합니다.",
-      },
-      {
-        id: "kda-lower-bounded-decay",
-        role: "Retention의 log 범위를 제한한 이유와 장기 곱의 경계를 설명합니다.",
-      },
-      {
-        id: "kda-mla-hybrid-schedule",
-        role: "23×(3 KDA+1 MLA)+final MLA에서 69·24 layer 합계를 추적합니다.",
-      },
-      {
-        id: "gated-mla-latent-cache",
-        role: "Compressed KV latent와 output gate의 역할을 분리합니다.",
-      },
-      {
-        id: "nope-hybrid-position-signal",
-        role: "NoPE를 순서 정보 부재로 오해하지 않고 causal mask·recurrence·length training과 연결합니다.",
-      },
-      {
-        id: "depth-attention-residual",
-        role: "Depth source key/value와 layer pseudo-query로 residual input을 선택합니다.",
-      },
-      {
-        id: "block-attnres-state-bound",
-        role: "93 layer를 8 block으로 묶을 때 depth state와 선택 자유도의 trade-off를 계산합니다.",
-      },
-      {
-        id: "latent-moe-width-factorization",
-        role: "Full-width shared path와 half-width routed path의 output을 합칩니다.",
-      },
-      {
-        id: "situ-glu-smooth-bound",
-        role: "두 soft cap이 SwiGLU outlier를 coordinate-wise 100 이내로 제한하는 구조를 읽습니다.",
-      },
-      {
-        id: "quantile-expert-balancing",
-        role: "Margin quantile에서 다음-step dispatch bias를 구하고 mixture weight에서 bias를 제외합니다.",
+        id: "kimi-k3-axis-factorization",
+        role: "Sequence·depth·width 병목과 대응 mechanism을 분리합니다.",
       },
       {
         id: "frontier-scaling-evidence-boundary",
-        role: "구성·method·ablation·종합 scaling·harness benchmark를 다른 claim level로 분리합니다.",
+        role: "Configuration·method·ablation·통합 scaling·benchmark의 근거 강도를 나눕니다.",
       },
     ],
     conceptExplanations: [
       {
-        id: "kda-channelwise-delta-state",
-        sectionId: "hybrid-attention",
+        id: "kimi-k3-axis-factorization",
+        sectionId: "overview",
         intuition:
-          "모든 과거 메모를 쌓아 두는 대신 key로 찾을 수 있는 작은 노트 한 장을 유지하고, 새 내용이 오면 같은 key 방향의 기존 예측 오차만 고쳐 씁니다.",
+          "과거 token을 보관하는 문제, 이전 layer를 고르는 문제, expert 계산 폭을 정하는 문제를 한 단어로 뭉치지 않습니다.",
         workedExample:
-          "한 channel retention α=0.9, write β=0.2라면 이전 성분을 먼저 90% 남긴 뒤 현재 key가 지목한 예측 오차의 20%를 반영합니다.",
+          "KDA–MLA는 sequence, Block AttnRes는 depth, Stable LatentMoE는 width 비용을 담당합니다.",
         boundary:
-          "State 크기는 sequence와 함께 늘지 않지만 서로 다른 과거가 같은 state coordinate에서 간섭할 수 있고 exact token retrieval을 보장하지 않습니다.",
-      },
-      {
-        id: "kda-lower-bounded-decay",
-        sectionId: "hybrid-attention",
-        intuition:
-          "기억을 한 번에 거의 0으로 만들거나 수치 범위를 크게 흔들지 않도록 한 step의 log decay에 울타리를 둡니다.",
-        workedExample:
-          "gmin=−5이면 α=e^g는 한 step에서 e⁻⁵보다 크고 1보다 작지만, α=0.9를 100 step 곱하면 약 0.000027이므로 장기 memory가 보장되지는 않습니다.",
-        boundary:
-          "Bound는 numerical range와 kernel 설계를 돕는 장치이지 어떤 semantic information을 유지할지 결정하는 rule은 아닙니다.",
-      },
-      {
-        id: "kda-mla-hybrid-schedule",
-        sectionId: "hybrid-attention",
-        intuition:
-          "평소에는 압축 state로 저렴하게 읽고 일정 간격마다 과거 token을 직접 보는 global layer를 둡니다.",
-        workedExample:
-          "23 blocks×3 KDA=69, 23 blocks×1 MLA에 final MLA 하나를 더해 24 MLA와 총 93 layers가 됩니다.",
-        boundary:
-          "3:1은 공개 configuration이지 다른 비율보다 보편적으로 최적이라는 full-scale ablation 결론은 아닙니다.",
-      },
-      {
-        id: "gated-mla-latent-cache",
-        sectionId: "hybrid-attention",
-        intuition:
-          "Key와 value를 매번 full width로 따로 저장하는 대신 작은 공통 latent에 저장하고, 읽은 결과가 residual에 들어갈 양은 input gate가 조절합니다.",
-        workedExample:
-          "Gate coordinate가 0.15이면 attention output의 해당 coordinate는 output projection 전에 15%만 통과합니다.",
-        boundary:
-          "Cache compression과 output gating은 다른 장치이며 gate가 attention score·causal mask 자체를 바꾸지는 않습니다.",
-      },
-      {
-        id: "nope-hybrid-position-signal",
-        sectionId: "hybrid-attention",
-        intuition:
-          "번호표를 따로 붙이지 않아도 한 줄로 들어온 순서와 미래를 가린 규칙은 남아 있습니다.",
-        workedExample:
-          "KDA는 token A 다음 B와 B 다음 A에서 state update 순서가 달라지고 MLA causal mask는 현재 위치가 미래 key를 보지 못하게 합니다.",
-        boundary:
-          "NoPE는 explicit position embedding 부재를 뜻하며 arbitrary long-context 이해나 distance 추정의 자동 보장은 아닙니다. K3도 8K→64K→256K→1M length schedule을 사용했습니다.",
-      },
-      {
-        id: "depth-attention-residual",
-        sectionId: "attention-residuals",
-        intuition:
-          "직전 보고서 한 장만 받는 대신 현재 layer가 embedding과 앞선 보고서들에 weight를 매겨 다시 골라 읽습니다.",
-        workedExample:
-          "Source weight [0.5,0.3,0.2]이면 current input은 세 depth value의 50%·30%·20% weighted sum입니다.",
-        boundary:
-          "Depth attention weight는 사용 비율을 보여 주지만 source의 causal 중요성이나 사람이 붙인 기능 이름을 그대로 증명하지 않습니다.",
-      },
-      {
-        id: "block-attnres-state-bound",
-        sectionId: "attention-residuals",
-        intuition:
-          "문서 93장을 모두 보관하는 대신 최대 12장씩 묶은 요약 8개와 원문 입구 하나만 장기 source로 남깁니다.",
-        workedExample:
-          "Hidden width d에서 Full source state가 약 93d라면 block-level 장기 source는 embedding을 포함해 9d 수준이고 마지막 block은 partial입니다.",
-        boundary:
-          "총 model memory의 정확한 93/9 절감이 아니라 source-state 비례 관계이며 block 내부 layer를 개별 선택하는 자유도는 줄어듭니다.",
-      },
-      {
-        id: "latent-moe-width-factorization",
-        sectionId: "stable-latent-moe",
-        intuition:
-          "공통 업무는 원래 크기의 작업대에서 처리하고, 전문 업무만 절반 폭의 작업대로 내려 보낸 뒤 결과를 다시 원래 폭으로 올립니다.",
-        workedExample:
-          "x∈R7168을 Wdown으로 R3584에 보내 896 expert 중 16개를 계산하고, aggregate를 RMSNorm·Wup으로 R7168에 복원해 shared expert 2개와 합칩니다.",
-        boundary:
-          "Routed width를 절반으로 줄여도 shared expert·down/up projection·router·dispatch가 남아 end-to-end compute나 latency가 정확히 절반이 되지 않습니다.",
-      },
-      {
-        id: "situ-glu-smooth-bound",
-        sectionId: "stable-latent-moe",
-        intuition:
-          "작은 신호는 거의 그대로 두되 너무 큰 두 branch가 곱해져 폭발하지 않도록 각각 부드러운 천장을 둡니다.",
-        workedExample:
-          "β1=4, β2=25이면 각 soft-capped factor의 절댓값이 4와 25를 넘지 않아 scalar product coordinate는 100 이내입니다.",
-        boundary:
-          "Coordinate bound는 전체 vector norm·loss·gradient의 안정성을 단독 보장하지 않고 큰 값에서 tanh saturation trade-off가 생깁니다.",
-      },
-      {
-        id: "quantile-expert-balancing",
-        sectionId: "stable-latent-moe",
-        intuition:
-          "매번 같은 크기로 줄을 조정하지 않고, 현재 점수 분포에서 정확히 목표 인원만 cutoff를 넘을 위치를 찾아 다음 줄 배정 bias로 씁니다.",
-        workedExample:
-          "m=8,n=4,k=1이면 q=2입니다. Expert별 margin의 75% quantile 음수를 bias로 두면 tie가 없을 때 상위 2개 margin이 threshold를 넘습니다.",
-        boundary:
-          "Bias는 다음 step부터 적용하고 실제 training은 histogram quantile 근사이므로 distribution shift·bin error·tie가 있으면 load가 정확히 q와 같지 않을 수 있습니다.",
+          "세 component를 서로 독립인 속도 배수로 더하거나 model size 하나로 환원하지 않습니다.",
       },
       {
         id: "frontier-scaling-evidence-boundary",
-        sectionId: "reading-report",
+        sectionId: "evidence",
         intuition:
-          "완성된 자동차의 연비가 좋아졌다는 결과만으로 엔진·타이어·운전 software 각각의 개선분을 나눌 수는 없습니다.",
+          "완성된 system의 효율 향상만으로 각 부품의 독립 기여를 역산하지 않습니다.",
         workedExample:
-          "K3의 약 2.5×는 architecture·data·training을 합친 equal-loss compute claim이며, KDA 단독 2.5×나 benchmark 2.5×가 아닙니다.",
+          "약 2.5× equal-loss compute claim은 architecture·data·training을 합친 보고입니다.",
         boundary:
-          "서로 다른 harness·tool·reasoning budget benchmark는 model-only comparison이 아니며 full-scale component ablation이 없으면 인과 귀속을 보류합니다.",
+          "KDA 단독 2.5×나 모든 hardware의 latency 2.5×로 바꾸지 않습니다.",
       },
     ],
     conceptStages: [
       {
-        label: "Scope",
-        relation: "공식 configuration과 sequence·depth·width 문제를 먼저 분리",
-        concepts: [
-          "frontier-scaling-evidence-boundary",
-          "empirical-scaling-law",
-        ],
+        label: "00 분해",
+        relation: "세 정보 이동 축을 먼저 나눕니다.",
+        concepts: ["kimi-k3-axis-factorization"],
       },
       {
-        label: "Sequence",
-        relation: "고정 state compression과 주기적 global read를 결합",
-        concepts: [
-          "kda-channelwise-delta-state",
-          "kda-lower-bounded-decay",
-          "gated-mla-latent-cache",
-          "kda-mla-hybrid-schedule",
-          "nope-hybrid-position-signal",
-        ],
+        label: "01 구성",
+        relation: "93층·expert·context configuration을 장부로 고정합니다.",
+        concepts: ["kda-mla-hybrid-schedule", "block-attnres-state-bound", "latent-moe-width-factorization"],
       },
       {
-        label: "Depth",
-        relation:
-          "Residual 누적을 depth-source selection으로 바꾸고 block 수로 제한",
-        concepts: [
-          "residual-normalization",
-          "depth-attention-residual",
-          "block-attnres-state-bound",
-        ],
-      },
-      {
-        label: "Width",
-        relation: "MoE routed width와 activation·load를 함께 안정화",
-        concepts: [
-          "conditional-expert-ffn",
-          "latent-moe-width-factorization",
-          "situ-glu-smooth-bound",
-          "quantile-expert-balancing",
-        ],
-      },
-      {
-        label: "Read evidence",
-        relation: "Method·ablation·scaling·harness·runtime claim을 다시 분리",
+        label: "02 근거",
+        relation: "통합 claim의 증거 범위를 제한합니다.",
         concepts: ["frontier-scaling-evidence-boundary"],
       },
     ],
     exercises: [
       {
         level: "basic",
-        question:
-          "K3의 sequence·depth·width 축에 각각 어떤 병목과 mechanism이 대응하는지 설명하라.",
-        answerChecklist: [
-          "sequence KDA+MLA",
-          "depth Block AttnRes",
-          "width Stable LatentMoE",
-          "압축과 보강",
-          "서로 다른 cost axis",
-          "parameter size만의 문제가 아님",
-        ],
-        requiredConcepts: [
-          "kda-mla-hybrid-schedule",
-          "block-attnres-state-bound",
-          "latent-moe-width-factorization",
-        ],
+        question: "K3의 sequence·depth·width 축이 각각 답하는 질문과 mechanism을 설명하세요.",
+        answerChecklist: ["sequence history", "KDA–MLA", "depth source", "Block AttnRes", "expert width", "Stable LatentMoE"],
+        requiredConcepts: ["kimi-k3-axis-factorization"],
         sectionId: "overview",
       },
       {
         level: "basic",
-        question:
-          "23개 hybrid block과 마지막 MLA에서 KDA·MLA layer 수를 계산하고 3:1을 93회 반복한다는 설명의 오류를 지적하라.",
-        answerChecklist: [
-          "69 KDA",
-          "23 block MLA",
-          "plus final MLA",
-          "24 MLA",
-          "93 total",
-          "not 93 repetitions",
-        ],
+        question: "K3를 parameter count 하나로만 읽으면 놓치는 비용 세 가지를 설명하세요.",
+        answerChecklist: ["token history", "layer source", "routed width", "runtime state", "communication", "independent axes"],
+        requiredConcepts: ["kimi-k3-axis-factorization"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question: "Sequence mixer 독립 글로 이동해야 하는 개념과 전체 글에 남길 개념을 구분하세요.",
+        answerChecklist: ["KDA state", "MLA cache", "NoPE", "mechanism detail", "axis relation", "overview owns relation"],
+        requiredConcepts: ["kimi-k3-axis-factorization"],
+        sectionId: "axes",
+      },
+      {
+        level: "basic",
+        question: "Depth routing과 LatentMoE가 같은 routing이라는 말로 합쳐질 수 없는 이유를 설명하세요.",
+        answerChecklist: ["depth sources", "expert assignment", "different objects", "different state", "different cost", "separate failure owner"],
+        requiredConcepts: ["kimi-k3-axis-factorization"],
+        sectionId: "axes",
+      },
+      {
+        level: "basic",
+        question: "23×(3 KDA+1 MLA)+final MLA에서 layer 수를 계산하세요.",
+        answerChecklist: ["23 blocks", "69 KDA", "23 block MLA", "one final MLA", "24 MLA", "93 total"],
         requiredConcepts: ["kda-mla-hybrid-schedule"],
-        sectionId: "hybrid-attention",
+        sectionId: "configuration",
       },
       {
         level: "basic",
-        question:
-          "Scalar KDA에서 S_prev=2, α=.5, β=.25, k=1, v=4, q=3일 때 새 state와 read output을 계산하고 각 항의 역할을 설명하라.",
-        answerChecklist: [
-          "retained state .5×2=1",
-          "erase factor 1-.25=.75",
-          "old contribution .75",
-          "new write .25×1×4=1",
-          "new state 1.75",
-          "query read 3×1.75=5.25",
-          "fixed-state collision boundary",
-        ],
-        requiredConcepts: [
-          "kda-channelwise-delta-state",
-          "kda-lower-bounded-decay",
-        ],
-        sectionId: "hybrid-attention",
-      },
-      {
-        level: "basic",
-        question:
-          "Gated MLA에서 c·o·sigmoid output gate를 구분하고 NoPE가 순서 정보 부재를 뜻하지 않는 이유를 설명하라.",
-        answerChecklist: [
-          "KV latent",
-          "global attention output",
-          "channel gate",
-          "causal mask",
-          "ordered KDA recurrence",
-          "explicit position absent",
-          "length training",
-        ],
-        requiredConcepts: [
-          "gated-mla-latent-cache",
-          "nope-hybrid-position-signal",
-        ],
-        sectionId: "hybrid-attention",
-      },
-      {
-        level: "basic",
-        question:
-          "표준 residual과 Full AttnRes의 input 생성 경로를 비교하고 depth pseudo-query·key·value·weight를 설명하라.",
-        answerChecklist: [
-          "identity plus update",
-          "past accumulated in prior state",
-          "depth source keys",
-          "layer pseudo-query",
-          "softmax weights",
-          "weighted values",
-          "not token attention",
-        ],
-        requiredConcepts: ["depth-attention-residual"],
-        sectionId: "attention-residuals",
+        question: "2.8T total과 104B active를 VRAM·FLOP와 같은 숫자로 읽으면 안 되는 이유를 설명하세요.",
+        answerChecklist: ["total weights", "active per token", "weight dtype", "runtime state", "workspace", "not direct latency"],
+        requiredConcepts: ["kimi-k3-axis-factorization"],
+        sectionId: "configuration",
       },
       {
         level: "advanced",
-        question:
-          "93 main layers를 최대 12-layer block 8개로 묶을 때 source-state order와 잃는 선택 자유도를 설명하라.",
-        answerChecklist: [
-          "partial last block",
-          "8 block states",
-          "embedding source",
-          "9 long-lived sources",
-          "O(Ld) to O(Nd)",
-          "not total memory ratio",
-          "intra-block individual choice lost",
-        ],
-        requiredConcepts: ["block-attnres-state-bound"],
-        sectionId: "attention-residuals",
-      },
-      {
-        level: "basic",
-        question:
-          "K3 LatentMoE의 7,168→3,584→7,168 routed path와 shared expert 2개·896/16 routing을 순서대로 추적하라.",
-        answerChecklist: [
-          "full input",
-          "Wdown",
-          "latent routed experts",
-          "16 of 896",
-          "weighted aggregate",
-          "RMSNorm",
-          "Wup",
-          "two full-width shared",
-          "sum",
-        ],
-        requiredConcepts: ["latent-moe-width-factorization"],
-        sectionId: "stable-latent-moe",
+        question: "왜 24 MLA layer만 context-length KV 증가를 만들 수 있어도 전체 runtime state가 KV의 24층분과 같지는 않은지 설명하세요.",
+        answerChecklist: ["MLA KV", "69 KDA states", "fixed per request", "context proportional", "separate ledger", "runtime implementation"],
+        requiredConcepts: ["kimi-k3-axis-factorization"],
+        sectionId: "configuration",
       },
       {
         level: "advanced",
-        question:
-          "SiTU-GLU의 β1=4·β2=25가 만드는 coordinate bound를 유도하고 이 bound가 보장하지 않는 항목을 적어라.",
-        answerChecklist: [
-          "tanh absolute at most 1",
-          "sigmoid at most 1",
-          "branch bounds 4 and 25",
-          "product at most 100",
-          "local near-linear",
-          "vector norm not fixed",
-          "gradient/loss not guaranteed",
-          "saturation",
-        ],
-        requiredConcepts: ["situ-glu-smooth-bound"],
-        sectionId: "stable-latent-moe",
-      },
-      {
-        level: "advanced",
-        question:
-          "m=8192,n=896,k=16에서 QB target load q를 계산하고 selection bias·mixture weight·next-step causality·histogram approximation을 설명하라.",
-        answerChecklist: [
-          "q about 146.286 and integer/tie handling",
-          "biased Top-k",
-          "raw score weights",
-          "cutoff margin",
-          "1-k/n quantile",
-          "mean recenter",
-          "next step",
-          "histogram all-reduce",
-          "not exact every batch",
-        ],
-        requiredConcepts: [
-          "expert-load-balance-target",
-          "quantile-expert-balancing",
-        ],
-        sectionId: "stable-latent-moe",
-      },
-      {
-        level: "advanced",
-        question:
-          "K3 report의 configuration fact·2.5× scaling claim·component causality·agent benchmark를 같은 evidence level로 읽으면 안 되는 이유를 설명하라.",
-        answerChecklist: [
-          "config reproducible",
-          "method equations",
-          "combined architecture/data/training",
-          "full-scale ablation missing",
-          "harness/tool/effort",
-          "system measurement",
-          "runtime support",
-          "bounded claim",
-        ],
+        question: "공식 configuration과 component ablation의 evidence level을 비교하세요.",
+        answerChecklist: ["reproducible fact", "method equation", "bounded scale", "comparison condition", "not causal whole model", "version pin"],
         requiredConcepts: ["frontier-scaling-evidence-boundary"],
-        sectionId: "reading-report",
+        sectionId: "evidence",
+      },
+      {
+        level: "advanced",
+        question: "약 2.5× claim을 KDA 단독 향상으로 귀속할 수 없는 이유를 설명하세요.",
+        answerChecklist: ["integrated system", "architecture", "data", "training", "missing independent attribution", "bounded claim"],
+        requiredConcepts: ["frontier-scaling-evidence-boundary"],
+        sectionId: "evidence",
+      },
+      {
+        level: "advanced",
+        question: "K3 benchmark를 다른 model과 비교할 때 함께 고정할 harness 항목을 제시하세요.",
+        answerChecklist: ["model version", "prompt", "tools", "reasoning budget", "runtime", "hardware"],
+        requiredConcepts: ["frontier-scaling-evidence-boundary"],
+        sectionId: "evidence",
       },
     ],
     papers: [
       {
         title: "Kimi K3: Open Frontier Intelligence",
         href: "https://arxiv.org/abs/2607.24653",
-        problem:
-          "Sequence length·network depth·expert width를 동시에 확장하면서 training·inference cost와 안정성을 감당하는 frontier-model scaling 문제",
-        contribution:
-          "Hybrid KDA–MLA, Block Attention Residuals, Stable LatentMoE와 data·optimizer·post-training·infrastructure를 2.8T model에 통합",
-        assumptions:
-          "K3의 공개 architecture·data/training recipe·Moonshot infrastructure·benchmark harness와 report 시점의 model version",
-        evidenceScope:
-          "공개 configuration, method equation, reported ablation/scaling/benchmark와 production-system 설명 범위",
-        notClaim:
-          "각 component의 2.8T full-scale 독립 기여도나 모든 model family·hardware에서의 보편적 우위를 증명한 것은 아님",
+        problem: "Sequence·depth·width를 함께 확장할 때의 비용과 안정성",
+        contribution: "KDA–MLA, Block AttnRes, Stable LatentMoE의 2.8T system 통합",
+        assumptions: "공개 model version·data·training·infrastructure 조건",
+        evidenceScope: "Configuration·method·보고된 scaling과 benchmark",
+        notClaim: "각 component의 full-scale 독립 기여나 모든 hardware의 보편 우위",
         sectionId: "paper-kimi-k3",
       },
-      {
-        title: "Kimi Linear: An Expressive, Efficient Attention Architecture",
-        href: "https://arxiv.org/abs/2510.26692",
-        problem:
-          "Long-context softmax attention의 KV·quadratic cost를 줄이면서 linear attention의 state collision과 실제 kernel 효율을 개선하는 문제",
-        contribution:
-          "Channelwise Kimi Delta Attention recurrence, bounded decay, chunkwise algorithm과 hybrid KDA–MLA 구성 제시",
-        assumptions:
-          "논문의 model scales·data·attention ratios·hardware kernels와 benchmark protocol",
-        evidenceScope:
-          "KDA architecture·algorithm과 보고된 language-model/long-context efficiency·quality 실험 범위",
-        notClaim:
-          "K3 2.8T의 최종 성능에서 KDA만의 인과 기여나 모든 task에서 full attention 대체를 증명한 것은 아님",
-        sectionId: "paper-kimi-linear",
-      },
-      {
-        title: "Attention Residuals",
-        href: "https://arxiv.org/abs/2603.15031",
-        problem:
-          "깊은 Transformer의 residual stream이 모든 과거 depth 정보를 직전 state에 누적하고 이전 representation을 선택적으로 다시 읽지 못하는 문제",
-        contribution:
-          "Learned pseudo-query로 depth source를 조합하는 Full AttnRes와 memory·communication을 줄인 Block AttnRes 제시",
-        assumptions:
-          "논문의 model scales·block schedules·training data와 reported ablation conditions",
-        evidenceScope:
-          "Depth-attention method, complexity analysis와 논문이 평가한 validation/downstream result 범위",
-        notClaim:
-          "Attention weight가 causal explanation이거나 K3 최종 gain 전체가 AttnRes 때문이라는 뜻은 아님",
-        sectionId: "paper-attention-residuals",
-      },
+    ],
+  },
+  "ai/kimi-k3-sequence-mixer": {
+    entryLevel: true,
+    entryNote: "Attention cache를 모른다고 가정하고 token 목록과 고정 recurrent state부터 비교합니다.",
+    coreIdea: "KDA는 과거 association을 고정 state에 retain·correct·read하고, Gated MLA가 주기적으로 causal token memory를 직접 조회해 state collision을 보강합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "kda-channelwise-delta-state", role: "고정 association state의 retain·delta correction·read를 계산합니다." },
+      { id: "kda-lower-bounded-decay", role: "한 step retention과 cumulative decay를 구분합니다." },
+      { id: "kda-mla-hybrid-schedule", role: "3 KDA와 1 MLA의 23-block schedule을 셉니다." },
+      { id: "gated-mla-latent-cache", role: "KV latent compression과 output gate를 분리합니다." },
+      { id: "nope-hybrid-position-signal", role: "NoPE와 recurrence·causal mask의 순서 신호를 구분합니다." },
+    ],
+    conceptExplanations: [
+      { id: "kda-channelwise-delta-state", sectionId: "overview", intuition: "과거 token 원문 대신 key로 읽는 작은 association state를 계속 고쳐 씁니다.", workedExample: "기존 예측 2, 새 value 4면 차이 2의 일부만 같은 key 방향에 씁니다.", boundary: "고정 state는 과거가 충돌할 수 있어 exact token retrieval을 보장하지 않습니다." },
+      { id: "kda-lower-bounded-decay", sectionId: "decay", intuition: "한 step에 기억을 거의 0으로 만드는 수치 폭을 제한합니다.", workedExample: "α=.9라도 100 step 누적은 약 .000027입니다.", boundary: "한 step bound가 semantic 장기 기억을 보장하지 않습니다." },
+      { id: "kda-mla-hybrid-schedule", sectionId: "hybrid", intuition: "평소에는 state를 읽고 일정 간격에는 token memory를 직접 봅니다.", workedExample: "23×3=69 KDA, 23+1=24 MLA입니다.", boundary: "3:1은 K3 구성이지 보편 최적 비율이 아닙니다." },
+      { id: "gated-mla-latent-cache", sectionId: "hybrid", intuition: "K/V는 latent로 줄이고 output이 residual에 들어갈 양은 gate로 정합니다.", workedExample: "Gate .15면 해당 coordinate의 15%가 통과합니다.", boundary: "Compression과 gating은 서로 다른 장치입니다." },
+      { id: "nope-hybrid-position-signal", sectionId: "position", intuition: "번호표가 없어도 update 순서와 미래 차단은 남습니다.", workedExample: "A→B와 B→A는 KDA state trajectory가 다릅니다.", boundary: "임의 길이 이해는 자동 보장되지 않습니다." },
+    ],
+    conceptStages: [
+      { label: "00 state", relation: "고정 memory의 update를 정의합니다.", concepts: ["kda-channelwise-delta-state"] },
+      { label: "01 retain", relation: "한 step decay 범위를 제한합니다.", concepts: ["kda-lower-bounded-decay"] },
+      { label: "02 hybrid", relation: "Token memory 조회를 조합합니다.", concepts: ["gated-mla-latent-cache", "kda-mla-hybrid-schedule"] },
+      { label: "03 position", relation: "남아 있는 순서 신호를 구분합니다.", concepts: ["nope-hybrid-position-signal"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Token별 KV cache와 KDA state의 저장 형태를 비교하세요.", answerChecklist: ["token list", "fixed state", "context growth", "association compression", "collision", "exact retrieval"], requiredConcepts: ["kda-channelwise-delta-state"], sectionId: "overview" },
+      { level: "basic", question: "KDA update를 retain·error·write·read 네 단계로 설명하세요.", answerChecklist: ["alpha retain", "old prediction", "value error", "beta write", "key direction", "query read"], requiredConcepts: ["kda-channelwise-delta-state"], sectionId: "overview" },
+      { level: "basic", question: "왜 v를 그대로 더하지 않고 v−S_prev k를 사용하나요?", answerChecklist: ["existing prediction", "subtract", "delta only", "avoid duplicate accumulation", "same key", "controlled write"], requiredConcepts: ["kda-channelwise-delta-state"], sectionId: "overview" },
+      { level: "basic", question: "gmin과 cumulative retention이 답하는 질문을 구분하세요.", answerChecklist: ["one-step log bound", "exp", "positive retention", "repeated product", "long-term decay", "not semantic guarantee"], requiredConcepts: ["kda-lower-bounded-decay"], sectionId: "decay" },
+      { level: "basic", question: "69 KDA와 24 MLA layer 수를 계산하세요.", answerChecklist: ["23 blocks", "three KDA", "69", "one MLA per block", "final MLA", "24"], requiredConcepts: ["kda-mla-hybrid-schedule"], sectionId: "hybrid" },
+      { level: "basic", question: "Gated MLA의 latent cache와 output gate 역할을 구분하세요.", answerChecklist: ["KV compression", "latent cache", "attention read", "sigmoid gate", "residual contribution", "causal mask unchanged"], requiredConcepts: ["gated-mla-latent-cache"], sectionId: "hybrid" },
+      { level: "advanced", question: "고정 state collision을 MLA가 어떻게 보강하는지 설명하세요.", answerChecklist: ["compressed state", "lost exact token", "periodic global layer", "causal token memory", "direct retrieval", "hybrid tradeoff"], requiredConcepts: ["kda-channelwise-delta-state", "kda-mla-hybrid-schedule"], sectionId: "hybrid" },
+      { level: "advanced", question: "NoPE가 no-order가 아닌 두 이유를 드세요.", answerChecklist: ["ordered recurrence", "causal mask", "A then B differs", "no explicit embedding", "length curriculum", "no arbitrary guarantee"], requiredConcepts: ["nope-hybrid-position-signal"], sectionId: "position" },
+      { level: "advanced", question: "KDA 논문의 KV·throughput 수치를 K3 전체에 그대로 옮기면 안 되는 이유를 설명하세요.", answerChecklist: ["different scale", "different model", "kernel", "hardware", "hybrid ratio", "bounded evidence"], requiredConcepts: ["kda-mla-hybrid-schedule"], sectionId: "position" },
+      { level: "advanced", question: "KDA request state와 MLA KV를 serving ledger에서 어떻게 분리할지 설명하세요.", answerChecklist: ["fixed recurrent state", "context proportional KV", "per request", "24 MLA", "69 KDA", "allocator support"], requiredConcepts: ["kda-channelwise-delta-state", "gated-mla-latent-cache"], sectionId: "position" },
+    ],
+    papers: [
+      { title: "Kimi Linear", href: "https://arxiv.org/abs/2510.26692", problem: "Long-context attention의 KV·compute와 recurrent collision", contribution: "KDA·bounded decay·chunk kernel·hybrid schedule", assumptions: "논문의 model·kernel·hardware 조건", evidenceScope: "방법과 보고된 quality·KV·throughput 비교", notClaim: "K3 전체에서 동일 수치가 재현된다는 주장", sectionId: "paper-kimi-linear" },
+    ],
+  },
+  "ai/kimi-k3-depth-routing": {
+    entryLevel: true,
+    entryNote: "Residual을 처음 보는 독자도 identity path부터 시작합니다.",
+    coreIdea: "Attention Residuals는 직전 layer만 받는 residual을 depth-source weighted read로 바꾸고, Block AttnRes는 long-lived source 수를 block 수로 제한합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "depth-attention-residual", role: "Layer pseudo-query로 이전 depth key/value를 가중합합니다." },
+      { id: "block-attnres-state-bound", role: "93 layer를 8 block source와 embedding으로 제한합니다." },
+    ],
+    conceptExplanations: [
+      { id: "depth-attention-residual", sectionId: "depth-attention", intuition: "현재 layer가 앞선 보고서 중 지금 필요한 source를 골라 읽습니다.", workedExample: "[.5,.3,.2] weight로 세 value를 합칩니다.", boundary: "Depth weight는 semantic causality 증명이 아닙니다." },
+      { id: "block-attnres-state-bound", sectionId: "block-bound", intuition: "93개 layer source 대신 최대 12층씩 묶은 block source를 보관합니다.", workedExample: "ceil(93/12)=8이고 embedding을 더해 9 source입니다.", boundary: "Source-state 차수이지 total model memory 비율이 아닙니다." },
+    ],
+    conceptStages: [
+      { label: "00 residual", relation: "직전 state 보존 경로를 정의합니다.", concepts: ["residual-normalization"] },
+      { label: "01 select", relation: "Depth source를 weighted read합니다.", concepts: ["depth-attention-residual"] },
+      { label: "02 bound", relation: "Block 수로 state를 제한합니다.", concepts: ["block-attnres-state-bound"] },
+    ],
+    exercises: [
+      { level: "basic", question: "표준 residual의 identity path와 update path를 설명하세요.", answerChecklist: ["previous state", "identity", "sublayer", "update", "addition", "not source selection"], requiredConcepts: ["residual-normalization"], sectionId: "overview" },
+      { level: "basic", question: "Depth attention의 query·key·value가 무엇인지 설명하세요.", answerChecklist: ["layer query", "source key", "source value", "depth axis", "not token query", "weighted input"], requiredConcepts: ["depth-attention-residual"], sectionId: "depth-attention" },
+      { level: "basic", question: "Score를 softmax하는 이유를 설명하세요.", answerChecklist: ["relative scores", "positive weights", "sum one", "comparable sources", "weighted combination", "stable scale"], requiredConcepts: ["depth-attention-residual"], sectionId: "depth-attention" },
+      { level: "basic", question: "[.5,.3,.2]와 value 세 개로 layer input을 만드는 순서를 설명하세요.", answerChecklist: ["multiply first", "multiply second", "multiply third", "sum", "same width", "current input"], requiredConcepts: ["depth-attention-residual"], sectionId: "depth-attention" },
+      { level: "basic", question: "Full AttnRes와 Block AttnRes의 source granularity를 비교하세요.", answerChecklist: ["layer source", "block source", "fine choice", "bounded state", "communication", "tradeoff"], requiredConcepts: ["block-attnres-state-bound"], sectionId: "block-bound" },
+      { level: "basic", question: "ceil(93/12)=8에서 ceiling이 필요한 이유를 설명하세요.", answerChecklist: ["seven full blocks", "remaining layers", "partial block", "must count", "ceiling", "eight blocks"], requiredConcepts: ["block-attnres-state-bound"], sectionId: "block-bound" },
+      { level: "advanced", question: "93d와 9d 비교가 total-memory ratio가 아닌 이유를 설명하세요.", answerChecklist: ["source state only", "keys values", "parameters", "activations", "KV cache", "proportional order"], requiredConcepts: ["block-attnres-state-bound"], sectionId: "block-bound" },
+      { level: "advanced", question: "Block 경계가 표현력에 주는 손실을 설명하세요.", answerChecklist: ["intra-block layers", "merged source", "cannot individually select", "coarser routing", "cost benefit", "tradeoff"], requiredConcepts: ["block-attnres-state-bound"], sectionId: "evidence" },
+      { level: "advanced", question: "Depth attention weight를 causal explanation으로 읽을 수 없는 이유를 설명하세요.", answerChecklist: ["usage weight", "correlation", "alternative paths", "learned representation", "intervention absent", "bounded interpretation"], requiredConcepts: ["depth-attention-residual"], sectionId: "evidence" },
+      { level: "advanced", question: "Full·Block 비교 실험에서 고정할 조건을 제시하세요.", answerChecklist: ["model scale", "training tokens", "optimizer", "block size", "hardware", "metric"], requiredConcepts: ["depth-attention-residual", "block-attnres-state-bound"], sectionId: "evidence" },
+    ],
+    papers: [
+      { title: "Attention Residuals", href: "https://arxiv.org/abs/2603.15031", problem: "깊은 model의 직전-state residual bottleneck", contribution: "Layer pseudo-query와 Full·Block depth attention", assumptions: "논문 architecture·scale·block·training 조건", evidenceScope: "논문이 정의한 depth-attention 식, source-state 복잡도, 공개 model scale·block size·metric에서 보고한 학습 및 평가 비교 범위", notClaim: "Weight의 semantic causality나 모든 깊이의 보편 이득", sectionId: "paper-attention-residuals" },
+    ],
+  },
+  "ai/kimi-k3-latent-moe": {
+    entryLevel: true,
+    entryNote: "MoE를 처음 보는 독자도 full-width input과 routed latent의 shape부터 시작합니다.",
+    coreIdea: "Stable LatentMoE는 routed expert width, multiplicative activation outlier, expert load imbalance를 각각 projection·SiTU/RMSNorm·Quantile Balancing으로 다룹니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "latent-moe-width-factorization", role: "Routed path의 7168→3584→7168 shape를 추적합니다." },
+      { id: "situ-glu-smooth-bound", role: "Gate·value branch의 coordinate soft cap을 계산합니다." },
+      { id: "quantile-expert-balancing", role: "Expert 목표 load와 next-step dispatch bias를 계산합니다." },
+    ],
+    conceptExplanations: [
+      { id: "latent-moe-width-factorization", sectionId: "overview", intuition: "전문가 작업대만 절반 폭으로 줄이고 공통 작업대는 full width에 둡니다.", workedExample: "7168→3584에서 16/896 expert를 계산한 뒤 7168로 복원합니다.", boundary: "Projection·shared compute·dispatch가 남아 latency가 절반은 아닙니다." },
+      { id: "situ-glu-smooth-bound", sectionId: "activation", intuition: "작은 값은 유지하고 큰 두 branch가 곱해지는 coordinate만 부드럽게 누릅니다.", workedExample: "Cap 4와 25면 product coordinate는 100 이내입니다.", boundary: "Coordinate bound는 전체 gradient 안정성 보장이 아닙니다." },
+      { id: "quantile-expert-balancing", sectionId: "balancing", intuition: "현재 score 분포에서 목표 인원 cutoff를 찾아 다음 배정 bias로 씁니다.", workedExample: "m=8,n=4,k=1이면 expert당 목표 q=2입니다.", boundary: "Histogram·tie·shift 때문에 exact load를 보장하지 않습니다." },
+    ],
+    conceptStages: [
+      { label: "00 width", relation: "Routed expert 계산 폭을 분리합니다.", concepts: ["latent-moe-width-factorization"] },
+      { label: "01 activation", relation: "Multiplicative outlier를 제한합니다.", concepts: ["situ-glu-smooth-bound"] },
+      { label: "02 load", relation: "Expert dispatch 빈도를 조정합니다.", concepts: ["quantile-expert-balancing"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Shared expert와 routed expert의 width 차이를 설명하세요.", answerChecklist: ["full width shared", "latent routed", "all tokens", "selected experts", "different roles", "combine output"], requiredConcepts: ["latent-moe-width-factorization"], sectionId: "overview" },
+      { level: "basic", question: "7168→3584→7168 routed path를 순서대로 추적하세요.", answerChecklist: ["input", "Wdown", "latent", "expert compute", "RMSNorm", "Wup"], requiredConcepts: ["latent-moe-width-factorization"], sectionId: "overview" },
+      { level: "basic", question: "896/16 routing과 shared expert 2개를 구분하세요.", answerChecklist: ["896 candidates", "16 selected", "router weights", "two shared", "all tokens", "sum paths"], requiredConcepts: ["latent-moe-width-factorization"], sectionId: "overview" },
+      { level: "basic", question: "SiTU cap이 작은 값과 큰 값에서 어떻게 동작하는지 설명하세요.", answerChecklist: ["divide beta", "tanh", "near linear", "large saturation", "multiply beta", "smooth not hard"], requiredConcepts: ["situ-glu-smooth-bound"], sectionId: "activation" },
+      { level: "basic", question: "β1=4, β2=25일 때 scalar product 상한을 계산하세요.", answerChecklist: ["gate cap four", "value cap twenty-five", "multiply", "one hundred", "coordinate only", "not vector norm"], requiredConcepts: ["situ-glu-smooth-bound"], sectionId: "activation" },
+      { level: "basic", question: "m=8,n=4,k=1에서 q를 계산하세요.", answerChecklist: ["eight tokens", "one assignment", "eight total", "four experts", "divide", "q two"], requiredConcepts: ["quantile-expert-balancing"], sectionId: "balancing" },
+      { level: "advanced", question: "왜 Quantile bias를 mixture weight에서 제외하나요?", answerChecklist: ["dispatch control", "raw score semantics", "selection only", "avoid output distortion", "separate ownership", "next step"], requiredConcepts: ["quantile-expert-balancing"], sectionId: "balancing" },
+      { level: "advanced", question: "왜 bias를 같은 batch가 아니라 다음 step에 적용하나요?", answerChecklist: ["current statistics", "circular dependency", "quantile compute", "state update", "next dispatch", "causal order"], requiredConcepts: ["quantile-expert-balancing"], sectionId: "balancing" },
+      { level: "advanced", question: "m=8192,n=896,k=16의 q가 integer가 아닐 때 생기는 경계를 설명하세요.", answerChecklist: ["about 146.3", "integer assignments", "ties", "histogram approximation", "distribution shift", "target not exact"], requiredConcepts: ["quantile-expert-balancing"], sectionId: "balancing" },
+      { level: "advanced", question: "Stable LatentMoE release gate에 width·activation·load를 모두 넣어야 하는 이유를 설명하세요.", answerChecklist: ["compute width", "activation outlier", "expert hot spot", "distinct failures", "combined monitoring", "rollback"], requiredConcepts: ["latent-moe-width-factorization", "situ-glu-smooth-bound", "quantile-expert-balancing"], sectionId: "release" },
+    ],
+    papers: [
+      { title: "Kimi K3: Stable LatentMoE", href: "https://arxiv.org/abs/2607.24653", problem: "대규모 MoE의 routed compute·outlier·load imbalance", contribution: "Latent width·SiTU-GLU·RMSNorm·Quantile Balancing 통합", assumptions: "K3 architecture·training·low-precision 조건", evidenceScope: "공개 configuration·method·보고된 비교", notClaim: "한 component가 전체 efficiency를 단독 만든다는 주장", sectionId: "paper-kimi-k3-width" },
     ],
   },
   "ai/hybrid-attention-serving": {

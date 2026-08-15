@@ -5480,7 +5480,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "KDA channelwise delta state",
     definition:
       "과거 key–value association을 고정 matrix state로 요약하고 channel별 retention과 delta-rule correction으로 현재 token의 write·read를 수행하는 Kimi linear-attention recurrence입니다.",
-    canonicalHref: "/ai/kimi-k3-architecture#hybrid-attention",
+    canonicalHref: "/ai/kimi-k3-sequence-mixer#overview",
   },
   "kda-lower-bounded-decay": {
     id: "kda-lower-bounded-decay",
@@ -5488,7 +5488,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "KDA lower-bounded log decay",
     definition:
       "Channelwise log decay를 gmin과 0 사이로 제한한 뒤 exponentiate해 한 step retention의 수치 범위와 tile-wise kernel 계산을 안정시키는 parameterization입니다.",
-    canonicalHref: "/ai/kimi-k3-architecture#hybrid-attention",
+    canonicalHref: "/ai/kimi-k3-sequence-mixer#decay",
   },
   "kda-mla-hybrid-schedule": {
     id: "kda-mla-hybrid-schedule",
@@ -5496,7 +5496,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "KDA–MLA hybrid schedule",
     definition:
       "세 KDA layer의 recurrent compression 뒤 Gated MLA global attention을 배치하고 마지막 MLA를 추가해 69 KDA·24 MLA를 만드는 K3 sequence mixer schedule입니다.",
-    canonicalHref: "/ai/kimi-k3-architecture#hybrid-attention",
+    canonicalHref: "/ai/kimi-k3-sequence-mixer#hybrid",
   },
   "gated-mla-latent-cache": {
     id: "gated-mla-latent-cache",
@@ -5504,7 +5504,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Gated MLA latent cache",
     definition:
       "Key/value 정보를 작은 latent cache로 공유하고 causal global attention output에 input-dependent sigmoid gate를 곱해 residual 기여를 조절하는 attention path입니다.",
-    canonicalHref: "/ai/kimi-k3-architecture#hybrid-attention",
+    canonicalHref: "/ai/kimi-k3-sequence-mixer#hybrid",
   },
   "nope-hybrid-position-signal": {
     id: "nope-hybrid-position-signal",
@@ -5512,7 +5512,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "NoPE hybrid position signal",
     definition:
       "명시적 positional embedding 없이 causal mask와 ordered recurrence·training length schedule에서 sequence order를 얻는 K3 hybrid-attention 구성의 위치 정보 경계입니다.",
-    canonicalHref: "/ai/kimi-k3-architecture#hybrid-attention",
+    canonicalHref: "/ai/kimi-k3-sequence-mixer#position",
   },
   "depth-attention-residual": {
     id: "depth-attention-residual",
@@ -5520,7 +5520,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Attention Residuals · depth attention",
     definition:
       "현재 layer의 learned pseudo-query로 embedding과 이전 depth representation의 key를 비교하고 value를 weighted sum해 layer input을 만드는 residual 대체 경로입니다.",
-    canonicalHref: "/ai/kimi-k3-architecture#attention-residuals",
+    canonicalHref: "/ai/kimi-k3-depth-routing#depth-attention",
   },
   "block-attnres-state-bound": {
     id: "block-attnres-state-bound",
@@ -5528,7 +5528,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Block AttnRes state bound",
     definition:
       "Layer별 depth source를 최대 12-layer block으로 합쳐 source memory·communication을 layer 수 L 대신 block 수 N에 비례하도록 제한하는 K3 구현입니다.",
-    canonicalHref: "/ai/kimi-k3-architecture#attention-residuals",
+    canonicalHref: "/ai/kimi-k3-depth-routing#block-bound",
   },
   "latent-moe-width-factorization": {
     id: "latent-moe-width-factorization",
@@ -5536,7 +5536,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "LatentMoE width factorization",
     definition:
       "Shared expert는 full model width에서 계산하고 routed expert는 down projection으로 만든 더 작은 latent width에서 계산한 뒤 RMSNorm과 up projection으로 합치는 MoE width 분해입니다.",
-    canonicalHref: "/ai/kimi-k3-architecture#stable-latent-moe",
+    canonicalHref: "/ai/kimi-k3-latent-moe#overview",
   },
   "situ-glu-smooth-bound": {
     id: "situ-glu-smooth-bound",
@@ -5544,7 +5544,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "SiTU-GLU smooth activation bound",
     definition:
       "SwiGLU의 두 linear factor를 scaled tanh로 부드럽게 제한해 0 근처 응답은 유지하면서 coordinate-wise product의 큰 값과 low-precision overflow 위험을 줄이는 activation입니다.",
-    canonicalHref: "/ai/kimi-k3-architecture#stable-latent-moe",
+    canonicalHref: "/ai/kimi-k3-latent-moe#activation",
   },
   "quantile-expert-balancing": {
     id: "quantile-expert-balancing",
@@ -5552,7 +5552,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Quantile Balancing",
     definition:
       "Expert별 router-score margin의 목표 quantile로 다음-step dispatch bias를 정하고, 그 bias를 mixture weight에서는 제외해 896-expert load를 조절하는 K3 routing 방법입니다.",
-    canonicalHref: "/ai/kimi-k3-architecture#stable-latent-moe",
+    canonicalHref: "/ai/kimi-k3-latent-moe#balancing",
   },
   "frontier-scaling-evidence-boundary": {
     id: "frontier-scaling-evidence-boundary",
@@ -5560,7 +5560,15 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Frontier scaling evidence boundary",
     definition:
       "공개 configuration·method, component ablation, architecture/data/training을 합친 scaling claim과 harness를 포함한 benchmark result를 서로 다른 근거 강도로 분리하는 읽기 원칙입니다.",
-    canonicalHref: "/ai/kimi-k3-architecture#reading-report",
+    canonicalHref: "/ai/kimi-k3-architecture#evidence",
+  },
+  "kimi-k3-axis-factorization": {
+    id: "kimi-k3-axis-factorization",
+    domain: "machine-learning",
+    label: "Kimi K3 sequence·depth·width factorization",
+    definition:
+      "긴 token history, 깊은 layer source, 넓은 expert compute를 서로 다른 정보 이동 축으로 분리하고 KDA–MLA·Block AttnRes·Stable LatentMoE에 각각 맡기는 K3 시스템 설계입니다.",
+    canonicalHref: "/ai/kimi-k3-architecture#overview",
   },
   "residual-normalization": {
     id: "residual-normalization",
@@ -22219,6 +22227,30 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "prerequisite",
     reason:
       "같은 loss에 도달하는 compute 비교를 model family와 관측 조건 안의 경험적 claim으로 읽습니다.",
+  },
+  {
+    from: "kimi-k3-axis-factorization",
+    to: "kda-mla-hybrid-schedule",
+    relation: "produces",
+    reason: "Sequence 축의 압축 state와 periodic global read를 독립 schedule로 배치합니다.",
+  },
+  {
+    from: "kimi-k3-axis-factorization",
+    to: "block-attnres-state-bound",
+    relation: "produces",
+    reason: "Depth 축의 source selection 비용을 block 수로 제한합니다.",
+  },
+  {
+    from: "kimi-k3-axis-factorization",
+    to: "latent-moe-width-factorization",
+    relation: "produces",
+    reason: "Width 축의 routed expert compute만 latent 공간으로 분리합니다.",
+  },
+  {
+    from: "frontier-scaling-evidence-boundary",
+    to: "kimi-k3-axis-factorization",
+    relation: "constrains",
+    reason: "세 축의 통합 효과를 개별 component의 독립 인과 효과로 과장하지 않게 제한합니다.",
   },
   {
     from: "autoregressive-decoding",
