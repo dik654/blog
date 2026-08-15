@@ -1694,38 +1694,95 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "deepfake-detection": {
-    title: "딥페이크 탐지 글이 소유하는 범위",
+    title: "딥페이크 평가 분리 글이 소유하는 범위",
     owns: [
       "Source clip·identity·generator·codec을 분리한 unseen-manipulation evaluation boundary와 worst-domain risk",
-      "Face detection·tracking·alignment failure를 coverage와 lineage로 detector input에 전달하는 전처리 계약",
-      "Spatial·frequency evidence의 corruption-conditional validity와 out-of-fold joint-error 비교",
-      "Frame score의 video aggregation·calibration·abstention과 provenance·consent·coverage manifest",
     ],
     reuses: [
       {
         label: "Identity group split과 image pipeline",
         href: "/ai/image-classification-pipeline",
       },
-      { label: "FFT와 spectrum", href: "/ai/fft" },
       {
-        label: "Video sampling과 temporal model",
-        href: "/ai/video-understanding",
+        label: "얼굴 전처리의 관측 coverage와 lineage",
+        href: "/ai/deepfake-preprocessing-lineage",
       },
       {
-        label: "Calibration과 decision threshold",
-        href: "/ai/imbalanced-data",
+        label: "Dataset provenance와 coverage matrix",
+        href: "/ai/deepfake-dataset-governance",
       },
-      { label: "Ensemble error diversity", href: "/ai/ensemble-methods" },
     ],
     evidence: [
       {
         kind: "primary-source",
-        rule: "FaceForensics++·DFDC·DeepfakeBench·CNNDetection·Fourier discrepancy claim은 각 manipulation·source·codec·benchmark 범위로 제한한다.",
+        rule: "FaceForensics++와 CNNDetection claim은 각 source·manipulation·codec·benchmark 범위로 제한한다.",
       },
       {
         kind: "standard",
-        rule: "Source·identity·consent·generator·codec·crop/track revision·coverage·aggregation·calibration·threshold·abstention을 함께 기록한다.",
+        rule: "Source·person·generator·codec group checksum과 domain support·risk·threshold를 함께 기록한다.",
       },
+    ],
+  },
+  "deepfake-preprocessing-lineage": {
+    title: "딥페이크 전처리 lineage 글이 소유하는 범위",
+    owns: [
+      "Decode·face detection·identity tracking·alignment·crop의 typed state와 source-frame lineage",
+      "Eligible frame을 고정 분모로 쓰는 stage별 face-track coverage와 silent-deletion 방지",
+    ],
+    reuses: [
+      { label: "Source-independent split", href: "/ai/deepfake-detection" },
+      { label: "Video timestamp와 sampling", href: "/ai/video-understanding" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "DeepfakeBench 전처리 claim은 공개 benchmark revision과 포함된 detector 범위로 제한한다." },
+      { kind: "standard", rule: "Decoder·detector·track·alignment·crop revision과 실패 이유·coverage를 같은 receipt에 기록한다." },
+    ],
+  },
+  "deepfake-frequency-evidence": {
+    title: "딥페이크 주파수 근거 글이 소유하는 범위",
+    owns: [
+      "Generator·codec·resize·blur cell에 조건부인 spectrum forensic signal",
+      "같은 held-out sample에서 spatial·frequency branch가 함께 틀리는 joint-error 비교",
+    ],
+    reuses: [
+      { label: "FFT와 spectrum", href: "/ai/fft" },
+      { label: "Source-independent evaluation", href: "/ai/deepfake-detection" },
+      { label: "Ensemble error diversity", href: "/ai/ensemble-methods" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Fourier discrepancy claim은 논문의 generator·spectral measure·post-processing 조건으로 제한한다." },
+      { kind: "standard", rule: "Branch별 error set과 intersection·union을 동일 sample IDs와 corruption cell에서 계산한다." },
+    ],
+  },
+  "deepfake-video-decisions": {
+    title: "딥페이크 비디오 판정 글이 소유하는 범위",
+    owns: [
+      "Frame·clip·track score의 mean·max·top-k aggregation과 coverage abstention",
+      "Source split·crop·frame budget·calibration·metric·hardware를 맞춘 detector parity",
+    ],
+    reuses: [
+      { label: "Video sampling과 temporal model", href: "/ai/video-understanding" },
+      { label: "Calibration과 threshold", href: "/ai/imbalanced-data" },
+      { label: "Preprocessing coverage", href: "/ai/deepfake-preprocessing-lineage" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "DeepfakeBench 순위는 포함된 datasets·methods·pipeline·revision 범위로 제한한다." },
+      { kind: "standard", rule: "Temporal unit·reducer·calibration split·threshold·abstention·runtime target을 함께 고정한다." },
+    ],
+  },
+  "deepfake-dataset-governance": {
+    title: "딥페이크 데이터 거버넌스 글이 소유하는 범위",
+    owns: [
+      "Source asset·person·consent와 generator·codec derivatives를 잇는 provenance manifest",
+      "Generator×codec×resolution cell별 독립 source-group coverage와 claim boundary",
+    ],
+    reuses: [
+      { label: "Source-independent split", href: "/ai/deepfake-detection" },
+      { label: "Data leakage와 lineage", href: "/ai/image-classification-pipeline" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "DFDC의 consent·scale·challenge claim은 논문 actor population과 construction 범위로 제한한다." },
+      { kind: "standard", rule: "Consent revision·allowed uses·expiry·deletion scope와 모든 derivative parent links를 보존한다." },
     ],
   },
   "video-understanding": {
@@ -1743,7 +1800,7 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "Q·K·V와 self-attention", href: "/ai/attention-theory" },
       {
         label: "Video score aggregation의 forensic 적용",
-        href: "/ai/deepfake-detection",
+        href: "/ai/deepfake-video-decisions",
       },
     ],
     evidence: [

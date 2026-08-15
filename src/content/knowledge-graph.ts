@@ -6288,7 +6288,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Forensic source-independent split",
     definition:
       "같은 source clip·person·capture session의 frame·crop·re-encoding 파생본을 한 group에 두고 identity·generator holdout 축을 별도로 선언하는 평가 분리입니다.",
-    canonicalHref: "/ai/deepfake-detection#overview",
+    canonicalHref: "/ai/deepfake-detection#source-groups",
   },
   "unseen-manipulation-domain-risk": {
     id: "unseen-manipulation-domain-risk",
@@ -6297,7 +6297,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Unseen-manipulation worst-domain risk",
     definition:
       "평가 전에 선언한 generator·codec·capture domain별 평균 loss와 그중 최댓값을 함께 보고해 전체 평균이 취약 slice를 숨기지 않게 하는 metric입니다.",
-    canonicalHref: "/ai/deepfake-detection#overview",
+    canonicalHref: "/ai/deepfake-detection#domain-risk",
   },
   "face-track-coverage": {
     id: "face-track-coverage",
@@ -6306,7 +6306,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Face-track coverage",
     definition:
       "평가 가능한 전체 frame 가운데 요구 identity의 valid detection·track·crop이 detector input까지 도달한 비율입니다.",
-    canonicalHref: "/ai/deepfake-detection#face-extraction",
+    canonicalHref: "/ai/deepfake-preprocessing-lineage#coverage",
   },
   "forensic-preprocessing-lineage": {
     id: "forensic-preprocessing-lineage",
@@ -6315,7 +6315,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Forensic preprocessing lineage",
     definition:
       "Decode·face detect·track·alignment·crop 각 단계의 revision·coordinate transform·confidence·failure state를 source frame에 추적 가능하게 보존한 기록입니다.",
-    canonicalHref: "/ai/deepfake-detection#face-extraction",
+    canonicalHref: "/ai/deepfake-preprocessing-lineage#lineage",
   },
   "conditional-frequency-forensic-signal": {
     id: "conditional-frequency-forensic-signal",
@@ -6324,7 +6324,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Conditional frequency forensic signal",
     definition:
       "Generator architecture·upsampling·codec·resize·blur에 따라 나타나거나 사라질 수 있어 corruption matrix 안에서만 근거 범위를 해석하는 spectrum feature입니다.",
-    canonicalHref: "/ai/deepfake-detection#frequency",
+    canonicalHref: "/ai/deepfake-frequency-evidence#spectrum",
   },
   "forensic-branch-joint-error": {
     id: "forensic-branch-joint-error",
@@ -6333,7 +6333,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Forensic branch joint error",
     definition:
       "같은 held-out sample에서 spatial·frequency 등 두 detector branch가 동시에 틀리는 비율로 error complementarity를 측정합니다.",
-    canonicalHref: "/ai/deepfake-detection#frequency",
+    canonicalHref: "/ai/deepfake-frequency-evidence#joint-error",
   },
   "video-score-aggregation-contract": {
     id: "video-score-aggregation-contract",
@@ -6342,7 +6342,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Video-score aggregation contract",
     definition:
       "Frame·clip·track score를 mean·max·top-k·temporal model로 video score에 합치는 순서와 length·coverage·calibration·threshold semantics를 고정한 규칙입니다.",
-    canonicalHref: "/ai/deepfake-detection#models",
+    canonicalHref: "/ai/deepfake-video-decisions#aggregation",
   },
   "forensic-benchmark-parity": {
     id: "forensic-benchmark-parity",
@@ -6351,7 +6351,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Forensic benchmark parity",
     definition:
       "Detector 후보의 source split·decode·face crop·frame budget·metric·aggregation·hardware를 동일하게 맞춰 architecture 외 변경을 분리하는 비교 절차입니다.",
-    canonicalHref: "/ai/deepfake-detection#models",
+    canonicalHref: "/ai/deepfake-video-decisions#parity",
   },
   "forensic-data-provenance-manifest": {
     id: "forensic-data-provenance-manifest",
@@ -6360,7 +6360,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Forensic data-provenance manifest",
     definition:
       "Dataset·source clip·person·generator·codec·license·consent·use/deletion scope와 split을 연결해 파생 데이터의 독립성과 적법한 사용 범위를 추적하는 기록입니다.",
-    canonicalHref: "/ai/deepfake-detection#external-data",
+    canonicalHref: "/ai/deepfake-dataset-governance#provenance",
   },
   "forensic-coverage-matrix": {
     id: "forensic-coverage-matrix",
@@ -6369,7 +6369,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Forensic coverage matrix",
     definition:
       "Generator×codec×resolution×capture-condition cell마다 frame이 아닌 source-independent clip·identity group 수를 split별로 집계한 데이터 범위 표입니다.",
-    canonicalHref: "/ai/deepfake-detection#external-data",
+    canonicalHref: "/ai/deepfake-dataset-governance#coverage",
   },
   "video-temporal-observation-contract": {
     id: "video-temporal-observation-contract",

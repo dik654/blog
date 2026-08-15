@@ -51,7 +51,8 @@ const dataArticles: Article[] = [
       { id: "photometric", title: "Photometric label boundary" },
       { id: "normalization", title: "고정 input 좌표" },
     ],
-    component: () => import("@/pages/articles/ai/image-augmentation-transforms"),
+    component: () =>
+      import("@/pages/articles/ai/image-augmentation-transforms"),
   },
   {
     slug: "mixup-cutmix",
@@ -341,16 +342,64 @@ const cvArticles: Article[] = [
   },
   {
     slug: "deepfake-detection",
-    title: "딥페이크 탐지: Source Boundary에서 Unseen Manipulation까지",
+    title: "딥페이크 평가 기초: Source Group과 Unseen Risk",
     subcategory: "ai-practical-cv",
     sections: [
-      { id: "overview", title: "Source Independence와 Worst-domain Risk" },
-      { id: "face-extraction", title: "Track Coverage와 Failure Lineage" },
-      { id: "frequency", title: "Conditional Frequency Evidence" },
-      { id: "models", title: "Temporal Aggregation과 Benchmark Contract" },
-      { id: "external-data", title: "Provenance·Consent·Coverage Matrix" },
+      { id: "overview", title: "파일이 아니라 Source Group" },
+      { id: "source-groups", title: "Derivative·Identity 분리" },
+      { id: "domain-risk", title: "평균과 Worst-domain Risk" },
+      { id: "release", title: "Unseen Claim의 경계" },
     ],
     component: () => import("@/pages/articles/ai/deepfake-detection"),
+  },
+  {
+    slug: "deepfake-preprocessing-lineage",
+    title: "딥페이크 전처리: Face Track Coverage와 Lineage",
+    subcategory: "ai-practical-cv",
+    sections: [
+      { id: "overview", title: "전처리도 Model이다" },
+      { id: "detection-track", title: "Detect에서 Identity Track까지" },
+      { id: "coverage", title: "실패를 분모에 남기기" },
+      { id: "lineage", title: "Crop Transform Receipt" },
+    ],
+    component: () =>
+      import("@/pages/articles/ai/deepfake-preprocessing-lineage"),
+  },
+  {
+    slug: "deepfake-frequency-evidence",
+    title: "딥페이크 주파수 단서: Spectrum에서 Joint Error까지",
+    subcategory: "ai-practical-cv",
+    sections: [
+      { id: "overview", title: "주파수 단서는 조건부 Evidence" },
+      { id: "spectrum", title: "Image에서 Spectrum으로" },
+      { id: "corruption", title: "Codec·Resize Corruption Matrix" },
+      { id: "joint-error", title: "RGB와 Frequency의 Joint Error" },
+    ],
+    component: () => import("@/pages/articles/ai/deepfake-frequency-evidence"),
+  },
+  {
+    slug: "deepfake-video-decisions",
+    title: "딥페이크 Video Decision: Aggregation과 Benchmark Parity",
+    subcategory: "ai-practical-cv",
+    sections: [
+      { id: "overview", title: "Frame Score는 Video Decision이 아니다" },
+      { id: "aggregation", title: "Mean·Max·Top-k" },
+      { id: "parity", title: "동일 Input·Budget 비교" },
+      { id: "release", title: "Calibration·Abstention" },
+    ],
+    component: () => import("@/pages/articles/ai/deepfake-video-decisions"),
+  },
+  {
+    slug: "deepfake-dataset-governance",
+    title: "딥페이크 Dataset Governance: Provenance·Consent·Coverage",
+    subcategory: "ai-practical-cv",
+    sections: [
+      { id: "overview", title: "영상 수보다 Source Identity" },
+      { id: "provenance", title: "Source에서 Derivative까지" },
+      { id: "coverage", title: "Generator×Codec Coverage" },
+      { id: "release", title: "Consent·Deletion·Claim Gate" },
+    ],
+    component: () => import("@/pages/articles/ai/deepfake-dataset-governance"),
   },
   {
     slug: "video-understanding",
@@ -360,7 +409,10 @@ const cvArticles: Article[] = [
       { id: "overview", title: "Duration·Sampling Rate·Aliasing" },
       { id: "sampling", title: "Interval Coverage와 Deterministic Replay" },
       { id: "3dcnn", title: "Temporal Receptive Field·I3D·SlowFast" },
-      { id: "video-transformer", title: "Tubelet·Factorized Attention·VideoMAE" },
+      {
+        id: "video-transformer",
+        title: "Tubelet·Factorized Attention·VideoMAE",
+      },
     ],
     component: () => import("@/pages/articles/ai/video-understanding"),
   },
@@ -414,7 +466,8 @@ const embeddingArticles: Article[] = [
       { id: "objective", title: "Multi-positive 평균 loss" },
       { id: "release", title: "Sampler·subgroup·downstream gate" },
     ],
-    component: () => import("@/pages/articles/ai/supervised-contrastive-learning"),
+    component: () =>
+      import("@/pages/articles/ai/supervised-contrastive-learning"),
   },
   {
     slug: "contrastive-evaluation",
@@ -713,7 +766,8 @@ const strategyArticles: Article[] = [
       { id: "fixture", title: "Cutoff admission fixture" },
       { id: "boundary", title: "Transform·join·serving 경계" },
     ],
-    component: () => import("@/pages/articles/ai/prediction-time-feature-availability"),
+    component: () =>
+      import("@/pages/articles/ai/prediction-time-feature-availability"),
   },
   {
     slug: "competition-baseline",
@@ -749,7 +803,8 @@ const strategyArticles: Article[] = [
       { id: "manifest", title: "Final submission manifest" },
       { id: "boundary", title: "Freeze·rollback·새 holdout" },
     ],
-    component: () => import("@/pages/articles/ai/competition-submission-control"),
+    component: () =>
+      import("@/pages/articles/ai/competition-submission-control"),
   },
   {
     slug: "cross-validation",
@@ -869,7 +924,10 @@ const strategyArticles: Article[] = [
       { id: "overview", title: "결과를 다시 만드는 provenance" },
       { id: "wandb", title: "Run · config · artifact lineage" },
       { id: "mlflow", title: "Tracking · artifact · registry 경계" },
-      { id: "reproducibility", title: "Input · execution · tolerance contract" },
+      {
+        id: "reproducibility",
+        title: "Input · execution · tolerance contract",
+      },
     ],
     component: () => import("@/pages/articles/ai/experiment-tracking"),
   },

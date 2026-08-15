@@ -1447,29 +1447,43 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "여러 face manipulation과 compression 조건을 제공하는 대표 benchmark",
     },
     {
-      kind: "Benchmark 논문",
-      label: "The Deepfake Detection Challenge Dataset",
-      href: "https://arxiv.org/abs/2006.07397",
-      note: "동의한 참여자 기반의 대규모 face-swap video dataset과 설계 원칙",
-    },
-    {
-      kind: "Benchmark 논문",
-      label: "DeepfakeBench: A Comprehensive Benchmark of Deepfake Detection",
-      href: "https://papers.nips.cc/paper_files/paper/2023/hash/0e735e4b4f07de483cbe250130992726-Abstract-Datasets_and_Benchmarks.html",
-      note: "detector와 dataset을 통일된 pipeline에서 비교하는 재현 benchmark",
-    },
-    {
       kind: "핵심 논문",
       label: "CNN-Generated Images Are Surprisingly Easy to Spot... for Now",
       href: "https://openaccess.thecvf.com/content_CVPR_2020/html/Wang_CNN-Generated_Images_Are_Surprisingly_Easy_to_Spot..._for_Now_CVPR_2020_paper.html",
       note: "생성 모델의 공통 artifact와 새로운 generator로의 일반화를 분석",
     },
+  ],
+  "ai/deepfake-preprocessing-lineage": [
+    {
+      kind: "Benchmark 논문",
+      label: "DeepfakeBench: preprocessing and evaluation protocol",
+      href: "https://papers.nips.cc/paper_files/paper/2023/hash/0e735e4b4f07de483cbe250130992726-Abstract-Datasets_and_Benchmarks.html#preprocessing",
+      note: "face extraction·crop·data management를 detector 비교 조건과 함께 고정하는 재현 benchmark",
+    },
+  ],
+  "ai/deepfake-frequency-evidence": [
     {
       kind: "비판적 읽기",
       label:
         "A Closer Look at Fourier Spectrum Discrepancies for CNN-Generated Images Detection",
       href: "https://openaccess.thecvf.com/content/CVPR2021/html/Chandrasegaran_A_Closer_Look_at_Fourier_Spectrum_Discrepancies_for_CNN-Generated_Images_CVPR_2021_paper.html",
       note: "고주파 spectrum discrepancy를 보편적이고 robust한 생성 흔적으로 해석하는 주장 재검토",
+    },
+  ],
+  "ai/deepfake-video-decisions": [
+    {
+      kind: "Benchmark 논문",
+      label: "DeepfakeBench: detector comparison parity",
+      href: "https://papers.nips.cc/paper_files/paper/2023/hash/0e735e4b4f07de483cbe250130992726-Abstract-Datasets_and_Benchmarks.html#comparison",
+      note: "동일 data pipeline·metric·implementation boundary에서 detector와 video decision을 비교",
+    },
+  ],
+  "ai/deepfake-dataset-governance": [
+    {
+      kind: "Benchmark 논문",
+      label: "The Deepfake Detection Challenge Dataset",
+      href: "https://arxiv.org/abs/2006.07397",
+      note: "동의한 참여자 기반의 대규모 face-swap video dataset과 construction boundary",
     },
   ],
   "ai/video-understanding": [

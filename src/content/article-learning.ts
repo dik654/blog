@@ -13309,484 +13309,1069 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/deepfake-detection": {
-    coreIdea:
-      "딥페이크 탐지는 알려진 dataset의 artifact를 잘 분류하는 문제로 끝나지 않습니다. Source·identity·generator·codec independence를 먼저 고정하고 face preprocessing failure와 evidence coverage를 보존한 뒤 spatial·temporal·frequency 신호를 같은 benchmark에서 비교하며, unseen manipulation의 worst-domain error·calibration·abstention까지 운영 decision으로 연결해야 합니다.",
-    assumedKnowledge: [
+    "entryLevel": true,
+    "entryNote": "딥페이크 detector를 고르기 전에 source·person·파생본을 한 묶음으로 보는 이유부터 시작합니다.",
+    "coreIdea": "딥페이크 탐지의 첫 경계는 model이 아니라 평가 분리입니다. 같은 원본의 파생본을 한 group에 묶고, generator·codec domain별 risk를 따로 계산해야 알려진 artifact 암기를 일반화로 오인하지 않습니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
       {
-        id: "image-identity-group-split",
-        role: "같은 대상과 원본 파생 image가 split을 넘지 않도록 group을 만듭니다.",
+        "id": "forensic-source-independent-split",
+        "role": "Source·person 파생본을 같은 split group에 둡니다."
       },
       {
-        id: "image-tensor-layout",
-        role: "Frame·face crop의 channel·spatial axis와 resize를 읽습니다.",
-      },
-      {
-        id: "discrete-fourier-transform",
-        role: "Spatial image를 frequency coefficient와 magnitude spectrum으로 바꾸는 계산을 재사용합니다.",
-      },
-      {
-        id: "expectation",
-        role: "Domain·source sample별 loss와 paired joint error의 평균을 해석합니다.",
-      },
-      {
-        id: "variance",
-        role: "Held-out source·domain metric의 uncertainty와 confidence interval을 읽습니다.",
-      },
-      {
-        id: "temperature-scaling-calibration",
-        role: "Detector logit을 held-out calibration data에서 probability scale로 맞춥니다.",
-      },
+        "id": "unseen-manipulation-domain-risk",
+        "role": "Domain별 평균과 가장 취약한 domain risk를 함께 냅니다."
+      }
     ],
-    introducedHere: [
+    "conceptExplanations": [
       {
-        id: "forensic-source-independent-split",
-        role: "Source clip·person·capture session 파생본을 같은 group에 두고 generator holdout과 분리합니다.",
+        "id": "forensic-source-independent-split",
+        "sectionId": "source-groups",
+        "intuition": "같은 시험 문제를 압축하거나 잘라 두 문제처럼 세지 않도록 모든 파생본에 같은 원본 이름표를 붙입니다.",
+        "workedExample": "Person 17의 원본·face crop·JPEG 재압축본을 모두 train에 두고 person 42와 그 파생본은 test에만 둡니다.",
+        "boundary": "Person holdout과 generator holdout은 다른 질문이므로 source group 하나만 검사하고 둘을 같은 것으로 간주하지 않습니다."
       },
       {
-        id: "unseen-manipulation-domain-risk",
-        role: "Generator·codec·capture domain별 risk와 worst group을 함께 보고합니다.",
-      },
-      {
-        id: "face-track-coverage",
-        role: "전체 temporal evidence 중 valid face track이 detector input에 도달한 비율을 계산합니다.",
-      },
-      {
-        id: "forensic-preprocessing-lineage",
-        role: "Decode부터 crop까지 transform·revision·failure를 source frame에 연결합니다.",
-      },
-      {
-        id: "conditional-frequency-forensic-signal",
-        role: "Spectrum artifact를 generator·codec·resize에 조건부인 보조 신호로 제한합니다.",
-      },
-      {
-        id: "forensic-branch-joint-error",
-        role: "Spatial·frequency branch가 같은 held-out sample에서 동시에 틀리는 비율을 측정합니다.",
-      },
-      {
-        id: "video-score-aggregation-contract",
-        role: "Frame·track score를 video probability와 decision으로 합치는 규칙을 고정합니다.",
-      },
-      {
-        id: "forensic-benchmark-parity",
-        role: "Data·crop·frame·metric·hardware를 통일해 detector 후보를 비교합니다.",
-      },
-      {
-        id: "forensic-data-provenance-manifest",
-        role: "Source·identity·generator·codec·license·consent와 split lineage를 기록합니다.",
-      },
-      {
-        id: "forensic-coverage-matrix",
-        role: "Generator×codec×resolution cell의 source-independent coverage를 split별로 셉니다.",
-      },
+        "id": "unseen-manipulation-domain-risk",
+        "sectionId": "domain-risk",
+        "intuition": "전체 반 평균과 함께 가장 성적이 나쁜 반의 평균을 보고 취약한 조건을 숨기지 않는 방법입니다.",
+        "workedExample": "Raw loss .1, JPEG .3, unseen-generator social loss .8이면 전체 평균보다 worst-domain .8이 배포 위험을 더 잘 드러냅니다.",
+        "boundary": "미리 선언한 domain 중 최댓값일 뿐 아직 보지 못한 미래 generator error의 상한은 아닙니다."
+      }
     ],
-    conceptExplanations: [
+    "conceptStages": [
       {
-        id: "forensic-source-independent-split",
-        sectionId: "overview",
-        intuition:
-          "한 영상에서 자른 frame과 다시 압축한 사본을 서로 다른 시험 문제로 착각하지 않고 모두 같은 원본 묶음에 둡니다.",
-        workedExample:
-          "Person 17 source clip의 real frame·face crop·H.264/JPEG 파생본을 전부 train에 두고 person 42와 source clip은 OOD test에만 둡니다.",
-        boundary:
-          "Identity holdout은 unseen generator를 보장하지 않고 generator holdout은 unseen identity를 보장하지 않으므로 두 축을 manifest에서 따로 선언해야 합니다.",
+        "label": "00 Source",
+        "relation": "파일을 원본 source·person group으로 되돌립니다.",
+        "concepts": [
+          "forensic-source-independent-split"
+        ]
       },
       {
-        id: "unseen-manipulation-domain-risk",
-        sectionId: "overview",
-        intuition:
-          "전체 반 평균만 보지 않고 가장 성적이 낮은 반의 평균도 함께 보고 취약한 조건을 숨기지 않습니다.",
-        workedExample:
-          "Raw known-generator loss .1, JPEG .3, unseen-generator social re-encode .8이면 전체 평균 .25보다 worst-domain .8이 배포 위험을 더 직접적으로 드러냅니다.",
-        boundary:
-          "사전에 정의한 evaluation domains 안에서의 최댓값이며 아직 관측하지 못한 미래 generator의 error upper bound는 아닙니다.",
+        "label": "01 Split",
+        "relation": "Group 교집합이 없는 train·validation·test를 만듭니다.",
+        "concepts": [
+          "forensic-source-independent-split"
+        ]
       },
       {
-        id: "face-track-coverage",
-        sectionId: "face-extraction",
-        intuition:
-          "성공적으로 찾은 얼굴만 채점하지 않고 원래 영상 중 얼마를 실제로 읽었는지 분모를 남깁니다.",
-        workedExample:
-          "100 eligible frames 중 같은 identity의 valid crop이 62개면 coverage .62이고, 나머지 38개는 삭제하지 않고 detection failure로 기록합니다.",
-        boundary:
-          "높은 coverage도 track switch·틀린 identity crop을 배제하지 못하므로 continuity·identity audit와 함께 사용합니다.",
+        "label": "02 Domain",
+        "relation": "Generator·codec·capture slice별 loss를 계산합니다.",
+        "concepts": [
+          "unseen-manipulation-domain-risk"
+        ]
       },
       {
-        id: "forensic-preprocessing-lineage",
-        sectionId: "face-extraction",
-        intuition:
-          "최종 crop에 원본 frame 주소와 거쳐 온 자르기·회전·보간 영수증을 붙여 전처리 artifact의 출처를 찾습니다.",
-        workedExample:
-          "source hash, frame timestamp, detector revision, box, landmarks, track ID, alignment matrix, crop margin, interpolation을 한 row에 저장합니다.",
-        boundary:
-          "Lineage를 저장하는 것만으로 detector가 robust해지지는 않지만 preprocessing 변경을 manipulation 신호로 잘못 학습한 경우를 재현할 수 있습니다.",
-      },
-      {
-        id: "conditional-frequency-forensic-signal",
-        sectionId: "frequency",
-        intuition:
-          "특정 프린터가 남기는 줄무늬처럼 일부 generator의 spectrum 흔적도 codec·resize를 거치면 달라질 수 있는 조건부 단서입니다.",
-        workedExample:
-          "Raw ProGAN spectrum에서 보인 high-frequency pattern이 JPEG quality와 bilinear resize 뒤 유지되는지 corruption cell별로 다시 측정합니다.",
-        boundary:
-          "Fourier coefficient 자체는 정확한 계산이지만 그 pattern이 deepfake의 보편적 원인이라는 해석은 별도 증거가 필요합니다.",
-      },
-      {
-        id: "forensic-branch-joint-error",
-        sectionId: "frequency",
-        intuition:
-          "두 탐정이 각각 몇 번 틀렸는지뿐 아니라 같은 사건에서 함께 틀리는지를 세어 서로 보완하는지 봅니다.",
-        workedExample:
-          "OOD clips 100개에서 RGB 20 errors, frequency 25 errors, simultaneous 18 errors면 frequency branch의 독립 보완 여지는 작습니다.",
-        boundary:
-          "Joint error만으로 calibrated ensemble gain이나 latency trade-off를 결정하지 않으며 class·codec slice별 값이 다를 수 있습니다.",
-      },
-      {
-        id: "video-score-aggregation-contract",
-        sectionId: "models",
-        intuition:
-          "여러 frame의 경고음을 평균할지 가장 큰 한 번을 들을지 높은 몇 번을 합칠지 운영 규칙으로 고정합니다.",
-        workedExample:
-          "Valid scores를 내림차순 정렬하고 top 5 mean을 계산한 뒤 track coverage<.4이면 score 대신 insufficient-evidence 상태를 반환합니다.",
-        boundary:
-          "Mean·max·top-k는 조작이 시간에 분포하는 방식에 서로 다른 가정을 하며 calibration은 aggregation 뒤 score에 다시 맞춰야 합니다.",
-      },
-      {
-        id: "forensic-benchmark-parity",
-        sectionId: "models",
-        intuition:
-          "경주차를 비교할 때 한 차만 더 좋은 타이어와 짧은 코스를 쓰지 않도록 input과 측정계를 통일합니다.",
-        workedExample:
-          "같은 source split·face detector/crop·32 frames·five seeds·video reducer·AUC/AP/NLL·target GPU에서 CNN·ViT·temporal candidates를 비교합니다.",
-        boundary:
-          "통일 benchmark의 순위도 그 dataset coverage 밖의 manipulation을 보장하지 않고 pretraining data가 다른 후보를 architecture-only effect로 해석할 수 없습니다.",
-      },
-      {
-        id: "forensic-data-provenance-manifest",
-        sectionId: "external-data",
-        intuition:
-          "영상이 어디서 왔고 누가 어떤 이용과 조작에 동의했는지 파생본까지 따라갈 수 있는 출처 장부입니다.",
-        workedExample:
-          "Dataset ID, source clip, person ID, consent scope, generator/checkpoint, codec, license, deletion request status, split을 한 manifest에 연결합니다.",
-        boundary:
-          "공개 접근 가능하다는 사실은 얼굴 조작·재배포 consent나 무제한 상업 이용을 뜻하지 않습니다.",
-      },
-      {
-        id: "forensic-coverage-matrix",
-        sectionId: "external-data",
-        intuition:
-          "재료가 많다는 말 대신 generator·codec·resolution 조합의 칸마다 서로 다른 원본이 몇 개인지 셉니다.",
-        workedExample:
-          "Train known-A×raw×720p에는 80 independent sources, OOD unseen-C×social×360p에는 12 sources로 기록하고 frame 수는 별도 열에 둡니다.",
-        boundary:
-          "빈 test cell을 training source로 채우면 coverage는 늘지만 holdout 질문이 깨지며 count가 작으면 metric uncertainty를 함께 표시해야 합니다.",
-      },
-    ],
-    conceptStages: [
-      {
-        label: "Evaluation boundary",
-        relation:
-          "Source·identity와 manipulation·codec holdout을 나누고 domain risk 정의",
-        concepts: [
-          "image-identity-group-split",
+        "label": "03 Release",
+        "relation": "Worst-domain risk가 기준을 넘으면 배포를 중단합니다.",
+        "concepts": [
           "forensic-source-independent-split",
-          "unseen-manipulation-domain-risk",
-        ],
-      },
-      {
-        label: "Observation lineage",
-        relation:
-          "Decode·detect·track·align의 success와 failure를 원본 시간축에 보존",
-        concepts: ["forensic-preprocessing-lineage", "face-track-coverage"],
-      },
-      {
-        label: "Conditional evidence",
-        relation:
-          "Spatial·frequency 단서의 corruption sensitivity와 joint error를 비교",
-        concepts: [
-          "discrete-fourier-transform",
-          "conditional-frequency-forensic-signal",
-          "forensic-branch-joint-error",
-        ],
-      },
-      {
-        label: "Video decision",
-        relation:
-          "동일 benchmark에서 temporal aggregation·calibration·coverage abstention 선택",
-        concepts: [
-          "video-score-aggregation-contract",
-          "temperature-scaling-calibration",
-          "forensic-benchmark-parity",
-        ],
-      },
-      {
-        label: "Data governance",
-        relation:
-          "Provenance·consent와 source-independent coverage로 근거 범위 관리",
-        concepts: [
-          "forensic-data-provenance-manifest",
-          "forensic-coverage-matrix",
-          "unseen-manipulation-domain-risk",
-        ],
-      },
+          "unseen-manipulation-domain-risk"
+        ]
+      }
     ],
-    exercises: [
+    "exercises": [
       {
-        level: "basic",
-        question:
-          "한 source video의 real·fake·crop·JPEG 파생본과 같은 인물의 다른 clip을 train·validation·OOD test에 배치하고 group-intersection 검사를 작성하라.",
-        answerChecklist: [
-          "source group",
-          "person group",
-          "all derivatives one split",
-          "generator holdout separate",
+        "level": "basic",
+        "question": "같은 source video의 원본·crop·JPEG 파생본을 어느 split에 함께 두어야 하는지 설명하세요.",
+        "answerChecklist": [
+          "source group 하나",
+          "파생본 같은 split",
+          "test 교집합 없음"
+        ],
+        "requiredConcepts": [
+          "forensic-source-independent-split"
+        ],
+        "sectionId": "source-groups"
+      },
+      {
+        "level": "basic",
+        "question": "Person ID와 source clip ID를 동시에 group key에 넣는 이유를 설명하세요.",
+        "answerChecklist": [
+          "identity leakage 방지",
+          "clip derivative 방지",
+          "두 축 결합"
+        ],
+        "requiredConcepts": [
+          "forensic-source-independent-split"
+        ],
+        "sectionId": "source-groups"
+      },
+      {
+        "level": "basic",
+        "question": "Train group과 test group의 교집합이 비어 있어야 하는 검사를 작성하세요.",
+        "answerChecklist": [
+          "집합 생성",
+          "교집합",
+          "원소 수 0"
+        ],
+        "requiredConcepts": [
+          "forensic-source-independent-split"
+        ],
+        "sectionId": "source-groups"
+      },
+      {
+        "level": "basic",
+        "question": "Raw·JPEG·social re-encode를 서로 다른 평가 domain으로 남기는 이유를 설명하세요.",
+        "answerChecklist": [
+          "codec 조건",
+          "shortcut 변화",
+          "slice별 loss"
+        ],
+        "requiredConcepts": [
+          "unseen-manipulation-domain-risk"
+        ],
+        "sectionId": "domain-risk"
+      },
+      {
+        "level": "basic",
+        "question": "Domain losses .1, .3, .8에서 평균과 worst-domain risk를 각각 계산하세요.",
+        "answerChecklist": [
+          "평균 .4",
+          "최댓값 .8",
+          "두 값 함께 보고"
+        ],
+        "requiredConcepts": [
+          "unseen-manipulation-domain-risk"
+        ],
+        "sectionId": "domain-risk"
+      },
+      {
+        "level": "basic",
+        "question": "Unseen-generator risk가 미래 모든 generator의 error upper bound가 아닌 이유를 설명하세요.",
+        "answerChecklist": [
+          "관측 domain 한정",
+          "미래 분포 미정",
+          "근거 범위 선언"
+        ],
+        "requiredConcepts": [
+          "unseen-manipulation-domain-risk"
+        ],
+        "sectionId": "domain-risk"
+      },
+      {
+        "level": "advanced",
+        "question": "Source·person·generator holdout을 각각 분리해 leakage 검사를 설계하세요.",
+        "answerChecklist": [
+          "세 group 축",
           "empty intersections",
-          "near-duplicate check",
-          "manifest digest",
+          "manifest checksum",
+          "near duplicate"
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
+          "forensic-source-independent-split"
+        ],
+        "sectionId": "source-groups"
+      },
+      {
+        "level": "advanced",
+        "question": "Support가 작은 domain에서 worst risk와 uncertainty를 함께 보고하는 표를 설계하세요.",
+        "answerChecklist": [
+          "domain count",
+          "같은 loss",
+          "confidence interval",
+          "minimum support"
+        ],
+        "requiredConcepts": [
+          "unseen-manipulation-domain-risk"
+        ],
+        "sectionId": "domain-risk"
+      },
+      {
+        "level": "advanced",
+        "question": "전체 평균은 좋아졌지만 worst-domain이 악화된 model release를 판정하세요.",
+        "answerChecklist": [
+          "평균과 worst 분리",
+          "사전 threshold",
+          "취약 slice",
+          "release 중단"
+        ],
+        "requiredConcepts": [
+          "unseen-manipulation-domain-risk"
+        ],
+        "sectionId": "release"
+      },
+      {
+        "level": "advanced",
+        "question": "새 generator를 추가할 때 split artifact와 risk report를 versioning하는 절차를 설계하세요.",
+        "answerChecklist": [
+          "source grouping 재검사",
+          "새 domain",
+          "과거 결과 비교",
+          "rollback receipt"
+        ],
+        "requiredConcepts": [
           "forensic-source-independent-split",
-          "image-identity-group-split",
+          "unseen-manipulation-domain-risk"
         ],
-        sectionId: "overview",
+        "sectionId": "release"
+      }
+    ],
+    "papers": [
+      {
+        "title": "FaceForensics++: Learning to Detect Manipulated Facial Images",
+        "href": "https://openaccess.thecvf.com/content_ICCV_2019/html/Rossler_FaceForensics_Learning_to_Detect_Manipulated_Facial_Images_ICCV_2019_paper.html",
+        "problem": "여러 facial manipulation detector를 공통 source와 compression 조건에서 비교하는 문제를 다룹니다.",
+        "contribution": "네 manipulation과 여러 compression level을 포함한 benchmark와 detector 비교를 제공합니다.",
+        "assumptions": "논문의 source videos·manipulation methods·preprocessing 설정을 전제로 합니다.",
+        "evidenceScope": "FaceForensics++ benchmark의 manipulation·compression·detector 평가 범위입니다.",
+        "notClaim": "이후 등장한 모든 generator와 실제 유통 경로에서 같은 성능을 보장하지 않습니다.",
+        "sectionId": "paper-faceforensics"
+      }
+    ]
+  },
+  "ai/deepfake-preprocessing-lineage": {
+    "entryLevel": true,
+    "entryNote": "얼굴 crop을 당연한 입력으로 보지 않고 decode부터 crop까지 성공과 실패가 어떻게 만들어지는지 봅니다.",
+    "coreIdea": "얼굴 전처리는 detector 밖의 청소 단계가 아니라 관측 장치입니다. Eligible frame을 분모로 coverage를 계산하고 각 transform과 실패를 source timestamp에 연결해야 preprocessing shortcut과 silent deletion을 진단할 수 있습니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "forensic-preprocessing-lineage",
+        "role": "Decode·detect·track·align·crop의 revision과 실패를 원본에 연결합니다."
       },
       {
-        level: "advanced",
-        question:
-          "Known/raw·known/re-encode·unseen/raw·unseen/re-encode domain의 mean risk·worst risk·confidence interval 보고표와 model reject rule을 설계하라.",
-        answerChecklist: [
-          "predeclared domains",
-          "independent source counts",
-          "same loss",
-          "mean and worst",
-          "CI",
-          "minimum support",
-          "reject threshold",
-          "future-domain caveat",
-        ],
-        requiredConcepts: ["unseen-manipulation-domain-risk", "variance"],
-        sectionId: "overview",
+        "id": "face-track-coverage",
+        "role": "전체 eligible frames 중 valid identity crop이 도달한 비율을 계산합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "forensic-preprocessing-lineage",
+        "sectionId": "lineage",
+        "intuition": "완성 crop에 원본 주소와 자르기·회전·보간 영수증을 붙여 artifact가 생긴 단계를 찾습니다.",
+        "workedExample": "Source hash, timestamp, detector revision, box, landmarks, track ID, alignment matrix와 failure code를 한 record에 둡니다.",
+        "boundary": "Lineage 자체가 detector를 robust하게 만들지는 않지만 input 변화의 원인을 재현하고 rollback할 수 있게 합니다."
       },
       {
-        level: "basic",
-        question:
-          "100 eligible frames 중 detect 80, identity-consistent track 70, valid crop 62일 때 stage별 coverage와 최종 coverage를 계산하고 실패를 저장할 schema를 작성하라.",
-        answerChecklist: [
-          ".80 detect",
-          ".70 track",
-          ".62 final",
-          "same denominator",
-          "timestamp",
-          "stage status",
-          "track switch",
-          "no silent deletion",
-        ],
-        requiredConcepts: [
-          "face-track-coverage",
+        "id": "face-track-coverage",
+        "sectionId": "coverage",
+        "intuition": "성공한 얼굴만 채점하지 않고 원래 읽어야 했던 영상 중 실제로 읽은 비율을 남깁니다.",
+        "workedExample": "Eligible 100 frames에서 detect 80, 같은 identity track 70, valid crop 62이면 최종 coverage는 .62입니다.",
+        "boundary": "높은 coverage만으로 track switch나 잘못된 identity crop이 없다고 보장하지 않으므로 lineage audit가 함께 필요합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "00 Decode",
+        "relation": "Source frame과 timestamp를 고정합니다.",
+        "concepts": [
+          "forensic-preprocessing-lineage"
+        ]
+      },
+      {
+        "label": "01 Track",
+        "relation": "Detection과 identity continuity 결과를 기록합니다.",
+        "concepts": [
           "forensic-preprocessing-lineage",
-        ],
-        sectionId: "face-extraction",
+          "face-track-coverage"
+        ]
       },
       {
-        level: "advanced",
-        question:
-          "Aligned/unaligned·crop margin·interpolation을 비교하면서 새 resampling shortcut을 검출하는 experiment와 parity rule을 설계하라.",
-        answerChecklist: [
-          "same source split",
-          "transform revision",
-          "same model budget",
-          "raw/compressed cells",
-          "coverage",
-          "paired OOD metric",
-          "background slice",
-          "lineage replay",
+        "label": "02 Crop",
+        "relation": "Alignment·margin·interpolation transform을 보존합니다.",
+        "concepts": [
+          "forensic-preprocessing-lineage"
+        ]
+      },
+      {
+        "label": "03 Coverage",
+        "relation": "성공과 실패를 같은 전체 분모로 집계합니다.",
+        "concepts": [
+          "face-track-coverage"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "Eligible 100 frames 중 valid crop 62개일 때 track coverage를 계산하세요.",
+        "answerChecklist": [
+          "분모 100",
+          "분자 62",
+          "coverage .62"
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
+          "face-track-coverage"
+        ],
+        "sectionId": "coverage"
+      },
+      {
+        "level": "basic",
+        "question": "Detect 80·track 70·crop 62일 때 단계별 coverage를 같은 분모로 계산하세요.",
+        "answerChecklist": [
+          ".80",
+          ".70",
+          ".62",
+          "같은 eligible 분모"
+        ],
+        "requiredConcepts": [
+          "face-track-coverage"
+        ],
+        "sectionId": "coverage"
+      },
+      {
+        "level": "basic",
+        "question": "Detector가 얼굴을 찾지 못한 frame을 삭제하지 말아야 하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "silent selection 방지",
+          "coverage 감소 보존",
+          "failure state"
+        ],
+        "requiredConcepts": [
+          "face-track-coverage"
+        ],
+        "sectionId": "detection-track"
+      },
+      {
+        "level": "basic",
+        "question": "Crop 하나를 source timestamp까지 되돌리는 lineage 필드를 나열하세요.",
+        "answerChecklist": [
+          "source와 timestamp",
+          "detector와 box",
+          "track ID",
+          "alignment와 crop"
+        ],
+        "requiredConcepts": [
+          "forensic-preprocessing-lineage"
+        ],
+        "sectionId": "lineage"
+      },
+      {
+        "level": "basic",
+        "question": "Face detection과 identity tracking이 서로 다른 단계인 이유를 설명하세요.",
+        "answerChecklist": [
+          "얼굴 존재",
+          "동일 인물 연속성",
+          "별도 실패 상태"
+        ],
+        "requiredConcepts": [
+          "forensic-preprocessing-lineage"
+        ],
+        "sectionId": "detection-track"
+      },
+      {
+        "level": "basic",
+        "question": "Alignment interpolation revision이 detector shortcut이 될 수 있는 경로를 설명하세요.",
+        "answerChecklist": [
+          "resampling artifact",
+          "split correlation",
+          "lineage revision"
+        ],
+        "requiredConcepts": [
+          "forensic-preprocessing-lineage"
+        ],
+        "sectionId": "lineage"
+      },
+      {
+        "level": "advanced",
+        "question": "Track switch가 coverage를 높게 유지하면서 label을 오염시키는 반례를 설계하세요.",
+        "answerChecklist": [
+          "다른 identity crop",
+          "indicator는 성공",
+          "identity audit",
+          "release 중단"
+        ],
+        "requiredConcepts": [
           "forensic-preprocessing-lineage",
-          "forensic-benchmark-parity",
+          "face-track-coverage"
         ],
-        sectionId: "face-extraction",
+        "sectionId": "detection-track"
       },
       {
-        level: "basic",
-        question:
-          "OOD 100 clips에서 RGB branch가 20개, frequency branch가 25개, 둘 다 18개를 틀렸다. RGB만·frequency만·둘 중 하나 이상·동시 오류 수를 계산하라.",
-        answerChecklist: [
-          "RGB-only=2",
-          "frequency-only=7",
-          "joint=18",
-          "union=27",
-          "joint rate=.18",
-          "same held-out samples",
-          "correlated-error boundary",
+        "level": "advanced",
+        "question": "Aligned와 unaligned crop을 source-paired하게 비교하는 실험을 설계하세요.",
+        "answerChecklist": [
+          "같은 timestamps",
+          "transform만 변경",
+          "coverage 함께",
+          "paired metric"
         ],
-        requiredConcepts: [
-          "forensic-branch-joint-error",
+        "requiredConcepts": [
+          "forensic-preprocessing-lineage"
+        ],
+        "sectionId": "lineage"
+      },
+      {
+        "level": "advanced",
+        "question": "Preprocessing revision 뒤 coverage가 .8에서 .6으로 떨어졌을 때 rollback 기준을 설계하세요.",
+        "answerChecklist": [
+          "stage별 delta",
+          "failure reason",
+          "slice 분석",
+          "last known revision"
+        ],
+        "requiredConcepts": [
+          "forensic-preprocessing-lineage",
+          "face-track-coverage"
+        ],
+        "sectionId": "coverage"
+      },
+      {
+        "level": "advanced",
+        "question": "Decoder부터 detector input까지 재생 가능한 provenance receipt를 설계하세요.",
+        "answerChecklist": [
+          "binary revisions",
+          "parameters",
+          "source checksum",
+          "output checksum"
+        ],
+        "requiredConcepts": [
+          "forensic-preprocessing-lineage"
+        ],
+        "sectionId": "lineage"
+      }
+    ],
+    "papers": [
+      {
+        "title": "DeepfakeBench: A Comprehensive Benchmark of Deepfake Detection",
+        "href": "https://papers.nips.cc/paper_files/paper/2023/hash/0e735e4b4f07de483cbe250130992726-Abstract-Datasets_and_Benchmarks.html",
+        "problem": "서로 다른 preprocessing·implementation·metric 때문에 detector 비교가 왜곡되는 문제를 다룹니다.",
+        "contribution": "통일 data management와 method implementation 및 evaluation protocol을 제공합니다.",
+        "assumptions": "포함된 datasets·detectors·공개 implementation revision을 전제로 합니다.",
+        "evidenceScope": "논문이 재현한 standardized preprocessing과 benchmark pipeline 범위입니다.",
+        "notClaim": "특정 face detector와 crop recipe가 모든 배포 영상에서 최적이라는 뜻은 아닙니다.",
+        "sectionId": "paper-deepfake-preprocess"
+      }
+    ]
+  },
+  "ai/deepfake-frequency-evidence": {
+    "entryLevel": true,
+    "entryNote": "주파수라는 단어를 보편적 진위 서명으로 가정하지 않고 이미지의 밝기 변화 패턴을 다른 좌표로 본다는 데서 시작합니다.",
+    "coreIdea": "Frequency evidence는 generator와 codec·resize 조건에 따라 생기고 사라지는 조건부 단서입니다. RGB와 spectrum branch의 개별 오류뿐 아니라 같은 sample에서 동시에 실패하는 joint error를 봐야 실제 보완성을 판단할 수 있습니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "conditional-frequency-forensic-signal",
+        "role": "Spectrum pattern의 근거를 generator·corruption cell로 제한합니다."
+      },
+      {
+        "id": "forensic-branch-joint-error",
+        "role": "RGB와 frequency branch가 같은 sample에서 함께 틀리는 비율을 계산합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "conditional-frequency-forensic-signal",
+        "sectionId": "spectrum",
+        "intuition": "특정 프린터의 줄무늬처럼 일부 generator가 남긴 반복 패턴을 frequency 좌표에서 보되 유통 변환 뒤 유지되는지 다시 묻습니다.",
+        "workedExample": "Raw generator output에서 보인 high-frequency peak를 JPEG quality·resize·blur cell마다 다시 측정합니다.",
+        "boundary": "Fourier transform은 정확한 좌표 변환이지만 관측한 peak가 모든 deepfake의 보편 원인이라는 뜻은 아닙니다."
+      },
+      {
+        "id": "forensic-branch-joint-error",
+        "sectionId": "joint-error",
+        "intuition": "두 탐정이 각각 몇 번 틀렸는지보다 같은 사건에서 함께 틀리는지를 세어 서로 보완하는지 확인합니다.",
+        "workedExample": "100 clips에서 RGB error 20, frequency error 25, simultaneous error 18이면 joint error rate는 .18입니다.",
+        "boundary": "Joint error가 낮아도 calibration·latency·coverage를 포함한 ensemble 이득이 자동 보장되지는 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "00 Image",
+        "relation": "같은 crop을 spatial과 frequency view로 나눕니다.",
+        "concepts": [
+          "conditional-frequency-forensic-signal"
+        ]
+      },
+      {
+        "label": "01 Corrupt",
+        "relation": "Codec·resize·blur 조건별 signal 변화를 측정합니다.",
+        "concepts": [
+          "conditional-frequency-forensic-signal"
+        ]
+      },
+      {
+        "label": "02 Errors",
+        "relation": "같은 held-out samples에 branch별 error를 표시합니다.",
+        "concepts": [
+          "forensic-branch-joint-error"
+        ]
+      },
+      {
+        "label": "03 Combine",
+        "relation": "Conditional signal과 joint error로 fusion 여부를 판단합니다.",
+        "concepts": [
           "conditional-frequency-forensic-signal",
+          "forensic-branch-joint-error"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "Spatial image와 magnitude spectrum이 같은 input을 다른 좌표로 본다는 뜻을 설명하세요.",
+        "answerChecklist": [
+          "같은 pixels",
+          "frequency basis",
+          "진위 label 아님"
         ],
-        sectionId: "frequency",
+        "requiredConcepts": [
+          "conditional-frequency-forensic-signal"
+        ],
+        "sectionId": "spectrum"
       },
       {
-        level: "basic",
-        question:
-          "Source frame 240에서 나온 face crop을 decode→detect→track→align→crop 단계로 추적할 lineage record를 만들고 detector 실패도 기록하라.",
-        answerChecklist: [
-          "source video and frame id",
-          "decoder revision",
-          "detector result",
-          "track identity",
-          "alignment transform",
-          "crop and interpolation",
-          "typed failure reason",
+        "level": "basic",
+        "question": "Raw에서 보인 spectral peak를 JPEG에서도 다시 검사해야 하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "compression 변화",
+          "조건부 signal",
+          "cell별 측정"
         ],
-        requiredConcepts: [
-          "forensic-preprocessing-lineage",
-          "face-track-coverage",
+        "requiredConcepts": [
+          "conditional-frequency-forensic-signal"
         ],
-        sectionId: "face-extraction",
+        "sectionId": "corruption"
       },
       {
-        level: "basic",
-        question:
-          "Generator A·B와 raw·JPEG의 2×2 coverage matrix에서 B×JPEG cell이 비어 있다. Manifest 필드와 이때 말할 수 없는 OOD 주장을 적어라.",
-        answerChecklist: [
-          "source identity",
-          "generator revision",
-          "codec and quality",
-          "license and consent",
-          "split lineage",
-          "empty B-by-JPEG cell",
-          "no robustness claim for empty cell",
+        "level": "basic",
+        "question": "Frequency artifact를 모든 generator의 보편적 원인으로 부를 수 없는 이유를 설명하세요.",
+        "answerChecklist": [
+          "generator 의존",
+          "pipeline 의존",
+          "근거 범위"
         ],
-        requiredConcepts: [
-          "forensic-data-provenance-manifest",
-          "forensic-coverage-matrix",
+        "requiredConcepts": [
+          "conditional-frequency-forensic-signal"
         ],
-        sectionId: "external-data",
+        "sectionId": "spectrum"
       },
       {
-        level: "basic",
-        question:
-          "Frame scores [.9,.8,.3,.1]에서 mean·max·top-2 mean을 계산하고 각 reducer가 가정하는 temporal evidence를 설명하라.",
-        answerChecklist: [
-          "mean=.525",
-          "max=.9",
-          "top2=.85",
-          "dilution",
-          "single-error sensitivity",
-          "k/length rule",
-          "coverage",
+        "level": "basic",
+        "question": "RGB error 20, frequency error 25, simultaneous error 18의 joint error rate를 계산하세요.",
+        "answerChecklist": [
+          "동시 18",
+          "분모 100",
+          "rate .18"
         ],
-        requiredConcepts: ["video-score-aggregation-contract"],
-        sectionId: "models",
+        "requiredConcepts": [
+          "forensic-branch-joint-error"
+        ],
+        "sectionId": "joint-error"
       },
       {
-        level: "advanced",
-        question:
-          "Frame CNN·ViT·temporal model을 source-independent하게 비교하는 preprocessing·frame·metric·calibration·runtime table과 release rule을 설계하라.",
-        answerChecklist: [
-          "same split",
-          "same crop/frame budget",
-          "pretraining stated",
-          "video reducer",
-          "AUC/AP/NLL",
-          "worst domain",
-          "coverage",
-          "p95/runtime",
-          "abstention",
+        "level": "basic",
+        "question": "같은 수치에서 RGB-only와 frequency-only error 수를 계산하세요.",
+        "answerChecklist": [
+          "RGB-only 2",
+          "frequency-only 7",
+          "동일 sample IDs"
         ],
-        requiredConcepts: [
-          "forensic-benchmark-parity",
+        "requiredConcepts": [
+          "forensic-branch-joint-error"
+        ],
+        "sectionId": "joint-error"
+      },
+      {
+        "level": "basic",
+        "question": "Branch accuracy 두 개만으로 complementarity를 알 수 없는 이유를 설명하세요.",
+        "answerChecklist": [
+          "sample alignment 부재",
+          "error overlap 필요",
+          "joint metric"
+        ],
+        "requiredConcepts": [
+          "forensic-branch-joint-error"
+        ],
+        "sectionId": "joint-error"
+      },
+      {
+        "level": "advanced",
+        "question": "Generator×codec×resize corruption matrix에서 spectrum signal을 검증하는 실험을 설계하세요.",
+        "answerChecklist": [
+          "source-independent split",
+          "cell support",
+          "같은 metric",
+          "empty cell 공개"
+        ],
+        "requiredConcepts": [
+          "conditional-frequency-forensic-signal"
+        ],
+        "sectionId": "corruption"
+      },
+      {
+        "level": "advanced",
+        "question": "두 branch error 집합의 union·intersection·각 branch-only 영역을 계산하세요.",
+        "answerChecklist": [
+          "intersection",
+          "set difference",
+          "union",
+          "same denominator"
+        ],
+        "requiredConcepts": [
+          "forensic-branch-joint-error"
+        ],
+        "sectionId": "joint-error"
+      },
+      {
+        "level": "advanced",
+        "question": "Frequency branch 추가가 latency만 늘리는 경우를 판정하는 release gate를 설계하세요.",
+        "answerChecklist": [
+          "joint error delta",
+          "calibrated metric",
+          "latency",
+          "rollback"
+        ],
+        "requiredConcepts": [
+          "conditional-frequency-forensic-signal",
+          "forensic-branch-joint-error"
+        ],
+        "sectionId": "joint-error"
+      },
+      {
+        "level": "advanced",
+        "question": "새 codec에서 spectral shortcut이 사라진 반례를 재현 가능한 receipt로 남기세요.",
+        "answerChecklist": [
+          "codec revision",
+          "source pairs",
+          "spectrum statistic",
+          "claim 축소"
+        ],
+        "requiredConcepts": [
+          "conditional-frequency-forensic-signal"
+        ],
+        "sectionId": "corruption"
+      }
+    ],
+    "papers": [
+      {
+        "title": "A Closer Look at Fourier Spectrum Discrepancies for CNN-Generated Images Detection",
+        "href": "https://openaccess.thecvf.com/content/CVPR2021/html/Chandrasegaran_A_Closer_Look_at_Fourier_Spectrum_Discrepancies_for_CNN-Generated_Images_CVPR_2021_paper.html",
+        "problem": "High-frequency discrepancy가 보편적이고 robust한 synthetic-image feature인지 재검토합니다.",
+        "contribution": "Spectrum-decay claim의 조건과 detection robustness 한계를 실험적으로 분석합니다.",
+        "assumptions": "논문의 generator families·spectral measures·post-processing 설정을 전제로 합니다.",
+        "evidenceScope": "CVPR 논문의 Fourier observations와 detector comparison 범위입니다.",
+        "notClaim": "모든 frequency feature가 무가치하거나 모든 future generator에서 같은 결과라는 뜻은 아닙니다.",
+        "sectionId": "paper-fourier-discrepancy"
+      }
+    ]
+  },
+  "ai/deepfake-video-decisions": {
+    "entryLevel": true,
+    "entryNote": "Frame score가 여러 개라는 사실과 video 판정 하나가 만들어졌다는 사실을 구분하는 데서 시작합니다.",
+    "coreIdea": "Frame·clip·track score를 video decision으로 바꾸는 reducer는 model 밖의 사소한 후처리가 아닙니다. Aggregation 뒤 calibration하고 동일 preprocessing·budget·metric에서 후보를 비교해야 공정한 video-level benchmark가 됩니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "video-score-aggregation-contract",
+        "role": "Temporal scores를 mean·max·top-k와 abstention으로 video decision에 연결합니다."
+      },
+      {
+        "id": "forensic-benchmark-parity",
+        "role": "입력·training·decision·runtime 조건을 맞춰 detector를 비교합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "video-score-aggregation-contract",
+        "sectionId": "aggregation",
+        "intuition": "여러 frame의 경고음을 모두 평균할지 가장 큰 것만 들을지 높은 몇 개만 들을지 운영 규칙으로 고정합니다.",
+        "workedExample": "Scores .9,.8,.3,.1의 mean은 .525, max는 .9, top-2 mean은 .85이고 서로 다른 시간 분포 가정을 가집니다.",
+        "boundary": "Reducer를 바꾸면 score distribution도 바뀌므로 aggregation 뒤 calibration을 다시 맞춰야 합니다."
+      },
+      {
+        "id": "forensic-benchmark-parity",
+        "sectionId": "parity",
+        "intuition": "경주차를 비교할 때 한 차만 좋은 타이어와 짧은 코스를 쓰지 않도록 입력과 측정계를 통일합니다.",
+        "workedExample": "같은 source split·crop·32 frames·reducer·metrics·target GPU에서 CNN과 temporal model을 비교합니다.",
+        "boundary": "공정한 benchmark의 순위도 dataset coverage 밖의 future manipulation 성능을 보장하지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "00 Units",
+        "relation": "Frame·clip·track 중 score의 temporal unit을 고정합니다.",
+        "concepts": [
+          "video-score-aggregation-contract"
+        ]
+      },
+      {
+        "label": "01 Reduce",
+        "relation": "Mean·max·top-k로 video score를 만듭니다.",
+        "concepts": [
+          "video-score-aggregation-contract"
+        ]
+      },
+      {
+        "label": "02 Match",
+        "relation": "입력·budget·metric·hardware를 후보 사이에 맞춥니다.",
+        "concepts": [
+          "forensic-benchmark-parity"
+        ]
+      },
+      {
+        "label": "03 Decide",
+        "relation": "Calibration·coverage·runtime과 함께 release를 판정합니다.",
+        "concepts": [
           "video-score-aggregation-contract",
-          "unseen-manipulation-domain-risk",
+          "forensic-benchmark-parity"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "Frame scores .9,.8,.3,.1의 mean·max·top-2 mean을 계산하세요.",
+        "answerChecklist": [
+          "mean .525",
+          "max .9",
+          "top-2 .85"
         ],
-        sectionId: "models",
+        "requiredConcepts": [
+          "video-score-aggregation-contract"
+        ],
+        "sectionId": "aggregation"
       },
       {
-        level: "advanced",
-        question:
-          "두 외부 dataset을 합칠 때 provenance·consent manifest와 generator×codec×resolution coverage matrix를 만들고 OOD cell 독립성 검사를 작성하라.",
-        answerChecklist: [
-          "dataset/source/person",
-          "consent/license",
-          "generator/checkpoint",
-          "codec/resolution",
-          "source counts not frames",
-          "split columns",
-          "empty overlap",
-          "unknown preserved",
-          "deletion scope",
+        "level": "basic",
+        "question": "Top-k mean에서 k가 1과 전체 score 수일 때 각각 어떤 reducer가 되는지 설명하세요.",
+        "answerChecklist": [
+          "k=1 max",
+          "k=T mean",
+          "연속된 선택"
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
+          "video-score-aggregation-contract"
+        ],
+        "sectionId": "aggregation"
+      },
+      {
+        "level": "basic",
+        "question": "Frame-level calibration을 aggregation 뒤 다시 맞춰야 하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "distribution 변화",
+          "video score",
+          "held-out calibration"
+        ],
+        "requiredConcepts": [
+          "video-score-aggregation-contract"
+        ],
+        "sectionId": "release"
+      },
+      {
+        "level": "basic",
+        "question": "Valid units가 k보다 적을 때 abstention을 반환하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "evidence 부족",
+          "임의 보간 금지",
+          "별도 상태"
+        ],
+        "requiredConcepts": [
+          "video-score-aggregation-contract"
+        ],
+        "sectionId": "release"
+      },
+      {
+        "level": "basic",
+        "question": "CNN과 temporal model 비교에서 같아야 할 input 조건을 나열하세요.",
+        "answerChecklist": [
+          "source split",
+          "crop",
+          "frame budget",
+          "timestamps"
+        ],
+        "requiredConcepts": [
+          "forensic-benchmark-parity"
+        ],
+        "sectionId": "parity"
+      },
+      {
+        "level": "basic",
+        "question": "Architecture 외 효과를 분리하려면 runtime을 같은 hardware에서 재야 하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "target 동일",
+          "latency 비교",
+          "memory 비교"
+        ],
+        "requiredConcepts": [
+          "forensic-benchmark-parity"
+        ],
+        "sectionId": "parity"
+      },
+      {
+        "level": "advanced",
+        "question": "짧은 영상과 긴 영상에 fixed k와 비율 k를 적용한 차이를 분석하세요.",
+        "answerChecklist": [
+          "length dependence",
+          "evidence fraction",
+          "minimum units",
+          "recipe 고정"
+        ],
+        "requiredConcepts": [
+          "video-score-aggregation-contract"
+        ],
+        "sectionId": "aggregation"
+      },
+      {
+        "level": "advanced",
+        "question": "Single false spike에 민감한 max reducer의 반례와 대체 gate를 설계하세요.",
+        "answerChecklist": [
+          "negative spike",
+          "top-k or calibration",
+          "coverage",
+          "false positive"
+        ],
+        "requiredConcepts": [
+          "video-score-aggregation-contract"
+        ],
+        "sectionId": "aggregation"
+      },
+      {
+        "level": "advanced",
+        "question": "CNN·ViT·temporal model의 공정 비교표와 release 기준을 설계하세요.",
+        "answerChecklist": [
+          "같은 data",
+          "같은 preprocessing",
+          "같은 decision",
+          "같은 runtime"
+        ],
+        "requiredConcepts": [
+          "forensic-benchmark-parity"
+        ],
+        "sectionId": "parity"
+      },
+      {
+        "level": "advanced",
+        "question": "정확도는 높지만 coverage와 latency가 나쁜 detector의 배포 결정을 판정하세요.",
+        "answerChecklist": [
+          "accuracy 단독 금지",
+          "coverage",
+          "p95 latency",
+          "abstention과 rollback"
+        ],
+        "requiredConcepts": [
+          "video-score-aggregation-contract",
+          "forensic-benchmark-parity"
+        ],
+        "sectionId": "release"
+      }
+    ],
+    "papers": [
+      {
+        "title": "DeepfakeBench: A Comprehensive Benchmark of Deepfake Detection",
+        "href": "https://papers.nips.cc/paper_files/paper/2023/hash/0e735e4b4f07de483cbe250130992726-Abstract-Datasets_and_Benchmarks.html",
+        "problem": "서로 다른 data processing·implementation·metric 때문에 detector 순위가 왜곡되는 문제를 다룹니다.",
+        "contribution": "통일 data management와 method implementation 및 evaluation protocol을 제공합니다.",
+        "assumptions": "포함된 datasets·methods·공개 code revision을 전제로 합니다.",
+        "evidenceScope": "논문이 재현한 standardized detector benchmark 범위입니다.",
+        "notClaim": "보고된 순위가 모든 미래 generator와 hardware에서 영구적 우열이라는 뜻은 아닙니다.",
+        "sectionId": "paper-deepfakebench"
+      }
+    ]
+  },
+  "ai/deepfake-dataset-governance": {
+    "entryLevel": true,
+    "entryNote": "파일 수가 많다는 말 대신 서로 다른 원본과 사용 권한이 얼마나 있는지 세는 데서 시작합니다.",
+    "coreIdea": "Forensic dataset은 source·person·consent·generator·codec derivative를 잇는 provenance manifest와 독립 source-group coverage matrix가 함께 있어야 합니다. 빈 cell과 삭제 범위를 숨기지 않아야 model claim의 근거 경계를 유지할 수 있습니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "forensic-data-provenance-manifest",
+        "role": "Source·identity·permission과 모든 derivative lineage를 기록합니다."
+      },
+      {
+        "id": "forensic-coverage-matrix",
+        "role": "Generator·codec·resolution cell마다 독립 source group 수를 셉니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "forensic-data-provenance-manifest",
+        "sectionId": "provenance",
+        "intuition": "영상이 어디서 왔고 누가 어떤 조작과 이용에 동의했는지 파생본까지 따라가는 출처 장부입니다.",
+        "workedExample": "Source asset·person ID·consent revision·generator checkpoint·codec·split과 deletion status를 한 chain으로 연결합니다.",
+        "boundary": "인터넷에서 접근 가능하다는 사실은 얼굴 조작·재배포·상업 이용에 동의했다는 뜻이 아닙니다."
+      },
+      {
+        "id": "forensic-coverage-matrix",
+        "sectionId": "coverage",
+        "intuition": "파일이 많다는 말 대신 generator·codec·resolution 칸마다 서로 다른 원본 묶음이 몇 개인지 셉니다.",
+        "workedExample": "같은 source의 JPEG frames 1,000개는 한 cell의 독립 source coverage에서 1로 계산합니다.",
+        "boundary": "빈 test cell을 train source로 채우면 count는 늘어도 holdout 질문이 깨지고 미래 distribution을 보장하지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "00 Source",
+        "relation": "원본 asset과 person permission을 식별합니다.",
+        "concepts": [
+          "forensic-data-provenance-manifest"
+        ]
+      },
+      {
+        "label": "01 Derive",
+        "relation": "Generator·codec·crop derivatives를 parent chain에 잇습니다.",
+        "concepts": [
+          "forensic-data-provenance-manifest"
+        ]
+      },
+      {
+        "label": "02 Count",
+        "relation": "Coverage cell에서 source group 중복을 제거합니다.",
+        "concepts": [
+          "forensic-coverage-matrix"
+        ]
+      },
+      {
+        "label": "03 Release",
+        "relation": "Permission과 coverage가 있는 범위만 claim합니다.",
+        "concepts": [
           "forensic-data-provenance-manifest",
-          "forensic-coverage-matrix",
-          "forensic-source-independent-split",
+          "forensic-coverage-matrix"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "Source asset과 derivative file을 서로 다른 개념으로 기록해야 하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "원본 identity",
+          "parent chain",
+          "파생 recipe"
         ],
-        sectionId: "external-data",
+        "requiredConcepts": [
+          "forensic-data-provenance-manifest"
+        ],
+        "sectionId": "provenance"
       },
+      {
+        "level": "basic",
+        "question": "Consent scope에 조작·연구·재배포를 별도 필드로 두는 이유를 설명하세요.",
+        "answerChecklist": [
+          "권한 분리",
+          "허용 목적",
+          "revision과 expiry"
+        ],
+        "requiredConcepts": [
+          "forensic-data-provenance-manifest"
+        ],
+        "sectionId": "provenance"
+      },
+      {
+        "level": "basic",
+        "question": "Deletion 요청이 들어온 person의 derivatives까지 찾는 경로를 설명하세요.",
+        "answerChecklist": [
+          "person ID",
+          "source assets",
+          "parent links",
+          "caches와 outputs"
+        ],
+        "requiredConcepts": [
+          "forensic-data-provenance-manifest"
+        ],
+        "sectionId": "release"
+      },
+      {
+        "level": "basic",
+        "question": "같은 source의 frames 1,000개가 coverage count 1인 이유를 설명하세요.",
+        "answerChecklist": [
+          "source group set",
+          "unique",
+          "파일 수와 분리"
+        ],
+        "requiredConcepts": [
+          "forensic-coverage-matrix"
+        ],
+        "sectionId": "coverage"
+      },
+      {
+        "level": "basic",
+        "question": "Generator B와 social codec cell이 0일 때 말할 수 없는 주장을 설명하세요.",
+        "answerChecklist": [
+          "빈 cell",
+          "독립 evidence 없음",
+          "robustness 주장 금지"
+        ],
+        "requiredConcepts": [
+          "forensic-coverage-matrix"
+        ],
+        "sectionId": "coverage"
+      },
+      {
+        "level": "basic",
+        "question": "Coverage matrix에 unknown generator와 codec을 그대로 남겨야 하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "임의 known 매핑 금지",
+          "미지 조건",
+          "claim boundary"
+        ],
+        "requiredConcepts": [
+          "forensic-coverage-matrix"
+        ],
+        "sectionId": "coverage"
+      },
+      {
+        "level": "advanced",
+        "question": "두 dataset을 합칠 때 source·person 중복과 consent 충돌을 검사하세요.",
+        "answerChecklist": [
+          "stable IDs",
+          "near duplicate",
+          "permission intersection",
+          "conflict 상태"
+        ],
+        "requiredConcepts": [
+          "forensic-data-provenance-manifest"
+        ],
+        "sectionId": "provenance"
+      },
+      {
+        "level": "advanced",
+        "question": "Generator×codec×resolution coverage matrix와 minimum-support rule을 설계하세요.",
+        "answerChecklist": [
+          "cell key",
+          "unique groups",
+          "support threshold",
+          "uncertainty"
+        ],
+        "requiredConcepts": [
+          "forensic-coverage-matrix"
+        ],
+        "sectionId": "coverage"
+      },
+      {
+        "level": "advanced",
+        "question": "Consent 철회 뒤 trained artifact까지 포함한 삭제·재학습 경계를 설계하세요.",
+        "answerChecklist": [
+          "data derivatives",
+          "checkpoints",
+          "법적 scope",
+          "release version"
+        ],
+        "requiredConcepts": [
+          "forensic-data-provenance-manifest"
+        ],
+        "sectionId": "release"
+      },
+      {
+        "level": "advanced",
+        "question": "Provenance와 coverage가 달라진 dataset release의 claim 축소 및 rollback을 설계하세요.",
+        "answerChecklist": [
+          "manifest diff",
+          "cell diff",
+          "claim update",
+          "last known release"
+        ],
+        "requiredConcepts": [
+          "forensic-data-provenance-manifest",
+          "forensic-coverage-matrix"
+        ],
+        "sectionId": "release"
+      }
     ],
-    papers: [
+    "papers": [
       {
-        title: "FaceForensics++: Learning to Detect Manipulated Facial Images",
-        href: "https://openaccess.thecvf.com/content_ICCV_2019/html/Rossler_FaceForensics_Learning_to_Detect_Manipulated_Facial_Images_ICCV_2019_paper.html",
-        problem:
-          "Facial manipulation detector를 여러 조작·compression과 hidden test에서 표준화해 비교하는 문제",
-        contribution:
-          "네 manipulation method와 compression 조건을 포함한 대규모 benchmark 및 detector/human comparison",
-        assumptions:
-          "FaceForensics++ source videos·four manipulation methods·논문의 compression/preprocessing/models",
-        evidenceScope:
-          "ICCV benchmark의 manipulation·compression·human/detector evaluation 범위",
-        notClaim:
-          "이후 등장한 모든 generator와 in-the-wild distribution에서 높은 성능을 보장한다는 뜻은 아님",
-        sectionId: "paper-faceforensics",
-      },
-      {
-        title:
-          "A Closer Look at Fourier Spectrum Discrepancies for CNN-Generated Images Detection",
-        href: "https://openaccess.thecvf.com/content/CVPR2021/html/Chandrasegaran_A_Closer_Look_at_Fourier_Spectrum_Discrepancies_for_CNN-Generated_Images_CVPR_2021_paper.html",
-        problem:
-          "CNN-generated image의 high-frequency spectrum discrepancy가 본질적이고 robust한 detector feature인지 재검토",
-        contribution:
-          "Spectrum-decay claim의 조건과 synthetic-image detection robustness 한계를 실험적으로 분석",
-        assumptions:
-          "논문의 CNN generator families·spectral measures·pre/post-processing experiments",
-        evidenceScope:
-          "CVPR 논문의 Fourier discrepancy observations와 detection robustness comparison 범위",
-        notClaim:
-          "모든 frequency-domain feature가 무가치하거나 모든 새로운 generator에 같은 반례가 성립한다는 뜻은 아님",
-        sectionId: "paper-fourier-discrepancy",
-      },
-      {
-        title: "DeepfakeBench: A Comprehensive Benchmark of Deepfake Detection",
-        href: "https://papers.nips.cc/paper/2023/hash/0e735e4b4f07de483cbe250130992726-Abstract-Datasets_and_Benchmarks.html",
-        problem:
-          "Detector별로 다른 data processing·implementation·metric 때문에 공정하고 재현 가능한 비교가 어려운 문제",
-        contribution:
-          "통일 data management·method implementation·standard evaluation protocol을 제공하는 benchmark",
-        assumptions:
-          "포함된 datasets·detectors·preprocessing·metrics와 공개 implementation revision",
-        evidenceScope:
-          "NeurIPS Datasets and Benchmarks 논문의 standardized comparison 범위",
-        notClaim:
-          "Benchmark 순위가 모든 future generator·deployment에서 영구적인 우열을 뜻하지 않음",
-        sectionId: "paper-deepfakebench",
-      },
-      {
-        title: "The DeepFake Detection Challenge (DFDC) Dataset",
-        href: "https://arxiv.org/abs/2006.07397",
-        problem:
-          "대규모 face-swap video detection training과 challenge를 위한 consented dataset 구축",
-        contribution:
-          "참여·likeness manipulation에 동의한 actor recordings, 여러 manipulation methods와 100,000개 이상 clips 및 challenge analysis",
-        assumptions:
-          "DFDC actor population·capture process·manipulation methods·competition split",
-        evidenceScope:
-          "논문의 dataset construction·consent·challenge와 reported in-the-wild analysis 범위",
-        notClaim:
-          "DFDC-only detector score가 모든 실제 영상의 진위를 증명하거나 모든 demographic·generator를 포괄한다는 뜻은 아님",
-        sectionId: "paper-dfdc",
-      },
-    ],
+        "title": "The DeepFake Detection Challenge Dataset",
+        "href": "https://arxiv.org/abs/2006.07397",
+        "problem": "대규모 face-swap detection과 challenge를 위한 consented video data를 구축하는 문제입니다.",
+        "contribution": "Likeness manipulation에 동의한 actors와 여러 manipulation의 대규모 clips를 제공합니다.",
+        "assumptions": "DFDC actor population·capture process·manipulation methods·competition split을 전제로 합니다.",
+        "evidenceScope": "논문의 dataset construction·consent와 challenge analysis 범위입니다.",
+        "notClaim": "DFDC가 모든 demographic·generator를 포괄하거나 영상 진위를 증명한다는 뜻은 아닙니다.",
+        "sectionId": "paper-dfdc"
+      }
+    ]
   },
   "ai/video-understanding": {
     coreIdea:
