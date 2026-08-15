@@ -75,7 +75,7 @@ export default function Overview() {
           아닙니다. Runtime에 필요한 것은 선택한 action, tool input/output, validator verdict,
           state diff와 다음 transition처럼 외부에서 검증할 수 있는 trace입니다. ReAct의 방법과
           tool proposal 자체는
-          <Link to="/ai/agentic-patterns"> agentic pattern 정본</Link>에서 다루고, 여기서는
+          <Link to="/ai/agent-loop-foundations"> Agent loop 정본</Link>에서 다루고, 여기서는
           그 loop를 어떤 runtime이 지속시키고 복구하는지만 다룹니다.
         </p>
 

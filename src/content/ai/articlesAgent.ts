@@ -129,17 +129,52 @@ export const agentArticles: Article[] = [
 
   /* ── 3. 에이전트 패턴 & 하네스 ── */
   {
-    slug: "agentic-patterns",
-    title: "에이전틱 패턴: ReAct에서 멀티에이전트까지",
+    slug: "agent-loop-foundations",
+    title: "Agent Loop 기초: State · Action · Observation · Exit",
     subcategory: "ai-agents",
     sections: [
-      { id: "overview", title: "Agent run·state·패턴 선택" },
-      { id: "react", title: "Observation loop·tool 경계" },
-      { id: "plan-execute", title: "Plan state·verification·reflection" },
-      { id: "multi-agent", title: "Delegation·ownership·merge" },
-      { id: "hooks-skills", title: "Hook·Skill·Guardrail·평가" },
+      { id: "overview", title: "State transition의 네 대상" },
+      { id: "transition", title: "Proposal에서 effect까지" },
+      { id: "observation-contract", title: "Typed observation" },
+      { id: "exit-states", title: "Terminal state 분리" },
     ],
-    component: () => import("@/pages/articles/ai/agentic-patterns"),
+    component: () => import("@/pages/articles/ai/agent-loop-foundations"),
+  },
+  {
+    slug: "agent-plan-replanning",
+    title: "Agent Plan: Artifact · Replanning · Reflection",
+    subcategory: "ai-agents",
+    sections: [
+      { id: "overview", title: "Executable plan state" },
+      { id: "executable-plan", title: "Task와 artifact receipt" },
+      { id: "replanning", title: "영향 범위 invalidation" },
+      { id: "reflection", title: "Feedback 기반 다음 trial" },
+    ],
+    component: () => import("@/pages/articles/ai/agent-plan-replanning"),
+  },
+  {
+    slug: "agent-delegation-contracts",
+    title: "Agent Delegation: Artifact · Manager · Handoff",
+    subcategory: "ai-agents",
+    sections: [
+      { id: "overview", title: "위임의 네 소유권" },
+      { id: "delegation-contract", title: "Typed delegation" },
+      { id: "manager-handoff", title: "User state owner" },
+      { id: "parallel-merge", title: "Parallel merge 조건" },
+    ],
+    component: () => import("@/pages/articles/ai/agent-delegation-contracts"),
+  },
+  {
+    slug: "agent-extension-boundaries",
+    title: "Agent 확장 경계: Hook · Skill · Guardrail · Verifier",
+    subcategory: "ai-agents",
+    sections: [
+      { id: "overview", title: "네 decision owner" },
+      { id: "hook", title: "Event callback 경계" },
+      { id: "skill-guardrail", title: "지식과 권한 분리" },
+      { id: "verifier", title: "Artifact·trajectory·effect" },
+    ],
+    component: () => import("@/pages/articles/ai/agent-extension-boundaries"),
   },
   {
     slug: "llm-harness",

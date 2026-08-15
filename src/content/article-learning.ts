@@ -23507,430 +23507,146 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
-  "ai/agentic-patterns": {
-    coreIdea:
-      "Agent pattern은 model에게 더 많은 자율성을 주는 제품 계급이 아니라, observable state→authorized action→typed observation→verified exit의 loop에서 경로 불확실성·artifact ownership·side-effect 위험을 어디까지 model과 runtime이 나눠 맡을지 정하는 control-flow 선택입니다.",
-    assumedKnowledge: [
-      {
-        id: "agent-run-contract",
-        role: "Agent loop의 objective·capability·artifact·verifier·recovery 경계를 먼저 고정합니다.",
-      },
-      {
-        id: "layered-agent-verification",
-        role: "Compiler·environment·rubric·human feedback을 pattern의 검증 source로 사용합니다.",
-      },
-    ],
+  "ai/agent-loop-foundations": {
+    entryLevel: true,
+    entryNote: "LLM 호출에서 시작해 action proposal·runtime gate·typed observation·terminal state를 하나씩 정의합니다.",
+    coreIdea: "Agent loop는 model이 현재 state에서 action을 제안하고 runtime이 authorization·execution으로 만든 typed observation을 다음 state에 반영하는 반복입니다.",
+    assumedKnowledge: [],
     introducedHere: [
-      {
-        id: "agent-observation-action-loop",
-        role: "Agent의 최소 실행 단위를 state·action·observation transition으로 정의합니다.",
-      },
-      {
-        id: "typed-tool-observation-contract",
-        role: "Tool의 정상·오류·partial effect를 다음 decision이 구분하게 합니다.",
-      },
-      {
-        id: "agent-exit-state-machine",
-        role: "완료·budget·fatal error·approval·escalation을 terminal state로 분리합니다.",
-      },
-      {
-        id: "executable-plan-state",
-        role: "Plan을 dependency·artifact·status·evidence가 있는 갱신 가능한 상태로 만듭니다.",
-      },
-      {
-        id: "evidence-driven-replanning",
-        role: "새 관찰로 깨진 task와 downstream만 invalidation합니다.",
-      },
-      {
-        id: "feedback-grounded-reflection",
-        role: "외부 feedback을 원인·수정·재검증이 있는 다음 trial 입력으로 바꿉니다.",
-      },
-      {
-        id: "agent-delegation-artifact-ownership",
-        role: "위임과 공유 artifact writer·merge rule을 한 typed contract로 묶습니다.",
-      },
-      {
-        id: "manager-handoff-state-ownership",
-        role: "Manager 호출과 specialist handoff의 user-facing state owner를 구분합니다.",
-      },
-      {
-        id: "hook-skill-guardrail-verifier-boundary",
-        role: "확장 장치의 실행 시점과 결정 권한을 분리합니다.",
-      },
+      { id: "agent-observation-action-loop", role: "State→proposal→runtime→observation→next state의 최소 실행 단위를 정의합니다." },
+      { id: "typed-tool-observation-contract", role: "Empty·denied·timeout·partial effect를 구분하는 결과 schema를 만듭니다." },
+      { id: "agent-exit-state-machine", role: "Completed·exhausted·stalled·failed·approval·escalation을 분리합니다." },
     ],
     conceptExplanations: [
-      {
-        id: "agent-observation-action-loop",
-        sectionId: "overview",
-        intuition:
-          "한 번 답하고 끝내는 대신 현재 작업판을 보고 행동을 제안하고, 실제 결과를 확인해 작업판을 갱신하는 반복입니다.",
-        workedExample:
-          "Model이 file read를 제안하면 runtime이 권한을 검사해 실행하고 success·content hash·truncation observation을 남긴 뒤 plan state에 evidence를 연결합니다.",
-        boundary:
-          "Model이 workflow를 동적으로 지휘한다는 뜻이지 runtime authorization·tool execution·종료 판정까지 model text에 맡긴다는 뜻은 아닙니다.",
-      },
-      {
-        id: "typed-tool-observation-contract",
-        sectionId: "react",
-        intuition:
-          "'결과 없음', '접근 거부', 'timeout', '일부만 성공'을 같은 빈 문자열로 돌려주지 않고 다음 행동이 구분할 수 있는 표찰을 붙입니다.",
-        workedExample:
-          "Observation에 status=timeout, retryable=true, source call ID, partialReceipt IDs, payload handle, truncated=false, observedAt를 넣습니다.",
-        boundary:
-          "Schema가 맞아도 payload의 사실성·freshness·권한이 보장되지는 않으며 큰 원문을 그대로 context에 넣는 대신 artifact identity와 필요한 slice를 사용해야 합니다.",
-      },
-      {
-        id: "agent-exit-state-machine",
-        sectionId: "react",
-        intuition:
-          "끝났다는 말 하나 대신 성공·시간 초과·승인 대기·복구 불가·사람 호출을 다른 종착역으로 둡니다.",
-        workedExample:
-          "Verifier pass면 completed, 반복 action 3회면 stalled, payment approval이 없으면 awaiting_approval, fatal tool error면 failed, budget 초과면 exhausted로 종료합니다.",
-        boundary:
-          "Turn limit에 닿은 것을 완료로 바꾸거나 model final answer가 있다는 이유로 verifier를 건너뛰면 안 되며 state별 artifact·receipt·resume policy가 필요합니다.",
-      },
-      {
-        id: "executable-plan-state",
-        sectionId: "plan-execute",
-        intuition:
-          "계획을 문장 목록이 아니라 선행 작업·담당·입력·결과물·검사 증거가 있는 작업 보드로 만듭니다.",
-        workedExample:
-          "Task B는 A의 schema artifact v3에 의존하고 owner=worker2, status=blocked, output URI와 checksum, validator ID를 필드로 가집니다.",
-        boundary:
-          "처음 plan을 고정된 진리로 보지 않으며 결과물과 완료 evidence가 없는 '조사하기' task는 실행·완료를 판정할 수 없습니다.",
-      },
-      {
-        id: "evidence-driven-replanning",
-        sectionId: "plan-execute",
-        intuition:
-          "새 검사 결과가 가정을 깨면 관련된 작업만 다시 열고 이미 확인한 결과까지 모두 지우지 않습니다.",
-        workedExample:
-          "API schema v3가 바뀌면 client generation과 downstream integration test를 pending으로 돌리되 unrelated UI screenshot artifact는 checksum이 같으면 유지합니다.",
-        boundary:
-          "실패를 숨기기 위한 무한 재시도가 아니며 invalidation reason·dependency edge·retry budget·새 acceptance가 없으면 plan drift가 생깁니다.",
-      },
-      {
-        id: "feedback-grounded-reflection",
-        sectionId: "plan-execute",
-        intuition:
-          "'다음엔 잘하자'가 아니라 어느 검사에서 왜 실패했고 무엇을 바꾼 뒤 어떤 검사로 확인할지 적는 회고입니다.",
-        workedExample:
-          "Compiler의 missing import error를 source로 삼아 target file/import path를 고치고 같은 compile command와 regression test를 재실행하도록 reflection을 저장합니다.",
-        boundary:
-          "Model이 자기 답을 다시 읽는 것만으로 오류 발견이 보장되지 않으며 잘못된 grader feedback은 다음 trial을 더 나쁘게 만들 수 있습니다.",
-      },
-      {
-        id: "agent-delegation-artifact-ownership",
-        sectionId: "multi-agent",
-        intuition:
-          "일을 나눌 때 '알아서 해'가 아니라 각자 읽고 쓸 서류와 제출 형식, 검사, 마감, 충돌 해결자를 정합니다.",
-        workedExample:
-          "Research worker는 read-only source snapshot에서 evidence JSON만 쓰고 implementation worker만 source tree writer가 되며 coordinator가 checksum과 schema를 검증해 merge합니다.",
-        boundary:
-          "Agent 수가 늘어도 같은 model의 지능이 합산되는 것은 아니고 task independence·context isolation·typed merge가 없으면 cost와 conflict만 늘어납니다.",
-      },
-      {
-        id: "manager-handoff-state-ownership",
-        sectionId: "multi-agent",
-        intuition:
-          "전문가에게 자문만 받고 접객 담당은 그대로인 경우와 고객 자체를 다음 담당자에게 넘기는 경우를 구분합니다.",
-        workedExample:
-          "Manager가 tax specialist를 tool처럼 호출하면 manager가 final response와 conversation state를 소유하지만 handoff에서는 specialist가 이후 user turns와 unresolved state를 인수합니다.",
-        boundary:
-          "Handoff 시 identity·history·pending effect·return condition이 없으면 state가 유실되고 parallel fan-out은 commutative/idempotent merge나 conflict detector가 없으면 안전하지 않습니다.",
-      },
-      {
-        id: "hook-skill-guardrail-verifier-boundary",
-        sectionId: "hooks-skills",
-        intuition:
-          "자동으로 울리는 센서, 필요할 때 펼치는 매뉴얼, 출입을 막는 문, 완성품 검사대를 같은 기능으로 부르지 않습니다.",
-        workedExample:
-          "Pre-hook이 secret을 redact하고 skill이 DB migration 절차를 제공하며 guardrail이 production write를 승인 대기로 보내고 verifier가 migration invariant를 검사합니다.",
-        boundary:
-          "Skill은 권한이 아니고 hook이 새 capability를 부여해서는 안 되며, guardrail policy pass와 artifact verifier pass는 서로 다른 판정입니다.",
-      },
+      { id: "agent-observation-action-loop", sectionId: "overview", intuition: "현재 작업판을 보고 행동을 제안하고 실제 결과로 작업판을 갱신합니다.", workedExample: "File read proposal을 runtime이 허가해 실행하고 content checksum observation을 다음 state에 넣습니다.", boundary: "Model proposal은 외부 effect 권한이 아닙니다." },
+      { id: "typed-tool-observation-contract", sectionId: "observation-contract", intuition: "빈 결과와 실행하지 못한 결과에 서로 다른 표찰을 붙입니다.", workedExample: "status=timeout, retryable=true, callId, payloadHandle, truncated=false를 남깁니다.", boundary: "Schema가 payload의 사실성이나 freshness를 자동 보장하지 않습니다." },
+      { id: "agent-exit-state-machine", sectionId: "exit-states", intuition: "끝났다는 말 대신 여러 종착역을 둡니다.", workedExample: "Verifier pass는 completed, 반복 action은 stalled, 승인 부재는 awaiting_approval입니다.", boundary: "Model final text만으로 completed가 되지 않습니다." },
     ],
     conceptStages: [
-      {
-        label: "Loop",
-        relation:
-          "Observable state에서 authorized action과 typed observation으로 전이",
-        concepts: [
-          "agent-run-contract",
-          "agent-observation-action-loop",
-          "typed-tool-observation-contract",
-          "agent-exit-state-machine",
-        ],
-      },
-      {
-        label: "Plan",
-        relation: "Dependency·artifact·evidence state를 새 관찰로 갱신",
-        concepts: [
-          "executable-plan-state",
-          "evidence-driven-replanning",
-          "feedback-grounded-reflection",
-        ],
-      },
-      {
-        label: "Delegate",
-        relation: "독립 task의 artifact owner와 user-facing state owner를 분리",
-        concepts: [
-          "agent-delegation-artifact-ownership",
-          "manager-handoff-state-ownership",
-        ],
-      },
-      {
-        label: "Extend",
-        relation: "Hook·skill·guardrail·verifier의 시점과 권한을 나눔",
-        concepts: [
-          "hook-skill-guardrail-verifier-boundary",
-          "layered-agent-verification",
-        ],
-      },
+      { label: "00 state", relation: "다음 decision에 허용된 observable state를 고정합니다.", concepts: ["agent-observation-action-loop"] },
+      { label: "01 proposal", relation: "Model proposal과 runtime effect를 분리합니다.", concepts: ["agent-observation-action-loop"] },
+      { label: "02 observation", relation: "실행 결과를 typed state input으로 만듭니다.", concepts: ["typed-tool-observation-contract"] },
+      { label: "03 exit", relation: "Verifier·budget·failure·approval에서 terminal state를 판정합니다.", concepts: ["agent-exit-state-machine"] },
     ],
     exercises: [
-      {
-        level: "basic",
-        question:
-          "파일을 읽고 수정하는 agent의 s_t·a_t·authorization·o_t·s_{t+1}을 구체적으로 적으라.",
-        answerChecklist: [
-          "objective/state",
-          "model proposal",
-          "path permission",
-          "executor",
-          "typed result",
-          "artifact update",
-          "not direct model effect",
-        ],
-        requiredConcepts: ["agent-observation-action-loop"],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "Empty search·permission denied·timeout·partial write observation schema를 서로 구분해 설계하라.",
-        answerChecklist: [
-          "status enum",
-          "payload",
-          "source",
-          "timestamp",
-          "retryable",
-          "truncation",
-          "partial receipt",
-          "error code",
-        ],
-        requiredConcepts: ["typed-tool-observation-contract"],
-        sectionId: "react",
-      },
-      {
-        level: "basic",
-        question:
-          "Verifier pass·turn/time/cost budget 소진·같은 action 반복·fatal tool error·approval 대기·사람 호출을 각각 어떤 exit state로 기록할지 분류하고, model이 final answer를 생성했다는 사실만으로 completed가 아닌 이유를 설명하라.",
-        answerChecklist: [
-          "verifier pass → completed",
-          "budget exhausted → exhausted",
-          "repeated action → stalled",
-          "fatal error → failed",
-          "approval wait → awaiting_approval",
-          "human review → escalated",
-          "state별 partial artifact·receipt 보존",
-          "model final text is not verifier evidence",
-        ],
-        requiredConcepts: ["agent-exit-state-machine"],
-        sectionId: "react",
-      },
-      {
-        level: "basic",
-        question:
-          "세 task A→B→C를 dependency·owner·artifact·status·evidence가 있는 executable plan으로 바꾸라.",
-        answerChecklist: [
-          "IDs",
-          "dependency",
-          "input snapshot",
-          "owner",
-          "output URI",
-          "status",
-          "validator",
-          "checksum",
-        ],
-        requiredConcepts: ["executable-plan-state"],
-        sectionId: "plan-execute",
-      },
-      {
-        level: "advanced",
-        question:
-          "B의 새 observation이 A의 가정을 깨뜨렸을 때 invalidation 범위와 보존할 artifact를 계산하라.",
-        answerChecklist: [
-          "assumption edge",
-          "A/B/downstream",
-          "pending transition",
-          "unrelated preserve",
-          "version",
-          "reason",
-          "retry budget",
-          "reverify",
-        ],
-        requiredConcepts: ["evidence-driven-replanning"],
-        sectionId: "plan-execute",
-      },
-      {
-        level: "advanced",
-        question:
-          "Model self-review와 compiler feedback 기반 reflection을 비교하고 다음 trial·재검증 계약을 설계하라.",
-        answerChecklist: [
-          "external oracle",
-          "failure evidence",
-          "root cause",
-          "target change",
-          "next trial",
-          "same verifier",
-          "bad feedback risk",
-        ],
-        requiredConcepts: ["feedback-grounded-reflection"],
-        sectionId: "plan-execute",
-      },
-      {
-        level: "advanced",
-        question:
-          "Research·implementation·review agent의 input/capability/output/owner/merge contract와 single-agent baseline을 설계하라.",
-        answerChecklist: [
-          "independence",
-          "input snapshot",
-          "read/write scope",
-          "typed output",
-          "single writer",
-          "merge",
-          "validator",
-          "baseline cost/quality",
-        ],
-        requiredConcepts: ["agent-delegation-artifact-ownership"],
-        sectionId: "multi-agent",
-      },
-      {
-        level: "basic",
-        question:
-          "여행 상담에서 manager가 specialist를 tool로 호출하는 경우와 handoff하는 경우의 state owner를 비교하라.",
-        answerChecklist: [
-          "manager final answer",
-          "manager conversation state",
-          "handoff specialist",
-          "history transfer",
-          "pending effects",
-          "return condition",
-        ],
-        requiredConcepts: ["manager-handoff-state-ownership"],
-        sectionId: "multi-agent",
-      },
-      {
-        level: "basic",
-        question:
-          "DB migration에서 hook·skill·guardrail·verifier가 각각 언제 무엇을 결정하는지 적으라.",
-        answerChecklist: [
-          "runtime event",
-          "instruction bundle",
-          "policy block/escalate",
-          "artifact acceptance",
-          "no new authority",
-          "different timing",
-        ],
-        requiredConcepts: ["hook-skill-guardrail-verifier-boundary"],
-        sectionId: "hooks-skills",
-      },
-      {
-        level: "advanced",
-        question:
-          "단일 ReAct loop에서 시작해 plan·reflection·multi-agent를 추가할 failure trace와 ablation 기준을 설계하라.",
-        answerChecklist: [
-          "single baseline",
-          "long horizon omission",
-          "external feedback",
-          "independent tasks",
-          "quality",
-          "token/latency",
-          "conflict",
-          "remove components",
-        ],
-        requiredConcepts: [
-          "agent-observation-action-loop",
-          "executable-plan-state",
-          "feedback-grounded-reflection",
-          "agent-delegation-artifact-ownership",
-        ],
-        sectionId: "hooks-skills",
-      },
+      { level: "basic", question: "File read loop의 state·proposal·authorization·observation을 순서대로 쓰세요.", answerChecklist: ["state snapshot", "tool proposal", "permission gate", "executor", "typed result"], requiredConcepts: ["agent-observation-action-loop"], sectionId: "transition" },
+      { level: "basic", question: "Model proposal이 곧 effect가 아닌 이유를 설명하세요.", answerChecklist: ["untrusted proposal", "runtime authority", "resource check", "fresh approval"], requiredConcepts: ["agent-observation-action-loop"], sectionId: "transition" },
+      { level: "basic", question: "Empty search와 permission denied observation을 구분하는 필드를 설계하세요.", answerChecklist: ["status enum", "payload", "error code", "source", "timestamp"], requiredConcepts: ["typed-tool-observation-contract"], sectionId: "observation-contract" },
+      { level: "basic", question: "Partial write observation에 필요한 receipt를 나열하세요.", answerChecklist: ["operation ID", "committed targets", "failed targets", "retryability", "artifact identity"], requiredConcepts: ["typed-tool-observation-contract"], sectionId: "observation-contract" },
+      { level: "basic", question: "Completed·exhausted·stalled의 차이를 설명하세요.", answerChecklist: ["verifier pass", "budget used", "repeated action", "different resume policy"], requiredConcepts: ["agent-exit-state-machine"], sectionId: "exit-states" },
+      { level: "basic", question: "Awaiting approval과 failed를 분리해야 하는 이유를 쓰세요.", answerChecklist: ["resumable wait", "fatal failure", "pending payload", "fresh decision"], requiredConcepts: ["agent-exit-state-machine"], sectionId: "exit-states" },
+      { level: "advanced", question: "Timeout 뒤 retry할 때 duplicate external effect를 막는 observation contract를 설계하세요.", answerChecklist: ["stable operation key", "unknown outcome", "receipt lookup", "idempotency", "no blind retry"], requiredConcepts: ["typed-tool-observation-contract"], sectionId: "observation-contract" },
+      { level: "advanced", question: "Final answer가 있지만 verifier가 실패한 run의 terminal transition을 설계하세요.", answerChecklist: ["not completed", "failed or pending", "preserve artifact", "feedback", "retry budget"], requiredConcepts: ["agent-exit-state-machine"], sectionId: "exit-states" },
+      { level: "advanced", question: "Action loop의 audit event schema를 작성하세요.", answerChecklist: ["state version", "proposal", "authorization decision", "executor receipt", "observation", "next state"], requiredConcepts: ["agent-observation-action-loop", "typed-tool-observation-contract"], sectionId: "transition" },
+      { level: "advanced", question: "Read-only search와 payment action의 gate를 공정하게 비교하세요.", answerChecklist: ["different risk", "capability scope", "fresh approval", "idempotency", "effect verification"], requiredConcepts: ["agent-observation-action-loop", "agent-exit-state-machine"], sectionId: "transition" },
     ],
     papers: [
-      {
-        title: "ReAct: Synergizing Reasoning and Acting in Language Models",
-        href: "https://arxiv.org/abs/2210.03629",
-        problem:
-          "Language model이 reasoning만 하거나 action만 생성할 때 계획·정보 획득·예외 처리를 함께 수행하기 어려운 문제",
-        contribution:
-          "Reasoning trace와 task action을 교대로 생성하고 environment observation으로 다음 step을 갱신하는 pattern을 제안",
-        assumptions:
-          "논문의 language model·prompt exemplars·QA/interactive task·environment action space",
-        evidenceScope:
-          "HotpotQA·Fever·ALFWorld·WebShop 등 공개 experiment 범위",
-        notClaim:
-          "Production authorization·exactly-once side effect·private reasoning 공개·모든 agent 성능 우위를 보장한다는 뜻은 아님",
-        sectionId: "paper-react",
-      },
-      {
-        title: "Reflexion: Language Agents with Verbal Reinforcement Learning",
-        href: "https://arxiv.org/abs/2303.11366",
-        problem:
-          "Weight update 없이 trial feedback을 다음 attempt의 behavior 개선에 활용하는 문제",
-        contribution:
-          "Environment·heuristic·self-evaluation feedback을 verbal reflection과 episodic memory로 저장하는 architecture를 제안",
-        assumptions:
-          "논문의 agent·feedback source·task·memory prompt·trial budget",
-        evidenceScope: "Decision-making·reasoning·coding task의 보고된 실험",
-        notClaim:
-          "근거 없는 self-review만으로 오류가 발견되거나 모든 grader·long-horizon task에서 개선된다는 뜻은 아님",
-        sectionId: "paper-reflexion",
-      },
-      {
-        title: "Anthropic — Building effective agents",
-        href: "https://www.anthropic.com/engineering/building-effective-agents",
-        problem:
-          "Workflow와 agent를 구분하고 routing·parallelization·orchestration·evaluation 복잡성을 언제 추가할지 판단하는 문제",
-        contribution:
-          "Workflow/agent 정의와 여러 composable pattern, 단순한 baseline에서 시작하는 설계 원칙을 공개",
-        assumptions: "Anthropic의 model/tool 환경과 customer/application 경험",
-        evidenceScope: "공식 engineering guide의 pattern과 design rationale",
-        notClaim:
-          "고정된 업계 표준 taxonomy이거나 모든 task에 pattern을 많이 쓸수록 좋다는 뜻은 아님",
-        sectionId: "paper-anthropic-effective-agents-patterns",
-      },
-      {
-        title: "OpenAI — A practical guide to building agents",
-        href: "https://openai.com/business/guides-and-resources/a-practical-guide-to-building-ai-agents/",
-        problem:
-          "Agent use case·tool·instruction·orchestration·guardrail·human intervention을 production system으로 구성하는 문제",
-        contribution:
-          "Single-agent baseline과 manager/handoff orchestration, run exit·guardrail·human oversight의 실무 가이드를 제시",
-        assumptions:
-          "OpenAI product examples·guide publication 시점의 API/model·enterprise use cases",
-        evidenceScope: "공식 guide의 architecture recommendation과 examples",
-        notClaim:
-          "Multi-agent의 보편적 성능 우위나 특정 SDK 사용이 안전성·품질을 자동 보장한다는 뜻은 아님",
-        sectionId: "paper-openai-agent-guide",
-      },
-      {
-        title: "Anthropic — Demystifying evals for AI agents",
-        href: "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents",
-        problem:
-          "Agent의 stochastic trajectory와 environment side effect를 final answer score 하나로 평가하기 어려운 문제",
-        contribution:
-          "Outcome·trajectory 관측과 code-based·model-based·human grader를 조합하는 evaluation 설계 원칙을 설명",
-        assumptions:
-          "Anthropic의 agent evaluation 경험·task suite·grader calibration 관점",
-        evidenceScope:
-          "공식 engineering guide의 evaluation taxonomy와 운영 권고",
-        notClaim:
-          "LLM judge 하나가 deterministic invariant·side-effect safety·human review를 대체한다는 뜻은 아님",
-        sectionId: "paper-anthropic-agent-evals",
-      },
+      { title: "ReAct: Synergizing Reasoning and Acting in Language Models", href: "https://arxiv.org/abs/2210.03629", problem: "Reasoning과 외부 interaction을 한 trajectory에서 결합하는 문제", contribution: "Reasoning trace와 task-specific action을 번갈아 생성하는 ReAct pattern", assumptions: "논문의 QA·interactive task·model·environment 조건", evidenceScope: "논문이 보고한 task 성능과 trajectory 사례", notClaim: "Production authorization·exactly-once effect·private reasoning 공개의 보장", sectionId: "paper-react" },
+    ],
+  },
+  "ai/agent-plan-replanning": {
+    entryLevel: true,
+    entryNote: "할 일 목록에서 시작해 dependency·artifact·evidence가 있는 plan state로 확장합니다.",
+    coreIdea: "Executable plan은 task dependency와 artifact receipt를 보존하고, 새 evidence가 assumption을 깨면 영향받은 downstream만 invalidation하며 feedback을 다음 trial의 수정 계약으로 바꿉니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "executable-plan-state", role: "Task·dependency·owner·artifact·status·evidence를 versioned graph로 만듭니다." },
+      { id: "evidence-driven-replanning", role: "깨진 assumption의 downstream만 다시 열고 검증 artifact를 보존합니다." },
+      { id: "feedback-grounded-reflection", role: "외부 feedback을 원인·수정·재검증이 있는 다음 trial 입력으로 만듭니다." },
+    ],
+    conceptExplanations: [
+      { id: "executable-plan-state", sectionId: "executable-plan", intuition: "문장 목록을 제출물과 검사 결과가 있는 작업 보드로 바꿉니다.", workedExample: "Task B는 schema:v3에 의존하고 output URI·checksum·validator를 가집니다.", boundary: "Output과 evidence가 없는 동사는 완료를 판정할 수 없습니다." },
+      { id: "evidence-driven-replanning", sectionId: "replanning", intuition: "새 사실이 깨뜨린 가지와 downstream만 다시 엽니다.", workedExample: "Schema v4는 client와 integration test를 invalidation하지만 unrelated screenshot은 보존합니다.", boundary: "전체 plan 재생성과 무한 retry가 아닙니다." },
+      { id: "feedback-grounded-reflection", sectionId: "reflection", intuition: "실패 관측을 다음 수정과 같은 재검증 command로 연결합니다.", workedExample: "Missing import→module path 수정→동일 compile·regression test 재실행을 기록합니다.", boundary: "근거 없는 self-review는 feedback source가 아닙니다." },
+    ],
+    conceptStages: [
+      { label: "00 task", relation: "Output schema가 있는 task를 만듭니다.", concepts: ["executable-plan-state"] },
+      { label: "01 artifact", relation: "Version·checksum·validator evidence를 연결합니다.", concepts: ["executable-plan-state"] },
+      { label: "02 replan", relation: "새 evidence의 영향 범위를 계산합니다.", concepts: ["evidence-driven-replanning"] },
+      { label: "03 reflect", relation: "실패를 다음 trial의 수정·재검증으로 바꿉니다.", concepts: ["feedback-grounded-reflection"] },
+    ],
+    exercises: [
+      { level: "basic", question: "A→B→C를 executable plan record로 바꾸세요.", answerChecklist: ["task IDs", "dependencies", "owners", "artifacts", "statuses", "validators"], requiredConcepts: ["executable-plan-state"], sectionId: "executable-plan" },
+      { level: "basic", question: "Task 완료에 worker message 대신 artifact receipt가 필요한 이유를 설명하세요.", answerChecklist: ["independent evidence", "URI", "checksum", "schema", "validator"], requiredConcepts: ["executable-plan-state"], sectionId: "executable-plan" },
+      { level: "basic", question: "Schema v3→v4에서 invalidation할 task를 고르세요.", answerChecklist: ["assumption edge", "direct consumer", "downstream", "unrelated preserve"], requiredConcepts: ["evidence-driven-replanning"], sectionId: "replanning" },
+      { level: "basic", question: "Replanning record의 최소 필드를 나열하세요.", answerChecklist: ["broken assumption", "affected edge", "tasks reopened", "preserved artifacts", "reason"], requiredConcepts: ["evidence-driven-replanning"], sectionId: "replanning" },
+      { level: "basic", question: "Compiler feedback 기반 reflection을 작성하세요.", answerChecklist: ["source", "observed failure", "cause", "change", "same verifier"], requiredConcepts: ["feedback-grounded-reflection"], sectionId: "reflection" },
+      { level: "basic", question: "Self-review와 grounded reflection을 구분하세요.", answerChecklist: ["external observation", "specific cause", "targeted change", "reverification"], requiredConcepts: ["feedback-grounded-reflection"], sectionId: "reflection" },
+      { level: "advanced", question: "Process restart 뒤 plan을 재개할 registry schema를 설계하세요.", answerChecklist: ["plan version", "task status", "artifact receipt", "pending owner", "attempt", "checkpoint"], requiredConcepts: ["executable-plan-state"], sectionId: "executable-plan" },
+      { level: "advanced", question: "Checksum이 같은 artifact를 보존하는 replan algorithm을 설명하세요.", answerChecklist: ["dependency graph", "version compare", "checksum match", "downstream closure", "reverify boundary"], requiredConcepts: ["evidence-driven-replanning"], sectionId: "replanning" },
+      { level: "advanced", question: "잘못된 grader feedback이 plan을 악화시키는 failure fixture를 설계하세요.", answerChecklist: ["bad oracle", "wrong reflection", "changed artifact", "independent verifier", "rollback"], requiredConcepts: ["feedback-grounded-reflection"], sectionId: "reflection" },
+      { level: "advanced", question: "Retry와 replanning을 구분하는 release gate를 작성하세요.", answerChecklist: ["same assumption retry", "new evidence", "dependency invalidation", "budget", "acceptance", "rollback"], requiredConcepts: ["evidence-driven-replanning", "feedback-grounded-reflection"], sectionId: "replanning" },
+    ],
+    papers: [
+      { title: "Reflexion: Language Agents with Verbal Reinforcement Learning", href: "https://arxiv.org/abs/2303.11366", problem: "Trial feedback을 다음 시도에 전달하는 문제", contribution: "언어적 reflection과 episodic memory를 이용한 다음-trial 개선", assumptions: "논문의 environment·heuristic·self-evaluation feedback과 task 조건", evidenceScope: "논문이 보고한 benchmark와 ablation 범위", notClaim: "근거 없는 self-review가 자동으로 오류를 고친다는 보편 주장", sectionId: "paper-reflexion" },
+    ],
+  },
+  "ai/agent-delegation-contracts": {
+    entryLevel: true,
+    entryNote: "여러 agent를 쓰기 전에 input·artifact·merge·conversation state의 owner를 하나씩 정의합니다.",
+    coreIdea: "Delegation은 objective·input snapshot·capability·artifact schema·verification을 고정하고 manager call과 handoff의 user-facing state owner를 분리하는 typed contract입니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "agent-delegation-artifact-ownership", role: "Delegate와 shared artifact의 writer·merge·verification owner를 고정합니다." },
+      { id: "manager-handoff-state-ownership", role: "Manager call과 handoff에서 conversation·pending effect owner를 분리합니다." },
+    ],
+    conceptExplanations: [
+      { id: "agent-delegation-artifact-ownership", sectionId: "delegation-contract", intuition: "일을 나누기 전에 각자 읽고 쓸 서류와 제출 형식·검사자를 정합니다.", workedExample: "Researcher는 evidence JSON만 쓰고 implementer만 source writer가 되며 coordinator가 checksum을 검증합니다.", boundary: "Agent 수가 지능을 자동 합산하지 않습니다." },
+      { id: "manager-handoff-state-ownership", sectionId: "manager-handoff", intuition: "전문가에게 자문을 받는 것과 고객 자체를 다음 담당자에게 넘기는 것을 구분합니다.", workedExample: "Manager call은 중앙이 final state를 유지하고 handoff는 specialist가 pending turn을 인수합니다.", boundary: "Identity·history·pending effect·return condition 없는 handoff는 state를 잃습니다." },
+    ],
+    conceptStages: [
+      { label: "00 input", relation: "Delegate가 읽을 immutable snapshot을 고정합니다.", concepts: ["agent-delegation-artifact-ownership"] },
+      { label: "01 output", relation: "Writer·schema·validator를 고정합니다.", concepts: ["agent-delegation-artifact-ownership"] },
+      { label: "02 state", relation: "Manager와 specialist 중 user-facing owner를 선택합니다.", concepts: ["manager-handoff-state-ownership"] },
+      { label: "03 merge", relation: "독립성·idempotency·conflict rule을 검증합니다.", concepts: ["agent-delegation-artifact-ownership", "manager-handoff-state-ownership"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Research worker의 delegation contract를 작성하세요.", answerChecklist: ["objective", "snapshot", "read scope", "output schema", "deadline", "validator"], requiredConcepts: ["agent-delegation-artifact-ownership"], sectionId: "delegation-contract" },
+      { level: "basic", question: "Shared source tree에 writer 하나를 두는 이유를 설명하세요.", answerChecklist: ["conflict", "lost update", "ownership", "merge rule"], requiredConcepts: ["agent-delegation-artifact-ownership"], sectionId: "delegation-contract" },
+      { level: "basic", question: "Sub-agent 완료 message와 artifact receipt를 구분하세요.", answerChecklist: ["claim", "URI", "checksum", "schema", "verification"], requiredConcepts: ["agent-delegation-artifact-ownership"], sectionId: "delegation-contract" },
+      { level: "basic", question: "Manager call에서 conversation state owner를 고르세요.", answerChecklist: ["manager", "specialist as tool", "typed result", "final synthesis"], requiredConcepts: ["manager-handoff-state-ownership"], sectionId: "manager-handoff" },
+      { level: "basic", question: "Handoff payload의 필드를 나열하세요.", answerChecklist: ["identity", "history", "pending effects", "approval", "return condition"], requiredConcepts: ["manager-handoff-state-ownership"], sectionId: "manager-handoff" },
+      { level: "basic", question: "병렬화하기 좋은 두 task의 조건을 쓰세요.", answerChecklist: ["independent inputs", "separate outputs", "no shared writer", "deterministic merge"], requiredConcepts: ["agent-delegation-artifact-ownership"], sectionId: "parallel-merge" },
+      { level: "advanced", question: "같은 file을 수정하는 두 worker의 conflict-safe protocol을 설계하세요.", answerChecklist: ["single writer or transactions", "base revision", "patch artifact", "conflict detection", "revalidation"], requiredConcepts: ["agent-delegation-artifact-ownership"], sectionId: "parallel-merge" },
+      { level: "advanced", question: "Manager crash 뒤 specialist result를 중복 merge하지 않는 fixture를 설계하세요.", answerChecklist: ["operation ID", "receipt", "idempotent merge", "checkpoint", "replay"], requiredConcepts: ["agent-delegation-artifact-ownership", "manager-handoff-state-ownership"], sectionId: "parallel-merge" },
+      { level: "advanced", question: "Handoff 뒤 pending payment approval의 owner loss를 재현하고 막으세요.", answerChecklist: ["pending payload", "approval identity", "new owner ack", "resume condition", "audit event"], requiredConcepts: ["manager-handoff-state-ownership"], sectionId: "manager-handoff" },
+      { level: "advanced", question: "Multi-agent가 single-agent보다 나은지 공정하게 평가하세요.", answerChecklist: ["same model", "same tools", "same budget", "independent tasks", "artifact quality", "latency", "conflicts"], requiredConcepts: ["agent-delegation-artifact-ownership"], sectionId: "parallel-merge" },
+    ],
+    papers: [
+      { title: "OpenAI — A practical guide to building agents", href: "https://openai.com/business/guides-and-resources/a-practical-guide-to-building-ai-agents/", problem: "Single·multi-agent orchestration과 guardrail·human intervention 선택 문제", contribution: "Manager·handoff와 incremental architecture 지침", assumptions: "가이드의 제품 예시·운영 관점·공개 시점", evidenceScope: "가이드가 설명하는 orchestration decision과 사례", notClaim: "Multi-agent의 보편적 성능 우위나 특정 vendor 구성이 표준이라는 주장", sectionId: "paper-openai-agent-guide" },
+    ],
+  },
+  "ai/agent-extension-boundaries": {
+    entryLevel: true,
+    entryNote: "Hook·Skill·Guardrail·Verifier를 실행 시점·지식·정책·합격 판정으로 한 용어씩 분리합니다.",
+    coreIdea: "Hook은 event callback, Skill은 점진 공개되는 절차, Guardrail은 policy 제한, Verifier는 artifact acceptance를 소유하며 어느 하나도 다른 owner의 권한을 대신하지 않습니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "hook-skill-guardrail-verifier-boundary", role: "네 확장 장치의 실행 시점과 decision authority를 분리합니다." },
+    ],
+    conceptExplanations: [
+      { id: "hook-skill-guardrail-verifier-boundary", sectionId: "overview", intuition: "자동 센서·매뉴얼·출입문·검사대를 같은 기능으로 부르지 않습니다.", workedExample: "Hook이 redact하고 Skill이 migration 절차를 제공하며 Guardrail이 write approval을 요구하고 Verifier가 invariant를 검사합니다.", boundary: "Skill은 권한이 아니고 policy pass와 artifact pass는 다른 판정입니다." },
+    ],
+    conceptStages: [
+      { label: "00 hook", relation: "Runtime event에 자동 실행되는 callback을 분리합니다.", concepts: ["hook-skill-guardrail-verifier-boundary"] },
+      { label: "01 skill", relation: "필요할 때 읽는 절차와 reference를 분리합니다.", concepts: ["hook-skill-guardrail-verifier-boundary"] },
+      { label: "02 guardrail", relation: "Input·output·action policy를 제한합니다.", concepts: ["hook-skill-guardrail-verifier-boundary"] },
+      { label: "03 verifier", relation: "Artifact·trajectory·effect acceptance를 판정합니다.", concepts: ["hook-skill-guardrail-verifier-boundary"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Pre-tool secret redaction을 Hook·Skill·Guardrail·Verifier 중 분류하세요.", answerChecklist: ["hook timing", "deterministic callback", "redaction", "no new capability"], requiredConcepts: ["hook-skill-guardrail-verifier-boundary"], sectionId: "hook" },
+      { level: "basic", question: "DB migration 절차 문서를 어느 owner로 분류할지 설명하세요.", answerChecklist: ["skill", "instruction", "reference", "not authority"], requiredConcepts: ["hook-skill-guardrail-verifier-boundary"], sectionId: "skill-guardrail" },
+      { level: "basic", question: "Production write approval을 어느 owner가 판정하는지 설명하세요.", answerChecklist: ["guardrail/runtime policy", "fresh approval", "deny", "tighten only"], requiredConcepts: ["hook-skill-guardrail-verifier-boundary"], sectionId: "skill-guardrail" },
+      { level: "basic", question: "Migration row-count invariant를 어느 owner가 검사하는지 설명하세요.", answerChecklist: ["verifier", "artifact state", "deterministic check", "separate policy"], requiredConcepts: ["hook-skill-guardrail-verifier-boundary"], sectionId: "verifier" },
+      { level: "basic", question: "Policy pass와 artifact pass가 다른 이유를 쓰세요.", answerChecklist: ["authorized action", "correct result", "different evidence", "both required"], requiredConcepts: ["hook-skill-guardrail-verifier-boundary"], sectionId: "verifier" },
+      { level: "basic", question: "Skill progressive disclosure의 세 단계를 쓰세요.", answerChecklist: ["metadata discovery", "load instructions", "load needed resources", "avoid all context"], requiredConcepts: ["hook-skill-guardrail-verifier-boundary"], sectionId: "skill-guardrail" },
+      { level: "advanced", question: "Hook이 새 capability를 부여하는 우회 경로를 재현하고 막으세요.", answerChecklist: ["pre-hook", "forged permission", "runtime authority", "deny", "audit"], requiredConcepts: ["hook-skill-guardrail-verifier-boundary"], sectionId: "hook" },
+      { level: "advanced", question: "Skill 사용 전후를 공정하게 평가하는 experiment를 설계하세요.", answerChecklist: ["same tasks", "same model", "same tools", "artifact quality", "cost", "failure slices"], requiredConcepts: ["hook-skill-guardrail-verifier-boundary"], sectionId: "skill-guardrail" },
+      { level: "advanced", question: "Model judge가 side-effect verifier를 대신할 수 없는 이유를 설명하세요.", answerChecklist: ["non-deterministic score", "external receipt", "state invariant", "false positive", "human risk"], requiredConcepts: ["hook-skill-guardrail-verifier-boundary"], sectionId: "verifier" },
+      { level: "advanced", question: "네 owner를 한 callback에 합친 구현의 failure matrix를 작성하세요.", answerChecklist: ["timing confusion", "authority escalation", "instruction collision", "false completion", "separate logs", "rollback"], requiredConcepts: ["hook-skill-guardrail-verifier-boundary"], sectionId: "overview" },
+    ],
+    papers: [
+      { title: "Anthropic — Demystifying evals for AI agents", href: "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents", problem: "Agent outcome과 trajectory를 여러 grader로 평가하는 문제", contribution: "Code·model·human grader와 outcome·trajectory 평가 경계", assumptions: "문서의 agent task·grader·production evaluation 관점", evidenceScope: "공개된 evaluation 설계 지침과 사례", notClaim: "Judge score 하나가 side-effect 안전성과 모든 failure를 보장한다는 주장", sectionId: "paper-anthropic-agent-evals" },
     ],
   },
   "ai/agent-frameworks": {

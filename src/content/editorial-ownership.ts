@@ -151,21 +151,14 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
-  "agentic-patterns": {
-    title: "에이전틱 패턴 글이 소유하는 범위",
+  "agent-loop-foundations": {
+    title: "Agent loop 기초 글이 소유하는 범위",
     owns: [
       "Model proposal·runtime authorization·tool execution·observation·exit로 이어지는 agent run state",
-      "ReAct observation loop와 plan/checkpoint/replanning/reflection의 control-flow 경계",
-      "Multi-agent delegation contract·state ownership·manager/handoff/parallel merge 선택",
-      "Hook·Skill·Guardrail·Verifier의 실행 시점과 answer·trajectory·side-effect 평가 층",
+      "ReAct observation loop와 typed tool result·terminal state의 control-flow 경계",
     ],
     reuses: [
       { label: "하네스 실행 계약과 개선 loop", href: "/ai/llm-harness" },
-      {
-        label: "Multi-agent runtime 구현",
-        href: "/ai/multi-agent-implementation",
-      },
-      { label: "Skill authoring format", href: "/ai/skills-anatomy" },
       { label: "Agent sandbox 보안", href: "/ai/agent-sandbox-security" },
     ],
     evidence: [
@@ -179,6 +172,24 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "agent-plan-replanning": {
+    title: "Agent plan·replanning 글이 소유하는 범위",
+    owns: ["Executable task dependency·artifact receipt·plan transition", "Evidence-driven invalidation과 feedback-grounded reflection"],
+    reuses: [{ label: "Agent state·observation·exit", href: "/ai/agent-loop-foundations" }, { label: "Durable checkpoint runtime", href: "/ai/agent-frameworks" }],
+    evidence: [{ kind: "primary-source", rule: "Reflexion claim은 논문의 feedback source·task·evaluation 조건으로 제한한다." }],
+  },
+  "agent-delegation-contracts": {
+    title: "Agent delegation 글이 소유하는 범위",
+    owns: ["Delegate input·capability·artifact·verification contract", "Manager·handoff user-facing state ownership과 parallel merge 조건"],
+    reuses: [{ label: "Multi-agent runtime 구현", href: "/ai/multi-agent-implementation" }, { label: "Agent plan artifact", href: "/ai/agent-plan-replanning" }],
+    evidence: [{ kind: "standard", rule: "Multi-agent 이득은 동일 model·tool·budget과 독립 task·merge 조건에서 평가한다." }],
+  },
+  "agent-extension-boundaries": {
+    title: "Agent extension authority 글이 소유하는 범위",
+    owns: ["Hook·Skill·Guardrail·Verifier의 실행 시점·지식·policy·acceptance decision owner"],
+    reuses: [{ label: "Skill authoring format", href: "/ai/skills-anatomy" }, { label: "하네스 검증 stack", href: "/ai/llm-harness" }],
+    evidence: [{ kind: "standard", rule: "Hook·Skill은 runtime capability를 넓히지 않고 policy pass와 artifact acceptance를 분리한다." }],
+  },
   "agent-frameworks": {
     title: "Agent framework 글이 소유하는 범위",
     owns: [
@@ -190,7 +201,7 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [
       {
         label: "ReAct state·action·observation과 exit state",
-        href: "/ai/agentic-patterns#react",
+        href: "/ai/agent-loop-foundations#exit-states",
       },
       {
         label: "Objective·authority·artifact·verifier·workflow/checkpoint 경계",
@@ -245,7 +256,7 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [
       {
         label: "Agent observation/action loop·delegation·hook taxonomy",
-        href: "/ai/agentic-patterns",
+        href: "/ai/agent-loop-foundations",
       },
       {
         label:
@@ -386,7 +397,7 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [
       {
         label: "Agent state·action·observation loop와 exit state",
-        href: "/ai/agentic-patterns#react",
+        href: "/ai/agent-loop-foundations#exit-states",
       },
       {
         label:
@@ -533,7 +544,7 @@ export const EDITORIAL_BOUNDARIES = {
       },
       {
         label: "Agent state·action·typed observation·exit state",
-        href: "/ai/agentic-patterns",
+        href: "/ai/agent-loop-foundations",
       },
       {
         label: "Direct loop와 framework runtime 선택",
@@ -602,7 +613,7 @@ export const EDITORIAL_BOUNDARIES = {
       },
       {
         label: "Typed tool observation과 turn exit state",
-        href: "/ai/agentic-patterns#react",
+        href: "/ai/agent-loop-foundations#observation-contract",
       },
       {
         label: "Checkpoint·replay·interrupt/resume의 정본",
@@ -679,7 +690,7 @@ export const EDITORIAL_BOUNDARIES = {
       },
       {
         label: "Typed tool observation과 exit state",
-        href: "/ai/agentic-patterns#react",
+        href: "/ai/agent-loop-foundations#observation-contract",
       },
       {
         label: "Claw permission mode·rule·override의 정본",
@@ -2118,8 +2129,8 @@ export const EDITORIAL_BOUNDARIES = {
     ],
     reuses: [
       {
-        label: "Agent run·delegation pattern·verification",
-        href: "/ai/agentic-patterns",
+        label: "Agent run의 proposal·observation·exit",
+        href: "/ai/agent-loop-foundations",
       },
       { label: "Harness·loop·graph vocabulary", href: "/ai/llm-harness" },
       {
@@ -2937,7 +2948,7 @@ export const EDITORIAL_BOUNDARIES = {
         label: "컨텍스트 선택·메모리·compaction",
         href: "/ai/context-engineering",
       },
-      { label: "ReAct·plan-execute·multi-agent", href: "/ai/agentic-patterns" },
+      { label: "Plan·replanning·reflection", href: "/ai/agent-plan-replanning" },
       { label: "Skill의 포맷과 동적 로딩", href: "/ai/skills-anatomy" },
     ],
     evidence: [
@@ -2962,7 +2973,7 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [
       {
         label: "Hook·Skill·Guardrail·Verifier의 실행 경계",
-        href: "/ai/agentic-patterns#hooks-skills",
+        href: "/ai/agent-extension-boundaries",
       },
       {
         label: "Context selection과 progressive loading",
@@ -3453,7 +3464,7 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [
       {
         label: "Agent의 tool proposal·runtime authorization",
-        href: "/ai/agentic-patterns",
+        href: "/ai/agent-loop-foundations#transition",
       },
       {
         label: "하네스의 capability·verifier·recovery 계약",
@@ -3488,7 +3499,7 @@ export const EDITORIAL_BOUNDARIES = {
     ],
     reuses: [
       { label: "MCP host·client·server와 request envelope", href: "/ai/mcp-protocol" },
-      { label: "Agent의 tool proposal과 observation loop", href: "/ai/agentic-patterns" },
+      { label: "Agent의 tool proposal과 observation loop", href: "/ai/agent-loop-foundations" },
     ],
     evidence: [
       { kind: "primary-source", rule: "Primitive와 result field는 MCP 2026-07-28 Tool·Resource·Prompt 문서의 normative 범위로 제한한다." },
@@ -3522,7 +3533,7 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [
       { label: "MCP primitive schema와 result", href: "/ai/mcp-primitives" },
       { label: "MCP transport timeout·cancel 경계", href: "/ai/mcp-transports" },
-      { label: "Agent runtime authorization", href: "/ai/agentic-patterns" },
+      { label: "Agent runtime authorization", href: "/ai/agent-loop-foundations#transition" },
     ],
     evidence: [
       { kind: "primary-source", rule: "Authorization과 lifecycle은 MCP 2026-07-28 specification·changelog·공식 OAuth profile 범위로 제한한다." },
@@ -3915,7 +3926,7 @@ export const EDITORIAL_BOUNDARIES = {
       },
       {
         label: "Retry 뒤 중복 side effect를 막는 idempotency",
-        href: "/ai/agentic-patterns#react",
+        href: "/ai/agent-loop-foundations#observation-contract",
       },
     ],
     evidence: [
@@ -3957,7 +3968,7 @@ export const EDITORIAL_BOUNDARIES = {
       },
       {
         label: "Retry idempotency와 effect receipt",
-        href: "/ai/agentic-patterns#react",
+        href: "/ai/agent-loop-foundations#observation-contract",
       },
     ],
     evidence: [
@@ -6200,8 +6211,8 @@ export const EDITORIAL_BOUNDARIES = {
       "Pinned team cron registry snapshot과 idempotent scheduling·verification hardening",
     ],
     reuses: [
-      { label: "Executable plan·dependency graph", href: "/ai/agentic-patterns#plan-execute" },
-      { label: "Delegation artifact ownership", href: "/ai/agentic-patterns#multi-agent" },
+      { label: "Executable plan·dependency graph", href: "/ai/agent-plan-replanning#executable-plan" },
+      { label: "Delegation artifact ownership", href: "/ai/agent-delegation-contracts#delegation-contract" },
       { label: "Layered verification", href: "/ai/llm-harness#evaluation" },
     ],
     evidence: [
@@ -6218,7 +6229,7 @@ export const EDITORIAL_BOUNDARIES = {
       "Delegation budget·capability·cancellation·late-result release gate",
     ],
     reuses: [
-      { label: "Agent delegation·artifact ownership", href: "/ai/agentic-patterns#multi-agent" },
+      { label: "Agent delegation·artifact ownership", href: "/ai/agent-delegation-contracts#delegation-contract" },
       { label: "Task packet·registry", href: "/ai/claw-task-team" },
       { label: "Permission·authority ceiling", href: "/ai/claw-permissions" },
     ],

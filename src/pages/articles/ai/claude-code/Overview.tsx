@@ -47,7 +47,7 @@ export default function Overview({
         </p>
         <ContentBoundary article="claude-code" />
         <p className="leading-7">
-          일반적인 agent loop는 <a href="/ai/agentic-patterns">에이전틱 패턴</a>,
+          일반적인 agent loop는 <a href="/ai/agent-loop-foundations">Agent loop 기초</a>,
           하네스의 설계 원리는 <a href="/ai/llm-harness">LLM 하네스</a>에서
           다룹니다. 이 글은 그 개념을 다시 정의하지 않고, Claude Code라는 제품이
           workspace 발견, tool 실행, permission, hook, memory, checkpoint와 IDE

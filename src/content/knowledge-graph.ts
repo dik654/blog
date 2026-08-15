@@ -4405,7 +4405,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Agent state · action · observation loop",
     definition:
       "Model이 현재 observable state에서 action을 제안하고 runtime이 실행한 typed observation으로 state를 갱신해 다음 decision을 만드는 반복 실행 단위입니다.",
-    canonicalHref: "/ai/agentic-patterns#overview",
+    canonicalHref: "/ai/agent-loop-foundations#overview",
   },
   "typed-tool-observation-contract": {
     id: "typed-tool-observation-contract",
@@ -4414,7 +4414,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Typed tool observation contract",
     definition:
       "Tool 결과에 success/error·payload schema·source·timestamp·truncation·effect receipt를 명시해 다음 decision이 실패와 빈 결과를 구분하게 하는 관찰 계약입니다.",
-    canonicalHref: "/ai/agentic-patterns#react",
+    canonicalHref: "/ai/agent-loop-foundations#observation-contract",
   },
   "agent-exit-state-machine": {
     id: "agent-exit-state-machine",
@@ -4423,7 +4423,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Agent exit-state machine",
     definition:
       "Verifier pass·budget exhaustion·repeated action·fatal tool error·approval wait·human escalation을 서로 다른 terminal state로 두어 model의 완료 주장만으로 loop를 끝내지 않는 계약입니다.",
-    canonicalHref: "/ai/agentic-patterns#react",
+    canonicalHref: "/ai/agent-loop-foundations#exit-states",
   },
   "agent-framework-runtime-boundary": {
     id: "agent-framework-runtime-boundary",
@@ -4486,7 +4486,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Executable plan state",
     definition:
       "Task마다 dependency·owner·input/output artifact·status·completion evidence를 가진 versioned graph로 plan을 표현해 실행과 재개가 가능하게 하는 상태입니다.",
-    canonicalHref: "/ai/agentic-patterns#plan-execute",
+    canonicalHref: "/ai/agent-plan-replanning#executable-plan",
   },
   "evidence-driven-replanning": {
     id: "evidence-driven-replanning",
@@ -4495,7 +4495,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Evidence-driven replanning",
     definition:
       "새 observation이 가정을 깨면 영향받은 task와 downstream dependency만 다시 pending으로 만들고 검증된 immutable artifact는 보존하는 plan transition입니다.",
-    canonicalHref: "/ai/agentic-patterns#plan-execute",
+    canonicalHref: "/ai/agent-plan-replanning#replanning",
   },
   "feedback-grounded-reflection": {
     id: "feedback-grounded-reflection",
@@ -4504,7 +4504,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Feedback-grounded reflection",
     definition:
       "Compiler·test·environment·rubric·human feedback에서 관측한 실패를 원인·수정 대상·재검증 조건이 있는 언어적 reflection으로 바꿔 다음 trial에 사용하는 방법입니다.",
-    canonicalHref: "/ai/agentic-patterns#plan-execute",
+    canonicalHref: "/ai/agent-plan-replanning#reflection",
   },
   "agent-delegation-artifact-ownership": {
     id: "agent-delegation-artifact-ownership",
@@ -4513,7 +4513,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Agent delegation · artifact ownership",
     definition:
       "Delegate의 objective·input snapshot·capability·output schema·deadline·verification과 공유 artifact의 writer/merge rule을 함께 고정하는 위임 계약입니다.",
-    canonicalHref: "/ai/agentic-patterns#multi-agent",
+    canonicalHref: "/ai/agent-delegation-contracts#delegation-contract",
   },
   "manager-handoff-state-ownership": {
     id: "manager-handoff-state-ownership",
@@ -4522,7 +4522,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Manager · handoff state ownership",
     definition:
       "중앙 manager가 user-facing state와 final answer를 계속 소유하는 방식과 specialist에게 대화·실행 state를 넘기는 handoff를 명시적으로 구분하는 orchestration 경계입니다.",
-    canonicalHref: "/ai/agentic-patterns#multi-agent",
+    canonicalHref: "/ai/agent-delegation-contracts#manager-handoff",
   },
   "hook-skill-guardrail-verifier-boundary": {
     id: "hook-skill-guardrail-verifier-boundary",
@@ -4531,7 +4531,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Hook · skill · guardrail · verifier boundary",
     definition:
       "Runtime event에 반드시 실행되는 hook, 필요할 때 읽는 skill, 정책 위반을 차단하는 guardrail, artifact acceptance를 판정하는 verifier의 시점과 권한을 분리하는 경계입니다.",
-    canonicalHref: "/ai/agentic-patterns#hooks-skills",
+    canonicalHref: "/ai/agent-extension-boundaries#overview",
   },
   "agent-skill-authoring-boundary": {
     id: "agent-skill-authoring-boundary",

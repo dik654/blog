@@ -41,6 +41,10 @@ const ARTICLE_INTENT_OVERRIDES: Partial<Record<string, ArticleIntent>> = {
   "kv-cache-fundamentals": "개념 지도",
   "hybrid-kv-cache-allocation": "구현 추적",
   "llm-serving-capacity": "비교·선택",
+  "agent-loop-foundations": "개념 지도",
+  "agent-plan-replanning": "구현 추적",
+  "agent-delegation-contracts": "비교·선택",
+  "agent-extension-boundaries": "개념 지도",
   "sionic-eureka": "사례·실측",
   "sionic-glm-b300": "사례·실측",
   "b300-switchless-network": "사례·실측",
@@ -111,8 +115,8 @@ const SUBCATEGORY_STARTS: Record<string, GuidanceLink> = {
     reason: "VAE·GAN·diffusion이 분포를 배우는 방식부터 비교합니다.",
   },
   "ai-agents": {
-    label: "에이전틱 패턴",
-    href: "/ai/agentic-patterns",
+    label: "Agent loop 기초",
+    href: "/ai/agent-loop-foundations",
     reason: "도구 호출·루프·검증이라는 공통 실행 모델을 먼저 봅니다.",
   },
   "ai-llm-serving": {
@@ -290,10 +294,10 @@ export function getBeginnerStart(
 export const CONCEPT_REUSE: Record<string, readonly GuidanceLink[]> = {
   "ai/llm-harness": [
     {
-      label: "Agent pattern의 control flow",
-      href: "/ai/agentic-patterns",
+      label: "Agent의 state·action·observation loop",
+      href: "/ai/agent-loop-foundations",
       reason:
-        "이 글은 전체 실행 계약을 소유하고, ReAct·plan-execute·multi-agent의 세부 control flow는 agent pattern 정본에서 이어집니다.",
+        "이 글은 전체 실행 계약을 소유하고, proposal·runtime·typed observation·exit의 세부 transition은 loop 정본에서 이어집니다.",
     },
     {
       label: "Context 선택·memory·compaction",
@@ -314,30 +318,44 @@ export const CONCEPT_REUSE: Record<string, readonly GuidanceLink[]> = {
         "Capability admission보다 아래의 process·network·kernel isolation은 sandbox 보안 글이 소유합니다.",
     },
   ],
-  "ai/agentic-patterns": [
+  "ai/agent-loop-foundations": [
     {
       label: "LLM 하네스의 목표·권한·복구",
       href: "/ai/llm-harness",
       reason:
-        "이 글은 control-flow 패턴을 소유하고, 전체 실행 계약·평가 개선 loop는 하네스 정본에서 이어집니다.",
+        "이 글은 최소 state transition을 소유하고, 전체 실행 계약·평가 개선 loop는 하네스 정본에서 이어집니다.",
     },
+  ],
+  "ai/agent-plan-replanning": [
+    {
+      label: "Agent loop의 typed observation과 exit",
+      href: "/ai/agent-loop-foundations",
+      reason: "Plan transition은 실제 observation과 terminal state를 입력으로 사용합니다.",
+    },
+    {
+      label: "Durable framework state",
+      href: "/ai/agent-frameworks",
+      reason: "Plan checkpoint를 process restart와 human wait까지 지속하는 runtime 구현은 framework 글이 소유합니다.",
+    },
+  ],
+  "ai/agent-delegation-contracts": [
     {
       label: "Multi-agent runtime 구현",
       href: "/ai/multi-agent-implementation",
       reason:
         "Delegation·ownership 원리를 실제 context 격리·checkpoint·merge로 내리는 구현은 별도 글이 소유합니다.",
     },
+  ],
+  "ai/agent-extension-boundaries": [
     {
-      label: "Skill authoring format",
+      label: "Skill의 포맷과 progressive disclosure",
       href: "/ai/skills-anatomy",
-      reason:
-        "Skill directory·progressive disclosure·script 구조는 Skills 정본에서 자세히 다룹니다.",
+      reason: "Skill의 runtime authority 경계만 여기서 보고 directory·metadata·resource authoring은 Skills 정본에서 이어집니다.",
     },
     {
-      label: "Sandbox와 egress 보안",
-      href: "/ai/agent-sandbox-security",
-      reason:
-        "Tool capability보다 아래의 process·network·kernel isolation은 sandbox 보안 글에서 이어집니다.",
+      label: "하네스의 layered verification",
+      href: "/ai/llm-harness#evaluation",
+      reason: "Verifier의 위치를 전체 artifact·trajectory·effect evaluation stack에 연결합니다.",
     },
   ],
   "ai/distributional-semantics": [
@@ -450,10 +468,10 @@ export const CONCEPT_REUSE: Record<string, readonly GuidanceLink[]> = {
   ],
   "ai/claw-subagent-orchestration": [
     {
-      label: "에이전틱 패턴의 기본 루프",
-      href: "/ai/agentic-patterns",
+      label: "Agent delegation과 state owner",
+      href: "/ai/agent-delegation-contracts",
       reason:
-        "여기서는 ReAct를 반복하지 않고 sub-agent의 작업 계약·격리·합류를 설명합니다.",
+        "여기서는 위임 원리를 반복하지 않고 Claw sub-agent의 작업 계약·격리·합류를 설명합니다.",
     },
   ],
   "ai/tabular-deep-learning": [
@@ -703,9 +721,9 @@ export const ARTICLE_CONCEPT_FLOWS: Record<string, ConceptFlow> = {
     ],
     "하네스 엔지니어링은 모델에게 지침을 많이 붙이는 일이 아니라, 실행 가능한 자유와 시스템이 강제할 invariant를 분리하는 일입니다.",
   ),
-  "ai/agentic-patterns": flow(
-    "Model 제안에서 검증 가능한 multi-step run까지",
-    "LLM이 tool로 환경을 바꾸는 동안 어떤 state·plan·delegation·verifier 경계를 두어야 run을 안전하게 끝낼 수 있을까?",
+  "ai/agent-loop-foundations": flow(
+    "State에서 typed observation과 terminal state까지",
+    "Model proposal을 runtime effect와 분리해 한 iteration을 어떻게 안전하게 끝낼까?",
     [
       {
         label: "Observable run state",
@@ -713,27 +731,27 @@ export const ARTICLE_CONCEPT_FLOWS: Record<string, ConceptFlow> = {
           "User input·tool result·artifact·budget·exit status를 typed state로 두고 model proposal과 runtime execution을 분리합니다.",
       },
       {
-        label: "ReAct observation loop",
+        label: "Action proposal",
         detail:
-          "Action 뒤 외부 observation으로 판단을 갱신하고 schema·permission·idempotency를 통과시킵니다.",
+          "Model이 tool name과 validated arguments를 제안하지만 아직 외부 effect를 만들지는 않습니다.",
       },
       {
-        label: "Plan & verification",
+        label: "Runtime gate",
         detail:
-          "Dependency·artifact·evidence가 있는 plan state를 verifier 결과에 따라 checkpoint·replan합니다.",
+          "Identity·resource·operation·approval·budget을 검사해 실행 범위를 좁힙니다.",
       },
       {
-        label: "Delegation contract",
+        label: "Typed observation",
         detail:
-          "Multi-agent는 objective·context·authority·output·acceptance를 나누고 공유 state owner를 고정합니다.",
+          "Success·empty·denied·timeout·partial effect를 payload·provenance·receipt와 함께 기록합니다.",
       },
       {
-        label: "Extension & evaluation",
+        label: "Exit state",
         detail:
-          "Hook·Skill·Guardrail·Verifier의 시점과 권한을 나누고 answer·trajectory·side effect를 함께 평가합니다.",
+          "Completed·exhausted·stalled·failed·approval·escalation을 별도 terminal state로 판정합니다.",
       },
     ],
-    "Agent pattern은 모델을 여러 번 부르는 이름이 아니라 observation·permission·artifact·verification·ownership을 연결하는 control flow입니다.",
+    "Agent loop는 model이 세계를 직접 바꾸는 구조가 아니라 proposal·authorization·execution·observation·state update를 분리하는 control flow입니다.",
   ),
   "ai/distributional-semantics": flow(
     "Corpus의 사용 패턴에서 검증 가능한 word vector까지",

@@ -2331,19 +2331,23 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "extension·deprecation·migration lifecycle의 revision 근거",
     },
   ],
-  "ai/agentic-patterns": [
+  "ai/agent-loop-foundations": [
     {
       kind: "핵심 논문",
       label: "ReAct: Synergizing Reasoning and Acting in Language Models",
       href: "https://arxiv.org/abs/2210.03629",
       note: "판단·행동·관찰을 번갈아 수행하는 에이전트 패턴",
     },
+  ],
+  "ai/agent-plan-replanning": [
     {
       kind: "핵심 논문",
       label: "Reflexion: Language Agents with Verbal Reinforcement Learning",
       href: "https://arxiv.org/abs/2303.11366",
       note: "외부·내부 feedback을 언어적 reflection과 episodic memory로 다음 trial에 전달하는 구조",
     },
+  ],
+  "ai/agent-delegation-contracts": [
     {
       kind: "공식 가이드",
       label: "Anthropic — Building effective agents",
@@ -2356,6 +2360,8 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://openai.com/business/guides-and-resources/a-practical-guide-to-building-ai-agents/",
       note: "Single/multi-agent orchestration·run exit condition·guardrail·human intervention 설계",
     },
+  ],
+  "ai/agent-extension-boundaries": [
     {
       kind: "공식 가이드",
       label: "Anthropic — Demystifying evals for AI agents",

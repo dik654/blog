@@ -1265,3 +1265,11 @@
 - Fundamentals에는 현재 Q/K/V 원, 과거 K/V cell, lookup·append arrow를 갖는 전용 animated Viz를 새로 만들었다. `ArrowLeft`·`ArrowRight`로 `현재 token→과거 cache→조회→append`를 이동하고 `Space`로 자동 재생한다. Hybrid allocation과 capacity 글은 layer pattern·retention curve·runtime log 비교를 별도 도형 Viz로 연결한다.
 - 세 public closure의 수식 5개를 모두 explicit operation annotation으로 이관했다. Q와 K/V의 서로 다른 head 축, K/V tensor 수와 dtype byte의 곱, layer별 visibility와 저장 byte의 합, KV pool/token byte·request length의 연속 나눗셈 의도를 KaTeX 식 안의 underbrace와 의미 단위 다단식으로 직접 표시했다. 전역 formula backlog는 926→921개로 줄었다.
 - 390px·1440px 실제 브라우저 6회에서 document·custom Viz·모든 visible KaTeX overflow, console warning/error, gradient·shadow·굵은 선이 모두 0임을 확인했다. 키보드 선택은 `현재 token→과거 cache`, Space는 `흐름 재생→일시정지`로 실제 상태 전이가 일어났고 focused Viz·formula 및 full-page screenshots를 육안 검수했다.
+
+## 2026-08-15 · Agent loop · plan · delegation · extension CRUD split
+
+- 기존 `ai/agentic-patterns` 한 글의 9개 concept를 graph 연결 arc로 다시 읽어 `state·action·observation·exit`, `plan·replanning·reflection`, `delegation·manager/handoff`, `hook·skill·guardrail·verifier`의 네 독립 수업으로 분리했다. 기존 공개 route와 legacy section 5개·텍스트 카드형 Viz 10개를 삭제하고 `ai/agent-loop-foundations`, `ai/agent-plan-replanning`, `ai/agent-delegation-contracts`, `ai/agent-extension-boundaries`를 생성했다.
+- 기존 canonical concept가 이미 네 arc를 정확히 표현하므로 새 node를 인위적으로 추가하지 않았다. 아홉 owner href·stage·evidence와 모든 backlink를 실제 설명 route로 이동했다. 공개 route·exact contract는 447→450개, graph는 2,380 concepts·3,560 relations·invariant 0을 유지하며 네 route 모두 topology `keep`, 전체 split-review는 70→69개다.
+- Observable state→proposal→runtime gate→typed observation, Task→artifact→downstream→replan, pinned input→delegate→receipt→state owner, Hook→Skill→Guardrail→Verifier를 서로 다른 도형·arrow·receipt 구조의 새 responsive Viz로 만들었다. 네 Viz 모두 `ArrowLeft`·`ArrowRight` 장면 이동과 `Space` 자동 재생을 실제 focus 상태에서 검증했다.
+- Agent loop 수식은 proposal sampling→authorization→execution→state commit의 네 연산 의도를 KaTeX 식 안의 다단 underbrace로 직접 표시했다. 기존 raw 설명식을 explicit operation annotation으로 이관해 전역 대기 수식은 921→920개, source files는 633→632개가 됐다.
+- 390px·1440px 실제 브라우저 8회에서 document·custom Viz·descendant·visible KaTeX overflow, console warning/error, gradient·shadow·굵은 선이 모두 0임을 확인했다. Desktop에서 회전 diamond와 마지막 document의 외접 폭이 6~20px 넘던 문제를 발견해 도형 크기·grid 배치를 교정하고 8 screenshots를 재촬영·육안 검수했다.
