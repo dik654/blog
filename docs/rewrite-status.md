@@ -1257,3 +1257,11 @@
 - 두 route는 topology `keep`이 되었고 전역 summary는 keep 372·rename-or-split-review 2·split-review 71이다. RNN은 state transition→lossy state→unroll→direction, RNN-LM은 shifted pair→vocabulary logit head→probability→NLL/PPL을 각각 소유한다.
 - 기존 텍스트 카드 중심 Viz를 현재 input·이전 state 원, 공유 transition 마름모, time rail, causal/bidirectional arrow, shifted token rail, state 육각형, vocabulary probability bar, loss 원형 pipeline으로 다시 그렸다. Active 장면에는 pulse animation을 넣고 `ArrowLeft`·`ArrowRight`와 `Space` 자동 재생을 실제 focus 상태에서 검증했다.
 - 두 route의 기존 수식 5개는 모두 operation별 `annotatedFormula`·`operations` 계약을 유지한다. 390px·1440px 실제 브라우저 4회에서 document·Viz·모든 descendant·formula overflow, console warning/error, gradient·shadow·굵은 선이 모두 0이며 두 route의 정적 learning·graph·article·Viz·term·route·TypeScript 검사를 통과했다.
+
+## 2026-08-15 · KV fundamentals · hybrid allocation · serving capacity CRUD split
+
+- 기존 `ai/hybrid-attention-serving` 한 글의 graph를 다시 읽어 `Q·K·V와 MHA/GQA/MQA의 token byte`, `local/global retention과 physical block allocation`, `weight·KV pool·runtime log와 admission`의 세 독립 질문을 확인했다. 기존 공개 route를 삭제하고 `ai/kv-cache-fundamentals`, `ai/hybrid-kv-cache-allocation`, `ai/llm-serving-capacity` 세 route로 생성·분리했다.
+- 이 배치에서는 graph에 이미 존재하던 여덟 canonical concept가 세 connected learning arc를 정확히 드러냈으므로 인위적인 node를 추가하지 않았다. 대신 각 owner href·stage·evidence를 실제 설명 route로 이동했다. 공개 route·exact contract는 445→447개가 되었고 graph는 2,380 concepts·3,560 relations, owner·isolation·stage invariant 0을 유지한다.
+- Fundamentals에는 현재 Q/K/V 원, 과거 K/V cell, lookup·append arrow를 갖는 전용 animated Viz를 새로 만들었다. `ArrowLeft`·`ArrowRight`로 `현재 token→과거 cache→조회→append`를 이동하고 `Space`로 자동 재생한다. Hybrid allocation과 capacity 글은 layer pattern·retention curve·runtime log 비교를 별도 도형 Viz로 연결한다.
+- 세 public closure의 수식 5개를 모두 explicit operation annotation으로 이관했다. Q와 K/V의 서로 다른 head 축, K/V tensor 수와 dtype byte의 곱, layer별 visibility와 저장 byte의 합, KV pool/token byte·request length의 연속 나눗셈 의도를 KaTeX 식 안의 underbrace와 의미 단위 다단식으로 직접 표시했다. 전역 formula backlog는 926→921개로 줄었다.
+- 390px·1440px 실제 브라우저 6회에서 document·custom Viz·모든 visible KaTeX overflow, console warning/error, gradient·shadow·굵은 선이 모두 0임을 확인했다. 키보드 선택은 `현재 token→과거 cache`, Space는 `흐름 재생→일시정지`로 실제 상태 전이가 일어났고 focused Viz·formula 및 full-page screenshots를 육안 검수했다.

@@ -3352,7 +3352,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "KV cache · autoregressive decode state",
     definition:
       "Autoregressive decode에서 과거 token의 layer별 key와 value projection을 다시 계산하지 않도록 보존하고, 현재 token의 query가 다음 step마다 이 기록을 조회하게 하는 runtime state입니다.",
-    canonicalHref: "/ai/hybrid-attention-serving#kv-shape",
+    canonicalHref: "/ai/kv-cache-fundamentals#kv-shape",
   },
   "grouped-query-kv-sharing": {
     id: "grouped-query-kv-sharing",
@@ -3361,7 +3361,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "MHA·GQA·MQA KV-head sharing",
     definition:
       "Query head 수는 유지하되 더 적은 key/value head를 여러 query head가 공유하게 만들어 cache width와 decode memory traffic을 줄이는 attention 설계 축입니다.",
-    canonicalHref: "/ai/hybrid-attention-serving#kv-shape-sharing",
+    canonicalHref: "/ai/kv-cache-fundamentals#kv-shape-sharing",
   },
   "per-token-kv-byte": {
     id: "per-token-kv-byte",
@@ -3370,7 +3370,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Per-token KV cache byte",
     definition:
       "한 token의 K/V를 보존하는 layer 수·KV head 수·head dimension·K/V tensor 수·cache dtype byte를 곱해 구하는 dense-allocation memory 비용입니다.",
-    canonicalHref: "/ai/hybrid-attention-serving#kv-shape-formula",
+    canonicalHref: "/ai/kv-cache-fundamentals#kv-shape-formula",
   },
   "hybrid-layer-kv-retention": {
     id: "hybrid-layer-kv-retention",
@@ -3379,7 +3379,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Hybrid layer KV-retention length",
     definition:
       "Global attention layer는 전체 history T를, sliding-window layer는 allocator가 오래된 block을 회수할 때 최근 min(T,W) token만 보존하도록 layer별 cache 길이를 정하는 규칙입니다.",
-    canonicalHref: "/ai/hybrid-attention-serving#kv-cache",
+    canonicalHref: "/ai/hybrid-kv-cache-allocation#kv-cache",
   },
   "hybrid-kv-cache-allocation": {
     id: "hybrid-kv-cache-allocation",
@@ -3388,7 +3388,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Hybrid KV-cache allocation",
     definition:
       "Full·sliding 등 attention type별로 필요한 block 수가 다른 layer를 cache group과 공통 physical page에 배치하고 layer별 보존 정책에 따라 block을 할당·회수하는 runtime 방법입니다.",
-    canonicalHref: "/ai/hybrid-attention-serving#spec-vllm-hybrid",
+    canonicalHref: "/ai/hybrid-kv-cache-allocation#spec-vllm-hybrid",
   },
   "kv-pool-capacity-budget": {
     id: "kv-pool-capacity-budget",
@@ -3397,7 +3397,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "KV-pool capacity budget",
     definition:
       "Replica VRAM에서 weight·model extras·runtime workspace·headroom을 뺀 KV pool byte를 token 또는 layer별 cache 비용과 연결해 수용 가능한 active state를 계산하는 예산입니다.",
-    canonicalHref: "/ai/hybrid-attention-serving#capacity",
+    canonicalHref: "/ai/llm-serving-capacity#capacity",
   },
   "context-concurrency-admission": {
     id: "context-concurrency-admission",
@@ -3406,7 +3406,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Context–concurrency admission control",
     definition:
       "최대 context 숫자를 수용 인원으로 바로 바꾸지 않고 active request의 실제 input·output 길이 분포와 KV budget·latency·preemption을 함께 사용해 scheduler admission 상한을 정하는 방법입니다.",
-    canonicalHref: "/ai/hybrid-attention-serving#capacity-admission",
+    canonicalHref: "/ai/llm-serving-capacity#capacity-admission",
   },
   "runtime-capacity-log-consistency": {
     id: "runtime-capacity-log-consistency",
@@ -3415,7 +3415,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Runtime capacity-log consistency",
     definition:
       "Startup log의 cache token을 max model length로 나눈 직접 concurrency와 runtime 보고값을 비교해 hybrid group·padding·token-equivalent 등 단위 차이를 찾는 검산입니다.",
-    canonicalHref: "/ai/hybrid-attention-serving#capacity-logs",
+    canonicalHref: "/ai/llm-serving-capacity#capacity-logs",
   },
   "speculative-draft-verify-cycle": {
     id: "speculative-draft-verify-cycle",

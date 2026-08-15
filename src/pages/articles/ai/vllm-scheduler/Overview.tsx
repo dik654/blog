@@ -39,7 +39,7 @@ export default function Overview() {
           어떤 순서로 배정하는지, 긴 prefill을 왜 나누는지, KV가 부족할 때 어떤
           state transition이 일어나는지를 추적합니다. KV의 logical·physical block
           mapping과 prefix sharing은 <Link to="/ai/vllm-paged-attention">PagedAttention</Link>,
-          KV tensor 한 token의 실제 byte는 <Link to="/ai/hybrid-attention-serving#kv-shape">KV
+          KV tensor 한 token의 실제 byte는 <Link to="/ai/kv-cache-fundamentals#kv-shape">KV
           cache와 hybrid attention</Link>이 정본입니다.
         </p>
         <p className="leading-8">

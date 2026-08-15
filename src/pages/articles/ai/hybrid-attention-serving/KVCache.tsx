@@ -1,4 +1,7 @@
+import TermBreakdown from "@/components/articles/term-breakdown";
+import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import AttentionPatternViz from "./viz/AttentionPatternViz";
 import KVCapacityViz from "./viz/KVCapacityViz";
 
 const LAYERWISE_TERMS = [
@@ -15,6 +18,16 @@ const LAYERWISE_TERMS = [
       "Global layer는 T, local layer는 allocator가 회수할 때 min(T,W_l)입니다.",
   },
   {
+    symbol: "e_l",
+    name: "l번째 layer의 KV 원소 폭",
+    description: "KV head 수와 head dimension을 곱한 K 또는 V의 원소 수입니다.",
+  },
+  {
+    symbol: "a_l",
+    name: "l번째 layer의 저장 byte 계수",
+    description: "K/V tensor 수와 dtype byte를 곱한 저장 계수입니다.",
+  },
+  {
     symbol: "c_l",
     name: "Layer별 token byte",
     description:
@@ -26,12 +39,13 @@ export default function KVCache() {
   return (
     <section id="kv-cache" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
-        Sliding window는 두 번째 절감입니다. Runtime이 오래된 block을 회수해야만
-        효과가 납니다
+        Local attention은 읽는 범위를 줄이고, allocator는 보관하는 범위를
+        줄입니다
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          앞 절의 토큰당 KV byte 식은 모든 layer가 요청의 전체 길이를 보관한다는
+          <a href="/ai/kv-cache-fundamentals#kv-shape-formula">앞 글</a>의
+          토큰당 KV byte 식은 모든 layer가 요청의 전체 길이를 보관한다는
           dense-allocation 근사였습니다. Sliding-window layer는 가장 최근{" "}
           <em>W</em>개 token만 참조하므로, runtime이 더 이상 쓰지 않는 block을
           회수한다면 해당 layer의 cache 길이는 <code>min(T, W)</code>에서
@@ -47,6 +61,31 @@ export default function KVCache() {
           됩니다.
         </p>
       </div>
+      <TermBreakdown
+        title="읽기 범위와 memory 회수를 따로 정의합니다"
+        description="Local attention을 쓴다는 사실만으로 오래된 KV block이 다른 요청에 돌아가지는 않습니다."
+        items={[
+          {
+            term: "Global attention layer",
+            description: "현재 token이 요청의 전체 prefix에 있는 K/V를 읽는 layer입니다.",
+            example: "길이 T 요청이면 이 layer는 T개 token의 KV를 보존합니다.",
+            boundary: "Global layer 수가 적어도 이 항은 context와 함께 계속 증가합니다.",
+          },
+          {
+            term: "Sliding-window layer",
+            description: "현재 위치에서 최근 W개 token만 attention 대상으로 사용하는 local layer입니다.",
+            example: "T=8,192, W=2,048이면 계산의 visibility는 최근 2,048 token입니다.",
+            boundary: "읽지 않는다는 규칙과 physical block을 반환한다는 규칙은 다릅니다.",
+          },
+          {
+            term: "Hybrid KV allocator",
+            description: "Layer type별 보존 규칙을 physical block 할당·회수로 실제 구현하는 runtime입니다.",
+            example: "Window 밖 local blocks를 반환해 다른 sequence가 같은 pool을 사용하게 합니다.",
+            boundary: "Grouping·page size·padding과 fallback path 때문에 config 식과 실제 byte가 달라질 수 있습니다.",
+          },
+        ]}
+      />
+      <AttentionPatternViz />
       <ExplainedFormula
         question="Local·global layer의 KV shape가 다를 때 요청 하나의 실제 KV memory를 어떻게 계산할까요?"
         idea={
@@ -64,6 +103,25 @@ r_l(T) &= T && [\mathrm{G}] \\
 r_l(T) &= \min(T,W_l) && [\mathrm{L_R}] \\
 r_l(T) &= T && [\mathrm{L_F}]
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}e_l&=\underbrace{H_{KV,l}}_{\text{KV heads}}\underbrace{D_l}_{\text{head 폭}}\\a_l&=\underbrace{N_{tensor,l}}_{\text{K·V 수}}\underbrace{b_l}_{\text{원소 byte}}\\c_l&=\underbrace{e_l}_{\text{KV 원소 폭}}\underbrace{a_l}_{\text{저장 byte 계수}}\\[3pt]M_{KV}(T)&=\sum_{l=1}^{L}\underbrace{r_l(T)}_{\text{보존 tokens}}\underbrace{c_l}_{\text{token byte}}\\[3pt]r_l(T)&=\underbrace{T}_{\text{전체 prefix}}&&[\mathrm G]\\r_l(T)&=\underbrace{\min(T,W_l)}_{\text{최근 window}}&&[\mathrm{L_R}]\\r_l(T)&=\underbrace{T}_{\text{회수 없음}}&&[\mathrm{L_F}]\end{aligned}`}
+        operations={[
+          {
+            expression: String.raw`H_{KV,l}D_lN_{tensor,l}b_l`,
+            annotation: ["layer의 KV 원소 폭을 세고", "K/V tensor와 dtype byte를 반영"],
+          },
+          {
+            expression: String.raw`r_l(T)c_l`,
+            annotation: ["그 layer가 남긴 token 수에", "token 하나의 byte를 곱함"],
+          },
+          {
+            expression: String.raw`\sum_{l=1}^{L}r_l(T)c_l`,
+            annotation: ["shape와 보존 길이가 다른", "모든 layer의 byte를 합산"],
+          },
+          {
+            expression: String.raw`\min(T,W_l)`,
+            annotation: ["전체 길이와 window 중", "더 작은 보존 길이를 선택"],
+          },
+        ]}
         terms={LAYERWISE_TERMS}
         assumptions={[
           "한 request의 logical KV만 계산하며 block rounding·prefix sharing·fragmentation·speculative branch는 제외합니다.",
@@ -103,6 +161,18 @@ r_l(T) &= T && [\mathrm{L_F}]
           <a href="/ai/vllm-paged-attention">PagedAttention·KV cache 글</a>에서
           이어서 설명합니다.
         </p>
+        <CitationBlock
+          type="paper"
+          citeKey={1}
+          source="Efficient Memory Management for Large Language Model Serving with PagedAttention"
+          href="https://arxiv.org/abs/2309.06180"
+        >
+          <p><strong>문제:</strong> 동적 request KV의 연속 예약이 만드는 fragmentation과 중복 저장입니다.</p>
+          <p><strong>핵심 아이디어:</strong> Logical block table로 non-contiguous physical KV blocks를 연결합니다.</p>
+          <p><strong>중요 가정:</strong> 논문의 vLLM version·GPU·model·scheduler 조건입니다.</p>
+          <p><strong>근거 범위:</strong> 보고된 memory waste·throughput·prefix/beam sharing 결과입니다.</p>
+          <p><strong>일반화 금지:</strong> 임의 hybrid model의 local block 회수가 자동 지원된다는 뜻은 아닙니다.</p>
+        </CitationBlock>
         <h3 id="paper-pagedattention" className="scroll-mt-20">
           PagedAttention의 핵심 아이디어: 연속 공간 예약을 logical block table로
           바꾼다

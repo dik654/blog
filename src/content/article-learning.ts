@@ -22437,27 +22437,13 @@ export const ARTICLE_LEARNING: Readonly<
       { title: "Kimi K3: Stable LatentMoE", href: "https://arxiv.org/abs/2607.24653", problem: "대규모 MoE의 routed compute·outlier·load imbalance", contribution: "Latent width·SiTU-GLU·RMSNorm·Quantile Balancing 통합", assumptions: "K3 architecture·training·low-precision 조건", evidenceScope: "공개 configuration·method·보고된 비교", notClaim: "한 component가 전체 efficiency를 단독 만든다는 주장", sectionId: "paper-kimi-k3-width" },
     ],
   },
-  "ai/hybrid-attention-serving": {
+  "ai/kv-cache-fundamentals": {
+    entryLevel: true,
+    entryNote:
+      "Autoregressive decode의 현재 질문과 과거 기록을 구분한 뒤, head 공유가 token당 KV byte를 어떻게 바꾸는지 계산합니다.",
     coreIdea:
-      "비슷한 parameter 수의 LLM도 서빙 동시성은 크게 다를 수 있습니다. Autoregressive decode가 보존하는 K/V의 layer·head·dimension·dtype을 먼저 계산하고, local/global layer의 보존 길이와 runtime allocator가 실제로 회수한 block을 합산한 뒤, startup log의 단위를 검산하고 workload trace로 admission 상한을 정해야 합니다.",
-    assumedKnowledge: [
-      {
-        id: "autoregressive-decoding",
-        role: "이전 output token을 prefix에 붙이고 다음 token을 반복 생성하는 decode 과정을 출발점으로 사용합니다.",
-      },
-      {
-        id: "attention-query-key-value",
-        role: "현재 query가 과거 key를 비교하고 value를 읽는 세 역할을 구분합니다.",
-      },
-      {
-        id: "multi-head-attention",
-        role: "여러 Q/K/V projection head를 병렬로 계산하는 MHA를 GQA·MQA의 기준선으로 둡니다.",
-      },
-      {
-        id: "bit-byte",
-        role: "Cache dtype의 원소 크기를 byte로 바꾸어 tensor element 수와 곱합니다.",
-      },
-    ],
+      "Autoregressive decode에서 현재 Query는 매 step 새로 만들고 과거 Key·Value는 재계산을 피하려고 보존합니다. MHA·GQA·MQA가 공유하는 KV head 축을 구분한 뒤 layer·KV head·head dimension·K/V tensor·dtype을 곱하면 token 하나가 늘 때의 logical KV byte를 계산할 수 있습니다.",
+    assumedKnowledge: [],
     introducedHere: [
       {
         id: "kv-cache-decode-state",
@@ -22470,26 +22456,6 @@ export const ARTICLE_LEARNING: Readonly<
       {
         id: "per-token-kv-byte",
         role: "Layer·KV head·head dimension·K/V tensor·dtype에서 token당 cache byte를 계산합니다.",
-      },
-      {
-        id: "hybrid-layer-kv-retention",
-        role: "Global T와 local min(T,W)의 layer별 보존 길이를 실제 KV byte 식으로 합칩니다.",
-      },
-      {
-        id: "hybrid-kv-cache-allocation",
-        role: "Model의 local attention과 runtime의 block 회수·grouping이 별도 구현 조건임을 확인합니다.",
-      },
-      {
-        id: "kv-pool-capacity-budget",
-        role: "Weight 밖에 남은 VRAM과 토큰당 비용에서 cache capacity를 계산합니다.",
-      },
-      {
-        id: "runtime-capacity-log-consistency",
-        role: "Cache token÷max_model_len과 runtime concurrency를 비교해 로그의 단위 차이를 찾습니다.",
-      },
-      {
-        id: "context-concurrency-admission",
-        role: "Maximum context가 아니라 실제 요청 길이와 latency·preemption으로 수용 상한을 정합니다.",
       },
     ],
     conceptExplanations: [
@@ -22523,56 +22489,6 @@ export const ARTICLE_LEARNING: Readonly<
         boundary:
           "이 값은 uniform dense-allocation 근사이며 layer별 shape·K=V 공유·TP head 복제·block padding·allocator metadata가 있으면 실제 rank별 byte와 달라집니다.",
       },
-      {
-        id: "hybrid-layer-kv-retention",
-        sectionId: "kv-cache",
-        intuition:
-          "Global 층은 처음부터 모든 기록을 보관하지만 local 층은 최근 W개가 든 서랍만 남기고 오래된 서랍은 비울 수 있습니다.",
-        workedExample:
-          "T=8,192에서 Muse의 topology proxy는 39×2,048+13×8,192이고, 52개 층을 모두 global로 볼 때의 52×8,192보다 작습니다.",
-        boundary:
-          "min(T,W)는 attention visibility와 allocator 회수가 모두 구현됐을 때의 cache 길이이며 local·global KV shape가 다르면 layer-token 수만으로 byte를 비교할 수 없습니다.",
-      },
-      {
-        id: "hybrid-kv-cache-allocation",
-        sectionId: "spec-vllm-hybrid",
-        intuition:
-          "모델 설계도가 오래된 서랍을 쓰지 않는다고 적어도 창고 관리자가 그 서랍을 실제로 반납 처리해야 다른 요청이 공간을 사용할 수 있습니다.",
-        workedExample:
-          "vLLM은 full과 sliding layer를 KV cache group으로 묶고 같은 physical page size에 맞추며, sliding group은 window 밖 block을 반환할 수 있습니다.",
-        boundary:
-          "Grouping에는 padding waste가 생길 수 있고 runtime version·architecture path·hybrid-manager 설정에 따라 sliding layer가 full spec으로 할당될 수 있으므로 config만으로 capacity를 확정하지 않습니다.",
-      },
-      {
-        id: "kv-pool-capacity-budget",
-        sectionId: "capacity",
-        intuition:
-          "GPU라는 창고에서 model weight와 작업 공간을 먼저 빼고 남은 구역을 token 상자 크기로 나누어 몇 상자를 둘 수 있는지 계산합니다.",
-        workedExample:
-          "같은 KV pool에서 B_token이 64 KiB에서 52 KiB로 줄면 uniform 근사의 token slot은 약 1.23배가 되지만, Qwen의 fixed recurrent state와 model별 weight·vision encoder·workspace가 다르면 총 실측 비율은 달라집니다.",
-        boundary:
-          "Capacity token은 latency나 실제 사용자 수가 아니며 block rounding·prefix sharing·multimodal token·speculative branch·headroom을 포함한 runtime measurement가 필요합니다.",
-      },
-      {
-        id: "runtime-capacity-log-consistency",
-        sectionId: "capacity-logs",
-        intuition:
-          "전체 좌석 수를 한 팀의 좌석 수로 나눈 값과 시스템이 말한 팀 수가 맞는지 먼저 계산해 같은 단위를 말하는지 확인합니다.",
-        workedExample:
-          "Muse는 352,736÷65,536≈5.38로 runtime 5.38×와 맞지만 Qwen은 97,216÷65,536≈1.48로 보고된 5.17×와 차이가 납니다.",
-        boundary:
-          "불일치 residual은 hybrid group·padding·표시 경로를 조사할 신호이지 어느 로그가 틀렸거나 물리 cache가 늘었다는 증명은 아닙니다.",
-      },
-      {
-        id: "context-concurrency-admission",
-        sectionId: "capacity-admission",
-        intuition:
-          "회의실 최대 정원만 보고 하루 방문객 수를 정하지 않고, 각 회의가 차지하는 시간과 좌석·대기 시간을 함께 보고 입장을 제한합니다.",
-        workedExample:
-          "65,536-token 요청만 가정한 상한과 달리 실제 p50 4k·p95 24k trace에서는 active sequence별 input+generated token 합과 prefix hit를 사용해 max_num_seqs를 검증합니다.",
-        boundary:
-          "이론 memory 상한까지 요청을 채워도 TTFT·ITL·preemption·OOM headroom·quality SLA가 먼저 실패할 수 있으므로 load test를 통과한 값만 운영 상한으로 사용합니다.",
-      },
     ],
     conceptStages: [
       {
@@ -22593,25 +22509,6 @@ export const ARTICLE_LEARNING: Readonly<
           "bit-byte",
           "per-token-kv-byte",
         ],
-      },
-      {
-        label: "Layer retention",
-        relation:
-          "Local·global layer의 보존 길이를 runtime block policy로 내림",
-        concepts: ["hybrid-layer-kv-retention", "hybrid-kv-cache-allocation"],
-      },
-      {
-        label: "Replica capacity",
-        relation: "남은 VRAM과 cache 단위를 startup log로 검산",
-        concepts: [
-          "kv-pool-capacity-budget",
-          "runtime-capacity-log-consistency",
-        ],
-      },
-      {
-        label: "Admission",
-        relation: "실제 요청 길이·latency·preemption에서 동시성 상한 승인",
-        concepts: ["context-concurrency-admission"],
       },
     ],
     exercises: [
@@ -22662,123 +22559,13 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "kv-shape-formula",
       },
       {
-        level: "advanced",
-        question:
-          "Muse의 52×2×128과 Qwen의 16×4×256 attention KV를 같은 BF16 dense-allocation 조건에서 비교해 비율을 구하고 총 cache token 비율이 정확히 역수가 아닐 수 있는 이유를 설명하라.",
-        answerChecklist: [
-          "13312 vs 16384 element factor",
-          "0.8125",
-          "inverse about 1.23",
-          "Qwen fixed recurrent state",
-          "different KV pool bytes",
-          "weights/extras/runtime",
-          "TP and allocator",
-        ],
-        requiredConcepts: ["per-token-kv-byte", "kv-pool-capacity-budget"],
-        sectionId: "kv-shape-formula",
-      },
-      {
-        level: "basic",
-        question:
-          "Gemma 4의 local 50층·KV16·dim256·window1024와 global 10층·KV4·dim512를 T=65,536에서 local·global token factor로 나눠 KV 항을 계산하라.",
-        answerChecklist: [
-          "50 min(T,1024) local term",
-          "10T global term",
-          "different global heads",
-          "different global head dim",
-          "K=V runtime question",
-          "allocator reclaim assumption",
-        ],
-        requiredConcepts: ["hybrid-layer-kv-retention", "per-token-kv-byte"],
-        sectionId: "kv-cache",
-      },
-      {
-        level: "advanced",
-        question:
-          "Sliding-window attention kernel은 동작하지만 KV capacity가 늘지 않은 실행을 hybrid allocator 관점에서 진단하는 확인 순서를 작성하라.",
-        answerChecklist: [
-          "pin runtime commit",
-          "hybrid manager flag/warning",
-          "inspect KV cache specs/groups",
-          "vary context and observe block slope",
-          "TP/PP and dtype",
-          "do not infer from config only",
-        ],
-        requiredConcepts: [
-          "hybrid-kv-cache-allocation",
-          "hybrid-layer-kv-retention",
-        ],
-        sectionId: "spec-vllm-hybrid",
-      },
-      {
-        level: "basic",
-        question:
-          "KV pool 10 GiB와 token당 256 KiB인 uniform model의 token capacity와 8,192-token 요청의 보수적 동시성 상한을 계산하라.",
-        answerChecklist: [
-          "10×2^30 bytes",
-          "40960 tokens",
-          "floor 5 sequences",
-          "block/headroom excluded",
-          "max_num_seqs only caps",
-        ],
-        requiredConcepts: ["kv-pool-capacity-budget", "per-token-kv-byte"],
-        sectionId: "capacity",
-      },
-      {
-        level: "basic",
-        question:
-          "KV cache size 88,824와 max_model_len 65,536에서 직접 concurrency를 계산하고 runtime 1.36×과 같은 단위인지 판단하라.",
-        answerChecklist: [
-          "1.3556",
-          "rounds to 1.36",
-          "residual near zero",
-          "same run conditions",
-          "not users per second",
-        ],
-        requiredConcepts: ["runtime-capacity-log-consistency"],
-        sectionId: "capacity-logs",
-      },
-      {
-        level: "advanced",
-        question:
-          "Qwen 로그 97,216·65,536·5.17×을 검산하고 이 값만으로 물리 KV token 수나 모델 우열을 결론 내리면 안 되는 이유를 설명하라.",
-        answerChecklist: [
-          "direct about 1.48",
-          "residual about 3.69",
-          "token-equivalent/grouping possible",
-          "inspect commit/spec",
-          "do not compare raw column",
-          "load test",
-        ],
-        requiredConcepts: [
-          "runtime-capacity-log-consistency",
-          "hybrid-kv-cache-allocation",
-        ],
-        sectionId: "capacity-logs",
-      },
-      {
-        level: "advanced",
-        question:
-          "p50 4k·p95 24k prompt와 variable output을 가진 망분리 agent service의 max_num_seqs를 승인하기 위한 workload trace와 측정 지표를 설계하라.",
-        answerChecklist: [
-          "input/output distribution",
-          "multimodal tokens",
-          "prefix hit",
-          "active KV usage",
-          "TTFT",
-          "ITL",
-          "preemption",
-          "OOM headroom",
-          "quality and SLA",
-          "artifact/runtime pin",
-        ],
-        requiredConcepts: [
-          "context-concurrency-admission",
-          "kv-pool-capacity-budget",
-          "runtime-capacity-log-consistency",
-        ],
-        sectionId: "capacity-admission",
-      },
+        level: "basic", question: "Prompt 3 token 뒤 다음 token을 만들 때 새로 계산하는 Q와 재사용하는 K/V를 구분하세요.", answerChecklist: ["new current Q", "past three K", "past three V", "reuse projections", "append new K/V"], requiredConcepts: ["kv-cache-decode-state"], sectionId: "kv-shape" },
+      { level: "basic", question: "Q head 24·KV head 4에서 KV 보관함 하나를 공유하는 Q head 수를 계산하세요.", answerChecklist: ["24/4", "six Q heads", "four KV heads", "Q heads remain 24"], requiredConcepts: ["grouped-query-kv-sharing"], sectionId: "kv-shape-sharing" },
+      { level: "basic", question: "8 KV layers·KV head 2·head_dim 128·K/V 분리·FP16에서 token당 KV byte를 계산하세요.", answerChecklist: ["8×2×128×2×2", "8192 bytes", "8 KiB", "Q heads excluded"], requiredConcepts: ["per-token-kv-byte", "bit-byte"], sectionId: "kv-shape-formula" },
+      { level: "advanced", question: "MHA checkpoint를 GQA로 바꿀 때 cache 절감만으로 품질 동등성을 주장할 수 없는 이유를 쓰세요.", answerChecklist: ["shared KV representation", "training/uptraining", "task slices", "quality evaluation", "latency and memory separate"], requiredConcepts: ["grouped-query-kv-sharing"], sectionId: "paper-gqa" },
+      { level: "advanced", question: "Layer별 KV head 수가 다른 model의 token당 byte를 단일 평균 head 수로 계산하면 안 되는 이유와 올바른 합산식을 설명하세요.", answerChecklist: ["layer-specific shape", "sum layer bytes", "K/V tensor count", "dtype", "average can hide wide layers"], requiredConcepts: ["per-token-kv-byte"], sectionId: "kv-shape-formula" },
+      { level: "advanced", question: "Weight FP8 모델의 KV cache를 자동으로 1 byte/element로 계산하면 안 되는 이유를 설명하세요.", answerChecklist: ["weight dtype separate", "kv_cache_dtype", "backend support", "scale metadata", "runtime receipt"], requiredConcepts: ["per-token-kv-byte"], sectionId: "kv-shape-formula" },
+      { level: "advanced", question: "Tensor parallel에서 logical KV byte와 rank별 physical KV byte가 달라질 수 있는 조건을 나열하세요.", answerChecklist: ["head sharding", "head replication", "rank-local heads", "block padding", "allocator metadata", "measure actual"], requiredConcepts: ["per-token-kv-byte", "grouped-query-kv-sharing"], sectionId: "kv-shape-runtime" },
     ],
     papers: [
       {
@@ -22812,22 +22599,84 @@ export const ARTICLE_LEARNING: Readonly<
           "GQA가 모든 architecture에서 MQA와 같은 속도 또는 MHA와 같은 품질을 자동 보장하거나 특정 group ratio가 보편 최적이라는 뜻은 아님",
         sectionId: "paper-gqa",
       },
-      {
-        title:
-          "Efficient Memory Management for Large Language Model Serving with PagedAttention",
-        href: "https://arxiv.org/abs/2309.06180",
-        problem:
-          "요청 길이가 동적으로 변하는 LLM serving에서 연속 KV 예약의 fragmentation과 중복 저장이 batch capacity를 낮추는 문제",
-        contribution:
-          "Logical block table과 non-contiguous fixed-size physical KV blocks를 사용하는 PagedAttention과 vLLM serving system을 제안",
-        assumptions:
-          "논문의 vLLM version·GPU·model·workload·scheduler와 block-management 구현",
-        evidenceScope:
-          "논문에 보고된 memory waste·throughput·latency와 prefix/beam sharing 실험 범위",
-        notClaim:
-          "PagedAttention만 도입하면 임의 hybrid architecture의 local block 회수와 optimal grouping이 자동 구현되거나 최신 vLLM에서 같은 수치가 재현된다는 뜻은 아님",
-        sectionId: "paper-pagedattention",
-      },
+    ],
+  },
+  "ai/hybrid-kv-cache-allocation": {
+    coreIdea: "Local attention layer가 최근 window만 읽는 계산 규칙과 runtime이 오래된 physical KV blocks를 반환하는 memory 규칙은 별개입니다. Layer별 보존 길이와 KV shape를 합산하고 hybrid allocator의 grouping·padding·fallback을 실제 cache spec과 byte 기울기로 확인해야 절감을 주장할 수 있습니다.",
+    assumedKnowledge: [
+      { id: "kv-cache-decode-state", role: "과거 K/V가 request별 runtime state라는 사실을 사용합니다." },
+      { id: "per-token-kv-byte", role: "Layer 하나의 KV shape를 실제 byte로 변환합니다." },
+      { id: "bit-byte", role: "Element count와 dtype byte를 memory로 변환합니다." },
+    ],
+    introducedHere: [
+      { id: "hybrid-layer-kv-retention", role: "Global T와 local min(T,W)의 보존 길이를 layer별로 계산합니다." },
+      { id: "hybrid-kv-cache-allocation", role: "Visibility 규칙을 physical block 할당·회수 정책으로 내립니다." },
+    ],
+    conceptExplanations: [
+      { id: "hybrid-layer-kv-retention", sectionId: "kv-cache", intuition: "Global 서랍은 전체 기록을 남기고 local 서랍은 최근 W개 기록만 필요합니다.", workedExample: "T=8192, W=2048인 local layer의 logical retention은 2048이고 global layer는 8192입니다.", boundary: "최근 기록만 읽는 kernel과 오래된 memory를 실제 반환하는 allocator를 구분합니다." },
+      { id: "hybrid-kv-cache-allocation", sectionId: "spec-vllm-hybrid", intuition: "설계도가 오래된 서랍을 쓰지 않아도 창고 관리자가 반납해야 다른 요청이 공간을 씁니다.", workedExample: "Full·sliding layers를 cache groups로 묶고 window 밖 local blocks를 반환합니다.", boundary: "Page size·group padding·runtime fallback 때문에 config 식과 실제 bytes가 다를 수 있습니다." },
+    ],
+    conceptStages: [
+      { label: "00 byte", relation: "Layer 하나의 token byte를 재사용합니다.", concepts: ["per-token-kv-byte"] },
+      { label: "01 visibility", relation: "Global·local layer가 읽을 prefix 길이를 나눕니다.", concepts: ["hybrid-layer-kv-retention"] },
+      { label: "02 allocation", relation: "Visibility를 block 회수로 구현합니다.", concepts: ["hybrid-kv-cache-allocation"] },
+      { label: "03 verify", relation: "Cache spec과 길이별 byte 기울기로 구현을 검증합니다.", concepts: ["hybrid-layer-kv-retention", "hybrid-kv-cache-allocation"] },
+    ],
+    exercises: [
+      { level: "basic", question: "T=8192, W=2048일 때 global layer와 local layer의 logical KV 보존 길이를 각각 계산하세요.", answerChecklist: ["global 8192", "local min", "local 2048", "different growth"], requiredConcepts: ["hybrid-layer-kv-retention"], sectionId: "kv-cache" },
+      { level: "basic", question: "Global 2층·local 6층·T=4096·W=1024의 layer-token retention 합을 계산하세요.", answerChecklist: ["2×4096", "6×1024", "14336 layer-tokens", "not bytes"], requiredConcepts: ["hybrid-layer-kv-retention"], sectionId: "kv-cache" },
+      { level: "basic", question: "Local·global layer의 KV head와 head_dim이 다르면 layer-token 합만으로 byte를 비교할 수 없는 이유를 쓰세요.", answerChecklist: ["different c_l", "heads", "head dimension", "dtype/tensors", "sum bytes"], requiredConcepts: ["hybrid-layer-kv-retention", "per-token-kv-byte"], sectionId: "kv-cache" },
+      { level: "basic", question: "Attention kernel의 sliding window와 allocator의 block reclaim을 구분하세요.", answerChecklist: ["visibility", "physical ownership", "can read local", "can still allocate full", "separate checks"], requiredConcepts: ["hybrid-kv-cache-allocation"], sectionId: "spec-vllm-hybrid" },
+      { level: "basic", question: "Paged KV block table이 연속 최대길이 예약보다 fragmentation을 줄이는 원리를 설명하세요.", answerChecklist: ["fixed-size blocks", "logical table", "allocate as grows", "non-contiguous", "sharing possible"], requiredConcepts: ["hybrid-kv-cache-allocation"], sectionId: "paper-pagedattention" },
+      { level: "basic", question: "Hybrid allocator가 비활성화되어 local layer를 full spec으로 잡으면 r_l(T)가 어떻게 바뀌나요?", answerChecklist: ["min removed", "r_l=T", "all layers grow", "no memory saving"], requiredConcepts: ["hybrid-kv-cache-allocation", "hybrid-layer-kv-retention"], sectionId: "spec-vllm-hybrid" },
+      { level: "advanced", question: "Context를 2K→4K→8K로 늘려 local block 회수 여부를 판별하는 실험을 설계하세요.", answerChecklist: ["pin runtime", "same TP/dtype", "allocated bytes", "slope change after W", "cache specs", "repeat"], requiredConcepts: ["hybrid-kv-cache-allocation"], sectionId: "spec-vllm-hybrid" },
+      { level: "advanced", question: "Group page size를 가장 큰 layer spec에 맞출 때 생기는 padding waste를 설명하세요.", answerChecklist: ["common page", "smaller spec padded", "unused bytes", "group count", "physical differs logical"], requiredConcepts: ["hybrid-kv-cache-allocation"], sectionId: "spec-vllm-hybrid" },
+      { level: "advanced", question: "Prefix sharing과 local block eviction이 함께 있을 때 block owner·reference count fixture를 설계하세요.", answerChecklist: ["shared prefix owners", "window eviction", "reference count", "no early free", "no leak", "output parity"], requiredConcepts: ["hybrid-kv-cache-allocation"], sectionId: "paper-pagedattention" },
+      { level: "advanced", question: "Local kernel은 맞지만 memory 절감이 없는 후보의 release gate를 작성하세요.", answerChecklist: ["attention parity", "cache spec", "allocated-byte slope", "padding", "latency", "rollback/fallback"], requiredConcepts: ["hybrid-layer-kv-retention", "hybrid-kv-cache-allocation"], sectionId: "spec-vllm-hybrid" },
+    ],
+    papers: [
+      { title: "Efficient Memory Management for Large Language Model Serving with PagedAttention", href: "https://arxiv.org/abs/2309.06180", problem: "동적 request KV의 fragmentation과 중복 저장", contribution: "Logical block table과 fixed-size physical blocks", assumptions: "논문의 vLLM·GPU·model·scheduler", evidenceScope: "논문이 보고한 memory·throughput·sharing 실험", notClaim: "임의 hybrid model의 local reclaim 자동 지원", sectionId: "paper-pagedattention" },
+    ],
+  },
+  "ai/llm-serving-capacity": {
+    coreIdea: "Replica의 weight·extras·workspace·headroom을 먼저 빼 KV pool을 확정하고 token당 logical byte로 capacity를 계산합니다. Startup log의 token과 concurrency 단위를 직접 검산한 뒤 실제 request 길이·latency·preemption trace를 통과한 값만 admission 상한으로 사용합니다.",
+    assumedKnowledge: [
+      { id: "per-token-kv-byte", role: "Token 하나의 logical KV byte를 capacity의 분모로 사용합니다." },
+      { id: "hybrid-kv-cache-allocation", role: "Hybrid allocator의 logical·physical 차이를 전제로 둡니다." },
+      { id: "model-weight-payload-ledger", role: "Checkpoint weight와 runtime state를 분리합니다." },
+    ],
+    introducedHere: [
+      { id: "kv-pool-capacity-budget", role: "남은 VRAM을 token capacity로 변환합니다." },
+      { id: "runtime-capacity-log-consistency", role: "Startup log의 token·concurrency 단위를 검산합니다." },
+      { id: "context-concurrency-admission", role: "실제 workload trace로 운영 수용 상한을 승인합니다." },
+    ],
+    conceptExplanations: [
+      { id: "kv-pool-capacity-budget", sectionId: "capacity", intuition: "창고에서 weight와 작업 공간을 빼고 남은 구역을 token 상자 크기로 나눕니다.", workedExample: "10 GiB÷256 KiB/token=40,960 token이고 8,192-token 요청은 최대 5개분입니다.", boundary: "Logical token capacity는 block rounding·recurrent state·latency를 포함한 사용자 수가 아닙니다." },
+      { id: "runtime-capacity-log-consistency", sectionId: "capacity-logs", intuition: "전체 좌석을 한 팀 좌석으로 나눈 값과 시스템이 말한 팀 수가 같은 단위인지 확인합니다.", workedExample: "88,824÷65,536≈1.36은 log와 맞지만 97,216÷65,536≈1.48은 5.17×와 다릅니다.", boundary: "Residual은 조사 신호이지 물리 slot이 늘었다는 증명이 아닙니다." },
+      { id: "context-concurrency-admission", sectionId: "capacity-admission", intuition: "최대 정원보다 실제 회의 길이·대기시간·좌석 사용을 보고 입장을 제한합니다.", workedExample: "p50 4k·p95 24k request trace에서 KV usage·TTFT·ITL·preemption을 함께 측정합니다.", boundary: "Memory 상한을 채우기 전에 latency·quality·headroom SLO가 실패할 수 있습니다." },
+    ],
+    conceptStages: [
+      { label: "00 pool", relation: "Weight·workspace·headroom 뒤 KV bytes를 고정합니다.", concepts: ["model-weight-payload-ledger", "kv-pool-capacity-budget"] },
+      { label: "01 tokens", relation: "Pool을 logical token capacity로 변환합니다.", concepts: ["per-token-kv-byte", "kv-pool-capacity-budget"] },
+      { label: "02 logs", relation: "Runtime이 표시한 단위를 직접 검산합니다.", concepts: ["runtime-capacity-log-consistency"] },
+      { label: "03 admission", relation: "Workload trace와 SLO로 운영 상한을 승인합니다.", concepts: ["context-concurrency-admission"] },
+    ],
+    exercises: [
+      { level: "basic", question: "48 GiB GPU에서 weight 30 GiB·runtime 6 GiB·headroom 4 GiB일 때 KV pool을 계산하세요.", answerChecklist: ["48-30-6-4", "8 GiB", "not free memory", "same replica"], requiredConcepts: ["kv-pool-capacity-budget"], sectionId: "capacity" },
+      { level: "basic", question: "KV pool 10 GiB와 256 KiB/token에서 token capacity를 계산하세요.", answerChecklist: ["10×2^30", "divide 256×2^10", "40960 tokens", "logical floor"], requiredConcepts: ["kv-pool-capacity-budget"], sectionId: "capacity" },
+      { level: "basic", question: "40,960 token capacity에서 8,192-token 요청의 보수적 동시성 상한을 계산하세요.", answerChecklist: ["40960/8192", "five", "floor", "headroom already fixed"], requiredConcepts: ["kv-pool-capacity-budget"], sectionId: "capacity" },
+      { level: "basic", question: "88,824 cache tokens와 max length 65,536의 direct concurrency를 계산하세요.", answerChecklist: ["88824/65536", "1.3556", "about 1.36", "same units"], requiredConcepts: ["runtime-capacity-log-consistency"], sectionId: "capacity-logs" },
+      { level: "basic", question: "97,216·65,536·runtime 5.17×에서 residual을 계산하고 의미를 설명하세요.", answerChecklist: ["direct about 1.48", "residual about 3.69", "unit mismatch signal", "inspect cache groups"], requiredConcepts: ["runtime-capacity-log-consistency"], sectionId: "capacity-logs" },
+      { level: "basic", question: "Maximum context와 admission limit이 같은 숫자가 아닌 이유를 쓰세요.", answerChecklist: ["per request limit", "request distribution", "latency", "preemption", "memory headroom"], requiredConcepts: ["context-concurrency-admission"], sectionId: "capacity-admission" },
+      { level: "advanced", question: "Logical KV capacity와 physical peak가 달라지는 항목을 memory ledger로 작성하세요.", answerChecklist: ["block rounding", "allocator metadata", "recurrent state", "CUDA graph/workspace", "vision/encoder", "fragmentation"], requiredConcepts: ["kv-pool-capacity-budget", "hybrid-kv-cache-allocation"], sectionId: "capacity" },
+      { level: "advanced", question: "서로 다른 두 runtime의 startup concurrency를 공정하게 비교할 receipt를 설계하세요.", answerChecklist: ["same model artifact", "TP/PP", "KV dtype", "max length", "pool bytes", "cache spec", "log units", "actual peak"], requiredConcepts: ["runtime-capacity-log-consistency"], sectionId: "capacity-logs" },
+      { level: "advanced", question: "p50 4k·p95 24k·variable output service의 admission load test를 설계하세요.", answerChecklist: ["input/output distribution", "prefix hit", "active tokens", "TTFT", "ITL", "preemption", "OOM", "quality SLA"], requiredConcepts: ["context-concurrency-admission"], sectionId: "capacity-admission" },
+      { level: "advanced", question: "망분리 deployment에서 model context와 service capacity를 별도 표로 승인하는 이유와 rollback gate를 쓰세요.", answerChecklist: ["artifact revisions", "official context", "runtime build", "request trace", "latency/memory", "quality", "threshold", "rollback"], requiredConcepts: ["context-concurrency-admission", "kv-pool-capacity-budget"], sectionId: "deployment" },
+    ],
+    papers: [
+      { title: "Muse Glimmer 30B model card", href: "https://huggingface.co/meta-models/Muse-Glimmer-30B", problem: "Small KV shape model의 공개 configuration 확인", contribution: "52-layer·KV2·head_dim128·context 공개", assumptions: "공식 model card revision", evidenceScope: "공개 architecture·artifact 범위", notClaim: "특정 GPU의 concurrency 보장", sectionId: "paper-muse-config" },
+      { title: "Gemma 4 31B IT model card", href: "https://huggingface.co/google/gemma-4-31B-it", problem: "Local·global layer별 KV shape 확인", contribution: "Layer pattern·KV heads·dimensions 공개", assumptions: "공식 model card revision", evidenceScope: "공개 architecture·context 범위", notClaim: "vLLM block 회수 또는 capacity 보장", sectionId: "paper-gemma-config" },
+      { title: "vLLM Benchmarking CLI", href: "https://github.com/vllm-project/vllm/blob/main/docs/benchmarking/cli.md", problem: "Serving capacity를 재현 가능한 workload로 측정", contribution: "Benchmark input·rate·latency 측정 interface", assumptions: "Pinned vLLM·backend·workload", evidenceScope: "CLI가 정의한 실행·metric 범위", notClaim: "Startup theoretical concurrency가 production admission이라는 뜻", sectionId: "paper-vllm-capacity" },
     ],
   },
   "ai/llm-serving-ops": {

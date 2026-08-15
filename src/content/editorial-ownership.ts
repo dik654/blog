@@ -2911,7 +2911,7 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "PagedAttention과 KV cache", href: "/ai/vllm-paged-attention" },
       {
         label: "Hybrid attention 모델의 KV capacity",
-        href: "/ai/hybrid-attention-serving",
+        href: "/ai/llm-serving-capacity",
       },
     ],
     evidence: [
@@ -3687,29 +3687,55 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "project-claim", rule: "Width·activation·load 장치를 전체 scaling의 독립 원인으로 과장하지 않는다." },
     ],
   },
-  "hybrid-attention-serving": {
-    title: "Hybrid attention 서빙 비교 글이 소유하는 범위",
+  "kv-cache-fundamentals": {
+    title: "KV cache 기초 글이 소유하는 범위",
     owns: [
       "MHA·GQA·MQA의 KV head 공유와 token당 KV byte 계산",
-      "Qwen 27B 배포본·Muse Glimmer 30B·Gemma 4 31B의 KV shape와 실측 capacity 비교",
-      "layer별 KV 보존 길이와 hybrid allocator에서 serving capacity로 내려가는 계산 순서",
-      "망분리 환경의 artifact·quality·capacity 반입 체크리스트",
+      "Autoregressive decode에서 현재 Query와 보존되는 과거 K/V의 역할 경계",
     ],
     reuses: [
       { label: "Attention 기본 원리", href: "/ai/attention-theory" },
-      { label: "PagedAttention과 KV block", href: "/ai/vllm-paged-attention" },
-      { label: "양자화와 VRAM budget", href: "/ai/quantization" },
-      { label: "LLM 서빙 운영 지표", href: "/ai/llm-serving-ops" },
+      { label: "Bit·byte", href: "/blockchain/bit-byte" },
     ],
     evidence: [
       {
         kind: "primary-source",
-        rule: "구조·context·artifact는 각 모델의 공식 model card와 config를 기준으로 한다.",
+        rule: "MHA·MQA·GQA의 공유 구조와 비교 결과는 원 논문의 model·training·decode 조건으로 제한한다.",
       },
-      {
-        kind: "project-measurement",
-        rule: "97,216·88,824·352,736 KV token과 5.17×·1.36×·5.38× concurrency는 runtime build·TP·cache dtype 조건을 붙인 프로젝트 관측으로만 해석한다.",
-      },
+    ],
+  },
+  "hybrid-kv-cache-allocation": {
+    title: "Hybrid KV cache allocator 글이 소유하는 범위",
+    owns: [
+      "Global T와 local min(T,W)의 layer별 KV 보존 길이",
+      "Attention visibility와 physical KV block 회수를 분리하는 runtime 계약",
+    ],
+    reuses: [
+      { label: "KV cache byte 기초", href: "/ai/kv-cache-fundamentals" },
+      { label: "PagedAttention과 KV block", href: "/ai/vllm-paged-attention" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "PagedAttention과 vLLM hybrid allocator의 block·grouping 주장은 pinned 논문과 구현 문서에 귀속한다." },
+      { kind: "project-measurement", rule: "Local block 회수 여부는 runtime revision·cache spec·context별 allocated-byte 기울기를 함께 기록한 실행에서만 주장한다." },
+    ],
+  },
+  "llm-serving-capacity": {
+    title: "LLM serving capacity 글이 소유하는 범위",
+    owns: [
+      "Replica memory에서 KV pool과 logical token capacity를 계산하는 예산",
+      "Startup log의 token·concurrency 단위를 직접 나눠 검산하는 절차",
+      "실제 request 길이·latency·preemption을 사용한 admission 상한",
+      "망분리 환경의 artifact·quality·capacity 반입 체크리스트",
+    ],
+    reuses: [
+      { label: "KV cache byte 기초", href: "/ai/kv-cache-fundamentals" },
+      { label: "Hybrid KV block 회수", href: "/ai/hybrid-kv-cache-allocation" },
+      { label: "모델 VRAM 예산", href: "/ai/model-vram-budgeting" },
+      { label: "LLM 서빙 운영 지표", href: "/ai/llm-serving-ops" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "모델 shape·context·artifact는 각 공식 model card와 config를 기준으로 한다." },
+      { kind: "project-measurement", rule: "97,216·88,824·352,736 token과 5.17×·1.36×·5.38×은 runtime build·TP·cache dtype을 붙인 프로젝트 관측으로만 해석한다." },
     ],
   },
   "vllm-serving": {
@@ -3732,7 +3758,7 @@ export const EDITORIAL_BOUNDARIES = {
       },
       {
         label: "KV cache shape와 capacity",
-        href: "/ai/hybrid-attention-serving",
+        href: "/ai/kv-cache-fundamentals",
       },
       {
         label: "Production readiness·autoscaling·rollout",
@@ -3769,7 +3795,7 @@ export const EDITORIAL_BOUNDARIES = {
       },
       {
         label: "KV tensor shape와 runtime capacity",
-        href: "/ai/hybrid-attention-serving",
+        href: "/ai/kv-cache-fundamentals",
       },
       {
         label: "Speculative verification과 state commit",
@@ -3808,7 +3834,7 @@ export const EDITORIAL_BOUNDARIES = {
       },
       {
         label: "MHA·GQA·MQA와 KV byte·hybrid capacity",
-        href: "/ai/hybrid-attention-serving",
+        href: "/ai/kv-cache-fundamentals",
       },
       {
         label: "Serving request lifecycle과 latency",
@@ -3843,7 +3869,7 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "기댓값", href: "/ai/math-random-variables-expectation" },
       {
         label: "KV cache와 serving capacity",
-        href: "/ai/hybrid-attention-serving#kv-shape",
+        href: "/ai/llm-serving-capacity#capacity",
       },
       {
         label: "GLM-5.2·B300의 MTP 적용과 프로젝트 실측",
@@ -6624,7 +6650,7 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [
       { label: "Scaled dot-product attention", href: "/ai/transformer-architecture#attention-boundary" },
       { label: "Lost in the middle 평가", href: "/ai/context-engineering#optimization" },
-      { label: "KV cache와 serving capacity", href: "/ai/hybrid-attention-serving#kv-cache" },
+      { label: "Hybrid KV block 회수", href: "/ai/hybrid-kv-cache-allocation#kv-cache" },
     ],
     evidence: [
       { kind: "primary-source", rule: "RoPE·PI·YaRN 결과는 각 논문의 checkpoint·data·extension factor·evaluation 범위에만 귀속한다." },
@@ -7532,7 +7558,7 @@ export const EDITORIAL_BOUNDARIES = {
     ],
     reuses: [
       { label: "Attention Q·K·V와 multi-head", href: "/ai/attention-theory" },
-      { label: "KV cache·GQA·capacity", href: "/ai/hybrid-attention-serving" },
+      { label: "KV cache·GQA 기초", href: "/ai/kv-cache-fundamentals" },
       { label: "RNN recurrent state와 압축 한계", href: "/ai/rnn" },
     ],
     evidence: [
@@ -7586,7 +7612,7 @@ export const EDITORIAL_BOUNDARIES = {
     ],
     reuses: [
       { label: "Quantization과 resident-memory ledger", href: "/ai/quantization" },
-      { label: "KV cache와 serving capacity", href: "/ai/hybrid-attention-serving" },
+      { label: "KV pool과 serving capacity", href: "/ai/llm-serving-capacity" },
       { label: "Qwen3.6 hybrid request state 적용", href: "/ai/qwen36-hybrid-runtime" },
     ],
     evidence: [

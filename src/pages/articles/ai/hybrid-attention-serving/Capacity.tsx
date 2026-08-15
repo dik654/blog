@@ -1,3 +1,5 @@
+import TermBreakdown from "@/components/articles/term-breakdown";
+import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import VllmCapacityLogViz from "./viz/VllmCapacityLogViz";
 
@@ -61,13 +63,15 @@ export default function Capacity() {
   return (
     <section id="capacity" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
-        실측 capacity는 KV shape를 지지하지만, 세 모델의 raw token 수를 그대로
-        나누면 안 됩니다
+        KV pool byte를 바로 사용자 수로 부르지 않습니다
       </h2>
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          같은 <code>max_model_len=65,536</code>에서 Gemma 4는 KV 88,824 token과
+          <a href="/ai/kv-cache-fundamentals">KV shape</a>와{" "}
+          <a href="/ai/hybrid-kv-cache-allocation">layer별 보존 길이</a>를
+          계산했다면, 이제 한 replica의 남은 memory를 실제 요청 수용량으로
+          바꿉니다. 같은 <code>max_model_len=65,536</code>에서 Gemma 4는 KV 88,824 token과
           maximum concurrency 1.36×, Muse Glimmer는 352,736 token과 5.38×를
           기록했습니다. 두 모델은 각각 <code>88,824÷65,536≈1.36</code>,{" "}
           <code>352,736÷65,536≈5.38</code>로 startup log가 직접 맞아떨어집니다.
@@ -116,6 +120,74 @@ export default function Capacity() {
           나타나지 않는 runtime에서는 기존 계산을 그대로 적용해야 합니다.
         </p>
       </div>
+      <TermBreakdown
+        title="Memory 숫자를 운영 판단으로 바꾸는 세 단계를 나눕니다"
+        description="Pool·token capacity·admission은 서로 다른 단위이므로 한 줄의 concurrency 숫자로 합치지 않습니다."
+        items={[
+          {
+            term: "KV pool",
+            description: "Weight·workspace·안전 여유를 제외하고 request state에 실제 예약한 GPU memory입니다.",
+            example: "총 48 GiB에서 weight와 runtime peak를 뺀 나머지를 KV block pool로 잡습니다.",
+            boundary: "GPU free memory 전체와 같지 않으며 recurrent state나 encoder memory가 따로 있을 수 있습니다.",
+          },
+          {
+            term: "Token capacity",
+            description: "KV pool에 현재 cache layout 기준으로 몇 token의 state가 들어가는지 나타낸 수입니다.",
+            example: "10 GiB를 256 KiB/token으로 나누면 단순 상한은 40,960 token입니다.",
+            boundary: "Block rounding·prefix sharing·hybrid grouping 전의 logical 상한일 수 있습니다.",
+          },
+          {
+            term: "Admission limit",
+            description: "실제 요청 길이·latency·preemption·headroom을 만족하도록 동시에 받을 요청 수를 제한한 운영값입니다.",
+            example: "p50 4k·p95 24k trace를 재생해 OOM 전에 latency SLO가 깨지는 지점을 찾습니다.",
+            boundary: "Maximum context를 token capacity로 나눈 값은 보수적 memory 상한이지 사용자 throughput이 아닙니다.",
+          },
+        ]}
+      />
+      <div className="space-y-5">
+        <div id="paper-muse-config">
+          <CitationBlock
+            type="code"
+            citeKey={1}
+            source="Meta · Muse Glimmer 30B model card"
+            href="https://huggingface.co/meta-models/Muse-Glimmer-30B"
+          >
+            <p><strong>문제:</strong> 작은 KV shape 후보의 공개 configuration을 확인합니다.</p>
+            <p><strong>핵심 아이디어:</strong> 52 layers·KV heads 2·head_dim 128·context 범위를 공개합니다.</p>
+            <p><strong>중요 가정:</strong> 확인한 공식 model-card revision입니다.</p>
+            <p><strong>근거 범위:</strong> 공개 architecture와 artifact 범위입니다.</p>
+            <p><strong>일반화 금지:</strong> 특정 GPU에서의 concurrency나 latency 보장은 아닙니다.</p>
+          </CitationBlock>
+        </div>
+        <div id="paper-gemma-config">
+          <CitationBlock
+            type="code"
+            citeKey={2}
+            source="Google DeepMind · Gemma 4 31B IT model card"
+            href="https://huggingface.co/google/gemma-4-31B-it"
+          >
+            <p><strong>문제:</strong> Local·global layer별 KV shape를 구분합니다.</p>
+            <p><strong>핵심 아이디어:</strong> Layer pattern·KV heads·head dimensions를 공개합니다.</p>
+            <p><strong>중요 가정:</strong> 확인한 공식 model-card revision입니다.</p>
+            <p><strong>근거 범위:</strong> 공개 architecture·context 범위입니다.</p>
+            <p><strong>일반화 금지:</strong> Runtime의 sliding block 회수나 capacity를 보장하지 않습니다.</p>
+          </CitationBlock>
+        </div>
+        <div id="paper-vllm-capacity">
+          <CitationBlock
+            type="code"
+            citeKey={3}
+            source="vLLM · Benchmarking CLI"
+            href="https://github.com/vllm-project/vllm/blob/main/docs/benchmarking/cli.md"
+          >
+            <p><strong>문제:</strong> Serving capacity를 재현 가능한 request workload로 측정합니다.</p>
+            <p><strong>핵심 아이디어:</strong> Input distribution·request rate·latency를 고정하는 CLI를 제공합니다.</p>
+            <p><strong>중요 가정:</strong> Pinned vLLM·backend·model·workload입니다.</p>
+            <p><strong>근거 범위:</strong> 해당 CLI가 정의한 실행·metric 범위입니다.</p>
+            <p><strong>일반화 금지:</strong> Startup theoretical concurrency가 production admission이라는 뜻은 아닙니다.</p>
+          </CitationBlock>
+        </div>
+      </div>
 
       <ExplainedFormula
         question="고정된 KV pool에서 max context를 줄이면 왜 동시에 유지할 수 있는 요청 수가 늘어날까요?"
@@ -131,6 +203,21 @@ export default function Capacity() {
 N_{capacity} &= \left\lfloor\frac{M_{pool}}{B_{token}}\right\rfloor \\
 C_{max} &\le \left\lfloor\frac{N_{capacity}}{L_{request}}\right\rfloor
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}N_{capacity}&=\lfloor\frac{\underbrace{M_{pool}}_{\text{KV pool bytes}}}{\underbrace{B_{token}}_{\text{token byte}}}\rfloor\\[4pt]C_{max}&\le\lfloor\frac{\underbrace{N_{capacity}}_{\text{token slots}}}{\underbrace{L_{request}}_{\text{request 길이}}}\rfloor\end{aligned}`}
+        operations={[
+          {
+            expression: String.raw`M_{pool}/B_{token}`,
+            annotation: ["KV pool을 token 한 개의 비용으로 나눠", "보관 가능한 token slot을 계산"],
+          },
+          {
+            expression: String.raw`N_{capacity}/L_{request}`,
+            annotation: ["token slot을 request 하나의 길이로 나눠", "동시 request의 memory 상한을 계산"],
+          },
+          {
+            expression: String.raw`\lfloor\cdot\rfloor`,
+            annotation: ["부분 token·부분 request는 넣을 수 없어", "안전한 정수 아래값을 선택"],
+          },
+        ]}
         terms={CAPACITY_TERMS}
         assumptions={[
           "모든 layer가 같은 full-attention KV shape를 쓰는 단순 근사입니다. Hybrid layer는 앞 절의 layer별 memory 식으로 바꿉니다.",
@@ -180,6 +267,17 @@ C_{max} &\le \left\lfloor\frac{N_{capacity}}{L_{request}}\right\rfloor
 C_{direct} &= \frac{N_{log}}{L_{max}} \\
 \Delta_C &= C_{runtime}-C_{direct}
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}C_{direct}&=\frac{\underbrace{N_{log}}_{\text{log의 cache tokens}}}{\underbrace{L_{max}}_{\text{max-length 한 요청}}}\\[4pt]\Delta_C&=\underbrace{C_{runtime}}_{\text{engine 보고값}}-\underbrace{C_{direct}}_{\text{직접 나눈 값}}\end{aligned}`}
+        operations={[
+          {
+            expression: String.raw`N_{log}/L_{max}`,
+            annotation: ["표시된 token 수가", "max-length 요청 몇 개분인지 환산"],
+          },
+          {
+            expression: String.raw`C_{runtime}-C_{direct}`,
+            annotation: ["engine 보고값과 직접 계산의 차이로", "단위·grouping 불일치 신호를 생성"],
+          },
+        ]}
         terms={LOG_TERMS}
         assumptions={[
           "두 로그가 같은 engine process·model load·TP/PP·kv_cache_dtype·max_model_len에서 나온 값이어야 합니다.",

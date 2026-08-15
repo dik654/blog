@@ -175,12 +175,11 @@ export const vllmServingArticles: Article[] = [
     component: () => import("@/pages/articles/ai/vllm-spec-decode"),
   },
   {
-    slug: "hybrid-attention-serving",
-    title:
-      "KV Cache와 Local·Global Attention: Qwen 27B · Muse 30B · Gemma 4 31B",
+    slug: "kv-cache-fundamentals",
+    title: "KV Cache 기초: Query · Key · Value와 GQA memory shape",
     subcategory: "ai-llm-serving",
     sections: [
-      { id: "overview", title: "비슷한 30B라도 배치 성격은 다르다" },
+      { id: "overview", title: "왜 과거 K/V만 보존하는가" },
       {
         id: "kv-shape",
         title: "MHA·GQA와 토큰당 KV byte 계산",
@@ -192,9 +191,18 @@ export const vllmServingArticles: Article[] = [
           { id: "kv-shape-runtime", title: "Gemma config와 TP 보정" },
         ],
       },
+    ],
+    component: () => import("@/pages/articles/ai/kv-cache-fundamentals"),
+  },
+  {
+    slug: "hybrid-kv-cache-allocation",
+    title: "Hybrid KV Cache: Local·Global layer와 block 회수",
+    subcategory: "ai-llm-serving",
+    sections: [
+      { id: "overview", title: "읽기 범위와 보관 범위는 다르다" },
       {
         id: "kv-cache",
-        title: "Local layer가 KV 증가율을 낮추는 방식",
+        title: "Local layer가 KV 보존 길이를 줄이는 방식",
         subsections: [
           {
             id: "spec-vllm-hybrid",
@@ -202,13 +210,22 @@ export const vllmServingArticles: Article[] = [
           },
           {
             id: "paper-pagedattention",
-            title: "PagedAttention의 핵심 아이디어",
+            title: "PagedAttention의 block table",
           },
         ],
       },
+    ],
+    component: () => import("@/pages/articles/ai/hybrid-kv-cache-allocation"),
+  },
+  {
+    slug: "llm-serving-capacity",
+    title: "LLM Serving Capacity: KV pool · 로그 검산 · Admission",
+    subcategory: "ai-llm-serving",
+    sections: [
+      { id: "overview", title: "Memory 숫자를 사용자 수로 바로 부르지 않기" },
       {
         id: "capacity",
-        title: "Context 길이와 동시 사용자 수를 분리해서 계산하기",
+        title: "KV byte를 요청 수용량으로 바꾸기",
         subsections: [
           { id: "capacity-sliding", title: "Sliding-window 실측 해석" },
           { id: "capacity-logs", title: "vLLM 로그의 단위 검산" },
@@ -217,7 +234,7 @@ export const vllmServingArticles: Article[] = [
       },
       { id: "deployment", title: "망분리 환경의 모델 선택과 반입 체크리스트" },
     ],
-    component: () => import("@/pages/articles/ai/hybrid-attention-serving"),
+    component: () => import("@/pages/articles/ai/llm-serving-capacity"),
   },
   {
     slug: "qwen36-hybrid-architecture",

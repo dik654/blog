@@ -99,7 +99,7 @@ export default function KVCacheManagerSection() {
         <p className="leading-8">
           Layer 수·KV head·head dimension·local window가 token당 byte와 유효 token
           capacity에 어떻게 들어가는지는
-          <Link to="/ai/hybrid-attention-serving"> KV Cache와 Local·Global Attention</Link>이
+          <Link to="/ai/hybrid-kv-cache-allocation"> Hybrid KV Cache와 block 회수</Link>가
           정본입니다. <code>GPU KV cache size</code>와 maximum concurrency log가
           이론 계산과 맞는지도 그 글의 consistency 식으로 검증합니다.
         </p>

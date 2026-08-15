@@ -38,7 +38,9 @@ export const ARTICLE_INTENT_DESCRIPTIONS: Record<ArticleIntent, string> = {
 
 const ARTICLE_INTENT_OVERRIDES: Partial<Record<string, ArticleIntent>> = {
   "kimi-k3-architecture": "논문·프로젝트 해설",
-  "hybrid-attention-serving": "비교·선택",
+  "kv-cache-fundamentals": "개념 지도",
+  "hybrid-kv-cache-allocation": "구현 추적",
+  "llm-serving-capacity": "비교·선택",
   "sionic-eureka": "사례·실측",
   "sionic-glm-b300": "사례·실측",
   "b300-switchless-network": "사례·실측",
@@ -492,10 +494,10 @@ export const CONCEPT_REUSE: Record<string, readonly GuidanceLink[]> = {
         "이 글은 engine 내부 batching·scheduler·KV cache를 반복하지 않고, 그 결과를 gateway·fleet·SLO 제어로 연결합니다.",
     },
     {
-      label: "Hybrid attention의 KV capacity",
-      href: "/ai/hybrid-attention-serving",
+      label: "LLM serving capacity",
+      href: "/ai/llm-serving-capacity",
       reason:
-        "KV head·head_dim·local/global layer가 concurrency를 바꾸는 계산과 모델 실측은 이 정본 글에서 이어집니다.",
+        "KV pool·runtime log·실제 request trace에서 admission 상한을 정하는 계산은 이 글에서 이어집니다.",
     },
   ],
   "ai/deepfake-detection": [

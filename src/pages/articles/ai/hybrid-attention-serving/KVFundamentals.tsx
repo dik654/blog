@@ -1,5 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import Math from "@/components/ui/math";
+import { CitationBlock } from "@/components/ui/citation-block";
 import KVHeadSharingViz from "./viz/KVHeadSharingViz";
 import KVShapeComparisonViz from "./viz/KVShapeComparisonViz";
 
@@ -34,6 +35,12 @@ const BYTE_TERMS = [
     name: "Layer당 KV 원소 수",
     description:
       "KV head 수와 head dimension을 곱한 token·tensor 하나의 폭입니다.",
+  },
+  {
+    symbol: "A_{store}",
+    name: "저장 byte 계수",
+    description:
+      "K/V tensor 수와 원소당 byte를 곱해 KV 원소 폭을 실제 byte로 바꾸는 계수입니다.",
   },
   {
     symbol: "B_{token}",
@@ -150,6 +157,21 @@ export default function KVFundamentals() {
 Q &\in \mathbb{R}^{T \times H_Q \times D_{head}} \\
 K,V &\in \mathbb{R}^{T \times H_{KV} \times D_{head}}
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}Q&\in\mathbb R^{\underbrace{T}_{\text{token 축}}\times\underbrace{H_Q}_{\text{질문 관점}}\times\underbrace{D_{head}}_{\text{head 폭}}}\\[4pt]K,V&\in\mathbb R^{\underbrace{T}_{\text{과거 위치}}\times\underbrace{H_{KV}}_{\text{공유 보관함}}\times\underbrace{D_{head}}_{\text{head 폭}}}\end{aligned}`}
+        operations={[
+          {
+            expression: String.raw`T\times H_Q\times D_{head}`,
+            annotation: ["현재 조회에 필요한", "token·query-head·head-width 축을 만듦"],
+          },
+          {
+            expression: String.raw`T\times H_{KV}\times D_{head}`,
+            annotation: ["과거 기록은 더 적은 KV heads로", "여러 Query가 공유하도록 저장"],
+          },
+          {
+            expression: String.raw`H_Q/H_{KV}`,
+            annotation: ["Query head 수를 KV head 수로 나눠", "보관함 하나를 공유할 Query 수를 계산"],
+          },
+        ]}
         terms={SHAPE_TERMS}
         assumptions={[
           "Batch와 tensor-parallel rank 축은 표시하지 않은 한 sequence의 logical shape입니다.",
@@ -185,6 +207,18 @@ K,V &\in \mathbb{R}^{T \times H_{KV} \times D_{head}}
           Q head가 공유하므로 model과 task에 따라 MHA보다 품질이 떨어질 수
           있습니다.
         </p>
+        <CitationBlock
+          type="paper"
+          citeKey={1}
+          source="Fast Transformer Decoding: One Write-Head is All You Need"
+          href="https://arxiv.org/abs/1911.02150"
+        >
+          <p><strong>문제:</strong> Autoregressive decode의 K/V memory bandwidth와 cache 폭입니다.</p>
+          <p><strong>핵심 아이디어:</strong> 모든 Query head가 K/V head 하나를 공유하는 MQA입니다.</p>
+          <p><strong>중요 가정:</strong> 논문의 model·task·hardware·batch 조건입니다.</p>
+          <p><strong>근거 범위:</strong> 보고된 quality와 decode performance 비교입니다.</p>
+          <p><strong>일반화 금지:</strong> 모든 model에서 KV head 하나가 품질을 유지한다는 뜻은 아닙니다.</p>
+        </CitationBlock>
         <h3 id="paper-gqa" className="scroll-mt-20">
           GQA의 핵심 아이디어: MHA와 MQA 사이를 연속적인 설계 공간으로 만든다
         </h3>
@@ -199,6 +233,18 @@ K,V &\in \mathbb{R}^{T \times H_{KV} \times D_{head}}
           같은 KV head 수가 최적이라는 주장이 아니라, 품질과 decode 비용 사이에
           조절 가능한 축을 만든 결과입니다.
         </p>
+        <CitationBlock
+          type="paper"
+          citeKey={2}
+          source="GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints"
+          href="https://arxiv.org/abs/2305.13245"
+        >
+          <p><strong>문제:</strong> MQA의 decode 이점과 MHA의 품질 사이 절충입니다.</p>
+          <p><strong>핵심 아이디어:</strong> 여러 Query head가 중간 개수의 KV head groups를 공유합니다.</p>
+          <p><strong>중요 가정:</strong> T5-family checkpoint와 논문의 uptraining·평가 조건입니다.</p>
+          <p><strong>근거 범위:</strong> 논문이 비교한 MHA·MQA·GQA quality와 latency입니다.</p>
+          <p><strong>일반화 금지:</strong> 특정 group ratio가 모든 architecture의 최적값이라는 뜻은 아닙니다.</p>
+        </CitationBlock>
 
         <h3 id="kv-shape-formula" className="scroll-mt-20">
           토큰당 KV byte는 다섯 항의 곱입니다
@@ -221,6 +267,21 @@ K,V &\in \mathbb{R}^{T \times H_{KV} \times D_{head}}
 E_{KV} &= H_{KV}D_{head} \\
 B_{token} &= L_{KV}E_{KV}N_{tensor}b_{dtype}
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}E_{KV}&=\underbrace{H_{KV}}_{\text{KV heads}}\underbrace{D_{head}}_{\text{head 폭}}\\[4pt]A_{store}&=\underbrace{N_{tensor}}_{\text{K·V 수}}\underbrace{b_{dtype}}_{\text{원소 byte}}\\[4pt]B_{token}&=\underbrace{L_{KV}}_{\text{KV layers}}\underbrace{E_{KV}}_{\text{layer당 폭}}\underbrace{A_{store}}_{\text{저장 byte 계수}}\end{aligned}`}
+        operations={[
+          {
+            expression: String.raw`H_{KV}D_{head}`,
+            annotation: ["token 하나가 layer 하나에 남길", "K 또는 V의 원소 수를 계산"],
+          },
+          {
+            expression: String.raw`N_{tensor}b_{dtype}`,
+            annotation: ["K·V tensor 개수와 dtype byte를 곱해", "한 원소 폭을 실제 bytes로 변환"],
+          },
+          {
+            expression: String.raw`L_{KV}E_{KV}N_{tensor}b_{dtype}`,
+            annotation: ["모든 KV layer에 같은 기록을 남겨", "token 하나의 총 memory 증가량을 계산"],
+          },
+        ]}
         terms={BYTE_TERMS}
         assumptions={[
           "비교하는 model이 같은 tensor parallel·pipeline parallel 구성과 cache dtype을 사용합니다.",

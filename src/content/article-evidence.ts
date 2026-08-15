@@ -2945,7 +2945,7 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
     source("공식 코드", KIMI_K3_SOURCE, "K3 896/16 routed·2 shared expert configuration"),
   ],
-  "ai/hybrid-attention-serving": [
+  "ai/kv-cache-fundamentals": [
     {
       kind: "핵심 논문",
       label:
@@ -2959,6 +2959,8 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://arxiv.org/abs/1911.02150",
       note: "모든 query head가 하나의 K/V head를 공유하는 MQA와 decode memory-bandwidth 문제",
     },
+  ],
+  "ai/hybrid-kv-cache-allocation": [
     {
       kind: "핵심 논문",
       label:
@@ -2966,6 +2968,20 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://arxiv.org/abs/2309.06180",
       note: "KV cache를 fixed-size physical block과 logical block table로 관리해 fragmentation과 sharing을 다루는 vLLM의 핵심 방법",
     },
+    {
+      kind: "공식 문서",
+      label: "vLLM — Hybrid KV Cache Manager",
+      href: "https://github.com/vllm-project/vllm/blob/main/docs/design/hybrid_kv_cache_manager.md",
+      note: "kv hidden size·page size 정의와 full·sliding-window layer별 block 할당 설계",
+    },
+    {
+      kind: "공식 코드",
+      label: "vLLM — KV cache interface",
+      href: "https://github.com/vllm-project/vllm/blob/main/vllm/v1/kv_cache_interface.py",
+      note: "hybrid allocator 비활성 시 sliding-window layer를 full-attention allocation으로 다루는 구현 경로",
+    },
+  ],
+  "ai/llm-serving-capacity": [
     {
       kind: "공식 문서",
       label: "Meta — Muse Glimmer 30B model card",
@@ -2983,18 +2999,6 @@ export const ARTICLE_EVIDENCE: Readonly<
       label: "Gemma 4 Technical Report",
       href: "https://arxiv.org/abs/2607.02770",
       note: "Gemma 4 architecture와 efficiency·reasoning 평가의 공식 기술 보고서",
-    },
-    {
-      kind: "공식 문서",
-      label: "vLLM — Hybrid KV Cache Manager",
-      href: "https://github.com/vllm-project/vllm/blob/main/docs/design/hybrid_kv_cache_manager.md",
-      note: "kv hidden size·page size 정의와 full·sliding-window layer별 block 할당 설계",
-    },
-    {
-      kind: "공식 코드",
-      label: "vLLM — KV cache interface",
-      href: "https://github.com/vllm-project/vllm/blob/main/vllm/v1/kv_cache_interface.py",
-      note: "hybrid allocator 비활성 시 sliding-window layer를 full-attention allocation으로 다루는 구현 경로",
     },
     {
       kind: "공식 문서",
