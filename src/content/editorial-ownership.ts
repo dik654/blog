@@ -2600,12 +2600,11 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   autoencoder: {
-    title: "Autoencoder 글이 소유하는 범위",
+    title: "Autoencoder foundation 글이 소유하는 범위",
     owns: [
       "Deterministic encoder–latent–decoder 계산 계약과 reconstruction objective",
-      "Undercomplete·overcomplete bottleneck과 identity solution을 막는 제약",
-      "Linear autoencoder와 PCA가 연결되는 정리의 전제와 basis 비식별성",
-      "Denoising·sparse·anomaly detection·masked autoencoder의 목적과 평가 경계",
+      "Undercomplete bottleneck의 coordinate 경계와 bit·semantic 오해",
+      "Identity-like reconstruction failure와 held-out representation 평가 분리",
     ],
     reuses: [
       {
@@ -2616,22 +2615,57 @@ export const EDITORIAL_BOUNDARIES = {
         label: "Chain rule·backpropagation",
         href: "/ai/backprop-optimization",
       },
-      {
-        label: "Matrix·rank·SVD·Eckart–Young 정리",
-        href: "/ai/math-matrices-svd",
-      },
       { label: "Likelihood와 reconstruction loss", href: "/ai/cross-entropy" },
-      { label: "확률적 latent model로의 확장", href: "/ai/vae" },
+      { label: "Linear AE–PCA 정리", href: "/ai/linear-autoencoder-pca" },
+      { label: "Denoising·masked objective", href: "/ai/denoising-masked-autoencoders" },
+      { label: "Sparse dictionary 평가", href: "/ai/sparse-autoencoder" },
     ],
     evidence: [
       {
         kind: "primary-source",
-        rule: "Deep AE·linear AE/PCA·denoising AE·MAE claim은 논문의 architecture·objective·dataset·evaluation 조건으로 제한한다.",
+        rule: "Deep AE claim은 논문의 architecture·objective·dataset·evaluation 조건으로 제한한다.",
       },
       {
         kind: "standard",
-        rule: "Input·target·latent dimension·corruption·loss reduction·capacity·threshold·downstream metric을 재현 가능한 계약으로 기록한다.",
+        rule: "Input·target·latent dimension·loss reduction·capacity·held-out reconstruction·downstream metric을 재현 가능한 계약으로 기록한다.",
       },
+    ],
+  },
+  "linear-autoencoder-pca": {
+    title: "Linear autoencoder–PCA 정리 글이 소유하는 범위",
+    owns: ["Centering·linear map·rank-k·squared-error 전제", "Eckart–Young을 통한 principal subspace equivalence", "Latent basis의 rotation·scale 비식별성과 nonlinear 반례"],
+    reuses: [
+      { label: "Autoencoder reconstruction 계약", href: "/ai/autoencoder" },
+      { label: "Matrix·rank·SVD·Eckart–Young", href: "/ai/math-matrices-svd" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "PCA equivalence는 Baldi–Hornik의 linear auto-associative quadratic-error 조건에만 귀속한다." },
+      { kind: "project-measurement", rule: "Numeric 검증은 centered fixture·rank k·SVD baseline·subspace angle·multiple seeds를 기록한다." },
+    ],
+  },
+  "denoising-masked-autoencoders": {
+    title: "Denoising·masked autoencoder 글이 소유하는 범위",
+    owns: ["Clean target과 corruption distribution의 분리", "Visible·masked patch와 asymmetric encoder–decoder 계산", "Corruption·mask ratio·target region의 선택 경계"],
+    reuses: [
+      { label: "Deterministic autoencoder 계약", href: "/ai/autoencoder" },
+      { label: "Sparse activation 제약", href: "/ai/sparse-autoencoder" },
+      { label: "확률적 latent model", href: "/ai/vae" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Denoising과 MAE 결과는 각 논문의 corruption·masking·architecture·dataset·transfer protocol로 제한한다." },
+      { kind: "project-measurement", rule: "Candidate는 corruption·mask sampler·seed·encoder FLOPs·held-out reconstruction·downstream transfer를 paired 비교한다." },
+    ],
+  },
+  "reconstruction-anomaly-detection": {
+    title: "Reconstruction anomaly detection 글이 소유하는 범위",
+    owns: ["Sample별 reconstruction score와 feature reduction", "Validation cost 기반 threshold calibration", "Capacity failure·missing normal mode·score drift 운영 gate"],
+    reuses: [
+      { label: "Autoencoder reconstruction objective", href: "/ai/autoencoder#reconstruction" },
+      { label: "Train·validation·test split", href: "/ai/train-validation-test-split" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Reconstruction anomaly 결과는 논문의 dataset·feature·architecture·threshold protocol 범위로 제한한다." },
+      { kind: "project-measurement", rule: "Checkpoint·scaler·score reduction·validation window·threshold·precision/recall·false alarms/day·drift를 한 receipt로 기록한다." },
     ],
   },
   vae: {
@@ -6642,7 +6676,7 @@ export const EDITORIAL_BOUNDARIES = {
       "Feature observation·held-out control·steering intervention의 증거 ladder",
     ],
     reuses: [
-      { label: "Autoencoder reconstruction·sparsity 정본", href: "/ai/autoencoder#variants" },
+      { label: "Autoencoder reconstruction 정본", href: "/ai/autoencoder#reconstruction" },
       { label: "Transformer residual 계산 경로", href: "/ai/transformer-architecture" },
     ],
     evidence: [

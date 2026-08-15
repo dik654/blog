@@ -38823,418 +38823,140 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/autoencoder": {
-    coreIdea:
-      "Autoencoder는 input-derived target을 복원하는 encoder–latent–decoder 합성 함수입니다. 의미 있는 representation은 reconstruction objective만으로 자동 생성되지 않으며, bottleneck·corruption·sparsity 같은 제약과 별도의 generalization·downstream 평가가 함께 있어야 합니다.",
-    assumedKnowledge: [
-      {
-        id: "function-composition",
-        role: "Encoder output이 decoder input으로 이어지는 x→z→x̂ 경로를 읽습니다.",
-      },
-      {
-        id: "parameterized-model",
-        role: "Encoder θ와 decoder φ를 loss로 함께 학습하는 함수를 구분합니다.",
-      },
-      {
-        id: "tensor-batch",
-        role: "Sample·feature axis와 reconstruction loss reduction을 구분합니다.",
-      },
-      {
-        id: "chain-rule",
-        role: "Decoder에서 시작한 gradient가 latent를 지나 encoder까지 가는 경로를 계산합니다.",
-      },
-      {
-        id: "likelihood-contract",
-        role: "관측값에 맞춰 MSE·BCE와 decoder output 범위를 선택합니다.",
-      },
-      {
-        id: "matrix-rank",
-        role: "Linear bottleneck이 reconstruction map의 rank를 제한하는 이유를 읽습니다.",
-      },
-      {
-        id: "singular-value-decomposition",
-        role: "PCA principal directions와 optimal low-rank reconstruction을 연결합니다.",
-      },
-      {
-        id: "eckart-young-theorem",
-        role: "Linear autoencoder–PCA equivalence의 optimality 근거를 재사용합니다.",
-      },
-    ],
+    entryLevel: true,
+    entryNote: "Vector·latent·encoder를 모른다고 가정하고 input 하나가 중간값을 거쳐 같은 shape로 복원되는 경로부터 시작합니다.",
+    coreIdea: "Deterministic autoencoder의 최소 계약은 input x를 encoder가 latent z로 바꾸고 decoder가 reconstruction x̂를 만들며, input-derived target과 비교해 두 함수를 함께 학습하는 것입니다. Bottleneck과 held-out 평가가 identity 복사와 useful representation을 구분합니다.",
+    assumedKnowledge: [],
     introducedHere: [
-      {
-        id: "deterministic-autoencoder-contract",
-        role: "Input·encoder·latent·decoder·reconstruction target의 interface를 고정합니다.",
-      },
-      {
-        id: "undercomplete-bottleneck",
-        role: "Latent coordinate 수를 줄여 정보 선택을 압박합니다.",
-      },
-      {
-        id: "autoencoder-identity-degeneracy",
-        role: "제약이 약한 model이 input을 그대로 복사하는 실패를 진단합니다.",
-      },
-      {
-        id: "reconstruction-objective",
-        role: "Likelihood와 reduction을 명시해 input–output 차이를 scalar loss로 만듭니다.",
-      },
-      {
-        id: "linear-autoencoder-pca",
-        role: "Linear AE와 PCA가 같은 부분공간을 찾는 정확한 전제를 구분합니다.",
-      },
-      {
-        id: "denoising-autoencoder-objective",
-        role: "Corrupted input에서 clean target을 복원해 identity shortcut을 막습니다.",
-      },
-      {
-        id: "sparse-autoencoder-penalty",
-        role: "Overcomplete latent에서도 활성 feature 수를 제한합니다.",
-      },
-      {
-        id: "reconstruction-anomaly-score",
-        role: "Sample reconstruction error를 threshold와 운영 cost가 있는 anomaly score로 평가합니다.",
-      },
-      {
-        id: "masked-autoencoder-pretraining",
-        role: "Structured masking과 asymmetric encoder–decoder를 vision pretraining에 사용합니다.",
-      },
+      { id: "deterministic-autoencoder-contract", role: "Input·encoder·latent·decoder·target의 최소 interface를 소유합니다." },
+      { id: "undercomplete-bottleneck", role: "Latent coordinate 수로 decoder의 정보 경로를 제한합니다." },
+      { id: "autoencoder-identity-degeneracy", role: "제약이 약한 model의 복사 실패를 진단합니다." },
+      { id: "reconstruction-objective", role: "Input과 reconstruction의 차이를 likelihood-aware scalar loss로 만듭니다." },
     ],
     conceptExplanations: [
-      {
-        id: "deterministic-autoencoder-contract",
-        sectionId: "overview",
-        intuition:
-          "긴 원고를 짧은 요약으로 바꾼 뒤 요약만 보고 원고를 되살리는 두 단계로 생각할 수 있습니다.",
-        workedExample:
-          "784-pixel image를 encoder가 32-value code로 바꾸고 decoder가 다시 784 pixel을 출력하면 x·z·x̂의 shape은 각각 784·32·784입니다.",
-        boundary:
-          "Input이 target이라는 사실만으로 latent가 semantic하거나 disentangled된다고 보장하지 않습니다.",
-      },
-      {
-        id: "undercomplete-bottleneck",
-        sectionId: "architecture",
-        intuition:
-          "작은 가방에는 모든 물건을 넣을 수 없으므로 목적에 필요한 것을 골라야 합니다.",
-        workedExample:
-          "Input dimension n=128이고 latent k=16이면 decoder에 전달되는 coordinate 수는 1/8로 줄어듭니다.",
-        boundary:
-          "Coordinate 수가 줄어도 real-valued code의 정보량이 자동으로 k개 bit가 되는 것은 아니며 capacity와 precision도 함께 작용합니다.",
-      },
-      {
-        id: "autoencoder-identity-degeneracy",
-        sectionId: "architecture",
-        intuition:
-          "답안지를 그대로 옮겨 적을 수 있으면 문제의 규칙을 이해할 이유가 없습니다.",
-        workedExample:
-          "k≥n이고 encoder·decoder가 충분히 크면 training points에서 g(f(x))≈x인 lookup-like solution으로 loss를 낮출 수 있습니다.",
-        boundary:
-          "Overcomplete라는 이유만으로 반드시 identity를 학습하는 것은 아니며 noise·sparsity·weight sharing·data diversity가 이를 제한할 수 있습니다.",
-      },
-      {
-        id: "reconstruction-objective",
-        sectionId: "loss-backprop",
-        intuition:
-          "복원된 각 좌표가 원본과 얼마나 다른지 재고 batch 전체의 한 점수로 평균냅니다.",
-        workedExample:
-          "x=[0.8,0.4], x̂=[0.593,0.608]이면 두 squared errors의 평균은 약 0.043입니다.",
-        boundary:
-          "Pixel MSE가 작아도 perceptual similarity나 downstream usefulness가 높다는 뜻은 아닙니다.",
-      },
-      {
-        id: "linear-autoencoder-pca",
-        sectionId: "dimension-reduction",
-        intuition:
-          "곡선이나 gate 없이 k개 linear directions로만 복원한다면, squared error를 가장 많이 줄이는 방향은 PCA의 leading directions입니다.",
-        workedExample:
-          "Centered 2D data가 x축으로 variance 9, y축으로 variance 1이면 rank-1 linear AE의 최적 reconstruction subspace는 x축입니다.",
-        boundary:
-          "동일한 것은 optimal reconstruction subspace이며 encoder coordinate basis와 weight가 PCA loading과 유일하게 같다는 뜻은 아닙니다.",
-        proofIdea:
-          "Linear encoder E와 decoder D의 합성 M=ED는 rank가 k 이하입니다. Centered data X의 squared reconstruction error는 ||X-XM||F²이고, Eckart–Young theorem이 leading right singular vectors가 펼치는 부분공간을 optimal rank-k projection으로 줍니다.",
-        counterexample:
-          "ReLU를 넣거나 BCE를 사용하거나 data를 center하지 않은 채 bias를 제한하면 optimization problem이 달라져 PCA equivalence를 그대로 적용할 수 없습니다.",
-      },
-      {
-        id: "denoising-autoencoder-objective",
-        sectionId: "variants",
-        intuition:
-          "얼룩진 문장을 그대로 베끼는 대신 깨끗한 원문을 맞히게 하면 반복되는 문법과 문맥을 이용해야 합니다.",
-        workedExample:
-          "Pixel 20%를 mask한 x̃를 encoder에 넣고 target은 원본 x로 두어 masked coordinate까지 복원합니다.",
-        boundary:
-          "Corruption이 실제 task의 nuisance와 무관하거나 signal을 모두 없애면 useful robustness를 기대할 수 없습니다.",
-      },
-      {
-        id: "sparse-autoencoder-penalty",
-        sectionId: "variants",
-        intuition:
-          "Feature 사전을 크게 두되 한 sample을 설명할 때는 몇 개 feature만 선택하게 합니다.",
-        workedExample:
-          "Latent 1,024개 중 sample마다 20개 정도만 활성화되도록 L1 penalty coefficient를 조정할 수 있습니다.",
-        boundary:
-          "Sparsity coefficient가 너무 크면 모든 activation이 0에 가까워져 reconstruction과 representation이 함께 무너질 수 있습니다.",
-      },
-      {
-        id: "reconstruction-anomaly-score",
-        sectionId: "applications",
-        intuition:
-          "정상 패턴만 연습한 복원기가 낯선 입력에서 더 큰 실수를 낼 것이라는 가정을 점수로 사용합니다.",
-        workedExample:
-          "Validation normal의 99th percentile score를 τ로 잡고 anomaly recall과 하루 false alarm 수를 함께 측정합니다.",
-        boundary:
-          "강한 decoder가 anomaly도 잘 복원하거나 정상 distribution이 여러 mode를 빠뜨리면 score ordering이 실패합니다.",
-      },
-      {
-        id: "masked-autoencoder-pretraining",
-        sectionId: "variants",
-        intuition:
-          "퍼즐 조각 대부분을 숨기고 보이는 조각에서 빠진 내용을 예측해 전체 구조를 배우게 합니다.",
-        workedExample:
-          "Image patch 75%를 mask하고 visible 25%만 ViT encoder에 넣은 뒤 lightweight decoder가 missing pixel을 복원합니다.",
-        boundary:
-          "75% masking은 MAE 논문의 image recipe이며 text·audio나 다른 resolution의 universal optimum이 아닙니다.",
-      },
+      { id: "deterministic-autoencoder-contract", sectionId: "overview", intuition: "원본을 작은 쪽지로 바꾼 뒤 쪽지만 보고 원본 형태를 되살리는 두 함수입니다.", workedExample: "784-coordinate image를 encoder가 32-coordinate z로 바꾸고 decoder가 784-coordinate x̂를 만듭니다.", boundary: "Input이 target이라는 사실만으로 latent가 semantic하다는 보장은 없습니다." },
+      { id: "undercomplete-bottleneck", sectionId: "bottleneck", intuition: "좁은 통로에는 모든 coordinate를 그대로 보낼 수 없어 복원에 필요한 방향을 골라야 합니다.", workedExample: "n=128,k=16이면 coordinate 비율은 1/8입니다.", boundary: "16 coordinates는 16 bits나 16개의 사람다운 개념을 뜻하지 않습니다." },
+      { id: "reconstruction-objective", sectionId: "reconstruction", intuition: "같은 위치의 원본과 복원 차이를 재고 sample·feature 전체를 한 점수로 평균냅니다.", workedExample: "x=[0.8,0.4], x̂=[0.6,0.6]의 coordinate MSE는 (0.04+0.04)/2=0.04입니다.", boundary: "작은 MSE가 perceptual similarity나 downstream usefulness를 자동으로 보장하지 않습니다." },
+      { id: "autoencoder-identity-degeneracy", sectionId: "evaluation", intuition: "답안지를 그대로 옮길 수 있으면 규칙을 배울 이유가 없습니다.", workedExample: "Capacity가 큰 model은 training reconstruction 0에 가까워도 held-out probe가 random일 수 있습니다.", boundary: "Overcomplete라는 이유만으로 항상 identity가 되는 것은 아니며 corruption·sparsity·capacity가 영향을 줍니다." },
     ],
     conceptStages: [
-      {
-        label: "계산 경로",
-        relation: "Encoder와 decoder 사이의 latent interface를 먼저 고정",
-        concepts: [
-          "deterministic-autoencoder-contract",
-          "undercomplete-bottleneck",
-        ],
-      },
-      {
-        label: "학습 신호",
-        relation: "Likelihood·reduction·chain rule로 두 network를 함께 update",
-        concepts: [
-          "reconstruction-objective",
-          "chain-rule",
-          "autoencoder-identity-degeneracy",
-        ],
-      },
-      {
-        label: "정리의 조건",
-        relation: "Linear·centered·rank-k·squared-error 조건에서만 PCA와 연결",
-        concepts: ["linear-autoencoder-pca", "eckart-young-theorem"],
-      },
-      {
-        label: "제약과 적용",
-        relation:
-          "실패 원인에 따라 corruption·sparsity·masking·threshold를 선택",
-        concepts: [
-          "denoising-autoencoder-objective",
-          "sparse-autoencoder-penalty",
-          "masked-autoencoder-pretraining",
-          "reconstruction-anomaly-score",
-        ],
-      },
+      { label: "01 대상", relation: "Input·latent·reconstruction의 shape를 고정합니다.", concepts: ["deterministic-autoencoder-contract"] },
+      { label: "02 경로", relation: "Decoder가 볼 정보 경로를 제한합니다.", concepts: ["undercomplete-bottleneck"] },
+      { label: "03 신호", relation: "Coordinate residual을 scalar loss로 만듭니다.", concepts: ["reconstruction-objective"] },
+      { label: "04 평가", relation: "Training 복사와 held-out usefulness를 분리합니다.", concepts: ["autoencoder-identity-degeneracy"] },
     ],
     exercises: [
-      {
-        level: "basic",
-        question:
-          "Input 128차원, latent 16차원, output 128차원인 autoencoder에서 encoder·decoder의 domain과 codomain을 쓰고 어떤 값끼리 reconstruction loss를 계산하는가?",
-        answerChecklist: ["fθ:R128→R16", "gφ:R16→R128", "x와 x̂ 비교"],
-        requiredConcepts: [
-          "deterministic-autoencoder-contract",
-          "undercomplete-bottleneck",
-        ],
-        sectionId: "architecture",
-      },
-      {
-        level: "basic",
-        question:
-          "본문의 [0.8,0.4] 예시에서 z와 두 reconstruction coordinate를 계산하고 MSE가 약 0.043인지 확인하라.",
-        answerChecklist: [
-          "weighted sum 0.52",
-          "z≈0.627",
-          "x̂≈[0.593,0.608]",
-          "coordinate mean",
-        ],
-        requiredConcepts: [
-          "deterministic-autoencoder-contract",
-          "reconstruction-objective",
-        ],
-        sectionId: "forward-example",
-      },
-      {
-        level: "basic",
-        question:
-          "Input dimension n=128, latent dimension k=16인 undercomplete autoencoder의 coordinate 비율을 계산하고 이를 16-bit 압축이라고 부르면 안 되는 이유를 설명하라.",
-        answerChecklist: [
-          "Latent coordinate 비율 16/128=1/8을 계산한다.",
-          "Decoder로 전달되는 coordinate 수가 줄었다고 설명한다.",
-          "각 coordinate는 real-valued이고 precision·capacity가 별도라 16 bit라는 뜻은 아니라고 제한한다.",
-        ],
-        requiredConcepts: [
-          "deterministic-autoencoder-contract",
-          "undercomplete-bottleneck",
-        ],
-        sectionId: "architecture",
-      },
-      {
-        level: "basic",
-        question:
-          "0/1 coordinate를 복원하는 경우와 연속 센서값을 복원하는 경우에 BCE와 MSE를 각각 연결하고 decoder output 범위가 loss 가정과 맞아야 하는 이유를 설명하라.",
-        answerChecklist: [
-          "Binary coordinate에는 Bernoulli/BCE를 연결한다.",
-          "연속값에는 fixed-variance Gaussian mean/MSE 해석을 연결한다.",
-          "Sigmoid output과 [0,1] target 또는 연속 output·scale의 일치를 확인한다.",
-          "Loss 선택은 단순 취향이 아니라 observation model 가정이라고 설명한다.",
-        ],
-        requiredConcepts: ["reconstruction-objective", "likelihood-contract"],
-        sectionId: "loss-backprop",
-      },
-      {
-        level: "basic",
-        question:
-          "Reconstruction loss에서 encoder parameter θ까지 gradient가 전달되는 세 Jacobian 항을 output에서 input 방향으로 나열하고 어느 지점이 작으면 encoder 학습이 약해지는지 설명하라.",
-        answerChecklist: [
-          "∂L/∂x̂를 먼저 둔다.",
-          "Decoder Jacobian ∂x̂/∂z를 잇는다.",
-          "Encoder parameter Jacobian ∂z/∂θ를 잇는다.",
-          "Decoder가 z를 무시하거나 activation이 포화되면 product가 작아질 수 있다고 말한다.",
-        ],
-        requiredConcepts: ["chain-rule", "reconstruction-objective"],
-        sectionId: "loss-backprop",
-      },
-      {
-        level: "advanced",
-        question:
-          "Training MSE는 거의 0인데 validation linear probe가 random 수준인 결과가 가능한 이유와 추가 진단을 설계하라.",
-        answerChecklist: [
-          "identity 또는 memorization",
-          "held-out reconstruction",
-          "linear probe 또는 downstream evaluation",
-          "capacity·regularization ablation",
-        ],
-        requiredConcepts: [
-          "autoencoder-identity-degeneracy",
-          "reconstruction-objective",
-        ],
-        sectionId: "architecture",
-      },
-      {
-        level: "advanced",
-        question:
-          "Linear autoencoder–PCA equivalence를 적용하기 전에 확인할 전제를 나열하고 latent basis가 PCA loading과 유일하게 같지 않은 이유를 설명하라.",
-        answerChecklist: [
-          "centered data",
-          "linear maps",
-          "rank-k bottleneck",
-          "squared error",
-          "rotation·scale non-identifiability",
-        ],
-        requiredConcepts: ["linear-autoencoder-pca", "eckart-young-theorem"],
-        sectionId: "dimension-reduction",
-      },
-      {
-        level: "basic",
-        question:
-          "Denoising autoencoder에서 encoder input과 reconstruction target이 왜 서로 다른지 설명하라.",
-        answerChecklist: [
-          "corrupted x̃ input",
-          "clean x target",
-          "identity shortcut 억제",
-          "corruption relevance",
-        ],
-        requiredConcepts: ["denoising-autoencoder-objective"],
-        sectionId: "variants",
-      },
-      {
-        level: "advanced",
-        question:
-          "정상 validation score와 anomaly score가 일부 겹치는 서비스에서 threshold를 정하는 평가 계획을 작성하라.",
-        answerChecklist: [
-          "precision–recall",
-          "false-positive cost",
-          "held-out anomaly",
-          "threshold provenance",
-          "drift monitoring",
-        ],
-        requiredConcepts: ["reconstruction-anomaly-score"],
-        sectionId: "applications",
-      },
-      {
-        level: "advanced",
-        question:
-          "Denoising AE·sparse AE·VAE·masked AE 중 하나를 고르는 것이 단순한 세대 비교가 아닌 이유를 input·latent·objective·평가 항목으로 비교하라.",
-        answerChecklist: [
-          "각 방법의 intervention",
-          "deterministic와 stochastic latent",
-          "target 차이",
-          "downstream metric",
-        ],
-        requiredConcepts: [
-          "denoising-autoencoder-objective",
-          "sparse-autoencoder-penalty",
-          "masked-autoencoder-pretraining",
-        ],
-        sectionId: "variants",
-      },
+      { level: "basic", question: "x∈R128, z∈R16인 autoencoder에서 encoder와 decoder의 domain·codomain을 쓰세요.", answerChecklist: ["fθ:R128→R16", "gφ:R16→R128", "x and xhat same shape"], requiredConcepts: ["deterministic-autoencoder-contract"], sectionId: "overview" },
+      { level: "basic", question: "Input·encoder·latent·decoder·reconstruction을 계산 순서로 배열하세요.", answerChecklist: ["input x", "encoder", "latent z", "decoder", "reconstruction xhat"], requiredConcepts: ["deterministic-autoencoder-contract"], sectionId: "overview" },
+      { level: "basic", question: "n=128,k=16의 coordinate 비율과 16-bit 압축이라고 부를 수 없는 이유를 설명하세요.", answerChecklist: ["16/128=1/8", "real-valued coordinates", "precision separate", "capacity separate"], requiredConcepts: ["undercomplete-bottleneck"], sectionId: "bottleneck" },
+      { level: "basic", question: "Decoder가 encoder의 수학적 inverse일 필요가 없는 이유를 설명하세요.", answerChecklist: ["separately parameterized", "trained jointly", "data support", "approximate reconstruction"], requiredConcepts: ["deterministic-autoencoder-contract"], sectionId: "bottleneck" },
+      { level: "basic", question: "x=[0.8,0.4], x̂=[0.6,0.6]의 coordinate MSE를 계산하세요.", answerChecklist: ["residual 0.2 and -0.2", "squares 0.04", "sum 0.08", "mean 0.04"], requiredConcepts: ["reconstruction-objective"], sectionId: "reconstruction" },
+      { level: "basic", question: "연속값 MSE와 binary BCE를 output range·likelihood 가정에 연결하세요.", answerChecklist: ["Gaussian mean", "Bernoulli probability", "continuous output", "[0,1] sigmoid", "loss not taste"], requiredConcepts: ["reconstruction-objective"], sectionId: "reconstruction" },
+      { level: "advanced", question: "Training reconstruction은 0인데 held-out probe가 random인 identity failure를 진단하세요.", answerChecklist: ["memorization or identity", "held-out reconstruction", "linear probe", "capacity ablation", "constraint"], requiredConcepts: ["autoencoder-identity-degeneracy"], sectionId: "evaluation" },
+      { level: "advanced", question: "Training·held-out reconstruction과 latent usefulness를 분리한 평가표를 만드세요.", answerChecklist: ["train loss", "held-out loss", "linear probe", "retrieval or clustering", "same checkpoint"], requiredConcepts: ["reconstruction-objective", "autoencoder-identity-degeneracy"], sectionId: "evaluation" },
+      { level: "advanced", question: "Undercomplete width 8·16·32 후보를 공정하게 고르는 ablation을 설계하세요.", answerChecklist: ["same data and seed set", "same decoder budget", "held-out reconstruction", "downstream metric", "not train loss only"], requiredConcepts: ["undercomplete-bottleneck", "autoencoder-identity-degeneracy"], sectionId: "evaluation" },
+      { level: "advanced", question: "Autoencoder foundation release receipt에 필요한 input·model·loss·evaluation 항목을 쓰세요.", answerChecklist: ["input schema/scale", "n and k", "encoder/decoder revision", "loss reduction", "held-out split", "downstream metric", "identity check", "rollback"], requiredConcepts: ["deterministic-autoencoder-contract", "reconstruction-objective", "autoencoder-identity-degeneracy"], sectionId: "evaluation" },
     ],
     papers: [
-      {
-        title: "Reducing the Dimensionality of Data with Neural Networks",
-        href: "https://doi.org/10.1126/science.1127647",
-        problem:
-          "고차원 data를 작은 code로 줄이면서 nonlinear structure를 복원하는 문제",
-        contribution:
-          "작은 central layer를 둔 deep autoencoder의 dimensionality-reduction 실험",
-        assumptions:
-          "논문의 layerwise pretraining·fine-tuning·dataset·code size 조건",
-        evidenceScope:
-          "MNIST·document retrieval 등 논문에서 보고한 reconstruction·embedding 실험",
-        notClaim:
-          "모든 nonlinear autoencoder가 PCA보다 우월하거나 semantic latent를 보장한다는 결론은 아님",
-        sectionId: "paper-deep-autoencoder",
-      },
-      {
-        title:
-          "Neural Networks and Principal Component Analysis: Learning from Examples Without Local Minima",
-        href: "https://doi.org/10.1016/0893-6080(89)90014-2",
-        problem:
-          "Linear layered network의 quadratic reconstruction error landscape와 PCA의 관계",
-        contribution:
-          "Global minimum의 principal subspace와 나머지 critical point의 성질 분석",
-        assumptions:
-          "Linear feed-forward network·quadratic error·auto-associative setting과 covariance 조건",
-        evidenceScope:
-          "논문의 linear landscape theorem이 다루는 reconstruction map 범위",
-        notClaim:
-          "Nonlinear network·다른 loss·finite sample generalization까지 같은 landscape라는 결론은 아님",
-        sectionId: "paper-linear-ae-pca",
-      },
-      {
-        title:
-          "Extracting and Composing Robust Features with Denoising Autoencoders",
-        href: "https://doi.org/10.1145/1390156.1390294",
-        problem:
-          "Unconstrained autoencoder가 identity를 학습하고 useful structure를 놓치는 문제",
-        contribution:
-          "Corrupted input에서 clean target을 복원하는 denoising objective와 stacked pretraining",
-        assumptions:
-          "선택한 corruption process·architecture·dataset과 supervised fine-tuning 조건",
-        evidenceScope:
-          "논문 benchmark에서의 feature learning·classification 실험",
-        notClaim:
-          "임의 corruption이 모든 task와 distribution shift에 robust하다는 결론은 아님",
-        sectionId: "paper-denoising-autoencoder",
-      },
-      {
-        title: "Masked Autoencoders Are Scalable Vision Learners",
-        href: "https://arxiv.org/abs/2111.06377",
-        problem:
-          "Vision Transformer를 효율적인 reconstruction task로 self-supervised pretrain하는 문제",
-        contribution:
-          "Visible patch만 처리하는 encoder·lightweight decoder·high masking ratio의 asymmetric MAE",
-        assumptions:
-          "Image patch tokenization·ImageNet-1K·ViT architecture·fine-tuning protocol",
-        evidenceScope:
-          "논문의 pretraining efficiency·ImageNet transfer·detection/segmentation 실험",
-        notClaim:
-          "75% masking이나 pixel target이 모든 modality·resolution에서 최적이라는 결론은 아님",
-        sectionId: "paper-masked-autoencoder",
-      },
+      { title: "Reducing the Dimensionality of Data with Neural Networks", href: "https://doi.org/10.1126/science.1127647", problem: "고차원 data를 작은 code로 줄이면서 nonlinear structure를 복원합니다.", contribution: "작은 central layer를 둔 deep autoencoder와 dimensionality-reduction 실험을 제시합니다.", assumptions: "논문의 pretraining·dataset·architecture·code size를 고정합니다.", evidenceScope: "논문이 측정한 reconstruction·embedding 실험에 한정합니다.", notClaim: "모든 autoencoder가 semantic latent나 PCA 우위를 보장한다는 결론은 아닙니다.", sectionId: "paper-deep-autoencoder" },
+    ],
+  },
+  "ai/linear-autoencoder-pca": {
+    entryLevel: true,
+    entryNote: "PCA·SVD·rank를 모른다고 가정하고 2D 점을 한 직선에 가장 가깝게 투영하는 그림에서 시작합니다.",
+    coreIdea: "Centered data, linear encoder·decoder, rank-k bottleneck, squared error 조건에서 linear autoencoder의 optimal reconstruction subspace는 PCA의 leading principal subspace와 일치하지만 latent basis 자체는 유일하지 않습니다.",
+    assumedKnowledge: [],
+    introducedHere: [{ id: "linear-autoencoder-pca", role: "Linear AE–PCA equivalence의 조건·결론·비식별성 경계를 소유합니다." }],
+    conceptExplanations: [
+      { id: "linear-autoencoder-pca", sectionId: "theorem", intuition: "2D 점을 한 직선에 눌러도 가장 적게 움직이게 하는 직선이 variance가 가장 큰 PCA 방향입니다.", workedExample: "Centered 2D data의 x variance가 9, y variance가 1이면 rank-1 최적 subspace는 x축입니다.", boundary: "동일한 것은 subspace이며 encoder coordinate·weight가 PCA loading과 유일하게 같다는 뜻은 아닙니다.", proofIdea: "Linear 합성 M=ED는 rank k 이하이고 ||X-XM||F²의 optimal rank-k approximation은 Eckart–Young 정리에 따라 top-k right singular subspace입니다.", counterexample: "ReLU·BCE·uncentered data·다른 regularizer를 쓰면 같은 optimization이 아닙니다." },
+    ],
+    conceptStages: [
+      { label: "01 조건", relation: "Centering·linear map·squared error를 고정합니다.", concepts: ["matrix-rank"] },
+      { label: "02 합성", relation: "Encoder·decoder를 rank-k reconstruction map으로 묶습니다.", concepts: ["linear-autoencoder-pca"] },
+      { label: "03 정리", relation: "SVD와 Eckart–Young으로 최적 subspace를 찾습니다.", concepts: ["singular-value-decomposition", "eckart-young-theorem", "linear-autoencoder-pca"] },
+      { label: "04 경계", relation: "Basis 비식별성과 nonlinear 반례를 분리합니다.", concepts: ["linear-autoencoder-pca"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Linear AE–PCA equivalence의 네 전제를 쓰세요.", answerChecklist: ["centered data", "linear encoder/decoder", "rank-k", "squared error"], requiredConcepts: ["linear-autoencoder-pca"], sectionId: "overview" },
+      { level: "basic", question: "E:n→k,D:k→n일 때 M=ED의 rank 상한을 설명하세요.", answerChecklist: ["composition", "rank at most k", "bottleneck", "n-to-n reconstruction"], requiredConcepts: ["linear-autoencoder-pca", "matrix-rank"], sectionId: "rank-k" },
+      { level: "basic", question: "2D variance가 9와 1일 때 rank-1 최적 subspace를 고르세요.", answerChecklist: ["x axis", "larger variance", "discard y energy", "centered"], requiredConcepts: ["linear-autoencoder-pca"], sectionId: "theorem" },
+      { level: "basic", question: "Frobenius reconstruction error가 무엇을 합하는지 설명하세요.", answerChecklist: ["all samples", "all features", "squared residual", "sum"], requiredConcepts: ["linear-autoencoder-pca"], sectionId: "rank-k" },
+      { level: "basic", question: "V_k가 무엇이고 왜 top-k를 고르는지 설명하세요.", answerChecklist: ["right singular vectors", "largest singular values", "principal directions", "minimum discarded energy"], requiredConcepts: ["singular-value-decomposition", "linear-autoencoder-pca"], sectionId: "theorem" },
+      { level: "basic", question: "같은 subspace와 같은 latent basis가 다른 주장인 이유를 설명하세요.", answerChecklist: ["rotation freedom", "scale freedom", "permutation", "same span"], requiredConcepts: ["linear-autoencoder-pca"], sectionId: "theorem" },
+      { level: "advanced", question: "Centering을 생략한 2D 반례가 왜 정리 전제를 깨는지 설명하세요.", answerChecklist: ["nonzero mean", "origin projection", "affine bias", "different optimum"], requiredConcepts: ["linear-autoencoder-pca"], sectionId: "boundary" },
+      { level: "advanced", question: "ReLU를 추가한 nonlinear AE에 PCA equivalence를 적용할 수 없는 이유를 쓰세요.", answerChecklist: ["piecewise nonlinear", "not single M", "rank argument insufficient", "different function class"], requiredConcepts: ["linear-autoencoder-pca"], sectionId: "boundary" },
+      { level: "advanced", question: "Squared error 대신 weighted error를 쓰면 principal direction이 달라질 수 있는 fixture를 설계하세요.", answerChecklist: ["feature weights", "same centered X", "weighted residual", "different optimum", "compare subspaces"], requiredConcepts: ["linear-autoencoder-pca"], sectionId: "boundary" },
+      { level: "advanced", question: "Linear AE theorem 검증 receipt를 작성하세요.", answerChecklist: ["centered X", "linear/no bias condition", "k", "squared loss", "SVD baseline", "subspace angle", "multiple seeds", "counterexample"], requiredConcepts: ["linear-autoencoder-pca", "eckart-young-theorem"], sectionId: "boundary" },
+    ],
+    papers: [
+      { title: "Neural Networks and Principal Component Analysis: Learning from Examples Without Local Minima", href: "https://doi.org/10.1016/0893-6080(89)90014-2", problem: "Linear layered network의 quadratic reconstruction landscape와 PCA 관계를 분석합니다.", contribution: "Global minimum의 principal subspace와 critical point 성질을 설명합니다.", assumptions: "Linear auto-associative network·quadratic error·covariance 조건입니다.", evidenceScope: "논문 theorem의 linear reconstruction map 범위입니다.", notClaim: "Nonlinear network·다른 loss·finite-sample generalization까지 같은 정리가 아닙니다.", sectionId: "paper-linear-ae-pca" },
+    ],
+  },
+  "ai/denoising-masked-autoencoders": {
+    entryLevel: true,
+    entryNote: "Noise·mask·self-supervision을 모른다고 가정하고 clean sample 하나에서 손상본을 만들고 다시 원본과 비교하는 과정부터 시작합니다.",
+    coreIdea: "Denoising과 masked autoencoder는 encoder input을 의도적으로 손상시키되 clean 또는 missing content를 target으로 유지해 identity shortcut을 막습니다. Corruption rule·visible compute·target region·downstream evaluation은 별도 계약입니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "denoising-autoencoder-objective", role: "Corrupted input에서 clean target을 복원하는 objective를 소유합니다." },
+      { id: "masked-autoencoder-pretraining", role: "Structured mask·visible-only encoder·missing-content decoder 계약을 소유합니다." },
+    ],
+    conceptExplanations: [
+      { id: "denoising-autoencoder-objective", sectionId: "denoising", intuition: "얼룩진 문장을 그대로 베끼지 않고 깨끗한 원문을 맞히게 합니다.", workedExample: "Pixel 20%를 drop한 x̃를 encoder에 넣고 target은 원본 x로 둡니다.", boundary: "Corruption이 task signal을 모두 지우거나 실제 nuisance와 무관하면 useful robustness를 보장하지 않습니다." },
+      { id: "masked-autoencoder-pretraining", sectionId: "masking", intuition: "퍼즐 조각 일부만 보고 숨긴 조각을 맞혀 전체 구조를 배우게 합니다.", workedExample: "Image patch 75%를 mask하고 visible 25%만 ViT encoder에 보낸 뒤 lightweight decoder가 missing pixel을 복원합니다.", boundary: "75%는 MAE image recipe이며 모든 modality·resolution의 universal optimum이 아닙니다." },
+    ],
+    conceptStages: [
+      { label: "01 원본", relation: "Clean x를 target으로 고정합니다.", concepts: ["deterministic-autoencoder-contract"] },
+      { label: "02 손상", relation: "q(x̃|x)에서 encoder input을 만듭니다.", concepts: ["denoising-autoencoder-objective"] },
+      { label: "03 마스크", relation: "Visible·masked set과 encoder compute를 분리합니다.", concepts: ["masked-autoencoder-pretraining"] },
+      { label: "04 선택", relation: "Corruption·target·downstream 목적을 비교합니다.", concepts: ["denoising-autoencoder-objective", "masked-autoencoder-pretraining"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Denoising AE의 clean x·corruption q·input x̃·target을 순서대로 설명하세요.", answerChecklist: ["clean x", "sample q", "corrupted x tilde", "encoder input", "clean target"], requiredConcepts: ["denoising-autoencoder-objective"], sectionId: "overview" },
+      { level: "basic", question: "Input과 target을 둘 다 x̃로 두면 clean denoising 계약이 아닌 이유를 설명하세요.", answerChecklist: ["copies corruption", "no clean target", "identity shortcut", "different objective"], requiredConcepts: ["denoising-autoencoder-objective"], sectionId: "denoising" },
+      { level: "basic", question: "Pixel dropout 20% 예에서 corruption strength를 기록해야 하는 이유를 설명하세요.", answerChecklist: ["reproducibility", "information remaining", "difficulty", "validation"], requiredConcepts: ["denoising-autoencoder-objective"], sectionId: "overview" },
+      { level: "basic", question: "N=196, mask ratio 75%일 때 visible·masked patch 수를 계산하세요.", answerChecklist: ["visible 49", "masked 147", "encoder sees visible", "decoder reconstructs missing"], requiredConcepts: ["masked-autoencoder-pretraining"], sectionId: "masking" },
+      { level: "basic", question: "MAE의 asymmetric encoder·decoder가 계산을 줄이는 위치를 설명하세요.", answerChecklist: ["heavy encoder", "visible patches only", "light decoder", "mask tokens later"], requiredConcepts: ["masked-autoencoder-pretraining"], sectionId: "masking" },
+      { level: "basic", question: "Denoising과 masking을 input transformation·target·compute 기준으로 비교하세요.", answerChecklist: ["noise or corruption", "structured mask", "clean/missing target", "visible-only compute"], requiredConcepts: ["denoising-autoencoder-objective", "masked-autoencoder-pretraining"], sectionId: "choice" },
+      { level: "advanced", question: "Corruption이 label signal을 지워 downstream 성능이 나빠지는 반례를 설계하세요.", answerChecklist: ["task-relevant feature", "corruption removes it", "reconstruction possible elsewhere", "downstream drop", "ablation"], requiredConcepts: ["denoising-autoencoder-objective"], sectionId: "choice" },
+      { level: "advanced", question: "Mask ratio 50·75·90% 후보의 compute·reconstruction·transfer 평가를 설계하세요.", answerChecklist: ["same model/data", "encoder FLOPs", "held-out reconstruction", "downstream transfer", "multiple seeds"], requiredConcepts: ["masked-autoencoder-pretraining"], sectionId: "choice" },
+      { level: "advanced", question: "Image의 75% mask ratio를 audio에 그대로 복사하면 안 되는 이유를 설명하세요.", answerChecklist: ["modality redundancy differs", "tokenization differs", "information loss", "validate ratio"], requiredConcepts: ["masked-autoencoder-pretraining"], sectionId: "choice" },
+      { level: "advanced", question: "Denoising·masked candidate release receipt를 작성하세요.", answerChecklist: ["clean dataset/version", "corruption or mask sampler", "seed/ratio", "encoder input", "target region", "loss reduction", "downstream metric", "rollback"], requiredConcepts: ["denoising-autoencoder-objective", "masked-autoencoder-pretraining"], sectionId: "choice" },
+    ],
+    papers: [
+      { title: "Extracting and Composing Robust Features with Denoising Autoencoders", href: "https://doi.org/10.1145/1390156.1390294", problem: "Unconstrained autoencoder의 identity shortcut을 줄입니다.", contribution: "Corrupted input에서 clean target을 복원하는 denoising objective를 제안합니다.", assumptions: "논문의 corruption·architecture·dataset·fine-tuning 조건입니다.", evidenceScope: "논문 benchmark의 feature learning 실험입니다.", notClaim: "임의 corruption이 모든 task shift에 robust하다는 결론은 아닙니다.", sectionId: "paper-denoising-autoencoder" },
+      { title: "Masked Autoencoders Are Scalable Vision Learners", href: "https://arxiv.org/abs/2111.06377", problem: "Vision Transformer를 효율적인 reconstruction task로 pretrain합니다.", contribution: "Visible-only encoder·lightweight decoder·high image masking ratio를 조합합니다.", assumptions: "ImageNet-1K·ViT·patch tokenization·fine-tuning protocol입니다.", evidenceScope: "논문의 pretraining efficiency와 transfer 실험입니다.", notClaim: "75% masking이 모든 modality에서 최적이라는 결론은 아닙니다.", sectionId: "paper-masked-autoencoder" },
+    ],
+  },
+  "ai/reconstruction-anomaly-detection": {
+    entryLevel: true,
+    entryNote: "Anomaly·threshold·calibration을 모른다고 가정하고 input과 reconstruction 사이의 sample별 거리 하나부터 시작합니다.",
+    coreIdea: "Reconstruction anomaly detection은 sample별 reconstruction distance를 score로 만들고 labeled validation의 false-positive·recall 비용으로 threshold를 calibration한 뒤, capacity failure와 distribution drift를 계속 감시하는 운영 계약입니다.",
+    assumedKnowledge: [],
+    introducedHere: [{ id: "reconstruction-anomaly-score", role: "Reconstruction distance·threshold·drift의 anomaly decision 계약을 소유합니다." }],
+    conceptExplanations: [
+      { id: "reconstruction-anomaly-score", sectionId: "overview", intuition: "정상 모양만 연습한 복원기가 낯선 모양에서 더 크게 틀릴 것이라는 가정을 숫자로 측정합니다.", workedExample: "Validation normal score의 99th percentile을 τ 후보로 두고 anomaly recall과 false alarms/day를 함께 비교합니다.", boundary: "강한 decoder가 anomaly도 잘 복원하거나 training normal mode가 빠지면 score ordering이 실패합니다.", counterexample: "Seasonal normal mode가 train에 없으면 정상인데도 큰 score를 받아 false positive가 됩니다." },
+    ],
+    conceptStages: [
+      { label: "01 복원", relation: "Input과 reconstruction의 같은 좌표를 비교합니다.", concepts: ["reconstruction-objective"] },
+      { label: "02 점수", relation: "Feature residual을 sample score로 줄입니다.", concepts: ["reconstruction-anomaly-score"] },
+      { label: "03 판정", relation: "Validation cost로 τ를 고릅니다.", concepts: ["reconstruction-anomaly-score"] },
+      { label: "04 운영", relation: "Capacity failure·score drift·delayed label로 재검증합니다.", concepts: ["reconstruction-anomaly-score", "autoencoder-identity-degeneracy"] },
+    ],
+    exercises: [
+      { level: "basic", question: "x=[0,1], x̂=[0.2,0.6]의 coordinate MSE anomaly score를 계산하세요.", answerChecklist: ["residual -0.2 and 0.4", "squares .04 and .16", "sum .20", "mean .10"], requiredConcepts: ["reconstruction-anomaly-score"], sectionId: "overview" },
+      { level: "basic", question: "Reconstruction score와 anomaly label이 다른 이유를 설명하세요.", answerChecklist: ["model error", "continuous score", "requires calibration", "not cause label"], requiredConcepts: ["reconstruction-anomaly-score"], sectionId: "overview" },
+      { level: "basic", question: "Threshold τ가 training loss에서 자동으로 나오지 않는 이유를 설명하세요.", answerChecklist: ["training objective not decision cost", "validation distribution", "false positive", "recall"], requiredConcepts: ["reconstruction-anomaly-score"], sectionId: "threshold" },
+      { level: "basic", question: "Score 0.12와 τ=0.10일 때 indicator 판정과 그 한계를 쓰세요.", answerChecklist: ["0.12>0.10", "alert 1", "threshold-dependent", "not root cause"], requiredConcepts: ["reconstruction-anomaly-score"], sectionId: "threshold" },
+      { level: "basic", question: "Feature scale이 다른 두 센서를 같은 MSE에 넣을 때 생기는 문제와 대안을 설명하세요.", answerChecklist: ["large unit dominates", "fit scaler on train", "same transform serve", "document weighting"], requiredConcepts: ["reconstruction-anomaly-score"], sectionId: "overview" },
+      { level: "basic", question: "Precision·recall·false alarms/day를 서로 다른 운영 질문에 연결하세요.", answerChecklist: ["precision alert trust", "recall missed anomalies", "daily operator load", "class imbalance"], requiredConcepts: ["reconstruction-anomaly-score"], sectionId: "threshold" },
+      { level: "advanced", question: "Decoder가 anomaly도 잘 복원하는 false-negative 반례와 capacity ablation을 설계하세요.", answerChecklist: ["high capacity", "low anomaly score", "smaller bottleneck", "held-out anomaly", "compare recall"], requiredConcepts: ["reconstruction-anomaly-score", "autoencoder-identity-degeneracy"], sectionId: "failure" },
+      { level: "advanced", question: "Missing normal mode가 false positive를 만드는 seasonal fixture를 설계하세요.", answerChecklist: ["train misses season", "normal test high score", "mode coverage", "recalibration", "not anomaly"], requiredConcepts: ["reconstruction-anomaly-score"], sectionId: "failure" },
+      { level: "advanced", question: "Test anomaly를 보며 τ를 고르는 leakage를 막는 split을 설계하세요.", answerChecklist: ["train model", "validation threshold", "locked test", "single final report", "no retune"], requiredConcepts: ["reconstruction-anomaly-score"], sectionId: "failure" },
+      { level: "advanced", question: "Anomaly detector release receipt와 drift rollback gate를 작성하세요.", answerChecklist: ["checkpoint", "feature schema/scaler", "score reduction", "validation window", "threshold", "precision/recall", "false alarms/day", "drift trigger", "rollback"], requiredConcepts: ["reconstruction-anomaly-score"], sectionId: "release" },
+    ],
+    papers: [
+      { title: "Anomaly Detection Using Autoencoders with Nonlinear Dimensionality Reduction", href: "https://doi.org/10.1145/2689746.2689747", problem: "High-dimensional telemetry에서 normal과 anomaly를 구분합니다.", contribution: "Autoencoder reconstruction error를 anomaly score로 적용합니다.", assumptions: "논문의 dataset·feature·architecture·threshold protocol입니다.", evidenceScope: "해당 benchmark의 detection 결과에 한정합니다.", notClaim: "Reconstruction score가 모든 anomaly·drift·원인을 분리한다는 결론은 아닙니다.", sectionId: "paper-reconstruction-anomaly" },
     ],
   },
   "ai/vae": {
@@ -56452,6 +56174,7 @@ export const ARTICLE_LEARNING: Readonly<
     coreIdea: "Sparse autoencoder는 고정된 language model activation을 overcomplete dictionary의 소수 feature로 복원하는 사후 분석 모델입니다. Reconstruction·sparsity·해석 사례·causal intervention은 서로 다른 평가 축입니다.",
     assumedKnowledge: [],
     introducedHere: [
+      { id: "sparse-autoencoder-penalty", role: "Overcomplete latent에서 L1·Top-K 등으로 sample별 활성 feature 수를 제한하는 일반 sparsity 계약을 소유합니다." },
       { id: "sae-activation-hook-contract", role: "Model·layer·hook·token·corpus를 하나의 측정 대상으로 고정합니다." },
       { id: "sae-overcomplete-dictionary-reconstruction", role: "Activation을 더 넓은 sparse coordinate와 decoder direction으로 복원합니다." },
       { id: "sae-sparsity-quality-frontier", role: "Reconstruction·active count·dead latent·LM behavior의 trade-off를 평가합니다." },
@@ -56459,6 +56182,7 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "sae-steering-intervention-boundary", role: "Feature direction 개입의 dose·control·side effect와 인과 해석 범위를 정합니다." },
     ],
     conceptExplanations: [
+      { id: "sparse-autoencoder-penalty", sectionId: "sae-architecture", intuition: "넓은 단어 사전을 두되 한 문장을 설명할 때는 몇 단어만 고르게 합니다.", workedExample: "Latent 1,024개 중 sample마다 약 20개만 활성화되도록 L1 coefficient 또는 Top-K를 비교합니다.", boundary: "Penalty가 너무 크면 all-zero collapse가 생기고 decoder scale을 풀어 두면 coefficient scale로 우회할 수 있습니다." },
       { id: "sae-activation-hook-contract", sectionId: "residual-stream", intuition: "혈액 검사도 채혈 위치와 시각을 기록하듯 activation도 어느 model·layer·token에서 뽑았는지 고정합니다.", workedExample: "Checkpoint A의 layer 12 resid_post에서 token position별 4096차원 vector를 모으고 tokenizer·context length를 receipt에 적습니다.", boundary: "같은 feature index를 다른 layer·seed·checkpoint의 동일 개념으로 취급할 수 없습니다." },
       { id: "sae-overcomplete-dictionary-reconstruction", sectionId: "polysemanticity", intuition: "사전의 단어 수는 문장 길이보다 많지만 한 문장에는 소수 단어만 쓰듯 넓은 dictionary에서 소수 방향을 고릅니다.", workedExample: "d=4 activation을 m=8 decoder directions 중 z1·z6 두 coefficient만 사용해 근사하며 정보가 8차원으로 새로 늘었다고 보지는 않습니다.", boundary: "Overcomplete factorization은 일반적으로 유일하지 않으며 ground-truth human concept 복원을 보장하지 않습니다." },
       { id: "sae-sparsity-quality-frontier", sectionId: "sae-architecture", intuition: "너무 많은 단어를 쓰면 복사는 쉽지만 해석이 어렵고 너무 적게 쓰면 원문 의미를 잃는 맞바꿈입니다.", workedExample: "같은 held-out corpus에서 active 16·32·64 checkpoint의 FVE, LM loss recovery, dead latent와 feature consistency를 함께 비교합니다.", boundary: "FVE가 높거나 active count가 작다는 한 지표만으로 causal interpretability가 높다고 결론 내릴 수 없습니다." },

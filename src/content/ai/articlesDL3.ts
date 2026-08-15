@@ -4,18 +4,51 @@ import type { Article } from "../types";
 export const dlFoundation2Articles: Article[] = [
   {
     slug: "autoencoder",
-    title: "오토인코더: 압축과 복원으로 배우는 표현 학습",
+    title: "Autoencoder 기초: Input · Latent · Reconstruction",
     subcategory: "ai-foundations",
     sections: [
-      { id: "overview", title: "복원 과제로 representation 압축하기" },
-      { id: "architecture", title: "Encoder·bottleneck·decoder" },
-      { id: "forward-example", title: "순전파를 숫자로 따라가기" },
-      { id: "loss-backprop", title: "Reconstruction loss와 역전파" },
-      { id: "dimension-reduction", title: "차원 축소의 의미" },
-      { id: "applications", title: "활용 사례" },
-      { id: "variants", title: "제약과 목표가 다른 변형들" },
+      { id: "overview", title: "Input에서 reconstruction까지" },
+      { id: "bottleneck", title: "Latent information path" },
+      { id: "reconstruction", title: "Reconstruction objective" },
+      { id: "evaluation", title: "Identity failure와 평가 분리" },
     ],
     component: () => import("@/pages/articles/ai/autoencoder"),
+  },
+  {
+    slug: "linear-autoencoder-pca",
+    title: "Linear Autoencoder와 PCA: 같아지는 정확한 조건",
+    subcategory: "ai-foundations",
+    sections: [
+      { id: "overview", title: "정리의 네 전제" },
+      { id: "rank-k", title: "Rank-k reconstruction map" },
+      { id: "theorem", title: "SVD와 principal subspace" },
+      { id: "boundary", title: "Nonlinear 확장 경계" },
+    ],
+    component: () => import("@/pages/articles/ai/linear-autoencoder-pca"),
+  },
+  {
+    slug: "denoising-masked-autoencoders",
+    title: "Denoising과 Masked Autoencoder: 무엇을 숨기고 복원할까",
+    subcategory: "ai-foundations",
+    sections: [
+      { id: "overview", title: "Clean·corrupted input 분리" },
+      { id: "denoising", title: "Denoising objective" },
+      { id: "masking", title: "Visible·masked patch" },
+      { id: "choice", title: "Intervention 선택 경계" },
+    ],
+    component: () => import("@/pages/articles/ai/denoising-masked-autoencoders"),
+  },
+  {
+    slug: "reconstruction-anomaly-detection",
+    title: "Reconstruction Anomaly Detection: Score · Threshold · Drift",
+    subcategory: "ai-foundations",
+    sections: [
+      { id: "overview", title: "Reconstruction score 정의" },
+      { id: "threshold", title: "Threshold calibration" },
+      { id: "failure", title: "Score overlap 반례" },
+      { id: "release", title: "운영 receipt와 drift" },
+    ],
+    component: () => import("@/pages/articles/ai/reconstruction-anomaly-detection"),
   },
 ];
 

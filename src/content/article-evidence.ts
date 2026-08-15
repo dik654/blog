@@ -1081,6 +1081,36 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "깊은 autoencoder로 nonlinear dimensionality reduction을 보인 논문",
     },
   ],
+  "ai/linear-autoencoder-pca": [
+    {
+      kind: "핵심 논문",
+      label: "Baldi & Hornik — Neural Networks and Principal Component Analysis",
+      href: "https://doi.org/10.1016/0893-6080(89)90014-2",
+      note: "Linear auto-associative network의 quadratic error landscape와 principal subspace 정리",
+    },
+  ],
+  "ai/denoising-masked-autoencoders": [
+    {
+      kind: "핵심 논문",
+      label: "Extracting and Composing Robust Features with Denoising Autoencoders",
+      href: "https://doi.org/10.1145/1390156.1390294",
+      note: "Corrupted input에서 clean target을 복원하는 denoising objective",
+    },
+    {
+      kind: "핵심 논문",
+      label: "Masked Autoencoders Are Scalable Vision Learners",
+      href: "https://arxiv.org/abs/2111.06377",
+      note: "Visible-only encoder와 lightweight decoder를 사용한 vision pretraining",
+    },
+  ],
+  "ai/reconstruction-anomaly-detection": [
+    {
+      kind: "핵심 논문",
+      label: "Anomaly Detection Using Autoencoders with Nonlinear Dimensionality Reduction",
+      href: "https://doi.org/10.1145/2689746.2689747",
+      note: "Reconstruction error를 anomaly score로 적용한 초기 평가 사례",
+    },
+  ],
   "ai/eda-workflow": [
     {
       kind: "보충 읽기",

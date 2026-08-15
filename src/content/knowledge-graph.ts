@@ -1716,7 +1716,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Undercomplete bottleneck",
     definition:
       "Latent dimension을 input dimension보다 작게 두어 모든 coordinate를 그대로 전달하기 어렵게 만들고 reconstruction에 필요한 정보를 선택하도록 압박하는 구조입니다.",
-    canonicalHref: "/ai/autoencoder#architecture",
+    canonicalHref: "/ai/autoencoder#bottleneck",
   },
   "autoencoder-identity-degeneracy": {
     id: "autoencoder-identity-degeneracy",
@@ -1724,7 +1724,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Autoencoder identity degeneracy",
     definition:
       "Capacity가 크고 제약이 약한 autoencoder가 useful structure 대신 input을 거의 그대로 복사하는 identity mapping으로 reconstruction loss를 낮추는 실패입니다.",
-    canonicalHref: "/ai/autoencoder#architecture",
+    canonicalHref: "/ai/autoencoder#evaluation",
   },
   "reconstruction-objective": {
     id: "reconstruction-objective",
@@ -1733,7 +1733,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Reconstruction objective",
     definition:
       "Input-derived target과 decoder output의 차이를 likelihood에 맞는 loss와 명시적인 batch·feature reduction으로 scalar화하는 학습 목적입니다.",
-    canonicalHref: "/ai/autoencoder#loss-backprop",
+    canonicalHref: "/ai/autoencoder#reconstruction",
   },
   "linear-autoencoder-pca": {
     id: "linear-autoencoder-pca",
@@ -1742,7 +1742,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Linear autoencoder–PCA equivalence",
     definition:
       "Centered data, linear encoder·decoder, rank-k bottleneck, squared reconstruction error 조건에서 최적 reconstruction map의 부분공간이 PCA의 leading principal subspace와 일치한다는 정리입니다.",
-    canonicalHref: "/ai/autoencoder#dimension-reduction",
+    canonicalHref: "/ai/linear-autoencoder-pca#theorem",
   },
   "denoising-autoencoder-objective": {
     id: "denoising-autoencoder-objective",
@@ -1751,7 +1751,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Denoising autoencoder objective",
     definition:
       "Clean sample에서 뽑은 corrupted input을 encoder에 넣되 target은 clean sample로 유지해 identity copying을 막고 corruption에 견고한 reconstruction을 학습하는 objective입니다.",
-    canonicalHref: "/ai/autoencoder#variants",
+    canonicalHref: "/ai/denoising-masked-autoencoders#denoising",
   },
   "sparse-autoencoder-penalty": {
     id: "sparse-autoencoder-penalty",
@@ -1760,7 +1760,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Sparse autoencoder penalty",
     definition:
       "Latent dimension이 크더라도 sample별 또는 평균 activation 중 소수만 켜지도록 L1·KL 등 penalty를 reconstruction loss에 더하는 제약입니다.",
-    canonicalHref: "/ai/autoencoder#variants",
+    canonicalHref: "/ai/sparse-autoencoder#sae-architecture",
   },
   "reconstruction-anomaly-score": {
     id: "reconstruction-anomaly-score",
@@ -1769,7 +1769,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Reconstruction anomaly score",
     definition:
       "Input과 reconstruction의 sample별 차이를 anomaly score로 사용하되 정상·이상 score 분리와 threshold를 labeled validation data에서 검증하는 측정 방식입니다.",
-    canonicalHref: "/ai/autoencoder#applications",
+    canonicalHref: "/ai/reconstruction-anomaly-detection#overview",
   },
   "masked-autoencoder-pretraining": {
     id: "masked-autoencoder-pretraining",
@@ -1778,7 +1778,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Masked autoencoder pretraining",
     definition:
       "Input 일부를 숨기고 visible part만 encoder로 처리한 뒤 lightweight decoder가 missing content를 복원하도록 학습하는 self-supervised pretraining 방법입니다.",
-    canonicalHref: "/ai/autoencoder#variants",
+    canonicalHref: "/ai/denoising-masked-autoencoders#masking",
   },
   "initial-value-problem": {
     id: "initial-value-problem",

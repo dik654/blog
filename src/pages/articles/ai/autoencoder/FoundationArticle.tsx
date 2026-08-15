@@ -1,0 +1,65 @@
+import { Link } from "react-router-dom";
+import ContentBoundary from "@/components/articles/content-boundary";
+import TermBreakdown from "@/components/articles/term-breakdown";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import { CitationBlock } from "@/components/ui/citation";
+import { AutoencoderFoundationViz } from "./viz/ModernAutoencoderViz";
+
+export default function FoundationArticle() {
+  return <div className="space-y-16">
+    <section id="overview" className="scroll-mt-20">
+      <h2 className="mb-6 text-2xl font-bold">Autoencoder는 입력을 좁은 중간 표현으로 옮겼다가 다시 복원합니다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8">처음에는 “압축”, “latent”, “representation learning”을 한꺼번에 외우지 않습니다. 입력 <code>x</code>를 encoder에 넣어 중간값 <code>z</code>를 만들고, decoder가 같은 입력 형태의 <code>x̂</code>를 만드는 가장 작은 계산부터 봅니다.</p></div>
+      <TermBreakdown title="계산 경로의 대상 네 개" description="각 용어를 따로 정의한 뒤 아래 그림에서 하나의 복원 경로로 연결합니다." items={[
+        { term: "Input · x", description: "복원하려는 관측값입니다. Sample 하나의 shape·단위·값 범위를 먼저 고정합니다.", example: "28×28 grayscale image 한 장은 784개 [0,1] 좌표로 펼칠 수 있습니다.", boundary: "Input이 target으로 재사용된다고 class label이 생기는 것은 아닙니다." },
+        { term: "Encoder · fθ", description: "Input을 decoder에 넘길 latent representation으로 바꾸는 학습 가능한 함수입니다.", example: "784 coordinates를 32 coordinates로 바꿉니다.", boundary: "Encoder만 떼어 쓸지는 downstream 목적에 따라 별도로 결정합니다." },
+        { term: "Latent · z", description: "Encoder output이자 decoder input인 중간 interface입니다.", example: "z∈R³²이면 decoder가 보는 값은 32개 coordinate입니다.", boundary: "32 coordinates는 32 bits나 32개의 사람다운 개념을 뜻하지 않습니다." },
+        { term: "Decoder · gφ", description: "Latent만 보고 input과 같은 shape의 reconstruction을 만드는 별도 함수입니다.", example: "32 coordinates에서 784 pixel 값을 예측합니다.", boundary: "Encoder의 수학적 inverse일 필요는 없습니다." },
+      ]} />
+      <AutoencoderFoundationViz />
+      <ContentBoundary article="autoencoder" />
+    </section>
+
+    <section id="bottleneck" className="scroll-mt-20">
+      <h2 className="mb-5 text-2xl font-bold">Bottleneck은 decoder가 볼 수 있는 정보 경로를 제한합니다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert"><p><strong>Undercomplete bottleneck</strong>은 latent coordinate 수 <code>k</code>를 input dimension <code>n</code>보다 작게 둡니다. 128개 coordinate에서 16개만 넘기면 coordinate 비율은 1/8입니다. 하지만 real number의 precision과 network capacity가 남아 있으므로 이를 곧바로 “16-bit 압축”이라 부르면 안 됩니다.</p></div>
+      <ExplainedFormula question="Encoder와 decoder의 domain을 어떻게 이어 한 번의 복원으로 만들까요?" idea={<p>Encoder가 만든 z만 decoder에 넘깁니다. 두 함수를 합성하되 input·latent·output shape를 식 안에 같이 표시합니다.</p>} formula={String.raw`z=f_\theta(x),\quad \hat x=g_\phi(z)`} annotatedFormula={String.raw`\begin{aligned}x\in\mathbb R^n&\xrightarrow{\ \underbrace{f_\theta}_{\text{n개 입력에서 k개 latent를 선택}}\ }z\in\mathbb R^k\\z&\xrightarrow{\ \underbrace{g_\phi}_{\text{latent만 보고 input shape를 복원}}\ }\hat x\in\mathbb R^n\end{aligned}`} operations={[
+        { expression: String.raw`f_\theta:\mathbb R^n\to\mathbb R^k`, annotation: ["input 정보를 latent interface로", "학습 가능한 방식으로 변환"] },
+        { expression: String.raw`g_\phi:\mathbb R^k\to\mathbb R^n`, annotation: ["latent 이외의 우회 경로 없이", "비교 가능한 input shape를 생성"] },
+        { expression: String.raw`k<n`, annotation: ["전달 coordinate 수를 줄여", "그대로 복사하기 어렵게 제한"] },
+      ]} terms={[
+        { symbol: "n", name: "Input dimension", description: "Sample 하나의 coordinate 수입니다." },
+        { symbol: "k", name: "Latent dimension", description: "Decoder에 전달되는 coordinate 수입니다." },
+        { symbol: "θ,φ", name: "Trainable parameters", description: "Encoder와 decoder가 loss를 함께 받는 parameter입니다." },
+      ]} assumptions={["Input과 reconstruction의 shape·좌표 의미가 대응합니다.", "Decoder에는 z 밖의 input shortcut이 없습니다."]} interpretation="k<n은 가장 단순한 capacity 제약입니다. Overcomplete model은 corruption·sparsity 같은 다른 제약이 필요할 수 있습니다." />
+    </section>
+
+    <section id="reconstruction" className="scroll-mt-20">
+      <h2 className="mb-5 text-2xl font-bold">Reconstruction objective는 좌표 오차를 학습 신호 하나로 만듭니다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert"><p>연속값에 MSE를 쓰면 fixed-variance Gaussian의 mean을 예측하는 해석이 가능합니다. Binary coordinate에 BCE를 쓰면 Bernoulli probability를 예측합니다. Loss는 이름이 아니라 관측값의 범위·likelihood·reduction과 함께 선택합니다.</p></div>
+      <ExplainedFormula question="Batch의 모든 coordinate 오차를 왜 제곱하고 평균할까요?" idea={<p>같은 위치의 차이를 먼저 만들고, 부호가 상쇄되지 않게 제곱한 뒤, batch와 feature 수가 달라도 비교하도록 평균합니다.</p>} formula={String.raw`\mathcal L_{\rm MSE}=\frac1{Bn}\sum_{b=1}^{B}\lVert x^{(b)}-\hat x^{(b)}\rVert_2^2`} annotatedFormula={String.raw`\begin{aligned}r_j^{(b)}&=\underbrace{x_j^{(b)}-\hat x_j^{(b)}}_{\text{같은 좌표의 residual}}\\e^{(b)}&=\underbrace{\frac1n\sum_{j=1}^{n}(r_j^{(b)})^2}_{\text{sample 안에서 제곱·평균}}\\\mathcal L_{\rm MSE}&=\underbrace{\frac1B\sum_{b=1}^{B}e^{(b)}}_{\text{batch 전체를 평균}}\end{aligned}`} operations={[
+        { expression: String.raw`x_j^{(b)}-\hat x_j^{(b)}`, annotation: ["같은 sample·coordinate에서", "복원 residual을 계산"] },
+        { expression: String.raw`(x_j^{(b)}-\hat x_j^{(b)})^2`, annotation: ["양·음 residual을 상쇄하지 않고", "큰 오차를 더 크게 반영"] },
+        { expression: String.raw`\frac1{Bn}\sum_{b,j}`, annotation: ["모든 기여를 누적한 뒤", "coordinate 수로 정규화"] },
+      ]} terms={[
+        { symbol: "B", name: "Batch size", description: "한 update에서 함께 보는 sample 수입니다." },
+        { symbol: "n", name: "Feature count", description: "Sample 하나에서 비교하는 coordinate 수입니다." },
+        { symbol: "x̂", name: "Reconstruction", description: "Decoder가 만든 input-shaped prediction입니다." },
+      ]} assumptions={["Feature scale과 missing-value policy가 고정되어 있습니다.", "MSE 해석에서는 coordinate noise scale을 같게 둡니다."]} interpretation="작은 MSE는 해당 좌표 scale에서 가깝다는 뜻입니다. Perceptual similarity나 downstream usefulness까지 자동으로 뜻하지 않습니다." />
+    </section>
+
+    <section id="evaluation" className="scroll-mt-20">
+      <h2 className="mb-5 text-2xl font-bold">복원이 잘돼도 representation이 유용하다는 결론은 따로 검증합니다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>Capacity가 크고 제약이 약하면 model이 training input을 거의 그대로 복사하는 <strong>identity degeneracy</strong>에 가까워질 수 있습니다. 그래서 training reconstruction, held-out reconstruction, latent linear probe·retrieval·clustering을 다른 줄에 기록합니다.</p>
+        <ul>
+          <li><strong>다음 정리</strong><br /><Link to="/ai/linear-autoencoder-pca">Linear autoencoder가 PCA와 같아지는 조건</Link></li>
+          <li><strong>다음 학습 목표</strong><br /><Link to="/ai/denoising-masked-autoencoders">Corruption과 masking으로 clean target 복원하기</Link></li>
+          <li><strong>다음 운영 문제</strong><br /><Link to="/ai/reconstruction-anomaly-detection">Reconstruction score를 anomaly decision으로 calibration하기</Link></li>
+          <li><strong>별도 sparse 경로</strong><br /><Link to="/ai/sparse-autoencoder">Overcomplete dictionary와 sparsity frontier</Link></li>
+        </ul>
+      </div>
+      <div id="paper-deep-autoencoder" className="not-prose mt-8 scroll-mt-24"><CitationBlock source="Hinton & Salakhutdinov — Reducing the Dimensionality of Data with Neural Networks" citeKey={1} type="paper" href="https://doi.org/10.1126/science.1127647">작은 central layer를 둔 deep autoencoder의 nonlinear dimensionality-reduction 실험입니다. 논문의 pretraining·dataset·architecture 조건을 넘어 모든 autoencoder의 semantic latent를 보장한다고 일반화하지 않습니다.</CitationBlock></div>
+    </section>
+  </div>;
+}
