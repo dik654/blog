@@ -92,16 +92,64 @@ const dataArticles: Article[] = [
   },
   {
     slug: "imbalanced-data",
-    title: "불균형 데이터: 학습 분포에서 운영 Threshold까지",
+    title: "불균형 분류 기초: Prevalence에서 Action까지",
     subcategory: "ai-practical-data",
     sections: [
-      { id: "overview", title: "비율보다 의사결정 비용" },
-      { id: "sampling", title: "Training-fold resampling" },
-      { id: "loss", title: "Class weight와 focal loss" },
-      { id: "threshold", title: "운영 정책으로서의 threshold" },
-      { id: "evaluation", title: "Ranking · decision · calibration" },
+      { id: "overview", title: "Population과 prevalence" },
+      { id: "prevalence-baseline", title: "All-negative baseline" },
+      { id: "three-layers", title: "Ranking · probability · action" },
     ],
     component: () => import("@/pages/articles/ai/imbalanced-data"),
+  },
+  {
+    slug: "imbalance-resampling",
+    title: "불균형 Resampling: Fold에서 SMOTE Geometry까지",
+    subcategory: "ai-practical-data",
+    sections: [
+      { id: "overview", title: "Training exposure만 변경" },
+      { id: "fold-local", title: "Split-local sampling" },
+      { id: "smote-geometry", title: "Minority 선분 보간" },
+      { id: "release-boundary", title: "Geometry·lineage gate" },
+    ],
+    component: () => import("@/pages/articles/ai/imbalance-resampling"),
+  },
+  {
+    slug: "imbalance-loss-weighting",
+    title: "불균형 Loss: Class Weight와 Focal Modulation",
+    subcategory: "ai-practical-data",
+    sections: [
+      { id: "overview", title: "Gradient contribution" },
+      { id: "class-weight", title: "고정 class 배점" },
+      { id: "focal-modulation", title: "현재 난이도 배점" },
+      { id: "noise-boundary", title: "Hard noise audit" },
+    ],
+    component: () => import("@/pages/articles/ai/imbalance-loss-weighting"),
+  },
+  {
+    slug: "cost-sensitive-thresholding",
+    title: "비용 민감 Threshold: Probability에서 Action까지",
+    subcategory: "ai-practical-data",
+    sections: [
+      { id: "overview", title: "Threshold policy" },
+      { id: "expected-cost", title: "두 action의 expected cost" },
+      { id: "capacity-policy", title: "Capacity·recall constraints" },
+      { id: "release-receipt", title: "Policy release receipt" },
+    ],
+    component: () => import("@/pages/articles/ai/cost-sensitive-thresholding"),
+  },
+  {
+    slug: "imbalanced-classification-evaluation",
+    title: "불균형 분류 평가: Confusion · PR · Calibration",
+    subcategory: "ai-practical-data",
+    sections: [
+      { id: "overview", title: "Report의 세 평가 층" },
+      { id: "confusion-matrix", title: "Precision · recall" },
+      { id: "prevalence-shift", title: "Base-rate 이동" },
+      { id: "calibration", title: "Probability reliability" },
+      { id: "report", title: "통합 evaluation report" },
+    ],
+    component: () =>
+      import("@/pages/articles/ai/imbalanced-classification-evaluation"),
   },
 ];
 

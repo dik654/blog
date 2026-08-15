@@ -808,7 +808,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Class prevalence",
     definition:
       "평가 population에서 positive class가 차지하는 비율로, accuracy baseline과 precision·calibration·alert volume에 직접 영향을 주는 base rate입니다.",
-    canonicalHref: "/ai/imbalanced-data#overview",
+    canonicalHref: "/ai/imbalanced-data#prevalence-baseline",
   },
   "ranking-decision-calibration": {
     id: "ranking-decision-calibration",
@@ -816,7 +816,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Ranking–decision–calibration boundary",
     definition:
       "Continuous score의 ordering, threshold에서의 hard decision, score가 probability와 일치하는 calibration을 서로 다른 평가 대상으로 분리하는 원칙입니다.",
-    canonicalHref: "/ai/imbalanced-data#overview",
+    canonicalHref: "/ai/imbalanced-data#three-layers",
   },
   "training-fold-resampling": {
     id: "training-fold-resampling",
@@ -825,7 +825,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Training-fold resampling",
     definition:
       "Split이 끝난 뒤 training fold 안에서만 class별 sample 노출 또는 합성 분포를 바꾸고 validation·test prevalence는 유지하는 방법입니다.",
-    canonicalHref: "/ai/imbalanced-data#sampling",
+    canonicalHref: "/ai/imbalance-resampling#fold-local",
   },
   "smote-interpolation": {
     id: "smote-interpolation",
@@ -834,7 +834,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "SMOTE interpolation",
     definition:
       "Training minority sample과 같은 class neighbor 사이의 선분에서 synthetic feature vector를 생성하는 oversampling 방법입니다.",
-    canonicalHref: "/ai/imbalanced-data#sampling",
+    canonicalHref: "/ai/imbalance-resampling#smote-geometry",
   },
   "class-weighted-risk": {
     id: "class-weighted-risk",
@@ -843,7 +843,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Class-weighted risk",
     definition:
       "Class별 sample loss에 서로 다른 weight를 곱해 training objective와 gradient에서 class contribution을 바꾸는 방법입니다.",
-    canonicalHref: "/ai/imbalanced-data#loss",
+    canonicalHref: "/ai/imbalance-loss-weighting#class-weight",
   },
   "focal-loss-modulation": {
     id: "focal-loss-modulation",
@@ -852,7 +852,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Focal-loss modulation",
     definition:
       "Target-class probability가 높은 easy example의 cross-entropy를 (1−pt)^γ로 줄여 현재 hard example에 gradient를 집중하는 방법입니다.",
-    canonicalHref: "/ai/imbalanced-data#loss",
+    canonicalHref: "/ai/imbalance-loss-weighting#focal-modulation",
   },
   "cost-sensitive-threshold": {
     id: "cost-sensitive-threshold",
@@ -861,7 +861,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Cost-sensitive decision threshold",
     definition:
       "Calibrated posterior probability와 false-positive·false-negative 비용 또는 recall·capacity 제약으로 positive action의 threshold를 정하는 운영 정책입니다.",
-    canonicalHref: "/ai/imbalanced-data#threshold",
+    canonicalHref: "/ai/cost-sensitive-thresholding#expected-cost",
   },
   "confusion-matrix-metrics": {
     id: "confusion-matrix-metrics",
@@ -870,7 +870,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Confusion-matrix metrics",
     definition:
       "선택한 threshold에서 TP·FP·FN·TN count를 만들고 precision·recall·specificity 등 서로 다른 분모의 decision 성능을 계산하는 지표군입니다.",
-    canonicalHref: "/ai/imbalanced-data#evaluation",
+    canonicalHref: "/ai/imbalanced-classification-evaluation#confusion-matrix",
   },
   "precision-recall-prevalence": {
     id: "precision-recall-prevalence",
@@ -879,7 +879,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Precision–recall prevalence dependence",
     definition:
       "같은 true-positive rate와 false-positive rate라도 positive prevalence가 달라지면 precision과 PR baseline이 달라진다는 base-rate 관계입니다.",
-    canonicalHref: "/ai/imbalanced-data#evaluation",
+    canonicalHref: "/ai/imbalanced-classification-evaluation#prevalence-shift",
   },
   "probability-calibration": {
     id: "probability-calibration",
@@ -888,7 +888,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Probability calibration",
     definition:
       "예측 probability가 p인 집단에서 실제 positive frequency도 p에 가까운지를 reliability diagram·Brier score 등으로 평가하는 성질입니다.",
-    canonicalHref: "/ai/imbalanced-data#evaluation",
+    canonicalHref: "/ai/imbalanced-classification-evaluation#calibration",
   },
   "augmentation-risk-objective": {
     id: "augmentation-risk-objective",
@@ -19499,6 +19499,41 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "evaluates",
     reason:
       "Ranking order와 별도로 score p 집단의 empirical positive frequency를 비교합니다.",
+  },
+  {
+    from: "class-prevalence",
+    to: "training-fold-resampling",
+    relation: "constrains",
+    reason:
+      "Resampling은 deployment base rate를 바꾸는 일이 아니라 training fold 안에서 minority signal을 보강하는 작업입니다.",
+  },
+  {
+    from: "class-prevalence",
+    to: "class-weighted-risk",
+    relation: "constrains",
+    reason:
+      "Class prevalence와 error cost를 함께 봐야 positive·negative example에 줄 weight를 정할 수 있습니다.",
+  },
+  {
+    from: "training-fold-resampling",
+    to: "probability-calibration",
+    relation: "constrains",
+    reason:
+      "Training prior를 바꾸는 resampling 뒤에는 원래 prevalence의 validation data에서 probability calibration을 다시 검사해야 합니다.",
+  },
+  {
+    from: "focal-loss-modulation",
+    to: "probability-calibration",
+    relation: "constrains",
+    reason:
+      "Easy example의 loss를 줄이는 modulation은 score scale도 바꿀 수 있으므로 calibration을 별도 검증해야 합니다.",
+  },
+  {
+    from: "cost-sensitive-threshold",
+    to: "confusion-matrix-metrics",
+    relation: "produces",
+    reason:
+      "Chosen threshold가 probability score를 hard decision으로 바꾸고 그 결과가 TP·FP·FN·TN ledger를 만듭니다.",
   },
   {
     from: "feature-target",

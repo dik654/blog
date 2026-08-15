@@ -1180,21 +1180,47 @@ export const ARTICLE_EVIDENCE: Readonly<
   "ai/imbalanced-data": [
     {
       kind: "핵심 논문",
+      label: "The Precision-Recall Plot Is More Informative than the ROC Plot",
+      href: "https://doi.org/10.1371/journal.pone.0118432",
+      note: "불균형 population에서 base rate와 평가 관점을 먼저 분리하는 근거",
+    },
+  ],
+  "ai/imbalance-resampling": [
+    {
+      kind: "핵심 논문",
       label: "SMOTE: Synthetic Minority Over-sampling Technique",
       href: "https://www.jair.org/index.php/jair/article/view/10302",
       note: "minority 이웃 사이를 보간하는 원 방법과 평가",
     },
+  ],
+  "ai/imbalance-loss-weighting": [
     {
       kind: "핵심 논문",
       label: "Focal Loss for Dense Object Detection",
       href: "https://arxiv.org/abs/1708.02002",
       note: "easy example의 loss 기여를 줄이는 focal loss 원 논문",
     },
+  ],
+  "ai/cost-sensitive-thresholding": [
     {
-      kind: "공식 문서",
-      label: "scikit-learn — Precision-Recall",
-      href: "https://scikit-learn.org/stable/auto_examples/model_selection/plot_precision_recall.html",
-      note: "precision–recall curve와 average precision의 해석",
+      kind: "핵심 논문",
+      label: "The Foundations of Cost-Sensitive Learning",
+      href: "https://cseweb.ucsd.edu/~elkan/rescale.pdf",
+      note: "오류 비용과 posterior probability를 action threshold로 연결하는 기초",
+    },
+  ],
+  "ai/imbalanced-classification-evaluation": [
+    {
+      kind: "핵심 논문",
+      label: "The Relationship Between Precision-Recall and ROC Curves",
+      href: "https://doi.org/10.1145/1143844.1143874",
+      note: "고정 binary dataset에서 ROC와 PR curve의 관계",
+    },
+    {
+      kind: "핵심 논문",
+      label: "On Calibration of Modern Neural Networks",
+      href: "https://proceedings.mlr.press/v70/guo17a.html",
+      note: "confidence와 empirical frequency를 비교하는 calibration 평가",
     },
   ],
   "ai/gradient-boosting": [

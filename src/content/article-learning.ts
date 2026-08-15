@@ -37509,409 +37509,170 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/imbalanced-data": {
-    coreIdea:
-      "불균형 classification은 minority 비율을 기계적으로 50:50으로 만드는 문제가 아닙니다. Training signal을 바꾸는 resampling·loss, score ordering을 보는 ranking, probability calibration, 비용과 처리 용량으로 정하는 threshold를 분리하고 원래 prevalence의 held-out data에서 함께 평가해야 합니다.",
-    assumedKnowledge: [
-      {
-        id: "probability-distribution",
-        role: "Class와 score distribution을 population별로 구분합니다.",
-      },
-      {
-        id: "conditional-probability",
-        role: "Posterior positive probability와 precision의 조건 방향을 읽습니다.",
-      },
-      {
-        id: "expectation",
-        role: "Weighted risk와 expected decision cost를 계산합니다.",
-      },
-      {
-        id: "train-validation-test",
-        role: "Resampling·calibration·threshold selection·test를 분리합니다.",
-      },
-      {
-        id: "empirical-risk",
-        role: "Class weight가 sample loss 평균을 어떻게 바꾸는지 읽습니다.",
-      },
-      {
-        id: "cross-entropy-nll",
-        role: "Focal loss의 기본 target-class log loss를 재사용합니다.",
-      },
-      {
-        id: "augmentation-target-map",
-        role: "SMOTE가 training data distribution을 바꾸는 작업임을 연결합니다.",
-      },
-    ],
+    entryLevel: true,
+    entryNote: "Class imbalance를 처음 보는 독자가 prevalence와 ranking·probability·action의 차이부터 시작합니다.",
+    coreIdea: "불균형 분류의 첫 단계는 minority를 억지로 늘리는 것이 아니라 base rate를 읽고, score 순서·확률 의미·운영 action을 서로 다른 문제로 분리하는 것입니다.",
+    assumedKnowledge: [],
     introducedHere: [
-      {
-        id: "class-prevalence",
-        role: "Positive base rate가 accuracy baseline과 precision에 미치는 영향을 계산합니다.",
-      },
-      {
-        id: "ranking-decision-calibration",
-        role: "Ordering·hard action·probability quality를 서로 다른 문제로 분리합니다.",
-      },
-      {
-        id: "training-fold-resampling",
-        role: "Sampling distribution 변경을 training fold 안으로 제한합니다.",
-      },
-      {
-        id: "smote-interpolation",
-        role: "Minority neighbor 사이 선형 보간의 계산과 geometry 전제를 확인합니다.",
-      },
-      {
-        id: "class-weighted-risk",
-        role: "Class별 loss contribution을 고정 coefficient로 바꿉니다.",
-      },
-      {
-        id: "focal-loss-modulation",
-        role: "현재 easy example의 cross-entropy 기여를 probability에 따라 줄입니다.",
-      },
-      {
-        id: "cost-sensitive-threshold",
-        role: "Calibrated probability·오류 비용·capacity로 operating point를 정합니다.",
-      },
-      {
-        id: "confusion-matrix-metrics",
-        role: "선택한 threshold의 TP·FP·FN·TN에서 decision metric을 계산합니다.",
-      },
-      {
-        id: "precision-recall-prevalence",
-        role: "Precision과 PR baseline이 prevalence에 의존하는 이유를 설명합니다.",
-      },
-      {
-        id: "probability-calibration",
-        role: "Score probability와 empirical frequency의 일치 여부를 평가합니다.",
-      },
+      { id: "class-prevalence", role: "Population에서 positive가 차지하는 base rate와 무의미한 accuracy baseline을 계산합니다." },
+      { id: "ranking-decision-calibration", role: "Score ordering·hard decision·probability meaning을 서로 다른 검증 대상으로 분리합니다." },
     ],
     conceptExplanations: [
-      {
-        id: "class-prevalence",
-        sectionId: "overview",
-        intuition:
-          "희귀 질병이 5%라면 아무도 아프지 않다고 답해도 숫자상 95%를 맞힙니다.",
-        workedExample:
-          "1,000명 중 positive 50명일 때 all-negative classifier는 TN=950, FN=50, accuracy=.95, recall=0입니다.",
-        boundary:
-          "Training resampling prevalence와 deployment prevalence를 같은 population probability로 읽으면 안 됩니다.",
-      },
-      {
-        id: "ranking-decision-calibration",
-        sectionId: "overview",
-        intuition:
-          "대기열 순서를 잘 정하는 능력, 몇 번째부터 처리하는 정책, 점수 0.8의 의미는 서로 다른 질문입니다.",
-        workedExample:
-          "Score order가 완벽해도 모든 score를 0.51–0.52에 몰아 넣으면 ranking은 좋지만 probability calibration은 나쁠 수 있습니다.",
-        boundary:
-          "AUC가 높다고 0.5 threshold나 expected-cost probability 해석이 자동으로 정당화되지 않습니다.",
-      },
-      {
-        id: "training-fold-resampling",
-        sectionId: "sampling",
-        intuition:
-          "모의 문제를 만들 때 실제 시험 문제를 재료로 섞으면 시험 점수가 오염됩니다.",
-        workedExample:
-          "5-fold CV에서는 매 fold의 80% training subset에서만 sampler를 fit하고 남은 20% validation은 원 prevalence로 둡니다.",
-        boundary:
-          "Dataset 전체에서 SMOTE 후 split하면 원본과 가까운 synthetic sample이 양쪽에 갈 수 있습니다.",
-      },
-      {
-        id: "smote-interpolation",
-        sectionId: "sampling",
-        intuition: "같은 class의 두 점을 잇는 선분에서 새 점을 뽑습니다.",
-        workedExample: "xi=(2,4), xj=(6,8), λ=.25이면 x̃=(3,5)입니다.",
-        boundary:
-          "Category·sparse·temporal feature에서 Euclidean neighbor와 선형 중간값이 현실적이라는 보장은 없습니다.",
-      },
-      {
-        id: "class-weighted-risk",
-        sectionId: "loss",
-        intuition:
-          "Minority answer 하나의 채점 배점을 크게 해 batch gradient에서 묻히지 않게 합니다.",
-        workedExample:
-          "Positive loss weight 9, negative 1이면 같은 per-sample CE라도 positive example이 gradient sum에 9배 기여합니다.",
-        boundary:
-          "Inverse frequency는 error cost와 label quality를 모르며 resampling과 함께 쓰면 중복 보정될 수 있습니다.",
-      },
-      {
-        id: "focal-loss-modulation",
-        sectionId: "loss",
-        intuition:
-          "이미 자신 있게 맞힌 문제의 배점을 낮추고 아직 어려운 문제에 학습 신호를 남깁니다.",
-        workedExample:
-          "γ=2일 때 pt=.9의 factor는 .01, pt=.2의 factor는 .64입니다.",
-        boundary:
-          "Hard example이 mislabeled noise라면 focal loss가 그 noise에 더 집중할 수 있습니다.",
-      },
-      {
-        id: "cost-sensitive-threshold",
-        sectionId: "threshold",
-        intuition:
-          "Alert를 보냈을 때와 놓쳤을 때의 평균 비용을 비교해 더 싼 action을 선택합니다.",
-        workedExample: "CFP=1, CFN=9이고 calibrated p라면 τ*=1/(1+9)=.1입니다.",
-        boundary:
-          "Calibration·prevalence·cost가 바뀌거나 capacity constraint가 있으면 threshold를 다시 validation해야 합니다.",
-      },
-      {
-        id: "confusion-matrix-metrics",
-        sectionId: "evaluation",
-        intuition:
-          "알린 것 중 맞은 비율과 실제 positive 중 찾은 비율은 서로 다른 분모를 씁니다.",
-        workedExample: "TP=40, FP=10, FN=10이면 precision=.8, recall=.8입니다.",
-        boundary:
-          "Count는 evaluation unit·window·deduplication·threshold가 같을 때만 비교할 수 있습니다.",
-      },
-      {
-        id: "precision-recall-prevalence",
-        sectionId: "evaluation",
-        intuition:
-          "Negative가 매우 많으면 작은 false-positive rate도 alert 대부분을 false positive로 만들 수 있습니다.",
-        workedExample:
-          "TPR=.8, FPR=.1일 때 prevalence .5면 precision≈.89지만 prevalence .01이면 약 .075입니다.",
-        boundary:
-          "Fixed dataset에서 ROC/PR dominance 관계가 있어도 서로 다른 prevalence의 PR-AUC 숫자는 직접 비교할 수 없습니다.",
-        proofIdea:
-          "Bayes count로 TP=π·TPR, FP=(1−π)·FPR을 precision=TP/(TP+FP)에 대입하면 π가 분자와 분모에 남습니다.",
-        counterexample:
-          "TPR과 FPR이 같은 두 배포처라도 prevalence가 50%와 1%이면 precision은 같지 않습니다.",
-      },
-      {
-        id: "probability-calibration",
-        sectionId: "evaluation",
-        intuition:
-          "0.8이라고 말한 사례를 많이 모았을 때 실제 positive도 약 80%인지 확인합니다.",
-        workedExample:
-          "0.7–0.8 confidence bin 100개 중 positive 55개면 그 bin은 overconfident합니다.",
-        boundary:
-          "In-distribution temperature scaling도 deployment shift 이후 calibration을 보장하지 않습니다.",
-      },
+      { id: "class-prevalence", sectionId: "prevalence-baseline", intuition: "희귀 질병이 5%라면 모두 음성이라고 답해도 accuracy는 95%입니다.", workedExample: "1,000명 중 positive 50명인 all-negative classifier는 TN=950, FN=50, accuracy=.95, recall=0입니다.", boundary: "Training에서 만든 50:50 sample ratio를 deployment prevalence로 읽으면 안 됩니다." },
+      { id: "ranking-decision-calibration", sectionId: "three-layers", intuition: "대기열 순서, 몇 번째부터 처리할지, score .8의 의미는 서로 다른 질문입니다.", workedExample: "Positive가 항상 위에 있어도 score를 .51–.52에 몰아 넣으면 ranking은 좋고 calibration은 나쁠 수 있습니다.", boundary: "AUC가 높다고 threshold .5나 probability 해석이 자동으로 정당화되지는 않습니다." },
     ],
     conceptStages: [
-      {
-        label: "문제 정의",
-        relation: "Base rate와 score·probability·decision을 먼저 분리",
-        concepts: ["class-prevalence", "ranking-decision-calibration"],
-      },
-      {
-        label: "학습 signal",
-        relation: "Data 노출·class weight·example 난이도 중 바꿀 축을 선택",
-        concepts: [
-          "training-fold-resampling",
-          "smote-interpolation",
-          "class-weighted-risk",
-          "focal-loss-modulation",
-        ],
-      },
-      {
-        label: "운영 decision",
-        relation: "Calibration과 비용·capacity constraint로 threshold 선택",
-        concepts: ["probability-calibration", "cost-sensitive-threshold"],
-      },
-      {
-        label: "평가",
-        relation: "Ranking·confusion counts·prevalence·slice를 함께 보고",
-        concepts: ["confusion-matrix-metrics", "precision-recall-prevalence"],
-      },
+      { label: "분포 읽기", relation: "Positive base rate와 all-negative baseline을 고정", concepts: ["class-prevalence"] },
+      { label: "출력 분리", relation: "Ranking·probability·action을 서로 다른 산출물로 분리", concepts: ["ranking-decision-calibration"] },
     ],
     exercises: [
-      {
-        level: "basic",
-        question:
-          "Positive 50명, negative 950명인 dataset에서 all-negative prediction의 accuracy와 recall을 계산하고 왜 부족한지 설명하라.",
-        answerChecklist: ["accuracy .95", "recall 0", "prevalence baseline"],
-        requiredConcepts: ["class-prevalence", "confusion-matrix-metrics"],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question: "xi=(2,4), xj=(6,8), λ=.25일 때 SMOTE point를 계산하라.",
-        answerChecklist: ["difference (4,4)", "scaled (1,1)", "x̃=(3,5)"],
-        requiredConcepts: ["smote-interpolation"],
-        sectionId: "sampling",
-      },
-      {
-        level: "basic",
-        question:
-          "Group 5-fold CV에서 validation 환자를 먼저 분리한 뒤 train fold에만 SMOTE를 fit·적용하는 순서를 쓰고, split 전에 SMOTE했을 때 누출되는 정보를 설명하라.",
-        answerChecklist: [
-          "group split first",
-          "fold-local fit",
-          "original validation prevalence",
-          "pre-split leakage",
-        ],
-        requiredConcepts: ["training-fold-resampling", "smote-interpolation"],
-        sectionId: "sampling",
-      },
-      {
-        level: "basic",
-        question:
-          "γ=2에서 pt=.9와 .2의 focal modulation factor를 계산하고 어느 example이 더 남는지 설명하라.",
-        answerChecklist: [".01", ".64", "hard example contribution"],
-        requiredConcepts: ["focal-loss-modulation"],
-        sectionId: "loss",
-      },
-      {
-        level: "advanced",
-        question:
-          "Positive label noise가 많은 dataset에서 focal loss가 실패할 수 있는 이유와 진단 ablation을 제안하라.",
-        answerChecklist: [
-          "mislabeled hard examples",
-          "CE baseline",
-          "class weight comparison",
-          "audited error slice",
-          "calibration",
-        ],
-        requiredConcepts: ["focal-loss-modulation", "class-weighted-risk"],
-        sectionId: "loss",
-      },
-      {
-        level: "basic",
-        question:
-          "CFP=1, CFN=9일 때 calibrated probability threshold를 유도하고 FN 비용이 늘 때 방향을 설명하라.",
-        answerChecklist: [
-          "τ=.1",
-          "expected cost comparison",
-          "CFN 증가 시 threshold 감소",
-        ],
-        requiredConcepts: [
-          "cost-sensitive-threshold",
-          "probability-calibration",
-        ],
-        sectionId: "threshold",
-      },
-      {
-        level: "advanced",
-        question:
-          "같은 TPR=.8, FPR=.1인 model을 prevalence 50%와 1% 환경에 배포할 때 precision을 비교하고 운영 보고서를 설계하라.",
-        answerChecklist: [
-          "약 .89",
-          "약 .075",
-          "ranking/decision/calibration 분리",
-          "alert volume",
-          "slice monitoring",
-        ],
-        requiredConcepts: [
-          "precision-recall-prevalence",
-          "ranking-decision-calibration",
-        ],
-        sectionId: "evaluation",
-      },
-      {
-        level: "basic",
-        question:
-          "Positive 50·negative 950에서 TP=30, FP=20, FN=20일 때 precision·recall·F1을 계산하고 accuracy와 함께 보아야 하는 이유를 설명하라.",
-        answerChecklist: [
-          "precision .6",
-          "recall .6",
-          "F1 .6",
-          "class prevalence",
-          "confusion matrix",
-          "threshold dependence",
-        ],
-        requiredConcepts: [
-          "precision-recall-prevalence",
-          "confusion-matrix-metrics",
-        ],
-        sectionId: "evaluation",
-      },
-      {
-        level: "advanced",
-        question:
-          "Validation에서 threshold를 선택한 뒤 prevalence 1% production으로 옮길 때 calibration·cost·precision drift를 검증하는 release receipt를 설계하라.",
-        answerChecklist: [
-          "validation-only threshold",
-          "prevalence shift",
-          "calibration",
-          "cost matrix",
-          "precision and recall",
-          "slice confidence interval",
-          "rollback",
-        ],
-        requiredConcepts: [
-          "precision-recall-prevalence",
-          "cost-sensitive-threshold",
-          "probability-calibration",
-        ],
-        sectionId: "evaluation",
-      },
-      {
-        level: "advanced",
-        question:
-          "Class weighting·focal loss·SMOTE·threshold 이동을 같은 split에서 한 축씩 비교하고, calibration과 minority false-negative cost를 함께 지키는 ablation을 설계하라.",
-        answerChecklist: [
-          "same group split",
-          "one changed axis",
-          "training vs decision intervention",
-          "precision recall",
-          "calibration",
-          "cost matrix",
-          "multiple seeds",
-          "rollback",
-        ],
-        requiredConcepts: [
-          "class-weighted-risk",
-          "focal-loss-modulation",
-          "training-fold-resampling",
-          "cost-sensitive-threshold",
-        ],
-        sectionId: "evaluation",
-      },
+      { level: "basic", question: "Positive 50명, negative 950명에서 prevalence를 계산하라.", answerChecklist: ["50/1000", ".05", "population base rate"], requiredConcepts: ["class-prevalence"], sectionId: "prevalence-baseline" },
+      { level: "basic", question: "같은 population에서 all-negative prediction의 accuracy와 recall을 계산하라.", answerChecklist: ["accuracy .95", "recall 0", "baseline 함정"], requiredConcepts: ["class-prevalence"], sectionId: "prevalence-baseline" },
+      { level: "basic", question: "Ranking이 좋은데 calibration이 나쁠 수 있는 score 예를 들어라.", answerChecklist: ["순서는 보존", "score .51–.52", "frequency 의미 불일치"], requiredConcepts: ["ranking-decision-calibration"], sectionId: "three-layers" },
+      { level: "basic", question: "Score와 hard action 사이에 필요한 정책을 설명하라.", answerChecklist: ["threshold", "cost 또는 capacity", "action ledger"], requiredConcepts: ["ranking-decision-calibration"], sectionId: "three-layers" },
+      { level: "basic", question: "Training sample ratio와 deployment prevalence가 다른 이유를 설명하라.", answerChecklist: ["sampling intervention", "population base rate", "동일시 금지"], requiredConcepts: ["class-prevalence"], sectionId: "prevalence-baseline" },
+      { level: "basic", question: "Ranking·calibration·decision을 각각 어떤 질문으로 검사하는지 쓰라.", answerChecklist: ["누가 위인가", "p가 frequency인가", "누구를 처리할까"], requiredConcepts: ["ranking-decision-calibration"], sectionId: "three-layers" },
+      { level: "advanced", question: "Accuracy .99인 fraud model이 쓸모없을 수 있는 반례를 구성하라.", answerChecklist: ["prevalence 1%", "all-negative", "recall 0", "business failure"], requiredConcepts: ["class-prevalence"], sectionId: "prevalence-baseline" },
+      { level: "advanced", question: "좋은 ranking score를 운영 action으로 바꾸기 전에 필요한 검증을 설계하라.", answerChecklist: ["calibration", "cost", "capacity", "held-out threshold"], requiredConcepts: ["ranking-decision-calibration"], sectionId: "three-layers" },
+      { level: "advanced", question: "Prevalence가 바뀔 때 precision과 alert volume이 달라지는 이유를 설명하라.", answerChecklist: ["negative population", "false positives", "base-rate shift", "재평가"], requiredConcepts: ["class-prevalence", "ranking-decision-calibration"], sectionId: "three-layers" },
+      { level: "advanced", question: "불균형 문제를 학습·확률·정책 세 층으로 분리한 release checklist를 작성하라.", answerChecklist: ["training intervention", "calibration", "threshold", "original prevalence", "rollback"], requiredConcepts: ["class-prevalence", "ranking-decision-calibration"], sectionId: "three-layers" },
     ],
     papers: [
-      {
-        title: "SMOTE: Synthetic Minority Over-sampling Technique",
-        href: "https://doi.org/10.1613/jair.953",
-        problem:
-          "Minority recognition을 높이면서 단순 복제 oversampling의 한계를 줄이는 문제",
-        contribution:
-          "Minority nearest-neighbor 선분의 synthetic example과 sampling 조합 평가",
-        assumptions:
-          "Feature metric·minority neighborhood·논문 dataset와 classifier",
-        evidenceScope: "논문의 ROC-space와 classifier experiment 범위",
-        notClaim:
-          "임의 category·sparse·temporal feature에서 synthetic row가 realistic하다는 결론은 아님",
-        sectionId: "paper-smote",
-      },
-      {
-        title: "Focal Loss for Dense Object Detection",
-        href: "https://openaccess.thecvf.com/content_ICCV_2017/html/Lin_Focal_Loss_for_ICCV_2017_paper.html",
-        problem:
-          "Dense detector의 수많은 easy background가 training signal을 지배하는 문제",
-        contribution:
-          "Well-classified example의 CE를 줄이는 focal factor와 RetinaNet",
-        assumptions: "Dense detection·target mapping·α·γ·RetinaNet recipe",
-        evidenceScope: "COCO detection의 논문 비교와 ablation",
-        notClaim:
-          "모든 class imbalance 문제에서 focal loss가 weighted CE보다 우월하다는 결론은 아님",
-        sectionId: "paper-focal-loss",
-      },
-      {
-        title: "The Relationship Between Precision-Recall and ROC Curves",
-        href: "https://doi.org/10.1145/1143844.1143874",
-        problem:
-          "Skewed binary dataset에서 ROC와 PR curve의 관계와 interpolation 해석",
-        contribution:
-          "Fixed dataset에서 dominance 관계와 achievable PR curve 분석",
-        assumptions:
-          "같은 positive·negative example set과 binary ranking curve",
-        evidenceScope: "ROC/PR 공간의 이론적 관계와 논문 실험",
-        notClaim:
-          "PR-AUC가 calibration·cost·threshold를 모두 대체한다는 결론은 아님",
-        sectionId: "paper-pr-roc",
-      },
-      {
-        title: "On Calibration of Modern Neural Networks",
-        href: "https://proceedings.mlr.press/v70/guo17a.html",
-        problem:
-          "Modern neural-network confidence가 empirical accuracy와 일치하지 않는 문제",
-        contribution:
-          "Calibration 측정 비교와 held-out temperature scaling recipe",
-        assumptions:
-          "Labeled calibration split·stationary evaluation distribution·논문 architectures",
-        evidenceScope: "Image·document classification calibration experiment",
-        notClaim:
-          "Temperature scaling이 distribution shift 이후나 모든 subgroup에서 calibration을 보장한다는 결론은 아님",
-        sectionId: "paper-calibration",
-      },
+      { title: "The Precision-Recall Plot Is More Informative than the ROC Plot When Evaluating Binary Classifiers on Imbalanced Datasets", href: "https://doi.org/10.1371/journal.pone.0118432", problem: "Skewed class distribution에서 accuracy와 ROC만으로 성능을 읽기 어려운 문제", contribution: "Class imbalance에서 PR representation이 제공하는 해석을 비교", assumptions: "Binary classifier와 고정된 labeled evaluation population", evidenceScope: "논문 dataset과 binary evaluation 비교 범위", notClaim: "PR curve 하나가 probability calibration·cost·deployment threshold를 대신한다는 뜻은 아님", sectionId: "paper-pr-guide" },
+    ],
+  },
+  "ai/imbalance-resampling": {
+    entryLevel: true,
+    entryNote: "왜 sample을 늘리는지부터 시작해 fold-local 적용과 synthetic geometry를 차례로 봅니다.",
+    coreIdea: "Resampling은 training signal의 노출 빈도를 바꾸는 개입이며, split 뒤 training fold 안에서만 수행하고 synthetic point의 geometry가 현실적인지 검증해야 합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "training-fold-resampling", role: "Sampler fit과 적용을 현재 training fold 안으로 제한합니다." },
+      { id: "smote-interpolation", role: "Minority neighbor 선분에서 synthetic point를 만드는 계산과 전제를 설명합니다." },
+    ],
+    conceptExplanations: [
+      { id: "training-fold-resampling", sectionId: "fold-local", intuition: "모의 문제를 만들 때 실제 시험 문제를 재료로 섞지 않습니다.", workedExample: "5-fold CV의 각 80% train subset에서만 sampler를 fit하고 20% validation은 원 prevalence로 둡니다.", boundary: "Dataset 전체를 SMOTE한 뒤 split하면 가까운 원본·합성점이 양쪽에 들어가 leakage가 생길 수 있습니다." },
+      { id: "smote-interpolation", sectionId: "smote-geometry", intuition: "같은 minority class의 두 점을 잇는 선분 위에서 새 점을 뽑습니다.", workedExample: "xi=(2,4), xj=(6,8), λ=.25이면 x̃=(3,5)입니다.", boundary: "Category·sparse·temporal feature에서 Euclidean 중간값이 현실적인 record라는 보장은 없습니다." },
+    ],
+    conceptStages: [
+      { label: "경계 고정", relation: "Validation을 먼저 격리하고 train fold만 sampler에 노출", concepts: ["training-fold-resampling"] },
+      { label: "형태 생성", relation: "Minority neighbor와 interpolation coefficient로 synthetic point 생성", concepts: ["smote-interpolation"] },
+    ],
+    exercises: [
+      { level: "basic", question: "5-fold CV에서 sampler와 validation의 실행 순서를 쓰라.", answerChecklist: ["split first", "train-only fit", "validation untouched"], requiredConcepts: ["training-fold-resampling"], sectionId: "fold-local" },
+      { level: "basic", question: "Split 전에 SMOTE하면 생기는 leakage를 설명하라.", answerChecklist: ["validation information", "near-duplicate geometry", "optimistic score"], requiredConcepts: ["training-fold-resampling", "smote-interpolation"], sectionId: "fold-local" },
+      { level: "basic", question: "xi=(2,4), xj=(6,8), λ=.25의 SMOTE point를 계산하라.", answerChecklist: ["difference (4,4)", "scaled (1,1)", "x̃=(3,5)"], requiredConcepts: ["smote-interpolation"], sectionId: "smote-geometry" },
+      { level: "basic", question: "Random oversampling과 SMOTE의 차이를 설명하라.", answerChecklist: ["복제", "neighbor interpolation", "geometry assumption"], requiredConcepts: ["smote-interpolation"], sectionId: "smote-geometry" },
+      { level: "basic", question: "Resampling 뒤 validation prevalence를 원래대로 유지해야 하는 이유를 쓰라.", answerChecklist: ["deployment approximation", "precision", "alert volume"], requiredConcepts: ["training-fold-resampling"], sectionId: "fold-local" },
+      { level: "basic", question: "SMOTE에서 λ=0과 λ=1이 뜻하는 점을 설명하라.", answerChecklist: ["xi", "xj", "선분 endpoint"], requiredConcepts: ["smote-interpolation"], sectionId: "smote-geometry" },
+      { level: "advanced", question: "환자별 repeated row가 있는 dataset의 safe resampling pipeline을 설계하라.", answerChecklist: ["group split", "train fold", "sampler fit", "patient leakage audit"], requiredConcepts: ["training-fold-resampling"], sectionId: "fold-local" },
+      { level: "advanced", question: "One-hot category feature에 선형 SMOTE가 실패하는 반례를 들어라.", answerChecklist: ["fractional category", "invalid record", "appropriate metric or alternative"], requiredConcepts: ["smote-interpolation"], sectionId: "smote-geometry" },
+      { level: "advanced", question: "Resampling이 probability calibration을 바꿀 수 있는 이유와 검사를 설명하라.", answerChecklist: ["training prior shift", "original-prevalence validation", "recalibration"], requiredConcepts: ["training-fold-resampling"], sectionId: "release-boundary" },
+      { level: "advanced", question: "복제·SMOTE·no-resampling을 공정하게 비교하는 ablation을 설계하라.", answerChecklist: ["same splits", "same model", "multiple seeds", "PR and calibration", "rollback"], requiredConcepts: ["training-fold-resampling", "smote-interpolation"], sectionId: "release-boundary" },
+    ],
+    papers: [
+      { title: "SMOTE: Synthetic Minority Over-sampling Technique", href: "https://www.jair.org/index.php/jair/article/view/10302", problem: "Minority recognition을 높이면서 단순 복제 oversampling의 한계를 줄이는 문제", contribution: "Minority nearest-neighbor 선분의 synthetic example과 sampling 조합 평가", assumptions: "Feature metric·minority neighborhood·논문 dataset와 classifier", evidenceScope: "논문의 ROC-space와 classifier experiment 범위", notClaim: "임의 category·sparse·temporal feature에서 synthetic row가 현실적이라는 결론은 아님", sectionId: "paper-smote" },
+    ],
+  },
+  "ai/imbalance-loss-weighting": {
+    entryLevel: true,
+    entryNote: "Data를 복제하지 않고 loss contribution을 바꾸는 두 방법을 분리해 봅니다.",
+    coreIdea: "Class weight는 class별 고정 배점을, focal loss는 현재 example 난이도에 따른 동적 배점을 적용하며 둘 다 calibration과 noisy-label 경계를 따로 검증해야 합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "class-weighted-risk", role: "Class별 sample loss contribution을 고정 coefficient로 바꿉니다." },
+      { id: "focal-loss-modulation", role: "이미 잘 맞힌 example의 cross-entropy 기여를 확률에 따라 줄입니다." },
+    ],
+    conceptExplanations: [
+      { id: "class-weighted-risk", sectionId: "class-weight", intuition: "Minority 답 하나의 채점 배점을 키워 batch gradient에서 묻히지 않게 합니다.", workedExample: "Positive weight 9, negative 1이면 같은 per-sample CE라도 positive가 loss sum에 9배 기여합니다.", boundary: "Inverse frequency는 실제 오류 비용이나 label quality를 자동으로 표현하지 않습니다." },
+      { id: "focal-loss-modulation", sectionId: "focal-modulation", intuition: "이미 자신 있게 맞힌 쉬운 문제의 배점을 낮추고 어려운 문제에 신호를 남깁니다.", workedExample: "γ=2이면 pt=.9의 factor는 .01, pt=.2의 factor는 .64입니다.", boundary: "Hard example이 mislabeled noise라면 그 noise에 더 집중할 수 있습니다." },
+    ],
+    conceptStages: [
+      { label: "고정 배점", relation: "Class identity로 loss weight 결정", concepts: ["class-weighted-risk"] },
+      { label: "동적 배점", relation: "현재 target probability로 easy-example contribution 조절", concepts: ["focal-loss-modulation"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Positive weight 9, negative weight 1의 의미를 설명하라.", answerChecklist: ["per-sample coefficient", "positive contribution 9배", "gradient signal"], requiredConcepts: ["class-weighted-risk"], sectionId: "class-weight" },
+      { level: "basic", question: "Weighted empirical risk에서 weight가 곱해지는 위치를 설명하라.", answerChecklist: ["sample loss 앞", "sum or mean", "class-dependent"], requiredConcepts: ["class-weighted-risk"], sectionId: "class-weight" },
+      { level: "basic", question: "γ=2일 때 pt=.9와 .2의 focal factor를 계산하라.", answerChecklist: [".01", ".64", "hard example remains"], requiredConcepts: ["focal-loss-modulation"], sectionId: "focal-modulation" },
+      { level: "basic", question: "γ=0일 때 focal loss가 무엇으로 돌아가는지 설명하라.", answerChecklist: ["factor 1", "cross entropy", "alpha weight만 가능"], requiredConcepts: ["focal-loss-modulation"], sectionId: "focal-modulation" },
+      { level: "basic", question: "Class weight와 resampling을 동시에 쓰면 생길 수 있는 문제를 쓰라.", answerChecklist: ["double correction", "oversized gradient", "ablation 필요"], requiredConcepts: ["class-weighted-risk"], sectionId: "noise-boundary" },
+      { level: "basic", question: "Focal loss가 easy example을 줄이는 이유를 식의 각 factor로 설명하라.", answerChecklist: ["pt", "1-pt", "gamma power", "negative log"], requiredConcepts: ["focal-loss-modulation"], sectionId: "focal-modulation" },
+      { level: "advanced", question: "Positive label noise에서 focal loss가 실패하는 경로를 설명하라.", answerChecklist: ["mislabeled hard example", "large modulation", "noise focus", "audit"], requiredConcepts: ["focal-loss-modulation"], sectionId: "noise-boundary" },
+      { level: "advanced", question: "Inverse-frequency weight와 business-cost weight를 비교하는 실험을 설계하라.", answerChecklist: ["same split", "same optimizer", "cost metric", "calibration", "confidence interval"], requiredConcepts: ["class-weighted-risk"], sectionId: "noise-boundary" },
+      { level: "advanced", question: "Weighted CE와 focal loss의 calibration을 비교하는 receipt를 설계하라.", answerChecklist: ["held-out prevalence", "ECE or reliability", "ranking", "threshold cost", "rollback"], requiredConcepts: ["class-weighted-risk", "focal-loss-modulation"], sectionId: "noise-boundary" },
+      { level: "advanced", question: "Weight·γ·label cleaning을 한 축씩 비교하는 ablation을 설계하라.", answerChecklist: ["one changed axis", "multiple seeds", "noise slice", "PR metrics", "calibration"], requiredConcepts: ["class-weighted-risk", "focal-loss-modulation"], sectionId: "noise-boundary" },
+    ],
+    papers: [
+      { title: "Focal Loss for Dense Object Detection", href: "https://openaccess.thecvf.com/content_ICCV_2017/html/Lin_Focal_Loss_for_ICCV_2017_paper.html", problem: "Dense detector에서 수많은 easy background가 training signal을 지배하는 문제", contribution: "Well-classified example의 CE를 줄이는 focal factor와 RetinaNet", assumptions: "Dense detection·target mapping·α·γ·RetinaNet recipe", evidenceScope: "COCO detection의 논문 비교와 ablation", notClaim: "모든 class imbalance 문제에서 focal loss가 weighted CE보다 우월하다는 결론은 아님", sectionId: "paper-focal-loss" },
+    ],
+  },
+  "ai/cost-sensitive-thresholding": {
+    entryLevel: true,
+    entryNote: "확률 score를 실제 action으로 바꾸는 비용·용량 정책을 처음부터 유도합니다.",
+    coreIdea: "Threshold는 모델의 고정 속성이 아니라 calibrated probability에 false-positive·false-negative 비용과 처리 용량을 결합한 운영 정책입니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "cost-sensitive-threshold", role: "두 action의 expected cost와 capacity 제약으로 operating point를 선택합니다." },
+    ],
+    conceptExplanations: [
+      { id: "cost-sensitive-threshold", sectionId: "expected-cost", intuition: "Alert를 보냈을 때와 놓쳤을 때의 평균 손실 중 더 작은 action을 고릅니다.", workedExample: "CFP=1, CFN=9이고 p가 calibrated probability면 τ*=1/(1+9)=.1입니다.", boundary: "Calibration·prevalence·cost·capacity가 바뀌면 threshold도 다시 validation해야 합니다." },
+    ],
+    conceptStages: [
+      { label: "비용 비교", relation: "두 action의 conditional expected cost를 계산", concepts: ["cost-sensitive-threshold"] },
+      { label: "운영 제약", relation: "Capacity·recall floor와 함께 feasible threshold 선택", concepts: ["cost-sensitive-threshold"] },
+    ],
+    exercises: [
+      { level: "basic", question: "CFP=1, CFN=9의 Bayes threshold를 계산하라.", answerChecklist: ["1/(1+9)", ".1", "cost comparison"], requiredConcepts: ["cost-sensitive-threshold"], sectionId: "expected-cost" },
+      { level: "basic", question: "False-negative cost가 커지면 threshold가 어느 방향으로 움직이는지 설명하라.", answerChecklist: ["decrease", "more alerts", "fewer misses"], requiredConcepts: ["cost-sensitive-threshold"], sectionId: "expected-cost" },
+      { level: "basic", question: "Threshold .5가 항상 옳지 않은 이유를 쓰라.", answerChecklist: ["unequal costs", "capacity", "calibration"], requiredConcepts: ["cost-sensitive-threshold"], sectionId: "expected-cost" },
+      { level: "basic", question: "하루 100건만 검토할 수 있을 때 threshold 선택 절차를 설명하라.", answerChecklist: ["rank validation scores", "capacity cutoff", "recall and cost report"], requiredConcepts: ["cost-sensitive-threshold"], sectionId: "capacity-policy" },
+      { level: "basic", question: "Threshold가 score를 어떤 ledger로 바꾸는지 설명하라.", answerChecklist: ["hard action", "TP FP FN TN", "alert volume"], requiredConcepts: ["cost-sensitive-threshold"], sectionId: "capacity-policy" },
+      { level: "basic", question: "Threshold를 test set에서 고르면 안 되는 이유를 설명하라.", answerChecklist: ["selection leakage", "validation only", "final test once"], requiredConcepts: ["cost-sensitive-threshold"], sectionId: "release-receipt" },
+      { level: "advanced", question: "Calibration error가 cost threshold를 왜곡하는 반례를 구성하라.", answerChecklist: ["score not posterior", "wrong expected cost", "recalibration", "held-out check"], requiredConcepts: ["cost-sensitive-threshold"], sectionId: "release-receipt" },
+      { level: "advanced", question: "Cost optimum과 capacity optimum이 다를 때 정책을 설계하라.", answerChecklist: ["feasible set", "capacity constraint", "cost within set", "escalation"], requiredConcepts: ["cost-sensitive-threshold"], sectionId: "capacity-policy" },
+      { level: "advanced", question: "Prevalence drift 뒤 threshold release receipt에 들어갈 항목을 쓰라.", answerChecklist: ["new prevalence", "calibration", "cost matrix", "alert volume", "rollback"], requiredConcepts: ["cost-sensitive-threshold"], sectionId: "release-receipt" },
+      { level: "advanced", question: "두 subgroup에 하나의 threshold를 쓸 때 생기는 trade-off를 분석하라.", answerChecklist: ["different calibration or prevalence", "cost by slice", "capacity", "policy governance"], requiredConcepts: ["cost-sensitive-threshold"], sectionId: "release-receipt" },
+    ],
+    papers: [
+      { title: "The Foundations of Cost-Sensitive Learning", href: "https://cseweb.ucsd.edu/~elkan/rescale.pdf", problem: "오류 종류의 비용이 다른 classification decision을 일관되게 정의하는 문제", contribution: "Cost matrix와 probability-based decision rule의 기초를 정리", assumptions: "비용과 posterior probability를 명시할 수 있는 binary decision setting", evidenceScope: "논문이 유도한 cost-sensitive classification rule 범위", notClaim: "실제 운영 비용·법적 제약·capacity가 자동으로 추정된다는 뜻은 아님", sectionId: "paper-cost-sensitive" },
+    ],
+  },
+  "ai/imbalanced-classification-evaluation": {
+    entryLevel: true,
+    entryNote: "Threshold 뒤 count부터 시작해 prevalence-sensitive precision과 probability calibration을 쌓습니다.",
+    coreIdea: "불균형 분류 평가는 하나의 AUC가 아니라 threshold별 confusion ledger, prevalence가 반영된 precision·recall, probability calibration을 함께 보고하는 일입니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "confusion-matrix-metrics", role: "TP·FP·FN·TN에서 precision·recall 같은 decision metric을 계산합니다." },
+      { id: "precision-recall-prevalence", role: "Precision과 PR baseline이 deployment prevalence에 의존하는 이유를 설명합니다." },
+      { id: "probability-calibration", role: "Score probability와 empirical positive frequency가 일치하는지 검사합니다." },
+    ],
+    conceptExplanations: [
+      { id: "confusion-matrix-metrics", sectionId: "confusion-matrix", intuition: "알린 것 중 맞은 비율과 실제 positive 중 찾은 비율은 서로 다른 분모를 씁니다.", workedExample: "TP=40, FP=10, FN=10이면 precision=.8, recall=.8입니다.", boundary: "Evaluation unit·window·deduplication·threshold가 같을 때만 count를 비교할 수 있습니다." },
+      { id: "precision-recall-prevalence", sectionId: "prevalence-shift", intuition: "Negative가 매우 많으면 작은 FPR도 alert 대부분을 false positive로 만들 수 있습니다.", workedExample: "TPR=.8, FPR=.1일 때 prevalence .5면 precision≈.89, prevalence .01이면 약 .075입니다.", boundary: "서로 다른 prevalence의 PR-AUC 숫자를 조건 없이 직접 비교하면 안 됩니다.", proofIdea: "Population을 1로 놓으면 TP=π·TPR, FP=(1−π)·FPR이고 이를 TP/(TP+FP)에 대입할 때 prevalence π가 분자와 분모에 남습니다.", counterexample: "TPR=.8과 FPR=.1이 같은 model도 prevalence 50% 환경에서는 precision 약 .89, 1% 환경에서는 약 .075이므로 동일 precision을 보장하지 않습니다." },
+      { id: "probability-calibration", sectionId: "calibration", intuition: "0.8이라고 말한 사례를 모았을 때 실제 positive도 약 80%인지 확인합니다.", workedExample: "0.7–0.8 bin 100개 중 positive 55개면 그 bin은 overconfident합니다.", boundary: "In-distribution temperature scaling도 deployment shift 이후 calibration을 보장하지 않습니다." },
+    ],
+    conceptStages: [
+      { label: "Count ledger", relation: "Threshold 결과를 TP·FP·FN·TN으로 고정", concepts: ["confusion-matrix-metrics"] },
+      { label: "Base-rate 해석", relation: "Prevalence와 FPR로 precision 변화를 설명", concepts: ["precision-recall-prevalence"] },
+      { label: "Probability audit", relation: "Confidence bin과 empirical frequency를 비교", concepts: ["probability-calibration"] },
+    ],
+    exercises: [
+      { level: "basic", question: "TP=40, FP=10, FN=10의 precision과 recall을 계산하라.", answerChecklist: ["40/50", ".8", "서로 다른 분모"], requiredConcepts: ["confusion-matrix-metrics"], sectionId: "confusion-matrix" },
+      { level: "basic", question: "같은 count에서 F1을 계산하라.", answerChecklist: ["harmonic mean", ".8", "threshold-dependent"], requiredConcepts: ["confusion-matrix-metrics"], sectionId: "confusion-matrix" },
+      { level: "basic", question: "TPR=.8, FPR=.1, prevalence=.01의 precision을 계산하라.", answerChecklist: [".008", ".099", "약 .075"], requiredConcepts: ["precision-recall-prevalence"], sectionId: "prevalence-shift" },
+      { level: "basic", question: "PR baseline이 prevalence와 같은 이유를 설명하라.", answerChecklist: ["random ranking", "positive fraction", "base rate"], requiredConcepts: ["precision-recall-prevalence"], sectionId: "prevalence-shift" },
+      { level: "basic", question: "Confidence .7–.8 bin 100개 중 positive 55개의 calibration 상태를 설명하라.", answerChecklist: ["observed .55", "predicted about .75", "overconfident"], requiredConcepts: ["probability-calibration"], sectionId: "calibration" },
+      { level: "basic", question: "Ranking metric과 calibration metric을 함께 봐야 하는 이유를 쓰라.", answerChecklist: ["ordering", "probability meaning", "different questions"], requiredConcepts: ["precision-recall-prevalence", "probability-calibration"], sectionId: "report" },
+      { level: "advanced", question: "두 배포처의 TPR/FPR은 같고 prevalence만 다를 때 precision 차이를 유도하라.", answerChecklist: ["Bayes counts", "negative population", "precision changes", "alert impact"], requiredConcepts: ["precision-recall-prevalence"], sectionId: "prevalence-shift" },
+      { level: "advanced", question: "Calibration curve가 전체에서는 좋아도 subgroup에서 실패하는 반례를 구성하라.", answerChecklist: ["mixture cancellation", "slice bins", "support count", "release gate"], requiredConcepts: ["probability-calibration"], sectionId: "calibration" },
+      { level: "advanced", question: "Threshold 변경 전후를 비교하는 confusion ledger를 설계하라.", answerChecklist: ["same unit/window", "TP FP FN TN", "precision recall", "volume", "confidence interval"], requiredConcepts: ["confusion-matrix-metrics"], sectionId: "report" },
+      { level: "advanced", question: "불균형 classifier의 운영 평가 보고서를 설계하라.", answerChecklist: ["PR ranking", "chosen threshold counts", "prevalence", "calibration", "slice", "rollback"], requiredConcepts: ["confusion-matrix-metrics", "precision-recall-prevalence", "probability-calibration"], sectionId: "report" },
+    ],
+    papers: [
+      { title: "The Relationship Between Precision-Recall and ROC Curves", href: "https://doi.org/10.1145/1143844.1143874", problem: "Skewed binary dataset에서 ROC와 PR curve의 관계와 interpolation 해석", contribution: "Fixed dataset에서 dominance 관계와 achievable PR curve 분석", assumptions: "같은 positive·negative example set과 binary ranking curve", evidenceScope: "ROC/PR 공간의 이론적 관계와 논문 실험", notClaim: "PR-AUC가 calibration·cost·threshold를 모두 대체한다는 결론은 아님", sectionId: "paper-pr-roc" },
+      { title: "On Calibration of Modern Neural Networks", href: "https://proceedings.mlr.press/v70/guo17a.html", problem: "Neural-network confidence가 empirical accuracy와 일치하지 않는 문제", contribution: "Calibration 측정 비교와 held-out temperature scaling recipe", assumptions: "Labeled calibration split·stationary evaluation distribution·논문 architectures", evidenceScope: "Image·document classification calibration experiment", notClaim: "Temperature scaling이 distribution shift나 모든 subgroup에서 calibration을 보장한다는 뜻은 아님", sectionId: "paper-calibration" },
     ],
   },
   "ai/data-augmentation": {

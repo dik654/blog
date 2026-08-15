@@ -2707,38 +2707,45 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "imbalanced-data": {
-    title: "불균형 데이터 글이 소유하는 범위",
+    title: "불균형 분류 출발점 글이 소유하는 범위",
     owns: [
-      "Prevalence·score ranking·probability calibration·threshold decision의 분리",
-      "Training-fold resampling과 SMOTE interpolation의 geometry·leakage 경계",
-      "Class weight와 focal loss가 바꾸는 gradient signal의 차이",
-      "Precision·recall·PR/ROC·cost threshold·slice monitoring의 운영 평가 계약",
+      "Class prevalence와 all-negative accuracy baseline",
+      "Score ranking·probability meaning·hard action의 세 층 분리",
     ],
     reuses: [
-      {
-        label: "Train·validation·test와 generalization",
-        href: "/ai/train-validation-test",
-      },
       {
         label: "Probability·conditional probability",
         href: "/ai/math-probability-expectation-variance",
       },
-      {
-        label: "Cross-entropy와 softmax probability",
-        href: "/ai/cross-entropy",
-      },
-      { label: "Synthetic row와 split-local synthesis", href: "/ai/tabular-data-synthesis#split-local" },
     ],
     evidence: [
-      {
-        kind: "primary-source",
-        rule: "SMOTE·focal loss·PR/ROC·temperature scaling claim은 각 논문의 feature geometry·task·dataset·evaluation 조건으로 제한한다.",
-      },
-      {
-        kind: "standard",
-        rule: "Prevalence·split·resampler·loss weight·score definition·threshold·cost·capacity·calibration·slice를 재현 가능한 decision contract로 기록한다.",
-      },
+      { kind: "primary-source", rule: "PR·imbalance claim은 binary labeled evaluation population이라는 논문 범위로 제한한다." },
+      { kind: "standard", rule: "Training sample ratio와 deployment prevalence를 별도 값으로 기록한다." },
     ],
+  },
+  "imbalance-resampling": {
+    title: "불균형 resampling 글이 소유하는 범위",
+    owns: ["Training-fold 안으로 제한한 sampler lifecycle", "SMOTE interpolation의 neighbor geometry와 leakage 경계"],
+    reuses: [{ label: "Train·validation·test", href: "/ai/train-validation-test" }, { label: "Synthetic row", href: "/ai/tabular-data-synthesis#split-local" }],
+    evidence: [{ kind: "primary-source", rule: "SMOTE claim은 논문의 feature metric·neighbor·classifier 조건으로 제한한다." }, { kind: "standard", rule: "Split·fold·sampler fit·seed와 validation prevalence를 기록한다." }],
+  },
+  "imbalance-loss-weighting": {
+    title: "불균형 loss weighting 글이 소유하는 범위",
+    owns: ["Class별 고정 weighted risk", "Focal modulation과 noisy hard-example 경계"],
+    reuses: [{ label: "Cross-entropy", href: "/ai/cross-entropy" }],
+    evidence: [{ kind: "primary-source", rule: "Focal-loss claim은 dense detection·α·γ·recipe의 논문 범위로 제한한다." }, { kind: "standard", rule: "Weight·γ·label audit·calibration ablation을 함께 기록한다." }],
+  },
+  "cost-sensitive-thresholding": {
+    title: "비용 민감 threshold 글이 소유하는 범위",
+    owns: ["Calibrated probability와 오류 비용의 Bayes action", "Capacity·recall constraint를 포함한 threshold release receipt"],
+    reuses: [{ label: "Probability expectation", href: "/ai/math-probability-expectation-variance" }],
+    evidence: [{ kind: "primary-source", rule: "Cost-sensitive rule은 posterior와 cost matrix를 명시할 수 있는 decision setting으로 제한한다." }, { kind: "standard", rule: "Cost·capacity·threshold·alert volume·rollback을 함께 기록한다." }],
+  },
+  "imbalanced-classification-evaluation": {
+    title: "불균형 분류 평가 글이 소유하는 범위",
+    owns: ["Threshold별 TP·FP·FN·TN ledger", "Prevalence-sensitive precision·recall과 probability calibration report"],
+    reuses: [{ label: "Class prevalence", href: "/ai/imbalanced-data#prevalence-baseline" }],
+    evidence: [{ kind: "primary-source", rule: "PR/ROC와 calibration claim은 각 논문의 고정 dataset·distribution 조건으로 제한한다." }, { kind: "standard", rule: "Evaluation unit·window·threshold·prevalence·slice support를 함께 기록한다." }],
   },
   "data-augmentation": {
     title: "Data augmentation 기초 글이 소유하는 범위",
