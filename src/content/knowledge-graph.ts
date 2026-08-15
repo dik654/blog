@@ -4327,7 +4327,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Agent run contract",
     definition:
       "한 run의 objective·acceptance condition·context path·capability·artifact·verifier·recovery를 시작 전에 식별 가능한 명세로 고정하는 실행 계약입니다.",
-    canonicalHref: "/ai/llm-harness#composition",
+    canonicalHref: "/ai/agent-run-contract#contract",
   },
   "agent-context-discovery-path": {
     id: "agent-context-discovery-path",
@@ -4336,7 +4336,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Agent context discovery path",
     definition:
       "모든 지식을 한 prompt에 복제하지 않고 짧은 진입 문서에서 task별 정본·상세 문서·현재 artifact를 필요할 때 찾아가게 하는 계층적 context 경로입니다.",
-    canonicalHref: "/ai/llm-harness#composition",
+    canonicalHref: "/ai/agent-run-contract#context-capability",
   },
   "agent-capability-runtime-boundary": {
     id: "agent-capability-runtime-boundary",
@@ -4345,7 +4345,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Agent capability · runtime boundary",
     definition:
       "Model이 tool schema를 생성할 수 있는 능력과 runtime이 특정 identity·resource·operation을 실제로 허용하는 권한을 구분하는 실행 경계입니다.",
-    canonicalHref: "/ai/llm-harness#composition",
+    canonicalHref: "/ai/agent-run-contract#context-capability",
   },
   "agent-artifact-state-continuity": {
     id: "agent-artifact-state-continuity",
@@ -4354,7 +4354,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Agent artifact · state continuity",
     definition:
       "대화 기록 대신 plan·결정·산출물·검증 evidence·미완료 항목을 versioned artifact에 남겨 process·session·agent가 바뀌어도 run을 이어 가게 하는 상태 계약입니다.",
-    canonicalHref: "/ai/llm-harness#composition",
+    canonicalHref: "/ai/agent-run-contract#artifact-continuity",
   },
   "layered-agent-verification": {
     id: "layered-agent-verification",
@@ -4363,7 +4363,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Layered agent verification",
     definition:
       "Compiler·test·schema 같은 결정적 검사부터 환경 oracle, rubric judge, 사람 검토 순으로 불확실성과 위험에 맞춰 검증 수단을 쌓는 방법입니다.",
-    canonicalHref: "/ai/llm-harness#evaluation",
+    canonicalHref: "/ai/agent-verification#layers",
   },
   "agent-trajectory-effect-evaluation": {
     id: "agent-trajectory-effect-evaluation",
@@ -4372,7 +4372,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Agent artifact · trajectory · effect evaluation",
     definition:
       "최종 산출물의 품질뿐 아니라 사용한 경로·권한·외부 side effect·비용·복구 결과를 서로 다른 판정 항으로 유지하는 end-to-end 평가 계약입니다.",
-    canonicalHref: "/ai/llm-harness#evaluation",
+    canonicalHref: "/ai/agent-verification#trajectory-effect",
   },
   "harness-failure-layer-ablation": {
     id: "harness-failure-layer-ablation",
@@ -4381,7 +4381,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Harness failure-layer ablation",
     definition:
       "재현 trace를 objective·context·tool schema·capability·verifier·recovery 실패로 분류하고 후보 장치를 하나씩 바꾸거나 제거해 실제 기여와 회귀를 측정하는 개선 방법입니다.",
-    canonicalHref: "/ai/llm-harness#iteration",
+    canonicalHref: "/ai/harness-failure-ablation#failure-layer",
   },
   "workflow-agent-checkpoint-boundary": {
     id: "workflow-agent-checkpoint-boundary",
@@ -4390,7 +4390,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Workflow · agent loop · checkpoint boundary",
     definition:
       "경로가 고정된 단계는 workflow, 의미 탐색은 agent loop, 되돌리기 어려운 상태 전이는 deterministic checkpoint와 승인으로 나누는 제어 흐름 경계입니다.",
-    canonicalHref: "/ai/llm-harness#patterns",
+    canonicalHref: "/ai/agent-control-boundaries#workflow-agent",
   },
   "loop-timescale-authority-separation": {
     id: "loop-timescale-authority-separation",
@@ -4399,7 +4399,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Loop timescale · authority separation",
     definition:
       "한 run 안의 행동·검증 loop와 여러 production run을 보고 하네스를 바꾸는 개선 loop의 주기·표본·승인 권한을 분리해 feedback 오염을 막는 운영 경계입니다.",
-    canonicalHref: "/ai/llm-harness#patterns",
+    canonicalHref: "/ai/agent-control-boundaries#loop-authority",
   },
   "llm-inference-context-state": {
     id: "llm-inference-context-state",

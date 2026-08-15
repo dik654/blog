@@ -13,7 +13,7 @@ const catalog = await loadPublicArticleCatalog({ root: repoRoot });
 const byRoute = new Map(catalog.map((article) => [article.route, article]));
 
 test("public catalog is the complete article route set without filesystem phantoms", () => {
-  assert.equal(catalog.length, 544);
+  assert.equal(catalog.length, 548);
   assert.equal(byRoute.size, catalog.length);
 
   for (const route of [
@@ -36,6 +36,10 @@ test("public catalog is the complete article route set without filesystem phanto
     "ai/agent-plan-replanning",
     "ai/agent-delegation-contracts",
     "ai/agent-extension-boundaries",
+    "ai/agent-run-contract",
+    "ai/agent-verification",
+    "ai/harness-failure-ablation",
+    "ai/agent-control-boundaries",
     "ai/bert",
     "ai/bert-input-packing",
     "ai/bert-mlm-corruption",

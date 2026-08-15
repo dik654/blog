@@ -87,7 +87,8 @@ export const agentArticles: Article[] = [
       { id: "attack-path", title: "Schema·authorization·policy gate" },
       { id: "release", title: "Effect path release test" },
     ],
-    component: () => import("@/pages/articles/ai/context-instruction-boundaries"),
+    component: () =>
+      import("@/pages/articles/ai/context-instruction-boundaries"),
   },
   {
     slug: "context-provenance-freshness",
@@ -225,16 +226,63 @@ export const agentArticles: Article[] = [
   },
   {
     slug: "llm-harness",
-    title: "LLM 하네스 엔지니어링: 모델을 제품으로",
+    title: "LLM harness: model proposal과 runtime enforcement",
     subcategory: "ai-agents",
     sections: [
       { id: "overview", title: "모델과 하네스의 책임 경계" },
-      { id: "composition", title: "실행 가능한 run contract" },
-      { id: "evaluation", title: "Artifact·trajectory·side effect 평가" },
-      { id: "iteration", title: "Trace에서 회귀 테스트까지" },
-      { id: "patterns", title: "Workflow·loop·checkpoint graph 선택" },
+      { id: "proposal-runtime", title: "Capability와 authority" },
+      { id: "feedback-loop", title: "Effect receipt와 observation" },
+      { id: "paper-effective-agents", title: "Workflow·agent 근거 경계" },
     ],
     component: () => import("@/pages/articles/ai/llm-harness"),
+  },
+  {
+    slug: "agent-run-contract",
+    title: "Agent run contract: context·capability·artifact·recovery",
+    subcategory: "ai-agents",
+    sections: [
+      { id: "contract", title: "Objective와 acceptance" },
+      { id: "context-capability", title: "Context path와 capability" },
+      { id: "artifact-continuity", title: "Versioned artifact continuity" },
+      { id: "recovery-handoff", title: "Recovery와 handoff" },
+    ],
+    component: () => import("@/pages/articles/ai/agent-run-contract"),
+  },
+  {
+    slug: "agent-verification",
+    title: "Agent verification: artifact·trajectory·effect gate",
+    subcategory: "ai-agents",
+    sections: [
+      { id: "layers", title: "Layered verifier" },
+      { id: "trajectory-effect", title: "네 acceptance gate" },
+      { id: "regression", title: "Trace와 regression fixture" },
+      { id: "release", title: "Judge와 human review" },
+    ],
+    component: () => import("@/pages/articles/ai/agent-verification"),
+  },
+  {
+    slug: "harness-failure-ablation",
+    title: "Harness failure ablation: 고장 난 layer 찾기",
+    subcategory: "ai-agents",
+    sections: [
+      { id: "failure-layer", title: "Replay fixture와 failure layer" },
+      { id: "classify", title: "실패 원인 분류" },
+      { id: "ablation", title: "Single-change paired test" },
+      { id: "paper-harness-ablation", title: "Long-running harness 근거" },
+    ],
+    component: () => import("@/pages/articles/ai/harness-failure-ablation"),
+  },
+  {
+    slug: "agent-control-boundaries",
+    title: "Agent control boundary: workflow·loop·checkpoint",
+    subcategory: "ai-agents",
+    sections: [
+      { id: "workflow-agent", title: "Workflow와 agent loop" },
+      { id: "selection", title: "불확실성과 effect 위험" },
+      { id: "loop-authority", title: "두 loop의 권한 분리" },
+      { id: "paper-loop-control", title: "운영 어휘의 근거 경계" },
+    ],
+    component: () => import("@/pages/articles/ai/agent-control-boundaries"),
   },
   {
     slug: "agent-code-mode",

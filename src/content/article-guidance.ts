@@ -354,7 +354,7 @@ export const CONCEPT_REUSE: Record<string, readonly GuidanceLink[]> = {
     },
     {
       label: "하네스의 layered verification",
-      href: "/ai/llm-harness#evaluation",
+      href: "/ai/agent-verification#overview",
       reason: "Verifier의 위치를 전체 artifact·trajectory·effect evaluation stack에 연결합니다.",
     },
   ],

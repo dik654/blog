@@ -3492,17 +3492,37 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://www.anthropic.com/engineering/building-effective-agents",
       note: "workflow와 agent 구분, 단순한 구조에서 복잡성을 늘리는 선택 기준",
     },
+  ],
+  "ai/agent-run-contract": [
     {
       kind: "공식 문서",
       label: "OpenAI Agents SDK — Guardrails and human review",
       href: "https://developers.openai.com/api/docs/guides/agents/guardrails-approvals",
       note: "Input/output/tool guardrail과 side effect 전 human approval의 공식 runtime control 경계",
     },
+  ],
+  "ai/agent-verification": [
+    {
+      kind: "공식 문서",
+      label: "OpenAI Agents SDK — Guardrails and human review",
+      href: "https://developers.openai.com/api/docs/guides/agents/guardrails-approvals",
+      note: "결정적 guardrail·승인·runtime observation을 model 판단과 분리하는 근거",
+    },
+  ],
+  "ai/harness-failure-ablation": [
     {
       kind: "공식 문서",
       label: "Anthropic — Harness design for long-running apps",
       href: "https://www.anthropic.com/engineering/harness-design-long-running-apps",
       note: "planner·generator·evaluator 구조와 구성 요소 ablation",
+    },
+  ],
+  "ai/agent-control-boundaries": [
+    {
+      kind: "공식 문서",
+      label: "Anthropic — Building effective agents",
+      href: "https://www.anthropic.com/engineering/building-effective-agents",
+      note: "workflow와 agent를 성숙도 순서가 아니라 제어 방식으로 구분하는 근거",
     },
     {
       kind: "보충 읽기",

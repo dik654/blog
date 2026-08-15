@@ -24411,48 +24411,12 @@ export const ARTICLE_LEARNING: Readonly<
     entryNote:
       "Agent framework나 분산 시스템 용어를 알고 있다고 가정하지 않습니다. Model이 행동을 제안하는 일과 runtime이 실제 실행을 통제하는 일을 나누는 데서 시작합니다.",
     coreIdea:
-      "LLM 하네스는 prompt 장식이 아니라 목표·context·권한·artifact·검증·복구를 한 run contract로 묶는 실행 시스템입니다. 탐색이 필요한 구간은 agent에게 맡기되 되돌리기 어려운 effect는 deterministic checkpoint로 제한하고, 실패 trace를 재현 case로 바꿔 장치의 실제 기여를 ablation해야 합니다.",
+      "LLM 하네스는 model이 낸 제안을 실제 action으로 바꾸는 runtime입니다. Model proposal, authorization, executor, observation의 책임을 먼저 분리해야 이후 run contract·검증·개선·제어 경계를 안전하게 조합할 수 있습니다.",
     assumedKnowledge: [],
     introducedHere: [
       {
         id: "llm-harness-system-boundary",
         role: "Model proposal과 runtime enforcement의 책임을 먼저 나눕니다.",
-      },
-      {
-        id: "agent-run-contract",
-        role: "한 run의 목표·입력·권한·산출물·검증·복구 조건을 묶습니다.",
-      },
-      {
-        id: "agent-context-discovery-path",
-        role: "긴 prompt 복제 대신 task별 정본을 찾아가는 경로를 설계합니다.",
-      },
-      {
-        id: "agent-capability-runtime-boundary",
-        role: "Tool 호출 문법과 실제 실행 권한을 분리합니다.",
-      },
-      {
-        id: "agent-artifact-state-continuity",
-        role: "대화가 아닌 versioned artifact로 실행 상태를 이어 갑니다.",
-      },
-      {
-        id: "layered-agent-verification",
-        role: "결정적 검사에서 judge·사람 검토까지 위험에 맞게 쌓습니다.",
-      },
-      {
-        id: "agent-trajectory-effect-evaluation",
-        role: "최종 답뿐 아니라 실행 경로·외부 effect·비용·복구를 평가합니다.",
-      },
-      {
-        id: "harness-failure-layer-ablation",
-        role: "실패 계층을 찾아 장치를 하나씩 바꾸거나 제거해 기여를 측정합니다.",
-      },
-      {
-        id: "workflow-agent-checkpoint-boundary",
-        role: "고정 workflow·자율 agent loop·위험 checkpoint를 섞는 기준을 세웁니다.",
-      },
-      {
-        id: "loop-timescale-authority-separation",
-        role: "Run 내부 loop와 production 개선 loop의 주기와 권한을 분리합니다.",
       },
     ],
     conceptExplanations: [
@@ -24466,300 +24430,25 @@ export const ARTICLE_LEARNING: Readonly<
         boundary:
           "하네스는 특정 SDK 이름이나 model의 추론 능력을 뜻하지 않으며, 규칙을 많이 넣는 것 자체가 좋은 하네스는 아닙니다.",
       },
-      {
-        id: "agent-run-contract",
-        sectionId: "composition",
-        intuition:
-          "일을 시작하기 전에 완료의 뜻, 볼 자료, 사용할 열쇠, 남길 결과, 검사와 실패 시 행동을 한 장에 적는 작업 명세입니다.",
-        workedExample:
-          "UI 수정 run은 대상 route, 390/1440px acceptance, workspace-write만 허용, screenshot·test report 저장, 실패 시 rollback이라는 항목을 가집니다.",
-        boundary:
-          "Contract가 자연어로 존재하는 것과 runtime이 강제하는 것은 다르며, 모호한 acceptance나 실제 권한보다 넓은 tool schema는 여전히 실패를 만듭니다.",
-      },
-      {
-        id: "agent-context-discovery-path",
-        sectionId: "composition",
-        intuition:
-          "모든 매뉴얼을 외우게 하지 않고 목차에서 현재 작업에 필요한 정본만 찾아 읽게 하는 방식입니다.",
-        workedExample:
-          "짧은 AGENTS.md가 design 작업에는 viz standard, 배포에는 runbook, 실험에는 dataset ledger를 찾아가도록 링크합니다.",
-        boundary:
-          "문서를 쪼개기만 하면 되는 것이 아니라 진입 문서·ownership·freshness·검색 실패 fallback이 없으면 필요한 context를 못 찾을 수 있습니다.",
-      },
-      {
-        id: "agent-capability-runtime-boundary",
-        sectionId: "composition",
-        intuition:
-          "열쇠의 이름을 말할 수 있다는 것과 실제 열쇠를 가지고 문을 열 수 있다는 것은 다릅니다.",
-        workedExample:
-          "deleteDeployment schema가 context에 있어도 runtime은 read-only identity에서는 호출을 거부하고 authorized target과 approval token이 있을 때만 실행합니다.",
-        boundary:
-          "Prompt의 '하지 마라'는 authorization이 아니며 type/schema validation도 대상 자원·identity·side effect를 제한하지 않습니다.",
-      },
-      {
-        id: "agent-artifact-state-continuity",
-        sectionId: "composition",
-        intuition:
-          "작업자의 기억 대신 체크리스트와 산출물을 공용 작업대에 남겨 교대자가 정확히 이어받게 합니다.",
-        workedExample:
-          "Plan status, commit SHA, generated file checksum, failed test와 next action을 artifact에 남기면 새 session이 완료 주장만 믿지 않고 재검증할 수 있습니다.",
-        boundary:
-          "대화 요약만으로는 외부 상태를 재현할 수 없고 artifact가 version·identity·checksum 없이 덮어쓰이면 stale state를 이어받을 수 있습니다.",
-      },
-      {
-        id: "layered-agent-verification",
-        sectionId: "evaluation",
-        intuition:
-          "정답이 분명한 것은 계산기로 먼저 검사하고, 애매한 품질 판단에만 rubric과 사람 시간을 씁니다.",
-        workedExample:
-          "Typecheck·unit test·DOM overflow를 먼저 통과시킨 뒤 디자인 hierarchy를 blind rubric judge가 비교하고 고위험 배포는 사람이 승인합니다.",
-        boundary:
-          "LLM judge는 deterministic oracle이 아니며 worker와 오류를 공유할 수 있고, test가 통과해도 test 자체의 coverage가 잘못되면 실제 요구를 놓칩니다.",
-      },
-      {
-        id: "agent-trajectory-effect-evaluation",
-        sectionId: "evaluation",
-        intuition:
-          "목적지에 도착했는지만 보지 않고 허용된 길을 썼는지, 물건을 망가뜨리지 않았는지, 시간·비용 한도를 지켰는지도 따로 채점합니다.",
-        workedExample:
-          "코드가 맞아도 secret을 외부로 전송했거나 production resource를 중복 생성했거나 budget을 넘겼다면 artifact success와 별개로 run은 실패입니다.",
-        boundary:
-          "Trace가 길수록 좋은 평가가 아니며 private chain-of-thought가 아니라 observable tool call·artifact·effect receipt·metric을 기록해야 합니다.",
-      },
-      {
-        id: "harness-failure-layer-ablation",
-        sectionId: "iteration",
-        intuition:
-          "증상마다 아무 장치나 더하지 않고 고장 난 층을 찾은 뒤 하나만 바꿔 같은 시험을 다시 합니다.",
-        workedExample:
-          "문서 발견 실패에는 reviewer를 추가하지 않고 context index를 고친 뒤 failure case와 기존 success case에서 search hit·quality·token cost를 비교합니다.",
-        boundary:
-          "동시에 model·prompt·tool·dataset을 바꾸면 원인을 귀속할 수 없고 한 trace의 개선이 전체 workload에 일반화된다고 볼 수 없습니다.",
-      },
-      {
-        id: "workflow-agent-checkpoint-boundary",
-        sectionId: "patterns",
-        intuition:
-          "정해진 철도 구간, 지형을 보며 길을 찾는 구간, 국경 검문소처럼 작업의 성격에 따라 제어 주체를 바꿉니다.",
-        workedExample:
-          "Source 탐색은 agent가 고르되 build·test는 workflow로 실행하고 production deploy 전에는 target diff·approval·rollback plan checkpoint를 강제합니다.",
-        boundary:
-          "Workflow·loop·graph는 성숙도 순서가 아니며 agent를 늘리거나 모든 branch를 graph로 고정하는 것이 자동으로 품질을 높이지 않습니다.",
-      },
-      {
-        id: "loop-timescale-authority-separation",
-        sectionId: "patterns",
-        intuition:
-          "한 경기 중 작전 수정과 시즌 전체 규칙 변경을 같은 선수에게 즉시 맡기지 않는 것과 같습니다.",
-        workedExample:
-          "Agent 행동 loop는 한 run의 token/tool budget 안에서 돌지만, harness prompt·skill 변경은 여러 production trace·review·canary·rollback을 거쳐 배포합니다.",
-        boundary:
-          "한 번의 judge feedback을 곧바로 global skill에 쓰면 reward hacking·feedback poisoning·회귀가 전체 run에 퍼질 수 있습니다.",
-      },
     ],
     conceptStages: [
       {
-        label: "Boundary",
-        relation: "Model proposal과 runtime enforcement를 분리",
+        label: "00 boundary",
+        relation: "제안·권한·실행·관측 owner를 나눈 뒤 다음 글의 run contract로 연결",
         concepts: ["llm-harness-system-boundary"],
-      },
-      {
-        label: "Contract",
-        relation: "목표·context·권한·artifact·검증·복구를 한 run에 고정",
-        concepts: [
-          "agent-run-contract",
-          "agent-context-discovery-path",
-          "agent-capability-runtime-boundary",
-          "agent-artifact-state-continuity",
-        ],
-      },
-      {
-        label: "Verify",
-        relation: "결정적 검사부터 effect·budget까지 독립 판정",
-        concepts: [
-          "layered-agent-verification",
-          "agent-trajectory-effect-evaluation",
-        ],
-      },
-      {
-        label: "Improve",
-        relation: "재현 trace에서 실패 계층과 장치 기여를 ablation",
-        concepts: ["harness-failure-layer-ablation"],
-      },
-      {
-        label: "Control",
-        relation:
-          "경로 위험과 주기에 따라 workflow·agent·checkpoint·개선 loop의 권한을 분리",
-        concepts: [
-          "workflow-agent-checkpoint-boundary",
-          "loop-timescale-authority-separation",
-        ],
       },
     ],
     exercises: [
-      {
-        level: "basic",
-        question:
-          "Model과 하네스가 각각 책임져야 할 일을 파일 수정 agent 예시로 나누라.",
-        answerChecklist: [
-          "model proposal",
-          "runtime authorization",
-          "execution",
-          "observation",
-          "termination",
-          "not framework name",
-        ],
-        requiredConcepts: ["llm-harness-system-boundary"],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "웹 UI 수정 요청을 objective·acceptance·context·capability·artifact·verifier·recovery가 있는 run contract로 바꾸라.",
-        answerChecklist: [
-          "target route",
-          "desktop/mobile",
-          "source path",
-          "workspace write",
-          "screenshot/test",
-          "failure evidence",
-          "rollback/escalation",
-        ],
-        requiredConcepts: ["agent-run-contract"],
-        sectionId: "composition",
-      },
-      {
-        level: "basic",
-        question:
-          "하나의 거대한 지침 파일과 계층적 context discovery path의 차이를 설명하고 stale 문서 방지책을 쓰라.",
-        answerChecklist: [
-          "entry document",
-          "canonical source",
-          "task routing",
-          "progressive loading",
-          "ownership",
-          "freshness",
-          "fallback",
-        ],
-        requiredConcepts: ["agent-context-discovery-path"],
-        sectionId: "composition",
-      },
-      {
-        level: "advanced",
-        question:
-          "Delete tool의 schema·identity·resource scope·approval·idempotency·receipt를 나눠 runtime authorization contract를 설계하라.",
-        answerChecklist: [
-          "schema not authority",
-          "caller identity",
-          "target scope",
-          "policy check",
-          "approval",
-          "operation key",
-          "receipt",
-          "deny tests",
-        ],
-        requiredConcepts: ["agent-capability-runtime-boundary"],
-        sectionId: "composition",
-      },
-      {
-        level: "basic",
-        question:
-          "Session이 끊긴 뒤 다른 agent가 안전하게 이어받기 위해 artifact에 남길 항목과 검증 순서를 쓰라.",
-        answerChecklist: [
-          "plan/status",
-          "input/version",
-          "artifact URI",
-          "checksum",
-          "decisions",
-          "test evidence",
-          "unfinished",
-          "revalidate",
-        ],
-        requiredConcepts: ["agent-artifact-state-continuity"],
-        sectionId: "composition",
-      },
-      {
-        level: "basic",
-        question:
-          "로그인 UI를 수정한 뒤 실행할 TypeScript build, Playwright 로그인 흐름, screenshot 디자인 rubric, production 반영 승인을 결정적 검사·환경 oracle·rubric judge·사람 검토에 각각 배치하고, 왜 확실한 검사부터 순서대로 적용하는지 설명하라.",
-        answerChecklist: [
-          "TypeScript build=deterministic check",
-          "Playwright flow=environment oracle",
-          "screenshot quality=rubric judge",
-          "production approval=human review",
-          "deterministic checks first",
-          "rubric calibration",
-          "high-risk escalation",
-          "one layer does not replace the others",
-        ],
-        requiredConcepts: ["layered-agent-verification"],
-        sectionId: "evaluation",
-      },
-      {
-        level: "advanced",
-        question:
-          "최종 파일은 맞지만 secret 외부 전송과 중복 배포가 있었던 run의 acceptance 식 각 항을 판정하라.",
-        answerChecklist: [
-          "artifact pass",
-          "trajectory fail",
-          "effect fail",
-          "budget",
-          "AND semantics",
-          "receipt",
-          "overall reject",
-        ],
-        requiredConcepts: ["agent-trajectory-effect-evaluation"],
-        sectionId: "evaluation",
-      },
-      {
-        level: "advanced",
-        question:
-          "문서를 못 찾은 실패에 reviewer·prompt·context index 후보를 비교하는 최소 ablation을 설계하라.",
-        answerChecklist: [
-          "repro case",
-          "single variable",
-          "context hit",
-          "quality",
-          "token/latency",
-          "normal cases",
-          "model/version fixed",
-          "rollback",
-        ],
-        requiredConcepts: ["harness-failure-layer-ablation"],
-        sectionId: "iteration",
-      },
-      {
-        level: "basic",
-        question:
-          "자료 조사·unit test·production 배포를 agent loop·workflow·checkpoint에 배치하고 이유를 설명하라.",
-        answerChecklist: [
-          "semantic uncertainty",
-          "fixed command",
-          "side effect risk",
-          "approval",
-          "receipt",
-          "hybrid",
-        ],
-        requiredConcepts: ["workflow-agent-checkpoint-boundary"],
-        sectionId: "patterns",
-      },
-      {
-        level: "advanced",
-        question:
-          "한 run의 verification loop와 production trace에서 skill을 바꾸는 개선 loop의 data·주기·권한·rollback을 분리하라.",
-        answerChecklist: [
-          "single-run evidence",
-          "multi-run sample",
-          "different authority",
-          "review",
-          "canary",
-          "rollback",
-          "feedback poisoning",
-          "versioning",
-        ],
-        requiredConcepts: ["loop-timescale-authority-separation"],
-        sectionId: "patterns",
-      },
+      { level: "basic", question: "Model proposal과 runtime execution을 구분하세요.", answerChecklist: ["untrusted proposal", "runtime authority", "executor", "typed observation"], requiredConcepts: ["llm-harness-system-boundary"], sectionId: "overview" },
+      { level: "basic", question: "파일 삭제 요청에서 model과 runtime의 책임을 나누세요.", answerChecklist: ["path proposal", "identity", "scope", "execution receipt"], requiredConcepts: ["llm-harness-system-boundary"], sectionId: "proposal-runtime" },
+      { level: "basic", question: "Tool schema와 capability가 다른 이유를 설명하세요.", answerChecklist: ["argument shape", "not authority", "resource scope", "current identity"], requiredConcepts: ["llm-harness-system-boundary"], sectionId: "proposal-runtime" },
+      { level: "basic", question: "Executor가 model 밖에 있어야 하는 이유를 쓰세요.", answerChecklist: ["effect owner", "policy", "idempotency", "receipt"], requiredConcepts: ["llm-harness-system-boundary"], sectionId: "proposal-runtime" },
+      { level: "basic", question: "Typed observation에 필요한 필드를 제안하세요.", answerChecklist: ["status", "resource identity", "checksum", "retry class"], requiredConcepts: ["llm-harness-system-boundary"], sectionId: "feedback-loop" },
+      { level: "basic", question: "Model의 완료 문장만으로 run을 끝낼 수 없는 이유를 설명하세요.", answerChecklist: ["unverified claim", "external state", "verifier", "terminal decision"], requiredConcepts: ["llm-harness-system-boundary"], sectionId: "feedback-loop" },
+      { level: "advanced", question: "Timeout 뒤 effect가 unknown인 action의 runtime 경계를 설계하세요.", answerChecklist: ["unknown outcome", "operation key", "receipt lookup", "no blind retry"], requiredConcepts: ["llm-harness-system-boundary"], sectionId: "feedback-loop" },
+      { level: "advanced", question: "Prompt 금지 문구가 authorization을 대신하지 못하는 반례를 만드세요.", answerChecklist: ["prompt bypass", "fresh identity", "target scope", "runtime deny"], requiredConcepts: ["llm-harness-system-boundary"], sectionId: "proposal-runtime" },
+      { level: "advanced", question: "Framework 이름과 harness boundary를 혼동한 설계를 교정하세요.", answerChecklist: ["product independent", "proposal", "enforcement", "observation"], requiredConcepts: ["llm-harness-system-boundary"], sectionId: "overview" },
+      { level: "advanced", question: "Workflow와 agent를 고르기 전에 공통 harness owner를 정하세요.", answerChecklist: ["authorization", "execution", "receipt", "termination", "later composition"], requiredConcepts: ["llm-harness-system-boundary"], sectionId: "paper-effective-agents" },
     ],
     papers: [
       {
@@ -24774,52 +24463,141 @@ export const ARTICLE_LEARNING: Readonly<
         evidenceScope: "Workflow·agent 용어와 관측된 복잡성 선택 원칙",
         notClaim:
           "모든 task가 단일 agent로 해결되거나 제시된 pattern이 표준 계층·성능 보장이 된다는 뜻은 아님",
-        sectionId: "paper-anthropic-effective-agents",
+        sectionId: "paper-effective-agents",
       },
-      {
-        title: "OpenAI Agents SDK — Guardrails and human review",
-        href: "https://developers.openai.com/api/docs/guides/agents/guardrails-approvals",
-        problem:
-          "Agent workflow의 입력·출력·tool behavior를 자동 검사하고 민감한 side effect 전에 실행을 pause해 승인받는 control boundary를 설계하는 문제",
-        contribution:
-          "Input/output/tool guardrail과 human-in-the-loop approval을 구분하고 run의 continue·pause·stop 지점 및 공식 SDK 패턴을 설명",
-        assumptions:
-          "OpenAI Agents SDK와 문서에 명시된 current input/output/function-tool/MCP control surface",
-        evidenceScope:
-          "Model proposal 밖 runtime이 tool argument·result를 검사하고 side effect 전에 approval을 요구하는 일반 경계",
-        notClaim:
-          "이 SDK 패턴이 모든 agent harness의 내부구조이거나 특정 third-party project의 구현·안전성·생산성을 검증한다는 뜻은 아님",
-        sectionId: "paper-openai-harness",
-      },
-      {
-        title: "Anthropic — Harness design for long-running apps",
-        href: "https://www.anthropic.com/engineering/harness-design-long-running-apps",
-        problem:
-          "긴 horizon에서 agent가 plan을 잃거나 조기 완료·회귀를 일으키는 문제",
-        contribution:
-          "Planner·generator·evaluator와 persistent state를 조합하고 구성 요소를 제거해 기여를 비교하는 harness design을 설명",
-        assumptions:
-          "문서에 공개된 model·application-building task·evaluation setup·component configuration",
-        evidenceScope:
-          "해당 장기 app-building experiment의 architecture와 ablation",
-        notClaim:
-          "Planner·evaluator를 항상 추가해야 하거나 모든 model에서 같은 component가 load-bearing이라는 뜻은 아님",
-        sectionId: "paper-anthropic-long-running-harness",
-      },
-      {
-        title: "LangChain — The Art of Loop Engineering",
-        href: "https://www.langchain.com/blog/the-art-of-loop-engineering",
-        problem:
-          "Agent를 한 번 실행하는 것을 넘어 검증·event·production feedback을 서로 다른 loop로 운영하는 문제",
-        contribution:
-          "Agent·verification·event-driven·hill-climbing loop라는 운영 vocabulary와 개선 구조를 제시",
-        assumptions:
-          "LangChain이 설명한 agent application·observability·production iteration 관점",
-        evidenceScope: "최근 loop engineering이라는 설계 어휘와 사례",
-        notClaim:
-          "공인 표준 taxonomy이거나 graph engineering까지 합의된 성숙도 계층이라는 뜻은 아님",
-        sectionId: "paper-langchain-loop",
-      },
+    ],
+  },
+  "ai/agent-run-contract": {
+    entryLevel: true,
+    entryNote: "하네스의 실행 경계를 배운 뒤 한 run이 시작·중단·재개될 조건을 한 항목씩 정의합니다.",
+    coreIdea: "Run contract는 objective·acceptance·context·capability·artifact·verifier·recovery를 같은 run identity에 묶고, 대화가 아니라 versioned artifact와 receipt로 상태를 이어 줍니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "agent-run-contract", role: "Run admission과 완료 조건을 한 계약으로 고정합니다." },
+      { id: "agent-context-discovery-path", role: "필요한 정본을 단계적으로 찾는 경로를 정의합니다." },
+      { id: "agent-capability-runtime-boundary", role: "도구 설명과 실제 실행 권한을 분리합니다." },
+      { id: "agent-artifact-state-continuity", role: "Session 사이 상태를 artifact receipt로 이어 줍니다." },
+    ],
+    conceptExplanations: [
+      { id: "agent-run-contract", sectionId: "overview", intuition: "작업 전에 완료의 뜻과 실패 시 행동까지 적는 접수증입니다.", workedExample: "UI run은 route·390/1440 acceptance·write scope·screenshot·rollback을 고정합니다.", boundary: "자연어 지시가 존재하는 것과 runtime admission은 다릅니다." },
+      { id: "agent-context-discovery-path", sectionId: "context-capability", intuition: "모든 문서를 외우지 않고 목차에서 필요한 정본만 찾습니다.", workedExample: "짧은 진입 문서가 design에는 Viz 규칙, 배포에는 runbook을 연결합니다.", boundary: "Ownership·freshness·fallback이 없으면 분할 문서도 stale합니다." },
+      { id: "agent-capability-runtime-boundary", sectionId: "context-capability", intuition: "열쇠 이름을 아는 것과 실제 열쇠를 가진 것은 다릅니다.", workedExample: "Delete schema가 보여도 read-only identity는 runtime에서 거부됩니다.", boundary: "Schema validation은 authorization이 아닙니다." },
+      { id: "agent-artifact-state-continuity", sectionId: "artifact-continuity", intuition: "기억 대신 version·checksum·검증 결과가 있는 작업물을 넘깁니다.", workedExample: "새 session이 commit과 screenshot receipt를 다시 검사합니다.", boundary: "대화 요약만으로 외부 상태를 재현할 수 없습니다." },
+    ],
+    conceptStages: [
+      { label: "00 contract", relation: "완료와 admission 조건을 고정합니다.", concepts: ["agent-run-contract"] },
+      { label: "01 access", relation: "읽을 context와 실행 capability를 분리합니다.", concepts: ["agent-context-discovery-path", "agent-capability-runtime-boundary"] },
+      { label: "02 artifact", relation: "Versioned receipt로 session을 연결합니다.", concepts: ["agent-artifact-state-continuity"] },
+      { label: "03 recovery", relation: "Retry·rollback·escalation으로 종료합니다.", concepts: ["agent-run-contract", "agent-artifact-state-continuity"] },
+    ],
+    exercises: [
+      { level: "basic", question: "UI 수정 run contract의 일곱 항목을 작성하세요.", answerChecklist: ["objective", "acceptance", "context", "capability", "artifact", "verifier", "recovery"], requiredConcepts: ["agent-run-contract"], sectionId: "overview" },
+      { level: "basic", question: "Objective와 acceptance를 구분하세요.", answerChecklist: ["direction", "observable completion", "viewport", "test"], requiredConcepts: ["agent-run-contract"], sectionId: "overview" },
+      { level: "basic", question: "Context discovery path의 최소 필드를 쓰세요.", answerChecklist: ["entry index", "canonical source", "owner", "freshness", "fallback"], requiredConcepts: ["agent-context-discovery-path"], sectionId: "context-capability" },
+      { level: "basic", question: "Tool schema와 runtime capability를 구분하세요.", answerChecklist: ["argument shape", "identity", "resource scope", "approval"], requiredConcepts: ["agent-capability-runtime-boundary"], sectionId: "context-capability" },
+      { level: "basic", question: "Handoff artifact에 남길 항목을 나열하세요.", answerChecklist: ["version", "URI", "checksum", "decision", "verifier result", "unfinished"], requiredConcepts: ["agent-artifact-state-continuity"], sectionId: "artifact-continuity" },
+      { level: "basic", question: "Contract completeness AND 식을 UI run에 적용하세요.", answerChecklist: ["all required", "missing verifier", "C=0", "admission deny"], requiredConcepts: ["agent-run-contract"], sectionId: "artifact-continuity" },
+      { level: "advanced", question: "Stale 문서를 읽은 run의 discovery failure를 막으세요.", answerChecklist: ["source version", "owner", "freshness", "fallback", "revalidate"], requiredConcepts: ["agent-context-discovery-path"], sectionId: "context-capability" },
+      { level: "advanced", question: "Broad delete schema와 narrow production 권한을 함께 설계하세요.", answerChecklist: ["schema", "caller identity", "target binding", "fresh approval", "deny test"], requiredConcepts: ["agent-capability-runtime-boundary"], sectionId: "context-capability" },
+      { level: "advanced", question: "Timeout 뒤 unknown effect를 안전하게 재개하세요.", answerChecklist: ["operation key", "receipt lookup", "idempotent retry", "rollback", "escalation"], requiredConcepts: ["agent-run-contract", "agent-artifact-state-continuity"], sectionId: "recovery-handoff" },
+      { level: "advanced", question: "Session 교대에서 완료 주장을 독립 검증하세요.", answerChecklist: ["artifact identity", "checksum", "actual state", "verifier rerun", "safe next action"], requiredConcepts: ["agent-artifact-state-continuity"], sectionId: "recovery-handoff" },
+    ],
+    papers: [],
+  },
+  "ai/agent-verification": {
+    entryLevel: true,
+    entryNote: "Compiler·browser·judge·사람 검토를 서로 다른 증거를 보는 검증층으로 하나씩 쌓습니다.",
+    coreIdea: "확실한 deterministic check부터 환경 oracle·rubric judge·human review를 올리고 artifact·trajectory·effect·budget gate는 평균내지 않고 모두 통과시킵니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "layered-agent-verification", role: "증거의 확실성과 위험에 맞는 검증층을 고릅니다." },
+      { id: "agent-trajectory-effect-evaluation", role: "결과·경로·외부 상태·비용을 독립 판정합니다." },
+    ],
+    conceptExplanations: [
+      { id: "layered-agent-verification", sectionId: "overview", intuition: "계산기로 확인할 일부터 검사하고 애매한 품질에만 judge와 사람을 씁니다.", workedExample: "Typecheck→Playwright→blind design rubric→production approval 순으로 올립니다.", boundary: "Judge는 deterministic oracle을 대체하지 않습니다." },
+      { id: "agent-trajectory-effect-evaluation", sectionId: "trajectory-effect", intuition: "목적지뿐 아니라 길·외부 변화·비용도 따로 채점합니다.", workedExample: "코드가 맞아도 secret 전송이나 중복 deploy가 있으면 reject합니다.", boundary: "Private reasoning이 아니라 observable call·artifact·receipt를 평가합니다." },
+    ],
+    conceptStages: [
+      { label: "00 oracle", relation: "결정적 검사와 환경 관측을 먼저 통과시킵니다.", concepts: ["layered-agent-verification"] },
+      { label: "01 rubric", relation: "불확실한 품질 판단을 calibration합니다.", concepts: ["layered-agent-verification"] },
+      { label: "02 effect", relation: "Trajectory·effect·budget을 독립 gate로 둡니다.", concepts: ["agent-trajectory-effect-evaluation"] },
+      { label: "03 release", relation: "회귀 fixture와 사람 승인을 결합합니다.", concepts: ["layered-agent-verification", "agent-trajectory-effect-evaluation"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Typecheck·Playwright·design rubric·배포 승인을 네 검증층에 배치하세요.", answerChecklist: ["deterministic", "environment", "rubric", "human"], requiredConcepts: ["layered-agent-verification"], sectionId: "overview" },
+      { level: "basic", question: "확실한 검사를 먼저 실행하는 이유를 설명하세요.", answerChecklist: ["cheap", "deterministic", "early rejection", "judge budget"], requiredConcepts: ["layered-agent-verification"], sectionId: "overview" },
+      { level: "basic", question: "Artifact와 trajectory gate를 구분하세요.", answerChecklist: ["final result", "allowed path", "tool calls", "both required"], requiredConcepts: ["agent-trajectory-effect-evaluation"], sectionId: "trajectory-effect" },
+      { level: "basic", question: "Effect receipt가 필요한 외부 작업 예를 드세요.", answerChecklist: ["resource identity", "operation ID", "state", "count"], requiredConcepts: ["agent-trajectory-effect-evaluation"], sectionId: "trajectory-effect" },
+      { level: "basic", question: "Budget gate의 네 항목을 정하세요.", answerChecklist: ["token", "tool calls", "time", "retry"], requiredConcepts: ["agent-trajectory-effect-evaluation"], sectionId: "trajectory-effect" },
+      { level: "basic", question: "운영 trace를 regression fixture로 바꾸세요.", answerChecklist: ["input", "observable calls", "artifact", "receipts", "metrics"], requiredConcepts: ["layered-agent-verification"], sectionId: "regression" },
+      { level: "advanced", question: "좋은 artifact가 secret 전송 실패를 상쇄하지 못하게 설계하세요.", answerChecklist: ["AND semantics", "trajectory fail", "effect fail", "overall reject"], requiredConcepts: ["agent-trajectory-effect-evaluation"], sectionId: "trajectory-effect" },
+      { level: "advanced", question: "Worker와 judge가 같은 오류를 공유하는 fixture를 만드세요.", answerChecklist: ["shared bias", "false pass", "independent oracle", "human label"], requiredConcepts: ["layered-agent-verification"], sectionId: "release" },
+      { level: "advanced", question: "Judge upgrade를 calibration하고 rollback하세요.", answerChecklist: ["version", "blind set", "human labels", "threshold", "rollback"], requiredConcepts: ["layered-agent-verification"], sectionId: "release" },
+      { level: "advanced", question: "High-risk effect에 필요한 독립 증거를 설계하세요.", answerChecklist: ["deterministic invariant", "external receipt", "approval", "replay", "escalation"], requiredConcepts: ["layered-agent-verification", "agent-trajectory-effect-evaluation"], sectionId: "release" },
+    ],
+    papers: [],
+  },
+  "ai/harness-failure-ablation": {
+    entryLevel: true,
+    entryNote: "실패를 재현한 뒤 context·schema·capability·verifier 층을 하나씩 분리해 비교합니다.",
+    coreIdea: "Failure-layer ablation은 같은 fixture에서 한 장치만 바꾸고 target recovery와 기존 success regression을 함께 측정해 실제 순기여가 있는 변경만 배포합니다.",
+    assumedKnowledge: [],
+    introducedHere: [{ id: "harness-failure-layer-ablation", role: "실패 계층과 장치의 순기여를 paired 비교합니다." }],
+    conceptExplanations: [{ id: "harness-failure-layer-ablation", sectionId: "overview", intuition: "고장 난 층을 찾고 부품 하나만 바꿔 같은 시험을 반복합니다.", workedExample: "문서 miss에서는 reviewer가 아니라 context index만 바꿔 hit·quality·cost를 비교합니다.", boundary: "Model·prompt·tool·dataset을 동시에 바꾸면 원인을 귀속할 수 없습니다." }],
+    conceptStages: [
+      { label: "00 reproduce", relation: "실패와 기존 성공 fixture를 고정합니다.", concepts: ["harness-failure-layer-ablation"] },
+      { label: "01 classify", relation: "Context·schema·capability·verifier 층을 찾습니다.", concepts: ["harness-failure-layer-ablation"] },
+      { label: "02 ablate", relation: "후보 하나만 바꿔 baseline과 비교합니다.", concepts: ["harness-failure-layer-ablation"] },
+      { label: "03 release", relation: "순개선과 회귀 한도를 함께 통과시킵니다.", concepts: ["harness-failure-layer-ablation"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Ablation fixture의 네 구성물을 쓰세요.", answerChecklist: ["replay input", "baseline", "single candidate", "paired metrics"], requiredConcepts: ["harness-failure-layer-ablation"], sectionId: "overview" },
+      { level: "basic", question: "문서 miss를 올바른 failure layer로 분류하세요.", answerChecklist: ["context", "index", "freshness", "not reviewer"], requiredConcepts: ["harness-failure-layer-ablation"], sectionId: "classify" },
+      { level: "basic", question: "잘못된 argument 반복을 고칠 층을 고르세요.", answerChecklist: ["schema", "actionable error", "fixture", "same model"], requiredConcepts: ["harness-failure-layer-ablation"], sectionId: "classify" },
+      { level: "basic", question: "Permission denial과 prompt failure를 구분하세요.", answerChecklist: ["identity", "scope", "approval", "runtime"], requiredConcepts: ["harness-failure-layer-ablation"], sectionId: "classify" },
+      { level: "basic", question: "같은 fixture의 candidate와 baseline에서 순변화 Delta를 계산하세요.", answerChecklist: ["candidate metric", "baseline metric", "subtract", "same fixture"], requiredConcepts: ["harness-failure-layer-ablation"], sectionId: "ablation" },
+      { level: "basic", question: "기존 success regression을 따로 측정하는 이유를 설명하세요.", answerChecklist: ["over-rejection", "regression set", "tolerance", "release gate"], requiredConcepts: ["harness-failure-layer-ablation"], sectionId: "ablation" },
+      { level: "advanced", question: "Model과 context index를 동시에 바꾼 실험을 교정하세요.", answerChecklist: ["confounder", "one variable", "fixed runtime", "paired rerun"], requiredConcepts: ["harness-failure-layer-ablation"], sectionId: "ablation" },
+      { level: "advanced", question: "Target 개선과 latency 악화를 함께 판정하세요.", answerChecklist: ["quality delta", "latency delta", "predefined budget", "reject or accept"], requiredConcepts: ["harness-failure-layer-ablation"], sectionId: "ablation" },
+      { level: "advanced", question: "한 trace의 개선을 다른 workload에 일반화하지 않도록 설계하세요.", answerChecklist: ["failure slices", "representative set", "confidence", "canary"], requiredConcepts: ["harness-failure-layer-ablation"], sectionId: "paper-harness-ablation" },
+      { level: "advanced", question: "Ablation 결과의 rollback receipt를 설계하세요.", answerChecklist: ["candidate version", "baseline version", "metrics", "decision", "rollback trigger"], requiredConcepts: ["harness-failure-layer-ablation"], sectionId: "paper-harness-ablation" },
+    ],
+    papers: [{ title: "Anthropic — Harness design for long-running apps", href: "https://www.anthropic.com/engineering/harness-design-long-running-apps", problem: "긴 horizon에서 plan 손실·조기 완료·회귀를 줄이는 harness component를 식별하는 문제", contribution: "Planner·generator·evaluator·persistent state 구성과 component ablation을 공개", assumptions: "문서의 model·application-building task·evaluation setup", evidenceScope: "해당 experiment의 architecture와 ablation", notClaim: "모든 model과 workload에 같은 component가 항상 필요하다는 주장", sectionId: "paper-harness-ablation" }],
+  },
+  "ai/agent-control-boundaries": {
+    entryLevel: true,
+    entryNote: "경로가 고정된 workflow, 의미 판단이 필요한 agent, 되돌리기 어려운 checkpoint를 차례로 구분합니다.",
+    coreIdea: "제어 형태는 성숙도 순서가 아니라 경로 불확실성과 effect 위험으로 선택하며, run 내부 action loop와 여러 run을 보고 harness를 바꾸는 개선 loop의 주기·권한을 분리합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "workflow-agent-checkpoint-boundary", role: "경로 불확실성과 effect 위험에 맞는 제어 주체를 고릅니다." },
+      { id: "loop-timescale-authority-separation", role: "Run 행동과 harness 개선의 주기·권한을 분리합니다." },
+    ],
+    conceptExplanations: [
+      { id: "workflow-agent-checkpoint-boundary", sectionId: "overview", intuition: "정해진 철도·현장 탐색·국경 검문소를 같은 운행 방식으로 다루지 않습니다.", workedExample: "Source 탐색은 agent, build는 workflow, production deploy는 approval checkpoint가 맡습니다.", boundary: "Agent나 graph가 workflow보다 높은 성숙도라는 뜻이 아닙니다." },
+      { id: "loop-timescale-authority-separation", sectionId: "loop-authority", intuition: "한 경기의 작전과 시즌 규칙 변경을 같은 선수가 즉시 결정하지 않습니다.", workedExample: "Run loop는 bounded tool action을, 개선 loop는 여러 trace·review·canary를 다룹니다.", boundary: "Judge feedback 하나가 global harness를 즉시 바꾸면 안 됩니다." },
+    ],
+    conceptStages: [
+      { label: "00 route", relation: "경로 불확실성으로 workflow와 agent를 고릅니다.", concepts: ["workflow-agent-checkpoint-boundary"] },
+      { label: "01 risk", relation: "되돌리기 어려운 effect 앞에 checkpoint를 둡니다.", concepts: ["workflow-agent-checkpoint-boundary"] },
+      { label: "02 run loop", relation: "한 run의 budget·capability 안에서 행동합니다.", concepts: ["loop-timescale-authority-separation"] },
+      { label: "03 improve", relation: "여러 trace로 harness 변경을 검토·canary합니다.", concepts: ["loop-timescale-authority-separation"] },
+    ],
+    exercises: [
+      { level: "basic", question: "자료 조사·build·production deploy를 세 제어 형태에 배치하세요.", answerChecklist: ["agent", "workflow", "checkpoint", "reason"], requiredConcepts: ["workflow-agent-checkpoint-boundary"], sectionId: "overview" },
+      { level: "basic", question: "Workflow와 agent의 차이를 설명하세요.", answerChecklist: ["predefined path", "model-directed path", "not maturity", "hybrid"], requiredConcepts: ["workflow-agent-checkpoint-boundary"], sectionId: "overview" },
+      { level: "basic", question: "낮은 불확실성·낮은 위험 작업의 제어를 고르세요.", answerChecklist: ["workflow", "fixed steps", "deterministic checks", "no needless agent"], requiredConcepts: ["workflow-agent-checkpoint-boundary"], sectionId: "selection" },
+      { level: "basic", question: "높은 불확실성·낮은 위험 작업의 제어를 고르세요.", answerChecklist: ["bounded agent", "exploration", "budget", "observation"], requiredConcepts: ["workflow-agent-checkpoint-boundary"], sectionId: "selection" },
+      { level: "basic", question: "높은 위험 action에 필요한 checkpoint를 쓰세요.", answerChecklist: ["target diff", "fresh approval", "receipt", "rollback"], requiredConcepts: ["workflow-agent-checkpoint-boundary"], sectionId: "selection" },
+      { level: "basic", question: "Run loop와 harness 개선 loop를 구분하세요.", answerChecklist: ["single run", "multi-run sample", "different budget", "different authority"], requiredConcepts: ["loop-timescale-authority-separation"], sectionId: "loop-authority" },
+      { level: "advanced", question: "높은 불확실성·높은 위험 배포 흐름을 설계하세요.", answerChecklist: ["sandbox exploration", "candidate artifact", "deterministic gate", "human approval", "receipt"], requiredConcepts: ["workflow-agent-checkpoint-boundary"], sectionId: "selection" },
+      { level: "advanced", question: "Judge feedback poisoning이 global skill로 퍼지는 경로를 막으세요.", answerChecklist: ["quarantine", "multiple traces", "review", "canary", "rollback"], requiredConcepts: ["loop-timescale-authority-separation"], sectionId: "loop-authority" },
+      { level: "advanced", question: "모든 단계를 agent graph로 고정한 과설계를 단순화하세요.", answerChecklist: ["fixed steps to workflow", "semantic branch only", "risk checkpoint", "compare baseline"], requiredConcepts: ["workflow-agent-checkpoint-boundary"], sectionId: "paper-loop-control" },
+      { level: "advanced", question: "Harness 변경의 release contract를 작성하세요.", answerChecklist: ["version", "representative traces", "review", "canary", "rollback trigger"], requiredConcepts: ["loop-timescale-authority-separation"], sectionId: "paper-loop-control" },
+    ],
+    papers: [
+      { title: "Anthropic — Building effective agents", href: "https://www.anthropic.com/engineering/building-effective-agents", problem: "Workflow와 agent를 언제 선택할지 판단하는 문제", contribution: "Predefined workflow와 model-directed agent를 구분하고 필요한 복잡성만 추가하는 원칙을 제시", assumptions: "공개된 model·tool 환경과 production 경험", evidenceScope: "Workflow·agent 선택 용어와 사례", notClaim: "Workflow와 agent가 성숙도 계층이거나 모든 workload에서 같은 성능을 보장한다는 주장은 아님", sectionId: "paper-loop-control" },
+      { title: "LangChain — The Art of Loop Engineering", href: "https://www.langchain.com/blog/the-art-of-loop-engineering", problem: "Agent 실행과 production 개선을 서로 다른 loop로 운영하는 문제", contribution: "Agent·verification·event-driven·hill-climbing loop vocabulary를 제시", assumptions: "공개된 agent application·observability 관점", evidenceScope: "최근 loop engineering 설계 어휘", notClaim: "공인 표준 taxonomy나 보편 성숙도 계층", sectionId: "paper-loop-control" },
     ],
   },
   "ai/agent-loop-foundations": {

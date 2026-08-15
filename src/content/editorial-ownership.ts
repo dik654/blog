@@ -361,7 +361,7 @@ export const EDITORIAL_BOUNDARIES = {
       },
       {
         label: "Layered deterministic·judge·human verification",
-        href: "/ai/llm-harness#evaluation",
+        href: "/ai/agent-verification#overview",
       },
     ],
     evidence: [
@@ -609,7 +609,7 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [
       {
         label: "Agent working state와 durable artifact continuity",
-        href: "/ai/llm-harness#composition",
+        href: "/ai/agent-run-contract#overview",
       },
       {
         label: "Typed tool observation과 turn exit state",
@@ -686,7 +686,7 @@ export const EDITORIAL_BOUNDARIES = {
       },
       {
         label: "Model proposal과 runtime capability·authorization 경계",
-        href: "/ai/llm-harness#composition",
+        href: "/ai/agent-run-contract#overview",
       },
       {
         label: "Typed tool observation과 exit state",
@@ -896,7 +896,7 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [
       {
         label: "Model proposal과 runtime capability·host enforcement 경계",
-        href: "/ai/llm-harness#composition",
+        href: "/ai/agent-run-contract#overview",
       },
       {
         label:
@@ -983,7 +983,7 @@ export const EDITORIAL_BOUNDARIES = {
       },
       {
         label: "Layered verification과 recovery gate",
-        href: "/ai/llm-harness#evaluation",
+        href: "/ai/agent-verification#overview",
       },
       {
         label: "Run artifact provenance·versioned verifier",
@@ -3495,30 +3495,50 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "llm-harness": {
-    title: "하네스 글이 소유하는 범위",
+    title: "LLM 하네스 실행 경계 글이 소유하는 범위",
     owns: [
-      "Objective·context·authority·artifact·verifier·recovery를 하나의 run contract로 보는 관점",
-      "경로 불확실성과 side-effect 위험으로 workflow·agent loop·checkpoint graph를 선택하는 기준",
-      "trace에서 재현 case·회귀 테스트·canary 하네스 변경으로 이어지는 개선 loop",
+      "Model proposal과 runtime authorization·execution·observation의 책임 분리",
+      "Tool schema와 실제 identity·resource capability의 차이",
+      "Typed observation과 terminal decision으로 이어지는 최소 feedback loop",
     ],
     reuses: [
-      {
-        label: "컨텍스트 선택·메모리·compaction",
-        href: "/ai/context-engineering",
-      },
-      { label: "Plan·replanning·reflection", href: "/ai/agent-plan-replanning" },
-      { label: "Skill의 포맷과 동적 로딩", href: "/ai/skills-anatomy" },
+      { label: "Run contract와 artifact continuity", href: "/ai/agent-run-contract" },
+      { label: "검증층과 effect evaluation", href: "/ai/agent-verification" },
     ],
     evidence: [
       {
         kind: "primary-source",
-        rule: "공개 사례는 OpenAI·Anthropic·LangChain이 실제로 설명한 범위까지만 쓴다.",
+        rule: "Workflow·agent 용어는 Anthropic이 공개한 범위까지만 쓰고 runtime boundary는 구현 계약으로 분리한다.",
       },
       {
         kind: "project-claim",
-        rule: "“loop·graph engineering”은 고정된 표준 계층이 아니라 최근의 설계 어휘로 표시한다.",
+        rule: "Model의 자연어 주장과 외부 effect receipt를 같은 증거로 취급하지 않는다.",
       },
     ],
+  },
+  "agent-run-contract": {
+    title: "Agent run contract 글이 소유하는 범위",
+    owns: ["Objective·acceptance·context·capability·artifact·verifier·recovery의 run admission 계약", "계층적 context discovery와 runtime capability 분리", "Versioned artifact·checksum·receipt 기반 session continuity와 recovery"],
+    reuses: [{ label: "Model과 runtime의 최소 경계", href: "/ai/llm-harness" }, { label: "Plan·replanning·reflection", href: "/ai/agent-plan-replanning" }],
+    evidence: [{ kind: "project-claim", rule: "자연어 field가 있다는 사실과 runtime이 owner·identity·version을 강제하는 것을 구분한다." }],
+  },
+  "agent-verification": {
+    title: "Agent verification 글이 소유하는 범위",
+    owns: ["Deterministic check·environment oracle·rubric judge·human review의 검증층", "Artifact·trajectory·effect·budget의 독립 acceptance gate", "Observable production trace의 regression fixture·judge calibration·release"],
+    reuses: [{ label: "Run contract의 verifier field", href: "/ai/agent-run-contract" }],
+    evidence: [{ kind: "project-measurement", rule: "Judge score는 deterministic invariant나 external effect receipt를 대체하지 않는다." }],
+  },
+  "harness-failure-ablation": {
+    title: "Harness failure ablation 글이 소유하는 범위",
+    owns: ["Context·schema·capability·verifier failure layer 분류", "같은 fixture에서 한 장치만 바꾸는 paired ablation", "Target recovery와 기존 success regression을 결합한 release gate"],
+    reuses: [{ label: "Agent verification fixture", href: "/ai/agent-verification" }],
+    evidence: [{ kind: "primary-source", rule: "Component 기여 주장은 Anthropic이 공개한 장기 app-building ablation 범위를 넘겨 일반화하지 않는다." }],
+  },
+  "agent-control-boundaries": {
+    title: "Agent control boundary 글이 소유하는 범위",
+    owns: ["경로 불확실성에 따른 workflow·agent 선택", "Side-effect 위험에 따른 deterministic checkpoint", "한 run의 action loop와 여러 run 기반 harness 개선 loop의 주기·권한 분리"],
+    reuses: [{ label: "하네스 runtime boundary", href: "/ai/llm-harness" }, { label: "Failure ablation", href: "/ai/harness-failure-ablation" }],
+    evidence: [{ kind: "primary-source", rule: "Workflow·agent 선택과 loop vocabulary는 각 공개 문서 범위로 한정하고 표준 성숙도 계층으로 표현하지 않는다." }],
   },
   "skills-anatomy": {
     title: "Agent Skill 글이 소유하는 범위",
@@ -3539,7 +3559,7 @@ export const EDITORIAL_BOUNDARIES = {
       },
       {
         label: "Runtime capability와 approval 계약",
-        href: "/ai/llm-harness#composition",
+        href: "/ai/agent-run-contract#overview",
       },
     ],
     evidence: [
@@ -6806,7 +6826,7 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [
       { label: "Executable plan·dependency graph", href: "/ai/agent-plan-replanning#executable-plan" },
       { label: "Delegation artifact ownership", href: "/ai/agent-delegation-contracts#delegation-contract" },
-      { label: "Layered verification", href: "/ai/llm-harness#evaluation" },
+      { label: "Layered verification", href: "/ai/agent-verification#overview" },
     ],
     evidence: [
       { kind: "primary-source", rule: "TaskPacket·registry·cron behavior는 pinned b71afdd source와 same-commit tests에만 귀속한다." },
@@ -6841,7 +6861,7 @@ export const EDITORIAL_BOUNDARIES = {
     ],
     reuses: [
       { label: "Run artifact provenance", href: "/ai/experiment-tracking" },
-      { label: "Agent trajectory·effect evaluation", href: "/ai/llm-harness#evaluation" },
+      { label: "Agent trajectory·effect evaluation", href: "/ai/agent-verification#trajectory-effect" },
       { label: "Provider request·stream identity", href: "/ai/claw-api-client" },
     ],
     evidence: [
@@ -6913,7 +6933,7 @@ export const EDITORIAL_BOUNDARIES = {
     ],
     reuses: [
       { label: "Permission authorization decision", href: "/ai/claw-permissions" },
-      { label: "Layered verifier·release gate", href: "/ai/llm-harness#evaluation" },
+      { label: "Layered verifier·release gate", href: "/ai/agent-verification#release" },
       { label: "Run·test artifact provenance", href: "/ai/experiment-tracking#overview" },
     ],
     evidence: [
