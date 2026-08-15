@@ -6686,7 +6686,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Masked sentence-pooling contract",
     definition:
       "Token별 contextual hidden state에서 padding과 special-token 포함 규칙을 mask로 고정하고, valid-token reducer와 normalization을 거쳐 문장·문서 vector 하나를 만드는 계약입니다.",
-    canonicalHref: "/ai/sentence-embeddings#overview",
+    canonicalHref: "/ai/sentence-embeddings#pooling",
   },
   "sentence-relation-objective-boundary": {
     id: "sentence-relation-objective-boundary",
@@ -6695,7 +6695,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Sentence relation-objective boundary",
     definition:
       "Pooling으로 고정 길이 vector를 얻는 것과 query–document·paraphrase·entailment 관계가 similarity 순서에 반영되도록 학습하는 것을 구분하는 경계입니다.",
-    canonicalHref: "/ai/sentence-embeddings#overview",
+    canonicalHref: "/ai/sentence-embeddings#relation",
   },
   "offline-document-embedding-reuse": {
     id: "offline-document-embedding-reuse",
@@ -6704,7 +6704,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Offline document-embedding reuse",
     definition:
       "Query와 독립적인 document encoder output을 corpus revision마다 미리 계산해 index에 저장하고 새 query마다 재사용하여 online pair-forward를 줄이는 retrieval 계산 구조입니다.",
-    canonicalHref: "/ai/sentence-embeddings#sbert",
+    canonicalHref: "/ai/bi-encoder-retrieval#offline-index",
   },
   "retrieval-candidate-recall-ceiling": {
     id: "retrieval-candidate-recall-ceiling",
@@ -6713,7 +6713,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Candidate-recall ceiling",
     definition:
       "두 번째 단계가 첫 단계의 candidate set만 재정렬한다면 candidate 밖의 relevant document를 새로 가져올 수 없으므로 최종 relevant coverage가 첫 단계 coverage를 넘지 못한다는 상한입니다.",
-    canonicalHref: "/ai/sentence-embeddings#sbert",
+    canonicalHref: "/ai/bi-encoder-retrieval#candidate",
   },
   "embedding-role-instruction-contract": {
     id: "embedding-role-instruction-contract",
@@ -6722,7 +6722,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Embedding role-instruction contract",
     definition:
       "Query·passage·task instruction의 정확한 문자열·위치·언어·적용 side를 training serialization과 같게 유지하는 embedding checkpoint 입력 규약입니다.",
-    canonicalHref: "/ai/sentence-embeddings#modern",
+    canonicalHref: "/ai/embedding-serving-contract#serialization",
   },
   "embedding-content-retention": {
     id: "embedding-content-retention",
@@ -6731,7 +6731,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Embedding content retention",
     definition:
       "Maximum token budget에서 special token과 instruction을 제외한 뒤 원문 content 중 실제로 encoder에 남은 token 비율과 정답 위치별 보존 여부를 함께 측정하는 지표입니다.",
-    canonicalHref: "/ai/sentence-embeddings#modern",
+    canonicalHref: "/ai/embedding-serving-contract#truncation",
   },
   "embedding-index-storage-budget": {
     id: "embedding-index-storage-budget",
@@ -6740,7 +6740,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Embedding-index storage budget",
     definition:
       "Vector 수·dimension·성분 byte로 계산한 raw payload와 ANN structure·ID·metadata·alignment·replica overhead를 분리해 기록하는 저장량 계약입니다.",
-    canonicalHref: "/ai/sentence-embeddings#modern",
+    canonicalHref: "/ai/embedding-serving-contract#index-artifact",
   },
   "multipositive-retrieval-metrics": {
     id: "multipositive-retrieval-metrics",
@@ -6749,7 +6749,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Multi-positive retrieval metrics",
     definition:
       "Query별 relevant set 전체를 보존하고 top-k coverage는 Recall@k로, graded relevance의 순위 품질은 NDCG@k로 분리해 측정하는 평가 계약입니다.",
-    canonicalHref: "/ai/sentence-embeddings#evaluation",
+    canonicalHref: "/ai/embedding-evaluation#metrics",
   },
   "embedding-quality-cost-frontier": {
     id: "embedding-quality-cost-frontier",
@@ -6758,7 +6758,47 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Embedding quality–cost frontier",
     definition:
       "동일 corpus·index·hardware 조건에서 domain 품질, p95 latency, runtime resource와 index storage를 비교하고 다른 후보에 지배되지 않는 embedding 후보를 남기는 선택 절차입니다.",
-    canonicalHref: "/ai/sentence-embeddings#evaluation",
+    canonicalHref: "/ai/embedding-evaluation#release",
+  },
+  "sentence-embedding-artifact": {
+    id: "sentence-embedding-artifact",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Sentence embedding artifact",
+    definition: "Token states를 checkpoint가 정한 mask·pooling·normalization으로 줄여 같은 relation space에서 저장·비교할 수 있게 만든 고정 길이 vector입니다.",
+    canonicalHref: "/ai/sentence-embeddings#overview",
+  },
+  "embedding-similarity-score-boundary": {
+    id: "embedding-similarity-score-boundary",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Embedding similarity-score boundary",
+    definition: "Cosine·dot-product 값은 학습한 relation space의 가까움을 나타낼 뿐 document의 사실성·안전성·권위·최신성을 증명하지 않는 해석 경계입니다.",
+    canonicalHref: "/ai/sentence-embeddings#similarity",
+  },
+  "retrieve-rerank-composition": {
+    id: "retrieve-rerank-composition",
+    kind: "method",
+    domain: "computer-science",
+    label: "Retrieve-then-rerank composition",
+    definition: "첫 단계가 높은 recall의 작은 candidate set을 만들고 두 번째 pair model이 그 집합 안에서 precision-oriented 순서를 다시 정하는 검색 composition입니다.",
+    canonicalHref: "/ai/bi-encoder-retrieval#reranking",
+  },
+  "embedding-index-generation-receipt": {
+    id: "embedding-index-generation-receipt",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Embedding-index generation receipt",
+    definition: "Checkpoint·tokenizer·serialization·pooling·normalization·length·dimension·dtype·corpus·ANN parameters를 하나의 compatible query/index generation으로 묶은 배포 기록입니다.",
+    canonicalHref: "/ai/embedding-serving-contract#index-artifact",
+  },
+  "embedding-label-snapshot": {
+    id: "embedding-label-snapshot",
+    kind: "concept",
+    domain: "statistics",
+    label: "Embedding evaluation-label snapshot",
+    definition: "Corpus revision과 query별 multi-positive IDs·relevance grades·annotator rule·unresolved cases를 함께 고정한 retrieval 평가 artifact입니다.",
+    canonicalHref: "/ai/embedding-evaluation#labels",
   },
   "affine-uniform-quantizer": {
     id: "affine-uniform-quantizer",
@@ -16907,6 +16947,12 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
       "Vector를 만드는 reducer만으로는 문장 관계의 similarity 순서가 학습됐다고 결론낼 수 없습니다.",
   },
   {
+    from: "sentence-pooling-mask-contract",
+    to: "sentence-embedding-artifact",
+    relation: "produces",
+    reason: "Mask·pooling·normalization을 통과한 고정 길이 vector가 저장 가능한 sentence embedding artifact가 됩니다.",
+  },
+  {
     from: "contrastive-pair-semantics",
     to: "sentence-relation-objective-boundary",
     relation: "prerequisite",
@@ -16928,6 +16974,30 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
       "독립 vector가 relation-aware similarity를 보존해야 재사용 가능한 retrieval representation이 됩니다.",
   },
   {
+    from: "sentence-relation-objective-boundary",
+    to: "sentence-embedding-artifact",
+    relation: "constrains",
+    reason: "동일한 pooled vector라도 어떤 positive·negative relation으로 학습했는지가 artifact의 가까움 의미를 제한합니다.",
+  },
+  {
+    from: "sentence-embedding-artifact",
+    to: "embedding-similarity-score-boundary",
+    relation: "constrains",
+    reason: "Embedding artifact의 cosine은 학습한 relation을 반영하지만 사실성·안전성까지 증명하지 않습니다.",
+  },
+  {
+    from: "normalized-embedding-cosine",
+    to: "embedding-similarity-score-boundary",
+    relation: "prerequisite",
+    reason: "Unit vector 내적을 cosine으로 읽는 계산과 그 score가 주장할 수 있는 의미 범위를 분리합니다.",
+  },
+  {
+    from: "sentence-embedding-artifact",
+    to: "offline-document-embedding-reuse",
+    relation: "prerequisite",
+    reason: "Query와 독립적으로 만든 document embedding artifact를 corpus generation에서 저장해야 online 재사용이 가능합니다.",
+  },
+  {
     from: "normalized-embedding-cosine",
     to: "offline-document-embedding-reuse",
     relation: "prerequisite",
@@ -16940,6 +17010,18 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "produces",
     reason:
       "Bi-encoder가 만든 top-k candidate set이 뒤 reranker가 볼 수 있는 문서 universe를 제한합니다.",
+  },
+  {
+    from: "retrieval-candidate-recall-ceiling",
+    to: "retrieve-rerank-composition",
+    relation: "constrains",
+    reason: "Retrieve-then-rerank pipeline은 첫 candidate coverage 안에서만 두 번째 단계의 ranking 개선을 얻습니다.",
+  },
+  {
+    from: "cross-bi-encoder-boundary",
+    to: "retrieve-rerank-composition",
+    relation: "produces",
+    reason: "독립 vector 검색의 recall과 pair interaction scoring의 precision을 서로 다른 단계로 배치합니다.",
   },
   {
     from: "embedding-role-instruction-contract",
@@ -16968,6 +17050,36 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "produces",
     reason:
       "미리 계산한 corpus vector를 저장하면서 dimension·dtype·ANN overhead가 운영 storage가 됩니다.",
+  },
+  {
+    from: "embedding-role-instruction-contract",
+    to: "embedding-index-generation-receipt",
+    relation: "constrains",
+    reason: "Query·passage serialization이 index build와 online query encoder에서 동일한 generation으로 재현되어야 합니다.",
+  },
+  {
+    from: "embedding-content-retention",
+    to: "embedding-index-generation-receipt",
+    relation: "constrains",
+    reason: "Tokenizer·length·truncation policy가 document content를 얼마나 보존했는지 generation receipt에 고정합니다.",
+  },
+  {
+    from: "embedding-index-storage-budget",
+    to: "embedding-index-generation-receipt",
+    relation: "produces",
+    reason: "Dimension·dtype·ANN structure와 실측 storage가 배포할 index generation의 resource receipt를 구성합니다.",
+  },
+  {
+    from: "hard-negative-mining-snapshot",
+    to: "embedding-label-snapshot",
+    relation: "constrains",
+    reason: "Mined candidate를 negative로 확정하기 전에 corpus revision의 multi-positive와 unresolved label을 보존합니다.",
+  },
+  {
+    from: "embedding-label-snapshot",
+    to: "multipositive-retrieval-metrics",
+    relation: "produces",
+    reason: "Query별 relevant IDs와 grades가 Recall·DCG·IDCG 계산의 분자·분모·gain을 제공합니다.",
   },
   {
     from: "retrieval-candidate-recall-ceiling",
@@ -17003,6 +17115,12 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "constrains",
     reason:
       "Dimension·precision·ANN overhead를 quality와 함께 선택할 resource 축으로 제공합니다.",
+  },
+  {
+    from: "embedding-index-generation-receipt",
+    to: "embedding-quality-cost-frontier",
+    relation: "evaluates",
+    reason: "동일 generation에서 실측한 p95·memory·index size를 retrieval 품질과 함께 release frontier에 놓습니다.",
   },
   {
     from: "train-validation-test",

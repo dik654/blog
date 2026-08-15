@@ -1782,12 +1782,10 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [{ kind: "primary-source", rule: "Datasheet·model-card framework가 실제 consent·independence·runtime enforcement를 보장한다고 과장하지 않는다." }, { kind: "standard", rule: "Group key·time cutoff·rights·derivative·required cell·fallback을 기록한다." }],
   },
   "sentence-embeddings": {
-    title: "문장 임베딩 글이 소유하는 범위",
+    title: "문장 임베딩 기초 글이 소유하는 범위",
     owns: [
       "Token hidden state에서 padding을 제외해 sentence vector로 만드는 pooling·normalization 계약",
-      "Relation objective와 cross/bi encoder 계산 경계, offline document reuse와 candidate-recall 상한",
-      "Role instruction·token budget·truncation·dimension·precision·ANN index storage의 checkpoint/serving 계약",
-      "Multi-positive Recall/NDCG와 language·length·query-style slice, 품질–latency–resource–storage frontier",
+      "Pooling 결과와 relation objective를 구분하고 cosine score의 의미·사실성 경계를 설명",
     ],
     reuses: [
       {
@@ -1809,9 +1807,27 @@ export const EDITORIAL_BOUNDARIES = {
       },
       {
         kind: "standard",
-        rule: "Checkpoint/tokenizer revision·prefix·pooling·normalization·max length·truncation·dimension/dtype·corpus/index revision·multi-positive label·latency/storage를 함께 기록한다.",
+        rule: "Token state·mask·pooling·normalization·pair relation과 similarity 해석을 한 계산 예로 기록한다.",
       },
     ],
+  },
+  "bi-encoder-retrieval": {
+    title: "Bi-encoder retrieval 글이 소유하는 범위",
+    owns: ["Cross-encoder와 bi-encoder의 online·offline 계산 경계", "Candidate recall 상한과 retrieve-then-rerank composition"],
+    reuses: [{ label: "Sentence embedding artifact", href: "/ai/sentence-embeddings" }, { label: "ANN index", href: "/ai/approximate-nearest-neighbor" }],
+    evidence: [{ kind: "primary-source", rule: "SBERT 계산 비교는 논문의 encoder·task·hardware 범위로 제한한다." }, { kind: "standard", rule: "Corpus generation·candidate k·Recall@k·reranking latency와 hybrid candidate source를 함께 기록한다." }],
+  },
+  "embedding-serving-contract": {
+    title: "Embedding serving contract 글이 소유하는 범위",
+    owns: ["Role instruction·tokenizer·truncation·pooling의 입력 artifact 계약", "Dimension·dtype·ANN overhead와 compatible index generation receipt"],
+    reuses: [{ label: "Tokenizer/checkpoint compatibility", href: "/ai/tokenizer" }, { label: "Sequence truncation", href: "/ai/sequence-length" }],
+    evidence: [{ kind: "primary-source", rule: "E5 prefix·multi-stage recipe는 해당 checkpoints와 paper 범위로 제한한다." }, { kind: "standard", rule: "Checkpoint·tokenizer·serialization·pooling·normalization·length·dimension·dtype·corpus·ANN settings를 같은 generation에 묶는다." }],
+  },
+  "embedding-evaluation": {
+    title: "Embedding evaluation 글이 소유하는 범위",
+    owns: ["Corpus와 multi-positive label snapshot, Recall·NDCG 계산 계약", "Required slice와 품질–latency–memory–storage Pareto release"],
+    reuses: [{ label: "Train·validation·test", href: "/ai/train-validation-test" }, { label: "Hard-negative snapshot", href: "/ai/triplet-metric-learning" }],
+    evidence: [{ kind: "primary-source", rule: "MTEB 결과는 benchmark snapshot·task·language·metric 범위로 제한한다." }, { kind: "standard", rule: "Corpus·labels·tie convention·slice thresholds·ANN settings·hardware·concurrency·actual cost를 함께 기록한다." }],
   },
   quantization: {
     title: "양자화 글이 소유하는 범위",

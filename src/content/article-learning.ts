@@ -14936,457 +14936,155 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/sentence-embeddings": {
-    coreIdea:
-      "문장 임베딩은 token sequence를 vector 하나로 줄이는 pooling만을 뜻하지 않습니다. 어떤 문장 관계를 가까움으로 학습했는지, 문서 표현을 query와 독립적으로 재사용할 수 있는지, 1단계 candidate recall이 뒤 reranker를 어디까지 제한하는지, role·길이·dimension 계약이 실제 평가와 비용을 어떻게 바꾸는지를 한 pipeline으로 봐야 합니다.",
-    assumedKnowledge: [
-      {
-        id: "bidirectional-encoder-visibility",
-        role: "각 token hidden state가 양쪽 문맥을 반영하는 encoder 출력을 읽습니다.",
-      },
-      {
-        id: "cross-bi-encoder-boundary",
-        role: "두 text를 함께 읽는 scoring과 독립 vector scoring의 interaction 차이를 구분합니다.",
-      },
-      {
-        id: "contrastive-pair-semantics",
-        role: "Query–document·paraphrase pair가 embedding에 부여하는 관계 의미를 확인합니다.",
-      },
-      {
-        id: "normalized-embedding-cosine",
-        role: "L2-normalized vector의 inner product를 cosine으로 계산합니다.",
-      },
-      {
-        id: "hard-negative-mining-snapshot",
-        role: "Retriever가 자주 혼동하는 candidate와 false negative 위험을 versioning합니다.",
-      },
-      {
-        id: "tokenizer-checkpoint-compatibility",
-        role: "Role prefix·special token·길이 계산을 checkpoint tokenizer와 맞춥니다.",
-      },
-      {
-        id: "sequence-truncation-policy",
-        role: "Maximum length에서 어느 쪽 content를 보존할지 정합니다.",
-      },
-      {
-        id: "train-validation-test",
-        role: "Pooling·prefix·index 선택과 마지막 평가 data를 분리합니다.",
-      },
-    ],
+    entryLevel: true,
+    entryNote: "Encoder나 vector를 모른다고 가정하고 한 문장의 token state가 여러 줄로 나온다는 형태부터 시작합니다.",
+    coreIdea: "문장 임베딩은 valid token state를 checkpoint의 pooling·normalization으로 vector 하나로 만들고, positive·negative relation objective로 가까움의 의미를 학습한 artifact입니다. Cosine은 그 관계의 score이지 사실성 판정이 아닙니다.",
+    assumedKnowledge: [],
     introducedHere: [
-      {
-        id: "sentence-pooling-mask-contract",
-        role: "Padding을 제외한 reducer·special token·normalization 규약을 계산합니다.",
-      },
-      {
-        id: "sentence-relation-objective-boundary",
-        role: "Vector를 얻는 pooling과 relation-aware similarity 학습을 구분합니다.",
-      },
-      {
-        id: "offline-document-embedding-reuse",
-        role: "Document vector 사전 계산이 online retrieval 비용 구조를 바꾸는 이유를 설명합니다.",
-      },
-      {
-        id: "retrieval-candidate-recall-ceiling",
-        role: "Candidate 밖 정답을 reranker가 복구할 수 없는 상한을 적용합니다.",
-      },
-      {
-        id: "embedding-role-instruction-contract",
-        role: "Query·passage·task prefix를 training serialization과 같은 형태로 유지합니다.",
-      },
-      {
-        id: "embedding-content-retention",
-        role: "Instruction·special token을 제외한 content budget과 위치별 보존을 측정합니다.",
-      },
-      {
-        id: "embedding-index-storage-budget",
-        role: "Vector raw payload와 ANN·metadata·replica overhead를 분리해 계산합니다.",
-      },
-      {
-        id: "multipositive-retrieval-metrics",
-        role: "여러 relevant document의 coverage와 graded ranking을 Recall/NDCG로 나눕니다.",
-      },
-      {
-        id: "embedding-quality-cost-frontier",
-        role: "품질·latency·resource·storage에서 지배되지 않는 배포 후보를 고릅니다.",
-      },
+      { id: "sentence-embedding-artifact", role: "Token state에서 저장·비교 가능한 고정 길이 relation vector가 만들어지는 전체 형태를 설명합니다." },
+      { id: "sentence-pooling-mask-contract", role: "Padding을 제외한 합·valid count 평균·L2 normalization을 계산합니다." },
+      { id: "sentence-relation-objective-boundary", role: "Vector를 만드는 pooling과 가까움의 의미를 학습하는 objective를 구분합니다." },
+      { id: "embedding-similarity-score-boundary", role: "Cosine score가 relation similarity만 말하며 사실성은 증명하지 않는 경계를 적용합니다." },
     ],
     conceptExplanations: [
-      {
-        id: "sentence-pooling-mask-contract",
-        sectionId: "overview",
-        intuition:
-          "Encoder가 token마다 만든 여러 줄의 표를 문장 한 줄로 요약하되 빈 padding 칸은 평균에서 빼는 규칙입니다.",
-        workedExample:
-          "Hidden states (1,1),(3,1),(9,9)에 mask 1,1,0을 적용하면 pooled vector는 (2,1)이고 norm sqrt(5)로 나누면 unit vector (2/sqrt5,1/sqrt5)가 됩니다.",
-        boundary:
-          "Mean pooling이 모든 checkpoint의 정답은 아니며 CLS·last token·special-token 포함 여부와 normalization은 학습 recipe를 따라야 합니다.",
-      },
-      {
-        id: "sentence-relation-objective-boundary",
-        sectionId: "overview",
-        intuition:
-          "문장을 숫자 한 줄로 접을 수 있다는 사실과 그 숫자의 가까움이 질문–답 관계를 뜻한다는 사실은 서로 다른 문제입니다.",
-        workedExample:
-          "Masked-LM BERT의 CLS를 바로 비교한 baseline과 query–positive–negative pair로 fine-tune한 model을 같은 retrieval validation에서 비교합니다.",
-        boundary:
-          "Paraphrase에 맞춘 관계 공간이 legal retrieval·code search에도 그대로 최적이라는 뜻은 아니며 training relation과 target task를 확인합니다.",
-      },
-      {
-        id: "offline-document-embedding-reuse",
-        sectionId: "sbert",
-        intuition:
-          "도서관 책 설명은 미리 색인해 두고 새 질문만 한 번 읽어 저장된 표와 비교하는 구조입니다.",
-        workedExample:
-          "문서 10,000개라면 cross-encoder는 query마다 pair forward 10,000번이 필요하지만 bi-encoder는 문서 vector를 offline에 저장하고 online query forward 한 번과 ANN search를 수행합니다.",
-        boundary:
-          "ANN도 index·dimension에 따른 비용과 recall 손실이 있고 독립 encoding은 query-document token interaction을 줄이므로 무조건 더 정확하거나 O(1)이라고 볼 수 없습니다.",
-      },
-      {
-        id: "retrieval-candidate-recall-ceiling",
-        sectionId: "sbert",
-        intuition:
-          "결선 심사위원은 예선을 통과한 후보의 순서만 바꿀 수 있으므로 예선에서 탈락한 정답을 우승시킬 수 없습니다.",
-        workedExample:
-          "Relevant documents가 {A,B,C}인데 top-5 candidate가 {A,D,E,F,G}라면 reranker를 아무리 개선해도 이 query의 relevant coverage는 1/3을 넘지 못합니다.",
-        boundary:
-          "두 번째 단계가 corpus를 다시 검색하거나 query expansion으로 새 candidate를 추가하면 전제가 깨지므로 순수 reranking pipeline에만 적용합니다.",
-        proofIdea:
-          "Rerank output의 문서 집합이 candidate set의 subset이라는 전제에서 relevant set과의 교집합도 candidate relevant 교집합의 subset이므로 cardinality가 더 커질 수 없습니다.",
-        counterexample:
-          "Reranker가 아니라 별도 sparse retriever의 candidate를 union하는 hybrid second stage라면 첫 dense candidate 밖의 정답 B를 추가할 수 있어 단일 candidate-set 상한을 그대로 적용할 수 없습니다.",
-      },
-      {
-        id: "embedding-role-instruction-contract",
-        sectionId: "modern",
-        intuition:
-          "같은 문장이라도 질문인지 답 후보인지 알려 주는 표찰까지 모델이 학습 입력으로 보았으므로 배포에서도 같은 표찰을 붙입니다.",
-        workedExample:
-          "E5-style checkpoint가 query에는 'query: ', document에는 'passage: '를 사용했다면 두 side를 바꾸거나 prefix를 빼지 않은 세 가지 설정을 validation에서 명시적으로 재현합니다.",
-        boundary:
-          "Prefix가 필요 없는 checkpoint에 임의로 같은 문자열을 붙인다고 좋아지지 않으며 model card의 exact serialization과 language 조건을 따릅니다.",
-      },
-      {
-        id: "embedding-content-retention",
-        sectionId: "modern",
-        intuition:
-          "좌석이 정해진 입력에서 안내문과 special token이 먼저 앉으면 원문이 사용할 좌석이 그만큼 줄어듭니다.",
-        workedExample:
-          "Limit 512, special 2, instruction 30이면 content budget은 480 token이며 800-token 문서의 head truncation retention은 .6입니다.",
-        boundary:
-          "Token 비율 .6이 정답 evidence를 .6 확률로 보존한다는 뜻은 아니므로 answer position별 kept 여부와 chunk parent relation을 함께 측정합니다.",
-      },
-      {
-        id: "embedding-index-storage-budget",
-        sectionId: "modern",
-        intuition:
-          "Vector 표의 행 수와 열 수와 칸당 byte를 곱한 값은 원자료 크기이며 검색용 연결선과 ID 복제본은 별도 비용입니다.",
-        workedExample:
-          "10,000,000 vectors×1,024 dimensions×2 bytes는 raw 20.48GB이고 HNSW graph·metadata·alignment·replica를 더하면 실제 index는 더 커집니다.",
-        boundary:
-          "Dimension과 dtype만으로 실제 RSS·disk를 정확히 예측할 수 없고 quantization·codebook·allocator와 update strategy를 운영 환경에서 측정해야 합니다.",
-      },
-      {
-        id: "multipositive-retrieval-metrics",
-        sectionId: "evaluation",
-        intuition:
-          "정답이 여러 권이면 몇 권을 찾아냈는지와 중요한 정답을 얼마나 앞에 놓았는지를 따로 채점합니다.",
-        workedExample:
-          "Relevant 4개 중 top-10에 3개면 Recall@10=.75이고, relevance grades 3·2·0의 순서라면 각 gain을 log rank로 할인해 DCG를 구한 뒤 ideal order DCG로 나눕니다.",
-        boundary:
-          "Unlabeled document가 실제 negative라는 보장은 없고 IDCG=0 query·tie·gain convention과 corpus snapshot을 고정해야 서로 비교할 수 있습니다.",
-      },
-      {
-        id: "embedding-quality-cost-frontier",
-        sectionId: "evaluation",
-        intuition:
-          "더 느리고 더 크면서 품질도 낮은 후보는 제외하고, 적어도 한 축을 얻으려면 다른 축을 양보해야 하는 후보만 남깁니다.",
-        workedExample:
-          "A가 NDCG .62·p95 8ms·20GB, B가 .61·10ms·25GB라면 A가 B를 지배하지만 C가 .64·14ms·18GB라면 A와 C는 서로 다른 tradeoff로 남습니다.",
-        boundary:
-          "Benchmark 평균 한 수치만 품질로 쓰지 않고 필수 language/domain slice gate를 먼저 적용하며 production concurrency·update cost는 canary에서 확인합니다.",
-      },
+      { id: "sentence-embedding-artifact", sectionId: "overview", intuition: "길이가 다른 문장을 같은 크기의 좌표표 한 장으로 접어 저장하고 비교합니다.", workedExample: "다섯 token state를 mask·mean·normalization해 768차원 unit vector 한 개로 만듭니다.", boundary: "Vector가 생겼다는 사실만으로 가까움의 의미가 정해지지는 않습니다." },
+      { id: "sentence-pooling-mask-contract", sectionId: "pooling", intuition: "여러 token 줄을 평균하되 batch shape용 빈 PAD 줄은 빼는 규칙입니다.", workedExample: "(1,1),(3,1),(9,9)에 mask 1,1,0이면 합 (4,2), 평균 (2,1), norm sqrt5로 나눕니다.", boundary: "CLS·mean·last-token 선택과 special-token 포함은 checkpoint recipe를 따라야 합니다." },
+      { id: "sentence-relation-objective-boundary", sectionId: "relation", intuition: "종이를 한 장으로 접는 법과 그 종이끼리 어떤 기준으로 가까워질지는 다른 문제입니다.", workedExample: "같은 pooling의 MLM baseline과 query-positive pair fine-tuned model을 retrieval validation에서 비교합니다.", boundary: "Paraphrase relation이 legal retrieval에도 자동으로 최적이라는 뜻은 아닙니다." },
+      { id: "embedding-similarity-score-boundary", sectionId: "similarity", intuition: "Cosine은 model이 배운 지도 위의 거리이지 문서의 진실 도장이나 최신성 보증이 아닙니다.", workedExample: "q=(1,0), d=(.6,.8)이면 score .6이지만 d의 주장이 사실인지는 source 검증이 필요합니다.", boundary: "Calibration threshold도 target validation 밖으로 자동 이전하지 않습니다." },
     ],
     conceptStages: [
-      {
-        label: "Token to relation vector",
-        relation:
-          "양방향 token state를 mask pooling하고 pair objective가 similarity에 주는 의미를 분리",
-        concepts: [
-          "bidirectional-encoder-visibility",
-          "sentence-pooling-mask-contract",
-          "contrastive-pair-semantics",
-          "normalized-embedding-cosine",
-          "sentence-relation-objective-boundary",
-        ],
-      },
-      {
-        label: "Retrieval architecture",
-        relation:
-          "Cross/bi interaction 경계에서 offline document reuse와 candidate recall 상한으로 연결",
-        concepts: [
-          "cross-bi-encoder-boundary",
-          "offline-document-embedding-reuse",
-          "retrieval-candidate-recall-ceiling",
-        ],
-      },
-      {
-        label: "Checkpoint and index contract",
-        relation:
-          "Tokenizer·role instruction·truncation이 content 보존과 index storage를 정함",
-        concepts: [
-          "tokenizer-checkpoint-compatibility",
-          "embedding-role-instruction-contract",
-          "sequence-truncation-policy",
-          "embedding-content-retention",
-          "embedding-index-storage-budget",
-        ],
-      },
-      {
-        label: "Evaluation and deployment",
-        relation:
-          "Multi-positive coverage·ranking을 같은 split에서 재고 품질–비용 frontier로 선택",
-        concepts: [
-          "hard-negative-mining-snapshot",
-          "train-validation-test",
-          "multipositive-retrieval-metrics",
-          "embedding-quality-cost-frontier",
-        ],
-      },
+      { label: "01 States", relation: "문장에서 token별 contextual state를 얻습니다.", concepts: ["sentence-embedding-artifact"] },
+      { label: "02 Pool", relation: "PAD를 제외하고 한 vector로 줄입니다.", concepts: ["sentence-pooling-mask-contract", "sentence-embedding-artifact"] },
+      { label: "03 Relate", relation: "Positive·negative pair가 가까움의 의미를 정합니다.", concepts: ["sentence-relation-objective-boundary"] },
+      { label: "04 Interpret", relation: "Similarity가 주장할 수 있는 범위를 제한합니다.", concepts: ["embedding-similarity-score-boundary"] },
     ],
     exercises: [
-      {
-        level: "basic",
-        question:
-          "Hidden states (1,1),(3,1),(9,9)와 mask 1,1,0에서 masked mean과 L2-normalized embedding을 계산하고 padding 포함 결과와 비교하라.",
-        answerChecklist: [
-          "masked sum (4,2)",
-          "valid count 2",
-          "mean (2,1)",
-          "norm sqrt5",
-          "unit vector",
-          "padding inclusion changes result",
-        ],
-        requiredConcepts: [
-          "sentence-pooling-mask-contract",
-          "normalized-embedding-cosine",
-        ],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "Unit embedding zq=(1,0), zd=(.6,.8), zn=(-1,0)의 cosine score를 계산해 document 순위를 정하고, 높은 score가 사실성을 보장하지 않는 이유를 설명하라.",
-        answerChecklist: [
-          "all norms equal 1",
-          "cosine equals inner product",
-          "score zd .6",
-          "score zn -1",
-          "zd ranked first",
-          "score reflects learned relation not factual proof",
-        ],
-        requiredConcepts: [
-          "normalized-embedding-cosine",
-          "sentence-relation-objective-boundary",
-        ],
-        sectionId: "overview",
-      },
-      {
-        level: "advanced",
-        question:
-          "일반 masked-LM BERT의 CLS 또는 mean pooling만으로 retrieval relation이 보장되지 않는 이유를 설명하고 pair objective ablation을 설계하라.",
-        answerChecklist: [
-          "pooling vs objective",
-          "MLM target",
-          "query-positive relation",
-          "same encoder/pooling",
-          "same split",
-          "retrieval metric",
-          "domain slices",
-        ],
-        requiredConcepts: [
-          "bidirectional-encoder-visibility",
-          "sentence-pooling-mask-contract",
-          "sentence-relation-objective-boundary",
-          "contrastive-pair-semantics",
-        ],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "Corpus 10,000개에서 새 query 한 건을 처리할 때 cross-encoder와 bi-encoder의 Transformer forward·offline artifact·online search를 비교하라.",
-        answerChecklist: [
-          "10,000 pair forwards",
-          "offline document encodings",
-          "one query forward",
-          "ANN search",
-          "index build excluded",
-          "interaction tradeoff",
-        ],
-        requiredConcepts: [
-          "cross-bi-encoder-boundary",
-          "offline-document-embedding-reuse",
-        ],
-        sectionId: "sbert",
-      },
-      {
-        level: "advanced",
-        question:
-          "Relevant {A,B,C}, candidate top-5 {A,D,E,F,G}에서 reranker coverage 상한을 증명하고 candidate k sweep과 hybrid 반례를 설계하라.",
-        answerChecklist: [
-          "intersection {A}",
-          "coverage 1/3",
-          "subset proof",
-          "k sweep",
-          "recall-latency",
-          "sparse union counterexample",
-        ],
-        requiredConcepts: [
-          "retrieval-candidate-recall-ceiling",
-          "offline-document-embedding-reuse",
-        ],
-        sectionId: "sbert",
-      },
-      {
-        level: "basic",
-        question:
-          "Limit 512·special 2·instruction 30·content 800에서 content budget과 retention을 계산하고 head truncation의 answer-position 위험을 설명하라.",
-        answerChecklist: [
-          "480 token budget",
-          "retention .6",
-          "exact tokenizer",
-          "truncation side",
-          "tail answer loss",
-          "position slice",
-        ],
-        requiredConcepts: [
-          "embedding-role-instruction-contract",
-          "embedding-content-retention",
-          "sequence-truncation-policy",
-          "tokenizer-checkpoint-compatibility",
-        ],
-        sectionId: "modern",
-      },
-      {
-        level: "basic",
-        question:
-          "Model card가 E5-style 직렬화를 요구할 때 질문 ‘연차 규정?’과 문서 ‘연차는 15일’의 query/document 입력을 쓰고, prefix 생략·양쪽 query prefix가 왜 잘못인지 분류하라.",
-        answerChecklist: [
-          "query: 연차 규정?",
-          "passage: 연차는 15일",
-          "asymmetric roles preserved",
-          "omission changes training serialization",
-          "two query prefixes swap document role",
-          "do not copy prefix to unsupported checkpoint",
-        ],
-        requiredConcepts: [
-          "embedding-role-instruction-contract",
-          "tokenizer-checkpoint-compatibility",
-        ],
-        sectionId: "modern",
-      },
-      {
-        level: "basic",
-        question:
-          "1천만 개 1,024차원 FP16 embedding의 raw storage를 계산하고 실제 ANN index 견적에 더할 항목을 작성하라.",
-        answerChecklist: [
-          "2 bytes",
-          "20.48GB decimal",
-          "ANN graph/list/codebook",
-          "IDs/metadata",
-          "alignment",
-          "replica",
-        ],
-        requiredConcepts: ["embedding-index-storage-budget"],
-        sectionId: "modern",
-      },
-      {
-        level: "advanced",
-        question:
-          "Relevant document가 4개인 query의 top-10에 3개가 있고 graded relevance가 주어졌을 때 Recall@10과 NDCG 계산표를 만들고 unlabeled positive 경계를 설명하라.",
-        answerChecklist: [
-          "Recall .75",
-          "gain 2^rel-1",
-          "log2 discount",
-          "IDCG",
-          "0-to-1 normalization",
-          "unlabeled not certain negative",
-          "convention fixed",
-        ],
-        requiredConcepts: ["multipositive-retrieval-metrics"],
-        sectionId: "evaluation",
-      },
-      {
-        level: "advanced",
-        question:
-          "두 embedding checkpoint를 한국어·장문·query-style slice에서 비교하고 candidate Recall/NDCG·p95·memory·actual index size로 Pareto 선택하는 실험을 설계하라.",
-        answerChecklist: [
-          "same corpus snapshot",
-          "multi-positive labels",
-          "same ANN settings",
-          "required slice gates",
-          "p95/concurrency",
-          "runtime memory",
-          "measured index size",
-          "dominated candidates",
-          "untouched test",
-        ],
-        requiredConcepts: [
-          "multipositive-retrieval-metrics",
-          "embedding-quality-cost-frontier",
-          "embedding-index-storage-budget",
-          "train-validation-test",
-          "hard-negative-mining-snapshot",
-        ],
-        sectionId: "evaluation",
-      },
+      { level: "basic", question: "Token hidden state와 sentence embedding을 구분하세요.", answerChecklist: ["token row", "contextual", "pooling", "fixed length", "artifact"], requiredConcepts: ["sentence-embedding-artifact"], sectionId: "overview" },
+      { level: "basic", question: "Padding mask가 필요한 이유를 설명하세요.", answerChecklist: ["batch shape", "PAD no content", "zero contribution", "valid count"], requiredConcepts: ["sentence-pooling-mask-contract"], sectionId: "pooling" },
+      { level: "basic", question: "(1,1),(3,1),(9,9), mask 1,1,0의 masked mean을 계산하세요.", answerChecklist: ["sum (4,2)", "count 2", "mean (2,1)", "PAD excluded"], requiredConcepts: ["sentence-pooling-mask-contract"], sectionId: "pooling" },
+      { level: "basic", question: "(2,1)을 L2-normalize하세요.", answerChecklist: ["norm sqrt5", "divide", "2/sqrt5", "1/sqrt5", "unit length"], requiredConcepts: ["sentence-pooling-mask-contract", "sentence-embedding-artifact"], sectionId: "pooling" },
+      { level: "basic", question: "Pooling과 relation objective를 구분하세요.", answerChecklist: ["reduce states", "fixed vector", "positive", "negative", "meaning of closeness"], requiredConcepts: ["sentence-relation-objective-boundary"], sectionId: "relation" },
+      { level: "basic", question: "q=(1,0), d=(.6,.8)의 cosine을 계산하고 해석 경계를 쓰세요.", answerChecklist: ["unit vectors", "dot product", ".6", "learned relation", "not factual proof"], requiredConcepts: ["embedding-similarity-score-boundary"], sectionId: "similarity" },
+      { level: "advanced", question: "Mean·CLS pooling ablation을 설계하세요.", answerChecklist: ["same encoder", "same objective", "mask", "normalization", "same split", "retrieval metric"], requiredConcepts: ["sentence-pooling-mask-contract", "sentence-embedding-artifact"], sectionId: "pooling" },
+      { level: "advanced", question: "MLM pooling만으로 retrieval relation이 보장되지 않는 반례를 설계하세요.", answerChecklist: ["same vector shape", "different objective", "query positive", "ranking failure", "paired baseline"], requiredConcepts: ["sentence-relation-objective-boundary"], sectionId: "relation" },
+      { level: "advanced", question: "Paraphrase와 question-answer relation 공간을 비교하세요.", answerChecklist: ["different positives", "same text may differ", "target task", "domain slice", "do not transfer claim"], requiredConcepts: ["sentence-relation-objective-boundary"], sectionId: "relation" },
+      { level: "advanced", question: "Sentence embedding release receipt를 작성하세요.", answerChecklist: ["encoder", "pooling", "mask", "normalization", "relation data", "metric", "score boundary"], requiredConcepts: ["sentence-embedding-artifact", "embedding-similarity-score-boundary"], sectionId: "similarity" },
     ],
     papers: [
-      {
-        title: "Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks",
-        href: "https://aclanthology.org/D19-1410/",
-        problem:
-          "BERT cross-encoder로 많은 sentence pair를 모두 비교할 때 발생하는 조합 비용",
-        contribution:
-          "Siamese·triplet BERT와 pooling으로 독립 sentence embedding을 학습해 similarity search에 재사용",
-        assumptions:
-          "BERT-family encoder와 NLI·STS supervision, 논문의 pooling·objective·evaluation protocol",
-        evidenceScope:
-          "EMNLP-IJCNLP 논문의 STS·transfer tasks와 10,000-sentence comparison example 범위",
-        notClaim:
-          "모든 현대 embedding·ANN system에서 같은 speedup 비율이나 cross-encoder와 같은 정확도를 보장한다는 뜻은 아님",
-        sectionId: "paper-sbert",
-      },
-      {
-        title: "Text Embeddings by Weakly-Supervised Contrastive Pre-training",
-        href: "https://arxiv.org/abs/2212.03533",
-        problem:
-          "여러 text matching task에 transfer 가능한 general-purpose embedding을 넓은 weak pair에서 학습하는 문제",
-        contribution:
-          "Heterogeneous weak pairs의 contrastive pretraining, supervised fine-tuning과 query/passage role prefix",
-        assumptions:
-          "논문의 text-pair mixture·batch/negative·Transformer checkpoints·prefix serialization",
-        evidenceScope:
-          "E5 checkpoints와 논문이 보고한 BEIR·MTEB 등 task·model size 범위",
-        notClaim:
-          "모든 embedding family에 query/passage 문자열을 붙이면 같은 효과가 생기거나 특정 domain 최적성이 보장된다는 뜻은 아님",
-        sectionId: "paper-e5",
-      },
-      {
-        title: "MTEB: Massive Text Embedding Benchmark",
-        href: "https://arxiv.org/abs/2210.07316",
-        problem:
-          "Sentence embedding을 한두 semantic similarity dataset만으로 비교해 task transfer를 놓치는 평가 문제",
-        contribution:
-          "Retrieval·STS·classification·clustering·reranking 등 task와 metric을 공통 framework로 평가",
-        assumptions:
-          "포함된 dataset·language·metric·model interface와 공개 benchmark snapshot",
-        evidenceScope:
-          "MTEB 논문의 task taxonomy와 포함 dataset에서의 model comparison 범위",
-        notClaim:
-          "Leaderboard 평균이 특정 서비스 traffic·최신 corpus·한국어 장문·serving cost를 대신한다는 뜻은 아님",
-        sectionId: "paper-mteb",
-      },
+      { title: "Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks", href: "https://aclanthology.org/D19-1410/", problem: "BERT pair 계산을 대규모 sentence similarity에 재사용하기 어려운 문제", contribution: "Siamese·triplet BERT와 pooling으로 독립 sentence embedding을 학습", assumptions: "BERT-family encoder·NLI/STS supervision·논문의 pooling과 objective", evidenceScope: "논문의 STS·transfer task와 architecture comparison", notClaim: "모든 domain에서 같은 pooling·quality·speedup을 보장한다는 뜻은 아님", sectionId: "paper-sbert" },
+    ],
+  },
+  "ai/bi-encoder-retrieval": {
+    entryLevel: true,
+    entryNote: "검색 architecture를 모른다고 가정하고 query와 document를 함께 읽는 경우와 따로 읽는 경우부터 비교합니다.",
+    coreIdea: "Bi-encoder는 document vector를 corpus generation에서 미리 계산해 online query 사이에 재사용하고 ANN으로 candidate를 찾습니다. Reranker는 candidate 내부 순서만 바꾸므로 첫 단계 recall이 전체 pipeline의 상한입니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "offline-document-embedding-reuse", role: "Document-side forward를 offline artifact로 옮겨 online 비용 구조를 바꿉니다." },
+      { id: "retrieval-candidate-recall-ceiling", role: "Candidate 밖 relevant document를 pure reranker가 복구할 수 없는 상한을 증명합니다." },
+      { id: "retrieve-rerank-composition", role: "Recall-oriented retrieval과 precision-oriented pair scoring을 두 단계로 조합합니다." },
+    ],
+    conceptExplanations: [
+      { id: "offline-document-embedding-reuse", sectionId: "offline-index", intuition: "도서관 책 설명은 미리 색인하고 새 질문만 한 번 읽어 저장된 표와 비교합니다.", workedExample: "문서 10,000개면 cross는 query마다 10,000 pair forwards, bi는 query forward 1회와 ANN search를 수행합니다.", boundary: "Index build·memory·approximation loss가 사라지는 것은 아닙니다." },
+      { id: "retrieval-candidate-recall-ceiling", sectionId: "candidate", intuition: "결선은 예선 통과자의 순서만 바꾸므로 예선에서 탈락한 정답을 우승시킬 수 없습니다.", workedExample: "Relevant {A,B,C}, candidates {A,D,E,F,G}이면 pure reranker coverage 상한은 1/3입니다.", boundary: "Sparse union이나 query expansion이 새 후보를 추가하면 단일 candidate-set 전제가 깨집니다.", proofIdea: "Reranker의 문서 집합이 candidate set의 subset이면 relevant set과의 교집합도 candidate relevant 교집합의 subset이므로 cardinality가 커질 수 없습니다.", counterexample: "Dense candidate에는 A만 있지만 sparse retriever가 B를 가져와 두 집합을 union하면 B는 새 candidate가 되므로 pure reranking 상한을 그대로 적용할 수 없습니다." },
+      { id: "retrieve-rerank-composition", sectionId: "reranking", intuition: "넓고 빠른 예선으로 정답을 모은 뒤 작고 정교한 결선으로 위쪽 순서를 다듬습니다.", workedExample: "Retriever top-100을 만든 뒤 cross-encoder가 100 pair만 다시 읽어 top-10을 정합니다.", boundary: "k 증가는 recall과 함께 reranking latency·context 비용도 높입니다." },
+    ],
+    conceptStages: [
+      { label: "01 Compare", relation: "Pair-forward와 independent encoding을 구분합니다.", concepts: ["offline-document-embedding-reuse"] },
+      { label: "02 Precompute", relation: "Document vectors를 corpus generation에 저장합니다.", concepts: ["offline-document-embedding-reuse"] },
+      { label: "03 Retrieve", relation: "ANN candidate coverage 상한을 측정합니다.", concepts: ["retrieval-candidate-recall-ceiling"] },
+      { label: "04 Rerank", relation: "Candidate 안에서 pair interaction으로 순서를 바꿉니다.", concepts: ["retrieve-rerank-composition"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Cross-encoder와 bi-encoder 입력 형태를 구분하세요.", answerChecklist: ["joint pair", "independent", "token interaction", "vector score"], requiredConcepts: ["offline-document-embedding-reuse"], sectionId: "overview" },
+      { level: "basic", question: "문서 10,000개에서 query당 online forward를 비교하세요.", answerChecklist: ["cross 10000", "bi query one", "offline documents", "ANN"], requiredConcepts: ["offline-document-embedding-reuse"], sectionId: "offline-index" },
+      { level: "basic", question: "Offline index build에 남길 artifact를 쓰세요.", answerChecklist: ["corpus revision", "encoder", "vectors", "ANN", "generation"], requiredConcepts: ["offline-document-embedding-reuse"], sectionId: "offline-index" },
+      { level: "basic", question: "Relevant {A,B,C}, candidates {A,D,E,F,G}의 coverage를 계산하세요.", answerChecklist: ["intersection A", "one", "three", "1/3", "ceiling"], requiredConcepts: ["retrieval-candidate-recall-ceiling"], sectionId: "candidate" },
+      { level: "basic", question: "Pure reranker가 candidate 밖 문서를 복구하지 못하는 이유를 설명하세요.", answerChecklist: ["subset", "only reorder", "no corpus search", "empty remains empty"], requiredConcepts: ["retrieval-candidate-recall-ceiling"], sectionId: "candidate" },
+      { level: "basic", question: "Retrieve-then-rerank 두 단계의 목적을 각각 쓰세요.", answerChecklist: ["candidate recall", "small k", "pair precision", "ranking"], requiredConcepts: ["retrieve-rerank-composition"], sectionId: "reranking" },
+      { level: "advanced", question: "Candidate k sweep 실험을 설계하세요.", answerChecklist: ["same corpus", "k values", "Recall@k", "ANN latency", "rerank latency", "frontier"], requiredConcepts: ["retrieval-candidate-recall-ceiling", "retrieve-rerank-composition"], sectionId: "candidate" },
+      { level: "advanced", question: "Sparse+dense candidate union이 상한 반례인 이유를 쓰세요.", answerChecklist: ["new candidates", "outside dense set", "union", "recompute ceiling", "hybrid source"], requiredConcepts: ["retrieval-candidate-recall-ceiling"], sectionId: "candidate" },
+      { level: "advanced", question: "Cross와 bi 품질·비용 비교를 설계하세요.", answerChecklist: ["same labels", "interaction", "offline cost", "online p95", "recall", "ranking"], requiredConcepts: ["offline-document-embedding-reuse", "retrieve-rerank-composition"], sectionId: "reranking" },
+      { level: "advanced", question: "Two-stage retrieval release receipt를 작성하세요.", answerChecklist: ["corpus", "index generation", "candidate k", "recall", "reranker", "p95", "rollback"], requiredConcepts: ["offline-document-embedding-reuse", "retrieval-candidate-recall-ceiling", "retrieve-rerank-composition"], sectionId: "reranking" },
+    ],
+    papers: [
+      { title: "Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks", href: "https://aclanthology.org/D19-1410/#retrieval", problem: "Query마다 모든 sentence pair를 BERT로 다시 계산하는 조합 비용", contribution: "독립 embedding과 similarity search로 document 계산을 재사용", assumptions: "논문의 BERT·NLI/STS·pooling·hardware와 comparison setup", evidenceScope: "10,000-sentence comparison과 paper tasks 범위", notClaim: "ANN이 O(1)이거나 cross-encoder 품질을 항상 유지한다는 뜻은 아님", sectionId: "paper-sbert-retrieval" },
+    ],
+  },
+  "ai/embedding-serving-contract": {
+    entryLevel: true,
+    entryNote: "Serving을 모른다고 가정하고 checkpoint 파일만 같아도 입력 규칙이 다르면 다른 vector가 된다는 사례부터 시작합니다.",
+    coreIdea: "Production embedding은 checkpoint·tokenizer·role serialization·pooling·normalization·length·dimension·dtype·corpus·ANN settings를 같은 index generation receipt로 묶고 query encoder와 index의 호환성을 확인해야 합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "embedding-role-instruction-contract", role: "Query·passage prefix와 task instruction을 training serialization과 같게 유지합니다." },
+      { id: "embedding-content-retention", role: "Special·instruction token을 뺀 content budget과 위치별 보존을 계산합니다." },
+      { id: "embedding-index-storage-budget", role: "Raw vector payload와 ANN·metadata·replica overhead를 나눠 계산합니다." },
+      { id: "embedding-index-generation-receipt", role: "Query encoder와 index가 같은 artifact generation을 사용하도록 전체 설정을 묶습니다." },
+    ],
+    conceptExplanations: [
+      { id: "embedding-role-instruction-contract", sectionId: "serialization", intuition: "질문과 답 후보에 학습 때 쓰던 역할표를 같은 위치에 붙입니다.", workedExample: "query: 연차 규정? / passage: 연차는 15일로 서로 다른 prefix를 보존합니다.", boundary: "Prefix가 없는 checkpoint에 임의로 복사하지 않습니다." },
+      { id: "embedding-content-retention", sectionId: "truncation", intuition: "입력 좌석에서 special과 instruction이 먼저 앉으면 본문 좌석이 줄어듭니다.", workedExample: "512-2-30=480 content tokens, 800-token 문서 retention=.6입니다.", boundary: "Retention .6이 answer evidence 보존 확률 .6이라는 뜻은 아닙니다." },
+      { id: "embedding-index-storage-budget", sectionId: "index-artifact", intuition: "Vector 표의 행·열·칸 byte는 원자료이고 검색 연결선과 ID는 별도 비용입니다.", workedExample: "10M×1024×2 bytes=20.48GB raw이고 ANN graph·metadata·replica를 더합니다.", boundary: "실제 RSS·disk는 compression·allocator·alignment를 측정해야 합니다." },
+      { id: "embedding-index-generation-receipt", sectionId: "index-artifact", intuition: "Query와 document가 같은 좌표계를 쓰는지 확인하는 배포 영수증입니다.", workedExample: "g42가 encoder e9·tokenizer t3·pool mean+norm·corpus c17·HNSW h5를 함께 가리킵니다.", boundary: "Model revision만 같아도 prefix·pooling·dimension이 다르면 compatible하지 않습니다." },
+    ],
+    conceptStages: [
+      { label: "01 Serialize", relation: "Query·passage 역할을 exact input으로 만듭니다.", concepts: ["embedding-role-instruction-contract"] },
+      { label: "02 Retain", relation: "Tokenizer와 length가 남긴 content를 측정합니다.", concepts: ["embedding-content-retention"] },
+      { label: "03 Build", relation: "Dimension·dtype·ANN overhead를 실측합니다.", concepts: ["embedding-index-storage-budget"] },
+      { label: "04 Release", relation: "Query와 index generation 호환성을 gate합니다.", concepts: ["embedding-index-generation-receipt"] },
+    ],
+    exercises: [
+      { level: "basic", question: "E5-style query와 passage 입력 예를 쓰세요.", answerChecklist: ["query prefix", "passage prefix", "different roles", "exact text"], requiredConcepts: ["embedding-role-instruction-contract"], sectionId: "serialization" },
+      { level: "basic", question: "Prefix를 생략하면 안 되는 이유를 설명하세요.", answerChecklist: ["training serialization", "role", "distribution shift", "model card"], requiredConcepts: ["embedding-role-instruction-contract"], sectionId: "serialization" },
+      { level: "basic", question: "512·special2·instruction30의 content budget을 계산하세요.", answerChecklist: ["512 minus 2", "minus 30", "480", "tokenizer"], requiredConcepts: ["embedding-content-retention"], sectionId: "truncation" },
+      { level: "basic", question: "800-token 문서의 480-token retention과 tail risk를 설명하세요.", answerChecklist: [".6", "head truncation", "tail answer", "position slice"], requiredConcepts: ["embedding-content-retention"], sectionId: "truncation" },
+      { level: "basic", question: "10M×1024 FP16 raw storage를 계산하세요.", answerChecklist: ["2 bytes", "20.48GB decimal", "raw only", "ANN extra"], requiredConcepts: ["embedding-index-storage-budget"], sectionId: "index-artifact" },
+      { level: "basic", question: "Index generation receipt 필드를 쓰세요.", answerChecklist: ["checkpoint", "tokenizer", "serialization", "pooling", "dimension dtype", "corpus", "ANN"], requiredConcepts: ["embedding-index-generation-receipt"], sectionId: "index-artifact" },
+      { level: "advanced", question: "Answer-position truncation audit를 설계하세요.", answerChecklist: ["same tokenizer", "position bins", "kept answer", "chunking", "parent relation", "metric"], requiredConcepts: ["embedding-content-retention"], sectionId: "truncation" },
+      { level: "advanced", question: "FP16과 int8 index를 비교하세요.", answerChecklist: ["raw bytes", "ANN overhead", "same queries", "recall", "p95", "actual RSS"], requiredConcepts: ["embedding-index-storage-budget"], sectionId: "index-artifact" },
+      { level: "advanced", question: "Old index와 new query encoder mismatch gate를 설계하세요.", answerChecklist: ["generation ID", "startup check", "reject traffic", "dual build", "canary", "rollback"], requiredConcepts: ["embedding-index-generation-receipt"], sectionId: "index-artifact" },
+      { level: "advanced", question: "Embedding serving release receipt를 작성하세요.", answerChecklist: ["model card", "input fixtures", "retention", "raw and actual size", "generation", "compatibility", "rollback"], requiredConcepts: ["embedding-role-instruction-contract", "embedding-content-retention", "embedding-index-storage-budget", "embedding-index-generation-receipt"], sectionId: "index-artifact" },
+    ],
+    papers: [
+      { title: "Text Embeddings by Weakly-Supervised Contrastive Pre-training", href: "https://arxiv.org/abs/2212.03533", problem: "다양한 text matching task에 transfer 가능한 embedding을 학습하는 문제", contribution: "Weak pair pretraining·supervised fine-tuning과 query/passage prefix", assumptions: "논문의 pair mixture·batch/negative·checkpoints·serialization", evidenceScope: "E5 checkpoints와 논문의 BEIR·MTEB 결과 범위", notClaim: "모든 family에 같은 prefix를 붙이면 개선된다는 뜻은 아님", sectionId: "paper-e5" },
+    ],
+  },
+  "ai/embedding-evaluation": {
+    entryLevel: true,
+    entryNote: "Retrieval metric을 모른다고 가정하고 한 query에 정답 문서가 여러 개일 수 있다는 사례부터 시작합니다.",
+    coreIdea: "Embedding 평가는 corpus revision과 multi-positive label snapshot을 먼저 고정하고 candidate coverage와 graded ranking을 Recall·NDCG로 나눈 뒤 required slice와 p95·memory·index size의 Pareto gate로 release합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "embedding-label-snapshot", role: "Corpus revision과 query별 positives·grades·annotator rule을 평가 artifact로 고정합니다." },
+      { id: "multipositive-retrieval-metrics", role: "Relevant coverage와 graded ranking을 Recall@k·NDCG@k로 분리합니다." },
+      { id: "embedding-quality-cost-frontier", role: "Required slice를 통과한 후보의 quality·p95·memory·storage Pareto frontier를 고릅니다." },
+    ],
+    conceptExplanations: [
+      { id: "embedding-label-snapshot", sectionId: "labels", intuition: "시험 답안지와 교과서 판본을 함께 봉인해 어느 문서들이 정답이었는지 보존합니다.", workedExample: "Corpus c17에서 query q1 positives {A,B}, grades {3,2}, rule r4, unresolved {C}를 기록합니다.", boundary: "Unlabeled document를 확정 negative로 단정하지 않습니다." },
+      { id: "multipositive-retrieval-metrics", sectionId: "metrics", intuition: "정답 몇 개를 찾았는지와 중요한 정답을 얼마나 위에 놓았는지를 따로 채점합니다.", workedExample: "Relevant 4개 중 top-10에 3개면 Recall=.75이고 grades를 rank discount한 DCG를 IDCG로 나눕니다.", boundary: "Tie·gain·IDCG=0 convention과 corpus snapshot을 고정해야 비교할 수 있습니다." },
+      { id: "embedding-quality-cost-frontier", sectionId: "release", intuition: "필수 과목을 모두 통과한 뒤 더 느리고 크면서 품질도 낮은 후보를 제거합니다.", workedExample: "A .62/8ms/20GB가 B .61/10ms/25GB를 지배하지만 C .64/14ms/18GB와는 trade-off입니다.", boundary: "Leaderboard 평균이 production language·length·domain slice와 concurrency를 대신하지 않습니다." },
+    ],
+    conceptStages: [
+      { label: "01 Snapshot", relation: "Corpus와 query별 relevant set을 고정합니다.", concepts: ["embedding-label-snapshot"] },
+      { label: "02 Cover", relation: "Top-k가 relevant set을 얼마나 포함하는지 셉니다.", concepts: ["multipositive-retrieval-metrics"] },
+      { label: "03 Rank", relation: "Graded relevance를 rank discount로 채점합니다.", concepts: ["multipositive-retrieval-metrics"] },
+      { label: "04 Release", relation: "Required slice와 운영 비용 frontier를 통과합니다.", concepts: ["embedding-quality-cost-frontier"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Corpus snapshot과 label snapshot을 구분하세요.", answerChecklist: ["documents revision", "query positives", "grades", "annotator rule", "linked"], requiredConcepts: ["embedding-label-snapshot"], sectionId: "overview" },
+      { level: "basic", question: "Unlabeled를 확정 negative로 보면 안 되는 이유를 설명하세요.", answerChecklist: ["missing judgment", "hidden positive", "false negative", "unresolved"], requiredConcepts: ["embedding-label-snapshot"], sectionId: "labels" },
+      { level: "basic", question: "Relevant 4개 중 top-10에 3개일 때 Recall@10을 계산하세요.", answerChecklist: ["intersection 3", "denominator 4", ".75", "coverage"], requiredConcepts: ["multipositive-retrieval-metrics"], sectionId: "metrics" },
+      { level: "basic", question: "DCG에서 gain과 log discount가 하는 일을 설명하세요.", answerChecklist: ["grade to gain", "rank", "lower discount", "sum"], requiredConcepts: ["multipositive-retrieval-metrics"], sectionId: "metrics" },
+      { level: "basic", question: "NDCG가 IDCG로 나누는 이유를 설명하세요.", answerChecklist: ["ideal order", "normalize", "query labels", "0 to 1", "IDCG zero rule"], requiredConcepts: ["multipositive-retrieval-metrics"], sectionId: "metrics" },
+      { level: "basic", question: "Required slice 세 개와 운영 cost 세 개를 쓰세요.", answerChecklist: ["language", "length", "domain", "p95", "memory", "index size"], requiredConcepts: ["embedding-quality-cost-frontier"], sectionId: "release" },
+      { level: "advanced", question: "Multi-positive annotation protocol을 설계하세요.", answerChecklist: ["corpus revision", "rubric", "multiple positives", "grades", "agreement", "unresolved"], requiredConcepts: ["embedding-label-snapshot"], sectionId: "labels" },
+      { level: "advanced", question: "Recall과 NDCG가 반대로 움직이는 예를 만드세요.", answerChecklist: ["same relevant count", "different rank", "coverage unchanged", "NDCG changes", "interpretation"], requiredConcepts: ["multipositive-retrieval-metrics"], sectionId: "metrics" },
+      { level: "advanced", question: "A·B·C의 Pareto dominance를 계산하세요.", answerChecklist: ["same snapshot", "quality", "p95", "storage", "dominated B", "A and C remain"], requiredConcepts: ["embedding-quality-cost-frontier"], sectionId: "release" },
+      { level: "advanced", question: "Embedding evaluation release receipt를 작성하세요.", answerChecklist: ["corpus", "labels", "metric convention", "slice thresholds", "ANN settings", "hardware", "test untouched", "decision"], requiredConcepts: ["embedding-label-snapshot", "multipositive-retrieval-metrics", "embedding-quality-cost-frontier"], sectionId: "release" },
+    ],
+    papers: [
+      { title: "MTEB: Massive Text Embedding Benchmark", href: "https://arxiv.org/abs/2210.07316", problem: "Sentence embedding을 한두 similarity dataset만으로 비교하는 평가 편향", contribution: "Retrieval·STS·classification·clustering·reranking 등의 공통 benchmark", assumptions: "포함 dataset·language·metric·model interface와 benchmark snapshot", evidenceScope: "MTEB 논문의 task taxonomy와 포함 datasets 범위", notClaim: "Leaderboard 평균이 특정 production corpus·한국어 장문·serving cost를 대신한다는 뜻은 아님", sectionId: "paper-mteb" },
     ],
   },
   "ai/quantization": {

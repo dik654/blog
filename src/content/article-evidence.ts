@@ -1957,18 +1957,15 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://aclanthology.org/D19-1410/",
       note: "siamese·triplet BERT로 독립 sentence embedding을 학습하고 pairwise BERT 계산 구조와 비교",
     },
-    {
-      kind: "핵심 논문",
-      label: "Text Embeddings by Weakly-Supervised Contrastive Pre-training",
-      href: "https://arxiv.org/abs/2212.03533",
-      note: "query·passage role prefix와 multi-stage contrastive training을 사용한 E5",
-    },
-    {
-      kind: "Benchmark 논문",
-      label: "MTEB: Massive Text Embedding Benchmark",
-      href: "https://arxiv.org/abs/2210.07316",
-      note: "retrieval·STS·classification·clustering 등 embedding task의 통합 평가",
-    },
+  ],
+  "ai/bi-encoder-retrieval": [
+    { kind: "핵심 논문", label: "Sentence-BERT", href: "https://aclanthology.org/D19-1410/", note: "pairwise cross-encoder 비용을 independent sentence embedding과 retrieval로 전환" },
+  ],
+  "ai/embedding-serving-contract": [
+    { kind: "핵심 논문", label: "Text Embeddings by Weakly-Supervised Contrastive Pre-training", href: "https://arxiv.org/abs/2212.03533", note: "query·passage role prefix와 multi-stage contrastive training을 사용한 E5" },
+  ],
+  "ai/embedding-evaluation": [
+    { kind: "Benchmark 논문", label: "MTEB: Massive Text Embedding Benchmark", href: "https://arxiv.org/abs/2210.07316", note: "retrieval·STS·classification·clustering 등 embedding task의 통합 평가" },
   ],
   "ai/domain-finetuning": [
     {
