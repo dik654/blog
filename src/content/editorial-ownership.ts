@@ -442,11 +442,11 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "agent-devlog-patterns": {
-    title: "Agent 개발 기록 패턴 글이 소유하는 범위",
+    title: "개발 기록 라우팅 글이 소유하는 범위",
     owns: [
-      "Raw artifact·Changelog·ADR·Lessons가 각각 답하는 질문과 정본 소유권",
-      "검증된 변화, architecturally significant decision, 재사용 가능한 현재 원칙을 서로 다른 문서로 승격하는 기준",
-      "Postmortem의 사건·영향·원인·action item과 Lessons의 현재 rule을 분리하는 경계",
+      "Raw evidence와 원인·완료 claim을 분리하는 경계",
+      "관찰·변화·결정·현재 규칙 질문마다 정본 하나를 고르는 routing",
+      "Artifact에서 Changelog·ADR·Lesson으로 조건부 승격하는 write path",
       "Agent가 기록 초안을 만들 때 evidence 존재·접근 권한·redaction·사람 승인을 확인하는 계약",
     ],
     reuses: [
@@ -474,7 +474,7 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [
       {
         kind: "primary-source",
-        rule: "Changelog 목적과 형식은 Keep a Changelog 1.1.0, ADR의 원형은 Michael Nygard의 글, blameless postmortem은 Google SRE Workbook의 공개 범위에만 귀속한다.",
+        rule: "Provenance 관계는 W3C PROV의 entity·activity·agent 범위에만 귀속하고 이 글의 문서 routing은 project pattern으로 구분한다.",
       },
       {
         kind: "standard",
@@ -488,6 +488,33 @@ export const EDITORIAL_BOUNDARIES = {
         kind: "project-claim",
         rule: "Agent가 만든 causal claim·수치·완료 상태는 원 artifact와 verifier receipt가 존재하고 접근·redaction 조건을 통과한 뒤 owner가 승인한 범위에서만 publish한다.",
       },
+    ],
+  },
+  "agent-changelog-evidence": {
+    title: "Changelog evidence 글이 소유하는 범위",
+    owns: ["Curated Changelog entry의 필드", "Audience와 observable impact로 notable change를 고르는 경계", "Verified·merged·deployed publication 상태", "Entry에서 run·commit·test·ADR로 돌아가는 stable evidence link"],
+    reuses: [{ label: "Raw evidence와 claim 경계", href: "/ai/agent-devlog-patterns#overview" }],
+    evidence: [
+      { kind: "primary-source", rule: "Changelog 목적·Unreleased·category는 Keep a Changelog 1.1.0의 공개 범위에만 귀속한다." },
+      { kind: "project-claim", rule: "내부 agent project의 notable 기준과 run-1842 사례는 설명 fixture이며 보편 release 표준이 아니다." },
+    ],
+  },
+  "architecture-decision-records": {
+    title: "Architecture Decision Record 글이 소유하는 범위",
+    owns: ["ADR 한 건의 context·options·decision·consequences", "같은 decision driver로 option을 비교하는 계약", "Accepted와 implementation·deployment 상태의 분리", "과거 ADR을 보존하는 supersession history"],
+    reuses: [{ label: "질문별 정본 routing", href: "/ai/agent-devlog-patterns#question-owner" }],
+    evidence: [
+      { kind: "primary-source", rule: "ADR의 원형 template과 status history는 Michael Nygard의 공개 글 범위에만 귀속한다." },
+      { kind: "project-claim", rule: "Profile storage A/B/C 선택은 고정 학습 fixture이며 모든 project의 최적 decision이 아니다." },
+    ],
+  },
+  "engineering-lessons-ledger": {
+    title: "Engineering Lessons 글이 소유하는 범위",
+    owns: ["현재 재사용할 rule의 정본", "Scope·exception·test triad", "좁은 provisional lesson의 evidence threshold", "Postmortem incident와 Lesson current rule의 소유권 경계"],
+    reuses: [{ label: "조건부 기록 승격", href: "/ai/agent-devlog-patterns#promotion" }],
+    evidence: [
+      { kind: "primary-source", rule: "Blameless incident analysis와 measurable action은 Google SRE Workbook의 공개 범위에만 귀속한다." },
+      { kind: "project-claim", rule: "Derived empty state guardrail은 학습 fixture이며 모든 output·storage에 적용하는 보편 rule이 아니다." },
     ],
   },
   "claw-overview": {

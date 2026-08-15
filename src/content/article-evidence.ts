@@ -2798,28 +2798,28 @@ export const ARTICLE_EVIDENCE: Readonly<
   ),
   "ai/agent-devlog-patterns": [
     {
-      kind: "공식 가이드",
-      label: "Keep a Changelog 1.1.0",
-      href: "https://keepachangelog.com/en/1.1.0/",
-      note: "Raw commit dump가 아닌 사람이 읽는 notable-change 목록, 날짜·version·linkable section·Unreleased convention",
-    },
-    {
-      kind: "보충 읽기",
-      label: "Michael Nygard — Documenting Architecture Decisions",
-      href: "https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions",
-      note: "Architecturally significant decision의 title·status·context·decision·consequences와 superseding history",
-    },
-    {
-      kind: "공식 가이드",
-      label: "Google SRE Workbook — Postmortem Culture",
-      href: "https://sre.google/workbook/postmortem-culture/",
-      note: "Blameless incident analysis, objective trigger/data, measurable preventive action·owner·review의 production 운영 범위",
+      kind: "공식 규격",
+      label: "W3C PROV Overview",
+      href: "https://www.w3.org/TR/prov-overview/",
+      note: "Entity·activity·agent와 생성·사용·귀속 관계로 evidence provenance를 표현하는 표준 모델",
     },
     {
       kind: "프로젝트 실측",
       label: "개인 context-manager 개발 기록",
       note: "Changelog·ADR·Lessons의 질문별 정본과 조건부 승격을 운영한 고정 사례이며 보편 표준이 아님",
     },
+  ],
+  "ai/agent-changelog-evidence": [
+    { kind: "공식 가이드", label: "Keep a Changelog 1.1.0", href: "https://keepachangelog.com/en/1.1.0/", note: "사람이 읽는 notable-change 목록, 날짜·version·linkable section·Unreleased convention" },
+    { kind: "프로젝트 실측", label: "Empty compaction guard change fixture", note: "run·commit·test·ADR link를 분리해 보여 주는 고정 학습 사례이며 보편 release format은 아님" },
+  ],
+  "ai/architecture-decision-records": [
+    { kind: "보충 읽기", label: "Michael Nygard — Documenting Architecture Decisions", href: "https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions", note: "Significant decision의 title·status·context·decision·consequences와 superseding history" },
+    { kind: "프로젝트 실측", label: "Profile storage ADR fixture", note: "Single JSON·profile files·database를 같은 driver로 비교하는 학습 사례이며 최적 storage 권고는 아님" },
+  ],
+  "ai/engineering-lessons-ledger": [
+    { kind: "공식 가이드", label: "Google SRE Workbook — Postmortem Culture", href: "https://sre.google/workbook/postmortem-culture/", note: "Blameless incident analysis, complete data, measurable preventive action·owner·review" },
+    { kind: "프로젝트 실측", label: "Derived empty state guardrail fixture", note: "Scope·exception·test·revisit가 있는 provisional lesson 예시이며 모든 AI output에 적용하는 보편 rule은 아님" },
   ],
   "ai/openclaw-assistant": [
     {

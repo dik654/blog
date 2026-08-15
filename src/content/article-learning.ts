@@ -28880,454 +28880,1015 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/agent-devlog-patterns": {
-    entryLevel: true,
-    entryNote:
-      "Changelog·ADR·Postmortem·artifact provenance를 안다고 가정하지 않습니다. Support agent의 빈 compaction 결과가 기존 고객 profile을 덮어쓴 한 사건에서 시작해, 관찰 원문과 해석을 나누고 ‘언제·왜·지금 무엇을 적용할지’라는 질문마다 정본 문서 하나를 고르는 순서로 설명합니다.",
-    coreIdea:
-      "Agent 개발 기록은 같은 사건을 여러 문서에 길게 복사하는 체계가 아닙니다. 재현 input·log·before/after state·test는 raw artifact가 소유하고, 검증된 변화는 Changelog, 이후 선택을 제약하는 decision은 ADR, 다른 작업에도 적용할 현재 rule은 Lessons가 소유합니다. 큰 production incident의 timeline·impact·action은 별도 Postmortem에 남깁니다. 각 claim은 stable artifact link로 원문까지 추적되어야 하며, agent가 초안을 만들더라도 evidence 존재·접근 권한·redaction·verification·사람 승인을 통과하기 전에는 사실이나 현재 원칙으로 publish하지 않습니다.",
-    assumedKnowledge: [],
-    introducedHere: [
+    "entryLevel": true,
+    "entryNote": "선행 수업을 가정하지 않고 고정된 empty-compaction 사건에서 용어 하나씩 정의한 뒤 형태·작은 예·경계와 조합 흐름을 순서대로 설명합니다.",
+    "coreIdea": "개발 기록은 문서 template에서 시작하지 않습니다. Raw evidence와 claim을 분리하고 독자의 질문마다 정본 하나를 고른 뒤, 검증된 변화·장기 decision·재사용 rule이 실제로 생길 때만 Changelog·ADR·Lessons로 승격합니다. Agent 초안은 link 존재·permission·redaction·verification·owner review를 통과해야 publish됩니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
       {
-        id: "devlog-record-question-ownership",
-        role: "한 사건을 복제하지 않고 독자의 질문마다 artifact·Changelog·ADR·Lessons 중 정본 하나를 정합니다.",
+        "id": "devlog-raw-evidence-claim-boundary",
+        "role": "관찰 원문과 원인·완료 해석을 분리합니다."
       },
       {
-        id: "devlog-raw-evidence-claim-boundary",
-        role: "재현 원문과 원인·완료 같은 해석을 나누고 claim에서 artifact로 돌아가는 link를 보존합니다.",
+        "id": "devlog-record-question-ownership",
+        "role": "질문마다 artifact·Changelog·ADR·Lessons 중 정본 하나를 고릅니다."
       },
       {
-        id: "curated-changelog-entry-contract",
-        role: "검증된 notable change를 날짜·결과·verification·evidence link로 찾게 합니다.",
+        "id": "devlog-record-promotion-threshold",
+        "role": "Evidence에서 다음 문서로 올라갈 조건을 정합니다."
       },
       {
-        id: "architecture-decision-record-contract",
-        role: "Significant decision의 context·options·status·consequences와 superseding history를 남깁니다.",
-      },
-      {
-        id: "reusable-lesson-contract",
-        role: "현재 재사용할 rule·scope·exception·evidence·verification·revisit 조건을 한 정본에서 관리합니다.",
-      },
-      {
-        id: "devlog-record-promotion-threshold",
-        role: "모든 작업에 모든 문서를 만들지 않고 evidence와 영향 범위에 따라 조건부로 승격합니다.",
-      },
-      {
-        id: "postmortem-lesson-boundary",
-        role: "Incident의 timeline·impact·action과 현재 재사용할 rule을 서로 다른 정본으로 유지합니다.",
-      },
-      {
-        id: "agent-drafted-record-evidence-boundary",
-        role: "Agent 초안이 evidence를 발명하지 못하게 existence·permission·redaction·review를 요구합니다.",
-      },
+        "id": "agent-drafted-record-evidence-boundary",
+        "role": "Agent 초안의 evidence·permission·redaction·approval gate를 정의합니다."
+      }
     ],
-    conceptExplanations: [
+    "conceptExplanations": [
       {
-        id: "devlog-record-question-ownership",
-        sectionId: "overview",
-        intuition:
-          "도서관에서 같은 책을 네 서가에 복사하지 않고 ‘언제 바뀌었나·왜 골랐나·지금 어떤 규칙을 쓰나’라는 질문마다 찾아갈 정본 서가 하나와 상호 link를 정하는 일입니다.",
-        workedExample:
-          "빈 compaction overwrite 사건에서 failing run은 artifact, guard가 들어간 날짜와 검증 결과는 Changelog, profile storage를 나누기로 한 이유는 ADR-005, destructive derived update에 적용할 현재 guardrail은 Lessons가 소유합니다. Changelog가 ADR의 context를 다시 쓰지 않고 ADR-005를 link합니다.",
-        boundary:
-          "Git log·issue·runbook·release note가 이미 같은 질문을 잘 소유한다면 새 문서 이름을 추가할 필요가 없습니다. 이름보다 질문 하나에 current owner가 하나이고 다른 문서는 stable link로 연결되는지가 중요합니다.",
+        "id": "devlog-raw-evidence-claim-boundary",
+        "sectionId": "overview",
+        "intuition": "CCTV 원본과 조사 결론을 같은 증거로 취급하지 않는 경계입니다.",
+        "workedExample": "run-1842에 input·empty output·checksum·failing test를 묶고 claim은 그 artifact가 지지하는 범위만 씁니다.",
+        "boundary": "Log 존재만으로 유일한 원인이 증명되지는 않습니다."
       },
       {
-        id: "devlog-raw-evidence-claim-boundary",
-        sectionId: "overview",
-        intuition:
-          "CCTV 원본과 ‘무엇 때문에 사고가 났다’는 조사 결론은 함께 필요하지만 같은 증거는 아닙니다. 결론을 눌렀을 때 원본으로 돌아갈 수 있어야 합니다.",
-        workedExample:
-          "`run-1842`에 failing input, empty output, 기존 profile checksum, model·prompt version, failing test를 보존하고 수정 뒤 `test-guard-empty-03`을 연결합니다. ‘empty compaction이 overwrite path를 통과했다’는 claim은 이 artifact와 before/after state가 뒷받침하는 범위까지만 씁니다.",
-        boundary:
-          "Log가 존재한다고 인과가 자동 증명되지는 않고, Changelog 요약이 raw evidence를 대신하지도 않습니다. 고객 원문·token·secret은 공개 문서로 복사하지 말고 접근 통제된 artifact ID와 redacted summary를 사용합니다.",
+        "id": "devlog-record-question-ownership",
+        "sectionId": "question-owner",
+        "intuition": "같은 책을 네 서가에 복사하지 않고 질문별 진입점 하나를 두는 규칙입니다.",
+        "workedExample": "언제는 Changelog, 왜는 ADR, 지금 rule은 Lessons가 소유합니다.",
+        "boundary": "기존 RFC·runbook이 같은 질문을 소유하면 새 이름을 만들지 않습니다."
       },
       {
-        id: "curated-changelog-entry-contract",
-        sectionId: "changelog",
-        intuition:
-          "Changelog는 모든 작업 흔적이 아니라 특정 날짜나 version에서 사람이 알아야 할 변화와 검증 근거를 빠르게 찾는 시간순 index입니다.",
-        workedExample:
-          "`2026-04-16 — 빈 compaction 결과의 profile overwrite 차단` 아래에 user·operator 관점의 결과, empty/partial/full 회귀 test, commit, `run-1842`, ADR-005, 관련 Lesson link를 적습니다. 아직 배포 전이면 Unreleased나 pending 상태로 남깁니다.",
-        boundary:
-          "Formatting commit, 실패한 실험의 모든 command, dependency noise를 모두 복사하면 notable change가 묻힙니다. 반대로 behavior·data format·model/prompt/tool policy·migration·security boundary가 달라졌다면 팀의 notable 기준과 독자에 맞춰 기록합니다.",
+        "id": "devlog-record-promotion-threshold",
+        "sectionId": "promotion",
+        "intuition": "모든 작업이 모든 층을 통과하는 checklist가 아니라 필요한 만큼만 올라가는 write path입니다.",
+        "workedExample": "Guard 수정은 Changelog에서 끝나고 storage 전환이 있을 때만 ADR이 생깁니다.",
+        "boundary": "중요해 보인다는 이유만으로 문서를 늘리지 않습니다."
       },
       {
-        id: "architecture-decision-record-contract",
-        sectionId: "adr",
-        intuition:
-          "ADR은 미래 개발자에게 ‘그때 왜 이 선택이 합리적이었는지, 어떤 대가를 알고 골랐는지’를 보여 주는 decision 영수증입니다.",
-        workedExample:
-          "ADR-005에서 data-loss blast radius·부분 복구·concurrency·migration·운영 복잡도를 같은 driver로 두고 A single JSON, B profile별 파일+파생 index, C transactional DB를 비교합니다. B를 accepted로 정해도 migration task와 deployment evidence는 별도 상태로 추적합니다.",
-        boundary:
-          "모든 bug fix가 ADR은 아니고 accepted는 implemented나 deployed가 아닙니다. Context가 바뀌면 번호를 재사용하거나 과거 문서를 지우지 말고 새 ADR로 supersede하여 당시 판단과 현재 결정을 모두 찾게 합니다.",
-      },
-      {
-        id: "reusable-lesson-contract",
-        sectionId: "lessons",
-        intuition:
-          "Lesson은 ‘그때 이런 일이 있었다’는 회고가 아니라 비슷한 다음 작업에서 실제로 실행하고 test할 현재 행동 기준입니다.",
-        workedExample:
-          "‘기존 non-empty state를 derived empty output으로 자동 replace하지 않는다’를 rule로 두고 profile compaction·bulk replace라는 scope, explicit delete intent라는 exception, 사건·ADR link, empty/partial/full test, transactional store 도입 시 revisit 조건을 함께 적습니다.",
-        boundary:
-          "‘Compaction은 위험하다’처럼 범위와 검증이 없는 구호는 Lesson이 아닙니다. 보통 여러 evidence가 필요하지만 data loss·security처럼 severity가 크면 scope를 좁힌 provisional lesson을 먼저 만들고 counterexample과 새 evidence로 갱신할 수 있습니다.",
-      },
-      {
-        id: "devlog-record-promotion-threshold",
-        sectionId: "three-layers",
-        intuition:
-          "모든 메모를 장기 보관 문서로 올리지 않고, 검증되었는지·장기 선택인지·다른 작업에 재사용할 수 있는지라는 문턱을 하나씩 통과시킵니다.",
-        workedExample:
-          "빈 overwrite 관찰은 즉시 artifact로 capture하고 guard가 test를 통과하면 Changelog에 publish합니다. Storage layout이 여러 module과 migration을 제약하므로 ADR을 만들고, explicit delete exception까지 말할 수 있는 destructive-update rule이 생겼을 때 Lessons로 올립니다. 작은 guard 수정뿐이었다면 Changelog에서 멈춥니다.",
-        boundary:
-          "중요해 보인다는 느낌이나 문서 개수를 목표로 승격하지 않습니다. Production incident 기준을 충족하면 Postmortem을 별도로 만들 수 있지만 Changelog·ADR·Lessons를 자동으로 모두 만들라는 뜻도 아닙니다.",
-      },
-      {
-        id: "postmortem-lesson-boundary",
-        sectionId: "lessons",
-        intuition:
-          "Postmortem은 사고의 시간표와 피해·복구·재발 방지 action을 소유하고, Lessons는 여러 사고와 결정에서 지금 재사용할 짧은 rule을 소유합니다.",
-        workedExample:
-          "고객 profile 손실이 production incident 기준을 넘었다면 Postmortem에 impact, detection, timeline, mitigation, contributing factors, owner와 verifiable end state가 있는 action을 적습니다. Lessons에는 그 문서를 evidence로 link하고 derived empty replacement guardrail과 test만 유지합니다.",
-        boundary:
-          "Lessons가 Postmortem을 압축해 대체하거나 Postmortem이 현재 rule의 정본이 되면 검색 경로가 흐려집니다. Blameless는 책임을 지우는 말이 아니라 개인 비난 대신 재현 가능한 system condition과 개선 action을 쓰는 원칙입니다.",
-      },
-      {
-        id: "agent-drafted-record-evidence-boundary",
-        sectionId: "three-layers",
-        intuition:
-          "Agent는 영수증을 모아 보고서 초안을 만들 수 있지만 없는 영수증을 채워 넣거나 승인 도장을 대신 찍을 수 없습니다.",
-        workedExample:
-          "Agent가 diff·issue·test에서 Changelog 초안과 반복 failure의 Lesson 후보를 만들면 CI가 artifact link 존재, 접근 권한, secret·PII redaction, verifier status, duplicate owner를 검사합니다. ‘세 번 반복됐다’는 claim에는 실제 artifact 세 개가 있어야 하며 owner가 causal wording과 공개 범위를 승인합니다.",
-        boundary:
-          "Citation URL이 문자열로 있다는 것만으로 읽을 권한과 내용 일치가 증명되지는 않습니다. Agent는 decision driver·원인·수치·완료 상태를 source 없이 추정하지 못하고 blocked/draft 상태를 지운 뒤 성공으로 바꾸지도 못합니다.",
-      },
+        "id": "agent-drafted-record-evidence-boundary",
+        "sectionId": "agent-review",
+        "intuition": "초안을 빠르게 만드는 권한과 사실을 확정·공개하는 권한을 분리합니다.",
+        "workedExample": "세 번 반복됐다는 문장은 확인 가능한 세 artifact가 있을 때만 publish합니다.",
+        "boundary": "문장 생성 능력은 causal review나 공개 승인을 대신하지 않습니다."
+      }
     ],
-    conceptStages: [
+    "conceptStages": [
       {
-        label: "Capture",
-        relation:
-          "최소 숙달: 재현 input·log·state·test를 immutable ID와 provenance로 보존하고 claim과 분리",
-        concepts: [
-          "run-artifact-provenance",
-          "content-addressed-artifact-reference",
-          "experiment-spec-attempt-identity",
-          "devlog-raw-evidence-claim-boundary",
-        ],
+        "label": "Observe",
+        "relation": "관찰 원문과 claim 분리",
+        "concepts": [
+          "devlog-raw-evidence-claim-boundary"
+        ]
       },
       {
-        label: "Assign",
-        relation:
-          "최소 숙달: 시간·결정·현재 원칙 질문마다 Changelog·ADR·Lessons 정본 하나를 고르고 다른 문서는 link",
-        concepts: ["devlog-record-question-ownership"],
-      },
-      {
-        label: "Publish change",
-        relation:
-          "최소 숙달: verified notable result·verification·stable link가 있는 Changelog entry를 작성",
-        concepts: [
-          "curated-changelog-entry-contract",
-          "versioned-verifier-measurement",
-        ],
-      },
-      {
-        label: "Record decision",
-        relation:
-          "최소 숙달: 같은 driver로 options를 비교하고 accepted·implemented·superseded 상태를 구분",
-        concepts: ["architecture-decision-record-contract"],
-      },
-      {
-        label: "Learn",
-        relation:
-          "최소 숙달: Postmortem action과 Lesson rule을 분리하고 scope·exception·test·revisit를 명시",
-        concepts: ["postmortem-lesson-boundary", "reusable-lesson-contract"],
-      },
-      {
-        label: "Govern",
-        relation:
-          "최소 숙달: 조건부 승격, single canonical owner, link health, agent draft evidence·redaction·approval을 검사",
-        concepts: [
-          "devlog-record-promotion-threshold",
-          "agent-drafted-record-evidence-boundary",
-        ],
-      },
-    ],
-    exercises: [
-      {
-        level: "basic",
-        question:
-          "빈 compaction 결과가 기존 profile을 덮어쓴 고정 사례의 failing input·log·수정 결과·storage 선택 이유·현재 destructive-update rule을 raw artifact·Changelog·ADR·Lessons에 각각 배치하고 정본과 link 방향을 적으라.",
-        answerChecklist: [
-          "raw input/log/before-after/test artifact",
-          "verified change in Changelog",
-          "storage why/options in ADR",
-          "current reusable rule in Lessons",
-          "one canonical owner per question",
-          "stable links not copied context",
-          "accepted not implemented",
-        ],
-        requiredConcepts: [
+        "label": "Route",
+        "relation": "독자 질문별 정본 선택",
+        "concepts": [
           "devlog-record-question-ownership",
-          "devlog-raw-evidence-claim-boundary",
-          "curated-changelog-entry-contract",
-          "architecture-decision-record-contract",
-          "reusable-lesson-contract",
-        ],
-        sectionId: "overview",
+          "devlog-raw-evidence-claim-boundary"
+        ]
       },
       {
-        level: "basic",
-        question:
-          "고정 사례의 Changelog entry를 date/version·사람이 이해할 result·verification·evidence links로 작성하고, 넣지 않을 commit noise와 Unreleased 상태를 설명하라.",
-        answerChecklist: [
-          "date/version",
-          "result before implementation detail",
-          "user/operator impact",
-          "empty/partial/full verification",
-          "commit/run/ADR/Lesson links",
-          "not raw commit dump",
-          "notable criterion",
-          "Unreleased or pending before rollout",
-          "redacted artifact link",
-        ],
-        requiredConcepts: [
-          "curated-changelog-entry-contract",
-          "devlog-raw-evidence-claim-boundary",
-        ],
-        sectionId: "changelog",
+        "label": "Promote",
+        "relation": "영향과 재사용성에 따라 조건부 승격",
+        "concepts": [
+          "devlog-record-promotion-threshold",
+          "devlog-record-question-ownership"
+        ]
       },
       {
-        level: "basic",
-        question:
-          "ADR-005에서 single JSON·profile별 파일+파생 index·transactional DB를 같은 decision driver로 비교하고 title·status·context·decision·consequences, accepted 이후 implementation, 나중의 supersede 처리를 작성하라.",
-        answerChecklist: [
-          "one significant decision",
-          "same drivers",
-          "data-loss blast radius",
-          "recovery/concurrency",
-          "migration/operations cost",
-          "status",
-          "context",
-          "options",
-          "decision",
-          "positive and negative consequences",
-          "accepted not implemented/deployed",
-          "new superseding ADR",
-          "old ADR preserved",
-        ],
-        requiredConcepts: ["architecture-decision-record-contract"],
-        sectionId: "adr",
-      },
+        "label": "Review",
+        "relation": "Agent 초안의 근거와 공개 gate 검사",
+        "concepts": [
+          "agent-drafted-record-evidence-boundary",
+          "devlog-raw-evidence-claim-boundary"
+        ]
+      }
+    ],
+    "exercises": [
       {
-        level: "basic",
-        question:
-          "Derived empty output이 기존 state를 교체하는 문제에 대해 Lesson의 rule·scope·evidence·verification·revisit를 작성하고 explicit user deletion이 정상인 예외를 포함하라.",
-        answerChecklist: [
-          "actionable current rule",
-          "profile and bulk-replace scope",
-          "explicit delete exception",
-          "incident/Changelog/ADR links",
-          "empty/partial/full tests",
-          "checksum or rollback evidence",
-          "revisit trigger",
-          "not broad compaction-is-bad claim",
-        ],
-        requiredConcepts: ["reusable-lesson-contract"],
-        sectionId: "lessons",
-      },
-      {
-        level: "basic",
-        question:
-          "`run-1842`의 raw evidence와 ‘empty compaction이 원인이며 수정이 끝났다’는 claim을 구분하고 stable artifact ID·digest·verification·redaction을 이용해 어느 범위까지 말할 수 있는지 적으라.",
-        answerChecklist: [
+        "level": "basic",
+        "question": "Raw evidence와 claim을 run-1842 사례로 구분하라.",
+        "answerChecklist": [
           "input",
           "log",
-          "before/after state",
-          "model/prompt/config",
-          "failing and passing tests",
-          "stable ID/digest",
-          "claim cites evidence",
-          "correlation not automatic causation",
-          "customer data redaction",
-          "access-controlled source",
-          "completion criterion",
+          "before/after",
+          "test",
+          "interpretation"
         ],
-        requiredConcepts: [
-          "devlog-raw-evidence-claim-boundary",
-          "run-artifact-provenance",
-          "content-addressed-artifact-reference",
-          "versioned-verifier-measurement",
+        "requiredConcepts": [
+          "devlog-raw-evidence-claim-boundary"
         ],
-        sectionId: "overview",
+        "sectionId": "overview"
       },
       {
-        level: "basic",
-        question:
-          "작은 guard 수정, 검증된 behavior change, 여러 module을 제약하는 storage decision, 반복된 destructive-update failure, 큰 production incident를 어떤 조건에서 artifact·Changelog·ADR·Lessons·Postmortem으로 보내고 어디서 멈출지 판정하라.",
-        answerChecklist: [
-          "capture observation",
-          "verified result to Changelog",
-          "significant long-lived decision to ADR",
-          "reusable scoped rule to Lessons",
-          "severity can justify provisional lesson",
-          "team incident trigger to Postmortem",
-          "not every record for every task",
-          "stop at smallest sufficient record",
+        "level": "basic",
+        "question": "같은 시점의 empty output만으로 유일한 원인이라 말할 수 없는 이유를 쓰라.",
+        "answerChecklist": [
+          "correlation",
+          "reproduction",
+          "alternative cause",
+          "bounded claim"
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
+          "devlog-raw-evidence-claim-boundary"
+        ],
+        "sectionId": "overview"
+      },
+      {
+        "level": "basic",
+        "question": "언제·왜·현재 rule 질문의 정본 문서를 각각 고르라.",
+        "answerChecklist": [
+          "Changelog",
+          "ADR",
+          "Lessons",
+          "one owner",
+          "links"
+        ],
+        "requiredConcepts": [
+          "devlog-record-question-ownership"
+        ],
+        "sectionId": "question-owner"
+      },
+      {
+        "level": "basic",
+        "question": "작은 guard 수정이 Changelog에서 끝날 수 있는 이유를 설명하라.",
+        "answerChecklist": [
+          "verified change",
+          "no decision",
+          "no reusable rule",
+          "stop"
+        ],
+        "requiredConcepts": [
+          "devlog-record-promotion-threshold"
+        ],
+        "sectionId": "promotion"
+      },
+      {
+        "level": "basic",
+        "question": "Agent 초안이 publish 전 통과할 gate를 순서대로 쓰라.",
+        "answerChecklist": [
+          "existence",
+          "permission",
+          "redaction",
+          "verification",
+          "approval"
+        ],
+        "requiredConcepts": [
+          "agent-drafted-record-evidence-boundary"
+        ],
+        "sectionId": "agent-review"
+      },
+      {
+        "level": "basic",
+        "question": "Secret이 있는 artifact를 공개 문서에서 안전하게 참조하라.",
+        "answerChecklist": [
+          "access control",
+          "redacted summary",
+          "stable ID",
+          "no secret copy"
+        ],
+        "requiredConcepts": [
+          "devlog-raw-evidence-claim-boundary",
+          "agent-drafted-record-evidence-boundary"
+        ],
+        "sectionId": "agent-review"
+      },
+      {
+        "level": "advanced",
+        "question": "한 incident가 세 문서 중 어디까지 승격되는지 판정표를 설계하라.",
+        "answerChecklist": [
+          "capture",
+          "verified change",
+          "decision",
+          "rule",
+          "stop condition"
+        ],
+        "requiredConcepts": [
           "devlog-record-promotion-threshold",
-          "postmortem-lesson-boundary",
+          "devlog-record-question-ownership"
         ],
-        sectionId: "three-layers",
+        "sectionId": "promotion"
       },
       {
-        level: "advanced",
-        question:
-          "같은 storage context와 destructive-update rule이 Changelog·ADR·Lessons 세 곳에 복제되어 서로 달라진 저장소를 감사하고 canonical owner·stable link·supersede·검색 진입점을 복구하는 migration 계획을 세우라.",
-        answerChecklist: [
-          "inventory duplicate claims",
-          "classify reader question",
-          "choose one owner per claim",
-          "Changelog owns when/what",
-          "ADR owns why/history",
-          "Lessons owns current rule",
-          "replace copies with summaries and links",
-          "superseded ADR preserved",
-          "redirect/search entry",
-          "broken-link check",
-          "owner/review",
+        "level": "advanced",
+        "question": "복제된 context를 정본+link 구조로 migration하라.",
+        "answerChecklist": [
+          "inventory",
+          "canonical owner",
+          "redirect",
+          "links",
+          "owner"
         ],
-        requiredConcepts: [
-          "devlog-record-question-ownership",
-          "curated-changelog-entry-contract",
-          "architecture-decision-record-contract",
-          "reusable-lesson-contract",
+        "requiredConcepts": [
+          "devlog-record-question-ownership"
         ],
-        sectionId: "three-layers",
+        "sectionId": "question-owner"
       },
       {
-        level: "advanced",
-        question:
-          "Agent가 만든 ‘세 번 반복된 원인이라 guard 배포가 완료됐다’는 기록 초안을 red-team하고 fabricated evidence·citation existence·link permission·redaction·verification·human approval 검사를 설계하라.",
-        answerChecklist: [
-          "three real artifact links",
-          "source supports causal wording",
-          "citation exists",
-          "permission/readability",
-          "secret/PII redaction",
-          "verifier receipt",
-          "deployment evidence separate from accepted",
+        "level": "advanced",
+        "question": "Agent의 과장된 causal claim을 blocked로 남기는 review flow를 설계하라.",
+        "answerChecklist": [
+          "source comparison",
+          "claim strength",
           "counterexample",
-          "draft/blocked status",
-          "owner approval",
-          "audit trail",
+          "blocked",
+          "reviewer"
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
           "agent-drafted-record-evidence-boundary",
-          "devlog-raw-evidence-claim-boundary",
-          "versioned-verifier-measurement",
+          "devlog-raw-evidence-claim-boundary"
         ],
-        sectionId: "three-layers",
+        "sectionId": "agent-review"
       },
       {
-        level: "advanced",
-        question:
-          "고객 profile 손실이 큰 production incident가 된 경우 Postmortem과 Lessons에 각각 무엇을 쓰고, blameless contributing factor·owner가 있는 verifiable action·좁은 provisional lesson·revisit 조건을 설계하라.",
-        answerChecklist: [
+        "level": "advanced",
+        "question": "기존 release note·RFC·runbook을 새 이름 없이 질문별로 매핑하라.",
+        "answerChecklist": [
+          "existing systems",
+          "when",
+          "why",
+          "current rule",
+          "one owner"
+        ],
+        "requiredConcepts": [
+          "devlog-record-question-ownership",
+          "devlog-record-promotion-threshold"
+        ],
+        "sectionId": "question-owner"
+      }
+    ],
+    "papers": [
+      {
+        "title": "W3C PROV Overview",
+        "href": "https://www.w3.org/TR/prov-overview/",
+        "problem": "결과의 출처와 생성 활동을 추적하지 못하는 문제",
+        "contribution": "Entity·activity·agent와 provenance relation의 공통 모델",
+        "assumptions": "도메인별 schema·권한·retention은 별도 설계",
+        "evidenceScope": "Evidence와 claim을 연결하는 provenance vocabulary",
+        "notClaim": "Causal correctness나 보안이 자동 보장된다는 뜻은 아님",
+        "sectionId": "paper-w3c-prov"
+      }
+    ]
+  },
+  "ai/agent-changelog-evidence": {
+    "entryLevel": true,
+    "entryNote": "선행 수업을 가정하지 않고 고정된 empty-compaction 사건에서 용어 하나씩 정의한 뒤 형태·작은 예·경계와 조합 흐름을 순서대로 설명합니다.",
+    "coreIdea": "Changelog는 commit dump가 아니라 특정 audience가 알아야 할 검증된 변화의 시간순 index입니다. Observable impact로 notable 후보를 고르고 구현·검증·merge·deployment 상태를 분리한 뒤 run·commit·test·ADR로 돌아가는 stable evidence link를 남깁니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "curated-changelog-entry-contract",
+        "role": "날짜·결과·영향·검증·근거를 가진 entry를 정의합니다."
+      },
+      {
+        "id": "changelog-notability-audience-boundary",
+        "role": "독자와 observable impact로 넣을 change를 고릅니다."
+      },
+      {
+        "id": "changelog-verification-publication-state",
+        "role": "검증·merge·배포·공개 상태를 나눕니다."
+      },
+      {
+        "id": "changelog-stable-evidence-link",
+        "role": "Entry에서 고정 artifact로 돌아가는 참조를 보존합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "curated-changelog-entry-contract",
+        "sectionId": "overview",
+        "intuition": "최근 변화에서 상세 근거로 내려가는 짧은 시간 index입니다.",
+        "workedExample": "2026-04-16 empty overwrite 차단과 회귀 test·run link를 한 항목에 둡니다.",
+        "boundary": "Debugging transcript와 미검증 완료 주장을 섞지 않습니다."
+      },
+      {
+        "id": "changelog-notability-audience-boundary",
+        "sectionId": "notability",
+        "intuition": "변경 줄 수가 아니라 누가 알아야 하고 무엇이 실제로 달라졌는지를 봅니다.",
+        "workedExample": "Formatting commit은 빼고 behavior가 달라진 guard는 Fixed에 넣습니다.",
+        "boundary": "내부 Changelog라고 모든 command를 notable로 만들지 않습니다."
+      },
+      {
+        "id": "changelog-verification-publication-state",
+        "sectionId": "publication",
+        "intuition": "완료 검증과 독자가 실제로 쓰는 시점을 서로 다른 표지판으로 둡니다.",
+        "workedExample": "Test pass 뒤 운영 반영 전이면 Unreleased에 남깁니다.",
+        "boundary": "Merge가 deployment나 장기 안정성을 보장하지 않습니다."
+      },
+      {
+        "id": "changelog-stable-evidence-link",
+        "sectionId": "links",
+        "intuition": "짧은 요약이 영수증 번호를 통해 상세 거래로 돌아가게 합니다.",
+        "workedExample": "run-1842·c8f…·test-guard-empty-03·ADR-005를 연결합니다.",
+        "boundary": "Secret 원문을 공개 entry에 복사하지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "Curate",
+        "relation": "Entry 소유 필드 고정",
+        "concepts": [
+          "curated-changelog-entry-contract"
+        ]
+      },
+      {
+        "label": "Select",
+        "relation": "Audience와 impact로 notable 판정",
+        "concepts": [
+          "changelog-notability-audience-boundary",
+          "curated-changelog-entry-contract"
+        ]
+      },
+      {
+        "label": "Publish",
+        "relation": "Verification과 deployment 상태 분리",
+        "concepts": [
+          "changelog-verification-publication-state"
+        ]
+      },
+      {
+        "label": "Trace",
+        "relation": "결과에서 원 evidence로 복귀",
+        "concepts": [
+          "changelog-stable-evidence-link",
+          "devlog-raw-evidence-claim-boundary"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "Curated Changelog entry의 필수 필드를 쓰라.",
+        "answerChecklist": [
+          "date/version",
+          "result",
           "impact",
-          "detection",
+          "verification",
+          "links"
+        ],
+        "requiredConcepts": [
+          "curated-changelog-entry-contract"
+        ],
+        "sectionId": "overview"
+      },
+      {
+        "level": "basic",
+        "question": "Formatting commit과 overwrite guard 중 notable change를 판정하라.",
+        "answerChecklist": [
+          "audience",
+          "behavior",
+          "omit formatting",
+          "include guard"
+        ],
+        "requiredConcepts": [
+          "changelog-notability-audience-boundary"
+        ],
+        "sectionId": "notability"
+      },
+      {
+        "level": "basic",
+        "question": "Verified·merged·deployed 상태를 구분하라.",
+        "answerChecklist": [
+          "test",
+          "merge",
+          "runtime availability",
+          "different evidence"
+        ],
+        "requiredConcepts": [
+          "changelog-verification-publication-state"
+        ],
+        "sectionId": "publication"
+      },
+      {
+        "level": "basic",
+        "question": "Unreleased 영역이 필요한 상황을 설명하라.",
+        "answerChecklist": [
+          "verified",
+          "not deployed",
+          "pending",
+          "no dated claim"
+        ],
+        "requiredConcepts": [
+          "changelog-verification-publication-state"
+        ],
+        "sectionId": "publication"
+      },
+      {
+        "level": "basic",
+        "question": "Entry에서 상세 evidence로 돌아가는 link set을 설계하라.",
+        "answerChecklist": [
+          "run",
+          "commit",
+          "test",
+          "ADR",
+          "stable ID"
+        ],
+        "requiredConcepts": [
+          "changelog-stable-evidence-link"
+        ],
+        "sectionId": "links"
+      },
+      {
+        "level": "basic",
+        "question": "긴 debugging transcript를 Changelog에 복사하지 않고 보존하라.",
+        "answerChecklist": [
+          "short result",
+          "artifact owner",
+          "redaction",
+          "link",
+          "verification"
+        ],
+        "requiredConcepts": [
+          "curated-changelog-entry-contract",
+          "changelog-stable-evidence-link"
+        ],
+        "sectionId": "links"
+      },
+      {
+        "level": "advanced",
+        "question": "내부 project의 notable 기준을 audience별로 설계하라.",
+        "answerChecklist": [
+          "user",
+          "operator",
+          "developer",
+          "impact",
+          "noise"
+        ],
+        "requiredConcepts": [
+          "changelog-notability-audience-boundary"
+        ],
+        "sectionId": "notability"
+      },
+      {
+        "level": "advanced",
+        "question": "Merge됐지만 rollout이 실패한 change의 상태와 근거를 작성하라.",
+        "answerChecklist": [
+          "merged",
+          "not deployed",
+          "blocked",
+          "failure receipt",
+          "rollback"
+        ],
+        "requiredConcepts": [
+          "changelog-verification-publication-state",
+          "changelog-stable-evidence-link"
+        ],
+        "sectionId": "publication"
+      },
+      {
+        "level": "advanced",
+        "question": "Link rot와 permission 변경을 탐지하는 audit를 설계하라.",
+        "answerChecklist": [
+          "existence",
+          "redirect",
+          "permission",
+          "digest",
+          "retention",
+          "owner"
+        ],
+        "requiredConcepts": [
+          "changelog-stable-evidence-link"
+        ],
+        "sectionId": "links"
+      },
+      {
+        "level": "advanced",
+        "question": "Raw commit log를 curated Changelog로 migration하라.",
+        "answerChecklist": [
+          "audience",
+          "filter",
+          "result",
+          "verification",
+          "links",
+          "archive"
+        ],
+        "requiredConcepts": [
+          "curated-changelog-entry-contract",
+          "changelog-notability-audience-boundary"
+        ],
+        "sectionId": "overview"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Keep a Changelog 1.1.0",
+        "href": "https://keepachangelog.com/en/1.1.0/",
+        "problem": "Raw commit log만으로 notable release change를 찾기 어려운 문제",
+        "contribution": "Curated chronological list·Unreleased·category·linkable section",
+        "assumptions": "Release software가 중심이고 notable 기준은 project가 정함",
+        "evidenceScope": "Changelog의 목적과 유지 convention",
+        "notClaim": "모든 commit 기록이나 이 글의 내부 형식을 의무화하지 않음",
+        "sectionId": "paper-keep-a-changelog"
+      }
+    ]
+  },
+  "ai/architecture-decision-records": {
+    "entryLevel": true,
+    "entryNote": "선행 수업을 가정하지 않고 고정된 empty-compaction 사건에서 용어 하나씩 정의한 뒤 형태·작은 예·경계와 조합 흐름을 순서대로 설명합니다.",
+    "coreIdea": "ADR은 significant decision 하나의 context·options·decision·consequences를 보존합니다. 모든 option을 같은 decision driver로 비교하고 accepted와 implementation을 분리하며, 결정이 바뀌면 원문 삭제 대신 supersession chain으로 history를 남깁니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "architecture-decision-record-contract",
+        "role": "ADR 한 건의 기본 소유 필드를 정의합니다."
+      },
+      {
+        "id": "adr-decision-driver-comparability",
+        "role": "모든 option을 같은 기준으로 비교합니다."
+      },
+      {
+        "id": "adr-status-implementation-separation",
+        "role": "Decision status와 실행 상태를 분리합니다."
+      },
+      {
+        "id": "adr-supersession-history-chain",
+        "role": "바뀐 결정의 과거 context를 보존합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "architecture-decision-record-contract",
+        "sectionId": "overview",
+        "intuition": "결론뿐 아니라 당시 왜 합리적이었는지를 남기는 결정 영수증입니다.",
+        "workedExample": "ADR-005가 profile별 파일 선택의 context와 consequences를 소유합니다.",
+        "boundary": "작은 bug fix와 일일 진행률은 ADR이 아닙니다."
+      },
+      {
+        "id": "adr-decision-driver-comparability",
+        "sectionId": "drivers",
+        "intuition": "세 후보를 같은 시험 문제로 평가해야 나중에 결론을 재검토할 수 있습니다.",
+        "workedExample": "JSON·files·DB를 blast radius와 migration cost로 비교합니다.",
+        "boundary": "근거 없는 점수나 option별 다른 기준을 쓰지 않습니다."
+      },
+      {
+        "id": "adr-status-implementation-separation",
+        "sectionId": "status",
+        "intuition": "회의에서 채택한 상태와 현장에 설치해 검증한 상태는 다른 영수증입니다.",
+        "workedExample": "Accepted ADR과 migration test·rollout receipt를 따로 둡니다.",
+        "boundary": "Accepted는 implemented나 deployed가 아닙니다."
+      },
+      {
+        "id": "adr-supersession-history-chain",
+        "sectionId": "supersession",
+        "intuition": "과거 표지판을 지우지 않고 새 길이 왜 생겼는지 연결합니다.",
+        "workedExample": "ADR-006이 ADR-005를 supersede하고 changed driver를 적습니다.",
+        "boundary": "번호 재사용이나 원문 덮어쓰기를 하지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "Record",
+        "relation": "Significant decision 한 건의 경계 고정",
+        "concepts": [
+          "architecture-decision-record-contract"
+        ]
+      },
+      {
+        "label": "Compare",
+        "relation": "같은 driver로 option 비교",
+        "concepts": [
+          "adr-decision-driver-comparability",
+          "architecture-decision-record-contract"
+        ]
+      },
+      {
+        "label": "Execute",
+        "relation": "Accepted와 implementation 상태 분리",
+        "concepts": [
+          "adr-status-implementation-separation"
+        ]
+      },
+      {
+        "label": "Evolve",
+        "relation": "새 결정과 과거 context 연결",
+        "concepts": [
+          "adr-supersession-history-chain",
+          "architecture-decision-record-contract"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "Profile storage 결정을 기록하는 ADR 한 건에 반드시 들어갈 기본 필드와 각 필드의 역할을 쓰라.",
+        "answerChecklist": [
+          "title",
+          "status",
+          "context",
+          "decision",
+          "consequences"
+        ],
+        "requiredConcepts": [
+          "architecture-decision-record-contract"
+        ],
+        "sectionId": "overview"
+      },
+      {
+        "level": "basic",
+        "question": "Significant decision과 작은 bug fix를 구분하라.",
+        "answerChecklist": [
+          "future constraint",
+          "architecture",
+          "bug issue",
+          "not every change"
+        ],
+        "requiredConcepts": [
+          "architecture-decision-record-contract"
+        ],
+        "sectionId": "overview"
+      },
+      {
+        "level": "basic",
+        "question": "세 storage option을 같은 driver로 비교하라.",
+        "answerChecklist": [
+          "blast radius",
+          "recovery",
+          "migration",
+          "operations",
+          "same axes"
+        ],
+        "requiredConcepts": [
+          "adr-decision-driver-comparability"
+        ],
+        "sectionId": "drivers"
+      },
+      {
+        "level": "basic",
+        "question": "Accepted와 implemented가 다른 이유를 쓰라.",
+        "answerChecklist": [
+          "decision adopted",
+          "task",
+          "migration",
+          "deployment",
+          "verification"
+        ],
+        "requiredConcepts": [
+          "adr-status-implementation-separation"
+        ],
+        "sectionId": "status"
+      },
+      {
+        "level": "basic",
+        "question": "ADR을 supersede할 때 남길 정보를 쓰라.",
+        "answerChecklist": [
+          "old status",
+          "new ADR",
+          "changed context",
+          "reason",
+          "history"
+        ],
+        "requiredConcepts": [
+          "adr-supersession-history-chain"
+        ],
+        "sectionId": "supersession"
+      },
+      {
+        "level": "basic",
+        "question": "Positive·negative consequence를 함께 쓰는 이유를 설명하라.",
+        "answerChecklist": [
+          "benefit",
+          "cost",
+          "trade-off",
+          "future review"
+        ],
+        "requiredConcepts": [
+          "architecture-decision-record-contract"
+        ],
+        "sectionId": "overview"
+      },
+      {
+        "level": "advanced",
+        "question": "근거 수치가 부족한 option comparison을 설계하라.",
+        "answerChecklist": [
+          "observations",
+          "unknowns",
+          "same drivers",
+          "no fake score",
+          "experiment"
+        ],
+        "requiredConcepts": [
+          "adr-decision-driver-comparability"
+        ],
+        "sectionId": "drivers"
+      },
+      {
+        "level": "advanced",
+        "question": "Accepted 뒤 migration 실패 시 ADR·task·Changelog 상태를 판정하라.",
+        "answerChecklist": [
+          "accepted",
+          "implementation failed",
+          "not deployed",
+          "evidence",
+          "rollback"
+        ],
+        "requiredConcepts": [
+          "adr-status-implementation-separation"
+        ],
+        "sectionId": "status"
+      },
+      {
+        "level": "advanced",
+        "question": "File storage를 DB로 바꾸는 superseding ADR을 설계하라.",
+        "answerChecklist": [
+          "old preserved",
+          "new context",
+          "drivers",
+          "decision",
+          "link"
+        ],
+        "requiredConcepts": [
+          "adr-supersession-history-chain",
+          "adr-decision-driver-comparability"
+        ],
+        "sectionId": "supersession"
+      },
+      {
+        "level": "advanced",
+        "question": "암묵 decision 하나를 evidence 기반 ADR로 복원하라.",
+        "answerChecklist": [
+          "history",
+          "context",
+          "uncertainty",
+          "options",
+          "status"
+        ],
+        "requiredConcepts": [
+          "architecture-decision-record-contract",
+          "adr-status-implementation-separation"
+        ],
+        "sectionId": "overview"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Michael Nygard — Documenting Architecture Decisions",
+        "href": "https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions",
+        "problem": "Decision 동기와 trade-off가 code만 남으면 사라지는 문제",
+        "contribution": "작고 modular한 ADR의 title·status·context·decision·consequences와 history",
+        "assumptions": "한 project의 significant decision을 다루며 significance는 팀이 판단",
+        "evidenceScope": "ADR 원형 template과 status rationale",
+        "notClaim": "Options section이나 특정 storage 선택이 보편 표준이라는 뜻은 아님",
+        "sectionId": "paper-nygard-adr"
+      }
+    ]
+  },
+  "ai/engineering-lessons-ledger": {
+    "entryLevel": true,
+    "entryNote": "선행 수업을 가정하지 않고 고정된 empty-compaction 사건에서 용어 하나씩 정의한 뒤 형태·작은 예·경계와 조합 흐름을 순서대로 설명합니다.",
+    "coreIdea": "Engineering Lesson은 사건 요약이 아니라 다음 작업에서 실행할 현재 rule입니다. Rule에 scope·정상 exception·test를 붙이고 evidence가 약하지만 severity가 큰 경우에는 좁은 provisional 상태로 시작합니다. Postmortem은 incident history를, Lesson은 current rule만 소유합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "reusable-lesson-contract",
+        "role": "현재 재사용할 rule의 전체 필드를 정의합니다."
+      },
+      {
+        "id": "lesson-scope-exception-test-triad",
+        "role": "Rule의 적용 범위·정상 예외·검증을 묶습니다."
+      },
+      {
+        "id": "provisional-lesson-evidence-threshold",
+        "role": "강한 한 사건에서 좁은 임시 rule을 시작합니다."
+      },
+      {
+        "id": "postmortem-lesson-boundary",
+        "role": "Incident history와 current rule의 정본을 분리합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "reusable-lesson-contract",
+        "sectionId": "overview",
+        "intuition": "과거 이야기를 저장하는 대신 다음 판단에서 꺼내 쓸 도구입니다.",
+        "workedExample": "Derived empty output으로 기존 state를 자동 replace하지 않는 rule을 둡니다.",
+        "boundary": "범위와 test 없는 구호는 Lesson이 아닙니다."
+      },
+      {
+        "id": "lesson-scope-exception-test-triad",
+        "sectionId": "scope-test",
+        "intuition": "어디서 멈추고 어떤 경우에 열어 줄지 시험까지 붙인 경계입니다.",
+        "workedExample": "Compaction은 scope, explicit delete는 exception, empty/delete fixture로 구분합니다.",
+        "boundary": "단순 length 검사로 domain intent를 대신하지 않습니다."
+      },
+      {
+        "id": "provisional-lesson-evidence-threshold",
+        "sectionId": "provisional",
+        "intuition": "증거가 적을수록 금지 범위를 좁히고 다시 볼 조건을 선명하게 합니다.",
+        "workedExample": "한 번의 data loss 뒤 destructive replace path에만 provisional guard를 둡니다.",
+        "boundary": "모든 AI output을 금지하는 보편 rule로 넓히지 않습니다."
+      },
+      {
+        "id": "postmortem-lesson-boundary",
+        "sectionId": "postmortem",
+        "intuition": "사고 보고서와 현재 안전 규칙을 서로 link하되 복제하지 않습니다.",
+        "workedExample": "Postmortem은 impact·timeline·action, Lesson은 empty replace guard만 소유합니다.",
+        "boundary": "Blameless를 accountability 부재로 해석하지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "Rule",
+        "relation": "현재 행동 기준 정의",
+        "concepts": [
+          "reusable-lesson-contract"
+        ]
+      },
+      {
+        "label": "Bound",
+        "relation": "Scope·exception·test 결합",
+        "concepts": [
+          "lesson-scope-exception-test-triad",
+          "reusable-lesson-contract"
+        ]
+      },
+      {
+        "label": "Qualify",
+        "relation": "Evidence와 severity로 provisional 범위 판정",
+        "concepts": [
+          "provisional-lesson-evidence-threshold"
+        ]
+      },
+      {
+        "label": "Separate",
+        "relation": "Incident history와 current rule 소유권 분리",
+        "concepts": [
+          "postmortem-lesson-boundary",
+          "reusable-lesson-contract"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "Reusable Lesson의 필수 필드를 쓰라.",
+        "answerChecklist": [
+          "rule",
+          "scope",
+          "exception",
+          "evidence",
+          "verification",
+          "revisit"
+        ],
+        "requiredConcepts": [
+          "reusable-lesson-contract"
+        ],
+        "sectionId": "overview"
+      },
+      {
+        "level": "basic",
+        "question": "‘Compaction은 위험하다’가 충분한 Lesson이 아닌 이유를 쓰라.",
+        "answerChecklist": [
+          "vague",
+          "no scope",
+          "no exception",
+          "no test"
+        ],
+        "requiredConcepts": [
+          "reusable-lesson-contract"
+        ],
+        "sectionId": "overview"
+      },
+      {
+        "level": "basic",
+        "question": "Empty replace guard의 scope·exception·test를 설계하라.",
+        "answerChecklist": [
+          "compaction",
+          "delete intent",
+          "empty fixture",
+          "delete fixture",
+          "state"
+        ],
+        "requiredConcepts": [
+          "lesson-scope-exception-test-triad"
+        ],
+        "sectionId": "scope-test"
+      },
+      {
+        "level": "basic",
+        "question": "한 data-loss 사건에서 provisional Lesson을 만들 수 있는 이유와 제한을 쓰라.",
+        "answerChecklist": [
+          "severity",
+          "narrow scope",
+          "status",
+          "counterexample",
+          "revisit"
+        ],
+        "requiredConcepts": [
+          "provisional-lesson-evidence-threshold"
+        ],
+        "sectionId": "provisional"
+      },
+      {
+        "level": "basic",
+        "question": "Postmortem과 Lesson이 각각 소유하는 내용을 나누라.",
+        "answerChecklist": [
+          "impact",
           "timeline",
           "mitigation",
-          "system contributing factors",
-          "no personal blame",
-          "action owner",
-          "verifiable end state",
-          "Postmortem canonical incident",
-          "Lesson current rule only",
-          "narrow provisional scope",
-          "evidence links",
-          "revisit/counterexample",
+          "action",
+          "current rule",
+          "test"
         ],
-        requiredConcepts: [
-          "postmortem-lesson-boundary",
+        "requiredConcepts": [
+          "postmortem-lesson-boundary"
+        ],
+        "sectionId": "postmortem"
+      },
+      {
+        "level": "basic",
+        "question": "Blameless 문장을 system condition 중심으로 다시 쓰라.",
+        "answerChecklist": [
+          "no blame",
+          "system condition",
+          "validation gap",
+          "action",
+          "owner"
+        ],
+        "requiredConcepts": [
+          "postmortem-lesson-boundary"
+        ],
+        "sectionId": "postmortem"
+      },
+      {
+        "level": "advanced",
+        "question": "새 counterexample이 나온 Lesson을 복사본 없이 갱신하라.",
+        "answerChecklist": [
+          "canonical rule",
+          "evidence",
+          "scope",
+          "exception",
+          "test update"
+        ],
+        "requiredConcepts": [
           "reusable-lesson-contract",
+          "lesson-scope-exception-test-triad"
         ],
-        sectionId: "lessons",
+        "sectionId": "scope-test"
       },
       {
-        level: "advanced",
-        question:
-          "기록 체계가 없는 오래된 repository에 과거 history 전체를 이관하지 않고 이 pattern을 점진 도입하는 30일 계획과 link health·owner·review·stale status 점검표를 작성하라.",
-        answerChecklist: [
-          "start with current work",
-          "artifact IDs",
-          "short verified Changelog",
-          "restore only revisited decisions",
-          "Lesson after repeated or severe case",
-          "map existing release/RFC/runbook systems",
-          "one canonical owner",
-          "link existence/permission",
-          "retention/archive",
-          "owner/reviewer",
-          "superseded/stale visibility",
-          "30-day health review",
-          "no forced full migration",
+        "level": "advanced",
+        "question": "Severity와 evidence로 provisional·accepted·rejected matrix를 만들라.",
+        "answerChecklist": [
+          "severity",
+          "evidence",
+          "provisional",
+          "accepted",
+          "reject",
+          "revisit"
         ],
-        requiredConcepts: [
-          "devlog-record-promotion-threshold",
-          "devlog-record-question-ownership",
-          "agent-drafted-record-evidence-boundary",
+        "requiredConcepts": [
+          "provisional-lesson-evidence-threshold"
         ],
-        sectionId: "three-layers",
+        "sectionId": "provisional"
       },
+      {
+        "level": "advanced",
+        "question": "Postmortem action과 Lesson verification이 link되는 구조를 설계하라.",
+        "answerChecklist": [
+          "incident ID",
+          "owner",
+          "end state",
+          "rule",
+          "test",
+          "no duplication"
+        ],
+        "requiredConcepts": [
+          "postmortem-lesson-boundary",
+          "lesson-scope-exception-test-triad"
+        ],
+        "sectionId": "postmortem"
+      },
+      {
+        "level": "advanced",
+        "question": "Agent의 Lesson 후보 과잉 일반화를 막는 review를 설계하라.",
+        "answerChecklist": [
+          "artifact links",
+          "evidence count",
+          "severity",
+          "counterexample",
+          "scope",
+          "approval"
+        ],
+        "requiredConcepts": [
+          "provisional-lesson-evidence-threshold",
+          "reusable-lesson-contract"
+        ],
+        "sectionId": "provisional"
+      }
     ],
-    papers: [
+    "papers": [
       {
-        title: "Keep a Changelog 1.1.0",
-        href: "https://keepachangelog.com/en/1.1.0/",
-        problem:
-          "Raw commit log만으로는 release마다 사람이 알아야 할 notable change와 그 시점을 빠르게 파악하기 어려운 문제",
-        contribution:
-          "사람이 읽는 curated chronological list, 최신 version 우선, link 가능한 section, 일관된 category, 날짜와 Unreleased 영역이라는 Changelog 유지 원칙을 제안",
-        assumptions:
-          "Release 또는 version이 있는 software와 end-user Changelog가 중심이며 project의 versioning·audience·notable 기준은 별도로 정한다는 전제",
-        evidenceScope:
-          "Commit dump와 구별되는 Changelog의 목적·구조·유지 convention 및 공개 software release 문맥",
-        notClaim:
-          "이 글의 내부 월별 heading·ADR·Lessons 구조가 공식 표준이거나 모든 commit·실험을 기록하고 모든 project가 같은 category를 써야 한다는 뜻은 아님",
-        sectionId: "paper-keep-a-changelog",
-      },
-      {
-        title: "Michael Nygard — Documenting Architecture Decisions",
-        href: "https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions",
-        problem:
-          "중요한 architecture decision의 동기와 trade-off가 사람과 문서에서 사라져 미래 개발자가 과거 선택을 이유 없이 뒤집거나 반복 논의하는 문제",
-        contribution:
-          "Architecturally significant decision 하나를 title·status·context·decision·consequences로 남기는 작고 modular한 ADR과 proposed·accepted·deprecated·superseded lifecycle을 제안",
-        assumptions:
-          "Decision의 번호를 재사용하지 않고 project repository에서 history를 보존하며 무엇이 significant한지는 팀이 context에 맞게 판단한다는 전제",
-        evidenceScope:
-          "ADR의 목적, 원형 template, status 변화와 superseding history를 보존하는 rationale",
-        notClaim:
-          "Options section·이 글의 filename·승격 threshold·profile별 파일 선택이 Nygard가 정한 필수 표준이거나 ADR accepted가 구현·배포 완료라는 뜻은 아님",
-        sectionId: "paper-nygard-adr",
-      },
-      {
-        title:
-          "Google SRE Workbook — Postmortem Culture: Learning from Failure",
-        href: "https://sre.google/workbook/postmortem-culture/",
-        problem:
-          "Production incident를 복구하고도 data·trigger·preventive action을 formal하게 학습하지 않거나 개인 비난이 evidence 공유를 막아 failure가 반복되는 문제",
-        contribution:
-          "객관적인 postmortem trigger, complete incident data, blameless analysis, measurable preventive action·owner·review를 통해 system learning으로 연결하는 운영 원리를 설명",
-        assumptions:
-          "Google SRE의 대규모 production service·조직 문화 사례이며 각 팀이 자기 service의 incident trigger와 review process를 사전에 정한다는 전제",
-        evidenceScope:
-          "Production incident의 timeline·impact·contributing factors·follow-up action을 보존하고 반복 pattern을 조직적 학습으로 바꾸는 운영 범위",
-        notClaim:
-          "이 글의 Lessons가 Google Postmortem과 같은 artifact이거나 개인 agent project가 Google process 전체를 따라야 하고 blameless가 accountability를 없앤다는 뜻은 아님",
-        sectionId: "paper-google-sre-postmortem",
-      },
-    ],
+        "title": "Google SRE Workbook — Postmortem Culture",
+        "href": "https://sre.google/workbook/postmortem-culture/",
+        "problem": "Incident 복구 뒤 formal learning과 action이 사라지는 문제",
+        "contribution": "Blameless analysis·complete data·measurable action·owner·review",
+        "assumptions": "대규모 production 사례이며 팀별 trigger와 process가 필요",
+        "evidenceScope": "Incident evidence를 system learning으로 연결하는 운영 원리",
+        "notClaim": "Lesson이 Postmortem과 같거나 accountability를 없앤다는 뜻은 아님",
+        "sectionId": "paper-google-sre-postmortem"
+      }
+    ]
   },
   "ai/openclaw-assistant": {
     entryLevel: true,

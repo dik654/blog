@@ -7784,7 +7784,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Curated Changelog entry contract",
     definition:
       "검증을 마친 notable change를 날짜·version, 사람이 이해할 결과·영향, verification, stable evidence link로 기록하되 raw commit·debugging transcript와 아직 배포되지 않은 상태를 섞지 않는 시간순 변경 기록 계약입니다.",
-    canonicalHref: "/ai/agent-devlog-patterns#changelog",
+    canonicalHref: "/ai/agent-changelog-evidence#overview",
   },
   "architecture-decision-record-contract": {
     id: "architecture-decision-record-contract",
@@ -7793,7 +7793,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Architecture Decision Record contract",
     definition:
       "이후 선택을 제약하는 architecturally significant decision 하나의 title·status·context·같은 driver로 비교한 options·decision·consequences를 보존하고, accepted를 구현 완료로 오인하지 않으며 바뀐 결정은 원문 삭제 대신 superseding ADR로 연결하는 계약입니다.",
-    canonicalHref: "/ai/agent-devlog-patterns#adr",
+    canonicalHref: "/ai/architecture-decision-records#overview",
   },
   "reusable-lesson-contract": {
     id: "reusable-lesson-contract",
@@ -7802,7 +7802,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "재사용 가능한 Lesson contract",
     definition:
       "한 사건의 요약 대신 다음 작업에서 실행할 현재 rule·적용 scope·정상 exception·evidence·verification·revisit condition을 한 정본에 유지하며, 근거가 약하거나 심각한 단일 사건에서는 좁은 provisional lesson으로 시작하는 계약입니다.",
-    canonicalHref: "/ai/agent-devlog-patterns#lessons",
+    canonicalHref: "/ai/engineering-lessons-ledger#overview",
   },
   "devlog-record-promotion-threshold": {
     id: "devlog-record-promotion-threshold",
@@ -7811,7 +7811,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "개발 기록의 조건부 승격 기준",
     definition:
       "모든 작업에 모든 문서를 만들지 않고 관찰은 artifact로, 검증된 변화는 Changelog로, 장기 제약이 있는 선택은 ADR로, 반복되거나 심각도가 높고 scope·exception·test를 말할 수 있는 원칙은 Lessons로 올리는 조건부 write path입니다.",
-    canonicalHref: "/ai/agent-devlog-patterns#three-layers",
+    canonicalHref: "/ai/agent-devlog-patterns#promotion",
   },
   "postmortem-lesson-boundary": {
     id: "postmortem-lesson-boundary",
@@ -7820,7 +7820,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Postmortem · Lessons 경계",
     definition:
       "Postmortem은 production incident의 timeline·impact·detection·mitigation·contributing factors·owner가 있는 verifiable action을 소유하고, Lessons는 그 사건을 대체하지 않은 채 여러 상황에서 현재 재사용할 rule과 test만 소유하는 분리 원칙입니다.",
-    canonicalHref: "/ai/agent-devlog-patterns#lessons",
+    canonicalHref: "/ai/engineering-lessons-ledger#postmortem",
   },
   "agent-drafted-record-evidence-boundary": {
     id: "agent-drafted-record-evidence-boundary",
@@ -7829,7 +7829,71 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Agent 작성 기록의 evidence 경계",
     definition:
       "Agent는 diff·log·test에서 기록 초안을 만들 수 있지만 source에 없는 수치·원인·완료 상태를 채우지 못하며, citation 존재·link 접근 권한·개인정보와 secret redaction·verification status를 검사한 뒤 owner가 해석과 공개 범위를 승인하게 하는 계약입니다.",
-    canonicalHref: "/ai/agent-devlog-patterns#three-layers",
+    canonicalHref: "/ai/agent-devlog-patterns#agent-review",
+  },
+  "changelog-notability-audience-boundary": {
+    id: "changelog-notability-audience-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Changelog notability · audience 경계",
+    definition: "변경의 크기를 commit 수로 재지 않고 누가 읽는지와 behavior·data format·policy·security에 관찰 가능한 영향이 있는지를 함께 판정해 Changelog에 넣을 변화를 고르는 경계입니다.",
+    canonicalHref: "/ai/agent-changelog-evidence#notability",
+  },
+  "changelog-verification-publication-state": {
+    id: "changelog-verification-publication-state",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Changelog verification · publication state",
+    definition: "구현·검증·merge·deployment를 서로 다른 상태로 보존하고 아직 실제 반영되지 않은 변화는 Unreleased 또는 pending으로 표시하는 공개 lifecycle입니다.",
+    canonicalHref: "/ai/agent-changelog-evidence#publication",
+  },
+  "changelog-stable-evidence-link": {
+    id: "changelog-stable-evidence-link",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Changelog stable evidence link",
+    definition: "짧은 변경 결과에서 고정 run·commit·test·decision identifier로 돌아가 위치 변경 뒤에도 같은 근거와 verification receipt를 찾게 하는 추적 참조입니다.",
+    canonicalHref: "/ai/agent-changelog-evidence#links",
+  },
+  "adr-decision-driver-comparability": {
+    id: "adr-decision-driver-comparability",
+    kind: "concept",
+    domain: "computer-science",
+    label: "ADR decision-driver comparability",
+    definition: "복구 범위·동시성·migration·운영 비용처럼 결정을 좌우하는 기준을 먼저 고정하고 모든 option을 같은 축에서 비교해 선택을 나중에 재검토할 수 있게 하는 계약입니다.",
+    canonicalHref: "/ai/architecture-decision-records#drivers",
+  },
+  "adr-status-implementation-separation": {
+    id: "adr-status-implementation-separation",
+    kind: "concept",
+    domain: "computer-science",
+    label: "ADR status · implementation separation",
+    definition: "ADR의 proposed·accepted 상태와 구현 task·migration·deployment·verification 상태를 분리해 결정 채택을 실행 완료로 오인하지 않게 하는 경계입니다.",
+    canonicalHref: "/ai/architecture-decision-records#status",
+  },
+  "adr-supersession-history-chain": {
+    id: "adr-supersession-history-chain",
+    kind: "concept",
+    domain: "computer-science",
+    label: "ADR supersession history chain",
+    definition: "결정이 바뀔 때 원문을 삭제하거나 덮어쓰지 않고 superseded 상태와 새 ADR link로 과거 context와 현재 결정을 모두 찾게 하는 history입니다.",
+    canonicalHref: "/ai/architecture-decision-records#supersession",
+  },
+  "lesson-scope-exception-test-triad": {
+    id: "lesson-scope-exception-test-triad",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Lesson scope · exception · test triad",
+    definition: "현재 rule의 적용 경로, 정상적으로 규칙을 깨도 되는 예외, 둘을 구별하는 verification fixture를 한 정본에서 함께 관리하는 실행 가능한 lesson 형태입니다.",
+    canonicalHref: "/ai/engineering-lessons-ledger#scope-test",
+  },
+  "provisional-lesson-evidence-threshold": {
+    id: "provisional-lesson-evidence-threshold",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Provisional lesson evidence threshold",
+    definition: "반복 evidence가 부족해도 data loss·security처럼 severity가 크면 적용 범위를 좁히고 provisional status·반례·revisit 조건을 붙여 시작하되 넓은 보편 rule로 일반화하지 않는 기준입니다.",
+    canonicalHref: "/ai/engineering-lessons-ledger#provisional",
   },
   "claw-independent-reimplementation-snapshot-boundary": {
     id: "claw-independent-reimplementation-snapshot-boundary",
@@ -24691,6 +24755,18 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     reason:
       "Agent가 반복 pattern을 제안해도 evidence count·counterexample·scope·owner review 없이 현재 rule로 승격하지 않습니다.",
   },
+  { from: "curated-changelog-entry-contract", to: "changelog-notability-audience-boundary", relation: "constrains", reason: "Curated entry는 audience와 관찰 가능한 영향이 있는 change만 포함해야 raw commit dump가 되지 않습니다." },
+  { from: "changelog-notability-audience-boundary", to: "changelog-verification-publication-state", relation: "prerequisite", reason: "Notable 후보를 고른 뒤 구현·검증·배포 상태를 분리해 공개 시점을 결정합니다." },
+  { from: "changelog-verification-publication-state", to: "changelog-stable-evidence-link", relation: "produces", reason: "공개된 상태와 결과는 실제 run·commit·test receipt로 돌아갈 stable link를 남깁니다." },
+  { from: "devlog-raw-evidence-claim-boundary", to: "changelog-stable-evidence-link", relation: "prerequisite", reason: "Changelog의 짧은 claim이 raw evidence를 대신하지 않고 원문으로 돌아가게 합니다." },
+  { from: "architecture-decision-record-contract", to: "adr-decision-driver-comparability", relation: "constrains", reason: "ADR의 options는 당시의 동일 decision driver로 비교되어야 선택 이유를 재검토할 수 있습니다." },
+  { from: "adr-decision-driver-comparability", to: "adr-status-implementation-separation", relation: "prerequisite", reason: "비교와 결정이 끝난 뒤에도 채택과 실제 구현·rollout은 별도 상태로 추적합니다." },
+  { from: "adr-status-implementation-separation", to: "adr-supersession-history-chain", relation: "prerequisite", reason: "결정 상태를 구현 상태와 분리해야 context 변화로 결정이 대체되는 history도 정확히 남길 수 있습니다." },
+  { from: "adr-supersession-history-chain", to: "devlog-record-question-ownership", relation: "extends", reason: "현재 결정과 과거 결정의 정본을 link로 연결해 같은 질문에 복제된 답이 생기지 않게 합니다." },
+  { from: "reusable-lesson-contract", to: "lesson-scope-exception-test-triad", relation: "constrains", reason: "재사용 rule은 적용 범위·정상 예외·검증 fixture를 함께 말할 수 있어야 실행 가능합니다." },
+  { from: "postmortem-lesson-boundary", to: "provisional-lesson-evidence-threshold", relation: "constrains", reason: "한 incident에서 lesson을 만들 때 사건 전체를 일반화하지 않고 severity와 evidence에 맞춰 범위를 좁힙니다." },
+  { from: "provisional-lesson-evidence-threshold", to: "lesson-scope-exception-test-triad", relation: "prerequisite", reason: "Provisional rule도 scope·exception·test를 갖춰야 다음 evidence로 유지·폐기 여부를 판단할 수 있습니다." },
+  { from: "lesson-scope-exception-test-triad", to: "reusable-lesson-contract", relation: "evaluates", reason: "Scope·exception·test가 실제로 구분되는지 점검해 Lesson이 구호가 아닌 현재 실행 규칙인지 평가합니다." },
   {
     from: "run-artifact-provenance",
     to: "claw-independent-reimplementation-snapshot-boundary",
