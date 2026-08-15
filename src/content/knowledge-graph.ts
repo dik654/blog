@@ -4714,7 +4714,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Claude Code instruction discovery · load order",
     definition:
       "Managed·user·project·local CLAUDE.md와 directory hierarchy·path rule·auto memory를 scope와 시점에 따라 발견하고, ancestor는 launch 때 이어 붙이며 descendant instruction은 관련 file을 읽을 때 불러오는 제품별 context 규칙입니다.",
-    canonicalHref: "/ai/claude-code#overview",
+    canonicalHref: "/ai/claude-code-instructions-memory#instruction-order",
   },
   "claude-code-subagent-handoff-contract": {
     id: "claude-code-subagent-handoff-contract",
@@ -4723,7 +4723,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Claude Code main · subagent handoff contract",
     definition:
       "Main conversation이 subagent에 objective·input scope·tool authority·output·artifact·completion evidence를 넘기고 별도 context에서 수행된 결과 summary를 검증해 다시 main state에 연결하는 제품 실행 계약입니다.",
-    canonicalHref: "/ai/claude-code#agent-architecture",
+    canonicalHref: "/ai/claude-code-subagents#handoff",
   },
   "claude-code-permission-decision-order": {
     id: "claude-code-permission-decision-order",
@@ -4732,7 +4732,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Claude Code permission · hook decision order",
     definition:
       "Tool call에 대해 permission rule의 deny→ask→allow 우선순위와 PreToolUse hook의 decision을 결합하되 hook allow가 기존 deny·ask를 우회하지 못하게 하는 Claude Code 제품 판정 순서입니다.",
-    canonicalHref: "/ai/claude-code#tools-permissions",
+    canonicalHref: "/ai/claude-code-permissions#decision-order",
   },
   "claude-code-hook-event-contract": {
     id: "claude-code-hook-event-contract",
@@ -4741,7 +4741,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Claude Code hook event contract",
     definition:
       "Session·prompt·tool·subagent 등 제품 lifecycle event에서 matcher와 지원 handler type을 고르고 versioned JSON input/output·exit status·timeout·decision을 처리하는 hook 실행 계약입니다.",
-    canonicalHref: "/ai/claude-code#tools-permissions",
+    canonicalHref: "/ai/claude-code-hooks#event-contract",
   },
   "claude-code-file-checkpoint-boundary": {
     id: "claude-code-file-checkpoint-boundary",
@@ -4750,7 +4750,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Claude Code direct-edit checkpoint boundary",
     definition:
       "Claude Code의 direct file-edit tool이 만든 file snapshot과 대화 rewind를 복구 대상으로 두되 Bash·subagent·external API·remote system effect는 checkpoint 밖에 남기는 제품 복구 경계입니다.",
-    canonicalHref: "/ai/claude-code#tools-permissions",
+    canonicalHref: "/ai/claude-code-checkpointing#file-boundary",
   },
   "qwen-language-consistency-failure-taxonomy": {
     id: "qwen-language-consistency-failure-taxonomy",

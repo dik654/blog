@@ -2631,43 +2631,53 @@ export const ARTICLE_EVIDENCE: Readonly<
       kind: "공식 문서",
       label: "Claude Code — How Claude Code works",
       href: "https://code.claude.com/docs/en/how-claude-code-works",
-      note: "Agentic loop·tool·session·extension·permission·checkpoint를 연결하는 현재 제품 runtime 개요",
-    },
-    {
-      kind: "공식 문서",
-      label: "Claude Code — Manage Claude's memory",
-      href: "https://code.claude.com/docs/en/memory",
-      note: "CLAUDE.md scope·ancestor/descendant loading·auto memory·compaction의 현재 동작",
-    },
-    {
-      kind: "공식 문서",
-      label: "Claude Code — Create custom subagents",
-      href: "https://code.claude.com/docs/en/sub-agents",
-      note: "별도 context·system prompt·tool access·permission·main handoff의 현재 제품 계약",
+      note: "Model proposal을 context·tool execution·observation·verification에 연결하는 현재 workspace harness 개요",
     },
     {
       kind: "공식 문서",
       label: "Claude Code — Tools reference",
       href: "https://code.claude.com/docs/en/tools-reference",
-      note: "Built-in tool identity와 permission·subagent·hook configuration에서 쓰는 현재 tool name",
+      note: "Built-in tool의 현재 identity·input·effect를 확인하는 reference",
     },
+  ],
+  "ai/claude-code-instructions-memory": [
     {
       kind: "공식 문서",
-      label: "Claude Code — Permissions",
-      href: "https://code.claude.com/docs/en/permissions",
-      note: "Deny→ask→allow rule evaluation과 PreToolUse hook decision이 결합되는 현재 판정 순서",
+      label: "Claude Code — Manage Claude's memory",
+      href: "https://code.claude.com/docs/en/memory",
+      note: "CLAUDE.md scope·nested loading·auto memory·compaction의 현재 source 계약",
     },
+  ],
+  "ai/claude-code-subagents": [
+    {
+      kind: "공식 문서",
+      label: "Claude Code — Create custom subagents",
+      href: "https://code.claude.com/docs/en/sub-agents",
+      note: "별도 context·system prompt·tool scope·permission·main handoff의 현재 계약",
+    },
+  ],
+  "ai/claude-code-permissions": [
+    {
+      kind: "공식 문서",
+      label: "Claude Code — Configure permissions",
+      href: "https://code.claude.com/docs/en/permissions",
+      note: "Deny→ask→allow rule matching과 hook decision이 결합되는 현재 순서",
+    },
+  ],
+  "ai/claude-code-hooks": [
     {
       kind: "공식 문서",
       label: "Claude Code — Hooks reference",
       href: "https://code.claude.com/docs/en/hooks",
-      note: "Version에 따라 달라질 수 있는 lifecycle event·matcher·handler·input/output 계약",
+      note: "Lifecycle event·matcher·handler·JSON I/O·exit·timeout의 현재 계약",
     },
+  ],
+  "ai/claude-code-checkpointing": [
     {
       kind: "공식 문서",
       label: "Claude Code — Checkpointing",
       href: "https://code.claude.com/docs/en/checkpointing",
-      note: "Direct file-edit snapshot과 Bash·subagent·external effect를 구분하는 현재 복구 경계",
+      note: "Direct file snapshot과 Bash·subagent·remote effect를 구분하는 복구 경계",
     },
   ],
   "ai/qwen-korean-consistency": [

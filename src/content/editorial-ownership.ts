@@ -244,69 +244,114 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "claude-code": {
-    title: "Claude Code 글이 소유하는 범위",
+    title: "Claude Code workspace harness 글이 소유하는 범위",
     owns: [
-      "Claude model과 repository workspace를 잇는 Claude Code 제품 하네스·session·tool 실행 경계",
-      "Managed·user·project·local CLAUDE.md와 ancestor·lazy descendant·auto memory·compaction의 제품별 발견 순서",
-      "Main/subagent의 별도 context·tool authority·permission·summary·artifact handoff 계약",
-      "Built-in tool registry와 deny→ask→allow permission·PreToolUse hook decision의 현재 판정 순서",
-      "Claude Code lifecycle event·matcher·handler·JSON input/output·timeout을 포함한 hook 계약",
-      "Direct file-edit snapshot·conversation rewind와 Bash·subagent·external effect를 나누는 checkpoint 경계",
+      "Claude model의 proposal과 Claude Code runtime의 context·authorization·tool execution·observation 경계",
+      "Read-only observation·workspace mutation·process·network effect를 나누는 첫 분류",
+      "Gather context→act→verify loop에서 완료 claim과 독립 verifier receipt를 분리하는 방법",
     ],
     reuses: [
-      {
-        label: "Agent observation/action loop·delegation·hook taxonomy",
-        href: "/ai/agent-loop-foundations",
-      },
-      {
-        label:
-          "하네스 objective·context·capability·artifact·verifier·recovery 계약",
-        href: "/ai/llm-harness",
-      },
-      {
-        label:
-          "Context discovery·memory·compaction·instruction/data/enforcement",
-        href: "/ai/context-engineering",
-      },
-      {
-        label:
-          "Skill authoring·progressive disclosure·permission non-escalation",
-        href: "/ai/skills-anatomy",
-      },
-      {
-        label: "MCP tool·resource·prompt·runtime capability 경계",
-        href: "/ai/mcp-protocol",
-      },
-      {
-        label: "OS·container·credential·egress·network sandbox",
-        href: "/ai/agent-sandbox-security",
-      },
-      {
-        label: "Claude Code IDE integration",
-        href: "https://code.claude.com/docs/en/vs-code",
-      },
-      {
-        label: "Claude Code GitHub Actions integration",
-        href: "https://code.claude.com/docs/en/github-actions",
-      },
+      { label: "일반 LLM harness boundary", href: "/ai/llm-harness" },
+      { label: "Instruction과 auto memory", href: "/ai/claude-code-instructions-memory" },
+      { label: "Permission 판정", href: "/ai/claude-code-permissions" },
     ],
     evidence: [
-      {
-        kind: "primary-source",
-        rule: "제품의 instruction loading·subagent·tool·permission·hook·checkpoint 동작은 확인 시점의 code.claude.com 공식 문서와 실제 설치 version에만 귀속한다.",
-      },
-      {
-        kind: "standard",
-        rule: "CLAUDE.md·auto memory는 context이고 permission enforcement가 아니며, checkpoint는 direct file edit 복구이지 Git·transaction·external effect rollback이 아님을 항상 함께 밝힌다.",
-      },
-      {
-        kind: "project-measurement",
-        rule: "CLAUDE.md·subagent·permission·hook의 개선 효과는 같은 model/version·repository snapshot·bug fixture·test oracle에서 최소 diff·성공률·unauthorized effect·trajectory·latency·token을 paired 비교한다.",
-      },
-      {
-        kind: "project-claim",
-        rule: "Auto memory는 v2.1.59+ 경계를 기록하고 hook event/type 지원은 동적 version surface로 다루며, 고정된 hook 개수나 보편적 성능 향상을 주장하지 않는다.",
-      },
+      { kind: "primary-source", rule: "제품 loop와 tool 역할은 확인 시점의 code.claude.com 공식 문서에만 귀속한다." },
+      { kind: "standard", rule: "Model proposal·runtime execution·typed observation·verifier를 서로 다른 owner로 표현한다." },
+      { kind: "project-measurement", rule: "완료는 실제 diff·test·effect receipt로 확인한다." },
+      { kind: "project-claim", rule: "Claude Code 사용이 생성 코드의 정확성이나 외부 effect 복구를 보장한다고 주장하지 않는다." },
+    ],
+  },
+  "claude-code-instructions-memory": {
+    title: "Claude Code instruction·memory 글이 소유하는 범위",
+    owns: [
+      "Managed·user·project·path-specific CLAUDE.md의 owner·scope·발견 시점",
+      "Auto memory와 user-authored instruction의 소유권·load boundary",
+      "Compaction 뒤 지속 규칙을 보존하고 실제 loaded context를 감사하는 방법",
+    ],
+    reuses: [
+      { label: "Workspace harness", href: "/ai/claude-code" },
+      { label: "Context engineering", href: "/ai/context-engineering" },
+      { label: "Permission enforcement", href: "/ai/claude-code-permissions" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Instruction scope·nested loading·auto memory 한계는 현재 공식 memory 문서와 client version으로 제한한다." },
+      { kind: "standard", rule: "Instruction context와 runtime enforcement를 구분한다." },
+      { kind: "project-measurement", rule: "실제 loaded source·revision·path를 inspection trace로 확인한다." },
+      { kind: "project-claim", rule: "Auto memory를 검토된 project 정본이나 보안 정책 저장소로 표현하지 않는다." },
+    ],
+  },
+  "claude-code-subagents": {
+    title: "Claude Code subagent handoff 글이 소유하는 범위",
+    owns: [
+      "Main과 subagent의 별도 context·objective·input snapshot 경계",
+      "Tool·resource·mutation scope와 반환 artifact owner",
+      "Summary를 원자료·command receipt로 재검증하는 main verifier 책임",
+    ],
+    reuses: [
+      { label: "Agent run contract", href: "/ai/agent-run-contract" },
+      { label: "Workspace harness", href: "/ai/claude-code" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Subagent context·tool·permission·return behavior는 현재 공식 문서에만 귀속한다." },
+      { kind: "standard", rule: "병렬화는 independent input·artifact와 single merge owner가 있을 때만 권한다." },
+      { kind: "project-measurement", rule: "반환 summary는 실제 source·line·command receipt로 다시 확인한다." },
+      { kind: "project-claim", rule: "Subagent 수 증가가 품질 향상이나 안전한 병렬 merge를 자동 보장한다고 주장하지 않는다." },
+    ],
+  },
+  "claude-code-permissions": {
+    title: "Claude Code permission 판정 글이 소유하는 범위",
+    owns: [
+      "Tool registry와 concrete call authorization의 차이",
+      "Deny→ask→allow rule category의 current decision order",
+      "Permission·blocking hook·OS sandbox·credential·network policy의 서로 다른 enforcement owner",
+    ],
+    reuses: [
+      { label: "Workspace harness", href: "/ai/claude-code" },
+      { label: "Hook event contract", href: "/ai/claude-code-hooks" },
+      { label: "Sandbox security", href: "/ai/agent-sandbox-security" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Rule syntax·precedence·permission mode는 현재 공식 permissions 문서와 resolved settings에 귀속한다." },
+      { kind: "standard", rule: "Call identity·arguments·target과 fresh approval를 함께 binding한다." },
+      { kind: "project-measurement", rule: "Overlap·Bash 우회·stale approval를 failure fixture로 확인한다." },
+      { kind: "project-claim", rule: "Permission이 OS·container·network 격리를 대체한다고 표현하지 않는다." },
+    ],
+  },
+  "claude-code-hooks": {
+    title: "Claude Code hook lifecycle 글이 소유하는 범위",
+    owns: [
+      "Lifecycle event·matcher·optional argument filter의 resolution",
+      "Handler type·versioned JSON input/output·exit status·timeout·audit log",
+      "Hook code owner·secret scope·fail-open/fail-closed security boundary",
+    ],
+    reuses: [
+      { label: "Permission 판정", href: "/ai/claude-code-permissions" },
+      { label: "일반 hook·skill·verifier 구분", href: "/ai/agent-loop-foundations" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Event·matcher·handler surface는 현재 공식 hooks reference와 installed version에 귀속한다." },
+      { kind: "standard", rule: "Exit success와 permission allow를 구분하고 빈 output을 no-decision으로 다룬다." },
+      { kind: "project-measurement", rule: "Matcher bypass·timeout·failure policy를 canary event로 재현한다." },
+      { kind: "project-claim", rule: "Hook가 본질적으로 신뢰되거나 모든 file·effect 경로를 관찰한다고 주장하지 않는다." },
+    ],
+  },
+  "claude-code-checkpointing": {
+    title: "Claude Code checkpoint 복구 글이 소유하는 범위",
+    owns: [
+      "Conversation checkpoint와 direct file-edit snapshot의 복구 대상",
+      "Bash·subagent·external editor·symlink/hardlink의 추적 경계",
+      "Database·API·deploy effect의 operation receipt·compensation·rollback owner",
+    ],
+    reuses: [
+      { label: "Artifact continuity", href: "/ai/agent-run-contract" },
+      { label: "Workspace harness", href: "/ai/claude-code" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Checkpoint 포함·제외 범위는 현재 공식 checkpoint 문서와 같은 session에서 확인한다." },
+      { kind: "standard", rule: "File snapshot과 Git·backup·transaction·distributed rollback을 구분한다." },
+      { kind: "project-measurement", rule: "Direct edit·Bash·link·remote effect를 작은 recovery drill로 확인한다." },
+      { kind: "project-claim", rule: "Checkpoint가 external effect나 exactly-once semantics를 제공한다고 표현하지 않는다." },
     ],
   },
   "qwen-korean-consistency": {
@@ -3833,7 +3878,10 @@ export const EDITORIAL_BOUNDARIES = {
       "Container root와 host root의 privilege 경계",
     ],
     reuses: [
-      { label: "Claude Code 도구·권한 모델", href: "/ai/claude-code" },
+      {
+        label: "Claude Code concrete call 권한 판정",
+        href: "/ai/claude-code-permissions",
+      },
       { label: "MCP 경계와 capability", href: "/ai/mcp-protocol" },
     ],
     evidence: [

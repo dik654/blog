@@ -25224,521 +25224,200 @@ export const ARTICLE_LEARNING: Readonly<
   },
   "ai/claude-code": {
     entryLevel: true,
-    entryNote:
-      "Agent·하네스·MCP·Skill·hook을 알고 있다고 가정하지 않습니다. 로그인 실패 버그를 조사하고 최소한으로 수정한 뒤 test로 확인하는 한 작업을 따라가면서, model이 제안한 행동과 Claude Code runtime이 실제로 집행하는 행동을 처음부터 구분합니다. 일반 원리는 기존 정본 글로 연결하되 이 글만 읽어도 제품의 instruction·subagent·permission·hook·checkpoint 경계를 설명할 수 있게 구성합니다.",
-    coreIdea:
-      "Claude Code는 Claude model 자체가 아니라 model을 repository workspace에 연결하는 제품 하네스입니다. CLAUDE.md와 auto memory는 이번 session에 들어갈 context를 제공하고, built-in tool·MCP·Skill은 가능한 행동과 절차를 제공하며, permission rule과 hook은 실제 실행 전후의 runtime decision을 담당합니다. Subagent는 별도 context에서 제한된 일을 수행하고 summary·artifact를 main에 돌려주며, checkpoint는 direct file edit만 되돌릴 수 있습니다. 따라서 올바른 사용법은 프롬프트 하나에 모든 책임을 넣는 것이 아니라 발견 순서·위임 계약·권한 판정·event hook·복구 범위를 각각 관찰하고 test 가능한 계약으로 만드는 것입니다.",
+    entryNote: "Model·tool·agent를 안다고 가정하지 않고, 제안과 실제 workspace effect의 owner부터 분리합니다.",
+    coreIdea: "Claude Code는 model의 action proposal을 context·permission·executor·typed observation·verifier에 연결하는 workspace harness입니다.",
     assumedKnowledge: [],
     introducedHere: [
-      {
-        id: "claude-code-workspace-harness-boundary",
-        role: "Claude model의 제안과 Claude Code가 workspace에서 수행하는 context·tool·permission·verification 책임을 나눕니다.",
-      },
-      {
-        id: "claude-code-instruction-discovery-order",
-        role: "CLAUDE.md scope·ancestor/descendant loading·auto memory·compaction의 제품별 발견 순서를 설명합니다.",
-      },
-      {
-        id: "claude-code-subagent-handoff-contract",
-        role: "Main과 subagent 사이의 입력·tool authority·산출물·완료 evidence·검증 책임을 고정합니다.",
-      },
-      {
-        id: "claude-code-permission-decision-order",
-        role: "Tool registry와 실행 가능성을 분리하고 deny→ask→allow와 hook decision의 우선순위를 적용합니다.",
-      },
-      {
-        id: "claude-code-hook-event-contract",
-        role: "Lifecycle event·matcher·handler·versioned input/output·timeout을 deterministic automation 계약으로 묶습니다.",
-      },
-      {
-        id: "claude-code-file-checkpoint-boundary",
-        role: "Direct file edit snapshot과 Bash·subagent·외부 effect의 복구 범위를 구분합니다.",
-      },
+      { id: "claude-code-workspace-harness-boundary", role: "Model proposal과 runtime authorization·execution·observation 책임을 분리합니다." },
     ],
     conceptExplanations: [
-      {
-        id: "claude-code-workspace-harness-boundary",
-        sectionId: "overview",
-        intuition:
-          "Model이 문제 해결 방향을 제안하는 개발자라면 Claude Code는 repository를 보여 주고 명령을 실행하며 결과를 돌려주고 권한을 확인하는 작업대입니다. 생각과 실제 workspace 변화가 같은 층에서 일어나는 것은 아닙니다.",
-        workedExample:
-          "사용자가 '로그인 실패 버그를 조사해 최소 수정하고 test해 달라'고 요청하면 model은 관련 file 읽기와 test 실행을 제안합니다. Claude Code runtime은 Read·search·Edit·Bash 같은 tool을 권한 규칙에 맞게 실행하고 결과를 observation으로 돌려주며, model은 그 근거로 작은 diff를 만들고 targeted test와 regression test 결과를 확인합니다.",
-        boundary:
-          "Claude Code를 사용한다고 model의 판단·생성 코드·test 선택이 자동으로 정확해지는 것은 아닙니다. Runtime은 tool과 workspace를 연결하지만 bug 재현 조건·acceptance criteria·security invariant·완료 판정은 관찰 가능한 evidence로 따로 검증해야 합니다.",
-      },
-      {
-        id: "claude-code-instruction-discovery-order",
-        sectionId: "overview",
-        intuition:
-          "건물 전체 규칙, 개인 작업 습관, 팀 규칙, 내 자리의 임시 메모를 함께 읽되, 아직 들어가지 않은 하위 방의 안내문은 그 방의 file을 실제로 열 때 읽는 방식입니다.",
-        workedExample:
-          "로그인 버그 작업에서 managed instruction의 보안 규칙, user scope의 응답 선호, project CLAUDE.md의 test command, 같은 위치의 CLAUDE.local.md에 적힌 local URL이 context에 들어옵니다. Launch 시 작업 directory 위쪽 ancestor file은 읽지만 `src/auth/CLAUDE.md`는 auth file을 읽을 때 lazy load됩니다. Auto memory는 v2.1.59+에서 repository별 학습 내용을 보조하고, compaction 뒤에도 반드시 지킬 규칙은 대화 요약이 아니라 CLAUDE.md에 둡니다.",
-        boundary:
-          "CLAUDE.md 계층은 일반적인 설정 file의 override chain이 아니라 발견된 내용을 context로 이어 붙이는 구조이며 permission·sandbox 같은 강제 경계가 아닙니다. 충돌한 문장이 항상 원하는 순서로 해결된다고 가정하지 말고 `/context` 등 현재 제품의 inspection 수단으로 실제 loading을 확인해야 하며, auto memory와 지원 동작은 설치 version을 기준으로 다시 확인해야 합니다.",
-        counterexample:
-          "Production DB 접근 금지를 CLAUDE.md에만 적는 것은 instruction이지 runtime 차단이 아닙니다. 같은 금지는 permission·hook·credential·network policy처럼 실행을 실제로 막는 층에도 있어야 합니다.",
-      },
-      {
-        id: "claude-code-subagent-handoff-contract",
-        sectionId: "agent-architecture",
-        intuition:
-          "동료에게 '로그 좀 봐 주세요'라고만 말하는 대신 어떤 incident와 file을 읽고, 무엇은 수정하지 말며, 어떤 형식의 근거를 언제 돌려줄지 정한 업무 인계서입니다.",
-        workedExample:
-          "Main agent는 read-only 조사 subagent에 재현 log·auth directory·실패 test ID를 입력으로 주고 source edit와 deploy는 금지합니다. Subagent는 별도 context에서 원인 후보, 인용한 file/line, 실행한 command, 실패·성공 evidence를 summary와 artifact로 돌려줍니다. Main은 그 결과를 다시 읽어 최소 diff를 직접 만들고 test receipt를 확인한 뒤에만 완료로 판정합니다.",
-        boundary:
-          "Subagent는 main conversation 전체를 자동으로 공유하는 복제본이 아니며 custom system prompt·tool access·permission을 가진 별도 context입니다. 반환 summary는 검증된 사실이나 안전한 data라는 보장이 없고 named subagent가 main의 auto memory를 그대로 읽는다고 가정해서도 안 됩니다. Input·authority·artifact owner·completion evidence를 명시하고 main이 원자료와 결과를 검증해야 합니다.",
-      },
-      {
-        id: "claude-code-permission-decision-order",
-        sectionId: "tools-permissions",
-        intuition:
-          "도구함에 공구가 등록돼 있다는 사실, 작업자가 그 공구 사용을 요청했다는 사실, 현장에서 실제 사용을 허용한다는 판정은 서로 다릅니다. 먼저 금지 규칙을 확인하고, 승인이 필요하면 묻고, 그 다음 허용 규칙을 적용합니다.",
-        workedExample:
-          "로그인 버그에서는 Read와 search는 허용하고 source Edit는 ask, targeted test command는 제한된 allow, production deploy와 credential read는 deny로 둡니다. Permission rule은 deny→ask→allow 순서로 평가되며, PreToolUse hook가 먼저 tool input을 검사하더라도 hook의 allow가 기존 deny·ask를 건너뛰지는 못합니다. 여러 hook decision이 충돌하면 현재 문서의 precedence를 확인하고 blocking decision을 보수적으로 처리합니다.",
-        boundary:
-          "Permission rule은 Claude Code의 tool call 판정이지 OS·container·network sandbox 전체가 아닙니다. 특정 Read·Edit rule만으로 Bash subprocess나 외부 프로그램의 모든 file 접근을 막았다고 볼 수 없으며, bare tool deny와 scoped call deny가 model에게 보이는 registry에 미치는 차이도 현재 제품 문서와 실제 trace로 확인해야 합니다.",
-      },
-      {
-        id: "claude-code-hook-event-contract",
-        sectionId: "tools-permissions",
-        intuition:
-          "사람이 매번 기억해 실행하는 체크리스트 대신 'tool 실행 직전', '실행 직후', '작업 종료 시도' 같은 사건에 맞춰 자동 검사기가 정해진 입출력으로 호출되는 구조입니다.",
-        workedExample:
-          "PreToolUse hook는 로그인 조사 중 production DB host를 향한 command를 차단하거나 승인으로 보냅니다. PostToolUse hook는 auth source edit 뒤 targeted test를 실행하고 receipt를 남기며, 완료 시점 hook는 최소 diff·test evidence가 있는지 검사합니다. 각 hook은 event·matcher·handler type·JSON input/output·exit status·timeout·log를 계약으로 기록합니다.",
-        boundary:
-          "Hook은 신뢰 가능한 제품 내장 정책이 아니라 사용자가 실행하는 code일 수 있으므로 timeout·secret handling·failure mode·audit log가 필요합니다. 지원 event·matcher·handler type은 제품 version에 따라 바뀌므로 고정된 hook 개수를 지식으로 저장하지 말고 현재 schema를 확인해야 하며, hook이 Skill처럼 설명서를 제공하거나 MCP처럼 새 외부 capability를 만드는 것은 아닙니다.",
-        counterexample:
-          "모든 file reference가 반드시 Read tool과 PreToolUse hook를 통과한다고 가정하면 빠지는 경로가 생길 수 있습니다. 문서에 명시된 직접 reference 같은 예외와 tool별 permission을 failure injection으로 확인해야 합니다.",
-      },
-      {
-        id: "claude-code-file-checkpoint-boundary",
-        sectionId: "tools-permissions",
-        intuition:
-          "문서 편집기의 변경 이력은 그 편집기로 고친 문장을 되돌릴 수 있지만 terminal에서 실행한 migration, 다른 작업자가 고친 file, 외부 API 요청까지 시간을 되감지는 못합니다.",
-        workedExample:
-          "Claude Code의 direct file-edit tool로 auth condition을 수정했다면 checkpoint와 대화를 rewind해 snapshot으로 돌아갈 수 있습니다. 그러나 Bash로 formatter가 여러 file을 바꾸거나 migration command를 실행한 경우, subagent가 직접 쓴 file, ticket·deploy 같은 external effect는 같은 checkpoint가 복구하지 않습니다. 따라서 test·API effect에는 command log·git diff·operation ID·receipt를 별도로 남깁니다.",
-        boundary:
-          "Checkpoint는 Git commit·database transaction·external side-effect rollback을 대체하지 않고 direct file-edit tool이 추적한 범위만 복원합니다. Symlink·hardlink나 외부 editor처럼 추적 경계가 불분명한 경로도 현재 문서와 작은 복구 시험으로 확인해야 하며, destructive command 전에는 독립된 backup과 승인이 필요합니다.",
-      },
+      { id: "claude-code-workspace-harness-boundary", sectionId: "overview", intuition: "Model이 다음 일을 제안하는 조종사라면 harness는 실제 workspace의 계기판·잠금장치·조종면입니다.", workedExample: "로그인 버그에서 model은 검색과 수정을 제안하고 runtime은 permission을 확인해 tool을 실행한 뒤 test receipt를 observation으로 돌려줍니다.", boundary: "Tool이 존재하거나 model이 완료라고 말한 사실은 실행 권한·실제 effect·검증 성공을 뜻하지 않습니다." },
     ],
     conceptStages: [
-      {
-        label: "Enter",
-        relation:
-          "제품 하네스와 workspace의 instruction·memory discovery 범위를 먼저 확인",
-        concepts: [
-          "llm-harness-system-boundary",
-          "claude-code-workspace-harness-boundary",
-          "agent-context-discovery-path",
-          "claude-code-instruction-discovery-order",
-          "working-state-long-term-memory-boundary",
-          "context-compaction-fidelity",
-        ],
-      },
-      {
-        label: "Observe",
-        relation:
-          "Model proposal·tool execution·typed observation·exit를 trace로 분리",
-        concepts: [
-          "agent-observation-action-loop",
-          "typed-tool-observation-contract",
-          "agent-exit-state-machine",
-        ],
-      },
-      {
-        label: "Delegate",
-        relation:
-          "Main과 subagent의 input·authority·artifact·evidence를 계약으로 전달",
-        concepts: [
-          "agent-delegation-artifact-ownership",
-          "claude-code-subagent-handoff-contract",
-        ],
-      },
-      {
-        label: "Enforce",
-        relation:
-          "Tool registry와 permission·hook의 실행 시점과 판정 권한을 구분",
-        concepts: [
-          "agent-capability-runtime-boundary",
-          "hook-skill-guardrail-verifier-boundary",
-          "claude-code-hook-event-contract",
-          "claude-code-permission-decision-order",
-          "layered-agent-verification",
-        ],
-      },
-      {
-        label: "Recover",
-        relation:
-          "File snapshot과 conversation rewind를 외부 artifact·effect 복구와 분리",
-        concepts: [
-          "agent-artifact-state-continuity",
-          "claude-code-file-checkpoint-boundary",
-        ],
-      },
-      {
-        label: "Extend · evaluate",
-        relation:
-          "MCP·Skill·Hook을 책임에 맞게 선택하고 같은 bug fixture에서 paired trace를 비교",
-        concepts: [
-          "mcp-tool-resource-prompt-boundary",
-          "skill-permission-non-escalation",
-          "agent-trajectory-effect-evaluation",
-        ],
-      },
+      { label: "00 define", relation: "Model과 runtime의 책임을 먼저 나눕니다.", concepts: ["claude-code-workspace-harness-boundary"] },
+      { label: "01 observe", relation: "Proposal·gate·executor·observation을 순서대로 추적합니다.", concepts: ["claude-code-workspace-harness-boundary"] },
+      { label: "02 verify", relation: "Artifact와 test receipt로 완료를 독립 판정합니다.", concepts: ["claude-code-workspace-harness-boundary"] },
+      { label: "03 compose", relation: "Instruction·subagent·permission·hook·checkpoint 글로 확장합니다.", concepts: ["claude-code-workspace-harness-boundary"] },
     ],
     exercises: [
-      {
-        level: "basic",
-        question:
-          "로그인 실패 조사→최소 수정→test 작업을 model proposal·runtime authorization·tool action·typed observation·state update·exit로 나눈 observable loop trace로 작성하라.",
-        answerChecklist: [
-          "user objective",
-          "starting workspace state",
-          "model proposal",
-          "permission check",
-          "tool executor",
-          "status/source/timestamp observation",
-          "minimal diff artifact",
-          "targeted and regression test",
-          "completed/failed exit",
-          "model does not directly edit",
-        ],
-        requiredConcepts: [
-          "claude-code-workspace-harness-boundary",
-          "agent-observation-action-loop",
-          "typed-tool-observation-contract",
-          "agent-exit-state-machine",
-        ],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "같은 작업에서 managed·user·project·local CLAUDE.md, ancestor와 nested CLAUDE.md, auto memory, compaction이 언제 context에 들어오는지 순서와 시점을 그리라.",
-        answerChecklist: [
-          "managed scope",
-          "user scope",
-          "project scope",
-          "local scope",
-          "ancestor at launch",
-          "nested lazy load on file access",
-          "concatenated context not override",
-          "auto memory v2.1.59+ and repo scope",
-          "named subagent caveat",
-          "persistent rule in CLAUDE.md",
-          "inspect actual context",
-          "not security enforcement",
-        ],
-        requiredConcepts: [
-          "claude-code-instruction-discovery-order",
-          "agent-context-discovery-path",
-          "context-compaction-fidelity",
-          "working-state-long-term-memory-boundary",
-        ],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "Read-only 조사 subagent에게 로그인 실패 원인을 맡길 때 main/subagent의 input·output·tool authority·artifact owner·completion evidence와 main의 재검증 절차를 표로 작성하라.",
-        answerChecklist: [
-          "bounded objective",
-          "input snapshot",
-          "separate context",
-          "read-only tools",
-          "explicit deny of edit/deploy",
-          "expected summary schema",
-          "file/line and command evidence",
-          "artifact owner",
-          "main source verification",
-          "main owns final edit/test",
-          "untrusted output boundary",
-        ],
-        requiredConcepts: [
-          "claude-code-subagent-handoff-contract",
-          "agent-delegation-artifact-ownership",
-        ],
-        sectionId: "agent-architecture",
-      },
-      {
-        level: "basic",
-        question:
-          "Built-in tool registry, MCP tool, permission rule, Pre/PostToolUse hook가 로그인 버그 작업에서 각각 무엇을 제공하고 무엇을 보장하지 않는지 구분하라.",
-        answerChecklist: [
-          "registered capability",
-          "MCP external integration",
-          "model-visible tool name/schema",
-          "permission execution decision",
-          "hook lifecycle automation",
-          "skill is workflow context not new tool authority",
-          "no automatic correctness",
-          "OS/network sandbox separate",
-        ],
-        requiredConcepts: [
-          "claude-code-workspace-harness-boundary",
-          "agent-capability-runtime-boundary",
-          "mcp-tool-resource-prompt-boundary",
-          "claude-code-permission-decision-order",
-          "claude-code-hook-event-contract",
-          "skill-permission-non-escalation",
-        ],
-        sectionId: "tools-permissions",
-      },
-      {
-        level: "basic",
-        question:
-          "Read 허용·source Edit 승인 요청·targeted test 허용·production deploy 금지 규칙과 충돌하는 PreToolUse hook가 있을 때 deny→ask→allow와 hook decision의 실제 판정 순서를 설명하라.",
-        answerChecklist: [
-          "tool proposal",
-          "PreToolUse timing",
-          "permission categories deny then ask then allow",
-          "hook allow cannot bypass deny/ask",
-          "blocking decision precedence",
-          "multiple hook conflict handled conservatively",
-          "prompt shown only when needed",
-          "runtime trace",
-          "versioned docs",
-        ],
-        requiredConcepts: [
-          "claude-code-permission-decision-order",
-          "claude-code-hook-event-contract",
-          "agent-capability-runtime-boundary",
-        ],
-        sectionId: "tools-permissions",
-      },
-      {
-        level: "basic",
-        question:
-          "로그인 수정 뒤 checkpoint를 rewind할 때 direct file edit·Bash formatter·subagent edit·database migration·ticket 생성 중 무엇이 복구되고 무엇이 남는지 분류하라.",
-        answerChecklist: [
-          "conversation checkpoint",
-          "direct file-edit snapshot",
-          "Bash changes untracked",
-          "subagent changes untracked",
-          "external effect untracked",
-          "symlink/external editor caveat",
-          "git diff/backup",
-          "operation ID and receipt",
-          "not transaction",
-          "not Git replacement",
-        ],
-        requiredConcepts: [
-          "claude-code-file-checkpoint-boundary",
-          "agent-artifact-state-continuity",
-        ],
-        sectionId: "tools-permissions",
-      },
-      {
-        level: "advanced",
-        question:
-          "Login incident에 외부 log service 연결, 반복 조사 절차, production command 차단이 각각 필요할 때 MCP·Skill·Hook 중 무엇을 선택하고 permission·sandbox와 어떻게 조합할지 설계하라.",
-        answerChecklist: [
-          "MCP for external capability/resource",
-          "Skill for reusable workflow/reference",
-          "Hook for lifecycle automation/blocking",
-          "tool registry",
-          "no permission escalation",
-          "credential scope",
-          "egress/sandbox",
-          "failure mode",
-          "versioned interface",
-          "smallest sufficient extension",
-        ],
-        requiredConcepts: [
-          "mcp-tool-resource-prompt-boundary",
-          "skill-permission-non-escalation",
-          "hook-skill-guardrail-verifier-boundary",
-          "claude-code-hook-event-contract",
-          "claude-code-permission-decision-order",
-        ],
-        sectionId: "tools-permissions",
-      },
-      {
-        level: "advanced",
-        question:
-          "Subagent가 근거 없는 원인을 반환하고, permission rule이 Bash 우회 경로를 놓치고, hook가 timeout 나는 세 failure를 주입해 main agent가 안전하게 실패하는지 검증하라.",
-        answerChecklist: [
-          "three isolated injections",
-          "untrusted subagent summary",
-          "source/evidence recheck",
-          "Bash access path",
-          "deny/ask expectation",
-          "hook timeout/fail policy",
-          "no production effect",
-          "observable trace",
-          "exit state",
-          "recovery artifact",
-          "regression fixture",
-        ],
-        requiredConcepts: [
-          "claude-code-subagent-handoff-contract",
-          "claude-code-permission-decision-order",
-          "claude-code-hook-event-contract",
-          "layered-agent-verification",
-        ],
-        sectionId: "agent-architecture",
-      },
-      {
-        level: "advanced",
-        question:
-          "동일한 로그인 버그 fixture에서 기본 Claude Code 설정과 CLAUDE.md·subagent·permission·hook를 추가한 설정을 paired evaluation하고 하네스 개선 여부를 판정하라.",
-        answerChecklist: [
-          "same model/version",
-          "same repository snapshot",
-          "same task and test oracle",
-          "minimal diff",
-          "bug fix success",
-          "regression pass",
-          "unauthorized tool/effect rate",
-          "evidence completeness",
-          "trajectory comparison",
-          "latency/token/tool calls",
-          "failure injection slices",
-          "no universal performance claim",
-        ],
-        requiredConcepts: [
-          "claude-code-workspace-harness-boundary",
-          "claude-code-instruction-discovery-order",
-          "claude-code-subagent-handoff-contract",
-          "agent-trajectory-effect-evaluation",
-        ],
-        sectionId: "overview",
-      },
-      {
-        level: "advanced",
-        question:
-          "Claude Code version을 올릴 때 auto memory·instruction loading·hook event/type·permission order·checkpoint 범위가 유지되는지 확인할 evidence matrix와 canary·rollback 절차를 작성하라.",
-        answerChecklist: [
-          "installed version",
-          "official docs snapshot/date",
-          "auto memory v2.1.59+ boundary",
-          "CLAUDE scope/lazy load test",
-          "dynamic hook event/type discovery",
-          "permission precedence trace",
-          "direct edit checkpoint test",
-          "Bash/external non-rollback test",
-          "canary repository",
-          "paired before/after",
-          "config backup",
-          "rollback trigger",
-          "no fixed hook count/performance",
-        ],
-        requiredConcepts: [
-          "claude-code-instruction-discovery-order",
-          "claude-code-hook-event-contract",
-          "claude-code-permission-decision-order",
-          "claude-code-file-checkpoint-boundary",
-          "agent-trajectory-effect-evaluation",
-        ],
-        sectionId: "tools-permissions",
-      },
+      { level: "basic", question: "Claude model과 Claude Code harness를 구분하세요.", answerChecklist: ["proposal", "runtime", "tool executor", "workspace effect"], requiredConcepts: ["claude-code-workspace-harness-boundary"], sectionId: "overview" },
+      { level: "basic", question: "로그인 버그 작업의 시작 state를 정의하세요.", answerChecklist: ["objective", "repository snapshot", "constraints", "acceptance"], requiredConcepts: ["claude-code-workspace-harness-boundary"], sectionId: "overview" },
+      { level: "basic", question: "Agent loop의 세 연산을 순서대로 설명하세요.", answerChecklist: ["proposal", "gate and execute", "state update", "repeat"], requiredConcepts: ["claude-code-workspace-harness-boundary"], sectionId: "agent-loop" },
+      { level: "basic", question: "Tool 결과를 typed observation으로 만드는 이유를 쓰세요.", answerChecklist: ["status", "source", "payload", "effect receipt"], requiredConcepts: ["claude-code-workspace-harness-boundary"], sectionId: "agent-loop" },
+      { level: "basic", question: "Read와 Edit의 effect 차이를 설명하세요.", answerChecklist: ["observation", "mutation", "authorization", "rollback"], requiredConcepts: ["claude-code-workspace-harness-boundary"], sectionId: "tool-effect" },
+      { level: "basic", question: "완료 문장과 verifier receipt를 구분하세요.", answerChecklist: ["claim", "artifact", "test", "independent decision"], requiredConcepts: ["claude-code-workspace-harness-boundary"], sectionId: "tool-effect" },
+      { level: "advanced", question: "Permission이 거절한 Edit proposal의 다음 state를 작성하세요.", answerChecklist: ["no edit effect", "denied observation", "state update", "safe alternative"], requiredConcepts: ["claude-code-workspace-harness-boundary"], sectionId: "agent-loop" },
+      { level: "advanced", question: "Timeout 뒤 effect가 unknown인 tool call을 처리하세요.", answerChecklist: ["operation identity", "status lookup", "no blind retry", "escalation"], requiredConcepts: ["claude-code-workspace-harness-boundary"], sectionId: "tool-effect" },
+      { level: "advanced", question: "LLM interface와 product harness를 혼동한 설명을 교정하세요.", answerChecklist: ["model endpoint", "workspace runtime", "authorization", "observation"], requiredConcepts: ["claude-code-workspace-harness-boundary"], sectionId: "overview" },
+      { level: "advanced", question: "공식 loop 설명의 적용 범위를 검증하세요.", answerChecklist: ["current client", "environment", "documented behavior", "no correctness guarantee"], requiredConcepts: ["claude-code-workspace-harness-boundary"], sectionId: "paper-how-claude-code-works" },
     ],
     papers: [
-      {
-        title: "Claude Code — How Claude Code works",
-        href: "https://code.claude.com/docs/en/how-claude-code-works",
-        problem:
-          "Claude model이 repository에서 context를 모으고 tool로 행동하며 결과를 검증하는 동안 model reasoning과 제품 runtime의 책임이 혼동되기 쉬운 문제",
-        contribution:
-          "Claude Code의 agentic loop, built-in tool, session context, extension, permission과 checkpoint가 model을 workspace에 연결하는 현재 제품 구조를 공식적으로 설명",
-        assumptions:
-          "2026-08-13에 확인한 공식 문서와 설치한 Claude Code version·model·workspace·permission·extension 설정이며 기능과 UI는 version에 따라 바뀔 수 있음",
-        evidenceScope:
-          "공식 문서가 명시한 gather context→take action→verify work loop와 제품 capability·session 동작의 현재 범위",
-        notClaim:
-          "Claude Code 사용이 생성 코드의 정확성·보안·성능을 자동 보장하거나 모든 작업에서 자율성을 높일수록 좋다는 뜻은 아님",
-        sectionId: "paper-claude-code-how-it-works",
-      },
-      {
-        title: "Claude Code — Manage Claude's memory",
-        href: "https://code.claude.com/docs/en/memory",
-        problem:
-          "여러 scope의 지속 instruction·repository별 memory·긴 session compaction을 어떤 순서와 시점에 context로 넣는지 불명확하면 규칙 누락과 충돌을 재현하기 어려운 문제",
-        contribution:
-          "Managed·user·project·local CLAUDE.md scope, ancestor launch loading, descendant lazy loading, path-specific rule, auto memory와 compaction의 현재 발견·관리 방법을 설명",
-        assumptions:
-          "2026-08-13 공식 문서, auto memory를 지원하는 설치 version(v2.1.59+), 현재 시작 directory·repository·CLAUDE.md 위치·memory 설정",
-        evidenceScope:
-          "공식 문서가 명시한 instruction file scope·loading behavior·auto memory storage/context·compaction 관련 제품 동작",
-        notClaim:
-          "CLAUDE.md가 permission·sandbox를 집행하거나 일반 override 설정처럼 충돌을 결정적으로 해결하고, auto memory가 항상 정확하거나 모든 subagent에 같은 방식으로 전달된다는 뜻은 아님",
-        sectionId: "paper-claude-code-memory",
-      },
-      {
-        title: "Claude Code — Create custom subagents",
-        href: "https://code.claude.com/docs/en/sub-agents",
-        problem:
-          "긴 작업을 별도 context로 위임하면서도 input·tool authority·permission·산출물·main conversation의 책임을 잃지 않게 하는 문제",
-        contribution:
-          "Built-in·custom subagent의 별도 context, system prompt, tool access, permission, invocation과 main으로 반환되는 결과의 현재 제품 계약을 설명",
-        assumptions:
-          "2026-08-13 공식 문서와 설치 version, 정의한 subagent file·tool list·permission mode·main session context 및 repository state",
-        evidenceScope:
-          "공식 문서에 명시된 subagent creation·scope·tool/permission configuration·foreground/background execution·return behavior",
-        notClaim:
-          "Subagent를 늘리면 품질이 자동으로 오르거나 반환 summary가 검증·sanitize되고 main context·auto memory·권한을 전부 그대로 공유한다는 뜻은 아님",
-        sectionId: "paper-claude-code-subagents",
-      },
-      {
-        title: "Claude Code — Tools reference",
-        href: "https://code.claude.com/docs/en/tools-reference",
-        problem:
-          "Model에게 노출되는 built-in tool과 MCP·Skill 같은 extension을 permission rule·hook matcher에서 어떤 identity와 schema로 다루는지 구분해야 하는 문제",
-        contribution:
-          "Claude Code built-in tool의 현재 역할과 입력, permission·subagent·hook 설정에서 사용하는 tool name, MCP tool과 Skill 호출 경계를 공식 reference로 제공",
-        assumptions:
-          "2026-08-13 공식 reference와 설치 version·platform·enabled MCP server·available Skill·tool configuration",
-        evidenceScope:
-          "현재 공식 문서에 열거된 built-in tool semantics와 configuration에서 참조하는 tool identity",
-        notClaim:
-          "Tool registry에 보인다는 사실이 실행 권한·결과 정확성·OS 격리를 보장하거나 Skill이 독립된 runtime capability라는 뜻은 아님",
-        sectionId: "paper-claude-code-tools",
-      },
-      {
-        title: "Claude Code — Permissions",
-        href: "https://code.claude.com/docs/en/permissions",
-        problem:
-          "여러 scope와 specificity의 allow·ask·deny rule 및 hook decision이 충돌할 때 실제 tool call이 어떤 순서로 허용·질문·차단되는지 예측하기 어려운 문제",
-        contribution:
-          "Permission mode·rule syntax·scope와 deny→ask→allow evaluation, PreToolUse hook와의 현재 결합 순서 및 permission 관리 방법을 설명",
-        assumptions:
-          "2026-08-13 공식 문서, 설치 version, resolved settings scope, 실제 tool name/input, permission mode와 hook configuration",
-        evidenceScope:
-          "Claude Code runtime이 공식적으로 문서화한 tool permission 판정과 설정 동작",
-        notClaim:
-          "Permission rule이 container·kernel·network security를 대체하거나 hook allow가 deny·ask를 우회하며, 특정 Read/Edit rule이 subprocess의 모든 접근까지 차단한다는 뜻은 아님",
-        sectionId: "paper-claude-code-permissions",
-      },
-      {
-        title: "Claude Code — Hooks reference",
-        href: "https://code.claude.com/docs/en/hooks",
-        problem:
-          "Model의 자발적 준수에 맡기지 않고 lifecycle event에서 반복 검사·자동화·차단을 실행하면서도 handler 실패와 decision precedence를 재현해야 하는 문제",
-        contribution:
-          "지원 lifecycle event·matcher·command/prompt/agent handler·JSON input/output·exit status·timeout·decision과 permission 상호작용의 현재 hook 계약을 공식적으로 설명",
-        assumptions:
-          "2026-08-13 공식 문서와 설치 version에서 실제로 지원하는 event·matcher·handler type, local command environment와 settings scope",
-        evidenceScope:
-          "현재 문서에 명시된 hook registration·execution lifecycle·decision input/output·debugging 및 보안 주의 범위",
-        notClaim:
-          "Hook event나 type 수가 고정돼 있거나 hook가 안전한 내장 code이고, 모든 file 접근 경로를 관찰하며, permission·sandbox·artifact verifier를 자동으로 대체한다는 뜻은 아님",
-        sectionId: "paper-claude-code-hooks",
-      },
-      {
-        title: "Claude Code — Checkpointing",
-        href: "https://code.claude.com/docs/en/checkpointing",
-        problem:
-          "Agent가 file을 여러 번 수정한 뒤 대화와 code를 이전 상태로 되돌리고 싶지만 terminal·subagent·외부 system effect까지 함께 복구된다고 오해하기 쉬운 문제",
-        contribution:
-          "Prompt별 checkpoint와 rewind, direct file-edit tool이 만든 file snapshot의 현재 복원 절차와 추적되지 않는 변경 범위를 공식적으로 설명",
-        assumptions:
-          "2026-08-13 공식 문서와 설치 version, 같은 session, direct file-edit tool이 추적한 일반 file, checkpoint retention과 workspace 상태",
-        evidenceScope:
-          "Claude Code checkpoint가 대화와 direct edit file을 저장·복원하는 제품 동작 및 Bash·subagent·external change 등 문서화된 제외 범위",
-        notClaim:
-          "Checkpoint가 Git·backup·transaction·external API rollback·exactly-once effect를 제공하거나 Bash·subagent·symlink/hardlink 변경까지 복원한다는 뜻은 아님",
-        sectionId: "paper-claude-code-checkpointing",
-      },
+      { title: "Claude Code — How Claude Code works", href: "https://code.claude.com/docs/en/how-claude-code-works", problem: "Model reasoning과 workspace runtime의 책임이 혼동되는 문제", contribution: "Context 수집·action·verification을 잇는 현재 제품 loop와 tool 역할을 설명", assumptions: "현재 Claude Code client와 선택한 execution environment", evidenceScope: "공식 문서가 공개한 제품 interface와 agentic loop", notClaim: "생성 코드의 정확성이나 모든 외부 effect의 자동 복구를 보장한다는 뜻은 아님", sectionId: "paper-how-claude-code-works" },
+    ],
+  },
+  "ai/claude-code-instructions-memory": {
+    entryLevel: true,
+    entryNote: "CLAUDE.md와 auto memory를 처음 보는 독자를 위해 source·owner·scope·load 시점부터 정의합니다.",
+    coreIdea: "Instruction context는 managed·user·project·path source와 auto memory를 순서 있게 조립한 참고 정보이며 permission enforcement가 아닙니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "claude-code-instruction-discovery-order", role: "Instruction source의 owner·scope·발견 시점과 memory·compaction 경계를 정의합니다." },
+    ],
+    conceptExplanations: [
+      { id: "claude-code-instruction-discovery-order", sectionId: "overview", intuition: "건물 규칙과 개인 메모를 출처표와 함께 읽되 아직 들어가지 않은 방의 안내는 그 방을 열 때 추가하는 방식입니다.", workedExample: "Managed·user·project instruction은 시작 context에 들어가고 nested instruction은 해당 path의 file을 읽을 때 추가되며 auto memory는 별도 repository note로 붙습니다.", boundary: "이어 붙인 문장은 runtime deny가 아니고, load order도 일반 설정의 단순 override chain이 아닙니다." },
+    ],
+    conceptStages: [
+      { label: "00 source", relation: "Instruction과 memory의 owner를 구분합니다.", concepts: ["claude-code-instruction-discovery-order"] },
+      { label: "01 load", relation: "Broad scope 뒤 current path source를 발견합니다.", concepts: ["claude-code-instruction-discovery-order"] },
+      { label: "02 compact", relation: "지속 규칙과 session 요약을 분리합니다.", concepts: ["claude-code-instruction-discovery-order"] },
+      { label: "03 audit", relation: "실제 loaded context와 version을 확인합니다.", concepts: ["claude-code-instruction-discovery-order"] },
+    ],
+    exercises: [
+      { level: "basic", question: "CLAUDE.md와 auto memory의 owner를 구분하세요.", answerChecklist: ["user managed instruction", "Claude-written note", "repository scope", "audit separately"], requiredConcepts: ["claude-code-instruction-discovery-order"], sectionId: "overview" },
+      { level: "basic", question: "Managed·user·project source의 load 순서를 그리세요.", answerChecklist: ["managed", "user", "project", "ordered context"], requiredConcepts: ["claude-code-instruction-discovery-order"], sectionId: "load-order" },
+      { level: "basic", question: "Nested instruction의 lazy load를 설명하세요.", answerChecklist: ["current path", "file access", "nested source", "not all upfront"], requiredConcepts: ["claude-code-instruction-discovery-order"], sectionId: "load-order" },
+      { level: "basic", question: "기호 ∥가 overwrite가 아닌 이유를 설명하세요.", answerChecklist: ["concatenation", "source provenance", "possible conflict", "inspect context"], requiredConcepts: ["claude-code-instruction-discovery-order"], sectionId: "load-order" },
+      { level: "basic", question: "항상 지킬 규칙을 어디에 두어야 하는지 설명하세요.", answerChecklist: ["CLAUDE.md", "explicit owner", "survives compaction", "short rule"], requiredConcepts: ["claude-code-instruction-discovery-order"], sectionId: "memory-compaction" },
+      { level: "basic", question: "Auto memory load boundary를 설명하세요.", answerChecklist: ["repository note", "first 200 lines", "25KB", "not policy store"], requiredConcepts: ["claude-code-instruction-discovery-order"], sectionId: "memory-compaction" },
+      { level: "advanced", question: "Production 금지를 instruction에만 둔 설계를 교정하세요.", answerChecklist: ["context not enforcement", "permission", "credential", "network boundary"], requiredConcepts: ["claude-code-instruction-discovery-order"], sectionId: "overview" },
+      { level: "advanced", question: "Stale nested instruction을 찾는 inspection 절차를 설계하세요.", answerChecklist: ["current path", "loaded source", "revision", "conflict"], requiredConcepts: ["claude-code-instruction-discovery-order"], sectionId: "load-order" },
+      { level: "advanced", question: "Compaction 뒤 누락되는 조건을 재현하세요.", answerChecklist: ["long session", "persistent rule", "summary loss", "regression fixture"], requiredConcepts: ["claude-code-instruction-discovery-order"], sectionId: "memory-compaction" },
+      { level: "advanced", question: "공식 memory 문서의 적용 범위를 기록하세요.", answerChecklist: ["client version", "settings scope", "current behavior", "no enforcement claim"], requiredConcepts: ["claude-code-instruction-discovery-order"], sectionId: "paper-claude-memory" },
+    ],
+    papers: [
+      { title: "Claude Code — Manage Claude's memory", href: "https://code.claude.com/docs/en/memory", problem: "Persistent instruction·repository memory·compaction의 owner와 load 시점이 섞이는 문제", contribution: "CLAUDE.md scope·nested loading·auto memory·compaction의 현재 동작을 설명", assumptions: "현재 Claude Code version과 settings·repository scope", evidenceScope: "공식 문서에 공개된 context source와 loading behavior", notClaim: "Instruction이 permission을 강제하거나 memory가 검토된 정본이라는 뜻은 아님", sectionId: "paper-claude-memory" },
+    ],
+  },
+  "ai/claude-code-subagents": {
+    entryLevel: true,
+    entryNote: "Subagent를 병렬 작업 수단으로 보기 전에 별도 context와 handoff 소유권부터 정의합니다.",
+    coreIdea: "Subagent 위임은 objective·input snapshot·capability·artifact·main verifier가 모두 있는 별도 context 계약입니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "claude-code-subagent-handoff-contract", role: "Main과 subagent 사이의 입력·권한·산출물·검증 책임을 고정합니다." },
+    ],
+    conceptExplanations: [
+      { id: "claude-code-subagent-handoff-contract", sectionId: "overview", intuition: "동료에게 막연히 조사해 달라는 말 대신 읽을 자료·금지 행동·반환 형식·검토자를 적은 인계서입니다.", workedExample: "Read-only subagent가 auth log와 source line을 인용해 원인 후보를 돌려주면 main이 실제 source와 command receipt를 다시 확인합니다.", boundary: "별도 context의 summary는 검증된 사실이 아니며 같은 file의 동시 writer가 안전한 merge를 보장하지 않습니다." },
+    ],
+    conceptStages: [
+      { label: "00 objective", relation: "Bounded question과 input snapshot을 고정합니다.", concepts: ["claude-code-subagent-handoff-contract"] },
+      { label: "01 authority", relation: "Tool·resource·mutation 범위를 제한합니다.", concepts: ["claude-code-subagent-handoff-contract"] },
+      { label: "02 artifact", relation: "Source identity가 있는 결과를 반환합니다.", concepts: ["claude-code-subagent-handoff-contract"] },
+      { label: "03 verify", relation: "Main이 원자료와 effect를 독립 검증합니다.", concepts: ["claude-code-subagent-handoff-contract"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Subagent가 main의 복제본이 아닌 이유를 설명하세요.", answerChecklist: ["separate context", "system prompt", "tool scope", "summary return"], requiredConcepts: ["claude-code-subagent-handoff-contract"], sectionId: "overview" },
+      { level: "basic", question: "Read-only 조사 handoff의 objective와 input을 쓰세요.", answerChecklist: ["bounded question", "repository revision", "log snapshot", "target files"], requiredConcepts: ["claude-code-subagent-handoff-contract"], sectionId: "overview" },
+      { level: "basic", question: "Capability와 artifact를 구분하세요.", answerChecklist: ["allowed actions", "resource scope", "return schema", "owner"], requiredConcepts: ["claude-code-subagent-handoff-contract"], sectionId: "handoff-contract" },
+      { level: "basic", question: "Handoff completeness AND 식을 판정하세요.", answerChecklist: ["all five checks", "one missing", "H=0", "deny admission"], requiredConcepts: ["claude-code-subagent-handoff-contract"], sectionId: "handoff-contract" },
+      { level: "basic", question: "Summary와 source receipt를 구분하세요.", answerChecklist: ["claim", "file line", "command status", "recheck"], requiredConcepts: ["claude-code-subagent-handoff-contract"], sectionId: "merge-boundary" },
+      { level: "basic", question: "병렬화하기 좋은 두 조사를 제안하세요.", answerChecklist: ["independent input", "read only", "separate artifact", "single merge owner"], requiredConcepts: ["claude-code-subagent-handoff-contract"], sectionId: "merge-boundary" },
+      { level: "advanced", question: "두 subagent가 같은 file을 수정한 설계를 교정하세요.", answerChecklist: ["writer conflict", "read-only analysis", "one writer", "rerun verifier"], requiredConcepts: ["claude-code-subagent-handoff-contract"], sectionId: "merge-boundary" },
+      { level: "advanced", question: "Subagent가 source를 꾸며 낸 failure를 주입하세요.", answerChecklist: ["forged citation", "main lookup", "reject", "regression fixture"], requiredConcepts: ["claude-code-subagent-handoff-contract"], sectionId: "merge-boundary" },
+      { level: "advanced", question: "Main context에만 있던 조건이 handoff에서 빠진 경우를 복구하세요.", answerChecklist: ["explicit input", "versioned contract", "no assumed context", "restart"], requiredConcepts: ["claude-code-subagent-handoff-contract"], sectionId: "handoff-contract" },
+      { level: "advanced", question: "공식 subagent 문서가 보장하지 않는 것을 쓰세요.", answerChecklist: ["quality gain", "safe merge", "trusted summary", "same memory"], requiredConcepts: ["claude-code-subagent-handoff-contract"], sectionId: "paper-claude-subagents" },
+    ],
+    papers: [
+      { title: "Claude Code — Create custom subagents", href: "https://code.claude.com/docs/en/sub-agents", problem: "별도 context로 위임하면서 tool 권한·결과 책임을 잃는 문제", contribution: "Subagent별 context·system prompt·tool·permission과 main으로의 결과 반환을 설명", assumptions: "현재 Claude Code version과 subagent configuration", evidenceScope: "공개된 delegation interface와 execution behavior", notClaim: "Agent 수가 품질을 높이거나 반환 summary가 검증됐다는 뜻은 아님", sectionId: "paper-claude-subagents" },
+    ],
+  },
+  "ai/claude-code-permissions": {
+    entryLevel: true,
+    entryNote: "Tool 이름이 보이는 것과 concrete call이 허용되는 것을 처음부터 구분합니다.",
+    coreIdea: "Permission은 current call의 identity·operation·target에 deny→ask→allow를 적용하고, hook·OS sandbox·credential 경계와 조합하는 runtime decision입니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "claude-code-permission-decision-order", role: "Tool call에 deny·ask·allow와 hook 결정을 적용하는 순서를 정의합니다." },
+    ],
+    conceptExplanations: [
+      { id: "claude-code-permission-decision-order", sectionId: "overview", intuition: "공구가 목록에 있다는 사실과 현장에서 지금 그 공구를 사용할 수 있다는 판정은 다릅니다.", workedExample: "Source Edit는 ask, targeted test는 allow, production deploy는 deny로 두고 concrete Bash input마다 다시 판정합니다.", boundary: "Permission은 Claude Code tool decision이지 OS·container·network 전체 격리가 아닙니다." },
+    ],
+    conceptStages: [
+      { label: "00 call", relation: "Tool name·argument·target을 concrete call로 묶습니다.", concepts: ["claude-code-permission-decision-order"] },
+      { label: "01 decide", relation: "Deny 뒤 ask, 그 뒤 allow를 적용합니다.", concepts: ["claude-code-permission-decision-order"] },
+      { label: "02 enforce", relation: "Blocking hook와 executor 경계를 함께 봅니다.", concepts: ["claude-code-permission-decision-order"] },
+      { label: "03 audit", relation: "Decision trace와 sandbox gap을 기록합니다.", concepts: ["claude-code-permission-decision-order"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Tool registry와 permission decision을 구분하세요.", answerChecklist: ["schema visibility", "concrete call", "runtime match", "not authority"], requiredConcepts: ["claude-code-permission-decision-order"], sectionId: "overview" },
+      { level: "basic", question: "Concrete call을 구성하는 세 필드를 쓰세요.", answerChecklist: ["tool name", "arguments", "target resource", "identity"], requiredConcepts: ["claude-code-permission-decision-order"], sectionId: "overview" },
+      { level: "basic", question: "Deny→ask→allow 순서를 설명하세요.", answerChecklist: ["deny first", "ask second", "allow last", "default decision"], requiredConcepts: ["claude-code-permission-decision-order"], sectionId: "precedence" },
+      { level: "basic", question: "Broad deny와 narrow allow가 함께 match한 결과를 판정하세요.", answerChecklist: ["both match", "deny wins", "no execution", "trace"], requiredConcepts: ["claude-code-permission-decision-order"], sectionId: "precedence" },
+      { level: "basic", question: "Ask decision에 필요한 fresh binding을 쓰세요.", answerChecklist: ["current call", "target", "arguments", "user approval"], requiredConcepts: ["claude-code-permission-decision-order"], sectionId: "precedence" },
+      { level: "basic", question: "Permission과 OS sandbox를 구분하세요.", answerChecklist: ["host decision", "filesystem", "network", "credential"], requiredConcepts: ["claude-code-permission-decision-order"], sectionId: "sandbox-boundary" },
+      { level: "advanced", question: "Bash subprocess가 file rule을 우회하는 반례를 만드세요.", answerChecklist: ["different tool path", "same resource", "sandbox", "deny fixture"], requiredConcepts: ["claude-code-permission-decision-order"], sectionId: "sandbox-boundary" },
+      { level: "advanced", question: "Stale approval 재사용을 막으세요.", answerChecklist: ["operation identity", "exact target", "expiry", "fresh decision"], requiredConcepts: ["claude-code-permission-decision-order"], sectionId: "precedence" },
+      { level: "advanced", question: "Broad Bash allow를 최소 권한으로 줄이세요.", answerChecklist: ["command prefix", "arguments", "working directory", "deny test"], requiredConcepts: ["claude-code-permission-decision-order"], sectionId: "sandbox-boundary" },
+      { level: "advanced", question: "공식 permission 문서의 경계를 검증하세요.", answerChecklist: ["current version", "settings scope", "decision trace", "not full sandbox"], requiredConcepts: ["claude-code-permission-decision-order"], sectionId: "paper-claude-permissions" },
+    ],
+    papers: [
+      { title: "Claude Code — Configure permissions", href: "https://code.claude.com/docs/en/permissions", problem: "여러 allow·ask·deny rule이 겹칠 때 실제 call 판정을 예측하는 문제", contribution: "Rule matching·category precedence·permission mode와 hook 관계를 설명", assumptions: "현재 client·resolved settings·managed policy", evidenceScope: "Claude Code host가 적용하는 documented permission decision", notClaim: "Allow가 command 안전성이나 OS·network 격리를 보장한다는 뜻은 아님", sectionId: "paper-claude-permissions" },
+    ],
+  },
+  "ai/claude-code-hooks": {
+    entryLevel: true,
+    entryNote: "Hook을 막연한 자동화가 아니라 event·matcher·handler·decision 계약으로 정의합니다.",
+    coreIdea: "Hook은 lifecycle event와 matcher가 맞을 때 versioned input으로 handler를 실행하고 output·exit·timeout을 runtime decision에 반영하는 사용자 code입니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "claude-code-hook-event-contract", role: "Event·matcher·handler·JSON I/O·timeout·failure policy를 고정합니다." },
+    ],
+    conceptExplanations: [
+      { id: "claude-code-hook-event-contract", sectionId: "overview", intuition: "문이 열릴 때 특정 표찰을 단 짐만 검사대로 보내고 결과를 출입 결정에 반영하는 자동 검문소입니다.", workedExample: "PreToolUse에서 Bash command와 argument filter가 맞을 때 production host를 검사해 block decision과 audit log를 반환합니다.", boundary: "Hook은 신뢰된 내장 정책이 아니라 실행되는 사용자 code일 수 있고, exit 0에 출력이 없으면 승인 아니라 decision 없음입니다." },
+    ],
+    conceptStages: [
+      { label: "00 event", relation: "Lifecycle 시점을 고릅니다.", concepts: ["claude-code-hook-event-contract"] },
+      { label: "01 match", relation: "Matcher와 optional argument filter로 대상을 좁힙니다.", concepts: ["claude-code-hook-event-contract"] },
+      { label: "02 handle", relation: "Versioned JSON과 timeout으로 handler를 실행합니다.", concepts: ["claude-code-hook-event-contract"] },
+      { label: "03 decide", relation: "Output·exit·failure policy를 audit합니다.", concepts: ["claude-code-hook-event-contract"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Hook을 구성하는 네 요소를 쓰세요.", answerChecklist: ["event", "matcher", "handler", "output"], requiredConcepts: ["claude-code-hook-event-contract"], sectionId: "overview" },
+      { level: "basic", question: "PreToolUse와 PostToolUse의 시점을 구분하세요.", answerChecklist: ["before execution", "after result", "different input", "different decision"], requiredConcepts: ["claude-code-hook-event-contract"], sectionId: "overview" },
+      { level: "basic", question: "Event·matcher·if AND 식을 판정하세요.", answerChecklist: ["event match", "matcher match", "optional filter", "all true"], requiredConcepts: ["claude-code-hook-event-contract"], sectionId: "resolution" },
+      { level: "basic", question: "Exit 0과 빈 output의 의미를 설명하세요.", answerChecklist: ["handler success", "no decision", "not approval", "continue precedence"], requiredConcepts: ["claude-code-hook-event-contract"], sectionId: "resolution" },
+      { level: "basic", question: "Hook input/output에 필요한 identity를 쓰세요.", answerChecklist: ["session", "event", "tool or agent", "decision"], requiredConcepts: ["claude-code-hook-event-contract"], sectionId: "resolution" },
+      { level: "basic", question: "Hook script의 security boundary를 설명하세요.", answerChecklist: ["code owner", "revision", "secret scope", "timeout"], requiredConcepts: ["claude-code-hook-event-contract"], sectionId: "security" },
+      { level: "advanced", question: "Version upgrade에서 event drift를 검출하세요.", answerChecklist: ["client version", "schema snapshot", "fixture", "canary"], requiredConcepts: ["claude-code-hook-event-contract"], sectionId: "security" },
+      { level: "advanced", question: "Timeout의 fail-open·fail-closed를 위험별로 고르세요.", answerChecklist: ["effect risk", "documented policy", "observable error", "safe fallback"], requiredConcepts: ["claude-code-hook-event-contract"], sectionId: "security" },
+      { level: "advanced", question: "Matcher bypass failure를 주입하세요.", answerChecklist: ["alternate tool", "argument variation", "expected block", "audit trace"], requiredConcepts: ["claude-code-hook-event-contract"], sectionId: "resolution" },
+      { level: "advanced", question: "공식 hook reference가 보장하지 않는 것을 쓰세요.", answerChecklist: ["trusted script", "fixed event list", "full file coverage", "permission bypass"], requiredConcepts: ["claude-code-hook-event-contract"], sectionId: "paper-claude-hooks" },
+    ],
+    papers: [
+      { title: "Claude Code — Hooks reference", href: "https://code.claude.com/docs/en/hooks", problem: "Lifecycle 자동화의 실행 시점·입력·decision을 재현해야 하는 문제", contribution: "Event·matcher·handler·JSON I/O·exit·timeout의 현재 계약을 설명", assumptions: "현재 Claude Code version과 hook location·runtime", evidenceScope: "공개된 hook registration과 execution behavior", notClaim: "Hook code가 신뢰되거나 permission·sandbox를 대체한다는 뜻은 아님", sectionId: "paper-claude-hooks" },
+    ],
+  },
+  "ai/claude-code-checkpointing": {
+    entryLevel: true,
+    entryNote: "Checkpoint를 machine rewind로 오해하지 않도록 추적된 file effect부터 정의합니다.",
+    coreIdea: "Checkpoint는 direct file-edit tracker가 snapshot한 file과 conversation을 복원하며 Bash·subagent·database·API effect에는 별도 rollback owner가 필요합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "claude-code-file-checkpoint-boundary", role: "Direct file snapshot과 추적 밖 local·remote effect의 복구 경계를 정의합니다." },
+    ],
+    conceptExplanations: [
+      { id: "claude-code-file-checkpoint-boundary", sectionId: "overview", intuition: "문서 편집기의 undo는 그 편집기로 바꾼 문장은 돌리지만 terminal·database·외부 ticket까지 시간을 되감지 않습니다.", workedExample: "Direct Edit은 checkpoint로 되돌리고 Bash formatter는 Git diff, API deployment는 operation receipt와 compensation으로 복구합니다.", boundary: "Checkpoint는 Git·backup·transaction·distributed rollback이 아니며 link와 외부 editor 경계도 따로 시험해야 합니다." },
+    ],
+    conceptStages: [
+      { label: "00 effect", relation: "File·process·remote effect를 분류합니다.", concepts: ["claude-code-file-checkpoint-boundary"] },
+      { label: "01 trace", relation: "Direct-edit tracker가 snapshot한 path를 찾습니다.", concepts: ["claude-code-file-checkpoint-boundary"] },
+      { label: "02 rewind", relation: "교집합에 있는 file만 복원합니다.", concepts: ["claude-code-file-checkpoint-boundary"] },
+      { label: "03 recover", relation: "추적 밖 effect에 독립 rollback을 적용합니다.", concepts: ["claude-code-file-checkpoint-boundary"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Checkpoint가 복원하는 두 대상을 쓰세요.", answerChecklist: ["conversation point", "direct file snapshot", "same session", "tracked path"], requiredConcepts: ["claude-code-file-checkpoint-boundary"], sectionId: "overview" },
+      { level: "basic", question: "Direct Edit과 Bash formatter를 분류하세요.", answerChecklist: ["tracked edit", "untracked command effect", "checkpoint", "Git diff"], requiredConcepts: ["claude-code-file-checkpoint-boundary"], sectionId: "overview" },
+      { level: "basic", question: "Recoverable set 교집합 식을 설명하세요.", answerChecklist: ["file effects", "direct trace", "intersection", "remote empty"], requiredConcepts: ["claude-code-file-checkpoint-boundary"], sectionId: "coverage" },
+      { level: "basic", question: "Database migration의 rollback owner를 정하세요.", answerChecklist: ["transaction", "operation identity", "status lookup", "compensation"], requiredConcepts: ["claude-code-file-checkpoint-boundary"], sectionId: "recovery-plan" },
+      { level: "basic", question: "API ticket 생성이 checkpoint 밖인 이유를 쓰세요.", answerChecklist: ["remote state", "not file snapshot", "receipt", "separate rollback"], requiredConcepts: ["claude-code-file-checkpoint-boundary"], sectionId: "recovery-plan" },
+      { level: "basic", question: "Destructive action 전에 남길 네 항목을 쓰세요.", answerChecklist: ["exact target", "fresh approval", "backup", "rollback receipt"], requiredConcepts: ["claude-code-file-checkpoint-boundary"], sectionId: "recovery-plan" },
+      { level: "advanced", question: "Symlink·hardlink 경계를 작은 시험으로 확인하세요.", answerChecklist: ["test path", "target identity", "edit", "rewind observation"], requiredConcepts: ["claude-code-file-checkpoint-boundary"], sectionId: "coverage" },
+      { level: "advanced", question: "Timeout 난 remote API의 안전한 복구를 설계하세요.", answerChecklist: ["unknown effect", "stable operation ID", "lookup", "no blind retry"], requiredConcepts: ["claude-code-file-checkpoint-boundary"], sectionId: "recovery-plan" },
+      { level: "advanced", question: "Checkpoint를 Git 대체물로 쓴 설계를 교정하세요.", answerChecklist: ["session local", "version history", "shared repository", "backup"], requiredConcepts: ["claude-code-file-checkpoint-boundary"], sectionId: "coverage" },
+      { level: "advanced", question: "공식 checkpoint 문서의 제외 범위를 검증하세요.", answerChecklist: ["Bash", "subagent", "external effect", "links"], requiredConcepts: ["claude-code-file-checkpoint-boundary"], sectionId: "paper-claude-checkpointing" },
+    ],
+    papers: [
+      { title: "Claude Code — Checkpointing", href: "https://code.claude.com/docs/en/checkpointing", problem: "File edit를 빠르게 되돌리면서 복구 범위를 과장하는 문제", contribution: "Prompt checkpoint·rewind·direct file snapshot과 제외 effect를 설명", assumptions: "현재 client·동일 session·지원 direct edit path", evidenceScope: "제품이 snapshot·restore하는 documented file changes", notClaim: "Git·database transaction·external API rollback을 제공한다는 뜻은 아님", sectionId: "paper-claude-checkpointing" },
     ],
   },
   "ai/qwen-korean-consistency": {
