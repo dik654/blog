@@ -2214,13 +2214,11 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "cross-validation": {
-    title: "교차검증 글이 소유하는 범위",
+    title: "배포 질문과 validation estimand 글이 소유하는 범위",
     owns: [
-      "배포에서 새로 나타나는 row·entity·time/site 단위에서 validation estimand와 split family를 선택하는 기준",
-      "K-fold exact partition·fold-local transform·pooled OOF risk와 CV procedure estimand의 해석 경계",
-      "Group disjointness·상위 dependency·independent-unit count와 fold별 group/class coverage",
-      "Walk-forward origin·label available time·feature/target overlap에 따른 gap·purge 조건",
-      "CV–leaderboard parity·pairwise direction agreement·adaptive protocol 변경 audit",
+      "배포에서 새로 나타나는 row·entity·time/site 단위와 averaging loss를 먼저 정하는 기준",
+      "Deployment-matched validation risk의 형태와 질문에서 split family로 가는 첫 mapping",
+      "Historical distribution 밖의 새 site·정책·기간에 대한 재검증 경계",
     ],
     reuses: [
       {
@@ -2228,37 +2226,82 @@ export const EDITORIAL_BOUNDARIES = {
         href: "/ai/train-validation-test",
       },
       {
-        label: "Expectation",
-        href: "/ai/math-random-variables-expectation",
-      },
-      { label: "Variance", href: "/ai/math-variance-sampling" },
-      {
-        label: "Competition evaluation contract와 selection bias",
+        label: "Competition evaluation contract",
         href: "/ai/competition-workflow",
-      },
-      {
-        label: "Prediction cutoff와 available time",
-        href: "/ai/competition-workflow#eda-phase",
-      },
-      {
-        label: "Fold manifest를 포함한 training run",
-        href: "/ai/training-pipeline#overview",
       },
     ],
     evidence: [
-      {
-        kind: "primary-source",
-        rule: "CV estimand·variance/interval claim은 Bates·Hastie·Tibshirani 논문의 OLS theorem·broader analysis·simulation 범위로 제한한다.",
-      },
       {
         kind: "primary-source",
         rule: "Splitter semantics와 parameter는 현재 scikit-learn 공식 문서·설치 version 범위로 제한한다.",
       },
       {
         kind: "standard",
-        rule: "Deployment unit/distribution·row/group/time metadata·fold manifest·fold-local fit·OOF row coverage·metric weight·origin/gap·candidate/leaderboard adaptation을 함께 기록한다.",
+        rule: "Deployment unit·distribution·loss와 선택한 split family를 함께 기록한다.",
       },
     ],
+  },
+  "fold-local-validation": {
+    title: "Fold-local fitted state 글이 소유하는 범위",
+    owns: [
+      "Fold manifest와 fitted state·fit·transform의 구분",
+      "Scaler·imputer·vocabulary·feature selection을 train fold에서만 fit하는 실행 경계",
+      "선택 뒤 full-data refit과 external pretrained transform의 provenance 경계",
+    ],
+    reuses: [
+      { label: "Fold-local preprocessing statistic", href: "/ai/feature-engineering#numeric" },
+      { label: "배포 질문", href: "/ai/cross-validation" },
+    ],
+    evidence: [{ kind: "primary-source", rule: "Pipeline 동작은 현재 scikit-learn 공식 문서 범위로 제한한다." }],
+  },
+  "oof-risk-estimation": {
+    title: "OOF prediction과 CV estimand 글이 소유하는 범위",
+    owns: [
+      "각 row를 보지 않은 fold model의 OOF prediction 생성과 row-order 복원",
+      "Fold 평균과 pooled row·weight risk의 구분",
+      "Full-data model conditional error와 learning-procedure estimand의 해석 경계",
+    ],
+    reuses: [
+      { label: "Fold-local validation", href: "/ai/fold-local-validation" },
+      { label: "Expectation", href: "/ai/math-random-variables-expectation" },
+    ],
+    evidence: [{ kind: "primary-source", rule: "CV estimand·uncertainty claim은 Bates·Hastie·Tibshirani의 이론·실험 범위로 제한한다." }],
+  },
+  "grouped-validation": {
+    title: "Group-disjoint validation 글이 소유하는 범위",
+    owns: [
+      "Row·entity·shared cause·group key의 구분",
+      "Train과 validation group ID 교집합을 비우는 split 조건",
+      "행 수와 independent evaluation-unit count, 중첩 household·site dependency의 경계",
+    ],
+    reuses: [{ label: "배포 질문", href: "/ai/cross-validation" }],
+    evidence: [{ kind: "primary-source", rule: "Group splitter semantics는 현재 scikit-learn 공식 문서 범위로 제한한다." }],
+  },
+  "walk-forward-validation": {
+    title: "Walk-forward와 label availability 글이 소유하는 범위",
+    owns: [
+      "Event·feature available·label available time과 forecast origin의 구분",
+      "Target horizon과 reporting delay를 포함한 training-row admission 조건",
+      "Gap·purge·rolling origin 및 expanding·rolling production policy 경계",
+    ],
+    reuses: [
+      { label: "Prediction cutoff와 feature availability", href: "/ai/feature-engineering#overview" },
+      { label: "Temporal gap·purge", href: "/ai/time-features#leakage" },
+    ],
+    evidence: [{ kind: "primary-source", rule: "TimeSeriesSplit API는 현재 scikit-learn 문서 범위로 제한하고 delayed labels 자동 처리로 확대하지 않는다." }],
+  },
+  "validation-feedback-audit": {
+    title: "Adaptive validation feedback 글이 소유하는 범위",
+    owns: [
+      "Local·public score offset과 candidate pair rank agreement의 구분",
+      "External feedback 뒤 split·metric·feature·candidate filter 변경 receipt",
+      "Feedback budget·protocol freeze·unused final holdout 종료 조건",
+    ],
+    reuses: [
+      { label: "OOF risk", href: "/ai/oof-risk-estimation" },
+      { label: "Selection optimism", href: "/ai/competition-workflow" },
+    ],
+    evidence: [{ kind: "primary-source", rule: "Adaptive leaderboard claim은 The Ladder의 문제 설정과 보장 범위로 제한한다." }],
   },
   "hyperparameter-tuning": {
     title: "하이퍼파라미터 튜닝 글이 소유하는 범위",
@@ -2334,7 +2377,7 @@ export const EDITORIAL_BOUNDARIES = {
       },
       {
         label: "OOF prediction과 fold-local 경계",
-        href: "/ai/cross-validation#kfold",
+        href: "/ai/oof-risk-estimation#pooling",
       },
       {
         label: "Hyperparameter selection·outer evaluation",

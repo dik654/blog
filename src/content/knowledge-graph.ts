@@ -981,7 +981,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Fold-local preprocessing statistic",
     definition:
       "평균·분산·결측 대치·category frequency·선택 기준처럼 data에서 추정하는 상태를 현재 training fold에서만 fit하고 validation에는 고정 적용하는 방법입니다.",
-    canonicalHref: "/ai/feature-engineering#numeric",
+    canonicalHref: "/ai/fold-local-validation#pipeline",
   },
   "cross-fitted-target-encoding": {
     id: "cross-fitted-target-encoding",
@@ -7303,15 +7303,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Deployment-matched validation risk",
     definition:
       "학습 절차가 실제 train distribution의 data로 model을 만들고 배포에서 새로 만날 row·entity·time/site 단위에 내는 loss의 기대값을 validation 목표로 명시한 estimand입니다.",
-    canonicalHref: "/ai/cross-validation#overview",
-  },
-  "fold-local-transform-boundary": {
-    id: "fold-local-transform-boundary",
-    domain: "machine-learning",
-    label: "Fold-local transform boundary",
-    definition:
-      "Scaler·imputer·vocabulary·feature selection·target encoding을 각 fold의 training rows에서만 fit하고 validation에는 transform만 적용하는 정보 경계입니다.",
-    canonicalHref: "/ai/cross-validation#overview",
+    canonicalHref: "/ai/cross-validation#risk",
   },
   "pooled-oof-risk-estimate": {
     id: "pooled-oof-risk-estimate",
@@ -7320,7 +7312,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Pooled out-of-fold risk estimate",
     definition:
       "각 행이 자신을 학습하지 않은 fold model에게서 받은 loss를 sample weight와 실제 validation 행 수로 합쳐 전체 held-out prediction risk를 계산하는 추정량입니다.",
-    canonicalHref: "/ai/cross-validation#kfold",
+    canonicalHref: "/ai/oof-risk-estimation#pooling",
   },
   "cv-procedure-estimand": {
     id: "cv-procedure-estimand",
@@ -7329,7 +7321,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Cross-validation procedure estimand",
     definition:
       "보통의 CV estimate는 관측 data 전체로 fit한 특정 model의 conditional error보다 같은 모집단에서 새로 뽑은 training sets에 학습 절차를 적용한 model들의 평균 prediction error에 더 가깝다는 해석입니다.",
-    canonicalHref: "/ai/cross-validation#kfold",
+    canonicalHref: "/ai/oof-risk-estimation#estimand",
   },
   "group-disjoint-split": {
     id: "group-disjoint-split",
@@ -7337,7 +7329,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Group-disjoint split",
     definition:
       "한 entity·source·site처럼 공유 원인을 가진 모든 파생 행을 같은 partition에 두어 fold train과 validation의 group ID 교집합을 비우는 분할 조건입니다.",
-    canonicalHref: "/ai/cross-validation#group",
+    canonicalHref: "/ai/grouped-validation#disjoint",
   },
   "independent-evaluation-unit-count": {
     id: "independent-evaluation-unit-count",
@@ -7346,7 +7338,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Independent evaluation-unit count",
     definition:
       "행 수가 아니라 배포 질문에서 새로 나타나며 독립에 가깝다고 보는 patient·site·source group 수를 근거 반복 단위로 세는 지표입니다.",
-    canonicalHref: "/ai/cross-validation#group",
+    canonicalHref: "/ai/grouped-validation#evidence",
   },
   "walk-forward-label-availability": {
     id: "walk-forward-label-availability",
@@ -7354,7 +7346,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Walk-forward label-availability boundary",
     definition:
       "각 validation origin에서 training row의 target horizon과 reporting delay를 지난 label available time이 첫 prediction cutoff보다 이른 행만 학습에 허용하는 시간 조건입니다.",
-    canonicalHref: "/ai/cross-validation#timeseries",
+    canonicalHref: "/ai/walk-forward-validation#labels",
   },
   "cv-leaderboard-rank-agreement": {
     id: "cv-leaderboard-rank-agreement",
@@ -7363,7 +7355,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "CV–leaderboard pairwise rank agreement",
     definition:
       "동일 후보 쌍에서 local CV와 public leaderboard의 우열 방향이 일치하는 비율로 절대 score offset과 model-selection 순서 보존을 분리하는 진단입니다.",
-    canonicalHref: "/ai/cross-validation#cv-lb",
+    canonicalHref: "/ai/validation-feedback-audit#agreement",
   },
   "validation-protocol-adaptation-audit": {
     id: "validation-protocol-adaptation-audit",
@@ -7371,7 +7363,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Validation-protocol adaptation audit",
     definition:
       "Leaderboard feedback을 보고 split·metric·preprocessing·candidate filter를 바꾼 시점과 가설을 기록하고 마지막에는 그 선택에 쓰지 않은 holdout에서 재평가하는 절차입니다.",
-    canonicalHref: "/ai/cross-validation#cv-lb",
+    canonicalHref: "/ai/validation-feedback-audit#adaptation",
   },
   "hpo-selection-evaluation-contract": {
     id: "hpo-selection-evaluation-contract",
@@ -15609,7 +15601,7 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
       "원래 score scale을 보존하는 결합과 ordering만 보존하는 결합을 구분합니다.",
   },
   {
-    from: "fold-local-transform-boundary",
+    from: "fold-local-statistic",
     to: "cross-fitted-stacking-matrix",
     relation: "prerequisite",
     reason:
@@ -15780,13 +15772,13 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   },
   {
     from: "deployment-matched-validation-risk",
-    to: "fold-local-transform-boundary",
+    to: "fold-local-statistic",
     relation: "constrains",
     reason:
       "Validation unit의 정보가 training transform fit에 들어가지 않도록 data path를 닫습니다.",
   },
   {
-    from: "fold-local-transform-boundary",
+    from: "fold-local-statistic",
     to: "pooled-oof-risk-estimate",
     relation: "constrains",
     reason:
@@ -15835,6 +15827,13 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
       "미래 deployment를 재연할 때 origin 당시 학습 가능한 historical labels만 허용합니다.",
   },
   {
+    from: "walk-forward-label-availability",
+    to: "temporal-gap-purge",
+    relation: "constrains",
+    reason:
+      "Label 도착 시각과 target interval을 먼저 계산한 뒤 validation origin과 정보를 공유하는 training rows를 purge합니다.",
+  },
+  {
     from: "pooled-oof-risk-estimate",
     to: "cv-leaderboard-rank-agreement",
     relation: "produces",
@@ -15847,6 +15846,13 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "constrains",
     reason:
       "Public holdout을 반복 사용해 validation protocol까지 선택하면 새 독립 holdout이 필요합니다.",
+  },
+  {
+    from: "leaderboard-adaptive-feedback-budget",
+    to: "validation-protocol-adaptation-audit",
+    relation: "prerequisite",
+    reason:
+      "External score가 후속 split·metric·feature 결정을 바꾼 횟수를 adaptation receipt의 입력으로 제공합니다.",
   },
   {
     from: "cv-leaderboard-rank-agreement",

@@ -1484,20 +1484,22 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
   ],
   "ai/cross-validation": [
-    {
-      kind: "공식 문서",
-      label:
-        "scikit-learn: Cross-validation — evaluating estimator performance",
-      href: "https://scikit-learn.org/stable/modules/cross_validation.html",
-      note: "K-fold·stratified·group·time-series splitter의 가정과 사용법",
-    },
-    {
-      kind: "핵심 논문",
-      label:
-        "Cross-Validation: What Does It Estimate and How Well Does It Do It?",
-      href: "https://pmc.ncbi.nlm.nih.gov/articles/PMC11412612/",
-      note: "CV가 추정하는 평균 prediction error와 fold-dependent uncertainty의 해석",
-    },
+    { kind: "공식 문서", label: "scikit-learn: Cross-validation — evaluating estimator performance", href: "https://scikit-learn.org/stable/modules/cross_validation.html", note: "K-fold·group·time splitter의 서로 다른 data assumption과 current API" },
+  ],
+  "ai/fold-local-validation": [
+    { kind: "공식 문서", label: "scikit-learn: Pipeline — chaining estimators", href: "https://scikit-learn.org/stable/modules/compose.html#pipeline-chaining-estimators", note: "Transform fit과 estimator fit을 같은 cross-validation 경계에서 실행하는 current API" },
+  ],
+  "ai/oof-risk-estimation": [
+    { kind: "핵심 논문", label: "Cross-Validation: What Does It Estimate and How Well Does It Do It?", href: "https://pmc.ncbi.nlm.nih.gov/articles/PMC11412612/", note: "CV procedure estimand와 fold dependence·uncertainty 해석" },
+  ],
+  "ai/grouped-validation": [
+    { kind: "공식 문서", label: "scikit-learn: Cross-validation iterators for grouped data", href: "https://scikit-learn.org/stable/modules/cross_validation.html#cross-validation-iterators-for-grouped-data", note: "GroupKFold·StratifiedGroupKFold의 current semantics" },
+  ],
+  "ai/walk-forward-validation": [
+    { kind: "공식 문서", label: "scikit-learn: TimeSeriesSplit", href: "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit.html", note: "Successive training windows와 gap parameter의 current behavior" },
+  ],
+  "ai/validation-feedback-audit": [
+    { kind: "핵심 논문", label: "The Ladder: A Reliable Leaderboard for Machine Learning Competitions", href: "https://proceedings.mlr.press/v37/blum15.html", note: "적응적 leaderboard feedback과 holdout overfitting 문제" },
   ],
   "ai/hyperparameter-tuning": [
     {

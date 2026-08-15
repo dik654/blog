@@ -7960,6 +7960,10 @@ export const ARTICLE_LEARNING: Readonly<
         id: "conditional-probability",
         role: "Category가 주어졌을 때 target 평균을 conditional response estimate로 해석합니다.",
       },
+      {
+        id: "fold-local-statistic",
+        role: "별도 fold-local validation 수업에서 정의한 fitted-state 경계를 numeric·categorical transform에 적용합니다.",
+      },
     ],
     introducedHere: [
       {
@@ -7973,10 +7977,6 @@ export const ARTICLE_LEARNING: Readonly<
       {
         id: "target-leakage",
         role: "Target proxy·미래 event·evaluation 정보가 input으로 들어오는 실패를 구분합니다.",
-      },
-      {
-        id: "fold-local-statistic",
-        role: "Scaling·imputation·frequency·selection state를 training fold에서만 fit합니다.",
       },
       {
         id: "cross-fitted-target-encoding",
@@ -8029,16 +8029,6 @@ export const ARTICLE_LEARNING: Readonly<
           "연체 예측에 연체 처리 완료 flag를 넣거나 전체 dataset 평균으로 결측을 채우거나 validation label을 category 평균에 넣으면 서로 다른 leakage가 생깁니다.",
         boundary:
           "상관이 높다는 사실만으로 leakage라고 단정하지 않습니다. 실제 decision 시점에 정당하게 사용 가능한 원인·관측일 수도 있어 data lineage를 확인해야 합니다.",
-      },
-      {
-        id: "fold-local-statistic",
-        sectionId: "numeric",
-        intuition:
-          "Training에서 눈금자를 만든 뒤 validation은 그 자로만 재며, 시험지를 보고 눈금 간격을 다시 조절하지 않습니다.",
-        workedExample:
-          "Training fold의 소득 평균 40, 표준편차 10이면 validation 소득 60은 z=2입니다. Validation을 포함해 평균을 다시 계산하지 않습니다.",
-        boundary:
-          "Fold-local fit은 temporal·entity split이 잘못된 문제를 고치지 않으며 production drift 뒤의 scale validity도 별도 감시해야 합니다.",
       },
       {
         id: "cross-fitted-target-encoding",
@@ -20119,428 +20109,225 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/cross-validation": {
-    coreIdea:
-      "교차검증은 K개 fold를 기계적으로 순환하는 방법이 아니라 배포에서 새로 나타나는 row·entity·time/site 단위의 expected loss를 목표로 정하고, fold-local transform·group disjointness·label availability를 지킨 OOF prediction으로 학습 절차의 선택 성능을 추정하는 실험 설계입니다.",
+    coreIdea: "교차검증은 split 이름을 고르는 기술이 아니라 배포에서 새로 만날 단위와 loss의 기대값을 먼저 정의하고 그 질문을 과거 data의 분할로 재연하는 평가 설계입니다.",
     assumedKnowledge: [
-      {
-        id: "expectation",
-        role: "Training data와 deployment unit에 대한 평균 loss를 읽습니다.",
-      },
-      {
-        id: "train-validation-test",
-        role: "Candidate selection과 독립 final evaluation data의 역할을 분리합니다.",
-      },
-      {
-        id: "competition-evaluation-contract",
-        role: "Prediction row·cutoff·metric과 local/public/private 평가 역할을 가져옵니다.",
-      },
-      {
-        id: "prediction-time-feature-availability",
-        role: "Feature source가 cutoff 전에 실제 이용 가능했는지 검사합니다.",
-      },
-      {
-        id: "model-selection-maximum-optimism",
-        role: "Noisy validation을 반복 최적화할 때 생기는 선택 편향을 연결합니다.",
-      },
-      {
-        id: "reproducible-training-run-contract",
-        role: "Fold manifest·transform·model·metric을 동일 run 계약에 포함합니다.",
-      },
+      { id: "expectation", role: "새 배포 단위의 loss를 평균내는 연산을 읽습니다." },
+      { id: "train-validation-test", role: "학습·선택·최종 보고 data의 역할을 분리합니다." },
+      { id: "competition-evaluation-contract", role: "Prediction row·cutoff·metric direction을 고정합니다." },
     ],
     introducedHere: [
-      {
-        id: "deployment-matched-validation-risk",
-        role: "Split이 추정해야 할 실제 새 unit의 expected prediction loss를 명시합니다.",
-      },
-      {
-        id: "fold-local-transform-boundary",
-        role: "각 transform과 feature fit을 fold train rows 안으로 제한합니다.",
-      },
-      {
-        id: "pooled-oof-risk-estimate",
-        role: "자신을 학습하지 않은 model의 행별 loss를 전체 row/weight 기준으로 집계합니다.",
-      },
-      {
-        id: "cv-procedure-estimand",
-        role: "CV가 특정 full-data model보다 학습 절차의 평균 risk에 가까운 해석을 다룹니다.",
-      },
-      {
-        id: "group-disjoint-split",
-        role: "공유 원인을 가진 파생 행의 group ID를 fold 양쪽에 두지 않습니다.",
-      },
-      {
-        id: "independent-evaluation-unit-count",
-        role: "행 수와 별개로 새 entity/site 반복 수를 근거 단위로 셉니다.",
-      },
-      {
-        id: "walk-forward-label-availability",
-        role: "각 origin에서 아직 확정되지 않은 historical label을 학습에서 제외합니다.",
-      },
-      {
-        id: "cv-leaderboard-rank-agreement",
-        role: "Local/public 후보 쌍의 우열 방향 일치와 절대 score 차이를 분리합니다.",
-      },
-      {
-        id: "validation-protocol-adaptation-audit",
-        role: "Leaderboard를 보고 protocol을 바꾼 경로와 독립 final holdout을 기록합니다.",
-      },
+      { id: "deployment-matched-validation-risk", role: "배포에서 새로 만날 row·entity·period·site와 그 단위의 expected loss를 validation 목표로 정합니다." },
     ],
     conceptExplanations: [
       {
         id: "deployment-matched-validation-risk",
-        sectionId: "overview",
-        intuition:
-          "예행연습장을 여러 번 바꾸는 것보다 실제 공연에서 새로 만날 조건을 연습장에 재현하는 일이 먼저입니다.",
-        workedExample:
-          "새 환자에게 배포할 model이면 Z를 row가 아닌 unseen patient로 정의하고 patient group split에서 patient-level loss를 계산합니다.",
-        boundary:
-          "P_deploy가 변하면 과거 CV risk는 새 분포를 보장하지 않으며 monitoring·새 기간/site 재검증이 필요합니다.",
-      },
-      {
-        id: "fold-local-transform-boundary",
-        sectionId: "overview",
-        intuition:
-          "시험 문제 전체의 평균을 미리 보고 공부하면 정답 label을 안 봤어도 시험 정보를 사용한 셈입니다.",
-        workedExample:
-          "Fold 2 validation을 제외한 train rows에서 scaler mean과 vocabulary를 fit하고 validation에는 그 상태로 transform만 적용합니다.",
-        boundary:
-          "Pretrained external transform은 허용될 수 있지만 data source·fit scope·revision과 evaluation overlap을 별도로 기록합니다.",
-      },
-      {
-        id: "pooled-oof-risk-estimate",
-        sectionId: "kfold",
-        intuition:
-          "각 사람이 자신을 가르치지 않은 선생에게 시험받은 오류를 모두 모아 한 번만 평균냅니다.",
-        workedExample:
-          "Valid fold가 20행 loss .2, 80행 loss .4라면 equal fold mean .3이 아니라 pooled row mean (.2×20+.4×80)/100=.36입니다.",
-        boundary:
-          "Non-decomposable metric·group reducer·sample weight는 단순 행 loss 평균 대신 해당 metric의 sufficient statistics와 집계 규칙을 사용합니다.",
-      },
-      {
-        id: "cv-procedure-estimand",
-        sectionId: "kfold",
-        intuition:
-          "CV는 완성된 자동차 한 대보다 같은 공정으로 새 재료에서 다시 만든 자동차들의 평균 성능에 더 가깝습니다.",
-        workedExample:
-          "각 fold model이 n(1−1/K)개로 학습되므로 full n-data model의 conditional error와 정확히 같은 대상을 평가하지 않습니다.",
-        boundary:
-          "논문의 exact proof는 OLS setting을 포함한 명시적 조건이 있으며 모든 learner·data의 finite-sample equality로 확대하지 않습니다.",
-        proofIdea:
-          "Fold별 model은 서로 다른 training subset의 함수이고 OOF loss를 평균하면 observed full-data model 하나가 아니라 resampled training sets에 적용된 procedure의 loss를 집계합니다.",
-        counterexample:
-          "학습 절차가 data에 무관하게 항상 같은 고정 model을 반환하면 fold model과 full-data model이 같아 두 estimand 차이가 사라집니다.",
-      },
-      {
-        id: "group-disjoint-split",
-        sectionId: "group",
-        intuition:
-          "같은 환자의 사진 여러 장을 서로 다른 시험지에 나누지 않고 환자 전체를 한쪽에 둡니다.",
-        workedExample:
-          "Patient C의 2,110개 patch가 validation이면 C의 patch는 train group set에 하나도 없어야 합니다.",
-        boundary:
-          "Patient ID가 달라도 같은 household·site·source image를 공유한다면 더 상위 group leakage가 남을 수 있습니다.",
-      },
-      {
-        id: "independent-evaluation-unit-count",
-        sectionId: "group",
-        intuition:
-          "한 사람을 천 번 촬영해도 새로운 사람 천 명을 관찰한 것과 같지 않습니다.",
-        workedExample:
-          "환자 20명×5,000 patch는 10만 행이지만 unseen-patient 근거 단위는 20명이고 fold별 patient 수를 보고합니다.",
-        boundary:
-          "Group 간 site/time dependency가 있으면 고유 group 수조차 완전한 독립 표본 수가 아닙니다.",
-      },
-      {
-        id: "walk-forward-label-availability",
-        sectionId: "timeseries",
-        intuition:
-          "과거 사건이라도 결과가 아직 나오지 않았다면 그 시점의 model은 정답을 배울 수 없습니다.",
-        workedExample:
-          "10월 25일 row의 30일 outcome이 11월 24일 확정되는데 validation origin이 11월 1일이면 그 row를 train에서 제외합니다.",
-        boundary:
-          "Label availability를 지켜도 feature window·target span·entity가 validation과 겹치면 추가 gap/purge/group constraint가 필요합니다.",
-      },
-      {
-        id: "cv-leaderboard-rank-agreement",
-        sectionId: "cv-lb",
-        intuition:
-          "두 심사위원의 평균 점수가 달라도 참가자들의 우열 순서가 비슷한지 비교합니다.",
-        workedExample:
-          "후보 쌍 10개 중 local/public 차이의 부호가 8개 같으면 pairwise agreement=.8입니다.",
-        boundary:
-          "작은 public sample·동점 tolerance·adaptive submissions가 agreement를 왜곡하며 private 순서 보존을 보장하지 않습니다.",
-      },
-      {
-        id: "validation-protocol-adaptation-audit",
-        sectionId: "cv-lb",
-        intuition:
-          "정답 힌트를 보고 채점법을 바꿨다면 바뀐 채점법도 같은 시험에 맞춘 결과로 기록합니다.",
-        workedExample:
-          "Public score를 보고 random→time split으로 바꿨다면 mismatch 가설·결정 시점·본 후보와 새 후보를 기록하고 미사용 기간에서 최종 확인합니다.",
-        boundary:
-          "합리적인 버그 수정도 public feedback 이후라면 adaptation 표시가 필요하며 audit 자체가 bias를 제거하지는 않습니다.",
+        sectionId: "risk",
+        intuition: "예행연습장을 자르기 전에 실제 공연에서 무엇이 새로 나타나는지부터 정합니다.",
+        workedExample: "새 환자 배포라면 Z를 patch가 아니라 unseen patient로 두고 환자별 loss를 평균냅니다.",
+        boundary: "배포 분포가 바뀌면 과거 CV risk는 새 site·정책·기간의 성능을 보장하지 않습니다.",
       },
     ],
     conceptStages: [
-      {
-        label: "Estimand",
-        relation: "배포에서 새로 만날 unit과 expected loss를 먼저 정의",
-        concepts: [
-          "expectation",
-          "competition-evaluation-contract",
-          "deployment-matched-validation-risk",
-        ],
-      },
-      {
-        label: "Information boundary",
-        relation:
-          "Fold assignment와 모든 fitted transform을 train partition 안으로 제한",
-        concepts: [
-          "fold-local-transform-boundary",
-          "reproducible-training-run-contract",
-        ],
-      },
-      {
-        label: "Exchangeable rows",
-        relation:
-          "Exact partition OOF를 pooled risk로 만들고 procedure-level 해석을 제한",
-        concepts: ["pooled-oof-risk-estimate", "cv-procedure-estimand"],
-      },
-      {
-        label: "Dependent units",
-        relation: "Entity group 교집합을 비우고 행 수와 독립 반복 수를 분리",
-        concepts: ["group-disjoint-split", "independent-evaluation-unit-count"],
-      },
-      {
-        label: "Time direction",
-        relation: "Origin 이전에 실제 확정된 feature와 label만 training에 포함",
-        concepts: [
-          "prediction-time-feature-availability",
-          "walk-forward-label-availability",
-        ],
-      },
-      {
-        label: "External feedback",
-        relation:
-          "Local/public 순서와 protocol adaptation을 기록하고 독립 final 평가로 연결",
-        concepts: [
-          "cv-leaderboard-rank-agreement",
-          "validation-protocol-adaptation-audit",
-          "model-selection-maximum-optimism",
-        ],
-      },
+      { label: "Question", relation: "배포에서 새로 나타날 물체를 지정", concepts: ["competition-evaluation-contract", "deployment-matched-validation-risk"] },
+      { label: "Unit", relation: "Row·entity·period·site 중 averaging unit을 고정", concepts: ["deployment-matched-validation-risk"] },
+      { label: "Risk", relation: "그 단위의 expected loss를 estimand로 정의", concepts: ["expectation", "deployment-matched-validation-risk"] },
+      { label: "Split family", relation: "질문을 재연할 K-fold·group·walk-forward를 선택", concepts: ["train-validation-test", "deployment-matched-validation-risk"] },
     ],
     exercises: [
-      {
-        level: "basic",
-        question:
-          "새 행·새 환자·다음 달·새 병원의 다음 달이라는 네 배포 질문에 K-fold·group·walk-forward·group×time split을 각각 매핑하라.",
-        answerChecklist: [
-          "new row K-fold",
-          "new patient group",
-          "next month walk-forward",
-          "new hospital future group×time",
-          "deployment unit",
-          "not interchangeable",
-        ],
-        requiredConcepts: ["deployment-matched-validation-risk"],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "Validation 행까지 포함해 scaler 평균을 계산한 경우와 train fold에서만 평균을 계산해 validation에 적용한 경우를 비교하고 어느 쪽이 leakage인지 판정하라.",
-        answerChecklist: [
-          "fold manifest",
-          "fit train rows only",
-          "validation transform only",
-          "full-data mean is leakage",
-          "validation distribution enters fitted state",
-          "fitted mean/state checksum",
-          "full-data refit only after selection",
-        ],
-        requiredConcepts: [
-          "fold-local-transform-boundary",
-          "reproducible-training-run-contract",
-        ],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "20행 fold loss .2와 80행 fold loss .4에서 equal-fold mean과 pooled OOF mean을 계산하고 차이의 원인을 설명하라.",
-        answerChecklist: [
-          "equal .3",
-          "pooled .36",
-          "fold sizes unequal",
-          "row weighting",
-          "sample weight caveat",
-        ],
-        requiredConcepts: ["pooled-oof-risk-estimate"],
-        sectionId: "kfold",
-      },
-      {
-        level: "advanced",
-        question:
-          "CV가 full-data model 하나의 conditional error와 learning procedure 평균 error 중 어느 쪽에 가까운지 proof idea·고정 model 반례·fold dependence를 포함해 설명하라.",
-        answerChecklist: [
-          "fold models differ",
-          "resampled training sets",
-          "procedure risk",
-          "full-data model not exact",
-          "fixed model counterexample",
-          "fold scores dependent",
-          "simple CI caveat",
-          "independent test",
-        ],
-        requiredConcepts: ["cv-procedure-estimand", "pooled-oof-risk-estimate"],
-        sectionId: "kfold",
-      },
-      {
-        level: "basic",
-        question:
-          "환자 20명에게서 각 5,000개 patch를 만든 데이터의 행 수와 unseen-patient 독립 평가 단위 수를 구하고 random row split의 문제를 설명하라.",
-        answerChecklist: [
-          "100000 rows",
-          "20 patients",
-          "entity fingerprint",
-          "group disjoint",
-          "uncertainty by groups",
-          "site caveat",
-        ],
-        requiredConcepts: [
-          "group-disjoint-split",
-          "independent-evaluation-unit-count",
-        ],
-        sectionId: "group",
-      },
-      {
-        level: "advanced",
-        question:
-          "Patient·household·hospital ID가 있고 label 분포가 불균형한 데이터에서 우선 group key와 stratified group fold report를 설계하라.",
-        answerChecklist: [
-          "deployment novelty",
-          "strongest shared cause",
-          "nested group",
-          "no intersection",
-          "group/sample counts",
-          "class ratios",
-          "site coverage",
-          "small-group uncertainty",
-        ],
-        requiredConcepts: [
-          "group-disjoint-split",
-          "independent-evaluation-unit-count",
-          "deployment-matched-validation-risk",
-        ],
-        sectionId: "group",
-      },
-      {
-        level: "basic",
-        question:
-          "10월 25일 row의 30일 label이 11월 24일 확정되고 validation cutoff가 11월 1일일 때 training 포함 여부를 판정하라.",
-        answerChecklist: [
-          "exclude",
-          "label unavailable",
-          "event date insufficient",
-          "origin",
-          "gap/purge",
-          "manifest",
-        ],
-        requiredConcepts: ["walk-forward-label-availability"],
-        sectionId: "timeseries",
-      },
-      {
-        level: "advanced",
-        question:
-          "90일 feature window·30일 target horizon·7일 reporting delay·monthly retraining의 expanding/rolling fold와 gap·purge·origin report를 설계하라.",
-        answerChecklist: [
-          "prediction cutoff",
-          "feature available time",
-          "label available time",
-          "30+7 delay reasoning",
-          "overlap/purge",
-          "expanding vs rolling policy",
-          "origin metrics",
-          "entity boundary",
-        ],
-        requiredConcepts: [
-          "walk-forward-label-availability",
-          "prediction-time-feature-availability",
-          "deployment-matched-validation-risk",
-        ],
-        sectionId: "timeseries",
-      },
-      {
-        level: "basic",
-        question:
-          "후보 쌍 10개 중 local CV와 public leaderboard의 우열 방향이 8개 같을 때 agreement를 계산하고 해석 한계를 설명하라.",
-        answerChecklist: [
-          ".8",
-          "direction not absolute",
-          "metric direction",
-          "tolerance",
-          "public noise",
-          "private not guaranteed",
-        ],
-        requiredConcepts: ["cv-leaderboard-rank-agreement"],
-        sectionId: "cv-lb",
-      },
-      {
-        level: "advanced",
-        question:
-          "CV–leaderboard mismatch 뒤 metric parity·mapping·shift·pairwise direction·adaptive protocol change·frozen holdout을 순서대로 검사하는 audit receipt를 작성하라.",
-        answerChecklist: [
-          "metric fixture",
-          "row/submission checksum",
-          "preprocess parity",
-          "group/time/category shift",
-          "rank agreement",
-          "feedback count",
-          "change hypothesis/time",
-          "unused holdout",
-          "no public chasing",
-        ],
-        requiredConcepts: [
-          "cv-leaderboard-rank-agreement",
-          "validation-protocol-adaptation-audit",
-          "model-selection-maximum-optimism",
-        ],
-        sectionId: "cv-lb",
-      },
+      { level: "basic", question: "새 row를 만나는 배포 질문의 evaluation unit과 split 출발점을 쓰세요.", answerChecklist: ["new row","row unit","exchangeable","K-fold","loss","deployment match"], requiredConcepts: ["deployment-matched-validation-risk"], sectionId: "split-family" },
+      { level: "basic", question: "새 환자를 만나는 배포에서 patch split이 틀린 이유를 설명하세요.", answerChecklist: ["patient unit","shared cause","patch dependence","group split","patient loss","unseen patient"], requiredConcepts: ["deployment-matched-validation-risk"], sectionId: "overview" },
+      { level: "basic", question: "다음 달 prediction 질문에 random K-fold보다 time split이 맞는 이유를 설명하세요.", answerChecklist: ["future period","time order","past train","future validation","no reverse time","deployment"], requiredConcepts: ["deployment-matched-validation-risk"], sectionId: "split-family" },
+      { level: "basic", question: "새 병원의 다음 달 성능을 평가할 split 축 두 개를 쓰세요.", answerChecklist: ["site group","time order","group by site","future period","group×time","both constraints"], requiredConcepts: ["deployment-matched-validation-risk"], sectionId: "split-family" },
+      { level: "basic", question: "Deployment unit과 deployment distribution을 구분하세요.", answerChecklist: ["one predicted object","frequency and conditions","unit identity","distribution weights","both in estimand","not synonyms"], requiredConcepts: ["deployment-matched-validation-risk"], sectionId: "overview" },
+      { level: "basic", question: "Accuracy와 patient-level log loss가 서로 다른 estimand인 이유를 쓰세요.", answerChecklist: ["different loss","different averaging unit","metric direction","patient weighting","prediction question","predeclare"], requiredConcepts: ["deployment-matched-validation-risk"], sectionId: "risk" },
+      { level: "advanced", question: "Training sample D와 새 unit Z를 포함한 risk 식의 세 연산을 설명하세요.", answerChecklist: ["A maps D to model","loss on Z","expectation over D","expectation over Z","procedure","deployment distribution"], requiredConcepts: ["deployment-matched-validation-risk"], sectionId: "risk" },
+      { level: "advanced", question: "Row·entity·time이 모두 있는 dataset의 split decision tree를 설계하세요.", answerChecklist: ["deployment novelty","strongest dependency","time direction","nested group","combined split","report units"], requiredConcepts: ["deployment-matched-validation-risk"], sectionId: "split-family" },
+      { level: "advanced", question: "정책 변경 뒤 과거 CV를 그대로 재사용할 수 없는 이유와 재검증 계획을 쓰세요.", answerChecklist: ["distribution shift","old estimand","new policy","new period","monitoring","revalidation"], requiredConcepts: ["deployment-matched-validation-risk"], sectionId: "boundary" },
+      { level: "advanced", question: "Split class 이름만으로 validation contract가 완성되지 않는 이유를 반례로 설명하세요.", answerChecklist: ["wrong unit","wrong group key","wrong cutoff","wrong loss","same splitter","different claim"], requiredConcepts: ["deployment-matched-validation-risk"], sectionId: "boundary" },
     ],
     papers: [
-      {
-        title:
-          "Cross-Validation: What Does It Estimate and How Well Does It Do It?",
-        href: "https://pmc.ncbi.nlm.nih.gov/articles/PMC11412612/",
-        problem:
-          "Cross-validation이 observed training data에 fit한 특정 model의 error와 learning procedure의 평균 error 중 무엇을 추정하며 uncertainty interval이 얼마나 정확한지 해석하는 문제",
-        contribution:
-          "OLS에서 CV estimand를 분석하고 다른 error estimators와의 공통 현상을 논의하며 fold dependence 때문에 standard intervals coverage가 낮을 수 있음을 보이고 nested CV variance scheme을 제안",
-        assumptions:
-          "논문의 OLS theorem·training/test distribution·CV construction·simulation/data examples와 nested scheme",
-        evidenceScope:
-          "JASA 논문의 exact theoretical results와 empirical coverage comparisons 범위",
-        notClaim:
-          "모든 learner에서 동일한 finite-sample equality가 성립하거나 CV가 model selection에 쓸모없다는 뜻은 아님",
-        sectionId: "paper-cv-estimand",
-      },
-      {
-        title:
-          "scikit-learn — Cross-validation: evaluating estimator performance",
-        href: "https://scikit-learn.org/stable/modules/cross_validation.html",
-        problem:
-          "i.i.d.·stratified·grouped·temporal data에서 estimator performance를 평가할 splitter와 API를 선택하는 문제",
-        contribution:
-          "KFold·StratifiedKFold·GroupKFold·StratifiedGroupKFold·TimeSeriesSplit 등 현재 splitter semantics·examples·caveats 제공",
-        assumptions:
-          "현재 scikit-learn stable version·splitter parameters·metadata/groups·estimator/scorer API",
-        evidenceScope: "공식 문서의 현재 library behavior와 사용 예 범위",
-        notClaim:
-          "Splitter class 이름만 고르면 올바른 group ID·time cutoff·deployment estimand가 자동 보장된다는 뜻은 아님",
-        sectionId: "standard-sklearn-cv",
-      },
+      { title: "scikit-learn — Cross-validation: evaluating estimator performance", href: "https://scikit-learn.org/stable/modules/cross_validation.html", problem: "Data dependency와 time order에 맞는 splitter를 선택하는 문제", contribution: "KFold·GroupKFold·TimeSeriesSplit 등의 현재 semantics와 examples 제공", assumptions: "현재 stable version과 splitter parameters", evidenceScope: "공식 library behavior와 사용 예", notClaim: "Class 이름만으로 deployment estimand가 자동 보장된다는 뜻은 아님", sectionId: "paper-cv-foundation" },
+    ],
+  },
+  "ai/fold-local-validation": {
+    coreIdea: "Fold-local validation은 model weight뿐 아니라 평균·대치값·vocabulary·feature selection처럼 data에서 배운 모든 fitted state를 현재 training fold에서만 만들고 validation에는 고정 적용하는 정보 경계입니다.",
+    assumedKnowledge: [
+      { id: "deployment-matched-validation-risk", role: "어느 validation rows를 보이지 않게 해야 하는지 정합니다." },
+      { id: "train-validation-test", role: "Fit과 evaluation data의 역할을 분리합니다." },
+      { id: "reproducible-training-run-contract", role: "Manifest·state·model revision을 한 run으로 연결합니다." },
+    ],
+    introducedHere: [
+      { id: "fold-local-statistic", role: "Scaler·imputer·vocabulary·selection state를 train fold에서만 fit하고 validation에는 transform만 적용합니다." },
+    ],
+    conceptExplanations: [
+      { id: "fold-local-statistic", sectionId: "pipeline", intuition: "시험지 전체 평균을 미리 보고 공부하면 정답 label을 안 봤어도 시험 정보를 쓴 것입니다.", workedExample: "Fold 2를 뺀 rows에서 μ와 scale을 fit하고 fold 2에는 저장 state로 변환만 합니다.", boundary: "External pretrained transform은 가능하지만 source revision과 evaluation overlap을 기록합니다." },
+    ],
+    conceptStages: [
+      { label: "Assign", relation: "Row별 fold membership을 manifest로 고정", concepts: ["deployment-matched-validation-risk", "reproducible-training-run-contract"] },
+      { label: "Fit", relation: "Training rows에서만 fitted state를 추정", concepts: ["fold-local-statistic"] },
+      { label: "Apply", relation: "Validation에는 frozen state로 transform만 수행", concepts: ["fold-local-statistic"] },
+      { label: "Refit", relation: "선택 후 final holdout을 닫은 채 full train으로 재학습", concepts: ["train-validation-test", "reproducible-training-run-contract"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Fold manifest와 random seed를 구분하세요.", answerChecklist: ["row membership","explicit table","seed input","version dependence","stable IDs","checksum"], requiredConcepts: ["fold-local-statistic"], sectionId: "overview" },
+      { level: "basic", question: "Scaler fit과 transform을 구분하세요.", answerChecklist: ["fit estimates mean","fit estimates scale","train rows","transform applies","frozen state","validation"], requiredConcepts: ["fold-local-statistic"], sectionId: "overview" },
+      { level: "basic", question: "Validation까지 포함한 평균이 leakage인 이유를 설명하세요.", answerChecklist: ["validation distribution","enters state","before evaluation","optimistic information","label not required","train-only fix"], requiredConcepts: ["fold-local-statistic"], sectionId: "pipeline" },
+      { level: "basic", question: "Category vocabulary에 unknown token이 필요한 이유를 설명하세요.", answerChecklist: ["train vocabulary","unseen valid category","no refit","stable mapping","fallback","serving parity"], requiredConcepts: ["fold-local-statistic"], sectionId: "pipeline" },
+      { level: "basic", question: "OOF row에 남길 fitted-state provenance를 여섯 개 쓰세요.", answerChecklist: ["row ID","fold ID","manifest hash","transform revision","state checksum","model checkpoint"], requiredConcepts: ["fold-local-statistic"], sectionId: "manifest" },
+      { level: "basic", question: "Full-data refit 시점을 설명하세요.", answerChecklist: ["after selection","same recipe","all training data","final holdout closed","new state","deployment artifact"], requiredConcepts: ["fold-local-statistic"], sectionId: "manifest" },
+      { level: "advanced", question: "Imputer→encoder→selector→model pipeline의 fold-local fit 순서를 설계하세요.", answerChecklist: ["manifest first","imputer train fit","encoder train fit","selector train fit","valid transform only","model train fit"], requiredConcepts: ["fold-local-statistic"], sectionId: "pipeline" },
+      { level: "advanced", question: "Target encoding에서 ordinary fold-local fit보다 더 강한 경계가 필요한 이유를 설명하세요.", answerChecklist: ["uses labels","training row self label","cross fitting","inner folds","validation mapping","smoothing"], requiredConcepts: ["fold-local-statistic"], sectionId: "boundary" },
+      { level: "advanced", question: "External pretrained tokenizer를 허용할 audit record를 설계하세요.", answerChecklist: ["source corpus","revision","fit scope","entity overlap","purpose","frozen artifact"], requiredConcepts: ["fold-local-statistic"], sectionId: "boundary" },
+      { level: "advanced", question: "두 candidate가 서로 다른 fold state를 사용했을 때 비교가 깨지는 이유와 fixture를 쓰세요.", answerChecklist: ["different information","unpaired rows","manifest equality","state provenance","same metric","reject mismatch"], requiredConcepts: ["fold-local-statistic"], sectionId: "manifest" },
+    ],
+    papers: [
+      { title: "scikit-learn — Pipeline: chaining estimators", href: "https://scikit-learn.org/stable/modules/compose.html#pipeline-chaining-estimators", problem: "Preprocessing과 estimator fit을 같은 validation 경계에서 실행하는 문제", contribution: "Pipeline의 fit·transform chaining과 parameter access 제공", assumptions: "현재 stable Pipeline API와 estimator semantics", evidenceScope: "공식 library behavior와 examples", notClaim: "임의 custom transformer가 자동으로 leakage-safe하다는 뜻은 아님", sectionId: "paper-fold-local" },
+    ],
+  },
+  "ai/oof-risk-estimation": {
+    coreIdea: "OOF estimation은 각 training row가 자신을 학습하지 않은 fold model에서 prediction 하나를 받게 하고, 이를 원래 row·weight 단위로 모아 learning procedure의 held-out risk를 해석하는 절차입니다.",
+    assumedKnowledge: [
+      { id: "deployment-matched-validation-risk", role: "OOF가 어느 배포 risk를 모사할지 정합니다." },
+      { id: "fold-local-statistic", role: "각 OOF prediction의 preprocessing도 row 정보를 보지 않게 합니다." },
+      { id: "expectation", role: "Procedure risk의 평균 해석을 읽습니다." },
+    ],
+    introducedHere: [
+      { id: "pooled-oof-risk-estimate", role: "각 row의 unseen prediction loss를 원래 evaluation weight로 모읍니다." },
+      { id: "cv-procedure-estimand", role: "Fold models의 평균 risk와 full-data model 하나의 error를 구분합니다." },
+    ],
+    conceptExplanations: [
+      { id: "pooled-oof-risk-estimate", sectionId: "pooling", intuition: "각 사람이 자신을 가르치지 않은 선생에게 시험받은 답을 원래 명단 순서로 모읍니다.", workedExample: "20행 loss .2와 80행 loss .4는 equal-fold .3이 아니라 pooled-row .36입니다.", boundary: "Non-decomposable metric은 전체 OOF vector에서 metric 자체를 다시 계산합니다." },
+      { id: "cv-procedure-estimand", sectionId: "estimand", intuition: "CV는 완성차 한 대보다 같은 공정으로 다른 재료에서 만든 자동차들의 평균 성능에 가깝습니다.", workedExample: "K-fold model은 n(1−1/K) rows로 학습되어 full n-data model과 동일한 object가 아닙니다.", boundary: "정확한 equality는 learner·data 조건에 의존하며 simple fold CI를 독립 반복처럼 읽지 않습니다.", proofIdea: "Fold별 model은 서로 다른 training subset의 함수이고 OOF loss는 이 resampled procedures의 결과를 합칩니다.", counterexample: "항상 같은 고정 model을 반환하는 procedure라면 fold model과 full model의 차이가 사라집니다." },
+    ],
+    conceptStages: [
+      { label: "Exclude", relation: "Row가 속한 validation fold를 training에서 제외", concepts: ["fold-local-statistic", "pooled-oof-risk-estimate"] },
+      { label: "Predict", relation: "각 row에 unseen prediction 하나를 생성", concepts: ["pooled-oof-risk-estimate"] },
+      { label: "Pool", relation: "Row·weight 기준으로 held-out risk를 계산", concepts: ["pooled-oof-risk-estimate"] },
+      { label: "Interpret", relation: "특정 model과 learning procedure estimand를 구분", concepts: ["cv-procedure-estimand"] },
+    ],
+    exercises: [
+      { level: "basic", question: "OOF prediction의 training exclusion 조건을 설명하세요.", answerChecklist: ["row fold identified","fold excluded","preprocess excluded","model excluded","one prediction","row order"], requiredConcepts: ["pooled-oof-risk-estimate"], sectionId: "overview" },
+      { level: "basic", question: "3-fold n rows의 OOF matrix shape를 쓰세요.", answerChecklist: ["n rows","one prediction column per output","all rows covered","fold IDs","not 3n","stable row order"], requiredConcepts: ["pooled-oof-risk-estimate"], sectionId: "overview" },
+      { level: "basic", question: "20행 .2와 80행 .4의 equal-fold와 pooled mean을 계산하세요.", answerChecklist: [".3",".36","unequal sizes","row weighting","100 rows","different estimand"], requiredConcepts: ["pooled-oof-risk-estimate"], sectionId: "pooling" },
+      { level: "basic", question: "Sample weights를 OOF risk에 적용하는 위치를 설명하세요.", answerChecklist: ["row loss","multiply weight","sum weighted loss","sum weights","same metric","not fold count"], requiredConcepts: ["pooled-oof-risk-estimate"], sectionId: "pooling" },
+      { level: "basic", question: "In-sample prediction을 OOF table에 섞으면 안 되는 이유를 쓰세요.", answerChecklist: ["row seen","training fit","optimistic","different provenance","not held out","reject"], requiredConcepts: ["pooled-oof-risk-estimate"], sectionId: "overview" },
+      { level: "basic", question: "Full-data model과 fold model의 training size 차이를 쓰세요.", answerChecklist: ["n","n(1-1/K)","different data","different fitted model","conditional error","procedure risk"], requiredConcepts: ["cv-procedure-estimand"], sectionId: "estimand" },
+      { level: "advanced", question: "CV procedure estimand의 proof idea와 고정-model 반례를 설명하세요.", answerChecklist: ["fold models differ","resampled sets","average procedure","full model not exact","fixed model","difference vanishes"], requiredConcepts: ["cv-procedure-estimand"], sectionId: "estimand" },
+      { level: "advanced", question: "Non-decomposable metric의 OOF 집계를 설계하세요.", answerChecklist: ["store predictions","restore rows","global target","metric once","sufficient statistics","no fold mean"], requiredConcepts: ["pooled-oof-risk-estimate"], sectionId: "boundary" },
+      { level: "advanced", question: "Fold scores를 독립 표본처럼 CI에 넣기 어려운 이유를 설명하세요.", answerChecklist: ["overlapping training sets","dependent models","correlated errors","K not sample size","coverage caveat","independent test"], requiredConcepts: ["cv-procedure-estimand"], sectionId: "boundary" },
+      { level: "advanced", question: "OOF artifact release fixture를 설계하세요.", answerChecklist: ["coverage exactly one","no train membership","row checksum","fold state checksum","metric parity","target untouched"], requiredConcepts: ["pooled-oof-risk-estimate", "cv-procedure-estimand"], sectionId: "boundary" },
+    ],
+    papers: [
+      { title: "Cross-Validation: What Does It Estimate and How Well Does It Do It?", href: "https://pmc.ncbi.nlm.nih.gov/articles/PMC11412612/", problem: "CV가 specific model error와 procedure average error 중 무엇을 추정하고 uncertainty가 얼마나 정확한지 해석하는 문제", contribution: "OLS estimand 분석과 fold dependence·interval coverage·nested variance scheme 제안", assumptions: "논문의 OLS theorem·training/test distribution·CV construction", evidenceScope: "JASA 이론 결과와 empirical coverage 비교", notClaim: "모든 learner의 finite-sample equality나 CV 무용론을 뜻하지 않음", sectionId: "paper-cv-estimand" },
+    ],
+  },
+  "ai/grouped-validation": {
+    coreIdea: "Grouped validation은 같은 patient·device·document·site처럼 공유 원인에서 나온 모든 rows를 한 partition에 두고, 행 수와 독립에 가까운 평가 entity 수를 분리해 보고하는 평가 설계입니다.",
+    assumedKnowledge: [
+      { id: "deployment-matched-validation-risk", role: "배포에서 새로 나타날 entity·site를 group key로 고릅니다." },
+      { id: "train-validation-test", role: "Group 전체를 training 또는 validation 역할에 배치합니다." },
+    ],
+    introducedHere: [
+      { id: "group-disjoint-split", role: "Train과 validation의 shared-cause group ID 교집합을 비웁니다." },
+      { id: "independent-evaluation-unit-count", role: "행 수와 별개로 validation의 고유 entity·site 수를 셉니다." },
+    ],
+    conceptExplanations: [
+      { id: "group-disjoint-split", sectionId: "disjoint", intuition: "같은 환자의 사진을 서로 다른 시험지에 나누지 않고 환자 전체를 한쪽에 둡니다.", workedExample: "Patient C의 2,110 patches가 validation이면 C의 patch는 train에 하나도 없어야 합니다.", boundary: "Patient가 달라도 같은 household·site를 공유하면 상위 dependency가 남을 수 있습니다." },
+      { id: "independent-evaluation-unit-count", sectionId: "evidence", intuition: "한 사람을 천 번 촬영해도 새로운 사람 천 명을 관찰한 것은 아닙니다.", workedExample: "20 patients×5,000 patches는 100,000 rows지만 unseen-patient 근거 단위는 20입니다.", boundary: "Group 간 site/time dependency가 있으면 고유 group 수도 완전한 독립 표본 수가 아닙니다." },
+    ],
+    conceptStages: [
+      { label: "Trace cause", relation: "Rows를 생성한 entity·source·site를 찾음", concepts: ["deployment-matched-validation-risk", "group-disjoint-split"] },
+      { label: "Choose key", relation: "배포 novelty와 가장 가까운 shared-cause ID를 고름", concepts: ["group-disjoint-split"] },
+      { label: "Split", relation: "Train·validation group 교집합을 비움", concepts: ["group-disjoint-split"] },
+      { label: "Count evidence", relation: "Row 수와 independent group 수를 분리", concepts: ["independent-evaluation-unit-count"] },
+    ],
+    exercises: [
+      { level: "basic", question: "20 patients×5,000 patches의 row 수와 independent unit 수를 계산하세요.", answerChecklist: ["100000 rows","20 patients","different counts","patient unit","shared cause","report both"], requiredConcepts: ["independent-evaluation-unit-count"], sectionId: "evidence" },
+      { level: "basic", question: "Patient C가 양쪽 fold에 있을 때 group leakage 집합을 쓰세요.", answerChecklist: ["train groups","valid groups","intersection","contains C","not empty","reject split"], requiredConcepts: ["group-disjoint-split"], sectionId: "disjoint" },
+      { level: "basic", question: "Row shuffle가 group split을 대신하지 못하는 이유를 설명하세요.", answerChecklist: ["rows dependent","same entity","shuffle mixes","memorization","optimistic score","group key"], requiredConcepts: ["group-disjoint-split"], sectionId: "overview" },
+      { level: "basic", question: "Group key를 편리한 ID가 아니라 deployment novelty로 고르는 이유를 쓰세요.", answerChecklist: ["claim target","new entity","shared cause","ID semantics","strongest dependency","matched risk"], requiredConcepts: ["group-disjoint-split"], sectionId: "overview" },
+      { level: "basic", question: "Fold별로 group 수와 row 수를 함께 보고할 이유를 설명하세요.", answerChecklist: ["balance","entity evidence","large groups","row imbalance","uncertainty","diagnostic"], requiredConcepts: ["independent-evaluation-unit-count"], sectionId: "evidence" },
+      { level: "basic", question: "Group disjointness 식의 세 연산을 설명하세요.", answerChecklist: ["collect train IDs","collect valid IDs","deduplicate","intersection","empty set","leak detection"], requiredConcepts: ["group-disjoint-split"], sectionId: "disjoint" },
+      { level: "advanced", question: "Patient·household·hospital의 중첩 group split을 설계하세요.", answerChecklist: ["deployment novelty","nested levels","strongest cause","hospital holdout","patient disjoint","report hierarchy"], requiredConcepts: ["group-disjoint-split", "independent-evaluation-unit-count"], sectionId: "boundary" },
+      { level: "advanced", question: "Class imbalance를 가진 grouped dataset의 fold report를 설계하세요.", answerChecklist: ["group counts","row counts","class ratios","site coverage","no intersection","small group caveat"], requiredConcepts: ["group-disjoint-split", "independent-evaluation-unit-count"], sectionId: "boundary" },
+      { level: "advanced", question: "Group 간 time dependency가 남는 반례를 설명하세요.", answerChecklist: ["different IDs","same period","shared event","correlated outcomes","group count optimistic","time constraint"], requiredConcepts: ["independent-evaluation-unit-count"], sectionId: "boundary" },
+      { level: "advanced", question: "Group assignment artifact의 release fixtures를 설계하세요.", answerChecklist: ["stable group key","coverage","intersection empty","nested mapping","class report","manifest checksum"], requiredConcepts: ["group-disjoint-split"], sectionId: "boundary" },
+    ],
+    papers: [
+      { title: "scikit-learn — Cross-validation iterators for grouped data", href: "https://scikit-learn.org/stable/modules/cross_validation.html#cross-validation-iterators-for-grouped-data", problem: "같은 subject의 samples가 train과 test에 동시에 나타나는 평가 오류", contribution: "GroupKFold·StratifiedGroupKFold 등 grouped iterator semantics 제공", assumptions: "사용자가 올바른 groups array를 제공하는 현재 API", evidenceScope: "공식 splitter behavior와 examples", notClaim: "Library가 실제 shared-cause group을 자동 발견한다는 뜻은 아님", sectionId: "paper-group-split" },
+    ],
+  },
+  "ai/walk-forward-validation": {
+    coreIdea: "Walk-forward validation은 각 forecast origin에서 feature와 label이 실제로 도착한 시각을 기준으로 training rows를 허용하고, 겹친 information interval을 gap·purge한 뒤 같은 production retraining policy로 origin을 전진시키는 backtest입니다.",
+    assumedKnowledge: [
+      { id: "deployment-matched-validation-risk", role: "다음 period라는 배포 질문을 시간 split으로 연결합니다." },
+      { id: "prediction-time-feature-availability", role: "Feature가 origin 전에 system에 도착했는지 검사합니다." },
+      { id: "rolling-origin-evaluation", role: "같은 rule로 여러 과거 forecast origins를 재연합니다." },
+      { id: "temporal-gap-purge", role: "겹친 feature·target interval을 split 경계에서 제거합니다." },
+    ],
+    introducedHere: [
+      { id: "walk-forward-label-availability", role: "Target horizon과 reporting delay를 지난 label만 각 origin의 training에 허용합니다." },
+    ],
+    conceptExplanations: [
+      { id: "walk-forward-label-availability", sectionId: "labels", intuition: "과거 사건이라도 결과가 아직 나오지 않았다면 그 시점의 model은 정답을 배울 수 없습니다.", workedExample: "10월 25일 event의 30일 outcome과 7일 delay는 12월 초까지 training label이 아닙니다.", boundary: "Label availability를 지켜도 feature·target interval과 entity가 validation에 겹치면 gap·purge·group constraint가 더 필요합니다." },
+    ],
+    conceptStages: [
+      { label: "Origin", relation: "Prediction을 냈다고 가정할 cutoff를 고정", concepts: ["deployment-matched-validation-risk", "prediction-time-feature-availability"] },
+      { label: "Availability", relation: "Feature와 label의 실제 도착 시각을 비교", concepts: ["walk-forward-label-availability"] },
+      { label: "Purge", relation: "Validation과 정보를 공유하는 interval을 제거", concepts: ["temporal-gap-purge"] },
+      { label: "Advance", relation: "같은 rule로 origin을 전진", concepts: ["rolling-origin-evaluation"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Event time과 label available time을 구분하세요.", answerChecklist: ["event occurs","horizon ends","reporting delay","system arrival","different times","training uses available"], requiredConcepts: ["walk-forward-label-availability"], sectionId: "overview" },
+      { level: "basic", question: "30일 horizon과 7일 delay의 label wait를 계산하세요.", answerChecklist: ["30 plus 7","37 days","event time","outcome end","arrival","not earlier"], requiredConcepts: ["walk-forward-label-availability"], sectionId: "labels" },
+      { level: "basic", question: "Label available time이 origin 뒤인 row의 admission을 판정하세요.", answerChecklist: ["exclude","future label","origin comparison","event date insufficient","manifest","no training"], requiredConcepts: ["walk-forward-label-availability"], sectionId: "labels" },
+      { level: "basic", question: "시간 split 경계에서 gap과 purge가 각각 어떤 rows를 제거하는지 구분하세요.", answerChecklist: ["gap fixed distance","purge overlap based","feature interval","target interval","boundary rows","different rules"], requiredConcepts: ["temporal-gap-purge"], sectionId: "gap-purge" },
+      { level: "basic", question: "Expanding과 rolling training window를 구분하세요.", answerChecklist: ["expanding accumulates","rolling fixed length","old data kept","old data dropped","production policy","drift"], requiredConcepts: ["rolling-origin-evaluation"], sectionId: "boundary" },
+      { level: "basic", question: "Forecast origin을 여러 번 전진시키는 이유를 설명하세요.", answerChecklist: ["multiple historical deployments","same rule","different periods","stability","drift","not random folds"], requiredConcepts: ["rolling-origin-evaluation"], sectionId: "gap-purge" },
+      { level: "advanced", question: "90일 feature·30일 target·7일 delay의 walk-forward manifest를 설계하세요.", answerChecklist: ["origin","90-day history","30-day target","7-day delay","availability check","purge overlap"], requiredConcepts: ["walk-forward-label-availability", "temporal-gap-purge"], sectionId: "gap-purge" },
+      { level: "advanced", question: "Event time만 사용한 backtest의 leakage 반례를 설명하세요.", answerChecklist: ["past event","late label","origin before arrival","model could not know","optimistic","available-time fix"], requiredConcepts: ["walk-forward-label-availability"], sectionId: "labels" },
+      { level: "advanced", question: "반복 entity가 있는 time series split에 추가할 조건을 설계하세요.", answerChecklist: ["entity groups","time order","same entity overlap","group×time","availability","report units"], requiredConcepts: ["walk-forward-label-availability", "temporal-gap-purge"], sectionId: "boundary" },
+      { level: "advanced", question: "Walk-forward release fixture를 설계하세요.", answerChecklist: ["timezone","origin list","feature available","label available","gap purge","window policy"], requiredConcepts: ["walk-forward-label-availability", "rolling-origin-evaluation"], sectionId: "boundary" },
+    ],
+    papers: [
+      { title: "scikit-learn — TimeSeriesSplit", href: "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit.html", problem: "Time-ordered samples에서 미래를 training하고 과거를 평가하는 오류", contribution: "Successive training sets와 gap을 가진 current splitter API 제공", assumptions: "Equally spaced samples와 current parameters", evidenceScope: "공식 API behavior와 examples", notClaim: "Delayed labels·overlapping intervals·group constraints가 자동 처리된다는 뜻은 아님", sectionId: "paper-walk-forward" },
+    ],
+  },
+  "ai/validation-feedback-audit": {
+    coreIdea: "Validation feedback audit은 local·public score offset과 후보 선택 순서의 불일치를 분리하고, external feedback 뒤 바꾼 split·metric·feature·candidate filter를 기록한 뒤 그 선택에 쓰지 않은 holdout으로 평가를 닫는 절차입니다.",
+    assumedKnowledge: [
+      { id: "pooled-oof-risk-estimate", role: "Frozen local candidate score를 만듭니다." },
+      { id: "model-selection-maximum-optimism", role: "Noisy holdout을 반복 최적화할 때 생기는 낙관을 설명합니다." },
+      { id: "leaderboard-adaptive-feedback-budget", role: "External feedback이 후속 선택을 바꾼 횟수를 셉니다." },
+    ],
+    introducedHere: [
+      { id: "cv-leaderboard-rank-agreement", role: "Local과 public에서 같은 후보 쌍의 우열 방향이 일치하는 비율을 계산합니다." },
+      { id: "validation-protocol-adaptation-audit", role: "Feedback 뒤 protocol 변경의 가설·시점·revision과 unused holdout을 기록합니다." },
+    ],
+    conceptExplanations: [
+      { id: "cv-leaderboard-rank-agreement", sectionId: "agreement", intuition: "두 심사위원의 평균 점수가 달라도 참가자들의 우열 순서가 비슷한지 따로 비교합니다.", workedExample: "후보 쌍 10개 중 local/public 차이 부호가 8개 같으면 agreement=.8입니다.", boundary: "작은 public sample·tie tolerance·adaptive submissions가 값을 왜곡하며 private 순서를 보장하지 않습니다." },
+      { id: "validation-protocol-adaptation-audit", sectionId: "adaptation", intuition: "정답 힌트를 보고 채점법을 바꿨다면 바뀐 채점법도 같은 시험에 맞춘 결과로 기록합니다.", workedExample: "Public score 뒤 random→time split으로 바꿨다면 가설·시점·본 후보를 기록하고 unused period에서 확인합니다.", boundary: "합리적인 bug fix도 feedback 이후라면 adaptation이며 audit 자체가 bias를 제거하지 않습니다." },
+    ],
+    conceptStages: [
+      { label: "Parity", relation: "Metric·row mapping·preprocess 구현을 먼저 맞춤", concepts: ["pooled-oof-risk-estimate"] },
+      { label: "Agreement", relation: "Score offset과 candidate-pair 방향을 분리", concepts: ["cv-leaderboard-rank-agreement"] },
+      { label: "Adaptation", relation: "External feedback 뒤 protocol 변경을 receipt로 기록", concepts: ["validation-protocol-adaptation-audit", "leaderboard-adaptive-feedback-budget"] },
+      { label: "Freeze", relation: "Unused holdout에서 frozen procedure를 최종 확인", concepts: ["model-selection-maximum-optimism", "validation-protocol-adaptation-audit"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Score offset과 rank agreement를 구분하세요.", answerChecklist: ["absolute values","candidate order","different diagnostics","same candidates","metric direction","not interchangeable"], requiredConcepts: ["cv-leaderboard-rank-agreement"], sectionId: "overview" },
+      { level: "basic", question: "10 candidate pairs 중 8개 방향 일치의 agreement를 계산하세요.", answerChecklist: ["8 divided 10",".8","pairwise","direction","not absolute score","not private guarantee"], requiredConcepts: ["cv-leaderboard-rank-agreement"], sectionId: "agreement" },
+      { level: "basic", question: "Tie tolerance가 필요한 이유를 설명하세요.", answerChecklist: ["score noise","tiny differences","treat tie","predeclare","consistent direction","avoid false disagreement"], requiredConcepts: ["cv-leaderboard-rank-agreement"], sectionId: "agreement" },
+      { level: "basic", question: "Mismatch audit에서 distribution shift보다 먼저 확인할 세 구현 항목을 쓰세요.", answerChecklist: ["metric fixture","row mapping","submission checksum","preprocess parity","same candidate","direction"], requiredConcepts: ["cv-leaderboard-rank-agreement"], sectionId: "overview" },
+      { level: "basic", question: "Protocol adaptation의 before·after receipt 항목을 쓰세요.", answerChecklist: ["observed feedback","hypothesis","change time","old revision","new revision","candidate set"], requiredConcepts: ["validation-protocol-adaptation-audit"], sectionId: "adaptation" },
+      { level: "basic", question: "Bug fix도 feedback 뒤면 adaptation인 이유를 설명하세요.", answerChecklist: ["holdout observed","decision changed","same feedback channel","record required","bias not erased","new holdout"], requiredConcepts: ["validation-protocol-adaptation-audit"], sectionId: "adaptation" },
+      { level: "advanced", question: "Pairwise agreement 식의 subtraction·sign·indicator·average 의도를 설명하세요.", answerChecklist: ["candidate difference","direction","tolerance","compare signs","indicator","normalize pairs"], requiredConcepts: ["cv-leaderboard-rank-agreement"], sectionId: "agreement" },
+      { level: "advanced", question: "CV–leaderboard mismatch audit 순서를 설계하세요.", answerChecklist: ["metric parity","row checksum","preprocess parity","group time shift","rank agreement","adaptation receipt"], requiredConcepts: ["cv-leaderboard-rank-agreement", "validation-protocol-adaptation-audit"], sectionId: "boundary" },
+      { level: "advanced", question: "Feedback budget과 frozen holdout의 관계를 설명하세요.", answerChecklist: ["count adaptive changes","predeclare limit","public reused","freeze protocol","unused data","final evaluation"], requiredConcepts: ["validation-protocol-adaptation-audit", "leaderboard-adaptive-feedback-budget"], sectionId: "boundary" },
+      { level: "advanced", question: "Final holdout 결과를 보고 다시 고친 경우 필요한 다음 조치를 쓰세요.", answerChecklist: ["holdout consumed","selection data now","no longer final","new independent data","record adaptation","stop condition"], requiredConcepts: ["validation-protocol-adaptation-audit"], sectionId: "boundary" },
+    ],
+    papers: [
+      { title: "The Ladder: A Reliable Leaderboard for Machine Learning Competitions", href: "https://proceedings.mlr.press/v37/blum15.html", problem: "반복적·적응적 submission이 leaderboard holdout에 overfit하는 문제", contribution: "변화가 충분할 때만 score를 갱신하는 제한적 공개 mechanism과 분석", assumptions: "논문의 competition model·loss·leaderboard mechanism", evidenceScope: "ICML 2015 이론과 experiments", notClaim: "일반 public leaderboard의 unbiasedness나 private 순서를 보장한다는 뜻은 아님", sectionId: "paper-validation-feedback" },
     ],
   },
   "ai/hyperparameter-tuning": {
@@ -21064,7 +20851,7 @@ export const ARTICLE_LEARNING: Readonly<
         role: "각 row를 보지 않은 base model의 prediction과 paired loss를 만듭니다.",
       },
       {
-        id: "fold-local-transform-boundary",
+        id: "fold-local-statistic",
         role: "Base preprocessing과 prediction이 meta row 정보를 사용하지 않게 합니다.",
       },
       {
@@ -21205,7 +20992,7 @@ export const ARTICLE_LEARNING: Readonly<
         relation:
           "Cross-fitted prediction matrix에서 meta-model을 학습하고 oracle claim을 제한",
         concepts: [
-          "fold-local-transform-boundary",
+          "fold-local-statistic",
           "cross-fitted-stacking-matrix",
           "super-learner-oracle-comparison",
         ],
@@ -21308,7 +21095,7 @@ export const ARTICLE_LEARNING: Readonly<
         ],
         requiredConcepts: [
           "cross-fitted-stacking-matrix",
-          "fold-local-transform-boundary",
+          "fold-local-statistic",
         ],
         sectionId: "stacking",
       },
