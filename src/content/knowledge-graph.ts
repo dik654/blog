@@ -6378,7 +6378,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Video temporal-observation contract",
     definition:
       "Source timestamp/FPS·sampled frames·stride·clip count를 실제 관측 duration과 effective sampling rate로 연결해 event duration·motion rate와 맞추는 입력 규칙입니다.",
-    canonicalHref: "/ai/video-understanding#overview",
+    canonicalHref: "/ai/video-understanding#duration",
   },
   "video-motion-aliasing-boundary": {
     id: "video-motion-aliasing-boundary",
@@ -6387,7 +6387,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Video motion aliasing boundary",
     definition:
       "Ideal band-limited temporal signal에서 motion frequency가 effective sample rate의 절반 미만이어야 반복 변화가 다른 낮은 frequency로 겹치지 않는다는 sampling 조건입니다.",
-    canonicalHref: "/ai/video-understanding#overview",
+    canonicalHref: "/ai/video-understanding#aliasing",
   },
   "temporal-interval-coverage": {
     id: "temporal-interval-coverage",
@@ -6396,7 +6396,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Temporal interval-union coverage",
     definition:
       "여러 sampled clip의 timestamp interval union 길이를 전체 video duration으로 나눠 overlap을 중복 계산하지 않고 관측 범위를 재는 metric입니다.",
-    canonicalHref: "/ai/video-understanding#sampling",
+    canonicalHref: "/ai/video-clip-sampling#coverage",
   },
   "deterministic-multiclip-replay": {
     id: "deterministic-multiclip-replay",
@@ -6405,7 +6405,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Deterministic multi-clip replay",
     definition:
       "평가 clip timestamp·decode·spatial crop·video aggregation을 manifest로 고정해 같은 video prediction을 재실행하는 protocol입니다.",
-    canonicalHref: "/ai/video-understanding#sampling",
+    canonicalHref: "/ai/video-clip-sampling#replay",
   },
   "temporal-convolution-receptive-span": {
     id: "temporal-convolution-receptive-span",
@@ -6414,7 +6414,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Temporal convolution receptive span",
     definition:
       "Temporal kernel size·dilation·sampling stride와 source FPS로 한 convolution 또는 stacked network가 직접 연결하는 original timestamp 범위를 계산한 값입니다.",
-    canonicalHref: "/ai/video-understanding#3dcnn",
+    canonicalHref: "/ai/video-convolution-architectures#receptive-span",
   },
   "inflated-3d-pretraining-handoff": {
     id: "inflated-3d-pretraining-handoff",
@@ -6423,7 +6423,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Inflated 3D pretraining handoff",
     definition:
       "2D convolution filter·pooling kernel에 temporal dimension을 추가해 3D operator의 초기값으로 옮기고 video pretraining으로 spatiotemporal representation을 학습하는 I3D 방식입니다.",
-    canonicalHref: "/ai/video-understanding#3dcnn",
+    canonicalHref: "/ai/video-convolution-architectures#inflation-factorization",
   },
   "r2plus1d-factorization": {
     id: "r2plus1d-factorization",
@@ -6432,7 +6432,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "R(2+1)D factorization",
     definition:
       "Full 3D convolution을 2D spatial convolution과 1D temporal convolution 및 중간 nonlinearity로 나눠 optimization path와 representation을 바꾸는 block입니다.",
-    canonicalHref: "/ai/video-understanding#3dcnn",
+    canonicalHref: "/ai/video-convolution-architectures#inflation-factorization",
   },
   "slowfast-rate-capacity-allocation": {
     id: "slowfast-rate-capacity-allocation",
@@ -6441,7 +6441,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "SlowFast rate–capacity allocation",
     definition:
       "Low-frame-rate wide Slow path와 high-frame-rate narrow Fast path를 α frame-rate ratio·β channel ratio와 lateral connection으로 결합하는 video architecture입니다.",
-    canonicalHref: "/ai/video-understanding#3dcnn",
+    canonicalHref: "/ai/video-convolution-architectures#slowfast",
   },
   "video-tubelet-token-contract": {
     id: "video-tubelet-token-contract",
@@ -6450,7 +6450,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Video tubelet-token contract",
     definition:
       "T×H×W clip을 τ×P×P non-overlapping volumes로 나누고 projection·position을 적용해 spatiotemporal token sequence를 만드는 규칙입니다.",
-    canonicalHref: "/ai/video-understanding#video-transformer",
+    canonicalHref: "/ai/video-transformers#tubelets",
   },
   "factorized-space-time-attention-cost": {
     id: "factorized-space-time-attention-cost",
@@ -6459,7 +6459,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Factorized space–time attention cost",
     definition:
       "TS token의 joint (TS)² pair interaction을 T회 spatial S²와 S회 temporal T² interaction으로 나눠 score cost와 direct connectivity를 바꾸는 설계입니다.",
-    canonicalHref: "/ai/video-understanding#video-transformer",
+    canonicalHref: "/ai/video-transformers#attention-cost",
   },
   "videomae-visible-tubelet-pretraining": {
     id: "videomae-visible-tubelet-pretraining",
@@ -6468,7 +6468,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "VideoMAE visible-tubelet pretraining",
     definition:
       "높은 비율의 spatiotemporal tubelet을 가리고 visible subset만 encoder에 전달해 decoder가 masked video content를 복원하도록 학습하는 self-supervised objective입니다.",
-    canonicalHref: "/ai/video-understanding#video-transformer",
+    canonicalHref: "/ai/video-transformers#masked-pretraining",
   },
   "contrastive-pair-semantics": {
     id: "contrastive-pair-semantics",
@@ -17556,6 +17556,41 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     to: "videomae-visible-tubelet-pretraining",
     relation: "extends",
     reason: "전체 tubelet sequence 중 visible subset만 encoder input에 둡니다.",
+  },
+  {
+    from: "deterministic-multiclip-replay",
+    to: "temporal-convolution-receptive-span",
+    relation: "constrains",
+    reason:
+      "고정된 clip timestamp와 input stride가 convolution span을 원본 seconds로 환산하는 입력을 제공합니다.",
+  },
+  {
+    from: "deterministic-multiclip-replay",
+    to: "video-tubelet-token-contract",
+    relation: "constrains",
+    reason:
+      "재생 가능한 clip shape·frame timestamps가 tubelet sequence의 시간축 위치를 고정합니다.",
+  },
+  {
+    from: "temporal-convolution-receptive-span",
+    to: "inflated-3d-pretraining-handoff",
+    relation: "constrains",
+    reason:
+      "Inflated temporal kernel이 직접 읽는 source-time 범위를 kernel depth·stride와 함께 명시하게 합니다.",
+  },
+  {
+    from: "r2plus1d-factorization",
+    to: "slowfast-rate-capacity-allocation",
+    relation: "contrasts",
+    reason:
+      "한 pathway의 operator factorization과 두 pathway의 rate·capacity 분리를 서로 다른 temporal design axis로 구분합니다.",
+  },
+  {
+    from: "factorized-space-time-attention-cost",
+    to: "videomae-visible-tubelet-pretraining",
+    relation: "contrasts",
+    reason:
+      "Interaction graph를 factorize하는 절감과 encoder input token 자체를 mask하는 절감을 분리합니다.",
   },
   {
     from: "deterministic-multiclip-replay",

@@ -403,18 +403,52 @@ const cvArticles: Article[] = [
   },
   {
     slug: "video-understanding",
-    title: "비디오 이해: Event Duration에서 Video Token Budget까지",
+    title: "비디오 시간 관측: Duration · Sampling Rate · Aliasing",
     subcategory: "ai-practical-cv",
     sections: [
-      { id: "overview", title: "Duration·Sampling Rate·Aliasing" },
-      { id: "sampling", title: "Interval Coverage와 Deterministic Replay" },
-      { id: "3dcnn", title: "Temporal Receptive Field·I3D·SlowFast" },
-      {
-        id: "video-transformer",
-        title: "Tubelet·Factorized Attention·VideoMAE",
-      },
+      { id: "overview", title: "영상은 시간축 관측" },
+      { id: "duration", title: "Frame Index를 Seconds로" },
+      { id: "sampling-rate", title: "Stride 뒤 Effective FPS" },
+      { id: "aliasing", title: "빠른 Motion이 겹치는 경계" },
     ],
     component: () => import("@/pages/articles/ai/video-understanding"),
+  },
+  {
+    slug: "video-clip-sampling",
+    title: "비디오 Clip Sampling: Coverage · Replay · Split",
+    subcategory: "ai-practical-cv",
+    sections: [
+      { id: "overview", title: "Frame Budget을 Interval로" },
+      { id: "coverage", title: "겹침 없는 시간 Coverage" },
+      { id: "replay", title: "Deterministic Multi-clip" },
+      { id: "release", title: "Train Randomness와 Eval Receipt" },
+    ],
+    component: () => import("@/pages/articles/ai/video-clip-sampling"),
+  },
+  {
+    slug: "video-convolution-architectures",
+    title: "비디오 Convolution: Receptive Span · I3D · R(2+1)D · SlowFast",
+    subcategory: "ai-practical-cv",
+    sections: [
+      { id: "overview", title: "시간 연산을 넣는 위치" },
+      { id: "receptive-span", title: "원본 Seconds로 보는 범위" },
+      { id: "inflation-factorization", title: "I3D와 R(2+1)D" },
+      { id: "slowfast", title: "Rate와 Capacity 분리" },
+    ],
+    component: () =>
+      import("@/pages/articles/ai/video-convolution-architectures"),
+  },
+  {
+    slug: "video-transformers",
+    title: "Video Transformer: Tubelet · Space-Time Attention · VideoMAE",
+    subcategory: "ai-practical-cv",
+    sections: [
+      { id: "overview", title: "Video를 Token으로" },
+      { id: "tubelets", title: "Tubelet Count" },
+      { id: "attention-cost", title: "Joint와 Factorized Attention" },
+      { id: "masked-pretraining", title: "Visible Tubelet Pretraining" },
+    ],
+    component: () => import("@/pages/articles/ai/video-transformers"),
   },
 ];
 

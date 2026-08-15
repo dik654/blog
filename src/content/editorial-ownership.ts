@@ -1761,7 +1761,8 @@ export const EDITORIAL_BOUNDARIES = {
       "Source split·crop·frame budget·calibration·metric·hardware를 맞춘 detector parity",
     ],
     reuses: [
-      { label: "Video sampling과 temporal model", href: "/ai/video-understanding" },
+      { label: "Video clip sampling과 replay", href: "/ai/video-clip-sampling" },
+      { label: "Temporal convolution candidates", href: "/ai/video-convolution-architectures" },
       { label: "Calibration과 threshold", href: "/ai/imbalanced-data" },
       { label: "Preprocessing coverage", href: "/ai/deepfake-preprocessing-lineage" },
     ],
@@ -1786,32 +1787,74 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "video-understanding": {
-    title: "비디오 이해 글이 소유하는 범위",
+    title: "비디오 시간 관측 글이 소유하는 범위",
     owns: [
       "Event duration·source FPS·temporal stride에서 관측 구간과 effective sampling rate를 정하는 계약",
-      "Clip interval union coverage·train randomization·deterministic multi-clip evaluation",
-      "3D temporal receptive field·I3D inflation·R(2+1)D factorization·SlowFast dual-rate allocation",
-      "Tubelet token count와 joint/divided/factorized attention budget, VideoMAE visible-token pretraining 경계",
+      "Ideal band-limited motion에서 effective sample rate가 만드는 aliasing 필요조건과 반례",
     ],
     reuses: [
       { label: "Sampling·aliasing·FFT", href: "/ai/fft" },
-      { label: "Image tensor와 convolution geometry", href: "/ai/cnn" },
-      { label: "Patch token과 position", href: "/ai/vision-transformer" },
-      { label: "Q·K·V와 self-attention", href: "/ai/attention-theory" },
       {
-        label: "Video score aggregation의 forensic 적용",
-        href: "/ai/deepfake-video-decisions",
+        label: "Clip interval coverage와 replay",
+        href: "/ai/video-clip-sampling",
       },
     ],
     evidence: [
       {
         kind: "primary-source",
-        rule: "I3D·R(2+1)D·SlowFast·TimeSformer·ViViT·VideoMAE claim은 각 data·pretraining·clip·architecture·task 범위로 제한한다.",
+        rule: "Nyquist sampling 경계는 논문의 signal·bandwidth 가정과 video에 적용한 근사 범위로 제한한다.",
       },
       {
         kind: "standard",
-        rule: "Source FPS/timestamps·frames·stride·clip intervals·crop·tubelet·token·test clips·pretraining·latency·memory를 함께 기록한다.",
+        rule: "Source FPS와 실제 timestamps·decode drop·T·stride·duration·effective rate를 함께 기록한다.",
       },
+    ],
+  },
+  "video-clip-sampling": {
+    title: "비디오 clip sampling 글이 소유하는 범위",
+    owns: [
+      "Clip timestamp interval union으로 overlap을 제거한 temporal coverage",
+      "Train random sampling과 분리된 deterministic multi-clip evaluation receipt와 replay",
+    ],
+    reuses: [
+      { label: "Duration·sample rate·aliasing", href: "/ai/video-understanding" },
+      { label: "Video score aggregation", href: "/ai/deepfake-video-decisions" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "TSN sampling claim은 논문의 action datasets·segments·two-stream recipe 범위로 제한한다." },
+      { kind: "standard", rule: "Source checksum·clip starts·duration·stride·decode·crop·reducer·model revision을 한 receipt에 기록한다." },
+    ],
+  },
+  "video-convolution-architectures": {
+    title: "비디오 convolution architecture 글이 소유하는 범위",
+    owns: [
+      "Temporal kernel·dilation·input stride를 source timestamp seconds로 환산한 receptive span",
+      "I3D inflation·R(2+1)D factorization·SlowFast rate-capacity allocation의 서로 다른 design axis",
+    ],
+    reuses: [
+      { label: "Image tensor와 spatial convolution", href: "/ai/cnn" },
+      { label: "Video time observation", href: "/ai/video-understanding" },
+      { label: "Clip replay와 budget parity", href: "/ai/video-clip-sampling" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "I3D·R(2+1)D·SlowFast claim은 각 논문의 data·pretraining·architecture·task 범위로 제한한다." },
+      { kind: "standard", rule: "Input timestamps·kernel geometry·weight handoff·alpha/beta·lateral path·FLOPs·latency·memory를 함께 기록한다." },
+    ],
+  },
+  "video-transformers": {
+    title: "Video transformer 글이 소유하는 범위",
+    owns: [
+      "T×H×W clip을 tubelet coordinates와 token sequence로 바꾸는 input contract",
+      "Joint·divided space-time pair cost와 VideoMAE visible-token pretraining 경계",
+    ],
+    reuses: [
+      { label: "Patch token과 position", href: "/ai/vision-transformer" },
+      { label: "Q·K·V와 self-attention", href: "/ai/attention-theory" },
+      { label: "Deterministic clip shape", href: "/ai/video-clip-sampling" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "TimeSformer·VideoMAE claim은 각 논문의 clip·resolution·pretraining·dataset 범위로 제한한다." },
+      { kind: "standard", rule: "T·H·W·tubelet·position revision·attention pattern·mask seed·decoder·test clips·latency·memory를 함께 기록한다." },
     ],
   },
   "contrastive-learning": {

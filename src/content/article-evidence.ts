@@ -1489,41 +1489,53 @@ export const ARTICLE_EVIDENCE: Readonly<
   "ai/video-understanding": [
     {
       kind: "핵심 논문",
+      label: "Certain Topics in Telegraph Transmission Theory",
+      href: "https://doi.org/10.1109/T-AIEE.1928.5055024",
+      note: "Video motion aliasing에 재사용하는 signal bandwidth와 sampling-rate 경계",
+    },
+  ],
+  "ai/video-clip-sampling": [
+    {
+      kind: "핵심 논문",
+      label: "Temporal Segment Networks",
+      href: "https://arxiv.org/abs/1608.00859",
+      note: "긴 video를 segments로 나누고 sparse snippets를 video consensus로 결합",
+    },
+  ],
+  "ai/video-convolution-architectures": [
+    {
+      kind: "핵심 논문",
       label:
         "Quo Vadis, Action Recognition? A New Model and the Kinetics Dataset",
       href: "https://openaccess.thecvf.com/content_cvpr_2017/html/Carreira_Quo_Vadis_Action_CVPR_2017_paper.html",
-      note: "2D image network를 3D로 확장한 I3D와 Kinetics pretraining",
+      note: "2D image filters를 3D로 inflate한 I3D와 Kinetics video pretraining",
     },
     {
       kind: "핵심 논문",
       label:
         "A Closer Look at Spatiotemporal Convolutions for Action Recognition",
       href: "https://openaccess.thecvf.com/content_cvpr_2018/html/Tran_A_Closer_Look_CVPR_2018_paper.html",
-      note: "3D convolution을 spatial·temporal 연산으로 분해한 R(2+1)D",
+      note: "3D convolution을 spatial·temporal operators로 분해한 R(2+1)D",
     },
     {
       kind: "핵심 논문",
       label: "SlowFast Networks for Video Recognition",
       href: "https://openaccess.thecvf.com/content_ICCV_2019/html/Feichtenhofer_SlowFast_Networks_for_Video_Recognition_ICCV_2019_paper.html",
-      note: "공간 의미와 빠른 motion을 서로 다른 frame rate 경로로 처리",
+      note: "공간 의미와 빠른 motion을 서로 다른 frame-rate·capacity paths로 처리",
     },
+  ],
+  "ai/video-transformers": [
     {
       kind: "핵심 논문",
       label: "TimeSformer",
       href: "https://proceedings.mlr.press/v139/bertasius21a.html",
-      note: "공간·시간 attention을 분리한 video transformer",
-    },
-    {
-      kind: "핵심 논문",
-      label: "ViViT: A Video Vision Transformer",
-      href: "https://openaccess.thecvf.com/content/ICCV2021/html/Arnab_ViViT_A_Video_Vision_Transformer_ICCV_2021_paper.html",
-      note: "video tokenization과 여러 spatial-temporal factorization 설계",
+      note: "Video patch token의 joint·factorized space-time attention 비교",
     },
     {
       kind: "핵심 논문",
       label: "VideoMAE",
-      href: "https://arxiv.org/abs/2203.12602",
-      note: "tube masking 기반 self-supervised video pretraining",
+      href: "https://openreview.net/forum?id=AhccnBXSne",
+      note: "높은 tube masking ratio와 visible-token encoder 기반 video pretraining",
     },
   ],
   "ai/competition-workflow": [],

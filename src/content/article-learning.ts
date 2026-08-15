@@ -14374,497 +14374,927 @@ export const ARTICLE_LEARNING: Readonly<
     ]
   },
   "ai/video-understanding": {
-    coreIdea:
-      "비디오 이해는 frame 수를 고르는 일에서 시작하지 않습니다. Label을 결정하는 event duration과 motion rate를 먼저 정하고 source timestamp·stride·clip interval로 관측 범위와 aliasing 위험을 계산한 뒤, 같은 frame/token budget에서 2D pooling·3D convolution·SlowFast·factorized video attention을 비교하고 deterministic video-level evaluation으로 선택합니다.",
-    assumedKnowledge: [
+    "entryLevel": true,
+    "entryNote": "Frame 수를 시간으로 착각하지 않고 source timestamp·duration·sampling rate를 하나씩 정의합니다.",
+    "coreIdea": "Video input은 frame 목록이 아니라 시간축 관측입니다. Source FPS와 stride로 duration과 effective sample rate를 각각 계산하고, 빠른 반복 motion이 aliasing boundary를 넘는지 확인해야 model이 실제로 본 evidence를 설명할 수 있습니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
       {
-        id: "sampling-nyquist-boundary",
-        role: "Sample rate·frequency·aliasing의 최소 조건을 시간축 motion에 적용합니다.",
+        "id": "video-temporal-observation-contract",
+        "role": "Frame indexes와 source timestamps를 duration·effective FPS로 바꿉니다."
       },
       {
-        id: "image-tensor-layout",
-        role: "Video tensor의 frame·channel·height·width axis를 구분합니다.",
-      },
-      {
-        id: "convolution-spatial-geometry",
-        role: "Kernel·stride·dilation receptive field를 시간축으로 확장합니다.",
-      },
-      {
-        id: "vit-patch-sequence-contract",
-        role: "Image patch token에 temporal tubelet dimension을 추가합니다.",
-      },
-      {
-        id: "self-attention",
-        role: "Joint·factorized space-time Q·K score cost를 계산합니다.",
-      },
-      {
-        id: "pretrained-handoff-contract",
-        role: "Image/video checkpoint의 weight·normalization·frame-rate contract를 함께 넘깁니다.",
-      },
+        "id": "video-motion-aliasing-boundary",
+        "role": "Motion frequency를 sample-rate 절반과 비교하는 필요조건을 적용합니다."
+      }
     ],
-    introducedHere: [
+    "conceptExplanations": [
       {
-        id: "video-temporal-observation-contract",
-        role: "Source FPS·T·stride로 clip duration과 effective sample rate를 계산합니다.",
+        "id": "video-temporal-observation-contract",
+        "sectionId": "duration",
+        "intuition": "사진 장수만 세지 않고 첫 장과 마지막 장이 몇 초 떨어졌고 초당 몇 번 관측했는지 함께 적습니다.",
+        "workedExample": "30 fps에서 T=16, stride 2이면 첫·마지막 index 폭 30 frames라 duration 1초, effective rate 15 fps입니다.",
+        "boundary": "Variable-frame-rate·decode drop은 실제 timestamps를 사용하고 긴 coverage와 촘촘한 sampling을 같은 값으로 보지 않습니다."
       },
       {
-        id: "video-motion-aliasing-boundary",
-        role: "구분할 motion rate가 sample-rate 절반보다 낮아야 하는 조건과 한계를 적용합니다.",
-      },
-      {
-        id: "temporal-interval-coverage",
-        role: "여러 clip interval의 union이 video duration 중 덮은 비율을 계산합니다.",
-      },
-      {
-        id: "deterministic-multiclip-replay",
-        role: "평가 timestamps·crop·aggregation을 고정해 video prediction을 재현합니다.",
-      },
-      {
-        id: "temporal-convolution-receptive-span",
-        role: "Kernel·dilation·stride를 original timestamp 범위로 바꿉니다.",
-      },
-      {
-        id: "inflated-3d-pretraining-handoff",
-        role: "2D convolution weight를 temporal kernel로 확장하는 I3D handoff를 읽습니다.",
-      },
-      {
-        id: "r2plus1d-factorization",
-        role: "Full 3D operator와 spatial→temporal factorized block의 차이를 구분합니다.",
-      },
-      {
-        id: "slowfast-rate-capacity-allocation",
-        role: "Slow·Fast path의 frame-rate·channel ratio와 lateral connection을 계산합니다.",
-      },
-      {
-        id: "video-tubelet-token-contract",
-        role: "T×H×W clip을 τ×P×P tubelet token으로 바꿉니다.",
-      },
-      {
-        id: "factorized-space-time-attention-cost",
-        role: "Joint (TS)²와 divided TS²+ST² score pair를 비교합니다.",
-      },
-      {
-        id: "videomae-visible-tubelet-pretraining",
-        role: "Visible tubelet만 encoder에 전달하는 masked-video pretraining을 읽습니다.",
-      },
+        "id": "video-motion-aliasing-boundary",
+        "sectionId": "aliasing",
+        "intuition": "빠르게 도는 바퀴를 드문드문 찍으면 느리거나 거꾸로 보이는 시간축 겹침입니다.",
+        "workedExample": "30 fps를 stride 3으로 뽑으면 10 fps이므로 ideal boundary 5 Hz보다 빠른 반복 motion은 고유하게 구분하지 못합니다.",
+        "boundary": "Band-limited periodic signal의 필요조건이며 blur·nonperiodic event·semantic recognition을 포함한 정확도 보장은 아닙니다.",
+        "proofIdea": "Frequency f와 f+k·fsample은 sample times n/fsample에서 phase가 2πkn만큼 달라 같은 sample 값을 만들 수 있어 기본 interval 밖 frequency가 겹칩니다.",
+        "counterexample": "8 Hz sinusoid를 10 Hz로 sampling하면 2 Hz와 동일한 discrete samples를 만들 수 있어 원래 속도를 구분할 수 없습니다."
+      }
     ],
-    conceptExplanations: [
+    "conceptStages": [
       {
-        id: "video-temporal-observation-contract",
-        sectionId: "overview",
-        intuition:
-          "사진 장수만 세지 않고 첫 장과 마지막 장이 몇 초 떨어져 있고 초당 몇 번 관측했는지를 함께 적습니다.",
-        workedExample:
-          "30 fps source에서 T=16, stride=2이면 effective 15 fps이고 첫·마지막 timestamp는 30 source-frame 간격, 즉 1초를 덮습니다.",
-        boundary:
-          "Variable-frame-rate·decode drop은 FPS 나눗셈 대신 실제 timestamps를 사용하고 긴 coverage와 촘촘한 sampling을 같은 값으로 보지 않습니다.",
+        "label": "00 Timestamp",
+        "relation": "Frame index를 source time에 연결합니다.",
+        "concepts": [
+          "video-temporal-observation-contract"
+        ]
       },
       {
-        id: "video-motion-aliasing-boundary",
-        sectionId: "overview",
-        intuition:
-          "빠르게 도는 바퀴를 드문드문 찍으면 느리거나 거꾸로 도는 것처럼 보이는 시간축 겹침입니다.",
-        workedExample:
-          "30 fps를 stride 3으로 뽑으면 10 fps이므로 ideal Nyquist limit 5 Hz보다 빠른 반복 motion은 구분할 수 없습니다.",
-        boundary:
-          "Band-limited periodic signal의 필요 조건이며 shutter blur·nonperiodic actions·model semantics를 포함한 정확도 보장이 아닙니다.",
-        proofIdea:
-          "Frequency f와 f+k·fsample은 sample times n/fsample에서 phase가 2πkn만큼 달라 같은 sample 값을 만들므로 Nyquist interval 밖 frequency가 겹칩니다.",
-        counterexample:
-          "8 Hz와 2 Hz sinusoid를 10 Hz로 sampling하면 sample sequence에서 alias 관계가 생겨 원래 속도를 구분할 수 없습니다.",
+        "label": "01 Duration",
+        "relation": "첫·마지막 sample 사이 seconds를 계산합니다.",
+        "concepts": [
+          "video-temporal-observation-contract"
+        ]
       },
       {
-        id: "temporal-interval-coverage",
-        sectionId: "sampling",
-        intuition:
-          "겹쳐 본 시간은 한 번만 세어 영상 전체 중 실제로 훑은 구간의 길이를 구합니다.",
-        workedExample:
-          "10초 영상에서 [0,2],[1,3],[8,10] 세 clip의 단순합은 6초지만 union은 5초라 coverage .5입니다.",
-        boundary:
-          "Coverage가 높아도 사건 순간을 포함하거나 motion rate가 충분하다는 뜻은 아니며 interval quality와 label timing을 별도로 확인합니다.",
-      },
-      {
-        id: "deterministic-multiclip-replay",
-        sectionId: "sampling",
-        intuition:
-          "시험 때는 같은 영상에서 매번 같은 시각과 crop을 읽고 같은 방식으로 점수를 합쳐 결과가 흔들리지 않게 합니다.",
-        workedExample:
-          "Video hash별 clip starts [0,.25,.5,.75] quantiles, center crop, mean logits, model revision을 manifest로 저장합니다.",
-        boundary:
-          "결정론적 평가는 sampling variance를 숨길 수 있어 coverage sweep은 별도 ablation으로 하고 training random sampling과 혼동하지 않습니다.",
-      },
-      {
-        id: "temporal-convolution-receptive-span",
-        sectionId: "3dcnn",
-        intuition:
-          "시간 방향 도장이 처음 찍는 frame과 마지막으로 찍는 frame이 실제로 몇 초 떨어졌는지 계산합니다.",
-        workedExample:
-          "30 fps, input stride 2, temporal kernel 3, dilation 1은 source indexes 0·2·4를 읽어 first-last span 4/30≈.133초입니다.",
-        boundary:
-          "Theoretical receptive span이며 padding boundary와 effective contribution은 다르고 stacked network는 layer stride를 재귀적으로 반영해야 합니다.",
-      },
-      {
-        id: "inflated-3d-pretraining-handoff",
-        sectionId: "3dcnn",
-        intuition:
-          "2D image filter를 시간 방향으로 복제·정규화해 첫 video filter의 초기값으로 사용한 뒤 motion은 video data에서 배웁니다.",
-        workedExample:
-          "kh×kw image kernel을 kt×kh×kw로 repeat하고 kt로 나눠 static repeated frame에 대한 response scale을 맞춘 뒤 Kinetics로 pretrain합니다.",
-        boundary:
-          "Inflation만으로 motion knowledge가 생기지 않고 exact initialization rule·video pretraining·two-stream input을 checkpoint contract에 포함해야 합니다.",
-      },
-      {
-        id: "r2plus1d-factorization",
-        sectionId: "3dcnn",
-        intuition:
-          "한 번에 공간과 시간을 섞는 대신 공간 모양을 읽고 activation을 거친 뒤 시간 변화를 읽는 두 단계 block입니다.",
-        workedExample:
-          "3×3×3 convolution을 1×3×3 spatial conv와 3×1×1 temporal conv로 나누고 중간 ReLU를 넣어 comparable parameter/FLOP candidate를 만듭니다.",
-        boundary:
-          "추가 nonlinearity 때문에 full 3D와 같은 linear operator의 단순 재배치가 아니며 intermediate channel 선택도 성능·비용을 바꿉니다.",
-      },
-      {
-        id: "slowfast-rate-capacity-allocation",
-        sectionId: "3dcnn",
-        intuition:
-          "장면이 무엇인지는 천천히 넓게 보고 빠른 손동작은 자주 보되 가벼운 feature로 읽습니다.",
-        workedExample:
-          "Slow 8 frames×C channels와 alpha=8, beta=1/8이면 Fast 64 frames×C/8 channels를 같은 duration에서 읽고 lateral feature를 합칩니다.",
-        boundary:
-          "Alpha·beta·lateral placement는 data와 runtime의 hyperparameter이며 high rate가 motion blur나 missing timestamp를 복구하지 않습니다.",
-      },
-      {
-        id: "video-tubelet-token-contract",
-        sectionId: "video-transformer",
-        intuition:
-          "한 image patch 대신 연속 frame의 같은 공간 patch를 작은 직육면체 조각으로 묶어 token 하나로 만듭니다.",
-        workedExample:
-          "16×224×224 clip, tau=2, P=16이면 temporal 8×spatial 14×14=1,568 tubelet tokens입니다.",
-        boundary:
-          "Non-overlap divisibility를 가정하며 tubelet projection이 interpolation·variable FPS를 자동 처리하지 않고 position state도 checkpoint와 맞아야 합니다.",
-      },
-      {
-        id: "factorized-space-time-attention-cost",
-        sectionId: "video-transformer",
-        intuition:
-          "모든 교실 학생을 한꺼번에 짝짓는 대신 같은 시간의 공간 모임과 같은 위치의 시간 모임을 차례로 엽니다.",
-        workedExample:
-          "T=8,S=196이면 joint pair proxy (1568)^2≈2.46M, divided는 8·196²+196·8²≈320k입니다.",
-        boundary:
-          "Pair count는 implementation latency가 아니며 factorization은 모든 space-time pair의 direct interaction을 바꾸므로 같은 정확도를 보장하지 않습니다.",
-      },
-      {
-        id: "videomae-visible-tubelet-pretraining",
-        sectionId: "video-transformer",
-        intuition:
-          "서로 비슷한 연속 영상 조각 대부분을 가리고 남은 일부만 큰 encoder가 읽은 뒤 작은 decoder가 빈 칸을 복원합니다.",
-        workedExample:
-          "1,568 tubelets에서 mask .9이면 약 157 visible tokens만 encoder에 들어가지만 decoder·I/O와 reconstruction target 비용은 남습니다.",
-        boundary:
-          "높은 masking ratio가 motion redundancy가 낮은 domain의 semantic representation에 최적이라는 보장은 없으며 downstream transfer로 평가해야 합니다.",
-      },
-    ],
-    conceptStages: [
-      {
-        label: "Physical time",
-        relation:
-          "Source timestamps에서 duration·sample rate·aliasing boundary를 계산",
-        concepts: [
-          "sampling-nyquist-boundary",
+        "label": "02 Rate",
+        "relation": "Stride 뒤 초당 관측 횟수를 계산합니다.",
+        "concepts": [
           "video-temporal-observation-contract",
-          "video-motion-aliasing-boundary",
-        ],
+          "video-motion-aliasing-boundary"
+        ]
       },
       {
-        label: "Clip observation",
-        relation:
-          "Frame budget을 interval union과 deterministic video replay로 연결",
-        concepts: [
+        "label": "03 Alias",
+        "relation": "Motion frequency가 관측 경계 아래인지 판정합니다.",
+        "concepts": [
+          "video-motion-aliasing-boundary"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "30 fps에서 T=16, stride 2인 clip의 index 폭과 duration을 계산하세요.",
+        "answerChecklist": [
+          "15 gaps",
+          "30 frame indexes",
+          "1 second"
+        ],
+        "requiredConcepts": [
+          "video-temporal-observation-contract"
+        ],
+        "sectionId": "duration"
+      },
+      {
+        "level": "basic",
+        "question": "같은 T=16에서 stride를 2에서 8로 바꾸면 duration이 어떻게 되는지 계산하세요.",
+        "answerChecklist": [
+          "120 frame indexes",
+          "4 seconds",
+          "resolution 감소"
+        ],
+        "requiredConcepts": [
+          "video-temporal-observation-contract"
+        ],
+        "sectionId": "duration"
+      },
+      {
+        "level": "basic",
+        "question": "30 fps source에서 stride 3의 effective sample rate를 계산하세요.",
+        "answerChecklist": [
+          "30 divided by 3",
+          "10 fps",
+          "0.1 second interval"
+        ],
+        "requiredConcepts": [
+          "video-temporal-observation-contract"
+        ],
+        "sectionId": "sampling-rate"
+      },
+      {
+        "level": "basic",
+        "question": "Variable-frame-rate video에서 FPS 공식 대신 실제 timestamp를 써야 하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "간격 불균일",
+          "index와 time 불일치",
+          "timestamp difference"
+        ],
+        "requiredConcepts": [
+          "video-temporal-observation-contract"
+        ],
+        "sectionId": "duration"
+      },
+      {
+        "level": "basic",
+        "question": "Effective rate 10 fps의 ideal Nyquist boundary를 계산하세요.",
+        "answerChecklist": [
+          "divide by two",
+          "5 Hz",
+          "필요조건"
+        ],
+        "requiredConcepts": [
+          "video-motion-aliasing-boundary"
+        ],
+        "sectionId": "aliasing"
+      },
+      {
+        "level": "basic",
+        "question": "Coverage가 길어져도 빠른 motion resolution이 나빠질 수 있는 이유를 설명하세요.",
+        "answerChecklist": [
+          "stride 증가",
+          "sample rate 감소",
+          "별도 metrics"
+        ],
+        "requiredConcepts": [
+          "video-temporal-observation-contract",
+          "video-motion-aliasing-boundary"
+        ],
+        "sectionId": "sampling-rate"
+      },
+      {
+        "level": "advanced",
+        "question": "8 Hz motion을 10 fps로 관측할 때 2 Hz alias와 sample phase 관계를 보이세요.",
+        "answerChecklist": [
+          "8=10-2",
+          "sample phases",
+          "same discrete values",
+          "original ambiguous"
+        ],
+        "requiredConcepts": [
+          "video-motion-aliasing-boundary"
+        ],
+        "sectionId": "aliasing"
+      },
+      {
+        "level": "advanced",
+        "question": "Shutter blur와 dropped frames가 ideal aliasing 계산을 깨는 반례를 설계하세요.",
+        "answerChecklist": [
+          "exposure integration",
+          "irregular timestamps",
+          "actual receipt",
+          "model caveat"
+        ],
+        "requiredConcepts": [
+          "video-motion-aliasing-boundary"
+        ],
+        "sectionId": "aliasing"
+      },
+      {
+        "level": "advanced",
+        "question": "짧은 8 Hz gesture와 4초 state event를 같은 16-frame budget으로 관측하는 두 recipes를 설계하세요.",
+        "answerChecklist": [
+          "dense gesture clip",
+          "sparse long clip",
+          "duration and rate",
+          "separate claims"
+        ],
+        "requiredConcepts": [
+          "video-temporal-observation-contract",
+          "video-motion-aliasing-boundary"
+        ],
+        "sectionId": "sampling-rate"
+      },
+      {
+        "level": "advanced",
+        "question": "Source FPS metadata가 틀린 video를 검출하고 rollback하는 observation receipt를 설계하세요.",
+        "answerChecklist": [
+          "timestamp deltas",
+          "declared FPS comparison",
+          "outlier state",
+          "revision rollback"
+        ],
+        "requiredConcepts": [
+          "video-temporal-observation-contract"
+        ],
+        "sectionId": "duration"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Certain Topics in Telegraph Transmission Theory",
+        "href": "https://doi.org/10.1109/T-AIEE.1928.5055024",
+        "problem": "제한된 대역에서 신호를 구분 가능한 관측 속도로 표현하는 문제를 다룹니다.",
+        "contribution": "Bandwidth와 signaling rate 사이의 고전적 sampling 경계를 제시합니다.",
+        "assumptions": "연속시간 신호와 논문의 통신 모델 및 대역 제한을 전제로 합니다.",
+        "evidenceScope": "Video motion에 재사용하는 sampling-theory 경계의 역사적 근거입니다.",
+        "notClaim": "이 경계만 만족하면 video model의 semantic accuracy가 보장된다는 뜻은 아닙니다.",
+        "sectionId": "paper-nyquist"
+      }
+    ]
+  },
+  "ai/video-clip-sampling": {
+    "entryLevel": true,
+    "entryNote": "Frame budget을 숫자 하나로 보지 않고 timeline 위 start·end intervals로 그리는 데서 시작합니다.",
+    "coreIdea": "여러 clips의 관측 범위는 interval union으로 계산해야 overlap을 중복 세지 않습니다. Evaluation에서는 timestamps·decode·crop·aggregation을 receipt로 고정하고 training randomness와 분리해야 같은 video prediction을 재생할 수 있습니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "temporal-interval-coverage",
+        "role": "Clip interval union 길이를 video duration으로 정규화합니다."
+      },
+      {
+        "id": "deterministic-multiclip-replay",
+        "role": "평가 관측과 video reducer를 versioned receipt로 고정합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "temporal-interval-coverage",
+        "sectionId": "coverage",
+        "intuition": "겹쳐 본 시간은 한 번만 세어 영상 전체 중 실제로 훑은 구간의 길이를 구합니다.",
+        "workedExample": "10초 영상에서 [0,2],[1,3],[8,10]의 단순합은 6초지만 union은 5초라 coverage .5입니다.",
+        "boundary": "Coverage가 높아도 label event를 포함하거나 motion rate가 충분하다는 뜻은 아니며 interval quality를 별도로 봅니다."
+      },
+      {
+        "id": "deterministic-multiclip-replay",
+        "sectionId": "replay",
+        "intuition": "시험에서는 같은 영상의 같은 시각과 crop을 읽고 같은 방식으로 scores를 합쳐 결과가 흔들리지 않게 합니다.",
+        "workedExample": "Video hash별 clip starts·stride·decode revision·center crop·mean reducer·model checksum을 한 receipt에 저장합니다.",
+        "boundary": "고정 평가 하나는 sampling variance를 숨길 수 있어 coverage sweep은 별도 ablation으로 유지합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "00 Intervals",
+        "relation": "각 clip을 실제 timestamp 구간으로 바꿉니다.",
+        "concepts": [
+          "temporal-interval-coverage"
+        ]
+      },
+      {
+        "label": "01 Union",
+        "relation": "겹친 구간을 병합해 coverage를 계산합니다.",
+        "concepts": [
+          "temporal-interval-coverage"
+        ]
+      },
+      {
+        "label": "02 Receipt",
+        "relation": "Eval timestamps·crop·reducer를 고정합니다.",
+        "concepts": [
+          "deterministic-multiclip-replay"
+        ]
+      },
+      {
+        "label": "03 Replay",
+        "relation": "동일 tensor와 video score를 재실행합니다.",
+        "concepts": [
           "temporal-interval-coverage",
-          "deterministic-multiclip-replay",
+          "deterministic-multiclip-replay"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "10초 video의 [0,2],[1,3],[8,10] clips에서 단순합과 union coverage를 계산하세요.",
+        "answerChecklist": [
+          "sum 6 seconds",
+          "union 5 seconds",
+          "coverage .5"
         ],
+        "requiredConcepts": [
+          "temporal-interval-coverage"
+        ],
+        "sectionId": "coverage"
       },
       {
-        label: "Convolutional time",
-        relation:
-          "Temporal receptive span과 pretrained/factorized/dual-rate operators 비교",
-        concepts: [
-          "convolution-spatial-geometry",
+        "level": "basic",
+        "question": "두 clips가 완전히 겹칠 때 clip 수는 늘어도 coverage가 늘지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "same interval",
+          "union unchanged",
+          "compute duplicated"
+        ],
+        "requiredConcepts": [
+          "temporal-interval-coverage"
+        ],
+        "sectionId": "coverage"
+      },
+      {
+        "level": "basic",
+        "question": "긴 coverage와 label event 포함 여부가 서로 다른 metric인 이유를 설명하세요.",
+        "answerChecklist": [
+          "location unknown",
+          "event timing",
+          "coverage necessary not sufficient"
+        ],
+        "requiredConcepts": [
+          "temporal-interval-coverage"
+        ],
+        "sectionId": "coverage"
+      },
+      {
+        "level": "basic",
+        "question": "Evaluation receipt에 들어갈 temporal selection 필드를 나열하세요.",
+        "answerChecklist": [
+          "clip starts",
+          "duration and stride",
+          "pad truncate",
+          "decode policy"
+        ],
+        "requiredConcepts": [
+          "deterministic-multiclip-replay"
+        ],
+        "sectionId": "replay"
+      },
+      {
+        "level": "basic",
+        "question": "Training random clips와 evaluation fixed clips의 목적을 구분하세요.",
+        "answerChecklist": [
+          "train diversity",
+          "eval reproducibility",
+          "separate seeds"
+        ],
+        "requiredConcepts": [
+          "deterministic-multiclip-replay"
+        ],
+        "sectionId": "replay"
+      },
+      {
+        "level": "basic",
+        "question": "같은 clips라도 mean과 max reducer가 다른 결과를 낼 수 있는 이유를 설명하세요.",
+        "answerChecklist": [
+          "score aggregation",
+          "different temporal assumption",
+          "receipt field"
+        ],
+        "requiredConcepts": [
+          "deterministic-multiclip-replay"
+        ],
+        "sectionId": "replay"
+      },
+      {
+        "level": "advanced",
+        "question": "겹치고 분리된 임의 intervals를 정렬·병합해 union length를 구하는 절차를 설계하세요.",
+        "answerChecklist": [
+          "sort starts",
+          "merge overlap",
+          "sum merged lengths",
+          "divide duration"
+        ],
+        "requiredConcepts": [
+          "temporal-interval-coverage"
+        ],
+        "sectionId": "coverage"
+      },
+      {
+        "level": "advanced",
+        "question": "두 model을 같은 frame budget과 coverage에서 비교하는 parity table을 설계하세요.",
+        "answerChecklist": [
+          "same source split",
+          "same intervals",
+          "same pixels",
+          "runtime target"
+        ],
+        "requiredConcepts": [
+          "temporal-interval-coverage",
+          "deterministic-multiclip-replay"
+        ],
+        "sectionId": "release"
+      },
+      {
+        "level": "advanced",
+        "question": "Receipt replay에서 tensor checksum은 같지만 score가 다를 때 원인을 좁히세요.",
+        "answerChecklist": [
+          "model revision",
+          "dtype backend",
+          "nondeterministic kernel",
+          "rollback"
+        ],
+        "requiredConcepts": [
+          "deterministic-multiclip-replay"
+        ],
+        "sectionId": "replay"
+      },
+      {
+        "level": "advanced",
+        "question": "Coverage sweep에서만 성능이 좋아지는 model의 release claim을 제한하세요.",
+        "answerChecklist": [
+          "specific coverage",
+          "cost increase",
+          "event slices",
+          "claim boundary"
+        ],
+        "requiredConcepts": [
+          "temporal-interval-coverage",
+          "deterministic-multiclip-replay"
+        ],
+        "sectionId": "release"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Temporal Segment Networks: Towards Good Practices for Deep Action Recognition",
+        "href": "https://arxiv.org/abs/1608.00859",
+        "problem": "긴 video의 temporal structure를 제한된 snippets로 학습하는 문제를 다룹니다.",
+        "contribution": "Segments에서 sparse snippets를 뽑고 consensus로 video prediction을 만드는 TSN을 제안합니다.",
+        "assumptions": "논문의 action datasets·segment sampling·two-stream architecture를 전제로 합니다.",
+        "evidenceScope": "Sparse temporal sampling과 video-level consensus 실험 범위입니다.",
+        "notClaim": "Uniform segment sampling이 모든 event duration과 streaming task에 최적이라는 뜻은 아닙니다.",
+        "sectionId": "paper-tsn"
+      }
+    ]
+  },
+  "ai/video-convolution-architectures": {
+    "entryLevel": true,
+    "entryNote": "3D CNN이라는 이름부터 외우지 않고 temporal kernel이 원본의 몇 초를 읽는지 계산합니다.",
+    "coreIdea": "Video convolution architecture는 시간 관계를 넣는 방식이 다릅니다. Temporal receptive span을 seconds로 계산하고, I3D weight inflation, R(2+1)D operator factorization, SlowFast rate-capacity allocation을 서로 다른 design axis로 비교해야 합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "temporal-convolution-receptive-span",
+        "role": "Kernel·dilation·input stride를 original timestamp span으로 바꿉니다."
+      },
+      {
+        "id": "inflated-3d-pretraining-handoff",
+        "role": "2D filters를 3D initial weights와 video pretraining으로 넘깁니다."
+      },
+      {
+        "id": "r2plus1d-factorization",
+        "role": "Spatial conv와 temporal conv 및 중간 activation을 구분합니다."
+      },
+      {
+        "id": "slowfast-rate-capacity-allocation",
+        "role": "Slow·Fast paths의 frame-rate와 channel ratio를 계산합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "temporal-convolution-receptive-span",
+        "sectionId": "receptive-span",
+        "intuition": "시간 방향 도장이 처음 찍는 frame과 마지막 frame이 실제로 몇 초 떨어졌는지 계산합니다.",
+        "workedExample": "30 fps, input stride 2, kernel 3, dilation 1은 indexes 0·2·4를 읽어 first-last span .133초입니다.",
+        "boundary": "한 layer의 theoretical span이며 padding·stacked stride·effective contribution은 별도로 계산합니다."
+      },
+      {
+        "id": "inflated-3d-pretraining-handoff",
+        "sectionId": "inflation-factorization",
+        "intuition": "2D image filter를 시간 방향으로 복제·정규화해 video filter의 시작점으로 사용합니다.",
+        "workedExample": "kh×kw kernel을 kt번 repeat하고 kt로 나눠 static repeated frames의 response scale을 맞춘 뒤 video pretraining합니다.",
+        "boundary": "Inflation만으로 motion knowledge가 생기지 않아 exact initialization과 video checkpoint를 함께 기록합니다."
+      },
+      {
+        "id": "r2plus1d-factorization",
+        "sectionId": "inflation-factorization",
+        "intuition": "공간 모양을 읽고 activation을 거친 뒤 시간 변화를 읽는 두 단계 block입니다.",
+        "workedExample": "3×3×3 conv를 1×3×3 spatial conv와 3×1×1 temporal conv로 나누고 중간 nonlinearity를 둡니다.",
+        "boundary": "추가 activation 때문에 같은 linear operator의 단순 재배치가 아니며 intermediate channels도 비용을 바꿉니다."
+      },
+      {
+        "id": "slowfast-rate-capacity-allocation",
+        "sectionId": "slowfast",
+        "intuition": "장면 의미는 천천히 넓게 보고 빠른 motion은 자주 보되 가벼운 feature로 읽습니다.",
+        "workedExample": "Slow 8×256, alpha 8, beta 1/8이면 Fast 64×32를 같은 duration에서 읽고 lateral로 결합합니다.",
+        "boundary": "Alpha·beta·lateral placement는 hyperparameters이며 high rate가 blur나 missing timestamps를 복구하지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "00 Span",
+        "relation": "Kernel positions를 source seconds로 바꿉니다.",
+        "concepts": [
+          "temporal-convolution-receptive-span"
+        ]
+      },
+      {
+        "label": "01 Inflate",
+        "relation": "Image weight를 temporal kernel initialization으로 옮깁니다.",
+        "concepts": [
+          "temporal-convolution-receptive-span",
+          "inflated-3d-pretraining-handoff"
+        ]
+      },
+      {
+        "label": "02 Factor",
+        "relation": "Spatial과 temporal operators를 분리합니다.",
+        "concepts": [
+          "r2plus1d-factorization"
+        ]
+      },
+      {
+        "label": "03 Multirate",
+        "relation": "두 pathways에 rate와 capacity를 배분합니다.",
+        "concepts": [
+          "r2plus1d-factorization",
+          "slowfast-rate-capacity-allocation"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "30 fps, stride 2, kernel 3, dilation 1의 source indexes와 span seconds를 계산하세요.",
+        "answerChecklist": [
+          "0 2 4",
+          "4 source gaps",
+          "4/30 seconds"
+        ],
+        "requiredConcepts": [
+          "temporal-convolution-receptive-span"
+        ],
+        "sectionId": "receptive-span"
+      },
+      {
+        "level": "basic",
+        "question": "Temporal dilation을 1에서 2로 바꾸면 같은 kernel의 span이 어떻게 변하는지 계산하세요.",
+        "answerChecklist": [
+          "sampled gap doubles",
+          "indexes 0 4 8",
+          "8/30 seconds"
+        ],
+        "requiredConcepts": [
+          "temporal-convolution-receptive-span"
+        ],
+        "sectionId": "receptive-span"
+      },
+      {
+        "level": "basic",
+        "question": "2D kernel inflation에서 kt로 나누는 이유를 static frames 예로 설명하세요.",
+        "answerChecklist": [
+          "repeat weights",
+          "sum kt copies",
+          "divide preserves scale"
+        ],
+        "requiredConcepts": [
+          "inflated-3d-pretraining-handoff"
+        ],
+        "sectionId": "inflation-factorization"
+      },
+      {
+        "level": "basic",
+        "question": "Inflated weight와 video pretraining이 서로 다른 단계인 이유를 설명하세요.",
+        "answerChecklist": [
+          "initialization only",
+          "motion learned later",
+          "checkpoint receipt"
+        ],
+        "requiredConcepts": [
+          "inflated-3d-pretraining-handoff"
+        ],
+        "sectionId": "inflation-factorization"
+      },
+      {
+        "level": "basic",
+        "question": "Full 3D와 R(2+1)D의 operator sequence와 nonlinearity 차이를 설명하세요.",
+        "answerChecklist": [
+          "one 3D op",
+          "spatial then activation",
+          "temporal op"
+        ],
+        "requiredConcepts": [
+          "r2plus1d-factorization"
+        ],
+        "sectionId": "inflation-factorization"
+      },
+      {
+        "level": "basic",
+        "question": "Slow 8×256과 alpha 8, beta 1/8에서 Fast shape를 계산하세요.",
+        "answerChecklist": [
+          "64 frames",
+          "32 channels",
+          "same duration"
+        ],
+        "requiredConcepts": [
+          "slowfast-rate-capacity-allocation"
+        ],
+        "sectionId": "slowfast"
+      },
+      {
+        "level": "advanced",
+        "question": "Stacked temporal layers의 receptive span을 각 layer stride까지 포함해 계산하세요.",
+        "answerChecklist": [
+          "jump recursion",
+          "kernel contribution",
+          "source FPS",
+          "padding caveat"
+        ],
+        "requiredConcepts": [
+          "temporal-convolution-receptive-span"
+        ],
+        "sectionId": "receptive-span"
+      },
+      {
+        "level": "advanced",
+        "question": "I3D와 R(2+1)D를 같은 data·pretraining·FLOP budget으로 비교하세요.",
+        "answerChecklist": [
+          "same inputs",
+          "handoff disclosed",
+          "intermediate channels",
+          "latency memory"
+        ],
+        "requiredConcepts": [
+          "inflated-3d-pretraining-handoff",
+          "r2plus1d-factorization"
+        ],
+        "sectionId": "inflation-factorization"
+      },
+      {
+        "level": "advanced",
+        "question": "SlowFast의 alpha를 늘렸지만 accuracy가 떨어지는 반례와 진단을 설계하세요.",
+        "answerChecklist": [
+          "motion blur",
+          "capacity reduction",
+          "event slices",
+          "lateral ablation"
+        ],
+        "requiredConcepts": [
+          "slowfast-rate-capacity-allocation"
+        ],
+        "sectionId": "slowfast"
+      },
+      {
+        "level": "advanced",
+        "question": "2D pooling·I3D·R(2+1)D·SlowFast의 release table을 설계하세요.",
+        "answerChecklist": [
+          "same duration",
+          "same total evidence",
+          "pretraining",
+          "quality latency memory"
+        ],
+        "requiredConcepts": [
           "temporal-convolution-receptive-span",
           "inflated-3d-pretraining-handoff",
           "r2plus1d-factorization",
-          "slowfast-rate-capacity-allocation",
+          "slowfast-rate-capacity-allocation"
         ],
+        "sectionId": "slowfast"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Quo Vadis, Action Recognition? A New Model and the Kinetics Dataset",
+        "href": "https://openaccess.thecvf.com/content_cvpr_2017/html/Carreira_Quo_Vadis_Action_CVPR_2017_paper.html",
+        "problem": "Image architecture와 pretraining을 scalable video action recognition으로 확장합니다.",
+        "contribution": "2D filters를 inflate한 I3D와 Kinetics pretraining transfer를 제시합니다.",
+        "assumptions": "Kinetics·UCF101·HMDB51와 RGB/flow recipe를 전제로 합니다.",
+        "evidenceScope": "I3D architecture·pretraining·action-classification experiment 범위입니다.",
+        "notClaim": "Inflation만의 효과가 모든 video task에서 우월하다는 뜻은 아닙니다.",
+        "sectionId": "paper-i3d"
       },
       {
-        label: "Tokenized time",
-        relation:
-          "Tubelet count에서 joint·factorized attention과 masked pretraining으로 확장",
-        concepts: [
-          "vit-patch-sequence-contract",
+        "title": "A Closer Look at Spatiotemporal Convolutions for Action Recognition",
+        "href": "https://openaccess.thecvf.com/content_cvpr_2018/html/Tran_A_Closer_Look_CVPR_2018_paper.html",
+        "problem": "2D·3D와 spatial-temporal factorization의 optimization 차이를 비교합니다.",
+        "contribution": "Spatial 2D와 temporal 1D convolution 및 중간 nonlinearity를 제시합니다.",
+        "assumptions": "논문의 residual architectures·capacity matching·datasets를 전제로 합니다.",
+        "evidenceScope": "Controlled spatiotemporal convolution experiments 범위입니다.",
+        "notClaim": "모든 hardware와 domain에서 같은 gain을 보장하지 않습니다.",
+        "sectionId": "paper-r2plus1d"
+      },
+      {
+        "title": "SlowFast Networks for Video Recognition",
+        "href": "https://openaccess.thecvf.com/content_ICCV_2019/html/Feichtenhofer_SlowFast_Networks_for_Video_Recognition_ICCV_2019_paper.html",
+        "problem": "공간 의미와 빠른 motion을 같은 rate·capacity로 처리하는 비효율을 다룹니다.",
+        "contribution": "Slow와 Fast pathways 및 lateral fusion을 제안합니다.",
+        "assumptions": "논문의 datasets·alpha·beta·architecture recipe를 전제로 합니다.",
+        "evidenceScope": "SlowFast video recognition experiments 범위입니다.",
+        "notClaim": "고정 alpha·beta가 모든 event와 runtime에서 최적이라는 뜻은 아닙니다.",
+        "sectionId": "paper-slowfast"
+      }
+    ]
+  },
+  "ai/video-transformers": {
+    "entryLevel": true,
+    "entryNote": "Attention을 안다고 가정하지 않고 video grid를 tubelet blocks와 pair counts로 바꾸는 데서 시작합니다.",
+    "coreIdea": "Video transformer의 입력 비용은 tubelet geometry가 결정합니다. Joint와 factorized attention은 pair 수뿐 아니라 direct connectivity를 바꾸며, VideoMAE masking은 interaction factorization과 달리 encoder input token 수 자체를 줄입니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "video-tubelet-token-contract",
+        "role": "T×H×W를 tau×P×P blocks와 token sequence로 바꿉니다."
+      },
+      {
+        "id": "factorized-space-time-attention-cost",
+        "role": "Joint와 divided space-time pair counts를 계산합니다."
+      },
+      {
+        "id": "videomae-visible-tubelet-pretraining",
+        "role": "Mask ratio 뒤 visible encoder tokens와 남는 decoder cost를 구분합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "video-tubelet-token-contract",
+        "sectionId": "tubelets",
+        "intuition": "연속 frames의 같은 공간 patch를 작은 직육면체 조각으로 묶어 token 하나로 만듭니다.",
+        "workedExample": "16×224×224, tau 2, patch 16이면 temporal 8×spatial 14×14=1568 tokens입니다.",
+        "boundary": "Non-overlap divisibility를 가정하며 variable FPS·position interpolation은 별도 contract입니다."
+      },
+      {
+        "id": "factorized-space-time-attention-cost",
+        "sectionId": "attention-cost",
+        "intuition": "모든 학생을 한꺼번에 짝짓는 대신 같은 시간의 공간 모임과 같은 위치의 시간 모임을 차례로 엽니다.",
+        "workedExample": "T=8,S=196이면 joint 약 2.46M pairs, divided 약 320k pairs입니다.",
+        "boundary": "Pair count는 latency가 아니며 factorization은 모든 space-time pair의 direct interaction을 바꿉니다."
+      },
+      {
+        "id": "videomae-visible-tubelet-pretraining",
+        "sectionId": "masked-pretraining",
+        "intuition": "비슷한 video 조각 대부분을 가리고 남은 일부만 큰 encoder가 읽은 뒤 작은 decoder가 빈 칸을 복원합니다.",
+        "workedExample": "1568 tokens에서 mask .9이면 구현 rounding에 따라 약 157 visible tokens만 encoder에 들어갑니다.",
+        "boundary": "Decoder·I/O 비용은 남고 높은 mask ratio가 모든 motion domain에서 최적이라는 보장은 없습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "00 Blocks",
+        "relation": "Video grid를 tubelet coordinates로 나눕니다.",
+        "concepts": [
+          "video-tubelet-token-contract"
+        ]
+      },
+      {
+        "label": "01 Tokens",
+        "relation": "축별 positions를 곱해 sequence length를 만듭니다.",
+        "concepts": [
           "video-tubelet-token-contract",
-          "self-attention",
+          "factorized-space-time-attention-cost"
+        ]
+      },
+      {
+        "label": "02 Interact",
+        "relation": "Joint 또는 divided space-time pairs를 계산합니다.",
+        "concepts": [
+          "factorized-space-time-attention-cost"
+        ]
+      },
+      {
+        "label": "03 Mask",
+        "relation": "Visible subset만 encoder input으로 남깁니다.",
+        "concepts": [
           "factorized-space-time-attention-cost",
-          "videomae-visible-tubelet-pretraining",
-        ],
-      },
+          "videomae-visible-tubelet-pretraining"
+        ]
+      }
     ],
-    exercises: [
+    "exercises": [
       {
-        level: "basic",
-        question:
-          "30 fps video에서 T=16, stride 2와 stride 8의 observed duration·effective FPS·ideal Nyquist limit를 각각 계산하라.",
-        answerChecklist: [
-          "1s and 4s span",
-          "15fps and 3.75fps",
-          "7.5Hz and 1.875Hz",
-          "coverage-resolution tradeoff",
-          "actual timestamps caveat",
-        ],
-        requiredConcepts: [
-          "video-temporal-observation-contract",
-          "video-motion-aliasing-boundary",
-        ],
-        sectionId: "overview",
-      },
-      {
-        level: "advanced",
-        question:
-          "8 Hz motion과 10 fps sampling의 alias 반례를 phase 식으로 보이고 shutter blur·nonperiodic action에서 정리의 한계를 설명하라.",
-        answerChecklist: [
-          "fs=10",
-          "8 aliases to 2",
-          "sample phase equality",
-          "Nyquist interval",
-          "band-limited assumption",
-          "blur/nonperiodic caveat",
-        ],
-        requiredConcepts: [
-          "video-motion-aliasing-boundary",
-          "sampling-nyquist-boundary",
-        ],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "10초 video에서 [0,2],[1,3],[8,10] clip의 naive duration sum과 interval-union coverage를 계산하라.",
-        answerChecklist: [
-          "naive 6 seconds",
-          "union [0,3] and [8,10]",
-          "5 seconds",
-          "coverage .5",
-          "overlap not double-counted",
-        ],
-        requiredConcepts: ["temporal-interval-coverage"],
-        sectionId: "sampling",
-      },
-      {
-        level: "advanced",
-        question:
-          "Training random clip과 evaluation deterministic multi-clip의 timestamp·crop·aggregation manifest 및 replay test를 설계하라.",
-        answerChecklist: [
-          "source hash/FPS",
-          "train random seed",
-          "fixed eval starts",
-          "decode revision",
-          "crop",
-          "video reducer",
-          "same output",
-          "coverage sweep separate",
-        ],
-        requiredConcepts: [
-          "deterministic-multiclip-replay",
-          "temporal-interval-coverage",
-        ],
-        sectionId: "sampling",
-      },
-      {
-        level: "basic",
-        question:
-          "30 fps, input stride 2, kt=3, dilation 1 temporal kernel의 sampled indexes·R_t·first-last timestamp span을 계산하라.",
-        answerChecklist: [
-          "0,2,4",
-          "R_t=3",
-          "4 source-frame intervals",
-          "4/30=.133s",
-          "not .2s",
-          "stacked caveat",
-        ],
-        requiredConcepts: ["temporal-convolution-receptive-span"],
-        sectionId: "3dcnn",
-      },
-      {
-        level: "advanced",
-        question:
-          "Full 3D·R(2+1)D·SlowFast를 같은 duration·frame/FLOP budget에서 비교하고 pretraining·nonlinearity·rate/channel 차이를 분리하라.",
-        answerChecklist: [
-          "same split/duration",
-          "same input evidence",
-          "I3D handoff",
-          "intermediate channels",
-          "extra activation",
-          "alpha/beta",
-          "event-duration slices",
-          "latency/memory",
-        ],
-        requiredConcepts: [
-          "inflated-3d-pretraining-handoff",
-          "r2plus1d-factorization",
-          "slowfast-rate-capacity-allocation",
-        ],
-        sectionId: "3dcnn",
-      },
-      {
-        level: "basic",
-        question:
-          "16×224×224 clip, tau=2, P=16의 token 수와 joint score pair를 계산하라.",
-        answerChecklist: [
+        "level": "basic",
+        "question": "16×224×224 clip, tau 2, patch 16의 temporal·spatial·total token 수를 계산하세요.",
+        "answerChecklist": [
           "8 temporal",
-          "14×14 spatial",
-          "N=1568",
-          "N²=2458624",
-          "special token omitted",
-          "runtime caveat",
+          "14x14 spatial",
+          "1568 total"
         ],
-        requiredConcepts: ["video-tubelet-token-contract", "self-attention"],
-        sectionId: "video-transformer",
+        "requiredConcepts": [
+          "video-tubelet-token-contract"
+        ],
+        "sectionId": "tubelets"
       },
       {
-        level: "advanced",
-        question:
-          "T=8,S=196에서 joint와 divided score-pair proxy를 계산하고 VideoMAE mask .9의 visible token 수·전체 speedup 한계를 설명하라.",
-        answerChecklist: [
-          "joint 2458624",
-          "divided 319872",
-          "about 157 visible",
-          "rounding rule",
-          "decoder/MLP/I-O",
-          "different connectivity",
-          "same clip budget evaluation",
+        "level": "basic",
+        "question": "Tubelet temporal depth를 2에서 4로 바꾸면 token 수가 어떻게 되는지 계산하세요.",
+        "answerChecklist": [
+          "4 temporal",
+          "784 total",
+          "temporal resolution halves"
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
+          "video-tubelet-token-contract"
+        ],
+        "sectionId": "tubelets"
+      },
+      {
+        "level": "basic",
+        "question": "Non-overlapping tubelet에서 divisibility와 padding 정책을 기록해야 하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "remainder frames",
+          "edge pixels",
+          "token identity"
+        ],
+        "requiredConcepts": [
+          "video-tubelet-token-contract"
+        ],
+        "sectionId": "tubelets"
+      },
+      {
+        "level": "basic",
+        "question": "T=8,S=196일 때 joint attention pair proxy를 계산하세요.",
+        "answerChecklist": [
+          "N 1568",
+          "N squared",
+          "2458624 pairs"
+        ],
+        "requiredConcepts": [
+          "factorized-space-time-attention-cost"
+        ],
+        "sectionId": "attention-cost"
+      },
+      {
+        "level": "basic",
+        "question": "같은 T와 S에서 divided spatial·temporal pair 수를 각각 계산하세요.",
+        "answerChecklist": [
+          "T times S squared",
+          "S times T squared",
+          "sum 319872"
+        ],
+        "requiredConcepts": [
+          "factorized-space-time-attention-cost"
+        ],
+        "sectionId": "attention-cost"
+      },
+      {
+        "level": "basic",
+        "question": "N=1000, mask .9에서 visible encoder tokens를 계산하세요.",
+        "answerChecklist": [
+          "visible fraction .1",
+          "100 tokens",
+          "decoder remains"
+        ],
+        "requiredConcepts": [
+          "videomae-visible-tubelet-pretraining"
+        ],
+        "sectionId": "masked-pretraining"
+      },
+      {
+        "level": "advanced",
+        "question": "Joint와 divided attention의 pair 감소와 connectivity 차이를 graph로 설명하세요.",
+        "answerChecklist": [
+          "all direct pairs",
+          "space then time",
+          "multi-layer path",
+          "not same representation"
+        ],
+        "requiredConcepts": [
+          "factorized-space-time-attention-cost"
+        ],
+        "sectionId": "attention-cost"
+      },
+      {
+        "level": "advanced",
+        "question": "Resolution과 clip length를 동시에 늘릴 때 token count와 pair cost 증가를 계산하세요.",
+        "answerChecklist": [
+          "axis counts",
+          "product sequence",
+          "square joint",
+          "memory gate"
+        ],
+        "requiredConcepts": [
+          "video-tubelet-token-contract",
+          "factorized-space-time-attention-cost"
+        ],
+        "sectionId": "attention-cost"
+      },
+      {
+        "level": "advanced",
+        "question": "Mask ratio .9가 end-to-end 100배 speedup이 아닌 이유를 비용 항목별로 설명하세요.",
+        "answerChecklist": [
+          "encoder pair reduction",
+          "decoder",
+          "MLP and I-O",
+          "kernel efficiency"
+        ],
+        "requiredConcepts": [
+          "videomae-visible-tubelet-pretraining"
+        ],
+        "sectionId": "masked-pretraining"
+      },
+      {
+        "level": "advanced",
+        "question": "Joint·divided·VideoMAE candidates를 같은 clip·token·pretraining budget에서 비교하세요.",
+        "answerChecklist": [
+          "same T H W",
+          "same tubelet",
+          "connectivity",
+          "quality latency memory"
+        ],
+        "requiredConcepts": [
+          "video-tubelet-token-contract",
           "factorized-space-time-attention-cost",
-          "videomae-visible-tubelet-pretraining",
+          "videomae-visible-tubelet-pretraining"
         ],
-        sectionId: "video-transformer",
-      },
-      {
-        level: "basic",
-        question:
-          "Slow pathway가 8 frames·256 channels를 쓸 때 alpha=8, beta=1/8인 SlowFast의 Fast frames와 channels를 계산하고 두 경로의 역할을 구분하라.",
-        answerChecklist: [
-          "Fast frames=64",
-          "Fast channels=32",
-          "same source duration",
-          "Slow semantics",
-          "Fast motion",
-          "lateral connection",
-          "ratios are hyperparameters",
-        ],
-        requiredConcepts: ["slowfast-rate-capacity-allocation"],
-        sectionId: "3dcnn",
-      },
-      {
-        level: "basic",
-        question:
-          "Tubelet token 1000개 중 VideoMAE가 90%를 가리고 visible token만 encoder에 넣는다. Visible 수와 attention score-pair 비율을 계산하라.",
-        answerChecklist: [
-          "visible fraction=.1",
-          "100 visible tokens",
-          "score ratio=.01",
-          "decoder remains",
-          "MLP and I-O remain",
-          "not guaranteed 100x speedup",
-          "downstream representation check",
-        ],
-        requiredConcepts: [
-          "videomae-visible-tubelet-pretraining",
-          "self-attention",
-        ],
-        sectionId: "video-transformer",
-      },
+        "sectionId": "masked-pretraining"
+      }
     ],
-    papers: [
+    "papers": [
       {
-        title:
-          "Quo Vadis, Action Recognition? A New Model and the Kinetics Dataset",
-        href: "https://openaccess.thecvf.com/content_cvpr_2017/html/Carreira_Quo_Vadis_Action_CVPR_2017_paper.html",
-        problem:
-          "Small video benchmarks에서 architecture 차이를 식별하기 어려운 상황과 scalable action dataset·video pretraining 문제",
-        contribution:
-          "Kinetics dataset 분석과 2D filters를 inflate한 two-stream I3D 및 video pretraining transfer",
-        assumptions:
-          "Kinetics-400·UCF101·HMDB51, RGB/flow two stream과 논문의 pretraining/fine-tuning",
-        evidenceScope:
-          "CVPR 논문의 action-classification architecture·pretraining comparison 범위",
-        notClaim:
-          "3D convolution만의 효과가 Kinetics data scale·optical flow·pretraining과 독립적으로 모든 video task에 우월하다는 뜻은 아님",
-        sectionId: "paper-i3d",
+        "title": "TimeSformer",
+        "href": "https://proceedings.mlr.press/v139/bertasius21a.html",
+        "problem": "Video patch tokens의 space-time self-attention 구조를 비교합니다.",
+        "contribution": "Joint와 여러 factorized schemes 및 divided attention을 평가합니다.",
+        "assumptions": "논문의 pretraining·clip·resolution·datasets를 전제로 합니다.",
+        "evidenceScope": "TimeSformer architecture와 video classification experiments 범위입니다.",
+        "notClaim": "Divided attention이 모든 sequence와 runtime에서 같은 우위를 보장하지 않습니다.",
+        "sectionId": "paper-timesformer"
       },
       {
-        title:
-          "A Closer Look at Spatiotemporal Convolutions for Action Recognition",
-        href: "https://openaccess.thecvf.com/content_cvpr_2018/html/Tran_A_Closer_Look_CVPR_2018_paper.html",
-        problem:
-          "Residual video network에서 2D·mixed·3D와 spatial-temporal factorization의 accuracy·optimization 차이를 비교",
-        contribution:
-          "Spatial 2D와 temporal 1D convolution 및 중간 nonlinearity의 R(2+1)D block",
-        assumptions:
-          "Sports-1M·Kinetics·UCF101·HMDB51와 논문의 residual architectures·capacity matching",
-        evidenceScope:
-          "CVPR 논문의 controlled spatiotemporal convolution experiments 범위",
-        notClaim:
-          "모든 hardware·video domain에서 factorization이 동일 speedup·accuracy gain을 보장한다는 뜻은 아님",
-        sectionId: "paper-r2plus1d",
-      },
-      {
-        title: "SlowFast Networks for Video Recognition",
-        href: "https://openaccess.thecvf.com/content_ICCV_2019/html/Feichtenhofer_SlowFast_Networks_for_Video_Recognition_ICCV_2019_paper.html",
-        problem:
-          "Spatial semantics와 빠른 motion을 동일 temporal rate·capacity로 처리할 때의 비효율",
-        contribution:
-          "Low-rate wide Slow path와 high-rate narrow Fast path 및 lateral fusion",
-        assumptions:
-          "Kinetics·Charades·AVA tasks와 논문의 alpha/beta·architecture·pretraining recipe",
-        evidenceScope:
-          "ICCV 논문의 action classification/detection와 pathway ablation 범위",
-        notClaim:
-          "논문 alpha=8·beta=1/8 등이 모든 event duration·camera FPS의 최적 default라는 뜻은 아님",
-        sectionId: "paper-slowfast",
-      },
-      {
-        title: "Is Space-Time Attention All You Need for Video Understanding?",
-        href: "https://proceedings.mlr.press/v139/bertasius21a.html",
-        problem:
-          "Convolution 없이 video patch의 spatial·temporal 관계를 self-attention으로 학습하고 attention scheme을 선택하는 문제",
-        contribution:
-          "TimeSformer와 joint·space-only·divided space–time attention comparison",
-        assumptions:
-          "논문의 image pretraining·Kinetics/SSv2/Diving-48·clip/resolution/test views",
-        evidenceScope:
-          "ICML 논문의 video classification attention-scheme experiments 범위",
-        notClaim:
-          "Pair-count 감소가 모든 runtime에서 동일 speedup이나 모든 task에서 divided attention 우월성을 보장한다는 뜻은 아님",
-        sectionId: "paper-timesformer",
-      },
-      {
-        title:
-          "VideoMAE: Masked Autoencoders are Data-Efficient Learners for Self-Supervised Video Pre-Training",
-        href: "https://arxiv.org/abs/2203.12602",
-        problem:
-          "Video temporal redundancy를 활용한 data-efficient self-supervised pretraining 문제",
-        contribution:
-          "높은 masking ratio·tube masking·visible-token encoder 기반 video masked autoencoder",
-        assumptions:
-          "Kinetics/SSv2 등 논문의 datasets·ViT backbone·masking·pretraining/fine-tuning recipe",
-        evidenceScope:
-          "논문의 data efficiency·masking ablation·downstream action-recognition 범위",
-        notClaim:
-          "90% masking과 pixel reconstruction이 모든 motion domain의 최적 semantic objective라는 뜻은 아님",
-        sectionId: "paper-videomae",
-      },
-    ],
+        "title": "VideoMAE: Masked Autoencoders are Data-Efficient Learners for Self-Supervised Video Pre-Training",
+        "href": "https://openreview.net/forum?id=AhccnBXSne",
+        "problem": "Video의 높은 시간 중복을 활용해 self-supervised pretraining 비용을 줄입니다.",
+        "contribution": "높은 tube masking ratio와 visible-token encoder·light decoder를 제안합니다.",
+        "assumptions": "논문의 datasets·masking·encoder/decoder·transfer setting을 전제로 합니다.",
+        "evidenceScope": "VideoMAE pretraining과 downstream transfer experiments 범위입니다.",
+        "notClaim": "90 percent masking이 모든 motion domain에서 최적이라는 뜻은 아닙니다.",
+        "sectionId": "paper-videomae"
+      }
+    ]
   },
   "ai/contrastive-learning": {
     entryLevel: true,
