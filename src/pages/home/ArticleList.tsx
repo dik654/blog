@@ -37,10 +37,10 @@ export default function ArticleList() {
               <span className="shrink-0 rounded bg-accent px-2 py-0.5 text-xs font-medium text-muted-foreground">
                 {article.categoryName}
               </span>
-              <span className="text-sm font-medium group-hover:text-foreground transition-colors">
+              <span className="min-w-0 flex-1 truncate text-sm font-medium group-hover:text-foreground transition-colors">
                 {article.title}
               </span>
-              <span className="ml-auto text-xs text-muted-foreground shrink-0">
+              <span className="ml-auto hidden shrink-0 text-xs text-muted-foreground sm:inline">
                 {article.subcategoryName} · {article.sections.length}개 섹션
               </span>
             </Link>
