@@ -12056,7 +12056,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "computer-science",
     label: "EIP-4844 versioned-hash binding",
     definition: "KZG commitment를 SHA-256한 뒤 첫 byte를 scheme version으로 바꿔 transaction의 32-byte reference와 sidecar commitment를 결속하는 방법입니다.",
-    canonicalHref: "/blockchain/reth-eip4844#kzg",
+    canonicalHref: "/blockchain/reth-eip4844#versioned-binding",
   },
   "reth-blob-staged-admission": {
     id: "reth-blob-staged-admission",
@@ -12064,7 +12064,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "computer-science",
     label: "Reth staged blob admission",
     definition: "Bounded decode·fork·개수·크기·hash-count 같은 값싼 구조 검사 뒤 nonce·balance·fee·KZG와 pool resource policy를 적용해 실패 이유와 비용을 분리하는 admission pipeline입니다.",
-    canonicalHref: "/blockchain/reth-eip4844#blob-pool",
+    canonicalHref: "/blockchain/reth-blob-admission#overview",
   },
   "reth-blobstore-lifecycle": {
     id: "reth-blobstore-lifecycle",
@@ -12072,7 +12072,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "distributed-systems",
     label: "Reth BlobStore artifact lifecycle",
     definition: "Transaction hash로 sidecar bytes와 검증 metadata를 memory/disk 구현에 저장하고 hit·miss·corruption·canonical cleanup을 typed receipt로 추적하는 artifact 수명주기입니다.",
-    canonicalHref: "/blockchain/reth-eip4844#blob-store",
+    canonicalHref: "/blockchain/reth-blob-storage#overview",
   },
   "eip4844-excess-blob-gas-feedback": {
     id: "eip4844-excess-blob-gas-feedback",
@@ -12080,7 +12080,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "distributed-systems",
     label: "EIP-4844 excess blob-gas feedback",
     definition: "Parent excess와 사용량을 더하고 fork target을 saturating subtraction한 값으로 다음 excess를 만들며 정수 fake-exponential로 다음 blob base fee를 정하는 피드백입니다.",
-    canonicalHref: "/blockchain/reth-eip4844#blob-gas",
+    canonicalHref: "/blockchain/eip4844-blob-fee#overview",
   },
   "reth-blob-reorg-retention-boundary": {
     id: "reth-blob-reorg-retention-boundary",
@@ -12088,7 +12088,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "distributed-systems",
     label: "Reth blob reorg · retention boundary",
     definition: "Old canonical transaction을 재주입할 때 local sidecar가 있으면 검증 receipt와 재사용하고 없으면 network fetch 또는 typed failure로 끝내며 finalization cleanup과 consensus retention을 구분하는 경계입니다.",
-    canonicalHref: "/blockchain/reth-eip4844#lifecycle",
+    canonicalHref: "/blockchain/reth-blob-reorg-release#overview",
   },
   "reth-blob-release-gate": {
     id: "reth-blob-release-gate",
@@ -12096,7 +12096,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "distributed-systems",
     label: "Reth blob lifecycle release gate",
     definition: "Wrong hash·bad KZG·fork limit·fee boundary·store corruption·reorg cache miss·cleanup crash를 같은 fixture에 주입해 admission·fee·artifact·restart parity 뒤 성능을 비교하는 채택 절차입니다.",
-    canonicalHref: "/blockchain/reth-eip4844#lifecycle",
+    canonicalHref: "/blockchain/reth-blob-reorg-release#release-gate",
   },
   "reth-payload-build-identity": {
     id: "reth-payload-build-identity",

@@ -5248,24 +5248,91 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "reth-eip4844": {
-    title: "Reth EIP-4844 blob transaction 글이 소유하는 범위",
+    title: "EIP-4844 blob·commitment·transaction·sidecar 글이 소유하는 범위",
     owns: [
-      "Type-3 transaction의 versioned hash와 sidecar artifact 분리",
-      "Reth blob pool admission·BlobStore·reorg·finalization cleanup 경계",
-      "Fork-aware excess blob gas와 정수 fee feedback 계산",
-      "Blob artifact lifecycle correctness·availability release gate",
+      "Blob·KZG commitment·type-3 transaction·sidecar 네 artifact의 역할 분리",
+      "Versioned hash로 transaction reference와 sidecar commitment를 결속하는 방법",
     ],
     reuses: [
       { label: "KZG commitment와 polynomial opening", href: "/crypto/polycommit#kzg10" },
+      { label: "Reth blob pool admission gate", href: "/blockchain/reth-blob-admission" },
+      { label: "Reth BlobStore artifact 수명주기", href: "/blockchain/reth-blob-storage" },
+      { label: "Blob fee excess feedback 계산", href: "/blockchain/eip4844-blob-fee" },
+      { label: "Reorg reinsert와 release gate", href: "/blockchain/reth-blob-reorg-release" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Blob·commitment·transaction·sidecar 구조 claim은 활성 fork의 EIP-4844 spec에 귀속한다." },
+      { kind: "standard", rule: "Versioned hash reference를 KZG proof 검증이나 data availability 보장으로 확대하지 않는다." },
+      { kind: "project-claim", rule: "Sidecar 분리를 특정 client의 pool·store 정책이나 blob의 영구 가용성으로 일반화하지 않는다." },
+    ],
+  },
+  "reth-blob-admission": {
+    title: "Reth blob pool admission 글이 소유하는 범위",
+    owns: [
+      "Bounded decode·shape·state·KZG·resource gate로 나눈 admission 순서",
+      "Cryptographically valid와 locally admitted를 구분하는 경계",
+    ],
+    reuses: [
+      { label: "Blob·sidecar·versioned hash 정의", href: "/blockchain/reth-eip4844" },
+      { label: "KZG commitment와 polynomial opening", href: "/crypto/polycommit#kzg10" },
       { label: "EIP-1559 execution fee market", href: "/blockchain/reth-eip1559" },
       { label: "Reth transaction pool ordering과 admission", href: "/blockchain/reth-txpool" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Admission gate claim은 pinned Reth transaction-pool source snapshot에 귀속한다." },
+      { kind: "standard", rule: "Pool admission을 block inclusion이나 finality 보장으로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "같은 fork parameter·tx/sidecar·KZG fixture에서 admission reason-code parity를 먼저 검사한다." },
+      { kind: "project-claim", rule: "특정 gate 순서·resource limit을 모든 Reth release의 고정값으로 일반화하지 않는다." },
+    ],
+  },
+  "reth-blob-storage": {
+    title: "Reth BlobStore 글이 소유하는 범위",
+    owns: [
+      "Storage key·sidecar bytes·digest·generation receipt로 이루어진 artifact 형태",
+      "Hit·miss·corrupt read outcome과 crash-safe cleanup 경계",
+    ],
+    reuses: [
+      { label: "Blob·sidecar·versioned hash 정의", href: "/blockchain/reth-eip4844" },
+      { label: "Reth blob pool admission gate", href: "/blockchain/reth-blob-admission" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "BlobStore artifact·lifecycle claim은 pinned Reth transaction-pool source snapshot에 귀속한다." },
+      { kind: "standard", rule: "Execution txpool sidecar retention을 consensus-layer data-availability 기간이나 장기 archive 보장으로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "같은 schema·backend·durability fixture에서 hit/miss/corrupt·cleanup parity를 먼저 검사한다." },
+      { kind: "project-claim", rule: "Local store hit를 protocol availability나 영구 보존 보장으로 확대하지 않는다." },
+    ],
+  },
+  "eip4844-blob-fee": {
+    title: "EIP-4844 blob fee feedback 글이 소유하는 범위",
+    owns: [
+      "Fork-aware excess blob gas 계산과 정수 fake-exponential fee",
+    ],
+    reuses: [
+      { label: "Blob·sidecar·versioned hash 정의", href: "/blockchain/reth-eip4844" },
+      { label: "EIP-1559 execution fee market", href: "/blockchain/reth-eip1559" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Excess update·정수 fee claim은 활성 fork의 EIP-4844 execution spec에 귀속한다." },
+      { kind: "standard", rule: "Blob gas와 execution gas를 같은 budget으로 합치지 않는다." },
+      { kind: "project-claim", rule: "Blob fee 감소를 rollup 총비용의 고정 배수 감소로 일반화하지 않는다." },
+    ],
+  },
+  "reth-blob-reorg-release": {
+    title: "Reth blob reorg·release gate 글이 소유하는 범위",
+    owns: [
+      "Orphaned body와 local sidecar receipt를 결합하는 fast reinsert 경계",
+      "Blob artifact lifecycle correctness·availability release gate",
+    ],
+    reuses: [
+      { label: "Blob·sidecar·versioned hash 정의", href: "/blockchain/reth-eip4844" },
+      { label: "Reth BlobStore artifact 수명주기", href: "/blockchain/reth-blob-storage" },
       { label: "Prysm blob sidecar consensus path", href: "/blockchain/prysm-blob-sidecar" },
     ],
     evidence: [
-      { kind: "primary-source", rule: "Blob transaction·gas·versioned hash claim은 활성 fork의 EIP-4844·execution spec과 pinned Reth source에 귀속한다." },
-      { kind: "standard", rule: "Execution txpool sidecar retention을 consensus-layer data-availability 기간이나 장기 archive 보장으로 확대하지 않는다." },
-      { kind: "project-measurement", rule: "같은 fork parameter·tx/sidecar·KZG fixture와 reorg schedule에서 admission·fee·cleanup parity를 먼저 검사한다." },
-      { kind: "project-claim", rule: "Blob fee 감소를 rollup 총비용의 고정 배수 감소나 blob data의 영구 가용성으로 일반화하지 않는다." },
+      { kind: "primary-source", rule: "Reorg reinsert claim은 pinned Reth source snapshot에 귀속한다." },
+      { kind: "standard", rule: "Execution 재주입 재사용을 consensus-layer data-availability 기간이나 finality 보장으로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "같은 fork parameter·tx/sidecar fixture와 reorg schedule에서 admission·artifact·restart parity를 먼저 검사한다." },
+      { kind: "project-claim", rule: "Finalized cleanup 시점을 consensus retention이나 장기 archive 보장과 합치지 않는다." },
     ],
   },
   "reth-payload-builder": {
@@ -6742,7 +6809,7 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [
       { label: "Reed–Solomon·rate·2D extension", href: "/blockchain/erasure-coding" },
       { label: "Finite-field polynomial 표현", href: "/crypto/finite-field-theory#polynomial" },
-      { label: "EIP-4844 versioned-hash binding", href: "/blockchain/reth-eip4844#kzg" },
+      { label: "EIP-4844 versioned-hash binding", href: "/blockchain/reth-eip4844#versioned-binding" },
     ],
     evidence: [
       { kind: "standard", rule: "EIP-4844·EIP-7594와 Celestia app의 encoding·sample 단위를 버전별 공식 규격에 귀속한다." },
