@@ -1,5 +1,8 @@
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import type { CodeRef } from "@/components/code/types";
+import { CodeViewButton } from "@/components/code";
+import { codeRefs } from "./codeRefs";
 
 const loop = [
   ["Forward", "μ·log σ² → z sample → decoder likelihood parameter"],
@@ -11,7 +14,11 @@ const loop = [
   ],
 ];
 
-export default function Training() {
+export default function Training({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="training" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
@@ -79,6 +86,11 @@ export default function Training() {
         ]}
         output="학습된 Encoder φ, Decoder θ"
         repeatUntil="Validation ELBO가 더 개선되지 않거나 정해진 step 수에 도달할 때까지 반복합니다."
+      />
+      <CodeViewButton
+        onClick={() =>
+          onCodeRef("reparam-and-loss", codeRefs["reparam-and-loss"])
+        }
       />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
