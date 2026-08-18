@@ -190,6 +190,29 @@ export default function CnnFoundationArticle() {
           ]}
           interpretation="H=7,K=3,P=1,S=2,D=1이면 span 3, room 6, floor(6/2)+1=4입니다."
         />
+        <TermBreakdown
+          title="같은 output 크기 식, 다른 aggregation — pooling"
+          items={[
+            {
+              term: "Max pooling",
+              description:
+                "위 식과 똑같이 K×K window를 stride S로 옮기지만, 학습된 weight로 합을 만드는 대신 window 안 최댓값을 그대로 통과시킵니다. 학습 parameter가 없습니다.",
+              example:
+                "2×2 window [[1,3],[2,0]]에서 max pooling은 3을 출력합니다.",
+              boundary:
+                "가장 강하게 반응한 위치만 남기고 나머지 activation은 버립니다 — 정확한 위치 정보가 필요한 task(예: segmentation)에서는 이 정보 손실이 문제가 될 수 있습니다.",
+            },
+            {
+              term: "Average pooling",
+              description:
+                "같은 window에서 최댓값 대신 평균을 냅니다. Global average pooling은 K를 전체 spatial 크기로 둬 H×W 전체를 한 값으로 요약합니다(classifier 직전에 흔히 사용).",
+              example:
+                "같은 2×2 window [[1,3],[2,0]]에서 average pooling은 (1+3+2+0)/4=1.5를 출력합니다.",
+              boundary:
+                "작은 activation도 평균에 영향을 줘 sharp한 feature를 max pooling보다 더 무디게 만들 수 있습니다.",
+            },
+          ]}
+        />
         <div id="paper-lenet" className="not-prose mt-8">
           <CitationBlock
             source="LeCun et al. — Gradient-Based Learning Applied to Document Recognition"

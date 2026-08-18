@@ -1,3 +1,4 @@
+import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import BlockFamilyViz from "./viz/BlockFamilyViz";
 
@@ -114,6 +115,56 @@ export default function Architecture() {
         interpretation="B가 C보다 충분히 작을 때 비싼 3×3 연산을 줄일 수 있습니다. Torchvision의 expansion 4처럼 외부·내부 width 계약을 확인해야 실제 비용을 정확히 비교할 수 있습니다."
       />
 
+      <ExplainedFormula
+        question="BatchNorm은 각 channel의 activation을 어떻게 정규화하고, 왜 학습 가능한 γ·β를 다시 곱하나요?"
+        idea={
+          <>
+            같은 channel의 batch·spatial 차원 전체에서 평균과 분산을 구해
+            평균 0, 분산 1로 맞춥니다. 이 강제 정규화가 network의 표현력을
+            제한할 수 있어, 학습 가능한 scale γ와 shift β로 필요하면 원래
+            분포 형태를 다시 만들 수 있게 열어둡니다.
+          </>
+        }
+        formula={String.raw`\hat x=\frac{x-\mu_B}{\sqrt{\sigma_B^2+\epsilon}},\qquad y=\gamma\hat x+\beta`}
+        annotatedFormula={String.raw`\begin{aligned}
+\mu_B&=\underbrace{\frac1m\sum_i x_i}_{\text{같은 channel의 batch·spatial 평균}}\\
+\sigma_B^2&=\underbrace{\frac1m\sum_i(x_i-\mu_B)^2}_{\text{같은 channel의 batch·spatial 분산}}\\
+\hat x_i&=\underbrace{\frac{x_i-\mu_B}{\sqrt{\sigma_B^2+\epsilon}}}_{\text{평균 0, 분산 1로 정규화}}\\
+y_i&=\underbrace{\gamma\hat x_i+\beta}_{\text{학습 가능한 scale·shift로 표현력 복원}}
+\end{aligned}`}
+        operations={[
+          {
+            expression: String.raw`\frac1m\sum_i x_i`,
+            annotation: ["같은 channel의 batch 전체를 평균해", "이번 mini-batch의 분포 중심 추정"],
+          },
+          {
+            expression: String.raw`\frac{x-\mu_B}{\sqrt{\sigma_B^2+\epsilon}}`,
+            annotation: ["평균을 빼고 표준편차로 나눠", "평균 0·분산 1로 강제 정규화"],
+          },
+          {
+            expression: String.raw`\gamma\hat x+\beta`,
+            annotation: ["학습된 scale·shift를 다시 곱하고 더해", "normalization이 표현력을 뺏지 않게 보정"],
+          },
+        ]}
+        terms={[
+          {
+            symbol: String.raw`\gamma,\beta`,
+            name: "학습 가능한 scale·shift",
+            description: "Channel마다 하나씩 gradient descent로 학습되는 parameter입니다.",
+          },
+          {
+            symbol: String.raw`\epsilon`,
+            name: "안정화 상수",
+            description: "분모가 0에 너무 가까워지는 것을 막는 작은 값(보통 1e-5)입니다.",
+          },
+        ]}
+        assumptions={[
+          "Train mode에서는 현재 mini-batch의 μ_B, σ_B²를 씁니다.",
+          "Eval mode에서는 훈련 중 누적한 running mean·variance(exponential moving average)를 대신 씁니다 — 그래야 단일 sample 추론에서도 batch 통계 없이 결과가 결정적입니다.",
+        ]}
+        interpretation="γ=√(σ_B²+ε), β=μ_B로 수렴하면 이론적으로 정규화 전체를 identity로 되돌릴 수도 있습니다 — BatchNorm이 표현력을 강제로 제한하지 않는다는 뜻입니다."
+      />
+
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Post-activation과 pre-activation은 activation 위치가 다르다</h3>
         <p className="leading-8">
@@ -124,7 +175,42 @@ export default function Architecture() {
           “BN 순서만 조금 바꾼 것” 이상으로 forward·backward mapping이
           달라집니다.
         </p>
+      </div>
 
+      <AlgorithmBlock
+        title="BasicBlock forward — v1(post-activation) vs v2(pre-activation)"
+        input={["입력 tensor x", "conv1, conv2 (3×3), BN1, BN2, 학습된 γ·β"]}
+        steps={[
+          {
+            code: "[v1] h = ReLU(BN1(conv1(x)))",
+            note: "conv 뒤 즉시 normalize하고 activation을 적용합니다.",
+          },
+          {
+            code: "[v1] h = BN2(conv2(h))",
+            note: "두 번째 conv도 같은 순서를 반복하되, 아직 ReLU는 적용하지 않습니다.",
+          },
+          {
+            code: "[v1] out = ReLU(h + shortcut(x))",
+            note: "Residual과 shortcut을 더한 뒤 마지막에 ReLU를 적용합니다 — identity path 위에 non-linearity가 걸립니다.",
+          },
+          {
+            code: "[v2] h = conv1(ReLU(BN1(x)))",
+            note: "Pre-activation은 순서를 뒤집습니다 — normalize·activation을 먼저 하고 conv를 나중에 합니다.",
+          },
+          {
+            code: "[v2] h = conv2(ReLU(BN2(h)))",
+            note: "두 번째 conv 앞에도 같은 순서를 반복합니다.",
+          },
+          {
+            code: "[v2] out = h + shortcut(x)",
+            note: "Addition 뒤에는 아무 연산도 없습니다 — identity path가 순수하게 유지됩니다.",
+          },
+        ]}
+        output="다음 block으로 전달할 out"
+        repeatUntil="Stage마다 정한 block 수만큼 이 forward를 순서대로 쌓습니다."
+      />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>
           구현에서는 stride 위치와 zero initialization까지 version 차이를 본다
         </h3>
