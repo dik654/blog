@@ -71,6 +71,59 @@ export default function LinearSoftmax() {
         interpretation="Attention mask는 model이 읽을 위치를, loss mask는 gradient를 낼 target을 정합니다. 두 mask를 혼동하면 prompt token 학습이나 padding loss 같은 오류가 생깁니다."
       />
 
+      <ExplainedFormula
+        question="Label smoothing은 정답 token의 log-probability를 최대화하는 목표를 어떻게 바꾸는가?"
+        idea={
+          <>
+            One-hot target은 정답에 확률 1, 나머지 모든 token에 0을 요구해
+            모델이 정답 logit을 무한히 키우도록 유도합니다. Label smoothing은
+            정답에는 1보다 살짝 작은 확률만, 나머지 K-1개 token에는 남은 확률을
+            균등하게 나눠줘 모델이 유한한 확신에서 멈추게 만듭니다.
+          </>
+        }
+        formula={String.raw`q'(k)=(1-\epsilon)\cdot\mathbf 1[k=y^*]+\frac{\epsilon}{K},\qquad \mathcal L_{\mathrm{ls}}=-\sum_k q'(k)\log p(k)`}
+        annotatedFormula={String.raw`q'(k)=\underbrace{(1-\epsilon)\cdot\mathbf 1[k=y^*]}_{\text{정답 token에 1보다 살짝 작은 확률}}+\underbrace{\frac{\epsilon}{K}}_{\text{나머지 모든 token에 균등 분산}}`}
+        operations={[
+          {
+            expression: String.raw`(1-\epsilon)\cdot\mathbf 1[k=y^*]`,
+            annotation: ["정답 token에는", "1에서 조금 깎은 확률만 할당"],
+          },
+          {
+            expression: String.raw`\epsilon/K`,
+            annotation: ["남은 확률 질량을", "vocabulary 전체에 균등하게 분산"],
+          },
+          {
+            expression: String.raw`-\sum_k q'(k)\log p(k)`,
+            annotation: [
+              "soft target과 model 확률 사이의",
+              "cross-entropy를 그대로 계산",
+            ],
+          },
+        ]}
+        terms={[
+          {
+            symbol: String.raw`\epsilon`,
+            name: "smoothing 강도",
+            description:
+              "정답 확률에서 덜어내 나머지 token에 나눠줄 양입니다. 원 논문은 0.1을 씁니다.",
+          },
+          {
+            symbol: "K",
+            name: "vocabulary 크기",
+            description: "확률을 분산시킬 대상이 되는 전체 token 종류 수입니다.",
+          },
+          {
+            symbol: "q'(k)",
+            name: "smoothed target",
+            description: "One-hot 대신 학습에 실제로 쓰는 soft target 분포입니다.",
+          },
+        ]}
+        assumptions={[
+          "Perplexity(정답 log-probability 자체)는 label smoothing 때문에 오히려 나빠질 수 있습니다 — 목적이 perplexity 최소화가 아니라 calibration과 downstream 품질(BLEU 등) 개선이기 때문입니다.",
+        ]}
+        interpretation="정답을 완벽히 맞혀도 loss가 0이 되지 않으므로, 모델은 정답 logit을 무한히 키우려 하지 않고 유한한 값에서 멈춥니다. 그 결과 확률 분포가 덜 뾰족해져, 정답이 아닌 다른 그럴듯한 후보의 확률을 완전히 0으로 밀어내지 않습니다."
+      />
+
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
           Input embedding과 output projection의 weight를 공유하는 weight tying도
