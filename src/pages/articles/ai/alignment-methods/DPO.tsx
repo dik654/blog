@@ -19,6 +19,29 @@ export default function DPO() {
       </div>
 
       <ExplainedFormula
+        question="왜 Bradley–Terry 식에 대입하면 prompt마다 있는 partition function Z(x)가 사라지나요?"
+        idea={<>KL-regularized reward maximization(<code>E[r]−β·KL(π‖π_ref)</code>)의 optimal policy는 <code>π*(y|x) ∝ π_ref(y|x)·exp(r(x,y)/β)</code> 형태로 closed-form입니다. 이를 r(x,y)에 대해 풀어 Bradley–Terry 식에 같은 prompt의 두 response로 각각 대입하면, 두 식에 똑같이 곱해진 β·log Z(x) 항이 뺄셈에서 사라집니다.</>}
+        formula={String.raw`\pi^*(y\mid x)=\frac{1}{Z(x)}\pi_{ref}(y\mid x)\exp\!\Big(\frac{r(x,y)}{\beta}\Big)\ \Longrightarrow\ r(x,y)=\beta\log\frac{\pi^*(y\mid x)}{\pi_{ref}(y\mid x)}+\beta\log Z(x)`}
+        annotatedFormula={String.raw`\begin{aligned}
+\pi^*(y\mid x)&=\underbrace{\frac{1}{Z(x)}\pi_{ref}(y\mid x)\exp\!\Big(\frac{r(x,y)}{\beta}\Big)}_{\text{KL-regularized reward maximization의 closed-form 해}}\\
+r(x,y)&=\underbrace{\beta\log\frac{\pi^*(y\mid x)}{\pi_{ref}(y\mid x)}+\beta\log Z(x)}_{\text{양변에 log를 취해 }r\text{에 대해 정리}}\\
+r(x,y_+)-r(x,y_-)&=\underbrace{\beta\log\frac{\pi^*(y_+\mid x)}{\pi_{ref}(y_+\mid x)}-\beta\log\frac{\pi^*(y_-\mid x)}{\pi_{ref}(y_-\mid x)}}_{\text{같은 }x\text{의 두 response를 빼면 }\beta\log Z(x)\text{가 상쇄}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\frac{1}{Z(x)}\pi_{ref}(y\mid x)\exp(r(x,y)/\beta)`, annotation: ["reward가 클수록 exp 항이 커지고", "Z(x)가 확률 합을 1로 정규화"] },
+          { expression: String.raw`\beta\log\frac{\pi^*}{\pi_{ref}}+\beta\log Z(x)`, annotation: ["양변에 log를 취해 exp를 풀고", "r을 policy log-ratio로 표현"] },
+          { expression: String.raw`r(x,y_+)-r(x,y_-)`, annotation: ["같은 x의 두 response를 빼서", "공통 partition function 항을 소거"] },
+        ]}
+        terms={[
+          { symbol: String.raw`\pi^*`, name: "이론적 optimal policy", description: "실제로 이 형태를 direct로 계산하지는 않고, 존재를 증명하는 데만 씁니다." },
+          { symbol: "Z(x)", name: "partition function", description: "모든 가능한 y에 대한 합이며 계산 불가능하지만 y에는 의존하지 않습니다." },
+          { symbol: "r(x,y)", name: "알 수 없는 true reward", description: "직접 관측할 수 없는 이상적인 reward function입니다." },
+        ]}
+        assumptions={["Reward maximization objective가 E[r]−β·KL(π‖π_ref) 형태입니다.", "Bradley–Terry model이 p(y+≻y−|x)=σ(r(x,y+)−r(x,y−))로 성립합니다."]}
+        interpretation="핵심은 Z(x)가 y가 아니라 x에만 의존한다는 것입니다 — 그래서 같은 prompt 안에서 두 response의 r을 빼면 항상 사라집니다. 이론적 π*를 학습 가능한 π_θ로 바꾸면 아래 최종 DPO loss가 됩니다."
+      />
+
+      <ExplainedFormula
         question="Chosen·rejected pair만으로 reference 대비 policy의 선호 방향을 어떻게 학습할까?"
         idea={<>각 response의 log probability가 아니라 policy가 reference보다 그 response를 얼마나 더 선호하게 됐는지 log-ratio를 비교합니다. Chosen의 relative log-ratio가 rejected보다 클수록 sigmoid 안의 margin이 커집니다.</>}
         formula={String.raw`\begin{aligned}r_\theta(x,y)&=\log\frac{\pi_\theta(y\mid x)}{\pi_{ref}(y\mid x)}\\\Delta_\theta&=r_\theta(x,y_+)-r_\theta(x,y_-)\\\mathcal L_{DPO}&=-\mathbb E_{\mathcal D}\log\sigma(\beta\Delta_\theta)\end{aligned}`}

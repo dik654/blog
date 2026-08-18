@@ -75,8 +75,32 @@ L^{CLIP}
           { symbol: String.raw`\hat A_t`, name: "advantage estimate", description: "선택한 token이 baseline보다 얼마나 나았는지 추정합니다." },
           { symbol: String.raw`\epsilon`, name: "clip range", description: "Probability-ratio surrogate의 허용 폭입니다." },
         ]}
-        assumptions={["Clipping은 objective의 일부이며 모든 parameter-space 변화에 대한 엄밀한 trust region은 아닙니다.", "Sequence reward를 token advantage로 바꾸는 return·GAE·value fitting 세부가 생략되어 있습니다."]}
+        assumptions={["Clipping은 objective의 일부이며 모든 parameter-space 변화에 대한 엄밀한 trust region은 아닙니다.", "Sequence 끝에서만 나오는 reward를 token별 advantage로 바꾸는 계산은 아래 GAE 식이 담당합니다."]}
         interpretation="Clipped term은 update 안정성을 위한 장치입니다. ε를 특정 상수로 외우기보다 KL, clip fraction, reward와 capability regression을 함께 보며 정합니다."
+      />
+
+      <ExplainedFormula
+        question="Sequence 끝에서만 나오는 reward를 각 token의 advantage Â_t로 어떻게 나누나요?"
+        idea={<>먼저 각 step의 TD residual(실제로 받은 보상과 다음 state 가치의 합에서 현재 state 가치 예측을 뺀 값)을 구합니다. 뒤쪽 residual을 γλ로 할인해 재귀적으로 누적하면, λ 하나로 bias(짧게 자름)와 variance(멀리까지 봄)를 조절할 수 있는 advantage 추정치가 됩니다.</>}
+        formula={String.raw`\delta_t=r_t+\gamma V(s_{t+1})-V(s_t),\qquad \hat A_t=\sum_{l=0}^{\infty}(\gamma\lambda)^l\delta_{t+l}`}
+        annotatedFormula={String.raw`\begin{aligned}
+\delta_t&=\underbrace{r_t+\gamma V(s_{t+1})-V(s_t)}_{\text{한 step의 TD residual — 실제 결과와 value 예측의 차이}}\\
+\hat A_t&=\underbrace{\delta_t+\gamma\lambda\hat A_{t+1}}_{\text{다음 step의 advantage를 할인해 재귀적으로 더함}}\\
+&=\underbrace{\sum_{l=0}^{\infty}(\gamma\lambda)^l\delta_{t+l}}_{\text{재귀를 풀면 먼 미래일수록 작은 weight로 반영}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`r_t+\gamma V(s_{t+1})-V(s_t)`, annotation: ["실제 보상과 다음 state 가치를 더해", "현재 state 가치 예측과 비교"] },
+          { expression: String.raw`\delta_t+\gamma\lambda\hat A_{t+1}`, annotation: ["이번 step의 residual에", "다음 step의 advantage를 할인해서 더함"] },
+          { expression: String.raw`\sum_{l=0}^{\infty}(\gamma\lambda)^l\delta_{t+l}`, annotation: ["재귀를 풀어쓰면", "먼 미래 residual일수록 작은 weight로 반영"] },
+        ]}
+        terms={[
+          { symbol: "r_t", name: "step reward", description: "LLM RLHF에서는 마지막 token에서만 0이 아니고 중간 step은 보통 KL penalty만 있습니다." },
+          { symbol: "V(s_t)", name: "value baseline", description: "별도로 학습한 value head가 예측한 state의 기대 return입니다." },
+          { symbol: String.raw`\gamma`, name: "discount factor", description: "LLM 생성은 episode가 짧아 보통 γ=1을 씁니다." },
+          { symbol: String.raw`\lambda`, name: "GAE parameter", description: "λ=1이면 Monte Carlo advantage, λ=0이면 1-step TD만 쓰는 두 극단을 잇습니다." },
+        ]}
+        assumptions={["V(s_t)는 policy와 별도(또는 공유 backbone의 별도 head)로 학습된 value network입니다.", "Episode가 끝나는 시점 이후 δ는 0으로 취급해 합을 유한하게 자릅니다."]}
+        interpretation="λ=1이면 Â_t는 남은 전체 return과 baseline의 차이(Monte Carlo advantage)와 같아지고, λ=0이면 1-step TD residual만 씁니다. 대부분의 RLHF 구현은 λ를 0.9~1 사이로 둬 variance를 줄이면서도 bias를 크게 늘리지 않습니다."
       />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">

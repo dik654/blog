@@ -120,6 +120,64 @@ export default function LatentVariableGenerativeModelsArticle() {
           Posterior가 어려우면 q(z|x)를 계산 가능한 발판으로 둡니다
         </h2>
         <ExplainedFormula
+          question="log p_θ(x)는 왜 E_q[log(p_θ(x,z)/q(z|x))]보다 크거나 같나요?"
+          idea={
+            <p>
+              직접 계산 못 하는 marginal p(x)를 q(z|x)로 importance-weight해
+              기댓값으로 바꿉니다. log는 concave 함수이므로 Jensen&rsquo;s
+              inequality가 log와 기댓값의 순서를 바꿀 때 부등호 방향을
+              정해줍니다 — 이 부등식이 ELBO라는 이름의 근거입니다.
+            </p>
+          }
+          formula={String.raw`\log p_\theta(x)=\log\mathbb E_{q(z\mid x)}\!\Big[\frac{p_\theta(x,z)}{q(z\mid x)}\Big]\ge\mathbb E_{q(z\mid x)}\!\Big[\log\frac{p_\theta(x,z)}{q(z\mid x)}\Big]=\mathcal L_{\mathrm{ELBO}}(x)`}
+          annotatedFormula={String.raw`\begin{aligned}
+p_\theta(x)&=\underbrace{\int p_\theta(x,z)\,dz}_{\text{직접 계산 불가능한 marginal}}\\
+&=\underbrace{\mathbb E_{q(z\mid x)}\!\Big[\frac{p_\theta(x,z)}{q(z\mid x)}\Big]}_{\text{q로 곱하고 나눠 적분을 기댓값으로 재작성}}\\
+\log p_\theta(x)&\ge\underbrace{\mathbb E_{q(z\mid x)}\!\Big[\log\frac{p_\theta(x,z)}{q(z\mid x)}\Big]}_{\text{log가 concave — Jensen 부등식으로 log를 기댓값 안으로 내림}}
+\end{aligned}`}
+          operations={[
+            {
+              expression: String.raw`\int p_\theta(x,z)\,dz`,
+              annotation: [
+                "z를 모두 marginalize해",
+                "직접 계산 불가능한 evidence를 정의",
+              ],
+            },
+            {
+              expression: String.raw`\mathbb E_{q(z\mid x)}\Big[\frac{p_\theta(x,z)}{q(z\mid x)}\Big]`,
+              annotation: [
+                "q(z|x)로 곱하고 나눠",
+                "적분을 q 아래 기댓값으로 재작성",
+              ],
+            },
+            {
+              expression: String.raw`\log\mathbb E[\cdot]\ge\mathbb E[\log(\cdot)]`,
+              annotation: [
+                "log의 concavity로",
+                "기댓값 안으로 log를 내림(Jensen)",
+              ],
+            },
+          ]}
+          terms={[
+            {
+              symbol: String.raw`p_\theta(x,z)`,
+              name: "Joint density",
+              description: "Decoder와 prior가 함께 만드는 결합분포입니다.",
+            },
+            {
+              symbol: String.raw`q(z\mid x)`,
+              name: "Importance distribution",
+              description:
+                "적분을 기댓값으로 바꾸는 데 쓰는 approximate posterior입니다.",
+            },
+          ]}
+          assumptions={[
+            "q(z|x)>0인 곳에서 p_θ(x,z)>0입니다(support가 겹칩니다).",
+            "적분과 기댓값을 바꿔 쓸 수 있습니다.",
+          ]}
+          interpretation="이 부등식은 q가 무엇이든 항상 성립합니다 — q가 true posterior에 가까울수록 bound가 tight해질 뿐입니다. 아래 식은 이 bound와 log evidence의 정확한 차이를 보여줍니다."
+        />
+        <ExplainedFormula
           question="ELBO는 왜 log evidence보다 작고, 그 차이는 무엇인가요?"
           idea={
             <p>
