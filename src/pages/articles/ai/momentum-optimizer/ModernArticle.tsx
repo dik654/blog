@@ -180,6 +180,20 @@ export default function MomentumOptimizerArticle() {
           ]}
           interpretation="v₁=1, v₂=.9×1+1=1.9, v₃=.9×1.9+1=2.71입니다. 같은 방향이 지속되면 state가 커집니다."
         />
+        <TermBreakdown
+          title="위 식에 없는 변형 — Nesterov look-ahead"
+          items={[
+            {
+              term: "Nesterov momentum",
+              description:
+                "위 식은 현재 θₜ₋₁에서 gradient를 구하지만, Nesterov는 velocity 방향으로 먼저 한 걸음 미리 이동한 지점에서 gradient를 구합니다: v_t = β·v_{t-1} + ∇f(θ_{t-1} − β·v_{t-1}), θ_t = θ_{t-1} − η·v_t.",
+              example:
+                "Velocity가 이미 minimum을 지나칠 방향이면, look-ahead 지점의 gradient가 그 방향을 미리 깎아 overshoot를 줄입니다.",
+              boundary:
+                "구현마다 look-ahead를 적용하는 순서가 다를 수 있어(예: PyTorch SGD의 nesterov=True) 정확한 update 식은 실제 사용하는 library 문서와 대조해야 합니다.",
+            },
+          ]}
+        />
       </section>
 
       <section id="damping-boundary" className="scroll-mt-20">

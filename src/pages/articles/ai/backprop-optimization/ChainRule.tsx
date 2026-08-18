@@ -1,3 +1,4 @@
+import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 
 export default function ChainRule() {
@@ -33,6 +34,30 @@ export default function ChainRule() {
         ]}
         assumptions={["row-vector cotangent 표기입니다. Column convention에서는 transpose 위치가 바뀝니다.", "최종 output L은 scalar입니다."]}
         interpretation="reverse mode는 output 수가 작고 input parameter가 매우 많을 때 유리합니다. Scalar loss 하나로 수많은 parameter gradient를 구하는 neural network에 맞는 이유입니다."
+      />
+
+      <TermBreakdown
+        title="이 선호가 무엇과 비교한 결과인지 — forward-mode·수치미분"
+        items={[
+          {
+            term: "Forward-mode autodiff (JVP)",
+            description:
+              "입력 방향 벡터 ẋ 하나를 정하고, primal 계산과 같은 forward pass 안에서 ẏ=J_f(x)ẋ를 함께 전파합니다. Reverse mode처럼 별도 backward tape가 필요 없습니다.",
+            example:
+              "Input이 n차원, output이 m차원이면 forward mode는 전체 Jacobian을 얻는 데 n번의 forward pass가 필요하고, reverse mode는 m번의 backward pass가 필요합니다.",
+            boundary:
+              "n≪m(input이 적고 output이 많음)이면 forward mode가 유리합니다. Neural network의 scalar loss는 input parameter가 수백만·output이 1개인 정반대 상황이라 reverse mode를 씁니다.",
+          },
+          {
+            term: "수치미분(numerical differentiation)",
+            description:
+              "f'(x)≈(f(x+h)−f(x))/h로 근사합니다. Autodiff처럼 정확한 값이 아니라 h 크기에 따라 오차가 생깁니다.",
+            example:
+              "h가 너무 작으면 floating-point 뺄셈에서 cancellation 오차가 커지고, h가 너무 크면 truncation 오차가 커집니다.",
+            boundary:
+              "Autodiff 결과를 검증하는 gradient check 용도로는 유용하지만, parameter마다 별도 forward pass가 필요해 실제 학습에는 쓰지 않습니다.",
+          },
+        ]}
       />
 
       <div id="save-recompute" className="prose prose-neutral dark:prose-invert max-w-none scroll-mt-20">

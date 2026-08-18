@@ -156,6 +156,16 @@ W_1(p_r,p_g)&=\underbrace{\sup_{\lVert f\rVert_L\le1}\Delta_f}_{\text{slope 제�
           n="02"
           title="Gradient penalty는 전체 공간이 아니라 sampled real–fake path의 slope를 잰다"
         />
+        <p className="text-lg leading-8">
+          1-Lipschitz를 강제하는 첫 시도는 <strong>weight clipping</strong>이었습니다.
+          모든 weight를 <code>[−c, c]</code> 범위로 잘라 함수가 만들 수 있는
+          최대 기울기를 간접적으로 제한합니다. 하지만 이 방식은 clipping이
+          거의 항상 weight를 <code>−c</code> 또는 <code>+c</code> 양 극단으로
+          밀어붙여, network가 실제로 표현할 수 있는 함수 집합을 심하게
+          줄입니다(capacity 문제). <code>c</code>가 너무 작으면 gradient가
+          여러 층을 지나며 사라지고, 너무 크면 반대로 폭발합니다 — WGAN-GP는
+          이 간접·전역적 제약을 직접·국소적 penalty로 바꿔 이 문제를 피합니다.
+        </p>
         <Term
           name="WGAN gradient penalty"
           shape="λ(∥∇f(x̂)∥₂−1)²"
@@ -171,13 +181,21 @@ W_1(p_r,p_g)&=\underbrace{\sup_{\lVert f\rVert_L\le1}\Delta_f}_{\text{slope 제�
               deviation도 양의 cost로 만들고 큰 위반을 더 세게 벌합니다.
             </>
           }
-          formula={String.raw`\mathcal L_{\rm GP}=\lambda\,\mathbb E_{\widehat x}(\lVert\nabla_{\widehat x}f(\widehat x)\rVert_2-1)^2`}
+          formula={String.raw`\widehat x=\varepsilon x+(1-\varepsilon)\widetilde x,\quad \mathcal L_{\rm GP}=\lambda\,\mathbb E_{\widehat x}(\lVert\nabla_{\widehat x}f(\widehat x)\rVert_2-1)^2`}
           annotatedFormula={String.raw`\begin{aligned}
-\underbrace{s(\widehat x)=\lVert\nabla_{\widehat x}f\rVert_2}_{\text{sampled 위치의 slope}}&\\
-\underbrace{e(\widehat x)=(s(\widehat x)-1)^2}_{\text{target 1과의 square deviation}}&\\
+\widehat x&=\underbrace{\varepsilon x+(1-\varepsilon)\widetilde x}_{\text{real }x\text{와 fake }\widetilde x\text{ 사이 무작위 지점을 샘플}}\\
+s(\widehat x)&=\underbrace{\lVert\nabla_{\widehat x}f\rVert_2}_{\text{sampled 위치의 slope}}\\
+e(\widehat x)&=\underbrace{(s(\widehat x)-1)^2}_{\text{target 1과의 square deviation}}\\
 \mathcal L_{\rm GP}&=\underbrace{\lambda\mathbb E_{\widehat x}[e(\widehat x)]}_{\text{평균 위반에 강도 적용}}
 \end{aligned}`}
           operations={[
+            {
+              expression: String.raw`\varepsilon x+(1-\varepsilon)\widetilde x`,
+              annotation: [
+                "매 batch마다 interpolation weight를 새로 뽑아",
+                "real–fake를 잇는 무작위 위치 x̂ 생성",
+              ],
+            },
             {
               expression: String.raw`\nabla_{\widehat x}f`,
               annotation: [
@@ -204,11 +222,16 @@ W_1(p_r,p_g)&=\underbrace{\sup_{\lVert f\rVert_L\le1}\Delta_f}_{\text{slope 제�
             {
               symbol: String.raw`\widehat x`,
               name: "Interpolated sample",
-              description: "Real과 fake를 이은 sampled point입니다.",
+              description: "Real x와 fake x̃를 이은 sampled point입니다.",
+            },
+            {
+              symbol: String.raw`\varepsilon`,
+              name: "Interpolation weight",
+              description: "매 sample마다 새로 뽑는 U(0,1) random scalar입니다.",
             },
           ]}
           assumptions={[
-            "Interpolation distribution과 λ를 명시합니다.",
+            "ε는 U(0,1)에서 매 batch·매 sample 독립적으로 뽑습니다.",
             "Input-gradient를 계산하는 추가 backward cost가 있습니다.",
           ]}
           interpretation="GP는 data-dependent local measurement입니다. 다음 spectral normalization은 weight operator에 직접 작용합니다."
