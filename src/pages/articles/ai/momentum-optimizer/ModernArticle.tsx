@@ -2,9 +2,13 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
+import { codeRefs } from "./codeRefs";
+import { momentumOptimizerTree } from "./fileTree";
 import { MomentumMemoryViz } from "../optimizers/viz/ModernOptimizerViz";
 
 export default function MomentumOptimizerArticle() {
+  const sidebar = useCodeSidebar();
   return (
     <div className="space-y-16">
       <section id="overview" className="scroll-mt-20">
@@ -180,6 +184,11 @@ export default function MomentumOptimizerArticle() {
           ]}
           interpretation="v₁=1, v₂=.9×1+1=1.9, v₃=.9×1.9+1=2.71입니다. 같은 방향이 지속되면 state가 커집니다."
         />
+        <CodeViewButton
+          onClick={() =>
+            sidebar.open("velocity-update", codeRefs["velocity-update"])
+          }
+        />
         <TermBreakdown
           title="위 식에 없는 변형 — Nesterov look-ahead"
           items={[
@@ -193,6 +202,14 @@ export default function MomentumOptimizerArticle() {
                 "구현마다 look-ahead를 적용하는 순서가 다를 수 있어(예: PyTorch SGD의 nesterov=True) 정확한 update 식은 실제 사용하는 library 문서와 대조해야 합니다.",
             },
           ]}
+        />
+        <CodeViewButton
+          onClick={() =>
+            sidebar.open(
+              "nesterov-formulation",
+              codeRefs["nesterov-formulation"],
+            )
+          }
         />
       </section>
 
@@ -224,6 +241,21 @@ export default function MomentumOptimizerArticle() {
           </CitationBlock>
         </div>
       </section>
+      <CodeSidebar
+        codeRefKey={sidebar.codeRefKey}
+        codeRef={sidebar.codeRef}
+        onClose={sidebar.close}
+        onNavigate={sidebar.navigate}
+        codeRefs={codeRefs}
+        fileTrees={{ torch: momentumOptimizerTree }}
+        projectMetas={{
+          torch: {
+            id: "torch",
+            label: "PyTorch · Python",
+            badgeClass: "bg-orange-500/10 border-orange-500 text-orange-700",
+          },
+        }}
+      />
     </div>
   );
 }
