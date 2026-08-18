@@ -1,5 +1,8 @@
 import { Link } from "react-router-dom";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
+import type { CodeRef } from "@/components/code/types";
+import { CodeViewButton } from "@/components/code";
+import { codeRefs } from "./codeRefs";
 
 const next = [
   {
@@ -22,7 +25,11 @@ const next = [
   },
 ];
 
-export default function Summary() {
+export default function Summary({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="next-reading" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
@@ -70,6 +77,9 @@ export default function Summary() {
         ]}
         output="logits (inference·decoding에서 다음 token 확률로 사용) 또는 loss=-Σm_t log softmax(logits)_{y_t*} (학습 시, LinearSoftmax 참고)"
         repeatUntil="num_layers만큼 attention→FFN 두 sublayer를 반복합니다."
+      />
+      <CodeViewButton
+        onClick={() => onCodeRef("block-forward", codeRefs["block-forward"])}
       />
 
       <div className="not-prose my-8 grid gap-3 lg:grid-cols-3">

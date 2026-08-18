@@ -1,8 +1,15 @@
 import { Link } from "react-router-dom";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import type { CodeRef } from "@/components/code/types";
+import { CodeViewButton } from "@/components/code";
+import { codeRefs } from "./codeRefs";
 import AttentionContractViz from "./viz/AttentionContractViz";
 
-export default function QKVComputation() {
+export default function QKVComputation({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="attention-boundary" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
@@ -63,6 +70,9 @@ export default function QKVComputation() {
           "Softmax 구현은 all-masked row와 낮은 precision에서 NaN이 나지 않도록 별도 처리가 필요합니다.",
         ]}
         interpretation="Mask는 attention 뒤에 결과를 지우는 장치가 아니라 softmax 정규화에 들어가기 전에 visibility를 정의합니다. Causal mask와 padding mask를 결합할 때 query·key 축 방향을 잘못 잡으면 leakage가 생깁니다."
+      />
+      <CodeViewButton
+        onClick={() => onCodeRef("sdpa-formula", codeRefs["sdpa-formula"])}
       />
 
       <ExplainedFormula
