@@ -1,7 +1,14 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
+import type { CodeRef } from "@/components/code/types";
+import { CodeViewButton } from "@/components/code";
+import { codeRefs } from "./codeRefs";
 import PatchEmbeddingViz from "./viz/PatchEmbeddingViz";
 
-export default function PatchEmbedding() {
+export default function PatchEmbedding({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="patch-embedding" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Patch embedding은 자르기, 펼치기, 선형 투영, 위치 부여를 하나의 입력 계약으로 묶습니다</h2>
@@ -31,6 +38,11 @@ Z_0&=[e_{\mathrm{cls}};e_1;\ldots;e_N]\in\mathbb R^{(N+1)\times D}.
         assumptions={["H와 W가 P로 나누어떨어지며 non-overlapping raster-order patch를 사용합니다.", "Batch axis는 생략했고 projection E와 position dimension은 D로 같습니다.", "[CLS] token은 선택 사항이며 mean pooling을 쓰는 model은 sequence contract가 달라집니다."]}
         interpretation="224×224 image와 P=16이면 N=196이고 [CLS]를 포함한 sequence length는 197입니다. P를 바꾸면 detail뿐 아니라 pretrained projection shape와 position grid도 함께 달라집니다."
       />
+      <CodeViewButton
+        onClick={() =>
+          onCodeRef("class-token-concat", codeRefs["class-token-concat"])
+        }
+      />
       <ExplainedFormula
         question="Patch를 펼쳐 matrix와 곱하는 구현을 Conv2d 한 층으로 바꿀 수 있는 이유는 무엇일까?"
         idea={<>Kernel size와 stride를 P로 둔 convolution은 각 P×P 영역을 겹치지 않게 읽습니다. D개 kernel의 weight를 E의 D개 output column과 같은 순서로 놓으면 동일한 dot product를 grid 전체에서 수행합니다.</>}
@@ -48,6 +60,11 @@ y_{r,s,d}&=k_d^\top v_{r,s}+b_d,\\
         ]}
         assumptions={["Kernel size=stride=P, dilation=1, padding=0인 non-overlapping convolution입니다.", "Patch flatten order와 kernel flatten order가 정확히 같아야 합니다.", "Bias 사용 여부와 tensor layout을 checkpoint schema와 맞춥니다."]}
         interpretation="두 구현은 parameter를 배치하는 방식만 다를 수 있습니다. 따라서 checkpoint 변환에서는 shape만 맞는지보다 flatten order와 numerical output parity를 검사해야 합니다."
+      />
+      <CodeViewButton
+        onClick={() =>
+          onCodeRef("conv-as-patch-proj", codeRefs["conv-as-patch-proj"])
+        }
       />
       <div className="not-prose my-8"><PatchEmbeddingViz /></div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
