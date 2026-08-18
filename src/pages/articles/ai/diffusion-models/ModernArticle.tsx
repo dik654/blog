@@ -154,6 +154,13 @@ x_t&=\underbrace{s_t+n_t}_{\text{두 항을 합성}}
           ]}
           interpretation="ᾱₜ=0.64이면 signal scale은 0.8, noise scale은 0.6입니다. x₀=2, ε=−1이면 xₜ=1.0입니다."
         />
+        <LearningTerm
+          name="Schedule 모양 선택 - linear vs cosine"
+          shape="linear: beta_t가 t에 비례해 균등 증가 / cosine: 누적 signal이 cos^2 곡선을 따름"
+          meaning="beta_t의 절대값이 아니라 모양이 학습 난이도 분포를 정합니다. Original DDPM의 linear schedule은 마지막 몇 step에서 신호를 너무 빨리 없애 그 구간의 학습 신호를 낭비합니다."
+          example="Linear schedule은 t가 T의 20%만 지나도 누적 signal이 이미 크게 떨어지지만, cosine schedule은 앞뒤 구간에서 더 완만하게 줄어 모든 noise level이 고르게 학습됩니다."
+          boundary="Cosine schedule은 작은 offset을 둬 t가 0에 가까울 때 beta_t가 0에 너무 붙는 것도 막습니다. Nichol과 Dhariwal(Improved DDPM)의 실험 결과이며 모든 데이터/해상도에 최적이라는 보장은 아닙니다."
+        />
       </section>
 
       <section id="target" className="space-y-6">
@@ -396,9 +403,13 @@ L_{t-1}&=\underbrace{w_t\,\mathbb E\big[\lVert\epsilon-\epsilon_\theta(x_t,t)\rV
               code: "θ ← θ − η · ∇_θ loss",
               note: "일반적인 gradient step으로 network parameter를 갱신합니다.",
             },
+            {
+              code: "θ_ema ← m · θ_ema + (1−m) · θ",
+              note: "θ_ema는 θ와 별도 buffer입니다. m=0.999~0.9999가 흔한 값이며, sampling에는 θ가 아니라 θ_ema를 씁니다 — 매 step의 잡음 많은 θ보다 여러 step을 평균한 θ_ema가 더 안정적인 sample을 만듭니다.",
+            },
           ]}
-          output="학습된 ε_θ"
-          repeatUntil="Loss가 수렴하거나 정해진 step 수에 도달할 때까지 1~6을 반복합니다."
+          output="학습된 θ_ema (sampling에 사용할 최종 weight)"
+          repeatUntil="Loss가 수렴하거나 정해진 step 수에 도달할 때까지 1~7을 반복합니다."
         />
         <AlgorithmBlock
           title="Sampling — xT에서 x0까지 T번 반복"

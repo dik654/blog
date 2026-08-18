@@ -225,6 +225,22 @@ g_c&=\underbrace{w\,d_c}_{\text{condition 방향을 scale}}\\
           ]}
           interpretation="w=1이면 εc와 정확히 같습니다. w=0이면 εu이고, w>1은 conditional 방향을 extrapolate합니다."
         />
+        <LearningTerm
+          name="Classifier guidance (CFG 이전 방식)"
+          shape="ŝ = ∇log p(xₜ) + w·∇_{xₜ} log p(y|xₜ)"
+          meaning="Diffusion model과 별개로, noisy input마다 label을 맞히는 classifier p(y|xₜ)를 따로 학습합니다. 그 classifier의 gradient(‘이 방향으로 가면 y일 확률이 커진다’)를 unconditional score에 더해 조건 방향으로 밉니다."
+          example="Diffusion model은 그대로 두고, ImageNet classifier처럼 매 noise level에서 동작하도록 다시 학습한 classifier 하나만 추가합니다."
+          boundary="Noisy input에서도 잘 동작하는 classifier를 별도로 학습해야 하고, gradient가 image quality가 아니라 classifier confidence를 높이는 adversarial 방향으로 흐를 수 있습니다 — 이게 CFG가 나온 이유입니다."
+        />
+        <p className="text-sm leading-7 text-muted-foreground">
+          CFG는 이 별도 classifier를 없애고, condition dropout으로 학습한 diffusion
+          model 하나가 <code>εᵤ</code>와 <code>ε_c</code> 두 역할을 모두 하게 만듭니다.
+          두 방법 모두 &ldquo;unconditional 방향에 condition 방향을 더한다&rdquo;는 같은
+          아이디어지만, classifier guidance는 그 방향을 <strong>외부 classifier의
+          gradient</strong>에서 얻고 CFG는 <strong>같은 network의 conditional−
+          unconditional 차이</strong>에서 얻습니다 — 그래서 CFG는 추가 학습·추가
+          adversarial 실패 모드 없이 guidance 방향을 만듭니다.
+        </p>
       </section>
 
       <section id="evaluation" className="space-y-6">

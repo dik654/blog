@@ -149,6 +149,13 @@ v_t&=\underbrace{f(x_t,t)-c_t}_{\text{deterministic flow field}}\\
           ]}
           interpretation="SDE와 ODE는 분포 snapshot을 공유할 수 있지만, SDE에는 계속 randomness가 들어오므로 pathwise equality는 없습니다."
         />
+        <LearningTerm
+          name="DDIM = probability-flow ODE의 discrete Euler step"
+          shape="x_{t-1} = sqrt(a_{t-1}) * x0_hat(x_t) + sqrt(1-a_{t-1}) * eps_theta(x_t,t)"
+          meaning="DDPM 논문 이후 나온 DDIM(Song et al. 2020)은 위 probability-flow ODE를 유한 step으로 discretize한 deterministic sampler입니다. 매 step 같은 noise z를 다시 뽑지 않고, x0를 먼저 추정한 뒤 그 추정치를 다음 noise level로 다시 옮깁니다."
+          example="x0_hat(x_t) = (x_t - sqrt(1-a_t) * eps_theta(x_t,t)) / sqrt(a_t)로 x0를 먼저 복원하고, 그 값을 t-1 시점의 forward 식에 다시 대입해 x_{t-1}을 만듭니다."
+          boundary="DDPM의 확률적 sampling(위 Sampling 알고리즘)은 매 step 새 noise z를 더하지만, DDIM은 z=0인 극한이라 같은 x_T에서 항상 같은 x0가 나옵니다 - 그래서 step 수를 크게 줄여도(T=1000 대신 50) 품질이 덜 떨어집니다."
+        />
       </section>
 
       <section id="flow-matching" className="space-y-6">
