@@ -56,6 +56,57 @@ export default function Word2VecNegativeSamplingArticle() {
         { term: "Frequent-word subsampling", description: "Window를 만들기 전에 고빈도 token occurrence 일부를 제거합니다.", boundary: "Positive pair 분포와 token 간 거리를 함께 바꿉니다." },
         { term: "Keep/drop receipt", description: "Frequency table, threshold, 식, seed와 corpus revision을 묶어 어떤 pair population을 학습했는지 재현합니다." },
       ]} />
+      <ExplainedFormula
+        question="고빈도 token을 얼마나 자주 버릴지는 어떤 식으로 정해지나요?"
+        idea={
+          <p>
+            목표 threshold t보다 훨씬 자주 나오는 word일수록 corpus를 훑을 때
+            그 occurrence를 window에 넣기 전에 더 높은 확률로 버립니다. t보다
+            드물게 나오는 word는 사실상 거의 버리지 않습니다.
+          </p>
+        }
+        formula={String.raw`P_{\mathrm{discard}}(w)=1-\sqrt{t/f(w)}`}
+        annotatedFormula={String.raw`\begin{aligned}
+r(w)&=\underbrace{t/f(w)}_{\text{threshold 대비 상대 빈도(w가 흔할수록 0에 가까움)}}\\
+P_{\mathrm{discard}}(w)&=\underbrace{1-\sqrt{r(w)}}_{\text{r(w)가 작을수록(=흔할수록) 1에 가까운 폐기 확률}}
+\end{aligned}`}
+        operations={[
+          {
+            expression: String.raw`t/f(w)`,
+            annotation: ["threshold를 실제 relative frequency로 나눠", "희귀할수록 1에, 흔할수록 0에 가까운 비율 생성"],
+          },
+          {
+            expression: String.raw`\sqrt{r(w)}`,
+            annotation: ["제곱근을 취해", "빈도 차이에 따른 비율 변화를 완만하게 만듦"],
+          },
+          {
+            expression: String.raw`1-\sqrt{r(w)}`,
+            annotation: ["1에서 빼서", "흔한 word일수록 큰 폐기 확률로 뒤집음"],
+          },
+        ]}
+        terms={[
+          {
+            symbol: String.raw`f(w)`,
+            name: "relative frequency",
+            description: "전체 corpus token 수 대비 word w의 occurrence 비율입니다(count(w)/total_count).",
+          },
+          {
+            symbol: "t",
+            name: "threshold",
+            description: "Subsampling 강도를 정하는 hyperparameter입니다. 원 논문은 약 1e-5를 씁니다.",
+          },
+          {
+            symbol: String.raw`P_{\mathrm{discard}}(w)`,
+            name: "폐기 확률",
+            description: "Corpus를 훑을 때 word w의 각 occurrence를 window에 넣기 전에 버릴 확률입니다.",
+          },
+        ]}
+        assumptions={[
+          "f(w) ≤ t인 word는 이 식이 음수를 낼 수 있어, 실제 구현은 0으로 clip합니다(버리지 않음).",
+          "이 식은 원 논문 식입니다. 공개된 원 C 구현(word2vec.c)은 이와 수학적으로 다른 keep-probability 식을 쓴다고 알려져 있습니다 — 논문 식과 released code가 정확히 일치하지 않는 점이 실전 재현에서 자주 놓치는 함정입니다.",
+        ]}
+        interpretation="t=1e-5, f(w)=1e-3(매우 흔한 word)이면 r=0.01, discard 확률은 1-0.1=0.9로 열 번 중 아홉 번을 버립니다. f(w)=1e-6(희귀 word)이면 r=10이라 sqrt(r)>1이 되어 discard 확률은 0으로 clip됩니다."
+      />
       <div id="paper-negative-sampling" className="not-prose mt-8 scroll-mt-24"><CitationBlock type="paper" citeKey={1} source="Mikolov et al. — Distributed Representations of Words and Phrases" href="https://arxiv.org/abs/1310.4546">Negative sampling과 frequent-word subsampling을 제시한 후속 Word2Vec 연구입니다. 3/4 exponent와 threshold의 효과는 논문의 corpus·task·training budget 범위에서 해석해야 합니다.</CitationBlock></div>
     </section>
   </div>;
