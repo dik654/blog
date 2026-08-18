@@ -2,9 +2,16 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import M from "@/components/ui/math";
 import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
+import type { CodeRef } from "@/components/code/types";
+import { CodeViewButton } from "@/components/code";
+import { codeRefs } from "./codeRefs";
 import RecurrentStateFlowViz from "./viz/RecurrentStateFlowViz";
 
-export default function Overview() {
+export default function Overview({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="overview" className="mb-20 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">RNN의 핵심은 순서가 아니라 state transition이다</h2>
@@ -68,6 +75,11 @@ h_t&=\underbrace{\tanh(a_t)}_{\text{합친 증거를 bounded 새 state로 압축
         ]}
         assumptions={["vanilla Elman RNN과 tanh activation을 기준으로 합니다.", "batch dimension은 표기를 단순하게 하려고 생략했습니다.", "초기 state h₀는 0 또는 학습 가능한 값으로 둘 수 있습니다."]}
         interpretation="sequence가 길어져도 Wxh와 Whh는 한 벌뿐입니다. 대신 각 다음 state가 직전 state에 의존하므로 time axis 계산을 한꺼번에 끝낼 수 없습니다."
+      />
+      <CodeViewButton
+        onClick={() =>
+          onCodeRef("recurrence-formula", codeRefs["recurrence-formula"])
+        }
       />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
