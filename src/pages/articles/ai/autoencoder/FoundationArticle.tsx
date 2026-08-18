@@ -32,6 +32,19 @@ export default function FoundationArticle() {
         { symbol: "k", name: "Latent dimension", description: "Decoder에 전달되는 coordinate 수입니다." },
         { symbol: "θ,φ", name: "Trainable parameters", description: "Encoder와 decoder가 loss를 함께 받는 parameter입니다." },
       ]} assumptions={["Input과 reconstruction의 shape·좌표 의미가 대응합니다.", "Decoder에는 z 밖의 input shortcut이 없습니다."]} interpretation="k<n은 가장 단순한 capacity 제약입니다. Overcomplete model은 corruption·sparsity 같은 다른 제약이 필요할 수 있습니다." />
+      <TermBreakdown title="Encoder·decoder weight를 묶을지(tied) 따로 둘지(untied)" items={[
+        {
+          term: "Tied weights (W_d = W_e^T)",
+          description: "Linear encoder z=W_e x+b_e, decoder x̂=W_d z+b_d에서 decoder weight를 따로 학습하지 않고 encoder weight의 transpose로 고정합니다. Parameter 수가 절반으로 줄고, PCA의 orthogonal basis와 비슷한 정규화 효과를 냅니다.",
+          example: "n=784, k=32이면 untied는 W_e·W_d를 각각 학습해 총 2×784×32개 parameter가 필요하지만, tied는 W_e 하나만 학습하고 W_d=W_e^T로 재사용합니다.",
+          boundary: "Encoder·decoder 사이에 nonlinear activation이 있으면 tied weight가 정확한 inverse를 보장하지 않습니다 — 여전히 근사적인 정규화 효과일 뿐입니다.",
+        },
+        {
+          term: "Untied weights",
+          description: "Encoder와 decoder가 서로 독립된 parameter를 갖습니다. 표현력은 더 크지만 그만큼 identity로 collapse하거나 overfit할 여지도 커집니다.",
+          boundary: "실무 선택은 모델 크기·데이터 양·regularization 필요도에 따라 갈립니다. 두 방식 중 한쪽이 항상 우월하다는 보장은 없습니다.",
+        },
+      ]} />
     </section>
 
     <section id="reconstruction" className="scroll-mt-20">
@@ -46,6 +59,52 @@ export default function FoundationArticle() {
         { symbol: "n", name: "Feature count", description: "Sample 하나에서 비교하는 coordinate 수입니다." },
         { symbol: "x̂", name: "Reconstruction", description: "Decoder가 만든 input-shaped prediction입니다." },
       ]} assumptions={["Feature scale과 missing-value policy가 고정되어 있습니다.", "MSE 해석에서는 coordinate noise scale을 같게 둡니다."]} interpretation="작은 MSE는 해당 좌표 scale에서 가깝다는 뜻입니다. Perceptual similarity나 downstream usefulness까지 자동으로 뜻하지 않습니다." />
+      <ExplainedFormula
+        question="Coordinate가 [0,1] 확률처럼 해석될 때 loss는 MSE와 무엇이 달라지나요?"
+        idea={
+          <p>
+            각 coordinate를 독립 Bernoulli 확률로 보고 decoder output을 그
+            확률의 추정치로 삼습니다. 실제 값이 1에 가까우면 예측도 1에
+            가까워야 loss가 작아지고, 0에 가까우면 그 반대입니다.
+          </p>
+        }
+        formula={String.raw`\mathcal L_{\rm BCE}=-\frac1{Bn}\sum_{b=1}^{B}\sum_{j=1}^{n}\Big[x_j^{(b)}\log \hat x_j^{(b)}+(1-x_j^{(b)})\log(1-\hat x_j^{(b)})\Big]`}
+        annotatedFormula={String.raw`\begin{aligned}
+\ell_j^{(b)}&=\underbrace{-\Big[x_j^{(b)}\log \hat x_j^{(b)}+(1-x_j^{(b)})\log(1-\hat x_j^{(b)})\Big]}_{\text{coordinate 하나의 negative log-likelihood}}\\
+\mathcal L_{\rm BCE}&=\underbrace{\frac1{Bn}\sum_{b,j}\ell_j^{(b)}}_{\text{모든 sample·coordinate 평균}}
+\end{aligned}`}
+        operations={[
+          {
+            expression: String.raw`x_j\log \hat x_j`,
+            annotation: ["실제 값이 1일 때", "예측 확률이 1에 가까울수록 벌점이 줄어듦"],
+          },
+          {
+            expression: String.raw`(1-x_j)\log(1-\hat x_j)`,
+            annotation: ["실제 값이 0일 때", "예측 확률이 0에 가까울수록 벌점이 줄어듦"],
+          },
+          {
+            expression: String.raw`-[\cdot]`,
+            annotation: ["두 항을 더한 log-likelihood 부호를 뒤집어", "최소화할 양의 loss로 변환"],
+          },
+        ]}
+        terms={[
+          {
+            symbol: String.raw`x_j^{(b)}`,
+            name: "실제 값 (0 또는 1 근방)",
+            description: "[0,1] 범위로 정규화한 coordinate입니다. 정확한 이진값과 연속 [0,1] target 모두 이 형태로 씁니다.",
+          },
+          {
+            symbol: String.raw`\hat x_j^{(b)}`,
+            name: "예측 확률",
+            description: "Decoder output에 sigmoid를 씌워 (0,1) 구간으로 만든 예측입니다.",
+          },
+        ]}
+        assumptions={[
+          "예측 x̂ⱼ는 항상 (0,1) 구간 안에 있어야 하므로 decoder 마지막 층에 sigmoid가 필요합니다 — MSE에는 이 제약이 없습니다.",
+          "이진 label뿐 아니라 [0,1] 사이 continuous target(정규화된 pixel 밝기 등)에도 그대로 적용하는 관례입니다.",
+        ]}
+        interpretation="MSE는 residual 크기에 비례해 벌점을 주지만 BCE는 예측이 정답과 반대 극단일 때(0인데 예측이 1에 가깝거나 그 반대) log가 발산해 훨씬 크게 벌점을 줍니다. 이진에 가까운 데이터(binarized MNIST 등)에는 BCE가 MSE보다 더 날카로운 gradient 신호를 만듭니다."
+      />
     </section>
 
     <section id="evaluation" className="scroll-mt-20">
