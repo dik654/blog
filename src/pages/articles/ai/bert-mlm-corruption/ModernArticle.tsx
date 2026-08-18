@@ -101,6 +101,25 @@ export default function BertMlmArticle() {
           ]}
           interpretation="N=10,000이면 target 1,500, MASK 1,200, random 150, unchanged 150이 기대값입니다."
         />
+        <TermBreakdown
+          title="왜 80/10/10인가 — MASK 하나만 쓰지 않는 이유"
+          items={[
+            {
+              term: "Pretrain/finetune 불일치 회피",
+              description:
+                "[MASK] token은 pretraining이 만든 인공적인 기호이고, downstream fine-tuning과 실제 inference input에는 절대 등장하지 않습니다. Selected 위치를 100% [MASK]로만 바꾸면 model은 [MASK]가 있을 때만 예측을 준비하도록 학습되어, [MASK]가 없는 실제 입력을 만났을 때 representation 품질이 달라질 위험이 생깁니다. 10%를 unchanged로, 10%를 random token으로 남겨 [MASK] 의존도를 낮춥니다.",
+              boundary:
+                "이 회피가 불일치를 완전히 없애지는 않습니다 — 여전히 selection 자체가 pretraining에만 있는 절차입니다.",
+            },
+            {
+              term: "모든 위치의 representation을 신뢰 불가능하게 만들기",
+              description:
+                "만약 [MASK]가 아닌 위치는 항상 원래 token 그대로라면, model은 '이 자리는 안 뽑혔으니 보이는 값이 곧 정답'이라고 안심하고 그 위치의 문맥 표현을 깊게 만들 필요가 없어집니다. Unchanged(10%)와 random(10%) branch를 섞으면, model은 겉보기에 멀쩡한 token조차 실제로는 오염됐을 수 있다는 사실 때문에 selected·비selected 위치 모두에서 강건한 contextual representation을 유지해야 합니다.",
+              example:
+                "Random branch로 '고양이'가 엉뚱한 단어로 바뀌었다면, model은 그 자리의 표면 token을 그대로 믿는 대신 주변 문맥으로 원래 뜻을 복원해야 합니다.",
+            },
+          ]}
+        />
       </section>
       <section id="objective" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">
