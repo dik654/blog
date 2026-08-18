@@ -2,9 +2,13 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
+import { codeRefs } from "./codeRefs";
+import { word2vecTree } from "./fileTree";
 import { Word2VecPairViz } from "./viz/ModernWord2VecViz";
 
 export default function Word2VecArticle() {
+  const sidebar = useCodeSidebar();
   return <div className="space-y-16">
     <section id="overview" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Word2Vec은 단어를 바로 이해하지 않고, word ID가 고른 row를 주변 단어와 함께 업데이트합니다</h2>
@@ -36,6 +40,11 @@ export default function Word2VecArticle() {
         { symbol: "W'", name: "Output table", description: "Context 역할의 별도 trainable V×d matrix입니다." },
         { symbol: "s(w,c)", name: "Pair score", description: "Center w와 context c의 역할별 row 내적입니다." },
       ]} assumptions={["Vocabulary ID 순서는 run과 artifact 전체에서 고정합니다.", "Input·output table은 같은 shape이어도 parameter를 공유하지 않습니다.", "Subword model처럼 여러 row를 합치는 경우는 별도 글에서 다룹니다."]} interpretation="V=5,d=3이면 W와 W′는 각각 5×3입니다. Word ID 2는 W[2]와 W′[2]를 따로 선택하며 두 row의 값과 용도는 서로 다릅니다." />
+      <CodeViewButton
+        onClick={() =>
+          sidebar.open("onehot-as-gather", codeRefs["onehot-as-gather"])
+        }
+      />
     </section>
 
     <section id="window" className="scroll-mt-20">
@@ -65,5 +74,20 @@ export default function Word2VecArticle() {
       ]} />
       <div id="paper-word2vec-original" className="not-prose mt-8 scroll-mt-24"><CitationBlock type="paper" citeKey={1} source="Mikolov et al. — Efficient Estimation of Word Representations" href="https://arxiv.org/abs/1301.3781">CBOW와 Skip-gram을 큰 corpus에서 효율적으로 학습하는 구조를 제안한 원 연구입니다. 논문의 analogy 결과가 모든 언어에서 같은 window recipe를 정당화하지는 않습니다.</CitationBlock></div>
     </section>
+    <CodeSidebar
+      codeRefKey={sidebar.codeRefKey}
+      codeRef={sidebar.codeRef}
+      onClose={sidebar.close}
+      onNavigate={sidebar.navigate}
+      codeRefs={codeRefs}
+      fileTrees={{ torch: word2vecTree }}
+      projectMetas={{
+        torch: {
+          id: "torch",
+          label: "PyTorch · Python",
+          badgeClass: "bg-orange-500/10 border-orange-500 text-orange-700",
+        },
+      }}
+    />
   </div>;
 }
