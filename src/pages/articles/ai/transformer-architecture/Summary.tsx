@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import AlgorithmBlock from "@/components/ui/algorithm-block";
 
 const next = [
   {
@@ -37,6 +38,39 @@ export default function Summary() {
           연결하느냐에 있다.
         </p>
       </div>
+
+      <AlgorithmBlock
+        title="Decoder-only forward pass — 앞 section의 조각을 순서대로 조립하기"
+        input={[
+          "token_ids (batch, seq_len)",
+          "causal mask M (DataPrep·QKVComputation에서 정의한 것과 동일)",
+          "학습된 parameter: embedding table, 각 layer의 W_Q/W_K/W_V/W_O·W_1/W_2·Norm scale, 최종 output projection W_vocab",
+        ]}
+        steps={[
+          {
+            code: "x = embed(token_ids) + PE",
+            note: "InputEmbedding의 token embedding과 sinusoidal PE(또는 학습된 position embedding)를 더해 첫 residual stream을 만듭니다.",
+          },
+          {
+            code: "for layer in range(num_layers):\n    x = x + MultiHeadAttention(Norm(x), M)",
+            note: "QKVComputation의 A=softmax(QKᵀ/√d_k+M), Y=AV를 head마다 계산해 concat한 뒤, FeedForward의 pre-norm 식 y_pre=x+F(Norm(x))를 attention에 적용합니다(post-norm이면 x=Norm(x+MultiHeadAttention(x,M))).",
+          },
+          {
+            code: "    x = x + FFN(Norm(x))",
+            note: "FeedForward의 FFN(x_t)=W_2·φ(W_1x_t+b_1)+b_2를 같은 pre-norm 규칙으로 residual stream에 더합니다.",
+          },
+          {
+            code: "x = Norm(x)",
+            note: "Pre-norm 구조는 마지막 layer를 나온 뒤 최종 normalization을 한 번 더 둡니다(post-norm이면 이 단계는 생략).",
+          },
+          {
+            code: "logits = x @ W_vocab + b",
+            note: "LinearSoftmax의 z_t=h_tW_vocab+b — 마지막 위치의 hidden state를 vocabulary logits로 투영합니다.",
+          },
+        ]}
+        output="logits (inference·decoding에서 다음 token 확률로 사용) 또는 loss=-Σm_t log softmax(logits)_{y_t*} (학습 시, LinearSoftmax 참고)"
+        repeatUntil="num_layers만큼 attention→FFN 두 sublayer를 반복합니다."
+      />
 
       <div className="not-prose my-8 grid gap-3 lg:grid-cols-3">
         {next.map((item) => (
