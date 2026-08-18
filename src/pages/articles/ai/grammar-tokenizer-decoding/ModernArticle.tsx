@@ -1,5 +1,6 @@
 import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
+import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import { TokenMaskViz } from "../grammar-constrained-generation/viz/ModernGrammarViz";
@@ -142,6 +143,50 @@ export default function GrammarTokenizerDecodingArticle() {
           ]}
           interpretation="금지 token은 e^(−∞)=0이므로 뽑히지 않습니다. 허용 후보의 상대 선호는 남지만, 선택한 숫자가 사실인지 또는 실행 권한이 있는지는 이 식이 보장하지 않습니다."
         />
+        <p className="text-sm leading-7 text-muted-foreground">
+          A(s)의 정의는 위 식으로 충분하지만, vocabulary가 수만~수십만 개인
+          현실에서 매 decode step마다 모든 token을 grammar로 하나씩 다시
+          시뮬레이션하면 너무 느립니다. 실제 구현(xgrammar·llguidance 등)은
+          token을 독립적으로 검사하지 않고, 공유 prefix를 trie로 묶어 한 번에
+          가지치기합니다.
+        </p>
+        <AlgorithmBlock
+          title="A(s) 계산 — vocabulary trie를 grammar와 함께 걷기"
+          input={[
+            "Matcher state s",
+            "Vocabulary trie T (byte 단위로 공유 prefix를 묶은 tree)",
+          ]}
+          steps={[
+            {
+              code: "stack = [(T.root, s)], A = {}",
+              note: "Trie root와 현재 grammar state의 쌍에서 DFS를 시작합니다.",
+            },
+            {
+              code: "while stack: node, cur_s = stack.pop()",
+              note: "매 token을 독립적으로 검사하지 않고, 이미 공유된 prefix는 한 번만 처리합니다.",
+            },
+            {
+              code: "  if node.is_token_end: A.add(node.token_id)",
+              note: "지금까지의 경로가 실제 vocabulary token 하나와 정확히 일치하면 허용 집합에 넣습니다.",
+            },
+            {
+              code: "  for byte, child in node.children:",
+              note: "현재 trie node에서 뻗어나가는 다음 byte들을 순회합니다.",
+            },
+            {
+              code: "    if grammar.can_advance(cur_s, byte): stack.push((child, grammar.advance(cur_s, byte)))",
+              note: "Grammar가 이 byte를 허용할 때만 그 subtree로 내려갑니다 — 허용되지 않으면 그 아래 모든 token을 한 번에 pruning합니다.",
+            },
+          ]}
+          output="허용 index 집합 A(s)"
+          repeatUntil="Stack이 빌 때까지 반복합니다(한 decode step당 한 번 계산)."
+        />
+        <p className="text-sm leading-7 text-muted-foreground">
+          같은 grammar state s가 여러 request나 여러 step에서 반복되면(예:
+          JSON의 <code>{`"`}</code> 다음처럼 흔한 state), 이미 계산한 A(s)를
+          state별로 caching해 재사용하는 것이 실제 serving 구현의 핵심
+          최적화입니다 — 다음 section의 caching·state 재사용과 이어집니다.
+        </p>
       </section>
 
       <section id="matcher-boundary" className="scroll-mt-20">

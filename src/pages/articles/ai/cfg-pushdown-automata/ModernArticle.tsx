@@ -1,5 +1,6 @@
 import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
+import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { PushdownStackViz } from "../grammar-constrained-generation/viz/ModernGrammarViz";
 
@@ -110,6 +111,45 @@ export default function CfgPushdownAutomataArticle() {
           ]}
           interpretation="입력 (()())은 깊이가 0→1→2→1→2→1→0이 됩니다. 중간에 음수가 되거나 마지막에 양수로 남으면 잘못된 string입니다."
         />
+        <p className="text-sm leading-7 text-muted-foreground">
+          위 예는 괄호 깊이 하나만 세지만, 실제로 임의의 CFG를 PDA로 옮기는
+          construction은 표준 절차가 있습니다 — stack에 정수 대신 grammar
+          symbol 자체를 쌓습니다.
+        </p>
+        <AlgorithmBlock
+          title="CFG → PDA construction (표준 절차)"
+          input={[
+            "CFG G (nonterminal마다 하나 이상의 production A → α)",
+            "입력 문자열 w (terminal symbol의 나열)",
+          ]}
+          steps={[
+            {
+              code: "stack = [S]",
+              note: "먼저 start symbol S 하나만 stack에 올립니다.",
+            },
+            {
+              code: "while stack:",
+              note: "Stack이 빌 때까지 top을 보고 아래 두 규칙 중 하나를 반복 적용합니다.",
+            },
+            {
+              code: "  if top(stack) is nonterminal A: choose A → α, pop A, push reverse(α)",
+              note: "A를 만들 수 있는 production 중 하나를 골라 A를 지우고, α를 왼쪽 symbol이 stack 맨 위에 오도록 뒤집어서 올립니다(예: array → [ values ]면 ], values, [ 순서로 push).",
+            },
+            {
+              code: "  if top(stack) is terminal a: if next(w) == a: pop a, consume a from w; else reject",
+              note: "Terminal이 top이면 input의 다음 글자와 정확히 같아야만 소비합니다 — 다르면 그 production 선택이 잘못된 것이라 실패합니다.",
+            },
+          ]}
+          output="stack과 w가 동시에 비면 accept, 아니면 reject"
+          repeatUntil="Stack이 비거나 더 이상 적용할 규칙이 없을 때까지 반복합니다."
+        />
+        <p className="text-sm leading-7 text-muted-foreground">
+          Nonterminal 선택(어떤 production을 고를지)이 여러 개일 수 있어 이
+          construction은 원래 비결정적(nondeterministic)입니다. 실제
+          top-down parser는 다음 몇 토큰을 미리 보는 lookahead로 이 선택을
+          결정적으로 좁히거나, 여러 선택지를 동시에 추적합니다 — 다음
+          section의 grammar-constrained decoding이 이 확장에 해당합니다.
+        </p>
       </section>
 
       <section id="implementation-boundary" className="scroll-mt-20">
