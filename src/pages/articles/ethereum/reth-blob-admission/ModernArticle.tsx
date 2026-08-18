@@ -2,11 +2,18 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { BlobAdmissionViz } from "../reth-eip4844/viz/ModernEip4844Viz";
+import { codeRefs } from "./codeRefs";
+import { rethBlobAdmissionTree } from "./fileTree";
 
 const RETH_BLOB = "https://github.com/paradigmxyz/reth/tree/main/crates/transaction-pool";
+const RETH_PROJECT_META = {
+  reth: { id: "reth", label: "Reth · Rust", badgeClass: "bg-orange-500/10 border-orange-500 text-orange-700" },
+};
 
 export default function ModernRethBlobAdmission() {
+  const sidebar = useCodeSidebar();
   return <article className="space-y-14">
     <section id="overview" className="space-y-6">
       <header className="space-y-3"><p className="text-sm font-semibold text-primary">큰 입력에 비싼 검사를 바로 실행하지 않기</p><h2 className="text-3xl font-bold tracking-tight">Admission은 “pool에 받아도 되는가”를 싼 질문부터 판정합니다</h2></header>
@@ -29,6 +36,10 @@ export default function ModernRethBlobAdmission() {
         { term: "Binding", description: "각 commitment에서 계산한 versioned hash가 같은 index의 reference와 같은지 확인합니다." },
         { term: "Reason code", description: "Fork mismatch, bad shape, fee failure, bad proof, capacity failure를 구분해 반환합니다.", boundary: "모든 실패를 invalid transaction 하나로 뭉개지 않습니다." },
       ]} />
+      <div className="not-prose flex flex-wrap items-center gap-2">
+        <CodeViewButton onClick={() => sidebar.open("tx-validate-stateless", codeRefs["tx-validate-stateless"])} />
+        <span className="text-xs text-muted-foreground">validate_stateless() — fork·크기·개수 검사</span>
+      </div>
     </section>
     <section id="state-kzg" className="space-y-6">
       <h2 className="text-2xl font-bold">모든 독립 gate가 참일 때만 admission이 열립니다</h2>
@@ -42,7 +53,24 @@ export default function ModernRethBlobAdmission() {
         { symbol: String.raw`I_{state}`, name: "State gate", description: "Nonce·balance·두 fee 조건의 판정입니다." },
         { symbol: String.raw`I_{budget}`, name: "Resource gate", description: "Pool memory·disk·account quota 판정입니다." },
       ]} assumptions={["모든 indicator는 같은 transaction·sidecar와 head snapshot에서 계산합니다.", "Gate 순서가 reason code와 비용 budget에 기록됩니다."]} interpretation="Shape·state·KZG가 모두 맞아도 pool disk quota가 0이면 A=0입니다. 이는 proof failure가 아니라 capacity rejection입니다." />
+      <div className="not-prose flex flex-wrap items-center gap-2">
+        <CodeViewButton onClick={() => sidebar.open("tx-validate-eip4844", codeRefs["tx-validate-eip4844"])} />
+        <span className="text-xs text-muted-foreground">validate_eip4844() — None/Missing/Present 분기</span>
+      </div>
+      <div className="not-prose flex flex-wrap items-center gap-2">
+        <CodeViewButton onClick={() => sidebar.open("blob-validate", codeRefs["blob-validate"])} />
+        <span className="text-xs text-muted-foreground">validate_blob_sidecar() — binding·KZG proof 검증</span>
+      </div>
     </section>
     <section id="paper-reth-blob-validation" className="space-y-5"><h2 className="text-2xl font-bold">구현 근거를 고정합니다</h2><CitationBlock type="code" citeKey={1} source="Reth transaction-pool source" href={RETH_BLOB}><p><strong>문제:</strong> Untrusted transaction을 값싼 검사부터 stateful·cryptographic 검사로 단계화해야 합니다.</p><p><strong>핵심 기여:</strong> Reth transaction-pool의 validator와 subpool boundary를 구현 근거로 사용합니다.</p><p><strong>중요 가정:</strong> 검사한 commit SHA, feature, ChainSpec과 KZG backend를 함께 고정합니다.</p><p><strong>근거 범위:</strong> 선택한 Reth source의 admission ordering과 typed outcome입니다.</p><p><strong>일반화 금지:</strong> Main branch의 현재 함수명·limit을 모든 release와 deployment의 고정값으로 일반화하지 않습니다.</p></CitationBlock></section>
+    <CodeSidebar
+      codeRefKey={sidebar.codeRefKey}
+      codeRef={sidebar.codeRef}
+      onClose={sidebar.close}
+      onNavigate={sidebar.navigate}
+      codeRefs={codeRefs}
+      fileTrees={{ reth: rethBlobAdmissionTree }}
+      projectMetas={RETH_PROJECT_META}
+    />
   </article>;
 }

@@ -2,11 +2,18 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { BlobReorgReleaseViz } from "../reth-eip4844/viz/ModernEip4844Viz";
+import { codeRefs } from "./codeRefs";
+import { rethBlobReorgReleaseTree } from "./fileTree";
 
 const RETH_SOURCE = "https://github.com/paradigmxyz/reth";
+const RETH_PROJECT_META = {
+  reth: { id: "reth", label: "Reth · Rust", badgeClass: "bg-orange-500/10 border-orange-500 text-orange-700" },
+};
 
 export default function ModernBlobReorgRelease() {
+  const sidebar = useCodeSidebar();
   return <article className="space-y-14">
     <section id="overview" className="space-y-6">
       <header className="space-y-3"><p className="text-sm font-semibold text-primary">Canonical chain이 바뀌어도 blob transaction을 다시 실행 가능하게 만들기</p><h2 className="text-3xl font-bold tracking-tight">Reorg는 transaction과 sidecar의 생명주기를 다시 결합합니다</h2></header>
@@ -18,6 +25,10 @@ export default function ModernBlobReorgRelease() {
         { term: "Reinsert outcome", description: "새 head의 nonce·fee·fork·pool budget에서 다시 admission됐는지 기록합니다.", boundary: "Old block에서 유효했다는 사실이 새 head admission을 보장하지 않습니다." },
       ]} />
       <BlobReorgReleaseViz />
+      <div className="not-prose flex flex-wrap items-center gap-2">
+        <CodeViewButton onClick={() => sidebar.open("canon-tracker", codeRefs["canon-tracker"])} />
+        <span className="text-xs text-muted-foreground">BlobStoreCanonTracker — 블록별 blob TX 추적</span>
+      </div>
       <ContentBoundary article="reth-blob-reorg-release" />
     </section>
     <section id="reinsert" className="space-y-6">
@@ -32,6 +43,10 @@ export default function ModernBlobReorgRelease() {
         { symbol: String.raw`I_{sidecar}`, name: "Sidecar indicator", description: "Local store에 대응 bytes가 있으면 1입니다." },
         { symbol: String.raw`I_{receipt}`, name: "Receipt indicator", description: "Digest·fork·validator generation이 재사용 조건과 맞으면 1입니다." },
       ]} assumptions={["세 indicator는 같은 transaction hash와 reorg generation을 가리킵니다.", "Fast path 뒤에도 새 head-relative nonce·fee·pool admission을 다시 검사합니다."]} interpretation="Body만 있고 sidecar가 없으면 I_fast=0입니다. Versioned hash에서 blob을 복원하지 않고 fetch 성공 또는 unavailable failure를 명시합니다." />
+      <div className="not-prose flex flex-wrap items-center gap-2">
+        <CodeViewButton onClick={() => sidebar.open("reinsert-sidecar-check", codeRefs["reinsert-sidecar-check"])} />
+        <span className="text-xs text-muted-foreground">blob_store.contains() — I_sidecar의 실제 구현</span>
+      </div>
     </section>
     <section id="release-gate" className="space-y-6">
       <h2 className="text-2xl font-bold">Release gate는 빠른 후보보다 같은 실패 결정을 먼저 요구합니다</h2>
@@ -42,7 +57,24 @@ export default function ModernBlobReorgRelease() {
         { term: "Restart parity", description: "각 crash point 뒤 같은 terminal state와 retry decision으로 수렴합니다." },
         { term: "Performance result", description: "위 parity를 통과한 뒤 p95 latency, memory, disk를 비교합니다.", boundary: "평균 처리량만 좋아진 candidate를 승인하지 않습니다." },
       ]} />
+      <div className="not-prose flex flex-wrap items-center gap-2">
+        <CodeViewButton onClick={() => sidebar.open("header-blob-gas", codeRefs["header-blob-gas"])} />
+        <span className="text-xs text-muted-foreground">validate_cancun_gas() — reorg 뒤에도 유지돼야 할 parity</span>
+      </div>
+      <div className="not-prose flex flex-wrap items-center gap-2">
+        <CodeViewButton onClick={() => sidebar.open("header-4844-standalone", codeRefs["header-4844-standalone"])} />
+        <span className="text-xs text-muted-foreground">validate_4844_header_standalone() — 네 가지 독립 불변식</span>
+      </div>
     </section>
     <section id="paper-reth-blob-reorg" className="space-y-5"><h2 className="text-2xl font-bold">구현 근거</h2><CitationBlock type="code" citeKey={1} source="Reth repository · blob pool lifecycle" href={RETH_SOURCE}><p><strong>문제:</strong> Canonical reorg와 finalization 사이에서 blob transaction body와 sidecar retention을 일관되게 관리해야 합니다.</p><p><strong>핵심 기여:</strong> Reth node, pool, chain notification과 storage implementation을 end-to-end source로 제공합니다.</p><p><strong>중요 가정:</strong> 같은 release/SHA, ChainSpec, KZG backend와 storage schema를 고정합니다.</p><p><strong>근거 범위:</strong> 선택한 Reth snapshot의 local reinsert·cleanup behavior입니다.</p><p><strong>일반화 금지:</strong> EL pool retention을 CL availability·archive retention이나 network fetch SLA로 확대하지 않습니다.</p></CitationBlock></section>
+    <CodeSidebar
+      codeRefKey={sidebar.codeRefKey}
+      codeRef={sidebar.codeRef}
+      onClose={sidebar.close}
+      onNavigate={sidebar.navigate}
+      codeRefs={codeRefs}
+      fileTrees={{ reth: rethBlobReorgReleaseTree }}
+      projectMetas={RETH_PROJECT_META}
+    />
   </article>;
 }

@@ -58,6 +58,23 @@ build 통과는 완료의 증거가 아니며, 아래 Definition of Done을 모�
 - 논문 자체의 방법·유도·ablation이 독립적인 학습 대상이면 별도 canonical article로 분리한다. 현재 글의 근거 한 부분이면 얕은 논문 요약 글을 만들지 않고 해당 section에 통합한다.
 - 별도 논문 article을 만들 때는 논문 제목이 sidebar와 근거 지도에서 보이고, 원 개념 글과 양방향으로 연결되어야 한다.
 
+### 2.3 코드 분석형 글의 소스 근거
+
+- Reth·Prysm·CometBFT·Filecoin·Helios처럼 실제 오픈소스 codebase의 동작을 추적하는 글은
+  "코드 분석형" 글이다. 이 글들은 spec·paper 근거만으로 완료되지 않으며, 설명하는 각 단계마다
+  실제 source 함수를 `CodeSidebar`/`CodeViewButton`(`@/components/code`)로 열람할 수 있어야
+  한다. Pin한 codebase 스냅샷을 `codebase/`에 두고, 함수명·파일 경로·줄 범위를 실제 코드와
+  맞춰 `codeRefs`에 등록하며, 최소 핵심 단계마다 한 개 이상의 `CodeViewButton`을 본문에 심는다.
+- 개념적으로 순수한 수학·이론 글(예: 암호 primitive 이론, ML 개념)은 이 요구에서 제외된다.
+  판단 기준은 "이 글이 특정 오픈소스 구현의 동작을 설명하는가"이다.
+- `TermBreakdown`·`ExplainedFormula`로 개념과 수식을 설명하는 새 글 형식(`ModernArticle`
+  패턴)도 코드 분석형 주제라면 이 요구에서 면제되지 않는다. 개념 설명과 실제 코드 근거는
+  같은 글 안에서 함께 있어야 하며, 하나가 다른 하나를 대체하지 않는다.
+- `codeRefs`의 `desc`는 "문제 → 해결"을 한 문장씩 담고, `annotations`는 강조한 줄 범위가
+  왜 그 역할을 하는지 설명한다. 함수 이름과 실제 line 번호가 없는 "구현 근거" 문단(예:
+  generic한 "Reth transaction-pool source" 링크 하나만 인용)은 코드 분석형 글의 완료 근거로
+  보지 않는다.
+
 ## 3. 수식 설명
 
 모든 주요 KaTeX 식은 다음 순서를 지킨다.
@@ -74,9 +91,20 @@ build 통과는 완료의 증거가 아니며, 아래 Definition of Done을 모�
 않는다. 기호 사전만으로 설명을 끝내지 않고, 곱은 무엇을 결합하거나 mask하는지, 합은 어떤
 기여를 어느 범위까지 누적하는지, 나눗셈은 무엇을 기준으로 정규화하는지를 KaTeX 주석 식으로
 직접 보여 준다. 모든 `ExplainedFormula`는 식의 실제 항을 사용하는 `annotatedFormula`와
-도메인 의미를 적은 `operations`를 명시한다. 공통 fallback은 전환 중인 레거시 식이 빈 화면이
-되지 않게 하는 임시 표현일 뿐 완료 근거가 아니다. `audit:formula -- --strict --require-explicit`에서
-식 하나씩 이를 검사한다. 단순 표기나 이미 충분히 설명된 inline math에는 이 블록을 반복하지 않는다.
+도메인 의미를 적은 `operations`를 명시한다. `operations`의 각 `expression`은 `annotatedFormula`에
+실제로 등장하는 기호를 그대로 써서, 독자가 "이 설명이 식의 어느 조각을 말하는가"를 한눈에
+대응시킬 수 있어야 한다. 공통 fallback(제네릭 `\text{요인}_1\times\text{요인}_2` 류)은 전환 중인
+레거시 식이 빈 화면이 되지 않게 하는 임시 표현일 뿐 완료 근거가 아니다 — fallback은 실제 식의
+기호를 담지 않으므로 "왜 하는지" 문장만 남고 "어떤 조각을 말하는지"는 사라진다. `audit:formula
+-- --strict --require-explicit`에서 식 하나씩 이를 검사한다. 단순 표기나 이미 충분히 설명된
+inline math에는 이 블록을 반복하지 않는다.
+
+수식이 그리는 관계가 threshold·monotonic 증가·piecewise saturation처럼 그래프로 볼 때 더 잘
+읽히면, `ExplainedFormula` 옆에 실제 함수 그래프(순수 수학 함수는 `mafs`, 데이터 계열 비교는
+`recharts`)를 추가한다. 이 그래프는 상태 전이나 pipeline을 그리는 mechanism Viz(4장)를
+대체하지 않으며, "입력이 바뀌면 식의 출력이 어떻게 움직이는가"라는 별도 질문에 답한다. 모든
+식에 그래프가 필요한 것은 아니다 — AND/OR gate처럼 이산적인 조건식에는 흐름을 보여 주는
+mechanism Viz가 더 적합하다.
 
 ## 4. Viz
 
@@ -144,6 +172,9 @@ build 통과는 완료의 증거가 아니며, 아래 Definition of Done을 모�
 - [ ] 주요 주장은 원 논문·공식 문서·실측 근거와 연결된다.
 - [ ] 핵심 논문마다 현재 글의 paper reading note 또는 별도 canonical paper article로 이어지는 내부 해설 경로가 있다.
 - [ ] 주요 KaTeX가 질문·아이디어·식·기호·전제·해석 순서를 따른다.
+- [ ] `ExplainedFormula`의 `operations`는 실제 식의 기호를 쓰는 explicit 값이며 제네릭 fallback이 아니다.
+- [ ] 코드 분석형 글(실제 오픈소스 codebase를 추적하는 글)은 핵심 단계마다 `CodeSidebar`로 열람 가능한 실제 source 함수·줄 범위 근거가 있다.
+- [ ] threshold·monotonic·piecewise 관계를 다루는 수식에는 mechanism Viz와 별도로 함수 그래프가 있는지 검토했다.
 - [ ] Model VRAM을 다루는 글은 parameter headline×단일 dtype으로 끝내지 않고 실제 checkpoint의 dtype별 tensor payload, GB·GiB 단위, weight residency와 KV·recurrent state·workspace·allocator headroom을 분리해 계산한다.
 - [ ] Viz가 메커니즘을 표현하며 정적 스타일 검사를 통과한다.
 - [ ] canonical article과 선행·후속 링크가 명확하고 긴 중복이 없다.

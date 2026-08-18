@@ -7,6 +7,15 @@
 @import "mafs/core.css";
 @import "mafs/font.css";
 
+/* mafs 기본 테마는 검정/흰색 고정이라 site light/dark 테마와 어긋난다. mafs/core.css가
+   @layer 밖에 있어 layer 안 규칙보다 우선하므로, 이 override도 @layer 밖에 둬야 이긴다.
+   함수 그래프를 쓰는 컴포넌트는 .themed-mafs로 감싸 site token을 따르게 한다. */
+.themed-mafs .MafsView {
+  --mafs-bg: var(--background);
+  --mafs-fg: var(--foreground);
+  --mafs-line-color: var(--border);
+}
+
 @custom-variant dark (&:is(.dark *));
 
 :root {

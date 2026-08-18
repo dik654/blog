@@ -2,11 +2,18 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { BlobStoreLifecycleViz } from "../reth-eip4844/viz/ModernEip4844Viz";
+import { codeRefs } from "./codeRefs";
+import { rethBlobStorageTree } from "./fileTree";
 
 const RETH_BLOBSTORE = "https://github.com/paradigmxyz/reth/tree/main/crates/transaction-pool";
+const RETH_PROJECT_META = {
+  reth: { id: "reth", label: "Reth · Rust", badgeClass: "bg-orange-500/10 border-orange-500 text-orange-700" },
+};
 
 export default function ModernRethBlobStorage() {
+  const sidebar = useCodeSidebar();
   return <article className="space-y-14">
     <section id="overview" className="space-y-6">
       <header className="space-y-3"><p className="text-sm font-semibold text-primary">검증한 큰 bytes를 다시 찾을 수 있게 만들기</p><h2 className="text-3xl font-bold tracking-tight">BlobStore는 sidecar bytes와 검증 영수증의 생명주기를 소유합니다</h2></header>
@@ -18,6 +25,10 @@ export default function ModernRethBlobStorage() {
         { term: "Generation receipt", description: "Schema·fork·validator revision과 write/cleanup generation을 기록합니다.", example: "Restart가 partial write인지 이미 완료된 write인지 판별합니다." },
       ]} />
       <BlobStoreLifecycleViz />
+      <div className="not-prose flex flex-wrap items-center gap-2">
+        <CodeViewButton onClick={() => sidebar.open("blobstore-trait", codeRefs["blobstore-trait"])} />
+        <span className="text-xs text-muted-foreground">BlobStore trait — insert·delete·cleanup·get 시그니처</span>
+      </div>
       <ContentBoundary article="reth-blob-storage" />
     </section>
     <section id="write-read" className="space-y-6">
@@ -37,6 +48,10 @@ export default function ModernRethBlobStorage() {
         { symbol: String.raw`B_H`, name: "Stored sidecar", description: "Key H에서 읽은 serialized sidecar bytes입니다." },
         { symbol: String.raw`d_H`, name: "Write digest", description: "Atomic write receipt에 기록한 expected digest입니다." },
       ]} assumptions={["Key·bytes·digest·generation write가 atomic하거나 recovery log를 가집니다.", "Digest algorithm과 serialization revision을 고정합니다."]} interpretation="Bytes가 있어도 digest가 다르면 H=0이며 결과는 corrupt입니다. Network miss처럼 조용히 다시 받기 전에 local corruption을 기록합니다." />
+      <div className="not-prose flex flex-wrap items-center gap-2">
+        <CodeViewButton onClick={() => sidebar.open("disk-inner-ops", codeRefs["disk-inner-ops"])} />
+        <span className="text-xs text-muted-foreground">insert_one() / get_one() — 캐시·디스크 동기화</span>
+      </div>
     </section>
     <section id="failure-cleanup" className="space-y-6">
       <h2 className="text-2xl font-bold">Cleanup은 finality signal과 local retention policy를 연결하는 별도 작업입니다</h2>
@@ -47,7 +62,24 @@ export default function ModernRethBlobStorage() {
         { term: "Crash cursor", description: "Delete 중 restart했을 때 재개할 stable position입니다." },
         { term: "Retention owner", description: "EL pool, CL node, archive가 각자 소유한 기간을 구분합니다." },
       ]} />
+      <div className="not-prose flex flex-wrap items-center gap-2">
+        <CodeViewButton onClick={() => sidebar.open("disk-blobstore", codeRefs["disk-blobstore"])} />
+        <span className="text-xs text-muted-foreground">delete() / cleanup() — 지연 삭제</span>
+      </div>
+      <div className="not-prose flex flex-wrap items-center gap-2">
+        <CodeViewButton onClick={() => sidebar.open("mem-blobstore", codeRefs["mem-blobstore"])} />
+        <span className="text-xs text-muted-foreground">InMemoryBlobStore — cleanup이 no-op인 대조 구현</span>
+      </div>
     </section>
     <section id="paper-reth-blobstore" className="space-y-5"><h2 className="text-2xl font-bold">구현 근거</h2><CitationBlock type="code" citeKey={1} source="Reth blob-store source" href={RETH_BLOBSTORE}><p><strong>문제:</strong> 큰 sidecar를 pool entry와 분리해 저장하면서 reorg·restart·cleanup에 안전하게 다시 연결해야 합니다.</p><p><strong>핵심 기여:</strong> Reth transaction-pool storage abstraction과 blob artifact lifecycle 구현을 제공합니다.</p><p><strong>중요 가정:</strong> Source SHA, storage backend, schema, fsync와 cleanup policy를 고정합니다.</p><p><strong>근거 범위:</strong> 선택한 implementation snapshot의 read/write/delete boundary입니다.</p><p><strong>일반화 금지:</strong> Local retention을 Ethereum 전체의 data availability나 영구 보관으로 확대하지 않습니다.</p></CitationBlock></section>
+    <CodeSidebar
+      codeRefKey={sidebar.codeRefKey}
+      codeRef={sidebar.codeRef}
+      onClose={sidebar.close}
+      onNavigate={sidebar.navigate}
+      codeRefs={codeRefs}
+      fileTrees={{ reth: rethBlobStorageTree }}
+      projectMetas={RETH_PROJECT_META}
+    />
   </article>;
 }

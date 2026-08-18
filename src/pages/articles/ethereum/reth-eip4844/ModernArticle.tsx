@@ -2,11 +2,18 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { BlobBoundaryViz } from "./viz/ModernEip4844Viz";
+import { modernCodeRefs } from "./modernCodeRefs";
+import { modernRethEip4844Tree } from "./modernFileTree";
 
 const EIP_4844 = "https://eips.ethereum.org/EIPS/eip-4844";
+const RETH_PROJECT_META = {
+  reth: { id: "reth", label: "Reth · Rust", badgeClass: "bg-orange-500/10 border-orange-500 text-orange-700" },
+};
 
 export default function ModernRethEip4844() {
+  const sidebar = useCodeSidebar();
   return (
     <article className="space-y-14">
       <section id="overview" className="space-y-6">
@@ -57,6 +64,10 @@ export default function ModernRethEip4844() {
           assumptions={["C의 byte encoding과 SHA-256 입력 순서를 고정합니다.", "현재 활성 fork가 기대하는 version byte를 사용합니다.", "이 binding은 proof 검증이나 data availability를 대신하지 않습니다."]}
           interpretation="예를 들어 digest 첫 byte가 0xab여도 version v=0x01이면 결과 첫 byte는 0x01이고 뒤 31 bytes만 digest에서 이어집니다."
         />
+        <div className="not-prose flex flex-wrap items-center gap-2">
+          <CodeViewButton onClick={() => sidebar.open("versioned-hash-check", modernCodeRefs["versioned-hash-check"])} />
+          <span className="text-xs text-muted-foreground">kzg_to_versioned_hash() — 이 식이 실제로 검증되는 지점</span>
+        </div>
       </section>
 
       <section id="paper-eip4844" className="space-y-5">
@@ -69,6 +80,15 @@ export default function ModernRethEip4844() {
           <p><strong>일반화 금지:</strong> Blob의 영구 보존, rollup execution correctness나 특정 client의 pool/storage 정책까지 보장하지 않습니다.</p>
         </CitationBlock>
       </section>
+      <CodeSidebar
+        codeRefKey={sidebar.codeRefKey}
+        codeRef={sidebar.codeRef}
+        onClose={sidebar.close}
+        onNavigate={sidebar.navigate}
+        codeRefs={modernCodeRefs}
+        fileTrees={{ reth: modernRethEip4844Tree }}
+        projectMetas={RETH_PROJECT_META}
+      />
     </article>
   );
 }

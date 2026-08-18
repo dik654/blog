@@ -2,11 +2,19 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { BlobFeeFeedbackViz } from "../reth-eip4844/viz/ModernEip4844Viz";
+import BlobFeeCurveChart from "./BlobFeeCurveChart";
+import { codeRefs } from "./codeRefs";
+import { eip4844BlobFeeTree } from "./fileTree";
 
 const EIP_4844 = "https://eips.ethereum.org/EIPS/eip-4844";
+const RETH_PROJECT_META = {
+  reth: { id: "reth", label: "Reth · Rust", badgeClass: "bg-orange-500/10 border-orange-500 text-orange-700" },
+};
 
 export default function ModernBlobFee() {
+  const sidebar = useCodeSidebar();
   return <article className="space-y-14">
     <section id="overview" className="space-y-6">
       <header className="space-y-3"><p className="text-sm font-semibold text-primary">Blob 수요만 따로 가격에 되먹이기</p><h2 className="text-3xl font-bold tracking-tight">Blob fee는 execution gas와 분리된 수요 원장을 읽습니다</h2></header>
@@ -32,6 +40,10 @@ export default function ModernBlobFee() {
         { symbol: String.raw`U_n`, name: "Parent usage", description: "Parent block의 blob gas used입니다." },
         { symbol: String.raw`T_n`, name: "Active target", description: "Parent timestamp에서 활성인 target blob gas입니다." },
       ]} assumptions={["E·U·T는 같은 blob-gas 단위입니다.", "Target은 활성 fork configuration에서 읽습니다.", "Arithmetic overflow와 fork transition을 consensus 규칙대로 처리합니다."]} interpretation="2+5−3=4입니다. 반대로 2+0−3=−1이면 max가 0을 골라 다음 excess는 0입니다." />
+      <div className="not-prose flex flex-wrap items-center gap-2">
+        <CodeViewButton onClick={() => sidebar.open("calc-excess-blob-gas", codeRefs["calc-excess-blob-gas"])} />
+        <span className="text-xs text-muted-foreground">calc_excess_blob_gas() — max(0, E+U−T)의 실제 구현</span>
+      </div>
     </section>
     <section id="integer-fee" className="space-y-6">
       <h2 className="text-2xl font-bold">정수 fake-exponential은 client마다 같은 price를 만들기 위한 계산법입니다</h2>
@@ -42,7 +54,31 @@ export default function ModernBlobFee() {
         { term: "Blob base fee", description: "Blob gas 한 단위의 protocol minimum price입니다." },
         { term: "Rollup total cost", description: "Compression, execution, proving, posting을 모두 포함한 별도 비용입니다.", boundary: "Blob base fee 감소를 총비용의 같은 비율 감소로 읽지 않습니다." },
       ]} />
+      <ExplainedFormula question="왜 나눗셈과 반복 곱을 써서 지수 함수를 흉내내나요?" idea={<p>부동소수점 없이 factor·e^(n/d) 모양을 만들려고, 이전 항에 n/(d·i)를 곱해 다음 Taylor 항을 순서대로 만들고 전부 더한 뒤 마지막에 한 번만 d로 나눕니다.</p>} formula={String.raw`P=\frac{1}{d}\sum_{i=0}^{k} a_i,\quad a_0=fd,\ a_i=a_{i-1}\cdot\frac{n}{d\,i}`} annotatedFormula={String.raw`\begin{aligned}a_0&=\underbrace{f\cdot d}_{\text{초기 누적자 — factor를 denom 배로 키워 정수 나눗셈 오차를 늦춤}}\\a_i&=\underbrace{a_{i-1}\cdot\frac{n}{d\,i}}_{\text{이전 항에 }n/(di)\text{를 곱해 다음 Taylor 항을 생성}}\\P&=\underbrace{\frac{1}{d}\sum_{i=0}^{k} a_i}_{\text{모든 항을 더한 뒤 }d\text{로 나눠 최종 price로 정규화}}
+\end{aligned}`} operations={[
+        { expression: String.raw`f\cdot d`, annotation: ["factor를 denom 배로 확대해", "정수 나눗셈에서 정밀도를 보존"] },
+        { expression: String.raw`a_{i-1}\cdot\frac{n}{d\,i}`, annotation: ["이전 항에 n/(d·i)를 곱해", "다음 Taylor 항을 순서대로 생성"] },
+        { expression: String.raw`\frac{1}{d}\sum_{i=0}^{k} a_i`, annotation: ["모든 항을 누적한 뒤 d로 나눠", "최종 price로 정규화"] },
+      ]} terms={[
+        { symbol: "f", name: "Factor", description: "MIN_BLOB_GASPRICE — excess가 0일 때의 최소 price입니다." },
+        { symbol: "n", name: "Numerator", description: "이번 block의 excess blob gas입니다." },
+        { symbol: "d", name: "Denominator", description: "BLOB_GASPRICE_UPDATE_FRACTION — price 증가 속도를 정하는 fork parameter입니다." },
+      ]} assumptions={["항 a_i가 0으로 수렴하면(정수 나눗셈이 0을 반환) 반복을 멈춥니다.", "모든 연산은 정수 산술이며 부동소수점을 쓰지 않습니다."]} interpretation="n/d가 0에 가까우면 P는 f에 가깝습니다. n/d가 1, 2, 3으로 커지면 P는 각각 f의 e배, e²배, e³배로 뛰어오릅니다 — 아래 그래프가 이 모양을 보여줍니다." />
+      <BlobFeeCurveChart />
+      <div className="not-prose flex flex-wrap items-center gap-2">
+        <CodeViewButton onClick={() => sidebar.open("calc-blob-fee", codeRefs["calc-blob-fee"])} />
+        <span className="text-xs text-muted-foreground">fake_exponential() — 정수 Taylor 근사의 실제 구현</span>
+      </div>
     </section>
     <section id="paper-eip4844-fee" className="space-y-5"><h2 className="text-2xl font-bold">규범적 근거</h2><CitationBlock type="paper" citeKey={1} source="EIP-4844 blob gas update" href={EIP_4844}><p><strong>문제:</strong> Blob data demand를 execution gas와 독립적으로 target 주변에 유지해야 합니다.</p><p><strong>핵심 기여:</strong> Excess blob gas update와 integer fake-exponential minimum fee를 정의합니다.</p><p><strong>중요 가정:</strong> 활성 fork의 target, update fraction, integer width와 header fields를 사용합니다.</p><p><strong>근거 범위:</strong> Consensus-visible blob gas state와 minimum fee 계산입니다.</p><p><strong>일반화 금지:</strong> User priority policy, rollup compression ratio나 미래 fork parameter를 고정하지 않습니다.</p></CitationBlock></section>
+    <CodeSidebar
+      codeRefKey={sidebar.codeRefKey}
+      codeRef={sidebar.codeRef}
+      onClose={sidebar.close}
+      onNavigate={sidebar.navigate}
+      codeRefs={codeRefs}
+      fileTrees={{ reth: eip4844BlobFeeTree }}
+      projectMetas={RETH_PROJECT_META}
+    />
   </article>;
 }
