@@ -512,10 +512,15 @@ export default function ArticleLessonFlowViz({
           key={step.id}
           data-concept-step={step.id}
           role="tabpanel"
+          layout="size"
           className="min-w-0 overflow-hidden border-t border-border/65 bg-muted/[0.1]"
           initial={reduceMotion ? false : { opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.28, ease: "easeOut" }}
+          transition={
+            reduceMotion
+              ? { duration: 0 }
+              : { duration: 0.28, ease: "easeOut" }
+          }
         >
           <div className="flex flex-col gap-3 border-b border-border/55 bg-background px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="min-w-0">
