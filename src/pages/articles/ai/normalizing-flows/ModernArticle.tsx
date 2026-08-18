@@ -2,9 +2,13 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
+import { codeRefs } from "./codeRefs";
+import { normalizingFlowsTree } from "./fileTree";
 import { FlowChangeViz } from "../generative-theory/viz/ModernGenerativeTheoryViz";
 
 export default function NormalizingFlowsArticle() {
+  const sidebar = useCodeSidebar();
   return (
     <div className="space-y-16">
       <section id="overview" className="scroll-mt-20">
@@ -118,6 +122,22 @@ export default function NormalizingFlowsArticle() {
           ]}
           interpretation="x=2z이면 z=x/2이고 |dz/dx|=1/2이므로 pX(x)=pZ(x/2)/2입니다. 두 배 넓어진 구간에 같은 mass가 퍼져 density가 절반이 됩니다."
         />
+        <CodeViewButton
+          onClick={() =>
+            sidebar.open(
+              "affine-inverse-jacobian",
+              codeRefs["affine-inverse-jacobian"],
+            )
+          }
+        />
+        <CodeViewButton
+          onClick={() =>
+            sidebar.open(
+              "change-of-variables-logprob",
+              codeRefs["change-of-variables-logprob"],
+            )
+          }
+        />
       </section>
 
       <section id="failure-boundary" className="scroll-mt-20">
@@ -151,6 +171,21 @@ export default function NormalizingFlowsArticle() {
           동일 순위를 뜻하지 않습니다.
         </CitationBlock>
       </section>
+      <CodeSidebar
+        codeRefKey={sidebar.codeRefKey}
+        codeRef={sidebar.codeRef}
+        onClose={sidebar.close}
+        onNavigate={sidebar.navigate}
+        codeRefs={codeRefs}
+        fileTrees={{ torch: normalizingFlowsTree }}
+        projectMetas={{
+          torch: {
+            id: "torch",
+            label: "PyTorch · Python",
+            badgeClass: "bg-orange-500/10 border-orange-500 text-orange-700",
+          },
+        }}
+      />
     </div>
   );
 }
