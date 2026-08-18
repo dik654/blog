@@ -2,9 +2,13 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
+import { codeRefs } from "./codeRefs";
+import { adamOptimizerTree } from "./fileTree";
 import { AdamStateViz } from "../optimizers/viz/ModernOptimizerViz";
 
 export default function AdamOptimizerArticle() {
+  const sidebar = useCodeSidebar();
   return (
     <div className="space-y-16">
       <section id="overview" className="scroll-mt-20">
@@ -116,6 +120,11 @@ export default function AdamOptimizerArticle() {
             "β₁=.9, β₂=.999 예시는 convention을 고정합니다.",
           ]}
           interpretation="m₁=.1×2=.2이고 v₁=.001×4=.004입니다. v에 평균을 뺀 centered deviation은 들어가지 않습니다."
+        />
+        <CodeViewButton
+          onClick={() =>
+            sidebar.open("moment-update", codeRefs["moment-update"])
+          }
         />
       </section>
 
@@ -252,6 +261,14 @@ export default function AdamOptimizerArticle() {
           ]}
           interpretation="m̂가 같고 ε를 무시하면 v̂=1은 1로, v̂=100은 10으로 나누므로 두 번째 coordinate step은 첫 번째의 1/10입니다."
         />
+        <CodeViewButton
+          onClick={() =>
+            sidebar.open(
+              "bias-correction-update",
+              codeRefs["bias-correction-update"],
+            )
+          }
+        />
       </section>
 
       <section id="release-boundary" className="scroll-mt-20">
@@ -298,6 +315,21 @@ export default function AdamOptimizerArticle() {
           </CitationBlock>
         </div>
       </section>
+      <CodeSidebar
+        codeRefKey={sidebar.codeRefKey}
+        codeRef={sidebar.codeRef}
+        onClose={sidebar.close}
+        onNavigate={sidebar.navigate}
+        codeRefs={codeRefs}
+        fileTrees={{ torch: adamOptimizerTree }}
+        projectMetas={{
+          torch: {
+            id: "torch",
+            label: "PyTorch · Python",
+            badgeClass: "bg-orange-500/10 border-orange-500 text-orange-700",
+          },
+        }}
+      />
     </div>
   );
 }
