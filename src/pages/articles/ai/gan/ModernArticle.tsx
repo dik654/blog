@@ -3,12 +3,17 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ConceptLadderViz from "@/components/viz/ConceptLadderViz";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
+import { codeRefs } from "./codeRefs";
+import { ganTree } from "./fileTree";
 import GanGameViz from "./GanGameViz";
 
 const ORIGINAL = "https://arxiv.org/abs/1406.2661";
 
 export default function GanFoundationsArticle() {
+  const sidebar = useCodeSidebar();
   return (
+    <>
     <article id="overview" className="space-y-16">
       <section id="distribution" className="space-y-6">
         <Header
@@ -237,6 +242,14 @@ export default function GanFoundationsArticle() {
           output="학습된 G (data 분포를 근사하는 sampler)"
           repeatUntil="D와 G의 loss가 안정적인 균형에 도달하거나 sample quality metric(FID 등)이 더 개선되지 않을 때까지 반복합니다."
         />
+        <CodeViewButton
+          onClick={() =>
+            sidebar.open(
+              "minimax-training-loop",
+              codeRefs["minimax-training-loop"],
+            )
+          }
+        />
         <p className="leading-7">
           이제부터는 objective 하나가 아니라 update 순서를 봐야 합니다.{" "}
           <a
@@ -298,6 +311,22 @@ export default function GanFoundationsArticle() {
         <ContentBoundary article="gan" />
       </section>
     </article>
+      <CodeSidebar
+        codeRefKey={sidebar.codeRefKey}
+        codeRef={sidebar.codeRef}
+        onClose={sidebar.close}
+        onNavigate={sidebar.navigate}
+        codeRefs={codeRefs}
+        fileTrees={{ "pytorch-examples": ganTree }}
+        projectMetas={{
+          "pytorch-examples": {
+            id: "pytorch-examples",
+            label: "PyTorch examples · Python",
+            badgeClass: "bg-orange-500/10 border-orange-500 text-orange-700",
+          },
+        }}
+      />
+    </>
   );
 }
 function Header({
