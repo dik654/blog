@@ -1,9 +1,17 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
+import type { CodeRef } from "@/components/code/types";
+import { CodeViewButton } from "@/components/code";
 import GRUFlowViz from "./viz/GRUFlowViz";
 
-export default function Variants() {
+export default function Variants({
+  onCodeRef,
+  codeRefs,
+}: {
+  onCodeRef?: (key: string, ref: CodeRef) => void;
+  codeRefs?: Record<string, CodeRef>;
+} = {}) {
   return (
     <section id="state-update" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Reset→candidate→update를 순서대로 조합한다</h2>
@@ -74,9 +82,14 @@ h_t
           { symbol: "a_r,a_z", name: "Gate preactivation", description: "Sigmoid 전의 현재 input·과거 state affine evidence입니다." },
           { symbol: "m_t", name: "Reset-filtered history", description: "Candidate에 허용하도록 reset gate를 곱한 이전 hidden입니다." },
         ]}
-        assumptions={["Cho 등의 GRU 계열 표기 중 하나이며 reset 적용 위치와 update convention은 구현마다 다를 수 있습니다.", "LSTM과 공정하게 비교하려면 hidden size가 아니라 parameter·FLOP·state memory budget을 맞춥니다."]}
+        assumptions={["Cho 등의 GRU 계열 표기 중 하나입니다. 예를 들어 PyTorch nn.GRUCell은 reset gate를 U_h(r_t⊙h_{t-1})처럼 h_{t-1}에 먼저 곱하지 않고, r_t⊙(U_hh_{t-1}+b_h)처럼 행렬곱 결과 전체에 곱합니다 — 행렬곱이 elementwise 곱에 분배되지 않으므로 이 둘은 대수적으로 다른 함수입니다.", "LSTM과 공정하게 비교하려면 hidden size가 아니라 parameter·FLOP·state memory budget을 맞춥니다."]}
         interpretation="z가 0이면 과거를 유지하고 1이면 candidate로 교체한다. LSTM의 input·forget gate를 하나의 interpolation policy로 결합한 것으로 볼 수 있지만 완전히 같은 parameterization은 아닙니다."
       />
+      {onCodeRef && codeRefs && (
+        <CodeViewButton
+          onClick={() => onCodeRef("gate-formula", codeRefs["gate-formula"])}
+        />
+      )}
 
       <GRUFlowViz />
       <ContentBoundary article="gru" />

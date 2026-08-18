@@ -1,6 +1,11 @@
 import Variants from "./lstm/Variants";
+import { CodeSidebar, useCodeSidebar } from "@/components/code";
+import { codeRefs } from "./gru/codeRefs";
+import { gruTree } from "./gru/fileTree";
 
 export default function GRUArticle() {
+  const sidebar = useCodeSidebar();
+
   return (
     <article className="space-y-14">
       <section id="overview" className="scroll-mt-20 space-y-4">
@@ -14,7 +19,22 @@ export default function GRUArticle() {
           마지막에 하나의 recurrent transition으로 조합합니다.
         </p>
       </section>
-      <Variants />
+      <Variants onCodeRef={sidebar.open} codeRefs={codeRefs} />
+      <CodeSidebar
+        codeRefKey={sidebar.codeRefKey}
+        codeRef={sidebar.codeRef}
+        onClose={sidebar.close}
+        onNavigate={sidebar.navigate}
+        codeRefs={codeRefs}
+        fileTrees={{ torch: gruTree }}
+        projectMetas={{
+          torch: {
+            id: "torch",
+            label: "PyTorch · Python",
+            badgeClass: "bg-orange-500/10 border-orange-500 text-orange-700",
+          },
+        }}
+      />
     </article>
   );
 }
