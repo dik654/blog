@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import VizFrame from "@/components/viz/VizFrame";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
+import { codeRefs } from "./mixture-of-experts/codeRefs";
+import { mixtureOfExpertsTree } from "./mixture-of-experts/fileTree";
 
 const experts = [
   { label: "E₁", topic: "공통 표현", load: 7, selected: true },
@@ -256,6 +259,7 @@ function PaperNote({
 }
 
 export default function MixtureOfExpertsArticle() {
+  const sidebar = useCodeSidebar();
   return (
     <>
       <section id="overview" className="mb-16 scroll-mt-20">
@@ -291,6 +295,11 @@ export default function MixtureOfExpertsArticle() {
             "Top-k 전후의 normalization, shared expert와 routing bias는 architecture마다 다릅니다.",
           ]}
           interpretation="k가 expert 전체 수 n보다 훨씬 작으면 expert FFN 계산은 sparse해집니다. 그러나 router와 dispatch 비용, 모든 expert weight를 저장하는 memory까지 k/n으로 줄어드는 것은 아닙니다."
+        />
+        <CodeViewButton
+          onClick={() =>
+            sidebar.open("expert-combine", codeRefs["expert-combine"])
+          }
         />
 
         <PaperNote id="paper-sparsely-gated-moe" label="Outrageously Large Neural Networks" href="https://arxiv.org/abs/1701.06538">
@@ -334,6 +343,9 @@ export default function MixtureOfExpertsArticle() {
             "Shared expert가 있다면 router 선택과 무관하게 추가 계산될 수 있습니다.",
           ]}
           interpretation="Router는 ‘정답 expert’를 분류하는 supervised classifier가 아닙니다. Language-model loss와 balancing signal을 통해 end-to-end로 유용한 경로를 학습합니다."
+        />
+        <CodeViewButton
+          onClick={() => sidebar.open("router-topk", codeRefs["router-topk"])}
         />
 
         <div className="prose prose-neutral max-w-none dark:prose-invert">
@@ -551,6 +563,21 @@ L_{\rm aux}&=\underbrace{\alpha N\sum_{i=1}^{N}f_iP_i}_{\text{두 값이 모두 
           </p>
         </div>
       </section>
+      <CodeSidebar
+        codeRefKey={sidebar.codeRefKey}
+        codeRef={sidebar.codeRef}
+        onClose={sidebar.close}
+        onNavigate={sidebar.navigate}
+        codeRefs={codeRefs}
+        fileTrees={{ transformers: mixtureOfExpertsTree }}
+        projectMetas={{
+          transformers: {
+            id: "transformers",
+            label: "HuggingFace transformers · Python",
+            badgeClass: "bg-yellow-500/10 border-yellow-500 text-yellow-700",
+          },
+        }}
+      />
     </>
   );
 }
