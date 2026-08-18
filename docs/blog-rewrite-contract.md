@@ -116,6 +116,12 @@ build 통과는 완료의 증거가 아니며, 아래 Definition of Done을 모�
 - CodeSidebar(2.3)와 역할이 다르다. CodeSidebar는 "이 실제 오픈소스가 어떻게 구현했는가"를
   보여주고, AlgorithmBlock은 "이 개념 자체를 처음부터 구현하려면 어떤 절차인가"를 보여준다.
   코드 분석형 글은 실제 구현이 있으니 AlgorithmBlock으로 재발명하지 않고 CodeSidebar를 쓴다.
+- 완결성을 감사할 때는 "교과서라면 이걸 다뤘을 것"이라는 추정보다 "PyTorch·NumPy·SciPy 같은
+  표준 라이브러리가 실제로 이 concept를 어떻게 구현·문서화했는가"와 대조하는 쪽이 더 객관적이고
+  반박하기 어려운 기준이다. 벡터·norm·gradient·복소수처럼 "순수 수학"으로 보이는 concept도
+  거의 항상 실제 구현체(`torch.norm`, `numpy.fft`, `torch.autograd` 등)가 있다 — 이 글의 설명이
+  그 구현체의 동작·인자·edge case를 이해하는 데 충분한지로 완결성을 판단한다. 실제 구현이 없는
+  순수 이론 concept에서만 교과서 기준으로 되돌아간다.
 
 ## 3. 수식 설명
 

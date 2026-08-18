@@ -117,6 +117,69 @@ export default function ScoreBasedGenerativeModelsArticle() {
 
       <section id="noise-score" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">
+          Network는 계산 불가능한 marginal score 대신 계산 가능한 conditional score를 맞추도록 학습합니다
+        </h2>
+        <ExplainedFormula
+          question="왜 (계산 불가능한) marginal score 대신 x0 하나에 조건부인 score를 맞추는 것으로 충분한가요?"
+          idea={
+            <p>
+              진짜 목표인 marginal density p(x)의 score는 알 수 없습니다.
+              하지만 data 하나 x0에 Gaussian noise를 더한 조건부 분포
+              q_sigma(x|x0)의 score는 정확한 closed form으로 계산할 수 있습니다.
+              Denoising score matching(Vincent, 2011)은 이 계산 가능한
+              target을 맞추는 것이 실제로는 원하는 marginal score를 학습하는
+              것과(theta에 무관한 상수 차이를 빼면) 같은 objective임을 보였습니다.
+            </p>
+          }
+          formula={String.raw`\mathcal L_{\rm DSM}(\theta)=\mathbb E_{x_0,\,x\sim q_\sigma(x\mid x_0)}\big[\lVert s_\theta(x)-\nabla_x\log q_\sigma(x\mid x_0)\rVert^2\big]`}
+          annotatedFormula={String.raw`\begin{aligned}
+q_\sigma(x\mid x_0)&=\underbrace{N(x_0,\sigma^2 I)}_{\text{x0 주변에 Gaussian noise를 더한 조건부 분포}}\\
+\nabla_x\log q_\sigma(x\mid x_0)&=\underbrace{-\frac{x-x_0}{\sigma^2}}_{\text{계산 가능한 conditional score - closed form}}\\
+\mathcal L_{\rm DSM}&=\underbrace{\mathbb E\big[\lVert s_\theta(x)-\nabla_x\log q_\sigma(x\mid x_0)\rVert^2\big]}_{\text{network가 이 tractable target을 맞추도록 학습}}
+\end{aligned}`}
+          operations={[
+            {
+              expression: String.raw`N(x_0,\sigma^2 I)`,
+              annotation: [
+                "x0에 표준편차만큼 Gaussian noise를 더해",
+                "같은 x0에서 여러 noisy sample 생성",
+              ],
+            },
+            {
+              expression: String.raw`-\frac{x-x_0}{\sigma^2}`,
+              annotation: [
+                "Gaussian log density를 미분해",
+                "x0로 되돌아가는 방향을 closed form으로 계산",
+              ],
+            },
+            {
+              expression: String.raw`\lVert s_\theta(x)-\nabla_x\log q_\sigma(x\mid x_0)\rVert^2`,
+              annotation: [
+                "network 예측과 계산 가능한 target의 차이를 제곱해",
+                "regression loss로 최적화",
+              ],
+            },
+          ]}
+          terms={[
+            {
+              symbol: String.raw`q_\sigma(x\mid x_0)`,
+              name: "Perturbation kernel",
+              description: "x0에 Gaussian noise를 씌운 조건부 분포입니다.",
+            },
+            {
+              symbol: String.raw`s_\theta(x)`,
+              name: "Score network",
+              description: "x0을 모르는 채로 x만 보고 score를 예측합니다.",
+            },
+          ]}
+          assumptions={[
+            "노이즈 크기는 고정한 noise level입니다.",
+            "x0는 data distribution에서 독립적으로 샘플링합니다.",
+          ]}
+          interpretation="Diffusion의 노이즈 예측은 이 objective를 diffusion의 noise scale로 재매개변수화한 특수한 경우입니다. 아래 식이 그 구체적인 변환을 보여줍니다."
+        />
+
+        <h2 className="mb-5 text-2xl font-bold">
           Diffusion에서는 예측한 noise를 뒤집고 noise scale로 나눕니다
         </h2>
         <ExplainedFormula
