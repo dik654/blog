@@ -1,6 +1,13 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
+import type { CodeRef } from "@/components/code/types";
+import { CodeViewButton } from "@/components/code";
+import { codeRefs } from "./codeRefs";
 
-export default function Gates() {
+export default function Gates({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="gates" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Gate는 hard switch가 아니라 channel별 soft policy다</h2>
@@ -40,6 +47,9 @@ g_t&=\underbrace{\tanh(a_g)}_{\text{부호 있는 후보값}}
         ]}
         assumptions={["Gate ordering은 i,f,g,o 또는 i,f,o,g처럼 library마다 다를 수 있으므로 checkpoint layout을 확인합니다.", "Hidden size H라면 fused output은 4H이며 bias·projection variant에 따라 parameter가 달라집니다."]}
         interpretation="수식은 gate 네 개를 별도 matmul로 그려도 구현에서는 하나로 fuse하는 이유를 보여 준다. 같은 checkpoint라도 gate order가 다르면 단순 weight copy가 깨집니다."
+      />
+      <CodeViewButton
+        onClick={() => onCodeRef("gate-formula", codeRefs["gate-formula"])}
       />
 
       <div id="paper-forget-gate" className="not-prose mt-8 scroll-mt-24 border-l border-border/80 pl-4">
