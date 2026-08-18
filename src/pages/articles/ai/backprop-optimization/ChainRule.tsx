@@ -1,7 +1,14 @@
 import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import type { CodeRef } from "@/components/code/types";
+import { CodeViewButton } from "@/components/code";
+import { codeRefs } from "../reverse-mode-autodiff/codeRefs";
 
-export default function ChainRule() {
+export default function ChainRule({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="reverse-mode" className="mb-16 scroll-mt-20">
       <p className="mb-3 text-sm font-bold text-primary">용어 3 · reverse-mode autodiff</p>
@@ -34,6 +41,9 @@ export default function ChainRule() {
         ]}
         assumptions={["row-vector cotangent 표기입니다. Column convention에서는 transpose 위치가 바뀝니다.", "최종 output L은 scalar입니다."]}
         interpretation="reverse mode는 output 수가 작고 input parameter가 매우 많을 때 유리합니다. Scalar loss 하나로 수많은 parameter gradient를 구하는 neural network에 맞는 이유입니다."
+      />
+      <CodeViewButton
+        onClick={() => onCodeRef("vjp-backward", codeRefs["vjp-backward"])}
       />
 
       <TermBreakdown

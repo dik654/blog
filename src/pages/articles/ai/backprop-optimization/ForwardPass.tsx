@@ -1,7 +1,14 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
+import type { CodeRef } from "@/components/code/types";
+import { CodeViewButton } from "@/components/code";
+import { codeRefs } from "../reverse-mode-autodiff/codeRefs";
 import AutodiffGraphViz from "./viz/AutodiffGraphViz";
 
-export default function ForwardPass() {
+export default function ForwardPass({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
       <p className="mb-3 text-sm font-bold text-primary">용어 1 · computational graph</p>
@@ -49,6 +56,11 @@ export default function ForwardPass() {
         ]}
         assumptions={["row-major batch 표기이며 framework에 따라 weight를 transpose해 저장할 수 있습니다."]}
         interpretation="forward activation memory가 training memory의 큰 비중을 차지하는 이유는 backward가 local derivative를 계산할 때 이 중간값을 다시 사용하기 때문입니다."
+      />
+      <CodeViewButton
+        onClick={() =>
+          onCodeRef("linear-forward", codeRefs["linear-forward"])
+        }
       />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
