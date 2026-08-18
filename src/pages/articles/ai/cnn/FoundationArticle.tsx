@@ -2,9 +2,13 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
+import { codeRefs } from "./codeRefs";
+import { cnnTree } from "./fileTree";
 import { CnnOperatorViz } from "./viz/ModernCnnViz";
 
 export default function CnnFoundationArticle() {
+  const sidebar = useCodeSidebar();
   return (
     <div className="space-y-16">
       <section id="overview" className="scroll-mt-20">
@@ -112,6 +116,11 @@ export default function CnnFoundationArticle() {
           ]}
           interpretation="2×2 patch [[1,2],[3,4]]와 kernel [[1,0],[0,−1]]이면 score는 1−4=−3입니다."
         />
+        <CodeViewButton
+          onClick={() =>
+            sidebar.open("conv-as-matmul", codeRefs["conv-as-matmul"])
+          }
+        />
       </section>
       <section id="shared-kernel" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">
@@ -190,6 +199,11 @@ export default function CnnFoundationArticle() {
           ]}
           interpretation="H=7,K=3,P=1,S=2,D=1이면 span 3, room 6, floor(6/2)+1=4입니다."
         />
+        <CodeViewButton
+          onClick={() =>
+            sidebar.open("output-shape-spec", codeRefs["output-shape-spec"])
+          }
+        />
         <TermBreakdown
           title="같은 output 크기 식, 다른 aggregation — pooling"
           items={[
@@ -226,6 +240,21 @@ export default function CnnFoundationArticle() {
           </CitationBlock>
         </div>
       </section>
+      <CodeSidebar
+        codeRefKey={sidebar.codeRefKey}
+        codeRef={sidebar.codeRef}
+        onClose={sidebar.close}
+        onNavigate={sidebar.navigate}
+        codeRefs={codeRefs}
+        fileTrees={{ torch: cnnTree }}
+        projectMetas={{
+          torch: {
+            id: "torch",
+            label: "PyTorch · Python",
+            badgeClass: "bg-orange-500/10 border-orange-500 text-orange-700",
+          },
+        }}
+      />
     </div>
   );
 }
