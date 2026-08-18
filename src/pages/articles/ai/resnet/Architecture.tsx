@@ -1,8 +1,15 @@
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import type { CodeRef } from "@/components/code/types";
+import { CodeViewButton } from "@/components/code";
+import { codeRefs } from "./codeRefs";
 import BlockFamilyViz from "./viz/BlockFamilyViz";
 
-export default function Architecture() {
+export default function Architecture({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="architecture" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
@@ -208,6 +215,9 @@ y_i&=\underbrace{\gamma\hat x_i+\beta}_{\text{학습 가능한 scale·shift로 �
         ]}
         output="다음 block으로 전달할 out"
         repeatUntil="Stage마다 정한 block 수만큼 이 forward를 순서대로 쌓습니다."
+      />
+      <CodeViewButton
+        onClick={() => onCodeRef("block-forward", codeRefs["block-forward"])}
       />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
