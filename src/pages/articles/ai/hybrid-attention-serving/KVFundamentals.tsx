@@ -1,6 +1,9 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import Math from "@/components/ui/math";
 import { CitationBlock } from "@/components/ui/citation-block";
+import type { CodeRef } from "@/components/code/types";
+import { CodeViewButton } from "@/components/code";
+import { codeRefs } from "../kv-cache-fundamentals/codeRefs";
 import KVHeadSharingViz from "./viz/KVHeadSharingViz";
 import KVShapeComparisonViz from "./viz/KVShapeComparisonViz";
 
@@ -101,7 +104,11 @@ const MEMORY_LEVERS = [
   ],
 ] as const;
 
-export default function KVFundamentals() {
+export default function KVFundamentals({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="kv-shape" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
@@ -180,6 +187,11 @@ K,V &\in \mathbb{R}^{T \times H_{KV} \times D_{head}}
         ]}
         interpretation="MHA는 H_Q=H_KV, GQA는 1<H_KV<H_Q, MQA는 H_KV=1입니다. Cache의 head 축은 H_Q가 아니라 H_KV이므로 같은 T와 D_head에서 H_KV를 8에서 2로 줄이면 K/V 원소 수도 4분의 1이 됩니다."
         title="Q와 K/V shape의 각 축"
+      />
+      <CodeViewButton
+        onClick={() =>
+          onCodeRef("repeat-kv-heads", codeRefs["repeat-kv-heads"])
+        }
       />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
