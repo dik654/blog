@@ -2,9 +2,13 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
+import { codeRefs } from "./codeRefs";
+import { bertTree } from "./fileTree";
 import { BertVisibilityViz } from "./viz/ModernBertViz";
 
 export default function BertFoundationArticle() {
+  const sidebar = useCodeSidebar();
   return (
     <div className="space-y-16">
       <section id="overview" className="scroll-mt-20">
@@ -118,6 +122,19 @@ export default function BertFoundationArticle() {
           ]}
           interpretation="Length 5의 실제 token sequence에서 query 2는 0…4를 모두 볼 수 있습니다. 마지막 두 slot이 PAD라면 0…2만 남습니다."
         />
+        <CodeViewButton
+          onClick={() =>
+            sidebar.open(
+              "visible-key-attention",
+              codeRefs["visible-key-attention"],
+            )
+          }
+        />
+        <CodeViewButton
+          onClick={() =>
+            sidebar.open("padding-mask-rule", codeRefs["padding-mask-rule"])
+          }
+        />
       </section>
       <section id="encoder-boundary" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">
@@ -166,6 +183,21 @@ export default function BertFoundationArticle() {
           </CitationBlock>
         </div>
       </section>
+      <CodeSidebar
+        codeRefKey={sidebar.codeRefKey}
+        codeRef={sidebar.codeRef}
+        onClose={sidebar.close}
+        onNavigate={sidebar.navigate}
+        codeRefs={codeRefs}
+        fileTrees={{ transformers: bertTree }}
+        projectMetas={{
+          transformers: {
+            id: "transformers",
+            label: "HuggingFace transformers · Python",
+            badgeClass: "bg-yellow-500/10 border-yellow-500 text-yellow-700",
+          },
+        }}
+      />
     </div>
   );
 }
