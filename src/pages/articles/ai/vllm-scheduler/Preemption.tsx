@@ -1,5 +1,8 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { Link } from "react-router-dom";
+import type { CodeRef } from "@/components/code/types";
+import { CodeViewButton } from "@/components/code";
+import { codeRefs } from "./codeRefs";
 import PreemptionTraceViz from "./viz/PreemptionTraceViz";
 
 const WASTE_TERMS = [
@@ -26,7 +29,11 @@ const WASTE_TERMS = [
   },
 ] as const;
 
-export default function Preemption() {
+export default function Preemption({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="preemption" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
@@ -74,6 +81,11 @@ C_{preempt} &\approx T_{model}\!\left(W_r^{recompute}\right)
         ]}
         interpretation="중단 전 8,000 token을 계산했고 재개 시 3,000-token prefix만 hit했다면 최소 5,000 token을 다시 처리합니다. preemption 횟수가 같아도 중단 위치와 prefix hit가 다르면 비용은 크게 달라지므로 counter 하나만으로 비교하면 안 됩니다."
         title="Recomputation waste와 사용자 지연"
+      />
+      <CodeViewButton
+        onClick={() =>
+          onCodeRef("preempt-request", codeRefs["preempt-request"])
+        }
       />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">

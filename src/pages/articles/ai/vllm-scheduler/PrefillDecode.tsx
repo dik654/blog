@@ -1,4 +1,7 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
+import type { CodeRef } from "@/components/code/types";
+import { CodeViewButton } from "@/components/code";
+import { codeRefs } from "./codeRefs";
 import ChunkedPrefillViz from "./viz/ChunkedPrefillViz";
 import SchedulerKnobViz from "./viz/SchedulerKnobViz";
 
@@ -48,7 +51,11 @@ const KNOBS = [
   },
 ] as const;
 
-export default function PrefillDecode() {
+export default function PrefillDecode({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="prefill-decode" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
@@ -96,6 +103,9 @@ T_{prefill,total} &\approx \sum_{j=1}^{C}T_{model}(c_j)
         ]}
         interpretation="P=4,096, c=512이면 최소 8개 chunk가 필요합니다. Decode가 최대 한 번의 긴 full-prefill 동안 멈추는 대신 더 짧은 경계마다 다시 고려될 수 있지만, prompt 완료 시간과 총 연산 효율이 자동으로 좋아지는 것은 아닙니다."
         title="Chunk 수와 반복 overhead의 맞바꿈"
+      />
+      <CodeViewButton
+        onClick={() => onCodeRef("preempt-chunk", codeRefs["preempt-chunk"])}
       />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">

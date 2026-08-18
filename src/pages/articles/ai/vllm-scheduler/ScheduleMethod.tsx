@@ -1,5 +1,8 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { Link } from "react-router-dom";
+import type { CodeRef } from "@/components/code/types";
+import { CodeViewButton } from "@/components/code";
+import { codeRefs } from "./codeRefs";
 import ProgressGapViz from "./viz/ProgressGapViz";
 import SchedulerLoopViz from "./viz/SchedulerLoopViz";
 
@@ -49,7 +52,11 @@ const PRIORITY_TERMS = [
   },
 ] as const;
 
-export default function ScheduleMethod() {
+export default function ScheduleMethod({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="schedule-method" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
@@ -129,6 +136,11 @@ n_r^{need} &= \max\!\left(0,\;n_r^{target}-n_r^{computed}\right) \\
         ]}
         interpretation="priority=0 요청은 priority=5 요청보다 나중에 들어와도 먼저 고려될 수 있습니다. 높은 우선순위 요청이 계속 도착하면 낮은 우선순위 요청이 오래 기다릴 수 있으므로 queue age와 starvation을 별도 SLO로 둬야 합니다."
         title="Priority policy의 정렬 기준"
+      />
+      <CodeViewButton
+        onClick={() =>
+          onCodeRef("priority-ordering", codeRefs["priority-ordering"])
+        }
       />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
