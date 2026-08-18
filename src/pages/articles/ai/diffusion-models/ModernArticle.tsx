@@ -228,9 +228,145 @@ e&=\underbrace{\lVert r\rVert_2^2}_{\text{residual square magnitude}}\\
         />
       </section>
 
-      <section id="score" className="space-y-6">
+      <section id="loss-derivation" className="space-y-6">
         <LearningHeader
           n="03"
+          kicker="L_simple이 어디서 나오는지 되짚기"
+          title="Noise-prediction loss는 evidence lower bound를 재가중한 결과다"
+        />
+        <p className="text-lg leading-8">
+          앞 section의 <code>L_ε</code>는 직관으로 고른 objective가 아닙니다.
+          Log-likelihood를 직접 최적화할 수 없어 evidence lower bound(ELBO)를
+          대신 최소화하고, 그 bound를 reverse step마다의 Gaussian
+          mean-matching 문제로 바꾼 뒤 model이 mean 대신 noise를 예측하도록
+          reparameterize한 결과가 바로 <code>L_ε</code>입니다.
+        </p>
+        <ExplainedFormula
+          question="log p_θ(x₀)를 직접 최적화하지 못하면 어떤 대안을 쓰나요?"
+          idea="고정된 forward q를 importance distribution으로 써서 log p_θ(x₀)의 lower bound를 만듭니다. Bayes rule로 q(xₜ|x_{t-1})을 q(x_{t-1}|xₜ,x₀)로 바꿔치면 곱이 telescoping되어 T개의 독립 항으로 쪼개집니다."
+          formula={String.raw`L_{\mathrm{vlb}}=D_{\mathrm{KL}}(q(x_T\mid x_0)\Vert p(x_T))+\sum_{t=2}^{T}D_{\mathrm{KL}}(q(x_{t-1}\mid x_t,x_0)\Vert p_\theta(x_{t-1}\mid x_t))-\log p_\theta(x_0\mid x_1)`}
+          annotatedFormula={String.raw`\begin{aligned}
+L_T&=\underbrace{D_{\mathrm{KL}}(q(x_T\mid x_0)\Vert p(x_T))}_{\text{학습 parameter가 없는 prior-matching 항}}\\
+L_{t-1}&=\underbrace{D_{\mathrm{KL}}(q(x_{t-1}\mid x_t,x_0)\Vert p_\theta(x_{t-1}\mid x_t))}_{\text{각 reverse step에서 정답 posterior와 model을 맞추는 항}}\\
+L_0&=\underbrace{-\log p_\theta(x_0\mid x_1)}_{\text{마지막 discrete reconstruction 항}}
+\end{aligned}`}
+          operations={[
+            {
+              expression: String.raw`D_{\mathrm{KL}}(q(x_T\mid x_0)\Vert p(x_T))`,
+              annotation: [
+                "T가 크면 q(x_T|x0)가 사실상 N(0,I)라",
+                "이 항은 학습과 거의 무관",
+              ],
+            },
+            {
+              expression: String.raw`D_{\mathrm{KL}}(q(x_{t-1}\mid x_t,x_0)\Vert p_\theta(x_{t-1}\mid x_t))`,
+              annotation: [
+                "각 reverse step에서 정답 posterior와",
+                "model의 예측을 비교",
+              ],
+            },
+            {
+              expression: String.raw`-\log p_\theta(x_0\mid x_1)`,
+              annotation: [
+                "마지막 continuous→discrete 복원을",
+                "별도 reconstruction 항으로 처리",
+              ],
+            },
+          ]}
+          terms={[
+            {
+              symbol: String.raw`q(x_{t-1}\mid x_t,x_0)`,
+              name: "True reverse posterior",
+              description:
+                "Forward chain과 x₀를 알 때 계산 가능한 정답 reverse 분포입니다.",
+            },
+            {
+              symbol: String.raw`p_\theta(x_{t-1}\mid x_t)`,
+              name: "Learned reverse step",
+              description: "Network가 근사하는 reverse 분포입니다.",
+            },
+            {
+              symbol: "T",
+              name: "Total forward steps",
+              description: "Forward chain의 길이이자 reverse 합의 범위입니다.",
+            },
+          ]}
+          assumptions={[
+            "Forward q는 학습 parameter가 없는 고정 Gaussian Markov chain입니다.",
+            "T가 충분히 크면 q(x_T|x0)는 사실상 N(0,I)라 L_T는 상수에 가깝습니다.",
+          ]}
+          interpretation="실제 학습은 L_T가 아니라 t=2..T의 L_{t-1} 항들에서 일어납니다. 각 항은 한 reverse step에서 정답 posterior와 model을 얼마나 잘 맞추는지를 잽니다."
+        />
+        <LearningTerm
+          name="Closed-form reverse posterior"
+          shape="q(x_{t-1}|xₜ,x₀) = N(x_{t-1}; μ̃ₜ(xₜ,x₀), β̃ₜI)"
+          meaning="Forward chain 전체가 Gaussian이므로 Bayes rule로 이 posterior를 정확한 닫힌 형태로 계산할 수 있습니다 — 두 Gaussian의 곱은 다시 Gaussian이기 때문입니다."
+          example="μ̃ₜ = (√ᾱ_{t-1}βₜ)/(1−ᾱₜ)·x₀ + (√αₜ(1−ᾱ_{t-1}))/(1−ᾱₜ)·xₜ, β̃ₜ = (1−ᾱ_{t-1})/(1−ᾱₜ)·βₜ"
+          boundary="이 닫힌 형태는 forward process가 정확히 Gaussian Markov chain일 때만 성립합니다."
+        />
+        <ExplainedFormula
+          question="왜 model이 mean μ_θ 대신 noise ε_θ를 예측하도록 바꿔 쓰나요?"
+          idea="q(x_{t-1}|xₜ,x₀)와 p_θ(x_{t-1}|xₜ)를 같은 분산의 Gaussian으로 두면 KL은 평균 차이의 제곱과 같습니다. Closed-form posterior mean을 xₜ와 ε만의 식으로 바꾸고 model도 같은 형태로 재구성하면, 남는 항이 정확히 noise-prediction squared error입니다."
+          formula={String.raw`D_{\mathrm{KL}}=\frac{1}{2\sigma_t^2}\lVert\tilde\mu_t(x_t,x_0)-\mu_\theta(x_t,t)\rVert^2`}
+          annotatedFormula={String.raw`\begin{aligned}
+D_{\mathrm{KL}}&=\underbrace{\frac{1}{2\sigma_t^2}\lVert\tilde\mu_t-\mu_\theta\rVert^2}_{\text{같은 분산의 두 Gaussian KL은 평균차 제곱}}\\
+\mu_\theta(x_t,t)&=\underbrace{\frac{1}{\sqrt{\alpha_t}}\Big(x_t-\frac{\beta_t}{\sqrt{1-\bar\alpha_t}}\epsilon_\theta(x_t,t)\Big)}_{\text{model이 mean 대신 노이즈 }\epsilon_\theta\text{를 내도록 재구성}}\\
+L_{t-1}&=\underbrace{w_t\,\mathbb E\big[\lVert\epsilon-\epsilon_\theta(x_t,t)\rVert^2\big]}_{\text{대입 후 남는 항 — }w_t=1\text{로 두면 }L_\varepsilon}
+\end{aligned}`}
+          operations={[
+            {
+              expression: String.raw`\frac{1}{2\sigma_t^2}\lVert\tilde\mu_t-\mu_\theta\rVert^2`,
+              annotation: [
+                "같은 분산의 두 Gaussian KL을",
+                "평균 차이의 제곱으로 정리",
+              ],
+            },
+            {
+              expression: String.raw`x_t-\frac{\beta_t}{\sqrt{1-\bar\alpha_t}}\epsilon_\theta(x_t,t)`,
+              annotation: [
+                "model output을 mean이 아니라",
+                "noise 예측값으로 재구성",
+              ],
+            },
+            {
+              expression: String.raw`w_t\,\lVert\epsilon-\epsilon_\theta(x_t,t)\rVert^2`,
+              annotation: [
+                "대입 후 남는 weighted term에서",
+                "weight를 1로 두면 noise-prediction loss",
+              ],
+            },
+          ]}
+          terms={[
+            {
+              symbol: String.raw`\tilde\mu_t`,
+              name: "Closed-form posterior mean",
+              description:
+                "Bayes rule로 얻은 q(x_{t-1}|xₜ,x₀)의 평균이며, xₜ와 ε만의 식으로 다시 쓸 수 있습니다.",
+            },
+            {
+              symbol: String.raw`\sigma_t^2`,
+              name: "Reverse step variance",
+              description:
+                "p_θ(x_{t-1}|xₜ)에 고정한 분산이며 보통 β̃ₜ 또는 βₜ를 씁니다.",
+            },
+            {
+              symbol: "w_t",
+              name: "Per-t loss weight",
+              description:
+                "치환 뒤 남는 βₜ²/(2σₜ²αₜ(1−ᾱₜ)) 형태의 계수입니다.",
+            },
+          ]}
+          assumptions={[
+            "p_θ(x_{t-1}|xₜ)의 분산을 학습하지 않고 상수로 고정합니다.",
+            "x₀=(xₜ−√(1−ᾱₜ)ε)/√ᾱₜ로 posterior mean 안의 x₀를 xₜ,ε로 치환합니다.",
+          ]}
+          interpretation="L_ε(=L_simple)은 이 유도에서 자동으로 나온 결과가 아니라 w_t를 전부 1로 둔 재가중치 버전입니다. Ho et al.은 이 재가중이 낮은 noise level의 기여를 늘려 sample quality를 실제로 개선한다는 것을 실험으로 보였습니다."
+        />
+      </section>
+
+      <section id="score" className="space-y-6">
+        <LearningHeader
+          n="04"
           kicker="Noise prediction을 방향장으로 읽기"
           title="Gaussian score는 현재 point를 conditional center 쪽으로 가리킨다"
         />

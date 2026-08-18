@@ -146,6 +146,7 @@ export const genArticles: Article[] = [
       { id: "corruption", title: "Training pair와 sampling loop" },
       { id: "schedule", title: "Gaussian cumulative schedule" },
       { id: "target", title: "Prediction target와 backbone" },
+      { id: "loss-derivation", title: "L_simple의 ELBO 유도" },
       { id: "score", title: "Noise–score identity" },
     ],
     component: () => import("@/pages/articles/ai/diffusion-models"),

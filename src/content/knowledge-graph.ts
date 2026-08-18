@@ -1983,6 +1983,24 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "같은 noisy state를 설명하는 noise ε·clean data x0·velocity v·score 중 network가 직접 예측할 quantity를 선택하고 noise level별 loss weighting을 정하는 계약입니다.",
     canonicalHref: "/ai/diffusion-models#target",
   },
+  "diffusion-variational-bound": {
+    id: "diffusion-variational-bound",
+    kind: "theorem",
+    domain: "machine-learning",
+    label: "Diffusion evidence lower bound decomposition",
+    definition:
+      "log p_θ(x0)를 직접 최적화할 수 없어 fixed forward process q를 importance distribution으로 쓴 evidence lower bound를 대신 최소화하며, Bayes rule로 q(x_t|x_{t-1})을 q(x_{t-1}|x_t,x0)로 바꿔치면 곱이 telescoping되어 bound가 prior-matching L_T, 각 reverse step의 KL L_{t-1}, reconstruction L_0로 분리되는 관계입니다.",
+    canonicalHref: "/ai/diffusion-models#loss-derivation",
+  },
+  "diffusion-posterior-mean-matching": {
+    id: "diffusion-posterior-mean-matching",
+    kind: "theorem",
+    domain: "machine-learning",
+    label: "Diffusion posterior mean-matching",
+    definition:
+      "같은 고정 분산을 갖는 두 Gaussian q(x_{t-1}|x_t,x0)와 p_θ(x_{t-1}|x_t)의 KL은 평균 차이의 제곱과 같아지며, closed-form posterior mean을 x_t와 ε로 다시 쓰고 model이 mean 대신 ε_θ를 예측하도록 reparameterize하면 이 KL 항이 t별 weight가 붙은 noise-prediction squared error가 되는 관계입니다. Weight를 1로 두면 L_simple입니다.",
+    canonicalHref: "/ai/diffusion-models#loss-derivation",
+  },
   "diffusion-score-identity": {
     id: "diffusion-score-identity",
     kind: "theorem",
@@ -19249,6 +19267,34 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "prerequisite",
     reason:
       "Noisy state를 만든 ε와 x0를 알고 있어 supervised regression target을 선택할 수 있습니다.",
+  },
+  {
+    from: "gaussian-forward-diffusion",
+    to: "diffusion-variational-bound",
+    relation: "produces",
+    reason:
+      "고정된 forward Markov chain을 importance distribution으로 써서 log p_θ(x0)의 evidence lower bound를 만듭니다.",
+  },
+  {
+    from: "diffusion-variational-bound",
+    to: "diffusion-posterior-mean-matching",
+    relation: "produces",
+    reason:
+      "Bound의 각 reverse-step KL 항이 정확히 q(x_{t-1}|x_t,x0)와 p_θ(x_{t-1}|x_t) 두 Gaussian 사이의 mean-matching 문제입니다.",
+  },
+  {
+    from: "cumulative-noise-schedule",
+    to: "diffusion-posterior-mean-matching",
+    relation: "prerequisite",
+    reason:
+      "Closed-form x_t=√ᾱt·x0+√(1−ᾱt)·ε로 posterior mean 안의 x0를 x_t와 ε로 다시 씁니다.",
+  },
+  {
+    from: "diffusion-posterior-mean-matching",
+    to: "diffusion-prediction-target",
+    relation: "produces",
+    reason:
+      "Mean 대신 ε_θ를 예측하도록 reparameterize한 결과가 정확히 diffusion-prediction-target의 ε-prediction 계약입니다.",
   },
   {
     from: "score-function-field",

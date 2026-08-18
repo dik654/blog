@@ -39231,7 +39231,7 @@ export const ARTICLE_LEARNING: Readonly<
   },
   "ai/diffusion-models": {
     "entryLevel": true,
-    "coreIdea": "이 글은 diffusion training pair와 sampling loop를 먼저 분리하고, Gaussian forward corruption·cumulative schedule·prediction target·noise–score identity·backbone tensor contract를 하나씩 쌓습니다.",
+    "coreIdea": "이 글은 diffusion training pair와 sampling loop를 먼저 분리하고, Gaussian forward corruption·cumulative schedule·prediction target·L_simple이 evidence lower bound에서 유도되는 경로·noise–score identity·backbone tensor contract를 하나씩 쌓습니다.",
     "assumedKnowledge": [],
     "introducedHere": [
       {
@@ -39249,6 +39249,14 @@ export const ARTICLE_LEARNING: Readonly<
       {
         "id": "diffusion-prediction-target",
         "role": "Network가 ε·x0·v·score 중 무엇을 직접 맞힐지 정합니다."
+      },
+      {
+        "id": "diffusion-variational-bound",
+        "role": "log p_θ(x0)를 직접 최적화하지 못해 evidence lower bound를 L_T+ΣL_{t-1}+L_0로 쪼갭니다."
+      },
+      {
+        "id": "diffusion-posterior-mean-matching",
+        "role": "각 reverse step의 KL을 mean-matching으로 바꾸고 ε_θ로 reparameterize해 L_simple을 회수합니다."
       },
       {
         "id": "diffusion-score-identity",
@@ -39298,6 +39306,24 @@ export const ARTICLE_LEARNING: Readonly<
         "boundary": "모든 diffusion이 U-Net·cross-attention을 쓰지 않습니다."
       },
       {
+        "id": "diffusion-variational-bound",
+        "sectionId": "loss-derivation",
+        "intuition": "고정된 forward q를 importance distribution으로 써서 계산 불가능한 log p_θ(x0)를 계산 가능한 lower bound로 바꿉니다.",
+        "workedExample": "Bayes rule로 q(xt|x_{t-1})을 q(x_{t-1}|xt,x0)로 바꿔치면 곱이 telescoping되어 T개의 독립 KL 항으로 쪼개집니다.",
+        "boundary": "L_T는 학습 parameter가 없는 prior-matching 항이라 최적화 대상에서 사실상 빠집니다.",
+        "proofIdea": "p_θ(x0:T)/q(x1:T|x0)의 log를 Jensen 부등식으로 bound하고 Bayes rule로 각 transition을 posterior 조건부로 재작성합니다.",
+        "counterexample": "Forward process가 fixed Markov chain이 아니면 이 telescoping이 성립하지 않습니다."
+      },
+      {
+        "id": "diffusion-posterior-mean-matching",
+        "sectionId": "loss-derivation",
+        "intuition": "같은 분산을 갖는 두 Gaussian의 KL은 평균 차이의 제곱과 같으므로, reverse step 학습은 결국 평균 맞히기 문제입니다.",
+        "workedExample": "Closed-form posterior mean μ̃t를 x0=(xt−√(1−ᾱt)ε)/√ᾱt로 치환하면 xt와 ε만의 식이 되고, model이 μ_θ 대신 ε_θ를 내도록 재구성하면 weight wt가 붙은 ‖ε−ε_θ‖²이 남습니다.",
+        "boundary": "wt를 1로 두는 것은 유도 결과가 아니라 Ho et al.이 실험으로 고른 재가중치입니다.",
+        "proofIdea": "두 Gaussian N(μ1,σ²I), N(μ2,σ²I)의 KL은 ‖μ1−μ2‖²/(2σ²)로 정리되며, μ_θ를 ε_θ 함수로 대입하면 L_simple의 계수 형태가 나옵니다.",
+        "counterexample": "Model 분산 σt²를 posterior β̃t와 다르게 학습하면 이 단순 형태가 아니라 분산 항까지 포함한 KL을 써야 합니다."
+      },
+      {
         "id": "diffusion-score-identity",
         "sectionId": "score",
         "intuition": "Gaussian log density의 gradient는 conditional center에서 벗어난 noise의 반대 방향입니다.",
@@ -39331,6 +39357,14 @@ export const ARTICLE_LEARNING: Readonly<
         "concepts": [
           "diffusion-prediction-target",
           "diffusion-backbone-contract"
+        ]
+      },
+      {
+        "label": "Justify",
+        "relation": "L_simple이 evidence lower bound에서 유도되는 경로를 확인",
+        "concepts": [
+          "diffusion-variational-bound",
+          "diffusion-posterior-mean-matching"
         ]
       },
       {
@@ -39372,16 +39406,16 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "β1=0.1, β2=0.2에서 α1·α2·ᾱ2와 noise variance를 계산할 수 있을까요?",
+        "question": "log p_θ(x0)를 직접 최적화하지 못하는 이유와 bound가 L_T·L_{t-1}·L_0 세 항으로 쪼개지는 이유를 설명할 수 있을까요?",
         "answerChecklist": [
-          "α1=0.9, α2=0.8을 계산한다.",
-          "ᾱ2=0.72를 계산한다.",
-          "Noise variance 0.28을 적는다."
+          "log p_θ(x0) marginalization이 intractable하다고 말한다.",
+          "고정된 forward q를 importance distribution으로 쓴다고 말한다.",
+          "Bayes rule로 telescoping되어 L_T+ΣL_{t-1}+L_0로 쪼개진다고 말한다."
         ],
         "requiredConcepts": [
-          "cumulative-noise-schedule"
+          "diffusion-variational-bound"
         ],
-        "sectionId": "schedule"
+        "sectionId": "loss-derivation"
       },
       {
         "level": "basic",
@@ -39465,18 +39499,18 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "Training loss와 sampling quality가 어긋난 run을 진단할 contract를 설계할 수 있을까요?",
+        "question": "두 Gaussian의 KL이 어떻게 mean-matching MSE가 되고, 그 mean을 ε_θ로 reparameterize하면 왜 L_simple이 나오는지 단계별로 설명할 수 있을까요?",
         "answerChecklist": [
-          "Target·weighting·schedule을 기록한다.",
-          "Sampler·steps·NFE를 별도 기록한다.",
-          "Backbone shape·checkpoint·evaluation을 고정한다."
+          "같은 분산의 두 Gaussian KL이 평균차 제곱임을 말한다.",
+          "closed-form posterior mean을 x_t와 ε로 다시 쓴다.",
+          "model이 mean 대신 ε_θ를 예측하도록 재구성한다.",
+          "t별 weight를 1로 두면 L_simple이 된다고 말한다."
         ],
         "requiredConcepts": [
-          "diffusion-training-sampling-contract",
-          "diffusion-prediction-target",
-          "diffusion-backbone-contract"
+          "diffusion-posterior-mean-matching",
+          "diffusion-prediction-target"
         ],
-        "sectionId": "target"
+        "sectionId": "loss-derivation"
       }
     ],
     "papers": [

@@ -75,6 +75,30 @@ build 통과는 완료의 증거가 아니며, 아래 Definition of Done을 모�
   generic한 "Reth transaction-pool source" 링크 하나만 인용)은 코드 분석형 글의 완료 근거로
   보지 않는다.
 
+### 2.4 결과 공식의 유도 완전성
+
+- 최종 공식(training loss, closed-form solution, complexity bound 등)이 더 근본적인 원리
+  (MLE→ELBO, Lagrangian duality, Taylor 전개, chain rule, 대수적 항등식, 보존 법칙 등)를 여러
+  단계 거쳐 유도된 결과라면, "이 공식이 맞다"는 결론만 제시하지 않는다. 유도 경로 전체가 최소
+  한 곳 — 이 글 본문, 또는 이 글이 명시적으로 연결하는 canonical 선수 글 — 에 실제로 있어야
+  한다.
+- 논문·외부 자료 citation은 유도를 대신하지 않는다. Evidence rail의 citation은 "이 결과가
+  어디서 왔는가"의 출처이지 "왜 이 결과가 맞는가"를 설명하는 문장이 아니다. 2.2절의 paper
+  reading note 요구와 같은 논리로, 유도 자체가 독립적인 학습 대상이면 별도 canonical article로
+  분리하고 현재 글은 그 글로 이어지는 명시적 경로와 "왜 이 유도를 거쳤는지" 한 문단 요약을
+  남긴다. 논문 인용 블록의 `contribution` 필드에 유도 단계를 한 줄로 요약해 두는 것은 유도를
+  실었다는 근거가 아니다.
+- 판단 기준: "독자가 이 공식을 암기하지 않고 처음부터 다시 만들어낼 수 있는가?" 다시 만들 수
+  없다면 유도가 빠진 것이다.
+- 이 요구는 AI/ML에 한정하지 않는다. 암호학 proof, 물리 보존 법칙 유도, 통계 estimator의
+  unbiasedness·consistency 증명, 분산 시스템의 correctness proof처럼 "왜 이 결과가 성립하는가"가
+  핵심인 모든 분야에 적용한다.
+- Knowledge graph에 등록할 때 "최종 결과"만 concept으로 넣지 않는다. 유도 경로의 핵심 분기점
+  (예: variational bound로의 전환, closed-form이 가능해지는 조건, reparameterization)도 각각
+  독립 concept으로 등록해, `audit:graph`가 유도 경로 자체의 존재를 정합성 검사로 대리 확인할 수
+  있게 한다. 최종 결과 concept 하나만 있고 그 결과를 만든 중간 concept이 하나도 없으면 유도가
+  생략됐다는 신호다.
+
 ## 3. 수식 설명
 
 모든 주요 KaTeX 식은 다음 순서를 지킨다.
@@ -174,6 +198,7 @@ mechanism Viz가 더 적합하다.
 - [ ] 주요 KaTeX가 질문·아이디어·식·기호·전제·해석 순서를 따른다.
 - [ ] `ExplainedFormula`의 `operations`는 실제 식의 기호를 쓰는 explicit 값이며 제네릭 fallback이 아니다.
 - [ ] 코드 분석형 글(실제 오픈소스 codebase를 추적하는 글)은 핵심 단계마다 `CodeSidebar`로 열람 가능한 실제 source 함수·줄 범위 근거가 있다.
+- [ ] 최종 공식이 알려진 다단계 유도의 결과라면, 그 유도 경로 전체가 이 글 또는 연결된 canonical 선수 글에 실제로 있다 — citation 한 줄로 대체하지 않았다.
 - [ ] threshold·monotonic·piecewise 관계를 다루는 수식에는 mechanism Viz와 별도로 함수 그래프가 있는지 검토했다.
 - [ ] Model VRAM을 다루는 글은 parameter headline×단일 dtype으로 끝내지 않고 실제 checkpoint의 dtype별 tensor payload, GB·GiB 단위, weight residency와 KV·recurrent state·workspace·allocator headroom을 분리해 계산한다.
 - [ ] Viz가 메커니즘을 표현하며 정적 스타일 검사를 통과한다.
