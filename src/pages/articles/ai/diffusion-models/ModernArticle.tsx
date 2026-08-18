@@ -3,6 +3,9 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ConceptLadderViz from "@/components/viz/ConceptLadderViz";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
+import { codeRefs } from "./codeRefs";
+import { diffusionModelsTree } from "./fileTree";
 import {
   EvidenceFields,
   LearningHeader,
@@ -11,7 +14,9 @@ import {
 import DiffusionTrainingViz from "./DiffusionTrainingViz";
 
 export default function DiffusionFoundationsArticle() {
+  const sidebar = useCodeSidebar();
   return (
+    <>
     <article id="overview" className="space-y-16">
       <section id="corruption" className="space-y-6">
         <LearningHeader
@@ -411,6 +416,9 @@ L_{t-1}&=\underbrace{w_t\,\mathbb E\big[\lVert\epsilon-\epsilon_\theta(x_t,t)\rV
           output="학습된 θ_ema (sampling에 사용할 최종 weight)"
           repeatUntil="Loss가 수렴하거나 정해진 step 수에 도달할 때까지 1~7을 반복합니다."
         />
+        <CodeViewButton
+          onClick={() => sidebar.open("add-noise", codeRefs["add-noise"])}
+        />
         <AlgorithmBlock
           title="Sampling — xT에서 x0까지 T번 반복"
           input={[
@@ -433,6 +441,9 @@ L_{t-1}&=\underbrace{w_t\,\mathbb E\big[\lVert\epsilon-\epsilon_\theta(x_t,t)\rV
           ]}
           output="x₀ — 생성된 sample"
           repeatUntil="t=T부터 t=1까지 매 step 위 세 줄을 순서대로 실행합니다."
+        />
+        <CodeViewButton
+          onClick={() => sidebar.open("reverse-step", codeRefs["reverse-step"])}
         />
       </section>
 
@@ -559,5 +570,21 @@ s_t&=\underbrace{-\frac{d_t}{\sigma_t^2}}_{\substack{\text{방향을 뒤집고}\
         <ContentBoundary article="diffusion-models" />
       </section>
     </article>
+      <CodeSidebar
+        codeRefKey={sidebar.codeRefKey}
+        codeRef={sidebar.codeRef}
+        onClose={sidebar.close}
+        onNavigate={sidebar.navigate}
+        codeRefs={codeRefs}
+        fileTrees={{ diffusers: diffusionModelsTree }}
+        projectMetas={{
+          diffusers: {
+            id: "diffusers",
+            label: "HuggingFace diffusers · Python",
+            badgeClass: "bg-violet-500/10 border-violet-500 text-violet-700",
+          },
+        }}
+      />
+    </>
   );
 }
