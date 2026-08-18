@@ -1,4 +1,5 @@
 import ContentBoundary from "@/components/articles/content-boundary";
+import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ConceptLadderViz from "@/components/viz/ConceptLadderViz";
@@ -204,6 +205,37 @@ export default function GanFoundationsArticle() {
             "Mini-batch가 latent expectation을 근사합니다.",
           ]}
           interpretation="D=0.01에서 saturating magnitude는 약 0.01, non-saturating은 약 0.99입니다. 다음 글은 이 signal이 두 optimizer 사이에서 어떻게 이동하는지 다룹니다."
+        />
+        <AlgorithmBlock
+          title="Minimax training — 한 iteration (수렴할 때까지 반복)"
+          input={[
+            "실제 데이터 분포에서 뽑을 수 있는 학습 데이터",
+            "D의 parameter φ, G의 parameter θ (둘 다 무작위 초기화)",
+          ]}
+          steps={[
+            {
+              code: "for k steps:",
+              note: "D를 G보다 더 자주 업데이트합니다 — D가 뒤처지면 G에게 줄 gradient 신호 자체가 부정확해집니다.",
+            },
+            {
+              code: "  z_1..z_m ~ p(z), x_1..x_m ~ 학습 데이터",
+              note: "각 m개씩 noise batch와 real batch를 독립적으로 샘플링합니다.",
+            },
+            {
+              code: "  φ ← φ + η∇_φ (1/m)Σ[log D(x_i) + log(1−D(G(z_i)))]",
+              note: "D를 real은 1에, fake는 0에 가깝게 만드는 방향으로 gradient ascent합니다.",
+            },
+            {
+              code: "z_1..z_m ~ p(z)",
+              note: "D 업데이트가 끝난 뒤 G 차례입니다 — 새 noise batch를 다시 샘플링합니다.",
+            },
+            {
+              code: "θ ← θ + η∇_θ (1/m)Σ log D(G(z_i))",
+              note: "Non-saturating 버전입니다 — log(1−D(G(z)))를 내리는 대신 log D(G(z))를 올리는 방향으로 gradient ascent해, D가 확신할 때(D≈0)도 G에게 강한 gradient가 남게 합니다.",
+            },
+          ]}
+          output="학습된 G (data 분포를 근사하는 sampler)"
+          repeatUntil="D와 G의 loss가 안정적인 균형에 도달하거나 sample quality metric(FID 등)이 더 개선되지 않을 때까지 반복합니다."
         />
         <p className="leading-7">
           이제부터는 objective 하나가 아니라 update 순서를 봐야 합니다.{" "}

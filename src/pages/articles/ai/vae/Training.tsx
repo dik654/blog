@@ -1,3 +1,4 @@
+import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 
 const loop = [
@@ -42,6 +43,43 @@ export default function Training() {
           </div>
         ))}
       </figure>
+
+      <AlgorithmBlock
+        title="VAE — 한 gradient step (수렴할 때까지 반복)"
+        input={["x ~ 학습 데이터", "Encoder φ, Decoder θ (무작위 초기화)"]}
+        steps={[
+          {
+            code: "(μ, log σ²) = Encoder_φ(x)",
+            note: "Encoder가 x를 직접 z로 매핑하지 않고, q(z|x)의 평균·분산 parameter를 냅니다.",
+          },
+          {
+            code: "ε ~ N(0, I)",
+            note: "z와 같은 shape의 표준 Gaussian noise를 샘플링합니다.",
+          },
+          {
+            code: "z = μ + σ ⊙ ε",
+            note: "Reparameterization trick — z를 직접 샘플링하지 않고 결정론적 함수로 만들어, encoder까지 gradient가 흐르게 합니다.",
+          },
+          {
+            code: "x̂_params = Decoder_θ(z)",
+            note: "Decoder가 z에서 x의 조건부 분포 parameter를 냅니다(연속값이면 평균, 이진값이면 Bernoulli 확률).",
+          },
+          {
+            code: "L_recon = −log p_θ(x | z)",
+            note: "연속 x는 보통 MSE(Gaussian likelihood), 이진 x는 BCE(Bernoulli likelihood)로 계산합니다.",
+          },
+          {
+            code: "L_KL = −½ Σ(1 + log σ² − μ² − σ²)",
+            note: "q(z|x)=N(μ,σ²)와 표준정규 prior 사이 KL의 closed-form입니다 — 두 Gaussian이라 적분 없이 바로 계산됩니다.",
+          },
+          {
+            code: "(φ, θ) ← (φ, θ) − η·∇_(φ,θ) (L_recon + L_KL)",
+            note: "reparameterization 덕분에 z가 φ의 미분가능한 함수라, encoder와 decoder를 한 번에 backprop할 수 있습니다.",
+          },
+        ]}
+        output="학습된 Encoder φ, Decoder θ"
+        repeatUntil="Validation ELBO가 더 개선되지 않거나 정해진 step 수에 도달할 때까지 반복합니다."
+      />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Posterior collapse를 진단한다</h3>
