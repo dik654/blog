@@ -1,5 +1,8 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { Link } from "react-router-dom";
+import type { CodeRef } from "@/components/code/types";
+import { CodeViewButton } from "@/components/code";
+import { codeRefs } from "./codeRefs";
 import AllocationContractViz from "./viz/AllocationContractViz";
 
 const ALLOC_TERMS = [
@@ -30,7 +33,11 @@ const ALLOC_TERMS = [
   },
 ] as const;
 
-export default function KVCacheManagerSection() {
+export default function KVCacheManagerSection({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="kv-cache-manager" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
@@ -71,6 +78,9 @@ export default function KVCacheManagerSection() {
         ]}
         interpretation="B=16, computed=30, new=5, lookahead=4이면 총 39 slot이 필요해 3 block입니다. 이미 2 block을 갖고 있으므로 새 block 하나가 필요합니다."
         title="Scheduled token에서 physical block demand로"
+      />
+      <CodeViewButton
+        onClick={() => onCodeRef("block-demand", codeRefs["block-demand"])}
       />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">

@@ -1,4 +1,7 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
+import type { CodeRef } from "@/components/code/types";
+import { CodeViewButton } from "@/components/code";
+import { codeRefs } from "./codeRefs";
 import PrefixHashViz from "./viz/PrefixHashViz";
 import PrefixScopeViz from "./viz/PrefixScopeViz";
 
@@ -43,7 +46,11 @@ const SAVING_TERMS = [
   },
 ] as const;
 
-export default function PrefixCaching() {
+export default function PrefixCaching({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="prefix-caching" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
@@ -81,6 +88,11 @@ export default function PrefixCaching() {
         ]}
         interpretation="현재 block token이 같아도 parent hash가 다르면 앞 문맥이 다르므로 hit가 아닙니다. LoRA나 image가 달라 KV가 바뀐다면 extras가 달라져야 하며, 그렇지 않으면 잘못된 state를 재사용합니다."
         title="Prefix block의 chained cache key"
+      />
+      <CodeViewButton
+        onClick={() =>
+          onCodeRef("block-hash-chain", codeRefs["block-hash-chain"])
+        }
       />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">

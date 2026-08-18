@@ -1,4 +1,7 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
+import type { CodeRef } from "@/components/code/types";
+import { CodeViewButton } from "@/components/code";
+import { codeRefs } from "./codeRefs";
 import BlockLifecycleViz from "./viz/BlockLifecycleViz";
 
 const REF_TERMS = [
@@ -24,7 +27,11 @@ const REF_TERMS = [
   },
 ] as const;
 
-export default function BlockPoolSection() {
+export default function BlockPoolSection({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="block-pool" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
@@ -66,6 +73,11 @@ export default function BlockPoolSection() {
         ]}
         interpretation="A와 B가 P7을 공유하면 ref(P7)=2입니다. A가 끝나도 ref=1이라 덮어쓸 수 없고, B도 참조를 놓아 ref=0이 된 뒤에야 free queue에서 새 allocation 대상으로 재사용할 수 있습니다."
         title="Reference count와 eviction safety"
+      />
+      <CodeViewButton
+        onClick={() =>
+          onCodeRef("ref-count-eviction", codeRefs["ref-count-eviction"])
+        }
       />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
