@@ -8791,6 +8791,26 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [{ label: "EMA와 momentum", href: "/ai/momentum-optimizer" }, { label: "Decoupled weight decay", href: "/ai/weight-decay#adamw" }],
     evidence: [{ kind: "primary-source", rule: "Adam update·convergence claim은 원 논문과 후속 counterexample의 stated objective·online setting 범위로 제한한다." }, { kind: "standard", rule: "m·v·step·β·ε·dtype·skip order와 parameter identity를 checkpoint에 기록한다." }],
   },
+  "in-context-lora": {
+    title: "In-Context LoRA 정본이 소유하는 범위",
+    owns: [
+      "Reference·target을 하나의 context로 이어붙이는 IC-LoRA의 정의와 self-attention 재사용 원리",
+      "Reference를 clean 상태로 유지하며 target만 노이즈 처리하는 flow-matching 조건화 학습 절차",
+      "RoPE 상에서 reference block에 negative temporal position을 부여하는 방법과 그 이유",
+      "Identity guidance(reference 유무 비교 delta)와 two-stage(full-guidance→distilled refine) serving 설계",
+    ],
+    reuses: [
+      { label: "LoRA low-rank update", href: "/ai/lora-finetuning#overview" },
+      { label: "Flow-matching objective", href: "/ai/diffusion-continuous-time#flow-matching" },
+      { label: "Classifier-free guidance", href: "/ai/latent-diffusion-guidance#guidance" },
+      { label: "Self-attention", href: "/ai/attention-theory#self-attention" },
+      { label: "RoPE relative rotation", href: "/ai/yarn-rope-extension#rope-foundation" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "IC-LoRA 원 논문(Huang et al. 2024)의 claim은 그 논문의 DiT·데이터셋·task 범위로 제한한다." },
+      { kind: "project-measurement", rule: "ID-LoRA(2026)의 성능·설계 설명은 해당 공개 repo와 논문의 실험 조건(LTX-2/2.3, CelebV-HQ·TalkVid)으로 제한하며, 모든 in-context LoRA 응용이 같은 결과를 낸다고 일반화하지 않는다." },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

@@ -2095,6 +2095,60 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "Autoencoder reconstruction·sample quality·mode coverage·condition adherence·latency를 versioned threshold로 각각 판정하고 모든 필수 gate를 통과할 때만 배포하는 acceptance 계약입니다.",
     canonicalHref: "/ai/latent-diffusion-guidance#evaluation",
   },
+  "in-context-lora-adaptation": {
+    id: "in-context-lora-adaptation",
+    kind: "method",
+    domain: "machine-learning",
+    label: "In-context LoRA adaptation",
+    definition:
+      "Diffusion transformer에 새 module을 추가하지 않고, reference와 target을 하나의 attention sequence로 이어붙인 뒤 그 위에서 작은 task-specific LoRA만 학습해 base model의 in-context 생성 능력을 활성화하는 adaptation 방법입니다.",
+    canonicalHref: "/ai/in-context-lora#overview",
+  },
+  "reference-target-context-concatenation": {
+    id: "reference-target-context-concatenation",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Reference-target context concatenation",
+    definition:
+      "별도 cross-attention module 없이 reference와 target token을 같은 self-attention sequence에 이어붙여, target이 reference를 읽는 능력을 기존 self-attention weight 하나로 재사용하는 구성입니다.",
+    canonicalHref: "/ai/in-context-lora#overview",
+  },
+  "flow-matching-reference-conditioning": {
+    id: "flow-matching-reference-conditioning",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Flow-matching reference conditioning",
+    definition:
+      "Reference latent는 noise 없이 clean 상태로 유지하고 target latent에만 flow-matching forward process를 적용한 뒤, loss도 target 위치에만 masking해 계산하는 in-context 학습 절차입니다.",
+    canonicalHref: "/ai/in-context-lora#training",
+  },
+  "negative-temporal-position-conditioning": {
+    id: "negative-temporal-position-conditioning",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Negative temporal position conditioning",
+    definition:
+      "RoPE 시간 축에서 reference block 전체를 target(t=0에서 시작)보다 이전인 음수 시간대로 옮겨, 새 position 종류를 만들지 않고도 relative rotation만으로 '이 reference가 target보다 먼저 있었다'는 순서를 표현하는 방법입니다.",
+    canonicalHref: "/ai/in-context-lora#training",
+  },
+  "identity-guidance-delta": {
+    id: "identity-guidance-delta",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Identity guidance delta",
+    definition:
+      "Reference를 context에 포함한 예측과 제외한 예측의 차이를 classifier-free guidance와 같은 구조로 만들어, text prompt가 아니라 reference identity의 유무를 toggle 조건으로 삼아 추가로 더하는 guidance 항입니다.",
+    canonicalHref: "/ai/in-context-lora#applications",
+  },
+  "two-stage-distilled-refinement": {
+    id: "two-stage-distilled-refinement",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Two-stage distilled refinement",
+    definition:
+      "1단계는 target 해상도에서 IC-LoRA와 전체 guidance suite로 생성하고, 2단계는 IC-LoRA 없이 distilled LoRA만으로 spatial upsample·refine해 비용이 큰 adapter가 실행되는 범위를 의도적으로 좁히는 two-stage serving 설계입니다.",
+    canonicalHref: "/ai/in-context-lora#applications",
+  },
   "amortized-variational-inference": {
     id: "amortized-variational-inference",
     kind: "method",
@@ -19462,6 +19516,83 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "constrains",
     reason:
       "Guidance scale과 branch compute가 condition adherence·diversity·latency gate를 함께 바꿉니다.",
+  },
+  {
+    from: "self-attention",
+    to: "reference-target-context-concatenation",
+    relation: "prerequisite",
+    reason:
+      "같은 self-attention weight가 reference·target 두 위치 모두에 적용되어야 새 module 없이 재사용할 수 있습니다.",
+  },
+  {
+    from: "lora-low-rank-update",
+    to: "in-context-lora-adaptation",
+    relation: "prerequisite",
+    reason:
+      "IC-LoRA는 base weight를 그대로 두고 low-rank adapter만 학습하는 LoRA 방식을 그대로 사용합니다.",
+  },
+  {
+    from: "reference-target-context-concatenation",
+    to: "in-context-lora-adaptation",
+    relation: "prerequisite",
+    reason:
+      "이 concatenation 구조가 있어야 새 아키텍처 없이 in-context 능력을 LoRA만으로 활성화할 수 있습니다.",
+  },
+  {
+    from: "flow-matching-objective",
+    to: "flow-matching-reference-conditioning",
+    relation: "prerequisite",
+    reason:
+      "일반 flow-matching의 x_t·velocity target 정의를 reference 조건화 학습에 그대로 재사용합니다.",
+  },
+  {
+    from: "rope-relative-rotation-geometry",
+    to: "negative-temporal-position-conditioning",
+    relation: "prerequisite",
+    reason:
+      "RoPE가 절대 위치가 아니라 상대 회전만 본다는 성질이 있어야 음수 위치 shift가 순서 정보로 작동합니다.",
+  },
+  {
+    from: "in-context-lora-adaptation",
+    to: "flow-matching-reference-conditioning",
+    relation: "extends",
+    reason:
+      "일반 IC-LoRA 개념을 실제 flow-matching 학습 절차(clean reference·noised target)로 구체화합니다.",
+  },
+  {
+    from: "flow-matching-reference-conditioning",
+    to: "negative-temporal-position-conditioning",
+    relation: "constrains",
+    reason:
+      "Reference와 target을 같은 sequence에서 구분해야 하므로 position 부여 방식이 이 조건화 절차에 묶입니다.",
+  },
+  {
+    from: "classifier-free-guidance",
+    to: "identity-guidance-delta",
+    relation: "prerequisite",
+    reason:
+      "조건 있음·없음 예측의 차이를 scale해 더하는 CFG의 구조를 identity 조건에 그대로 적용합니다.",
+  },
+  {
+    from: "in-context-lora-adaptation",
+    to: "identity-guidance-delta",
+    relation: "extends",
+    reason:
+      "IC-LoRA로 학습한 model 위에서 reference 유무를 toggle하는 추가 guidance 항을 정의합니다.",
+  },
+  {
+    from: "identity-guidance-delta",
+    to: "two-stage-distilled-refinement",
+    relation: "constrains",
+    reason:
+      "매 step마다 forward를 두 번 하는 identity guidance 비용이 이를 1단계에만 두는 설계를 강제합니다.",
+  },
+  {
+    from: "in-context-lora-adaptation",
+    to: "two-stage-distilled-refinement",
+    relation: "extends",
+    reason:
+      "IC-LoRA 방법을 실제 serving에 배치할 때 비용이 큰 adapter의 실행 범위를 좁히는 응용 설계입니다.",
   },
   {
     from: "generative-evaluation-boundary",

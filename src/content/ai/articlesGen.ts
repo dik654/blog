@@ -175,4 +175,15 @@ export const genArticles: Article[] = [
     ],
     component: () => import("@/pages/articles/ai/latent-diffusion-guidance"),
   },
+  {
+    slug: "in-context-lora",
+    title: "In-Context LoRA: reference·target을 한 context로 이어붙이기",
+    subcategory: "ai-generative",
+    sections: [
+      { id: "overview", title: "새 아키텍처 대신 self-attention 재사용" },
+      { id: "training", title: "Clean reference·noised target 학습" },
+      { id: "applications", title: "ID-LoRA — identity guidance와 two-stage 생성" },
+    ],
+    component: () => import("@/pages/articles/ai/in-context-lora"),
+  },
 ];

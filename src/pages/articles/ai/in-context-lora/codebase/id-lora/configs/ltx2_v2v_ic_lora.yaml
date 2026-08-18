@@ -1,0 +1,40 @@
+# ID-LoRA repo · packages/ltx-trainer/configs/ltx2_v2v_ic_lora.yaml
+# (2026년 8월 기준 main branch). LTX-2 video-to-video IC-LoRA 학습 설정 —
+# 전체 파일에서 이 글이 다루는 lora·training_strategy 절만 발췌했습니다.
+# 본문 대응: "task-specific LoRA를 base model 위에 학습한다"는 IC-LoRA의
+# 정의가 실제로 어떤 module에, 어떤 크기로 적용되는지.
+
+lora:
+  # Rank가 클수록 표현력은 늘지만 그만큼 원 base model에서 벗어난 자유도도 커짐
+  # IC-LoRA는 8~64 사이를 흔히 쓰며 이 설정은 32를 씀
+  rank: 32
+  alpha: 32  # alpha=rank면 유효 scale이 1.0
+
+  # LTX-2 transformer의 video attention·FFN에만 적용 — 원본 weight는 그대로 두고
+  # 이 module들에 A,B 저랭크 행렬 쌍만 새로 붙임
+  target_modules:
+    - "attn1.to_k"      # video self-attention
+    - "attn1.to_q"
+    - "attn1.to_v"
+    - "attn1.to_out.0"
+    - "attn2.to_k"      # video cross-attention (text 조건)
+    - "attn2.to_q"
+    - "attn2.to_v"
+    - "attn2.to_out.0"
+    - "ff.net.0.proj"   # video feed-forward
+    - "ff.net.2"
+
+training_strategy:
+  # 이름 자체가 IC-LoRA의 핵심을 말해줌 — "새 아키텍처"가 아니라
+  # "video-to-video"라는 학습 전략(어떤 latent를 조건으로 붙이는가) 선택
+  name: "video_to_video"
+  # 학습 중 이 확률로 reference latent 대신 target 첫 frame을 조건으로 줌
+  # (image-to-video 성능도 함께 확보)
+  first_frame_conditioning_p: 0.2
+  # Reference video latent가 저장된 디렉토리 — 이게 곧 IC-LoRA의 "context"
+  reference_latents_dir: "reference_latents"
+
+flow_matching:
+  # LTX-2가 권장하는 timestep sampling — diffusion-continuous-time 글의
+  # x_t=(1-t)x_0+tx_1 직선 보간에서 t를 뽑는 분포
+  timestep_sampling_mode: "shifted_logit_normal"
