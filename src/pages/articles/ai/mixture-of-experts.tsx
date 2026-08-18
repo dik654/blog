@@ -402,6 +402,47 @@ export default function MixtureOfExpertsArticle() {
           interpretation="m=128, k=2, n=8이면 균등 load는 32입니다. φ=1.25라면 C=40이고 실제 load가 46인 expert에는 overflow 6개가 생깁니다. 이 6개를 drop할지 다른 expert로 보낼지, buffer를 더 키울지는 quality와 memory를 함께 보고 정합니다."
         />
 
+        <ExplainedFormula
+          question="Auxiliary load-balancing loss는 실제로 어떤 식이고, 왜 f_i·P_i를 곱한 합을 쓰나요?"
+          idea={
+            <>
+              실제 배정 비율 f_i는 argmax로 만들어져 미분할 수 없습니다.
+              대신 router의 soft 확률 P_i는 미분 가능합니다. 이 둘을 곱해
+              더하면, f_i가 큰(많이 몰린) expert의 P_i를 낮추는 방향으로
+              gradient가 흐르게 만들 수 있습니다.
+            </>
+          }
+          formula={String.raw`f_i=\frac{1}{T}\sum_{x}\mathbf{1}[\arg\max_j p_j(x)=i],\quad P_i=\frac{1}{T}\sum_x p_i(x),\quad L_{\rm aux}=\alpha N\sum_{i=1}^{N}f_iP_i`}
+          annotatedFormula={String.raw`\begin{aligned}
+f_i&=\underbrace{\frac{1}{T}\sum_x\mathbf{1}[\arg\max_j p_j(x)=i]}_{\text{실제로 expert i에 배정된 token 비율(hard, 미분 불가)}}\\
+P_i&=\underbrace{\frac{1}{T}\sum_x p_i(x)}_{\text{router가 expert i에 준 평균 확률(soft, 미분 가능)}}\\
+L_{\rm aux}&=\underbrace{\alpha N\sum_{i=1}^{N}f_iP_i}_{\text{두 값이 모두 uniform(1/N)일 때 최소화되는 결합 항}}
+\end{aligned}`}
+          operations={[
+            {
+              expression: String.raw`\frac{1}{T}\sum_x\mathbf{1}[\cdot]`,
+              annotation: ["batch 안에서 실제로 expert i를 고른", "token 비율을 셈"],
+            },
+            {
+              expression: String.raw`\frac{1}{T}\sum_x p_i(x)`,
+              annotation: ["router softmax 확률을 평균해", "expert i에 준 soft weight 계산"],
+            },
+            {
+              expression: String.raw`\alpha N\sum_i f_iP_i`,
+              annotation: ["hard 배정과 soft 확률을 곱해 더한 뒤", "language-model loss에 더할 벌점 생성"],
+            },
+          ]}
+          terms={[
+            { symbol: "T", name: "Batch token 수", description: "이번 batch에서 routing한 전체 token 개수입니다." },
+            { symbol: "N", name: "Expert 수", description: "분배 대상 expert 개수입니다." },
+            { symbol: String.raw`\alpha`, name: "Aux loss 강도", description: "Balancing 항을 얼마나 강하게 반영할지 정하는 hyperparameter입니다(Switch Transformer는 0.01을 씁니다)." },
+          ]}
+          assumptions={[
+            "f_i는 미분 불가능하지만 P_i를 통해서만 gradient가 흐릅니다.",
+            "N개 expert에 완전히 균등하면(f_i=P_i=1/N) Σf_iP_i=1/N이라 L_aux=α로 최소가 됩니다.",
+          ]}
+          interpretation="한 expert가 모든 token을 받으면 Σf_iP_i=1이 되어 L_aux=αN으로 균등 상태보다 N배 커집니다 — 이 penalty가 router의 쏠림을 억제합니다."
+        />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <h3>Auxiliary loss, routing bias, capacity는 서로 다른 개입 지점이다</h3>
           <p className="leading-8">
