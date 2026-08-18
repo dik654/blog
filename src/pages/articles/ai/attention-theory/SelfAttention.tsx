@@ -1,8 +1,15 @@
 import { Link } from "react-router-dom";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import type { CodeRef } from "@/components/code/types";
+import { CodeViewButton } from "@/components/code";
+import { codeRefs } from "./codeRefs";
 import SelfAttentionTensorViz from "./viz/SelfAttentionTensorViz";
 
-export default function SelfAttention() {
+export default function SelfAttention({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="self-attention" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
@@ -36,6 +43,11 @@ export default function SelfAttention() {
         assumptions={["한 self-attention layer의 단일 head 또는 head를 합친 matrix 표기입니다."]}
         interpretation="‘Q=K=V’라는 약식 표현은 source sequence가 같다는 뜻일 뿐 실제 tensor 값이나 weight matrix가 같다는 뜻이 아닙니다."
       />
+      <CodeViewButton
+        onClick={() =>
+          onCodeRef("qkv-projection", codeRefs["qkv-projection"])
+        }
+      />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
@@ -60,6 +72,11 @@ export default function SelfAttention() {
         ]}
         assumptions={["기본 MHA 표기입니다. MQA와 GQA는 query head가 key/value head를 공유하므로 KV projection 수가 다릅니다."]}
         interpretation="multi-head는 해석 가능한 역할 분담을 보장하지 않습니다. 서로 다른 projection과 attention map을 학습할 capacity를 제공하는 구조입니다."
+      />
+      <CodeViewButton
+        onClick={() =>
+          onCodeRef("multi-head-split", codeRefs["multi-head-split"])
+        }
       />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
