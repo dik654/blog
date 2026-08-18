@@ -99,6 +99,24 @@ build 통과는 완료의 증거가 아니며, 아래 Definition of Done을 모�
   있게 한다. 최종 결과 concept 하나만 있고 그 결과를 만든 중간 concept이 하나도 없으면 유도가
   생략됐다는 신호다.
 
+### 2.5 구현 가능성
+
+- 이해 가능성과 구현 가능성은 다른 기준이다. 2.4가 "왜 이 결과가 맞는가"를 요구한다면, 이
+  절은 "이걸 읽고 실제로 코드를 짤 수 있는가"를 요구한다. 알고리즘·training procedure·sampling
+  loop·protocol처럼 구체적 절차가 있는 concept은 수식과 별개로 `AlgorithmBlock`
+  (`@/components/ui/algorithm-block`)으로 입력→단계별 연산→출력을 pseudocode로 적는다.
+- Pseudocode는 특정 언어 문법이 아니라 언어 무관 표기를 쓴다. 목표는 PyTorch·NumPy·Rust
+  어디로든 한 줄씩 그대로 옮길 수 있는 정밀도이지, 특정 framework API를 가르치는 것이 아니다.
+- 판단 기준은 2.4와 짝을 이룬다: "독자가 이 공식을 처음부터 다시 만들어낼 수 있는가?"(2.4)에
+  더해 "독자가 이 절차를 지금 바로 코드로 옮길 수 있는가?"(2.5). 수식만 있고 절차가 없으면
+  독자는 "왜 맞는지는 알지만 어떻게 짜는지는 모르는" 상태로 남는다.
+- 이 요구도 AI/ML에 한정하지 않는다. 암호 프로토콜의 message flow, 분산 합의의 state machine,
+  압축·인덱싱 알고리즘의 단계처럼 "순서가 있는 절차"가 핵심인 모든 concept에 적용한다. 반대로
+  순수 정의나 존재성 증명처럼 절차가 없는 concept에는 억지로 pseudocode를 만들지 않는다.
+- CodeSidebar(2.3)와 역할이 다르다. CodeSidebar는 "이 실제 오픈소스가 어떻게 구현했는가"를
+  보여주고, AlgorithmBlock은 "이 개념 자체를 처음부터 구현하려면 어떤 절차인가"를 보여준다.
+  코드 분석형 글은 실제 구현이 있으니 AlgorithmBlock으로 재발명하지 않고 CodeSidebar를 쓴다.
+
 ## 3. 수식 설명
 
 모든 주요 KaTeX 식은 다음 순서를 지킨다.
@@ -199,6 +217,7 @@ mechanism Viz가 더 적합하다.
 - [ ] `ExplainedFormula`의 `operations`는 실제 식의 기호를 쓰는 explicit 값이며 제네릭 fallback이 아니다.
 - [ ] 코드 분석형 글(실제 오픈소스 codebase를 추적하는 글)은 핵심 단계마다 `CodeSidebar`로 열람 가능한 실제 source 함수·줄 범위 근거가 있다.
 - [ ] 최종 공식이 알려진 다단계 유도의 결과라면, 그 유도 경로 전체가 이 글 또는 연결된 canonical 선수 글에 실제로 있다 — citation 한 줄로 대체하지 않았다.
+- [ ] 구체적 절차가 있는 concept(algorithm·training procedure·sampling loop·protocol)은 `AlgorithmBlock`으로 입력→단계별 연산→출력 pseudocode가 있다 — 수식만 있고 절차가 없는 상태로 남기지 않았다.
 - [ ] threshold·monotonic·piecewise 관계를 다루는 수식에는 mechanism Viz와 별도로 함수 그래프가 있는지 검토했다.
 - [ ] Model VRAM을 다루는 글은 parameter headline×단일 dtype으로 끝내지 않고 실제 checkpoint의 dtype별 tensor payload, GB·GiB 단위, weight residency와 KV·recurrent state·workspace·allocator headroom을 분리해 계산한다.
 - [ ] Viz가 메커니즘을 표현하며 정적 스타일 검사를 통과한다.

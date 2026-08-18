@@ -1,4 +1,5 @@
 import ContentBoundary from "@/components/articles/content-boundary";
+import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ConceptLadderViz from "@/components/viz/ConceptLadderViz";
@@ -361,6 +362,66 @@ L_{t-1}&=\underbrace{w_t\,\mathbb E\big[\lVert\epsilon-\epsilon_\theta(x_t,t)\rV
             "x₀=(xₜ−√(1−ᾱₜ)ε)/√ᾱₜ로 posterior mean 안의 x₀를 xₜ,ε로 치환합니다.",
           ]}
           interpretation="L_ε(=L_simple)은 이 유도에서 자동으로 나온 결과가 아니라 w_t를 전부 1로 둔 재가중치 버전입니다. Ho et al.은 이 재가중이 낮은 noise level의 기여를 늘려 sample quality를 실제로 개선한다는 것을 실험으로 보였습니다."
+        />
+        <p className="text-sm leading-7 text-muted-foreground">
+          여기까지가 "왜 이 loss가 맞는가"입니다. 아래 두 알고리즘은 지금까지의
+          식을 그대로 코드로 옮긴 것입니다 — 위에서 이미 정의한 기호(x₀,
+          ᾱₜ, ε, ε_θ) 그대로 씁니다.
+        </p>
+        <AlgorithmBlock
+          title="Training — 한 gradient step (수렴할 때까지 반복)"
+          input={["x₀ ~ 학습 데이터", "T, {β₁,…,β_T} (고정 noise schedule)"]}
+          steps={[
+            {
+              code: "t ~ Uniform({1, …, T})",
+              note: "이번 step에서 학습할 noise level을 무작위로 고릅니다.",
+            },
+            {
+              code: "ε ~ N(0, I)",
+              note: "x₀와 같은 shape의 표준 Gaussian noise를 샘플링합니다.",
+            },
+            {
+              code: "ᾱ_t = ∏ˢ₌₁ᵗ(1−β_s)",
+              note: "미리 계산해 둔 lookup table에서 t번째 값을 읽으면 됩니다.",
+            },
+            {
+              code: "x_t = √ᾱ_t · x₀ + √(1−ᾱ_t) · ε",
+              note: "forward loop를 t번 실행하지 않고 closed form으로 바로 계산합니다.",
+            },
+            {
+              code: "loss = ‖ε − ε_θ(x_t, t)‖²",
+              note: "network가 예측한 noise와 실제로 주입한 noise의 MSE입니다.",
+            },
+            {
+              code: "θ ← θ − η · ∇_θ loss",
+              note: "일반적인 gradient step으로 network parameter를 갱신합니다.",
+            },
+          ]}
+          output="학습된 ε_θ"
+          repeatUntil="Loss가 수렴하거나 정해진 step 수에 도달할 때까지 1~6을 반복합니다."
+        />
+        <AlgorithmBlock
+          title="Sampling — xT에서 x0까지 T번 반복"
+          input={[
+            "학습된 ε_θ, T, {β₁,…,β_T}",
+            "x_T ~ N(0, I)",
+          ]}
+          steps={[
+            {
+              code: "for t = T, T−1, …, 1:",
+              note: "Terminal noise에서 시작해 역순으로 반복합니다.",
+            },
+            {
+              code: "  z ~ N(0, I)   (t=1이면 z=0)",
+              note: "마지막 step에서는 추가 noise를 넣지 않아야 x₀가 결정론적으로 남습니다.",
+            },
+            {
+              code: "  x_{t-1} = (1/√α_t)·(x_t − (β_t/√(1−ᾱ_t))·ε_θ(x_t,t)) + σ_t·z",
+              note: "위 μ_θ 식으로 mean을 계산한 뒤, posterior 분산만큼 noise를 다시 더합니다.",
+            },
+          ]}
+          output="x₀ — 생성된 sample"
+          repeatUntil="t=T부터 t=1까지 매 step 위 세 줄을 순서대로 실행합니다."
         />
       </section>
 
