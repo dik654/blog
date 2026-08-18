@@ -1,5 +1,8 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import Math from "@/components/ui/math";
+import type { CodeRef } from "@/components/code/types";
+import { CodeViewButton } from "@/components/code";
+import { codeRefs } from "./codeRefs";
 import AcceptanceTraceViz from "./viz/AcceptanceTraceViz";
 
 const REJECTION_TERMS = [
@@ -48,7 +51,11 @@ const PREFIX_TERMS = [
   },
 ] as const;
 
-export default function DraftVerify() {
+export default function DraftVerify({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="draft-verify" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
@@ -97,6 +104,9 @@ m_{\mathrm{out}}(x)&=m_{\mathrm{accept}}(x)+m_{\mathrm{correct}}(x) \\
         ]}
         interpretation="이 등식이 speculative sampling의 정확성 핵심입니다. 단순히 draft token을 항상 수락하거나 거부 뒤 target 전체 분포에서 다시 뽑으면 두 항이 p(x)로 합쳐지지 않아 출력 분포가 달라집니다."
         title="Rejection sampling으로 target probability 복원하기"
+      />
+      <CodeViewButton
+        onClick={() => onCodeRef("rejection-test", codeRefs["rejection-test"])}
       />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
@@ -153,6 +163,9 @@ A &= \sum_{i=1}^{K} I_i \\
         ]}
         interpretation="앞쪽 수락률이 높아도 먼 위치까지 모두 수락할 확률이 빠르게 줄 수 있습니다. 따라서 K를 두 배로 늘린 결과는 개별 token acceptance rate가 아니라 tail probability와 실제 E[A]로 확인해야 합니다."
         title="연속 prefix의 acceptance length"
+      />
+      <CodeViewButton
+        onClick={() => onCodeRef("prefix-stop", codeRefs["prefix-stop"])}
       />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
