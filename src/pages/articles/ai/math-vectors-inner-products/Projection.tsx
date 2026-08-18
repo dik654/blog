@@ -23,7 +23,7 @@ export default function Projection() {
           { symbol: String.raw`v\cdot v`, name: "기준 길이의 제곱", description: "v의 scale을 두 번 세지 않도록 나누는 normalization 항입니다." },
           { symbol: String.raw`\operatorname{proj}_v(u)`, name: "parallel component", description: "u에서 v와 평행한 성분만 남긴 vector입니다." },
         ]}
-        assumptions={["기준 vector v는 zero vector가 아니어야 합니다.", "수직 성분은 u−projᵥ(u)로 남으며 projection 하나가 원래 vector 전체를 보존하지는 않습니다."]}
+        assumptions={["기준 vector v는 zero vector가 아니어야 합니다.", "수직 성분은 u−projᵥ(u)로 남으며 projection 하나가 원래 vector 전체를 보존하지는 않습니다.", "실제 구현은 이 수학적 전제를 그대로 두지 않습니다 — torch.nn.functional.normalize나 cosine_similarity는 분모에 작은 eps(기본값 1e-8~1e-12)를 더해 v≈0에서도 0으로 나누지 않고 안정적인(다만 무의미한) 값을 반환합니다."]}
         interpretation="u=(3,4)는 x축으로 3, x축에 수직인 방향으로 4를 가집니다. Perceptron score w·x도 input이 weight 방향으로 가진 signed 성분을 scale과 함께 재는 계산입니다."
       />
     </section>
