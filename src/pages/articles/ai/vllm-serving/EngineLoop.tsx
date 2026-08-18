@@ -1,5 +1,8 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { Link } from "react-router-dom";
+import type { CodeRef } from "@/components/code/types";
+import { CodeViewButton } from "@/components/code";
+import { codeRefs } from "./codeRefs";
 import ContinuousBatchViz from "./viz/ContinuousBatchViz";
 import ResourceGateViz from "./viz/ResourceGateViz";
 
@@ -36,7 +39,11 @@ const FEASIBILITY_TERMS = [
   },
 ] as const;
 
-export default function EngineLoop() {
+export default function EngineLoop({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="engine-loop" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
@@ -107,6 +114,14 @@ M_{KV}^{need} &\le M_{KV}^{free}
         ]}
         interpretation="max_num_batched_tokens나 max_num_seqs 하나만 크게 올려도 다른 두 제약이 그대로라면 처리량이 늘지 않습니다. 오히려 긴 prefill이 decode를 오래 기다리게 하거나 KV pressure로 preemption이 늘 수 있습니다."
         title="Iteration-level scheduling의 hard feasibility"
+      />
+      <CodeViewButton
+        onClick={() =>
+          onCodeRef(
+            "schedule-resource-feasibility",
+            codeRefs["schedule-resource-feasibility"],
+          )
+        }
       />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
