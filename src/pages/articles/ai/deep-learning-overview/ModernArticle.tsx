@@ -80,6 +80,38 @@ export default function DeepLearningOverviewArticle() {
           ]}
           interpretation="깊이의 핵심은 층 수를 세는 일이 아니라, 앞에서 만든 중간 계산을 뒤에서 다시 쓰는 합성 구조입니다."
         />
+        <ExplainedFormula
+          question="φ가 전부 선형이면 층을 쌓아도 왜 표현력이 늘지 않나요?"
+          idea={
+            <>
+              각 φᵢ를 Wᵢh 같은 선형 변환으로 두면, 두 번 합성한 결과도 그
+              자체로 다시 하나의 선형 map입니다. 행렬곱은 결합법칙을
+              만족하므로 층 수를 아무리 늘려도 결과는 항상 입력의 선형
+              변환 하나로 붕괴합니다.
+            </>
+          }
+          formula={String.raw`h_2=W_2(W_1x)=(W_2W_1)x=Wx`}
+          annotatedFormula={String.raw`\begin{aligned}h_1&=\underbrace{W_1x}_{\text{첫 층이 선형이라 가정}}\\h_2&=\underbrace{W_2h_1=W_2W_1x}_{\text{두 번째 층도 선형이면 행렬곱이 결합}}\\h_2&=\underbrace{(W_2W_1)x=Wx}_{\text{두 행렬의 곱은 다시 한 행렬 — 층 하나와 표현력이 같음}}\end{aligned}`}
+          operations={[
+            {
+              expression: String.raw`W_2(W_1x)`,
+              annotation: ["두 선형 층을 차례로 적용한 결과를", "행렬 결합법칙으로 다시 묶음"],
+            },
+            {
+              expression: String.raw`(W_2W_1)x`,
+              annotation: ["두 weight matrix의 곱을 미리 계산해", "입력에 한 번만 곱해도 되는 형태로 정리"],
+            },
+          ]}
+          terms={[
+            { symbol: String.raw`W_1,W_2`, name: "층별 weight matrix", description: "각 층이 선형(활성함수 없이 Wh+b 형태)이라고 가정했을 때의 parameter입니다." },
+            { symbol: "W", name: "등가 단일 행렬", description: "두 선형 층의 곱을 미리 계산한, 원래 입력에 한 번만 곱해도 같은 결과를 내는 행렬입니다." },
+          ]}
+          assumptions={[
+            "Bias 항은 생략했습니다 — bias를 포함해도 결합된 map은 여전히 하나의 affine 변환입니다.",
+            "φᵢ가 하나라도 비선형(ReLU·sigmoid 등)이면 이 붕괴가 일어나지 않습니다.",
+          ]}
+          interpretation="선형 층만 쌓으면 depth와 무관하게 표현 가능한 함수족은 단일 선형 층과 정확히 같습니다. 여러 층이 서로 다른 함수를 표현하려면 φᵢ 사이에 최소 하나의 nonlinearity가 있어야 하며, 이것이 activation function이 존재하는 근본 이유입니다."
+        />
       </section>
 
       <section id="boundaries" className="space-y-6">
