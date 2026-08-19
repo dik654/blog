@@ -2,9 +2,11 @@ import { useState } from "react";
 import BuilderDetailViz from "./viz/BuilderDetailViz";
 import { BUILD_PATHS } from "./BuilderApiData";
 import type { CodeRef } from "@/components/code/types";
+import { CodeViewButton } from "@/components/code";
+import { codeRefs } from "./codeRefs";
 
 export default function BuilderApi({
-  onCodeRef: _onCodeRef,
+  onCodeRef,
 }: {
   onCodeRef: (key: string, ref: CodeRef) => void;
 }) {
@@ -34,6 +36,14 @@ export default function BuilderApi({
           bid submission은 downstream application의 정책이며 Reth node의 local
           payload job과 동일한 코드 경로가 아닙니다.
         </p>
+        <div className="not-prose">
+          <CodeViewButton
+            label="rbuilder StateProviderFactoryFromRethProvider"
+            onClick={() =>
+              onCodeRef("rbuilder-reth-provider", codeRefs["rbuilder-reth-provider"])
+            }
+          />
+        </div>
         <p className="leading-7">
           예를 들어 slot 12의 parent P에 대해 local candidate L을 계속 갱신하면서
           relay에서 5·7 ETH bid를 받습니다. 외부 후보는 value만 크다고 즉시

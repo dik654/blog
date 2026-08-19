@@ -6,9 +6,11 @@ import type { CodeRef } from "@/components/code/types";
 import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import { CodeViewButton } from "@/components/code";
+import { codeRefs } from "./codeRefs";
 
 export default function Overview({
-  onCodeRef: _onCodeRef,
+  onCodeRef,
 }: {
   onCodeRef: (key: string, ref: CodeRef) => void;
 }) {
@@ -38,6 +40,12 @@ export default function Overview({
         assumptions={["Relay response를 신뢰하기 전에 signature와 request context를 검증합니다.", "Local payload readiness와 fallback cutoff를 별도로 유지합니다.", "Private bundle intake와 proposer-side Builder API를 같은 authentication surface로 합치지 않습니다."]}
         interpretation="5·7·9 ETH bid 중 9 ETH 후보가 wrong parent라면 유효 집합에서 빠져 7 ETH를 선택합니다. 7 ETH payload가 전달되지 않을 위험은 argmax가 해결하지 않으므로 deadline·relay health·local fallback이 필요합니다."
       />
+      <div className="not-prose mb-8">
+        <CodeViewButton
+          label="mev-boost processBid()"
+          onClick={() => onCodeRef("process-bid", codeRefs["process-bid"])}
+        />
+      </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
         <p className="leading-7">

@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { API_SURFACES } from "./FlashbotsData";
 import type { CodeRef } from "@/components/code/types";
+import { CodeViewButton } from "@/components/code";
+import { codeRefs } from "./codeRefs";
 
 export default function Flashbots({
-  onCodeRef: _onCodeRef,
+  onCodeRef,
 }: {
   onCodeRef: (key: string, ref: CodeRef) => void;
 }) {
@@ -42,6 +44,14 @@ export default function Flashbots({
           사후에 “높은 bid를 놓친 것”과 “invalid bid를 거른 것”을 구분할 수
           있습니다.
         </p>
+        <div className="not-prose">
+          <CodeViewButton
+            label="mev-boost getPayload timeout · verifyPayload"
+            onClick={() =>
+              onCodeRef("get-payload-timeout", codeRefs["get-payload-timeout"])
+            }
+          />
+        </div>
       </div>
 
       <div className="not-prose grid grid-cols-2 gap-2 sm:grid-cols-4 mb-4">
