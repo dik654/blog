@@ -60923,4 +60923,39 @@ export const ARTICLE_LEARNING: Readonly<
       { title: "ID-LoRA: Identity-Driven Audio-Video Personalization with In-Context LoRA", href: "https://arxiv.org/abs/2603.10256", problem: "Audio-driven talking video 생성에서 화자 identity를 유지하면서도 IC-LoRA의 가벼움을 지키는 방법이 필요합니다.", contribution: "Negative temporal position, identity guidance delta, two-stage serving을 결합한 ID-LoRA를 제안합니다.", assumptions: "LTX-2/2.3 backbone과 논문이 사용한 CelebV-HQ·TalkVid 조건입니다.", evidenceScope: "해당 backbone·dataset 실험 범위의 성능·설계 근거입니다.", notClaim: "다른 backbone이나 domain에 동일 하이퍼파라미터가 그대로 이식된다는 뜻은 아닙니다.", sectionId: "applications" },
     ],
   },
+  "ai/cuda-graph-capture": {
+    coreIdea:
+      "CUDA Graphs는 kernel launch 시퀀스를 한 번 capture해 그래프로 기록하고, 이후에는 그 그래프를 CPU 쪽 재해석 없이 GPU에 그대로 replay해 kernel마다 반복되는 launch overhead를 상각하는 실행 모델입니다. Replay는 capture 시점에 고정된 input·output GPU 주소만 읽고 쓰므로 dynamic shape를 그대로 다룰 수 없고, 그래서 vLLM 같은 실전 serving engine은 batch shape를 key로 capture된 그래프를 캐시하고 dynamic shape는 패딩으로 흡수합니다.",
+    assumedKnowledge: [
+      { id: "cuda-stream-ordering", role: "Graph capture는 특정 stream에 issue된 kernel 시퀀스를 기록하는 것이므로, stream이 순서를 보장하는 asynchronous execution contract를 그대로 전제합니다." },
+    ],
+    introducedHere: [
+      { id: "cuda-graph-capture-replay", role: "Kernel launch 시퀀스를 한 번 기록하고 이후 그대로 재생해 launch overhead를 상각하는 실행 모델을 도입합니다." },
+      { id: "cuda-graph-static-address-constraint", role: "Replay가 capture 시점에 고정된 GPU 메모리 주소만 읽고 쓴다는 제약을 도입합니다." },
+      { id: "cuda-graph-batch-shape-dispatch", role: "batch shape를 key로 capture된 그래프를 캐시하고 처음 보는 shape는 capture, 이미 본 shape는 replay하는 실전 serving 패턴을 도입합니다." },
+    ],
+    conceptExplanations: [
+      { id: "cuda-graph-capture-replay", sectionId: "overview", intuition: "매번 새로 부르는 대신 한 번 녹음해 둔 안내방송을 그대로 재생하는 것과 같습니다 — 안내 내용을 다시 읽는 비용은 없고, 방송 자체가 걸리는 시간만 남습니다.", workedExample: "`with torch.cuda.graph(g): output = model(x)`로 감싸면 그 안의 forward가 즉시 실행되는 대신 kernel 시퀀스로 기록되고, 이후 `g.replay()`가 그 시퀀스를 그대로 재생합니다.", boundary: "Capture 구간 안의 실행 결과 자체는 신뢰할 수 없습니다 — 실제로 유효한 결과를 얻으려면 반드시 replay를 호출해야 합니다." },
+      { id: "cuda-graph-static-address-constraint", sectionId: "mechanics", intuition: "녹음된 안내방송이 특정 스피커 위치를 향해 나가듯, replay도 capture 때 정해진 바로 그 메모리 자리만 읽고 씁니다 — 다른 스피커(새 tensor)로 바꿔 틀 수 없습니다.", workedExample: "`new_x.copy_(x)` 처럼 capture 때 쓰인 `x`라는 같은 buffer에 새 데이터를 in-place로 덮어써야 `g.replay()`가 새 입력을 반영합니다. `x = new_tensor`로 참조만 바꾸면 replay는 여전히 옛 데이터를 읽습니다.", boundary: "이 제약 때문에 batch size나 sequence 길이가 매 step 달라지는 완전한 dynamic shape는 하나의 capture로 다룰 수 없습니다." },
+      { id: "cuda-graph-batch-shape-dispatch", sectionId: "implementation", intuition: "사이즈가 다른 손님마다 미리 만들어 둔 옷을 매칭해 입히는 기성복 매장과 같습니다 — 정확히 맞는 사이즈가 없으면 가장 가까운 큰 사이즈를 입혀 남는 부분을 감수합니다.", workedExample: "vLLM의 `CUDAGraphWrapper.__call__`은 `batch_descriptor`가 dict에 없으면 새 entry를 만들고 capture하며, 이미 있으면 저장된 `torch.cuda.CUDAGraph`를 replay합니다.", boundary: "Batch size를 몇 개의 고정 크기로 패딩해 capture 개수를 제한하므로, 실제 batch가 패딩 크기보다 작으면 남는 자리만큼 연산을 낭비합니다." },
+    ],
+    conceptStages: [
+      { label: "00 Capture/Replay", relation: "Kernel launch 시퀀스를 한 번 기록하고 그대로 재생하는 기본 실행 모델을 정의합니다.", concepts: ["cuda-graph-capture-replay"] },
+      { label: "01 Constraint", relation: "Replay가 지켜야 하는 static-address 제약을 도입합니다.", concepts: ["cuda-graph-static-address-constraint"] },
+      { label: "02 Serve", relation: "이 제약 아래에서 실제 serving engine이 여러 batch shape를 어떻게 capture·dispatch하는지 구체화합니다.", concepts: ["cuda-graph-batch-shape-dispatch"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Eager 실행과 비교해 CUDA graph capture/replay가 줄이는 비용이 정확히 무엇이고, 무엇은 그대로 남는지 설명하세요.", answerChecklist: ["launch overhead 감소", "kernel exec 시간은 그대로", "N개 launch가 graph launch 하나로 상각", "batch가 크면 효과 작음"], requiredConcepts: ["cuda-graph-capture-replay"], sectionId: "overview" },
+      { level: "basic", question: "torch.cuda.graph capture 구간 안에서 실행한 코드의 결과를 왜 그대로 신뢰할 수 없는지 설명하세요.", answerChecklist: ["capture는 즉시 실행 아님", "kernel 시퀀스만 기록", "유효한 결과는 replay 후", "실행과 기록의 분리"], requiredConcepts: ["cuda-graph-capture-replay"], sectionId: "overview" },
+      { level: "basic", question: "Static-address 제약이 무엇인지, 그리고 replay 이후 새 입력을 반영하려면 어떻게 해야 하는지 설명하세요.", answerChecklist: ["capture 시점 GPU 주소 고정", "새 tensor 참조로는 반영 안 됨", "in-place copy 필요", "같은 buffer 재사용"], requiredConcepts: ["cuda-graph-static-address-constraint"], sectionId: "mechanics" },
+      { level: "basic", question: "Static-address 제약이 dynamic shape를 다루기 어렵게 만드는 이유를 설명하세요.", answerChecklist: ["주소가 고정되면 shape도 고정", "batch size마다 다른 graph 필요", "완전한 dynamic shape는 단일 capture 불가"], requiredConcepts: ["cuda-graph-static-address-constraint"], sectionId: "mechanics" },
+      { level: "basic", question: "vLLM CUDAGraphWrapper가 batch_descriptor를 key로 삼아 capture와 replay를 어떻게 분기하는지 설명하세요.", answerChecklist: ["batch_descriptor가 dict key", "없으면 capture", "있으면 replay", "shape별 별도 entry"], requiredConcepts: ["cuda-graph-batch-shape-dispatch"], sectionId: "implementation" },
+      { level: "basic", question: "Batch size를 고정된 몇 개 크기로 패딩해 capture하는 이유와 그 대가를 설명하세요.", answerChecklist: ["capture 개수 제한", "graph 수가 무한히 늘지 않음", "패딩 크기보다 작은 실제 batch는 연산 낭비", "trade-off"], requiredConcepts: ["cuda-graph-batch-shape-dispatch"], sectionId: "tradeoffs" },
+      { level: "advanced", question: "T_eager=N(τ_L+τ_E)와 T_replay≈Nτ_E+τ_L,graph 두 식을 근거로, 어떤 workload에서 CUDA graph의 이득이 크고 작은지 설명하세요.", answerChecklist: ["N이 클수록 launch 비용 비중 큼", "τ_L≫τ_E일 때 이득 큼(작은 batch·decode)", "batch가 커 τ_E가 지배하면 이득 작음", "exec 시간 자체는 줄지 않음"], requiredConcepts: ["cuda-graph-capture-replay"], sectionId: "overview" },
+      { level: "advanced", question: "Capture 시점의 static-address 검증 로직(입력 주소 기록 후 replay 때 비교)이 왜 필요한지, 이 검증이 없다면 어떤 실패가 생길 수 있는지 설명하세요.", answerChecklist: ["capture 때 주소 기록", "replay 전 실제 주소와 비교", "다르면 옛 buffer를 읽는 silent bug 위험", "assert로 조기 발견"], requiredConcepts: ["cuda-graph-static-address-constraint", "cuda-graph-batch-shape-dispatch"], sectionId: "implementation" },
+      { level: "advanced", question: "Full graph capture와 piecewise capture의 trade-off를 capture 가능 범위와 launch 절감 크기 두 축으로 비교하세요.", answerChecklist: ["full: 절감 최대, dynamic 분기 있으면 불가", "piecewise: 일부만 graph, 나머지 eager", "capture 불가능한 조건 분기 예시", "유연성-절감 trade-off"], requiredConcepts: ["cuda-graph-batch-shape-dispatch"], sectionId: "tradeoffs" },
+      { level: "advanced", question: "여러 batch shape에 대해 각각 그래프를 capture할 때, graph pool을 공유하지 않는다면 어떤 비용이 추가로 발생하는지 설명하세요.", answerChecklist: ["shape마다 별도 GPU memory 할당", "공유 pool 없으면 중복 할당", "capture 개수가 늘수록 메모리 압박 커짐", "model-vram known floor와의 연결"], requiredConcepts: ["cuda-graph-batch-shape-dispatch"], sectionId: "tradeoffs" },
+    ],
+    papers: [],
+  },
 };

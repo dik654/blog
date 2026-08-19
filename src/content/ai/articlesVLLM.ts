@@ -361,4 +361,22 @@ export const vllmServingArticles: Article[] = [
     ],
     component: () => import("@/pages/articles/ai/model-vram-budgeting"),
   },
+  {
+    slug: "cuda-graph-capture",
+    title: "CUDA Graphs: kernel launch overhead를 capture-replay로 지우기",
+    subcategory: "ai-llm-serving",
+    sections: [
+      { id: "overview", title: "Decode step의 launch overhead 문제" },
+      { id: "mechanics", title: "Capture/replay 계약과 static address 제약" },
+      {
+        id: "implementation",
+        title: "vLLM CUDAGraphWrapper의 실제 구현",
+      },
+      {
+        id: "tradeoffs",
+        title: "Dynamic shape·capture 범위·memory pool trade-off",
+      },
+    ],
+    component: () => import("@/pages/articles/ai/cuda-graph-capture"),
+  },
 ];

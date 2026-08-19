@@ -8811,6 +8811,23 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "project-measurement", rule: "ID-LoRA(2026)의 성능·설계 설명은 해당 공개 repo와 논문의 실험 조건(LTX-2/2.3, CelebV-HQ·TalkVid)으로 제한하며, 모든 in-context LoRA 응용이 같은 결과를 낸다고 일반화하지 않는다." },
     ],
   },
+  "cuda-graph-capture": {
+    title: "CUDA Graphs 정본이 소유하는 범위",
+    owns: [
+      "Kernel launch overhead가 exec 시간을 압도하는 조건과 capture/replay의 latency 모델",
+      "torch.cuda.graph capture/replay의 static input·output 주소 계약",
+      "vLLM CUDAGraphWrapper의 batch shape별 capture·dispatch·replay 실제 구현",
+      "Dynamic shape 패딩, full·piecewise capture 범위, graph pool 공유의 trade-off",
+    ],
+    reuses: [
+      { label: "CUDA stream ordering", href: "/gpu/cuda-sync-streams#streams" },
+      { label: "Model VRAM known floor", href: "/ai/model-vram-budgeting#known-floor" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Capture/replay 실행 계약은 PyTorch torch.cuda.graph의 문서화된 static-address 의미론으로 제한한다." },
+      { kind: "project-measurement", rule: "실제 구현 설명은 vllm-project/vllm의 vllm/compilation/cuda_graph.py 코드 범위로 제한하며, latency 배율 예시는 개념 설명용 수치일 뿐 실측값이 아니다." },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

@@ -2149,6 +2149,33 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "1단계는 target 해상도에서 IC-LoRA와 전체 guidance suite로 생성하고, 2단계는 IC-LoRA 없이 distilled LoRA만으로 spatial upsample·refine해 비용이 큰 adapter가 실행되는 범위를 의도적으로 좁히는 two-stage serving 설계입니다.",
     canonicalHref: "/ai/in-context-lora#applications",
   },
+  "cuda-graph-capture-replay": {
+    id: "cuda-graph-capture-replay",
+    kind: "method",
+    domain: "computer-science",
+    label: "CUDA graph capture · replay",
+    definition:
+      "Stream에 issue되는 kernel launch 시퀀스를 즉시 실행하는 대신 한 번 기록(capture)해 실행 그래프로 만들고, 이후에는 그 그래프를 CPU 쪽 재해석 없이 GPU에 그대로 재생(replay)해 kernel마다 반복되는 launch overhead를 상각하는 실행 모델입니다.",
+    canonicalHref: "/ai/cuda-graph-capture#mechanics",
+  },
+  "cuda-graph-static-address-constraint": {
+    id: "cuda-graph-static-address-constraint",
+    kind: "concept",
+    domain: "computer-science",
+    label: "CUDA graph static-address constraint",
+    definition:
+      "Captured graph는 capture 시점에 고정된 input·output tensor의 GPU 메모리 주소만 읽고 쓰므로, replay 이후 새 데이터를 반영하려면 새 tensor를 넘기는 대신 같은 buffer에 in-place copy로 덮어써야 하는 제약입니다.",
+    canonicalHref: "/ai/cuda-graph-capture#mechanics",
+  },
+  "cuda-graph-batch-shape-dispatch": {
+    id: "cuda-graph-batch-shape-dispatch",
+    kind: "method",
+    domain: "computer-science",
+    label: "CUDA graph batch-shape dispatch",
+    definition:
+      "Static-address 제약 때문에 batch size마다 별도 graph가 필요하므로, 실행 shape를 key로 capture된 graph를 캐시하고 처음 보는 shape는 capture, 이미 본 shape는 replay로 분기하며, dynamic shape는 미리 정한 크기로 패딩해 capture 개수를 제한하는 serving 패턴입니다.",
+    canonicalHref: "/ai/cuda-graph-capture#implementation",
+  },
   "amortized-variational-inference": {
     id: "amortized-variational-inference",
     kind: "method",
@@ -19593,6 +19620,41 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "extends",
     reason:
       "IC-LoRA 방법을 실제 serving에 배치할 때 비용이 큰 adapter의 실행 범위를 좁히는 응용 설계입니다.",
+  },
+  {
+    from: "cuda-stream-ordering",
+    to: "cuda-graph-capture-replay",
+    relation: "prerequisite",
+    reason:
+      "Graph capture는 특정 stream에 issue된 kernel 시퀀스를 기록하는 것이라, stream이 순서를 보장하는 asynchronous execution contract가 있어야 성립합니다.",
+  },
+  {
+    from: "cuda-graph-capture-replay",
+    to: "cuda-graph-static-address-constraint",
+    relation: "extends",
+    reason:
+      "Capture한 그래프를 재사용 가능하게 만드는 대가로, replay가 참조하는 input·output 주소를 capture 시점에 고정한다는 제약을 도입합니다.",
+  },
+  {
+    from: "cuda-graph-static-address-constraint",
+    to: "cuda-graph-batch-shape-dispatch",
+    relation: "constrains",
+    reason:
+      "주소가 고정되면 tensor shape도 고정되므로, batch size가 바뀔 때마다 새 graph가 필요하다는 실제 serving 제약을 만듭니다.",
+  },
+  {
+    from: "cuda-graph-capture-replay",
+    to: "cuda-graph-batch-shape-dispatch",
+    relation: "extends",
+    reason:
+      "단일 capture/replay 개념을 여러 batch shape가 섞이는 실제 serving loop에서 shape별 캐시·dispatch 패턴으로 구체화합니다.",
+  },
+  {
+    from: "cuda-graph-batch-shape-dispatch",
+    to: "model-vram-known-floor",
+    relation: "constrains",
+    reason:
+      "Shape마다 capture된 graph가 GPU memory를 점유하므로, known floor와 구분되는 physical peak의 CUDA graph 항목을 이 dispatch 패턴이 만듭니다.",
   },
   {
     from: "generative-evaluation-boundary",

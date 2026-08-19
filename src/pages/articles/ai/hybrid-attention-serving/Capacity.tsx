@@ -84,7 +84,8 @@ export default function Capacity() {
           <code>남은 KV 예산 ÷ 토큰당 KV byte</code>이기 때문입니다. Weight
           quantization은 토큰당 KV byte를 바꾸지 않더라도 weight를 올린 뒤 남는
           KV 예산을 바꿀 수 있고, Qwen의 request당 fixed recurrent state,
-          vision encoder·CUDA graph·workspace·TP 구성도 모델마다 다릅니다.
+          vision encoder·<a href="/ai/cuda-graph-capture">CUDA graph</a>·
+          workspace·TP 구성도 모델마다 다릅니다.
           토큰당 비용을 검증하려면 startup log의 총 token 수뿐 아니라 실제로 KV
           pool과 recurrent-state group에 예약된 byte도 함께 기록해야 합니다.
         </p>

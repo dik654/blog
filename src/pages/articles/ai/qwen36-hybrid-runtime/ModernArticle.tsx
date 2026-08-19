@@ -200,6 +200,14 @@ M_{runtime}&=\underbrace{M_W}_{\text{모든 request가 공유}}
           interpretation="128K 하나와 32K 네 개는 logical KV 총량이 같을 수 있지만 고정 recurrent state는 후자가 네 배입니다. Scheduler는 실제 T₁…Tᴺ 분포로 admission해야 합니다."
           title="Hybrid request memory의 세 성장축"
         />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p className="leading-8">
+            M_work를 이루는 kernel temporary·allocator padding·activation과
+            달리 <Link to="/ai/cuda-graph-capture">CUDA graph</Link>가
+            차지하는 몫은 shape마다 capture된 graph 수에 좌우됩니다 — request
+            길이 분포가 다양할수록 capture해야 할 shape도 늘어납니다.
+          </p>
+        </div>
       </section>
 
       <section id="prefix-transaction" className="scroll-mt-20 space-y-7">

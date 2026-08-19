@@ -26,7 +26,7 @@ export default function ModernArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <h2>“27B니까 54GB”는 첫 줄 계산이지, GPU 적재 판정이 아닙니다</h2>
           <p className="text-lg leading-8">
-            모델별 VRAM을 직관적으로 보는 출발점은 간단합니다. <strong>parameter 수×저장 byte</strong>가 가중치의 대략적인 바닥입니다. 그래서 BF16 1B는 약 2 GB, FP8 1B는 약 1 GB, packed INT4 1B는 약 0.5 GB입니다. 하지만 이 숫자에는 아직 KV cache·recurrent state·activation·CUDA graph·kernel workspace가 없습니다.
+            모델별 VRAM을 직관적으로 보는 출발점은 간단합니다. <strong>parameter 수×저장 byte</strong>가 가중치의 대략적인 바닥입니다. 그래서 BF16 1B는 약 2 GB, FP8 1B는 약 1 GB, packed INT4 1B는 약 0.5 GB입니다. 하지만 이 숫자에는 아직 KV cache·recurrent state·activation·<Link to="/ai/cuda-graph-capture">CUDA graph</Link>·kernel workspace가 없습니다.
           </p>
           <p className="leading-8">
             더 중요한 점은 “FP8 모델”도 모든 tensor를 1 byte로 저장하지 않을 수 있다는 것입니다. Embedding·normalization·vision block이나 민감한 tensor를 BF16으로 남기고, scale tensor를 더할 수 있습니다. 따라서 이름의 dtype이 아니라 <strong>checkpoint index와 tensor dtype histogram</strong>을 읽어야 합니다.

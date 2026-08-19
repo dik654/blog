@@ -2,6 +2,9 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ConceptLadderViz from "@/components/viz/ConceptLadderViz";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
+import { codeRefs } from "./codeRefs";
+import { nagTree } from "./fileTree";
 import {
   EvidenceFields,
   LearningHeader,
@@ -10,7 +13,9 @@ import {
 import LatentPipelineViz from "./LatentPipelineViz";
 
 export default function LatentDiffusionGuidanceArticle() {
+  const sidebar = useCodeSidebar();
   return (
+    <>
     <article id="overview" className="space-y-16">
       <section id="compression" className="space-y-6">
         <LearningHeader
@@ -241,6 +246,23 @@ g_c&=\underbrace{w\,d_c}_{\text{condition 방향을 scale}}\\
           unconditional 차이</strong>에서 얻습니다 — 그래서 CFG는 추가 학습·추가
           adversarial 실패 모드 없이 guidance 방향을 만듭니다.
         </p>
+        <p className="text-sm leading-7 text-muted-foreground">
+          CFG의 같은 extrapolation 아이디어를 attention output 레벨로 옮기면
+          Normalized Attention Guidance(NAG)가 됩니다. Noise prediction
+          εᵤ·ε_c 대신 positive·negative attention output 사이에 같은 형태의
+          extrapolation을 적용하되, L1-norm 기반 clamp(τ)로 결과가 원래
+          norm의 τ배를 넘지 못하게 누르고 원래 값과 α만큼 blend해 되돌립니다.
+          이 두 안전장치는 CFG에는 없는 것으로, guidance scale이 클수록
+          extrapolation이 원래 attention output에서 점점 멀어지다 결국
+          collapse하는(few-step·distilled model에서 CFG가 자주 실패하는
+          지점) 현상을 완화하기 위해 추가됐습니다.
+        </p>
+        <div className="flex flex-wrap gap-2">
+          <CodeViewButton
+            label="NAGAttnProcessor2_0 — extrapolation·clamp·blend 실제 구현"
+            onClick={() => sidebar.open("nag-guidance-branch", codeRefs["nag-guidance-branch"])}
+          />
+        </div>
       </section>
 
       <section id="evaluation" className="space-y-6">
@@ -347,5 +369,21 @@ G_{\rm release}&=\underbrace{G_{\rm recon}\land G_s\land G_p}_{\text{필수 gate
         <ContentBoundary article="latent-diffusion-guidance" />
       </section>
     </article>
+    <CodeSidebar
+      codeRefKey={sidebar.codeRefKey}
+      codeRef={sidebar.codeRef}
+      onClose={sidebar.close}
+      onNavigate={sidebar.navigate}
+      codeRefs={codeRefs}
+      fileTrees={{ nag: nagTree }}
+      projectMetas={{
+        nag: {
+          id: "nag",
+          label: "Normalized-Attention-Guidance · Python",
+          badgeClass: "bg-yellow-500/10 border-yellow-500 text-yellow-700",
+        },
+      }}
+    />
+    </>
   );
 }

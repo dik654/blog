@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
@@ -54,8 +55,12 @@ export default function QuantizedModelDeploymentArticle() {
             },
             {
               term: "Runtime overhead",
-              description:
-                "Activation·workspace·allocator reserve·CUDA graph입니다.",
+              description: (
+                <>
+                  Activation·workspace·allocator reserve·
+                  <Link to="/ai/cuda-graph-capture">CUDA graph</Link>입니다.
+                </>
+              ),
               example: "Engine startup 뒤 peak를 실제로 측정합니다.",
               boundary: "Checkpoint file size에서 알 수 없습니다.",
             },
