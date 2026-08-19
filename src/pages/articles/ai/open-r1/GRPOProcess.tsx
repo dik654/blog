@@ -1,7 +1,14 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import OnlineLoopViz from "./viz/OnlineLoopViz";
+import { CodeViewButton } from "@/components/code";
+import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "./codeRefs";
 
-export default function GRPOProcess() {
+export default function GRPOProcess({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="grpo-process" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
@@ -88,6 +95,12 @@ export default function GRPOProcess() {
         ]}
         interpretation="GRPO는 절대 난도를 맞히는 value function 대신 같은 문제의 후보들을 비교합니다. Group이 전부 맞거나 전부 틀리면 update에 유용한 상대 정보가 거의 없습니다."
       />
+      <div className="not-prose my-4">
+        <CodeViewButton
+          label="TRL GRPOTrainer — advantage 계산"
+          onClick={() => onCodeRef("grpo-advantage", codeRefs["grpo-advantage"])}
+        />
+      </div>
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Advantage가 정해져도 policy를 얼마나 움직일지는 별도 문제다</h3>
@@ -154,6 +167,12 @@ c_{i,t}&=\operatorname{clip}(\rho_{i,t},1-\epsilon,1+\epsilon)\widehat A_i\\
         ]}
         interpretation="GRPO라는 이름만 같아도 advantage scaling, token aggregation, clip과 KL 설정이 다르면 update는 달라집니다. 따라서 알고리즘 이름보다 실제 trainer version과 config를 기록합니다."
       />
+      <div className="not-prose my-4">
+        <CodeViewButton
+          label="TRL GRPOTrainer — clipped surrogate loss"
+          onClick={() => onCodeRef("grpo-clipped-loss", codeRefs["grpo-clipped-loss"])}
+        />
+      </div>
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>긴 reasoning에서는 loss normalization도 학습 신호다</h3>

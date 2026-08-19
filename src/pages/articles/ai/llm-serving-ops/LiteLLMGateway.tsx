@@ -1,6 +1,9 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import GatewayPolicyViz from "./viz/GatewayPolicyViz";
 import RetryBoundaryViz from "./viz/RetryBoundaryViz";
+import { CodeViewButton } from "@/components/code";
+import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "./codeRefs";
 
 const contractRows = [
   ["Capability", "context length · streaming · tools · structured output"],
@@ -12,7 +15,11 @@ const contractRows = [
   ],
 ] as const;
 
-export default function LiteLLMGateway() {
+export default function LiteLLMGateway({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="litellm-gateway" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
@@ -35,6 +42,13 @@ export default function LiteLLMGateway() {
           route를 고릅니다. 이 순서를 뒤집으면 싸거나 한가한 model을 골랐지만
           요청 자체를 수행할 수 없는 상황이 생깁니다.
         </p>
+      </div>
+
+      <div className="not-prose mb-4">
+        <CodeViewButton
+          label="LiteLLM Router._pre_call_checks()"
+          onClick={() => onCodeRef("pre-call-checks", codeRefs["pre-call-checks"])}
+        />
       </div>
 
       <GatewayPolicyViz />
@@ -113,6 +127,12 @@ T_{\mathrm{backoff}}+\widehat T_{\mathrm{attempt}}&<D_{\mathrm{remain}}
         ]}
         interpretation="retry budget은 고정 횟수가 아니라 남은 end-to-end 시간과 실행 안전성을 함께 보는 정책입니다. 시간이 없으면 빠르게 실패시키거나 계약을 만족하는 fallback으로 전환하는 편이 낫습니다."
       />
+      <div className="not-prose my-4">
+        <CodeViewButton
+          label="LiteLLM get_num_retries_from_retry_policy()"
+          onClick={() => onCodeRef("retry-policy", codeRefs["retry-policy"])}
+        />
+      </div>
 
       <ExplainedFormula
         question="평균 backend 시도 수가 늘면 실제 부하는 얼마나 증폭되는가?"

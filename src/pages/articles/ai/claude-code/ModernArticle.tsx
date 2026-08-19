@@ -3,9 +3,14 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import { WorkspaceHarnessViz } from "./viz/ModernClaudeCodeViz";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
+import { codeRefs } from "./codeRefs";
+import { claudeCodeTree } from "./fileTree";
 
 export default function ClaudeCodeArticle() {
+  const sidebar = useCodeSidebar();
   return (
+    <>
     <div className="space-y-16">
       <section id="overview" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
@@ -120,6 +125,14 @@ export default function ClaudeCodeArticle() {
           ]}
           interpretation="Model이 Edit를 제안해도 G가 거부하면 E는 실행되지 않고, 거부 observation만 다음 state에 들어갑니다."
         />
+        <div className="not-prose mt-4">
+          <CodeViewButton
+            label="PreToolUse hook — bash_command_validator_example.py"
+            onClick={() =>
+              sidebar.open("bash-validator-hook", codeRefs["bash-validator-hook"])
+            }
+          />
+        </div>
       </section>
 
       <section id="tool-effect" className="scroll-mt-20">
@@ -141,6 +154,14 @@ export default function ClaudeCodeArticle() {
             이어집니다.
           </p>
         </div>
+        <div className="not-prose mt-4">
+          <CodeViewButton
+            label="hookify PreToolUse — bash/file event 분류"
+            onClick={() =>
+              sidebar.open("hookify-pretooluse", codeRefs["hookify-pretooluse"])
+            }
+          />
+        </div>
       </section>
 
       <section id="paper-how-claude-code-works" className="scroll-mt-20">
@@ -161,5 +182,21 @@ export default function ClaudeCodeArticle() {
         </div>
       </section>
     </div>
+    <CodeSidebar
+      codeRefKey={sidebar.codeRefKey}
+      codeRef={sidebar.codeRef}
+      onClose={sidebar.close}
+      onNavigate={sidebar.navigate}
+      codeRefs={codeRefs}
+      fileTrees={{ "claude-code": claudeCodeTree }}
+      projectMetas={{
+        "claude-code": {
+          id: "claude-code",
+          label: "claude-code · Python",
+          badgeClass: "bg-orange-500/10 border-orange-500 text-orange-700",
+        },
+      }}
+    />
+    </>
   );
 }

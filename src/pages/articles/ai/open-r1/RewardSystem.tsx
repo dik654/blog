@@ -1,7 +1,14 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import RewardBoundaryViz from "./viz/RewardBoundaryViz";
+import { CodeViewButton } from "@/components/code";
+import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "./codeRefs";
 
-export default function RewardSystem() {
+export default function RewardSystem({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="reward-system" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
@@ -17,6 +24,13 @@ export default function RewardSystem() {
           0점으로 만들거나, 약한 test를 통과한 잘못된 code를 1점으로 만들 수
           있습니다.
         </p>
+      </div>
+
+      <div className="not-prose mb-4">
+        <CodeViewButton
+          label="open-r1 accuracy/format reward · get_reward_funcs()"
+          onClick={() => onCodeRef("open-r1-rewards", codeRefs["open-r1-rewards"])}
+        />
       </div>
 
       <RewardBoundaryViz />
