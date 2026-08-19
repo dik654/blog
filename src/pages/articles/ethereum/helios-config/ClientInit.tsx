@@ -1,12 +1,14 @@
 import type { CodeRef } from "@/components/code/types";
+import { CodeViewButton } from "@/components/code";
 import HeliosContractViz from "../helios-contract-viz";
+import { codeRefsReal } from "./codeRefsReal";
 
 interface Props {
   title: string;
   onCodeRef: (key: string, ref: CodeRef) => void;
 }
 
-export default function ClientInit({ title, onCodeRef: _onCodeRef }: Props) {
+export default function ClientInit({ title, onCodeRef }: Props) {
   return (
     <section id="client-init" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">{title}</h2>
@@ -16,6 +18,12 @@ export default function ClientInit({ title, onCodeRef: _onCodeRef }: Props) {
           checkpoint, data directory와 bind address를 덮어쓴 뒤 consensus client와 execution provider를 조립합니다. 여기까지는
           <strong> construction</strong>이며 verified head를 확보했다는 뜻이 아닙니다.
         </p>
+      </div>
+      <div className="not-prose my-4">
+        <CodeViewButton
+          label="EthereumClientBuilder::build()"
+          onClick={() => onCodeRef("helios-builder", codeRefsReal["helios-builder"])}
+        />
       </div>
       <HeliosContractViz mode="client-startup" />
       <div className="prose prose-neutral max-w-none dark:prose-invert">

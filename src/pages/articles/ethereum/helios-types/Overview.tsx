@@ -2,7 +2,9 @@ import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
 import type { CodeRef } from "@/components/code/types";
 import { CitationBlock } from "@/components/ui/citation";
+import { CodeViewButton } from "@/components/code";
 import HeliosContractViz from "../helios-contract-viz";
+import { codeRefsReal } from "./codeRefsReal";
 
 interface Props {
   onCodeRef?: (key: string, ref: CodeRef) => void;
@@ -11,7 +13,7 @@ interface Props {
 const HELIOS_SHA = "43a8c9f3cdda41a6f383c4db41d9a83f102638b1";
 const SPEC_SHA = "2359a5e3444635ee2fc2acdea8a759e16391af90";
 
-export default function Overview({ onCodeRef: _onCodeRef }: Props) {
+export default function Overview({ onCodeRef }: Props) {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">Helios 타입은 untrusted bytes를 검증된 실행 상태 view로 바꾸는 계약이다</h2>
@@ -26,6 +28,12 @@ export default function Overview({ onCodeRef: _onCodeRef }: Props) {
           fork별 <code>LightClientHeader.execution</code>에서 가져옵니다. 이 두 root를 같은 “state root”라고 뭉뚱그리면 합의 상태와 실행
           상태를 잘못 연결하게 됩니다.
         </p>
+        <div className="not-prose my-4">
+          <CodeViewButton
+            label="BeaconBlockHeader · LightClientHeader"
+            onClick={() => onCodeRef?.("helios-header-root", codeRefsReal["helios-header-root"])}
+          />
+        </div>
         <p>
           SSZ의 공통 원리는 <Link to="/blockchain/prysm-ssz">SSZ 정본</Link>, sync committee의 선발·서명 역할은
           <Link to="/blockchain/prysm-sync-committee"> Sync Committee 정본</Link>을 재사용합니다. 이 글은 그 규칙이 Helios의

@@ -1,13 +1,15 @@
 import type { CodeRef } from "@/components/code/types";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import { CodeViewButton } from "@/components/code";
 import HeliosContractViz from "../helios-contract-viz";
+import { codeRefsReal } from "./codeRefsReal";
 
 interface Props {
   title: string;
   onCodeRef: (key: string, ref: CodeRef) => void;
 }
 
-export default function Persistence({ title, onCodeRef: _onCodeRef }: Props) {
+export default function Persistence({ title, onCodeRef }: Props) {
   return (
     <section id="persistence" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">{title}</h2>
@@ -21,6 +23,12 @@ export default function Persistence({ title, onCodeRef: _onCodeRef }: Props) {
           또한 pinned source의 save는 파일을 <code>truncate</code>한 뒤 바로 씁니다. Temp file, fsync, atomic rename과 directory sync가
           보이지 않으므로 crash-safe atomicity를 구현 사실로 주장할 수 없습니다. 그런 보장은 아래 release gate의 hardening 요구입니다.
         </p>
+      </div>
+      <div className="not-prose my-4">
+        <CodeViewButton
+          label="FileDB — save/load_checkpoint()"
+          onClick={() => onCodeRef("helios-filedb", codeRefsReal["helios-filedb"])}
+        />
       </div>
       <HeliosContractViz mode="checkpoint-storage" />
       <ExplainedFormula

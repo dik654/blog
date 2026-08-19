@@ -2,7 +2,9 @@ import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
 import type { CodeRef } from "@/components/code/types";
 import { CitationBlock } from "@/components/ui/citation";
+import { CodeViewButton } from "@/components/code";
 import HeliosContractViz from "../helios-contract-viz";
+import { codeRefsReal } from "./codeRefsReal";
 
 interface Props {
   onCodeRef: (key: string, ref: CodeRef) => void;
@@ -10,7 +12,7 @@ interface Props {
 
 const HELIOS_SHA = "43a8c9f3cdda41a6f383c4db41d9a83f102638b1";
 
-export default function Overview({ onCodeRef: _onCodeRef }: Props) {
+export default function Overview({ onCodeRef }: Props) {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">설정은 문자열 목록이 아니라 이번 실행의 trust boundary다</h2>
@@ -25,6 +27,12 @@ export default function Overview({ onCodeRef: _onCodeRef }: Props) {
           <code> BaseConfig → TOML → CLI</code> merge 순서에서는 최종값 10,545와 <code>source=CLI</code>, 가려진 두 후보, config digest를 함께
           기록합니다. 값 10,545만 남기면 재시작 때 왜 달라졌는지 설명할 수 없습니다.
         </p>
+        <div className="not-prose my-4">
+          <CodeViewButton
+            label="Config::from_file() — Figment merge"
+            onClick={() => onCodeRef("helios-config-merge", codeRefsReal["helios-config-merge"])}
+          />
+        </div>
         <p>
           일반적인 설정 provenance는 <Link to="/blockchain/reth-cli#overview">Reth CLI 글</Link>의 정본을 재사용합니다. 이 글은 Helios의
           network bundle, checkpoint source/age, endpoint role, FileDB snapshot에만 범위를 좁힙니다.

@@ -1,13 +1,15 @@
 import type { CodeRef } from "@/components/code/types";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import { CodeViewButton } from "@/components/code";
 import HeliosContractViz from "../helios-contract-viz";
+import { codeRefsReal } from "./codeRefsReal";
 
 interface Props {
   title: string;
   onCodeRef: (key: string, ref: CodeRef) => void;
 }
 
-export default function NetworkConfig({ title, onCodeRef: _onCodeRef }: Props) {
+export default function NetworkConfig({ title, onCodeRef }: Props) {
   return (
     <section id="network-config" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">{title}</h2>
@@ -22,6 +24,12 @@ export default function NetworkConfig({ title, onCodeRef: _onCodeRef }: Props) {
           equivocation 관측이 필요합니다. 특히 checkpoint source는 light-client가 처음 chain을 선택하는 trust anchor이므로 “나중에 BLS를
           검증하니 아무 URL이나 괜찮다”고 볼 수 없습니다.
         </p>
+      </div>
+      <div className="not-prose my-4">
+        <CodeViewButton
+          label="Network enum · mainnet()"
+          onClick={() => onCodeRef("helios-network", codeRefsReal["helios-network"])}
+        />
       </div>
       <HeliosContractViz mode="network-bundle" />
       <ExplainedFormula

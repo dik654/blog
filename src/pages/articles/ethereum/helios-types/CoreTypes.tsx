@@ -1,13 +1,15 @@
 import type { CodeRef } from "@/components/code/types";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import { CodeViewButton } from "@/components/code";
 import HeliosContractViz from "../helios-contract-viz";
+import { codeRefsReal } from "./codeRefsReal";
 
 interface Props {
   title: string;
   onCodeRef: (key: string, ref: CodeRef) => void;
 }
 
-export default function CoreTypes({ title, onCodeRef: _onCodeRef }: Props) {
+export default function CoreTypes({ title, onCodeRef }: Props) {
   return (
     <section id="core-types" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">{title}</h2>
@@ -17,6 +19,12 @@ export default function CoreTypes({ title, onCodeRef: _onCodeRef }: Props) {
           누가 어느 header root에 서명했는지 나타내는 증거, <code>Update</code>는 검증 후보 메시지, <code>LightClientStore</code>는 검증을
           통과한 결과를 누적하는 local state입니다.
         </p>
+      </div>
+      <div className="not-prose my-4">
+        <CodeViewButton
+          label="LightClientStore · SyncAggregate · Update"
+          onClick={() => onCodeRef("helios-core-types", codeRefsReal["helios-core-types"])}
+        />
       </div>
       <HeliosContractViz mode="light-client-types" />
 
