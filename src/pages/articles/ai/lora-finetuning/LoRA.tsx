@@ -1,7 +1,14 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import LoraMatrixViz from "./viz/LoraMatrixViz";
+import { CodeViewButton } from "@/components/code";
+import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "./codeRefs";
 
-export default function LoRA() {
+export default function LoRA({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="lora" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">LoRA는 큰 weight 전체를 다시 쓰지 않고, 가능한 변화 방향을 rank r인 부분공간으로 제한합니다</h2>
@@ -46,6 +53,13 @@ N_{\mathrm{LoRA}}&=r(d_{\mathrm{in}}+d_{\mathrm{out}})\\
       <div className="not-prose my-8"><LoraMatrixViz /></div>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>Rank 하나만 고르면 끝나지 않습니다. Attention의 q·k·v·o projection과 MLP의 gate·up·down projection 중 어디에 capacity를 배분할지 정해야 합니다. Model family마다 module 이름과 fused layout이 다르므로 문자열을 복사하지 말고 실제 named modules, trainable parameter 수와 forward hook을 확인합니다. 후보를 비교할 때는 data·update 수·α·dropout·initialization을 고정하고 seed를 반복하며, target/general metric과 peak memory·step time을 같은 validation protocol에서 기록합니다.</p>
+        <p>Unsloth의 <code>get_peft_model()</code> 기본값은 이 배분 문제에 대한 실전 답 하나를 보여줍니다: r=16, target_modules에 attention·MLP 7개 linear 전부, lora_alpha=16(s=α/r=1). rank를 키울 때 학습을 더 안정시키는 <code>use_rslora</code> 옵션도 있고, 지원하지 않는 PEFT 버전에서 그 옵션을 켜면 조용히 무시하는 대신 즉시 에러를 던집니다.</p>
+      </div>
+      <div className="not-prose mb-8">
+        <CodeViewButton
+          label="get_peft_model — 실전 기본값과 rslora 검증"
+          onClick={() => onCodeRef("lora-hyperparams", codeRefs["lora-hyperparams"])}
+        />
       </div>
       <div id="reading-lora" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">핵심 논문 · LoRA</p>

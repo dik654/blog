@@ -3,9 +3,14 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { SgdUpdateViz } from "./viz/ModernOptimizerViz";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
+import { codeRefs } from "./codeRefs";
+import { transformersTree } from "./fileTree";
 
 export default function OptimizersArticle() {
+  const sidebar = useCodeSidebar();
   return (
+    <>
     <div className="space-y-16">
       <section id="overview" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
@@ -273,6 +278,39 @@ export default function OptimizersArticle() {
           ]}
           interpretation="4×8=32이지만 BatchNorm state·dropout mask·data order까지 한 번에 32개를 처리한 실행과 완전히 같다는 뜻은 아닙니다."
         />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            "각 micro loss의 reduction scale이 같습니다"라는 가정은 실전에서
+            자주 깨집니다. 2024년 Unsloth가 보고한 gradient accumulation
+            버그가 정확히 이 지점입니다. sequence 길이가 micro-batch마다
+            다르면(padding 없는 packed batch, variable-length data) 각
+            micro-batch가 <strong>자기 자신의 유효 토큰 수로만</strong>{" "}
+            나누는 mean reduction과, K개 micro-batch 전체를 한 번에 처리했을
+            때의 loss가 서로 달라집니다. Loss curve는 정상처럼 보이지만
+            실제로는 짧은 시퀀스가 긴 시퀀스보다 과대평가된 gradient를 받는
+            식으로 조용히 편향됩니다.
+          </p>
+          <p>
+            HuggingFace transformers는 이를{" "}
+            <code>fixed_cross_entropy</code>라는, 이름 자체가 수정 이력을
+            가리키는 함수로 고쳤습니다. K개 micro-batch를 backward 없이 먼저
+            모아 accumulation window 전체의 유효 토큰 수(<code>
+              num_items_in_batch
+            </code>
+            )를 미리 계산해 두고, 각 micro loss는 자기 토큰 수가 아니라 이
+            공유된 분모로 나눕니다.
+          </p>
+          <div className="flex flex-wrap gap-2 not-prose">
+            <CodeViewButton
+              label="fixed_cross_entropy — 실제 버그/수정 지점"
+              onClick={() => sidebar.open("ga-fixed-cross-entropy", codeRefs["ga-fixed-cross-entropy"])}
+            />
+            <CodeViewButton
+              label="get_batch_samples — 분모를 먼저 구하는 위치"
+              onClick={() => sidebar.open("ga-num-items-in-batch", codeRefs["ga-num-items-in-batch"])}
+            />
+          </div>
+        </div>
       </section>
 
       <section id="release-boundary" className="scroll-mt-20">
@@ -307,5 +345,21 @@ export default function OptimizersArticle() {
         </div>
       </section>
     </div>
+    <CodeSidebar
+      codeRefKey={sidebar.codeRefKey}
+      codeRef={sidebar.codeRef}
+      onClose={sidebar.close}
+      onNavigate={sidebar.navigate}
+      codeRefs={codeRefs}
+      fileTrees={{ transformers: transformersTree }}
+      projectMetas={{
+        transformers: {
+          id: "transformers",
+          label: "transformers · Python",
+          badgeClass: "bg-yellow-500/10 border-yellow-500 text-yellow-700",
+        },
+      }}
+    />
+    </>
   );
 }

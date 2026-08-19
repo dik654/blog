@@ -1,13 +1,27 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import DataFormatViz from "./viz/DataFormatViz";
+import { CodeViewButton } from "@/components/code";
+import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "./codeRefs";
 
-export default function Data() {
+export default function Data({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="data" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Adapter가 작아도 학습 대상은 token sequence이므로, chat template과 loss mask가 틀리면 작은 artifact에 잘못된 행동을 정확히 학습합니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>원본 JSON의 system·user·assistant field를 base tokenizer의 chat template으로 serialize하고, 실제 token ID·special token·turn boundary를 표본으로 확인합니다. 이미 special token이 포함된 문자열을 template에 다시 넣거나 다른 model의 template을 복사하면 training과 serving input이 달라집니다.</p>
+        <p>실제로 이런 실수는 이중 BOS(beginning-of-sequence) token 형태로 자주 나타납니다. Gemma 계열처럼 chat template 문자열 자체가 <code>{"{{ bos_token }}"}</code>을 하드코딩해 넣는 경우, 그 문자열을 다시 tokenizer의 <code>add_special_tokens=True</code> 인코딩에 넣으면 BOS가 두 번 들어갑니다. Unsloth는 인코딩 직전에 문자열 앞의 중복 BOS를 지우는 방식으로 이를 막습니다.</p>
         <p>Instruction tuning에서는 대개 assistant response token만 loss에 넣지만 목적에 따라 전체 sequence를 학습할 수도 있습니다. 중요한 것은 선택을 명시하고 padding·packing·truncation 경계와 함께 검사하는 것입니다.</p>
+      </div>
+      <div className="not-prose mb-8">
+        <CodeViewButton
+          label="remove_special_tokens — 이중 BOS의 원인과 수정"
+          onClick={() => onCodeRef("double-bos-fix", codeRefs["double-bos-fix"])}
+        />
       </div>
       <ExplainedFormula
         question="Assistant 답변만 학습할 때 prompt token을 loss에서 어떻게 제외할까요?"
