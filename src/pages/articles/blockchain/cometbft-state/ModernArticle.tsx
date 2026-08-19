@@ -1,9 +1,14 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
 import { DurableStoresViz, RecoveryMatrixViz } from "./viz/ModernStateViz";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
+import { codeRefs } from "./codeRefs";
+import { cometbftStateTree } from "./fileTrees";
 
 export default function ModernCometBFTStateArticle() {
-  return <article className="space-y-14">
+  const sidebar = useCodeSidebar();
+  return <>
+  <article className="space-y-14">
     <section id="overview" className="space-y-6">
       <header className="space-y-3"><p className="text-sm font-semibold text-primary">CometBFT v0.40.0 구현 읽기</p><h2 className="text-3xl font-bold tracking-tight">‘state’ 하나가 아니라 다음 block을 검증할 여러 durable receipt가 있다</h2></header>
       <p className="text-lg leading-8 text-foreground/90"><code>alice→bob 10</code>이 height 42의 block에 결정됐다고 하겠습니다. Node는 block bytes와 commit을 BlockStore에, 다음 height의 validator·parameter·AppHash를 State store에, FinalizeBlock result를 ABCI response store에 남깁니다. Application은 별도 database에 실제 balance 변화와 committed height를 저장합니다. 이름은 모두 상태처럼 들리지만 서로를 대신하지 않습니다.</p>
@@ -16,6 +21,10 @@ export default function ModernCometBFTStateArticle() {
       <p><code>State</code>는 chain ID, initial height, 마지막 block height·ID·time, current·next·last validator set, consensus parameters, AppHash와 LastResultsHash를 보존합니다. <code>LastValidators</code>는 새 block의 LastCommit을 검증하는 historical snapshot이고, <code>Validators</code>와 <code>NextValidators</code>는 update 지연을 반영합니다. 최신 validator 목록 하나만 저장하면 과거 commit과 evidence를 어느 voting power로 검증해야 하는지 잃습니다.</p>
       <p><code>AppHash</code>는 application이 직전 execution에서 반환한 commitment입니다. Header h는 이미 알고 있던 이전 application result를 담고, block h를 실행해 나온 새 AppHash는 다음 header로 이어집니다. 이 높이 관계는 <a className="text-primary hover:underline" href="/blockchain/cometbft-types#block-header">header commitment 정본</a>에서 수식과 함께 설명합니다.</p>
       <ExplainedFormula question="Restart 때 세 durable height가 얼마나 어긋났는지 어떤 값으로 먼저 표현할 수 있는가?" idea={<>BlockStore의 최고 height에서 State와 application의 committed height를 각각 빼면 어느 receipt를 replay해야 하는지 범위를 좁힐 수 있습니다. 음수는 자동 보정하지 않고 impossible state로 따로 처리합니다.</>} formula={String.raw`g_s=H_b-H_s,\qquad g_a=H_b-H_a`} terms={[{symbol:"H_b",name:"block store height",description:"BlockStore가 연속적으로 보존한 최고 block height입니다."},{symbol:"H_s",name:"CometBFT state height",description:"State.LastBlockHeight로 확인한 다음 검증 입력의 기준 높이입니다."},{symbol:"H_a",name:"application height",description:"ABCI Info가 보고한 application committed height입니다."},{symbol:"g_s,g_a",name:"replay gaps",description:"block 원본에 비해 State와 application이 얼마나 뒤에 있는지 나타냅니다."}]} assumptions={["세 height는 같은 chain ID·genesis·binary/config snapshot에서 읽습니다.","BlockStore의 Base…Height가 필요한 replay 구간을 실제로 보유하는지 확인합니다.","height가 같아도 AppHash가 다르면 진행하지 않습니다.","application이나 State가 BlockStore보다 앞선 음수 gap은 자동 rollback하지 않고 fail closed합니다."]} interpretation="예를 들어 (Hb,Hs,Ha)=(42,41,42)이면 application Commit은 끝났지만 State 저장 전 crash일 수 있습니다. 저장한 FinalizeBlock response와 AppHash를 대조해 State만 재구성할 수 있으며, transaction을 application에 무조건 다시 실행하면 안 됩니다." />
+      <div className="not-prose flex flex-wrap gap-3">
+        <CodeViewButton label="State 구조체" onClick={() => sidebar.open("state-struct", codeRefs["state-struct"])} />
+        <CodeViewButton label="Store 인터페이스" onClick={() => sidebar.open("state-store", codeRefs["state-store"])} />
+      </div>
       <div id="paper-cometbft-state-v040"><CitationBlock source="CometBFT v0.40.0 — state/state.go · state/store.go" citeKey={1} type="code" href="https://github.com/cometbft/cometbft/blob/v0.40.0/state/state.go"><p><strong>문제:</strong> 다음 block 검증에 필요한 chain state와 historical validator·parameter 정보를 durable하게 보존합니다.</p><p><strong>기여:</strong> State field 의미, validator snapshot, AppHash와 batched synchronous save 구현을 제공합니다.</p><p><strong>전제:</strong> v0.40.0 State schema와 storage encoding을 사용합니다.</p><p><strong>근거 범위:</strong> CometBFT state database의 next-height input과 recovery metadata입니다.</p><p><strong>말하지 않는 것:</strong> application database 내용, snapshot 신뢰성, 모든 external effect의 durability를 보장하지 않습니다.</p></CitationBlock></div>
     </section>
 
@@ -23,6 +32,10 @@ export default function ModernCometBFTStateArticle() {
       <header><p className="text-sm font-semibold text-primary">02 · BlockStore</p><h2 className="mt-2 text-2xl font-bold">block 원본, part와 commit index는 replay와 증거 보존의 재료다</h2></header>
       <p>BlockStore는 block meta, 각 part, hash→height index, block commit과 seen commit을 저장하고 <code>Base</code>와 <code>Height</code>로 보유 구간을 표시합니다. <code>SaveBlock</code>는 다음 연속 height를 기대하므로 빈 구간을 조용히 건너뛰는 archive가 아닙니다. Block meta만 있다고 전체 block을 재구성할 수 있는 것도 아니며 모든 part가 있어야 합니다.</p>
       <p>Pruning은 단순히 <code>height보다 오래된 것은 모두 삭제</code>가 아닙니다. Evidence를 검증하는 데 필요한 historical validator·block data의 retain height를 함께 계산하고, State store도 validator checkpoint와 last-changed pointer가 가리키는 항목을 남깁니다. Disk 사용량을 줄였다는 성공 receipt와 아직 evidence·replay를 수행할 수 있다는 correctness receipt를 따로 검사해야 합니다.</p>
+      <div className="not-prose flex flex-wrap gap-3">
+        <CodeViewButton label="BlockStore" onClick={() => sidebar.open("block-store", codeRefs["block-store"])} />
+        <CodeViewButton label="SaveBlock()" onClick={() => sidebar.open("block-save", codeRefs["block-save"])} />
+      </div>
       <div id="paper-cometbft-blockstore-v040"><CitationBlock source="CometBFT v0.40.0 — store/store.go" citeKey={2} type="code" href="https://github.com/cometbft/cometbft/blob/v0.40.0/store/store.go"><p><strong>문제:</strong> block·parts·commit을 height와 hash로 복구하고 안전하게 prune합니다.</p><p><strong>기여:</strong> BlockStore Base·Height, save/load index와 evidence-aware pruning 경로를 구현합니다.</p><p><strong>전제:</strong> v0.40.0 block encoding과 연속 저장 규칙, 제공된 State를 사용합니다.</p><p><strong>근거 범위:</strong> local block database의 보유·조회·prune 동작입니다.</p><p><strong>말하지 않는 것:</strong> snapshot application state, remote archive availability, Byzantine header 신뢰를 단독으로 보장하지 않습니다.</p></CitationBlock></div>
     </section>
 
@@ -31,9 +44,30 @@ export default function ModernCometBFTStateArticle() {
       <p>State sync는 genesis부터 모든 block을 실행하는 대신 application snapshot chunk를 받아 head 근처에서 시작하게 합니다. 그러나 snapshot bytes를 받은 peer를 그대로 신뢰하지 않습니다. 공식 문서는 light client verification을 위한 RPC servers, <code>trust_height</code>·<code>trust_hash</code>·<code>trust_period</code>를 요구하고, application이 snapshot protocol을 지원해야 한다고 명시합니다. Snapshot 적용이 끝나면 <code>Bootstrap</code>이 State와 validator·parameter snapshot을 설치하고 이후 block으로 전진합니다.</p>
       <p>반면 정상 restart의 handshake는 ABCI Info에서 application height·AppHash를 읽고 local BlockStore·State와 대조해 빠진 block만 replay합니다. (42,41,42)처럼 application이 한 단계 앞서면 이미 저장한 FinalizeBlock response를 사용해 application을 다시 mutate하지 않고 State를 재구성합니다. AppHash가 맞지 않거나 app이 local block 원본보다 앞서면 자동으로 ‘가장 높은 쪽’을 정답으로 택하지 않습니다.</p>
       <RecoveryMatrixViz />
+      <div className="not-prose flex flex-wrap gap-3">
+        <CodeViewButton label="evidence.Pool" onClick={() => sidebar.open("evidence-pool", codeRefs["evidence-pool"])} />
+        <CodeViewButton label="AddEvidence()" onClick={() => sidebar.open("evidence-add", codeRefs["evidence-add"])} />
+        <CodeViewButton label="Update() · CheckEvidence()" onClick={() => sidebar.open("evidence-update", codeRefs["evidence-update"])} />
+      </div>
       <div id="paper-cometbft-state-sync-v040"><CitationBlock source="CometBFT v0.40.0 — State Sync guide · consensus/replay.go" citeKey={3} type="code" href="https://github.com/cometbft/cometbft/blob/v0.40.0/docs/core/state-sync.md"><p><strong>문제:</strong> 새 node의 snapshot bootstrap과 기존 node의 crash recovery를 검증 가능한 state에 연결합니다.</p><p><strong>기여:</strong> trusted height/hash/period 설정과 ABCI Info 기반 block replay 분기 구현을 제공합니다.</p><p><strong>전제:</strong> application snapshot 지원, light-client trust assumptions, 필요한 local block/result 보유를 전제로 합니다.</p><p><strong>근거 범위:</strong> v0.40.0 state-sync configuration과 node/application height·AppHash reconciliation입니다.</p><p><strong>말하지 않는 것:</strong> 임의 RPC server의 정직성, 오래된 trust root의 안전성, external service rollback을 보장하지 않습니다.</p></CitationBlock></div>
       <p>Release gate는 state sync의 corrupted·duplicate·missing chunk, 잘못된 trust hash와 trust period 만료를 넣고 반드시 거절되는지 확인합니다. Crash test는 Finalize 전, result 저장 뒤, application Commit 뒤, State 저장 뒤에서 process를 끊고 재시작해 최종 height·AppHash·balance가 정상 control과 같고 transaction이 한 번만 반영되는지 검사합니다. Pruning 후에도 evidence max age 안의 검증 자료와 필요한 replay 구간이 남아야 합니다.</p>
       <h3 className="text-xl font-semibold">이 글만으로 풀어야 하는 10문제</h3><p>기초 6문제는 네 durable receipt, State field, validator snapshot, AppHash lag, BlockStore와 state sync를 확인합니다. 심화 4문제는 prune/evidence 경계, corrupted snapshot, height triad와 crash cut replay matrix를 설계하게 합니다.</p>
     </section>
-  </article>;
+  </article>
+  <CodeSidebar
+    codeRefKey={sidebar.codeRefKey}
+    codeRef={sidebar.codeRef}
+    onClose={sidebar.close}
+    onNavigate={sidebar.navigate}
+    codeRefs={codeRefs}
+    fileTrees={{ cometbft: cometbftStateTree }}
+    projectMetas={{
+      cometbft: {
+        id: "cometbft",
+        label: "CometBFT · Go",
+        badgeClass: "bg-blue-500/10 border-blue-500 text-blue-700",
+      },
+    }}
+  />
+  </>;
 }

@@ -1,5 +1,13 @@
 import CometBFTCoreViz from "../cometbft-core-viz";
-export default function ReceiveRoutine() {
+import { CodeViewButton } from "@/components/code";
+import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "./codeRefs";
+
+export default function ReceiveRoutine({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="receive-routine" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">receive routine은 여러 producer를 한 state owner에게 직렬화한다</h2>
@@ -9,6 +17,10 @@ export default function ReceiveRoutine() {
           손상이 생길 수 있습니다. 그래서 수신 경로는 message를 직접 적용하지 않고 envelope와 source를 queue에 넣고,
           consensus loop가 한 번에 하나씩 처리합니다. 이 구조는 race를 줄이지만 queue 자체가 신뢰 경계는 아닙니다.
         </p>
+      </div>
+      <div className="not-prose my-4 flex flex-wrap gap-3">
+        <CodeViewButton label="receiveRoutine()" onClick={() => onCodeRef("receive-routine", codeRefs["receive-routine"])} />
+        <CodeViewButton label="handleMsg()" onClick={() => onCodeRef("handle-msg", codeRefs["handle-msg"])} />
       </div>
       <CometBFTCoreViz mode="queues" />
       <div className="prose prose-neutral max-w-none dark:prose-invert">

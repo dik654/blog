@@ -1,5 +1,13 @@
 import CometBFTCoreViz from "../cometbft-core-viz";
-export default function ABCIClient() {
+import { CodeViewButton } from "@/components/code";
+import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "./codeRefs";
+
+export default function ABCIClient({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="abci-client" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">ABCI client는 transport adapter이면서 연결별 state ordering의 경계다</h2>
@@ -10,6 +18,22 @@ export default function ABCIClient() {
           Transport가 빠르다고 호출 순서·determinism·durability가 보장되지는 않고, remote transport에는 serialization,
           deadline, reconnect, duplicated request와 partial failure가 추가됩니다.
         </p>
+      </div>
+      <div className="not-prose my-4 flex flex-wrap gap-3">
+        <CodeViewButton
+          label="AppConns · 4개 연결"
+          onClick={() => onCodeRef("app-conns", codeRefs["app-conns"])}
+        />
+        <CodeViewButton
+          label="Application 인터페이스"
+          onClick={() =>
+            onCodeRef("application-interface", codeRefs["application-interface"])
+          }
+        />
+        <CodeViewButton
+          label="localClient"
+          onClick={() => onCodeRef("local-client", codeRefs["local-client"])}
+        />
       </div>
       <CometBFTCoreViz mode="connections" />
       <div className="prose prose-neutral max-w-none dark:prose-invert">

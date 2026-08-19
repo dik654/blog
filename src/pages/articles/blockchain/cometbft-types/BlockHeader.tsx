@@ -1,6 +1,14 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import CometBFTCoreViz from "../cometbft-core-viz";
-export default function BlockHeader() {
+import { CodeViewButton } from "@/components/code";
+import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "./codeRefs";
+
+export default function BlockHeader({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="block-header" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Header는 현재 payload와 이전 실행 결과를 한 block identity에 묶는다</h2>
@@ -11,6 +19,10 @@ export default function BlockHeader() {
           AppHash와 LastResultsHash도 이전 block을 application에 적용한 결과를 가리킵니다. 즉 한 header는 현재
           제안 내용과 직전 상태 전이의 영수증을 함께 잇습니다.
         </p>
+      </div>
+      <div className="not-prose my-4 flex flex-wrap gap-3">
+        <CodeViewButton label="Block struct" onClick={() => onCodeRef("block-struct", codeRefs["block-struct"])} />
+        <CodeViewButton label="Header struct" onClick={() => onCodeRef("header-struct", codeRefs["header-struct"])} />
       </div>
       <CometBFTCoreViz mode="block" />
       <ExplainedFormula
@@ -25,6 +37,11 @@ export default function BlockHeader() {
         assumptions={["Field order와 encoding rule이 모든 verifier에서 동일합니다.", "Hash collision resistance와 Merkle construction의 domain separation을 가정합니다.", "Commitment는 payload 의미의 유효성이 아니라 같은 bytes에 묶였음을 증명합니다."]}
         interpretation="한 field의 한 bit만 달라도 C_H가 바뀌므로 vote의 BlockID와 다른 payload를 바꿔 끼우기 어렵습니다. 그러나 AppHash의 application 의미는 application proof와 별도로 검증해야 합니다."
       />
+      <div className="not-prose my-4 flex flex-wrap gap-3">
+        <CodeViewButton label="Header.Hash()" onClick={() => onCodeRef("header-hash", codeRefs["header-hash"])} />
+        <CodeViewButton label="Data.Hash()" onClick={() => onCodeRef("data-hash", codeRefs["data-hash"])} />
+        <CodeViewButton label="Tx.Hash() · Txs.Hash()" onClick={() => onCodeRef("tx-hash", codeRefs["tx-hash"])} />
+      </div>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>왜 AppHash는 한 높이 늦게 보일까요?</h3>
         <p>
@@ -39,6 +56,9 @@ export default function BlockHeader() {
           parameters, block time, LastCommit, evidence를 local state와 대조합니다. Hash가 맞아도 잘못된 높이·chain의
           객체이거나 유효 기간이 지난 evidence라면 block은 유효하지 않습니다.
         </p>
+      </div>
+      <div className="not-prose my-4 flex flex-wrap gap-3">
+        <CodeViewButton label="MakePartSet()" onClick={() => onCodeRef("make-partset", codeRefs["make-partset"])} />
       </div>
     </section>
   );

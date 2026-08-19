@@ -1,7 +1,15 @@
 import { Link } from "react-router-dom";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import CometBFTCoreViz from "../cometbft-core-viz";
-export default function VoteCommit() {
+import { CodeViewButton } from "@/components/code";
+import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "./codeRefs";
+
+export default function VoteCommit({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="vote-commit" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Vote는 좌표가 붙은 서명이고 Commit은 같은 좌표의 power certificate다</h2>
@@ -12,6 +20,10 @@ export default function VoteCommit() {
           object를 그대로 서명하지 않고 ChainID까지 포함한 안정된 sign bytes를 만듭니다. 이 domain binding이
           없으면 다른 chain이나 phase의 서명을 재사용하는 위험이 생깁니다.
         </p>
+      </div>
+      <div className="not-prose my-4 flex flex-wrap gap-3">
+        <CodeViewButton label="Vote struct" onClick={() => onCodeRef("vote-struct", codeRefs["vote-struct"])} />
+        <CodeViewButton label="VoteSet struct" onClick={() => onCodeRef("voteset-struct", codeRefs["voteset-struct"])} />
       </div>
       <CometBFTCoreViz mode="votes" />
       <ExplainedFormula
@@ -27,6 +39,9 @@ export default function VoteCommit() {
         assumptions={["각 signature·validator index·height·round·type·BlockID를 먼저 검증합니다.", "한 validator의 중복 vote는 한 번만 집계하고 conflicting vote는 evidence 후보로 분리합니다.", "Safety의 honest-intersection 결론은 Byzantine power가 1/3 미만이라는 BFT 전제와 함께 읽습니다."]}
         interpretation="Power 100 중 같은 block precommit이 67이면 2/3보다 크므로 threshold를 넘습니다. 66은 넘지 못하고, nil이나 absent signature를 block power에 더할 수 없습니다."
       />
+      <div className="not-prose my-4 flex flex-wrap gap-3">
+        <CodeViewButton label="AddVote() → addVote()" onClick={() => onCodeRef("addvote", codeRefs["addvote"])} />
+      </div>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Absent·nil·commit을 구분합니다</h3>
         <p>

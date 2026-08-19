@@ -1,6 +1,14 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import CometBFTCoreViz, { EvidenceLedgerViz } from "../cometbft-core-viz";
-export default function ValidatorSet() {
+import { CodeViewButton } from "@/components/code";
+import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "./codeRefs";
+
+export default function ValidatorSet({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="validator-set" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">ValidatorSet은 검증 weight snapshot이고 proposer priority는 별도 scheduler state다</h2>
@@ -10,6 +18,9 @@ export default function ValidatorSet() {
           검증하고 quorum weight를 계산하는 합의 입력입니다. 반면 proposer priority는 다음 proposer를 고르는 누적
           scheduler 값이므로 block certificate의 의미와 혼동하면 안 됩니다.
         </p>
+      </div>
+      <div className="not-prose my-4 flex flex-wrap gap-3">
+        <CodeViewButton label="Validator · ValidatorSet struct" onClick={() => onCodeRef("validator-struct", codeRefs["validator-struct"])} />
       </div>
       <CometBFTCoreViz mode="validators" />
       <ExplainedFormula
@@ -25,6 +36,9 @@ export default function ValidatorSet() {
         assumptions={["동일 validator set snapshot과 deterministic tie-break를 사용합니다.", "실제 구현의 normalization·rescaling·set update는 v0.40.0 source를 함께 확인합니다.", "이 식은 proposer scheduling이며 consensus safety를 단독으로 증명하지 않습니다."]}
         interpretation="Power가 3:1이면 장기적으로 앞 validator가 더 자주 선택되지만, 선택할 때 W를 빼므로 매 round 같은 validator가 자동으로 독점하지 않습니다."
       />
+      <div className="not-prose my-4 flex flex-wrap gap-3">
+        <CodeViewButton label="IncrementProposerPriority()" onClick={() => onCodeRef("proposer-priority", codeRefs["proposer-priority"])} />
+      </div>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Validator update에는 높이 지연이 있습니다</h3>
         <p>
@@ -44,6 +58,10 @@ export default function ValidatorSet() {
           하지만 두 bytes를 찾았다는 사실만으로 처벌이 끝나지는 않습니다. 당시 membership·power와 signature, chain ID,
           age, 이미 commit됐는지를 검증하고 block에 포함한 뒤 FinalizeBlock의 misbehavior 입력으로 application에 전달합니다.
         </p>
+      </div>
+      <div className="not-prose my-4 flex flex-wrap gap-3">
+        <CodeViewButton label="DuplicateVoteEvidence struct" onClick={() => onCodeRef("evidence-struct", codeRefs["evidence-struct"])} />
+        <CodeViewButton label="Evidence.Verify()" onClick={() => onCodeRef("evidence-verify", codeRefs["evidence-verify"])} />
       </div>
       <EvidenceLedgerViz />
       <div id="paper-cometbft-evidence-v040" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">

@@ -1,4 +1,12 @@
-export default function VoteHandling() {
+import { CodeViewButton } from "@/components/code";
+import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "./codeRefs";
+
+export default function VoteHandling({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <div className="prose prose-neutral mb-16 max-w-none dark:prose-invert">
       <h3>Vote handler는 signature보다 앞뒤 context를 더 많이 확인합니다</h3>
@@ -14,6 +22,9 @@ export default function VoteHandling() {
         복구해야 합니다. 따라서 metric에는 vote count뿐 아니라 voting power, block availability, validation failure,
         transition latency를 함께 둡니다.
       </p>
+      <div className="not-prose my-4 flex flex-wrap gap-3">
+        <CodeViewButton label="addVote()" onClick={() => onCodeRef("add-vote", codeRefs["add-vote"])} />
+      </div>
     </div>
   );
 }

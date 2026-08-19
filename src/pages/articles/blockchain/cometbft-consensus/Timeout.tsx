@@ -1,6 +1,14 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import CometBFTCoreViz from "../cometbft-core-viz";
-export default function Timeout() {
+import { CodeViewButton } from "@/components/code";
+import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "./codeRefs";
+
+export default function Timeout({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="timeout" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Timeout은 실패 판결이 아니라 더 높은 round로 넘어갈 조건이다</h2>
@@ -10,6 +18,9 @@ export default function Timeout() {
           들어 있어야 하며, 처리 시점의 current state와 맞지 않는 오래된 timer는 무시합니다. 그렇지 않으면 이미
           precommit이나 다음 round에 간 node가 늦은 timer 때문에 뒤로 이동할 수 있습니다.
         </p>
+      </div>
+      <div className="not-prose my-4 flex flex-wrap gap-3">
+        <CodeViewButton label="handleTimeout()" onClick={() => onCodeRef("handle-timeout", codeRefs["handle-timeout"])} />
       </div>
       <CometBFTCoreViz mode="timeout" />
       <ExplainedFormula

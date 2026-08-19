@@ -1,5 +1,13 @@
 import { EvidenceLedgerViz } from "../cometbft-core-viz";
-export default function Byzantine() {
+import { CodeViewButton } from "@/components/code";
+import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "./codeRefs";
+
+export default function Byzantine({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="byzantine" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Consensus가 탐지한 equivocation과 application의 처벌은 같은 동작이 아니다</h2>
@@ -10,6 +18,9 @@ export default function Byzantine() {
           넣습니다. 이후 gossip·block inclusion·FinalizeBlock misbehavior 전달을 거쳐야 application이 penalty 정책을
           적용할 수 있습니다.
         </p>
+      </div>
+      <div className="not-prose my-4 flex flex-wrap gap-3">
+        <CodeViewButton label="tryAddVote()" onClick={() => onCodeRef("try-add-vote", codeRefs["try-add-vote"])} />
       </div>
       <EvidenceLedgerViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">

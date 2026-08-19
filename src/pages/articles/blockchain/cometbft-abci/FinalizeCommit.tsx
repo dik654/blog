@@ -1,6 +1,14 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import CometBFTCoreViz from "../cometbft-core-viz";
-export default function FinalizeCommit() {
+import { CodeViewButton } from "@/components/code";
+import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "./codeRefs";
+
+export default function FinalizeCommit({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="finalize-commit" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">FinalizeBlock은 결정된 state를 계산하고 Commit은 그 state를 durable하게 만든다</h2>
@@ -11,6 +19,20 @@ export default function FinalizeCommit() {
           영속화는 아직 끝나지 않았습니다. 뒤따르는 Commit이 반환돼야 application이 그 height를 durable하게 저장했다고
           판단할 수 있습니다.
         </p>
+      </div>
+      <div className="not-prose my-4 flex flex-wrap gap-3">
+        <CodeViewButton
+          label="ApplyBlock · FinalizeBlock 호출"
+          onClick={() => onCodeRef("apply-block", codeRefs["apply-block"])}
+        />
+        <CodeViewButton
+          label="proxy · FinalizeBlock"
+          onClick={() => onCodeRef("proxy-finalize", codeRefs["proxy-finalize"])}
+        />
+        <CodeViewButton
+          label="localClient · FinalizeBlock"
+          onClick={() => onCodeRef("local-finalize", codeRefs["local-finalize"])}
+        />
       </div>
       <ExplainedFormula
         question="모든 correct node가 같은 다음 state와 AppHash를 만들기 위한 최소 식은 무엇일까요?"
@@ -33,6 +55,22 @@ export default function FinalizeCommit() {
           height, FinalizeBlock result AppHash, application committed height, 다음 header의 AppHash를 분리해 남겨야 합니다.
           같은 이름만 보고 현재 block payload의 hash나 CometBFT 자체 database root로 해석하면 안 됩니다.
         </p>
+      </div>
+      <div className="not-prose my-4 flex flex-wrap gap-3">
+        <CodeViewButton
+          label="ApplyBlock · Commit 호출"
+          onClick={() => onCodeRef("apply-block-commit", codeRefs["apply-block-commit"])}
+        />
+        <CodeViewButton
+          label="proxy · Commit"
+          onClick={() => onCodeRef("proxy-commit", codeRefs["proxy-commit"])}
+        />
+        <CodeViewButton
+          label="localClient · Commit"
+          onClick={() => onCodeRef("local-commit", codeRefs["local-commit"])}
+        />
+      </div>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Crash point별 replay 결정을 표로 만듭니다</h3>
         <p>
           Block만 저장됐으면 FinalizeBlock 이후를 replay하고, CometBFT result/state가 저장됐지만 application Commit이
