@@ -7,6 +7,9 @@ import {
   PaymentRailViz,
   PeriodStateViz,
 } from "./OnchainCloudFlowViz";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
+import { codeRefs } from "./codeRefs";
+import { filecoinServicesTree, filecoinPayTree } from "./fileTree";
 
 const SERVICES_SPEC =
   "https://github.com/FilOzone/filecoin-services/blob/a391c1cd23c95ee8d8eadec462cdc35569ae486d/SPEC.md";
@@ -18,7 +21,9 @@ const SYNAPSE_MANAGER =
   "https://github.com/FilOzone/synapse-sdk/blob/44ffc12fd9b5390820d9642148f6a36b9b2baed4/packages/synapse-sdk/src/storage/manager.ts";
 
 export default function ModernFilecoinOnchainCloud() {
+  const sidebar = useCodeSidebar();
   return (
+    <>
     <article className="space-y-14">
       <section id="overview" className="space-y-6">
         <header className="space-y-3">
@@ -145,6 +150,12 @@ export default function ModernFilecoinOnchainCloud() {
           기록이 있어야 나중의 proof와 payment가 같은 주문을 가리키는지 확인할
           수 있습니다.
         </p>
+        <div className="not-prose">
+          <CodeViewButton
+            label="DataSetInfo struct"
+            onClick={() => sidebar.open("dataset-info", codeRefs["dataset-info"])}
+          />
+        </div>
         <TermBreakdown
           title="Dataset generation을 고정하는 필드"
           description="필드 이름을 한꺼번에 외우지 않습니다. 각 줄에서 ‘무엇을 식별하는가’와 ‘무엇까지는 보장하지 않는가’를 확인합니다."
@@ -404,6 +415,12 @@ export default function ModernFilecoinOnchainCloud() {
           판정 전인지, proof를 통과했는지, deadline을 놓쳤는지를 기록한
           값입니다.
         </p>
+        <div className="not-prose">
+          <CodeViewButton
+            label="possessionProven() · nextProvingPeriod()"
+            onClick={() => sidebar.open("period-state", codeRefs["period-state"])}
+          />
+        </div>
         <TermBreakdown
           title="Period state의 세 가지 값"
           description="세 상태를 한 문장에 섞지 않습니다. 각 상태가 확정됐는지와 settlement cursor가 움직일 수 있는지를 따로 봅니다."
@@ -535,6 +552,12 @@ export default function ModernFilecoinOnchainCloud() {
           어디까지 지급했는가”를 한 줄에 기록한 on-chain ledger입니다. 그래서
           단순 정기 송금과 다릅니다.
         </p>
+        <div className="not-prose">
+          <CodeViewButton
+            label="Rail struct · settleRail()"
+            onClick={() => sidebar.open("rail-settle", codeRefs["rail-settle"])}
+          />
+        </div>
         <TermBreakdown
           title="Payment rail의 다섯 장부 항목"
           description="각 항목은 서로 다른 질문에 답합니다. 한 줄씩 읽은 뒤 아래 Viz에서 값이 움직이는 순서를 확인합니다."
@@ -813,5 +836,29 @@ export default function ModernFilecoinOnchainCloud() {
         </aside>
       </section>
     </article>
+    <CodeSidebar
+      codeRefKey={sidebar.codeRefKey}
+      codeRef={sidebar.codeRef}
+      onClose={sidebar.close}
+      onNavigate={sidebar.navigate}
+      codeRefs={codeRefs}
+      fileTrees={{
+        "filecoin-services": filecoinServicesTree,
+        "filecoin-pay": filecoinPayTree,
+      }}
+      projectMetas={{
+        "filecoin-services": {
+          id: "filecoin-services",
+          label: "filecoin-services · Solidity",
+          badgeClass: "bg-blue-500/10 border-blue-500 text-blue-700",
+        },
+        "filecoin-pay": {
+          id: "filecoin-pay",
+          label: "filecoin-pay · Solidity",
+          badgeClass: "bg-emerald-500/10 border-emerald-500 text-emerald-700",
+        },
+      }}
+    />
+    </>
   );
 }
