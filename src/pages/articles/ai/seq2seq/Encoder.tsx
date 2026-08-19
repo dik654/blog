@@ -1,7 +1,14 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import StateHandoffViz from "./viz/StateHandoffViz";
+import { CodeViewButton } from "@/components/code";
+import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "./codeRefs";
 
-export default function Encoder() {
+export default function Encoder({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="encoder" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Encoder는 source를 decoder가 사용할 조건 정보로 바꾼다</h2>
@@ -28,6 +35,9 @@ export default function Encoder() {
         ]}
         assumptions={["설명을 위해 단방향 LSTM을 사용했으며 bidirectional encoder는 방향별 state를 concatenate·project할 수 있습니다.", "Padding이 있는 batch에서는 실제 length의 마지막 state를 선택해야 합니다."]}
         interpretation="Fixed context의 정보 병목은 state dimension뿐 아니라 이 초기 handoff 이후 source를 다시 볼 수 없다는 접근 경로의 제약입니다."
+      />
+      <CodeViewButton
+        onClick={() => onCodeRef("encoder-handoff", codeRefs["encoder-handoff"])}
       />
 
       <StateHandoffViz />

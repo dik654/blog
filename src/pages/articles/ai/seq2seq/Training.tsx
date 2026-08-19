@@ -1,7 +1,14 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import TrainInferenceGapViz from "./viz/TrainInferenceGapViz";
+import { CodeViewButton } from "@/components/code";
+import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "./codeRefs";
 
-export default function Training() {
+export default function Training({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="training" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Teacher forcing은 objective 계산을 단순화하지만 inference prefix와 다르다</h2>
@@ -27,6 +34,9 @@ export default function Training() {
         ]}
         assumptions={["Cross-entropy reduction을 token 평균으로 정의한 예입니다.", "Label smoothing·class weight를 적용하면 target distribution과 가중합이 달라집니다."]}
         interpretation="낮은 teacher-forced loss는 정답 prefix에서의 conditional modeling을 측정한다. Model이 만든 prefix에서의 recovery와 search quality를 자동으로 보장하지 않습니다."
+      />
+      <CodeViewButton
+        onClick={() => onCodeRef("training-loop", codeRefs["training-loop"])}
       />
 
       <TrainInferenceGapViz />

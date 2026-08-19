@@ -1,7 +1,14 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import AutoregressiveDecodeViz from "./viz/AutoregressiveDecodeViz";
+import { CodeViewButton } from "@/components/code";
+import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "./codeRefs";
 
-export default function Decoder() {
+export default function Decoder({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="decoder" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Decoder는 prefix를 state로 축약하며 다음 token을 생성한다</h2>
@@ -27,6 +34,9 @@ export default function Decoder() {
         ]}
         assumptions={["Cell state 표기는 간결성을 위해 s에 묶었습니다.", "Beam search의 실제 score에는 length normalization·coverage penalty 같은 task-specific 항이 추가될 수 있습니다."]}
         interpretation="Beam width를 늘리면 더 많은 prefix를 탐색하지만 model probability와 task quality가 같지는 않다. Search budget, length bias와 latency를 함께 검증해야 합니다."
+      />
+      <CodeViewButton
+        onClick={() => onCodeRef("decoder-step", codeRefs["decoder-step"])}
       />
 
       <AutoregressiveDecodeViz />
