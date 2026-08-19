@@ -2,13 +2,18 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { FilecoinProofFlowViz } from "./FilecoinProofFlowViz";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
+import { codeRefs } from "./codeRefs";
+import { bellpersonTree } from "./fileTrees";
 
 const FIL = "https://github.com/filecoin-project/rust-fil-proofs/blob/d451d23ba6dcabd107e66b2f9c6531887b17fd3d/filecoin-proofs/src/api/seal.rs";
 const PARAMS = "https://github.com/filecoin-project/rust-fil-proofs/blob/d451d23ba6dcabd107e66b2f9c6531887b17fd3d/fil-proofs-param/parameters.json";
 const BELL = "https://github.com/filecoin-project/bellperson/blob/728306c8ee52f53dbd55ea02557affcdfb546ae7/src/groth16/prover/native.rs";
 
 export default function ModernFilecoinGpuProofsArticle() {
-  return <article className="space-y-14">
+  const sidebar = useCodeSidebar();
+  return <>
+  <article className="space-y-14">
     <section id="overview" className="space-y-6">
       <header className="space-y-3"><p className="text-sm font-semibold text-primary">Sector input에서 independently verified proof artifact까지</p><h2 className="text-3xl font-bold tracking-tight">Filecoin proof GPU 가속은 커널 목록이 아니라 phase artifact와 cache identity가 이어지는 전체 job이다</h2></header>
       <p className="text-lg leading-8 text-foreground/90">고정 workload는 sector data·ticket·prover identity에서 replica와 cache를 만들고, vanilla proof와 Groth16 proof artifact를 거쳐 verification receipt로 끝납니다. <a className="text-primary hover:underline" href="/gpu/gpu-proof-pipeline">일반 GPU proof DAG</a>, <a className="text-primary hover:underline" href="/gpu/msm-ntt">MSM·NTT</a>, field/hash 정본은 연결 글을 재사용합니다. 이 글은 rust-fil-proofs snapshot의 Filecoin phase boundary와 bellperson accelerator integration만 소유합니다.</p>
@@ -47,12 +52,19 @@ export default function ModernFilecoinGpuProofsArticle() {
         {symbol:"K",name:"Cache manifest",description:"Phase별 files의 path-independent schema·size·digest 목록입니다."},
         {symbol:"r",name:"Implementation revision",description:"rust-fil-proofs, bellperson/backend와 config schema revisions입니다."},
       ]} assumptions={["Secrets는 digest/logging policy를 따르고 raw private inputs를 receipt에 노출하지 않습니다.","H inputs는 type·length가 명확하며 manifest verification 뒤 cache를 엽니다."]} interpretation="Sector bytes가 같아도 ticket이나 parameter manifest가 바뀌면 G가 달라집니다. Old cache directory 이름만 같다고 hit로 처리하지 않습니다." />
+      <div className="not-prose flex flex-wrap gap-3">
+        <CodeViewButton label="generate_random_parameters()" onClick={() => sidebar.open("bp-generator", codeRefs["bp-generator"])} />
+      </div>
       <div id="paper-fil-parameters"><CitationBlock type="code" citeKey={2} source="rust-fil-proofs parameter manifest · commit d451d23" href={PARAMS}><p><strong>문제:</strong> 여러 sector/proof configurations의 parameter artifacts를 identifier·digest·size와 연결해야 합니다.</p><p><strong>핵심 기여:</strong> Pinned manifest는 concrete parameter files의 cache identifiers와 integrity metadata를 제공합니다.</p><p><strong>중요 가정:</strong> 같은 repository commit, release process와 proof configuration을 고정합니다.</p><p><strong>근거 범위:</strong> 해당 snapshot의 parameter artifact inventory입니다.</p><p><strong>일반화 금지:</strong> Manifest presence가 trusted setup ceremony·network activation·local file correctness를 단독으로 증명하지 않습니다.</p></CitationBlock></div>
     </section>
 
     <section id="accelerator-split" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">03 · Accelerator work split</p><h2 className="mt-2 text-2xl font-bold">Bellperson의 FFT·MSM 후보를 가속하되 CPU preparation·locking·fallback과 verifier를 전체 경계에 남긴다</h2></header>
       <p>Pinned bellperson prover는 GPU multiexponentiation과 FFT 경로를 CPU work와 함께 orchestration하고, 환경·device failure에 따른 fallback 경계를 가집니다. 따라서 “Filecoin proof가 GPU에서 실행된다”보다 어느 stage의 어떤 buffers가 accelerator에 갔는지 기록해야 합니다. GPU kernel timing은 C2 proof artifact latency와 같지 않습니다.</p>
+      <div className="not-prose flex flex-wrap gap-3">
+        <CodeViewButton label="CpuGpuMultiexpKernel" onClick={() => sidebar.open("bp-gpu-multiexp", codeRefs["bp-gpu-multiexp"])} />
+        <CodeViewButton label="create_proof_batch_priority_inner" onClick={() => sidebar.open("bp-groth16-prover", codeRefs["bp-groth16-prover"])} />
+      </div>
       <ExplainedFormula question="일부만 가속한 Filecoin proof의 최대 speedup을 어떻게 제한할까?" idea={<>가속하지 못한 전체 시간 비율은 GPU kernel을 아무리 빠르게 해도 남습니다.</>} formula={String.raw`S\le\frac{1}{(1-f)+f/s}`} terms={[
         {symbol:"S",name:"Overall speedup",description:"같은 verified Filecoin job의 reference/candidate end-to-end 시간 비율입니다."},
         {symbol:"f",name:"Accelerated fraction",description:"Reference 시간 중 실제로 GPU 후보가 대체하는 비율입니다."},
@@ -65,6 +77,10 @@ export default function ModernFilecoinGpuProofsArticle() {
     <section id="release-gate" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">04 · Deadline release gate</p><h2 className="mt-2 text-2xl font-bold">독립 verification과 deadline slack을 함께 통과한 artifact만 배포하고 실패 generation은 격리한다</h2></header>
       <p>Wrong ticket/seed/prover/sector, piece/CommD mismatch, parameter digest mismatch, missing/truncated/stale cache, phase reorder, GPU OOM·timeout·wrong result, crash와 retry를 포함합니다. CPU/reference commitments와 final proof verifier parity를 먼저 통과한 뒤 cold/warm cache, disk I/O, queue, GPU stages, p50/p95, peak host/VRAM과 retry rate를 기록합니다.</p>
+      <div className="not-prose flex flex-wrap gap-3">
+        <CodeViewButton label="verify_proof()" onClick={() => sidebar.open("bp-verifier", codeRefs["bp-verifier"])} />
+        <CodeViewButton label="Proof<E> struct" onClick={() => sidebar.open("bp-proof", codeRefs["bp-proof"])} />
+      </div>
       <ExplainedFormula question="한 job이 운영 deadline 안에 retry 여유까지 갖는지 어떻게 판단할까?" idea={<>Deadline에서 queue·p95 execution·검증과 최소 retry/운영 reserve를 모두 빼고 남은 slack을 봅니다.</>} formula={String.raw`\Delta=D-(T_{queue}+T_{p95}+T_{verify}+B_{retry}+B_{ops})`} terms={[
         {symbol:"\\Delta",name:"Deadline slack",description:"모든 예산을 뺀 뒤 남는 시간이며 양수여야 합니다."},
         {symbol:"D",name:"Deadline budget",description:"해당 operation/profile이 허용한 end-to-end 시간입니다."},
@@ -76,5 +92,21 @@ export default function ModernFilecoinGpuProofsArticle() {
       ]} assumptions={["D와 phase set은 실제 network/operator profile에서 versioned config로 가져오며 이 글은 고정 deadline 숫자를 주장하지 않습니다.","Failed/invalid jobs와 queue saturation을 p95 sample에서 제거하지 않습니다."]} interpretation="D=100, queue10, execution60, verify5, retry15, ops5분이면 slack은 5분입니다. Candidate p95가 66분이면 slack이 -1분이므로 kernel 평균이 좋아도 release하지 않습니다." />
       <aside className="rounded-lg border border-border bg-muted/20 p-5 text-sm leading-6 text-muted-foreground"><strong className="text-foreground">Article-only 역검사 10/10:</strong> phase outputs, generation readiness, parameter/cache binding, accelerator 범위, Amdahl 계산, stale artifact 반례, verification, deadline slack, paired measurement, fallback·rollback까지 이 글만으로 답할 수 있어야 합니다.</aside>
     </section>
-  </article>;
+  </article>
+  <CodeSidebar
+    codeRefKey={sidebar.codeRefKey}
+    codeRef={sidebar.codeRef}
+    onClose={sidebar.close}
+    onNavigate={sidebar.navigate}
+    codeRefs={codeRefs}
+    fileTrees={{ bellperson: bellpersonTree }}
+    projectMetas={{
+      bellperson: {
+        id: "bellperson",
+        label: "bellperson · Rust",
+        badgeClass: "bg-orange-500/10 border-orange-500 text-orange-700",
+      },
+    }}
+  />
+  </>;
 }

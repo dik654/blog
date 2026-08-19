@@ -1,9 +1,14 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
 import { CertificateCatchupViz, FilecoinF3TraceViz } from "./viz/ModernFilecoinF3Viz";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
+import { codeRefs } from "./codeRefs";
+import { f3Tree } from "./fileTrees";
 
 export default function ModernFilecoinF3Article() {
-  return <article className="space-y-14">
+  const sidebar = useCodeSidebar();
+  return <>
+  <article className="space-y-14">
     <section id="overview" className="space-y-6">
       <header className="space-y-3"><p className="text-sm font-semibold text-primary">Filecoin F3 integration</p><h2 className="text-3xl font-bold tracking-tight">바뀔 수 있는 EC head를 certificate checkpoint로 고정하고 다음 fork choice의 울타리로 쓴다</h2></header>
       <p className="text-lg leading-8 text-foreground/90">Alice→Bob transaction이 Expected Consensus(EC) head의 block D에 들어갔다고 하겠습니다. 이 inclusion만으로는 D가 다시 바뀌지 않는다고 말할 수 없습니다. F3는 이전에 finalized한 base B와 그 위의 current EC proposal B→C→D, versioned power table을 GPBFT instance에 넣습니다. GPBFT가 prefix를 결정하면 서명 evidence가 붙은 finality certificate가 되고, 이후 EC는 그 checkpoint를 정확히 포함하는 branches 안에서만 weight를 비교합니다.</p>
@@ -15,6 +20,10 @@ export default function ModernFilecoinF3Article() {
     <section id="ec-f3-boundary" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">01 · EC input, base, committee</p><h2 className="mt-2 text-2xl font-bold">Proposal은 움직일 수 있지만 이전 finalized base와 historical power table은 instance에 고정한다</h2></header>
       <p>F3 instance의 proposal은 node가 관찰한 current canonical EC chain이므로 consensus가 끝나기 전에 달라질 수 있습니다. 반면 base는 이전 certificate에서 이미 합의한 chain prefix이며 새 proposal은 그 base를 연장해야 합니다. Proposal이 바뀌었다는 이유로 base까지 되돌리면 이전 agreement를 무효화하므로 input validation에서 extension 관계와 commitments를 검사합니다.</p>
+      <div className="not-prose flex flex-wrap gap-3">
+        <CodeViewButton label="F3.Run() 개요" onClick={() => sidebar.open("f3-run", codeRefs["f3-run"])} />
+        <CodeViewButton label="GPBFT phases" onClick={() => sidebar.open("gpbft-run", codeRefs["gpbft-run"])} />
+      </div>
       <p>투표 power도 현재 head에서 임의로 읽지 않습니다. Protocol manifest와 finalized chain state의 lookback으로 instance committee와 signing keys, scaled power를 정하고 power-table CID·network name·instance·supplemental data에 결속합니다. 그래서 certificate i를 과거 PTᵢ가 아니라 현재 PT로 검증해서는 안 됩니다. Member가 바뀌면 동일 signatures의 weight 합이 달라져 history를 재해석하게 됩니다.</p>
       <ExplainedFormula question="F3 certificate signer 집합이 strong quorum인지 무엇으로 판정하는가?" idea={<>Certificate가 가리키는 historical power table에서 distinct valid signers의 power를 더하고, table total의 2/3를 엄격히 넘어야 합니다. 그 전에 network·instance·base·decision과 aggregate signature를 같은 domain에서 검증합니다.</>} formula={String.raw`q(C_i)=\sum_{v\in Signers(C_i)}w_i(v),\qquad 3q(C_i)>2W_i`} terms={[{symbol:"C_i",name:"instance certificate",description:"Instance i의 base, decision, supplemental data와 signer evidence를 담습니다."},{symbol:"w_i(v)",name:"historical voting power",description:"Instance i에 결속된 power table에서 participant v가 가진 검증 weight입니다."},{symbol:"W_i",name:"committee total power",description:"같은 table의 eligible voting power 합입니다."},{symbol:"q(C_i)",name:"certificate power",description:"중복을 제거한 valid certificate signers의 power 합입니다."}]} assumptions={["Certificate와 power table이 같은 network·instance·manifest generation에 결속됩니다.","Signer membership, signing key, aggregate signature와 duplicate를 검증합니다.","Byzantine committee power는 protocol fault bound인 1/3 미만입니다.","Quorum certificate는 GPBFT decision evidence이며 application transaction success까지 증명하지 않습니다."]} interpretation="W_i=120이면 q=80은 3q=240이라 strict inequality를 통과하지 못하고 q=81은 243>240이라 통과합니다. 현재 table에서 81이더라도 PT_i에서 79라면 과거 certificate는 strong quorum이 아닙니다." />
       <div id="paper-fip86-f3"><CitationBlock source="FIP-0086 — Fast Finality in Filecoin" citeKey={1} href="https://github.com/filecoin-project/FIPs/blob/c856d99b126cb52a0436c4838da55ec84495cfa7/FIPS/fip-0086.md"><p><strong>문제:</strong> Expected Consensus의 긴 probabilistic confirmation을 검증 가능한 fast checkpoint로 보완합니다.</p><p><strong>기여:</strong> EC/F3 input, GPBFT certificate, power-table evolution·sync와 finalized-prefix fork-choice 변경을 규정합니다.</p><p><strong>전제:</strong> Byzantine QAP 1/3 미만, versioned committee·manifest와 EC compatibility·network timing 조건을 사용합니다.</p><p><strong>근거 범위:</strong> Final FIP revision c856d99의 F3 protocol semantics와 deployment model입니다.</p><p><strong>말하지 않는 것:</strong> 고정 latency SLA, current Go API나 F3 halt 중 EC head의 자동 finality를 보장하지 않습니다.</p></CitationBlock></div>
@@ -36,5 +45,21 @@ export default function ModernFilecoinF3Article() {
       <div className="grid gap-4 md:grid-cols-2"><aside className="rounded-lg border border-border p-4"><h3 className="font-semibold">통과 receipt</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">Trusted base, contiguous instances, certificate digests, power-table CIDs, finalized prefix, application state root.</p></aside><aside className="rounded-lg border border-border p-4"><h3 className="font-semibold">중단 조건</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">Certificate domain·signature·table·base mismatch, F3 lag SLO 초과, finalized prefix 밖의 head 후보.</p></aside></div>
       <h3 className="text-xl font-semibold">이 글만으로 풀어야 하는 10문제</h3><p>기초 6문제는 proposal/base, F3 halt, committee binding, certificate context, power-table diff와 fork-choice fence를 묻습니다. 심화 4문제는 stale/skipped sync, lag policy, conflicting heavy branch와 cold-start-to-release test를 설계하게 합니다. 위 단계만으로 신뢰 시작점과 실패 시 행동까지 답할 수 있어야 합니다.</p>
     </section>
-  </article>;
+  </article>
+  <CodeSidebar
+    codeRefKey={sidebar.codeRefKey}
+    codeRef={sidebar.codeRef}
+    onClose={sidebar.close}
+    onNavigate={sidebar.navigate}
+    codeRefs={codeRefs}
+    fileTrees={{ "go-f3": f3Tree }}
+    projectMetas={{
+      "go-f3": {
+        id: "go-f3",
+        label: "go-f3 · Go",
+        badgeClass: "bg-blue-500/10 border-blue-500 text-blue-700",
+      },
+    }}
+  />
+  </>;
 }
