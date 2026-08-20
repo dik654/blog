@@ -20,8 +20,8 @@ export default function VectorMeasurementViz() {
             <span className="absolute -left-5 top-0 text-[10px] text-muted-foreground">x₂</span>
             <span className="absolute bottom-[-0.3rem] left-[-0.3rem] h-2 w-2 rounded-sm bg-foreground" />
             <span className="absolute bottom-0 left-0 h-px w-[60%] origin-left -rotate-[53deg] bg-primary" />
-            <span className="absolute bottom-[48%] left-[58%] h-3 w-3 -translate-x-1/2 translate-y-1/2 rounded-sm border border-primary bg-background" />
-            <span className="absolute bottom-[52%] left-[62%] font-mono text-xs font-bold text-primary">(3, 4)</span>
+            <span className="absolute bottom-[48%] left-[36%] h-3 w-3 -translate-x-1/2 translate-y-1/2 rounded-sm border border-primary bg-background" />
+            <span className="absolute bottom-[52%] left-[40%] font-mono text-xs font-bold text-primary">(3, 4)</span>
             <span className="absolute bottom-2 left-2 text-[10px] text-muted-foreground">원점</span>
           </div>
         </div>
