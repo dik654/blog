@@ -285,7 +285,7 @@ export default function ArticleLessonFlowViz({
     }
     if (safeActive < conceptSteps.length - 1) {
       setActive((current) => current + 1);
-      setReveal(4);
+      setReveal(0);
     }
   };
 
