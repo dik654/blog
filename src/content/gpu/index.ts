@@ -174,6 +174,7 @@ const gpu: Category = {
         { id: "small-fusion", title: "작은 elementwise fusion" },
         { id: "megakernel", title: "Megakernel 자원 trade-off" },
         { id: "flash-attention", title: "Tile-budgeted fusion" },
+        { id: "kernel-stack", title: "CUTLASS·CuTe·Triton 선택 층" },
         { id: "release-gate", title: "Fusion release gate" },
       ],
       component: () => import("@/pages/articles/gpu/cuda-kernel-fusion"),
@@ -190,6 +191,20 @@ const gpu: Category = {
         { id: "release-gate", title: "Persistent release gate" },
       ],
       component: () => import("@/pages/articles/gpu/cuda-persistent-kernels"),
+    },
+    {
+      slug: "cfd-finite-volume-gpu",
+      title: "CFD 기초: finite volume에서 GPU mapping까지",
+      subcategory: "gpu-fundamentals",
+      sections: [
+        { id: "conservation", title: "보존 법칙과 CFD 경계" },
+        { id: "finite-volume", title: "Finite-volume cell balance" },
+        { id: "time-step", title: "CFL time-step budget" },
+        { id: "gpu-mapping", title: "Stencil과 GPU memory mapping" },
+        { id: "verification", title: "Verification·validation gate" },
+      ],
+      component: () =>
+        import("@/pages/articles/gpu/cfd-finite-volume-gpu"),
     },
     {
       slug: "msm-ntt",

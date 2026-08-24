@@ -13,13 +13,14 @@ const catalog = await loadPublicArticleCatalog({ root: repoRoot });
 const byRoute = new Map(catalog.map((article) => [article.route, article]));
 
 test("public catalog is the complete article route set without filesystem phantoms", () => {
-  assert.equal(catalog.length, 562);
+  assert.equal(catalog.length, 563);
   assert.equal(byRoute.size, catalog.length);
 
   for (const route of [
     "blockchain/reth",
     "crypto/finite-field-theory",
     "gpu/gpu-architecture",
+    "gpu/cfd-finite-volume-gpu",
     "gpu/hw-memory",
     "ai/supervised-learning-loop",
     "ai/train-validation-test",

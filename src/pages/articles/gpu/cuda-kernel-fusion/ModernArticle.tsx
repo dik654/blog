@@ -7,6 +7,9 @@ import { FusionMegakernelViz } from "../cuda-perf-analysis/viz/FusionResourceViz
 const PRACTICES =
   "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-best-practices-guide/index.html";
 const FLASH_ATTENTION = "https://arxiv.org/abs/2205.14135";
+const CUTLASS = "https://docs.nvidia.com/cutlass/latest/overview.html";
+const TRITON =
+  "https://triton-lang.org/main/programming-guide/chapter-1/introduction.html";
 
 export default function ModernCudaKernelFusionArticle() {
   return (
@@ -301,10 +304,100 @@ export default function ModernCudaKernelFusionArticle() {
         </div>
       </section>
 
+      <section id="kernel-stack" className="space-y-6">
+        <header>
+          <p className="text-sm font-semibold text-primary">
+            04 · Authoring layer
+          </p>
+          <h2 className="mt-2 text-2xl font-bold">
+            CUTLASS·CuTe·Triton은 같은 이름의 커널 언어가 아니다
+          </h2>
+        </header>
+        <p>
+          Fusion boundary를 정한 뒤에는 그 boundary를 어느 abstraction에서
+          표현할지 고릅니다. CUDA C++는 thread·shared memory·synchronization을
+          직접 소유합니다. CUTLASS는 GEMM mainloop와 epilogue를 reusable
+          collectives로 조립하고, 그 아래 CuTe는 shape·stride layout과 copy/MMA
+          atoms의 thread–value mapping을 기술합니다. Triton은 한 program
+          instance가 value block을 다루게 쓰고 compiler가 coalescing,
+          vectorization과 memory placement의 상당 부분을 낮춥니다.
+        </p>
+        <TermBreakdown
+          title="이름 대신 누가 어떤 결정을 소유하는지 봅니다"
+          description="같은 algorithm도 target GPU·shape·dtype에 따라 서로 다른 lane이 유리할 수 있습니다."
+          items={[
+            {
+              term: "CUTLASS collective",
+              description:
+                "Collective mainloop와 epilogue를 tile·copy·MMA policy로 조합합니다.",
+              example:
+                "Hopper GEMM mainloop에 TMA pipeline과 fused activation epilogue를 선택합니다.",
+              boundary:
+                "Linear-algebra composition이 중심이며 arbitrary control flow 전체를 자동 해결하지 않습니다.",
+            },
+            {
+              term: "CuTe layout · atom",
+              description:
+                "Logical coordinate를 memory offset과 participating threads/values에 연결합니다.",
+              example:
+                "TiledCopy와 TiledMMA로 global→shared→register/MMA 경로를 구성합니다.",
+              boundary:
+                "높은 control 대신 layout·lifetime·barrier correctness 책임도 커집니다.",
+            },
+            {
+              term: "Triton blocked program",
+              description:
+                "Program ID가 맡은 N차원 block과 masked load/store·reduction을 표현합니다.",
+              example:
+                "BLOCK_SIZE와 num_warps variants를 autotune하는 fused normalization kernel입니다.",
+              boundary:
+                "Python 문법이 곧 portability나 최적 code generation을 보장하지는 않습니다.",
+            },
+          ]}
+        />
+        <div className="grid gap-4 md:grid-cols-2">
+          <div id="paper-cutlass-stack">
+            <CitationBlock
+              type="code"
+              citeKey={2}
+              source="NVIDIA CUTLASS documentation · Overview"
+              href={CUTLASS}
+            >
+              <p>
+                <strong>근거 범위:</strong> CUTLASS의 hierarchical GEMM
+                components와 CuTe layout·tensor·hardware atom 역할입니다.
+              </p>
+              <p>
+                <strong>일반화 금지:</strong> 특정 collective나 tile이 모든
+                GPU·shape에서 최고 성능이라는 뜻은 아닙니다.
+              </p>
+            </CitationBlock>
+          </div>
+          <div id="paper-triton-stack">
+            <CitationBlock
+              type="code"
+              citeKey={3}
+              source="Triton programming guide · Introduction"
+              href={TRITON}
+            >
+              <p>
+                <strong>근거 범위:</strong> Scalar CUDA thread와 대비되는 blocked
+                program model 및 compiler-owned scheduling입니다.
+              </p>
+              <p>
+                <strong>일반화 금지:</strong> DSL 사용만으로 handwritten
+                CUDA/CUTLASS보다 빠르거나 모든 backend에 portable하다는 주장이
+                아닙니다.
+              </p>
+            </CitationBlock>
+          </div>
+        </div>
+      </section>
+
       <section id="release-gate" className="space-y-6">
         <header>
           <p className="text-sm font-semibold text-primary">
-            04 · Fusion release gate
+            05 · Fusion release gate
           </p>
           <h2 className="mt-2 text-2xl font-bold">
             Unfused·small fusion·Megakernel을 같은 receipt에서 비교한다

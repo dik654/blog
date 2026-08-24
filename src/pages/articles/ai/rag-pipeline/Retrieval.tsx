@@ -8,6 +8,20 @@ export default function Retrieval() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>Sparse retrieval은 제품 코드·법 조항·고유명사처럼 정확한 token 일치에 강하고, dense retrieval은 표현이 달라도 의미가 가까운 문서를 찾는 데 유리합니다. 두 점수의 scale은 다르므로 검증 없이 더하지 않습니다. 간단한 baseline으로는 각 순위만 사용하는 Reciprocal Rank Fusion(RRF)을 쓸 수 있습니다.</p>
       </div>
+      <div className="not-prose my-8 grid gap-3 md:grid-cols-2">
+        {[
+          ["BM25 · lexical", "Term frequency saturation·IDF·문서 길이로 exact-term 후보를 빠르게 만듭니다.", "고유명사와 code에는 강하지만 vocabulary mismatch는 남습니다."],
+          ["HNSW · dense ANN", "여러 층의 proximity graph를 내려오며 embedding 이웃 후보를 근사 탐색합니다.", "efSearch를 키우면 보통 recall과 query cost가 함께 늘어납니다."],
+          ["RRF · rank fusion", "서로 단위가 다른 BM25·dense score 대신 각 목록의 rank evidence를 합칩니다.", "Candidate cutoff 밖의 문서를 복구하지는 못합니다."],
+          ["Cross-encoder · rerank", "Query와 candidate text를 함께 읽어 제한된 목록의 relevance를 다시 계산합니다.", "품질 ceiling은 candidate recall이고 비용은 candidate 수에 비례합니다."],
+        ].map(([title, description, boundary]) => (
+          <article key={title} className="rounded-2xl border border-border/70 bg-card/60 p-5">
+            <h3 className="font-semibold text-foreground">{title}</h3>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">{description}</p>
+            <p className="mt-3 border-t border-border/60 pt-3 text-xs leading-5 text-muted-foreground">경계 · {boundary}</p>
+          </article>
+        ))}
+      </div>
       <ExplainedFormula
         question="Dense와 sparse 결과의 점수 범위가 다를 때 순위만으로 어떻게 합칠까요?"
         idea={<>각 검색기가 문서에 준 rank를 역수 형태로 바꿔 더합니다. 여러 목록에서 꾸준히 상위인 문서는 높은 점수를 얻고, k는 한 검색기의 1위가 지나치게 지배하는 정도를 완화합니다.</>}
@@ -27,6 +41,7 @@ export default function Retrieval() {
       />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>ACL·tenant·valid-time filter는 candidate 생성 전에 적용합니다. 검색 후 forbidden 문서를 지우면 허가 문서가 top-k 밖으로 밀렸거나, 금지 문서의 text와 score가 뒤 단계에 노출될 수 있습니다. 넓은 후보는 query와 document를 함께 읽는 cross-encoder 또는 late-interaction model로 rerank하되, 이 모델은 candidate 밖 문서를 새로 만들 수 없습니다.</p>
+        <p>GraphRAG는 이 funnel을 대체하는 단일 검색기가 아닙니다. Entity·relation extraction으로 만든 graph에서 local subgraph나 community summary를 후보로 만들고 lexical/vector retrieval과 결합하는 추가 lane입니다. 따라서 graph construction revision, 원문 provenance, traversal hop budget을 별도 receipt로 남겨야 합니다. 잘못 합쳐진 entity나 빠진 edge는 reranker가 원문 사실로 복구할 수 없습니다.</p>
       </div>
       <ExplainedFormula
         question="Reranker가 아무리 좋아도 첫 retrieval의 누락을 복구할 수 없는 이유는 무엇일까요?"
@@ -55,6 +70,16 @@ O_q&\subseteq C_q\\
         <p className="text-xs font-bold text-primary">핵심 논문 · Dense Passage Retrieval</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">DPR은 질문과 passage를 두 encoder로 독립 변환하고 dense vector similarity로 open-domain QA 후보를 회수했습니다. 작은 수의 question–passage pair로 학습한 dual encoder가 논문 조건에서 강한 BM25 baseline보다 top-20 passage accuracy를 개선한 것이 핵심 결과입니다. 이 수치가 모든 언어·identifier-heavy corpus·최신 BM25 설정에서도 그대로 유지된다는 주장은 아닙니다.</p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/2004.04906" target="_blank" rel="noreferrer">Dual encoder와 평가 조건 보기</a>
+      </div>
+      <div id="reading-hnsw" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+        <p className="text-xs font-bold text-primary">핵심 논문 · HNSW</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">Malkov와 Yashunin은 vector를 확률적으로 선택된 여러 graph layer에 배치하고, 위층의 장거리 탐색에서 아래층의 세밀한 이웃 탐색으로 내려오는 approximate nearest-neighbor index를 제안했습니다. 이는 exact scan과 같은 결과를 자동 보장하는 구조가 아니므로 target corpus에서 exact subset 대비 recall·latency·memory를 함께 측정해야 합니다.</p>
+        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/1603.09320" target="_blank" rel="noreferrer">HNSW graph construction과 search 보기</a>
+      </div>
+      <div id="reading-cross-encoder" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+        <p className="text-xs font-bold text-primary">핵심 논문 · BERT passage reranking</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">Nogueira와 Cho는 query–passage pair를 BERT에 함께 넣어 binary relevance를 계산하는 second-stage reranker를 보였습니다. 논문의 MS MARCO·TREC-CAR 결과는 해당 model과 benchmark의 근거이며, candidate를 늘릴수록 모든 production RAG에서 비용 대비 품질이 좋아진다는 보장은 아닙니다.</p>
+        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/1901.04085" target="_blank" rel="noreferrer">Passage Re-ranking with BERT 보기</a>
       </div>
       <div id="reading-rrf" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">핵심 연구 · Reciprocal Rank Fusion</p>

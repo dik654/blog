@@ -2656,7 +2656,8 @@ export const EDITORIAL_BOUNDARIES = {
       "Answer claim에서 source revision까지 이어지는 retrieval–generation trace와 stage별 실패 분리",
       "검색 child와 generation parent를 분리한 chunk boundary·answer-span coverage·source offset 계약",
       "Encoder·tokenizer·input·vector·corpus·ANN을 묶은 index version과 shadow switch·rollback",
-      "Dense/sparse rank fusion·pre-retrieval ACL·candidate-recall 상한·reranking 경계",
+      "BM25 lexical·HNSW dense ANN·RRF fusion·cross-encoder funnel과 pre-retrieval ACL·candidate-recall 상한",
+      "Graph traversal·community summary를 provenance·hop budget과 함께 추가하는 GraphRAG 경계",
       "Context token budget·untrusted retrieved data·citation validation·abstention policy",
       "Retrieval·context·answer·citation·system을 분리한 end-to-end evaluation trace",
     ],
@@ -7592,6 +7593,7 @@ export const EDITORIAL_BOUNDARIES = {
       "Intermediate HBM write/read를 없애는 small-fusion IO boundary",
       "이질적 stages의 live resource와 scheduling을 한 kernel이 소유하는 Megakernel trade-off",
       "FlashAttention의 tile-budgeted fusion과 model-wide Megakernel의 구분",
+      "CUDA·CUTLASS/CuTe·Triton authoring layer의 책임 분리와 target별 선택 gate",
     ],
     reuses: [
       { label: "CUDA performance measurement", href: "/gpu/cuda-perf-analysis" },
@@ -7601,7 +7603,28 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [
       { kind: "primary-source", rule: "FlashAttention은 attention 내부 IO-aware exact tile fusion 범위에만 귀속한다." },
       { kind: "standard", rule: "Fusion 후보의 timing·traffic·reference comparison은 CUDA Best Practices 12.8.1 경계에 고정한다." },
+      { kind: "standard", rule: "CUTLASS/CuTe와 Triton의 programming-model 설명은 각 official documentation revision에 고정한다." },
       { kind: "project-measurement", rule: "Unfused·small fusion·Megakernel을 parity, median/p95, register·spill·shared·traffic·eligible-warp로 비교한다." },
+    ],
+  },
+  "cfd-finite-volume-gpu": {
+    title: "CFD finite-volume·GPU mapping 글이 소유하는 범위",
+    owns: [
+      "Mass·momentum·energy conservation을 control-volume flux balance로 읽는 출발점",
+      "Shared face numerical flux의 finite-volume cell update와 CFL time-step budget",
+      "Mesh stencil·connectivity·halo·linear-solver를 GPU memory/communication path에 연결하는 경계",
+      "Code/solution verification·physical validation과 GPU performance를 분리한 release gate",
+    ],
+    reuses: [
+      { label: "GPU memory hierarchy", href: "/gpu/gpu-architecture#gpu-memory-traffic-hierarchy" },
+      { label: "CUDA kernel fusion", href: "/gpu/cuda-kernel-fusion" },
+      { label: "CUDA register pressure", href: "/gpu/cuda-register-pressure" },
+      { label: "CUDA performance measurement", href: "/gpu/cuda-perf-analysis" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "보존식 구성과 CFD 정의는 NASA Glenn의 공개 설명에 귀속하고 특정 closure·solver의 보편 타당성으로 확대하지 않는다." },
+      { kind: "standard", rule: "Finite-volume implementation guidance는 확인한 OpenFOAM Foundation 문서 revision과 선택 scheme profile에 고정한다." },
+      { kind: "project-measurement", rule: "GPU 후보는 conservation·manufactured/analytic refinement·experiment validation을 통과한 뒤 같은 residual 기준의 physical-time wall time과 memory·communication으로 비교한다." },
     ],
   },
   "cuda-persistent-kernels": {

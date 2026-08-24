@@ -2339,6 +2339,19 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
     {
       kind: "핵심 논문",
+      label:
+        "Efficient and robust approximate nearest neighbor search using Hierarchical Navigable Small World graphs",
+      href: "https://arxiv.org/abs/1603.09320",
+      note: "Multi-layer proximity graph를 이용한 HNSW approximate-neighbor index",
+    },
+    {
+      kind: "핵심 논문",
+      label: "Passage Re-ranking with BERT",
+      href: "https://arxiv.org/abs/1901.04085",
+      note: "Query와 passage를 함께 읽는 cross-encoder second-stage reranking",
+    },
+    {
+      kind: "핵심 논문",
       label: "Lost in the Middle: How Language Models Use Long Contexts",
       href: "https://arxiv.org/abs/2307.03172",
       note: "긴 input의 가운데 놓인 relevant information 활용 저하를 분석",
@@ -5368,10 +5381,17 @@ export const ARTICLE_EVIDENCE: Readonly<
   "gpu/cuda-kernel-fusion": [
     { kind: "핵심 논문", label: "FlashAttention · IO-Aware Exact Attention", href: "https://arxiv.org/abs/2205.14135", note: "Attention 내부의 tile 단위 HBM IO 절감 근거이며 model-wide Megakernel의 보편적 이득을 뜻하지 않음" },
     { kind: "공식 문서", label: "NVIDIA CUDA C++ Best Practices Guide 12.8.1", href: "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-best-practices-guide/index.html", note: "Fusion 후보의 timing·effective bandwidth·reference comparison 경계를 고정하는 공식 guide" },
+    { kind: "공식 문서", label: "NVIDIA CUTLASS documentation · Overview", href: "https://docs.nvidia.com/cutlass/latest/overview.html", note: "CUTLASS collectives와 CuTe layout·tensor·copy/MMA atom hierarchy의 current official 설명" },
+    { kind: "공식 문서", label: "Triton programming guide · Introduction", href: "https://triton-lang.org/main/programming-guide/chapter-1/introduction.html", note: "Blocked program model과 compiler-owned dataflow scheduling의 official 설명" },
   ],
   "gpu/cuda-persistent-kernels": [
     { kind: "핵심 논문", label: "A Study of Persistent Threads Style GPU Programming", href: "https://doi.org/10.1109/InPar.2012.6339596", note: "Persistent worker와 work distribution use cases의 2012 primary study이며 현대 GPU speedup 보장은 아님" },
     { kind: "공식 문서", label: "NVIDIA CUDA C++ Programming Guide 12.8.1", href: "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-programming-guide/index.html", note: "Grid·block residency·atomic·memory ordering과 cooperative execution primitive의 pinned semantics" },
+  ],
+  "gpu/cfd-finite-volume-gpu": [
+    { kind: "공식 문서", label: "NASA Glenn · Navier–Stokes Equation", href: "https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/navier-strokes-equation/", note: "Mass·momentum·energy conservation equations와 CFD의 물리적 출발점" },
+    { kind: "공식 문서", label: "OpenFOAM Foundation · Technical Guides", href: "https://openfoam.org/guides/", note: "Finite-volume CFD equation·model·solver guidance의 공식 진입점" },
+    { kind: "공식 문서", label: "NASA Ames · LAVA CFD framework", href: "https://www.nas.nasa.gov/LAVA/introduction/", note: "Finite difference·finite volume을 포함한 NASA CFD/multiphysics solver family의 공개 scope" },
   ],
   "gpu/gpu-arch-hopper": [
     { kind: "공식 가이드", label: "NVIDIA Hopper Tuning Guide · CUDA 12.8.1", href: "https://docs.nvidia.com/cuda/archive/12.8.1/hopper-tuning-guide/index.html", note: "Compute capability 9.0 resource·TMA·cluster tuning의 pinned guide" },

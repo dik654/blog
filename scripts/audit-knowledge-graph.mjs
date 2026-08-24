@@ -9,6 +9,7 @@ const findings = [];
 const warnings = [];
 const owners = new Map();
 const labels = new Map();
+const names = new Map();
 const degree = new Map(
   Object.keys(KNOWLEDGE_CONCEPTS).map((conceptId) => [conceptId, 0]),
 );
@@ -55,6 +56,16 @@ for (const [key, concept] of Object.entries(KNOWLEDGE_CONCEPTS)) {
   const labelConcepts = labels.get(normalizedLabel) ?? [];
   labelConcepts.push(concept.id);
   labels.set(normalizedLabel, labelConcepts);
+  for (const name of [concept.label, ...(concept.aliases ?? [])]) {
+    const normalizedName = name.trim().toLocaleLowerCase();
+    if (!normalizedName) {
+      findings.push(`빈 alias를 가진 concept: ${concept.id}`);
+      continue;
+    }
+    const nameConcepts = names.get(normalizedName) ?? [];
+    nameConcepts.push({ id: concept.id, source: name === concept.label ? "label" : "alias" });
+    names.set(normalizedName, nameConcepts);
+  }
   const conceptOwners = owners.get(concept.id) ?? [];
   if (conceptOwners.length !== 1) {
     findings.push(
@@ -79,6 +90,17 @@ for (const [key, concept] of Object.entries(KNOWLEDGE_CONCEPTS)) {
 for (const [label, conceptIds] of labels) {
   if (conceptIds.length > 1) {
     findings.push(`같은 label을 가진 concept를 정본 하나로 통합해야 함: ${label} → ${conceptIds.join(", ")}`);
+  }
+}
+
+for (const [name, concepts] of names) {
+  const conceptIds = [...new Set(concepts.map((concept) => concept.id))];
+  if (conceptIds.length > 1) {
+    findings.push(`같은 label/alias가 여러 정본을 가리킴: ${name} → ${conceptIds.join(", ")}`);
+  }
+  const aliases = concepts.filter((concept) => concept.source === "alias");
+  if (aliases.length > 1 || (aliases.length === 1 && concepts.length > 1)) {
+    findings.push(`중복 alias 또는 label 재사용: ${name} → ${concepts.map((concept) => `${concept.id}:${concept.source}`).join(", ")}`);
   }
 }
 

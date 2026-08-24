@@ -1955,11 +1955,27 @@ export const ARTICLE_CONCEPT_FLOWS: Record<string, ConceptFlow> = {
         detail: "이질적 stages의 lifetime과 scheduling을 함께 소유합니다.",
       },
       {
+        label: "Authoring layer",
+        detail: "CUTLASS·CuTe·Triton 중 layout과 scheduling 책임의 위치를 고릅니다.",
+      },
+      {
         label: "Gate",
         detail: "Traffic·register·spill·elapsed를 paired 비교합니다.",
       },
     ],
     "Fusion은 source 크기가 아니라 중간값의 저장 위치와 resource lifetime을 고르는 문제입니다.",
+  ),
+  "gpu/cfd-finite-volume-gpu": flow(
+    "CFD conservation-to-GPU path",
+    "보존 법칙은 어떤 dataflow를 거쳐 GPU workload가 될까?",
+    [
+      { label: "Conserve", detail: "질량·운동량·에너지 balance를 고정합니다." },
+      { label: "Flux", detail: "Cell 경계를 shared face numerical flux로 바꿉니다." },
+      { label: "Advance", detail: "CFL budget 안에서 다음 state로 전진합니다." },
+      { label: "Map", detail: "Stencil·halo·solver를 GPU memory path에 배치합니다." },
+      { label: "Verify", detail: "Conservation·refinement·validation 뒤 speed를 채택합니다." },
+    ],
+    "Kernel throughput보다 먼저 같은 이산식과 보존량을 계산하는지 증명합니다.",
   ),
   "gpu/cuda-persistent-kernels": flow(
     "Persistent worker lifecycle",
