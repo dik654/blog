@@ -1,7 +1,5 @@
-import {
-  AnimatedSceneControls,
-  useAnimatedScenes,
-} from "@/components/viz/AnimatedSceneControls";
+import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
 const SCENES = ["D step", "G step", "회전하는 game", "coverage 진단"] as const;

@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ModuleBox, DataBox, ActionBox, AlertBox } from '@/components/viz/boxes';
+import { ModuleBox, DataBox } from '@/components/viz/boxes';
 import { C } from './SyncModesVizData';
 
 export function Step0() {

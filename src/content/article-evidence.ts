@@ -93,33 +93,6 @@ const PRYSM_SERIES_EVIDENCE: readonly ArticleEvidenceItem[] = [
   ),
 ];
 
-const COMETBFT_SERIES_EVIDENCE: readonly ArticleEvidenceItem[] = [
-  source(
-    "공식 코드",
-    OFFICIAL_SOURCES.cometbft.repository,
-    "consensus·mempool·state·P2P 구현의 현재 원본",
-  ),
-  source(
-    "공식 규격",
-    OFFICIAL_SOURCES.cometbft.abci,
-    "consensus engine과 application 사이의 ABCI++ 경계",
-  ),
-];
-
-const FILECOIN_LOTUS_SERIES_EVIDENCE: readonly ArticleEvidenceItem[] = [
-  {
-    kind: "공식 코드",
-    label: "filecoin-project/lotus",
-    href: "https://github.com/filecoin-project/lotus",
-    note: "chain·state·message pool·miner 경계를 확인하는 Lotus 구현 원본",
-  },
-  source(
-    "공식 문서",
-    OFFICIAL_SOURCES.filecoin.lotusComponents,
-    "Lotus daemon·miner·worker·Boost의 현재 프로세스 경계",
-  ),
-];
-
 const FILECOIN_PROOFS_SERIES_EVIDENCE: readonly ArticleEvidenceItem[] = [
   {
     kind: "공식 코드",

@@ -39,7 +39,7 @@ o_-(x)
           { expression: String.raw`\mathcal L_{SFT}+\lambda\mathcal L_{OR}`, annotation: ["Chosen imitation을 유지하면서", "pair separation을 같은 stage에 추가"] },
         ]}
         terms={[
-          { symbol: "p_\theta(y\mid x)", name: "sequence likelihood", description: "Token log-probability를 sequence 단위로 모은 값이며 length 처리 방식을 명시해야 합니다." },
+          { symbol: "p_\\theta(y\\mid x)", name: "sequence likelihood", description: "Token log-probability를 sequence 단위로 모은 값이며 length 처리 방식을 명시해야 합니다." },
           { symbol: String.raw`\operatorname{odds}`, name: "generation odds", description: "해당 response 확률과 그 외 response 확률의 비입니다." },
           { symbol: String.raw`\mathcal L_{SFT}`, name: "chosen NLL", description: "Chosen response 자체를 모방하는 supervised objective입니다." },
           { symbol: String.raw`\lambda`, name: "preference weight", description: "Data fit과 chosen–rejected separation 사이의 scale을 정합니다." },

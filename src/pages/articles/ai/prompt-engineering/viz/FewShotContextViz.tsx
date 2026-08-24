@@ -1,5 +1,6 @@
 import VizFrame from "@/components/viz/VizFrame";
-import { Controls, useScenes } from "./PromptVizControls";
+import { Controls } from "./PromptVizControls";
+import { useScenes } from "./usePromptScenes";
 
 const FEW_SHOT_SCENES = ["예시 선택", "순서 교란", "비용 판정"] as const;
 

@@ -93,7 +93,7 @@ function inferOperations(formula: string): FormulaOperationAnnotation[] {
       annotation: ["계산 결과를 예산과 비교해", "채택 가능성을 판정"],
     });
   }
-  const hasImplicitProduct = /(?:[A-Za-z0-9}\)])\\,\s*(?:[A-Za-z0-9{\\(])/.test(
+  const hasImplicitProduct = /(?:[A-Za-z0-9})])\\,\s*(?:[A-Za-z0-9{(])/.test(
     formula,
   );
   if (/\\cdot|\\times|\\odot/.test(formula) || hasImplicitProduct) {

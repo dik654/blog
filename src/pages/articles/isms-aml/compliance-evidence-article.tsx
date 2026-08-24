@@ -134,7 +134,7 @@ const CONFIG: Record<ArticleKey, Config> = {
     question: "모집단 중 end-to-end trace가 완성된 비율은 어떻게 계산하고 해석하는가?",
     idea: "같은 기간의 population에서 request부터 outcome까지 요구 증거가 모두 연결된 항목 수를 나눠 coverage gap을 드러냅니다.",
     formula: String.raw`C=\frac{N_{\mathrm{traceable}}}{N_{\mathrm{population}}}`,
-    terms: [{ symbol: "N_{\mathrm{traceable}}", name: "Traceable records", description: "필수 단계·ID·source receipt가 모두 연결된 항목 수입니다." }, { symbol: "N_{\mathrm{population}}", name: "Population size", description: "명시 기간·source·query로 재현한 전체 항목 수입니다." }, { symbol: "C", name: "Trace coverage", description: "0~1 범위의 증거 연결 비율입니다." }],
+    terms: [{ symbol: "N_{\\mathrm{traceable}}", name: "Traceable records", description: "필수 단계·ID·source receipt가 모두 연결된 항목 수입니다." }, { symbol: "N_{\\mathrm{population}}", name: "Population size", description: "명시 기간·source·query로 재현한 전체 항목 수입니다." }, { symbol: "C", name: "Trace coverage", description: "0~1 범위의 증거 연결 비율입니다." }],
     assumptions: ["분자와 분모가 같은 기간·scope·dedupe rule을 씁니다.", "Traceable은 통제 결과가 합격했다는 뜻이 아니라 검증 가능한 상태라는 뜻입니다.", "C=1도 sampling과 evidence 진실성·통제 설계 적정성을 대신하지 않습니다."],
     interpretation: "배포 200건 중 184건만 request·approval·artifact·production receipt가 연결되면 C=0.92입니다. 나머지 16건의 공통 source와 영향범위를 조사한 뒤 표본 결과를 해석합니다.",
     citations: [
@@ -169,7 +169,7 @@ const CONFIG: Record<ArticleKey, Config> = {
     question: "보유기한은 어떤 두 요소로 계산하며 legal hold는 어디에 붙는가?",
     idea: "정책 기간만 적지 않고 시계를 시작하는 사건에 기간을 더해 deadline을 만들며, 유효한 hold는 별도 권한으로 그 deadline의 실행을 제한합니다.",
     formula: String.raw`t_{\mathrm{delete}}=t_{\mathrm{event}}+T_{\mathrm{basis}}`,
-    terms: [{ symbol: "t_{\mathrm{event}}", name: "Retention start event", description: "계약 종료·채용 종료처럼 보유 시계를 시작하는 검증된 시각입니다." }, { symbol: "T_{\mathrm{basis}}", name: "Permitted retention period", description: "해당 목적·법적 근거·정책 version이 허용하는 기간입니다." }, { symbol: "t_{\mathrm{delete}}", name: "Deletion deadline", description: "보존 예외가 없을 때 파기 workflow가 실행돼야 하는 시각입니다." }],
+    terms: [{ symbol: "t_{\\mathrm{event}}", name: "Retention start event", description: "계약 종료·채용 종료처럼 보유 시계를 시작하는 검증된 시각입니다." }, { symbol: "T_{\\mathrm{basis}}", name: "Permitted retention period", description: "해당 목적·법적 근거·정책 version이 허용하는 기간입니다." }, { symbol: "t_{\\mathrm{delete}}", name: "Deletion deadline", description: "보존 예외가 없을 때 파기 workflow가 실행돼야 하는 시각입니다." }],
     assumptions: ["Event와 기간의 timezone·calendar rule·policy generation을 고정합니다.", "Legal hold는 권한·최소범위·해제 조건이 있는 별도 state입니다.", "Deadline 계산만으로 모든 사본의 실제 삭제가 증명되지는 않습니다."],
     interpretation: "채용 절차가 8월 14일 끝나고 적용 정책이 30일 보유라면 deadline은 policy calendar에 따른 9월 13일입니다. 유효한 hold가 없다면 그 시각에 artifact manifest 전체를 삭제·검증합니다.",
     citations: [

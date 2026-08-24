@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ModuleBox, DataBox, ActionBox, AlertBox } from '@/components/viz/boxes';
+import { ModuleBox, AlertBox } from '@/components/viz/boxes';
 import { C } from './StateCacheVizData';
 
 export function Step0() {

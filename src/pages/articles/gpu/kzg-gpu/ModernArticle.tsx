@@ -41,7 +41,7 @@ export default function ModernKzgGpuArticle() {
         {symbol:"i",name:"Degree/index",description:"Coefficient와 SRS power를 같은 위치로 묶습니다."},
         {symbol:"n",name:"MSM length",description:"Coefficient count이자 SRS prefix length입니다."},
         {symbol:String.raw`\tau`,name:"Hidden setup scalar",description:"SRS ceremony가 powers를 만들 때 사용하고 폐기해야 하는 값입니다."},
-        {symbol:"[\tau^i]G",name:"SRS point",description:"GPU MSM의 i번째 curve point입니다."},
+        {symbol:"[\\tau^i]G",name:"SRS point",description:"GPU MSM의 i번째 curve point입니다."},
         {symbol:"G",name:"Group generator",description:"고정 KZG curve subgroup의 generator입니다."},
         {symbol:"C",name:"Commitment",description:"MSM 결과로 얻는 group element입니다."},
       ]} assumptions={["SRS curve·subgroup·degree bound·basis가 polynomial profile과 일치하고 τ는 알려져 있지 않습니다.","a_i는 evaluation values가 아니라 monomial coefficients이며 internal scalar domain을 backend API에 맞춥니다."]} interpretation="a=(2,3), SRS=(G,[τ]G)이면 C=2G+3[τ]G입니다. Lagrange-form SRS를 같은 index로 넣는 것은 별도 basis 계약입니다." />

@@ -1,5 +1,6 @@
 import VizFrame from "@/components/viz/VizFrame";
-import { RecurrentSceneControls, useRecurrentScenes } from "./RecurrentVizControls";
+import { RecurrentSceneControls } from "./RecurrentVizControls";
+import { useRecurrentScenes } from "./useRecurrentScenes";
 
 const SCENES = ["역방향 합산", "Jacobian 배율", "detach 경계"] as const;
 

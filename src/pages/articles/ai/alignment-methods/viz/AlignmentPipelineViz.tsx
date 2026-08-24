@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 type Mode = "dpo" | "cai" | "orpo" | "kto";
 
@@ -75,13 +75,15 @@ function Shape({ stage, active }: { stage: Stage; active: boolean }) {
 }
 
 export default function AlignmentPipelineViz({ mode }: { mode: Mode }) {
+  return <AlignmentPipeline key={mode} mode={mode} />;
+}
+
+function AlignmentPipeline({ mode }: { mode: Mode }) {
   const flow = FLOWS[mode];
   const [active, setActive] = useState(0);
   const last = flow.stages.length - 1;
   const activeStage = flow.stages[active];
   const instructions = useMemo(() => "좌우 방향키 또는 Space로 다음 단계를 볼 수 있습니다.", []);
-
-  useEffect(() => setActive(0), [mode]);
 
   function move(delta: number) {
     setActive((current) => (current + delta + flow.stages.length) % flow.stages.length);

@@ -58,7 +58,7 @@ export default function ModernSparseMultiplicationArticle() {
             { symbol: "S_A,S_B", name: "Supports", description: "각 operand에서 coefficient가 0이 아닌 index 집합입니다." },
             { symbol: "a_i,b_j", name: "Nonzero coefficients", description: "Support가 가리키는 실제 field 값입니다." },
             { symbol: "c_k", name: "Output coefficient", description: "지수 합이 k인 partial product를 모두 더한 값입니다." },
-            { symbol: "N_{\mathrm{mul}}", name: "Candidate scalar products", description: "Reduction 전 support pair의 개수입니다." },
+            { symbol: "N_{\\mathrm{mul}}", name: "Candidate scalar products", description: "Reduction 전 support pair의 개수입니다." },
           ]}
           assumptions={["0 판정은 coefficient field에서 정확하며, secret sparsity를 branch로 노출하지 않습니다.", "표시한 count는 coefficient multiplication 후보만 세고 addition·reduction·memory 비용은 제외합니다.", "Quotient field에서는 degree가 defining relation을 넘은 항을 추가로 reduction합니다."]}
           interpretation="Dense 길이가 dA+1, dB+1이면 모든 slot을 순회하는 비용과 support product를 비교할 수 있습니다. 다만 support pair 여러 개가 같은 k로 모이거나 quotient reduction에서 섞이므로 output nonzero 수가 |SA||SB|와 같다는 뜻은 아닙니다."
@@ -121,7 +121,7 @@ export default function ModernSparseMultiplicationArticle() {
           terms={[
             { symbol: "f", name: "Optimized fraction", description: "기준 구현 시간 중 sparse line multiplication이 차지한 비율입니다." },
             { symbol: "s", name: "Local speedup", description: "같은 input에서 해당 부분만 전용 schedule로 빨라진 배수입니다." },
-            { symbol: "S_{\mathrm{total}}", name: "End-to-end speedup", description: "Miller loop 또는 pairing 전체 wall time의 개선 배수입니다." },
+            { symbol: "S_{\\mathrm{total}}", name: "End-to-end speedup", description: "Miller loop 또는 pairing 전체 wall time의 개선 배수입니다." },
           ]}
           assumptions={["Baseline과 candidate가 같은 curve·field profile·input·correctness를 사용합니다.", "f는 profiler로 측정하고 local optimization이 다른 구간의 cache·parallelism을 바꾸지 않는 근사입니다.", "식은 upper-bound cost model이며 보안성과 수치 정확성을 평가하지 않습니다."]}
           interpretation="f=0.4이고 line multiply만 2배 빨라져도 전체 상한은 1/(0.6+0.2)=1.25배입니다. Partial-product count 2배 감소를 pairing 2배 향상으로 보고하면 안 되는 이유입니다."

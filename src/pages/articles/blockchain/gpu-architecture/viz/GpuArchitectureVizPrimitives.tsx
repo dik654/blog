@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import VizFrame from "@/components/viz/VizFrame";
 import { cn } from "@/lib/utils";
 
-export const gpuTone = {
+const gpuTone = {
   host: "border-slate-400/55 bg-slate-500/5 text-slate-700 dark:text-slate-200",
   control:
     "border-indigo-400/60 bg-indigo-500/5 text-indigo-700 dark:text-indigo-200",

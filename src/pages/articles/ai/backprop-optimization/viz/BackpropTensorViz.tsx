@@ -1,5 +1,6 @@
 import VizFrame from "@/components/viz/VizFrame";
-import { BackpropSceneControls, useBackpropScenes } from "./BackpropVizControls";
+import { BackpropSceneControls } from "./BackpropVizControls";
+import { useBackpropScenes } from "./useBackpropScenes";
 
 const SCENES = ["loss seed", "tensor 분배", "책임 경계"] as const;
 

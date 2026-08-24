@@ -20,7 +20,7 @@ const STEPS = [
   { label: 'WinningPoSt 증명', body: 'GetSectorsForWinningPoSt() → 섹터 선택\nBeacon 랜덤시드로 챌린지 생성 → 증명 검증' },
 ];
 
-const BW = 130, BH = 36, GX = 20;
+const BW = 130, GX = 20;
 
 export default function ValidateBlockViz() {
   return (

@@ -1,4 +1,5 @@
-import { StoryShell, useStory } from "../../kimi-k3-shared";
+import { StoryShell } from "../../kimi-k3-shared";
+import { useStory } from "../../useKimiStory";
 
 const steps = [
   { label: "입력", voltage: 22, title: "Spike·current가 들어옵니다", detail: "Event가 없으면 synaptic 계산을 건너뛸 수 있지만 membrane state는 시간에 따라 leak할 수 있습니다." },

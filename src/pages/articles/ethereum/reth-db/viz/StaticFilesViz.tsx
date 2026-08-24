@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import StepViz from '@/components/ui/step-viz';
 import { CodeViewButton } from '@/components/code';
-import { DataBox } from '@/components/viz/boxes';
+
 import { C, STEPS, STEP_REFS } from './StaticFilesVizData';
 
 function Step0() {

@@ -1,7 +1,5 @@
-import {
-  AnimatedSceneControls,
-  useAnimatedScenes,
-} from "@/components/viz/AnimatedSceneControls";
+import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
 const SCENES = ["encode", "condition", "denoise", "decode · release"] as const;

@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ModuleBox, ActionBox, DataBox, AlertBox } from '@/components/viz/boxes';
+import { ModuleBox, ActionBox, DataBox } from '@/components/viz/boxes';
 import { C } from './ContextVizData';
 
 export function StepPool() {

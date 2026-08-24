@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { AlertBox, ActionBox, ModuleBox } from '@/components/viz/boxes';
+import { AlertBox, ActionBox } from '@/components/viz/boxes';
 import { C } from './ContextVizData';
 
 export function StepProblem() {

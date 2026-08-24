@@ -26,9 +26,9 @@ export default function ModernGpuProofPipelineArticle() {
         {symbol:"v",name:"Candidate stage",description:"NTT, MSM, transfer, transcript update 또는 proof assembly 작업입니다."},
         {symbol:"pred(v)",name:"Predecessors",description:"v의 input이나 challenge를 생산하는 선행 stages 집합입니다."},
         {symbol:"done(u)",name:"Completion receipt",description:"선행 stage u의 device event와 success/failure 결과입니다."},
-        {symbol:"gen(\cdot)",name:"Generation identity",description:"Circuit/SRS/input/transcript가 같은 proof attempt에 속함을 나타냅니다."},
+        {symbol:"gen(\\cdot)",name:"Generation identity",description:"Circuit/SRS/input/transcript가 같은 proof attempt에 속함을 나타냅니다."},
         {symbol:"D_v",name:"Dependency predicate",description:"모든 선행 stage가 완료됐을 때만 참인 조건입니다."},
-        {symbol:"u\prec v",name:"Predecessor relation",description:"Stage u가 v보다 먼저 완료돼야 한다는 dependency edge입니다."},
+        {symbol:"u\\prec v",name:"Predecessor relation",description:"Stage u가 v보다 먼저 완료돼야 한다는 dependency edge입니다."},
         {symbol:"g_i,g_t",name:"Input·transcript generation",description:"두 값이 같아야 같은 proof attempt의 data와 challenge를 사용합니다."},
         {symbol:"ready(v)",name:"Enqueue permission",description:"v를 실행 queue에 넣어도 dependency가 깨지지 않는 조건입니다."},
       ]} assumptions={["DAG에는 모든 data·transcript·host/device dependency가 포함되고 cycle이 없습니다.","Event 완료는 kernel 성공과 output validation을 구분하며 실패는 downstream enqueue를 막습니다."]} interpretation="NTT가 끝났어도 다른 proof attempt의 transcript challenge를 붙이면 ready=false입니다. 이 조건은 scheduler 효율이나 cryptographic soundness 전체를 자동 증명하지 않습니다." />
@@ -44,7 +44,7 @@ export default function ModernGpuProofPipelineArticle() {
         {symbol:"size(b)",name:"Allocated bytes",description:"Alignment·padding·backend workspace를 포함한 실제 allocation 크기입니다."},
         {symbol:"birth_b",name:"생성 시점",description:"Producer가 storage를 점유하기 시작한 event입니다."},
         {symbol:"death_b",name:"마지막 소비 완료",description:"마지막 consumer event 뒤 안전하게 재사용할 수 있는 시점입니다."},
-        {symbol:"I_b(\tau)",name:"Indicator",description:"τ가 buffer b의 live interval 안이면 1, 아니면 0입니다."},
+        {symbol:"I_b(\\tau)",name:"Indicator",description:"τ가 buffer b의 live interval 안이면 1, 아니면 0입니다."},
         {symbol:"B_{peak}",name:"Peak live bytes",description:"Pipeline이 요구하는 최대 동시 device allocation입니다."},
       ]} assumptions={["Asynchronous transfer와 kernels의 event timestamp·ownership을 DAG에 반영합니다.","Allocator fragmentation, context/module memory와 safety margin은 B_peak 밖에 별도 더합니다."]} interpretation="8GB buffer가 [0,5], 6GB가 [3,8], 4GB가 [6,9]에 살면 peak는 3~5 구간의 14GB입니다. 전체 18GB를 항상 필요하다고 보거나 최대 단일 8GB만 보면 둘 다 틀립니다." />
       <p>고정 SRS bases와 twiddles를 여러 proofs에서 재사용하면 transfer를 줄일 수 있지만 cache key에 curve/domain/SRS digest를 포함해야 합니다. OOM 때 chunking을 선택하면 NTT stage와 MSM reduction이 chunk 경계를 넘어 어떻게 합쳐지는지 correctness proof와 extra traffic을 같이 기록합니다.</p>

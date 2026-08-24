@@ -45,18 +45,18 @@ export default function Stability() {
         \end{aligned}`}
         terms={[
           {
-            symbol: "1-h\lambda",
+            symbol: "1-h\\lambda",
             name: "amplification factor",
             description: "한 step 뒤 state 크기와 부호를 정하는 배율입니다.",
           },
           {
-            symbol: "h\lambda",
+            symbol: "h\\lambda",
             name: "dimensionless step",
             description:
               "Solver step과 system time scale을 비교한 무차원 값입니다.",
           },
           {
-            symbol: "|1-h\lambda|<1",
+            symbol: "|1-h\\lambda|<1",
             name: "stability condition",
             description: "반복할수록 numerical state가 줄어드는 조건입니다.",
           },

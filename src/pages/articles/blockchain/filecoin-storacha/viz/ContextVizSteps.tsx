@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ActionBox, ModuleBox, AlertBox } from '@/components/viz/boxes';
+import { ModuleBox, AlertBox } from '@/components/viz/boxes';
 import { C } from './ContextVizData';
 
 /* Step 0: Saturn → Storacha */

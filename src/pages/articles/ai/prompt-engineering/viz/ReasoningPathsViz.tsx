@@ -1,5 +1,6 @@
 import VizFrame from "@/components/viz/VizFrame";
-import { Controls, useScenes } from "./PromptVizControls";
+import { Controls } from "./PromptVizControls";
+import { useScenes } from "./usePromptScenes";
 
 const REASONING_SCENES = ["경로 생성", "답 집계", "외부 검증"] as const;
 
@@ -36,7 +37,7 @@ export function ReasoningPathsViz() {
           </div>
 
           <div className="relative grid gap-3 sm:grid-cols-3">
-            {paths.map((path, index) => (
+            {paths.map((path) => (
               <div
                 key={path.id}
                 className={`border p-4 text-center ${path.tone} ${scenes.active === 0 ? "opacity-100" : "opacity-75"}`}

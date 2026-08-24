@@ -1,4 +1,5 @@
-import { AnimatedSceneControls, useAnimatedScenes } from "@/components/viz/AnimatedSceneControls";
+import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
 const SCENES = ["가능한 경우", "Event 묶기", "조건으로 가지치기", "곱으로 복원"] as const;

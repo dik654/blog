@@ -42,7 +42,7 @@ J(\theta)
         terms={[
           { symbol: String.raw`\pi_\theta`, name: "policy", description: "응답을 sample하며 update되는 language model입니다." },
           { symbol: String.raw`\pi_{ref}`, name: "reference policy", description: "보통 SFT checkpoint를 고정해 drift의 기준으로 사용합니다." },
-          { symbol: "r_\phi", name: "reward model", description: "Preference data에서 학습한 sequence-level proxy score입니다." },
+          { symbol: "r_\\phi", name: "reward model", description: "Preference data에서 학습한 sequence-level proxy score입니다." },
           { symbol: String.raw`\beta`, name: "KL coefficient", description: "높을수록 reference 근처의 보수적인 update를 선호합니다." },
         ]}
         assumptions={["기대값의 응답 y는 현재 policy에서 sample하므로 objective가 online distribution을 따릅니다.", "표시한 log-ratio는 sequence 합으로 구현할 수 있으며 실제 system은 token-level KL shaping을 사용하기도 합니다."]}

@@ -1,5 +1,6 @@
 import VizFrame from "@/components/viz/VizFrame";
-import { RecurrentSceneControls, useRecurrentScenes } from "../../rnn/viz/RecurrentVizControls";
+import { RecurrentSceneControls } from "../../rnn/viz/RecurrentVizControls";
+import { useRecurrentScenes } from "../../rnn/viz/useRecurrentScenes";
 const SCENES=["두 state","보존·쓰기","직접 경로"] as const;
 export default function LSTMFlowViz(){const scenes=useRecurrentScenes(SCENES.length);return <VizFrame eyebrow="Animated LSTM cell" title="Cell state lane 위에서 보존과 쓰기를 더하고, hidden은 필요한 만큼만 공개한다" description="C와 h를 먼저 분리한 뒤 forget·input·output gate가 어느 선에 작용하는지 확인합니다."><div data-viz-canvas tabIndex={0} role="group" aria-label="LSTM state gate and gradient animation" onKeyDown={scenes.onKeyDown} className="outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
 <div className={`border p-5 ${scenes.active===0?"border-primary bg-primary/10":"border-border"}`}><div className="grid gap-5 sm:grid-cols-[1fr_auto_1fr]"><State label="Cell memory lane" value="Cₜ₋₁ → Cₜ"/><span className="self-center text-2xl text-primary">≠</span><State label="Exposed hidden" value="hₜ₋₁ → hₜ"/></div></div>

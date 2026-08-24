@@ -29,7 +29,7 @@ export default function Entropy({ title }: { title?: string }) {
         terms={[
           { symbol: "H(P)", name: "entropy", description: "분포 P가 가진 평균 불확실성입니다." },
           { symbol: "P(x)", name: "발생 확률", description: "사건의 빈도 가중치이면서 self-information을 정하는 값입니다." },
-          { symbol: "-\log P(x)", name: "self-information", description: "실제 분포를 기준으로 계산한 사건 x의 surprisal입니다." },
+          { symbol: "-\\log P(x)", name: "self-information", description: "실제 분포를 기준으로 계산한 사건 x의 surprisal입니다." },
         ]}
         assumptions={["이 식은 discrete entropy입니다. Continuous differential entropy는 성질과 해석이 일부 다릅니다.", "0 log 0 항은 극한값 0으로 정의합니다."]}
         interpretation="Entropy는 모델이 못해서 생기는 loss가 아니다. P가 원래 가진 불확실성이므로 완벽한 모델 Q=P도 평균적으로 H(P)보다 낮은 cross-entropy를 만들 수 없습니다."

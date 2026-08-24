@@ -17,9 +17,9 @@ export default function CodePoints() {
         idea={<>같은 text를 사용자가 보는 grapheme, Unicode code point, UTF-8 byte라는 서로 다른 경계로 나누기 때문입니다. 어떤 길이를 썼는지 좌표계를 함께 적어야 합니다.</>}
         formula={String.raw`N_{\mathrm{grapheme}}\;\not=\;N_{\mathrm{code\ point}}\;\not=\;N_{\mathrm{UTF\text{-}8\ byte}}\quad\text{in general}`}
         terms={[
-          { symbol: "N_{\mathrm{grapheme}}", name: "displayed units", description: "사용자 cursor 이동과 삭제에 가까운 text cluster 수입니다." },
-          { symbol: "N_{\mathrm{code\ point}}", name: "Unicode scalar sequence length", description: "Unicode 번호 sequence의 원소 수입니다." },
-          { symbol: "N_{\mathrm{UTF\text{-}8\ byte}}", name: "encoded storage length", description: "UTF-8로 직렬화했을 때 차지하는 byte 수입니다." },
+          { symbol: "N_{\\mathrm{grapheme}}", name: "displayed units", description: "사용자 cursor 이동과 삭제에 가까운 text cluster 수입니다." },
+          { symbol: "N_{\\mathrm{code\\ point}}", name: "Unicode scalar sequence length", description: "Unicode 번호 sequence의 원소 수입니다." },
+          { symbol: "N_{\\mathrm{UTF\\text{-}8\\ byte}}", name: "encoded storage length", description: "UTF-8로 직렬화했을 때 차지하는 byte 수입니다." },
         ]}
         assumptions={["Grapheme boundary는 Unicode text segmentation 규칙과 구현 version에 따라 판정합니다."]}
         interpretation="‘세 번째 문자’나 ‘길이 10’이라는 말만으로는 충분하지 않습니다. UI cursor인지, Unicode 처리인지, file/network offset인지 목적을 먼저 고정합니다."

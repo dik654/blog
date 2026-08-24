@@ -1,4 +1,5 @@
-import { StoryShell, useStory } from "./kimi-k3-shared";
+import { StoryShell } from "./kimi-k3-shared";
+import { useStory } from "./useKimiStory";
 
 type Step = { short: string; title: string; detail: string; artifact: string };
 

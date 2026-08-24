@@ -1,7 +1,5 @@
-import {
-  AnimatedSceneControls,
-  useAnimatedScenes,
-} from "@/components/viz/AnimatedSceneControls";
+import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
 const SCENES = ["입력 하나", "출력 계약", "함수 연결", "순서 경계"] as const;

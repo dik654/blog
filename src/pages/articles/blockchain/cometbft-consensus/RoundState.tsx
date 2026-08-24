@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import CometBFTCoreViz from "../cometbft-core-viz";
+
 import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";

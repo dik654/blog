@@ -56,7 +56,7 @@ export default function ModernGpuComparisonArticle(){return <article className="
       {symbol:"C_{hardware}",name:"기간 환산 장비비",description:"구매·임대·감가와 필요한 server 부품을 포함합니다."},
       {symbol:"C_{energy}",name:"전력·냉각 비용",description:"Wall-power measurement와 시설 PUE 경계를 명시합니다."},
       {symbol:"C_{ops}",name:"운영 비용",description:"Support, downtime, engineer time과 capacity reserve입니다."},
-      {symbol:"N_{valid\ work}",name:"유효 완료 작업 수",description:"Correctness·quality·latency SLA를 모두 통과한 outputs입니다."},
+      {symbol:"N_{valid\\ work}",name:"유효 완료 작업 수",description:"Correctness·quality·latency SLA를 모두 통과한 outputs입니다."},
     ]} assumptions={["같은 workload trace·quality threshold·기간과 availability target을 사용합니다.", "중고가·지역 전력·세금처럼 변하는 값은 결정 시점 견적으로 다시 넣습니다."]} interpretation="싼 board가 OOM·downtime·scale-out overhead로 유효 처리량이 낮으면 작업당 비용은 높을 수 있습니다. 반대로 enterprise feature가 필요 없는 단일 사용자 workload에서는 datacenter premium이 회수되지 않을 수 있습니다." />
   </section>
 

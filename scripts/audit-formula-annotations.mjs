@@ -21,13 +21,26 @@ const missingExplicitAnnotations = [];
 const rawDisplay = [];
 const unsafeKatexSymbols = [];
 
+function hasOddBackslashRun(rawLiteral) {
+  for (let index = 1; index < rawLiteral.length - 1; ) {
+    if (rawLiteral[index] !== "\\") {
+      index += 1;
+      continue;
+    }
+    let end = index;
+    while (rawLiteral[end] === "\\") end += 1;
+    if ((end - index) % 2 === 1) return true;
+    index = end;
+  }
+  return false;
+}
+
 for (const file of files) {
   const source = fs.readFileSync(file, "utf8");
   explained += (source.match(/<ExplainedFormula\b/g) ?? []).length;
   domainAnnotated += (source.match(/\bannotatedFormula=/g) ?? []).length;
   explicitOperations += (source.match(/\boperations=/g) ?? []).length;
   if (/<(?:Math\s+display|BlockMath)\b|\$\$/.test(source)) rawDisplay.push(file);
-  if (/symbol:\s*"\\(?!\\)/.test(source)) unsafeKatexSymbols.push(file);
 
   const ast = ts.createSourceFile(
     file,
@@ -37,6 +50,17 @@ for (const file of files) {
     ts.ScriptKind.TSX,
   );
   const visit = (node) => {
+    if (
+      ts.isPropertyAssignment(node) &&
+      node.name.getText(ast) === "symbol" &&
+      ts.isStringLiteralLike(node.initializer) &&
+      hasOddBackslashRun(node.initializer.getText(ast))
+    ) {
+      const { line } = ast.getLineAndCharacterOfPosition(
+        node.initializer.getStart(ast),
+      );
+      unsafeKatexSymbols.push(`${file}:${line + 1}`);
+    }
     if (
       ts.isJsxSelfClosingElement(node) &&
       node.tagName.getText(ast) === "ExplainedFormula"

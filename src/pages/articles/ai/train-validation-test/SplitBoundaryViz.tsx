@@ -1,8 +1,6 @@
 import VizFrame from "@/components/viz/VizFrame";
-import {
-  AnimatedSceneControls,
-  useAnimatedScenes,
-} from "@/components/viz/AnimatedSceneControls";
+import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 
 const SCENES = ["train", "validation", "test", "재사용 경계"] as const;
 const partitions = [

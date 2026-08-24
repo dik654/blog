@@ -78,7 +78,6 @@ export function StepCOW() {
 /* Step 4: FieldTrie */
 export function StepFieldTrie() {
   const clean = [0, 1, 3, 4];
-  const dirty = [2];
   return (<g>
     {clean.map((_, i) => (
       <motion.rect key={i} x={20 + i * 80} y={30} width={65} height={26} rx={13}
@@ -89,7 +88,7 @@ export function StepFieldTrie() {
       <text key={i} x={52 + i * 80} y={47} textAnchor="middle" fontSize={11} fill={C.ok}>clean</text>
     ))}
     <motion.rect x={20 + 2 * 80} y={30} width={65} height={26} rx={13}
-      fill={`${C.hash}18`} stroke={C.hash} strokeWidth={1.5}
+      fill={`${C.hash}18`} stroke={C.hash} strokeWidth={1.25}
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} />
     <text x={52 + 2 * 80} y={47} textAnchor="middle" fontSize={11} fontWeight={600} fill={C.hash}>dirty</text>
     <motion.text x={210} y={85} textAnchor="middle" fontSize={11} fill={C.hash}

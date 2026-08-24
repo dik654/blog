@@ -1,5 +1,6 @@
 import VizFrame from "@/components/viz/VizFrame";
-import { RecurrentSceneControls, useRecurrentScenes } from "../../rnn/viz/RecurrentVizControls";
+import { RecurrentSceneControls } from "../../rnn/viz/RecurrentVizControls";
+import { useRecurrentScenes } from "../../rnn/viz/useRecurrentScenes";
 const SCENES=["reset","candidate","update","budget"] as const;
 export default function GRUFlowViz(){const scenes=useRecurrentScenes(SCENES.length);return <VizFrame eyebrow="Animated GRU state update" title="과거를 먼저 거르고 candidate를 만든 뒤 기존 state와 보간한다" description="Reset과 update가 같은 일을 하는 gate가 아님을 선의 위치로 확인합니다."><div data-viz-canvas tabIndex={0} role="group" aria-label="GRU reset candidate and update animation" onKeyDown={scenes.onKeyDown} className="outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
 <div className="grid gap-4 lg:grid-cols-[0.8fr_auto_1fr_auto_1fr]"><Box active={scenes.active===0} label="이전 state" value="hₜ₋₁" note="과거 요약"/><Arrow/><Box active={scenes.active===0} label="reset mask" value="rₜ ⊙ hₜ₋₁" note="candidate에 허용할 history"/><Arrow/><Box active={scenes.active===1} label="candidate" value="h̃ₜ" note="xₜ + filtered history"/></div>

@@ -32,7 +32,7 @@ export default function Convergence() {
           { symbol: String.raw`\Delta_t`, name: "objective gap", description: "Step t의 objective와 optimal value의 차이입니다." },
           { symbol: String.raw`\mu`, name: "strong-convexity constant", description: "함수가 minimizer에서 최소한 얼마나 빠르게 위로 굽는지 나타냅니다." },
           { symbol: "L", name: "smoothness constant", description: "Gradient가 가장 빠르게 변하는 정도의 상한입니다." },
-          { symbol: "L/\mu", name: "condition number", description: "서로 다른 방향의 curvature 불균형과 convergence 난도를 나타냅니다." },
+          { symbol: "L/\\mu", name: "condition number", description: "서로 다른 방향의 curvature 불균형과 convergence 난도를 나타냅니다." },
         ]}
         assumptions={[
           "함수가 전역적으로 μ-strongly convex이고 L-smooth합니다.",

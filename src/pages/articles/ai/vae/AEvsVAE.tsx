@@ -33,8 +33,8 @@ export default function AEvsVAE() {
           \Sigma_\phi(x)&=\operatorname{diag}\!\left(\sigma_\phi^2(x)\right)
         \end{aligned}`}
         terms={[
-          { symbol: "f_\phi(x)", name: "deterministic code", description: "같은 input은 같은 latent point로 갑니다." },
-          { symbol: "q_\phi(z\mid x)", name: "approximate posterior", description: "true posterior pθ(z|x)를 encoder가 근사합니다." },
+          { symbol: "f_\\phi(x)", name: "deterministic code", description: "같은 input은 같은 latent point로 갑니다." },
+          { symbol: "q_\\phi(z\\mid x)", name: "approximate posterior", description: "true posterior pθ(z|x)를 encoder가 근사합니다." },
           { symbol: String.raw`\Sigma_\phi(x)`, name: "diagonal covariance", description: "diag(σ²)로 두어 latent dimension 사이 posterior covariance를 0으로 만드는 tractable한 선택입니다." },
         ]}
         assumptions={["기본 Gaussian VAE와 deterministic autoencoder를 비교합니다.", "VAE라는 이름이 모든 stochastic autoencoder 변형을 뜻하지는 않습니다."]}

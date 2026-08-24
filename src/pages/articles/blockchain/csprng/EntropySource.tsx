@@ -16,8 +16,8 @@ export default function EntropySource() {
         formula={String.raw`H_\infty(X)=-\log_2\!\left(\max_x \Pr[X=x]\right)`}
         terms={[
           { symbol: "X", name: "raw-source random variable", description: "고정한 sampling window에서 관찰한 outcome입니다." },
-          { symbol: "p_{\max}", name: "most likely outcome probability", description: "공격자 관점에서 가장 잘 맞힐 수 있는 값의 확률입니다." },
-          { symbol: "H_\infty", name: "min-entropy", description: "최선의 단일 guess에 대응하는 보수적 bit 수입니다." },
+          { symbol: "p_{\\max}", name: "most likely outcome probability", description: "공격자 관점에서 가장 잘 맞힐 수 있는 값의 확률입니다." },
+          { symbol: "H_\\infty", name: "min-entropy", description: "최선의 단일 guess에 대응하는 보수적 bit 수입니다." },
         ]}
         assumptions={["확률은 실제 deployment 환경과 공격자의 side information을 반영한 source model에서 추정합니다.", "독립성을 검증하지 않은 sample의 min-entropy를 단순 합산하지 않습니다."]}
         interpretation="pmax=1/8이면 H∞=3 bits입니다. 128-bit key buffer에 이 source를 반복 복사해도 seed entropy는 3 bits를 넘지 않으며, hash conditioning은 entropy를 정돈할 수 있지만 새 entropy를 만들어내지 않습니다."

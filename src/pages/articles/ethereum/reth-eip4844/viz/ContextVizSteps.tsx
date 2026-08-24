@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { AlertBox, ActionBox, AnnotationBox, ModuleBox, DataBox } from '@/components/viz/boxes';
+import { AlertBox, ActionBox, AnnotationBox, ModuleBox } from '@/components/viz/boxes';
 import { C } from './ContextVizData';
 
 /* Step 0: L2 비용 */

@@ -191,7 +191,7 @@ export default function Training({
                 "한 observation에서 encoder가 뽑는 latent sample 수입니다.",
             },
             {
-              symbol: "p_\theta(x,z_k)/q_\phi(z_k\mid x)",
+              symbol: "p_\\theta(x,z_k)/q_\\phi(z_k\\mid x)",
               name: "importance weight",
               description:
                 "Proposal sample을 model joint 기준으로 다시 가중합니다.",

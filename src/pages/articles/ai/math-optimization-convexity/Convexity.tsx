@@ -37,7 +37,7 @@ export default function Convexity() {
             description: "두 점 사이 어디를 볼지 정하는 0과 1 사이의 비율입니다.",
           },
           {
-            symbol: "z=\lambda x+(1-\lambda)y",
+            symbol: "z=\\lambda x+(1-\\lambda)y",
             name: "interpolated input",
             description: "x와 y를 잇는 선분 위의 입력입니다.",
           },

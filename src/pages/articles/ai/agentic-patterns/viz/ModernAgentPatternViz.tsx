@@ -1,9 +1,7 @@
 import { motion } from "framer-motion";
 import VizFrame from "@/components/viz/VizFrame";
-import {
-  AnimatedSceneControls,
-  useAnimatedScenes,
-} from "@/components/viz/AnimatedSceneControls";
+import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 
 type NodeShape = "circle" | "diamond" | "document" | "gate";
 

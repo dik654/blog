@@ -46,7 +46,7 @@ export default function BatchVerification({
               "각 item에 독립적으로 배정하는 nonzero challenge scalar입니다.",
           },
           {
-            symbol: "PK_i,m_i,\sigma_i",
+            symbol: "PK_i,m_i,\\sigma_i",
             name: "Verification tuple",
             description:
               "Public key, 정확한 signing-root bytes, signature입니다.",

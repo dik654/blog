@@ -29,7 +29,7 @@ export default function PruningArchival({
             description: "직접 보존한 state snapshot 사이 slot 간격입니다.",
           },
           {
-            symbol: "N_{\rm replay,max}",
+            symbol: "N_{\\rm replay,max}",
             name: "Maximum replay steps",
             description:
               "균등 간격 안에서 요청 state를 복원할 최대 transition 수입니다.",

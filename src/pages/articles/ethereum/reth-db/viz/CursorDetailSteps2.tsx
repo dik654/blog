@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { DataBox } from '@/components/viz/boxes';
+
 import { C } from './CursorDetailVizData';
 
 export function Step3() {

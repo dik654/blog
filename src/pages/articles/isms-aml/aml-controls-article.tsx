@@ -186,7 +186,7 @@ const CONFIG: Record<ArticleKey, Config> = {
     terms: [
       { symbol: "s_j", name: "Ownership share at level j", description: "소유 사슬의 j번째 법인이 다음 법인에 가진 지분율입니다." },
       { symbol: "k", name: "Path depth", description: "법인 고객에서 최종 자연인까지 지나가는 소유 단계 수입니다." },
-      { symbol: "b_{\mathrm{indirect}}", name: "Indirect ownership", description: "그 한 경로를 통해 자연인이 고객 법인에 갖는 간접 지분율입니다." },
+      { symbol: "b_{\\mathrm{indirect}}", name: "Indirect ownership", description: "그 한 경로를 통해 자연인이 고객 법인에 갖는 간접 지분율입니다." },
     ],
     assumptions: [
       "모든 지분은 같은 기준일의 0~1 비율이며 nominee·voting agreement 같은 별도 지배 근거를 따로 검토합니다.",
@@ -276,7 +276,7 @@ const CONFIG: Record<ArticleKey, Config> = {
       { symbol: "p_s", name: "Scenario likelihood", description: "정한 기간에 시나리오가 발생할 추정 가능성입니다." },
       { symbol: "L_s", name: "Scenario impact", description: "손실·규제·고객·운영 영향을 같은 내부 단위로 환산한 값입니다." },
       { symbol: "m_s", name: "Mitigation effectiveness", description: "검증된 통제가 해당 시나리오 노출을 줄이는 0~1 추정 비율입니다." },
-      { symbol: "R_{\mathrm{res}}", name: "Residual exposure index", description: "모델 전제 아래 비교에 쓰는 내부 잔여 노출 지표입니다." },
+      { symbol: "R_{\\mathrm{res}}", name: "Residual exposure index", description: "모델 전제 아래 비교에 쓰는 내부 잔여 노출 지표입니다." },
     ],
     assumptions: [
       "p, L, m의 기간·population·단위와 confidence range를 고정하고 서로 겹치는 scenario의 이중 합산을 점검합니다.",

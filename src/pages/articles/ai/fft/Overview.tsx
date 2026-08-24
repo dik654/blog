@@ -36,7 +36,7 @@ export default function Overview() {
         terms={[
           { symbol: "x[n]", name: "input sample", description: "시간 또는 공간 index n에서 관측한 값입니다." },
           { symbol: "X[k]", name: "frequency coefficient", description: "k번째 discrete frequency의 magnitude와 phase를 담는 complex number입니다." },
-          { symbol: "e^{-i2\pi kn/N}", name: "Fourier basis", description: "N sample 동안 k회 회전하는 분석 pattern입니다." },
+          { symbol: "e^{-i2\\pi kn/N}", name: "Fourier basis", description: "N sample 동안 k회 회전하는 분석 pattern입니다." },
           { symbol: "1/N", name: "normalization", description: "여기서는 inverse transform에 둔 convention이며 library마다 분배 위치가 다를 수 있습니다." },
         ]}
         assumptions={["N개 sample은 일정한 간격으로 관측되었고 분석 구간 밖에서 주기적으로 반복된다고 해석합니다.", "Complex-valued DFT의 기본식입니다. Real input은 conjugate symmetry를 이용해 절반가량만 저장할 수 있습니다."]}

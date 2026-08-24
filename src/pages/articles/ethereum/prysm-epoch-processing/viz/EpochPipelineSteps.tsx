@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ModuleBox, DataBox, ActionBox, StatusBox } from '@/components/viz/boxes';
+import { DataBox, ActionBox, StatusBox } from '@/components/viz/boxes';
 import { C } from './EpochPipelineVizData';
 
 const fade = (d: number) => ({ initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { delay: d } });

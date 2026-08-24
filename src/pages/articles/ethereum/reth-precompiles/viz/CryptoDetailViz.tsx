@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import StepViz from '@/components/ui/step-viz';
-import { DataBox } from '@/components/viz/boxes';
+
 import { C, STEPS } from './CryptoDetailVizData';
 
 function Step0() {

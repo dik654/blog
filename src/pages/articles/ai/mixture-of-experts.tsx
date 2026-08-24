@@ -491,7 +491,7 @@ L_{\rm aux}&=\underbrace{\alpha N\sum_{i=1}^{N}f_iP_i}_{\text{두 값이 모두 
             P_{\mathrm{active}}&\approx P_{\mathrm{shared}}+kP_e
           \end{aligned}`}
           terms={[
-            { symbol: "P_{\mathrm{shared}}", name: "공유 parameter", description: "Attention·embedding·normalization·shared expert처럼 모든 token이 쓰는 parameter입니다." },
+            { symbol: "P_{\\mathrm{shared}}", name: "공유 parameter", description: "Attention·embedding·normalization·shared expert처럼 모든 token이 쓰는 parameter입니다." },
             { symbol: "P_e", name: "expert 하나의 parameter", description: "같은 폭을 가정한 routed expert FFN 하나의 parameter 수입니다." },
             { symbol: "n", name: "전체 expert 수", description: "Checkpoint가 저장하는 routed expert 개수입니다." },
             { symbol: "k", name: "활성 expert 수", description: "Token 하나가 해당 layer에서 선택하는 routed expert 개수입니다." },

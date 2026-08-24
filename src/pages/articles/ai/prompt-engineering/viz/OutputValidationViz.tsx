@@ -1,5 +1,6 @@
 import VizFrame from "@/components/viz/VizFrame";
-import { Controls, useScenes } from "./PromptVizControls";
+import { Controls } from "./PromptVizControls";
+import { useScenes } from "./usePromptScenes";
 
 const OUTPUT_SCENES = ["Parse", "Schema", "Domain", "Fallback"] as const;
 

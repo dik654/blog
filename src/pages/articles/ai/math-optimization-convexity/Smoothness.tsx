@@ -30,8 +30,8 @@ export default function Smoothness() {
         \end{aligned}`}
         terms={[
           { symbol: "L", name: "smoothness constant", description: "Gradient 변화 속도의 전역 상한입니다." },
-          { symbol: "g_x^\top d", name: "first-order change", description: "gₓ=∇f(x)와 d=y−x의 내적으로, 현재 gradient가 예측하는 local linear 변화입니다." },
-          { symbol: "L\|d\|^2/2", name: "curvature allowance", description: "직선 근사에서 벗어나는 정도의 상한입니다." },
+          { symbol: "g_x^\\top d", name: "first-order change", description: "gₓ=∇f(x)와 d=y−x의 내적으로, 현재 gradient가 예측하는 local linear 변화입니다." },
+          { symbol: "L\\|d\\|^2/2", name: "curvature allowance", description: "직선 근사에서 벗어나는 정도의 상한입니다." },
         ]}
         assumptions={[
           "관심 domain에서 gradient가 L-Lipschitz여야 합니다.",

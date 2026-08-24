@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ModuleBox, DataBox, ActionBox } from '@/components/viz/boxes';
+
 import { C } from './SSZMerkleVizData';
 
 export function Step0() {

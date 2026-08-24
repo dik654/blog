@@ -35,9 +35,9 @@ export default function Overview() {
         idea={<>먼저 <M>{"w"}</M>가 중요하게 보는 방향으로 input을 projection하고, bias로 경계 위치를 옮깁니다. 마지막 step function은 score의 부호만 남깁니다.</>}
         formula={String.raw`z=w^\top x+b=\sum_{i=1}^{d}w_i x_i+b,\qquad \hat y=H(z)=\begin{cases}1&z>0\\0&z\le 0\end{cases}`}
         terms={[
-          { symbol: "x\in\mathbb{R}^{d}", name: "input vector", description: "분류할 sample의 d개 feature입니다." },
-          { symbol: "w\in\mathbb{R}^{d}", name: "weight vector", description: "각 feature의 방향과 상대적 중요도를 정합니다." },
-          { symbol: "b\in\mathbb{R}", name: "bias", description: "결정 경계를 원점에서 평행 이동합니다." },
+          { symbol: "x\\in\\mathbb{R}^{d}", name: "input vector", description: "분류할 sample의 d개 feature입니다." },
+          { symbol: "w\\in\\mathbb{R}^{d}", name: "weight vector", description: "각 feature의 방향과 상대적 중요도를 정합니다." },
+          { symbol: "b\\in\\mathbb{R}", name: "bias", description: "결정 경계를 원점에서 평행 이동합니다." },
           { symbol: "H", name: "Heaviside step", description: "연속 score를 0 또는 1의 class label로 바꿉니다." },
         ]}
         assumptions={["binary classification과 hard threshold를 사용하는 고전적 perceptron을 기준으로 합니다.", "z=0일 때 어느 class로 둘지는 구현 convention이며 여기서는 0으로 둡니다."]}
@@ -45,10 +45,10 @@ export default function Overview() {
       />
       <ExplainedFormula
         question="분류를 틀렸을 때 결정 경계를 어느 방향으로 움직일까?"
-        idea={<>정답 <M>{"y"}</M>와 예측 <M>{"\hat y"}</M>의 차이에 input을 곱해, 틀린 sample을 올바른 쪽으로 보내는 방향으로 weight와 bias를 이동합니다.</>}
+        idea={<>정답 <M>{"y"}</M>와 예측 <M>{"\\hat y"}</M>의 차이에 input을 곱해, 틀린 sample을 올바른 쪽으로 보내는 방향으로 weight와 bias를 이동합니다.</>}
         formula={String.raw`w\leftarrow w+\eta(y-\hat y)x,\qquad b\leftarrow b+\eta(y-\hat y)`}
         terms={[
-          { symbol: "y\in\{0,1\}", name: "target", description: "sample의 정답 label입니다." },
+          { symbol: "y\\in\\{0,1\\}", name: "target", description: "sample의 정답 label입니다." },
           { symbol: String.raw`\hat y`, name: "prediction", description: "현재 경계가 낸 0 또는 1입니다." },
           { symbol: String.raw`\eta>0`, name: "learning rate", description: "한 mistake가 경계를 움직이는 크기입니다." },
         ]}

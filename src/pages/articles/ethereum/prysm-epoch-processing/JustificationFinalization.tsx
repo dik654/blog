@@ -16,8 +16,8 @@ export default function JustificationFinalization({ onCodeRef }: { onCodeRef: (k
         idea={<>분수를 부동소수점으로 계산하지 않고 참여 weight의 세 배와 전체 active weight의 두 배를 정수로 비교합니다.</>}
         formula={String.raw`3A_{\mathrm{target}} \ge 2A_{\mathrm{active}}`}
         terms={[
-          { symbol: "A_{\mathrm{target}}", name: "target-attesting balance", description: "해당 epoch target에 timely하게 참여한 unslashed validator의 effective balance 합이며 단위는 Gwei입니다." },
-          { symbol: "A_{\mathrm{active}}", name: "total active balance", description: "그 epoch의 활성 validator effective balance 총합이며 같은 Gwei 단위를 씁니다." },
+          { symbol: "A_{\\mathrm{target}}", name: "target-attesting balance", description: "해당 epoch target에 timely하게 참여한 unslashed validator의 effective balance 합이며 단위는 Gwei입니다." },
+          { symbol: "A_{\\mathrm{active}}", name: "total active balance", description: "그 epoch의 활성 validator effective balance 총합이며 같은 Gwei 단위를 씁니다." },
         ]}
         assumptions={["두 합은 같은 epoch·validator registry snapshot과 fork 규칙에서 계산합니다.", "Signature, committee membership, target root와 timeliness를 이미 검증한 participation만 셉니다."]}
         interpretation="Active balance가 96 Gwei인 작은 예에서 target 참여가 64 Gwei면 192≥192로 threshold를 만족하지만 63 Gwei면 189<192로 실패합니다. 이 threshold 하나만으로 즉시 finalization되는 것은 아닙니다."

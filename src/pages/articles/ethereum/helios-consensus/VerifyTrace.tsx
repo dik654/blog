@@ -24,7 +24,7 @@ export default function VerifyTrace({ title, onCodeRef: _onCodeRef }: Props & { 
         terms={[
           { symbol: "N", name: "Committee position 수", description: "Network preset의 sync committee size; 예시는 512 positions" },
           { symbol: "p", name: "참여 position 수", description: "sync_committee_bits에서 1인 bit의 개수" },
-          { symbol: "3p\ge2N", name: "정수 supermajority 판정", description: "2/3 이상인지 rounding 없이 비교하는 Boolean 조건" },
+          { symbol: "3p\\ge2N", name: "정수 supermajority 판정", description: "2/3 이상인지 rounding 없이 비교하는 Boolean 조건" },
           { symbol: "p_{min}", name: "최소 supermajority 참여", description: "N=512일 때 ceil(1024/3)=342 positions" },
         ]}
         assumptions={[

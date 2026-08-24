@@ -1,5 +1,6 @@
 import VizFrame from "@/components/viz/VizFrame";
-import { RecurrentSceneControls, useRecurrentScenes } from "./RecurrentVizControls";
+import { RecurrentSceneControls } from "./RecurrentVizControls";
+import { useRecurrentScenes } from "./useRecurrentScenes";
 
 const SCENES = ["shift pair", "state→분포", "loss→PPL"] as const;
 const SCENE_COPY = [

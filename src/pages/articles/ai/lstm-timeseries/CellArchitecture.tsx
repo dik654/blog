@@ -31,7 +31,7 @@ export default function CellArchitecture() {
         formula={String.raw`\begin{aligned}\mathbf h_t&=\operatorname{LSTM}(X_t)\\\widehat Y_t&=\operatorname{reshape}(W_o\mathbf h_t+\mathbf b_o)\end{aligned}`}
         terms={[
           { symbol: "\\mathbf h_t", name: "forecast state", description: "Input window 마지막 step에서 읽은 요약 표현입니다." },
-          { symbol: "W_o,\mathbf b_o", name: "forecast head", description: "Hidden representation을 모든 horizon·target 출력으로 바꾸는 학습 parameter입니다." },
+          { symbol: "W_o,\\mathbf b_o", name: "forecast head", description: "Hidden representation을 모든 horizon·target 출력으로 바꾸는 학습 parameter입니다." },
           { symbol: "\\widehat Y_t", name: "multi-horizon forecast", description: "한 origin에서 동시에 만든 H×Dᵧ 예측입니다." },
         ]}
         assumptions={["출력 horizon H가 학습·serving 계약에 고정되어 있습니다.", "각 horizon의 loss weight와 scale을 별도로 정할 수 있습니다."]}

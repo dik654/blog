@@ -23,9 +23,9 @@ export default function Fourier() {
         formula={String.raw`\begin{aligned}F(\omega)&=\int_{-\infty}^{\infty}f(t)e^{-i\omega t}\,dt\\[3pt]f(t)&=\frac1{2\pi}\int_{-\infty}^{\infty}F(\omega)e^{i\omega t}\,d\omega\end{aligned}`}
         terms={[
           { symbol: "f(t)", name: "continuous signal", description: "시간 t마다 정의된 원래 함수입니다." },
-          { symbol: "F(\omega)", name: "spectrum", description: "Angular frequency ω 성분의 complex coefficient입니다." },
-          { symbol: "e^{\pm i\omega t}", name: "complex basis", description: "Euler identity로 cosine과 sine phase를 함께 표현합니다." },
-          { symbol: "1/(2\pi)", name: "inverse normalization", description: "Angular-frequency convention에서 생기며 다른 convention에서는 위치가 달라집니다." },
+          { symbol: "F(\\omega)", name: "spectrum", description: "Angular frequency ω 성분의 complex coefficient입니다." },
+          { symbol: "e^{\\pm i\\omega t}", name: "complex basis", description: "Euler identity로 cosine과 sine phase를 함께 표현합니다." },
+          { symbol: "1/(2\\pi)", name: "inverse normalization", description: "Angular-frequency convention에서 생기며 다른 convention에서는 위치가 달라집니다." },
         ]}
         assumptions={["적분과 역변환이 성립하려면 signal class에 맞는 integrability 또는 distribution 조건이 필요합니다.", "이 식은 angular frequency ω를 사용합니다. Hz frequency를 쓰면 exponent와 normalization에 2π가 이동합니다."]}
         interpretation="Forward와 inverse transform은 lossless representation pair다. 실제 ML pipeline에서 magnitude, band aggregation 또는 quantization만 남길 때 정보 손실이 생깁니다."

@@ -129,13 +129,13 @@ export default function ContinuousTime() {
             description: "Forward process의 평균적인 deterministic 이동입니다.",
           },
           {
-            symbol: "g(t)^2\nabla_x\log p_t(x)",
+            symbol: "g(t)^2\\nabla_x\\log p_t(x)",
             name: "score correction",
             description:
               "퍼진 mass를 현재 perturbed data density가 높은 방향으로 되모읍니다.",
           },
           {
-            symbol: "d\overline W_t",
+            symbol: "d\\overline W_t",
             name: "reverse Brownian increment",
             description:
               "Reverse-time stochastic path에 남는 random increment입니다.",
@@ -241,7 +241,7 @@ export default function ContinuousTime() {
               "Chosen conditional path에서 직접 sample한 시간 t의 state입니다.",
           },
           {
-            symbol: "u_t(x_t\mid x_1)",
+            symbol: "u_t(x_t\\mid x_1)",
             name: "conditional target velocity",
             description:
               "선택한 path가 제공해 simulation 없이 계산할 수 있는 supervision입니다.",

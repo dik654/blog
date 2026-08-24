@@ -75,7 +75,7 @@ export default function Convergence() {
               "Training 순서에서 퍼셉트론이 한 번에 보고 예측하는 feature vector입니다.",
           },
           {
-            symbol: "y_i\in\{-1,+1\}",
+            symbol: "y_i\\in\\{-1,+1\\}",
             name: "정답의 부호",
             description:
               "두 class를 계산하기 편하도록 −1과 +1로 표현합니다.",

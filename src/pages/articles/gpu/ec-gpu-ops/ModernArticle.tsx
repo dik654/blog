@@ -23,7 +23,7 @@ export default function ModernEcGpuOpsArticle() {
         {symbol:"x",name:"Field representative",description:"Decode 뒤 0≤x<p인 canonical residue 또는 명시한 Montgomery-domain value입니다."},
         {symbol:"L",name:"Limb count",description:"Field 값을 저장하는 machine words 개수입니다."},
         {symbol:"w",name:"Limb width",description:"한 limb의 bits이며 backend와 multiplication primitive가 지원해야 합니다."},
-        {symbol:"x_\ell",name:"Limb value",description:"Little-endian radix에서 index ℓ가 소유한 digit입니다."},
+        {symbol:"x_\\ell",name:"Limb value",description:"Little-endian radix에서 index ℓ가 소유한 digit입니다."},
       ]} assumptions={["Limb order, w, modulus p와 internal Montgomery domain이 host·device에서 같습니다.","Unused top bits와 noncanonical x≥p 입력을 decode boundary에서 처리합니다."]} interpretation="w=8,L=4에서 limbs [1,2,0,0]은 1+2·256=513입니다. 배열 bytes를 반대 endian으로 읽으면 같은 memory가 전혀 다른 field value가 됩니다." />
       <p>한 work item이 많은 limbs와 point temporaries를 가지면 compiler가 정한 register 수와 spill이 occupancy를 제한할 수 있습니다. Array-of-structs와 structure-of-arrays는 동일한 limbs라도 warp address를 다르게 만들므로 actual DRAM transactions와 alignment를 profiler로 확인합니다. Warp-cooperative 대안을 비교할 때도 별도 kernel로 구현해 같은 fixtures와 workload에서 측정합니다.</p>
     </section>

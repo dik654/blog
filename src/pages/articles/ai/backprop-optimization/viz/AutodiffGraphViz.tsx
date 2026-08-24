@@ -1,5 +1,6 @@
 import VizFrame from "@/components/viz/VizFrame";
-import { BackpropSceneControls, useBackpropScenes } from "./BackpropVizControls";
+import { BackpropSceneControls } from "./BackpropVizControls";
+import { useBackpropScenes } from "./useBackpropScenes";
 
 const SCENES = ["forward 값", "reverse 책임", "저장 경계"] as const;
 

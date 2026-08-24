@@ -110,7 +110,7 @@ export default function ModernCRTArticle() {
           terms={[
             { symbol: "m_1", name: "p-side result", description: "c^d를 p에서 계산한 residue입니다." },
             { symbol: "m_2", name: "q-side result", description: "c^d를 q에서 계산한 residue입니다." },
-            { symbol: "q_{\mathrm{inv}}", name: "CRT coefficient", description: "q·qInv≡1 (mod p)을 만족합니다." },
+            { symbol: "q_{\\mathrm{inv}}", name: "CRT coefficient", description: "q·qInv≡1 (mod p)을 만족합니다." },
             { symbol: "h", name: "Correction", description: "m₂에 q의 몇 배를 더할지 정하는 p-side 보정량입니다." },
             { symbol: "m", name: "Recombined result", description: "mod p에서는 m₁, mod q에서는 m₂와 같은 대표값입니다." },
           ]}

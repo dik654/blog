@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ModuleBox, DataBox } from '@/components/viz/boxes';
+import { ModuleBox } from '@/components/viz/boxes';
 import { C } from './ContextVizData';
 
 /* Step 3: PBS 분리 */

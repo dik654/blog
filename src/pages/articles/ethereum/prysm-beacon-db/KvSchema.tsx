@@ -47,7 +47,7 @@ export default function KvSchema({
               "Slot·parent 등 이번 schema가 유지하는 index 개수입니다.",
           },
           {
-            symbol: "W_{\rm logical}",
+            symbol: "W_{\\rm logical}",
             name: "Logical writes",
             description:
               "한 object 저장이 갱신하는 key/value mapping 수입니다.",

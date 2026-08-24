@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ModuleBox, AlertBox, DataBox, ActionBox } from '@/components/viz/boxes';
+import { ModuleBox, AlertBox, DataBox } from '@/components/viz/boxes';
 import { C } from './ContextVizData';
 
 export function StepVoting() {

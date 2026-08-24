@@ -23,7 +23,7 @@ export default function CEvsMSE({ title }: { title?: string }) {
         terms={[
           { symbol: "\\mu_\\theta", name: "predicted mean", description: "Gaussian conditional distribution의 평균 parameter입니다." },
           { symbol: "\\sigma^2", name: "noise variance", description: "고정하면 MSE의 scale만 바꾸지만 학습하면 별도 log variance 항이 필요합니다." },
-          { symbol: "z_\theta", name: "class logits", description: "Categorical probability를 만드는 normalized 전 score입니다." },
+          { symbol: "z_\\theta", name: "class logits", description: "Categorical probability를 만드는 normalized 전 score입니다." },
           { symbol: "C", name: "constant term", description: "θ와 무관해 fixed-variance optimization에서 생략할 수 있습니다." },
         ]}
         assumptions={["첫 식은 conditional Gaussian noise와 고정 σ를 가정합니다.", "두 번째 식은 mutually exclusive K-class categorical label을 가정합니다."]}

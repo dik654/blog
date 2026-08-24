@@ -44,7 +44,7 @@ v_U
           { expression: String.raw`\lambda_y-v_y`, annotation: ["Class별 최대 weight에서 현재 utility를 빼", "부족한 방향만 학습"] },
         ]}
         terms={[
-          { symbol: "r_\theta", name: "implicit reward", description: "현재 policy가 reference보다 response y를 얼마나 더 선호하는지 나타내는 log-ratio입니다." },
+          { symbol: "r_\\theta", name: "implicit reward", description: "현재 policy가 reference보다 response y를 얼마나 더 선호하는지 나타내는 log-ratio입니다." },
           { symbol: "z_0", name: "reference point", description: "Policy와 reference의 KL을 batch에서 추정해 gain·loss 기준으로 사용합니다." },
           { symbol: String.raw`\lambda_D,\lambda_U`, name: "class weights", description: "Desirable·undesirable feedback의 비대칭과 class imbalance를 조절합니다." },
           { symbol: String.raw`\beta`, name: "utility scale", description: "Reference point 주변 sigmoid의 민감도를 정합니다." },

@@ -25,7 +25,7 @@ export default function RankBasis() {
         formula={String.raw`A=\begin{bmatrix}1&2\\2&4\end{bmatrix}=\begin{bmatrix}1\\2\end{bmatrix}\begin{bmatrix}1&2\end{bmatrix},\qquad \operatorname{rank}(A)=1`}
         terms={[
           { symbol: "A", name: "rank-one matrix", description: "Column 두 개가 있지만 두 번째가 첫 번째의 2배인 matrix입니다." },
-          { symbol: "uv^\top", name: "outer product", description: "Column vector u와 row vector vᵀ의 곱으로 한 방향의 row·column pattern을 만듭니다." },
+          { symbol: "uv^\\top", name: "outer product", description: "Column vector u와 row vector vᵀ의 곱으로 한 방향의 row·column pattern을 만듭니다." },
           { symbol: String.raw`\operatorname{rank}(A)`, name: "independent directions", description: "Column space 또는 row space의 dimension이며 두 값은 같습니다." },
         ]}
         assumptions={["Exact real arithmetic의 linear dependence를 설명합니다.", "Measured data에서는 작은 singular value를 noise로 볼지 signal로 볼지 tolerance와 task 기준이 필요합니다."]}

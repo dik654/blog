@@ -1,4 +1,5 @@
-import { AnimatedSceneControls, useAnimatedScenes } from "@/components/viz/AnimatedSceneControls";
+import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
 const SCENES = ["Outcome", "숫자로 매핑", "같은 값 합치기", "무게중심"] as const;

@@ -23,7 +23,7 @@ export default function Overview() {
         formula={String.raw`\operatorname{Adv}_{\mathrm{next}}(A)=\left|\Pr[A(Y_1,\ldots,Y_k)=Y_{k+1}]-\frac12\right|`}
         terms={[
           { symbol: "A", name: "adversarial predictor", description: "정해진 시간·메모리 예산 안에서 실행되는 공격 알고리즘입니다." },
-          { symbol: "Y_1,\ldots,Y_k", name: "observed prefix", description: "공격자가 이미 본 generator output bits입니다." },
+          { symbol: "Y_1,\\ldots,Y_k", name: "observed prefix", description: "공격자가 이미 본 generator output bits입니다." },
           { symbol: "Y_{k+1}", name: "next bit", description: "공격자가 아직 보지 못한 예측 대상입니다." },
           { symbol: String.raw`\operatorname{Adv}`, name: "prediction advantage", description: "동전 맞히기 1/2보다 더 잘 맞힌 정도입니다." },
         ]}

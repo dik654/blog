@@ -45,7 +45,7 @@ export default function ModernSNARKOverviewArticle() {
             { symbol: "P", name: "Claim-difference polynomial", description: "참인 항등식이면 identically zero여야 하는 차이입니다." },
             { symbol: "d", name: "Degree bound", description: "Commitment·protocol이 실제로 강제해야 하는 최대 차수입니다." },
             { symbol: "r", name: "Challenge point", description: "Prover가 commitment를 고정한 뒤 예측하기 어렵게 정합니다." },
-            { symbol: "|\mathbb F|", name: "Field size", description: "Challenge가 추출되는 유한체 원소 수입니다." },
+            { symbol: "|\\mathbb F|", name: "Field size", description: "Challenge가 추출되는 유한체 원소 수입니다." },
           ]}
           assumptions={["P는 r을 보기 전에 고정되고 challenge는 요구된 분포와 domain separation을 따릅니다.", "Degree bound와 commitment binding이 지켜지며 malformed field/group encoding은 먼저 거절합니다.", "여러 check의 error를 합칠 때 union bound·repetition·batching 상관관계를 별도로 계산합니다."]}
           interpretation="예를 들어 |F|=101, d=2이면 한 check의 단순 상한은 2/101입니다. 실제 SNARK 보안은 이 한 줄뿐 아니라 PCS·pairing·knowledge assumption·Fiat–Shamir 모델과 reduction loss를 함께 봅니다."

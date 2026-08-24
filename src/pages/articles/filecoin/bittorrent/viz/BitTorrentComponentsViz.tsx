@@ -83,7 +83,7 @@ export default function BitTorrentComponentsViz() {
             [1, 3],
             [2, 3],
             [3, 2],
-          ].map(([a, b], i) => (
+          ].map(([a, b]) => (
             <motion.line
               key={`flow-${a}-${b}`}
               x1={POS[a].x + 100}

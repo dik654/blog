@@ -1,9 +1,7 @@
 import { motion } from "framer-motion";
 import type { ReactNode } from "react";
-import {
-  AnimatedSceneControls,
-  useAnimatedScenes,
-} from "@/components/viz/AnimatedSceneControls";
+import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
 const accent = "var(--primary)";
@@ -315,7 +313,7 @@ export function AdaptiveSearchViz() {
             stroke={border}
             strokeWidth="1.25"
           />
-          {points.map(([cx, cy], index) => {
+          {points.map(([cx, cy]) => {
             const good = cy < 80;
             const visible = active === 0 || active >= 1;
             return (

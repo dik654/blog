@@ -1,8 +1,6 @@
 import VizFrame from "@/components/viz/VizFrame";
-import {
-  AnimatedSceneControls,
-  useAnimatedScenes,
-} from "@/components/viz/AnimatedSceneControls";
+import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 
 const SCENES = ["example", "batch", "forward", "update"] as const;
 

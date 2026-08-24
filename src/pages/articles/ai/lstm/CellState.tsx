@@ -34,7 +34,7 @@ R_{k\to t}
           { expression: String.raw`\sum_j\log f_j`, annotation: ["곱에 log를 취해 합으로 바꿔", "긴 horizon의 감쇠를 안정적으로 분석"] },
         ]}
         terms={[
-          { symbol: "R_{k\to t}", name: "direct retention", description: "k에서 t까지 cell path에 남은 multiplicative contribution입니다." },
+          { symbol: "R_{k\\to t}", name: "direct retention", description: "k에서 t까지 cell path에 남은 multiplicative contribution입니다." },
           { symbol: "f_j", name: "forget gate", description: "Step j에서 각 state channel을 유지하는 비율입니다." },
           { symbol: "\\prod_j", name: "temporal product", description: "Chain rule로 이어지는 direct edge derivative의 곱입니다." },
           { symbol: "\\sum\\log f_j", name: "log retention", description: "긴 horizon에서 수치적으로 분석하기 쉬운 합 형태입니다." },

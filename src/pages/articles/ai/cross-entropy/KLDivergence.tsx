@@ -20,7 +20,7 @@ export default function KLDivergence() {
         idea={<>모델 Q의 평균 code length H(P,Q)에서 P 자체의 최저 비용 H(P)를 뺍니다. Log ratio로 정리하면 사건별로 Q가 P를 얼마나 과소·과대평가했는지 P로 평균낸 식이 됩니다.</>}
         formula={String.raw`\begin{aligned}D_{\mathrm{KL}}(P\Vert Q)&=\sum_xP(x)\log\frac{P(x)}{Q(x)}\\&=H(P,Q)-H(P)\ge 0\end{aligned}`}
         terms={[
-          { symbol: "P\Vert Q", name: "방향", description: "P에서 sample을 뽑아 Q로 평가한다는 비대칭을 표시합니다." },
+          { symbol: "P\\Vert Q", name: "방향", description: "P에서 sample을 뽑아 Q로 평가한다는 비대칭을 표시합니다." },
           { symbol: "P(x)/Q(x)", name: "density ratio", description: "사건 x를 Q가 실제보다 얼마나 작거나 크게 평가했는지 나타냅니다." },
           { symbol: "H(P,Q)", name: "model code cost", description: "Q로 실제 데이터를 설명할 때 필요한 평균 정보량입니다." },
           { symbol: "H(P)", name: "irreducible cost", description: "P가 원래 가진 불확실성입니다." },

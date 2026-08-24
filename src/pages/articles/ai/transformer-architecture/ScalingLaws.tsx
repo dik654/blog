@@ -42,7 +42,7 @@ export default function ScalingLaws() {
         formula={String.raw`L(N,D)\approx L_\infty+aN^{-\alpha}+bD^{-\beta}`}
         terms={[
           {
-            symbol: "L_\infty",
+            symbol: "L_\\infty",
             name: "irreducible floor",
             description:
               "주어진 data distribution과 objective에서 scale만으로 없애기 어려운 loss floor입니다.",

@@ -1,4 +1,5 @@
-import { NodeBox, StoryShell, useStory } from "./kimi-k3-shared";
+import { NodeBox, StoryShell } from "./kimi-k3-shared";
+import { useStory } from "./useKimiStory";
 
 const Arrow = () => (
   <span

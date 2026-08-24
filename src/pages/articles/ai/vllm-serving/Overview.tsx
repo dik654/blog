@@ -1,5 +1,5 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
-import Math from "@/components/ui/math";
+
 import { Link } from "react-router-dom";
 import RequestLifecycleViz from "./viz/RequestLifecycleViz";
 import PrefillDecodeViz from "./viz/PrefillDecodeViz";

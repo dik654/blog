@@ -76,9 +76,9 @@ export default function ModernCudaBasicsArticle() {
           idea={<>GPU 경로에는 input 전송, kernel, output 전송과 synchronization이 모두 들어갑니다. CPU 시간과 비교할 때 kernel time 하나만 떼어 보지 않습니다.</>}
           formula={String.raw`\begin{aligned}T_{GPU}&=T_{H\to D}+T_{kernel}\\&\quad+T_{D\to H}+T_{sync}\end{aligned}`}
           terms={[
-            { symbol: "T_{H\to D}", name: "Host-to-device 시간", description: "Input bytes를 host memory에서 device memory로 옮기는 시간입니다." },
+            { symbol: "T_{H\\to D}", name: "Host-to-device 시간", description: "Input bytes를 host memory에서 device memory로 옮기는 시간입니다." },
             { symbol: "T_{kernel}", name: "Kernel 시간", description: "GPU timeline에서 kernel이 실제 실행된 elapsed time입니다." },
-            { symbol: "T_{D\to H}", name: "Device-to-host 시간", description: "필요한 결과 bytes를 host로 회수하는 시간입니다." },
+            { symbol: "T_{D\\to H}", name: "Device-to-host 시간", description: "필요한 결과 bytes를 host로 회수하는 시간입니다." },
             { symbol: "T_{sync}", name: "동기화·queue 비용", description: "Dependency wait, launch overhead와 완료 확인에 드는 나머지 시간을 묶습니다." },
           ]}
           assumptions={["CPU와 GPU가 같은 입력에서 같은 정확도의 결과를 만든다고 먼저 검증합니다.", "전송과 kernel이 겹친다면 단순 합 대신 실제 timeline의 critical path를 사용합니다."]}

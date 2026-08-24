@@ -25,7 +25,7 @@ export default function Components() {
         idea={<>AR polynomial φ(B)는 Z의 과거를, MA polynomial θ(B)는 innovation의 과거를 필터링합니다. 두 polynomial로 쓰면 lag 구조와 stationarity·invertibility 조건을 같은 언어로 확인할 수 있습니다.</>}
         formula={String.raw`\begin{aligned}\operatorname{AR}_t&=\sum_{i=1}^{p}\phi_iZ_{t-i}\\\operatorname{MA}_t&=\varepsilon_t+\sum_{j=1}^{q}\theta_j\varepsilon_{t-j}\\Z_t&=c+\operatorname{AR}_t+\operatorname{MA}_t\\\phi(B)Z_t&=c+\theta(B)\varepsilon_t\end{aligned}`}
         terms={[
-          { symbol: "Z_t=\Delta^dY_t", name: "modeled series", description: "d번 차분한 stationary representation입니다." },
+          { symbol: "Z_t=\\Delta^dY_t", name: "modeled series", description: "d번 차분한 stationary representation입니다." },
           { symbol: "\\phi_i", name: "AR coefficients", description: "과거 관측값이 현재 conditional mean에 주는 가중치입니다." },
           { symbol: "\\theta_j", name: "MA coefficients", description: "과거 innovation이 현재 값에 남기는 가중치입니다." },
           { symbol: "\\varepsilon_t", name: "innovation", description: "과거 정보에 조건부인 평균 0의 새 error입니다." },

@@ -1,5 +1,6 @@
 import VizFrame from "@/components/viz/VizFrame";
-import { BackpropSceneControls, useBackpropScenes } from "./BackpropVizControls";
+import { BackpropSceneControls } from "./BackpropVizControls";
+import { useBackpropScenes } from "./useBackpropScenes";
 
 const SCENES = ["공동 분모", "temperature", "출력 경계"] as const;
 const BASE = [2, 1, 0.5];

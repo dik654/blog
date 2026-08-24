@@ -22,7 +22,7 @@ export default function Expectation({ title }: { title?: string }) {
         terms={[
           { symbol: "P", name: "모집단 분포", description: "실제 환경에서 input과 label이 생성되는 알 수 없는 분포입니다." },
           { symbol: "f(x)", name: "사건별 측정값", description: "이 글에서는 surprisal 또는 sample loss가 들어갑니다." },
-          { symbol: "R(\theta)", name: "population risk", description: "새로운 데이터에서 기대하는 model loss입니다." },
+          { symbol: "R(\\theta)", name: "population risk", description: "새로운 데이터에서 기대하는 model loss입니다." },
           { symbol: "\\widehat R_n", name: "empirical risk", description: "관측한 n개 training sample로 계산한 평균 loss입니다." },
         ]}
         assumptions={["Training sample이 동일한 data-generating distribution에서 뽑혔다고 가정합니다.", "낮은 empirical risk만으로 낮은 population risk가 보장되지는 않으므로 validation과 regularization이 필요합니다."]}

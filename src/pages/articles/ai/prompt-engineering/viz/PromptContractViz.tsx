@@ -1,5 +1,6 @@
 import VizFrame from "@/components/viz/VizFrame";
-import { Controls, useScenes } from "./PromptVizControls";
+import { Controls } from "./PromptVizControls";
+import { useScenes } from "./usePromptScenes";
 
 const CONTRACT_SCENES = ["입력 분리", "계약 조립", "검증"] as const;
 

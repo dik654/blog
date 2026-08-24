@@ -1,5 +1,6 @@
 import VizFrame from "@/components/viz/VizFrame";
-import { RecurrentSceneControls, useRecurrentScenes } from "./RecurrentVizControls";
+import { RecurrentSceneControls } from "./RecurrentVizControls";
+import { useRecurrentScenes } from "./useRecurrentScenes";
 
 const SCENES = ["state 만들기", "시간축 펼치기", "방향 경계"] as const;
 const SCENE_COPY = [

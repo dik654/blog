@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import StepViz from '@/components/ui/step-viz';
-import { DataBox } from '@/components/viz/boxes';
+
 
 const C = { client: '#a855f7', check: '#6366f1', pool: '#10b981', gossip: '#f59e0b', prep: '#8b5cf6', recheck: '#ec4899' };
 

@@ -1,8 +1,6 @@
 import VizFrame from "@/components/viz/VizFrame";
-import {
-  AnimatedSceneControls,
-  useAnimatedScenes,
-} from "@/components/viz/AnimatedSceneControls";
+import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 
 const SCENES = ["입력", "국소 표현", "조합 표현", "판정"] as const;
 

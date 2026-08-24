@@ -30,7 +30,7 @@ export default function EulerFormula() {
         idea={<>Exponential의 거듭제곱급수에 iθ를 넣으면 i의 거듭제곱이 1,i,−1,−i로 반복됩니다. 짝수 항은 cosine 급수, 홀수 항은 i×sine 급수로 모입니다.</>}
         formula={String.raw`e^{i\theta}=\cos\theta+i\sin\theta,\qquad re^{i\theta}=r(\cos\theta+i\sin\theta)`}
         terms={[
-          { symbol: "e^{i\theta}", name: "unit complex rotation", description: "Magnitude 1, phase θ인 복소수입니다." },
+          { symbol: "e^{i\\theta}", name: "unit complex rotation", description: "Magnitude 1, phase θ인 복소수입니다." },
           { symbol: "r", name: "magnitude", description: "단위원 좌표를 반지름 r로 확대합니다." },
           { symbol: String.raw`\theta`, name: "phase", description: "양의 실수축에서 잰 회전 각도입니다." },
         ]}

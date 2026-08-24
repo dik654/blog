@@ -15,7 +15,7 @@ export default function UnitCircle() {
         idea={<>단위원 위의 점은 원점에서 거리가 항상 1입니다. 회전각 θ에서 가로축으로 내린 좌표가 cos θ, 세로축 좌표가 sin θ이므로 두 좌표의 제곱합은 언제나 1입니다.</>}
         formula={String.raw`u(\theta)=(\cos\theta,\sin\theta),\qquad \cos^2\theta+\sin^2\theta=1`}
         terms={[
-          { symbol: "u(\theta)", name: "unit-circle point", description: "각도 θ에 놓인 2차원 좌표입니다." },
+          { symbol: "u(\\theta)", name: "unit-circle point", description: "각도 θ에 놓인 2차원 좌표입니다." },
           { symbol: String.raw`\cos\theta`, name: "horizontal coordinate", description: "회전한 점의 가로 성분입니다." },
           { symbol: String.raw`\sin\theta`, name: "vertical coordinate", description: "회전한 점의 세로 성분입니다." },
         ]}

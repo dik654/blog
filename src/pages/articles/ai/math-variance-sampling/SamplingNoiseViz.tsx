@@ -1,4 +1,5 @@
-import { AnimatedSceneControls, useAnimatedScenes } from "@/components/viz/AnimatedSceneControls";
+import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
 const SCENES = ["중심과 편차", "편차 제곱", "Sample 평균", "1/B 축소", "Gradient estimate"] as const;

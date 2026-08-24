@@ -63,12 +63,12 @@ export default function OdeSdeBoundary() {
         \end{aligned}`}
         terms={[
           {
-            symbol: "f\Delta t",
+            symbol: "f\\Delta t",
             name: "drift increment",
             description: "평균적인 deterministic 이동량입니다.",
           },
           {
-            symbol: "g\sqrt{\Delta t}\epsilon_n",
+            symbol: "g\\sqrt{\\Delta t}\\epsilon_n",
             name: "diffusion increment",
             description: "Step마다 새로 뽑는 random fluctuation입니다.",
           },
