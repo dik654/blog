@@ -21,6 +21,118 @@ export interface EditorialBoundary {
  * 신규 주제가 추가되면 먼저 이 manifest에서 소유 글과 참조 글을 정한 뒤 본문을 확장한다.
  */
 export const EDITORIAL_BOUNDARIES = {
+  "llm-training-stages": {
+    title: "LLM 학습 단계 글이 소유하는 범위",
+    owns: [
+      "Pretraining·continued/mid-training·post-training·serving/agent harness의 objective와 update-authority 경계",
+      "PTQ의 Post-Training과 LLM post-training, LoRA라는 update mechanism의 용어 분리",
+      "Agent trajectory 학습 loop와 soft limit·hard limit을 판정하는 evidence boundary",
+    ],
+    reuses: [
+      {
+        label: "Continued pretraining의 data·objective 경계",
+        href: "/ai/continued-pretraining",
+      },
+      {
+        label: "SFT의 demonstration likelihood",
+        href: "/ai/supervised-fine-tuning",
+      },
+      {
+        label: "RLVR·GRPO 실험 pipeline",
+        href: "/ai/open-r1",
+      },
+      {
+        label: "On-policy distillation의 일반 정의",
+        href: "/ai/on-policy-distillation",
+      },
+      {
+        label: "Agent observation·action runtime loop",
+        href: "/ai/agent-loop-foundations",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "각 training stage는 원 논문·공식 model report의 objective와 data-generation 절차로 확인하고, 연구 관심의 이동을 pretraining·architecture의 중요성 소멸로 표현하지 않는다.",
+      },
+      {
+        kind: "project-measurement",
+        rule: "Agentic training 개선은 동일 base model·tool environment·budget에서 task success·rollout cost·failure recovery를 함께 비교한 결과에만 귀속한다.",
+      },
+    ],
+  },
+  "motif-3-architecture": {
+    title: "Motif 3 구조 글이 소유하는 범위",
+    owns: [
+      "Motif 3 technical report v1의 exact 314B total·13.2B active configuration과 base/instruction checkpoint 경계",
+      "MLA compression과 Grouped Differential Attention이 만나는 GDLA, modified mHC, Expert-Specific PolyNorm의 Motif-specific composition",
+      "Motif 3 chosen-token scalar MOPD와 ICE-POP filter 및 full-vocab OPD와의 차이",
+    ],
+    reuses: [
+      {
+        label: "MoE total·active parameter와 routing 장부",
+        href: "/ai/mixture-of-experts",
+      },
+      {
+        label: "MTP를 이용한 speculative decoding lifecycle",
+        href: "/ai/vllm-spec-decode",
+      },
+      {
+        label: "일반 GKD·MOPD와 teacher signal",
+        href: "/ai/on-policy-distillation",
+      },
+      {
+        label: "Residual·normalization의 기본 경계",
+        href: "/ai/transformer-architecture#transformer-block",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "구조명·layer/head/expert/context 수치는 Motif 3 technical report의 exact version과 official model card에 귀속하고 MDLA 같은 비공식 명칭으로 바꾸지 않는다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "GDLA·mHC·PolyNorm ablation은 보고서가 명시한 약 10B controlled models의 결과로만 표현하며 314B full-model 전체의 causal attribution으로 확대하지 않는다.",
+      },
+      {
+        kind: "project-measurement",
+        rule: "Serving·training 비용은 exact checkpoint·MTP head 포함 여부·runtime·GPU topology가 고정된 측정 없이 공개 architecture 수치에서 추정하지 않는다.",
+      },
+    ],
+  },
+  "spiking-neural-networks": {
+    title: "Spiking Neural Network 글이 소유하는 범위",
+    owns: [
+      "LIF membrane dynamics·hard spike threshold·surrogate derivative의 forward/backward 분리",
+      "시간축 SNN unroll과 BPTT, Hebbian local plasticity, standard backprop의 category boundary",
+      "SNN algorithm과 digital·analog·mixed-signal hardware 및 PVT·energy claim의 evidence boundary",
+    ],
+    reuses: [
+      {
+        label: "Backprop은 gradient 계산, optimizer는 update라는 경계",
+        href: "/ai/backprop-optimization",
+      },
+      {
+        label: "Recurrent graph를 시간축으로 펼치는 BPTT",
+        href: "/ai/bptt",
+      },
+      {
+        label: "Step function과 differentiability",
+        href: "/ai/activation-functions",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "Surrogate-gradient와 neuromorphic hardware 설명은 original paper·official chip document에 귀속하고 SNN을 인간 뇌의 완전한 model로 표현하지 않는다.",
+      },
+      {
+        kind: "project-measurement",
+        rule: "저전력 배수는 chip·process node·task·accuracy·latency·batch·encoding overhead가 같은 비교에만 귀속하며 1000배·10000배를 일반 사실로 쓰지 않는다.",
+      },
+    ],
+  },
   "cuda-thread-hierarchy": {
     title: "CUDA thread hierarchy 글이 소유하는 범위",
     owns: [

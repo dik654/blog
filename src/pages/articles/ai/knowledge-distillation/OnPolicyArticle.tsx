@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
@@ -315,10 +316,53 @@ export default function OnPolicyDistillationArticle() {
           </CitationBlock>
         </div>
       </section>
+      <section id="motif-mopd-case" className="mb-16 scroll-mt-20 space-y-6">
+        <header>
+          <p className="text-sm font-semibold text-primary">
+            04 · Motif 3 case
+          </p>
+          <h2 className="mt-2 text-2xl font-bold">
+            Motif 3는 full-vocabulary KL 대신 sampled token 하나의 teacher
+            log-probability를 사용했다
+          </h2>
+        </header>
+        <p>
+          Motif 3의 MOPD는 general SFT student가 on-policy trajectory를 만들고,
+          prompt domain에 맞는 일곱 specialist 중 하나가 각 sampled token에 준
+          scalar log probability만 가져옵니다. Generation policy와 update 직전
+          old policy의 mismatch는 ICE-POP importance filter로 제한하고,
+          environment reward와 reference-policy KL은 distillation objective에서
+          제외합니다.
+        </p>
+        <p>
+          이는 앞 절의 full-vocabulary divergence를 구현하는 유일한 방법이
+          아닙니다. 같은 on-policy·multi-teacher 틀에서도 teacher interface는
+          full distribution, top-k logits, chosen-token scalar처럼 달라질 수
+          있습니다. Motif의 정확한 식과 7-teacher pipeline은{" "}
+          <Link className="text-primary hover:underline" to="/ai/motif-3-architecture#post-training">
+            Motif 3 구조 글
+          </Link>
+          이 소유합니다.
+        </p>
+        <div id="paper-motif3-mopd">
+          <CitationBlock
+            source="Motif 3: Technical Report — selected-token MOPD"
+            citeKey={3}
+            type="paper"
+            href="https://arxiv.org/abs/2608.09119"
+          >
+            <p><strong>문제:</strong> RL·SFT로 만든 일곱 specialist capability를 general student에 통합합니다.</p>
+            <p><strong>기여:</strong> Student rollout의 sampled token에 대한 routed-teacher log probability와 ICE-POP filter를 사용합니다.</p>
+            <p><strong>전제:</strong> Motif 3의 same-origin teacher·domain routing·policy-version·tokenizer 조건입니다.</p>
+            <p><strong>근거 범위:</strong> 보고서의 구체적 MOPD implementation과 final model evaluation입니다.</p>
+            <p><strong>말하지 않는 것:</strong> Chosen-token scalar가 full-vocabulary KL보다 항상 좋거나 long-horizon credit assignment를 해결한다는 뜻은 아닙니다.</p>
+          </CitationBlock>
+        </div>
+      </section>
       <section id="release-gate" className="mb-16 scroll-mt-20 space-y-5">
         <header>
           <p className="text-sm font-semibold text-primary">
-            04 · release gate
+            05 · release gate
           </p>
           <h2 className="mt-2 text-2xl font-bold">
             Rollout policy·teacher cost·worst-domain regression을 함께 승인한다

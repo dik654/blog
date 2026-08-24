@@ -148,6 +148,90 @@ const withSeriesEvidence = (
 export const ARTICLE_EVIDENCE: Readonly<
   Record<string, readonly ArticleEvidenceItem[]>
 > = {
+  "ai/llm-training-stages": [
+    {
+      kind: "핵심 논문",
+      label: "Scaling Laws for Neural Language Models",
+      href: "https://arxiv.org/abs/2001.08361",
+      note: "Autoregressive language-model pretraining loss와 model·data·compute scaling 관계의 기준 연구",
+    },
+    {
+      kind: "핵심 논문",
+      label: "Training language models to follow instructions with human feedback",
+      href: "https://arxiv.org/abs/2203.02155",
+      note: "SFT와 preference-model·RL을 결합한 instruction post-training pipeline의 대표 연구",
+    },
+    {
+      kind: "핵심 논문",
+      label: "On-Policy Distillation of Language Models: Learning from Self-Generated Mistakes",
+      href: "https://arxiv.org/abs/2306.13649",
+      note: "Student가 실제 생성한 prefix에서 teacher token feedback을 받는 on-policy distillation 근거",
+    },
+    {
+      kind: "공식 연구",
+      label: "Motif 3 Technical Report v1",
+      href: "https://arxiv.org/abs/2608.09119",
+      note: "Architecture·pretraining·multi-teacher post-training을 공동 설계한 최신 model-system 사례",
+    },
+  ],
+  "ai/motif-3-architecture": [
+    {
+      kind: "공식 연구",
+      label: "Motif 3 Technical Report v1",
+      href: "https://arxiv.org/abs/2608.09119",
+      note: "314B total·13.2B active configuration, GDLA·modified mHC·PolyNorm·MOPD와 controlled ablation의 정본",
+    },
+    {
+      kind: "공식 문서",
+      label: "Motif-Technologies/Motif-3",
+      href: "https://huggingface.co/Motif-Technologies/Motif-3",
+      note: "MIT license, instruction checkpoint와 built-in one-layer MTP head의 현재 공개 정보",
+    },
+    {
+      kind: "공식 구현",
+      label: "Motif 3 Training Example",
+      href: "https://github.com/MotifTechnologies/motif3-training-example",
+      note: "B200 train-only reference와 multi-node launch configuration을 공개한 공식 training example",
+    },
+    {
+      kind: "핵심 논문",
+      label: "Grouped Differential Attention",
+      href: "https://arxiv.org/abs/2510.06949",
+      note: "Signal/noise head grouping과 token-dependent differential coefficient의 원 설계",
+    },
+    {
+      kind: "핵심 논문",
+      label: "DeepSeek-V2: A Strong, Economical, and Efficient Mixture-of-Experts Language Model",
+      href: "https://arxiv.org/abs/2405.04434",
+      note: "MLA의 low-rank joint KV compression과 MoE architecture 배경",
+    },
+  ],
+  "ai/spiking-neural-networks": [
+    {
+      kind: "핵심 논문",
+      label: "SuperSpike: Supervised Learning in Multilayer Spiking Neural Networks",
+      href: "https://arxiv.org/abs/1705.11146",
+      note: "Hard spike nonlinearity를 우회하는 surrogate-gradient 계열 학습의 기준 연구",
+    },
+    {
+      kind: "핵심 논문",
+      label: "Dendritic cortical microcircuits approximate the backpropagation algorithm",
+      href: "https://arxiv.org/abs/1810.11393",
+      note: "Standard backprop의 biological implausibility와 approximate credit-assignment circuit을 구분하는 근거",
+    },
+    {
+      kind: "공식 문서",
+      label: "Intel Loihi 2 Technology Brief",
+      href: "https://www.intel.com/content/www/us/en/research/neuromorphic-computing-loihi-2-technology-brief.html",
+      note: "Digital neuromorphic processor가 제공하는 programmable neuron·event-driven execution의 공식 범위",
+    },
+    {
+      kind: "핵심 논문",
+      label: "The BrainScaleS-2 Accelerated Neuromorphic System With Hybrid Plasticity",
+      href: "https://arxiv.org/abs/2201.11063",
+      note: "Mixed-signal accelerated substrate와 on-chip plasticity의 별도 hardware 사례",
+    },
+  ],
   "gpu/cuda-thread-hierarchy": [
     {
       kind: "공식 문서",
@@ -2244,6 +2328,12 @@ export const ARTICLE_EVIDENCE: Readonly<
       label: "Thinking Machines Lab: On-Policy Distillation",
       href: "https://thinkingmachines.ai/blog/on-policy-distillation/",
       note: "student sampling·teacher scoring·per-token reverse KL recipe와 공개 비용 비교",
+    },
+    {
+      kind: "공식 연구",
+      label: "Motif 3 Technical Report v1 — Multi-Teacher On-Policy Distillation",
+      href: "https://arxiv.org/abs/2608.09119",
+      note: "Full-vocabulary teacher distribution 대신 chosen-token log-probability scalar와 ICE-POP filter를 쓰는 Motif-specific MOPD 사례",
     },
   ],
   "ai/self-distillation": [

@@ -22,6 +22,9 @@ build 통과는 완료의 증거가 아니며, 아래 Definition of Done을 모�
 - 전문 용어를 없애지 않는다. 업계 표준 용어는 그대로 사용하고 처음 한 번 자연스러운 한국어 설명을 붙인다.
 - 원 논문, 공식 specification, 공식 구현을 우선 근거로 삼는다. 현재 상태가 중요한 내용은 최신 원문을 다시 확인한다.
 - 주장을 논문 결과와 일반 법칙으로 혼동하지 않는다. 실험 조건과 적용 범위를 함께 쓴다.
+- 새 model family와 branded architecture를 다룰 때는 공식 technical report·model card·공개 config의 정확한 release 이름, version 또는 revision, 기준일을 먼저 고정한다. 비공식 약어·이전 preview license·서로 다른 checkpoint의 수치를 섞지 않으며, 명칭을 바로잡을 때는 잘못된 이름을 새 alias처럼 지식 그래프에 남기지 않는다.
+- 두 연구 계열을 결합한 구조는 한쪽의 단선적 `진화형·상위호환`으로 설명하지 않는다. 각 계열이 해결하는 병목, 결합 지점, 새 비용을 독립 축으로 보여 주고, component ablation은 해당 model scale·data·metric 범위까지만 주장한다. 작은 진단 model의 loss 개선을 full-scale model의 benchmark·latency 원인으로 확대하지 않는다.
+- 행동주의·뇌·노이즈 캔슬링 같은 비유는 직관을 여는 설명 장치로 표시하고 수학적 mechanism과 일대일 대응시키지 않는다. model class와 학습 알고리즘처럼 층위가 다른 항목의 비교(`SNN 대 backprop` 등)는 category mismatch를 먼저 바로잡은 뒤 같은 층의 비교축으로 다시 쓴다.
 - Roadmap·strawmap·research prototype·alpha처럼 성숙도가 다른 항목을 한 목록에 섞지 않는다. 각 항목마다 `현재 배포됨 / 채택 검토 중 / 연구 방향 / 실험 결과` 중 상태와 기준 시점을 먼저 표시하고, 방향성을 최종 채택·일정·성능 보장으로 확대하지 않는다.
 - 암호 primitive를 바꾸는 접근과 기존 primitive를 그대로 두고 proof/execution layer를 최적화하는 접근은 별도 설계 축으로 비교한다. Field·instruction 표현의 impedance mismatch, prover·verifier·proof size, 구현 생태계와 cryptanalysis history를 같은 표에서 비교하고 단일 benchmark만으로 장기 primitive 선택을 결론내리지 않는다.
 - Hybrid sequence model은 `전체 layer 수 × KV shape`로 cache를 계산하지 않는다. 먼저 공개 config의 layer pattern을 `full attention / linear attention·recurrent mixer`로 나누고, token 수에 따라 커지는 attention KV와 request마다 고정되는 recurrent·convolution state를 별도 tensor shape·dtype으로 계산한다. Prefill의 chunk/parallel form과 decode의 recurrent form, logical bytes와 allocator·TP·kernel의 physical bytes도 서로 다른 claim으로 표시한다.

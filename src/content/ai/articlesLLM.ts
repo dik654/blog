@@ -4,6 +4,19 @@ import { vllmServingArticles } from "./articlesVLLM";
 const llmBaseArticles: Article[] = [
   // ── LLM Theory: 학습, 정렬, 해석가능성 ──
   {
+    slug: "llm-training-stages",
+    title: "LLM 학습 단계: Pretraining에서 Agentic Training까지",
+    subcategory: "ai-llm-theory",
+    sections: [
+      { id: "overview", title: "Capability와 behavior의 층위" },
+      { id: "pretraining", title: "Pretraining·continued training" },
+      { id: "post-training", title: "SFT·RLVR·OPD와 용어 경계" },
+      { id: "agentic-training", title: "Trajectory·environment·verifier" },
+      { id: "limits", title: "Soft limit·hard limit의 증거 경계" },
+    ],
+    component: () => import("@/pages/articles/ai/llm-training-stages"),
+  },
+  {
     slug: "supervised-fine-tuning",
     title: "SFT: demonstration을 response-token 학습으로 바꾸기",
     subcategory: "ai-llm-theory",
@@ -170,6 +183,20 @@ const llmBaseArticles: Article[] = [
       { id: "evolution", title: "Shared·fine-grained·latent expert" },
     ],
     component: () => import("@/pages/articles/ai/mixture-of-experts"),
+  },
+  {
+    slug: "motif-3-architecture",
+    title: "Motif 3 구조: GDLA·mHC·PolyNorm과 MOPD",
+    subcategory: "ai-llm-theory",
+    sections: [
+      { id: "overview", title: "314B MoE의 구성 장부" },
+      { id: "gdla", title: "MLA와 GDA가 만나는 GDLA" },
+      { id: "mhc", title: "Modified mHC residual mixing" },
+      { id: "polynorm", title: "Expert-Specific PolyNorm" },
+      { id: "post-training", title: "7개 teacher와 MOPD" },
+      { id: "evidence", title: "Ablation·benchmark 근거 경계" },
+    ],
+    component: () => import("@/pages/articles/ai/motif-3-architecture"),
   },
   {
     slug: "kimi-k3-architecture",

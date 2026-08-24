@@ -682,6 +682,18 @@
 
 ## 진행 중
 
+### AI / Motif 3 · LLM training stages · SNN learning boundary (2026-08-24)
+
+- [x] Motif 3 v1 technical report와 현재 MIT model card를 기준으로 GDLA·modified mHC·Expert-Specific PolyNorm·MoE·MTP·MOPD의 구성과 근거 범위를 새 model-system 글로 정리
+- [x] Pretraining·continued/mid-training·post-training·serving/agent harness의 역할을 구분하고 PTQ·LoRA 용어 혼동, RLVR·OPD·agentic trajectory의 학습 신호 차이를 독립 단계 지도 글로 정리
+- [x] Backpropagation·optimizer·SNN·surrogate gradient·BPTT의 category boundary와 생물학적 비유·digital/analog neuromorphic hardware·PVT·효율 claim의 조건을 SNN 글로 정리
+- [x] 기존 knowledge-distillation 글에 Motif 3의 chosen-token·ICE-POP MOPD 사례를 canonical OPD 정의와 중복 없이 연결
+- [x] 새 route의 catalog·learning(기초 6/심화 4)·evidence·ownership·knowledge graph 등록과 strict audit·build·1440/390 브라우저 검수
+
+- Motif 3 report v1(2026-08-10)·현재 instruction/base model card·공식 B200 training example을 대조했다. Report의 314B-A13.2B 통합 결과와 약 10B diagnostic ablation을 분리하고, instruction checkpoint의 built-in 1-layer MTP와 base checkpoint에 MTP head가 포함되지 않는 artifact 차이도 본문에 고정했다.
+- 세 route에 20개 canonical concept와 관계선을 추가해 graph는 2,438 concepts·3,699 relations, public route·exact learning contract는 562개가 됐다. 각 글은 기초 6개·심화 4개 exercise, primary evidence, ownership boundary를 가진다.
+- `audit:graph --strict`, 신규 4개 글 `audit:learning --strict --require-registration`, `audit:formula --strict`, 신규 Viz 6개 source `audit:viz --strict`, reading·term-density·topology strict, route regression과 production build를 통과했다. Playwright에서 정적 audit가 찾지 못한 annotated underbrace 중괄호 오류를 교정한 뒤 1440px·390px 세 route 모두 KaTeX error 0, document overflow 0, console warning/error 0을 확인했다. Lesson flow는 마지막 컷에서 `→` 입력 시 `개념 2/5 · 컷 1/5`로 이동하는 실제 DOM 상태까지 재검증했다.
+
 ### AI / Tabular deep learning
 
 - [x] Heterogeneous row·schema → 강한 GBDT baseline → representation 기회 → TabNet/FT-Transformer → 운영 판정의 top-down 흐름으로 재작성

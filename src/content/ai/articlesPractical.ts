@@ -915,6 +915,7 @@ const compressionArticles: Article[] = [
       { id: "state-mismatch", title: "Fixed·on-policy mixture" },
       { id: "teacher-feedback", title: "Token-level teacher feedback" },
       { id: "multi-teacher", title: "Specialist policy 통합" },
+      { id: "motif-mopd-case", title: "Motif 3 chosen-token MOPD" },
       { id: "release-gate", title: "Rollout·cost·regression gate" },
     ],
     component: () => import("@/pages/articles/ai/on-policy-distillation"),

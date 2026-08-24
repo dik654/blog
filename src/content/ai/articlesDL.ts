@@ -351,6 +351,20 @@ export const dlFoundationArticles: Article[] = [
     component: () => import("@/pages/articles/ai/backprop-optimization"),
   },
   {
+    slug: "spiking-neural-networks",
+    title: "SNN: LIF·Surrogate Gradient·저전력의 조건",
+    subcategory: "ai-foundations",
+    sections: [
+      { id: "overview", title: "SNN과 학습 알고리즘 구분" },
+      { id: "lif-dynamics", title: "LIF membrane state와 spike" },
+      { id: "surrogate-gradient", title: "Hard forward·surrogate backward" },
+      { id: "bptt", title: "시간축 unroll과 BPTT" },
+      { id: "brain-boundary", title: "뇌·Hebbian learning 비유 경계" },
+      { id: "hardware", title: "Event-driven hardware와 PVT" },
+    ],
+    component: () => import("@/pages/articles/ai/spiking-neural-networks"),
+  },
+  {
     slug: "optimizers",
     title: "SGD와 Effective Batch: Gradient를 한 Update로",
     subcategory: "ai-foundations",
