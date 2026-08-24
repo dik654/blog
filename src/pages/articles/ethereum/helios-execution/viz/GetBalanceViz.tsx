@@ -831,7 +831,7 @@ export default function GetBalanceViz() {
                     rx={6}
                     fill={`${C.ok}12`}
                     stroke={C.ok}
-                    strokeWidth={1.5}
+                    strokeWidth={1.2}
                   />
                   <text
                     x={195}

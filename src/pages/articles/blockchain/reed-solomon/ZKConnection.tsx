@@ -22,6 +22,10 @@ export default function ZKConnection() {
         question="Low-degree polynomial과 RS codeword membership은 어떻게 연결될까요?"
         idea="Domain D의 모든 점에서 degree&lt;k polynomial을 평가한 vector들의 집합을 code로 정의합니다. Membership은 정확한 등가이고 proximity는 이 집합까지의 상대 Hamming 거리를 별도로 잽니다."
         formula={String.raw`\operatorname{RS}[\mathbb F,D,k]=\{(p(x))_{x\in D}:\deg p<k\},\qquad \Delta(f,\operatorname{RS})=\min_c\frac{|\{x:f(x)\ne c_x\}|}{|D|}`}
+        annotatedFormula={String.raw`\operatorname{RS}[\mathbb F,D,k]=\underbrace{\{(p(x))_{x\in D}:\deg p<k\},\qquad \Delta(f,\operatorname{RS})=\min_c\frac{|\{x:f(x)\ne c_x\}|}{|D|}}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`\{(p(x))_{x\in D}:\deg p<k\},\qquad \Delta(f,\operatorname{RS})=\min_c\frac{|\{x:f(x)\ne c_x\}|}{|D|}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Domain D의 모든 점에서 degree k","polynomial을 평가한 vector들의 집합을 code로","정의합니다."] },
+        ]}
         terms={[
           { symbol: "D", name: "evaluation domain", description: "중복 없는 field points의 ordered set입니다." },
           { symbol: "k", name: "dimension bound", description: "허용 polynomial degree를 k 미만으로 제한합니다." },

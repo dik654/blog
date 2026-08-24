@@ -6,5 +6,15 @@ export default function Architecture() {
 J_R&=\mathbf 1[R=K]\\
 J_A&=\mathbf 1[\operatorname{conflicts}(A)=\varnothing]\\
 \operatorname{join\_ok}&=J_RJ_A\mathbf 1[V(A)=1]
-\end{aligned}`} terms={[{symbol:"R",name:"required tasks",description:"계획에서 반드시 완료해야 한다고 고정한 task ID 집합입니다."},{symbol:"K",name:"successful receipts",description:"Schema·checksum·local validation을 통과한 receipt의 task ID 집합입니다."},{symbol:"A",name:"artifacts",description:"Worker가 반환한 file·record·report 등 versioned 결과 집합입니다."},{symbol:"V",name:"global validator",description:"합친 결과의 test·rubric·policy를 검사하는 결정적 또는 audited 판정입니다."}]} assumptions={["Task ID와 input snapshot이 retry마다 안정적이며 중복 receipt를 dedup합니다.","부분 성공을 허용한다면 required/optional과 degraded-output policy를 사전에 구분합니다.","Validator가 보지 않는 의미 오류는 join_ok=1이어도 남을 수 있으므로 audit 표본을 둡니다."]} interpretation="필수 10개 중 9개만 성공하면 보고서가 그럴듯해도 완료가 아닙니다. 10개가 모두 있어도 같은 파일을 서로 다르게 수정했거나 전체 test가 실패하면 join을 승인하지 않습니다."/><div className="not-prose my-8"><ArchitectureViz /></div></section>;
+\end{aligned}`}
+  annotatedFormula={String.raw`\begin{aligned}
+J_R&=\underbrace{\mathbf 1[R=K]}_{\text{required tasks 계산}}\\
+J_A&=\underbrace{\mathbf 1[\operatorname{conflicts}(A)=\varnothing]}_{\text{artifacts 계산}}\\
+\operatorname{join\_ok}&=\underbrace{J_RJ_A\mathbf 1[V(A)=1]}_{\text{artifacts 계산}}
+\end{aligned}`}
+  operations={[
+    { expression: String.raw`\mathbf 1[R=K]`, annotation: ["required tasks이(가) 식의 결과에 기여하는 방식을","계산합니다.","필수 task ID 집합과 성공 receipt가 있는 task","ID 집합이 같고, artifact 충돌이 없으며 전역"] },
+    { expression: String.raw`\mathbf 1[\operatorname{conflicts}(A)=\varnothing]`, annotation: ["artifacts이(가) 식의 결과에 기여하는 방식을","계산합니다.","필수 task ID 집합과 성공 receipt가 있는 task","ID 집합이 같고, artifact 충돌이 없으며 전역"] },
+    { expression: String.raw`J_RJ_A\mathbf 1[V(A)=1]`, annotation: ["artifacts이(가) 식의 결과에 기여하는 방식을","계산합니다.","필수 task ID 집합과 성공 receipt가 있는 task","ID 집합이 같고, artifact 충돌이 없으며 전역"] },
+  ]} terms={[{symbol:"R",name:"required tasks",description:"계획에서 반드시 완료해야 한다고 고정한 task ID 집합입니다."},{symbol:"K",name:"successful receipts",description:"Schema·checksum·local validation을 통과한 receipt의 task ID 집합입니다."},{symbol:"A",name:"artifacts",description:"Worker가 반환한 file·record·report 등 versioned 결과 집합입니다."},{symbol:"V",name:"global validator",description:"합친 결과의 test·rubric·policy를 검사하는 결정적 또는 audited 판정입니다."}]} assumptions={["Task ID와 input snapshot이 retry마다 안정적이며 중복 receipt를 dedup합니다.","부분 성공을 허용한다면 required/optional과 degraded-output policy를 사전에 구분합니다.","Validator가 보지 않는 의미 오류는 join_ok=1이어도 남을 수 있으므로 audit 표본을 둡니다."]} interpretation="필수 10개 중 9개만 성공하면 보고서가 그럴듯해도 완료가 아닙니다. 10개가 모두 있어도 같은 파일을 서로 다르게 수정했거나 전체 test가 실패하면 join을 승인하지 않습니다."/><div className="not-prose my-8"><ArchitectureViz /></div></section>;
 }

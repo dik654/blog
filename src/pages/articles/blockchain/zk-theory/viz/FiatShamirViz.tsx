@@ -447,7 +447,7 @@ function FiatShamirDiagram() {
           rx={20}
           fill={`${C.fs}15`}
           stroke={C.fs}
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <text
           x={327}

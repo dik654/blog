@@ -91,7 +91,7 @@ function Step1() {
         x2={150}
         y2={44}
         stroke={C.stem}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
         transition={{ duration: 0.4 }}

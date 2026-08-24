@@ -33,6 +33,10 @@ export default function KvSchema({
           </>
         }
         formula={String.raw`W_{\rm logical}=1+k`}
+        annotatedFormula={String.raw`W_{\rm logical}=\underbrace{1+k}_{\text{Logical writes 계산}}`}
+        operations={[
+          { expression: String.raw`1+k`, annotation: ["Logical writes이(가) 식의 결과에 기여하는 방식을","계산합니다.","원본 primary record 하나와 그 object를 찾게","하는 k개 secondary mappings를 같은"] },
+        ]}
         terms={[
           {
             symbol: "1",

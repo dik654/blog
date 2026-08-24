@@ -22,6 +22,12 @@ export default function YarnMethod() {
         question="각 RoPE 차원이 pretraining에서 본 회전 수에 따라 scaling 강도를 다르게 정하려면?"
         idea={<>rᵢ=L/λᵢ로 원래 context 안의 회전 횟수를 계산합니다. 거의 회전하지 않은 저주파는 interpolation하고, 여러 번 회전한 고주파는 그대로 두며, 사이는 linear ramp로 연결합니다.</>}
         formula={String.raw`\begin{aligned}r_i&=\frac{L}{\lambda_i}\\[3pt]\gamma_i&=\operatorname{clip}\!\left(\frac{r_i-\beta_{\rm slow}}{\beta_{\rm fast}-\beta_{\rm slow}},0,1\right)\\[3pt]\theta_i'&=(1-\gamma_i)\frac{\theta_i}{s}+\gamma_i\theta_i\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}r_i&=\underbrace{\frac{L}{\lambda_i}}_{\text{기준량당 비율}}\\[3pt]\gamma_i&=\underbrace{\operatorname{clip}\!\left(\frac{r_i-\beta_{\rm slow}}{\beta_{\rm fast}-\beta_{\rm slow}},0,1\right)}_{\text{기준량당 비율}}\\[3pt]\theta_i'&=\underbrace{(1-\gamma_i)\frac{\theta_i}{s}+\gamma_i\theta_i}_{\text{기준량당 비율}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`\frac{L}{\lambda_i}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","rᵢ=L/λᵢ로 원래 context 안의 회전 횟수를","계산합니다."] },
+          { expression: String.raw`\operatorname{clip}\!\left(\frac{r_i-\beta_{\rm slow}}{\beta_{\rm fast}-\beta_{\rm slow}},0,1\right)`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","rᵢ=L/λᵢ로 원래 context 안의 회전 횟수를","계산합니다."] },
+          { expression: String.raw`(1-\gamma_i)\frac{\theta_i}{s}+\gamma_i\theta_i`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","rᵢ=L/λᵢ로 원래 context 안의 회전 횟수를","계산합니다."] },
+        ]}
         terms={[
           { symbol: "r_i", name: "observed rotations", description: "pretraining context L 안에서 i번째 RoPE pair가 돈 횟수입니다." },
           { symbol: "\\gamma_i", name: "ramp weight", description: "0이면 전부 interpolation, 1이면 원래 frequency를 그대로 사용합니다." },
@@ -57,6 +63,11 @@ export default function YarnMethod() {
         question="context가 길어지며 달라진 attention entropy를 logit scale로 어떻게 보정할까?"
         idea={<>softmax 전에 temperature t를 두고, query와 key 양쪽의 rotary embedding을 m(s)=√(1/t)만큼 scale합니다. 그러면 dot product에는 m(s)²=1/t가 반영됩니다.</>}
         formula={String.raw`\begin{aligned}p(n\mid m)&=\operatorname{softmax}\!\left(\frac{q_m^\top k_n}{t\sqrt d}\right)\\[3pt]m(s)&=\sqrt{\frac1t}=0.1\ln s+1\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}p(n\mid m)&=\underbrace{\operatorname{softmax}\!\left(\frac{q_m^\top k_n}{t\sqrt d}\right)}_{\text{선택 비율 정규화}}\\[3pt]m(s)&=\underbrace{\sqrt{\frac1t}=0.1\ln s+1}_{\text{로그 비용 변환}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`\operatorname{softmax}\!\left(\frac{q_m^\top k_n}{t\sqrt d}\right)`, annotation: ["score를 합이 1인 선택 비율로 정규화합니다.","softmax 전에 temperature t를 두고,","query와 key 양쪽의 rotary embedding을","m(s)=√(1/t)만큼 scale합니다."] },
+          { expression: String.raw`\sqrt{\frac1t}=0.1\ln s+1`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","softmax 전에 temperature t를 두고,","query와 key 양쪽의 rotary embedding을","m(s)=√(1/t)만큼 scale합니다."] },
+        ]}
         terms={[
           { symbol: "t", name: "attention temperature", description: "작을수록 logits가 커지고 softmax distribution이 더 뾰족해집니다." },
           { symbol: "m(s)", name: "length scale", description: "rotary cosine·sine에 적용하는 scale이며 q와 k 양쪽에 들어갑니다." },

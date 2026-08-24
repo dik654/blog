@@ -96,6 +96,14 @@ export default function LiteLLMGateway({
 D_{\mathrm{remain}}&=D_{\mathrm{total}}-T_{\mathrm{elapsed}}\\
 T_{\mathrm{backoff}}+\widehat T_{\mathrm{attempt}}&<D_{\mathrm{remain}}
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+\underbrace{D_{\mathrm{remain}}}_{\text{다음 시도 예산 계산}}&=\underbrace{D_{\mathrm{total}}-T_{\mathrm{elapsed}}}_{\text{소진한 시간 계산}}\\
+T_{\mathrm{backoff}}+\widehat T_{\mathrm{attempt}}&<D_{\mathrm{remain}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`D_{\mathrm{total}}-T_{\mathrm{elapsed}}`, annotation: ["소진한 시간이(가) 식의 결과에 기여하는 방식을 계산합니다.","전체 deadline에서 이미 쓴 시간을 빼고, 다음 시도의","예상 backoff·실행·응답 전달 시간이 그 안에 들어올","때만 재시도합니다."] },
+          { expression: String.raw`D_{\mathrm{remain}}`, annotation: ["다음 시도 예산이(가) 식의 결과에 기여하는 방식을","계산합니다.","전체 deadline에서 이미 쓴 시간을 빼고, 다음 시도의","예상 backoff·실행·응답 전달 시간이 그 안에 들어올"] },
+        ]}
         terms={[
           {
             symbol: "D_{\\mathrm{total}}",
@@ -144,6 +152,10 @@ T_{\mathrm{backoff}}+\widehat T_{\mathrm{attempt}}&<D_{\mathrm{remain}}
           </>
         }
         formula={String.raw`\lambda_{\mathrm{backend}}=\lambda_{\mathrm{client}}\,\mathbb E[A]`}
+        annotatedFormula={String.raw`\lambda_{\mathrm{backend}}=\underbrace{\lambda_{\mathrm{client}}\,\mathbb E[A]}_{\text{확률 가중 평균}}`}
+        operations={[
+          { expression: String.raw`\lambda_{\mathrm{client}}\,\mathbb E[A]`, annotation: ["backend arrival rate이(가) 식의 결과에","기여하는 방식을 계산합니다.","Client request 하나가 backend를 평균 몇 번","호출하는지 세면, 장애 중 실제 arrival rate를"] },
+        ]}
         terms={[
           {
             symbol: "\\lambda_{\\mathrm{client}}",

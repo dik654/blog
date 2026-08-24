@@ -121,7 +121,7 @@ export default function CurveViz() {
         </text>
 
         {/* 곡선 */}
-        <path d={pathData} stroke="#3b82f6" strokeWidth={2.5} fill="none" />
+        <path d={pathData} stroke="#3b82f6" strokeWidth={1.2} fill="none" />
 
         {/* Point A (10, 10) */}
         <circle
@@ -130,7 +130,7 @@ export default function CurveViz() {
           r={5}
           fill="#10b981"
           stroke="var(--card)"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <text
           x={originX + 10 * scaleX + 10}
@@ -157,7 +157,7 @@ export default function CurveViz() {
           r={5}
           fill="#f59e0b"
           stroke="var(--card)"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <text
           x={originX + 5 * scaleX + 10}
@@ -184,7 +184,7 @@ export default function CurveViz() {
           r={5}
           fill="#8b5cf6"
           stroke="var(--card)"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <text
           x={originX + 20 * scaleX - 10}

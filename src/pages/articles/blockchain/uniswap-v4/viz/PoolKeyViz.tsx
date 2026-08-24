@@ -26,7 +26,7 @@ export default function PoolKeyViz() {
           rx={8}
           fill="var(--card)"
           stroke="#3b82f6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <rect
           x={80}

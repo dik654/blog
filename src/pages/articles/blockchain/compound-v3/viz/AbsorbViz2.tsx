@@ -66,7 +66,7 @@ export default function AbsorbViz2() {
           x2={40}
           y2={108}
           stroke="#3b82f6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#ab-arr)"
         />
 
@@ -106,7 +106,7 @@ export default function AbsorbViz2() {
           x2={40}
           y2={168}
           stroke="#3b82f6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#ab-arr)"
         />
 
@@ -146,7 +146,7 @@ export default function AbsorbViz2() {
           x2={40}
           y2={228}
           stroke="#3b82f6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#ab-arr)"
         />
 

@@ -13,6 +13,10 @@ export default function FlashSwap() {
         question="두 cumulative price snapshot으로 5분 TWAP을 어떻게 계산할까요?"
         idea="Pair는 이전 reserve 비율에 경과 시간을 곱해 누적합니다. 소비자는 서로 다른 두 시점의 누적값 차이를 실제 경과 시간으로 나눕니다."
         formula={String.raw`P_{TWAP}=\frac{C(t_1)-C(t_0)}{t_1-t_0},\qquad C\leftarrow C+P_{old}\Delta t`}
+        annotatedFormula={String.raw`P_{TWAP}=\underbrace{\frac{C(t_1)-C(t_0)}{t_1-t_0},\qquad C\leftarrow C+P_{old}\Delta t}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`\frac{C(t_1)-C(t_0)}{t_1-t_0},\qquad C\leftarrow C+P_{old}\Delta t`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Pair는 이전 reserve 비율에 경과 시간을 곱해","누적합니다."] },
+        ]}
         terms={[
           { symbol: "C", name: "cumulative price", description: "Q112.112 price×seconds 누적값입니다." },
           { symbol: "P_old", name: "pre-update price", description: "해당 시간 구간 동안 유지됐다고 보는 이전 reserve 비율입니다." },

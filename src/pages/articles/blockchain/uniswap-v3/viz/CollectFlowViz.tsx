@@ -107,7 +107,7 @@ export default function CollectFlowViz() {
                   x2={44}
                   y2={y + 60}
                   stroke="#3b82f6"
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                   markerEnd="url(#cf-arr)"
                 />
               )}

@@ -171,7 +171,7 @@ export function EthCompatStep() {
             rx={8}
             fill={`${b.c}14`}
             stroke={b.c}
-            strokeWidth={1.5}
+            strokeWidth={1.2}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: i * 0.15 }}

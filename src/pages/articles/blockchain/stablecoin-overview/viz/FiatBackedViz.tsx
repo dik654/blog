@@ -147,7 +147,7 @@ export default function FiatBackedViz() {
         <path
           d="M 450 90 Q 455 120 120 90"
           stroke="#10b981"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           fill="none"
           markerEnd="url(#fb-arr)"
           strokeDasharray="4 3"

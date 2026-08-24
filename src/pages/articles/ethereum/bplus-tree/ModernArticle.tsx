@@ -31,6 +31,10 @@ export default function ModernArticle() {
         question="Page layout에서 point lookup의 최대 page 수를 어떻게 추정할까?"
         idea="Page의 usable bytes를 routing entry bytes로 나눠 fanout을 얻고, leaf capacity로 leaf page 수를 구한 뒤 fanout의 거듭제곱으로 root까지 접습니다."
         formula={String.raw`F=\left\lfloor\frac{P-H}{K+C}\right\rfloor,\qquad L=\left\lceil\frac{N}{E}\right\rceil,\qquad \text{page reads}\approx 1+\left\lceil\log_F L\right\rceil`}
+        annotatedFormula={String.raw`F=\underbrace{\left\lfloor\frac{P-H}{K+C}\right\rfloor,\qquad L=\left\lceil\frac{N}{E}\right\rceil,\qquad \text{page reads}\approx 1+\left\lceil\log_F L\right\rceil}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`\left\lfloor\frac{P-H}{K+C}\right\rfloor,\qquad L=\left\lceil\frac{N}{E}\right\rceil,\qquad \text{page reads}\approx 1+\left\lceil\log_F L\right\rceil`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Page의 usable bytes를 routing entry","bytes로 나눠 fanout을 얻고, leaf","capacity로 leaf page 수를 구한 뒤"] },
+        ]}
         terms={[
           { symbol: "P", name: "Page bytes", description: "한 index page의 고정 byte 크기입니다." },
           { symbol: "H", name: "Page overhead", description: "Header·slot directory·sibling metadata 등에 쓰는 bytes입니다." },

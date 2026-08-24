@@ -24,6 +24,16 @@ export default function PoRep() {
           C_D&=C(D)\\
           C_{R_i}&=C(R_i)
         \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+          R_i&=\underbrace{E(D,i)}_{\text{encoded replica 계산}}\\
+          C_D&=\underbrace{C(D)}_{\text{sector data 계산}}\\
+          C_{R_i}&=\underbrace{C(R_i)}_{\text{encoded replica 계산}}
+        \end{aligned}`}
+        operations={[
+          { expression: String.raw`E(D,i)`, annotation: ["encoded replica이(가) 식의 결과에 기여하는","방식을 계산합니다.","Replica-specific encoding은 D와","identifier를 함께 입력으로 받아 encoded"] },
+          { expression: String.raw`C(D)`, annotation: ["sector data이(가) 식의 결과에 기여하는 방식을","계산합니다.","Replica-specific encoding은 D와","identifier를 함께 입력으로 받아 encoded"] },
+          { expression: String.raw`C(R_i)`, annotation: ["encoded replica이(가) 식의 결과에 기여하는","방식을 계산합니다.","Replica-specific encoding은 D와","identifier를 함께 입력으로 받아 encoded"] },
+        ]}
         terms={[
           { symbol: "D", name: "sector data", description: "Padding·piece layout까지 확정된 source sector bytes입니다." },
           { symbol: String.raw`\mathrm{replica\_id}_i`, name: "replica identity", description: "Provider·sector·ticket 등 protocol inputs에 귀속되는 context입니다." },

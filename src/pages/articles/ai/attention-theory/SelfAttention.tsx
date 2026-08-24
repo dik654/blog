@@ -35,6 +35,12 @@ export default function SelfAttention({
         question="같은 input sequence가 질문·주소·content라는 서로 다른 역할을 어떻게 동시에 맡을까?"
         idea={<>X 자체를 세 번 복사하는 것이 아니라 서로 다른 learned matrix로 투영합니다. 같은 token도 query일 때와 key/value일 때 다른 좌표를 가질 수 있습니다.</>}
         formula={String.raw`\begin{aligned}Q&=XW_Q\\K&=XW_K\\V&=XW_V\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}Q&=\underbrace{XW_Q}_{\text{오른쪽 항으로 결과 계산}}\\K&=\underbrace{XW_K}_{\text{오른쪽 항으로 결과 계산}}\\V&=\underbrace{XW_V}_{\text{오른쪽 항으로 결과 계산}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`XW_Q`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","X 자체를 세 번 복사하는 것이 아니라 서로 다른","learned matrix로 투영합니다."] },
+          { expression: String.raw`XW_K`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","X 자체를 세 번 복사하는 것이 아니라 서로 다른","learned matrix로 투영합니다."] },
+          { expression: String.raw`XW_V`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","X 자체를 세 번 복사하는 것이 아니라 서로 다른","learned matrix로 투영합니다."] },
+        ]}
         terms={[
           { symbol: "X\\in\\mathbb R^{n\\times d_{model}}", name: "shared source", description: "n개 token의 현재 layer representation입니다." },
           { symbol: "W_Q,W_K,W_V", name: "role projections", description: "질문·주소·content 역할에 맞게 학습되는 서로 다른 parameter입니다." },
@@ -64,6 +70,12 @@ export default function SelfAttention({
         question="한 개의 attention distribution 대신 여러 representation subspace에서 병렬로 읽으려면?"
         idea={<>model dimension을 H개 head의 projection으로 나누어 각자 score와 weighted sum을 계산하고, 결과를 concat한 뒤 output projection으로 다시 섞습니다.</>}
         formula={String.raw`\begin{aligned}Q_h&=XW_h^Q,\quad K_h=XW_h^K\\V_h&=XW_h^V\\a_h&=\operatorname{Attention}(Q_h,K_h,V_h)\\Y&=\operatorname{Concat}(a_1,\ldots,a_H)\\\operatorname{MHA}(X)&=YW_O\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}Q_h&=\underbrace{XW_h^Q,\quad K_h=XW_h^K}_{\text{오른쪽 항으로 결과 계산}}\\V_h&=\underbrace{XW_h^V}_{\text{오른쪽 항으로 결과 계산}}\\a_h&=\underbrace{\operatorname{Attention}(Q_h,K_h,V_h)}_{\text{head output 계산}}\\Y&=\operatorname{Concat}(a_1,\ldots,a_H)\\\operatorname{MHA}(X)&=YW_O\end{aligned}`}
+        operations={[
+          { expression: String.raw`XW_h^Q,\quad K_h=XW_h^K`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","model dimension을 H개 head의","projection으로 나누어 각자 score와","weighted sum을 계산하고, 결과를 concat한 뒤"] },
+          { expression: String.raw`XW_h^V`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","model dimension을 H개 head의","projection으로 나누어 각자 score와","weighted sum을 계산하고, 결과를 concat한 뒤"] },
+          { expression: String.raw`\operatorname{Attention}(Q_h,K_h,V_h)`, annotation: ["head output이(가) 식의 결과에 기여하는 방식을","계산합니다.","model dimension을 H개 head의","projection으로 나누어 각자 score와"] },
+        ]}
         terms={[
           { symbol: "H", name: "number of query heads", description: "병렬 attention projection의 수입니다." },
           { symbol: "W_h^Q,W_h^K,W_h^V", name: "head-specific projections", description: "head마다 다른 comparison·content subspace를 만듭니다." },

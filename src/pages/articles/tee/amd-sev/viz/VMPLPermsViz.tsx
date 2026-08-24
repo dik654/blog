@@ -154,7 +154,7 @@ export default function VMPLPermsViz() {
                 d="M170,60 C240,60 240,96 170,96"
                 fill="none"
                 stroke={C.amber}
-                strokeWidth={1.3}
+                strokeWidth={1.2}
                 strokeDasharray="5 3"
                 markerEnd="url(#vmplArr)"
               />

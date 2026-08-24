@@ -26,6 +26,14 @@ export default function ProofOfWork() {
           p&=\Pr[H<T]=\frac{T}{2^b}\\
           \mathbb{E}[N]&=\frac{1}{p}=\frac{2^b}{T}
         \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+          p&=\underbrace{\Pr[H<T]=\frac{T}{2^b}}_{\text{기준량당 비율}}\\
+          \mathbb{E}[N]&=\underbrace{\frac{1}{p}=\frac{2^b}{T}}_{\text{확률 가중 평균}}
+        \end{aligned}`}
+        operations={[
+          { expression: String.raw`\Pr[H<T]=\frac{T}{2^b}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Hash output을 균등하고 각 시도를 독립이라고 근사하면","성공 영역의 비율이 한 번의 성공 확률이고, geometric","distribution의 기대 시도 수는 그 역수입니다."] },
+          { expression: String.raw`\frac{1}{p}=\frac{2^b}{T}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Hash output을 균등하고 각 시도를 독립이라고 근사하면","성공 영역의 비율이 한 번의 성공 확률이고, geometric","distribution의 기대 시도 수는 그 역수입니다."] },
+        ]}
         terms={[
           { symbol: "b", name: "hash bits", description: "Toy model에서 hash output을 나타내는 bit 수입니다." },
           { symbol: "T", name: "target", description: "0 이상 T 미만 output을 성공으로 인정하는 threshold입니다." },

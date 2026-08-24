@@ -270,7 +270,7 @@ export default function PaillierHomViz() {
                 rx={7}
                 fill={C.dec + "18"}
                 stroke={C.dec}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={340}

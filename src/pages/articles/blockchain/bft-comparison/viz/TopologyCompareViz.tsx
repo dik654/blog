@@ -23,7 +23,7 @@ function Node({
         r={r}
         fill="var(--card)"
         stroke={color}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
       />
       <text
         x={x}
@@ -71,7 +71,7 @@ function PBFTMesh() {
           x2={N[b].x}
           y2={N[b].y}
           stroke={C.pbft}
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           opacity={0.5}
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}
@@ -124,7 +124,7 @@ function HotStuffStar() {
           x2={r.x}
           y2={r.y - 16}
           stroke={C.hs}
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           opacity={0.5}
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}

@@ -57,12 +57,12 @@ export default function HotStorageViz() {
                       transition={{ delay: i * 0.15 }}>
                       <rect x={x} y={50} width={w} height={36} rx={7}
                         fill={['#6366f1', '#f59e0b', '#10b981'][fi] + '18'}
-                        stroke={['#6366f1', '#f59e0b', '#10b981'][fi]} strokeWidth={1.5} />
+                        stroke={['#6366f1', '#f59e0b', '#10b981'][fi]} strokeWidth={1.2} />
                       <text x={x + w / 2} y={72} textAnchor="middle" fontSize={10}
                         fontWeight={600} fill={['#6366f1', '#f59e0b', '#10b981'][fi]}>{p}</text>
                       {i < parts.length - 1 && (
                         <motion.line x1={x + w + 2} y1={68} x2={x + w + 8} y2={68}
-                          stroke="currentColor" strokeOpacity={0.2} strokeWidth={1.5}
+                          stroke="currentColor" strokeOpacity={0.2} strokeWidth={1.2}
                           initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} />
                       )}
                     </motion.g>

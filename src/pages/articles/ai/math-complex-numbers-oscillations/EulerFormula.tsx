@@ -17,6 +17,10 @@ export default function EulerFormula() {
         question="eˣ·cos x·sin x를 같은 power-series 표현으로 놓으면 i의 반복이 어떻게 두 삼각함수를 만들까?"
         idea={<>eˣ의 각 항에 x=iθ를 넣습니다. i의 짝수 거듭제곱 1,−1,…은 cosine 항으로, 홀수 거듭제곱 i,−i,…은 i×sine 항으로 묶입니다.</>}
         formula={String.raw`e^x=\sum_{m=0}^{\infty}\frac{x^m}{m!},\quad \cos x=\sum_{m=0}^{\infty}(-1)^m\frac{x^{2m}}{(2m)!},\quad \sin x=\sum_{m=0}^{\infty}(-1)^m\frac{x^{2m+1}}{(2m+1)!}`}
+        annotatedFormula={String.raw`e^x=\underbrace{\sum_{m=0}^{\infty}\frac{x^m}{m!},\quad \cos x=\sum_{m=0}^{\infty}(-1)^m\frac{x^{2m}}{(2m)!},\quad \sin x=\sum_{m=0}^{\infty}(-1)^m\frac{x^{2m+1}}{(2m+1)!}}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`\sum_{m=0}^{\infty}\frac{x^m}{m!},\quad \cos x=\sum_{m=0}^{\infty}(-1)^m\frac{x^{2m}}{(2m)!},\quad \sin x=\sum_{m=0}^{\infty}(-1)^m\frac{x^{2m+1}}{(2m+1)!}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","eˣ의 각 항에 x=iθ를 넣습니다."] },
+        ]}
         terms={[
           { symbol: "m!", name: "factorial", description: "m!=1·2·…·m이며 0!=1로 정의합니다." },
           { symbol: String.raw`\sum_{m=0}^{\infty}`, name: "convergent series", description: "처음 M개 항의 부분합이 M→∞에서 가까워지는 극한입니다." },
@@ -29,6 +33,10 @@ export default function EulerFormula() {
         question="크기는 1로 유지하면서 각도 θ만큼 회전하는 복소수를 어떻게 한 식으로 나타낼까?"
         idea={<>Exponential의 거듭제곱급수에 iθ를 넣으면 i의 거듭제곱이 1,i,−1,−i로 반복됩니다. 짝수 항은 cosine 급수, 홀수 항은 i×sine 급수로 모입니다.</>}
         formula={String.raw`e^{i\theta}=\cos\theta+i\sin\theta,\qquad re^{i\theta}=r(\cos\theta+i\sin\theta)`}
+        annotatedFormula={String.raw`e^{i\theta}=\underbrace{\cos\theta+i\sin\theta,\qquad re^{i\theta}=r(\cos\theta+i\sin\theta)}_{\text{unit complex rotation 계산}}`}
+        operations={[
+          { expression: String.raw`\cos\theta+i\sin\theta,\qquad re^{i\theta}=r(\cos\theta+i\sin\theta)`, annotation: ["unit complex rotation이(가) 식의 결과에","기여하는 방식을 계산합니다.","Exponential의 거듭제곱급수에 iθ를 넣으면 i의","거듭제곱이 1,i,−1,−i로 반복됩니다."] },
+        ]}
         terms={[
           { symbol: "e^{i\\theta}", name: "unit complex rotation", description: "Magnitude 1, phase θ인 복소수입니다." },
           { symbol: "r", name: "magnitude", description: "단위원 좌표를 반지름 r로 확대합니다." },
@@ -41,6 +49,10 @@ export default function EulerFormula() {
         question="복소수 곱셈이 회전을 합성하는 이유는 무엇일까?"
         idea={<>지수의 곱셈 법칙에 따라 같은 밑 e의 지수는 더해집니다. Polar form의 두 복소수를 곱하면 magnitude는 곱해지고 phase는 더해집니다.</>}
         formula={String.raw`r_1e^{i\theta_1}\,r_2e^{i\theta_2}=r_1r_2e^{i(\theta_1+\theta_2)}`}
+        annotatedFormula={String.raw`r_1e^{i\theta_1}\,r_2e^{i\theta_2}=\underbrace{r_1r_2e^{i(\theta_1+\theta_2)}}_{\text{combined phase 계산}}`}
+        operations={[
+          { expression: String.raw`r_1r_2e^{i(\theta_1+\theta_2)}`, annotation: ["combined phase이(가) 식의 결과에 기여하는 방식을","계산합니다.","지수의 곱셈 법칙에 따라 같은 밑 e의 지수는 더해집니다."] },
+        ]}
         terms={[
           { symbol: "r_1r_2", name: "combined scale", description: "두 곱셈이 적용한 길이 배율의 곱입니다." },
           { symbol: String.raw`\theta_1+\theta_2`, name: "combined phase", description: "두 회전 각도를 순서대로 적용한 총각도입니다." },

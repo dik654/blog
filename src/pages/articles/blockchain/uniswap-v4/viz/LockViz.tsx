@@ -143,7 +143,7 @@ export default function LockViz() {
           x2={150}
           y2={70}
           stroke="#3b82f6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#lock-arr)"
         />
         <line
@@ -152,7 +152,7 @@ export default function LockViz() {
           x2={310}
           y2={70}
           stroke="#f59e0b"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#lock-arr)"
         />
 
@@ -277,7 +277,7 @@ export default function LockViz() {
           x2={260}
           y2={240}
           stroke="#10b981"
-          strokeWidth={1.3}
+          strokeWidth={1.2}
           markerEnd="url(#lock-arr)"
         />
 
@@ -320,7 +320,7 @@ export default function LockViz() {
           x2={170}
           y2={260}
           stroke="#ef4444"
-          strokeWidth={1.3}
+          strokeWidth={1.2}
           markerEnd="url(#lock-arr-red)"
         />
 

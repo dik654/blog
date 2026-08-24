@@ -80,7 +80,7 @@ export function HArrow({
           />
           {animated && (
             <motion.div
-              className="absolute inset-y-0 w-1/2 bg-gradient-to-r from-transparent via-emerald-500 to-transparent"
+              className="absolute inset-y-0 w-1/4 bg-emerald-500"
               animate={shimmer}
               transition={{ repeat: Infinity, duration: 0.75, ease: "linear" }}
             />
@@ -133,7 +133,7 @@ export function VConn({
         />
         {animated && (
           <motion.div
-            className="absolute inset-x-0 h-1/2 bg-gradient-to-b from-transparent via-emerald-500 to-transparent"
+            className="absolute inset-x-0 h-1/4 bg-emerald-500"
             animate={{ y: ["-60%", "160%", "-60%"] }}
             transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
           />

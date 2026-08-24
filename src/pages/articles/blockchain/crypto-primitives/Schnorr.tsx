@@ -17,6 +17,10 @@ export default function Schnorr() {
         question="Verifier는 secret x를 보지 않고 서명자의 응답을 어떻게 확인할까요?"
         idea="Signer는 nonce commitment R을 먼저 고정하고 challenge e에 대해 s=k+ex로 응답합니다. 양변에 G를 곱하면 공개된 P=xG만으로 같은 관계를 검사할 수 있습니다."
         formula={String.raw`R=kG,\quad e=H(\mathsf{tag}\Vert R\Vert P\Vert m),\quad s=k+ex\pmod q,\quad sG\stackrel?=R+eP`}
+        annotatedFormula={String.raw`R=\underbrace{kG,\quad e=H(\mathsf{tag}\Vert R\Vert P\Vert m),\quad s=k+ex\pmod q,\quad sG\stackrel?=R+eP}_{\text{Fiat–Shamir challenge 계산}}`}
+        operations={[
+          { expression: String.raw`kG,\quad e=H(\mathsf{tag}\Vert R\Vert P\Vert m),\quad s=k+ex\pmod q,\quad sG\stackrel?=R+eP`, annotation: ["Fiat–Shamir challenge이(가) 식의 결과에","기여하는 방식을 계산합니다.","Signer는 nonce commitment R을 먼저","고정하고 challenge e에 대해 s=k+ex로"] },
+        ]}
         terms={[
           { symbol: "x,P=xG", name: "secret·public key", description: "x는 scalar field의 비밀값이고 P는 공개 group point입니다." },
           { symbol: "k,R=kG", name: "nonce·commitment", description: "서명마다 독립적으로 안전하게 만든 scalar와 그 공개점입니다." },
@@ -30,6 +34,10 @@ export default function Schnorr() {
         question="같은 nonce k를 두 메시지에 쓰면 왜 secret x가 드러날까요?"
         idea="같은 R에서 challenge만 e₁,e₂로 달라지면 두 response의 차이에서 k가 지워지고 x에 대한 일차식 하나가 남습니다."
         formula={String.raw`s_1-s_2=(e_1-e_2)x\pmod q\quad\Longrightarrow\quad x=(s_1-s_2)(e_1-e_2)^{-1}\pmod q`}
+        annotatedFormula={String.raw`s_1-s_2=\underbrace{(e_1-e_2)x\pmod q\quad\Longrightarrow\quad x=(s_1-s_2)(e_1-e_2)^{-1}\pmod q}_{\text{field inverse 계산}}`}
+        operations={[
+          { expression: String.raw`(e_1-e_2)x\pmod q\quad\Longrightarrow\quad x=(s_1-s_2)(e_1-e_2)^{-1}\pmod q`, annotation: ["field inverse이(가) 식의 결과에 기여하는 방식을","계산합니다.","같은 R에서 challenge만 e₁,e₂로 달라지면 두","response의 차이에서 k가 지워지고 x에 대한 일차식"] },
+        ]}
         terms={[
           { symbol: "s_1,s_2", name: "responses", description: "동일 nonce로 만든 두 공개 서명의 response입니다." },
           { symbol: "e_1,e_2", name: "challenges", description: "서로 다른 메시지 transcript에서 나온 공개 scalars입니다." },

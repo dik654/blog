@@ -35,6 +35,10 @@ export default function Limitation() {
         question="왜 XOR의 네 점은 어떤 weight와 bias로도 한 번에 분리할 수 없을까?"
         idea={<>XOR 조건을 네 개의 부등식으로 적으면, positive 두 점에서 얻은 하한과 negative 두 점에서 얻은 상한이 서로 모순됩니다.</>}
         formula={String.raw`\begin{aligned}b&\le0 &&(0,0)\mapsto0\\w_1+b&>0 &&(1,0)\mapsto1\\w_2+b&>0 &&(0,1)\mapsto1\\w_1+w_2+b&\le0 &&(1,1)\mapsto0\end{aligned}\quad\Longrightarrow\quad w_1+w_2+2b>0\ \text{and}\ w_1+w_2+2b\le b\le0`}
+        annotatedFormula={String.raw`\begin{aligned}b&\le0 &&(0,0)\mapsto0\\w_1+b&>0 &&(1,0)\mapsto1\\w_2+b&>0 &&(0,1)\mapsto1\\w_1+w_2+b&\le0 &&(1,1)\mapsto0\end{aligned}\quad\Longrightarrow\quad w_1+w_2+2b>\underbrace{0\ \text{and}\ w_1+w_2+2b\le b\le0}_{\text{허용 경계 판정}}`}
+        operations={[
+          { expression: String.raw`0\ \text{and}\ w_1+w_2+2b\le b\le0`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","XOR 조건을 네 개의 부등식으로 적으면, positive 두","점에서 얻은 하한과 negative 두 점에서 얻은 상한이","서로 모순됩니다."] },
+        ]}
         terms={[
           { symbol: "w_1,w_2", name: "input weights", description: "두 coordinate가 score에 기여하는 크기입니다." },
           { symbol: "b", name: "bias", description: "네 부등식 모두가 공유하는 경계 offset입니다." },

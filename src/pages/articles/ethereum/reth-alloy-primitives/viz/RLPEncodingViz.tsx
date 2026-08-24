@@ -63,7 +63,7 @@ export default function RLPEncodingViz({ onOpenCode }: {
                 <text x={130} y={128} textAnchor="middle" fontSize={11} fill={C.dim}>
                   struct TX {'{ nonce, to, value }'}</text>
                 <motion.line x1={210} y1={115} x2={260} y2={115} stroke={C.macro}
-                  strokeWidth={1.5} initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
+                  strokeWidth={1.2} initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
                   transition={{ duration: 0.5 }} />
                 <rect x={260} y={100} width={150} height={35} rx={6}
                   fill={`${C.macro}10`} stroke={C.macro} strokeWidth={1.2} />

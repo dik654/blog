@@ -131,7 +131,7 @@ export default function OverviewViz() {
                 x2={296}
                 y2={155}
                 stroke="hsl(142 71% 45%)"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 strokeDasharray="4 3"
               />
               <text

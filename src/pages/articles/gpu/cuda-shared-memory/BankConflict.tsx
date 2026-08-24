@@ -38,6 +38,10 @@ export default function BankConflict() {
           </>
         }
         formula={String.raw`\operatorname{bank}(a)=\left\lfloor\frac{a}{4\ \mathrm{B}}\right\rfloor\bmod 32`}
+        annotatedFormula={String.raw`\operatorname{bank}(a)=\underbrace{\left\lfloor\frac{a}{4\ \mathrm{B}}\right\rfloor\bmod 32}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`\left\lfloor\frac{a}{4\ \mathrm{B}}\right\rfloor\bmod 32`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Byte address를 bank width인 4 B로 나눠","word index를 만들고, 32 banks를 순환하므로","나머지를 취합니다."] },
+        ]}
         terms={[
           {
             symbol: "a",

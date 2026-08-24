@@ -90,6 +90,16 @@ n_r^{need} &= \max\!\left(0,\;n_r^{target}-n_r^{computed}\right) \\
 0 \le n_r^{sched} &\le n_r^{need} \\
 \sum_{r\in\mathcal S} n_r^{sched} &\le B_{tok}
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+\underbrace{n_r^{need}}_{\text{허용 경계 판정}} &= \underbrace{\max\!\left(0,\;n_r^{target}-n_r^{computed}\right)}_{\text{경계 후보 선택}} \\
+0 \le n_r^{sched} &\le n_r^{need} \\
+\sum_{r\in\mathcal S} n_r^{sched} &\le \underbrace{B_{tok}}_{\text{오른쪽 항으로 결과 계산}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\max\!\left(0,\;n_r^{target}-n_r^{computed}\right)`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","요청마다"] },
+          { expression: String.raw`n_r^{need}`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","요청마다"] },
+          { expression: String.raw`B_{tok}`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","요청마다"] },
+        ]}
         terms={GAP_TERMS}
         assumptions={[
           "각 request의 target·computed counter가 같은 tokenizer와 position 기준을 사용합니다.",
@@ -128,6 +138,12 @@ n_r^{need} &= \max\!\left(0,\;n_r^{target}-n_r^{computed}\right) \\
         formula={String.raw`r_i \prec r_j
 \quad\Longleftrightarrow\quad
 (p_i,a_i)<_{\mathrm{lex}}(p_j,a_j)`}
+        annotatedFormula={String.raw`r_i \prec r_j
+\quad\Longleftrightarrow\quad
+(p_i,a_i)<\underbrace{_{\mathrm{lex}}(p_j,a_j)}_{\text{오른쪽 항으로 결과 계산}}`}
+        operations={[
+          { expression: String.raw`_{\mathrm{lex}}(p_j,a_j)`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","현재 공식 설정은 작은 priority 값을 먼저 보고, 같은","값이면 arrival time이 이른 요청을 먼저 보는","lexicographic order를 사용합니다."] },
+        ]}
         terms={PRIORITY_TERMS}
         assumptions={[
           "priority policy가 활성화되어 있고 client가 의미가 일관된 priority 값을 보냅니다.",

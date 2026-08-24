@@ -38,6 +38,11 @@ export default function ModernHooksArticle() {
           question="Matching hook 세 개를 순차 실행하면 tool이 시작되기 전 최소 지연은 얼마인가?"
           idea={<>순차 실행에서는 각 hook의 시간이 겹치지 않으므로 더합니다. 40 ms, 70 ms, 25 ms가 걸렸다면 hook 자체 지연만 135 ms이며 process spawn과 scheduler 지연은 여기에 더해집니다.</>}
           formula={String.raw`\begin{aligned}T_{pre}&=\sum_{i=1}^{m}t_i\\&=40+70+25=135\ \mathrm{ms}\end{aligned}`}
+          annotatedFormula={String.raw`\begin{aligned}T_{pre}&=\underbrace{\sum_{i=1}^{m}t_i}_{\text{Pre-hook 지연 계산}}\\&=\underbrace{40+70+25=135\ \mathrm{ms}}_{\text{오른쪽 항으로 결과 계산}}\end{aligned}`}
+          operations={[
+            { expression: String.raw`\sum_{i=1}^{m}t_i`, annotation: ["Pre-hook 지연이(가) 식의 결과에 기여하는 방식을","계산합니다.","순차 실행에서는 각 hook의 시간이 겹치지 않으므로","더합니다."] },
+            { expression: String.raw`40+70+25=135\ \mathrm{ms}`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","순차 실행에서는 각 hook의 시간이 겹치지 않으므로","더합니다."] },
+          ]}
           terms={[
             { symbol: "m", name: "Matching hook 수", description: "현재 event와 tool matcher를 통과해 실제로 실행되는 command 개수입니다." },
             { symbol: "t_i", name: "개별 hook 시간", description: "i번째 subprocess가 시작해 결과를 반환할 때까지 걸린 시간입니다." },

@@ -15,6 +15,11 @@ export default function Overview() {
         question="연속된 시계열 하나를 LSTM이 학습할 input–target sample로 어떻게 바꿀까?"
         idea={<>Forecast origin t를 하나 고른 뒤 그 이전 L개 step을 input으로, 그 다음 H개 step을 target으로 묶습니다. Origin을 stride S만큼 이동하면 다음 sample이 생깁니다.</>}
         formula={String.raw`\begin{aligned}X_t&=[\mathbf x_{t-L+1},\ldots,\mathbf x_t]\in\mathbb R^{L\times F}\\Y_t&=[\mathbf y_{t+1},\ldots,\mathbf y_{t+H}]\in\mathbb R^{H\times D_y}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}X_t&=\underbrace{[\mathbf x_{t-L+1},\ldots,\mathbf x_t]\in\mathbb R^{L\times F}}_{\text{look-back 계산}}\\Y_t&=\underbrace{[\mathbf y_{t+1},\ldots,\mathbf y_{t+H}]\in\mathbb R^{H\times D_y}}_{\text{target dimension 계산}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`[\mathbf x_{t-L+1},\ldots,\mathbf x_t]\in\mathbb R^{L\times F}`, annotation: ["look-back이(가) 식의 결과에 기여하는 방식을","계산합니다.","Forecast origin t를 하나 고른 뒤 그 이전 L개","step을 input으로, 그 다음 H개 step을"] },
+          { expression: String.raw`[\mathbf y_{t+1},\ldots,\mathbf y_{t+H}]\in\mathbb R^{H\times D_y}`, annotation: ["target dimension이(가) 식의 결과에 기여하는","방식을 계산합니다.","Forecast origin t를 하나 고른 뒤 그 이전 L개","step을 input으로, 그 다음 H개 step을"] },
+        ]}
         terms={[
           { symbol: "L", name: "look-back", description: "모델이 한 origin에서 직접 읽는 과거 step 수입니다." },
           { symbol: "H", name: "forecast horizon", description: "한 origin에서 평가할 미래 step 수입니다." },

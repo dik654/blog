@@ -15,6 +15,10 @@ export default function BytesAndBloom({ onCodeRef }: { onCodeRef: (key: string, 
         question="m-bit bloom에 n개 항목을 k개 위치로 표시하면 false-positive 확률을 어떻게 근사할까요?"
         idea="한 bit가 끝까지 0일 확률을 지수로 근사한 뒤, 조회한 k개 bit가 모두 1일 확률을 구합니다. Ethereum log bloom은 고정 parameter를 쓰므로 식은 직관·fixture 설계에 사용합니다."
         formula={String.raw`p_{fp}\approx\left(1-e^{-kn/m}\right)^k`}
+        annotatedFormula={String.raw`\underbrace{p_{fp}}_{\text{false-positive 확률 계산}}\approx\left(1-e^{-kn/m}\right)^k`}
+        operations={[
+          { expression: String.raw`p_{fp}`, annotation: ["false-positive 확률이(가) 식의 결과에 기여하는","방식을 계산합니다.","한 bit가 끝까지 0일 확률을 지수로 근사한 뒤, 조회한","k개 bit가 모두 1일 확률을 구합니다."] },
+        ]}
         terms={[
           { symbol: "p_{fp}", name: "false-positive 확률", description: "실제 항목이 없지만 후보로 통과할 근사 확률" },
           { symbol: "m", name: "bitmap bit 수", description: "Ethereum log bloom에서는 2,048 bits" },

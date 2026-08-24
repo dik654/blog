@@ -25,7 +25,7 @@ export default function ConfigViz() {
             rx={5}
             fill="#6b728012"
             stroke="#6b7280"
-            strokeWidth={1.5}
+            strokeWidth={1.2}
           />
           <text
             x={155}

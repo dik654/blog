@@ -16,6 +16,15 @@ B_{\mathrm{docs}}&=L_{\max}-L_{\mathrm{system}}-L_{\mathrm{history}}\\
 &\quad-L_{\mathrm{query}}-L_{\mathrm{output}}\\
 \sum_{c\in K_q}\ell(c)&\le B_{\mathrm{docs}}
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+\underbrace{B_{\mathrm{docs}}}_{\text{chunk token cost 계산}}&=\underbrace{L_{\max}-L_{\mathrm{system}}-L_{\mathrm{history}}}_{\text{경계 후보 선택}}\\
+&\quad-L_{\mathrm{query}}-L_{\mathrm{output}}\\
+\sum_{c\in K_q}\ell(c)&\le B_{\mathrm{docs}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`L_{\max}-L_{\mathrm{system}}-L_{\mathrm{history}}`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","모델 최대 길이에서 문서가 아닌 입력과 예약한 출력 길이를","먼저 뺍니다."] },
+          { expression: String.raw`B_{\mathrm{docs}}`, annotation: ["chunk token cost이(가) 식의 결과에 기여하는","방식을 계산합니다.","모델 최대 길이에서 문서가 아닌 입력과 예약한 출력 길이를","먼저 뺍니다."] },
+        ]}
         terms={[
           { symbol: "L_max", name: "model context limit", description: "Input과 output을 합친 tokenizer 기준 최대 길이입니다." },
           { symbol: "L_system,L_history,L_query", name: "non-document input", description: "System·대화·현재 질문이 차지하는 token 수입니다." },

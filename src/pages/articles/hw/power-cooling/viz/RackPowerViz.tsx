@@ -117,7 +117,7 @@ function Paths() {
         d="M120 66 H170 V101 M120 150 H170 V115"
         fill="none"
         stroke={C.neutral}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
       />
@@ -134,7 +134,7 @@ function Paths() {
         d="M288 101 H334 V66 M288 115 H334 V150"
         fill="none"
         stroke={C.neutral}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
       />

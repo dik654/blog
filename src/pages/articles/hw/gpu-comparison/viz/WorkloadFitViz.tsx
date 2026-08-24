@@ -170,7 +170,7 @@ function Msm() {
           d={`M299 90 C330 ${60 + i * 30} 347 ${60 + i * 30} 369 ${60 + i * 30}`}
           fill="none"
           stroke={C.datacenter}
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}
           transition={{ delay: 0.25 + i * 0.1 }}
@@ -250,7 +250,7 @@ function Ntt() {
               d={`M${fromX} ${y} C${fromX + 40} ${y} ${toX - 40} ${targetY} ${toX} ${targetY}`}
               fill="none"
               stroke={stage % 2 ? C.memory : C.compute}
-              strokeWidth={1.3}
+              strokeWidth={1.2}
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
               transition={{ delay: stage * 0.2 + i * 0.04 }}
@@ -310,7 +310,7 @@ function Pipeline() {
             <path
               d={`M${stage.x + 77} 91 H${stage.x + 92}`}
               stroke="var(--muted-foreground)"
-              strokeWidth={1.5}
+              strokeWidth={1.2}
             />
           )}
         </motion.g>

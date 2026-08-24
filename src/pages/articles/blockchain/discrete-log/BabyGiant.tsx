@@ -16,6 +16,10 @@ export default function BabyGiant() {
         question="왜 baby table과 giant walk의 만남이 x를 복원할까요?"
         idea="m=ceil(√q)로 두면 0≤x&lt;q인 모든 지수를 x=im+j로 쓸 수 있습니다. Y=gˣ의 양변에 g⁻ⁱᵐ을 곱하면 저장한 baby-step gʲ와 같아집니다."
         formula={String.raw`m=\lceil\sqrt q\rceil,\quad x=im+j,\quad Y(g^{-m})^i=g^j\quad\Longrightarrow\quad x=im+j\pmod q`}
+        annotatedFormula={String.raw`m=\underbrace{\lceil\sqrt q\rceil,\quad x=im+j,\quad Y(g^{-m})^i=g^j\quad\Longrightarrow\quad x=im+j\pmod q}_{\text{subgroup order 계산}}`}
+        operations={[
+          { expression: String.raw`\lceil\sqrt q\rceil,\quad x=im+j,\quad Y(g^{-m})^i=g^j\quad\Longrightarrow\quad x=im+j\pmod q`, annotation: ["subgroup order이(가) 식의 결과에 기여하는 방식을","계산합니다.","m=ceil(√q)로 두면 0≤x q인 모든 지수를","x=im+j로 쓸 수 있습니다."] },
+        ]}
         terms={[
           { symbol: "q", name: "subgroup order", description: "찾는 exponent가 mod q에서 놓이는 후보 공간 크기입니다." },
           { symbol: "m", name: "split width", description: "Baby와 giant 두 축을 비슷한 크기로 만드는 ceil(√q)입니다." },

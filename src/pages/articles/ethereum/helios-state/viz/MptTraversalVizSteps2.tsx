@@ -531,7 +531,7 @@ export function Step4() {
           x2={450}
           y2={118}
           stroke="var(--border)"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <text
           x={16}

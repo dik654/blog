@@ -11,6 +11,10 @@ export default function Bases() {
         question="밑 b로 계산한 logarithm을 밑 a로 어떻게 바꾸는가?"
         idea={<>x=bʸ를 같은 기준 a의 지수로 표현하고 두 로그의 비율을 취합니다.</>}
         formula={String.raw`\log_b x=\frac{\log_a x}{\log_a b}`}
+        annotatedFormula={String.raw`\log_b x=\underbrace{\frac{\log_a x}{\log_a b}}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`\frac{\log_a x}{\log_a b}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","x=bʸ를 같은 기준 a의 지수로 표현하고 두 로그의 비율을","취합니다."] },
+        ]}
         terms={[
           { symbol: "a,b", name: "old·new bases", description: "0보다 크고 1이 아닌 두 기준 배율입니다." },
           { symbol: String.raw`\log_a b`, name: "scale conversion", description: "두 log 단위 사이를 바꾸는 고정 상수입니다." },

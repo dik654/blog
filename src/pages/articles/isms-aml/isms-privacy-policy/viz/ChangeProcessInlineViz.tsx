@@ -245,7 +245,7 @@ export default function ChangeProcessInlineViz() {
                 x2={450}
                 y2={130}
                 stroke="var(--border)"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <circle cx={100} cy={130} r={4} fill={C.notify} />
               <text

@@ -39,6 +39,10 @@ export default function Coalescing() {
           </>
         }
         formula={String.raw`\eta_{\mathrm{global}}=\frac{B_{\mathrm{useful}}}{32\ \mathrm{B}\times T}`}
+        annotatedFormula={String.raw`\eta_{\mathrm{global}}=\underbrace{\frac{B_{\mathrm{useful}}}{32\ \mathrm{B}\times T}}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`\frac{B_{\mathrm{useful}}}{32\ \mathrm{B}\times T}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Active lane이 요구한 useful byte를 그","address들을 덮기 위해 발행된 32 B segment","수로 나눕니다."] },
+        ]}
         terms={[
           {
             symbol: "B_useful",

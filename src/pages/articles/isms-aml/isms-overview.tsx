@@ -107,6 +107,10 @@ export default function IsmsOverview() {
           question="서로 다른 위험 시나리오의 처리 우선순위를 어떻게 일관되게 정할까?"
           idea="발생가능성과 업무 영향을 같은 등급표로 판정하고 곱해 우선순위 후보를 만듭니다. 곱셈값은 위험의 물리량이 아니라 조직이 정의한 ordinal score이므로, 동일 점수의 의미와 수용 기준을 별도로 검토합니다."
           formula={String.raw`R_i=L_i\times I_i`}
+          annotatedFormula={String.raw`R_i=\underbrace{L_i\times I_i}_{\text{발생가능성 등급 계산}}`}
+          operations={[
+            { expression: String.raw`L_i\times I_i`, annotation: ["발생가능성 등급이(가) 식의 결과에 기여하는 방식을","계산합니다.","발생가능성과 업무 영향을 같은 등급표로 판정하고 곱해 우선순위","후보를 만듭니다."] },
+          ]}
           terms={[
             { symbol: "i", name: "위험 시나리오", description: "자산·위협·취약점·영향이 연결된 한 평가 단위입니다." },
             { symbol: "L_i", name: "발생가능성 등급", description: "예를 들어 1~5 표에서 관측된 노출·사건 빈도·통제 상태로 판정합니다." },

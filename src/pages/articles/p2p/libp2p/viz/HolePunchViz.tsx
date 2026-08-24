@@ -82,7 +82,7 @@ export default function HolePunchViz() {
                 x2={t.x}
                 y2={t.y}
                 stroke={e.color}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 strokeDasharray={ei === 3 ? "0" : "4 3"}
               />
               {e.label && (
@@ -115,7 +115,7 @@ export default function HolePunchViz() {
               rx={5}
               fill={n.color + "12"}
               stroke={n.color}
-              strokeWidth={1.3}
+              strokeWidth={1.2}
             />
             <text
               x={n.x + BW / 2}

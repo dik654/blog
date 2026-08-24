@@ -32,7 +32,7 @@ export function PolicyFrame({
   children: ReactNode;
 }) {
   return (
-    <figure className="my-8 overflow-hidden rounded-3xl border border-border/70 bg-gradient-to-br from-background to-muted/40 shadow-sm">
+    <figure className="my-8 overflow-hidden rounded-xl border border-border/70 bg-background">
       <div className="p-5 sm:p-7">
         <figcaption className="max-w-3xl">
           <span className="inline-flex rounded-full bg-foreground px-3 py-1 text-[11px] font-semibold tracking-wide text-background">

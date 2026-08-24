@@ -35,7 +35,7 @@ export function Step2() {
           x2={130}
           y2={90}
           stroke="#ef4444"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <text x={155} y={84} fontSize={10} fontWeight={600} fill="#ef4444">
           FAULT!

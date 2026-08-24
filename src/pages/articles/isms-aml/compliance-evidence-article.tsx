@@ -38,6 +38,8 @@ type Config = {
   question: string;
   idea: string;
   formula: string;
+  annotatedFormula: string;
+  operations: readonly { expression: string; annotation: string | readonly string[] }[];
   terms: readonly { symbol: string; name: string; description: string }[];
   assumptions: readonly string[];
   interpretation: string;
@@ -94,6 +96,10 @@ const CONFIG: Record<ArticleKey, Config> = {
     question: "새 detector의 하루 alert가 analyst 처리용량을 넘는지 어떻게 계산하는가?",
     idea: "Alert가 소비하는 총 검토시간을 analyst의 실제 가용시간으로 나누면 queue가 계속 쌓일 조건을 작은 수치로 확인할 수 있습니다.",
     formula: String.raw`Q=\frac{A\,m}{H}`,
+    annotatedFormula: String.raw`Q=\underbrace{\frac{A\,m}{H}}_{\text{기준량당 비율}}`,
+    operations: [
+      { expression: String.raw`\frac{A\,m}{H}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Alert가 소비하는 총 검토시간을 analyst의 실제","가용시간으로 나누면 queue가 계속 쌓일 조건을 작은 수치로","확인할 수 있습니다."] },
+    ],
     terms: [
       { symbol: "A", name: "Alerts per day", description: "Candidate가 하루에 여는 alert 수입니다." },
       { symbol: "m", name: "Minutes per alert", description: "Quality를 유지하며 한 alert를 검토하는 평균 분입니다." },
@@ -134,6 +140,10 @@ const CONFIG: Record<ArticleKey, Config> = {
     question: "모집단 중 end-to-end trace가 완성된 비율은 어떻게 계산하고 해석하는가?",
     idea: "같은 기간의 population에서 request부터 outcome까지 요구 증거가 모두 연결된 항목 수를 나눠 coverage gap을 드러냅니다.",
     formula: String.raw`C=\frac{N_{\mathrm{traceable}}}{N_{\mathrm{population}}}`,
+    annotatedFormula: String.raw`C=\underbrace{\frac{N_{\mathrm{traceable}}}{N_{\mathrm{population}}}}_{\text{기준량당 비율}}`,
+    operations: [
+      { expression: String.raw`\frac{N_{\mathrm{traceable}}}{N_{\mathrm{population}}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","같은 기간의 population에서 request부터","outcome까지 요구 증거가 모두 연결된 항목 수를 나눠","coverage gap을 드러냅니다."] },
+    ],
     terms: [{ symbol: "N_{\\mathrm{traceable}}", name: "Traceable records", description: "필수 단계·ID·source receipt가 모두 연결된 항목 수입니다." }, { symbol: "N_{\\mathrm{population}}", name: "Population size", description: "명시 기간·source·query로 재현한 전체 항목 수입니다." }, { symbol: "C", name: "Trace coverage", description: "0~1 범위의 증거 연결 비율입니다." }],
     assumptions: ["분자와 분모가 같은 기간·scope·dedupe rule을 씁니다.", "Traceable은 통제 결과가 합격했다는 뜻이 아니라 검증 가능한 상태라는 뜻입니다.", "C=1도 sampling과 evidence 진실성·통제 설계 적정성을 대신하지 않습니다."],
     interpretation: "배포 200건 중 184건만 request·approval·artifact·production receipt가 연결되면 C=0.92입니다. 나머지 16건의 공통 source와 영향범위를 조사한 뒤 표본 결과를 해석합니다.",
@@ -169,6 +179,10 @@ const CONFIG: Record<ArticleKey, Config> = {
     question: "보유기한은 어떤 두 요소로 계산하며 legal hold는 어디에 붙는가?",
     idea: "정책 기간만 적지 않고 시계를 시작하는 사건에 기간을 더해 deadline을 만들며, 유효한 hold는 별도 권한으로 그 deadline의 실행을 제한합니다.",
     formula: String.raw`t_{\mathrm{delete}}=t_{\mathrm{event}}+T_{\mathrm{basis}}`,
+    annotatedFormula: String.raw`t_{\mathrm{delete}}=\underbrace{t_{\mathrm{event}}+T_{\mathrm{basis}}}_{\text{Deletion deadline 계산}}`,
+    operations: [
+      { expression: String.raw`t_{\mathrm{event}}+T_{\mathrm{basis}}`, annotation: ["Deletion deadline이(가) 식의 결과에 기여하는","방식을 계산합니다.","정책 기간만 적지 않고 시계를 시작하는 사건에 기간을 더해","deadline을 만들며, 유효한 hold는 별도 권한으로 그"] },
+    ],
     terms: [{ symbol: "t_{\\mathrm{event}}", name: "Retention start event", description: "계약 종료·채용 종료처럼 보유 시계를 시작하는 검증된 시각입니다." }, { symbol: "T_{\\mathrm{basis}}", name: "Permitted retention period", description: "해당 목적·법적 근거·정책 version이 허용하는 기간입니다." }, { symbol: "t_{\\mathrm{delete}}", name: "Deletion deadline", description: "보존 예외가 없을 때 파기 workflow가 실행돼야 하는 시각입니다." }],
     assumptions: ["Event와 기간의 timezone·calendar rule·policy generation을 고정합니다.", "Legal hold는 권한·최소범위·해제 조건이 있는 별도 state입니다.", "Deadline 계산만으로 모든 사본의 실제 삭제가 증명되지는 않습니다."],
     interpretation: "채용 절차가 8월 14일 끝나고 적용 정책이 30일 보유라면 deadline은 policy calendar에 따른 9월 13일입니다. 유효한 hold가 없다면 그 시각에 artifact manifest 전체를 삭제·검증합니다.",
@@ -204,6 +218,10 @@ const CONFIG: Record<ArticleKey, Config> = {
     question: "공시와 실제 처리의 일치를 release gate로 어떻게 표현할 수 있는가?",
     idea: "Inventory, 읽을 수 있는 notice, 실제 선택 enforcement, 재현 가능한 evidence가 모두 있어야 한 generation을 공개합니다.",
     formula: String.raw`P=I\land N\land C\land E`,
+    annotatedFormula: String.raw`P=\underbrace{I\land N\land C\land E}_{\text{판정 조건 결합}}`,
+    operations: [
+      { expression: String.raw`I\land N\land C\land E`, annotation: ["필요한 gate가 모두 참일 때만 전체 조건을 통과시킵니다.","Inventory, 읽을 수 있는 notice, 실제 선택","enforcement, 재현 가능한 evidence가 모두","있어야 한 generation을 공개합니다."] },
+    ],
     terms: [{ symbol: "I", name: "Inventory completeness", description: "실제 data·cookie·SDK·recipient flow가 발견·분류됐습니다." }, { symbol: "N", name: "Notice accuracy", description: "목적·항목·근거·기간·권리와 상대방을 읽을 수 있게 공개했습니다." }, { symbol: "C", name: "Choice enforcement", description: "필요한 동의·거절·철회가 UI와 backend에서 같은 version으로 작동합니다." }, { symbol: "E", name: "Evidence receipt", description: "Crawler·network trace·API·processor evidence가 release artifact에 묶였습니다." }, { symbol: "P", name: "Policy release", description: "해당 처리방침과 runtime generation을 공개할 수 있는 내부 승인입니다." }],
     assumptions: ["각 Boolean은 문서 존재가 아니라 같은 fixture·generation에서 검증된 상태입니다.", "어떤 처리가 동의를 요구하는지는 현행 법령과 사실관계로 별도 판단합니다.", "P는 법적 적법성 전체를 수학적으로 증명하는 식이 아니라 누락 방지용 내부 gate입니다."],
     interpretation: "방침 문구가 정확해 N=1이어도 reject 뒤 광고 SDK가 호출돼 C=0이면 P=0입니다. Runtime을 고치고 새 network trace와 withdrawal receipt를 만든 뒤 다시 승인합니다.",
@@ -266,7 +284,7 @@ export default function ComplianceEvidenceArticle({ article }: { article: Articl
       <section id={config.secondId} className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">02 · 실행·계산·근거</p><h2 className="mt-2 text-2xl font-bold">{config.secondTitle}</h2></header>
         {config.secondBody.map((paragraph) => <p key={paragraph} className="leading-7">{paragraph}</p>)}
-        <ExplainedFormula question={config.question} idea={config.idea} formula={config.formula} terms={config.terms} assumptions={config.assumptions} interpretation={config.interpretation} />
+        <ExplainedFormula question={config.question} idea={config.idea} formula={config.formula} annotatedFormula={config.annotatedFormula} operations={config.operations} terms={config.terms} assumptions={config.assumptions} interpretation={config.interpretation} />
         {config.citations.map((item, index) => <Evidence key={item.id} item={item} index={index} />)}
       </section>
 

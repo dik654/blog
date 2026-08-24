@@ -12,6 +12,10 @@ export default function Logarithms() {
         question="a를 몇 제곱해야 양수 x가 되는가?"
         idea={<>로그값 y를 지수 자리에 되돌려 넣었을 때 aʸ=x가 되도록 정의합니다.</>}
         formula={String.raw`y=\log_a x\quad\Longleftrightarrow\quad a^y=x`}
+        annotatedFormula={String.raw`y=\underbrace{\log_a x\quad\Longleftrightarrow\quad a^y=x}_{\text{로그 비용 변환}}`}
+        operations={[
+          { expression: String.raw`\log_a x\quad\Longleftrightarrow\quad a^y=x`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","로그값 y를 지수 자리에 되돌려 넣었을 때 aʸ=x가 되도록","정의합니다."] },
+        ]}
         terms={[
           { symbol: "x", name: "logarithm input", description: "0보다 커야 하는 원래 scale의 값입니다." },
           { symbol: "a", name: "base · 밑", description: "양수이며 1이 아닌 기준 배율입니다." },

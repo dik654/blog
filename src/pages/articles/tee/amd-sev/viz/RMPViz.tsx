@@ -116,7 +116,7 @@ export default function RMPViz() {
                   rx={6}
                   fill={`${v.color}18`}
                   stroke={v.color}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                   initial={{ y: -20, opacity: 0 }}
                   animate={{ y: 30 + i * 52, opacity: 1 }}
                   transition={{ delay: i * 0.1, type: "spring", bounce: 0.3 }}
@@ -141,7 +141,7 @@ export default function RMPViz() {
                     x2={190}
                     y2={82 + i * 52}
                     stroke="var(--border)"
-                    strokeWidth={1.5}
+                    strokeWidth={1.2}
                     strokeDasharray="3,3"
                     initial={{ pathLength: 0 }}
                     animate={{ pathLength: 1 }}
@@ -165,7 +165,7 @@ export default function RMPViz() {
                 rx={10}
                 fill="#10b98118"
                 stroke="#10b981"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={190}

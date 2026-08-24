@@ -26,6 +26,14 @@ export default function ReedSolomon() {
 p(x)&=\sum_{i=0}^{k-1}y_iL_i(x)\\[4pt]
 L_i(x)&=\prod_{j\ne i}\frac{x-x_j}{x_i-x_j}
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+p(x)&=\underbrace{\sum_{i=0}^{k-1}y_iL_i(x)}_{\text{Lagrange basis 계산}}\\[4pt]
+L_i(x)&=\underbrace{\prod_{j\ne i}\frac{x-x_j}{x_i-x_j}}_{\text{기준량당 비율}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\sum_{i=0}^{k-1}y_iL_i(x)`, annotation: ["Lagrange basis이(가) 식의 결과에 기여하는 방식을","계산합니다.","각 관측점에서는 1이고 나머지 관측점에서는 0인","Lagrange basis를 만든 뒤, 관측값을 가중해"] },
+          { expression: String.raw`\prod_{j\ne i}\frac{x-x_j}{x_i-x_j}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","각 관측점에서는 1이고 나머지 관측점에서는 0인","Lagrange basis를 만든 뒤, 관측값을 가중해","더합니다."] },
+        ]}
         terms={[
           {
             symbol: "x_i",

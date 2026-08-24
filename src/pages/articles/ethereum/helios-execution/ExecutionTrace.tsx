@@ -48,6 +48,10 @@ export default function ExecutionTrace({
             </>
           }
           formula={"(o,g,A)={\\rm EVM}_{f}(T,E_H,D_R)"}
+          annotatedFormula={String.raw`(o,g,A)=\underbrace{{\rm EVM}_{f}(T,E_H,D_R)}_{\text{Output · gas · accesses 계산}}`}
+          operations={[
+            { expression: String.raw`{\rm EVM}_{f}(T,E_H,D_R)`, annotation: ["Output · gas · accesses이(가) 식의 결과에","기여하는 방식을 계산합니다.","EVM은 transaction만 보는 함수가 아닙니다."] },
+          ]}
           terms={[
             {
               symbol: "T",

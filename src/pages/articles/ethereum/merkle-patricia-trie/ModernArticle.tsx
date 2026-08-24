@@ -37,6 +37,11 @@ export default function ModernArticle() {
         question="한 node의 bytes가 어떻게 root-bound reference가 될까?"
         idea="Child의 canonical RLP 길이에 따라 reversible inline bytes 또는 fixed digest를 parent에 넣고, root node는 canonical bytes를 Keccak해 block header의 root identity로 만듭니다."
         formula={String.raw`\operatorname{ref}(n)=\begin{cases}\operatorname{RLP}(n),&|\operatorname{RLP}(n)|<32\\ \operatorname{Keccak256}(\operatorname{RLP}(n)),&|\operatorname{RLP}(n)|\ge 32\end{cases},\qquad R=\operatorname{Keccak256}(\operatorname{RLP}(n_{\mathrm{root}}))`}
+        annotatedFormula={String.raw`\operatorname{ref}(n)=\begin{cases}\operatorname{RLP}(n),&|\operatorname{RLP}(n)|<\underbrace{32}_{\text{Trie node 계산}}\\ \operatorname{Keccak256}(\operatorname{RLP}(n)),&|\operatorname{RLP}(n)|\ge 32\end{cases},\qquad R=\underbrace{\operatorname{Keccak256}(\operatorname{RLP}(n_{\mathrm{root}}))}_{\text{허용 경계 판정}}`}
+        operations={[
+          { expression: String.raw`32`, annotation: ["Trie node이(가) 식의 결과에 기여하는 방식을","계산합니다.","Child의 canonical RLP 길이에 따라","reversible inline bytes 또는 fixed"] },
+          { expression: String.raw`\operatorname{Keccak256}(\operatorname{RLP}(n_{\mathrm{root}}))`, annotation: ["Trie node이(가) 식의 결과에 기여하는 방식을","계산합니다.","Child의 canonical RLP 길이에 따라","reversible inline bytes 또는 fixed"] },
+        ]}
         terms={[
           { symbol: "n", name: "Trie node", description: "Branch·extension·leaf 중 하나의 logical node입니다." },
           { symbol: "RLP(n)", name: "Canonical node bytes", description: "Kind·length·payload가 canonical하게 직렬화된 bytes입니다." },

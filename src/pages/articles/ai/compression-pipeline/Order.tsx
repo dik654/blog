@@ -36,6 +36,16 @@ m_{AB}&=m(B(A(\theta_0))),\\
 m_{BA}&=m(A(B(\theta_0))),\\
 \Delta_{\mathrm{order}}(m)&=m_{AB}-m_{BA}.
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+m_{AB}&=\underbrace{m(B(A(\theta_0))),}_{\text{frozen baseline 계산}}\\
+m_{BA}&=\underbrace{m(A(B(\theta_0))),}_{\text{frozen baseline 계산}}\\
+\Delta_{\mathrm{order}}(m)&=\underbrace{m_{AB}-m_{BA}.}_{\text{변화량 계산}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`m(B(A(\theta_0))),`, annotation: ["frozen baseline이(가) 식의 결과에 기여하는","방식을 계산합니다.","같은 baseline과 budget에서 두 순서의 최종","metric 차이를 직접 계산합니다."] },
+          { expression: String.raw`m(A(B(\theta_0))),`, annotation: ["frozen baseline이(가) 식의 결과에 기여하는","방식을 계산합니다.","같은 baseline과 budget에서 두 순서의 최종","metric 차이를 직접 계산합니다."] },
+          { expression: String.raw`m_{AB}-m_{BA}.`, annotation: ["paired metric이(가) 식의 결과에 기여하는 방식을","계산합니다.","같은 baseline과 budget에서 두 순서의 최종","metric 차이를 직접 계산합니다."] },
+        ]}
         terms={[
           {
             symbol: "theta_0",

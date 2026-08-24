@@ -85,7 +85,7 @@ export default function JoltPipelineViz() {
                   rx={12}
                   fill="none"
                   stroke={n.color}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                   opacity={0.55}
                 />
               )}

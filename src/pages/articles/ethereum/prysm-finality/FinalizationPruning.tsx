@@ -12,6 +12,10 @@ export default function FinalizationPruning({ onCodeRef }: { onCodeRef: (key: st
         question="충돌하는 두 checkpoint가 각각 2/3 vote를 받았다면 최소 얼마의 stake가 양쪽에 겹칠까요?"
         idea="전체 stake W 안에 크기가 각각 최소 2W/3인 두 voter 집합을 넣으면, 포함-배제 원리에 따라 교집합은 최소 W/3입니다. 충돌 vote에 모두 들어간 validator는 slashing evidence를 남깁니다."
         formula={String.raw`|Q_1\cap Q_2|\;\ge\;|Q_1|+|Q_2|-W\;\ge\;\frac{W}{3}`}
+        annotatedFormula={String.raw`|Q_1\cap Q_2|\;\ge\underbrace{\;|Q_1|+|Q_2|-W\;\ge\;\frac{W}{3}}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`\;|Q_1|+|Q_2|-W\;\ge\;\frac{W}{3}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","전체 stake W 안에 크기가 각각 최소 2W/3인 두","voter 집합을 넣으면, 포함-배제 원리에 따라 교집합은","최소 W/3입니다."] },
+        ]}
         terms={[
           { symbol: "W", name: "전체 활성 잔액", description: "전체 active effective balance(Gwei)" },
           { symbol: "Q_1,Q_2", name: "충돌 쿼럼", description: "충돌하는 checkpoint link 각각을 지지한 balance 집합" },

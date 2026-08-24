@@ -20,7 +20,11 @@ export default function ModernPoseidonGpuArticle() {
     <section id="parameter-artifact" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">01 · Parameter artifact</p><h2 className="mt-2 text-2xl font-bold">Field부터 constants digest까지 하나의 immutable profile로 묶고 partial mix를 임의 조합하지 않는다</h2></header>
       <p>Artifact에는 modulus, state width t, rate/capacity, domain tag, S-box exponent α, full/partial rounds, round constants, MDS와 optimized sparse matrices, generator revision을 넣습니다. Caller input의 field encoding과 profile field가 다르면 kernel launch 전에 실패합니다.</p>
-      <ExplainedFormula question="GPU output이 정확히 어느 Poseidon instance의 결과인지 어떻게 봉인할까?" idea={<>Algorithm 이름 대신 모든 parameters와 constants bytes를 canonical digest에 결속합니다.</>} formula={String.raw`A_P=H(p\|t\|r\|c\|\alpha\|R_F\|R_P\|H(C)\|H(M)\|v)`} terms={[
+      <ExplainedFormula question="GPU output이 정확히 어느 Poseidon instance의 결과인지 어떻게 봉인할까?" idea={<>Algorithm 이름 대신 모든 parameters와 constants bytes를 canonical digest에 결속합니다.</>} formula={String.raw`A_P=H(p\|t\|r\|c\|\alpha\|R_F\|R_P\|H(C)\|H(M)\|v)`}
+      annotatedFormula={String.raw`A_P=\underbrace{H(p\|t\|r\|c\|\alpha\|R_F\|R_P\|H(C)\|H(M)\|v)}_{\text{S-box exponent 계산}}`}
+      operations={[
+        { expression: String.raw`H(p\|t\|r\|c\|\alpha\|R_F\|R_P\|H(C)\|H(M)\|v)`, annotation: ["S-box exponent이(가) 식의 결과에 기여하는 방식을","계산합니다.","Algorithm 이름 대신 모든 parameters와","constants bytes를 canonical digest에"] },
+      ]} terms={[
         {symbol:"A_P",name:"Parameter artifact",description:"한 Poseidon instance를 식별하는 digest입니다."},
         {symbol:"H",name:"Digest",description:"Length-delimited canonical encoding에 적용한 pinned hash입니다."},
         {symbol:"p",name:"Prime modulus",description:"State elements가 속한 field Fp의 modulus입니다."},
@@ -38,7 +42,11 @@ export default function ModernPoseidonGpuArticle() {
     <section id="round-kernel" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">02 · Round kernel</p><h2 className="mt-2 text-2xl font-bold">ARK→S-box→mix 순서를 보존하고 lane ownership과 barrier를 profile width에 맞춘다</h2></header>
       <p>한 state를 thread 하나가 소유할지, coordinates를 여러 lanes가 나눌지는 batch, width, register pressure와 matrix traffic에 따라 측정합니다. Full round는 모든 coordinates, partial round는 profile이 지정한 coordinate에 S-box를 적용합니다. Cross-thread mix가 있으면 producer values가 준비된 뒤 barrier가 필요합니다. ICICLE v3.9.0 문서는 batch API와 constants profile을 보여주지만 CUDA kernel 내부 schedule의 보편 최적성을 증명하지는 않습니다.</p>
-      <ExplainedFormula question="한 Poseidon round를 GPU에서 어떤 세 단계로 읽을까?" idea={<>먼저 round constants를 더하고, schedule에 따라 S-box를 적용한 뒤, matrix로 모든 output coordinates를 섞습니다.</>} formula={String.raw`x_i'=\sum_{j=0}^{t-1}M_{ij}\,S_r(x_j+C_{r,j})`} terms={[
+      <ExplainedFormula question="한 Poseidon round를 GPU에서 어떤 세 단계로 읽을까?" idea={<>먼저 round constants를 더하고, schedule에 따라 S-box를 적용한 뒤, matrix로 모든 output coordinates를 섞습니다.</>} formula={String.raw`x_i'=\sum_{j=0}^{t-1}M_{ij}\,S_r(x_j+C_{r,j})`}
+      annotatedFormula={String.raw`x_i'=\underbrace{\sum_{j=0}^{t-1}M_{ij}\,S_r(x_j+C_{r,j})}_{\text{Round constant 계산}}`}
+      operations={[
+        { expression: String.raw`\sum_{j=0}^{t-1}M_{ij}\,S_r(x_j+C_{r,j})`, annotation: ["Round constant이(가) 식의 결과에 기여하는 방식을","계산합니다.","먼저 round constants를 더하고, schedule에","따라 S-box를 적용한 뒤, matrix로 모든 output"] },
+      ]} terms={[
         {symbol:"x_i'",name:"Next state coordinate",description:"Round 뒤 i번째 output field element입니다."},
         {symbol:"i",name:"Output index",description:"Mixing matrix의 row이자 output lane 위치입니다."},
         {symbol:"j",name:"Input index",description:"Mixing에 기여하는 이전 state coordinate입니다."},
@@ -55,7 +63,11 @@ export default function ModernPoseidonGpuArticle() {
     <section id="batch-tree" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">03 · Batch and tree frontier</p><h2 className="mt-2 text-2xl font-bold">독립 states는 batch하되 Merkle level 사이의 parent dependency와 padding·domain tag를 보존한다</h2></header>
       <p>첫 level에는 hashes가 많아 GPU가 충분히 차지만 root에 가까워질수록 jobs가 줄어듭니다. Parent는 ordered children이 모두 준비된 뒤 실행합니다. Leaf와 internal node의 domain, arity, 마지막 incomplete group의 padding rule이 다르면 같은 leaves에서도 다른 root가 나옵니다.</p>
-      <ExplainedFormula question="Arity a인 tree에서 level별 hash job 수는 어떻게 줄어들까?" idea={<>각 parent가 최대 a개 children을 소비하므로 이전 level node 수를 a로 나누어 올림합니다.</>} formula={String.raw`N_{\ell+1}=\left\lceil\frac{N_\ell}{a}\right\rceil`} terms={[
+      <ExplainedFormula question="Arity a인 tree에서 level별 hash job 수는 어떻게 줄어들까?" idea={<>각 parent가 최대 a개 children을 소비하므로 이전 level node 수를 a로 나누어 올림합니다.</>} formula={String.raw`N_{\ell+1}=\left\lceil\frac{N_\ell}{a}\right\rceil`}
+      annotatedFormula={String.raw`N_{\ell+1}=\underbrace{\left\lceil\frac{N_\ell}{a}\right\rceil}_{\text{기준량당 비율}}`}
+      operations={[
+        { expression: String.raw`\left\lceil\frac{N_\ell}{a}\right\rceil`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","각 parent가 최대 a개 children을 소비하므로 이전","level node 수를 a로 나누어 올림합니다."] },
+      ]} terms={[
         {symbol:"N_\\ell",name:"Nodes at level ℓ",description:"현재 level에서 소비할 child hashes 수입니다."},
         {symbol:"N_{\\ell+1}",name:"Parent jobs",description:"다음 level에서 계산할 Poseidon states 수입니다."},
         {symbol:"a",name:"Tree arity",description:"Parent 한 개가 받는 ordered children 수입니다."},
@@ -68,7 +80,11 @@ export default function ModernPoseidonGpuArticle() {
     <section id="release-gate" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">04 · Release gate</p><h2 className="mt-2 text-2xl font-bold">Official/reference vectors와 tree root parity 뒤 verified states/s를 측정하고 profile mismatch는 fail closed한다</h2></header>
       <p>Zero/one/max canonical field element, width·round/constants·domain mismatch, noncanonical input, empty/partial batch, leaf order mutation, wrong padding, wrong event dependency, OOM과 timeout을 포함합니다. Round-by-round debug fixture와 full hash/tree roots를 CPU reference·circuit과 비교하고 최종 proof verifier가 같은 public root를 승인해야 합니다.</p>
-      <ExplainedFormula question="GPU Poseidon의 유효 처리량을 어떻게 보고할까?" idea={<>Reference/root/proof gate를 통과한 states만 세고 transfer·kernel·sync를 같은 wall-clock boundary에 넣습니다.</>} formula={String.raw`R_P=\frac{N_{states}^{verified}}{T_{H2D}+T_{kernel}+T_{D2H}+T_{sync}}`} terms={[
+      <ExplainedFormula question="GPU Poseidon의 유효 처리량을 어떻게 보고할까?" idea={<>Reference/root/proof gate를 통과한 states만 세고 transfer·kernel·sync를 같은 wall-clock boundary에 넣습니다.</>} formula={String.raw`R_P=\frac{N_{states}^{verified}}{T_{H2D}+T_{kernel}+T_{D2H}+T_{sync}}`}
+      annotatedFormula={String.raw`R_P=\underbrace{\frac{N_{states}^{verified}}{T_{H2D}+T_{kernel}+T_{D2H}+T_{sync}}}_{\text{기준량당 비율}}`}
+      operations={[
+        { expression: String.raw`\frac{N_{states}^{verified}}{T_{H2D}+T_{kernel}+T_{D2H}+T_{sync}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Reference/root/proof gate를 통과한","states만 세고 transfer·kernel·sync를","같은 wall-clock boundary에 넣습니다."] },
+      ]} terms={[
         {symbol:"R_P",name:"Verified state rate",description:"초당 parity를 통과한 independent Poseidon states 수입니다."},
         {symbol:"N_{states}^{verified}",name:"Verified states",description:"Pinned reference와 같은 outputs를 낸 state 수입니다."},
         {symbol:"T_{H2D}",name:"Input transfer",description:"Host에서 device로 inputs/profile을 보내는 시간입니다."},

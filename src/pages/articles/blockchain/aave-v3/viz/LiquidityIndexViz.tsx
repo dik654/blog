@@ -141,7 +141,7 @@ export default function LiquidityIndexViz() {
         })}
 
         {/* Linear 경로 */}
-        <path d={pathData} stroke="#10b981" strokeWidth={2.5} fill="none" />
+        <path d={pathData} stroke="#10b981" strokeWidth={1.2} fill="none" />
 
         {/* 이벤트 포인트 */}
         {events.map((e, i) => (
@@ -152,7 +152,7 @@ export default function LiquidityIndexViz() {
               r={5}
               fill="#10b981"
               stroke="var(--card)"
-              strokeWidth={1.5}
+              strokeWidth={1.2}
             />
             <text
               x={toX(e.t)}

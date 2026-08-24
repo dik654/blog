@@ -169,7 +169,7 @@ export default function JugDripViz() {
           x2={190}
           y2={85}
           stroke="#3b82f6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#jd-arr)"
         />
         <line
@@ -178,7 +178,7 @@ export default function JugDripViz() {
           x2={390}
           y2={85}
           stroke="#3b82f6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#jd-arr)"
         />
 
@@ -333,7 +333,7 @@ export default function JugDripViz() {
           x2={186}
           y2={192}
           stroke="#3b82f6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#jd-arr)"
         />
         <line
@@ -342,7 +342,7 @@ export default function JugDripViz() {
           x2={352}
           y2={192}
           stroke="#3b82f6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#jd-arr)"
         />
 

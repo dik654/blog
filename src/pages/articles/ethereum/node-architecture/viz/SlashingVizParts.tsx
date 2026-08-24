@@ -26,7 +26,7 @@ export function Block({
         rx={9}
         fill={`${color}22`}
         stroke={color}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
       />
       {/* Header text -- upper section */}
       <text

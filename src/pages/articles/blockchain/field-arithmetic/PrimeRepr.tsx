@@ -35,6 +35,10 @@ export default function PrimeRepr() {
         question="little-endian limb 네 개는 어떤 하나의 정수를 뜻할까요?"
         idea="각 limb를 2⁶⁴ 진법의 한 자리로 읽습니다. 낮은 index가 낮은 자리이므로 carry도 index 0에서 3 방향으로 흐릅니다."
         formula={String.raw`x=l_0+2^{64}l_1+2^{128}l_2+2^{192}l_3`}
+        annotatedFormula={String.raw`x=\underbrace{l_0+2^{64}l_1+2^{128}l_2+2^{192}l_3}_{\text{수학적 정수 계산}}`}
+        operations={[
+          { expression: String.raw`l_0+2^{64}l_1+2^{128}l_2+2^{192}l_3`, annotation: ["수학적 정수이(가) 식의 결과에 기여하는 방식을 계산합니다.","각 limb를 2⁶⁴ 진법의 한 자리로 읽습니다."] },
+        ]}
         terms={[
           { symbol: "x", name: "수학적 정수", description: "환원이나 Montgomery 변환 전후 의미를 별도로 표시할 값입니다." },
           { symbol: "l_i", name: "64-bit limb", description: "0≤l_i<2⁶⁴인 little-endian radix 자리입니다." },

@@ -42,7 +42,7 @@ export default function FileDbViz() {
                   rx={8}
                   fill={C.disk + "15"}
                   stroke={C.disk}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={140}
@@ -70,7 +70,7 @@ export default function FileDbViz() {
                   x2={260}
                   y2={65}
                   stroke={C.disk}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                   initial={{ pathLength: 0 }}
                   animate={{ pathLength: 1 }}
                 />
@@ -82,7 +82,7 @@ export default function FileDbViz() {
                   rx={8}
                   fill={C.disk + "15"}
                   stroke={C.disk}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={345}
@@ -116,7 +116,7 @@ export default function FileDbViz() {
                   rx={8}
                   fill={C.load + "15"}
                   stroke={C.load}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={145}
@@ -144,7 +144,7 @@ export default function FileDbViz() {
                   x2={260}
                   y2={65}
                   stroke={C.load}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                   initial={{ pathLength: 0 }}
                   animate={{ pathLength: 1 }}
                 />
@@ -156,7 +156,7 @@ export default function FileDbViz() {
                   rx={8}
                   fill={C.load + "15"}
                   stroke={C.load}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={345}
@@ -190,7 +190,7 @@ export default function FileDbViz() {
                   rx={8}
                   fill={C.fallback + "15"}
                   stroke={C.fallback}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={105}
@@ -220,7 +220,7 @@ export default function FileDbViz() {
                   rx={8}
                   fill={C.fallback + "15"}
                   stroke={C.fallback}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={255}
@@ -250,7 +250,7 @@ export default function FileDbViz() {
                   rx={8}
                   fill={C.fallback + "15"}
                   stroke={C.fallback}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={390}

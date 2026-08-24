@@ -32,6 +32,12 @@ export default function SignVerify({
           </>
         }
         formula={String.raw`\begin{aligned}PK&=skG_1\\\sigma&=skH(m)\\e(G_1,\sigma)&=e(PK,H(m))\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}PK&=\underbrace{skG_1}_{\text{G1 generator 계산}}\\\sigma&=\underbrace{skH(m)}_{\text{Hash-to-curve 계산}}\\e(G_1,\sigma)&=\underbrace{e(PK,H(m))}_{\text{Hash-to-curve 계산}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`skG_1`, annotation: ["G1 generator이(가) 식의 결과에 기여하는 방식을","계산합니다.","Pairing은 한쪽 point의 scalar","multiplication을 target group의"] },
+          { expression: String.raw`skH(m)`, annotation: ["Hash-to-curve이(가) 식의 결과에 기여하는 방식을","계산합니다.","Pairing은 한쪽 point의 scalar","multiplication을 target group의"] },
+          { expression: String.raw`e(PK,H(m))`, annotation: ["Hash-to-curve이(가) 식의 결과에 기여하는 방식을","계산합니다.","Pairing은 한쪽 point의 scalar","multiplication을 target group의"] },
+        ]}
         terms={[
           {
             symbol: "sk",

@@ -20,6 +20,10 @@ export default function Protocol() {
         question="서로 다른 secret을 가진 두 참여자가 왜 같은 shared group element를 얻을까요?"
         idea="Exponentiation이 같은 base에서 지수 곱셈으로 합성되므로 상대 공개값에 자기 exponent를 적용하는 두 순서가 같습니다. Elliptic-curve 표기에서는 B=[b]G와 [a]B=[ab]G로 바뀝니다."
         formula={String.raw`A=g^a,\quad B=g^b,\qquad K_A=B^a=g^{ba}=g^{ab}=A^b=K_B`}
+        annotatedFormula={String.raw`A=\underbrace{g^a,\quad B=g^b,\qquad K_A=B^a=g^{ba}=g^{ab}=A^b=K_B}_{\text{raw DH output 계산}}`}
+        operations={[
+          { expression: String.raw`g^a,\quad B=g^b,\qquad K_A=B^a=g^{ba}=g^{ab}=A^b=K_B`, annotation: ["raw DH output이(가) 식의 결과에 기여하는 방식을","계산합니다.","Exponentiation이 같은 base에서 지수 곱셈으로","합성되므로 상대 공개값에 자기 exponent를 적용하는 두"] },
+        ]}
         terms={[
           { symbol: "G,g", name: "agreed group and generator", description: "Order와 encoding, membership rule까지 고정한 public domain입니다." },
           { symbol: "a,b", name: "secret exponents", description: "CSPRNG로 생성하고 지정한 exponent/scalar 범위에서 해석합니다." },

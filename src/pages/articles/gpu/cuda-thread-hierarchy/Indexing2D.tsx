@@ -43,6 +43,16 @@ export default function Indexing2D() {
 \mathrm{row}&=b_yB_y+t_y,\\
 \mathrm{offset}&=\mathrm{row}\times W+\mathrm{col}.
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+\mathrm{col}&=\underbrace{b_xB_x+t_x,}_{\text{오른쪽 항으로 결과 계산}}\\
+\mathrm{row}&=\underbrace{b_yB_y+t_y,}_{\text{오른쪽 항으로 결과 계산}}\\
+\mathrm{offset}&=\underbrace{\mathrm{row}\times W+\mathrm{col}.}_{\text{row width 계산}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`b_xB_x+t_x,`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","완전히 지나온 row가 row개이고 각 row에 width개","원소가 있으므로 row × width만큼 건너간 뒤 현재","col을 더합니다."] },
+          { expression: String.raw`b_yB_y+t_y,`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","완전히 지나온 row가 row개이고 각 row에 width개","원소가 있으므로 row × width만큼 건너간 뒤 현재","col을 더합니다."] },
+          { expression: String.raw`\mathrm{row}\times W+\mathrm{col}.`, annotation: ["row width이(가) 식의 결과에 기여하는 방식을","계산합니다.","완전히 지나온 row가 row개이고 각 row에 width개","원소가 있으므로 row × width만큼 건너간 뒤 현재"] },
+        ]}
         terms={[
           {
             symbol: "b_x,b_y",

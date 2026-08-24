@@ -40,7 +40,7 @@ export default function MemEncViz() {
             rx={5}
             fill="#6366f115"
             stroke="#6366f1"
-            strokeWidth={1.5}
+            strokeWidth={1.2}
           />
           <text
             x={65}

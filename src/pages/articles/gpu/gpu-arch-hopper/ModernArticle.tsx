@@ -25,7 +25,11 @@ export default function ModernHopperArticle(){return <article className="space-y
   <section id="tma" className="space-y-6">
     <header><p className="text-sm font-semibold text-primary">02 · TMA</p><h2 className="mt-2 text-2xl font-bold">한 thread가 transfer를 시작하고 나머지는 계산을 이어 간다</h2></header>
     <p>TMA는 global↔shared memory 사이의 1D부터 다차원 tensor transfer를 descriptor로 기술하고 asynchronous하게 실행하는 Hopper mechanism입니다. 주소 계산과 element-wise copy instruction을 많은 threads가 직접 수행하는 대신 작은 producer 역할이 transfer를 발행하고, consumer는 completion barrier 이후 shared tile을 사용합니다.</p>
-    <ExplainedFormula question="두 단계 pipeline이 steady state에서 tile 하나당 얼마나 걸리는지 어떻게 근사할까?" idea={<>Load와 compute를 겹치면 매 tile마다 둘을 더하지 않고 더 느린 단계가 cadence를 정합니다. 처음 채우기와 마지막 비우기 비용은 별도로 남습니다.</>} formula={String.raw`\begin{aligned}T_{stage}&=\max(T_{copy},T_{compute})\\[3pt]T_{pipe}&\approx T_{fill}+(L-1)T_{stage}+T_{drain}\end{aligned}`} terms={[
+    <ExplainedFormula question="두 단계 pipeline이 steady state에서 tile 하나당 얼마나 걸리는지 어떻게 근사할까?" idea={<>Load와 compute를 겹치면 매 tile마다 둘을 더하지 않고 더 느린 단계가 cadence를 정합니다. 처음 채우기와 마지막 비우기 비용은 별도로 남습니다.</>} formula={String.raw`\begin{aligned}T_{stage}&=\max(T_{copy},T_{compute})\\[3pt]T_{pipe}&\approx T_{fill}+(L-1)T_{stage}+T_{drain}\end{aligned}`}
+    annotatedFormula={String.raw`\begin{aligned}T_{stage}&=\underbrace{\max(T_{copy},T_{compute})}_{\text{경계 후보 선택}}\\[3pt]T_{pipe}&\approx T_{fill}+(L-1)T_{stage}+T_{drain}\end{aligned}`}
+    operations={[
+      { expression: String.raw`\max(T_{copy},T_{compute})`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","Load와 compute를 겹치면 매 tile마다"] },
+    ]} terms={[
       {symbol:"L",name:"Tile stage 수",description:"K축 또는 workload를 따라 처리하는 tile 개수입니다."},
       {symbol:"T_{pipe}",name:"전체 pipeline 시간",description:"Fill부터 마지막 drain까지 L tiles를 완료하는 근사 elapsed time입니다."},
       {symbol:"T_{copy}",name:"Tile transfer 시간",description:"TMA가 source에서 shared/DSM으로 옮기고 arrival을 알릴 때까지의 시간입니다."},

@@ -507,7 +507,7 @@ export default function PrivacyImpactAssessmentViz() {
                 rx={8}
                 fill="none"
                 stroke={C.risk}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 strokeDasharray="4 3"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}

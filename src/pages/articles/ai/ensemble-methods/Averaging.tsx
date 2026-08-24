@@ -26,6 +26,16 @@ export default function Averaging() {
           w_m&\ge 0 \\
           \sum_{m=1}^{M}w_m&=1
         \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+          \widehat y_i^{\mathrm{ens}}&=\underbrace{\sum_{m=\underbrace{1}_{\text{simplex weight 계산}}}^{M}w_m\widehat y_{im}}_{\text{simplex weight 계산}} \\
+          w_m&\ge \underbrace{0}_{\text{simplex weight 계산}} \\
+          \sum_{m=1}^{M}w_m&=1
+        \end{aligned}`}
+        operations={[
+          { expression: String.raw`\sum_{m=1}^{M}w_m\widehat y_{im}`, annotation: ["simplex weight이(가) 식의 결과에 기여하는 방식을","계산합니다.","각 row의 prediction을 non-negative","weights로 평균하고 weight 합을 1로 둡니다."] },
+          { expression: String.raw`0`, annotation: ["simplex weight이(가) 식의 결과에 기여하는 방식을","계산합니다.","각 row의 prediction을 non-negative","weights로 평균하고 weight 합을 1로 둡니다."] },
+          { expression: String.raw`1`, annotation: ["simplex weight이(가) 식의 결과에 기여하는 방식을","계산합니다.","각 row의 prediction을 non-negative","weights로 평균하고 weight 합을 1로 둡니다."] },
+        ]}
         terms={[
           { symbol: "y-hat_im", name: "aligned prediction", description: "동일 row i와 동일 output/class 의미에 맞춘 m번째 model prediction입니다." },
           { symbol: "w_m", name: "simplex weight", description: "0 이상이고 전체 합이 1인 model별 비중입니다." },
@@ -47,6 +57,16 @@ export default function Averaging() {
           \mathbf 1(\widehat y_{jm}\le\widehat y_{im}) \\
           r_i^{\mathrm{ens}}&=\sum_m w_m r_{im}
         \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+          r_{im}&=\underbrace{\frac{1}{n}\sum_{j=1}^{n}
+          \mathbf 1(\widehat y_{jm}\le\widehat y_{im})}_{\text{기준량당 비율}} \\
+          r_i^{\mathrm{ens}}&=\underbrace{\sum_m w_m r_{im}}_{\text{오른쪽 항으로 결과 계산}}
+        \end{aligned}`}
+        operations={[
+          { expression: String.raw`\frac{1}{n}\sum_{j=1}^{n}
+          \mathbf 1(\widehat y_{jm}\le\widehat y_{im})`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","각 model 안에서 prediction보다"] },
+          { expression: String.raw`\sum_m w_m r_{im}`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","각 model 안에서 prediction보다"] },
+        ]}
         terms={[
           { symbol: "r_im", name: "empirical percentile rank", description: "Model m에서 row i prediction이 OOF sample 중 어느 percentile인지 나타냅니다." },
           { symbol: "indicator", name: "ordering comparison", description: "j번째 prediction이 i번째 이하이면 1, 아니면 0입니다." },

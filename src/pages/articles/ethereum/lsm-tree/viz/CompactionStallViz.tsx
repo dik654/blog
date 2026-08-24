@@ -63,7 +63,7 @@ export default function CompactionStallViz() {
               points={NORMAL_POINTS}
               fill="none"
               stroke={CN}
-              strokeWidth={1.5}
+              strokeWidth={1.2}
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
               transition={{ duration: 1 }}
@@ -112,7 +112,7 @@ export default function CompactionStallViz() {
               points={SPIKE_POINTS}
               fill="none"
               stroke={CR}
-              strokeWidth={1.5}
+              strokeWidth={1.2}
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
               transition={{ duration: 1.2 }}

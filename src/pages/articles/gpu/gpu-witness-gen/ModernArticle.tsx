@@ -20,7 +20,11 @@ export default function ModernGpuWitnessArticle() {
     <section id="dataflow-dag" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">01 · Dataflow DAG</p><h2 className="mt-2 text-2xl font-bold">각 signal에 producer와 consumers를 붙이고 cycle·unknown input을 실행 전에 거절한다</h2></header>
       <p>Signal node는 field value 하나를 만들며 incoming edge는 먼저 필요한 값입니다. 예를 들어 x=3, a=x², b=x+5, out=a·b라면 a와 b는 서로 독립이지만 out은 둘 다 기다립니다. R1CS를 sparse matrix로 GPU에 올리는 것만으로는 이 계산 순서를 얻을 수 없습니다.</p>
-      <ExplainedFormula question="각 signal이 실행 가능한 가장 이른 level을 어떻게 계산할까?" idea={<>선행 producer가 없으면 입력 level이고, 그렇지 않으면 가장 늦은 predecessor보다 한 단계 뒤입니다.</>} formula={String.raw`L(v)=\begin{cases}0,&\operatorname{pred}(v)=\varnothing\\1+\max_{u\in\operatorname{pred}(v)}L(u),&\text{otherwise}\end{cases}`} terms={[
+      <ExplainedFormula question="각 signal이 실행 가능한 가장 이른 level을 어떻게 계산할까?" idea={<>선행 producer가 없으면 입력 level이고, 그렇지 않으면 가장 늦은 predecessor보다 한 단계 뒤입니다.</>} formula={String.raw`L(v)=\begin{cases}0,&\operatorname{pred}(v)=\varnothing\\1+\max_{u\in\operatorname{pred}(v)}L(u),&\text{otherwise}\end{cases}`}
+      annotatedFormula={String.raw`\underbrace{L(v)}_{\text{Level of v 계산}}=\begin{cases}0,&\operatorname{pred}(v)=\varnothing\\1+\max_{u\in\operatorname{pred}(v)}L(u),&\text{otherwise}\end{cases}`}
+      operations={[
+        { expression: String.raw`L(v)`, annotation: ["Level of v이(가) 식의 결과에 기여하는 방식을","계산합니다.","선행 producer가 없으면 입력 level이고, 그렇지","않으면 가장 늦은 predecessor보다"] },
+      ]} terms={[
         {symbol:"L(v)",name:"Level of v",description:"Signal node v가 실행 가능한 가장 이른 frontier 번호입니다."},
         {symbol:"v",name:"Signal node",description:"입력 또는 arithmetic operation이 생산하는 witness 값입니다."},
         {symbol:"\\operatorname{pred}(v)",name:"Predecessors",description:"v를 계산하기 전에 완료되어야 하는 producer node 집합입니다."},
@@ -33,7 +37,13 @@ export default function ModernGpuWitnessArticle() {
     <section id="frontier-schedule" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">02 · Frontier schedule</p><h2 className="mt-2 text-2xl font-bold">같은 level의 node 수보다 전체 work와 긴 dependency chain을 함께 본다</h2></header>
       <p>GPU는 frontier가 넓을 때 유리하지만, 한 signal의 긴 recurrence는 threads를 늘려도 사라지지 않습니다. 따라서 “constraint 수가 크다”만으로 GPU 적합성을 판단하지 않고, compiler가 만든 witness instructions의 work와 span을 측정합니다.</p>
-      <ExplainedFormula question="P개 worker가 있어도 witness가 더 빨라질 수 없는 하한은 무엇일까?" idea={<>전체 연산을 P개가 나누는 시간과 가장 긴 dependency chain 시간 가운데 큰 값보다 빨라질 수 없습니다.</>} formula={String.raw`T_P\ge\max\!\left(\frac{W}{P},D\right)`} terms={[
+      <ExplainedFormula question="P개 worker가 있어도 witness가 더 빨라질 수 없는 하한은 무엇일까?" idea={<>전체 연산을 P개가 나누는 시간과 가장 긴 dependency chain 시간 가운데 큰 값보다 빨라질 수 없습니다.</>} formula={String.raw`T_P\ge\max\!\left(\frac{W}{P},D\right)`}
+      annotatedFormula={String.raw`\underbrace{T_P}_{\text{Parallel time 계산}}\ge\underbrace{\max}_{\text{경계 후보 선택}}\!\left(\frac{\underbrace{W}_{\text{Work 계산}}}{P},D\right)`}
+      operations={[
+        { expression: String.raw`\max`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","전체 연산을 P개가 나누는 시간과 가장 긴 dependency","chain 시간 가운데 큰 값보다"] },
+        { expression: String.raw`T_P`, annotation: ["Parallel time이(가) 식의 결과에 기여하는 방식을","계산합니다.","전체 연산을 P개가 나누는 시간과 가장 긴 dependency","chain 시간 가운데 큰 값보다"] },
+        { expression: String.raw`W`, annotation: ["Work이(가) 식의 결과에 기여하는 방식을 계산합니다.","전체 연산을 P개가 나누는 시간과 가장 긴 dependency","chain 시간 가운데 큰 값보다"] },
+      ]} terms={[
         {symbol:"T_P",name:"Parallel time",description:"P개 worker로 한 witness를 계산하는 실행 시간의 하한입니다."},
         {symbol:"W",name:"Work",description:"모든 field operation의 총 비용입니다."},
         {symbol:"P",name:"Workers",description:"동시에 유효 작업을 실행할 수 있는 threads 또는 lanes 수입니다."},
@@ -46,7 +56,11 @@ export default function ModernGpuWitnessArticle() {
     <section id="residency-plan" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">03 · Residency plan</p><h2 className="mt-2 text-2xl font-bold">전체 R1CS가 아니라 현재 살아 있는 inputs·instructions·signals의 실제 bytes를 예산한다</h2></header>
       <p>한 frontier가 끝났다고 모든 signal을 버릴 수는 없습니다. 뒤 level이 다시 읽는 값은 마지막 consumer까지 살아 있어야 합니다. Host/device 경계를 넘나드는 작은 frontier는 launch와 transfer가 계산보다 비쌀 수 있으므로 CPU에 남기거나 여러 witnesses를 batch하는 선택도 계획에 포함합니다.</p>
-      <ExplainedFormula question="한 시점의 witness device memory를 어떻게 계산할까?" idea={<>현재 살아 있는 signal bytes와 instructions, constants, frontier scratch, runtime reserve를 실제 allocation 기준으로 더합니다.</>} formula={String.raw`B_{live}(k)=s_F\,|S_k|+B_{inst}+B_{const}+B_{scratch}(k)+B_{runtime}`} terms={[
+      <ExplainedFormula question="한 시점의 witness device memory를 어떻게 계산할까?" idea={<>현재 살아 있는 signal bytes와 instructions, constants, frontier scratch, runtime reserve를 실제 allocation 기준으로 더합니다.</>} formula={String.raw`B_{live}(k)=s_F\,|S_k|+B_{inst}+B_{const}+B_{scratch}(k)+B_{runtime}`}
+      annotatedFormula={String.raw`B_{live}(k)=\underbrace{s_F\,|S_k|+B_{inst}+B_{const}+B_{scratch}(k)+B_{runtime}}_{\text{Scratch bytes 계산}}`}
+      operations={[
+        { expression: String.raw`s_F\,|S_k|+B_{inst}+B_{const}+B_{scratch}(k)+B_{runtime}`, annotation: ["Scratch bytes이(가) 식의 결과에 기여하는 방식을","계산합니다.","현재 살아 있는 signal bytes와","instructions, constants, frontier"] },
+      ]} terms={[
         {symbol:"B_{live}(k)",name:"Live bytes",description:"Frontier k가 실행될 때 동시에 필요한 device bytes입니다."},
         {symbol:"s_F",name:"Field element bytes",description:"Pinned device representation 한 element의 aligned bytes입니다."},
         {symbol:"S_k",name:"Live signal set",description:"이미 생산됐고 아직 마지막 consumer가 남은 signal 집합입니다."},
@@ -60,7 +74,11 @@ export default function ModernGpuWitnessArticle() {
     <section id="release-gate" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">04 · Release gate</p><h2 className="mt-2 text-2xl font-bold">Witness bytes, constraint satisfaction, proof verification을 차례로 통과한 결과만 성능표에 넣는다</h2></header>
       <p>Zero·one·maximum canonical field value, branch 양쪽, unused signal, dependency cycle, divide-by-zero, malformed input, device OOM·timeout을 포함합니다. CPU/reference witness와 canonical field values를 비교하고, 전체 constraints와 최종 verifier가 같은 statement를 승인해야 합니다. GPU failure는 generation을 폐기하고 검증된 CPU 경로나 이전 scheduler artifact로 되돌립니다.</p>
-      <ExplainedFormula question="Witness GPU 경로의 유효 처리량을 어떤 경계에서 셀까?" idea={<>최종 proof verifier까지 통과한 witnesses만 세고 parse·transfer·kernel·sync·fallback 시간을 wall clock에 포함합니다.</>} formula={String.raw`R_{witness}=\frac{N_{verified}}{T_{wall}}`} terms={[
+      <ExplainedFormula question="Witness GPU 경로의 유효 처리량을 어떤 경계에서 셀까?" idea={<>최종 proof verifier까지 통과한 witnesses만 세고 parse·transfer·kernel·sync·fallback 시간을 wall clock에 포함합니다.</>} formula={String.raw`R_{witness}=\frac{N_{verified}}{T_{wall}}`}
+      annotatedFormula={String.raw`R_{witness}=\underbrace{\frac{N_{verified}}{T_{wall}}}_{\text{기준량당 비율}}`}
+      operations={[
+        { expression: String.raw`\frac{N_{verified}}{T_{wall}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","최종 proof verifier까지 통과한 witnesses만","세고","parse·transfer·kernel·sync·fallback"] },
+      ]} terms={[
         {symbol:"R_{witness}",name:"Verified witness rate",description:"초당 최종 검증까지 통과한 witness 수입니다."},
         {symbol:"N_{verified}",name:"Verified count",description:"Reference parity·constraint check·proof verification을 모두 통과한 수입니다."},
         {symbol:"T_{wall}",name:"Wall time",description:"입력 수신부터 verified receipt까지의 전체 시간입니다."},

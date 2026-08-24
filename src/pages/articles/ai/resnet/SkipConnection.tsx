@@ -34,6 +34,10 @@ export default function SkipConnection() {
           </>
         }
         formula={String.raw`\frac{\partial\mathcal L}{\partial x}=\frac{\partial\mathcal L}{\partial y}\left(I+J_F(x)\right)`}
+        annotatedFormula={String.raw`\frac{\partial\mathcal L}{\partial x}=\underbrace{\frac{\partial\mathcal L}{\partial y}\left(I+J_F(x)\right)}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`\frac{\partial\mathcal L}{\partial y}\left(I+J_F(x)\right)`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Output y=x+F(x)를 x로 미분하면 shortcut의","identity Jacobian과 residual","branch의 Jacobian이 더해집니다."] },
+        ]}
         terms={[
           {
             symbol: "\\partial\\mathcal L/\\partial y",
@@ -77,6 +81,10 @@ export default function SkipConnection() {
           </>
         }
         formula={String.raw`x_L=x_l+\sum_{i=l}^{L-1}F_i(x_i)`}
+        annotatedFormula={String.raw`x_L=\underbrace{x_l+\sum_{i=l}^{L-1}F_i(x_i)}_{\text{누적 residual 계산}}`}
+        operations={[
+          { expression: String.raw`x_l+\sum_{i=l}^{L-1}F_i(x_i)`, annotation: ["누적 residual이(가) 식의 결과에 기여하는 방식을","계산합니다.","각 block의 xₗ₊₁=xₗ+Fₗ(xₗ)를 연속해서","대입하면, 먼 state는 시작 state와 중간"] },
+        ]}
         terms={[
           {
             symbol: "x_l,x_L",

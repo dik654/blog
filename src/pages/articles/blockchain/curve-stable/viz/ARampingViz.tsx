@@ -92,7 +92,7 @@ export default function ARampingViz() {
                 r={5}
                 fill={e.color}
                 stroke="var(--card)"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               {i < events.length - 1 && (
                 <line
@@ -103,7 +103,7 @@ export default function ARampingViz() {
                     230 - (Math.log10(events[i + 1].A) / Math.log10(5000)) * 150
                   }
                   stroke="#ef4444"
-                  strokeWidth={2}
+                  strokeWidth={1.2}
                 />
               )}
               <text

@@ -267,7 +267,7 @@ export default function PIAComparisonInlineViz() {
                 x2={450}
                 y2={55}
                 stroke="var(--border)"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
 
               {/* PIA 영역 */}

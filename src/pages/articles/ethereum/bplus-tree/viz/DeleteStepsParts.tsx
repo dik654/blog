@@ -105,7 +105,7 @@ export function RedistributeStep() {
       <motion.path
         d="M280,66 L200,66"
         stroke={CW}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         fill="none"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}

@@ -48,6 +48,10 @@ export default function BuildJob({ onCodeRef }: Props) {
           question="한 candidate가 block의 execution gas와 blob gas 예산 안에 들어오는지 어떻게 판정할까요?"
           idea="서로 단위가 다른 두 자원을 한 숫자로 더하지 않고 각각 독립된 상한으로 검사합니다. 유효성 검사를 통과한 후보끼리만 value를 비교합니다."
           formula={String.raw`G(C)=\sum_{t\in C}g_t\le G_{\max},\qquad B(C)=\sum_{t\in C}b_t\le B_{\max}`}
+          annotatedFormula={String.raw`G(C)=\underbrace{\sum_{t\in C}g_t\le G_{\max},\qquad B(C)=\sum_{t\in C}b_t\le B_{\max}}_{\text{경계 후보 선택}}`}
+          operations={[
+            { expression: String.raw`\sum_{t\in C}g_t\le G_{\max},\qquad B(C)=\sum_{t\in C}b_t\le B_{\max}`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","서로 단위가 다른 두 자원을 한 숫자로 더하지 않고 각각","독립된 상한으로 검사합니다."] },
+          ]}
           terms={[
             { symbol: "C", name: "candidate", description: "현재 snapshot에서 순서대로 실행해 성공한 transaction 집합" },
             { symbol: "g_t", name: "execution gas", description: "transaction t가 실제 사용한 execution gas" },

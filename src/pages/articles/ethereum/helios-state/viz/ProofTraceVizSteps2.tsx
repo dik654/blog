@@ -232,7 +232,7 @@ export function Step3() {
           x2={216}
           y2={120}
           stroke={C.nested}
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#ptArr2V)"
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}

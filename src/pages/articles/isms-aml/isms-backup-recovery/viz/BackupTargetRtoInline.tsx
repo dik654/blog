@@ -204,7 +204,7 @@ export default function BackupTargetRtoInline() {
                 x2={180}
                 y2={30}
                 stroke={C.amber}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={110}
@@ -251,7 +251,7 @@ export default function BackupTargetRtoInline() {
                 x2={300}
                 y2={88}
                 stroke={C.blue}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={170}

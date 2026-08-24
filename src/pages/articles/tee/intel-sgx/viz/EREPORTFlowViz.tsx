@@ -39,7 +39,7 @@ export default function EREPORTFlowViz() {
             rx={8}
             fill="none"
             stroke="#10b98120"
-            strokeWidth={1.5}
+            strokeWidth={1.2}
             strokeDasharray="5,3"
           />
           <text

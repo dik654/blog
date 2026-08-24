@@ -78,7 +78,7 @@ export default function CodeSidebar({
           />
           <motion.aside
             key="panel"
-            className="fixed top-0 right-0 z-50 h-full w-full max-w-[1100px] flex flex-col bg-white dark:bg-[#0d1117] border-l border-[#d0d7de] dark:border-[#30363d] shadow-2xl"
+            className="fixed top-0 right-0 z-50 flex h-full w-full max-w-[1100px] flex-col border-l border-[#d0d7de] bg-white dark:border-[#30363d] dark:bg-[#0d1117]"
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}

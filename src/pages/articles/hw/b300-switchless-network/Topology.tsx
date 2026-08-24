@@ -45,6 +45,16 @@ export default function Topology() {
               = \frac{cN(N-1)}{2} \\
             P_{\mathrm{node}} &= c(N-1) \le 8
           \end{aligned}`}
+          annotatedFormula={String.raw`\begin{aligned}
+            E_{\mathrm{cable}} &= \underbrace{c\binom{N}{2}
+              = \frac{cN(N-1)}{2}}_{\text{기준량당 비율}} \\
+            P_{\mathrm{node}} &= \underbrace{c(N-1) \le 8}_{\text{허용 경계 판정}}
+          \end{aligned}`}
+          operations={[
+            { expression: String.raw`c\binom{N}{2}
+              = \frac{cN(N-1)}{2}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Full mesh의 node pair 수는 조합 N","choose 2입니다."] },
+            { expression: String.raw`c(N-1) \le 8`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","Full mesh의 node pair 수는 조합 N","choose 2입니다."] },
+          ]}
           terms={[
             { symbol: "N", name: "node count", description: "Full mesh에 참여하는 DGX B300 node 수입니다." },
             { symbol: "c", name: "cables per pair", description: "모든 node pair에 동일하게 배정하는 physical 800G cable 수입니다." },

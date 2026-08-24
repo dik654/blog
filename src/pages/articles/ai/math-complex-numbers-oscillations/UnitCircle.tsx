@@ -14,6 +14,10 @@ export default function UnitCircle() {
         question="한 바퀴를 도는 점의 위치를 두 좌표로 어떻게 나타낼까?"
         idea={<>단위원 위의 점은 원점에서 거리가 항상 1입니다. 회전각 θ에서 가로축으로 내린 좌표가 cos θ, 세로축 좌표가 sin θ이므로 두 좌표의 제곱합은 언제나 1입니다.</>}
         formula={String.raw`u(\theta)=(\cos\theta,\sin\theta),\qquad \cos^2\theta+\sin^2\theta=1`}
+        annotatedFormula={String.raw`u(\theta)=\underbrace{(\cos\theta,\sin\theta),\qquad \cos^2\theta+\sin^2\theta=1}_{\text{horizontal coordinate 계산}}`}
+        operations={[
+          { expression: String.raw`(\cos\theta,\sin\theta),\qquad \cos^2\theta+\sin^2\theta=1`, annotation: ["horizontal coordinate이(가) 식의 결과에","기여하는 방식을 계산합니다.","단위원 위의 점은 원점에서 거리가 항상 1입니다."] },
+        ]}
         terms={[
           { symbol: "u(\\theta)", name: "unit-circle point", description: "각도 θ에 놓인 2차원 좌표입니다." },
           { symbol: String.raw`\cos\theta`, name: "horizontal coordinate", description: "회전한 점의 가로 성분입니다." },

@@ -779,7 +779,7 @@ export default function ThreeLinesViz() {
                 x2={300}
                 y2={60}
                 stroke={C.line3}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 markerEnd="url(#tl-arrow)"
               />
               <text x={345} y={65} fontSize={8} fontWeight={600} fill={C.line3}>

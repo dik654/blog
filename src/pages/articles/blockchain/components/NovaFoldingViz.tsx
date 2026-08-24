@@ -188,7 +188,7 @@ export default function NovaFoldingViz() {
                 rx={7}
                 fill={C.e2 + "18"}
                 stroke={C.e2}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={205}
@@ -234,7 +234,7 @@ export default function NovaFoldingViz() {
                 rx={7}
                 fill={C.verify + "18"}
                 stroke={C.verify}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={345}

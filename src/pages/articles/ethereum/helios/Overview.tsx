@@ -28,6 +28,10 @@ export default function Overview({ title }: { title: string }) {
         question="RPC가 돌려준 값 v를 Helios가 같은 block의 검증된 답으로 공개하려면 무엇이 모두 참이어야 할까요?"
         idea="Consensus 검증과 execution-state 증명을 논리곱으로 묶습니다. 둘 중 하나라도 실패하면 부분 결과를 사용하지 않습니다."
         formula={String.raw`\operatorname{Accept}(v)=LC(C,H)\;\land\;Proof(R_{exec}(H),k,v)`}
+        annotatedFormula={String.raw`\operatorname{Accept}(v)=\underbrace{LC(C,H)\;\land\;Proof(R_{exec}(H),k,v)}_{\text{판정 조건 결합}}`}
+        operations={[
+          { expression: String.raw`LC(C,H)\;\land\;Proof(R_{exec}(H),k,v)`, annotation: ["필요한 gate가 모두 참일 때만 전체 조건을 통과시킵니다.","Consensus 검증과 execution-state 증명을","논리곱으로 묶습니다."] },
+        ]}
         terms={[
           { symbol: "C", name: "Trusted checkpoint", description: "Network·epoch·출처를 확인한 최근 beacon block root" },
           { symbol: "H", name: "검증 대상 header", description: "Sync-committee update가 가리키는 beacon/execution block identity" },

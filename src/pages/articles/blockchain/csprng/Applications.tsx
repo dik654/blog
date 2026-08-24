@@ -14,6 +14,10 @@ export default function Applications() {
         question="같은 ECDSA nonce k로 두 메시지를 서명하면 private key d를 어떻게 복구할까요?"
         idea="두 서명의 s 식을 빼면 private-key 항은 사라지지 않고 nonce inverse가 공통이므로 먼저 k를 얻습니다. 이후 공개된 r,h,s와 k로 d를 직접 풉니다."
         formula={String.raw`k=(h_1-h_2)(s_1-s_2)^{-1}\bmod n,\qquad d=(s_1k-h_1)r^{-1}\bmod n`}
+        annotatedFormula={String.raw`k=\underbrace{(h_1-h_2)(s_1-s_2)^{-1}\bmod n,\qquad d=(s_1k-h_1)r^{-1}\bmod n}_{\text{reused nonce 계산}}`}
+        operations={[
+          { expression: String.raw`(h_1-h_2)(s_1-s_2)^{-1}\bmod n,\qquad d=(s_1k-h_1)r^{-1}\bmod n`, annotation: ["reused nonce이(가) 식의 결과에 기여하는 방식을","계산합니다.","두 서명의 s 식을 빼면 private-key 항은 사라지지","않고 nonce inverse가 공통이므로 먼저 k를"] },
+        ]}
         terms={[
           { symbol: "h_1,h_2", name: "message digests", description: "서명된 서로 다른 메시지의 공개 hash scalars입니다." },
           { symbol: "r,s_1,s_2", name: "signature values", description: "같은 nonce 때문에 r이 같아진 두 공개 서명입니다." },

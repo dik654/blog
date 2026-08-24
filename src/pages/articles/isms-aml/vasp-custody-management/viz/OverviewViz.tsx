@@ -116,7 +116,7 @@ export default function OverviewViz() {
                 x2={240}
                 y2={145}
                 stroke={C.red}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 strokeDasharray="4 3"
               />
               <text

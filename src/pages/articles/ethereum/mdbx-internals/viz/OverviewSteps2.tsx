@@ -33,7 +33,7 @@ export function Step2() {
         x2={200}
         y2={55}
         stroke={C.mdbx}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         strokeDasharray="4 3"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
@@ -55,7 +55,7 @@ export function Step2() {
           rx={6}
           fill={`${C.mdbx}12`}
           stroke={C.mdbx}
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <text
           x={280}

@@ -363,7 +363,7 @@ export default function ThirdPartySharingViz() {
                 x2={220}
                 y2={55}
                 stroke={C.overseas}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 strokeDasharray="6 3"
                 initial={{ pathLength: 0 }}
                 animate={{ pathLength: 1 }}

@@ -22,6 +22,10 @@ export default function PruningArchival({
           </>
         }
         formula={String.raw`N_{\rm replay,max}=R-1`}
+        annotatedFormula={String.raw`N_{\rm replay,max}=\underbrace{R-1}_{\text{Maximum replay steps 계산}}`}
+        operations={[
+          { expression: String.raw`R-1`, annotation: ["Maximum replay steps이(가) 식의 결과에","기여하는 방식을 계산합니다.","가장 가까운 보존 state에서 요청 slot까지","block/empty-slot transition을"] },
+        ]}
         terms={[
           {
             symbol: "R",

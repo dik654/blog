@@ -567,7 +567,7 @@ export function Step3() {
                   x2={230}
                   y2={r.y + 14}
                   stroke={C.fail}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                   opacity={0.7}
                 />
                 <line
@@ -576,7 +576,7 @@ export function Step3() {
                   x2={222}
                   y2={r.y + 14}
                   stroke={C.fail}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                   opacity={0.7}
                 />
               </motion.g>
@@ -610,7 +610,7 @@ export function Step3() {
                   d={`M 222 ${r.y + 8} L 226 ${r.y + 12} L 232 ${r.y + 5}`}
                   fill="none"
                   stroke={C.disk}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                   strokeLinecap="round"
                   {...drawLine(0.8)}
                 />
@@ -717,7 +717,7 @@ export function Step3() {
             d="M 13 20 L 18 25 L 27 16"
             fill="none"
             stroke={C.disk}
-            strokeWidth={2}
+            strokeWidth={1.2}
             strokeLinecap="round"
             {...drawLine(0.95)}
           />

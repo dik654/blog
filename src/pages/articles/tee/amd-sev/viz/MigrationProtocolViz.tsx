@@ -196,7 +196,7 @@ export default function MigrationProtocolViz() {
                 x2={dstX - 5}
                 y2={90}
                 stroke={C.amber}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 strokeDasharray="5 3"
                 markerEnd="url(#migArrow)"
               />

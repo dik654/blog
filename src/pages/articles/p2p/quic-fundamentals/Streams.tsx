@@ -33,6 +33,16 @@ o_s + \ell_s &\le M_s,\\
 \sum_s \Delta_s &\le M_{conn},\\
 \text{sendable}_s &= \min(M_s-o_s,\;M_{conn}-D_{conn}).
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+o_s + \ell_s &\le \underbrace{M_s,}_{\text{stream offset 계산}}\\
+\sum_s \Delta_s &\le \underbrace{M_{conn},}_{\text{변화량 계산}}\\
+\text{sendable}_s &= \underbrace{\min(M_s-o_s,\;M_{conn}-D_{conn}).}_{\text{경계 후보 선택}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`M_s,`, annotation: ["stream offset이(가) 식의 결과에 기여하는 방식을","계산합니다.","Receiver는 stream별 최대 offset과","connection 전체 누적 byte limit을"] },
+          { expression: String.raw`M_{conn},`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Receiver는 stream별 최대 offset과","connection 전체 누적 byte limit을","credit으로 알립니다."] },
+          { expression: String.raw`\min(M_s-o_s,\;M_{conn}-D_{conn}).`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","Receiver는 stream별 최대 offset과","connection 전체 누적 byte limit을","credit으로 알립니다."] },
+        ]}
         terms={[
           {
             symbol: "o_s",

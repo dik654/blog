@@ -25,6 +25,10 @@ export default function PolynomialArithmetic() {
         question="degree d 이하 다항식이 서로 다른 점 몇 개에서 0이 될 수 있을까요?"
         idea="root r을 하나 찾으면 (x−r)이 다항식을 나눕니다. root마다 서로 다른 일차 factor가 하나씩 필요하므로 degree보다 많은 root를 가질 수 없습니다."
         formula={String.raw`P\ne0,\ \deg P=d\quad\Longrightarrow\quad |\{r\in F:P(r)=0\}|\le d`}
+        annotatedFormula={String.raw`P\ne0,\ \deg P=\underbrace{d\quad\Longrightarrow\quad |\{r\in F:P(r)=0\}|\le d}_{\text{허용 경계 판정}}`}
+        operations={[
+          { expression: String.raw`d\quad\Longrightarrow\quad |\{r\in F:P(r)=0\}|\le d`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","root r을 하나 찾으면 (x−r)이 다항식을 나눕니다."] },
+        ]}
         terms={[
           {
             symbol: "P",

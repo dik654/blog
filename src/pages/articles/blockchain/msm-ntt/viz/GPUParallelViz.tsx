@@ -37,7 +37,7 @@ export default function GPUParallelViz() {
                     rx={8}
                     fill={C.msm + "08"}
                     stroke={C.msm}
-                    strokeWidth={1.5}
+                    strokeWidth={1.2}
                   />
                   <text
                     x={70 + sm * 110}
@@ -125,7 +125,7 @@ export default function GPUParallelViz() {
                       x2={128 + stage * 110}
                       y2={53}
                       stroke={C.ntt}
-                      strokeWidth={1.5}
+                      strokeWidth={1.2}
                       initial={{ pathLength: 0 }}
                       animate={{ pathLength: 1 }}
                       transition={{ delay: stage * 0.15 }}
@@ -168,7 +168,7 @@ export default function GPUParallelViz() {
                       rx={4}
                       fill={[C.msm, C.ntt, C.msm][i] + "20"}
                       stroke={[C.msm, C.ntt, C.msm][i]}
-                      strokeWidth={1.5}
+                      strokeWidth={1.2}
                       initial={{ scaleX: 0 }}
                       animate={{ scaleX: 1 }}
                       style={{

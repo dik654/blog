@@ -25,7 +25,7 @@ export default function BellpersonViz() {
             <line key={i}
               x1={POS[a].x + 70} y1={POS[a].y + 28}
               x2={POS[b].x + 70} y2={POS[b].y}
-              stroke="currentColor" strokeOpacity={0.1} strokeWidth={1.5} />
+              stroke="currentColor" strokeOpacity={0.1} strokeWidth={1.2} />
           ))}
           {/* lib boxes */}
           {LIBS.map((l, i) => {
@@ -50,7 +50,7 @@ export default function BellpersonViz() {
             key={`pulse-${step}`}
             x={POS[step].x - 3} y={POS[step].y - 3}
             width={146} height={34} rx={9}
-            fill="none" stroke={LIBS[step].c} strokeWidth={1.5}
+            fill="none" stroke={LIBS[step].c} strokeWidth={1.2}
             initial={{ opacity: 0.6 }} animate={{ opacity: 0 }}
             transition={{ duration: 1, repeat: Infinity }}
           />

@@ -452,7 +452,7 @@ function Squeeze() {
           x2={cx[0] + w - 10}
           y2={68}
           stroke="#ef4444"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <line
           x1={cx[0] + w - 10}
@@ -460,7 +460,7 @@ function Squeeze() {
           x2={cx[0] + 10}
           y2={68}
           stroke="#ef4444"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
       </motion.g>
       {/* output arrows from rate */}
@@ -475,7 +475,7 @@ function Squeeze() {
         rx={8}
         fill={`${C2}15`}
         stroke={C2}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         initial={{ opacity: 0, y: 6 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}

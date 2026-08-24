@@ -180,7 +180,7 @@ export default function GetAmountsOutViz() {
                 x2={s.x + 120}
                 y2={174}
                 stroke="#3b82f6"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 markerEnd="url(#gao-arr)"
               />
             )}

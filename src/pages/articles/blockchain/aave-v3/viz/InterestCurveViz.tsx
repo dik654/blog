@@ -132,7 +132,7 @@ export default function InterestCurveViz() {
         />
 
         {/* 곡선 */}
-        <path d={pathData} stroke="#3b82f6" strokeWidth={2.5} fill="none" />
+        <path d={pathData} stroke="#3b82f6" strokeWidth={1.2} fill="none" />
 
         {/* Kink 점 */}
         <circle cx={toX(kinkU)} cy={toY(0.04)} r={5} fill="#ef4444" />

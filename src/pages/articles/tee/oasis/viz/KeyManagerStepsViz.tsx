@@ -48,7 +48,7 @@ export default function KeyManagerStepsViz() {
                 rx={8}
                 fill={`${C.s}10`}
                 stroke={C.s}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={270}

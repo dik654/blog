@@ -34,6 +34,10 @@ export default function Multiproof({
           </>
         }
         formula={String.raw`\begin{aligned}g_L&=2g,&g_R&=2g+1\\g_{\rm sib}&=g\oplus1,&|P|&=32d\ \mathrm B\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}g_L&=2g,&g_R&=2g+1\\g_{\rm sib}&=g\underbrace{\oplus1}_{\text{Last-bit flip 계산}},&|P|&=32d\ \mathrm B\end{aligned}`}
+        operations={[
+          { expression: String.raw`\oplus1`, annotation: ["Last-bit flip이(가) 식의 결과에 기여하는 방식을","계산합니다.","Leaf에서 root까지 한 level을 올라갈 때마다"] },
+        ]}
         terms={[
           {
             symbol: "g",

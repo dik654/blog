@@ -30,6 +30,10 @@ export default function Indexing1D() {
           </>
         }
         formula={String.raw`i=\mathrm{blockIdx}.x\times\mathrm{blockDim}.x+\mathrm{threadIdx}.x`}
+        annotatedFormula={String.raw`i=\underbrace{\mathrm{blockIdx}.x\times\mathrm{blockDim}.x+\mathrm{threadIdx}.x}_{\text{global logical index 계산}}`}
+        operations={[
+          { expression: String.raw`\mathrm{blockIdx}.x\times\mathrm{blockDim}.x+\mathrm{threadIdx}.x`, annotation: ["global logical index이(가) 식의 결과에","기여하는 방식을 계산합니다.","blockIdx.x 앞에 있는 block들이 각각","blockDim.x개 자리를 차지하므로 그 길이를 건너뛴 뒤,"] },
+        ]}
         terms={[
           {
             symbol: "blockIdx.x",

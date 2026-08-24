@@ -35,6 +35,15 @@ export default function Session({
           ready&=secure\land(C_{shared}^{eth}\ne\varnothing)\\
           &\quad\land compatible(status)
         \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+          C_{shared}&=\underbrace{C_{local}\cap C_{peer}}_{\text{local capabilities 계산}}\\
+          ready&=\underbrace{secure\land(C_{shared}^{eth}\ne\varnothing)}_{\text{판정 조건 결합}}\\
+          &\quad\land compatible(status)
+        \end{aligned}`}
+        operations={[
+          { expression: String.raw`C_{local}\cap C_{peer}`, annotation: ["local capabilities이(가) 식의 결과에 기여하는","방식을 계산합니다.","이름·version이 같은 capability만 교집합에","남기고, 그중 필요한 ETH capability와 chain"] },
+          { expression: String.raw`secure\land(C_{shared}^{eth}\ne\varnothing)`, annotation: ["필요한 gate가 모두 참일 때만 전체 조건을 통과시킵니다.","이름·version이 같은 capability만 교집합에","남기고, 그중 필요한 ETH capability와 chain","Status가 모두 통과할 때만 data-path 권한을"] },
+        ]}
         terms={[
           {
             symbol: String.raw`C_{local}`,

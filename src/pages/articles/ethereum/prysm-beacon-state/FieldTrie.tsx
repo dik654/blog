@@ -29,6 +29,10 @@ export default function FieldTrie({
           </>
         }
         formula={String.raw`d=\lceil\log_2L\rceil,\qquad C\approx d+1`}
+        annotatedFormula={String.raw`d=\underbrace{\lceil\log_2L\rceil,\qquad C\approx d+1}_{\text{로그 비용 변환}}`}
+        operations={[
+          { expression: String.raw`\lceil\log_2L\rceil,\qquad C\approx d+1`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","Leaf chunk를 새로 만든 뒤 depth마다"] },
+        ]}
         terms={[
           {
             symbol: "L",

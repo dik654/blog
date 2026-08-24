@@ -194,7 +194,7 @@ export default function PotDsrViz() {
           x2={200}
           y2={130}
           stroke="#10b981"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#pd-arr)"
         />
         <line
@@ -203,7 +203,7 @@ export default function PotDsrViz() {
           x2={390}
           y2={160}
           stroke="#f59e0b"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#pd-arr-out)"
         />
 

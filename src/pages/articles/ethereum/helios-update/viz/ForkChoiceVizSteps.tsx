@@ -326,7 +326,7 @@ export function Step1() {
             x2={75}
             y2={68}
             stroke={C.alert}
-            strokeWidth={1.5}
+            strokeWidth={1.2}
             opacity={0.6}
           />
           <line
@@ -335,7 +335,7 @@ export function Step1() {
             x2={55}
             y2={68}
             stroke={C.alert}
-            strokeWidth={1.5}
+            strokeWidth={1.2}
             opacity={0.6}
           />
         </motion.g>
@@ -443,7 +443,7 @@ export function Step1() {
             d="M 5 14 V 9 A 7 7 0 0 1 19 9 V 14"
             fill="none"
             stroke={C.fin}
-            strokeWidth={2.5}
+            strokeWidth={1.2}
             strokeLinecap="round"
           />
           {/* 열쇠 구멍 */}

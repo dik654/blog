@@ -42,7 +42,7 @@ export function StepECvsF3() {
         <motion.g key={f.name} initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }}
           transition={{ delay: i * 0.15, ...sp }}>
           <rect x={f.x} y={15} width={150} height={75} rx={10}
-            fill={`${f.c}12`} stroke={f.c} strokeWidth={1.5} />
+            fill={`${f.c}12`} stroke={f.c} strokeWidth={1.2} />
           <text x={f.x + 75} y={42} textAnchor="middle" fontSize={11}
             fontWeight={600} fill={f.c}>{f.name}</text>
           <text x={f.x + 75} y={62} textAnchor="middle" fontSize={14}

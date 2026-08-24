@@ -29,6 +29,11 @@ export default function CellArchitecture() {
         question="마지막 LSTM state에서 H개 미래 값을 한 번에 어떻게 출력할까?"
         idea={<>Direct multi-output head는 마지막 hidden state를 H×Dᵧ개의 값으로 투영한 뒤 horizon 축으로 reshape합니다. Recursive decoder와 달리 앞선 예측을 다음 입력으로 되먹이지 않습니다.</>}
         formula={String.raw`\begin{aligned}\mathbf h_t&=\operatorname{LSTM}(X_t)\\\widehat Y_t&=\operatorname{reshape}(W_o\mathbf h_t+\mathbf b_o)\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}\mathbf h_t&=\underbrace{\operatorname{LSTM}(X_t)}_{\text{forecast state 계산}}\\\widehat Y_t&=\underbrace{\operatorname{reshape}(W_o\mathbf h_t+\mathbf b_o)}_{\text{multi-horizon forecast 계산}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`\operatorname{LSTM}(X_t)`, annotation: ["forecast state이(가) 식의 결과에 기여하는 방식을","계산합니다.","Direct multi-output head는 마지막","hidden state를 H×Dᵧ개의 값으로 투영한 뒤"] },
+          { expression: String.raw`\operatorname{reshape}(W_o\mathbf h_t+\mathbf b_o)`, annotation: ["multi-horizon forecast이(가) 식의 결과에","기여하는 방식을 계산합니다.","Direct multi-output head는 마지막","hidden state를 H×Dᵧ개의 값으로 투영한 뒤"] },
+        ]}
         terms={[
           { symbol: "\\mathbf h_t", name: "forecast state", description: "Input window 마지막 step에서 읽은 요약 표현입니다." },
           { symbol: "W_o,\\mathbf b_o", name: "forecast head", description: "Hidden representation을 모든 horizon·target 출력으로 바꾸는 학습 parameter입니다." },

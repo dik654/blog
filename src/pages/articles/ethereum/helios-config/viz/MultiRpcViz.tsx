@@ -42,7 +42,7 @@ export default function MultiRpcViz() {
                   rx={8}
                   fill={C.primary + "15"}
                   stroke={C.primary}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={115}
@@ -60,7 +60,7 @@ export default function MultiRpcViz() {
                   x2={230}
                   y2={65}
                   stroke={C.primary}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                   initial={{ pathLength: 0 }}
                   animate={{ pathLength: 1 }}
                 />
@@ -72,7 +72,7 @@ export default function MultiRpcViz() {
                   rx={8}
                   fill={C.primary + "15"}
                   stroke={C.primary}
-                  strokeWidth={2}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={330}
@@ -154,7 +154,7 @@ export default function MultiRpcViz() {
                   rx={8}
                   fill={C.fail + "12"}
                   stroke={C.fail}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={140}
@@ -185,7 +185,7 @@ export default function MultiRpcViz() {
                   fill="#10b981"
                   fillOpacity={0.1}
                   stroke="#10b981"
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={345}

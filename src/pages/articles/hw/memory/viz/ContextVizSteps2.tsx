@@ -41,7 +41,7 @@ export function StepEccLayers() {
         x2={278}
         y2={95}
         stroke={C.err}
-        strokeWidth={2}
+        strokeWidth={1.2}
         strokeDasharray="5 4"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}

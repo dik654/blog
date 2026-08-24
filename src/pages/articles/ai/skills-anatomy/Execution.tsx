@@ -45,6 +45,14 @@ export default function Execution() {
           \mathrm{Precision}_{\mathrm{trigger}}&=\frac{TP}{TP+FP}\\
           \mathrm{Recall}_{\mathrm{trigger}}&=\frac{TP}{TP+FN}
         \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+          \mathrm{Precision}_{\mathrm{trigger}}&=\underbrace{\frac{TP}{TP+FP}}_{\text{기준량당 비율}}\\
+          \mathrm{Recall}_{\mathrm{trigger}}&=\underbrace{\frac{TP}{TP+FN}}_{\text{기준량당 비율}}
+        \end{aligned}`}
+        operations={[
+          { expression: String.raw`\frac{TP}{TP+FP}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","적용해야 하는 positive request와 적용하면 안","되는 hard negative request를 먼저","label합니다."] },
+          { expression: String.raw`\frac{TP}{TP+FN}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","적용해야 하는 positive request와 적용하면 안","되는 hard negative request를 먼저","label합니다."] },
+        ]}
         terms={[
           { symbol: "TP", name: "true positive", description: "Skill을 적용해야 하는 요청에서 실제로 해당 Skill을 선택한 수입니다." },
           { symbol: "FP", name: "false positive", description: "Skill을 적용하면 안 되는 요청인데도 해당 Skill을 선택한 수입니다." },

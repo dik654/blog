@@ -28,7 +28,7 @@ export function Step3() {
         x2={450}
         y2={68}
         stroke="var(--border)"
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
         transition={{ duration: 0.4 }}
@@ -117,7 +117,7 @@ export function Step3() {
         x2={210}
         y2={92}
         stroke={C.committee}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         strokeDasharray="4 3"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}

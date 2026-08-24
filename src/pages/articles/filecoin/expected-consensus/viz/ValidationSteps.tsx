@@ -31,7 +31,7 @@ export function StepSync() {
             <text x={177} y={y + 30} textAnchor="middle" fontSize={12} fontWeight={700} fill={color}>h={c.current}</text>
 
             <rect x={235} y={y + 4} width={70} height={26} rx={5}
-              fill={c.pass ? '#10b98120' : '#ef444420'} stroke={color} strokeWidth={1.5} />
+              fill={c.pass ? '#10b98120' : '#ef444420'} stroke={color} strokeWidth={1.2} />
             <text x={270} y={y + 22} textAnchor="middle" fontSize={11} fontWeight={700} fill={color}>
               {c.pass ? '✓ 통과' : '✗ 거부'}
             </text>

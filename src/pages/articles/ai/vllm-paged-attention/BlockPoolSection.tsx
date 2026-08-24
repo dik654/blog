@@ -65,6 +65,16 @@ export default function BlockPoolSection({
 \operatorname{evictable}(b)
 &\Longrightarrow \operatorname{ref}(b)=0
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+\operatorname{ref}(b)
+&=\underbrace{\sum_{r\in\mathcal R}\sum_i \mathbf1[T_r[i]=b]}_{\text{오른쪽 항으로 결과 계산}} \\
+\operatorname{evictable}(b)
+&\Longrightarrow \operatorname{ref}(b)=\underbrace{0}_{\text{오른쪽 항으로 결과 계산}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\sum_{r\in\mathcal R}\sum_i \mathbf1[T_r[i]=b]`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","모든 live request의 block table을 보며","block b를 가리키는 entry 수를 셉니다."] },
+          { expression: String.raw`0`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","모든 live request의 block table을 보며","block b를 가리키는 entry 수를 셉니다."] },
+        ]}
         terms={REF_TERMS}
         assumptions={[
           "Block table entry의 추가·제거와 reference count 갱신이 같은 ownership 계약 안에서 일어납니다.",

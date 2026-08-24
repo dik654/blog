@@ -33,7 +33,7 @@ export function DawnStep() {
         x2={460}
         y2={60}
         stroke={C.dawn}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         opacity={0.3}
       />
 
@@ -172,7 +172,7 @@ export function RevivalStep() {
         x2={460}
         y2={60}
         stroke={C.revival}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         opacity={0.3}
       />
 
@@ -276,7 +276,7 @@ export function RevolutionStep() {
         x2={460}
         y2={60}
         stroke={C.revolution}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         opacity={0.3}
       />
 
@@ -497,7 +497,7 @@ export function LLMEraStep() {
         x2={460}
         y2={50}
         stroke={C.llm}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         opacity={0.3}
       />
 

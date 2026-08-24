@@ -4,4 +4,12 @@ export default function Manufacturing(){return <section id="manufacturing" class
 A_{\mathrm{execute}}&=I_{\mathrm{sensor}}I_{\mathrm{rule}}\\
 &\quad I_{\mathrm{human}}I_{\mathrm{interlock}}\\
 I_{\mathrm{LLM}}&\not\Rightarrow A_{\mathrm{execute}}
-\end{aligned}`} terms={[{symbol:"I_sensor",name:"sensor validity",description:"설비 ID·시간·calibration·quality가 유효한 관측인지 판정합니다."},{symbol:"I_rule",name:"approved rule",description:"Versioned deterministic policy가 해당 조치를 허용하는지 판정합니다."},{symbol:"I_human",name:"operator approval",description:"권한 있는 운영자가 evidence와 조치를 확인한 결과입니다."},{symbol:"I_interlock",name:"physical/software interlock",description:"PLC와 안전 장치의 최종 실행 조건입니다."},{symbol:"I_LLM",name:"LLM recommendation",description:"보고서의 권고 존재 여부이며 실행 권한은 아닙니다."}]} assumptions={["각 indicator와 승인 identity·rule version·timestamp를 audit log에 남깁니다.","Emergency stop과 fail-safe는 agent runtime 밖 독립 경로로 유지합니다.","Local model도 egress·package·credential·log 정책을 별도로 적용합니다."]} interpretation="LLM이 정지를 권고해도 센서가 invalid하거나 승인·interlock이 없으면 실행은 0입니다. 반대로 safety interlock은 LLM service 장애와 무관하게 동작해야 합니다."/><div className="not-prose my-8"><ManufacturingViz /></div></section>}
+\end{aligned}`}
+annotatedFormula={String.raw`\begin{aligned}
+A_{\mathrm{execute}}&=\underbrace{I_{\mathrm{sensor}}I_{\mathrm{rule}}}_{\text{오른쪽 항으로 결과 계산}}\\
+&\quad I_{\mathrm{human}}I_{\mathrm{interlock}}\\
+I_{\mathrm{LLM}}&\not\Rightarrow A_{\mathrm{execute}}
+\end{aligned}`}
+operations={[
+  { expression: String.raw`I_{\mathrm{sensor}}I_{\mathrm{rule}}`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","조치는 agent 추천 하나로 열지 않고 sensor","validity, deterministic safety","rule, 사람 승인, interlock을 모두 만족할 때만"] },
+]} terms={[{symbol:"I_sensor",name:"sensor validity",description:"설비 ID·시간·calibration·quality가 유효한 관측인지 판정합니다."},{symbol:"I_rule",name:"approved rule",description:"Versioned deterministic policy가 해당 조치를 허용하는지 판정합니다."},{symbol:"I_human",name:"operator approval",description:"권한 있는 운영자가 evidence와 조치를 확인한 결과입니다."},{symbol:"I_interlock",name:"physical/software interlock",description:"PLC와 안전 장치의 최종 실행 조건입니다."},{symbol:"I_LLM",name:"LLM recommendation",description:"보고서의 권고 존재 여부이며 실행 권한은 아닙니다."}]} assumptions={["각 indicator와 승인 identity·rule version·timestamp를 audit log에 남깁니다.","Emergency stop과 fail-safe는 agent runtime 밖 독립 경로로 유지합니다.","Local model도 egress·package·credential·log 정책을 별도로 적용합니다."]} interpretation="LLM이 정지를 권고해도 센서가 invalid하거나 승인·interlock이 없으면 실행은 0입니다. 반대로 safety interlock은 LLM service 장애와 무관하게 동작해야 합니다."/><div className="not-prose my-8"><ManufacturingViz /></div></section>}

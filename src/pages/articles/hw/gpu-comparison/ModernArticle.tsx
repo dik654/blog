@@ -21,7 +21,12 @@ export default function ModernGpuComparisonArticle(){return <article className="
     <header><p className="text-sm font-semibold text-primary">01 · Workload envelope</p><h2 className="mt-2 text-2xl font-bold">평균 하나 대신 shape·batch·precision·동시 실행 범위를 적는다</h2></header>
     <p><strong>Workload envelope</strong>는 GPU가 실제로 처리해야 할 입력 범위와 운영 조건입니다. LLM inference라면 model revision, weight dtype, context/prefill/decode 길이, KV-cache dtype, batch·concurrency와 TTFT/TPOT SLA가 들어갑니다. CUDA kernel이라면 M/N/K 또는 input size, data layout, precision, correctness tolerance와 transfer 포함 여부가 필요합니다.</p>
     <p>예를 들어 24GB board에 weight가 22GB 들어간다는 사실만으로 서비스가 가능한 것은 아닙니다. Runtime workspace, KV cache, graph capture, allocator fragmentation과 동시 request headroom을 더해야 합니다. 반대로 training에 필요한 memory를 inference 요구에 그대로 적용해서도 안 됩니다.</p>
-    <ExplainedFormula question="후보 GPU가 workload를 안정적으로 담을 수 있는지 어떤 예산으로 검사할까?" idea={<>고정 weight뿐 아니라 request마다 늘어나는 state와 runtime workspace, fragmentation·운영 headroom을 합쳐 usable device memory보다 작은지 봅니다.</>} formula={String.raw`\begin{aligned}M_{need}&=M_{weight}+C\,M_{state}\\&\quad+M_{workspace}+M_{headroom}\\[3pt]M_{need}&\le M_{usable}\end{aligned}`} terms={[
+    <ExplainedFormula question="후보 GPU가 workload를 안정적으로 담을 수 있는지 어떤 예산으로 검사할까?" idea={<>고정 weight뿐 아니라 request마다 늘어나는 state와 runtime workspace, fragmentation·운영 headroom을 합쳐 usable device memory보다 작은지 봅니다.</>} formula={String.raw`\begin{aligned}M_{need}&=M_{weight}+C\,M_{state}\\&\quad+M_{workspace}+M_{headroom}\\[3pt]M_{need}&\le M_{usable}\end{aligned}`}
+    annotatedFormula={String.raw`\begin{aligned}M_{need}&=\underbrace{M_{weight}+C\,M_{state}}_{\text{고정 memory 계산}}\\&\quad+M_{workspace}+M_{headroom}\\[3pt]M_{need}&\le \underbrace{M_{usable}}_{\text{실사용 가능 capacity 계산}}\end{aligned}`}
+    operations={[
+      { expression: String.raw`M_{weight}+C\,M_{state}`, annotation: ["고정 memory이(가) 식의 결과에 기여하는 방식을","계산합니다.","고정 weight뿐 아니라 request마다"] },
+      { expression: String.raw`M_{usable}`, annotation: ["실사용 가능 capacity이(가) 식의 결과에 기여하는","방식을 계산합니다.","고정 weight뿐 아니라 request마다"] },
+    ]} terms={[
       {symbol:"M_{need}",name:"필요한 총 memory",description:"Workload profile을 실행하기 위해 동시에 resident해야 할 allocation의 합입니다."},
       {symbol:"M_{weight}",name:"고정 memory",description:"Model weight·constant table처럼 request와 무관한 allocation입니다."},
       {symbol:"C",name:"동시 작업 수",description:"동시에 resident한 request·batch slot 수입니다."},
@@ -51,7 +56,11 @@ export default function ModernGpuComparisonArticle(){return <article className="
   <section id="blockchain" className="space-y-6">
     <header><p className="text-sm font-semibold text-primary">04 · Workload별 선택과 실측</p><h2 className="mt-2 text-2xl font-bold">Hash·MSM·NTT·LLM은 같은 GPU 비교표를 쓰지 않는다</h2></header>
     <p>Hash batch는 integer/bit operation과 memory access, MSM은 field arithmetic·bucket contention·reduction, NTT는 stage별 global synchronization과 traffic이 병목일 수 있습니다. LLM decode는 weight·KV traffic과 batch에 민감하고 training은 matrix throughput·collective·optimizer memory가 중요합니다. 따라서 한 benchmark의 순위를 다른 workload에 옮기지 않습니다.</p>
-    <ExplainedFormula question="구매 비용이 아니라 실제 처리량 기준 비용을 어떻게 비교할까?" idea={<>같은 SLA와 quality를 만족한 후보만 대상으로 일정 기간의 장비·전력·운영비를 그 기간 완료한 유효 작업 수로 나눕니다.</>} formula={String.raw`C_{work}=\frac{C_{hardware}+C_{energy}+C_{ops}}{N_{valid\ work}}`} terms={[
+    <ExplainedFormula question="구매 비용이 아니라 실제 처리량 기준 비용을 어떻게 비교할까?" idea={<>같은 SLA와 quality를 만족한 후보만 대상으로 일정 기간의 장비·전력·운영비를 그 기간 완료한 유효 작업 수로 나눕니다.</>} formula={String.raw`C_{work}=\frac{C_{hardware}+C_{energy}+C_{ops}}{N_{valid\ work}}`}
+    annotatedFormula={String.raw`C_{work}=\underbrace{\frac{C_{hardware}+C_{energy}+C_{ops}}{N_{valid\ work}}}_{\text{기준량당 비율}}`}
+    operations={[
+      { expression: String.raw`\frac{C_{hardware}+C_{energy}+C_{ops}}{N_{valid\ work}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","같은 SLA와 quality를 만족한 후보만 대상으로 일정","기간의 장비·전력·운영비를 그 기간 완료한 유효 작업 수로","나눕니다."] },
+    ]} terms={[
       {symbol:"C_{work}",name:"유효 작업당 비용",description:"선택한 기간에 SLA와 quality를 통과한 output 하나를 만드는 총비용입니다."},
       {symbol:"C_{hardware}",name:"기간 환산 장비비",description:"구매·임대·감가와 필요한 server 부품을 포함합니다."},
       {symbol:"C_{energy}",name:"전력·냉각 비용",description:"Wall-power measurement와 시설 PUE 경계를 명시합니다."},

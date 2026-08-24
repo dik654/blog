@@ -32,6 +32,10 @@ export default function DataPrep() {
           </>
         }
         formula={String.raw`X^{(0)}_{b,t,:}=E_{\mathrm{tok}[b,t],:}+P_{t,:}`}
+        annotatedFormula={String.raw`X^{(0)}_{b,t,:}=\underbrace{E_{\mathrm{tok}[b,t],:}+P_{t,:}}_{\text{initial hidden states 계산}}`}
+        operations={[
+          { expression: String.raw`E_{\mathrm{tok}[b,t],:}+P_{t,:}`, annotation: ["initial hidden states이(가) 식의 결과에","기여하는 방식을 계산합니다.","Token embedding table에서 ID에 해당하는","row를 고르고, 같은 d_model 차원의 position"] },
+        ]}
         terms={[
           {
             symbol: "b,t",

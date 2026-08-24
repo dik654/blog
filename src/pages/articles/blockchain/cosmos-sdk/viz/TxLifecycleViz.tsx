@@ -65,7 +65,7 @@ export default function TxLifecycleViz() {
                   rx={6}
                   fill={`${s.color}15`}
                   stroke={s.color}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                   animate={{ scale: active ? 1 : 0.95 }}
                   style={{
                     transformOrigin: `${s.x + SW / 2}px ${25 + SH / 2}px`,
@@ -98,7 +98,7 @@ export default function TxLifecycleViz() {
                     x2={s.x + SW + 18}
                     y2={45}
                     stroke={s.color}
-                    strokeWidth={1.5}
+                    strokeWidth={1.2}
                     opacity={0.5}
                     markerEnd="url(#arrowhead)"
                   />

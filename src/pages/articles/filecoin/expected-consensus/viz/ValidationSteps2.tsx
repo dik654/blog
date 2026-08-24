@@ -72,7 +72,7 @@ export function StepWinPost() {
     })}
     <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7 }}>
       <text x={410} y={50} fontSize={12} fill="var(--muted-foreground)">→</text>
-      <rect x={420} y={36} width={30} height={24} rx={4} fill="#10b98120" stroke="#10b981" strokeWidth={1.5} />
+      <rect x={420} y={36} width={30} height={24} rx={4} fill="#10b98120" stroke="#10b981" strokeWidth={1.2} />
       <text x={435} y={52} textAnchor="middle" fontSize={11} fontWeight={700} fill="#10b981">✓</text>
     </motion.g>
     <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9 }}>

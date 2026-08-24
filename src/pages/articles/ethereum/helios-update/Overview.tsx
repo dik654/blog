@@ -62,6 +62,10 @@ export default function Overview({ onCodeRef: _onCodeRef }: Props) {
           </>
         }
         formula={"3p\\ge 2N"}
+        annotatedFormula={String.raw`3p\ge \underbrace{2N}_{\text{Participating positions 계산}}`}
+        operations={[
+          { expression: String.raw`2N`, annotation: ["Participating positions이(가) 식의 결과에","기여하는 방식을 계산합니다.","부동소수점 비율 대신 정수끼리 교차 곱하면 client마다"] },
+        ]}
         terms={[
           {
             symbol: "p",

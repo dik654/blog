@@ -19,6 +19,12 @@ export default function CrossEntropy({ title }: { title?: string }) {
         question="실제 데이터는 P에서 나오지만 모델 Q가 만든 확률로 encode하면 평균 비용이 얼마인가?"
         idea={<>실제 사건의 빈도 P(x)는 가중치로 두고, 각 사건에 모델이 부여한 확률 Q(x)를 −log로 변환합니다. One-hot classification에서는 정답 class 하나의 항만 남습니다.</>}
         formula={String.raw`\begin{aligned}H(P,Q)&=\mathbb E_{x\sim P}[-\log Q(x)]\\&=-\sum_xP(x)\log Q(x)\\[3pt]\ell_{\rm CE}(z,y)&=-\log\operatorname{softmax}(z)_y\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}H(P,Q)&=\underbrace{\mathbb E_{x\sim P}[-\log Q(x)]}_{\text{확률 가중 평균}}\\&=\underbrace{-\sum_xP(x)\log Q(x)}_{\text{로그 비용 변환}}\\[3pt]\ell_{\rm CE}(z,y)&=\underbrace{-\log\operatorname{softmax}(z)_y}_{\text{선택 비율 정규화}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`\mathbb E_{x\sim P}[-\log Q(x)]`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","실제 사건의 빈도 P(x)는 가중치로 두고, 각 사건에 모델이","부여한 확률 Q(x)를 −log로 변환합니다."] },
+          { expression: String.raw`-\sum_xP(x)\log Q(x)`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","실제 사건의 빈도 P(x)는 가중치로 두고, 각 사건에 모델이","부여한 확률 Q(x)를 −log로 변환합니다."] },
+          { expression: String.raw`-\log\operatorname{softmax}(z)_y`, annotation: ["score를 합이 1인 선택 비율로 정규화합니다.","실제 사건의 빈도 P(x)는 가중치로 두고, 각 사건에 모델이","부여한 확률 Q(x)를 −log로 변환합니다."] },
+        ]}
         terms={[
           { symbol: "P", name: "target distribution", description: "실제 data distribution 또는 sample의 label distribution입니다." },
           { symbol: "Q", name: "model distribution", description: "Parameter θ와 input x가 만드는 예측 분포입니다." },

@@ -54,6 +54,11 @@ export default function ModernSparseMultiplicationArticle() {
           question="두 coefficient 표현을 곱을 때 어떤 출력 위치에 어떤 partial product가 더해지는가?"
           idea={<>지수 i와 j의 항을 곱하면 x^(i+j)가 되므로, 0이 아닌 support 쌍만 순회해 같은 출력 index에 누적합니다.</>}
           formula={String.raw`c_k=\sum_{\substack{i\in S_A,\,j\in S_B\\i+j=k}}a_ib_j,\qquad N_{\mathrm{mul}}=|S_A|\,|S_B|`}
+          annotatedFormula={String.raw`\underbrace{c_k}_{\text{Output coefficient 계산}}=\sum_{\substack{i\in S_A,\,j\in S_B\\i+j=k}}a_ib_j,\qquad \underbrace{N_{\mathrm{mul}}}_{\text{Candidate scalar 계산}}=|S_A|\,|S_B|`}
+          operations={[
+            { expression: String.raw`N_{\mathrm{mul}}`, annotation: ["Candidate scalar products이(가) 식의","결과에 기여하는 방식을 계산합니다.","지수 i와 j의 항을 곱하면 x^(i+j)가 되므로, 0이","아닌 support 쌍만 순회해 같은 출력 index에"] },
+            { expression: String.raw`c_k`, annotation: ["Output coefficient이(가) 식의 결과에 기여하는","방식을 계산합니다.","지수 i와 j의 항을 곱하면 x^(i+j)가 되므로, 0이","아닌 support 쌍만 순회해 같은 출력 index에"] },
+          ]}
           terms={[
             { symbol: "S_A,S_B", name: "Supports", description: "각 operand에서 coefficient가 0이 아닌 index 집합입니다." },
             { symbol: "a_i,b_j", name: "Nonzero coefficients", description: "Support가 가리키는 실제 field 값입니다." },
@@ -118,6 +123,10 @@ export default function ModernSparseMultiplicationArticle() {
           question="Miller loop 전체에서 sparse 전용 곱셈이 절약할 수 있는 시간의 상한을 어떻게 읽는가?"
           idea={<>전체 시간 가운데 line multiplication이 차지하는 비율만 개선 대상입니다. 그 부분을 s배 빠르게 해도 나머지 시간은 그대로이므로 Amdahl 형태의 상한이 생깁니다.</>}
           formula={String.raw`S_{\mathrm{total}}\le \frac{1}{(1-f)+f/s}`}
+          annotatedFormula={String.raw`S_{\mathrm{total}}\le \underbrace{\frac{1}{(1-f)+f/s}}_{\text{기준량당 비율}}`}
+          operations={[
+            { expression: String.raw`\frac{1}{(1-f)+f/s}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","전체 시간 가운데 line multiplication이","차지하는 비율만 개선 대상입니다."] },
+          ]}
           terms={[
             { symbol: "f", name: "Optimized fraction", description: "기준 구현 시간 중 sparse line multiplication이 차지한 비율입니다." },
             { symbol: "s", name: "Local speedup", description: "같은 input에서 해당 부분만 전용 schedule로 빨라진 배수입니다." },
@@ -153,6 +162,10 @@ export default function ModernSparseMultiplicationArticle() {
           question="Sparse line multiplication은 Miller recurrence의 어느 위치를 바꾸는가?"
           idea={<>Accumulator 제곱과 point update는 유지하고, dense f에 sparse line ℓ를 곱하는 한 연산을 profile-specific helper로 낮춥니다.</>}
           formula={String.raw`f_{i+1}=f_i^2\,\ell_i(P)\quad\leadsto\quad f_{i+1}=\operatorname{mul\_by\_support}(f_i^2;\,\ell_{s_1},\ell_{s_2},\ell_{s_3})`}
+          annotatedFormula={String.raw`f_{i+1}=\underbrace{f_i^2\,\ell_i(P)\quad\leadsto\quad f_{i+1}=\operatorname{mul\_by\_support}(f_i^2;\,\ell_{s_1},\ell_{s_2},\ell_{s_3})}_{\text{허용 경계 판정}}`}
+          operations={[
+            { expression: String.raw`f_i^2\,\ell_i(P)\quad\leadsto\quad f_{i+1}=\operatorname{mul\_by\_support}(f_i^2;\,\ell_{s_1},\ell_{s_2},\ell_{s_3})`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","Accumulator 제곱과 point update는","유지하고, dense f에 sparse line ℓ를 곱하는","한 연산을 profile-specific helper로"] },
+          ]}
           terms={[
             { symbol: "f_i", name: "Miller accumulator", description: "현재 loop까지 line function 값을 누적한 dense Fp12 원소입니다." },
             { symbol: String.raw`\ell_i(P)`, name: "Evaluated line", description: "Twist point 연산의 line을 base-field point P에서 평가해 embedding한 sparse 원소입니다." },

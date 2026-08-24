@@ -824,7 +824,7 @@ export default function SendTxViz() {
                     d="M 230 90 C 242 90, 248 90, 252 90"
                     fill="none"
                     stroke={C.bloom}
-                    strokeWidth={1.5}
+                    strokeWidth={1.2}
                     markerEnd="url(#arr-stx-muted)"
                     {...drawLine(0.45)}
                   />

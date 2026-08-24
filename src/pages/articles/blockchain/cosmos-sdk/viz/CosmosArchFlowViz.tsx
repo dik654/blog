@@ -75,7 +75,7 @@ export default function CosmosArchFlowViz() {
                   x2={t.x}
                   y2={t.y}
                   stroke="#666"
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                   initial={{ pathLength: 0 }}
                   animate={{ pathLength: show ? 1 : 0 }}
                   transition={{ duration: 0.4, delay: i * 0.08 }}
@@ -107,7 +107,7 @@ export default function CosmosArchFlowViz() {
                 rx={6}
                 fill={`${n.color}12`}
                 stroke={n.color}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={n.x + BW / 2}

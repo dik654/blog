@@ -34,6 +34,12 @@ export default function Overview() {
         question="Pretrained backbone과 새 task head는 target data에서 어떤 함수로 학습될까?"
         idea={<>Source에서 얻은 θsrc로 representation f를 시작하고, 새 head φ는 target label에 맞게 초기화합니다. Fixed feature는 θ를 고정하고 φ만, full fine-tuning은 둘 다 target empirical risk로 조정합니다.</>}
         formula={String.raw`\begin{aligned}\hat y_i&=g_{\phi}(f_{\theta}(x_i)),\\\theta_0&=\theta_{\mathrm{src}},\quad \phi_0=\phi_{\mathrm{new}},\\\mathcal L_t(\theta,\phi)&=\frac1n\sum_{i=1}^{n}\ell(\hat y_i,y_i),\\(\theta^*,\phi^*)&=\arg\min_{\theta,\phi}\mathcal L_t(\theta,\phi).\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}\hat y_i&=\underbrace{g_{\phi}(f_{\theta}(x_i)),}_{\text{오른쪽 항으로 결과 계산}}\\\theta_0&=\underbrace{\theta_{\mathrm{src}},\quad \phi_0=\phi_{\mathrm{new}},}_{\text{오른쪽 항으로 결과 계산}}\\\mathcal L_t(\theta,\phi)&=\underbrace{\frac1n\sum_{i=1}^{n}\ell(\hat y_i,y_i),}_{\text{오른쪽 항으로 결과 계산}}\\(\theta^*,\phi^*)&=\arg\min_{\theta,\phi}\mathcal L_t(\theta,\phi).\end{aligned}`}
+        operations={[
+          { expression: String.raw`g_{\phi}(f_{\theta}(x_i)),`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Source에서 얻은 θsrc로 representation","f를 시작하고, 새 head φ는 target label에","맞게 초기화합니다."] },
+          { expression: String.raw`\theta_{\mathrm{src}},\quad \phi_0=\phi_{\mathrm{new}},`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Source에서 얻은 θsrc로 representation","f를 시작하고, 새 head φ는 target label에","맞게 초기화합니다."] },
+          { expression: String.raw`\frac1n\sum_{i=1}^{n}\ell(\hat y_i,y_i),`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Source에서 얻은 θsrc로 representation","f를 시작하고, 새 head φ는 target label에","맞게 초기화합니다."] },
+        ]}
         terms={[
           { symbol: "f_θ", name: "backbone · encoder", description: "Source pretraining에서 시작해 input을 representation으로 바꾸는 함수입니다." },
           { symbol: "g_φ", name: "target head", description: "Representation을 새 task의 class·score로 바꾸는 출력 함수입니다." },

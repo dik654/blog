@@ -21,7 +21,11 @@ export default function ModernIcicleArticle() {
     <section id="backend-dispatch" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">01 · Backend dispatch</p><h2 className="mt-2 text-2xl font-bold">Active device와 primitive identity를 registry key로 묶고 exact implementation을 선택한다</h2></header>
       <p>Pinned runtime은 thread-local active device를 관리하며 dynamically loaded backend가 제공하는 device API를 통해 allocate/copy/sync를 호출합니다. Primitive registry는 별도 field·curve registration과 함께 보아야 하며, “CUDA가 설치되어 있다”와 “이 field의 이 primitive 구현이 등록되어 있다”는 다른 조건입니다.</p>
-      <ExplainedFormula question="한 ICICLE 호출이 어느 구현으로 가야 하는지 어떻게 표현할까?" idea={<>Device type, primitive, field/curve와 implementation revision을 하나의 lookup identity로 고정합니다.</>} formula={String.raw`I=\mathcal{R}[d,\,p,\,f,\,r]`} terms={[
+      <ExplainedFormula question="한 ICICLE 호출이 어느 구현으로 가야 하는지 어떻게 표현할까?" idea={<>Device type, primitive, field/curve와 implementation revision을 하나의 lookup identity로 고정합니다.</>} formula={String.raw`I=\mathcal{R}[d,\,p,\,f,\,r]`}
+      annotatedFormula={String.raw`I=\underbrace{\mathcal{R}[d,\,p,\,f,\,r]}_{\text{Registry 계산}}`}
+      operations={[
+        { expression: String.raw`\mathcal{R}[d,\,p,\,f,\,r]`, annotation: ["Registry이(가) 식의 결과에 기여하는 방식을","계산합니다.","Device type, primitive,","field/curve와 implementation"] },
+      ]} terms={[
         {symbol:"I",name:"Implementation",description:"호출할 concrete backend function 또는 명시적 unsupported 결과입니다."},
         {symbol:"\\mathcal{R}",name:"Registry",description:"Backend registration으로 채워진 runtime mapping입니다."},
         {symbol:"d",name:"Device type",description:"CPU, CUDA 또는 설치된 custom accelerator type입니다."},
@@ -35,7 +39,11 @@ export default function ModernIcicleArticle() {
     <section id="memory-stream" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">02 · Memory and stream</p><h2 className="mt-2 text-2xl font-bold">Pointer의 device owner와 asynchronous completion이 끝날 때까지 buffer lifetime을 유지한다</h2></header>
       <p>Rust wrapper의 HostSlice·DeviceSlice는 위치를 구분하고 copy/copy_async 경로를 제공합니다. Async 함수가 반환됐다는 사실은 GPU가 buffer 사용을 끝냈다는 뜻이 아닙니다. Event 또는 stream synchronization이 완료되기 전에 input을 덮거나 output을 읽거나 allocation을 해제하면 race가 생깁니다.</p>
-      <ExplainedFormula question="Async buffer를 언제 재사용할 수 있을까?" idea={<>마지막 write와 모든 consumers가 같은 stream order 또는 event dependency로 완료된 뒤에만 재사용합니다.</>} formula={String.raw`t_{reuse}(b)\ge\max_{o\in C(b)}t_{done}(o)`} terms={[
+      <ExplainedFormula question="Async buffer를 언제 재사용할 수 있을까?" idea={<>마지막 write와 모든 consumers가 같은 stream order 또는 event dependency로 완료된 뒤에만 재사용합니다.</>} formula={String.raw`t_{reuse}(b)\ge\max_{o\in C(b)}t_{done}(o)`}
+      annotatedFormula={String.raw`t_{reuse}(b)\ge\underbrace{\max_{o\in C(b)}t_{done}(o)}_{\text{경계 후보 선택}}`}
+      operations={[
+        { expression: String.raw`\max_{o\in C(b)}t_{done}(o)`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","마지막 write와 모든 consumers가 같은 stream","order 또는 event dependency로 완료된 뒤에만","재사용합니다."] },
+      ]} terms={[
         {symbol:"t_{reuse}(b)",name:"Reuse time",description:"Buffer b를 overwrite하거나 free할 수 있는 가장 이른 시점입니다."},
         {symbol:"b",name:"Buffer",description:"Host 또는 특정 device가 소유한 input/output allocation입니다."},
         {symbol:"C(b)",name:"Consumers",description:"Buffer b를 읽거나 쓰도록 제출된 모든 async operation 집합입니다."},
@@ -49,7 +57,11 @@ export default function ModernIcicleArticle() {
     <section id="primitive-config" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">03 · Primitive config</p><h2 className="mt-2 text-2xl font-bold">같은 function 이름 아래 숨은 representation·ordering·residency options를 artifact로 남긴다</h2></header>
       <p>MSM은 point/scalar representation과 window plan, NTT는 domain·direction·ordering, Poseidon은 field·arity/width·parameter constants가 필요합니다. Config와 input artifact가 맞지 않으면 kernel이 성공해도 다른 수학 문제를 계산합니다. Wrapper version이 바뀌면 defaults도 artifact identity에 포함합니다.</p>
-      <ExplainedFormula question="한 primitive job을 재현할 수 있는 identity는 무엇일까?" idea={<>Input digest와 primitive config, device/backend revision, output digest를 length-delimited receipt로 결속합니다.</>} formula={String.raw`J=H(p\|f\|H(x)\|H(c)\|d\|r\|H(y))`} terms={[
+      <ExplainedFormula question="한 primitive job을 재현할 수 있는 identity는 무엇일까?" idea={<>Input digest와 primitive config, device/backend revision, output digest를 length-delimited receipt로 결속합니다.</>} formula={String.raw`J=H(p\|f\|H(x)\|H(c)\|d\|r\|H(y))`}
+      annotatedFormula={String.raw`J=\underbrace{H(p\|f\|H(x)\|H(c)\|d\|r\|H(y))}_{\text{Job receipt 계산}}`}
+      operations={[
+        { expression: String.raw`H(p\|f\|H(x)\|H(c)\|d\|r\|H(y))`, annotation: ["Job receipt이(가) 식의 결과에 기여하는 방식을","계산합니다.","Input digest와 primitive config,","device/backend revision, output"] },
+      ]} terms={[
         {symbol:"J",name:"Job receipt",description:"재현·비교·rollback에 쓰는 primitive job identity입니다."},
         {symbol:"H",name:"Digest",description:"Canonical length-delimited encoding에 적용한 pinned hash입니다."},
         {symbol:"p",name:"Primitive",description:"MSM, NTT 또는 Poseidon operation 이름입니다."},
@@ -65,7 +77,11 @@ export default function ModernIcicleArticle() {
     <section id="release-gate" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">04 · Release gate</p><h2 className="mt-2 text-2xl font-bold">Backend별 parity와 failure semantics를 먼저 맞춘 뒤 verified jobs/s와 end-to-end를 비교한다</h2></header>
       <p>Zero/one/random/boundary field values, unsupported field·size·device, wrong pointer owner, short buffer, missing backend, async early read, OOM과 injected kernel error를 포함합니다. CPU reference와 normalized output을 비교하고 최종 proof verifier를 통과한 뒤 cold load, warm steady state, H2D/kernel/D2H/sync, peak memory, median/p95를 기록합니다.</p>
-      <ExplainedFormula question="Backend 교체의 end-to-end speedup은 어떻게 계산할까?" idea={<>같은 verified workload에서 load·transfer·sync·fallback을 포함한 전체 시간을 reference와 candidate에 동일하게 적용합니다.</>} formula={String.raw`S_{e2e}=\frac{T_{ref}^{load}+T_{ref}^{run}+T_{ref}^{verify}}{T_{cand}^{load}+T_{H2D}+T_{kernel}+T_{D2H}+T_{sync}+T_{verify}}`} terms={[
+      <ExplainedFormula question="Backend 교체의 end-to-end speedup은 어떻게 계산할까?" idea={<>같은 verified workload에서 load·transfer·sync·fallback을 포함한 전체 시간을 reference와 candidate에 동일하게 적용합니다.</>} formula={String.raw`S_{e2e}=\frac{T_{ref}^{load}+T_{ref}^{run}+T_{ref}^{verify}}{T_{cand}^{load}+T_{H2D}+T_{kernel}+T_{D2H}+T_{sync}+T_{verify}}`}
+      annotatedFormula={String.raw`S_{e2e}=\underbrace{\frac{T_{ref}^{load}+T_{ref}^{run}+T_{ref}^{verify}}{T_{cand}^{load}+T_{H2D}+T_{kernel}+T_{D2H}+T_{sync}+T_{verify}}}_{\text{기준량당 비율}}`}
+      operations={[
+        { expression: String.raw`\frac{T_{ref}^{load}+T_{ref}^{run}+T_{ref}^{verify}}{T_{cand}^{load}+T_{H2D}+T_{kernel}+T_{D2H}+T_{sync}+T_{verify}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","같은 verified workload에서","load·transfer·sync·fallback을 포함한","전체 시간을 reference와 candidate에 동일하게"] },
+      ]} terms={[
         {symbol:"S_{e2e}",name:"End-to-end speedup",description:"같은 검증 경계를 쓴 reference/candidate 전체 시간 비율입니다."},
         {symbol:"T_{ref}^{load}",name:"Reference load",description:"Reference artifact/backend 준비 시간입니다."},
         {symbol:"T_{ref}^{run}",name:"Reference run",description:"Reference primitive 실행 시간입니다."},

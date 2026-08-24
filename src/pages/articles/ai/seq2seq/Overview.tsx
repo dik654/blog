@@ -38,6 +38,12 @@ export default function Overview() {
         question="가변 길이 target sequence 전체의 확률을 다음-token 확률로 어떻게 분해할까?"
         idea={<>Probability chain rule을 적용하면 각 target token은 source X와 이전 target prefix y&lt;t에 조건부인 항으로 분해됩니다. EOS도 하나의 token이므로 종료 시점까지 같은 분해에 포함됩니다.</>}
         formula={String.raw`\begin{aligned}p_t&=P_\theta(y_t\mid y_{<t},X)\\P_\theta(Y\mid X)&=\prod_{t=1}^{T}p_t\\\log P_\theta(Y\mid X)&=\sum_{t=1}^{T}\log p_t\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}p_t&=\underbrace{P_\theta(y_t\mid y_{<t},X)}_{\text{허용 경계 판정}}\\P_\theta(Y\mid X)&=\underbrace{\prod_{t=1}^{T}p_t}_{\text{model parameters 계산}}\\\log P_\theta(Y\mid X)&=\underbrace{\sum_{t=1}^{T}\log p_t}_{\text{로그 비용 변환}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`P_\theta(y_t\mid y_{<t},X)`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","Probability chain rule을 적용하면 각","target token은 source X와 이전 target","prefix y t에 조건부인 항으로 분해됩니다."] },
+          { expression: String.raw`\prod_{t=1}^{T}p_t`, annotation: ["model parameters이(가) 식의 결과에 기여하는","방식을 계산합니다.","Probability chain rule을 적용하면 각","target token은 source X와 이전 target"] },
+          { expression: String.raw`\sum_{t=1}^{T}\log p_t`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","Probability chain rule을 적용하면 각","target token은 source X와 이전 target","prefix y t에 조건부인 항으로 분해됩니다."] },
+        ]}
         terms={[
           { symbol: "X=(x_1,\\ldots,x_S)", name: "source sequence", description: "길이 S의 encoder 입력입니다." },
           { symbol: "Y=(y_1,\\ldots,y_T)", name: "target sequence", description: "EOS를 포함할 수 있는 길이 T의 출력입니다." },

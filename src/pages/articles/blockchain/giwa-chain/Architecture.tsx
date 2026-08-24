@@ -124,7 +124,7 @@ export default function Architecture() {
               x2={300}
               y2={140}
               stroke="#3b82f6"
-              strokeWidth={1.5}
+              strokeWidth={1.2}
               markerEnd="url(#gv-arr)"
             />
             <text

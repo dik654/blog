@@ -151,7 +151,7 @@ export default function SwapLoopViz() {
                   x2={44}
                   y2={y + 50}
                   stroke="#3b82f6"
-                  strokeWidth={1.3}
+                  strokeWidth={1.2}
                   markerEnd="url(#sl-arr)"
                 />
               )}
@@ -164,7 +164,7 @@ export default function SwapLoopViz() {
           d="M 420 112 Q 490 112 490 390 Q 490 388 448 388"
           fill="none"
           stroke="#8b5cf6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           strokeDasharray="4 3"
           markerEnd="url(#sl-arr)"
         />

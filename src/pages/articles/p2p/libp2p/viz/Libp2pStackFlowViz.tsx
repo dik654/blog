@@ -154,7 +154,7 @@ export default function Libp2pStackFlowViz() {
                 x2={310}
                 y2={270}
                 stroke="#8b5cf6"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 strokeDasharray="4,3"
               />
               <rect

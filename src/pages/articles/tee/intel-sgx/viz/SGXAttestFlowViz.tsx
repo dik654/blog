@@ -105,7 +105,7 @@ export default function SGXAttestFlowViz() {
                   x2={bx(a.to)}
                   y2={by(a.to) + off}
                   stroke={a.color}
-                  strokeWidth={1.3}
+                  strokeWidth={1.2}
                   markerEnd="url(#sgxa)"
                 />
                 {(() => {

@@ -11,6 +11,10 @@ export default function ProductRule() {
         question="여러 양수를 곱한 값을 로그 공간에서는 어떻게 계산하는가?"
         idea={<>각 값이 밑 a를 몇 번 적용한 결과인지 따로 구한 뒤 그 횟수를 더합니다. 나눗셈은 음의 지수 때문에 뺄셈으로 바뀝니다.</>}
         formula={String.raw`\log_a(uv)=\log_a u+\log_a v,\qquad \log_a\!\left(\frac uv\right)=\log_a u-\log_a v`}
+        annotatedFormula={String.raw`\log_a(uv)=\underbrace{\log_a u+\log_a v,\qquad \log_a\!\left(\frac uv\right)=\log_a u-\log_a v}_{\text{로그 비용 변환}}`}
+        operations={[
+          { expression: String.raw`\log_a u+\log_a v,\qquad \log_a\!\left(\frac uv\right)=\log_a u-\log_a v`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","각 값이 밑 a를 몇 번 적용한 결과인지 따로 구한 뒤 그","횟수를 더합니다."] },
+        ]}
         terms={[
           { symbol: "u,v", name: "positive inputs", description: "곱하거나 나눌 0보다 큰 값입니다." },
           { symbol: String.raw`\log_a u`, name: "u의 log-scale 위치", description: "밑 a를 기준으로 u가 놓인 지수 좌표입니다." },

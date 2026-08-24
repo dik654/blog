@@ -398,7 +398,7 @@ export default function OverviewViz() {
                 rx={8}
                 fill="none"
                 stroke={C.destroy}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.3 }}
@@ -675,7 +675,7 @@ export default function OverviewViz() {
               <motion.path
                 d="M 245 165 L 245 180"
                 stroke={C.safe}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 initial={{ pathLength: 0 }}
                 animate={{ pathLength: 1 }}
                 transition={{ duration: 0.6, delay: 0.3 }}

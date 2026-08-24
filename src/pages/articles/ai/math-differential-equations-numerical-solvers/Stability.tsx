@@ -43,6 +43,16 @@ export default function Stability() {
           |1-h\lambda|&<1 \\
           0&<h\lambda<2
         \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+          x_{n+\underbrace{1}_{\text{amplification factor 계산}}}&=\underbrace{(1-h\lambda)x_n}_{\text{amplification factor 계산}} \\
+          |1-h\lambda|&<1 \\
+          0&<\underbrace{h\lambda<2}_{\text{허용 경계 판정}}
+        \end{aligned}`}
+        operations={[
+          { expression: String.raw`(1-h\lambda)x_n`, annotation: ["amplification factor이(가) 식의 결과에","기여하는 방식을 계산합니다.","한 번의 update를 이전 값에 곱하는 배율로 정리합니다."] },
+          { expression: String.raw`1`, annotation: ["amplification factor이(가) 식의 결과에","기여하는 방식을 계산합니다.","한 번의 update를 이전 값에 곱하는 배율로 정리합니다."] },
+          { expression: String.raw`h\lambda<2`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","한 번의 update를 이전 값에 곱하는 배율로 정리합니다."] },
+        ]}
         terms={[
           {
             symbol: "1-h\\lambda",

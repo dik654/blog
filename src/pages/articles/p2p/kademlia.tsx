@@ -29,6 +29,10 @@ export default function KademliaArticle() {
           question="두 ID x와 y 사이의 Kademlia 거리를 어떻게 한 값으로 만들까?"
           idea="같은 비트는 0, 다른 비트는 1로 만든 XOR 결과를 부호 없는 정수로 읽는다. 첫 차이 비트가 앞에 있을수록 값이 크므로 prefix가 덜 겹친 노드를 더 멀다고 정렬할 수 있다."
           formula={String.raw`d(x,y)=x\oplus y`}
+          annotatedFormula={String.raw`d(x,y)=\underbrace{x\oplus y}_{\text{XOR 계산}}`}
+          operations={[
+            { expression: String.raw`x\oplus y`, annotation: ["XOR이(가) 식의 결과에 기여하는 방식을 계산합니다.","같은 비트는 0, 다른 비트는 1로 만든 XOR 결과를 부호","없는 정수로 읽는다."] },
+          ]}
           terms={[
             { symbol: "x,y", name: "Node IDs", description: "길이가 같은 node ID 또는 key 비트열" },
             { symbol: "\\oplus", name: "XOR", description: "각 비트 위치에 적용하는 XOR 연산" },
@@ -71,6 +75,10 @@ export default function KademliaArticle() {
           question="XOR 값 전체 대신 두 ID가 처음 갈라지는 거리 구간은 어떻게 구할까?"
           idea="XOR 결과 앞의 0은 공통 prefix다. 가장 높은 1의 위치에 1을 더하면 필요한 distance bucket 번호가 된다."
           formula={String.raw`\operatorname{LogDist}(x,y)=\begin{cases}0,&x=y\\ \lfloor\log_2(x\oplus y)\rfloor+1,&x\ne y\end{cases}`}
+          annotatedFormula={String.raw`\underbrace{\operatorname{LogDist}}_{\text{Logarithmic distance 계산}}(x,y)=\begin{cases}0,&x=y\\ \lfloor\log_2(x\oplus y)\rfloor+1,&x\ne y\end{cases}`}
+          operations={[
+            { expression: String.raw`\operatorname{LogDist}`, annotation: ["Logarithmic distance이(가) 식의 결과에","기여하는 방식을 계산합니다.","XOR 결과 앞의 0은 공통 prefix다."] },
+          ]}
           terms={[
             { symbol: "\\operatorname{LogDist}", name: "Logarithmic distance", description: "0부터 ID bit 수까지의 logarithmic distance" },
             { symbol: "\\lfloor\\log_2 z\\rfloor", name: "Highest set bit", description: "양의 정수 z의 가장 높은 1 비트 위치" },

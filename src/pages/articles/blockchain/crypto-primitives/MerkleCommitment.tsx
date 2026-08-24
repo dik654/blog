@@ -15,6 +15,12 @@ export default function MerkleCommitment() {
         question="Depth d의 binary Merkle proof는 root를 어떻게 복원할까요?"
         idea="Leaf index의 i번째 bit가 현재 hash를 왼쪽에 놓을지 오른쪽에 놓을지 정합니다. 각 level에서 sibling과 순서 있게 hash해 trusted root와 비교합니다."
         formula={String.raw`h_0=H(0x00\Vert k\Vert v),\qquad h_{i+1}=\begin{cases}H(0x01\Vert h_i\Vert s_i)&b_i=0\\H(0x01\Vert s_i\Vert h_i)&b_i=1\end{cases}`}
+        annotatedFormula={String.raw`h_0=H(0x00\Vert k\Vert v),\qquad h_{i+1}=\begin{cases}H(0x01\Vert \underbrace{h_i}_{\text{running hash 계산}}\Vert \underbrace{s_i}_{\text{sibling 계산}})&\underbrace{b_i}_{\text{path bit 계산}}=0\\H(0x01\Vert s_i\Vert h_i)&b_i=1\end{cases}`}
+        operations={[
+          { expression: String.raw`h_i`, annotation: ["running hash이(가) 식의 결과에 기여하는 방식을","계산합니다.","Leaf index의 i번째 bit가 현재 hash를 왼쪽에","놓을지 오른쪽에 놓을지 정합니다."] },
+          { expression: String.raw`s_i`, annotation: ["sibling이(가) 식의 결과에 기여하는 방식을 계산합니다.","Leaf index의 i번째 bit가 현재 hash를 왼쪽에","놓을지 오른쪽에 놓을지 정합니다."] },
+          { expression: String.raw`b_i`, annotation: ["path bit이(가) 식의 결과에 기여하는 방식을","계산합니다.","Leaf index의 i번째 bit가 현재 hash를 왼쪽에","놓을지 오른쪽에 놓을지 정합니다."] },
+        ]}
         terms={[
           { symbol: "h_i", name: "running hash", description: "Leaf에서 i level 올라온 subtree root입니다." },
           { symbol: "s_i", name: "sibling", description: "Proof가 제공하는 같은 level의 이웃 subtree root입니다." },

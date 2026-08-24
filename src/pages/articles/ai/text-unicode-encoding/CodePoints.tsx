@@ -16,6 +16,10 @@ export default function CodePoints() {
         question="문자열 길이를 셀 때 왜 답이 하나로 고정되지 않을까?"
         idea={<>같은 text를 사용자가 보는 grapheme, Unicode code point, UTF-8 byte라는 서로 다른 경계로 나누기 때문입니다. 어떤 길이를 썼는지 좌표계를 함께 적어야 합니다.</>}
         formula={String.raw`N_{\mathrm{grapheme}}\;\not=\;N_{\mathrm{code\ point}}\;\not=\;N_{\mathrm{UTF\text{-}8\ byte}}\quad\text{in general}`}
+        annotatedFormula={String.raw`N_{\mathrm{grapheme}}\;\not=\underbrace{\;N_{\mathrm{code\ point}}\;\not=\;N_{\mathrm{UTF\text{-}8\ byte}}\quad\text{in general}}_{\text{encoded storage length 계산}}`}
+        operations={[
+          { expression: String.raw`\;N_{\mathrm{code\ point}}\;\not=\;N_{\mathrm{UTF\text{-}8\ byte}}\quad\text{in general}`, annotation: ["encoded storage length이(가) 식의 결과에","기여하는 방식을 계산합니다.","같은 text를 사용자가 보는 grapheme, Unicode","code point, UTF-8 byte라는 서로 다른 경계로"] },
+        ]}
         terms={[
           { symbol: "N_{\\mathrm{grapheme}}", name: "displayed units", description: "사용자 cursor 이동과 삭제에 가까운 text cluster 수입니다." },
           { symbol: "N_{\\mathrm{code\\ point}}", name: "Unicode scalar sequence length", description: "Unicode 번호 sequence의 원소 수입니다." },

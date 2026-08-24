@@ -29,6 +29,10 @@ export default function BlockHeader({
         question="여러 하위 객체를 하나의 짧은 block identity에 어떻게 묶을까요?"
         idea={<>각 field를 release가 정한 canonical encoding으로 바꾸고, field 순서를 보존한 Merkle commitment를 계산합니다. 같은 의미처럼 보여도 encoding·순서·version이 다르면 다른 identity입니다.</>}
         formula={String.raw`C_H=\operatorname{MerkleRoot}\!\left(E(f_{1:m})\right)`}
+        annotatedFormula={String.raw`C_H=\underbrace{\operatorname{MerkleRoot}\!\left(E(f_{1:m})\right)}_{\text{허용 경계 판정}}`}
+        operations={[
+          { expression: String.raw`\operatorname{MerkleRoot}\!\left(E(f_{1:m})\right)`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","각 field를 release가 정한 canonical","encoding으로 바꾸고, field 순서를 보존한","Merkle commitment를 계산합니다."] },
+        ]}
         terms={[
           { symbol: "f_i", name: "Header field", description: "Version·ChainID·Height와 각 commitment field입니다." },
           { symbol: "E", name: "Canonical encoding", description: "선택한 release schema의 field encoding입니다." },

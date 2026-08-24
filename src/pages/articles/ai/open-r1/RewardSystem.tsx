@@ -46,6 +46,10 @@ export default function RewardSystem({
           </>
         }
         formula={String.raw`r_i=\sum_{k=1}^{K}w_k\,R_k(q,o_i;v_k)`}
+        annotatedFormula={String.raw`r_i=\underbrace{\sum_{k=1}^{K}w_k\,R_k(q,o_i;v_k)}_{\text{prompt와 completion 계산}}`}
+        operations={[
+          { expression: String.raw`\sum_{k=1}^{K}w_k\,R_k(q,o_i;v_k)`, annotation: ["prompt와 completion이(가) 식의 결과에 기여하는","방식을 계산합니다.","Correctness, format와 code","execution처럼 서로 다른 reward"] },
+        ]}
         terms={[
           {
             symbol: "q,o_i",

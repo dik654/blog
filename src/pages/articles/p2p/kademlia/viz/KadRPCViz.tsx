@@ -36,7 +36,7 @@ export default function KadRPCViz() {
             r={22}
             fill={C[step] + "18"}
             stroke={C[step]}
-            strokeWidth={1.5}
+            strokeWidth={1.2}
           />
           <text
             x={AX}
@@ -55,7 +55,7 @@ export default function KadRPCViz() {
             r={22}
             fill={C[step] + "18"}
             stroke={C[step]}
-            strokeWidth={1.5}
+            strokeWidth={1.2}
           />
           <text
             x={BX}
@@ -75,7 +75,7 @@ export default function KadRPCViz() {
             x2={BX - 24}
             y2={NY - 8}
             stroke={C[step]}
-            strokeWidth={1.5}
+            strokeWidth={1.2}
             markerEnd="url(#kadarr)"
             initial={{ pathLength: 0, opacity: 0 }}
             animate={{ pathLength: 1, opacity: 1 }}
@@ -103,7 +103,7 @@ export default function KadRPCViz() {
             x2={AX + 24}
             y2={NY + 8}
             stroke={C[step]}
-            strokeWidth={1.5}
+            strokeWidth={1.2}
             strokeDasharray="6 3"
             markerEnd="url(#kadarr)"
             initial={{ pathLength: 0, opacity: 0 }}

@@ -20,6 +20,10 @@ export default function UnitRoot() {
         question="Fₚ에서 크기 n NTT를 위한 primitive root를 어떻게 만들까요?"
         idea="전체 곱셈군의 generator g를 (p−1)/n번 거듭제곱하면 order를 n으로 줄일 수 있습니다."
         formula={String.raw`n\mid(p-1),\quad \omega=g^{(p-1)/n},\quad \operatorname{ord}(\omega)=n`}
+        annotatedFormula={String.raw`n\mid(p-1),\quad \omega=\underbrace{g^{(p-1)/n},\quad \operatorname{ord}(\omega)=n}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`g^{(p-1)/n},\quad \operatorname{ord}(\omega)=n`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","전체 곱셈군의 generator g를 (p−1)/n번","거듭제곱하면 order를 n으로 줄일 수 있습니다."] },
+        ]}
         terms={[
           {
             symbol: "g",

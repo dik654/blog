@@ -28,6 +28,17 @@ x_{\mathrm{obs}}(u)&=[\widetilde x_1(u);\ldots;\widetilde x_V(u)],\\
 m(u)&=[m_1(u);\ldots;m_V(u)],\\
 x_{\mathrm{cat}}(u)&=[x_{\mathrm{obs}}(u);m(u)].
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+\widetilde x_v(u)&=\underbrace{T_v(x_v)(u),}_{\text{reference-grid 계산}}\\
+x_{\mathrm{obs}}(u)&=\underbrace{[\widetilde x_1(u);\ldots;\widetilde x_V(u)],}_{\text{reference-grid 계산}}\\
+m(u)&=\underbrace{[m_1(u);\ldots;m_V(u)],}_{\text{reference-grid 계산}}\\
+x_{\mathrm{cat}}(u)&=[x_{\mathrm{obs}}(u);m(u)].
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`T_v(x_v)(u),`, annotation: ["reference-grid coordinate이(가) 식의","결과에 기여하는 방식을 계산합니다.","각 sensor를 공통 image grid로 옮기는 변환","Tᵥ를 먼저 적용하고, 같은 좌표 u의 관측값과"] },
+          { expression: String.raw`[\widetilde x_1(u);\ldots;\widetilde x_V(u)],`, annotation: ["reference-grid coordinate이(가) 식의","결과에 기여하는 방식을 계산합니다.","각 sensor를 공통 image grid로 옮기는 변환","Tᵥ를 먼저 적용하고, 같은 좌표 u의 관측값과"] },
+          { expression: String.raw`[m_1(u);\ldots;m_V(u)],`, annotation: ["reference-grid coordinate이(가) 식의","결과에 기여하는 방식을 계산합니다.","각 sensor를 공통 image grid로 옮기는 변환","Tᵥ를 먼저 적용하고, 같은 좌표 u의 관측값과"] },
+        ]}
         terms={[
           { symbol: "u", name: "reference-grid coordinate", description: "Fusion tensor가 사용하는 공통 pixel 또는 voxel 좌표입니다." },
           { symbol: "Tᵥ", name: "registration transform", description: "v번째 sensor 관측을 calibration에 따라 reference grid로 옮기는 warp·projection입니다." },

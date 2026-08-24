@@ -71,7 +71,7 @@ export default function PolicyViz() {
             x2={52 + step * 72}
             y2={85}
             stroke={BLOCKS[step].color}
-            strokeWidth={2.5}
+            strokeWidth={1.2}
             initial={{ pathLength: 0 }}
             animate={{ pathLength: 1 }}
             transition={{ duration: 0.4 }}
@@ -82,7 +82,7 @@ export default function PolicyViz() {
             r={8}
             fill={step === 4 ? "#ef444430" : "#10b98130"}
             stroke={step === 4 ? "#ef4444" : "#10b981"}
-            strokeWidth={1.5}
+            strokeWidth={1.2}
             animate={{ scale: [1, 1.2, 1] }}
             transition={{ repeat: Infinity, duration: 1.5 }}
           />

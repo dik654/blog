@@ -48,7 +48,7 @@ export function StepRedundancy() {
         d="M136 69 H192 V109 M136 150 H192 V109"
         fill="none"
         stroke={C.neutral}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
       />
@@ -67,7 +67,7 @@ export function StepRedundancy() {
         x2={352}
         y2={109}
         stroke={C.heat}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
       />

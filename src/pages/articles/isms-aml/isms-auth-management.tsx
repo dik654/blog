@@ -85,6 +85,10 @@ export default function IsmsAuthManagement() {
           question="Hash DB가 유출됐을 때 한 계정의 후보를 G개 시험하는 시간이 무엇에 좌우될까?"
           idea="후보 하나를 계산하는 실제 평균 시간에 후보 수를 곱하고 공격자의 유효 병렬 처리량으로 나눕니다. Salt는 여러 계정의 사전계산 재사용을 막지만 한 계정의 약한 password를 강하게 만들지는 않습니다."
           formula={String.raw`T_{\mathrm{guess}}\approx\frac{G\,t_{\mathrm{hash}}}{p_{\mathrm{eff}}}`}
+          annotatedFormula={String.raw`\underbrace{T_{\mathrm{guess}}\approx\frac{G\,t_{\mathrm{hash}}}{p_{\mathrm{eff}}}}_{\text{기준량당 비율}}`}
+          operations={[
+            { expression: String.raw`T_{\mathrm{guess}}\approx\frac{G\,t_{\mathrm{hash}}}{p_{\mathrm{eff}}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","후보 하나를 계산하는 실제 평균 시간에 후보 수를 곱하고","공격자의 유효 병렬 처리량으로 나눕니다."] },
+          ]}
           terms={[
             { symbol: "G", name: "후보 수", description: "공격자가 해당 계정에 대해 시험하는 password guess 개수입니다." },
             { symbol: "t_{\\mathrm{hash}}", name: "후보당 비용", description: "저장된 algorithm·memory/time parameter로 후보 하나를 검증하는 평균 시간입니다." },

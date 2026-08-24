@@ -221,7 +221,7 @@ export function Step1() {
         x2={225}
         y2={185}
         stroke={C.next}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         strokeDasharray="4 3"
         {...drawLine(0.6)}
       />

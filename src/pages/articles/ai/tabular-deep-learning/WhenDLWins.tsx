@@ -47,6 +47,15 @@ e_{m,i}&=y_i-\hat y_{m,i},\\
 \rho_{e_A,e_B}
 &=\frac{\operatorname{Cov}(e_A,e_B)}{\sigma_{e_A}\sigma_{e_B}}.
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+e_{m,i}&=\underbrace{y_i-\hat y_{m,i},}_{\text{오른쪽 항으로 결과 계산}}\\
+\rho_{e_A,e_B}
+&=\underbrace{\frac{\operatorname{Cov}(e_A,e_B)}{\sigma_{e_A}\sigma_{e_B}}.}_{\text{lag별 공분산}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`y_i-\hat y_{m,i},`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Validation row마다"] },
+          { expression: String.raw`\frac{\operatorname{Cov}(e_A,e_B)}{\sigma_{e_A}\sigma_{e_B}}.`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Validation row마다"] },
+        ]}
         terms={[
           { symbol: "e_m,i", name: "out-of-fold error", description: "Model m이 해당 row를 training에 보지 않은 상태에서 만든 prediction error입니다." },
           { symbol: "Cov", name: "error covariance", description: "두 모델의 error가 같은 row에서 함께 움직이는 정도입니다." },

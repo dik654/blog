@@ -41,6 +41,10 @@ export default function Overview() {
         question="Forecasting용 table의 한 row는 어떤 질문을 하나의 target으로 고정할까?"
         idea={<>Entity i에서 forecast origin c까지 알 수 있는 history로, c 뒤의 horizon h 동안 정의된 target을 예측합니다. 따라서 input과 label 양쪽에 시간 경계가 들어갑니다.</>}
         formula={String.raw`\hat y_{i,c,h}=f_{\theta}\!\left(\Phi\!\left(\{r: r.\mathrm{entity}=i,\ r.\mathrm{available\_time}\le c\}\right)\right)`}
+        annotatedFormula={String.raw`\hat y_{i,c,h}=\underbrace{f_{\theta}\!\left(\Phi\!\left(\{r: r.\mathrm{entity}=i,\ r.\mathrm{available\_time}\le c\}\right)\right)}_{\text{허용 경계 판정}}`}
+        operations={[
+          { expression: String.raw`f_{\theta}\!\left(\Phi\!\left(\{r: r.\mathrm{entity}=i,\ r.\mathrm{available\_time}\le c\}\right)\right)`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","Entity i에서 forecast origin c까지 알 수","있는 history로, c 뒤의 horizon h 동안 정의된","target을 예측합니다."] },
+        ]}
         terms={[
           { symbol: "i", name: "entity", description: "서로 history가 섞이면 안 되는 매장·사용자·센서 같은 예측 단위입니다." },
           { symbol: "c", name: "cutoff · forecast origin", description: "Prediction을 실제로 만들어야 하는 기준 시점입니다." },

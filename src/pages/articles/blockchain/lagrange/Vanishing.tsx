@@ -20,6 +20,10 @@ export default function Vanishing() {
         question="C가 H의 모든 점에서 0인지 왜 Z_H divisibility로 검사할 수 있을까요?"
         idea="C의 각 root h에 대응하는 factor x−h가 C를 나눕니다. h들이 서로 다르면 이 factor의 곱 Z_H 전체가 C를 나눕니다. 역방향은 대입하면 곧바로 확인됩니다."
         formula={String.raw`Z_H(x)=\prod_{h\in H}(x-h),\qquad \bigl[\forall h\in H:C(h)=0\bigr]\iff Z_H(x)\mid C(x)`}
+        annotatedFormula={String.raw`Z_H(x)=\underbrace{\prod_{h\in H}(x-h),\qquad \bigl[\forall h\in H:C(h)=0\bigr]\iff Z_H(x)\mid C(x)}_{\text{vanishing polynomial 계산}}`}
+        operations={[
+          { expression: String.raw`\prod_{h\in H}(x-h),\qquad \bigl[\forall h\in H:C(h)=0\bigr]\iff Z_H(x)\mid C(x)`, annotation: ["vanishing polynomial이(가) 식의 결과에","기여하는 방식을 계산합니다.","C의 각 root h에 대응하는 factor x−h가 C를","나눕니다."] },
+        ]}
         terms={[
           {
             symbol: "H",

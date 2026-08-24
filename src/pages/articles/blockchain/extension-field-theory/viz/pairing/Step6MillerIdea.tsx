@@ -33,14 +33,14 @@ export default function Step6MillerIdea() {
         d={curve.u}
         fill="none"
         stroke={`${C.g2}50`}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         {...draw(0)}
       />
       <motion.path
         d={curve.l}
         fill="none"
         stroke={`${C.g2}50`}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         {...draw(0)}
       />
 

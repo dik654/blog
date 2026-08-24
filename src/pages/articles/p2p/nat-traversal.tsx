@@ -137,6 +137,10 @@ export default function NatTraversalArticle() {
           question="ICE checklist에서 candidate pair의 검사 순서를 어떻게 정하는가?"
           idea="두 candidate 중 낮은 priority를 가장 큰 자리로 올려 약한 쪽을 먼저 비교하고, 높은 priority와 controlling role을 뒤의 tie-breaker로 붙인다."
           formula={String.raw`P_{pair}=2^{32}\min(G,D)+2\max(G,D)+\mathbf{1}[G>D]`}
+          annotatedFormula={String.raw`P_{pair}=\underbrace{2^{32}\min(G,D)+2\max(G,D)+\mathbf{1}[G>D]}_{\text{경계 후보 선택}}`}
+          operations={[
+            { expression: String.raw`2^{32}\min(G,D)+2\max(G,D)+\mathbf{1}[G>D]`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","두 candidate 중 낮은 priority를 가장 큰","자리로 올려 약한 쪽을 먼저 비교하고, 높은 priority와","controlling role을 뒤의 tie-breaker로"] },
+          ]}
           terms={[
             { symbol: "P_{pair}", name: "Pair priority", description: "Checklist 내림차순 정렬에 쓰는 64-bit 범위의 무차원 정수" },
             { symbol: "G", name: "Controlling priority", description: "Controlling agent가 제공한 candidate의 uint32 미만 priority" },

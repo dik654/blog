@@ -208,7 +208,7 @@ export default function LiquidationPenaltyViz() {
             x2={vowW}
             y2={56}
             stroke="var(--foreground)"
-            strokeWidth={1.5}
+            strokeWidth={1.2}
           />
 
           {/* % 라벨 */}

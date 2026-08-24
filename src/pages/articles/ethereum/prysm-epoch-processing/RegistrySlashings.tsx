@@ -16,6 +16,12 @@ export default function RegistrySlashings({ onCodeRef }: { onCodeRef: (key: stri
         question="왜 여러 validator가 함께 slash될수록 correlation penalty가 커질까요?"
         idea={<>최근 slashing window의 총 slashed balance를 전체 active balance에 대한 비율로 만들고, fork가 정한 multiplier와 상한을 적용한 뒤 각 validator effective balance에 비례시킵니다.</>}
         formula={String.raw`p_i \approx E_i\min\!\left(1,\frac{mS}{A}\right)`}
+        annotatedFormula={String.raw`\underbrace{p_i}_{\text{correlation penalty 계산}} \approx \underbrace{E_i}_{\text{effective balance 계산}}\min\!\left(1,\frac{mS}{\underbrace{A}_{\text{total active balance 계산}}}\right)`}
+        operations={[
+          { expression: String.raw`p_i`, annotation: ["correlation penalty이(가) 식의 결과에","기여하는 방식을 계산합니다.","최근 slashing window의 총 slashed","balance를 전체 active balance에 대한 비율로"] },
+          { expression: String.raw`E_i`, annotation: ["effective balance이(가) 식의 결과에 기여하는","방식을 계산합니다.","최근 slashing window의 총 slashed","balance를 전체 active balance에 대한 비율로"] },
+          { expression: String.raw`A`, annotation: ["total active balance이(가) 식의 결과에","기여하는 방식을 계산합니다.","최근 slashing window의 총 slashed","balance를 전체 active balance에 대한 비율로"] },
+        ]}
         terms={[
           { symbol: "p_i", name: "correlation penalty", description: "Validator i에 귀속되는 근사 penalty이며 단위는 Gwei입니다." },
           { symbol: "E_i", name: "effective balance", description: "Validator i의 fork 규격상 유효 stake이며 Gwei입니다." },

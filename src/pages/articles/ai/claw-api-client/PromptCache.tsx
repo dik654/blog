@@ -143,6 +143,11 @@ export default function PromptCache() {
           question="Provider cache가 실제 input 비용을 얼마나 줄였는지 어떻게 계산할까?"
           idea={<>요청 수가 아니라 token 종류별 단가를 곱합니다. Cache가 없었다면 모든 prefix token이 일반 input이었을 비용과, 실제 creation·read·uncached input 비용의 차이를 같은 가격표 version에서 비교합니다.</>}
           formula={String.raw`\begin{aligned}C_{\mathrm{actual}}&=p_uU+p_wW+p_rR+p_oO\\S&=C_{\mathrm{baseline}}-C_{\mathrm{actual}}\end{aligned}`}
+          annotatedFormula={String.raw`\begin{aligned}C_{\mathrm{actual}}&=\underbrace{p_uU+p_wW+p_rR+p_oO}_{\text{오른쪽 항으로 결과 계산}}\\S&=\underbrace{C_{\mathrm{baseline}}-C_{\mathrm{actual}}}_{\text{오른쪽 항으로 결과 계산}}\end{aligned}`}
+          operations={[
+            { expression: String.raw`p_uU+p_wW+p_rR+p_oO`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","요청 수가 아니라 token 종류별 단가를 곱합니다."] },
+            { expression: String.raw`C_{\mathrm{baseline}}-C_{\mathrm{actual}}`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","요청 수가 아니라 token 종류별 단가를 곱합니다."] },
+          ]}
           terms={[
             { symbol: "U", name: "uncached input tokens", description: "Cache에 포함되지 않아 일반 input 단가가 적용된 token 수입니다." },
             { symbol: "W", name: "cache creation tokens", description: "새 prefix 계산을 cache에 쓰면서 provider가 보고한 token 수입니다." },

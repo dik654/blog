@@ -40,7 +40,7 @@ export default function AttestationViz() {
           fill="#10b981"
           fillOpacity={0.15}
           stroke="#10b981"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <text
           x={80}
@@ -91,7 +91,7 @@ export default function AttestationViz() {
           fill="#f59e0b"
           fillOpacity={0.15}
           stroke="#f59e0b"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <text
           x={240}
@@ -151,7 +151,7 @@ export default function AttestationViz() {
           fill="#3b82f6"
           fillOpacity={0.15}
           stroke="#3b82f6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <text
           x={400}

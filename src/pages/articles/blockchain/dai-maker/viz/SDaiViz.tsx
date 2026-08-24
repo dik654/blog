@@ -134,7 +134,7 @@ export default function SDaiViz() {
           x2={172}
           y2={87}
           stroke="#3b82f6"
-          strokeWidth={1.3}
+          strokeWidth={1.2}
           markerEnd="url(#sd-arr)"
         />
         <line
@@ -143,7 +143,7 @@ export default function SDaiViz() {
           x2={320}
           y2={87}
           stroke="#3b82f6"
-          strokeWidth={1.3}
+          strokeWidth={1.2}
           markerEnd="url(#sd-arr)"
         />
         <line
@@ -152,7 +152,7 @@ export default function SDaiViz() {
           x2={420}
           y2={87}
           stroke="#3b82f6"
-          strokeWidth={1.3}
+          strokeWidth={1.2}
           markerEnd="url(#sd-arr)"
         />
 
@@ -262,7 +262,7 @@ export default function SDaiViz() {
           x2={172}
           y2={179}
           stroke="#f59e0b"
-          strokeWidth={1.3}
+          strokeWidth={1.2}
           markerEnd="url(#sd-arr-r)"
         />
         <line
@@ -271,7 +271,7 @@ export default function SDaiViz() {
           x2={320}
           y2={179}
           stroke="#f59e0b"
-          strokeWidth={1.3}
+          strokeWidth={1.2}
           markerEnd="url(#sd-arr-r)"
         />
         <line
@@ -280,7 +280,7 @@ export default function SDaiViz() {
           x2={420}
           y2={179}
           stroke="#f59e0b"
-          strokeWidth={1.3}
+          strokeWidth={1.2}
           markerEnd="url(#sd-arr-r)"
         />
 

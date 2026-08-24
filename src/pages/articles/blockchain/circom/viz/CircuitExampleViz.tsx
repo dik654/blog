@@ -74,7 +74,7 @@ export default function CircuitExampleViz() {
                 rx={6}
                 fill={`${b.color}12`}
                 stroke={b.color}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={b.x + BW / 2}

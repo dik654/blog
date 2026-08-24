@@ -77,7 +77,7 @@ export default function BuildPipelineViz() {
                     x2={x + 2}
                     y2={40}
                     stroke={done || active ? NODES[i].color : "#555"}
-                    strokeWidth={1.5}
+                    strokeWidth={1.2}
                     markerEnd="url(#bp-arr)"
                     animate={{ opacity: done || active ? 0.9 : 0.15 }}
                   />

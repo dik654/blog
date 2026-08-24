@@ -148,7 +148,7 @@ export default function OverviewViz() {
               x2={476}
               y2={85}
               stroke={C2}
-              strokeWidth={1.5}
+              strokeWidth={1.2}
               animate={{ opacity: step === 1 ? 1 : 0 }}
               markerEnd="url(#seqArr)"
             />

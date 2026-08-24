@@ -61,6 +61,10 @@ export default function ModernPluginArticle() {
           question="세 plugin 가운데 두 개만 ready라면 registry 가용 비율은 얼마인가?"
           idea={<>Expected plugin 세 개 중 tool을 안전하게 제공할 수 있는 ready plugin이 두 개라면 2/3입니다. 이 값은 degraded 정도를 보여 주는 진단일 뿐, 남은 두 plugin의 기능이 충분하다는 안전 보장은 아닙니다.</>}
           formula={String.raw`A_{plugin}=\frac{N_{ready}}{N_{expected}}=\frac{2}{3}\approx 0.667`}
+          annotatedFormula={String.raw`A_{plugin}=\underbrace{\frac{N_{ready}}{N_{expected}}=\frac{2}{3}\approx 0.667}_{\text{기준량당 비율}}`}
+          operations={[
+            { expression: String.raw`\frac{N_{ready}}{N_{expected}}=\frac{2}{3}\approx 0.667`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Expected plugin 세 개 중 tool을 안전하게","제공할 수 있는 ready plugin이 두 개라면","2/3입니다."] },
+          ]}
           terms={[
             { symbol: "N_{ready}", name: "Ready plugin 수", description: "Validation과 initialize를 통과하고 현재 generation에서 tool을 제공할 수 있는 plugin 수입니다." },
             { symbol: "N_{expected}", name: "Expected plugin 수", description: "고정한 배포 manifest에서 활성화되어야 하는 전체 plugin 수입니다." },

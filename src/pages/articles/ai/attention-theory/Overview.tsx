@@ -48,6 +48,12 @@ export default function Overview() {
         question="현재 query가 여러 memory slot 중 필요한 정보를 differentiable하게 읽으려면?"
         idea={<>각 key와의 score를 같은 query 안에서 softmax로 비교한 뒤, 그 probability로 value를 평균냅니다. hard argmax 대신 weighted sum을 쓰므로 score가 모든 후보 경로에서 gradient를 받습니다.</>}
         formula={String.raw`\begin{aligned}e_{ti}&=\operatorname{score}(q_t,k_i)\\[2pt]\alpha_{ti}&=\frac{\exp e_{ti}}{\sum_j\exp e_{tj}}\\[2pt]c_t&=\sum_i\alpha_{ti}v_i\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}e_{ti}&=\underbrace{\operatorname{score}(q_t,k_i)}_{\text{query 계산}}\\[2pt]\alpha_{ti}&=\underbrace{\frac{\exp e_{ti}}{\sum_j\exp e_{tj}}}_{\text{기준량당 비율}}\\[2pt]c_t&=\underbrace{\sum_i\alpha_{ti}v_i}_{\text{attention weight 계산}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`\operatorname{score}(q_t,k_i)`, annotation: ["query이(가) 식의 결과에 기여하는 방식을 계산합니다.","각 key와의 score를 같은 query 안에서","softmax로 비교한 뒤, 그 probability로","value를 평균냅니다."] },
+          { expression: String.raw`\frac{\exp e_{ti}}{\sum_j\exp e_{tj}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","각 key와의 score를 같은 query 안에서","softmax로 비교한 뒤, 그 probability로","value를 평균냅니다."] },
+          { expression: String.raw`\sum_i\alpha_{ti}v_i`, annotation: ["attention weight이(가) 식의 결과에 기여하는","방식을 계산합니다.","각 key와의 score를 같은 query 안에서","softmax로 비교한 뒤, 그 probability로"] },
+        ]}
         terms={[
           { symbol: "q_t", name: "query", description: "출력 시점 t가 현재 찾는 조건입니다." },
           { symbol: "k_i", name: "key", description: "source i번째 slot을 query와 비교할 주소 representation입니다." },
@@ -62,6 +68,12 @@ export default function Overview() {
         question="Score 두 개가 log 2와 0일 때 실제 weight와 context vector는 어떻게 계산될까?"
         idea={<>Softmax는 score를 양수로 바꾼 뒤 같은 query row의 합으로 나눕니다. 따라서 exp(log 2):exp(0)=2:1이고, value 두 개를 그 비율로 섞습니다.</>}
         formula={String.raw`\begin{aligned}e&=(\log 2,0)\\\alpha&=\left(\frac23,\frac13\right)\\v_1&=(3,0),\quad v_2=(0,6)\\c&=\frac23v_1+\frac13v_2=(2,2)\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}e&=\underbrace{(\log 2,0)}_{\text{로그 비용 변환}}\\\alpha&=\underbrace{\left(\frac23,\frac13\right)}_{\text{허용 경계 판정}}\\v_1&=\underbrace{(3,0),\quad v_2=(0,6)}_{\text{오른쪽 항으로 결과 계산}}\\c&=\frac23v_1+\frac13v_2=(2,2)\end{aligned}`}
+        operations={[
+          { expression: String.raw`(\log 2,0)`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","Softmax는 score를 양수로 바꾼 뒤 같은 query","row의 합으로 나눕니다."] },
+          { expression: String.raw`\left(\frac23,\frac13\right)`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","Softmax는 score를 양수로 바꾼 뒤 같은 query","row의 합으로 나눕니다."] },
+          { expression: String.raw`(3,0),\quad v_2=(0,6)`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Softmax는 score를 양수로 바꾼 뒤 같은 query","row의 합으로 나눕니다."] },
+        ]}
         terms={[
           { symbol: "e", name: "score row", description: "Query 하나와 key 두 개의 정규화 전 compatibility입니다." },
           { symbol: "\\alpha", name: "softmax weights", description: "양수이고 합이 1인 두 read coefficient입니다." },

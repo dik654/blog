@@ -59,7 +59,7 @@ export default function PsmTimelineViz() {
           x2={490}
           y2={130}
           stroke="var(--border)"
-          strokeWidth={2}
+          strokeWidth={1.2}
         />
 
         {events.map((e, i) => {
@@ -75,7 +75,7 @@ export default function PsmTimelineViz() {
                 r={8}
                 fill={e.color}
                 stroke="var(--card)"
-                strokeWidth={2}
+                strokeWidth={1.2}
               />
               {/* 연결선 */}
               <line
@@ -84,7 +84,7 @@ export default function PsmTimelineViz() {
                 x2={x}
                 y2={isAbove ? 114 : 150}
                 stroke={e.color}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
 
               {/* 이벤트 박스 */}

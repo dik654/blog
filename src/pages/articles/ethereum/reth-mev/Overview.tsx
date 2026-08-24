@@ -30,6 +30,10 @@ export default function Overview({
         question="Proposer는 높은 bid를 보았을 때 어떤 후보를 선택해야 할까?"
         idea="Value만 비교하기 전에 slot·parent·proposer·fork schema·signature와 deadline을 통과한 후보 집합을 만듭니다. 유효한 external bid가 없거나 delivery 여유가 부족하면 준비된 local payload가 liveness fallback입니다."
         formula={String.raw`b^*=\arg\max_{b\in\mathcal V(t<t_d)} v(b)`}
+        annotatedFormula={String.raw`b^*=\underbrace{\arg\max_{b\in\mathcal V(t<t_d)} v(b)}_{\text{경계 후보 선택}}`}
+        operations={[
+          { expression: String.raw`\arg\max_{b\in\mathcal V(t<t_d)} v(b)`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","Value만 비교하기 전에","slot·parent·proposer·fork","schema·signature와 deadline을 통과한 후보"] },
+        ]}
         terms={[
           { symbol: "b", name: "Builder bid", description: "Signed header·value·builder identity를 포함한 external 후보입니다." },
           { symbol: "\\mathcal V", name: "Validated set", description: "Expected slot·parent·proposer·fork fields·signature·policy를 모두 통과한 후보 집합입니다." },

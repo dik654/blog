@@ -105,6 +105,16 @@ export default function Overview() {
 \bar A &= \frac{1}{C}\sum_{c=1}^{C}A_c \\
 \bar Y &= \frac{1}{C}\sum_{c=1}^{C}Y_c
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+0 \le A_c &\le \underbrace{K}_{\text{허용 경계 판정}} \\
+\bar A &= \underbrace{\frac{1}{C}\sum_{c=1}^{C}A_c}_{\text{기준량당 비율}} \\
+\bar Y &= \underbrace{\frac{1}{C}\sum_{c=1}^{C}Y_c}_{\text{기준량당 비율}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`K`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","첫 거부 전까지 수락된 draft 수와 실제 sequence에","반영된 token 수를 나누어 셉니다."] },
+          { expression: String.raw`\frac{1}{C}\sum_{c=1}^{C}A_c`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","첫 거부 전까지 수락된 draft 수와 실제 sequence에","반영된 token 수를 나누어 셉니다."] },
+          { expression: String.raw`\frac{1}{C}\sum_{c=1}^{C}Y_c`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","첫 거부 전까지 수락된 draft 수와 실제 sequence에","반영된 token 수를 나누어 셉니다."] },
+        ]}
         terms={ACCEPTANCE_TERMS}
         assumptions={[
           "같은 model·sampler·prompt/output distribution에서 cycle을 집계합니다.",
@@ -142,6 +152,12 @@ export default function Overview() {
         }
         formula={String.raw`B_{W,\,\mathrm{per\ token}}
 \;\approx\; \frac{B_W}{\mathbb{E}[Y]}`}
+        annotatedFormula={String.raw`\underbrace{B_{W,\,\mathrm{per\ token}}
+\;\approx\; \frac{B_W}{\mathbb{E}[Y]}}_{\text{확률 가중 평균}}`}
+        operations={[
+          { expression: String.raw`B_{W,\,\mathrm{per\ token}}
+\;\approx\; \frac{B_W}{\mathbb{E}[Y]}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Target weight를 verify 한 번에 한 차례","읽었다고 근사하고, 그 결과로 확정한 token 수에 비용을","나눕니다."] },
+        ]}
         terms={BANDWIDTH_TERMS}
         assumptions={[
           "Target 실행이 weight-bandwidth bound이고 batch가 작아 weight reuse가 제한된 구간입니다.",

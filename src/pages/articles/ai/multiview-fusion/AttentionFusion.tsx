@@ -26,6 +26,10 @@ export default function AttentionFusion() {
         question="멀티뷰 token 하나가 어느 관측의 어느 위치인지 어떻게 구분할까?"
         idea={<>Image content embedding에 spatial position만 더하면 서로 다른 camera의 같은 grid index가 충돌합니다. View·pose·time 정보를 별도 항으로 더하거나 attention bias로 사용합니다.</>}
         formula={String.raw`t_{v,n}=E(x_{v,n})+p_n+q_v+r(c_v)`}
+        annotatedFormula={String.raw`t_{v,n}=\underbrace{E(x_{v,n})+p_n+q_v+r(c_v)}_{\text{content projection 계산}}`}
+        operations={[
+          { expression: String.raw`E(x_{v,n})+p_n+q_v+r(c_v)`, annotation: ["content projection이(가) 식의 결과에 기여하는","방식을 계산합니다.","Image content embedding에 spatial","position만 더하면 서로 다른 camera의 같은"] },
+        ]}
         terms={[
           { symbol: "xᵥ,ₙ", name: "local observation", description: "View v의 spatial location n에서 얻은 patch 또는 feature입니다." },
           { symbol: "E", name: "content projection", description: "관측값을 model dimension의 token content로 바꿉니다." },
@@ -44,6 +48,14 @@ export default function AttentionFusion() {
 N_{\mathrm{total}}&=\sum_{v=1}^{V}m_vN_v,\\
 \text{score pairs}&=N_{\mathrm{total}}^2.
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+N_{\mathrm{total}}&=\underbrace{\sum_{v=1}^{V}m_vN_v,}_{\text{오른쪽 항으로 결과 계산}}\\
+\text{score pairs}&=\underbrace{N_{\mathrm{total}}^2.}_{\text{오른쪽 항으로 결과 계산}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\sum_{v=1}^{V}m_vN_v,`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Full attention score matrix는 모든","query와 key 쌍을 저장합니다."] },
+          { expression: String.raw`N_{\mathrm{total}}^2.`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Full attention score matrix는 모든","query와 key 쌍을 저장합니다."] },
+        ]}
         terms={[
           { symbol: "Nᵥ", name: "tokens per view", description: "v번째 view에서 attention에 남기는 patch 또는 feature token 수입니다." },
           { symbol: "mᵥ", name: "view availability", description: "결측 view의 token을 비용 계산에서 제외하는 0·1 mask입니다." },
@@ -76,6 +88,18 @@ N_{\mathrm{total}}&=\sum_{v=1}^{V}m_vN_v,\\
 \Delta_v&=\frac1n\sum_{i=1}^{n}
 \left(\ell_i^{(-v)}-\ell_i^{(\mathrm{full})}\right).
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+\ell_i^{(-v)}&=\underbrace{\ell(F(X_i\setminus v),y_i),}_{\text{오른쪽 항으로 결과 계산}}\\
+\ell_i^{(\mathrm{full})}&=\underbrace{\ell(F(X_i),y_i),}_{\text{오른쪽 항으로 결과 계산}}\\
+\Delta_v&=\underbrace{\frac1n\sum_{i=1}^{n}
+\left(\ell_i^{(-v)}-\ell_i^{(\mathrm{full})}\right).}_{\text{허용 경계 판정}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\ell(F(X_i\setminus v),y_i),`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","같은 sample을 full-view와 view-v-drop","조건에서 각각 평가해 loss 차이를 냅니다."] },
+          { expression: String.raw`\ell(F(X_i),y_i),`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","같은 sample을 full-view와 view-v-drop","조건에서 각각 평가해 loss 차이를 냅니다."] },
+          { expression: String.raw`\frac1n\sum_{i=1}^{n}
+\left(\ell_i^{(-v)}-\ell_i^{(\mathrm{full})}\right).`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","같은 sample을 full-view와 view-v-drop","조건에서 각각 평가해 loss 차이를 냅니다."] },
+        ]}
         terms={[
           { symbol: "Xᵢ∖v", name: "view-drop episode", description: "같은 sample에서 view v와 그 token만 availability mask로 제거한 입력입니다." },
           { symbol: "ℓ", name: "evaluation loss", description: "Full-view와 view-drop condition에서 동일하게 계산하는 sample-level error입니다." },

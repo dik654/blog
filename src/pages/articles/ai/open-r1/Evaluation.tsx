@@ -42,6 +42,14 @@ export default function Evaluation() {
 c_{n,k}&=\mathbf 1[V(q_n,o_{n,k})=1]\\
 \widehat{\mathrm{pass@1}}&=\frac1{NK}\sum_{n=1}^{N}\sum_{k=1}^{K}c_{n,k}
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+c_{n,k}&=\underbrace{\mathbf 1[V(q_n,o_{n,k})=1]}_{\text{sample별 판정 계산}}\\
+\widehat{\mathrm{pass@1}}&=\underbrace{\frac1{NK}\sum_{n=1}^{N}\sum_{k=1}^{K}c_{n,k}}_{\text{sample별 판정 계산}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\mathbf 1[V(q_n,o_{n,k})=1]`, annotation: ["sample별 판정이(가) 식의 결과에 기여하는 방식을","계산합니다.","각 problem에서 K개의 독립적인 completion을","sampling하고 verifier가 맞다고 판정한"] },
+          { expression: String.raw`\frac1{NK}\sum_{n=1}^{N}\sum_{k=1}^{K}c_{n,k}`, annotation: ["sample별 판정이(가) 식의 결과에 기여하는 방식을","계산합니다.","각 problem에서 K개의 독립적인 completion을","sampling하고 verifier가 맞다고 판정한"] },
+        ]}
         terms={[
           {
             symbol: "N",
@@ -90,6 +98,10 @@ c_{n,k}&=\mathbf 1[V(q_n,o_{n,k})=1]\\
           </>
         }
         formula={String.raw`\operatorname{SE}(\widehat p)\approx\sqrt{\frac{\widehat p(1-\widehat p)}{N_{\mathrm{eff}}}}`}
+        annotatedFormula={String.raw`\underbrace{\operatorname{SE}(\widehat p)\approx\sqrt{\frac{\widehat p(1-\widehat p)}{N_{\mathrm{eff}}}}}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`\operatorname{SE}(\widehat p)\approx\sqrt{\frac{\widehat p(1-\widehat p)}{N_{\mathrm{eff}}}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","독립 Bernoulli 근사를 쓰면 success","probability의 표준오차를 대략 계산할 수 있습니다."] },
+        ]}
         terms={[
           {
             symbol: "\\widehat p",

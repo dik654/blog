@@ -243,7 +243,7 @@ export default function NIFSFoldingViz() {
                 rx={7}
                 fill={C[3] + "18"}
                 stroke={C[3]}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={BX[2] + BW / 2}

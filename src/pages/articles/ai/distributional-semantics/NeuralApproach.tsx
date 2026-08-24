@@ -35,6 +35,10 @@ export default function NeuralApproach() {
           </>
         }
         formula={String.raw`u_w^\top v_c\approx \operatorname{PMI}(w,c)-\log k`}
+        annotatedFormula={String.raw`\underbrace{u_w^\top v_c\approx \operatorname{PMI}(w,c)-\log k}_{\text{로그 비용 변환}}`}
+        operations={[
+          { expression: String.raw`u_w^\top v_c\approx \operatorname{PMI}(w,c)-\log k`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","Positive pair를 corpus에서, negative","context를 noise distribution에서 k개","sampling해 이진 분류합니다."] },
+        ]}
         terms={[
           {
             symbol: "u_w,v_c",

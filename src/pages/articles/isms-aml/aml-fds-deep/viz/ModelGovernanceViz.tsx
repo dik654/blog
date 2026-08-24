@@ -94,7 +94,7 @@ export default function ModelGovernanceViz() {
                 x2={450}
                 y2={55}
                 stroke="var(--border)"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
 
               <motion.g

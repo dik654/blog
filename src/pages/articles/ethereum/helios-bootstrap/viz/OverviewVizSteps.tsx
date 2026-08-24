@@ -146,7 +146,7 @@ export function Step0() {
       <motion.path
         d="M 155 144 L 185 144"
         stroke={C.helios}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         fill="none"
         markerEnd="url(#arrowHelios)"
         initial={{ pathLength: 0 }}
@@ -174,7 +174,7 @@ export function Step0() {
       <motion.path
         d="M 275 144 L 305 144"
         stroke={C.helios}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         fill="none"
         markerEnd="url(#arrowHelios)"
         initial={{ pathLength: 0 }}
@@ -650,7 +650,7 @@ export function Step2() {
           d="M 100 64 C 100 44 140 44 140 64"
           fill="none"
           stroke={C.trust}
-          strokeWidth={2.5}
+          strokeWidth={1.2}
           strokeLinecap="round"
         />
         {/* 자물쇠 몸통 */}
@@ -672,7 +672,7 @@ export function Step2() {
           x2={120}
           y2={90}
           stroke={C.trust}
-          strokeWidth={2}
+          strokeWidth={1.2}
           strokeLinecap="round"
         />
 

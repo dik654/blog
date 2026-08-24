@@ -76,7 +76,7 @@ export default function PieceManagerViz() {
               x2={a.x2}
               y2={48}
               stroke="var(--border)"
-              strokeWidth={1.5}
+              strokeWidth={1.2}
               markerEnd="url(#ah3)"
             />
           ))}

@@ -26,6 +26,10 @@ export default function Transformer() {
         question="Query 위치 q가 key 위치 k를 읽을 수 있는지 어떻게 숫자로 표현할까?"
         idea={<>읽을 수 있는 위치에는 0을 더하고, 가려야 할 위치에는 −∞를 더합니다. Softmax 뒤에는 −∞ 위치의 확률이 0이 되므로 정보가 흐르지 않습니다.</>}
         formula={String.raw`\begin{aligned}A_{\mathrm{whole}}(q,k)&=\mathbf 1[k\le L],\\A_{\mathrm{next}}(q,k)&=\mathbf 1[k\le L,\ k\le q],\\M_{qk}&=\begin{cases}0,&A(q,k)=1,\\-\infty,&A(q,k)=0.\end{cases}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}A_{\mathrm{whole}}(q,k)&=\underbrace{\mathbf 1[k\le L],}_{\text{허용 경계 판정}}\\A_{\mathrm{next}}(q,k)&=\mathbf 1[k\le L,\ k\le q],\\M_{qk}&=\begin{cases}0,&A(q,k)=1,\\-\infty,&A(q,k)=0.\end{cases}\end{aligned}`}
+        operations={[
+          { expression: String.raw`\mathbf 1[k\le L],`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","읽을 수 있는 위치에는 0을 더하고, 가려야 할 위치에는","−∞를 더합니다."] },
+        ]}
         terms={[
           { symbol: "q,k", name: "query·key position", description: "현재 출력을 만드는 위치와 참조하려는 event 위치입니다." },
           { symbol: "L", name: "valid length", description: "PAD를 제외한 실제 event 수입니다." },
@@ -53,6 +57,10 @@ export default function Transformer() {
         question="길이가 서로 다른 sequence를 평균낼 때 PAD를 어떻게 제외할까?"
         idea={<>실제 event에는 mask 1, PAD에는 0을 곱한 뒤 실제 event 수 L로만 나눕니다. Tensor의 고정 길이 T와 sample의 유효 길이 L을 구분하는 것이 핵심입니다.</>}
         formula={String.raw`h_{\mathrm{seq}}=\frac{1}{L}\sum_{j=1}^{T}m_jh_j,\qquad L=\sum_{j=1}^{T}m_j`}
+        annotatedFormula={String.raw`h_{\mathrm{seq}}=\underbrace{\frac{1}{L}\sum_{j=1}^{T}m_jh_j,\qquad L=\sum_{j=1}^{T}m_j}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`\frac{1}{L}\sum_{j=1}^{T}m_jh_j,\qquad L=\sum_{j=1}^{T}m_j`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","실제 event에는 mask 1, PAD에는 0을 곱한 뒤","실제 event 수 L로만 나눕니다."] },
+        ]}
         terms={[
           { symbol: "h_j", name: "event hidden state", description: "Transformer를 지난 j번째 위치의 d차원 표현입니다." },
           { symbol: "m_j", name: "valid-token mask", description: "실제 event면 1, PAD면 0입니다." },
@@ -78,6 +86,12 @@ export default function Transformer() {
         question="모델이 event 순서를 실제로 사용했는지 어떤 차이로 측정할까?"
         idea={<>원래 순서의 metric에서 entity 안의 순서만 무작위로 바꾼 metric을 뺍니다. 다른 정보는 유지하므로 감소 폭이 클수록 배운 예측 신호가 순서에 의존했다는 증거가 됩니다.</>}
         formula={String.raw`\begin{aligned}m_{\mathrm{original}}&=\operatorname{Metric}(D),\\m_{\mathrm{shuffle}}&=\mathbb E_{\pi}[\operatorname{Metric}(D^{\pi})],\\\Delta_{\mathrm{order}}&=m_{\mathrm{original}}-m_{\mathrm{shuffle}}.\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}m_{\mathrm{original}}&=\underbrace{\operatorname{Metric}(D),}_{\text{오른쪽 항으로 결과 계산}}\\m_{\mathrm{shuffle}}&=\underbrace{\mathbb E_{\pi}[\operatorname{Metric}(D^{\pi})],}_{\text{확률 가중 평균}}\\\Delta_{\mathrm{order}}&=\underbrace{m_{\mathrm{original}}-m_{\mathrm{shuffle}}.}_{\text{변화량 계산}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`\operatorname{Metric}(D),`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","원래 순서의 metric에서 entity 안의 순서만 무작위로","바꾼 metric을 뺍니다."] },
+          { expression: String.raw`\mathbb E_{\pi}[\operatorname{Metric}(D^{\pi})],`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","원래 순서의 metric에서 entity 안의 순서만 무작위로","바꾼 metric을 뺍니다."] },
+          { expression: String.raw`m_{\mathrm{original}}-m_{\mathrm{shuffle}}.`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","원래 순서의 metric에서 entity 안의 순서만 무작위로","바꾼 metric을 뺍니다."] },
+        ]}
         terms={[
           { symbol: "π", name: "within-entity permutation", description: "Entity·cutoff·event multiset은 유지하고 유효 event의 순서만 바꾸는 permutation입니다." },
           { symbol: "E_π", name: "shuffle average", description: "한 번의 우연한 permutation 대신 여러 shuffle 결과를 평균합니다." },

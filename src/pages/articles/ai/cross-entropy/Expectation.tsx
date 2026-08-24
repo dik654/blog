@@ -19,6 +19,12 @@ export default function Expectation({ title }: { title?: string }) {
         question="사건마다 다른 비용 f(x)를 실제 분포 P 전체에서 어떻게 평균낼까?"
         idea={<>각 사건의 비용 f(x)에 그 사건이 실제로 나타날 확률 P(x)를 곱해 더합니다. 학습에서는 P를 직접 모르므로 i.i.d. sample 평균인 empirical risk로 근사합니다.</>}
         formula={String.raw`\begin{aligned}\mathbb E_{x\sim P}[f(x)]&=\sum_xP(x)f(x)\\[3pt]R(\theta)&=\mathbb E_{(x,y)\sim P_{\rm data}}[\ell_\theta(x,y)]\\[3pt]\widehat R_n(\theta)&=\frac1n\sum_{i=1}^{n}\ell_\theta(x_i,y_i)\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}\mathbb E_{x\sim P}[f(x)]&=\underbrace{\sum_xP(x)f(x)}_{\text{확률 가중 평균}}\\[3pt]R(\theta)&=\underbrace{\mathbb E_{(x,y)\sim P_{\rm data}}[\ell_\theta(x,y)]}_{\text{확률 가중 평균}}\\[3pt]\widehat R_n(\theta)&=\underbrace{\frac1n\sum_{i=1}^{n}\ell_\theta(x_i,y_i)}_{\text{empirical risk 계산}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`\sum_xP(x)f(x)`, annotation: ["사건별 측정값이(가) 식의 결과에 기여하는 방식을 계산합니다.","각 사건의 비용 f(x)에 그 사건이 실제로 나타날 확률","P(x)를 곱해 더합니다."] },
+          { expression: String.raw`\mathbb E_{(x,y)\sim P_{\rm data}}[\ell_\theta(x,y)]`, annotation: ["population risk이(가) 식의 결과에 기여하는","방식을 계산합니다.","각 사건의 비용 f(x)에 그 사건이 실제로 나타날 확률","P(x)를 곱해 더합니다."] },
+          { expression: String.raw`\frac1n\sum_{i=1}^{n}\ell_\theta(x_i,y_i)`, annotation: ["empirical risk이(가) 식의 결과에 기여하는 방식을","계산합니다.","각 사건의 비용 f(x)에 그 사건이 실제로 나타날 확률","P(x)를 곱해 더합니다."] },
+        ]}
         terms={[
           { symbol: "P", name: "모집단 분포", description: "실제 환경에서 input과 label이 생성되는 알 수 없는 분포입니다." },
           { symbol: "f(x)", name: "사건별 측정값", description: "이 글에서는 surprisal 또는 sample loss가 들어갑니다." },

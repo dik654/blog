@@ -58,7 +58,7 @@ export default function SealevelViz({
                   rx={6}
                   fill={`${tx.color}18`}
                   stroke={tx.color}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={55}

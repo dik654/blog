@@ -86,7 +86,7 @@ export default function SwarmEventViz() {
               x2={BOXES[to].x + 40}
               y2={100}
               stroke={BOXES[from].c}
-              strokeWidth={1.5}
+              strokeWidth={1.2}
               markerEnd="url(#swmarr)"
               initial={{ pathLength: 0, opacity: 0 }}
               animate={{ pathLength: 1, opacity: 1 }}

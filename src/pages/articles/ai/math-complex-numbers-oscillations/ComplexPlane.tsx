@@ -13,6 +13,10 @@ export default function ComplexPlane() {
         question="복소수 하나에서 평면 좌표·길이·반대 회전 정보를 어떻게 읽을까?"
         idea={<>실수부 a를 가로 좌표, 허수부 b를 세로 좌표로 읽습니다. 원점까지의 거리는 피타고라스 정리로 구하고, conjugate는 세로 좌표의 부호를 바꾸어 실수축에 대해 반사합니다.</>}
         formula={String.raw`z=a+bi,\quad i^2=-1,\quad |z|=\sqrt{a^2+b^2},\quad \overline z=a-bi,\quad z\overline z=|z|^2`}
+        annotatedFormula={String.raw`z=\underbrace{a+bi,\quad i^2=-1,\quad |z|=\sqrt{a^2+b^2},\quad \overline z=a-bi,\quad z\overline z=|z|^2}_{\text{complex conjugate 계산}}`}
+        operations={[
+          { expression: String.raw`a+bi,\quad i^2=-1,\quad |z|=\sqrt{a^2+b^2},\quad \overline z=a-bi,\quad z\overline z=|z|^2`, annotation: ["complex conjugate이(가) 식의 결과에 기여하는","방식을 계산합니다.","실수부 a를 가로 좌표, 허수부 b를 세로 좌표로 읽습니다."] },
+        ]}
         terms={[
           { symbol: "a", name: "real part", description: "복소평면의 가로 좌표입니다." },
           { symbol: "b", name: "imaginary coordinate", description: "복소평면의 세로 좌표이며 bi로 적습니다." },

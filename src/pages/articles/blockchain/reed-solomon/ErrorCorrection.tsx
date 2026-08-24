@@ -22,6 +22,10 @@ export default function ErrorCorrection() {
         question="Error e개와 erasure s개를 함께 unique-decode할 수 있는 경계는 무엇일까요?"
         idea="Known erasure는 그 좌표를 비교에서 제외하면 되지만 unknown error는 두 후보 codeword 중 어느 쪽이 틀렸는지 분리해야 합니다. 그래서 error 하나가 distance 두 칸을 사용합니다."
         formula={String.raw`d_{\min}=n-k+1,\qquad 2e+s<d_{\min}\iff2e+s\le n-k`}
+        annotatedFormula={String.raw`d_{\min}=\underbrace{n-k+1,\qquad 2e+s<d_{\min}\iff2e+s\le n-k}_{\text{경계 후보 선택}}`}
+        operations={[
+          { expression: String.raw`n-k+1,\qquad 2e+s<d_{\min}\iff2e+s\le n-k`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","Known erasure는 그 좌표를 비교에서 제외하면 되지만","unknown error는 두 후보 codeword 중 어느","쪽이 틀렸는지 분리해야 합니다."] },
+        ]}
         terms={[
           { symbol: "e", name: "unknown-position errors", description: "값과 위치를 모두 decoder가 찾아야 하는 corruption 수입니다." },
           { symbol: "s", name: "known erasures", description: "위치는 알지만 값이 없는 symbol 수입니다." },
@@ -38,6 +42,10 @@ export default function ErrorCorrection() {
           question="Unknown error 위치를 모른 채 polynomial을 어떻게 복원할까요?"
           idea="Error 위치에서는 0이 되는 locator E를 곱해 잘못된 관측을 지웁니다. N=Ep를 별도 미지 polynomial로 두면 각 관측에 대한 식이 coefficient에 선형이 되어 연립방정식으로 풀 수 있습니다."
           formula={String.raw`N(\alpha_i)=r_iE(\alpha_i),\quad \deg E\le t,\quad \deg N<k+t,\quad p=N/E`}
+          annotatedFormula={String.raw`N(\alpha_i)=\underbrace{r_iE(\alpha_i),\quad \deg E\le t,\quad \deg N<k+t,\quad p=N/E}_{\text{기준량당 비율}}`}
+          operations={[
+            { expression: String.raw`r_iE(\alpha_i),\quad \deg E\le t,\quad \deg N<k+t,\quad p=N/E`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Error 위치에서는 0이 되는 locator E를 곱해","잘못된 관측을 지웁니다."] },
+          ]}
           terms={[
             { symbol: "r_i", name: "received symbol", description: "평가점 α_i에서 받은 값으로 일부는 틀릴 수 있습니다." },
             { symbol: "E(x)", name: "error locator", description: "Error 좌표 α_i에서 0이 되는 monic polynomial입니다." },

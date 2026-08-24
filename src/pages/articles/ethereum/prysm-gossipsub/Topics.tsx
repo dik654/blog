@@ -15,6 +15,10 @@ export default function Topics({ onCodeRef }: { onCodeRef: (key: string, ref: Co
         question="서로 다른 chain·fork의 같은 message 이름을 topic에서 어떻게 분리할까요?"
         idea="Fork version과 genesis validators root를 SSZ ForkData로 commitment한 뒤 hash의 앞 4 bytes를 routing digest로 씁니다. 이 짧은 값은 실용적 domain separation이며 cryptographic identity 전체를 대체하지 않습니다."
         formula={String.raw`d_f=\operatorname{SHA256}(\operatorname{SSZ}(v_f,g))_{0:4}`}
+        annotatedFormula={String.raw`d_f=\underbrace{\operatorname{SHA256}(\operatorname{SSZ}(v_f,g))_{0:4}}_{\text{포크 다이제스트 계산}}`}
+        operations={[
+          { expression: String.raw`\operatorname{SHA256}(\operatorname{SSZ}(v_f,g))_{0:4}`, annotation: ["포크 다이제스트이(가) 식의 결과에 기여하는 방식을","계산합니다.","Fork version과 genesis validators","root를 SSZ ForkData로 commitment한 뒤"] },
+        ]}
         terms={[
           { symbol: "d_f", name: "포크 다이제스트", description: "topic에 들어가는 4-byte fork digest" },
           { symbol: "v_f", name: "포크 버전", description: "해당 epoch에서 활성인 4-byte fork version" },

@@ -15,6 +15,10 @@ export default function Norm() {
         question="Vector x=(3,4)의 원점으로부터 길이는 얼마일까요?"
         idea={<>서로 직각인 coordinate의 이동량을 제곱해 더한 뒤 제곱근을 취합니다. 제곱은 음수 좌표도 양의 거리 기여로 바꾸고, 제곱근은 단위를 원래 scale로 돌립니다.</>}
         formula={String.raw`\lVert x\rVert_2=\sqrt{\sum_{j=1}^{d}x_j^2}\qquad\Longrightarrow\qquad \lVert(3,4)\rVert_2=\sqrt{3^2+4^2}=5`}
+        annotatedFormula={String.raw`\lVert x\rVert_2=\underbrace{\sqrt{\sum_{j=1}^{d}x_j^2}\qquad\Longrightarrow\qquad \lVert(3,4)\rVert_2=\sqrt{3^2+4^2}=5}_{\text{L2 norm 계산}}`}
+        operations={[
+          { expression: String.raw`\sqrt{\sum_{j=1}^{d}x_j^2}\qquad\Longrightarrow\qquad \lVert(3,4)\rVert_2=\sqrt{3^2+4^2}=5`, annotation: ["L2 norm이(가) 식의 결과에 기여하는 방식을 계산합니다.","서로 직각인 coordinate의 이동량을 제곱해 더한 뒤","제곱근을 취합니다."] },
+        ]}
         terms={[
           { symbol: "x_j", name: "j번째 coordinate", description: "Vector를 이루는 한 방향의 signed 값입니다." },
           { symbol: "d", name: "dimension", description: "Vector에 들어 있는 coordinate 수입니다." },

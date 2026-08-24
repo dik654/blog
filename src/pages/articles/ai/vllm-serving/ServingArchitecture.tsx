@@ -94,6 +94,10 @@ export default function ServingArchitecture() {
           </>
         }
         formula={String.raw`G=D_P\times T_P\times P_P`}
+        annotatedFormula={String.raw`G=\underbrace{D_P\times T_P\times P_P}_{\text{오른쪽 항으로 결과 계산}}`}
+        operations={[
+          { expression: String.raw`D_P\times T_P\times P_P`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","한 replica의 model을 TP×PP GPU에 놓고, 그","replica를 DP개 복제한다고 보면 총 GPU 수는 세","축의 곱입니다."] },
+        ]}
         terms={PARALLEL_TERMS}
         assumptions={[
           "모든 replica가 같은 TP·PP 크기를 쓰는 regular homogeneous layout입니다.",
@@ -128,6 +132,11 @@ export default function ServingArchitecture() {
         }
         formula={String.raw`\mathrm{Goodput}_{SLO}
 =\frac{\sum_r y_r\,\mathbf{1}[SLO_r]}{\Delta t}`}
+        annotatedFormula={String.raw`\mathrm{Goodput}_{SLO}
+=\underbrace{\frac{\sum_r y_r\,\mathbf{1}[SLO_r]}{\Delta t}}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`\frac{\sum_r y_r\,\mathbf{1}[SLO_r]}{\Delta t}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","측정 구간의 모든 output token을 더하는 대신,","사전에 정한 SLO를 통과한 요청의 token에만 1을","곱합니다."] },
+        ]}
         terms={GOODPUT_TERMS}
         assumptions={[
           "SLO threshold와 workload distribution을 tuning 전에 고정합니다.",

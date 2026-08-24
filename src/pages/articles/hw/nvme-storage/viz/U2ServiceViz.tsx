@@ -61,7 +61,7 @@ function Package() {
         x2={183}
         y2={93}
         stroke={C.u2}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
       />
@@ -80,7 +80,7 @@ function Package() {
         x2={348}
         y2={93}
         stroke={C.u2}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
       />
@@ -220,7 +220,7 @@ function Plp() {
         d="M216 128 V156 H314"
         fill="none"
         stroke={C.err}
-        strokeWidth={1.4}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
       />

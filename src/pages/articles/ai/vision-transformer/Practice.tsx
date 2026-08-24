@@ -25,6 +25,19 @@ P_{\mathrm{old}}&=[p_{\mathrm{cls}};P_{\mathrm{grid}}],\\
 G_{\mathrm{old}}&=\operatorname{reshape}_{h,w}(P_{\mathrm{grid}}),\\
 P_{\mathrm{new}}&=[p_{\mathrm{cls}};\widetilde P_{\mathrm{grid}}^{\flat}].
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+P_{\mathrm{old}}&=\underbrace{[p_{\mathrm{cls}};P_{\mathrm{grid}}],}_{\text{오른쪽 항으로 결과 계산}}\\
+\widetilde P_{\mathrm{grid}}&=\underbrace{\operatorname{Interp}_{2D}
+\!\left(G_{\mathrm{old}},h',w'\right),}_{\text{허용 경계 판정}}\\
+G_{\mathrm{old}}&=\underbrace{\operatorname{reshape}_{h,w}(P_{\mathrm{grid}}),}_{\text{오른쪽 항으로 결과 계산}}\\
+P_{\mathrm{new}}&=[p_{\mathrm{cls}};\widetilde P_{\mathrm{grid}}^{\flat}].
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`[p_{\mathrm{cls}};P_{\mathrm{grid}}],`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Image-level special token의","position은 2D spatial grid가 아니므로 먼저","분리합니다."] },
+          { expression: String.raw`\operatorname{Interp}_{2D}
+\!\left(G_{\mathrm{old}},h',w'\right),`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","Image-level special token의","position은 2D spatial grid가 아니므로 먼저","분리합니다."] },
+          { expression: String.raw`\operatorname{reshape}_{h,w}(P_{\mathrm{grid}}),`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Image-level special token의","position은 2D spatial grid가 아니므로 먼저","분리합니다."] },
+        ]}
         terms={[
           { symbol: "p_cls", name: "special-token position", description: "Spatial patch grid에 속하지 않는 class 또는 distillation token의 learned position입니다." },
           { symbol: "P_grid", name: "old spatial position grid", description: "Pretraining patch 좌표 h×w에 대응하는 D-dimensional learned vectors입니다." },
@@ -44,6 +57,18 @@ z_{\mathrm{exp}}&=f_{\mathrm{exp}}(x'),\\
 d&=\lVert z_{\mathrm{ref}}-z_{\mathrm{exp}}\rVert_\infty,\\
 d&\le\varepsilon.
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+x'&=\underbrace{T_{\mathrm{ckpt}}(x),}_{\text{오른쪽 항으로 결과 계산}}\\
+z_{\mathrm{ref}}&=\underbrace{f_{\mathrm{ref}}(x'),}_{\text{오른쪽 항으로 결과 계산}}\\
+z_{\mathrm{exp}}&=\underbrace{f_{\mathrm{exp}}(x'),}_{\text{오른쪽 항으로 결과 계산}}\\
+d&=\lVert z_{\mathrm{ref}}-z_{\mathrm{exp}}\rVert_\infty,\\
+d&\le\varepsilon.
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`T_{\mathrm{ckpt}}(x),`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","같은 preprocessed tensor와 eval","state에서 두 구현의 logit 차이를 tolerance","안에서 비교합니다."] },
+          { expression: String.raw`f_{\mathrm{ref}}(x'),`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","같은 preprocessed tensor와 eval","state에서 두 구현의 logit 차이를 tolerance","안에서 비교합니다."] },
+          { expression: String.raw`f_{\mathrm{exp}}(x'),`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","같은 preprocessed tensor와 eval","state에서 두 구현의 logit 차이를 tolerance","안에서 비교합니다."] },
+        ]}
         terms={[
           { symbol: "T_ckpt", name: "checkpoint preprocessing", description: "Registry가 명시한 resize·crop·channel·normalization을 재현하는 deterministic inference transform입니다." },
           { symbol: "f_ref,f_exp", name: "reference and exported models", description: "원 runtime 구현과 배포용으로 변환한 implementation입니다." },

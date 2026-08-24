@@ -18,6 +18,10 @@ export default function PrimeField() {
         question="Fₚ에서 0이 아닌 a로 어떻게 나눌까요?"
         idea="Fermat의 소정리 a^(p−1)=1의 양변에서 a 한 개를 분리하면 a^(p−2)가 a의 역원입니다. 구현에서는 exponentiation 또는 extended Euclidean algorithm을 선택합니다."
         formula={String.raw`a^{-1}\equiv a^{p-2}\pmod p,\qquad b/a\equiv b\,a^{-1}\pmod p`}
+        annotatedFormula={String.raw`\underbrace{a^{-1}\equiv a^{p-2}\pmod p,\qquad b/a\equiv b\,a^{-1}\pmod p}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`a^{-1}\equiv a^{p-2}\pmod p,\qquad b/a\equiv b\,a^{-1}\pmod p`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Fermat의 소정리 a^(p−1)=1의 양변에서 a 한 개를","분리하면 a^(p−2)가 a의 역원입니다."] },
+        ]}
         terms={[
           {
             symbol: "p",
@@ -61,6 +65,10 @@ export default function PrimeField() {
         question="후보 g가 Fₚ* 전체를 생성하는지 어떻게 검사할까요?"
         idea="p−1의 각 서로 다른 소인수 q마다 g를 (p−1)/q번 거듭제곱했을 때 1이 아니면, g의 order가 어느 proper divisor에도 갇힐 수 없습니다."
         formula={String.raw`g\text{ is primitive}\iff g^{(p-1)/q}\not\equiv1\pmod p\quad\text{for every prime }q\mid(p-1)`}
+        annotatedFormula={String.raw`\underbrace{g\text{ is primitive}\iff g^{(p-1)/q}\not\equiv1\pmod p\quad\text{for every prime }q\mid(p-1)}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`g\text{ is primitive}\iff g^{(p-1)/q}\not\equiv1\pmod p\quad\text{for every prime }q\mid(p-1)`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","p−1의 각 서로 다른 소인수 q마다"] },
+        ]}
         terms={[
           {
             symbol: "g",

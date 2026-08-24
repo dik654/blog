@@ -13,6 +13,10 @@ export default function BitsBytes() {
         question="8개의 binary 자리가 서로 독립적으로 0 또는 1일 때 몇 가지 pattern을 만들까?"
         idea={<>각 자리마다 두 선택지가 있고 여덟 자리의 선택 수를 곱합니다. 따라서 2를 여덟 번 곱한 2⁸개 pattern이 생기며, unsigned 정수로 읽으면 0부터 255까지입니다.</>}
         formula={String.raw`1\ \mathrm{byte}=8\ \mathrm{bits},\qquad 2^8=256,\qquad 00000000_2\ldots11111111_2=0\ldots255`}
+        annotatedFormula={String.raw`1\ \mathrm{byte}=\underbrace{8\ \mathrm{bits},\qquad 2^8=256,\qquad 00000000_2\ldots11111111_2=0\ldots255}_{\text{eight-bit unit 계산}}`}
+        operations={[
+          { expression: String.raw`8\ \mathrm{bits},\qquad 2^8=256,\qquad 00000000_2\ldots11111111_2=0\ldots255`, annotation: ["eight-bit unit이(가) 식의 결과에 기여하는 방식을","계산합니다.","각 자리마다"] },
+        ]}
         terms={[
           { symbol: String.raw`\mathrm{bit}`, name: "binary digit", description: "0 또는 1인 한 자리입니다." },
           { symbol: String.raw`\mathrm{byte}`, name: "eight-bit unit", description: "파일 크기와 UTF-8 code unit을 세는 기본 묶음입니다." },

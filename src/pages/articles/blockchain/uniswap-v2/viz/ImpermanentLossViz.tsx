@@ -165,7 +165,7 @@ export default function ImpermanentLossViz() {
         />
 
         {/* IL 곡선 */}
-        <path d={pathData} stroke="#ef4444" strokeWidth={2.5} fill="none" />
+        <path d={pathData} stroke="#ef4444" strokeWidth={1.2} fill="none" />
 
         {/* 현재 값 포인터 */}
         <circle
@@ -174,7 +174,7 @@ export default function ImpermanentLossViz() {
           r={6}
           fill="#ef4444"
           stroke="var(--card)"
-          strokeWidth={2}
+          strokeWidth={1.2}
         />
         <line
           x1={toX(priceRatio)}

@@ -107,7 +107,7 @@ export default function DiemBFTViz({
                       x2={RX[i] - 42}
                       y2={46}
                       stroke="var(--border)"
-                      strokeWidth={1.5}
+                      strokeWidth={1.2}
                       strokeDasharray="4 2"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 0.5 }}

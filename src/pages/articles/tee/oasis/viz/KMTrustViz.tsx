@@ -45,7 +45,7 @@ export default function KMTrustViz() {
                     x2={190}
                     y2={i * 50 + 10}
                     stroke={d.color}
-                    strokeWidth={1.5}
+                    strokeWidth={1.2}
                     strokeDasharray="3,3"
                     initial={{ pathLength: 0 }}
                     animate={{ pathLength: 1 }}
@@ -60,7 +60,7 @@ export default function KMTrustViz() {
                   rx={7}
                   fill={`${d.color}15`}
                   stroke={d.color}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                   initial={{ scaleX: 0 }}
                   animate={{ scaleX: 1 }}
                   transition={{ delay: i * 0.1, duration: 0.3 }}
@@ -99,7 +99,7 @@ export default function KMTrustViz() {
                     rx={6}
                     fill={`${f.color}10`}
                     stroke={f.color}
-                    strokeWidth={1.5}
+                    strokeWidth={1.2}
                     initial={{ x: -20, opacity: 0 }}
                     animate={{ x: 20, opacity: 1 }}
                     transition={{ delay: i * 0.1, duration: 0.3 }}
@@ -119,7 +119,7 @@ export default function KMTrustViz() {
                     x2={210}
                     y2={y + 17}
                     stroke={f.color}
-                    strokeWidth={1.5}
+                    strokeWidth={1.2}
                     initial={{ pathLength: 0 }}
                     animate={{ pathLength: 1 }}
                     transition={{ delay: i * 0.1 + 0.2 }}

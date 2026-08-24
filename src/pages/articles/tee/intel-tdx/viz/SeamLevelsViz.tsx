@@ -27,7 +27,7 @@ export default function SeamLevelsViz() {
           fill="#8b5cf6"
           fillOpacity={0.15}
           stroke="#8b5cf6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <text x={60} y={65} fontSize={11} fontWeight={700} fill="#8b5cf6">
           SEAM Mode

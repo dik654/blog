@@ -53,6 +53,10 @@ export default function ModernCRTArticle() {
           question="나머지 조건 n개를 동시에 만족하는 정수를 어떻게 직접 만들 수 있는가?"
           idea={<>i번째 selector Mᵢyᵢ에 원하는 나머지 aᵢ를 곱해 더합니다. 다른 modulus에서는 해당 항이 0으로 사라지고, 자기 modulus에서만 aᵢ가 남습니다.</>}
           formula={String.raw`M=\prod_{i=1}^{n}m_i,\quad M_i=\frac{M}{m_i},\quad y_i=M_i^{-1}\pmod{m_i},\quad x\equiv\sum_{i=1}^{n}a_iM_iy_i\pmod M`}
+          annotatedFormula={String.raw`M=\underbrace{\prod_{i=1}^{n}m_i,\quad M_i=\frac{M}{m_i},\quad y_i=M_i^{-1}\pmod{m_i},\quad x\equiv\sum_{i=1}^{n}a_iM_iy_i\pmod M}_{\text{기준량당 비율}}`}
+          operations={[
+            { expression: String.raw`\prod_{i=1}^{n}m_i,\quad M_i=\frac{M}{m_i},\quad y_i=M_i^{-1}\pmod{m_i},\quad x\equiv\sum_{i=1}^{n}a_iM_iy_i\pmod M`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","i번째 selector Mᵢyᵢ에 원하는 나머지 aᵢ를 곱해","더합니다."] },
+          ]}
           terms={[
             { symbol: "m_i", name: "i번째 modulus", description: "나머지를 재는 기준이며 모든 쌍이 서로소여야 합니다." },
             { symbol: "a_i", name: "i번째 residue", description: "x가 mᵢ로 나뉠 때 남아야 하는 0 이상 mᵢ 미만 값입니다." },
@@ -107,6 +111,10 @@ export default function ModernCRTArticle() {
           question="두 RSA residue m₁과 m₂를 n=pq의 한 message representative로 어떻게 합치는가?"
           idea={<>m₂에서 시작해 p 방향의 차이만 h로 보정합니다. h는 q를 곱했을 때 mod p에서 m₁−m₂가 되도록 q의 inverse를 사용합니다.</>}
           formula={String.raw`h=((m_1-m_2)q_{\mathrm{inv}})\bmod p,\qquad m=m_2+qh`}
+          annotatedFormula={String.raw`h=\underbrace{((m_1-m_2)q_{\mathrm{inv}})\bmod p,\qquad m=m_2+qh}_{\text{CRT coefficient 계산}}`}
+          operations={[
+            { expression: String.raw`((m_1-m_2)q_{\mathrm{inv}})\bmod p,\qquad m=m_2+qh`, annotation: ["CRT coefficient이(가) 식의 결과에 기여하는","방식을 계산합니다.","m₂에서 시작해 p 방향의 차이만 h로 보정합니다."] },
+          ]}
           terms={[
             { symbol: "m_1", name: "p-side result", description: "c^d를 p에서 계산한 residue입니다." },
             { symbol: "m_2", name: "q-side result", description: "c^d를 q에서 계산한 residue입니다." },

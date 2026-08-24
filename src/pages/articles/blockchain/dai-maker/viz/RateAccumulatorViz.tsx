@@ -181,7 +181,7 @@ export default function RateAccumulatorViz() {
         </text>
 
         {/* 누적 곡선 */}
-        <path d={pathData} stroke="#f59e0b" strokeWidth={2.5} fill="none" />
+        <path d={pathData} stroke="#f59e0b" strokeWidth={1.2} fill="none" />
 
         {/* 끝점 마커 */}
         <circle
@@ -190,7 +190,7 @@ export default function RateAccumulatorViz() {
           r={5}
           fill="#f59e0b"
           stroke="var(--card)"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
 
         {/* 정보 박스 */}

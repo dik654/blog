@@ -38,6 +38,10 @@ export default function UseCases() {
         question="3명 guardian 중 2명 threshold에서 몇 개의 guardian 조합이 recovery를 승인할 수 있을까요?"
         idea="순서와 무관하게 threshold만큼 고르는 조합 수를 셉니다. 조합 수가 많다는 것은 availability가 높다는 뜻이지만, guardian 독립성이 없으면 실제 안전성은 그만큼 늘지 않습니다."
         formula={String.raw`N_{paths}=\binom{n}{t}=\frac{n!}{t!(n-t)!}`}
+        annotatedFormula={String.raw`N_{paths}=\underbrace{\binom{n}{t}=\frac{n!}{t!(n-t)!}}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`\binom{n}{t}=\frac{n!}{t!(n-t)!}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","순서와 무관하게 threshold만큼 고르는 조합 수를","셉니다."] },
+        ]}
         terms={[
           { symbol: "n", name: "Guardians", description: "등록한 서로 구분되는 guardian 수입니다." },
           { symbol: "t", name: "Threshold", description: "Recovery proposal에 필요한 동의 수입니다." },

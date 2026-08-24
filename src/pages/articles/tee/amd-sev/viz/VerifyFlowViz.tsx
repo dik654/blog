@@ -221,7 +221,7 @@ export default function VerifyFlowViz() {
               rx={4}
               fill={`${C.green}15`}
               stroke={C.green}
-              strokeWidth={1.3}
+              strokeWidth={1.2}
             />
             <text
               x={405}

@@ -100,7 +100,7 @@ export default function DeathSpiralViz() {
           x2={180}
           y2={72}
           stroke="#ef4444"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#ds-arr)"
         />
         <line
@@ -109,7 +109,7 @@ export default function DeathSpiralViz() {
           x2={330}
           y2={72}
           stroke="#ef4444"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#ds-arr)"
         />
         <line
@@ -118,7 +118,7 @@ export default function DeathSpiralViz() {
           x2={390}
           y2={135}
           stroke="#ef4444"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#ds-arr)"
         />
         <line
@@ -127,7 +127,7 @@ export default function DeathSpiralViz() {
           x2={300}
           y2={157}
           stroke="#ef4444"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#ds-arr)"
         />
         <line
@@ -136,7 +136,7 @@ export default function DeathSpiralViz() {
           x2={150}
           y2={157}
           stroke="#ef4444"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#ds-arr)"
         />
 
@@ -147,7 +147,7 @@ export default function DeathSpiralViz() {
           x2={90}
           y2={95}
           stroke="#ef4444"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#ds-arr)"
         />
 

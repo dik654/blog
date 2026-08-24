@@ -91,6 +91,10 @@ export default function Rendering() {
           question="Event가 재전송되거나 순서가 바뀔 수 있을 때 같은 화면 상태를 어떻게 재현할까?"
           idea={<>화면을 직접 덧그리지 않고, 이전 state와 다음 event를 입력으로 받는 결정적 reducer를 둡니다. Sequence가 이미 적용한 값 이하이면 duplicate로 무시하고, 다음 번호가 건너뛰면 gap을 복구한 뒤 적용합니다.</>}
           formula={String.raw`S_{k+1}=\delta(S_k,e_{k+1}),\qquad \operatorname{seq}(e_{k+1})=\operatorname{seq}(S_k)+1`}
+          annotatedFormula={String.raw`S_{k+1}=\underbrace{\delta(S_k,e_{k+1}),\qquad \operatorname{seq}(e_{k+1})=\operatorname{seq}(S_k)+1}_{\text{next normalized event 계산}}`}
+          operations={[
+            { expression: String.raw`\delta(S_k,e_{k+1}),\qquad \operatorname{seq}(e_{k+1})=\operatorname{seq}(S_k)+1`, annotation: ["next normalized event이(가) 식의 결과에","기여하는 방식을 계산합니다.","화면을 직접 덧그리지 않고, 이전 state와 다음","event를 입력으로 받는 결정적 reducer를 둡니다."] },
+          ]}
           terms={[
             { symbol: "S_k", name: "render state", description: "현재 text buffer, tool call별 상태, permission prompt, usage와 terminal outcome입니다." },
             { symbol: "e_{k+1}", name: "next normalized event", description: "Session·turn·call identity와 monotonic sequence를 가진 다음 event입니다." },

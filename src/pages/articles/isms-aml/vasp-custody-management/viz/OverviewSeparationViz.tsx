@@ -211,7 +211,7 @@ export default function OverviewSeparationViz() {
                 x2={200}
                 y2={170}
                 stroke={C.red}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 strokeDasharray="4 3"
               />
               <text

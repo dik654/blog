@@ -48,7 +48,7 @@ export function Step0() {
           x2={210}
           y2={80}
           stroke={C.os}
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <polygon points="208,76 216,80 208,84" fill={C.os} />
         <text

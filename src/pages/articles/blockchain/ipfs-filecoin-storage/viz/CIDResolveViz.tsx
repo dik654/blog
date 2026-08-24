@@ -43,7 +43,7 @@ export default function CIDResolveViz() {
                 x1={from.x + 50} y1={from.y}
                 x2={to.x - 10} y2={to.y}
                 stroke={active ? NODES[a.to].color : '#555'}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 markerEnd="url(#cid-arrow)"
                 animate={{ opacity: active ? 0.8 : 0.15 }}
                 transition={{ duration: 0.3 }}

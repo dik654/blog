@@ -240,7 +240,7 @@ export function ProofPath() {
         r={9}
         fill="none"
         stroke={C.proof}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         strokeDasharray="3 2"
       />
       <text x={280} y={20} fontSize={10} fill={C.proof} fontWeight={600}>

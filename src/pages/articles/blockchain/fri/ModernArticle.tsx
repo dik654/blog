@@ -21,6 +21,10 @@ export default function ModernFRIArticle() {
           question="Polynomial의 degree와 evaluation domain을 한 round에서 어떻게 절반으로 줄이는가?"
           idea={<>f의 짝수 지수 coefficient와 홀수 지수 coefficient를 각각 T=X²의 polynomial로 묶습니다. 그 뒤 commitment를 본 verifier가 β를 고르고 두 부분을 선형 결합합니다.</>}
           formula={String.raw`f(X)=f_{\mathrm{even}}(X^2)+Xf_{\mathrm{odd}}(X^2),\quad g(T)=f_{\mathrm{even}}(T)+\beta f_{\mathrm{odd}}(T)`}
+          annotatedFormula={String.raw`f(X)=\underbrace{f_{\mathrm{even}}(X^2)+Xf_{\mathrm{odd}}(X^2),\quad g(T)=f_{\mathrm{even}}(T)+\beta f_{\mathrm{odd}}(T)}_{\text{Even polynomial 계산}}`}
+          operations={[
+            { expression: String.raw`f_{\mathrm{even}}(X^2)+Xf_{\mathrm{odd}}(X^2),\quad g(T)=f_{\mathrm{even}}(T)+\beta f_{\mathrm{odd}}(T)`, annotation: ["Even polynomial이(가) 식의 결과에 기여하는","방식을 계산합니다.","f의 짝수 지수 coefficient와 홀수 지수","coefficient를 각각 T=X²의 polynomial로"] },
+          ]}
           terms={[
             { symbol: "f_{\\mathrm{even}}", name: "Even polynomial", description: "a₀+a₂T+a₄T²처럼 짝수 차수 coefficient를 모읍니다." },
             { symbol: "f_{\\mathrm{odd}}", name: "Odd polynomial", description: "a₁+a₃T+a₅T²처럼 홀수 차수 coefficient를 모읍니다." },
@@ -42,6 +46,10 @@ export default function ModernFRIArticle() {
           question="δ 비율의 잘못된 위치를 q번 독립 sampling이 모두 놓칠 단순 상한은 얼마인가?"
           idea={<>각 query가 bad set을 피할 확률이 1−δ이고, replacement가 있는 독립 query라면 조건부 확률을 q번 곱합니다. 이는 FRI 전체 theorem이 아니라 sampling intuition의 작은 구성요소입니다.</>}
           formula={String.raw`\Pr[\text{all }q\text{ queries miss the bad set}]\le(1-\delta)^q`}
+          annotatedFormula={String.raw`\Pr[\text{all }q\text{ queries miss the bad set}]\le\underbrace{(1-\delta)^q}_{\text{Simple miss bound 계산}}`}
+          operations={[
+            { expression: String.raw`(1-\delta)^q`, annotation: ["Simple miss bound이(가) 식의 결과에 기여하는","방식을 계산합니다.","각 query가 bad set을 피할 확률이 1−δ이고,","replacement가 있는 독립 query라면 조건부 확률을"] },
+          ]}
           terms={[
             { symbol: "\\delta", name: "Bad-position fraction", description: "현재 oracle에서 inconsistent한 위치가 차지하는 비율입니다." },
             { symbol: "q", name: "Independent query count", description: "Transcript가 뽑은 독립적인 검사 횟수입니다." },

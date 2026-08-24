@@ -73,7 +73,7 @@ export default function SlashingViz() {
               fill: step >= 1 ? "#ef444422" : "#6366f122",
               stroke: step >= 1 ? "#ef4444" : "#6366f1",
             }}
-            strokeWidth={2.5}
+            strokeWidth={1.2}
             transition={{ duration: 0.4 }}
           />
           <text x={KEY_X} y={KEY_Y - 5} textAnchor="middle" fontSize={14}>
@@ -111,7 +111,7 @@ export default function SlashingViz() {
                 rx={5}
                 fill="#22c55e33"
                 stroke="#22c55e"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={SIG_A_OX}
@@ -153,7 +153,7 @@ export default function SlashingViz() {
                 rx={5}
                 fill="#ef444433"
                 stroke="#ef4444"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={SIG_B_OX}
@@ -182,7 +182,7 @@ export default function SlashingViz() {
               rx={6}
               fill="#f59e0b22"
               stroke="#f59e0b"
-              strokeWidth={1.5}
+              strokeWidth={1.2}
             />
             <text
               x={210}

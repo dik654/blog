@@ -25,6 +25,15 @@ y&=\frac{m}{1-p}x,\quad m\sim\operatorname{Bernoulli}(1-p),\\
 x=2,\ p=.25&\Rightarrow y\in\{0,\ 2/.75\},\\
 \mathbb{E}[y]&=.25\cdot0+.75\cdot(2/.75)=2.
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+y&=\underbrace{\frac{m}{1-p}x,\quad m\sim\operatorname{Bernoulli}(1-p),}_{\text{기준량당 비율}}\\
+x=2,\ p=.25&\Rightarrow y\in\{0,\ 2/.75\},\\
+\mathbb{E}[y]&=\underbrace{.25\cdot0+.75\cdot(2/.75)=2.}_{\text{확률 가중 평균}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\frac{m}{1-p}x,\quad m\sim\operatorname{Bernoulli}(1-p),`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Keep probability만큼만 값이 남으므로 남은 값은","그 확률로 나눠 키웁니다."] },
+          { expression: String.raw`.25\cdot0+.75\cdot(2/.75)=2.`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Keep probability만큼만 값이 남으므로 남은 값은","그 확률로 나눠 키웁니다."] },
+        ]}
         terms={[
           { symbol: "p", name: "drop probability", description: "Train mode에서 activation을 0으로 만드는 확률입니다." },
           { symbol: "m", name: "keep mask", description: "Forward에서 sampling하고 backward에 그대로 재사용하는 0·1 mask입니다." },

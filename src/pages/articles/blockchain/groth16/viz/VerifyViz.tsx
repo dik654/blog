@@ -503,7 +503,7 @@ export default function VerifyViz() {
                   rx={10}
                   fill={`${C.ok}12`}
                   stroke={C.ok}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={240}

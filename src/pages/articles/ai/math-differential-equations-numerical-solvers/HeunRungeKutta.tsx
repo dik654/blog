@@ -31,6 +31,17 @@ export default function HeunRungeKutta() {
           k_2&=f(\widetilde x,t_n+h) \\
           x_{n+1}&=x_n+\frac h2(k_1+k_2)
         \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+          k_1&=\underbrace{f(x_n,t_n)}_{\text{starting slope 계산}} \\
+          \widetilde x&=\underbrace{x_n+h k_1}_{\text{Euler predictor 계산}} \\
+          k_2&=\underbrace{f(\widetilde x,t_n+h)}_{\text{Euler predictor 계산}} \\
+          x_{n+1}&=x_n+\frac h2(k_1+k_2)
+        \end{aligned}`}
+        operations={[
+          { expression: String.raw`f(x_n,t_n)`, annotation: ["starting slope이(가) 식의 결과에 기여하는 방식을","계산합니다.","현재 기울기로 provisional endpoint를 만든 뒤","그 끝의 기울기를 다시 측정합니다."] },
+          { expression: String.raw`x_n+h k_1`, annotation: ["Euler predictor이(가) 식의 결과에 기여하는","방식을 계산합니다.","현재 기울기로 provisional endpoint를 만든 뒤","그 끝의 기울기를 다시 측정합니다."] },
+          { expression: String.raw`f(\widetilde x,t_n+h)`, annotation: ["Euler predictor이(가) 식의 결과에 기여하는","방식을 계산합니다.","현재 기울기로 provisional endpoint를 만든 뒤","그 끝의 기울기를 다시 측정합니다."] },
+        ]}
         terms={[
           {
             symbol: "k_1",

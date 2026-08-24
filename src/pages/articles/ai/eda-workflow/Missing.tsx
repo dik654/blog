@@ -29,6 +29,16 @@ M_i&=\mathbf{1}[x_i\ \text{is missing}],\\
 \hat{p}_{\mathrm{all}}&=\frac{\sum_iM_i}{N}=\frac{100}{1000}=0.10,\\
 \hat{p}_{\mathrm{deviceA}}&=\frac{80}{200}=0.40.
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+M_i&=\underbrace{\mathbf{1}[x_i\ \text{is missing}],}_{\text{missing indicator 계산}}\\
+\hat{p}_{\mathrm{all}}&=\underbrace{\frac{\sum_iM_i}{N}=\frac{100}{1000}=0.10,}_{\text{기준량당 비율}}\\
+\hat{p}_{\mathrm{deviceA}}&=\underbrace{\frac{80}{200}=0.40.}_{\text{기준량당 비율}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\mathbf{1}[x_i\ \text{is missing}],`, annotation: ["missing indicator이(가) 식의 결과에 기여하는","방식을 계산합니다.","결측 indicator를 만들고 전체뿐 아니라","시간·장비·label slice마다"] },
+          { expression: String.raw`\frac{\sum_iM_i}{N}=\frac{100}{1000}=0.10,`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","결측 indicator를 만들고 전체뿐 아니라","시간·장비·label slice마다"] },
+          { expression: String.raw`\frac{80}{200}=0.40.`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","결측 indicator를 만들고 전체뿐 아니라","시간·장비·label slice마다"] },
+        ]}
         terms={[
           { symbol: "M_i", name: "missing indicator", description: "관측 i가 비어 있으면 1, 아니면 0인 진단 변수입니다." },
           { symbol: "N", name: "reference row count", description: "전체 또는 명시한 slice의 분모입니다." },

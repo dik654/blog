@@ -138,7 +138,7 @@ export default function SellGemFlowViz() {
           x2={200}
           y2={67}
           stroke="#8b5cf6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#sg-arr)"
         />
         <line
@@ -147,7 +147,7 @@ export default function SellGemFlowViz() {
           x2={370}
           y2={67}
           stroke="#8b5cf6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#sg-arr)"
         />
 

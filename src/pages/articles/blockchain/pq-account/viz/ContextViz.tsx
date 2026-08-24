@@ -81,7 +81,7 @@ export default function ContextViz() {
               y2={pb.cy}
               stroke="currentColor"
               strokeOpacity={0.15}
-              strokeWidth={1.5}
+              strokeWidth={1.2}
             />
           );
         })}

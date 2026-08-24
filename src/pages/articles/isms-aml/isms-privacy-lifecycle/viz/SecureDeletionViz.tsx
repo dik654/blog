@@ -573,7 +573,7 @@ export default function SecureDeletionViz() {
                 x2={320}
                 y2={120}
                 stroke={C.physical}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 strokeDasharray="4 3"
               />
               <text
@@ -662,7 +662,7 @@ export default function SecureDeletionViz() {
                 x2={260}
                 y2={126}
                 stroke={C.physical}
-                strokeWidth={2.5}
+                strokeWidth={1.2}
                 initial={{ pathLength: 0 }}
                 animate={{ pathLength: 1 }}
                 transition={{ duration: 0.5, delay: 0.5 }}
@@ -673,7 +673,7 @@ export default function SecureDeletionViz() {
                 x2={220}
                 y2={126}
                 stroke={C.physical}
-                strokeWidth={2.5}
+                strokeWidth={1.2}
                 initial={{ pathLength: 0 }}
                 animate={{ pathLength: 1 }}
                 transition={{ duration: 0.5, delay: 0.5 }}

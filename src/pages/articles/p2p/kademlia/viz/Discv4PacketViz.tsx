@@ -63,7 +63,7 @@ export default function Discv4PacketViz() {
             r={18}
             fill="#6366f112"
             stroke="#6366f1"
-            strokeWidth={1.5}
+            strokeWidth={1.2}
           />
           <text
             x={70}
@@ -81,7 +81,7 @@ export default function Discv4PacketViz() {
             r={18}
             fill="#10b98112"
             stroke="#10b981"
-            strokeWidth={1.5}
+            strokeWidth={1.2}
           />
           <text
             x={310}
@@ -108,7 +108,7 @@ export default function Discv4PacketViz() {
                   x2={toX}
                   y2={y}
                   stroke={p.color}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                   initial={{ pathLength: 0 }}
                   animate={{ pathLength: 1 }}
                   transition={{ delay: i * 0.3, duration: 0.4 }}

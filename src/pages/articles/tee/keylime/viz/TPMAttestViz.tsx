@@ -40,7 +40,7 @@ export default function TPMAttestViz() {
             x2={370}
             y2={60}
             stroke="var(--border)"
-            strokeWidth={1.5}
+            strokeWidth={1.2}
           />
           {P.map((s, i) => {
             const cx = 50 + i * 78;

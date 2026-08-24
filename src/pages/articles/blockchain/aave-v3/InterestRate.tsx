@@ -14,6 +14,11 @@ export default function InterestRate() {
         question="Optimal utilization 전후의 variable borrow rate를 어떻게 계산할까요?"
         idea="Optimal point까지 slope1을 선형 배분하고, 그 위에서는 slope1을 모두 더한 뒤 초과 utilization 비율에 slope2를 적용합니다."
         formula={String.raw`r_v(U)=\begin{cases}r_0+s_1U/U_* & U\le U_*\\ r_0+s_1+s_2(U-U_*)/(1-U_*) & U>U_*\end{cases},\quad r_L=r_vU_s(1-RF)`}
+        annotatedFormula={String.raw`r_v(U)=\begin{cases}r_0+s_1U/\underbrace{U_*}_{\text{borrow usage ratio 계산}} & U\le U_*\\ r_0+s_1+s_2(U-U_*)/(1-U_*) & U>U_*\end{cases},\quad r_L=\underbrace{r_vU_s(1-RF)}_{\text{허용 경계 판정}}`}
+        operations={[
+          { expression: String.raw`U_*`, annotation: ["borrow usage ratio이(가) 식의 결과에 기여하는","방식을 계산합니다.","Optimal point까지 slope1을 선형 배분하고, 그","위에서는 slope1을 모두 더한 뒤 초과"] },
+          { expression: String.raw`r_vU_s(1-RF)`, annotation: ["supply usage ratio이(가) 식의 결과에 기여하는","방식을 계산합니다.","Optimal point까지 slope1을 선형 배분하고, 그","위에서는 slope1을 모두 더한 뒤 초과"] },
+        ]}
         terms={[
           { symbol: "U", name: "borrow usage ratio", description: "totalDebt/(availableLiquidity+totalDebt)입니다." },
           { symbol: "U_s", name: "supply usage ratio", description: "Unbacked까지 포함한 denominator를 쓰므로 source version에 따라 U와 다를 수 있습니다." },

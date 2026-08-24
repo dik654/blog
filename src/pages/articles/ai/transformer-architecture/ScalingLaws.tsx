@@ -40,6 +40,10 @@ export default function ScalingLaws() {
           </>
         }
         formula={String.raw`L(N,D)\approx L_\infty+aN^{-\alpha}+bD^{-\beta}`}
+        annotatedFormula={String.raw`\underbrace{L(N,D)\approx L_\infty+aN^{-\alpha}+bD^{-\beta}}_{\text{irreducible floor 계산}}`}
+        operations={[
+          { expression: String.raw`L(N,D)\approx L_\infty+aN^{-\alpha}+bD^{-\beta}`, annotation: ["irreducible floor이(가) 식의 결과에 기여하는","방식을 계산합니다.","무한한 model·data에서도 남는 irreducible","term에 parameter-limited term과"] },
+        ]}
         terms={[
           {
             symbol: "L_\\infty",

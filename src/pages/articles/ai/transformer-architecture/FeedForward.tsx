@@ -35,6 +35,10 @@ export default function FeedForward() {
           </>
         }
         formula={String.raw`\operatorname{FFN}(x_t)=W_2\,\phi(W_1x_t+b_1)+b_2`}
+        annotatedFormula={String.raw`\operatorname{FFN}(x_t)=\underbrace{W_2\,\phi(W_1x_t+b_1)+b_2}_{\text{nonlinear activation 계산}}`}
+        operations={[
+          { expression: String.raw`W_2\,\phi(W_1x_t+b_1)+b_2`, annotation: ["nonlinear activation이(가) 식의 결과에","기여하는 방식을 계산합니다.","첫 linear projection이 d_model에서","d_ff로 넓히고 activation이 feature를"] },
+        ]}
         terms={[
           {
             symbol: "x_t",
@@ -98,6 +102,11 @@ export default function FeedForward() {
           </>
         }
         formula={String.raw`\begin{aligned}y_{\mathrm{pre}}&=x+F(\operatorname{Norm}(x))\\y_{\mathrm{post}}&=\operatorname{Norm}(x+F(x))\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}y_{\mathrm{pre}}&=\underbrace{x+F(\operatorname{Norm}(x))}_{\text{normalization 계산}}\\y_{\mathrm{post}}&=\underbrace{\operatorname{Norm}(x+F(x))}_{\text{normalization 계산}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`x+F(\operatorname{Norm}(x))`, annotation: ["normalization이(가) 식의 결과에 기여하는 방식을","계산합니다.","Pre-norm은 sublayer에 들어가기 전에 x를","정규화하고 update를 원래 x에 더합니다."] },
+          { expression: String.raw`\operatorname{Norm}(x+F(x))`, annotation: ["normalization이(가) 식의 결과에 기여하는 방식을","계산합니다.","Pre-norm은 sublayer에 들어가기 전에 x를","정규화하고 update를 원래 x에 더합니다."] },
+        ]}
         terms={[
           {
             symbol: "x",

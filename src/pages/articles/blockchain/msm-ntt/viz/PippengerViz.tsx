@@ -39,7 +39,7 @@ export default function PippengerViz() {
                     rx={4}
                     fill={C[0] + "15"}
                     stroke={C[0]}
-                    strokeWidth={1.5}
+                    strokeWidth={1.2}
                   />
                   <text
                     x={46 + i * 60}
@@ -109,7 +109,7 @@ export default function PippengerViz() {
                     rx={8}
                     fill={C[1] + "12"}
                     stroke={C[1]}
-                    strokeWidth={1.5}
+                    strokeWidth={1.2}
                   />
                   <text
                     x={75 + i * 100}
@@ -171,7 +171,7 @@ export default function PippengerViz() {
                 rx={6}
                 fill={C[2] + "20"}
                 stroke={C[2]}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={200}
@@ -223,7 +223,7 @@ export default function PippengerViz() {
                 rx={8}
                 fill={C[3] + "20"}
                 stroke={C[3]}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 style={{ transformOrigin: "200px 92px" }}

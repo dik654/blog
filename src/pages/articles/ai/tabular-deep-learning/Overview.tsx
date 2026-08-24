@@ -46,6 +46,10 @@ export default function Overview() {
         question="서로 뜻이 다른 column을 neural model은 어떤 공통 경로로 prediction까지 보낼까?"
         idea={<>먼저 schema가 raw row를 단위와 category가 명확한 feature vector로 바꾸고, encoder가 task에 유용한 representation을 학습합니다. Prediction head는 그 representation만 받아 target 형식의 output을 냅니다.</>}
         formula={String.raw`\hat y_i=h_{\phi}\!\left(\operatorname{Enc}_{\theta}\!\left(T_{\text{schema}}(x_i)\right)\right)`}
+        annotatedFormula={String.raw`\hat y_i=\underbrace{h_{\phi}\!\left(\operatorname{Enc}_{\theta}\!\left(T_{\text{schema}}(x_i)\right)\right)}_{\text{허용 경계 판정}}`}
+        operations={[
+          { expression: String.raw`h_{\phi}\!\left(\operatorname{Enc}_{\theta}\!\left(T_{\text{schema}}(x_i)\right)\right)`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","먼저 schema가 raw row를 단위와 category가","명확한 feature vector로 바꾸고, encoder가","task에 유용한 representation을 학습합니다."] },
+        ]}
         terms={[
           { symbol: "x_i", name: "raw row", description: "한 entity와 cutoff에 해당하는 수치형·범주형 관측값입니다." },
           { symbol: "T_schema", name: "schema transform", description: "단위·결측·category vocabulary·available-time 규칙을 적용하며 training과 serving에서 같아야 합니다." },

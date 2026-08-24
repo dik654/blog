@@ -14,6 +14,10 @@ export default function EntropySource() {
         question="공격자가 한 번에 맞힐 가능성이 가장 큰 raw outcome으로부터 몇 bit를 보수적으로 셀까요?"
         idea="Shannon entropy의 평균 대신 가장 높은 확률 pmax 하나를 봅니다. 가장 쉬운 결과가 1/8 확률이라면 최악의 한 번 추측에 대해 3-bit보다 강하다고 말할 수 없습니다."
         formula={String.raw`H_\infty(X)=-\log_2\!\left(\max_x \Pr[X=x]\right)`}
+        annotatedFormula={String.raw`H_\infty(X)=\underbrace{-\log_2\!\left(\max_x \Pr[X=x]\right)}_{\text{로그 비용 변환}}`}
+        operations={[
+          { expression: String.raw`-\log_2\!\left(\max_x \Pr[X=x]\right)`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","Shannon entropy의 평균 대신 가장 높은 확률","pmax 하나를 봅니다."] },
+        ]}
         terms={[
           { symbol: "X", name: "raw-source random variable", description: "고정한 sampling window에서 관찰한 outcome입니다." },
           { symbol: "p_{\\max}", name: "most likely outcome probability", description: "공격자 관점에서 가장 잘 맞힐 수 있는 값의 확률입니다." },
@@ -26,6 +30,10 @@ export default function EntropySource() {
         question="h bit의 min-entropy만 가진 seed로 만든 256-bit key는 얼마나 강할까요?"
         idea="Generator output 길이가 길어져도 공격자는 가능한 seed를 열거해 key 후보를 재생성할 수 있습니다. Guessing work의 상한은 출력 길이가 아니라 seed의 실제 entropy와 DRBG security strength 중 작은 값에 묶입니다."
         formula={String.raw`b_{\mathrm{effective}}\le \min\!\left(H_\infty(S),\,b_{\mathrm{DRBG}},\,b_{\mathrm{key}}\right)`}
+        annotatedFormula={String.raw`b_{\mathrm{effective}}\le \underbrace{\min\!\left(H_\infty(S),\,b_{\mathrm{DRBG}},\,b_{\mathrm{key}}\right)}_{\text{경계 후보 선택}}`}
+        operations={[
+          { expression: String.raw`\min\!\left(H_\infty(S),\,b_{\mathrm{DRBG}},\,b_{\mathrm{key}}\right)`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","Generator output 길이가 길어져도 공격자는 가능한","seed를 열거해 key 후보를 재생성할 수 있습니다."] },
+        ]}
         terms={[
           { symbol: "S", name: "seed material", description: "Instantiate에 들어간 전체 entropy-bearing input입니다." },
           { symbol: "b_{DRBG}", name: "DRBG security strength", description: "선택한 mechanism·parameter가 목표로 하는 최대 strength입니다." },

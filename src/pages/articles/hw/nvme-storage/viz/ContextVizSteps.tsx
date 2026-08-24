@@ -45,7 +45,7 @@ export function StepLayers() {
         d="M240 73 V94 M84 94 H396"
         fill="none"
         stroke={C.ok}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
         transition={{ delay: 0.2 }}

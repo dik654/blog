@@ -26,6 +26,16 @@ export default function Stacking() {
           \widehat R(h)&=\frac1n\sum_{i=1}^{n}\ell(h(Z_{i,:}),y_i) \\
           \widehat h&=\arg\min_h\widehat R(h)
         \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+          Z_{im}&=\underbrace{f_m^{(-k(i))}(x_i)}_{\text{row fold 계산}} \\
+          \widehat R(h)&=\underbrace{\frac1n\sum_{i=1}^{n}\ell(h(Z_{i,:}),y_i)}_{\text{meta-model 계산}} \\
+          \widehat h&=\underbrace{\arg\min_h\widehat R(h)}_{\text{경계 후보 선택}}
+        \end{aligned}`}
+        operations={[
+          { expression: String.raw`f_m^{(-k(i))}(x_i)`, annotation: ["row fold이(가) 식의 결과에 기여하는 방식을","계산합니다.","Row i가 속한 fold k(i)를 학습에서 뺀 base","model m의 prediction만 Z의 i,m 칸에"] },
+          { expression: String.raw`\frac1n\sum_{i=1}^{n}\ell(h(Z_{i,:}),y_i)`, annotation: ["meta-model이(가) 식의 결과에 기여하는 방식을","계산합니다.","Row i가 속한 fold k(i)를 학습에서 뺀 base","model m의 prediction만 Z의 i,m 칸에"] },
+          { expression: String.raw`\arg\min_h\widehat R(h)`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","Row i가 속한 fold k(i)를 학습에서 뺀 base","model m의 prediction만 Z의 i,m 칸에","넣습니다."] },
+        ]}
         terms={[
           { symbol: "k(i)", name: "row fold", description: "Row i가 validation 역할을 맡은 fold 번호입니다." },
           { symbol: "f_m^(-k(i))", name: "cross-fitted base model", description: "Fold k(i)의 모든 row를 제외하고 학습한 m번째 base procedure입니다." },
@@ -50,6 +60,18 @@ export default function Stacking() {
           R_n^*&=\inf_{\alpha\in\mathcal A_n}R(h_\alpha) \\
           R(h_{\widehat\alpha})-R_n^*&\xrightarrow[n\to\infty]{}0
         \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+          \widehat\alpha
+          &=\underbrace{\arg\min_{\alpha\in\mathcal A_n}
+            \widehat R_{\mathrm{CV}}(h_\alpha)}_{\text{경계 후보 선택}} \\
+          R_n^*&=\underbrace{\inf_{\alpha\in\mathcal A_n}R(h_\alpha)}_{\text{oracle risk 계산}} \\
+          R(h_{\widehat\alpha})-R_n^*&\xrightarrow[n\to\infty]{}0
+        \end{aligned}`}
+        operations={[
+          { expression: String.raw`\arg\min_{\alpha\in\mathcal A_n}
+            \widehat R_{\mathrm{CV}}(h_\alpha)`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","Cross-validated risk로 결합 계수 α를","고르고, 같은 결합 family 안에서 true risk가","가장 작은 oracle α*와의 excess risk가 표본이"] },
+          { expression: String.raw`\inf_{\alpha\in\mathcal A_n}R(h_\alpha)`, annotation: ["oracle risk이(가) 식의 결과에 기여하는 방식을","계산합니다.","Cross-validated risk로 결합 계수 α를","고르고, 같은 결합 family 안에서 true risk가"] },
+        ]}
         terms={[
           { symbol: "A_n", name: "candidate combination family", description: "Base library를 섞는 허용된 coefficient·meta-model family이며 표본 크기에 따라 달라질 수 있습니다." },
           { symbol: "alpha-hat", name: "CV-selected combination", description: "V-fold cross-validated risk가 가장 작은 결합 설정입니다." },

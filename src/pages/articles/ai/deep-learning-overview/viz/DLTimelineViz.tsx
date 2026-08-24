@@ -63,7 +63,7 @@ export default function DLTimelineViz() {
             x2={400}
             y2={45}
             stroke="var(--border)"
-            strokeWidth={1.5}
+            strokeWidth={1.2}
           />
 
           {/* Era segments */}

@@ -20,6 +20,10 @@ export default function Cyclic() {
         question="주기 T의 위치 x를 경계가 끊기지 않는 두 좌표로 어떻게 바꿀까?"
         idea={<>한 주기 T를 2π radian 한 바퀴에 대응시키고 angle의 가로·세로 좌표를 사용합니다. x=0과 x=T는 같은 point이고 T−1과 0도 원 위에서 가까워집니다.</>}
         formula={String.raw`\phi_T(x)=\left(\cos\frac{2\pi x}{T},\ \sin\frac{2\pi x}{T}\right)`}
+        annotatedFormula={String.raw`\phi_T(x)=\underbrace{\left(\cos\frac{2\pi x}{T},\ \sin\frac{2\pi x}{T}\right)}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`\left(\cos\frac{2\pi x}{T},\ \sin\frac{2\pi x}{T}\right)`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","한 주기 T를 2π radian 한 바퀴에 대응시키고","angle의 가로·세로 좌표를 사용합니다."] },
+        ]}
         terms={[
           { symbol: "x", name: "phase position", description: "Hour·weekday처럼 주기 안에서의 위치를 나타내며 원래 단위는 hour·day 등입니다." },
           { symbol: "T", name: "period", description: "한 바퀴를 이루는 길이로 hour-of-day는 24, weekday는 7입니다." },
@@ -34,6 +38,10 @@ export default function Cyclic() {
         question="원 위에서 두 시점의 거리는 실제 circular separation과 어떻게 연결될까?"
         idea={<>두 unit-circle vector의 squared Euclidean distance를 전개하면 angle 차이의 cosine으로 정리됩니다. 경계를 사이에 둔 두 위치도 작은 angle 차이를 가지므로 거리가 작습니다.</>}
         formula={String.raw`\|\phi_T(x)-\phi_T(x^{\prime})\|_2^2=2-2\cos\!\left(\frac{2\pi(x-x^{\prime})}{T}\right)`}
+        annotatedFormula={String.raw`\|\phi_T(x)-\phi_T(x^{\prime})\|_2^2=\underbrace{2-2\cos\!\left(\frac{2\pi(x-x^{\prime})}{T}\right)}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`2-2\cos\!\left(\frac{2\pi(x-x^{\prime})}{T}\right)`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","두 unit-circle vector의 squared","Euclidean distance를 전개하면 angle 차이의","cosine으로 정리됩니다."] },
+        ]}
         terms={[
           { symbol: String.raw`x-x^{\prime}`, name: "phase difference", description: "두 위치의 차이며 cosine의 주기성 때문에 T만큼 다른 값은 같은 위상으로 취급됩니다." },
           { symbol: "2−2cos(·)", name: "chord distance squared", description: "Unit circle의 두 point를 잇는 직선 거리의 제곱입니다." },

@@ -16,6 +16,17 @@
 - [x] 기초과학 concept의 관측량·단위/차원·모델 전제·측정 예·한계와 물리 좌표계 누락을 막는 `scientificGrounding` 감사
 - [x] 공개 catalog 전체를 대상으로 concept·stage·실제 import closure·제목 병렬 주제를 계산하는 `audit:topology` 추가
 
+### 2026-08-24 · 전역 Viz 오류·명시 수식 주석 backlog 종료
+
+- [x] 공개/legacy Viz 정적 감사의 실제 오류 830건을 0건으로 정리. 413개 파일의 `strokeWidth` 812건을 1.2로 통일하고 gradient 12건·oversized radius 5건·heavy shadow 1건을 flat 표현으로 교체
+- [x] 임계 구간의 의미가 있던 Aave health factor·Maker collateral ratio·network segmentation은 gradient를 단색으로 뭉개지 않고 경계가 분명한 구간별 band로 교체
+- [x] 공개 562개 글의 `ExplainedFormula` 1,170개 모두 실제 원식 fragment를 쓰는 `annotatedFormula`와 explicit `operations`를 갖도록 전환. 전환 대기 771개/529 files를 0으로 닫고 raw display·unsafe KaTeX escape도 0 유지
+- [x] `scripts/migrate-formula-annotations.mjs`를 추가해 `String.raw`의 raw TeX, 등식 우변·합·곱·비율·판정, 기존 term/idea 문맥을 이용한 migration을 dry-run→KaTeX parse→write 순서로 수행. 행렬·cases·dynamic config는 safe fallback 또는 직접 annotation으로 처리
+- [x] Article strict material violation 0. Viz가 없는 text-first 글 60개는 score 1 review hint이며 계약상 strict 실패가 아님을 재확인
+- [x] Topology strict 통과: 562 routes 중 keep 519, split/rename review 43. 이 43건은 section·line·concept 수 기반의 CRUD 검토 queue이며 현재 canonical owner·learning path 오류는 아님
+- [x] Formula require-explicit, article, Viz, learning 562/562, graph 2,438 concepts·3,699 relations·invariant 0, topology, reading, terms, TypeScript, diff-check 통과
+- [x] Production build 통과. Playwright Chromium으로 공개 562 route × 390/1440 = 1,124 viewport를 실제 로드해 HTTP·heading·page/Viz/formula/SVG text overflow·KaTeX parse·explicit operation·console/page error를 검사했고 기능 실패와 console error/warning이 모두 0임을 확인. `vllm-serving`의 FOCUS 전환도 `개념 3/11 · 컷 5/5` → `개념 4/11 · 컷 1/5`로 회귀 검증했으며 Motif 3 desktop·ARIMA mobile을 육안 확인. Pages 재배포는 이 ledger 변경과 함께 수행
+
 ### 2026-08-15 · 아티클 경계를 고정값이 아닌 CRUD 대상으로 재개방
 
 - [ ] 공개 route 전부를 `keep / create / split / merge / rename / delete` 관점으로 재검토하고, 독립 수업을 한 글에 압축한 route의 concept owner·본문·문제·근거를 실제 새 route로 이동

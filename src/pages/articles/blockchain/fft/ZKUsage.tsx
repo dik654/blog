@@ -24,6 +24,10 @@ export default function ZKUsage() {
         question="두 다항식의 linear product를 NTT로 계산할 때 transform length를 어떻게 정할까요?"
         idea="곱의 최대 degree를 담을 수 있을 만큼 evaluation points를 확보하고, 두 input을 같은 길이로 padding한 뒤 transform·pointwise product·inverse를 수행합니다."
         formula={String.raw`n\ge L_a+L_b-1,\qquad c=\operatorname{INTT}_n\!\left(\operatorname{NTT}_n(a)\odot\operatorname{NTT}_n(b)\right)`}
+        annotatedFormula={String.raw`n\ge L_a+L_b-1,\qquad c=\underbrace{\operatorname{INTT}_n\!\left(\operatorname{NTT}_n(a)\odot\operatorname{NTT}_n(b)\right)}_{\text{허용 경계 판정}}`}
+        operations={[
+          { expression: String.raw`\operatorname{INTT}_n\!\left(\operatorname{NTT}_n(a)\odot\operatorname{NTT}_n(b)\right)`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","곱의 최대 degree를 담을 수 있을 만큼","evaluation points를 확보하고, 두 input을","같은 길이로 padding한 뒤"] },
+        ]}
         terms={[
           {
             symbol: "L_a,L_b",

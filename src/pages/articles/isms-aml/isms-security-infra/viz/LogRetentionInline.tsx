@@ -195,7 +195,7 @@ export default function LogRetentionInline() {
                 x2={460}
                 y2={40}
                 stroke="var(--border)"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text x={40} y={30} fontSize={8} fill="var(--muted-foreground)">
                 0

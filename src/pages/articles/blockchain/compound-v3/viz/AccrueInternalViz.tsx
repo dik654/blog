@@ -130,7 +130,7 @@ export default function AccrueInternalViz() {
                 r={isSkip ? 3 : 7}
                 fill={isSkip ? "#6b7280" : isUpdate ? "#10b981" : "#3b82f6"}
                 stroke="var(--card)"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={x}

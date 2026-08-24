@@ -18,6 +18,10 @@ export default function Projection() {
         question="u=(3,4)를 x축 방향 v=(1,0)에 projection하면 무엇이 남을까요?"
         idea={<>u가 v 방향으로 가진 양을 dot product로 재고, 단위가 아닌 v에도 쓸 수 있도록 v·v로 나눕니다. 그 scalar를 v에 곱하면 기준 방향과 평행한 vector가 됩니다.</>}
         formula={String.raw`\operatorname{proj}_{v}(u)=\frac{u\cdot v}{v\cdot v}v\qquad\Longrightarrow\qquad \operatorname{proj}_{(1,0)}(3,4)=\frac{3}{1}(1,0)=(3,0)`}
+        annotatedFormula={String.raw`\operatorname{proj}_{v}(u)=\underbrace{\frac{u\cdot v}{v\cdot v}v\qquad\Longrightarrow\qquad \operatorname{proj}_{(1,0)}(3,4)=\frac{3}{1}(1,0)=(3,0)}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`\frac{u\cdot v}{v\cdot v}v\qquad\Longrightarrow\qquad \operatorname{proj}_{(1,0)}(3,4)=\frac{3}{1}(1,0)=(3,0)`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","u가 v 방향으로 가진 양을 dot product로 재고,","단위가 아닌 v에도 쓸 수 있도록 v·v로 나눕니다."] },
+        ]}
         terms={[
           { symbol: String.raw`u\cdot v`, name: "signed alignment", description: "u가 v 방향을 얼마나 포함하는지 길이와 방향을 함께 측정합니다." },
           { symbol: String.raw`v\cdot v`, name: "기준 길이의 제곱", description: "v의 scale을 두 번 세지 않도록 나누는 normalization 항입니다." },

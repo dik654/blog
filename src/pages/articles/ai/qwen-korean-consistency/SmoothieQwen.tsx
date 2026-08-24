@@ -52,6 +52,10 @@ export default function SmoothieQwen() {
           </>
         }
         formula={String.raw`S(r)=1-(1-m)\frac{\log\!\left(1+(s-1)r\right)}{\log s}`}
+        annotatedFormula={String.raw`S(r)=\underbrace{1-(1-m)\frac{\log\!\left(1+(s-1)r\right)}{\log s}}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`1-(1-m)\frac{\log\!\left(1+(s-1)r\right)}{\log s}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Risk가 0이면 원래 weight를 유지하고, risk가","1이면 최소 scale m만큼만 남깁니다."] },
+        ]}
         terms={[
           { symbol: "r", name: "risk score", description: "token이 목표 문자군을 직접 포함하거나 조합해 만들 가능성을 0에서 1 사이로 근사한 값입니다." },
           { symbol: "m", name: "min_scale", description: "risk가 1인 token에도 남겨 둘 weight 비율의 하한입니다." },
@@ -100,6 +104,16 @@ w'_t&=S(r_t)w_t\\
 z'_t&=(w'_t)^{\top}h\\
 p'(t\mid h)&=\frac{e^{z'_t}}{\sum_{j\in\mathcal V}e^{z'_j}}
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+w'_t&=\underbrace{S(r_t)w_t}_{\text{오른쪽 항으로 결과 계산}}\\
+z'_t&=\underbrace{(w'_t)^{\top}h}_{\text{scaled logit 계산}}\\
+p'(t\mid h)&=\underbrace{\frac{e^{z'_t}}{\sum_{j\in\mathcal V}e^{z'_j}}}_{\text{기준량당 비율}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`S(r_t)w_t`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Scale은 먼저 lm_head 행을 바꾸고, 바뀐 행과","hidden state의 내적이 새 logit을 만듭니다."] },
+          { expression: String.raw`(w'_t)^{\top}h`, annotation: ["scaled logit이(가) 식의 결과에 기여하는 방식을","계산합니다.","Scale은 먼저 lm_head 행을 바꾸고, 바뀐 행과","hidden state의 내적이 새 logit을 만듭니다."] },
+          { expression: String.raw`\frac{e^{z'_t}}{\sum_{j\in\mathcal V}e^{z'_j}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Scale은 먼저 lm_head 행을 바꾸고, 바뀐 행과","hidden state의 내적이 새 logit을 만듭니다."] },
+        ]}
         terms={[
           { symbol: "w_t, w'_t", name: "original and scaled lm_head row", description: "token t를 hidden state에서 logit으로 투영하는 변환 전·후 weight 벡터입니다." },
           { symbol: "h", name: "hidden state", description: "현재까지의 token 문맥을 Transformer가 만든 표현입니다." },

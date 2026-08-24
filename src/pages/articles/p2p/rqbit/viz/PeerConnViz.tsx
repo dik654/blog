@@ -37,7 +37,7 @@ export default function PeerConnViz() {
             x2={290}
             y2={70}
             stroke="var(--border)"
-            strokeWidth={1.5}
+            strokeWidth={1.2}
           />
           {PEERS.map((p, i) => {
             const active = i === step;

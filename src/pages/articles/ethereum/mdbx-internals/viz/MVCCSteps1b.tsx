@@ -15,7 +15,7 @@ export function Step2() {
         rx={5}
         fill={`${C.writer}14`}
         stroke={C.writer}
-        strokeWidth={1.4}
+        strokeWidth={1.2}
       />
       <text
         x={190}

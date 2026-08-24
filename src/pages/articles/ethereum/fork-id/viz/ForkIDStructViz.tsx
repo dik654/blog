@@ -49,7 +49,7 @@ export default function ForkIDStructViz() {
                         rx={6}
                         fill={c + "12"}
                         stroke={c}
-                        strokeWidth={1.5}
+                        strokeWidth={1.2}
                         strokeOpacity={0.6}
                       />
                       <text
@@ -69,7 +69,7 @@ export default function ForkIDStructViz() {
                           x2={x + 90}
                           y2={70}
                           stroke={c}
-                          strokeWidth={1.5}
+                          strokeWidth={1.2}
                           strokeOpacity={0.4}
                           initial={{ pathLength: 0 }}
                           animate={{ pathLength: 1 }}
@@ -107,7 +107,7 @@ export default function ForkIDStructViz() {
                     rx={8}
                     fill={s.c + "15"}
                     stroke={s.c}
-                    strokeWidth={1.5}
+                    strokeWidth={1.2}
                   />
                   <text
                     x={120 + i * 160}
@@ -128,7 +128,7 @@ export default function ForkIDStructViz() {
                 y2={58}
                 stroke="currentColor"
                 strokeOpacity={0.3}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 markerEnd="url(#fidarr)"
                 initial={{ pathLength: 0 }}
                 animate={{ pathLength: 1 }}
@@ -160,7 +160,7 @@ export default function ForkIDStructViz() {
                 fill="none"
                 stroke="currentColor"
                 strokeOpacity={0.15}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={200}

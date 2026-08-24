@@ -28,6 +28,10 @@ export default function NativeAA() {
         question="EIP-7702 authorization이 다른 chain이나 다른 delegate로 재사용되지 않게 무엇을 서명할까요?"
         idea="Authorization의 용도 표식과 chain·delegate·nonce를 함께 RLP encode한 뒤 hash합니다. Chain ID 0은 여러 chain에서 유효하도록 의도한 예외이므로 더 강한 deployment 동일성 검사가 필요합니다."
         formula={String.raw`m=\operatorname{keccak256}(\mathtt{0x05}\,\|\,\operatorname{rlp}([c,a,n]))`}
+        annotatedFormula={String.raw`m=\underbrace{\operatorname{keccak256}(\mathtt{0x05}\,\|\,\operatorname{rlp}([c,a,n]))}_{\text{Magic 계산}}`}
+        operations={[
+          { expression: String.raw`\operatorname{keccak256}(\mathtt{0x05}\,\|\,\operatorname{rlp}([c,a,n]))`, annotation: ["Magic이(가) 식의 결과에 기여하는 방식을 계산합니다.","Authorization의 용도 표식과","chain·delegate·nonce를 함께 RLP","encode한 뒤 hash합니다."] },
+        ]}
         terms={[
           { symbol: "c", name: "Chain ID", description: "Authorization이 유효한 chain이며 0은 chain-independent 선택입니다." },
           { symbol: "a", name: "Delegate address", description: "EOA context에서 실행할 code pointer입니다." },

@@ -21,6 +21,16 @@ export default function KeypairSigning() {
 v &= \operatorname{Verify}_{pk_{id}}(m,\sigma)\\
 p &= \operatorname{PeerId}(pk_{id})\\
 \operatorname{accept} &\iff v\land(p=p_{expected})\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}m &= \underbrace{\texttt{prefix}\,\|\,s_{noise}}_{\text{Noise static public key 계산}}\\
+\sigma &= \underbrace{\operatorname{Sign}_{sk_{id}}(m)}_{\text{identity signature 계산}}\\
+v &= \underbrace{\operatorname{Verify}_{pk_{id}}(m,\sigma)}_{\text{identity signature 계산}}\\
+p &= \operatorname{PeerId}(pk_{id})\\
+\operatorname{accept} &\iff v\land(p=p_{expected})\end{aligned}`}
+        operations={[
+          { expression: String.raw`\texttt{prefix}\,\|\,s_{noise}`, annotation: ["Noise static public key이(가) 식의 결과에","기여하는 방식을 계산합니다.","Signature input에 domain-separation","prefix와 정확한 Noise static public"] },
+          { expression: String.raw`\operatorname{Sign}_{sk_{id}}(m)`, annotation: ["identity signature이(가) 식의 결과에 기여하는","방식을 계산합니다.","Signature input에 domain-separation","prefix와 정확한 Noise static public"] },
+          { expression: String.raw`\operatorname{Verify}_{pk_{id}}(m,\sigma)`, annotation: ["identity signature이(가) 식의 결과에 기여하는","방식을 계산합니다.","Signature input에 domain-separation","prefix와 정확한 Noise static public"] },
+        ]}
         terms={[
           { symbol: "s_{noise}", name: "Noise static public key", description: "이번 secure channel의 장기 DH key입니다." },
           { symbol: "sk_{id}, pk_{id}", name: "libp2p identity keypair", description: "PeerId의 장기 identity와 signature를 담당합니다." },

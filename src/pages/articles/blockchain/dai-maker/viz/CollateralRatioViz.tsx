@@ -349,21 +349,31 @@ export default function CollateralRatioViz() {
           담보비율 구간 — 현재 위치 표시
         </text>
 
-        <defs>
-          <linearGradient id="ratio-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#ef4444" stopOpacity={0.35} />
-            <stop offset="35%" stopColor="#f59e0b" stopOpacity={0.35} />
-            <stop offset="40%" stopColor="#10b981" stopOpacity={0.35} />
-            <stop offset="100%" stopColor="#10b981" stopOpacity={0.35} />
-          </linearGradient>
-        </defs>
         <rect
           x={20}
           y={324}
-          width={480}
+          width={168}
           height={22}
-          rx={4}
-          fill="url(#ratio-grad)"
+          rx={3}
+          fill="#ef4444"
+          fillOpacity={0.35}
+        />
+        <rect
+          x={188}
+          y={324}
+          width={24}
+          height={22}
+          fill="#f59e0b"
+          fillOpacity={0.35}
+        />
+        <rect
+          x={212}
+          y={324}
+          width={288}
+          height={22}
+          rx={3}
+          fill="#10b981"
+          fillOpacity={0.35}
           stroke="var(--border)"
           strokeWidth={0.5}
         />
@@ -375,7 +385,7 @@ export default function CollateralRatioViz() {
           x2={20 + ((liquidationRatio - barMin) / (barMax - barMin)) * 480}
           y2={350}
           stroke="#f59e0b"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           strokeDasharray="3 2"
         />
         <text
@@ -397,7 +407,7 @@ export default function CollateralRatioViz() {
             x2={indicatorX}
             y2={354}
             stroke={isSafe ? "#10b981" : "#ef4444"}
-            strokeWidth={2}
+            strokeWidth={1.2}
           />
           <circle
             cx={indicatorX}
@@ -405,7 +415,7 @@ export default function CollateralRatioViz() {
             r={6}
             fill={isSafe ? "#10b981" : "#ef4444"}
             stroke="var(--card)"
-            strokeWidth={2}
+            strokeWidth={1.2}
           />
           <text
             x={indicatorX}

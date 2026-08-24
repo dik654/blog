@@ -13,6 +13,10 @@ export default function Chunking() {
         question="Chunk 길이가 정답을 실제로 보존하는지 어떻게 계산할까요?"
         idea={<>평가 질문마다 사람이 표시한 정답 근거 span을 두고, 검색 또는 parent 복원 뒤 prompt에 남은 문자 구간과의 교집합을 잽니다. 여러 구간의 합집합을 사용해야 overlap을 두 번 세지 않습니다.</>}
         formula={String.raw`C_{\mathrm{span}}(q)=\frac{\left|A_q\cap\left(\bigcup_{c\in K_q}\operatorname{span}(c)\right)\right|}{|A_q|}`}
+        annotatedFormula={String.raw`C_{\mathrm{span}}(q)=\underbrace{\frac{\left|A_q\cap\left(\bigcup_{c\in K_q}\operatorname{span}(c)\right)\right|}{|A_q|}}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`\frac{\left|A_q\cap\left(\bigcup_{c\in K_q}\operatorname{span}(c)\right)\right|}{|A_q|}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","평가 질문마다"] },
+        ]}
         terms={[
           { symbol: "A_q", name: "answer-support span", description: "질문 q의 답을 뒷받침하는 원문 문자 또는 token 위치 집합입니다." },
           { symbol: "K_q", name: "retained chunks", description: "검색·dedup·budgeting을 거쳐 최종 context에 남은 chunk 집합입니다." },

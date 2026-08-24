@@ -45,6 +45,10 @@ export default function Streams() {
           </>
         }
         formula={String.raw`T_{\mathrm{steady}}\ge\max(T_{\mathrm{H2D}},T_{\mathrm{kernel}},T_{\mathrm{D2H}})`}
+        annotatedFormula={String.raw`T_{\mathrm{steady}}\ge\underbrace{\max(T_{\mathrm{H2D}},T_{\mathrm{kernel}},T_{\mathrm{D2H}})}_{\text{경계 후보 선택}}`}
+        operations={[
+          { expression: String.raw`\max(T_{\mathrm{H2D}},T_{\mathrm{kernel}},T_{\mathrm{D2H}})`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","서로 완전히 겹칠 수 있다면 세 단계의 합이 아니라 가장 오래","걸리는 stage가 다음 chunk의 간격을 제한합니다."] },
+        ]}
         terms={[
           {
             symbol: "T_H2D",

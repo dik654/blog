@@ -21,6 +21,10 @@ export default function ModernSNARKOverviewArticle() {
           question="SNARK의 세 알고리즘은 무엇을 받고 무엇을 내놓는가?"
           idea={<>Setup은 relation 또는 size bound에 맞는 key를 만들고, prover는 public instance와 private witness를 결합해 proof를 만듭니다. Verifier는 witness를 받지 않습니다.</>}
           formula={String.raw`(pk,vk)\leftarrow\mathsf{Setup}(1^\lambda,R),\qquad \pi\leftarrow\mathsf{Prove}(pk,x,w),\qquad b\leftarrow\mathsf{Verify}(vk,x,\pi)`}
+          annotatedFormula={String.raw`(pk,vk)\le\underbrace{ftarrow\mathsf{Setup}(1^\lambda,R),\qquad \pi\leftarrow\mathsf{Prove}(pk,x,w),\qquad b\leftarrow\mathsf{Verify}(vk,x,\pi)}_{\text{허용 경계 판정}}`}
+          operations={[
+            { expression: String.raw`ftarrow\mathsf{Setup}(1^\lambda,R),\qquad \pi\leftarrow\mathsf{Prove}(pk,x,w),\qquad b\leftarrow\mathsf{Verify}(vk,x,\pi)`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","Setup은 relation 또는 size bound에 맞는","key를 만들고, prover는 public instance와","private witness를 결합해 proof를 만듭니다."] },
+          ]}
           terms={[
             { symbol: String.raw`\lambda`, name: "Security parameter", description: "공격 비용과 error 확률의 목표 크기를 정합니다." },
             { symbol: "R", name: "Relation", description: "Public instance x와 witness w가 만족해야 하는 조건입니다." },
@@ -41,6 +45,10 @@ export default function ModernSNARKOverviewArticle() {
           question="Random evaluation 한 번이 거짓 polynomial identity를 잡는다는 주장은 어느 정도인가?"
           idea={<>0이 아닌 차수 d 다항식은 field에서 root를 최대 d개만 가집니다. Challenge r을 균일하게 고르면 우연히 root에 걸릴 확률이 d/|F| 이하입니다.</>}
           formula={String.raw`P\ne 0,\ \deg P\le d,\ r\overset{\$}{\leftarrow}\mathbb F\quad\Longrightarrow\quad \Pr[P(r)=0]\le \frac{d}{|\mathbb F|}`}
+          annotatedFormula={String.raw`P\ne 0,\ \deg P\le d,\ r\overset{\$}{\leftarrow}\mathbb F\quad\Longrightarrow\quad \Pr[P(r)=\underbrace{0]\le \frac{d}{|\mathbb F|}}_{\text{기준량당 비율}}`}
+          operations={[
+            { expression: String.raw`0]\le \frac{d}{|\mathbb F|}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","0이 아닌 차수 d 다항식은 field에서 root를 최대","d개만 가집니다."] },
+          ]}
           terms={[
             { symbol: "P", name: "Claim-difference polynomial", description: "참인 항등식이면 identically zero여야 하는 차이입니다." },
             { symbol: "d", name: "Degree bound", description: "Commitment·protocol이 실제로 강제해야 하는 최대 차수입니다." },

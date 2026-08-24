@@ -92,7 +92,7 @@ export default function HotStuffPipelineViz() {
                     rx={4}
                     fill={`${p.color}20`}
                     stroke={p.color}
-                    strokeWidth={1.5}
+                    strokeWidth={1.2}
                     initial={{ scaleX: 0 }}
                     animate={{ scaleX: visible ? 1 : 0 }}
                     style={{ transformOrigin: `${x}px ${y + BAR_H / 2}px` }}

@@ -237,7 +237,7 @@ function Fit() {
       <motion.path
         d="M94 132 H386"
         stroke={C.ok}
-        strokeWidth={2}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
       />

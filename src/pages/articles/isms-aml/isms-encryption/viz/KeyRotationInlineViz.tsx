@@ -520,7 +520,7 @@ export default function KeyRotationInlineViz() {
                 x2={120}
                 y2={56}
                 stroke={C.danger}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={120}
@@ -549,7 +549,7 @@ export default function KeyRotationInlineViz() {
                 x2={400}
                 y2={56}
                 stroke={C.warn}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={400}
@@ -715,7 +715,7 @@ export default function KeyRotationInlineViz() {
                 x2={190}
                 y2={142}
                 stroke={C.danger}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={190}

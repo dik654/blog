@@ -24,6 +24,10 @@ export default function CAP() {
         question="Partition 중 linearizability와 모든 요청의 응답을 왜 동시에 보장할 수 없을까?"
         idea="서로 통신할 수 없는 두 replica에서 한쪽은 write를 완료하고 다른 쪽은 그 이후 read를 받습니다. 두 번째 replica는 write를 알 수 없으므로 최신 값을 답하거나 응답을 보장하는 선택을 동시에 할 수 없습니다."
         formula={String.raw`P \Longrightarrow \neg(C_{lin} \land A_{resp})`}
+        annotatedFormula={String.raw`\underbrace{P \Longrightarrow \neg(C_{lin} \land A_{resp})}_{\text{판정 조건 결합}}`}
+        operations={[
+          { expression: String.raw`P \Longrightarrow \neg(C_{lin} \land A_{resp})`, annotation: ["필요한 gate가 모두 참일 때만 전체 조건을 통과시킵니다.","서로 통신할 수 없는 두 replica에서 한쪽은 write를","완료하고 다른 쪽은 그 이후 read를 받습니다."] },
+        ]}
         terms={[
           { symbol: "P", name: "partition execution", description: "replica 집합 사이 message loss가 지속되는 partition execution" },
           { symbol: "C_{lin}", name: "linearizability", description: "real-time order를 보존하는 linearizable history" },

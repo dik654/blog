@@ -25,6 +25,10 @@ export default function ModernPolycommitArticle() {
           question="f(z)=y라는 주장을 왜 quotient polynomial 하나로 바꿀 수 있는가?"
           idea={<>나머지 정리에 따라 f(X)−y가 X−z로 나누어떨어질 때와 f(z)=y일 때가 같습니다. KZG는 hidden setup point τ에서 이 항등식을 평가하고 pairing으로 양쪽의 곱을 비교합니다.</>}
           formula={String.raw`q(X)=\frac{f(X)-y}{X-z},\quad C=[f(\tau)]_1,\quad \pi=[q(\tau)]_1,\quad e(C-[y]_1,[1]_2)=e(\pi,[\tau-z]_2)`}
+          annotatedFormula={String.raw`q(X)=\underbrace{\frac{f(X)-y}{X-z},\quad C=[f(\tau)]_1,\quad \pi=[q(\tau)]_1,\quad e(C-[y]_1,[1]_2)=e(\pi,[\tau-z]_2)}_{\text{기준량당 비율}}`}
+          operations={[
+            { expression: String.raw`\frac{f(X)-y}{X-z},\quad C=[f(\tau)]_1,\quad \pi=[q(\tau)]_1,\quad e(C-[y]_1,[1]_2)=e(\pi,[\tau-z]_2)`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","나머지 정리에 따라 f(X)−y가 X−z로 나누어떨어질 때와","f(z)=y일 때가 같습니다."] },
+          ]}
           terms={[
             { symbol: "q(X)", name: "Quotient polynomial", description: "Evaluation이 맞을 때 remainder 없이 존재합니다." },
             { symbol: "\\tau", name: "Toxic-waste point", description: "SRS가 powers를 제공하지만 값 자체는 누구도 알아서는 안 됩니다." },
@@ -45,6 +49,10 @@ export default function ModernPolycommitArticle() {
           question="IPA는 polynomial evaluation을 어떤 vector 관계로 표현하는가?"
           idea={<>Coefficient vector와 z의 거듭제곱 vector의 dot product가 바로 f(z)입니다. Prover와 verifier는 두 vector를 challenge마다 절반으로 접으며 이 inner product claim을 더 작은 claim으로 줄입니다.</>}
           formula={String.raw`\mathbf a=(a_0,\ldots,a_d),\quad \mathbf b(z)=(1,z,\ldots,z^d),\quad y=f(z)=\langle\mathbf a,\mathbf b(z)\rangle`}
+          annotatedFormula={String.raw`\mathbf a=\underbrace{(a_0,\ldots,a_d),\quad \mathbf b(z)=(1,z,\ldots,z^d),\quad y=f(z)=\langle\mathbf a,\mathbf b(z)\rangle}_{\text{Power vector 계산}}`}
+          operations={[
+            { expression: String.raw`(a_0,\ldots,a_d),\quad \mathbf b(z)=(1,z,\ldots,z^d),\quad y=f(z)=\langle\mathbf a,\mathbf b(z)\rangle`, annotation: ["Power vector이(가) 식의 결과에 기여하는 방식을","계산합니다.","Coefficient vector와 z의 거듭제곱","vector의 dot product가 바로 f(z)입니다."] },
+          ]}
           terms={[
             { symbol: "\\mathbf a", name: "Coefficient vector", description: "Polynomial f의 coefficient를 낮은 차수부터 담습니다." },
             { symbol: "\\mathbf b(z)", name: "Power vector", description: "Evaluation point z의 0승부터 d승까지입니다." },

@@ -107,6 +107,10 @@ export default function ProposerSelection({ onCodeRef }: Props) {
           question="유효 잔액이 큰 검증자에게 더 높은 제안 확률을 주면서도 모든 노드가 같은 사람을 고르려면 어떻게 할까요?"
           idea={<>같은 seed로 후보 순서를 섞고, 후보의 <strong>effective balance 비율</strong>만큼 acceptance test를 통과시킵니다. 실패하면 다음 결정적 후보를 검사합니다.</>}
           formula={String.raw`b_i\cdot255\;\ge\;B_{\max}\cdot r_i`}
+          annotatedFormula={String.raw`b_i\cdot255\;\ge\underbrace{\;B_{\max}\cdot r_i}_{\text{경계 후보 선택}}`}
+          operations={[
+            { expression: String.raw`\;B_{\max}\cdot r_i`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","같은 seed로 후보 순서를 섞고, 후보의 effective","balance 비율 만큼 acceptance test를","통과시킵니다."] },
+          ]}
           terms={[
             { symbol: "b_i", name: "후보 effective balance", description: "후보 i의 protocol 가중치이며 단위는 Gwei입니다." },
             { symbol: "255", name: "최대 random byte", description: "8-bit 표본의 최댓값입니다." },

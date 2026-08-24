@@ -13,6 +13,10 @@ export default function Embedding() {
         question="어떤 값이 같아야 query와 index가 같은 검색 공간이라고 말할 수 있을까요?"
         idea={<>Index version을 임의의 이름이 아니라 입력부터 source snapshot까지의 tuple로 정의합니다. Tuple의 한 항이라도 바뀌면 새 index를 만들고 비교 가능성을 다시 검증합니다.</>}
         formula={String.raw`V_{\mathrm{index}}=(h_E,h_T,h_P,d,\nu,\delta,h_C,h_A)`}
+        annotatedFormula={String.raw`V_{\mathrm{index}}=\underbrace{(h_E,h_T,h_P,d,\nu,\delta,h_C,h_A)}_{\text{tokenizer · 계산}}`}
+        operations={[
+          { expression: String.raw`(h_E,h_T,h_P,d,\nu,\delta,h_C,h_A)`, annotation: ["tokenizer · preprocessing","hashes이(가) 식의 결과에 기여하는 방식을 계산합니다.","Index version을 임의의 이름이 아니라 입력부터","source snapshot까지의 tuple로 정의합니다."] },
+        ]}
         terms={[
           { symbol: "h_E", name: "encoder hash", description: "Embedding checkpoint와 revision의 식별자입니다." },
           { symbol: "h_T,h_P", name: "tokenizer · preprocessing hashes", description: "Tokenizer, role instruction, pooling, truncation 규약입니다." },

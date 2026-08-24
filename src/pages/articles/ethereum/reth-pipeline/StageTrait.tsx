@@ -22,6 +22,10 @@ export default function StageTrait({
           </>
         }
         formula={"b_{\\rm start}=c+1,\\qquad b_{\\rm end}=\\min(c+L,t)"}
+        annotatedFormula={String.raw`b_{\rm start}=\underbrace{c+1,\qquad b_{\rm end}=\min(c+L,t)}_{\text{경계 후보 선택}}`}
+        operations={[
+          { expression: String.raw`c+1,\qquad b_{\rm end}=\min(c+L,t)`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","이미 commit한 c 다음 block부터 시작하고, 한 번에","L개를 넘지 않도록 target과 batch 상한 중 작은","높이에서 멈춥니다."] },
+        ]}
         terms={[
           {
             symbol: "c",

@@ -124,7 +124,7 @@ export default function PathRoutingViz() {
           fill="#6366f1"
           fillOpacity={0.15}
           stroke="#6366f1"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <text
           x={A.x}
@@ -147,7 +147,7 @@ export default function PathRoutingViz() {
           fill="#6366f1"
           fillOpacity={0.15}
           stroke="#6366f1"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <text
           x={B.x}

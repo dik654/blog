@@ -31,6 +31,10 @@ export default function DDR() {
             formula={
               "B_{\\mathrm{theory}}=r_{\\mathrm{MT/s}}\\times\\frac{w_{\\mathrm{bit}}}{8}\\times N_{\\mathrm{channel}}"
             }
+            annotatedFormula={String.raw`B_{\mathrm{theory}}=\underbrace{r_{\mathrm{MT/s}}\times\frac{w_{\mathrm{bit}}}{8}\times N_{\mathrm{channel}}}_{\text{기준량당 비율}}`}
+            operations={[
+              { expression: String.raw`r_{\mathrm{MT/s}}\times\frac{w_{\mathrm{bit}}}{8}\times N_{\mathrm{channel}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","초당 transfer 수에 transfer마다"] },
+            ]}
             terms={[
               {
                 symbol: "r_{\\mathrm{MT/s}}",
@@ -73,6 +77,10 @@ export default function DDR() {
               </p>
             }
             formula={"t_{\\mathrm{CAS}}=CL\\times\\frac{2}{r_{\\mathrm{MT/s}}}"}
+            annotatedFormula={String.raw`t_{\mathrm{CAS}}=\underbrace{CL\times\frac{2}{r_{\mathrm{MT/s}}}}_{\text{기준량당 비율}}`}
+            operations={[
+              { expression: String.raw`CL\times\frac{2}{r_{\mathrm{MT/s}}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","CAS latency는 cycle 수이므로 실제 memory","clock의 한 cycle 시간과 곱해 nanosecond로","바꿔야 합니다."] },
+            ]}
             terms={[
               {
                 symbol: "CL",

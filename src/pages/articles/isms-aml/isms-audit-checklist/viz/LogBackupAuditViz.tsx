@@ -302,7 +302,7 @@ export default function LogBackupAuditViz() {
                 x2={200}
                 y2={90}
                 stroke={C.ok}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 initial={false}
                 animate={{ x2: 200 }}
                 transition={{ duration: 0.5 }}
@@ -314,7 +314,7 @@ export default function LogBackupAuditViz() {
                 x2={200}
                 y2={100}
                 stroke={C.ok}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 initial={false}
                 animate={{ x2: 200 }}
                 transition={{ duration: 0.5, delay: 0.1 }}
@@ -326,7 +326,7 @@ export default function LogBackupAuditViz() {
                 x2={200}
                 y2={110}
                 stroke={C.ok}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 initial={false}
                 animate={{ x2: 200 }}
                 transition={{ duration: 0.5, delay: 0.2 }}

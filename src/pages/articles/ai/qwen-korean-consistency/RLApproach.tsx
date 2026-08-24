@@ -96,6 +96,10 @@ export default function RLApproach() {
           </>
         }
         formula={String.raw`R(x,y)=\sum_{k=1}^{K}w_k r_k(x,y)`}
+        annotatedFormula={String.raw`R(x,y)=\underbrace{\sum_{k=1}^{K}w_k r_k(x,y)}_{\text{sub-reward 계산}}`}
+        operations={[
+          { expression: String.raw`\sum_{k=1}^{K}w_k r_k(x,y)`, annotation: ["sub-reward이(가) 식의 결과에 기여하는 방식을","계산합니다.","각 기준을 독립된 sub-reward로 계산하고 중요도","weight를 곱해 더합니다."] },
+        ]}
         terms={[
           { symbol: "x", name: "query", description: "한국어 질문과 번역 예외처럼 model이 지켜야 할 요청입니다." },
           { symbol: "y", name: "candidate output", description: "연구용 reasoning trace와 final answer를 포함한 하나의 sampled 응답입니다." },
@@ -131,6 +135,10 @@ export default function RLApproach() {
           </>
         }
         formula={String.raw`\bar r=\frac{1}{G}\sum_{j=1}^{G}r_j,\qquad A_i=r_i-\bar r`}
+        annotatedFormula={String.raw`\bar r=\underbrace{\frac{1}{G}\sum_{j=1}^{G}r_j,\qquad A_i=r_i-\bar r}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`\frac{1}{G}\sum_{j=1}^{G}r_j,\qquad A_i=r_i-\bar r`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Group의 mean reward를 기준선으로 두고","candidate reward에서 뺍니다."] },
+        ]}
         terms={[
           { symbol: "G", name: "group size", description: "같은 query에서 sampling한 candidate 수이며 논문 설정에서는 12입니다." },
           { symbol: "r_i", name: "candidate reward", description: "i번째 output의 composite reward입니다." },

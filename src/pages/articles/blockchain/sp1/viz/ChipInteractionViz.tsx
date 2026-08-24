@@ -49,7 +49,7 @@ export default function ChipInteractionViz() {
             rx={8}
             fill={CPU.color + "12"}
             stroke={CPU.color}
-            strokeWidth={1.5}
+            strokeWidth={1.2}
           />
           <text
             x={CPU.x + 45}

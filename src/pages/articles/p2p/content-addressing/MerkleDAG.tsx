@@ -34,6 +34,16 @@ c_L &= \operatorname{CID}(b_L),\\
 b_P &= \operatorname{Encode}(data_P,[c_L,c_2,\ldots]),\\
 c_P &= \operatorname{CID}(b_P).
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+c_L &= \underbrace{\operatorname{CID}(b_L),}_{\text{오른쪽 항으로 결과 계산}}\\
+b_P &= \underbrace{\operatorname{Encode}(data_P,[c_L,c_2,\ldots]),}_{\text{parent local data 계산}}\\
+c_P &= \underbrace{\operatorname{CID}(b_P).}_{\text{오른쪽 항으로 결과 계산}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\operatorname{CID}(b_L),`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Leaf bytes의 digest가 바뀌면 leaf CID가","바뀌고, 그 CID를 포함한 parent encoding도","달라집니다."] },
+          { expression: String.raw`\operatorname{Encode}(data_P,[c_L,c_2,\ldots]),`, annotation: ["parent local data이(가) 식의 결과에 기여하는","방식을 계산합니다.","Leaf bytes의 digest가 바뀌면 leaf CID가","바뀌고, 그 CID를 포함한 parent encoding도"] },
+          { expression: String.raw`\operatorname{CID}(b_P).`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Leaf bytes의 digest가 바뀌면 leaf CID가","바뀌고, 그 CID를 포함한 parent encoding도","달라집니다."] },
+        ]}
         terms={[
           {
             symbol: "b_L, c_L",

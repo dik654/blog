@@ -313,7 +313,7 @@ function CommitDiagram() {
           rx={8}
           fill={`${C.op}15`}
           stroke={C.op}
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <text
           x={312}

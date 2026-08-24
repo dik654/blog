@@ -40,6 +40,10 @@ export default function Dimensionality() {
           </>
         }
         formula={String.raw`M\approx U_k\Sigma_kV_k^\top,\qquad E_{\mathrm{word}}=U_k\Sigma_k^p`}
+        annotatedFormula={String.raw`M\approx U_k\Sigma_kV_k^\top,\qquad E_{\mathrm{word}}=\underbrace{U_k\Sigma_k^p}_{\text{singular values 계산}}`}
+        operations={[
+          { expression: String.raw`U_k\Sigma_k^p`, annotation: ["singular values이(가) 식의 결과에 기여하는","방식을 계산합니다.","SVD의 singular value가 큰 방향 k개만","남깁니다."] },
+        ]}
         terms={[
           {
             symbol: "M",
@@ -108,6 +112,10 @@ export default function Dimensionality() {
           </>
         }
         formula={String.raw`\operatorname{cos}(u,v)=\frac{u^\top v}{\lVert u\rVert_2\lVert v\rVert_2}`}
+        annotatedFormula={String.raw`\operatorname{cos}(u,v)=\underbrace{\frac{u^\top v}{\lVert u\rVert_2\lVert v\rVert_2}}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`\frac{u^\top v}{\lVert u\rVert_2\lVert v\rVert_2}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Dot product를 두 vector norm으로 나누면","scale을 제거한 angle similarity가 됩니다."] },
+        ]}
         terms={[
           {
             symbol: "u,v",

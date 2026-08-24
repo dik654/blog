@@ -14,6 +14,10 @@ export default function Radians() {
         question="원의 크기와 무관하게 회전한 양을 어떻게 측정할까?"
         idea={<>중심각이 잘라낸 호의 길이 s를 반지름 r로 나눕니다. 반지름만큼 이동한 호가 1 radian이고, 한 바퀴의 호 길이는 원둘레 2πr이므로 한 바퀴는 2π radian입니다.</>}
         formula={String.raw`\theta=\frac{s}{r},\qquad 2\pi\ \text{rad}=360^\circ,\qquad \pi\ \text{rad}=180^\circ`}
+        annotatedFormula={String.raw`\theta=\underbrace{\frac{s}{r},\qquad 2\pi\ \text{rad}=360^\circ,\qquad \pi\ \text{rad}=180^\circ}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`\frac{s}{r},\qquad 2\pi\ \text{rad}=360^\circ,\qquad \pi\ \text{rad}=180^\circ`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","중심각이 잘라낸 호의 길이 s를 반지름 r로 나눕니다."] },
+        ]}
         terms={[
           { symbol: "s", name: "arc length", description: "원 위에서 실제로 이동한 곡선의 길이입니다." },
           { symbol: "r", name: "radius", description: "원의 중심에서 둘레까지의 거리입니다." },

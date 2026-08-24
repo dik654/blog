@@ -159,7 +159,7 @@ export default function CurveWarsViz() {
           x2={200}
           y2={72}
           stroke="#3b82f6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#cw-arr)"
         />
         <line
@@ -168,7 +168,7 @@ export default function CurveWarsViz() {
           x2={380}
           y2={72}
           stroke="#3b82f6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#cw-arr)"
         />
 
@@ -256,7 +256,7 @@ export default function CurveWarsViz() {
                 x2={s.x + 180}
                 y2={174}
                 stroke="#3b82f6"
-                strokeWidth={1.3}
+                strokeWidth={1.2}
                 markerEnd="url(#cw-arr)"
               />
             )}

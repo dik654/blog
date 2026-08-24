@@ -101,6 +101,10 @@ export default function AgentSelection() {
           question="권한 조건을 통과한 후보 중 품질·latency·비용을 어떻게 비교할까?"
           idea={<>먼저 capability·path·network·isolation 같은 hard constraint를 하나라도 어긴 후보를 제거합니다. 남은 후보에만 같은 작업 slice에서 정규화한 검증 품질은 더하고 latency와 비용은 뺍니다.</>}
           formula={String.raw`S_i=w_qQ_i-w_lL_i-w_cC_i`}
+          annotatedFormula={String.raw`S_i=\underbrace{w_qQ_i-w_lL_i-w_cC_i}_{\text{candidate score 계산}}`}
+          operations={[
+            { expression: String.raw`w_qQ_i-w_lL_i-w_cC_i`, annotation: ["candidate score이(가) 식의 결과에 기여하는","방식을 계산합니다.","먼저","capability·path·network·isolation"] },
+          ]}
           terms={[
             { symbol: "S_i", name: "candidate score", description: "Hard constraint를 모두 통과한 agent i의 비교 점수입니다." },
             { symbol: "Q_i", name: "verified quality", description: "같은 task type·난이도 slice에서 verifier가 확인한 품질입니다." },

@@ -15,6 +15,10 @@ export default function Poseidon() {
         question="한 Poseidon round는 state를 어떻게 비선형적으로 섞을까요?"
         idea="Round constant로 대칭을 깨고, S-box로 비선형성을 넣은 뒤, invertible MDS matrix로 한 좌표의 차이를 전체 state에 확산합니다. Partial round는 S-box를 일부 좌표에만 적용해 회로 비용을 줄이되 그만큼 분석된 round 수가 필요합니다."
         formula={String.raw`\mathbf x^{(r+1)}=M\,S_r\!\left(\mathbf x^{(r)}+\mathbf c^{(r)}\right),\qquad S(x)=x^\alpha`}
+        annotatedFormula={String.raw`\mathbf x^{(r+1)}=\underbrace{M\,S_r\!\left(\mathbf x^{(r)}+\mathbf c^{(r)}\right),\qquad S(x)=x^\alpha}_{\text{허용 경계 판정}}`}
+        operations={[
+          { expression: String.raw`M\,S_r\!\left(\mathbf x^{(r)}+\mathbf c^{(r)}\right),\qquad S(x)=x^\alpha`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","Round constant로 대칭을 깨고, S-box로","비선형성을 넣은 뒤, invertible MDS matrix로","한 좌표의 차이를 전체 state에 확산합니다."] },
+        ]}
         terms={[
           { symbol: String.raw`\mathbf x^{(r)}`, name: "state", description: "r번째 round가 받는 t개 field element입니다." },
           { symbol: String.raw`\mathbf c^{(r)}`, name: "round constants", description: "각 round와 위치에 고정된 field constants입니다." },
@@ -28,6 +32,10 @@ export default function Poseidon() {
         question="Sponge의 capacity가 이상적인 collision security 상한을 어떻게 제한할까요?"
         idea="Rate 좌표로 입출력을 주고받아도 capacity 좌표는 내부에 남아 permutation 호출 사이의 숨은 상태를 만듭니다. 이상적 permutation model에서는 capacity c field elements가 제공하는 bit 수와 digest 길이 중 작은 값이 collision search의 상한을 정합니다."
         formula={String.raw`b_{\mathrm{coll}}\lesssim \frac{\min(c\log_2 p,\,n)}{2}`}
+        annotatedFormula={String.raw`b_{\mathrm{coll}}\le\underbrace{sssim \frac{\min(c\log_2 p,\,n)}{2}}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`sssim \frac{\min(c\log_2 p,\,n)}{2}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Rate 좌표로 입출력을 주고받아도 capacity 좌표는","내부에 남아 permutation 호출 사이의 숨은 상태를","만듭니다."] },
+        ]}
         terms={[
           { symbol: "c", name: "capacity width", description: "외부 rate와 분리한 field element 수입니다." },
           { symbol: "p", name: "field modulus", description: "한 field element가 담을 수 있는 상태 수를 정합니다." },

@@ -42,6 +42,11 @@ export default function MemoryHierarchy() {
           formula={
             "\\begin{aligned} I&=\\frac{F}{Q}\\\\ P_{\\mathrm{bound}}&=\\min\\left(P_{\\mathrm{peak}},\\ I B_{\\mathrm{peak}}\\right) \\end{aligned}"
           }
+          annotatedFormula={String.raw`\begin{aligned} I&=\underbrace{\frac{F}{Q}}_{\text{기준량당 비율}}\\ P_{\mathrm{bound}}&=\underbrace{\min\left(P_{\mathrm{peak}},\ I B_{\mathrm{peak}}\right)}_{\text{경계 후보 선택}} \end{aligned}`}
+          operations={[
+            { expression: String.raw`\frac{F}{Q}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","실행한 연산 수를 HBM에서 이동한 byte로 나눈","arithmetic intensity와 장치의 peak","compute·peak bandwidth를 결합하면 이상적인"] },
+            { expression: String.raw`\min\left(P_{\mathrm{peak}},\ I B_{\mathrm{peak}}\right)`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","실행한 연산 수를 HBM에서 이동한 byte로 나눈","arithmetic intensity와 장치의 peak","compute·peak bandwidth를 결합하면 이상적인"] },
+          ]}
           terms={[
             {
               symbol: "F",

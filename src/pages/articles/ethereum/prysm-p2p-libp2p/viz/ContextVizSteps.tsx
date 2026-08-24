@@ -63,7 +63,7 @@ export function Step2() {
     ))}
     <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
       <rect x={160} y={25} width={100} height={50} rx={8} fill="var(--card)"
-        stroke={C.err} strokeWidth={1.5} strokeDasharray="4 3" />
+        stroke={C.err} strokeWidth={1.2} strokeDasharray="4 3" />
       <text x={210} y={46} textAnchor="middle" fontSize={10} fontWeight={600} fill={C.err}>
         피해 노드
       </text>

@@ -34,6 +34,10 @@ export default function StateInterface({
           </>
         }
         formula={String.raw`\begin{aligned}B_{\rm deep}&=\sum_{j=1}^{F}S_j\\B_{\rm COW}&\approx\sum_{j\in W,\ r_j>1}S_j+B_{\rm meta}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}B_{\rm deep}&=\underbrace{\sum_{j=1}^{F}S_j}_{\text{Backing size 계산}}\\B_{\rm COW}&\approx\sum_{j\in W,\ r_j>1}S_j+B_{\rm meta}\end{aligned}`}
+        operations={[
+          { expression: String.raw`\sum_{j=1}^{F}S_j`, annotation: ["Backing size이(가) 식의 결과에 기여하는 방식을","계산합니다.","Deep copy는 모든 field를 복제하지만","field-granular COW는 실제로 처음 쓰는"] },
+        ]}
         terms={[
           {
             symbol: "F",

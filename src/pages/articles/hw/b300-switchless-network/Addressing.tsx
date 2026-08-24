@@ -29,6 +29,16 @@ export default function Addressing() {
             \mathrm{net}(a,b,\ell) &= 10.o_2.\ell.0/30 \\
             h_a &= .1,\qquad h_b=.2
           \end{aligned}`}
+          annotatedFormula={String.raw`\begin{aligned}
+            o_2 &= \underbrace{100+10a+b}_{\text{second octet 계산}} \\
+            \mathrm{net}(a,b,\ell) &= \underbrace{10.o_2.\ell.0/30}_{\text{기준량당 비율}} \\
+            h_a &= \underbrace{.1,\qquad h_b=.2}_{\text{오른쪽 항으로 결과 계산}}
+          \end{aligned}`}
+          operations={[
+            { expression: String.raw`100+10a+b`, annotation: ["second octet이(가) 식의 결과에 기여하는 방식을","계산합니다.","작은 node 번호를 a, 큰 번호를 b로 정렬하면 방향과","무관한 pair identity가 됩니다."] },
+            { expression: String.raw`10.o_2.\ell.0/30`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","작은 node 번호를 a, 큰 번호를 b로 정렬하면 방향과","무관한 pair identity가 됩니다."] },
+            { expression: String.raw`.1,\qquad h_b=.2`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","작은 node 번호를 a, 큰 번호를 b로 정렬하면 방향과","무관한 pair identity가 됩니다."] },
+          ]}
           terms={[
             { symbol: "a,b", name: "sorted node IDs", description: "a<b가 되도록 정렬한 1–8 범위의 두 server 번호입니다." },
             { symbol: "\\ell", name: "link index", description: "같은 node pair 사이에서 cable을 구분하는 1부터 시작하는 번호입니다." },

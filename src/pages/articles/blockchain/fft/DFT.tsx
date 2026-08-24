@@ -18,6 +18,10 @@ export default function DFT() {
         question="계수 벡터를 roots-of-unity 평가값으로 어떻게 바꿀까요?"
         idea="k번째 행에는 평가점 ωᵏ의 0승부터 n−1승까지를 놓습니다. 각 행과 coefficient vector의 dot product가 f(ωᵏ)입니다."
         formula={String.raw`y_k=f(\omega^k)=\sum_{j=0}^{n-1}a_j\omega^{jk},\qquad \mathbf y=W\mathbf a,\ W_{k,j}=\omega^{kj}`}
+        annotatedFormula={String.raw`y_k=\underbrace{f(\omega^k)=\sum_{j=0}^{n-1}a_j\omega^{jk},\qquad \mathbf y=W\mathbf a,\ W_{k,j}=\omega^{kj}}_{\text{primitive n-th root 계산}}`}
+        operations={[
+          { expression: String.raw`f(\omega^k)=\sum_{j=0}^{n-1}a_j\omega^{jk},\qquad \mathbf y=W\mathbf a,\ W_{k,j}=\omega^{kj}`, annotation: ["primitive n-th root이(가) 식의 결과에","기여하는 방식을 계산합니다.","k번째 행에는 평가점 ωᵏ의 0승부터 n−1승까지를 놓습니다."] },
+        ]}
         terms={[
           {
             symbol: "a_j",

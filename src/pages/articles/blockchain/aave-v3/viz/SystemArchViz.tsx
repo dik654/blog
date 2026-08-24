@@ -40,7 +40,7 @@ export default function SystemArchViz() {
           fill="#8b5cf6"
           fillOpacity={0.15}
           stroke="#8b5cf6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <text
           x={260}

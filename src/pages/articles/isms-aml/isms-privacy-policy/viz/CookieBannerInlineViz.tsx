@@ -65,7 +65,7 @@ export default function CookieBannerInlineViz() {
                 rx={6}
                 fill="none"
                 stroke={C.banner}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={240}

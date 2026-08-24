@@ -22,6 +22,10 @@ export default function Numeric() {
         question="Standardization은 숫자를 무엇으로 바꾸며, 왜 validation 평균을 쓰면 안 될까?"
         idea={<>Training fold의 평균을 원점으로 옮기고 training fold의 표준편차를 한 칸의 크기로 삼습니다. Validation 값은 이미 정해진 자로 재야 합니다. Validation까지 포함해 자를 다시 만들면 평가 대상의 분포를 미리 본 것입니다.</>}
         formula={String.raw`z_i=\frac{x_i-\mu_{\mathrm{train}}}{\sigma_{\mathrm{train}}}`}
+        annotatedFormula={String.raw`z_i=\underbrace{\frac{x_i-\mu_{\mathrm{train}}}{\sigma_{\mathrm{train}}}}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`\frac{x_i-\mu_{\mathrm{train}}}{\sigma_{\mathrm{train}}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Training fold의 평균을 원점으로 옮기고","training fold의 표준편차를 한 칸의 크기로","삼습니다."] },
+        ]}
         terms={[
           { symbol: "x_i", name: "raw value", description: "원래 단위를 가진 i번째 관측값입니다." },
           { symbol: "μ_train", name: "training mean", description: "현재 training fold에서만 계산한 중심입니다." },

@@ -12,6 +12,10 @@ export default function Retrieval() {
         question="Dense와 sparse 결과의 점수 범위가 다를 때 순위만으로 어떻게 합칠까요?"
         idea={<>각 검색기가 문서에 준 rank를 역수 형태로 바꿔 더합니다. 여러 목록에서 꾸준히 상위인 문서는 높은 점수를 얻고, k는 한 검색기의 1위가 지나치게 지배하는 정도를 완화합니다.</>}
         formula={String.raw`\operatorname{RRF}(d)=\sum_{r\in\mathcal R}\frac{1}{k+\operatorname{rank}_r(d)}`}
+        annotatedFormula={String.raw`\operatorname{RRF}(d)=\underbrace{\sum_{r\in\mathcal R}\frac{1}{k+\operatorname{rank}_r(d)}}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`\sum_{r\in\mathcal R}\frac{1}{k+\operatorname{rank}_r(d)}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","각 검색기가 문서에 준 rank를 역수 형태로 바꿔 더합니다."] },
+        ]}
         terms={[
           { symbol: "d", name: "document", description: "두 검색 결과 중 하나 이상에 등장한 후보 문서입니다." },
           { symbol: "R", name: "rankers", description: "BM25·dense retriever처럼 합칠 검색기 집합입니다." },
@@ -31,6 +35,13 @@ export default function Retrieval() {
 O_q&\subseteq C_q\\
 |O_q\cap R_q|&\le |C_q\cap R_q|
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+O_q&\subseteq C_q\\
+|O_q\cap R_q|&\le \underbrace{|C_q\cap R_q|}_{\text{relevant set 계산}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`|C_q\cap R_q|`, annotation: ["relevant set이(가) 식의 결과에 기여하는 방식을","계산합니다.","Reranker output은 candidate set의","부분집합입니다."] },
+        ]}
         terms={[
           { symbol: "R_q", name: "relevant set", description: "질문 q에 답을 뒷받침하는 정답 문서 전체입니다." },
           { symbol: "C_q", name: "candidate set", description: "Dense·sparse·fusion이 reranker에 넘긴 문서입니다." },

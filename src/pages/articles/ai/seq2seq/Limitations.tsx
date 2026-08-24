@@ -21,6 +21,12 @@ export default function Limitations() {
         question="Target step t가 source 위치마다 다른 비율로 정보를 읽게 하려면 어떻게 할까?"
         idea={<>현재 decoder state와 각 encoder state의 compatibility score를 만든 뒤 source 축으로 softmax하고, 그 weight로 encoder value를 가중합합니다.</>}
         formula={String.raw`\begin{aligned}e_{tj}&=\operatorname{score}(s_{t-1},h_j)\\\alpha_{tj}&=\frac{e^{e_{tj}}}{\sum_{r=1}^{S}e^{e_{tr}}}\\c_t&=\sum_{j=1}^{S}\alpha_{tj}h_j\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}e_{tj}&=\underbrace{\operatorname{score}(s_{t-1},h_j)}_{\text{compatibility score 계산}}\\\alpha_{tj}&=\underbrace{\frac{e^{e_{tj}}}{\sum_{r=1}^{S}e^{e_{tr}}}}_{\text{기준량당 비율}}\\c_t&=\underbrace{\sum_{j=1}^{S}\alpha_{tj}h_j}_{\text{attention weight 계산}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`\operatorname{score}(s_{t-1},h_j)`, annotation: ["compatibility score이(가) 식의 결과에","기여하는 방식을 계산합니다.","현재 decoder state와 각 encoder state의","compatibility score를 만든 뒤 source"] },
+          { expression: String.raw`\frac{e^{e_{tj}}}{\sum_{r=1}^{S}e^{e_{tr}}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","현재 decoder state와 각 encoder state의","compatibility score를 만든 뒤 source","축으로 softmax하고, 그 weight로 encoder"] },
+          { expression: String.raw`\sum_{j=1}^{S}\alpha_{tj}h_j`, annotation: ["attention weight이(가) 식의 결과에 기여하는","방식을 계산합니다.","현재 decoder state와 각 encoder state의","compatibility score를 만든 뒤 source"] },
+        ]}
         terms={[
           { symbol: "e_{tj}", name: "compatibility score", description: "Target step t와 source position j가 얼마나 맞는지 나타내는 unnormalized score입니다." },
           { symbol: "\\alpha_{tj}", name: "attention weight", description: "Source 축에서 합이 1인 step별 read weight입니다." },

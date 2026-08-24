@@ -16,6 +16,10 @@ export default function Ed25519() {
         question="Ed25519 서명과 검증은 어떤 값을 정확히 묶을까요?"
         idea="Secret seed hash의 앞부분에서 signing scalar a를, 뒷부분에서 nonce prefix를 얻습니다. Nonce r과 challenge k는 서로 다른 transcript를 hash하고, verifier는 encoded point와 scalar를 strict parse한 뒤 group equation을 확인합니다."
         formula={String.raw`r=H(\mathsf{prefix}\Vert M)\bmod L,\quad R=[r]B,\quad k=H(R\Vert A\Vert M)\bmod L,\quad S=(r+ka)\bmod L`}
+        annotatedFormula={String.raw`r=\underbrace{H(\mathsf{prefix}\Vert M)\bmod L,\quad R=[r]B,\quad k=H(R\Vert A\Vert M)\bmod L,\quad S=(r+ka)\bmod L}_{\text{nonce prefix 계산}}`}
+        operations={[
+          { expression: String.raw`H(\mathsf{prefix}\Vert M)\bmod L,\quad R=[r]B,\quad k=H(R\Vert A\Vert M)\bmod L,\quad S=(r+ka)\bmod L`, annotation: ["nonce prefix이(가) 식의 결과에 기여하는 방식을","계산합니다.","Secret seed hash의 앞부분에서 signing","scalar a를, 뒷부분에서 nonce prefix를"] },
+        ]}
         terms={[
           { symbol: "a,A=[a]B", name: "signing scalar·public key", description: "Seed hash와 pruning으로 만든 scalar와 encoded Edwards point입니다." },
           { symbol: String.raw`\mathsf{prefix}`, name: "nonce prefix", description: "Secret seed hash의 별도 절반으로, message-dependent nonce를 만듭니다." },

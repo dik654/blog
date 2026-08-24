@@ -140,7 +140,7 @@ export default function BlockAllocationViz({
                   d={`M${SX + PBH_W - 20},${SY + BAR_H + 6} Q${SX + PBH_W},${SY + BAR_H + 16} ${SX + PBH_W + 20},${SY + BAR_H + 6}`}
                   fill="none"
                   stroke="#f59e0b"
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                   markerEnd="url(#ba-a)"
                 />
                 <text

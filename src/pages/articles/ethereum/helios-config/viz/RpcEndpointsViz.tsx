@@ -42,7 +42,7 @@ export default function RpcEndpointsViz() {
                   rx={8}
                   fill={C.cl + "15"}
                   stroke={C.cl}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={135}
@@ -70,7 +70,7 @@ export default function RpcEndpointsViz() {
                   x2={260}
                   y2={65}
                   stroke={C.cl}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                   initial={{ pathLength: 0 }}
                   animate={{ pathLength: 1 }}
                 />
@@ -82,7 +82,7 @@ export default function RpcEndpointsViz() {
                   rx={8}
                   fill={C.cl + "15"}
                   stroke={C.cl}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={345}
@@ -116,7 +116,7 @@ export default function RpcEndpointsViz() {
                   rx={8}
                   fill={C.el + "15"}
                   stroke={C.el}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={135}
@@ -144,7 +144,7 @@ export default function RpcEndpointsViz() {
                   x2={260}
                   y2={65}
                   stroke={C.el}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                   initial={{ pathLength: 0 }}
                   animate={{ pathLength: 1 }}
                 />
@@ -156,7 +156,7 @@ export default function RpcEndpointsViz() {
                   rx={8}
                   fill={C.el + "15"}
                   stroke={C.el}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={345}
@@ -190,7 +190,7 @@ export default function RpcEndpointsViz() {
                   rx={8}
                   fill={C.reth + "15"}
                   stroke={C.reth}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={240}

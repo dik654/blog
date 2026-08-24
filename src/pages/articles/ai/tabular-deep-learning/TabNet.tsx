@@ -29,6 +29,16 @@ u^{(s)}&=P^{(s-1)}\odot h_s(a^{(s-1)}),\\
 M^{(s)}&=\operatorname{sparsemax}\!\left(u^{(s)}\right),\\
 x^{(s)}&=M^{(s)}\odot x.
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+u^{(s)}&=\underbrace{P^{(s-1)}\odot h_s(a^{(s-1)}),}_{\text{decision step 계산}}\\
+M^{(s)}&=\underbrace{\operatorname{sparsemax}\!\left(u^{(s)}\right),}_{\text{허용 경계 판정}}\\
+x^{(s)}&=\underbrace{M^{(s)}\odot x.}_{\text{decision step 계산}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`P^{(s-1)}\odot h_s(a^{(s-1)}),`, annotation: ["decision step이(가) 식의 결과에 기여하는 방식을","계산합니다.","직전 step의 context a⁽ˢ⁻¹⁾에서 feature","score를 만들고 prior P⁽ˢ⁻¹⁾를 곱한 뒤"] },
+          { expression: String.raw`\operatorname{sparsemax}\!\left(u^{(s)}\right),`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","직전 step의 context a⁽ˢ⁻¹⁾에서 feature","score를 만들고 prior P⁽ˢ⁻¹⁾를 곱한 뒤","sparsemax로 mask를 만듭니다."] },
+          { expression: String.raw`M^{(s)}\odot x.`, annotation: ["decision step이(가) 식의 결과에 기여하는 방식을","계산합니다.","직전 step의 context a⁽ˢ⁻¹⁾에서 feature","score를 만들고 prior P⁽ˢ⁻¹⁾를 곱한 뒤"] },
+        ]}
         terms={[
           { symbol: "s", name: "decision step", description: "같은 row를 선택하고 처리하는 반복 순서입니다." },
           { symbol: "h_s(a^(s−1))", name: "attentive score", description: "이전 step의 처리 결과에서 현재 feature별 선택 score를 만드는 학습 함수입니다." },
@@ -47,6 +57,14 @@ x^{(s)}&=M^{(s)}\odot x.
 P^{(0)}&=\mathbf 1,\\
 P^{(s)}&=P^{(s-1)}\odot\left(\gamma-M^{(s)}\right).
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+P^{(0)}&=\underbrace{\mathbf 1,}_{\text{오른쪽 항으로 결과 계산}}\\
+P^{(s)}&=\underbrace{P^{(s-1)}\odot\left(\gamma-M^{(s)}\right).}_{\text{허용 경계 판정}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\mathbf 1,`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","각 step 뒤에 prior를 (γ−현재 mask)만큼","갱신합니다."] },
+          { expression: String.raw`P^{(s-1)}\odot\left(\gamma-M^{(s)}\right).`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","각 step 뒤에 prior를 (γ−현재 mask)만큼","갱신합니다."] },
+        ]}
         terms={[
           { symbol: "γ", name: "relaxation parameter", description: "Feature를 여러 decision step에서 다시 선택할 수 있는 정도를 조절합니다." },
           { symbol: "P^(0)=1", name: "initial prior", description: "첫 step에서는 모든 사용 가능한 feature를 동일한 시작 prior에 둡니다." },

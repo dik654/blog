@@ -96,7 +96,7 @@ export default function ENRLayoutViz() {
                 rx={6}
                 fill={FIELDS[step].c + "12"}
                 stroke={FIELDS[step].c}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={200}

@@ -95,6 +95,14 @@ C &= \left\lceil \frac{P}{c} \right\rceil \\
 T_{prefill,total} &\approx \sum_{j=1}^{C}T_{model}(c_j)
  + C\,t_{launch+sched}
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+C &= \underbrace{\left\lceil \frac{P}{c} \right\rceil}_{\text{기준량당 비율}} \\
+T_{prefill,total} &\approx \sum_{j=1}^{C}T_{model}(c_j)
+ + C\,t_{launch+sched}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\left\lceil \frac{P}{c} \right\rceil`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Chunk 수는 prompt 길이를 chunk 상한으로 나눈","올림입니다."] },
+        ]}
         terms={CHUNK_TERMS}
         assumptions={[
           "각 chunk 크기 c_j는 c 이하이고 전체 합이 P입니다.",

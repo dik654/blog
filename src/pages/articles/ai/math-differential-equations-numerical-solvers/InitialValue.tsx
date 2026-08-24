@@ -30,6 +30,13 @@ export default function InitialValue() {
           \frac{dx}{dt}&=-\lambda x, & x(0)&=x_0 \\
           x(t)&=x_0e^{-\lambda t}
         \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+          \frac{dx}{dt}&=-\lambda x, & x(0)&=x_0 \\
+          x(t)&=\underbrace{x_0e^{-\lambda t}}_{\text{state trajectory 계산}}
+        \end{aligned}`}
+        operations={[
+          { expression: String.raw`x_0e^{-\lambda t}`, annotation: ["state trajectory이(가) 식의 결과에 기여하는","방식을 계산합니다.","매 순간 양의 일정 비율이 사라진다면 변화율은 현재 값에 음의","상수를 곱한 값입니다."] },
+        ]}
         terms={[
           {
             symbol: "x(t)",

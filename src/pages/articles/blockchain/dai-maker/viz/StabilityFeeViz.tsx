@@ -102,7 +102,7 @@ export default function StabilityFeeViz() {
           x2={145}
           y2={82}
           stroke="#ef4444"
-          strokeWidth={1.4}
+          strokeWidth={1.2}
           markerEnd="url(#sf-arr-red)"
         />
         <line
@@ -111,7 +111,7 @@ export default function StabilityFeeViz() {
           x2={265}
           y2={82}
           stroke="#f59e0b"
-          strokeWidth={1.4}
+          strokeWidth={1.2}
           markerEnd="url(#sf-arr)"
         />
         <line
@@ -120,7 +120,7 @@ export default function StabilityFeeViz() {
           x2={395}
           y2={82}
           stroke="#3b82f6"
-          strokeWidth={1.4}
+          strokeWidth={1.2}
           markerEnd="url(#sf-arr)"
         />
 
@@ -151,7 +151,7 @@ export default function StabilityFeeViz() {
           x2={320}
           y2={160}
           stroke="#10b981"
-          strokeWidth={1.4}
+          strokeWidth={1.2}
           markerEnd="url(#sf-arr-green)"
         />
         <line
@@ -160,7 +160,7 @@ export default function StabilityFeeViz() {
           x2={395}
           y2={184}
           stroke="#10b981"
-          strokeWidth={1.4}
+          strokeWidth={1.2}
           markerEnd="url(#sf-arr-green)"
         />
 

@@ -307,7 +307,7 @@ export function Step1() {
           r={16}
           fill="var(--card)"
           stroke={C.mpt}
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <text
           x={rootX + 32}

@@ -64,7 +64,7 @@ export default function ForkCompatViz() {
               rx={8}
               fill="#6366f118"
               stroke="#6366f1"
-              strokeWidth={1.5}
+              strokeWidth={1.2}
             />
             <text
               x={AX}
@@ -85,7 +85,7 @@ export default function ForkCompatViz() {
               rx={8}
               fill="#8b5cf618"
               stroke="#8b5cf6"
-              strokeWidth={1.5}
+              strokeWidth={1.2}
             />
             <text
               x={BX}
@@ -105,7 +105,7 @@ export default function ForkCompatViz() {
               x2={BX - 38}
               y2={NY}
               stroke={cs.c}
-              strokeWidth={2.5}
+              strokeWidth={1.2}
               strokeDasharray={cs.icon === "X" ? "6 4" : "none"}
               initial={{ pathLength: 0, opacity: 0 }}
               animate={{ pathLength: 1, opacity: 1 }}
@@ -124,7 +124,7 @@ export default function ForkCompatViz() {
                 r={16}
                 fill={cs.c + "25"}
                 stroke={cs.c}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={200}

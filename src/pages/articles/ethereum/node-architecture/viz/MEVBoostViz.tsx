@@ -184,7 +184,7 @@ export default function MEVBoostViz() {
                 rx={2}
                 fill={`${CP}44`}
                 stroke={CP}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text x={25} y={196} textAnchor="middle" fontSize={9} fill={CP}>
                 로컬
@@ -207,7 +207,7 @@ export default function MEVBoostViz() {
                 rx={2}
                 fill={`${CB}44`}
                 stroke={CB}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 animate={{ width: 60 }}
                 transition={{ duration: 0.5 }}
               />

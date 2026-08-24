@@ -29,7 +29,7 @@ export default function BaseAssetViz() {
           fill="#3b82f6"
           fillOpacity={0.15}
           stroke="#3b82f6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <text
           x={240}

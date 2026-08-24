@@ -39,7 +39,7 @@ export default function MainContractsViz() {
           rx={8}
           fill="var(--card)"
           stroke="#8b5cf6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <rect
           x={160}

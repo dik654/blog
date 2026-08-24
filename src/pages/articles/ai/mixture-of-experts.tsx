@@ -282,6 +282,10 @@ export default function MixtureOfExpertsArticle() {
           question="한 token의 MoE 출력은 선택된 expert 결과를 어떻게 합치는가?"
           idea={<>Router가 expert별 score를 만든 뒤 상위 k개 index 집합만 남기고, 그 expert 출력에 mixture weight를 곱해 더합니다. Dense FFN 하나를 조건부 weighted sum으로 바꾼 셈입니다.</>}
           formula={String.raw`y(x)=\sum_{i\in T_k(x)} p_i(x)E_i(x)`}
+          annotatedFormula={String.raw`y(x)=\underbrace{\sum_{i\in T_k(x)} p_i(x)E_i(x)}_{\text{Top-k 집합 계산}}`}
+          operations={[
+            { expression: String.raw`\sum_{i\in T_k(x)} p_i(x)E_i(x)`, annotation: ["Top-k 집합이(가) 식의 결과에 기여하는 방식을","계산합니다.","Router가 expert별 score를 만든 뒤 상위 k개","index 집합만 남기고, 그 expert 출력에"] },
+          ]}
           terms={[
             { symbol: "x", name: "token state", description: "현재 MoE layer에 들어온 한 token의 hidden vector입니다." },
             { symbol: "E_i", name: "i번째 expert", description: "대개 자신만의 parameter를 가진 FFN branch입니다." },
@@ -330,6 +334,16 @@ export default function MixtureOfExpertsArticle() {
             p_i&=\frac{e^{z_i}}{\sum_{j=1}^{n}e^{z_j}} \\
             T_k(x)&=\operatorname{TopK}(p,k)
           \end{aligned}`}
+          annotatedFormula={String.raw`\begin{aligned}
+            z&=\underbrace{W_r x}_{\text{router projection 계산}} \\
+            p_i&=\underbrace{\frac{e^{z_i}}{\sum_{j=1}^{n}e^{z_j}}}_{\text{기준량당 비율}} \\
+            T_k(x)&=\underbrace{\operatorname{TopK}(p,k)}_{\text{active expert 수 계산}}
+          \end{aligned}`}
+          operations={[
+            { expression: String.raw`W_r x`, annotation: ["router projection이(가) 식의 결과에 기여하는","방식을 계산합니다.","Linear score를 softmax해 상대 크기를 유지한","probability를 만들고, 그중 가장 큰 k개를"] },
+            { expression: String.raw`\frac{e^{z_i}}{\sum_{j=1}^{n}e^{z_j}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Linear score를 softmax해 상대 크기를 유지한","probability를 만들고, 그중 가장 큰 k개를","선택합니다."] },
+            { expression: String.raw`\operatorname{TopK}(p,k)`, annotation: ["active expert 수이(가) 식의 결과에 기여하는","방식을 계산합니다.","Linear score를 softmax해 상대 크기를 유지한","probability를 만들고, 그중 가장 큰 k개를"] },
+          ]}
           terms={[
             { symbol: "W_r", name: "router projection", description: "Hidden dimension을 n개 expert logit으로 바꾸는 학습 parameter입니다." },
             { symbol: "z_i", name: "router logit", description: "i번째 expert에 대한 정규화 전 score입니다." },
@@ -377,6 +391,10 @@ export default function MixtureOfExpertsArticle() {
           question="Batch가 expert에 완전히 균등하게 배정된다면 expert 하나가 받을 assignment는 몇 개인가?"
           idea={<>전체 assignment 수 mk를 n개 expert가 나눕니다. 이 값은 balancing의 기준선이지 실제 batch마다 반드시 강제해야 하는 정답은 아닙니다.</>}
           formula={String.raw`q=\frac{mk}{n},\qquad \rho_{\max}=\frac{\max_i c_i}{q}`}
+          annotatedFormula={String.raw`q=\underbrace{\frac{mk}{n},\qquad \rho_{\max}=\frac{\max_i c_i}{q}}_{\text{기준량당 비율}}`}
+          operations={[
+            { expression: String.raw`\frac{mk}{n},\qquad \rho_{\max}=\frac{\max_i c_i}{q}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","전체 assignment 수 mk를 n개 expert가","나눕니다."] },
+          ]}
           terms={[
             { symbol: "m", name: "token 수", description: "현재 routing batch에 들어온 유효 token 개수입니다." },
             { symbol: "k", name: "Top-k", description: "Token 하나가 만드는 routed assignment 수입니다." },
@@ -400,6 +418,14 @@ export default function MixtureOfExpertsArticle() {
             C&=\left\lceil\phi\frac{mk}{n}\right\rceil \\
             o_i&=\max(0,c_i-C)
           \end{aligned}`}
+          annotatedFormula={String.raw`\begin{aligned}
+            C&=\underbrace{\left\lceil\phi\frac{mk}{n}\right\rceil}_{\text{기준량당 비율}} \\
+            o_i&=\underbrace{\max(0,c_i-C)}_{\text{경계 후보 선택}}
+          \end{aligned}`}
+          operations={[
+            { expression: String.raw`\left\lceil\phi\frac{mk}{n}\right\rceil`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","균등 기준 mk/n에 capacity factor φ를 곱해","expert당 buffer 상한을 정하고, 실제 load가 그","상한을 넘은 만큼을 overflow로 셉니다."] },
+            { expression: String.raw`\max(0,c_i-C)`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","균등 기준 mk/n에 capacity factor φ를 곱해","expert당 buffer 상한을 정하고, 실제 load가 그","상한을 넘은 만큼을 overflow로 셉니다."] },
+          ]}
           terms={[
             { symbol: "phi", name: "capacity factor", description: "균등 load보다 buffer를 얼마나 넉넉하게 잡을지 정하는 1 이상의 배수입니다." },
             { symbol: "C", name: "expert capacity", description: "한 expert buffer가 이번 batch에서 받을 수 있는 assignment 상한입니다." },
@@ -490,6 +516,13 @@ L_{\rm aux}&=\underbrace{\alpha N\sum_{i=1}^{N}f_iP_i}_{\text{두 값이 모두 
             P_{\mathrm{total}}&\approx P_{\mathrm{shared}}+nP_e \\
             P_{\mathrm{active}}&\approx P_{\mathrm{shared}}+kP_e
           \end{aligned}`}
+          annotatedFormula={String.raw`\begin{aligned}
+            P_{\mathrm{total}}&\approx \underbrace{P_{\mathrm{shared}}}_{\text{공유 parameter 계산}}+nP_e \\
+            P_{\mathrm{active}}&\approx P_{\mathrm{shared}}+kP_e
+          \end{aligned}`}
+          operations={[
+            { expression: String.raw`P_{\mathrm{shared}}`, annotation: ["공유 parameter이(가) 식의 결과에 기여하는 방식을","계산합니다.","모든 token이 공유하는 parameter와 expert","하나의 parameter를 분리하면, 전체 저장량에는 n개를"] },
+          ]}
           terms={[
             { symbol: "P_{\\mathrm{shared}}", name: "공유 parameter", description: "Attention·embedding·normalization·shared expert처럼 모든 token이 쓰는 parameter입니다." },
             { symbol: "P_e", name: "expert 하나의 parameter", description: "같은 폭을 가정한 routed expert FFN 하나의 parameter 수입니다." },
@@ -508,6 +541,10 @@ L_{\rm aux}&=\underbrace{\alpha N\sum_{i=1}^{N}f_iP_i}_{\text{두 값이 모두 
           question="Expert parallel 장치 사이로 최소한 어느 정도의 token payload가 이동하는가?"
           idea={<>Token m개를 k개 expert로 복제해 hidden vector를 보내고 결과를 다시 받는다면, routing metadata와 protocol overhead를 빼도 forward payload는 두 방향에서 생깁니다.</>}
           formula={String.raw`B_{\mathrm{dispatch+gather}}\gtrsim 2mkdb`}
+          annotatedFormula={String.raw`\underbrace{B_{\mathrm{dispatch+gather}}\gtrsim 2mkdb}_{\text{payload lower estimate 계산}}`}
+          operations={[
+            { expression: String.raw`B_{\mathrm{dispatch+gather}}\gtrsim 2mkdb`, annotation: ["payload lower estimate이(가) 식의 결과에","기여하는 방식을 계산합니다.","Token m개를 k개 expert로 복제해 hidden","vector를 보내고 결과를 다시 받는다면, routing"] },
+          ]}
           terms={[
             { symbol: "m", name: "routed token 수", description: "한 MoE layer의 현재 batch에서 이동하는 token 수입니다." },
             { symbol: "k", name: "expert fan-out", description: "Token당 destination expert 개수입니다." },

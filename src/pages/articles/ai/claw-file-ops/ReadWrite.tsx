@@ -88,6 +88,10 @@ export default function ReadWrite() {
           question="Agent가 읽은 뒤 파일이 바뀌었을 때 stale edit를 어떻게 막을까?"
           idea={<>읽은 content의 digest를 expected version으로 요청에 넣고, 적용 직전 현재 content의 digest와 같을 때만 replacement를 만듭니다. 다르면 자동으로 덮어쓰지 않고 새 snapshot을 읽게 합니다.</>}
           formula={String.raw`\operatorname{apply}\iff H(C_{\mathrm{current}})=H(C_{\mathrm{expected}})`}
+          annotatedFormula={String.raw`\operatorname{apply}\iff H(C_{\mathrm{current}})=\underbrace{H(C_{\mathrm{expected}})}_{\text{conditional mutation 계산}}`}
+          operations={[
+            { expression: String.raw`H(C_{\mathrm{expected}})`, annotation: ["conditional mutation이(가) 식의 결과에","기여하는 방식을 계산합니다.","읽은 content의 digest를 expected","version으로 요청에 넣고, 적용 직전 현재"] },
+          ]}
           terms={[
             { symbol: "C_{current}", name: "current bytes", description: "변경을 적용하기 직전에 관찰한 현재 file bytes입니다." },
             { symbol: "C_{expected}", name: "expected snapshot", description: "Agent가 edit를 계산할 때 읽었던 file bytes입니다." },

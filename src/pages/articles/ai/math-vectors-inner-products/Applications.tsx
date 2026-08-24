@@ -64,6 +64,17 @@ export default function Applications() {
           \lVert w_M\rVert_2 &\le R\sqrt{M}\\
           M\gamma &\le R\sqrt{M}\quad\Longrightarrow\quad M\le\left(\frac{R}{\gamma}\right)^2
         \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+          w_M\cdot w^* &\ge \underbrace{M\gamma}_{\text{margin 계산}}\\
+          w_M\cdot w^* &\le \underbrace{\lVert w_M\rVert_2}_{\text{허용 경계 판정}}\lVert w^*\rVert_2=\lVert w_M\rVert_2\\
+          \lVert w_M\rVert_2 &\le \underbrace{R\sqrt{M}}_{\text{weight after M mistakes 계산}}\\
+          M\gamma &\le R\sqrt{M}\quad\Longrightarrow\quad M\le\left(\frac{R}{\gamma}\right)^2
+        \end{aligned}`}
+        operations={[
+          { expression: String.raw`M\gamma`, annotation: ["margin이(가) 식의 결과에 기여하는 방식을 계산합니다.","각 실수 update는 정답 separator 방향으로 적어도","γ만큼 전진하지만, 전체 weight 길이는 input 길이","R 때문에 √M보다"] },
+          { expression: String.raw`\lVert w_M\rVert_2`, annotation: ["weight after M mistakes이(가) 식의 결과에","기여하는 방식을 계산합니다.","각 실수 update는 정답 separator 방향으로 적어도","γ만큼 전진하지만, 전체 weight 길이는 input 길이"] },
+          { expression: String.raw`R\sqrt{M}`, annotation: ["weight after M mistakes이(가) 식의 결과에","기여하는 방식을 계산합니다.","각 실수 update는 정답 separator 방향으로 적어도","γ만큼 전진하지만, 전체 weight 길이는 input 길이"] },
+        ]}
         terms={[
           { symbol: String.raw`M`, name: "mistake count", description: "Update가 일어난 분류 실수의 누적 횟수입니다." },
           { symbol: String.raw`\gamma`, name: "margin", description: "정답 separator 방향으로 각 example이 확보한 최소 signed 여유입니다." },

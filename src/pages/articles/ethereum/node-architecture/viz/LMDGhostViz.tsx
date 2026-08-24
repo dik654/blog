@@ -55,7 +55,7 @@ export default function LMDGhostViz() {
               x2={x2}
               y2={y2}
               stroke="var(--border)"
-              strokeWidth={1.5}
+              strokeWidth={1.2}
             />
           ))}
 
@@ -68,7 +68,7 @@ export default function LMDGhostViz() {
             rx={8}
             fill={`${CG}22`}
             stroke={CG}
-            strokeWidth={1.5}
+            strokeWidth={1.2}
           />
           <text
             x={GX}
@@ -143,7 +143,7 @@ export default function LMDGhostViz() {
                   r={12}
                   fill={v.s === "a" ? `${CA}22` : `${CB}22`}
                   stroke={v.s === "a" ? CA : CB}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={v.vx}
@@ -159,7 +159,7 @@ export default function LMDGhostViz() {
               <motion.path
                 d={`M${v.vx + (v.s === "a" ? 12 : -12)} ${v.vy} L${v.bx} ${v.by}`}
                 stroke={v.s === "a" ? CA : CB}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 fill="none"
                 markerEnd={`url(#arr-${v.s})`}
                 initial={{ pathLength: 0, opacity: 0 }}

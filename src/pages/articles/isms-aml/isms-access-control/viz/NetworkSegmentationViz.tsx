@@ -386,22 +386,14 @@ export default function NetworkSegmentationViz() {
                 fill="var(--border)"
                 opacity={0.3}
               />
-              <rect
-                x={50}
-                y={188}
-                width={390}
-                height={8}
-                rx={4}
-                fill="url(#ns-grad)"
-              />
-              <defs>
-                <linearGradient id="ns-grad" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stopColor={C.ext} stopOpacity={0.7} />
-                  <stop offset="33%" stopColor={C.dmz} stopOpacity={0.7} />
-                  <stop offset="66%" stopColor={C.svc} stopOpacity={0.7} />
-                  <stop offset="100%" stopColor={C.int} stopOpacity={0.7} />
-                </linearGradient>
-              </defs>
+              {[
+                { x: 50, color: C.ext },
+                { x: 147.5, color: C.dmz },
+                { x: 245, color: C.svc },
+                { x: 342.5, color: C.int },
+              ].map(({ x, color }) => (
+                <rect key={x} x={x} y={188} width={97.5} height={8} rx={2} fill={color} opacity={0.7} />
+              ))}
               <text
                 x={245}
                 y={213}

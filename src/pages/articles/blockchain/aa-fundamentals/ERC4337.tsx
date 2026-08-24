@@ -32,6 +32,10 @@ export default function ERC4337() {
         question="Bundler가 한 UserOperation에서 먼저 확보해야 할 최대 gas 비용은 얼마일까요?"
         idea="Validation·execution·calldata 보상 예산을 같은 gas 단위로 더한 뒤 fee-per-gas 상한을 곱합니다. 실제 settlement는 사용량과 effective gas price에 따라 더 작아질 수 있습니다."
         formula={String.raw`C_{\max}=(G_{verify}+G_{call}+G_{pre})\,F_{\max}`}
+        annotatedFormula={String.raw`C_{\max}=\underbrace{(G_{verify}+G_{call}+G_{pre})\,F_{\max}}_{\text{경계 후보 선택}}`}
+        operations={[
+          { expression: String.raw`(G_{verify}+G_{call}+G_{pre})\,F_{\max}`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","Validation·execution·calldata 보상","예산을 같은 gas 단위로 더한 뒤 fee-per-gas","상한을 곱합니다."] },
+        ]}
         terms={[
           { symbol: "G_{verify}", name: "Validation gas", description: "Account와 paymaster validation에 잡은 gas 상한입니다." },
           { symbol: "G_{call}", name: "Call gas", description: "Account main execution에 잡은 gas 상한입니다." },

@@ -22,6 +22,10 @@ export default function ModernGroth16Article() {
           question="QAP를 만족하는 witness에서 prover가 반드시 계산해야 하는 quotient는 무엇인가?"
           idea={<>Assignment로 만든 A·B−C가 target polynomial t로 정확히 나누어지는 몫 h를 구합니다. 나머지가 있으면 어느 constraint point에서는 R1CS가 깨졌다는 뜻입니다.</>}
           formula={String.raw`h(X)=\frac{A(X)B(X)-C(X)}{t(X)},\qquad t(X)=\prod_{i=1}^{m}(X-r_i)`}
+          annotatedFormula={String.raw`h(X)=\underbrace{\frac{A(X)B(X)-C(X)}{t(X)},\qquad t(X)=\prod_{i=1}^{m}(X-r_i)}_{\text{기준량당 비율}}`}
+          operations={[
+            { expression: String.raw`\frac{A(X)B(X)-C(X)}{t(X)},\qquad t(X)=\prod_{i=1}^{m}(X-r_i)`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Assignment로 만든 A·B−C가 target","polynomial t로 정확히 나누어지는 몫 h를 구합니다."] },
+          ]}
           terms={[
             { symbol: "A,B,C", name: "Assignment polynomials", description: "Public input과 witness coefficient로 QAP column polynomials를 합칩니다." },
             { symbol: "t", name: "Target polynomial", description: "모든 R1CS row point에서 0입니다." },
@@ -43,6 +47,10 @@ export default function ModernGroth16Article() {
           question="Verifier가 public input과 proof 세 요소를 어떤 pairing 관계로 검사하는가?"
           idea={<>Public inputs xᵢ로 verifying-key basis를 합친 vkₓ를 만들고, proof pairing이 setup 기준항과 public/private contribution의 pairing 곱으로 분해되는지 확인합니다.</>}
           formula={String.raw`vk_x=IC_0+\sum_{i=1}^{\ell}x_iIC_i,\qquad e(A,B)=e(\alpha_1,\beta_2)\,e(vk_x,\gamma_2)\,e(C,\delta_2)`}
+          annotatedFormula={String.raw`vk_x=\underbrace{IC_0+\sum_{i=1}^{\ell}x_iIC_i,\qquad e(A,B)=e(\alpha_1,\beta_2)\,e(vk_x,\gamma_2)\,e(C,\delta_2)}_{\text{Input coefficients 계산}}`}
+          operations={[
+            { expression: String.raw`IC_0+\sum_{i=1}^{\ell}x_iIC_i,\qquad e(A,B)=e(\alpha_1,\beta_2)\,e(vk_x,\gamma_2)\,e(C,\delta_2)`, annotation: ["Input coefficients이(가) 식의 결과에 기여하는","방식을 계산합니다.","Public inputs xᵢ로 verifying-key","basis를 합친 vkₓ를 만들고, proof pairing이"] },
+          ]}
           terms={[
             { symbol: "IC_i", name: "Input coefficients", description: "i번째 public input을 G₁ linear combination에 결속하는 verifying-key 요소입니다." },
             { symbol: String.raw`\ell`, name: "Public-input count", description: "Verifier cost에는 적어도 이 linear combination이 포함됩니다." },

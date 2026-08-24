@@ -196,7 +196,7 @@ export default function EndgameViz() {
           x2={183}
           y2={167}
           stroke="#6b7280"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#eg-arr)"
         />
         <line
@@ -205,7 +205,7 @@ export default function EndgameViz() {
           x2={346}
           y2={167}
           stroke="#6b7280"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#eg-arr)"
         />
 

@@ -26,7 +26,7 @@ export default function ValidatorLifecycleViz() {
               x2={400}
               y2={RAIL_Y}
               stroke="var(--border)"
-              strokeWidth={1.5}
+              strokeWidth={1.2}
             />
             {STATES.slice(0, 5).map((s) => (
               <line
@@ -46,7 +46,7 @@ export default function ValidatorLifecycleViz() {
               x2={230}
               y2={163}
               stroke="var(--border)"
-              strokeWidth={1.5}
+              strokeWidth={1.2}
               strokeDasharray="5 3"
             />
             <rect
@@ -66,7 +66,7 @@ export default function ValidatorLifecycleViz() {
               x2={118}
               y2={100}
               stroke="var(--border)"
-              strokeWidth={1.5}
+              strokeWidth={1.2}
             />
             <line
               x1={162}
@@ -74,7 +74,7 @@ export default function ValidatorLifecycleViz() {
               x2={208}
               y2={100}
               stroke="var(--border)"
-              strokeWidth={1.5}
+              strokeWidth={1.2}
             />
             <line
               x1={252}
@@ -82,7 +82,7 @@ export default function ValidatorLifecycleViz() {
               x2={298}
               y2={100}
               stroke="var(--border)"
-              strokeWidth={1.5}
+              strokeWidth={1.2}
             />
             <line
               x1={342}
@@ -90,7 +90,7 @@ export default function ValidatorLifecycleViz() {
               x2={378}
               y2={100}
               stroke="var(--border)"
-              strokeWidth={1.5}
+              strokeWidth={1.2}
             />
             {STATES.map((s, i) => {
               const active = step === i;

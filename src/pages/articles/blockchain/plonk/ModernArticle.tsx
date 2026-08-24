@@ -21,6 +21,10 @@ export default function ModernPLONKArticle() {
           question="한 row의 a·b·c 값에 덧셈·곱셈·상수 gate를 어떻게 선택적으로 적용하는가?"
           idea={<>고정 selector q를 coefficient로 사용해 한 공통 gate 식을 만듭니다. Multiplication row에서는 qM=1, qO=−1만 켜면 ab−c=0이 됩니다.</>}
           formula={String.raw`q_Mab+q_La+q_Rb+q_Oc+q_C=0\quad\text{on every row of }H`}
+          annotatedFormula={String.raw`q_Mab+q_La+q_Rb+q_Oc+q_C=\underbrace{0\quad\text{on every row of }H}_{\text{Multiplication selector 계산}}`}
+          operations={[
+            { expression: String.raw`0\quad\text{on every row of }H`, annotation: ["Multiplication selector이(가) 식의 결과에","기여하는 방식을 계산합니다.","고정 selector q를 coefficient로 사용해 한","공통 gate 식을 만듭니다."] },
+          ]}
           terms={[
             { symbol: "a,b,c", name: "Witness cells", description: "한 row의 세 advice/wire column 값입니다." },
             { symbol: "q_M", name: "Multiplication selector", description: "a·b 항을 켜고 크기를 정합니다." },
@@ -41,6 +45,10 @@ export default function ModernPLONKArticle() {
           question="모든 copy edge의 equality를 왜 하나의 running product로 검사할 수 있는가?"
           idea={<>현재 cell value와 원래 위치 label을 곱한 분자를, 같은 value와 permutation된 label을 곱한 분모와 row마다 누적합니다. 모든 copy가 맞으면 마지막 product가 1로 돌아옵니다.</>}
           formula={String.raw`Z(\omega X)=Z(X)\prod_{j\in\{a,b,c\}}\frac{j(X)+\beta\,\mathrm{id}_j(X)+\gamma}{j(X)+\beta\,\sigma_j(X)+\gamma},\qquad Z(1)=1`}
+          annotatedFormula={String.raw`Z(\omega X)=\underbrace{Z(X)\prod_{j\in\{a,b,c\}}\frac{j(X)+\beta\,\mathrm{id}_j(X)+\gamma}{j(X)+\beta\,\sigma_j(X)+\gamma},\qquad Z(1)=1}_{\text{기준량당 비율}}`}
+          operations={[
+            { expression: String.raw`Z(X)\prod_{j\in\{a,b,c\}}\frac{j(X)+\beta\,\mathrm{id}_j(X)+\gamma}{j(X)+\beta\,\sigma_j(X)+\gamma},\qquad Z(1)=1`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","현재 cell value와 원래 위치 label을 곱한","분자를, 같은 value와 permutation된 label을","곱한 분모와 row마다"] },
+          ]}
           terms={[
             { symbol: "Z", name: "Grand-product polynomial", description: "Row를 따라 numerator/denominator ratio를 누적합니다." },
             { symbol: String.raw`\omega`, name: "Domain generator", description: "X에서 다음 row ωX로 이동시킵니다." },
@@ -61,6 +69,10 @@ export default function ModernPLONKArticle() {
           question="PLONK verifier가 여러 constraint를 한 challenge point에서 묶어 확인하는 핵심 등식은 무엇인가?"
           idea={<>서로 다른 constraint family를 α powers로 섞은 N이 domain 전체에서 0이면 ZH로 나누어집니다. Commitment를 먼저 고정한 뒤 ζ에서 quotient identity와 batch opening을 확인합니다.</>}
           formula={String.raw`N(X)=T(X)Z_H(X),\quad Z_H(X)=X^n-1,\qquad N(\zeta)\stackrel{?}{=}T(\zeta)(\zeta^n-1)`}
+          annotatedFormula={String.raw`N(X)=\underbrace{T(X)Z_H(X),\quad Z_H(X)=X^n-1,\qquad N(\zeta)\stackrel{?}{=}T(\zeta)(\zeta^n-1)}_{\text{Evaluation challenge 계산}}`}
+          operations={[
+            { expression: String.raw`T(X)Z_H(X),\quad Z_H(X)=X^n-1,\qquad N(\zeta)\stackrel{?}{=}T(\zeta)(\zeta^n-1)`, annotation: ["Evaluation challenge이(가) 식의 결과에","기여하는 방식을 계산합니다.","서로 다른 constraint family를 α powers로","섞은 N이 domain 전체에서 0이면 ZH로 나누어집니다."] },
+          ]}
           terms={[
             { symbol: "N", name: "Combined constraint numerator", description: "Gate·permutation·boundary·public-input 식을 challenge α로 분리해 합칩니다." },
             { symbol: "T", name: "Quotient polynomial", description: "N을 domain vanishing polynomial로 나눈 결과입니다." },

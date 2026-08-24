@@ -164,7 +164,7 @@ export default function RepoStructViz() {
                 x2={280}
                 y2={95}
                 stroke="#f59e0b"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 markerEnd="url(#rarr)"
               />
               <rect
@@ -191,7 +191,7 @@ export default function RepoStructViz() {
                 x2={260}
                 y2={130}
                 stroke="#f59e0b"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 markerEnd="url(#rarr)"
               />
               <rect

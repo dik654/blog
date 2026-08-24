@@ -26,6 +26,10 @@ export default function FTTransformer() {
         question="Numerical scalar 하나를 column 정체성이 보존된 d차원 token으로 어떻게 바꿀까?"
         idea={<>j번째 numerical column만의 direction vector wⱼ를 scalar xᵢⱼ만큼 늘리고, feature bias bⱼ를 더합니다. 값의 크기와 column identity를 함께 학습 가능한 vector로 만드는 계산입니다.</>}
         formula={String.raw`T^{(\mathrm{num})}_{i,j}=b_j+x^{(\mathrm{num})}_{i,j}w_j\in\mathbb R^d`}
+        annotatedFormula={String.raw`T^{(\mathrm{num})}_{i,j}=\underbrace{b_j+x^{(\mathrm{num})}_{i,j}w_j\in\mathbb R^d}_{\text{feature direction 계산}}`}
+        operations={[
+          { expression: String.raw`b_j+x^{(\mathrm{num})}_{i,j}w_j\in\mathbb R^d`, annotation: ["feature direction이(가) 식의 결과에 기여하는","방식을 계산합니다.","j번째 numerical column만의 direction","vector wⱼ를 scalar xᵢⱼ만큼 늘리고,"] },
+        ]}
         terms={[
           { symbol: "x_i,j", name: "numerical value", description: "i번째 row의 j번째 수치형 scalar이며 단위·missing 처리는 schema contract가 정합니다." },
           { symbol: "w_j", name: "feature direction", description: "j번째 column 값이 token space에서 움직일 고유한 d차원 방향입니다." },
@@ -44,6 +48,15 @@ T^{(\mathrm{cat})}_{i,j}&=b_j+E_j[c_{i,j}],\\
 T_i&=\operatorname{stack}\!\left([\mathrm{CLS}],T_{i,1},\ldots,T_{i,k}\right),\\
 T_i&\in\mathbb R^{(k+1)\times d}.
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+T^{(\mathrm{cat})}_{i,j}&=\underbrace{b_j+E_j[c_{i,j}],}_{\text{column embedding table 계산}}\\
+T_i&=\underbrace{\operatorname{stack}\!\left([\mathrm{CLS}],T_{i,1},\ldots,T_{i,k}\right),}_{\text{허용 경계 판정}}\\
+T_i&\in\mathbb R^{(k+1)\times d}.
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`b_j+E_j[c_{i,j}],`, annotation: ["column embedding table이(가) 식의 결과에","기여하는 방식을 계산합니다.","Categorical column은 one-hot을 직접 큰","vector로 유지하지 않고 column 전용"] },
+          { expression: String.raw`\operatorname{stack}\!\left([\mathrm{CLS}],T_{i,1},\ldots,T_{i,k}\right),`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","Categorical column은 one-hot을 직접 큰","vector로 유지하지 않고 column 전용","embedding table에서 해당 category"] },
+        ]}
         terms={[
           { symbol: "c_i,j", name: "category index", description: "j번째 column vocabulary 안에서 현재 category를 가리키는 discrete ID입니다." },
           { symbol: "E_j", name: "column embedding table", description: "j번째 categorical column의 category별 d차원 vector를 저장합니다." },

@@ -46,7 +46,7 @@ export function Step3() {
           x2={208}
           y2={65}
           stroke={C.cow}
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <polygon points="206,60 214,65 206,70" fill={C.cow} />
       </motion.g>
@@ -64,7 +64,7 @@ export function Step3() {
           rx={6}
           fill={`${C.cow}14`}
           stroke={C.cow}
-          strokeWidth={1.4}
+          strokeWidth={1.2}
         />
         <text
           x={290}
@@ -189,7 +189,7 @@ export function Step4() {
         x2={250}
         y2={78}
         stroke={C.cow}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
         transition={{ delay: 0.3, duration: 0.3 }}

@@ -62,7 +62,7 @@ export function StarTopologyStep() {
           r={12}
           fill={`${CV}20`}
           stroke={CV}
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <text
           x={cx}

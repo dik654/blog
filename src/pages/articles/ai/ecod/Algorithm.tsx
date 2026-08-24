@@ -19,6 +19,11 @@ export default function Algorithm() {
         question="각 feature의 tail rarity를 왜 −log score로 바꿀까?"
         idea={<>Independence를 가정하면 feature별 tail probability를 곱합니다. Log를 취하면 곱이 합으로 바뀌고, 앞에 minus를 붙이면 작은 probability일수록 큰 anomaly contribution이 됩니다.</>}
         formula={String.raw`\begin{aligned}U_{L,ij}&=-\log \widehat F_{j,L}(X_{ij})\\U_{R,ij}&=-\log \widehat F_{j,R}(X_{ij})\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}U_{L,ij}&=\underbrace{-\log \widehat F_{j,L}(X_{ij})}_{\text{로그 비용 변환}}\\U_{R,ij}&=\underbrace{-\log \widehat F_{j,R}(X_{ij})}_{\text{로그 비용 변환}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`-\log \widehat F_{j,L}(X_{ij})`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","Independence를 가정하면 feature별 tail","probability를 곱합니다."] },
+          { expression: String.raw`-\log \widehat F_{j,R}(X_{ij})`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","Independence를 가정하면 feature별 tail","probability를 곱합니다."] },
+        ]}
         terms={[
           { symbol: "i,j", name: "row and feature", description: "평가 중인 row i와 그 안의 feature j를 가리킵니다." },
           { symbol: "U_{L,ij}", name: "left contribution", description: "작은 값이 얼마나 드문지 나타내는 nonnegative score입니다." },
@@ -43,6 +48,10 @@ export default function Algorithm() {
         question="분포가 어느 방향으로 길게 늘어졌는지 어떻게 한 숫자로 정할까?"
         idea={<>평균에서 떨어진 거리를 세제곱하면 방향 부호가 남습니다. 이를 표준편차의 세제곱 scale로 나누어 feature 단위에 덜 민감한 skewness coefficient를 만듭니다.</>}
         formula={String.raw`\gamma_j=\frac{\frac1n\sum_{r=1}^{n}(X_{rj}-\bar X_j)^3}{\left[\frac1{n-1}\sum_{r=1}^{n}(X_{rj}-\bar X_j)^2\right]^{3/2}}`}
+        annotatedFormula={String.raw`\gamma_j=\underbrace{\frac{\frac1n\sum_{r=1}^{n}(X_{rj}-\bar X_j)^3}{\left[\frac1{n-1}\sum_{r=1}^{n}(X_{rj}-\bar X_j)^2\right]^{3/2}}}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`\frac{\frac1n\sum_{r=1}^{n}(X_{rj}-\bar X_j)^3}{\left[\frac1{n-1}\sum_{r=1}^{n}(X_{rj}-\bar X_j)^2\right]^{3/2}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","평균에서 떨어진 거리를 세제곱하면 방향 부호가 남습니다."] },
+        ]}
         terms={[
           { symbol: "\\bar X_j", name: "feature mean", description: "Feature j의 reference sample 평균입니다." },
           { symbol: "\\gamma_j", name: "sample skewness", description: "음수면 왼쪽, 양수면 오른쪽 tail이 상대적으로 길다는 신호입니다." },
@@ -59,6 +68,12 @@ export default function Algorithm() {
         question="원 ECOD 논문은 feature contribution을 row score로 어떻게 합칠까?"
         idea={<>왼쪽만 합친 score, 오른쪽만 합친 score, skewness로 feature별 방향을 고른 score를 각각 만든 뒤 row 수준에서 가장 극단적인 하나를 선택합니다.</>}
         formula={String.raw`\begin{aligned}O_L(i)&=\sum_j U_{L,ij}\\O_R(i)&=\sum_j U_{R,ij}\\O_A(i)&=\sum_j U_{S,ij}\\O_i^{\mathrm{paper}}&=\max\{O_L(i),O_R(i),O_A(i)\}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}O_L(i)&=\underbrace{\sum_j U_{L,ij}}_{\text{오른쪽 항으로 결과 계산}}\\O_R(i)&=\underbrace{\sum_j U_{R,ij}}_{\text{오른쪽 항으로 결과 계산}}\\O_A(i)&=\underbrace{\sum_j U_{S,ij}}_{\text{selected tail 계산}}\\O_i^{\mathrm{paper}}&=\max\{O_L(i),O_R(i),O_A(i)\}\end{aligned}`}
+        operations={[
+          { expression: String.raw`\sum_j U_{L,ij}`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","왼쪽만 합친 score, 오른쪽만 합친 score,","skewness로 feature별 방향을 고른 score를","각각 만든 뒤 row 수준에서 가장 극단적인 하나를"] },
+          { expression: String.raw`\sum_j U_{R,ij}`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","왼쪽만 합친 score, 오른쪽만 합친 score,","skewness로 feature별 방향을 고른 score를","각각 만든 뒤 row 수준에서 가장 극단적인 하나를"] },
+          { expression: String.raw`\sum_j U_{S,ij}`, annotation: ["selected tail이(가) 식의 결과에 기여하는 방식을","계산합니다.","왼쪽만 합친 score, 오른쪽만 합친 score,","skewness로 feature별 방향을 고른 score를"] },
+        ]}
         terms={[
           { symbol: "O_L,O_R", name: "one-direction scores", description: "모든 feature에서 같은 tail 방향의 contribution을 합친 두 후보입니다." },
           { symbol: "O_A", name: "automatic score", description: "Feature마다 skewness 부호로 고른 tail contribution의 합입니다." },
@@ -76,6 +91,10 @@ export default function Algorithm() {
         question="현재 PyOD 3.6.4 소스가 실제로 반환하는 score는 무엇인가?"
         idea={<>소스는 각 feature에서 left·right·skew-selected contribution의 최댓값을 먼저 고른 다음, 그 결과를 feature 축으로 합산합니다.</>}
         formula={String.raw`O_i^{\mathrm{PyOD}}=\sum_j\max\left\{U_{L,ij},U_{R,ij},U_{S,ij}\right\}`}
+        annotatedFormula={String.raw`O_i^{\mathrm{PyOD}}=\underbrace{\sum_j\max\left\{U_{L,ij},U_{R,ij},U_{S,ij}\right\}}_{\text{경계 후보 선택}}`}
+        operations={[
+          { expression: String.raw`\sum_j\max\left\{U_{L,ij},U_{R,ij},U_{S,ij}\right\}`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","소스는 각 feature에서","left·right·skew-selected","contribution의 최댓값을 먼저 고른 다음, 그 결과를"] },
+        ]}
         terms={[
           { symbol: "U_{S,ij}", name: "skew-selected contribution", description: "Skewness 부호에 따라 left 또는 right에서 가져온 feature score입니다." },
           { symbol: "\\max\\{\\cdot\\}", name: "feature-level selection", description: "각 feature에서 contribution을 먼저 선택합니다." },

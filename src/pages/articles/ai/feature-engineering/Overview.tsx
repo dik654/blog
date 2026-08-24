@@ -46,6 +46,17 @@ export default function Overview() {
 &t_{\mathrm{available}}(r)\le t_0\},\\
 x_j(e,t_0)&=g_j\!\left(\mathcal R(e,t_0)\right).
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+\mathcal R(e,t_0)=\{r:\;&\operatorname{entity}(r)=e,\\
+&t_{\mathrm{event}}(r)\le \underbrace{t_0,}_{\text{오른쪽 항으로 결과 계산}}\\
+&t_{\mathrm{available}}(r)\le \underbrace{t_0\},}_{\text{오른쪽 항으로 결과 계산}}\\
+x_j(e,t_0)&=\underbrace{g_j\!\left(\mathcal R(e,t_0)\right).}_{\text{허용 경계 판정}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`t_0,`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","예측 대상 entity e와 cutoff time t₀를 먼저","고정합니다."] },
+          { expression: String.raw`t_0\},`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","예측 대상 entity e와 cutoff time t₀를 먼저","고정합니다."] },
+          { expression: String.raw`g_j\!\left(\mathcal R(e,t_0)\right).`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","예측 대상 entity e와 cutoff time t₀를 먼저","고정합니다."] },
+        ]}
         terms={[
           { symbol: "e", name: "prediction entity", description: "고객·설비·주문처럼 예측 한 건의 기준이 되는 대상입니다." },
           { symbol: "t₀", name: "cutoff time", description: "Prediction을 내린다고 가정한 시각입니다. 이후 정보는 피처 계산에서 제외합니다." },

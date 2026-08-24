@@ -105,7 +105,7 @@ export default function AmplificationViz() {
             key={curve.A}
             d={toPath(generateCurve(curve.A))}
             stroke={curve.color}
-            strokeWidth={2}
+            strokeWidth={1.2}
             fill="none"
           />
         ))}
@@ -130,7 +130,7 @@ export default function AmplificationViz() {
                 x2={25}
                 y2={0}
                 stroke={curve.color}
-                strokeWidth={2.5}
+                strokeWidth={1.2}
               />
               <text
                 x={30}

@@ -51,8 +51,8 @@ export default function Step1Finite() {
           stroke={`${C.g1}20`}
           strokeWidth={0.6}
         />
-        <path d={curveMini.u} fill="none" stroke={C.g1} strokeWidth={1.8} />
-        <path d={curveMini.l} fill="none" stroke={C.g1} strokeWidth={1.8} />
+        <path d={curveMini.u} fill="none" stroke={C.g1} strokeWidth={1.2} />
+        <path d={curveMini.l} fill="none" stroke={C.g1} strokeWidth={1.2} />
         <text
           x={90}
           y={178}

@@ -145,7 +145,7 @@ export default function ShamirShareViz() {
                 rx={6}
                 fill="#a855f718"
                 stroke="#a855f7"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={405}

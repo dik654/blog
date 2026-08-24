@@ -7,19 +7,19 @@ export type ConceptGridItem = {
 
 const TONES = {
   blue: {
-    wash: "from-blue-50 via-background to-cyan-50 dark:from-blue-950/30 dark:to-cyan-950/20",
+    wash: "bg-blue-50/70 dark:bg-blue-950/20",
     label: "bg-blue-100 text-blue-800 dark:bg-blue-950/60 dark:text-blue-200",
   },
   violet: {
-    wash: "from-violet-50 via-background to-fuchsia-50 dark:from-violet-950/30 dark:to-fuchsia-950/20",
+    wash: "bg-violet-50/70 dark:bg-violet-950/20",
     label: "bg-violet-100 text-violet-800 dark:bg-violet-950/60 dark:text-violet-200",
   },
   emerald: {
-    wash: "from-emerald-50 via-background to-teal-50 dark:from-emerald-950/30 dark:to-teal-950/20",
+    wash: "bg-emerald-50/70 dark:bg-emerald-950/20",
     label: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-200",
   },
   amber: {
-    wash: "from-amber-50 via-background to-orange-50 dark:from-amber-950/30 dark:to-orange-950/20",
+    wash: "bg-amber-50/70 dark:bg-amber-950/20",
     label: "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-200",
   },
 } as const;
@@ -39,8 +39,8 @@ export default function ConceptGridViz({
 }) {
   const colors = TONES[tone];
   return (
-    <figure data-viz="concept-grid" className="not-prose my-8 overflow-hidden rounded-2xl border bg-card shadow-sm">
-      <figcaption className={`border-b bg-gradient-to-br ${colors.wash} px-5 py-5 sm:px-6`}>
+    <figure data-viz="concept-grid" className="not-prose my-8 overflow-hidden rounded-xl border bg-card">
+      <figcaption className={`border-b ${colors.wash} px-5 py-5 sm:px-6`}>
         <p className="text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">{eyebrow}</p>
         <h3 className="mt-2 text-lg font-bold tracking-tight sm:text-xl">{title}</h3>
         <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">{summary}</p>

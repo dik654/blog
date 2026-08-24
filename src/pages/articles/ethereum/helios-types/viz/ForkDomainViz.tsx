@@ -51,7 +51,7 @@ export default function ForkDomainViz() {
                   rx={8}
                   fill={C.fork + "15"}
                   stroke={C.fork}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={240}
@@ -85,7 +85,7 @@ export default function ForkDomainViz() {
                   rx={8}
                   fill={C.fork + "15"}
                   stroke={C.fork}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={140}
@@ -105,7 +105,7 @@ export default function ForkDomainViz() {
                   rx={8}
                   fill={C.data + "15"}
                   stroke={C.data}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={340}
@@ -139,7 +139,7 @@ export default function ForkDomainViz() {
                   rx={8}
                   fill={C.domain + "15"}
                   stroke={C.domain}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={240}
@@ -183,7 +183,7 @@ export default function ForkDomainViz() {
                   rx={8}
                   fill={C.sign + "15"}
                   stroke={C.sign}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={240}

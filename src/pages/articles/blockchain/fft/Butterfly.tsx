@@ -20,6 +20,10 @@ export default function Butterfly() {
         question="E[k]와 O[k] 한 쌍에서 NTT output 두 개를 어떻게 얻을까요?"
         idea="half-turn identity ω^(k+n/2)=−ω^k를 사용하면 odd contribution의 부호만 바뀌므로 새 sub-transform 없이 더하기와 빼기로 두 output을 만듭니다."
         formula={String.raw`y_k=E_k+\omega^kO_k,\qquad y_{k+n/2}=E_k-\omega^kO_k`}
+        annotatedFormula={String.raw`y_k=\underbrace{E_k+\omega^kO_k,\qquad y_{k+n/2}=E_k-\omega^kO_k}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`E_k+\omega^kO_k,\qquad y_{k+n/2}=E_k-\omega^kO_k`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","half-turn identity ω^(k+n/2)=−ω^k를","사용하면 odd contribution의 부호만 바뀌므로 새","sub-transform 없이 더하기와 빼기로 두"] },
+        ]}
         terms={[
           {
             symbol: "E_k",

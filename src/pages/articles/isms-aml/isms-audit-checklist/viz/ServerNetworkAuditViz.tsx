@@ -188,7 +188,7 @@ export default function ServerNetworkAuditViz() {
                 x2={260}
                 y2={87}
                 stroke={C.fail}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 strokeDasharray="6 3"
                 initial={false}
                 animate={{ x2: 260 }}
@@ -217,7 +217,7 @@ export default function ServerNetworkAuditViz() {
                   x2={280}
                   y2={96}
                   stroke={C.fail}
-                  strokeWidth={2.5}
+                  strokeWidth={1.2}
                 />
                 <line
                   x1={280}
@@ -225,7 +225,7 @@ export default function ServerNetworkAuditViz() {
                   x2={265}
                   y2={96}
                   stroke={C.fail}
-                  strokeWidth={2.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={272}

@@ -26,6 +26,10 @@ export default function Applications() {
         question="단위와 크기가 다른 여러 series의 MAE를 naive forecast와 어떻게 비교할까?"
         idea={<>MASE는 test absolute error를 train 구간의 seasonal-naive one-step error로 나눕니다. 원 단위를 제거하면서 단순 기준선 대비 난도를 함께 반영합니다.</>}
         formula={String.raw`\operatorname{MASE}=\frac{\frac1N\sum_{i=1}^{N}|y_i-\hat y_i|}{\frac1{T-m}\sum_{t=m+1}^{T}|y_t-y_{t-m}|}`}
+        annotatedFormula={String.raw`\operatorname{MASE}=\underbrace{\frac{\frac1N\sum_{i=1}^{N}|y_i-\hat y_i|}{\frac1{T-m}\sum_{t=m+1}^{T}|y_t-y_{t-m}|}}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`\frac{\frac1N\sum_{i=1}^{N}|y_i-\hat y_i|}{\frac1{T-m}\sum_{t=m+1}^{T}|y_t-y_{t-m}|}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","MASE는 test absolute error를 train","구간의 seasonal-naive one-step error로","나눕니다."] },
+        ]}
         terms={[
           { symbol: "N", name: "test forecasts", description: "모든 평가 origin·horizon에서 집계한 예측 error 수입니다." },
           { symbol: "T", name: "training length", description: "분모를 계산하는 해당 fold의 train 관측 수입니다." },

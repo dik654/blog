@@ -41,7 +41,7 @@ export function StepEnergy() {
         x2={171}
         y2={93}
         stroke={C.power}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
       />
@@ -60,7 +60,7 @@ export function StepEnergy() {
         x2={344}
         y2={93}
         stroke={C.heat}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
       />

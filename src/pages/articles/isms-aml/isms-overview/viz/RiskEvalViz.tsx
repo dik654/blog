@@ -326,7 +326,7 @@ export default function RiskEvalViz() {
                 x2={200}
                 y2={58}
                 stroke={C.red}
-                strokeWidth={2}
+                strokeWidth={1.2}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.4 }}

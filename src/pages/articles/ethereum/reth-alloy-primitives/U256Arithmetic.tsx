@@ -15,6 +15,10 @@ export default function U256Arithmetic({ onCodeRef }: { onCodeRef: (key: string,
         question="Little-endian limb 네 개는 어떤 U256 값을 나타낼까요?"
         idea="각 limb를 2⁶⁴ 자리 하나로 보고 낮은 자리부터 가중해 더합니다. 이는 내부 산술 표현이며 RLP wire bytes의 순서와 구분합니다."
         formula={String.raw`x=\sum_{i=0}^{3}\ell_i2^{64i},\qquad 0\leq \ell_i<2^{64}`}
+        annotatedFormula={String.raw`x=\underbrace{\sum_{i=0}^{3}\ell_i2^{64i},\qquad 0\leq \ell_i<2^{64}}_{\text{허용 경계 판정}}`}
+        operations={[
+          { expression: String.raw`\sum_{i=0}^{3}\ell_i2^{64i},\qquad 0\leq \ell_i<2^{64}`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","각 limb를 2⁶⁴ 자리 하나로 보고 낮은 자리부터 가중해","더합니다."] },
+        ]}
         terms={[
           { symbol: "x", name: "U256 값", description: "0부터 2²⁵⁶−1 사이의 unsigned integer" },
           { symbol: "\\ell_i", name: "i번째 limb", description: "배열의 i번째 64-bit unsigned word" },

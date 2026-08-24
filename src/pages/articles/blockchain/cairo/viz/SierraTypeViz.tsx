@@ -65,7 +65,7 @@ export default function SierraTypeViz() {
                   rx={6}
                   fill={`${t.color}15`}
                   stroke={t.color}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={t.x + BW / 2}

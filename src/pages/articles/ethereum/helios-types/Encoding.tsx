@@ -23,6 +23,11 @@ export default function Encoding({ title, onCodeRef: _onCodeRef }: Props) {
         question="같은 header root의 서명을 다른 duty·fork·network에서 재사용하지 못하게 하려면 무엇을 hash하는가?"
         idea="먼저 fork와 network를 묶은 ForkData root를 만들고, 앞 28 bytes를 역할을 나타내는 domain type과 연결합니다. 마지막으로 message root와 domain을 SigningData로 묶습니다."
         formula={String.raw`\begin{aligned} D &= T_{\text{domain}}\;\|\;\operatorname{root}(V_{\text{fork}},G)_{0:28} \\ R_{\text{sign}} &= \operatorname{root}(R_{\text{object}},D) \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned} D &= \underbrace{T_{\text{domain}}\;\|\;\operatorname{root}(V_{\text{fork}},G)_{0:28}}_{\text{Domain type 계산}} \\ R_{\text{sign}} &= \underbrace{\operatorname{root}(R_{\text{object}},D)}_{\text{Object root 계산}} \end{aligned}`}
+        operations={[
+          { expression: String.raw`T_{\text{domain}}\;\|\;\operatorname{root}(V_{\text{fork}},G)_{0:28}`, annotation: ["Domain type이(가) 식의 결과에 기여하는 방식을","계산합니다.","먼저 fork와 network를 묶은 ForkData","root를 만들고, 앞 28 bytes를 역할을 나타내는"] },
+          { expression: String.raw`\operatorname{root}(R_{\text{object}},D)`, annotation: ["Object root이(가) 식의 결과에 기여하는 방식을","계산합니다.","먼저 fork와 network를 묶은 ForkData","root를 만들고, 앞 28 bytes를 역할을 나타내는"] },
+        ]}
         terms={[
           { symbol: "T_{\\text{domain}}", name: "Domain type", description: "Sync committee·beacon proposer처럼 서명 역할을 구분하는 4-byte 값입니다." },
           { symbol: "V_{\\text{fork}}", name: "Fork version", description: "Signature epoch에 활성인 consensus fork의 4-byte version입니다." },

@@ -66,7 +66,7 @@ export default function BitswapFlowViz() {
                   x2={AX[m.to]}
                   y2={y}
                   stroke="#10b981"
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                   markerEnd="url(#arr)"
                 />
                 <text

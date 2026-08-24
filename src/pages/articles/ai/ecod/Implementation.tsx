@@ -51,6 +51,11 @@ print(detector.get_params())`}</code></pre>
         question="Contamination c는 연속 score를 어떻게 binary label로 바꿀까?"
         idea={<>Training score의 상위 c 비율이 경계를 넘도록 <code>100(1−c)</code> percentile을 threshold로 사용합니다. PyOD는 score가 threshold보다 클 때 1을 반환합니다.</>}
         formula={String.raw`\begin{aligned}\tau&=Q_{1-c}\!\left(\{O_i^{\mathrm{train}}\}_{i=1}^{n}\right)\\\widehat y_i&=\mathbf1[O_i>\tau]\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}\tau&=\underbrace{Q_{1-c}\!\left(\{O_i^{\mathrm{train}}\}_{i=1}^{n}\right)}_{\text{허용 경계 판정}}\\\widehat y_i&=\underbrace{\mathbf1[O_i>\tau]}_{\text{허용 경계 판정}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`Q_{1-c}\!\left(\{O_i^{\mathrm{train}}\}_{i=1}^{n}\right)`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","Training score의 상위 c 비율이 경계를 넘도록","100(1−c) percentile을 threshold로","사용합니다."] },
+          { expression: String.raw`\mathbf1[O_i>\tau]`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","Training score의 상위 c 비율이 경계를 넘도록","100(1−c) percentile을 threshold로","사용합니다."] },
+        ]}
         terms={[
           { symbol: "c", name: "contamination", description: "Training data에서 outlier로 표시할 것으로 정한 비율이며 PyOD float 설정은 (0, 0.5] 범위입니다." },
           { symbol: "Q_{1-c}", name: "empirical quantile", description: "Training score 분포의 1−c 분위수입니다." },

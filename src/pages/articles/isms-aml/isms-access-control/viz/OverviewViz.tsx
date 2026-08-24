@@ -865,7 +865,7 @@ export default function OverviewViz() {
                 rx={8}
                 fill="none"
                 stroke={C.danger}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 strokeDasharray="4 2"
               />
               <rect
@@ -876,7 +876,7 @@ export default function OverviewViz() {
                 rx={8}
                 fill="none"
                 stroke={C.safe}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 strokeDasharray="4 2"
               />
               <text

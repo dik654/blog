@@ -37,6 +37,10 @@ export default function Fp12() {
           question="Fp¹²에서 p제곱을 일반 exponentiation보다 싸게 계산할 수 있는 이유는 무엇일까요?"
           idea="Fp coefficient는 p제곱에서 고정되고 extension basis만 permutation·sign·사전 계산 coefficient로 바뀝니다. Concrete tower basis에서 이 선형 작용을 table로 만들면 긴 square-and-multiply를 피할 수 있습니다."
           formula={String.raw`\varphi(x)=x^p,\qquad \varphi^{12}(x)=x^{p^{12}}=x\quad(x\in\mathbb F_{p^{12}})`}
+          annotatedFormula={String.raw`\varphi(x)=\underbrace{x^p,\qquad \varphi^{12}(x)=x^{p^{12}}=x\quad(x\in\mathbb F_{p^{12}})}_{\text{extension degree 계산}}`}
+          operations={[
+            { expression: String.raw`x^p,\qquad \varphi^{12}(x)=x^{p^{12}}=x\quad(x\in\mathbb F_{p^{12}})`, annotation: ["extension degree이(가) 식의 결과에 기여하는","방식을 계산합니다.","Fp coefficient는 p제곱에서 고정되고","extension basis만"] },
+          ]}
           terms={[
             { symbol: "φ", name: "Frobenius map", description: "Characteristic p field의 p-power automorphism입니다." },
             { symbol: "12", name: "extension degree", description: "Fp¹²에서 Frobenius action이 항등으로 돌아오는 주기입니다." },

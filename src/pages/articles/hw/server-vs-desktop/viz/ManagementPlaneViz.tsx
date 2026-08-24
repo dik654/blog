@@ -82,7 +82,7 @@ function Bmc() {
       <motion.path
         d="M144 89 H180 M300 89 H336"
         stroke={C.server}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
       />
@@ -188,7 +188,7 @@ function Numa() {
       <motion.path
         d="M153 87 H327"
         stroke={C.err}
-        strokeWidth={2}
+        strokeWidth={1.2}
         strokeDasharray="5 4"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}

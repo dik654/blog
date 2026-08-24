@@ -46,7 +46,7 @@ export default function AutobahnLayersViz() {
             rx={6}
             fill={`${C.highway}12`}
             stroke={C.highway}
-            strokeWidth={1.5}
+            strokeWidth={1.2}
             animate={{ opacity: step === 0 || step === 3 ? 1 : 0.25 }}
           />
           <text
@@ -68,7 +68,7 @@ export default function AutobahnLayersViz() {
             rx={6}
             fill={`${C.ride}12`}
             stroke={C.ride}
-            strokeWidth={1.5}
+            strokeWidth={1.2}
             animate={{ opacity: step === 0 || step === 2 ? 1 : 0.25 }}
           />
           <text
@@ -90,7 +90,7 @@ export default function AutobahnLayersViz() {
             rx={6}
             fill={`${C.lane}08`}
             stroke={C.lane}
-            strokeWidth={1.5}
+            strokeWidth={1.2}
             animate={{ opacity: step === 0 || step === 1 ? 1 : 0.25 }}
           />
           <text x={50} y={128} fontSize={10} fontWeight="700" fill={C.lane}>
@@ -116,7 +116,7 @@ export default function AutobahnLayersViz() {
                   x2={350}
                   y2={y}
                   stroke={C.lane}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                   strokeDasharray="6 4"
                   animate={{ opacity: step >= 1 ? 1 : 0.3 }}
                 />

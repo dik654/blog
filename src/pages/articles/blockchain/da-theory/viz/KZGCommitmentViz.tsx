@@ -100,7 +100,7 @@ export default function KZGCommitmentViz() {
                 rx={5}
                 fill={`${C[1]}20`}
                 stroke={C[1]}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={270}
@@ -161,7 +161,7 @@ export default function KZGCommitmentViz() {
                 rx={5}
                 fill={`${C[2]}20`}
                 stroke={C[2]}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={250}
@@ -199,7 +199,7 @@ export default function KZGCommitmentViz() {
                 rx={6}
                 fill={`${C[3]}08`}
                 stroke={C[3]}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={410}

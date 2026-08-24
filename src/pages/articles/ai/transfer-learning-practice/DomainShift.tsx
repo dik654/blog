@@ -27,6 +27,20 @@ export default function DomainShift() {
           &\text{concept shift}\\[-2pt]
           &P_s(y\mid x)\ne P_t(y\mid x).
         \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+          &\text{covariate shift}\\[-2pt]
+          &P_s(x)\ne P_t(x),\\[-2pt]
+          &P_s(y\mid x)=\underbrace{P_t(y\mid x),}_{\text{오른쪽 항으로 결과 계산}}\\[4pt]
+          &\text{label shift}\\[-2pt]
+          &P_s(y)\ne P_t(y),\\[-2pt]
+          &P_s(x\mid y)=\underbrace{P_t(x\mid y),}_{\text{오른쪽 항으로 결과 계산}}\\[4pt]
+          &\text{concept shift}\\[-2pt]
+          &P_s(y\mid x)\ne P_t(y\mid x).
+        \end{aligned}`}
+        operations={[
+          { expression: String.raw`P_t(y\mid x),`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","P(x,y)=P(y|x)P(x)로 읽으면 input 빈도와","label rule을 분리할 수 있고, Bayes rule을","함께 보면 label prior 변화도 별도 가정으로 다룰 수"] },
+          { expression: String.raw`P_t(x\mid y),`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","P(x,y)=P(y|x)P(x)로 읽으면 input 빈도와","label rule을 분리할 수 있고, Bayes rule을","함께 보면 label prior 변화도 별도 가정으로 다룰 수"] },
+        ]}
         terms={[
           { symbol: "P_s,P_t", name: "source·target distribution", description: "Pretraining/학습 환경과 실제 deployment 환경의 확률 분포입니다." },
           { symbol: "P(x)", name: "input marginal", description: "Label을 무시한 sensor·style·language·device input의 빈도입니다." },

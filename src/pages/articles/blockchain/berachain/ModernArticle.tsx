@@ -77,6 +77,10 @@ export default function ModernBerachainArticle() {
           question="Vault 전체 1,000 units 중 100 units를 stake했고 50 BGT가 배정되면 단순 pro-rata reward는 얼마인가요?"
           idea="같은 accounting interval의 user balance를 total eligible stake로 나눈 share에 distributable reward를 곱합니다."
           formula={String.raw`R_u=R_v\frac{s_u}{S_v}`}
+          annotatedFormula={String.raw`R_u=\underbrace{R_v\frac{s_u}{S_v}}_{\text{기준량당 비율}}`}
+          operations={[
+            { expression: String.raw`R_v\frac{s_u}{S_v}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","같은 accounting interval의 user","balance를 total eligible stake로 나눈","share에 distributable reward를 곱합니다."] },
+          ]}
           terms={[
             {
               symbol: "Rᵤ",

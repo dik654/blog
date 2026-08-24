@@ -50,6 +50,11 @@ export default function Modeling() {
         question="Likelihood가 좋아지는 만큼 parameter가 늘어나는 후보를 같은 기준으로 어떻게 비교할까?"
         idea={<>AIC와 BIC는 maximized log-likelihood에 complexity penalty를 더합니다. AIC는 parameter당 2, BIC는 sample size가 커질수록 log n만큼 벌점을 주어 서로 다른 목적의 근사 기준을 만듭니다.</>}
         formula={String.raw`\begin{aligned}\operatorname{AIC}&=-2\log\hat L+2k\\\operatorname{BIC}&=-2\log\hat L+k\log n\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}\operatorname{AIC}&=\underbrace{-2\log\hat L+2k}_{\text{로그 비용 변환}}\\\operatorname{BIC}&=\underbrace{-2\log\hat L+k\log n}_{\text{로그 비용 변환}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`-2\log\hat L+2k`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","AIC와 BIC는 maximized","log-likelihood에 complexity","penalty를 더합니다."] },
+          { expression: String.raw`-2\log\hat L+k\log n`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","AIC와 BIC는 maximized","log-likelihood에 complexity","penalty를 더합니다."] },
+        ]}
         terms={[
           { symbol: "\\hat L", name: "maximized likelihood", description: "같은 observations와 likelihood family에서 적합한 model의 최대 likelihood입니다." },
           { symbol: "k", name: "estimated parameters", description: "AR·MA·trend·variance 등 실제 추정한 자유 parameter 수입니다." },
@@ -63,6 +68,10 @@ export default function Modeling() {
         question="Residual 여러 lag에 설명되지 않은 autocorrelation이 남았는지 한 통계량으로 어떻게 확인할까?"
         idea={<>Ljung–Box statistic은 lag 1부터 h까지 residual autocorrelation의 제곱을 sample-size correction과 함께 누적합니다. 개별 spike가 아니라 여러 lag의 공동 lack-of-fit을 검정합니다.</>}
         formula={String.raw`Q(h)=n(n+2)\sum_{k=1}^{h}\frac{\hat\rho_k^2}{n-k}`}
+        annotatedFormula={String.raw`Q(h)=\underbrace{n(n+2)\sum_{k=1}^{h}\frac{\hat\rho_k^2}{n-k}}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`n(n+2)\sum_{k=1}^{h}\frac{\hat\rho_k^2}{n-k}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Ljung–Box statistic은 lag 1부터 h까지","residual autocorrelation의 제곱을","sample-size correction과 함께 누적합니다."] },
+        ]}
         terms={[
           { symbol: "\\hat\\rho_k", name: "residual autocorrelation", description: "Fitted model의 residual에서 계산한 lag-k sample correlation입니다." },
           { symbol: "h", name: "diagnostic horizon", description: "공동으로 확인할 최대 lag이며 season과 sample size를 고려해 정합니다." },

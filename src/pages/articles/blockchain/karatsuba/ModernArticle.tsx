@@ -51,6 +51,10 @@ export default function ModernKaratsubaArticle() {
           question="두 조각으로 나눈 두 수를 schoolbook 방식으로 곱하면 어떤 네 곱이 생기는가?"
           idea={<>분배법칙으로 각 조각 쌍을 모두 곱하고 B의 거듭제곱에 맞춰 자리 이동합니다. 이 식이 Karatsuba와 비교할 정확한 기준선입니다.</>}
           formula={String.raw`xy=x_1y_1B^2+(x_1y_0+x_0y_1)B+x_0y_0`}
+          annotatedFormula={String.raw`xy=\underbrace{x_1y_1B^2+(x_1y_0+x_0y_1)B+x_0y_0}_{\text{Split radix 계산}}`}
+          operations={[
+            { expression: String.raw`x_1y_1B^2+(x_1y_0+x_0y_1)B+x_0y_0`, annotation: ["Split radix이(가) 식의 결과에 기여하는 방식을","계산합니다.","분배법칙으로 각 조각 쌍을 모두 곱하고 B의 거듭제곱에 맞춰","자리 이동합니다."] },
+          ]}
           terms={[
             { symbol: "x_1,y_1", name: "High halves", description: "각 operand의 높은 자리 조각입니다." },
             { symbol: "x_0,y_0", name: "Low halves", description: "0 이상 B 미만인 낮은 자리 조각입니다." },
@@ -72,6 +76,10 @@ export default function ModernKaratsubaArticle() {
           question="Schoolbook의 네 절반 곱과 같은 결과를 세 절반 곱으로 어떻게 계산하는가?"
           idea={<>낮은 항 z₀와 높은 항 z₂는 그대로 계산하고, 두 합을 곱한 값에서 z₀와 z₂를 빼 교차항 z₁을 얻습니다.</>}
           formula={String.raw`z_0=x_0y_0,\quad z_2=x_1y_1,\quad z_1=(x_0+x_1)(y_0+y_1)-z_0-z_2,\quad xy=z_2B^2+z_1B+z_0`}
+          annotatedFormula={String.raw`z_0=\underbrace{x_0y_0,\quad z_2=x_1y_1,\quad z_1=(x_0+x_1)(y_0+y_1)-z_0-z_2,\quad xy=z_2B^2+z_1B+z_0}_{\text{Low product 계산}}`}
+          operations={[
+            { expression: String.raw`x_0y_0,\quad z_2=x_1y_1,\quad z_1=(x_0+x_1)(y_0+y_1)-z_0-z_2,\quad xy=z_2B^2+z_1B+z_0`, annotation: ["Low product이(가) 식의 결과에 기여하는 방식을","계산합니다.","낮은 항 z₀와 높은 항 z₂는 그대로 계산하고, 두 합을","곱한 값에서 z₀와 z₂를 빼 교차항 z₁을 얻습니다."] },
+          ]}
           terms={[
             { symbol: "z_0", name: "Low product", description: "낮은 조각끼리의 곱입니다." },
             { symbol: "z_2", name: "High product", description: "높은 조각끼리의 곱입니다." },
@@ -112,6 +120,10 @@ export default function ModernKaratsubaArticle() {
           question="Karatsuba 재귀의 계산량이 왜 n²이 아니라 n^log₂3이 되는가?"
           idea={<>문제 크기는 매 단계 절반이 되고 subproblem 수는 세 배가 됩니다. 깊이 log₂n에서 leaf 수가 3^log₂n이므로 같은 지수 법칙으로 바꿉니다.</>}
           formula={String.raw`T(n)=3T(n/2)+cn\quad\Longrightarrow\quad T(n)=\Theta\!\left(n^{\log_2 3}\right)\approx\Theta(n^{1.585})`}
+          annotatedFormula={String.raw`T(n)=\underbrace{3T(n/2)+cn\quad\Longrightarrow\quad T(n)=\Theta\!\left(n^{\log_2 3}\right)\approx\Theta(n^{1.585})}_{\text{기준량당 비율}}`}
+          operations={[
+            { expression: String.raw`3T(n/2)+cn\quad\Longrightarrow\quad T(n)=\Theta\!\left(n^{\log_2 3}\right)\approx\Theta(n^{1.585})`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","문제 크기는 매 단계 절반이 되고 subproblem 수는 세","배가 됩니다."] },
+          ]}
           terms={[
             { symbol: "T(n)", name: "n-limb running cost", description: "같은 backend에서 n 크기 operand 두 개를 곱하는 비용입니다." },
             { symbol: "3T(n/2)", name: "Recursive products", description: "절반 크기의 z₀, z₁, z₂ 곱 세 개입니다." },

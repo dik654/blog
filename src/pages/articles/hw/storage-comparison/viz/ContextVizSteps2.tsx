@@ -45,7 +45,7 @@ export function StepSas() {
         d="M132 74 H182 V112 M132 151 H182 V112"
         fill="none"
         stroke={C.sas}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
         transition={{ delay: 0.22 }}
@@ -65,7 +65,7 @@ export function StepSas() {
         d="M300 112 H342 M342 112 V68 M342 112 V155"
         fill="none"
         stroke={C.sas}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
         transition={{ delay: 0.4 }}
@@ -153,7 +153,7 @@ export function StepNvme() {
         d="M54 150 V165 H326 M141 150 V165 M228 150 V165"
         fill="none"
         stroke={C.nvme}
-        strokeWidth={1.4}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
         transition={{ delay: 0.46 }}

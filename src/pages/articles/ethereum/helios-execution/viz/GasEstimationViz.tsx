@@ -46,7 +46,7 @@ export default function GasEstimationViz() {
                   rx={8}
                   fill={C.est + "15"}
                   stroke={C.est}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={240}
@@ -80,7 +80,7 @@ export default function GasEstimationViz() {
                   rx={8}
                   fill={C.est + "15"}
                   stroke={C.est}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={140}
@@ -100,7 +100,7 @@ export default function GasEstimationViz() {
                   rx={8}
                   fill={C.exec + "15"}
                   stroke={C.exec}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={340}
@@ -124,7 +124,7 @@ export default function GasEstimationViz() {
                   rx={8}
                   fill={C.exec + "15"}
                   stroke={C.exec}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={240}
@@ -158,7 +158,7 @@ export default function GasEstimationViz() {
                   rx={8}
                   fill={C.gas + "15"}
                   stroke={C.gas}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={240}

@@ -13,6 +13,10 @@ export default function AtokenDebt() {
         question="Index가 움직일 때 현재 공급·부채 balance는 어떻게 바뀔까요?"
         idea="사용자의 scaled unit은 transaction 사이에 그대로 두고 reserve 공통 index만 앞으로 움직입니다. 입출금 시 현재 amount를 index로 나누어 scaled delta로 바꿉니다."
         formula={String.raw`B_{supply}=b_s I_L,\qquad B_{debt}=b_d I_V`}
+        annotatedFormula={String.raw`B_{supply}=\underbrace{b_s I_L,\qquad B_{debt}=b_d I_V}_{\text{liquidity index 계산}}`}
+        operations={[
+          { expression: String.raw`b_s I_L,\qquad B_{debt}=b_d I_V`, annotation: ["liquidity index이(가) 식의 결과에 기여하는","방식을 계산합니다.","사용자의 scaled unit은 transaction 사이에","그대로 두고 reserve 공통 index만 앞으로"] },
+        ]}
         terms={[
           { symbol: "b_s,b_d", name: "scaled balances", description: "사용자별로 저장된 공급·variable debt 단위입니다." },
           { symbol: "I_L", name: "liquidity index", description: "공급자 수익을 반영하는 ray-scaled reserve index입니다." },

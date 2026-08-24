@@ -61,6 +61,16 @@ export default function OdeSdeBoundary() {
           &+g(x_n,t_n)\sqrt{\Delta t}\,\epsilon_n \\
           \epsilon_n&\sim\mathcal N(0,I)
         \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+          x_{n+1}={}&x_n+\underbrace{f(x_n,t_n)\Delta t}_{\text{시간에 비례하는 drift}} \\
+          &+\underbrace{g(x_n,t_n)\sqrt{\Delta t}\,\epsilon_n}_{\text{Brownian scaling을 보존하는 diffusion}} \\
+          \epsilon_n&\sim\underbrace{\mathcal N(0,I)}_{\text{step마다 독립인 Gaussian draw}}
+        \end{aligned}`}
+        operations={[
+          { expression: String.raw`f(x_n,t_n)\Delta t`, annotation: ["현재 state의 deterministic 속도에", "step 길이를 곱해 평균 이동량을 만듭니다"] },
+          { expression: String.raw`g(x_n,t_n)\sqrt{\Delta t}\,\epsilon_n`, annotation: ["Noise direction에 √Δt를 곱해", "한 step 분산이 Δt가 되게 합니다"] },
+          { expression: String.raw`\epsilon_n\sim\mathcal N(0,I)`, annotation: ["각 step에서 평균 0·단위 공분산인", "새 random increment를 뽑습니다"] },
+        ]}
         terms={[
           {
             symbol: "f\\Delta t",

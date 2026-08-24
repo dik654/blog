@@ -21,6 +21,11 @@ export default function Fourier() {
         question="연속 시간 signal의 각 angular frequency 성분을 어떻게 분해하고 다시 합칠까?"
         idea={<>Forward transform은 f(t)를 ω로 회전하는 basis와 전체 시간에 걸쳐 내적하고, inverse transform은 모든 coefficient에 basis를 다시 곱해 합성합니다.</>}
         formula={String.raw`\begin{aligned}F(\omega)&=\int_{-\infty}^{\infty}f(t)e^{-i\omega t}\,dt\\[3pt]f(t)&=\frac1{2\pi}\int_{-\infty}^{\infty}F(\omega)e^{i\omega t}\,d\omega\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}F(\omega)&=\underbrace{\int_{-\infty}^{\infty}f(t)e^{-i\omega t}\,dt}_{\text{spectrum 계산}}\\[3pt]f(t)&=\underbrace{\frac1{2\pi}\int_{-\infty}^{\infty}F(\omega)e^{i\omega t}\,d\omega}_{\text{spectrum 계산}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`\int_{-\infty}^{\infty}f(t)e^{-i\omega t}\,dt`, annotation: ["spectrum이(가) 식의 결과에 기여하는 방식을","계산합니다.","Forward transform은 f(t)를 ω로 회전하는","basis와 전체 시간에 걸쳐 내적하고, inverse"] },
+          { expression: String.raw`\frac1{2\pi}\int_{-\infty}^{\infty}F(\omega)e^{i\omega t}\,d\omega`, annotation: ["spectrum이(가) 식의 결과에 기여하는 방식을","계산합니다.","Forward transform은 f(t)를 ω로 회전하는","basis와 전체 시간에 걸쳐 내적하고, inverse"] },
+        ]}
         terms={[
           { symbol: "f(t)", name: "continuous signal", description: "시간 t마다 정의된 원래 함수입니다." },
           { symbol: "F(\\omega)", name: "spectrum", description: "Angular frequency ω 성분의 complex coefficient입니다." },
@@ -37,6 +42,12 @@ export default function Fourier() {
         question="Sample rate와 frame length가 FFT에서 보이는 frequency 좌표를 어떻게 정할까?"
         idea={<>Continuous signal을 fₛ번/초로 sampling하고 N개씩 잘라 DFT하면, positive frequency의 관측 한계는 Nyquist frequency fₛ/2이고 adjacent bin 간격은 fₛ/N이 됩니다.</>}
         formula={String.raw`\begin{aligned}f_k&=\frac{k f_s}{N}\\[2pt]\Delta f&=\frac{f_s}{N}\\[2pt]|f|&<\frac{f_s}{2}\quad\text{(alias-free band)}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}f_k&=\underbrace{\frac{k f_s}{N}}_{\text{기준량당 비율}}\\[2pt]\Delta f&=\underbrace{\frac{f_s}{N}}_{\text{기준량당 비율}}\\[2pt]|f|&<\underbrace{\frac{f_s}{2}\quad\text{(alias-free band)}}_{\text{기준량당 비율}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`\frac{k f_s}{N}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Continuous signal을 fₛ번/초로","sampling하고 N개씩 잘라 DFT하면, positive","frequency의 관측 한계는 Nyquist"] },
+          { expression: String.raw`\frac{f_s}{N}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Continuous signal을 fₛ번/초로","sampling하고 N개씩 잘라 DFT하면, positive","frequency의 관측 한계는 Nyquist"] },
+          { expression: String.raw`\frac{f_s}{2}\quad\text{(alias-free band)}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Continuous signal을 fₛ번/초로","sampling하고 N개씩 잘라 DFT하면, positive","frequency의 관측 한계는 Nyquist"] },
+        ]}
         terms={[
           { symbol: "f_s", name: "sample rate", description: "초당 관측한 sample 수입니다." },
           { symbol: "N", name: "frame length", description: "한 번의 DFT에 넣는 sample 수이며 frame duration은 N/fₛ입니다." },

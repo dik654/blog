@@ -27,6 +27,10 @@ export default function ModernWorkerBootArticle() {
           question="작업 prompt를 보내도 되는 순간을 한 조건으로 어떻게 표현할까?"
           idea={<>Process 생존만 보지 않고 ready cue, trust gate, tool permission gate가 모두 통과했을 때만 1이 되는 곱으로 읽습니다. 하나라도 0이면 전송하지 않습니다.</>}
           formula={String.raw`G_{send}=I_{alive},I_{ready},I_{trust},I_{tool}`}
+          annotatedFormula={String.raw`G_{send}=\underbrace{I_{alive},I_{ready},I_{trust},I_{tool}}_{\text{Process 생존 indicator 계산}}`}
+          operations={[
+            { expression: String.raw`I_{alive},I_{ready},I_{trust},I_{tool}`, annotation: ["Process 생존 indicator이(가) 식의 결과에","기여하는 방식을 계산합니다.","Process 생존만 보지 않고 ready cue, trust","gate, tool permission gate가 모두"] },
+          ]}
           terms={[
             { symbol: "I_{alive}", name: "Process 생존 indicator", description: "Worker process가 종료되지 않았으면 1, 아니면 0입니다." },
             { symbol: "I_{ready}", name: "Ready 관찰 indicator", description: "Pinned detector가 coding-agent prompt surface를 ready로 분류했으면 1입니다." },

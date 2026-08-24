@@ -273,7 +273,7 @@ export default function AbsorbViz() {
                   rx={8}
                   fill={`${C2}12`}
                   stroke={C2}
-                  strokeWidth={2}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={cellX(2) + bw / 2}

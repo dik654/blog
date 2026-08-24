@@ -44,6 +44,16 @@ I_k(a)&=\mathbf1[g_k(a)\le b_k],\\
 F(a)&=\prod_{k=1}^{K}I_k(a),\\
 a^*&=\arg\min_{a:F(a)=1}C_{\mathrm{ops}}(a).
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+I_k(a)&=\underbrace{\mathbf1[g_k(a)\le b_k],}_{\text{허용 경계 판정}}\\
+F(a)&=\underbrace{\prod_{k=1}^{K}I_k(a),}_{\text{artifact candidate 계산}}\\
+a^*&=\underbrace{\arg\min_{a:F(a)=1}C_{\mathrm{ops}}(a).}_{\text{경계 후보 선택}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\mathbf1[g_k(a)\le b_k],`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","각 guardrail을 만족하면 1, 아니면 0인","indicator를 곱합니다."] },
+          { expression: String.raw`\prod_{k=1}^{K}I_k(a),`, annotation: ["artifact candidate이(가) 식의 결과에 기여하는","방식을 계산합니다.","각 guardrail을 만족하면 1, 아니면 0인","indicator를 곱합니다."] },
+          { expression: String.raw`\arg\min_{a:F(a)=1}C_{\mathrm{ops}}(a).`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","각 guardrail을 만족하면 1, 아니면 0인","indicator를 곱합니다."] },
+        ]}
         terms={[
           {
             symbol: "a",

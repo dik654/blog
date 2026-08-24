@@ -25,6 +25,10 @@ export default function StateRoot({
         formula={
           "r_{\\rm state}={\\rm TrieRoot}\\!\\left\\{ {\\rm keccak}(a)\\mapsto {\\rm RLP}(n,b,r_{\\rm storage},h_{\\rm code}) \\right\\}"
         }
+        annotatedFormula={String.raw`r_{\rm state}=\underbrace{{\rm TrieRoot}\!\left\{ {\rm keccak}(a)\mapsto {\rm RLP}(n,b,r_{\rm storage},h_{\rm code}) \right\}}_{\text{허용 경계 판정}}`}
+        operations={[
+          { expression: String.raw`{\rm TrieRoot}\!\left\{ {\rm keccak}(a)\mapsto {\rm RLP}(n,b,r_{\rm storage},h_{\rm code}) \right\}`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","Address를 hash한 path에 account 네 필드를","RLP로 넣고, account가 가진 storage trie","root도 그 value 안에 중첩합니다."] },
+        ]}
         terms={[
           {
             symbol: "a",

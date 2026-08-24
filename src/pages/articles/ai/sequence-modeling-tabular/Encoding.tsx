@@ -20,6 +20,10 @@ export default function Encoding() {
         question="한 event의 종류·속성·순서·시간 간격을 하나의 d차원 token으로 어떻게 만들까?"
         idea={<>각 신호를 d차원으로 변환한 뒤 같은 좌표계에서 더하는 한 가지 설계입니다. Concatenation을 쓴다면 뒤에 projection이 필요하며, 어느 쪽이든 신호별 source와 단위가 명확해야 합니다.</>}
         formula={String.raw`\begin{aligned}z_j={}&E_{\mathrm{type}}[a_j]+W_{\mathrm{num}}u_j\\&+p_j+g_{\psi}(\Delta t_j),\\z_j\in{}&\mathbb R^d.\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}z_j={}&E_{\mathrm{type}}[\underbrace{a_j}_{\text{event type 계산}}]+W_{\mathrm{num}}u_j\\&+p_j+g_{\psi}(\Delta t_j),\\z_j\in{}&\mathbb R^d.\end{aligned}`}
+        operations={[
+          { expression: String.raw`a_j`, annotation: ["event type이(가) 식의 결과에 기여하는 방식을","계산합니다.","각 신호를 d차원으로 변환한 뒤 같은 좌표계에서 더하는 한","가지 설계입니다."] },
+        ]}
         terms={[
           { symbol: "a_j", name: "event type", description: "View·cart·purchase처럼 j번째 event의 categorical action ID입니다." },
           { symbol: "u_j", name: "numerical attributes", description: "Amount·device score처럼 event에 붙은 수치 vector이며 단위와 missing rule이 필요합니다." },

@@ -136,7 +136,7 @@ export default function ProveCoreViz() {
                       rx={12}
                       fill="none"
                       stroke={n.color}
-                      strokeWidth={1.4}
+                      strokeWidth={1.2}
                     />
                   )}
                 </motion.g>
@@ -152,7 +152,7 @@ export default function ProveCoreViz() {
               rx={9}
               fill="none"
               stroke="#ef4444"
-              strokeWidth={1.5}
+              strokeWidth={1.2}
               initial={{ opacity: 0 }}
               animate={{ opacity: [0.3, 0.7, 0.3] }}
               transition={{ duration: 1.5, repeat: Infinity }}

@@ -49,7 +49,7 @@ export function StepWorkload() {
         sub="points · scalars"
         color={C.memory}
       />
-      <path d="M118 92 H183" stroke={C.memory} strokeWidth={2} />
+      <path d="M118 92 H183" stroke={C.memory} strokeWidth={1.2} />
       <path d={arrow} transform="translate(181 92)" fill={C.memory} />
       <ModuleBox
         x={188}
@@ -60,7 +60,7 @@ export function StepWorkload() {
         sub="load → compute → store"
         color={C.compute}
       />
-      <path d="M296 92 H361" stroke={C.ok} strokeWidth={2} />
+      <path d="M296 92 H361" stroke={C.ok} strokeWidth={1.2} />
       <path d={arrow} transform="translate(359 92)" fill={C.ok} />
       <DataBox
         x={366}
@@ -155,7 +155,7 @@ export function StepCapacity() {
       <path
         d="M302 89 H351"
         stroke={C.danger}
-        strokeWidth={2}
+        strokeWidth={1.2}
         strokeDasharray="4 3"
       />
       <path d={arrow} transform="translate(349 89)" fill={C.danger} />
@@ -172,7 +172,7 @@ export function StepCapacity() {
         d="M405 126 C405 160 160 161 160 130"
         fill="none"
         stroke={C.danger}
-        strokeWidth={2}
+        strokeWidth={1.2}
         strokeDasharray="5 4"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}

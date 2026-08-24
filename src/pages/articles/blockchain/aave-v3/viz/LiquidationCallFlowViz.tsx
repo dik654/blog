@@ -141,7 +141,7 @@ export default function LiquidationCallFlowViz() {
                   x2={44}
                   y2={y + 54}
                   stroke="#3b82f6"
-                  strokeWidth={1.3}
+                  strokeWidth={1.2}
                   markerEnd="url(#lc-arr)"
                 />
               )}

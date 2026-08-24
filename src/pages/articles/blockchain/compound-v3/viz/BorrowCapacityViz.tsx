@@ -183,7 +183,7 @@ export default function BorrowCapacityViz() {
           fill="#10b981"
           fillOpacity={0.12}
           stroke="#10b981"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <text
           x={36}

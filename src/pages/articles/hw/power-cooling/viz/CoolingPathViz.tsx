@@ -66,7 +66,7 @@ function Aisle() {
         x2={176}
         y2={96}
         stroke={C.cool}
-        strokeWidth={2}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
       />
@@ -85,7 +85,7 @@ function Aisle() {
         x2={342}
         y2={96}
         stroke={C.heat}
-        strokeWidth={2}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
       />
@@ -138,7 +138,7 @@ function Passive() {
         x2={174}
         y2={95}
         stroke={C.cool}
-        strokeWidth={2}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
       />
@@ -157,7 +157,7 @@ function Passive() {
         x2={338}
         y2={95}
         stroke={C.heat}
-        strokeWidth={2}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
       />
@@ -217,7 +217,7 @@ function OpenAir() {
         d="M156 87 C205 40 275 40 324 87 M324 107 C274 154 206 154 156 107"
         fill="none"
         stroke={C.heat}
-        strokeWidth={2}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
       />

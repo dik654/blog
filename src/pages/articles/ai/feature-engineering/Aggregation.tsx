@@ -34,6 +34,18 @@ I_r={}&\mathbf 1[e_r=e]\\
 &\cdot\mathbf 1[t_{\mathrm{available},r}\le t_0],\\
 \operatorname{count}_{W}(e,t_0)&=\sum_r I_r.
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+I_r={}&\mathbf 1[e_r=e]\\
+&\cdot\mathbf 1[t_0-W<\underbrace{t_{\mathrm{event},r}]}_{\text{lookback window 계산}}\\
+&\cdot\mathbf 1[t_{\mathrm{event},r}\le \underbrace{t_0]}_{\text{event record 계산}}\\
+&\cdot\mathbf 1[t_{\mathrm{available},r}\le \underbrace{t_0],}_{\text{event record 계산}}\\
+\operatorname{count}_{W}(e,t_0)&=\sum_r I_r.
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`t_{\mathrm{event},r}]`, annotation: ["lookback window이(가) 식의 결과에 기여하는","방식을 계산합니다.","Entity가 같은 record 중 event time과","available time이 모두 cutoff 이하이고, 왼쪽"] },
+          { expression: String.raw`t_0]`, annotation: ["event record이(가) 식의 결과에 기여하는 방식을","계산합니다.","Entity가 같은 record 중 event time과","available time이 모두 cutoff 이하이고, 왼쪽"] },
+          { expression: String.raw`t_0],`, annotation: ["event record이(가) 식의 결과에 기여하는 방식을","계산합니다.","Entity가 같은 record 중 event time과","available time이 모두 cutoff 이하이고, 왼쪽"] },
+        ]}
         terms={[
           { symbol: "W", name: "lookback window", description: "7일·30일처럼 cutoff에서 과거로 돌아갈 관측 길이입니다." },
           { symbol: "r", name: "event record", description: "거래·로그인·센서 측정처럼 집계 후보가 되는 한 기록입니다." },

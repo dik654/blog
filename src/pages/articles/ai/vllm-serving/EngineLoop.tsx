@@ -106,6 +106,16 @@ n_{tok} &\le B_{tok} \\
 n_{seq} &\le B_{seq} \\
 M_{KV}^{need} &\le M_{KV}^{free}
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+n_{tok} &\le \underbrace{B_{tok}}_{\text{오른쪽 항으로 결과 계산}} \\
+n_{seq} &\le \underbrace{B_{seq}}_{\text{오른쪽 항으로 결과 계산}} \\
+M_{KV}^{need} &\le \underbrace{M_{KV}^{free}}_{\text{오른쪽 항으로 결과 계산}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`B_{tok}`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","계산할 token 수, 동시에 진행할 sequence 수, 새","state를 남길 KV memory를 각각 상한과 비교합니다."] },
+          { expression: String.raw`B_{seq}`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","계산할 token 수, 동시에 진행할 sequence 수, 새","state를 남길 KV memory를 각각 상한과 비교합니다."] },
+          { expression: String.raw`M_{KV}^{free}`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","계산할 token 수, 동시에 진행할 sequence 수, 새","state를 남길 KV memory를 각각 상한과 비교합니다."] },
+        ]}
         terms={FEASIBILITY_TERMS}
         assumptions={[
           "B_tok와 B_seq는 해당 vLLM version의 effective SchedulerConfig 값입니다.",

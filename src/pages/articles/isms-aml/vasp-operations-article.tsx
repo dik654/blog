@@ -36,6 +36,8 @@ type Config = {
   question: string;
   idea: string;
   formula: string;
+  annotatedFormula: string;
+  operations: readonly { expression: string; annotation: string | readonly string[] }[];
   terms: readonly { symbol: string; name: string; description: string }[];
   assumptions: readonly string[];
   interpretation: string;
@@ -74,6 +76,10 @@ const CONFIG: Record<ArticleKey, Config> = {
     question: "검증한 자산 105 BTC와 포함 채무 100 BTC를 어떻게 읽어야 하는가?",
     idea: "단순 비율은 snapshot 안에서 검증된 자산이 포함 채무보다 얼마나 큰지만 보여 줍니다. 채무 모집단 완전성과 자산의 법적·운영 통제는 별도 증거입니다.",
     formula: String.raw`R=\frac{A_{\mathrm{verified}}}{L_{\mathrm{included}}}=\frac{105}{100}=1.05`,
+    annotatedFormula: String.raw`R=\underbrace{\frac{A_{\mathrm{verified}}}{L_{\mathrm{included}}}=\frac{105}{100}=1.05}_{\text{기준량당 비율}}`,
+    operations: [
+      { expression: String.raw`\frac{A_{\mathrm{verified}}}{L_{\mathrm{included}}}=\frac{105}{100}=1.05`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","단순 비율은 snapshot 안에서 검증된 자산이 포함","채무보다"] },
+    ],
     terms: [{ symbol: "A_verified", name: "Verified assets", description: "고정 cutoff와 방법으로 통제·잔액을 확인한 자산입니다." }, { symbol: "L_included", name: "Included liabilities", description: "PoR manifest가 포함했다고 밝힌 고객 채무입니다." }, { symbol: "R", name: "Snapshot coverage ratio", description: "선택 snapshot의 자산/포함 채무 비율입니다." }],
     assumptions: ["같은 asset unit·cutoff·valuation rule을 사용합니다.", "Liability population completeness와 asset encumbrance는 별도 검증합니다.", "R≥1은 지급능력·감사·미래 출금 성공을 증명하지 않습니다."],
     interpretation: "R=1.05는 포함 채무 100 BTC에 대해 검증 자산 105 BTC가 보였다는 뜻뿐입니다. 숨은 채무 20 BTC가 있으면 전체 비율은 달라지므로 PoR와 solvency를 구분합니다.",
@@ -108,6 +114,10 @@ const CONFIG: Record<ArticleKey, Config> = {
     question: "출금 release gate는 어떤 독립 조건이 모두 참이어야 하는가?",
     idea: "고객 의도, 정책, 분리 승인, signer binding, chain/ledger reconciliation이 같은 generation에서 검증돼야 외부 효과를 허용합니다.",
     formula: String.raw`W=I\land P\land A\land S\land R`,
+    annotatedFormula: String.raw`W=\underbrace{I\land P\land A\land S\land R}_{\text{판정 조건 결합}}`,
+    operations: [
+      { expression: String.raw`I\land P\land A\land S\land R`, annotation: ["필요한 gate가 모두 참일 때만 전체 조건을 통과시킵니다.","고객 의도, 정책, 분리 승인, signer binding,","chain/ledger reconciliation이 같은","generation에서 검증돼야 외부 효과를 허용합니다."] },
+    ],
     terms: [{ symbol: "I", name: "Intent binding", description: "고객이 승인한 chain·destination·amount가 canonical bytes와 같습니다." }, { symbol: "P", name: "Policy pass", description: "한도·velocity·allowlist·risk policy가 통과했습니다." }, { symbol: "A", name: "Separated approval", description: "요구된 독립 업무 승인과 authority가 확인됐습니다." }, { symbol: "S", name: "Signer binding", description: "승인한 digest와 key generation을 signer가 그대로 사용합니다." }, { symbol: "R", name: "Reconciliation readiness", description: "Broadcast·confirmation·ledger 상태를 idempotent하게 조정할 수 있습니다." }],
     assumptions: ["각 Boolean은 같은 intent와 policy/key generation을 가리킵니다.", "MPC share 수와 업무 승인자 수를 구분합니다.", "W=1은 chain finality·고객 기기 안전·법률 준수 전체의 증명이 아닙니다."],
     interpretation: "HSM 서명이 가능해 S=1이어도 approver 분리가 깨져 A=0이면 W=0입니다. 서명 장비 하나만 통과했다고 출금을 release하지 않습니다.",
@@ -142,6 +152,10 @@ const CONFIG: Record<ArticleKey, Config> = {
     question: "하루 alert 480건을 4명이 건당 10분씩, 각 360분 검토할 수 있으면 부하는 얼마인가?",
     idea: "총 검토 필요시간을 실제 analyst 가용시간으로 나눠 threshold가 운영 가능한지 확인합니다.",
     formula: String.raw`Q=\frac{A m}{H}=\frac{480\times 10}{4\times 360}\approx 3.33`,
+    annotatedFormula: String.raw`Q=\underbrace{\frac{A m}{H}=\frac{480\times 10}{4\times 360}\approx 3.33}_{\text{기준량당 비율}}`,
+    operations: [
+      { expression: String.raw`\frac{A m}{H}=\frac{480\times 10}{4\times 360}\approx 3.33`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","총 검토 필요시간을 실제 analyst 가용시간으로 나눠","threshold가 운영 가능한지 확인합니다."] },
+    ],
     terms: [{ symbol: "A", name: "Alerts per day", description: "하루 생성되는 조사 후보 수입니다." }, { symbol: "m", name: "Minutes per alert", description: "Quality를 유지한 평균 검토시간입니다." }, { symbol: "H", name: "Available analyst minutes", description: "전체 analyst의 실제 일일 가용시간입니다." }, { symbol: "Q", name: "Capacity load", description: "1보다 크면 평균 유입이 처리용량보다 큽니다." }],
     assumptions: ["같은 alert definition과 severity mix를 사용합니다.", "P95 queue age와 고위험 miss를 별도로 봅니다.", "Q는 위법 판단 threshold나 신고 의무 조건이 아닙니다."],
     interpretation: "Q≈3.33이면 queue가 계속 쌓입니다. Recall 숫자만 보고 배포하지 말고 threshold·workflow·인력을 조정한 뒤 독립 holdout으로 다시 확인합니다.",
@@ -165,7 +179,7 @@ export default function VaspOperationsArticle({ article }: { article: ArticleKey
   return <article className="space-y-14">
     <section id="overview" className="space-y-6"><p className="text-sm font-semibold text-primary">{c.eyebrow}</p><h2 className="text-3xl font-bold tracking-tight">{c.title}</h2><p className="text-lg leading-8">{c.lead}</p><aside className="rounded-lg border border-border p-4 text-sm leading-6">{c.boundary}</aside><Flow config={c}/><ContentBoundary article={c.key}/></section>
     <section id={c.firstId} className="space-y-5"><p className="text-sm font-semibold text-primary">01 · 개념과 통제 경계</p><h2 className="text-2xl font-bold">{c.firstTitle}</h2>{c.firstBody.map((p) => <p key={p} className="leading-7">{p}</p>)}</section>
-    <section id={c.secondId} className="space-y-5"><p className="text-sm font-semibold text-primary">02 · 계산과 운영 증거</p><h2 className="text-2xl font-bold">{c.secondTitle}</h2>{c.secondBody.map((p) => <p key={p} className="leading-7">{p}</p>)}<ExplainedFormula question={c.question} idea={c.idea} formula={c.formula} terms={c.terms} assumptions={c.assumptions} interpretation={c.interpretation}/>{c.citations.map((item, index) => <Evidence key={item.id} item={item} index={index}/>)}</section>
+    <section id={c.secondId} className="space-y-5"><p className="text-sm font-semibold text-primary">02 · 계산과 운영 증거</p><h2 className="text-2xl font-bold">{c.secondTitle}</h2>{c.secondBody.map((p) => <p key={p} className="leading-7">{p}</p>)}<ExplainedFormula question={c.question} idea={c.idea} formula={c.formula} annotatedFormula={c.annotatedFormula} operations={c.operations} terms={c.terms} assumptions={c.assumptions} interpretation={c.interpretation}/>{c.citations.map((item, index) => <Evidence key={item.id} item={item} index={index}/>)}</section>
     <section id={c.releaseId} className="space-y-5"><p className="text-sm font-semibold text-primary">03 · 실패 주입과 release gate</p><h2 className="text-2xl font-bold">정상 예시보다 누락·우회·외부 effect의 불확실성을 먼저 시험합니다</h2><div className="overflow-hidden rounded-lg border border-border">{c.failures.map(([fault, oracle]) => <div key={fault} className="grid grid-cols-[minmax(0,.7fr)_minmax(0,1.3fr)] gap-3 border-b border-border p-4 text-sm last:border-b-0"><strong>{fault}</strong><span className="min-w-0 break-words text-muted-foreground">{oracle}</span></div>)}</div><p className="leading-7">Base와 candidate는 같은 사건·기간·policy·code·key/model generation에서 비교합니다. Missing·unknown은 pass가 아니며 owner, reviewer, source digest, canary와 rollback receipt를 하나의 release record로 남깁니다.</p><h3 className="text-xl font-semibold">이 글만으로 풀어야 하는 10문제</h3><p className="leading-7">기초 6문제는 용어·흐름·작은 계산을, 심화 4문제는 반례·실패 주입·독립 검증·rollback을 묻습니다. 각 답의 전제와 비보장은 위 절에서 직접 찾을 수 있습니다.</p></section>
   </article>;
 }

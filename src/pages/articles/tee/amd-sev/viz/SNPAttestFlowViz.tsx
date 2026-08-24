@@ -109,7 +109,7 @@ export default function SNPAttestFlowViz() {
                   x2={x2}
                   y2={y2 + off}
                   stroke={a.color}
-                  strokeWidth={1.3}
+                  strokeWidth={1.2}
                   markerEnd="url(#snpa)"
                 />
                 {(() => {

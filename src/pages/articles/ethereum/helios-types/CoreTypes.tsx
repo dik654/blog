@@ -32,6 +32,11 @@ export default function CoreTypes({ title, onCodeRef }: Props) {
         question="고정 크기인 BeaconBlockHeader와 SyncAggregate는 SSZ payload에서 각각 몇 byte인가?"
         idea="Fixed-size scalar와 byte vector의 크기를 더합니다. 이 계산은 container field payload만 세며 framing·allocation·Rust struct padding은 포함하지 않습니다."
         formula={String.raw`\begin{aligned} B_{\text{header}} &= 8+8+3\cdot32=112\ \text{bytes} \\ B_{\text{aggregate}} &= 512/8+96=160\ \text{bytes} \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned} B_{\text{header}} &= \underbrace{8+8+3\cdot32=112\ \text{bytes}}_{\text{B256 크기 계산}} \\ B_{\text{aggregate}} &= \underbrace{512/8+96=160\ \text{bytes}}_{\text{기준량당 비율}} \end{aligned}`}
+        operations={[
+          { expression: String.raw`8+8+3\cdot32=112\ \text{bytes}`, annotation: ["B256 크기이(가) 식의 결과에 기여하는 방식을 계산합니다.","Fixed-size scalar와 byte vector의","크기를 더합니다."] },
+          { expression: String.raw`512/8+96=160\ \text{bytes}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Fixed-size scalar와 byte vector의","크기를 더합니다."] },
+        ]}
         terms={[
           { symbol: "8", name: "u64 크기", description: "slot과 proposer_index가 각각 차지하는 SSZ fixed payload입니다." },
           { symbol: "32", name: "B256 크기", description: "parent_root·state_root·body_root 각각의 byte 수입니다." },

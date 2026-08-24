@@ -158,7 +158,7 @@ export default function LiquidationBonusViz() {
           x2={210}
           y2={148}
           stroke="#3b82f6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#lb-arr)"
         />
 
@@ -211,7 +211,7 @@ export default function LiquidationBonusViz() {
           x2={405}
           y2={148}
           stroke="#3b82f6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#lb-arr)"
         />
 

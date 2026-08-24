@@ -223,7 +223,7 @@ export default function WorldSwitchFlowViz() {
                   d={`M ${x1} ${y1} Q ${controlX} ${controlY} ${x2} ${y2}`}
                   fill="none"
                   stroke={a.color}
-                  strokeWidth={1.3}
+                  strokeWidth={1.2}
                   markerEnd="url(#warr)"
                 />
                 <rect

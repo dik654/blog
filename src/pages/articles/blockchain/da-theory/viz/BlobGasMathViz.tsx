@@ -113,7 +113,7 @@ export default function BlobGasMathViz() {
               d={curvePath}
               fill="none"
               stroke={C[0]}
-              strokeWidth={2}
+              strokeWidth={1.2}
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
               transition={{ duration: 0.8 }}

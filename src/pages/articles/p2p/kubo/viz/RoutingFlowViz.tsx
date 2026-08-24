@@ -94,7 +94,7 @@ export default function RoutingFlowViz() {
                   rx={6}
                   fill={`${n.color}12`}
                   stroke={n.color}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={n.x + 45}

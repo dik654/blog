@@ -170,7 +170,7 @@ export default function BeaconKitCompareViz() {
                       x2={228}
                       y2={y + LH / 2}
                       stroke="#f59e0b"
-                      strokeWidth={1.5}
+                      strokeWidth={1.2}
                       markerEnd="url(#arw)"
                     />
                     <text

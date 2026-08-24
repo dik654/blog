@@ -177,7 +177,7 @@ export default function FeeModelViz() {
           x2={165}
           y2={92}
           stroke="#3b82f6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#fm-arr)"
         />
         <line
@@ -186,7 +186,7 @@ export default function FeeModelViz() {
           x2={310}
           y2={92}
           stroke="#3b82f6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#fm-arr)"
         />
         <line

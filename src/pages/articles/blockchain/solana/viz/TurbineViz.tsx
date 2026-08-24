@@ -61,7 +61,7 @@ export default function TurbineViz({
                 r={14}
                 fill="#6366f130"
                 stroke="#6366f1"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={LEADER.x}
@@ -82,7 +82,7 @@ export default function TurbineViz({
                 x2={n.x}
                 y2={n.y - 12}
                 stroke="#0ea5e9"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 strokeDasharray="4 2"
                 animate={{ opacity: step >= 1 ? 0.7 : 0.05 }}
                 transition={sp}
@@ -100,7 +100,7 @@ export default function TurbineViz({
                   r={12}
                   fill="#0ea5e920"
                   stroke="#0ea5e9"
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={n.x}

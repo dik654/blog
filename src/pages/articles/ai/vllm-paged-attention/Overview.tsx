@@ -87,6 +87,14 @@ export default function Overview() {
 m_r &= \left\lceil\frac{n_r}{B}\right\rceil \\
 w_r &= m_rB-n_r, \qquad 0\le w_r < B
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+m_r &= \underbrace{\left\lceil\frac{n_r}{B}\right\rceil}_{\text{기준량당 비율}} \\
+w_r &= \underbrace{m_rB-n_r, \qquad 0\le w_r < B}_{\text{허용 경계 판정}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\left\lceil\frac{n_r}{B}\right\rceil`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Token 수를 block size로 나누어 올림하면 필요한","block 수가 나옵니다."] },
+          { expression: String.raw`m_rB-n_r, \qquad 0\le w_r < B`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","Token 수를 block size로 나누어 올림하면 필요한","block 수가 나옵니다."] },
+        ]}
         terms={BLOCK_TERMS}
         assumptions={[
           "한 cache group 안에서 모든 physical block이 같은 token block size B를 사용합니다.",
@@ -124,6 +132,14 @@ w_r &= m_rB-n_r, \qquad 0\le w_r < B
 \phi_r(j) &= T_r\!\left[\left\lfloor j/B\right\rfloor\right] \\
 o(j) &= j \bmod B
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+\phi_r(j) &= \underbrace{T_r\!\left[\left\lfloor j/B\right\rfloor\right]}_{\text{기준량당 비율}} \\
+o(j) &= \underbrace{j \bmod B}_{\text{오른쪽 항으로 결과 계산}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`T_r\!\left[\left\lfloor j/B\right\rfloor\right]`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","j를 block size로 나눈 몫이 logical block","index이고 나머지가 block 내부 offset입니다."] },
+          { expression: String.raw`j \bmod B`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","j를 block size로 나눈 몫이 logical block","index이고 나머지가 block 내부 offset입니다."] },
+        ]}
         terms={ADDRESS_TERMS}
         assumptions={[
           "Token position은 0부터 시작하고 block table entry 순서가 request의 logical 순서입니다.",

@@ -27,7 +27,7 @@ export function StepAnchorCommit() {
       <motion.path
         d="M 140 35 C 205 35, 205 35, 270 35"
         stroke={C.dag}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         fill="none"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}

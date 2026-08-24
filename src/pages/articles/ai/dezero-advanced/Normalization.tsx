@@ -26,6 +26,18 @@ export default function Normalization({ onCodeRef }: { onCodeRef: (key: string, 
 \hat{x}&=(x-\mu)/\sqrt{\sigma^2+\varepsilon}
 \approx[-1,1].
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+\mu&=\underbrace{(1+3)/2=2,}_{\text{기준량당 비율}}\\
+\sigma^2&=\underbrace{((1-2)^2+(3-2)^2)/2=1,}_{\text{기준량당 비율}}\\
+\hat{x}&=\underbrace{(x-\mu)/\sqrt{\sigma^2+\varepsilon}
+\approx[-1,1].}_{\text{기준량당 비율}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`(1+3)/2=2,`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Feature 축 평균을 빼고 같은 축의 population","variance로 나눕니다."] },
+          { expression: String.raw`((1-2)^2+(3-2)^2)/2=1,`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Feature 축 평균을 빼고 같은 축의 population","variance로 나눕니다."] },
+          { expression: String.raw`(x-\mu)/\sqrt{\sigma^2+\varepsilon}
+\approx[-1,1].`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Feature 축 평균을 빼고 같은 축의 population","variance로 나눕니다."] },
+        ]}
         terms={[
           { symbol: "μ", name: "feature mean", description: "이 sample의 정규화 대상 feature 평균입니다." },
           { symbol: "σ²", name: "population variance", description: "대상 feature 수로 나눈 squared deviation 평균입니다." },

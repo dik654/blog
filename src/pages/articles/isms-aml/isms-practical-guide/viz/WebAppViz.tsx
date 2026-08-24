@@ -482,7 +482,7 @@ export default function WebAppViz() {
                 x2={460}
                 y2={60}
                 stroke={C.red}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <line
                 x1={460}
@@ -490,7 +490,7 @@ export default function WebAppViz() {
                 x2={350}
                 y2={60}
                 stroke={C.red}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
             </motion.g>
           )}

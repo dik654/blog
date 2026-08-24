@@ -126,7 +126,7 @@ function Measure() {
         d="M188 92 H230 M292 92 H250"
         fill="none"
         stroke={C.cool}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
       />
@@ -301,7 +301,7 @@ function Failure() {
         d="M126 70 H171 M126 150 H171"
         fill="none"
         stroke={C.neutral}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
       />

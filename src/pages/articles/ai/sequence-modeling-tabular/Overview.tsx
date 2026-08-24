@@ -37,6 +37,12 @@ export default function Overview() {
         question="Forecast origin c에서 model에 들어갈 event sequence를 어떻게 정의할까?"
         idea={<>같은 entity i의 records 중 available time이 cutoff 이하인 것만 고르고 event time과 tie-break key로 안정적으로 정렬합니다. 그 결과의 길이 Lᵢ,𝚌는 entity마다 다를 수 있습니다.</>}
         formula={String.raw`\begin{aligned}\mathcal H_{i,c}&=\{e:e.\mathrm{entity}=i,\ t^{\mathrm{avail}}_e\le c\},\\S_{i,c}&=\operatorname{sort}_{(t^{\mathrm{event}},k_{\mathrm{tie}})}(\mathcal H_{i,c}),\\S_{i,c}&=(e_1,\ldots,e_{L_{i,c}}).\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}\mathcal H_{i,c}&=\underbrace{\{e:e.\mathrm{entity}=i,\ t^{\mathrm{avail}}_e\le c\},}_{\text{허용 경계 판정}}\\S_{i,c}&=\underbrace{\operatorname{sort}_{(t^{\mathrm{event}},k_{\mathrm{tie}})}(\mathcal H_{i,c}),}_{\text{오른쪽 항으로 결과 계산}}\\S_{i,c}&=\underbrace{(e_1,\ldots,e_{L_{i,c}}).}_{\text{오른쪽 항으로 결과 계산}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`\{e:e.\mathrm{entity}=i,\ t^{\mathrm{avail}}_e\le c\},`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","같은 entity i의 records 중 available","time이 cutoff 이하인 것만 고르고 event","time과 tie-break key로 안정적으로 정렬합니다."] },
+          { expression: String.raw`\operatorname{sort}_{(t^{\mathrm{event}},k_{\mathrm{tie}})}(\mathcal H_{i,c}),`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","같은 entity i의 records 중 available","time이 cutoff 이하인 것만 고르고 event","time과 tie-break key로 안정적으로 정렬합니다."] },
+          { expression: String.raw`(e_1,\ldots,e_{L_{i,c}}).`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","같은 entity i의 records 중 available","time이 cutoff 이하인 것만 고르고 event","time과 tie-break key로 안정적으로 정렬합니다."] },
+        ]}
         terms={[
           { symbol: "S_i,c", name: "event-sequence sample", description: "Entity i와 cutoff c에 조건부인 ordered input입니다." },
           { symbol: "t_avail≤c", name: "availability filter", description: "Prediction 당시 실제로 알 수 있던 records만 허용합니다." },

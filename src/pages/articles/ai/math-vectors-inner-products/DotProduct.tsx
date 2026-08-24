@@ -16,6 +16,10 @@ export default function DotProduct() {
         question="u=(3,4)와 v=(4,−3)은 왜 dot product가 0일까요?"
         idea={<>같은 coordinate끼리의 기여를 더하면 첫 축의 +12와 둘째 축의 −12가 정확히 상쇄됩니다. 기하학적으로는 두 vector가 직각이라 서로의 방향 성분이 0이라는 뜻입니다.</>}
         formula={String.raw`u\cdot v=\sum_{j=1}^{d}u_jv_j=3\times4+4\times(-3)=0=\lVert u\rVert\lVert v\rVert\cos 90^\circ`}
+        annotatedFormula={String.raw`u\cdot v=\underbrace{\sum_{j=1}^{d}u_jv_j=3\times4+4\times(-3)=0=\lVert u\rVert\lVert v\rVert\cos 90^\circ}_{\text{dot product 계산}}`}
+        operations={[
+          { expression: String.raw`\sum_{j=1}^{d}u_jv_j=3\times4+4\times(-3)=0=\lVert u\rVert\lVert v\rVert\cos 90^\circ`, annotation: ["dot product이(가) 식의 결과에 기여하는 방식을","계산합니다.","같은 coordinate끼리의 기여를 더하면 첫 축의 +12와","둘째 축의 −12가 정확히 상쇄됩니다."] },
+        ]}
         terms={[
           { symbol: "u_jv_j", name: "coordinate별 기여", description: "같은 축에서 두 vector가 같은 부호면 양수, 반대 부호면 음수입니다." },
           { symbol: String.raw`u\cdot v`, name: "dot product", description: "모든 coordinate 기여를 합친 scalar입니다." },

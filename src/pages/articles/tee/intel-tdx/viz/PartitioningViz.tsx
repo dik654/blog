@@ -27,7 +27,7 @@ export default function PartitioningViz() {
           fill="#10b981"
           fillOpacity={0.08}
           stroke="#10b981"
-          strokeWidth={1.8}
+          strokeWidth={1.2}
           strokeDasharray="4 2"
         />
         <text
@@ -60,7 +60,7 @@ export default function PartitioningViz() {
           fill="#3b82f6"
           fillOpacity={0.15}
           stroke="#3b82f6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <text
           x={140}
@@ -129,7 +129,7 @@ export default function PartitioningViz() {
           fill="#f59e0b"
           fillOpacity={0.15}
           stroke="#f59e0b"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <text
           x={340}

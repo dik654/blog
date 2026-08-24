@@ -20,6 +20,10 @@ export default function Svd() {
         question="SVD의 U, Σ, Vᵀ는 input vector에 어떤 순서로 작용할까요?"
         idea={<>오른쪽에서 왼쪽으로 읽습니다. Vᵀ가 input을 orthonormal coordinate로 바꾸고, diagonal Σ가 방향별 scale만 적용하며, U가 그 성분을 output 공간의 orthonormal directions로 합칩니다.</>}
         formula={String.raw`A=U\Sigma V^\top,\qquad Ax=U\bigl(\Sigma(V^\top x)\bigr),\qquad \sigma_1\ge\sigma_2\ge\cdots\ge0`}
+        annotatedFormula={String.raw`A=\underbrace{U\Sigma V^\top,\qquad Ax=U\bigl(\Sigma(V^\top x)\bigr),\qquad \sigma_1\ge\sigma_2\ge\cdots\ge0}_{\text{허용 경계 판정}}`}
+        operations={[
+          { expression: String.raw`U\Sigma V^\top,\qquad Ax=U\bigl(\Sigma(V^\top x)\bigr),\qquad \sigma_1\ge\sigma_2\ge\cdots\ge0`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","오른쪽에서 왼쪽으로 읽습니다."] },
+        ]}
         terms={[
           { symbol: "V", name: "right singular vectors", description: "Input 공간에서 A가 구분하는 orthonormal directions를 column으로 가집니다." },
           { symbol: String.raw`\Sigma`, name: "singular values", description: "각 대응 방향을 얼마나 강하게 전달하는지 나타내는 nonnegative diagonal scale입니다." },

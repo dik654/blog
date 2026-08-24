@@ -20,6 +20,10 @@ export default function Formula() {
         question="n개의 평가값을 통과하는 degree n−1 이하 다항식을 어떻게 직접 만들까요?"
         idea="각 표본점을 위한 selector를 만든 뒤 그 위치의 목표값만큼 가중합니다. Selector는 자기 점에서 1이고 다른 점에서 0입니다."
         formula={String.raw`\ell_i(x)=\prod_{j\ne i}\frac{x-x_j}{x_i-x_j},\qquad L(x)=\sum_{i=0}^{n-1}y_i\ell_i(x)`}
+        annotatedFormula={String.raw`\ell_i(x)=\underbrace{\prod_{j\ne i}\frac{x-x_j}{x_i-x_j},\qquad L(x)=\sum_{i=0}^{n-1}y_i\ell_i(x)}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`\prod_{j\ne i}\frac{x-x_j}{x_i-x_j},\qquad L(x)=\sum_{i=0}^{n-1}y_i\ell_i(x)`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","각 표본점을 위한 selector를 만든 뒤 그 위치의","목표값만큼 가중합니다."] },
+        ]}
         terms={[
           {
             symbol: "x_i,y_i",

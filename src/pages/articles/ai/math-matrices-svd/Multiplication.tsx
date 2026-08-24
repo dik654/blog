@@ -18,6 +18,10 @@ export default function Multiplication() {
         question="왜 A가 p×m이고 B가 m×n일 때만 AB를 만들 수 있을까요?"
         idea={<>AB의 (i,j) entry는 A의 i번째 row와 B의 j번째 column의 dot product입니다. 두 vector가 공유하는 중간 좌표가 m개로 같아야 곱하고 더할 수 있습니다.</>}
         formula={String.raw`A\in\mathbb R^{p\times m},\ B\in\mathbb R^{m\times n}\quad\Longrightarrow\quad (AB)_{ij}=\sum_{r=1}^{m}A_{ir}B_{rj},\quad AB\in\mathbb R^{p\times n}`}
+        annotatedFormula={String.raw`A\in\mathbb R^{p\times m},\ B\in\mathbb R^{m\times n}\quad\Longrightarrow\quad (AB)_{ij}=\underbrace{\sum_{r=1}^{m}A_{ir}B_{rj},\quad AB\in\mathbb R^{p\times n}}_{\text{composed map 계산}}`}
+        operations={[
+          { expression: String.raw`\sum_{r=1}^{m}A_{ir}B_{rj},\quad AB\in\mathbb R^{p\times n}`, annotation: ["composed map이(가) 식의 결과에 기여하는 방식을","계산합니다.","AB의 (i,j) entry는 A의 i번째 row와 B의","j번째 column의 dot product입니다."] },
+        ]}
         terms={[
           { symbol: "m", name: "contracted dimension", description: "B가 만드는 중간 coordinate 수이면서 A가 읽는 coordinate 수입니다." },
           { symbol: "r", name: "intermediate coordinate", description: "두 map 사이에서 전달되는 같은 위치의 성분을 순회합니다." },

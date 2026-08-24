@@ -50,6 +50,10 @@ export default function Mtp() {
             </p>
           }
           formula={String.raw`\mathrm{throughput}=\frac{\mathbb{E}[L_{\mathrm{commit}}]}{T_{\mathrm{draft}}+T_{\mathrm{verify}}+T_{\mathrm{sample}}}`}
+          annotatedFormula={String.raw`\mathrm{throughput}=\underbrace{\frac{\mathbb{E}[L_{\mathrm{commit}}]}{T_{\mathrm{draft}}+T_{\mathrm{verify}}+T_{\mathrm{sample}}}}_{\text{확률 가중 평균}}`}
+          operations={[
+            { expression: String.raw`\frac{\mathbb{E}[L_{\mathrm{commit}}]}{T_{\mathrm{draft}}+T_{\mathrm{verify}}+T_{\mathrm{sample}}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","한 verification cycle이 끝날 때 실제로 확정한","token 수를 그 cycle의 전체 시간으로 나눕니다."] },
+          ]}
           terms={[
             { symbol: "L_{\\mathrm{commit}}", name: "committed length", description: "한 cycle에서 앞에서부터 실제 sequence에 확정한 token 수입니다." },
             { symbol: "T_{\\mathrm{draft}}", name: "draft 시간", description: "Future-token candidate를 만드는 데 걸린 cycle당 시간입니다." },
@@ -73,6 +77,10 @@ export default function Mtp() {
             </p>
           }
           formula={String.raw`Q_{\mathrm{weight/token}}\approx\frac{Q_{\mathrm{main/cycle}}}{\mathbb{E}[L_{\mathrm{commit}}]}`}
+          annotatedFormula={String.raw`\underbrace{Q_{\mathrm{weight/token}}\approx\frac{Q_{\mathrm{main/cycle}}}{\mathbb{E}[L_{\mathrm{commit}}]}}_{\text{확률 가중 평균}}`}
+          operations={[
+            { expression: String.raw`Q_{\mathrm{weight/token}}\approx\frac{Q_{\mathrm{main/cycle}}}{\mathbb{E}[L_{\mathrm{commit}}]}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Cycle마다"] },
+          ]}
           terms={[
             { symbol: "Q_{\\mathrm{main/cycle}}", name: "cycle당 main traffic", description: "한 verification cycle의 main-model weight traffic이며 단위는 byte/cycle입니다." },
             { symbol: "Q_{\\mathrm{weight/token}}", name: "token당 main weight 항", description: "확정 token 하나에 배분한 main weight traffic이며 단위는 byte/token입니다." },

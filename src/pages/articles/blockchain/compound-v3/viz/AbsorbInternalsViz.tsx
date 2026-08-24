@@ -148,7 +148,7 @@ export default function AbsorbInternalsViz() {
           x2={206}
           y2={104}
           stroke="#3b82f6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#ai-arr)"
         />
         <text
@@ -210,7 +210,7 @@ export default function AbsorbInternalsViz() {
           x2={374}
           y2={104}
           stroke="#3b82f6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#ai-arr)"
         />
 

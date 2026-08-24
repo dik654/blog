@@ -26,7 +26,7 @@ export default function SeptViz() {
           rx={10}
           fill="var(--card)"
           stroke="#8b5cf6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <text
           x={240}

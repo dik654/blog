@@ -20,6 +20,15 @@ export default function Overview() {
 \Theta_{\mathrm{train}}^{\mathrm{LoRA}}&=\{A_m,B_m:m\in\mathcal T\}\\
 &\quad\cup\Theta_{\mathrm{save}}
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+\Theta_{\mathrm{train}}^{\mathrm{full}}&=\underbrace{\Theta_{\mathrm{base}}}_{\text{오른쪽 항으로 결과 계산}}\\
+\Theta_{\mathrm{train}}^{\mathrm{LoRA}}&=\underbrace{\{A_m,B_m:m\in\mathcal T\}}_{\text{adapter matrices 계산}}\\
+&\quad\cup\Theta_{\mathrm{save}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\Theta_{\mathrm{base}}`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Loss는 같은 model output에서 계산할 수 있지만","gradient를 적용하는 집합이 다릅니다."] },
+          { expression: String.raw`\{A_m,B_m:m\in\mathcal T\}`, annotation: ["adapter matrices이(가) 식의 결과에 기여하는","방식을 계산합니다.","Loss는 같은 model output에서 계산할 수 있지만","gradient를 적용하는 집합이 다릅니다."] },
+        ]}
         terms={[
           { symbol: "Theta_base", name: "base parameters", description: "Pretrained checkpoint의 전체 weight와 bias입니다." },
           { symbol: "T", name: "target modules", description: "LoRA update를 삽입하기로 한 실제 linear module 경로 집합입니다." },

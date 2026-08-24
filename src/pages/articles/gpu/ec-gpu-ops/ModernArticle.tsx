@@ -19,7 +19,11 @@ export default function ModernEcGpuOpsArticle() {
     <section id="field-layout" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">01 · Limb mapping</p><h2 className="mt-2 text-2xl font-bold">한 thread가 모든 limbs를 들지, warp lanes가 나눠 들지 먼저 정한다</h2></header>
       <p>Field element는 radix <code>2^w</code> digits로 표현합니다. Pinned ec-gpu CUDA source는 한 logical work item이 field/point의 fixed limbs 전체를 소유하고 32-bit limbs로 연산합니다. 따라서 BN254는 8 limbs, BLS12-381은 12 limbs이며, 4/6개의 64-bit CUDA limbs라고 설명하면 이 구현과 다릅니다. OpenCL 생성 경로는 64-bit limbs를 사용합니다. 여러 warp lanes가 limbs를 나누는 방식은 가능한 대안이지만 ec-gpu의 현재 mapping이라고 부르지 않습니다.</p>
-      <ExplainedFormula question="큰 field element를 L개 limbs로 나눈다는 것은 각 lane이 어떤 값을 소유한다는 뜻일까?" idea={<>Radix 2^w 자리값을 사용하면 limb l은 <code>x_l·2^(w·l)</code>의 계수를 담습니다. 이 표기와 endian order를 host serialization, CPU reference와 kernel이 동일하게 써야 합니다.</>} formula={String.raw`x=\sum_{\ell=0}^{L-1}x_\ell 2^{w\ell},\qquad 0\le x_\ell<2^w`} terms={[
+      <ExplainedFormula question="큰 field element를 L개 limbs로 나눈다는 것은 각 lane이 어떤 값을 소유한다는 뜻일까?" idea={<>Radix 2^w 자리값을 사용하면 limb l은 <code>x_l·2^(w·l)</code>의 계수를 담습니다. 이 표기와 endian order를 host serialization, CPU reference와 kernel이 동일하게 써야 합니다.</>} formula={String.raw`x=\sum_{\ell=0}^{L-1}x_\ell 2^{w\ell},\qquad 0\le x_\ell<2^w`}
+      annotatedFormula={String.raw`x=\underbrace{\sum_{\ell=0}^{L-1}x_\ell 2^{w\ell},\qquad 0\le x_\ell<2^w}_{\text{허용 경계 판정}}`}
+      operations={[
+        { expression: String.raw`\sum_{\ell=0}^{L-1}x_\ell 2^{w\ell},\qquad 0\le x_\ell<2^w`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","Radix 2^w 자리값을 사용하면 limb l은","x_l·2^(w·l) 의 계수를 담습니다."] },
+      ]} terms={[
         {symbol:"x",name:"Field representative",description:"Decode 뒤 0≤x<p인 canonical residue 또는 명시한 Montgomery-domain value입니다."},
         {symbol:"L",name:"Limb count",description:"Field 값을 저장하는 machine words 개수입니다."},
         {symbol:"w",name:"Limb width",description:"한 limb의 bits이며 backend와 multiplication primitive가 지원해야 합니다."},
@@ -31,7 +35,13 @@ export default function ModernEcGpuOpsArticle() {
     <section id="fp-montgomery" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">02 · Carry schedule</p><h2 className="mt-2 text-2xl font-bold">곱셈의 병렬 partial products와 순차 carry를 분리한다</h2></header>
       <p>L×L limb multiplication은 여러 partial products를 동시에 만들 수 있지만 같은 output column으로 모이는 합과 carry에는 순서가 있습니다. Wide accumulator가 넘치지 않는 범위를 증명하거나 중간 reduction을 넣고, CUDA의 <code>add.cc</code>/<code>addc</code> 계열 또는 explicit high-half 연산이 compiler target에서 어떻게 lowering되는지 disassembly와 vector test로 확인합니다.</p>
-      <ExplainedFormula question="한 output limb와 다음 carry는 이전 carry에 어떻게 의존할까?" idea={<>같은 radix column의 partial products와 이전 carry를 합한 t에서 낮은 w bits를 현재 limb로 남기고 나머지를 다음 column으로 넘깁니다. 따라서 carry chain을 무시한 lane-parallel add는 틀립니다.</>} formula={String.raw`\begin{aligned}t_k&=c_k+\sum_{i+j=k}a_i b_j\\z_k&=t_k\bmod 2^w\\c_{k+1}&=\left\lfloor t_k/2^w\right\rfloor\end{aligned}`} terms={[
+      <ExplainedFormula question="한 output limb와 다음 carry는 이전 carry에 어떻게 의존할까?" idea={<>같은 radix column의 partial products와 이전 carry를 합한 t에서 낮은 w bits를 현재 limb로 남기고 나머지를 다음 column으로 넘깁니다. 따라서 carry chain을 무시한 lane-parallel add는 틀립니다.</>} formula={String.raw`\begin{aligned}t_k&=c_k+\sum_{i+j=k}a_i b_j\\z_k&=t_k\bmod 2^w\\c_{k+1}&=\left\lfloor t_k/2^w\right\rfloor\end{aligned}`}
+      annotatedFormula={String.raw`\begin{aligned}t_k&=\underbrace{c_k+\sum_{i+j=k}a_i b_j}_{\text{Incoming carry 계산}}\\z_k&=\underbrace{t_k\bmod 2^w}_{\text{Wide accumulator 계산}}\\c_{k+1}&=\underbrace{\left\lfloor t_k/2^w\right\rfloor}_{\text{기준량당 비율}}\end{aligned}`}
+      operations={[
+        { expression: String.raw`c_k+\sum_{i+j=k}a_i b_j`, annotation: ["Incoming carry이(가) 식의 결과에 기여하는 방식을","계산합니다.","같은 radix column의 partial products와","이전 carry를 합한 t에서 낮은 w bits를 현재"] },
+        { expression: String.raw`t_k\bmod 2^w`, annotation: ["Wide accumulator이(가) 식의 결과에 기여하는","방식을 계산합니다.","같은 radix column의 partial products와","이전 carry를 합한 t에서 낮은 w bits를 현재"] },
+        { expression: String.raw`\left\lfloor t_k/2^w\right\rfloor`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","같은 radix column의 partial products와","이전 carry를 합한 t에서 낮은 w bits를 현재","limb로 남기고 나머지를 다음 column으로 넘깁니다."] },
+      ]} terms={[
         {symbol:"a_i,b_j",name:"Input limbs",description:"두 wide integer의 radix-2^w digits입니다."},
         {symbol:"k",name:"Product column",description:"i+j가 같은 partial products가 모이는 위치입니다."},
         {symbol:"c_k",name:"Incoming carry",description:"이전 column에서 넘어온 상위 값입니다."},
@@ -46,7 +56,12 @@ export default function ModernEcGpuOpsArticle() {
     <section id="point-ops" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">03 · Point batch</p><h2 className="mt-2 text-2xl font-bold">Jacobian은 inversion을 미루지만 예외 처리와 register budget을 없애지 않는다</h2></header>
       <p>Affine addition은 slope를 구하려고 field inversion을 쓰므로 대량 add에서 비쌉니다. Jacobian coordinates는 같은 affine point를 여러 triples로 표현하고 multiplication/square로 addition을 진행한 뒤 마지막에 normalize합니다. 하지만 identity, equal points, inverse points와 mixed-add input format은 formula variant마다 precondition이 다르므로 complete formula인지 exceptional branch가 필요한지 정해야 합니다.</p>
-      <ExplainedFormula question="Jacobian triple이 어떤 affine point를 나타내며 normalization은 무엇을 계산할까?" idea={<>Z의 powers를 coordinate scale로 흡수해 매 add마다 inverse를 하지 않고, batch가 끝날 때 Z inverse를 한 번 사용해 affine coordinates로 돌아갑니다.</>} formula={String.raw`\begin{aligned}x&=XZ^{-2}\\y&=YZ^{-3},\qquad Z\ne0\end{aligned}`} terms={[
+      <ExplainedFormula question="Jacobian triple이 어떤 affine point를 나타내며 normalization은 무엇을 계산할까?" idea={<>Z의 powers를 coordinate scale로 흡수해 매 add마다 inverse를 하지 않고, batch가 끝날 때 Z inverse를 한 번 사용해 affine coordinates로 돌아갑니다.</>} formula={String.raw`\begin{aligned}x&=XZ^{-2}\\y&=YZ^{-3},\qquad Z\ne0\end{aligned}`}
+      annotatedFormula={String.raw`\begin{aligned}x&=\underbrace{XZ^{-2}}_{\text{오른쪽 항으로 결과 계산}}\\y&=\underbrace{YZ^{-3},\qquad Z\ne0}_{\text{오른쪽 항으로 결과 계산}}\end{aligned}`}
+      operations={[
+        { expression: String.raw`XZ^{-2}`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Z의 powers를 coordinate scale로 흡수해 매","add마다"] },
+        { expression: String.raw`YZ^{-3},\qquad Z\ne0`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Z의 powers를 coordinate scale로 흡수해 매","add마다"] },
+      ]} terms={[
         {symbol:"X,Y,Z",name:"Jacobian coordinates",description:"GPU point kernel이 내부에서 보존하는 projective triple입니다."},
         {symbol:"x,y",name:"Affine coordinates",description:"Canonical output 또는 CPU reference가 비교하는 curve coordinates입니다."},
         {symbol:"Z^{-1}",name:"Field inverse",description:"Normalization에서 구하며 zero/infinity encoding은 별도 규칙을 따릅니다."},
@@ -59,7 +74,13 @@ export default function ModernEcGpuOpsArticle() {
     <section id="msm-mapping" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">04 · MSM consumer</p><h2 className="mt-2 text-2xl font-bold">한 work item은 window와 group을 고르고 자기 bucket slice를 누적한다</h2></header>
       <p>Pinned multiexp kernel은 global work-item ID를 window와 group으로 풀어 해당 point/scalar range와 bucket slice를 처리합니다. 각 scalar의 digit이 0이면 건너뛰고, nonzero digit이면 대응 bucket에 mixed add한 뒤 뒤에서 앞으로 running sum을 누적해 window partial을 만듭니다. 이 ownership이 buffer size와 coalescing, work-group count를 정합니다.</p>
-      <ExplainedFormula question="Global work-item ID가 어떤 MSM window와 group을 맡는지 어떻게 풀어낼까?" idea={<>Windows를 빠르게 변하는 축으로 두면 나머지가 window, 몫이 같은 point chunk를 처리할 group이 됩니다. Host와 kernel이 같은 num_windows를 써야 bucket slice가 겹치지 않습니다.</>} formula={String.raw`\begin{aligned}window&=gid\bmod W\\group&=\left\lfloor gid/W\right\rfloor\\B&=2^c-1\end{aligned}`} terms={[
+      <ExplainedFormula question="Global work-item ID가 어떤 MSM window와 group을 맡는지 어떻게 풀어낼까?" idea={<>Windows를 빠르게 변하는 축으로 두면 나머지가 window, 몫이 같은 point chunk를 처리할 group이 됩니다. Host와 kernel이 같은 num_windows를 써야 bucket slice가 겹치지 않습니다.</>} formula={String.raw`\begin{aligned}window&=gid\bmod W\\group&=\left\lfloor gid/W\right\rfloor\\B&=2^c-1\end{aligned}`}
+      annotatedFormula={String.raw`\begin{aligned}window&=\underbrace{gid\bmod W}_{\text{Window index 계산}}\\group&=\underbrace{\left\lfloor gid/W\right\rfloor}_{\text{기준량당 비율}}\\B&=\underbrace{2^c-1}_{\text{Window bits 계산}}\end{aligned}`}
+      operations={[
+        { expression: String.raw`gid\bmod W`, annotation: ["Window index이(가) 식의 결과에 기여하는 방식을","계산합니다.","Windows를 빠르게 변하는 축으로 두면 나머지가","window, 몫이 같은 point chunk를 처리할"] },
+        { expression: String.raw`\left\lfloor gid/W\right\rfloor`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Windows를 빠르게 변하는 축으로 두면 나머지가","window, 몫이 같은 point chunk를 처리할","group이 됩니다."] },
+        { expression: String.raw`2^c-1`, annotation: ["Window bits이(가) 식의 결과에 기여하는 방식을","계산합니다.","Windows를 빠르게 변하는 축으로 두면 나머지가","window, 몫이 같은 point chunk를 처리할"] },
+      ]} terms={[
         {symbol:"gid",name:"Global work-item ID",description:"Kernel launch가 부여한 logical task index입니다."},
         {symbol:"W",name:"Number of windows",description:"Scalar bit length와 window width가 정한 window 수입니다."},
         {symbol:"window",name:"Window index",description:"이 work item이 읽을 scalar digit 위치입니다."},
@@ -74,7 +95,12 @@ export default function ModernEcGpuOpsArticle() {
       <header><p className="text-sm font-semibold text-primary">04 · Release gate</p><h2 className="mt-2 text-2xl font-bold">Field parity와 point parity를 통과한 candidate만 throughput을 비교한다</h2></header>
       <p>Field fixture는 0·1·p−1·carry chain·wide maximum·noncanonical input·normal/R-domain mismatch를 포함합니다. Point fixture는 infinity, P+O, P+(−P), P+P, subgroup edge, invalid encoding과 random CPU reference vectors를 포함합니다. 중간 Jacobian triples를 byte-for-byte 비교하지 않고 둘 다 normalize해 같은 affine point인지 확인해야 합니다.</p>
       <p>성능은 같은 curve·batch·input distribution·compiler flags·GPU clock에서 context/module warm-up 후 CUDA events로 kernel-only median/p95를 재고, H2D·conversion·normalization·D2H·sync를 포함한 end-to-end도 따로 잽니다. Achieved bandwidth, integer instruction mix, register/thread, occupancy, spills, branch/warp stalls를 같은 receipt에 남겨 원인을 설명합니다.</p>
-      <ExplainedFormula question="Point kernel의 useful throughput과 memory traffic을 어떤 경계로 기록할까?" idea={<>정확히 normalize된 output point 수를 같은 elapsed time으로 나누고, 요청 bytes와 profiler의 actual DRAM bytes를 분리해 저장합니다.</>} formula={String.raw`\begin{aligned}R_{point}&=\frac{N_{valid}}{t_{kernel}}\\B_{dram}&=\frac{B_{read}^{actual}+B_{write}^{actual}}{t_{kernel}}\end{aligned}`} terms={[
+      <ExplainedFormula question="Point kernel의 useful throughput과 memory traffic을 어떤 경계로 기록할까?" idea={<>정확히 normalize된 output point 수를 같은 elapsed time으로 나누고, 요청 bytes와 profiler의 actual DRAM bytes를 분리해 저장합니다.</>} formula={String.raw`\begin{aligned}R_{point}&=\frac{N_{valid}}{t_{kernel}}\\B_{dram}&=\frac{B_{read}^{actual}+B_{write}^{actual}}{t_{kernel}}\end{aligned}`}
+      annotatedFormula={String.raw`\begin{aligned}R_{point}&=\underbrace{\frac{N_{valid}}{t_{kernel}}}_{\text{기준량당 비율}}\\B_{dram}&=\underbrace{\frac{B_{read}^{actual}+B_{write}^{actual}}{t_{kernel}}}_{\text{기준량당 비율}}\end{aligned}`}
+      operations={[
+        { expression: String.raw`\frac{N_{valid}}{t_{kernel}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","정확히 normalize된 output point 수를 같은","elapsed time으로 나누고, 요청 bytes와","profiler의 actual DRAM bytes를 분리해"] },
+        { expression: String.raw`\frac{B_{read}^{actual}+B_{write}^{actual}}{t_{kernel}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","정확히 normalize된 output point 수를 같은","elapsed time으로 나누고, 요청 bytes와","profiler의 actual DRAM bytes를 분리해"] },
+      ]} terms={[
         {symbol:"N_{valid}",name:"Validated outputs",description:"Reference와 같은 affine point로 확인된 output 개수입니다."},
         {symbol:"t_{kernel}",name:"Device elapsed",description:"Warm-up 뒤 같은 stream event 경계의 seconds입니다."},
         {symbol:"R_{point}",name:"Point throughput",description:"초당 correct point operations이며 operation 종류를 함께 표시합니다."},

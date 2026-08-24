@@ -25,6 +25,10 @@ export default function ProtoArray({ onCodeRef }: { onCodeRef: (key: string, ref
         question="Validator의 latest vote가 A branch에서 B branch로 옮겨갈 때 node weight를 어떻게 갱신할까요?"
         idea="각 validator가 차지하는 effective balance를 old latest root의 ancestor에서는 빼고 new latest root의 ancestor에는 더합니다. 공통 ancestor 위쪽에는 두 변화가 상쇄됩니다."
         formula={String.raw`\begin{aligned}\Delta W(n)&=\sum_i b_i\bigl(\mathbf{1}[n\preceq r_i^{new}]\\&\qquad-\mathbf{1}[n\preceq r_i^{old}]\bigr)\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}\Delta W(n)&=\underbrace{\sum_i b_i\bigl(\mathbf{1}[n\preceq r_i^{new}]}_{\text{변화량 계산}}\\&\qquad-\mathbf{1}[n\preceq r_i^{old}]\bigr)\end{aligned}`}
+        operations={[
+          { expression: String.raw`\sum_i b_i\bigl(\mathbf{1}[n\preceq r_i^{new}]`, annotation: ["조상 관계이(가) 식의 결과에 기여하는 방식을 계산합니다.","각 validator가 차지하는 effective","balance를 old latest root의","ancestor에서는 빼고 new latest root의"] },
+        ]}
         terms={[
           { symbol: "W(n)", name: "서브트리 가중치", description: "node n이 대표하는 subtree의 attestation weight(Gwei 또는 effective-balance 단위)" },
           { symbol: "b_i", name: "검증자 잔액", description: "validator i의 effective balance(Gwei)" },

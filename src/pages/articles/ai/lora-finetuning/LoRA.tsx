@@ -24,6 +24,16 @@ A&\in\mathbb R^{r\times d_{\mathrm{in}}}\\
 B&\in\mathbb R^{d_{\mathrm{out}}\times r}\\
 s&=\frac{\alpha}{r}
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+y&=\underbrace{Wx+sBAx}_{\text{오른쪽 항으로 결과 계산}}\\
+A&\in\mathbb R^{r\times d_{\mathrm{in}}}\\
+B&\in\mathbb R^{d_{\mathrm{out}}\times r}\\
+s&=\underbrace{\frac{\alpha}{r}}_{\text{기준량당 비율}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`Wx+sBAx`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Base output Wx는 그대로 두고 adapter","branch BAx를 더합니다."] },
+          { expression: String.raw`\frac{\alpha}{r}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Base output Wx는 그대로 두고 adapter","branch BAx를 더합니다."] },
+        ]}
         terms={[
           { symbol: "W", name: "frozen base weight", description: "Shape dout×din인 pretrained linear weight입니다." },
           { symbol: "A", name: "down projection", description: "Input feature를 r차원 adapter coordinate로 줄입니다." },
@@ -42,6 +52,14 @@ N_{\mathrm{LoRA}}&=r(d_{\mathrm{in}}+d_{\mathrm{out}})\\
 \operatorname{rank}(BA)&\le \min(\operatorname{rank}A,\operatorname{rank}B)\\
 &\le r
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+N_{\mathrm{LoRA}}&=\underbrace{r(d_{\mathrm{in}}+d_{\mathrm{out}})}_{\text{오른쪽 항으로 결과 계산}}\\
+\operatorname{rank}(BA)&\le \min(\operatorname{rank}A,\operatorname{rank}B)\\
+&\le r
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`r(d_{\mathrm{in}}+d_{\mathrm{out}})`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Full matrix는 din·dout개의 값을 가지지만 두","adapter는 r(din+dout)개만 가집니다."] },
+        ]}
         terms={[
           { symbol: "N_LoRA", name: "adapter parameters", description: "한 target weight에 추가되는 A와 B의 scalar 수입니다." },
           { symbol: "din·dout", name: "full update parameters", description: "같은 layer의 unrestricted full matrix가 가지는 scalar 수입니다." },

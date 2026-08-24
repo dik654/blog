@@ -407,7 +407,7 @@ export default function IPAViz() {
                 animate={{ r: 18 }}
                 fill={`${C.fin}15`}
                 stroke={C.fin}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 transition={sp}
               />
               <text

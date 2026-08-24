@@ -61,6 +61,10 @@ export default function Overview({
         question="여러 ExEx가 있을 때 node가 보존해야 할 가장 느린 checkpoint는 어디일까?"
         idea="각 extension이 durable하게 끝냈다고 보고한 높이 중 최솟값을 공통 안전 경계로 사용합니다. Head와의 차이는 backlog이며, 느린 consumer가 계속 뒤처지면 buffer가 유한하다는 사실을 운영자가 확인해야 합니다."
         formula={String.raw`h_{\mathrm{safe}}=\min_i h_i,\qquad L=H-h_{\mathrm{safe}}`}
+        annotatedFormula={String.raw`h_{\mathrm{safe}}=\underbrace{\min_i h_i,\qquad L=H-h_{\mathrm{safe}}}_{\text{경계 후보 선택}}`}
+        operations={[
+          { expression: String.raw`\min_i h_i,\qquad L=H-h_{\mathrm{safe}}`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","각 extension이 durable하게 끝냈다고 보고한 높이","중 최솟값을 공통 안전 경계로 사용합니다."] },
+        ]}
         terms={[
           { symbol: "h_i", name: "ExEx finished height", description: "Extension i가 자신의 파생 상태까지 durable commit한 마지막 canonical block입니다." },
           { symbol: "h_{\\mathrm{safe}}", name: "공통 안전 경계", description: "모든 extension이 처리했다고 증명한 가장 낮은 height입니다." },

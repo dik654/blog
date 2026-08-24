@@ -84,7 +84,7 @@ export default function EngineIntegrationViz() {
               x2={NODES[to].x}
               y2={45}
               stroke={C[step]}
-              strokeWidth={2.5}
+              strokeWidth={1.2}
               markerEnd="url(#octarr)"
               initial={{ pathLength: 0, opacity: 0 }}
               animate={{ pathLength: 1, opacity: 1 }}
@@ -105,7 +105,7 @@ export default function EngineIntegrationViz() {
                 rx={6}
                 fill={C[step] + "12"}
                 stroke={C[step]}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={200}

@@ -41,7 +41,7 @@ export default function TCBViz() {
               rx={8}
               fill="#ef444408"
               stroke="#ef4444"
-              strokeWidth={1.5}
+              strokeWidth={1.2}
               strokeDasharray="6 3"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -57,7 +57,7 @@ export default function TCBViz() {
               rx={8}
               fill="#10b98108"
               stroke="#10b981"
-              strokeWidth={1.5}
+              strokeWidth={1.2}
               strokeDasharray="6 3"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -136,7 +136,7 @@ export default function TCBViz() {
                 rx={5}
                 fill="#10b98118"
                 stroke="#10b981"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={390}

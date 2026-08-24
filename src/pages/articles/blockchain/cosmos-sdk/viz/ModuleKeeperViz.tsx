@@ -73,7 +73,7 @@ export default function ModuleKeeperViz() {
                   x2={t.cx}
                   y2={t.cy}
                   stroke="#888"
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                   strokeDasharray="5 3"
                   initial={{ pathLength: 0 }}
                   animate={{ pathLength: show ? 1 : 0 }}
@@ -120,7 +120,7 @@ export default function ModuleKeeperViz() {
                   rx={6}
                   fill={`${m.color}12`}
                   stroke={m.color}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={m.x + MW / 2}

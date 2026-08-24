@@ -173,10 +173,10 @@ export default function LinearVsCompoundViz() {
         })}
 
         {/* Linear 경로 */}
-        <path d={linearPath} stroke="#10b981" strokeWidth={2.5} fill="none" />
+        <path d={linearPath} stroke="#10b981" strokeWidth={1.2} fill="none" />
 
         {/* Compound 경로 */}
-        <path d={compoundPath} stroke="#f59e0b" strokeWidth={2.5} fill="none" />
+        <path d={compoundPath} stroke="#f59e0b" strokeWidth={1.2} fill="none" />
 
         {/* 끝점 마커 */}
         <circle
@@ -185,7 +185,7 @@ export default function LinearVsCompoundViz() {
           r={5}
           fill="#10b981"
           stroke="var(--card)"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <circle
           cx={toX(years)}
@@ -193,7 +193,7 @@ export default function LinearVsCompoundViz() {
           r={5}
           fill="#f59e0b"
           stroke="var(--card)"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
 
         {/* 결과 박스 */}

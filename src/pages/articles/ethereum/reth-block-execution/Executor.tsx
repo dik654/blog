@@ -23,6 +23,10 @@ export default function Executor({
           </>
         }
         formula={"\\sigma_{i+1}=\\Upsilon_f(\\sigma_i,T_i,E_B)"}
+        annotatedFormula={String.raw`\sigma_{i+1}=\underbrace{\Upsilon_f(\sigma_i,T_i,E_B)}_{\text{Fork transition 계산}}`}
+        operations={[
+          { expression: String.raw`\Upsilon_f(\sigma_i,T_i,E_B)`, annotation: ["Fork transition이(가) 식의 결과에 기여하는","방식을 계산합니다.","이전 transaction까지의 결과 state를 다음","transaction이 그대로 읽습니다."] },
+        ]}
         terms={[
           {
             symbol: "\\sigma_i",

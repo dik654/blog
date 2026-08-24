@@ -70,7 +70,7 @@ export default function CairoPipelineViz() {
                 x2={t.x}
                 y2={t.y}
                 stroke="#666"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 strokeDasharray="5 3"
                 animate={{ opacity: show ? 1 : 0.1 }}
                 transition={{ duration: 0.3 }}
@@ -93,7 +93,7 @@ export default function CairoPipelineViz() {
                   rx={6}
                   fill={`${n.color}18`}
                   stroke={n.color}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={n.x + BW / 2}

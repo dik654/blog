@@ -183,6 +183,17 @@ export default function Training({
             \mathcal L_K(x)&=\mathbb E[\log\overline w_K] \\
             \mathcal L_K(x)&\le\log p_\theta(x)
           \end{aligned}`}
+          annotatedFormula={String.raw`\begin{aligned}
+            w_k&=\underbrace{\frac{p_\theta(x,z_k)}{q_\phi(z_k\mid x)}}_{\text{기준량당 비율}} \\
+            \overline w_K&=\underbrace{\frac1K\sum_{k=1}^{K}w_k}_{\text{importance sample count 계산}} \\
+            \mathcal L_K(x)&=\underbrace{\mathbb E[\log\overline w_K]}_{\text{확률 가중 평균}} \\
+            \mathcal L_K(x)&\le\log p_\theta(x)
+          \end{aligned}`}
+          operations={[
+            { expression: String.raw`\frac{p_\theta(x,z_k)}{q_\phi(z_k\mid x)}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","각 sample이 model joint p(x,z)를","proposal q(z|x)가 얼마나 과소·과대 대표했는지","importance weight로 보정한 뒤, 그 평균의"] },
+            { expression: String.raw`\frac1K\sum_{k=1}^{K}w_k`, annotation: ["importance sample count이(가) 식의 결과에","기여하는 방식을 계산합니다.","각 sample이 model joint p(x,z)를","proposal q(z|x)가 얼마나 과소·과대 대표했는지"] },
+            { expression: String.raw`\mathbb E[\log\overline w_K]`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","각 sample이 model joint p(x,z)를","proposal q(z|x)가 얼마나 과소·과대 대표했는지","importance weight로 보정한 뒤, 그 평균의"] },
+          ]}
           terms={[
             {
               symbol: "K",

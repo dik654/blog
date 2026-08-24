@@ -82,7 +82,7 @@ export default function MktmeViz() {
           fill="#f59e0b"
           fillOpacity={0.15}
           stroke="#f59e0b"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <text
           x={240}

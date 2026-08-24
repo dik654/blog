@@ -112,6 +112,11 @@ export default function Discv5Article() {
           question="같은 ECDH secret에서 Alice→Bob과 Bob→Alice key를 어떻게 분리하는가?"
           idea="WHOAREYOU transcript를 salt로, 두 node ID와 고정 label을 context로 넣어 handshake와 role을 key에 결속한다. 32-byte output을 16 byte씩 나누면 방향이 바뀐 message가 같은 key 용도로 겹치지 않는다."
           formula={String.raw`\begin{aligned}p&=\operatorname{HKDFExtract}(c,\operatorname{ECDH}(B_s,a_e))\\K_i\parallel K_r&=\operatorname{HKDFExpand}(p,\text{"discovery v5 key agreement"}\parallel id_A\parallel id_B,32)\end{aligned}`}
+          annotatedFormula={String.raw`\begin{aligned}p&=\underbrace{\operatorname{HKDFExtract}(c,\operatorname{ECDH}(B_s,a_e))}_{\text{Recipient static key 계산}}\\K_i\parallel K_r&=\underbrace{\operatorname{HKDFExpand}(p,\text{"discovery v5 key agreement"}\parallel id_A\parallel id_B,32)}_{\text{Pseudorandom key 계산}}\end{aligned}`}
+          operations={[
+            { expression: String.raw`\operatorname{HKDFExtract}(c,\operatorname{ECDH}(B_s,a_e))`, annotation: ["Recipient static key이(가) 식의 결과에","기여하는 방식을 계산합니다.","WHOAREYOU transcript를 salt로, 두","node ID와 고정 label을 context로 넣어"] },
+            { expression: String.raw`\operatorname{HKDFExpand}(p,\text{"discovery v5 key agreement"}\parallel id_A\parallel id_B,32)`, annotation: ["Pseudorandom key이(가) 식의 결과에 기여하는","방식을 계산합니다.","WHOAREYOU transcript를 salt로, 두","node ID와 고정 label을 context로 넣어"] },
+          ]}
           terms={[
             { symbol: "c", name: "Challenge data", description: "WHOAREYOU의 unmasked masking IV, static header, authdata byte sequence" },
             { symbol: "B_s", name: "Recipient static key", description: "Bob의 signed ENR identity에 결속된 secp256k1 public key" },

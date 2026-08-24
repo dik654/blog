@@ -27,7 +27,7 @@ export default function ThreatModelViz() {
           fill="#10b981"
           fillOpacity={0.15}
           stroke="#10b981"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <text
           x={130}
@@ -69,7 +69,7 @@ export default function ThreatModelViz() {
           fill="#10b981"
           fillOpacity={0.15}
           stroke="#10b981"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <text
           x={350}
@@ -108,7 +108,7 @@ export default function ThreatModelViz() {
           x2={450}
           y2={115}
           stroke="var(--foreground)"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           strokeDasharray="4 3"
         />
         <text

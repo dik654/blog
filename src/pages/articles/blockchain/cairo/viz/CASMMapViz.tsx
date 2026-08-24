@@ -97,7 +97,7 @@ export default function CASMMapViz() {
                   x2={195}
                   y2={y + 11}
                   stroke={r.color}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                   strokeDasharray="4 2"
                   animate={{ pathLength: show ? 1 : 0 }}
                   transition={{ duration: 0.4 }}

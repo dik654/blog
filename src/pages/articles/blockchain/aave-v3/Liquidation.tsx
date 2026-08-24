@@ -13,6 +13,10 @@ export default function Liquidation() {
         question="담보 가격 하락이 health factor와 청산량에 어떻게 연결될까요?"
         idea="먼저 asset decimals와 oracle scale을 맞춰 base currency value를 만들고, 담보별 threshold를 곱한 합을 debt로 나눕니다. Liquidation 시 debt repayment와 bonus collateral은 available collateral·close factor에 의해 다시 제한됩니다."
         formula={String.raw`HF=\frac{\sum_i V_i\,LT_i}{D},\qquad C_{seize}=\frac{D_{repaid}(1+bonus)}{P_C}`}
+        annotatedFormula={String.raw`HF=\underbrace{\frac{\sum_i V_i\,LT_i}{D},\qquad C_{seize}=\frac{D_{repaid}(1+bonus)}{P_C}}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`\frac{\sum_i V_i\,LT_i}{D},\qquad C_{seize}=\frac{D_{repaid}(1+bonus)}{P_C}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","먼저 asset decimals와 oracle scale을","맞춰 base currency value를 만들고, 담보별","threshold를 곱한 합을 debt로 나눕니다."] },
+        ]}
         terms={[
           { symbol: "V_i", name: "collateral value", description: "Oracle price·token balance·decimals로 계산한 base-currency 가치입니다." },
           { symbol: "LT_i", name: "liquidation threshold", description: "Collateral별 governance risk percentage입니다." },

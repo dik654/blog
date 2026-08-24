@@ -35,7 +35,7 @@ export default function GossipSubViz() {
             r={24}
             fill="#64748b12"
             stroke="#64748b"
-            strokeWidth={1.5}
+            strokeWidth={1.2}
           />
           <text
             x={CX}
@@ -109,7 +109,7 @@ export default function GossipSubViz() {
             r={18}
             fill="none"
             stroke={PROTOS[step].c}
-            strokeWidth={1.5}
+            strokeWidth={1.2}
             initial={false}
             animate={{ r: 30, opacity: 0 }}
             transition={{ duration: 1, repeat: Infinity }}

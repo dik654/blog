@@ -179,7 +179,7 @@ export default function EngineAPIFlowViz() {
                     rx={7}
                     fill="none"
                     stroke={n.color}
-                    strokeWidth={1.5}
+                    strokeWidth={1.2}
                     animate={{ opacity: [0.6, 0.15, 0.6] }}
                     transition={{ repeat: Infinity, duration: 1.5 }}
                   />

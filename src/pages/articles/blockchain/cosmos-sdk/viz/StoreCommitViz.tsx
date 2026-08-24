@@ -147,7 +147,7 @@ export default function StoreCommitViz({
                   rx={5}
                   fill="#ec489918"
                   stroke="#ec4899"
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={170}

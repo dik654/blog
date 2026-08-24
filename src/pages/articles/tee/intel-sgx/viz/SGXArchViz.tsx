@@ -51,7 +51,7 @@ export default function SGXArchViz() {
             rx={10}
             fill="none"
             stroke="#6366f125"
-            strokeWidth={1.5}
+            strokeWidth={1.2}
             strokeDasharray="6,4"
           />
           <text x={30} y={26} fontSize={10} fill="#6366f1" fontWeight={600}>
@@ -72,7 +72,7 @@ export default function SGXArchViz() {
                     x2={cx - 35}
                     y2={70}
                     stroke={done || active ? s.color : "var(--border)"}
-                    strokeWidth={1.5}
+                    strokeWidth={1.2}
                   />
                 )}
                 <motion.circle
@@ -163,7 +163,7 @@ export default function SGXArchViz() {
             x2={60 + step * 85}
             y2={54}
             stroke={P[step].color}
-            strokeWidth={1.5}
+            strokeWidth={1.2}
             animate={{ x1: 60 + step * 85, x2: 60 + step * 85 }}
             transition={{ duration: 0.45, type: "spring", bounce: 0.25 }}
           />

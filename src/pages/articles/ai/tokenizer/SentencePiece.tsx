@@ -39,6 +39,11 @@ export default function SentencePiece() {
           </>
         }
         formula={String.raw`\begin{aligned}P(\mathbf s)&=\prod_{i=1}^{m}p(s_i)\\\mathbf s^*&=\arg\max_{\mathbf s\in S(X)}\sum_{i=1}^{m}\log p(s_i)\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}P(\mathbf s)&=\underbrace{\prod_{i=1}^{m}p(s_i)}_{\text{piece probability 계산}}\\\mathbf s^*&=\underbrace{\arg\max_{\mathbf s\in S(X)}\sum_{i=1}^{m}\log p(s_i)}_{\text{로그 비용 변환}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`\prod_{i=1}^{m}p(s_i)`, annotation: ["piece probability이(가) 식의 결과에 기여하는","방식을 계산합니다.","한 경로에 들어 있는 piece가 독립적으로 생성된다는 단순한","model을 두고 piece probability를 곱합니다."] },
+          { expression: String.raw`\arg\max_{\mathbf s\in S(X)}\sum_{i=1}^{m}\log p(s_i)`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","한 경로에 들어 있는 piece가 독립적으로 생성된다는 단순한","model을 두고 piece probability를 곱합니다."] },
+        ]}
         terms={[
           {
             symbol: "S(X)",

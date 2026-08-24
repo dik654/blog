@@ -20,6 +20,10 @@ export default function Overview() {
         question="Short-Weierstrass 식이 실제로 nonsingular curve를 만들었는지 어떻게 확인할까요?"
         idea="Curve에 cusp나 self-intersection이 생기면 tangent 기반 group law가 깨집니다. Discriminant가 0이 아닌 parameter만 사용해 그런 singularity를 제외합니다."
         formula={String.raw`E/\mathbb F_p:\ y^2=x^3+ax+b,\qquad 4a^3+27b^2\not\equiv0\pmod p`}
+        annotatedFormula={String.raw`E/\mathbb F_p:\ y^2=\underbrace{x^3+ax+b,\qquad 4a^3+27b^2\not\equiv0\pmod p}_{\text{base-field modulus 계산}}`}
+        operations={[
+          { expression: String.raw`x^3+ax+b,\qquad 4a^3+27b^2\not\equiv0\pmod p`, annotation: ["base-field modulus이(가) 식의 결과에 기여하는","방식을 계산합니다.","Curve에 cusp나 self-intersection이","생기면 tangent 기반 group law가 깨집니다."] },
+        ]}
         terms={[
           { symbol: "p", name: "base-field modulus", description: "좌표 arithmetic을 환원하는 odd prime입니다." },
           { symbol: "a,b", name: "curve coefficients", description: "Curve instance를 정하는 field elements입니다." },

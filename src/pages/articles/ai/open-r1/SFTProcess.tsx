@@ -55,6 +55,14 @@ export default function SFTProcess() {
 Z&=\sum_{t=1}^{T}m_t\\
 \mathcal L_{\mathrm{SFT}}&=-\frac1Z\sum_{t=1}^{T}m_t\log p_\theta(y_t\mid x,y_{<t})
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+Z&=\underbrace{\sum_{t=1}^{T}m_t}_{\text{loss mask 계산}}\\
+\mathcal L_{\mathrm{SFT}}&=\underbrace{-\frac1Z\sum_{t=1}^{T}m_t\log p_\theta(y_t\mid x,y_{<t})}_{\text{로그 비용 변환}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\sum_{t=1}^{T}m_t`, annotation: ["loss mask이(가) 식의 결과에 기여하는 방식을","계산합니다.","Teacher forcing으로 이전 정답 token을","context에 넣고 다음 정답 token의 negative"] },
+          { expression: String.raw`-\frac1Z\sum_{t=1}^{T}m_t\log p_\theta(y_t\mid x,y_{<t})`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","Teacher forcing으로 이전 정답 token을","context에 넣고 다음 정답 token의 negative","log-likelihood를 합합니다."] },
+        ]}
         terms={[
           {
             symbol: "x",

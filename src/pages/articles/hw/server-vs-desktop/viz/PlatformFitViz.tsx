@@ -130,7 +130,7 @@ function LaneBudget() {
             x2={device.x + 43}
             y2={119}
             stroke={device.color}
-            strokeWidth={1.5}
+            strokeWidth={1.2}
           />
         </motion.g>
       ))}
@@ -270,7 +270,7 @@ function SelectPlatform() {
       <motion.path
         d="M84 133 H396"
         stroke={C.ok}
-        strokeWidth={2}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
         transition={{ delay: 0.5 }}

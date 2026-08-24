@@ -45,7 +45,7 @@ export default function SealingViz() {
             rx={10}
             fill="none"
             stroke="#6366f130"
-            strokeWidth={1.5}
+            strokeWidth={1.2}
             strokeDasharray="6,4"
           />
           <text x={35} y={32} fontSize={10} fill="#6366f1" fontWeight={600}>

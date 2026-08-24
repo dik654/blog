@@ -26,6 +26,12 @@ export default function Decoder({
         question="Prefix 하나를 확장할 때 decoder state와 sequence score는 어떻게 갱신될까?"
         idea={<>Recurrent transition으로 다음 state를 만들고 output projection으로 vocabulary distribution을 얻습니다. Candidate sequence의 log probability는 선택한 token의 log probability를 이전 누적값에 더합니다.</>}
         formula={String.raw`\begin{aligned}u_t&=e(y_{t-1})\\s_t&=\operatorname{LSTM}_D(u_t,s_{t-1})\\p_t&=\operatorname{softmax}(W_os_t+b_o)\\q_t&=q_{t-1}+\log p_t[y_t]\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}u_t&=\underbrace{e(y_{t-1})}_{\text{오른쪽 항으로 결과 계산}}\\s_t&=\underbrace{\operatorname{LSTM}_D(u_t,s_{t-1})}_{\text{decoder state 계산}}\\p_t&=\underbrace{\operatorname{softmax}(W_os_t+b_o)}_{\text{선택 비율 정규화}}\\q_t&=q_{t-1}+\log p_t[y_t]\end{aligned}`}
+        operations={[
+          { expression: String.raw`e(y_{t-1})`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Recurrent transition으로 다음 state를","만들고 output projection으로 vocabulary","distribution을 얻습니다."] },
+          { expression: String.raw`\operatorname{LSTM}_D(u_t,s_{t-1})`, annotation: ["decoder state이(가) 식의 결과에 기여하는 방식을","계산합니다.","Recurrent transition으로 다음 state를","만들고 output projection으로 vocabulary"] },
+          { expression: String.raw`\operatorname{softmax}(W_os_t+b_o)`, annotation: ["score를 합이 1인 선택 비율로 정규화합니다.","Recurrent transition으로 다음 state를","만들고 output projection으로 vocabulary","distribution을 얻습니다."] },
+        ]}
         terms={[
           { symbol: "s_t", name: "decoder state", description: "Source condition과 target prefix를 recurrent하게 요약한 state입니다." },
           { symbol: "p_t", name: "next-token distribution", description: "현재 prefix에서 vocabulary token 각각의 categorical probability입니다." },

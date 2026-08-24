@@ -28,7 +28,7 @@ export function VertexCircle({
           r={R + 5}
           fill="none"
           stroke={COMMITTED}
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           initial={{ opacity: 0 }}
           animate={{ opacity: [0.3, 0.7, 0.3] }}
           transition={{ duration: 2, repeat: Infinity }}
@@ -40,7 +40,7 @@ export function VertexCircle({
         r={R}
         fill={`${fillColor}22`}
         stroke={fillColor}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
       />
       <text
         x={v.rx}

@@ -27,6 +27,16 @@ h_v&=e_v(x_v),\\
 \alpha_v&=\frac{m_v\exp(a_v)}{\sum_j m_j\exp(a_j)},\\
 h&=\sum_v\alpha_v h_v.
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+h_v&=\underbrace{e_v(x_v),}_{\text{오른쪽 항으로 결과 계산}}\\
+\alpha_v&=\underbrace{\frac{m_v\exp(a_v)}{\sum_j m_j\exp(a_j)},}_{\text{기준량당 비율}}\\
+h&=\underbrace{\sum_v\alpha_v h_v.}_{\text{오른쪽 항으로 결과 계산}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`e_v(x_v),`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","각 encoder output hᵥ에서 gate score","aᵥ를 만들되, mask가 0인 view는 softmax의","분자와 분모에서 제외합니다."] },
+          { expression: String.raw`\frac{m_v\exp(a_v)}{\sum_j m_j\exp(a_j)},`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","각 encoder output hᵥ에서 gate score","aᵥ를 만들되, mask가 0인 view는 softmax의","분자와 분모에서 제외합니다."] },
+          { expression: String.raw`\sum_v\alpha_v h_v.`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","각 encoder output hᵥ에서 gate score","aᵥ를 만들되, mask가 0인 view는 softmax의","분자와 분모에서 제외합니다."] },
+        ]}
         terms={[
           { symbol: "eᵥ", name: "view encoder", description: "v번째 view를 공통 dimension의 feature hᵥ로 바꿉니다. Modality에 따라 weight를 공유하거나 분리합니다." },
           { symbol: "aᵥ", name: "gate score", description: "현재 sample에서 view v에 배정할 상대 weight의 logit입니다." },

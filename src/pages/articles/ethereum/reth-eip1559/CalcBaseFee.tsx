@@ -45,6 +45,12 @@ export default function CalcBaseFee({
         question="Parent block이 target보다 3,000,000 gas 더 썼다면 다음 base fee는 얼마일까?"
         idea="초과 비율만큼 parent base fee를 조정하되, mainnet denominator 8로 한 번 더 완화합니다. Consensus 구현은 실수 반올림이 아니라 정해진 순서의 정수 나눗셈을 사용합니다."
         formula={String.raw`\begin{aligned}T&=L_p/E\\&=15{,}000{,}000\ \mathrm{gas}\\[2pt]r&=\frac{U_p-T}{T\,D}=0.025\\[2pt]\Delta&=\max(\lfloor B_p r\rfloor,1\ \mathrm{wei})\\&=0.5\ \mathrm{gwei}\\[2pt]B_n&=B_p+\Delta\\&=20.5\ \mathrm{gwei}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}T&=\underbrace{L_p/E}_{\text{기준량당 비율}}\\&=\underbrace{15{,}000{,}000\ \mathrm{gas}}_{\text{오른쪽 항으로 결과 계산}}\\[2pt]r&=\underbrace{\frac{U_p-T}{T\,D}=0.025}_{\text{기준량당 비율}}\\[2pt]\Delta&=\max(\lfloor B_p r\rfloor,1\ \mathrm{wei})\\&=0.5\ \mathrm{gwei}\\[2pt]B_n&=B_p+\Delta\\&=20.5\ \mathrm{gwei}\end{aligned}`}
+        operations={[
+          { expression: String.raw`L_p/E`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","초과 비율만큼 parent base fee를 조정하되,","mainnet denominator 8로 한 번 더","완화합니다."] },
+          { expression: String.raw`15{,}000{,}000\ \mathrm{gas}`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","초과 비율만큼 parent base fee를 조정하되,","mainnet denominator 8로 한 번 더","완화합니다."] },
+          { expression: String.raw`\frac{U_p-T}{T\,D}=0.025`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","초과 비율만큼 parent base fee를 조정하되,","mainnet denominator 8로 한 번 더","완화합니다."] },
+        ]}
         terms={[
           { symbol: "L_p", name: "Parent gas limit", description: "Parent header가 허용한 최대 execution gas입니다. 예시는 30,000,000 gas입니다." },
           { symbol: "E", name: "Elasticity multiplier", description: "Gas limit에서 target을 만드는 활성 ChainSpec 계수이며 예시는 2입니다." },

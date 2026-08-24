@@ -61,6 +61,10 @@ export default function Overview() {
           </>
         }
         formula={String.raw`\text{global bytes per use}\approx\frac{B_{\mathrm{load}}+B_{\mathrm{store}}}{R}`}
+        annotatedFormula={String.raw`\underbrace{\text{global bytes per use}\approx\frac{B_{\mathrm{load}}+B_{\mathrm{store}}}{R}}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`\text{global bytes per use}\approx\frac{B_{\mathrm{load}}+B_{\mathrm{store}}}{R}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","한 번 stage한 값이 R번 사용된다면 원래 R번","global load하던 byte를 한 번의 global","load와 R번의 on-chip access로 바꿉니다."] },
+        ]}
         terms={[
           {
             symbol: "B_load",

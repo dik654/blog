@@ -14,6 +14,10 @@ export default function PairContract() {
         question="기존 LP를 희석하지 않으면서 새 LP share를 몇 개 발행해야 할까요?"
         idea="입금이 기존 reserve 비율보다 한쪽으로 치우치면 부족한 쪽이 실제로 더해진 유동성을 제한합니다. 그래서 두 비례 몫의 최솟값을 사용합니다."
         formula={String.raw`S_{mint}=\min\!\left(\frac{\Delta xS}{x},\frac{\Delta yS}{y}\right),\qquad S_{initial}=\sqrt{\Delta x\Delta y}-S_{min}`}
+        annotatedFormula={String.raw`S_{mint}=\underbrace{\min\!\left(\frac{\Delta xS}{x},\frac{\Delta yS}{y}\right),\qquad S_{initial}=\sqrt{\Delta x\Delta y}-S_{min}}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`\min\!\left(\frac{\Delta xS}{x},\frac{\Delta yS}{y}\right),\qquad S_{initial}=\sqrt{\Delta x\Delta y}-S_{min}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","입금이 기존 reserve 비율보다"] },
+        ]}
         terms={[
           { symbol: "S", name: "existing total supply", description: "Mint 직전 발행된 LP token 총량입니다." },
           { symbol: "S_min", name: "locked minimum liquidity", description: "초기 가격 조작과 division edge를 줄이려고 zero address에 영구 잠근 양입니다." },

@@ -153,7 +153,7 @@ export default function OverviewSteps({ step }: { step: number }) {
                   x2={265 - LW / 2 - 4}
                   y2={y + LH / 2}
                   stroke="#f59e0b"
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                   markerEnd="url(#oct-arw)"
                 />
                 <rect

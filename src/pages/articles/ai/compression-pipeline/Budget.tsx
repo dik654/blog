@@ -37,6 +37,18 @@ M_{\mathrm{free}}&=M_{\mathrm{device}}-M_{\mathrm{fixed}},\\
 M_{\mathrm{req}}&=M_{\mathrm{request}}(L_{\mathrm{in}},L_{\mathrm{out}}),\\
 c_{\max}&=\left\lfloor M_{\mathrm{free}}/M_{\mathrm{req}}\right\rfloor.
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+M_{\mathrm{base}}&=\underbrace{M_{\mathrm{weights}}+M_{\mathrm{workspace}},}_{\text{오른쪽 항으로 결과 계산}}\\
+M_{\mathrm{fixed}}&=\underbrace{M_{\mathrm{base}}+M_{\mathrm{headroom}},}_{\text{오른쪽 항으로 결과 계산}}\\
+M_{\mathrm{free}}&=\underbrace{M_{\mathrm{device}}-M_{\mathrm{fixed}},}_{\text{오른쪽 항으로 결과 계산}}\\
+M_{\mathrm{req}}&=M_{\mathrm{request}}(L_{\mathrm{in}},L_{\mathrm{out}}),\\
+c_{\max}&=\left\lfloor M_{\mathrm{free}}/M_{\mathrm{req}}\right\rfloor.
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`M_{\mathrm{weights}}+M_{\mathrm{workspace}},`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","전체 memory에서 model과 workspace처럼 요청","수와 무관한 고정 resident를 먼저 빼고, 남은","memory를 요청 하나의"] },
+          { expression: String.raw`M_{\mathrm{base}}+M_{\mathrm{headroom}},`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","전체 memory에서 model과 workspace처럼 요청","수와 무관한 고정 resident를 먼저 빼고, 남은","memory를 요청 하나의"] },
+          { expression: String.raw`M_{\mathrm{device}}-M_{\mathrm{fixed}},`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","전체 memory에서 model과 workspace처럼 요청","수와 무관한 고정 resident를 먼저 빼고, 남은","memory를 요청 하나의"] },
+        ]}
         terms={[
           {
             symbol: "M_device",

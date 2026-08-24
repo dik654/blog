@@ -79,7 +79,7 @@ export default function BlockSTMViz({
                           : `${COLORS[i]}18`,
                       stroke: conflict ? "#ef4444" : COLORS[i],
                     }}
-                    strokeWidth={1.5}
+                    strokeWidth={1.2}
                     transition={sp}
                   />
                   <motion.text
@@ -120,7 +120,7 @@ export default function BlockSTMViz({
                       rx={4}
                       fill={`${COLORS[i]}30`}
                       stroke={COLORS[i]}
-                      strokeWidth={1.5}
+                      strokeWidth={1.2}
                       initial={false}
                       animate={{ width: 90 }}
                       transition={sp}

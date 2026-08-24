@@ -27,6 +27,10 @@ export default function Timeout({
         question="Round가 반복될수록 정상 message를 기다릴 예산을 어떻게 늘릴까요?"
         idea={<>초기 timeout에 round별 delta를 더하는 단순 schedule은 network delay가 안정된 뒤 언젠가 기다림이 실제 delay를 넘도록 만듭니다. Step별 base와 delta는 따로 둡니다.</>}
         formula={String.raw`T_s(r)=T_{s,0}+r\,\Delta_s`}
+        annotatedFormula={String.raw`T_s(r)=\underbrace{T_{s,0}+r\,\Delta_s}_{\text{변화량 계산}}`}
+        operations={[
+          { expression: String.raw`T_{s,0}+r\,\Delta_s`, annotation: ["인접한 level의 차이를 남겨 변화량을 계산합니다.","초기 timeout에 round별 delta를 더하는 단순","schedule은 network delay가 안정된 뒤 언젠가","기다림이 실제 delay를 넘도록 만듭니다."] },
+        ]}
         terms={[
           { symbol: "s", name: "Consensus step", description: "Propose·Prevote·Precommit 중 timer step입니다." },
           { symbol: "r", name: "Round", description: "현재 round 번호입니다." },

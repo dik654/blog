@@ -73,6 +73,14 @@ W_r^{recompute} &= \max\!\left(0,\;n_r^{before}-n_r^{hit}\right) \\
 C_{preempt} &\approx T_{model}\!\left(W_r^{recompute}\right)
  + t_{requeue}+t_{restore}
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+W_r^{recompute} &= \underbrace{\max\!\left(0,\;n_r^{before}-n_r^{hit}\right)}_{\text{경계 후보 선택}} \\
+C_{preempt} &\approx T_{model}\!\left(W_r^{recompute}\right)
+ + t_{requeue}+t_{restore}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\max\!\left(0,\;n_r^{before}-n_r^{hit}\right)`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","중단 전에 계산한 token 가운데 재개 시 prefix","cache로 다시 쓸 수 있는 부분을 빼면 최소 반복 계산량을","얻습니다."] },
+        ]}
         terms={WASTE_TERMS}
         assumptions={[
           "n_hit은 재개 시 실제 cache lookup 결과이며 preemption 전 cached token 수와 같다고 가정하지 않습니다.",

@@ -419,7 +419,7 @@ export function Step1() {
                   x2={234}
                   y2={r.y + 16}
                   stroke={C.fail}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                   opacity={0.7}
                 />
                 <line
@@ -428,7 +428,7 @@ export function Step1() {
                   x2={224}
                   y2={r.y + 16}
                   stroke={C.fail}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                   opacity={0.7}
                 />
               </motion.g>
@@ -462,7 +462,7 @@ export function Step1() {
                   d="M 226 39 L 230 43 L 238 35"
                   fill="none"
                   stroke={C.load}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                   strokeLinecap="round"
                   transform={`translate(0, ${r.y - 26})`}
                   {...drawLine(0.7)}
@@ -570,7 +570,7 @@ export function Step1() {
             d="M 13 22 L 18 27 L 27 18"
             fill="none"
             stroke={C.load}
-            strokeWidth={2}
+            strokeWidth={1.2}
             strokeLinecap="round"
             {...drawLine(0.9)}
           />

@@ -18,6 +18,10 @@ export default function ProcessBlock({ onCodeRef }: { onCodeRef: (key: string, r
         question="검증된 RANDAO reveal 하나가 epoch mix를 어떻게 갱신할까요?"
         idea={<>이전 32-byte mix와 reveal의 hash를 bitwise XOR합니다. 어느 한쪽만으로 결과를 정할 수 없게 기여를 누적하지만, reveal을 제출하지 않는 선택까지 없애지는 않습니다.</>}
         formula={String.raw`R_e' = R_e \oplus H(\sigma_{e,p})`}
+        annotatedFormula={String.raw`R_e' = \underbrace{R_e \oplus H(\sigma_{e,p})}_{\text{RANDAO reveal 계산}}`}
+        operations={[
+          { expression: String.raw`R_e \oplus H(\sigma_{e,p})`, annotation: ["RANDAO reveal이(가) 식의 결과에 기여하는 방식을","계산합니다.","이전 32-byte mix와 reveal의 hash를","bitwise XOR합니다."] },
+        ]}
         terms={[
           { symbol: "R_e", name: "previous epoch mix", description: "현재 epoch e의 historical-vector 위치에 저장된 32-byte 값입니다." },
           { symbol: String.raw`\sigma_{e,p}`, name: "RANDAO reveal", description: "Proposer p가 epoch e와 RANDAO domain에 서명한 BLS signature입니다." },

@@ -27,6 +27,14 @@ export default function Hypothesis() {
 \bar{y}_A=12.0\text{ min},\ \bar{y}_B=10.5\text{ min}
 &\Rightarrow \widehat{\Delta}=1.5\text{ min}.
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+\widehat{\Delta}&=\underbrace{\bar{y}_A-\bar{y}_B,}_{\text{변화량 계산}}\\
+\bar{y}_A=12.0\text{ min},\ \bar{y}_B=10.5\text{ min}
+&\Rightarrow \widehat{\Delta}=1.5\text{ min}.
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\bar{y}_A-\bar{y}_B,`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","먼저 같은 metric 단위의 차이를 effect","estimate로 계산하고, resampling이나 model","가정으로 confidence interval을 만듭니다."] },
+        ]}
         terms={[
           { symbol: String.raw`\bar{y}_A,\bar{y}_B`, name: "slice means", description: "같은 metric과 cutoff로 계산한 두 slice의 평균입니다." },
           { symbol: "Δ̂", name: "estimated effect", description: "A와 B의 관측 평균 차이이며 원래 metric 단위를 유지합니다." },

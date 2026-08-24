@@ -20,6 +20,11 @@ export default function CEvsMSE({ title }: { title?: string }) {
         question="왜 Gaussian regression에서는 MSE가, categorical classification에서는 cross-entropy가 자연스럽게 나오는가?"
         idea={<>같은 maximum likelihood 원칙에 서로 다른 관측 분포를 넣습니다. Gaussian의 log density는 squared residual을 만들고, categorical likelihood의 log는 정답 확률의 negative log를 만듭니다.</>}
         formula={String.raw`\begin{aligned}\mathcal L_{\rm Gaussian}&=\frac{(y-\mu_\theta)^2}{2\sigma^2}+C\\[3pt]\mathcal L_{\rm Cat}&=-\log\operatorname{softmax}(z_\theta)_y\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}\mathcal L_{\rm Gaussian}&=\underbrace{\frac{(y-\mu_\theta)^2}{2\sigma^2}+C}_{\text{기준량당 비율}}\\[3pt]\mathcal L_{\rm Cat}&=\underbrace{-\log\operatorname{softmax}(z_\theta)_y}_{\text{선택 비율 정규화}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`\frac{(y-\mu_\theta)^2}{2\sigma^2}+C`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","같은 maximum likelihood 원칙에 서로 다른 관측","분포를 넣습니다."] },
+          { expression: String.raw`-\log\operatorname{softmax}(z_\theta)_y`, annotation: ["score를 합이 1인 선택 비율로 정규화합니다.","같은 maximum likelihood 원칙에 서로 다른 관측","분포를 넣습니다."] },
+        ]}
         terms={[
           { symbol: "\\mu_\\theta", name: "predicted mean", description: "Gaussian conditional distribution의 평균 parameter입니다." },
           { symbol: "\\sigma^2", name: "noise variance", description: "고정하면 MSE의 scale만 바꾸지만 학습하면 별도 log variance 항이 필요합니다." },

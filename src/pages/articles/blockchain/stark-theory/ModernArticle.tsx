@@ -21,6 +21,10 @@ export default function ModernSTARKTheoryArticle() {
           question="Horner trace가 x=4에서 f(4)=10을 계산했다는 것을 어떤 제약으로 확인하는가?"
           idea={<>각 행의 상태 vᵢ와 다음 행 vᵢ₊₁ 사이에 곱셈·덧셈 규칙을 둡니다. 첫 coefficient와 마지막 공개 output은 boundary constraint로 고정합니다.</>}
           formula={String.raw`v_0=1,\quad v_{i+1}=xv_i+a_{i+1},\quad (a_1,a_2)=(2,3),\quad v_2=y=10\quad\text{in }\mathbb F_{17}`}
+          annotatedFormula={String.raw`v_0=\underbrace{1,\quad v_{i+1}=xv_i+a_{i+1},\quad (a_1,a_2)=(2,3),\quad v_2=y=10\quad\text{in }\mathbb F_{17}}_{\text{Trace state 계산}}`}
+          operations={[
+            { expression: String.raw`1,\quad v_{i+1}=xv_i+a_{i+1},\quad (a_1,a_2)=(2,3),\quad v_2=y=10\quad\text{in }\mathbb F_{17}`, annotation: ["Trace state이(가) 식의 결과에 기여하는 방식을","계산합니다.","각 행의 상태 vᵢ와 다음 행 vᵢ₊₁ 사이에 곱셈·덧셈","규칙을 둡니다."] },
+          ]}
           terms={[
             { symbol: "v_i", name: "Trace state", description: "i번째 step까지 Horner 계산이 누적한 field 값입니다." },
             { symbol: "x", name: "Public evaluation point", description: "예에서는 4이며 statement에 binding되어야 합니다." },
@@ -35,6 +39,10 @@ export default function ModernSTARKTheoryArticle() {
           question="여러 AIR 제약을 verifier가 검사할 하나의 low-degree claim으로 어떻게 묶는가?"
           idea={<>각 constraint numerator Nⱼ가 적용 domain의 zero polynomial Zⱼ로 나누어떨어져야 합니다. Quotient들을 commitment 뒤 random αⱼ로 합쳐 composition polynomial을 만듭니다.</>}
           formula={String.raw`Q_j(X)=\frac{N_j(X)}{Z_j(X)},\qquad C(X)=\sum_{j=1}^{m}\alpha_j Q_j(X)`}
+          annotatedFormula={String.raw`Q_j(X)=\underbrace{\frac{N_j(X)}{Z_j(X)},\qquad C(X)=\sum_{j=1}^{m}\alpha_j Q_j(X)}_{\text{기준량당 비율}}`}
+          operations={[
+            { expression: String.raw`\frac{N_j(X)}{Z_j(X)},\qquad C(X)=\sum_{j=1}^{m}\alpha_j Q_j(X)`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","각 constraint numerator Nⱼ가 적용","domain의 zero polynomial Zⱼ로","나누어떨어져야 합니다."] },
+          ]}
           terms={[
             { symbol: "N_j", name: "Constraint numerator", description: "j번째 전이 또는 경계 식을 polynomial로 표현한 오차입니다." },
             { symbol: "Z_j", name: "Constraint zero polynomial", description: "그 제약이 적용되는 row set에서 0입니다." },

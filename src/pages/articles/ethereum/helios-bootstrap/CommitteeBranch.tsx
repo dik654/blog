@@ -19,6 +19,10 @@ export default function CommitteeBranch({ title, onCodeRef: _onCodeRef }: Props 
         question="Committee leaf와 Merkle branch가 header의 state root에 실제로 묶였는지 어떻게 확인할까요?"
         idea="Generalized index의 각 bit가 현재 hash를 sibling의 왼쪽에 둘지 오른쪽에 둘지 정합니다. Branch를 모두 접은 최종 root만 비교합니다."
         formula={String.raw`r_0=HTR(K),\qquad r_{i+1}=H(\operatorname{order}(r_i,b_i,g_i)),\qquad r_d\stackrel{?}{=}R_{state}`}
+        annotatedFormula={String.raw`r_0=\underbrace{HTR(K),\qquad r_{i+1}=H(\operatorname{order}(r_i,b_i,g_i)),\qquad r_d\stackrel{?}{=}R_{state}}_{\text{Header state root 계산}}`}
+        operations={[
+          { expression: String.raw`HTR(K),\qquad r_{i+1}=H(\operatorname{order}(r_i,b_i,g_i)),\qquad r_d\stackrel{?}{=}R_{state}`, annotation: ["Header state root이(가) 식의 결과에 기여하는","방식을 계산합니다.","Generalized index의 각 bit가 현재 hash를","sibling의 왼쪽에 둘지 오른쪽에 둘지 정합니다."] },
+        ]}
         terms={[
           { symbol: "K", name: "Current sync committee", description: "응답으로 받은 public-key list와 aggregate public key" },
           { symbol: "HTR(K)", name: "Committee root", description: "Fork-specific SSZ schema로 계산한 hash-tree-root" },

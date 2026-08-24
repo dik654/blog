@@ -22,6 +22,14 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
 S_{t+1}&=T_f(S_t,B_t)\\
 \operatorname{HTR}(S_{t+1})&=B_t.\mathrm{state\_root}
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+S_{t+1}&=\underbrace{T_f(S_t,B_t)}_{\text{pre-state 계산}}\\
+\operatorname{HTR}(S_{t+1})&=\underbrace{B_t.\mathrm{state\_root}}_{\text{signed block message 계산}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`T_f(S_t,B_t)`, annotation: ["pre-state이(가) 식의 결과에 기여하는 방식을","계산합니다.","Parent의 pre-state , fork가 정한 block","handler와 signed block을 하나의 결정적 함수로"] },
+          { expression: String.raw`B_t.\mathrm{state\_root}`, annotation: ["signed block message이(가) 식의 결과에","기여하는 방식을 계산합니다.","Parent의 pre-state , fork가 정한 block","handler와 signed block을 하나의 결정적 함수로"] },
+        ]}
         terms={[
           { symbol: "S_t", name: "pre-state", description: "Block parent와 정렬된 fork-specific BeaconState입니다." },
           { symbol: "B_t", name: "signed block message", description: "Slot·parent·proposer·body와 별도 proposer signature를 가진 입력입니다." },

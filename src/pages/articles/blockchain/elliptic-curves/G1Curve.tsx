@@ -14,6 +14,10 @@ export default function G1Curve() {
         question="Affine point addition은 두 점에서 결과 좌표를 어떻게 계산할까요?"
         idea="두 점을 지나는 line slope λ를 계산하고 cubic의 세 intersection x 좌표 합 관계를 사용합니다. Field division은 denominator inverse이므로 P=Q·P=−Q 예외를 먼저 분리합니다."
         formula={String.raw`\lambda=(y_2-y_1)(x_2-x_1)^{-1},\qquad x_3=\lambda^2-x_1-x_2,\qquad y_3=\lambda(x_1-x_3)-y_1`}
+        annotatedFormula={String.raw`\lambda=\underbrace{(y_2-y_1)(x_2-x_1)^{-1},\qquad x_3=\lambda^2-x_1-x_2,\qquad y_3=\lambda(x_1-x_3)-y_1}_{\text{field inverse 계산}}`}
+        operations={[
+          { expression: String.raw`(y_2-y_1)(x_2-x_1)^{-1},\qquad x_3=\lambda^2-x_1-x_2,\qquad y_3=\lambda(x_1-x_3)-y_1`, annotation: ["field inverse이(가) 식의 결과에 기여하는 방식을","계산합니다.","두 점을 지나는 line slope λ를 계산하고 cubic의","세 intersection x 좌표 합 관계를 사용합니다."] },
+        ]}
         terms={[
           { symbol: String.raw`\lambda`, name: "line slope", description: "두 affine points를 잇는 field-valued 기울기입니다." },
           { symbol: "(x_3,y_3)", name: "sum point", description: "P+Q의 canonical affine coordinates입니다." },
@@ -32,6 +36,10 @@ export default function G1Curve() {
         question="Jacobian coordinates는 왜 반복 scalar multiplication의 inversion을 줄일까요?"
         idea="여러 (X,Y,Z)가 같은 affine point를 나타내도록 denominator power를 Z에 미룹니다. Add/double에서는 multiplication과 square만 수행하고 최종 serialization에서 inverse 한 번으로 affine에 돌아옵니다."
         formula={String.raw`x=XZ^{-2},\qquad y=YZ^{-3},\qquad (X,Y,Z)\sim(\mu^2X,\mu^3Y,\mu Z)`}
+        annotatedFormula={String.raw`x=\underbrace{XZ^{-2},\qquad y=YZ^{-3},\qquad (X,Y,Z)\sim(\mu^2X,\mu^3Y,\mu Z)}_{\text{Jacobian coordinates 계산}}`}
+        operations={[
+          { expression: String.raw`XZ^{-2},\qquad y=YZ^{-3},\qquad (X,Y,Z)\sim(\mu^2X,\mu^3Y,\mu Z)`, annotation: ["Jacobian coordinates이(가) 식의 결과에","기여하는 방식을 계산합니다.","여러 (X,Y,Z)가 같은 affine point를 나타내도록","denominator power를 Z에 미룹니다."] },
+        ]}
         terms={[
           { symbol: "X,Y,Z", name: "Jacobian coordinates", description: "반복 group operation에 사용하는 projective representation입니다." },
           { symbol: "Z^{-1}", name: "deferred inverse", description: "최종 affine conversion에서 한 번 계산합니다." },

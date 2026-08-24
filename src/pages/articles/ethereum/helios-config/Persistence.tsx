@@ -35,6 +35,10 @@ export default function Persistence({ title, onCodeRef }: Props) {
         question="Checkpoint가 age policy 안에 있는지 어떤 단위로 판단하는가?"
         idea="검사 시각과 checkpoint가 대표하는 finalized 시각의 차이를 같은 초 단위로 계산한 뒤 configured maximum과 비교합니다. Root의 수학적 유효성과 source trust는 별도 조건입니다."
         formula={String.raw`a=t_{\text{check}}-t_{\text{finalized}},\qquad \operatorname{fresh}=\bigl(0\le a\le A_{\max}\bigr)`}
+        annotatedFormula={String.raw`a=\underbrace{t_{\text{check}}-t_{\text{finalized}},\qquad \operatorname{fresh}=\bigl(0\le a\le A_{\max}\bigr)}_{\text{경계 후보 선택}}`}
+        operations={[
+          { expression: String.raw`t_{\text{check}}-t_{\text{finalized}},\qquad \operatorname{fresh}=\bigl(0\le a\le A_{\max}\bigr)`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","검사 시각과 checkpoint가 대표하는 finalized","시각의 차이를 같은 초 단위로 계산한 뒤 configured","maximum과 비교합니다."] },
+        ]}
         terms={[
           { symbol: "t_{\\text{check}}", name: "검사 시각", description: "이번 startup receipt에 기록한 wall-clock seconds입니다." },
           { symbol: "t_{\\text{finalized}}", name: "Checkpoint 시각", description: "Checkpoint epoch/slot과 network genesis·slot duration으로 연결한 finalized 시각입니다." },

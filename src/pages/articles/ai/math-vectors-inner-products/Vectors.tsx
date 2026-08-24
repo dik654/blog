@@ -18,6 +18,10 @@ export default function Vectors() {
         question="Vector를 더하거나 scalar 배율로 늘리면 각 좌표는 어떻게 바뀔까요?"
         idea={<>같은 위치의 좌표끼리 더하고, scalar는 모든 좌표에 같은 배율로 곱합니다. 이 두 연산이 여러 방향을 조합하는 linear combination의 출발점입니다.</>}
         formula={String.raw`x=(3,4),quad y=(-1,2)qquad\Longrightarrow\qquad x+y=(2,6),\quad 2x=(6,8)`}
+        annotatedFormula={String.raw`x=\underbrace{(3,4),quad y=(-1,2)qquad\Longrightarrow\qquad x+y=(2,6),\quad 2x=(6,8)}_{\text{vector addition 계산}}`}
+        operations={[
+          { expression: String.raw`(3,4),quad y=(-1,2)qquad\Longrightarrow\qquad x+y=(2,6),\quad 2x=(6,8)`, annotation: ["vector addition이(가) 식의 결과에 기여하는","방식을 계산합니다.","같은 위치의 좌표끼리 더하고, scalar는 모든 좌표에 같은","배율로 곱합니다."] },
+        ]}
         terms={[
           { symbol: "x,y", name: "2차원 vector", description: "각각 두 개의 대응하는 좌표를 가진 대상입니다." },
           { symbol: "2", name: "scalar", description: "방향은 유지하면서 vector의 모든 성분과 길이를 두 배로 만듭니다." },

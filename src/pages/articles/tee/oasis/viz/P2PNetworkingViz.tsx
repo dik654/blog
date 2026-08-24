@@ -114,7 +114,7 @@ export default function P2PNetworkingViz() {
                   rx={6}
                   fill={`${n.color}15`}
                   stroke={n.color}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={n.x}

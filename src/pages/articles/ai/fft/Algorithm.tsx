@@ -20,6 +20,12 @@ export default function Algorithm() {
         question="N-point DFT를 두 개의 N/2-point DFT로 나눠도 같은 X[k]를 얻을 수 있을까?"
         idea={<>Input index n을 2m과 2m+1로 나눕니다. N-point root를 제곱하면 N/2-point root가 되므로 두 합은 각각 even·odd sample의 N/2-point DFT가 되고, odd 결과에 twiddle factor만 곱해 다시 합칠 수 있습니다.</>}
         formula={String.raw`\begin{aligned}\omega_N&=e^{-i2\pi/N}\\[2pt]E[k]&=\sum_{m=0}^{N/2-1}x[2m]\omega_{N/2}^{mk}\\[2pt]O[k]&=\sum_{m=0}^{N/2-1}x[2m+1]\omega_{N/2}^{mk}\\[3pt]X[k]&=E[k]+\omega_N^kO[k]\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}\omega_N&=\underbrace{e^{-i2\pi/N}}_{\text{기준량당 비율}}\\[2pt]E[k]&=\underbrace{\sum_{m=0}^{N/2-1}x[2m]\omega_{N/2}^{mk}}_{\text{기준량당 비율}}\\[2pt]O[k]&=\underbrace{\sum_{m=0}^{N/2-1}x[2m+1]\omega_{N/2}^{mk}}_{\text{기준량당 비율}}\\[3pt]X[k]&=E[k]+\omega_N^kO[k]\end{aligned}`}
+        operations={[
+          { expression: String.raw`e^{-i2\pi/N}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Input index n을 2m과 2m+1로 나눕니다."] },
+          { expression: String.raw`\sum_{m=0}^{N/2-1}x[2m]\omega_{N/2}^{mk}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Input index n을 2m과 2m+1로 나눕니다."] },
+          { expression: String.raw`\sum_{m=0}^{N/2-1}x[2m+1]\omega_{N/2}^{mk}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Input index n을 2m과 2m+1로 나눕니다."] },
+        ]}
         terms={[
           { symbol: "\\omega_N", name: "primitive root of unity", description: "N번 곱하면 1로 돌아오는 한 bin의 complex rotation입니다." },
           { symbol: "E[k]", name: "even sub-DFT", description: "x[0], x[2], …로 만든 길이 N/2 transform입니다." },
@@ -34,6 +40,11 @@ export default function Algorithm() {
         question="같은 E[k]와 O[k]로 나머지 N/2개 output도 어떻게 얻을까?"
         idea={<>N-point root의 half-period symmetry를 쓰면 upper-half output은 twiddle 항의 부호만 바뀝니다. 두 output을 더하기와 빼기로 묶은 이 계산이 butterfly입니다.</>}
         formula={String.raw`\begin{aligned}X[k]&=E[k]+\omega_N^kO[k]\\[3pt]X[k+N/2]&=E[k]-\omega_N^kO[k]\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}X[k]&=\underbrace{E[k]+\omega_N^kO[k]}_{\text{lower-half output 계산}}\\[3pt]X[k+N/2]&=\underbrace{E[k]-\omega_N^kO[k]}_{\text{upper-half output 계산}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`E[k]+\omega_N^kO[k]`, annotation: ["lower-half output이(가) 식의 결과에 기여하는","방식을 계산합니다.","N-point root의 half-period","symmetry를 쓰면 upper-half output은"] },
+          { expression: String.raw`E[k]-\omega_N^kO[k]`, annotation: ["upper-half output이(가) 식의 결과에 기여하는","방식을 계산합니다.","N-point root의 half-period","symmetry를 쓰면 upper-half output은"] },
+        ]}
         terms={[
           { symbol: "X[k]", name: "lower-half output", description: "Even과 phase-aligned odd 결과를 더합니다." },
           { symbol: "X[k+N/2]", name: "upper-half output", description: "같은 두 intermediate를 재사용하되 odd term을 뺍니다." },
@@ -49,6 +60,11 @@ export default function Algorithm() {
         question="왜 radix-2 FFT의 asymptotic work가 O(N log N)인가?"
         idea={<>각 level에서 두 subproblem의 전체 크기는 여전히 N이고 butterfly combine도 O(N)입니다. Problem size를 절반으로 줄이면 level이 log₂N개 생깁니다.</>}
         formula={String.raw`\begin{aligned}T(N)&=2T(N/2)+cN\\[3pt]T(N)&=\Theta(N\log_2N)\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}T(N)&=\underbrace{2T(N/2)+cN}_{\text{기준량당 비율}}\\[3pt]T(N)&=\underbrace{\Theta(N\log_2N)}_{\text{로그 비용 변환}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`2T(N/2)+cN`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","각 level에서 두 subproblem의 전체 크기는 여전히","N이고 butterfly combine도 O(N)입니다."] },
+          { expression: String.raw`\Theta(N\log_2N)`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","각 level에서 두 subproblem의 전체 크기는 여전히","N이고 butterfly combine도 O(N)입니다."] },
+        ]}
         terms={[
           { symbol: "2T(N/2)", name: "recursive transforms", description: "Even과 odd sequence의 두 sub-DFT입니다." },
           { symbol: "cN", name: "combine work", description: "한 level의 twiddle multiplication과 butterfly 작업입니다." },

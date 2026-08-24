@@ -34,6 +34,12 @@ export default function ModernMcpArticle() {
           question="한 번의 docs.search 호출에 허용할 end-to-end deadline은 어떻게 나누는가?"
           idea={<>연결, 초기화, 발견, 호출은 서로 다른 실패 지점이므로 budget도 따로 잡아 합칩니다. 예를 들어 500 ms, 1,000 ms, 1,000 ms, 1,500 ms를 배정하면 전체 상한은 4,000 ms입니다.</>}
           formula={String.raw`\begin{aligned}T_{total}&=T_s+T_i+T_d+T_c\\&=500+1000+1000+1500\\&=4000\ \mathrm{ms}\end{aligned}`}
+          annotatedFormula={String.raw`\begin{aligned}T_{total}&=\underbrace{T_s+T_i+T_d+T_c}_{\text{연결 budget 계산}}\\&=\underbrace{500+1000+1000+1500}_{\text{오른쪽 항으로 결과 계산}}\\&=\underbrace{4000\ \mathrm{ms}}_{\text{오른쪽 항으로 결과 계산}}\end{aligned}`}
+          operations={[
+            { expression: String.raw`T_s+T_i+T_d+T_c`, annotation: ["연결 budget이(가) 식의 결과에 기여하는 방식을","계산합니다.","연결, 초기화, 발견, 호출은 서로 다른 실패 지점이므로","budget도 따로 잡아 합칩니다."] },
+            { expression: String.raw`500+1000+1000+1500`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","연결, 초기화, 발견, 호출은 서로 다른 실패 지점이므로","budget도 따로 잡아 합칩니다."] },
+            { expression: String.raw`4000\ \mathrm{ms}`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","연결, 초기화, 발견, 호출은 서로 다른 실패 지점이므로","budget도 따로 잡아 합칩니다."] },
+          ]}
           terms={[
             { symbol: "T_s", name: "연결 budget", description: "Stdio child를 만들고 pipe를 사용할 수 있을 때까지의 시간입니다." },
             { symbol: "T_i", name: "초기화 budget", description: "Protocol initialize request와 response가 끝날 때까지의 시간입니다." },

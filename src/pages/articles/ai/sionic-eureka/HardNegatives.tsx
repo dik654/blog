@@ -53,6 +53,13 @@ export default function HardNegatives() {
             d&\in\mathcal N(q) \\
             &\Longleftrightarrow s(q,d)<s(q,p)-m
           \end{aligned}`}
+          annotatedFormula={String.raw`\begin{aligned}
+            d&\in\mathcal N(q) \\
+            &\Longleftrightarrow s(q,d)<\underbrace{s(q,p)-m}_{\text{query 계산}}
+          \end{aligned}`}
+          operations={[
+            { expression: String.raw`s(q,p)-m`, annotation: ["query이(가) 식의 결과에 기여하는 방식을 계산합니다.","후보 점수를 고정 숫자와 비교하지 않고, 같은 query의","positive 점수에서 margin을 뺀 상대 경계보다"] },
+          ]}
           terms={[
             { symbol: "q", name: "query", description: "현재 hard negative를 고르는 검색 질의입니다." },
             { symbol: "p", name: "known positive", description: "Query와 관련 있다고 라벨된 기준 문서입니다." },

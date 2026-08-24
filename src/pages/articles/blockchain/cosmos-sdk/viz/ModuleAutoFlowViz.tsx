@@ -75,7 +75,7 @@ export default function ModuleAutoFlowViz() {
                   x2={t.x}
                   y2={t.y}
                   stroke="#666"
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                   strokeDasharray="5 3"
                   initial={{ pathLength: 0 }}
                   animate={{ pathLength: show ? 1 : 0 }}
@@ -117,7 +117,7 @@ export default function ModuleAutoFlowViz() {
                 rx={6}
                 fill={`${m.color}12`}
                 stroke={m.color}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={m.x + BW / 2}

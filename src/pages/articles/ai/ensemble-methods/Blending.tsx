@@ -32,6 +32,16 @@ export default function Blending() {
           |D_{\mathrm{base}}|&=(1-\alpha)n \\
           |D_{\mathrm{blend}}|&=\alpha n
         \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+          D&=\underbrace{D_{\mathrm{base}}\sqcup D_{\mathrm{blend}}}_{\text{오른쪽 항으로 결과 계산}} \\
+          |D_{\mathrm{base}}|&=\underbrace{(1-\alpha)n}_{\text{blend fraction 계산}} \\
+          |D_{\mathrm{blend}}|&=\underbrace{\alpha n}_{\text{blend fraction 계산}}
+        \end{aligned}`}
+        operations={[
+          { expression: String.raw`D_{\mathrm{base}}\sqcup D_{\mathrm{blend}}`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","겹치지 않는 두 집합으로 나누므로 base fit은","(1−α)n개, combiner fit은 αn개를 사용합니다."] },
+          { expression: String.raw`(1-\alpha)n`, annotation: ["blend fraction이(가) 식의 결과에 기여하는 방식을","계산합니다.","겹치지 않는 두 집합으로 나누므로 base fit은","(1−α)n개, combiner fit은 αn개를 사용합니다."] },
+          { expression: String.raw`\alpha n`, annotation: ["blend fraction이(가) 식의 결과에 기여하는 방식을","계산합니다.","겹치지 않는 두 집합으로 나누므로 base fit은","(1−α)n개, combiner fit은 αn개를 사용합니다."] },
+        ]}
         terms={[
           { symbol: "alpha", name: "blend fraction", description: "전체 개발 데이터 중 combiner 학습 전용으로 남기는 비율입니다." },
           { symbol: "D_base", name: "base training set", description: "Base models의 parameter를 fit하는 행 집합입니다." },

@@ -34,6 +34,16 @@ N_i &= IV \oplus \operatorname{encode}_{96}(i),\\
 (C_i,\tau_i) &= \operatorname{AEAD\_Encrypt}(K,N_i,P_i,A_i),\\
 P_i &= \text{content}\,\|\,\text{inner type}\,\|\,\text{zero padding}.
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+N_i &= \underbrace{IV \oplus \operatorname{encode}_{96}(i),}_{\text{per-record nonce 계산}}\\
+(C_i,\tau_i) &= \underbrace{\operatorname{AEAD\_Encrypt}(K,N_i,P_i,A_i),}_{\text{per-record nonce 계산}}\\
+P_i &= \underbrace{\text{content}\,\|\,\text{inner type}\,\|\,\text{zero padding}.}_{\text{record sequence number 계산}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`IV \oplus \operatorname{encode}_{96}(i),`, annotation: ["per-record nonce이(가) 식의 결과에 기여하는","방식을 계산합니다.","Handshake에서 파생한 static IV에 증가하는","record sequence number를 같은 길이로"] },
+          { expression: String.raw`\operatorname{AEAD\_Encrypt}(K,N_i,P_i,A_i),`, annotation: ["per-record nonce이(가) 식의 결과에 기여하는","방식을 계산합니다.","Handshake에서 파생한 static IV에 증가하는","record sequence number를 같은 길이로"] },
+          { expression: String.raw`\text{content}\,\|\,\text{inner type}\,\|\,\text{zero padding}.`, annotation: ["record sequence number이(가) 식의 결과에","기여하는 방식을 계산합니다.","Handshake에서 파생한 static IV에 증가하는","record sequence number를 같은 길이로"] },
+        ]}
         terms={[
           {
             symbol: "i",

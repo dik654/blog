@@ -40,7 +40,7 @@ export default function EPCMemoryViz() {
             rx={8}
             fill="none"
             stroke="#6366f120"
-            strokeWidth={1.5}
+            strokeWidth={1.2}
             strokeDasharray="5,3"
           />
           <text x={35} y={24} fontSize={10} fill="#6366f1" fontWeight={600}>
@@ -107,7 +107,7 @@ export default function EPCMemoryViz() {
                 rx={5}
                 fill="#10b98112"
                 stroke="#10b981"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={440}
@@ -154,7 +154,7 @@ export default function EPCMemoryViz() {
                 rx={5}
                 fill="#f59e0b12"
                 stroke="#f59e0b"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={440}

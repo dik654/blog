@@ -70,6 +70,18 @@ export default function KVCacheManagerSection({
 \left\lceil\frac{n^{computed}+n^{new}+n^{look}}{B}\right\rceil
 -m^{owned}
 \right)`}
+        annotatedFormula={String.raw`m^{alloc}=\underbrace{\max\!\left(
+0,\;
+\left\lceil\frac{n^{computed}+n^{new}+n^{look}}{B}\right\rceil
+-m^{owned}
+\right)}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`\max\!\left(
+0,\;
+\left\lceil\frac{n^{computed}+n^{new}+n^{look}}{B}\right\rceil
+-m^{owned}
+\right)`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","실행 뒤 보존해야 할 전체 token 위치를 block 수로","올림한 다음 이미 연결된 block 수를 뺍니다."] },
+        ]}
         terms={ALLOC_TERMS}
         assumptions={[
           "단일 full-attention cache group을 설명하는 개념 식이며 실제 manager는 cached token·block alignment·encoder/Mamba state를 추가로 다룹니다.",

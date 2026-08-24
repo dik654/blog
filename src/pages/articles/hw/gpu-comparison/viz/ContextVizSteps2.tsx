@@ -66,13 +66,13 @@ export function StepScale() {
         d="M109 83 C145 43 160 53 188 58"
         fill="none"
         stroke={C.neutral}
-        strokeWidth={2}
+        strokeWidth={1.2}
       />
       <path
         d="M292 58 C320 53 335 43 371 83"
         fill="none"
         stroke={C.neutral}
-        strokeWidth={2}
+        strokeWidth={1.2}
       />
       <text x={150} y={51} textAnchor="middle" fontSize={8} fill={C.neutral}>
         PCIe
@@ -84,7 +84,7 @@ export function StepScale() {
         d="M110 112 H370"
         fill="none"
         stroke={C.datacenter}
-        strokeWidth={5}
+        strokeWidth={1.2}
         strokeLinecap="round"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
@@ -160,7 +160,7 @@ export function StepCooling() {
           d={`M127 92 C${105 + d * 22} ${74 + d * 7} ${77 + d * 31} ${69 + d * 9} ${54 + d * 38} ${65 + d * 12}`}
           fill="none"
           stroke={C.danger}
-          strokeWidth={2}
+          strokeWidth={1.2}
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}
           transition={{ delay: 0.1 + (d + 1) * 0.12 }}
@@ -203,7 +203,7 @@ export function StepCooling() {
           key={i}
           d={`M281 ${91 + i * 13} H423`}
           stroke={i === 1 ? C.danger : C.memory}
-          strokeWidth={3}
+          strokeWidth={1.2}
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}
           transition={{ delay: i * 0.12 }}
@@ -278,7 +278,7 @@ export function StepDecision() {
       <motion.path
         d="M384 91 H414"
         stroke={C.ok}
-        strokeWidth={2}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
         transition={{ delay: 0.55 }}

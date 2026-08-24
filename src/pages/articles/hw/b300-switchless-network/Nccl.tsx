@@ -55,6 +55,17 @@ export default function Nccl() {
             &\land\ \mathcal N_{30}(g)=\mathcal N_{30}(r) \\
             g^* &= \operatorname{first}(\mathcal C(r))
           \end{aligned}`}
+          annotatedFormula={String.raw`\begin{aligned}
+            \mathcal N_{30}(x) &= \underbrace{\mathrm{net}_{30}(ip(x))}_{\text{오른쪽 항으로 결과 계산}} \\
+            g\in\mathcal C(r)\quad &\Longleftrightarrow\quad v(g)=\underbrace{v(r)=2}_{\text{matching candidates 계산}} \\
+            &\land\ \mathcal N_{30}(g)=\underbrace{\mathcal N_{30}(r)}_{\text{판정 조건 결합}} \\
+            g^* &= \operatorname{first}(\mathcal C(r))
+          \end{aligned}`}
+          operations={[
+            { expression: String.raw`\mathrm{net}_{30}(ip(x))`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Remote GID와 local GID에서 IPv4 주소를","복원한 뒤 RoCE version과 /30 network","prefix가 모두 같은 local entry만 후보로"] },
+            { expression: String.raw`v(r)=2`, annotation: ["matching candidates이(가) 식의 결과에","기여하는 방식을 계산합니다.","Remote GID와 local GID에서 IPv4 주소를","복원한 뒤 RoCE version과 /30 network"] },
+            { expression: String.raw`\mathcal N_{30}(r)`, annotation: ["remote GID이(가) 식의 결과에 기여하는 방식을","계산합니다.","Remote GID와 local GID에서 IPv4 주소를","복원한 뒤 RoCE version과 /30 network"] },
+          ]}
           terms={[
             { symbol: "r", name: "remote GID", description: "QP를 연결하려는 peer가 교환한 remote RoCE GID입니다." },
             { symbol: "g", name: "local GID entry", description: "현재 HCA port의 GID table에서 검사 중인 local entry입니다." },

@@ -25,7 +25,7 @@ export function PairingOverviewStep() {
       <motion.path
         d="M 205 35 L 245 35"
         stroke={CA}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         markerEnd="url(#pArr)"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}

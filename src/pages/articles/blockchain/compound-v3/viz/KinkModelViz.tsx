@@ -219,7 +219,7 @@ export default function KinkModelViz() {
           x2={toX(borrowKink)}
           y2={66 + h}
           stroke="#f59e0b"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           strokeDasharray="3 2"
         />
 
@@ -230,9 +230,9 @@ export default function KinkModelViz() {
           fillOpacity={0.1}
         />
         {/* Borrow 곡선 */}
-        <path d={borrowPath} stroke="#ef4444" strokeWidth={2.5} fill="none" />
+        <path d={borrowPath} stroke="#ef4444" strokeWidth={1.2} fill="none" />
         {/* Supply 곡선 */}
-        <path d={supplyPath} stroke="#10b981" strokeWidth={2.5} fill="none" />
+        <path d={supplyPath} stroke="#10b981" strokeWidth={1.2} fill="none" />
 
         {/* 현재 위치 */}
         <circle
@@ -241,7 +241,7 @@ export default function KinkModelViz() {
           r={5}
           fill="#ef4444"
           stroke="var(--card)"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <circle
           cx={toX(utilization)}
@@ -249,7 +249,7 @@ export default function KinkModelViz() {
           r={5}
           fill="#10b981"
           stroke="var(--card)"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
 
         {/* 결과 */}

@@ -14,6 +14,10 @@ export default function Cursor({ onCodeRef }: { onCodeRef: (key: string, ref: Co
         question="Half-open range [a,b)를 걷는 cursor가 반환해야 할 key 순서는 무엇일까요?"
         idea="처음 key는 a 이상인 가장 작은 key이고, 이후 key는 엄격히 증가하되 b에 도달하기 전에 멈춥니다. 같은 read transaction이 유지돼야 중간 writer 때문에 순서가 섞이지 않습니다."
         formula={String.raw`a\leq k_0<k_1<\cdots<k_r<b`}
+        annotatedFormula={String.raw`a\le\underbrace{q k_0<k_1<\cdots<k_r<b}_{\text{허용 경계 판정}}`}
+        operations={[
+          { expression: String.raw`q k_0<k_1<\cdots<k_r<b`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","처음 key는 a 이상인 가장 작은 key이고, 이후 key는","엄격히 증가하되 b에 도달하기 전에 멈춥니다."] },
+        ]}
         terms={[
           { symbol: "a", name: "시작 key", description: "seek가 찾을 inclusive lower bound" },
           { symbol: "b", name: "끝 key", description: "walk가 포함하지 않는 exclusive upper bound" },

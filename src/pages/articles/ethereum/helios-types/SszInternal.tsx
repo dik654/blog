@@ -24,6 +24,10 @@ export default function SszInternal({ title, onCodeRef: _onCodeRef }: Props) {
         question="Generalized index 13의 Merkle branch는 몇 단계이며 어느 방향으로 내려가는가?"
         idea="Index를 binary로 쓰고 맨 앞의 root bit를 제거합니다. 남은 bit 수가 branch depth이며 각 bit가 이동 방향을 정합니다."
         formula={String.raw`13_{10}=1101_2\quad\Rightarrow\quad \operatorname{depth}(13)=\lfloor\log_2 13\rfloor=3,\quad \operatorname{path}=101`}
+        annotatedFormula={String.raw`13_{10}=\underbrace{1101_2\quad\Rightarrow\quad \operatorname{depth}(13)=\lfloor\log_2 13\rfloor=3,\quad \operatorname{path}=101}_{\text{로그 비용 변환}}`}
+        operations={[
+          { expression: String.raw`1101_2\quad\Rightarrow\quad \operatorname{depth}(13)=\lfloor\log_2 13\rfloor=3,\quad \operatorname{path}=101`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","Index를 binary로 쓰고 맨 앞의 root bit를","제거합니다."] },
+        ]}
         terms={[
           { symbol: "13", name: "Generalized index", description: "검증할 tree node의 heap-style 번호입니다." },
           { symbol: "3", name: "Branch depth", description: "Leaf에서 root까지 결합할 sibling hash의 수입니다." },

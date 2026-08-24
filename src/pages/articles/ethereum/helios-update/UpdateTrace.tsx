@@ -52,6 +52,10 @@ export default function UpdateTrace({
           formula={
             "P(s)=\\left\\lfloor\\frac{s}{S_{\\rm epoch}E_{\\rm period}}\\right\\rfloor"
           }
+          annotatedFormula={String.raw`P(s)=\underbrace{\left\lfloor\frac{s}{S_{\rm epoch}E_{\rm period}}\right\rfloor}_{\text{기준량당 비율}}`}
+          operations={[
+            { expression: String.raw`\left\lfloor\frac{s}{S_{\rm epoch}E_{\rm period}}\right\rfloor`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Slot을 epoch 크기로 먼저 묶고, 다시 period당","epoch 수로 묶습니다."] },
+          ]}
           terms={[
             {
               symbol: "s",

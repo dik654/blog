@@ -40,6 +40,12 @@ export default function LinearSoftmax() {
           </>
         }
         formula={String.raw`\begin{aligned}z_t&=h_tW_{\mathrm{vocab}}+b\\p_t&=\operatorname{softmax}(z_t)\\\mathcal L&=-\sum_t m_t\log p_t(y_t^*)\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}z_t&=\underbrace{h_tW_{\mathrm{vocab}}+b}_{\text{final hidden state 계산}}\\p_t&=\underbrace{\operatorname{softmax}(z_t)}_{\text{선택 비율 정규화}}\\\mathcal L&=\underbrace{-\sum_t m_t\log p_t(y_t^*)}_{\text{로그 비용 변환}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`h_tW_{\mathrm{vocab}}+b`, annotation: ["final hidden state이(가) 식의 결과에 기여하는","방식을 계산합니다.","Position t의 hidden state로","vocabulary logits를 만들고, 이전 token y"] },
+          { expression: String.raw`\operatorname{softmax}(z_t)`, annotation: ["score를 합이 1인 선택 비율로 정규화합니다.","Position t의 hidden state로","vocabulary logits를 만들고, 이전 token y","t가 주어진 상태에서 실제 다음 token y*t의"] },
+          { expression: String.raw`-\sum_t m_t\log p_t(y_t^*)`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","Position t의 hidden state로","vocabulary logits를 만들고, 이전 token y","t가 주어진 상태에서 실제 다음 token y*t의"] },
+        ]}
         terms={[
           {
             symbol: "h_t",

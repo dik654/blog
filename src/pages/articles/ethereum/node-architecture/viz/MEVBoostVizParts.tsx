@@ -25,7 +25,7 @@ export function Actor({
         rx={7}
         fill={`${color}22`}
         stroke={color}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
       />
       <text
         x={x}
@@ -87,7 +87,7 @@ export function Pkt({
           rx={4}
           fill={`${color}33`}
           stroke={color}
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <text
           x={sx}

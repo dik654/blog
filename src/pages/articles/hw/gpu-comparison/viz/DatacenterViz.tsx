@@ -175,7 +175,7 @@ function Hbm() {
               d={`M${x + 14} 78 V91 H193`}
               fill="none"
               stroke={C.memory}
-              strokeWidth={1.5}
+              strokeWidth={1.2}
             />
           </motion.g>
         );
@@ -300,7 +300,7 @@ function FormFactor() {
         d="M285 146 C300 119 301 113 311 107 M395 107 C405 113 407 119 420 146"
         fill="none"
         stroke={C.memory}
-        strokeWidth={2}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
       />
@@ -392,7 +392,7 @@ function Fabric() {
           key={`p-${i}`}
           d={`M${x + (x < 240 ? 34 : -34)} ${y} L${x < 240 ? 205 : 275} ${96 + (y < 96 ? -8 : 8)}`}
           stroke={i < 4 ? C.datacenter : C.memory}
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           fill="none"
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}
@@ -479,7 +479,7 @@ function Mig() {
       <motion.path
         d="M359 75 H339 M359 136 H339"
         stroke={C.ok}
-        strokeWidth={2}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
       />

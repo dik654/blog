@@ -27,6 +27,16 @@ export default function Overview() {
           \operatorname{Var}(e_{\mathrm{ens}})&=\mathbf w^{\top}\Sigma\mathbf w \\
           \Sigma_{jk}&=\operatorname{Cov}(e_j,e_k)
         \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+          e_{\mathrm{ens}}&=\underbrace{\sum_{m=1}^{M}w_m e_m}_{\text{row-aligned error 계산}} \\
+          \operatorname{Var}(e_{\mathrm{ens}})&=\underbrace{\mathbf w^{\top}\Sigma\mathbf w}_{\text{분산 규모}} \\
+          \Sigma_{jk}&=\underbrace{\operatorname{Cov}(e_j,e_k)}_{\text{lag별 공분산}}
+        \end{aligned}`}
+        operations={[
+          { expression: String.raw`\sum_{m=1}^{M}w_m e_m`, annotation: ["row-aligned error이(가) 식의 결과에 기여하는","방식을 계산합니다.","가중 앙상블의 error는 개별 error의 가중합입니다."] },
+          { expression: String.raw`\mathbf w^{\top}\Sigma\mathbf w`, annotation: ["error covariance matrix이(가) 식의 결과에","기여하는 방식을 계산합니다.","가중 앙상블의 error는 개별 error의 가중합입니다."] },
+          { expression: String.raw`\operatorname{Cov}(e_j,e_k)`, annotation: ["error covariance matrix이(가) 식의 결과에","기여하는 방식을 계산합니다.","가중 앙상블의 error는 개별 error의 가중합입니다."] },
+        ]}
         terms={[
           { symbol: "e_m", name: "row-aligned error", description: "같은 OOF 행에서 m번째 model prediction과 target으로 만든 residual 또는 loss signal입니다." },
           { symbol: "w_m", name: "ensemble weight", description: "Model m의 prediction에 곱하는 계수이며 보통 합이 1인 제약에서 시작합니다." },

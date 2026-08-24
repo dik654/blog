@@ -208,7 +208,7 @@ export default function AesGcmViz() {
                 rx={6}
                 fill="#ef444420"
                 stroke="#ef4444"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={420}
@@ -236,7 +236,7 @@ export default function AesGcmViz() {
                 x2={354}
                 y2={52}
                 stroke="#ef4444"
-                strokeWidth={2}
+                strokeWidth={1.2}
               />
               <line
                 x1={354}
@@ -244,7 +244,7 @@ export default function AesGcmViz() {
                 x2={340}
                 y2={52}
                 stroke="#ef4444"
-                strokeWidth={2}
+                strokeWidth={1.2}
               />
               <text
                 x={250}

@@ -89,7 +89,7 @@ export function StepHS2() {
         x2={210}
         y2={41}
         stroke={C.hs2}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
         transition={{ delay: 0.2 }}

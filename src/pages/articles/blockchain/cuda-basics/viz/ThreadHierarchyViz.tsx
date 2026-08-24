@@ -28,7 +28,7 @@ function ThreadBlock({
         rx={8}
         fill={`${C.block}11`}
         stroke={C.block}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         strokeDasharray="4 2"
       />
       <text
@@ -104,7 +104,7 @@ export default function ThreadHierarchyViz() {
           rx={12}
           fill={`${C.grid}08`}
           stroke={C.grid}
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3 }}

@@ -125,7 +125,7 @@ export default function TokenAmountViz() {
                 x2={xC}
                 y2={96}
                 stroke="#f59e0b"
-                strokeWidth={2}
+                strokeWidth={1.2}
               />
               <circle
                 cx={xC}
@@ -133,7 +133,7 @@ export default function TokenAmountViz() {
                 r={5}
                 fill="#f59e0b"
                 stroke="var(--card)"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={xC}

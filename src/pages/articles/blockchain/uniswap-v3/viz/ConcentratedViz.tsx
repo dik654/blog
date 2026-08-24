@@ -69,7 +69,7 @@ export default function ConcentratedViz() {
         <path
           d="M 35 210 Q 125 200 215 210"
           stroke="#3b82f6"
-          strokeWidth={2.5}
+          strokeWidth={1.2}
           fill="none"
           opacity={0.6}
         />

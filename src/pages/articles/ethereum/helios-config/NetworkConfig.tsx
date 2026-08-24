@@ -36,6 +36,10 @@ export default function NetworkConfig({ title, onCodeRef }: Props) {
         question="Slot 8,192가 어느 epoch와 sync committee period에 속하는가?"
         idea="Network preset의 slots per epoch와 epochs per period를 차례로 나눕니다. 두 floor division은 시간 단위가 아니라 정수 index 변환입니다."
         formula={String.raw`e=\left\lfloor\frac{s}{32}\right\rfloor=256,\qquad p=\left\lfloor\frac{e}{256}\right\rfloor=1`}
+        annotatedFormula={String.raw`e=\underbrace{\left\lfloor\frac{s}{32}\right\rfloor=256,\qquad p=\left\lfloor\frac{e}{256}\right\rfloor=1}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`\left\lfloor\frac{s}{32}\right\rfloor=256,\qquad p=\left\lfloor\frac{e}{256}\right\rfloor=1`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Network preset의 slots per epoch와","epochs per period를 차례로 나눕니다."] },
+        ]}
         terms={[
           { symbol: "s", name: "Slot", description: "검증할 update/header의 consensus slot입니다." },
           { symbol: "e", name: "Epoch", description: "32 slots를 묶은 epoch index입니다." },

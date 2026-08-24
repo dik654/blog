@@ -550,7 +550,7 @@ export default function SumcheckViz() {
                 r={16}
                 fill={`${C.pcs}15`}
                 stroke={C.pcs}
-                strokeWidth={1.4}
+                strokeWidth={1.2}
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ ...sp, delay: 0.2 }}

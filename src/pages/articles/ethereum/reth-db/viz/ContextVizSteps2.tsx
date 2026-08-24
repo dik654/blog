@@ -39,7 +39,7 @@ export function StepMDBX() {
 /* Step 4: StaticFiles 분리 */
 export function StepStaticFiles() {
   return (<g>
-    <motion.line x1={220} y1={18} x2={220} y2={105} stroke={C.hot} strokeWidth={1.5}
+    <motion.line x1={220} y1={18} x2={220} y2={105} stroke={C.hot} strokeWidth={1.2}
       strokeDasharray="4 3" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
       transition={{ duration: 0.6 }} />
     <text x={220} y={12} textAnchor="middle" fontSize={10} fill={C.hot} fontWeight={600}>

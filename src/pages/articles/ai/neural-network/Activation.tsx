@@ -21,6 +21,12 @@ export default function Activation() {
         question="왜 activation이 없는 두 layer는 하나의 layer와 같은가?"
         idea={<>첫 affine output을 두 번째 식에 대입하고 matrix multiplication과 bias 항을 묶으면 새로운 effective weight와 bias 하나만 남습니다.</>}
         formula={String.raw`\begin{aligned}z_1&=xW_1+b_1\\z_2&=z_1W_2+b_2\\&=x\underbrace{(W_1W_2)}_{W_{\rm eff}}+\underbrace{(b_1W_2+b_2)}_{b_{\rm eff}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}z_1&=\underbrace{xW_1+b_1}_{\text{intermediate value 계산}}\\z_2&=\underbrace{z_1W_2+b_2}_{\text{intermediate value 계산}}\\&=\underbrace{x\underbrace{(W_1W_2)}_{W_{\rm eff}}+\underbrace{(b_1W_2+b_2)}_{b_{\rm eff}}}_{\text{effective bias 계산}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`xW_1+b_1`, annotation: ["intermediate value이(가) 식의 결과에 기여하는","방식을 계산합니다.","첫 affine output을 두 번째 식에 대입하고","matrix multiplication과 bias 항을 묶으면"] },
+          { expression: String.raw`z_1W_2+b_2`, annotation: ["intermediate value이(가) 식의 결과에 기여하는","방식을 계산합니다.","첫 affine output을 두 번째 식에 대입하고","matrix multiplication과 bias 항을 묶으면"] },
+          { expression: String.raw`x\underbrace{(W_1W_2)}_{W_{\rm eff}}+\underbrace{(b_1W_2+b_2)}_{b_{\rm eff}}`, annotation: ["effective bias이(가) 식의 결과에 기여하는 방식을","계산합니다.","첫 affine output을 두 번째 식에 대입하고","matrix multiplication과 bias 항을 묶으면"] },
+        ]}
         terms={[
           { symbol: "W_1W_2", name: "effective weight", description: "두 선형 projection을 하나로 합친 matrix입니다." },
           { symbol: "b_1W_2+b_2", name: "effective bias", description: "첫 bias가 두 번째 좌표계로 이동한 뒤 최종 bias와 합쳐집니다." },

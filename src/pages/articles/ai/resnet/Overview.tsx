@@ -47,6 +47,11 @@ export default function Overview() {
           </>
         }
         formula={String.raw`\begin{aligned}F(x)&=H(x)-x\\y=H(x)&=x+F(x)\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}F(x)&=\underbrace{H(x)-x}_{\text{target mapping 계산}}\\y=H(x)&=\underbrace{x+F(x)}_{\text{target mapping 계산}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`H(x)-x`, annotation: ["target mapping이(가) 식의 결과에 기여하는 방식을","계산합니다.","원하는 출력 H(x)에서 입력 x를 뺀 변화량을 F(x)로","정의합니다."] },
+          { expression: String.raw`x+F(x)`, annotation: ["target mapping이(가) 식의 결과에 기여하는 방식을","계산합니다.","원하는 출력 H(x)에서 입력 x를 뺀 변화량을 F(x)로","정의합니다."] },
+        ]}
         terms={[
           {
             symbol: "x",

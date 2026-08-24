@@ -135,7 +135,7 @@ export default function TwapAccumulatorViz() {
         <path d={areaPath} fill="#3b82f6" fillOpacity={0.12} />
 
         {/* 가격 곡선 */}
-        <path d={pathData} stroke="#3b82f6" strokeWidth={2.5} fill="none" />
+        <path d={pathData} stroke="#3b82f6" strokeWidth={1.2} fill="none" />
 
         {/* 이벤트 포인트 */}
         {events.map((e, i) => (
@@ -146,7 +146,7 @@ export default function TwapAccumulatorViz() {
               r={4}
               fill="#3b82f6"
               stroke="var(--card)"
-              strokeWidth={1.5}
+              strokeWidth={1.2}
             />
             <text
               x={toX(e.t)}

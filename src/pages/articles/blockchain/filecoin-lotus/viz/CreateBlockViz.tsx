@@ -57,7 +57,7 @@ export default function CreateBlockViz({
             <p className="text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">CreateBlock progress</p>
             <div className="mt-3 h-2 overflow-hidden rounded-full bg-muted">
               <motion.div
-                className="h-full rounded-full bg-gradient-to-r from-indigo-500 via-blue-500 to-emerald-500"
+                className="h-full rounded-full bg-blue-600 dark:bg-blue-400"
                 animate={{ width: `${((step + 1) / STAGES.length) * 100}%` }}
                 transition={spring}
               />

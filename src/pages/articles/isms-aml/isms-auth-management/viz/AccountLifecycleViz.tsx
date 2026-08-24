@@ -351,7 +351,7 @@ export default function AccountLifecycleViz() {
                 rx={10}
                 fill="none"
                 stroke={C.done}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 strokeDasharray="6 3"
               />
               <text

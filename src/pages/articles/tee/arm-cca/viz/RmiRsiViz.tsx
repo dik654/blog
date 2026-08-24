@@ -40,7 +40,7 @@ export default function RmiRsiViz() {
           fill="#3b82f6"
           fillOpacity={0.15}
           stroke="#3b82f6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <text
           x={85}
@@ -82,7 +82,7 @@ export default function RmiRsiViz() {
           fill="#f59e0b"
           fillOpacity={0.15}
           stroke="#f59e0b"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <text
           x={240}
@@ -144,7 +144,7 @@ export default function RmiRsiViz() {
           fill="#10b981"
           fillOpacity={0.15}
           stroke="#10b981"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <text
           x={395}
@@ -183,7 +183,7 @@ export default function RmiRsiViz() {
           x2={180}
           y2={72}
           stroke="#8b5cf6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#ri-arr)"
         />
         <text
@@ -212,7 +212,7 @@ export default function RmiRsiViz() {
           x2={300}
           y2={72}
           stroke="#8b5cf6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#ri-arr)"
         />
         <text

@@ -162,7 +162,7 @@ export default function MultiHopViz() {
           x2={222}
           y2={83}
           stroke="#3b82f6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#arr-hop)"
         />
         <line
@@ -171,7 +171,7 @@ export default function MultiHopViz() {
           x2={324}
           y2={83}
           stroke="#3b82f6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#arr-hop)"
         />
         <line
@@ -180,7 +180,7 @@ export default function MultiHopViz() {
           x2={426}
           y2={83}
           stroke="#3b82f6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#arr-hop)"
         />
 
@@ -220,7 +220,7 @@ export default function MultiHopViz() {
           x2={120}
           y2={83}
           stroke="#3b82f6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#arr-hop)"
         />
 

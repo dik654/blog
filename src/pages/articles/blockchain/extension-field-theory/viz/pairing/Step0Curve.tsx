@@ -47,14 +47,14 @@ export default function Step0Curve() {
         d={p.u}
         fill="none"
         stroke={C.g1}
-        strokeWidth={2}
+        strokeWidth={1.2}
         {...draw(0)}
       />
       <motion.path
         d={p.l}
         fill="none"
         stroke={C.g1}
-        strokeWidth={2}
+        strokeWidth={1.2}
         {...draw(0)}
       />
       <motion.text x={195} y={48} fontSize={11} fill={C.g1} {...fade(0.5)}>
@@ -98,7 +98,7 @@ export default function Step0Curve() {
           r={5}
           fill="none"
           stroke={C.line}
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
       </motion.g>
 

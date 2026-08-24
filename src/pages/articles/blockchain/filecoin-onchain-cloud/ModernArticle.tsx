@@ -301,6 +301,10 @@ export default function ModernFilecoinOnchainCloud() {
             </>
           }
           formula={String.raw`D=H(C\|P\|S\|\{(c_i,z_i)\}\|V\|R\|G)`}
+          annotatedFormula={String.raw`D=\underbrace{H(C\|P\|S\|\{(c_i,z_i)\}\|V\|R\|G)}_{\text{Piece identifier 계산}}`}
+          operations={[
+            { expression: String.raw`H(C\|P\|S\|\{(c_i,z_i)\}\|V\|R\|G)`, annotation: ["Piece identifier이(가) 식의 결과에 기여하는","방식을 계산합니다.","Off-chain upload와 on-chain","identities·contract versions을"] },
+          ]}
           terms={[
             {
               symbol: "D",
@@ -626,6 +630,10 @@ export default function ModernFilecoinOnchainCloud() {
             </>
           }
           formula={String.raw`F_{required}=r\,L+F_{fixed},\qquad ready\iff F_{available}\ge F_{required}`}
+          annotatedFormula={String.raw`F_{required}=\underbrace{r\,L+F_{fixed},\qquad ready\iff F_{available}\ge F_{required}}_{\text{허용 경계 판정}}`}
+          operations={[
+            { expression: String.raw`r\,L+F_{fixed},\qquad ready\iff F_{available}\ge F_{required}`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","정해진 lockup horizon의 variable","obligation과 lifecycle fixed","reserve를 합쳐 available funds와"] },
+          ]}
           terms={[
             {
               symbol: "F_{required}",
@@ -745,6 +753,10 @@ export default function ModernFilecoinOnchainCloud() {
             </>
           }
           formula={String.raw`A=U_{bytes}\land D_{chain}\land P_{period}\land R_{pay}\land Q_{retrieve}\land O_{recover}`}
+          annotatedFormula={String.raw`A=\underbrace{U_{bytes}\land D_{chain}\land P_{period}\land R_{pay}\land Q_{retrieve}\land O_{recover}}_{\text{판정 조건 결합}}`}
+          operations={[
+            { expression: String.raw`U_{bytes}\land D_{chain}\land P_{period}\land R_{pay}\land Q_{retrieve}\land O_{recover}`, annotation: ["필요한 gate가 모두 참일 때만 전체 조건을 통과시킵니다.","Upload, on-chain identity, proof","state, payment state와","retrieval·recovery를 독립 gates로"] },
+          ]}
           terms={[
             {
               symbol: "A",

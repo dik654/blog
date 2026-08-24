@@ -155,7 +155,7 @@ export default function FlashArbitrageViz() {
                 x2={42}
                 y2={s.y + 52}
                 stroke="#3b82f6"
-                strokeWidth={1.3}
+                strokeWidth={1.2}
                 markerEnd="url(#fa-arr)"
               />
             )}

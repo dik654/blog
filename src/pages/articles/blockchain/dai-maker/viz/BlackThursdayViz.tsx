@@ -58,7 +58,7 @@ export default function BlackThursdayViz() {
           x2={80}
           y2={282}
           stroke="var(--border)"
-          strokeWidth={2}
+          strokeWidth={1.2}
         />
 
         {events.map((e, i) => {
@@ -72,7 +72,7 @@ export default function BlackThursdayViz() {
                 r={6}
                 fill={e.color}
                 stroke="var(--card)"
-                strokeWidth={2}
+                strokeWidth={1.2}
               />
 
               {/* 시간 텍스트 */}

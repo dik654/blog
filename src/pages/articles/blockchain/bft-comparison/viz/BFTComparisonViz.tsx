@@ -26,7 +26,7 @@ function N({
         r={r}
         fill="var(--card)"
         stroke={color}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
       />
       <text
         x={x}

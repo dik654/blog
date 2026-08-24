@@ -178,7 +178,7 @@ export default function TrustZoneViz() {
             x2={97}
             y2={148}
             stroke="#f59e0b"
-            strokeWidth={1.5}
+            strokeWidth={1.2}
             strokeDasharray="3,3"
             animate={{ opacity: step === 2 ? 1 : 0.2 }}
           />
@@ -188,7 +188,7 @@ export default function TrustZoneViz() {
             x2={302}
             y2={148}
             stroke="#f59e0b"
-            strokeWidth={1.5}
+            strokeWidth={1.2}
             strokeDasharray="3,3"
             animate={{ opacity: step === 2 ? 1 : 0.2 }}
           />

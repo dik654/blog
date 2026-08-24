@@ -37,6 +37,11 @@ export default function Overview({ title }: { title?: string }) {
         question="모델이 실제로 일어난 사건 x를 얼마나 뜻밖이라고 평가했는가?"
         idea={<>모델 분포 Q가 사건 x에 준 확률을 음의 log로 바꿉니다. 확률의 곱이 log 안에서 합으로 바뀌므로 독립 관측의 정보량도 더해서 계산할 수 있습니다.</>}
         formula={String.raw`\begin{aligned}I_Q(x)&=-\log Q(x)\\[3pt]I_Q(x_1,x_2)&=I_Q(x_1)+I_Q(x_2)\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}I_Q(x)&=\underbrace{-\log Q(x)}_{\text{로그 비용 변환}}\\[3pt]I_Q(x_1,x_2)&=\underbrace{I_Q(x_1)+I_Q(x_2)}_{\text{관측된 사건 계산}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`-\log Q(x)`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","모델 분포 Q가 사건 x에 준 확률을 음의 log로 바꿉니다."] },
+          { expression: String.raw`I_Q(x_1)+I_Q(x_2)`, annotation: ["관측된 사건이(가) 식의 결과에 기여하는 방식을 계산합니다.","모델 분포 Q가 사건 x에 준 확률을 음의 log로 바꿉니다."] },
+        ]}
         terms={[
           { symbol: "x", name: "관측된 사건", description: "실제로 일어난 class 또는 token입니다." },
           { symbol: "Q(x)", name: "모델 확률", description: "모델이 사건 x가 일어날 것이라고 예측한 확률입니다." },

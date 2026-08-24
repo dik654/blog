@@ -33,6 +33,16 @@ L_0&=L\!\left(f(X),y\right),\\
 L_j^{\pi}&=L\!\left(f(X_{-j},X_j^{\pi}),y\right),\\
 I_j&=\mathbb E_{\pi}\!\left[L_j^{\pi}-L_0\right].
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+L_0&=\underbrace{L\!\left(f(X),y\right),}_{\text{허용 경계 판정}}\\
+L_j^{\pi}&=\underbrace{L\!\left(f(X_{-j},X_j^{\pi}),y\right),}_{\text{허용 경계 판정}}\\
+I_j&=\underbrace{\mathbb E_{\pi}\!\left[L_j^{\pi}-L_0\right].}_{\text{확률 가중 평균}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`L\!\left(f(X),y\right),`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","Validation에서 j번째 column만 무작위로 섞어 그","피처와 target·다른 피처의 대응을 끊은 뒤 loss가","얼마나 늘어나는지 봅니다."] },
+          { expression: String.raw`L\!\left(f(X_{-j},X_j^{\pi}),y\right),`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","Validation에서 j번째 column만 무작위로 섞어 그","피처와 target·다른 피처의 대응을 끊은 뒤 loss가","얼마나 늘어나는지 봅니다."] },
+          { expression: String.raw`\mathbb E_{\pi}\!\left[L_j^{\pi}-L_0\right].`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","Validation에서 j번째 column만 무작위로 섞어 그","피처와 target·다른 피처의 대응을 끊은 뒤 loss가","얼마나 늘어나는지 봅니다."] },
+        ]}
         terms={[
           { symbol: "X_j^π", name: "permuted feature", description: "Row 순서를 random permutation π로 바꾼 j번째 validation column입니다." },
           { symbol: "X_−j", name: "remaining features", description: "섞지 않고 그대로 둔 나머지 validation columns입니다." },

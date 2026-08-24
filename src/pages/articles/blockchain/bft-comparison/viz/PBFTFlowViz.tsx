@@ -35,7 +35,7 @@ function Msg({
         x2={x2}
         y2={y}
         stroke={color}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         markerEnd="url(#pf-arr)"
       />
       {label && (
@@ -106,7 +106,7 @@ export default function PBFTFlowViz() {
                 x2={218}
                 y2={100}
                 stroke={C.P}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 markerEnd="url(#pf-arr)"
               />
               <line
@@ -115,7 +115,7 @@ export default function PBFTFlowViz() {
                 x2={308}
                 y2={106}
                 stroke={C.P}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 markerEnd="url(#pf-arr)"
               />
               <line
@@ -124,7 +124,7 @@ export default function PBFTFlowViz() {
                 x2={398}
                 y2={112}
                 stroke={C.P}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 markerEnd="url(#pf-arr)"
               />
               <rect
@@ -230,7 +230,7 @@ export default function PBFTFlowViz() {
                 x2={42}
                 y2={210}
                 stroke={C.G}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 markerEnd="url(#pf-arr)"
               />
               <line

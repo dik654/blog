@@ -59,7 +59,7 @@ export default function OasisLayerViz() {
                     x2={180}
                     y2={l.y}
                     stroke={done || active ? l.color : "var(--border)"}
-                    strokeWidth={1.5}
+                    strokeWidth={1.2}
                     strokeDasharray="4,4"
                     initial={{ pathLength: 0 }}
                     animate={{ pathLength: 1 }}

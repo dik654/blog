@@ -34,6 +34,18 @@ P_i^T&=\frac{e^{t_i/\tau}}{\sum_j e^{t_j/\tau}},\qquad
 P_i^S=\frac{e^{s_i/\tau}}{\sum_j e^{s_j/\tau}}\\
 \mathcal L(q)&=D_{\mathrm{KL}}(P^T\Vert P^S)
 \end{aligned}`}
+          annotatedFormula={String.raw`\begin{aligned}
+\mathcal D(q)&=\underbrace{\{p,n_1,\ldots,n_{15}\}}_{\text{query-local candidate 계산}}\\
+P_i^T&=\underbrace{\frac{e^{t_i/\tau}}{\sum_j e^{t_j/\tau}},\qquad
+P_i^S=\frac{e^{s_i/\tau}}{\sum_j e^{s_j/\tau}}}_{\text{기준량당 비율}}\\
+\mathcal L(q)&=\underbrace{D_{\mathrm{KL}}(P^T\Vert P^S)}_{\text{KL divergence 계산}}
+\end{aligned}`}
+          operations={[
+            { expression: String.raw`\{p,n_1,\ldots,n_{15}\}`, annotation: ["query-local candidate set이(가) 식의","결과에 기여하는 방식을 계산합니다.","Query마다"] },
+            { expression: String.raw`\frac{e^{t_i/\tau}}{\sum_j e^{t_j/\tau}},\qquad
+P_i^S=\frac{e^{s_i/\tau}}{\sum_j e^{s_j/\tau}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Query마다"] },
+            { expression: String.raw`D_{\mathrm{KL}}(P^T\Vert P^S)`, annotation: ["KL divergence이(가) 식의 결과에 기여하는 방식을","계산합니다.","Query마다"] },
+          ]}
           terms={[
             { symbol: "\\mathcal D(q)", name: "query-local candidate set", description: "한 query의 positive와 저장된 negative 15개입니다." },
             { symbol: "t_i, s_i", name: "teacher·student score", description: "같은 candidate i에 대해 두 모델이 계산한 scalar relevance score입니다." },

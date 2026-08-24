@@ -81,7 +81,7 @@ export default function ArchViz() {
             y2={cy(b)}
             stroke="currentColor"
             strokeOpacity={0.15}
-            strokeWidth={1.5}
+            strokeWidth={1.2}
           />
         ))}
         {COMPONENTS.map((c) => (

@@ -46,7 +46,7 @@ export default function GulfStreamViz({
               x2={130}
               y2={64}
               stroke="#6366f1"
-              strokeWidth={1.5}
+              strokeWidth={1.2}
               strokeDasharray="4 2"
               animate={{ opacity: step >= 0 ? 0.8 : 0.1 }}
               transition={sp}
@@ -57,7 +57,7 @@ export default function GulfStreamViz({
               x2={240}
               y2={46}
               stroke="#10b981"
-              strokeWidth={1.5}
+              strokeWidth={1.2}
               strokeDasharray="4 2"
               animate={{ opacity: step >= 1 ? 0.8 : 0.1 }}
               transition={sp}
@@ -68,7 +68,7 @@ export default function GulfStreamViz({
               x2={240}
               y2={85}
               stroke="#f59e0b"
-              strokeWidth={1.5}
+              strokeWidth={1.2}
               strokeDasharray="4 2"
               animate={{ opacity: step >= 2 ? 0.8 : 0.1 }}
               transition={sp}
@@ -81,7 +81,7 @@ export default function GulfStreamViz({
                   x2={195}
                   y2={20}
                   stroke="#ef4444"
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <rect
                   x={140}
@@ -113,7 +113,7 @@ export default function GulfStreamViz({
                   rx={7}
                   fill={`${n.color}18`}
                   stroke={n.color}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                   animate={{ opacity: i <= step + 1 || i === 0 ? 1 : 0.15 }}
                   transition={sp}
                 />

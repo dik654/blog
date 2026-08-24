@@ -130,7 +130,7 @@ export default function ShardPipelineViz() {
                       rx={12}
                       fill="none"
                       stroke={n.color}
-                      strokeWidth={1.4}
+                      strokeWidth={1.2}
                     />
                   )}
                 </motion.g>

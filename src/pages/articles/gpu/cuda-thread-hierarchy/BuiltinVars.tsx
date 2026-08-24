@@ -42,6 +42,10 @@ export default function BuiltinVars() {
           </>
         }
         formula={String.raw`G=\left\lceil\frac{N}{B}\right\rceil=\left\lfloor\frac{N+B-1}{B}\right\rfloor`}
+        annotatedFormula={String.raw`G=\underbrace{\left\lceil\frac{N}{B}\right\rceil=\left\lfloor\frac{N+B-1}{B}\right\rfloor}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`\left\lceil\frac{N}{B}\right\rceil=\left\lfloor\frac{N+B-1}{B}\right\rfloor`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","정수 나눗셈은 나머지를 버리므로, 나머지가 하나라도 있을 때","block 하나를 더 만드는 ceiling division을","사용합니다."] },
+        ]}
         terms={[
           {
             symbol: "N",

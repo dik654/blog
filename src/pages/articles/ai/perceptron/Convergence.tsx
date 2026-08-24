@@ -67,6 +67,15 @@ export default function Convergence() {
 \underbrace{y_i(w_*^\top x_i)\ge\gamma>0}_{\text{모든 example의 최소 여유}}
 \qquad\Longrightarrow\qquad
 \underbrace{M\le\left(\frac{R}{\gamma}\right)^2}_{\text{mistake 횟수의 상한}}`}
+        annotatedFormula={String.raw`\underbrace{\lVert \underbrace{x_i}_{\text{i번째 input 계산}}\rVert\le R}_{\text{input 크기의 상한}},\qquad
+\underbrace{y_i(\underbrace{w_*}_{\text{정답을 모두 나누는 방향 계산}}^\top x_i)\ge\underbrace{\gamma}_{\text{최소 margin 계산}}>0}_{\text{모든 example의 최소 여유}}
+\qquad\Longrightarrow\qquad
+\underbrace{M\le\left(\frac{R}{\gamma}\right)^2}_{\text{mistake 횟수의 상한}}`}
+        operations={[
+          { expression: String.raw`\gamma`, annotation: ["최소 margin이(가) 식의 결과에 기여하는 방식을","계산합니다.","설명을 단순하게 만들기 위해 class 0을 −1, class","1을 +1로 바꿉니다."] },
+          { expression: String.raw`x_i`, annotation: ["i번째 input이(가) 식의 결과에 기여하는 방식을","계산합니다.","설명을 단순하게 만들기 위해 class 0을 −1, class","1을 +1로 바꿉니다."] },
+          { expression: String.raw`w_*`, annotation: ["정답을 모두 나누는 방향이(가) 식의 결과에 기여하는 방식을","계산합니다.","설명을 단순하게 만들기 위해 class 0을 −1, class","1을 +1로 바꿉니다."] },
+        ]}
         terms={[
           {
             symbol: "x_i",

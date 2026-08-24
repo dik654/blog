@@ -155,7 +155,7 @@ export default function UserFlowViz() {
           x2={160}
           y2={149}
           stroke="#3b82f6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#uf-arr)"
         />
 
@@ -283,7 +283,7 @@ export default function UserFlowViz() {
           x2={330}
           y2={99}
           stroke="#8b5cf6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#uf-arr-p)"
         />
         <line
@@ -292,7 +292,7 @@ export default function UserFlowViz() {
           x2={330}
           y2={149}
           stroke="#8b5cf6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#uf-arr-p)"
         />
         <line
@@ -301,7 +301,7 @@ export default function UserFlowViz() {
           x2={330}
           y2={199}
           stroke="#8b5cf6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#uf-arr-p)"
         />
 

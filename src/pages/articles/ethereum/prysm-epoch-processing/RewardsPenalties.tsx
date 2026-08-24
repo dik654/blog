@@ -15,6 +15,10 @@ export default function RewardsPenalties({ onCodeRef }: { onCodeRef: (key: strin
         question="Validator i의 한 participation flag reward는 어떤 세 요인의 곱일까요?"
         idea={<>개인 effective balance가 만드는 base reward에 flag 중요도와 그 flag에 참여한 전체 active balance 비율을 곱합니다. Spec은 overflow를 피하기 위해 increment와 integer division으로 계산합니다.</>}
         formula={String.raw`r_{i,f}=b_i\,\frac{w_f}{W}\,\frac{A_f}{A}`}
+        annotatedFormula={String.raw`r_{i,f}=\underbrace{b_i\,\frac{w_f}{W}\,\frac{A_f}{A}}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`b_i\,\frac{w_f}{W}\,\frac{A_f}{A}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","개인 effective balance가 만드는 base","reward에 flag 중요도와 그 flag에 참여한 전체","active balance 비율을 곱합니다."] },
+        ]}
         terms={[
           { symbol: "b_i", name: "base reward", description: "Validator i의 effective-balance increments와 전체 active balance 제곱근에서 계산한 기준 Gwei입니다." },
           { symbol: "w_f/W", name: "flag weight share", description: "Fork가 정한 participation flag weight를 denominator로 나눈 무차원 비율입니다." },

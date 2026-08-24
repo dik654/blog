@@ -161,7 +161,7 @@ export default function UtilizationRateViz() {
             .map((p, i) => `${i === 0 ? "M" : "L"} ${p[0]} ${p[1]}`)
             .join(" ");
           return (
-            <path d={path} stroke="#ef4444" strokeWidth={2.5} fill="none" />
+            <path d={path} stroke="#ef4444" strokeWidth={1.2} fill="none" />
           );
         })()}
 
@@ -172,7 +172,7 @@ export default function UtilizationRateViz() {
           r={7}
           fill="#ef4444"
           stroke="var(--card)"
-          strokeWidth={2}
+          strokeWidth={1.2}
         />
 
         {/* 결과 */}

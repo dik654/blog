@@ -72,7 +72,7 @@ export default function EnterExitViz() {
           x2={180}
           y2={70}
           stroke="#3b82f6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#ee-arr)"
         />
         <text x={160} y={62} textAnchor="middle" fontSize={7} fill="#3b82f6">
@@ -85,7 +85,7 @@ export default function EnterExitViz() {
           x2={340}
           y2={70}
           stroke="#10b981"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#ee-arr)"
         />
         <text x={320} y={62} textAnchor="middle" fontSize={7} fill="#10b981">

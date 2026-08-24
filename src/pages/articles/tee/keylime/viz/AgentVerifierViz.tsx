@@ -33,7 +33,7 @@ export default function AgentVerifierViz() {
             rx={10}
             fill="#10b98112"
             stroke="#10b981"
-            strokeWidth={1.5}
+            strokeWidth={1.2}
           />
           <text
             x={70}
@@ -64,7 +64,7 @@ export default function AgentVerifierViz() {
             rx={10}
             fill="#6366f112"
             stroke="#6366f1"
-            strokeWidth={1.5}
+            strokeWidth={1.2}
           />
           <text
             x={290}
@@ -94,7 +94,7 @@ export default function AgentVerifierViz() {
               x2={step === 0 ? 240 : 120}
               y2={45}
               stroke={step === 0 ? "#10b981" : "#6366f1"}
-              strokeWidth={1.5}
+              strokeWidth={1.2}
               markerEnd="url(#ah2)"
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
@@ -108,7 +108,7 @@ export default function AgentVerifierViz() {
               x2={240}
               y2={45}
               stroke="#10b981"
-              strokeWidth={1.5}
+              strokeWidth={1.2}
               markerEnd="url(#ah2)"
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
@@ -124,7 +124,7 @@ export default function AgentVerifierViz() {
               rx={10}
               fill="#ef444430"
               stroke="#ef4444"
-              strokeWidth={2.5}
+              strokeWidth={1.2}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.4 }}
@@ -138,7 +138,7 @@ export default function AgentVerifierViz() {
             r={14}
             fill={step === 3 ? "#ef444425" : "#10b98125"}
             stroke={step === 3 ? "#ef4444" : "#10b981"}
-            strokeWidth={1.5}
+            strokeWidth={1.2}
             animate={{ scale: [1, 1.15, 1] }}
             transition={{ repeat: Infinity, duration: 2 }}
           />

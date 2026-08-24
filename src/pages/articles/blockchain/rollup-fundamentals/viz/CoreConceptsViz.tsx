@@ -151,7 +151,7 @@ export default function CoreConceptsViz() {
                 rx={5}
                 fill="#10b98110"
                 stroke="#10b981"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={340}
@@ -511,7 +511,7 @@ export default function CoreConceptsViz() {
                 rx={6}
                 fill="#10b98115"
                 stroke="#10b981"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={340}

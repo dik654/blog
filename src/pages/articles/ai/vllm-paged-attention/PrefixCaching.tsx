@@ -80,6 +80,10 @@ export default function PrefixCaching({
           </>
         }
         formula={String.raw`H_i=\operatorname{Hash}\!\left(H_{i-1},\;x_i,\;e_i\right)`}
+        annotatedFormula={String.raw`H_i=\underbrace{\operatorname{Hash}\!\left(H_{i-1},\;x_i,\;e_i\right)}_{\text{허용 경계 판정}}`}
+        operations={[
+          { expression: String.raw`\operatorname{Hash}\!\left(H_{i-1},\;x_i,\;e_i\right)`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","현재 block token만 hash하지 않고 parent","hash를 함께 넣어 앞선 전체 prefix 순서를","연결합니다."] },
+        ]}
         terms={HASH_TERMS}
         assumptions={[
           "같은 cache key는 같은 model weights·tokenizer/template·position semantics·KV computation을 뜻하도록 version boundary를 포함합니다.",
@@ -122,6 +126,14 @@ export default function PrefixCaching({
 n_{miss} &= n_{prompt}-n_{hit} \\
 0 &\le n_{hit}\le n_{prompt}
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+n_{miss} &= \underbrace{n_{prompt}-n_{hit}}_{\text{오른쪽 항으로 결과 계산}} \\
+0 &\le \underbrace{n_{hit}\le n_{prompt}}_{\text{허용 경계 판정}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`n_{prompt}-n_{hit}`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Prompt 전체에서 연속으로 hit한 full-block","prefix를 뺍니다."] },
+          { expression: String.raw`n_{hit}\le n_{prompt}`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","Prompt 전체에서 연속으로 hit한 full-block","prefix를 뺍니다."] },
+        ]}
         terms={SAVING_TERMS}
         assumptions={[
           "Hit block의 KV가 eviction되지 않았고 request가 scheduling될 때 touch·reference count 갱신에 성공합니다.",

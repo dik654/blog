@@ -26,6 +26,10 @@ export default function StateSummary({ onCodeRef }: { onCodeRef: (key: string, r
         question="Anchor 간격을 바꾸면 replay 비용이 왜 달라질까요?"
         idea="Slot step·block step·DB bytes·state copy/hash를 분리해 같은 query trace에서 어느 항목이 변했는지 봅니다."
         formula={String.raw`\begin{aligned}C_{replay}&=N_s c_s+N_b c_b\\&\quad+B_{io}c_{io}\\&\quad+C_{copy/hash}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}C_{replay}&=\underbrace{N_s c_s+N_b c_b}_{\text{slot transition 수 계산}}\\&\quad+B_{io}c_{io}\\&\quad+C_{copy/hash}\end{aligned}`}
+        operations={[
+          { expression: String.raw`N_s c_s+N_b c_b`, annotation: ["slot transition 수이(가) 식의 결과에 기여하는","방식을 계산합니다.","Slot step·block step·DB","bytes·state copy/hash를 분리해 같은"] },
+        ]}
         terms={[
           { symbol: "N_s", name: "slot transition 수", description: "Anchor 다음 slot부터 target까지 적용한 빈 slot 포함 step 수" },
           { symbol: "c_s", name: "slot당 비용", description: "동일 환경에서 측정한 slot transition 평균 또는 분포 비용" },

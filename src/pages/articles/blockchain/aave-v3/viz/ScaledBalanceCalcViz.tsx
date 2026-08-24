@@ -230,7 +230,7 @@ export default function ScaledBalanceCalcViz() {
           x2={345}
           y2={144}
           stroke="#6b7280"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#sb-arr)"
         />
         <text

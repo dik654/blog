@@ -75,7 +75,7 @@ export default function AttestationViz() {
               x2={220}
               y2={100}
               stroke="#6366f1"
-              strokeWidth={1.5}
+              strokeWidth={1.2}
               markerEnd="url(#arr-i)"
             />
             <rect
@@ -105,7 +105,7 @@ export default function AttestationViz() {
               x2={380}
               y2={100}
               stroke="#10b981"
-              strokeWidth={1.5}
+              strokeWidth={1.2}
               markerEnd="url(#arr-e)"
             />
             <rect
@@ -135,7 +135,7 @@ export default function AttestationViz() {
               x2={220}
               y2={100}
               stroke="#f59e0b"
-              strokeWidth={1.5}
+              strokeWidth={1.2}
               markerEnd="url(#arr-a)"
             />
             <rect
@@ -165,7 +165,7 @@ export default function AttestationViz() {
               x2={60}
               y2={100}
               stroke="#10b981"
-              strokeWidth={1.5}
+              strokeWidth={1.2}
               markerEnd="url(#arr-e2)"
             />
             <rect
@@ -195,7 +195,7 @@ export default function AttestationViz() {
               x2={500}
               y2={100}
               stroke="#8b5cf6"
-              strokeWidth={1.5}
+              strokeWidth={1.2}
               markerEnd="url(#arr-p)"
             />
             <rect

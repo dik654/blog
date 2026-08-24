@@ -18,6 +18,10 @@ export default function Overview() {
         question="구간 유동성은 어떻게 constant-product 곡선의 한 조각을 만들까요?"
         idea="실제 token balances에 구간 끝에서 남을 virtual reserve를 더하면 V2와 같은 곱 L²을 얻습니다. 범위 밖에서는 한 token 양이 0이 됩니다."
         formula={String.raw`\left(x+\frac{L}{\sqrt{p_b}}\right)\left(y+L\sqrt{p_a}\right)=L^2`}
+        annotatedFormula={String.raw`\left(x+\frac{L}{\sqrt{p_b}}\right)\left(y+L\sqrt{p_a}\right)=\underbrace{L^2}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`L^2`, annotation: ["position liquidity이(가) 식의 결과에 기여하는","방식을 계산합니다.","실제 token balances에 구간 끝에서 남을","virtual reserve를 더하면 V2와 같은 곱 L²을"] },
+        ]}
         terms={[
           { symbol: "p_a,p_b", name: "range prices", description: "token1/token0 기준 lower·upper price이며 pₐ<pᵦ입니다." },
           { symbol: "L", name: "position liquidity", description: "범위 안 swap amount와 price 이동을 잇는 유동성 단위입니다." },

@@ -25,6 +25,14 @@ export default function Optimizer({ onCodeRef }: { onCodeRef: (key: string, ref:
 \theta_t=2,\ \eta=0.1,\ g_t=0.5
 &\Rightarrow \theta_{t+1}=1.95.
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+\theta_{t+1}&=\underbrace{\theta_t-\eta g_t,}_{\text{current gradient 계산}}\\
+\theta_t=2,\ \eta=0.1,\ g_t=0.5
+&\Rightarrow \theta_{t+1}=1.95.
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\theta_t-\eta g_t,`, annotation: ["current gradient이(가) 식의 결과에 기여하는","방식을 계산합니다.","Gradient가 loss가 가장 빠르게 커지는 방향을","가리키므로 그 반대 방향으로 learning rate만큼"] },
+        ]}
         terms={[
           { symbol: "θ_t", name: "current parameter", description: "Update 전에 optimizer가 읽은 parameter 값입니다." },
           { symbol: "g_t", name: "current gradient", description: "현재 batch loss의 θ에 대한 미분입니다." },

@@ -31,7 +31,7 @@ export function Step0() {
         x2={450}
         y2={y + 42}
         stroke="var(--border)"
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
         transition={{ duration: 0.5 }}

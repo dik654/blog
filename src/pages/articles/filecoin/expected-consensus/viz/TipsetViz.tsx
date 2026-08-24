@@ -44,7 +44,7 @@ export default function TipsetViz() {
                 {/* chain arrow */}
                 {ei < 2 && (
                   <motion.line x1={200} y1={ep.y + 32} x2={200} y2={EPOCHS[ei + 1].y - 2}
-                    stroke="currentColor" strokeOpacity={step === 2 ? 0.3 : 0.1} strokeWidth={1.5}
+                    stroke="currentColor" strokeOpacity={step === 2 ? 0.3 : 0.1} strokeWidth={1.2}
                     initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
                     transition={{ delay: 0.3 }} />
                 )}
@@ -57,7 +57,7 @@ export default function TipsetViz() {
                 { n: 'F3 (신규)', t: '수 분', ep: 10, c: F3_C, x: 230 }].map(f => (
                 <motion.g key={f.n} initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
                   <rect x={f.x} y={25} width={140} height={70} rx={10}
-                    fill={f.c + '12'} stroke={f.c} strokeWidth={1.5} />
+                    fill={f.c + '12'} stroke={f.c} strokeWidth={1.2} />
                   <text x={f.x + 70} y={52} textAnchor="middle" fontSize={11} fontWeight={600} fill={f.c}>{f.n}</text>
                   <text x={f.x + 70} y={70} textAnchor="middle" fontSize={14} fontWeight={600} fill={f.c}>{f.t}</text>
                   <text x={f.x + 70} y={86} textAnchor="middle" fontSize={10} fill={f.c} fillOpacity={0.5}>

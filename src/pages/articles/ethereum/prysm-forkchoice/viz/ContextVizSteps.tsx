@@ -49,7 +49,7 @@ export function StepLMDGHOST() {
     <DataBox x={145} y={8} w={130} h={24} label="Justified (Ep 150)" color={C.fork} />
     <motion.line x1={210} y1={32} x2={140} y2={58} stroke={C.attest} strokeWidth={1}
       initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: 0.3, duration: 0.3 }} />
-    <motion.line x1={210} y1={32} x2={280} y2={58} stroke={C.ok} strokeWidth={1.5}
+    <motion.line x1={210} y1={32} x2={280} y2={58} stroke={C.ok} strokeWidth={1.2}
       initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: 0.3, duration: 0.3 }} />
     <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
       <DataBox x={90} y={58} w={100} h={24} label="w=5,760 ETH" color={C.attest} />

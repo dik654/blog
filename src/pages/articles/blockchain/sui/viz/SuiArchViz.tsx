@@ -55,7 +55,7 @@ export default function SuiArchViz() {
             rx={7}
             fill="#8b5cf618"
             stroke="#8b5cf6"
-            strokeWidth={1.5}
+            strokeWidth={1.2}
           />
           <text
             x={190}
@@ -74,7 +74,7 @@ export default function SuiArchViz() {
             x2={PATHS[0].x + 65}
             y2={55}
             stroke="#10b981"
-            strokeWidth={1.5}
+            strokeWidth={1.2}
             strokeDasharray="4 2"
             animate={{ opacity: step >= 1 ? 0.8 : 0.15 }}
             transition={sp}
@@ -85,7 +85,7 @@ export default function SuiArchViz() {
             x2={PATHS[1].x + 65}
             y2={55}
             stroke="#6366f1"
-            strokeWidth={1.5}
+            strokeWidth={1.2}
             strokeDasharray="4 2"
             animate={{ opacity: step >= 2 ? 0.8 : 0.15 }}
             transition={sp}
@@ -108,7 +108,7 @@ export default function SuiArchViz() {
                 rx={8}
                 fill={`${p.color}15`}
                 stroke={p.color}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={p.x + 70}

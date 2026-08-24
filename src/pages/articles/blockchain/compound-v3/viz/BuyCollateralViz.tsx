@@ -256,7 +256,7 @@ export default function BuyCollateralViz() {
                 x2={s.x + 160}
                 y2={262}
                 stroke="#3b82f6"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 markerEnd="url(#bc-arr)"
               />
             )}

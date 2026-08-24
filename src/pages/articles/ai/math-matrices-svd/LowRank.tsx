@@ -19,6 +19,10 @@ export default function LowRank() {
         question="Rank k만 남길 때 어떤 근사가 전체 entry의 squared error를 가장 작게 만들까요?"
         idea={<>Singular value가 큰 rank-one component부터 k개 남깁니다. Orthonormal components는 서로 error를 섞지 않으므로 버린 방향의 squared singular value가 Frobenius error로 정확히 더해집니다.</>}
         formula={String.raw`A_k=\sum_{i=1}^{k}\sigma_i u_i v_i^\top,\qquad \min_{\operatorname{rank}(B)\le k}\lVert A-B\rVert_F^2=\lVert A-A_k\rVert_F^2=\sum_{i>k}\sigma_i^2`}
+        annotatedFormula={String.raw`A_k=\underbrace{\sum_{i=1}^{k}\sigma_i u_i v_i^\top,\qquad \min_{\operatorname{rank}(B)\le k}\lVert A-B\rVert_F^2=\lVert A-A_k\rVert_F^2=\sum_{i>k}\sigma_i^2}_{\text{경계 후보 선택}}`}
+        operations={[
+          { expression: String.raw`\sum_{i=1}^{k}\sigma_i u_i v_i^\top,\qquad \min_{\operatorname{rank}(B)\le k}\lVert A-B\rVert_F^2=\lVert A-A_k\rVert_F^2=\sum_{i>k}\sigma_i^2`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","Singular value가 큰 rank-one","component부터 k개 남깁니다."] },
+        ]}
         terms={[
           { symbol: "A_k", name: "truncated SVD", description: "가장 큰 singular value와 대응 vector k쌍만 남긴 rank-k matrix입니다." },
           { symbol: String.raw`\lVert\cdot\rVert_F`, name: "Frobenius norm", description: "Matrix 모든 entry의 제곱합에 제곱근을 취한 전체 reconstruction error입니다." },

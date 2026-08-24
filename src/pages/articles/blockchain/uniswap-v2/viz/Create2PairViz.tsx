@@ -137,7 +137,7 @@ export default function Create2PairViz() {
           x2={260}
           y2={124}
           stroke="#3b82f6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#c2-arr)"
         />
 
@@ -198,7 +198,7 @@ export default function Create2PairViz() {
           x2={260}
           y2={200}
           stroke="#3b82f6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#c2-arr)"
         />
 

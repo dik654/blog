@@ -117,7 +117,7 @@ export default function DsrHistoryViz() {
         />
 
         {/* 라인 */}
-        <path d={pathData} stroke="#10b981" strokeWidth={2.5} fill="none" />
+        <path d={pathData} stroke="#10b981" strokeWidth={1.2} fill="none" />
 
         {/* 포인트 */}
         {history.map((p, i) => (
@@ -128,7 +128,7 @@ export default function DsrHistoryViz() {
               r={5}
               fill="#10b981"
               stroke="var(--card)"
-              strokeWidth={1.5}
+              strokeWidth={1.2}
             />
             <text
               x={toX(i)}

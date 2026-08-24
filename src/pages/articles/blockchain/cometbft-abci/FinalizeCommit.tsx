@@ -38,6 +38,11 @@ export default function FinalizeCommit({
         question="모든 correct node가 같은 다음 state와 AppHash를 만들기 위한 최소 식은 무엇일까요?"
         idea={<>결정된 block과 이전 committed state만 deterministic transition에 넣고, 결과 state의 commitment를 계산합니다. Node-local 입력과 external effect는 함수 밖으로 분리합니다.</>}
         formula={String.raw`\begin{aligned}S_{h+1}&=F(S_h,B_h),\\ A_{h+1}&=C(S_{h+1})\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}S_{h+1}&=\underbrace{F(S_h,B_h),}_{\text{Previous state 계산}}\\ A_{h+1}&=\underbrace{C(S_{h+1})}_{\text{AppHash 계산}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`F(S_h,B_h),`, annotation: ["Previous state이(가) 식의 결과에 기여하는 방식을","계산합니다.","결정된 block과 이전 committed state만","deterministic transition에 넣고, 결과"] },
+          { expression: String.raw`C(S_{h+1})`, annotation: ["AppHash이(가) 식의 결과에 기여하는 방식을 계산합니다.","결정된 block과 이전 committed state만","deterministic transition에 넣고, 결과","state의 commitment를 계산합니다."] },
+        ]}
         terms={[
           { symbol: "S_h", name: "Previous state", description: "FinalizeBlock 전에 durable하게 commit된 application state입니다." },
           { symbol: "B_h", name: "Decided block", description: "Consensus가 height h에서 결정한 block과 protocol context입니다." },

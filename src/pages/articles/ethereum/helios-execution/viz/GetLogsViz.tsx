@@ -1142,7 +1142,7 @@ export default function GetLogsViz() {
                   d="M 230 100 L 252 100"
                   fill="none"
                   stroke={C.bloom}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                   markerEnd="url(#arr-gl-bloom)"
                   {...drawLine(0.5)}
                 />

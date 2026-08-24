@@ -81,6 +81,10 @@ export default function KubernetesFleet() {
           </>
         }
         formula={String.raw`L=\lambda W`}
+        annotatedFormula={String.raw`L=\underbrace{\lambda W}_{\text{완료 가능한 arrival rate 계산}}`}
+        operations={[
+          { expression: String.raw`\lambda W`, annotation: ["완료 가능한 arrival rate이(가) 식의 결과에","기여하는 방식을 계산합니다.","안정된 관측 구간에서는 들어온 요청률과 요청 하나가","queue·실행에 머문 평균 시간을 곱하면 시스템 안의 평균"] },
+        ]}
         terms={[
           {
             symbol: "L",

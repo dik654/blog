@@ -22,6 +22,11 @@ export default function AIUsage() {
         question="긴 signal에서 시간에 따라 변하는 local spectrum을 어떻게 만들까?"
         idea={<>Frame index m마다 signal을 H sample씩 이동하고 window w[n]를 곱한 뒤 N-point DFT를 계산합니다. Magnitude 또는 power를 남기면 time–frequency matrix가 됩니다.</>}
         formula={String.raw`\begin{aligned}s_m[n]&=x[n+mH]w[n]\\[3pt]\operatorname{STFT}_x[m,k]&=\sum_{n=0}^{N-1}s_m[n]e^{-i2\pi kn/N}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}s_m[n]&=\underbrace{x[n+mH]w[n]}_{\text{analysis window 계산}}\\[3pt]\operatorname{STFT}_x[m,k]&=\underbrace{\sum_{n=0}^{N-1}s_m[n]e^{-i2\pi kn/N}}_{\text{기준량당 비율}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`x[n+mH]w[n]`, annotation: ["analysis window이(가) 식의 결과에 기여하는","방식을 계산합니다.","Frame index m마다"] },
+          { expression: String.raw`\sum_{n=0}^{N-1}s_m[n]e^{-i2\pi kn/N}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Frame index m마다"] },
+        ]}
         terms={[
           { symbol: "m", name: "frame index", description: "시간축에서 몇 번째 local window인지 나타냅니다." },
           { symbol: "k", name: "frequency bin", description: "각 frame 안의 discrete frequency index입니다." },
@@ -54,6 +59,10 @@ export default function AIUsage() {
         question="큰 convolution을 왜 frequency별 multiplication으로 바꿀 수 있을까?"
         idea={<>Circular convolution은 Fourier basis에서 diagonal operator이므로 각 frequency bin을 독립적으로 곱할 수 있습니다. Linear convolution은 wrap-around를 막도록 충분히 padding한 뒤 inverse transform하고 필요한 구간을 자릅니다.</>}
         formula={String.raw`y=x*h=\mathcal F^{-1}\!\left(\mathcal F(x)\odot\mathcal F(h)\right)`}
+        annotatedFormula={String.raw`y=\underbrace{x*h=\mathcal F^{-1}\!\left(\mathcal F(x)\odot\mathcal F(h)\right)}_{\text{허용 경계 판정}}`}
+        operations={[
+          { expression: String.raw`x*h=\mathcal F^{-1}\!\left(\mathcal F(x)\odot\mathcal F(h)\right)`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","Circular convolution은 Fourier","basis에서 diagonal operator이므로 각","frequency bin을 독립적으로 곱할 수 있습니다."] },
+        ]}
         terms={[
           { symbol: "x*h", name: "linear convolution", description: "Input x와 filter h를 shift하며 multiply-accumulate한 결과입니다." },
           { symbol: "\\mathcal F", name: "FFT transform", description: "두 operand를 같은 frequency coordinate로 옮깁니다." },

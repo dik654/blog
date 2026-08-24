@@ -56,6 +56,13 @@ export default function Overview() {
 T_{\mathrm{TTFT}}={}&T_{\mathrm{ingress}}+T_{\mathrm{route}}\\
 &+T_{\mathrm{queue}}+T_{\mathrm{prefill}}+T_{\mathrm{first\ emit}}
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+T_{\mathrm{TTFT}}={}&\underbrace{T_{\mathrm{ingress}}}_{\text{입구 처리 계산}}+T_{\mathrm{route}}\\
+&+T_{\mathrm{queue}}+T_{\mathrm{prefill}}+T_{\mathrm{first\ emit}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`T_{\mathrm{ingress}}`, annotation: ["입구 처리이(가) 식의 결과에 기여하는 방식을 계산합니다.","요청이 들어온 시점부터 첫 token이 client에 전달될","때까지를 계층별 구간으로 나눕니다."] },
+        ]}
         terms={[
           {
             symbol: "T_{\\mathrm{ingress}}",
@@ -105,6 +112,10 @@ T_{\mathrm{TTFT}}={}&T_{\mathrm{ingress}}+T_{\mathrm{route}}\\
           </>
         }
         formula={String.raw`T_{\mathrm{complete}}=T_{\mathrm{TTFT}}+\sum_{i=2}^{N_{\mathrm{out}}}\Delta t_i+T_{\mathrm{tail}}`}
+        annotatedFormula={String.raw`T_{\mathrm{complete}}=\underbrace{T_{\mathrm{TTFT}}+\sum_{i=2}^{N_{\mathrm{out}}}\Delta t_i+T_{\mathrm{tail}}}_{\text{변화량 계산}}`}
+        operations={[
+          { expression: String.raw`T_{\mathrm{TTFT}}+\sum_{i=2}^{N_{\mathrm{out}}}\Delta t_i+T_{\mathrm{tail}}`, annotation: ["인접한 level의 차이를 남겨 변화량을 계산합니다.","첫 token 뒤에는 각 output token 사이의 간격이","누적됩니다."] },
+        ]}
         terms={[
           {
             symbol: "N_{\\mathrm{out}}",

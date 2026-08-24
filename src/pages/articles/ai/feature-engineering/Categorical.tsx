@@ -34,6 +34,17 @@ N_i&=\sum_{j\notin k(i)}\mathbf 1[c_j=c_i],\\
 \operatorname{TE}^{(-k(i))}(c_i)
 &=\frac{S_i+\alpha\mu_{\mathrm{train}}}{N_i+\alpha}.
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+S_i&=\underbrace{\sum_{j\notin k(i)}\mathbf 1[c_j=c_i]y_j,}_{\text{category indicator 계산}}\\
+N_i&=\underbrace{\sum_{j\notin k(i)}\mathbf 1[c_j=c_i],}_{\text{category indicator 계산}}\\
+\operatorname{TE}^{(-k(i))}(c_i)
+&=\underbrace{\frac{S_i+\alpha\mu_{\mathrm{train}}}{N_i+\alpha}.}_{\text{기준량당 비율}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\sum_{j\notin k(i)}\mathbf 1[c_j=c_i]y_j,`, annotation: ["category indicator이(가) 식의 결과에 기여하는","방식을 계산합니다.","Row i가 속한 fold를 통째로 제외하고 같은","category c의 target 합과 count를"] },
+          { expression: String.raw`\sum_{j\notin k(i)}\mathbf 1[c_j=c_i],`, annotation: ["category indicator이(가) 식의 결과에 기여하는","방식을 계산합니다.","Row i가 속한 fold를 통째로 제외하고 같은","category c의 target 합과 count를"] },
+          { expression: String.raw`\frac{S_i+\alpha\mu_{\mathrm{train}}}{N_i+\alpha}.`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Row i가 속한 fold를 통째로 제외하고 같은","category c의 target 합과 count를","계산합니다."] },
+        ]}
         terms={[
           { symbol: "k(i)", name: "row i의 fold", description: "Encoding 통계를 만들 때 i와 같은 validation fold 전체를 제외합니다." },
           { symbol: "1[c_j=c_i]", name: "category indicator", description: "Row j가 i와 같은 category일 때만 1이 됩니다." },

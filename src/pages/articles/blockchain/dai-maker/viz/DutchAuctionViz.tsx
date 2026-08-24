@@ -124,7 +124,7 @@ export default function DutchAuctionViz() {
         </text>
 
         {/* 경매 곡선 */}
-        <path d={pathData} stroke="#3b82f6" strokeWidth={2.5} fill="none" />
+        <path d={pathData} stroke="#3b82f6" strokeWidth={1.2} fill="none" />
 
         {/* 시작 점 */}
         <circle cx={toX(0)} cy={toY(startPrice)} r={5} fill="#3b82f6" />

@@ -13,6 +13,11 @@ export default function CometArchitecture() {
         question="하나의 signed principal에서 현재 공급·차입 balance를 어떻게 복원할까요?"
         idea="부호가 economic role을 고르고 절댓값에 해당 index를 곱합니다. Present value를 principal로 되돌릴 때 supply는 내림, borrow는 올림해 protocol이 과소 부채를 기록하지 않게 합니다."
         formula={String.raw`V(p)=\begin{cases}pI_s/I_0&p\ge0\\-(-p)I_b/I_0&p<0\end{cases}`}
+        annotatedFormula={String.raw`V(\underbrace{p}_{\text{signed principal 계산}})=\begin{cases}pI_s/\underbrace{I_0}_{\text{index scale 계산}}&p\ge0\\-(-p)I_b/I_0&p<0\end{cases}`}
+        operations={[
+          { expression: String.raw`I_0`, annotation: ["index scale이(가) 식의 결과에 기여하는 방식을","계산합니다.","부호가 economic role을 고르고 절댓값에 해당","index를 곱합니다."] },
+          { expression: String.raw`p`, annotation: ["signed principal이(가) 식의 결과에 기여하는","방식을 계산합니다.","부호가 economic role을 고르고 절댓값에 해당","index를 곱합니다."] },
+        ]}
         terms={[
           { symbol: "p", name: "signed principal", description: "양수는 base supply, 음수는 base borrow입니다." },
           { symbol: "I_s,I_b", name: "base indexes", description: "공급·차입에 독립적으로 누적되는 uint64 index입니다." },
@@ -26,6 +31,10 @@ export default function CometArchitecture() {
         question="Comet의 supply와 borrow rate는 utilization에서 어떻게 갈라질까요?"
         idea="두 curve가 U를 공유하지만 각각 base·kink·low/high slope를 가집니다. Aave처럼 borrow rate×U×(1−reserve factor)로 supply rate를 유도한다고 가정하지 않습니다."
         formula={String.raw`U=\frac{B}{S},\qquad r_j(U)=\begin{cases}b_j+m_{j,L}U&U\le K_j\\b_j+m_{j,L}K_j+m_{j,H}(U-K_j)&U>K_j\end{cases}`}
+        annotatedFormula={String.raw`U=\frac{B}{S},\qquad r_j(U)=\begin{cases}b_j+m_{j,L}U&U\le \underbrace{K_j}_{\text{기준량당 비율}}\\b_j+m_{j,L}K_j+m_{j,H}(U-K_j)&U>K_j\end{cases}`}
+        operations={[
+          { expression: String.raw`K_j`, annotation: ["model kink이(가) 식의 결과에 기여하는 방식을","계산합니다.","두 curve가 U를 공유하지만 각각","base·kink·low/high slope를 가집니다."] },
+        ]}
         terms={[
           { symbol: "B,S", name: "present-value totals", description: "Base borrow·supply principal을 각각 index로 전진시킨 총량입니다." },
           { symbol: "j", name: "supply or borrow model", description: "서로 다른 parameter set을 선택합니다." },

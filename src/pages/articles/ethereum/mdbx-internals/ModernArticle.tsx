@@ -38,6 +38,10 @@ export default function ModernArticle() {
         question="Retired page를 언제 안전하게 재사용할 수 있을까?"
         idea="그 page가 마지막으로 속한 generation보다 오래된 reader가 하나도 없을 때만 새 writer generation에 돌려줍니다."
         formula={String.raw`\operatorname{reclaim}(p)\ \text{only if}\ \operatorname{retiredTx}(p)<\min_{r\in R_{\mathrm{active}}}\operatorname{readerTx}(r)`}
+        annotatedFormula={String.raw`\operatorname{reclaim}(p)\ \text{only if}\ \operatorname{retiredTx}(p)<\underbrace{\min_{r\in R_{\mathrm{active}}}\operatorname{readerTx}(r)}_{\text{경계 후보 선택}}`}
+        operations={[
+          { expression: String.raw`\min_{r\in R_{\mathrm{active}}}\operatorname{readerTx}(r)`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","그 page가 마지막으로 속한 generation보다"] },
+        ]}
         terms={[
           { symbol: "p", name: "Retired page", description: "새 root에서는 더 이상 필요하지 않지만 old reader가 볼 수 있는 page입니다." },
           { symbol: "retiredTx", name: "Retirement generation", description: "해당 page가 current graph에서 빠진 transaction boundary입니다." },

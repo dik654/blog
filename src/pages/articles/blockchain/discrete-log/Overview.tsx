@@ -22,6 +22,10 @@ export default function Overview() {
         question="큰 x에서도 gˣ을 왜 빠르게 계산할 수 있을까요?"
         idea="x를 binary로 분해하고 매 bit마다 현재 값을 square한 뒤 bit가 1일 때만 g를 곱합니다. 지수 크기가 아니라 지수를 적는 bit 수에 비례합니다."
         formula={String.raw`x=\sum_{i=0}^{\ell-1}b_i2^i\quad\Longrightarrow\quad g^x=\prod_{i:b_i=1}g^{2^i},\qquad \ell=\lfloor\log_2x\rfloor+1`}
+        annotatedFormula={String.raw`x=\underbrace{\sum_{i=0}^{\ell-1}b_i2^i\quad\Longrightarrow\quad g^x=\prod_{i:b_i=1}g^{2^i},\qquad \ell=\lfloor\log_2x\rfloor+1}_{\text{로그 비용 변환}}`}
+        operations={[
+          { expression: String.raw`\sum_{i=0}^{\ell-1}b_i2^i\quad\Longrightarrow\quad g^x=\prod_{i:b_i=1}g^{2^i},\qquad \ell=\lfloor\log_2x\rfloor+1`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","x를 binary로 분해하고 매 bit마다"] },
+        ]}
         terms={[
           { symbol: "b_i", name: "exponent bit", description: "x의 i번째 binary digit로 0 또는 1입니다." },
           { symbol: "g^{2^i}", name: "successive squares", description: "직전 값을 한 번 square해 얻는 group element입니다." },

@@ -18,6 +18,10 @@ export default function Multilayer() {
         question="여러 affine layer를 쌓는 것만으로 XOR을 해결할 수 있을까?"
         idea={<>중간에 nonlinearity가 없으면 matrix multiplication과 bias가 다시 하나의 affine transform으로 합쳐집니다. 깊이는 늘어도 결정 경계 종류는 그대로입니다.</>}
         formula={String.raw`f(x)=W_2(W_1x+b_1)+b_2=(W_2W_1)x+(W_2b_1+b_2)=W'x+b'`}
+        annotatedFormula={String.raw`f(x)=\underbrace{W_2(W_1x+b_1)+b_2=(W_2W_1)x+(W_2b_1+b_2)=W'x+b'}_{\text{오른쪽 항으로 결과 계산}}`}
+        operations={[
+          { expression: String.raw`W_2(W_1x+b_1)+b_2=(W_2W_1)x+(W_2b_1+b_2)=W'x+b'`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","중간에 nonlinearity가 없으면 matrix","multiplication과 bias가 다시 하나의","affine transform으로 합쳐집니다."] },
+        ]}
         terms={[
           { symbol: "W_1,b_1", name: "first affine layer", description: "입력을 중간 dimension으로 옮깁니다." },
           { symbol: "W_2,b_2", name: "second affine layer", description: "중간 값을 output space로 옮깁니다." },

@@ -322,7 +322,7 @@ export default function DisasterRecoveryViz() {
                 x2={240}
                 y2={80}
                 stroke={C.red}
-                strokeWidth={2}
+                strokeWidth={1.2}
               />
               <circle cx={240} cy={70} r={4} fill={C.red} />
 

@@ -152,7 +152,7 @@ export default function ScrollCircuitViz() {
                 rx={8}
                 fill="none"
                 stroke={CIRCUITS[0].color}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 strokeDasharray="4 2"
               />
               <text

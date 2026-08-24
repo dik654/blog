@@ -137,7 +137,7 @@ export function StepBandwidth() {
       <motion.path
         d="M94 133 H386"
         stroke={C.ecc}
-        strokeWidth={2}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
       />

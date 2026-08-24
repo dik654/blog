@@ -154,7 +154,7 @@ export default function DrawFlowViz() {
                   x2={42}
                   y2={y + 64}
                   stroke="#3b82f6"
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                   markerEnd="url(#dr-arr)"
                 />
               )}

@@ -20,6 +20,10 @@ export default function StateRootCaching({
           </>
         }
         formula={String.raw`N_s=t-c,\qquad N_e=\left\lfloor\frac{t}{E}\right\rfloor-\left\lfloor\frac{c}{E}\right\rfloor`}
+        annotatedFormula={String.raw`N_s=\underbrace{t-c,\qquad N_e=\left\lfloor\frac{t}{E}\right\rfloor-\left\lfloor\frac{c}{E}\right\rfloor}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`t-c,\qquad N_e=\left\lfloor\frac{t}{E}\right\rfloor-\left\lfloor\frac{c}{E}\right\rfloor`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","각 slot을 한 번씩 처리하므로 slot step은 차이와","같습니다."] },
+        ]}
         terms={[
           {
             symbol: "c",

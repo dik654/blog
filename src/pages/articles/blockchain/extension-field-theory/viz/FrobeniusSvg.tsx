@@ -72,7 +72,7 @@ export default function FrobeniusSvg({ a, b }: Props) {
         x2={cx + (7 * s) / 3 + 4}
         y2={cy}
         stroke={`${C.conj}25`}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         strokeDasharray="4 3"
       />
       <text x={cx + (7 * s) / 3 + 8} y={cy + 14} fontSize={9} fill={C.conj}>

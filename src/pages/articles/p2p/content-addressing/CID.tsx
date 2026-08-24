@@ -35,6 +35,18 @@ export default function CID() {
 \operatorname{multihash}(b) &= \operatorname{varint}(hcode)\,\|\,
 \operatorname{varint}(|d|)\,\|\,d.
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+\mathrm{CIDv1}_{bin} &= \underbrace{\operatorname{varint}(1)\,\|\,
+\operatorname{varint}(codec)\,\|\,\operatorname{multihash}(b),}_{\text{unsigned variable 계산}}\\
+\operatorname{multihash}(b) &= \underbrace{\operatorname{varint}(hcode)\,\|\,
+\operatorname{varint}(|d|)\,\|\,d.}_{\text{unsigned variable 계산}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\operatorname{varint}(1)\,\|\,
+\operatorname{varint}(codec)\,\|\,\operatorname{multihash}(b),`, annotation: ["unsigned variable integer이(가) 식의","결과에 기여하는 방식을 계산합니다.","먼저 multibase prefix로 문자열을 bytes로","되돌리고, minimal varint로 version과"] },
+          { expression: String.raw`\operatorname{varint}(hcode)\,\|\,
+\operatorname{varint}(|d|)\,\|\,d.`, annotation: ["unsigned variable integer이(가) 식의","결과에 기여하는 방식을 계산합니다.","먼저 multibase prefix로 문자열을 bytes로","되돌리고, minimal varint로 version과"] },
+        ]}
         terms={[
           {
             symbol: "codec",

@@ -81,7 +81,7 @@ export default function PsmViz() {
           x2={200}
           y2={147}
           stroke="#3b82f6"
-          strokeWidth={1.6}
+          strokeWidth={1.2}
           markerEnd="url(#psm-arr)"
         />
         <line
@@ -90,7 +90,7 @@ export default function PsmViz() {
           x2={380}
           y2={147}
           stroke="#10b981"
-          strokeWidth={1.6}
+          strokeWidth={1.2}
           markerEnd="url(#psm-arr-green)"
         />
 

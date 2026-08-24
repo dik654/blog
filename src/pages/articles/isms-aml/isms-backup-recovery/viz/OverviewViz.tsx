@@ -301,7 +301,7 @@ export default function OverviewViz() {
                 x2={100}
                 y2={95}
                 stroke={C.amber}
-                strokeWidth={2}
+                strokeWidth={1.2}
                 markerEnd="url(#br-ov-arrow)"
               />
               <text
@@ -331,7 +331,7 @@ export default function OverviewViz() {
                 x2={360}
                 y2={95}
                 stroke={C.green}
-                strokeWidth={2}
+                strokeWidth={1.2}
                 markerEnd="url(#br-ov-arrow)"
               />
               <text

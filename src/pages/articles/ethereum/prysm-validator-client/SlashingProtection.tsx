@@ -19,6 +19,10 @@ export default function SlashingProtection({ onCodeRef }: { onCodeRef: (key: str
         question="두 attestation 가운데 하나가 다른 하나를 surround하는지 어떻게 판정할까요?"
         idea="각 vote를 source epoch에서 target epoch까지의 열린 방향 interval로 보고, 한 interval의 양 끝이 다른 interval 바깥에 엄격히 놓이는지 양방향으로 검사합니다."
         formula={String.raw`(s_1<s_2<t_2<t_1)\;\lor\;(s_2<s_1<t_1<t_2)`}
+        annotatedFormula={String.raw`(s_1<\underbrace{s_2<t_2<t_1)\;\lor\;(s_2<s_1<t_1<t_2)}_{\text{판정 조건 결합}}`}
+        operations={[
+          { expression: String.raw`s_2<t_2<t_1)\;\lor\;(s_2<s_1<t_1<t_2)`, annotation: ["대안 gate 중 하나라도 참이면 조건을 통과시킵니다.","각 vote를 source epoch에서 target","epoch까지의 열린 방향 interval로 보고, 한","interval의 양 끝이 다른 interval 바깥에 엄격히"] },
+        ]}
         terms={[
           { symbol: "s_1,t_1", name: "첫 투표 구간", description: "기존 또는 첫 attestation의 source·target epoch" },
           { symbol: "s_2,t_2", name: "두 번째 투표 구간", description: "새 또는 두 번째 attestation의 source·target epoch" },

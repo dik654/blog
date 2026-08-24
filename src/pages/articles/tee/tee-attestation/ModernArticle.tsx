@@ -46,6 +46,10 @@ export default function ModernTeeAttestationArticle() {
           question="Quote signature가 유효해도 key release가 거부될 수 있는 이유는 무엇인가?"
           idea={<>서명·freshness·measurement·TCB·channel binding을 모두 AND로 묶습니다. Signature는 필요한 조건 하나일 뿐입니다.</>}
           formula={String.raw`R=S\land N\land M\land T\land B`}
+          annotatedFormula={String.raw`R=\underbrace{S\land N\land M\land T\land B}_{\text{판정 조건 결합}}`}
+          operations={[
+            { expression: String.raw`S\land N\land M\land T\land B`, annotation: ["필요한 gate가 모두 참일 때만 전체 조건을 통과시킵니다.","서명·freshness·measurement·TCB·channel","binding을 모두 AND로 묶습니다."] },
+          ]}
           terms={[
             { symbol: "S", name: "Signature chain", description: "Evidence signature와 endorsement·certificate chain이 허용 trust anchor까지 검증됐다는 조건입니다." },
             { symbol: "N", name: "Nonce freshness", description: "Evidence가 이번 미사용 challenge 또는 허용 epoch에 묶였다는 조건입니다." },

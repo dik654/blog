@@ -14,6 +14,10 @@ export default function PositionNft() {
         question="Position 범위 안에서 발생한 수수료만 어떻게 분리할까요?"
         idea="Global per-liquidity fee growth에서 lower 아래와 upper 위에 해당하는 growth를 현재 tick 방향 규칙으로 계산해 뺍니다. Position은 직전 inside snapshot 이후 증가분만 받습니다."
         formula={String.raw`f_{inside}=f_{global}-f_{below}-f_{above},\qquad fee=L\,(f_{inside}-f_{last})/2^{128}`}
+        annotatedFormula={String.raw`f_{inside}=\underbrace{f_{global}-f_{below}-f_{above},\qquad fee=L\,(f_{inside}-f_{last})/2^{128}}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`f_{global}-f_{below}-f_{above},\qquad fee=L\,(f_{inside}-f_{last})/2^{128}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Global per-liquidity fee growth에서","lower 아래와 upper 위에 해당하는 growth를 현재","tick 방향 규칙으로 계산해 뺍니다."] },
+        ]}
         terms={[
           { symbol: "f_global", name: "global fee growth", description: "Pool 전체에서 token별로 누적한 Q128 per-liquidity counter입니다." },
           { symbol: "f_below,f_above", name: "outside partitions", description: "Boundary tick의 outside 값을 현재 tick 위치에 따라 해석한 양입니다." },

@@ -23,6 +23,10 @@ export default function MptTraversal({ title, onCodeRef: _onCodeRef }: Props) {
         formula={
           "k={\\rm Nibbles}({\\rm Keccak256}(x)),\\quad v={\\rm RLP}(y),\\quad {\\rm Verify}(R,k,v,\\pi)=\\mathrm{true}"
         }
+        annotatedFormula={String.raw`k=\underbrace{{\rm Nibbles}({\rm Keccak256}(x)),\quad v={\rm RLP}(y),\quad {\rm Verify}(R,k,v,\pi)=\mathrm{true}}_{\text{Proof nodes 계산}}`}
+        operations={[
+          { expression: String.raw`{\rm Nibbles}({\rm Keccak256}(x)),\quad v={\rm RLP}(y),\quad {\rm Verify}(R,k,v,\pi)=\mathrm{true}`, annotation: ["Proof nodes이(가) 식의 결과에 기여하는 방식을","계산합니다.","Raw key는 secure hash의 nibble","path로, expected value는 canonical"] },
+        ]}
         terms={[
           {
             symbol: "x",

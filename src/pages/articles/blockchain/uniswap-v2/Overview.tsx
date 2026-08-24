@@ -18,6 +18,10 @@ export default function Overview() {
         question="x=1,000, y=1,000인 풀에 token0 100개를 넣으면 token1을 얼마나 받을까요?"
         idea="입력 전체는 reserve에 들어오지만 가격 이동에는 0.3%를 뺀 유효 입력만 사용합니다. 새 유효 reserve product가 이전 product와 같도록 출력량을 풀면 됩니다."
         formula={String.raw`\Delta y=\frac{y\cdot997\Delta x}{1000x+997\Delta x},\qquad (1000x+997\Delta x)(y-\Delta y)\ge1000xy`}
+        annotatedFormula={String.raw`\Delta y=\underbrace{\frac{y\cdot997\Delta x}{1000x+997\Delta x},\qquad (1000x+997\Delta x)(y-\Delta y)\ge1000xy}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`\frac{y\cdot997\Delta x}{1000x+997\Delta x},\qquad (1000x+997\Delta x)(y-\Delta y)\ge1000xy`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","입력 전체는 reserve에 들어오지만 가격 이동에는","0.3%를 뺀 유효 입력만 사용합니다."] },
+        ]}
         terms={[
           { symbol: "x,y", name: "pre-swap reserves", description: "Pair에 기록된 token0·token1 reserve입니다." },
           { symbol: "Δx", name: "observed input", description: "Transfer 뒤 balance 차이로 확인한 token0 입력입니다." },
@@ -30,6 +34,10 @@ export default function Overview() {
         question="가격이 두 배가 되면 constant-product LP가 단순 보유보다 얼마나 뒤처질까요?"
         idea="차익거래가 reserve 비율을 새 외부 가격에 맞추면 LP는 오른 자산을 일부 팔고 내린 자산을 일부 산 상태가 됩니다. 초기 50/50 포트폴리오와 같은 자산을 그대로 보유한 가치를 비교합니다."
         formula={String.raw`\operatorname{IL}(r)=\frac{2\sqrt r}{1+r}-1`}
+        annotatedFormula={String.raw`\operatorname{IL}(r)=\underbrace{\frac{2\sqrt r}{1+r}-1}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`\frac{2\sqrt r}{1+r}-1`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","차익거래가 reserve 비율을 새 외부 가격에 맞추면 LP는","오른 자산을 일부 팔고 내린 자산을 일부 산 상태가 됩니다."] },
+        ]}
         terms={[
           { symbol: "r", name: "relative price ratio", description: "초기 대비 token0/token1 외부 가격 변화 비율입니다." },
           { symbol: "IL", name: "divergence loss", description: "수수료를 제외한 LP 가치 / HODL 가치 − 1입니다." },

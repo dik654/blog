@@ -107,7 +107,7 @@ export function ConfigStep() {
             rx={8}
             fill={`${s.c}10`}
             stroke={s.c}
-            strokeWidth={1.5}
+            strokeWidth={1.2}
           />
           <text
             x={s.x}
@@ -181,7 +181,7 @@ export function WorkflowStep() {
               rx={8}
               fill={`${s.c}14`}
               stroke={s.c}
-              strokeWidth={1.5}
+              strokeWidth={1.2}
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.12 }}

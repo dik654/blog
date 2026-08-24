@@ -96,6 +96,19 @@ m_{\mathrm{correct}}(x)&=(p(x)-q(x))_+ \\
 m_{\mathrm{out}}(x)&=m_{\mathrm{accept}}(x)+m_{\mathrm{correct}}(x) \\
 &=p(x)
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+a(x)&=\underbrace{\min\!\left(1,\frac{p(x)}{q(x)}\right)}_{\text{기준량당 비율}} \\
+r(x)&=\underbrace{\frac{(p(x)-q(x))_+}{\sum_z (p(z)-q(z))_+}}_{\text{기준량당 비율}} \\
+m_{\mathrm{accept}}(x)&=\underbrace{\min(p(x),q(x))}_{\text{경계 후보 선택}} \\
+m_{\mathrm{correct}}(x)&=(p(x)-q(x))_+ \\
+m_{\mathrm{out}}(x)&=m_{\mathrm{accept}}(x)+m_{\mathrm{correct}}(x) \\
+&=p(x)
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\min\!\left(1,\frac{p(x)}{q(x)}\right)`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Draft가 token x를 낼 확률 q(x) 에","acceptance probability를 곱하면 두 모델이","공통으로 가진 확률 질량 min(p(x),q(x)) 만 먼저"] },
+          { expression: String.raw`\frac{(p(x)-q(x))_+}{\sum_z (p(z)-q(z))_+}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Draft가 token x를 낼 확률 q(x) 에","acceptance probability를 곱하면 두 모델이","공통으로 가진 확률 질량 min(p(x),q(x)) 만 먼저"] },
+          { expression: String.raw`\min(p(x),q(x))`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","Draft가 token x를 낼 확률 q(x) 에","acceptance probability를 곱하면 두 모델이","공통으로 가진 확률 질량 min(p(x),q(x)) 만 먼저"] },
+        ]}
         terms={REJECTION_TERMS}
         assumptions={[
           "p와 q는 같은 vocabulary와 같은 이미 확정된 prefix를 조건으로 한 normalized distribution입니다.",
@@ -155,6 +168,17 @@ I_i &= \prod_{j=1}^{i}R_j \\
 A &= \sum_{i=1}^{K} I_i \\
 \mathbb{E}[A] &= \sum_{i=1}^{K}\Pr(A\ge i)
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+R_j &\in \{0,1\} \\
+I_i &= \underbrace{\prod_{j=1}^{i}R_j}_{\text{오른쪽 항으로 결과 계산}} \\
+A &= \underbrace{\sum_{i=1}^{K} I_i}_{\text{오른쪽 항으로 결과 계산}} \\
+\mathbb{E}[A] &= \underbrace{\sum_{i=1}^{K}\Pr(A\ge i)}_{\text{확률 가중 평균}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\prod_{j=1}^{i}R_j`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","i번째 draft가 개별적으로 맞았는지만 세면 안 됩니다."] },
+          { expression: String.raw`\sum_{i=1}^{K} I_i`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","i번째 draft가 개별적으로 맞았는지만 세면 안 됩니다."] },
+          { expression: String.raw`\sum_{i=1}^{K}\Pr(A\ge i)`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","i번째 draft가 개별적으로 맞았는지만 세면 안 됩니다."] },
+        ]}
         terms={PREFIX_TERMS}
         assumptions={[
           "수락은 왼쪽부터 확인하며 첫 거부에서 draft prefix가 끝납니다.",

@@ -245,7 +245,7 @@ export function Step2() {
         x2={pathX}
         y2={42}
         stroke={C.parse}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         strokeDasharray="4 3"
         opacity={0.25}
         initial={{ pathLength: 0 }}

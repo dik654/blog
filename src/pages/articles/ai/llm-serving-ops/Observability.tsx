@@ -101,6 +101,10 @@ export default function Observability() {
           </>
         }
         formula={String.raw`r_{\mathrm{burn}}=\frac{N_{\mathrm{bad}}/N_{\mathrm{total}}}{1-S_{\mathrm{SLO}}}`}
+        annotatedFormula={String.raw`r_{\mathrm{burn}}=\underbrace{\frac{N_{\mathrm{bad}}/N_{\mathrm{total}}}{1-S_{\mathrm{SLO}}}}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`\frac{N_{\mathrm{bad}}/N_{\mathrm{total}}}{1-S_{\mathrm{SLO}}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","SLO가 허용하는 실패 비율은 1−SLO입니다."] },
+        ]}
         terms={[
           {
             symbol: "N_{\\mathrm{bad}}",
@@ -157,6 +161,16 @@ export default function Observability() {
 \Delta_{\mathrm{before}}&=S_{\mathrm{canary,before}}-S_{\mathrm{control,before}}\\
 \Delta_{\mathrm{effect}}&=\Delta_{\mathrm{after}}-\Delta_{\mathrm{before}}
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+\Delta_{\mathrm{after}}&=\underbrace{S_{\mathrm{canary,after}}-S_{\mathrm{control,after}}}_{\text{변화량 계산}}\\
+\Delta_{\mathrm{before}}&=\underbrace{S_{\mathrm{canary,before}}-S_{\mathrm{control,before}}}_{\text{변화량 계산}}\\
+\Delta_{\mathrm{effect}}&=\underbrace{\Delta_{\mathrm{after}}-\Delta_{\mathrm{before}}}_{\text{변화량 계산}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`S_{\mathrm{canary,after}}-S_{\mathrm{control,after}}`, annotation: ["비교할 SLI이(가) 식의 결과에 기여하는 방식을 계산합니다.","변경 전후의 SLI 차이에서 자연 변동과 workload","mix 변화를 분리합니다."] },
+          { expression: String.raw`S_{\mathrm{canary,before}}-S_{\mathrm{control,before}}`, annotation: ["비교할 SLI이(가) 식의 결과에 기여하는 방식을 계산합니다.","변경 전후의 SLI 차이에서 자연 변동과 workload","mix 변화를 분리합니다."] },
+          { expression: String.raw`\Delta_{\mathrm{after}}-\Delta_{\mathrm{before}}`, annotation: ["인접한 level의 차이를 남겨 변화량을 계산합니다.","변경 전후의 SLI 차이에서 자연 변동과 workload","mix 변화를 분리합니다."] },
+        ]}
         terms={[
           {
             symbol: "S",

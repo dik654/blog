@@ -182,7 +182,7 @@ export default function KVMIoctlViz() {
               rx={6}
               fill={`${C.amber}12`}
               stroke={C.amber}
-              strokeWidth={1.3}
+              strokeWidth={1.2}
             />
             <text
               x={150}
@@ -212,7 +212,7 @@ export default function KVMIoctlViz() {
               rx={6}
               fill={`${C.amber}15`}
               stroke={C.amber}
-              strokeWidth={1.5}
+              strokeWidth={1.2}
             />
             <text
               x={300}
@@ -242,7 +242,7 @@ export default function KVMIoctlViz() {
               rx={6}
               fill={`${C.indigo}12`}
               stroke={C.indigo}
-              strokeWidth={1.3}
+              strokeWidth={1.2}
             />
             <text
               x={440}

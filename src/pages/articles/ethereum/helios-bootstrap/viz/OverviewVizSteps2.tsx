@@ -106,7 +106,7 @@ export function Step3() {
           r={6}
           fill={C.checkpoint}
           stroke="var(--card)"
-          strokeWidth={2}
+          strokeWidth={1.2}
         />
         <text
           x={tlLeft}
@@ -132,7 +132,7 @@ export function Step3() {
           x2={safeEnd}
           y2={tlY + 18}
           stroke={C.trust}
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           strokeDasharray="3 2"
         />
         <text
@@ -168,7 +168,7 @@ export function Step3() {
           x2={maxEnd}
           y2={tlY + 18}
           stroke={C.danger}
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           strokeDasharray="3 2"
         />
         <text
@@ -489,7 +489,7 @@ export function Step4() {
           r={24}
           fill="var(--card)"
           stroke={C.checkpoint}
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         {/* 내부 원 */}
         <circle
@@ -532,7 +532,7 @@ export function Step4() {
           x2={centerX + 60}
           y2={centerY}
           stroke={C.helios}
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#arrowSrc)"
         />
         <ModuleBox

@@ -41,6 +41,11 @@ export default function QKVComputation({
           </>
         }
         formula={String.raw`\begin{aligned}A&=\operatorname{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}+M\right)\\Y&=AV\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}A&=\underbrace{\operatorname{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}+M\right)}_{\text{선택 비율 정규화}}\\Y&=\underbrace{AV}_{\text{mixed values 계산}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`\operatorname{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}+M\right)`, annotation: ["score를 합이 1인 선택 비율로 정규화합니다.","QKᵀ score에 additive mask를 더한 뒤","row별 softmax를 적용합니다."] },
+          { expression: String.raw`AV`, annotation: ["mixed values이(가) 식의 결과에 기여하는 방식을","계산합니다.","QKᵀ score에 additive mask를 더한 뒤","row별 softmax를 적용합니다."] },
+        ]}
         terms={[
           {
             symbol: "Q,K,V",
@@ -85,6 +90,11 @@ export default function QKVComputation({
           </>
         }
         formula={String.raw`\begin{aligned}\operatorname{cost}_{\mathrm{attn}}&=O(n^2d)\\\operatorname{memory}_{\mathrm{scores}}&=O(n^2)\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}\operatorname{cost}_{\mathrm{attn}}&=\underbrace{O(n^2d)}_{\text{pair count 계산}}\\\operatorname{memory}_{\mathrm{scores}}&=\underbrace{O(n^2)}_{\text{pair count 계산}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`O(n^2d)`, annotation: ["pair count이(가) 식의 결과에 기여하는 방식을","계산합니다.","Query n개가 key n개를 모두 비교하면 QKᵀ와","attention probability가 n×n입니다."] },
+          { expression: String.raw`O(n^2)`, annotation: ["pair count이(가) 식의 결과에 기여하는 방식을","계산합니다.","Query n개가 key n개를 모두 비교하면 QKᵀ와","attention probability가 n×n입니다."] },
+        ]}
         terms={[
           {
             symbol: "n",

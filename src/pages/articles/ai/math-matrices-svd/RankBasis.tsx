@@ -23,6 +23,10 @@ export default function RankBasis() {
         question="Column이 두 개여도 rank가 1일 수 있는 이유를 어떻게 확인할까요?"
         idea={<>둘째 column이 첫째 column의 두 배라면 어느 input을 넣어도 output은 첫째 column이 가리키는 직선 위에서만 움직입니다. 독립적으로 조절할 수 있는 output 방향은 하나뿐입니다.</>}
         formula={String.raw`A=\begin{bmatrix}1&2\\2&4\end{bmatrix}=\begin{bmatrix}1\\2\end{bmatrix}\begin{bmatrix}1&2\end{bmatrix},\qquad \operatorname{rank}(A)=1`}
+        annotatedFormula={String.raw`A=\begin{bmatrix}\underbrace{1}_{\text{independent directions 계산}}&2\\2&4\end{bmatrix}=\begin{bmatrix}1\\2\end{bmatrix}\begin{bmatrix}1&2\end{bmatrix},\qquad \operatorname{rank}(A)=1`}
+        operations={[
+          { expression: String.raw`1`, annotation: ["independent directions이(가) 식의 결과에","기여하는 방식을 계산합니다.","둘째 column이 첫째 column의 두 배라면 어느","input을 넣어도 output은 첫째 column이 가리키는"] },
+        ]}
         terms={[
           { symbol: "A", name: "rank-one matrix", description: "Column 두 개가 있지만 두 번째가 첫 번째의 2배인 matrix입니다." },
           { symbol: "uv^\\top", name: "outer product", description: "Column vector u와 row vector vᵀ의 곱으로 한 방향의 row·column pattern을 만듭니다." },

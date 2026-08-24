@@ -20,6 +20,11 @@ export default function DutyAssignment({ onCodeRef }: { onCodeRef: (key: string,
         question="Slot 안의 특정 protocol action을 언제 시작하고 언제 포기해야 할까요?"
         idea="Genesis time에서 slot 길이만큼 이동해 slot 시작을 계산하고, 규격이 정한 phase fraction을 더해 action deadline을 만듭니다. Network·clock 여유를 빼 실제 local cutoff를 둡니다."
         formula={String.raw`\begin{aligned}t_{action}&=t_{genesis}+sT_{slot}+\alpha T_{slot}\\t_{cutoff}&=t_{action}-\delta\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}t_{action}&=\underbrace{t_{genesis}+sT_{slot}+\alpha T_{slot}}_{\text{슬롯 길이 계산}}\\t_{cutoff}&=\underbrace{t_{action}-\delta}_{\text{안전 여유 계산}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`t_{genesis}+sT_{slot}+\alpha T_{slot}`, annotation: ["슬롯 길이이(가) 식의 결과에 기여하는 방식을 계산합니다.","Genesis time에서 slot 길이만큼 이동해 slot","시작을 계산하고, 규격이 정한 phase fraction을","더해 action deadline을 만듭니다."] },
+          { expression: String.raw`t_{action}-\delta`, annotation: ["안전 여유이(가) 식의 결과에 기여하는 방식을 계산합니다.","Genesis time에서 slot 길이만큼 이동해 slot","시작을 계산하고, 규격이 정한 phase fraction을","더해 action deadline을 만듭니다."] },
+        ]}
         terms={[
           { symbol: "s", name: "슬롯 번호", description: "genesis부터 센 slot index(slot 단위)" },
           { symbol: "T_{slot}", name: "슬롯 길이", description: "해당 network configuration의 slot duration(초)" },

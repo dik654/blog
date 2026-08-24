@@ -87,7 +87,7 @@ export default function CompressionStep0() {
         rx={14}
         fill={`${C3}08`}
         stroke={C3}
-        strokeWidth={1.4}
+        strokeWidth={1.2}
       />
       <text
         x={510}
@@ -107,7 +107,7 @@ export default function CompressionStep0() {
       </text>
 
       {/* Arrow to output */}
-      <line x1={650} y1={cy} x2={720} y2={cy} stroke={C3} strokeWidth={1.4} />
+      <line x1={650} y1={cy} x2={720} y2={cy} stroke={C3} strokeWidth={1.2} />
 
       {/* Output */}
       <rect

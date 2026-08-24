@@ -50,7 +50,7 @@ export default function HUKDeriveViz() {
                     x2={160}
                     y2={n.y}
                     stroke={done || active ? n.color : "var(--border)"}
-                    strokeWidth={1.5}
+                    strokeWidth={1.2}
                     strokeDasharray="4,3"
                     initial={{ pathLength: 0 }}
                     animate={{ pathLength: 1 }}

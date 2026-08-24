@@ -26,6 +26,10 @@ export default function Lag() {
         question="같은 entity의 k번째 이전 관측값을 현재 forecasting row에 어떻게 붙일까?"
         idea={<>Entity별로 유효한 record를 시간순으로 정렬한 뒤 현재 index n보다 k칸 앞의 값을 선택합니다. Difference는 두 확정된 lag level을 빼 level보다 변화를 강조합니다.</>}
         formula={String.raw`\operatorname{lag}_k(i,n)=y_{i,n-k},\qquad \Delta_k y_{i,n}=y_{i,n}-y_{i,n-k}`}
+        annotatedFormula={String.raw`\operatorname{lag}_k(i,n)=\underbrace{y_{i,n-k},\qquad \Delta_k y_{i,n}=y_{i,n}-y_{i,n-k}}_{\text{변화량 계산}}`}
+        operations={[
+          { expression: String.raw`y_{i,n-k},\qquad \Delta_k y_{i,n}=y_{i,n}-y_{i,n-k}`, annotation: ["인접한 level의 차이를 남겨 변화량을 계산합니다.","Entity별로 유효한 record를 시간순으로 정렬한 뒤","현재 index n보다"] },
+        ]}
         terms={[
           { symbol: "i", name: "entity", description: "Lag가 다른 매장·사용자·sensor history로 넘어가지 않게 하는 group key입니다." },
           { symbol: "n", name: "ordered observation index", description: "Event/available-time 정책으로 정렬하고 중복을 처리한 뒤의 entity 내부 순서입니다." },

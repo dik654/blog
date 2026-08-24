@@ -136,7 +136,7 @@ export default function TDXQuoteViz() {
                 x2={50}
                 y2={140}
                 stroke="#f59e0b"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <polygon points="55,137 50,140 55,143" fill="#f59e0b" />
               <text

@@ -25,6 +25,10 @@ export default function Montgomery() {
         question="T를 p로 직접 나누지 않고 T·R⁻¹ mod p를 어떻게 구할까요?"
         idea="p′=-p⁻¹ mod R를 미리 계산하고, T+mp의 하위 log₂R bits가 모두 0이 되게 m을 고릅니다. 그러면 /R은 exact shift이고 p의 배수를 더했으므로 mod p 값은 보존됩니다."
         formula={String.raw`m=(T p')\bmod R,\qquad \operatorname{REDC}(T)=\frac{T+mp}{R}\pmod p`}
+        annotatedFormula={String.raw`m=\underbrace{(T p')\bmod R,\qquad \operatorname{REDC}(T)=\frac{T+mp}{R}\pmod p}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`(T p')\bmod R,\qquad \operatorname{REDC}(T)=\frac{T+mp}{R}\pmod p`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","p′=-p⁻¹ mod R를 미리 계산하고, T+mp의 하위","log₂R bits가 모두 0이 되게 m을 고릅니다."] },
+        ]}
         terms={[
           { symbol: "T", name: "wide product", description: "보통 두 L-limb 내부 값의 최대 2L-limb 곱입니다." },
           { symbol: "R", name: "radix power", description: "2^(word bits×limb count)라 division이 shift가 되는 값입니다." },

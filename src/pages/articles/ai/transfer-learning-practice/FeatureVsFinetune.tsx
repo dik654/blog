@@ -25,6 +25,12 @@ export default function FeatureVsFinetune() {
         question="더 큰 fine-tuning scope가 실제로 baseline보다 나아졌는지 seed 불확실성과 함께 어떻게 표시할까?"
         idea={<>같은 split에서 candidate와 fixed baseline의 metric 차이를 seed마다 계산하고, 그 paired differences의 평균과 표준오차를 봅니다. 독립 평균 두 개보다 공통 seed·data 조건의 차이를 직접 비교합니다.</>}
         formula={String.raw`\begin{aligned}d_s&=M_s^{\mathrm{candidate}}-M_s^{\mathrm{fixed}},\\\bar d&=\frac1S\sum_{s=1}^{S}d_s,\\\operatorname{SE}(\bar d)&=\frac{\operatorname{sd}(d_1,\ldots,d_S)}{\sqrt S}.\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}d_s&=\underbrace{M_s^{\mathrm{candidate}}-M_s^{\mathrm{fixed}},}_{\text{paired gain 계산}}\\\bar d&=\underbrace{\frac1S\sum_{s=1}^{S}d_s,}_{\text{paired gain 계산}}\\\operatorname{SE}(\bar d)&=\underbrace{\frac{\operatorname{sd}(d_1,\ldots,d_S)}{\sqrt S}.}_{\text{기준량당 비율}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`M_s^{\mathrm{candidate}}-M_s^{\mathrm{fixed}},`, annotation: ["paired gain이(가) 식의 결과에 기여하는 방식을","계산합니다.","같은 split에서 candidate와 fixed","baseline의 metric 차이를 seed마다"] },
+          { expression: String.raw`\frac1S\sum_{s=1}^{S}d_s,`, annotation: ["paired gain이(가) 식의 결과에 기여하는 방식을","계산합니다.","같은 split에서 candidate와 fixed","baseline의 metric 차이를 seed마다"] },
+          { expression: String.raw`\frac{\operatorname{sd}(d_1,\ldots,d_S)}{\sqrt S}.`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","같은 split에서 candidate와 fixed","baseline의 metric 차이를 seed마다"] },
+        ]}
         terms={[
           { symbol: "d_s", name: "paired gain", description: "Seed s의 같은 split·budget에서 candidate가 fixed baseline보다 얻은 metric 차이입니다." },
           { symbol: "S", name: "replicate count", description: "독립 초기화·sampling seed로 반복한 실험 수입니다." },

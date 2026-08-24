@@ -78,6 +78,10 @@ export default function OAuth() {
           question="Authorization server가 원래 login을 시작한 CLI인지 어떻게 확인할까?"
           idea={<>CLI가 추측하기 어려운 verifier를 먼저 만들고, 그 원문 대신 SHA-256 digest를 URL-safe 문자열로 바꾼 challenge만 authorization request에 보냅니다. Token 교환 때 verifier를 제출하면 server가 같은 변환을 다시 계산해 비교합니다.</>}
           formula={String.raw`\operatorname{challenge}=\operatorname{BASE64URL}\!\left(\operatorname{SHA256}\!\left(\operatorname{ASCII}(\operatorname{verifier})\right)\right)`}
+          annotatedFormula={String.raw`\operatorname{challenge}=\underbrace{\operatorname{BASE64URL}\!\left(\operatorname{SHA256}\!\left(\operatorname{ASCII}(\operatorname{verifier})\right)\right)}_{\text{허용 경계 판정}}`}
+          operations={[
+            { expression: String.raw`\operatorname{BASE64URL}\!\left(\operatorname{SHA256}\!\left(\operatorname{ASCII}(\operatorname{verifier})\right)\right)`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","CLI가 추측하기 어려운 verifier를 먼저 만들고, 그","원문 대신 SHA-256 digest를 URL-safe","문자열로 바꾼 challenge만 authorization"] },
+          ]}
           terms={[
             { symbol: "verifier", name: "code verifier", description: "각 login attempt마다 CSPRNG로 새로 만든 비밀 문자열입니다." },
             { symbol: "SHA256", name: "one-way digest", description: "verifier를 256-bit digest로 바꾸며 challenge에서 원문을 되찾기 어렵게 합니다." },

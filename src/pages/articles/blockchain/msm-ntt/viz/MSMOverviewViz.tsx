@@ -37,7 +37,7 @@ export default function MSMOverviewViz() {
                     rx={4}
                     fill={C.msm + "18"}
                     stroke={C.msm}
-                    strokeWidth={1.5}
+                    strokeWidth={1.2}
                   />
                   <text
                     x={35 + i * 70}
@@ -84,7 +84,7 @@ export default function MSMOverviewViz() {
                   rx={8}
                   fill={C.msm + "20"}
                   stroke={C.msm}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={200}
@@ -152,7 +152,7 @@ export default function MSMOverviewViz() {
                 rx={8}
                 fill={C.ntt + "10"}
                 stroke={C.ntt}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={197}
@@ -188,7 +188,7 @@ export default function MSMOverviewViz() {
                     rx={4}
                     fill={C.ntt + "20"}
                     stroke={C.ntt}
-                    strokeWidth={1.5}
+                    strokeWidth={1.2}
                   />
                   <text
                     x={290}

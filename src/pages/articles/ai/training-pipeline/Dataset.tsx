@@ -48,6 +48,12 @@ export default function Dataset() {
         question="한 training step에서 accelerator가 데이터를 기다린 비율과 실제 처리량을 어떻게 구할까?"
         idea={<>Step 시간을 batch 대기와 device 계산으로 나눕니다. 대기 비율이 크면서 accelerator utilization이 낮다면 model보다 input path를 먼저 최적화할 근거가 됩니다.</>}
         formula={String.raw`\begin{aligned}t_{\mathrm{step}}&=t_{\mathrm{wait}}+t_{\mathrm{compute}},\\r_{\mathrm{wait}}&=\frac{t_{\mathrm{wait}}}{t_{\mathrm{step}}},\\Q&=\frac{N_{\mathrm{samples}}}{\sum t_{\mathrm{step}}}.\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}t_{\mathrm{step}}&=\underbrace{t_{\mathrm{wait}}+t_{\mathrm{compute}},}_{\text{오른쪽 항으로 결과 계산}}\\r_{\mathrm{wait}}&=\underbrace{\frac{t_{\mathrm{wait}}}{t_{\mathrm{step}}},}_{\text{기준량당 비율}}\\Q&=\underbrace{\frac{N_{\mathrm{samples}}}{\sum t_{\mathrm{step}}}.}_{\text{항별 기여 누적}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`t_{\mathrm{wait}}+t_{\mathrm{compute}},`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Step 시간을 batch 대기와 device 계산으로","나눕니다."] },
+          { expression: String.raw`\frac{t_{\mathrm{wait}}}{t_{\mathrm{step}}},`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Step 시간을 batch 대기와 device 계산으로","나눕니다."] },
+          { expression: String.raw`\frac{N_{\mathrm{samples}}}{\sum t_{\mathrm{step}}}.`, annotation: ["index마다","Step 시간을 batch 대기와 device 계산으로","나눕니다."] },
+        ]}
         terms={[
           { symbol: "t_wait", name: "data wait time", description: "다음 batch가 준비되기를 training process가 기다린 wall-clock 시간입니다." },
           { symbol: "t_compute", name: "device compute time", description: "Device copy·forward·backward·update를 측정 범위에 맞춰 포함한 시간입니다." },

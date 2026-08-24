@@ -58,7 +58,7 @@ function Airflow() {
       <motion.path
         d="M25 151 H147"
         stroke={C.u2}
-        strokeWidth={5}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
       />
@@ -83,7 +83,7 @@ function Airflow() {
       <motion.path
         d="M318 151 H456"
         stroke={C.e1s}
-        strokeWidth={5}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
       />
@@ -179,7 +179,7 @@ function Families() {
       <motion.path
         d="M125 139 H355"
         stroke={C.ok}
-        strokeWidth={2}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
       />

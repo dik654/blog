@@ -74,6 +74,10 @@ export default function ModernCurveStableArticle() {
           question="n개 자산 StableSwap invariant에서 어떤 값이 swap 전후 보존될까요?"
           idea="정규화 잔액의 합과 곱을 A로 결합해 invariant D를 정합니다. Swap은 입력 후 잔액에서 같은 D를 만족하는 출력 잔액을 반복법으로 구합니다."
           formula={String.raw`A n^n\sum_i x_i+D=A D n^n+\frac{D^{n+1}}{n^n\prod_i x_i}`}
+          annotatedFormula={String.raw`A n^n\sum_i x_i+D=\underbrace{A D n^n+\frac{D^{n+1}}{n^n\prod_i x_i}}_{\text{기준량당 비율}}`}
+          operations={[
+            { expression: String.raw`A D n^n+\frac{D^{n+1}}{n^n\prod_i x_i}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","정규화 잔액의 합과 곱을 A로 결합해 invariant D를","정합니다."] },
+          ]}
           terms={[
             {
               symbol: "xᵢ",

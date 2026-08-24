@@ -744,7 +744,7 @@ export function Step1() {
         x2={268}
         y2={y2 + 36}
         stroke={C.cache}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         markerEnd="url(#ovArrowCache)"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}

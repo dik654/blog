@@ -41,7 +41,7 @@ export default function VmFlowViz() {
             x2={350}
             y2={70}
             stroke="var(--border)"
-            strokeWidth={1.5}
+            strokeWidth={1.2}
           />
 
           {/* Stage nodes */}
@@ -131,7 +131,7 @@ export default function VmFlowViz() {
               rx={8}
               fill="none"
               stroke="#10b981"
-              strokeWidth={1.5}
+              strokeWidth={1.2}
               strokeDasharray="5,3"
               initial={{ opacity: 0 }}
               animate={{ opacity: 0.6 }}

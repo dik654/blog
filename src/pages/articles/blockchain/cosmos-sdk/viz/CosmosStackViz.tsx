@@ -61,7 +61,7 @@ export default function CosmosStackViz() {
                   rx={6}
                   fill={`${l.color}15`}
                   stroke={l.color}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                   animate={{ scale: active ? 1 : 0.97 }}
                   style={{
                     transformOrigin: `${LX + W / 2}px ${l.y + LH / 2}px`,
@@ -86,7 +86,7 @@ export default function CosmosStackViz() {
                     x2={LX + W / 2}
                     y2={l.y + LH + 8}
                     stroke={l.color}
-                    strokeWidth={1.5}
+                    strokeWidth={1.2}
                     opacity={0.4}
                   />
                 )}

@@ -62,6 +62,10 @@ export default function Architecture({
           </>
         }
         formula={String.raw`P_{\mathrm{basic}}=2(3^2C^2)=18C^2`}
+        annotatedFormula={String.raw`P_{\mathrm{basic}}=\underbrace{2(3^2C^2)=18C^2}_{\text{BasicBlock parameter 계산}}`}
+        operations={[
+          { expression: String.raw`2(3^2C^2)=18C^2`, annotation: ["BasicBlock parameter이(가) 식의 결과에","기여하는 방식을 계산합니다.","Bias를 생략한 convolution parameter는","kernel area×input channel×output"] },
+        ]}
         terms={[
           {
             symbol: "C",
@@ -91,6 +95,11 @@ export default function Architecture({
           </>
         }
         formula={String.raw`\begin{aligned}P_{\mathrm{bottle}}&=CB+9B^2+BC\\&=2CB+9B^2\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}P_{\mathrm{bottle}}&=\underbrace{CB+9B^2+BC}_{\text{3×3 spatial mixing 계산}}\\&=\underbrace{2CB+9B^2}_{\text{3×3 spatial mixing 계산}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`CB+9B^2+BC`, annotation: ["3×3 spatial mixing이(가) 식의 결과에 기여하는","방식을 계산합니다.","첫 1×1은 C에서 B로 channel을 줄이고, 3×3은 더","작은 B width에서 spatial mixing을 수행한 뒤"] },
+          { expression: String.raw`2CB+9B^2`, annotation: ["3×3 spatial mixing이(가) 식의 결과에 기여하는","방식을 계산합니다.","첫 1×1은 C에서 B로 channel을 줄이고, 3×3은 더","작은 B width에서 spatial mixing을 수행한 뒤"] },
+        ]}
         terms={[
           {
             symbol: "C",

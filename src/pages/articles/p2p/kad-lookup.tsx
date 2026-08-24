@@ -49,6 +49,10 @@ export default function KadLookupArticle() {
           question="한 round 뒤 유지할 shortlist를 어떻게 결정할까?"
           idea="기존 후보와 검증된 응답 후보를 합치고 ID 중복을 제거한 뒤 target과의 XOR 거리로 정렬해 앞의 k개만 남긴다."
           formula={String.raw`S_{r+1}=\operatorname{Take}_k\!\left(\operatorname{sort}_{d(\cdot,t)}\left(\operatorname{unique}(S_r\cup R_r)\right)\right)`}
+          annotatedFormula={String.raw`S_{r+1}=\underbrace{\operatorname{Take}_k\!\left(\operatorname{sort}_{d(\cdot,t)}\left(\operatorname{unique}(S_r\cup R_r)\right)\right)}_{\text{허용 경계 판정}}`}
+          operations={[
+            { expression: String.raw`\operatorname{Take}_k\!\left(\operatorname{sort}_{d(\cdot,t)}\left(\operatorname{unique}(S_r\cup R_r)\right)\right)`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","기존 후보와 검증된 응답 후보를 합치고 ID 중복을 제거한 뒤","target과의 XOR 거리로 정렬해 앞의 k개만 남긴다."] },
+          ]}
           terms={[
             { symbol: "S_r", name: "Shortlist", description: "round r 시작 때의 shortlist와 후보 상태" },
             { symbol: "R_r", name: "Validated responses", description: "이번 round 응답에서 검증을 통과한 후보 집합" },

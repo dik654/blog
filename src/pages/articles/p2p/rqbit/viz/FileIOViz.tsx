@@ -67,7 +67,7 @@ export default function FileIOViz() {
             x2={330}
             y2={LAYERS[Math.min(step, 3)].y + 14}
             stroke={LAYERS[Math.min(step, 3)].color}
-            strokeWidth={2.5}
+            strokeWidth={1.2}
             markerEnd="url(#ah4)"
             initial={{ pathLength: 0 }}
             animate={{ pathLength: 1 }}

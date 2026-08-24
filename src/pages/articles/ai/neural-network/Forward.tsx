@@ -19,6 +19,11 @@ export default function Forward() {
         question="B개 sample을 Dᵢₙ차원에서 Dₒᵤₜ차원으로 한 번에 어떻게 옮길까?"
         idea={<>Input feature 축 Dᵢₙ을 weight의 첫 축과 contraction하고, output feature 축 Dₒᵤₜ을 남깁니다. Bias는 batch마다 복사하지 않고 마지막 축에 broadcast합니다.</>}
         formula={String.raw`\begin{aligned}X&\in\mathbb R^{B\times D_{\rm in}}\\W&\in\mathbb R^{D_{\rm in}\times D_{\rm out}},\quad b\in\mathbb R^{D_{\rm out}}\\Z&=XW+b\in\mathbb R^{B\times D_{\rm out}}\\A&=\phi(Z)\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}X&\in\mathbb R^{B\times D_{\rm in}}\\W&\in\mathbb R^{D_{\rm in}\times D_{\rm out}},\quad b\in\mathbb R^{D_{\rm out}}\\Z&=\underbrace{XW+b\in\mathbb R^{B\times D_{\rm out}}}_{\text{output width 계산}}\\A&=\underbrace{\phi(Z)}_{\text{오른쪽 항으로 결과 계산}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`XW+b\in\mathbb R^{B\times D_{\rm out}}`, annotation: ["output width이(가) 식의 결과에 기여하는 방식을","계산합니다.","Input feature 축 Dᵢₙ을 weight의 첫 축과","contraction하고, output feature 축"] },
+          { expression: String.raw`\phi(Z)`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Input feature 축 Dᵢₙ을 weight의 첫 축과","contraction하고, output feature 축","Dₒᵤₜ을 남깁니다."] },
+        ]}
         terms={[
           { symbol: "B", name: "batch size", description: "같은 parameter로 함께 처리하는 sample 수입니다." },
           { symbol: "D_{\\rm in}", name: "input width", description: "이 layer가 받는 representation dimension입니다." },

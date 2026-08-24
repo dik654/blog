@@ -61,6 +61,10 @@ export default function ModernDAArticle() {
           question="EIP-4844 blob 하나의 payload byte 수는 어떻게 계산하는가?"
           idea={<>Blob은 4,096개의 field element slot으로 구성되고 각 slot은 32 bytes입니다. 두 protocol 상수를 곱하면 131,072 bytes, 즉 128 KiB가 됩니다. 이는 임의 파일 128 KiB를 그대로 넣는다는 뜻이 아니라 각 field element의 canonical encoding 제약을 따릅니다.</>}
           formula={String.raw`B_{blob}=4096\;\text{elements}\times32\;\text{bytes/element}=131072\;\text{bytes}=128\;\text{KiB}`}
+          annotatedFormula={String.raw`B_{blob}=\underbrace{4096\;\text{elements}\times32\;\text{bytes/element}=131072\;\text{bytes}=128\;\text{KiB}}_{\text{기준량당 비율}}`}
+          operations={[
+            { expression: String.raw`4096\;\text{elements}\times32\;\text{bytes/element}=131072\;\text{bytes}=128\;\text{KiB}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Blob은 4,096개의 field element slot으로","구성되고 각 slot은 32 bytes입니다."] },
+          ]}
           terms={[
             { symbol: "B_{blob}", name: "Blob byte length", description: "EIP-4844 blob 한 개의 고정 serialized byte 길이입니다." },
             { symbol: "4096", name: "Field elements", description: "FIELD_ELEMENTS_PER_BLOB로 정한 slot 개수입니다." },
@@ -151,6 +155,10 @@ export default function ModernDAArticle() {
           question="전체의 f 비율이 숨겨졌을 때 s번 표본이 모두 숨김을 놓칠 확률은 얼마인가?"
           idea={<>한 번의 uniform sample이 숨겨지지 않은 영역에 떨어질 확률은 1-f입니다. 같은 조건에서 독립적으로 s번 모두 놓칠 확률은 이를 s번 곱합니다. f=1/2, s=10인 toy model에서는 1/2의 10제곱, 즉 1/1,024입니다.</>}
           formula={String.raw`P_{miss}=(1-f)^s,\qquad f=\tfrac12,\;s=10 \Rightarrow P_{miss}=\tfrac1{1024}\approx0.0977\%`}
+          annotatedFormula={String.raw`P_{miss}=\underbrace{(1-f)^s,\qquad f=\tfrac12,\;s=10 \Rightarrow P_{miss}=\tfrac1{1024}\approx0.0977\%}_{\text{Miss probability 계산}}`}
+          operations={[
+            { expression: String.raw`(1-f)^s,\qquad f=\tfrac12,\;s=10 \Rightarrow P_{miss}=\tfrac1{1024}\approx0.0977\%`, annotation: ["Miss probability이(가) 식의 결과에 기여하는","방식을 계산합니다.","한 번의 uniform sample이 숨겨지지 않은 영역에","떨어질 확률은 1-f입니다."] },
+          ]}
           terms={[
             { symbol: "f", name: "Hidden fraction", description: "Reconstruction을 막으려고 공격자가 숨겨야 한다고 모델링한 전체 cell 비율입니다." },
             { symbol: "s", name: "Sample count", description: "Uniform·independent하다고 가정한 표본 요청 횟수입니다." },

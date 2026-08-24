@@ -351,7 +351,7 @@ export default function HumanPhysicalSecViz() {
                 d="M 20 100 L 50 100"
                 fill="none"
                 stroke={C.green}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 markerEnd="url(#hps-arrow)"
                 initial={{ pathLength: 0 }}
                 animate={{ pathLength: 1 }}
@@ -361,7 +361,7 @@ export default function HumanPhysicalSecViz() {
                 d="M 50 105 L 220 105"
                 fill="none"
                 stroke={C.amber}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 markerEnd="url(#hps-arrow)"
                 initial={{ pathLength: 0 }}
                 animate={{ pathLength: 1 }}

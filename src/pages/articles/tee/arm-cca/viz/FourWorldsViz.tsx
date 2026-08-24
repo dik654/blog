@@ -70,7 +70,7 @@ export default function FourWorldsViz() {
               fill={w.color}
               fillOpacity={0.15}
               stroke={w.color}
-              strokeWidth={1.5}
+              strokeWidth={1.2}
             />
             <text
               x={w.x + w.w / 2}

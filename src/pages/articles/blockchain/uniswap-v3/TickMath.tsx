@@ -13,6 +13,10 @@ export default function TickMath() {
         question="가격·tick·sqrtPriceX96은 어떻게 같은 상태를 표현할까요?"
         idea="로그 눈금이 곱셈 가격 변화를 정수 덧셈으로 바꾸고, 제곱근 fixed point가 amount 계산의 곱셈·나눗셈을 정수화합니다."
         formula={String.raw`P(i)=1.0001^i,\qquad \texttt{sqrtPriceX96}=\left\lfloor\sqrt P\,2^{96}\right\rfloor`}
+        annotatedFormula={String.raw`P(i)=\underbrace{1.0001^i,\qquad \texttt{sqrtPriceX96}=\left\lfloor\sqrt P\,2^{96}\right\rfloor}_{\text{허용 경계 판정}}`}
+        operations={[
+          { expression: String.raw`1.0001^i,\qquad \texttt{sqrtPriceX96}=\left\lfloor\sqrt P\,2^{96}\right\rfloor`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","로그 눈금이 곱셈 가격 변화를 정수 덧셈으로 바꾸고, 제곱근","fixed point가 amount 계산의 곱셈·나눗셈을","정수화합니다."] },
+        ]}
         terms={[
           { symbol: "i", name: "tick", description: "허용 범위 안의 signed integer price index입니다." },
           { symbol: "P", name: "token1/token0 price", description: "Raw token units 기준이며 decimals 보정 전일 수 있습니다." },
@@ -25,6 +29,10 @@ export default function TickMath() {
         question="현재 가격이 범위 안일 때 position의 두 token 양은 어떻게 계산할까요?"
         idea="Token0은 upper sqrt price까지 남은 역수 거리, token1은 lower에서 현재까지의 sqrt 거리와 비례합니다."
         formula={String.raw`x=L\frac{\sqrt{p_b}-\sqrt P}{\sqrt P\sqrt{p_b}},\qquad y=L(\sqrt P-\sqrt{p_a})`}
+        annotatedFormula={String.raw`x=\underbrace{L\frac{\sqrt{p_b}-\sqrt P}{\sqrt P\sqrt{p_b}},\qquad y=L(\sqrt P-\sqrt{p_a})}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`L\frac{\sqrt{p_b}-\sqrt P}{\sqrt P\sqrt{p_b}},\qquad y=L(\sqrt P-\sqrt{p_a})`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Token0은 upper sqrt price까지 남은 역수","거리, token1은 lower에서 현재까지의 sqrt 거리와","비례합니다."] },
+        ]}
         terms={[
           { symbol: "x", name: "token0 amount", description: "가격이 upper로 갈수록 0에 접근합니다." },
           { symbol: "y", name: "token1 amount", description: "가격이 lower에서 멀어질수록 증가합니다." },

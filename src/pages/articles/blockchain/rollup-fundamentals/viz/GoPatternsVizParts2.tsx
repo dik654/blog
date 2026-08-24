@@ -177,7 +177,7 @@ export function PointerRecvStep() {
         d="M170,55 L210,55"
         fill="none"
         stroke="#0ea5e9"
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         markerEnd="url(#go-arr)"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}

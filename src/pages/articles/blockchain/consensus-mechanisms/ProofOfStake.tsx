@@ -23,6 +23,10 @@ export default function ProofOfStake() {
         question="Stake 10·20·30·40인 네 validator의 단순 weighted lottery 확률은?"
         idea="Toy lottery에서는 각 validator의 stake를 전체 effective stake로 나눈 비율을 한 번의 선택 확률로 둡니다. 실제 protocol은 committee sampling·effective-balance cap·randomness 규칙을 더합니다."
         formula={String.raw`P(i)=\frac{s_i}{\sum_j s_j}`}
+        annotatedFormula={String.raw`P(i)=\underbrace{\frac{s_i}{\sum_j s_j}}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`\frac{s_i}{\sum_j s_j}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Toy lottery에서는 각 validator의 stake를","전체 effective stake로 나눈 비율을 한 번의 선택","확률로 둡니다."] },
+        ]}
         terms={[
           { symbol: "s_i", name: "validator stake", description: "Validator i에 protocol이 인정한 effective stake입니다." },
           { symbol: String.raw`\sum_j s_j`, name: "total stake", description: "해당 선택 집합에 참여한 전체 effective stake입니다." },

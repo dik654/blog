@@ -327,7 +327,7 @@ export default function MerkleTreePoRViz() {
                 fill={C.green}
                 fillOpacity={0.1}
                 stroke={C.green}
-                strokeWidth={2}
+                strokeWidth={1.2}
               />
               <text
                 x={60}

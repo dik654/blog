@@ -78,7 +78,7 @@ export default function RetentionDrillInline() {
                 x2={460}
                 y2={50}
                 stroke="var(--border)"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text x={40} y={40} fontSize={9} fill="var(--muted-foreground)">
                 0

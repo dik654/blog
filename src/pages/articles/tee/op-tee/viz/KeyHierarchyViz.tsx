@@ -36,7 +36,7 @@ export default function KeyHierarchyViz() {
                     x2={140}
                     y2={l.y}
                     stroke={i <= step ? l.color : "var(--border)"}
-                    strokeWidth={1.5}
+                    strokeWidth={1.2}
                     strokeDasharray="4,3"
                     animate={{ opacity: i <= step ? 1 : 0.2 }}
                   />

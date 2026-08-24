@@ -157,7 +157,7 @@ export default function RMPEntryViz() {
                 rx={6}
                 fill={`${C.indigo}12`}
                 stroke={C.indigo}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={440}

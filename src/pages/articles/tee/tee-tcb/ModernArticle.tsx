@@ -39,6 +39,10 @@ export default function ModernTcbArticle() {
           question="왜 같은 event 둘을 다른 순서로 측정하면 PCR 결과가 달라지는가?"
           idea={<>PCR extend는 기존 값과 새 event digest를 이어 붙여 다시 hash합니다. 따라서 단순 집합이 아니라 순서 있는 history를 접습니다.</>}
           formula={String.raw`\mathrm{PCR}_{i}=H\!\left(\mathrm{PCR}_{i-1}\,\|\,H(e_i)\right)`}
+          annotatedFormula={String.raw`\mathrm{PCR}_{i}=\underbrace{H\!\left(\mathrm{PCR}_{i-1}\,\|\,H(e_i)\right)}_{\text{허용 경계 판정}}`}
+          operations={[
+            { expression: String.raw`H\!\left(\mathrm{PCR}_{i-1}\,\|\,H(e_i)\right)`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","PCR extend는 기존 값과 새 event digest를","이어 붙여 다시 hash합니다."] },
+          ]}
           terms={[
             { symbol: "e_i", name: "i번째 event", description: "Firmware image·configuration·bootloader처럼 이번에 측정한 bytes 또는 정의된 event입니다." },
             { symbol: "H", name: "Cryptographic hash", description: "선택한 PCR bank의 hash algorithm입니다." },

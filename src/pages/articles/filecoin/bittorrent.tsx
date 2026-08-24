@@ -47,6 +47,10 @@ export default function BitTorrentArticle() {
           question="전체 길이 L을 piece 길이 P로 나누면 검증할 piece는 몇 개인가?"
           idea="앞쪽 piece는 같은 P byte로 자르고 마지막 remainder만 짧게 둔다. 따라서 나눗셈의 몫에 remainder가 있으면 한 piece를 더 세는 ceiling division이 필요하다."
           formula={String.raw`n_p=\left\lceil\frac{L}{P}\right\rceil`}
+          annotatedFormula={String.raw`n_p=\underbrace{\left\lceil\frac{L}{P}\right\rceil}_{\text{기준량당 비율}}`}
+          operations={[
+            { expression: String.raw`\left\lceil\frac{L}{P}\right\rceil`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","앞쪽 piece는 같은 P byte로 자르고 마지막","remainder만 짧게 둔다."] },
+          ]}
           terms={[
             { symbol: "L", name: "Payload length", description: "모든 파일을 이어 붙인 전체 payload 길이, 단위 byte" },
             { symbol: "P", name: "Piece length", description: "메타정보가 선언한 보통의 piece 길이, 단위 byte" },

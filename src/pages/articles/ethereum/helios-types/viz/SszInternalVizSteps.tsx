@@ -551,7 +551,7 @@ export function Step1() {
           rx={6}
           fill={`${C.merkle}28`}
           stroke={C.merkle}
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <text
           x={rootNode.x + (nodeW + 20) / 2}

@@ -24,7 +24,7 @@ export default function SignedPrincipalViz() {
           x2={420}
           y2={130}
           stroke="var(--foreground)"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
 
         {/* 0 마커 */}

@@ -40,6 +40,11 @@ export default function Overview() {
         question="Feature j의 값 x가 reference data에서 어느 순위에 놓였는가?"
         idea={<>Indicator가 조건을 만족한 sample만 1로 세고 전체 개수로 나눕니다. 오른쪽 ECDF는 <code>1−F(x)</code>가 아니라 <code>X≥x</code>를 직접 세어 tie에서 양쪽 정의를 대칭으로 유지합니다.</>}
         formula={String.raw`\begin{aligned}\widehat F_{j,L}(x)&=\frac{1}{n}\sum_{r=1}^{n}\mathbf 1[X_{rj}\le x]\\\widehat F_{j,R}(x)&=\frac{1}{n}\sum_{r=1}^{n}\mathbf 1[X_{rj}\ge x]\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}\widehat F_{j,L}(x)&=\underbrace{\frac{1}{n}\sum_{r=1}^{n}\mathbf 1[X_{rj}\le x]}_{\text{기준량당 비율}}\\\widehat F_{j,R}(x)&=\underbrace{\frac{1}{n}\sum_{r=1}^{n}\mathbf 1[X_{rj}\ge x]}_{\text{기준량당 비율}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`\frac{1}{n}\sum_{r=1}^{n}\mathbf 1[X_{rj}\le x]`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Indicator가 조건을 만족한 sample만 1로 세고","전체 개수로 나눕니다."] },
+          { expression: String.raw`\frac{1}{n}\sum_{r=1}^{n}\mathbf 1[X_{rj}\ge x]`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Indicator가 조건을 만족한 sample만 1로 세고","전체 개수로 나눕니다."] },
+        ]}
         terms={[
           { symbol: "X_{rj}", name: "reference value", description: "Reference row r의 feature j 값입니다." },
           { symbol: "n", name: "reference sample count", description: "ECDF를 구성하는 비교 집단의 row 수입니다." },

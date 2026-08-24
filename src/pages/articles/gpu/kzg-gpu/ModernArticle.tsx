@@ -20,7 +20,11 @@ export default function ModernKzgGpuArticle() {
     <section id="srs-residency" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">01 · SRS residency</p><h2 className="mt-2 text-2xl font-bold">SRS를 bytes로 cache하지 말고 curve·degree·digest·validation이 붙은 immutable artifact로 올린다</h2></header>
       <p>Structured reference string(SRS)은 [τ⁰]G,[τ¹]G,… points입니다. Loader는 외부 encoding을 해석하고 point-on-curve·subgroup·길이와 digest를 확인한 뒤 backend 내부 point layout으로 변환합니다. 외부 compressed bytes와 device Jacobian/affine bytes는 다르므로 고정 GB 수치를 encoding 설명 없이 일반화하지 않습니다.</p>
-      <ExplainedFormula question="고정 SRS와 한 KZG job의 peak live bytes를 어떻게 예산할까?" idea={<>항상 resident인 SRS prefix에 scalar, quotient, MSM workspace와 outputs가 동시에 살아 있는 구간을 더합니다.</>} formula={String.raw`B_{live}=n s_P+n s_F+n_qs_F+B_{MSM}+B_{out}+B_{runtime}`} terms={[
+      <ExplainedFormula question="고정 SRS와 한 KZG job의 peak live bytes를 어떻게 예산할까?" idea={<>항상 resident인 SRS prefix에 scalar, quotient, MSM workspace와 outputs가 동시에 살아 있는 구간을 더합니다.</>} formula={String.raw`B_{live}=n s_P+n s_F+n_qs_F+B_{MSM}+B_{out}+B_{runtime}`}
+      annotatedFormula={String.raw`B_{live}=\underbrace{n s_P+n s_F+n_qs_F+B_{MSM}+B_{out}+B_{runtime}}_{\text{Runtime overhead 계산}}`}
+      operations={[
+        { expression: String.raw`n s_P+n s_F+n_qs_F+B_{MSM}+B_{out}+B_{runtime}`, annotation: ["Runtime overhead이(가) 식의 결과에 기여하는","방식을 계산합니다.","항상 resident인 SRS prefix에 scalar,","quotient, MSM workspace와 outputs가"] },
+      ]} terms={[
         {symbol:"B_{live}",name:"Peak live bytes",description:"해당 stage에서 필요한 device allocation 합입니다."},
         {symbol:"n",name:"Commitment length",description:"사용하는 coefficients와 SRS prefix points 수입니다."},
         {symbol:"s_P",name:"Internal point bytes",description:"Validated device SRS point 하나의 aligned bytes입니다."},
@@ -34,7 +38,11 @@ export default function ModernKzgGpuArticle() {
 
     <section id="commit-job" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">02 · Commit job</p><h2 className="mt-2 text-2xl font-bold">Coefficient form과 정확한 SRS monomial prefix를 같은 MSM job으로 묶는다</h2></header>
-      <ExplainedFormula question="KZG commitment가 GPU MSM의 어떤 입력이 될까?" idea={<>각 coefficient를 scalar로, 같은 degree의 SRS power를 point로 넣은 MSM 결과가 commitment입니다.</>} formula={String.raw`f(X)=\sum_{i=0}^{n-1}a_iX^i,\qquad C=\sum_{i=0}^{n-1}a_i[\tau^i]G=[f(\tau)]G`} terms={[
+      <ExplainedFormula question="KZG commitment가 GPU MSM의 어떤 입력이 될까?" idea={<>각 coefficient를 scalar로, 같은 degree의 SRS power를 point로 넣은 MSM 결과가 commitment입니다.</>} formula={String.raw`f(X)=\sum_{i=0}^{n-1}a_iX^i,\qquad C=\sum_{i=0}^{n-1}a_i[\tau^i]G=[f(\tau)]G`}
+      annotatedFormula={String.raw`f(X)=\underbrace{\sum_{i=0}^{n-1}a_iX^i,\qquad C=\sum_{i=0}^{n-1}a_i[\tau^i]G=[f(\tau)]G}_{\text{SRS point 계산}}`}
+      operations={[
+        { expression: String.raw`\sum_{i=0}^{n-1}a_iX^i,\qquad C=\sum_{i=0}^{n-1}a_i[\tau^i]G=[f(\tau)]G`, annotation: ["SRS point이(가) 식의 결과에 기여하는 방식을","계산합니다.","각 coefficient를 scalar로, 같은 degree의","SRS power를 point로 넣은 MSM 결과가"] },
+      ]} terms={[
         {symbol:"f(X)",name:"Polynomial",description:"Degree가 n보다 작은 coefficient-form polynomial입니다."},
         {symbol:"X",name:"Formal variable",description:"Polynomial expression의 indeterminate입니다."},
         {symbol:"a_i",name:"Coefficient scalar",description:"GPU MSM의 i번째 scalar입니다."},
@@ -51,7 +59,11 @@ export default function ModernKzgGpuArticle() {
     <section id="opening-dag" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">03 · Opening DAG</p><h2 className="mt-2 text-2xl font-bold">Evaluation·exact quotient·proof MSM·pairing verify를 generation-bound DAG로 잇는다</h2></header>
       <p>Claim y=f(z)를 계산하고 q=(f−y)/(X−z)의 remainder가 0인지 확인한 뒤 q coefficients와 SRS prefix를 MSM해 proof π를 만듭니다. Batch opening은 transcript challenge와 aggregation equation을 특정 protocol/version에 고정해야 하며, 여러 commitments를 무조건 하나의 MSM으로 이어 붙이는 식으로 group 결과를 분리할 수 없습니다.</p>
-      <ExplainedFormula question="KZG artifact가 같은 입력 generation에서 만들어졌는지 어떻게 봉인할까?" idea={<>Polynomial, SRS, claim, backend와 output digests를 하나의 receipt identity에 묶어 verifier 결과와 함께 저장합니다.</>} formula={String.raw`R=H(A_f\|A_{SRS}\|z\|y\|H(C)\|H(\pi)\|v\|b)`} terms={[
+      <ExplainedFormula question="KZG artifact가 같은 입력 generation에서 만들어졌는지 어떻게 봉인할까?" idea={<>Polynomial, SRS, claim, backend와 output digests를 하나의 receipt identity에 묶어 verifier 결과와 함께 저장합니다.</>} formula={String.raw`R=H(A_f\|A_{SRS}\|z\|y\|H(C)\|H(\pi)\|v\|b)`}
+      annotatedFormula={String.raw`R=\underbrace{H(A_f\|A_{SRS}\|z\|y\|H(C)\|H(\pi)\|v\|b)}_{\text{SRS artifact 계산}}`}
+      operations={[
+        { expression: String.raw`H(A_f\|A_{SRS}\|z\|y\|H(C)\|H(\pi)\|v\|b)`, annotation: ["SRS artifact이(가) 식의 결과에 기여하는 방식을","계산합니다.","Polynomial, SRS, claim, backend와","output digests를 하나의 receipt"] },
+      ]} terms={[
         {symbol:"R",name:"KZG artifact receipt",description:"재현·rollback에 사용하는 immutable identity입니다."},
         {symbol:"H",name:"Hash",description:"Canonical encoded fields를 결합하는 pinned digest입니다."},
         {symbol:"A_f",name:"Polynomial artifact",description:"Form/domain/generation과 bytes digest입니다."},
@@ -68,7 +80,11 @@ export default function ModernKzgGpuArticle() {
     <section id="release-gate" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">04 · Release gate</p><h2 className="mt-2 text-2xl font-bold">Independent verifier와 negative fixtures가 승인한 artifact만 성능 비교에 넣는다</h2></header>
       <p>Zero/constant/max-degree, SRS short/wrong digest/wrong subgroup, coefficient/evaluation mismatch, y·z mutation, quotient remainder, malformed C/π, GPU OOM·timeout과 fallback을 포함합니다. CPU reference와 GPU C·π bytes 또는 normalized points를 비교하고, pinned independent verifier가 valid를 승인하고 invalid를 같은 failure class로 거절해야 합니다.</p>
-      <ExplainedFormula question="KZG GPU 경로의 유효 처리량과 speedup을 어떤 경계에서 계산할까?" idea={<>독립 verifier가 승인한 artifacts만 세고 setup cache hit/cold, transfer, polynomial work와 MSM을 포함한 같은 wall-clock 경계를 비교합니다.</>} formula={String.raw`R_{KZG}=\frac{N_{verified}}{T_{wall}},\qquad S=\frac{T_{reference}^{e2e}}{T_{GPU}^{e2e}}`} terms={[
+      <ExplainedFormula question="KZG GPU 경로의 유효 처리량과 speedup을 어떤 경계에서 계산할까?" idea={<>독립 verifier가 승인한 artifacts만 세고 setup cache hit/cold, transfer, polynomial work와 MSM을 포함한 같은 wall-clock 경계를 비교합니다.</>} formula={String.raw`R_{KZG}=\frac{N_{verified}}{T_{wall}},\qquad S=\frac{T_{reference}^{e2e}}{T_{GPU}^{e2e}}`}
+      annotatedFormula={String.raw`R_{KZG}=\underbrace{\frac{N_{verified}}{T_{wall}},\qquad S=\frac{T_{reference}^{e2e}}{T_{GPU}^{e2e}}}_{\text{기준량당 비율}}`}
+      operations={[
+        { expression: String.raw`\frac{N_{verified}}{T_{wall}},\qquad S=\frac{T_{reference}^{e2e}}{T_{GPU}^{e2e}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","독립 verifier가 승인한 artifacts만 세고","setup cache hit/cold, transfer,","polynomial work와 MSM을 포함한 같은"] },
+      ]} terms={[
         {symbol:"R_{KZG}",name:"Verified artifact rate",description:"초당 승인된 commitments/opening proofs입니다."},
         {symbol:"N_{verified}",name:"Verified outputs",description:"Pinned independent verifier가 승인한 artifact 수입니다."},
         {symbol:"T_{wall}",name:"Wall time",description:"정한 request/input boundary부터 verifier receipt까지입니다."},

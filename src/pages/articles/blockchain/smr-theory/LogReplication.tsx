@@ -19,6 +19,10 @@ export default function LogReplication() {
         question="n개 replica에서 crash f개 뒤에도 majority quorum을 만들고 두 quorum을 겹치게 하려면?"
         idea="Majority q=floor(n/2)+1은 두 집합이 반드시 겹치며, n=2f+1이면 f개 crash 뒤에도 q개가 남습니다."
         formula={String.raw`q=\left\lfloor\frac n2\right\rfloor+1,\qquad |Q_1\cap Q_2|\ge 2q-n`}
+        annotatedFormula={String.raw`q=\underbrace{\left\lfloor\frac n2\right\rfloor+1,\qquad |Q_1\cap Q_2|\ge 2q-n}_{\text{허용 경계 판정}}`}
+        operations={[
+          { expression: String.raw`\left\lfloor\frac n2\right\rfloor+1,\qquad |Q_1\cap Q_2|\ge 2q-n`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","Majority q=floor(n/2)+1은 두 집합이 반드시","겹치며, n=2f+1이면 f개 crash 뒤에도 q개가","남습니다."] },
+        ]}
         terms={[
           { symbol: "n", name: "replica count", description: "고정 membership의 전체 voting replica 수입니다." },
           { symbol: "q", name: "majority", description: "Election·replication에 필요한 vote 또는 ACK 수입니다." },

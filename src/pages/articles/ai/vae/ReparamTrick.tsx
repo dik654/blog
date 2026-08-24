@@ -39,6 +39,17 @@ export default function ReparamTrick() {
           \epsilon&\sim\mathcal N(0,I) \\
           z&=\mu_\phi(x)+\sigma_\phi(x)\odot\epsilon
         \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+          \ell_\phi(x)&=\underbrace{\log\sigma_\phi^2(x)}_{\text{로그 비용 변환}} \\
+          \sigma_\phi(x)&=\underbrace{\exp\!\left(\tfrac12\ell_\phi(x)\right)}_{\text{허용 경계 판정}} \\
+          \epsilon&\sim\mathcal N(0,I) \\
+          z&=\underbrace{\mu_\phi(x)+\sigma_\phi(x)\odot\epsilon}_{\text{posterior mean 계산}}
+        \end{aligned}`}
+        operations={[
+          { expression: String.raw`\log\sigma_\phi^2(x)`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","randomness를 parameterized","distribution 안에 숨기지 않고, parameter와","독립인 standard Gaussian input으로"] },
+          { expression: String.raw`\exp\!\left(\tfrac12\ell_\phi(x)\right)`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","randomness를 parameterized","distribution 안에 숨기지 않고, parameter와","독립인 standard Gaussian input으로"] },
+          { expression: String.raw`\mu_\phi(x)+\sigma_\phi(x)\odot\epsilon`, annotation: ["posterior mean이(가) 식의 결과에 기여하는 방식을","계산합니다.","randomness를 parameterized","distribution 안에 숨기지 않고, parameter와"] },
+        ]}
         terms={[
           { symbol: String.raw`\mu_\phi(x)`, name: "posterior mean", description: "encoder가 input별 latent 중심을 예측합니다." },
           { symbol: String.raw`\ell_\phi(x)`, name: "log variance", description: "양수 제약 없는 값을 출력한 뒤 exponentiation으로 variance를 만듭니다." },

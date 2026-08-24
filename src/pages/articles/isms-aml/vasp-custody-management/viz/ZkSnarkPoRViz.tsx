@@ -105,7 +105,7 @@ export default function ZkSnarkPoRViz() {
                 rx={10}
                 fill="var(--card)"
                 stroke={C.purple}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={240}

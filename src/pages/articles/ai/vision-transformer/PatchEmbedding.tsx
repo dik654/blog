@@ -28,6 +28,16 @@ N&=\frac HP\frac WP,\qquad x_p^{(i)}\in\mathbb R^{P^2C},\\
 e_i&=x_p^{(i)}E+p_i,\qquad E\in\mathbb R^{P^2C\times D},\\
 Z_0&=[e_{\mathrm{cls}};e_1;\ldots;e_N]\in\mathbb R^{(N+1)\times D}.
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+N&=\underbrace{\frac HP\frac WP,\qquad x_p^{(i)}\in\mathbb R^{P^2C},}_{\text{오른쪽 항으로 결과 계산}}\\
+e_i&=\underbrace{x_p^{(i)}E+p_i,\qquad E\in\mathbb R^{P^2C\times D},}_{\text{position embedding 계산}}\\
+Z_0&=\underbrace{[e_{\mathrm{cls}};e_1;\ldots;e_N]\in\mathbb R^{(N+1)\times D}.}_{\text{오른쪽 항으로 결과 계산}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\frac HP\frac WP,\qquad x_p^{(i)}\in\mathbb R^{P^2C},`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Patch 한 변 P가 spatial sampling 간격을","정합니다."] },
+          { expression: String.raw`x_p^{(i)}E+p_i,\qquad E\in\mathbb R^{P^2C\times D},`, annotation: ["position embedding이(가) 식의 결과에 기여하는","방식을 계산합니다.","Patch 한 변 P가 spatial sampling 간격을","정합니다."] },
+          { expression: String.raw`[e_{\mathrm{cls}};e_1;\ldots;e_N]\in\mathbb R^{(N+1)\times D}.`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Patch 한 변 P가 spatial sampling 간격을","정합니다."] },
+        ]}
         terms={[
           { symbol: "H,W,C", name: "image shape", description: "높이·너비·channel 수로, batch axis를 제외한 한 image의 tensor shape입니다." },
           { symbol: "P,N", name: "patch size and count", description: "Patch 한 변 길이와 image에서 만들어지는 patch token 개수입니다." },
@@ -52,6 +62,17 @@ v_{r,s}&=\operatorname{patch}_{P}(x;r,s),\\
 y_{r,s,d}&=k_d^\top v_{r,s}+b_d,\\
 \operatorname{flatten}(K_d)&=E_{:,d}.
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+k_d&=\underbrace{\operatorname{flatten}(K_d),}_{\text{d-th convolution kernel 계산}}\\
+v_{r,s}&=\underbrace{\operatorname{patch}_{P}(x;r,s),}_{\text{flattened patch 계산}}\\
+y_{r,s,d}&=\underbrace{k_d^\top v_{r,s}+b_d,}_{\text{flattened patch 계산}}\\
+\operatorname{flatten}(K_d)&=E_{:,d}.
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\operatorname{flatten}(K_d),`, annotation: ["d-th convolution kernel이(가) 식의 결과에","기여하는 방식을 계산합니다.","Kernel size와 stride를 P로 둔","convolution은 각 P×P 영역을 겹치지 않게"] },
+          { expression: String.raw`\operatorname{patch}_{P}(x;r,s),`, annotation: ["flattened patch이(가) 식의 결과에 기여하는","방식을 계산합니다.","Kernel size와 stride를 P로 둔","convolution은 각 P×P 영역을 겹치지 않게"] },
+          { expression: String.raw`k_d^\top v_{r,s}+b_d,`, annotation: ["flattened patch이(가) 식의 결과에 기여하는","방식을 계산합니다.","Kernel size와 stride를 P로 둔","convolution은 각 P×P 영역을 겹치지 않게"] },
+        ]}
         terms={[
           { symbol: "K_d", name: "d-th convolution kernel", description: "D개 output token coordinate 중 d번째 값을 만드는 P×P×C weight입니다." },
           { symbol: "r,s", name: "patch-grid coordinate", description: "Stride P로 이동하는 patch의 세로·가로 index입니다." },

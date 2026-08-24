@@ -124,7 +124,7 @@ export default function SwapFlowViz() {
                   x2={40}
                   y2={y + 58}
                   stroke="#3b82f6"
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                   markerEnd="url(#sf-arr2)"
                 />
               )}

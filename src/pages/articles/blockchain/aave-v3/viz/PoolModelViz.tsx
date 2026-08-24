@@ -227,7 +227,7 @@ export default function PoolModelViz() {
           x2={190}
           y2={130}
           stroke="#3b82f6"
-          strokeWidth={1.3}
+          strokeWidth={1.2}
           markerEnd="url(#pm-arr)"
         />
         <line
@@ -236,7 +236,7 @@ export default function PoolModelViz() {
           x2={190}
           y2={150}
           stroke="#3b82f6"
-          strokeWidth={1.3}
+          strokeWidth={1.2}
           markerEnd="url(#pm-arr)"
         />
         <line
@@ -245,7 +245,7 @@ export default function PoolModelViz() {
           x2={190}
           y2={170}
           stroke="#3b82f6"
-          strokeWidth={1.3}
+          strokeWidth={1.2}
           markerEnd="url(#pm-arr)"
         />
 
@@ -255,7 +255,7 @@ export default function PoolModelViz() {
           x2={385}
           y2={78}
           stroke="#ef4444"
-          strokeWidth={1.3}
+          strokeWidth={1.2}
           markerEnd="url(#pm-arr-r)"
         />
         <line
@@ -264,7 +264,7 @@ export default function PoolModelViz() {
           x2={385}
           y2={128}
           stroke="#ef4444"
-          strokeWidth={1.3}
+          strokeWidth={1.2}
           markerEnd="url(#pm-arr-r)"
         />
         <line
@@ -273,7 +273,7 @@ export default function PoolModelViz() {
           x2={385}
           y2={178}
           stroke="#ef4444"
-          strokeWidth={1.3}
+          strokeWidth={1.2}
           markerEnd="url(#pm-arr-r)"
         />
 

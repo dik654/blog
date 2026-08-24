@@ -176,7 +176,7 @@ function DiagArrow({ style }: { style?: React.CSSProperties }) {
           x2="4"
           y2="60"
           stroke="currentColor"
-          strokeWidth="1.5"
+          strokeWidth="1.2"
           strokeDasharray="4,3"
           markerEnd="url(#arr)"
           className=""

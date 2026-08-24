@@ -93,6 +93,11 @@ export default function Aggregation({ onCodeRef }: Props) {
           question="Slot 35의 committee 2 투표는 64개 attestation subnet 중 어디로 갈까요?"
           idea={<>Epoch 안에서 먼저 지난 committee 수를 세고 현재 committee index를 더한 뒤 subnet 수로 나눈 나머지를 씁니다.</>}
           formula={String.raw`\begin{aligned}u&=c\,(s\bmod S)+j\\s_{net}&=u\bmod N\end{aligned}`}
+          annotatedFormula={String.raw`\begin{aligned}u&=\underbrace{c\,(s\bmod S)+j}_{\text{slot 계산}}\\s_{net}&=\underbrace{u\bmod N}_{\text{slot 계산}}\end{aligned}`}
+          operations={[
+            { expression: String.raw`c\,(s\bmod S)+j`, annotation: ["slot이(가) 식의 결과에 기여하는 방식을 계산합니다.","Epoch 안에서 먼저 지난 committee 수를 세고 현재","committee index를 더한 뒤 subnet 수로 나눈","나머지를 씁니다."] },
+            { expression: String.raw`u\bmod N`, annotation: ["slot이(가) 식의 결과에 기여하는 방식을 계산합니다.","Epoch 안에서 먼저 지난 committee 수를 세고 현재","committee index를 더한 뒤 subnet 수로 나눈","나머지를 씁니다."] },
+          ]}
           terms={[
             { symbol: "s", name: "slot", description: "투표 duty의 slot 번호입니다." },
             { symbol: "S", name: "slots per epoch", description: "network preset의 epoch당 slot 수입니다." },
@@ -177,6 +182,16 @@ m&=\max\!\left(1,\left\lfloor\frac{n}{A}\right\rfloor\right)\\
 h&=\operatorname{u64}\!\left(H(\sigma)_{0:8}\right)\\
 h\bmod m&=0
 \end{aligned}`}
+          annotatedFormula={String.raw`\begin{aligned}
+m&=\underbrace{\max\!\left(1,\left\lfloor\frac{n}{A}\right\rfloor\right)}_{\text{기준량당 비율}}\\
+h&=\underbrace{\operatorname{u64}\!\left(H(\sigma)_{\underbrace{0}_{\text{selection modulo 계산}}:8}\right)}_{\text{허용 경계 판정}}\\
+h\bmod m&=0
+\end{aligned}`}
+          operations={[
+            { expression: String.raw`\max\!\left(1,\left\lfloor\frac{n}{A}\right\rfloor\right)`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Validator가 slot selection proof에","먼저 서명하고 그 hash를 modulo test에 넣습니다."] },
+            { expression: String.raw`\operatorname{u64}\!\left(H(\sigma)_{0:8}\right)`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","Validator가 slot selection proof에","먼저 서명하고 그 hash를 modulo test에 넣습니다."] },
+            { expression: String.raw`0`, annotation: ["selection modulo이(가) 식의 결과에 기여하는","방식을 계산합니다.","Validator가 slot selection proof에","먼저 서명하고 그 hash를 modulo test에 넣습니다."] },
+          ]}
           terms={[
             { symbol: "n", name: "committee size", description: "이 slot·committee에 배정된 validator 수, 단위는 명입니다." },
             { symbol: "A", name: "target aggregators", description: "v1.6.1에서 committee당 목표 16명입니다." },

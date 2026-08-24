@@ -62,7 +62,7 @@ export default function Step6bIterAnimate() {
             Q ${INT[0] + 40} ${INT[1] - 6}, 260 ${INT[1] - 10}`}
         fill="none"
         stroke={`${C.g2}45`}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         {...draw(0.2)}
       />
 
@@ -74,7 +74,7 @@ export default function Step6bIterAnimate() {
             Q ${TWO_T[0] + 40} ${TWO_T[1] + 6}, 260 ${TWO_T[1] + 10}`}
         fill="none"
         stroke={`${C.g2}45`}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         {...draw(0.2)}
       />
 

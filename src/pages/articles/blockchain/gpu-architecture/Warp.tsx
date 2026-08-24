@@ -32,6 +32,12 @@ export default function Warp() {
           formula={
             "\\begin{aligned} B_{\\mathrm{res}}&=\\min(B_{\\max},B_T,B_R,B_S)\\\\ B_T&=\\left\\lfloor\\frac{T_{SM}}{T_B}\\right\\rfloor\\quad B_R=\\left\\lfloor\\frac{R_{SM}}{R_TT_B}\\right\\rfloor\\\\ B_S&=\\left\\lfloor\\frac{S_{SM}}{S_B}\\right\\rfloor \\end{aligned}"
           }
+          annotatedFormula={String.raw`\begin{aligned} B_{\mathrm{res}}&=\underbrace{\min(B_{\max},B_T,B_R,B_S)}_{\text{경계 후보 선택}}\\ B_T&=\underbrace{\left\lfloor\frac{T_{SM}}{T_B}\right\rfloor\quad B_R=\left\lfloor\frac{R_{SM}}{R_TT_B}\right\rfloor}_{\text{기준량당 비율}}\\ B_S&=\underbrace{\left\lfloor\frac{S_{SM}}{S_B}\right\rfloor}_{\text{기준량당 비율}} \end{aligned}`}
+          operations={[
+            { expression: String.raw`\min(B_{\max},B_T,B_R,B_S)`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","Thread·register·shared-memory·architecture","block limit가 각각 허용하는 block 수를","계산하고, 가장 작은 값이 실제 상한이 됩니다."] },
+            { expression: String.raw`\left\lfloor\frac{T_{SM}}{T_B}\right\rfloor\quad B_R=\left\lfloor\frac{R_{SM}}{R_TT_B}\right\rfloor`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Thread·register·shared-memory·architecture","block limit가 각각 허용하는 block 수를","계산하고, 가장 작은 값이 실제 상한이 됩니다."] },
+            { expression: String.raw`\left\lfloor\frac{S_{SM}}{S_B}\right\rfloor`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Thread·register·shared-memory·architecture","block limit가 각각 허용하는 block 수를","계산하고, 가장 작은 값이 실제 상한이 됩니다."] },
+          ]}
           terms={[
             {
               symbol: "B_{\\max}",

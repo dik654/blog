@@ -101,7 +101,7 @@ function WriteBudget() {
       <motion.path
         d="M98 132 H382"
         stroke={C.ok}
-        strokeWidth={2}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
       />
@@ -179,7 +179,7 @@ function Plp() {
         d="M222 126 V157 H320"
         fill="none"
         stroke={C.err}
-        strokeWidth={1.4}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
       />

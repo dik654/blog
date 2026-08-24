@@ -142,7 +142,7 @@ export default function TickCrossingViz() {
           r={6}
           fill="#8b5cf6"
           stroke="var(--card)"
-          strokeWidth={2}
+          strokeWidth={1.2}
         />
         <text
           x={92}
@@ -162,7 +162,7 @@ export default function TickCrossingViz() {
           r={6}
           fill="#ef4444"
           stroke="var(--card)"
-          strokeWidth={2}
+          strokeWidth={1.2}
         />
         <text
           x={440}
@@ -196,7 +196,7 @@ export default function TickCrossingViz() {
           x2={210}
           y2={180}
           stroke="#10b981"
-          strokeWidth={3}
+          strokeWidth={1.2}
         />
         {/* Crossing 1 */}
         <circle
@@ -205,7 +205,7 @@ export default function TickCrossingViz() {
           r={5}
           fill="#ef4444"
           stroke="var(--card)"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         {/* Step 2 */}
         <line
@@ -214,7 +214,7 @@ export default function TickCrossingViz() {
           x2={362}
           y2={180}
           stroke="#3b82f6"
-          strokeWidth={3}
+          strokeWidth={1.2}
         />
         {/* Crossing 2 */}
         <circle
@@ -223,7 +223,7 @@ export default function TickCrossingViz() {
           r={5}
           fill="#ef4444"
           stroke="var(--card)"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         {/* Step 3 */}
         <line
@@ -232,7 +232,7 @@ export default function TickCrossingViz() {
           x2={434}
           y2={180}
           stroke="#f59e0b"
-          strokeWidth={3}
+          strokeWidth={1.2}
           markerEnd="url(#swap-arr-v3)"
         />
 

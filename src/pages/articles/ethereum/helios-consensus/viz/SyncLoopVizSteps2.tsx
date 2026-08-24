@@ -148,7 +148,7 @@ export function Step2() {
                 x2={s.x - 10}
                 y2={tlY}
                 stroke={C.fin}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <polygon
                 points={`${s.x - 8},${tlY} ${s.x - 14},${tlY - 3} ${s.x - 14},${tlY + 3}`}

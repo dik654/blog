@@ -90,6 +90,15 @@ TTFT &\approx t_{queue}+t_{prefill}+t_{front} \\
 T_{E2E} &= TTFT+\sum_{j=1}^{N_{out}-1}ITL_j \\
 TPOT &= \frac{T_{E2E}-TTFT}{\max(N_{out}-1,1)}
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+TTFT &\approx t_{queue}+t_{prefill}+t_{front} \\
+T_{E2E} &= \underbrace{TTFT+\sum_{j=1}^{N_{out}-1}ITL_j}_{\text{오른쪽 항으로 결과 계산}} \\
+TPOT &= \underbrace{\frac{T_{E2E}-TTFT}{\max(N_{out}-1,1)}}_{\text{기준량당 비율}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`TTFT+\sum_{j=1}^{N_{out}-1}ITL_j`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","첫 token까지의 시간과 그 뒤 token 사이의 시간을","나눕니다."] },
+          { expression: String.raw`\frac{T_{E2E}-TTFT}{\max(N_{out}-1,1)}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","첫 token까지의 시간과 그 뒤 token 사이의 시간을","나눕니다."] },
+        ]}
         terms={LATENCY_TERMS}
         assumptions={[
           "Client·gateway·frontend 시간을 t_front에 포함하거나 별도 span으로 측정한다고 먼저 정합니다.",

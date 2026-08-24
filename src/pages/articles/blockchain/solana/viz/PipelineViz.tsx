@@ -76,7 +76,7 @@ export default function PipelineViz({
                       x2={x + 2}
                       y2={38}
                       stroke={done || active ? s.color : "#555"}
-                      strokeWidth={1.5}
+                      strokeWidth={1.2}
                       markerEnd="url(#pipe-arr)"
                       animate={{ opacity: done || active ? 0.8 : 0.15 }}
                       transition={sp}

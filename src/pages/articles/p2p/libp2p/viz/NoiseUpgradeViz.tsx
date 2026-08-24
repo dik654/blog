@@ -88,7 +88,7 @@ export default function NoiseUpgradeViz() {
             x2={355}
             y2={28}
             stroke="var(--border)"
-            strokeWidth={1.5}
+            strokeWidth={1.2}
           />
           <polygon points="352,30 355,22 358,30" fill="var(--border)" />
           <text

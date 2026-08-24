@@ -118,7 +118,7 @@ export default function SystemViz() {
           x2={210}
           y2={136}
           stroke="#8b5cf6"
-          strokeWidth={1.4}
+          strokeWidth={1.2}
           opacity={0.7}
           markerEnd="url(#arrow-purple)"
         />
@@ -129,7 +129,7 @@ export default function SystemViz() {
           x2={310}
           y2={136}
           stroke="#f59e0b"
-          strokeWidth={1.4}
+          strokeWidth={1.2}
           opacity={0.7}
           markerEnd="url(#arrow-orange)"
         />
@@ -140,7 +140,7 @@ export default function SystemViz() {
           x2={210}
           y2={166}
           stroke="#ef4444"
-          strokeWidth={1.4}
+          strokeWidth={1.2}
           opacity={0.7}
           markerEnd="url(#arrow-red)"
         />
@@ -151,7 +151,7 @@ export default function SystemViz() {
           x2={370}
           y2={212}
           stroke="#10b981"
-          strokeWidth={1.4}
+          strokeWidth={1.2}
           opacity={0.7}
           markerEnd="url(#arrow-green)"
         />

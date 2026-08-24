@@ -59,6 +59,10 @@ export default function Discv4Article() {
           question="Packet 앞의 32-byte hash는 정확히 어떤 byte들을 묶는가?"
           idea="서명을 포함한 packet 나머지를 다시 hash하면 손상되거나 다른 framing인 datagram을 먼저 걸러낼 수 있다. Identity 증명은 이 hash가 아니라 뒤의 signature 검증이 맡는다."
           formula={String.raw`h=\operatorname{keccak256}(\sigma\parallel t\parallel d)`}
+          annotatedFormula={String.raw`h=\underbrace{\operatorname{keccak256}(\sigma\parallel t\parallel d)}_{\text{Concatenation 계산}}`}
+          operations={[
+            { expression: String.raw`\operatorname{keccak256}(\sigma\parallel t\parallel d)`, annotation: ["Concatenation이(가) 식의 결과에 기여하는 방식을","계산합니다.","서명을 포함한 packet 나머지를 다시 hash하면","손상되거나 다른 framing인 datagram을 먼저 걸러낼"] },
+          ]}
           terms={[
             { symbol: "h", name: "Packet hash", description: "Packet 맨 앞의 32-byte Keccak-256 결과" },
             { symbol: "\\sigma", name: "Recoverable signature", description: "r, s, recovery id를 잇는 65-byte 서명" },

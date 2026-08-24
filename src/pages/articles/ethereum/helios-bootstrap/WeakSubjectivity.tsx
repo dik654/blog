@@ -16,6 +16,10 @@ export default function WeakSubjectivity({ title }: { title: string }) {
         question="현재 slot 기준으로 checkpoint가 얼마나 오래됐는지 어떻게 계산할까요?"
         idea="Slot 차이를 network의 seconds-per-slot으로 바꿉니다. 이 나이는 구현 정책의 입력이며, 그 자체가 protocol의 보편적인 안전 기간은 아닙니다."
         formula={String.raw`age_{days}=\frac{(s_{now}-s_C)\,T_{slot}}{86{,}400}`}
+        annotatedFormula={String.raw`age_{days}=\underbrace{\frac{(s_{now}-s_C)\,T_{slot}}{86{,}400}}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`\frac{(s_{now}-s_C)\,T_{slot}}{86{,}400}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Slot 차이를 network의","seconds-per-slot으로 바꿉니다."] },
+        ]}
         terms={[
           { symbol: "s_{now}", name: "현재 slot", description: "Genesis time과 local clock에서 계산한 network의 현재 slot" },
           { symbol: "s_C", name: "Checkpoint slot", description: "Trusted checkpoint가 속한 beacon slot" },

@@ -39,7 +39,7 @@ export default function TrustChainViz() {
             x2={190}
             y2={210}
             stroke="var(--border)"
-            strokeWidth={1.5}
+            strokeWidth={1.2}
           />
 
           {CHAIN.map((c, i) => {

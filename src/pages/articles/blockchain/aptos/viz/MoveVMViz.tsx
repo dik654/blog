@@ -89,7 +89,7 @@ export default function MoveVMViz({
                 rx={8}
                 fill="#10b98112"
                 stroke="#10b981"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={285}
@@ -119,7 +119,7 @@ export default function MoveVMViz({
                   height={22}
                   fill="#10b98130"
                   stroke="#10b981"
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                   animate={{
                     x: step === 2 ? [220, 310] : [220, 220],
                     y: [70, 70],
@@ -160,7 +160,7 @@ export default function MoveVMViz({
                       rx={6}
                       fill={blocked ? "#ef444412" : `${a.color}12`}
                       stroke={blocked ? "#ef4444" : a.color}
-                      strokeWidth={1.5}
+                      strokeWidth={1.2}
                     />
                     <text
                       x={x + 37}

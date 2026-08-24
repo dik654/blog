@@ -758,7 +758,7 @@ export default function OverviewViz() {
                 x2={230}
                 y2={55}
                 stroke={C.ext}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={215}

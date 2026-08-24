@@ -93,6 +93,14 @@ export default function Participation({ onCodeRef }: Props) {
 R_{sign}&=\operatorname{HTR}(\\&\quad R_{block},D_{sync})\\
 \sigma&=\operatorname{BLS.Sign}(\\&\quad sk,R_{sign})
 \end{aligned}`}
+          annotatedFormula={String.raw`\begin{aligned}
+R_{sign}&=\underbrace{\operatorname{HTR}(}_{\text{signing root 계산}}\\&\quad R_{block},D_{sync})\\
+\sigma&=\underbrace{\operatorname{BLS.Sign}(}_{\text{BLS signature 계산}}\\&\quad sk,R_{sign})
+\end{aligned}`}
+          operations={[
+            { expression: String.raw`\operatorname{HTR}(`, annotation: ["signing root이(가) 식의 결과에 기여하는 방식을","계산합니다.","객체 root에 역할과 fork를 담은 domain을 결합한","signing root를 만든 뒤 BLS로 서명합니다."] },
+            { expression: String.raw`\operatorname{BLS.Sign}(`, annotation: ["BLS signature이(가) 식의 결과에 기여하는 방식을","계산합니다.","객체 root에 역할과 fork를 담은 domain을 결합한","signing root를 만든 뒤 BLS로 서명합니다."] },
+          ]}
           terms={[
             { symbol: "R_{block}", name: "beacon block root", description: "위원회 구성원이 관찰한 32-byte head root입니다." },
             { symbol: "D_{sync}", name: "sync domain", description: "DOMAIN_SYNC_COMMITTEE와 fork/genesis context로 만든 32-byte domain입니다." },

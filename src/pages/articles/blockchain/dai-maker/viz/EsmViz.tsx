@@ -170,7 +170,7 @@ export default function EsmViz() {
                   x2={x + 120}
                   y2={186}
                   stroke="#6b7280"
-                  strokeWidth={1.3}
+                  strokeWidth={1.2}
                   markerEnd="url(#esm-arr)"
                 />
               )}

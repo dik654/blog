@@ -40,7 +40,7 @@ export default function TdvmcallViz() {
           fill="#10b981"
           fillOpacity={0.15}
           stroke="#10b981"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <text
           x={85}
@@ -92,7 +92,7 @@ export default function TdvmcallViz() {
           fill="#ef4444"
           fillOpacity={0.15}
           stroke="#ef4444"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <text
           x={240}
@@ -142,7 +142,7 @@ export default function TdvmcallViz() {
           fill="#3b82f6"
           fillOpacity={0.15}
           stroke="#3b82f6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <text
           x={395}

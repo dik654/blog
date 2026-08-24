@@ -43,7 +43,7 @@ export default function MeasurementChainViz() {
               rx={6}
               fill={`${C.indigo}15`}
               stroke={C.indigo}
-              strokeWidth={1.3}
+              strokeWidth={1.2}
             />
             <text
               x={75}

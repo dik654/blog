@@ -9,6 +9,10 @@ export default function SnappyEncoding({ onCodeRef: _onCodeRef }: { onCodeRef: (
         question="최대 raw payload n bytes를 허용할 때 Snappy wire input을 어디까지 읽을 수 있을까요?"
         idea="Snappy의 worst-case compressed length upper bound를 사용해 압축 bytes부터 제한하고, header가 선언한 decoded length와 실제 output도 raw cap 이하인지 별도로 검사합니다."
         formula={String.raw`C_{max}(n)=32+n+\left\lfloor\frac{n}{6}\right\rfloor`}
+        annotatedFormula={String.raw`C_{max}(n)=\underbrace{32+n+\left\lfloor\frac{n}{6}\right\rfloor}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`32+n+\left\lfloor\frac{n}{6}\right\rfloor`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Snappy의 worst-case compressed","length upper bound를 사용해 압축 bytes부터","제한하고, header가 선언한 decoded length와"] },
+        ]}
         terms={[
           { symbol: "n", name: "최대 원문 크기", description: "규격이 허용하는 uncompressed application payload(bytes)" },
           { symbol: "C_{max}(n)", name: "최대 압축 입력", description: "허용할 Snappy compressed bytes의 worst-case 상한" },

@@ -94,6 +94,10 @@ export default function FullSync({
           question="여러 stage가 서로 다른 높이까지 끝났을 때 전체 pipeline의 안전한 commit cursor는 어디일까요?"
           idea="뒤 stage가 소비하는 모든 authoritative 입력이 준비되어야 하므로, 필요한 stage checkpoint 가운데 가장 작은 연속 높이를 선택합니다."
           formula={String.raw`H_{\mathrm{safe}}=\min_{s\in S_{\mathrm{required}}} H_s`}
+          annotatedFormula={String.raw`H_{\mathrm{safe}}=\underbrace{\min_{s\in S_{\mathrm{required}}} H_s}_{\text{경계 후보 선택}}`}
+          operations={[
+            { expression: String.raw`\min_{s\in S_{\mathrm{required}}} H_s`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","뒤 stage가 소비하는 모든 authoritative 입력이","준비되어야 하므로, 필요한 stage checkpoint","가운데 가장 작은 연속 높이를 선택합니다."] },
+          ]}
           terms={[
             { symbol: "H_s", name: "stage checkpoint", description: "stage s가 검증하고 durable commit한 마지막 연속 block 높이" },
             { symbol: "S_required", name: "required stages", description: "현재 sync 완료 판단에 반드시 필요한 authoritative stage 집합" },

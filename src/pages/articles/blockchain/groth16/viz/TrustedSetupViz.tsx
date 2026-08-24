@@ -377,7 +377,7 @@ export default function TrustedSetupViz() {
                 x2={310}
                 y2={120}
                 stroke={C.del}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 strokeDasharray="6 4"
                 initial={{ pathLength: 0 }}
                 animate={{ pathLength: 1 }}
@@ -402,7 +402,7 @@ export default function TrustedSetupViz() {
                   x2={380}
                   y2={100}
                   stroke={C.del}
-                  strokeWidth={2}
+                  strokeWidth={1.2}
                 />
                 <line
                   x1={380}
@@ -410,7 +410,7 @@ export default function TrustedSetupViz() {
                   x2={360}
                   y2={100}
                   stroke={C.del}
-                  strokeWidth={2}
+                  strokeWidth={1.2}
                 />
                 <text x={400} y={94} fontSize={8} fill={C.del}>
                   교차 불가
@@ -458,7 +458,7 @@ export default function TrustedSetupViz() {
                     x2={72 + i * 94}
                     y2={38}
                     stroke={C.del}
-                    strokeWidth={2}
+                    strokeWidth={1.2}
                   />
                   <line
                     x1={72 + i * 94}
@@ -466,7 +466,7 @@ export default function TrustedSetupViz() {
                     x2={30 + i * 94}
                     y2={38}
                     stroke={C.del}
-                    strokeWidth={2}
+                    strokeWidth={1.2}
                   />
                 </motion.g>
               ))}

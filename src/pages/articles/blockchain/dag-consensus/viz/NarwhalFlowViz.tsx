@@ -80,7 +80,7 @@ export default function NarwhalFlowViz() {
                     x2={x + 2}
                     y2={40}
                     stroke={done || active ? n.color : "#555"}
-                    strokeWidth={1.5}
+                    strokeWidth={1.2}
                     markerEnd="url(#nf-arr)"
                     animate={{ opacity: done || active ? 0.9 : 0.15 }}
                   />

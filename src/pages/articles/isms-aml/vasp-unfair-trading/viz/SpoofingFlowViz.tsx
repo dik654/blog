@@ -160,7 +160,7 @@ export default function SpoofingFlowViz() {
                 points="70,155 130,155 200,115 280,110 340,155 420,155"
                 fill="none"
                 stroke={C.market}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
 
               <text x={100} y={148} fontSize={8} fill="var(--muted-foreground)">

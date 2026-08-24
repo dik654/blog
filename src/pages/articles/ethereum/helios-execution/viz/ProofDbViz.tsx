@@ -41,7 +41,7 @@ export default function ProofDbViz() {
                 rx={8}
                 fill={C.reth + "15"}
                 stroke={C.reth}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={130}
@@ -59,7 +59,7 @@ export default function ProofDbViz() {
                 x2={260}
                 y2={65}
                 stroke={C.reth}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 strokeOpacity={0.4}
                 initial={{ pathLength: 0 }}
                 animate={{ pathLength: 1 }}
@@ -72,7 +72,7 @@ export default function ProofDbViz() {
                 rx={8}
                 fill={C.reth + "15"}
                 stroke={C.reth}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={340}
@@ -106,7 +106,7 @@ export default function ProofDbViz() {
                 rx={8}
                 fill={C.helios + "15"}
                 stroke={C.helios}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={240}
@@ -154,7 +154,7 @@ export default function ProofDbViz() {
                       rx={8}
                       fill={c + "15"}
                       stroke={c}
-                      strokeWidth={1.5}
+                      strokeWidth={1.2}
                     />
                     <text
                       x={90 + i * 150}
@@ -203,7 +203,7 @@ export default function ProofDbViz() {
                 fill="none"
                 stroke="currentColor"
                 strokeOpacity={0.15}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={240}
@@ -223,7 +223,7 @@ export default function ProofDbViz() {
                 rx={6}
                 fill={C.helios + "15"}
                 stroke={C.helios}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={150}
@@ -243,7 +243,7 @@ export default function ProofDbViz() {
                 rx={6}
                 fill={C.reth + "15"}
                 stroke={C.reth}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={330}

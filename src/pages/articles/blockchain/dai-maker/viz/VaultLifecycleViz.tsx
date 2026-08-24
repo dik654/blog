@@ -264,7 +264,7 @@ export default function VaultLifecycleViz() {
           x2={105}
           y2={125}
           stroke="#3b82f6"
-          strokeWidth={1.3}
+          strokeWidth={1.2}
           markerEnd="url(#vl-arr)"
         />
         <line
@@ -273,7 +273,7 @@ export default function VaultLifecycleViz() {
           x2={105}
           y2={195}
           stroke="#3b82f6"
-          strokeWidth={1.3}
+          strokeWidth={1.2}
           markerEnd="url(#vl-arr)"
         />
 
@@ -284,7 +284,7 @@ export default function VaultLifecycleViz() {
           x2={225}
           y2={195}
           stroke="#3b82f6"
-          strokeWidth={1.3}
+          strokeWidth={1.2}
           markerEnd="url(#vl-arr)"
         />
 
@@ -295,7 +295,7 @@ export default function VaultLifecycleViz() {
           x2={335}
           y2={120}
           stroke="#6b7280"
-          strokeWidth={1.3}
+          strokeWidth={1.2}
           markerEnd="url(#vl-arr-gray)"
         />
 
@@ -306,7 +306,7 @@ export default function VaultLifecycleViz() {
           x2={520}
           y2={160}
           stroke="#10b981"
-          strokeWidth={1.3}
+          strokeWidth={1.2}
           markerEnd="url(#vl-arr-green)"
         />
 
@@ -317,7 +317,7 @@ export default function VaultLifecycleViz() {
           x2={520}
           y2={240}
           stroke="#ef4444"
-          strokeWidth={1.3}
+          strokeWidth={1.2}
           markerEnd="url(#vl-arr-red)"
         />
 

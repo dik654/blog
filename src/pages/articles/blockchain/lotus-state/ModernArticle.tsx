@@ -111,6 +111,10 @@ export default function ModernLotusStateArticle() {
           question="256-bit HAMT hash를 level당 5 bit로 읽으면 path 조각은 최대 몇 개일까?"
           idea={<>각 level이 <code>w</code> bits를 소비하므로 전체 bit 수를 나누고 남는 bits가 있으면 마지막 level 하나를 더 셉니다.</>}
           formula={"d_{\\max}=\\left\\lceil\\frac{b}{w}\\right\\rceil=\\left\\lceil\\frac{256}{5}\\right\\rceil=52"}
+          annotatedFormula={String.raw`d_{\max}=\underbrace{\left\lceil\frac{b}{w}\right\rceil=\left\lceil\frac{256}{5}\right\rceil=52}_{\text{기준량당 비율}}`}
+          operations={[
+            { expression: String.raw`\left\lceil\frac{b}{w}\right\rceil=\left\lceil\frac{256}{5}\right\rceil=52`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","각 level이 w bits를 소비하므로 전체 bit 수를","나누고 남는 bits가 있으면 마지막 level 하나를 더","셉니다."] },
+          ]}
           terms={[
             { symbol: "d_{\\max}", name: "Path-slice upper bound", description: "Hash bits를 모두 소비할 때 필요한 level 조각 수의 상한입니다." },
             { symbol: "b", name: "Hash bit length", description: "예제 canonical key hash의 256 bits입니다." },
@@ -127,6 +131,10 @@ export default function ModernLotusStateArticle() {
           question="AMT index 42를 bit width 3의 path digits로 어떻게 나눌까?"
           idea={<>3 bits는 base 8의 한 자리입니다. Index를 낮은 자리부터 mask하고 오른쪽으로 이동합니다.</>}
           formula={"q_i=(42\\gg 3i)\\ \\&\\ (2^3-1),\\qquad(q_0,q_1)=(2,5)"}
+          annotatedFormula={String.raw`q_i=(\underbrace{42}_{\text{Array index 계산}}\gg 3i)\ \&\ (2^3-1),\qquad(q_0,q_1)=(2,5)`}
+          operations={[
+            { expression: String.raw`42`, annotation: ["Array index이(가) 식의 결과에 기여하는 방식을","계산합니다.","3 bits는 base 8의 한 자리입니다."] },
+          ]}
           terms={[
             { symbol: "42", name: "Array index", description: "조회할 integer slot입니다. 8진수로 52입니다." },
             { symbol: "i", name: "Level", description: "Root 쪽 낮은 3-bit digit부터 세는 level입니다." },
@@ -184,6 +192,10 @@ export default function ModernLotusStateArticle() {
           question="Versioned StateTree의 새 root CID는 무엇을 봉인해야 할까?"
           idea={<>Revert되지 않은 actor updates를 canonical HAMT에 적용한 Actors root와 tree version·Info CID를 같은 encoded StateRoot에 넣습니다.</>}
           formula={"R_1=\\operatorname{CID}\\!\\left(\\operatorname{DAGCBOR}(v,A_1,I)\\right),\\quad A_1=\\operatorname{HAMTApply}(A_0,U_{\\mathrm{survive}})"}
+          annotatedFormula={String.raw`R_1=\underbrace{\operatorname{CID}\!\left(\operatorname{DAGCBOR}(v,A_1,I)\right),\quad A_1=\operatorname{HAMTApply}(A_0,U_{\mathrm{survive}})}_{\text{허용 경계 판정}}`}
+          operations={[
+            { expression: String.raw`\operatorname{CID}\!\left(\operatorname{DAGCBOR}(v,A_1,I)\right),\quad A_1=\operatorname{HAMTApply}(A_0,U_{\mathrm{survive}})`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","Revert되지 않은 actor updates를","canonical HAMT에 적용한 Actors root와","tree version·Info CID를 같은 encoded"] },
+          ]}
           terms={[
             { symbol: "R_1", name: "New StateRoot CID", description: "Flush가 반환하는 versioned top-level commitment입니다." },
             { symbol: "v", name: "StateTree version", description: "Actors map을 어떤 generation으로 load할지 정합니다." },

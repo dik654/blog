@@ -42,6 +42,12 @@ export default function Middleware() {
         question="Burst 20개를 허용하면서 평균 초당 5개로 제한하려면 요청을 언제 받아야 할까?"
         idea="Token bucket은 시간에 따라 token을 보충하고 요청 cost만큼 차감합니다. Global bucket만 두지 않고 caller·method cost에 맞는 budget을 겹쳐 expensive query가 값싼 조회를 굶기지 않게 합니다."
         formula={String.raw`\begin{aligned}T'&=\min(C,T+r\Delta t)\\ \mathrm{allow}(q)&\iff T'\ge w_q\\ T_{\mathrm{next}}&=T'-w_q\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}T'&=\underbrace{\min(C,T+r\Delta t)}_{\text{경계 후보 선택}}\\ \mathrm{allow}(q)&\iff T'\ge \underbrace{w_q}_{\text{Request weight 계산}}\\ T_{\mathrm{next}}&=\underbrace{T'-w_q}_{\text{Request weight 계산}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`\min(C,T+r\Delta t)`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","Token bucket은 시간에 따라 token을 보충하고","요청 cost만큼 차감합니다."] },
+          { expression: String.raw`w_q`, annotation: ["Request weight이(가) 식의 결과에 기여하는 방식을","계산합니다.","Token bucket은 시간에 따라 token을 보충하고","요청 cost만큼 차감합니다."] },
+          { expression: String.raw`T'-w_q`, annotation: ["Request weight이(가) 식의 결과에 기여하는 방식을","계산합니다.","Token bucket은 시간에 따라 token을 보충하고","요청 cost만큼 차감합니다."] },
+        ]}
         terms={[
           { symbol: "T,T'", name: "Token balance", description: "보충 전후 남은 request-cost token입니다." },
           { symbol: "C", name: "Bucket capacity", description: "순간 burst 상한입니다. 예시는 20 token입니다." },

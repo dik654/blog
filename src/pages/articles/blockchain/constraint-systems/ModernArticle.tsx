@@ -27,6 +27,10 @@ export default function ModernConstraintSystemsArticle() {
           question="m개의 산술 제약을 witness vector 하나에 대해 어떤 표준형으로 검사하는가?"
           idea={<>각 행 i에서 Aᵢ·z와 Bᵢ·z라는 두 선형 조합을 곱하고 Cᵢ·z와 비교합니다. 같은 z를 모든 행이 공유하기 때문에 중간값의 일관성도 강제할 수 있습니다.</>}
           formula={String.raw`\forall i\in\{1,\ldots,m\}:\quad \langle A_i,z\rangle\,\langle B_i,z\rangle=\langle C_i,z\rangle\quad\text{in }\mathbb F_p`}
+          annotatedFormula={String.raw`\forall i\in\{1,\ldots,m\}:\quad \langle A_i,z\rangle\,\langle B_i,z\rangle=\underbrace{\langle C_i,z\rangle\quad\text{in }\mathbb F_p}_{\text{Linear combination 계산}}`}
+          operations={[
+            { expression: String.raw`\langle C_i,z\rangle\quad\text{in }\mathbb F_p`, annotation: ["Linear combination이(가) 식의 결과에 기여하는","방식을 계산합니다.","각 행 i에서 Aᵢ·z와 Bᵢ·z라는 두 선형 조합을 곱하고","Cᵢ·z와 비교합니다."] },
+          ]}
           terms={[
             { symbol: String.raw`\mathbb F_p`, name: "Prime field", description: "모든 덧셈·곱셈이 mod p에서 이루어지는 유한체입니다." },
             { symbol: "z", name: "Assignment vector", description: "상수 1, public input, output과 private witness를 정해진 순서로 담습니다." },
@@ -49,6 +53,10 @@ export default function ModernConstraintSystemsArticle() {
           question="모든 R1CS 행의 만족을 왜 target polynomial의 나눗셈 하나로 표현할 수 있는가?"
           idea={<>각 행 point에서 P(X)=A(X)B(X)−C(X)가 0이 되게 만듭니다. 모든 rᵢ를 root로 가지면 그 곱 t(X)가 P(X)를 나누므로 quotient h(X)가 존재합니다.</>}
           formula={String.raw`A(X)=\sum_j z_jA_j(X),\ B(X)=\sum_j z_jB_j(X),\ C(X)=\sum_j z_jC_j(X),\quad A(X)B(X)-C(X)=h(X)t(X),\quad t(X)=\prod_{i=1}^{m}(X-r_i)`}
+          annotatedFormula={String.raw`A(X)=\underbrace{\sum_j z_jA_j(X),\ B(X)=\sum_j z_jB_j(X),\ C(X)=\sum_j z_jC_j(X),\quad A(X)B(X)-C(X)=h(X)t(X),\quad t(X)=\prod_{i=1}^{m}(X-r_i)}_{\text{Vanishing polynomial 계산}}`}
+          operations={[
+            { expression: String.raw`\sum_j z_jA_j(X),\ B(X)=\sum_j z_jB_j(X),\ C(X)=\sum_j z_jC_j(X),\quad A(X)B(X)-C(X)=h(X)t(X),\quad t(X)=\prod_{i=1}^{m}(X-r_i)`, annotation: ["Vanishing polynomial이(가) 식의 결과에","기여하는 방식을 계산합니다.","각 행 point에서 P(X)=A(X)B(X)−C(X)가 0이","되게 만듭니다."] },
+          ]}
           terms={[
             { symbol: "A_j,B_j,C_j", name: "Column polynomials", description: "행 point에서 변수 j의 R1CS coefficient를 재현합니다." },
             { symbol: "A,B,C", name: "Assignment polynomials", description: "Witness coefficient zⱼ로 column polynomials를 합친 결과입니다." },

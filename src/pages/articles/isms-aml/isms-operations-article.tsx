@@ -39,6 +39,8 @@ type Config = {
   question: string;
   idea: string;
   formula: string;
+  annotatedFormula: string;
+  operations: readonly { expression: string; annotation: string | readonly string[] }[];
   terms: readonly { symbol: string; name: string; description: string }[];
   assumptions: readonly string[];
   interpretation: string;
@@ -94,6 +96,11 @@ const CONFIG: Record<ArticleKey, Config> = {
     idea:
       "복구 가능한 마지막 시점과 업무 승인을 받은 시점을 분리합니다. 목표치는 계획이고, 아래 값은 한 훈련이나 사고에서 관측한 결과입니다.",
     formula: String.raw`\begin{aligned}\mathrm{RPO}_{real}&=t_{failure}-t_{latest\ recoverable}\\\mathrm{RTO}_{real}&=t_{accepted\ service}-t_{failure}\end{aligned}`,
+    annotatedFormula: String.raw`\begin{aligned}\mathrm{RPO}_{real}&=\underbrace{t_{failure}-t_{latest\ recoverable}}_{\text{Latest recoverable point 계산}}\\\mathrm{RTO}_{real}&=\underbrace{t_{accepted\ service}-t_{failure}}_{\text{Accepted service time 계산}}\end{aligned}`,
+    operations: [
+      { expression: String.raw`t_{failure}-t_{latest\ recoverable}`, annotation: ["Latest recoverable point이(가) 식의","결과에 기여하는 방식을 계산합니다.","복구 가능한 마지막 시점과 업무 승인을 받은 시점을","분리합니다."] },
+      { expression: String.raw`t_{accepted\ service}-t_{failure}`, annotation: ["Accepted service time이(가) 식의 결과에","기여하는 방식을 계산합니다.","복구 가능한 마지막 시점과 업무 승인을 받은 시점을","분리합니다."] },
+    ],
     terms: [
       { symbol: "t_{failure}", name: "Failure time", description: "서비스의 authoritative state가 손상되거나 사용할 수 없어진 시각입니다." },
       { symbol: "t_{latest\\ recoverable}", name: "Latest recoverable point", description: "무결성과 dependency consistency를 검증한 마지막 복구 시점입니다." },
@@ -176,6 +183,10 @@ const CONFIG: Record<ArticleKey, Config> = {
     idea:
       "원인 제거, identity 정리, 서비스 검증, 재발 monitoring은 서로 대신할 수 없으므로 모두 참일 때만 정상화합니다.",
     formula: String.raw`A=E\land I\land V\land M`,
+    annotatedFormula: String.raw`A=\underbrace{E\land I\land V\land M}_{\text{판정 조건 결합}}`,
+    operations: [
+      { expression: String.raw`E\land I\land V\land M`, annotation: ["필요한 gate가 모두 참일 때만 전체 조건을 통과시킵니다.","원인 제거, identity 정리, 서비스 검증, 재발","monitoring은 서로 대신할 수 없으므로 모두 참일 때만","정상화합니다."] },
+    ],
     terms: [
       { symbol: "E", name: "Eradication evidence", description: "취약 경로·persistence·malicious artifact 제거를 재현한 증거입니다." },
       { symbol: "I", name: "Identity recovery", description: "노출 계정·token·key를 폐기하고 최소 권한으로 재발급한 상태입니다." },
@@ -258,6 +269,10 @@ const CONFIG: Record<ArticleKey, Config> = {
     idea:
       "기능 test, security verification, artifact provenance, canary가 서로 다른 실패를 막으므로 모두 통과해야 합니다.",
     formula: String.raw`A=T\land S\land P\land C`,
+    annotatedFormula: String.raw`A=\underbrace{T\land S\land P\land C}_{\text{판정 조건 결합}}`,
+    operations: [
+      { expression: String.raw`T\land S\land P\land C`, annotation: ["필요한 gate가 모두 참일 때만 전체 조건을 통과시킵니다.","기능 test, security verification,","artifact provenance, canary가 서로 다른","실패를 막으므로 모두 통과해야 합니다."] },
+    ],
     terms: [
       { symbol: "T", name: "Deterministic tests", description: "기능·회귀·authorization negative fixture가 기대 결과와 일치하는 조건입니다." },
       { symbol: "S", name: "Security verification", description: "위험에 맞는 review·SAST·SCA·DAST finding이 승인 정책을 통과한 조건입니다." },
@@ -350,6 +365,10 @@ const CONFIG: Record<ArticleKey, Config> = {
     idea:
       "Zone membership, 명시된 flow, 접속 identity, 현재 policy generation이 모두 맞아야 enforcement point가 허용합니다. 그 뒤 application authorization은 다시 검사합니다.",
     formula: String.raw`A_{net}=Z\land F\land I\land P`,
+    annotatedFormula: String.raw`A_{net}=\underbrace{Z\land F\land I\land P}_{\text{판정 조건 결합}}`,
+    operations: [
+      { expression: String.raw`Z\land F\land I\land P`, annotation: ["필요한 gate가 모두 참일 때만 전체 조건을 통과시킵니다.","Zone membership, 명시된 flow, 접속","identity, 현재 policy generation이 모두","맞아야 enforcement point가 허용합니다."] },
+    ],
     terms: [
       { symbol: "Z", name: "Zone placement", description: "Source·destination asset이 inventory와 현재 zone에 정확히 매핑된 조건입니다." },
       { symbol: "F", name: "Flow match", description: "Protocol·port·direction·destination이 승인된 업무 flow와 일치하는 조건입니다." },
@@ -487,6 +506,8 @@ export default function IsmsOperationsArticle({ article }: { article: ArticleKey
           question={config.question}
           idea={config.idea}
           formula={config.formula}
+          annotatedFormula={config.annotatedFormula}
+          operations={config.operations}
           terms={config.terms}
           assumptions={config.assumptions}
           interpretation={config.interpretation}

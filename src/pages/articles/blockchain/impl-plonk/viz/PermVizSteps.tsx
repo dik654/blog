@@ -67,7 +67,7 @@ export function CopyConstraintStep() {
       <motion.path
         d="M 200 54 C 240 54 240 70 200 70"
         stroke={CA}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         fill="none"
         strokeDasharray="4,2"
         initial={{ pathLength: 0 }}

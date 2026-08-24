@@ -99,7 +99,7 @@ export default function DASFlowViz() {
                     r={6}
                     fill={`${C[2]}30`}
                     stroke={C[2]}
-                    strokeWidth={1.5}
+                    strokeWidth={1.2}
                   />
                   <text
                     x={x}

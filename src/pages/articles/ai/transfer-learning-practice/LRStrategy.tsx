@@ -19,6 +19,10 @@ export default function LRStrategy() {
         question="서로 scale이 다른 layer의 update 충격을 어떤 무차원 비율로 비교할까?"
         idea={<>Learning rate와 update direction norm의 곱을 현재 parameter norm으로 나눕니다. 같은 η라도 gradient와 weight scale이 다르면 상대 이동량은 달라집니다.</>}
         formula={String.raw`\rho_{\ell}=\frac{\|\Delta\theta_{\ell}\|_2}{\|\theta_{\ell}\|_2+\varepsilon}=\frac{\eta_{\ell}\|g_{\ell}\|_2}{\|\theta_{\ell}\|_2+\varepsilon}`}
+        annotatedFormula={String.raw`\rho_{\ell}=\underbrace{\frac{\|\Delta\theta_{\ell}\|_2}{\|\theta_{\ell}\|_2+\varepsilon}=\frac{\eta_{\ell}\|g_{\ell}\|_2}{\|\theta_{\ell}\|_2+\varepsilon}}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`\frac{\|\Delta\theta_{\ell}\|_2}{\|\theta_{\ell}\|_2+\varepsilon}=\frac{\eta_{\ell}\|g_{\ell}\|_2}{\|\theta_{\ell}\|_2+\varepsilon}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Learning rate와 update direction","norm의 곱을 현재 parameter norm으로 나눕니다."] },
+        ]}
         terms={[
           { symbol: "Δθ_ℓ", name: "one-update displacement", description: "Optimizer update 한 번으로 layer parameter가 움직인 vector입니다." },
           { symbol: "ρ_ℓ", name: "relative update ratio", description: "현재 parameter scale 대비 update 크기인 dimensionless 진단값입니다." },

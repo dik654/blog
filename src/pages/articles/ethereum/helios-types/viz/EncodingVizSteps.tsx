@@ -245,7 +245,7 @@ export function Step0() {
           rx={6}
           fill={`${C.merkle}25`}
           stroke={C.merkle}
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <text
           x={370}
@@ -420,7 +420,7 @@ export function Step1() {
             x2={f.x + f.w / 2}
             y2={78}
             stroke={C.fork}
-            strokeWidth={1.5}
+            strokeWidth={1.2}
           />
           <circle cx={f.x + f.w / 2} cy={70} r={3} fill={C.fork} />
 

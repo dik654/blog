@@ -121,7 +121,7 @@ function Capacity() {
         d="M211 121 C211 135 212 137 220 140"
         fill="none"
         stroke={C.danger}
-        strokeWidth={2}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
       />
@@ -129,7 +129,7 @@ function Capacity() {
         d="M353 121 C353 135 296 137 280 140"
         fill="none"
         stroke={C.ok}
-        strokeWidth={2}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
       />
@@ -291,7 +291,7 @@ function Power() {
         d="M125 110 V135 H355 V110"
         fill="none"
         stroke={C.neutral}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
       />
@@ -363,14 +363,14 @@ function MultiGpu() {
         d="M172 83 C185 62 187 62 190 62 M290 62 C293 62 296 62 308 83"
         fill="none"
         stroke={C.neutral}
-        strokeWidth={2}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
       />
       <motion.path
         d="M173 117 H307"
         stroke={C.danger}
-        strokeWidth={2}
+        strokeWidth={1.2}
         strokeDasharray="5 4"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}

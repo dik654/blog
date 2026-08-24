@@ -120,7 +120,7 @@ export default function StableSwapCurveViz() {
         <path
           d={toPath(cpPoints)}
           stroke="#3b82f6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           fill="none"
           opacity={0.7}
         />
@@ -129,7 +129,7 @@ export default function StableSwapCurveViz() {
         <path
           d={toPath(csPoints)}
           stroke="#ef4444"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           fill="none"
           opacity={0.7}
           strokeDasharray="4 2"
@@ -139,7 +139,7 @@ export default function StableSwapCurveViz() {
         <path
           d={toPath(ssPoints)}
           stroke="#10b981"
-          strokeWidth={2.5}
+          strokeWidth={1.2}
           fill="none"
         />
 
@@ -188,7 +188,7 @@ export default function StableSwapCurveViz() {
             x2={30}
             y2={15}
             stroke="#ef4444"
-            strokeWidth={1.5}
+            strokeWidth={1.2}
             strokeDasharray="4 2"
           />
           <text x={35} y={18} fontSize={8} fill="var(--foreground)">
@@ -201,7 +201,7 @@ export default function StableSwapCurveViz() {
             x2={30}
             y2={33}
             stroke="#10b981"
-            strokeWidth={2.5}
+            strokeWidth={1.2}
           />
           <text x={35} y={36} fontSize={8} fontWeight={600} fill="#10b981">
             StableSwap (혼합)
@@ -213,7 +213,7 @@ export default function StableSwapCurveViz() {
             x2={30}
             y2={51}
             stroke="#3b82f6"
-            strokeWidth={1.5}
+            strokeWidth={1.2}
           />
           <text x={35} y={54} fontSize={8} fill="var(--foreground)">
             x·y=k (CP, Uniswap)

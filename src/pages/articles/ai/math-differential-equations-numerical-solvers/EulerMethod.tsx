@@ -63,6 +63,14 @@ export default function EulerMethod() {
           t_{n+1}&=t_n+h \\
           x_{n+1}&=x_n+h f(x_n,t_n)
         \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+          t_{n+1}&=\underbrace{t_n+h}_{\text{step size 계산}} \\
+          x_{n+1}&=\underbrace{x_n+h f(x_n,t_n)}_{\text{estimated change 계산}}
+        \end{aligned}`}
+        operations={[
+          { expression: String.raw`t_n+h`, annotation: ["step size이(가) 식의 결과에 기여하는 방식을","계산합니다.","미분의 local linearity를 이용해 짧은 구간에서는","변화량을 derivative×시간으로 근사합니다."] },
+          { expression: String.raw`x_n+h f(x_n,t_n)`, annotation: ["estimated change이(가) 식의 결과에 기여하는","방식을 계산합니다.","미분의 local linearity를 이용해 짧은 구간에서는","변화량을 derivative×시간으로 근사합니다."] },
+        ]}
         terms={[
           {
             symbol: "h",

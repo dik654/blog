@@ -48,7 +48,7 @@ export default function DHTViz() {
               x2={NODES[b].x}
               y2={NODES[b].y - 12}
               stroke="var(--border)"
-              strokeWidth={1.5}
+              strokeWidth={1.2}
             />
           ))}
           {/* Nodes */}

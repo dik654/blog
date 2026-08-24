@@ -89,7 +89,7 @@ export default function IAVLStoreViz() {
                       r={14}
                       fill={`${fl}20`}
                       stroke={fl}
-                      strokeWidth={1.5}
+                      strokeWidth={1.2}
                     />
                     <text
                       x={n.x}
@@ -141,7 +141,7 @@ export default function IAVLStoreViz() {
                 rx={6}
                 fill={`${C.root}15`}
                 stroke={C.root}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={190}
@@ -163,7 +163,7 @@ export default function IAVLStoreViz() {
                       x2={x + 30}
                       y2={75}
                       stroke={C.node}
-                      strokeWidth={1.5}
+                      strokeWidth={1.2}
                       initial={{ pathLength: 0 }}
                       animate={{ pathLength: 1 }}
                       transition={{ duration: 0.4, delay: i * 0.1 }}
@@ -176,7 +176,7 @@ export default function IAVLStoreViz() {
                       rx={5}
                       fill={`${C.node}10`}
                       stroke={C.node}
-                      strokeWidth={1.5}
+                      strokeWidth={1.2}
                     />
                     <text
                       x={x + 30}

@@ -32,6 +32,17 @@ export default function AEvsVAE() {
           &=\mathcal N\!\left(\mu_\phi(x),\Sigma_\phi(x)\right) \\
           \Sigma_\phi(x)&=\operatorname{diag}\!\left(\sigma_\phi^2(x)\right)
         \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+          \text{AE: }z&=\underbrace{f_\phi(x)}_{\text{deterministic code 계산}} \\
+          \text{VAE: }q_\phi(z\mid x)
+          &=\underbrace{\mathcal N\!\left(\mu_\phi(x),\Sigma_\phi(x)\right)}_{\text{허용 경계 판정}} \\
+          \Sigma_\phi(x)&=\underbrace{\operatorname{diag}\!\left(\sigma_\phi^2(x)\right)}_{\text{허용 경계 판정}}
+        \end{aligned}`}
+        operations={[
+          { expression: String.raw`f_\phi(x)`, annotation: ["deterministic code이(가) 식의 결과에 기여하는","방식을 계산합니다.","AE는 input마다"] },
+          { expression: String.raw`\mathcal N\!\left(\mu_\phi(x),\Sigma_\phi(x)\right)`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","AE는 input마다"] },
+          { expression: String.raw`\operatorname{diag}\!\left(\sigma_\phi^2(x)\right)`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","AE는 input마다"] },
+        ]}
         terms={[
           { symbol: "f_\\phi(x)", name: "deterministic code", description: "같은 input은 같은 latent point로 갑니다." },
           { symbol: "q_\\phi(z\\mid x)", name: "approximate posterior", description: "true posterior pθ(z|x)를 encoder가 근사합니다." },

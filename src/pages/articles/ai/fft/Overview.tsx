@@ -33,6 +33,11 @@ export default function Overview() {
         question="길이 N의 discrete signal을 N개의 주파수 coefficient로 어떻게 바꿀까?"
         idea={<>입력 x[n]을 k번 회전하는 complex exponential basis와 내적합니다. 같은 회전 성분은 같은 방향으로 누적되고, 맞지 않는 성분은 원 둘레에서 상쇄됩니다.</>}
         formula={String.raw`\begin{aligned}X[k]&=\sum_{n=0}^{N-1}x[n]e^{-i2\pi kn/N}\\[3pt]x[n]&=\frac1N\sum_{k=0}^{N-1}X[k]e^{i2\pi kn/N}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}X[k]&=\underbrace{\sum_{n=0}^{N-1}x[n]e^{-i2\pi kn/N}}_{\text{기준량당 비율}}\\[3pt]x[n]&=\underbrace{\frac1N\sum_{k=0}^{N-1}X[k]e^{i2\pi kn/N}}_{\text{기준량당 비율}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`\sum_{n=0}^{N-1}x[n]e^{-i2\pi kn/N}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","입력 x[n]을 k번 회전하는 complex","exponential basis와 내적합니다."] },
+          { expression: String.raw`\frac1N\sum_{k=0}^{N-1}X[k]e^{i2\pi kn/N}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","입력 x[n]을 k번 회전하는 complex","exponential basis와 내적합니다."] },
+        ]}
         terms={[
           { symbol: "x[n]", name: "input sample", description: "시간 또는 공간 index n에서 관측한 값입니다." },
           { symbol: "X[k]", name: "frequency coefficient", description: "k번째 discrete frequency의 magnitude와 phase를 담는 complex number입니다." },

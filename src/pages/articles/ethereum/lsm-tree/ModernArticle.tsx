@@ -43,6 +43,10 @@ export default function ModernArticle() {
         question="User write보다 storage에 실제로 몇 배를 썼는지 어떻게 계산할까?"
         idea="WAL, flush와 compaction output 중 포함할 byte 범위를 먼저 선언한 뒤 동일 관측 구간의 physical written bytes를 accepted user bytes로 나눕니다."
         formula={String.raw`WA=\frac{B_{\mathrm{WAL}}+B_{\mathrm{flush}}+B_{\mathrm{compaction}}}{B_{\mathrm{user}}}`}
+        annotatedFormula={String.raw`WA=\underbrace{\frac{B_{\mathrm{WAL}}+B_{\mathrm{flush}}+B_{\mathrm{compaction}}}{B_{\mathrm{user}}}}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`\frac{B_{\mathrm{WAL}}+B_{\mathrm{flush}}+B_{\mathrm{compaction}}}{B_{\mathrm{user}}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","WAL, flush와 compaction output 중","포함할 byte 범위를 먼저 선언한 뒤 동일 관측 구간의","physical written bytes를 accepted"] },
+        ]}
         terms={[
           { symbol: "WA", name: "Write amplification", description: "User byte 한 개당 선언한 storage layer가 쓴 bytes 비율입니다." },
           { symbol: "B_user", name: "Accepted user bytes", description: "같은 측정 구간에서 성공한 logical writes입니다." },
@@ -57,6 +61,10 @@ export default function ModernArticle() {
         question="Compaction이 ingest를 못 따라갈 때 stall threshold는 언제 찰까?"
         idea="Foreground arrival rate에서 background service rate를 뺀 값만큼 compaction debt가 늘어난다고 보는 작은 fluid model입니다."
         formula={String.raw`t_{\mathrm{limit}}=\frac{D_{\mathrm{limit}}-D_0}{\max(\lambda_{\mathrm{ingest}}-\mu_{\mathrm{compact}},\,0)}`}
+        annotatedFormula={String.raw`t_{\mathrm{limit}}=\underbrace{\frac{D_{\mathrm{limit}}-D_0}{\max(\lambda_{\mathrm{ingest}}-\mu_{\mathrm{compact}},\,0)}}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`\frac{D_{\mathrm{limit}}-D_0}{\max(\lambda_{\mathrm{ingest}}-\mu_{\mathrm{compact}},\,0)}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Foreground arrival rate에서","background service rate를 뺀 값만큼","compaction debt가 늘어난다고 보는 작은 fluid"] },
+        ]}
         terms={[
           { symbol: "D", name: "Compaction debt", description: "처리해야 할 pending bytes 또는 대응되는 engine backlog입니다." },
           { symbol: "λ_ingest", name: "Ingest rate", description: "Foreground가 새 work를 만드는 MB/s입니다." },

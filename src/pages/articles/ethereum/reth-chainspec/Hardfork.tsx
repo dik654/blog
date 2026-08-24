@@ -37,6 +37,17 @@ export default function Hardfork({
           a_D&=\operatorname{TTD}(c,D_f)\\
           a_N&=0
         \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+          a_B&=\underbrace{[n\ge N_f]}_{\text{허용 경계 판정}}\\
+          a_T&=\underbrace{[t\ge T_f]}_{\text{허용 경계 판정}}\\
+          a_D&=\underbrace{\operatorname{TTD}(c,D_f)}_{\text{TTD threshold 계산}}\\
+          a_N&=0
+        \end{aligned}`}
+        operations={[
+          { expression: String.raw`[n\ge N_f]`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","ForkCondition variant가 요구하는 좌표만","비교하고, 서로 다른 좌표를 대신 쓰지 않습니다."] },
+          { expression: String.raw`[t\ge T_f]`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","ForkCondition variant가 요구하는 좌표만","비교하고, 서로 다른 좌표를 대신 쓰지 않습니다."] },
+          { expression: String.raw`\operatorname{TTD}(c,D_f)`, annotation: ["TTD threshold이(가) 식의 결과에 기여하는 방식을","계산합니다.","ForkCondition variant가 요구하는 좌표만","비교하고, 서로 다른 좌표를 대신 쓰지 않습니다."] },
+        ]}
         terms={[
           {
             symbol: "f",

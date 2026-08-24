@@ -108,7 +108,7 @@ export function Step4() {
               x2={n.x + 30}
               y2={n.y}
               stroke={C.path}
-              strokeWidth={1.5}
+              strokeWidth={1.2}
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
               transition={{ delay: i * 0.25, duration: 0.3 }}

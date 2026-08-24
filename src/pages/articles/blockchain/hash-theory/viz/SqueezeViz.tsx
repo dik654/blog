@@ -164,7 +164,7 @@ export default function SqueezeViz() {
                     rx={8}
                     fill={`${C1}20`}
                     stroke={C1}
-                    strokeWidth={1.4}
+                    strokeWidth={1.2}
                   />
                   <text
                     x={cellX(i) + bw / 2}

@@ -34,7 +34,7 @@ export default function FeeGrowthViz() {
           x2={160}
           y2={175}
           stroke="#10b981"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           strokeDasharray="3 2"
         />
         <line
@@ -43,7 +43,7 @@ export default function FeeGrowthViz() {
           x2={360}
           y2={175}
           stroke="#10b981"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           strokeDasharray="3 2"
         />
 
@@ -75,7 +75,7 @@ export default function FeeGrowthViz() {
           r={6}
           fill="#f59e0b"
           stroke="var(--card)"
-          strokeWidth={2}
+          strokeWidth={1.2}
         />
         <text
           x={260}

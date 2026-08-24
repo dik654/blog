@@ -18,6 +18,16 @@ y&=\operatorname{cast}_{c}\!\bigl(D(q_W,s_W)\bigr)x\\
 \nabla_{q_W,s_W}\mathcal L&=0\\
 \nabla_{A,B}\mathcal L&\ne0
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+y&=\underbrace{\operatorname{cast}_{c}\!\bigl(D(q_W,s_W)\bigr)x}_{\text{quantized base storage 계산}}\\
+&\quad+\frac{\alpha}{r}BAx\\
+\nabla_{q_W,s_W}\mathcal L&=\underbrace{0}_{\text{quantized base storage 계산}}\\
+\nabla_{A,B}\mathcal L&\ne0
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\operatorname{cast}_{c}\!\bigl(D(q_W,s_W)\bigr)x`, annotation: ["quantized base storage이(가) 식의 결과에","기여하는 방식을 계산합니다.","Quantized code와 scale로 base","weight를 저장하고 forward 때 compute"] },
+          { expression: String.raw`0`, annotation: ["quantized base storage이(가) 식의 결과에","기여하는 방식을 계산합니다.","Quantized code와 scale로 base","weight를 저장하고 forward 때 compute"] },
+        ]}
         terms={[
           { symbol: "q_W,s_W", name: "quantized base storage", description: "Low-bit code와 block/group별 quantization metadata입니다." },
           { symbol: "D", name: "dequantization", description: "Code와 scale을 approximate weight로 복원하는 연산입니다." },
@@ -35,6 +45,15 @@ M_{\mathrm{train}}&\approx \frac{N_Wb}{8}+M_{\mathrm{qmeta}}+M_{A,B}\\
 &\quad+M_{\mathrm{grad}}+M_{\mathrm{opt}}+M_{\mathrm{act}}\\
 &\quad+M_{\mathrm{workspace}}
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+M_{\mathrm{train}}&\approx \underbrace{\frac{N_Wb}{8}+M_{\mathrm{qmeta}}}_{\text{frozen base와 quantization metadata}}+\underbrace{M_{A,B}+M_{\mathrm{grad}}+M_{\mathrm{opt}}}_{\text{trainable adapter state}}\\
+&\quad+\underbrace{M_{\mathrm{act}}+M_{\mathrm{workspace}}}_{\text{sequence와 kernel이 만드는 runtime peak}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\frac{N_Wb}{8}+M_{\mathrm{qmeta}}`, annotation: ["Base scalar와 bit 수를 byte로 바꾸고", "quantization metadata를 더합니다"] },
+          { expression: String.raw`M_{A,B}+M_{\mathrm{grad}}+M_{\mathrm{opt}}`, annotation: ["학습되는 adapter의 weight·gradient·optimizer를", "각 dtype의 실제 byte로 합산합니다"] },
+          { expression: String.raw`M_{\mathrm{act}}+M_{\mathrm{workspace}}`, annotation: ["Backward activation과 temporary workspace를 더해", "parameter 장부가 놓치는 peak를 포함합니다"] },
+        ]}
         terms={[
           { symbol: "N_W,b", name: "base count · storage bits", description: "Frozen base scalar 수와 scalar당 low-bit code 크기입니다." },
           { symbol: "M_qmeta", name: "quantization metadata", description: "Scale·zero-point·double-quant metadata와 alignment입니다." },

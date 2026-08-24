@@ -107,7 +107,7 @@ export default function HealthFactorViz() {
           fill={color}
           fillOpacity={0.12}
           stroke={color}
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <text
           x={260}
@@ -142,23 +142,31 @@ export default function HealthFactorViz() {
           HF 구간
         </text>
 
-        <defs>
-          <linearGradient id="hf-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#ef4444" stopOpacity={0.4} />
-            <stop offset="25%" stopColor="#ef4444" stopOpacity={0.4} />
-            <stop offset="25%" stopColor="#f59e0b" stopOpacity={0.4} />
-            <stop offset="50%" stopColor="#f59e0b" stopOpacity={0.4} />
-            <stop offset="50%" stopColor="#10b981" stopOpacity={0.4} />
-            <stop offset="100%" stopColor="#10b981" stopOpacity={0.4} />
-          </linearGradient>
-        </defs>
         <rect
           x={20}
           y={218}
-          width={480}
+          width={120}
           height={20}
-          rx={4}
-          fill="url(#hf-grad)"
+          rx={3}
+          fill="#ef4444"
+          fillOpacity={0.4}
+        />
+        <rect
+          x={140}
+          y={218}
+          width={120}
+          height={20}
+          fill="#f59e0b"
+          fillOpacity={0.4}
+        />
+        <rect
+          x={260}
+          y={218}
+          width={240}
+          height={20}
+          rx={3}
+          fill="#10b981"
+          fillOpacity={0.4}
           stroke="var(--border)"
           strokeWidth={0.5}
         />
@@ -170,7 +178,7 @@ export default function HealthFactorViz() {
           x2={260}
           y2={244}
           stroke="#6b7280"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           strokeDasharray="2 2"
         />
         <text
@@ -189,7 +197,7 @@ export default function HealthFactorViz() {
           x2={380}
           y2={244}
           stroke="#6b7280"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           strokeDasharray="2 2"
         />
         <text
@@ -214,7 +222,7 @@ export default function HealthFactorViz() {
                 r={7}
                 fill={color}
                 stroke="var(--card)"
-                strokeWidth={2}
+                strokeWidth={1.2}
               />
               <text
                 x={x}

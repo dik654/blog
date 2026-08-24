@@ -38,6 +38,10 @@ export default function Applications({
           </>
         }
         formula={String.raw`\hat u_{\text{tgt}} = \hat u_{\text{tgt}}^{\,\text{pos}} + w_{\text{id}} \left(\hat u_{\text{tgt}}^{\,\text{ref}} - \hat u_{\text{tgt}}^{\,\text{noref}}\right)`}
+        annotatedFormula={String.raw`\hat u_{\text{tgt}} = \underbrace{\hat u_{\text{tgt}}^{\,\text{pos}} + w_{\text{id}} \left(\hat u_{\text{tgt}}^{\,\text{ref}} - \hat u_{\text{tgt}}^{\,\text{noref}}\right)}_{\text{허용 경계 판정}}`}
+        operations={[
+          { expression: String.raw`\hat u_{\text{tgt}}^{\,\text{pos}} + w_{\text{id}} \left(\hat u_{\text{tgt}}^{\,\text{ref}} - \hat u_{\text{tgt}}^{\,\text{noref}}\right)`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","표준 CFG가 \"text 조건 있음 vs 없음\"의 예측 차이를","증폭하듯, identity guidance는","\"reference가 context에 있음 vs 없음\"의 예측"] },
+        ]}
         terms={[
           {
             symbol: String.raw`\hat u_{\text{tgt}}^{\,\text{pos}}`,

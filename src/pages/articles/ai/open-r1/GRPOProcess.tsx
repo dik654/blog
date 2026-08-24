@@ -65,6 +65,10 @@ export default function GRPOProcess({
           </>
         }
         formula={String.raw`\widehat A_i=\frac{r_i-\overline r}{s_r+\varepsilon},\qquad \overline r=\frac1G\sum_{j=1}^{G}r_j`}
+        annotatedFormula={String.raw`\widehat A_i=\underbrace{\frac{r_i-\overline r}{s_r+\varepsilon},\qquad \overline r=\frac1G\sum_{j=1}^{G}r_j}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`\frac{r_i-\overline r}{s_r+\varepsilon},\qquad \overline r=\frac1G\sum_{j=1}^{G}r_j`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","같은 prompt에서 뽑은 G개 reward의 평균을 기준으로","각 completion이 group보다"] },
+        ]}
         terms={[
           {
             symbol: "G",
@@ -129,6 +133,16 @@ u_{i,t}&=\rho_{i,t}\widehat A_i\\
 c_{i,t}&=\operatorname{clip}(\rho_{i,t},1-\epsilon,1+\epsilon)\widehat A_i\\
 \ell_{i,t}&=\min(u_{i,t},c_{i,t})
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+u_{i,t}&=\underbrace{\rho_{i,t}\widehat A_i}_{\text{sequence advantage 계산}}\\
+c_{i,t}&=\underbrace{\operatorname{clip}(\rho_{i,t},1-\epsilon,1+\epsilon)\widehat A_i}_{\text{sequence advantage 계산}}\\
+\ell_{i,t}&=\underbrace{\min(u_{i,t},c_{i,t})}_{\text{경계 후보 선택}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\rho_{i,t}\widehat A_i`, annotation: ["sequence advantage이(가) 식의 결과에 기여하는","방식을 계산합니다.","새 policy와 rollout policy의","probability ratio에 advantage를 곱하고,"] },
+          { expression: String.raw`\operatorname{clip}(\rho_{i,t},1-\epsilon,1+\epsilon)\widehat A_i`, annotation: ["sequence advantage이(가) 식의 결과에 기여하는","방식을 계산합니다.","새 policy와 rollout policy의","probability ratio에 advantage를 곱하고,"] },
+          { expression: String.raw`\min(u_{i,t},c_{i,t})`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","새 policy와 rollout policy의","probability ratio에 advantage를 곱하고,","ratio를 신뢰 구간 밖으로 밀어 얻는 추가 이득은"] },
+        ]}
         terms={[
           {
             symbol: "\\rho_{i,t}",

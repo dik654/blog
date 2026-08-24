@@ -86,7 +86,7 @@ function UniVsMulti() {
         points={curvePts}
         fill="none"
         stroke={C.uni}
-        strokeWidth={2}
+        strokeWidth={1.2}
         strokeLinecap="round"
         initial={{ pathLength: 0, opacity: 0 }}
         animate={{ pathLength: 1, opacity: 1 }}
@@ -257,7 +257,7 @@ function HypercubeStep() {
             r={22}
             fill={`${C.hi}18`}
             stroke={C.hi}
-            strokeWidth={1.5}
+            strokeWidth={1.2}
           />
           <text
             x={v.x}

@@ -117,7 +117,7 @@ export default function UserPerspectiveViz() {
                 x2={262}
                 y2={y + 28}
                 stroke="#3b82f6"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 markerEnd="url(#up-arr)"
               />
 

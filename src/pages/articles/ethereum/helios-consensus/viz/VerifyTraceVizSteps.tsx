@@ -154,7 +154,7 @@ export function Step1() {
         x2={thresholdX}
         y2={barY + barH + 8}
         stroke="#ef4444"
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         strokeDasharray="4 3"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -335,7 +335,7 @@ export function Step2() {
         r={14}
         fill="none"
         stroke={C.aggpk}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         initial={false}
         animate={{ r: 14 }}
         transition={{ delay: 1.2, duration: 0.3 }}

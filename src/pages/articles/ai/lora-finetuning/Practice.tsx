@@ -17,6 +17,16 @@ Wx+sBAx&=(W+sBA)x\\
 &=W'x\\
 W'&=W+sBA
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+Wx+sBAx&=\underbrace{(\underbrace{W+sBA}_{\text{adapter delta 계산}})x}_{\text{adapter delta 계산}}\\
+&=\underbrace{W'x}_{\text{merged weight 계산}}\\
+W'&=W+sBA
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`(W+sBA)x`, annotation: ["adapter delta이(가) 식의 결과에 기여하는 방식을","계산합니다.","분배법칙으로 W와 sBA를 먼저 더한 새 weight를 만들","수 있습니다."] },
+          { expression: String.raw`W'x`, annotation: ["merged weight이(가) 식의 결과에 기여하는 방식을","계산합니다.","분배법칙으로 W와 sBA를 먼저 더한 새 weight를 만들","수 있습니다."] },
+          { expression: String.raw`W+sBA`, annotation: ["adapter delta이(가) 식의 결과에 기여하는 방식을","계산합니다.","분배법칙으로 W와 sBA를 먼저 더한 새 weight를 만들","수 있습니다."] },
+        ]}
         terms={[
           { symbol: "W", name: "base weight", description: "Adapter와 호환되는 원본 linear weight입니다." },
           { symbol: "sBA", name: "adapter delta", description: "학습된 low-rank update를 base shape로 materialize한 값입니다." },
@@ -33,6 +43,14 @@ W'&=W+sBA
 Q(\widetilde W)&\ne q_W+Q(sBA)\\
 &\text{(generally)}
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+\widetilde W&=\underbrace{D(q_W,s_W)+sBA}_{\text{base quantized artifact 계산}}\\
+Q(\widetilde W)&\ne q_W+Q(sBA)\\
+&\text{(generally)}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`D(q_W,s_W)+sBA`, annotation: ["base quantized artifact이(가) 식의 결과에","기여하는 방식을 계산합니다.","Quantizer Q는 rounding과 clipping이","있는 비선형 연산이므로 일반적으로 덧셈을 보존하지 않습니다."] },
+        ]}
         terms={[
           { symbol: "Q,D", name: "quantize · dequantize", description: "Real-valued weight와 low-bit code/metadata 사이 변환입니다." },
           { symbol: "q_W,s_W", name: "base quantized artifact", description: "QLoRA training에 사용한 frozen code와 scale입니다." },

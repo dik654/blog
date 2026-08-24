@@ -40,7 +40,7 @@ export function StructEmbedStep() {
         rx={6}
         fill="#8b5cf610"
         stroke="#8b5cf6"
-        strokeWidth={1.5}
+        strokeWidth={1.2}
       />
       <rect x={200} y={10} width={270} height={18} rx={6} fill="#8b5cf630" />
       <text
@@ -146,7 +146,7 @@ export function ChannelStep() {
         rx={15}
         fill="#f59e0b15"
         stroke="#f59e0b"
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         initial={{ scaleX: 0 }}
         animate={{ scaleX: 1 }}
         transition={{ delay: 0.2 }}
@@ -238,7 +238,7 @@ export function ContextStep() {
         rx={6}
         fill="#f59e0b18"
         stroke="#f59e0b"
-        strokeWidth={1.5}
+        strokeWidth={1.2}
       />
       <text
         x={240}

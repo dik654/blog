@@ -100,7 +100,7 @@ export default function TickViz() {
           r={6}
           fill="#f59e0b"
           stroke="var(--card)"
-          strokeWidth={2}
+          strokeWidth={1.2}
         />
         <text
           x={startX + 4 * tickWidth}

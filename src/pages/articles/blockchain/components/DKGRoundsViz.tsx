@@ -94,7 +94,7 @@ export default function DKGRoundsViz() {
                 r={10}
                 fill="#10b98118"
                 stroke="#10b981"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={CX}

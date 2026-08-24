@@ -42,7 +42,7 @@ export default function ButterflyViz() {
                 r={12}
                 fill={C.main + "15"}
                 stroke={C.main}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={60}
@@ -59,7 +59,7 @@ export default function ButterflyViz() {
                 r={12}
                 fill={C.sub + "15"}
                 stroke={C.sub}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={60}
@@ -76,7 +76,7 @@ export default function ButterflyViz() {
                 x2={156}
                 y2={50}
                 stroke={C.main}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 initial={{ pathLength: 0 }}
                 animate={{ pathLength: 1 }}
                 transition={{ delay: 0.2 }}
@@ -87,7 +87,7 @@ export default function ButterflyViz() {
                 x2={156}
                 y2={100}
                 stroke={C.sub}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 initial={{ pathLength: 0 }}
                 animate={{ pathLength: 1 }}
                 transition={{ delay: 0.3 }}
@@ -131,7 +131,7 @@ export default function ButterflyViz() {
                 r={12}
                 fill={C.result + "15"}
                 stroke={C.result}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={170}
@@ -148,7 +148,7 @@ export default function ButterflyViz() {
                 r={12}
                 fill={C.result + "15"}
                 stroke={C.result}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={170}
@@ -248,7 +248,7 @@ export default function ButterflyViz() {
                     rx={8}
                     fill={[C.main, C.result, C.sub][i] + "15"}
                     stroke={[C.main, C.result, C.sub][i]}
-                    strokeWidth={1.5}
+                    strokeWidth={1.2}
                   />
                   <text
                     x={80 + i * 150}
@@ -270,7 +270,7 @@ export default function ButterflyViz() {
                   x2={168 + i * 150}
                   y2={50}
                   stroke="var(--muted-foreground)"
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
               ))}
               <text

@@ -125,7 +125,7 @@ export default function PeerSlotViz() {
                         rx={8}
                         fill={f.c + "12"}
                         stroke={f.c}
-                        strokeWidth={1.5}
+                        strokeWidth={1.2}
                       />
                       <text
                         x={120 + i * 170}
@@ -156,7 +156,7 @@ export default function PeerSlotViz() {
                     y2={70}
                     stroke="currentColor"
                     strokeOpacity={0.15}
-                    strokeWidth={1.5}
+                    strokeWidth={1.2}
                     initial={{ pathLength: 0 }}
                     animate={{ pathLength: 1 }}
                   />

@@ -44,6 +44,10 @@ export default function ModernFrobeniusArticle() {
           question="Characteristic p field에서 p제곱 map이 덧셈과 곱셈을 보존하는 이유는 무엇인가?"
           idea={<>Binomial expansion의 가운데 coefficient가 모두 p의 배수라 field 안에서 0이 됩니다. 곱셈은 exponent 법칙으로 바로 보존됩니다.</>}
           formula={String.raw`\varphi(x)=x^p,\qquad \varphi(a+b)=(a+b)^p=a^p+b^p,\qquad \varphi(ab)=a^pb^p`}
+          annotatedFormula={String.raw`\varphi(x)=\underbrace{x^p,\qquad \varphi(a+b)=(a+b)^p=a^p+b^p,\qquad \varphi(ab)=a^pb^p}_{\text{Frobenius map 계산}}`}
+          operations={[
+            { expression: String.raw`x^p,\qquad \varphi(a+b)=(a+b)^p=a^p+b^p,\qquad \varphi(ab)=a^pb^p`, annotation: ["Frobenius map이(가) 식의 결과에 기여하는 방식을","계산합니다.","Binomial expansion의 가운데","coefficient가 모두 p의 배수라 field 안에서"] },
+          ]}
           terms={[
             { symbol: "p", name: "Characteristic prime", description: "Base field Fp의 소수 modulus입니다." },
             { symbol: String.raw`\varphi`, name: "Frobenius map", description: "Field 원소를 p제곱하는 함수입니다." },
@@ -63,6 +67,10 @@ export default function ModernFrobeniusArticle() {
           question="Fp^k에서 Frobenius를 몇 번 적용하면 원래 원소로 돌아오는가?"
           idea={<>Fp^k의 모든 nonzero 원소는 크기 p^k−1인 multiplicative group에 있으므로 x^(p^k−1)=1이고, 0에도 식이 성립합니다.</>}
           formula={String.raw`\varphi^j(x)=x^{p^j},\qquad \varphi^k(x)=x^{p^k}=x`}
+          annotatedFormula={String.raw`\varphi^j(x)=\underbrace{x^{p^j},\qquad \varphi^k(x)=x^{p^k}=x}_{\text{Full cycle 계산}}`}
+          operations={[
+            { expression: String.raw`x^{p^j},\qquad \varphi^k(x)=x^{p^k}=x`, annotation: ["Full cycle이(가) 식의 결과에 기여하는 방식을","계산합니다.","Fp^k의 모든 nonzero 원소는 크기 p^k−1인","multiplicative group에 있으므로"] },
+          ]}
           terms={[
             { symbol: "k", name: "Extension degree", description: "Fp 위 vector-space dimension이며 field 크기는 p^k입니다." },
             { symbol: "j", name: "Frobenius power", description: "Map을 반복 적용한 횟수입니다." },
@@ -118,6 +126,10 @@ export default function ModernFrobeniusArticle() {
           question="Embedding degree 12의 final exponent를 어떤 두 부분으로 나눌 수 있는가?"
           idea={<>p^12−1을 (p^6−1)(p^6+1)로 나누고 p^6+1=(p^2+1)(p^4−p^2+1)을 사용합니다. Target subgroup order r이 마지막 cyclotomic factor를 나누는 profile에서 앞 두 factor를 easy part로 처리합니다.</>}
           formula={String.raw`\frac{p^{12}-1}{r}=(p^6-1)(p^2+1)\cdot\frac{p^4-p^2+1}{r}`}
+          annotatedFormula={String.raw`\frac{p^{12}-1}{r}=\underbrace{(p^6-1)(p^2+1)\cdot\frac{p^4-p^2+1}{r}}_{\text{기준량당 비율}}`}
+          operations={[
+            { expression: String.raw`(p^6-1)(p^2+1)\cdot\frac{p^4-p^2+1}{r}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","p^12−1을 (p^6−1)(p^6+1)로 나누고","p^6+1=(p^2+1)(p^4−p^2+1)을 사용합니다."] },
+          ]}
           terms={[
             { symbol: "p", name: "Base-field characteristic", description: "Pairing-friendly curve가 정의된 prime field의 modulus입니다." },
             { symbol: "r", name: "Target subgroup order", description: "G1, G2와 pairing target subgroup이 공유하는 prime order입니다." },
@@ -152,6 +164,10 @@ export default function ModernFrobeniusArticle() {
           question="F3²의 x=1+u에 Frobenius를 적용한 결과를 어떻게 손으로 확인하는가?"
           idea={<>Characteristic 3에서 (1+u)^3=1+u^3이고, defining relation u²=2를 한 번 적용해 u³=2u로 줄입니다.</>}
           formula={String.raw`\varphi(1+u)=(1+u)^3=1+u^3=1+2u,\qquad \varphi^2(1+u)=1+u`}
+          annotatedFormula={String.raw`\varphi(1+u)=\underbrace{(1+u)^3=1+u^3=1+2u,\qquad \varphi^2(1+u)=1+u}_{\text{Frobenius 계산}}`}
+          operations={[
+            { expression: String.raw`(1+u)^3=1+u^3=1+2u,\qquad \varphi^2(1+u)=1+u`, annotation: ["Frobenius이(가) 식의 결과에 기여하는 방식을","계산합니다.","Characteristic 3에서","(1+u)^3=1+u^3이고, defining relation"] },
+          ]}
           terms={[
             { symbol: "u", name: "Extension basis unit", description: "u²+1=0, 즉 u²=2를 만족하는 새 원소입니다." },
             { symbol: String.raw`\varphi`, name: "Frobenius", description: "이 degree-2 field에서 세제곱하는 map입니다." },

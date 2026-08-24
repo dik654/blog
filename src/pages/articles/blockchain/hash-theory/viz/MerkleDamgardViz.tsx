@@ -308,7 +308,7 @@ export default function MerkleDamgardViz() {
                       rx={10}
                       fill={`${CR}14`}
                       stroke={CR}
-                      strokeWidth={1.4}
+                      strokeWidth={1.2}
                     />
                     <text
                       x={ax + FW / 2}
@@ -338,7 +338,7 @@ export default function MerkleDamgardViz() {
                       rx={7}
                       fill={`${CR}18`}
                       stroke={CR}
-                      strokeWidth={1.4}
+                      strokeWidth={1.2}
                     />
                     <text
                       x={ax + FW + GAP + (BW + 20) / 2}

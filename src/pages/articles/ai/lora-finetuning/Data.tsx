@@ -30,6 +30,14 @@ export default function Data({
 Z&=\sum_{t=1}^{T}m_t,\qquad m_t\in\{0,1\}\\
 \mathcal L_{\mathrm{resp}}&=-\frac{1}{Z}\sum_{t=1}^{T}m_t\log p_\theta(x_t\mid x_{<t})
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+Z&=\underbrace{\sum_{t=1}^{T}m_t,\qquad m_t\in\{0,1\}}_{\text{loss mask 계산}}\\
+\mathcal L_{\mathrm{resp}}&=\underbrace{-\frac{1}{Z}\sum_{t=1}^{T}m_t\log p_\theta(x_t\mid x_{<t})}_{\text{기준량당 비율}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\sum_{t=1}^{T}m_t,\qquad m_t\in\{0,1\}`, annotation: ["loss mask이(가) 식의 결과에 기여하는 방식을","계산합니다.","각 token에 0/1 mask를 두고 assistant","target 위치만 negative log-likelihood"] },
+          { expression: String.raw`-\frac{1}{Z}\sum_{t=1}^{T}m_t\log p_\theta(x_t\mid x_{<t})`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","각 token에 0/1 mask를 두고 assistant","target 위치만 negative log-likelihood","합과 분모에 포함합니다."] },
+        ]}
         terms={[
           { symbol: "x_t", name: "target token", description: "Chat template으로 직렬화한 sequence의 t번째 다음-token target입니다." },
           { symbol: "m_t", name: "loss mask", description: "학습할 assistant response 위치는 1, prompt·padding은 0입니다." },

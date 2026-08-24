@@ -17,7 +17,7 @@ export function TwistMotivationStep() {
       <motion.path
         d="M 145 37 L 185 37"
         stroke={CA}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         markerEnd="url(#g2Arr)"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}

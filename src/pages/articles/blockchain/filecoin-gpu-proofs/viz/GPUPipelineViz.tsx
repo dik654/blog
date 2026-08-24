@@ -48,7 +48,7 @@ export default function GPUPipelineViz() {
                   <motion.line
                     x1={x - 8} y1={50} x2={x + 2} y2={50}
                     stroke={done || active ? color : '#666'}
-                    strokeWidth={1.5}
+                    strokeWidth={1.2}
                     markerEnd="url(#gpu-arrow)"
                     animate={{ opacity: done || active ? 0.8 : 0.2 }}
                     transition={{ duration: 0.3 }}

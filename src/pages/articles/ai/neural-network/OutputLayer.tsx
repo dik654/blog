@@ -22,6 +22,12 @@ export default function OutputLayer() {
         question="서로 배타적인 K개 class의 raw score를 하나의 확률 분포로 어떻게 바꿀까?"
         idea={<>각 logit을 exponentiate해 양수로 만든 뒤 전체 합으로 나눕니다. 학습 loss는 이 계산을 log-sum-exp와 결합해 정답 class의 negative log-likelihood로 안정적으로 계산합니다.</>}
         formula={String.raw`\begin{aligned}p_k&=p(y=k\mid x;\theta)\\&=\frac{e^{z_k}}{\sum_{j=1}^{K}e^{z_j}}\\[3pt]\mathcal L(x,y)&=-\log p_y\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}p_k&=\underbrace{p(y=k\mid x;\theta)}_{\text{categorical probability 계산}}\\&=\underbrace{\frac{e^{z_k}}{\sum_{j=1}^{K}e^{z_j}}}_{\text{기준량당 비율}}\\[3pt]\mathcal L(x,y)&=\underbrace{-\log p_y}_{\text{로그 비용 변환}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`p(y=k\mid x;\theta)`, annotation: ["categorical probability이(가) 식의 결과에","기여하는 방식을 계산합니다.","각 logit을 exponentiate해 양수로 만든 뒤 전체","합으로 나눕니다."] },
+          { expression: String.raw`\frac{e^{z_k}}{\sum_{j=1}^{K}e^{z_j}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","각 logit을 exponentiate해 양수로 만든 뒤 전체","합으로 나눕니다."] },
+          { expression: String.raw`-\log p_y`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","각 logit을 exponentiate해 양수로 만든 뒤 전체","합으로 나눕니다."] },
+        ]}
         terms={[
           { symbol: "z_k", name: "class logit", description: "확률로 정규화하기 전의 제한 없는 relative score입니다." },
           { symbol: "K", name: "class count", description: "한 사건에서 서로 경쟁하는 class 수입니다." },

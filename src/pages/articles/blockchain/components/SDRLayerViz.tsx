@@ -137,7 +137,7 @@ export default function SDRLayerViz() {
                 points="405,30 370,100 440,100"
                 fill={C.tree + "15"}
                 stroke={C.tree}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={405}

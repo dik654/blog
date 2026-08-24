@@ -24,6 +24,17 @@ export default function Tradeoff() {
 \overline\Delta&>\delta_{\min},\\
 L_{95}(B)&\le L_{\max},\qquad M(B)\le M_{\max}.
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+\Delta_s&=\underbrace{m(B;s)-m(A;s),}_{\text{변화량 계산}}\\
+\overline\Delta&=\underbrace{\frac1S\sum_{s=1}^{S}\Delta_s,}_{\text{변화량 계산}}\\
+\overline\Delta&>\underbrace{\delta_{\min},}_{\text{경계 후보 선택}}\\
+L_{95}(B)&\le L_{\max},\qquad M(B)\le M_{\max}.
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`m(B;s)-m(A;s),`, annotation: ["paired quality metric이(가) 식의 결과에","기여하는 방식을 계산합니다.","같은 seed에서 후보 B와 기준 A의 metric 차이를","먼저 구해 initialization·sampling 변동을"] },
+          { expression: String.raw`\frac1S\sum_{s=1}^{S}\Delta_s,`, annotation: ["인접한 level의 차이를 남겨 변화량을 계산합니다.","같은 seed에서 후보 B와 기준 A의 metric 차이를","먼저 구해 initialization·sampling 변동을","짝지어 제거합니다."] },
+          { expression: String.raw`\delta_{\min},`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","같은 seed에서 후보 B와 기준 A의 metric 차이를","먼저 구해 initialization·sampling 변동을","짝지어 제거합니다."] },
+        ]}
         terms={[
           { symbol: "m(A;s)", name: "paired quality metric", description: "같은 split·seed·search budget에서 후보 A가 얻은 target metric입니다." },
           { symbol: "Δ̄", name: "mean paired gain", description: "S개 같은 seed 쌍에서 후보 B가 기준 A보다 얻은 평균 품질 차이입니다." },

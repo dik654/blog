@@ -90,6 +90,10 @@ export default function ModernRollupArticle() {
           question="N개의 실행 step에서 처음 다른 한 step을 찾는 데 몇 번의 이분 탐색이 필요한가?"
           idea={<>매 round마다 후보 구간을 절반으로 줄이므로, 2를 몇 번 곱해야 N에 도달하는지를 역으로 계산합니다. N=1,024라면 1,024→512→…→1이 되어 10 rounds입니다.</>}
           formula={String.raw`r = \lceil \log_2 N \rceil,\qquad N=1024 \Rightarrow r=10`}
+          annotatedFormula={String.raw`r = \underbrace{\lceil \log_2 N \rceil,\qquad N=1024 \Rightarrow r=10}_{\text{로그 비용 변환}}`}
+          operations={[
+            { expression: String.raw`\lceil \log_2 N \rceil,\qquad N=1024 \Rightarrow r=10`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","매 round마다"] },
+          ]}
           terms={[
             { symbol: "N", name: "후보 step 수", description: "Dispute가 시작될 때 남아 있는 execution step의 개수입니다." },
             { symbol: "r", name: "Bisection rounds", description: "한 step 구간에 도달하기 위한 최대 상호작용 횟수입니다." },

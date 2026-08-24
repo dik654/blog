@@ -37,7 +37,7 @@ export default function TorrentParseViz() {
             x2={320}
             y2={60}
             stroke="var(--border)"
-            strokeWidth={1.5}
+            strokeWidth={1.2}
           />
           {P.map((s, i) => {
             const cx = 55 + i * 88;

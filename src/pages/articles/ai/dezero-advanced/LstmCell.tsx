@@ -27,6 +27,17 @@ f_t=.8,\ c_{t-1}=1,\ i_t=.25,\ g_t=.4
 &\Rightarrow c_t=.9,\\
 o_t=.5&\Rightarrow h_t\approx.358.
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+c_t&=\underbrace{f_t c_{t-1}+i_t g_t,}_{\text{gated candidate 계산}}\\
+h_t&=\underbrace{o_t\tanh(c_t),}_{\text{output gate 계산}}\\
+f_t=.8,\ c_{t-1}=1,\ i_t=.25,\ g_t=.4
+&\Rightarrow c_t=.9,\\
+o_t=.5&\Rightarrow h_t\approx.358.
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`f_t c_{t-1}+i_t g_t,`, annotation: ["gated candidate이(가) 식의 결과에 기여하는","방식을 계산합니다.","먼저 이전 memory에 forget 비율을 곱하고 새","candidate에 input 비율을 곱해 더합니다."] },
+          { expression: String.raw`o_t\tanh(c_t),`, annotation: ["output gate이(가) 식의 결과에 기여하는 방식을","계산합니다.","먼저 이전 memory에 forget 비율을 곱하고 새","candidate에 input 비율을 곱해 더합니다."] },
+        ]}
         terms={[
           { symbol: "f_t", name: "forget gate", description: "이전 cell state를 channel별로 얼마나 유지할지 정합니다." },
           { symbol: "i_t g_t", name: "gated candidate", description: "새 candidate 중 cell state에 기록할 양입니다." },

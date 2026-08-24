@@ -626,7 +626,7 @@ export default function UtmFirewallViz() {
                 x2={193}
                 y2={160}
                 stroke={C.deny}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={148}

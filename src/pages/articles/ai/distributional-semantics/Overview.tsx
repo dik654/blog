@@ -49,6 +49,10 @@ export default function Overview() {
           </>
         }
         formula={String.raw`e_i^\top e_j=\begin{cases}1,&i=j\\0,&i\ne j\end{cases}`}
+        annotatedFormula={String.raw`\underbrace{e_i^\top e_j}_{\text{dot product 계산}}=\begin{cases}1,&i=j\\0,&i\ne j\end{cases}`}
+        operations={[
+          { expression: String.raw`e_i^\top e_j`, annotation: ["dot product이(가) 식의 결과에 기여하는 방식을","계산합니다.","Vocabulary의 각 단어를 서로 다른 basis","vector에 배정하면 같은 단어만 내적이 1이고 다른 단어는"] },
+        ]}
         terms={[
           {
             symbol: "e_i,e_j",

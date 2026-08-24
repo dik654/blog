@@ -226,7 +226,7 @@ function Power() {
       <motion.path
         d="M130 80 H177 M130 157 H177"
         stroke={C.server}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
       />
@@ -254,7 +254,7 @@ function Power() {
         d="M303 80 H343 V118 M303 157 H343 V118"
         fill="none"
         stroke={C.ok}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
       />

@@ -12,7 +12,7 @@ export function Node({
     <g>
       <motion.circle
         cx={x} cy={y} r={20}
-        fill={fill} stroke={color} strokeWidth={1.5}
+        fill={fill} stroke={color} strokeWidth={1.2}
         animate={{ fill, scale: highlight ? 1.1 : 1 }}
         transition={{ duration: 0.3 }}
         style={{ transformOrigin: `${x}px ${y}px` }}
@@ -51,7 +51,7 @@ export function Arrow({
       </defs>
       <motion.line
         x1={sx} y1={sy} x2={ex} y2={ey}
-        stroke={color} strokeWidth={1.5}
+        stroke={color} strokeWidth={1.2}
         markerEnd="url(#arrowhead)"
         initial={{ pathLength: 0, opacity: 0 }}
         animate={show ? { pathLength: 1, opacity: 0.7 } : { pathLength: 0, opacity: 0 }}

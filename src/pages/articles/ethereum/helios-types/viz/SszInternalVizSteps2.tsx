@@ -471,7 +471,7 @@ export function Step3() {
           rx={6}
           fill={`${C.verify}20`}
           stroke={C.verify}
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <text
           x={colX}
@@ -532,7 +532,7 @@ export function Step3() {
           d="M 284 25 L 288 29 L 296 21"
           fill="none"
           stroke={C.index}
-          strokeWidth={2}
+          strokeWidth={1.2}
           strokeLinecap="round"
           {...drawLine(1.45)}
         />

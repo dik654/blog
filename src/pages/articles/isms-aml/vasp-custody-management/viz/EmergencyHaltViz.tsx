@@ -340,7 +340,7 @@ export default function EmergencyHaltViz() {
                 rx={8}
                 fill="var(--card)"
                 stroke={C.red}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={235}

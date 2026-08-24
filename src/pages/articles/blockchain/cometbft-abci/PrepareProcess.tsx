@@ -39,6 +39,10 @@ export default function PrepareProcess({
         question="Correct validator 둘이 같은 proposal을 받았을 때 왜 같은 판정을 내야 할까요?"
         idea={<>판정 함수의 입력을 committed state, proposal bytes, protocol context로 닫고 local clock·randomness·remote API처럼 node마다 달라지는 값을 제거합니다.</>}
         formula={String.raw`d=G(S_h,B,C_h)`}
+        annotatedFormula={String.raw`d=\underbrace{G(S_h,B,C_h)}_{\text{Committed state 계산}}`}
+        operations={[
+          { expression: String.raw`G(S_h,B,C_h)`, annotation: ["Committed state이(가) 식의 결과에 기여하는","방식을 계산합니다.","판정 함수의 입력을 committed state,","proposal bytes, protocol context로"] },
+        ]}
         terms={[
           { symbol: "S_h", name: "Committed state", description: "Height h 직전의 committed application state입니다." },
           { symbol: "B", name: "Proposal", description: "검사하는 동일 proposal block bytes입니다." },

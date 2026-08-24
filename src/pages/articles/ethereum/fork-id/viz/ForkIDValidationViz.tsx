@@ -98,7 +98,7 @@ export default function ForkIDValidationViz() {
                 x2={nb.x - 2}
                 y2={nb.y + 18}
                 stroke="#888"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 markerEnd="url(#fv-arr)"
                 animate={{ opacity: on ? 0.8 : 0.1 }}
               />

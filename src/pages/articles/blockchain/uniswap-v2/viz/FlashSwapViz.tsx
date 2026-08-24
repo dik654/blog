@@ -155,7 +155,7 @@ export default function FlashSwapViz() {
           x2={190}
           y2={76}
           stroke="#3b82f6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#fs-arr)"
         />
         <line
@@ -164,7 +164,7 @@ export default function FlashSwapViz() {
           x2={360}
           y2={76}
           stroke="#10b981"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#fs-arr-g)"
         />
 
@@ -206,7 +206,7 @@ export default function FlashSwapViz() {
           x2={400}
           y2={130}
           stroke="#8b5cf6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#fs-arr)"
         />
 
@@ -248,7 +248,7 @@ export default function FlashSwapViz() {
           x2={300}
           y2={208}
           stroke="#6b7280"
-          strokeWidth={1.3}
+          strokeWidth={1.2}
           markerEnd="url(#fs-arr)"
         />
 
@@ -291,7 +291,7 @@ export default function FlashSwapViz() {
           x2={170}
           y2={234}
           stroke="#ef4444"
-          strokeWidth={1.3}
+          strokeWidth={1.2}
           markerEnd="url(#fs-arr-r)"
         />
 

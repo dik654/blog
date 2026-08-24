@@ -26,7 +26,7 @@ export function StepThreeModes() {
 export function StepTransition() {
   return (<g>
     <ModuleBox x={30} y={30} w={120} h={45} label="Snap Sync" sub="빠른 초기 동기화" color={C.snap} />
-    <motion.line x1={155} y1={52} x2={210} y2={52} stroke={C.ok} strokeWidth={1.5}
+    <motion.line x1={155} y1={52} x2={210} y2={52} stroke={C.ok} strokeWidth={1.2}
       initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: 0.3, duration: 0.4 }} />
     <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7 }}>
       <ModuleBox x={215} y={30} w={120} h={45} label="Live Sync" sub="실시간 블록 처리" color={C.live} />

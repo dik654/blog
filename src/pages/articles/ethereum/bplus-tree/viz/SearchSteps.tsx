@@ -121,7 +121,7 @@ export default function SearchSteps({ step }: { step: number }) {
         <motion.path
           d={`M${root.x + 40},${root.y + 24} L${int1[1].x + 30},${int1[1].y}`}
           stroke={CA}
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           fill="none"
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}
@@ -132,7 +132,7 @@ export default function SearchSteps({ step }: { step: number }) {
         <motion.path
           d={`M${int1[1].x + 30},${int1[1].y + 24} L${leaves[2].x + 44},${leaves[2].y}`}
           stroke={CA}
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           fill="none"
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}
@@ -153,7 +153,7 @@ export default function SearchSteps({ step }: { step: number }) {
             x2={leaves[3].x}
             y2={132}
             stroke={CR}
-            strokeWidth={1.5}
+            strokeWidth={1.2}
             strokeDasharray="4,2"
             markerEnd="url(#arrS)"
           />

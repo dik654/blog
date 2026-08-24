@@ -11,6 +11,10 @@ export default function CollateralBorrow() {
         question="같은 collateral에서 borrow gate와 liquidation gate는 어떻게 다른 결과를 낼까요?"
         idea="Base debt를 음수 liquidity로 두고 collateral value에 gate별 factor를 곱해 더합니다. Borrow gate는 새 risk를 막고 liquidation gate는 protocol intervention 시점을 정합니다."
         formula={String.raw`L_{borrow}=-D+\sum_iV_iCF_{b,i},\qquad L_{liq}=-D+\sum_iV_iCF_{l,i}`}
+        annotatedFormula={String.raw`L_{borrow}=\underbrace{-D+\sum_iV_iCF_{b,i},\qquad L_{liq}=-D+\sum_iV_iCF_{l,i}}_{\text{base debt value 계산}}`}
+        operations={[
+          { expression: String.raw`-D+\sum_iV_iCF_{b,i},\qquad L_{liq}=-D+\sum_iV_iCF_{l,i}`, annotation: ["base debt value이(가) 식의 결과에 기여하는","방식을 계산합니다.","Base debt를 음수 liquidity로 두고","collateral value에 gate별 factor를 곱해"] },
+        ]}
         terms={[
           { symbol: "D", name: "base debt value", description: "Borrow index와 base price가 반영된 debt입니다." },
           { symbol: "CF_b", name: "borrow collateral factor", description: "새 borrow/withdraw 뒤 0 이상이어야 하는 보수적 factor입니다." },

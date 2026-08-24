@@ -154,7 +154,7 @@ export default function SandwichAttackViz() {
                 x2={56}
                 y2={tx.y + 64}
                 stroke="#3b82f6"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 markerEnd="url(#sa-arr)"
               />
             )}

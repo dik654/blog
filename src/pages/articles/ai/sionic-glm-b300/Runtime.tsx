@@ -39,6 +39,10 @@ export default function Runtime() {
             </p>
           }
           formula={String.raw`S_{\mathrm{total}}=\frac{1}{(1-f)+\frac{f}{S_{\mathrm{local}}}}`}
+          annotatedFormula={String.raw`S_{\mathrm{total}}=\underbrace{\frac{1}{(1-f)+\frac{f}{S_{\mathrm{local}}}}}_{\text{기준량당 비율}}`}
+          operations={[
+            { expression: String.raw`\frac{1}{(1-f)+\frac{f}{S_{\mathrm{local}}}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","전체 시간에서 그 kernel이 차지하던 비율만 가속의 혜택을","받습니다."] },
+          ]}
           terms={[
             { symbol: "f", name: "개선 대상 비율", description: "기존 전체 시간 중 개선할 구간이 차지하는 0에서 1 사이의 비율입니다." },
             { symbol: "S_{\\mathrm{local}}", name: "local speedup", description: "개선 대상 구간만 몇 배 빨라졌는지를 나타냅니다." },

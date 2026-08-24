@@ -51,7 +51,7 @@ export default function ArchFlowViz() {
                 rx={8}
                 fill={`${n.color}12`}
                 stroke={n.color}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={n.x}
@@ -77,7 +77,7 @@ export default function ArchFlowViz() {
                 x2={x2}
                 y2={70}
                 stroke={N[from].color}
-                strokeWidth={2.5}
+                strokeWidth={1.2}
                 markerEnd="url(#arrowhead)"
                 initial={{ pathLength: 0 }}
                 animate={{ pathLength: 1 }}

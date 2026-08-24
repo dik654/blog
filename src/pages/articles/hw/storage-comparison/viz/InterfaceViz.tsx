@@ -110,7 +110,7 @@ function AhciQueue() {
         x2={150}
         y2={90}
         stroke={C.sata}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
       />
@@ -192,7 +192,7 @@ function SasPaths() {
         d="M136 74 H194 V112 M136 153 H194 V112"
         fill="none"
         stroke={C.sas}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
       />
@@ -211,7 +211,7 @@ function SasPaths() {
         x2={345}
         y2={112}
         stroke={C.sas}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
       />

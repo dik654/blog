@@ -90,7 +90,7 @@ export default function PsmArbitrageViz() {
                 x2={s.x + s.w + 10}
                 y2={s.y + 22}
                 stroke="#3b82f6"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 markerEnd="url(#ar-arr)"
               />
             )}
@@ -188,7 +188,7 @@ export default function PsmArbitrageViz() {
                 x2={s.x + s.w + 10}
                 y2={s.y + 22}
                 stroke="#3b82f6"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 markerEnd="url(#ar-arr)"
               />
             )}

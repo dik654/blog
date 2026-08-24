@@ -543,7 +543,7 @@ export default function Groth16PipelineViz() {
                   rx={10}
                   fill={`${C.q}15`}
                   stroke={C.q}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={330}

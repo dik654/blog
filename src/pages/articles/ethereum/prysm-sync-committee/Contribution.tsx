@@ -136,6 +136,19 @@ z&=H(\sigma)\\
 h&=\operatorname{u64}(z_{0:8})\\
 h\bmod m&=0
 \end{aligned}`}
+          annotatedFormula={String.raw`\begin{aligned}
+q&=\underbrace{C/N}_{\text{기준량당 비율}}\\
+a&=\underbrace{\left\lfloor q/A\right\rfloor}_{\text{기준량당 비율}}\\
+m&=\underbrace{\max(1,a)}_{\text{경계 후보 선택}}\\
+z&=H(\sigma)\\
+h&=\operatorname{u64}(z_{0:8})\\
+h\bmod m&=0
+\end{aligned}`}
+          operations={[
+            { expression: String.raw`C/N`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Subcommittee 한 칸의 크기를 목표","aggregator 수로 나눠 modulo를 만들고,","domain-separated selection proof"] },
+            { expression: String.raw`\left\lfloor q/A\right\rfloor`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Subcommittee 한 칸의 크기를 목표","aggregator 수로 나눠 modulo를 만들고,","domain-separated selection proof"] },
+            { expression: String.raw`\max(1,a)`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","Subcommittee 한 칸의 크기를 목표","aggregator 수로 나눠 modulo를 만들고,","domain-separated selection proof"] },
+          ]}
           terms={[
             { symbol: "C", name: "sync committee size", description: "Mainnet preset에서 512 positions입니다." },
             { symbol: "N", name: "sync subnet count", description: "Mainnet preset에서 4개 subcommittee입니다." },

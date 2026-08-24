@@ -31,6 +31,10 @@ export default function Fp6() {
         question="Fp² 위 3차 표현이 왜 Fp 위 6차원일까요?"
         idea="상위 basis 1,v,v²마다 Fp² coefficient 하나가 있고, 각 Fp² coefficient는 다시 Fp 좌표 두 개를 가집니다. 차원은 tower 단계의 곱으로 셉니다."
         formula={String.raw`[\mathbb F_{p^6}:\mathbb F_p]=[\mathbb F_{p^6}:\mathbb F_{p^2}]\,[\mathbb F_{p^2}:\mathbb F_p]=3\cdot2=6`}
+        annotatedFormula={String.raw`[\mathbb F_{p^6}:\mathbb F_p]=\underbrace{[\mathbb F_{p^6}:\mathbb F_{p^2}]\,[\mathbb F_{p^2}:\mathbb F_p]=3\cdot2=6}_{\text{오른쪽 항으로 결과 계산}}`}
+        operations={[
+          { expression: String.raw`[\mathbb F_{p^6}:\mathbb F_{p^2}]\,[\mathbb F_{p^2}:\mathbb F_p]=3\cdot2=6`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","상위 basis 1,v,v²마다"] },
+        ]}
         terms={[
           { symbol: "[K:F]", name: "extension degree", description: "K를 F-vector space로 볼 때 필요한 basis 원소 수입니다." },
           { symbol: "1,v,v²", name: "cubic basis", description: "Fp² 위 coefficient를 놓는 세 자리입니다." },

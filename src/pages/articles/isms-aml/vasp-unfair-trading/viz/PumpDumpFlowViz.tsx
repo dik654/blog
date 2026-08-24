@@ -159,7 +159,7 @@ export default function PumpDumpFlowViz() {
                 points="70,165 120,165 160,150 220,120 280,100 310,95 340,130 380,165 430,165"
                 fill="none"
                 stroke={C.dump}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
 
               <text x={100} y={160} fontSize={8} fill={C.accumulate}>

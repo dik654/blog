@@ -18,13 +18,13 @@ export default function PoissonSortitionViz() {
       {(step) => (
         <svg viewBox="0 0 460 180" className="w-full max-w-2xl" style={{ height: 'auto' }}>
           {/* Miner node */}
-          <rect x={15} y={25} width={90} height={42} rx={6} fill="#6366f115" stroke="#6366f1" strokeWidth={1.5} />
+          <rect x={15} y={25} width={90} height={42} rx={6} fill="#6366f115" stroke="#6366f1" strokeWidth={1.2} />
           <text x={60} y={50} textAnchor="middle" fontSize={12} fontWeight={600} fill="#6366f1">Miner</text>
 
           {/* VRF ticket */}
           {step >= 0 && (
             <motion.g initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={sp}>
-              <line x1={107} y1={46} x2={138} y2={46} stroke={C[0]} strokeWidth={1.5} markerEnd="url(#ps-arr)" />
+              <line x1={107} y1={46} x2={138} y2={46} stroke={C[0]} strokeWidth={1.2} markerEnd="url(#ps-arr)" />
               <rect x={140} y={25} width={110} height={42} rx={6}
                 fill={C[0] + '15'} stroke={C[0]} strokeWidth={step === 0 ? 2 : 0.8} />
               <text x={195} y={44} textAnchor="middle" fontSize={11} fontWeight={600} fill={C[0]}>VRF Ticket</text>
@@ -35,7 +35,7 @@ export default function PoissonSortitionViz() {
           {/* Threshold comparison */}
           {step >= 1 && (
             <motion.g initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={sp}>
-              <line x1={252} y1={46} x2={278} y2={46} stroke={C[1]} strokeWidth={1.5} markerEnd="url(#ps-arr)" />
+              <line x1={252} y1={46} x2={278} y2={46} stroke={C[1]} strokeWidth={1.2} markerEnd="url(#ps-arr)" />
               <rect x={280} y={25} width={150} height={42} rx={6}
                 fill={C[1] + '15'} stroke={C[1]} strokeWidth={step === 1 ? 2 : 0.8} />
               <text x={355} y={44} textAnchor="middle" fontSize={11} fontWeight={600} fill={C[1]}>임계값 비교</text>
@@ -76,7 +76,7 @@ export default function PoissonSortitionViz() {
             <motion.g initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }}
               transition={sp} style={{ transformOrigin: '60px 140px' }}>
               <rect x={15} y={120} width={90} height={36} rx={6}
-                fill={C[3] + '20'} stroke={C[3]} strokeWidth={1.5} />
+                fill={C[3] + '20'} stroke={C[3]} strokeWidth={1.2} />
               <text x={60} y={142} textAnchor="middle" fontSize={12} fontWeight={700} fill={C[3]}>Block!</text>
             </motion.g>
           )}

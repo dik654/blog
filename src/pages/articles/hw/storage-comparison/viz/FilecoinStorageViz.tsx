@@ -145,7 +145,7 @@ function Scratch() {
       <motion.path
         d="M96 133 H384"
         stroke={C.ok}
-        strokeWidth={2}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
       />
@@ -189,7 +189,7 @@ function LongTerm() {
         d="M148 97 H201 M201 97 V67 M201 97 V147"
         fill="none"
         stroke={C.sas}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
       />

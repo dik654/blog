@@ -167,7 +167,7 @@ export default function PingTestInlineViz() {
                 x2={240}
                 y2={73}
                 stroke={C.fail}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 strokeDasharray="5 3"
                 initial={false}
                 animate={{ x2: 240 }}
@@ -196,7 +196,7 @@ export default function PingTestInlineViz() {
                   x2={250}
                   y2={82}
                   stroke={C.fail}
-                  strokeWidth={2.5}
+                  strokeWidth={1.2}
                 />
                 <line
                   x1={250}
@@ -204,7 +204,7 @@ export default function PingTestInlineViz() {
                   x2={235}
                   y2={82}
                   stroke={C.fail}
-                  strokeWidth={2.5}
+                  strokeWidth={1.2}
                 />
               </motion.g>
 

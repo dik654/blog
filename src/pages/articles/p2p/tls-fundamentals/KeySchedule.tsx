@@ -36,6 +36,18 @@ S_{role,phase} &= \operatorname{HKDF\!\text{-}Expand\!\text{-}Label}
 (PRK,label,H(T),L),\\
 K &= \operatorname{ExpandLabel}(S_{role,phase},\text{"key"},\varnothing,L_K).
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+PRK &= \underbrace{\operatorname{HKDF\!\text{-}Extract}(salt,IKM),}_{\text{input keying material 계산}}\\
+S_{role,phase} &= \underbrace{\operatorname{HKDF\!\text{-}Expand\!\text{-}Label}
+(PRK,label,H(T),L),}_{\text{domain-separation label 계산}}\\
+K &= \underbrace{\operatorname{ExpandLabel}(S_{role,phase},\text{"key"},\varnothing,L_K).}_{\text{오른쪽 항으로 결과 계산}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\operatorname{HKDF\!\text{-}Extract}(salt,IKM),`, annotation: ["input keying material이(가) 식의 결과에","기여하는 방식을 계산합니다.","HKDF-Extract가 salt와 input key","material을 PRK로 압축하고,"] },
+          { expression: String.raw`\operatorname{HKDF\!\text{-}Expand\!\text{-}Label}
+(PRK,label,H(T),L),`, annotation: ["domain-separation label이(가) 식의 결과에","기여하는 방식을 계산합니다.","HKDF-Extract가 salt와 input key","material을 PRK로 압축하고,"] },
+          { expression: String.raw`\operatorname{ExpandLabel}(S_{role,phase},\text{"key"},\varnothing,L_K).`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","HKDF-Extract가 salt와 input key","material을 PRK로 압축하고,","HKDF-Expand-Label이 protocol"] },
+        ]}
         terms={[
           {
             symbol: "IKM",

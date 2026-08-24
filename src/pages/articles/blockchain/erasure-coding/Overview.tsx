@@ -46,6 +46,16 @@ R&=\frac{k}{n}\\[3pt]
 O_{extra}&=\frac{n-k}{k}\\[3pt]
 E_{max}&=n-k
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+R&=\underbrace{\frac{k}{n}}_{\text{기준량당 비율}}\\[3pt]
+O_{extra}&=\underbrace{\frac{\underbrace{n-k}_{\text{Maximum erasures 계산}}}{k}}_{\text{기준량당 비율}}\\[3pt]
+E_{max}&=n-k
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\frac{k}{n}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Code rate는 전체 encoded symbol 중","source 정보의 비율이고, extra overhead는","원본 대비 추가 저장량입니다."] },
+          { expression: String.raw`\frac{n-k}{k}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Code rate는 전체 encoded symbol 중","source 정보의 비율이고, extra overhead는","원본 대비 추가 저장량입니다."] },
+          { expression: String.raw`n-k`, annotation: ["Maximum erasures이(가) 식의 결과에 기여하는","방식을 계산합니다.","Code rate는 전체 encoded symbol 중","source 정보의 비율이고, extra overhead는"] },
+        ]}
         terms={[
           {
             symbol: "n",

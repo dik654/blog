@@ -35,6 +35,17 @@ export default function VAELoss() {
           \ell_{\mathrm G}
           &=\sum_i\frac{(x_i-\mu_i)^2}{2s^2}+C
         \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+          \ell_{\mathrm B}
+          &=\underbrace{-\sum_i x_i\log\pi_i}_{\text{로그 비용 변환}} \\
+          &\quad-\sum_i(1-x_i)\log(1-\pi_i) \\
+          \ell_{\mathrm G}
+          &=\underbrace{\sum_i\frac{(x_i-\mu_i)^2}{2s^2}+C}_{\text{기준량당 비율}}
+        \end{aligned}`}
+        operations={[
+          { expression: String.raw`-\sum_i x_i\log\pi_i`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","Binary 관측은 각 위치의 Bernoulli log","probability를, fixed-variance","continuous 관측은 Gaussian log"] },
+          { expression: String.raw`\sum_i\frac{(x_i-\mu_i)^2}{2s^2}+C`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Binary 관측은 각 위치의 Bernoulli log","probability를, fixed-variance","continuous 관측은 Gaussian log"] },
+        ]}
         terms={[
           { symbol: "x_i", name: "observation", description: "Bernoulli에서는 0 또는 1, Gaussian에서는 연속값입니다." },
           { symbol: String.raw`\pi_i`, name: "Bernoulli probability", description: "Decoder sigmoid가 예측한 binary event probability입니다." },
@@ -68,6 +79,19 @@ export default function VAELoss() {
           \mathcal L(x)&=D(x)-R(x) \\
           \log p_\theta(x)&\ge\mathcal L(x)
         \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+          D(x)&=\underbrace{\mathbb E_{q_\phi(z\mid x)}
+          [\log p_\theta(x\mid z)]}_{\text{확률 가중 평균}} \\
+          R(x)&=\underbrace{\operatorname{KL}\!\left(q_\phi(z\mid x)\,\|\,p(z)\right)}_{\text{허용 경계 판정}} \\
+          \mathcal L(x)&=\underbrace{D(x)-R(x)}_{\text{data-fit term 계산}} \\
+          \log p_\theta(x)&\ge\mathcal L(x)
+        \end{aligned}`}
+        operations={[
+          { expression: String.raw`\mathbb E_{q_\phi(z\mid x)}
+          [\log p_\theta(x\mid z)]`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","approximate posterior q를 도입해","Jensen inequality를 적용하면, decoder의","data fit과 posterior–prior KL로 계산"] },
+          { expression: String.raw`\operatorname{KL}\!\left(q_\phi(z\mid x)\,\|\,p(z)\right)`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","approximate posterior q를 도입해","Jensen inequality를 적용하면, decoder의","data fit과 posterior–prior KL로 계산"] },
+          { expression: String.raw`D(x)-R(x)`, annotation: ["data-fit term이(가) 식의 결과에 기여하는 방식을","계산합니다.","approximate posterior q를 도입해","Jensen inequality를 적용하면, decoder의"] },
+        ]}
         terms={[
           { symbol: String.raw`\log p_\theta(x)`, name: "log evidence", description: "latent를 적분한 data likelihood이며 직접 계산이 어려울 수 있습니다." },
           { symbol: "D(x)", name: "data-fit term", description: "sampled latent가 관측값을 설명하도록 decoder를 학습하는 log-likelihood expectation입니다." },
@@ -85,6 +109,18 @@ export default function VAELoss() {
           1+\log\sigma_j^2-\mu_j^2-\sigma_j^2
           \right)
         \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+          \operatorname{KL}(q\|p)&=\underbrace{\sum_j K_j}_{\text{dimension contribution 계산}} \\
+          K_j&=\underbrace{-\frac12\left(
+          1+\log\sigma_j^2-\mu_j^2-\sigma_j^2
+          \right)}_{\text{로그 비용 변환}}
+        \end{aligned}`}
+        operations={[
+          { expression: String.raw`\sum_j K_j`, annotation: ["dimension contribution이(가) 식의 결과에","기여하는 방식을 계산합니다.","두 Gaussian의 KL 공식을 dimension별로","적용하면 mean displacement, variance와"] },
+          { expression: String.raw`-\frac12\left(
+          1+\log\sigma_j^2-\mu_j^2-\sigma_j^2
+          \right)`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","두 Gaussian의 KL 공식을 dimension별로","적용하면 mean displacement, variance와","log-volume 차이의 합으로 정리됩니다."] },
+        ]}
         terms={[
           { symbol: "j", name: "latent dimension", description: "diagonal covariance이므로 dimension별 기여를 더합니다." },
           { symbol: "K_j", name: "dimension contribution", description: "j번째 posterior 축이 standard normal prior에서 벗어난 KL 비용입니다." },

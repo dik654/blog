@@ -39,7 +39,7 @@ export default function SGXAttestViz() {
                 rx={5}
                 fill={`${a.color}15`}
                 stroke={a.color}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={a.x}

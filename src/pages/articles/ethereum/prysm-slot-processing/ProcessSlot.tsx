@@ -33,6 +33,10 @@ export default function ProcessSlot({
           </>
         }
         formula={String.raw`i=s\bmod H`}
+        annotatedFormula={String.raw`i=\underbrace{s\bmod H}_{\text{Current slot 계산}}`}
+        operations={[
+          { expression: String.raw`s\bmod H`, annotation: ["Current slot이(가) 식의 결과에 기여하는 방식을","계산합니다.","최근 H개 slot을 고정 크기 vector에 보관하므로","slot 번호를 H로 나눈 나머지를 index로 사용합니다."] },
+        ]}
         terms={[
           {
             symbol: "s",

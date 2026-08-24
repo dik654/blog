@@ -39,6 +39,14 @@ export default function Overview() {
           (S_i,r_i)&=\delta(S_{i-1},c_i)\\
           S_m&=\delta^*(S_0,[c_1,\ldots,c_m])
         \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+          (S_i,r_i)&=\underbrace{\delta(S_{i-1},c_i)}_{\text{ordered command 계산}}\\
+          S_m&=\underbrace{\delta^*(S_0,[c_1,\ldots,c_m])}_{\text{오른쪽 항으로 결과 계산}}
+        \end{aligned}`}
+        operations={[
+          { expression: String.raw`\delta(S_{i-1},c_i)`, annotation: ["ordered command이(가) 식의 결과에 기여하는","방식을 계산합니다.","State transition δ가 결정적이면 동일한 시작","state에 동일한 ordered command prefix를"] },
+          { expression: String.raw`\delta^*(S_0,[c_1,\ldots,c_m])`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","State transition δ가 결정적이면 동일한 시작","state에 동일한 ordered command prefix를","하나씩 적용한 결과가 귀납적으로 같습니다."] },
+        ]}
         terms={[
           { symbol: "S_0,S_i", name: "replica state", description: "공통 initial state와 i번째 command 적용 뒤 state입니다." },
           { symbol: "c_i", name: "ordered command", description: "Consensus가 log index i에 결정한 명령입니다." },

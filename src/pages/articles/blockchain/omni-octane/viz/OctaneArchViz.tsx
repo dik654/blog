@@ -133,7 +133,7 @@ export default function OctaneArchViz() {
               x2={203}
               y2={50}
               stroke="#f59e0b"
-              strokeWidth={1.5}
+              strokeWidth={1.2}
               strokeDasharray="4 2"
               initial={{ opacity: 0 }}
               animate={{ opacity: 0.7 }}

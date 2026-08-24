@@ -19,6 +19,10 @@ export default function Usage() {
         question="고정된 표본에서 새 점 z의 보간값을 전개 없이 어떻게 구할까요?"
         idea="각 basis의 고정 denominator를 weight wᵢ로 미리 저장하고, 공통 factor를 약분한 barycentric ratio를 계산합니다."
         formula={String.raw`w_i=\left(\prod_{j\ne i}(x_i-x_j)\right)^{-1},\qquad L(z)=\frac{\sum_i\frac{w_i y_i}{z-x_i}}{\sum_i\frac{w_i}{z-x_i}}`}
+        annotatedFormula={String.raw`w_i=\underbrace{\left(\prod_{j\ne i}(x_i-x_j)\right)^{-1},\qquad L(z)=\frac{\sum_i\frac{w_i y_i}{z-x_i}}{\sum_i\frac{w_i}{z-x_i}}}_{\text{기준량당 비율}}`}
+        operations={[
+          { expression: String.raw`\left(\prod_{j\ne i}(x_i-x_j)\right)^{-1},\qquad L(z)=\frac{\sum_i\frac{w_i y_i}{z-x_i}}{\sum_i\frac{w_i}{z-x_i}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","각 basis의 고정 denominator를 weight","wᵢ로 미리 저장하고, 공통 factor를 약분한","barycentric ratio를 계산합니다."] },
+        ]}
         terms={[
           {
             symbol: "w_i",

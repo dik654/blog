@@ -27,7 +27,7 @@ export default function CcaAttestViz() {
           fill="#8b5cf6"
           fillOpacity={0.08}
           stroke="#8b5cf6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <text
           x={240}
@@ -50,7 +50,7 @@ export default function CcaAttestViz() {
           fill="#10b981"
           fillOpacity={0.15}
           stroke="#10b981"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <text
           x={137}
@@ -121,7 +121,7 @@ export default function CcaAttestViz() {
           fill="#f59e0b"
           fillOpacity={0.15}
           stroke="#f59e0b"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <text
           x={342}

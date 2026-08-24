@@ -40,6 +40,11 @@ export default function InputEmbedding() {
           </>
         }
         formula={String.raw`\begin{aligned}PE(pos,2i)&=\sin(pos/10000^{2i/d})\\PE(pos,2i+1)&=\cos(pos/10000^{2i/d})\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}PE(pos,2i)&=\underbrace{\sin(pos/10000^{2i/d})}_{\text{기준량당 비율}}\\PE(pos,2i+1)&=\underbrace{\cos(pos/10000^{2i/d})}_{\text{기준량당 비율}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`\sin(pos/10000^{2i/d})`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Feature 차원을 두 개씩 묶어 같은 주파수의 sin과","cos를 배치합니다."] },
+          { expression: String.raw`\cos(pos/10000^{2i/d})`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Feature 차원을 두 개씩 묶어 같은 주파수의 sin과","cos를 배치합니다."] },
+        ]}
         terms={[
           {
             symbol: "pos",

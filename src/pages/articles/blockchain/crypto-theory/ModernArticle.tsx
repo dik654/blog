@@ -78,6 +78,10 @@ export default function ModernCryptoTheoryArticle() {
           question="두 challenge 중 하나를 맞히는 game에서 adversary의 advantage를 어떻게 읽을까요?"
           idea="정보가 전혀 없으면 성공확률은 1/2입니다. 실제 성공확률이 이 baseline에서 얼마나 벗어나는지 절댓값으로 잽니다."
           formula={String.raw`Adv_{\mathcal A}(\lambda)=\left|\Pr[b'=b]-\frac12\right|`}
+          annotatedFormula={String.raw`Adv_{\mathcal A}(\lambda)=\underbrace{\left|\Pr[b'=b]-\frac12\right|}_{\text{허용 경계 판정}}`}
+          operations={[
+            { expression: String.raw`\left|\Pr[b'=b]-\frac12\right|`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","정보가 전혀 없으면 성공확률은 1/2입니다."] },
+          ]}
           terms={[
             {
               symbol: "𝒜",

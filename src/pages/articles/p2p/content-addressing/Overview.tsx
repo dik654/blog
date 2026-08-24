@@ -44,6 +44,16 @@ b &= \operatorname{Encode}_{codec}(x),\\
 d &= H(b),\\
 \operatorname{accept}(b^{\prime}) &\iff H(b^{\prime})=d.
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+b &= \underbrace{\operatorname{Encode}_{codec}(x),}_{\text{logical value 계산}}\\
+d &= \underbrace{H(b),}_{\text{canonical encoded bytes 계산}}\\
+\operatorname{accept}(b^{\prime}) &\iff H(b^{\prime})=\underbrace{d.}_{\text{received bytes 계산}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\operatorname{Encode}_{codec}(x),`, annotation: ["logical value이(가) 식의 결과에 기여하는 방식을","계산합니다.","주소를 만들 때 codec으로 canonical bytes를","정하고 cryptographic hash를 계산합니다."] },
+          { expression: String.raw`H(b),`, annotation: ["canonical encoded bytes이(가) 식의 결과에","기여하는 방식을 계산합니다.","주소를 만들 때 codec으로 canonical bytes를","정하고 cryptographic hash를 계산합니다."] },
+          { expression: String.raw`d.`, annotation: ["received bytes이(가) 식의 결과에 기여하는 방식을","계산합니다.","주소를 만들 때 codec으로 canonical bytes를","정하고 cryptographic hash를 계산합니다."] },
+        ]}
         terms={[
           {
             symbol: "x",

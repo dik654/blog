@@ -975,7 +975,7 @@ export function Step2() {
           r={22}
           fill="var(--card)"
           stroke={C.proof}
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <circle cx={416} cy={61} r={14} fill={C.proof} opacity={0.12} />
         <text

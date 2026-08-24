@@ -554,7 +554,7 @@ export default function GetStorageViz() {
                 d="M 298 60 Q 318 60, 318 80 Q 318 100, 328 100"
                 fill="none"
                 stroke={C.bloom}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 markerEnd="url(#gsArrowBloom)"
                 {...drawLine(0.7, 0.4)}
               />

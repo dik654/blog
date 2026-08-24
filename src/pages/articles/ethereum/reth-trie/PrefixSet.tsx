@@ -31,6 +31,10 @@ export default function PrefixSet({
           </>
         }
         formula={"N_{\\rm nibble}=2B"}
+        annotatedFormula={String.raw`N_{\rm nibble}=\underbrace{2B}_{\text{Path digits 계산}}`}
+        operations={[
+          { expression: String.raw`2B`, annotation: ["Path digits이(가) 식의 결과에 기여하는 방식을","계산합니다.","Nibble 하나는 4 bit이고 byte 하나는 8","bit이므로 byte마다"] },
+        ]}
         terms={[
           {
             symbol: "B",

@@ -23,6 +23,14 @@ export default function FaultyThreshold() {
           n&=3f+1,\qquad q=2f+1\\
           |Q_1\cap Q_2|&\ge 2q-n=f+1>f
         \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+          n&=\underbrace{3f+1,\qquad q=2f+1}_{\text{replicas 계산}}\\
+          |Q_1\cap Q_2|&\ge 2q-n=\underbrace{f+1>f}_{\text{허용 경계 판정}}
+        \end{aligned}`}
+        operations={[
+          { expression: String.raw`3f+1,\qquad q=2f+1`, annotation: ["replicas이(가) 식의 결과에 기여하는 방식을","계산합니다.","두 집합의 크기 합에서 전체 membership을 빼면 최소","교집합이 나옵니다."] },
+          { expression: String.raw`f+1>f`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","두 집합의 크기 합에서 전체 membership을 빼면 최소","교집합이 나옵니다."] },
+        ]}
         terms={[
           { symbol: "n", name: "replicas", description: "Equal-weight fixed membership의 전체 replica 수입니다." },
           { symbol: "f", name: "fault bound", description: "Protocol이 허용하는 최대 Byzantine replica 수입니다." },

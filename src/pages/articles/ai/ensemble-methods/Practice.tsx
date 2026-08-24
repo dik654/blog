@@ -23,6 +23,17 @@ export default function Practice() {
             -\widehat R_{\mathrm{OOF}}(E\oplus j) \\
           C_j&=(\Delta p95_j,\Delta M_j,\Delta O_j)
         \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+          \Delta_j
+          &=\underbrace{\widehat R_{\mathrm{OOF}}(E)
+            -\widehat R_{\mathrm{OOF}}(E\oplus j)}_{\text{변화량 계산}} \\
+          C_j&=\underbrace{(\Delta p95_j,\Delta M_j,\Delta O_j)}_{\text{변화량 계산}}
+        \end{aligned}`}
+        operations={[
+          { expression: String.raw`\widehat R_{\mathrm{OOF}}(E)
+            -\widehat R_{\mathrm{OOF}}(E\oplus j)`, annotation: ["paired marginal gain이(가) 식의 결과에","기여하는 방식을 계산합니다.","같은 OOF 행에서 현재 ensemble loss와 후보를","더한 ensemble loss를 빼 개선량을 구하고, 추가"] },
+          { expression: String.raw`(\Delta p95_j,\Delta M_j,\Delta O_j)`, annotation: ["인접한 level의 차이를 남겨 변화량을 계산합니다.","같은 OOF 행에서 현재 ensemble loss와 후보를","더한 ensemble loss를 빼 개선량을 구하고, 추가","latency·memory와 함께 봅니다."] },
+        ]}
         terms={[
           { symbol: "E", name: "current ensemble", description: "이미 채택된 base models와 고정 결합 규칙입니다." },
           { symbol: "E plus j", name: "candidate extension", description: "후보 j를 같은 결합 규칙으로 임시 추가한 ensemble입니다." },

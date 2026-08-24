@@ -430,7 +430,7 @@ function CommitDiagram() {
           rx={8}
           fill={`${C.cm}15`}
           stroke={C.cm}
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <text
           x={412}
@@ -645,7 +645,7 @@ function OpenDiagram() {
           rx={8}
           fill={`${C.open}15`}
           stroke={C.open}
-          strokeWidth={1.5}
+          strokeWidth={1.2}
         />
         <text
           x={422}

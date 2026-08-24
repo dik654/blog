@@ -30,6 +30,10 @@ export default function LogicGates() {
         question="AND의 네 input 중 (1,1)만 positive half-space에 넣으려면 경계를 어디에 둘까?"
         idea={<>두 coordinate를 같은 비중으로 더한 뒤 threshold를 0.7에 두면 합이 1인 (1,1)만 통과하고, 합이 0.5 이하인 나머지는 통과하지 못합니다.</>}
         formula={String.raw`z_{\mathrm{AND}}=0.5x_1+0.5x_2-0.7,\qquad \hat y=H(z_{\mathrm{AND}})`}
+        annotatedFormula={String.raw`z_{\mathrm{AND}}=\underbrace{0.5x_1+0.5x_2-0.7,\qquad \hat y=H(z_{\mathrm{AND}})}_{\text{bias 계산}}`}
+        operations={[
+          { expression: String.raw`0.5x_1+0.5x_2-0.7,\qquad \hat y=H(z_{\mathrm{AND}})`, annotation: ["bias이(가) 식의 결과에 기여하는 방식을 계산합니다.","두 coordinate를 같은 비중으로 더한 뒤","threshold를 0.7에 두면 합이 1인 (1,1)만","통과하고, 합이 0.5 이하인 나머지는 통과하지 못합니다."] },
+        ]}
         terms={[
           { symbol: "x_1,x_2\\in\\{0,1\\}", name: "binary inputs", description: "truth table의 두 입력입니다." },
           { symbol: "0.5,0.5", name: "weights", description: "두 입력을 같은 방향으로 점수화합니다." },

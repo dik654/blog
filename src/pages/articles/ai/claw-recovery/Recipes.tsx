@@ -101,6 +101,10 @@ export default function Recipes() {
           question="현재 attempt 뒤 자동 recovery를 몇 번 더 허용할 수 있을까?"
           idea={<>전체 한도에서 이미 시작한 attempt 수를 빼되 음수가 되지 않게 합니다. Scenario A가 한도를 다 썼다고 다른 dependency의 budget까지 소모한 것으로 계산하지 않습니다.</>}
           formula={String.raw`R=\max(0,\,L-A)`}
+          annotatedFormula={String.raw`R=\underbrace{\max(0,\,L-A)}_{\text{경계 후보 선택}}`}
+          operations={[
+            { expression: String.raw`\max(0,\,L-A)`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","전체 한도에서 이미 시작한 attempt 수를 빼되 음수가","되지 않게 합니다."] },
+          ]}
           terms={[
             { symbol: "R", name: "attempts remaining", description: "현재 scenario에서 새로 시작할 수 있는 자동 recovery 횟수입니다." },
             { symbol: "L", name: "retry limit", description: "정책과 recipe version이 허용한 전체 attempt 상한입니다." },

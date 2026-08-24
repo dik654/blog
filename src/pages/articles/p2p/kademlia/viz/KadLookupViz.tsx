@@ -67,7 +67,7 @@ export default function KadLookupViz() {
                 r={16}
                 fill="none"
                 stroke="#6366f1"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 strokeDasharray="3,3"
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
@@ -85,7 +85,7 @@ export default function KadLookupViz() {
                 x2={NODES[i + 3] ? NODES[i + 3].x : NODES[0].x}
                 y2={NODES[i + 3] ? NODES[i + 3].y : NODES[0].y}
                 stroke="#10b981"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 strokeDasharray="5,3"
                 initial={{ pathLength: 0 }}
                 animate={{ pathLength: 1 }}
@@ -123,7 +123,7 @@ export default function KadLookupViz() {
                 r={16}
                 fill="none"
                 stroke="#f59e0b"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: (i - 4) * 0.1 }}
@@ -136,7 +136,7 @@ export default function KadLookupViz() {
               x2={NODES[0].x}
               y2={NODES[0].y}
               stroke="#f59e0b"
-              strokeWidth={1.5}
+              strokeWidth={1.2}
               strokeDasharray="4,3"
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
@@ -157,7 +157,7 @@ export default function KadLookupViz() {
                 x2={NODES[0].x}
                 y2={NODES[0].y}
                 stroke="#10b981"
-                strokeWidth={2.5}
+                strokeWidth={1.2}
               />
               <rect
                 x={250}

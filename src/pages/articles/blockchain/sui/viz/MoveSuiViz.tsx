@@ -48,7 +48,7 @@ export default function MoveSuiViz({
                 rx={8}
                 fill="#6366f110"
                 stroke="#6366f1"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={90}
@@ -111,7 +111,7 @@ export default function MoveSuiViz({
                 rx={8}
                 fill="#10b98115"
                 stroke="#10b981"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 animate={{ x: step === 2 ? 290 : 200 }}
                 transition={sp}
               />
@@ -144,7 +144,7 @@ export default function MoveSuiViz({
                 rx={8}
                 fill="#f59e0b15"
                 stroke="#f59e0b"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={327}

@@ -147,7 +147,7 @@ export default function IrohConnectViz() {
               x2={PB.x - 14}
               y2={PB.y}
               stroke="#8b5cf6"
-              strokeWidth={1.5}
+              strokeWidth={1.2}
               strokeDasharray="4 2"
               initial={{ opacity: 0 }}
               animate={{ opacity: 0.7 }}

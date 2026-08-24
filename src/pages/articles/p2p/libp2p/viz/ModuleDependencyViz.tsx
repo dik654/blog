@@ -92,7 +92,7 @@ export default function ModuleDependencyViz() {
                   rx={5}
                   fill={m.color + "12"}
                   stroke={m.color}
-                  strokeWidth={1.4}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={m.x + BW / 2}

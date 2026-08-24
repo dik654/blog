@@ -22,6 +22,10 @@ export default function ModernZKTheoryArticle() {
           question="같은 첫 메시지 R에 서로 다른 challenge 두 개를 답하면 왜 witness w를 계산할 수 있는가?"
           idea={<>두 accepted response에서 nonce r은 같고 challenge만 다릅니다. 식을 빼면 r이 사라지고 w에 대한 일차식만 남습니다. 이것이 special soundness의 extractor 아이디어입니다.</>}
           formula={String.raw`s=r+ew,\quad s'=r+e'w\quad\Longrightarrow\quad w=(s-s')(e-e')^{-1}\pmod q`}
+          annotatedFormula={String.raw`s=\underbrace{r+ew,\quad s'=r+e'w\quad\Longrightarrow\quad w=(s-s')(e-e')^{-1}\pmod q}_{\text{Witness 계산}}`}
+          operations={[
+            { expression: String.raw`r+ew,\quad s'=r+e'w\quad\Longrightarrow\quad w=(s-s')(e-e')^{-1}\pmod q`, annotation: ["Witness이(가) 식의 결과에 기여하는 방식을 계산합니다.","두 accepted response에서 nonce r은 같고","challenge만 다릅니다."] },
+          ]}
           terms={[
             { symbol: "R=g^r", name: "First message", description: "Challenge 전에 고정하는 nonce commitment입니다." },
             { symbol: "e,e'", name: "Distinct challenges", description: "같은 R에 대해 서로 달라야 합니다." },
@@ -42,6 +46,10 @@ export default function ModernZKTheoryArticle() {
           question="Schnorr verifier가 보는 accepted transcript를 witness 없이 어떻게 만들 수 있는가?"
           idea={<>Simulator는 challenge e와 response s를 먼저 고르고 verifier equation이 성립하도록 R을 역산합니다. Honest-verifier setting에서 이 transcript의 분포가 실제 protocol view와 같거나 구별하기 어렵다는 것이 ZK 직관입니다.</>}
           formula={String.raw`e,s\leftarrow\mathbb Z_q,\qquad R:=g^sY^{-e}\quad\Longrightarrow\quad g^s=R\,Y^e`}
+          annotatedFormula={String.raw`e,s\leftarrow\mathbb Z_q,\qquad R:=\underbrace{g^sY^{-e}\quad\Longrightarrow\quad g^s=R\,Y^e}_{\text{허용 경계 판정}}`}
+          operations={[
+            { expression: String.raw`g^sY^{-e}\quad\Longrightarrow\quad g^s=R\,Y^e`, annotation: ["Scalar field이(가) 식의 결과에 기여하는 방식을","계산합니다.","Simulator는 challenge e와 response","s를 먼저 고르고 verifier equation이 성립하도록"] },
+          ]}
           terms={[
             { symbol: "e,s", name: "Simulated challenge/response", description: "Simulator가 witness 없이 뽑는 field 값입니다." },
             { symbol: "R", name: "Programmed first message", description: "Verifier equation이 성립하도록 역산합니다." },
@@ -56,6 +64,10 @@ export default function ModernZKTheoryArticle() {
           question="Pedersen commitment는 hiding과 binding을 어떤 서로 다른 전제에 배치하는가?"
           idea={<>Random r이 commitment 분포를 모든 m에 대해 같게 만들어 hiding을 주고, 같은 C를 두 메시지로 열면 generator 사이 discrete log를 계산할 수 있게 되어 computational binding을 줍니다.</>}
           formula={String.raw`C=g^m h^r,\qquad g^m h^r=g^{m'}h^{r'}\Rightarrow \log_g h=(m-m')(r'-r)^{-1}`}
+          annotatedFormula={String.raw`C=\underbrace{g^m h^r,\qquad g^m h^r=g^{m'}h^{r'}\Rightarrow \log_g h=(m-m')(r'-r)^{-1}}_{\text{로그 비용 변환}}`}
+          operations={[
+            { expression: String.raw`g^m h^r,\qquad g^m h^r=g^{m'}h^{r'}\Rightarrow \log_g h=(m-m')(r'-r)^{-1}`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","Random r이 commitment 분포를 모든 m에 대해","같게 만들어 hiding을 주고, 같은 C를 두 메시지로 열면","generator 사이 discrete log를 계산할 수"] },
+          ]}
           terms={[
             { symbol: "m", name: "Message", description: "Commit하고 숨기려는 field 값입니다." },
             { symbol: "r", name: "Blinding", description: "매 commitment마다 새로 uniform sampling합니다." },

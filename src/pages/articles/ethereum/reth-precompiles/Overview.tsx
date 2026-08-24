@@ -57,6 +57,10 @@ export default function Overview({
         question="프리컴파일을 실제로 실행하기 전에 어떤 조건을 확인해야 할까?"
         idea="활성 포크가 정한 주소별 gas 함수로 비용을 먼저 계산합니다. 호출에 실린 gas가 부족하면 native backend에 들어가지 않고 out-of-gas로 끝나야 합니다."
         formula={String.raw`G_f(x) \le g_{\mathrm{call}},\qquad g_{\mathrm{left}}=g_{\mathrm{call}}-G_f(x)`}
+        annotatedFormula={String.raw`G_f(x) \le g_{\mathrm{call}},\qquad g_{\mathrm{left}}=\underbrace{g_{\mathrm{call}}-G_f(x)}_{\text{허용 경계 판정}}`}
+        operations={[
+          { expression: String.raw`g_{\mathrm{call}}-G_f(x)`, annotation: ["호출 gas이(가) 식의 결과에 기여하는 방식을 계산합니다.","활성 포크가 정한 주소별 gas 함수로 비용을 먼저","계산합니다."] },
+        ]}
         terms={[
           { symbol: "x", name: "입력 bytes", description: "프리컴파일에 전달된 byte string입니다. 길이·필드 encoding이 gas와 유효성에 영향을 줄 수 있습니다." },
           { symbol: "f", name: "활성 연산", description: "현재 block의 fork registry가 해당 주소에 연결한 네이티브 연산입니다." },

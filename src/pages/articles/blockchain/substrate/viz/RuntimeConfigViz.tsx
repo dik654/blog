@@ -90,7 +90,7 @@ export default function RuntimeConfigViz() {
                 rx={6}
                 fill={`${n.color}12`}
                 stroke={n.color}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={n.x + BW / 2}

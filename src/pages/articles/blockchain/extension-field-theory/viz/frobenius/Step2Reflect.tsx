@@ -91,7 +91,7 @@ export default function Step2Reflect() {
           x2={cx + (7 * s) / 3 + 6}
           y2={cy}
           stroke={`${C.conj}30`}
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           strokeDasharray="5 3"
         />
         <text x={cx + (7 * s) / 3 + 10} y={cy + 16} fontSize={9} fill={C.conj}>

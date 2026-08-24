@@ -46,7 +46,7 @@ export default function SszViz() {
                   rx={8}
                   fill={C.fixed + "15"}
                   stroke={C.fixed}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={140}
@@ -156,7 +156,7 @@ export default function SszViz() {
                   rx={8}
                   fill={C.fixed + "15"}
                   stroke={C.fixed}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={110}
@@ -176,7 +176,7 @@ export default function SszViz() {
                   rx={8}
                   fill={C.var + "15"}
                   stroke={C.var}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={220}
@@ -194,7 +194,7 @@ export default function SszViz() {
                   x2={290}
                   y2={63}
                   stroke={C.var}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                   strokeDasharray="4 2"
                   initial={{ pathLength: 0 }}
                   animate={{ pathLength: 1 }}
@@ -207,7 +207,7 @@ export default function SszViz() {
                   rx={8}
                   fill={C.var + "15"}
                   stroke={C.var}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={360}
@@ -246,7 +246,7 @@ export default function SszViz() {
                       rx={4}
                       fill={C.merkle + "25"}
                       stroke={C.merkle}
-                      strokeWidth={1.5}
+                      strokeWidth={1.2}
                     />
                     <text
                       x={155 + i * 160}
@@ -268,7 +268,7 @@ export default function SszViz() {
                   rx={4}
                   fill={C.merkle + "35"}
                   stroke={C.merkle}
-                  strokeWidth={2}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={240}

@@ -82,7 +82,7 @@ export default function TransactionEVMViz() {
             x2={22}
             y2={382}
             stroke="var(--border)"
-            strokeWidth={1.5}
+            strokeWidth={1.2}
           />
 
           {/* Stage boxes */}
@@ -100,7 +100,7 @@ export default function TransactionEVMViz() {
                 x2={46}
                 y2={s.y}
                 stroke={i <= step ? s.color : "var(--border)"}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <rect
                 x={46}

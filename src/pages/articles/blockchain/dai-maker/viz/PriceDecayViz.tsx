@@ -204,7 +204,7 @@ export default function PriceDecayViz() {
         />
 
         {/* 경매 곡선 */}
-        <path d={pathData} stroke="#3b82f6" strokeWidth={2.5} fill="none" />
+        <path d={pathData} stroke="#3b82f6" strokeWidth={1.2} fill="none" />
 
         {/* 시작점 */}
         <circle cx={toX(0)} cy={toY(top)} r={5} fill="#3b82f6" />
@@ -227,7 +227,7 @@ export default function PriceDecayViz() {
               r={6}
               fill="#10b981"
               stroke="var(--card)"
-              strokeWidth={1.5}
+              strokeWidth={1.2}
             />
             <text
               x={toX(breakEven.t)}

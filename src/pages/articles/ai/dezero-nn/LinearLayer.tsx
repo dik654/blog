@@ -26,6 +26,16 @@ W\in\mathbb{R}^{2\times3},\quad b\in\mathbb{R}^{3},\\
 Y&=XW+b\in\mathbb{R}^{4\times3},\\
 N_{\mathrm{param}}&=2\cdot3+3=9.
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+X&\in\mathbb{R}^{4\times2},\quad
+W\in\mathbb{R}^{2\times3},\quad b\in\mathbb{R}^{3},\\
+Y&=\underbrace{XW+b\in\mathbb{R}^{4\times3},}_{\text{batch size 계산}}\\
+N_{\mathrm{param}}&=\underbrace{2\cdot3+3=9.}_{\text{input dimension 계산}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`XW+b\in\mathbb{R}^{4\times3},`, annotation: ["batch size이(가) 식의 결과에 기여하는 방식을","계산합니다.","각 sample의 길이 2 row가 2×3 weight와","곱해져 길이 3 row가 되고, 길이 3 bias가 모든"] },
+          { expression: String.raw`2\cdot3+3=9.`, annotation: ["input dimension이(가) 식의 결과에 기여하는","방식을 계산합니다.","각 sample의 길이 2 row가 2×3 weight와","곱해져 길이 3 row가 되고, 길이 3 bias가 모든"] },
+        ]}
         terms={[
           { symbol: "4", name: "batch size", description: "같은 weight를 통과하는 sample 수입니다." },
           { symbol: "2", name: "input dimension", description: "Sample 하나의 feature 수이자 W의 row 수입니다." },

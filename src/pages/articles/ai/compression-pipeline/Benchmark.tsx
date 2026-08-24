@@ -37,6 +37,17 @@ export default function Benchmark() {
 \Delta_{AB}&=m_{AB}-m_0,\\
 I_{A,B}&=\Delta_{AB}-\Delta_A-\Delta_B.
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+\Delta_A&=\underbrace{m_A-m_0,}_{\text{변화량 계산}}\\
+\Delta_B&=\underbrace{m_B-m_0,}_{\text{변화량 계산}}\\
+\Delta_{AB}&=\underbrace{m_{AB}-m_0,}_{\text{변화량 계산}}\\
+I_{A,B}&=\Delta_{AB}-\Delta_A-\Delta_B.
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`m_A-m_0,`, annotation: ["baseline metric이(가) 식의 결과에 기여하는","방식을 계산합니다.","Baseline 대비 같은 방향의 gain을 정의하고 결합","gain에서 두 단일 gain을 뺍니다."] },
+          { expression: String.raw`m_B-m_0,`, annotation: ["baseline metric이(가) 식의 결과에 기여하는","방식을 계산합니다.","Baseline 대비 같은 방향의 gain을 정의하고 결합","gain에서 두 단일 gain을 뺍니다."] },
+          { expression: String.raw`m_{AB}-m_0,`, annotation: ["baseline metric이(가) 식의 결과에 기여하는","방식을 계산합니다.","Baseline 대비 같은 방향의 gain을 정의하고 결합","gain에서 두 단일 gain을 뺍니다."] },
+        ]}
         terms={[
           {
             symbol: "m_0",
@@ -85,6 +96,19 @@ a\succ b&\iff a\succeq b\ \land\ \min_j c_j<0,\\
 D(a)&=\mathbf1[\exists b\in\mathcal A:b\succ a],\\
 \mathcal P&=\{a\in\mathcal A:D(a)=0\}.
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+c_j&=\underbrace{f_j(a)-f_j(b),}_{\text{cost-oriented metric 계산}}\\
+a\succeq b&\iff c_j\le\underbrace{0\quad(\forall j),}_{\text{오른쪽 항으로 결과 계산}}\\
+a\succ b&\iff a\succeq b\ \land\ \min_j c_j<\underbrace{0,}_{\text{경계 후보 선택}}\\
+\mathcal A&=\{a:F(a)=1\},\\
+D(a)&=\mathbf1[\exists b\in\mathcal A:b\succ a],\\
+\mathcal P&=\{a\in\mathcal A:D(a)=0\}.
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`f_j(a)-f_j(b),`, annotation: ["cost-oriented metric이(가) 식의 결과에","기여하는 방식을 계산합니다.","한 후보가 다른 후보보다"] },
+          { expression: String.raw`0\quad(\forall j),`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","한 후보가 다른 후보보다"] },
+          { expression: String.raw`0,`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","한 후보가 다른 후보보다"] },
+        ]}
         terms={[
           {
             symbol: "f_j",

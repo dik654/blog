@@ -137,6 +137,16 @@ S(K)&\approx\frac{\mathbb{E}[Y_K],t_T(1)}{t_C(K)} \\
 \text{benefit}&\Longleftrightarrow
 \mathbb{E}[Y_K],t_T(1)>t_C(K)
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+\underbrace{t_C(K)}_{\text{확률 가중 평균}}&=\underbrace{t_D(K)+t_V(K)+t_R(K)}_{\text{오른쪽 항으로 결과 계산}} \\
+S(K)&\approx\frac{\mathbb{E}[Y_K],t_T(1)}{t_C(K)} \\
+\text{benefit}&\Longleftrightarrow
+\mathbb{E}[Y_K],t_T(1)>t_C(K)
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`t_D(K)+t_V(K)+t_R(K)`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","한 cycle에서 확정한 token을 target-only로","만들었을 기준 시간과,","proposal·verification·runtime을 모두"] },
+          { expression: String.raw`t_C(K)`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","한 cycle에서 확정한 token을 target-only로","만들었을 기준 시간과,","proposal·verification·runtime을 모두"] },
+        ]}
         terms={SPEEDUP_TERMS}
         assumptions={[
           "같은 prompt/output distribution·sampler·quality contract에서 target-only와 비교합니다.",

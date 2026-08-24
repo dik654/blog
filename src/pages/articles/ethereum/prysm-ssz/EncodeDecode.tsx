@@ -32,6 +32,10 @@ export default function EncodeDecode({
           </>
         }
         formula={String.raw`o_b=8+4+4=16\ \mathrm{B}`}
+        annotatedFormula={String.raw`o_b=\underbrace{8+4+4=16\ \mathrm{B}}_{\text{b offset 계산}}`}
+        operations={[
+          { expression: String.raw`8+4+4=16\ \mathrm{B}`, annotation: ["b offset이(가) 식의 결과에 기여하는 방식을","계산합니다.","Fixed part에는 a의 8 bytes, b의 offset","4 bytes, c의 4 bytes가 놓입니다."] },
+        ]}
         terms={[
           {
             symbol: "o_b",

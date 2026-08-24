@@ -135,6 +135,10 @@ export default function Usage() {
           question="한 model attempt의 token usage를 당시 가격표로 어떻게 추정할까?"
           idea={<>Input·output·cache read·cache write를 하나의 token 합계로 뭉치지 않고 각 billable category와 단가를 곱합니다. Retry가 새 response를 만들면 별도 attempt 비용으로 더합니다.</>}
           formula={String.raw`\widehat C=p_iI+p_oO+p_rR+p_wW`}
+          annotatedFormula={String.raw`\widehat C=\underbrace{p_iI+p_oO+p_rR+p_wW}_{\text{estimated cost 계산}}`}
+          operations={[
+            { expression: String.raw`p_iI+p_oO+p_rR+p_wW`, annotation: ["estimated cost이(가) 식의 결과에 기여하는 방식을","계산합니다.","Input·output·cache read·cache","write를 하나의 token 합계로 뭉치지 않고 각"] },
+          ]}
           terms={[
             { symbol: String.raw`\widehat C`, name: "estimated cost", description: "해당 pricing catalog version으로 계산한 추정 통화 금액입니다." },
             { symbol: "I,O", name: "input and output tokens", description: "Provider가 보고한 일반 input·output billable token 수입니다." },

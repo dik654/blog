@@ -32,6 +32,14 @@ export default function Overview() {
 X_i&=\{(x_{iv},m_{iv},c_{iv})\}_{v=1}^{V_i},\\
 \hat y_i&=F_\theta(X_i).
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+X_i&=\underbrace{\{(x_{iv},m_{iv},c_{iv})\}_{v=1}^{V_i},}_{\text{오른쪽 항으로 결과 계산}}\\
+\hat y_i&=\underbrace{F_\theta(X_i).}_{\text{오른쪽 항으로 결과 계산}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\{(x_{iv},m_{iv},c_{iv})\}_{v=1}^{V_i},`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","각 view의 관측값만 모으지 않고, 보이는지 나타내는","mask와 좌표·시각·센서 정보를 담은 metadata를 한","tuple로 묶습니다."] },
+          { expression: String.raw`F_\theta(X_i).`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","각 view의 관측값만 모으지 않고, 보이는지 나타내는","mask와 좌표·시각·센서 정보를 담은 metadata를 한","tuple로 묶습니다."] },
+        ]}
         terms={[
           { symbol: "i,v", name: "sample and view index", description: "i는 같은 대상·사건을 묶은 episode, v는 그 안의 camera·sensor·시점 index입니다." },
           { symbol: "xᵢᵥ", name: "view observation", description: "v번째 view의 image, depth map 또는 encoder가 읽을 원자료입니다." },
@@ -58,6 +66,14 @@ X_i&=\{(x_{iv},m_{iv},c_{iv})\}_{v=1}^{V_i},\\
 X_i'&=\pi X_i,\\
 F_\theta(X_i')&=F_\theta(X_i)\quad(\forall\pi).
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+X_i'&=\underbrace{\pi X_i,}_{\text{오른쪽 항으로 결과 계산}}\\
+F_\theta(X_i')&=\underbrace{F_\theta(X_i)\quad(\forall\pi).}_{\text{오른쪽 항으로 결과 계산}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\pi X_i,`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","같은 원소를 다른 순서로 나열한 permutation은 같은","set입니다."] },
+          { expression: String.raw`F_\theta(X_i)\quad(\forall\pi).`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","같은 원소를 다른 순서로 나열한 permutation은 같은","set입니다."] },
+        ]}
         terms={[
           { symbol: "π", name: "permutation", description: "View 내용은 그대로 둔 채 나열 순서만 바꾸는 일대일 재배열입니다." },
           { symbol: "πXᵢ", name: "reordered episode", description: "Xᵢ와 같은 view들을 다른 순서로 입력한 sample입니다." },

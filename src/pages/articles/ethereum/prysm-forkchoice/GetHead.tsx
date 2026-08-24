@@ -16,6 +16,10 @@ export default function GetHead({ onCodeRef }: { onCodeRef: (key: string, ref: C
         question="한 node의 child 가운데 다음에 내려갈 branch를 어떤 score로 정할까요?"
         idea="각 eligible child의 subtree를 지지하는 active·unslashed validator 최신 balance를 합하고, 조건을 만족한 현재 slot의 proposer boost가 그 subtree에 있으면 임시 score를 더합니다."
         formula={String.raw`\begin{aligned}W(n)&=\sum_{i\in A\setminus E}b_i\,\mathbf{1}[n\preceq r_i]\\&\qquad+B\,\mathbf{1}[n\preceq r_{boost}]\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}W(n)&=\underbrace{\sum_{i\in A\setminus E}b_i\,\mathbf{1}[n\preceq r_i]}_{\text{검증자 잔액 계산}}\\&\qquad+B\,\mathbf{1}[n\preceq r_{boost}]\end{aligned}`}
+        operations={[
+          { expression: String.raw`\sum_{i\in A\setminus E}b_i\,\mathbf{1}[n\preceq r_i]`, annotation: ["검증자 잔액이(가) 식의 결과에 기여하는 방식을 계산합니다.","각 eligible child의 subtree를 지지하는","active·unslashed validator 최신","balance를 합하고, 조건을 만족한 현재 slot의"] },
+        ]}
         terms={[
           { symbol: "A", name: "활성 검증자 집합", description: "기준 checkpoint state의 active validator 집합" },
           { symbol: "E", name: "이중 투표 검증자 집합", description: "확인된 equivocating validator 집합" },

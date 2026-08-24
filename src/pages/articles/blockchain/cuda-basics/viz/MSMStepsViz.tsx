@@ -48,7 +48,7 @@ export default function MSMStepsViz() {
                     rx={5}
                     fill={C[0] + "15"}
                     stroke={C[0]}
-                    strokeWidth={1.5}
+                    strokeWidth={1.2}
                   />
                   <text
                     x={54 + i * 58}
@@ -117,7 +117,7 @@ export default function MSMStepsViz() {
                     rx={8}
                     fill={C[1] + "15"}
                     stroke={C[1]}
-                    strokeWidth={1.5}
+                    strokeWidth={1.2}
                   />
                   <text
                     x={80 + i * 120}
@@ -183,7 +183,7 @@ export default function MSMStepsViz() {
                     x2={200}
                     y2={80}
                     stroke={C[2]}
-                    strokeWidth={1.5}
+                    strokeWidth={1.2}
                     strokeOpacity={0.4}
                     initial={{ pathLength: 0 }}
                     animate={{ pathLength: 1 }}
@@ -199,7 +199,7 @@ export default function MSMStepsViz() {
                 rx={6}
                 fill={C[2] + "20"}
                 stroke={C[2]}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={200}
@@ -251,7 +251,7 @@ export default function MSMStepsViz() {
                 rx={8}
                 fill={C[3] + "20"}
                 stroke={C[3]}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 style={{ transformOrigin: "200px 89px" }}

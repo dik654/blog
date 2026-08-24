@@ -24,6 +24,12 @@ export default function Components() {
         question="차분된 현재 값을 과거 관측의 관성과 과거 forecast error로 어떻게 분해할까?"
         idea={<>AR polynomial φ(B)는 Z의 과거를, MA polynomial θ(B)는 innovation의 과거를 필터링합니다. 두 polynomial로 쓰면 lag 구조와 stationarity·invertibility 조건을 같은 언어로 확인할 수 있습니다.</>}
         formula={String.raw`\begin{aligned}\operatorname{AR}_t&=\sum_{i=1}^{p}\phi_iZ_{t-i}\\\operatorname{MA}_t&=\varepsilon_t+\sum_{j=1}^{q}\theta_j\varepsilon_{t-j}\\Z_t&=c+\operatorname{AR}_t+\operatorname{MA}_t\\\phi(B)Z_t&=c+\theta(B)\varepsilon_t\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}\operatorname{AR}_t&=\underbrace{\sum_{i=1}^{p}\phi_iZ_{t-i}}_{\text{AR coefficients 계산}}\\\operatorname{MA}_t&=\underbrace{\varepsilon_t+\sum_{j=1}^{q}\theta_j\varepsilon_{t-j}}_{\text{innovation 계산}}\\Z_t&=\underbrace{c+\operatorname{AR}_t+\operatorname{MA}_t}_{\text{오른쪽 항으로 결과 계산}}\\\phi(B)Z_t&=c+\theta(B)\varepsilon_t\end{aligned}`}
+        operations={[
+          { expression: String.raw`\sum_{i=1}^{p}\phi_iZ_{t-i}`, annotation: ["AR coefficients이(가) 식의 결과에 기여하는","방식을 계산합니다.","AR polynomial φ(B)는 Z의 과거를, MA","polynomial θ(B)는 innovation의 과거를"] },
+          { expression: String.raw`\varepsilon_t+\sum_{j=1}^{q}\theta_j\varepsilon_{t-j}`, annotation: ["innovation이(가) 식의 결과에 기여하는 방식을","계산합니다.","AR polynomial φ(B)는 Z의 과거를, MA","polynomial θ(B)는 innovation의 과거를"] },
+          { expression: String.raw`c+\operatorname{AR}_t+\operatorname{MA}_t`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","AR polynomial φ(B)는 Z의 과거를, MA","polynomial θ(B)는 innovation의 과거를","필터링합니다."] },
+        ]}
         terms={[
           { symbol: "Z_t=\\Delta^dY_t", name: "modeled series", description: "d번 차분한 stationary representation입니다." },
           { symbol: "\\phi_i", name: "AR coefficients", description: "과거 관측값이 현재 conditional mean에 주는 가중치입니다." },

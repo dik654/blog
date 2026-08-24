@@ -16,7 +16,7 @@ export function StepCrash() {
     ))}
     <motion.g initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }}
       transition={{ delay: 0.4, type: 'spring' }}>
-      <line x1={215} y1={18} x2={215} y2={70} stroke={C.err} strokeWidth={2} strokeDasharray="4 2" />
+      <line x1={215} y1={18} x2={215} y2={70} stroke={C.err} strokeWidth={1.2} strokeDasharray="4 2" />
       <text x={215} y={12} textAnchor="middle" fontSize={11} fill={C.err}>💥 크래시</text>
     </motion.g>
     <motion.text x={210} y={90} textAnchor="middle" fontSize={11} fill={C.err}

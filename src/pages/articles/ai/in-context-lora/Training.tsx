@@ -47,6 +47,17 @@ export default function Training({
           u_t^{\text{tgt}} &= x_1^{\text{tgt}} - x_0^{\text{tgt}} \\
           z &= \mathrm{concat}(z_\text{ref},\, z_t^{\text{tgt}})
         \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+          z_\text{ref} &= \underbrace{x_0^{\text{ref}}}_{\text{concatenated context 계산}} \\
+          z_t^{\text{tgt}} &= \underbrace{(1-t)\,x_0^{\text{tgt}} + t\,x_1^{\text{tgt}}}_{\text{표준 Gaussian noise 계산}} \\
+          u_t^{\text{tgt}} &= \underbrace{x_1^{\text{tgt}} - x_0^{\text{tgt}}}_{\text{velocity target 계산}} \\
+          z &= \mathrm{concat}(z_\text{ref},\, z_t^{\text{tgt}})
+        \end{aligned}`}
+        operations={[
+          { expression: String.raw`x_0^{\text{ref}}`, annotation: ["concatenated context이(가) 식의 결과에","기여하는 방식을 계산합니다.","Flow matching의 직선 보간은 target 에만","적용합니다."] },
+          { expression: String.raw`(1-t)\,x_0^{\text{tgt}} + t\,x_1^{\text{tgt}}`, annotation: ["표준 Gaussian noise이(가) 식의 결과에 기여하는","방식을 계산합니다.","Flow matching의 직선 보간은 target 에만","적용합니다."] },
+          { expression: String.raw`x_1^{\text{tgt}} - x_0^{\text{tgt}}`, annotation: ["velocity target이(가) 식의 결과에 기여하는","방식을 계산합니다.","Flow matching의 직선 보간은 target 에만","적용합니다."] },
+        ]}
         terms={[
           {
             symbol: String.raw`x_0^{\text{ref}}, x_0^{\text{tgt}}`,
@@ -103,6 +114,10 @@ export default function Training({
           </>
         }
         formula={String.raw`p'_{\text{ref}} = p_{\text{ref}} - \text{duration}_{\text{ref}} - \Delta t`}
+        annotatedFormula={String.raw`p'_{\text{ref}} = \underbrace{p_{\text{ref}} - \text{duration}_{\text{ref}} - \Delta t}_{\text{변화량 계산}}`}
+        operations={[
+          { expression: String.raw`p_{\text{ref}} - \text{duration}_{\text{ref}} - \Delta t`, annotation: ["인접한 level의 차이를 남겨 변화량을 계산합니다.","Reference에 target과 같은 방식으로 우선 '보통'","위치를 계산한 뒤, 그 구간의 전체 길이( duration",")와 한 latent frame의 시간 간격( Δt )만큼을"] },
+        ]}
         terms={[
           {
             symbol: "p_{\\text{ref}}",

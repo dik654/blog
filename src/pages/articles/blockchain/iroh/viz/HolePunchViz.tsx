@@ -33,7 +33,7 @@ function NodeBox({
         fill={color}
         fillOpacity={0.15}
         stroke={color}
-        strokeWidth={1.5}
+        strokeWidth={1.2}
       />
       <text
         x={cx}
@@ -178,7 +178,7 @@ function StepAnimation({ step }: { step: number }) {
             x2={NODE_B.x - 30}
             y2={NODE_B.y}
             stroke="#10b981"
-            strokeWidth={1.5}
+            strokeWidth={1.2}
           />
           <motion.g
             initial={{ x: NODE_A.x + 30 }}
@@ -247,7 +247,7 @@ export default function HolePunchViz() {
             y2={H - 20}
             stroke="currentColor"
             strokeOpacity={0.2}
-            strokeWidth={1.5}
+            strokeWidth={1.2}
             strokeDasharray="4 3"
           />
           <line
@@ -257,7 +257,7 @@ export default function HolePunchViz() {
             y2={H - 20}
             stroke="currentColor"
             strokeOpacity={0.2}
-            strokeWidth={1.5}
+            strokeWidth={1.2}
             strokeDasharray="4 3"
           />
           <rect

@@ -32,6 +32,11 @@ export default function BatchVerification({
           </>
         }
         formula={String.raw`\begin{aligned}\sigma_r&=\sum_{i=1}^{N}r_i\sigma_i\\e(G_1,\sigma_r)&=\prod_{i=1}^{N}e(r_iPK_i,H(m_i))\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}\sigma_r&=\underbrace{\sum_{i=1}^{N}r_i\sigma_i}_{\text{Random coefficient 계산}}\\e(G_1,\sigma_r)&=\underbrace{\prod_{i=1}^{N}e(r_iPK_i,H(m_i))}_{\text{Random coefficient 계산}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`\sum_{i=1}^{N}r_i\sigma_i`, annotation: ["Random coefficient이(가) 식의 결과에 기여하는","방식을 계산합니다.","각 식에 verifier가 새로 뽑은 nonzero","scalar rᵢ를 곱해 합칩니다."] },
+          { expression: String.raw`\prod_{i=1}^{N}e(r_iPK_i,H(m_i))`, annotation: ["Random coefficient이(가) 식의 결과에 기여하는","방식을 계산합니다.","각 식에 verifier가 새로 뽑은 nonzero","scalar rᵢ를 곱해 합칩니다."] },
+        ]}
         terms={[
           {
             symbol: "N",

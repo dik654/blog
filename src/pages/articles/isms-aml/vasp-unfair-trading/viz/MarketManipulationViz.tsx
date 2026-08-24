@@ -384,7 +384,7 @@ export default function MarketManipulationViz() {
                 points="50,170 120,168 180,165 220,140 260,115 300,100 330,95 350,100 370,130 400,155 430,170"
                 fill="none"
                 stroke={C.attack}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 initial={{ pathLength: 0 }}
                 animate={{ pathLength: 1 }}
                 transition={{ duration: 1.2 }}
@@ -602,7 +602,7 @@ export default function MarketManipulationViz() {
                 x2={198}
                 y2={55}
                 stroke={C.attack}
-                strokeWidth={2}
+                strokeWidth={1.2}
                 strokeDasharray="6 3"
               />
               <text
@@ -631,7 +631,7 @@ export default function MarketManipulationViz() {
                 x2={368}
                 y2={55}
                 stroke={C.attack}
-                strokeWidth={2}
+                strokeWidth={1.2}
                 strokeDasharray="6 3"
               />
               <text

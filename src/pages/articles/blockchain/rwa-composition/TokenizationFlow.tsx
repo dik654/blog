@@ -156,7 +156,7 @@ export default function TokenizationFlow() {
               x2={240}
               y2={120}
               stroke="#10b981"
-              strokeWidth={1.5}
+              strokeWidth={1.2}
               markerEnd="url(#rwa-arr)"
             />
             <text

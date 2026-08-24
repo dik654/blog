@@ -429,7 +429,7 @@ export function Step1() {
         <motion.path
           d={`M ${buildX + 40} 122 L ${buildX + 40} 142`}
           stroke={C.chain}
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           fill="none"
           markerEnd="url(#arrowBuild)"
           initial={{ pathLength: 0 }}

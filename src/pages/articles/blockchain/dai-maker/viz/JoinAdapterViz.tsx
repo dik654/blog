@@ -178,7 +178,7 @@ export default function JoinAdapterViz() {
           x2={140}
           y2={92}
           stroke="#3b82f6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#ja-arr)"
         />
         <line
@@ -187,7 +187,7 @@ export default function JoinAdapterViz() {
           x2={280}
           y2={92}
           stroke="#3b82f6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#ja-arr)"
         />
         <line
@@ -196,7 +196,7 @@ export default function JoinAdapterViz() {
           x2={420}
           y2={92}
           stroke="#3b82f6"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#ja-arr)"
         />
 
@@ -356,7 +356,7 @@ export default function JoinAdapterViz() {
           x2={390}
           y2={192}
           stroke="#f59e0b"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#ja-arr-back)"
         />
         <line
@@ -365,7 +365,7 @@ export default function JoinAdapterViz() {
           x2={250}
           y2={192}
           stroke="#f59e0b"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#ja-arr-back)"
         />
         <line
@@ -374,7 +374,7 @@ export default function JoinAdapterViz() {
           x2={110}
           y2={192}
           stroke="#f59e0b"
-          strokeWidth={1.5}
+          strokeWidth={1.2}
           markerEnd="url(#ja-arr-back)"
         />
 

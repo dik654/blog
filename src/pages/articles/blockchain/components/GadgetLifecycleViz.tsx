@@ -234,7 +234,7 @@ export default function GadgetLifecycleViz() {
                 rx={7}
                 fill={C.bus + "18"}
                 stroke={C.bus}
-                strokeWidth={1.5}
+                strokeWidth={1.2}
               />
               <text
                 x={360}

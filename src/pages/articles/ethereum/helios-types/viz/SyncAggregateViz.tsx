@@ -98,7 +98,7 @@ export default function SyncAggregateViz() {
                   rx={8}
                   fill={C.bits + "15"}
                   stroke={C.bits}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={240}
@@ -132,7 +132,7 @@ export default function SyncAggregateViz() {
                   rx={8}
                   fill={C.sig + "15"}
                   stroke={C.sig}
-                  strokeWidth={1.5}
+                  strokeWidth={1.2}
                 />
                 <text
                   x={240}

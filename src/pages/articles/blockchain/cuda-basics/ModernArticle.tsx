@@ -54,6 +54,11 @@ export default function ModernCudaBasicsArticle() {
           question="N개 원소를 B개 thread의 block으로 빠짐없이 처리하려면 block 수와 global index를 어떻게 계산할까?"
           idea={<>N을 B로 나눈 값을 올림해 마지막 partial block까지 만들고, block 시작 offset에 block 안의 thread index를 더합니다. 마지막에는 i&lt;N을 검사합니다.</>}
           formula={String.raw`\begin{aligned}G&=\left\lceil\frac{N}{B}\right\rceil=\frac{N+B-1}{B}\\[3pt]i&=\mathrm{blockIdx.x}\,B+\mathrm{threadIdx.x}\end{aligned}`}
+          annotatedFormula={String.raw`\begin{aligned}G&=\underbrace{\left\lceil\frac{N}{B}\right\rceil=\frac{N+B-1}{B}}_{\text{기준량당 비율}}\\[3pt]i&=\underbrace{\mathrm{blockIdx.x}\,B+\mathrm{threadIdx.x}}_{\text{Block당 thread 수 계산}}\end{aligned}`}
+          operations={[
+            { expression: String.raw`\left\lceil\frac{N}{B}\right\rceil=\frac{N+B-1}{B}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","N을 B로 나눈 값을 올림해 마지막 partial","block까지 만들고, block 시작 offset에","block 안의 thread index를 더합니다."] },
+            { expression: String.raw`\mathrm{blockIdx.x}\,B+\mathrm{threadIdx.x}`, annotation: ["Block당 thread 수이(가) 식의 결과에 기여하는","방식을 계산합니다.","N을 B로 나눈 값을 올림해 마지막 partial","block까지 만들고, block 시작 offset에"] },
+          ]}
           terms={[
             { symbol: "N", name: "원소 수", description: "이번 launch에서 처리할 1차원 data의 logical 길이입니다." },
             { symbol: "B", name: "Block당 thread 수", description: "launch의 blockDim.x이며 target GPU limit와 kernel resource 사용 안에서 정합니다." },
@@ -75,6 +80,10 @@ export default function ModernCudaBasicsArticle() {
           question="GPU kernel이 CPU 구현보다 빨라도 end-to-end 실행이 느릴 수 있는 이유를 어떻게 계산할까?"
           idea={<>GPU 경로에는 input 전송, kernel, output 전송과 synchronization이 모두 들어갑니다. CPU 시간과 비교할 때 kernel time 하나만 떼어 보지 않습니다.</>}
           formula={String.raw`\begin{aligned}T_{GPU}&=T_{H\to D}+T_{kernel}\\&\quad+T_{D\to H}+T_{sync}\end{aligned}`}
+          annotatedFormula={String.raw`\begin{aligned}T_{GPU}&=\underbrace{T_{H\to D}+T_{kernel}}_{\text{Host-to-device 시간 계산}}\\&\quad+T_{D\to H}+T_{sync}\end{aligned}`}
+          operations={[
+            { expression: String.raw`T_{H\to D}+T_{kernel}`, annotation: ["Host-to-device 시간이(가) 식의 결과에 기여하는","방식을 계산합니다.","GPU 경로에는 input 전송, kernel, output","전송과 synchronization이 모두 들어갑니다."] },
+          ]}
           terms={[
             { symbol: "T_{H\\to D}", name: "Host-to-device 시간", description: "Input bytes를 host memory에서 device memory로 옮기는 시간입니다." },
             { symbol: "T_{kernel}", name: "Kernel 시간", description: "GPU timeline에서 kernel이 실제 실행된 elapsed time입니다." },

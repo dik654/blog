@@ -34,6 +34,12 @@ export default function Fp2() {
         question="Fp² 곱셈의 base-field 곱셈을 네 번에서 세 번으로 어떻게 줄일까요?"
         idea="상수항과 u²항에 필요한 두 곱 v₀,v₁을 먼저 계산하고, 합의 곱 한 번에서 이미 계산한 두 항을 빼 교차항을 얻습니다."
         formula={String.raw`\begin{aligned}v_0&=a_0b_0,&v_1&=a_1b_1\\c_0&=v_0+\beta v_1,&c_1&=(a_0+a_1)(b_0+b_1)-v_0-v_1\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}v_0&=\underbrace{a_0b_0}_{\text{상수 좌표의 직접 곱}},&v_1&=\underbrace{a_1b_1}_{\text{u 좌표의 직접 곱}}\\c_0&=v_0+\beta v_1,&c_1&=\underbrace{(a_0+a_1)(b_0+b_1)-v_0-v_1}_{\text{세 번째 곱에서 교차항만 복원}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`a_0b_0`, annotation: ["두 input의 상수 coefficient를 곱해", "v₀를 한 번 계산합니다"] },
+          { expression: String.raw`a_1b_1`, annotation: ["두 u coefficient를 곱해", "u² reduction에 재사용할 v₁을 만듭니다"] },
+          { expression: String.raw`(a_0+a_1)(b_0+b_1)-v_0-v_1`, annotation: ["합의 곱에서 이미 계산한 v₀·v₁을 빼", "a₀b₁+a₁b₀ 교차항을 얻습니다"] },
+        ]}
         terms={[
           { symbol: "a_i,b_i", name: "Fp coefficients", description: "두 Fp² input을 base-field 두 좌표로 펼친 값입니다." },
           { symbol: "β", name: "quadratic non-residue", description: "u²을 낮은 차수로 줄이는 profile 상수입니다." },

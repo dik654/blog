@@ -28,6 +28,10 @@ export default function DhtSecurityArticle() {
           question="한 주소 집단이 routing slot을 얼마나 차지했는지 어떻게 관측할까?"
           idea="선택된 peer 수 가운데 같은 network group에 속한 수를 비율로 센다. 이 값은 탐지 신호이지 독립 identity의 확률을 증명하는 값은 아니다."
           formula={String.raw`q_g=\frac{n_g}{n_{\mathrm{selected}}}`}
+          annotatedFormula={String.raw`q_g=\underbrace{\frac{n_g}{n_{\mathrm{selected}}}}_{\text{기준량당 비율}}`}
+          operations={[
+            { expression: String.raw`\frac{n_g}{n_{\mathrm{selected}}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","선택된 peer 수 가운데 같은 network group에","속한 수를 비율로 센다."] },
+          ]}
           terms={[
             { symbol: "g", name: "Network group", description: "운영자가 정한 /24, /48, ASN 같은 network group" },
             { symbol: "n_g", name: "Grouped peers", description: "선택된 routing peer 중 group g에 속한 수" },

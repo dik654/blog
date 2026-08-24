@@ -116,7 +116,7 @@ export default function CapitalEfficiencyViz() {
                 x2={xCurrent}
                 y2={96}
                 stroke="#f59e0b"
-                strokeWidth={1.5}
+                strokeWidth={1.2}
                 strokeDasharray="3 2"
               />
               <text

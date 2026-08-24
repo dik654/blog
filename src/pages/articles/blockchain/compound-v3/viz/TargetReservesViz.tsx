@@ -146,7 +146,7 @@ export default function TargetReservesViz() {
           x2={185}
           y2={83}
           stroke="#3b82f6"
-          strokeWidth={1.3}
+          strokeWidth={1.2}
           markerEnd="url(#tr-arr)"
         />
         <line
@@ -155,7 +155,7 @@ export default function TargetReservesViz() {
           x2={350}
           y2={83}
           stroke="#3b82f6"
-          strokeWidth={1.3}
+          strokeWidth={1.2}
           markerEnd="url(#tr-arr)"
         />
 
@@ -198,7 +198,7 @@ export default function TargetReservesViz() {
           x2={335}
           y2={156}
           stroke="#10b981"
-          strokeWidth={1.3}
+          strokeWidth={1.2}
           markerEnd="url(#tr-arr-g)"
         />
 

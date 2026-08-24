@@ -38,6 +38,16 @@ T_n &= \operatorname{Hash}(M_1\,\|\,M_2\,\|\cdots\|\,M_n),\\
 \sigma &= \operatorname{Sign}_{sk_{cert}}(\text{context}\,\|\,T_n),\\
 \operatorname{Verify}_{pk_{cert}}(\sigma,\text{context}\,\|\,T_n)&=\mathrm{true}.
 \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+T_n &= \underbrace{\operatorname{Hash}(M_1\,\|\,M_2\,\|\cdots\|\,M_n),}_{\text{transcript hash 계산}}\\
+\sigma &= \underbrace{\operatorname{Sign}_{sk_{cert}}(\text{context}\,\|\,T_n),}_{\text{TLS 1.3 signature 계산}}\\
+\operatorname{Verify}_{pk_{cert}}(\sigma,\text{context}\,\|\,T_n)&=\underbrace{\mathrm{true}.}_{\text{TLS 1.3 signature 계산}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\operatorname{Hash}(M_1\,\|\,M_2\,\|\cdots\|\,M_n),`, annotation: ["transcript hash이(가) 식의 결과에 기여하는","방식을 계산합니다.","각 handshake message의 직렬화 bytes를","순서대로 누적해 transcript hash를 만들고, 서버는"] },
+          { expression: String.raw`\operatorname{Sign}_{sk_{cert}}(\text{context}\,\|\,T_n),`, annotation: ["TLS 1.3 signature context이(가) 식의","결과에 기여하는 방식을 계산합니다.","각 handshake message의 직렬화 bytes를","순서대로 누적해 transcript hash를 만들고, 서버는"] },
+          { expression: String.raw`\mathrm{true}.`, annotation: ["TLS 1.3 signature context이(가) 식의","결과에 기여하는 방식을 계산합니다.","각 handshake message의 직렬화 bytes를","순서대로 누적해 transcript hash를 만들고, 서버는"] },
+        ]}
         terms={[
           {
             symbol: "M_i",
