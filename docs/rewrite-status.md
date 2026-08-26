@@ -26,7 +26,7 @@
 - [x] 공개 article contract의 유일한 material failure인 `gpu/cfd-finite-volume-gpu`의 overview anchor 계약을 수정
 - [x] Claude adversarial review의 채택·기각과 원문 재검토 결과를 decision journal에 기록
 - [x] 전역 topology·article·learning·graph·formula·Viz·build와 390/1440 변경 route 검증
-- [ ] GitHub Pages 재배포와 production route 확인
+- [x] GitHub Pages 재배포와 production route 확인
 
 - 구조 변경 뒤 공개 article은 569개다. 새 정본은 `smoothie-qwen-weight-editing`, `qwen-korean-reasoning-posttraining`, `retrieval-ranking-funnel`, `shamir-secret-sharing`, `paillier-cryptosystem` 다섯 개이며, 세 parent는 독립 수업의 본문·문제·concept owner를 비우고 경계 설명과 연결만 남겼다.
 - `audit:topology --strict`는 현재 `keep 529 / split-review 40`이며 모든 후보가 reviewed/implemented decision과 fingerprint를 가진다. `keep`에는 하나의 학습 arc뿐 아니라 동일 fixture에서 correctness·failure·cost·rollback을 판정하는 `sharedGate`가 필수다.
@@ -34,6 +34,7 @@
 - Claude 1차 검토의 invalid relation, parent learning 중복, dead link, stale label, missing gate, physical ownership, orphan legacy 지적을 반영했다. 2차 검토에서 남은 MPC catalog label과 import되지 않는 Go/Viz/data 파일까지 정리했으며 삭제 파일은 Git 이력에서 복구할 수 있다.
 - `audit:learning` 569/569, graph 2,468 concepts·3,743 relations·invariant failure 0, formula explicit 1,176/1,176, article/topology/reading/Viz/terms 감사, ESLint와 production build가 통과했다. Build는 576개 static public route와 404 fallback을 생성했다.
 - Playwright로 11개 변경 route를 390×1000·1440×1000에서 총 22회 검사했다. HTTP·heading·본문 길이·기초/심화 문제·paper path·document/Viz/formula/SVG overflow·KaTeX·console·request failure가 모두 0건이었고 Shamir route는 1440×1000·390×844 screenshot을 육안 확인했다.
+- commit `7e5233e9`의 [Pages run 32992353156](https://github.com/dik654/blog/actions/runs/32992353156)에서 여섯 strict audit·production build·artifact upload·deploy가 모두 통과했다. 운영 주소 `https://dik654.github.io/blog/`에서 같은 11개 route를 390/1440으로 다시 22회 검사해 실패·console/network error 0을 확인했고, `/crypto?sub=mpc`의 새 Shamir·Paillier 정본 label과 기존 label 제거도 확인했다.
 
 ### 2026-08-24 · 전역 Viz 오류·명시 수식 주석 backlog 종료
 
