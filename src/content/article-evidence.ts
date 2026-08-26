@@ -7,6 +7,7 @@ import { OFFICIAL_SOURCES } from "./official-sources";
 
 export type ArticleEvidenceKind =
   | "핵심 논문"
+  | "리뷰 논문"
   | "핵심 연구"
   | "Benchmark 논문"
   | "평가 논문"
