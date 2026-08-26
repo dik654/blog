@@ -471,8 +471,6 @@ export const EDITORIAL_BOUNDARIES = {
     owns: [
       "Qwen의 한국어 reasoning/final language mismatch와 정상 번역·원문·고유명사 예외를 나누는 적용 진단",
       "한국어 기본 출력과 code·수식·인용·사용자 지정 번역 예외를 함께 둔 Qwen prompt policy",
-      "Smoothie-Qwen의 Unicode·broken-token risk score와 lm_head row scaling 식·부작용·재현 범위",
-      "Qwen3 14B Korean reasoning SFT→Oracle-Guided Dr.GRPO 사례의 stage·reward·oracle 적용 경계",
       "Korean language checker·judge threshold calibration과 base/candidate paired canary·rollback 계약",
     ],
     reuses: [
@@ -520,6 +518,8 @@ export const EDITORIAL_BOUNDARIES = {
         label: "Layered deterministic·judge·human verification",
         href: "/ai/agent-verification#overview",
       },
+      { label: "Smoothie-Qwen output-weight 편집", href: "/ai/smoothie-qwen-weight-editing" },
+      { label: "Qwen Korean reasoning SFT·RL", href: "/ai/qwen-korean-reasoning-posttraining" },
     ],
     evidence: [
       {
@@ -539,6 +539,18 @@ export const EDITORIAL_BOUNDARIES = {
         rule: "배포 주장은 base/candidate artifact·prompt·checker·judge·dataset provenance가 있는 canary에 한하며 hard guardrail 회귀 시 이전 version으로 rollback할 수 있어야 한다.",
       },
     ],
+  },
+  "smoothie-qwen-weight-editing": {
+    title: "Smoothie-Qwen weight-editing 글이 소유하는 범위",
+    owns: ["Unicode·broken-token n-gram risk procedure", "Logarithmic lm_head row scaling·softmax coupling·artifact release"],
+    reuses: [{ label: "Qwen language failure taxonomy", href: "/ai/qwen-korean-consistency#overview" }, { label: "Tokenizer contract", href: "/ai/tokenizer" }, { label: "Softmax", href: "/ai/softmax#overview" }],
+    evidence: [{ kind: "primary-source", rule: "Algorithm·수치는 Smoothie-Qwen 논문과 공개 구현의 checkpoint·tokenizer·Unicode·evaluation 범위로 제한한다." }, { kind: "project-measurement", rule: "원본/변환본을 같은 prompt에서 suppression·정상 번역·task quality로 paired 비교한다." }, { kind: "project-claim", rule: "Risk를 language oracle이나 row scale을 probability 직접 배율로 표현하지 않는다." }],
+  },
+  "qwen-korean-reasoning-posttraining": {
+    title: "Qwen Korean reasoning post-training 글이 소유하는 범위",
+    owns: ["Korean reasoning SFT와 current-policy group RL의 stage 경계", "Accuracy·format·language·length reward와 frozen oracle correction receipt"],
+    reuses: [{ label: "Qwen language failure taxonomy", href: "/ai/qwen-korean-consistency#overview" }, { label: "SFT", href: "/ai/supervised-fine-tuning" }, { label: "GRPO·Dr.GRPO", href: "/ai/open-r1" }],
+    evidence: [{ kind: "primary-source", rule: "학습 recipe와 benchmark는 Making Qwen3 Think in Korean 논문의 model·data·reward·compute 조건에 한정한다." }, { kind: "project-measurement", rule: "Base→SFT→RL checkpoint를 같은 independent slices에서 stage ablation한다." }, { kind: "project-claim", rule: "Oracle을 ground truth로, 한국어 출력 reasoning을 내부 인과 추론의 증명으로 표현하지 않는다." }],
   },
   "openclaw-assistant": {
     title: "OpenClaw assistant 글이 소유하는 범위",
@@ -2676,8 +2688,6 @@ export const EDITORIAL_BOUNDARIES = {
       "Answer claim에서 source revision까지 이어지는 retrieval–generation trace와 stage별 실패 분리",
       "검색 child와 generation parent를 분리한 chunk boundary·answer-span coverage·source offset 계약",
       "Encoder·tokenizer·input·vector·corpus·ANN을 묶은 index version과 shadow switch·rollback",
-      "BM25 lexical·HNSW dense ANN·RRF fusion·cross-encoder funnel과 pre-retrieval ACL·candidate-recall 상한",
-      "Graph traversal·community summary를 provenance·hop budget과 함께 추가하는 GraphRAG 경계",
       "Context token budget·untrusted retrieved data·citation validation·abstention policy",
       "Retrieval·context·answer·citation·system을 분리한 end-to-end evaluation trace",
     ],
@@ -2696,6 +2706,7 @@ export const EDITORIAL_BOUNDARIES = {
         label: "도메인 적응과 RAG/fine-tuning 선택",
         href: "/ai/domain-finetuning",
       },
+      { label: "Candidate retrieval·fusion·reranking funnel", href: "/ai/retrieval-ranking-funnel" },
     ],
     evidence: [
       {
@@ -2711,6 +2722,12 @@ export const EDITORIAL_BOUNDARIES = {
         rule: "Formula의 stage indicator·index tuple·context ledger·citation contract는 운영 진단을 위한 이 글의 명시적 계약이며 특정 framework 표준으로 표현하지 않는다.",
       },
     ],
+  },
+  "retrieval-ranking-funnel": {
+    title: "Retrieval ranking funnel 글이 소유하는 범위",
+    owns: ["BM25 lexical·HNSW dense ANN·RRF fusion·cross-encoder candidate funnel", "Pre-retrieval ACL과 GraphRAG provenance lane·candidate recall ceiling"],
+    reuses: [{ label: "RAG ingestion→answer lifecycle", href: "/ai/rag-pipeline" }, { label: "Sentence embedding과 multi-positive metric", href: "/ai/sentence-embeddings" }],
+    evidence: [{ kind: "primary-source", rule: "DPR·HNSW·RRF·BERT reranking claim은 각 원 논문의 corpus·metric·model 범위로 제한한다." }, { kind: "standard", rule: "Authorized universe·candidate IDs·ranker revision·cutoff·latency·memory·recall을 같은 trace에 남긴다." }, { kind: "project-measurement", rule: "Exact scan ablation과 candidate Recall@k 뒤 rerank NDCG·p95를 측정한다." }],
   },
   "lora-finetuning": {
     title: "LoRA·QLoRA 글이 소유하는 범위",
@@ -8968,6 +8985,24 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "primary-source", rule: "IC-LoRA 원 논문(Huang et al. 2024)의 claim은 그 논문의 DiT·데이터셋·task 범위로 제한한다." },
       { kind: "project-measurement", rule: "ID-LoRA(2026)의 성능·설계 설명은 해당 공개 repo와 논문의 실험 조건(LTX-2/2.3, CelebV-HQ·TalkVid)으로 제한하며, 모든 in-context LoRA 응용이 같은 결과를 낸다고 일반화하지 않는다." },
     ],
+  },
+  "mpc": {
+    title: "MPC real/ideal·DKG release 글이 소유하는 범위",
+    owns: ["Real/ideal view와 adversary·network·abort/fairness claim", "Session-bound DKG transcript와 active-failure release gate"],
+    reuses: [{ label: "Shamir threshold sharing", href: "/crypto/shamir-secret-sharing" }, { label: "Paillier additive homomorphism", href: "/crypto/paillier-cryptosystem" }],
+    evidence: [{ kind: "primary-source", rule: "Concrete DKG behavior는 pinned tss-lib source와 selected protocol profile에만 귀속한다." }, { kind: "project-measurement", rule: "Bad share·cross-session round·complaint·dropout·restart를 replay하고 messages·bytes·latency를 분리한다." }, { kind: "project-claim", rule: "한 primitive의 security를 전체 MPC의 malicious security·fairness로 확대하지 않는다." }],
+  },
+  "shamir-secret-sharing": {
+    title: "Shamir Secret Sharing 글이 소유하는 범위",
+    owns: ["Random polynomial share generation과 x=0 Lagrange reconstruction", "t-share perfect privacy와 plain sharing의 active-security/VSS 경계"],
+    reuses: [{ label: "Prime-field arithmetic", href: "/crypto/field-arithmetic" }, { label: "MPC composition", href: "/crypto/mpc" }],
+    evidence: [{ kind: "primary-source", rule: "Correctness·privacy는 Shamir 1979의 finite-field·distinct-point·uniform-coefficient 조건에 한정한다." }, { kind: "project-measurement", rule: "Zero/duplicate index·insufficient/bad share·RNG replay를 negative fixtures로 둔다." }, { kind: "project-claim", rule: "Plain sharing이 VSS·dealer honesty·malicious DKG를 제공한다고 주장하지 않는다." }],
+  },
+  "paillier-cryptosystem": {
+    title: "Paillier cryptosystem 글이 소유하는 범위",
+    owns: ["Valid n·g·lambda·mu key profile과 randomized encryption/L-function decryption", "Additive homomorphism과 ciphertext malleability·integrity 경계"],
+    reuses: [{ label: "Prime-field arithmetic", href: "/crypto/finite-field-theory#prime-field" }, { label: "MPC composition", href: "/crypto/mpc" }],
+    evidence: [{ kind: "primary-source", rule: "Construction과 security claim은 Paillier 1999의 composite-residuosity·key/randomizer 조건에 한정한다." }, { kind: "project-measurement", rule: "Invalid r/c/key·reuse·wraparound·altered aggregate를 release 전에 재생한다." }, { kind: "project-claim", rule: "Homomorphism을 ciphertext integrity·range proof·malicious MPC 보장으로 확대하지 않는다." }],
   },
   "cuda-graph-capture": {
     title: "CUDA Graphs 정본이 소유하는 범위",

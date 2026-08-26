@@ -213,6 +213,8 @@ mechanism Viz가 더 적합하다.
 - 현재 공개 article 수·slug·제목을 보존하는 것을 목표로 삼지 않는다. Knowledge graph의 학습 단위가 기존 route 경계를 넘으면 article을 새로 만들고, 한 글에 독립 수업이 여러 개면 분리하며, 같은 수업이 중복되면 병합한다. 잘못된 이름은 바꾸고 더 이상 독립 학습 가치가 없는 route는 redirect를 남긴 뒤 제거할 수 있다.
 - Article CRUD는 `create → canonical owner·catalog·learning/evidence 등록`, `split → concept owner·본문·문제·근거를 새 route로 이동`, `merge → 중복 정의를 한 정본으로 통합`, `rename → 제목·slug·내부 링크·이전 URL redirect 갱신`, `delete → 대체 정본·redirect·orphan 검사`까지 한 작업이다. 파일을 복사하거나 catalog 숫자만 늘리는 것은 create가 아니다.
 - Route topology는 전체 catalog를 주기적으로 다시 계산한다. 처음 소유하는 concept 수, 실제 import closure의 section·길이, 독립 stage와 제목의 병렬 주제를 `npm run audit:topology`로 검토하되, 휴리스틱 결과를 자동 분할 명령으로 사용하지 않고 본문의 학습 질문·선수 경계·canonical ownership으로 최종 판단한다.
+- Topology 휴리스틱에 한 번 잡힌 route는 `src/content/article-topology-decisions.ts`에 `keep / split / merge / rename / delete` 판정, 근거, 검토일, 구현 상태와 대체 route를 기록한다. 줄 수·section 수·concept 수만으로 `keep`을 금지하지 않지만, `keep` 판정은 하나의 순차적 학습 질문을 `rationale`로, 같은 fixture·artifact에서 correctness·failure·cost·rollback을 함께 판정하는 공통 release/evaluation gate를 `sharedGate`로 명시해야 한다. `split / merge / rename / delete`는 실제 catalog·owner·learning/evidence·redirect 변경이 끝나기 전까지 `planned`이며 전역 완료로 세지 않는다.
+- `audit:topology -- --strict`는 새 휴리스틱 후보, 누락된 판정, 존재하지 않는 target route, `planned` 상태로 남은 구조 변경을 실패시킨다. 이미 검토한 `keep`도 source metric이나 owned concept 집합이 바뀌면 decision fingerprint가 달라져 다시 검토 대상으로 연다. 즉 모델이 바뀌어도 판정 문장을 재생성하는 것이 아니라 입력 fingerprint와 불변식으로 stale review를 찾는다.
 - 한 글은 “제품이나 분야 하나”가 아니라 “독자가 한 번에 쌓을 수 있는 하나의 설명 arc”를 소유한다. 예를 들어 RLHF·DPO·CAI·ORPO·KTO가 한 제목에 있다는 이유로 하나의 글을 유지하지 않으며, 각 방법이 독립된 문제·수식·failure mode·선택 기준을 가지면 별도 글로 분리한다.
 - 공통 정의와 핵심 유도는 하나의 canonical article이 소유한다.
 - 다른 글에서는 필요한 만큼만 요약하고 해당 anchor로 연결한다. 같은 긴 설명과 Viz를 복제하지 않는다.

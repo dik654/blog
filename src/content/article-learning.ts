@@ -20202,6 +20202,30 @@ export const ARTICLE_LEARNING: Readonly<
       "RAG는 문서를 LLM 앞에 붙이는 기능이 아니라, 사용자의 질문에서 최신·허가된 source를 찾고 검색 단위와 generation 문맥을 구성한 뒤, 최종 claim과 citation을 원문 revision까지 역추적하며 각 실패 stage를 따로 평가하는 system입니다.",
     assumedKnowledge: [
       {
+        id: "reciprocal-rank-fusion",
+        role: "Dense·sparse rank fusion의 계산은 독립 retrieval funnel 글에서 재사용합니다.",
+      },
+      {
+        id: "bm25-lexical-ranking",
+        role: "Lexical candidate 생성은 독립 retrieval funnel 글에서 재사용합니다.",
+      },
+      {
+        id: "hnsw-ann-index",
+        role: "Approximate dense candidate search는 독립 retrieval funnel 글에서 재사용합니다.",
+      },
+      {
+        id: "cross-encoder-reranking",
+        role: "Bounded candidate reranking은 독립 retrieval funnel 글에서 재사용합니다.",
+      },
+      {
+        id: "graph-structured-retrieval-boundary",
+        role: "Graph retrieval lane의 provenance 경계는 독립 retrieval funnel 글에서 재사용합니다.",
+      },
+      {
+        id: "rag-pre-retrieval-access-control",
+        role: "Candidate 생성 전 ACL 경계는 독립 retrieval funnel 글에서 재사용합니다.",
+      },
+      {
         id: "offline-document-embedding-reuse",
         role: "Document vector를 corpus revision마다 미리 계산하고 query마다 재사용하는 비용 구조를 읽습니다.",
       },
@@ -20242,30 +20266,6 @@ export const ARTICLE_LEARNING: Readonly<
       {
         id: "rag-index-version-contract",
         role: "Encoder부터 corpus·ANN까지 query/index 좌표계 tuple을 versioning합니다.",
-      },
-      {
-        id: "reciprocal-rank-fusion",
-        role: "Score scale이 다른 dense·sparse 목록을 rank evidence로 합칩니다.",
-      },
-      {
-        id: "bm25-lexical-ranking",
-        role: "Exact-term signal로 sparse candidate를 만드는 lexical first stage를 고정합니다.",
-      },
-      {
-        id: "hnsw-ann-index",
-        role: "Dense vector의 approximate candidate search와 recall·latency knob를 고정합니다.",
-      },
-      {
-        id: "cross-encoder-reranking",
-        role: "Bounded candidate 안에서 query–document joint relevance를 다시 계산합니다.",
-      },
-      {
-        id: "graph-structured-retrieval-boundary",
-        role: "Graph traversal·community summary를 별도 provenance lane으로 추가합니다.",
-      },
-      {
-        id: "rag-pre-retrieval-access-control",
-        role: "ACL·tenant·valid-time을 candidate 생성 전에 적용합니다.",
       },
       {
         id: "rag-context-token-budget",
@@ -20403,7 +20403,17 @@ export const ARTICLE_LEARNING: Readonly<
         boundary:
           "자동 judge score는 judge model·prompt·order에 민감하고 ACL·latency·security deterministic check를 대신하지 않습니다.",
       },
-    ],
+    ].filter(
+      (concept) =>
+        ![
+          "reciprocal-rank-fusion",
+          "bm25-lexical-ranking",
+          "hnsw-ann-index",
+          "cross-encoder-reranking",
+          "graph-structured-retrieval-boundary",
+          "rag-pre-retrieval-access-control",
+        ].includes(concept.id),
+    ),
     conceptStages: [
       {
         label: "Source and trace",
@@ -20422,18 +20432,10 @@ export const ARTICLE_LEARNING: Readonly<
         ],
       },
       {
-        label: "Candidate funnel",
+        label: "Candidate interface",
         relation:
-          "Dense/sparse rank를 합치고 ACL universe 안에서 candidate recall 상한을 확보",
-        concepts: [
-          "bm25-lexical-ranking",
-          "hnsw-ann-index",
-          "reciprocal-rank-fusion",
-          "cross-encoder-reranking",
-          "graph-structured-retrieval-boundary",
-          "rag-pre-retrieval-access-control",
-          "retrieval-candidate-recall-ceiling",
-        ],
+          "독립 retrieval funnel이 만든 authorized candidate set과 recall 상한을 RAG context stage의 입력 계약으로 연결",
+        concepts: ["retrieval-candidate-recall-ceiling"],
       },
       {
         label: "Grounded generation",
@@ -20527,47 +20529,6 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "basic",
         question:
-          "BM25와 HNSW가 만든 목록에서 k=60일 때 문서 A가 dense rank1·sparse rank10이면 RRF를 계산하고 raw score 합산보다 필요한 가정이 적은 이유를 설명하라.",
-        answerChecklist: [
-          "1/61+1/70",
-          "about .0307",
-          "rank only",
-          "no score scale calibration",
-          "k/cutoff fixed",
-          "BM25 lexical lane",
-          "HNSW approximate dense lane",
-        ],
-        requiredConcepts: [
-          "bm25-lexical-ranking",
-          "hnsw-ann-index",
-          "reciprocal-rank-fusion",
-        ],
-        sectionId: "retrieval",
-      },
-      {
-        level: "advanced",
-        question:
-          "Relevant 4개 중 candidate가 3개이고 reranker가 2개만 남긴 경우 candidate/final recall 상한과 pre-retrieval ACL contract를 설명하라.",
-        answerChecklist: [
-          "candidate .75",
-          "final at most .75 and actual .5",
-          "subset proof",
-          "cannot recover missing",
-          "authorized relevant set",
-          "filter before ranking/rerank",
-          "cross-encoder only reorders candidates",
-        ],
-        requiredConcepts: [
-          "retrieval-candidate-recall-ceiling",
-          "rag-pre-retrieval-access-control",
-          "multipositive-retrieval-metrics",
-          "cross-encoder-reranking",
-        ],
-        sectionId: "retrieval",
-      },
-      {
-        level: "basic",
-        question:
           "Lmax=8192, system=500, history=1000, query=200, output=1500일 때 문서 예산을 구하고 5200-token chunk set 처리 규칙을 적어라.",
         answerChecklist: [
           "4992",
@@ -20598,7 +20559,6 @@ export const ARTICLE_LEARNING: Readonly<
         ],
         requiredConcepts: [
           "rag-retrieved-data-boundary",
-          "rag-pre-retrieval-access-control",
           "rag-citation-support-metrics",
         ],
         sectionId: "generation",
@@ -20632,16 +20592,52 @@ export const ARTICLE_LEARNING: Readonly<
           "ACL/injection deterministic",
           "judge blind audit",
           "full version trace",
-          "graph build and hop provenance",
         ],
         requiredConcepts: [
           "rag-stage-success-trace",
           "rag-layered-evaluation",
           "multipositive-retrieval-metrics",
           "rag-citation-support-metrics",
-          "graph-structured-retrieval-boundary",
         ],
         sectionId: "evaluation",
+      },
+      {
+        level: "basic",
+        question:
+          "독립 retrieval funnel이 RAG 본문 단계에 넘겨야 할 candidate handoff receipt를 작성하라.",
+        answerChecklist: [
+          "query and corpus revision",
+          "authorized candidate IDs",
+          "candidate cutoff",
+          "candidate recall estimate",
+          "ranking artifact link",
+          "latency",
+        ],
+        requiredConcepts: [
+          "retrieval-candidate-recall-ceiling",
+          "rag-stage-success-trace",
+        ],
+        sectionId: "retrieval",
+      },
+      {
+        level: "advanced",
+        question:
+          "Candidate handoff 이후 context와 answer가 실패한 경우 retrieval 재작업을 막는 attribution 절차를 설계하라.",
+        answerChecklist: [
+          "candidate success evidence",
+          "first failed stage",
+          "span coverage",
+          "context budget",
+          "claim support",
+          "owner assignment",
+          "same trace ID",
+        ],
+        requiredConcepts: [
+          "retrieval-candidate-recall-ceiling",
+          "rag-stage-success-trace",
+          "rag-chunk-span-coverage",
+        ],
+        sectionId: "retrieval",
       },
     ],
     papers: [
@@ -20755,6 +20751,64 @@ export const ARTICLE_LEARNING: Readonly<
           "LLM judge가 사람과 항상 일치하거나 ACL·security·latency·citation provenance를 대신한다는 뜻은 아님",
         sectionId: "reading-ragas",
       },
+    ].filter(
+      (paper) =>
+        !["reading-dpr", "reading-rrf", "reading-hnsw", "reading-cross-encoder"].includes(
+          paper.sectionId ?? "",
+        ),
+    ),
+  },
+  "ai/retrieval-ranking-funnel": {
+    entryLevel: false,
+    entryNote: "Sparse/dense retrieval, ANN, fusion과 reranking을 모른다고 가정하고 candidate set의 포함관계부터 시작합니다.",
+    coreIdea: "Retrieval ranking은 허가된 universe에서 lexical·dense lane으로 candidate recall을 확보하고 서로 다른 score 대신 rank evidence를 합친 뒤 bounded set만 joint model로 재정렬하는 funnel이며, 뒤 단계는 앞 단계에서 누락된 relevant document를 복구할 수 없습니다.",
+    assumedKnowledge: [
+      { id: "offline-document-embedding-reuse", role: "Document vector를 corpus revision마다 미리 계산합니다." },
+      { id: "retrieval-candidate-recall-ceiling", role: "Reranker output이 candidate subset이라는 상한을 적용합니다." },
+      { id: "multipositive-retrieval-metrics", role: "Recall@k와 NDCG@k를 구분합니다." },
+      { id: "embedding-role-instruction-contract", role: "Query/document serialization을 맞춥니다." },
+    ],
+    introducedHere: [
+      { id: "bm25-lexical-ranking", role: "Exact-term signal로 sparse candidate를 만드는 lexical first stage를 고정합니다." },
+      { id: "hnsw-ann-index", role: "Dense vector의 approximate search와 recall·latency knob를 고정합니다." },
+      { id: "reciprocal-rank-fusion", role: "Score scale이 다른 dense·sparse 목록을 rank evidence로 합칩니다." },
+      { id: "cross-encoder-reranking", role: "Bounded candidate 안에서 query–document joint relevance를 계산합니다." },
+      { id: "graph-structured-retrieval-boundary", role: "Graph traversal·community summary를 별도 provenance lane으로 추가합니다." },
+      { id: "rag-pre-retrieval-access-control", role: "ACL·tenant·valid-time을 candidate 생성 전에 적용합니다." },
+    ],
+    conceptExplanations: [
+      { id: "bm25-lexical-ranking", sectionId: "retrieval", intuition: "드문 query term은 크게 보고 반복 term의 이득은 포화시킵니다.", workedExample: "제품 code·법 조항 번호 query의 exact-term 후보를 빠르게 만듭니다.", boundary: "동의어·paraphrase vocabulary mismatch는 놓칠 수 있습니다." },
+      { id: "hnsw-ann-index", sectionId: "retrieval", intuition: "위층 proximity graph에서 지역을 찾고 아래층에서 가까운 이웃을 좁힙니다.", workedExample: "efSearch별 exact-subset Recall@50·p95·bytes를 기록합니다.", boundary: "Approximate index 누락과 embedding 품질 실패를 분리해야 합니다." },
+      { id: "reciprocal-rank-fusion", sectionId: "retrieval", intuition: "단위가 다른 score 대신 각 검색기의 등수를 역수 evidence로 합칩니다.", workedExample: "k=60에서 dense rank1·sparse rank10은 1/61+1/70입니다.", boundary: "Cutoff 밖 문서를 복구하지 않고 모든 query에서 개별 검색기보다 좋다는 보장이 없습니다." },
+      { id: "cross-encoder-reranking", sectionId: "retrieval", intuition: "질문과 문서를 함께 읽어 제한된 후보의 relevance를 다시 계산합니다.", workedExample: "RRF top-100을 joint encoder로 채점해 top-8로 줄입니다.", boundary: "Candidate 밖 문서를 만들 수 없고 candidate 수에 따라 cost가 증가합니다." },
+      { id: "graph-structured-retrieval-boundary", sectionId: "retrieval", intuition: "Entity 사이의 길과 community summary를 별도 candidate lane으로 사용합니다.", workedExample: "회사→제품→취약점 subgraph와 각 edge의 원문 span을 함께 남깁니다.", boundary: "Extraction·resolution·summary error와 hop budget을 vector lane과 별도 평가합니다." },
+      { id: "rag-pre-retrieval-access-control", sectionId: "retrieval", intuition: "금지 문서를 뽑은 뒤 가리지 않고 검색 universe 자체를 요청자 권한으로 제한합니다.", workedExample: "Tenant A는 A와 public corpus만 ANN/BM25 후보 universe에 넣습니다.", boundary: "DB filter만으로 cache·log·citation의 권한 누출까지 해결되지 않습니다." },
+    ],
+    conceptStages: [
+      { label: "00 universe", relation: "Tenant·ACL·valid-time으로 candidate universe를 고정합니다.", concepts: ["rag-pre-retrieval-access-control"] },
+      { label: "01 recall lanes", relation: "Lexical과 dense ANN 후보를 독립 생성합니다.", concepts: ["bm25-lexical-ranking", "hnsw-ann-index", "embedding-role-instruction-contract"] },
+      { label: "02 fuse", relation: "Score scale 대신 rank evidence를 합칩니다.", concepts: ["reciprocal-rank-fusion"] },
+      { label: "03 graph lane", relation: "Subgraph 후보와 provenance를 추가합니다.", concepts: ["graph-structured-retrieval-boundary"] },
+      { label: "04 rerank", relation: "Bounded candidate를 joint model로 줄입니다.", concepts: ["cross-encoder-reranking", "retrieval-candidate-recall-ceiling"] },
+      { label: "05 evaluate", relation: "Candidate recall·ranking quality·latency·memory를 분리합니다.", concepts: ["multipositive-retrieval-metrics"] },
+    ],
+    exercises: [
+      { level: "basic", question: "BM25와 dense retrieval이 각각 유리한 query를 쓰세요.", answerChecklist: ["exact identifier", "lexical", "paraphrase", "semantic", "hybrid"], requiredConcepts: ["bm25-lexical-ranking", "hnsw-ann-index"], sectionId: "retrieval" },
+      { level: "basic", question: "HNSW efSearch를 높일 때 측정할 값을 쓰세요.", answerChecklist: ["Recall@k", "latency", "distance evaluations", "memory unchanged/inspect", "exact subset"], requiredConcepts: ["hnsw-ann-index"], sectionId: "retrieval" },
+      { level: "basic", question: "k=60, rank1·rank10의 RRF score를 쓰세요.", answerChecklist: ["1/61", "1/70", "sum", "rank not raw score"], requiredConcepts: ["reciprocal-rank-fusion"], sectionId: "retrieval" },
+      { level: "basic", question: "Cross-encoder가 candidate 밖 문서를 복구하지 못하는 이유를 쓰세요.", answerChecklist: ["output subset", "candidate ceiling", "rerank only", "measure recall first"], requiredConcepts: ["cross-encoder-reranking", "retrieval-candidate-recall-ceiling"], sectionId: "retrieval" },
+      { level: "basic", question: "Pre-retrieval ACL과 post-filter를 비교하세요.", answerChecklist: ["authorized universe", "forbidden text not scored", "top-k displacement", "logs/cache"], requiredConcepts: ["rag-pre-retrieval-access-control"], sectionId: "retrieval" },
+      { level: "basic", question: "Graph lane receipt를 작성하세요.", answerChecklist: ["graph revision", "entities", "edges", "source spans", "hop budget", "summary"], requiredConcepts: ["graph-structured-retrieval-boundary"], sectionId: "retrieval" },
+      { level: "advanced", question: "Sparse·dense cutoff와 RRF k validation experiment를 설계하세요.", answerChecklist: ["frozen split", "candidate union", "cutoffs", "k sweep", "Recall/NDCG", "latency"], requiredConcepts: ["bm25-lexical-ranking", "hnsw-ann-index", "reciprocal-rank-fusion"], sectionId: "retrieval" },
+      { level: "advanced", question: "Relevant 4개 중 candidate 3개, output 2개의 recall ceiling을 계산하세요.", answerChecklist: ["candidate recall .75", "output at most .75", "actual .5 if two relevant", "cannot exceed candidate"], requiredConcepts: ["retrieval-candidate-recall-ceiling", "cross-encoder-reranking"], sectionId: "retrieval" },
+      { level: "advanced", question: "HNSW index 누락과 embedding failure를 분리하는 ablation을 설계하세요.", answerChecklist: ["exact vector scan", "same embeddings", "ANN comparison", "gold positives", "latency/memory"], requiredConcepts: ["hnsw-ann-index", "embedding-role-instruction-contract"], sectionId: "retrieval" },
+      { level: "advanced", question: "Tenant·graph·reranker를 포함한 release gate를 설계하세요.", answerChecklist: ["forbidden effect zero", "candidate recall", "graph provenance", "rerank NDCG", "p95/cost", "rollback"], requiredConcepts: ["rag-pre-retrieval-access-control", "graph-structured-retrieval-boundary", "cross-encoder-reranking"], sectionId: "retrieval" },
+    ],
+    papers: [
+      { title: "Dense Passage Retrieval for Open-Domain Question Answering", href: "https://arxiv.org/abs/2004.04906", problem: "Open-domain QA passage candidate retrieval", contribution: "Dual-encoder dense retrieval을 제시", assumptions: "논문의 corpus·training pairs·benchmark", evidenceScope: "EMNLP 2020의 passage retrieval·end-to-end QA 실험 범위", notClaim: "모든 언어·identifier corpus에서 BM25보다 우월함을 보장하지 않음", sectionId: "reading-dpr" },
+      { title: "Efficient and Robust Approximate Nearest Neighbor Search Using HNSW", href: "https://arxiv.org/abs/1603.09320", problem: "고차원 approximate nearest-neighbor search", contribution: "Hierarchical proximity graph search를 제시", assumptions: "논문의 datasets·distance·parameters", evidenceScope: "HNSW algorithm과 benchmark", notClaim: "Exact recall이나 모든 workload 최적성을 보장하지 않음", sectionId: "reading-hnsw" },
+      { title: "Passage Re-ranking with BERT", href: "https://arxiv.org/abs/1901.04085", problem: "First-stage candidates의 정교한 relevance ranking", contribution: "Query–passage cross-encoder reranking을 제시", assumptions: "MS MARCO·TREC-CAR와 논문 model", evidenceScope: "해당 benchmark reranking", notClaim: "후보 누락 복구나 무제한 candidate의 비용 효율을 보장하지 않음", sectionId: "reading-cross-encoder" },
+      { title: "Reciprocal Rank Fusion outperforms Condorcet and individual Rank Learning Methods", href: "https://cormack.uwaterloo.ca/cormacksigir09-rrf.pdf", problem: "서로 다른 retrieval rank list 결합", contribution: "1/(k+rank) 기반 RRF를 제안", assumptions: "논문의 TREC·LETOR experiment", evidenceScope: "SIGIR 2009의 RRF 정의와 TREC·LETOR 비교 실험 범위", notClaim: "고정 k의 보편 우위를 보장하지 않음", sectionId: "reading-rrf" },
     ],
   },
   "ai/lora-finetuning": {
@@ -25642,12 +25696,29 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/qwen-korean-consistency": {
-    entryLevel: true,
+    entryLevel: false,
     entryNote:
       "Unicode·tokenizer·logit·softmax·SFT·GRPO를 안다고 가정하지 않습니다. 같은 한국어 질문에서 화면에 보이는 reasoning은 중국어로 바뀌고 final answer는 한국어로 돌아온 실패와, 사용자가 중국어 번역을 명시해 중국어가 정답인 예외를 처음부터 함께 추적합니다. 각 단계의 최소 숙달 기준과 수식에서 자주 틀리는 지점을 문제로 먼저 고정해, 이 글만으로 진단·보정·학습·배포 결정을 설명할 수 있게 구성합니다.",
     coreIdea:
       "한국어 일관성 문제는 외국 문자가 보였다는 사실 하나로 진단할 수 없습니다. 먼저 reasoning·final·인용·번역 의도를 label로 나누고, Unicode script와 tokenizer token이 곧 언어·원인은 아니라는 경계를 세운 뒤, hidden state→lm_head logit→softmax라는 실제 선택 경로를 봐야 합니다. Prompt는 기본 정책과 예외를 설명하고, Smoothie-Qwen은 risk score로 일부 lm_head row를 post-hoc scaling하며, SFT는 한국어 reasoning의 모방 가능한 출발점을 만들고 group-relative RL은 current-policy 후보를 accuracy·format·language·length reward로 비교합니다. Checker와 oracle judge 모두 오류 가능한 측정기이므로, 정상 중국어 번역 slice를 포함한 paired evaluation·canary·rollback이 마지막 승인 조건입니다.",
-    assumedKnowledge: [],
+    assumedKnowledge: [
+      {
+        id: "smoothie-token-risk-score",
+        role: "출력층 보정 후보의 상세 risk 정의는 독립 Smoothie-Qwen 글에서 재사용합니다.",
+      },
+      {
+        id: "smoothie-lm-head-row-scaling",
+        role: "lm_head 편집의 수식·softmax 경계는 독립 Smoothie-Qwen 글에서 재사용합니다.",
+      },
+      {
+        id: "qwen-korean-sft-rl-stage-boundary",
+        role: "SFT와 RL update의 상세 경계는 독립 post-training 글에서 재사용합니다.",
+      },
+      {
+        id: "oracle-guided-korean-reward-contract",
+        role: "Checker·oracle reward 계약은 독립 post-training 글에서 재사용합니다.",
+      },
+    ],
     introducedHere: [
       {
         id: "qwen-language-consistency-failure-taxonomy",
@@ -25656,22 +25727,6 @@ export const ARTICLE_LEARNING: Readonly<
       {
         id: "korean-output-policy-exception-contract",
         role: "기본 한국어 출력과 code·수식·원문·사용자 지정 번역 예외를 prompt policy로 고정합니다.",
-      },
-      {
-        id: "smoothie-token-risk-score",
-        role: "Unicode direct token·safe token·broken subword의 n-gram 복원 위험을 [0,1] 점수로 만듭니다.",
-      },
-      {
-        id: "smoothie-lm-head-row-scaling",
-        role: "Risk score를 m≤S(r)≤1 scale로 바꾸고 lm_head vocabulary row에 적용하는 post-hoc 개입을 설명합니다.",
-      },
-      {
-        id: "qwen-korean-sft-rl-stage-boundary",
-        role: "Korean reasoning imitation을 만드는 SFT와 current-policy candidate preference를 조정하는 RL을 나눕니다.",
-      },
-      {
-        id: "oracle-guided-korean-reward-contract",
-        role: "Accuracy·format·language·overlong reward와 오류 가능한 oracle judge의 보정 범위를 계약으로 만듭니다.",
       },
       {
         id: "korean-language-runtime-guard-calibration",
@@ -25769,7 +25824,15 @@ export const ARTICLE_LEARNING: Readonly<
         boundary:
           "한 aggregate 평균, 저자 보고 수치, judge score 하나로 release할 수 없습니다. Stochastic generation은 반복 seed와 uncertainty가 필요하고 SFT/RL 데이터·reward와 겹친 benchmark는 independent evaluation이 아닙니다. Model·tokenizer·prompt·checker·judge artifact를 함께 versioning하지 않으면 rollback해도 이전 동작을 복원할 수 없습니다.",
       },
-    ],
+    ].filter(
+      (concept) =>
+        ![
+          "smoothie-token-risk-score",
+          "smoothie-lm-head-row-scaling",
+          "qwen-korean-sft-rl-stage-boundary",
+          "oracle-guided-korean-reward-contract",
+        ].includes(concept.id),
+    ),
     conceptStages: [
       {
         label: "Diagnose",
@@ -25796,33 +25859,6 @@ export const ARTICLE_LEARNING: Readonly<
           "language-model-policy",
           "softmax-normalization",
           "korean-output-policy-exception-contract",
-        ],
-      },
-      {
-        label: "Edit",
-        relation:
-          "최소 숙달: S(r)의 domain·끝값·단조성·m≤S≤1과 row scaling의 음수-logit 반례를 계산",
-        concepts: ["smoothie-token-risk-score", "smoothie-lm-head-row-scaling"],
-      },
-      {
-        label: "Supervise",
-        relation:
-          "최소 숙달: Fixed demonstration imitation인 SFT와 current-policy rollout RL의 data source·역할을 분리",
-        concepts: [
-          "sft",
-          "response-loss-mask",
-          "online-rollout",
-          "qwen-korean-sft-rl-stage-boundary",
-        ],
-      },
-      {
-        label: "Reward",
-        relation:
-          "최소 숙달: sub-reward 가중합과 group-centered advantage를 계산하고 zero-variance·reward hacking·oracle 오판 경계를 설명",
-        concepts: [
-          "oracle-guided-korean-reward-contract",
-          "grpo-within-prompt-relative-advantage",
-          "versioned-verifier-measurement",
         ],
       },
       {
@@ -25892,137 +25928,6 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "overview",
       },
       {
-        level: "basic",
-        question:
-          "Smoothie 식에서 m=0.5, s=10, r=0.5일 때 S(r)를 계산하고 r=0·1의 끝값, m≤S≤1, 단조 방향과 s=1의 함정을 설명하라.",
-        answerChecklist: [
-          "formula substitution",
-          "S approximately 0.630",
-          "S(0)=1",
-          "S(1)=m=0.5",
-          "m≤S≤1",
-          "decreasing in r for s>1",
-          "0≤r≤1",
-          "0≤m≤1",
-          "s>1",
-          "log(s)=0 at s=1",
-        ],
-        requiredConcepts: [
-          "smoothie-token-risk-score",
-          "smoothie-lm-head-row-scaling",
-        ],
-        sectionId: "smoothie-qwen",
-      },
-      {
-        level: "basic",
-        question:
-          "Logit (4,2,0)의 첫 token lm_head row를 0.5배 했을 때 새 softmax를 계산하고, 확률을 단순 0.5배 한 것과 다른 이유 및 음수 logit −10의 반례를 설명하라.",
-        answerChecklist: [
-          "new logits (2,2,0)",
-          "new probabilities approximately (0.468,0.468,0.063)",
-          "shared denominator",
-          "other probabilities change",
-          "row/logit not probability scaling",
-          "negative −10 becomes −5",
-          "negative token may gain relative probability",
-          "bias/tied weight implementation caveat",
-        ],
-        requiredConcepts: [
-          "language-model-policy",
-          "softmax-normalization",
-          "smoothie-lm-head-row-scaling",
-        ],
-        sectionId: "smoothie-qwen",
-      },
-      {
-        level: "basic",
-        question:
-          "한국어 reasoning SFT와 group-relative RL이 각각 어떤 data를 보고 어떤 behavior를 바꾸는지, 왜 같은 학습 단계가 아닌지 설명하라.",
-        answerChecklist: [
-          "fixed demonstration",
-          "response token NLL/mask",
-          "imitation/start region",
-          "current-policy rollout",
-          "multiple candidates per prompt",
-          "reward comparison",
-          "preference update",
-          "SFT not faithful proof",
-          "RL not automatic truth",
-          "stage ablation",
-        ],
-        requiredConcepts: [
-          "sft",
-          "response-loss-mask",
-          "online-rollout",
-          "qwen-korean-sft-rl-stage-boundary",
-        ],
-        sectionId: "rl-approach",
-      },
-      {
-        level: "basic",
-        question:
-          "r_acc=1, r_format=1, r_lang=0, r_overlong=−0.5일 때 논문의 가중합 reward를 계산하고 각 항을 별도로 logging해야 하는 이유를 설명하라.",
-        answerChecklist: [
-          "1.0×1",
-          "0.2×1",
-          "0.2×0",
-          "0.2×−0.5",
-          "R=1.1",
-          "overlong can be negative",
-          "accuracy highest weight",
-          "aggregate hides tradeoff",
-          "weights are paper setting not universal",
-        ],
-        requiredConcepts: ["oracle-guided-korean-reward-contract"],
-        sectionId: "rl-approach",
-      },
-      {
-        level: "advanced",
-        question:
-          "같은 prompt의 candidate reward가 (1.4,1.0,0.6)일 때 mean과 Dr.GRPO식 centered advantage를 계산하고, 모든 reward가 같을 때와 표준편차로 다시 나눌 때의 차이를 논하라.",
-        answerChecklist: [
-          "group mean 1.0",
-          "advantages (0.4,0,−0.4)",
-          "positive/zero/negative update direction",
-          "within-prompt comparison",
-          "all equal gives zero signal",
-          "Dr.GRPO omits std normalization",
-          "do not mix reward and probability ratio",
-          "group diversity monitoring",
-        ],
-        requiredConcepts: [
-          "oracle-guided-korean-reward-contract",
-          "grpo-within-prompt-relative-advantage",
-          "online-rollout",
-        ],
-        sectionId: "rl-approach",
-      },
-      {
-        level: "advanced",
-        question:
-          "형식은 맞지만 오답인 candidate가 deterministic checker에서 고득점하는 reward hacking 사례를 만들고 oracle judge가 보정할 범위와 새 실패 가능성을 설계하라.",
-        answerChecklist: [
-          "checker exploit trace",
-          "wrong high accuracy/format",
-          "oracle rechecks semantic accuracy",
-          "override/clamp rule",
-          "frozen judge/model version",
-          "false positive and false negative",
-          "shared blind spot",
-          "prompt injection/style bias",
-          "human calibration",
-          "independent benchmark",
-          "oracle not ground truth",
-          "reward component logs",
-        ],
-        requiredConcepts: [
-          "oracle-guided-korean-reward-contract",
-          "versioned-verifier-measurement",
-          "independent-evaluation",
-        ],
-        sectionId: "rl-approach",
-      },
-      {
         level: "advanced",
         question:
           "예상치 못한 Chinese span 60건, 정상 중국어 번역 40건, 원문 인용·code·고유명사 slice가 있는 validation set에서 script-ratio checker의 pass/retry/review threshold를 calibration하는 절차를 작성하라.",
@@ -26060,7 +25965,7 @@ export const ARTICLE_LEARNING: Readonly<
           "task correctness/general regression",
           "human/judge calibration",
           "latency/retry/token cost",
-          "stage ablation",
+          "intervention-level comparison",
           "acceptance and hard guardrails",
           "canary traffic",
           "rollback trigger",
@@ -26072,8 +25977,107 @@ export const ARTICLE_LEARNING: Readonly<
           "run-artifact-provenance",
           "independent-evaluation",
           "korean-language-runtime-guard-calibration",
-          "qwen-korean-sft-rl-stage-boundary",
-          "smoothie-lm-head-row-scaling",
+        ],
+        sectionId: "decision-matrix",
+      },
+      {
+        level: "basic",
+        question:
+          "기본 한국어 출력 정책과 번역·인용·code 예외를 한 prompt contract로 작성하라.",
+        answerChecklist: [
+          "Korean default",
+          "requested translation",
+          "quoted source",
+          "code and math",
+          "proper nouns",
+          "user intent priority",
+        ],
+        requiredConcepts: ["korean-output-policy-exception-contract"],
+        sectionId: "prompt-level",
+      },
+      {
+        level: "basic",
+        question:
+          "같은 언어 혼용 증상에서 prompt·weight edit·training·runtime guard 중 다음 검토 층을 고르는 기준을 쓰세요.",
+        answerChecklist: [
+          "failure taxonomy",
+          "smallest reversible intervention",
+          "artifact changes",
+          "latency or training cost",
+          "paired evaluation",
+          "rollback",
+        ],
+        requiredConcepts: [
+          "qwen-language-consistency-failure-taxonomy",
+          "qwen-korean-paired-release-evaluation",
+        ],
+        sectionId: "decision-matrix",
+      },
+      {
+        level: "basic",
+        question:
+          "Script checker의 pass·retry·review 세 구간과 최대 retry 이후 fallback을 정의하세요.",
+        answerChecklist: [
+          "pass threshold",
+          "ambiguous review band",
+          "retry threshold",
+          "retry cap",
+          "abstain or human fallback",
+          "versioned detector",
+        ],
+        requiredConcepts: ["korean-language-runtime-guard-calibration"],
+        sectionId: "runtime-guard",
+      },
+      {
+        level: "basic",
+        question:
+          "Base와 candidate의 한국어 일관성을 같은 요청에서 비교할 최소 measurement 열을 작성하세요.",
+        answerChecklist: [
+          "same request ID",
+          "reasoning and final labels",
+          "translation exception",
+          "task correctness",
+          "latency and retry",
+          "artifact revision",
+        ],
+        requiredConcepts: ["qwen-korean-paired-release-evaluation"],
+        sectionId: "decision-matrix",
+      },
+      {
+        level: "advanced",
+        question:
+          "Language leakage miss와 정상 번역 false reject의 비용이 다른 상황에서 guard threshold를 선택하세요.",
+        answerChecklist: [
+          "labeled slices",
+          "false negative cost",
+          "false positive cost",
+          "threshold sweep",
+          "review capacity",
+          "independent holdout",
+          "abstention",
+        ],
+        requiredConcepts: [
+          "cost-sensitive-threshold",
+          "korean-language-runtime-guard-calibration",
+        ],
+        sectionId: "runtime-guard",
+      },
+      {
+        level: "advanced",
+        question:
+          "Model·tokenizer·prompt·checker·judge 중 하나만 rollback했을 때 생기는 반례와 atomic rollback receipt를 설계하세요.",
+        answerChecklist: [
+          "artifact mismatch",
+          "same request replay",
+          "complete version tuple",
+          "atomic switch",
+          "canary trigger",
+          "previous generation",
+          "post-rollback verification",
+        ],
+        requiredConcepts: [
+          "qwen-korean-paired-release-evaluation",
+          "run-artifact-provenance",
         ],
         sectionId: "decision-matrix",
       },
@@ -26140,6 +26144,94 @@ export const ARTICLE_LEARNING: Readonly<
           "Oracle이 ground truth이거나 한국어 reasoning이 내부 인과 추론과 같고, 동일 recipe가 다른 Qwen size·언어·dataset에서 안정성·일반 성능 향상을 보장한다는 뜻은 아님",
         sectionId: "paper-qwen-korean-rl",
       },
+    ].filter(
+      (paper) =>
+        ![
+          "paper-smoothie-qwen",
+          "paper-smoothie-qwen-code",
+          "paper-qwen-korean-rl",
+        ].includes(paper.sectionId ?? ""),
+    ),
+  },
+  "ai/smoothie-qwen-weight-editing": {
+    entryLevel: false,
+    entryNote: "Token ID·logit·softmax를 모른다고 가정하고 Unicode risk에서 변환 artifact까지 한 경로로 계산합니다.",
+    coreIdea: "Smoothie-Qwen은 선택한 Unicode·tokenizer procedure로 token risk를 추정하고 lm_head row를 연속적으로 scaling하는 post-hoc weight 편집이며, language oracle이나 probability 직접 scaling이 아니므로 정상 번역을 포함한 paired evaluation이 필요합니다.",
+    assumedKnowledge: [
+      { id: "unicode-code-point", role: "문자 code point와 언어 의미를 구분합니다." },
+      { id: "tokenizer-pipeline-contract", role: "Tokenizer revision과 broken subword를 고정합니다." },
+      { id: "softmax-normalization", role: "한 logit 변화가 vocabulary 전체 확률을 바꾸는 이유를 읽습니다." },
+    ],
+    introducedHere: [
+      { id: "smoothie-token-risk-score", role: "Unicode direct token·safe token·broken subword의 n-gram 복원 위험을 [0,1] 점수로 만듭니다." },
+      { id: "smoothie-lm-head-row-scaling", role: "Risk를 m≤S(r)≤1 scale로 바꿔 lm_head vocabulary row에 적용합니다." },
+    ],
+    conceptExplanations: [
+      { id: "smoothie-token-risk-score", sectionId: "smoothie-qwen", intuition: "Vocabulary 조각마다 목표 문자군을 직접 또는 조합으로 만들 위험을 표시합니다.", workedExample: "Broken token을 100개 bigram sample과 결합해 12개가 target Unicode로 decode되면 r≈0.12로 기록합니다.", boundary: "언어 의미·실제 next-token probability가 아니라 선택한 Unicode·sampling recipe의 추정치입니다." },
+      { id: "smoothie-lm-head-row-scaling", sectionId: "smoothie-qwen", intuition: "높은-risk 출력 row를 지우지 않고 하한 m까지 눌러 상대 경쟁을 바꿉니다.", workedExample: "m=.5,s=10,r=.5이면 S≈.630이며 logits (4,2,0)의 첫 row 결과를 절반으로 만들면 softmax는 약 (.468,.468,.063)입니다.", boundary: "Probability에 S를 곱하는 연산이 아니고 음수 logit·weight tying·bias는 별도 구현 반례입니다.", proofIdea: "r=0,1에서 S=1,m이고 s>1이면 log 항이 단조 증가하므로 S는 단조 감소합니다.", counterexample: "정상 중국어 번역 token까지 낮추면 leakage 지표만 좋아지고 task correctness는 나빠집니다." },
+    ],
+    conceptStages: [
+      { label: "00 classify", relation: "Target Unicode와 tokenizer 조각을 구분합니다.", concepts: ["unicode-code-point", "tokenizer-pipeline-contract", "smoothie-token-risk-score"] },
+      { label: "01 scale", relation: "Risk를 bounded row scale로 바꿉니다.", concepts: ["smoothie-lm-head-row-scaling"] },
+      { label: "02 decode", relation: "Logit·softmax 전체 coupling을 계산합니다.", concepts: ["softmax-normalization", "smoothie-lm-head-row-scaling"] },
+      { label: "03 release", relation: "정상 예외를 보존하는 paired artifact를 승인합니다.", concepts: ["independent-evaluation", "run-artifact-provenance"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Direct·safe·broken token을 구분하세요.", answerChecklist: ["Unicode target", "safe decode", "subword/byte fragment", "ngram test"], requiredConcepts: ["smoothie-token-risk-score"], sectionId: "smoothie-qwen" },
+      { level: "basic", question: "100개 조합 중 12개 target decode의 risk를 계산하세요.", answerChecklist: ["12/100", "0.12", "sampling estimate", "record seed"], requiredConcepts: ["smoothie-token-risk-score"], sectionId: "smoothie-qwen" },
+      { level: "basic", question: "Smoothie scale 식에서 S(0)과 S(1)을 각각 계산하고 의미를 설명하세요.", answerChecklist: ["1", "m", "s>1", "bounded"], requiredConcepts: ["smoothie-lm-head-row-scaling"], sectionId: "smoothie-qwen" },
+      { level: "basic", question: "m=.5,s=10,r=.5의 S를 근사하세요.", answerChecklist: ["substitute", "log 5.5", "log 10", "approximately .630"], requiredConcepts: ["smoothie-lm-head-row-scaling"], sectionId: "smoothie-qwen" },
+      { level: "basic", question: "Row scaling과 probability scaling을 구분하세요.", answerChecklist: ["weight row", "dot product", "logit", "shared softmax denominator"], requiredConcepts: ["smoothie-lm-head-row-scaling", "softmax-normalization"], sectionId: "smoothie-qwen" },
+      { level: "basic", question: "변환 artifact에 보존할 항목을 쓰세요.", answerChecklist: ["base revision", "tokenizer", "Unicode range", "sampling recipe", "m/s", "risk digest"], requiredConcepts: ["smoothie-token-risk-score", "run-artifact-provenance"], sectionId: "smoothie-qwen" },
+      { level: "advanced", question: "S(r)의 끝값과 단조성을 보이세요.", answerChecklist: ["r=0", "r=1", "log monotone", "decreasing", "m to 1"], requiredConcepts: ["smoothie-lm-head-row-scaling"], sectionId: "smoothie-qwen" },
+      { level: "advanced", question: "음수 logit에 양의 scale을 곱했을 때 suppression이 뒤집히는 반례를 설명하세요.", answerChecklist: ["−10 to −5", "closer to zero", "relative probability can rise", "measure logits"], requiredConcepts: ["smoothie-lm-head-row-scaling", "softmax-normalization"], sectionId: "smoothie-qwen" },
+      { level: "advanced", question: "Weight tying과 bias가 있는 model의 변환 검사를 설계하세요.", answerChecklist: ["inspect architecture", "shared embedding", "bias path", "serialization parity", "rollback"], requiredConcepts: ["smoothie-lm-head-row-scaling", "run-artifact-provenance"], sectionId: "smoothie-qwen" },
+      { level: "advanced", question: "한국어-only와 중국어 번역 paired release gate를 설계하세요.", answerChecklist: ["same prompts/settings", "mismatch reduction", "translation preservation", "task correctness", "uncertainty", "rollback"], requiredConcepts: ["smoothie-token-risk-score", "smoothie-lm-head-row-scaling", "independent-evaluation"], sectionId: "smoothie-qwen" },
+    ],
+    papers: [
+      { title: "Smoothie-Qwen: Post-Hoc Smoothing to Reduce Language Bias in Multilingual LLMs", href: "https://arxiv.org/abs/2507.05686", problem: "Full retraining 없이 특정 문자군 output tendency를 낮추는 문제", contribution: "Token risk와 logarithmic lm_head row scaling을 제안", assumptions: "논문의 Qwen checkpoint·tokenizer·Unicode·sampling·evaluation 설정", evidenceScope: "정의한 algorithm과 제한된 Qwen 실험", notClaim: "모든 언어·checkpoint·정상 번역 보존을 보장하지 않음", sectionId: "paper-smoothie-qwen" },
+      { title: "dnotitia/smoothie-qwen", href: "https://github.com/dnotitia/smoothie-qwen", problem: "논문 변환을 checkpoint에 재현", contribution: "Risk 분석·설정·weight 변환 code 제공", assumptions: "Pinned repository·dependency·model/config", evidenceScope: "공개 repository가 구현한 tokenizer 분석, risk artifact, lm_head 변환과 저장 경로 범위", notClaim: "기본값의 production 최적성과 모든 architecture 호환을 보장하지 않음", sectionId: "paper-smoothie-qwen-code" },
+    ],
+  },
+  "ai/qwen-korean-reasoning-posttraining": {
+    entryLevel: false,
+    entryNote: "SFT·rollout·reward·GRPO를 모른다고 가정하고 fixed demonstration과 current-policy data부터 구분합니다.",
+    coreIdea: "한국어 reasoning post-training은 SFT로 imitation 출발점을 만들고 on-policy group candidates에 composite reward를 주어 policy를 업데이트하는 별도 실험이며, checker와 oracle은 모두 versioned measurement이므로 stage ablation과 independent evaluation이 필요합니다.",
+    assumedKnowledge: [
+      { id: "sft", role: "Response-token likelihood update를 재사용합니다." },
+      { id: "online-rollout", role: "현재 policy가 만든 candidate distribution을 재사용합니다." },
+      { id: "grpo-within-prompt-relative-advantage", role: "같은 prompt 안의 상대 advantage를 재사용합니다." },
+      { id: "versioned-verifier-measurement", role: "Checker·judge를 측정 artifact로 다룹니다." },
+    ],
+    introducedHere: [
+      { id: "qwen-korean-sft-rl-stage-boundary", role: "Korean reasoning imitation SFT와 current-policy preference RL을 나눕니다." },
+      { id: "oracle-guided-korean-reward-contract", role: "Accuracy·format·language·length reward와 oracle correction을 versioning합니다." },
+    ],
+    conceptExplanations: [
+      { id: "qwen-korean-sft-rl-stage-boundary", sectionId: "rl-approach", intuition: "SFT는 좋은 풀이를 따라 쓰고 RL은 현재 model의 여러 후보를 상대 비교합니다.", workedExample: "Korean demonstrations로 warm start한 뒤 질문마다 12 rollouts을 accuracy·format·language·length로 채점합니다.", boundary: "SFT가 faithfulness를 증명하거나 RL이 자동으로 새로운 진실을 발견하지 않습니다." },
+      { id: "oracle-guided-korean-reward-contract", sectionId: "rl-approach", intuition: "형식 checker와 semantic judge를 하나의 oracle로 뭉개지 않고 충돌 규칙까지 기록합니다.", workedExample: "R=1.0r_acc+.2r_format+.2r_lang+.2r_overlong에서 (1,1,0,−.5)는 1.1입니다.", boundary: "Oracle judge도 오류 가능한 frozen model이며 shared blind spot과 reward hacking을 없애지 못합니다.", counterexample: "모든 group reward가 같으면 centered advantage가 0이라 preference signal이 없습니다." },
+    ],
+    conceptStages: [
+      { label: "00 SFT", relation: "Fixed Korean demonstrations로 response policy를 warm start합니다.", concepts: ["sft", "response-loss-mask", "qwen-korean-sft-rl-stage-boundary"] },
+      { label: "01 rollout", relation: "Current policy에서 prompt별 후보를 생성합니다.", concepts: ["online-rollout", "qwen-korean-sft-rl-stage-boundary"] },
+      { label: "02 reward", relation: "Checker·oracle·component score를 receipt로 묶습니다.", concepts: ["oracle-guided-korean-reward-contract", "versioned-verifier-measurement"] },
+      { label: "03 update", relation: "Group-relative signal과 collapse를 관찰합니다.", concepts: ["grpo-within-prompt-relative-advantage", "oracle-guided-korean-reward-contract"] },
+      { label: "04 evaluate", relation: "Stage별 gain과 일반 능력 회귀를 분리합니다.", concepts: ["independent-evaluation", "run-artifact-provenance"] },
+    ],
+    exercises: [
+      { level: "basic", question: "SFT data와 RL rollout data를 구분하세요.", answerChecklist: ["fixed demonstrations", "current policy", "imitation", "rewarded candidates"], requiredConcepts: ["qwen-korean-sft-rl-stage-boundary"], sectionId: "rl-approach" },
+      { level: "basic", question: "SFT가 먼저 필요한 논문 사례의 역할을 설명하세요.", answerChecklist: ["warm start", "Korean format", "not universal requirement", "ablation"], requiredConcepts: ["qwen-korean-sft-rl-stage-boundary"], sectionId: "rl-approach" },
+      { level: "basic", question: "Reward (1,.7,.4)의 mean과 advantage를 계산하세요.", answerChecklist: ["mean .7", ".3", "0", "−.3"], requiredConcepts: ["grpo-within-prompt-relative-advantage"], sectionId: "rl-approach" },
+      { level: "basic", question: "Composite reward 예시 (1,1,0,−.5)를 계산하세요.", answerChecklist: ["1", ".2", "0", "−.1", "1.1"], requiredConcepts: ["oracle-guided-korean-reward-contract"], sectionId: "rl-approach" },
+      { level: "basic", question: "Deterministic checker와 oracle judge를 구분하세요.", answerChecklist: ["typed rule", "semantic model", "false positives", "false negatives", "version both"], requiredConcepts: ["oracle-guided-korean-reward-contract", "versioned-verifier-measurement"], sectionId: "rl-approach" },
+      { level: "basic", question: "Reward receipt fields를 쓰세요.", answerChecklist: ["checker version", "judge snapshot", "prompt", "component scores", "override/clamp", "candidate ID"], requiredConcepts: ["oracle-guided-korean-reward-contract"], sectionId: "rl-approach" },
+      { level: "advanced", question: "모든 group reward가 같을 때 update 신호를 분석하세요.", answerChecklist: ["mean equals each", "zero advantage", "no relative signal", "monitor diversity"], requiredConcepts: ["oracle-guided-korean-reward-contract", "grpo-within-prompt-relative-advantage"], sectionId: "rl-approach" },
+      { level: "advanced", question: "Checker exploit과 oracle shared blind spot fixture를 설계하세요.", answerChecklist: ["wrong formatted answer", "checker pass", "judge review", "shared error", "human calibration"], requiredConcepts: ["oracle-guided-korean-reward-contract", "versioned-verifier-measurement"], sectionId: "rl-approach" },
+      { level: "advanced", question: "Base→SFT→RL stage ablation을 설계하세요.", answerChecklist: ["same benchmark", "frozen data split", "stage checkpoints", "language metric", "task quality", "regression"], requiredConcepts: ["qwen-korean-sft-rl-stage-boundary", "independent-evaluation"], sectionId: "rl-approach" },
+      { level: "advanced", question: "다른 domain으로의 전이를 과장하지 않는 release gate를 작성하세요.", answerChecklist: ["training domain", "unseen slices", "reasoning structure", "confidence interval", "cost", "rollback"], requiredConcepts: ["qwen-korean-sft-rl-stage-boundary", "run-artifact-provenance"], sectionId: "rl-approach" },
+    ],
+    papers: [
+      { title: "Making Qwen3 Think in Korean with Reinforcement Learning", href: "https://arxiv.org/abs/2508.10355", problem: "Qwen3 14B의 출력 reasoning을 한국어에 맞추며 task quality와 RL 안정성을 유지", contribution: "Korean SFT와 oracle-guided Dr.GRPO 사례·training trace 보고", assumptions: "논문의 base·data·reward·12 rollouts·compute·benchmark", evidenceScope: "해당 two-stage experiment", notClaim: "Oracle이 ground truth이거나 다른 model·language에 같은 gain을 보장하지 않음", sectionId: "paper-qwen-korean-rl" },
     ],
   },
   "ai/claw-overview": {
@@ -51566,12 +51658,28 @@ export const ARTICLE_LEARNING: Readonly<
     papers:[{title:"ElGamal · A Public-Key Cryptosystem and a Signature Scheme Based on Discrete Logarithms",href:"https://doi.org/10.1109/TIT.1985.1057074",problem:"Discrete-log group에서 public-key encryption과 signature를 구성",contribution:"Ephemeral exponent와 DH-style mask를 쓰는 randomized encryption 구조 제시",assumptions:"Original group model과 논문의 security context",evidenceScope:"Textbook ElGamal construction의 primary source",notClaim:"Modern IND-CCA·hybrid profile·specific curve implementation 안전성을 자동 보장하지 않음",sectionId:"paper-elgamal-1985"},{title:"RFC 6090 · Fundamental Elliptic Curve Cryptography Algorithms",href:"https://www.rfc-editor.org/rfc/rfc6090.html",problem:"ECC group operations과 ElGamal-family 역사적 algorithms의 interoperable description",contribution:"Finite-field EC group·encoding/security considerations의 standard reference",assumptions:"RFC의 chosen curve/domain·validation requirements",evidenceScope:"EC group instance와 input validation 경계",notClaim:"Arbitrary EC ElGamal profile을 표준화하거나 AEAD를 대체하지 않음",sectionId:"paper-rfc6090-elgamal"}]
   },
   "crypto/mpc": {
-    entryLevel:true, entryNote:"Party 세 명이 비밀 5를 shares로 나누는 계산에서 시작해 adversary model·Paillier·DKG transcript까지 연결합니다.", coreIdea:"MPC는 여러 party의 private inputs로 함수를 계산하면서 ideal functionality가 허용한 결과 밖의 정보를 노출하지 않는 프로토콜 목표이며, Shamir·Paillier·DKG는 서로 다른 역할의 building blocks이지 하나의 보안 보장이 아닙니다.", assumedKnowledge:[],
-    introducedHere:[{id:"mpc-real-ideal-adversary-boundary",role:"Corruption·network·abort·fairness 조건별 보안 claim을 구분합니다."},{id:"shamir-threshold-polynomial-sharing",role:"t+1 shares interpolation과 t-share privacy를 계산합니다."},{id:"paillier-additive-homomorphic-boundary",role:"Ciphertext multiplication이 plaintext addition이 되는 계산·전제를 설명합니다."},{id:"mpc-dkg-transcript-artifact",role:"Party·round·commitment·complaint·public key를 session receipt에 결속합니다."},{id:"mpc-protocol-release-gate",role:"Active failures·dropout·restart와 cost를 pinned profile에서 검증합니다."}],
-    conceptExplanations:[{id:"mpc-real-ideal-adversary-boundary",sectionId:"security-model",intuition:"Trusted referee가 inputs를 받고 result만 나누어 준 ideal world와 실제 messages에서 party가 보는 view를 비교합니다.",workedExample:"Alice 3, Bob 4의 sum 7만 공개할 때 transcript에서 3이나 4를 더 알 수 있으면 실패입니다.",boundary:"Semi-honest는 protocol을 따르는 관찰자이고 malicious는 메시지 변조·abort를 포함하며 fairness는 별도 속성입니다.",counterexample:"Privacy가 있어도 마지막 message를 본 공격자가 abort해 자신만 result를 얻을 수 있습니다."},{id:"shamir-threshold-polynomial-sharing",sectionId:"shamir",intuition:"Secret을 y-intercept로 숨긴 random polynomial의 points를 나눠 가집니다.",workedExample:"F17에서 f(x)=5+3x이면 shares는 (1,8),(2,11),(3,14)이고 어느 두 points로든 f(0)=5를 복원합니다.",boundary:"Degree t, distinct nonzero indices, uniform coefficients과 field arithmetic이 필요합니다.",proofIdea:"t+1 points는 degree t polynomial을 유일하게 정하지만 t points에는 각 secret마다 하나의 맞는 polynomial이 있습니다.",counterexample:"Share index 0을 나누면 f(0)=s 자체를 공개합니다."},{id:"paillier-additive-homomorphic-boundary",sectionId:"paillier",intuition:"n² group에서 ciphertext 곱셈은 exponent의 덧셈으로 바뀌어 plaintext mod n 덧셈을 만듭니다.",workedExample:"p=3,q=5,n=15,g=16,λ=4,μ=4,m=4,r=2이면 c=173이고 c^λ mod225=16, L(16)=1이므로 m=1·4 mod15=4입니다.",boundary:"r은 Z*n의 unit이어야 하며 textbook homomorphism은 malformed ciphertext·active proof를 자동 처리하지 않습니다.",proofIdea:"g^(m1)r1^n·g^(m2)r2^n=g^(m1+m2)(r1r2)^n입니다.",counterexample:"r과 n이 coprime이 아니면 required unit-group distribution을 벗어납니다."},{id:"mpc-dkg-transcript-artifact",sectionId:"dkg",intuition:"Round messages는 같은 session·party roster·threshold에 속해야 재사용·교차 혼합을 막습니다.",workedExample:"P1,P2,P3,t=1의 roster hash, round commitments, encrypted shares, complaints, accepted group public key를 receipt에 넣습니다.",boundary:"DKG가 public key와 shares를 만든다는 사실은 application signature protocol의 모든 보안을 보장하지 않습니다.",counterexample:"Session ID가 빠지면 이전 round commitment를 새 ceremony에 replay할 수 있습니다."},{id:"mpc-protocol-release-gate",sectionId:"release",intuition:"Correct happy path 하나보다 bad share·dropout·restart에서 계약이 보존되는지가 먼저입니다.",workedExample:"Duplicate ID, out-of-field share, malformed Paillier key, reordered round, complaint, timeout을 replay한 뒤 rounds·messages·bytes·p50/p99 latency·RSS를 측정합니다.",boundary:"Same n,t, adversary/network model, security parameter, hardware에서 비교합니다."}],
-    conceptStages:[{label:"00 security",relation:"Functionality·party·adversary model을 고정합니다.",concepts:["mpc-real-ideal-adversary-boundary"]},{label:"01 sharing",relation:"Field interpolation으로 threshold shares를 만듭니다.",concepts:["prime-field-modular-arithmetic","lagrange-interpolation-basis","shamir-threshold-polynomial-sharing"]},{label:"02 homomorphism",relation:"Paillier 덧셈 경계를 계산합니다.",concepts:["modular-congruence-residue-class","paillier-additive-homomorphic-boundary"]},{label:"03 DKG",relation:"Rounds를 session artifact에 결속합니다.",concepts:["mpc-dkg-transcript-artifact"]},{label:"04 release",relation:"Active failures·cost·rollback을 검사합니다.",concepts:["mpc-protocol-release-gate"]}],
-    exercises:[{level:"basic",question:"Semi-honest와 malicious adversary를 구분하세요.",answerChecklist:["follows protocol","observes view","deviates","abort/malformed","different guarantees"],requiredConcepts:["mpc-real-ideal-adversary-boundary"],sectionId:"security-model"},{level:"basic",question:"F17의 f(x)=5+3x에서 shares 1,2,3을 계산하세요.",answerChecklist:["8","11","14","mod17"],requiredConcepts:["shamir-threshold-polynomial-sharing"],sectionId:"shamir"},{level:"basic",question:"Shares (1,8),(2,11)로 secret 5를 복원하세요.",answerChecklist:["line slope 3","interpolate x=0","5","field arithmetic"],requiredConcepts:["shamir-threshold-polynomial-sharing","lagrange-interpolation-basis"],sectionId:"shamir"},{level:"basic",question:"Share index 0을 금지하는 이유를 쓰세요.",answerChecklist:["f(0)","secret","direct leak","nonzero distinct indices"],requiredConcepts:["shamir-threshold-polynomial-sharing"],sectionId:"shamir"},{level:"basic",question:"Toy Paillier m=4,r=2 ciphertext 173을 식에 따라 복호하세요.",answerChecklist:["n=15","lambda=4","c^4=16 mod225","L=1","mu=4","m=4"],requiredConcepts:["paillier-additive-homomorphic-boundary"],sectionId:"paillier"},{level:"basic",question:"DKG receipt에 필요한 fields를 나열하세요.",answerChecklist:["protocol/version","session","roster/indices","threshold","round order","commitments/shares","complaints","public key"],requiredConcepts:["mpc-dkg-transcript-artifact"],sectionId:"dkg"},{level:"advanced",question:"t+1 Shamir 복원과 t-share privacy의 증명 아이디어를 설명하세요.",answerChecklist:["degree t uniqueness","t+1 points","each secret compatible","random coefficient","information theoretic"],requiredConcepts:["shamir-threshold-polynomial-sharing"],sectionId:"shamir"},{level:"advanced",question:"Paillier ciphertext multiplication identity를 유도하세요.",answerChecklist:["multiply encryptions","g exponents add","randomizers multiply","mod n message addition","unit condition"],requiredConcepts:["paillier-additive-homomorphic-boundary"],sectionId:"paillier"},{level:"advanced",question:"Session-crossing DKG replay와 complaint/dropout fixture를 설계하세요.",answerChecklist:["session/roster hash","old commitment","round order","complaint evidence","disqualification","abort/restart"],requiredConcepts:["mpc-dkg-transcript-artifact","mpc-real-ideal-adversary-boundary"],sectionId:"dkg"},{level:"advanced",question:"MPC release receipt·benchmark·rollback 경계를 작성하세요.",answerChecklist:["source SHA","n/t/adversary/network","security parameter","negative matrix","rounds/messages/bytes","p50/p99/RSS","restart","rollback"],requiredConcepts:["mpc-protocol-release-gate"],sectionId:"release"}],
-    papers:[{title:"Shamir · How to Share a Secret",href:"https://doi.org/10.1145/359168.359176",problem:"Secret을 threshold shares로 나누고 적은 shares에서 정보를 숨김",contribution:"Random polynomial evaluations과 interpolation을 이용한 perfect secret sharing 제시",assumptions:"Finite field, distinct evaluation points, uniform random coefficients",evidenceScope:"Shamir threshold sharing의 correctness·privacy 구조",notClaim:"Active MPC·VSS·DKG·fairness를 자동 보장하지 않음",sectionId:"paper-shamir"},{title:"Paillier · Public-Key Cryptosystems Based on Composite Degree Residuosity Classes",href:"https://link.springer.com/chapter/10.1007/3-540-48910-X_16",problem:"Composite residuosity를 이용한 확률적 public-key encryption",contribution:"Additive homomorphism을 갖는 Paillier cryptosystem 제시",assumptions:"Composite residuosity setting과 valid key/randomizer generation",evidenceScope:"Paillier encryption·decryption·homomorphic identity",notClaim:"Standalone ciphertext가 malicious MPC input proof를 제공하지 않음",sectionId:"paper-paillier"},{title:"bnb-chain/tss-lib pinned source 3f677ff",href:"https://github.com/bnb-chain/tss-lib/tree/3f677ff761fcf692edb0243a5d812930844d879a",problem:"Threshold-signature DKG/MtA/VSS의 concrete implementation seam을 고정",contribution:"Official Go source·tests의 pinned snapshot",assumptions:"Commit 3f677ff와 protocol/toolchain/dependency profile 고정",evidenceScope:"선택 source의 round/artifact behavior",notClaim:"Generic MPC 정의·모든 threshold schemes·moving main의 security를 대신하지 않음",sectionId:"paper-tsslib-source"}]
+    entryLevel:false, entryNote:"Alice 3·Bob 4의 sum 7만 공개하는 사례에서 real/ideal·adversary·abort/fairness를 먼저 고정합니다.", coreIdea:"MPC는 private inputs로 함수를 계산하면서 ideal functionality가 허용한 result 밖의 leakage를 제한하는 protocol 목표이며, Shamir·Paillier 같은 primitive와 DKG ceremony의 보장을 합성할 때 각 전제·failure·receipt를 보존해야 합니다.", assumedKnowledge:[{id:"shamir-threshold-polynomial-sharing",role:"Threshold sharing의 수학은 독립 Shamir 글에서 재사용합니다."},{id:"paillier-additive-homomorphic-boundary",role:"Additive homomorphism의 수학은 독립 Paillier 글에서 재사용합니다."}],
+    introducedHere:[{id:"mpc-real-ideal-adversary-boundary",role:"Corruption·network·abort·fairness 조건별 보안 claim을 구분합니다."},{id:"mpc-dkg-transcript-artifact",role:"Party·round·commitment·complaint·public key를 session receipt에 결속합니다."},{id:"mpc-protocol-release-gate",role:"Active failures·dropout·restart와 cost를 pinned profile에서 검증합니다."}],
+    conceptExplanations:[{id:"mpc-real-ideal-adversary-boundary",sectionId:"security-model",intuition:"Trusted referee의 ideal output과 실제 transcript view를 비교합니다.",workedExample:"Sum 7만 공개할 때 transcript에서 input 3이나 4를 더 알 수 있으면 실패입니다.",boundary:"Semi-honest·malicious, static·adaptive, abort·fairness는 별도 조건입니다.",counterexample:"Privacy가 있어도 마지막 party가 abort해 자신만 result를 얻을 수 있습니다."},{id:"mpc-dkg-transcript-artifact",sectionId:"dkg",intuition:"모든 round message를 같은 session·roster·threshold에 결속합니다.",workedExample:"P1,P2,P3,t=1의 roster hash, commitments, encrypted shares, complaints와 public key를 receipt에 넣습니다.",boundary:"DKG output은 application signature·nonce·resharing 보장을 대신하지 않습니다.",counterexample:"Session ID가 빠지면 이전 commitment를 새 ceremony에 replay할 수 있습니다."},{id:"mpc-protocol-release-gate",sectionId:"release",intuition:"Happy path보다 bad share·dropout·restart에서 계약 보존을 먼저 봅니다.",workedExample:"Duplicate ID, invalid share/key, reordered round, complaint와 timeout을 재생하고 messages·bytes·p99·RSS를 잽니다.",boundary:"같은 n/t·adversary/network·security·hardware profile에서 비교합니다."}],
+    conceptStages:[{label:"00 security",relation:"Functionality·party·adversary model을 고정합니다.",concepts:["mpc-real-ideal-adversary-boundary"]},{label:"01 compose",relation:"독립 primitive의 전제와 실패를 전체 protocol claim으로 올리기 전에 조합 경계를 검사합니다.",concepts:["mpc-real-ideal-adversary-boundary","mpc-protocol-release-gate"]},{label:"02 DKG",relation:"Rounds를 session artifact에 결속합니다.",concepts:["mpc-dkg-transcript-artifact"]},{label:"03 release",relation:"Active failures·cost·rollback을 검사합니다.",concepts:["mpc-protocol-release-gate"]}],
+    exercises:[{level:"basic",question:"Semi-honest와 malicious adversary를 구분하세요.",answerChecklist:["follows protocol","observes view","deviates","abort/malformed","different guarantees"],requiredConcepts:["mpc-real-ideal-adversary-boundary"],sectionId:"security-model"},{level:"basic",question:"Shamir의 privacy가 전체 MPC의 malicious security를 곧바로 증명하지 않는 이유를 쓰세요.",answerChecklist:["primitive scope","bad share/dealer","protocol composition","adversary model","separate gate"],requiredConcepts:["mpc-real-ideal-adversary-boundary","mpc-protocol-release-gate"],sectionId:"shamir"},{level:"basic",question:"Paillier의 additive homomorphism과 MPC의 integrity·fairness 보장을 구분하세요.",answerChecklist:["malleability","no authenticity","abort/fairness separate","protocol proof","profile"],requiredConcepts:["mpc-real-ideal-adversary-boundary"],sectionId:"paillier"},{level:"basic",question:"Primitive를 MPC에 재사용할 때 보존해야 할 전제 네 가지를 적으세요.",answerChecklist:["field/key profile","party threshold","adversary/network","validation/session","failure semantics"],requiredConcepts:["mpc-real-ideal-adversary-boundary","mpc-protocol-release-gate"],sectionId:"security-model"},{level:"basic",question:"DKG receipt에 필요한 fields를 나열하세요.",answerChecklist:["protocol/version","session","roster/indices","threshold","round order","commitments/shares","complaints","public key"],requiredConcepts:["mpc-dkg-transcript-artifact"],sectionId:"dkg"},{level:"basic",question:"DKG session ID와 roster hash가 replay 방지에 필요한 이유를 설명하세요.",answerChecklist:["ceremony identity","same parties/threshold","old message replay","binding","typed reject"],requiredConcepts:["mpc-dkg-transcript-artifact"],sectionId:"dkg"},{level:"advanced",question:"Shamir 기반 MPC를 semi-honest에서 malicious setting으로 옮길 때 추가 의무 표를 설계하세요.",answerChecklist:["dealer equivocation","share validation","commitment/complaint","abort","authentication","simulation claim"],requiredConcepts:["mpc-real-ideal-adversary-boundary","mpc-protocol-release-gate"],sectionId:"shamir"},{level:"advanced",question:"Paillier primitive를 threshold decryption protocol에 넣을 때 누락되기 쉬운 보안 의무를 설계하세요.",answerChecklist:["valid key/ciphertext","distributed key","decryption proof","range/relation","malicious shares","abort/fairness"],requiredConcepts:["mpc-real-ideal-adversary-boundary","mpc-protocol-release-gate"],sectionId:"paillier"},{level:"advanced",question:"Session-crossing DKG replay와 complaint/dropout fixture를 설계하세요.",answerChecklist:["session/roster hash","old commitment","round order","complaint evidence","disqualification","abort/restart"],requiredConcepts:["mpc-dkg-transcript-artifact","mpc-real-ideal-adversary-boundary"],sectionId:"dkg"},{level:"advanced",question:"MPC release receipt·benchmark·rollback 경계를 작성하세요.",answerChecklist:["source SHA","n/t/adversary/network","security parameter","negative matrix","rounds/messages/bytes","p50/p99/RSS","restart","rollback"],requiredConcepts:["mpc-protocol-release-gate"],sectionId:"release"}],
+    papers:[{title:"bnb-chain/tss-lib pinned source 3f677ff",href:"https://github.com/bnb-chain/tss-lib/tree/3f677ff761fcf692edb0243a5d812930844d879a",problem:"Threshold-signature DKG/MtA/VSS의 concrete implementation seam을 고정",contribution:"Official Go source·tests의 pinned snapshot",assumptions:"Commit 3f677ff와 protocol/toolchain/dependency profile 고정",evidenceScope:"선택 source의 round/artifact behavior",notClaim:"Generic MPC 정의·모든 threshold schemes·moving main의 security를 대신하지 않음",sectionId:"paper-tsslib-source"}]
+  },
+  "crypto/shamir-secret-sharing": {
+    entryLevel:false, entryNote:"F17의 f(x)=5+3x를 직접 계산하며 field·threshold·interpolation을 모른다고 가정합니다.", coreIdea:"Shamir sharing은 secret을 random degree-t polynomial의 상수항으로 두어 t+1 points로 복원하고 t개 이하의 view 분포를 secret과 독립으로 만들지만, plain scheme은 bad share·dealer equivocation·refresh를 검증하지 않습니다.", assumedKnowledge:[{id:"prime-field-modular-arithmetic",role:"F17 산술과 inverse를 사용합니다."},{id:"lagrange-interpolation-basis",role:"Points에서 f(0)를 복원합니다."}],
+    introducedHere:[{id:"shamir-threshold-polynomial-sharing",role:"t+1 복원과 t-share privacy의 핵심 construction입니다."},{id:"shamir-share-generation",role:"Random coefficients와 nonzero distinct indices로 shares를 만듭니다."},{id:"shamir-reconstruction-at-zero",role:"Lagrange basis를 x=0에서 평가합니다."},{id:"shamir-threshold-privacy-boundary",role:"Uniform coefficient 아래 t-share view의 동일 분포를 설명합니다."},{id:"shamir-active-security-boundary",role:"Plain sharing과 VSS·refresh·complaint를 구분합니다."}],
+    conceptExplanations:[{id:"shamir-threshold-polynomial-sharing",sectionId:"overview",intuition:"Secret을 y-intercept로 숨긴 random curve의 points를 나눕니다.",workedExample:"F17에서 f=5+3x의 shares는 8,11,14입니다.",boundary:"이 글은 degree t 표기를 사용해 t+1개가 복원합니다."},{id:"shamir-share-generation",sectionId:"share-generation",intuition:"Random coefficients가 같은 observed point에 여러 secret 후보를 가능하게 합니다.",workedExample:"s=5,a1=3이면 P1은 f(1)=8입니다.",boundary:"Index 0·duplicate index·biased RNG는 금지합니다."},{id:"shamir-reconstruction-at-zero",sectionId:"reconstruction",intuition:"각 share가 x=0의 값에 기여하는 field weight를 구합니다.",workedExample:"(1,8),(2,11)은 8·2−11=5 mod17입니다.",boundary:"Integer division이 아니라 field inverse입니다."},{id:"shamir-threshold-privacy-boundary",sectionId:"privacy-boundary",intuition:"t개 view의 분포가 secret마다 동일해야 합니다.",workedExample:"(1,8)에 대해 각 s마다 유일한 slope가 있습니다.",boundary:"Coefficient reuse·bias는 privacy proof를 깨뜨립니다."},{id:"shamir-active-security-boundary",sectionId:"active-boundary",intuition:"Interpolation은 잘못된 point의 정직성을 검사하지 않습니다.",workedExample:"한 party가 y를 바꾸면 다른 secret을 복원할 수 있습니다.",boundary:"VSS commitment·complaint·authenticated identity가 별도 필요합니다."}],
+    conceptStages:[{label:"00 field",relation:"Field와 threshold 표기를 고정합니다.",concepts:["prime-field-modular-arithmetic","shamir-threshold-polynomial-sharing"]},{label:"01 share",relation:"Random polynomial points를 배포합니다.",concepts:["shamir-share-generation"]},{label:"02 reconstruct",relation:"x=0에서 secret을 복원합니다.",concepts:["lagrange-interpolation-basis","shamir-reconstruction-at-zero"]},{label:"03 privacy",relation:"t-share view의 분포를 비교합니다.",concepts:["shamir-threshold-privacy-boundary"]},{label:"04 active",relation:"VSS·refresh 경계를 둡니다.",concepts:["shamir-active-security-boundary"]}],
+    exercises:[{level:"basic",question:"F17의 f=5+3x에서 x=1,2,3 shares를 계산하세요.",answerChecklist:["8","11","14","mod17"],requiredConcepts:["shamir-share-generation"],sectionId:"share-generation"},{level:"basic",question:"Index 0을 금지하는 이유를 쓰세요.",answerChecklist:["f(0)","secret","direct leak","nonzero"],requiredConcepts:["shamir-share-generation"],sectionId:"share-generation"},{level:"basic",question:"(1,8),(2,11)로 secret을 복원하세요.",answerChecklist:["basis 2 and −1","16−11","5 mod17","field"],requiredConcepts:["shamir-reconstruction-at-zero"],sectionId:"reconstruction"},{level:"basic",question:"Degree t와 최소 복원 share 수를 연결하세요.",answerChecklist:["degree t","t+1 points","t private","API convention"],requiredConcepts:["shamir-threshold-polynomial-sharing"],sectionId:"overview"},{level:"basic",question:"한 share가 secret을 결정하지 못하는 이유를 쓰세요.",answerChecklist:["each secret compatible","different slope","uniform coefficient","same distribution"],requiredConcepts:["shamir-threshold-privacy-boundary"],sectionId:"privacy-boundary"},{level:"basic",question:"Plain Shamir과 VSS를 구분하세요.",answerChecklist:["sharing correctness","dealer equivocation","commitment","complaint"],requiredConcepts:["shamir-active-security-boundary"],sectionId:"active-boundary"},{level:"advanced",question:"t+1 reconstruction proof idea를 쓰세요.",answerChecklist:["degree t uniqueness","Lagrange basis","field inverse","evaluate zero"],requiredConcepts:["shamir-reconstruction-at-zero"],sectionId:"reconstruction"},{level:"advanced",question:"t-share perfect privacy proof idea를 설명하세요.",answerChecklist:["free coefficient","bijection","uniform","view independent of secret"],requiredConcepts:["shamir-threshold-privacy-boundary"],sectionId:"privacy-boundary"},{level:"advanced",question:"Zero-constant refresh protocol의 경계를 설계하세요.",answerChecklist:["constant zero","new randomness","secret unchanged","verify contributions","session"],requiredConcepts:["shamir-active-security-boundary"],sectionId:"active-boundary"},{level:"advanced",question:"Shamir release matrix를 작성하세요.",answerChecklist:["field","threshold convention","indices","RNG","bad share","insufficient","bytes/latency","rollback"],requiredConcepts:["shamir-share-generation","shamir-active-security-boundary"],sectionId:"release"}],
+    papers:[{title:"Shamir · How to Share a Secret",href:"https://doi.org/10.1145/359168.359176",problem:"Threshold shares와 적은-share privacy",contribution:"Random polynomial evaluation과 interpolation construction",assumptions:"Finite field·distinct points·uniform coefficients",evidenceScope:"Correctness와 perfect privacy",notClaim:"VSS·malicious DKG·fairness를 보장하지 않음",sectionId:"paper-shamir"}]
+  },
+  "crypto/paillier-cryptosystem": {
+    entryLevel:false, entryNote:"Toy p=3,q=5에서 keygen·encrypt·homomorphic add·decrypt를 직접 계산합니다.", coreIdea:"Paillier는 n² unit group에서 fresh randomizer로 probabilistic ciphertext를 만들고 ciphertext multiplication을 plaintext mod-n addition으로 옮기지만, 이 malleability는 integrity·range·active MPC proof가 아닙니다.", assumedKnowledge:[{id:"modular-congruence-residue-class",role:"Z_n과 modulo wraparound를 사용합니다."},{id:"csprng-computational-unpredictability",role:"Fresh unit randomizer를 생성합니다."}],
+    introducedHere:[{id:"paillier-additive-homomorphic-boundary",role:"Ciphertext multiplication과 plaintext addition의 계산·전제를 소유합니다."},{id:"paillier-key-generation-contract",role:"n,g,lambda,mu의 validity 조건을 고정합니다."},{id:"paillier-randomized-encryption",role:"Fresh r∈Z*n으로 ciphertext를 만듭니다."},{id:"paillier-decryption-l-function",role:"L 함수와 mu로 residue를 복원합니다."},{id:"paillier-ciphertext-security-boundary",role:"Homomorphic malleability와 integrity·proof 경계를 구분합니다."}],
+    conceptExplanations:[{id:"paillier-additive-homomorphic-boundary",sectionId:"homomorphism",intuition:"Ciphertext 곱에서 message exponent는 더해집니다.",workedExample:"Enc(m1;r1)Enc(m2;r2)=Enc(m1+m2;r1r2)입니다.",boundary:"Addition은 mod n이며 authenticity를 주지 않습니다."},{id:"paillier-key-generation-contract",sectionId:"key-generation",intuition:"Decryption에 필요한 inverse가 존재하도록 key tuple을 만듭니다.",workedExample:"n=15,g=16,lambda=4,mu=4입니다.",boundary:"Toy key는 security parameter가 아닙니다."},{id:"paillier-randomized-encryption",sectionId:"encryption",intuition:"같은 m도 fresh unit r로 다른 c를 만듭니다.",workedExample:"n=15,g=16,m=4,r=2이면 c=173입니다.",boundary:"gcd(r,n)=1이고 reuse를 금지합니다."},{id:"paillier-decryption-l-function",sectionId:"decryption",intuition:"lambda power 뒤 linear term을 L 함수로 꺼냅니다.",workedExample:"173^4 mod225=16,L=1,1·mu=4 mod15입니다.",boundary:"Key·ciphertext validity가 필요합니다."},{id:"paillier-ciphertext-security-boundary",sectionId:"security-boundary",intuition:"누구나 ciphertext를 바꿀 수 있는 기능은 integrity 부재이기도 합니다.",workedExample:"Attacker가 Enc(delta)를 곱하면 plaintext가 delta만큼 바뀝니다.",boundary:"Range/relation proof·CCA protection·threshold proof는 별도 protocol입니다."}],
+    conceptStages:[{label:"00 key",relation:"Valid modulus와 decryption inverse를 만듭니다.",concepts:["paillier-key-generation-contract"]},{label:"01 encrypt",relation:"Fresh unit randomizer로 암호화합니다.",concepts:["csprng-computational-unpredictability","paillier-randomized-encryption"]},{label:"02 add",relation:"Ciphertext 곱의 modular addition을 유도합니다.",concepts:["paillier-additive-homomorphic-boundary"]},{label:"03 decrypt",relation:"L 함수로 residue를 복원합니다.",concepts:["paillier-decryption-l-function"]},{label:"04 security",relation:"Malleability와 release 경계를 검사합니다.",concepts:["paillier-ciphertext-security-boundary"]}],
+    exercises:[{level:"basic",question:"Toy n과 lambda를 계산하세요.",answerChecklist:["p=3,q=5","n=15","lcm(2,4)","lambda=4"],requiredConcepts:["paillier-key-generation-contract"],sectionId:"key-generation"},{level:"basic",question:"m=4,r=2의 ciphertext를 계산하세요.",answerChecklist:["g=16","n²=225","16^4","2^15","173"],requiredConcepts:["paillier-randomized-encryption"],sectionId:"encryption"},{level:"basic",question:"r이 unit이어야 하는 이유를 쓰세요.",answerChecklist:["gcd(r,n)=1","Z*n","valid distribution","r=0 reject"],requiredConcepts:["paillier-randomized-encryption"],sectionId:"encryption"},{level:"basic",question:"두 ciphertext 곱의 plaintext 의미를 쓰세요.",answerChecklist:["m1+m2","mod n","r1r2","same key"],requiredConcepts:["paillier-additive-homomorphic-boundary"],sectionId:"homomorphism"},{level:"basic",question:"c=173을 toy key로 복호하세요.",answerChecklist:["c^4=16","L=1","mu=4","m=4"],requiredConcepts:["paillier-decryption-l-function"],sectionId:"decryption"},{level:"basic",question:"Homomorphism과 integrity를 구분하세요.",answerChecklist:["intentional malleability","predictable mutation","no authenticity","separate proof"],requiredConcepts:["paillier-ciphertext-security-boundary"],sectionId:"security-boundary"},{level:"advanced",question:"Homomorphic identity를 exponent law로 유도하세요.",answerChecklist:["multiply","exponents add","randomizers multiply","mod n","mod n²"],requiredConcepts:["paillier-additive-homomorphic-boundary"],sectionId:"homomorphism"},{level:"advanced",question:"L 함수 decryption correctness의 profile 전제를 설명하세요.",answerChecklist:["lambda","u congruent 1 mod n","inverse mu","valid g","residue"],requiredConcepts:["paillier-key-generation-contract","paillier-decryption-l-function"],sectionId:"decryption"},{level:"advanced",question:"Randomizer reuse·malformed ciphertext fixture를 설계하세요.",answerChecklist:["same r","relation leakage","gcd failure","invalid c","typed reject"],requiredConcepts:["paillier-randomized-encryption","paillier-ciphertext-security-boundary"],sectionId:"security-boundary"},{level:"advanced",question:"Paillier release profile을 작성하세요.",answerChecklist:["key size/g","encoding","RNG","validation","wraparound","negative vectors","timings/bytes","rollback"],requiredConcepts:["paillier-ciphertext-security-boundary"],sectionId:"release"}],
+    papers:[{title:"Paillier · Public-Key Cryptosystems Based on Composite Degree Residuosity Classes",href:"https://link.springer.com/chapter/10.1007/3-540-48910-X_16",problem:"Composite residuosity 기반 probabilistic encryption",contribution:"Additively homomorphic public-key cryptosystem",assumptions:"Valid key·unit randomizer·논문 security setting",evidenceScope:"Encryption·decryption·homomorphic identity",notClaim:"Malicious MPC·CCA integrity를 자동 보장하지 않음",sectionId:"paper-paillier"}]
   },
   "crypto/scroll-zkevm": {
     entryLevel:true, entryNote:"EVM이 stack의 3과 4를 ADD해 7을 만드는 한 step에서 시작해 trace·table·Halo2 proof·rollup receipt까지 올라갑니다.", coreIdea:"Scroll zkEVM은 Ethereum state transition을 opcode execution trace와 RW·bytecode·transaction·block tables에 펼친 뒤 Halo2 gates·copy·lookups로 연결하고, pre/post state roots·data·circuit/key/version이 결속된 validity-proof artifact를 L1 verifier에 넘깁니다.", assumedKnowledge:[],

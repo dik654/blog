@@ -4932,7 +4932,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Smoothie-Qwen token risk score",
     definition:
       "목표 Unicode range에 직접 해당하는 token에는 1, 안전 token에는 0, broken subword에는 n-gram sampling에서 목표 문자로 복원되는 비율을 배정해 후속 lm_head 보정 강도를 정하는 [0,1] 점수입니다.",
-    canonicalHref: "/ai/qwen-korean-consistency#smoothie-qwen",
+    canonicalHref: "/ai/smoothie-qwen-weight-editing#smoothie-qwen",
   },
   "smoothie-lm-head-row-scaling": {
     id: "smoothie-lm-head-row-scaling",
@@ -4941,7 +4941,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Smoothie-Qwen risk-aware lm_head row scaling",
     definition:
       "Token risk r과 min_scale m·smoothness s로 m≤S(r)≤1인 scale을 계산해 해당 vocabulary row를 W′t=S(r)Wt로 바꾸는 post-hoc model editing이며 probability 자체를 S배 하는 연산과 구분됩니다.",
-    canonicalHref: "/ai/qwen-korean-consistency#smoothie-qwen",
+    canonicalHref: "/ai/smoothie-qwen-weight-editing#smoothie-qwen",
   },
   "qwen-korean-sft-rl-stage-boundary": {
     id: "qwen-korean-sft-rl-stage-boundary",
@@ -4950,7 +4950,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Qwen Korean reasoning SFT · RL stage boundary",
     definition:
       "한국어 reasoning demonstration의 token likelihood를 높여 탐색 출발점을 만드는 SFT와, 같은 prompt의 current-policy rollout을 reward로 비교해 정확성·형식·언어 선호를 조정하는 group-relative RL의 역할을 나눈 사례 연구 경계입니다.",
-    canonicalHref: "/ai/qwen-korean-consistency#rl-approach",
+    canonicalHref: "/ai/qwen-korean-reasoning-posttraining#rl-approach",
   },
   "oracle-guided-korean-reward-contract": {
     id: "oracle-guided-korean-reward-contract",
@@ -4959,7 +4959,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Oracle-guided Korean reasoning reward contract",
     definition:
       "Accuracy·format·Korean consistency·overlong sub-reward의 versioned 가중합을 만들고 외부 oracle judge가 주로 accuracy checker의 false positive·false negative를 재검토하되 judge 자체도 오류 가능한 측정기로 취급하는 학습 신호 계약입니다.",
-    canonicalHref: "/ai/qwen-korean-consistency#rl-approach",
+    canonicalHref: "/ai/qwen-korean-reasoning-posttraining#rl-approach",
   },
   "korean-language-runtime-guard-calibration": {
     id: "korean-language-runtime-guard-calibration",
@@ -7372,7 +7372,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Reciprocal Rank Fusion · RRF",
     definition:
       "서로 score scale이 다른 여러 retrieval result에서 문서별 1/(k+rank)를 합해, 여러 목록에서 꾸준히 높은 후보를 score calibration 없이 결합하는 rank-fusion 방법입니다.",
-    canonicalHref: "/ai/rag-pipeline#retrieval",
+    canonicalHref: "/ai/retrieval-ranking-funnel#retrieval",
   },
   "rag-pre-retrieval-access-control": {
     id: "rag-pre-retrieval-access-control",
@@ -7381,7 +7381,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Pre-retrieval access control",
     definition:
       "Tenant·ACL·valid-time 조건을 candidate 생성 전에 적용해 금지 문서가 ranking·reranking·prompt assembly에 들어오지 못하게 하는 RAG 권한 경계입니다.",
-    canonicalHref: "/ai/rag-pipeline#retrieval",
+    canonicalHref: "/ai/retrieval-ranking-funnel#retrieval",
   },
   "rag-context-token-budget": {
     id: "rag-context-token-budget",
@@ -14291,8 +14291,16 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
   "elgamal-multiplicative-malleability": { id:"elgamal-multiplicative-malleability", kind:"concept", domain:"computer-science", label:"ElGamal multiplicative malleability", definition:"Ciphertexts를 component-wise 곱하면 plaintext group elements도 곱해지므로 homomorphic use에는 유용하지만 인증 없는 암호화에서는 공격자가 평문을 예측 가능하게 변조할 수 있는 성질입니다.", canonicalHref:"/crypto/elgamal#security" },
   "elgamal-hybrid-encryption-release-gate": { id:"elgamal-hybrid-encryption-release-gate", kind:"method", domain:"computer-science", label:"ElGamal hybrid-encryption release gate", definition:"Group·generator·subgroup·encoding·RNG·KDF·AEAD profile을 고정하고 malformed input·nonce reuse·ciphertext mutation·wrong key/domain을 거절한 뒤 hybrid KEM-DEM 구현의 시간·bytes·rollback을 비교하는 채택 절차입니다.", canonicalHref:"/crypto/elgamal#release" },
   "mpc-real-ideal-adversary-boundary": { id:"mpc-real-ideal-adversary-boundary", kind:"concept", domain:"computer-science", label:"MPC real–ideal · adversary boundary", definition:"실제 parties·messages·corruptions의 view가 trusted ideal functionality의 input/output·allowed leakage로 simulation되는지를 semi-honest·malicious, static·adaptive, abort·fairness 조건별로 나눈 secure-computation 정의입니다.", canonicalHref:"/crypto/mpc#security-model" },
-  "shamir-threshold-polynomial-sharing": { id:"shamir-threshold-polynomial-sharing", kind:"method", domain:"mathematics", label:"Shamir threshold polynomial sharing", definition:"Field에서 secret s를 degree t polynomial f의 상수항으로 두고 nonzero points f(i)를 shares로 배포해 t+1개 points로는 interpolation하고 t개 이하로는 s에 대한 정보를 숨기는 방법입니다.", canonicalHref:"/crypto/mpc#shamir" },
-  "paillier-additive-homomorphic-boundary": { id:"paillier-additive-homomorphic-boundary", kind:"method", domain:"computer-science", label:"Paillier additive-homomorphic boundary", definition:"n² modulus에서 Enc(m;r)=g^m r^n으로 암호화해 ciphertext 곱을 plaintext mod n 덧셈으로 옮기되, composite-residuosity·unit-randomizer·ciphertext validation 전제와 active-security proof를 별도로 두는 경계입니다.", canonicalHref:"/crypto/mpc#paillier" },
+  "shamir-threshold-polynomial-sharing": { id:"shamir-threshold-polynomial-sharing", kind:"method", domain:"mathematics", label:"Shamir threshold polynomial sharing", definition:"Field에서 secret s를 degree t polynomial f의 상수항으로 두고 nonzero points f(i)를 shares로 배포해 t+1개 points로는 interpolation하고 t개 이하로는 s에 대한 정보를 숨기는 방법입니다.", canonicalHref:"/crypto/shamir-secret-sharing#overview" },
+  "shamir-share-generation": { id:"shamir-share-generation", kind:"method", domain:"mathematics", label:"Shamir share generation", definition:"Uniform random nonconstant coefficients와 distinct nonzero field indices로 polynomial evaluations을 생성해 parties에 배포하는 단계입니다.", canonicalHref:"/crypto/shamir-secret-sharing#share-generation" },
+  "shamir-reconstruction-at-zero": { id:"shamir-reconstruction-at-zero", kind:"method", domain:"mathematics", label:"Shamir reconstruction at zero", definition:"t+1 shares의 Lagrange basis를 x=0에서 평가해 field-linear combination으로 secret f(0)를 복원하는 계산입니다.", canonicalHref:"/crypto/shamir-secret-sharing#reconstruction" },
+  "shamir-threshold-privacy-boundary": { id:"shamir-threshold-privacy-boundary", kind:"concept", domain:"mathematics", label:"Shamir threshold privacy boundary", definition:"Uniform coefficients 아래 t개 이하 share view의 분포가 secret 후보와 독립이라는 information-theoretic privacy와 RNG·index 전제를 묶는 경계입니다.", canonicalHref:"/crypto/shamir-secret-sharing#privacy-boundary" },
+  "shamir-active-security-boundary": { id:"shamir-active-security-boundary", kind:"concept", domain:"computer-science", label:"Shamir active-security boundary", definition:"Plain interpolation이 dealer equivocation·bad share를 탐지하지 못하므로 VSS commitments·complaints·refresh verification을 별도 protocol로 두는 경계입니다.", canonicalHref:"/crypto/shamir-secret-sharing#active-boundary" },
+  "paillier-additive-homomorphic-boundary": { id:"paillier-additive-homomorphic-boundary", kind:"method", domain:"computer-science", label:"Paillier additive-homomorphic boundary", definition:"n² modulus에서 Enc(m;r)=g^m r^n으로 암호화해 ciphertext 곱을 plaintext mod n 덧셈으로 옮기되, composite-residuosity·unit-randomizer·ciphertext validation 전제와 active-security proof를 별도로 두는 경계입니다.", canonicalHref:"/crypto/paillier-cryptosystem#homomorphism" },
+  "paillier-key-generation-contract": { id:"paillier-key-generation-contract", kind:"concept", domain:"computer-science", label:"Paillier key-generation contract", definition:"n=pq, λ=lcm(p−1,q−1), valid g와 μ=L(g^λ mod n²)⁻¹ mod n의 존재 조건을 하나의 cryptosystem profile로 고정합니다.", canonicalHref:"/crypto/paillier-cryptosystem#key-generation" },
+  "paillier-randomized-encryption": { id:"paillier-randomized-encryption", kind:"method", domain:"computer-science", label:"Paillier randomized encryption", definition:"Fresh unit r∈Z*n을 사용해 c=g^m r^n mod n²를 만들고 같은 message의 ciphertext linkability를 줄이는 probabilistic encryption 단계입니다.", canonicalHref:"/crypto/paillier-cryptosystem#encryption" },
+  "paillier-decryption-l-function": { id:"paillier-decryption-l-function", kind:"method", domain:"mathematics", label:"Paillier L-function decryption", definition:"L(u)=(u−1)/n과 secret λ·μ를 사용해 valid ciphertext에서 plaintext residue를 복원하는 계산입니다.", canonicalHref:"/crypto/paillier-cryptosystem#decryption" },
+  "paillier-ciphertext-security-boundary": { id:"paillier-ciphertext-security-boundary", kind:"concept", domain:"computer-science", label:"Paillier ciphertext security boundary", definition:"Additive homomorphism의 의도적 malleability와 ciphertext integrity·range/relation proof·CCA protection·threshold decryption proof를 분리하는 경계입니다.", canonicalHref:"/crypto/paillier-cryptosystem#security-boundary" },
   "mpc-dkg-transcript-artifact": { id:"mpc-dkg-transcript-artifact", kind:"concept", domain:"computer-science", label:"MPC DKG transcript artifact", definition:"Protocol/version, party IDs·indices, threshold, session/curve/group, commitments, encrypted shares, complaints·disqualifications, accepted public key와 round order를 하나의 session-bound distributed-key-generation receipt로 결속하는 계약입니다.", canonicalHref:"/crypto/mpc#dkg" },
   "mpc-protocol-release-gate": { id:"mpc-protocol-release-gate", kind:"method", domain:"computer-science", label:"MPC protocol release gate", definition:"Adversary·network·threshold profile을 pin하고 duplicate ID·bad share·malformed Paillier key·reordered round·dropout·complaint·restart을 replay한 뒤 correctness·leakage·abort·messages·bytes·latency·rollback을 평가하는 채택 절차입니다.", canonicalHref:"/crypto/mpc#release" },
   "scroll-zkevm-evm-trace-table-contract": { id:"scroll-zkevm-evm-trace-table-contract", kind:"concept", domain:"computer-science", label:"Scroll zkEVM trace · table contract", definition:"Pinned Scroll circuit source에서 EVM opcode step, stack·memory·storage read/write, bytecode, transaction·block·state data를 Halo2 tables·lookups·copy constraints로 연결해 native state transition의 witness semantics를 고정하는 계약입니다.", canonicalHref:"/crypto/scroll-zkevm#trace-tables" },
@@ -15299,10 +15307,10 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
   "hebbian-local-plasticity": { id: "hebbian-local-plasticity", kind: "concept", domain: "machine-learning", label: "Hebbian local plasticity", definition: "Pre-와 post-synaptic activity의 국소 상관을 이용해 synaptic strength를 바꾸는 plasticity family이며 표준 global-loss backpropagation과는 다른 update 정보 경계를 가집니다.", canonicalHref: "/ai/spiking-neural-networks#brain-boundary" },
   "neuromorphic-efficiency-boundary": { id: "neuromorphic-efficiency-boundary", kind: "concept", domain: "computer-science", label: "Neuromorphic efficiency evidence boundary", definition: "Sparse event-driven execution의 잠재적 energy 이점을 chip·process node·task·accuracy·latency·encoding overhead가 고정된 measurement에만 귀속하고 보편적인 배수로 확대하지 않는 경계입니다.", canonicalHref: "/ai/spiking-neural-networks#hardware" },
   "snn-hardware-substrate-boundary": { id: "snn-hardware-substrate-boundary", kind: "concept", domain: "computer-science", label: "SNN hardware substrate boundary", definition: "Spiking algorithm을 digital, analog, mixed-signal neuromorphic implementations와 구분하고 PVT sensitivity를 해당 circuit substrate의 조건으로만 해석하는 경계입니다.", canonicalHref: "/ai/spiking-neural-networks#hardware" },
-  "bm25-lexical-ranking": { id: "bm25-lexical-ranking", kind: "method", domain: "computer-science", label: "BM25 lexical ranking", aliases: ["Okapi BM25"], definition: "Query term의 inverse document frequency와 문서 안 term-frequency saturation, 문서 길이 정규화를 결합해 exact lexical match 후보를 정렬하는 sparse retrieval 방법입니다.", canonicalHref: "/ai/rag-pipeline#retrieval" },
-  "hnsw-ann-index": { id: "hnsw-ann-index", kind: "method", domain: "computer-science", label: "HNSW approximate-neighbor index", aliases: ["Hierarchical Navigable Small World", "HNSW"], definition: "Vector를 여러 높이의 proximity graph에 배치하고 위층의 거친 탐색에서 아래층의 세밀한 이웃 탐색으로 내려가 exact scan보다 적은 distance evaluations로 후보를 찾는 ANN index입니다.", canonicalHref: "/ai/rag-pipeline#retrieval" },
-  "cross-encoder-reranking": { id: "cross-encoder-reranking", kind: "method", domain: "machine-learning", label: "Cross-encoder reranking", aliases: ["Second-stage cross-encoder ranker"], definition: "첫 검색기가 만든 제한된 candidate 각각에 query와 document를 함께 입력해 token-level interaction으로 relevance를 다시 계산하는 고비용 second-stage ranking 방법입니다.", canonicalHref: "/ai/rag-pipeline#retrieval" },
-  "graph-structured-retrieval-boundary": { id: "graph-structured-retrieval-boundary", kind: "concept", domain: "computer-science", label: "Graph-structured retrieval boundary", aliases: ["GraphRAG boundary", "Subgraph retrieval"], definition: "Entity·relation·community graph의 traversal과 summary를 vector 또는 lexical candidate generation에 결합하되, graph construction error·provenance·hop budget을 별도 retrieval evidence로 남기는 경계입니다.", canonicalHref: "/ai/rag-pipeline#retrieval" },
+  "bm25-lexical-ranking": { id: "bm25-lexical-ranking", kind: "method", domain: "computer-science", label: "BM25 lexical ranking", aliases: ["Okapi BM25"], definition: "Query term의 inverse document frequency와 문서 안 term-frequency saturation, 문서 길이 정규화를 결합해 exact lexical match 후보를 정렬하는 sparse retrieval 방법입니다.", canonicalHref: "/ai/retrieval-ranking-funnel#retrieval" },
+  "hnsw-ann-index": { id: "hnsw-ann-index", kind: "method", domain: "computer-science", label: "HNSW approximate-neighbor index", aliases: ["Hierarchical Navigable Small World", "HNSW"], definition: "Vector를 여러 높이의 proximity graph에 배치하고 위층의 거친 탐색에서 아래층의 세밀한 이웃 탐색으로 내려가 exact scan보다 적은 distance evaluations로 후보를 찾는 ANN index입니다.", canonicalHref: "/ai/retrieval-ranking-funnel#retrieval" },
+  "cross-encoder-reranking": { id: "cross-encoder-reranking", kind: "method", domain: "machine-learning", label: "Cross-encoder reranking", aliases: ["Second-stage cross-encoder ranker"], definition: "첫 검색기가 만든 제한된 candidate 각각에 query와 document를 함께 입력해 token-level interaction으로 relevance를 다시 계산하는 고비용 second-stage ranking 방법입니다.", canonicalHref: "/ai/retrieval-ranking-funnel#retrieval" },
+  "graph-structured-retrieval-boundary": { id: "graph-structured-retrieval-boundary", kind: "concept", domain: "computer-science", label: "Graph-structured retrieval boundary", aliases: ["GraphRAG boundary", "Subgraph retrieval"], definition: "Entity·relation·community graph의 traversal과 summary를 vector 또는 lexical candidate generation에 결합하되, graph construction error·provenance·hop budget을 별도 retrieval evidence로 남기는 경계입니다.", canonicalHref: "/ai/retrieval-ranking-funnel#retrieval" },
   "gpu-kernel-authoring-abstraction-stack": { id: "gpu-kernel-authoring-abstraction-stack", kind: "concept", domain: "computer-science", label: "GPU kernel-authoring abstraction stack", aliases: ["CUDA–CUTLASS–CuTe–Triton stack"], definition: "CUDA C++의 thread-level control, CUTLASS의 reusable linear-algebra components, CuTe의 layout·atom algebra, Triton의 blocked program과 compiler scheduling을 같은 목적의 동의어가 아닌 서로 다른 authoring layers로 구분하는 지도입니다.", canonicalHref: "/gpu/cuda-kernel-fusion#kernel-stack" },
   "cutlass-collective-gemm-composition": { id: "cutlass-collective-gemm-composition", kind: "method", domain: "computer-science", label: "CUTLASS collective GEMM composition", aliases: ["CUTLASS", "CollectiveMma"], definition: "Data type·layout·tile·copy·MMA policy에 맞춘 collective mainloop와 epilogue를 kernel layer에서 조합해 GEMM과 인접 fusion을 구성하는 CUTLASS 3.x programming model입니다.", canonicalHref: "/gpu/cuda-kernel-fusion#kernel-stack" },
   "cute-layout-atom-algebra": { id: "cute-layout-atom-algebra", kind: "concept", domain: "computer-science", label: "CuTe layout · atom algebra", aliases: ["CuTe", "TiledMMA", "TiledCopy"], definition: "Shape·stride의 coordinate mapping을 layout으로 표현하고 copy/MMA hardware instruction의 atom을 thread·value layout으로 tile·compose해 data movement와 계산 배치를 기술하는 저수준 algebra입니다.", canonicalHref: "/gpu/cuda-kernel-fusion#kernel-stack" },
@@ -30876,6 +30884,13 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   { from: "offline-document-embedding-reuse", to: "hnsw-ann-index", relation: "prerequisite", reason: "미리 계산한 document vectors가 multi-layer proximity graph에 삽입되는 searchable index payload가 됩니다." },
   { from: "hnsw-ann-index", to: "reciprocal-rank-fusion", relation: "prerequisite", reason: "Approximate dense ranking이 BM25와 score scale을 맞추지 않고 합칠 두 번째 후보 목록을 제공합니다." },
   { from: "reciprocal-rank-fusion", to: "cross-encoder-reranking", relation: "produces", reason: "Dense·sparse 목록을 합친 bounded candidate set이 query–document joint scoring의 입력이 됩니다." },
+  { from: "shamir-share-generation", to: "shamir-reconstruction-at-zero", relation: "produces", reason: "Distinct polynomial points가 x=0 Lagrange reconstruction의 입력 shares가 됩니다." },
+  { from: "shamir-threshold-polynomial-sharing", to: "shamir-threshold-privacy-boundary", relation: "produces", reason: "Random degree-t polynomial construction이 t-share view의 동일 분포 argument를 제공합니다." },
+  { from: "shamir-active-security-boundary", to: "mpc-dkg-transcript-artifact", relation: "prerequisite", reason: "Dealer equivocation과 bad-share 검증 경계를 알아야 DKG complaint·disqualification receipt를 해석할 수 있습니다." },
+  { from: "paillier-key-generation-contract", to: "paillier-randomized-encryption", relation: "prerequisite", reason: "Valid n·g profile과 unit group이 randomized encryption의 domain을 정합니다." },
+  { from: "paillier-key-generation-contract", to: "paillier-decryption-l-function", relation: "prerequisite", reason: "Key generation이 만든 λ와 μ, valid g 조건이 L 함수 기반 decryption의 domain과 inverse를 고정합니다." },
+  { from: "paillier-randomized-encryption", to: "paillier-additive-homomorphic-boundary", relation: "produces", reason: "g^m r^n 구조가 ciphertext multiplication의 additive identity를 만듭니다." },
+  { from: "paillier-additive-homomorphic-boundary", to: "paillier-ciphertext-security-boundary", relation: "constrains", reason: "유용한 homomorphism은 동시에 예측 가능한 ciphertext malleability이므로 integrity와 별도 취급합니다." },
   { from: "retrieval-candidate-recall-ceiling", to: "cross-encoder-reranking", relation: "constrains", reason: "Second-stage ranker는 전달받지 못한 relevant document를 새로 만들 수 없으므로 candidate recall 상한을 넘지 못합니다." },
   { from: "graph-structured-retrieval-boundary", to: "rag-stage-success-trace", relation: "extends", reason: "일반 candidate trace에 entity extraction·graph build·hop traversal·community summary의 추가 실패 지점을 확장합니다." },
   { from: "gpu-kernel-fusion-io-boundary", to: "gpu-kernel-authoring-abstraction-stack", relation: "prerequisite", reason: "줄이려는 launch·intermediate IO 경계를 고정한 뒤 그 경계를 표현할 authoring layer를 선택합니다." },

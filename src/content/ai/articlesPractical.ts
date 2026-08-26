@@ -956,11 +956,21 @@ const llmAppArticles: Article[] = [
       { id: "overview", title: "Answer에서 source까지 이어지는 trace" },
       { id: "chunking", title: "검색 단위 · 근거 단위 · metadata" },
       { id: "embedding", title: "Embedding–index version contract" },
-      { id: "retrieval", title: "Candidate recall · fusion · reranking" },
+      { id: "retrieval", title: "검색 funnel 경계와 독립 글 연결" },
       { id: "generation", title: "Context · citation · abstention policy" },
       { id: "evaluation", title: "Retrieval · context · answer 분리 평가" },
     ],
     component: () => import("@/pages/articles/ai/rag-pipeline"),
+  },
+  {
+    slug: "retrieval-ranking-funnel",
+    title: "Retrieval Ranking Funnel: BM25·HNSW·RRF·Cross-Encoder",
+    subcategory: "ai-practical-llm",
+    sections: [
+      { id: "overview", title: "Candidate funnel과 recall ceiling" },
+      { id: "retrieval", title: "Sparse·dense·fusion·reranking" },
+    ],
+    component: () => import("@/pages/articles/ai/retrieval-ranking-funnel"),
   },
   {
     slug: "lora-finetuning",

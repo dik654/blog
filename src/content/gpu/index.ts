@@ -67,12 +67,12 @@ const gpu: Category = {
     },
     {
       slug: "cuda-basics",
-      title: "CUDA 기초 (GPU 병렬처리와 블록체인)",
+      title: "CUDA 실행 기초: Host·Kernel·Memory·Workload Fit",
       subcategory: "gpu-fundamentals",
       sections: [
-        { id: "overview", title: "CUDA 기초 & 블록체인 활용" },
-        { id: "memory-model", title: "메모리 계층 & 최적화" },
-        { id: "blockchain-gpu", title: "블록체인 GPU 가속 실전" },
+        { id: "overview", title: "Host에서 device execution까지" },
+        { id: "memory-model", title: "메모리 계층과 이동 비용" },
+        { id: "blockchain-gpu", title: "Workload fit과 측정 경계" },
       ],
       component: () => import("@/pages/articles/blockchain/cuda-basics"),
     },

@@ -16,6 +16,25 @@
 - [x] 기초과학 concept의 관측량·단위/차원·모델 전제·측정 예·한계와 물리 좌표계 누락을 막는 `scientificGrounding` 감사
 - [x] 공개 catalog 전체를 대상으로 concept·stage·실제 import closure·제목 병렬 주제를 계산하는 `audit:topology` 추가
 
+### 2026-08-27 · 전역 article topology CRUD 재검토
+
+- [x] 기준선 564개 공개 route에서 휴리스틱으로 잡힌 43개 글을 실제 학습 질문·canonical ownership·근거·exercise 기준으로 `keep / split / merge / rename / delete` 판정하고 decision fingerprint를 등록
+- [x] Qwen 한국어 일관성에서 Smoothie weight editing과 한국어 reasoning post-training을 독립 정본으로 이동하고 기존 anchor를 summary redirect로 보존
+- [x] RAG 전체 pipeline에서 BM25·HNSW·RRF·cross-encoder candidate funnel을 독립 정본으로 이동하고 ingestion·grounding·evaluation arc와 분리
+- [x] MPC에서 Shamir secret sharing과 Paillier cryptosystem의 독립 유도·보안 전제를 별도 정본으로 이동하고 MPC/DKG 글은 조합 경계만 소유
+- [x] CUDA 기초와 ISMS security-infra 제목을 실제 단일 학습 arc에 맞게 개명하고 이전 slug는 유지
+- [x] 공개 article contract의 유일한 material failure인 `gpu/cfd-finite-volume-gpu`의 overview anchor 계약을 수정
+- [x] Claude adversarial review의 채택·기각과 원문 재검토 결과를 decision journal에 기록
+- [x] 전역 topology·article·learning·graph·formula·Viz·build와 390/1440 변경 route 검증
+- [ ] GitHub Pages 재배포와 production route 확인
+
+- 구조 변경 뒤 공개 article은 569개다. 새 정본은 `smoothie-qwen-weight-editing`, `qwen-korean-reasoning-posttraining`, `retrieval-ranking-funnel`, `shamir-secret-sharing`, `paillier-cryptosystem` 다섯 개이며, 세 parent는 독립 수업의 본문·문제·concept owner를 비우고 경계 설명과 연결만 남겼다.
+- `audit:topology --strict`는 현재 `keep 529 / split-review 40`이며 모든 후보가 reviewed/implemented decision과 fingerprint를 가진다. `keep`에는 하나의 학습 arc뿐 아니라 동일 fixture에서 correctness·failure·cost·rollback을 판정하는 `sharedGate`가 필수다.
+- Pages workflow는 build 전에 learning·graph·formula·article·topology·reading strict audit를 각각 실행한다. 따라서 다음 편집자가 local audit를 생략해도 stale topology fingerprint와 owner/learning/formula 계약 위반은 배포를 막는다.
+- Claude 1차 검토의 invalid relation, parent learning 중복, dead link, stale label, missing gate, physical ownership, orphan legacy 지적을 반영했다. 2차 검토에서 남은 MPC catalog label과 import되지 않는 Go/Viz/data 파일까지 정리했으며 삭제 파일은 Git 이력에서 복구할 수 있다.
+- `audit:learning` 569/569, graph 2,468 concepts·3,743 relations·invariant failure 0, formula explicit 1,176/1,176, article/topology/reading/Viz/terms 감사, ESLint와 production build가 통과했다. Build는 576개 static public route와 404 fallback을 생성했다.
+- Playwright로 11개 변경 route를 390×1000·1440×1000에서 총 22회 검사했다. HTTP·heading·본문 길이·기초/심화 문제·paper path·document/Viz/formula/SVG overflow·KaTeX·console·request failure가 모두 0건이었고 Shamir route는 1440×1000·390×844 screenshot을 육안 확인했다.
+
 ### 2026-08-24 · 전역 Viz 오류·명시 수식 주석 backlog 종료
 
 - [x] 공개/legacy Viz 정적 감사의 실제 오류 830건을 0건으로 정리. 413개 파일의 `strokeWidth` 812건을 1.2로 통일하고 gradient 12건·oversized radius 5건·heavy shadow 1건을 flat 표현으로 교체

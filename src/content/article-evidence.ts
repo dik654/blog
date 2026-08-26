@@ -2344,32 +2344,6 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
     {
       kind: "핵심 논문",
-      label: "Dense Passage Retrieval for Open-Domain Question Answering",
-      href: "https://arxiv.org/abs/2004.04906",
-      note: "질문·passage dual encoder와 open-domain QA dense retrieval의 기준 연구",
-    },
-    {
-      kind: "핵심 연구",
-      label:
-        "Reciprocal Rank Fusion outperforms Condorcet and individual Rank Learning Methods",
-      href: "https://cormack.uwaterloo.ca/cormacksigir09-rrf.pdf",
-      note: "서로 다른 retrieval ranking을 reciprocal rank 합으로 결합하는 방법",
-    },
-    {
-      kind: "핵심 논문",
-      label:
-        "Efficient and robust approximate nearest neighbor search using Hierarchical Navigable Small World graphs",
-      href: "https://arxiv.org/abs/1603.09320",
-      note: "Multi-layer proximity graph를 이용한 HNSW approximate-neighbor index",
-    },
-    {
-      kind: "핵심 논문",
-      label: "Passage Re-ranking with BERT",
-      href: "https://arxiv.org/abs/1901.04085",
-      note: "Query와 passage를 함께 읽는 cross-encoder second-stage reranking",
-    },
-    {
-      kind: "핵심 논문",
       label: "Lost in the Middle: How Language Models Use Long Contexts",
       href: "https://arxiv.org/abs/2307.03172",
       note: "긴 input의 가운데 놓인 relevant information 활용 저하를 분석",
@@ -2386,6 +2360,12 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://arxiv.org/abs/2309.15217",
       note: "retrieval context와 generated answer를 나눠 평가하는 metric framework",
     },
+  ],
+  "ai/retrieval-ranking-funnel": [
+    { kind: "핵심 논문", label: "Dense Passage Retrieval for Open-Domain Question Answering", href: "https://arxiv.org/abs/2004.04906", note: "질문·passage dual encoder와 dense candidate retrieval의 기준 연구" },
+    { kind: "핵심 연구", label: "Reciprocal Rank Fusion outperforms Condorcet and individual Rank Learning Methods", href: "https://cormack.uwaterloo.ca/cormacksigir09-rrf.pdf", note: "서로 다른 ranking을 reciprocal-rank evidence로 합치는 원 연구" },
+    { kind: "핵심 논문", label: "Efficient and robust approximate nearest neighbor search using HNSW", href: "https://arxiv.org/abs/1603.09320", note: "Multi-layer proximity graph approximate-neighbor index" },
+    { kind: "핵심 논문", label: "Passage Re-ranking with BERT", href: "https://arxiv.org/abs/1901.04085", note: "Query와 passage를 함께 읽는 cross-encoder second-stage reranking" },
   ],
   "ai/lora-finetuning": [
     {
@@ -2781,25 +2761,13 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://qwenlm.github.io/blog/qwen3/",
       note: "Qwen3 model family·thinking/non-thinking mode·multilingual capability를 확인하는 공식 release snapshot",
     },
-    {
-      kind: "핵심 논문",
-      label:
-        "Smoothie-Qwen: Post-Hoc Smoothing to Reduce Language Bias in Multilingual LLMs",
-      href: "https://arxiv.org/abs/2507.05686",
-      note: "Unicode·broken-token risk score와 lm_head row scaling을 이용한 post-hoc language suppression 방법",
-    },
-    {
-      kind: "공식 코드",
-      label: "dnotitia/smoothie-qwen",
-      href: "https://github.com/dnotitia/smoothie-qwen",
-      note: "Risk 분석·min_scale/smoothness 변환·공개 checkpoint와 제한된 Qwen 실험의 재현 구현",
-    },
-    {
-      kind: "핵심 논문",
-      label: "Making Qwen3 Think in Korean with Reinforcement Learning",
-      href: "https://arxiv.org/abs/2508.10355",
-      note: "한국어 reasoning SFT와 Oracle-Guided Dr.GRPO의 사례 연구",
-    },
+  ],
+  "ai/smoothie-qwen-weight-editing": [
+    { kind: "핵심 논문", label: "Smoothie-Qwen: Post-Hoc Smoothing to Reduce Language Bias in Multilingual LLMs", href: "https://arxiv.org/abs/2507.05686", note: "Unicode·broken-token risk와 lm_head row scaling을 이용한 post-hoc 방법" },
+    { kind: "공식 코드", label: "dnotitia/smoothie-qwen", href: "https://github.com/dnotitia/smoothie-qwen", note: "Risk 분석·scale 설정·weight 변환의 공개 구현" },
+  ],
+  "ai/qwen-korean-reasoning-posttraining": [
+    { kind: "핵심 논문", label: "Making Qwen3 Think in Korean with Reinforcement Learning", href: "https://arxiv.org/abs/2508.10355", note: "한국어 reasoning SFT와 Oracle-Guided Dr.GRPO의 사례 연구" },
   ],
   "ai/claw-overview": clawEvidence(
     {
@@ -5244,9 +5212,13 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 규격", label: "RFC 6090 · Fundamental Elliptic Curve Cryptography Algorithms", href: "https://www.rfc-editor.org/rfc/rfc6090.html", note: "EC group instance·validation/security considerations의 standard reference" },
   ],
   "crypto/mpc": [
-    { kind: "핵심 논문", label: "Shamir · How to Share a Secret", href: "https://doi.org/10.1145/359168.359176", note: "Threshold polynomial sharing의 primary paper" },
-    { kind: "핵심 논문", label: "Paillier · Composite Degree Residuosity Cryptosystems", href: "https://link.springer.com/chapter/10.1007/3-540-48910-X_16", note: "Additively homomorphic encryption의 primary paper" },
     { kind: "공식 코드", label: "bnb-chain/tss-lib @ 3f677ff", href: "https://github.com/bnb-chain/tss-lib/tree/3f677ff761fcf692edb0243a5d812930844d879a", note: "Threshold DKG/MtA/VSS implementation의 pinned source" },
+  ],
+  "crypto/shamir-secret-sharing": [
+    { kind: "핵심 논문", label: "Shamir · How to Share a Secret", href: "https://doi.org/10.1145/359168.359176", note: "Threshold polynomial sharing의 primary paper" },
+  ],
+  "crypto/paillier-cryptosystem": [
+    { kind: "핵심 논문", label: "Paillier · Public-Key Cryptosystems Based on Composite Degree Residuosity Classes", href: "https://link.springer.com/chapter/10.1007/3-540-48910-X_16", note: "Probabilistic additive-homomorphic encryption의 primary paper" },
   ],
   "crypto/scroll-zkevm": [
     { kind: "공식 문서", label: "Scroll zkEVM Overview", href: "https://docs.scroll.io/en/technology/zkevm/zkevm-overview/", note: "EVM state-transition validity proof의 official architecture boundary" },

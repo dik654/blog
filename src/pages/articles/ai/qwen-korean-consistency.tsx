@@ -1,15 +1,14 @@
 import Overview from "./qwen-korean-consistency/Overview";
 import PromptLevel from "./qwen-korean-consistency/PromptLevel";
-import SmoothieQwen from "./qwen-korean-consistency/SmoothieQwen";
-import RLApproach from "./qwen-korean-consistency/RLApproach";
+import { Link } from "react-router-dom";
 import RuntimeGuard from "./qwen-korean-consistency/RuntimeGuard";
 import DecisionMatrix from "./qwen-korean-consistency/DecisionMatrix";
 
 const ARTICLE_PATH = [
   ["현상 분류", "문자 혼용인지, 구간 전환인지, 정상 예외인지 먼저 가릅니다."],
   ["입력 정책", "프롬프트로 기대 언어와 허용 예외를 명시합니다."],
-  ["출력층 보정", "Smoothie-Qwen이 token risk와 lm_head를 어떻게 연결하는지 봅니다."],
-  ["학습", "SFT와 Oracle-Guided Dr.GRPO가 reasoning trace까지 바꾸는 조건을 읽습니다."],
+  ["출력층 보정", "독립 글에서 Smoothie-Qwen의 weight 편집 계약을 검증합니다."],
+  ["학습", "독립 글에서 SFT와 Oracle-Guided Dr.GRPO의 update 경계를 읽습니다."],
   ["운영 가드", "규칙·judge·재시도·사람 검토의 책임을 나눕니다."],
   ["배포 결정", "같은 paired evaluation으로 후보를 비교하고 rollback을 준비합니다."],
 ] as const;
@@ -87,8 +86,37 @@ export default function QwenKoreanConsistencyArticle() {
 
       <Overview />
       <PromptLevel />
-      <SmoothieQwen />
-      <RLApproach />
+      <section id="smoothie-qwen" className="scroll-mt-20">
+        <h2 className="mb-4 text-2xl font-bold">출력층 보정은 별도 모델 후보로 평가합니다</h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            Smoothie-Qwen은 prompt 규칙이 아니라 tokenizer에서 추정한 token risk를
+            <code>lm_head</code> 행의 scale로 바꾸는 post-hoc weight 편집입니다.
+            정상 번역 token까지 약해질 수 있고 softmax 전체가 다시 정규화되므로,
+            수식·token 분류·paired evaluation은 독립 글에서 다룹니다.
+          </p>
+          <p>
+            <Link to="/ai/smoothie-qwen-weight-editing">
+              Smoothie-Qwen weight editing 글로 이동 →
+            </Link>
+          </p>
+        </div>
+      </section>
+      <section id="rl-approach" className="scroll-mt-20">
+        <h2 className="mb-4 text-2xl font-bold">Reasoning policy update는 별도 학습 실험입니다</h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            한국어 reasoning SFT와 oracle-guided Dr.GRPO는 weight를 직접 업데이트하고,
+            checker·judge·rollout distribution까지 학습 결과에 영향을 줍니다. 화면의
+            문자 혼용을 줄이는 운영 가드와 같은 개입으로 취급하지 않습니다.
+          </p>
+          <p>
+            <Link to="/ai/qwen-korean-reasoning-posttraining">
+              Qwen 한국어 reasoning post-training 글로 이동 →
+            </Link>
+          </p>
+        </div>
+      </section>
       <RuntimeGuard />
       <DecisionMatrix />
     </div>

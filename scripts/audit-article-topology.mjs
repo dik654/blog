@@ -1,5 +1,10 @@
 import fs from "node:fs";
+import { createHash } from "node:crypto";
 import { ARTICLE_LEARNING } from "../src/content/article-learning.ts";
+import {
+  ARTICLE_TOPOLOGY_DECISIONS,
+  ARTICLE_TOPOLOGY_FINGERPRINTS,
+} from "../src/content/article-topology-decisions.ts";
 import {
   collectArticleSourceClosure,
   loadPublicArticleCatalog,
@@ -58,18 +63,79 @@ function recommendation(article, contract, metrics) {
   return { action: "keep", reasons: [] };
 }
 
+function topologyFingerprint(article, contract, metrics) {
+  const payload = JSON.stringify({
+    title: article.title,
+    introducedHere: contract?.introducedHere.map((concept) => concept.id) ?? [],
+    conceptStages:
+      contract?.conceptStages.map((stage) => ({
+        label: stage.label,
+        concepts: stage.concepts,
+      })) ?? [],
+    metrics,
+  });
+  return createHash("sha256").update(payload).digest("hex").slice(0, 16);
+}
+
 const rows = catalog.map((article) => {
   const contract = ARTICLE_LEARNING[article.route];
   const metrics = sourceMetrics(article.sourcePath);
+  const decision = ARTICLE_TOPOLOGY_DECISIONS[article.route];
+  const fingerprint = topologyFingerprint(article, contract, metrics);
+  const reviewedFingerprint = ARTICLE_TOPOLOGY_FINGERPRINTS[article.route];
+  const targets = decision?.targetRoutes ?? [];
+  const missingTargets = targets.filter(
+    (target) => !catalog.some((candidate) => candidate.route === target),
+  );
+  const issues = [];
+  const heuristic = recommendation(article, contract, metrics);
+
+  if (heuristic.action !== "keep" && !decision) issues.push("unreviewed");
+  if (decision && !reviewedFingerprint) issues.push("missing-fingerprint");
+  if (decision && reviewedFingerprint && reviewedFingerprint !== fingerprint) {
+    issues.push("stale-decision");
+  }
+  if (decision?.status === "planned") issues.push("planned-change");
+  if (decision?.action === "keep" && !decision.sharedGate?.trim()) {
+    issues.push("missing-shared-gate");
+  }
+  if (missingTargets.length) issues.push(`missing-target:${missingTargets.join(",")}`);
+
   return {
     route: article.route,
     title: article.title,
     introducedConcepts: contract?.introducedHere.length ?? 0,
     stages: contract?.conceptStages.length ?? 0,
     ...metrics,
-    ...recommendation(article, contract, metrics),
+    ...heuristic,
+    fingerprint,
+    decision: decision?.action ?? null,
+    decisionStatus: decision?.status ?? null,
+    issues,
   };
 });
+
+for (const route of Object.keys(ARTICLE_TOPOLOGY_DECISIONS)) {
+  if (!catalog.some((article) => article.route === route)) {
+    rows.push({
+      route,
+      title: "(catalog route 없음)",
+      introducedConcepts: 0,
+      stages: 0,
+      files: 0,
+      lines: 0,
+      sections: 0,
+      formulas: 0,
+      visualizations: 0,
+      action: "invalid-decision",
+      reasons: ["decision route가 public catalog에 없음"],
+      fingerprint: ARTICLE_TOPOLOGY_FINGERPRINTS[route] ?? null,
+      decision: ARTICLE_TOPOLOGY_DECISIONS[route].action,
+      decisionStatus: ARTICLE_TOPOLOGY_DECISIONS[route].status,
+      issues: ["missing-route"],
+    });
+  }
+}
 
 const summary = Object.fromEntries(
   [...new Set(rows.map((row) => row.action))]
@@ -83,13 +149,18 @@ if (json) {
   console.log(
     `아티클 topology 감사: ${catalog.length} routes · ${JSON.stringify(summary)}`,
   );
-  for (const row of rows.filter((candidate) => candidate.action !== "keep")) {
+  for (const row of rows.filter((candidate) => candidate.action !== "keep" || candidate.issues.length)) {
     console.log(
-      `- [${row.action}] ${row.route} · ${row.title} · ${row.reasons.join(" / ")}`,
+      `- [${row.action}] ${row.route} · decision=${row.decision ?? "none"}/${row.decisionStatus ?? "none"} · ${row.title} · ${[...row.reasons, ...row.issues].join(" / ")}`,
     );
   }
 }
 
-if (strict && rows.some((row) => row.action === "create-contract")) {
+if (
+  strict &&
+  rows.some(
+    (row) => row.action === "create-contract" || row.issues.length > 0,
+  )
+) {
   process.exitCode = 1;
 }

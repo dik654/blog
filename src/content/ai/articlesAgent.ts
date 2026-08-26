@@ -461,20 +461,40 @@ export const agentArticles: Article[] = [
   },
   {
     slug: "qwen-korean-consistency",
-    title: "Qwen 한국어 일관성: 진단·Smoothing·Post-training",
+    title: "Qwen 한국어 일관성: 현상 진단에서 배포 개입 선택까지",
     subcategory: "ai-agents",
     sections: [
       { id: "overview", title: "언어 혼용을 먼저 진단하기" },
       { id: "prompt-level", title: "Prompt policy의 역할과 한계" },
       {
         id: "smoothie-qwen",
-        title: "Smoothie-Qwen: lm_head row scaling",
+        title: "출력층 개입 선택과 독립 글 연결",
       },
-      { id: "rl-approach", title: "SFT와 Oracle-guided Dr.GRPO" },
+      { id: "rl-approach", title: "학습 개입 선택과 독립 글 연결" },
       { id: "runtime-guard", title: "Checker·Judge·Bounded retry" },
       { id: "decision-matrix", title: "Paired evaluation과 배포 결정" },
     ],
     component: () => import("@/pages/articles/ai/qwen-korean-consistency"),
+  },
+  {
+    slug: "smoothie-qwen-weight-editing",
+    title: "Smoothie-Qwen: Token Risk에서 lm_head Weight Editing까지",
+    subcategory: "ai-agents",
+    sections: [
+      { id: "overview", title: "Post-hoc weight 편집 경계" },
+      { id: "smoothie-qwen", title: "Risk·scale·logit·paired evaluation" },
+    ],
+    component: () => import("@/pages/articles/ai/smoothie-qwen-weight-editing"),
+  },
+  {
+    slug: "qwen-korean-reasoning-posttraining",
+    title: "Qwen 한국어 Reasoning Post-Training: SFT·Dr.GRPO·Oracle Reward",
+    subcategory: "ai-agents",
+    sections: [
+      { id: "overview", title: "Policy update와 평가 경계" },
+      { id: "rl-approach", title: "SFT·Dr.GRPO·oracle-guided reward" },
+    ],
+    component: () => import("@/pages/articles/ai/qwen-korean-reasoning-posttraining"),
   },
   {
     slug: "openclaw-assistant",

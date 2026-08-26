@@ -208,7 +208,7 @@ const ismsAmlArticles: Article[] = [
   },
   {
     slug: "isms-security-infra",
-    title: "보안 인프라 — UTM·방화벽·IDS/IPS·SIEM 구축",
+    title: "보안 인프라 운영 — Zone Enforcement에서 Telemetry Release까지",
     subcategory: "isms-infra",
     sections: [
       { id: "overview", title: "Zone에서 evidence까지" },

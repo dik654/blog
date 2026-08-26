@@ -1,21 +1,130 @@
-import ExplainedFormula from "@/components/ui/explained-formula";
+import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation-block";
+import ContentBoundary from "@/components/articles/content-boundary";
 
-const Flow=()=> <figure data-viz="mpc-security-flow" className="not-prose rounded-xl border border-border bg-card p-4 sm:p-5"><figcaption className="mb-4 text-sm font-semibold">Private inputs에서 session-bound DKG artifact까지</figcaption><div className="grid gap-3 sm:grid-cols-5">{[['01','Function'],['02','Adversary'],['03','Shares'],['04','Rounds'],['05','Receipt']].map(([n,t])=><div key={n} className="min-w-0 rounded-lg border border-border bg-background p-4"><span className="text-xs font-semibold text-primary">{n}</span><p className="mt-2 break-words text-sm font-semibold">{t}</p></div>)}</div></figure>;
+const FLOW = [
+  ["01", "Function", "공개 output과 허용 leakage"],
+  ["02", "Adversary", "corruption·network·abort"],
+  ["03", "Building blocks", "sharing·encryption·proof"],
+  ["04", "Rounds", "session-bound message order"],
+  ["05", "Receipt", "result·failure·cost·rollback"],
+] as const;
 
-export default function ModernArticle(){return <article className="space-y-14">
-  <section id="overview" className="space-y-5"><h2 className="text-3xl font-bold">MPC: 함수 결과는 공유하되 private inputs은 공유하지 않는다</h2><p className="text-lg leading-8">Alice의 3과 Bob의 4를 더해 7을 얻되 서로의 input을 알지 못하게 한다고 해 봅시다. MPC의 질문은 “나누어 계산했는가”가 아니라 실제 party view가 trusted ideal functionality가 허용한 result·leakage 밖의 정보를 주는지입니다.</p><Flow/><p>Shamir sharing, Paillier encryption, DKG는 각각 threshold storage, homomorphic arithmetic, dealerless key generation을 담당합니다. 한 building block의 security를 전체 protocol의 malicious security·fairness로 확대하면 안 됩니다.</p></section>
-  <section id="security-model" className="space-y-5"><h2 className="text-2xl font-bold">Adversary·network·abort/fairness를 먼저 고정한다</h2><p>Semi-honest adversary는 protocol을 따르면서 본 messages로 추가 정보를 얻으려 하지만 malicious adversary는 message를 변조하고 잘못된 share를 보내거나 중간에 abort할 수 있습니다. Static/adaptive corruption, authenticated channels/broadcast, synchrony/timeout, corruption threshold도 보안 statement의 일부입니다.</p><p>Privacy가 있어도 fairness는 없을 수 있습니다. 마지막 message를 먼저 본 공격자가 abort해 자신만 result를 얻는 반례가 가능하므로 output delivery·abort 범위를 따로 기록합니다.</p></section>
-  <section id="shamir" className="space-y-5"><h2 className="text-2xl font-bold">Shamir: secret을 random polynomial의 y-intercept로 만든다</h2><p>F₁₇에서 secret s=5, degree 1 polynomial f(x)=5+3x를 쓰면 shares는 (1,8),(2,11),(3,14)입니다. 서로 다른 두 points는 직선을 유일하게 정해 f(0)=5를 복원하지만 한 point에는 각 secret 후보마다 맞는 slope가 존재합니다. Index 0을 share로 나누면 secret 자체를 노출하므로 indices는 distinct nonzero field elements여야 합니다.</p><ExplainedFormula question="t+1 shares는 어떻게 secret f(0)를 복원하는가?" idea={<>Degree t polynomial은 t+1 points로 유일하게 정해지므로 Lagrange basis를 x=0에서 평가해 share values의 선형 조합을 만듭니다.</>} formula={String.raw`s=f(0)=\sum_{i\in S} y_i\prod_{j\in S,j\ne i}\frac{-x_j}{x_i-x_j},\qquad |S|=t+1`}
-  annotatedFormula={String.raw`s=\underbrace{f(0)=\sum_{i\in S} y_i\prod_{j\in S,j\ne i}\frac{-x_j}{x_i-x_j},\qquad |S|=t+1}_{\text{기준량당 비율}}`}
-  operations={[
-    { expression: String.raw`f(0)=\sum_{i\in S} y_i\prod_{j\in S,j\ne i}\frac{-x_j}{x_i-x_j},\qquad |S|=t+1`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Degree t polynomial은 t+1 points로","유일하게 정해지므로 Lagrange basis를 x=0에서","평가해 share values의 선형 조합을 만듭니다."] },
-  ]} terms={[{symbol:"s",name:"Secret",description:"Polynomial의 constant term f(0)입니다."},{symbol:"(x_i,y_i)",name:"Share",description:"Distinct nonzero x_i에서 계산한 y_i=f(x_i)입니다."},{symbol:"t",name:"Privacy threshold degree",description:"t shares이나 이하로는 secret을 결정하지 못하고 t+1 shares로 복원합니다."}]} assumptions={["Arithmetic은 모든 nonzero denominator가 inverse를 갖는 같은 finite field에서 수행합니다.","Nonconstant coefficients는 uniform random이고 share indices는 distinct·nonzero입니다."]} interpretation="f(x)=5+3x의 (1,8),(2,11)를 interpolation하면 slope 3, intercept 5입니다. Plain Shamir은 잘못된 share를 찾는 VSS나 malicious DKG를 자동으로 제공하지 않습니다." /></section>
-  <section id="paillier" className="space-y-5"><h2 className="text-2xl font-bold">Paillier: ciphertext 곱을 plaintext 덧셈으로 옮긴다</h2><ExplainedFormula question="Ciphertext를 복호화하지 않고 두 plaintext를 어떻게 더할까?" idea="Paillier encryption의 g^m 항과 randomizer r^n 항은 모두 곱셈으로 결합되므로 ciphertext 곱이 plaintext 덧셈에 대응합니다." formula={String.raw`c=\operatorname{Enc}(m;r)=g^m r^n \bmod n^2,\qquad \operatorname{Enc}(m_1;r_1)\operatorname{Enc}(m_2;r_2)=\operatorname{Enc}(m_1+m_2;r_1r_2)`}
-  annotatedFormula={String.raw`c=\underbrace{\operatorname{Enc}(m;r)=g^m r^n \bmod n^2,\qquad \operatorname{Enc}(m_1;r_1)\operatorname{Enc}(m_2;r_2)=\operatorname{Enc}(m_1+m_2;r_1r_2)}_{\text{generator parameter 계산}}`}
-  operations={[
-    { expression: String.raw`\operatorname{Enc}(m;r)=g^m r^n \bmod n^2,\qquad \operatorname{Enc}(m_1;r_1)\operatorname{Enc}(m_2;r_2)=\operatorname{Enc}(m_1+m_2;r_1r_2)`, annotation: ["generator parameter이(가) 식의 결과에","기여하는 방식을 계산합니다.","Paillier encryption의 g^m 항과","randomizer r^n 항은 모두 곱셈으로 결합되므로"] },
-  ]} terms={[{symbol:"n=pq",name:"public modulus",description:"서로 다른 두 소수의 곱이며 plaintext는 Z_n에서 계산합니다."},{symbol:"g",name:"generator parameter",description:"정상적으로 생성된 public key parameter입니다."},{symbol:"r",name:"fresh randomizer",description:"Z_n^*에서 새로 뽑는 unit입니다."},{symbol:"m",name:"plaintext",description:"0부터 n-1까지의 residue입니다."}]} assumptions={["p,q와 secret key가 올바르게 생성되었습니다.","각 encryption은 gcd(r,n)=1인 fresh randomizer를 사용합니다.","이 항등식은 additive homomorphism이지 ciphertext integrity나 malicious security가 아닙니다."]} interpretation="Toy p=3,q=5,n=15,g=16,λ=4,μ=4,m=4,r=2이면 c=173입니다. c⁴ mod 225=16이고 L(16)=1이어서 1·4 mod 15=4를 복원합니다."/><p>Malformed ciphertext·key를 검증하고 active protocol에서는 ciphertext가 올바른 plaintext relation을 암호한다는 proof가 따로 필요할 수 있습니다. 같은 randomizer를 재사용하거나 homomorphism을 곧바로 chosen-ciphertext security로 해석해서도 안 됩니다.</p></section>
-  <section id="dkg" className="space-y-5"><h2 className="text-2xl font-bold">DKG round를 session-bound artifact로 보존한다</h2><p>Protocol/source version, session ID, party public identities·indices, n/t, curve/group, commitment·encrypted-share·proof messages, round order, complaints·disqualifications, accepted group public key를 receipt에 넣습니다. Session ID/roster hash가 빠지면 이전 ceremony의 commitment를 새 ceremony에 replay할 수 있습니다.</p><p>DKG의 output은 한 명이 전체 secret을 얻지 않은 public key와 secret shares입니다. 그러나 application signature protocol, nonce generation, resharing, membership rotation은 별도 protocol/version입니다.</p></section>
-  <section id="release" className="space-y-5"><h2 className="text-2xl font-bold">Active failures·dropout·restart를 통과한 뒤 성능을 재다</h2><p>Duplicate party/index, out-of-field share, invalid commitment, malformed Paillier key/ciphertext, reordered/cross-session round, false/valid complaint, dropout, timeout, crash/restart를 replay합니다. Same n/t, adversary·network model, security parameter, hardware에서 rounds, messages, wire bytes, p50/p99 latency, CPU/RSS를 나누고 security/compatibility regression 시 이전 protocol generation으로 rollback합니다.</p><div id="paper-shamir"><CitationBlock source="Shamir · How to Share a Secret" citeKey={1} href="https://doi.org/10.1145/359168.359176"><p><b>문제:</b> Secret을 threshold shares로 나누고 적은 shares에서 정보를 숨깁니다.</p><p><b>기여:</b> Random polynomial evaluations과 interpolation을 이용한 perfect sharing을 제시합니다.</p><p><b>전제:</b> Finite field, distinct points, uniform coefficients입니다.</p><p><b>근거 범위:</b> Shamir sharing의 correctness·privacy 구조입니다.</p><p><b>말하지 않는 것:</b> Active MPC·VSS·DKG·fairness를 보장하지 않습니다.</p></CitationBlock></div><div id="paper-paillier"><CitationBlock source="Paillier · Public-Key Cryptosystems Based on Composite Degree Residuosity Classes" citeKey={2} href="https://link.springer.com/chapter/10.1007/3-540-48910-X_16"><p><b>문제:</b> Composite residuosity로 확률적 public-key encryption을 만듭니다.</p><p><b>기여:</b> Additive homomorphism을 갖는 Paillier cryptosystem을 제시합니다.</p><p><b>전제:</b> Valid key generation과 unit randomizer, composite-residuosity setting입니다.</p><p><b>근거 범위:</b> Encryption·decryption·homomorphic identity입니다.</p><p><b>말하지 않는 것:</b> Standalone ciphertext가 malicious MPC proof를 제공하지 않습니다.</p></CitationBlock></div><div id="paper-tsslib-source"><CitationBlock source="bnb-chain/tss-lib pinned source 3f677ff" citeKey={3} href="https://github.com/bnb-chain/tss-lib/tree/3f677ff761fcf692edb0243a5d812930844d879a"><p><b>문제:</b> Threshold DKG/MtA/VSS의 concrete implementation seam을 고정합니다.</p><p><b>기여:</b> Official Go source·tests의 pinned snapshot입니다.</p><p><b>전제:</b> Commit 3f677ff와 protocol/toolchain/dependency profile을 pin합니다.</p><p><b>근거 범위:</b> 선택 source의 round/artifact behavior입니다.</p><p><b>말하지 않는 것:</b> Generic MPC 정의·모든 threshold schemes·moving main을 대신하지 않습니다.</p></CitationBlock></div></section>
-</article>}
+export default function ModernArticle() {
+  return (
+    <article className="space-y-14">
+      <section id="overview" className="space-y-5">
+        <h2 className="text-3xl font-bold">
+          MPC: 함수 결과는 공유하되 private inputs은 공유하지 않는다
+        </h2>
+        <p className="text-lg leading-8">
+          Alice의 3과 Bob의 4를 더해 7을 얻되 서로의 input을 알지 못하게 한다고
+          해 봅시다. MPC의 질문은 “나누어 계산했는가”가 아니라 실제 party view가
+          trusted ideal functionality가 허용한 result·leakage 밖의 정보를 주는지입니다.
+        </p>
+        <figure data-viz="mpc-security-flow" className="not-prose rounded-xl border border-border bg-card p-4 sm:p-5">
+          <figcaption className="mb-4 text-sm font-semibold">
+            Private inputs에서 session-bound protocol receipt까지
+          </figcaption>
+          <div className="grid gap-3 sm:grid-cols-5">
+            {FLOW.map(([number, title, description]) => (
+              <div key={number} className="min-w-0 rounded-lg border border-border bg-background p-4">
+                <span className="text-xs font-semibold text-primary">{number}</span>
+                <p className="mt-2 break-words text-sm font-semibold">{title}</p>
+                <p className="mt-1 text-xs leading-5 text-muted-foreground">{description}</p>
+              </div>
+            ))}
+          </div>
+        </figure>
+        <p>
+          Shamir sharing, Paillier encryption, DKG는 각각 threshold storage,
+          homomorphic arithmetic, dealerless key generation을 담당합니다. 한 building
+          block의 security를 전체 protocol의 malicious security·fairness로 확대하면
+          안 됩니다.
+        </p>
+        <ContentBoundary article="mpc" />
+      </section>
+
+      <section id="security-model" className="space-y-5">
+        <h2 className="text-2xl font-bold">Adversary·network·abort/fairness를 먼저 고정한다</h2>
+        <p>
+          Semi-honest adversary는 protocol을 따르면서 본 messages로 추가 정보를
+          얻으려 하지만 malicious adversary는 message를 변조하고 잘못된 share를
+          보내거나 중간에 abort할 수 있습니다. Static/adaptive corruption,
+          authenticated channels/broadcast, synchrony/timeout과 corruption threshold도
+          security statement의 일부입니다.
+        </p>
+        <p>
+          Privacy가 있어도 fairness는 없을 수 있습니다. 마지막 message를 먼저 본
+          공격자가 abort해 자신만 result를 얻는 반례가 가능하므로 output delivery와
+          abort 범위를 별도 기록합니다.
+        </p>
+      </section>
+
+      <section id="shamir" className="scroll-mt-20 space-y-4">
+        <h2 className="text-2xl font-bold">Shamir은 독립적인 threshold-sharing primitive입니다</h2>
+        <p>
+          Secret을 random polynomial의 상수항으로 두고 nonzero points를 shares로
+          나눕니다. 복원식, t-share privacy의 전제, 잘못된 share·refresh·VSS 경계는
+          MPC 전체 정의와 다른 학습 단위이므로 별도 글로 이동했습니다.
+        </p>
+        <Link className="font-medium text-primary hover:underline" to="/crypto/shamir-secret-sharing">
+          Shamir Secret Sharing 글로 이동 →
+        </Link>
+      </section>
+
+      <section id="paillier" className="scroll-mt-20 space-y-4">
+        <h2 className="text-2xl font-bold">Paillier는 독립적인 확률적 public-key cryptosystem입니다</h2>
+        <p>
+          Ciphertext 곱을 plaintext 덧셈으로 옮기는 항등식에는 key generation,
+          unit randomizer, modulus와 security assumption이 붙습니다. Homomorphism을
+          active MPC input proof나 ciphertext integrity로 확대하지 않는 경계는 별도
+          글에서 유도합니다.
+        </p>
+        <Link className="font-medium text-primary hover:underline" to="/crypto/paillier-cryptosystem">
+          Paillier Cryptosystem 글로 이동 →
+        </Link>
+      </section>
+
+      <section id="dkg" className="space-y-5">
+        <h2 className="text-2xl font-bold">DKG round를 session-bound artifact로 보존한다</h2>
+        <p>
+          Protocol/source version, session ID, party public identities·indices, n/t,
+          curve/group, commitment·encrypted-share·proof messages, round order,
+          complaints·disqualifications와 accepted group public key를 receipt에 넣습니다.
+          Session ID나 roster hash가 빠지면 이전 ceremony의 commitment를 새 ceremony에
+          replay할 수 있습니다.
+        </p>
+        <p>
+          DKG의 output은 한 명이 전체 secret을 얻지 않은 public key와 secret
+          shares입니다. Application signature protocol, nonce generation, resharing과
+          membership rotation은 별도 protocol/version입니다.
+        </p>
+      </section>
+
+      <section id="release" className="space-y-5">
+        <h2 className="text-2xl font-bold">Active failures·dropout·restart를 통과한 뒤 성능을 재다</h2>
+        <p>
+          Duplicate party/index, out-of-field share, invalid commitment, malformed key,
+          reordered/cross-session round, false/valid complaint, dropout, timeout과
+          crash/restart를 replay합니다. 같은 n/t·adversary/network model·security
+          parameter·hardware에서 rounds, messages, wire bytes, p50/p99 latency,
+          CPU/RSS를 나누고 regression이면 이전 protocol generation으로 rollback합니다.
+        </p>
+        <div id="paper-tsslib-source">
+          <CitationBlock
+            source="bnb-chain/tss-lib pinned source 3f677ff"
+            citeKey={1}
+            href="https://github.com/bnb-chain/tss-lib/tree/3f677ff761fcf692edb0243a5d812930844d879a"
+          >
+            <p><b>문제:</b> Threshold DKG/MtA/VSS의 concrete implementation seam을 고정합니다.</p>
+            <p><b>기여:</b> Official Go source·tests의 pinned snapshot입니다.</p>
+            <p><b>전제:</b> Commit과 protocol/toolchain/dependency profile을 함께 pin합니다.</p>
+            <p><b>근거 범위:</b> 선택 source의 round·artifact behavior입니다.</p>
+            <p><b>말하지 않는 것:</b> Generic MPC 정의나 모든 threshold scheme을 대신하지 않습니다.</p>
+          </CitationBlock>
+        </div>
+      </section>
+    </article>
+  );
+}

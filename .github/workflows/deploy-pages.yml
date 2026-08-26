@@ -27,6 +27,18 @@ jobs:
 
       - run: npm ci
 
+      - run: npm run audit:learning -- --strict --require-registration --all-articles
+
+      - run: npm run audit:graph -- --strict
+
+      - run: npm run audit:formula -- --strict --require-explicit
+
+      - run: npm run audit:articles -- --strict --all-articles
+
+      - run: npm run audit:topology -- --strict
+
+      - run: npm run audit:reading -- --strict
+
       - run: npm run build
         env:
           GITHUB_PAGES: "true"
