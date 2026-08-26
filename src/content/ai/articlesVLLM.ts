@@ -350,6 +350,14 @@ export const vllmServingArticles: Article[] = [
         ],
       },
       {
+        id: "moe-serving-boundary",
+        title: "MoE total·active·request 세 장부",
+        subsections: [
+          { id: "paper-qwen3-next", title: "Qwen3-Next total/active 적용 예" },
+          { id: "paper-nvfp4", title: "NVFP4 format과 artifact 경계" },
+        ],
+      },
+      {
         id: "admission-logs",
         title: "Admission과 기동 로그 receipt",
         subsections: [

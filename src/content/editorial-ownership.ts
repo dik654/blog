@@ -1315,6 +1315,26 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [{ label: "Receptive field와 output geometry", href: "/ai/cnn-receptive-fields" }],
     evidence: [{ kind: "primary-source", rule: "Dense prediction claim은 FCN의 dataset·architecture·metric 범위에서 해석하고 task별 release evidence를 별도 수집한다." }],
   },
+  "vla-embodiment-gap": {
+    title: "VLA embodiment gap 글이 소유하는 범위",
+    owns: [
+      "Semantic grounding에서 3D geometry·action interface·controller·closed-loop verification으로 이어지는 embodiment gap",
+      "Action token·pose·chunk·diffusion/flow head를 robot execution contract로 비교하는 경계",
+      "Cross-embodiment pretraining과 target-robot adaptation을 observation·action·data·adaptation receipt로 분리하는 방법",
+      "Monolithic VLA와 hierarchical VLM·geometry·planner·controller system boundary",
+      "Pixel-to-3D waypoint의 coordinate transform·error composition과 embodied closed-loop release gate",
+    ],
+    reuses: [
+      { label: "Vision task의 output coordinate 보존", href: "/ai/vision-task-spatial-contracts" },
+      { label: "Conditional flow-matching objective", href: "/ai/diffusion-continuous-time#flow-matching" },
+      { label: "Agent observation·action loop", href: "/ai/agent-loop-foundations" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "VLA 구조·data 규모·성공률은 각 paper의 robot·action space·benchmark·revision과 저자 자기보고 범위로 제한한다." },
+      { kind: "project-measurement", rule: "현장 경험은 robot·sensor·controller·model/runtime revision·action rate·perturbation·반복 횟수를 갖춘 trajectory receipt가 있을 때만 공개 비교로 승격한다." },
+      { kind: "project-claim", rule: "최신 preprint와 branded model family를 하나의 통합 system처럼 합치지 않고, 독립 평가 없는 결과를 physical generalization의 확정 증거로 쓰지 않는다." },
+    ],
+  },
  "transformer-architecture": {
     title: "Transformer architecture 글이 소유하는 범위",
     owns: [
@@ -8482,6 +8502,7 @@ export const EDITORIAL_BOUNDARIES = {
       "Parameter headline을 checkpoint dtype별 weight payload로 바꾸는 범용 계산 절차",
       "Attention KV·recurrent state·activation·workspace의 서로 다른 memory growth classes",
       "Known logical floor와 physical runtime peak를 구분하는 device admission 판정",
+      "MoE total weight residency·active token path·context/runtime state를 서로 다른 serving ledger로 분리하는 경계",
       "Model identity·geometry·runtime·retention을 묶는 startup memory receipt",
     ],
     reuses: [
@@ -8493,6 +8514,8 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "primary-source", rule: "Parameter·dtype·payload는 배포할 exact checkpoint index와 tensor metadata revision에 귀속한다." },
       { kind: "standard", rule: "Logical cache shape는 model config에, physical allocation·workspace·peak는 사용한 serving engine·kernel·GPU profile의 startup receipt에 귀속한다." },
       { kind: "project-claim", rule: "Known floor가 device capacity보다 작다는 계산을 load 성공·최대 context 품질·production concurrency 보장으로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "Prefill·decode·MTP 병목과 hardware sweet spot은 exact model/runtime/hardware topology/checkpoint quantization·input/output length·context·batch/concurrency·KV dtype·sampling 설정·측정 방법·반복 횟수·허용 오차가 있는 stage receipt에만 귀속한다." },
+      { kind: "project-claim", rule: "미공개 model spec·Q8 약어·현장 체감 임계점은 공식 artifact와 재현 receipt 전까지 canonical fact나 구매 권고로 승격하지 않는다." },
     ],
   },
   "dpo": {

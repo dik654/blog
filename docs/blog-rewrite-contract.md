@@ -61,6 +61,31 @@ build 통과는 완료의 증거가 아니며, 아래 Definition of Done을 모�
 - 논문 자체의 방법·유도·ablation이 독립적인 학습 대상이면 별도 canonical article로 분리한다. 현재 글의 근거 한 부분이면 얕은 논문 요약 글을 만들지 않고 해당 section에 통합한다.
 - 별도 논문 article을 만들 때는 논문 제목이 sidebar와 근거 지도에서 보이고, 원 개념 글과 양방향으로 연결되어야 한다.
 
+### 2.2.1 주장 등급과 현장 관찰 수명주기
+
+- 수치·성능·지원 범위·현재 model spec처럼 시간과 실행 환경에 민감한 주장은 본문에 넣기 전에
+  `공식 artifact / 이론·유도 / 논문 자기보고 / 독립 평가 / project 실측 / 현장 경험 / 추정·소문`
+  중 하나로 분류한다. 한 논문의 benchmark 결과를 일반 법칙으로, 한 사용자의 체감치를 hardware
+  임계점으로 승격하지 않는다.
+- 논문과 benchmark에는 기준일과 `저자 자기보고 / 독립 재현·평가`를 표시한다. 같은 조직의 model,
+  navigation system, manipulation system처럼 서로 다른 artifact는 이름이 비슷해도 하나의 통합
+  증거로 합치지 않는다. 최신 preprint는 공개일·revision과 재검토 시점을 적고 본문의 핵심 결론을
+  독점하지 않게 한다.
+- Project 실측과 현장 경험은 최소한 model·exact revision, runtime·version, hardware·topology,
+  checkpoint·quantization, input/output length, batch·concurrency, KV dtype, sampling 설정, 측정 방법,
+  반복 횟수와 허용 오차를 묶은 environment fingerprint가 있어야 공개 비교 근거가 된다. 일부가
+  비어 있으면 유용한 관찰로 보존할 수는 있지만 `sweet spot`, `병목이 없다`, `필요 없다`, 보편적인
+  배수 표현으로 쓰지 않는다.
+- 미공개 model의 이름·parameter 수·format처럼 안정된 공식 artifact로 확인되지 않은 정보는
+  canonical article과 knowledge graph의 fact node에 넣지 않는다. Editorial observation ledger에
+  `captured-at`, source class, 확인된 것, 비어 있는 fingerprint, `review-by`, promote 조건, 반증·만료 시
+  reject 또는 supersede 판정 규칙을 적어 검증 대기로 보존한다.
+- 관찰을 article로 승격하려면 공식 artifact 또는 독립 확인과 재현 가능한 measurement receipt가
+  필요하다. 반대로 기준일이 지나도 확인되지 않거나 공식 정보와 충돌하면 원장을 지우기보다
+  `rejected / superseded` 상태와 이유를 남겨 같은 주장을 다시 사실로 되살리지 않게 한다.
+- 위 분류는 분야를 가리지 않는다. Embodied AI의 성공률·로봇 시간, local LLM의 context·throughput,
+  neuromorphic chip의 energy 배수처럼 조건에 민감한 수치는 모두 같은 claim receipt를 따른다.
+
 ### 2.3 코드 분석형 글의 소스 근거
 
 - Reth·Prysm·CometBFT·Filecoin·Helios처럼 실제 오픈소스 codebase의 동작을 추적하는 글은

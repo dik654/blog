@@ -4,6 +4,7 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import BudgetPipelineViz from "./viz/BudgetPipelineViz";
+import MoEResidencyViz from "./viz/MoEResidencyViz";
 import WeightVramViz from "./viz/WeightVramViz";
 
 const WEIGHT_TERMS = [
@@ -151,9 +152,71 @@ C_{use}
         </div>
       </section>
 
+      <section id="moe-serving-boundary" className="scroll-mt-20 space-y-7">
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <h2>3단계 · MoE에서는 total weight, active path, request state를 세 장부로 봅니다</h2>
+          <p className="leading-8">
+            “N total / K active” 같은 MoE 표기는 두 질문을 한 줄에 놓습니다. <strong>Total parameters</strong>는
+            checkpoint 전체를 어떤 dtype으로 저장하고 어느 device에 배치할지에 가깝고, <strong>active
+            parameters</strong>는 한 token이 router를 거쳐 실제로 사용하는 expert path 규모의 힌트입니다.
+            이는 exact FLOPs나 실제로 이동한 weight bytes와 동일한 수치가 아닙니다.
+            따라서 active 수가 작아도 모든 expert weight를 resident하게 만들 capacity와 expert routing·통신은
+            별도로 남습니다.
+          </p>
+          <p className="leading-8">
+            여기에 Full Context를 요청하면 attention KV, recurrent state, allocator와 prefill workload가
+            추가됩니다. “모델이 지원하는 최대 길이”는 그 길이의 KV가 들어가고 품질·TTFT가 운영 목표를
+            통과한다는 뜻이 아닙니다. Q8도 마찬가지입니다. Q8_0, INT8 weight-only, W8A8처럼 format과
+            execution contract가 다르므로 이름만으로 byte·kernel·quality를 확정하지 않습니다.
+          </p>
+        </div>
+
+        <MoEResidencyViz />
+
+        <TermBreakdown
+          title="병목이 이동했다는 관찰은 stage timing으로 다시 씁니다"
+          items={[
+            { term: "Prefill profile", description: "Prompt token을 처음 처리한 TTFT 구간을 attention·expert GEMM·communication·host overhead로 나눕니다.", example: "4K·32K·64K context를 같은 batch에서 sweep해 token/s와 peak memory를 기록합니다.", boundary: "Long context에서 느려졌다는 한 숫자로 compute·memory 원인을 단정하지 않습니다." },
+            { term: "Decode profile", description: "생성된 output token당 model step의 weight/KV traffic과 active expert compute를 측정합니다.", example: "Batch 1과 concurrency 16의 ITL·tokens/s·HBM counters를 분리합니다.", boundary: "Active parameter가 작다는 이유로 bandwidth bottleneck이 없다고 단정하지 않습니다." },
+            { term: "MTP / speculative profile", description: "Draft·verification·acceptance 관리 비용을 실제 committed tokens로 나눠 target-only baseline과 비교합니다.", example: "Acceptance length가 짧으면 base decode가 빠른 model에서 추가 overhead가 이득을 지울 수 있습니다.", boundary: "MTP head가 있다는 사실은 항상 켜야 하거나 항상 끌 이유가 아닙니다." },
+            { term: "Evidence status", description: "공식 artifact·논문 자기보고·독립 평가·project 실측·현장 경험·추정을 서로 다른 등급으로 남깁니다.", example: "미공개 model의 parameter 수와 hardware sweet spot은 공식 card·재현 receipt 전까지 검증 대기입니다.", boundary: "소문과 체감 임계점을 canonical model spec이나 구매 권고로 승격하지 않습니다." },
+          ]}
+        />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p className="leading-8">
+            이 분해는 경험적 관찰을 버리기 위한 것이 아닙니다. “Small-active MoE에서는 prefill 비중이
+            커졌다”, “base decode가 빨라 MTP 이득이 작았다”, “64K부터 특정 Mac에서 급락했다”는 말은
+            다음 benchmark를 고르는 유용한 가설입니다. 다만 exact model·runtime·hardware·quantization,
+            input/output length, batch·concurrency, KV dtype와 반복 측정이 채워질 때까지 임계점이 아닙니다.
+            MTP break-even의 계산은 <Link to="/ai/vllm-spec-decode">speculative decoding 정본 글</Link>에서
+            다룹니다.
+          </p>
+        </div>
+
+        <div id="paper-qwen3-next" className="scroll-mt-20">
+          <CitationBlock source="Qwen3-Next · official architecture announcement" citeKey={1} type="paper" href="https://qwen.ai/blog?id=qwen3-next">
+            <p><strong>문제:</strong> 높은 total capacity와 낮은 active compute를 hybrid sequence model에 결합합니다.</p>
+            <p><strong>핵심 기여:</strong> 공식 공개 범위에서 80B total·약 3B active MoE와 Gated DeltaNet/attention·MTP 구성을 설명합니다.</p>
+            <p><strong>전제:</strong> 해당 Qwen3-Next release와 공식 benchmark 조건입니다.</p>
+            <p><strong>근거 범위:</strong> Total/active parameters가 서로 다른 serving ledger라는 공개 model 사례입니다.</p>
+            <p><strong>비주장:</strong> Active 수만으로 임의 hardware의 latency·bandwidth·full-context admission이 결정된다는 뜻은 아닙니다.</p>
+          </CitationBlock>
+        </div>
+        <div id="paper-nvfp4" className="scroll-mt-20">
+          <CitationBlock source="NVIDIA Transformer Engine · NVFP4 format" citeKey={2} type="paper" href="https://docs.nvidia.com/deeplearning/transformer-engine-releases/release-2.15/user-guide/features/low_precision_training/nvfp4/nvfp4.html">
+            <p><strong>문제:</strong> Blackwell에서 4-bit floating-point tensor를 scale과 함께 표현·실행합니다.</p>
+            <p><strong>핵심 기여:</strong> E2M1 values, 16-value block의 E4M3 scale과 tensor-level FP32 scale을 문서화합니다.</p>
+            <p><strong>전제:</strong> 지원 NVIDIA hardware·software와 실제 NVFP4 artifact입니다.</p>
+            <p><strong>근거 범위:</strong> NVFP4 format과 metadata를 weight ledger에 넣는 근거입니다.</p>
+            <p><strong>비주장:</strong> 임의 checkpoint가 NVFP4로 공개됐거나 dual-GPU 구성의 품질·speedup이 보장된다는 뜻은 아닙니다.</p>
+          </CitationBlock>
+        </div>
+      </section>
+
       <section id="admission-logs" className="scroll-mt-20 space-y-7">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <h2>3단계 · 기동 로그는 나중에 memory 미지수를 되살리는 receipt입니다</h2>
+          <h2>4단계 · 기동 로그는 나중에 memory 미지수를 되살리는 receipt입니다</h2>
           <p className="leading-8">
             OOM 뒤에 model 이름과 마지막 오류만 남으면 dtype upcast, fallback kernel, 생성된 KV pool, CUDA graph capture가 얼마를 예약했는지 알 수 없습니다. 첫 140줄 요약은 빠른 확인용으로 남기되, 원본 stdout·stderr는 rotation된 별도 파일이나 journal에 보존해야 합니다.
           </p>
@@ -177,7 +240,7 @@ C_{use}
         </div>
 
         <div id="paper-safetensors" className="scroll-mt-20">
-          <CitationBlock source="Hugging Face · Safetensors documentation" citeKey={1} type="paper" href="https://huggingface.co/docs/safetensors/index">
+          <CitationBlock source="Hugging Face · Safetensors documentation" citeKey={3} type="paper" href="https://huggingface.co/docs/safetensors/index">
             <p><strong>문제:</strong> Tensor shape·dtype·payload를 안전하고 빠르게 읽는 checkpoint format이 필요합니다.</p>
             <p><strong>핵심 기여:</strong> Header와 contiguous tensor data를 분리해 tensor metadata와 byte 범위를 확인할 수 있게 합니다.</p>
             <p><strong>전제:</strong> 해당 safetensors artifact와 metadata가 실제 runtime에 로드되는 revision과 같아야 합니다.</p>
@@ -186,7 +249,7 @@ C_{use}
           </CitationBlock>
         </div>
         <div id="paper-qwen-weights" className="scroll-mt-20">
-          <CitationBlock source="Qwen3.6-27B · official BF16 safetensors index" citeKey={2} type="code" href="https://huggingface.co/Qwen/Qwen3.6-27B/blob/main/model.safetensors.index.json">
+          <CitationBlock source="Qwen3.6-27B · official BF16 safetensors index" citeKey={4} type="code" href="https://huggingface.co/Qwen/Qwen3.6-27B/blob/main/model.safetensors.index.json">
             <p><strong>문제:</strong> 27B라는 반올림 이름을 실제 tensor payload로 바꿉니다.</p>
             <p><strong>핵심 기여:</strong> total_size 55,562,855,904 bytes를 공개해 BF16 weight floor를 직접 검산하게 합니다.</p>
             <p><strong>전제:</strong> 공식 BF16 checkpoint의 해당 revision입니다.</p>
@@ -195,7 +258,7 @@ C_{use}
           </CitationBlock>
         </div>
         <div id="paper-vllm-memory" className="scroll-mt-20">
-          <CitationBlock source="vLLM · Hybrid KV Cache Manager" citeKey={3} type="paper" href="https://docs.vllm.ai/en/stable/design/hybrid_kv_cache_manager/">
+          <CitationBlock source="vLLM · Hybrid KV Cache Manager" citeKey={5} type="paper" href="https://docs.vllm.ai/en/stable/design/hybrid_kv_cache_manager/">
             <p><strong>문제:</strong> 서로 다른 cache type이 섞인 model의 blocks를 한 allocator에서 관리해야 합니다.</p>
             <p><strong>핵심 기여:</strong> Cache groups·page size·padding과 hybrid allocation의 설계 제약을 문서화합니다.</p>
             <p><strong>전제:</strong> 사용한 vLLM revision과 model cache spec입니다.</p>

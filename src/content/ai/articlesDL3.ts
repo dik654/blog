@@ -119,6 +119,20 @@ export const dlVisionArticles: Article[] = [
       import("@/pages/articles/ai/vision-task-spatial-contracts"),
   },
   {
+    slug: "vla-embodiment-gap",
+    title: "VLA Embodiment Gap: 의미에서 물리 행동까지",
+    subcategory: "ai-vision",
+    sections: [
+      { id: "overview", title: "Semantic에서 physical action까지" },
+      { id: "action-interface", title: "Action representation contract" },
+      { id: "embodiment-alignment", title: "Cross-embodiment adaptation" },
+      { id: "system-boundary", title: "Monolithic과 hierarchical boundary" },
+      { id: "pixel-to-3d", title: "Pixel-to-3D interface" },
+      { id: "closed-loop-release", title: "Closed-loop release gate" },
+    ],
+    component: () => import("@/pages/articles/ai/vla-embodiment-gap"),
+  },
+  {
     slug: "resnet",
     title: "ResNet: 잔차 연결이 깊은 네트워크를 학습시키는 법",
     subcategory: "ai-vision",

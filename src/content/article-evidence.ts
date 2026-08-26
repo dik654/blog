@@ -503,6 +503,23 @@ export const ARTICLE_EVIDENCE: Readonly<
   "ai/vision-task-spatial-contracts": [
     { kind: "핵심 논문", label: "Fully Convolutional Networks", href: "https://arxiv.org/abs/1411.4038", note: "Image-level network를 dense spatial output과 skip architecture로 전환" },
   ],
+  "ai/vla-embodiment-gap": [
+    { kind: "리뷰 논문", label: "The Embodiment Gap in Robot Foundation Models (TMLR, arXiv v1 2026-08-19)", href: "https://arxiv.org/abs/2608.18433", note: "Foundation representation과 target embodiment adaptation 사이의 최신 survey taxonomy이며 2026-09-19에 arXiv revision을 다시 확인하고 합의된 표준으로 취급하지 않음" },
+    { kind: "핵심 논문", label: "RT-2 · Vision-Language-Action Models Transfer Web Knowledge to Robotic Control", href: "https://arxiv.org/abs/2307.15818", note: "Web-scale VLM과 robot trajectory를 action token interface로 공동 학습한 monolithic VLA 사례이며 임의 embodiment의 zero-shot control 보장은 아님" },
+    { kind: "핵심 논문", label: "ACT · Learning Fine-Grained Bimanual Manipulation with Low-Cost Hardware", href: "https://arxiv.org/abs/2304.13705", note: "Action chunking과 temporal ensemble의 robot manipulation 근거이며 같은 chunk horizon의 보편 최적성을 뜻하지 않음" },
+    { kind: "핵심 논문", label: "Diffusion Policy · Visuomotor Policy Learning via Action Diffusion", href: "https://arxiv.org/abs/2303.04137", note: "Multimodal continuous action trajectory를 diffusion으로 생성한 근거이며 iterative inference 비용과 target control rate를 별도 평가해야 함" },
+    { kind: "핵심 논문", label: "Open X-Embodiment · Robotic Learning Datasets and RT-X Models", href: "https://arxiv.org/abs/2310.08864", note: "22 robot·527 skill·160,266 task data mixture와 cross-embodiment 실험의 저자 보고이며 target robot adaptation 소멸을 뜻하지 않음" },
+    { kind: "핵심 논문", label: "OpenVLA · An Open-Source Vision-Language-Action Model", href: "https://arxiv.org/abs/2406.09246", note: "7B model·970k real-world demonstrations와 adaptation 결과의 저자 보고이며 모든 action space에 plug-and-play라는 뜻은 아님" },
+    { kind: "핵심 논문", label: "Octo · An Open-Source Generalist Robot Policy", href: "https://arxiv.org/abs/2405.12213", note: "800k trajectory pretraining과 새 observation·action space adaptation 사례이며 universal low-level controller 주장이 아님" },
+    { kind: "핵심 논문", label: "π0 · A Vision-Language-Action Flow Model for General Robot Control", href: "https://arxiv.org/abs/2410.24164", note: "VLM 위 flow-matching action model을 결합한 continuous action 사례이며 direct/token head에 대한 보편 우위를 뜻하지 않음" },
+    { kind: "핵심 논문", label: "OK-Robot · Integrating Open-Knowledge Models for Robotics", href: "https://arxiv.org/abs/2401.12202", note: "VLM·navigation·grasp primitive를 조합한 modular system과 component error composition의 실제 평가" },
+    { kind: "후속 논문", label: "Qwen-RobotNav · Agentic Navigation with a Parameterized Interface", href: "https://arxiv.org/abs/2606.18112", note: "Parameterized task/observation interface와 outer planner를 둔 navigation system의 자기보고이며 Qwen-VLA와 별도 artifact·paper로 취급" },
+    { kind: "후속 논문", label: "Goal2Pixel · From Language Goals to Pixel-Level Action", href: "https://arxiv.org/abs/2606.01621", note: "2D pixel grounding을 depth·geometry로 3D waypoint에 연결한 navigation 자기보고 결과이며 manipulation transfer 근거는 아님" },
+    { kind: "후속 논문", label: "Embodied-Navigator · TAMP-Nav (2026-08-18 preprint)", href: "https://arxiv.org/abs/2608.17512", note: "Pixel pointing·selective reasoning·anchor memory·two-level alignment의 최신 자기보고이며 블로그 편집부가 2026-09-18에 공개 revision을 다시 확인" },
+    { kind: "후속 논문", label: "3D Diffuser Actor · Policy Diffusion with 3D Scene Representations", href: "https://arxiv.org/abs/2402.10885", note: "Point-cloud 기반 3D scene representation과 diffusion policy를 결합한 대조 계열로 pixel-to-3D lifting이 유일한 interface가 아님을 보여 줌" },
+    { kind: "평가 논문", label: "RADAR · Robustness Assessment of Vision-Language-Action Models", href: "https://arxiv.org/abs/2602.10980", note: "Dynamics·observation perturbation에서 nominal success와 robustness를 분리한 독립 평가" },
+    { kind: "평가 논문", label: "SO-101 real-robot VLA failure and recovery benchmark", href: "https://arxiv.org/abs/2606.08881", note: "실제 저비용 robot의 failure taxonomy와 recovery를 final success와 분리한 독립 평가" },
+  ],
   "ai/word2vec": [
     {
       kind: "핵심 논문",
@@ -5843,6 +5860,8 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 코드", label: "Qwen3.6-27B · BF16 safetensors index", href: "https://huggingface.co/Qwen/Qwen3.6-27B/blob/main/model.safetensors.index.json", note: "total_size 55,562,855,904 bytes의 exact BF16 weight payload 적용 예이며 KV·workspace는 포함하지 않음" },
     { kind: "공식 코드", label: "Qwen3.6-27B-FP8 · mixed checkpoint", href: "https://huggingface.co/Qwen/Qwen3.6-27B-FP8/tree/main", note: "FP8·BF16 tensor가 섞인 official artifact 적용 예이며 activation·KV dtype을 자동 결정하지 않음" },
     { kind: "공식 문서", label: "vLLM · Hybrid KV Cache Manager", href: "https://docs.vllm.ai/en/stable/design/hybrid_kv_cache_manager/", note: "서로 다른 cache spec의 group·page·padding이 physical allocation을 바꾸는 공식 설계 경계" },
+    { kind: "공식 문서", label: "Qwen3-Next · official architecture announcement", href: "https://qwen.ai/blog?id=qwen3-next", note: "80B total·약 3B active MoE와 hybrid attention·MTP의 공개 사례이며 active 수만으로 hardware latency·full-context admission을 확정하지 않음" },
+    { kind: "공식 문서", label: "NVIDIA Transformer Engine · NVFP4 format", href: "https://docs.nvidia.com/deeplearning/transformer-engine-releases/release-2.15/user-guide/features/low_precision_training/nvfp4/nvfp4.html", note: "Blackwell NVFP4 value·block/tensor scale format 근거이며 특정 model checkpoint·dual-GPU speedup·quality 보장은 아님" },
   ],
   "ai/supervised-learning-loop": [
     { kind: "보충 읽기", label: "Deep Learning Book · Machine Learning Basics", href: "https://www.deeplearningbook.org/contents/ml.html", note: "Input·target·model·objective와 generalization의 기본 역할 정본" },
