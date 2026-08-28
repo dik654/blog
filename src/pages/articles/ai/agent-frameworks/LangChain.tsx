@@ -6,26 +6,33 @@ export default function LangChain() {
   return (
     <section id="langchain" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
-        LangChain은 agent abstraction을, LangGraph는 stateful orchestration runtime을 제공한다
+        LangChain과 LangGraph는 서로 다른 층을 맡습니다
       </h2>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           2026년 8월 공식 문서의 현재 계층에서 LangChain은 model·tool integration과 일반적인
-          agent loop를 제공하는 상위 framework이고, <code>create_agent</code>는 LangGraph
-          runtime 위에서 동작합니다. LangGraph는 prompt나 agent architecture를 대신 정하는
-          제품이 아니라 long-running stateful workflow의 persistence, durable execution,
-          streaming과 human-in-the-loop를 제공하는 낮은 수준의 orchestration runtime입니다.
-          두 이름을 경쟁 framework처럼 놓기보다 같은 stack의 서로 다른 책임으로 읽는 편이
-          정확합니다.
+          agent loop를 제공하는 상위 framework입니다. 현재 <code>create_agent</code>는
+          LangGraph runtime 위에서 동작합니다.
+        </p>
+        <p>
+          LangGraph는 prompt나 agent architecture를 대신 정하지 않습니다. Long-running
+          stateful workflow에 persistence, durable execution, streaming과 human-in-the-loop를
+          제공하는 낮은 수준의 orchestration runtime입니다.
+        </p>
+        <p>
+          따라서 두 이름을 경쟁 제품처럼 놓기보다, 같은 stack에서 서로 다른 책임을 맡는
+          계층으로 읽는 편이 정확합니다.
         </p>
         <p>
           환불 요청에서 model·tool 연결과 짧은 loop만 필요하면 LangChain agent로 시작할 수
-          있습니다. 주문 조회 뒤 담당자 승인을 며칠 기다리고, process 장애 후 같은 위치에서
-          재개하며, 각 phase의 state를 inspect해야 한다면 LangGraph의 Graph API 또는 기존
-          if·for·function 구조를 유지하는 Functional API를 검토합니다. LangGraph는 LangChain
-          없이도 사용할 수 있으므로 integration layer와 runtime을 함께 채택해야 하는 것은
-          아닙니다.
+          있습니다. 주문 조회 뒤 담당자 승인을 오래 기다리거나, 장애 후 같은 위치에서
+          재개해야 한다면 LangGraph를 검토합니다.
+        </p>
+        <p>
+          이때 state machine을 명시하는 Graph API와 기존 if·for·function 구조를 유지하는
+          Functional API 중 필요한 방식을 고릅니다. LangGraph는 LangChain 없이도 쓸 수 있으므로
+          integration layer와 runtime을 반드시 함께 채택할 필요는 없습니다.
         </p>
       </div>
 
@@ -34,23 +41,31 @@ export default function LangChain() {
       </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3>State·Node·Edge는 환불 workflow의 snapshot·작업·이동 규칙이다</h3>
+        <h3>State·Node·Edge가 workflow를 나눕니다</h3>
         <p>
           <strong>State</strong>는 현재 application snapshot입니다. 환불 예에서는
           <code>phase</code>, order, policy decision, approval, refund operation과 receipt를
-          포함합니다. <strong>Node</strong>는 주문 조회, 정책 판정, 승인 interrupt, 환불 API,
-          receipt 검증처럼 한 책임을 수행하는 함수이고, <strong>Edge</strong>는 state를 보고
-          다음 node를 정하는 고정 또는 조건부 transition입니다. Graph가 업무 흐름의 정답을
-          발견하는 것이 아니라 개발자가 이미 정의한 state machine을 실행할 뿐입니다.
+          포함합니다.
+        </p>
+        <p>
+          <strong>Node</strong>는 주문 조회, 정책 판정, 승인 interrupt, 환불 API, receipt 검증처럼
+          한 책임을 수행하는 함수입니다. <strong>Edge</strong>는 state를 보고 다음 node를 정하는
+          고정 또는 조건부 transition입니다.
+        </p>
+        <p>
+          Graph가 업무 흐름의 정답을 발견하는 것은 아닙니다. 개발자가 정의한 state machine을
+          실행하고, 전이 상태를 추적할 뿐입니다.
         </p>
         <p>
           Node는 state 전체를 마음대로 고치기보다 update를 반환합니다. 같은 field에 update가
           들어오면 <strong>reducer</strong>가 기존 값과 새 값을 어떻게 합칠지 정합니다. 예를
-          들어 <code>phase</code>는 새 값으로 덮어쓰고, <code>audit_events</code>는 기존 list
-          뒤에 새 event를 붙일 수 있습니다. Single workflow에서도 reducer를 잘못 정하면
-          retry 때 event가 사라지거나 중복됩니다. 여러 node가 병렬로 같은 field를 갱신하는
-          충돌과 안전한 merge는 multi-agent 정본의 범위이므로, 여기서는 한 transition의 update
-          semantics까지만 확인합니다.
+          들어 <code>phase</code>는 새 값으로 덮어쓰고, <code>audit_events</code>는 기존 list 뒤에
+          새 event를 붙일 수 있습니다.
+        </p>
+        <p>
+          Single workflow에서도 reducer를 잘못 정하면 retry 때 event가 사라지거나 중복됩니다.
+          여러 node의 병렬 충돌과 안전한 merge는 multi-agent 정본에 맡기고, 여기서는 한
+          transition의 update semantics까지만 확인합니다.
         </p>
 
         <div id="paper-langgraph-runtime" className="not-prose scroll-mt-24">
@@ -70,22 +85,27 @@ export default function LangChain() {
           </CitationBlock>
         </div>
 
-        <h3>Checkpoint는 program counter 하나가 아니라 serializable state snapshot이다</h3>
+        <h3>Checkpoint는 복원 가능한 상태 사본입니다</h3>
         <p>
           <strong>Checkpoint</strong>는 “다음 줄 번호”만 저장하지 않습니다. LangGraph의
           persistence는 thread별 graph state values, 다음에 실행할 node·task와 metadata를
-          snapshot으로 남겨 interrupt, fault recovery와 replay에 사용합니다. Thread ID는 어느
-          실행의 checkpoint history를 읽을지 가리킵니다. 이 graph state를 저장하는
-          <strong>checkpointer</strong>와, 여러 thread가 공유하는 사용자 profile 같은
-          cross-thread application data를 저장하는 <strong>store</strong>는 책임이 다릅니다.
+          남겨 interrupt, fault recovery와 replay에 사용합니다. Thread ID는 어느 실행의
+          checkpoint history를 읽을지 가리킵니다.
+        </p>
+        <p>
+          <strong>Checkpointer</strong>는 이 graph state를 저장합니다. 여러 thread가 공유하는
+          사용자 profile 같은 cross-thread application data를 보관하는 <strong>store</strong>와는
+          책임이 다릅니다.
         </p>
         <p>
           환불 workflow가 승인 대기에서 멈출 때 checkpoint에는 request ID, order와 policy
           evidence, approval payload, 현재 phase와 다음 node가 복원 가능한 형태로 들어 있어야
-          합니다. File handle, open database transaction, live HTTP response처럼 serialize할 수
-          없는 process-local object를 state에 넣으면 다른 worker가 재개하기 어렵습니다. 대신
-          stable ID와 필요한 data를 저장하고, connection 같은 dependency는 runtime context에서
-          다시 주입합니다.
+          합니다.
+        </p>
+        <p>
+          File handle, open database transaction, live HTTP response 같은 process-local object는
+          다른 worker가 복원하기 어렵습니다. 대신 stable ID와 필요한 data를 저장하고,
+          connection 같은 dependency는 runtime context에서 다시 주입합니다.
         </p>
       </div>
 
@@ -98,23 +118,31 @@ export default function LangChain() {
         <p>
           과거 checkpoint에서 replay하면 이전 node 결과는 건너뛸 수 있지만 checkpoint 뒤의
           LLM call, API request와 interrupt는 다시 실행될 수 있습니다. 특히 interrupt가 있는
-          node는 resume할 때 node 시작부터 다시 실행될 수 있으므로 interrupt 앞의 side effect도
-          반복될 가능성을 고려해야 합니다. <strong>Idempotency</strong>는 같은 operation을 여러
-          번 요청해도 효과가 한 번 수행한 것과 같게 만드는 성질입니다.
+          node는 resume할 때 node 시작부터 다시 실행될 수 있습니다.
+        </p>
+        <p>
+          따라서 interrupt 앞의 side effect도 반복될 가능성을 고려해야 합니다.
+          <strong> Idempotency</strong>는 같은 operation을 여러 번 요청해도 효과가 한 번 수행한
+          것과 같게 만드는 성질입니다.
         </p>
         <p>
           환불 API에는 <code>{"refund:{request_id}:{order_id}"}</code>처럼 workflow에서
           안정적으로 재생성할 수 있는 idempotency key를 보내고, provider가 반환한 operation ID와
-          receipt를 state에 기록합니다. API 성공 직후 checkpoint write 전에 worker가 죽어도 같은
-          key로 재시도하면 새 환불을 만들지 않고 기존 결과를 조회해야 합니다. “이 node는 대개 한 번
-          실행된다”는 기대나 in-memory flag는 장애 경계를 넘지 못합니다.
+          receipt를 state에 기록합니다.
+        </p>
+        <p>
+          API 성공 직후 checkpoint write 전에 worker가 죽어도 같은 key로 재시도하면 새 환불을
+          만들지 않고 기존 결과를 조회해야 합니다. “이 node는 대개 한 번 실행된다”는 기대나
+          in-memory flag는 장애 경계를 넘지 못합니다.
         </p>
         <p>
           Human approval은 interrupt payload를 JSON-serializable data로 내보내고 durable
           checkpointer에 state를 저장한 뒤 중단합니다. Resume input은 승인 여부와 reviewer ID,
-          policy version을 검증한 다음 state update로 남깁니다. 승인 전에 tool call을 실행하거나,
-          오래된 approval을 최신 policy에 그대로 적용해서는 안 됩니다. Timeout·취소·거절도 정상적인
-          terminal state로 설계해야 합니다.
+          policy version을 검증한 다음 state update로 남깁니다.
+        </p>
+        <p>
+          승인 전에 tool call을 실행하거나 오래된 approval을 최신 policy에 그대로 적용해서는 안
+          됩니다. Timeout, 취소와 거절도 정상적인 terminal state로 설계해야 합니다.
         </p>
 
         <div

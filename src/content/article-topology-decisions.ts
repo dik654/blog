@@ -124,7 +124,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/vae": "41e2e0c24bd2879f",
   "ai/vllm-paged-attention": "89e47d83deac9dba",
   "ai/vllm-spec-decode": "e502882146613dc8",
-  "ai/xml-prompting": "c03c7a97c4229bca",
+  "ai/xml-prompting": "a8fe599b80c579e6",
   "blockchain/cometbft-abci": "95ca71232816d16a",
   "blockchain/cometbft-consensus": "9bb6fd231f8bb08f",
   "blockchain/da-theory": "0a8168b6d8d160d3",
