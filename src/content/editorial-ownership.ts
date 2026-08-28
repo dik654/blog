@@ -3695,6 +3695,9 @@ export const EDITORIAL_BOUNDARIES = {
       "Model proposal과 runtime authorization·execution·observation의 책임 분리",
       "Tool schema와 실제 identity·resource capability의 차이",
       "Typed observation과 terminal decision으로 이어지는 최소 feedback loop",
+      "Observation·deterministic transform·creative artifact·state mutation의 역할별 권한 경계",
+      "Contract→observe→typed artifact→independent check→targeted patch→recheck 교정 loop",
+      "모델 교체 시 하네스 불변식과 model-dependent heuristic을 ablation으로 분리하는 방법",
     ],
     reuses: [
       { label: "Run contract와 artifact continuity", href: "/ai/agent-run-contract" },
@@ -3708,6 +3711,10 @@ export const EDITORIAL_BOUNDARIES = {
       {
         kind: "project-claim",
         rule: "Model의 자연어 주장과 외부 effect receipt를 같은 증거로 취급하지 않는다.",
+      },
+      {
+        kind: "project-measurement",
+        rule: "Office Secretary 수치는 2026-08-21~25 frozen fixture와 기록된 Qwen endpoint·runtime 범위에만 귀속하며 model size의 보편 우위로 일반화하지 않는다.",
       },
     ],
   },
@@ -8965,6 +8972,34 @@ export const EDITORIAL_BOUNDARIES = {
     owns: ["Gradient first·second raw-moment state", "EMA initialization bias correction과 diagonal preconditioning"],
     reuses: [{ label: "EMA와 momentum", href: "/ai/momentum-optimizer" }, { label: "Decoupled weight decay", href: "/ai/weight-decay#adamw" }],
     evidence: [{ kind: "primary-source", rule: "Adam update·convergence claim은 원 논문과 후속 counterexample의 stated objective·online setting 범위로 제한한다." }, { kind: "standard", rule: "m·v·step·β·ε·dtype·skip order와 parameter identity를 checkpoint에 기록한다." }],
+  },
+  "image-video-lora-architecture": {
+    title: "Image·Video LoRA architecture 정본이 소유하는 범위",
+    owns: [
+      "Diffusion pipeline의 실제 named module을 host 역할과 LoRA target으로 매핑하는 방법",
+      "Image denoiser·선택적 text encoder의 adapter 범위와 frozen component 경계",
+      "Video의 spatial·temporal·cross-modal target 범위와 appearance-motion coupling",
+      "Clip FPS·frame·resolution·condition metadata와 frame·temporal·motion 분리 평가",
+    ],
+    reuses: [
+      { label: "LoRA low-rank update와 rank 계산", href: "/ai/lora-finetuning#lora" },
+      { label: "Latent diffusion component pipeline", href: "/ai/latent-diffusion-guidance#pipeline" },
+      { label: "Video tubelet과 space-time attention", href: "/ai/video-transformers" },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "Target module 예시는 Diffusers와 LTX-2의 현재 공식 config 범위로 제한하며 보편 target 목록으로 일반화하지 않는다.",
+      },
+      {
+        kind: "primary-source",
+        rule: "Appearance·motion 분리 주장은 MotionDirector의 backbone·dataset·benchmark와 저자 자기보고 범위로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Base revision·full target paths·trainable count·clip preprocessing·held-out frame/temporal/motion metric을 같은 run artifact에 기록한다.",
+      },
+    ],
   },
   "in-context-lora": {
     title: "In-Context LoRA 정본이 소유하는 범위",

@@ -231,7 +231,10 @@ export const agentArticles: Article[] = [
     sections: [
       { id: "overview", title: "모델과 하네스의 책임 경계" },
       { id: "proposal-runtime", title: "Capability와 authority" },
+      { id: "operation-roles", title: "도구 역할과 권한 경계" },
       { id: "feedback-loop", title: "Effect receipt와 observation" },
+      { id: "artifact-repair", title: "Typed artifact 교정 loop" },
+      { id: "model-change", title: "모델 교체와 하네스 불변식" },
       { id: "paper-effective-agents", title: "Workflow·agent 근거 경계" },
     ],
     component: () => import("@/pages/articles/ai/llm-harness"),

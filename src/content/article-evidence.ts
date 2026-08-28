@@ -2388,6 +2388,32 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "LoraConfig·target_modules·initialization·merge 관련 현재 구현 옵션",
     },
   ],
+  "ai/image-video-lora-architecture": [
+    {
+      kind: "공식 문서",
+      label: "Hugging Face Diffusers — LoRA training",
+      href: "https://huggingface.co/docs/diffusers/main/training/lora",
+      note: "Text-to-image U-Net 예제의 target module·trainable parameter filtering과 예제 범위",
+    },
+    {
+      kind: "공식 코드",
+      label: "LTX-2 trainer — T2V LoRA config",
+      href: "https://github.com/Lightricks/LTX-2/blob/main/packages/ltx-trainer/configs/t2v_lora.yaml",
+      note: "Audio·video·cross-modal attention에 match하는 현재 target pattern과 그 설정의 권장 범위",
+    },
+    {
+      kind: "공식 문서",
+      label: "LTX-2 trainer — Training modes guide",
+      href: "https://github.com/Lightricks/LTX-2/blob/main/packages/ltx-trainer/docs/training-modes.md",
+      note: "Generated·frozen modality, clean reference·first-frame condition과 loss 제외 규칙",
+    },
+    {
+      kind: "핵심 논문",
+      label: "MotionDirector",
+      href: "https://www.ecva.net/papers/eccv_2024/papers_ECCV/papers/07327.pdf",
+      note: "Spatial appearance LoRA와 temporal motion LoRA를 나누는 dual-path 연구",
+    },
+  ],
   "ai/prompt-engineering": [
     {
       kind: "공식 문서",
@@ -3564,6 +3590,30 @@ export const ARTICLE_EVIDENCE: Readonly<
       label: "Anthropic — Building effective agents",
       href: "https://www.anthropic.com/engineering/building-effective-agents",
       note: "workflow와 agent 구분, 단순한 구조에서 복잡성을 늘리는 선택 기준",
+    },
+    {
+      kind: "공식 문서",
+      label: "Anthropic — Writing effective tools for AI agents",
+      href: "https://www.anthropic.com/engineering/writing-tools-for-agents",
+      note: "실제 workload eval, 명확한 tool boundary, high-signal result와 raw transcript 점검",
+    },
+    {
+      kind: "공식 문서",
+      label: "Anthropic — Demystifying evals for AI agents",
+      href: "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents",
+      note: "Stable environment, grader·transcript·tool-call·latency를 함께 보는 agent eval harness",
+    },
+    {
+      kind: "프로젝트 실측",
+      label: "Office Secretary — Claude artifact accuracy methods",
+      href: "https://github.com/dik654/ojs-agents/blob/c6b0fb756aa66a33e9f0b1cd4a53c2ee1202a618/products/office-secretary/experiments/CLAUDE_ARTIFACT_ACCURACY_METHODS.md",
+      note: "Claude 로컬 산출물에서 추출한 typed artifact·independent check·targeted repair 패턴과 Qwen held-out 적용 범위",
+    },
+    {
+      kind: "프로젝트 실측",
+      label: "Office Secretary — Model size decision",
+      href: "https://github.com/dik654/ojs-agents/blob/c6b0fb756aa66a33e9f0b1cd4a53c2ee1202a618/products/office-secretary/experiments/MODEL_SIZE_DECISION.md",
+      note: "Raw model strict-count와 deterministic agent contract를 분리한 2026-08-21 controlled fixture",
     },
   ],
   "ai/agent-run-contract": [

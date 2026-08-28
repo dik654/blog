@@ -47,6 +47,13 @@ export default function Overview({
           이 글은 IC-LoRA의 이 재사용 원리와, 이를 audio-driven talking video
           identity 보존에 적용한 구체 사례인 ID-LoRA(2026)를 함께 다룹니다.
         </p>
+        <p>
+          여기서 “video attention·FFN에 LoRA를 붙인다”는 말을 실제 module
+          범위로 해석하려면 먼저 <Link to="/ai/image-video-lora-architecture">
+          Image·Video LoRA architecture</Link>의 spatial·temporal·cross-modal
+          구분이 필요합니다. 이 글은 그 target 범위를 전제로 reference와 target을
+          한 context에 넣는 조건화 방식에만 집중합니다.
+        </p>
       </div>
 
       <ContentBoundary article="in-context-lora" />

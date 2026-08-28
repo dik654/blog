@@ -176,6 +176,19 @@ export const genArticles: Article[] = [
     component: () => import("@/pages/articles/ai/latent-diffusion-guidance"),
   },
   {
+    slug: "image-video-lora-architecture",
+    title: "Image·Video LoRA: host architecture와 adapter 범위",
+    subcategory: "ai-generative",
+    sections: [
+      { id: "overview", title: "같은 LoRA, 다른 host architecture" },
+      { id: "image-scope", title: "Image denoiser의 target 범위" },
+      { id: "video-scope", title: "공간·시간·교차모달 target" },
+      { id: "training-evaluation", title: "Clip 학습과 평가 계약" },
+    ],
+    component: () =>
+      import("@/pages/articles/ai/image-video-lora-architecture"),
+  },
+  {
     slug: "in-context-lora",
     title: "In-Context LoRA: reference·target을 한 context로 이어붙이기",
     subcategory: "ai-generative",

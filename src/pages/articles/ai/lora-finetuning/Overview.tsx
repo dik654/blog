@@ -48,6 +48,13 @@ export default function Overview() {
           처음이라면 <a href="/ai/math-matrices-svd">행렬·SVD 정본</a>을 먼저
           참고할 수 있습니다.
         </p>
+        <p>
+          이 글의 target-module 원칙을 이미지·영상 diffusion model에 적용할
+          때는 <a href="/ai/image-video-lora-architecture">Image·Video LoRA
+          architecture</a>로 이어집니다. 같은 LoRA 수식을 쓰더라도 spatial,
+          temporal, cross-modal path 가운데 무엇을 학습하는지는 host model이
+          결정합니다.
+        </p>
       </ProgressiveDetail>
       <ContentBoundary article="lora-finetuning" />
       <ExplainedFormula

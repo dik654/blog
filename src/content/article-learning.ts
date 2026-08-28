@@ -24686,12 +24686,20 @@ export const ARTICLE_LEARNING: Readonly<
     entryNote:
       "Agent framework나 분산 시스템 용어를 알고 있다고 가정하지 않습니다. Model이 행동을 제안하는 일과 runtime이 실제 실행을 통제하는 일을 나누는 데서 시작합니다.",
     coreIdea:
-      "LLM 하네스는 model이 낸 제안을 실제 action으로 바꾸는 runtime입니다. Model proposal, authorization, executor, observation의 책임을 먼저 분리해야 이후 run contract·검증·개선·제어 경계를 안전하게 조합할 수 있습니다.",
+      "LLM 하네스는 model이 낸 제안을 실제 action과 검증된 artifact로 바꾸는 runtime입니다. Model proposal, 역할별 operation 권한, executor, typed observation과 독립 교정 loop의 책임을 분리해야 model이 바뀌어도 외부 effect의 안전성과 완료 판정을 유지할 수 있습니다.",
     assumedKnowledge: [],
     introducedHere: [
       {
         id: "llm-harness-system-boundary",
         role: "Model proposal과 runtime enforcement의 책임을 먼저 나눕니다.",
+      },
+      {
+        id: "agent-operation-role-boundary",
+        role: "관찰·결정적 변환·창작 산출물·상태 변경의 권한과 실패 처리를 나눕니다.",
+      },
+      {
+        id: "typed-artifact-repair-loop",
+        role: "산출물을 구조화한 뒤 독립 검사에서 실패한 부분만 고치고 재검사합니다.",
       },
     ],
     conceptExplanations: [
@@ -24705,25 +24713,55 @@ export const ARTICLE_LEARNING: Readonly<
         boundary:
           "하네스는 특정 SDK 이름이나 model의 추론 능력을 뜻하지 않으며, 규칙을 많이 넣는 것 자체가 좋은 하네스는 아닙니다.",
       },
+      {
+        id: "agent-operation-role-boundary",
+        sectionId: "operation-roles",
+        intuition:
+          "같은 사무실 장비라도 문서를 읽는 스캐너, 숫자를 계산하는 계산기, 문서를 쓰는 편집기, 실제 계약을 체결하는 결재 도장은 서로 다른 권한을 가져야 합니다.",
+        workedExample:
+          "계산기는 문서에서 검증된 금액과 세율만 계산하고, creative writer는 그 결과를 문장으로 만들며, 파일 변경은 one-use 승인·backup·journal이 있는 state-mutation 경로만 사용합니다.",
+        boundary:
+          "Tool 이름이나 자연어 설명만으로 역할을 정하지 않고 현재 operation의 input source·effect·failure semantics를 기준으로 분류합니다.",
+      },
+      {
+        id: "typed-artifact-repair-loop",
+        sectionId: "artifact-repair",
+        intuition:
+          "보고서 전체를 매번 다시 쓰지 않고, 맞춤법 검사나 schema validator가 표시한 위반 구간만 고친 뒤 같은 검사를 다시 돌리는 방식입니다.",
+        workedExample:
+          "DOCX를 저장한 뒤 package validator와 PDF render를 실행하고, 누락된 표 caption만 patch한 다음 기존 통과 항목의 회귀까지 재검사합니다.",
+        boundary:
+          "Model self-critique만 독립 검사로 세지 않으며, validator가 판정할 수 없는 의미 품질은 fresh reader·rubric·사람 검토 범위를 따로 기록합니다.",
+      },
     ],
     conceptStages: [
       {
-        label: "00 boundary",
-        relation: "제안·권한·실행·관측 owner를 나눈 뒤 다음 글의 run contract로 연결",
+        label: "00 System boundary",
+        relation: "제안·권한·실행·관측 owner를 먼저 나눕니다.",
         concepts: ["llm-harness-system-boundary"],
+      },
+      {
+        label: "01 Operation roles",
+        relation: "각 operation이 관찰·변환·창작·상태 변경 중 무엇을 소유하는지 제한합니다.",
+        concepts: ["agent-operation-role-boundary"],
+      },
+      {
+        label: "02 Artifact repair",
+        relation: "Typed artifact와 독립 validator를 targeted patch·recheck loop로 묶습니다.",
+        concepts: ["typed-artifact-repair-loop"],
       },
     ],
     exercises: [
       { level: "basic", question: "Model proposal과 runtime execution을 구분하세요.", answerChecklist: ["untrusted proposal", "runtime authority", "executor", "typed observation"], requiredConcepts: ["llm-harness-system-boundary"], sectionId: "overview" },
       { level: "basic", question: "파일 삭제 요청에서 model과 runtime의 책임을 나누세요.", answerChecklist: ["path proposal", "identity", "scope", "execution receipt"], requiredConcepts: ["llm-harness-system-boundary"], sectionId: "proposal-runtime" },
       { level: "basic", question: "Tool schema와 capability가 다른 이유를 설명하세요.", answerChecklist: ["argument shape", "not authority", "resource scope", "current identity"], requiredConcepts: ["llm-harness-system-boundary"], sectionId: "proposal-runtime" },
-      { level: "basic", question: "Executor가 model 밖에 있어야 하는 이유를 쓰세요.", answerChecklist: ["effect owner", "policy", "idempotency", "receipt"], requiredConcepts: ["llm-harness-system-boundary"], sectionId: "proposal-runtime" },
+      { level: "basic", question: "Observation selector·deterministic transform·creative artifact·state mutation의 권한 차이를 예로 설명하세요.", answerChecklist: ["관찰만", "검증된 입력만 계산", "writer는 사실 확정 불가", "승인·backup·journal"], requiredConcepts: ["agent-operation-role-boundary"], sectionId: "operation-roles" },
       { level: "basic", question: "Typed observation에 필요한 필드를 제안하세요.", answerChecklist: ["status", "resource identity", "checksum", "retry class"], requiredConcepts: ["llm-harness-system-boundary"], sectionId: "feedback-loop" },
-      { level: "basic", question: "Model의 완료 문장만으로 run을 끝낼 수 없는 이유를 설명하세요.", answerChecklist: ["unverified claim", "external state", "verifier", "terminal decision"], requiredConcepts: ["llm-harness-system-boundary"], sectionId: "feedback-loop" },
+      { level: "basic", question: "Typed artifact 교정 loop의 contract→observe→write→validate→patch→recheck 순서를 설명하세요.", answerChecklist: ["acceptance", "current evidence", "typed fields", "independent validator", "targeted patch", "regression recheck"], requiredConcepts: ["typed-artifact-repair-loop"], sectionId: "artifact-repair" },
       { level: "advanced", question: "Timeout 뒤 effect가 unknown인 action의 runtime 경계를 설계하세요.", answerChecklist: ["unknown outcome", "operation key", "receipt lookup", "no blind retry"], requiredConcepts: ["llm-harness-system-boundary"], sectionId: "feedback-loop" },
       { level: "advanced", question: "Prompt 금지 문구가 authorization을 대신하지 못하는 반례를 만드세요.", answerChecklist: ["prompt bypass", "fresh identity", "target scope", "runtime deny"], requiredConcepts: ["llm-harness-system-boundary"], sectionId: "proposal-runtime" },
-      { level: "advanced", question: "Framework 이름과 harness boundary를 혼동한 설계를 교정하세요.", answerChecklist: ["product independent", "proposal", "enforcement", "observation"], requiredConcepts: ["llm-harness-system-boundary"], sectionId: "overview" },
-      { level: "advanced", question: "Workflow와 agent를 고르기 전에 공통 harness owner를 정하세요.", answerChecklist: ["authorization", "execution", "receipt", "termination", "later composition"], requiredConcepts: ["llm-harness-system-boundary"], sectionId: "paper-effective-agents" },
+      { level: "advanced", question: "새 model이 strict 형식 지시를 잘 따르게 됐을 때 제거할 보정과 유지할 runtime 불변식을 ablation으로 나누세요.", answerChecklist: ["frozen fixture", "model-specific prompt/shim 후보", "identity·approval·idempotency 유지", "correctness·cost·new failure"], requiredConcepts: ["llm-harness-system-boundary", "agent-operation-role-boundary"], sectionId: "model-change" },
+      { level: "advanced", question: "자동 evaluator가 20/20을 냈지만 artifact가 잘린 사례에서 검증 stack을 교정하세요.", answerChecklist: ["top-line score 한계", "raw transcript", "artifact render/schema", "fresh reader 또는 human audit", "held-out regression"], requiredConcepts: ["typed-artifact-repair-loop"], sectionId: "artifact-repair" },
     ],
     papers: [
       {
@@ -24738,6 +24776,36 @@ export const ARTICLE_LEARNING: Readonly<
         evidenceScope: "Workflow·agent 용어와 관측된 복잡성 선택 원칙",
         notClaim:
           "모든 task가 단일 agent로 해결되거나 제시된 pattern이 표준 계층·성능 보장이 된다는 뜻은 아님",
+        sectionId: "paper-effective-agents",
+      },
+      {
+        title: "Anthropic — Writing effective tools for AI agents",
+        href: "https://www.anthropic.com/engineering/writing-tools-for-agents",
+        problem:
+          "Agent가 많은 tool 가운데 올바른 operation과 parameter를 선택하고 high-signal result를 사용하는지 실제 workload에서 개선하는 문제",
+        contribution:
+          "현실적인 held-out task·verifiable outcome·raw transcript와 call/token/latency metric으로 tool boundary와 response를 반복 개선하는 방법을 공개합니다.",
+        assumptions:
+          "Anthropic이 공개한 tool-use evaluation loop와 model·tool environment입니다.",
+        evidenceScope:
+          "Tool naming·schema·response design과 programmatic agent eval을 함께 개선하는 실전 지침입니다.",
+        notClaim:
+          "제시한 tool layout이 모든 domain에 최적이거나 reasoning transcript가 정답이라는 뜻은 아닙니다.",
+        sectionId: "paper-effective-agents",
+      },
+      {
+        title: "Anthropic — Demystifying evals for AI agents",
+        href: "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents",
+        problem:
+          "비결정적이고 multi-turn인 agent를 final answer 한 개가 아니라 안정된 환경과 trajectory까지 포함해 평가하는 문제",
+        contribution:
+          "Task·trial·grader·transcript·tool-call·token·latency를 구분하고 stable eval harness를 설계하는 절차를 제시합니다.",
+        assumptions:
+          "재실행 가능한 environment와 verifiable outcome 또는 calibrated grader를 구성할 수 있는 agent task입니다.",
+        evidenceScope:
+          "Agent eval dataset·grader·harness·metric을 설계하고 transcript로 failure를 분석하는 범위입니다.",
+        notClaim:
+          "자동 grader 점수 하나가 side effect correctness나 모든 production risk를 보장한다는 뜻은 아닙니다.",
         sectionId: "paper-effective-agents",
       },
     ],
@@ -61335,6 +61403,212 @@ export const ARTICLE_LEARNING: Readonly<
     papers: [
       { title: "The Elements of Statistical Learning · Model Assessment and Selection", href: "https://hastie.su.domains/ElemStatLearn/", problem: "Training error와 generalization error, model selection과 assessment를 구분합니다.", contribution: "Training·validation·test 역할과 bias–variance 관점을 정리합니다.", assumptions: "Statistical learning의 sampling·loss 조건입니다.", evidenceScope: "교과서의 model assessment·selection 원리입니다.", notClaim: "고정 random 비율이 모든 group·time deployment에 맞는다는 뜻은 아닙니다.", sectionId: "paper-train-test" },
       { title: "Cross-Validation: What Does It Estimate and How Well Does It Do It?", href: "https://pmc.ncbi.nlm.nih.gov/articles/PMC11412612/", problem: "CV가 특정 fitted model과 learning procedure 중 무엇의 error를 추정하는지 구분합니다.", contribution: "CV estimand와 uncertainty를 분석합니다.", assumptions: "논문의 OLS theorem과 CV construction 조건입니다.", evidenceScope: "논문이 분석한 estimand·coverage 범위입니다.", notClaim: "모든 learner의 finite-sample equality나 독립 test 대체를 보장하지 않습니다.", sectionId: "paper-cv-estimand" },
+    ],
+  },
+  "ai/image-video-lora-architecture": {
+    coreIdea:
+      "Image·video LoRA는 같은 low-rank update를 쓰지만, 실제 학습 능력은 host model에서 adapter가 들어가는 denoiser·spatial·temporal·cross-modal 경로와 image/clip 평가 단위가 결정합니다. 따라서 rank보다 먼저 full target path와 역할을 고정해야 합니다.",
+    assumedKnowledge: [
+      {
+        id: "lora-low-rank-update",
+        role: "Frozen base weight에 더하는 저랭크 변화량의 shape와 capacity를 재사용합니다.",
+      },
+      {
+        id: "latent-diffusion-component-contract",
+        role: "Autoencoder·conditioner·denoiser·sampler를 나눠 어느 component가 학습 대상인지 구분합니다.",
+      },
+      {
+        id: "video-tubelet-token-contract",
+        role: "Video input에 공간축뿐 아니라 frame 시간축이 들어간다는 사실을 전제합니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "diffusion-lora-host-target-map",
+        role: "실제 named module을 정보 경로별로 분류하고 adapter match 결과를 고정합니다.",
+      },
+      {
+        id: "image-lora-denoiser-target-scope",
+        role: "Image denoiser와 선택적 text encoder에서 학습할 module 범위를 구분합니다.",
+      },
+      {
+        id: "video-lora-spatiotemporal-target-scope",
+        role: "Video model의 spatial·temporal·cross-modal target을 구분합니다.",
+      },
+      {
+        id: "appearance-motion-adapter-separation",
+        role: "Reference clip의 appearance와 motion이 한 update에 얽히는 문제를 분리 경로로 다룹니다.",
+      },
+      {
+        id: "video-lora-clip-evaluation-contract",
+        role: "Frame 품질과 temporal·motion 품질을 서로 다른 평가 항으로 유지합니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "diffusion-lora-host-target-map",
+        sectionId: "overview",
+        intuition:
+          "같은 작은 부품도 카메라의 초점 장치에 넣는지, 짐벌의 회전 장치에 넣는지에 따라 바꾸는 능력이 달라지는 것과 같습니다.",
+        workedExample:
+          "`to_q`라는 짧은 pattern이 image U-Net에서는 attention 네 곳에 match할 수 있지만 audio-video DiT에서는 video·audio·cross-modal attention 전체에 match할 수 있으므로 full path와 shape를 먼저 출력합니다.",
+        boundary:
+          "Module 이름만 같다고 같은 역할은 아니며, 공개 config의 target 문자열을 다른 model family에 그대로 복사하지 않습니다.",
+      },
+      {
+        id: "image-lora-denoiser-target-scope",
+        sectionId: "image-scope",
+        intuition:
+          "사진을 복원하는 화가의 손놀림을 바꿀지, 요청 문장을 읽는 통역사를 함께 바꿀지 정하는 범위입니다.",
+        workedExample:
+          "Denoiser attention projection만 학습한 run과 denoiser+text encoder run을 같은 held-out prompt·seed로 비교하고, 실제 trainable parameter 목록을 저장합니다.",
+        boundary:
+          "VAE와 scheduler가 frozen이어도 output ceiling과 sampling 동작에는 영향을 주므로 revision을 artifact에 남깁니다.",
+      },
+      {
+        id: "video-lora-spatiotemporal-target-scope",
+        sectionId: "video-scope",
+        intuition:
+          "한 장면을 잘 그리는 능력과 장면 사이 움직임을 이어 붙이는 능력, 소리와 입 모양을 맞추는 능력을 서로 다른 통로로 보는 것입니다.",
+        workedExample:
+          "Video-only style adaptation은 spatial target부터 시작하고, walking motion은 temporal target을 열며, audio-driven lip-sync는 필요한 cross-modal target을 별도로 확인합니다.",
+        boundary:
+          "Joint space-time attention처럼 경로가 architecture 안에서 결합된 model은 이름만으로 완전히 분리되지 않으므로 block 역할과 activation shape를 함께 확인합니다.",
+      },
+      {
+        id: "appearance-motion-adapter-separation",
+        sectionId: "video-scope",
+        intuition:
+          "배우의 옷과 걷는 방식이 항상 함께 찍힌 영상에서 옷은 빼고 걷는 방식만 옮기려는 문제입니다.",
+        workedExample:
+          "MotionDirector는 무작위 한 frame으로 spatial appearance LoRA를, 여러 frame으로 temporal motion LoRA를 학습하고 temporal loss에서 appearance bias를 줄입니다.",
+        boundary:
+          "이 dual-path는 한 연구의 해결책이며 모든 backbone이 spatial·temporal module을 같은 방식으로 분리해 제공하지는 않습니다.",
+      },
+      {
+        id: "video-lora-clip-evaluation-contract",
+        sectionId: "training-evaluation",
+        intuition:
+          "영화 한 편을 첫 장면의 선명도만 보고 평가하지 않고, 장면이 자연스럽게 이어지고 의도한 동작이 유지되는지도 따로 보는 것입니다.",
+        workedExample:
+          "같은 base revision·FPS·25 frames·resolution bucket·prompt·seed에서 frame quality, subject fidelity, temporal consistency와 motion fidelity를 분리해 기록합니다.",
+        boundary:
+          "자동 temporal metric 하나가 실제 motion 의미와 artifact를 모두 보장하지 않으므로 원본 clip 검토와 base regression을 함께 둡니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 Host map",
+        relation: "같은 LoRA update를 어느 host module에 넣는지 먼저 inventory로 고정합니다.",
+        concepts: ["diffusion-lora-host-target-map"],
+      },
+      {
+        label: "01 Image",
+        relation: "Image pipeline에서 denoiser와 선택적 text-encoder 범위를 나눕니다.",
+        concepts: ["image-lora-denoiser-target-scope"],
+      },
+      {
+        label: "02 Video",
+        relation: "시간·modality 경로를 추가하고 appearance와 motion coupling을 다룹니다.",
+        concepts: [
+          "video-lora-spatiotemporal-target-scope",
+          "appearance-motion-adapter-separation",
+        ],
+      },
+      {
+        label: "03 Evaluate",
+        relation: "Target manifest와 clip 전체의 품질을 같은 run에서 검증합니다.",
+        concepts: ["video-lora-clip-evaluation-contract"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question: "Image·video LoRA가 같은 행렬식을 써도 학습 능력이 달라지는 이유를 설명하세요.",
+        answerChecklist: ["같은 low-rank update", "host architecture", "target role", "input/evaluation unit"],
+        requiredConcepts: ["diffusion-lora-host-target-map"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question: "Diffusers 예제의 to_q·to_k·to_v·to_out.0을 모든 image model의 기본 target으로 복사하면 안 되는 이유를 설명하세요.",
+        answerChecklist: ["특정 U-Net 예제", "named module 확인", "fused layout", "trainable count"],
+        requiredConcepts: ["image-lora-denoiser-target-scope"],
+        sectionId: "image-scope",
+      },
+      {
+        level: "basic",
+        question: "Image LoRA run에서 denoiser·text encoder·VAE의 학습 경계를 나누세요.",
+        answerChecklist: ["denoiser 기본 target", "text encoder 선택", "VAE frozen", "revision 영향"],
+        requiredConcepts: ["image-lora-denoiser-target-scope"],
+        sectionId: "image-scope",
+      },
+      {
+        level: "basic",
+        question: "Video LoRA의 spatial·temporal·cross-modal path가 각각 어떤 정보를 다루는지 설명하세요.",
+        answerChecklist: ["frame 내부 appearance", "frame 사이 motion", "modality condition", "별도 target scope"],
+        requiredConcepts: ["video-lora-spatiotemporal-target-scope"],
+        sectionId: "video-scope",
+      },
+      {
+        level: "basic",
+        question: "Image LoRA를 호환되는 video spatial layer에 불러와도 motion LoRA가 되지 않는 이유를 설명하세요.",
+        answerChecklist: ["frame appearance prior", "연속 frame 미학습", "temporal signal 없음", "shape compatibility와 능력 구분"],
+        requiredConcepts: ["video-lora-spatiotemporal-target-scope"],
+        sectionId: "video-scope",
+      },
+      {
+        level: "basic",
+        question: "Video adapter를 첫 frame 품질만으로 판정하면 어떤 실패를 놓치는지 설명하세요.",
+        answerChecklist: ["temporal consistency", "motion fidelity", "clip 전체", "frame metric 분리"],
+        requiredConcepts: ["video-lora-clip-evaluation-contract"],
+        sectionId: "training-evaluation",
+      },
+      {
+        level: "advanced",
+        question: "짧은 `to_q` pattern이 audio-video model의 모든 attention에 match한 상황에서 안전한 target manifest를 설계하세요.",
+        answerChecklist: ["full module paths", "spatial/temporal/cross-modal 분류", "weight shapes", "trainable count", "의도하지 않은 match 거절"],
+        requiredConcepts: ["diffusion-lora-host-target-map", "video-lora-spatiotemporal-target-scope"],
+        sectionId: "video-scope",
+      },
+      {
+        level: "advanced",
+        question: "Reference clip의 motion만 학습하려는데 배경과 인물 외형이 함께 재현되는 실패를 진단하고 실험을 설계하세요.",
+        answerChecklist: ["appearance-motion coupling", "spatial/temporal scope", "분리 adapter 또는 loss", "held-out appearance", "motion fidelity"],
+        requiredConcepts: ["appearance-motion-adapter-separation", "video-lora-clip-evaluation-contract"],
+        sectionId: "video-scope",
+      },
+      {
+        level: "advanced",
+        question: "Image LoRA와 video LoRA candidate를 공정하게 비교하는 run artifact 필드를 작성하세요.",
+        answerChecklist: ["base revision", "exact targets/rank", "preprocessing", "FPS/frames/resolution", "prompt/seed", "quality/regression/cost"],
+        requiredConcepts: ["diffusion-lora-host-target-map", "video-lora-clip-evaluation-contract"],
+        sectionId: "training-evaluation",
+      },
+      {
+        level: "advanced",
+        question: "Video style adaptation에서 spatial-only와 all-attention target을 한 축씩 비교하는 ablation을 설계하세요.",
+        answerChecklist: ["같은 data/update budget", "target scope만 변경", "appearance fidelity", "temporal regression", "parameter/step cost"],
+        requiredConcepts: ["video-lora-spatiotemporal-target-scope", "video-lora-clip-evaluation-contract"],
+        sectionId: "training-evaluation",
+      },
+    ],
+    papers: [
+      {
+        title: "MotionDirector: Motion Customization of Text-to-Video Diffusion Models",
+        href: "https://www.ecva.net/papers/eccv_2024/papers_ECCV/papers/07327.pdf",
+        problem:
+          "Reference video의 motion을 학습할 때 제한된 appearance까지 함께 외워 새로운 외형으로 motion을 일반화하기 어려운 문제",
+        contribution:
+          "한 frame의 spatial appearance LoRA와 여러 frame의 temporal motion LoRA를 나누고 appearance-debiased temporal loss를 결합한 dual-path 방법을 제안합니다.",
+        assumptions:
+          "논문이 사용한 spatial·temporal transformer를 가진 video diffusion backbone과 reference-video customization 설정입니다.",
+        evidenceScope:
+          "논문의 두 benchmark, 86개 motion과 600개 이상 prompt에서 저자들이 보고한 appearance diversity·temporal consistency·motion fidelity 결과입니다.",
+        notClaim:
+          "모든 video backbone이 같은 module 분리를 제공하거나 모든 video LoRA가 dual-path여야 한다는 뜻은 아닙니다.",
+        sectionId: "paper-motiondirector",
+      },
     ],
   },
   "ai/in-context-lora": {

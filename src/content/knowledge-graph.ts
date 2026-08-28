@@ -2151,6 +2151,51 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "Autoencoder reconstruction·sample quality·mode coverage·condition adherence·latency를 versioned threshold로 각각 판정하고 모든 필수 gate를 통과할 때만 배포하는 acceptance 계약입니다.",
     canonicalHref: "/ai/latent-diffusion-guidance#evaluation",
   },
+  "diffusion-lora-host-target-map": {
+    id: "diffusion-lora-host-target-map",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Diffusion LoRA host · target map",
+    definition:
+      "Image·video diffusion pipeline의 실제 named module을 denoiser·text encoder와 spatial·temporal·cross-modal 역할로 분류한 뒤, LoRA pattern이 match한 full path·shape·trainable parameter를 고정하는 설계 방법입니다.",
+    canonicalHref: "/ai/image-video-lora-architecture#overview",
+  },
+  "image-lora-denoiser-target-scope": {
+    id: "image-lora-denoiser-target-scope",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Image LoRA denoiser target scope",
+    definition:
+      "Text-to-image pipeline에서 U-Net·DiT denoiser의 attention·FFN projection 중 LoRA update가 실제로 닿는 module 집합을 text encoder·VAE 등 다른 component와 구분한 범위입니다.",
+    canonicalHref: "/ai/image-video-lora-architecture#image-scope",
+  },
+  "video-lora-spatiotemporal-target-scope": {
+    id: "video-lora-spatiotemporal-target-scope",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Video LoRA spatiotemporal target scope",
+    definition:
+      "Video denoiser에서 frame 내부의 spatial path, frame 사이 temporal path, text·audio·video cross-modal path 가운데 adapter가 학습하는 full module 경로를 구분한 범위입니다.",
+    canonicalHref: "/ai/image-video-lora-architecture#video-scope",
+  },
+  "appearance-motion-adapter-separation": {
+    id: "appearance-motion-adapter-separation",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Appearance · motion adapter separation",
+    definition:
+      "Reference clip의 외형과 움직임이 하나의 update에 함께 묶이는 현상을 줄이기 위해 spatial appearance adapter와 temporal motion adapter 또는 그 loss를 서로 다른 학습 경로로 분리하는 방법입니다.",
+    canonicalHref: "/ai/image-video-lora-architecture#video-scope",
+  },
+  "video-lora-clip-evaluation-contract": {
+    id: "video-lora-clip-evaluation-contract",
+    kind: "metric",
+    domain: "machine-learning",
+    label: "Video LoRA clip evaluation contract",
+    definition:
+      "Base revision·target paths·clip FPS·frame count·resolution·condition·seed를 고정하고 frame quality와 prompt·subject fidelity, temporal consistency와 motion fidelity, base regression·cost를 서로 다른 판정 항으로 유지하는 평가 계약입니다.",
+    canonicalHref: "/ai/image-video-lora-architecture#training-evaluation",
+  },
   "in-context-lora-adaptation": {
     id: "in-context-lora-adaptation",
     kind: "method",
@@ -4474,6 +4519,24 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     definition:
       "Model이 다음 행동을 제안하는 역할과 runtime이 권한·실행·관측·종료를 강제하는 역할을 분리해, prompt wrapper보다 넓은 실행 시스템으로 하네스를 정의하는 경계입니다.",
     canonicalHref: "/ai/llm-harness#overview",
+  },
+  "agent-operation-role-boundary": {
+    id: "agent-operation-role-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Agent operation-role boundary",
+    definition:
+      "도구를 observation selection·deterministic transform·creative artifact·state mutation 역할로 분류하고, 각 역할이 사실을 확정하거나 외부 effect를 만들 수 있는 권한과 실패 처리를 서로 다르게 제한하는 실행 경계입니다.",
+    canonicalHref: "/ai/llm-harness#operation-roles",
+  },
+  "typed-artifact-repair-loop": {
+    id: "typed-artifact-repair-loop",
+    kind: "method",
+    domain: "computer-science",
+    label: "Typed artifact · targeted repair loop",
+    definition:
+      "요청을 acceptance contract로 고정하고 현재 상태를 관찰한 뒤 typed artifact를 생성하며, 독립 validator가 지적한 위반 부분만 patch하고 같은 검사를 다시 실행하는 산출물 교정 절차입니다.",
+    canonicalHref: "/ai/llm-harness#artifact-repair",
   },
   "agent-run-contract": {
     id: "agent-run-contract",
@@ -19645,6 +19708,76 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
       "Guidance scale과 branch compute가 condition adherence·diversity·latency gate를 함께 바꿉니다.",
   },
   {
+    from: "lora-low-rank-update",
+    to: "diffusion-lora-host-target-map",
+    relation: "prerequisite",
+    reason:
+      "Frozen weight에 더할 low-rank update를 먼저 이해한 뒤 그 update가 들어갈 diffusion module의 실제 역할을 분류합니다.",
+  },
+  {
+    from: "latent-diffusion-component-contract",
+    to: "diffusion-lora-host-target-map",
+    relation: "prerequisite",
+    reason:
+      "Autoencoder·conditioner·denoiser·sampler를 나눠야 어느 component를 학습하고 어느 component는 frozen으로 둘지 기록할 수 있습니다.",
+  },
+  {
+    from: "diffusion-lora-host-target-map",
+    to: "image-lora-denoiser-target-scope",
+    relation: "extends",
+    reason:
+      "일반 host inventory를 text-to-image U-Net·DiT denoiser와 선택적 text-encoder 범위로 구체화합니다.",
+  },
+  {
+    from: "video-tubelet-token-contract",
+    to: "video-lora-spatiotemporal-target-scope",
+    relation: "prerequisite",
+    reason:
+      "Video input이 frame·공간을 함께 가진 token sequence라는 사실이 spatial·temporal target 구분의 출발점입니다.",
+  },
+  {
+    from: "diffusion-lora-host-target-map",
+    to: "video-lora-spatiotemporal-target-scope",
+    relation: "extends",
+    reason:
+      "Host module inventory를 frame 내부·frame 사이·modality 사이 정보 경로로 확장합니다.",
+  },
+  {
+    from: "image-lora-denoiser-target-scope",
+    to: "video-lora-spatiotemporal-target-scope",
+    relation: "contrasts",
+    reason:
+      "Image의 공간 denoiser 범위와 video에서 추가되는 temporal·cross-modal 범위를 같은 projection 이름과 혼동하지 않게 비교합니다.",
+  },
+  {
+    from: "video-lora-spatiotemporal-target-scope",
+    to: "appearance-motion-adapter-separation",
+    relation: "extends",
+    reason:
+      "Spatial·temporal path를 구분한 뒤 appearance와 motion update를 서로 다른 adapter·loss 경로로 분리할 수 있습니다.",
+  },
+  {
+    from: "video-lora-spatiotemporal-target-scope",
+    to: "video-lora-clip-evaluation-contract",
+    relation: "constrains",
+    reason:
+      "어느 정보 경로를 학습했는지에 따라 frame quality 외에 temporal·motion·cross-modal 판정 항을 선택합니다.",
+  },
+  {
+    from: "appearance-motion-adapter-separation",
+    to: "video-lora-clip-evaluation-contract",
+    relation: "evaluates",
+    reason:
+      "Appearance 다양성과 motion fidelity를 분리해 adapter separation이 coupling을 실제로 줄였는지 판정합니다.",
+  },
+  {
+    from: "video-lora-spatiotemporal-target-scope",
+    to: "in-context-lora-adaptation",
+    relation: "prerequisite",
+    reason:
+      "IC-LoRA가 self-attention과 FFN을 재사용하더라도 실제 video·audio target module 범위를 먼저 알아야 update의 범위를 설명할 수 있습니다.",
+  },
+  {
     from: "self-attention",
     to: "reference-target-context-concatenation",
     relation: "prerequisite",
@@ -24871,6 +25004,27 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "produces",
     reason:
       "Model 제안과 runtime 강제 책임을 분리한 뒤 한 run에서 고정할 목표·권한·검증·복구 항목을 명세합니다.",
+  },
+  {
+    from: "llm-harness-system-boundary",
+    to: "agent-operation-role-boundary",
+    relation: "extends",
+    reason:
+      "일반적인 model·runtime 경계를 각 operation이 관찰·변환·생성·변경 중 무엇을 소유하는지로 세분화합니다.",
+  },
+  {
+    from: "agent-operation-role-boundary",
+    to: "typed-artifact-repair-loop",
+    relation: "constrains",
+    reason:
+      "Creative writer는 artifact를 만들 수 있지만 사실 확정과 effect 권한은 없으므로 독립 validator와 targeted repair가 필요합니다.",
+  },
+  {
+    from: "typed-artifact-repair-loop",
+    to: "agent-artifact-state-continuity",
+    relation: "produces",
+    reason:
+      "검증과 부분 교정을 통과한 typed artifact가 다음 run에서도 재검사 가능한 상태를 제공합니다.",
   },
   {
     from: "agent-context-discovery-path",
