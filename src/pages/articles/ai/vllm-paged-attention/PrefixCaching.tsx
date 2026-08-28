@@ -28,6 +28,29 @@ const HASH_TERMS = [
   },
 ] as const;
 
+const HIT_TERMS = [
+  {
+    symbol: "n^{query}_q",
+    name: "Query q의 조회 token 수",
+    description: "새 request q가 cache에 물어본 prompt token 수입니다. vLLM은 query마다 이 값을 기록합니다.",
+  },
+  {
+    symbol: "n^{hit}_q",
+    name: "Query q의 hit token 수",
+    description: "조회한 token 중 시작부터 연속으로 cache에 있던 full-block token 수입니다.",
+  },
+  {
+    symbol: "h_{tok}",
+    name: "Token hit rate",
+    description: "일정 구간의 hit token 합을 조회 token 합으로 나눈 값입니다. vLLM log와 Prometheus counter가 쓰는 정의입니다.",
+  },
+  {
+    symbol: "h_{req}",
+    name: "Request hit rate",
+    description: "한 token이라도 hit한 request의 비율입니다. 절감량을 말해 주지 않습니다.",
+  },
+] as const;
+
 const SAVING_TERMS = [
   {
     symbol: "n_{prompt}",
@@ -62,7 +85,10 @@ export default function PrefixCaching({
           같은 model에서 동일한 prefix token은 causal attention의 같은 K·V를
           만듭니다. vLLM Automatic Prefix Caching(APC)은 이전 request가 계산한
           full KV block을 hash table에 남겨 두었다가, 새 request의 hash chain이
-          같은 동안 block을 touch하고 prefill을 생략합니다. 긴 system prompt,
+          같은 동안 block을 touch하고 prefill을 생략합니다.
+        </p>
+        <p className="leading-8">
+          긴 system prompt,
           반복 문서 QA, multi-turn conversation처럼 앞부분이 자주 반복되는 traffic에서
           TTFT를 줄일 수 있습니다.
         </p>
@@ -145,8 +171,37 @@ n_{miss} &= \underbrace{n_{prompt}-n_{hit}}_{\text{오른쪽 항으로 결과 �
       />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3 id="prefix-sharing" className="scroll-mt-20">
+          Prefix sharing은 prefill 생략과 함께 physical block 자체를 나눠 씁니다
+        </h3>
+        <p className="leading-8">
+          Prefix sharing은 같은 prefix를 가진 여러 request의 block table이 같은
+          physical block을 가리키는 상태입니다. 계산을 건너뛰는 것과 memory를
+          아끼는 것은 같은 hit에서 나오는 두 가지 효과인데, 동시 request가 많을수록
+          memory 쪽 효과가 더 큽니다.
+        </p>
+        <p className="leading-8">
+          1,000-token system prompt를 B=16으로 나누면 full block 62개(992 token)와
+          8 token짜리 partial block 하나가 나옵니다. 동시에 들어온 request 10개가 이
+          prompt를 공유하면 62 block의 ref는 10이 되고, 공유 없이 620 block을
+          쓰는 대신 62 block으로 충분합니다. 마지막 8 token은 request마다 자기
+          block에 다시 계산합니다.
+        </p>
+        <p className="leading-8">
+          Fork와 다른 점은 공유를 찾는 방법입니다. Fork는 부모가 누구인지 알고
+          table을 복사하므로 partial block까지 copy-on-write로 공유합니다. Prefix
+          sharing은 hash lookup으로 낯선 request 사이의 일치를 찾기 때문에 full
+          block만 공유하고, 공유 block에 쓰기가 일어날 일이 없어 CoW가 필요
+          없습니다. 새 token은 언제나 자기 소유의 새 block에 들어갑니다.
+        </p>
+        <p className="leading-8">
+          공유 block이 free queue에 있다가 재활성화되는 경로는 위의 BlockPool
+          절과 같습니다. 여러 branch의 공유 관계를 tree로 명시하는 radix 방식과의
+          비교는 아래 RadixAttention 절에서 이어집니다.
+        </p>
+
         <h3 id="paper-radixattention" className="scroll-mt-20">
-          SGLang·RadixAttention이 보여 주는 대안: prefix reuse를 radix tree로 직접 표현합니다
+          SGLang RadixAttention은 prefix reuse를 radix tree로 직접 표현합니다
         </h3>
         <p className="leading-8">
           <a href="https://papers.nips.cc/paper_files/paper/2024/file/724be4472168f31ba1c9ac630f15dec8-Paper-Conference.pdf">
@@ -166,14 +221,90 @@ n_{miss} &= \underbrace{n_{prompt}-n_{hit}}_{\text{오른쪽 항으로 결과 �
         </p>
 
         <h3 id="prefix-operations" className="scroll-mt-20">
-          운영에서는 hit rate보다 cached token·routing·TTFT를 함께 봅니다
+          Cache hit rate는 request가 아니라 token 단위로 세야 절감량이 보입니다
         </h3>
-        <ul className="leading-8">
-          <li>Request hit 비율과 함께 prompt 중 몇 token이 hit했는지 histogram을 기록합니다.</li>
-          <li>Replica별 cache가 독립이면 같은 prefix를 같은 replica로 보내는 routing policy와 imbalance를 함께 봅니다.</li>
-          <li>Model·tokenizer·chat template·adapter·multimodal processor가 바뀌면 cache identity를 분리합니다.</li>
-          <li>KV pressure가 높아 cached block이 빠르게 eviction되면 높은 논리적 반복률이 실제 TTFT 개선으로 이어지지 않을 수 있습니다.</li>
-        </ul>
+        <p className="leading-8">
+          Cache hit rate는 조회한 것 가운데 cache에 있던 비율입니다. vLLM은 cache를
+          조회할 때마다 물어본 token 수와 그중 hit한 token 수를 counter로 기록하고,
+          log에는 최근 1,000 query 구간의 비율을 보여 줍니다. Request 단위 비율은
+          같은 이름으로 불리지만 다른 양입니다.
+        </p>
+        <p className="leading-8">
+          1,200-token prompt request 10개 중 9개가 앞의 992 token을 hit하면 조회
+          token은 12,000, hit token은 8,928이므로 token hit rate는 74.4%입니다.
+          Request hit rate는 90%로 더 높게 보이지만, prefill에서 실제로 사라진 일은
+          74.4%뿐이고 output decode는 하나도 줄지 않았습니다.
+        </p>
+      </div>
+
+      <ExplainedFormula
+        question="같은 traffic에서 request hit rate와 token hit rate가 다르게 나오는 이유는 무엇일까요?"
+        idea={
+          <>
+            Token hit rate는 hit한 token 합을 조회 token 합으로 나눕니다. Request
+            hit rate는 한 token이라도 hit한 request 수를 셉니다. 앞은 절감량에
+            비례하고 뒤는 그렇지 않습니다.
+          </>
+        }
+        formula={String.raw`\begin{aligned}
+h_{tok} &= \frac{\sum_{q\in Q} n^{hit}_q}{\sum_{q\in Q} n^{query}_q} \\
+h_{req} &= \frac{\left|\{q\in Q : n^{hit}_q>0\}\right|}{|Q|}
+\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+h_{tok} &= \underbrace{\frac{\sum_{q\in Q} n^{hit}_q}{\sum_{q\in Q} n^{query}_q}}_{\text{기준량당 비율}} \\
+h_{req} &= \underbrace{\frac{\left|\{q\in Q : n^{hit}_q>0\}\right|}{|Q|}}_{\text{기준량당 비율}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\frac{\sum_{q\in Q} n^{hit}_q}{\sum_{q\in Q} n^{query}_q}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","구간 Q의 hit token 합을 조회 token 합으로 나눈","값이며 prefill 절감량에 비례합니다."] },
+          { expression: String.raw`\frac{\left|\{q\in Q : n^{hit}_q>0\}\right|}{|Q|}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","한 token이라도 hit한 request 수를 전체 request","수로 나눈 값이며 hit 길이를 반영하지 않습니다."] },
+        ]}
+        terms={HIT_TERMS}
+        assumptions={[
+          "Q는 log의 최근 1,000 query처럼 고정 구간이거나 Prometheus rate()의 시간 창입니다. 구간이 다르면 값도 다릅니다.",
+          "n_hit은 시작부터 연속으로 일치한 full-block token만 셉니다. Partial block과 중간 일치는 0으로 셉니다.",
+          "Hit로 기록된 block이 실행 전에 evict되면 counter는 hit이지만 실제 prefill 절감은 일어나지 않을 수 있습니다.",
+        ]}
+        interpretation="10 request × 1,200 token 중 9 request가 992 token을 hit하면 h_tok=8,928/12,000=74.4%, h_req=90%입니다. 운영 대시보드에 h_req만 있으면 절감량을 25% 과대평가합니다."
+        title="Token hit rate와 request hit rate"
+      />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">
+          그래서 운영에서는 hit rate 하나 대신 prompt 중 몇 token이 hit했는지의
+          histogram과 TTFT를 함께 기록합니다. Model, tokenizer, chat template,
+          adapter, multimodal processor가 바뀌면 cache identity를 분리해야 같은
+          숫자를 이어서 비교할 수 있습니다.
+        </p>
+
+        <h3 id="cache-locality" className="scroll-mt-20">
+          Cache locality는 replica 배치와 eviction 시점 두 축에서 깨집니다
+        </h3>
+        <p className="leading-8">
+          Cache locality는 재사용 가능한 prefix가 실제로 hit하는 자리에 놓여 있는
+          정도입니다. 논리적으로 같은 prompt가 반복돼도 두 조건이 어긋나면 miss가
+          납니다. 같은 replica에 도착해야 하고, 지난 사용과 이번 사용 사이에
+          evict되지 않아야 합니다.
+        </p>
+        <p className="leading-8">
+          Replica별 cache는 독립입니다. 같은 prompt request 10개를 replica 2개에
+          round-robin으로 나누면 replica마다 첫 request는 miss이므로 request hit
+          rate는 90%에서 80%로 내려갑니다. Replica가 8개이면 8개가 miss여서 20%가
+          됩니다. 그래서 같은 prefix를 같은 replica로 보내는 routing과 그로 인한
+          load imbalance를 함께 봅니다.
+        </p>
+        <p className="leading-8">
+          시간 축의 locality는 free queue의 LRU 순서가 정합니다. Pool이 8,000
+          block이고 어떤 prefix가 62 block을 차지할 때, 두 사용 사이에 다른
+          traffic이 8,500 block을 새로 할당하면 그 prefix는 queue head에 도달해
+          evict됩니다. 반복률이 높아도 KV pressure가 높으면 TTFT 이득이 사라지는
+          이유입니다.
+        </p>
+        <p className="leading-8">
+          측정은 cached token histogram과 함께 eviction 횟수, free pool 크기를 같은
+          시간축에 놓고 봅니다. Hit rate가 떨어질 때 histogram이 그대로면 routing
+          문제이고, histogram의 긴 hit가 사라지면 eviction 문제입니다. Prefix를 보고
+          request를 배치하는 scheduling과 routing policy는 다음 글이 다룹니다.
+        </p>
       </div>
     </section>
   );

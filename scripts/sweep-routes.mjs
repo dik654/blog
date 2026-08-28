@@ -128,6 +128,8 @@ for (const route of routes) {
     });
     page.on("pageerror", (error) => consoleMessages.push(`pageerror: ${String(error).slice(0, 200)}`));
     const result = { ok: true, issues: [] };
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+    result.issues = [];
     try {
       const response = await page.goto(`${base}/${route}`, { waitUntil: "networkidle", timeout: 90_000 });
       if (!response || response.status() >= 400) result.issues.push(`HTTP ${response?.status()}`);
@@ -178,7 +180,14 @@ for (const route of routes) {
         result.screenshot = file;
       }
     } catch (error) {
-      result.issues.push(`exception: ${String(error).slice(0, 200)}`);
+      const text = String(error);
+      if (/Execution context was destroyed|Navigation|Target closed/.test(text) && attempt < 2) {
+        await page.waitForTimeout(1500);
+        continue; // dev server HMR reload 로 context 가 바뀐 경우 재시도
+      }
+      result.issues.push(`exception: ${text.slice(0, 200)}`);
+    }
+    break;
     }
     result.ok = result.issues.length === 0;
     if (!result.ok) failures += 1;

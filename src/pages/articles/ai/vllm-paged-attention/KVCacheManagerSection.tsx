@@ -41,7 +41,7 @@ export default function KVCacheManagerSection({
   return (
     <section id="kv-cache-manager" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
-        KVCacheManager는 scheduler의 token 계획을 block allocation으로 변환합니다
+        KVCacheManager는 scheduler의 token 계획을 block 요청으로 바꿉니다
       </h2>
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
@@ -97,11 +97,14 @@ export default function KVCacheManagerSection({
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3 id="allocation-failure" className="scroll-mt-20">
-          Allocation 실패는 manager의 반환값이고, 누구를 멈출지는 scheduler의 policy입니다
+          Allocation 실패는 manager가 알리고, 누구를 멈출지는 scheduler가 정합니다
         </h3>
         <p className="leading-8">
           Manager가 충분한 block을 확보하지 못하면 scheduler에 실패를 돌려줍니다.
-          Manager가 임의로 다른 request를 중단하지는 않습니다. Scheduler가 policy와
+          Manager가 임의로 다른 request를 중단하지는 않습니다.
+        </p>
+        <p className="leading-8">
+          Scheduler가 policy와
           queue order를 보고 victim을 고른 뒤 block을 반환하고 다시 allocation을
           시도합니다. 이 책임을 섞으면 memory bug와 fairness bug를 같은 계층에서
           추적하게 됩니다. Current V1의 state reset은
@@ -114,7 +117,10 @@ export default function KVCacheManagerSection({
         <p className="leading-8">
           Full attention, sliding-window attention, Mamba state가 섞인 model은 모든
           layer가 같은 KV 규칙을 쓰지 않습니다. vLLM은 compatible한 layer를 cache
-          group으로 묶고 coordinator가 group별 manager를 함께 움직입니다. 그래서
+          group으로 묶고 coordinator가 group별 manager를 함께 움직입니다.
+        </p>
+        <p className="leading-8">
+          그래서
           단일 block 식은 개념을 이해하는 출발점이고, 실제 capacity는 runtime이
           만든 cache spec·group·block 수를 기준으로 확인해야 합니다.
         </p>

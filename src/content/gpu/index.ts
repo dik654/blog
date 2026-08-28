@@ -77,6 +77,30 @@ const gpu: Category = {
       component: () => import("@/pages/articles/blockchain/cuda-basics"),
     },
     {
+      slug: "cuda-compilation-and-isa-analysis",
+      title: "CUDA 컴파일 경로: PTX 는 가상 ISA 이고 SASS 가 실제로 돕니다",
+      subcategory: "gpu-fundamentals",
+      sections: [
+        { id: "pipeline", title: "nvcc 의 두 단계 컴파일" },
+        { id: "ptx-and-sass", title: "PTX 가상 ISA 와 SASS 기계어" },
+        { id: "fatbin-and-jit", title: "Fatbin·compute capability·JIT 선택" },
+        { id: "ptxas-optimizations", title: "ptxas allocation·scheduling·unrolling" },
+        { id: "classic-optimizations", title: "CSE·DCE·folding·selection 의 단계 배치" },
+        { id: "isa-analysis", title: "PTX–SASS gap 과 cuobjdump·nvdisasm" },
+        {
+          id: "evidence",
+          title: "NVIDIA 공식 문서 근거",
+          subsections: [
+            { id: "doc-nvcc-gpu-compilation", title: "NVCC GPU Compilation" },
+            { id: "doc-ptx-isa", title: "PTX ISA" },
+            { id: "doc-cuda-binary-utilities", title: "CUDA Binary Utilities" },
+            { id: "doc-compute-capabilities", title: "Compute Capabilities" },
+          ],
+        },
+      ],
+      component: () => import("@/pages/articles/gpu/cuda-compilation-and-isa-analysis"),
+    },
+    {
       slug: "cuda-thread-hierarchy",
       title: "CUDA 스레드 계층: 그리드, 블록, 워프, 인덱싱",
       subcategory: "gpu-fundamentals",
@@ -87,6 +111,27 @@ const gpu: Category = {
         { id: "indexing-2d", title: "2D 인덱싱" },
       ],
       component: () => import("@/pages/articles/gpu/cuda-thread-hierarchy"),
+    },
+    {
+      slug: "sm-warp-scheduling-and-issue",
+      title: "SM 내부: subpartition, warp scheduler, scoreboard, divergence",
+      subcategory: "gpu-fundamentals",
+      sections: [
+        { id: "sm-structure", title: "SM 과 subpartition 4개의 issue 상한" },
+        { id: "issue-scoreboard", title: "Scoreboard 와 issue·dispatch" },
+        { id: "latency-hiding", title: "Dependency latency 와 TLP·ILP·MLP" },
+        { id: "divergence", title: "Divergence 와 reconvergence" },
+        {
+          id: "evidence",
+          title: "Programming Guide·Nsight Compute 근거",
+          subsections: [
+            { id: "paper-cuda-simt-multithreading", title: "CUDA Programming Guide 의 SIMT·multithreading" },
+            { id: "paper-nsight-compute-scheduler", title: "Nsight Compute 의 scheduler·stall metric" },
+            { id: "paper-hopper-sm-diagram", title: "Hopper SM diagram" },
+          ],
+        },
+      ],
+      component: () => import("@/pages/articles/gpu/sm-warp-scheduling-and-issue"),
     },
     {
       slug: "cuda-matrix-multiply",
@@ -178,6 +223,52 @@ const gpu: Category = {
         { id: "release-gate", title: "Fusion release gate" },
       ],
       component: () => import("@/pages/articles/gpu/cuda-kernel-fusion"),
+    },
+    {
+      slug: "cutlass-gemm-hierarchy-and-cute-layouts",
+      title: "CUTLASS GEMM 계층과 CuTe layout: tile·fragment·swizzle·copy atom",
+      subcategory: "gpu-fundamentals",
+      sections: [
+        { id: "tile-hierarchy", title: "Threadblock·warp·MMA tile 세 층" },
+        { id: "mainloop-epilogue", title: "Mainloop 한 k-iteration 과 epilogue" },
+        { id: "cute-layout", title: "CuTe layout 함수와 합성·tiling" },
+        { id: "tv-partition", title: "Thread·value layout 과 copy/MMA atom" },
+        { id: "swizzle", title: "Swizzled shared memory layout" },
+        {
+          id: "evidence",
+          title: "CUTLASS 문서·CuTe 소스·EVT",
+          subsections: [
+            { id: "paper-cutlass-efficient-gemm", title: "Efficient GEMM 문서" },
+            { id: "paper-cute-layout-docs", title: "CuTe layout·algebra 문서" },
+            { id: "source-cute-mma-traits", title: "mma_traits_sm80·swizzle 소스" },
+            { id: "paper-evt", title: "EVT 논문" },
+          ],
+        },
+      ],
+      component: () => import("@/pages/articles/gpu/cutlass-gemm-hierarchy-and-cute-layouts"),
+    },
+    {
+      slug: "triton-kernel-programming-and-compiler",
+      title: "Triton: block 프로그래밍 모델, autotune, MLIR 컴파일, specialization",
+      subcategory: "gpu-fundamentals",
+      sections: [
+        { id: "block-program", title: "Program instance·BLOCK_SIZE·mask" },
+        { id: "launch-and-autotune", title: "num_warps·num_stages 와 autotune" },
+        { id: "jit-specialization", title: "JIT cache key 와 specialization" },
+        { id: "compiler-pipeline", title: "Triton IR → TritonGPU IR → PTX" },
+        { id: "tradeoff", title: "CUDA 와 Triton 의 소유 범위 비교" },
+        {
+          id: "evidence",
+          title: "Tillet 2019·공식 문서·runtime 소스",
+          subsections: [
+            { id: "paper-triton-mapl", title: "Tillet, Kung, Cox · Triton (MAPL 2019)" },
+            { id: "doc-triton-programming-guide", title: "Triton 공식 문서와 tutorial" },
+            { id: "source-triton-jit-runtime", title: "jit.py 와 NVIDIA backend compiler.py" },
+            { id: "doc-mlir", title: "MLIR" },
+          ],
+        },
+      ],
+      component: () => import("@/pages/articles/gpu/triton-kernel-programming-and-compiler"),
     },
     {
       slug: "cuda-persistent-kernels",

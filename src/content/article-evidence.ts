@@ -3618,7 +3618,13 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://docs.vllm.ai/en/latest/design/v1/prefix_caching/",
       note: "Parent hash·token block·extra identity와 full-block cache key semantics",
     },
-  ],
+    {
+      kind: "공식 문서",
+      label: "vLLM — Metrics design (prefix_cache_queries · prefix_cache_hits)",
+      href: "https://docs.vllm.ai/en/latest/design/metrics/",
+      note: "token 단위 query·hit counter와 최근 1k query 구간 hit rate 정의",
+    },
+],
   "ai/vllm-spec-decode": [
     {
       kind: "핵심 논문",
@@ -3663,7 +3669,13 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://docs.vllm.ai/en/latest/features/speculative_decoding/mtp/",
       note: "native MTP family 지원 조건과 num_speculative_tokens 설정의 현재 경계",
     },
-  ],
+    {
+      kind: "핵심 논문",
+      label: "Accelerating Large Language Model Decoding with Speculative Sampling",
+      href: "https://arxiv.org/abs/2302.01318",
+      note: "K token 병렬 scoring이 한 step과 비슷하다는 memory-bound 근거와 modified rejection sampling 알고리즘",
+    },
+],
   "ai/llm-harness": [
     {
       kind: "공식 문서",
@@ -5974,5 +5986,76 @@ export const ARTICLE_EVIDENCE: Readonly<
   "ai/train-validation-test": [
     { kind: "보충 읽기", label: "The Elements of Statistical Learning · Model Assessment and Selection", href: "https://hastie.su.domains/ElemStatLearn/", note: "Training error·selection·final assessment와 generalization 역할 구분" },
     { kind: "핵심 논문", label: "Cross-Validation: What Does It Estimate and How Well Does It Do It?", href: "https://pmc.ncbi.nlm.nih.gov/articles/PMC11412612/", note: "Cross-validation estimand와 독립 final evaluation 경계" },
+  ],
+  "ai/flash-attention-io-aware-kernel": [
+    { kind: "핵심 논문", label: "FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness", href: "https://arxiv.org/abs/2205.14135", note: "IO-aware tiling·recomputation 과 A100 속도·HBM 접근 수치의 출처로 결과는 저자 자기보고 범위" },
+    { kind: "핵심 논문", label: "Online normalizer calculation for softmax", href: "https://arxiv.org/abs/1805.02867", note: "Running max·normalizer 갱신식의 원 출처인 2018 년 NVIDIA 기술 보고서" },
+    { kind: "후속 논문", label: "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning", href: "https://arxiv.org/abs/2307.08691", note: "Loop 순서 교체·지연 정규화·sequence 축 병렬을 다룬 후속으로 이 글은 언급만 하고 다음 글이 정본" },
+    { kind: "공식 구현", label: "Dao-AILab/flash-attention", href: "https://github.com/Dao-AILab/flash-attention", note: "논문 저자의 CUDA 구현으로 지원 head dim 과 GPU 세대는 release 마다 확인" },
+  ],
+  "ai/continuous-batching-step-anatomy": [
+    { kind: "공식 코드", label: "vLLM V1 scheduler: vllm/v1/core/sched/scheduler.py", href: "https://github.com/vllm-project/vllm/blob/main/vllm/v1/core/sched/scheduler.py", note: "schedule() 의 running 순회·preemption·waiting admission 순서와 token_budget·long_prefill_token_threshold clipping 의 근거" },
+    { kind: "공식 코드", label: "vLLM SchedulerConfig: vllm/config/scheduler.py", href: "https://github.com/vllm-project/vllm/blob/main/vllm/config/scheduler.py", note: "max_num_batched_tokens 2048·max_num_seqs 128 기본값과 long_prefill_token_threshold 0 이 상한 없음이라는 docstring 의 근거" },
+    { kind: "공식 문서", label: "vLLM Optimization and Performance — Chunked Prefill", href: "https://docs.vllm.ai/en/latest/configuration/optimization.html", note: "V1 이 chunked prefill 을 기본으로 켜고 decode 를 먼저 batch 한 뒤 남은 budget 에 prefill 을 넣는다는 설명과 budget 크기의 ITL·TTFT 맞바꿈" },
+    { kind: "선행·비교 논문", label: "Orca: A Distributed Serving System for Transformer-Based Generative Models", href: "https://www.usenix.org/conference/osdi22/presentation/yu", note: "Iteration-level scheduling 과 selective batching 의 원 논문(OSDI 2022)" },
+    { kind: "핵심 논문", label: "Taming Throughput-Latency Tradeoff in LLM Inference with Sarathi-Serve", href: "https://arxiv.org/abs/2403.02310", note: "Chunked prefill 과 stall-free scheduling 으로 mixed batch 를 만드는 근거이며 수치는 저자 자기보고" },
+  ],
+  "ai/serving-memory-admission-and-preemption": [
+    { kind: "핵심 논문", label: "Efficient Memory Management for Large Language Model Serving with PagedAttention", href: "https://arxiv.org/abs/2309.06180", note: "FCFS·all-or-nothing eviction과 recompute·swap 정의, block 크기별 비교, OPT-13B token당 800 KB와 20.4~38.2% 활용률의 출처" },
+    { kind: "공식 문서", label: "vLLM Optimization and Tuning — Preemption", href: "https://docs.vllm.ai/en/latest/configuration/optimization.html", note: "V1 기본 preemption mode RECOMPUTE와 preemption을 줄이는 설정 조정 방향" },
+    { kind: "공식 문서", label: "vLLM v0.6.3 Engine Arguments", href: "https://docs.vllm.ai/en/v0.6.3/models/engine_args.html", note: "swap_space 기본 4 GiB, preemption_mode, block_size 16, gpu_memory_utilization 0.9의 V0 정의" },
+    { kind: "공식 구현", label: "vLLM v0.6.3 BlockSpaceManagerV1", href: "https://github.com/vllm-project/vllm/blob/v0.6.3/vllm/core/block_manager_v1.py", note: "watermark 기본 0.01과 can_allocate의 OK·LATER·NEVER 조건" },
+    { kind: "공식 문서", label: "SGLang Server Arguments", href: "https://docs.sglang.io/advanced_features/server_arguments.html", note: "mem-fraction-static·max-total-tokens·schedule-conservativeness와 retract 안내" },
+    { kind: "공식 문서", label: "TensorRT-LLM KV Cache System", href: "https://nvidia.github.io/TensorRT-LLM/features/kvcache.html", note: "free_gpu_memory_fraction 기본 0.9와 host_cache_size secondary offload" },
+  ],
+  "ai/inference-runtime-anatomy": [
+    { kind: "공식 문서", label: "vLLM Architecture Overview", href: "https://docs.vllm.ai/en/latest/design/arch_overview.html", note: "frontend·engine core·worker·model runner 의 process 구조와 ZMQ 연결의 근거" },
+    { kind: "공식 코드", label: "vllm/v1/worker/gpu_worker.py · vllm/v1/engine/core.py", href: "https://github.com/vllm-project/vllm/blob/main/vllm/v1/worker/gpu_worker.py", note: "init_device → load_model → determine_available_memory → initialize_from_config → compile_or_warm_up_model 순서와 KV byte 뺄셈의 근거" },
+    { kind: "공식 문서", label: "vLLM Engine Arguments", href: "https://docs.vllm.ai/en/latest/configuration/engine_args.html", note: "gpu_memory_utilization·enforce_eager·load_format·distributed_executor_backend·cudagraph_capture_sizes 의 정의" },
+    { kind: "공식 문서", label: "PyTorch CUDA semantics · Memory management", href: "https://docs.pytorch.org/docs/stable/notes/cuda.html#memory-management", note: "caching allocator 의 pool·reuse·fragmentation 설명의 근거" },
+    { kind: "공식 문서", label: "SGLang Server Arguments", href: "https://docs.sglang.io/advanced_features/server_arguments.html", note: "mem-fraction-static·cuda-graph-max-bs·skip-server-warmup 의 정의" },
+    { kind: "공식 코드", label: "sglang/srt/managers/scheduler.py · model_executor/model_runner.py", href: "https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/managers/scheduler.py", note: "TokenizerManager·Scheduler·TpModelWorker·ModelRunner 의 process 대응과 load_model → alloc_memory_pool → init_cuda_graphs 순서" },
+  ],
+  "ai/serving-latency-metrics-and-slo": [
+    { kind: "공식 코드", label: "vLLM · vllm/benchmarks/serve.py", href: "https://github.com/vllm-project/vllm/blob/main/vllm/benchmarks/serve.py", note: "TTFT·TPOT·ITL·E2E·request/output token throughput 의 실제 계산식과 보고 percentile 의 근거" },
+    { kind: "공식 문서", label: "NVIDIA · GenAI-Perf metrics", href: "https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/perf_analyzer/genai-perf/README.html", note: "Chunk 당 token 수로 나누는 inter token latency 정의와 avg·p99·p90·p75 보고 집합의 근거" },
+    { kind: "공식 문서", label: "Google SRE Book · Service Level Objectives", href: "https://sre.google/sre-book/service-level-objectives/", note: "SLI·SLO·SLA 구분, percentile 기반 latency 목표, error budget 과 내부 SLO 여유의 근거" },
+    { kind: "공식 문서", label: "vLLM · Benchmarking CLI", href: "https://github.com/vllm-project/vllm/blob/main/docs/benchmarking/cli.md", note: "Serving benchmark 의 실행 interface 이며 방법론(warm·cold, rate sweep)은 후속 글 범위" },
+  ],
+  "ai/prefill-decode-phase-dynamics": [
+    { kind: "핵심 논문", label: "Roofline: An Insightful Visual Performance Model for Multicore Architectures", href: "https://doi.org/10.1145/1498765.1498785", note: "Arithmetic intensity 와 ridge point 로 compute·memory 병목을 판정하는 원 model" },
+    { kind: "핵심 논문", label: "Taming Throughput-Latency Tradeoff in LLM Inference with Sarathi-Serve", href: "https://arxiv.org/abs/2403.02310", note: "Chunked prefill 과 stall-free scheduling 으로 decode 간섭을 다룬 OSDI 2024 연구, 수치는 저자 자기보고" },
+    { kind: "핵심 논문", label: "DistServe: Disaggregating Prefill and Decoding for Goodput-optimized Large Language Model Serving", href: "https://arxiv.org/abs/2401.09670", note: "Prefill·decode 간섭을 정량화한 OSDI 2024 연구, 분리 서빙 자체는 이 글 범위 밖" },
+    { kind: "공식 문서", label: "vLLM Optimization and Tuning: Chunked Prefill", href: "https://docs.vllm.ai/en/latest/configuration/optimization.html", note: "V1 기본 활성화, decode 우선, max_num_batched_tokens 절충의 공식 근거" },
+  ],
+  "gpu/sm-warp-scheduling-and-issue": [
+    { kind: "공식 문서", label: "NVIDIA CUDA C++ Programming Guide 12.8.1 · SIMT Architecture / Hardware Multithreading / Multiprocessor Level", href: "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-programming-guide/index.html", note: "Warp 32 thread·경로 직렬화·on-chip context·산술 latency 약 4 clock 과 warp 16개 요건의 근거" },
+    { kind: "공식 문서", label: "NVIDIA Nsight Compute Profiling Guide · Scheduler Statistics / Warp State Statistics", href: "https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html", note: "SM subpartition 4개, active·eligible·issued warp, long/short scoreboard·wait·not selected 분류의 근거" },
+    { kind: "공식 문서", label: "NVIDIA Hopper Architecture In-Depth", href: "https://developer.nvidia.com/blog/nvidia-hopper-architecture-in-depth/", note: "H100 SXM5 SM 132개와 SM diagram 의 처리 block 4개 구성의 근거" },
+  ],
+  "gpu/cuda-compilation-and-isa-analysis": [
+    { kind: "공식 문서", label: "CUDA Compiler Driver NVCC — GPU Compilation", href: "https://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/index.html", note: "cudafe++·cicc·ptxas·fatbinary 단계, compute_XX·sm_XX 의 두 단계 compile, PTX runtime JIT 규칙, cubin 의 same-major 호환의 근거" },
+    { kind: "공식 규격", label: "Parallel Thread Execution ISA", href: "https://docs.nvidia.com/cuda/parallel-thread-execution/index.html", note: "PTX 가 세대를 넘는 가상 ISA 라는 목표, .reg 의 무제한 가상 register 와 ptxas allocation, @p opcode.type 문법, sm_80·sm_90 의 ISA version 의 근거" },
+    { kind: "공식 문서", label: "CUDA Binary Utilities — cuobjdump·nvdisasm", href: "https://docs.nvidia.com/cuda/cuda-binary-utilities/index.html", note: "cuobjdump -sass·-ptx·-lelf·-res-usage, nvdisasm -cfg·-plr·-g 옵션과 본문 SASS 예제의 근거" },
+    { kind: "공식 문서", label: "CUDA C++ Programming Guide — Compute Capabilities", href: "https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#compute-capabilities", note: "major.minor 의미, GPU 별 번호, 8.0·9.0 의 register·shared memory 한도, 9.0 전용 feature 의 근거" },
+  ],
+  "gpu/triton-kernel-programming-and-compiler": [
+    { kind: "핵심 논문", label: "Tillet, Kung, Cox · Triton (MAPL 2019)", href: "https://www.eecs.harvard.edu/~htk/publication/2019-mapl-tillet-kung-cox.pdf", note: "Tile 단위 프로그래밍 모델과 compiler 가 tiling·coalescing·shared memory·synchronization 을 소유한다는 설계의 원 논문" },
+    { kind: "공식 문서", label: "Triton programming guide chapter 1·2", href: "https://triton-lang.org/main/programming-guide/chapter-1/introduction.html", note: "Blocked program 대 scalar thread 의 대비와 compiler 자동 최적화 목록, polyhedral·scheduling language 와의 위치" },
+    { kind: "공식 문서", label: "Triton tutorial 01 vector add · 03 matrix multiplication", href: "https://triton-lang.org/main/getting-started/tutorials/01-vector-add.html", note: "N=98432·BLOCK_SIZE=1024 예, mask 와 tl.constexpr, matmul 의 grouped ordering·K 루프·autotune config 목록의 근거" },
+    { kind: "공식 문서", label: "triton.autotune · triton.jit · triton.Config API reference", href: "https://triton-lang.org/main/python-api/generated/triton.autotune.html", note: "configs·key·prune_configs_by·reset_to_zero·restore_value, do_not_specialize, num_warps·num_stages 정의의 근거" },
+    { kind: "공식 코드", label: "triton-lang/triton · python/triton/runtime/jit.py", href: "https://github.com/triton-lang/triton/blob/main/python/triton/runtime/jit.py", note: "Cache key = (specialization, options) 구성과 16 배수·정렬 specialization, do_not_specialize 의 근거" },
+    { kind: "공식 코드", label: "triton-lang/triton · third_party/nvidia/backend/compiler.py", href: "https://github.com/triton-lang/triton/blob/main/third_party/nvidia/backend/compiler.py", note: "make_ttir·make_ttgir·make_llir·make_ptx·make_cubin 단계와 coalesce·pipeline·warp-specialize pass 이름의 근거" },
+    { kind: "공식 문서", label: "LLVM · MLIR", href: "https://mlir.llvm.org/", note: "Dialect·progressive lowering·재사용 pass 라는 기반 시설 정의의 근거" },
+  ],
+  "gpu/cutlass-gemm-hierarchy-and-cute-layouts": [
+    { kind: "공식 문서", label: "NVIDIA CUTLASS · Efficient GEMM in CUDA", href: "https://github.com/NVIDIA/cutlass/blob/main/media/docs/cpp/efficient_gemm.md", note: "Threadblock·warp·instruction 세 층 tile 구조와 double buffering, epilogue 의 shared memory 재배치 근거" },
+    { kind: "공식 문서", label: "NVIDIA CUTLASS · CuTe Layouts (01_layout.md)", href: "https://github.com/NVIDIA/cutlass/blob/main/media/docs/cpp/cute/01_layout.md", note: "Layout 을 shape·stride 함수로 정의하고 열·행 우선과 중첩 shape 를 설명하는 근거" },
+    { kind: "공식 문서", label: "NVIDIA CUTLASS · CuTe Layout Algebra (02_layout_algebra.md)", href: "https://github.com/NVIDIA/cutlass/blob/main/media/docs/cpp/cute/02_layout_algebra.md", note: "Composition·complement·logical divide·product 의 정의와 20:2 ∘ (5,4):(4,1) = (5,4):(8,2) 예" },
+    { kind: "공식 문서", label: "NVIDIA CUTLASS · CuTe Tensors · MMA atoms · GEMM tutorial", href: "https://github.com/NVIDIA/cutlass/blob/main/media/docs/cpp/cute/0x_gemm_tutorial.md", note: "local_tile·local_partition, TiledCopy·TiledMMA 와 mainloop 의 copy→sync→gemm 구조" },
+    { kind: "공식 코드", label: "NVIDIA/cutlass · include/cute/atom/mma_traits_sm80.hpp", href: "https://github.com/NVIDIA/cutlass/blob/main/include/cute/atom/mma_traits_sm80.hpp", note: "SM80_16x8x16_F32F16F16F32_TN 의 ALayout ((4,8),(2,2,2)):((32,1),(16,8,128)) 등 fragment TV layout 의 근거" },
+    { kind: "공식 코드", label: "NVIDIA/cutlass · include/cute/swizzle.hpp", href: "https://github.com/NVIDIA/cutlass/blob/main/include/cute/swizzle.hpp", note: "Swizzle<B,M,S>::apply 의 offset ^ ((offset & yyy_mask) >> S) 식과 B·M·S 의 의미" },
+    { kind: "공식 규격", label: "PTX ISA · Matrix Fragments for mma.m16n8k16", href: "https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#warp-level-matrix-fragment-mma-16816-float", note: "groupID = lane>>2, threadID_in_group = lane%4 의 fragment lane 규칙 원 출처" },
+    { kind: "핵심 논문", label: "EVT: Accelerating Deep Learning Training with Epilogue Visitor Tree (ASPLOS 2024)", href: "https://dl.acm.org/doi/10.1145/3620666.3651369", note: "Epilogue visitor tree 의 구조와 compiler 자동 생성 근거이며 수치는 저자 자기보고" },
   ],
 };

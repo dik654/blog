@@ -1,9 +1,12 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
+import { Link } from "react-router-dom";
 import Math from "@/components/ui/math";
 import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
 import { codeRefs } from "./codeRefs";
+import AlgorithmBlock from "@/components/ui/algorithm-block";
 import AcceptanceTraceViz from "./viz/AcceptanceTraceViz";
+import RejectionResampleViz from "./viz/RejectionResampleViz";
 
 const REJECTION_TERMS = [
   {
@@ -131,12 +134,74 @@ m_{\mathrm{out}}(x)&=m_{\mathrm{accept}}(x)+m_{\mathrm{correct}}(x) \\
             Fast Inference from Transformers via Speculative Decoding
           </a>
           은 작은 approximation model의 출력을 그대로 정답으로 쓰지 않고, 큰
-          target model이 병렬로 검증할 proposal로 사용했습니다. 위 acceptance와
+          target model이 병렬로 검증할 proposal로 사용했습니다.
+        </p>
+        <p className="leading-8">
+          위 acceptance와
           correction 규칙이 있으므로 논문의 전제 안에서는 target-only sampling과
           같은 분포를 유지하면서 target의 serial step 수를 줄일 수 있습니다.
           “작은 모델이 품질을 대신한다”가 아니라 “작은 모델은 계산 경로만 제안하고
           품질 계약은 target이 계속 소유한다”는 것이 핵심입니다.
         </p>
+
+        <h3 id="verification-pass" className="scroll-mt-20">
+          Verification pass는 K+1개 분포를 한 번의 forward로 얻습니다
+        </h3>
+        <p className="leading-8">
+          Draft가 K개 후보를 만들면 target은 확정 prefix 뒤에 그 K개를 이어 붙여
+          한 번만 실행합니다. Causal attention 덕분에 마지막 K+1개 위치의 출력이
+          각각 prefix, prefix+t₁, …, prefix+t₁..t_K를 조건으로 한 next-token
+          분포가 되므로, 수락 판정에 필요한 p를 위치마다 따로 실행하지 않아도
+          됩니다.
+        </p>
+        <p className="leading-8">
+          이 한 번의 forward가 verification pass이고, 그 비용이 token 하나짜리
+          target step과 비슷하다는 것이 Chen et al. 2023의 관찰입니다. 낮은
+          batch에서는 linear layer가 weight read에 묶여 있어 한 token을 넣든
+          다섯 token을 넣든 읽는 byte가 같기 때문입니다. 이 가정이 언제 깨지는지는
+          <Link to="/ai/vllm-spec-decode#not-always-faster">비용 모델 절</Link>에서
+          다룹니다.
+        </p>
+
+        <h3 id="rejection-point" className="scroll-mt-20">
+          Rejection point에서는 residual로 다시 뽑고 그 뒤 후보는 버립니다
+        </h3>
+        <p className="leading-8">
+          Verification pass가 끝나면 위치 1부터 차례로 uniform 난수 r_i를 뽑아
+          r_i ≤ p_i/q_i 인지 봅니다. 처음 실패한 위치 n이 rejection point이고,
+          그 앞의 n−1개 draft는 그대로 확정합니다. 위치 n의 token은 target에만
+          남은 질량 (p−q)₊를 정규화한 분포에서 다시 뽑습니다.
+        </p>
+        <p className="leading-8">
+          거부가 한 번도 없으면 K+1번째 분포 <Math>{String.raw`p_{K+1}`}</Math>에서 bonus token 하나를
+          뽑습니다. 이 분포는 prefix+t₁..t_K를 조건으로 이미 계산돼 있으므로
+          추가 실행이 없습니다. 어느 경우든 한 cycle은 정확히 하나의 target
+          sampling(correction 또는 bonus)으로 끝나고, 확정 길이 Y는 1 이상
+          K+1 이하가 됩니다.
+        </p>
+      </div>
+
+      <AlgorithmBlock
+        title="한 speculative cycle: draft K개 → verify 1 pass → rejection point → resample → commit"
+        input={[
+          "prefix: 확정된 token 열, target p(·|·), draft q(·|·), speculation length K",
+        ]}
+        steps={[
+          { code: "for i in 1..K: q_i = q(· | prefix + t_1..t_{i-1}); t_i ~ q_i", note: "Draft를 K번 직렬 실행합니다. 비용 Kc." },
+          { code: "p_1..p_{K+1} = target(prefix + t_1..t_K)", note: "Verification pass 한 번. 위치 i의 p_i는 prefix+t_1..t_{i-1}를 조건으로 한 분포입니다." },
+          { code: "n = K + 1", note: "거부가 없으면 n은 K+1로 남아 bonus 경로로 갑니다." },
+          { code: "for i in 1..K: r_i ~ U(0,1); if r_i > p_i(t_i) / q_i(t_i): n = i; break", note: "왼쪽부터 첫 실패 위치가 rejection point입니다." },
+          { code: "accepted = t_1..t_{n-1}", note: "A = n−1. 첫 거부 뒤의 t_n..t_K는 버립니다." },
+          { code: "if n <= K: x ~ normalize(max(0, p_n − q_n)) else: x ~ p_{K+1}", note: "Correction은 residual에서, bonus는 K+1번째 target 분포에서 뽑습니다." },
+          { code: "prefix = prefix + accepted + [x]; commit KV up to len(prefix)", note: "Y = n. Scheduler·KV cache·sampler가 같은 길이를 봐야 합니다." },
+        ]}
+        output="prefix에 1..K+1개 token이 추가되고 다음 cycle이 새 prefix에서 시작합니다"
+        repeatUntil="EOS 또는 max_tokens에 도달할 때까지 반복"
+      />
+
+      <RejectionResampleViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
       </div>
 
       <AcceptanceTraceViz />
@@ -146,8 +211,10 @@ m_{\mathrm{out}}(x)&=m_{\mathrm{accept}}(x)+m_{\mathrm{correct}}(x) \\
         <p className="leading-8">
           Draft의 네 번째 후보는 앞선 세 번째 draft token이 이미 prefix에 들어갔다고
           가정해 만든 conditional sample입니다. 그런데 세 번째 위치가 거부되어
-          correction token으로 바뀌면 네 번째 후보는 더 이상 현재 prefix에서 만든
-          값이 아닙니다. 그래서 첫 거부 뒤의 suffix를 그대로 이어 쓰면 target
+          correction token으로 바뀌면 네 번째 후보는 더 이상 현재 prefix에서 만든 값이 아닙니다.
+        </p>
+        <p className="leading-8">
+          그래서 첫 거부 뒤의 suffix를 그대로 이어 쓰면 target
           distribution 보장도 깨집니다. Runtime은 거부 지점까지 sequence length와
           KV state를 확정하고, 바뀐 prefix에서 다음 cycle을 시작해야 합니다.
         </p>
@@ -199,7 +266,10 @@ A &= \underbrace{\sum_{i=1}^{K} I_i}_{\text{오른쪽 항으로 결과 계산}} 
           <strong>최종 생성 분포가 target distribution과 같다</strong>는 뜻입니다.
           Floating-point 연산 순서, kernel, tensor parallel reduction, batch
           invariance, structured-output mask까지 매 run의 token이 bitwise 같다는
-          뜻은 아닙니다. 같은 seed 재현성만 확인할 것이 아니라 여러 prompt와 seed의
+          뜻은 아닙니다.
+        </p>
+        <p className="leading-8">
+          같은 seed 재현성만 확인할 것이 아니라 여러 prompt와 seed의
           task quality·token frequency·failure rate가 target-only 기준에서 벗어나지
           않는지도 봐야 합니다.
         </p>
@@ -209,7 +279,10 @@ A &= \underbrace{\sum_{i=1}^{K} I_i}_{\text{오른쪽 항으로 결과 계산}} 
           Target은 후보 여러 위치를 한 step에 처리할 token budget과 임시 KV slot을
           사용합니다. 첫 거부가 정해지면 scheduler의 sequence length, model
           runner의 cache commit 지점, sampler의 correction 결과가 모두 같은
-          prefix를 가리켜야 합니다. 이 가운데 하나라도 suffix를 확정된 state로
+          prefix를 가리켜야 합니다.
+        </p>
+        <p className="leading-8">
+          이 가운데 하나라도 suffix를 확정된 state로
           남기면 다음 cycle의 조건이 어긋납니다. Speculative decoding은 proposer
           하나를 추가하는 기능이 아니라 이 세 계층의 commit protocol입니다.
         </p>

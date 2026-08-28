@@ -35,13 +35,16 @@ export default function EagleMtp() {
   return (
     <section id="eagle-mtp" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
-        EAGLE·native MTP·draft model은 같은 검증기에 서로 다른 proposer를 붙입니다
+        EAGLE·MTP·draft model은 같은 검증기에 다른 proposer를 붙입니다
       </h2>
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
           모든 방법은 target verify와 acceptance라는 같은 골격을 사용하지만 후보를
-          만드는 정보와 비용이 다릅니다. 별도 draft model은 token distribution을
+          만드는 정보와 비용이 다릅니다.
+        </p>
+        <p className="leading-8">
+          별도 draft model은 token distribution을
           직접 예측하고, EAGLE 계열은 target의 feature를 활용해 불확실성을 줄이며,
           native MTP는 학습할 때부터 붙어 있던 future-token module을 proposer로
           사용합니다. N-gram·suffix 방식은 model 없이 이미 등장한 문자열 반복을
@@ -60,8 +63,10 @@ export default function EagleMtp() {
             EAGLE: Speculative Sampling Requires Rethinking Feature Uncertainty
           </a>
           은 다음 token 자체보다 target model의 feature sequence를 autoregressive하게
-          예측하고, 원래 token sequence도 조건으로 제공하는 feature-level drafter를
-          제안했습니다. Feature에는 다음 token 외의 문맥 정보가 들어 있지만 token이
+          예측하고, 원래 token sequence도 조건으로 제공하는 feature-level drafter를 제안했습니다.
+        </p>
+        <p className="leading-8">
+          Feature에는 다음 token 외의 문맥 정보가 들어 있지만 token이
           정해져도 feature가 하나로 결정되지는 않으므로, 논문은 이 uncertainty를
           줄이는 조건 설계를 함께 다룹니다. 결과적으로 target에 가까운 proposal을
           더 작은 계산으로 만들려는 접근이며, 모든 target에 checkpoint 없이 바로
@@ -77,6 +82,8 @@ export default function EagleMtp() {
           </a>
           은 shared model trunk 위에 여러 output head를 두고, 각 위치에서 다음
           token 하나뿐 아니라 더 먼 미래 token까지 함께 예측하도록 학습했습니다.
+        </p>
+        <p className="leading-8">
           원 논문의 주장은 auxiliary training objective가 representation과 sample
           efficiency에 줄 수 있는 효과, 그리고 학습된 미래 예측을 inference에
           활용할 가능성을 해당 model scale·task에서 평가한 것입니다. 모든 native
@@ -95,8 +102,10 @@ export default function EagleMtp() {
         </p>
         <p className="leading-8">
           또 target과 proposer의 작은 수치 차이가 먼 후보까지 누적되므로 activation
-          quantization이나 custom kernel 변경 뒤에는 acceptance length가 크게
-          달라질 수 있습니다. 양자화는 한 target 실행에서 읽는 byte를 줄이고 MTP는
+          quantization이나 custom kernel 변경 뒤에는 acceptance length가 크게 달라질 수 있습니다.
+        </p>
+        <p className="leading-8">
+          양자화는 한 target 실행에서 읽는 byte를 줄이고 MTP는
           그 실행을 여러 token이 나눠 쓰게 하므로 함께 이득을 낼 수 있지만,
           numerical drift가 acceptance를 낮추면 두 효과가 서로 상쇄될 수도 있습니다.
           GLM-5.2와 B300에서 이 문제를 어떻게 측정하고 runtime 병목을 제거했는지는
@@ -110,7 +119,10 @@ export default function EagleMtp() {
         <p className="leading-8">
           <a href="https://arxiv.org/abs/2305.09781">SpecInfer</a>는 여러 small
           speculative model이 만든 후보를 tree로 구성하고, 큰 model이 tree-based
-          attention으로 함께 검증하는 serving system을 제안했습니다. Chain 하나의
+          attention으로 함께 검증하는 serving system을 제안했습니다.
+        </p>
+        <p className="leading-8">
+          Chain 하나의
           depth만 늘리는 대신 후보 폭도 활용해 target과 일치할 경로를 늘리는
           접근입니다. 다만 tree가 넓어질수록 temporary KV·verification compute와
           scheduling 복잡도도 늘어나므로, 논문의 workload와 system 조건 밖에서
@@ -162,20 +174,26 @@ S(K)&\approx\frac{\mathbb{E}[Y_K],t_T(1)}{t_C(K)} \\
           Static K 하나가 아니라 workload별 정책을 검증합니다
         </h3>
         <p className="leading-8">
-          최적 depth는 prompt·출력 종류·sampling temperature·동시성에 따라
+          최적 depth는 prompt와 출력 종류, sampling temperature, 동시성에 따라
           달라집니다. 코드처럼 다음 token이 비교적 예측 가능한 구간과 높은
           temperature의 창작 문장은 같은 K를 쓰더라도 acceptance tail이 다릅니다.
+        </p>
+        <p className="leading-8">
           vLLM의 dynamic speculative decoding처럼 runtime이 관측 신호에 따라
-          speculation을 줄이거나 끌 수 있지만, 정책의 입력·선택 이유·실제 결과를
-          trace에 남겨야 회귀를 찾을 수 있습니다.
+          speculation을 줄이거나 끌 수 있지만, 정책의 입력과 선택 이유, 실제
+          결과를 trace에 남겨야 회귀를 찾을 수 있습니다.
         </p>
         <p className="leading-8">
           최소 benchmark ledger에는 target/draft artifact와 revision, K와 dynamic
-          policy, prompt/output length·QPS·sampler 분포, <Math>{String.raw`\bar A`}</Math>와
-          <Math>{String.raw`\bar Y`}</Math>의 정의, draft/verify/runtime 시간, TTFT·ITL·E2E
-          latency, KV 사용량·preemption, target-only 대비 품질 검사가 들어가야
-          합니다. Batch-1 tokens/s 한 숫자로 production throughput을 결론 내리지
-          않는 이유가 여기에 있습니다.
+          policy, prompt/output length와 QPS, sampler 분포가 들어갑니다. 여기에
+          <Math>{String.raw`\bar A`}</Math>와 <Math>{String.raw`\bar Y`}</Math>의
+          정의도 함께 적습니다.
+        </p>
+        <p className="leading-8">
+          시간 쪽에서는 draft/verify/runtime 시간과 TTFT, ITL, E2E latency를,
+          자원 쪽에서는 KV 사용량과 preemption을, 품질 쪽에서는 target-only 대비
+          검사를 기록합니다. Batch-1 tokens/s 한 숫자로 production throughput을
+          결론 내리지 않는 이유가 여기에 있습니다.
         </p>
       </div>
     </section>

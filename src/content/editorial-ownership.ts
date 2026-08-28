@@ -4723,7 +4723,10 @@ export const EDITORIAL_BOUNDARIES = {
       "BlockPool reference count·free queue·cached block eviction의 ownership 불변식",
       "KVCacheManager의 cache lookup·slot demand·allocation 실패 계약과 hybrid cache group 경계",
       "Automatic Prefix Caching의 chained full-block hash·재사용 범위·운영 지표",
-    ],
+      "연속 예약과 fixed-size block에서의 internal·external fragmentation 계산과 paging이 external fragmentation을 없애는 이유",
+      "BlockPool allocator의 allocate·free 연산, sequence fork·copy-on-write, beam·branch block 공유의 reference count 전이",
+      "Block 단위 prefix sharing과 token·request hit rate, replica·eviction 두 축의 cache locality 측정",
+],
     reuses: [
       {
         label: "Autoregressive decoding과 KV state",
@@ -4760,7 +4763,9 @@ export const EDITORIAL_BOUNDARIES = {
       "Rejection sampling의 target-distribution 보존 조건과 첫 거부 이후 suffix causality",
       "Acceptance length·committed length·target weight-read amortization의 측정 정의",
       "Draft model·EAGLE·native MTP·N-gram proposer와 production serving 손익분기점",
-    ],
+      "Speculation length K·acceptance rate α·cost coefficient c로 닫히는 기대 확정 길이와 speculative speedup 모델, 그리고 memory-bound 가정이 깨져 항상 빨라지지 않는 조건",
+      "Verification pass가 K+1 분포를 한 forward로 내는 단계와 rejection point에서 residual resample·suffix 폐기·bonus로 이어지는 절차",
+],
     reuses: [
       { label: "Autoregressive decoding", href: "/ai/seq2seq#decoder" },
       {
@@ -4790,7 +4795,11 @@ export const EDITORIAL_BOUNDARIES = {
         kind: "project-measurement",
         rule: "GLM/B300 acceptance·throughput·kernel 수치는 적용 사례 글이 소유하며 일반 이론의 보편적 speedup으로 확대하지 않는다.",
       },
-    ],
+      {
+        kind: "primary-source",
+        rule: "Speedup 식과 표의 수치는 Leviathan et al.의 i.i.d. α·cost coefficient c 가정 아래 이론값이며, 저자 보고 speedup은 논문의 model·hardware·batch 조건으로 제한하고 실측 speedup으로 승격하지 않는다.",
+      },
+],
   },
   "distributed-systems": {
     title: "분산 시스템 기초 글이 소유하는 범위",
@@ -9127,6 +9136,225 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [
       { kind: "primary-source", rule: "Capture/replay 실행 계약은 PyTorch torch.cuda.graph의 문서화된 static-address 의미론으로 제한한다." },
       { kind: "project-measurement", rule: "실제 구현 설명은 vllm-project/vllm의 vllm/compilation/cuda_graph.py 코드 범위로 제한하며, latency 배율 예시는 개념 설명용 수치일 뿐 실측값이 아니다." },
+    ],
+  },
+  "flash-attention-io-aware-kernel": {
+    title: "FlashAttention IO-aware kernel 글이 소유하는 범위",
+    owns: [
+      "Attention materialization 의 N×N HBM 왕복 비용 계산",
+      "IO-aware 비용 모델과 SRAM residency·HBM 접근량 Θ(N²d²/M)",
+      "Online softmax 의 running max·normalizer·출력 누적 갱신식",
+      "Q/K/V tiling forward loop 와 backward 의 logsumexp recompute-vs-store tradeoff",
+    ],
+    reuses: [
+      { label: "Scaled dot-product attention", href: "/ai/attention-theory" },
+      { label: "Softmax 와 max-shift invariance", href: "/ai/softmax" },
+      { label: "KV cache 모양", href: "/ai/kv-cache-fundamentals" },
+      { label: "CUDA shared-memory GEMM tiling", href: "/gpu/cuda-matrix-multiply" },
+      { label: "Autodiff save–recompute 경계", href: "/ai/reverse-mode-autodiff" },
+      { label: "PagedAttention kernel 경계", href: "/ai/vllm-paged-attention" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "속도·HBM 접근 배율은 FlashAttention 논문의 A100 자기보고로 한정하고 다른 GPU 세대로 일반화하지 않는다." },
+      { kind: "standard", rule: "HBM·SRAM 용량과 대역폭은 논문이 적은 A100 수치를 쓰고 hardware 별 재확인을 전제한다." },
+      { kind: "project-claim", rule: "FlashAttention-2·3 의 병렬화·loop 재배치는 이 글에서 언급만 하고 수치·기여는 다음 글이 정본으로 다룬다." },
+    ],
+  },
+  "continuous-batching-step-anatomy": {
+    title: "Scheduling step 해부 글이 소유하는 범위",
+    owns: [
+      "한 scheduling step 의 입력(running·waiting·budget·KV)과 출력(SchedulerOutput) 정의",
+      "Token budget 이 running 먼저, waiting 나중 순서로 소모되는 배분식과 sequence budget 의 별도 상한",
+      "schedule() 의 running 순회 → preemption → waiting admission → chunk 분할 → batch 조립 순서",
+      "Decode·prefill·mixed batch 가 같은 절차에서 갈리는 조건과 mixed batch 의 이득·비용",
+    ],
+    reuses: [
+      { label: "Iteration-level continuous batching 과 resource feasibility", href: "/ai/vllm-serving#engine-loop" },
+      { label: "Request progress gap·queue 정책·preemption 비용", href: "/ai/vllm-scheduler" },
+      { label: "Prefill·decode 의 compute·memory 특성", href: "/ai/prefill-decode-phase-dynamics" },
+      { label: "CUDA graph batch-shape dispatch", href: "/ai/cuda-graph-capture#implementation" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "함수·필드 이름과 분기 순서는 vLLM V1 main branch 의 scheduler.py·config/scheduler.py 에서 읽은 범위로만 쓰고 읽은 시점을 본문에 적는다." },
+      { kind: "project-claim", rule: "Sarathi-Serve 의 처리 용량 배수는 논문의 model·GPU·latency 조건에 묶인 저자 자기보고로 표기하고 최신 vLLM 성능으로 옮기지 않는다." },
+      { kind: "standard", rule: "수치 예(budget 2048·decode 40·prompt 3000)는 배분식의 산수이며 step 시간·ITL 은 측정 없이 크기 관계로만 말한다." },
+    ],
+  },
+  "serving-memory-admission-and-preemption": {
+    title: "KV admission·preemption 글이 소유하는 범위",
+    owns: [
+      "요청 memory footprint 계산식과 admission 시점 prefill 몫·최종 상한의 구분",
+      "Memory watermark의 정의와 free block 기반 OK·LATER·NEVER admission 판정",
+      "Memory pressure의 정의와 recompute·swap preemption의 비용 비교(연산 vs PCIe)",
+      "Hybrid model의 고정 recurrent-state 할당이 admission 필요 block을 바꾸는 방식",
+    ],
+    reuses: [
+      { label: "Paged KV block allocation·fragmentation·cache group", href: "/ai/vllm-paged-attention" },
+      { label: "RUNNING·WAITING 순서, token budget, preemption 상태 전이", href: "/ai/vllm-scheduler" },
+      { label: "Token당 KV byte", href: "/ai/kv-cache-fundamentals" },
+      { label: "Weight·KV·workspace 장부와 성장축 분류", href: "/ai/model-vram-budgeting" },
+      { label: "배포 용량 단위의 context·concurrency admission", href: "/ai/llm-serving-capacity" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Recompute·swap 비교의 정성적 결론은 vLLM 논문의 block 크기 실험 범위로 한정하고, ms 단위 수치는 본문이 직접 계산한 예시임을 밝힌다." },
+      { kind: "standard", rule: "Watermark·swap_space·gpu_memory_utilization 같은 기본값은 버전을 명시한 공식 문서나 code에서만 가져온다." },
+      { kind: "project-claim", rule: "SGLang·TensorRT-LLM의 설정은 각 engine 문서가 정의한 범위로만 읽고 vLLM의 preemption mechanism과 동일시하지 않는다." },
+    ],
+  },
+  "inference-runtime-anatomy": {
+    title: "Inference runtime 해부 글이 소유하는 범위",
+    owns: [
+      "frontend·driver·worker process 분리와 executor·model runner 의 위치",
+      "checkpoint shard 를 rank 별로 읽는 weight loading 과 대역폭 하한 계산",
+      "memory pool·arena·reuse 위에서 KV pool 을 확정하는 static memory planning 과 workspace 예약",
+      "config → load → profile → KV pool → warmup → ready 의 기동 절차와 cold start 지배 항",
+      "eager·lazy initialization 의 선택 기준과 backend·compatibility layer 의 역할",
+    ],
+    reuses: [
+      { label: "vLLM engine 책임 경계와 DP·TP·PP layout", href: "/ai/vllm-serving#serving-architecture" },
+      { label: "Scheduler 의 step 로직", href: "/ai/vllm-scheduler" },
+      { label: "KV block allocator 와 prefix cache", href: "/ai/vllm-paged-attention" },
+      { label: "CUDA graph capture·replay 원리", href: "/ai/cuda-graph-capture#mechanics" },
+      { label: "Weight payload 와 known floor 계산", href: "/ai/model-vram-budgeting#known-floor" },
+      { label: "KV pool 의 token·동시 요청 환산", href: "/ai/llm-serving-capacity#capacity" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "process·method 이름은 vLLM 공식 설계 문서와 vllm/v1 코드, SGLang srt 코드에 있는 것만 쓰고 다른 engine 으로 일반화하지 않는다." },
+      { kind: "standard", rule: "pool·arena·reuse 의 설명은 PyTorch caching allocator 문서 범위로 제한한다." },
+      { kind: "project-claim", rule: "70B FP16·TP 8·80 GB 의 byte 분해와 9 초·140 초 loading, 4.5 GB peak, 1 GB graph 는 계산 예시이며 실측이 아니다." },
+    ],
+  },
+  "serving-latency-metrics-and-slo": {
+    title: "Serving latency 지표와 SLO 글이 소유하는 범위",
+    owns: [
+      "TTFT·ITL·TPOT·E2E 의 정의와 E2E = TTFT + (n−1)·TPOT 분해식",
+      "tokens/s·RPS 의 서버 단위 정의와 batch·queueing 이 만드는 latency–throughput 상충",
+      "정렬 표본의 percentile(P50·P95·P99)·tail latency·ITL 분산을 분포로 읽는 방법",
+      "percentile·임계값·window·허용 위반율로 적는 SLO 와 window 단위 violation 판정 절차",
+    ],
+    reuses: [
+      { label: "Request lifecycle 과 latency decomposition 측정 계약", href: "/ai/vllm-serving#prefill-decode" },
+      { label: "SLO 조건 아래의 goodput", href: "/ai/vllm-serving#serving-goodput" },
+      { label: "Little's law 와 error budget burn rate", href: "/ai/llm-serving-ops#observability-aiops" },
+      { label: "SLO 로 막히는 admission 상한", href: "/ai/llm-serving-capacity#capacity-admission" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "지표 계산식은 vLLM serve.py 와 GenAI-Perf 문서의 정의를 그대로 옮기고 두 도구의 percentile 집합 차이를 명시한다." },
+      { kind: "standard", rule: "SLO 문장은 SLI·percentile·임계값·window·평가 기간·허용 위반율을 모두 적은 뒤에만 위반을 판정한다." },
+      { kind: "project-claim", rule: "Step 시간·표본 분포 같은 수치 예는 설명용 가정이며 특정 model·GPU 의 측정값으로 인용하지 않는다." },
+    ],
+  },
+  "prefill-decode-phase-dynamics": {
+    title: "Prefill 은 compute-bound, decode 는 memory-bound 글이 소유하는 범위",
+    owns: [
+      "Prefill 과 decode 의 arithmetic intensity 계산과 ridge point 비교",
+      "섞인 batch 의 step 시간을 memory 항과 compute 항의 max 로 모델링한 간섭 mechanism",
+      "Decode 우선의 roofline 근거와 TPOT 상한에서 chunk 크기를 역산하는 절차",
+      "n* = P/(d·N) 를 넘는 long-context prefill 의 n² 지배 구간과 chunk 재읽기 비용",
+      "Prefill 최적화를 kernel·chunking·scheduling·분리 배치 층으로 나누는 지도",
+    ],
+    reuses: [
+      { label: "Prefill·decode phase 구분", href: "/ai/vllm-serving#prefill-decode" },
+      { label: "Chunked prefill interleaving 과 scheduler 정책", href: "/ai/vllm-scheduler#prefill-decode" },
+      { label: "Roofline 측정 장부", href: "/gpu/cuda-perf-analysis#throughput-ledger" },
+      { label: "KV cache shape 와 VRAM budget", href: "/ai/model-vram-budgeting#kv-state" },
+      { label: "Scheduling step 조립", href: "/ai/continuous-batching-step-anatomy" },
+      { label: "TTFT·TPOT 지표와 SLO", href: "/ai/serving-latency-metrics-and-slo" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "모든 수치는 7B dense FP16·H100 급 가정의 roofline 하한 계산이며 특정 장비 실측으로 적지 않는다." },
+      { kind: "primary-source", rule: "Sarathi-Serve·DistServe 의 배수는 저자 자기보고로 표기하고 해당 model·hardware·workload 범위로 한정한다." },
+      { kind: "project-claim", rule: "미공개 model 의 long-context prefill 체감치는 사실로 쓰지 않고 n* 와 F_eff 조건식으로만 설명한다." },
+    ],
+  },
+  "sm-warp-scheduling-and-issue": {
+    title: "SM 내부 warp scheduling 글이 소유하는 범위",
+    owns: [
+      "CUDA programming model 이 정하는 것과 하드웨어가 정하는 것의 경계(block→SM, warp→subpartition)",
+      "SM subpartition 4개와 warp scheduler 의 clock 당 issue 상한",
+      "Scoreboard 의 ready·stalled 판정과 issue·dispatch 의 구분, stall 원인 분류",
+      "Dependency latency 를 TLP·ILP·MLP 로 숨기는 Little's law 계산과 issue pipeline bubble",
+      "Warp divergence 의 경로 직렬화 비용과 reconvergence·independent thread scheduling 의 범위",
+    ],
+    reuses: [
+      { label: "Grid·block·thread 와 warp SIMT", href: "/gpu/cuda-thread-hierarchy#overview" },
+      { label: "Occupancy resource bound 계산", href: "/gpu/gpu-architecture#gpu-latency-hiding-occupancy" },
+      { label: "Register 가 residency 를 줄이는 경로", href: "/gpu/cuda-register-pressure#residency" },
+      { label: "Memory coalescing", href: "/gpu/cuda-shared-memory#coalescing" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "산술 latency 약 4 clock 과 warp 16개 요건은 CUDA C++ Programming Guide 12.8.1 의 CC 7.x 서술 범위로만 쓰고 세대별 실제 값으로 일반화하지 않는다." },
+      { kind: "standard", rule: "Global load latency 500 clock 은 계산 예를 위한 가정값으로 표기하고 문서 수치로 승격하지 않는다." },
+      { kind: "primary-source", rule: "Stall 원인 이름과 subpartition 정의는 Nsight Compute Profiling Guide 의 용어를 그대로 쓰고 scheduler 의 선택 정책은 공개되지 않았다고 적는다." },
+    ],
+  },
+  "cuda-compilation-and-isa-analysis": {
+    title: "CUDA 컴파일 경로 글이 소유하는 범위",
+    owns: [
+      "nvcc 가 cudafe++·cicc·ptxas·fatbinary·host compiler 를 잇는 두 단계 컴파일 절차",
+      "PTX 의 instruction 문법·가상 register 와 SASS 의 세대별 기계어 형태, 둘의 예제 비교",
+      "Fatbinary 안에서 runtime 이 cubin 을 고르거나 PTX 를 JIT 하는 규칙과 compute capability 호환",
+      "ptxas 의 register allocation·instruction scheduling 상충과 loop unrolling 의 instruction·register 손익식",
+      "CSE·DCE·constant folding·strength reduction·instruction selection 이 cicc 와 ptxas 어느 단계에서 일어나는지",
+      "PTX–SASS gap 과 cuobjdump·nvdisasm 으로 SASS 를 읽는 ISA-level analysis 절차",
+    ],
+    reuses: [
+      { label: "Host·device·kernel 실행 경로", href: "/gpu/cuda-basics#execution-path" },
+      { label: "Warp·SIMT 실행 model", href: "/gpu/cuda-thread-hierarchy#overview" },
+      { label: "Register live range·residency·spill 비용", href: "/gpu/cuda-register-pressure#live-range" },
+      { label: "Occupancy 와 latency hiding 경계", href: "/gpu/gpu-architecture#gpu-latency-hiding-occupancy" },
+      { label: "Hopper 전용 feature 의 채택 판단", href: "/gpu/gpu-arch-hopper#release-gate" },
+      { label: "Timing 절차와 profiler 분석 loop", href: "/gpu/cuda-perf-analysis#profiling" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "컴파일 단계·JIT 규칙·도구 옵션·compute capability 수치는 NVIDIA 공식 문서(NVCC·PTX ISA·Binary Utilities·Programming Guide) 에서 읽은 범위로만 쓰고 읽은 시점을 본문에 적는다." },
+      { kind: "standard", rule: "본문 PTX 예제는 nvcc 의 전형적 출력 형태이고 SASS 예제는 Binary Utilities 문서의 출력 예임을 밝히며, 독자의 CUDA 버전·sm_XX 에서 같은 줄이 나온다고 말하지 않는다." },
+      { kind: "standard", rule: "Unroll 의 instruction·register 산수는 측정이 아닌 크기 관계이며 실제 수는 -Xptxas -v 와 SASS 로 확인해야 한다고 본문에 적는다. SASS 로 cycle 을 계산하지 않는다." },
+    ],
+  },
+  "triton-kernel-programming-and-compiler": {
+    title: "Triton kernel 프로그래밍과 compiler 글이 소유하는 범위",
+    owns: [
+      "Program instance·program id·BLOCK_SIZE 로 원소 범위를 계산하는 block program 의 구조와 offsets·mask 식",
+      "tl.load·tl.store 의 mask 인자가 경계를 데이터로 처리하는 방식",
+      "num_warps·num_stages 의 자원 배치 의미와 autotune 의 config·key·search space 규칙",
+      "JIT cache key 의 네 층과 compile-time constant·shape specialization 이 variant 수를 정하는 규칙",
+      "Triton IR → TritonGPU IR → LLVM → PTX 의 MLIR 기반 lowering, schedule abstraction, automatic vectorization 의 조건",
+      "같은 workload 에서 CUDA 와 Triton 을 개발 비용·제어 범위·성능 재현 조건으로 비교하는 축",
+    ],
+    reuses: [
+      { label: "CUDA·CUTLASS·CuTe·Triton 의 책임 층 지도와 release gate", href: "/gpu/cuda-kernel-fusion#kernel-stack" },
+      { label: "CUDA grid·block·thread 계층과 index 계산", href: "/gpu/cuda-thread-hierarchy#indexing-1d" },
+      { label: "Global memory coalescing 과 shared memory 규칙", href: "/gpu/cuda-shared-memory#coalescing" },
+      { label: "CUDA tiled GEMM 의 tile 재사용 예산과 경계 predication", href: "/gpu/cuda-matrix-multiply#tiled" },
+      { label: "Hopper TMA producer–consumer pipeline", href: "/gpu/gpu-arch-hopper#tma" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "API 이름·cache key 구성·pass 이름은 2026년 8월 기준 공식 문서와 main branch 소스에서 읽은 범위로만 쓰고 읽은 시점을 본문에 적는다." },
+      { kind: "project-claim", rule: "Tutorial 의 softmax 약 4배·matmul 220→245 TFLOPS 와 논문의 cuBLAS 대비 수치는 명시된 GPU·shape·비교 대상에 묶인 자기보고로 표기하고 일반화하지 않는다." },
+      { kind: "standard", rule: "수치 예(N=98432·BLOCK 1024·tile 128×128×32·config 6개)는 공식 예제 값의 산수이며 실행 시간은 측정 없이 크기 관계로만 말한다." },
+    ],
+  },
+  "cutlass-gemm-hierarchy-and-cute-layouts": {
+    title: "CUTLASS GEMM 계층과 CuTe layout 글이 소유하는 범위",
+    owns: [
+      "Threadblock·warp·MMA tile 세 층의 정의와 각 층이 소유하는 memory 이동, 128×128×32·64×64·m16n8k16 의 수치 예",
+      "Tensor core MMA 명령의 fragment lane 규칙과 register 예산이 warp tile 을 제한하는 산수",
+      "GEMM mainloop 한 k-iteration 의 copy→ldmatrix→mma 순서와 epilogue·epilogue visitor 의 구조",
+      "CuTe layout 의 shape:stride 좌표 함수, composition·logical divide, thread/value layout 과 partitioning, copy·MMA atom",
+      "Swizzle<B,M,S> 의 XOR 규칙과 bank conflict 를 없애는 계산",
+    ],
+    reuses: [
+      { label: "CUDA GEMM shared-tile 재사용 예산", href: "/gpu/cuda-matrix-multiply#tiled" },
+      { label: "Shared memory bank conflict 의 정의", href: "/gpu/cuda-shared-memory#bank-conflict" },
+      { label: "Register pressure 와 spill", href: "/gpu/cuda-register-pressure#spill-path" },
+      { label: "CUTLASS·CuTe·Triton 선택 층", href: "/gpu/cuda-kernel-fusion#kernel-stack" },
+      { label: "Collective·pipeline stage·tile scheduler", href: "/gpu/cutlass-collectives-and-tile-schedulers" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Fragment layout 과 swizzle 식은 CUTLASS main branch 의 mma_traits_sm80.hpp·swizzle.hpp 와 PTX ISA 에서 읽은 범위로만 쓰고 읽은 시점을 본문에 적는다." },
+      { kind: "standard", rule: "128×128×32·64×64·64 MMA·128 register 같은 수치는 명령 모양으로 계산한 산수이며 특정 GPU 의 최적 구성이나 측정 성능으로 말하지 않는다." },
+      { kind: "project-claim", rule: "EVT 논문의 fusion 성능은 저자 자기보고로 표기하고 구조 설명만 본문 사실로 가져온다." },
     ],
   },
 } as const satisfies Record<string, EditorialBoundary>;

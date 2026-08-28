@@ -1,5 +1,6 @@
 import Overview from "./vllm-spec-decode/Overview";
 import DraftVerify from "./vllm-spec-decode/DraftVerify";
+import CostModel from "./vllm-spec-decode/CostModel";
 import EagleMtp from "./vllm-spec-decode/EagleMtp";
 import { CodeSidebar, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./vllm-spec-decode/codeRefs";
@@ -12,6 +13,7 @@ export default function VLLMSpecDecodeArticle() {
     <>
       <Overview />
       <DraftVerify onCodeRef={sidebar.open} />
+      <CostModel />
       <EagleMtp />
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}

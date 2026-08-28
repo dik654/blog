@@ -53,7 +53,7 @@ export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
-        PagedAttention의 출발점은 attention 식이 아니라 길이를 미리 모르는 KV memory입니다
+        PagedAttention은 attention 식이 아니라 길이 모를 KV memory에서 출발합니다
       </h2>
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
@@ -106,8 +106,51 @@ w_r &= \underbrace{m_rB-n_r, \qquad 0\le w_r < B}_{\text{허용 경계 판정}}
       />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3 id="fragmentation-kinds" className="scroll-mt-20">
+          Block 단위 paging은 두 종류의 fragmentation을 다르게 줄입니다
+        </h3>
+        <p className="leading-8">
+          Internal fragmentation은 request에 배정했지만 그 request가 끝내 쓰지 않는
+          공간입니다. 연속 예약에서는 최대 길이와 실제 길이의 차이 전체가 이 낭비가
+          됩니다. 최대 2,048 token을 잡고 1,000 token에서 끝나면 1,048 slot, 절반이
+          넘는 예약이 한 번도 쓰이지 않은 채 request 수명 내내 잠깁니다.
+        </p>
+        <p className="leading-8">
+          Fixed-size block에서는 이 낭비가 마지막 block 하나의 빈 slot으로 줄어듭니다.
+          B=16에서 1,000 token request는 63 block, 1,008 slot을 받고 8 slot만
+          비어 있으므로 낭비율은 0.8%입니다. 길이에 관계없이 request당 낭비는 B보다
+          작고, 평균으로 보면 B의 절반 정도입니다.
+        </p>
+        <p className="leading-8">
+          External fragmentation은 남은 공간의 합은 충분한데 연속된 조각이 없어서
+          새 request를 못 받는 상태입니다. 2,048·512·1,024 slot을 연속으로 잡은 세
+          request 중 가운데 512가 끝나면 그 자리는 512보다 큰 요청을 담지 못합니다.
+          앞뒤의 free 조각과 합칠 수 없기 때문입니다.
+        </p>
+        <p className="leading-8">
+          Paging에서는 이 문제가 block 단위에서 사라집니다. 어느 physical block이든
+          크기가 같고, block table이 logical 순서를 보존하므로 어떤 free block도 어떤
+          logical block 자리에 들어갈 수 있습니다. 흩어진 free block 3개는 3 block이
+          필요한 어느 request에게나 쓸모가 있어 free block 수가 유일한 admission
+          조건이 됩니다.
+        </p>
+        <p className="leading-8">
+          vLLM 논문의 profiling은 기존 system에서 실제 token state가 KV memory의
+          20.4%에서 38.2%만 차지한다고 보고합니다. 나머지는 앞으로 쓸 reserved slot,
+          internal fragmentation, external fragmentation이 나눠 갖습니다. 논문
+          저자의 자기보고 수치이며 model과 workload에 따라 비율은 달라집니다.
+        </p>
+        <p className="leading-8">
+          Block size는 두 낭비 사이의 조절 손잡이입니다. B를 키우면 block table과
+          hash 항목은 줄지만 마지막 block의 평균 빈 slot이 커지고, prefix 공유
+          단위도 거칠어집니다. vLLM의 기본값 16은 이 균형에서 나온 값이며, 다른
+          kernel이나 hardware는 다른 값을 요구할 수 있습니다.
+        </p>
+      </div>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3 id="logical-physical-address" className="scroll-mt-20">
-          Block table은 sequence 위치를 physical address로 바꾸는 page table 역할을 합니다
+          Block table은 page table처럼 sequence 위치를 physical 주소로 바꿉니다
         </h3>
         <p className="leading-8">
           예를 들어 block size가 16이고 token position이 37이라면 logical block은
@@ -152,14 +195,17 @@ o(j) &= \underbrace{j \bmod B}_{\text{오른쪽 항으로 결과 계산}}
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3 id="paper-pagedattention" className="scroll-mt-20">
-          vLLM 원 논문의 핵심 아이디어: OS paging의 indirection을 KV cache에 적용합니다
+          vLLM 논문의 핵심: OS paging의 indirection을 KV cache에 적용합니다
         </h3>
         <p className="leading-8">
           <a href="https://arxiv.org/abs/2309.06180">
             Efficient Memory Management for Large Language Model Serving with PagedAttention
           </a>
           은 request별 연속 KV 예약이 만드는 internal·external fragmentation과
-          parallel sampling·beam search의 중복 KV를 문제로 삼았습니다. Logical
+          parallel sampling·beam search의 중복 KV를 문제로 삼았습니다.
+        </p>
+        <p className="leading-8">
+          Logical
           block과 non-contiguous physical block을 분리하고 reference count와
           copy-on-write를 이용해 block을 안전하게 공유하는 memory manager, 그리고
           block table을 읽는 attention kernel을 함께 제안했습니다.
@@ -172,23 +218,24 @@ o(j) &= \underbrace{j \bmod B}_{\text{오른쪽 항으로 결과 계산}}
         </p>
 
         <h3 id="memory-kernel-boundary" className="scroll-mt-20">
-          Paged KV manager와 paged attention kernel은 같은 이름을 쓰지만 책임이 다릅니다
+          Paged KV manager와 paged attention kernel은 책임이 다릅니다
         </h3>
-        <ul className="leading-8">
-          <li>
-            <strong>Memory manager</strong>는 block allocation·reference count·free·
-            cache lookup·eviction을 맡습니다.
-          </li>
-          <li>
-            <strong>Attention kernel</strong>은 block table과 slot mapping을 읽어
-            Q가 참조할 K·V를 찾아 dot-product attention을 계산합니다.
-          </li>
-          <li>
-            <strong>Scheduler</strong>는 필요한 slot을 manager에 요청하고 실패하면
-            request를 줄이거나 preempt합니다. 자세한 전이는
-            <Link to="/ai/vllm-scheduler#preemption"> scheduler 글</Link>이 소유합니다.
-          </li>
-        </ul>
+        <p className="leading-8">
+          Memory manager는 block allocation, reference count, free, cache lookup과
+          eviction을 맡습니다. Block을 누가 언제까지 소유하는지를 아는 유일한
+          계층이므로, 다른 계층은 block ID를 받아 읽기만 하고 수명은 건드리지
+          않습니다.
+        </p>
+        <p className="leading-8">
+          Attention kernel은 block table과 slot mapping을 읽어 Q가 참조할 K·V를
+          찾아 dot-product attention을 계산합니다. Kernel이 보는 것은 주소뿐이므로
+          block이 공유되었는지, 언제 free될지는 kernel 성능이나 정확도와 무관합니다.
+        </p>
+        <p className="leading-8">
+          Scheduler는 필요한 slot을 manager에 요청하고 실패하면 request를 줄이거나
+          preempt합니다. 자세한 전이는
+          <Link to="/ai/vllm-scheduler#preemption"> scheduler 글</Link>이 소유합니다.
+        </p>
       </div>
     </section>
   );

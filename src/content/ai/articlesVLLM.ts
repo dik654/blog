@@ -38,6 +38,42 @@ export const vllmServingArticles: Article[] = [
     component: () => import("@/pages/articles/ai/vllm-serving"),
   },
   {
+    slug: "serving-latency-metrics-and-slo",
+    title: "TTFT·TPOT·ITL 은 분포로 읽고 SLO 는 percentile 로 계약합니다",
+    subcategory: "ai-llm-serving",
+    sections: [
+      { id: "problem", title: "평균 latency 한 줄로는 부족한 이유" },
+      { id: "metrics", title: "TTFT·ITL·TPOT·E2E 정의와 분해식" },
+      { id: "throughput", title: "tokens/s·RPS 와 latency–throughput 상충" },
+      { id: "distribution", title: "Percentile 과 tail latency 로 읽기" },
+      { id: "slo", title: "SLO 문장과 violation budget 판정" },
+      {
+        id: "sources",
+        title: "근거 문서",
+        subsections: [
+          { id: "paper-vllm-bench", title: "vLLM serving benchmark 계산식" },
+          { id: "paper-genai-perf", title: "GenAI-Perf 지표 정의" },
+          { id: "paper-sre-slo", title: "SRE Book 의 SLO 장" },
+        ],
+      },
+    ],
+    component: () => import("@/pages/articles/ai/serving-latency-metrics-and-slo"),
+  },
+  {
+    slug: "inference-runtime-anatomy",
+    title: "Inference runtime 은 첫 요청 전에 process 를 나누고 GPU memory 지도를 확정합니다",
+    subcategory: "ai-llm-serving",
+    sections: [
+      { id: "process-anatomy", title: "Frontend·driver·worker process 분리", subsections: [{ id: "paper-vllm-arch", title: "vLLM 설계 문서의 process 구조" }] },
+      { id: "loading", title: "Weight loading 과 sharding 의 대역폭 하한" },
+      { id: "memory-plan", title: "Pool·arena 위의 static memory planning", subsections: [{ id: "paper-pytorch-allocator", title: "PyTorch caching allocator 문서" }] },
+      { id: "startup-procedure", title: "config 에서 ready 까지의 기동 절차" },
+      { id: "warmup", title: "Warmup·cold start 와 eager·lazy 초기화", subsections: [{ id: "paper-sglang-args", title: "SGLang server arguments" }] },
+      { id: "backend", title: "Backend 와 compatibility layer" },
+    ],
+    component: () => import("@/pages/articles/ai/inference-runtime-anatomy"),
+  },
+  {
     slug: "vllm-scheduler",
     title: "vLLM Scheduler: Token Budget · Chunked Prefill · Preemption",
     subcategory: "ai-llm-serving",
@@ -81,6 +117,42 @@ export const vllmServingArticles: Article[] = [
     component: () => import("@/pages/articles/ai/vllm-scheduler"),
   },
   {
+    slug: "continuous-batching-step-anatomy",
+    title: "Scheduling step 해부: running 먼저, 남은 token budget 은 prefill chunk 로",
+    subcategory: "ai-llm-serving",
+    sections: [
+      { id: "step-unit", title: "한 step 의 입력·출력과 sequence 단위" },
+      { id: "token-budget", title: "Token budget 과 sequence budget 의 소모 순서" },
+      { id: "step-procedure", title: "schedule() 절차: 순회·preempt·admission·chunk" },
+      { id: "batch-shape", title: "Decode·prefill·mixed batch 의 모양과 비용" },
+      {
+        id: "evidence",
+        title: "Orca·Sarathi-Serve·vLLM V1 소스",
+        subsections: [
+          { id: "paper-orca-iteration", title: "Orca 의 iteration-level scheduling" },
+          { id: "paper-sarathi-serve", title: "Sarathi-Serve 의 stall-free schedule" },
+          { id: "source-vllm-v1-scheduler", title: "vLLM V1 schedule() 소스" },
+        ],
+      },
+    ],
+    component: () => import("@/pages/articles/ai/continuous-batching-step-anatomy"),
+  },
+  {
+    slug: "prefill-decode-phase-dynamics",
+    title: "Prefill 은 compute-bound, decode 는 memory-bound: 간섭과 chunk 크기",
+    subcategory: "ai-llm-serving",
+    sections: [
+      { id: "problem", title: "두 phase 가 다른 자원에 막히는 이유" },
+      { id: "arithmetic-intensity", title: "Intensity 와 ridge point" },
+      { id: "interference", title: "섞인 batch 의 step 시간과 간섭" },
+      { id: "chunk-size", title: "Chunk 크기 역산 절차" },
+      { id: "long-context", title: "64K 이상에서 n² 항의 지배" },
+      { id: "prefill-optimization", title: "Prefill 최적화의 네 층" },
+      { id: "evidence", title: "근거와 경계" },
+    ],
+    component: () => import("@/pages/articles/ai/prefill-decode-phase-dynamics"),
+  },
+  {
     slug: "vllm-paged-attention",
     title: "vLLM PagedAttention: KV Block · Allocation · Prefix Cache",
     subcategory: "ai-llm-serving",
@@ -89,18 +161,10 @@ export const vllmServingArticles: Article[] = [
         id: "overview",
         title: "Variable-length KV를 block으로 바꾸기",
         subsections: [
-          {
-            id: "logical-physical-address",
-            title: "Logical→physical address translation",
-          },
-          {
-            id: "paper-pagedattention",
-            title: "PagedAttention 원 논문의 핵심",
-          },
-          {
-            id: "memory-kernel-boundary",
-            title: "Manager·kernel·scheduler 책임 경계",
-          },
+          { id: "fragmentation-kinds", title: "Internal·external fragmentation" },
+          { id: "logical-physical-address", title: "Logical→physical address translation" },
+          { id: "paper-pagedattention", title: "PagedAttention 원 논문의 핵심" },
+          { id: "memory-kernel-boundary", title: "Manager·kernel·scheduler 책임 경계" },
         ],
       },
       {
@@ -108,6 +172,9 @@ export const vllmServingArticles: Article[] = [
         title: "Physical block의 소유권과 수명",
         subsections: [
           { id: "free-queue-eviction", title: "Free queue와 cache eviction" },
+          { id: "block-allocator", title: "Allocator의 allocate·free" },
+          { id: "sequence-forking", title: "Sequence fork와 copy-on-write" },
+          { id: "beam-branch-sharing", title: "Beam·branch block 공유" },
           { id: "block-invariants", title: "BlockPool의 세 불변식" },
         ],
       },
@@ -124,15 +191,36 @@ export const vllmServingArticles: Article[] = [
         title: "Automatic Prefix Caching",
         subsections: [
           { id: "full-block-boundary", title: "Token·full-block hit 경계" },
-          {
-            id: "paper-radixattention",
-            title: "SGLang·RadixAttention 논문의 핵심",
-          },
-          { id: "prefix-operations", title: "Prefix cache 운영 지표" },
+          { id: "prefix-sharing", title: "Block 단위 prefix sharing" },
+          { id: "paper-radixattention", title: "SGLang·RadixAttention 논문의 핵심" },
+          { id: "prefix-operations", title: "Cache hit rate의 두 정의" },
+          { id: "cache-locality", title: "Cache locality의 두 축" },
         ],
       },
     ],
     component: () => import("@/pages/articles/ai/vllm-paged-attention"),
+  },
+  {
+    slug: "serving-memory-admission-and-preemption",
+    title: "KV admission은 watermark 아래서만 받고 부족하면 recompute·swap으로 비웁니다",
+    subcategory: "ai-llm-serving",
+    sections: [
+      { id: "problem", title: "지금 받을지와 누구를 내보낼지" },
+      { id: "footprint", title: "요청 memory footprint 계산" },
+      { id: "watermark-admission", title: "Watermark와 admission 판정" },
+      { id: "preemption-modes", title: "Recompute와 swap preemption" },
+      { id: "hybrid-fixed-state", title: "Hybrid model의 고정 state 할당" },
+      {
+        id: "paper-vllm",
+        title: "근거: vLLM 논문과 engine 문서",
+        subsections: [
+          { id: "paper-vllm-docs", title: "vLLM preemption 문서" },
+          { id: "paper-sglang-scheduler", title: "SGLang scheduler 인자" },
+          { id: "paper-trtllm-kvcache", title: "TensorRT-LLM KV cache 설정" },
+        ],
+      },
+    ],
+    component: () => import("@/pages/articles/ai/serving-memory-admission-and-preemption"),
   },
   {
     slug: "vllm-spec-decode",
@@ -154,6 +242,18 @@ export const vllmServingArticles: Article[] = [
             id: "paper-speculative-decoding",
             title: "Speculative Decoding 원 논문의 핵심 아이디어",
           },
+          { id: "verification-pass", title: "Verification pass: K+1 분포를 한 forward로" },
+          { id: "rejection-point", title: "Rejection point에서의 resample과 suffix 폐기" },
+        ],
+      },
+      {
+        id: "cost-model",
+        title: "α·K·c로 닫히는 speedup 모델",
+        subsections: [
+          { id: "speculation-length", title: "Speculation length K" },
+          { id: "acceptance-rate", title: "Acceptance rate α와 기대 확정 길이" },
+          { id: "speedup-model", title: "Speculative speedup 식과 표" },
+          { id: "not-always-faster", title: "항상 빨라지지 않는 조건" },
         ],
       },
       {
@@ -193,6 +293,28 @@ export const vllmServingArticles: Article[] = [
       },
     ],
     component: () => import("@/pages/articles/ai/kv-cache-fundamentals"),
+  },
+  {
+    slug: "flash-attention-io-aware-kernel",
+    title: "FlashAttention 은 online softmax 로 attention 행렬을 HBM 에 쓰지 않습니다",
+    subcategory: "ai-llm-serving",
+    sections: [
+      {
+        id: "problem",
+        title: "표준 attention 은 N×N 행렬을 HBM 에 썼다가 다시 읽는다",
+        subsections: [{ id: "paper-flashattention", title: "FlashAttention 논문의 문제와 기여" }],
+      },
+      { id: "io-aware", title: "IO-aware 비용 모델과 SRAM residency" },
+      {
+        id: "online-softmax",
+        title: "Online softmax 의 running max·normalizer 갱신",
+        subsections: [{ id: "paper-online-softmax", title: "Online normalizer 논문의 문제와 기여" }],
+      },
+      { id: "tiling", title: "Tile 이 SRAM 에 머무는 동안 attention 을 끝내는 forward loop" },
+      { id: "backward", title: "Backward 의 recompute-vs-store tradeoff" },
+      { id: "boundary", title: "SRAM 크기·head dim·hardware 의존성과 다음 읽기" },
+    ],
+    component: () => import("@/pages/articles/ai/flash-attention-io-aware-kernel"),
   },
   {
     slug: "hybrid-kv-cache-allocation",

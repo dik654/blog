@@ -54,8 +54,24 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "ai/transfer-learning-practice": KEEP("Pretrained handoff에서 freeze scope·update scale·domain shift adaptation까지 하나의 선택 spectrum입니다."),
   "ai/transformer-architecture": KEEP("Token input→visibility→block→output policy→scaling이 Transformer의 단일 기준 구조를 형성합니다."),
   "ai/vae": KEEP("Latent model→pathwise gradient→ELBO→collapse diagnosis→variant 경계가 하나의 VAE 학습 arc입니다."),
-  "ai/vllm-paged-attention": KEEP("Variable KV state의 addressing·ownership·allocation·prefix reuse를 한 block manager mechanism으로 추적합니다."),
-  "ai/vllm-spec-decode": KEEP("Serial baseline→draft/verify→distribution invariance→proposal→break-even이 하나의 speculative execution contract입니다."),
+  "ai/vllm-paged-attention": {
+    action: "keep",
+    status: "reviewed",
+    reviewedAt: "2026-08-29",
+    rationale:
+      "Variable KV state의 addressing·ownership·allocation·fragmentation·prefix sharing·fork/copy-on-write를 한 block manager mechanism으로 추적합니다. 2026-08-29 coverage 보강으로 concept가 17개로 늘었지만 모두 같은 allocator·block table 위의 facet이며 admission·preemption은 serving-memory-admission-and-preemption, radix prefix caching은 prefix-caching-radix-attention으로 분리했습니다.",
+    sharedGate:
+      "같은 block size·pool 크기·요청 길이 fixture에서 allocation·fragmentation·sharing·CoW의 block 수와 hit rate를 한 receipt로 비교합니다.",
+  },
+  "ai/vllm-spec-decode": {
+    action: "keep",
+    status: "reviewed",
+    reviewedAt: "2026-08-29",
+    rationale:
+      "Serial baseline→draft/verify→distribution invariance→acceptance rate·speculation length·rejection point→speedup model→break-even이 하나의 speculative execution contract입니다. 2026-08-29 보강으로 cost model 절이 추가됐지만 변형(self-speculative·MTP·tree·suffix)은 speculative-decoding-variants로 분리합니다.",
+    sharedGate:
+      "같은 draft/target·α·K·batch fixture에서 accepted length·forward 수·wall-clock을 함께 재어 break-even을 판정합니다.",
+  },
   "ai/xml-prompting": KEEP("Role framing→serialization→parser/schema/security validation→format evaluation이 한 XML prompt contract입니다."),
   "blockchain/cometbft-abci": KEEP("PrepareProposal→ProcessProposal→FinalizeBlock→Commit이 ABCI state transition 순서와 일치합니다."),
   "blockchain/cometbft-consensus": KEEP("Height/round/step 입력에서 safety·liveness·accountability까지 한 consensus state machine입니다."),
@@ -122,8 +138,8 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/transfer-learning-practice": "2cbdcdc7079650ed",
   "ai/transformer-architecture": "da15b1d8d52b8838",
   "ai/vae": "41e2e0c24bd2879f",
-  "ai/vllm-paged-attention": "89e47d83deac9dba",
-  "ai/vllm-spec-decode": "e502882146613dc8",
+  "ai/vllm-paged-attention": "d9f43052865ba377",
+  "ai/vllm-spec-decode": "033ea8067d38760d",
   "ai/xml-prompting": "a8fe599b80c579e6",
   "blockchain/cometbft-abci": "95ca71232816d16a",
   "blockchain/cometbft-consensus": "9bb6fd231f8bb08f",

@@ -131,8 +131,10 @@ export default function Overview() {
         <h3>왜 batch 1에서 특히 유리할 수 있을까요?</h3>
         <p className="leading-8">
           큰 batch는 같은 weight read를 여러 요청이 나누어 쓰게 합니다.
-          Speculative decoding은 한 요청의 여러 미래 위치를 함께 검증해 비슷한
-          효과를 만듭니다. Native MTP를 이용하든 별도 draft model을 이용하든,
+          Speculative decoding은 한 요청의 여러 미래 위치를 함께 검증해 비슷한 효과를 만듭니다.
+        </p>
+        <p className="leading-8">
+          Native MTP를 이용하든 별도 draft model을 이용하든,
           평균 확정 길이가 3.5라면 이상적인 memory-bound 근사에서는 target
           weight read가 token당 약 3.5분의 1로 나뉩니다. 다만 verify가 여러
           위치의 activation·attention을 계산하고 proposer와 runtime overhead도

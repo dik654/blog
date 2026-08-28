@@ -59,12 +59,12 @@ function parse(file, text = fs.readFileSync(file, "utf8")) {
   return ts.createSourceFile(file, text, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
 }
 
-function exportedInitializers(sf) {
+function exportedInitializers(sf, { includeUnexported = false } = {}) {
   const out = new Map();
   for (const statement of sf.statements) {
     if (!ts.isVariableStatement(statement)) continue;
     const exported = statement.modifiers?.some((m) => m.kind === ts.SyntaxKind.ExportKeyword);
-    if (!exported) continue;
+    if (!exported && !includeUnexported) continue;
     for (const decl of statement.declarationList.declarations) {
       if (ts.isIdentifier(decl.name) && decl.initializer) {
         out.set(decl.name.text, unwrap(decl.initializer));
@@ -261,6 +261,9 @@ function lineStart(text, position) {
 }
 
 function propValue(objNode, key) {
+  objNode = unwrap(objNode);
+  // `...hwArticles` 같은 spread element 는 object literal 이 아니므로 slug 비교 대상에서 제외한다.
+  if (!ts.isObjectLiteralExpression(objNode)) return undefined;
   const prop = objectProps(objNode).get(key);
   if (!prop || !ts.isPropertyAssignment(prop)) return undefined;
   return literalValue(prop.initializer);
@@ -423,8 +426,9 @@ function mergeCatalog(module, obj) {
     }
   }
   if (!arrayNode) {
-    // category index (gpu/index.ts 처럼 `articles: [` 안에 있는 경우)
-    for (const [name, init] of exports) {
+    // category index (gpu/index.ts 처럼 `const gpu: Category = { articles: [ ... ] }; export default gpu;` 인 경우 —
+    // export default 로 내보내는 정의는 exported variable statement 가 아니므로 미수출 top-level const 도 본다)
+    for (const [name, init] of exportedInitializers(ed.sf(), { includeUnexported: true })) {
       if (ts.isObjectLiteralExpression(init)) {
         const articles = objectProps(init).get("articles");
         if (articles && ts.isArrayLiteralExpression(unwrap(articles.initializer))) {
