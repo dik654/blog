@@ -27,3 +27,4 @@ dist-ssr
 *.sln
 *.sw?
 files/go-ethereum
+src/content/registrations/
