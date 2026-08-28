@@ -6,6 +6,7 @@ import {
   findSubcategory,
   getArticlesInSubcategory,
   getDirectArticlesInSubcategory,
+  sortSubcategoriesForReading,
 } from "@/content/subcategory-navigation";
 import ArticleCard from "./category/ArticleCard";
 import CategoryReadingMap from "./category/CategoryReadingMap";
@@ -37,7 +38,7 @@ export default function CategoryPage() {
         </motion.div>
         <CategoryReadingMap category={cat} />
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-          {cat.subcategories.map((sub, i) => (
+          {sortSubcategoriesForReading(cat, cat.subcategories).map((sub, i) => (
             <motion.div
               key={sub.slug}
               initial={{ opacity: 0, y: 12 }}
@@ -79,6 +80,12 @@ export default function CategoryPage() {
         <p className="text-sm text-muted-foreground">
           {activeSub.description ?? `${allArticles.length}개의 글`}
         </p>
+        {!activeSub.children && allArticles.length > 1 && (
+          <p className="mt-3 max-w-2xl text-xs leading-5 text-foreground/65">
+            아래 글은 게시 시각이 아니라 선수 개념에서 구현·평가로 이어지는
+            실제 읽기 순서입니다. 이미 아는 단계는 건너뛰어도 됩니다.
+          </p>
+        )}
         {activeSub.children && (
           <p className="mt-3 max-w-2xl text-xs leading-5 text-foreground/65">
             이 페이지는 여러 세부 주제를 묶는 입구입니다. 아래에서 먼저 읽을

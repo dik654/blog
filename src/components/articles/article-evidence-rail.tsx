@@ -7,6 +7,7 @@ import {
 
 const KIND_STYLE: Record<ArticleEvidenceItem["kind"], string> = {
   "핵심 논문": "bg-violet-500/10 text-violet-700 dark:text-violet-300",
+  "선행·비교 논문": "bg-fuchsia-500/10 text-fuchsia-700 dark:text-fuchsia-300",
   "리뷰 논문": "bg-violet-500/10 text-violet-700 dark:text-violet-300",
   "핵심 연구": "bg-violet-500/10 text-violet-700 dark:text-violet-300",
   "Benchmark 논문": "bg-violet-500/10 text-violet-700 dark:text-violet-300",

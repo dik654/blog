@@ -16,6 +16,71 @@
   --mafs-line-color: var(--border);
 }
 
+/*
+ * 여러 장면을 넘기는 Viz는 현재 장면의 높이에 wrapper를 맞추지 않는다.
+ * Figure 전체를 viewport 안의 안정된 크기로 예약하고, 큰 장면만 canvas 안에서
+ * 스크롤한다. 조작부는 같은 scrollport의 하단에 고정되어 연속 클릭 때 움직이지 않는다.
+ */
+figure[data-viz="modern"]:has([data-viz-controls]) {
+  display: flex;
+  height: min(48rem, calc(100dvh - 5rem));
+  max-height: calc(100dvh - 5rem);
+  min-height: 0;
+  flex-direction: column;
+  overflow: hidden;
+  scroll-margin-top: 4rem;
+}
+
+figure[data-viz="modern"]:has([data-viz-controls]) > figcaption,
+figure[data-viz="modern"]:has([data-viz-controls]) > [data-viz-controls],
+figure[data-viz="modern"]:has([data-viz-controls]) > :not([data-viz-canvas]) {
+  flex: 0 0 auto;
+}
+
+figure[data-viz="modern"]:has([data-viz-controls]) > [data-viz-canvas] {
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+figure[data-viz="modern"]:has([data-viz-controls])
+  :is([data-viz], [data-viz-canvas]):has(> [data-viz-controls]) {
+  display: flex;
+  min-height: 100%;
+  flex-direction: column;
+}
+
+figure[data-viz="lesson-flow-v4"] {
+  display: flex;
+  height: min(52rem, calc(100dvh - 5rem));
+  max-height: calc(100dvh - 5rem);
+  min-height: 0;
+  flex-direction: column;
+  overflow: hidden;
+  scroll-margin-top: 4rem;
+}
+
+figure[data-viz="lesson-flow-v4"] > figcaption,
+figure[data-viz="lesson-flow-v4"] > [data-concept-composition] {
+  flex: 0 0 auto;
+}
+
+figure[data-viz="lesson-flow-v4"] > [data-viz-canvas] {
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+@media (max-height: 40rem) {
+  figure[data-viz="modern"]:has([data-viz-controls]),
+  figure[data-viz="lesson-flow-v4"] {
+    height: calc(100dvh - 4.5rem);
+    max-height: calc(100dvh - 4.5rem);
+  }
+}
+
 @custom-variant dark (&:is(.dark *));
 
 :root {

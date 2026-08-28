@@ -12,12 +12,20 @@ const lessonViz = fs.readFileSync(
   "src/components/viz/ArticleLessonFlowViz.tsx",
   "utf8",
 );
+const animatedControls = fs.readFileSync(
+  "src/components/viz/AnimatedSceneControls.tsx",
+  "utf8",
+);
 const termBreakdown = fs.readFileSync(
   "src/components/articles/term-breakdown.tsx",
   "utf8",
 );
 const denseTermFlow = fs.readFileSync(
   "src/components/articles/dense-term-flow.tsx",
+  "utf8",
+);
+const progressiveDetail = fs.readFileSync(
+  "src/components/articles/progressive-detail.tsx",
   "utf8",
 );
 const globalStyles = fs.readFileSync("src/index.css", "utf8");
@@ -93,6 +101,19 @@ const contract = {
     lessonViz.includes("data-viz-play") &&
     lessonViz.includes("useReducedMotion") &&
     lessonViz.includes("window.setTimeout"),
+  stableVizControlMarker:
+    animatedControls.includes("data-viz-controls") &&
+    lessonViz.includes("data-viz-controls"),
+  stableVizControlSize:
+    animatedControls.includes("min-h-[6.75rem]") &&
+    animatedControls.includes("w-[7.75rem]") &&
+    lessonViz.includes("w-[8.5rem]"),
+  viewportCappedVizFrame:
+    globalStyles.includes('figure[data-viz="modern"]:has([data-viz-controls])') &&
+    globalStyles.includes('figure[data-viz="lesson-flow-v4"]') &&
+    globalStyles.includes("calc(100dvh - 5rem)") &&
+    globalStyles.includes("scroll-margin-top: 4rem") &&
+    globalStyles.includes("overscroll-behavior: contain"),
   keyboardCutNavigation:
     lessonViz.includes("data-viz-keyboard") &&
     lessonViz.includes('event.key === "ArrowRight"') &&
@@ -123,6 +144,13 @@ const contract = {
   introducedTermsSingleColumn:
     introducedSection.includes('className="mt-4 grid gap-4"') &&
     !introducedSection.includes("grid-cols-2"),
+  progressiveDisclosureAccessible:
+    progressiveDetail.includes("<details") &&
+    progressiveDetail.includes("<summary") &&
+    progressiveDetail.includes("data-progressive-detail") &&
+    progressiveDetail.includes("data-progressive-detail-preview") &&
+    progressiveDetail.includes("focus-visible:ring-2") &&
+    progressiveDetail.includes("group-open:rotate-90"),
 };
 
 const failures = Object.entries(contract)

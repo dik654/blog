@@ -2,6 +2,7 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { Link } from "react-router-dom";
 import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
+import ProgressiveDetail from "@/components/articles/progressive-detail";
 import { codeRefs } from "./codeRefs";
 import ContinuousBatchViz from "./viz/ContinuousBatchViz";
 import ResourceGateViz from "./viz/ResourceGateViz";
@@ -64,26 +65,49 @@ export default function EngineLoop({
           모두 만족해야 하며, 긴 prefill 하나가 decode latency를 밀어내지 않도록
           priority와 chunk 크기도 결정합니다.
         </p>
+        <p className="leading-8">
+          여기서 역사적 경계를 하나 먼저 분리해야 합니다. 요청이 끝날 때까지
+          batch를 고정하지 않고 model iteration마다 다시 조립한다는 아이디어는
+          vLLM이 처음 제안한 것이 아닙니다. 아래의 Orca는 vLLM 내부 모듈명이
+          아니라, 이 scheduling 문제를 먼저 정식화한 별도의 선행 serving
+          system입니다.
+        </p>
       </div>
 
       <ContinuousBatchViz />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3 id="paper-orca" className="scroll-mt-20">
-          Orca의 핵심 아이디어: request가 아니라 iteration 단위로 다시 scheduling합니다
+          Orca는 vLLM의 구성 요소가 아니라 선행 serving system입니다
         </h3>
         <p className="leading-8">
           <a href="https://www.usenix.org/conference/osdi22/presentation/yu">
             Orca: A Distributed Serving System for Transformer-Based Generative Models
           </a>
-          는 생성 요청 전체가 끝날 때까지 batch를 고정하지 않고, 한 model
-          iteration이 끝날 때마다 batch를 다시 구성하는 iteration-level
-          scheduling을 제안했습니다. 또 모든 요청에 같은 연산을 강제하지 않고
-          attention처럼 요청별 shape가 다른 연산과 dense layer처럼 함께 묶기 좋은
-          연산을 구분했습니다. 현재 vLLM의 세부 scheduler 구현과 Orca가 같다는
-          뜻은 아니지만, 서로 다른 길이의 생성 요청을 iteration 경계에서 다시
-          조립한다는 문제 정의의 중요한 선행 근거입니다.
+          는 2022년에 생성 요청 전체가 끝날 때까지 batch를 고정하지 않고, 한
+          model iteration이 끝날 때마다 batch를 다시 구성하는
+          <em> iteration-level scheduling</em>을 제안했습니다. 먼저 끝난 요청은
+          바로 빠지고 새 요청은 다음 iteration에 들어갈 수 있으므로, 위 그림의
+          A·B·C 교체가 가능해집니다. 오늘날 흔히 continuous batching이라고 부르는
+          실행 형태를 이해할 때 Orca가 등장하는 이유가 이것입니다.
         </p>
+        <ProgressiveDetail
+          title="Orca의 selective batching과 현재 vLLM 구현은 무엇이 다른가요?"
+          preview="두 system은 iteration마다 batch를 다시 짠다는 문제를 공유하지만, attention 실행과 KV memory 관리는 같은 구현이 아닙니다."
+        >
+          <p>
+            Orca의 <em>selective batching</em>은 당시 variable-shape attention은
+            요청별로 처리하고 dense 연산은 함께 묶는 구체적인 구현 선택이었습니다.
+            이 선택을 현재 vLLM backend의 구조로 옮겨 읽으면 안 됩니다. vLLM은
+            자체 attention kernel과 KV block manager를 사용합니다.
+          </p>
+          <p>
+            따라서 계보는 두 단계로 읽는 편이 정확합니다. Orca가 먼저 연 것은
+            “언제 batch를 다시 짤 것인가”이고, vLLM의 원 논문이 새로 밀어낸 핵심
+            병목은 “그 batch의 동적인 KV state를 어떻게 낭비 없이 보관할
+            것인가”입니다.
+          </p>
+        </ProgressiveDetail>
         <h3 id="resource-feasibility" className="scroll-mt-20">
           한 iteration은 세 예산의 교집합 안에서만 실행할 수 있습니다
         </h3>
@@ -136,7 +160,7 @@ M_{KV}^{need} &\le \underbrace{M_{KV}^{free}}_{\text{오른쪽 항으로 결과 
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3 id="paper-vllm" className="scroll-mt-20">
-          vLLM 원 논문의 핵심 아이디어: token state를 연속 memory 예약에서 분리합니다
+          vLLM은 scheduling 계보 위에서 KV memory 병목을 새로 해결했습니다
         </h3>
         <p className="leading-8">
           <a href="https://arxiv.org/abs/2309.06180">

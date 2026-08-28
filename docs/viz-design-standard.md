@@ -27,6 +27,10 @@
 - 서로 다른 연구 축이 한 구조에서 합쳐질 때는 한 축이 다른 축으로 진화하는 timeline으로 그리지 않고, 각 병목과 mechanism이 결합 지점으로 수렴하는 branch diagram을 사용한다.
 - 여러 컷을 넘기는 Viz는 pointer 버튼만 두지 않는다. Viz 자체를 keyboard focusable하게 만들고 `←`·`→`로 이전·다음 컷, `Space`로 재생·일시정지를 제공하며 화면에 단축키를 표시한다. 입력 필드와 contenteditable의 키는 가로채지 않는다.
 - 개념마다 여러 컷을 갖는 Viz에서 `다음`으로 개념 경계를 넘으면 새 개념의 첫 컷으로 이동한다. 반대로 첫 컷에서 `이전`으로 돌아가면 이전 개념의 마지막 컷을 보여 전체 탐색 순서가 단조 증가·감소하게 유지돼야 한다.
+- 장면을 바꿀 때 Viz 외곽 frame과 이전·재생·다음 control row의 위치가 움직이지 않아야 한다. 모든 장면의 필요한 크기를 기준으로 stage의 안정된 높이를 확보하고, control은 그 stage 아래의 고정된 row에 둔다. 현재 장면 내용 높이에 맞춰 wrapper 자체를 매번 줄였다 늘리지 않는다.
+- 안정된 stage는 데스크톱에서도 viewport를 넘어 버튼이 화면 밖으로 밀리지 않게 `100dvh`에서 page header·caption·control 여백을 뺀 상한을 둔다. 큰 장면은 frame을 키우는 대신 stage 내부의 responsive 재배치, 축척 또는 명시적 scroll 영역으로 처리한다.
+- 모바일은 장면별 긴 설명을 stage 안에 모두 쌓아 최소 높이를 무한히 늘리지 않는다. diagram과 현재 핵심 설명을 안정 영역에 두고, 상세 설명이 상한을 넘으면 stage 내부에서만 스크롤하되 control row는 바깥에 남긴다.
+- 같은 Viz의 모든 장면에서 control button의 bounding box 변화는 2px 이내, frame top/left/width 변화는 2px 이내를 목표로 한다. Reduced motion 여부와 관계없이 layout shift 자체는 없어야 한다.
 
 ## 3. 수식 규칙
 
@@ -43,6 +47,7 @@
 
 - 코드 검사: gradient, 굵은 stroke, 과도한 radius/shadow, SVG 긴 텍스트를 찾는다.
 - 브라우저 검사: 데스크톱과 모바일에서 text overflow, label-box, label-line, canvas overflow를 확인한다.
+- 장면 전환 검사: 첫 장면·가장 큰 장면·마지막 장면에서 frame과 control button bounding box를 기록해 위치·크기가 2px 넘게 변하지 않는지 확인한다. 또한 frame bottom과 control row가 viewport 안에 동시에 들어오는지 검사한다.
 - 스크린샷 검사: 좌표 검사를 통과해도 실제 폰트가 벗어날 수 있으므로 렌더 결과를 직접 본다.
 - 한 화면이 빽빽하면 글자를 줄이지 않고 Viz를 둘로 나눈다.
 

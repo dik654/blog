@@ -41,6 +41,9 @@ export default function ArticleCard({ article, categorySlug, index }: Props) {
         )}
         <div className="min-w-0 flex-1">
           <div className="mb-1 flex flex-wrap items-center gap-2">
+            <span className="font-mono text-xs font-black text-foreground/55">
+              읽기 {String(index + 1).padStart(2, "0")}
+            </span>
             <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-bold text-primary">
               {intent}
             </span>

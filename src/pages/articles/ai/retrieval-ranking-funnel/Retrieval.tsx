@@ -4,9 +4,27 @@ import RetrievalViz from "./viz/RetrievalViz";
 export default function Retrieval() {
   return (
     <section id="retrieval" className="scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">Retrieval은 하나의 점수로 정답을 고르는 단계가 아니라, 서로 다른 검색 신호로 후보를 넓게 회수한 뒤 정교한 모델로 좁히는 단계입니다</h2>
+      <h2 className="mb-6 text-2xl font-bold">
+        검색은 넓게 찾고, 비싼 판단은 뒤에서 합니다
+      </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p>Sparse retrieval은 제품 코드·법 조항·고유명사처럼 정확한 token 일치에 강하고, dense retrieval은 표현이 달라도 의미가 가까운 문서를 찾는 데 유리합니다. 두 점수의 scale은 다르므로 검증 없이 더하지 않습니다. 간단한 baseline으로는 각 순위만 사용하는 Reciprocal Rank Fusion(RRF)을 쓸 수 있습니다.</p>
+        <p className="text-lg leading-8">
+          검색 단계의 첫 목표는 정답 하나를 확정하는 것이 아닙니다. 정답일 가능성이
+          있는 문서를 놓치지 않도록 후보를 넓게 모으는 일입니다. 이때 정확한 단어
+          일치와 의미 유사성은 서로 다른 실패를 보완합니다.
+        </p>
+        <p>
+          예를 들어 제품 코드 <code>XR-17B</code>를 찾을 때는 철자가 그대로 맞는
+          sparse retrieval이 유리합니다. 반면 “로그인이 계속 풀린다”와 “세션이
+          조기에 만료된다”처럼 표현이 다른 문의는 dense retrieval이 더 잘 연결할 수
+          있습니다. 어느 하나만 쓰면 다른 종류의 정답을 놓칠 수 있습니다.
+        </p>
+        <p>
+          그래서 실용적인 검색은 보통 네 단계로 흐릅니다. BM25와 dense index가
+          각자 후보를 만들고, 두 순위를 합친 뒤, 더 비싼 reranker가 작은 후보 집합을
+          자세히 읽습니다. 아래 네 카드는 이 순서에서 각 부품이 맡는 일과 넘지 못하는
+          경계를 요약합니다.
+        </p>
       </div>
       <div className="not-prose my-8 grid gap-3 md:grid-cols-2">
         {[
@@ -26,9 +44,9 @@ export default function Retrieval() {
         question="Dense와 sparse 결과의 점수 범위가 다를 때 순위만으로 어떻게 합칠까요?"
         idea={<>각 검색기가 문서에 준 rank를 역수 형태로 바꿔 더합니다. 여러 목록에서 꾸준히 상위인 문서는 높은 점수를 얻고, k는 한 검색기의 1위가 지나치게 지배하는 정도를 완화합니다.</>}
         formula={String.raw`\operatorname{RRF}(d)=\sum_{r\in\mathcal R}\frac{1}{k+\operatorname{rank}_r(d)}`}
-        annotatedFormula={String.raw`\operatorname{RRF}(d)=\underbrace{\sum_{r\in\mathcal R}\frac{1}{k+\operatorname{rank}_r(d)}}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`\operatorname{RRF}(d)=\underbrace{\sum_{r\in\mathcal R}\frac{1}{k+\operatorname{rank}_r(d)}}_{\text{검색기별 역순위 기여를 합산}}`}
         operations={[
-          { expression: String.raw`\sum_{r\in\mathcal R}\frac{1}{k+\operatorname{rank}_r(d)}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","각 검색기가 문서에 준 rank를 역수 형태로 바꿔 더합니다."] },
+          { expression: String.raw`\sum_{r\in\mathcal R}\frac{1}{k+\operatorname{rank}_r(d)}`, annotation: ["각 검색기의 순위를 k+rank의 역수로 바꾸고", "같은 문서가 받은 기여를 모두 더합니다."] },
         ]}
         terms={[
           { symbol: "d", name: "document", description: "두 검색 결과 중 하나 이상에 등장한 후보 문서입니다." },
@@ -40,8 +58,26 @@ export default function Retrieval() {
         interpretation="k=60일 때 dense 1위·sparse 10위 문서는 1/61+1/70을 얻습니다. 두 목록 모두 상위에 있는 문서가 한 목록에서만 우연히 1위인 문서보다 유리해질 수 있습니다."
       />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p>ACL·tenant·valid-time filter는 candidate 생성 전에 적용합니다. 검색 후 forbidden 문서를 지우면 허가 문서가 top-k 밖으로 밀렸거나, 금지 문서의 text와 score가 뒤 단계에 노출될 수 있습니다. 넓은 후보는 query와 document를 함께 읽는 cross-encoder 또는 late-interaction model로 rerank하되, 이 모델은 candidate 밖 문서를 새로 만들 수 없습니다.</p>
-        <p>GraphRAG는 이 funnel을 대체하는 단일 검색기가 아닙니다. Entity·relation extraction으로 만든 graph에서 local subgraph나 community summary를 후보로 만들고 lexical/vector retrieval과 결합하는 추가 lane입니다. 따라서 graph construction revision, 원문 provenance, traversal hop budget을 별도 receipt로 남겨야 합니다. 잘못 합쳐진 entity나 빠진 edge는 reranker가 원문 사실로 복구할 수 없습니다.</p>
+        <p>
+          여기서 검색 범위를 정하는 권한 조건은 첫 단계보다 앞에 와야 합니다.
+          ACL·tenant·valid-time filter를 검색 뒤에 적용하면, 허가된 문서는 이미
+          top-k 밖으로 밀렸을 수 있습니다. 금지 문서의 본문이나 점수가 뒤 단계에
+          노출될 위험도 생깁니다.
+        </p>
+        <p>
+          허가된 후보를 넓게 모은 다음에는 cross-encoder나 late-interaction model이
+          query와 문서를 함께 읽어 순서를 다시 정합니다. 하지만 여기에는 분명한
+          한계가 있습니다. Reranker는 받은 후보를 재정렬할 뿐, 첫 검색에서 빠진
+          문서를 새로 만들어 내지 못합니다.
+        </p>
+        <p>
+          GraphRAG도 이 원칙에서 예외가 아닙니다. 지식 그래프의 local subgraph나
+          community summary를 또 하나의 후보 통로로 추가할 뿐, lexical·vector
+          retrieval 전체를 대체하지는 않습니다. 따라서 어떤 원문에서 graph를
+          만들었는지, entity를 어떻게 합쳤는지, 몇 hop까지 탐색했는지를 함께
+          기록해야 합니다. 빠진 edge는 뒤의 reranker가 원문 사실만으로 복구할 수
+          없기 때문입니다.
+        </p>
       </div>
       <ExplainedFormula
         question="Reranker가 아무리 좋아도 첫 retrieval의 누락을 복구할 수 없는 이유는 무엇일까요?"
@@ -52,10 +88,10 @@ O_q&\subseteq C_q\\
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
 O_q&\subseteq C_q\\
-|O_q\cap R_q|&\le \underbrace{|C_q\cap R_q|}_{\text{relevant set 계산}}
+|O_q\cap R_q|&\le \underbrace{|C_q\cap R_q|}_{\text{후보에 이미 들어온 정답 수}}
 \end{aligned}`}
         operations={[
-          { expression: String.raw`|C_q\cap R_q|`, annotation: ["relevant set이(가) 식의 결과에 기여하는 방식을","계산합니다.","Reranker output은 candidate set의","부분집합입니다."] },
+          { expression: String.raw`|C_q\cap R_q|`, annotation: ["후보 집합 Cq와 정답 문서 Rq의 교집합을 세어", "reranker가 보존할 수 있는 정답 수의 상한을 구합니다."] },
         ]}
         terms={[
           { symbol: "R_q", name: "relevant set", description: "질문 q에 답을 뒷받침하는 정답 문서 전체입니다." },

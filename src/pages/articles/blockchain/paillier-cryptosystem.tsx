@@ -6,19 +6,29 @@ export default function PaillierCryptosystemArticle() {
   return (
     <article className="space-y-14">
       <section id="overview" className="space-y-5">
-        <h2 className="text-3xl font-bold">Paillier는 n²에서 randomized ciphertext를 곱해 plaintext를 더합니다</h2>
+        <h2 className="text-3xl font-bold">
+          암호문을 곱하면 평문의 합이 됩니다
+        </h2>
         <p className="text-lg leading-8">
-          Paillier cryptosystem은 plaintext m∈Zₙ을 ciphertext c∈Z*ₙ²로 옮기는
-          probabilistic public-key encryption입니다. 같은 message도 fresh randomizer
-          r에 따라 다른 ciphertext가 되고, ciphertext multiplication은 plaintext의
-          modular addition에 대응합니다. 이 기능과 confidentiality·integrity·active
-          protocol security는 각각 분리해 읽어야 합니다.
+          Paillier cryptosystem의 특징은 암호를 풀지 않고도 값을 더할 수 있다는
+          점입니다. 두 ciphertext를 곱한 뒤 복호화하면, 원래 두 plaintext를 더한
+          결과가 나옵니다. 여러 사람의 투표 수나 통계 합계를 개별 값의 노출 없이
+          모을 때 이 성질을 이용할 수 있습니다.
+        </p>
+        <p>
+          다만 “더할 수 있다”와 “안전하게 쓸 수 있다”는 같은 주장이 아닙니다.
+          같은 message를 매번 다른 ciphertext로 만드는 randomness, 정상 key와
+          ciphertext를 확인하는 validation, 악의적인 변조를 막는 protocol은 따로
+          살펴야 합니다. 먼저 작은 수치 예로 암호화와 복호화를 따라간 뒤 이 경계로
+          돌아오겠습니다.
         </p>
         <ContentBoundary article="paillier-cryptosystem" />
       </section>
 
       <section id="key-generation" className="space-y-5">
-        <h2 className="text-2xl font-bold">Key generation은 modulus뿐 아니라 decryption inverse 조건을 만듭니다</h2>
+        <h2 className="text-2xl font-bold">
+          Key generation은 복호화가 가능한 조건까지 만듭니다
+        </h2>
         <p>
           서로 다른 primes p,q로 n=pq를 만들고 λ=lcm(p−1,q−1)를 계산합니다. Public
           parameter g는 L(g^λ mod n²)가 modulo n에서 inverse를 가져야 하며,
@@ -55,7 +65,9 @@ export default function PaillierCryptosystemArticle() {
       </section>
 
       <section id="homomorphism" className="space-y-5">
-        <h2 className="text-2xl font-bold">Ciphertext multiplication은 mod n plaintext addition입니다</h2>
+        <h2 className="text-2xl font-bold">
+          왜 ciphertext의 곱이 plaintext의 합이 될까요?
+        </h2>
         <ExplainedFormula
           question="복호화하지 않고 두 plaintext를 어떻게 더할까요?"
           idea="두 encryption을 곱하면 g의 exponent는 더해지고 randomizer는 곱해집니다."
@@ -117,13 +129,21 @@ export default function PaillierCryptosystemArticle() {
       </section>
 
       <section id="release" className="space-y-5">
-        <h2 className="text-2xl font-bold">Profile과 encoding을 pin한 뒤 negative vectors를 먼저 통과시킵니다</h2>
+        <h2 className="text-2xl font-bold">
+          구현에서는 정상 예보다 실패 입력을 먼저 고정합니다
+        </h2>
         <p>
-          Key size, g profile, plaintext encoding, randomness source, ciphertext
-          serialization과 validation policy를 하나의 artifact로 고정합니다. r=0,
-          gcd(r,n)≠1, out-of-range message, malformed c, wrong key, repeated randomness,
-          modular wraparound와 altered aggregate를 시험한 뒤 keygen/encrypt/decrypt/
-          homomorphic operation latency와 bytes를 측정합니다.
+          먼저 key size, g 선택 규칙, plaintext encoding, randomness source,
+          ciphertext serialization과 validation policy를 한 구현 설정으로 묶어
+          버전을 남깁니다. 그래야 서로 다른 library 결과를 같은 Paillier 구현처럼
+          잘못 비교하지 않습니다.
+        </p>
+        <p>
+          그다음 <code>r=0</code>, <code>gcd(r,n)≠1</code>, 범위를 벗어난 message,
+          malformed ciphertext, wrong key, randomness 재사용, modular wraparound와
+          변조된 aggregate를 넣어 거부 동작을 확인합니다. 이 검사를 통과한 뒤에야
+          keygen·encrypt·decrypt·homomorphic operation의 latency와 byte 크기를
+          측정할 수 있습니다.
         </p>
         <div id="paper-paillier">
           <CitationBlock source="Paillier · Public-Key Cryptosystems Based on Composite Degree Residuosity Classes" citeKey={1} href="https://link.springer.com/chapter/10.1007/3-540-48910-X_16">

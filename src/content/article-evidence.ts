@@ -7,6 +7,7 @@ import { OFFICIAL_SOURCES } from "./official-sources";
 
 export type ArticleEvidenceKind =
   | "핵심 논문"
+  | "선행·비교 논문"
   | "리뷰 논문"
   | "핵심 연구"
   | "Benchmark 논문"
@@ -3403,11 +3404,11 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "ai/vllm-serving": [
     {
-      kind: "핵심 논문",
+      kind: "선행·비교 논문",
       label:
         "Orca: A Distributed Serving System for Transformer-Based Generative Models",
       href: "https://www.usenix.org/conference/osdi22/presentation/yu",
-      note: "Iteration-level scheduling과 selective batching의 문제 정의·system evaluation",
+      note: "vLLM 내부 구성 요소가 아닌 별도 선행 system으로서 iteration-level scheduling과 selective batching의 출발점을 제공",
     },
     {
       kind: "핵심 논문",
@@ -3436,14 +3437,14 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "ai/vllm-scheduler": [
     {
-      kind: "핵심 논문",
+      kind: "선행·비교 논문",
       label:
         "Taming Throughput-Latency Tradeoff in LLM Inference with Sarathi-Serve",
       href: "https://arxiv.org/abs/2403.02310",
       note: "Chunked prefill·stall-free scheduling과 throughput-tail-latency tradeoff",
     },
     {
-      kind: "핵심 논문",
+      kind: "선행·비교 논문",
       label: "Fast Distributed Inference Serving for Large Language Models",
       href: "https://arxiv.org/abs/2305.05920",
       note: "Token-boundary preemption·skip-join MLFQ와 state offload 설계 공간",
@@ -3481,7 +3482,7 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "logical·physical KV block mapping과 sharing의 원 논문",
     },
     {
-      kind: "핵심 논문",
+      kind: "선행·비교 논문",
       label:
         "SGLang: Efficient Execution of Structured Language Model Programs",
       href: "https://papers.nips.cc/paper_files/paper/2024/file/724be4472168f31ba1c9ac630f15dec8-Paper-Conference.pdf",
@@ -3533,7 +3534,7 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "shared trunk의 여러 future-token head를 함께 학습하는 MTP objective와 inference 활용",
     },
     {
-      kind: "핵심 논문",
+      kind: "선행·비교 논문",
       label: "SpecInfer: Accelerating LLM Serving with Speculative Inference",
       href: "https://arxiv.org/abs/2305.09781",
       note: "tree 기반 후보 생성과 verification을 서빙 관점에서 확장",

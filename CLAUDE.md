@@ -32,7 +32,7 @@ src/content/{카테고리}/index.ts                     ← 카테고리 정의 
 - codebase 소스를 먼저 확인/확장한 뒤 본문에 반영
 - 각 코드 블록: 함수 시그니처, 매개변수 의미, 예시 값, "왜 이렇게" 설명
 - 인사이트 callout: 💡 설계 판단, 비교 대상, 보안 근거
-- 목표: 150~200줄 (이것이 Viz의 "spec" 역할)
+- 줄 수를 목표로 삼지 않는다. `claim → 이유 → 작은 예 → 한계 → 다음 질문`이 자연스럽게 이어지고 독자가 구현·판정에 필요한 내용이 닫힐 때까지 쓴다. 이 본문이 Viz의 spec 역할을 한다.
 
 ### 2단계: Viz 전환 (에이전트 위임)
 - 깊은 텍스트 기반으로 에이전트에게 VizData.ts + Viz.tsx + VizSteps.tsx + VizSteps2.tsx 생성 위임
@@ -77,6 +77,7 @@ src/content/{카테고리}/index.ts                     ← 카테고리 정의 
 - viewBox="0 0 480 200" 기본
 - 5가지 박스: ModuleBox(상단바) / DataBox(필) / ActionBox(좌측바) / StatusBox(프로그레스) / AlertBox(점선)
 - import from `@/components/viz/boxes`
+- 장면별 내용 높이로 Viz wrapper와 control row를 늘였다 줄이지 않음. 모든 장면의 최대 필요 크기를 viewport 상한 안에 둔 stable stage를 쓰고 버튼 bounding box 변화는 2px 이내로 유지
 
 ## 코드 규칙
 - codebase 소스에 "본문 대응:" 주석 필수
@@ -85,11 +86,15 @@ src/content/{카테고리}/index.ts                     ← 카테고리 정의 
 - 코드를 본문에 직접 나열하지 않고 CodeSidebar "소스 보기"로 이동
 
 ## 글 작성 스타일
-- 짧은 문장, -이다/-입니다 최대한 제거
+- 문장은 짧고 명확하게 쓰되 원인·관찰·결론을 `~다. ~다.` 식으로 잘게 끊지 않는다
 - 줄바꿈은 `\n`으로 처리
 - 전문 용어 첫 등장 시 반드시 설명
 - 원인-결과는 한 줄로 합침
 - 비교는 대구 형태
+- 한 문단에는 중심 생각 하나만 두고, 다음 문단이 필요한 이유를 전환 문장으로 연결
+- 표·카드·칩은 본문에서 설명을 끝낸 뒤 비교·참조용으로만 사용
+- artifact·receipt·gate 같은 내부 운영어를 주제와 무관한 공통 결론 문법으로 반복하지 않음
+- 카테고리 article listing은 prerequisite→mechanism→응용·운영의 읽기 순서를 따름
 
 ## 메모리 파일 위치
 상세 규칙은 `~/.claude/projects/-Users-dylan-code-blog/memory/` 에 저장됨.

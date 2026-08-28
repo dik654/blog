@@ -722,7 +722,10 @@ export default function ArticleLessonFlowViz({
             </div>
           </div>
 
-          <div className="border-t border-border/60 bg-background px-4 py-4 sm:px-5">
+          <div
+            data-viz-controls
+            className="sticky bottom-0 z-20 min-h-[8.25rem] shrink-0 border-t border-border/60 bg-background/95 px-4 py-4 backdrop-blur-sm sm:px-5"
+          >
             <div className="h-1 overflow-hidden rounded-full bg-muted">
               <motion.div
                 className="h-full bg-primary/70"
@@ -741,7 +744,7 @@ export default function ArticleLessonFlowViz({
                   type="button"
                   onClick={moveBackward}
                   disabled={safeActive === 0 && reveal === 0}
-                  className="rounded-md border border-border/70 bg-background px-3 py-1.5 text-xs font-bold text-foreground transition-colors hover:border-primary/40 hover:text-primary disabled:opacity-40"
+                  className="min-h-8 w-[6.5rem] rounded-md border border-border/70 bg-background px-3 py-1.5 text-xs font-bold text-foreground transition-colors hover:border-primary/40 hover:text-primary disabled:opacity-40"
                 >
                   ← 이전 컷
                 </button>
@@ -750,7 +753,7 @@ export default function ArticleLessonFlowViz({
                   type="button"
                   disabled={Boolean(reduceMotion)}
                   onClick={togglePlayback}
-                  className="rounded-md border border-primary/35 bg-primary/[0.045] px-3 py-1.5 text-xs font-bold text-primary transition-colors hover:bg-primary/[0.08] disabled:cursor-not-allowed disabled:opacity-50"
+                  className="min-h-8 w-[8.5rem] rounded-md border border-primary/35 bg-primary/[0.045] px-3 py-1.5 text-xs font-bold text-primary transition-colors hover:bg-primary/[0.08] disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {reduceMotion
                     ? "모션 줄이기 적용됨"
@@ -764,7 +767,7 @@ export default function ArticleLessonFlowViz({
                   disabled={
                     safeActive === conceptSteps.length - 1 && reveal === 4
                   }
-                  className="rounded-md border border-border/70 bg-background px-3 py-1.5 text-xs font-bold text-foreground transition-colors hover:border-primary/40 hover:text-primary disabled:opacity-40"
+                  className="min-h-8 w-[6.5rem] rounded-md border border-border/70 bg-background px-3 py-1.5 text-xs font-bold text-foreground transition-colors hover:border-primary/40 hover:text-primary disabled:opacity-40"
                 >
                   다음 컷 →
                 </button>
