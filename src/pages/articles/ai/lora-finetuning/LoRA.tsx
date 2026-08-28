@@ -1,4 +1,5 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
+import ProgressiveDetail from "@/components/articles/progressive-detail";
 import LoraMatrixViz from "./viz/LoraMatrixViz";
 import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
@@ -11,9 +12,20 @@ export default function LoRA({
 }) {
   return (
     <section id="lora" className="scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">LoRA는 큰 weight 전체를 다시 쓰지 않고, 가능한 변화 방향을 rank r인 부분공간으로 제한합니다</h2>
+      <h2 className="mb-6 text-2xl font-bold">
+        Rank r은 adapter가 배울 변화 방향의 수를 제한합니다
+      </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p>Linear layer의 base weight가 <code>d_out × d_in</code>이라면 full update도 같은 크기입니다. LoRA는 input을 먼저 <code>d_in → r</code>로 줄이는 A와 다시 <code>r → d_out</code>으로 늘리는 B를 학습합니다. 중간 폭 r이 작기 때문에 <code>BA</code>가 만들 수 있는 독립 변화 방향은 최대 r개입니다.</p>
+        <p>
+          Linear layer의 base weight가 <code>d_out × d_in</code>이라면, 제한 없는
+          full update도 같은 크기입니다. LoRA는 이 큰 변화량을 바로 학습하지
+          않습니다.
+        </p>
+        <p>
+          대신 input을 <code>d_in → r</code>로 줄이는 A와, 다시
+          <code>r → d_out</code>으로 늘리는 B를 학습합니다. 중간 통로의 폭이
+          r이므로 <code>BA</code>가 만들 수 있는 독립 변화 방향도 최대 r개입니다.
+        </p>
       </div>
       <ExplainedFormula
         question="LoRA forward와 두 adapter 행렬의 shape는 어떻게 연결될까요?"
@@ -70,9 +82,38 @@ N_{\mathrm{LoRA}}&=\underbrace{r(d_{\mathrm{in}}+d_{\mathrm{out}})}_{\text{오�
       />
       <div className="not-prose my-8"><LoraMatrixViz /></div>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p>Rank 하나만 고르면 끝나지 않습니다. Attention의 q·k·v·o projection과 MLP의 gate·up·down projection 중 어디에 capacity를 배분할지 정해야 합니다. Model family마다 module 이름과 fused layout이 다르므로 문자열을 복사하지 말고 실제 named modules, trainable parameter 수와 forward hook을 확인합니다. 후보를 비교할 때는 data·update 수·α·dropout·initialization을 고정하고 seed를 반복하며, target/general metric과 peak memory·step time을 같은 validation protocol에서 기록합니다.</p>
-        <p>Unsloth의 <code>get_peft_model()</code> 기본값은 이 배분 문제에 대한 실전 답 하나를 보여줍니다: r=16, target_modules에 attention·MLP 7개 linear 전부, lora_alpha=16(s=α/r=1). rank를 키울 때 학습을 더 안정시키는 <code>use_rslora</code> 옵션도 있고, 지원하지 않는 PEFT 버전에서 그 옵션을 켜면 조용히 무시하는 대신 즉시 에러를 던집니다.</p>
+        <p>
+          하지만 rank 하나만 고르면 끝나는 것은 아닙니다. Attention의 query,
+          key, value, output projection과 MLP의 gate, up, down projection 가운데
+          어디에 adapter를 붙일지도 capacity를 바꿉니다.
+        </p>
+        <p>
+          Model family마다 module 이름과 fused layout이 다릅니다. 다른 설정의
+          문자열을 그대로 복사하지 말고, 실제 named module과 trainable parameter
+          수를 확인해야 합니다.
+        </p>
+        <p>
+          후보를 비교할 때는 data, update 수, α, dropout과 initialization을
+          고정합니다. 여러 seed에서 target·general metric뿐 아니라 peak memory와
+          step time도 같은 protocol로 기록해야 rank의 효과를 분리할 수 있습니다.
+        </p>
       </div>
+      <ProgressiveDetail
+        title="함께 보관한 Unsloth snapshot은 target module을 어떻게 고르나요?"
+        preview="한 가지 실전 기본값일 뿐이며, 현재 설치된 model과 PEFT가 같은 module·option을 지원하는지 확인해야 합니다."
+      >
+        <p>
+          이 글에 포함한 <code>get_peft_model()</code> snapshot은 r=16,
+          lora_alpha=16으로 두고 attention·MLP의 일곱 linear projection을 target으로
+          선택합니다. 이는 모든 model의 최적값이 아니라 해당 구현이 제공하는
+          출발점입니다.
+        </p>
+        <p>
+          Snapshot에는 rank가 커질 때 scale을 조정하는 <code>use_rslora</code>도
+          있습니다. 지원하지 않는 PEFT version에서 이 option을 요청하면 조용히
+          무시하지 않고 오류를 내도록 경계를 둡니다.
+        </p>
+      </ProgressiveDetail>
       <div className="not-prose mb-8">
         <CodeViewButton
           label="get_peft_model — 실전 기본값과 rslora 검증"
@@ -81,7 +122,17 @@ N_{\mathrm{LoRA}}&=\underbrace{r(d_{\mathrm{in}}+d_{\mathrm{out}})}_{\text{오�
       </div>
       <div id="reading-lora" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">핵심 논문 · LoRA</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">Hu 등은 pretrained weight를 고정하고 Transformer layer에 trainable rank-decomposition matrix를 삽입해 task별 trainable parameter와 checkpoint 비용을 줄였습니다. 논문은 RoBERTa·DeBERTa·GPT-2·GPT-3 조건에서 full fine-tuning과 품질·throughput·memory를 비교하고 adaptation update의 rank deficiency를 분석했습니다. 보고된 큰 절감 배율을 다른 model·target module·optimizer에 그대로 적용할 수는 없습니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          Hu 등은 pretrained weight를 고정하고 Transformer layer에 trainable
+          rank-decomposition matrix를 삽입했습니다. 이를 통해 task별 trainable
+          parameter와 checkpoint 비용을 줄이는 방법을 제안했습니다.
+        </p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          논문은 RoBERTa, DeBERTa, GPT-2와 GPT-3 조건에서 full fine-tuning과 품질,
+          throughput, memory를 비교하고 adaptation update의 rank deficiency를
+          분석했습니다. 보고된 절감 배율을 다른 model, target module과 optimizer에
+          그대로 적용할 수는 없습니다.
+        </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/2106.09685" target="_blank" rel="noreferrer">Low-rank parameterization과 실험 범위 보기</a>
       </div>
     </section>

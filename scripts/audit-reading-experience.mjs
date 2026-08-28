@@ -28,6 +28,14 @@ const progressiveDetail = fs.readFileSync(
   "src/components/articles/progressive-detail.tsx",
   "utf8",
 );
+const articleOnboarding = fs.readFileSync(
+  "src/components/ArticleOnboarding.tsx",
+  "utf8",
+);
+const contentBoundary = fs.readFileSync(
+  "src/components/articles/content-boundary.tsx",
+  "utf8",
+);
 const globalStyles = fs.readFileSync("src/index.css", "utf8");
 const cloudArticle = fs.readFileSync(
   "src/pages/articles/blockchain/filecoin-onchain-cloud/ModernArticle.tsx",
@@ -151,6 +159,17 @@ const contract = {
     progressiveDetail.includes("data-progressive-detail-preview") &&
     progressiveDetail.includes("focus-visible:ring-2") &&
     progressiveDetail.includes("group-open:rotate-90"),
+  articleScopeProgressivelyDisclosed:
+    articleOnboarding.includes("<ProgressiveDetail") &&
+    articleOnboarding.includes("이 글은 어디까지 설명하고") &&
+    articleOnboarding.includes("learningScope.map") &&
+    articleOnboarding.includes("concept.role") &&
+    !articleOnboarding.includes('.join(" · ")'),
+  editorialBoundaryProgressivelyDisclosed:
+    contentBoundary.includes("<ProgressiveDetail") &&
+    contentBoundary.includes("본문의 핵심 흐름을 읽는 데 먼저 외울 필요는 없습니다") &&
+    contentBoundary.includes("이 글이 직접 설명하는 내용") &&
+    !contentBoundary.includes("lg:grid-cols-3"),
 };
 
 const failures = Object.entries(contract)

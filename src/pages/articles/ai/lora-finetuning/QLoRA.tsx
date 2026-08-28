@@ -1,13 +1,35 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
+import ProgressiveDetail from "@/components/articles/progressive-detail";
 import QLoraDetailViz from "./viz/QLoraDetailViz";
 
 export default function QLoRA() {
   return (
     <section id="qlora" className="scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">QLoRA는 4-bit로 학습하는 LoRA가 아니라, 4-bit로 저장한 frozen base를 연산 시 복원하며 높은 precision adapter에 gradient를 보내는 방법입니다</h2>
+      <h2 className="mb-6 text-2xl font-bold">
+        QLoRA에서는 저장·연산·학습 정밀도를 따로 봐야 합니다
+      </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p>여기서는 세 precision을 나눠야 합니다. Base weight는 NF4 같은 low-bit representation과 scale metadata로 저장하고, matmul 전에 지정된 compute dtype으로 dequantize하며, LoRA parameter·gradient·optimizer state는 별도의 training dtype을 사용합니다. 그래서 “base가 4-bit”라는 말만으로 전체 training memory나 output artifact dtype을 알 수 없습니다.</p>
-        <p>NF4·block quantization·double quantization의 일반 원리와 quantization error는 <a href="/ai/quantization">양자화 정본</a>을 재사용합니다. QLoRA에서는 quantized base가 frozen이므로 일반 QAT처럼 base quantizer error를 gradient로 직접 수정하지 않습니다. Adapter가 task loss 아래에서 일부 오차를 우회할 수 있을 뿐입니다.</p>
+        <p>
+          “Base가 4-bit다”라는 한 문장만으로 QLoRA의 계산을 설명할 수는
+          없습니다. 무엇을 4-bit로 <em>저장</em>하는지와, 어떤 dtype으로
+          <em>연산</em>하고 <em>학습</em>하는지를 나눠야 합니다.
+        </p>
+        <p>
+          Base weight는 NF4 같은 low-bit code와 scale metadata로 저장됩니다.
+          Matmul 경로에서는 지정된 compute dtype으로 복원되고, LoRA parameter,
+          gradient와 optimizer state는 별도의 training dtype을 사용합니다.
+        </p>
+        <p>
+          따라서 base 저장량만 보고 전체 training memory나 최종 artifact dtype을
+          판단하면 안 됩니다.
+        </p>
+        <p>
+          NF4·block quantization·double quantization의 일반 원리는
+          <a href="/ai/quantization"> 양자화 정본</a>에서 이어집니다. QLoRA의
+          quantized base는 frozen이므로 일반 QAT처럼 quantizer error를 gradient로
+          직접 수정하지 않습니다. Adapter가 task loss 아래에서 그 오차의 일부를
+          보완할 수 있을 뿐입니다.
+        </p>
       </div>
       <ExplainedFormula
         question="QLoRA의 한 layer에서 저장값·연산값·학습값은 어떻게 나뉠까요?"
@@ -65,12 +87,34 @@ M_{\mathrm{train}}&\approx \underbrace{\frac{N_Wb}{8}+M_{\mathrm{qmeta}}}_{\text
         interpretation="Base storage가 16-bit에서 4-bit로 줄어도 activation이 peak의 절반이면 전체 memory가 4배 줄지 않습니다. 먼저 장부에서 가장 큰 항을 확인해야 합니다."
       />
       <div className="not-prose my-8"><QLoraDetailViz /></div>
-      <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p>Full-precision LoRA와 QLoRA의 차이를 base quantization 효과로 해석하려면 base revision·data/split·rank·target·α·optimizer·update 수를 같게 둡니다. Storage dtype과 compute dtype, seed를 기록하고 target·general·safety slice의 untouched test와 peak memory·step time을 함께 비교해야, 메모리 절감과 품질 차이를 같은 원인으로 섞지 않을 수 있습니다.</p>
-      </div>
+      <ProgressiveDetail
+        title="QLoRA의 품질 차이를 base quantization 때문이라고 말하려면 무엇을 고정해야 하나요?"
+        preview="LoRA와 QLoRA의 data·adapter·update 조건을 맞춘 paired comparison이 필요합니다."
+      >
+        <p>
+          Base revision, data split, rank, target module, α, optimizer와 update 수를
+          같게 둡니다. Storage dtype과 compute dtype, seed도 함께 기록합니다.
+        </p>
+        <p>
+          그런 다음 untouched test에서 target·general·safety slice를 평가하고,
+          peak memory와 step time을 같은 실행 조건에서 측정합니다. 그래야 메모리
+          절감과 품질 차이를 서로 다른 원인으로 분리할 수 있습니다.
+        </p>
+      </ProgressiveDetail>
       <div id="reading-qlora" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">핵심 논문 · QLoRA</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">Dettmers 등은 frozen 4-bit quantized base를 통해 LoRA adapter로 gradient를 전달하고, NF4·double quantization·paged optimizer를 조합해 65B model을 단일 48GB GPU에서 fine-tuning한 결과를 보고했습니다. 논문의 LLaMA/T5·instruction dataset·Guanaco·당시 chatbot 평가 범위의 결과이며, 모든 hardware·kernel·task에서 full 16-bit fine-tuning과 동등하거나 judge benchmark가 충분하다는 뜻은 아닙니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          Dettmers 등은 frozen 4-bit quantized base를 통해 LoRA adapter로 gradient를
+          전달하고, NF4·double quantization·paged optimizer를 조합했습니다. 이
+          구성으로 65B model을 단일 48GB GPU에서 fine-tuning한 결과를
+          보고했습니다.
+        </p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          이는 논문의 LLaMA/T5, instruction dataset, Guanaco와 당시 chatbot 평가
+          범위의 결과입니다. 모든 hardware·kernel·task에서 full 16-bit
+          fine-tuning과 동등하거나 judge benchmark 하나로 충분하다는 뜻은
+          아닙니다.
+        </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/2305.14314" target="_blank" rel="noreferrer">NF4·double quantization·paged optimizer와 평가 보기</a>
       </div>
     </section>

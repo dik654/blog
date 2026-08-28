@@ -8,6 +8,9 @@ import {
 
 const strict = process.argv.includes("--strict");
 const refreshBaseline = process.argv.includes("--refresh-baseline");
+const routeFilter = process.argv
+  .find((argument) => argument.startsWith("--route="))
+  ?.slice("--route=".length);
 const baselinePath = path.resolve("docs/prose-readability-baseline.json");
 const internalTerms = [
   "artifact",
@@ -76,12 +79,18 @@ function analyze(source) {
     (sum, paragraph) => sum + paragraph.length,
     0,
   );
-  const score =
+  const pacingScore =
     longHeadings.length * 2 +
     longParagraphs.length * 2 +
     listLikeParagraphs.length * 2 +
-    Math.max(0, internalTermCount - 8) +
     (proseChars >= 1000 && transitionCount === 0 ? 2 : 0);
+  const editorialJargonScore = Math.max(0, internalTermCount - 8);
+  const score = pacingScore + editorialJargonScore;
+  const signalSnippets = [
+    ...longHeadings.map((text) => ({ kind: "긴 제목", text })),
+    ...longParagraphs.map((text) => ({ kind: "긴 문단", text })),
+    ...listLikeParagraphs.map((text) => ({ kind: "목록형 문단", text })),
+  ];
 
   return {
     score,
@@ -92,6 +101,9 @@ function analyze(source) {
     listLikeParagraphs: listLikeParagraphs.length,
     internalTermCount,
     transitionCount,
+    pacingScore,
+    editorialJargonScore,
+    signalSnippets,
   };
 }
 
@@ -144,10 +156,18 @@ const unreviewed = findings.filter((finding) => {
 console.log(
   `문장 호흡 검사: 공개 글 ${catalog.length}개 · 압축 신호 ${findings.length}개 · 재검토 ${unreviewed.length}개`,
 );
-for (const finding of findings.slice(0, 20)) {
+const reportedFindings = routeFilter
+  ? findings.filter((finding) => finding.route === routeFilter)
+  : findings.slice(0, 20);
+for (const finding of reportedFindings) {
   console.log(
-    `${finding.route} score=${finding.score} heading=${finding.longHeadings} paragraph=${finding.longParagraphs} list=${finding.listLikeParagraphs} ops=${finding.internalTermCount} transitions=${finding.transitionCount}`,
+    `${finding.route} score=${finding.score} pacing=${finding.pacingScore} jargon=${finding.editorialJargonScore} heading=${finding.longHeadings} paragraph=${finding.longParagraphs} list=${finding.listLikeParagraphs} ops=${finding.internalTermCount} transitions=${finding.transitionCount}`,
   );
+  if (routeFilter) {
+    finding.signalSnippets.forEach((signal) =>
+      console.log(`  - ${signal.kind}: ${signal.text.slice(0, 220)}`),
+    );
+  }
 }
 
 if (unreviewed.length > 0) {

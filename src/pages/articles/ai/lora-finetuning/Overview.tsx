@@ -1,16 +1,54 @@
 import ContentBoundary from "@/components/articles/content-boundary";
+import ProgressiveDetail from "@/components/articles/progressive-detail";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import PeftCompareViz from "./viz/PeftCompareViz";
 
 export default function Overview() {
   return (
     <section id="overview" className="scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">LoRA의 출발점은 “모델을 작게 만든다”가 아니라, 고정된 base model에 필요한 변화만 작은 별도 artifact로 학습하는 것입니다</h2>
+      <h2 className="mb-6 text-2xl font-bold">
+        LoRA는 모델 압축이 아니라 변화량을 분리하는 방법입니다
+      </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p className="text-lg leading-8">Full fine-tuning은 base weight 전체에 gradient를 만들고 optimizer state까지 유지합니다. 모델이 커지면 한 task를 위해 같은 크기의 checkpoint를 매번 저장하는 비용도 커집니다. Low-Rank Adaptation(LoRA)은 base weight를 고정한 채 선택한 linear layer의 변화량만 두 작은 행렬로 표현합니다.</p>
-        <p>따라서 줄어드는 것은 우선 <strong>trainable parameter·gradient·optimizer state와 task별 checkpoint</strong>입니다. Base weight를 읽는 forward cost와 activation이 사라지는 것은 아니며, adapter를 merge하지 않은 serving에서는 추가 matmul과 adapter routing 비용이 생길 수 있습니다. LoRA를 inference quantization이나 작은 student와 같은 압축으로 세면 안 되는 이유입니다.</p>
-        <p>이 글은 base와 adapter의 경계, low-rank update의 shape와 capacity, QLoRA의 저장/연산 precision, chat template·loss mask, merge·requantization·배포 artifact를 차례로 다룹니다. 어떤 adaptation 방법을 고를지는 <a href="/ai/domain-finetuning">도메인 적응 정본</a>, 행렬 rank가 처음이라면 <a href="/ai/math-matrices-svd">행렬·SVD 정본</a>을 먼저 따라갈 수 있습니다.</p>
+        <p className="text-lg leading-8">
+          Full fine-tuning은 base weight 전체를 업데이트합니다. 그래서 gradient와
+          optimizer state도 전체 parameter에 맞춰 필요하고, task마다 큰
+          checkpoint가 하나씩 생깁니다.
+        </p>
+        <p>
+          LoRA는 base를 고정하고 선택한 linear layer의 <em>변화량</em>만 두 작은
+          행렬로 학습합니다. 같은 base를 여러 task가 공유하고, task마다 작은
+          adapter만 따로 보관할 수 있는 이유가 여기에 있습니다.
+        </p>
+        <p>
+          따라서 가장 먼저 줄어드는 것은
+          <strong> trainable parameter, gradient, optimizer state와 task별 저장량</strong>
+          입니다. Base forward와 activation 비용까지 같은 비율로 사라지는 것은
+          아닙니다. Merge하지 않은 adapter는 serving에서 추가 matmul이나 routing
+          비용도 만들 수 있습니다.
+        </p>
+        <p>
+          즉 LoRA는 inference quantization이나 작은 student처럼 모델 자체를 줄이는
+          압축 기법과 목적이 다릅니다.
+        </p>
       </div>
+      <ProgressiveDetail
+        title="이 글은 어떤 순서로 LoRA를 설명하나요?"
+        preview="Base와 adapter의 경계를 잡은 뒤 rank·QLoRA·데이터·배포 artifact 순서로 내려갑니다."
+      >
+        <p>
+          먼저 low-rank update의 shape와 capacity를 계산합니다. 그다음 QLoRA의
+          저장·연산·학습 precision을 분리하고, chat template과 loss mask가 실제
+          학습 sequence를 어떻게 정하는지 확인합니다. 마지막에는 merge,
+          requantization과 serving artifact의 검증 경계를 다룹니다.
+        </p>
+        <p>
+          어떤 adaptation 방법을 고를지는
+          <a href="/ai/domain-finetuning"> 도메인 적응 정본</a>, 행렬 rank가
+          처음이라면 <a href="/ai/math-matrices-svd">행렬·SVD 정본</a>을 먼저
+          참고할 수 있습니다.
+        </p>
+      </ProgressiveDetail>
       <ContentBoundary article="lora-finetuning" />
       <ExplainedFormula
         question="Full fine-tuning과 LoRA에서 실제로 업데이트되는 파라미터 집합은 어떻게 다를까요?"

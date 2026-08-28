@@ -117,20 +117,25 @@ Z&=\underbrace{\sum_{t=1}^{T}m_t}_{\text{loss mask 계산}}\\
         <p className="leading-8">
           R1-Zero의 특징은 SFT 없이 base model에 RL을 적용한 데 있지만, 초기
           policy가 parser가 읽을 수 있는 answer나 code를 거의 만들지 못하면
-          reward가 대부분 0이 됩니다. 이때 작은 cold-start SFT는 “정답을
-          가르친다”기보다 verifier가 구분 가능한 output 영역으로 policy를
-          옮깁니다. 반대로 이미 verifiable output을 충분히 만드는 base
-          model이라면 SFT 없이 RL의 변화를 관찰할 수 있습니다.
+          reward가 대부분 0이 됩니다.
+        </p>
+        <p className="leading-8">
+          이때 작은 cold-start SFT는 “정답을 가르친다”기보다 verifier가 구분할
+          수 있는 output 영역으로 policy를 옮깁니다. 이미 verifiable output을
+          충분히 만드는 base model이라면 SFT 없이 RL의 변화를 관찰할 수도
+          있습니다.
         </p>
 
         <h3>YAML 숫자를 복사하기 전에 token budget을 다시 계산한다</h3>
         <p className="leading-8">
           Open-R1 recipe는 특정 checkpoint와 GPU topology의 실행 예시입니다. GPU
           수를 바꾸면 per-device batch와 gradient accumulation을 조정해 global
-          batch를 유지하고, max sequence length·packing·truncation 뒤 실제
-          supervised token 수를 기록해야 합니다. Reasoning trace는 길이 분포가
-          넓으므로 sample 수만 같아도 update당 token budget은 크게 달라질 수
-          있습니다.
+          batch를 유지해야 합니다.
+        </p>
+        <p className="leading-8">
+          Max sequence length, packing과 truncation을 적용한 뒤 실제 supervised
+          token 수도 기록합니다. Reasoning trace는 길이 분포가 넓어서 sample
+          수가 같아도 update당 token budget은 크게 달라질 수 있습니다.
         </p>
       </div>
 
@@ -143,13 +148,14 @@ Z&=\underbrace{\sum_{t=1}^{T}m_t}_{\text{loss mask 계산}}\\
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
           현재 공개 저장소는 distilled reasoning trace를 이용한 SFT 명령과
-          recipe를 제공하고, GPU 수를 바꾸면 per-device batch나 gradient
-          accumulation을 조정해 global batch를 유지하라고 안내합니다. 특히
-          tokenizer에 이미 정의된 chat template와 EOS가 맞지 않으면 종료와
-          format 학습이 달라질 수 있으므로 예시 YAML의 숫자보다 실제
-          serialization을 먼저 확인해야 합니다. 이는 현재 저장소 동작의
-          근거이지 모든 base model에 같은 learning rate와 epoch가 최적이라는
-          주장은 아닙니다.
+          recipe를 제공합니다. GPU 수가 달라지면 per-device batch나 gradient
+          accumulation을 조정해 global batch를 유지하라고 안내합니다.
+        </p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          Tokenizer의 chat template와 EOS가 맞지 않으면 종료와 format 학습도
+          달라집니다. 예시 YAML 숫자보다 실제 serialization을 먼저 확인해야
+          합니다. 이는 현재 저장소 동작의 근거이지 모든 base model에 같은
+          learning rate와 epoch가 최적이라는 주장은 아닙니다.
         </p>
         <a
           className="mt-3 inline-block text-sm font-medium text-primary hover:underline"

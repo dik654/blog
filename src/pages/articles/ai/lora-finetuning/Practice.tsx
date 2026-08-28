@@ -1,14 +1,46 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
+import ProgressiveDetail from "@/components/articles/progressive-detail";
 import PracticeWorkflowViz from "./viz/PracticeWorkflowViz";
 
 export default function Practice() {
   return (
     <section id="practice" className="scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">학습이 끝난 adapter가 아니라, base와 결합해 검증된 serving artifact가 배포 단위입니다</h2>
+      <h2 className="mb-6 text-2xl font-bold">
+        배포 단위는 adapter 파일 하나가 아닙니다
+      </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p>Adapter checkpoint에는 base revision·tokenizer·chat template·target module·rank·α·dropout·initialization·quantization config·data/split·training code를 연결합니다. Load 시 실제 base hash와 module shape가 맞지 않으면 이름이 비슷해도 실패시킵니다. Merge parity는 logit의 maximum error와 relative error를 tolerance로 고정하고 task metric까지 함께 확인합니다.</p>
-        <p>평가는 frozen base, adapter-enabled, 가능하면 full fine-tuning baseline을 같은 prompt와 decoding으로 비교합니다. Target gain뿐 아니라 general capability regression·format·safety·긴 길이와 seed variance를 봅니다. QLoRA는 full-precision LoRA와도 비교해야 quantized base에서 온 차이를 분리할 수 있습니다.</p>
+        <p>
+          학습이 끝나면 작은 adapter checkpoint가 생깁니다. 하지만 이 파일만으로는
+          같은 모델을 복원할 수 없습니다. Adapter는 정확한 base revision,
+          tokenizer와 target module 위에서만 의미가 있기 때문입니다.
+        </p>
+        <p>
+          따라서 실제 배포 단위는 base와 adapter를 함께 식별하고, load·merge와
+          task 평가를 통과한 serving artifact입니다. 이름이 비슷해도 base hash나
+          module shape가 다르면 조용히 계속하지 않고 실패시켜야 합니다.
+        </p>
+        <p>
+          평가는 frozen base와 adapter-enabled model을 같은 prompt와 decoding으로
+          비교합니다. 가능하면 full fine-tuning baseline도 추가합니다. Target
+          성능뿐 아니라 general capability, format, safety, 긴 길이와 seed variance를
+          함께 봐야 개선과 회귀를 구분할 수 있습니다.
+        </p>
       </div>
+      <ProgressiveDetail
+        title="재현 가능한 adapter manifest에는 무엇을 고정해야 하나요?"
+        preview="Base·tokenizer·adapter 구조·학습 데이터·배포 변환을 하나의 versioned artifact로 묶어야 합니다."
+      >
+        <p>
+          Base revision과 hash, tokenizer, chat template, target module, rank, α,
+          dropout, initialization과 quantization config를 기록합니다. Data split과
+          training code revision도 같은 manifest에 연결합니다.
+        </p>
+        <p>
+          Merge 전후에는 logit maximum error와 relative error의 tolerance를 먼저
+          고정하고 task metric을 함께 확인합니다. QLoRA라면 full-precision LoRA도
+          비교해 quantized base에서 생긴 차이를 분리합니다.
+        </p>
+      </ProgressiveDetail>
       <ExplainedFormula
         question="Unmerged LoRA를 base weight에 합치면 왜 같은 linear output을 만들 수 있을까요?"
         idea={<>분배법칙으로 W와 sBA를 먼저 더한 새 weight를 만들 수 있습니다. 같은 dtype에서 dropout이 꺼진 deterministic inference라면 두 경로의 결과가 수치 오차 범위에서 일치해야 합니다.</>}
@@ -63,7 +95,16 @@ Q(\widetilde W)&\ne q_W+Q(sBA)\\
       <div className="not-prose my-8"><PracticeWorkflowViz /></div>
       <div id="standard-peft-lora" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">공식 구현 참고 · Hugging Face PEFT LoRA</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">PEFT 문서는 현재 LoraConfig의 rank·alpha·target_modules·dropout·bias·modules_to_save와 initialization, merge 관련 구현 경계를 제공합니다. 이 글은 특정 version의 default를 영구 표준으로 가정하지 않으며, 실제 설치 version의 config·checkpoint format·target module mapping을 manifest에 고정합니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          PEFT 문서는 현재 LoraConfig의 rank, alpha, target_modules, dropout, bias와
+          modules_to_save를 설명합니다. Initialization과 merge 관련 구현 경계도
+          함께 제공합니다.
+        </p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          이 글은 특정 version의 default를 영구 표준으로 가정하지 않습니다. 실제
+          설치 version의 config, checkpoint format과 target module mapping을
+          manifest에 고정해야 합니다.
+        </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://huggingface.co/docs/peft/main/package_reference/lora" target="_blank" rel="noreferrer">현재 LoraConfig와 구현 옵션 보기</a>
       </div>
     </section>

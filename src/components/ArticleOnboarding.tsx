@@ -11,6 +11,7 @@ import {
 import { EDITORIAL_BOUNDARIES } from "@/content/editorial-ownership";
 import { ARTICLE_LEARNING } from "@/content/article-learning";
 import { getKnowledgeConcept } from "@/content/knowledge-graph";
+import ProgressiveDetail from "@/components/articles/progressive-detail";
 
 function findSubcategory(
   subcategories: readonly Subcategory[],
@@ -68,13 +69,22 @@ export default function ArticleOnboarding({
         "공통 원리는 이 글에서 다시 정의하지 않고 해당 글의 설명을 사용합니다.",
     })) ?? []),
   ]).filter((link) => link.href !== `/${routeKey}`);
-  const learningScope = learning?.introducedHere
-    .slice(0, 5)
-    .map((concept) => getKnowledgeConcept(concept.id).label)
-    .join(" · ");
-  const scopeDescription = (
-    learningScope ?? subcategory?.description ?? category.description
-  ).replace(/[.!?]\s*$/, "");
+  const learningScope = learning?.introducedHere.slice(0, 5).map((concept) => ({
+    label: getKnowledgeConcept(concept.id).label,
+    role: concept.role,
+  }));
+  const fallbackScope = (subcategory?.description ?? category.description).replace(
+    /[.!?]\s*$/,
+    "",
+  );
+  const firstScope = learningScope?.[0];
+  const lastScope = learningScope?.at(-1);
+  const scopePreview =
+    firstScope && lastScope
+      ? firstScope === lastScope
+        ? `${firstScope.label}의 핵심 원리와 적용 경계를 설명합니다.`
+        : `${firstScope.label}에서 출발해 ${lastScope.label}까지 순서대로 연결합니다.`
+      : `${fallbackScope}의 핵심 흐름과 경계를 설명합니다.`;
   const firstStage = flow?.nodes[0]?.label;
   const lastStage = flow?.nodes.at(-1)?.label;
 
@@ -99,9 +109,9 @@ export default function ArticleOnboarding({
         <p className="mt-2 text-sm leading-7 text-foreground/75">
           {learning ? (
             <>
-              위의 장면별 수업에서 새 용어를 하나씩 확인했습니다. 이제 이 글이
-              다루는 범위와 연결 글을 구분한 뒤 실제 본문을 처음부터 읽습니다.
-              다 읽은 뒤에는 넓은 용어 카드와 연습문제로 이해를 확인합니다.
+              먼저 본문에서 문제와 결론을 한 흐름으로 따라갑니다. 수식·구현
+              조건이 필요할 때만 상세 설명을 펼치고, 마지막 연습문제에서 실제로
+              설명할 수 있는지 확인하면 됩니다.
             </>
           ) : firstStage && lastStage ? (
             <>
@@ -119,19 +129,12 @@ export default function ArticleOnboarding({
         </p>
       </div>
 
-      <div className="rounded-xl border border-border/60 bg-muted/20 p-3.5">
-        <p className="text-xs leading-5 text-foreground/75">
-          <strong className="text-foreground">다루는 범위:</strong>{" "}
-          {scopeDescription}. 이 글은 {ARTICLE_INTENT_DESCRIPTIONS[intent]}이며,
-          공통 정의는 연결 글에 맡기고 이 주제에서 필요한 판단과 흐름에
-          집중합니다.
-        </p>
-        {effectiveBeginnerStart &&
-          !learning?.entryLevel &&
-          effectiveBeginnerStart.href !== `/${routeKey}` && (
+      {effectiveBeginnerStart &&
+        !learning?.entryLevel &&
+        effectiveBeginnerStart.href !== `/${routeKey}` && (
           <Link
             to={effectiveBeginnerStart.href}
-            className="mt-3 block rounded-lg border border-primary/20 bg-primary/5 px-3 py-2 transition-colors hover:bg-primary/10"
+            className="block rounded-xl border border-primary/20 bg-primary/5 px-3.5 py-3 transition-colors hover:bg-primary/10"
           >
             <span className="block text-xs font-bold text-primary">
               처음이라면 먼저: {effectiveBeginnerStart.label} →
@@ -141,31 +144,56 @@ export default function ArticleOnboarding({
             </span>
           </Link>
         )}
-      </div>
 
-      {reuseLinks.length > 0 && (
-        <div className="min-w-0 rounded-xl border border-amber-500/25 bg-amber-500/5 p-3">
-          <p className="text-xs font-bold text-amber-700 dark:text-amber-300">
-            이 글과 역할을 나누는 연결 글
-          </p>
-          <div className="mt-2 grid min-w-0 gap-2 sm:grid-cols-2">
-            {reuseLinks.map((link) => (
-              <Link
-                key={link.href}
-                to={link.href}
-                className="min-w-0 rounded-lg bg-background/70 px-3 py-2 text-xs transition-colors hover:bg-background"
-              >
-                <span className="block break-words font-semibold text-foreground">
-                  {link.label} →
+      <ProgressiveDetail
+        className="my-0"
+        title="이 글은 어디까지 설명하고, 무엇을 연결 글에 맡기나요?"
+        preview={scopePreview}
+      >
+        <p>
+          이 글은 {ARTICLE_INTENT_DESCRIPTIONS[intent]}입니다. 핵심 판단에 필요한
+          흐름은 본문에서 설명하고, 여러 글에 공통인 정의는 아래 연결 글의 정본
+          설명을 사용합니다.
+        </p>
+        {learningScope && learningScope.length > 0 ? (
+          <ol>
+            {learningScope.map((concept) => (
+              <li key={concept.label}>
+                <strong>{concept.label}</strong>
+                <span className="mt-1 block text-muted-foreground">
+                  {concept.role}
                 </span>
-                <span className="mt-0.5 block break-words text-xs leading-5 text-muted-foreground">
-                  {link.reason}
-                </span>
-              </Link>
+              </li>
             ))}
+          </ol>
+        ) : (
+          <p>{fallbackScope}의 배경·핵심 동작·적용 경계를 차례로 다룹니다.</p>
+        )}
+
+        {reuseLinks.length > 0 && (
+          <div className="not-prose mt-5 border-t border-border/70 pt-4">
+            <p className="text-xs font-bold text-amber-700 dark:text-amber-300">
+              이 글과 역할을 나누는 연결 글
+            </p>
+            <div className="mt-2 grid min-w-0 gap-2 sm:grid-cols-2">
+              {reuseLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  to={link.href}
+                  className="min-w-0 rounded-lg border border-border/60 bg-background px-3 py-2 text-xs transition-colors hover:bg-muted/40"
+                >
+                  <span className="block break-words font-semibold text-foreground">
+                    {link.label} →
+                  </span>
+                  <span className="mt-0.5 block break-words leading-5 text-muted-foreground">
+                    {link.reason}
+                  </span>
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </ProgressiveDetail>
     </section>
   );
 }

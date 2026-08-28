@@ -98,10 +98,14 @@ export default function RewardSystem({
         <p className="leading-8">
           Open-R1은 competitive programming solution을 test case로 실행하는
           reward와 여러 sandbox provider를 지원합니다. 이때 timeout, network
-          egress, filesystem, secret와 nondeterminism이 reward 함수의 일부가
-          됩니다. Sandbox queue가 밀려 timeout이 늘면 model quality가 아니라
-          infrastructure 상태 때문에 reward distribution이 바뀔 수 있으므로
-          verifier latency와 failure reason도 함께 기록해야 합니다. 격리 원리는{" "}
+          egress, filesystem, secret와 nondeterminism도 reward 함수의 일부가
+          됩니다.
+        </p>
+        <p className="leading-8">
+          Sandbox queue가 밀려 timeout이 늘면 model quality가 아니라
+          infrastructure 상태 때문에 reward distribution이 바뀔 수 있습니다.
+          Verifier latency와 failure reason을 함께 기록해야 하는 이유입니다. 격리
+          원리는{" "}
           <a href="/ai/agent-sandbox-security">에이전트 sandbox 보안</a>에서
           이어집니다.
         </p>
@@ -125,11 +129,14 @@ export default function RewardSystem({
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
           Open-R1은 math answer와 competitive-programming output을 자동으로
-          확인하는 reward code를 제공하지만, 실제 측정 대상은 parser와 test가
-          관측한 결과입니다. 같은 model output도 parser commit·test revision·
-          sandbox timeout이 바뀌면 reward가 달라질 수 있으므로 세 항목을 model
-          밖의 versioned evaluator artifact로 다뤄야 합니다. 저장소 지원 범위가
-          reasoning 과정 전체의 사실성이나 안전성을 검증한다는 뜻은 아닙니다.
+          확인하는 reward code를 제공합니다. 하지만 실제 측정 대상은 parser와
+          test가 관측한 결과입니다.
+        </p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          같은 model output도 parser commit, test revision과 sandbox timeout이
+          바뀌면 reward가 달라질 수 있습니다. 이 세 항목을 model 밖의 versioned
+          evaluator artifact로 다뤄야 합니다. 저장소가 reasoning 과정 전체의
+          사실성이나 안전성을 검증한다는 뜻은 아닙니다.
         </p>
         <a
           className="mt-3 inline-block text-sm font-medium text-primary hover:underline"

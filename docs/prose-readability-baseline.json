@@ -25,10 +25,6 @@
       "fingerprint": "e6e950644ff3c1c8",
       "score": 52
     },
-    "ai/open-r1": {
-      "fingerprint": "45d5e234d84734c3",
-      "score": 50
-    },
     "ai/openclaw-assistant": {
       "fingerprint": "b01ccfe632f15e76",
       "score": 43
@@ -48,10 +44,6 @@
     "blockchain/filecoin-storacha": {
       "fingerprint": "b158410a649f8c67",
       "score": 41
-    },
-    "ai/lora-finetuning": {
-      "fingerprint": "84291efa98257b96",
-      "score": 40
     },
     "gpu/ec-gpu-gen": {
       "fingerprint": "b5969057e5d00beb",
