@@ -140,6 +140,38 @@ function reindent(text, indent) {
     .join("\n");
 }
 
+/** 정본 파일에 그대로 복사되므로 값은 순수 literal 이어야 한다. 식별자·template literal·호출식은 거부한다. */
+function assertPureLiteral(node, where, allowFunction = false) {
+  node = unwrap(node);
+  if (
+    ts.isStringLiteral(node) ||
+    ts.isNoSubstitutionTemplateLiteral(node) ||
+    ts.isNumericLiteral(node) ||
+    node.kind === ts.SyntaxKind.TrueKeyword ||
+    node.kind === ts.SyntaxKind.FalseKeyword ||
+    node.kind === ts.SyntaxKind.NullKeyword
+  )
+    return;
+  if (ts.isPrefixUnaryExpression(node) && ts.isNumericLiteral(node.operand)) return;
+  if (ts.isArrayLiteralExpression(node)) {
+    node.elements.forEach((el, i) => assertPureLiteral(el, `${where}[${i}]`, allowFunction));
+    return;
+  }
+  if (ts.isObjectLiteralExpression(node)) {
+    for (const prop of node.properties) {
+      const key = propertyKey(prop);
+      if (!ts.isPropertyAssignment(prop)) throw new Error(`${where}.${key ?? "?"}: shorthand/spread 는 지원하지 않습니다.`);
+      assertPureLiteral(prop.initializer, `${where}.${key}`, allowFunction || key === "component");
+    }
+    return;
+  }
+  if (allowFunction && ts.isArrowFunction(node)) return;
+  throw new Error(
+    `${where}: 순수 literal 이 아닙니다 (${ts.SyntaxKind[node.kind]}: ${node.getText().slice(0, 60)}). ` +
+      "template literal(${...})·변수·함수 호출은 정본 파일에서 깨지므로 문자열 literal 로 바꾸세요.",
+  );
+}
+
 function nodeText(node, sf) {
   return sf.text.slice(node.getStart(sf), node.end);
 }
@@ -459,6 +491,7 @@ function mergeModule(file) {
   for (const name of order) {
     const node = exports.get(name);
     if (!node) continue;
+    assertPureLiteral(node, `${path.basename(file)}:${name}`, name === "CATALOG");
     switch (name) {
       case "CONCEPTS":
         mergeConcepts(module, node);
