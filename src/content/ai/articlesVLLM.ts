@@ -60,6 +60,52 @@ export const vllmServingArticles: Article[] = [
     component: () => import("@/pages/articles/ai/serving-latency-metrics-and-slo"),
   },
   {
+    slug: "serving-benchmark-methodology",
+    title: "Serving benchmark 는 offered load 를 올리며 steady state 에서 재야 재현됩니다",
+    subcategory: "ai-llm-serving",
+    sections: [
+      { id: "problem", title: "같은 서버도 실행 조건에 따라 숫자가 달라지는 이유" },
+      { id: "taxonomy", title: "Micro·macro·end-to-end 와 입력 분포" },
+      { id: "protocol", title: "Cold·warm, steady state, noise 와 variance" },
+      { id: "load", title: "Offered load, saturation, utilization–latency 곡선" },
+      { id: "reproducibility", title: "Baseline 과 λ sweep 절차" },
+      {
+        id: "sources",
+        title: "근거 문서",
+        subsections: [
+          { id: "paper-vllm-cli", title: "vLLM Benchmark CLI" },
+          { id: "paper-genai-perf-load", title: "GenAI-Perf 부하 옵션" },
+          { id: "paper-mlperf-rules", title: "MLPerf Inference Rules" },
+          { id: "paper-queueing-text", title: "Queueing 교과서(M/M/1)" },
+        ],
+      },
+    ],
+    component: () => import("@/pages/articles/ai/serving-benchmark-methodology"),
+  },
+  {
+    slug: "inference-cost-and-capacity-planning",
+    title: "추론 비용은 cost/token 으로, capacity 는 peak 와 headroom 으로 계획합니다",
+    subcategory: "ai-llm-serving",
+    sections: [
+      { id: "problem", title: "GPU 수를 정하는 두 계산" },
+      { id: "cost", title: "GPU-hour 와 cost/token·cost/request" },
+      { id: "efficiency", title: "Throughput per dollar·per watt 와 TCO" },
+      { id: "capacity", title: "Peak·headroom 과 over/underprovisioning" },
+      { id: "scaling", title: "Reserved·on-demand, scale-up/out, autoscaling, fragmentation" },
+      {
+        id: "sources",
+        title: "근거 문서",
+        subsections: [
+          { id: "paper-hpa", title: "Kubernetes HPA" },
+          { id: "paper-gpu-sharing", title: "NVIDIA GPU sharing·MIG" },
+          { id: "paper-aws-pricing", title: "EC2 구매 옵션" },
+          { id: "paper-mlperf-power", title: "MLPerf Power" },
+        ],
+      },
+    ],
+    component: () => import("@/pages/articles/ai/inference-cost-and-capacity-planning"),
+  },
+  {
     slug: "inference-runtime-anatomy",
     title: "Inference runtime 은 첫 요청 전에 process 를 나누고 GPU memory 지도를 확정합니다",
     subcategory: "ai-llm-serving",
@@ -81,18 +127,24 @@ export const vllmServingArticles: Article[] = [
       {
         id: "overview",
         title: "Scheduler의 입력·출력 계약",
+        subsections: [{ id: "scheduler-boundary", title: "Policy와 memory의 책임 경계" }],
+      },
+      {
+        id: "queue-batching",
+        title: "Batching 세대·queue 정책·fairness·HOL·overhead",
         subsections: [
-          { id: "scheduler-boundary", title: "Policy와 memory의 책임 경계" },
+          { id: "batching-generations", title: "Static·dynamic·iteration-level batching" },
+          { id: "request-queue", title: "Request queue 와 queue discipline" },
+          { id: "scheduler-fairness", title: "Token 단위 fairness 와 VTC" },
+          { id: "hol-blocking", title: "Head-of-line blocking 의 두 자리" },
+          { id: "scheduler-overhead", title: "Scheduler overhead 와 async scheduling" },
         ],
       },
       {
         id: "schedule-method",
         title: "Request progress와 한 GPU step",
         subsections: [
-          {
-            id: "running-waiting-order",
-            title: "RUNNING·WAITING admission 순서",
-          },
+          { id: "running-waiting-order", title: "RUNNING·WAITING admission 순서" },
           { id: "closed-loop-update", title: "Output update와 closed-loop" },
         ],
       },
@@ -151,6 +203,30 @@ export const vllmServingArticles: Article[] = [
       { id: "evidence", title: "근거와 경계" },
     ],
     component: () => import("@/pages/articles/ai/prefill-decode-phase-dynamics"),
+  },
+  {
+    slug: "disaggregated-prefill-decode-serving",
+    title: "Prefill과 decode를 분리 배치하면 KV transfer 비용만큼 간섭이 사라집니다",
+    subcategory: "ai-llm-serving",
+    sections: [
+      { id: "problem", title: "두 phase를 섞을 때 생기는 문제" },
+      { id: "routing", title: "Replica routing과 cache-aware load balancing" },
+      { id: "disaggregation", title: "Prefill worker와 decode worker" },
+      { id: "kv-transfer", title: "KV transfer의 byte·시간·대역폭" },
+      { id: "provisioning", title: "두 풀의 GPU 수와 heterogeneous serving" },
+      {
+        id: "evidence",
+        title: "근거: DistServe·Splitwise·Mooncake와 engine 문서",
+        subsections: [
+          { id: "paper-distserve", title: "DistServe" },
+          { id: "paper-splitwise", title: "Splitwise" },
+          { id: "paper-mooncake", title: "Mooncake" },
+          { id: "paper-vllm-disagg", title: "vLLM disaggregated prefilling 문서" },
+          { id: "paper-sglang-router", title: "SGLang PD disaggregation·router" },
+        ],
+      },
+    ],
+    component: () => import("@/pages/articles/ai/disaggregated-prefill-decode-serving"),
   },
   {
     slug: "vllm-paged-attention",
@@ -223,6 +299,40 @@ export const vllmServingArticles: Article[] = [
     component: () => import("@/pages/articles/ai/serving-memory-admission-and-preemption"),
   },
   {
+    slug: "prefix-caching-radix-attention",
+    title: "Prefix caching: radix tree 매칭과 cache-aware scheduling",
+    subcategory: "ai-llm-serving",
+    sections: [
+      { id: "problem", title: "매칭 구조와 실행 순서가 hit 을 정한다" },
+      { id: "radix-tree", title: "Radix tree 가 공유 prefix 를 node 로 가르는 방법" },
+      {
+        id: "matching",
+        title: "match_prefix 와 block hash 의 매칭 단위",
+        subsections: [{ id: "hybrid-manager", title: "Hybrid cache manager 의 group 간 hit 합의" }],
+      },
+      { id: "eviction", title: "Ref counter 와 leaf-first LRU eviction" },
+      { id: "scheduling", title: "Cache-aware scheduling 의 hit rate 와 fairness" },
+      {
+        id: "attention-metadata",
+        title: "Attention metadata: slot mapping 과 block table lookup",
+        subsections: [
+          { id: "slot-mapping", title: "Slot mapping · KV 쓰기 경로" },
+          { id: "block-table-lookup", title: "Block table lookup · KV 읽기 경로" },
+        ],
+      },
+      {
+        id: "evidence",
+        title: "SGLang 논문·vLLM 설계 문서·V1 소스",
+        subsections: [
+          { id: "paper-sglang-radixattention", title: "SGLang RadixAttention 논문" },
+          { id: "source-vllm-prefix-caching", title: "vLLM automatic prefix caching 설계" },
+          { id: "source-vllm-v1-attention", title: "vLLM V1 attention metadata·coordinator 소스" },
+        ],
+      },
+    ],
+    component: () => import("@/pages/articles/ai/prefix-caching-radix-attention"),
+  },
+  {
     slug: "vllm-spec-decode",
     title: "vLLM Speculative Decoding: Draft · Verify · Acceptance",
     subcategory: "ai-llm-serving",
@@ -275,6 +385,40 @@ export const vllmServingArticles: Article[] = [
     component: () => import("@/pages/articles/ai/vllm-spec-decode"),
   },
   {
+    slug: "speculative-decoding-variants",
+    title: "Speculative decoding 변형은 draft 의 출처와 verify 의 모양으로 갈립니다",
+    subcategory: "ai-llm-serving",
+    sections: [
+      { id: "problem", title: "변형을 가르는 두 축: draft 출처와 verify 모양" },
+      {
+        id: "self-speculative",
+        title: "Self-speculative decoding 의 layer 비율 비용",
+        subsections: [{ id: "paper-layerskip", title: "LayerSkip 논문의 문제와 기여" }],
+      },
+      {
+        id: "mtp",
+        title: "MTP head 의 draft 비용과 효용 경계",
+        subsections: [{ id: "paper-deepseek-v3-mtp", title: "DeepSeek-V3 MTP 절의 문제와 기여" }],
+      },
+      {
+        id: "tree",
+        title: "Tree 기반 speculation 의 node 수와 기대 길이",
+        subsections: [{ id: "paper-medusa", title: "Medusa 논문의 문제와 기여" }],
+      },
+      {
+        id: "tree-verify",
+        title: "Tree attention mask 와 경로 확정",
+        subsections: [{ id: "paper-specinfer", title: "SpecInfer 논문의 문제와 기여" }],
+      },
+      {
+        id: "suffix",
+        title: "Suffix decoding 과 변형 선택",
+        subsections: [{ id: "paper-suffix-decoding", title: "SuffixDecoding 논문의 문제와 기여" }],
+      },
+    ],
+    component: () => import("@/pages/articles/ai/speculative-decoding-variants"),
+  },
+  {
     slug: "kv-cache-fundamentals",
     title: "KV Cache 기초: Query · Key · Value와 GQA memory shape",
     subcategory: "ai-llm-serving",
@@ -315,6 +459,31 @@ export const vllmServingArticles: Article[] = [
       { id: "boundary", title: "SRAM 크기·head dim·hardware 의존성과 다음 읽기" },
     ],
     component: () => import("@/pages/articles/ai/flash-attention-io-aware-kernel"),
+  },
+  {
+    slug: "attention-kernel-anatomy-and-backends",
+    title: "Attention kernel 은 세 단계를 한 tile 에 융합하고 prefill 과 decode 에 다른 backend 를 씁니다",
+    subcategory: "ai-llm-serving",
+    sections: [
+      { id: "problem", title: "Attention kernel 은 세 단계를 한 tile 안에서 끝내는 GPU 함수다" },
+      { id: "anatomy", title: "QK matmul·softmax·PV matmul 과 fused kernel" },
+      { id: "causal", title: "Causal kernel 의 tile skip 과 load balancing" },
+      { id: "regimes", title: "Prefill 은 compute-bound, decode 는 memory-bound" },
+      {
+        id: "generations",
+        title: "FlashAttention-2 의 warp 분할과 3 의 단계 겹치기",
+        subsections: [
+          { id: "paper-flashattention-2", title: "FlashAttention-2 논문의 문제와 기여" },
+          { id: "paper-flashattention-3", title: "FlashAttention-3 논문의 문제와 기여" },
+        ],
+      },
+      {
+        id: "backends",
+        title: "Backend 선택, FlashInfer, kernel autotuning",
+        subsections: [{ id: "paper-flashinfer", title: "FlashInfer 논문의 문제와 기여" }],
+      },
+    ],
+    component: () => import("@/pages/articles/ai/attention-kernel-anatomy-and-backends"),
   },
   {
     slug: "hybrid-kv-cache-allocation",
@@ -492,6 +661,59 @@ export const vllmServingArticles: Article[] = [
     component: () => import("@/pages/articles/ai/model-vram-budgeting"),
   },
   {
+    slug: "expert-parallelism-moe-systems",
+    title: "Expert parallelism은 all-to-all 통신량이 expert 계산 시간을 넘지 않게 설계합니다",
+    subcategory: "ai-llm-serving",
+    sections: [
+      { id: "problem", title: "Expert를 나누면 token이 건너야 하는 이유" },
+      { id: "sharding", title: "Expert parallelism과 expert sharding" },
+      { id: "all-to-all", title: "All-to-all의 byte·시간·절차" },
+      { id: "locality", title: "Expert locality와 node-limited routing" },
+      { id: "bottleneck", title: "통신 병목·straggler·routing overhead" },
+      {
+        id: "evidence",
+        title: "근거: GShard·Switch·DeepSpeed-MoE·DeepSeek-V3·DeepEP",
+        subsections: [
+          { id: "paper-gshard", title: "GShard" },
+          { id: "paper-switch", title: "Switch Transformers" },
+          { id: "paper-deepspeed-moe", title: "DeepSpeed-MoE" },
+          { id: "paper-deepseek-v3", title: "DeepSeek-V3" },
+          { id: "paper-deepep", title: "DeepEP README" },
+        ],
+      },
+    ],
+    component: () => import("@/pages/articles/ai/expert-parallelism-moe-systems"),
+  },
+  {
+    slug: "tensor-and-pipeline-parallel-inference",
+    title: "Tensor, pipeline, data, context parallel 은 나누는 축이 달라 통신도 다릅니다",
+    subcategory: "ai-llm-serving",
+    sections: [
+      { id: "axes", title: "네 parallel 축이 나누는 차원과 통신" },
+      { id: "tensor-parallel", title: "TP 의 column·row 분할과 layer 당 all-reduce 두 번", subsections: [{ id: "paper-megatron", title: "Megatron-LM 의 분할 근거" }] },
+      { id: "collectives", title: "All-reduce·reduce-scatter·all-gather 와 α + n/B", subsections: [{ id: "paper-nccl", title: "NCCL collective 정의" }] },
+      { id: "pipeline-parallel", title: "PP 의 stage·microbatch·bubble 과 latency penalty", subsections: [{ id: "paper-gpipe", title: "GPipe 의 bubble 식" }] },
+      { id: "data-parallel", title: "DP replica 와 throughput scaling" },
+      { id: "sequence-context-parallel", title: "Sequence·context parallel 과 ring 조건", subsections: [{ id: "paper-ring-attention", title: "Ring Attention 의 c ≥ F/B" }] },
+      { id: "decode-impact", title: "Decode 에서 통신 latency 가 TPOT 에 주는 영향" },
+    ],
+    component: () => import("@/pages/articles/ai/tensor-and-pipeline-parallel-inference"),
+  },
+  {
+    slug: "parallelism-strategy-and-placement",
+    title: "Parallelism 전략은 통신 대 계산 비율을 topology 안에서 최소화하는 배치입니다",
+    subcategory: "ai-llm-serving",
+    sections: [
+      { id: "strategy", title: "Mesh 와 degree 배정, hybrid parallelism" },
+      { id: "fabric-tiers", title: "NVSwitch 도메인과 InfiniBand 의 두 계층", subsections: [{ id: "paper-nvlink", title: "NVIDIA NVLink 사양" }] },
+      { id: "placement", title: "Topology-aware shard placement 와 세 mesh 후보" },
+      { id: "scaling", title: "Strong·weak scaling efficiency", subsections: [{ id: "paper-megatron-scaling", title: "Megatron-LM scaling analysis" }] },
+      { id: "overlap-bottleneck", title: "통신 대 계산 비율과 overlap" },
+      { id: "procedure", title: "TP·PP·DP degree 선택 절차", subsections: [{ id: "paper-vllm-parallelism", title: "vLLM parallelism 권고" }] },
+    ],
+    component: () => import("@/pages/articles/ai/parallelism-strategy-and-placement"),
+  },
+  {
     slug: "cuda-graph-capture",
     title: "CUDA Graphs: kernel launch overhead를 capture-replay로 지우기",
     subcategory: "ai-llm-serving",
@@ -499,9 +721,19 @@ export const vllmServingArticles: Article[] = [
       { id: "overview", title: "Decode step의 launch overhead 문제" },
       { id: "mechanics", title: "Capture/replay 계약과 static address 제약" },
       {
+        id: "graph-anatomy",
+        title: "Node·edge·instantiate·update의 graph lifecycle",
+        subsections: [
+          { id: "stream-capture", title: "Stream capture와 cross-stream join" },
+          { id: "graph-update", title: "cudaGraphExecUpdate의 topology 조건" },
+        ],
+      },
+      { id: "graph-compatibility", title: "Graph-compatible execution과 graph pool" },
+      {
         id: "implementation",
         title: "vLLM CUDAGraphWrapper의 실제 구현",
       },
+      { id: "shape-padding", title: "Dynamic shape와 capture size padding" },
       {
         id: "tradeoffs",
         title: "Dynamic shape·capture 범위·memory pool trade-off",

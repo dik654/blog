@@ -135,8 +135,8 @@ export default function CudaCompilationAndIsaAnalysisViz() {
           </p>
           <h4 className="mt-2 text-base font-bold">{SCENES[scenes.active]}</h4>
 
-          <div className="mt-4 grid gap-4 sm:grid-cols-[3fr_2fr]">
-            <div className="min-h-[15.5rem] border border-border p-3">
+          <div className="mt-4 grid min-w-0 gap-4 sm:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
+            <div className="min-h-[15.5rem] min-w-0 overflow-hidden border border-border p-3">
               <p className="text-[11px] font-bold text-muted-foreground">instruction 열 · 위에서 아래로 issue</p>
               <div className="mt-2 flex flex-col gap-1">
                 {Array.from({ length: MAX_ROWS }).map((_, index) => {
@@ -150,7 +150,7 @@ export default function CudaCompilationAndIsaAnalysisViz() {
                       className={`flex h-[1.375rem] items-center overflow-hidden border px-2 font-mono text-[10.5px] leading-none ${KIND_CLASS[row.kind]}`}
                     >
                       <span className="w-4 shrink-0 text-muted-foreground">{index + 1}</span>
-                      <span className="truncate">{row.text}</span>
+                      <span className="min-w-0 flex-1 truncate">{row.text}</span>
                       {row.moved ? <span className="ml-auto shrink-0 pl-2 text-[9px] font-bold text-amber-700">↑ 앞당김</span> : null}
                     </div>
                   );
@@ -158,7 +158,7 @@ export default function CudaCompilationAndIsaAnalysisViz() {
               </div>
             </div>
 
-            <div className="min-h-[15.5rem] border border-border p-3">
+            <div className="min-h-[15.5rem] min-w-0 overflow-hidden border border-border p-3">
               <p className="text-[11px] font-bold text-muted-foreground">{state.regLabel}</p>
               <div className="mt-2 grid grid-cols-5 gap-[3px]" aria-label={`register ${state.regs}개`}>
                 {Array.from({ length: state.regMax }).map((_, index) => {

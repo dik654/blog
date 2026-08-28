@@ -159,6 +159,29 @@ const gpu: Category = {
       component: () => import("@/pages/articles/gpu/cuda-shared-memory"),
     },
     {
+      slug: "gpu-memory-hierarchy-and-roofline",
+      title: "GPU memory hierarchy 와 roofline: 네 가지 bound",
+      subcategory: "gpu-fundamentals",
+      sections: [
+        { id: "hierarchy", title: "다섯 계층과 local·constant memory" },
+        { id: "transactions", title: "32-byte sector transaction" },
+        { id: "latency-bandwidth", title: "Latency·bandwidth·effective bandwidth" },
+        { id: "roofline-bound", title: "Ridge point 와 compute·memory-bound" },
+        { id: "latency-launch-bound", title: "Latency-bound 와 launch-bound" },
+        {
+          id: "evidence",
+          title: "Best Practices·Nsight·Roofline 근거",
+          subsections: [
+            { id: "paper-cuda-best-practices-memory", title: "Best Practices Guide 의 transaction·bandwidth" },
+            { id: "paper-nsight-compute-roofline", title: "Nsight Compute 의 throughput metric" },
+            { id: "paper-roofline-williams", title: "Roofline 원 논문" },
+            { id: "paper-hopper-h100-memory", title: "Hopper H100 구성" },
+          ],
+        },
+      ],
+      component: () => import("@/pages/articles/gpu/gpu-memory-hierarchy-and-roofline"),
+    },
+    {
       slug: "cuda-sync-streams",
       title: "CUDA 동기화 & 스트림",
       subcategory: "gpu-fundamentals",
@@ -246,6 +269,30 @@ const gpu: Category = {
         },
       ],
       component: () => import("@/pages/articles/gpu/cutlass-gemm-hierarchy-and-cute-layouts"),
+    },
+    {
+      slug: "cutlass-collectives-and-tile-schedulers",
+      title: "CUTLASS collective·tile scheduler·Stream-K·cluster",
+      subcategory: "gpu-fundamentals",
+      sections: [
+        { id: "collectives", title: "CollectiveMma·CollectiveEpilogue 계약" },
+        { id: "pipeline-stages", title: "Pipeline stage 수와 shared memory 예산" },
+        { id: "tile-scheduler", title: "Persistent tile scheduler 와 wave quantization" },
+        { id: "stream-k", title: "Stream-K 의 k-iteration 분배와 fixup" },
+        { id: "cluster-multicast", title: "Cluster launch 와 TMA multicast" },
+        { id: "autotuning", title: "Profiler 기반 autotuning" },
+        {
+          id: "evidence",
+          title: "Stream-K 논문·CUTLASS 소스·Hopper 문서",
+          subsections: [
+            { id: "paper-stream-k", title: "Stream-K 논문" },
+            { id: "paper-cutlass-gemm-api", title: "CUTLASS GEMM API 3.x" },
+            { id: "source-cutlass-tile-scheduler", title: "Tile scheduler·builder 소스" },
+            { id: "paper-hopper-tuning-guide", title: "Hopper tuning guide·profiler" },
+          ],
+        },
+      ],
+      component: () => import("@/pages/articles/gpu/cutlass-collectives-and-tile-schedulers"),
     },
     {
       slug: "triton-kernel-programming-and-compiler",

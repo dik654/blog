@@ -1,4 +1,5 @@
 import Overview from "./vllm-scheduler/Overview";
+import QueueBatching from "./vllm-scheduler/QueueBatching";
 import ScheduleMethod from "./vllm-scheduler/ScheduleMethod";
 import PrefillDecode from "./vllm-scheduler/PrefillDecode";
 import Preemption from "./vllm-scheduler/Preemption";
@@ -12,6 +13,7 @@ export default function VLLMSchedulerArticle() {
   return (
     <>
       <Overview />
+      <QueueBatching onCodeRef={sidebar.open} />
       <ScheduleMethod onCodeRef={sidebar.open} />
       <PrefillDecode onCodeRef={sidebar.open} />
       <Preemption onCodeRef={sidebar.open} />
