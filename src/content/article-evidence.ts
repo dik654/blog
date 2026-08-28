@@ -2063,6 +2063,86 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "Conditional·unconditional prediction 결합의 정본",
     },
   ],
+  "ai/visual-representation-tokenizers": [
+    {
+      kind: "핵심 논문",
+      label: "High-Resolution Image Synthesis with Latent Diffusion Models",
+      href: "https://openaccess.thecvf.com/content/CVPR2022/html/Rombach_High-Resolution_Image_Synthesis_With_Latent_Diffusion_Models_CVPR_2022_paper.html",
+      note: "Perceptual autoencoder가 만드는 reconstruction latent와 latent-space diffusion의 기준 연구",
+    },
+    {
+      kind: "후속 논문",
+      label: "Diffusion Transformers with Representation Autoencoders",
+      href: "https://arxiv.org/abs/2510.11690",
+      note: "Semantic representation encoder를 diffusion latent로 재사용하는 2025년 preprint이며 production 표준으로 확정하지 않음",
+    },
+  ],
+  "ai/diffusion-transformer-architecture": [
+    {
+      kind: "핵심 논문",
+      label: "Scalable Diffusion Models with Transformers",
+      href: "https://arxiv.org/abs/2212.09748",
+      note: "Latent patch token·adaptive layer normalization·DiT scaling 실험의 원 연구",
+    },
+    {
+      kind: "핵심 논문",
+      label: "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis",
+      href: "https://arxiv.org/abs/2403.03206",
+      note: "Text·image modality별 weight를 두고 attention으로 교환하는 MMDiT와 rectified-flow recipe의 기준",
+    },
+    {
+      kind: "공식 연구",
+      label: "Krea 2 Technical Report",
+      href: "https://www.krea.ai/blog/krea-2-technical-report",
+      note: "Single-stream·GQA·gated sigmoid attention·3D axial RoPE 등 Krea 2 구성에 대한 제작사 자기보고",
+    },
+  ],
+  "ai/modern-image-model-stack": [
+    {
+      kind: "공식 연구",
+      label: "Krea 2 Technical Report",
+      href: "https://www.krea.ai/blog/krea-2-technical-report",
+      note: "Prompt expander·encoder·autoencoder·DiT·post-training을 하나의 image system으로 설명한 제작사 보고서",
+    },
+    {
+      kind: "핵심 논문",
+      label: "High-Resolution Image Synthesis with Latent Diffusion Models",
+      href: "https://openaccess.thecvf.com/content/CVPR2022/html/Rombach_High-Resolution_Image_Synthesis_With_Latent_Diffusion_Models_CVPR_2022_paper.html",
+      note: "Encoder·latent denoiser·decoder로 분리된 two-stage image generation pipeline의 선행 근거",
+    },
+    {
+      kind: "선행·비교 논문",
+      label: "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis",
+      href: "https://arxiv.org/abs/2403.03206",
+      note: "Modern text-to-image stack의 multimodal backbone·rectified flow·evaluation 비교점",
+    },
+  ],
+  "ai/diffusion-language-models": [
+    {
+      kind: "핵심 논문",
+      label: "Simple and Effective Masked Diffusion Language Models",
+      href: "https://arxiv.org/abs/2406.07524",
+      note: "Absorbing MASK와 SUBS parameterization으로 discrete diffusion objective를 정리한 NeurIPS 2024 연구",
+    },
+    {
+      kind: "후속 논문",
+      label: "Large Language Diffusion Models",
+      href: "https://arxiv.org/abs/2502.09992",
+      note: "LLaDA의 from-scratch pretraining·SFT·low-confidence remasking을 보고한 연구로 결과는 해당 checkpoint와 sampler 범위",
+    },
+    {
+      kind: "핵심 논문",
+      label: "Block Diffusion: Interpolating Between Autoregressive and Diffusion Language Models",
+      href: "https://openreview.net/pdf?id=tyEyYT267x",
+      note: "Block 사이 causal factorization과 block 내부 diffusion을 결합한 ICLR 2025 연구",
+    },
+    {
+      kind: "보충 읽기",
+      label: "Dream 7B: Diffusion Large Language Models",
+      href: "https://arxiv.org/abs/2508.15487",
+      note: "Autoregressive initialization을 쓰는 2025년 preprint로 MDLM·LLaDA와 recipe를 구분해서 읽음",
+    },
+  ],
   "ai/yarn-rope-extension": [
     {
       kind: "핵심 논문",

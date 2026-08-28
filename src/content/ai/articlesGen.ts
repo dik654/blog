@@ -176,6 +176,57 @@ export const genArticles: Article[] = [
     component: () => import("@/pages/articles/ai/latent-diffusion-guidance"),
   },
   {
+    slug: "visual-representation-tokenizers",
+    title: "Visual representation: reconstruction latent와 semantic feature",
+    subcategory: "ai-generative",
+    sections: [
+      { id: "objective", title: "무엇을 보존하도록 학습했는가" },
+      { id: "reconstruction", title: "Reconstruction latent와 복원 상한" },
+      { id: "semantic", title: "Semantic representation과 RAE" },
+      { id: "world-state", title: "World-state 표현의 추가 조건" },
+    ],
+    component: () =>
+      import("@/pages/articles/ai/visual-representation-tokenizers"),
+  },
+  {
+    slug: "diffusion-transformer-architecture",
+    title: "Diffusion Transformer: latent patch·conditioning·stream 구조",
+    subcategory: "ai-generative",
+    sections: [
+      { id: "latent-patches", title: "Latent patch와 token 비용" },
+      { id: "conditioned-block", title: "Time modulation과 condition" },
+      { id: "multimodal-streams", title: "Single·dual·joint stream" },
+      { id: "runtime-boundary", title: "NFE와 runtime 경계" },
+    ],
+    component: () =>
+      import("@/pages/articles/ai/diffusion-transformer-architecture"),
+  },
+  {
+    slug: "modern-image-model-stack",
+    title: "현대 이미지 생성 모델: component stack에서 world model 경계까지",
+    subcategory: "ai-generative",
+    sections: [
+      { id: "system-map", title: "전체 component map" },
+      { id: "component-contract", title: "Tensor·정보 interface" },
+      { id: "training-stack", title: "Data·caption·post-training" },
+      { id: "world-model-boundary", title: "시간·행동·state transition" },
+    ],
+    component: () => import("@/pages/articles/ai/modern-image-model-stack"),
+  },
+  {
+    slug: "diffusion-language-models",
+    title: "Diffusion LLM: MASK corruption·반복 복원·block diffusion",
+    subcategory: "ai-generative",
+    sections: [
+      { id: "ar-vs-diffusion", title: "AR과 masked diffusion" },
+      { id: "forward-objective", title: "Forward mask와 objective" },
+      { id: "reverse-sampling", title: "Parallel unmasking sampler" },
+      { id: "runtime-blocks", title: "KV cache와 block diffusion" },
+      { id: "world-model-boundary", title: "World model과의 경계" },
+    ],
+    component: () => import("@/pages/articles/ai/diffusion-language-models"),
+  },
+  {
     slug: "image-video-lora-architecture",
     title: "Image·Video LoRA: host architecture와 adapter 범위",
     subcategory: "ai-generative",

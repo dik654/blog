@@ -2151,6 +2151,152 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "Autoencoder reconstruction·sample quality·mode coverage·condition adherence·latency를 versioned threshold로 각각 판정하고 모든 필수 gate를 통과할 때만 배포하는 acceptance 계약입니다.",
     canonicalHref: "/ai/latent-diffusion-guidance#evaluation",
   },
+  "reconstruction-visual-latent-contract": {
+    id: "reconstruction-visual-latent-contract",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Reconstruction visual latent contract",
+    definition:
+      "Image를 작은 spatial tensor로 압축하되 decoder가 pixel을 복원할 수 있도록 latent shape·scale·channel·compression ratio와 reconstruction objective를 함께 고정하는 표현 계약입니다.",
+    canonicalHref: "/ai/visual-representation-tokenizers#reconstruction",
+  },
+  "semantic-visual-representation-contract": {
+    id: "semantic-visual-representation-contract",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Semantic visual representation contract",
+    definition:
+      "Text alignment·view invariance·self-distillation처럼 task objective가 보상한 의미 관계를 feature에 남기되 정확한 pixel detail 복원을 자동 보장하지 않는 시각 표현 계약입니다.",
+    canonicalHref: "/ai/visual-representation-tokenizers#semantic",
+  },
+  "visual-representation-objective-boundary": {
+    id: "visual-representation-objective-boundary",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Visual representation objective boundary",
+    definition:
+      "같은 image encoder라도 reconstruction·contrastive alignment·future prediction 중 어떤 loss로 학습했는지에 따라 보존·폐기되는 정보와 downstream consumer가 달라지는 경계입니다.",
+    canonicalHref: "/ai/visual-representation-tokenizers#objective",
+  },
+  "world-state-representation-gate": {
+    id: "world-state-representation-gate",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "World-state representation gate",
+    definition:
+      "Visual feature가 pixel을 잘 복원하는지를 넘어 object permanence·motion·action sensitivity·nuisance invariance를 보존해 next-state predictor와 policy가 실제로 사용할 수 있는지 판정하는 기준입니다.",
+    canonicalHref: "/ai/visual-representation-tokenizers#world-state",
+  },
+  "latent-patch-tokenization": {
+    id: "latent-patch-tokenization",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Latent patch tokenization",
+    definition:
+      "h×w×c noisy latent grid를 p×p spatial patch로 나누고 각각을 hidden width d의 token으로 projection해 Transformer가 처리할 sequence로 만드는 변환입니다.",
+    canonicalHref: "/ai/diffusion-transformer-architecture#latent-patches",
+  },
+  "diffusion-transformer-block-contract": {
+    id: "diffusion-transformer-block-contract",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Diffusion Transformer block contract",
+    definition:
+      "Noisy latent token·time·condition을 attention과 FFN으로 처리한 뒤 solver가 소비할 noise·velocity·clean prediction을 원 latent shape로 되돌리는 Transformer denoiser interface입니다.",
+    canonicalHref: "/ai/diffusion-transformer-architecture#conditioned-block",
+  },
+  "timestep-adaptive-normalization": {
+    id: "timestep-adaptive-normalization",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Timestep-adaptive normalization",
+    aliases: ["AdaLN", "AdaLN-Zero"],
+    definition:
+      "Noise time과 condition embedding에서 normalization scale·shift와 residual gate를 만들어 같은 DiT block이 noise level마다 다른 계산을 수행하도록 조절하는 방법입니다.",
+    canonicalHref: "/ai/diffusion-transformer-architecture#conditioned-block",
+  },
+  "multimodal-diffusion-stream-design": {
+    id: "multimodal-diffusion-stream-design",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Multimodal diffusion stream design",
+    definition:
+      "Text·image token이 weight를 공유하거나 modality별 weight를 쓰고 cross/joint attention으로 정보를 교환하는 single·dual·hybrid stream의 책임 배분입니다.",
+    canonicalHref: "/ai/diffusion-transformer-architecture#multimodal-streams",
+  },
+  "modern-image-generation-component-stack": {
+    id: "modern-image-generation-component-stack",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Modern image-generation component stack",
+    definition:
+      "Condition encoder·visual autoencoder·diffusion/flow transformer·solver·decoder와 선택적 prompt expander를 revisioned tensor interface로 조립하는 현대 text-to-image 생성 시스템입니다.",
+    canonicalHref: "/ai/modern-image-model-stack#system-map",
+  },
+  "image-generation-component-compatibility": {
+    id: "image-generation-component-compatibility",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Image-generation component compatibility",
+    definition:
+      "Text hidden width·latent shape/scale·prediction target·time convention·solver schedule이 학습 checkpoint와 정확히 맞는지 확인해 개별 component 교체가 전체 pipeline을 깨뜨리지 않게 하는 계약입니다.",
+    canonicalHref: "/ai/modern-image-model-stack#component-contract",
+  },
+  "image-to-world-transition-boundary": {
+    id: "image-to-world-transition-boundary",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Image generation to world-transition boundary",
+    definition:
+      "조건부 한 장 생성 p(x|c)과 현재 state·action으로 다음 state를 예측하는 p(s_{t+1}|s_t,a_t)를 구분하고 time·action·rollout·closed-loop 검증을 추가하는 경계입니다.",
+    canonicalHref: "/ai/modern-image-model-stack#world-model-boundary",
+  },
+  "masked-discrete-diffusion-language-model": {
+    id: "masked-discrete-diffusion-language-model",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Masked discrete diffusion language model",
+    aliases: ["Diffusion LLM", "dLLM"],
+    definition:
+      "Clean token sequence를 absorbing MASK state로 점차 보내고 causal mask가 없는 Transformer가 reverse process에서 masked 위치들을 반복 복원해 sequence distribution을 모델링하는 language model입니다.",
+    canonicalHref: "/ai/diffusion-language-models#ar-vs-diffusion",
+  },
+  "absorbing-mask-forward-process": {
+    id: "absorbing-mask-forward-process",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Absorbing MASK forward process",
+    definition:
+      "Noise time t에서 각 clean token을 확률 t로 특별한 MASK category로 바꾸고 이미 MASK가 된 state에서는 원 token 정보를 복구하지 않는 discrete corruption process입니다.",
+    canonicalHref: "/ai/diffusion-language-models#forward-objective",
+  },
+  "parallel-unmasking-sampler": {
+    id: "parallel-unmasking-sampler",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Parallel unmasking sampler",
+    definition:
+      "한 reverse step에서 여러 masked 위치의 token 분포를 동시에 예측하고 일부를 확정하며 낮은 신뢰도 위치를 다시 MASK로 보내 문장 전체를 반복 수정하는 생성 절차입니다.",
+    canonicalHref: "/ai/diffusion-language-models#reverse-sampling",
+  },
+  "diffusion-language-runtime-contract": {
+    id: "diffusion-language-runtime-contract",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Diffusion language runtime contract",
+    definition:
+      "Sequence length·reverse step·remask schedule·forward latency·token acceptance와 KV-cache 가능 범위를 함께 기록해 병렬 token 예측과 실제 wall-clock speed를 구분하는 실행 계약입니다.",
+    canonicalHref: "/ai/diffusion-language-models#runtime-blocks",
+  },
+  "block-diffusion-language-model": {
+    id: "block-diffusion-language-model",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Block diffusion language model",
+    definition:
+      "Block 사이는 autoregressive하게 확정해 prefix cache를 재사용하고 현재 block 내부에서만 masked diffusion refinement를 수행하는 AR·diffusion 절충 factorization입니다.",
+    canonicalHref: "/ai/diffusion-language-models#runtime-blocks",
+  },
   "diffusion-lora-host-target-map": {
     id: "diffusion-lora-host-target-map",
     kind: "method",
@@ -19706,6 +19852,223 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "constrains",
     reason:
       "Guidance scale과 branch compute가 condition adherence·diversity·latency gate를 함께 바꿉니다.",
+  },
+  {
+    from: "representation-objective-bias",
+    to: "visual-representation-objective-boundary",
+    relation: "extends",
+    reason:
+      "Data·target·loss가 보존할 차이를 정한다는 일반 원리를 reconstruction·semantic·future-prediction visual feature 선택에 구체화합니다.",
+  },
+  {
+    from: "visual-representation-objective-boundary",
+    to: "reconstruction-visual-latent-contract",
+    relation: "produces",
+    reason:
+      "Pixel reconstruction을 objective로 고르면 decoder가 소비할 spatial latent의 shape·scale·복원 상한을 고정해야 합니다.",
+  },
+  {
+    from: "visual-representation-objective-boundary",
+    to: "semantic-visual-representation-contract",
+    relation: "produces",
+    reason:
+      "Text alignment·view invariance·self-distillation objective가 semantic feature의 보존 관계와 폐기 가능한 pixel detail을 정합니다.",
+  },
+  {
+    from: "reconstruction-visual-latent-contract",
+    to: "semantic-visual-representation-contract",
+    relation: "contrasts",
+    reason:
+      "Pixel 복원을 위한 정보 보존과 semantic relation을 위한 invariance를 같은 visual token이라는 이름으로 혼동하지 않게 합니다.",
+  },
+  {
+    from: "latent-diffusion-bottleneck",
+    to: "reconstruction-visual-latent-contract",
+    relation: "extends",
+    reason:
+      "Latent diffusion의 compute·reconstruction trade-off를 autoencoder shape·scale·decoder consumer의 표현 계약으로 확장합니다.",
+  },
+  {
+    from: "reconstruction-visual-latent-contract",
+    to: "world-state-representation-gate",
+    relation: "constrains",
+    reason:
+      "Pixel reconstruction이 좋아도 action sensitivity·object permanence를 자동 보장하지 않으므로 world-state 판정을 별도로 둡니다.",
+  },
+  {
+    from: "semantic-visual-representation-contract",
+    to: "world-state-representation-gate",
+    relation: "constrains",
+    reason:
+      "Semantic invariance가 작은 geometry·contact detail을 지울 수 있어 next-state와 policy consumer로 다시 평가해야 합니다.",
+  },
+  {
+    from: "diffusion-backbone-contract",
+    to: "latent-patch-tokenization",
+    relation: "extends",
+    reason:
+      "Noisy tensor interface를 Transformer가 읽을 spatial patch token sequence로 구체화합니다.",
+  },
+  {
+    from: "self-attention",
+    to: "diffusion-transformer-block-contract",
+    relation: "prerequisite",
+    reason:
+      "Latent token pair가 정보를 교환하는 핵심 sequence operation을 제공합니다.",
+  },
+  {
+    from: "latent-patch-tokenization",
+    to: "diffusion-transformer-block-contract",
+    relation: "prerequisite",
+    reason:
+      "Patch projection과 position encoding이 DiT block이 소비할 token sequence와 unpatchify shape를 고정합니다.",
+  },
+  {
+    from: "timestep-adaptive-normalization",
+    to: "diffusion-transformer-block-contract",
+    relation: "optimizes",
+    reason:
+      "Noise time과 condition에서 scale·shift·gate를 만들어 동일 block의 noise-level별 계산을 조절합니다.",
+  },
+  {
+    from: "diffusion-transformer-block-contract",
+    to: "multimodal-diffusion-stream-design",
+    relation: "extends",
+    reason:
+      "Latent-only denoiser block을 text·image token이 single·dual·hybrid stream에서 정보를 교환하는 conditional architecture로 확장합니다.",
+  },
+  {
+    from: "reconstruction-visual-latent-contract",
+    to: "modern-image-generation-component-stack",
+    relation: "prerequisite",
+    reason:
+      "Autoencoder가 latent shape·scale과 decoder reconstruction ceiling을 제공합니다.",
+  },
+  {
+    from: "diffusion-transformer-block-contract",
+    to: "modern-image-generation-component-stack",
+    relation: "prerequisite",
+    reason:
+      "DiT가 solver가 반복 호출할 noise·velocity prediction component를 제공합니다.",
+  },
+  {
+    from: "multimodal-diffusion-stream-design",
+    to: "modern-image-generation-component-stack",
+    relation: "prerequisite",
+    reason:
+      "Prompt·reference condition token과 noisy image token이 만나는 architecture 경로를 고정합니다.",
+  },
+  {
+    from: "latent-diffusion-component-contract",
+    to: "modern-image-generation-component-stack",
+    relation: "extends",
+    reason:
+      "기본 latent pipeline을 prompt expansion·modern DiT·multi-stage training까지 포함한 current component system으로 확장합니다.",
+  },
+  {
+    from: "modern-image-generation-component-stack",
+    to: "image-generation-component-compatibility",
+    relation: "produces",
+    reason:
+      "여러 component를 조립하려면 text width·latent scale·prediction target·solver convention의 exact compatibility manifest가 필요합니다.",
+  },
+  {
+    from: "image-generation-component-compatibility",
+    to: "conditional-diffusion-release-gate",
+    relation: "prerequisite",
+    reason:
+      "호환되는 component revision과 sampler receipt를 고정한 뒤에만 reconstruction·quality·latency를 같은 artifact로 판정할 수 있습니다.",
+  },
+  {
+    from: "world-state-representation-gate",
+    to: "image-to-world-transition-boundary",
+    relation: "prerequisite",
+    reason:
+      "한 장의 표현이 action-conditioned next-state predictor가 소비할 정보를 남기는지 먼저 확인합니다.",
+  },
+  {
+    from: "modern-image-generation-component-stack",
+    to: "image-to-world-transition-boundary",
+    relation: "extends",
+    reason:
+      "조건부 spatial sample pipeline에 time·action·rollout·closed-loop evaluation을 추가하는 다음 설계 경계를 드러냅니다.",
+  },
+  {
+    from: "agent-observation-action-loop",
+    to: "image-to-world-transition-boundary",
+    relation: "prerequisite",
+    reason:
+      "Action이 environment를 바꾸고 새 observation으로 돌아오는 loop가 image generation에 없는 physical transition 계약을 제공합니다.",
+  },
+  {
+    from: "diffusion-training-sampling-contract",
+    to: "absorbing-mask-forward-process",
+    relation: "extends",
+    reason:
+      "Data corruption과 reverse sampling을 분리하는 diffusion 원리를 Gaussian tensor 대신 discrete MASK state에 적용합니다.",
+  },
+  {
+    from: "absorbing-mask-forward-process",
+    to: "masked-discrete-diffusion-language-model",
+    relation: "prerequisite",
+    reason:
+      "Clean token을 mask ratio별 corrupted sequence로 보내 mask predictor의 training pair를 만듭니다.",
+  },
+  {
+    from: "self-attention",
+    to: "masked-discrete-diffusion-language-model",
+    relation: "prerequisite",
+    reason:
+      "Causal mask 없이 현재 보이는 양방향 token context로 masked 위치 분포를 예측합니다.",
+  },
+  {
+    from: "autoregressive-generative-factorization",
+    to: "masked-discrete-diffusion-language-model",
+    relation: "contrasts",
+    reason:
+      "왼쪽 prefix conditional의 곱과 전체 masked state의 iterative refinement라는 서로 다른 sequence factorization을 비교합니다.",
+  },
+  {
+    from: "masked-discrete-diffusion-language-model",
+    to: "parallel-unmasking-sampler",
+    relation: "produces",
+    reason:
+      "Mask predictor가 한 reverse step에서 여러 masked 위치의 vocabulary 분포와 confidence를 제공합니다.",
+  },
+  {
+    from: "parallel-unmasking-sampler",
+    to: "diffusion-language-runtime-contract",
+    relation: "constrains",
+    reason:
+      "동시 예측 위치 수·remask 비율·reverse step 수가 실제 forward 호출과 wall-clock latency를 함께 정합니다.",
+  },
+  {
+    from: "autoregressive-generative-factorization",
+    to: "block-diffusion-language-model",
+    relation: "prerequisite",
+    reason:
+      "완료 block 사이를 causal product로 묶어 이전 block을 고정 prefix로 재사용합니다.",
+  },
+  {
+    from: "masked-discrete-diffusion-language-model",
+    to: "block-diffusion-language-model",
+    relation: "extends",
+    reason:
+      "Full-sequence refinement를 현재 block 내부로 제한하고 block 사이에는 autoregressive ordering을 추가합니다.",
+  },
+  {
+    from: "block-diffusion-language-model",
+    to: "diffusion-language-runtime-contract",
+    relation: "optimizes",
+    reason:
+      "확정된 block을 cache 가능한 prefix로 만들어 full diffusion의 전체-sequence 재계산 비용을 절충합니다.",
+  },
+  {
+    from: "image-to-world-transition-boundary",
+    to: "masked-discrete-diffusion-language-model",
+    relation: "constrains",
+    reason:
+      "Language token refinement를 action-conditioned physical state transition이나 closed-loop control 능력으로 자동 해석하지 않게 제한합니다.",
   },
   {
     from: "lora-low-rank-update",

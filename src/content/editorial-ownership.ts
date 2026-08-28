@@ -3621,6 +3621,78 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "standard", rule: "Component revision·latent shape·scale·target·sampler·guidance·precision·evaluator를 release receipt에 함께 기록한다." },
     ],
   },
+  "visual-representation-tokenizers": {
+    title: "Visual representation·tokenizer 글이 소유하는 범위",
+    owns: [
+      "Reconstruction latent와 semantic visual feature의 objective·consumer 경계",
+      "Spatial compression·channel payload·decoder reconstruction ceiling 장부",
+      "World-state representation으로 넘어가기 위한 motion·action-sensitivity·object-permanence gate",
+    ],
+    reuses: [
+      { label: "Latent diffusion bottleneck", href: "/ai/latent-diffusion-guidance#pipeline" },
+      { label: "Representation objective bias", href: "/ai/representation-learning" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "VAE·RAE claim은 해당 encoder·decoder·dataset·downstream consumer 조건으로 제한한다." },
+      { kind: "standard", rule: "Latent shape·compression·reconstruction·semantic·action-conditioned metric을 분리 기록한다." },
+      { kind: "project-claim", rule: "RAE는 2025년 preprint로 표시하고 modern image stack의 확정 표준이나 VAE의 보편 대체재로 표현하지 않는다." },
+    ],
+  },
+  "diffusion-transformer-architecture": {
+    title: "Diffusion Transformer architecture 글이 소유하는 범위",
+    owns: [
+      "Latent grid를 patch token sequence로 바꾸는 shape·attention-cost 계산",
+      "Time-conditioned normalization·residual gate를 포함한 한 DiT block의 tensor contract",
+      "Single·dual·multimodal stream의 parameter sharing과 information-exchange 경계",
+    ],
+    reuses: [
+      { label: "Diffusion denoiser target", href: "/ai/diffusion-models#prediction-targets" },
+      { label: "Latent component pipeline", href: "/ai/latent-diffusion-guidance#pipeline" },
+      { label: "Self-attention", href: "/ai/attention-theory#self-attention" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "DiT·MMDiT 구조와 scaling claim은 원 논문의 model·data·compute·evaluation 조건으로 제한한다." },
+      { kind: "project-claim", rule: "Krea 2 구성과 ablation은 제작사 technical report의 자기보고 범위로만 표현한다." },
+      { kind: "standard", rule: "Latent shape·patch size·token count·stream layout·prediction target·NFE를 함께 기록한다." },
+    ],
+  },
+  "modern-image-model-stack": {
+    title: "Modern image model stack 글이 소유하는 범위",
+    owns: [
+      "Prompt expander·text/VLM encoder·autoencoder·DiT·solver·decoder·post-training의 end-to-end component map",
+      "Checkpoint·latent scale·condition dimension·prediction target·scheduler의 compatibility contract",
+      "Image generator에서 action-conditioned temporal world model로 넘어갈 때 추가되는 state·time·action·closed-loop gate",
+    ],
+    reuses: [
+      { label: "Visual representation objective", href: "/ai/visual-representation-tokenizers" },
+      { label: "DiT block과 multimodal stream", href: "/ai/diffusion-transformer-architecture" },
+      { label: "Latent diffusion·CFG", href: "/ai/latent-diffusion-guidance" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "공통 stack과 특정 제품 구성을 구분하고 architecture claim은 원 논문·공식 technical report에 귀속한다." },
+      { kind: "project-claim", rule: "Krea 2의 realism·data·caption·post-training 설명은 제작사 자기보고이며 다른 model family의 보편 recipe로 확대하지 않는다." },
+      { kind: "standard", rule: "Component revision·shape·scale·prompt transform·sampler·precision·evaluator를 하나의 release receipt로 기록한다." },
+    ],
+  },
+  "diffusion-language-models": {
+    title: "Diffusion Language Model 글이 소유하는 범위",
+    owns: [
+      "Absorbing MASK forward process와 weighted masked-token objective",
+      "Parallel unmasking·confidence remasking reverse sampler",
+      "Autoregressive·full diffusion·block diffusion의 factorization·KV cache·latency 경계",
+      "Diffusion LLM을 곧바로 world model·planning model로 부르지 않는 transition gate",
+    ],
+    reuses: [
+      { label: "Diffusion training·sampling contract", href: "/ai/diffusion-models" },
+      { label: "Autoregressive factorization", href: "/ai/autoregressive-language-model" },
+      { label: "Modern image diffusion stack", href: "/ai/modern-image-model-stack" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "MDLM·LLaDA·Block Diffusion 결과는 각 objective·initialization·data·sampler·evaluation 범위로 분리한다." },
+      { kind: "project-claim", rule: "Dream 등 preprint의 benchmark를 diffusion language model 전체나 robot planning 성능으로 일반화하지 않는다." },
+      { kind: "standard", rule: "Output length·sampling steps·block size·forward calls·KV memory·quality·p50/p95 latency를 같은 receipt에 기록한다." },
+    ],
+  },
   "open-r1": {
     title: "Open-R1 글이 소유하는 범위",
     owns: [
@@ -8983,7 +9055,8 @@ export const EDITORIAL_BOUNDARIES = {
     ],
     reuses: [
       { label: "LoRA low-rank update와 rank 계산", href: "/ai/lora-finetuning#lora" },
-      { label: "Latent diffusion component pipeline", href: "/ai/latent-diffusion-guidance#pipeline" },
+      { label: "Modern image generation component stack", href: "/ai/modern-image-model-stack#system-map" },
+      { label: "DiT block과 multimodal stream", href: "/ai/diffusion-transformer-architecture" },
       { label: "Video tubelet과 space-time attention", href: "/ai/video-transformers" },
     ],
     evidence: [
