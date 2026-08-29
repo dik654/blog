@@ -2471,7 +2471,13 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://huggingface.co/docs/peft/main/package_reference/lora",
       note: "LoraConfig·target_modules·initialization·merge 관련 현재 구현 옵션",
     },
-  ],
+    {
+      kind: "핵심 논문",
+      label: "S-LoRA: Serving Thousands of Concurrent LoRA Adapters",
+      href: "https://arxiv.org/abs/2311.03285",
+      note: "Unified paging과 batched GEMM으로 여러 LoRA adapter를 동시에 서빙하는 방법",
+    },
+],
   "ai/image-video-lora-architecture": [
     {
       kind: "공식 문서",
@@ -6405,5 +6411,42 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "핵심 논문", label: "Defining and Characterizing Reward Hacking", href: "https://arxiv.org/abs/2209.13085", note: "Reward hacking의 형식적 정의와 unhackable 조건의 출처" },
     { kind: "핵심 논문", label: "Concrete Problems in AI Safety", href: "https://arxiv.org/abs/1606.06565", note: "Specification gaming·reward misspecification 이름의 출처" },
     { kind: "핵심 논문", label: "Policy Invariance Under Reward Transformations", href: "https://dl.acm.org/doi/10.5555/645528.657613", note: "Potential-based reward shaping의 optimal policy 보존 증명 출처" },
+  ],
+  "ai/fine-tuning-tradeoffs-forgetting-and-merging": [
+    { kind: "핵심 논문", label: "Catastrophic Interference in Connectionist Networks: The Sequential Learning Problem", href: "https://doi.org/10.1016/S0079-7421(08)60536-8", note: "Catastrophic forgetting을 처음 정식화한 원 논문" },
+    { kind: "핵심 논문", label: "Model soups: averaging weights of multiple fine-tuned models improves accuracy without increasing inference time", href: "https://arxiv.org/abs/2203.05482", note: "Weight interpolation 기반 model merging의 근거" },
+    { kind: "핵심 논문", label: "Editing Models with Task Arithmetic", href: "https://arxiv.org/abs/2212.04089", note: "Task vector를 더하고 빼는 task arithmetic model editing의 근거" },
+  ],
+  "ai/llm-guardrails-and-output-validation": [
+    { kind: "공식 문서", label: "NVIDIA NeMo Guardrails — Documentation", href: "https://docs.nvidia.com/nemo/guardrails/latest/index.html", note: "Input/output/dialog/tool rail 위치 축과 rule-based·model-based 조합 구조의 근거." },
+    { kind: "공식 문서", label: "JSON Schema — Understanding JSON Schema", href: "https://json-schema.org/understanding-json-schema/about", note: "Schema validation의 구조 검증 범위와 semantic validation이 별도로 필요한 이유의 근거." },
+  ],
+  "ai/llm-monitoring-observability-and-drift": [
+    { kind: "공식 문서", label: "OpenTelemetry · Traces", href: "https://opentelemetry.io/docs/concepts/signals/traces/", note: "distributed tracing·trace span·부모-자식 tree 구조의 근거" },
+    { kind: "공식 문서", label: "Langfuse · Observability Data Model", href: "https://langfuse.com/docs/observability/data-model", note: "trace·observation 중첩 구조와 LLM observability 정의의 근거" },
+    { kind: "핵심 논문", label: "A Survey on Concept Drift Adaptation (Gama et al., 2014)", href: "https://doi.org/10.1145/2523813", note: "data drift(virtual drift)와 concept drift(real drift) 구분의 근거" },
+  ],
+  "ai/prompt-injection-poisoning-and-data-protection": [
+    { kind: "공식 문서", label: "OWASP — LLM01:2025 Prompt Injection", href: "https://genai.owasp.org/llmrisk/llm01-prompt-injection/", note: "Direct·indirect prompt injection 구분과 완화 전략 목록의 근거." },
+    { kind: "핵심 논문", label: "Greshake et al. · Not what you've signed up for (arXiv 2302.12173)", href: "https://arxiv.org/abs/2302.12173", note: "Indirect prompt injection 원 논문과 tool injection·retrieval poisoning 사례의 근거." },
+  ],
+  "ai/continual-learning-foundations": [
+    { kind: "핵심 논문", label: "A continual learning survey: Defying forgetting in classification tasks", href: "https://arxiv.org/abs/1909.08383", note: "Continual learning taxonomy와 stability–plasticity 분석 틀의 근거" },
+    { kind: "핵심 논문", label: "Overcoming catastrophic forgetting in neural networks", href: "https://arxiv.org/abs/1612.00796", note: "Regularization-based continual learning(EWC)의 근거" },
+    { kind: "핵심 논문", label: "Progressive Neural Networks", href: "https://arxiv.org/abs/1606.04671", note: "Parameter isolation·dynamic architecture expansion의 근거" },
+  ],
+  "ai/llm-application-caching": [
+    { kind: "공식 문서", label: "Zilliz · GPTCache", href: "https://github.com/zilliztech/GPTCache", note: "semantic cache의 similarity search·threshold·hit ratio/recall 정의 근거" },
+    { kind: "핵심 논문", label: "A Study of Replacement Algorithms for a Virtual-Storage Computer (Belady, 1966)", href: "https://doi.org/10.1147/sj.52.0078", note: "LRU를 포함한 replacement 알고리즘과 이상적 최적 알고리즘 비교의 근거" },
+  ],
+  "ai/llm-gateway-and-model-routing": [
+    { kind: "공식 문서", label: "LiteLLM · Routing", href: "https://docs.litellm.ai/docs/routing", note: "load/latency/cost 기반 routing 전략 정의의 근거" },
+    { kind: "공식 문서", label: "OpenRouter · Quickstart", href: "https://openrouter.ai/docs/quickstart", note: "unified API·자동 fallback·비용 효율적 routing 설명의 근거" },
+    { kind: "핵심 논문", label: "FrugalGPT (Chen, Zaharia, Zou, 2023)", href: "https://arxiv.org/abs/2305.05176", note: "cascaded inference·confidence 기반 escalation과 비용 절감 수치의 근거" },
+  ],
+  "ai/rate-limiting-and-reliability-patterns": [
+    { kind: "공식 문서", label: "Martin Fowler · CircuitBreaker", href: "https://martinfowler.com/bliki/CircuitBreaker.html", note: "circuit breaker 패턴과 상태 전이 정의의 근거" },
+    { kind: "공식 규격", label: "RFC 2697 · A Single Rate Three Color Marker", href: "https://www.rfc-editor.org/rfc/rfc2697", note: "token bucket의 refill rate·burst capacity 정의의 근거" },
+    { kind: "공식 문서", label: "nginx · ngx_http_limit_req_module", href: "https://nginx.org/en/docs/http/ngx_http_limit_req_module.html", note: "leaky bucket rate limiting의 rate·burst 파라미터 근거" },
   ],
 };

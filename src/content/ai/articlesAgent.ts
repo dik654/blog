@@ -422,6 +422,32 @@ export const agentArticles: Article[] = [
     component: () => import("@/pages/articles/ai/agent-control-boundaries"),
   },
   {
+    slug: "llm-guardrails-and-output-validation",
+    title: "Guardrail은 두는 위치와 판정 방식으로 정확도·지연을 맞바꿉니다",
+    subcategory: "ai-agents",
+    sections: [
+      { id: "overview", title: "Input·output·tool guardrail 위치" },
+      { id: "rule-vs-model", title: "Rule-based와 model-based 판정" },
+      { id: "fp-fn-tradeoff", title: "False positive·false negative 트레이드오프" },
+      { id: "validation-methods", title: "Schema·semantic·action validation" },
+      { id: "human-approval-gate", title: "Human approval gate" },
+    ],
+    component: () => import("@/pages/articles/ai/llm-guardrails-and-output-validation"),
+  },
+  {
+    slug: "prompt-injection-poisoning-and-data-protection",
+    title: "Injection은 지시 경로로, poisoning은 오염 시점으로 나뉩니다",
+    subcategory: "ai-agents",
+    sections: [
+      { id: "injection-vectors", title: "Direct와 indirect prompt injection" },
+      { id: "tool-retrieval-injection", title: "Tool injection과 retrieval poisoning" },
+      { id: "data-poisoning", title: "Data poisoning: 학습 시점 오염" },
+      { id: "secret-leakage", title: "Secret leakage와 credential isolation" },
+      { id: "pii-detection", title: "PII detection과 data minimization" },
+    ],
+    component: () => import("@/pages/articles/ai/prompt-injection-poisoning-and-data-protection"),
+  },
+  {
     slug: "agent-code-mode",
     title: "Code Mode: Tool 왕복을 Program으로 접는 실행 패턴",
     subcategory: "ai-agents",

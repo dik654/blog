@@ -21,6 +21,12 @@ export default function Overview() {
           adapter만 따로 보관할 수 있는 이유가 여기에 있습니다.
         </p>
         <p>
+          이렇게 base 전체가 아니라 일부 parameter만 학습하는 접근을 통틀어
+          <strong> parameter-efficient fine-tuning(PEFT)</strong>이라고 부릅니다.
+          LoRA는 PEFT의 한 구현이고, prompt-tuning이나 adapter layer 삽입처럼
+          같은 목표를 다른 방식으로 푸는 방법들과 나란히 놓입니다.
+        </p>
+        <p>
           따라서 가장 먼저 줄어드는 것은
           <strong> trainable parameter, gradient, optimizer state와 task별 저장량</strong>
           입니다. Base forward와 activation 비용까지 같은 비율로 사라지는 것은

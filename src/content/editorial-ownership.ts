@@ -2753,7 +2753,10 @@ export const EDITORIAL_BOUNDARIES = {
       "QLoRA의 quantized base storage·dequant compute·adapter training precision·memory ledger",
       "Chat template serialization·response-only loss mask·packing/truncation data contract",
       "Unmerged·merged·merged-requantized artifact의 algebra·호환성·parity·배포 승인 경로",
-    ],
+      "Full fine-tuning과 parameter-efficient fine-tuning(PEFT)의 용어 경계, alpha·scaling·dropout 등 adapter hyperparameter",
+      "Trainable parameter ratio·memory footprint·compute budget으로 나눈 fine-tuning resource 장부",
+      "하나의 base 위에서 여러 adapter를 동시에 서빙하는 multi-LoRA serving과 요청 단위 adapter switching 경계",
+],
     reuses: [
       {
         label: "행렬 rank·SVD·low-rank approximation",
@@ -2786,7 +2789,11 @@ export const EDITORIAL_BOUNDARIES = {
         kind: "standard",
         rule: "Base/tokenizer/template·target/rank/alpha/dropout/init/bias/modules_to_save·quant/storage/compute dtype·data/split/mask·optimizer/batch/sequence/peak·adapter/merge/requant checksum·quality/latency를 함께 기록한다.",
       },
-    ],
+      {
+        kind: "primary-source",
+        rule: "Multi-LoRA serving의 동시 서빙 adapter 수·throughput claim은 S-LoRA 논문의 benchmark model·adapter 구성 범위로 제한한다.",
+      },
+],
   },
   "multi-agent-implementation": {
     title: "멀티에이전트 구현 글이 소유하는 범위",
@@ -10492,6 +10499,166 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "primary-source", rule: "Reward hacking·reward shaping의 이론적 주장은 각 논문이 증명한 조건(MDP 정식화, potential function 제약)에 한정하고 임의의 실제 reward 설계에 자동 적용된다고 쓰지 않는다." },
       { kind: "primary-source", rule: "Process reward의 MATH 78% 수치는 Lightman et al. 이 보고한 데이터셋·model 조건에 한정한다." },
       { kind: "project-claim", rule: "6-station·verifier A/B 같은 illustrative 수치는 예시로만 쓰고 특정 실제 시스템의 실측치로 제시하지 않는다." },
+    ],
+  },
+  "fine-tuning-tradeoffs-forgetting-and-merging": {
+    title: "Fine-tuning tradeoffs·forgetting·merging 글이 소유하는 범위",
+    owns: [
+      "Instruction·domain·task·style·behavior 다섯 축의 fine-tuning 목적 taxonomy",
+      "Fine-tuning distribution과 dataset size–quality tradeoff, 그로 인한 fine-tuning overfitting",
+      "Catastrophic forgetting과 capability regression, held-out benchmark 기반 forgetting evaluation",
+      "Data replay·regularization against drift로 forgetting을 완화하는 방법",
+      "Weight interpolation 기반 model merging과 task vector를 더하고 빼는 task arithmetic",
+      "Checkpoint selection과 fine-tuning ablation 절차",
+    ],
+    reuses: [
+      { label: "LoRA·QLoRA adapter 메커니즘과 LoRA merge equivalence", href: "/ai/lora-finetuning#practice" },
+      { label: "Post-training method 경계(SFT·preference optimization 등)", href: "/ai/llm-training-stages#post-training" },
+      { label: "Stability–plasticity dilemma와 continual learning의 replay buffer", href: "/ai/continual-learning-foundations#stability-plasticity" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Catastrophic forgetting 원 정식화는 McCloskey & Cohen(1989)의 소규모 신경망 실험 범위로 제한한다." },
+      { kind: "primary-source", rule: "Model merging·task arithmetic claim은 각 논문이 실험한 model·task 조합 범위로 제한하고 임의 조합에 일반화하지 않는다." },
+      { kind: "project-claim", rule: "본문의 forgetting 하락폭·replay 완화 수치는 예시 목적의 illustrative round number이며 특정 공개 모델의 실측치라고 주장하지 않는다." },
+    ],
+  },
+  "llm-guardrails-and-output-validation": {
+    title: "LLM guardrail·output validation 글이 소유하는 범위",
+    owns: [
+      "Guardrail을 input·output·tool 위치 축으로 나누는 taxonomy",
+      "Rule-based·model-based guardrail의 latency-정확도 트레이드오프, content filter·policy engine 이름 구분",
+      "Guardrail false positive·false negative를 precision·recall로 설명하는 트레이드오프",
+      "Schema·semantic·action validation을 검증 대상 축으로 나누는 구분",
+    ],
+    reuses: [
+      { label: "Workflow·agent loop·checkpoint 경계", href: "/ai/agent-control-boundaries#workflow-agent" },
+      { label: "Blast radius·least privilege", href: "/ai/agent-control-boundaries#blast-radius" },
+      { label: "Layered agent verification", href: "/ai/agent-verification#layers" },
+      { label: "Human-in-the-loop escalation", href: "/ai/agent-failure-modes-and-recovery#human-in-the-loop-escalation" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "NeMo Guardrails 인용은 rail 구조 설명으로 한정하고, latency·정확도 예시 수치는 이 글이 만든 illustrative 값임을 본문에서 밝힌다." },
+      { kind: "primary-source", rule: "JSON Schema 인용은 구조 검증 범위로 한정하고 semantic validation을 대신한다고 표현하지 않는다." },
+    ],
+  },
+  "llm-monitoring-observability-and-drift": {
+    title: "LLM 운영 관측 글이 소유하는 범위",
+    owns: [
+      "Production/model/system/input/output monitoring 층 구분",
+      "Data drift·concept drift·performance drift 세 종류와 그 결합분포 기반 정의",
+      "Distributed tracing·trace span 기본 개념과 request/generation/agent/tool/retrieval trace로 이루어진 LLM trace tree(LLM observability)",
+      "Token usage·token throughput과 model/application latency breakdown의 소유 층 구분",
+      "GPU utilization/memory monitoring·queue depth/time",
+      "Trace sampling의 비용·커버리지 trade-off와 error classification·production debugging 절차",
+    ],
+    reuses: [
+      { label: "SLI·error budget·burn rate·closed-loop 자동화", href: "/ai/llm-serving-ops#observability-aiops" },
+      { label: "TTFT·ITL·TPOT 시간 축 분해와 prefill/decode 실행 단계", href: "/ai/vllm-serving#prefill-decode" },
+      { label: "요청이 거치는 validation·scheduling·streaming 수명주기", href: "/ai/vllm-serving#overview" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "trace/span 구조 정의는 OpenTelemetry·Langfuse 공식 문서 범위 안에서만 주장합니다." },
+      { kind: "primary-source", rule: "data drift·concept drift 정의는 Gama et al. 2014의 결합분포 구분을 근거로 하며, 특정 model의 drift 발생 여부는 주장하지 않습니다." },
+      { kind: "standard", rule: "GPU·queue·token 수치 예시는 절차를 보여 주기 위한 예시이며 특정 배포의 실측값이라고 주장하지 않습니다." },
+    ],
+  },
+  "prompt-injection-poisoning-and-data-protection": {
+    title: "Prompt injection·poisoning·data protection 글이 소유하는 범위",
+    owns: [
+      "Direct·indirect prompt injection을 지시 경로로 구분하고 instruction-data separation으로 완화하는 taxonomy",
+      "Tool injection·retrieval poisoning을 indirect injection의 구체 경로로 구분",
+      "Data poisoning을 추론 시점이 아닌 학습 시점 오염으로 구분",
+      "Secret leakage·data exfiltration과 credential isolation의 사전 대응 관계",
+      "PII detection(정규식·NER)과 data minimization의 역할 구분",
+    ],
+    reuses: [
+      { label: "Guardrail 위치 axis", href: "/ai/llm-guardrails-and-output-validation#overview" },
+      { label: "Rule-based·model-based guardrail", href: "/ai/llm-guardrails-and-output-validation#rule-vs-model" },
+      { label: "Schema·semantic·action validation", href: "/ai/llm-guardrails-and-output-validation#validation-methods" },
+      { label: "Blast radius·least privilege", href: "/ai/agent-control-boundaries#blast-radius" },
+      { label: "Agent trajectory·effect evaluation", href: "/ai/agent-verification#trajectory-effect" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "OWASP LLM01 인용은 공개된 taxonomy·완화 전략 목록으로 한정하고 특정 제품의 방어 효과 보장으로 표현하지 않는다." },
+      { kind: "primary-source", rule: "Greshake et al. 인용은 논문이 시연한 2023년 시점 사례 범위로 한정하고 이후 방어책의 존재 여부를 임의로 단정하지 않는다." },
+    ],
+  },
+  "continual-learning-foundations": {
+    title: "Continual learning foundations 글이 소유하는 범위",
+    owns: [
+      "Online·offline·incremental·continual learning 학습 방식 축",
+      "Stability–plasticity dilemma",
+      "Experience replay·replay buffer, regularization-based continual learning(EWC), parameter isolation·dynamic architecture expansion 세 전략",
+      "Test-time adaptation·online adaptation",
+      "Model update cadence와 knowledge freshness",
+    ],
+    reuses: [
+      { label: "Fine-tuning 한 번의 목적 taxonomy와 catastrophic forgetting", href: "/ai/fine-tuning-tradeoffs-forgetting-and-merging#forgetting" },
+      { label: "Fine-tuning의 ad hoc data replay·regularization against drift", href: "/ai/fine-tuning-tradeoffs-forgetting-and-merging#mitigation" },
+      { label: "Continued pretraining의 adaptation gain–forgetting frontier", href: "/ai/continued-pretraining#forgetting-release" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "EWC·Progressive Networks claim은 각 논문이 실험한 task 순서·수·도메인 범위로 제한하고 임의 task 수에 일반화하지 않는다." },
+      { kind: "project-claim", rule: "본문의 replay buffer 정확도 수치, freshness 일수 예시는 관계를 보여주기 위한 illustrative round number이며 특정 공개 벤치마크의 실측치라고 주장하지 않는다." },
+    ],
+  },
+  "llm-application-caching": {
+    title: "LLM 애플리케이션 캐시 글이 소유하는 범위",
+    owns: [
+      "Exact-match·semantic·retrieval·embedding·tool result cache를 '무엇을 캐싱하는가'로 나눈 taxonomy",
+      "Semantic cache similarity threshold와 hit rate·오답 위험의 trade-off",
+      "Cache key·invalidation·TTL·staleness의 관계와 trade-off",
+      "Cache hit·miss 정의와 hit rate 계산식(요청 단위)",
+      "Cache warming과 LRU eviction",
+    ],
+    reuses: [
+      { label: "GPU 안 KV 값 재사용(prefix caching)과 prefix cache hit rate", href: "/ai/vllm-paged-attention#prefix-caching" },
+      { label: "Embedding similarity의 해석 경계", href: "/ai/sentence-embeddings#similarity" },
+      { label: "RAG knowledge base 저장소 구조", href: "/ai/rag-ingestion-and-chunking#problem" },
+      { label: "Agent tool-call round trip", href: "/ai/agent-code-mode#code-mode-definition" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Semantic cache의 similarity search·hit ratio/recall 정의는 GPTCache 공식 문서 범위 안에서만 주장합니다." },
+      { kind: "primary-source", rule: "LRU의 최적성 기준선은 Belady 1966의 이상적 알고리즘 비교를 근거로 하며 특정 워크로드에서 LRU가 최적이라고 주장하지 않습니다." },
+      { kind: "standard", rule: "Threshold·TTL·hit rate 수치 예시는 절차를 보여 주기 위한 예시이며 특정 배포의 실측값이라고 주장하지 않습니다." },
+    ],
+  },
+  "llm-gateway-and-model-routing": {
+    title: "LLM gateway·model routing 글이 소유하는 범위",
+    owns: [
+      "LLM gateway·model endpoint·unified model API·provider abstraction",
+      "Load/latency/cost/capability/policy-based routing과 model router로 나눈 routing 정책 taxonomy",
+      "Cascaded inference·model cascade·confidence-based escalation",
+      "Fallback model·provider fallback",
+    ],
+    reuses: [
+      { label: "Capability-first model routing과 deadline-owned retry budget 같은 gateway 운영 제어면", href: "/ai/llm-serving-ops#litellm-gateway" },
+      { label: "요청이 거치는 validation·scheduling·streaming 수명주기", href: "/ai/vllm-serving#overview" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Routing 전략 이름과 동작은 LiteLLM·OpenRouter 공식 문서 범위 안에서만 주장합니다." },
+      { kind: "primary-source", rule: "Cascade의 비용·정확도 수치는 FrugalGPT 논문이 실험한 범위의 자기보고로 한정하고 다른 model·워크로드로 일반화하지 않습니다." },
+      { kind: "standard", rule: "Provider 가격·지연 수치 예시는 절차를 보여 주기 위한 예시이며 특정 시점의 실제 가격표라고 주장하지 않습니다." },
+    ],
+  },
+  "rate-limiting-and-reliability-patterns": {
+    title: "Rate limiting·reliability 패턴 글이 소유하는 범위",
+    owns: [
+      "Request retry와 exponential backoff·jitter",
+      "Circuit breaker(closed/open/half-open)와 health check",
+      "Request/token rate limit·concurrency limit과 token bucket·leaky bucket 알고리즘",
+      "Load shedding과 admission policy(트래픽 문 앞 단계)",
+      "Reliability를 정의하는 HA·fault tolerance와 이를 구현하는 failover·graceful degradation",
+    ],
+    reuses: [
+      { label: "Fallback model·provider fallback", href: "/ai/llm-gateway-and-model-routing#fallback-model" },
+      { label: "Deadline-owned retry budget과 retry load amplification(gateway 운영 제어면)", href: "/ai/llm-serving-ops#litellm-gateway" },
+      { label: "GPU scheduler 안의 memory·context-concurrency admission control", href: "/ai/vllm-serving#overview" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Circuit breaker 상태 전이는 Martin Fowler의 CircuitBreaker 패턴 범위 안에서만 주장하고 특정 라이브러리 API로 일반화하지 않습니다." },
+      { kind: "primary-source", rule: "Token bucket·leaky bucket의 refill rate·burst 개념은 RFC 2697과 nginx 공식 문서 범위 안에서만 인용합니다." },
+      { kind: "standard", rule: "임계값·rate·backoff 수치 예시는 절차를 보여 주기 위한 예시이며 특정 배포의 실측값이라고 주장하지 않습니다." },
     ],
   },
 } as const satisfies Record<string, EditorialBoundary>;

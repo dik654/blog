@@ -1581,4 +1581,31 @@ export const practicalArticles: Article[] = [
     ],
     component: () => import("@/pages/articles/ai/rag-context-assembly-and-evaluation"),
   },
+  {
+    slug: "fine-tuning-tradeoffs-forgetting-and-merging",
+    title: "Fine-tuning은 목적별 데이터 분포에 따라 forgetting 위험이 갈린다",
+    subcategory: "ai-practical-llm",
+    sections: [
+      { id: "goal-taxonomy", title: "다섯 가지 fine-tuning 목적 축" },
+      { id: "data-tradeoff", title: "데이터 분포와 size–quality tradeoff" },
+      { id: "forgetting", title: "Catastrophic forgetting과 capability regression" },
+      { id: "mitigation", title: "Forgetting evaluation·replay·regularization" },
+      { id: "merging", title: "Model merging·weight interpolation·task arithmetic" },
+      { id: "checkpoint-ablation", title: "Checkpoint selection과 ablation" },
+    ],
+    component: () => import("@/pages/articles/ai/fine-tuning-tradeoffs-forgetting-and-merging"),
+  },
+  {
+    slug: "continual-learning-foundations",
+    title: "모델은 배포 후에도 학습 방식과 갱신 주기에 따라 낡는다",
+    subcategory: "ai-practical-llm",
+    sections: [
+      { id: "learning-modes", title: "Online·offline·incremental·continual 학습 방식" },
+      { id: "stability-plasticity", title: "Stability–plasticity dilemma" },
+      { id: "strategies", title: "Replay·regularization·parameter isolation" },
+      { id: "adaptation", title: "Test-time·online adaptation" },
+      { id: "cadence-freshness", title: "Update cadence와 knowledge freshness" },
+    ],
+    component: () => import("@/pages/articles/ai/continual-learning-foundations"),
+  },
 ];

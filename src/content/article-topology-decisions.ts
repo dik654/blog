@@ -82,6 +82,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "같은 query·corpus fixture에서 candidate depth·재순위 방식별 recall@k·precision@k·MRR과 latency를 한 receipt로 비교합니다.",
   },
+  "ai/lora-finetuning": {
+    action: "keep",
+    status: "reviewed",
+    reviewedAt: "2026-08-29",
+    rationale:
+      "Frozen base→rank/alpha/target module 설계→data→adapter 배포까지 하나의 PEFT 학습·서빙 단위입니다. 2026-08-29 보강으로 concept가 12개로 늘었지만 full FT vs PEFT 대비, hyperparameter(alpha·scaling·dropout), multi-LoRA serving·adapter switching, 메모리·연산 예산이 모두 같은 adapter contract의 설계→배포 단계이며, fine-tuning의 목적별 데이터·forgetting·model merging은 fine-tuning-tradeoffs-forgetting-and-merging으로 이미 분리돼 있습니다.",
+    sharedGate:
+      "같은 base model·rank 설정에서 trainable parameter ratio·메모리 절감·adapter 서빙 처리량을 한 receipt로 비교합니다.",
+  },
   "ai/vllm-scheduler": {
     action: "keep",
     status: "reviewed",
@@ -185,4 +194,5 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "gpu/cuda-persistent-kernels": "0993e126d9521089",
   "gpu/cuda-register-pressure": "bb8de1b5a0f91f2c",
   "isms-aml/isms-security-infra": "3c313e4c01bcc569",
+  "ai/lora-finetuning": "33795cea211c3c2a",
 };

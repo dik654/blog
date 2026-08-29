@@ -1,5 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
+import TermBreakdown from "@/components/articles/term-breakdown";
 import LoraMatrixViz from "./viz/LoraMatrixViz";
 import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
@@ -98,6 +99,64 @@ N_{\mathrm{LoRA}}&=\underbrace{r(d_{\mathrm{in}}+d_{\mathrm{out}})}_{\text{오�
           step time도 같은 protocol로 기록해야 rank의 효과를 분리할 수 있습니다.
         </p>
       </div>
+      <TermBreakdown
+        title="Rank 말고도 adapter 크기를 바꾸는 세 값"
+        description="같은 rank라도 alpha·scaling·dropout이 다르면 실제 학습되는 delta와 정규화가 달라집니다."
+        items={[
+          {
+            term: "LoRA alpha",
+            description:
+              "Adapter branch의 배율을 정하는 고정 hyperparameter입니다. Rank r과 따로 지정하고, 실제로 곱해지는 값은 alpha 자체가 아니라 alpha와 r의 비율입니다.",
+            example: "앞서 본 s=α/r에서 α가 이 값입니다. Unsloth snapshot은 r=16, α=16을 써서 s=1이 됩니다.",
+            boundary: "Alpha를 rank와 같은 값으로 두는 것이 규칙은 아니며, 구현마다 s를 계산하는 공식이 다를 수 있습니다.",
+          },
+          {
+            term: "LoRA scaling",
+            description:
+              "s=α/r처럼 alpha와 rank의 비율로 adapter delta 크기를 조절하는 계산입니다. Rank만 바꾸고 alpha를 그대로 두면 s가 달라져 같은 학습 곡선을 기대할 수 없습니다.",
+            example: "r을 16에서 32로 올리면서 α=16을 유지하면 s는 1에서 0.5로 줄어 delta가 더 작아집니다.",
+            boundary: "s를 rank와 무관하게 비슷한 크기로 유지하려는 rank-stabilized 방식(예: α/√r)도 있어, 실제 어떤 scaling 공식을 쓰는지 먼저 확인해야 합니다.",
+          },
+          {
+            term: "LoRA dropout",
+            description:
+              "Base weight가 아니라 adapter 입력에만 적용하는 dropout입니다. A로 들어가기 전 활성값 일부를 무작위로 0으로 만들어 low-rank branch만 정규화합니다.",
+            example: "흔히 0~0.1 사이 값을 쓰며, 값이 클수록 학습 중 adapter 출력의 분산이 커집니다.",
+            boundary: "Inference나 merge 시점에는 dropout을 끕니다. 켜진 채로 비교하면 merge 전후 결과가 달라져 앞서 본 동치 조건이 깨집니다.",
+          },
+        ]}
+      />
+      <ExplainedFormula
+        question="Rank를 낮춰 trainable parameter ratio를 줄이면 memory와 compute budget도 같은 비율로 줄어들까요?"
+        idea={<>Trainable parameter ratio는 adapter parameter를 전체 model parameter로 나눈 값입니다. Memory footprint 중 gradient·optimizer state는 이 비율을 따라 줄지만, base forward와 activation은 rank와 무관하게 남습니다. Compute budget은 대부분 frozen base를 통과하는 FLOPs가 정하므로 adapter parameter가 줄어도 크게 줄지 않습니다.</>}
+        formula={String.raw`\begin{aligned}
+\rho&=\frac{N_{\mathrm{adapter}}}{N_{\mathrm{model}}}\\
+M_{\mathrm{train}}&\approx N_{\mathrm{model}}b_{\mathrm{base}}+M_{\mathrm{act}}\\
+&\quad+N_{\mathrm{adapter}}(b_p+b_g+b_o)\\
+C_{\mathrm{step}}&\approx C(N_{\mathrm{model}})
+\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}
+\rho&=\underbrace{\frac{N_{\mathrm{adapter}}}{N_{\mathrm{model}}}}_{\text{trainable parameter ratio}}\\
+M_{\mathrm{train}}&\approx \underbrace{N_{\mathrm{model}}b_{\mathrm{base}}+M_{\mathrm{act}}}_{\text{rank와 무관한 항}}\\
+&\quad+\underbrace{N_{\mathrm{adapter}}(b_p+b_g+b_o)}_{\text{rank를 따라 줄어드는 항}}\\
+C_{\mathrm{step}}&\approx \underbrace{C(N_{\mathrm{model}})}_{\text{base FLOPs가 지배}}
+\end{aligned}`}
+        operations={[
+          { expression: String.raw`\frac{N_{\mathrm{adapter}}}{N_{\mathrm{model}}}`, annotation: ["분자에 둔 adapter parameter 수를 분모의","전체 model parameter 수로 정규화합니다."] },
+          { expression: String.raw`N_{\mathrm{model}}b_{\mathrm{base}}+M_{\mathrm{act}}`, annotation: ["Base storage와 activation은 rank를 바꿔도","거의 그대로 남는 항입니다."] },
+          { expression: String.raw`N_{\mathrm{adapter}}(b_p+b_g+b_o)`, annotation: ["Adapter parameter·gradient·optimizer state만","rank를 따라 늘거나 줄어드는 항입니다."] },
+        ]}
+        terms={[
+          { symbol: "rho", name: "trainable parameter ratio", description: "Adapter parameter 수를 전체 model parameter 수로 나눈 값입니다." },
+          { symbol: "N_adapter", name: "adapter parameter count", description: "선택한 모든 target module의 A,B를 합산한 parameter 수입니다." },
+          { symbol: "N_model", name: "model parameter count", description: "Base 전체가 가진 parameter 수입니다." },
+          { symbol: "b_base,b_p,b_g,b_o", name: "per-parameter bytes", description: "각각 base 저장, adapter 저장, gradient, optimizer state 한 parameter당 byte입니다." },
+          { symbol: "M_act", name: "activation memory", description: "Sequence·batch·checkpointing에 따라 달라지는 backward용 activation입니다." },
+          { symbol: "C_step", name: "step compute budget", description: "한 step에 필요한 FLOPs를 GPU-시간으로 환산한 예산입니다." },
+        ]}
+        assumptions={["N_adapter는 실제 선택한 target module과 rank로 계산하고, 후보를 바꿀 때마다 다시 셉니다.", "byte 상수는 storage/compute/training dtype과 optimizer 종류에 따라 달라지므로 profiling으로 확인합니다.", "Compute budget은 GPU-시간(step time × step 수)으로 측정하며 parameter ratio만으로 추정하지 않습니다."]}
+        interpretation="이 글의 target-module 예시를 7B 모델 전체와 비교하면 r=8일 때 adapter parameter는 약 20M으로 trainable parameter ratio는 약 0.29%이고, r=16이면 약 0.57%입니다. Hu 등은 GPT-3 175B에 rank 4 LoRA를 적용해 trainable parameter를 약 10,000배, GPU memory를 약 3배 줄였다고 보고했습니다. 다만 forward/backward가 여전히 전체 175B parameter를 통과하므로 이 절감이 compute budget까지 같은 비율로 옮겨가지는 않습니다."
+      />
       <ProgressiveDetail
         title="함께 보관한 Unsloth snapshot은 target module을 어떻게 고르나요?"
         preview="한 가지 실전 기본값일 뿐이며, 현재 설치된 model과 PEFT가 같은 module·option을 지원하는지 확인해야 합니다."
