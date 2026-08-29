@@ -2450,7 +2450,8 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "핵심 연구", label: "Reciprocal Rank Fusion outperforms Condorcet and individual Rank Learning Methods", href: "https://cormack.uwaterloo.ca/cormacksigir09-rrf.pdf", note: "서로 다른 ranking을 reciprocal-rank evidence로 합치는 원 연구" },
     { kind: "핵심 논문", label: "Efficient and robust approximate nearest neighbor search using HNSW", href: "https://arxiv.org/abs/1603.09320", note: "Multi-layer proximity graph approximate-neighbor index" },
     { kind: "핵심 논문", label: "Passage Re-ranking with BERT", href: "https://arxiv.org/abs/1901.04085", note: "Query와 passage를 함께 읽는 cross-encoder second-stage reranking" },
-  ],
+    { kind: "핵심 논문", label: "ColBERT: Efficient and Effective Passage Search via Contextualized Late Interaction over BERT", href: "https://arxiv.org/abs/2004.12832", note: "문서 token embedding을 미리 계산해 두고 query token과 MaxSim으로 비교하는 late interaction" },
+],
   "ai/lora-finetuning": [
     {
       kind: "핵심 논문",
@@ -6296,5 +6297,56 @@ export const ARTICLE_EVIDENCE: Readonly<
   "ai/llm-as-a-judge": [
     { kind: "핵심 논문", label: "Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena", href: "https://arxiv.org/abs/2306.05685", note: "Position·verbosity·self-enhancement bias 실측치와 human agreement rate 의 출처" },
     { kind: "핵심 논문", label: "G-Eval: NLG Evaluation using GPT-4 with Better Human Alignment", href: "https://arxiv.org/abs/2303.16634", note: "Chain-of-thought + form-filling rubric 설계와 Spearman 0.514 의 출처" },
+  ],
+  "ai/rag-ingestion-and-chunking": [
+    { kind: "공식 문서", label: "Anthropic · Introducing Contextual Retrieval", href: "https://www.anthropic.com/news/contextual-retrieval", note: "Contextual retrieval의 방법과 top-20 검색 실패율 5.7→1.9% 수치의 근거" },
+    { kind: "공식 문서", label: "LangChain · Text splitters", href: "https://python.langchain.com/docs/concepts/text_splitters/", note: "Chunk size·overlap·구분자 계층형 분할 방식의 근거" },
+    { kind: "공식 문서", label: "LlamaIndex · Node Parser Modules", href: "https://developers.llamaindex.ai/python/framework/module_guides/loading/node_parsers/modules/", note: "SentenceSplitter·SemanticSplitterNodeParser의 파라미터와 경계 결정 방식의 근거" },
+  ],
+  "ai/vector-search-and-ann-indexes": [
+    { kind: "핵심 논문", label: "Jégou, Douze, Schmid — Product Quantization for Nearest Neighbor Search (TPAMI 2011)", href: "https://doi.org/10.1109/TPAMI.2010.57", note: "Product quantization·asymmetric distance computation·IVFADC 의 근거. 수치는 저자 자기보고" },
+    { kind: "공식 문서", label: "FAISS wiki — Faiss indexes", href: "https://github.com/facebookresearch/faiss/wiki/Faiss-indexes", note: "IndexIVFFlat 의 nlist·nprobe, IndexPQ·IndexIVFPQ 의 m·nbits·code_size 계산의 근거" },
+  ],
+  "ai/knowledge-graph-construction": [
+    { kind: "공식 문서", label: "Neo4j — Graph Database Concepts", href: "https://neo4j.com/docs/getting-started/appendix/graphdb-concepts/", note: "Node·relationship·property·label 정의, edge property·multi-label 지원의 근거" },
+    { kind: "핵심 논문", label: "Open Information Extraction from the Web (Banko et al., IJCAI 2007)", href: "https://www.ijcai.org/Proceedings/07/Papers/429.pdf", note: "TextRunner 구조와 Open IE 정밀도(저자 자기보고)의 근거" },
+    { kind: "핵심 논문", label: "Extract, Define, Canonicalize: An LLM-based Framework for Knowledge Graph Construction (EMNLP 2024)", href: "https://arxiv.org/abs/2404.03868", note: "Schema-guided extraction·self-canonicalization 3단계와 target alignment/self-canonicalization 구분의 근거" },
+  ],
+  "ai/embedding-model-fine-tuning": [
+    { kind: "핵심 논문", label: "Reimers & Gurevych · Sentence-BERT (EMNLP 2019)", href: "https://arxiv.org/abs/1908.10084", note: "Siamese·triplet bi-encoder로 재사용 가능한 sentence embedding을 학습한 원 논문. In-batch negative는 후속 실무의 확장" },
+    { kind: "핵심 논문", label: "Karpukhin et al. · Dense Passage Retrieval (EMNLP 2020)", href: "https://arxiv.org/abs/2004.04906", note: "Asymmetric dual encoder와 in-batch negative 학습의 근거. 수치는 저자 자기보고" },
+    { kind: "공식 문서", label: "Sentence-Transformers 공식 문서 · Symmetric vs. Asymmetric Semantic Search", href: "https://www.sbert.net/examples/applications/semantic-search/README.html", note: "Symmetric·asymmetric 용어 구분과 권장 모델의 근거" },
+    { kind: "핵심 논문", label: "Kusupati et al. · Matryoshka Representation Learning (NeurIPS 2022)", href: "https://arxiv.org/abs/2205.13147", note: "Nested loss로 embedding truncation을 가능하게 하는 근거. Vision benchmark 자기보고" },
+    { kind: "핵심 논문", label: "Wang et al. · Text Embeddings by Weakly-Supervised Contrastive Pre-training (E5)", href: "https://arxiv.org/abs/2212.03533", note: "Instruction 접두어 기반 asymmetric embedding과 in-batch negative pre-training의 근거" },
+    { kind: "공식 문서", label: "Shakir, Aarsen & Lee · Binary and Scalar Embedding Quantization (Hugging Face blog)", href: "https://huggingface.co/blog/embedding-quantization", note: "Int8 embedding quantization의 저장 4배 절감과 99%대 정확도 유지 수치 근거" },
+  ],
+  "ai/document-parsing-and-table-extraction": [
+    { kind: "공식 문서", label: "Unstructured.io · Partitioning docs", href: "https://docs.unstructured.io/open-source/core-functionality/partitioning", note: "Layout parsing·OCR 전략(auto/hi_res/ocr_only)·표 HTML 보존의 근거" },
+    { kind: "공식 문서", label: "jsvine · pdfplumber", href: "https://github.com/jsvine/pdfplumber", note: "PDF 표 셀 경계 감지(line intersection)와 읽기 순서 보존 옵션의 근거" },
+    { kind: "공식 문서", label: "PyMuPDF · Text Extraction Recipes", href: "https://pymupdf.readthedocs.io/en/latest/recipes-text.html", note: "다단 PDF reading order 문제와 sort=True 해결의 근거" },
+    { kind: "핵심 논문", label: "Smock, Pesala, Abraham · PubTables-1M (CVPR 2022)", href: "https://arxiv.org/abs/2110.00061", note: "표 구조 인식 GriTS_Top/AccCon 수치의 근거" },
+    { kind: "핵심 논문", label: "Nassar et al. · TableFormer (CVPR 2022)", href: "https://arxiv.org/abs/2203.01017", note: "단순·복잡 표 TEDS 수치와 rowspan/colspan HTML 예측의 근거" },
+    { kind: "공식 문서", label: "Unstructured.io · Chunking docs", href: "https://docs.unstructured.io/open-source/core-functionality/chunking", note: "Table element 격리(never combined)와 orig_elements provenance 보존의 근거" },
+  ],
+  "ai/rag-context-assembly-and-evaluation": [
+    { kind: "핵심 논문", label: "Es et al. · RAGAS (2023)", href: "https://arxiv.org/abs/2309.15217", note: "Groundedness(faithfulness)·answer relevance 계산식과 WikiEval 사람 판정 일치율의 근거" },
+    { kind: "공식 문서", label: "RAGAS docs · Context Precision", href: "https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/context_precision/", note: "Context precision 계산식(precision@k 가중 합산)의 근거" },
+    { kind: "공식 문서", label: "RAGAS docs · Context Recall", href: "https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/context_recall/", note: "Context recall 계산식(reference claim 지지 비율)의 근거" },
+    { kind: "핵심 논문", label: "Lewis et al. · RAG (NeurIPS 2020)", href: "https://arxiv.org/abs/2005.11401", note: "Closed-book 대비 RAG 성능 격차 — retrieval ablation 수치 예의 근거" },
+    { kind: "핵심 논문", label: "Ju et al. · CRUX (2025)", href: "https://arxiv.org/abs/2506.20051", note: "Oracle retrieval coverage 대비 실제 방법 coverage 격차 — retriever upper bound 수치 예의 근거" },
+  ],
+  "ai/query-transformation-and-adaptive-retrieval": [
+    { kind: "핵심 논문", label: "Gao et al. · HyDE (ACL 2023)", href: "https://arxiv.org/abs/2212.10496", note: "가상 문서 embedding으로 검색하는 HyDE 방법과 정성적 성능 비교의 근거" },
+    { kind: "핵심 논문", label: "Asai et al. · Self-RAG (ICLR 2024)", href: "https://arxiv.org/abs/2310.11511", note: "네 reflection token 정의와 PopQA·PubHealth·ARC-Challenge 수치의 근거" },
+    { kind: "핵심 논문", label: "Yan et al. · CRAG (2024)", href: "https://arxiv.org/abs/2401.15884", note: "Correct·Ambiguous·Incorrect 세 범주와 baseline 대비 개선 수치의 근거" },
+    { kind: "핵심 논문", label: "Zheng et al. · Step-Back Prompting (ICLR 2024)", href: "https://arxiv.org/abs/2310.06117", note: "Step-back 질문 방법과 MMLU·TimeQA·MuSiQue 개선폭의 근거" },
+    { kind: "핵심 논문", label: "Zhou et al. · Least-to-Most Prompting (ICLR 2023)", href: "https://arxiv.org/abs/2205.10625", note: "복합 문제를 subproblem으로 나누는 decomposition 원리와 SCAN 수치의 근거" },
+  ],
+  "ai/lexical-retrieval-bm25-inverted-index": [
+    { kind: "핵심 논문", label: "Robertson, Zaragoza — The Probabilistic Relevance Framework: BM25 and Beyond (2009)", href: "https://doi.org/10.1561/1500000019", note: "BM25 scoring 식의 유도와 saturation·length normalization 결합의 근거" },
+    { kind: "공식 문서", label: "Apache Lucene — BM25Similarity (javadoc)", href: "https://lucene.apache.org/core/9_11_0/core/org/apache/lucene/search/similarities/BM25Similarity.html", note: "IDF 의 log(1+...) 변형과 k1=1.2, b=0.75 기본값의 근거" },
+  ],
+  "ai/graphrag-community-and-multihop-search": [
+    { kind: "핵심 논문", label: "From Local to Global: A Graph RAG Approach to Query-Focused Summarization (Edge et al., arXiv 2404.16130)", href: "https://arxiv.org/abs/2404.16130", note: "Leiden community detection·계층 summary, local/global search 구분, global search map-reduce 절차, community level 별 성능·token 비율의 근거. 수치는 저자 자기보고" },
   ],
 };

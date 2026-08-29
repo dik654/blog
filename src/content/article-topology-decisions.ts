@@ -73,6 +73,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "같은 draft/target·α·K·batch fixture에서 accepted length·forward 수·wall-clock을 함께 재어 break-even을 판정합니다.",
   },
+  "ai/retrieval-ranking-funnel": {
+    action: "keep",
+    status: "reviewed",
+    reviewedAt: "2026-08-29",
+    rationale:
+      "BM25→HNSW→RRF→cross-encoder의 candidate 생성·병합·재순위 funnel이 하나의 학습 단위입니다. 2026-08-29 보강으로 concept가 9개로 늘었지만 hybrid depth budget·ColBERT late interaction·precision/MRR 평가가 모두 같은 funnel의 각 단계이며, RAG 전체 lifecycle은 rag-pipeline, ingestion/chunking은 rag-ingestion-and-chunking으로 이미 분리돼 있습니다.",
+    sharedGate:
+      "같은 query·corpus fixture에서 candidate depth·재순위 방식별 recall@k·precision@k·MRR과 latency를 한 receipt로 비교합니다.",
+  },
   "ai/vllm-scheduler": {
     action: "keep",
     status: "reviewed",
@@ -154,6 +163,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/vllm-paged-attention": "d9f43052865ba377",
   "ai/vllm-spec-decode": "033ea8067d38760d",
   "ai/vllm-scheduler": "3388fbba0894a8a1",
+  "ai/retrieval-ranking-funnel": "6f8840ae50720a9e",
   "ai/xml-prompting": "a8fe599b80c579e6",
   "blockchain/cometbft-abci": "95ca71232816d16a",
   "blockchain/cometbft-consensus": "9bb6fd231f8bb08f",

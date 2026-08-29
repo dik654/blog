@@ -1,4 +1,7 @@
 import Retrieval from "./retrieval-ranking-funnel/Retrieval";
+import HybridDepth from "./retrieval-ranking-funnel/HybridDepth";
+import LateInteraction from "./retrieval-ranking-funnel/LateInteraction";
+import RankingEvaluation from "./retrieval-ranking-funnel/RankingEvaluation";
 import ContentBoundary from "@/components/articles/content-boundary";
 
 export default function RetrievalRankingFunnelArticle() {
@@ -22,6 +25,9 @@ export default function RetrievalRankingFunnelArticle() {
         <ContentBoundary article="retrieval-ranking-funnel" />
       </header>
       <Retrieval />
+      <HybridDepth />
+      <LateInteraction />
+      <RankingEvaluation />
     </div>
   );
 }
