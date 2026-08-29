@@ -113,10 +113,6 @@
       "fingerprint": "f2ead228f58818c3",
       "score": 30
     },
-    "ai/vllm-spec-decode": {
-      "fingerprint": "43c6ef03ab84a9e4",
-      "score": 30
-    },
     "blockchain/proofs-post": {
       "fingerprint": "fb91279d904707ac",
       "score": 30
@@ -150,7 +146,7 @@
       "score": 28
     },
     "ai/transformer-architecture": {
-      "fingerprint": "6a58a731797ee27c",
+      "fingerprint": "974bd8be543c0e90",
       "score": 28
     },
     "blockchain/cometbft-consensus": {
@@ -203,14 +199,6 @@
     },
     "ai/rag-pipeline": {
       "fingerprint": "1e33bb4eb3716e40",
-      "score": 26
-    },
-    "ai/vllm-paged-attention": {
-      "fingerprint": "99d0b95eb1dd16f5",
-      "score": 26
-    },
-    "ai/vllm-scheduler": {
-      "fingerprint": "5946678444fc108f",
       "score": 26
     },
     "blockchain/autobahn-deep": {
@@ -386,7 +374,7 @@
       "score": 20
     },
     "ai/mixture-of-experts": {
-      "fingerprint": "3a2c6faac00c8e63",
+      "fingerprint": "84abd80325629abd",
       "score": 20
     },
     "ai/training-pipeline": {
@@ -618,7 +606,7 @@
       "score": 14
     },
     "ai/tokenizer": {
-      "fingerprint": "bfb2cffef835348b",
+      "fingerprint": "22da105a2ef2bbff",
       "score": 14
     },
     "ai/vision-transformer": {
@@ -827,10 +815,6 @@
     },
     "ai/context-window-optimization": {
       "fingerprint": "e02c02164cdfe9b6",
-      "score": 10
-    },
-    "ai/cuda-graph-capture": {
-      "fingerprint": "07019d326c485c70",
       "score": 10
     },
     "ai/knowledge-distillation": {
@@ -1169,10 +1153,6 @@
       "fingerprint": "b49927b3951ce209",
       "score": 6
     },
-    "ai/in-context-lora": {
-      "fingerprint": "dfea4080d192f3cb",
-      "score": 6
-    },
     "ai/mcp-server-operations": {
       "fingerprint": "febb85f83aceace3",
       "score": 6
@@ -1247,14 +1227,6 @@
     },
     "crypto/zk-theory": {
       "fingerprint": "38a1e87710e37eba",
-      "score": 6
-    },
-    "gpu/cuda-persistent-kernels": {
-      "fingerprint": "e1c6d1faff5d4dda",
-      "score": 6
-    },
-    "gpu/cuda-register-pressure": {
-      "fingerprint": "17e1b71cf270b085",
       "score": 6
     },
     "gpu/hw-network": {

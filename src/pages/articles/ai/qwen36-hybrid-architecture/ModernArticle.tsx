@@ -463,6 +463,69 @@ M_\Delta
           />
         </div>
 
+        <div id="division-of-labor" className="scroll-mt-20 space-y-7">
+          <div className="prose prose-neutral max-w-none dark:prose-invert">
+            <h3>DeltaNet의 state는 token이 아니라 key-value 연관을 압축합니다</h3>
+            <p className="leading-8">
+              DeltaNet의 48개 state head는 각각 128×128 association matrix
+              하나만 유지하고, 새 token은 그 위에 prediction error만 다시 써
+              표현을 갱신합니다. 압축하는 대상은 개별 token 원본이 아니라
+              key가 가리키는 value의 연관 그 자체입니다.
+            </p>
+            <p className="leading-8">
+              그래서 이 state는 attention layer가 갖는 explicit token memory,
+              즉 token마다의 key와 value를 그대로 나열해 둔 기록과 저장
+              방식부터 다릅니다.
+            </p>
+            <p className="leading-8">
+              역할 분담은 이 차이에서 나옵니다. Attention layer 16개는
+              explicit token memory를 그대로 남겨 두므로 어떤 token이든
+              정확히 다시 찾아 올 수 있고, DeltaNet layer 48개는 compressed
+              state로 대부분의 문맥을 요약해 memory와 연산을 아낍니다. 한쪽이
+              정확한 조회를, 다른 쪽이 압축을 맡는 구도이며 두 state를 합쳐야
+              request 하나가 실제로 쓰는 memory가 됩니다.
+            </p>
+          </div>
+          <TermBreakdown
+            title="두 기억이 나누어 맡는 일"
+            description="같은 request 안에서 각자 다른 실패 모드를 책임집니다."
+            items={[
+              {
+                term: "Explicit token memory (attention)",
+                description:
+                  "Token마다의 key와 value를 그대로 남겨 정확한 조회를 보장합니다.",
+                example: "16개 layer, context에 비례해 계속 자람",
+                boundary:
+                  "정확하지만 context가 길수록 저장·조회 비용이 함께 늘어납니다.",
+              },
+              {
+                term: "Compressed state memory (DeltaNet)",
+                description:
+                  "Key-value 연관을 128×128 matrix에 압축해 request당 고정 크기로 둡니다.",
+                example: "48개 layer, 4K와 262K에서 모두 144 MiB",
+                boundary:
+                  "크기는 고정이지만 연관 수가 matrix 용량을 넘으면 서로 다른 연관이 겹쳐 써질 수 있습니다.",
+              },
+            ]}
+          />
+          <div className="prose prose-neutral max-w-none dark:prose-invert">
+            <p className="leading-8">
+              추론 시점의 memory는 이 두 state를 더한 값입니다. Context
+              32K에서 attention KV는 약 2 GiB, DeltaNet core state는
+              request마다 고정된 144 MiB이므로 합은 약 2.14 GiB입니다.
+            </p>
+            <p className="leading-8">
+              Context가 262K로 늘어도 DeltaNet 쪽은 그대로인 채 attention
+              KV만 16 GiB까지 자랍니다. 서로 다른 크기 규칙을 가진 cache
+              여러 종류를 같은 device 메모리 안에 함께 배치하는 일반 원리는{" "}
+              <Link to="/ai/hybrid-kv-cache-allocation">
+                hybrid KV-cache allocation
+              </Link>
+              이 다룹니다.
+            </p>
+          </div>
+        </div>
+
         <div id="paper-gated-deltanet" className="scroll-mt-20">
           <CitationBlock
             source="Yang et al. · Gated Delta Networks"

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import Math from "@/components/ui/math";
 import { CitationBlock } from "@/components/ui/citation-block";
@@ -120,9 +121,11 @@ export default function KVFundamentals({
           Autoregressive decode는 지금까지 만든 문장을 조건으로 다음 token을
           하나 생성하고, 그 token을 문장 끝에 붙여 같은 과정을 반복합니다. 이때
           과거 token의 attention projection을 매번 다시 계산하면 문장이
-          길어질수록 같은 계산을 계속 반복하게 됩니다. 그래서 runtime은 각
-          layer에서 이미 계산한 Key와 Value를 KV cache에 저장한 뒤 다음 step에서
-          다시 사용합니다. 반면 Query는{" "}
+          길어질수록 같은 계산을 계속 반복하게 됩니다.
+        </p>
+        <p>
+          그래서 runtime은 각 layer에서 이미 계산한 Key와 Value를 KV cache에
+          저장한 뒤 다음 step에서 다시 사용합니다. 반면 Query는{" "}
           <em>현재 token이 과거의 무엇을 찾는가</em>를 표현하므로 그 step에서
           만들고 사용하되 다음 step을 위해 저장하지 않습니다.
         </p>
@@ -130,8 +133,11 @@ export default function KVFundamentals({
           따라서 parameter 수가 비슷한 30B model이라도 KV cache는 크게 다를 수
           있습니다. Weight quantization은 model weight가 차지하는 고정 memory를
           줄이지만, KV cache의 원소당 byte는 <code>kv_cache_dtype</code>가
-          결정합니다. 이번 비교처럼 cache dtype과 병렬화 조건을 맞췄다면
-          weight가 FP8이라는 사실보다 <code>num_key_value_heads</code>와{" "}
+          결정합니다.
+        </p>
+        <p>
+          이번 비교처럼 cache dtype과 병렬화 조건을 맞췄다면 weight가 FP8이라는
+          사실보다 <code>num_key_value_heads</code>와{" "}
           <code>head_dim</code>이 먼저 capacity를 가릅니다.
         </p>
       </div>
@@ -199,6 +205,8 @@ K,V &\in \mathbb{R}^{T \times H_{KV} \times D_{head}}
           <Math>{"H_{KV}<H_Q"}</Math>입니다. Group 크기{" "}
           <Math>{"g=H_Q/H_{KV}"}</Math>만큼의 Q head가 같은 K/V head를 사용하며,
           MQA는 <Math>{"H_{KV}=1"}</Math>인 GQA의 끝점으로 볼 수 있습니다.
+        </p>
+        <p>
           Attention score 계산은 계속 각 Q head마다 이뤄지지만 cache에 남는
           K/V의 head 축만 작아지므로, decode 품질을 크게 잃지 않으면서 memory
           bandwidth와 capacity를 줄이는 절충이 됩니다.
@@ -208,16 +216,30 @@ K,V &\in \mathbb{R}^{T \times H_{KV} \times D_{head}}
           MQA의 핵심 아이디어: decode의 memory bandwidth를 먼저 줄인다
         </h3>
         <p>
+          Decode가 이런 비용에 민감한 이유는 그 자체가 memory bandwidth로
+          정해지는{" "}
+          <Link to="/ai/prefill-decode-phase-dynamics#arithmetic-intensity">
+            memory-bound 구간
+          </Link>
+          이기 때문입니다. KV 폭을 줄이려는 시도는 모두 이 성질을 배경으로
+          합니다.
+        </p>
+        <p>
           <a href="https://arxiv.org/abs/1911.02150">
             Multi-Query Attention 논문
           </a>
           은 모든 Q head가 K/V head 하나를 공유하도록 만들었습니다. 문제의
-          출발점은 attention FLOPs만이 아니었습니다. Batch가 작고 한 번에 token
-          하나를 만드는 decode에서는 매 step마다 과거 K/V와 weight를 memory에서
-          읽는 비용이 커지므로, cache의 폭과 memory traffic을 줄이면 generation
-          속도가 좋아질 수 있다는 아이디어였습니다. 다만 하나의 K/V 표현을 모든
-          Q head가 공유하므로 model과 task에 따라 MHA보다 품질이 떨어질 수
-          있습니다.
+          출발점은 attention FLOPs만이 아니었습니다.
+        </p>
+        <p>
+          Batch가 작고 한 번에 token 하나를 만드는 decode에서는 매 step마다
+          과거 K/V와 weight를 memory에서 읽는 비용이 커지므로, cache의 폭과
+          memory traffic을 줄이면 generation 속도가 좋아질 수 있다는
+          아이디어였습니다.
+        </p>
+        <p>
+          다만 하나의 K/V 표현을 모든 Q head가 공유하므로 model과 task에 따라
+          MHA보다 품질이 떨어질 수 있습니다.
         </p>
         <CitationBlock
           type="paper"
@@ -240,10 +262,13 @@ K,V &\in \mathbb{R}^{T \times H_{KV} \times D_{head}}
           </a>
           은 K/V head를 하나로 고정하지 않고 Q head보다 적은 여러 group으로
           나눴습니다. 논문은 기존 MHA checkpoint의 K/V head를 group별로 묶어
-          짧게 uptraining하는 방법도 함께 제안했고, 해당 실험 범위에서 MHA에
-          가까운 품질과 MQA에 가까운 속도를 보고했습니다. 이것은 모든 모델에서
-          같은 KV head 수가 최적이라는 주장이 아니라, 품질과 decode 비용 사이에
-          조절 가능한 축을 만든 결과입니다.
+          짧게 uptraining하는 방법도 함께 제안했습니다.
+        </p>
+        <p>
+          해당 실험 범위에서 MHA에 가까운 품질과 MQA에 가까운 속도를
+          보고했습니다. 이것은 모든 모델에서 같은 KV head 수가 최적이라는
+          주장이 아니라, 품질과 decode 비용 사이에 조절 가능한 축을 만든
+          결과입니다.
         </p>
         <CitationBlock
           type="paper"
@@ -305,14 +330,32 @@ B_{token} &= L_{KV}E_{KV}N_{tensor}b_{dtype}
       />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
+          예를 들어 Llama 3 8B는 layer 32개, Q head 32개, KV head 8개(group
+          size 4), head_dim 128입니다. BF16 cache라면 token당 KV byte는
+          32×8×128×2×2=131,072 byte, 즉 128 KiB입니다.
+        </p>
+        <p>
+          같은 model이 KV head를 Q head와 같은 32개로 둔 MHA였다면
+          32×32×128×2×2=524,288 byte, 즉 512 KiB로 4배(그룹 크기만큼) 컸을
+          것입니다.
+        </p>
+        <p>
           예를 들어 BF16 cache라면 K와 V가 각각 2 byte이므로 마지막 두 항은{" "}
           <code>2×2=4 byte</code>입니다. Qwen3.6-27B는 64개 layer 중 실제 KV를
           남기는 full-attention layer가 16개이므로 token당{" "}
-          <code>16×4×256×2×2 = 65,536 byte</code>, 즉 64 KiB입니다. Muse
-          Glimmer는 <code>52×2×128×2×2 = 53,248 byte</code>, 즉 52 KiB여서 같은
-          dense-allocation 가정에서 Qwen attention KV의 81.25%입니다. Qwen의
-          나머지 48개 DeltaNet layer는 별도의 fixed recurrent state를 사용하며,
-          이 계산은 <a href="/ai/qwen36-hybrid-architecture#state-bytes">Qwen3.6 hybrid architecture 글</a>에서 분리합니다.
+          <code>16×4×256×2×2 = 65,536 byte</code>, 즉 64 KiB입니다.
+        </p>
+        <p>
+          Muse Glimmer는 <code>52×2×128×2×2 = 53,248 byte</code>, 즉 52 KiB여서
+          같은 dense-allocation 가정에서 Qwen attention KV의 81.25%입니다.
+        </p>
+        <p>
+          Qwen의 나머지 48개 DeltaNet layer는 별도의 fixed recurrent state를
+          사용하며, 이 계산은{" "}
+          <a href="/ai/qwen36-hybrid-architecture#state-bytes">
+            Qwen3.6 hybrid architecture 글
+          </a>
+          에서 분리합니다.
         </p>
       </div>
 
@@ -352,17 +395,22 @@ B_{token} &= L_{KV}E_{KV}N_{tensor}b_{dtype}
           위한 uniform proxy입니다. 공식 text config는 더 세밀합니다. 50개
           sliding layer는 <code>KV head 16 · head_dim 256</code>을 쓰지만, 10개
           global layer는 <code>KV head 4 · global_head_dim 512</code>를 쓰고{" "}
-          <code>attention_k_eq_v=true</code>도 선언합니다. 따라서 이 구조를 byte
-          단위로 정확히 계산하려면 layer별 KV spec과 engine이 K=V 공유를 실제
-          cache layout에 반영하는지까지 확인해야 합니다.
+          <code>attention_k_eq_v=true</code>도 선언합니다.
+        </p>
+        <p>
+          따라서 이 구조를 byte 단위로 정확히 계산하려면 layer별 KV spec과
+          engine이 K=V 공유를 실제 cache layout에 반영하는지까지 확인해야
+          합니다.
         </p>
         <p>
           이 구분이 중요한 이유는 config의 이론적 절감과 runtime의 실제 할당이
           다를 수 있기 때문입니다. 이번 실측에서는 Gemma의 local window 1,024가
-          총 capacity에 뚜렷한 이점으로 나타나지 않았고, 16개의 local KV head와
-          256차원 head가 만든 넓은 cache shape가 먼저 관측됐습니다. 반면 Muse는
-          모든 text layer에서 KV head 2개와 head_dim 128을 사용하므로, 공격적인
-          GQA가 capacity에 직접 드러났습니다.
+          총 capacity에 뚜렷한 이점으로 나타나지 않았습니다.
+        </p>
+        <p>
+          16개의 local KV head와 256차원 head가 만든 넓은 cache shape가 먼저
+          관측됐습니다. 반면 Muse는 모든 text layer에서 KV head 2개와 head_dim
+          128을 사용하므로, 공격적인 GQA가 capacity에 직접 드러났습니다.
         </p>
 
         <h3>
@@ -371,10 +419,80 @@ B_{token} &= L_{KV}E_{KV}N_{tensor}b_{dtype}
         <p>
           위 식은 model 전체 기준입니다. Tensor parallel에서는 KV head가 rank
           사이에 나뉘면 GPU 한 장의 <code>H_KV</code>가 줄지만, KV head 수가 TP
-          size보다 작으면 일부 runtime은 head를 복제합니다. Pipeline parallel은
-          layer를 나누므로 rank별 <code>L_KV</code>가 달라집니다. 그래서 서로
-          다른 TP·PP 설정의 startup log를 비교할 때는 model config의 총 head
-          수만 넣지 말고, engine이 만든 rank별 KV cache spec을 확인해야 합니다.
+          size보다 작으면 일부 runtime은 head를 복제합니다.
+        </p>
+        <p>
+          Pipeline parallel은 layer를 나누므로 rank별 <code>L_KV</code>가
+          달라집니다. 그래서 서로 다른 TP·PP 설정의 startup log를 비교할
+          때는 model config의 총 head 수만 넣지 말고, engine이 만든 rank별
+          KV cache spec을 확인해야 합니다.
+        </p>
+
+        <h3 id="cache-representation-design" className="scroll-mt-20">
+          Cache representation design은 무엇을 저장할지 바꾸는 축입니다
+        </h3>
+        <p>
+          KV cache 크기를 줄이는 방법은 head 공유(MQA·GQA)만이 아닙니다. Cache
+          representation design은 token 하나를 얼마나 압축된 형태로 저장할지
+          정하는 축입니다.
+        </p>
+        <p>
+          GQA·MQA는 head 수를 줄이고, MLA(Multi-head Latent Attention)는 그
+          head 표현 자체를 low-rank latent로 압축합니다.
+        </p>
+        <p>
+          GQA·MQA는 저장하는 K/V head의 개수를 물리적으로 줄입니다. 각 KV
+          head는 그대로 온전한 벡터이고, 여러 Q head가 그 벡터를 나눠 읽을 뿐
+          추가 연산은 필요 없습니다.
+        </p>
+        <p>
+          MLA는 다릅니다. Token마다 훨씬 작은 latent vector 하나만 cache에
+          남기고, attention을 계산할 때 그 latent를 다시 head 차원으로
+          복원하는 projection을 거칩니다.
+        </p>
+
+        <h3 id="mla-vs-gqa" className="scroll-mt-20">
+          MLA는 저장 byte를, GQA는 읽기 연산 없이 byte를 줄입니다
+        </h3>
+        <p>
+          MLA와 GQA를 나란히 놓으면 차이가 분명해집니다. GQA는 head 수를 줄여
+          저장 byte를 줄이고 읽을 때 별도 복원 연산이 없습니다.
+        </p>
+        <p>
+          MLA는 latent 차원을 훨씬 작게 둬 저장 byte를 더 크게 줄이지만, 그
+          대신 읽을 때마다 up-projection 행렬곱을 거쳐야 합니다.
+        </p>
+        <p>
+          이 차이가 capacity saving과 bandwidth saving을 가르는 지점입니다.
+          Capacity saving은 고정된 memory에 몇 token·request를 담을 수 있는지를
+          늘리는 것입니다.
+        </p>
+        <p>
+          Bandwidth saving은 decode 한 step이 실제로 읽는 byte를 줄여 그
+          step의 시간을 줄이는 것입니다.
+        </p>
+        <p>
+          KV head를 줄이는 GQA는 두 절감이 같은 방향으로 움직입니다. 저장
+          byte가 줄면 읽는 byte도 그만큼 줄고, 추가 연산이 없어 decode는{" "}
+          <Link to="/ai/prefill-decode-phase-dynamics#arithmetic-intensity">
+            메모리 대역폭이 정하는 시간
+          </Link>{" "}
+          그대로 짧아집니다.
+        </p>
+        <p>
+          MLA는 capacity saving은 더 크지만 bandwidth saving은 그만큼 자동으로
+          따라오지 않을 수 있습니다.
+        </p>
+        <p>
+          Latent를 읽는 byte는 줄어도, up-projection이 decode step에 tensor
+          core 연산을 더하므로 memory-bound였던 step이 그만큼 compute 시간을
+          새로 씁니다.
+        </p>
+        <p>
+          MLA의 latent 압축 자체는{" "}
+          <Link to="/ai/motif-3-architecture#gdla">Motif 3의 GDLA 글</Link>이
+          다루는 low-rank KV 압축을 그대로 씁니다. 이 글은 그 압축이 GQA와
+          다른 자리에서 capacity와 bandwidth를 나눈다는 것만 짚습니다.
         </p>
       </div>
     </section>

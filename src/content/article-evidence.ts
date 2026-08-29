@@ -438,7 +438,8 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://arxiv.org/abs/2103.03404",
       note: "Pure self-attention의 token uniformity와 skip connection·MLP 역할을 분석한 연구",
     },
-  ],
+    { kind: "핵심 논문", label: "Root Mean Square Layer Normalization", href: "https://arxiv.org/abs/1910.07467", note: "평균을 빼지 않고 제곱평균만으로 재정규화하는 RMSNorm을 제안하고 실행 시간 절감을 보고한 연구" },
+],
   "ai/bert": [
     { kind: "핵심 논문", label: "BERT: Pre-training of Deep Bidirectional Transformers", href: "https://arxiv.org/abs/1810.04805", note: "양방향 encoder visibility와 BERT pretraining의 원문" },
   ],
@@ -777,7 +778,9 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://arxiv.org/abs/1810.04805",
       note: "WordPiece vocabulary를 사용한 대표적인 encoder model",
     },
-  ],
+    { kind: "핵심 논문", label: "Language Models are Unsupervised Multitask Learners (GPT-2)", href: "https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf", note: "UTF-8 byte 256개를 unicode로 매핑해 BPE를 적용하는 byte-level BPE encoder" },
+    { kind: "공식 코드", label: "openai/gpt-2 — src/encoder.py", href: "https://github.com/openai/gpt-2/blob/master/src/encoder.py", note: "bytes_to_unicode()의 256-byte lookup table 구현" },
+],
   "ai/math-matrices-svd": [
     {
       kind: "공개 강의",
@@ -6217,5 +6220,61 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 규격", label: "NVIDIA PTX ISA · ldmatrix · prefetch/prefetchu · cp.async.bulk.prefetch.tensor", href: "https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#warp-level-matrix-load-instruction-ldmatrix", note: "ldmatrix 8x8 .x4 정의, prefetch·bulk prefetch의 L2 목적지 정의" },
     { kind: "공식 문서", label: "NVIDIA CUDA Driver API · cuTensorMapEncodeTiled · l2Promotion", href: "https://docs.nvidia.com/cuda/cuda-driver-api/group__CUDA__TENSOR__MEMORY.html", note: "다차원 tensor copy box·stride와 TMA L2 promotion 옵션의 출처" },
     { kind: "공식 규격", label: "NVIDIA H100 Tensor Core GPU 제품 사양 · Hopper Tuning Guide", href: "https://www.nvidia.com/en-us/data-center/h100/", note: "HBM3 3.35 TB/s, dense bf16 989 TFLOP/s, L2 50 MB, SM당 shared memory 228 KB의 출처 — 본문 산수의 계산 기준" },
+  ],
+  "ai/llm-sampling-strategies": [
+    { kind: "핵심 논문", label: "The Curious Case of Neural Text Degeneration", href: "https://arxiv.org/abs/1904.09751", note: "Nucleus(top-p) sampling 정의와 perplexity·self-BLEU·반복률 표의 출처" },
+    { kind: "핵심 논문", label: "Hierarchical Neural Story Generation", href: "https://arxiv.org/abs/1805.04833", note: "Top-k sampling 정의와 k=10 채택 근거의 출처" },
+    { kind: "핵심 논문", label: "Scaling LLM Test-Time Compute Optimally can be More Effective than Scaling Model Parameters", href: "https://arxiv.org/abs/2408.03314", note: "Test-time compute 정의와 compute-optimal scaling 의 4배·14배 수치의 출처" },
+  ],
+  "ai/multi-head-latent-attention-mechanics": [
+    { kind: "핵심 논문", label: "DeepSeek-V2: A Strong, Economical, and Efficient Mixture-of-Experts Language Model", href: "https://arxiv.org/abs/2405.04434", note: "MLA 의 low-rank KV 압축·decoupled RoPE·dimension 수치의 원 출처, 저자 자기보고 범위" },
+    { kind: "후속 논문", label: "DeepSeek-V3 Technical Report", href: "https://arxiv.org/abs/2412.19437", note: "더 큰 규모에서 같은 MLA 설계를 채택했다는 확인" },
+    { kind: "공식 구현", label: "vLLM mla_attention 구현 문서", href: "https://docs.vllm.ai/en/v0.22.0/api/vllm/model_executor/layers/attention/mla_attention/", note: "Prefill naive·decode absorbed 두 경로 구분과 캐시된 latent·위치 key 분리 저장의 출처" },
+  ],
+  "ai/linear-attention-and-state-space-models": [
+    { kind: "핵심 논문", label: "Transformers are RNNs: Fast Autoregressive Transformers with Linear Attention", href: "https://arxiv.org/abs/2006.16236", note: "Kernel feature map으로 attention을 O(n) recurrent 형태로 재구성한 원 논문" },
+    { kind: "핵심 논문", label: "Efficiently Modeling Long Sequences with Structured State Spaces", href: "https://arxiv.org/abs/2111.00396", note: "S4의 구조적 state space model과 LTI 조건의 출처" },
+    { kind: "핵심 논문", label: "Mamba: Linear-Time Sequence Modeling with Selective State Spaces", href: "https://arxiv.org/abs/2312.00752", note: "Selective SSM과 hardware-aware scan 알고리즘의 출처" },
+    { kind: "핵심 논문", label: "Transformers are SSMs: Generalized Models and Efficient Algorithms Through Structured State Space Duality", href: "https://arxiv.org/abs/2405.21060", note: "Linear attention과 selective SSM의 이론적 동등성(SSD)과 Mamba-2의 출처" },
+    { kind: "핵심 논문", label: "Jamba: A Hybrid Transformer-Mamba Language Model", href: "https://arxiv.org/abs/2403.19887", note: "Attention:Mamba 1:7 hybrid 배치와 256K context 지원 보고의 출처" },
+  ],
+  "ai/differential-attention": [
+    { kind: "핵심 논문", label: "Differential Transformer", href: "https://arxiv.org/abs/2410.05258", note: "DiffAttn 식·λ 재매개변수화·selectivity/robustness 수치의 출처, 3B 대조군 자기보고 범위" },
+    { kind: "선행·비교 논문", label: "Grouped Differential Attention", href: "https://arxiv.org/abs/2510.06949", note: "Signal head 비대칭 grouping 변형으로 이 글은 언급만 하고 ai/motif-3-architecture 가 정본" },
+    { kind: "공식 구현", label: "microsoft/unilm (Diff-Transformer)", href: "https://aka.ms/Diff-Transformer", note: "저자 공개 코드로 head 수·GroupNorm 적용 위치를 그대로 확인할 수 있습니다" },
+  ],
+  "ai/sparse-windowed-attention-patterns": [
+    { kind: "핵심 논문", label: "Mistral 7B", href: "https://arxiv.org/abs/2310.06825", note: "Sliding-window attention·rolling buffer cache·수신 범위 131K 의 출처" },
+    { kind: "핵심 논문", label: "Longformer: The Long-Document Transformer", href: "https://arxiv.org/abs/2004.05150", note: "Local+global attention 조합과 receptive field ℓ×d×w 의 출처" },
+    { kind: "핵심 논문", label: "Big Bird: Transformers for Longer Sequences", href: "https://arxiv.org/abs/2007.14062", note: "Window+global+random sparse attention 의 universal approximation·Turing completeness 증명" },
+    { kind: "핵심 논문", label: "Gemma 2: Improving Open Language Models at a Practical Size", href: "https://arxiv.org/abs/2408.00118", note: "Local:global=1:1, window 4096 hybrid 구조의 출처" },
+    { kind: "핵심 논문", label: "Gemma 3 Technical Report", href: "https://arxiv.org/abs/2503.19786", note: "Local:global=5:1, window 1024, KV 오버헤드 60%→15% 미만의 출처" },
+    { kind: "핵심 논문", label: "Native Sparse Attention", href: "https://arxiv.org/abs/2502.11089", note: "학습된 block 선택과 64K 속도 배율의 출처" },
+  ],
+  "ai/search-based-reasoning-and-test-time-compute": [
+    { kind: "핵심 논문", label: "Let's Verify Step by Step", href: "https://arxiv.org/abs/2305.20050", note: "PRM vs ORM vs 다수결 best-of-1860 재순위화 수치의 출처" },
+    { kind: "핵심 논문", label: "Tree of Thoughts: Deliberate Problem Solving with Large Language Models", href: "https://arxiv.org/abs/2305.10601", note: "Tree search 의 b·k·d 설정과 Game of 24 성공률의 출처" },
+    { kind: "핵심 논문", label: "Self-Refine: Iterative Refinement with Self-Feedback", href: "https://arxiv.org/abs/2303.17651", note: "외부 verifier 없는 self-correction 의 긍정적 결과의 출처" },
+    { kind: "핵심 논문", label: "Large Language Models Cannot Self-Correct Reasoning Yet", href: "https://arxiv.org/abs/2310.01798", note: "Intrinsic self-correction 의 정확도 하락 수치의 출처" },
+    { kind: "선행·비교 논문", label: "Scaling LLM Test-Time Compute Optimally can be More Effective than Scaling Model Parameters", href: "https://arxiv.org/abs/2408.03314", note: "Revision vs PRM search 의 난이도별 효율 비교 수치의 출처 — 축 정의는 llm-sampling-strategies 가 정본" },
+  ],
+  "ai/moe-routing-and-load-balancing": [
+    { kind: "핵심 논문", label: "GShard: Scaling Giant Models with Conditional Computation and Automatic Sharding", href: "https://arxiv.org/abs/2006.16668", note: "Auxiliary balance loss와 random second-expert routing을 Transformer MoE에 처음 적용" },
+    { kind: "핵심 논문", label: "Switch Transformers: Scaling to Trillion Parameter Models with Simple and Efficient Sparsity", href: "https://arxiv.org/abs/2101.03961", note: "f_i·P_i 곱셈 load balancing loss(α=0.01)와 capacity factor 1.0·1.25·2.0 비교" },
+    { kind: "핵심 논문", label: "ST-MoE: Designing Stable and Transferable Sparse Expert Models", href: "https://arxiv.org/abs/2202.08906", note: "Router z-loss와 fine-tuning capacity factor 조정으로 학습 불안정 완화" },
+    { kind: "핵심 논문", label: "Mixtral of Experts", href: "https://arxiv.org/abs/2401.04088", note: "Top-2·8 expert의 slot 기준 balancing loss 일반화와 routing specialization 분석" },
+    { kind: "핵심 논문", label: "DeepSeek-V3 Technical Report", href: "https://arxiv.org/abs/2412.19437", note: "Auxiliary-loss-free bias 갱신(γ=0.001)과 total 671B·active 37B sparsity ratio" },
+  ],
+  "ai/hyper-connections-residual-streams": [
+    { kind: "핵심 논문", label: "Hyper-Connections", href: "https://arxiv.org/abs/2409.19606", note: "Read·write·mix 세 행렬 구조와 확장률 n 실험의 출처, 저자 자기보고 범위" },
+    { kind: "핵심 논문", label: "mHC: Manifold-Constrained Hyper-Connections", href: "https://arxiv.org/abs/2512.24880", note: "Doubly-stochastic 투영·Sinkhorn-Knopp·Amax Gain Magnitude 수치의 출처" },
+    { kind: "선행·비교 논문", label: "On Layer Normalization in the Transformer Architecture", href: "https://arxiv.org/abs/2002.04745", note: "Post-LN·Pre-LN gradient 크기 증명과 warm-up 실험의 출처" },
+    { kind: "선행·비교 논문", label: "Identity Mappings in Deep Residual Networks", href: "https://arxiv.org/abs/1603.05027", note: "Shortcut 항등이 신호 전파를 보존한다는 원 근거" },
+  ],
+  "ai/fast-weight-memory-and-chunkwise-recurrence": [
+    { kind: "핵심 논문", label: "Linear Transformers Are Secretly Fast Weight Programmers", href: "https://arxiv.org/abs/2102.11174", note: "Fast weight memory·delta rule 의 원 출처, 저자 자기보고 범위" },
+    { kind: "핵심 논문", label: "Parallelizing Linear Transformers with the Delta Rule over Sequence Length", href: "https://arxiv.org/abs/2406.06484", note: "Chunkwise WY/UT transform 알고리즘과 4~16배 속도 수치의 출처" },
+    { kind: "핵심 논문", label: "Gated Delta Networks: Improving Mamba2 with Delta Rule", href: "https://arxiv.org/abs/2412.06464", note: "Gated delta rule 식과 perplexity·retrieval 벤치마크의 출처" },
+    { kind: "공식 규격", label: "Blelloch · Prefix Sums and Their Applications (CMU-CS-90-190)", href: "https://www.cs.cmu.edu/~guyb/papers/Ble93.pdf", note: "Up-sweep·down-sweep parallel scan 의 원 출처, 1990년 기술보고서" },
   ],
 };

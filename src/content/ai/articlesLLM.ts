@@ -96,6 +96,7 @@ const llmBaseArticles: Article[] = [
     sections: [
       { id: "overview", title: "길이를 늘리는 것과 잘 쓰는 것" },
       { id: "rope-foundation", title: "RoPE의 회전과 주파수" },
+      { id: "long-context-scope", title: "Long-context modeling의 위치·메모리·평가 3분할" },
       { id: "extension-attempts", title: "PI와 NTK-aware scaling" },
       { id: "yarn-method", title: "YaRN의 두 구성 요소" },
       {
@@ -320,4 +321,207 @@ const llmBaseArticles: Article[] = [
 export const llmArticles: Article[] = [
   ...llmBaseArticles,
   ...vllmServingArticles,
+  {
+    slug: "llm-sampling-strategies",
+    title: "Sampling 전략은 temperature 로 분포를 바꾸고 top-k·top-p 로 자릅니다",
+    subcategory: "ai-llm-theory",
+    sections: [
+      { id: "problem", title: "결정적 tie-break 과 확률 재정규화 축의 선택" },
+      { id: "temperature", title: "Temperature 로 분포의 뾰족함을 조절" },
+      { id: "top-k", title: "Top-k truncation 의 고정 개수 자르기", subsections: [{ id: "paper-top-k-sampling", title: "Fan 외 top-k sampling 논문의 문제와 기여" }] },
+      { id: "top-p", title: "Top-p(nucleus) truncation 의 가변 개수 자르기", subsections: [{ id: "paper-nucleus-sampling", title: "Holtzman 외 nucleus sampling 논문의 문제와 기여" }] },
+      { id: "test-time-compute", title: "Test-time compute: 추론 연산으로 품질 사기", subsections: [{ id: "paper-test-time-compute-scaling", title: "Snell 외 test-time compute scaling 논문의 문제와 기여" }] },
+    ],
+    component: () => import("@/pages/articles/ai/llm-sampling-strategies"),
+  },
+  {
+    slug: "multi-head-latent-attention-mechanics",
+    title: "MLA 는 latent 로 압축한 KV 를 흡수한 weight 로 곧장 소비합니다",
+    subcategory: "ai-llm-theory",
+    sections: [
+      {
+        id: "problem",
+        title: "MLA 는 decode 에서 key·value 를 복원하지 않고 압축된 latent 를 그대로 쓴다",
+        subsections: [{ id: "paper-deepseek-v2", title: "DeepSeek-V2 논문의 MLA 제안" }],
+      },
+      { id: "kv-projection", title: "Down/up-projection 과 low-rank KV bottleneck" },
+      { id: "decoupled-rope", title: "RoPE 를 압축 경로 밖으로 빼는 decoupled RoPE" },
+      { id: "content-position", title: "Content 와 위치로 갈라지는 attention score" },
+      {
+        id: "weight-absorption",
+        title: "결합법칙으로 up-projection 을 옮겨 접는 weight absorption",
+        subsections: [
+          { id: "paper-deepseek-v3", title: "DeepSeek-V3 의 MLA 채택 확인" },
+          { id: "paper-vllm-mla", title: "vLLM MLA 구현의 naive·absorbed 경로" },
+        ],
+      },
+      { id: "boundary", title: "메모리 절감과 계산 증가의 교환, 그리고 한계" },
+    ],
+    component: () => import("@/pages/articles/ai/multi-head-latent-attention-mechanics"),
+  },
+  {
+    slug: "fast-weight-memory-and-chunkwise-recurrence",
+    title: "Fast weight memory 는 delta rule 로 쓰고 chunkwise scan 으로 병렬화합니다",
+    subcategory: "ai-llm-theory",
+    sections: [
+      {
+        id: "problem",
+        title: "겹쳐 쓴 outer-product 기억은 지우거나 고칠 수 없다",
+        subsections: [{ id: "paper-schlag", title: "Fast weight programmer 논문의 제안" }],
+      },
+      { id: "associative-memory", title: "k⊗v 외적의 합이 만드는 content-addressable 기억" },
+      { id: "delta-rule", title: "예측 오차만 다시 쓰는 delta rule" },
+      {
+        id: "memory-gate",
+        title: "Delta rule 이 못 하는 한꺼번에 지우기를 맡는 gate",
+        subsections: [{ id: "paper-gated-deltanet", title: "Gated Delta Networks 논문의 제안" }],
+      },
+      {
+        id: "chunkwise-scan",
+        title: "Chunk 안 병렬 행렬곱과 chunk 사이 순차 전달",
+        subsections: [{ id: "paper-deltanet-parallel", title: "DeltaNet chunkwise 병렬화 논문의 제안" }],
+      },
+      { id: "prefix-scan", title: "O(log n) 단계로 순차 누적을 없애는 parallel scan" },
+      {
+        id: "boundary",
+        title: "병렬화의 계산 비용과 delta rule 의 한계",
+        subsections: [{ id: "paper-blelloch", title: "Blelloch prefix scan 기술보고서" }],
+      },
+    ],
+    component: () => import("@/pages/articles/ai/fast-weight-memory-and-chunkwise-recurrence"),
+  },
+  {
+    slug: "linear-attention-and-state-space-models",
+    title: "Linear attention과 SSM은 고정 크기 state로 attention의 KV 성장을 없앱니다",
+    subcategory: "ai-llm-theory",
+    sections: [
+      { id: "problem", title: "Sequence mixer: attention·linear attention·SSM의 공통 자리" },
+      {
+        id: "kernel-trick",
+        title: "Kernel feature map과 φ(K)ᵀV 재결합",
+        subsections: [{ id: "paper-linear-attention", title: "Transformers are RNNs 논문의 문제와 기여" }],
+      },
+      { id: "recurrent-state", title: "고정 크기 recurrent state와 linear-time 계산" },
+      {
+        id: "ssm",
+        title: "State space model과 Mamba의 selective mechanism",
+        subsections: [
+          { id: "paper-s4", title: "S4 논문의 문제와 기여" },
+          { id: "paper-mamba", title: "Mamba 논문의 문제와 기여" },
+          { id: "paper-mamba2-ssd", title: "Mamba-2/SSD 논문의 문제와 기여" },
+        ],
+      },
+      { id: "tradeoff", title: "Retrieval–compression tradeoff와 고정 state의 용량" },
+      {
+        id: "hybrid",
+        title: "Hybrid sequence architecture와 attention layer 비율",
+        subsections: [{ id: "paper-jamba", title: "Jamba 논문의 문제와 기여" }],
+      },
+    ],
+    component: () => import("@/pages/articles/ai/linear-attention-and-state-space-models"),
+  },
+  {
+    slug: "differential-attention",
+    title: "Differential attention: 두 attention map 의 차로 noise 를 지웁니다",
+    subcategory: "ai-llm-theory",
+    sections: [
+      {
+        id: "problem",
+        title: "표준 attention 이 무관한 context 에 점수를 흘리는 문제",
+        subsections: [{ id: "paper-differential-transformer", title: "Differential Transformer 논문의 문제와 기여" }],
+      },
+      { id: "paired-maps", title: "독립적인 두 attention map: signal 과 noise" },
+      { id: "mechanism", title: "λ 로 스케일한 차 A1−λA2 와 head 산수" },
+      { id: "properties", title: "Attention selectivity·robustness 수치" },
+      { id: "boundary", title: "MLA 와의 병목 차이·연산 비용·다음 읽기" },
+    ],
+    component: () => import("@/pages/articles/ai/differential-attention"),
+  },
+  {
+    slug: "hyper-connections-residual-streams",
+    title: "Hyper-connection: 여러 residual stream 이 signal 을 나눠 옮깁니다",
+    subcategory: "ai-llm-theory",
+    sections: [
+      {
+        id: "problem",
+        title: "단일 residual stream 이 신호 전달의 유일한 통로인 문제",
+        subsections: [
+          { id: "paper-hyper-connections", title: "Hyper-Connections 논문의 문제와 기여" },
+          { id: "paper-pre-ln", title: "Pre-LN 논문의 gradient 증명" },
+        ],
+      },
+      { id: "streams", title: "n개로 복제한 hyper hidden matrix 와 확장률" },
+      { id: "mixing", title: "한 layer 의 read·write·mix 세 행렬" },
+      {
+        id: "stability",
+        title: "Doubly-stochastic 제약과 mHC 의 Sinkhorn 투영",
+        subsections: [{ id: "paper-mhc", title: "mHC 논문의 문제와 기여" }],
+      },
+      {
+        id: "boundary",
+        title: "신호 전파 배경과 비용·다음 읽기",
+        subsections: [{ id: "paper-resnet-identity", title: "ResNet identity mapping 논문" }],
+      },
+    ],
+    component: () => import("@/pages/articles/ai/hyper-connections-residual-streams"),
+  },
+  {
+    slug: "sparse-windowed-attention-patterns",
+    title: "Attention 은 어디를 볼지 window·sparse·hybrid 로 정해 비용을 줄입니다",
+    subcategory: "ai-llm-theory",
+    sections: [
+      { id: "problem", title: "Mask 가 어느 (query, key) 쌍을 아예 계산하지 않을지 정한다" },
+      {
+        id: "window",
+        title: "Sliding-window attention 과 rolling buffer cache",
+        subsections: [{ id: "paper-mistral", title: "Mistral 7B 논문의 SWA 와 rolling buffer" }],
+      },
+      {
+        id: "sparse-global",
+        title: "Global token 과 sparse attention(Longformer·BigBird)",
+        subsections: [
+          { id: "paper-longformer", title: "Longformer 논문의 local+global 조합" },
+          { id: "paper-bigbird", title: "BigBird 논문의 표현력 증명" },
+        ],
+      },
+      {
+        id: "hybrid",
+        title: "Layer 단위로 나누는 hybrid attention(Gemma)",
+        subsections: [
+          { id: "paper-gemma2", title: "Gemma 2 논문의 1:1 local/global" },
+          { id: "paper-gemma3", title: "Gemma 3 논문의 5:1 비율과 KV 절감" },
+        ],
+      },
+      {
+        id: "boundary",
+        title: "고정 패턴과 Native Sparse Attention 의 학습된 선택",
+        subsections: [{ id: "paper-nsa", title: "Native Sparse Attention 논문의 학습된 block 선택" }],
+      },
+    ],
+    component: () => import("@/pages/articles/ai/sparse-windowed-attention-patterns"),
+  },
+  {
+    slug: "moe-routing-and-load-balancing",
+    title: "Load balancing loss는 router의 하드 배정을 미분 가능한 확률과 곱해 쏠림을 벌점으로 바꿉니다",
+    subcategory: "ai-llm-theory",
+    sections: [
+      { id: "problem", title: "Top-k router가 스스로 무너지는 되먹임" },
+      { id: "loss", title: "Load balancing loss: f_i·P_i 벌점" },
+      { id: "bias", title: "Auxiliary-loss-free balancing: bias 갱신" },
+      { id: "collapse", title: "Expert collapse와 token dropping" },
+      { id: "sparsity", title: "Sparsity ratio: active/total 비율" },
+      {
+        id: "evidence",
+        title: "근거: GShard·Switch·ST-MoE·Mixtral·DeepSeek-V3",
+        subsections: [
+          { id: "paper-gshard", title: "GShard" },
+          { id: "paper-switch", title: "Switch Transformers" },
+          { id: "paper-st-moe", title: "ST-MoE" },
+          { id: "paper-mixtral", title: "Mixtral of Experts" },
+          { id: "paper-deepseek-v3", title: "DeepSeek-V3" },
+        ],
+      },
+    ],
+    component: () => import("@/pages/articles/ai/moe-routing-and-load-balancing"),
+  },
 ];

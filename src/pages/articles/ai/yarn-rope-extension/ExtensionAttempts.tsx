@@ -37,6 +37,11 @@ export default function ExtensionAttempts() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
+          PI, NTK-aware scaling, YaRN은 모두 RoPE scaling이라 부르는 방법군에 속한다.
+          Checkpoint를 다시 학습하지 않고 position index나 frequency base를 조정해 학습
+          밖 길이에서도 동작하게 만드는 것이 공통 목표다.
+        </p>
+        <p className="leading-7">
           원래 context length가 <M>{"L"}</M>이고 목표 길이가
           <M>{"L'=sL"}</M>라면 가장 직관적인 방법은 Position
           Interpolation(PI)이다. 새 위치 <M>{"m"}</M>을
@@ -96,6 +101,10 @@ export default function ExtensionAttempts() {
       />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p>
+          예를 들어 d=128, 원래 base 10000에서 L=4096을 L′=32768(s=8)로 늘리면
+          b′≈82,685다. 지수 d/(d−2)가 1에 가까워 base 변화가 s와 거의 비례한다.
+        </p>
         <p>
           다만 “NTK-aware”라는 이름 아래 static·dynamic 변형과 구현 convention이
           섞여 있으므로 config 이름만 보고 같은 동작이라고 가정하면 안 된다.

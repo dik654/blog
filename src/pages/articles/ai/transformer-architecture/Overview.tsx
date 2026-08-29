@@ -26,6 +26,32 @@ export default function Overview() {
           Encoder-only·decoder-only·encoder–decoder의 차이는 이 block을 버리는
           것이 아니라 어떤 source를 읽고 어느 위치를 가리는지에 있습니다.
         </p>
+
+        <h3 id="decoder-only" className="scroll-mt-20">
+          Decoder-only Transformer가 오늘날 LLM의 표준 architecture다
+        </h3>
+        <p className="leading-8">
+          Decoder-only Transformer는 encoder 없이 causal self-attention만
+          쌓아 지금까지 나온 token만 보고 다음 token 확률을 내는 구조입니다.
+          이 next-token 예측 목적함수로 학습하는 model을 autoregressive
+          language model이라 부르고, GPT 계열을 비롯한 오늘날 대부분의
+          대규모 언어모델이 이 architecture를 씁니다.
+        </p>
+        <p className="leading-8">
+          이렇게 한 번의 대규모 corpus 학습을 여러 downstream task에
+          재사용하는 model을 foundation model이라 부르며, 언어를 다루는
+          foundation model을 특히 LLM(Large Language Model)이라 합니다. 세
+          이름은 서로 다른 architecture가 아니라 같은 decoder-only causal
+          구조·next-token objective·범용 재사용 방식이라는 세 관점을
+          가리킵니다.
+        </p>
+        <p className="leading-8">
+          작은 예로 vocabulary 128,000개, 입력이 [BOS, 나는, 밥을] 세
+          token이라면 decoder-only model은 causal mask 아래 각 위치가 자기
+          이전 token만 보고 다음 token 확률분포를 냅니다. 3번째 위치는
+          BOS·나는·밥을만 조건으로 삼고, encoder가 미리 처리해 둔 별도 source
+          sequence는 존재하지 않습니다.
+        </p>
       </div>
 
       <ContentBoundary article="transformer-architecture" />

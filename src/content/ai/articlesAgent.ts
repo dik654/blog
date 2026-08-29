@@ -201,6 +201,26 @@ export const agentArticles: Article[] = [
     component: () => import("@/pages/articles/ai/agent-plan-replanning"),
   },
   {
+    slug: "search-based-reasoning-and-test-time-compute",
+    title: "Test-time compute 는 후보 여러 개를 만들고 검증·탐색으로 고릅니다",
+    subcategory: "ai-agents",
+    sections: [
+      { id: "problem", title: "Search-based reasoning: 후보를 만들고 검증·탐색으로 답을 고름" },
+      { id: "best-of-n", title: "Best-of-N 의 기대 정답률: pass@N 과 verifier 정확도", subsections: [{ id: "paper-lets-verify-step-by-step", title: "Lightman 외 PRM 논문의 문제와 기여" }] },
+      { id: "tree-search", title: "Tree search 의 평가 후보 수: branching·유지 폭·depth", subsections: [{ id: "paper-tree-of-thoughts", title: "Tree of Thoughts 논문의 문제와 기여" }] },
+      {
+        id: "self-correction",
+        title: "Self-correction 의 경계: 외부 신호 없이는 개선이 불확실",
+        subsections: [
+          { id: "paper-self-refine", title: "Self-Refine 논문의 문제와 기여" },
+          { id: "paper-self-correction-limits", title: "Huang 외 self-correction 한계 논문의 문제와 기여" },
+        ],
+      },
+      { id: "boundary", title: "세 전략의 verifier 의존도와 선택 기준" },
+    ],
+    component: () => import("@/pages/articles/ai/search-based-reasoning-and-test-time-compute"),
+  },
+  {
     slug: "agent-delegation-contracts",
     title: "Agent Delegation: Artifact · Manager · Handoff",
     subcategory: "ai-agents",

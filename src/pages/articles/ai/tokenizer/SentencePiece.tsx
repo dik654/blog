@@ -1,4 +1,5 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
+import AlgorithmBlock from "@/components/ui/algorithm-block";
 import UnigramViz from "./viz/UnigramViz";
 
 export default function SentencePiece() {
@@ -19,10 +20,17 @@ export default function SentencePiece() {
           것은 아닙니다.
         </p>
         <p>
-          Unigram trainer는 넓은 seed vocabulary에서 각 piece의 probability를
-          추정한 뒤, 제거했을 때 corpus likelihood를 덜 해치는 후보를 반복해서
-          pruning합니다. BPE가 병합 순서를 규칙으로 쌓는 반면 Unigram encoding은
-          현재 vocabulary로 입력을 완전히 덮는 여러 경로를 비교합니다.
+          Unigram trainer는 넓은 seed vocabulary(예: suffix array로 뽑은 자주
+          나오는 substring 모두)에서 출발해 EM(expectation-maximization)을
+          반복합니다. E-step은 현재 piece probability로 corpus의 각 문장을
+          여러 경로로 나눠 보고 piece별 기대 등장 횟수를 계산하고, M-step은 그
+          기대 횟수로 probability를 다시 추정합니다. 이 EM을 몇 round 돌린 뒤,
+          제거했을 때 corpus log-likelihood를 가장 덜 해치는 piece부터 얼마간
+          잘라내는 pruning을 반복해 목표 vocabulary 크기에 도달합니다.
+        </p>
+        <p className="leading-7">
+          BPE가 병합 순서를 규칙으로 쌓는 반면 Unigram encoding은 현재
+          vocabulary로 입력을 완전히 덮는 여러 경로를 비교합니다.
         </p>
       </div>
 
@@ -66,6 +74,51 @@ export default function SentencePiece() {
           "Normalizer와 unknown·byte-fallback 처리 뒤의 문자열을 vocabulary 경로가 완전히 덮을 수 있어야 합니다.",
         ]}
         interpretation="Unigram은 최고 score 경로 하나를 고를 수도 있고, 확률에 따라 다른 경로를 sampling할 수도 있습니다. 후자를 training augmentation으로 쓰는 subword regularization과 production의 deterministic encoding 계약은 분리해서 관리합니다."
+      />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>작은 한국어 예: &quot;안녕&quot;은 두 조각보다 한 조각이 이길 수 있다</h3>
+        <p className="leading-7">
+          Vocabulary에 <code>▁안녕</code>(log-probability −6.21, 즉
+          probability 0.002), <code>▁안</code>(−4.61, 0.01),{" "}
+          <code>녕</code>(−3.91, 0.02)이 있다고 합시다. 두 조각 경로{" "}
+          <code>[▁안, 녕]</code>의 점수는 −4.61+(−3.91)=−8.52이고, 한 조각
+          경로 <code>[▁안녕]</code>의 점수는 −6.21입니다.
+        </p>
+        <p className="leading-7">
+          로그 확률은 클수록(0에 가까울수록) 더 그럴듯한 경로이므로 −6.21이
+          −8.52보다 큰 한 조각 경로가 선택됩니다. Corpus에서 &quot;안녕&quot;이
+          통째로 자주 나와 그 piece의 probability가 충분히 크게 학습됐기
+          때문입니다.
+        </p>
+      </div>
+
+      <AlgorithmBlock
+        title="Viterbi 최적 분할 — 문자열 X를 최대 log-probability 경로로 나누기"
+        input={[
+          "X: 정규화된 입력 문자열(길이 n)",
+          "vocab: piece → log p(piece) 사전(현재 학습된 Unigram vocabulary)",
+        ]}
+        steps={[
+          {
+            code: "best[0] = 0; back[0] = null",
+            note: "빈 prefix의 점수는 0으로 시작합니다.",
+          },
+          {
+            code: "for j in 1..n:\n    best[j] = -infinity",
+            note: "위치 j에서 끝나는 최적 경로 점수를 아직 모른다고 초기화합니다.",
+          },
+          {
+            code: "    for i in 0..j-1:\n        piece = X[i:j]\n        if piece in vocab:\n            score = best[i] + logp(piece)\n            if score > best[j]:\n                best[j] = score; back[j] = i",
+            note: "Piece로 끝날 수 있는 모든 시작점 i를 비교해 가장 큰 누적 log-probability를 남기고, 그 선택을 back[j]에 기록합니다.",
+          },
+          {
+            code: "path = backtrack(back, n)",
+            note: "back 배열을 n에서 0까지 거꾸로 따라가 최적 segmentation 경로를 복원합니다.",
+          },
+        ]}
+        output="best[n] (전체 최적 log-probability 합)과 path (선택된 piece 순서)"
+        repeatUntil="모든 위치 j=1..n의 best[j]를 채울 때까지 반복합니다."
       />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">

@@ -85,7 +85,9 @@ export const EDITORIAL_BOUNDARIES = {
         label: "Residual·normalization의 기본 경계",
         href: "/ai/transformer-architecture#transformer-block",
       },
-    ],
+      { label: "Differential attention의 signal·noise 원형 mechanism", href: "/ai/differential-attention" },
+      { label: "Hyper-connection·mHC의 doubly-stochastic 원형", href: "/ai/hyper-connections-residual-streams" },
+],
     evidence: [
       {
         kind: "primary-source",
@@ -1354,7 +1356,10 @@ export const EDITORIAL_BOUNDARIES = {
       "Encoder self·causal self·cross-attention의 source와 visibility 차이",
       "Attention token mixer·FFN feature mixer·residual·normalization의 block 경계",
       "LM head·training objective·decoding policy와 training recipe·scaling 예산의 연결",
-    ],
+      "Decoder-only Transformer·autoregressive LM·foundation model·LLM 이름의 세 층(architecture·objective·재사용 방식) 구분",
+      "d_model(width)·layer 수(depth)의 model shape 산수와 head dimension·FFN parameter 계산",
+      "Attention logit·matrix의 두 단계 구분과 residual stream·RMSNorm의 gradient 안정화 계약",
+],
     reuses: [
       { label: "Tokenizer algorithm과 ID 호환성", href: "/ai/tokenizer" },
       {
@@ -1374,7 +1379,8 @@ export const EDITORIAL_BOUNDARIES = {
         kind: "standard",
         rule: "Tensor shape·mask axis·norm 위치·objective는 checkpoint와 framework config에서 확인할 실행 계약으로 쓴다.",
       },
-    ],
+      { kind: "standard", rule: "7B급 parameter 산수(4d²+8d² 12d² 32-layer)는 d_ff=4d_model classic FFN 가정의 근사이며 SwiGLU 등 실제 배포 model의 공개 수치가 아니라고 본문에 밝힌다." },
+],
   },
   resnet: {
     title: "ResNet 글이 소유하는 범위",
@@ -4497,7 +4503,8 @@ export const EDITORIAL_BOUNDARIES = {
       "Token router·Top-k·weighted mixture와 load·capacity·overflow 계약",
       "Total/active parameter·expert-parallel dispatch를 분리하는 system cost ledger",
       "Sparsely-Gated MoE·GShard·Switch·DeepSeekMoE의 문제와 claim 경계",
-    ],
+      "Dense model·sparse model의 parameter·FLOP 대비, routed expert·shared expert의 기본 구분, combine이 dispatch의 역연산이라는 관계",
+],
     reuses: [
       {
         label: "Transformer block과 dense FFN",
@@ -4593,17 +4600,22 @@ export const EDITORIAL_BOUNDARIES = {
     owns: [
       "MHA·GQA·MQA의 KV head 공유와 token당 KV byte 계산",
       "Autoregressive decode에서 현재 Query와 보존되는 과거 K/V의 역할 경계",
-    ],
+      "Cache representation design 축과 GQA(head 공유) vs MLA(latent 압축)의 비교",
+      "Capacity saving과 bandwidth saving의 구분, 그리고 언제 이 둘이 갈리는지",
+],
     reuses: [
       { label: "Attention 기본 원리", href: "/ai/attention-theory" },
       { label: "Bit·byte", href: "/blockchain/bit-byte" },
-    ],
+      { label: "Decode 의 memory-bound 성질", href: "/ai/prefill-decode-phase-dynamics#arithmetic-intensity" },
+      { label: "MLA latent KV compression 의 정의", href: "/ai/motif-3-architecture#gdla" },
+],
     evidence: [
       {
         kind: "primary-source",
         rule: "MHA·MQA·GQA의 공유 구조와 비교 결과는 원 논문의 model·training·decode 조건으로 제한한다.",
       },
-    ],
+      { kind: "standard", rule: "Llama 3 8B 의 layer·head 수는 공식 논문(arXiv:2407.21783) Table 3 값을 쓰고, 그 값으로 계산한 KV byte·MHA 대비 배율은 이 글의 산수 예임을 밝힌다." },
+],
   },
   "hybrid-kv-cache-allocation": {
     title: "Hybrid KV cache allocator 글이 소유하는 범위",
@@ -7631,17 +7643,23 @@ export const EDITORIAL_BOUNDARIES = {
       "RoPE 상대 회전 geometry와 dimension pair별 frequency·wavelength spectrum",
       "PI·NTK-aware·YaRN의 scaling 대상과 YaRN frequency ramp·attention compensation",
       "Long-context 위치·길이·task·serving paired release gate",
-    ],
+      "Positional encoding 상위 범주 안에서 RoPE 의 위치와 PI·NTK-aware·YaRN 이 속하는 RoPE scaling 방법군의 정의",
+      "Native context length·extended context length 구분과 context length extrapolation 이 실패하는 각도 수준의 이유",
+      "Long-context modeling 을 위치 확장·메모리·평가 세 문제로 나누는 경계",
+],
     reuses: [
       { label: "Scaled dot-product attention", href: "/ai/transformer-architecture#attention-boundary" },
       { label: "Lost in the middle 평가", href: "/ai/context-window-optimization#position" },
       { label: "Hybrid KV block 회수", href: "/ai/hybrid-kv-cache-allocation#kv-cache" },
-    ],
+      { label: "Attention·KV cache 가 길이에 비례해 커지는 비용", href: "/ai/kv-cache-fundamentals" },
+      { label: "Prefill 의 quadratic 항이 지배하는 구간", href: "/ai/prefill-decode-phase-dynamics#long-context" },
+],
     evidence: [
       { kind: "primary-source", rule: "RoPE·PI·YaRN 결과는 각 논문의 checkpoint·data·extension factor·evaluation 범위에만 귀속한다." },
       { kind: "standard", rule: "Runtime config는 model revision과 library version을 고정하고 resolved factor·original length·attention factor를 기록한다." },
       { kind: "project-measurement", rule: "Base/candidate를 위치·길이·task·short regression·KV·TTFT·concurrency의 같은 matrix에서 비교한다." },
-    ],
+      { kind: "standard", rule: "i=63(가장 느린 dimension)의 회전 각도·NTK-aware base 변경값은 d=128, base=10000, L=4096→L′=32768(s=8)을 넣은 이 글의 산수 예이며 어느 논문의 측정값도 아니라고 밝힌다." },
+],
   },
   "cuda-basics": {
     title: "CUDA host·kernel·thread·memory 입문 글이 소유하는 범위",
@@ -8583,17 +8601,21 @@ export const EDITORIAL_BOUNDARIES = {
       "공식 layer_types를 48 Gated DeltaNet·16 Gated Attention으로 분리하는 3:1 schedule",
       "Qwen3.6 attention KV의 token당 64 KiB와 DeltaNet FP32 core state의 request당 144 MiB shape 계산",
       "Delta-rule prediction-error correction의 감쇠·read·error·key-directed write 연산",
-    ],
+      "DeltaNet compressed state와 attention explicit token memory의 역할 분담, 두 state를 합친 request당 memory 산수",
+],
     reuses: [
       { label: "Attention Q·K·V와 multi-head", href: "/ai/attention-theory" },
       { label: "KV cache·GQA 기초", href: "/ai/kv-cache-fundamentals" },
       { label: "RNN recurrent state와 압축 한계", href: "/ai/rnn" },
-    ],
+      { label: "고정 크기 state와 압축-검색 tradeoff 일반 이론", href: "/ai/linear-attention-and-state-space-models" },
+      { label: "서로 다른 cache group을 한 device에 배치하는 일반 원리", href: "/ai/hybrid-kv-cache-allocation" },
+],
     evidence: [
       { kind: "primary-source", rule: "모델명·3:1 layer pattern과 attention·linear head shape는 Qwen3.6-27B 공식 model card·config revision에 귀속한다." },
       { kind: "primary-source", rule: "Gating·prediction-error correction과 parallel recurrence claim은 Gated Delta Networks 원 논문의 조건에 귀속한다." },
       { kind: "project-claim", rule: "64 KiB/token KV와 144 MiB core state는 명시한 logical shape·dtype 계산이며 allocator·TP·convolution history를 포함한 physical allocation으로 확대하지 않는다." },
-    ],
+      { kind: "project-claim", rule: "두 state를 더한 request당 memory 합(약 2.14 GiB, 약 16.14 GiB 등)은 이 글이 계산한 logical 값이며 allocator·workspace를 포함한 실측 peak가 아니다." },
+],
   },
   "qwen36-hybrid-runtime": {
     title: "Qwen3.6 hybrid runtime 글이 소유하는 범위",
@@ -9780,6 +9802,207 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [
       { kind: "standard", rule: "H100 사양(3.35 TB/s·989 TFLOP/s·L2 50 MB)에서 계산한 층별 시간(0.32 µs·37 ns·48 µs·139 µs 등)은 실측이 아니라 공개 사양으로 계산한 산수임을 명시한다." },
       { kind: "project-measurement", rule: "Fusion이 실제로 시간을 돌려주는지는 profiler의 achieved traffic으로 별도 확인해야 한다는 경계를 유지한다." },
+    ],
+  },
+  "llm-sampling-strategies": {
+    title: "LLM sampling 전략 글이 소유하는 범위",
+    owns: [
+      "결정적 tie-break 과 확률적 재정규화라는 sampling 전략 결정 축",
+      "Top-k truncation 의 고정 개수 재정규화 규칙과 수치 예",
+      "Top-p(nucleus) truncation 의 누적 확률 기준 가변 재정규화 규칙과 수치 예",
+      "Test-time compute 축의 정의(canonical) — 구체적인 best-of-N·tree search·self-correction 은 다른 글이 소유",
+    ],
+    reuses: [
+      { label: "Softmax normalization 과 temperature scaling", href: "/ai/softmax" },
+      { label: "Beam search 와 autoregressive decoding", href: "/ai/seq2seq" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Perplexity·self-BLEU·반복률·4배/14배 수치는 각 논문이 명시한 model·benchmark 범위로 한정하고 다른 model 로 일반화하지 않는다." },
+      { kind: "standard", rule: "Temperature 의 수학적 정의와 유도는 이 글에서 다시 만들지 않고 기존 softmax 글을 링크로 재사용한다." },
+      { kind: "project-claim", rule: "Test-time compute 절은 축의 정의와 헤드라인 수치만 적고, best-of-N·tree search·self-correction 의 구체적 mechanism 은 다음 글로 넘긴다." },
+    ],
+  },
+  "multi-head-latent-attention-mechanics": {
+    title: "MLA 내부 mechanics 글이 소유하는 범위",
+    owns: [
+      "KV down/up-projection 두 행렬과 low-rank KV bottleneck·rank-compression tradeoff",
+      "Decoupled RoPE 의 위치 query/key 분리와 head 공유 여부",
+      "Content/position 으로 나뉜 query·key 와 그 내적이 두 항의 합으로 갈라지는 score 구성",
+      "Weight absorption(query-side·value-side)의 결합법칙 재유도와 decode pseudocode",
+    ],
+    reuses: [
+      { label: "MLA latent KV compression 상위 개념", href: "/ai/motif-3-architecture" },
+      { label: "RoPE 의 상대 회전 기하", href: "/ai/yarn-rope-extension" },
+      { label: "Low-rank approximation·행렬곱 결합법칙", href: "/ai/math-matrices-svd" },
+      { label: "Scaled dot-product attention", href: "/ai/attention-theory" },
+      { label: "KV cache 모양과 GQA head 공유", href: "/ai/kv-cache-fundamentals" },
+      { label: "Gated DeltaNet 의 고정 shape recurrent state", href: "/ai/qwen36-hybrid-architecture" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Dimension 수치(d_model=5120, d_c=512 등)와 KV cache 절감 배율은 DeepSeek-V2 논문 자기보고로 한정하고 다른 모델 규모로 일반화하지 않는다." },
+      { kind: "standard", rule: "결합법칙에 의한 weight absorption 유도는 저자가 명시한 문장(W^UK 를 W^Q 에, W^UV 를 W^O 에 흡수)을 근거로 하며 이 글이 다시 유도한 형태다." },
+      { kind: "project-claim", rule: "Prefill naive·decode absorbed 경로 구분은 vLLM 구현 문서 서술이며 다른 서빙 엔진의 커널 선택과 동일하다고 단정하지 않는다." },
+    ],
+  },
+  "linear-attention-and-state-space-models": {
+    title: "Linear attention과 SSM은 고정 크기 state로 attention의 KV 성장을 없앱니다 글이 소유하는 범위",
+    owns: [
+      "Sequence mixer라는 총칭과 attention·linear attention·SSM을 같은 자리의 다른 구현으로 묶는 정의",
+      "φ(K)ᵀV 재결합으로 attention을 O(n) kernel 계산과 recurrent form으로 바꾸는 유도",
+      "d×d 고정 크기 recurrent state의 정의와 attention KV 대비 byte 계산",
+      "S4의 LTI recurrence와 Mamba의 selective mechanism 비교",
+      "고정 state의 표현 용량과 retrieval-compression tradeoff의 일반 정의",
+      "소수 attention layer만 남기는 hybrid sequence architecture의 일반 설계와 byte 절감 계산",
+    ],
+    reuses: [
+      { label: "Softmax attention의 Q, K, V", href: "/ai/attention-theory" },
+      { label: "Attention KV cache의 token당 byte", href: "/ai/kv-cache-fundamentals" },
+      { label: "RNN의 고정 차원 hidden state", href: "/ai/rnn" },
+      { label: "Qwen3.6의 DeltaNet과 3:1 hybrid schedule", href: "/ai/qwen36-hybrid-architecture" },
+      { label: "Kimi K3의 KDA·MLA sequence mixer", href: "/ai/kimi-k3-sequence-mixer" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Linear attention, S4, Mamba, Mamba-2/SSD, Jamba의 수치와 비율은 각 논문이 자기보고한 실험 범위로 한정하고 다른 규모로 일반화하지 않는다." },
+      { kind: "project-claim", rule: "d=128 기준 byte 계산과 32-layer hybrid 예시는 이 글이 만든 설명용 수치이며 특정 공개 checkpoint의 실측값이 아니다." },
+    ],
+  },
+  "differential-attention": {
+    title: "Differential attention 글이 소유하는 범위",
+    owns: [
+      "Paired attention maps(signal·noise)를 만드는 절차와 두 이름이 보장하지 않는 것",
+      "DiffAttn 식 A1−λA2·λ 재매개변수화·층별 λinit 값",
+      "Head 수를 절반으로 맞추는 파라미터 산수와 GroupNorm·고정 배율의 역할",
+      "논문이 측정한 attention selectivity·robustness(순서·양자화) 수치와 그 조건",
+    ],
+    reuses: [
+      { label: "Scaled dot-product attention·multi-head 구조", href: "/ai/attention-theory" },
+      { label: "FlashAttention exact kernel", href: "/ai/flash-attention-io-aware-kernel" },
+      { label: "Grouped differential attention·GDLA(Motif 3)", href: "/ai/motif-3-architecture#gdla" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Selectivity·robustness·quantization 수치는 Differential Transformer 논문의 3B 대조군 자기보고로 한정하고 다른 모델 규모로 일반화하지 않는다." },
+      { kind: "project-claim", rule: "Grouped differential attention·GDLA 의 head 비율·MLA 결합은 이 글에서 언급만 하고 ai/motif-3-architecture 가 정본으로 다룬다." },
+    ],
+  },
+  "sparse-windowed-attention-patterns": {
+    title: "Sliding-window·sparse·hybrid attention 패턴 글이 소유하는 범위",
+    owns: [
+      "Sliding-window(local) attention 의 정의, rolling buffer cache, layer 를 쌓았을 때의 수신 범위 계산",
+      "Global attention token 의 정의와 window 대비 추가 비용",
+      "Sparse attention pattern(window+global+random)의 정의와 표현력에 대한 이론적 결과",
+      "Hybrid attention 의 layer 단위 local/global 배치와 KV cache 절감 계산",
+      "Dense 와 sparse/window attention 의 FLOP complexity 비교",
+      "고정 sparsity 패턴과 Native Sparse Attention 의 학습된 block 선택 사이의 경계",
+    ],
+    reuses: [
+      { label: "Attention kernel 이 tile 을 실제로 계산하는 방법", href: "/ai/attention-kernel-anatomy-and-backends" },
+      { label: "위치가 숫자로 표현되는 방법(RoPE·YaRN)", href: "/ai/yarn-rope-extension" },
+      { label: "KV cache 의 shape 와 byte 계산", href: "/ai/kv-cache-fundamentals" },
+      { label: "Prefill 의 quadratic 항이 지배하는 구간", href: "/ai/prefill-decode-phase-dynamics" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Mistral·Longformer·BigBird·Gemma·NSA 의 수치와 정리는 각 논문·기술보고서가 실험한 model·hardware·길이로 한정하고 다른 설정으로 일반화하지 않는다." },
+      { kind: "standard", rule: "n=32,768, w=4,096 을 비롯한 FLOP·수신 범위·KV 절감 산수 예는 이 글이 만든 계산이며 어느 논문의 측정값도 아니라고 본문에 밝힌다." },
+    ],
+  },
+  "search-based-reasoning-and-test-time-compute": {
+    title: "Search-based reasoning·test-time compute 글이 소유하는 범위",
+    owns: [
+      "Search-based reasoning 을 test-time compute 의 구현 축으로 정의",
+      "Best-of-N 의 기대 정답률 식(pass@N, verifier 정확도 q)과 수치 예",
+      "Tree search 의 평가 후보 수 식과 branching·유지 폭·depth 의 관계",
+      "Self-correction 이 외부 신호 없이 개선을 보장하지 않는다는 경계와 그 근거 수치",
+    ],
+    reuses: [
+      { label: "Test-time compute 축의 정의", href: "/ai/llm-sampling-strategies#test-time-compute" },
+      { label: "Verifier·reward 의 versioned measurement", href: "/ai/open-r1#reward-system" },
+      { label: "Layered agent verification", href: "/ai/agent-verification#layers" },
+      { label: "Self-consistency 다수결", href: "/ai/prompt-reasoning#chain-of-thought" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "PRM·ORM·tree search·self-correction 의 수치는 각 논문이 명시한 benchmark·model 범위로 한정하고 다른 domain 으로 일반화하지 않는다." },
+      { kind: "project-claim", rule: "Best-of-N 기대 정답률 식의 q(verifier 정확도)는 이진 사건으로 단순화한 교육용 모델임을 명시하고, 실제 PRM/ORM 의 연속 점수와 동일시하지 않는다." },
+      { kind: "standard", rule: "Self-correction 이 '항상 실패한다'거나 '항상 성공한다'고 단정하지 않고, 외부 신호 유무에 따른 경계로만 적는다." },
+    ],
+  },
+  "moe-routing-and-load-balancing": {
+    title: "MoE routing 글이 소유하는 범위",
+    owns: [
+      "Load balancing loss 식(f_i·P_i·α N)과 균등·쏠림 상태에서의 값",
+      "Auxiliary-loss-free balancing의 bias 갱신 규칙과 top-k 선택·combine 가중치의 분리",
+      "Expert collapse의 되먹임 동역학과 balancing 장치가 늦었을 때의 token dropping 결과",
+      "Sparsity ratio의 정의와 읽을 수 있는 것·읽으면 안 되는 것의 경계",
+    ],
+    reuses: [
+      { label: "Router logit·routing probability·top-k selection의 정의", href: "/ai/mixture-of-experts#routing" },
+      { label: "Expert load-balance target과 capacity factor·overflow policy의 정의", href: "/ai/mixture-of-experts#load-balancing" },
+      { label: "Total·active parameter ledger", href: "/ai/mixture-of-experts#system-cost" },
+      { label: "Dispatch·combine all-to-all과 GPU당 통신 byte", href: "/ai/expert-parallelism-moe-systems#all-to-all" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "각 논문의 α·γ·capacity factor·sparsity ratio 수치는 그 논문의 model·hardware 범위 안의 저자 자기보고로만 인용하고 서로 비교하지 않는다." },
+      { kind: "project-claim", rule: "614 slot·L_aux≈0.0115·capacity 320·drop 294 같은 수치는 본문이 명시한 예시 구성으로 직접 계산한 값임을 밝히고 논문 값과 섞지 않는다." },
+    ],
+  },
+  "hyper-connections-residual-streams": {
+    title: "Hyper-connection·residual stream 글이 소유하는 범위",
+    owns: [
+      "Residual stream을 n개로 늘리는 hyper-connection의 read(Am)·write(B)·mix(Ar) 분해와 확장률 n의 메모리·연산 비용",
+      "Doubly-stochastic 제약의 norm 보존 성질과 Sinkhorn-Knopp 투영으로 이를 구현하는 mHC 절차",
+      "제약 없는 mixing이 만드는 activation explosion의 수치와 deep network signal propagation 배경",
+    ],
+    reuses: [
+      { label: "단일 residual stream·ResNet identity shortcut", href: "/ai/resnet" },
+      { label: "Pre-LN·Post-LN의 층 안 배치", href: "/ai/transformer-architecture#transformer-block" },
+      { label: "Motif 3의 modified mHC(post scale annealing)", href: "/ai/motif-3-architecture#mhc" },
+      { label: "Differential attention의 signal·noise 분리", href: "/ai/differential-attention" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "확장률 n·수렴 속도·벤치마크 수치는 Hyper-Connections·mHC 논문의 자기보고 조건(모델 크기·데이터·n값)으로 한정한다." },
+      { kind: "project-claim", rule: "Motif 3의 post scale 2→1 annealing은 이 글에서 언급만 하고 ai/motif-3-architecture가 정본으로 다룬다." },
+    ],
+  },
+  "fast-weight-memory-and-chunkwise-recurrence": {
+    title: "Fast weight memory·chunkwise recurrence 글이 소유하는 범위",
+    owns: [
+      "Outer-product associative memory·fast weight programmer 구도와 겹쳐 쓰기 간섭의 수치 예",
+      "Delta rule 의 예측 오차 재작성과 gated delta rule 의 decay·표적 수정 분리",
+      "Recurrent/parallel formulation duality 와 chunkwise parallel form 의 FLOP·순차 단계 교환",
+      "Parallel prefix scan 일반 알고리즘과 chunkwise 형태의 차이",
+    ],
+    reuses: [
+      { label: "Linear attention·recurrent fixed-size state·retrieval-compression tradeoff", href: "/ai/linear-attention-and-state-space-models" },
+      { label: "Qwen3.6 Gated DeltaNet 의 48-head 구체 구현", href: "/ai/qwen36-hybrid-architecture" },
+      { label: "MLA 의 latent 압축 계열(대안적 고정 크기 축소)", href: "/ai/multi-head-latent-attention-mechanics" },
+      { label: "RNN 의 순차 state 전이", href: "/ai/rnn" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Delta rule·gated delta rule 식과 chunkwise 속도 배율은 원 논문 자기보고로 한정하고 다른 하드웨어·규모로 일반화하지 않는다." },
+      { kind: "standard", rule: "Parallel prefix scan 의 log n 단계 수는 Blelloch 의 일반 알고리즘 설명이며 DeltaNet 이 이 알고리즘을 그대로 쓴다고 서술하지 않는다." },
+      { kind: "project-claim", rule: "FLOP·순차 단계 수치 예(L=4096, C=64, d=128 등)는 이 글이 공개된 복잡도 공식에 임의의 수를 대입해 계산한 것이며 특정 논문의 실측치가 아니다." },
+    ],
+  },
+  "tokenizer": {
+    title: "Tokenizer 글이 소유하는 범위",
+    owns: [
+      "Tokenizer pipeline(normalize·pre-tokenize·segment·post-process)의 versioned contract",
+      "Subword BPE·byte-level tokenization·WordPiece maximum matching·SentencePiece/Unigram의 학습·encoding 절차 차이",
+      "Token ID와 embedding matrix(V×d)의 연결, tokenizer-checkpoint 호환성 계약",
+      "실제 traffic 기준 tokenizer efficiency 평가와 배포 bundle versioning",
+    ],
+    reuses: [
+      { label: "Unicode·UTF-8·정규화", href: "/ai/text-unicode-encoding" },
+      { label: "Transformer의 token embedding lookup", href: "/ai/transformer-architecture#input-contract" },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "BPE·WordPiece·SentencePiece/Unigram·byte-level BPE의 mechanism 설명은 각 원 논문과 공식 구현(tiktoken, openai/gpt-2, HF tokenizers)이 보고한 범위로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Vocabulary 크기·embedding matrix 메모리·parameter 수 계산은 예시 수치의 산수이며 특정 배포의 실측이 아니라고 본문에 밝힌다.",
+      },
     ],
   },
 } as const satisfies Record<string, EditorialBoundary>;

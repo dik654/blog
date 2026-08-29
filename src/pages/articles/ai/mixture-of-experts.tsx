@@ -322,6 +322,10 @@ export default function MixtureOfExpertsArticle() {
           <p className="leading-8">
             Top-k index 선택은 경계에서 불연속이므로 보통 선택된 경로를 통해 gradient가 흐르고, 별도의 auxiliary loss나 bias update가 router의 장기적인 균형을 돕습니다. “Top-1이 언제나 더 빠르다”거나 “Top-2가 언제나 더 정확하다”고 단정할 수는 없습니다. Expert GEMM 크기, all-to-all 구현, token batch, capacity policy가 달라지면 같은 k도 system cost가 달라집니다.
           </p>
+          <p className="leading-8">
+            여기서 말하는 expert는 router가 골라야만 계산되는 <strong>routed expert</strong>입니다. 일부 MoE는 이와 별도로 router 선택과 무관하게 모든 token이 항상 통과하는 <strong>shared expert</strong>를 둡니다. Shared expert의 출력은 top-k 합이 아니라 그대로 더해지며, routed expert를 더 잘게 나누고 shared expert를 분리하는 설계는{" "}
+            <Link to="/ai/mixture-of-experts#evolution">뒤의 진화 절</Link>에서 다룹니다.
+          </p>
         </div>
 
         <RouterExampleViz />
@@ -489,6 +493,12 @@ L_{\rm aux}&=\underbrace{\alpha N\sum_{i=1}^{N}f_iP_i}_{\text{두 값이 모두 
           <p className="leading-8">
             균형 항을 지나치게 키우면 token 내용보다 균등 분배를 우선해 specialization을 해칠 수 있고, capacity를 너무 작게 잡으면 중요한 token 경로가 drop됩니다. 반대로 capacity를 넉넉히 잡으면 memory와 padding waste가 늘어납니다. 그러므로 router entropy 하나만 보지 말고 expert별 token count, dropped-token rate, per-expert GEMM size, all-to-all time과 task quality를 함께 측정해야 합니다.
           </p>
+          <p className="leading-8">
+            Load balancing loss의 정확한 f_i·P_i 식, bias만으로 균형을 잡는 auxiliary-loss-free
+            갱신 규칙, 두 장치가 늦었을 때 생기는 expert collapse의 되먹임과 sparsity ratio는{" "}
+            <Link to="/ai/moe-routing-and-load-balancing#loss">MoE routing 글</Link>이 이어서
+            계산합니다.
+          </p>
         </div>
 
         <PaperNote id="paper-switch-transformer" label="Switch Transformers" href="https://arxiv.org/abs/2101.03961">
@@ -537,6 +547,19 @@ L_{\rm aux}&=\underbrace{\alpha N\sum_{i=1}^{N}f_iP_i}_{\text{두 값이 모두 
           interpretation="n을 늘리고 k를 유지하면 total capacity를 크게 늘리면서 token별 expert 경로는 비슷하게 유지할 수 있습니다. 대신 weight memory와 routing·communication complexity는 커집니다."
         />
 
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p className="leading-8">
+            이 식이 <strong>dense model</strong>과 <strong>sparse model</strong>을 가르는
+            지점입니다. Dense model은 n=k=1인 경우와 같아서 parameter와 token별 FLOP이 같은
+            배수로 움직이지만, sparse model은 n을 늘려 parameter만 키우고 k는 그대로 둘 수
+            있어 두 축이 갈라집니다.
+          </p>
+          <p className="leading-8">
+            Shared 10B, expert당 2B, n=16이면 dense 대비 parameter는 8배지만, k=2를 유지하면
+            token별 expert FLOP은 2배에 그칩니다.
+          </p>
+        </div>
+
         <ExplainedFormula
           question="Expert parallel 장치 사이로 최소한 어느 정도의 token payload가 이동하는가?"
           idea={<>Token m개를 k개 expert로 복제해 hidden vector를 보내고 결과를 다시 받는다면, routing metadata와 protocol overhead를 빼도 forward payload는 두 방향에서 생깁니다.</>}
@@ -559,6 +582,21 @@ L_{\rm aux}&=\underbrace{\alpha N\sum_{i=1}^{N}f_iP_i}_{\text{두 값이 모두 
           ]}
           interpretation="m=2048, k=2, d=4096, b=2라면 payload 항만 약 64 MiB입니다. 이 값이 곧 wire traffic이나 시간은 아니지만, k와 hidden width가 network budget을 직접 키운다는 사실은 보여 줍니다."
         />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p className="leading-8">
+            위 식의 “보내고 다시 받는다”는 두 단계로 나뉩니다. Token을 expert가 있는 장치로
+            보내는 쪽이 dispatch이고, expert 출력을 원래 token 위치로 되돌리는 쪽이{" "}
+            <strong>combine</strong>입니다. Combine은 dispatch의 역연산으로, 같은 index로
+            흩어졌던 조각을 그 index로 다시 모아 원래 순서로 되돌린 뒤 routing weight로
+            합칩니다.
+          </p>
+          <p className="leading-8">
+            실제로 몇 byte가 어느 GPU link를 건너는지는{" "}
+            <Link to="/ai/expert-parallelism-moe-systems#all-to-all">expert parallelism 글</Link>이
+            계산합니다.
+          </p>
+        </div>
 
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <h3>Serving에서는 average보다 tail과 locality를 본다</h3>

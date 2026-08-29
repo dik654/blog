@@ -447,6 +447,8 @@ export const vllmServingArticles: Article[] = [
           { id: "paper-gqa", title: "GQA 논문의 문제와 핵심 아이디어" },
           { id: "kv-shape-formula", title: "토큰당 KV byte 공식" },
           { id: "kv-shape-runtime", title: "Gemma config와 TP 보정" },
+          { id: "cache-representation-design", title: "Cache representation design 축" },
+          { id: "mla-vs-gqa", title: "MLA vs GQA와 capacity·bandwidth saving" },
         ],
       },
     ],

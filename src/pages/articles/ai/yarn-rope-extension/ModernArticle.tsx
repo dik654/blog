@@ -1,6 +1,7 @@
 import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExtensionAttempts from "./ExtensionAttempts";
+import LongContextScope from "./LongContextScope";
 import Overview from "./Overview";
 import RopeFoundation from "./RopeFoundation";
 import YarnMethod from "./YarnMethod";
@@ -99,6 +100,7 @@ export default function ModernYarnRopeArticle() {
       <Overview />
       <ContentBoundary article="yarn-rope-extension" />
       <RopeFoundation />
+      <LongContextScope />
       <ExtensionAttempts />
       <YarnMethod />
       <DeploymentAndPapers />

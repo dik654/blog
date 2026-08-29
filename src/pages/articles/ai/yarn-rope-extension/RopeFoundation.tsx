@@ -31,6 +31,12 @@ export default function RopeFoundation() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
+          Transformer는 순서를 모른다. Token embedding만으로는 어순이 사라지므로 위치를
+          attention 계산 어딘가에 넣어야 하고, 이 절대·상대 위치 표현 방식을 통틀어
+          positional encoding이라 부른다. RoPE는 그 중 좌표 쌍을 회전시켜 상대 위치를
+          넣는 방식이다.
+        </p>
+        <p className="leading-7">
           Rotary Position Embedding(RoPE)은 attention head의 차원을 2차원
           쌍으로 나누고, 위치 <M>{"m"}</M>에 있는 query와 key를 각 쌍의
           frequency에 따라 회전시킨다. 위치 자체를 token embedding에 더하지

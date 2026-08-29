@@ -80,6 +80,18 @@ export default function Motif3ArchitectureArticle() {
           ]}
           output="GDLA token-mixing update"
         />
+        <p className="text-sm leading-7 text-muted-foreground">
+          MLA와 GDA는 서로 다른 병목에서 출발합니다. MLA는 decode 가 옮기는 KV cache 크기를 줄이는
+          <Link className="text-primary hover:underline" to="/ai/differential-attention#boundary"> memory 축</Link>이고,
+          <Link className="text-primary hover:underline" to="/ai/differential-attention"> differential attention</Link>의
+          signal·noise 차분(원 mechanism은 대칭 head, GDA는 그 head 비율을 비대칭으로 바꾼 변형)은
+          attention 이 무엇에 점수를 주는지를 바꾸는 selectivity 축입니다.
+        </p>
+        <p className="text-sm leading-7 text-muted-foreground">
+          GDLA의 결합 지점은 두 query path(signal, noise)가 별도 KV cache 없이 같은 compressed
+          latent를 읽게 만든 자리입니다. 새로 드는 비용은 이 latent 하나를 signal·noise 두 경로가
+          각각 복원해야 한다는 것과, token별 λ·output gate 계산이 MLA 단독보다 늘어난다는 것입니다.
+        </p>
       </section>
 
       <section id="mhc" className="space-y-6">
@@ -106,6 +118,13 @@ export default function Motif3ArchitectureArticle() {
           assumptions={["Mapping은 token마다 동적으로 계산합니다.", "Sinkhorn normalization과 mapping logits는 보고서상 FP32로 계산합니다.", "Motif의 2→1 annealing은 원 mHC 전체와 구분한 model-specific modification입니다."]}
           interpretation="네 stream은 네 개의 독립 모델이 아닙니다. 같은 layer 안에서 정보가 지나갈 residual width를 늘리고 제약된 mixing으로 update source를 재배치합니다."
         />
+        <p className="text-sm leading-7 text-muted-foreground">
+          H_res를 doubly-stochastic 행렬로 제한하는 원리 자체와 이 제약이 없을 때 층을 쌓을수록
+          신호가 폭발하는 이유는
+          <Link className="text-primary hover:underline" to="/ai/hyper-connections-residual-streams"> hyper-connection·mHC 글</Link>이
+          정본으로 다룹니다. 이 절은 그 위에 얹은 post multiplier 2→1 annealing만 Motif 3 고유의
+          변형으로 소유합니다.
+        </p>
       </section>
 
       <section id="polynorm" className="space-y-6">
