@@ -21,6 +21,87 @@ export default function PlanReplanningArticle() {
         <ContentBoundary article="agent-plan-replanning" />
       </section>
 
+      <section id="planning-and-plan-mode" className="scroll-mt-20">
+        <h2 className="mb-5 text-2xl font-bold">
+          Planning은 실행 전에 미래 행동을 먼저 확정하는 일입니다
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            매 step마다 다음 action 하나만 보는 reactive loop와 달리,{" "}
+            <strong>planning</strong>은 실행하기 전에 앞으로 거칠 여러
+            action의 순서와 그 사이 dependency를 먼저 만드는 절차입니다.
+            지금부터 볼 executable plan·replanning·reflection은 모두 이
+            planning의 산출물을 다루는 구체적인 방법입니다.
+          </p>
+          <p>
+            많은 agent 도구는 이 planning 단계를 실행과 분리해 사람이
+            검토할 수 있게 합니다. Model이 파일을 바로 고치지 않고 어떤
+            task를 어떤 순서로 만들지 초안만 내놓는 상태를{" "}
+            <strong>plan mode</strong>라고 부르며, 사람이 그 초안을
+            승인해야 비로소 executable plan으로 넘어가 실행이 시작됩니다.
+          </p>
+        </div>
+        <TermBreakdown
+          title="미리 만드는 일과 매번 결정하는 일의 차이"
+          items={[
+            {
+              term: "Planning",
+              description:
+                "실행 전에 앞으로 거칠 action의 순서·dependency를 먼저 만드는 절차입니다.",
+              boundary:
+                "만든다고 끝이 아니고, 뒤에서 볼 validation·replanning을 거쳐야 실행 가능한 상태가 됩니다.",
+            },
+            {
+              term: "Plan Mode",
+              description:
+                "Model이 실행하지 않고 task 순서 초안만 내놓아 승인을 기다리는 운영 모드입니다.",
+              example:
+                "파일을 고치기 전에 “A를 바꾸고 B test를 돌린다”는 초안만 보여줍니다.",
+              boundary:
+                "승인 전에는 파일이나 외부 상태가 바뀌지 않는다는 뜻이지, 계획이 맞다는 보장은 아닙니다.",
+            },
+          ]}
+        />
+      </section>
+
+      <section id="task-decomposition-and-subgoal" className="scroll-mt-20">
+        <h2 className="mb-5 text-2xl font-bold">
+          큰 목표를 subgoal로 나눠야 각 task의 완료를 판정할 수 있습니다
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            "API를 새로 만든다"는 목표 하나로는 무엇을 완료로 볼지 정할 수
+            없습니다. <strong>Task decomposition</strong>은 이런 큰 목표를
+            독립적으로 검증할 수 있는 더 작은 작업으로 나누는 절차이고, 그
+            결과로 생기는 각 중간 목표를 <strong>subgoal</strong>이라고
+            부릅니다.
+          </p>
+          <p>
+            앞서 본 executable plan의 task node 하나하나가 바로 이
+            subgoal의 실행 단위입니다. Decomposition이 먼저 subgoal
+            경계를 정하고, 그 경계마다 input·output schema를 채워야
+            executable plan이 완성됩니다.
+          </p>
+        </div>
+        <span id="hierarchical-planning" className="scroll-mt-20" />
+        <h3 className="mb-4 mt-8 text-xl font-bold">
+          Subgoal을 다시 나눠야 하는 깊이가 hierarchical planning을 만듭니다
+        </h3>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            Subgoal 하나가 여전히 너무 커서 그 자체로 완료 판정이 어렵다면
+            그 subgoal을 다시 decomposition합니다. 이렇게 여러 층의 목표
+            (전체 목표→subgoal→더 작은 subgoal)를 두는 절차를{" "}
+            <strong>hierarchical planning</strong>이라고 합니다.
+          </p>
+          <p>
+            층이 늘어날수록 상위 목표는 하위 결과가 다 모여야 완료를
+            판정할 수 있으므로, 각 층의 완료 조건과 dependency를 명시하지
+            않으면 어느 layer가 막혔는지 추적하기 어려워집니다.
+          </p>
+        </div>
+      </section>
+
       <section id="executable-plan" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">Task는 dependency·owner·artifact·evidence를 가집니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
@@ -33,6 +114,26 @@ export default function PlanReplanningArticle() {
             <li><strong>Status evidence</strong><br />blocked/running/verified와 transition reason</li>
           </ul>
           <p>이 구조가 있으면 process가 재시작되어도 model의 자연어 요약이 아니라 registry state에서 정확한 재개 위치를 찾을 수 있습니다.</p>
+        </div>
+      </section>
+
+      <section id="plan-validation" className="scroll-mt-20">
+        <h2 className="mb-5 text-2xl font-bold">
+          실행 전에 plan validation이 dependency와 자원을 먼저 확인합니다
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            Executable plan을 만들었다고 바로 실행해도 되는 것은
+            아닙니다. <strong>Plan validation</strong>은 실행을 시작하기
+            전에 task 사이 dependency에 순환이 없는지, 각 task가 요구하는
+            input artifact가 실제로 존재하는지, 필요한 worker·budget이
+            남아 있는지를 확인하는 절차입니다.
+          </p>
+          <p>
+            이 확인은 뒤에서 볼 replanning의 “실행 뒤 evidence로 다시
+            여는 일”과 다릅니다. Plan validation은 한 글자도 실행하지
+            않은 상태에서 계획 자체의 결함을 미리 찾아내는 단계입니다.
+          </p>
         </div>
       </section>
 

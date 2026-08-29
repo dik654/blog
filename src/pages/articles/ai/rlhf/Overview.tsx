@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import FeedbackContractViz from "./viz/FeedbackContractViz";
 
 export default function Overview() {
@@ -30,10 +31,18 @@ export default function Overview() {
           정리한 대표 경로는 demonstration으로 SFT를 한 뒤, response ranking으로
           reward model을 학습하고 PPO로 현재 policy를 갱신하는 세 단계다. 이후
           DPO·ORPO·KTO는 같은 문제를 offline classification 형태의 objective로
-          다시 구성했고, Constitutional AI는 feedback을 만드는 기준을 자연어
-          principle과 AI critique로 드러냈다. 이름은 비슷하지만 대체하는 층이
-          서로 다르므로, 이 글은 방법을 연대순으로 나열하지 않고 data contract,
-          score model, online sampling, evaluation의 네 축으로 비교한다.
+          다시 구성했고, <Link to="/ai/constitutional-ai#constitutional-ai">Constitutional AI</Link>는
+          feedback을 만드는 기준을 자연어 principle과 AI critique로 드러냈다.
+          이름은 비슷하지만 대체하는 층이 서로 다르므로, 이 글은 방법을
+          연대순으로 나열하지 않고 data contract, score model, online sampling,
+          evaluation의 네 축으로 비교한다.
+        </p>
+        <p>
+          사람 labeler 대신 AI judge가 같은 판단을 내리면 이 pipeline은
+          RLAIF(Reinforcement Learning from AI Feedback)라고 부르는 변형이
+          된다. Reward model 학습과 PPO update 구조는 그대로 두고 preference
+          label의 출처만 사람에서 AI로 바꾼 것이므로, label 품질은 judge
+          model과 constitution 자체의 신뢰도에 종속된다.
         </p>
       </div>
 
@@ -72,6 +81,23 @@ export default function Overview() {
           penalty를 사용해 PPO policy를 갱신했습니다. 이 결과는 특정 model·labeler
           pool·evaluation에서 보고된 것이며, preference가 인간 가치 전체를
           측정한다거나 PPO가 유일한 최적화 경로라는 결론은 아닙니다.
+        </p>
+      </div>
+
+      <div
+        id="paper-rlaif"
+        className="not-prose mt-8 scroll-mt-24 border-l border-border/80 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">논문 해설 · RLAIF</p>
+        <h3 className="mt-2 text-base font-bold text-foreground">
+          RLAIF는 새 objective가 아니라 reward model label의 출처를 바꾼 변형이다
+        </h3>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          Lee et al.(2023)은 사람 preference label 대신 off-the-shelf LLM이 같은
+          pairwise 질문에 답하게 해 reward model을 학습해도 사람 feedback 기준과
+          비슷한 win rate를 얻었다고 보고했습니다. 이 결과는 논문이 실험한
+          model·prompt·태스크 조건에서 관측된 것이며, 모든 judge model이 사람
+          labeler를 대체할 수 있다는 뜻은 아닙니다.
         </p>
       </div>
     </section>

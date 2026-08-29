@@ -15,6 +15,11 @@ export default function RewardModel() {
           pairwise preference를 response 하나당 scalar score로 압축하며, 이후 현재
           policy가 새로 생성한 응답에도 같은 scorer를 적용한다.
         </p>
+        <p className="leading-7">
+          이 scorer를 사람 선호를 직접 예측한다는 뜻에서 preference model이라고도
+          부르는데, 별도 구성 요소가 아니라 reward model과 같은 model을 가리키는
+          다른 이름이다.
+        </p>
       </div>
 
       <RewardCompressionViz />

@@ -18,6 +18,18 @@ export default function RankBasis() {
           1이므로 coordinate가 서로 섞이지 않으며, projection으로 각 방향의 기여를
           따로 읽을 수 있습니다.
         </p>
+        <p>
+          <strong>Orthogonality</strong>는 두 vector의 dot product가 0이라는 조건
+          하나만 요구하고, orthonormal basis는 여기에 norm이 1이라는 조건을 더한
+          것입니다. SVD가 U와 V를 직교행렬로 고르는 이유는 각도와 길이를 보존하는
+          등거리 변환(isometry)이기 때문입니다.
+        </p>
+        <p>
+          그래야 늘이고 줄이는 정도가 Σ의 대각 성분만으로 전부 설명되고, U와 V가
+          만드는 회전은 크기를 왜곡하지 않습니다. 직교행렬은 <code>UᵀU=I</code>도
+          만족해 transpose가 그대로 inverse가 되므로, 계산이 어려운 U⁻¹ 대신
+          항상 Uᵀ를 씁니다.
+        </p>
       </div>
       <ExplainedFormula
         question="Column이 두 개여도 rank가 1일 수 있는 이유를 어떻게 확인할까요?"

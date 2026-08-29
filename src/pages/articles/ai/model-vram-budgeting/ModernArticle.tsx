@@ -6,6 +6,10 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import BudgetPipelineViz from "./viz/BudgetPipelineViz";
 import MoEResidencyViz from "./viz/MoEResidencyViz";
 import WeightVramViz from "./viz/WeightVramViz";
+import QuantizationVramTradeoff from "./QuantizationVramTradeoff";
+import VramBudgetingComponents from "./VramBudgetingComponents";
+import MultiGpuVramStrategies from "./MultiGpuVramStrategies";
+import MoeVramServingTradeoff from "./MoeVramServingTradeoff";
 
 const WEIGHT_TERMS = [
   { symbol: "N_d", name: "dtype별 parameter 수", description: "Checkpoint 안에서 dtype d로 저장된 tensor 원소 수입니다." },
@@ -90,6 +94,8 @@ M_W
         </div>
       </section>
 
+      <QuantizationVramTradeoff />
+
       <section id="runtime-state" className="scroll-mt-20 space-y-7">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <h2>2단계 · 가중치가 들어간 뒤에는 request가 만드는 state를 더합니다</h2>
@@ -152,22 +158,27 @@ C_{use}
         </div>
       </section>
 
+      <VramBudgetingComponents />
+
+      <MultiGpuVramStrategies />
+
       <section id="moe-serving-boundary" className="scroll-mt-20 space-y-7">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <h2>3단계 · MoE에서는 total weight, active path, request state를 세 장부로 봅니다</h2>
+          <h2>3단계 · MoE는 total weight, active path, request state를 나눕니다</h2>
           <p className="leading-8">
             “N total / K active” 같은 MoE 표기는 두 질문을 한 줄에 놓습니다. <strong>Total parameters</strong>는
             checkpoint 전체를 어떤 dtype으로 저장하고 어느 device에 배치할지에 가깝고, <strong>active
             parameters</strong>는 한 token이 router를 거쳐 실제로 사용하는 expert path 규모의 힌트입니다.
-            이는 exact FLOPs나 실제로 이동한 weight bytes와 동일한 수치가 아닙니다.
-            따라서 active 수가 작아도 모든 expert weight를 resident하게 만들 capacity와 expert routing·통신은
-            별도로 남습니다.
           </p>
           <p className="leading-8">
-            여기에 Full Context를 요청하면 attention KV, recurrent state, allocator와 prefill workload가
-            추가됩니다. “모델이 지원하는 최대 길이”는 그 길이의 KV가 들어가고 품질·TTFT가 운영 목표를
-            통과한다는 뜻이 아닙니다. Q8도 마찬가지입니다. Q8_0, INT8 weight-only, W8A8처럼 format과
-            execution contract가 다르므로 이름만으로 byte·kernel·quality를 확정하지 않습니다.
+            이는 exact FLOPs나 실제로 이동한 weight bytes와 같은 수치는 아닙니다. Active 수가 작아도 모든
+            expert weight를 resident하게 만들 capacity와 expert routing·통신은 별도로 남고, 이 관계를
+            bandwidth 숫자로 푸는 이야기는 아래 절에서 이어집니다.
+          </p>
+          <p className="leading-8">
+            Full context를 요청하면 attention KV·recurrent state·prefill workload가 함께 늘어나고,
+            Q8·NVFP4처럼 precision을 낮추는 선택도 known floor를 바꿉니다. 두 결정의 구체적인 크기는
+            각각 아래 절에서 다룹니다.
           </p>
         </div>
 
@@ -187,10 +198,12 @@ C_{use}
           <p className="leading-8">
             이 분해는 경험적 관찰을 버리기 위한 것이 아닙니다. “Small-active MoE에서는 prefill 비중이
             커졌다”, “base decode가 빨라 MTP 이득이 작았다”, “64K부터 특정 Mac에서 급락했다”는 말은
-            다음 benchmark를 고르는 유용한 가설입니다. 다만 exact model·runtime·hardware·quantization,
-            input/output length, batch·concurrency, KV dtype와 반복 측정이 채워질 때까지 임계점이 아닙니다.
-            MTP break-even의 계산은 <Link to="/ai/vllm-spec-decode">speculative decoding 정본 글</Link>에서
-            다룹니다.
+            다음 benchmark를 고르는 유용한 가설입니다.
+          </p>
+          <p className="leading-8">
+            다만 정확한 model과 runtime, hardware와 quantization, input/output 길이, batch와 concurrency,
+            KV dtype, 반복 측정이 채워질 때까지는 임계점이 아닙니다. MTP break-even 계산은{" "}
+            <Link to="/ai/vllm-spec-decode">speculative decoding 정본 글</Link>에서 다룹니다.
           </p>
         </div>
 
@@ -214,6 +227,8 @@ C_{use}
         </div>
       </section>
 
+      <MoeVramServingTradeoff />
+
       <section id="admission-logs" className="scroll-mt-20 space-y-7">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <h2>4단계 · 기동 로그는 나중에 memory 미지수를 되살리는 receipt입니다</h2>
@@ -235,7 +250,10 @@ C_{use}
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <h3>Qwen3.6-27B를 48GiB 한 장에 놓는 적용 예</h3>
           <p className="leading-8">
-            공식 BF16 index의 55,562,855,904 bytes는 51.75GiB라 weight만으로 한 장을 넘습니다. 공식 mixed-FP8 checkpoint는 FP8 약 24.699B와 BF16 약 3.084B를 합쳐 tensor payload가 약 28.75GiB입니다. 여기에 BF16 attention KV가 32K/128K/262K에서 약 2/8/16GiB, Delta core state가 request당 약 144MiB 들어갑니다. Known floor는 약 30.89/36.89/44.89GiB지만, 마지막 값은 workspace를 넣기 전이라 262K 안전 운용을 보장하지 않습니다.
+            공식 BF16 index의 55,562,855,904 bytes는 51.75GiB라 weight만으로 한 장을 넘습니다. 공식 mixed-FP8 checkpoint는 FP8 약 24.699B와 BF16 약 3.084B를 합쳐 tensor payload가 약 28.75GiB입니다.
+          </p>
+          <p className="leading-8">
+            여기에 BF16 attention KV가 32K/128K/262K에서 약 2/8/16GiB, Delta core state가 request당 약 144MiB 들어갑니다. Known floor는 약 30.89/36.89/44.89GiB지만, 마지막 값은 workspace를 넣기 전이라 262K 안전 운용을 보장하지 않습니다.
           </p>
         </div>
 

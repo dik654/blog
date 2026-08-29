@@ -71,6 +71,33 @@ export const dlFoundationArticles: Article[] = [
     component: () => import("@/pages/articles/ai/math-matrices-svd"),
   },
   {
+    slug: "math-high-dimensional-geometry",
+    title: "고차원에서는 거리가 무너지고 그 틈을 JL 사영과 latent 표현이 메운다",
+    subcategory: "ai-foundations",
+    sections: [
+      { id: "problem", title: "거리 하나로 가까움을 구분하기 어려워지는 이유" },
+      { id: "distance", title: "Euclidean distance와 고차원 거리 집중" },
+      { id: "jl-lemma", title: "Johnson–Lindenstrauss lemma" },
+      { id: "intrinsic-dimension", title: "Ambient dimension과 intrinsic dimension" },
+      { id: "latent-representation", title: "Low-rank·latent·bottleneck representation" },
+      { id: "applications", title: "Autoencoder·분포 의미론·vector search로 연결" },
+    ],
+    component: () => import("@/pages/articles/ai/math-high-dimensional-geometry"),
+  },
+  {
+    slug: "math-numerical-precision-stability",
+    title: "부동소수점은 유효숫자를 잘라 저장하고 그 오차가 계산 순서에 따라 증폭되거나 사라진다",
+    subcategory: "ai-foundations",
+    sections: [
+      { id: "problem", title: "유한 bit 저장이 남기는 오차" },
+      { id: "precision", title: "FP32·FP16·BF16의 유효숫자" },
+      { id: "stability", title: "계산 순서와 오차 증폭" },
+      { id: "shape", title: "Tensor shape와 broadcasting" },
+      { id: "applications", title: "Quantization·AMP·행렬로 연결" },
+    ],
+    component: () => import("@/pages/articles/ai/math-numerical-precision-stability"),
+  },
+  {
     slug: "math-complex-numbers-oscillations",
     title: "복소수·회전·Euler 공식: Fourier 수식을 읽는 최소 수학",
     subcategory: "ai-foundations",
@@ -349,6 +376,18 @@ export const dlFoundationArticles: Article[] = [
       { id: "tensor-backward", title: "출력에서 weight까지" },
     ],
     component: () => import("@/pages/articles/ai/backprop-optimization"),
+  },
+  {
+    slug: "training-memory-budget",
+    title: "학습 메모리는 weight·gradient·optimizer state 합으로 커진다",
+    subcategory: "ai-foundations",
+    sections: [
+      { id: "problem", title: "Parameter 크기만으로 메모리를 가늠할 수 없는 이유" },
+      { id: "memory-math", title: "Model-state memory: 16byte/param" },
+      { id: "checkpointing", title: "Activation checkpointing" },
+      { id: "applications", title: "QLoRA·autodiff·AMP로 연결" },
+    ],
+    component: () => import("@/pages/articles/ai/training-memory-budget"),
   },
   {
     slug: "spiking-neural-networks",

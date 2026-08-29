@@ -779,11 +779,27 @@ const compressionArticles: Article[] = [
     subcategory: "ai-practical-compression",
     sections: [
       { id: "overview", title: "학습 없이 변환하는 PTQ" },
+      { id: "quantization-axes", title: "PTQ·QAT, weight·activation의 축" },
       { id: "scale-granularity", title: "Scale 공유 범위와 metadata" },
+      { id: "dynamic-static-outliers", title: "Dynamic·static과 outlier handling" },
       { id: "coverage", title: "Layer·traffic slice 포화" },
       { id: "release", title: "Scale 선택과 artifact release" },
     ],
     component: () => import("@/pages/articles/ai/ptq-calibration"),
+  },
+  {
+    slug: "quantization-formats-and-granularity",
+    title: "양자화 숫자 형식과 granularity: 비트 폭과 스케일 단위",
+    subcategory: "ai-practical-compression",
+    sections: [
+      { id: "overview", title: "형식 축과 granularity 축" },
+      { id: "integer-formats", title: "INT8·INT4 code 개수" },
+      { id: "floating-point-formats", title: "FP8·FP4·NVFP4" },
+      { id: "extreme-low-bit", title: "Binary·ternary weight" },
+      { id: "zero-point-symmetry", title: "Zero-point와 symmetric·asymmetric" },
+      { id: "granularity", title: "Per-tensor부터 block까지" },
+    ],
+    component: () => import("@/pages/articles/ai/quantization-formats-and-granularity"),
   },
   {
     slug: "quantization-aware-training",

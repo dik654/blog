@@ -31,12 +31,29 @@ export default function RegularizationDiagnosisArticle() {
     </section>
     <section id="audit" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">원인 감사가 끝나기 전에는 regularizer를 고르지 않습니다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>
+          네 원인을 배제하고 training error도 낮은 채 gap만 계속 커진다면 그
+          패턴이 곧 <strong>overfitting</strong>입니다. Overfitting은 model이
+          train data의 noise·특수성까지 외워 training error는 계속 줄지만
+          unseen data error는 오히려 커지는 현상이며, 아래 네 원인이 모두
+          배제된 뒤에만 이 이름을 붙일 수 있습니다.
+        </p>
+      </div>
       <TermBreakdown title="Gap을 만든 다른 원인" items={[
         { term: "Split leakage", description: "같은 entity·time window의 정보가 train과 validation에 동시에 들어갑니다.", example: "동일 사용자의 연속 event가 두 split에 섞였습니다." },
         { term: "Pipeline mismatch", description: "두 split의 transform·label mapping·loss denominator가 다릅니다.", example: "Validation만 다른 normalization 통계를 사용합니다." },
         { term: "Label noise", description: "Validation label 오류가 loss를 높이지만 model capacity 문제는 아닙니다.", example: "Source별 error sample을 직접 audit합니다." },
         { term: "Distribution shift", description: "Validation population이 train과 다른 생성 과정을 가집니다.", example: "지역·기간·device slice별 gap을 나눠 봅니다." },
       ]} />
+      <div className="prose prose-neutral max-w-none dark:prose-invert mt-6">
+        <p>
+          이 네 가지를 배제한 뒤 남은 gap이 바로 regularization이 다루는
+          대상입니다. Regularization은 leakage나 잘못된 pipeline을 고치지
+          않고, model이 training data를 과도하게 외우지 못하도록 자유도를
+          제한해 overfitting 자체를 줄입니다.
+        </p>
+      </div>
     </section>
     <section id="ablation" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">한 번에 한 축만 바꿔 이득과 부작용을 함께 비교합니다</h2>

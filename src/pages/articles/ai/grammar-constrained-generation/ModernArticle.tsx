@@ -1,5 +1,6 @@
 import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
+import { CitationBlock } from "@/components/ui/citation";
 import { FormalLanguageViz } from "./viz/ModernGrammarViz";
 
 export default function GrammarConstrainedGenerationArticle() {
@@ -119,15 +120,153 @@ export default function GrammarConstrainedGenerationArticle() {
         </div>
       </section>
 
+      <section id="grammar-constrained-decoding" className="scroll-mt-20">
+        <h2 className="mb-5 text-2xl font-bold">
+          Grammar가 다음 token 후보를 미리 걸러내면 decoding을 제약합니다
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            Derivation은 완성된 string이 유효한지 사후에 판정하는 절차였습니다.
+            같은 규칙을 생성 시점으로 가져오면, 모델이 다음 symbol을 고르기
+            직전에 지금까지 만든 prefix에서 grammar가 허용하는 후보만 남기고
+            나머지를 배제할 수 있습니다. 이렇게 decoding 자체를 grammar로
+            제약하는 방식을 <strong>grammar-constrained decoding</strong>이라고
+            부릅니다.
+          </p>
+          <p>
+            예를 들어 array grammar에서 <code>[0</code>까지 만든 상태라면 다음
+            symbol 후보는 <code>]</code>나 <code>,</code> 정도로 줄어듭니다.
+            나머지 alphabet symbol은 나와도 language 밖으로 나가므로 처음부터
+            후보에서 지웁니다. 여러 문서는 같은 절차를{" "}
+            <strong>constrained sampling</strong>이라고도 부르는데, grammar가
+            아니라 sampling 단계 관점에서 부르는 이름일 뿐 매 step 허용 집합을
+            좁힌다는 대상은 같습니다.
+          </p>
+        </div>
+        <TermBreakdown
+          title="Post-hoc 판정과 decoding-time 제약의 차이"
+          items={[
+            {
+              term: "Grammar-Constrained Decoding",
+              description:
+                "모델이 다음 symbol을 고르기 전에 grammar가 허용하는 후보만 남기는 decoding 방식입니다.",
+              example:
+                "[0 뒤에는 ]와 ,만 후보로 남고 나머지 alphabet symbol은 제거합니다.",
+              boundary:
+                "어떤 state에서 어떤 symbol이 허용되는지 계산하는 방법은 다음 글에서 다룹니다.",
+            },
+            {
+              term: "Constrained Sampling",
+              description:
+                "Grammar-constrained decoding을 sampling 단계 관점에서 부르는 같은 절차의 다른 이름입니다.",
+              boundary:
+                "허용 집합 안에서 고른다는 뜻이지 남은 후보의 확률 순서를 바꾸지는 않습니다.",
+            },
+          ]}
+        />
+      </section>
+
+      <section id="structured-decoding-taxonomy" className="scroll-mt-20">
+        <h2 className="mb-5 text-2xl font-bold">
+          무엇으로 허용 집합을 적느냐에 따라 structured decoding이 갈립니다
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            Grammar-constrained decoding은 "무엇을 허용 규칙으로 쓰는가"에
+            따라 다시 나뉩니다. 이 선택지 전체를{" "}
+            <strong>structured decoding</strong>이라고 부르는데, 실제로 자주
+            쓰이는 세 형식은 표현할 수 있는 구조의 깊이가 서로 다릅니다.
+          </p>
+          <p>
+            Regex-constrained decoding은 정규표현식으로 규칙을 적고 유한
+            상태만으로 판정할 수 있어 빠르지만, 여는 괄호와 닫는 괄호 개수를
+            맞추는 임의 깊이 중첩은 표현하지 못합니다. CFG-constrained
+            decoding은 production rule을 그대로 써서 이 중첩을 recursion으로
+            표현하고, JSON schema decoding은 type·required·enum 같은 schema
+            명세를 CFG 규칙으로 컴파일해 같은 방식으로 강제합니다.
+          </p>
+        </div>
+        <TermBreakdown
+          title="구조를 적는 세 형식과 표현 한계"
+          items={[
+            {
+              term: "Structured Decoding",
+              description:
+                "Grammar 형식과 무관하게 decoding 시점에 구조를 강제하는 접근을 통칭하는 이름입니다.",
+              boundary:
+                "Prompt에만 형식을 적어 두는 것과 달리 decoder 자체의 후보를 제한한다는 뜻입니다.",
+            },
+            {
+              term: "Regex-Constrained Decoding",
+              description:
+                "정규표현식으로 허용 문자열을 적고 finite automaton만으로 검사합니다.",
+              example: "전화번호나 날짜처럼 고정 길이 패턴에 적합합니다.",
+              boundary:
+                "괄호 짝처럼 임의 깊이로 열고 닫는 구조는 표현할 수 없습니다.",
+            },
+            {
+              term: "CFG-Constrained Decoding",
+              description:
+                "Production rule의 recursion으로 임의 깊이 중첩을 그대로 검사합니다.",
+              boundary: "Regex보다 표현력은 크지만 state 계산 비용도 늘어납니다.",
+            },
+            {
+              term: "JSON Schema Decoding",
+              description:
+                "JSON Schema의 type·required·enum 명세를 CFG 규칙으로 컴파일해 강제합니다.",
+              boundary:
+                "Schema를 통과해도 값이 사실인지, 권한이 있는지는 별도로 검사해야 합니다.",
+            },
+          ]}
+        />
+      </section>
+
+      <section id="xgrammar" className="scroll-mt-20">
+        <h2 className="mb-5 text-2xl font-bold">
+          XGrammar는 이 검사를 vocabulary 규모에서 감당하게 만듭니다
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            Grammar-constrained decoding을 그대로 구현하면 매 step마다
+            vocabulary 전체 token을 하나씩 grammar에 넣어 봐야 합니다. 수만
+            개 token을 매 step 검사하면 decoding이 눈에 띄게 느려지고,
+            XGrammar는 이 비용을 줄이기 위해 나온 constrained decoding
+            엔진입니다.
+          </p>
+          <p>
+            Token 대부분은 지금 grammar state와 무관하게 항상 같은 결과를
+            내는 context-independent token이어서 미리 계산해 둘 수 있고,
+            state에 따라 결과가 달라지는 소수 token만 매 step 다시 검사합니다.
+            CFG recursion이 만드는 반복되는 stack 상태도 매번 복제하지 않고
+            재사용해 pushdown automaton 비용을 줄입니다.
+          </p>
+        </div>
+        <div id="paper-xgrammar" className="not-prose mt-8 scroll-mt-24">
+          <CitationBlock
+            source="XGrammar: Flexible and Efficient Structured Generation Engine for Large Language Models"
+            citeKey={1}
+            href="https://arxiv.org/abs/2411.15100"
+          >
+            Context-independent token을 미리 분류해 두고 소수의
+            context-dependent token만 매 step 검사하며, CFG stack 상태를
+            복제 대신 재사용해 constrained decoding overhead를 줄이는 구조를
+            제시합니다. 논문이 보고한 조건과 benchmark 범위 안에서의
+            결과이고, 모든 tokenizer·engine 조합에서 같은 배율을 보장한다는
+            뜻은 아닙니다.
+          </CitationBlock>
+        </div>
+      </section>
+
       <section id="next" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">
           이제 “무한히 깊은 중첩을 무엇으로 기억하나”를 묻습니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            여기까지는 언어의 재료와 생성 규칙만 정의했습니다. 다음 글에서는
-            finite automaton이 어디서 막히고, CFG의 recursion을 PDA stack이
-            어떻게 따라가는지 괄호 하나씩 확인합니다.
+            여기까지 언어의 재료·생성 규칙과 grammar가 decoding을 제약하는
+            방식까지 봤습니다. 다음 글에서는 finite automaton이 어디서
+            막히고, CFG의 recursion을 PDA stack이 어떻게 따라가는지 괄호
+            하나씩 확인합니다.
           </p>
           <p>
             <a href="/ai/cfg-pushdown-automata">

@@ -249,7 +249,10 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://docs.nvidia.com/cuda/cuda-programming-guide/03-advanced/multi-gpu-systems.html",
       note: "Current device별 allocation·stream·event ownership과 peer access 경계",
     },
-  ],
+    { kind: "공식 문서", label: "NVIDIA CUDA Programming Guide — Advanced Kernel Programming", href: "https://docs.nvidia.com/cuda/cuda-programming-guide/03-advanced/advanced-kernel-programming.html", note: "__syncwarp()로 warp subset을 명시적으로 동기화하라는 공식 권고" },
+    { kind: "공식 문서", label: "NVIDIA CUDA Programming Guide — Asynchronous Barriers", href: "https://docs.nvidia.com/cuda/cuda-programming-guide/04-special-topics/async-barriers.html", note: "Cuda::barrier의 arrive/wait 분리와 __syncthreads() 대비 권장 범위" },
+    { kind: "공식 문서", label: "NVIDIA CUDA C++ Programming Guide — Memory Fence Functions", href: "https://docs.nvidia.com/cuda/cuda-c-programming-guide/#memory-fence-functions", note: "__threadfence 계열이 barrier와 달리 도착을 기다리지 않는다는 공식 구분" },
+],
   "ai/arima": [
     {
       kind: "핵심 논문",
@@ -2223,7 +2226,13 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://arxiv.org/abs/1707.06347",
       note: "Clipped surrogate objective와 alternating policy update를 제안한 PPO 원문",
     },
-  ],
+    {
+      kind: "핵심 논문",
+      label: "RLAIF: Scaling Reinforcement Learning from Human Feedback with AI Feedback",
+      href: "https://arxiv.org/abs/2309.00267",
+      note: "사람 대신 AI judge가 preference label을 매기는 RLAIF 변형의 실험 근거",
+    },
+],
   "ai/dpo": [
     { kind: "핵심 논문", label: "Direct Preference Optimization", href: "https://arxiv.org/abs/2305.18290", note: "KL-regularized reward objective를 chosen·rejected policy log-ratio loss로 재매개화" },
     { kind: "공식 문서", label: "Hugging Face TRL · DPO Trainer", href: "https://huggingface.co/docs/trl/dpo_trainer", note: "Reference handling·loss variant·data format을 확인하는 implementation surface" },
@@ -2304,7 +2313,8 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "ai/ptq-calibration": [
     { kind: "핵심 논문", label: "SmoothQuant", href: "https://proceedings.mlr.press/v202/xiao23c.html", note: "Activation outlier 난이도를 equivalent scaling으로 이동하는 W8A8 PTQ" },
-  ],
+    { kind: "핵심 논문", label: "AWQ", href: "https://arxiv.org/abs/2306.00978", note: "Activation 크기 기준 channel-wise scaling으로 salient weight를 보호하는 outlier handling" },
+],
   "ai/quantization-aware-training": [
     { kind: "핵심 논문", label: "Quantization and Training of Neural Networks", href: "https://arxiv.org/abs/1712.05877", note: "Affine integer quantization과 quantization-aware training의 기준 연구" },
   ],
@@ -2339,8 +2349,12 @@ export const ARTICLE_EVIDENCE: Readonly<
       "label": "TensorRT Structured Sparsity",
       "href": "https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/advanced.html#structured-sparsity",
       "note": "2:4 eligibility와 실제 tactic 선택 경계"
-    }
-  ],
+    },
+    { kind: "핵심 논문", label: "Are Sixteen Heads Really Better than One?", href: "https://arxiv.org/abs/1905.10650", note: "Attention head를 20~40%까지 지워도 성능 저하가 크지 않았던 greedy pruning 실험" },
+    { kind: "핵심 논문", label: "ShortGPT: Layers in Large Language Models are More Redundant Than You Expect", href: "https://arxiv.org/abs/2403.03853", note: "Block Influence 점수로 25% layer를 지우고 최대 1.49배 속도를 낸 layer pruning" },
+    { kind: "핵심 논문", label: "Not All Experts are Equal: Efficient Expert Pruning and Skipping for Mixture-of-Experts Large Language Models", href: "https://arxiv.org/abs/2402.14800", note: "Mixtral 8x7B expert 2~4개 제거의 실제 성능 하락 폭을 보고한 MoE expert pruning" },
+    { kind: "핵심 논문", label: "Accelerating Sparse Deep Neural Networks", href: "https://arxiv.org/abs/2104.08378", note: "2:4 structured sparsity에서만 2배 처리량을 내는 Ampere Sparse Tensor Core 조건" },
+],
   "ai/one-shot-llm-pruning": [
     {
       "kind": "핵심 논문",
@@ -2376,7 +2390,8 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://arxiv.org/abs/1412.6550",
       note: "teacher intermediate representation을 hint로 전달하는 feature distillation",
     },
-  ],
+    { kind: "핵심 논문", label: "Hinton, Vinyals, Dean — Distilling the Knowledge in a Neural Network (MNIST/speech 실험 수치)", href: "https://arxiv.org/abs/1503.02531", note: "MNIST test error 67(large)/146(small baseline)/74(T=20 distilled), speech test frame accuracy 58.9%/61.1%/60.8%·WER 10.9%/10.7%/10.7%" },
+],
   "ai/sequence-distillation": [
     {
       kind: "핵심 논문",
@@ -3398,7 +3413,9 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "동일 max_model_len 65,536에서 KV 97,216·88,824·352,736과 concurrency 5.17×·1.36×·5.38×. Qwen 행은 두 로그의 token 단위가 일치하지 않으므로 별도 해석",
     },
   ],
-  "ai/grammar-constrained-generation": [],
+  "ai/grammar-constrained-generation": [
+    { kind: "핵심 논문", label: "XGrammar: Flexible and Efficient Structured Generation Engine for Large Language Models", href: "https://arxiv.org/abs/2411.15100", note: "Context-independent token 사전 분류와 CFG stack 재사용으로 constrained decoding overhead를 줄이는 엔진" },
+],
   "ai/cfg-pushdown-automata": [],
   "ai/incremental-parsing-tree-sitter": [
     {
@@ -6021,7 +6038,8 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 문서", label: "vLLM · Hybrid KV Cache Manager", href: "https://docs.vllm.ai/en/stable/design/hybrid_kv_cache_manager/", note: "서로 다른 cache spec의 group·page·padding이 physical allocation을 바꾸는 공식 설계 경계" },
     { kind: "공식 문서", label: "Qwen3-Next · official architecture announcement", href: "https://qwen.ai/blog?id=qwen3-next", note: "80B total·약 3B active MoE와 hybrid attention·MTP의 공개 사례이며 active 수만으로 hardware latency·full-context admission을 확정하지 않음" },
     { kind: "공식 문서", label: "NVIDIA Transformer Engine · NVFP4 format", href: "https://docs.nvidia.com/deeplearning/transformer-engine-releases/release-2.15/user-guide/features/low_precision_training/nvfp4/nvfp4.html", note: "Blackwell NVFP4 value·block/tensor scale format 근거이며 특정 model checkpoint·dual-GPU speedup·quality 보장은 아님" },
-  ],
+    { kind: "공식 코드", label: "llama.cpp GGUF quantize tool README (Q8_0 benchmark)", href: "https://github.com/ggml-org/llama.cpp/blob/master/tools/quantize/README.md", note: "Q8_0 block-scale overhead가 만드는 8.5bit/weight 평균 폭의 project 실측 근거이며 다른 model·revision의 값을 보장하지 않음" },
+],
   "ai/supervised-learning-loop": [
     { kind: "보충 읽기", label: "Deep Learning Book · Machine Learning Basics", href: "https://www.deeplearningbook.org/contents/ml.html", note: "Input·target·model·objective와 generalization의 기본 역할 정본" },
     { kind: "핵심 논문", label: "Automatic Differentiation in Machine Learning: a Survey", href: "https://jmlr.org/papers/v18/17-468.html", note: "Forward·reverse derivative 계산과 optimizer update의 책임 분리" },
@@ -6467,5 +6485,22 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "핵심 논문", label: "Beyond the Nav-Graph: VLN-CE", href: "https://arxiv.org/abs/2004.02857", note: "Continuous environment에서의 low-level action과 성능 하락의 근거이며 모든 결과가 비례 재현된다는 뜻은 아님" },
     { kind: "핵심 논문", label: "Waypoint Models for Instruction-guided Navigation in Continuous Environments", href: "https://arxiv.org/abs/2110.02207", note: "Waypoint 표현력 spectrum과 경로 효율성의 근거이며 모든 embodiment를 대표하지 않음" },
     { kind: "후속 논문", label: "Embodied-Navigator · TAMP-Nav (2026-08-18 preprint)", href: "https://arxiv.org/abs/2608.17512", note: "Selective reasoning·anchor-trajectory memory·two-level alignment와 R2R-CE 66.2% SR의 최신 자기보고이며 독립 재현은 아님" },
+  ],
+  "ai/math-high-dimensional-geometry": [
+    { kind: "핵심 논문", label: "Dasgupta & Gupta — An Elementary Proof of a Theorem of Johnson and Lindenstrauss", href: "https://doi.org/10.1002/rsa.10073", note: "JL lemma의 명시적 차원 하한 k≥4ln(n)/(ε²/2−ε³/3)의 근거" },
+    { kind: "핵심 논문", label: "Pope et al. — The Intrinsic Dimension of Images and Its Impact on Learning", href: "https://arxiv.org/abs/2104.08894", note: "ImageNet 등 자연 이미지의 intrinsic dimension 추정치(26~43)의 근거" },
+  ],
+  "ai/math-numerical-precision-stability": [
+    { kind: "핵심 논문", label: "Goldberg — What Every Computer Scientist Should Know About Floating-Point Arithmetic", href: "https://doi.org/10.1145/103162.103163", note: "IEEE 754 형식·유효숫자·machine epsilon 수치의 근거" },
+    { kind: "보충 읽기", label: "Goodfellow, Bengio & Courville — Deep Learning, Chapter 4", href: "https://www.deeplearningbook.org/contents/numerical.html", note: "Softmax max-subtraction 안정화 기법의 근거" },
+  ],
+  "ai/quantization-formats-and-granularity": [
+    { kind: "공식 문서", label: "NVIDIA Transformer Engine · FP8 Current Scaling", href: "https://docs.nvidia.com/deeplearning/transformer-engine/user-guide/features/low_precision_training/fp8_current_scaling/fp8_current_scaling.html", note: "E4M3·E5M2 bit 배치와 amax 기반 scaling의 공식 근거" },
+    { kind: "공식 문서", label: "Introducing NVFP4 for Efficient and Accurate Low-Precision Inference", href: "https://developer.nvidia.com/blog/introducing-nvfp4-for-efficient-and-accurate-low-precision-inference/", note: "NVFP4의 E2M1 code와 16-element micro-block + tensor scale two-level scaling 근거" },
+    { kind: "핵심 논문", label: "The Era of 1-bit LLMs: All Large Language Models are in 1.58 Bits", href: "https://arxiv.org/abs/2402.17764", note: "Ternary weight로 처음부터 학습하는 BitNet b1.58 근거" },
+  ],
+  "ai/training-memory-budget": [
+    { kind: "핵심 논문", label: "Rajbhandari et al. — ZeRO: Memory Optimizations Toward Training Trillion Parameter Models", href: "https://arxiv.org/abs/1910.02054", note: "Model-state memory (2+2+K)Ψ·16byte/param 수치의 근거" },
+    { kind: "핵심 논문", label: "Chen et al. — Training Deep Nets with Sublinear Memory Cost", href: "https://arxiv.org/abs/1604.06174", note: "Activation checkpointing의 O(√n) 메모리·48GB→7GB·+30% 시간 수치의 근거" },
   ],
 };

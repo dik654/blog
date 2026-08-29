@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
@@ -58,6 +59,38 @@ export default function PtqCalibrationArticle() {
         <CalibrationPipelineViz />
         <ContentBoundary article="ptq-calibration" />
       </section>
+      <section id="quantization-axes" className="scroll-mt-20">
+        <h2 className="mb-5 text-2xl font-bold">
+          언제 바꿀지는 PTQ·QAT가, 무엇을 바꿀지는 weight·activation이 정합니다
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            <strong>PTQ(post-training quantization)</strong>는 학습이 끝난
+            checkpoint를 그대로 두고 calibration만으로 scale을 정하는 반면,{" "}
+            <strong>QAT(quantization-aware training)</strong>는 forward에
+            fake quantization을 넣어 optimizer가 오차를 직접 보면서 weight를
+            다시 학습합니다. 두 방법은 quantization error를 학습이 끝난 뒤에
+            처리하는지 학습 도중에 처리하는지에서 갈립니다.
+          </p>
+          <p>
+            같은 quantizer를 어느 tensor에 적용하는지도 별개의 축입니다.{" "}
+            <strong>Weight quantization</strong>은 학습이 끝나 값이 고정된
+            weight tensor만 낮은 정밀도로 바꾸고,{" "}
+            <strong>activation quantization</strong>은 매 forward마다 새로
+            계산되는 activation tensor까지 낮은 정밀도로 바꿉니다. Activation은
+            입력에 따라 range가 흔들리므로 weight보다 다루기 어렵습니다.
+          </p>
+          <p>
+            Weight만 4bit로 저장하고 activation은 그대로 두면{" "}
+            <Link to="/ai/weight-only-quantization#overview">
+              weight-only quantization
+            </Link>
+            이라 부르고, 둘 다 8bit로 낮추면 W8A8이라고 표기합니다. 이 글의
+            calibration pipeline은 weight quantization·activation
+            quantization 어느 쪽에도 적용되는 절차입니다.
+          </p>
+        </div>
+      </section>
       <section id="scale-granularity" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">
           Scale을 공유하는 범위가 error·metadata·kernel layout을 함께 바꿉니다
@@ -109,6 +142,53 @@ export default function PtqCalibrationArticle() {
           ]}
           interpretation="4096/128=32 groups이고 scale 2 byte·zero-point 1 byte라면 raw metadata는 96 byte입니다."
         />
+      </section>
+      <section id="dynamic-static-outliers" className="scroll-mt-20">
+        <h2 className="mb-5 text-2xl font-bold">
+          Static은 calibration dataset으로, dynamic은 실행 시 scale을 정합니다
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            Activation quantization은 scale을 언제 정하는지에 따라 갈립니다.{" "}
+            <strong>Static quantization</strong>은 배포 전에{" "}
+            <strong>calibration dataset</strong>을 흘려 관측한 range로 scale을
+            고정하고, <strong>dynamic quantization</strong>은 매 forward마다
+            그 순간의 min/max를 보고 scale을 즉석에서 계산합니다.
+          </p>
+          <p>
+            이 글의 calibration set이 곧 static quantization이 쓰는
+            calibration dataset입니다. Dynamic quantization은 이 표본을 따로
+            두지 않는 대신 매 호출마다 관측 비용을 지불합니다.
+          </p>
+          <p>
+            문제는 이 calibration dataset이 정한 range 안에{" "}
+            <strong>outlier activation</strong>이 있을 때 생깁니다. 특정
+            channel 값이 나머지보다 훨씬 크면 그 channel 하나가 tensor 전체의
+            min/max를 정해버려 나머지 channel의 rounding error가 커집니다.
+          </p>
+          <p>
+            <strong>Outlier handling</strong>은 이 난이도를 다른 곳으로 옮기는
+            방법들입니다. SmoothQuant는 activation과 weight 사이에 동등한
+            channel scaling을 넣어 난이도를 activation에서 weight로 옮기고
+            (자세한 인용은 release 절 참고), AWQ는 channel마다 활성화 크기에
+            비례한 scale을 따로 둬 salient weight를 보호합니다.
+          </p>
+        </div>
+        <div id="paper-awq" className="scroll-mt-24">
+          <CitationBlock
+            source="AWQ"
+            citeKey={1}
+            href="https://arxiv.org/abs/2306.00978"
+          >
+            <strong>문제:</strong> Weight-only PTQ에서 몇 % salient weight를
+            잘못 다루면 품질이 크게 떨어짐. <strong>기여:</strong> Activation
+            크기를 기준으로 channel마다 다른 scale을 줘 salient weight를
+            보호하는 channel-wise scaling. <strong>전제:</strong> 논문의
+            model·calibration·kernel 조건. <strong>근거 범위:</strong> AWQ
+            변환과 실험. <strong>과장 금지:</strong> 모든 model·bit width에서
+            동일 품질과 속도를 보장하지 않습니다.
+          </CitationBlock>
+        </div>
       </section>
       <section id="coverage" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">
@@ -176,7 +256,7 @@ export default function PtqCalibrationArticle() {
         <div id="paper-smoothquant" className="scroll-mt-24">
           <CitationBlock
             source="SmoothQuant"
-            citeKey={1}
+            citeKey={2}
             href="https://proceedings.mlr.press/v202/xiao23c.html"
           >
             <strong>문제:</strong> LLM activation outlier가 W8A8 PTQ를 어렵게

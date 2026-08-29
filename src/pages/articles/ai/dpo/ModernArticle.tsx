@@ -10,7 +10,7 @@ export default function ModernArticle() {
     <article className="space-y-16">
       <section id="overview" className="scroll-mt-20 space-y-7">
         <header className="space-y-3">
-          <p className="text-sm font-semibold text-primary">하나의 prompt와 두 response에서 시작합니다</p>
+          <p className="text-sm font-semibold text-primary">Direct Preference Optimization(DPO)은 하나의 prompt와 두 response에서 시작합니다</p>
           <h2 className="text-3xl font-bold tracking-tight">DPO는 reward를 없애는 기법이 아니라 pair의 선호를 policy log-ratio 안에 넣는 방법입니다</h2>
         </header>
         <div className="prose prose-neutral max-w-none dark:prose-invert">

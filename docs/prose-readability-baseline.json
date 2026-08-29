@@ -141,6 +141,10 @@
       "fingerprint": "05a4bec1afa1b37a",
       "score": 28
     },
+    "ai/multi-agent-implementation": {
+      "fingerprint": "b08af647b4683cf6",
+      "score": 28
+    },
     "ai/resnet": {
       "fingerprint": "4437e4576d4ff8d1",
       "score": 28
@@ -191,10 +195,6 @@
     },
     "ai/arima": {
       "fingerprint": "e016644ce2b7e475",
-      "score": 26
-    },
-    "ai/multi-agent-implementation": {
-      "fingerprint": "461a252353d1fce0",
       "score": 26
     },
     "ai/rag-pipeline": {
@@ -274,7 +274,7 @@
       "score": 24
     },
     "gpu/cuda-sync-streams": {
-      "fingerprint": "d784faf4e071746c",
+      "fingerprint": "401d045bc8e9f44d",
       "score": 24
     },
     "gpu/ec-gpu-ops": {
@@ -453,10 +453,6 @@
       "fingerprint": "1a85166ee755fbd2",
       "score": 18
     },
-    "ai/kv-cache-fundamentals": {
-      "fingerprint": "e6fdd251bf6a9bc6",
-      "score": 18
-    },
     "ai/llm-serving-capacity": {
       "fingerprint": "799082bba2bd81fa",
       "score": 18
@@ -534,7 +530,7 @@
       "score": 18
     },
     "ai/rlhf": {
-      "fingerprint": "0133df9d0c412d2a",
+      "fingerprint": "30e50a31a9e3d1ba",
       "score": 16
     },
     "ai/seq2seq": {
@@ -591,10 +587,6 @@
     },
     "ai/ecod": {
       "fingerprint": "90a7edb9419ebfe2",
-      "score": 14
-    },
-    "ai/prompt-engineering": {
-      "fingerprint": "7d8782c7166bb7fd",
       "score": 14
     },
     "ai/skills-anatomy": {
@@ -805,6 +797,10 @@
       "fingerprint": "c948f66d5b32c54e",
       "score": 10
     },
+    "ai/backprop-optimization": {
+      "fingerprint": "330b1cecc3f250f3",
+      "score": 10
+    },
     "ai/claw-mcp": {
       "fingerprint": "aacf4e76c86fa972",
       "score": 10
@@ -813,28 +809,16 @@
       "fingerprint": "3fcd3ca30d1c14d6",
       "score": 10
     },
-    "ai/context-window-optimization": {
-      "fingerprint": "e02c02164cdfe9b6",
-      "score": 10
-    },
     "ai/knowledge-distillation": {
-      "fingerprint": "b002d06269edec8d",
+      "fingerprint": "b69eb13aefafa359",
       "score": 10
     },
     "ai/lstm": {
       "fingerprint": "5a772f3b4722774a",
       "score": 10
     },
-    "ai/model-vram-budgeting": {
-      "fingerprint": "c309dd38a1584216",
-      "score": 10
-    },
     "ai/orpo": {
       "fingerprint": "ac7596507e9ac889",
-      "score": 10
-    },
-    "ai/prompt-structured-output": {
-      "fingerprint": "0e14d23d210c4705",
       "score": 10
     },
     "ai/qwen-korean-consistency": {
@@ -929,10 +913,6 @@
       "fingerprint": "55cad8e69ce6d71b",
       "score": 9
     },
-    "ai/backprop-optimization": {
-      "fingerprint": "3921578dd5ddc5bb",
-      "score": 8
-    },
     "ai/bptt": {
       "fingerprint": "a1b168843b2beefc",
       "score": 8
@@ -942,7 +922,7 @@
       "score": 8
     },
     "ai/dpo": {
-      "fingerprint": "bfeba95619ab7cf1",
+      "fingerprint": "3445b45ad01c3890",
       "score": 8
     },
     "ai/gru": {
@@ -1100,10 +1080,6 @@
     "crypto/field-arithmetic": {
       "fingerprint": "d54f7c7936c211f9",
       "score": 7
-    },
-    "ai/agent-memory-lifecycle": {
-      "fingerprint": "994188b1857dc77c",
-      "score": 6
     },
     "ai/attention-theory": {
       "fingerprint": "e917bddb82e4d62e",

@@ -21,6 +21,13 @@ export default function RagIngestionAndChunkingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
+            Retrieval-Augmented Generation(RAG)은 LLM 이 학습 시점 가중치만으로 답을 만드는 대신,
+            질문마다 외부 knowledge base 를 검색해 그 내용을 prompt context 에 넣고 그 위에서 답을
+            생성하게 하는 아키텍처입니다. 모델을 다시 학습하지 않고도 최신 정보나 사설 데이터를
+            답변에 반영할 수 있는 대신, 검색이 가져온 근거가 틀리면 생성 단계는 그 오류를 그대로
+            답에 옮깁니다.
+          </p>
+          <p className="text-lg leading-8">
             RAG 가 검색하는 대상은 원본 파일이 아니라 knowledge base 입니다. Knowledge base 는
             문서·chunk·metadata·embedding vector 를 함께 담은 저장소이고, document ingestion
             pipeline 이 그 저장소를 채우는 절차입니다. 이 순서(parsing → chunking → embedding)를

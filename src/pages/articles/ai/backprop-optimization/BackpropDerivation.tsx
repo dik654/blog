@@ -11,8 +11,11 @@ export default function BackpropDerivation() {
           Multi-class classification에서 softmax와 cross-entropy를 따로 미분하면
           softmax Jacobian의 diagonal과 off-diagonal 항이 보이지만, 두 operation을
           합치면 logit gradient는 prediction에서 target distribution을 뺀 값으로
-          정리된다. 실제 library가 raw logits를 받는 fused cross-entropy를 제공하는
-          이유는 이 경로를 수치적으로 안정되게 계산할 수 있기 때문이다.
+          정리된다.
+        </p>
+        <p>
+          실제 library가 raw logits를 받는 fused cross-entropy를 제공하는 이유는
+          이 경로를 수치적으로 안정되게 계산할 수 있기 때문이다.
         </p>
       </div>
 

@@ -9,7 +9,11 @@ const llmBaseArticles: Article[] = [
     subcategory: "ai-llm-theory",
     sections: [
       { id: "overview", title: "Capability와 behavior의 층위" },
-      { id: "pretraining", title: "Pretraining·continued training" },
+      {
+        id: "pretraining",
+        title: "Pretraining·continued training",
+        subsections: [{ id: "mid-training", title: "Mid-training: pretrain과 SFT 사이" }],
+      },
       { id: "post-training", title: "SFT·RLVR·OPD와 용어 경계" },
       { id: "agentic-training", title: "Trajectory·environment·verifier" },
       { id: "limits", title: "Soft limit·hard limit의 증거 경계" },

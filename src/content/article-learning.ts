@@ -4846,19 +4846,40 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "fused-softmax-cross-entropy-gradient", role: "Categorical output의 logit gradient를 prediction minus target으로 계산합니다." },
       { id: "batched-linear-backward", role: "Upstream matrix를 weight·bias·input gradient shape로 분배합니다." },
       { id: "training-intervention", role: "Gradient 계산과 optimizer·regularization 개입 지점을 구분합니다." },
-    ],
+      { id: "parameter-credit-assignment-problem", role: "수많은 parameter 각각이 최종 loss에 얼마나 기여했는지 알아내는, backprop이 푸는 핵심 문제를 정의합니다." },
+],
     conceptExplanations: [
-      { id: "loss-objective", sectionId: "loss-function", intuition: "여러 output error를 backward seed 하나로 모읍니다.", workedExample: "정답 확률 0.8의 NLL은 약 0.223입니다.", boundary: "Loss 하나가 task의 모든 가치를 대변하지는 않습니다." },
-      { id: "backpropagation", sectionId: "overview", intuition: "Output error의 책임을 hidden parameter까지 보냅니다.", workedExample: "Loss에서 output weight, activation, hidden weight 순으로 gradient를 전달합니다.", boundary: "Gradient 계산이지 update rule이 아닙니다." },
+      {
+        id: "loss-objective",
+        sectionId: "loss-function",
+        intuition: "여러 output error를 backward seed 하나로 모읍니다.",
+        workedExample: "정답 확률 0.8의 NLL은 약 0.223입니다.",
+        boundary: "Loss 하나가 task의 모든 가치를 대변하지는 않습니다.",
+      },
+      {
+        id: "backpropagation",
+        sectionId: "overview",
+        intuition: "Credit assignment problem의 답인 parameter별 gradient를, 출력 error의 책임을 hidden parameter까지 chain rule로 되돌려 계산합니다.",
+        workedExample: "Loss에서 output weight, activation, hidden weight 순으로 gradient를 전달하며, 이 순서가 parameter 수가 아니라 layer 수에 비례하는 비용을 만듭니다.",
+        boundary: "Gradient 계산이지 update rule이 아니며, 계산된 gradient를 실제로 소비하는 쪽은 gradient-based optimization입니다.",
+      },
       { id: "fused-softmax-cross-entropy-gradient", sectionId: "tensor-backward", intuition: "Softmax와 NLL을 함께 미분해 간단한 error vector를 만듭니다.", workedExample: "(0.7,0.2,0.1)−(1,0,0)=(−0.3,0.2,0.1)입니다.", boundary: "Softmax 단독 Jacobian이 identity라는 뜻이 아닙니다." },
       { id: "batched-linear-backward", sectionId: "tensor-backward", intuition: "Batch의 input과 error를 각 원래 tensor shape의 책임으로 모읍니다.", workedExample: "dW=XᵀG, db=row-sum(G), dX=GWᵀ입니다.", boundary: "Weight 저장 convention과 loss reduction을 고정해야 합니다." },
       { id: "training-intervention", sectionId: "overview", intuition: "Gradient 계산 뒤의 update와 다른 training 개입을 섞지 않습니다.", workedExample: "Backprop은 gradient, optimizer는 parameter update를 소유합니다.", boundary: "Regularization 세부 정본은 별도 글이 소유합니다." },
-    ],
+      {
+        id: "parameter-credit-assignment-problem",
+        sectionId: "overview",
+        intuition: "최종 성적표 하나를 보고 어느 팀원이 얼마나 잘했는지 나눠 계산하는 것과 같은 문제입니다.",
+        workedExample: "Parameter를 하나씩 흔들어 loss를 다시 재는 방법은 parameter 수(예: 수백만)만큼 forward pass가 필요하지만, backprop은 layer 수만큼의 backward pass로 모든 parameter의 답을 한 번에 구합니다.",
+        boundary: "RL의 trajectory·action에 대한 credit assignment와는 다른 층위이며, 이 글은 하나의 forward 계산 그래프 안 parameter 기여도만 다룹니다.",
+      },
+],
     conceptStages: [
-      { label: "00 scalar seed", relation: "Prediction error를 scalar loss로 모음", concepts: ["loss-objective"] },
-      { label: "01 output error", relation: "Categorical output의 logit 책임 생성", concepts: ["fused-softmax-cross-entropy-gradient"] },
-      { label: "02 tensor backward", relation: "Error를 weight·bias·input shape로 분배", concepts: ["backpropagation", "batched-linear-backward"] },
-      { label: "03 handoff", relation: "Gradient 계산과 update를 분리", concepts: ["training-intervention"] },
+      { label: "00 credit assignment", relation: "각 parameter가 최종 loss에 얼마나 기여했는지 알아내야 하는 문제를 정의합니다.", concepts: ["parameter-credit-assignment-problem"] },
+      { label: "01 scalar seed", relation: "Prediction error를 scalar loss로 모음", concepts: ["loss-objective"] },
+      { label: "02 output error", relation: "Categorical output의 logit 책임 생성", concepts: ["fused-softmax-cross-entropy-gradient"] },
+      { label: "03 tensor backward", relation: "Error를 weight·bias·input shape로 분배", concepts: ["backpropagation", "batched-linear-backward"] },
+      { label: "04 handoff", relation: "Gradient 계산과 update를 분리", concepts: ["training-intervention"] },
     ],
     exercises: [
       { level: "basic", question: "Backpropagation과 optimizer의 책임을 구분하세요.", answerChecklist: ["gradient calculation", "parameter update", "separate stages"], requiredConcepts: ["backpropagation", "training-intervention"], sectionId: "overview" },
@@ -4955,16 +4976,25 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "raw-gradient-moments", role: "Gradient와 gradient 제곱의 EMA를 first·second raw moment로 추적합니다." },
       { id: "ema-bias-correction", role: "0 initialization 때문에 초기 EMA가 작아지는 scale을 1−βᵗ로 보정합니다." },
       { id: "adaptive-preconditioning", role: "Squared-gradient history로 coordinate별 effective step을 조절합니다." },
-    ],
+      { id: "adam-optimizer", role: "Signed·squared moment EMA, bias correction, coordinate별 preconditioning을 하나의 optimizer update로 묶습니다." },
+],
     conceptExplanations: [
       { id: "raw-gradient-moments", sectionId: "moments", intuition: "Signed 방향 장부와 부호 없는 squared magnitude 장부를 따로 유지합니다.", workedExample: "β₁=.9,β₂=.999,g=2이면 첫 m=.2, v=.004입니다.", boundary: "v는 E[g²] 계열이며 centered variance E[(g−E[g])²]가 아닙니다." },
       { id: "ema-bias-correction", sectionId: "bias-correction", intuition: "빈 장부 0에서 시작해 초기에 작아진 EMA를 지금까지 들어온 coefficient mass로 나눕니다.", workedExample: "m₁=.2를 1−.9=.1로 나누면 m̂₁=2입니다.", boundary: "Dataset sampling bias나 model bias를 교정하는 장치가 아닙니다." },
       { id: "adaptive-preconditioning", sectionId: "preconditioning", intuition: "최근 gradient가 컸던 좌표는 짧게, 작았던 좌표는 상대적으로 길게 걷습니다.", workedExample: "같은 m̂에서 v̂=1은 1로, v̂=100은 10으로 나눕니다.", boundary: "Diagonal history scale이지 full Hessian inverse가 아니며 ε·dtype·trajectory에 의존합니다." },
-    ],
+      {
+        id: "adam-optimizer",
+        sectionId: "overview",
+        intuition: "방향을 기억하는 momentum에 더해, 각 좌표가 최근 얼마나 크게 흔들렸는지도 함께 기억해 그만큼 step을 줄입니다.",
+        workedExample: "β₁=.9,β₂=.999,g=2인 첫 step에서 m=.2,v=.004이며, bias correction 뒤 m̂=2,v̂=4로 update 크기를 정합니다.",
+        boundary: "v는 centered variance가 아니고 diagonal preconditioner는 Hessian inverse가 아니며, 이 조합이 모든 문제에서 SGD·momentum보다 낫다는 보장은 아닙니다.",
+      },
+],
     conceptStages: [
       { label: "Moment state", relation: "Signed gradient와 squared scale을 별도 EMA로 저장", concepts: ["raw-gradient-moments"] },
       { label: "Initialization", relation: "두 state의 누적 coefficient mass를 보정", concepts: ["ema-bias-correction"] },
       { label: "Adaptive step", relation: "Corrected direction을 coordinate scale로 나눔", concepts: ["adaptive-preconditioning"] },
+      { label: "Adam", relation: "세 요소를 하나의 optimizer update로 통합", concepts: ["adam-optimizer"] },
     ],
     exercises: [
       { level: "basic", question: "β₁=.9,β₂=.999,g=2,m₀=v₀=0의 m₁과 v₁을 계산하세요.", answerChecklist: ["m .2", "g squared 4", "v .004"], requiredConcepts: ["raw-gradient-moments"], sectionId: "moments" },
@@ -12115,8 +12145,9 @@ export const ARTICLE_LEARNING: Readonly<
       {
         "id": "regularization-ablation-contract",
         "role": "동일 seed·split·budget에서 regularization 한 축만 비교합니다."
-      }
-    ],
+      },
+      { id: "overfitting", role: "Gap의 다른 원인을 모두 배제한 뒤 남는, regularization이 실제로 다루는 대상을 정의합니다." },
+],
     "conceptExplanations": [
       {
         "id": "observed-generalization-gap",
@@ -12133,38 +12164,36 @@ export const ARTICLE_LEARNING: Readonly<
         "workedExample": "동일 five seeds·30k updates에서 baseline과 dropout p=.1의 paired validation gain을 계산합니다.",
         "boundary": "Search budget·stopping policy가 다르면 regularizer와 model-selection 효과가 섞입니다.",
         "counterexample": "후보만 두 배 오래 tuning하고 validation gain을 regularizer 효과라고 부르면 불공정합니다."
-      }
-    ],
-    "conceptStages": [
-      {
-        "label": "01 두 위험",
-        "relation": "Train과 validation empirical risk를 같은 단위로 정의합니다.",
-        "concepts": [
-          "empirical-risk"
-        ]
       },
       {
-        "label": "02 차이",
-        "relation": "두 위험에서 관측 gap을 만듭니다.",
-        "concepts": [
-          "observed-generalization-gap"
-        ]
+        id: "overfitting",
+        sectionId: "audit",
+        intuition: "시험 범위 밖의 문제까지 답을 외워서 연습문제는 잘 풀지만 실전 문제는 못 푸는 것과 같습니다.",
+        workedExample: "Train NLL .18로 낮은데 leakage·pipeline mismatch·label noise·distribution shift가 모두 배제되고도 validation NLL .31이 남으면 이 gap은 overfitting입니다.",
+        boundary: "Gap이 있다고 곧바로 overfitting은 아니며, 네 원인 중 하나라도 남아 있으면 regularization으로 gap이 줄지 않습니다.",
+      },
+],
+    conceptStages: [
+      {
+        label: "01 두 위험",
+        relation: "Train과 validation empirical risk를 같은 단위로 정의합니다.",
+        concepts: ["empirical-risk"],
       },
       {
-        "label": "03 원인",
-        "relation": "Leakage·pipeline·noise·shift를 배제합니다.",
-        "concepts": [
-          "train-validation-test",
-          "observed-generalization-gap"
-        ]
+        label: "02 차이",
+        relation: "두 위험에서 관측 gap을 만듭니다.",
+        concepts: ["observed-generalization-gap"],
       },
       {
-        "label": "04 선택",
-        "relation": "한 regularization 축만 paired comparison합니다.",
-        "concepts": [
-          "regularization-ablation-contract"
-        ]
-      }
+        label: "03 원인",
+        relation: "Leakage·pipeline·noise·shift를 배제하고 남은 gap만 overfitting으로 부릅니다.",
+        concepts: ["train-validation-test", "observed-generalization-gap", "overfitting"],
+      },
+      {
+        label: "04 선택",
+        relation: "확인된 overfitting에 대해 한 regularization 축만 paired comparison합니다.",
+        concepts: ["regularization-ablation-contract"],
+      },
     ],
     "exercises": [
       {
@@ -17588,15 +17617,47 @@ export const ARTICLE_LEARNING: Readonly<
     introducedHere: [
       { id: "quantization-scale-granularity", role: "Tensor·channel·group이 scale을 공유하는 범위를 정합니다." },
       { id: "ptq-calibration-coverage", role: "Layer·traffic slice별 saturation과 regression을 검사합니다." },
-    ],
+      { id: "ptq-vs-qat-tradeoff", role: "PTQ와 QAT가 quantization error를 언제 다루는지의 경계를 고정합니다." },
+      { id: "weight-vs-activation-quantization-target", role: "Weight quantization과 activation quantization이 겨냥하는 대상을 구분합니다." },
+      { id: "dynamic-vs-static-activation-quantization", role: "Static quantization이 쓰는 calibration dataset과 dynamic quantization의 실행 시 계산을 대조합니다." },
+      { id: "outlier-activation-and-handling", role: "Outlier activation이 만드는 saturation 문제와 SmoothQuant·AWQ의 outlier handling을 추가합니다." },
+],
     conceptExplanations: [
       { id: "quantization-scale-granularity", sectionId: "scale-granularity", intuition: "모든 값이 같은 자를 쓸지 작은 그룹마다 다른 자를 쓸지 정합니다.", workedExample: "4096 weights를 group 128로 나누면 scale 32개가 필요합니다.", boundary: "작은 group이 항상 task quality나 kernel speed를 높이지 않습니다." },
       { id: "ptq-calibration-coverage", sectionId: "coverage", intuition: "연습 표본으로 만든 자가 실제 traffic에서도 넘치지 않는지 구간별로 봅니다.", workedExample: "전체 .01%여도 긴 한국어 layer 20이 4%면 worst slice는 실패 후보입니다.", boundary: "낮은 saturation만으로 task quality를 보장하지 않습니다." },
-    ],
+      {
+        id: "ptq-vs-qat-tradeoff",
+        sectionId: "quantization-axes",
+        intuition: "이미 만든 물건을 배송 전에 한 번 재보정할지, 만드는 동안 오차를 보면서 다시 조립할지의 선택입니다.",
+        workedExample: "같은 checkpoint를 PTQ는 calibration 표본만으로 변환하고, QAT는 수천 step을 다시 학습해 fake-quant 오차에 적응시킵니다.",
+        boundary: "PTQ 실패가 곧 QAT 필요를 보장하지 않으며, QAT는 학습 데이터·compute 예산이 추가로 필요합니다.",
+      },
+      {
+        id: "weight-vs-activation-quantization-target",
+        sectionId: "quantization-axes",
+        intuition: "고정된 물건과 매번 새로 오는 물건 중 어느 쪽을 낮은 정밀도로 다룰지 정합니다.",
+        workedExample: "Weight만 4bit로 저장하고 activation은 그대로 두면 weight-only quantization, 둘 다 8bit면 W8A8입니다.",
+        boundary: "Activation quantization은 weight quantization과 별개로 매 forward의 range 변화를 감당해야 합니다.",
+      },
+      {
+        id: "dynamic-vs-static-activation-quantization",
+        sectionId: "dynamic-static-outliers",
+        intuition: "자를 미리 만들어 둘지 잴 때마다 새로 만들지의 선택이며, 미리 만든 자는 대표 표본으로 검증해야 합니다.",
+        workedExample: "Static quantization은 calibration dataset 500개 표본의 관측 range로 scale을 고정하고, dynamic quantization은 매 호출마다 그 입력의 min/max를 다시 봅니다.",
+        boundary: "Calibration dataset이 실제 traffic slice를 덮지 못하면 static scale은 배포 후에도 갱신되지 않습니다.",
+      },
+      {
+        id: "outlier-activation-and-handling",
+        sectionId: "dynamic-static-outliers",
+        intuition: "한 channel만 유독 크면 그 channel이 전체 자의 눈금을 정해버려 나머지가 뭉개집니다.",
+        workedExample: "Activation 대부분이 [-2,2]인데 한 channel만 20까지 나가면 scale이 20 기준으로 커져 나머지 channel의 rounding error가 커집니다.",
+        boundary: "Outlier handling은 난이도를 옮길 뿐 없애지 않으며, SmoothQuant·AWQ 모두 논문 조건 밖 model·bit width의 동일 품질을 보장하지 않습니다.",
+      },
+],
     conceptStages: [
-      { label: "00 checkpoint", relation: "Float checkpoint와 calibration data 역할을 분리합니다.", concepts: ["affine-uniform-quantizer", "quantization-scale-granularity"] },
-      { label: "01 observe", relation: "공유 범위마다 tensor 통계를 모읍니다.", concepts: ["quantization-scale-granularity"] },
-      { label: "02 validate", relation: "분리된 layer·slice의 포화를 계산합니다.", concepts: ["quantization-rounding-clipping-error", "ptq-calibration-coverage"] },
+      { label: "00 checkpoint", relation: "Float checkpoint와 calibration data 역할을 분리하고, 학습 후 변환하는 PTQ와 학습 중 재보정하는 QAT의 경계를 정합니다.", concepts: ["affine-uniform-quantizer", "quantization-scale-granularity", "ptq-vs-qat-tradeoff"] },
+      { label: "01 observe", relation: "공유 범위마다 tensor 통계를 모으고, weight·activation 중 어느 대상을 보는지와 scale을 언제 계산할지를 정합니다.", concepts: ["quantization-scale-granularity", "weight-vs-activation-quantization-target", "dynamic-vs-static-activation-quantization"] },
+      { label: "02 validate", relation: "분리된 layer·slice의 포화를 계산하고, outlier channel이 만드는 saturation을 별도로 봅니다.", concepts: ["quantization-rounding-clipping-error", "ptq-calibration-coverage", "outlier-activation-and-handling"] },
       { label: "03 release", relation: "Scale·packing·fallback을 artifact로 고정합니다.", concepts: ["quantization-scale-granularity", "ptq-calibration-coverage"] },
     ],
     exercises: [
@@ -17613,7 +17674,8 @@ export const ARTICLE_LEARNING: Readonly<
     ],
     papers: [
       { title: "SmoothQuant", href: "https://proceedings.mlr.press/v202/xiao23c.html", problem: "LLM activation outlier가 W8A8 PTQ를 어렵게 합니다.", contribution: "동등한 channel scaling으로 난이도를 activation에서 weight로 옮깁니다.", assumptions: "논문의 model·calibration·INT8 kernel 조건입니다.", evidenceScope: "SmoothQuant 변환과 실험입니다.", notClaim: "모든 model·bit width의 품질과 속도를 보장하지 않습니다.", sectionId: "paper-smoothquant" },
-    ],
+      { title: "AWQ", href: "https://arxiv.org/abs/2306.00978", problem: "Weight-only PTQ에서 소수 salient weight를 잘못 다루면 품질이 크게 떨어집니다.", contribution: "Activation 크기를 기준으로 channel마다 다른 scale을 줘 salient weight를 보호하는 channel-wise scaling을 제시합니다.", assumptions: "논문의 model·calibration·kernel 조건입니다.", evidenceScope: "AWQ 논문이 보고한 channel-wise scaling 변환과 그 실험 범위입니다.", notClaim: "모든 model·bit width에서 동일 품질과 속도를 보장하지 않습니다.", sectionId: "paper-awq" },
+],
   },
   "ai/quantization-aware-training": {
     coreIdea: "QAT는 float master weight를 유지하고 forward에는 fake quantization을 넣어 배포 오차를 노출하며, backward에는 STE surrogate를 사용한 뒤 converted artifact와 실제 kernel에서 다시 검증하는 재학습 절차입니다.",
@@ -18165,8 +18227,12 @@ export const ARTICLE_LEARNING: Readonly<
       {
         "id": "nm-semi-structured-constraint",
         "role": "모든 local group의 N:M eligibility를 검사합니다."
-      }
-    ],
+      },
+      { id: "model-compression-and-pruning-taxonomy", role: "Model compression을 quantization·distillation·pruning으로 나누고 pruning을 다시 structured·unstructured로 나눕니다." },
+      { id: "structured-pruning-granularity", role: "Attention head·layer·expert 중 어느 단위를 지우는지에 따른 shape·품질 profile을 고정합니다." },
+      { id: "expert-importance-estimation", role: "MoE expert pruning 전에 어떤 expert가 실제로 쓰이는지 재는 방법을 추가합니다." },
+      { id: "sparse-kernel-execution", role: "구조적 sparsity가 실제 연산 감소로 바뀌는 kernel 조건을 고정합니다." },
+],
     "conceptExplanations": [
       {
         "id": "structured-pruning-shape-propagation",
@@ -18181,187 +18247,115 @@ export const ARTICLE_LEARNING: Readonly<
         "intuition": "전체 절반이 아니라 네 명의 각 조마다 두 명을 남기는 규칙입니다.",
         "workedExample": "[1100|1010]은 2:4이고 [1110|1000]은 전체 .5여도 부적격입니다.",
         "boundary": "Axis·layout·dtype·operator와 실제 chosen tactic을 함께 확인합니다."
-      }
+      },
+      {
+        id: "model-compression-and-pruning-taxonomy",
+        sectionId: "compression-taxonomy",
+        intuition: "Model을 작게 만드는 방법은 수를 낮추거나(quantization), 다시 가르치거나(distillation), 아예 지우는(pruning) 세 갈래로 나뉩니다.",
+        workedExample: "10B parameter에서 개별 weight 90%를 지우면 저장은 줄어도 shape는 그대로지만, channel 25%를 지우면 dense matmul 크기 자체가 줄어듭니다.",
+        boundary: "Pruning 안에서도 개별 weight(unstructured)와 연결 단위(structured)는 저장·연산 이득의 조건이 다릅니다.",
+      },
+      {
+        id: "structured-pruning-granularity",
+        sectionId: "pruning-granularity",
+        intuition: "같은 shape propagation 계약이라도 무엇을 지우느냐(head·layer·expert)에 따라 남는 품질과 절약량이 달라집니다.",
+        workedExample: "BERT는 head 40%, LLaMA2-13B는 layer 25%(MMLU 55.0→52.2), Mixtral 8x7B는 expert 25%(2.9점 하락)까지 지워도 크게 무너지지 않았습니다.",
+        boundary: "어느 granularity가 유리한지는 model·task마다 다르고, 같은 비율이라도 어떤 단위를 지웠는지에 따라 손실 폭이 다릅니다.",
+      },
+      {
+        id: "expert-importance-estimation",
+        sectionId: "expert-importance",
+        intuition: "Expert를 지우기 전에 실제로 얼마나 쓰이는지 routing 빈도나 제거 시 loss 증가로 미리 잽니다.",
+        workedExample: "8개 expert 중 2개가 token의 40% 이상을 가져간다면 나머지 6개는 각각 10% 미만이라 pruning 후보 우선순위가 됩니다.",
+        boundary: "빈도·loss·유사도 중 어느 신호를 쓰느냐에 따라 우선순위가 달라지고, 학습 domain이 바뀌면 추정이 다시 필요합니다.",
+      },
+      {
+        id: "sparse-kernel-execution",
+        sectionId: "sparse-kernel-execution",
+        intuition: "Weight를 지워도 kernel이 그 pattern을 인식해 건너뛰지 못하면 저장만 줄고 연산은 그대로입니다.",
+        workedExample: "NVIDIA Ampere Sparse Tensor Core는 2:4 pattern에서만 2배 처리량을 내고, 임의 위치 sparsity는 같은 GPU에서도 가속되지 않습니다.",
+        boundary: "Eligible pattern이어도 kernel·builder가 그 tactic을 실제로 선택해야 하며, 선택 여부는 별도로 확인해야 합니다.",
+      },
+],
+    conceptStages: [
+      { label: "00 Landscape", relation: "Model compression의 세 lever와 pruning 안의 structured·unstructured 축을 고정합니다.", concepts: ["model-compression-and-pruning-taxonomy"] },
+      { label: "01 Dependency & shape", relation: "현재 output과 다음 input의 공유 dimension을 찾아 channel·head 제거를 graph 전체로 전파합니다.", concepts: ["structured-pruning-shape-propagation"] },
+      { label: "02 Pattern", relation: "Shape 유지 경로에서는 local N:M을 검사합니다.", concepts: ["nm-semi-structured-constraint"] },
+      { label: "03 Granularity & expert importance", relation: "Head·layer·expert 중 지울 단위를 고르고 expert는 importance부터 잽니다.", concepts: ["structured-pruning-granularity", "expert-importance-estimation"] },
+      { label: "04 Kernel execution", relation: "구조적 sparsity가 실제 연산 감소로 바뀌려면 kernel이 pattern을 인식해야 합니다.", concepts: ["sparse-kernel-execution"] },
+      { label: "05 Compile", relation: "Export shape·sparse tactic 선택·kernel 지원을 함께 검증합니다.", concepts: ["structured-pruning-shape-propagation", "nm-semi-structured-constraint", "sparse-kernel-execution"] },
     ],
-    "conceptStages": [
+    exercises: [
       {
-        "label": "00 Dependency",
-        "relation": "현재 output과 다음 input의 공유 dimension을 찾습니다.",
-        "concepts": [
-          "structured-pruning-shape-propagation"
-        ]
+        level: "basic",
+        question: "Channel pruning이 앞 output과 뒤 input을 함께 바꾸는 이유를 설명하세요.",
+        answerChecklist: ["shared dimension", "producer output", "consumer input", "graph propagation"],
+        requiredConcepts: ["structured-pruning-shape-propagation"],
+        sectionId: "overview",
       },
       {
-        "label": "01 Shape",
-        "relation": "Channel·head 제거를 graph 전체에 전파합니다.",
-        "concepts": [
-          "structured-pruning-shape-propagation"
-        ]
+        level: "basic",
+        question: "Input·output .75 retention의 arithmetic 비율을 계산하세요.",
+        answerChecklist: [".75 times .75", ".5625", "43.75 reduction", "not latency"],
+        requiredConcepts: ["structured-pruning-shape-propagation"],
+        sectionId: "shape-propagation",
       },
       {
-        "label": "02 Pattern",
-        "relation": "Shape 유지 경로에서는 local N:M을 검사합니다.",
-        "concepts": [
-          "nm-semi-structured-constraint"
-        ]
+        level: "basic",
+        question: "Head 제거 뒤 hidden width를 원래대로 채우는 반례를 설명하세요.",
+        answerChecklist: ["head removed", "projection remains", "dense shape unchanged", "parameter vs latency"],
+        requiredConcepts: ["structured-pruning-shape-propagation"],
+        sectionId: "overview",
       },
       {
-        "label": "03 Compile",
-        "relation": "Export shape 또는 sparse tactic 선택을 검증합니다.",
-        "concepts": [
-          "structured-pruning-shape-propagation",
-          "nm-semi-structured-constraint"
-        ]
-      }
-    ],
-    "exercises": [
-      {
-        "level": "basic",
-        "question": "Channel pruning이 앞 output과 뒤 input을 함께 바꾸는 이유를 설명하세요.",
-        "answerChecklist": [
-          "shared dimension",
-          "producer output",
-          "consumer input",
-          "graph propagation"
-        ],
-        "requiredConcepts": [
-          "structured-pruning-shape-propagation"
-        ],
-        "sectionId": "overview"
+        level: "basic",
+        question: "[1100|1010]의 2:4 적격성을 판정하세요.",
+        answerChecklist: ["two groups", "two kept each", "eligible", "axis fixed"],
+        requiredConcepts: ["nm-semi-structured-constraint"],
+        sectionId: "nm-pattern",
       },
       {
-        "level": "basic",
-        "question": "Input·output .75 retention의 arithmetic 비율을 계산하세요.",
-        "answerChecklist": [
-          ".75 times .75",
-          ".5625",
-          "43.75 reduction",
-          "not latency"
-        ],
-        "requiredConcepts": [
-          "structured-pruning-shape-propagation"
-        ],
-        "sectionId": "shape-propagation"
+        level: "basic",
+        question: "Unstructured pruning과 structured pruning이 같은 90%·25%라는 숫자에서도 왜 다른 종류의 이득을 주는지 설명하세요.",
+        answerChecklist: ["individual weight", "shape unchanged", "connected dimension", "shape shrinks"],
+        requiredConcepts: ["model-compression-and-pruning-taxonomy"],
+        sectionId: "compression-taxonomy",
       },
       {
-        "level": "basic",
-        "question": "Head 제거 뒤 hidden width를 원래대로 채우는 반례를 설명하세요.",
-        "answerChecklist": [
-          "head removed",
-          "projection remains",
-          "dense shape unchanged",
-          "parameter vs latency"
-        ],
-        "requiredConcepts": [
-          "structured-pruning-shape-propagation"
-        ],
-        "sectionId": "overview"
+        level: "basic",
+        question: "Attention head·layer·expert pruning 중 무엇을 지우는지에 따라 shape propagation 대상이 어떻게 달라지는지 설명하세요.",
+        answerChecklist: ["head projection slice", "residual block", "routed FFN", "same shape contract"],
+        requiredConcepts: ["structured-pruning-granularity"],
+        sectionId: "pruning-granularity",
       },
       {
-        "level": "basic",
-        "question": "[1100|1010]의 2:4 적격성을 판정하세요.",
-        "answerChecklist": [
-          "two groups",
-          "two kept each",
-          "eligible",
-          "axis fixed"
-        ],
-        "requiredConcepts": [
-          "nm-semi-structured-constraint"
-        ],
-        "sectionId": "nm-pattern"
+        level: "advanced",
+        question: "Residual block channel pruning dependency graph를 설계하세요.",
+        answerChecklist: ["main path", "skip path", "norm", "projection", "shared indices", "shape test"],
+        requiredConcepts: ["structured-pruning-shape-propagation"],
+        sectionId: "shape-propagation",
       },
       {
-        "level": "basic",
-        "question": "[1110|1000]이 전체 density .5인데 부적격인 이유를 쓰세요.",
-        "answerChecklist": [
-          "3 and 1",
-          "local rule",
-          "global count insufficient",
-          "ineligible"
-        ],
-        "requiredConcepts": [
-          "nm-semi-structured-constraint"
-        ],
-        "sectionId": "nm-pattern"
+        level: "advanced",
+        question: "FLOPs .5625인데 latency .8인 반례를 진단하세요.",
+        answerChecklist: ["memory", "launch", "alignment", "occupancy", "measure"],
+        requiredConcepts: ["structured-pruning-shape-propagation"],
+        sectionId: "shape-propagation",
       },
       {
-        "level": "basic",
-        "question": "Eligible과 chosen tactic을 구분하세요.",
-        "answerChecklist": [
-          "mask pattern",
-          "supported dtype op",
-          "builder choice",
-          "benchmark"
-        ],
-        "requiredConcepts": [
-          "nm-semi-structured-constraint"
-        ],
-        "sectionId": "paper-structured-sparsity"
+        level: "advanced",
+        question: "MoE expert 8개 중 절반을 지울 때 importance score를 무엇으로 매길지, 그리고 그 점수가 domain shift에서 실패할 수 있는 이유를 설명하세요.",
+        answerChecklist: ["routing frequency", "loss increase", "output similarity", "calibration domain", "recalibrate"],
+        requiredConcepts: ["expert-importance-estimation"],
+        sectionId: "expert-importance",
       },
       {
-        "level": "advanced",
-        "question": "Residual block channel pruning dependency graph를 설계하세요.",
-        "answerChecklist": [
-          "main path",
-          "skip path",
-          "norm",
-          "projection",
-          "shared indices",
-          "shape test"
-        ],
-        "requiredConcepts": [
-          "structured-pruning-shape-propagation"
-        ],
-        "sectionId": "shape-propagation"
+        level: "advanced",
+        question: "구조적으로 pruning했지만 latency가 그대로인 상황을 sparse kernel 지원 여부로 진단하는 절차를 설계하세요.",
+        answerChecklist: ["pattern recognized", "supported tactic", "N:M eligibility", "measure latency", "not just storage"],
+        requiredConcepts: ["sparse-kernel-execution", "nm-semi-structured-constraint"],
+        sectionId: "sparse-kernel-execution",
       },
-      {
-        "level": "advanced",
-        "question": "FLOPs .5625인데 latency .8인 반례를 진단하세요.",
-        "answerChecklist": [
-          "memory",
-          "launch",
-          "alignment",
-          "occupancy",
-          "measure"
-        ],
-        "requiredConcepts": [
-          "structured-pruning-shape-propagation"
-        ],
-        "sectionId": "shape-propagation"
-      },
-      {
-        "level": "advanced",
-        "question": "2:4 mask의 axis permutation 오류를 탐지하는 test를 설계하세요.",
-        "answerChecklist": [
-          "layout",
-          "reduction axis",
-          "group counts",
-          "serialization",
-          "kernel log"
-        ],
-        "requiredConcepts": [
-          "nm-semi-structured-constraint"
-        ],
-        "sectionId": "nm-pattern"
-      },
-      {
-        "level": "advanced",
-        "question": "Channel-pruned와 2:4 후보를 같은 workload에서 비교하세요.",
-        "answerChecklist": [
-          "same base",
-          "quality gate",
-          "artifact shape",
-          "tactic",
-          "memory",
-          "p95"
-        ],
-        "requiredConcepts": [
-          "structured-pruning-shape-propagation",
-          "nm-semi-structured-constraint"
-        ],
-        "sectionId": "paper-structured-sparsity"
-      }
     ],
     "papers": [
       {
@@ -18373,8 +18367,48 @@ export const ARTICLE_LEARNING: Readonly<
         "evidenceScope": "Structured sparsity build와 inference 범위입니다.",
         "notClaim": "모든 eligible layer가 빠른 sparse tactic을 선택한다는 뜻은 아닙니다.",
         "sectionId": "paper-structured-sparsity"
-      }
-    ]
+      },
+      {
+        title: "Are Sixteen Heads Really Better than One?",
+        href: "https://arxiv.org/abs/1905.10650",
+        problem: "학습 때 여러 attention head를 쓴 모델이 추론 때도 모든 head가 정말 필요한지 확인합니다.",
+        contribution: "Greedy pruning으로 WMT en-de는 head 20%, BERT는 40%까지 제거해도 성능 저하가 크지 않음을 보입니다.",
+        assumptions: "논문의 model·task·pruning 절차 조건입니다.",
+        evidenceScope: "해당 실험의 head 제거 비율과 성능 측정 범위입니다.",
+        notClaim: "이 비율이 모든 model·task로 그대로 옮겨간다는 뜻은 아닙니다.",
+        sectionId: "pruning-granularity",
+      },
+      {
+        title: "ShortGPT: Layers in Large Language Models are More Redundant Than You Expect",
+        href: "https://arxiv.org/abs/2403.03853",
+        problem: "LLM layer가 실제로 얼마나 redundant한지 측정하고 제거 가능한 layer를 찾습니다.",
+        contribution: "입출력 유사도로 정의한 Block Influence 점수로 layer를 지워 LLaMA2-13B에서 25% 제거·MMLU 52.2 유지, LLaMA3.1-8B에서 최대 1.49배 속도 향상을 보입니다.",
+        assumptions: "논문의 model·benchmark·pruning 비율 조건입니다.",
+        evidenceScope: "해당 model family의 layer 제거 실험 범위입니다.",
+        notClaim: "모든 model이 같은 비율에서 같은 성능을 유지한다는 뜻은 아닙니다.",
+        sectionId: "pruning-granularity",
+      },
+      {
+        title: "Not All Experts are Equal: Efficient Expert Pruning and Skipping for Mixture-of-Experts Large Language Models",
+        href: "https://arxiv.org/abs/2402.14800",
+        problem: "MoE model의 거대한 parameter를 배포 가능하게 줄이면서 성능을 지키는 방법을 다룹니다.",
+        contribution: "Task-agnostic·task-specific expert importance를 계산해 Mixtral 8x7B에서 expert 2개 제거 시 2.9점, 4개 제거 시 7.1점 하락에 그치는 pruning·skipping 방법을 제시합니다.",
+        assumptions: "논문의 model·evaluation task 조건입니다.",
+        evidenceScope: "해당 MoE model의 post-training expert pruning 실험 범위입니다.",
+        notClaim: "모든 MoE architecture·routing 방식에서 같은 하락 폭을 보장하지 않습니다.",
+        sectionId: "expert-importance",
+      },
+      {
+        title: "Accelerating Sparse Deep Neural Networks",
+        href: "https://arxiv.org/abs/2104.08378",
+        problem: "Sparse weight가 실제 GPU 연산 감소로 이어지려면 무엇이 필요한지 다룹니다.",
+        contribution: "NVIDIA Ampere Tensor Core가 2:4 structured sparsity pattern을 인식해 dense 대비 2배 math throughput을 내는 workflow와 정확도 유지 방법을 제시합니다.",
+        assumptions: "논문의 Ampere 세대 GPU·2:4 pattern 조건입니다.",
+        evidenceScope: "해당 세대 Tensor Core의 sparse matmul 실험 범위입니다.",
+        notClaim: "임의 pattern의 unstructured sparsity에도 같은 2배가 적용된다는 뜻은 아닙니다.",
+        sectionId: "sparse-kernel-execution",
+      },
+]
   },
   "ai/one-shot-llm-pruning": {
     "entryLevel": true,
@@ -18878,31 +18912,15 @@ export const ARTICLE_LEARNING: Readonly<
       }
     ],
     "introducedHere": [
-      {
-        "id": "distillation-signal-interface",
-        "role": "Logit·feature·sequence·self-teacher 중 공유 가능한 supervision을 고릅니다."
-      },
-      {
-        "id": "temperature-soft-target",
-        "role": "Temperature에 따른 class odds와 non-target probability를 계산합니다."
-      },
-      {
-        "id": "hard-soft-distillation-objective",
-        "role": "Ground-truth CE와 teacher KL을 alpha로 혼합합니다."
-      },
-      {
-        "id": "distillation-temperature-gradient-scale",
-        "role": "큰 T에서 soft-target gradient가 약해지는 1/T² 관계를 설명합니다."
-      },
-      {
-        "id": "distillation-kl-direction",
-        "role": "Forward·reverse KL의 expectation과 penalty 차이를 구분합니다."
-      },
-      {
-        "id": "feature-distillation-alignment",
-        "role": "Layer·position·dimension을 projection으로 맞춰 feature loss를 계산합니다."
-      }
-    ],
+      { id: "distillation-signal-interface", role: "Logit·feature·sequence·self-teacher 중 공유 가능한 supervision을 고릅니다." },
+      { id: "temperature-soft-target", role: "Temperature에 따른 class odds와 non-target probability를 계산합니다." },
+      { id: "hard-soft-distillation-objective", role: "Ground-truth CE와 teacher KL을 alpha로 혼합합니다." },
+      { id: "distillation-temperature-gradient-scale", role: "큰 T에서 soft-target gradient가 약해지는 1/T² 관계를 설명합니다." },
+      { id: "distillation-kl-direction", role: "Forward·reverse KL의 expectation과 penalty 차이를 구분합니다." },
+      { id: "feature-distillation-alignment", role: "Layer·position·dimension을 projection으로 맞춰 feature loss를 계산합니다." },
+      { id: "teacher-student-distillation-framework", role: "Teacher/student 역할과 knowledge distillation 전체 절차의 이름을 고정합니다." },
+      { id: "distillation-scope-taxonomy", role: "Task-specific distillation과 capability distillation을 목표 범위로 구분합니다." },
+],
     "conceptExplanations": [
       {
         "id": "distillation-signal-interface",
@@ -18947,186 +18965,120 @@ export const ARTICLE_LEARNING: Readonly<
         "intuition": "해상도와 열 수가 다른 두 표를 바로 빼지 않고 같은 행의 의미를 맞춘 뒤 변환표로 열 수를 맞춥니다.",
         "workedExample": "Student hidden 384를 linear projection으로 teacher 1024에 보낸 뒤 같은 non-padding token의 selected layers에서 MSE를 계산합니다.",
         "boundary": "Hidden coordinate는 고유하지 않고 layer·position mapping이 의미 있어야 하며 feature loss 감소가 downstream gain을 보장하지 않습니다."
-      }
+      },
+      {
+        id: "teacher-student-distillation-framework",
+        sectionId: "overview",
+        intuition: "이미 학습을 마친 teacher가 정답 대신 그 판단 자체를 student에게 보여주고, student는 그 판단을 흉내 내며 자기 parameter만 학습하는 관계를 teacher/student로 부릅니다.",
+        workedExample: "24층·1024차원 teacher는 gradient를 받지 않는 고정 target 역할만 하고, 12층·384차원 student만 backprop으로 갱신됩니다.",
+        boundary: "Teacher가 크다는 사실만으로 student가 그 성능을 재현한다는 보장은 없고, 공유 가능한 signal이 먼저 있어야 distillation이 성립합니다.",
+      },
+      {
+        id: "distillation-scope-taxonomy",
+        sectionId: "distillation-scope",
+        intuition: "Distillation이 노리는 목표가 배포할 task 하나인지 여러 task에 걸친 일반 능력인지에 따라 필요한 데이터 다양성과 평가 방식이 완전히 달라집니다.",
+        workedExample: "감성분류 하나만 배포한다면 그 task의 held-out 정확도만 보는 task-specific distillation으로 충분하지만, 코딩·추론·대화를 두루 다루는 assistant는 benchmark suite 평균으로 검증하는 capability distillation이 필요합니다.",
+        boundary: "Task-specific distillation은 학습에 없던 새 task로 일반화를 보장하지 않고, capability distillation은 폭넓은 데이터가 필요해 특정 task 하나만 보면 좁게 학습한 student보다 못할 수 있습니다.",
+      },
+],
+    conceptStages: [
+      {
+        label: "00 interface",
+        relation: "Teacher/student 역할을 정의하고 전달할 class·feature interface를 고릅니다.",
+        concepts: ["probability-distribution", "teacher-student-distillation-framework", "distillation-signal-interface"],
+      },
+      {
+        label: "01 soft target",
+        relation: "Temperature와 KL 방향으로 class 관계를 전달합니다.",
+        concepts: ["softmax-normalization", "temperature-soft-target", "distillation-kl-direction"],
+      },
+      {
+        label: "02 objective",
+        relation: "Hard label과 teacher signal의 gradient scale을 결합합니다.",
+        concepts: ["cross-entropy-nll", "distillation-temperature-gradient-scale", "hard-soft-distillation-objective"],
+      },
+      {
+        label: "03 feature",
+        relation: "Layer·position·dimension bridge를 고정합니다.",
+        concepts: ["matrix-multiplication", "feature-distillation-alignment"],
+      },
+      {
+        label: "04 scope",
+        relation: "Task-specific인지 capability인지에 따라 학습 데이터와 평가 기준을 나눕니다.",
+        concepts: ["train-validation-test", "distillation-scope-taxonomy"],
+      },
     ],
-    "conceptStages": [
+    exercises: [
       {
-        "label": "00 interface",
-        "relation": "Teacher가 전달할 class·feature interface를 고릅니다.",
-        "concepts": [
-          "probability-distribution",
-          "distillation-signal-interface"
-        ]
+        level: "basic",
+        question: "Teacher/student model 정의와 Logit·feature 중 가능한 distillation interface를 고르는 기준을 함께 설명하세요.",
+        answerChecklist: ["teacher fixed target", "student backprop", "shared class order", "student capacity"],
+        requiredConcepts: ["teacher-student-distillation-framework", "distillation-signal-interface"],
+        sectionId: "overview",
       },
       {
-        "label": "01 soft target",
-        "relation": "Temperature와 KL 방향으로 class 관계를 전달합니다.",
-        "concepts": [
-          "softmax-normalization",
-          "temperature-soft-target",
-          "distillation-kl-direction"
-        ]
+        level: "basic",
+        question: "Temperature가 class odds를 완만하게 만드는 순서를 설명하세요.",
+        answerChecklist: ["divide logits", "exponentiate", "normalize", "order preserved"],
+        requiredConcepts: ["temperature-soft-target"],
+        sectionId: "soft-target",
       },
       {
-        "label": "02 objective",
-        "relation": "Hard label과 teacher signal의 gradient scale을 결합합니다.",
-        "concepts": [
-          "cross-entropy-nll",
-          "distillation-temperature-gradient-scale",
-          "hard-soft-distillation-objective"
-        ]
+        level: "basic",
+        question: "Hard-label과 soft-target loss가 각각 무엇을 고정하는지 설명하세요.",
+        answerChecklist: ["ground truth", "teacher relation", "alpha", "gradient conflict"],
+        requiredConcepts: ["hard-soft-distillation-objective"],
+        sectionId: "hard-soft-loss",
       },
       {
-        "label": "03 feature",
-        "relation": "Layer·position·dimension bridge를 고정합니다.",
-        "concepts": [
-          "matrix-multiplication",
-          "feature-distillation-alignment"
-        ]
-      }
-    ],
-    "exercises": [
-      {
-        "level": "basic",
-        "question": "Logit·feature 중 가능한 distillation interface를 고르는 기준을 설명하세요.",
-        "answerChecklist": [
-          "shared class order",
-          "hidden access",
-          "student capacity",
-          "teacher quality"
-        ],
-        "requiredConcepts": [
-          "distillation-signal-interface"
-        ],
-        "sectionId": "overview"
+        level: "basic",
+        question: "Forward KL의 teacher·student 인수 순서를 설명하세요.",
+        answerChecklist: ["teacher expectation", "student support", "not symmetric", "library order"],
+        requiredConcepts: ["distillation-kl-direction"],
+        sectionId: "hard-soft-loss",
       },
       {
-        "level": "basic",
-        "question": "Temperature가 class odds를 완만하게 만드는 순서를 설명하세요.",
-        "answerChecklist": [
-          "divide logits",
-          "exponentiate",
-          "normalize",
-          "order preserved"
-        ],
-        "requiredConcepts": [
-          "temperature-soft-target"
-        ],
-        "sectionId": "soft-target"
+        level: "basic",
+        question: "384차원 student와 1024차원 teacher feature 사이에 필요한 bridge를 설명하세요.",
+        answerChecklist: ["layer pair", "position alignment", "384 to 1024 projection", "mask"],
+        requiredConcepts: ["feature-distillation-alignment"],
+        sectionId: "feature-alignment",
       },
       {
-        "level": "basic",
-        "question": "Hard-label과 soft-target loss가 각각 무엇을 고정하는지 설명하세요.",
-        "answerChecklist": [
-          "ground truth",
-          "teacher relation",
-          "alpha",
-          "gradient conflict"
-        ],
-        "requiredConcepts": [
-          "hard-soft-distillation-objective"
-        ],
-        "sectionId": "hard-soft-loss"
+        level: "basic",
+        question: "Task-specific distillation과 capability distillation의 평가 기준 차이를 설명하세요.",
+        answerChecklist: ["single task accuracy", "benchmark suite average", "generalization limit", "training cost"],
+        requiredConcepts: ["distillation-scope-taxonomy"],
+        sectionId: "distillation-scope",
       },
       {
-        "level": "basic",
-        "question": "Forward KL의 teacher·student 인수 순서를 설명하세요.",
-        "answerChecklist": [
-          "teacher expectation",
-          "student support",
-          "not symmetric",
-          "library order"
-        ],
-        "requiredConcepts": [
-          "distillation-kl-direction"
-        ],
-        "sectionId": "hard-soft-loss"
+        level: "advanced",
+        question: "Logit 차이 4에서 T=1·2 class odds를 계산하세요.",
+        answerChecklist: ["e to four", "about 54.6", "e squared", "about 7.4", "same order"],
+        requiredConcepts: ["temperature-soft-target"],
+        sectionId: "soft-target",
       },
       {
-        "level": "basic",
-        "question": "384차원 student와 1024차원 teacher feature 사이에 필요한 bridge를 설명하세요.",
-        "answerChecklist": [
-          "layer pair",
-          "position alignment",
-          "384 to 1024 projection",
-          "mask"
-        ],
-        "requiredConcepts": [
-          "feature-distillation-alignment"
-        ],
-        "sectionId": "feature-alignment"
+        level: "advanced",
+        question: "Alpha=0·1 경계와 teacher 오답 sample의 gradient conflict를 분석하세요.",
+        answerChecklist: ["supervised only", "teacher only", "opposing gradients", "validation"],
+        requiredConcepts: ["hard-soft-distillation-objective"],
+        sectionId: "hard-soft-loss",
       },
       {
-        "level": "basic",
-        "question": "Distillation release에서 agreement와 independent quality를 분리하세요.",
-        "answerChecklist": [
-          "teacher agreement",
-          "test quality",
-          "calibration",
-          "student runtime"
-        ],
-        "requiredConcepts": [
-          "distillation-signal-interface"
-        ],
-        "sectionId": "release-gate"
+        level: "advanced",
+        question: "큰 T에서 T² 보정이 나오는 두 개의 1/T 요인을 설명하세요.",
+        answerChecklist: ["softmax derivative", "probability residual", "large T assumption", "not exact always"],
+        requiredConcepts: ["distillation-temperature-gradient-scale"],
+        sectionId: "hard-soft-loss",
       },
       {
-        "level": "advanced",
-        "question": "Logit 차이 4에서 T=1·2 class odds를 계산하세요.",
-        "answerChecklist": [
-          "e to four",
-          "about 54.6",
-          "e squared",
-          "about 7.4",
-          "same order"
-        ],
-        "requiredConcepts": [
-          "temperature-soft-target"
-        ],
-        "sectionId": "soft-target"
+        level: "advanced",
+        question: "Feature MSE가 낮아도 task quality가 나빠지는 반례와 ablation을 설계하세요.",
+        answerChecklist: ["coordinate non-uniqueness", "wrong layer", "output metric", "remove feature loss"],
+        requiredConcepts: ["feature-distillation-alignment"],
+        sectionId: "feature-alignment",
       },
-      {
-        "level": "advanced",
-        "question": "Alpha=0·1 경계와 teacher 오답 sample의 gradient conflict를 분석하세요.",
-        "answerChecklist": [
-          "supervised only",
-          "teacher only",
-          "opposing gradients",
-          "validation"
-        ],
-        "requiredConcepts": [
-          "hard-soft-distillation-objective"
-        ],
-        "sectionId": "hard-soft-loss"
-      },
-      {
-        "level": "advanced",
-        "question": "큰 T에서 T² 보정이 나오는 두 개의 1/T 요인을 설명하세요.",
-        "answerChecklist": [
-          "softmax derivative",
-          "probability residual",
-          "large T assumption",
-          "not exact always"
-        ],
-        "requiredConcepts": [
-          "distillation-temperature-gradient-scale"
-        ],
-        "sectionId": "hard-soft-loss"
-      },
-      {
-        "level": "advanced",
-        "question": "Feature MSE가 낮아도 task quality가 나빠지는 반례와 ablation을 설계하세요.",
-        "answerChecklist": [
-          "coordinate non-uniqueness",
-          "wrong layer",
-          "output metric",
-          "remove feature loss"
-        ],
-        "requiredConcepts": [
-          "feature-distillation-alignment"
-        ],
-        "sectionId": "feature-alignment"
-      }
     ],
     "papers": [
       {
@@ -21340,7 +21292,8 @@ export const ARTICLE_LEARNING: Readonly<
         id: "manufacturing-advisory-control-boundary",
         role: "LLM advisory와 실제 설비 command의 권한 경로를 분리합니다.",
       },
-    ],
+      { id: "multi-agent-system-and-orchestrator", role: "여러 agent instance로 나뉜 전체 구성, worker를 부르고 합치는 orchestrator 역할, 역할을 나누는 specialization과 나뉜 agent를 맞추는 coordination을 이름 붙입니다." },
+],
     conceptExplanations: [
       {
         id: "multiagent-baseline-gain",
@@ -21415,8 +21368,20 @@ export const ARTICLE_LEARNING: Readonly<
         boundary:
           "Fail-safe·emergency stop·PLC interlock을 agent runtime·network·model availability에 의존시키면 안 됩니다.",
       },
-    ],
+      {
+        id: "multi-agent-system-and-orchestrator",
+        sectionId: "overview",
+        intuition: "여러 사람이 각자 다른 자료·권한으로 나눠 일하고, 그 배분과 취합을 한 명이 맡는 구조와 같습니다. 역할을 나눈다고 저절로 맞물리지 않고 순서·의존성을 맞추는 별도 조율이 필요합니다.",
+        workedExample: "Researcher·implementer·reviewer가 서로 다른 tool 권한을 갖고, coordinator가 join 시점에 각 worker 결과를 받아 다음 단계로 넘깁니다.",
+        boundary: "Agent 수를 늘리는 것 자체가 이득이 아니고, 아래 baseline gain 수식으로 실제 순이득을 확인해야 합니다.",
+      },
+],
     conceptStages: [
+      {
+        label: "System definition",
+        relation: "Multi-agent system·orchestrator와 그 안의 role specialization·coordination 이름을 고정합니다.",
+        concepts: ["multi-agent-system-and-orchestrator"],
+      },
       {
         label: "Partition decision",
         relation:
@@ -23681,31 +23646,34 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "post-training-method-boundary", role: "SFT·RLVR·OPD와 PTQ·LoRA의 category를 구분합니다." },
       { id: "agentic-trajectory-training-loop", role: "Tool action·observation·effect·verifier를 training trajectory로 만듭니다." },
       { id: "paradigm-limit-evidence-boundary", role: "현재 recipe의 soft limit과 구조적 hard limit 주장의 근거를 나눕니다." },
-    ],
+      { id: "llm-mid-training-stage", role: "Pretrain과 SFT 사이에서 같은 objective를 좁은 corpus 분포로 이어가는 단계를 정의합니다." },
+],
     conceptExplanations: [
       { id: "llm-training-stage-boundary", sectionId: "overview", intuition: "같은 coding 능력도 code를 읽어 표현을 만드는 단계, test reward로 행동을 고치는 단계, shell을 실제 실행하는 단계가 다릅니다.", workedExample: "Corpus→continued mixture→SFT/RL/OPD→sandbox harness 순서로 input과 state owner를 적습니다.", boundary: "Post-training 성과가 pretraining·architecture 불필요성을 뜻하지 않습니다." },
       { id: "autoregressive-pretraining-objective", sectionId: "pretraining", intuition: "앞 token을 보고 실제 다음 token에 높은 확률을 주도록 모든 위치의 비용을 평균합니다.", workedExample: "길이 4 target의 NLL 네 개를 더해 4로 나눕니다.", boundary: "낮은 token loss가 factuality·safety·tool success를 보장하지 않습니다." },
       { id: "post-training-method-boundary", sectionId: "post-training", intuition: "좋은 문자열·선호·reward·teacher distribution은 서로 다른 채점표입니다.", workedExample: "PTQ는 weight artifact를 low-bit로 바꾸고 LoRA는 update parameterization을 바꾸므로 objective 이름이 아닙니다.", boundary: "모든 post-training 방법을 RL이나 PEFT로 묶지 않습니다." },
       { id: "agentic-trajectory-training-loop", sectionId: "agentic-training", intuition: "도구를 쓰면 다음 문제 상태가 달라지므로 action과 observation 전체가 한 sample이 됩니다.", workedExample: "repo search→edit→test fail→log inspect→test pass를 effect receipt와 저장합니다.", boundary: "Final reward 하나만으로 어느 token·action이 원인인지 자동 알 수 없습니다." },
       { id: "paradigm-limit-evidence-boundary", sectionId: "limits", intuition: "현재 recipe로 아직 못 고친 실패와 paradigm이 원리상 못 고치는 실패를 관찰만으로 구분하지 않습니다.", workedExample: "Long-horizon drift에 context·RL·architecture intervention을 같은 budget에서 비교합니다.", boundary: "Soft·hard limit은 공식 taxonomy가 아니며 matched intervention 근거가 필요합니다." },
-    ],
+      { id: "llm-mid-training-stage", sectionId: "mid-training", intuition: "일반 교재로 기초를 익힌 뒤, 전공 서적으로 옮겨 가되 아직 문제 풀이 정답지는 보지 않는 단계와 같습니다.", workedExample: "Pretraining 말기 mixture에서 code 비중을 10%에서 40%로 올려 수백억 token을 더 학습하면, 이후 SFT가 더 적은 demonstration만으로도 code 목표 행동에 도달하기 쉬워집니다.", boundary: "Labeled instruction-response 쌍을 아직 쓰지 않는다는 점에서 SFT와 다르고, 조직마다 범위가 달라 이름보다 data·objective·checkpoint handoff를 확인해야 합니다." },
+],
     conceptStages: [
       { label: "00 stage map", relation: "각 단계가 받는 input과 바꾸는 state를 분리합니다.", concepts: ["llm-training-stage-boundary"] },
       { label: "01 substrate", relation: "Causal next-token objective로 capability 바닥을 만듭니다.", concepts: ["autoregressive-pretraining-objective"] },
-      { label: "02 feedback", relation: "Post-training signal과 artifact 변환을 구분합니다.", concepts: ["post-training-method-boundary"] },
-      { label: "03 environment", relation: "Action·observation·verifier를 trajectory로 묶습니다.", concepts: ["agentic-trajectory-training-loop"] },
-      { label: "04 evidence", relation: "Paradigm 한계 주장의 강도를 제한합니다.", concepts: ["paradigm-limit-evidence-boundary"] },
+      { label: "02 mid-training", relation: "같은 objective를 좁힌 corpus 분포로 이어가 SFT 이전에 목표 분포로 기울입니다.", concepts: ["llm-mid-training-stage"] },
+      { label: "03 feedback", relation: "Post-training signal과 artifact 변환을 구분합니다.", concepts: ["post-training-method-boundary"] },
+      { label: "04 environment", relation: "Action·observation·verifier를 trajectory로 묶습니다.", concepts: ["agentic-trajectory-training-loop"] },
+      { label: "05 evidence", relation: "Paradigm 한계 주장의 강도를 제한합니다.", concepts: ["paradigm-limit-evidence-boundary"] },
     ],
     exercises: [
       { level: "basic", question: "Pretraining·post-training·agent harness가 각각 주로 바꾸는 대상을 설명하세요.", answerChecklist: ["corpus", "representation", "feedback", "policy behavior", "environment", "runtime state"], requiredConcepts: ["llm-training-stage-boundary"], sectionId: "overview" },
       { level: "basic", question: "길이 T sequence의 autoregressive pretraining NLL을 token별로 계산하는 순서를 설명하세요.", answerChecklist: ["causal prefix", "next token", "probability", "negative log", "sum", "divide by T"], requiredConcepts: ["autoregressive-pretraining-objective"], sectionId: "pretraining" },
-      { level: "basic", question: "Continued training과 SFT의 data·target 차이를 설명하세요.", answerChecklist: ["unlabeled corpus", "self-supervised objective", "demonstration", "response targets", "checkpoint handoff", "not same stage"], requiredConcepts: ["llm-training-stage-boundary"], sectionId: "pretraining" },
+      { level: "basic", question: "Mid-training과 SFT가 각각 쓰는 data·objective의 차이를 설명하세요.", answerChecklist: ["same next-token objective", "narrowed corpus distribution", "no labeled instruction-response yet", "SFT uses demonstration targets", "checkpoint handoff"], requiredConcepts: ["llm-mid-training-stage"], sectionId: "mid-training" },
       { level: "basic", question: "LLM post-training과 PTQ의 post-training이 다른 이유를 설명하세요.", answerChecklist: ["behavior feedback", "weight update", "artifact conversion", "calibration", "low-bit", "name collision"], requiredConcepts: ["post-training-method-boundary"], sectionId: "post-training" },
       { level: "basic", question: "SFT·RLVR·OPD가 제공하는 학습 신호를 비교하세요.", answerChecklist: ["demonstration tokens", "scalar outcome reward", "teacher token feedback", "visited state", "density", "different interfaces"], requiredConcepts: ["post-training-method-boundary"], sectionId: "post-training" },
       { level: "basic", question: "Agent trajectory에서 action·observation·effect·verifier receipt가 필요한 이유를 설명하세요.", answerChecklist: ["state change", "tool result", "external effect", "failure recovery", "outcome", "reproducibility"], requiredConcepts: ["agentic-trajectory-training-loop"], sectionId: "agentic-training" },
       { level: "advanced", question: "Terminal reward가 1인 trajectory라도 unsafe한 run일 수 있는 반례와 추가 평가축을 만드세요.", answerChecklist: ["task success", "secret leak", "duplicate deploy", "trajectory", "effect", "permission"], requiredConcepts: ["agentic-trajectory-training-loop"], sectionId: "agentic-training" },
       { level: "advanced", question: "Pretraining=고전적 조건화, RL=조작적 조건화 대응이 기술적으로 부족한 이유를 설명하세요.", answerChecklist: ["analogy only", "next-token likelihood", "MDP", "policy optimization", "credit assignment", "not one-to-one"], requiredConcepts: ["llm-training-stage-boundary", "post-training-method-boundary"], sectionId: "limits" },
-      { level: "advanced", question: "Agent가 hard limit에 도달했다는 가설을 시험할 matched intervention을 설계하세요.", answerChecklist: ["failure slice", "same budget", "data", "harness", "post-training", "architecture", "held-out evaluation"], requiredConcepts: ["paradigm-limit-evidence-boundary"], sectionId: "limits" },
+      { level: "advanced", question: "Mid-training 단계가 domain-adaptive continued pretraining과 같은 축에 있으면서도 LLM stage map에서 별도로 이름 붙는 이유를 설명하세요.", answerChecklist: ["same self-supervised objective", "narrowed target distribution", "sits between pretrain and SFT specifically", "prepares checkpoint for fewer SFT demonstrations", "org-specific scope needs explicit handoff"], requiredConcepts: ["llm-mid-training-stage"], sectionId: "mid-training" },
       { level: "advanced", question: "Motif 3가 architecture 대 post-training이라는 제로섬 설명의 반례인 이유를 쓰세요.", answerChecklist: ["GDLA", "mHC", "PolyNorm", "pretraining", "specialist teachers", "MOPD", "co-design"], requiredConcepts: ["llm-training-stage-boundary", "paradigm-limit-evidence-boundary"], sectionId: "limits" },
     ],
     papers: [
@@ -25029,17 +24997,51 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "agent-observation-action-loop", role: "State→proposal→runtime→observation→next state의 최소 실행 단위를 정의합니다." },
       { id: "typed-tool-observation-contract", role: "Empty·denied·timeout·partial effect를 구분하는 결과 schema를 만듭니다." },
       { id: "agent-exit-state-machine", role: "Completed·exhausted·stalled·failed·approval·escalation을 분리합니다." },
-    ],
+      { id: "ai-agent-definition-taxonomy", role: "AI agent·autonomous agent와 agentic workflow를 가르는 정의 축을 고정합니다." },
+      { id: "agent-step-and-horizon", role: "한 반복을 agent step으로, 그 반복이 감당할 범위를 agent horizon·long-horizon agent로 이름 붙입니다." },
+      { id: "agent-policy", role: "State를 action 확률 분포로 바꾸는 π_θ 함수에 agent policy라는 역할을 붙입니다." },
+      { id: "react-and-tool-augmented-llm", role: "Tool 호출 능력(tool-augmented LLM)과 reasoning-action 교대 pattern(ReAct)을 소개합니다." },
+],
     conceptExplanations: [
       { id: "agent-observation-action-loop", sectionId: "overview", intuition: "현재 작업판을 보고 행동을 제안하고 실제 결과로 작업판을 갱신합니다.", workedExample: "File read proposal을 runtime이 허가해 실행하고 content checksum observation을 다음 state에 넣습니다.", boundary: "Model proposal은 외부 effect 권한이 아닙니다." },
       { id: "typed-tool-observation-contract", sectionId: "observation-contract", intuition: "빈 결과와 실행하지 못한 결과에 서로 다른 표찰을 붙입니다.", workedExample: "status=timeout, retryable=true, callId, payloadHandle, truncated=false를 남깁니다.", boundary: "Schema가 payload의 사실성이나 freshness를 자동 보장하지 않습니다." },
       { id: "agent-exit-state-machine", sectionId: "exit-states", intuition: "끝났다는 말 대신 여러 종착역을 둡니다.", workedExample: "Verifier pass는 completed, 반복 action은 stalled, 승인 부재는 awaiting_approval입니다.", boundary: "Model final text만으로 completed가 되지 않습니다." },
-    ],
+      {
+        id: "ai-agent-definition-taxonomy",
+        sectionId: "agent-definition",
+        intuition: "다음 action을 model이 매 반복 스스로 정하는지, 코드가 미리 정한 순서를 따르는지로 agent와 workflow를 가릅니다.",
+        workedExample: "요약→분류→저장처럼 순서가 코드에 고정된 pipeline은 agentic workflow이고, 다음 tool을 model이 매번 고르면 AI agent입니다.",
+        boundary: "각 단계에서 LLM을 쓴다는 사실만으로 그 pipeline 전체가 agent가 되지는 않습니다.",
+      },
+      {
+        id: "agent-step-and-horizon",
+        sectionId: "agent-step-and-horizon",
+        intuition: "한 바퀴 반복을 step으로 세고, 그 작업이 버텨야 하는 step·시간·budget 범위를 horizon으로 봅니다.",
+        workedExample: "파일 여러 개를 고치고 test를 반복하는 작업은 horizon이 수십 step으로 늘어납니다.",
+        boundary: "Step 상한을 크게 잡는 것만으로는 long-horizon agent가 되지 않고 checkpoint·재검증이 함께 필요합니다.",
+      },
+      {
+        id: "agent-policy",
+        sectionId: "transition",
+        intuition: "State 하나를 넣으면 다음 action의 확률 분포를 내놓는 함수가 policy입니다.",
+        workedExample: "s_t를 넣은 π_θ가 file read·grep·응답 종료 중 하나를 더 높은 확률로 제안합니다.",
+        boundary: "Policy가 제안한 action이 실행 권한을 갖는 것은 아니며, 그다음 authorization gate가 별도로 판정합니다.",
+      },
+      {
+        id: "react-and-tool-augmented-llm",
+        sectionId: "react-and-tool-augmented-llm",
+        intuition: "Tool을 부를 수 있는 LLM 위에서, ReAct는 이유를 적은 reasoning과 실제 action을 번갈아 만듭니다.",
+        workedExample: "\"파일을 먼저 확인해야 한다\"는 reasoning 뒤 read_file action을 내고, 그 결과로 다음 reasoning을 갱신합니다.",
+        boundary: "논문의 task 결과를 production authorization이나 exactly-once effect 보장으로 확대하지 않습니다.",
+      },
+],
     conceptStages: [
-      { label: "00 state", relation: "다음 decision에 허용된 observable state를 고정합니다.", concepts: ["agent-observation-action-loop"] },
-      { label: "01 proposal", relation: "Model proposal과 runtime effect를 분리합니다.", concepts: ["agent-observation-action-loop"] },
-      { label: "02 observation", relation: "실행 결과를 typed state input으로 만듭니다.", concepts: ["typed-tool-observation-contract"] },
-      { label: "03 exit", relation: "Verifier·budget·failure·approval에서 terminal state를 판정합니다.", concepts: ["agent-exit-state-machine"] },
+      { label: "00 define", relation: "무엇이 agent이고 무엇이 workflow인지 정의합니다.", concepts: ["ai-agent-definition-taxonomy"] },
+      { label: "01 state-proposal", relation: "다음 decision에 허용된 observable state를 고정하고, model proposal과 runtime effect를 분리하며 policy의 역할을 붙입니다.", concepts: ["agent-observation-action-loop", "agent-policy"] },
+      { label: "02 horizon", relation: "반복을 step으로 세고 감당할 범위를 horizon으로 봅니다.", concepts: ["agent-step-and-horizon"] },
+      { label: "03 observation", relation: "실행 결과를 typed state input으로 만듭니다.", concepts: ["typed-tool-observation-contract"] },
+      { label: "04 pattern", relation: "Tool 호출 능력 위에서 reasoning과 action을 번갈아 만드는 pattern을 봅니다.", concepts: ["react-and-tool-augmented-llm"] },
+      { label: "05 exit", relation: "Verifier·budget·failure·approval에서 terminal state를 판정합니다.", concepts: ["agent-exit-state-machine"] },
     ],
     exercises: [
       { level: "basic", question: "File read loop의 state·proposal·authorization·observation을 순서대로 쓰세요.", answerChecklist: ["state snapshot", "tool proposal", "permission gate", "executor", "typed result"], requiredConcepts: ["agent-observation-action-loop"], sectionId: "transition" },
@@ -25066,17 +25068,51 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "executable-plan-state", role: "Task·dependency·owner·artifact·status·evidence를 versioned graph로 만듭니다." },
       { id: "evidence-driven-replanning", role: "깨진 assumption의 downstream만 다시 열고 검증 artifact를 보존합니다." },
       { id: "feedback-grounded-reflection", role: "외부 feedback을 원인·수정·재검증이 있는 다음 trial 입력으로 만듭니다." },
-    ],
+      { id: "planning-and-plan-mode", role: "실행 전 action 순서를 먼저 만드는 planning과, 승인을 기다리는 plan mode를 정의합니다." },
+      { id: "task-decomposition-and-subgoal", role: "큰 목표를 검증 가능한 subgoal로 나누는 decomposition을 추가합니다." },
+      { id: "hierarchical-planning", role: "Subgoal을 다시 나눠야 하는 여러 층의 planning을 설명합니다." },
+      { id: "plan-validation", role: "실행 전 dependency·artifact·budget 결함을 찾는 검사를 replanning과 구분합니다." },
+],
     conceptExplanations: [
       { id: "executable-plan-state", sectionId: "executable-plan", intuition: "문장 목록을 제출물과 검사 결과가 있는 작업 보드로 바꿉니다.", workedExample: "Task B는 schema:v3에 의존하고 output URI·checksum·validator를 가집니다.", boundary: "Output과 evidence가 없는 동사는 완료를 판정할 수 없습니다." },
       { id: "evidence-driven-replanning", sectionId: "replanning", intuition: "새 사실이 깨뜨린 가지와 downstream만 다시 엽니다.", workedExample: "Schema v4는 client와 integration test를 invalidation하지만 unrelated screenshot은 보존합니다.", boundary: "전체 plan 재생성과 무한 retry가 아닙니다." },
       { id: "feedback-grounded-reflection", sectionId: "reflection", intuition: "실패 관측을 다음 수정과 같은 재검증 command로 연결합니다.", workedExample: "Missing import→module path 수정→동일 compile·regression test 재실행을 기록합니다.", boundary: "근거 없는 self-review는 feedback source가 아닙니다." },
-    ],
+      {
+        id: "planning-and-plan-mode",
+        sectionId: "planning-and-plan-mode",
+        intuition: "매번 다음 action만 보는 대신 실행 전에 순서 전체를 먼저 만들고, 그 초안을 사람이 검토하게 둘 수 있습니다.",
+        workedExample: "파일을 고치기 전에 \"A를 바꾸고 B test를 돌린다\"는 초안만 보여주는 상태가 plan mode입니다.",
+        boundary: "Plan mode에서 실행이 보류된다는 뜻이지 그 계획이 옳다는 보장은 아닙니다.",
+      },
+      {
+        id: "task-decomposition-and-subgoal",
+        sectionId: "task-decomposition-and-subgoal",
+        intuition: "완료를 판정할 수 없을 만큼 큰 목표를 독립적으로 검증 가능한 작은 단위로 나눕니다.",
+        workedExample: "\"API를 만든다\"를 schema 정의·구현·통합 test라는 세 subgoal로 나눕니다.",
+        boundary: "Decomposition은 경계만 정하고, 각 subgoal의 완료 근거는 executable plan의 artifact receipt가 채웁니다.",
+      },
+      {
+        id: "hierarchical-planning",
+        sectionId: "hierarchical-planning",
+        intuition: "한 subgoal이 여전히 크면 그 안에서 다시 decomposition해 층을 늘립니다.",
+        workedExample: "구현이라는 subgoal 아래 client 코드·에러 처리라는 더 작은 subgoal을 둡니다.",
+        boundary: "층마다 완료 조건과 dependency를 명시하지 않으면 어느 layer가 막혔는지 추적할 수 없습니다.",
+      },
+      {
+        id: "plan-validation",
+        sectionId: "plan-validation",
+        intuition: "실행을 시작하기 전에 계획 구조 자체에 순환이나 누락이 없는지 확인합니다.",
+        workedExample: "Task C가 존재하지 않는 artifact를 참조하면 실행 전에 이 참조 오류를 잡습니다.",
+        boundary: "실행 뒤 새 evidence로 영향 범위를 다시 여는 replanning과는 검사 시점이 다릅니다.",
+      },
+],
     conceptStages: [
-      { label: "00 task", relation: "Output schema가 있는 task를 만듭니다.", concepts: ["executable-plan-state"] },
-      { label: "01 artifact", relation: "Version·checksum·validator evidence를 연결합니다.", concepts: ["executable-plan-state"] },
-      { label: "02 replan", relation: "새 evidence의 영향 범위를 계산합니다.", concepts: ["evidence-driven-replanning"] },
-      { label: "03 reflect", relation: "실패를 다음 trial의 수정·재검증으로 바꿉니다.", concepts: ["feedback-grounded-reflection"] },
+      { label: "00 plan", relation: "실행 전 action 순서를 만들고 plan mode로 승인을 기다립니다.", concepts: ["planning-and-plan-mode"] },
+      { label: "01 decompose", relation: "큰 목표를 검증 가능한 subgoal로 나누고, 한 층으로 부족하면 여러 층으로 확장합니다.", concepts: ["task-decomposition-and-subgoal", "hierarchical-planning"] },
+      { label: "02 task", relation: "Output schema가 있는 task를 만들고 version·checksum·validator evidence를 연결합니다.", concepts: ["executable-plan-state"] },
+      { label: "03 validate", relation: "실행 전 dependency·artifact·budget 결함을 찾습니다.", concepts: ["plan-validation"] },
+      { label: "04 replan", relation: "새 evidence의 영향 범위를 계산합니다.", concepts: ["evidence-driven-replanning"] },
+      { label: "05 reflect", relation: "실패를 다음 trial의 수정·재검증으로 바꿉니다.", concepts: ["feedback-grounded-reflection"] },
     ],
     exercises: [
       { level: "basic", question: "A→B→C를 executable plan record로 바꾸세요.", answerChecklist: ["task IDs", "dependencies", "owners", "artifacts", "statuses", "validators"], requiredConcepts: ["executable-plan-state"], sectionId: "executable-plan" },
@@ -33159,7 +33195,10 @@ export const ARTICLE_LEARNING: Readonly<
         id: "grammar-production-derivation",
         role: "Terminal·nonterminal·production이 유효한 string을 만드는 과정을 설명합니다.",
       },
-    ],
+      { id: "grammar-constrained-decoding-technique", role: "Derivation 판정을 생성 시점으로 옮겨 다음 symbol 후보를 미리 줄이는 기법 이름을 고정합니다." },
+      { id: "structured-decoding-formalism-taxonomy", role: "Regex·CFG·JSON schema 가운데 무엇으로 허용 규칙을 적을지 축을 추가합니다." },
+      { id: "xgrammar-constrained-decoding-engine", role: "그 검사를 vocabulary 규모에서 빠르게 만드는 구현 이름을 소개합니다." },
+],
     conceptExplanations: [
       {
         id: "formal-alphabet-string-language",
@@ -33181,10 +33220,34 @@ export const ARTICLE_LEARNING: Readonly<
         boundary:
           "한 grammar가 같은 string을 여러 방식으로 derive하는 ambiguity가 있을 수 있고 grammar가 semantic uniqueness나 evaluation order를 자동으로 정하지 않습니다.",
       },
-    ],
+      {
+        id: "grammar-constrained-decoding-technique",
+        sectionId: "grammar-constrained-decoding",
+        intuition: "Derivation으로 사후 판정하던 규칙을 생성 직전으로 당겨 매 step 허용 후보만 남깁니다.",
+        workedExample: "[0까지 만든 상태에서 다음 symbol 후보는 ]와 ,로 줄고 나머지 alphabet symbol은 배제합니다.",
+        boundary: "어떤 state에서 어떤 symbol이 허용되는지 계산하는 실제 방법은 tokenizer 단위 compile로 뒤 글이 다룹니다.",
+      },
+      {
+        id: "structured-decoding-formalism-taxonomy",
+        sectionId: "structured-decoding-taxonomy",
+        intuition: "허용 규칙을 정규표현식·CFG·JSON schema 중 무엇으로 적느냐가 표현 가능한 중첩 깊이를 가릅니다.",
+        workedExample: "전화번호 형식은 regex로 충분하지만 임의 깊이로 중첩되는 JSON 배열은 CFG recursion이 필요합니다.",
+        boundary: "JSON schema decoding이 schema를 통과시켜도 값의 사실성·권한까지 보장하지는 않습니다.",
+      },
+      {
+        id: "xgrammar-constrained-decoding-engine",
+        sectionId: "xgrammar",
+        intuition: "State와 무관하게 항상 같은 token은 미리 분류해 두고 state에 따라 달라지는 소수 token만 다시 검사합니다.",
+        workedExample: "Vocabulary 대부분은 context-independent로 미리 걸러 두고 매 step에는 나머지 소수 token만 검사합니다.",
+        boundary: "논문이 보고한 benchmark 조건 범위의 결과이며 모든 tokenizer·engine 조합에서 같은 배율을 보장하지 않습니다.",
+      },
+],
     conceptStages: [
       { label: "00 define", relation: "Symbol에서 language membership까지 정의합니다.", concepts: ["formal-alphabet-string-language"] },
       { label: "01 derive", relation: "Production으로 start symbol을 terminal string으로 전개합니다.", concepts: ["grammar-production-derivation"] },
+      { label: "02 constrain", relation: "Derivation 판정을 생성 시점으로 옮겨 decoding 후보를 줄입니다.", concepts: ["grammar-constrained-decoding-technique"] },
+      { label: "03 formalism", relation: "Regex·CFG·JSON schema 가운데 허용 규칙 형식을 고릅니다.", concepts: ["structured-decoding-formalism-taxonomy"] },
+      { label: "04 engine", relation: "그 검사를 vocabulary 규모에서 빠르게 계산하는 구현을 봅니다.", concepts: ["xgrammar-constrained-decoding-engine"] },
     ],
     exercises: [
       { level: "basic", question: "Symbol과 alphabet의 차이를 괄호 예제로 설명하세요.", answerChecklist: ["symbol one mark", "finite set", "Sigma", "open bracket", "close bracket", "not ordered"], requiredConcepts: ["formal-alphabet-string-language"], sectionId: "alphabet" },
@@ -33197,6 +33260,9 @@ export const ARTICLE_LEARNING: Readonly<
       { level: "advanced", question: "빈 string epsilon을 포함하는 language의 membership fixture를 만드세요.", answerChecklist: ["epsilon", "length zero", "include rule", "nonempty", "accept", "reject"], requiredConcepts: ["formal-alphabet-string-language"], sectionId: "string-language" },
       { level: "advanced", question: "Ambiguous derivation이 semantic uniqueness를 보장하지 않는 이유를 설명하세요.", answerChecklist: ["same string", "multiple derivations", "grammar", "semantic separate", "evaluation order", "boundary"], requiredConcepts: ["grammar-production-derivation"], sectionId: "derivation" },
       { level: "advanced", question: "Formal symbol과 tokenizer token을 같은 단위로 두면 생기는 오류를 설명하세요.", answerChecklist: ["multi-byte", "multi-character token", "formal symbol", "tokenizer", "compilation needed", "boundary"], requiredConcepts: ["formal-alphabet-string-language"], sectionId: "next" },
+    ],
+    papers: [
+      { title: "XGrammar: Flexible and Efficient Structured Generation Engine for Large Language Models", href: "https://arxiv.org/abs/2411.15100", problem: "매 decoding step마다 vocabulary 전체를 grammar로 재검사하는 높은 비용", contribution: "Context-independent token 사전 분류와 CFG stack 상태 재사용으로 constrained decoding overhead를 줄이는 엔진 구조를 제시", assumptions: "논문 tokenizer·model·engine·benchmark 조건", evidenceScope: "논문이 보고한 vocabulary·grammar 구성에서의 측정 범위", notClaim: "모든 tokenizer·serving engine 조합에서 같은 배율의 speedup을 보장한다는 뜻은 아님", sectionId: "xgrammar" },
     ],
   },
   "ai/cfg-pushdown-automata": {
@@ -43033,7 +43099,17 @@ export const ARTICLE_LEARNING: Readonly<
     papers: [
       { title: "InstructGPT", href: "https://arxiv.org/abs/2203.02155", problem: "Pretraining만으로 사용자 의도에 맞는 behavior를 정하기 어려움", contribution: "SFT→reward model→PPO pipeline", assumptions: "Labeler preference가 유용한 proxy", evidenceScope: "논문의 영어 prompt·model·labeler 조건", notClaim: "모든 domain의 최적 pipeline이라는 뜻 아님", sectionId: "paper-instructgpt" },
       { title: "PPO", href: "https://arxiv.org/abs/1707.06347", problem: "On-policy data 재사용 중 과도한 policy 변화", contribution: "Clipped surrogate objective", assumptions: "Behavior trajectory와 advantage estimate", evidenceScope: "원 논문의 일반 RL benchmark", notClaim: "Reward 타당성이나 alignment 보장 아님", sectionId: "paper-ppo" },
-    ],
+      {
+        title: "RLAIF: Scaling Reinforcement Learning from Human Feedback with AI Feedback",
+        href: "https://arxiv.org/abs/2309.00267",
+        problem: "사람 preference label 수집이 비싸고 느려 reward model 학습 파이프라인의 병목이 됨",
+        contribution: "Off-the-shelf LLM judge가 사람 대신 pairwise preference label을 매겨도 human feedback 기준과 비슷한 win rate의 reward model을 학습할 수 있음을 보고",
+        assumptions: "논문이 사용한 judge model·prompt template·summarization/dialogue 태스크 조건",
+        evidenceScope: "논문 자기보고 실험(사람 대비 win rate 비교)",
+        notClaim: "모든 judge model·domain에서 사람 labeler를 대체할 수 있다는 뜻은 아님",
+        sectionId: "paper-rlaif",
+      },
+],
   },
   "ai/dpo": {
     entryLevel: true,
@@ -44789,7 +44865,11 @@ export const ARTICLE_LEARNING: Readonly<
         id: "cuda-multigpu-resource-ownership",
         role: "Current device별 handles와 P2P capability를 추적합니다.",
       },
-    ],
+      { id: "cuda-warp-level-synchronization", role: "Block 전체가 아니라 warp 내부에서만 값을 맞추는 shuffle·vote·syncwarp를 구분합니다." },
+      { id: "cuda-named-and-async-barrier", role: "한 block 안 여러 독립 barrier와 arrive/wait 분리 barrier를 구분합니다." },
+      { id: "cuda-memory-fence-vs-barrier", role: "Barrier보다 가벼운, 도착을 기다리지 않는 memory ordering 명령을 구분합니다." },
+      { id: "cuda-sync-overhead-and-divergence", role: "Barrier의 대기 비용과 일부만 도달했을 때의 deadlock 위험을 구분합니다." },
+],
     conceptExplanations: [
       {
         id: "cuda-synchronization-scope",
@@ -44831,7 +44911,35 @@ export const ARTICLE_LEARNING: Readonly<
         boundary:
           "같은 node·NVLink 이름만으로 P2P·bandwidth를 보장하지 않으며 topology와 contention을 측정합니다.",
       },
-    ],
+      {
+        id: "cuda-warp-level-synchronization",
+        sectionId: "warp-sync",
+        intuition: "Block 전체를 세우지 않고 같은 warp 안 lane끼리만 register 값을 맞추거나 조건을 모읍니다.",
+        workedExample: "Mask로 지정한 lane들이 __shfl_sync로 이웃 값을 읽고 __syncwarp(mask)로 그 지점 도달을 확인합니다.",
+        boundary: "Mask 밖 lane이나 다른 warp는 참여하지 않으며, independent thread scheduling 이후에는 명시적 __syncwarp 없이 lock-step을 가정하면 안 됩니다.",
+      },
+      {
+        id: "cuda-named-and-async-barrier",
+        sectionId: "named-async-barrier",
+        intuition: "한 block 안에 barrier를 하나만 두지 않고 여러 개를 따로 운용하거나, 도착과 대기를 분리해 그 사이에 다른 일을 시킵니다.",
+        workedExample: "Producer warp group은 barrier id 0, consumer warp group은 barrier id 1에서 각자 bar.sync하거나, cuda::barrier로 arrive 후 다른 계산을 하다가 나중에 wait합니다.",
+        boundary: "Block·warp 전체를 한 번에 맞추는 것이 목적이라면 named·async barrier보다 __syncthreads()·__syncwarp()가 더 간단하고 빠릅니다.",
+      },
+      {
+        id: "cuda-memory-fence-vs-barrier",
+        sectionId: "memory-fence",
+        intuition: "다른 thread를 기다리지 않고, 자신이 쓴 값이 어디까지 보이는 순서로 보일지만 정합니다.",
+        workedExample: "__threadfence()를 호출한 thread는 그 뒤 write가 device 안 다른 thread에게 보이는 순서를 보장받지만, 다른 thread가 그 값을 언제 읽을지는 별도 flag로 알려야 합니다.",
+        boundary: "Fence는 barrier처럼 도착을 기다리게 하지 않으므로 rendezvous가 필요한 지점에는 barrier를 대신 써야 합니다.",
+      },
+      {
+        id: "cuda-sync-overhead-and-divergence",
+        sectionId: "sync-overhead-divergence",
+        intuition: "Barrier는 가장 늦게 오는 참여자를 기다리는 비용이 있고, 일부만 barrier에 도달하면 그 비용이 무한 대기로 바뀝니다.",
+        workedExample: "조건문 한쪽에만 __syncthreads()를 두면 다른 경로를 탄 thread는 그 barrier를 실행하지 않아 나머지가 영원히 기다립니다.",
+        boundary: "Overhead는 load imbalance를 줄이면 완화되지만, divergence는 barrier를 참여자 전원이 실행하는 경로로 옮겨야만 없앨 수 있습니다.",
+      },
+],
     conceptStages: [
       {
         label: "01 correctness edge",
@@ -44839,13 +44947,23 @@ export const ARTICLE_LEARNING: Readonly<
         concepts: ["cuda-synchronization-scope"],
       },
       {
-        label: "02 asynchronous queues",
+        label: "02 narrower · lighter sync",
+        relation: "Block barrier보다 좁거나(warp) 여러 개로 나누거나(named·async) 가벼운(fence) 동기화",
+        concepts: ["cuda-warp-level-synchronization", "cuda-named-and-async-barrier", "cuda-memory-fence-vs-barrier"],
+      },
+      {
+        label: "03 cost · risk",
+        relation: "Barrier가 만드는 대기 비용과 일부만 도달했을 때의 deadlock 위험",
+        concepts: ["cuda-sync-overhead-and-divergence"],
+      },
+      {
+        label: "04 asynchronous queues",
         relation:
           "Independent operations를 streams로 제출하고 overlap 조건 확인",
         concepts: ["cuda-stream-ordering"],
       },
       {
-        label: "03 dependency graph",
+        label: "05 dependency graph",
         relation: "Cross-stream marker와 device ownership 연결",
         concepts: ["cuda-event-dependency", "cuda-multigpu-resource-ownership"],
       },
@@ -44881,30 +44999,28 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "basic",
         question:
-          "H2D=2 ms, kernel=5 ms, D2H=2 ms pipeline의 sequential 합과 ideal steady-state 하한을 계산하세요.",
+          "__shfl_sync·__ballot_sync 같은 warp shuffle·vote 명령과 __syncwarp(mask)가 block 전체를 멈추는 __syncthreads()와 어떻게 다른지 설명하세요.",
         answerChecklist: [
-          "합 9 ms",
-          "max stage",
-          "하한 5 ms",
-          "fill/drain 별도",
-          "resource assumptions",
+          "mask로 지정한 lane만",
+          "block 전체 아님",
+          "shuffle/vote로 값 교환",
+          "syncwarp가 도달 보장",
         ],
-        requiredConcepts: ["cuda-stream-ordering"],
-        sectionId: "streams",
+        requiredConcepts: ["cuda-warp-level-synchronization"],
+        sectionId: "warp-sync",
       },
       {
         level: "basic",
         question:
-          "cudaMemcpyAsync overlap에 pinned host memory가 필요한 이유와 과도한 pinning의 비용을 설명하세요.",
+          "Named barrier가 한 thread block 안에 여러 독립적인 대기점을 만드는 방법과, asynchronous barrier의 arrive·wait 분리가 무엇을 가능하게 하는지 설명하세요.",
         answerChecklist: [
-          "DMA",
-          "page-locked",
-          "pageable fallback/staging",
-          "bounded buffers",
-          "OS paging pressure",
+          "barrier resource id 0~15",
+          "독립된 여러 barrier",
+          "arrive와 wait 분리",
+          "완료 전 다른 작업 진행",
         ],
-        requiredConcepts: ["cuda-stream-ordering"],
-        sectionId: "streams",
+        requiredConcepts: ["cuda-named-and-async-barrier"],
+        sectionId: "named-async-barrier",
       },
       {
         level: "basic",
@@ -44912,10 +45028,9 @@ export const ARTICLE_LEARNING: Readonly<
           "cudaEventRecord와 cudaStreamWaitEvent가 host를 막지 않고 producer→consumer edge를 만드는 순서를 설명하세요.",
         answerChecklist: [
           "record enqueued after producer",
-          "marker completion",
-          "wait in consumer stream",
-          "consumer after wait",
-          "independent work continues",
+          "waitEvent host non-blocking",
+          "edge only between marked streams",
+          "independent streams unaffected",
         ],
         requiredConcepts: ["cuda-event-dependency"],
         sectionId: "events",
@@ -44925,14 +45040,27 @@ export const ARTICLE_LEARNING: Readonly<
         question:
           "cudaSetDevice 뒤 allocation·stream·event가 어느 device에 속하는지와 handle 혼용 위험을 설명하세요.",
         answerChecklist: [
-          "host-thread current device",
-          "resource ownership",
-          "device ID tracking",
-          "invalid resource/order",
-          "explicit switch",
+          "current device binding",
+          "resource tagged by device",
+          "stale stream misuse",
+          "invalid-resource error",
         ],
         requiredConcepts: ["cuda-multigpu-resource-ownership"],
         sectionId: "multi-gpu",
+      },
+      {
+        level: "advanced",
+        question:
+          "Memory fence만 쓰고 barrier를 빠뜨린 코드에서 생기는 race와, 조건문 안에 barrier를 둬서 생기는 barrier divergence를 각각 어떻게 진단하고 고칠지 설계하세요.",
+        answerChecklist: [
+          "fence는 도착 보장 안 함",
+          "별도 flag·barrier 필요",
+          "일부 thread만 barrier 실행",
+          "무한 대기·정의되지 않은 동작",
+          "barrier는 전원 실행 경로에",
+        ],
+        requiredConcepts: ["cuda-memory-fence-vs-barrier", "cuda-sync-overhead-and-divergence"],
+        sectionId: "sync-overhead-divergence",
       },
       {
         level: "advanced",
@@ -44965,27 +45093,7 @@ export const ARTICLE_LEARNING: Readonly<
           "negative race test",
           "independent overlap",
         ],
-        requiredConcepts: [
-          "cuda-synchronization-scope",
-          "cuda-event-dependency",
-        ],
-        sectionId: "events",
-      },
-      {
-        level: "advanced",
-        question:
-          "CUDA event timing benchmark가 재현 가능하려면 warm-up·synchronization·clock·statistics를 어떻게 기록해야 하나요?",
-        answerChecklist: [
-          "warm-up/JIT",
-          "same stream interval",
-          "stop synchronize",
-          "repetitions",
-          "median/spread",
-          "clock/power",
-          "input",
-          "contention",
-        ],
-        requiredConcepts: ["cuda-event-dependency"],
+        requiredConcepts: ["cuda-synchronization-scope", "cuda-event-dependency"],
         sectionId: "events",
       },
       {
@@ -45002,10 +45110,7 @@ export const ARTICLE_LEARNING: Readonly<
           "link counters",
           "single-GPU reference",
         ],
-        requiredConcepts: [
-          "cuda-multigpu-resource-ownership",
-          "cuda-stream-ordering",
-        ],
+        requiredConcepts: ["cuda-multigpu-resource-ownership", "cuda-stream-ordering"],
         sectionId: "multi-gpu",
       },
     ],
@@ -45041,7 +45146,37 @@ export const ARTICLE_LEARNING: Readonly<
           "같은 node의 모든 GPU pair가 P2P를 지원하거나 NVLink 이름만으로 일정 bandwidth·linear scaling을 보장한다는 뜻은 아님",
         sectionId: "paper-cuda-multi-gpu",
       },
-    ],
+      {
+        title: "NVIDIA CUDA Programming Guide — Advanced Kernel Programming",
+        href: "https://docs.nvidia.com/cuda/cuda-programming-guide/03-advanced/advanced-kernel-programming.html",
+        problem: "Volta 이전 GPU를 겨냥한 warp-synchronous 코드가 independent thread scheduling 이후 GPU에서 깨질 수 있는 문제",
+        contribution: "__syncwarp()로 warp subset을 명시적으로 동기화하도록 권고하는 공식 guidance 제공",
+        assumptions: "Compute capability·independent thread scheduling 지원 여부",
+        evidenceScope: "공식 guide가 명시한 __syncwarp() 권고 사항의 범위",
+        notClaim: "모든 옛 warp-synchronous 코드가 자동으로 고쳐진다는 뜻은 아님",
+        sectionId: "paper-cuda-warp-sync",
+      },
+      {
+        title: "NVIDIA CUDA Programming Guide — Asynchronous Barriers",
+        href: "https://docs.nvidia.com/cuda/cuda-programming-guide/04-special-topics/async-barriers.html",
+        problem: "__syncthreads()·__syncwarp()보다 세밀한 non-blocking 조정이 필요한 경우를 표현하는 문제",
+        contribution: "Cuda::barrier의 arrive/wait 분리 semantics를 공식 문서화",
+        assumptions: "Compute capability·cuda::barrier API 지원 여부",
+        evidenceScope: "공식 guide의 API semantics 설명 범위",
+        notClaim: "Block·warp 전체 동기화가 목적일 때도 async barrier가 더 빠르다는 뜻은 아님",
+        sectionId: "paper-cuda-async-barrier",
+      },
+      {
+        title: "NVIDIA CUDA C++ Programming Guide — Memory Fence Functions",
+        href: "https://docs.nvidia.com/cuda/cuda-c-programming-guide/#memory-fence-functions",
+        problem: "Barrier 없이 memory write의 visibility 순서만 보장해야 하는 경우를 표현하는 문제",
+        contribution: "__threadfence_block·__threadfence·__threadfence_system 세 함수의 범위별 공식 semantics 문서화",
+        assumptions: "각 함수가 정의하는 memory scope(block·device·system)",
+        evidenceScope: "공식 guide의 API semantics 설명 범위",
+        notClaim: "Fence가 barrier의 도착 대기(rendezvous)를 대신한다는 뜻은 아님",
+        sectionId: "paper-cuda-memory-fence",
+      },
+],
   },
   "p2p/tls-fundamentals": {
     coreIdea:
@@ -61526,7 +61661,11 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "model-vram-known-floor", role: "시작 전에 계산 가능한 하한과 runtime peak를 구분합니다." },
       { id: "moe-residency-active-path-boundary", role: "MoE total checkpoint residency와 token당 active compute 및 request runtime을 서로 다른 serving ledger로 분리합니다." },
       { id: "model-vram-startup-receipt", role: "Identity·geometry·runtime·retention 기록으로 admission을 재현합니다." },
-    ],
+      { id: "quantization-level-vram-tradeoff", role: "Q8·NVFP4처럼 block scale이 붙는 quantization level의 평균 bit 폭과 hardware 지원 차이를 고정합니다." },
+      { id: "vram-budgeting-components", role: "Model residency·full context·cache optimization을 known floor를 구성하는 실무 결정으로 묶습니다." },
+      { id: "multi-gpu-vram-strategies", role: "2-way GPU 분배·CPU/GPU offloading·unified memory를 known floor 초과 시의 세 대응으로 정리합니다." },
+      { id: "moe-vram-serving-tradeoff", role: "Active parameter가 decode bandwidth를 실제로 얼마나 줄이는지와 consumer/workstation GPU에서의 함의를 수치로 잇습니다." },
+],
     conceptExplanations: [
       {
         id: "model-weight-payload-ledger",
@@ -61563,13 +61702,42 @@ export const ARTICLE_LEARNING: Readonly<
         workedExample: "첫 140줄에는 identity·geometry·pool·peak를 요약하고 원본 stdout/stderr는 rotate·redact해 dtype upcast와 fallback 이후 trace까지 보존합니다.",
         boundary: "무제한 원본 보존은 secret·prompt·signed URL 노출을 만들 수 있으므로 redaction·access·retention도 같은 계약에 넣습니다.",
       },
-    ],
+      {
+        id: "quantization-level-vram-tradeoff",
+        sectionId: "quantization-vram-tradeoff",
+        intuition: "Q8과 NVFP4 모두 payload bit에 block마다 붙는 scale bit을 원소 수로 나눠 더한 평균 bit 폭이 실제 byte라는 같은 규칙을 따르되, 그 폭이 8.5bit와 4.5bit로 다릅니다.",
+        workedExample: "27.781B parameter에 Q8(8.5bit)을 적용하면 약 27.48GiB, NVFP4(4.5bit)를 적용하면 약 14.55GiB로, 앞서 계산한 BF16 51.75GiB의 절반과 4분의 1 수준입니다.",
+        boundary: "NVFP4는 Blackwell급 tensor core가 필요하고 Q8류 INT8 W8A8은 더 넓은 세대에서 돌지만, 두 값 모두 tensor histogram을 대신하지 않습니다.",
+      },
+      {
+        id: "vram-budgeting-components",
+        sectionId: "vram-budgeting-components",
+        intuition: "Known floor 안에는 weight 전체가 동시에 상주해야 한다는 제약, 최대 context를 그대로 넣는 가정, KV dtype으로 그 값을 줄이는 선택이 함께 들어 있습니다.",
+        workedExample: "262K full context에서 BF16 KV 16GiB를 FP8로 낮추면 8GiB가 되어, mixed FP8 weight 28.75GiB와 합친 known floor가 44.89GiB보다 줄어듭니다.",
+        boundary: "동시 request 4개가 각자 full context를 쓰면 KV만 64GiB로 weight를 더하기도 전에 48GiB 카드 용량을 넘습니다.",
+      },
+      {
+        id: "multi-gpu-vram-strategies",
+        sectionId: "multi-gpu-vram-strategies",
+        intuition: "Known floor가 한 GPU 용량을 넘으면 weight를 두 장에 나누거나, 일부를 host에 두거나, 애초에 더 큰 통합 memory로 옮기는 세 갈래 중 하나를 고릅니다.",
+        workedExample: "BF16 51.75GiB는 48GiB 카드 한 장에 못 들어가지만 TP degree 2로 나누면 장당 약 25.9GiB만 상주해 여유가 생기고, 통신 비용은 layer마다 별도로 더해집니다.",
+        boundary: "장당 25.9GiB는 weight 지분일 뿐이고, per-rank KV·workspace와 실제 fabric bandwidth는 따로 확인해야 합니다.",
+      },
+      {
+        id: "moe-vram-serving-tradeoff",
+        sectionId: "moe-vram-serving-tradeoff",
+        intuition: "Decode 한 step이 다시 읽는 weight bytes는 dense에서는 total parameter에, MoE에서는 router가 고른 active parameter에 비례해 같은 known floor라도 요구 bandwidth가 달라집니다.",
+        workedExample: "80B total·3B active MoE는 BF16 기준 decode마다 약 6GiB만 읽어, 같은 dtype의 80B dense가 매 step 읽을 160GiB보다 약 26배 적습니다.",
+        boundary: "Active parameter가 작다는 사실이 capacity 요구까지 줄이지는 않아, consumer GPU에서는 bandwidth보다 total residency가 먼저 막힐 수 있습니다.",
+      },
+],
     conceptStages: [
-      { label: "00 count", relation: "Parameter와 byte 단위를 고정합니다.", concepts: ["bit-byte", "model-weight-payload-ledger"] },
+      { label: "00 count", relation: "Parameter와 byte 단위를 고정하고 Q8·NVFP4 같은 quantization level의 평균 bit 폭까지 확장합니다.", concepts: ["bit-byte", "model-weight-payload-ledger", "quantization-level-vram-tradeoff"] },
       { label: "01 growth", relation: "Token·request·execution 성장축을 나눕니다.", concepts: ["kv-cache-decode-state", "lossy-recurrent-state", "model-request-memory-growth-classes"] },
-      { label: "02 floor", relation: "Weights와 logical state를 known floor로 합칩니다.", concepts: ["model-weight-payload-ledger", "model-request-memory-growth-classes", "model-vram-known-floor"] },
-      { label: "03 MoE ledgers", relation: "Total residency·active token path·request runtime을 서로 다른 질문으로 나눕니다.", concepts: ["moe-total-active-parameter-ledger", "moe-residency-active-path-boundary", "model-request-memory-growth-classes"] },
-      { label: "04 admission", relation: "Physical peak와 stage timing·logs로 최종 승인합니다.", concepts: ["resident-memory-concurrency-bound", "model-vram-startup-receipt"] },
+      { label: "02 floor · components", relation: "Weights와 logical state를 known floor로 합치고, model residency·full context·cache optimization 같은 실무 구성 요소로 구체화합니다.", concepts: ["model-weight-payload-ledger", "model-request-memory-growth-classes", "model-vram-known-floor", "vram-budgeting-components"] },
+      { label: "03 multi-GPU", relation: "Known floor가 device 하나에 안 맞을 때 2-way 분배·offload·unified memory 전략으로 넘어갑니다.", concepts: ["vram-budgeting-components", "multi-gpu-vram-strategies"] },
+      { label: "04 MoE ledgers", relation: "Total residency·active token path·request runtime을 나누고, active parameter가 decode bandwidth를 실제로 얼마나 줄이는지 수치로 잇습니다.", concepts: ["moe-total-active-parameter-ledger", "moe-residency-active-path-boundary", "moe-vram-serving-tradeoff", "model-request-memory-growth-classes"] },
+      { label: "05 admission", relation: "Physical peak와 stage timing·logs로 최종 승인합니다.", concepts: ["resident-memory-concurrency-bound", "model-vram-startup-receipt"] },
     ],
     exercises: [
       { level: "basic", question: "1B parameters를 BF16·FP8·packed INT4로 저장할 때 payload 감각을 GB로 쓰세요.", answerChecklist: ["BF16 2GB", "FP8 1GB", "INT4 .5GB", "decimal GB", "metadata excluded"], requiredConcepts: ["model-weight-payload-ledger"], sectionId: "weight-residency" },
@@ -61589,7 +61757,8 @@ export const ARTICLE_LEARNING: Readonly<
       { title: "vLLM Hybrid KV Cache Manager", href: "https://docs.vllm.ai/en/stable/design/hybrid_kv_cache_manager/", problem: "서로 다른 cache specs를 physical blocks에 함께 배치합니다.", contribution: "Cache groups·page sizing·padding constraints를 문서화합니다.", assumptions: "사용한 vLLM revision과 supported model cache specs입니다.", evidenceScope: "Logical bytes와 physical allocation 차이의 구현 근거입니다.", notClaim: "모든 engine·model의 overhead 숫자를 고정하지 않습니다.", sectionId: "paper-vllm-memory" },
       { title: "Qwen3-Next official architecture announcement", href: "https://qwen.ai/blog?id=qwen3-next", problem: "높은 total capacity와 낮은 active compute를 hybrid sequence model에서 결합합니다.", contribution: "80B total·약 3B active MoE와 hybrid attention·MTP를 공개합니다.", assumptions: "해당 official release와 benchmark 조건입니다.", evidenceScope: "Total/active ledger가 다른 공개 model 사례입니다.", notClaim: "Active 수만으로 임의 hardware의 latency·full-context admission을 결정하지 않습니다.", sectionId: "paper-qwen3-next" },
       { title: "NVIDIA Transformer Engine NVFP4 format", href: "https://docs.nvidia.com/deeplearning/transformer-engine-releases/release-2.15/user-guide/features/low_precision_training/nvfp4/nvfp4.html", problem: "4-bit floating-point tensor와 scale metadata를 표현합니다.", contribution: "E2M1 value와 block/tensor scaling contract를 문서화합니다.", assumptions: "지원 Blackwell hardware·software와 실제 NVFP4 artifact입니다.", evidenceScope: "Format과 metadata를 weight ledger에 넣는 근거입니다.", notClaim: "특정 model checkpoint·quality·dual-GPU speedup 보장이 아닙니다.", sectionId: "paper-nvfp4" },
-    ],
+      { title: "llama.cpp GGUF quantize tool README (Q8_0 benchmark)", href: "https://github.com/ggml-org/llama.cpp/blob/master/tools/quantize/README.md", problem: "GGUF의 여러 quantization type이 실제로 어느 정도 크기·속도·품질을 내는지 한 reference model로 비교합니다.", contribution: "Llama-3.1-8B에서 Q8_0가 8.5008bit/weight·7.95GiB로 나온다는 실측 표를 공개합니다.", assumptions: "해당 llama.cpp revision과 표에 쓰인 정확한 Llama-3.1-8B checkpoint·측정 조건입니다.", evidenceScope: "Q8_0 block-scale overhead가 만드는 평균 bit 폭을 검증하는 project 실측 근거입니다.", notClaim: "다른 model·revision에서 같은 bit 폭이나 품질을 보장한다는 뜻은 아닙니다.", sectionId: "paper-q8-quantization" },
+],
   },
   "ai/supervised-learning-loop": {
     entryLevel: true,
@@ -65986,6 +66155,7 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "rag-index-version-contract", role: "Chunking 뒤에 오는 embedding·index 버전 계약은 RAG 파이프라인 글의 범위이며, 이 글은 그 계약이 받을 입력(chunk)을 만드는 과정만 다룹니다." },
     ],
     introducedHere: [
+      { id: "retrieval-augmented-generation", role: "LLM이 외부 문서를 검색해 context에 넣고 그 위에서 답을 생성하는 RAG 아키텍처 자체를 정의합니다." },
       { id: "rag-knowledge-base", role: "RAG가 검색하는 대상이 원본 파일이 아니라 ingestion이 채운 저장소라는 사실을 정의합니다." },
       { id: "document-ingestion-pipeline", role: "Parsing·chunking·embedding을 정해진 순서로 묶는 전체 절차를 정의합니다." },
       { id: "document-parsing-for-ingestion", role: "원본 포맷에서 구조와 offset을 보존해 chunking의 입력을 만드는 단계를 ingestion 관점에서 좁게 정의합니다." },
@@ -65994,6 +66164,7 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "contextual-retrieval-chunk-prefix", role: "Chunk 앞에 문맥을 붙여 검색 실패율을 낮추는 Anthropic의 방법과 실측 수치를 정의합니다." },
     ],
     conceptExplanations: [
+      { id: "retrieval-augmented-generation", sectionId: "problem", intuition: "모델 가중치 안에 없는 정보를 매번 재학습하는 대신, 질문마다 관련 문서를 찾아 그 내용을 함께 읽고 답을 만듭니다.", workedExample: "어제 바뀐 요금제 문서를 검색해 prompt에 넣으면, 모델을 재학습하지 않고도 새 요금제로 답할 수 있습니다.", boundary: "검색이 관련 없는 chunk를 가져오면 생성 단계는 그 잘못된 근거를 그대로 답에 반영합니다." },
       { id: "rag-knowledge-base", sectionId: "problem", intuition: "검색 엔진이 실제로 뒤지는 것은 웹 전체가 아니라 미리 만들어 둔 색인인 것과 같습니다.", workedExample: "100 페이지 매뉴얼을 500 개 chunk로 잘라 넣은 저장소가 knowledge base이며, 질문은 원본 PDF가 아니라 이 저장소를 검색합니다.", boundary: "Ingestion이 chunk를 잘못 만들면 knowledge base 자체가 그 오류를 그대로 담습니다." },
       { id: "document-ingestion-pipeline", sectionId: "problem", intuition: "원자재를 순서대로 가공하는 조립 라인처럼, 뒷 단계는 앞 단계가 남긴 형태를 그대로 입력받습니다.", workedExample: "Parsing이 표의 header-row 관계를 남기지 않으면, 그 뒤 chunking은 숫자만 있는 행을 잘라내 어떤 항목인지 알 수 없는 chunk를 만듭니다.", boundary: "한 단계라도 건너뛰면 다음 단계가 받는 입력의 형태 자체가 깨집니다." },
       { id: "document-parsing-for-ingestion", sectionId: "parsing", intuition: "번역 전에 원문의 단락·표 구조부터 표시해 두지 않으면 번역문도 그 구조를 잃는 것과 같습니다.", workedExample: "3행 4열 표에서 header 행과의 관계를 남기지 않으면, chunking 뒤 그 표에서 나온 chunk는 항목 이름 없이 숫자만 남습니다.", boundary: "표 셀 단위 복원이나 스캔 문서 layout 분석 같은 parsing 자체의 세부는 이 글이 소유하지 않습니다." },
@@ -66002,7 +66173,7 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "contextual-retrieval-chunk-prefix", sectionId: "contextual-retrieval", intuition: "사진 한 장만 보여주는 대신 캡션을 붙여 언제 어디서 찍었는지 알려주는 것과 같습니다.", workedExample: "Anthropic은 top-20 chunk 검색 실패율이 기존 5.7 %에서 contextual embedding만으로 3.7 %, +BM25로 2.9 %, +rerank로 1.9 %까지 낮아졌다고 보고합니다.", boundary: "Prompt caching 없이 매 문서마다 설명을 새로 생성하면 비용이 커지며, Anthropic의 1.02달러/100만 token 수치는 caching을 전제로 한 값입니다." },
     ],
     conceptStages: [
-      { label: "00 저장소·절차", relation: "RAG가 검색하는 대상(knowledge base)과 그것을 채우는 절차(ingestion pipeline)를 정의합니다.", concepts: ["rag-knowledge-base", "document-ingestion-pipeline"] },
+      { label: "00 RAG·저장소·절차", relation: "RAG 아키텍처 자체와 그것이 검색하는 대상(knowledge base), 그 대상을 채우는 절차(ingestion pipeline)를 정의합니다.", concepts: ["retrieval-augmented-generation", "rag-knowledge-base", "document-ingestion-pipeline"] },
       { label: "01 parsing", relation: "원본 포맷에서 구조와 offset을 보존해 chunking의 입력을 만듭니다.", concepts: ["document-parsing-for-ingestion"] },
       { label: "02 fixed-size chunking", relation: "Chunk size·overlap·boundary로 검색 단위와 경계 손실의 trade-off를 정합니다.", concepts: ["fixed-size-chunking-and-overlap"] },
       { label: "03 semantic chunking", relation: "고정 길이 대신 문장 유사도로 주제 경계를 찾는 대안입니다.", concepts: ["semantic-chunking"] },
@@ -66795,19 +66966,21 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "reciprocal-rank-fusion", role: "Lexical·semantic 결과를 합치는 rank fusion 이 있다는 사실만 전제하고 계산은 그 글에 맡깁니다." },
     ],
     introducedHere: [
+      { id: "document-frequency", role: "TF-IDF 의 IDF 와 BM25 의 idf(qi) 항이 공통으로 쓰는 document frequency 정의를 명시적으로 분리합니다." },
       { id: "bag-of-words-tf-idf", role: "3문서 toy corpus 로 bag of words·TF·IDF·TF-IDF 를 손으로 계산합니다." },
       { id: "bm25-saturation-and-length-norm", role: "k1·b 표준값으로 saturation·길이 정규화가 점수를 어떻게 바꾸는지 수치로 보입니다." },
       { id: "inverted-index-posting-list", role: "Term→posting list 구조가 검색 비용을 매칭 수에 비례하게 만드는 이유를 설명합니다." },
       { id: "lexical-vs-semantic-matching", role: "Vocabulary mismatch 예로 lexical matching 의 한계와 semantic retrieval 이 보완하는 지점을 보입니다." },
     ],
     conceptExplanations: [
+      { id: "document-frequency", sectionId: "bag-of-words-tf-idf", intuition: "한 단어가 이 문서에서 몇 번 나왔는지가 아니라, 전체 문서 중 몇 개에 나왔는지를 셉니다.", workedExample: "D1=apple apple banana, D2=apple cherry cherry, D3=apple banana durian 에서 apple 은 세 문서 모두에 나와 df=3, cherry 는 D2 에만 나와 df=1 입니다.", boundary: "같은 문서 안에서 여러 번 나와도 df 는 1만 늘어나며, term frequency 와 달리 등장 횟수를 무시합니다." },
       { id: "bag-of-words-tf-idf", sectionId: "bag-of-words-tf-idf", intuition: "문서를 단어 가방에 쏟아붓듯 순서를 버리고 각 단어가 몇 번 나왔는지만 세는 표현이며, TF-IDF 는 그 개수에 흔한 단어를 깎는 가중치를 곱합니다.", workedExample: "D1=apple apple banana, D2=apple cherry cherry, D3=apple banana durian(N=3)에서 apple 은 모든 문서에 나와 idf=ln(3/3)=0 이지만 cherry 는 D2 에만 있어 idf=ln3≈1.099, TF-IDF(cherry,D2)=2×1.099≈2.197 입니다.", boundary: "모든 문서에 나오는 단어는 TF 가 아무리 커도 idf=0 이라 점수에 기여하지 못합니다." },
       { id: "bm25-saturation-and-length-norm", sectionId: "bm25-saturation-and-length-norm", intuition: "같은 단어가 두 번째, 세 번째 나올 때마다 처음만큼 중요해지지는 않는다는 감쇠와, 짧은 글의 한 번 언급이 긴 글의 한 번 언급보다 더 의미 있다는 보정을 함께 하는 조절 장치입니다.", workedExample: "k1=1.2, b=0.75, idf=2.30, avgdl=50 일 때 길이 50 문서에서 TF=1→점수 2.30, TF=10→점수 4.51 로 10배 빈도가 2배 점수로만 반영되고, 같은 TF=10 이라도 길이 200 문서는 점수 3.64 로 더 낮습니다.", boundary: "k1·b 는 corpus 마다 다르게 tuning 될 수 있고, 이 글의 1.2·0.75 는 Lucene 이 쓰는 표준 기본값입니다." },
       { id: "inverted-index-posting-list", sectionId: "inverted-index-posting-list", intuition: "책 뒤 색인이 페이지를 순서대로 넘기지 않고 단어별로 어느 페이지에 나오는지 바로 알려주는 것과 같습니다.", workedExample: "문서 100만 개 중 term 하나가 200개 문서에만 나타나면 inverted index 는 그 200개(posting list)만 보면 되고, 문서→term 순으로 뒤지는 forward index 는 100만 개를 다 열어야 합니다.", boundary: "Posting list 는 term 마다 크기가 다르고, 아주 흔한 term 의 list 는 문서 수에 가까워 이점이 줄어듭니다." },
       { id: "lexical-vs-semantic-matching", sectionId: "lexical-vs-semantic-matching", intuition: "받아쓰기 시험처럼 글자가 정확히 같은지를 보는 채점과, 뜻이 통하면 맞다고 보는 채점의 차이와 같습니다.", workedExample: "Query '자동차', 문서가 '차량'만 쓰면 lexical matching(BM25)은 term 이 달라 그 문서를 못 찾고(vocabulary mismatch), embedding 거리로 보는 semantic retrieval 은 두 단어를 가깝게 두면 찾을 수 있습니다.", boundary: "Semantic retrieval 도 학습되지 않은 관계는 가깝게 두지 못하며, 두 방식을 rank fusion 으로 합치는 hybrid 구성이 흔합니다." },
     ],
     conceptStages: [
-      { label: "00 표현", relation: "문서를 단어 등장 횟수로 표현하고 흔한 단어를 깎는 가중치를 봅니다.", concepts: ["bag-of-words-tf-idf"] },
+      { label: "00 표현", relation: "문서를 단어 등장 횟수로 표현하고, 몇 개 문서에 나오는지(document frequency)로 흔한 단어를 깎는 가중치를 봅니다.", concepts: ["document-frequency", "bag-of-words-tf-idf"] },
       { label: "01 점수", relation: "BM25 가 saturation·길이 정규화로 그 가중치를 다듬는 방식을 봅니다.", concepts: ["bm25-saturation-and-length-norm"] },
       { label: "02 색인", relation: "Posting list 가 검색 비용을 매칭 수에 비례하게 만드는 구조를 봅니다.", concepts: ["inverted-index-posting-list"] },
       { label: "03 경계", relation: "Lexical matching 이 못 찾는 경우와 semantic retrieval 의 보완을 봅니다.", concepts: ["lexical-vs-semantic-matching"] },
@@ -68905,6 +69078,310 @@ export const ARTICLE_LEARNING: Readonly<
       { title: "VLN-CE", href: "https://arxiv.org/abs/2004.02857", problem: "Navigation graph가 가정하는 known topology·oracle navigation·perfect localization 없이 VLN을 수행합니다.", contribution: "Low-level action만으로 continuous environment를 이동하는 VLN-CE를 정의하고 discrete graph 대비 큰 성능 하락을 보고합니다.", assumptions: "저자 simulator·action set·evaluation protocol입니다.", evidenceScope: "Discrete graph와 continuous environment 사이 action space 차이의 근거입니다.", notClaim: "모든 discrete VLN 결과가 continuous 설정에서 비례해 재현된다는 뜻은 아닙니다.", sectionId: "paper-vln-ce" },
       { title: "Waypoint Models for Instruction-guided Navigation in Continuous Environments", href: "https://arxiv.org/abs/2110.02207", problem: "Low-level action과 완전 continuous waypoint 사이 표현력·실행 비용의 trade-off를 탐색합니다.", contribution: "12개 panoramic RGB-D observation을 입력으로, 거리 0.25~4m·방향 ±15˚ 범위의 waypoint를 예측하는 network를 제안하고 더 표현력 있는 예측이 더 짧고 빠른 경로를 만든다고 보고합니다.", assumptions: "저자 simulator·panoramic sensor 구성·waypoint 범위 설정입니다.", evidenceScope: "Waypoint prediction의 표현력 spectrum과 경로 효율성 근거입니다.", notClaim: "이 범위가 모든 robot embodiment의 이동 한계를 대표한다는 뜻은 아닙니다.", sectionId: "paper-waypoint" },
       { title: "Embodied-Navigator · TAMP-Nav", href: "https://arxiv.org/abs/2608.17512", problem: "Continuous VLN에서 매 step의 비싼 reasoning과 긴 trajectory 저장 비용을 줄입니다.", contribution: "Selective reasoning, anchor-trajectory memory, spatial-temporal memory, two-level alignment를 결합하고 90k trajectory 학습 후 R2R-CE에서 66.2% success rate를 저자 실험으로 보고합니다.", assumptions: "2026-08-18 공개 preprint의 model·90k trajectory·benchmark protocol입니다.", evidenceScope: "Selective reasoning·anchor-trajectory memory·spatial-temporal memory 정의와 R2R-CE 수치의 근거입니다.", notClaim: "독립 재현, manipulation transfer 또는 다른 benchmark로의 일반화를 주장하지 않습니다.", sectionId: "paper-tamp-nav-memory" },
+    ],
+  },
+  "ai/math-high-dimensional-geometry": {
+    entryNote: "벡터·norm 정본의 Euclidean norm과 SVD 정본의 rank·low-rank approximation을 이미 아는 독자를 대상으로 합니다.",
+    coreIdea:
+      "차원이 늘수록 무작위 점들의 Euclidean distance는 서로 비슷한 값으로 몰려 거리 하나로 가까움을 구분하기 어려워집니다. Johnson–Lindenstrauss lemma는 점 개수의 로그에만 비례하는 훨씬 낮은 차원으로 무작위 사영해도 이 거리를 (1±ε) 안에서 보존할 수 있다고 보장합니다. 이 보장이 통하는 이유는 실제 데이터의 intrinsic dimension이 저장에 쓰인 ambient dimension보다 훨씬 작기 때문이며, latent·bottleneck·low-rank representation은 그 낮은 자유도를 명시적인 저차원 좌표로 만드는 방법들입니다.",
+    assumedKnowledge: [
+      { id: "euclidean-norm", role: "두 점 차이 vector의 길이로 거리를 정의하는 데 사용합니다." },
+      { id: "matrix-multiplication", role: "JL lemma의 무작위 사영이 실제로는 행렬-벡터 곱이라는 것을 이해하는 데 사용합니다." },
+      { id: "matrix-rank", role: "Intrinsic dimension을 선형 부분공간 자유도의 비선형 일반화로 대조하는 데 사용합니다." },
+      { id: "low-rank-approximation", role: "Low-rank representation의 구체적인 계산 방법(rank-k 근사)으로 사용합니다." },
+    ],
+    introducedHere: [
+      { id: "high-dimensional-geometry-and-distance", role: "Euclidean distance를 정의하고 차원이 늘수록 거리가 집중되는 고차원 기하 현상을 확인합니다." },
+      { id: "johnson-lindenstrauss-lemma", role: "점 개수의 로그에만 비례하는 차원으로 사영해도 거리가 보존된다는 보장을 수식으로 고정합니다." },
+      { id: "intrinsic-dimension", role: "ambient dimension과 구분되는, 데이터가 실제로 쓰는 자유도를 정의합니다." },
+      { id: "latent-and-bottleneck-representation", role: "낮은 intrinsic dimension을 명시적 저차원 좌표로 바꾸는 low-rank·latent·bottleneck representation을 하나로 묶습니다." },
+    ],
+    conceptExplanations: [
+      {
+        id: "high-dimensional-geometry-and-distance",
+        sectionId: "distance",
+        intuition: "차원이 늘수록 좌표 차이의 제곱합이 평균 주변으로 몰려, 무작위 점들의 거리가 서로 비슷해집니다.",
+        workedExample: "d=2에서 최근접·최원접 거리는 1.2 대 8.7(비율 7.3배)이지만 d=1,000에서는 31.1 대 33.4(비율 1.07배)로 좁아집니다.",
+        boundary: "이 집중은 좌표별 분산이 비슷한 무작위 점을 가정한 것이며, 실제 데이터가 특정 방향으로 몰려 있으면 정도가 달라집니다.",
+      },
+      {
+        id: "johnson-lindenstrauss-lemma",
+        sectionId: "jl-lemma",
+        intuition: "점이 몇 개인지만 알면, 데이터 구조를 몰라도 무작위 사영 하나로 거리를 거의 보존하는 낮은 차원을 찾을 수 있습니다.",
+        workedExample: "n=1,000,000·ε=0.1이면 Dasgupta–Gupta 하한으로 k≥17,763이면 충분하고, n을 1,000배 줄여도 k는 8,882로 절반 정도만 줄어듭니다.",
+        boundary: "이 k는 특정 증명이 제시하는 충분조건이며 실전에서 필요한 최소 차원이 아니고, data-specific한 구조를 이용하는 축소보다 나을 것이라는 보장도 아닙니다.",
+        proofIdea:
+          "무작위 방향에 점을 사영한 길이는 원래 길이 주변에 집중한다는 사실을 각 점 쌍에 적용한 뒤, 실패 확률을 점 쌍 수(약 n²/2)로 나눠도 여전히 작아지도록 k를 크게 잡아 union bound로 모든 쌍에서 동시에 성립하게 만듭니다.",
+        counterexample:
+          "k를 이 하한보다 훨씬 작게 잡으면 union bound가 보장하는 성공 확률이 0 이하로 떨어져, 일부 점 쌍에서는 거리가 (1±ε) 범위를 벗어날 수 있습니다.",
+      },
+      {
+        id: "intrinsic-dimension",
+        sectionId: "intrinsic-dimension",
+        intuition: "저장된 좌표 수가 아무리 많아도 데이터가 실제로 움직이는 자유도는 그보다 훨씬 작을 수 있습니다.",
+        workedExample: "ImageNet 이미지는 150,528 ambient 차원(224×224×3)이지만 추정된 intrinsic dimension은 26~43에 불과합니다.",
+        boundary: "이 추정치는 특정 MLE 기반 추정 도구와 데이터셋 조건에서 나온 값이며, 모든 데이터셋의 intrinsic dimension이 이만큼 작다고 일반화하지 않습니다.",
+      },
+      {
+        id: "latent-and-bottleneck-representation",
+        sectionId: "latent-representation",
+        intuition: "실제 자유도가 작다는 사실이 있어야, 좁은 통로로 강제해도 정보를 거의 잃지 않고 압축할 수 있습니다.",
+        workedExample: "784차원 MNIST pixel을 32차원 bottleneck으로 압축하는 autoencoder는 intrinsic dimension 추정치(약 7~13)보다 여유 있는 크기를 씁니다.",
+        boundary: "Bottleneck이 intrinsic dimension보다 좁으면 서로 다른 입력이 같은 좌표로 뭉개져 복원이 불가능해지고, 너무 넓으면 identity mapping으로 새는 위험이 커집니다.",
+      },
+    ],
+    conceptStages: [
+      { label: "00 거리 정의·집중", relation: "Euclidean distance를 정의하고 차원이 늘수록 거리가 서로 비슷해지는 현상을 확인합니다.", concepts: ["high-dimensional-geometry-and-distance"] },
+      { label: "01 JL 사영", relation: "무작위 선형 사영 하나로 점 개수의 로그 차원만으로 거리를 거의 보존합니다.", concepts: ["johnson-lindenstrauss-lemma"] },
+      { label: "02 intrinsic dimension", relation: "실제 데이터의 자유도가 ambient dimension보다 훨씬 작다는 사실을 확인합니다.", concepts: ["intrinsic-dimension"] },
+      { label: "03 latent·bottleneck", relation: "낮은 자유도를 명시적 저차원 좌표로 강제하는 low-rank·latent·bottleneck representation으로 마무리합니다.", concepts: ["latent-and-bottleneck-representation"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Euclidean distance 공식에서 제곱을 취했다가 다시 제곱근을 취하는 이유를 설명하세요.", answerChecklist: ["부호 제거", "원래 좌표와 같은 단위로 되돌림"], requiredConcepts: ["high-dimensional-geometry-and-distance"], sectionId: "distance" },
+      { level: "basic", question: "d=2와 d=1,000에서 최근접·최원접 거리 비율이 왜 다른지 이 글의 수치로 설명하세요.", answerChecklist: ["d=2: 7.3배", "d=1,000: 1.07배", "독립 항 수 증가"], requiredConcepts: ["high-dimensional-geometry-and-distance"], sectionId: "distance" },
+      { level: "basic", question: "JL lemma가 보장하는 것은 무엇이고, k는 무엇에 비례하나요?", answerChecklist: ["pairwise distance (1±ε) 보존", "점 개수 n의 로그에 비례"], requiredConcepts: ["johnson-lindenstrauss-lemma"], sectionId: "jl-lemma" },
+      { level: "basic", question: "ImageNet의 ambient dimension과 intrinsic dimension 추정치를 비교해 설명하세요.", answerChecklist: ["150,528", "26~43"], requiredConcepts: ["intrinsic-dimension"], sectionId: "intrinsic-dimension" },
+      { level: "basic", question: "Low-rank representation, latent representation, bottleneck representation이 각각 가리키는 대상을 구분하세요.", answerChecklist: ["low-rank: 계산 방법", "latent: 학습된 좌표", "bottleneck: 구조적 제약"], requiredConcepts: ["latent-and-bottleneck-representation"], sectionId: "latent-representation" },
+      { level: "basic", question: "Bottleneck이 intrinsic dimension보다 좁으면 어떤 문제가 생기나요?", answerChecklist: ["서로 다른 입력이 같은 좌표로 압축", "복원 불가능"], requiredConcepts: ["latent-and-bottleneck-representation"], sectionId: "latent-representation" },
+      { level: "advanced", question: "ε을 절반으로 줄이면 JL lemma의 k는 대략 몇 배가 되고 왜 그런가요?", answerChecklist: ["약 4배", "분모가 ε²에 비례"], requiredConcepts: ["johnson-lindenstrauss-lemma"], sectionId: "jl-lemma" },
+      { level: "advanced", question: "JL lemma의 목표 차원 k와 intrinsic dimension이 서로 다른 축인 이유를 설명하세요.", answerChecklist: ["k는 n에만 의존", "intrinsic dimension은 데이터 구조에 의존"], requiredConcepts: ["johnson-lindenstrauss-lemma", "intrinsic-dimension"], sectionId: "jl-lemma" },
+      { level: "advanced", question: "Matrix rank와 intrinsic dimension의 관계를 선형·비선형 관점에서 설명하세요.", answerChecklist: ["rank: 선형 부분공간 자유도", "intrinsic dimension: manifold로 일반화"], requiredConcepts: ["intrinsic-dimension"], sectionId: "intrinsic-dimension" },
+      { level: "advanced", question: "SVD의 low-rank approximation이 low-rank representation의 한 사례인 이유를 설명하세요.", answerChecklist: ["rank-k factor 곱", "저장량 mn→k(m+n) 감소"], requiredConcepts: ["latent-and-bottleneck-representation"], sectionId: "latent-representation" },
+    ],
+    papers: [
+      {
+        title: "Dasgupta & Gupta — An Elementary Proof of a Theorem of Johnson and Lindenstrauss",
+        href: "https://doi.org/10.1002/rsa.10073",
+        problem: "Johnson–Lindenstrauss 1984 정리의 원 증명이 복잡해, 더 단순한 확률론적 증명과 명시적 차원 하한이 필요했습니다.",
+        contribution: "무작위 방향 사영의 길이 집중만으로 정리를 재증명하고 k≥4ln(n)/(ε²/2−ε³/3)이라는 명시적 충분조건을 제시했습니다.",
+        assumptions: "점들이 Euclidean 공간에 있고 사영이 Gaussian 무작위 행렬로 만들어진다는 논문의 조건입니다.",
+        evidenceScope: "Random Structures & Algorithms 2003에 발표된 이론적 증명(저자 자기보고)이며 특정 데이터셋 실험은 아닙니다.",
+        notClaim: "이 k가 실전에서 필요한 최소 차원이라거나 모든 random-projection 구현이 이 상수를 그대로 쓴다는 뜻은 아닙니다.",
+        sectionId: "paper-jl-lemma",
+      },
+      {
+        title: "Pope, Zhu, Abdelkader, Goldblum & Goldstein — The Intrinsic Dimension of Images and Its Impact on Learning",
+        href: "https://arxiv.org/abs/2104.08894",
+        problem: "자연 이미지 데이터셋이 실제로 얼마나 낮은 차원 구조를 갖는지, 그리고 그 차원이 학습에 어떤 영향을 주는지가 불명확했습니다.",
+        contribution: "MLE 기반 dimension 추정 도구를 GAN 생성 데이터로 먼저 검증한 뒤 MNIST·CIFAR·ImageNet 등에 적용해 intrinsic dimension을 측정하고 학습 sample 수·일반화와의 상관관계를 보였습니다.",
+        assumptions: "논문이 쓴 k-nearest-neighbor 기반 MLE 추정기와 실험에 사용한 특정 데이터셋·모델 조건입니다.",
+        evidenceScope: "ICLR 2021에 발표된 저자 자기보고 실험 결과이며 독립 재현 평가는 별도로 확인해야 합니다.",
+        notClaim: "모든 데이터셋의 intrinsic dimension이 26~43 범위라거나, 이 추정치가 downstream task의 최적 latent 차원과 같다는 뜻은 아닙니다.",
+        sectionId: "paper-intrinsic-dimension",
+      },
+    ],
+  },
+  "ai/math-numerical-precision-stability": {
+    entryNote: "벡터·내적 정본의 합산 연산과 행렬 정본의 shape 계약을 이미 아는 독자를 대상으로 합니다.",
+    coreIdea:
+      "컴퓨터는 실수를 IEEE 754 형식의 유한 bit로 저장하며 mantissa bit 수만큼만 유효숫자를 남기고 나머지는 반올림합니다. 이 floating-point error는 계산 단계마다 누적되는데, 같은 수식이라도 계산 순서에 따라 오차가 폭발하거나(예: softmax의 naive 계산) 사라질(max-subtraction) 수 있다는 것이 numerical stability입니다. Tensor shape가 어긋나는 문제도 같은 층위의 조용한 실패이며, broadcasting 규칙이 우연히 성립하면 예외 없이 의도와 다른 축으로 계산이 진행됩니다.",
+    assumedKnowledge: [
+      { id: "dot-product", role: "여러 항을 더하는 합산 연산에서 오차가 누적되는 상황을 만드는 데 사용합니다." },
+      { id: "linear-map-matrix", role: "행렬의 m×n shape 계약을 tensor broadcasting 규칙으로 확장하는 데 사용합니다." },
+    ],
+    introducedHere: [
+      { id: "floating-point-precision-and-error", role: "IEEE 754가 남기는 유효숫자 자릿수와 그로 인한 반올림 오차를 정의합니다." },
+      { id: "numerical-stability", role: "같은 수식도 계산 순서에 따라 오차 증폭 정도가 달라진다는 성질을 softmax 사례로 고정합니다." },
+      { id: "tensor-shape-contract", role: "Shape가 어긋나도 broadcasting이 예외 없이 다른 축으로 진행될 수 있다는 계약을 정의합니다." },
+    ],
+    conceptExplanations: [
+      {
+        id: "floating-point-precision-and-error",
+        sectionId: "precision",
+        intuition: "실수를 유한 자릿수로 저장하면 그 자릿수보다 정밀한 값은 가장 가까운 표현 가능값으로 반올림됩니다.",
+        workedExample: "FP16(mantissa 10bit)은 유효숫자 약 3.3자리만 남겨, 1.0에 2^-11을 더해도 반올림돼 다시 1.0이 됩니다.",
+        boundary: "이 근사는 1.0 근처 normal number 기준이며, subnormal 값이나 overflow 경계 근처에서는 간격이 달라집니다.",
+      },
+      {
+        id: "numerical-stability",
+        sectionId: "stability",
+        intuition: "수학적으로 같은 식이라도 부동소수점 계산 순서에 따라 오차가 폭발하거나 사라질 수 있습니다.",
+        workedExample: "Logit [1000,1001,1002]를 그대로 exp에 넣으면 FP32에서 inf·NaN이 되지만, 최댓값 1002를 먼저 빼면 [-2,-1,0]이 되어 안전합니다.",
+        boundary: "이 안정화는 overflow에 대한 것이며, 모든 logit이 매우 작은 음수로 몰려 exp가 전부 0에 가까워지는 underflow는 별도로 다뤄야 합니다.",
+      },
+      {
+        id: "tensor-shape-contract",
+        sectionId: "shape",
+        intuition: "Shape가 우연히 broadcasting 규칙에 들어맞으면, 의도와 다른 축으로도 예외 없이 계산이 진행됩니다.",
+        workedExample: "Shape (3,1)인 a와 (3,)인 b를 더하면 원소별 합 3개가 아니라 (3,3) 조합 9개가 조용히 나옵니다.",
+        boundary: "축 크기가 서로 다르고 둘 다 1이 아니면(예: (3,4)+(5,)) broadcasting 자체가 성립하지 않아 runtime에서 즉시 예외가 납니다.",
+      },
+    ],
+    conceptStages: [
+      { label: "00 precision", relation: "IEEE 754가 남기는 유효숫자 자릿수와 반올림 오차를 정의합니다.", concepts: ["floating-point-precision-and-error"] },
+      { label: "01 stability", relation: "같은 수식도 계산 순서에 따라 오차 증폭 정도가 달라짐을 softmax로 확인합니다.", concepts: ["numerical-stability"] },
+      { label: "02 shape", relation: "Shape 계약이 어긋나도 broadcasting이 예외 없이 다른 축으로 진행될 수 있음을 확인합니다.", concepts: ["tensor-shape-contract"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Mantissa bit 수가 늘면 유효숫자 자릿수와 machine epsilon은 각각 어떻게 바뀌나요?", answerChecklist: ["유효숫자 증가", "epsilon=2^-p 감소"], requiredConcepts: ["floating-point-precision-and-error"], sectionId: "precision" },
+      { level: "basic", question: "FP16과 BF16이 유효숫자·표현 범위에서 어떻게 다른지 설명하세요.", answerChecklist: ["FP16: mantissa 10bit·좁은 범위", "BF16: mantissa 7bit·FP32와 같은 범위"], requiredConcepts: ["floating-point-precision-and-error"], sectionId: "precision" },
+      { level: "basic", question: "Softmax를 naive하게 계산하면 왜 inf·NaN이 나올 수 있나요?", answerChecklist: ["exp(큰 값)이 FP32 범위 초과", "inf/inf=NaN"], requiredConcepts: ["numerical-stability"], sectionId: "stability" },
+      { level: "basic", question: "Softmax에서 최댓값을 빼는 재정렬이 결과를 바꾸지 않는 이유를 설명하세요.", answerChecklist: ["분자·분모의 exp(c) 약분", "수학적으로 동일한 값"], requiredConcepts: ["numerical-stability"], sectionId: "stability" },
+      { level: "basic", question: "Shape (3,1)과 (3,)을 더하면 왜 (3,3)이 되나요?", answerChecklist: ["broadcasting 규칙", "각 행이 b 전체와 짝지어짐"], requiredConcepts: ["tensor-shape-contract"], sectionId: "shape" },
+      { level: "basic", question: "Shape (3,4)와 (5,)를 더하면 broadcasting이 되지 않는 이유는 무엇인가요?", answerChecklist: ["마지막 축 4와 5가 다름", "둘 다 1이 아님"], requiredConcepts: ["tensor-shape-contract"], sectionId: "shape" },
+      { level: "advanced", question: "1.0에 2^-11을 더했을 때 FP16에서 결과가 다시 1.0이 되는 이유를 machine epsilon으로 설명하세요.", answerChecklist: ["FP16 epsilon≈2^-10", "2^-11 < 절반 간격이라 반올림 흡수"], requiredConcepts: ["floating-point-precision-and-error"], sectionId: "precision" },
+      { level: "advanced", question: "Catastrophic cancellation이 분산 계산 E[X²]-E[X]²에서 왜 발생하는지 설명하세요.", answerChecklist: ["크기가 비슷한 두 큰 수의 뺄셈", "앞자리 상쇄로 반올림 오차만 남음"], requiredConcepts: ["numerical-stability"], sectionId: "stability" },
+      { level: "advanced", question: "Precision 계약과 shape 계약이 서로 다른 축의 정확성인 이유를 설명하세요.", answerChecklist: ["precision: 표현 가능한 값의 정밀도", "shape: 축 정합성"], requiredConcepts: ["floating-point-precision-and-error", "tensor-shape-contract"], sectionId: "shape" },
+      { level: "advanced", question: "AMP(automatic mixed-precision)가 연산별로 dtype을 다르게 고르는 근거를 FP16·BF16 트레이드오프로 설명하세요.", answerChecklist: ["FP16: 좁은 범위·많은 유효숫자", "BF16: 넓은 범위·적은 유효숫자"], requiredConcepts: ["floating-point-precision-and-error"], sectionId: "precision" },
+    ],
+    papers: [
+      {
+        title: "Goldberg — What Every Computer Scientist Should Know About Floating-Point Arithmetic",
+        href: "https://doi.org/10.1145/103162.103163",
+        problem: "IEEE 754 부동소수점의 반올림·오차 전파를 프로그래머가 흔히 오해하거나 무시하는 문제를 다룹니다.",
+        contribution: "Sign·exponent·mantissa 구조, machine epsilon, catastrophic cancellation을 표준 사례로 정리한 survey입니다.",
+        assumptions: "IEEE 754 표준을 따르는 부동소수점 구현을 전제합니다.",
+        evidenceScope: "ACM Computing Surveys 1991에 발표된 survey(저자 정리)이며 특정 하드웨어 벤치마크는 아닙니다.",
+        notClaim: "특정 GPU·CPU의 실제 명령어 지연시간이나 처리량까지 보장하는 논문은 아닙니다.",
+        sectionId: "paper-fp-arithmetic",
+      },
+      {
+        title: "Goodfellow, Bengio & Courville — Deep Learning, Chapter 4 Numerical Computation",
+        href: "https://www.deeplearningbook.org/contents/numerical.html",
+        problem: "Overflow·underflow가 딥러닝 구현에서 어떻게 나타나고 어떻게 피하는지가 불명확했습니다.",
+        contribution: "Softmax의 max-subtraction(log-sum-exp) 안정화 기법을 포함해 수치 계산 실패 패턴을 정리했습니다.",
+        assumptions: "표준 IEEE 754 부동소수점 연산을 전제한 설명입니다.",
+        evidenceScope: "공개 교재(저자 정리)이며 특정 논문의 실험 결과는 아닙니다.",
+        notClaim: "모든 수치 불안정 문제가 max-subtraction 하나로 해결된다는 뜻은 아닙니다.",
+        sectionId: "paper-numerical-stability",
+      },
+    ],
+  },
+  "ai/quantization-formats-and-granularity": {
+    entryNote: "affine quantizer의 scale·zero-point·round·clip 규약(/ai/quantization)과 scale 공유 범위(/ai/ptq-calibration#scale-granularity), method·format 경계(/ai/weight-only-quantization#artifact-boundary)를 안다고 가정합니다.",
+    coreIdea: "양자화는 몇 bit로 몇 개의 값을 어떻게 표현하는지(INT8/INT4·FP8/FP4/NVFP4·binary/ternary weight)와 scale을 얼마나 잘게 나눠 공유하는지(zero-point·per-tensor/channel/group-wise·block)라는 서로 다른 두 축으로 갈립니다.",
+    assumedKnowledge: [
+      { id: "affine-uniform-quantizer", role: "이 글의 모든 format·granularity가 공유하는 quantize·dequantize 규약입니다." },
+      { id: "quantization-scale-granularity", role: "Per-tensor·per-channel·group의 scale 공유 범위와 metadata 계산을 그대로 가져옵니다." },
+      { id: "quantization-method-format-boundary", role: "GPTQ·AWQ 같은 method와 이 글이 다루는 numerical format을 구분하는 전제입니다." },
+    ],
+    introducedHere: [
+      { id: "integer-quantization-formats", role: "INT8·INT4가 표현하는 code 개수와 bit-width 관계를 고정합니다." },
+      { id: "floating-point-quantization-formats", role: "FP8·FP4·NVFP4의 exponent·mantissa 구조와 dynamic range를 고정합니다." },
+      { id: "extreme-low-bit-weights", role: "Binary·ternary weight라는 INT4보다 더 낮은 bit의 극단을 추가합니다." },
+      { id: "symmetric-vs-asymmetric-zero-point-quantization", role: "Zero-point 값에 따른 symmetric·asymmetric 선택을 고정합니다." },
+      { id: "quantization-granularity-and-block-scaling", role: "Per-tensor부터 block까지 scale 공유 범위의 전체 스펙트럼을 완성합니다." },
+    ],
+    conceptExplanations: [
+      {
+        id: "integer-quantization-formats",
+        sectionId: "integer-formats",
+        intuition: "자를 몇 칸으로 나누는지가 곧 bit 수이며, 칸이 줄면 칸 사이 간격이 넓어집니다.",
+        workedExample: "INT8은 2⁸=256개, INT4는 2⁴=16개 code이며 256/16=16배 차이입니다.",
+        boundary: "이 관계는 균일 간격 정수 code에서만 성립하며 floating-point format에는 그대로 적용되지 않습니다.",
+      },
+      {
+        id: "floating-point-quantization-formats",
+        sectionId: "floating-point-formats",
+        intuition: "지수 자리를 늘리면 표현 폭이 넓어지고, 가수 자리를 늘리면 그 폭 안의 정밀도가 좋아집니다.",
+        workedExample: "NVFP4(E2M1)는 4bit로 0부터 6까지 8개 값을, INT4는 같은 4bit로 16개 균일 code를 표현합니다.",
+        boundary: "Exponent·mantissa 배치는 표준 하나로 고정돼 있지 않아 E4M3·E5M2·E2M1처럼 용도별로 다릅니다.",
+      },
+      {
+        id: "extreme-low-bit-weights",
+        sectionId: "extreme-low-bit",
+        intuition: "Weight 하나가 가질 수 있는 값의 개수를 2개나 3개까지 줄이는 가장 급진적인 선택입니다.",
+        workedExample: "Ternary weight는 {-1,0,+1} 3개 값만 쓰며 log₂3≈1.58bit로 INT4의 16개보다 훨씬 적습니다.",
+        boundary: "BitNet처럼 처음부터 ternary로 학습하는 방법과 이미 학습된 weight를 사후 변환하는 PTQ는 같은 절차가 아닙니다.",
+      },
+      {
+        id: "symmetric-vs-asymmetric-zero-point-quantization",
+        sectionId: "zero-point-symmetry",
+        intuition: "자의 눈금 0을 실수 0에 그대로 둘지, 분포에 맞춰 옮길지의 선택입니다.",
+        workedExample: "Range [-3,3]은 zero-point=0인 symmetric이 code를 낭비 없이 쓰고, [-2,6]은 zero-point≈64인 asymmetric이 유리합니다.",
+        boundary: "Asymmetric이 항상 더 정확한 것은 아니며, zero-point 덧셈을 지원하지 않는 kernel에서는 symmetric만 쓸 수 있습니다.",
+      },
+      {
+        id: "quantization-granularity-and-block-scaling",
+        sectionId: "granularity",
+        intuition: "자 하나를 tensor 전체가 쓸지, 작은 묶음마다 새 자를 쓸지의 폭 문제입니다.",
+        workedExample: "16,777,216개 원소에서 per-tensor는 scale 1개, group-wise(128)는 131,072개, block(16)은 1,048,576개가 필요합니다.",
+        boundary: "좁힐수록 outlier 피해는 줄지만 scale metadata와 kernel 복잡도가 늘어나 항상 더 나은 선택은 아닙니다.",
+      },
+    ],
+    conceptStages: [
+      { label: "00 base", relation: "Affine quantizer의 scale·zero-point·round·clip 규약을 가져옵니다.", concepts: ["affine-uniform-quantizer"] },
+      { label: "01 integer", relation: "같은 규약의 구체적 bit-width로 INT8·INT4의 code 수를 고정합니다.", concepts: ["affine-uniform-quantizer", "quantization-method-format-boundary", "integer-quantization-formats"] },
+      { label: "02 float", relation: "등간격이 아닌 exponent·mantissa 구조로 FP8·FP4·NVFP4의 dynamic range를 넓힙니다.", concepts: ["floating-point-quantization-formats", "quantization-method-format-boundary"] },
+      { label: "03 extreme", relation: "Code 수를 2개·3개까지 줄이는 극단적 저bit weight를 추가합니다.", concepts: ["integer-quantization-formats", "extreme-low-bit-weights"] },
+      { label: "04 zero-point", relation: "Zero-point 값 하나로 대칭·비대칭 range 선택을 구체화합니다.", concepts: ["affine-uniform-quantizer", "symmetric-vs-asymmetric-zero-point-quantization"] },
+      { label: "05 granularity", relation: "Scale 공유 범위를 tensor에서 block까지 좁혀 가는 스펙트럼을 완성합니다.", concepts: ["quantization-scale-granularity", "floating-point-quantization-formats", "quantization-granularity-and-block-scaling"] },
+    ],
+    exercises: [
+      { level: "basic", question: "INT8과 INT4가 표현할 수 있는 code 개수를 각각 구하고 그 비율을 설명하세요.", answerChecklist: ["2^8=256", "2^4=16", "16배 차이", "지수적 관계", "bit 수 절반"], requiredConcepts: ["integer-quantization-formats"], sectionId: "integer-formats" },
+      { level: "basic", question: "FP8과 FP4가 정수 format과 다르게 값을 표현하는 방식을 설명하세요.", answerChecklist: ["sign", "exponent", "mantissa", "비균일 step", "dynamic range"], requiredConcepts: ["floating-point-quantization-formats"], sectionId: "floating-point-formats" },
+      { level: "basic", question: "Binary weight와 ternary weight가 각각 몇 개의 값을 표현하는지, INT4와 비교하세요.", answerChecklist: ["binary 2개", "ternary 3개", "INT4 16개", "극단적 저bit", "BitNet"], requiredConcepts: ["extreme-low-bit-weights", "integer-quantization-formats"], sectionId: "extreme-low-bit" },
+      { level: "basic", question: "Zero-point가 0이면 symmetric, 0이 아니면 asymmetric이 되는 이유를 설명하세요.", answerChecklist: ["zero-point=0", "원점 대칭", "zero-point≠0", "치우친 range", "code space"], requiredConcepts: ["symmetric-vs-asymmetric-zero-point-quantization"], sectionId: "zero-point-symmetry" },
+      { level: "basic", question: "Weight 분포와 ReLU 이후 activation 분포 중 어느 쪽에 asymmetric quantization이 유리한지 설명하세요.", answerChecklist: ["weight 대칭", "activation 치우침", "asymmetric 유리", "code space 활용", "symmetric 낭비"], requiredConcepts: ["symmetric-vs-asymmetric-zero-point-quantization"], sectionId: "zero-point-symmetry" },
+      { level: "basic", question: "Per-tensor·per-channel·group-wise·block quantization을 scale 공유 범위 기준으로 순서대로 나열하세요.", answerChecklist: ["per-tensor 가장 넓음", "per-channel", "group-wise", "block 가장 좁음", "metadata 증가"], requiredConcepts: ["quantization-granularity-and-block-scaling"], sectionId: "granularity" },
+      { level: "advanced", question: "4096×4096 weight matrix에서 per-tensor·per-channel(4096)·group-wise(128)의 scale 개수를 계산하고 metadata 증가를 설명하세요.", answerChecklist: ["per-tensor 1개", "per-channel 4096개", "group-wise 131072개", "metadata 증가", "정확도-오버헤드 trade-off"], requiredConcepts: ["quantization-granularity-and-block-scaling"], sectionId: "granularity" },
+      { level: "advanced", question: "NVFP4의 두 단계 scale(micro-block+tensor) 구조를 설명하고 이것이 block quantization인 이유를 쓰세요.", answerChecklist: ["16개 원소 block", "FP8 E4M3 scale", "tensor FP32 scale", "second-level", "group-wise와 차이"], requiredConcepts: ["floating-point-quantization-formats", "quantization-granularity-and-block-scaling"], sectionId: "granularity" },
+      { level: "advanced", question: "INT4 weight-only quantization과 BitNet 같은 ternary weight 학습의 차이를 PTQ·QAT 관점에서 설명하세요.", answerChecklist: ["INT4는 PTQ 대상", "BitNet은 학습부터 ternary", "QAT와 유사한 재학습", "전제 조건 차이", "일반화 금지"], requiredConcepts: ["extreme-low-bit-weights"], sectionId: "extreme-low-bit" },
+      { level: "advanced", question: "Symmetric quantization만 지원하는 kernel에 asymmetric range가 필요한 activation을 넣으면 생기는 문제와 해결 방향을 설명하세요.", answerChecklist: ["code space 절반 낭비", "range 재조정 필요", "zero-point 지원 kernel 필요", "precision 손실", "hardware 제약"], requiredConcepts: ["symmetric-vs-asymmetric-zero-point-quantization"], sectionId: "zero-point-symmetry" },
+    ],
+    papers: [
+      { title: "NVIDIA Transformer Engine · FP8 Current Scaling", href: "https://docs.nvidia.com/deeplearning/transformer-engine/user-guide/features/low_precision_training/fp8_current_scaling/fp8_current_scaling.html", problem: "FP8의 좁은 dynamic range에서 tensor를 안전하게 표현하는 문제입니다.", contribution: "E4M3·E5M2 bit 배치와 amax 기반 current scaling 절차를 명시합니다.", assumptions: "Transformer Engine 해당 version과 지원 GPU·shape 조건입니다.", evidenceScope: "FP8 format 정의와 current scaling 절차의 공식 문서 범위입니다.", notClaim: "모든 model·shape에서 동일한 정확도를 보장하지 않습니다.", sectionId: "paper-fp8" },
+      { title: "Introducing NVFP4 for Efficient and Accurate Low-Precision Inference", href: "https://developer.nvidia.com/blog/introducing-nvfp4-for-efficient-and-accurate-low-precision-inference/", problem: "4bit inference에서 정확도 손실 없이 memory 대역폭을 더 줄이는 문제입니다.", contribution: "E2M1 4bit code에 16개 원소당 FP8 micro-block scale과 tensor 하나의 FP32 scale을 더한 two-level scaling을 제시합니다.", assumptions: "NVIDIA Blackwell 세대 GPU와 문서가 명시한 model·benchmark 조건입니다.", evidenceScope: "문서가 보고한 DeepSeek-R1 계열 변환·benchmark 측정 범위입니다.", notClaim: "모든 model·task에서 1% 이하 정확도 저하를 보장하지 않습니다.", sectionId: "paper-nvfp4" },
+      { title: "The Era of 1-bit LLMs: All Large Language Models are in 1.58 Bits", href: "https://arxiv.org/abs/2402.17764", problem: "INT4보다 낮은 bit에서 학습부터 진행하는 LLM이 float 성능을 유지할 수 있는지입니다.", contribution: "{-1,0,+1} ternary weight로 처음부터 학습하는 BitNet b1.58을 제시하고 FP16 baseline과 perplexity·zero-shot 정확도를 비교합니다.", assumptions: "논문의 model 크기·학습 토큰 수·평가 조건입니다.", evidenceScope: "논문이 보고한 학습·추론 실험 범위입니다.", notClaim: "모든 model 크기·task에서 동일한 memory·속도 이득을 보장하지 않습니다.", sectionId: "paper-bitnet" },
+    ],
+  },
+  "ai/training-memory-budget": {
+    entryNote: "Adam 정본의 momentum·variance state와 reverse-mode autodiff 정본의 save–recompute 경계를 이미 아는 독자를 대상으로 합니다.",
+    coreIdea:
+      "학습 메모리는 weight·gradient·optimizer state·activation 네 항목의 합입니다. Mixed-precision Adam 학습은 parameter 하나당 FP16 weight·gradient 각 2byte에 FP32 master weight·momentum·variance 각 4byte를 더해 16byte를 쓰고, 75억 parameter 모델이면 이것만으로 120GB가 필요합니다. Activation은 layer 수에 비례해 따로 쌓이는데, activation checkpointing은 일부 layer의 activation만 저장하고 나머지는 backward에서 다시 계산해 이 항목을 O(√n) 메모리로 줄이는 대신 forward를 한 번 더 실행하는 비용을 지불합니다.",
+    assumedKnowledge: [
+      { id: "raw-gradient-moments", role: "Adam이 parameter마다 유지하는 momentum·variance FP32 buffer를 byte로 세는 데 사용합니다." },
+      { id: "autodiff-save-recompute-boundary", role: "Activation을 저장할지 다시 계산할지 정하는 일반 경계로 checkpointing의 배경이 됩니다." },
+    ],
+    introducedHere: [
+      { id: "training-memory-budget-and-checkpointing", role: "Model-state memory를 16byte/param으로 계산하고, activation checkpointing이 activation 항을 O(√n)으로 줄이는 절충을 정의합니다." },
+    ],
+    conceptExplanations: [
+      {
+        id: "training-memory-budget-and-checkpointing",
+        sectionId: "memory-math",
+        intuition: "Weight 하나마다 gradient·optimizer state라는 그림자가 따라붙고, activation은 layer 수만큼 따로 쌓입니다.",
+        workedExample: "Ψ=7.5×10⁹ parameter 모델은 (2+2+12)Ψ=16Ψ byte, 즉 120GB의 model-state memory가 필요하고, 1,000-layer network의 activation은 checkpointing으로 48GB에서 7GB로 줄어드는 대신 학습 시간이 약 30% 늘어납니다.",
+        boundary: "16byte/param은 SGD 등 다른 optimizer나 activation·temporary buffer·fragmentation을 포함하지 않은 model-state 하한이며, checkpoint 간격 선택은 메모리와 재계산 비용의 절충이지 공짜 축소가 아닙니다.",
+      },
+    ],
+    conceptStages: [
+      { label: "00 model states", relation: "Weight·gradient·optimizer state를 byte 단위로 더합니다.", concepts: ["training-memory-budget-and-checkpointing"] },
+      { label: "01 activation checkpointing", relation: "Activation 항을 O(√n) 메모리로 줄이는 대신 forward를 다시 실행합니다.", concepts: ["training-memory-budget-and-checkpointing"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Mixed-precision Adam 학습에서 parameter 하나당 byte를 각 항목별로 나눠 설명하세요.", answerChecklist: ["FP16 weight 2byte", "FP16 gradient 2byte", "FP32 master·momentum·variance 12byte"], requiredConcepts: ["training-memory-budget-and-checkpointing"], sectionId: "memory-math" },
+      { level: "basic", question: "Ψ=7.5×10⁹ parameter 모델의 model-state memory를 계산하세요.", answerChecklist: ["16×7.5e9", "120GB"], requiredConcepts: ["training-memory-budget-and-checkpointing"], sectionId: "memory-math" },
+      { level: "basic", question: "K=12가 어디서 나오는 숫자인지 설명하세요.", answerChecklist: ["FP32 master weight 4byte", "momentum 4byte", "variance 4byte"], requiredConcepts: ["training-memory-budget-and-checkpointing"], sectionId: "memory-math" },
+      { level: "basic", question: "Activation checkpointing이 저장하는 activation과 버리는 activation을 구분하세요.", answerChecklist: ["checkpoint layer만 저장", "나머지는 즉시 폐기"], requiredConcepts: ["training-memory-budget-and-checkpointing"], sectionId: "checkpointing" },
+      { level: "basic", question: "1,000-layer network에서 checkpointing 전후 activation 메모리와 시간 변화를 설명하세요.", answerChecklist: ["48GB→7GB", "시간 약 30% 증가"], requiredConcepts: ["training-memory-budget-and-checkpointing"], sectionId: "checkpointing" },
+      { level: "basic", question: "Checkpoint 간격을 √n으로 고르는 이유를 설명하세요.", answerChecklist: ["저장하는 activation 수", "구간당 재계산 비용의 균형"], requiredConcepts: ["training-memory-budget-and-checkpointing"], sectionId: "checkpointing" },
+      { level: "advanced", question: "SGD-momentum만 쓰는 optimizer로 바꾸면 K와 model-state memory가 어떻게 달라지는지 추정하세요.", answerChecklist: ["K가 12보다 작아짐", "model-state memory 감소"], requiredConcepts: ["training-memory-budget-and-checkpointing"], sectionId: "memory-math" },
+      { level: "advanced", question: "Checkpoint 간격을 √n보다 훨씬 작게(예: 매 layer) 잡으면 무엇이 손해인지 설명하세요.", answerChecklist: ["저장량은 늘고", "재계산 이득은 줄어듦"], requiredConcepts: ["training-memory-budget-and-checkpointing"], sectionId: "checkpointing" },
+      { level: "advanced", question: "O(log n) 메모리 극단 방식이 O(√n)보다 항상 더 나은 선택이 아닌 이유를 설명하세요.", answerChecklist: ["메모리는 더 줄지만", "추가 계산 비용이 O(n log n)으로 더 커짐"], requiredConcepts: ["training-memory-budget-and-checkpointing"], sectionId: "checkpointing" },
+      { level: "advanced", question: "QLoRA training-memory ledger가 이 글의 memory math를 어떻게 세분화하는지 설명하세요.", answerChecklist: ["base low-bit payload 분리", "adapter·activation 별도 항목"], requiredConcepts: ["training-memory-budget-and-checkpointing"], sectionId: "memory-math" },
+    ],
+    papers: [
+      {
+        title: "Rajbhandari, Rasley, Ruwase & He — ZeRO: Memory Optimizations Toward Training Trillion Parameter Models",
+        href: "https://arxiv.org/abs/1910.02054",
+        problem: "대형 모델 학습에서 weight·gradient·optimizer state가 각 data-parallel rank에 중복 저장돼 메모리를 낭비하는 문제를 다룹니다.",
+        contribution: "Model-state memory를 (2+2+K)Ψ로 정식화하고(Adam K=12), 이 상태들을 rank 간에 분할하는 ZeRO-DP를 제시합니다.",
+        assumptions: "Mixed-precision(FP16 forward·backward, FP32 optimizer state) 학습과 Adam optimizer를 전제합니다.",
+        evidenceScope: "논문 Figure 1의 Ψ=7.5B·Nd=64 예시(저자 자기보고)이며 특정 실험 설정입니다.",
+        notClaim: "모든 optimizer·정밀도 조합에서 16byte/param이 그대로 성립한다는 뜻은 아닙니다.",
+        sectionId: "paper-zero",
+      },
+      {
+        title: "Chen, Xu, Zhang & Guestrin — Training Deep Nets with Sublinear Memory Cost",
+        href: "https://arxiv.org/abs/1604.06174",
+        problem: "Layer 수에 비례해 커지는 activation 메모리가 깊은 network 학습의 병목이 되는 문제를 다룹니다.",
+        contribution: "O(√n) 메모리로 n-layer network를 학습하는 checkpointing 알고리즘을 제시하고, 1,000-layer network에서 48GB→7GB·시간 +30%를 실험으로 보였습니다.",
+        assumptions: "논문이 실험한 residual network·RNN 구조와 checkpoint 배치 전략입니다.",
+        evidenceScope: "저자 자기보고 실험(ImageNet 등)이며 독립 재현 평가는 별도입니다.",
+        notClaim: "모든 architecture에서 30%라는 시간 증가율이 그대로 유지된다는 뜻은 아닙니다.",
+        sectionId: "paper-gradient-checkpointing",
+      },
     ],
   },
 };

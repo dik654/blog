@@ -1,7 +1,9 @@
 import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import TermBreakdown from "@/components/articles/term-breakdown";
 import DistillationLearningFlowViz from "./viz/DistillationLearningFlowViz";
+import ScopeTaxonomy from "./ScopeTaxonomy";
 
 export default function ClassicDistillationArticle() {
   return (
@@ -23,6 +25,37 @@ export default function ClassicDistillationArticle() {
           Distillation loss가 작아져도 정답 성능이 좋아졌다는 뜻은 아니므로 hard
           label과 독립 test를 남깁니다.
         </p>
+        <TermBreakdown
+          title="Teacher model · student model · knowledge distillation이 가리키는 관계"
+          description="이 글이 반복해 쓰는 세 역할의 정의입니다."
+          items={[
+            {
+              term: "Teacher model",
+              description:
+                "이미 학습이 끝나 고정된 채로만 참조하는 모델입니다. Gradient를 받지 않고 student가 맞춰야 할 target만 만듭니다.",
+              example: "24층·1024차원 대형 classifier가 teacher 역할을 맡습니다.",
+              boundary:
+                "Teacher가 크거나 유명하다는 사실이 student 품질을 보장하지 않고, teacher 자신의 오류도 그대로 target에 남습니다.",
+            },
+            {
+              term: "Student model",
+              description:
+                "실제로 backprop되어 갱신되는, 대개 더 작고 배포 비용이 싼 모델입니다.",
+              example: "12층·384차원 모델이 teacher의 판단을 student target으로 학습합니다.",
+              boundary:
+                "Student capacity가 너무 작으면 teacher signal을 아무리 잘 만들어도 담아낼 곳이 없습니다.",
+            },
+            {
+              term: "Knowledge distillation",
+              description:
+                "Teacher가 관측하게 해 준 신호(logit·feature·sequence)를 student가 재현하도록 학습시키는 전체 절차의 이름입니다.",
+              example:
+                "이 글은 logit·feature 신호를 다루고, sequence 신호는 별도 글로 넘어갑니다.",
+              boundary:
+                "Distillation loss 하나만으로는 완결되지 않고 hard label과 독립 test로 최종 승인합니다.",
+            },
+          ]}
+        />
         <DistillationLearningFlowViz mode="classic" />
         <ContentBoundary article="knowledge-distillation" />
       </section>
@@ -107,6 +140,27 @@ export default function ClassicDistillationArticle() {
           ]}
           interpretation="Logit 차이가 4이면 T=1의 odds는 e⁴≈54.6, T=2에서는 e²≈7.4입니다. 순서는 같지만 작은 class에도 더 큰 신호가 남습니다."
         />
+        <p>
+          Temperature가 실제로 얼마나 부드러워지는지는{" "}
+          <a className="text-primary hover:underline" href="#paper-hinton-kd">
+            Hinton et al.(2015)
+          </a>{" "}
+          원 논문의 MNIST 실험이 보여줍니다. Dropout을 쓴 큰 net은 test error
+          67개, 정규화 없는 작은 net은 146개를 냈습니다. 같은 작은 net을 정답
+          label 없이 T=20 soft target만으로 학습하자 오류가 74개로 줄었습니다.
+        </p>
+        <p>
+          Baseline 146개보다 훨씬 적은 74개까지 내려간 셈이라, class 순서만
+          유지한 채 완만해진 확률에도 teacher가 학습한 class 간 관계가 담겨
+          있다는 뜻입니다.
+        </p>
+        <p>
+          음성 인식 실험에서도 같은 패턴이 나옵니다. Baseline 단일 모델은 test
+          frame accuracy 58.9%·WER 10.9%였고, model 10개 ensemble은
+          61.1%·10.7%까지 좋아졌습니다. 그 ensemble의 soft target으로
+          distillation한 단일 모델은 60.8%·10.7%를 냈고, ensemble이 만든
+          개선분의 80% 이상을 student 하나가 그대로 가져갔습니다.
+        </p>
       </section>
       <section id="hard-soft-loss" className="mb-16 scroll-mt-20 space-y-6">
         <header>
@@ -326,10 +380,11 @@ export default function ClassicDistillationArticle() {
           </CitationBlock>
         </div>
       </section>
+      <ScopeTaxonomy />
       <section id="release-gate" className="mb-16 scroll-mt-20 space-y-5">
         <header>
           <p className="text-sm font-semibold text-primary">
-            04 · release gate
+            05 · release gate
           </p>
           <h2 className="mt-2 text-2xl font-bold">
             Teacher agreement가 아니라 student-only quality·memory·latency로

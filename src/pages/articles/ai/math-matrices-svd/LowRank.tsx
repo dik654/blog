@@ -13,6 +13,17 @@ export default function LowRank() {
           가진 모든 행렬 가운데 truncated SVD가 spectral norm과 Frobenius norm 기준의
           최적 근사임을 보장합니다.
         </p>
+        <p>
+          SVD가 만드는 <code>Aₖ=UₖΣₖVₖᵀ</code>는 <strong>low-rank
+          factorization</strong>의 한 예입니다. 일반적으로 low-rank factorization은
+          m×n 행렬을 rank k인 두 작은 factor의 곱 BC(B는 m×k, C는 k×n)로 표현해
+          저장량을 mn에서 k(m+n)으로 줄이는 방법을 통칭합니다.
+        </p>
+        <p>
+          m=n=1,000이고 k=10이면 1,000,000개 entry가 20,000개로 50배 줄어듭니다.
+          SVD는 그 가운데 orthogonal 조건 아래 Frobenius norm과 spectral norm
+          기준으로 최적인 factorization을 골라 줍니다.
+        </p>
       </div>
       <LowRankBudgetViz />
       <ExplainedFormula

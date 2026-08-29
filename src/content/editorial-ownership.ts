@@ -27,7 +27,8 @@ export const EDITORIAL_BOUNDARIES = {
       "Pretraining·continued/mid-training·post-training·serving/agent harness의 objective와 update-authority 경계",
       "PTQ의 Post-Training과 LLM post-training, LoRA라는 update mechanism의 용어 분리",
       "Agent trajectory 학습 loop와 soft limit·hard limit을 판정하는 evidence boundary",
-    ],
+      "Mid-training이 pretrain의 objective를 유지한 채 domain 특화 corpus로 이어가고, 아직 labeled instruction-response 쌍을 쓰지 않는다는 점에서 SFT와 구분되는 경계",
+],
     reuses: [
       {
         label: "Continued pretraining의 data·objective 경계",
@@ -49,7 +50,11 @@ export const EDITORIAL_BOUNDARIES = {
         label: "Agent observation·action runtime loop",
         href: "/ai/agent-loop-foundations",
       },
-    ],
+      { label: "Domain-adaptive continued pretraining의 일반 정의", href: "/ai/transfer-learning-practice#domain-shift" },
+      { label: "SFT의 demonstration data contract", href: "/ai/supervised-fine-tuning#data-contract" },
+      { label: "Fine-tuning 목표 다섯 축(instruction 포함)", href: "/ai/fine-tuning-tradeoffs-forgetting-and-merging#goal-taxonomy" },
+      { label: "Preference pair의 DPO contract", href: "/ai/dpo#pair-contract" },
+],
     evidence: [
       {
         kind: "primary-source",
@@ -270,7 +275,11 @@ export const EDITORIAL_BOUNDARIES = {
     owns: [
       "Model proposal·runtime authorization·tool execution·observation·exit로 이어지는 agent run state",
       "ReAct observation loop와 typed tool result·terminal state의 control-flow 경계",
-    ],
+      "AI agent·autonomous agent·agentic workflow를 가르는 정의 축",
+      "Agent step·agent horizon·long-horizon agent라는 반복 범위 이름",
+      "Agent policy π_θ가 loop 안에서 차지하는 역할",
+      "ReAct의 reasoning-action 교대 pattern과 tool-augmented LLM이라는 전제",
+],
     reuses: [
       { label: "하네스 실행 계약과 개선 loop", href: "/ai/llm-harness" },
       { label: "Agent sandbox 보안", href: "/ai/agent-sandbox-security" },
@@ -284,12 +293,20 @@ export const EDITORIAL_BOUNDARIES = {
         kind: "standard",
         rule: "Tool schema·permission·state transition·artifact·exit condition은 runtime에서 검증 가능한 계약으로 표현한다.",
       },
-    ],
+      { kind: "primary-source", rule: "ReAct claim은 논문이 보고한 task·model·environment 조건 범위로만 주장한다." },
+],
   },
   "agent-plan-replanning": {
     title: "Agent plan·replanning 글이 소유하는 범위",
-    owns: ["Executable task dependency·artifact receipt·plan transition", "Evidence-driven invalidation과 feedback-grounded reflection"],
-    reuses: [{ label: "Agent state·observation·exit", href: "/ai/agent-loop-foundations" }, { label: "Durable checkpoint runtime", href: "/ai/agent-frameworks" }],
+    owns: ["Executable task dependency·artifact receipt·plan transition", "Evidence-driven invalidation과 feedback-grounded reflection",
+      "Planning·plan mode라는 실행 전 계획 수립과 승인 대기 정의",
+      "Task decomposition·subgoal이라는 목표 분해 단위",
+      "Hierarchical planning이라는 여러 층 decomposition",
+      "Plan validation이라는 실행 전 dependency·artifact·budget 검사",
+],
+    reuses: [{ label: "Agent state·observation·exit", href: "/ai/agent-loop-foundations" }, { label: "Durable checkpoint runtime", href: "/ai/agent-frameworks" },
+      { label: "Plan-execute-verify loop의 실행 후 verify", href: "/ai/agent-verification#plan-execute-verify" },
+],
     evidence: [{ kind: "primary-source", rule: "Reflexion claim은 논문의 feedback source·task·evaluation 조건으로 제한한다." }],
   },
   "agent-delegation-contracts": {
@@ -2409,9 +2426,18 @@ export const EDITORIAL_BOUNDARIES = {
   },
   "ptq-calibration": {
     title: "PTQ calibration 글이 소유하는 범위",
-    owns: ["Per-tensor·channel·group scale 공유 범위", "Calibration set과 validation slice의 saturation·artifact release 경계"],
-    reuses: [{ label: "Quantizer의 scale·clipping", href: "/ai/quantization" }, { label: "Train·validation·test", href: "/ai/train-validation-test" }],
-    evidence: [{ kind: "primary-source", rule: "SmoothQuant claim은 논문의 model·calibration·INT8 kernel·hardware 범위로 제한한다." }],
+    owns: ["Per-tensor·channel·group scale 공유 범위", "Calibration set과 validation slice의 saturation·artifact release 경계",
+      "PTQ·QAT의 학습 시점(학습 후 vs 학습 중) 경계",
+      "Weight quantization과 activation quantization의 대상 구분",
+      "Dynamic·static activation quantization과 calibration dataset의 관계",
+      "Outlier activation이 만드는 saturation과 SmoothQuant·AWQ의 outlier handling",
+],
+    reuses: [{ label: "Quantizer의 scale·clipping", href: "/ai/quantization" }, { label: "Train·validation·test", href: "/ai/train-validation-test" },
+      { label: "Weight-only quantization의 execution profile", href: "/ai/weight-only-quantization#overview" },
+],
+    evidence: [{ kind: "primary-source", rule: "SmoothQuant claim은 논문의 model·calibration·INT8 kernel·hardware 범위로 제한한다." },
+      { kind: "primary-source", rule: "AWQ channel-wise scaling claim은 논문의 model·calibration·kernel 조건으로 제한한다." },
+],
   },
   "quantization-aware-training": {
     title: "QAT 글이 소유하는 범위",
@@ -2485,8 +2511,12 @@ export const EDITORIAL_BOUNDARIES = {
     "title": "Structured pruning 글이 소유하는 범위",
     "owns": [
       "Channel·head 제거의 graph shape propagation",
-      "N:M local-group eligibility와 chosen tactic 경계"
-    ],
+      "N:M local-group eligibility와 chosen tactic 경계",
+      "Model compression·parameter pruning taxonomy와 structured·unstructured 축 구분",
+      "Attention head·layer·expert pruning의 granularity 선택과 대표 수치",
+      "MoE expert importance estimation의 pruning 우선순위 계산",
+      "Sparse kernel이 구조적 sparsity를 실제 연산 감소로 바꾸는 조건",
+],
     "reuses": [
       {
         "label": "Mask와 removal unit",
@@ -2495,8 +2525,12 @@ export const EDITORIAL_BOUNDARIES = {
       {
         "label": "Runtime release frontier",
         "href": "/ai/pruning-recovery-deployment"
-      }
-    ],
+      },
+      { label: "Unstructured pruning의 개별 weight·storage break-even", href: "/ai/unstructured-pruning#overview" },
+      { label: "Quantization의 numeric precision lever", href: "/ai/quantization#affine-map" },
+      { label: "Knowledge distillation의 teacher-student lever", href: "/ai/knowledge-distillation#overview" },
+      { label: "MoE routing과 expert 선택", href: "/ai/mixture-of-experts#routing" },
+],
     "evidence": [
       {
         "kind": "standard",
@@ -2505,8 +2539,10 @@ export const EDITORIAL_BOUNDARIES = {
       {
         "kind": "project-measurement",
         "rule": "Export shape·build log·latency를 같은 workload에서 함께 검증한다."
-      }
-    ]
+      },
+      { kind: "primary-source", rule: "Attention head·layer·expert pruning 수치는 각 논문의 model·benchmark 조건(WMT/BERT, LLaMA2-13B, Mixtral 8x7B)으로 제한한다." },
+      { kind: "standard", rule: "Sparse kernel의 2배 처리량 주장은 NVIDIA Ampere Sparse Tensor Core·2:4 pattern 조건으로 제한한다." },
+]
   },
   "one-shot-llm-pruning": {
     "title": "One-shot LLM pruning 글이 소유하는 범위",
@@ -2560,7 +2596,9 @@ export const EDITORIAL_BOUNDARIES = {
       "Teacher signal을 class logit과 aligned hidden feature interface로 구분하는 선택 경계",
       "Temperature soft target·class odds·hard/soft mixture·T² gradient scale과 KL 방향",
       "서로 다른 hidden dimension·layer·position 사이 feature projection과 alignment 계약",
-    ],
+      "Teacher model·student model·knowledge distillation 역할과 전체 절차의 canonical 정의",
+      "Task-specific distillation과 capability distillation의 목표 범위 구분",
+],
     reuses: [
       {
         label: "Probability·softmax·cross-entropy·KL",
@@ -2570,7 +2608,9 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "Tokenizer/checkpoint compatibility", href: "/ai/tokenizer" },
       { label: "SFT response-only loss와 data contract", href: "/ai/sft" },
       { label: "Train·validation·test", href: "/ai/train-validation-test" },
-    ],
+      { label: "Sequence-level(cross-tokenizer) distillation", href: "/ai/sequence-distillation#sequence-loss" },
+      { label: "Synthetic data generation·teacher-generated data", href: "/ai/synthetic-data-and-data-flywheel#generation-sources" },
+],
     evidence: [
       {
         kind: "primary-source",
@@ -2580,7 +2620,8 @@ export const EDITORIAL_BOUNDARIES = {
         kind: "standard",
         rule: "Teacher/base hash·class order·temperature·KL direction/reduction·alpha·feature layer/projection·split·student-only runtime을 함께 기록한다.",
       },
-    ],
+      { kind: "primary-source", rule: "Temperature·MNIST/speech 수치 claim은 Hinton et al.(2015) 원 논문이 보고한 실험 조건(model·dataset·temperature)으로 제한한다." },
+],
   },
   "sequence-distillation": {
     title: "Sequence distillation 글이 소유하는 범위",
@@ -2805,7 +2846,8 @@ export const EDITORIAL_BOUNDARIES = {
       "병렬 state channel의 reducer 의미·순서 독립 조건·checkpoint/replay-safe side effect",
       "LangGraph state/node/edge/Send와 CrewAI Crew/Flow를 구현 예로 연결하는 현재 API 경계",
       "제조 advisory artifact와 deterministic rule·human approval·PLC interlock control path의 분리",
-    ],
+      "Multi-agent system·agent orchestrator라는 runtime 구성 이름과 그 안의 role specialization·coordination",
+],
     reuses: [
       {
         label: "Agent run의 proposal·observation·exit",
@@ -4527,14 +4569,21 @@ export const EDITORIAL_BOUNDARIES = {
     owns: [
       "Symbol·alphabet·string·language의 최소 정의",
       "Terminal·nonterminal·production derivation의 출발점",
-    ],
-    reuses: [],
+      "Grammar-constrained decoding·constrained sampling이라는 기법 이름",
+      "Structured decoding을 regex·CFG·JSON schema로 나누는 형식 축",
+      "XGrammar라는 constrained decoding 엔진 이름과 context-independent token 분류·stack 재사용",
+],
+    reuses: [
+      { label: "Grammar-tokenizer compilation·token mask", href: "/ai/grammar-tokenizer-decoding#tokenizer-compilation" },
+      { label: "CFG recursion·finite automaton 메모리 한계", href: "/ai/cfg-pushdown-automata" },
+],
     evidence: [
       {
         kind: "standard",
         rule: "이 글은 formal language의 보편 정의만 소유하고 parser 구현 주장은 뒤 글로 넘긴다.",
       },
-    ],
+      { kind: "primary-source", rule: "XGrammar claim은 논문이 보고한 tokenizer·model·benchmark 조건 범위로만 주장한다." },
+],
   },
   "cfg-pushdown-automata": {
     title: "CFG와 PDA 글이 소유하는 범위",
@@ -8739,19 +8788,30 @@ export const EDITORIAL_BOUNDARIES = {
       "Known logical floor와 physical runtime peak를 구분하는 device admission 판정",
       "MoE total weight residency·active token path·context/runtime state를 서로 다른 serving ledger로 분리하는 경계",
       "Model identity·geometry·runtime·retention을 묶는 startup memory receipt",
-    ],
+      "Q8·NVFP4 quantization level이 만드는 평균 bit 폭과 VRAM 절감 비교",
+      "Model residency·full context·cache optimization을 known floor 구성 요소로 묶는 계약",
+      "Known floor 초과 시 2-way GPU 분배·CPU/GPU offloading·unified memory 대응",
+      "Dense와 MoE의 decode weight bandwidth 차이와 consumer/workstation GPU serving 함의",
+],
     reuses: [
       { label: "Quantization과 resident-memory ledger", href: "/ai/quantization" },
       { label: "KV pool과 serving capacity", href: "/ai/llm-serving-capacity" },
       { label: "Qwen3.6 hybrid request state 적용", href: "/ai/qwen36-hybrid-runtime" },
-    ],
+      { label: "GPTQ·AWQ와 quantization method·format·container 경계", href: "/ai/weight-only-quantization#artifact-boundary" },
+      { label: "PagedAttention block allocator·KV eviction", href: "/ai/vllm-paged-attention#kv-cache-manager" },
+      { label: "Tensor parallel column·row sharding과 통신 비용", href: "/ai/tensor-and-pipeline-parallel-inference#tensor-parallel" },
+      { label: "MoE sparsity ratio·active/total parameter 정의", href: "/ai/moe-routing-and-load-balancing#sparsity" },
+      { label: "GPU capacity·fabric fit 절차", href: "/gpu/hw-gpu-comparison#workload-envelope" },
+],
     evidence: [
       { kind: "primary-source", rule: "Parameter·dtype·payload는 배포할 exact checkpoint index와 tensor metadata revision에 귀속한다." },
       { kind: "standard", rule: "Logical cache shape는 model config에, physical allocation·workspace·peak는 사용한 serving engine·kernel·GPU profile의 startup receipt에 귀속한다." },
       { kind: "project-claim", rule: "Known floor가 device capacity보다 작다는 계산을 load 성공·최대 context 품질·production concurrency 보장으로 확대하지 않는다." },
       { kind: "project-measurement", rule: "Prefill·decode·MTP 병목과 hardware sweet spot은 exact model/runtime/hardware topology/checkpoint quantization·input/output length·context·batch/concurrency·KV dtype·sampling 설정·측정 방법·반복 횟수·허용 오차가 있는 stage receipt에만 귀속한다." },
       { kind: "project-claim", rule: "미공개 model spec·Q8 약어·현장 체감 임계점은 공식 artifact와 재현 receipt 전까지 canonical fact나 구매 권고로 승격하지 않는다." },
-    ],
+      { kind: "project-measurement", rule: "Q8_0 8.5bit/weight·NVFP4 4.5bit/weight 수치는 인용한 project 실측·공식 format 문서의 조건(reference model·revision·hardware)으로 제한한다." },
+      { kind: "project-claim", rule: "MoE decode bandwidth 절감 배수(예: 약 26배)는 이 글이 든 total/active 수치 적용 예이며 임의 model의 실측 kernel traffic을 대신하지 않는다." },
+],
   },
   "dpo": {
     title: "DPO 글이 소유하는 범위",
@@ -10149,6 +10209,7 @@ export const EDITORIAL_BOUNDARIES = {
   "rag-ingestion-and-chunking": {
     title: "RAG ingestion: 문서 파싱·chunking·overlap·contextual retrieval 글이 소유하는 범위",
     owns: [
+      "Retrieval-Augmented Generation(RAG) 자체의 정의 — 학습 시점 가중치 대신 검색한 외부 문서를 context에 넣어 생성하는 아키텍처",
       "Knowledge base와 document ingestion pipeline의 정의, parsing→chunking→embedding 순서의 필요성",
       "Ingestion pipeline 관점의 document parsing 범위(구조·offset 보존, 표 셀 세부는 제외)",
       "Fixed-size chunking의 chunk size·chunk overlap·chunk boundary와 그 수치 관계",
@@ -10304,6 +10365,7 @@ export const EDITORIAL_BOUNDARIES = {
   "lexical-retrieval-bm25-inverted-index": {
     title: "Lexical retrieval: TF-IDF·BM25·inverted index 글이 소유하는 범위",
     owns: [
+      "Document frequency(DF)의 정의 — term frequency와 다른 축이며 IDF·BM25 idf 항의 공통 기반",
       "Bag of words 표현과 TF·IDF·TF-IDF 가중치의 정의와 3문서 toy corpus 계산",
       "BM25 의 term frequency saturation·document length normalization 조절 항과 그 수치 효과(k1=1.2, b=0.75)",
       "Inverted index·posting list 자료구조와 AND/OR candidate 계산",
@@ -10716,6 +10778,78 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [
       { kind: "primary-source", rule: "R2R·VLN-CE·waypoint predictor·TAMP-Nav의 규모·성능 수치는 각 논문의 저자 자기보고 범위로 제한한다." },
       { kind: "project-claim", rule: "Preprint 단계인 TAMP-Nav의 결과를 독립 재현되거나 다른 embodiment·benchmark에 일반화되는 결론으로 확대하지 않는다." },
+    ],
+  },
+  "math-high-dimensional-geometry": {
+    title: "고차원 기하·JL lemma·intrinsic dimension 글이 소유하는 범위",
+    owns: [
+      "Euclidean distance 정의와 차원이 늘수록 거리가 집중되는 고차원 기하 현상",
+      "Johnson–Lindenstrauss lemma의 진술과 무작위 사영으로 얻는 차원-거리 보존 관계",
+      "Ambient dimension과 구분되는 intrinsic dimension의 정의와 자연 이미지 추정치",
+      "Low-rank·latent·bottleneck representation을 하나의 압축 원리로 묶는 설명",
+    ],
+    reuses: [
+      { label: "Euclidean norm·거리 정의", href: "/ai/math-vectors-inner-products#norm" },
+      { label: "SVD의 low-rank approximation·rank", href: "/ai/math-matrices-svd#low-rank" },
+      { label: "Autoencoder의 undercomplete bottleneck 구조", href: "/ai/autoencoder#bottleneck" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "JL lemma의 차원 하한은 Dasgupta–Gupta 증명 조건(Gaussian 무작위 사영, Euclidean 공간)으로 제한한다." },
+      { kind: "primary-source", rule: "Intrinsic dimension 수치(26~43)는 Pope et al. 2021의 MLE 추정 도구와 실험 데이터셋 조건으로 제한하고 모든 데이터셋에 일반화하지 않는다." },
+    ],
+  },
+  "math-numerical-precision-stability": {
+    title: "부동소수점 정밀도·수치 안정성·tensor shape 글이 소유하는 범위",
+    owns: [
+      "IEEE 754 sign·exponent·mantissa 구조와 FP32·FP16·BF16의 유효숫자·표현 범위 비교",
+      "Machine epsilon과 floating-point rounding error의 정의",
+      "Numerical stability 정의와 softmax max-subtraction·catastrophic cancellation 사례",
+      "Tensor shape contract와 broadcasting이 예외 없이 조용히 다른 축으로 계산되는 사례",
+    ],
+    reuses: [
+      { label: "행렬의 m×n shape 계약", href: "/ai/math-matrices-svd#matrix-map" },
+      { label: "Quantization의 rounding·clipping 오차", href: "/ai/quantization#error-shape" },
+      { label: "Automatic mixed-precision training contract", href: "/ai/training-pipeline#loop" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "IEEE 754 유효숫자·범위 수치는 Goldberg survey가 요약한 표준 정의로 제한하고 특정 하드웨어 성능은 주장하지 않는다." },
+      { kind: "standard", rule: "Softmax 안정화 기법은 Deep Learning 교재의 표준 설명을 따르며 모든 수치 불안정 문제의 해법이라고 일반화하지 않는다." },
+    ],
+  },
+  "quantization-formats-and-granularity": {
+    title: "양자화 숫자 형식과 granularity 글이 소유하는 범위",
+    owns: [
+      "INT8·INT4 정수 format의 code 개수·bit-width 관계",
+      "FP8·FP4·NVFP4 floating-point format의 exponent·mantissa 구조와 dynamic range",
+      "Binary·ternary weight 같은 극단적 저bit weight format",
+      "Zero-point 값에 따른 symmetric·asymmetric quantization 선택",
+      "Per-tensor·per-channel·group-wise에 block quantization을 더한 scale granularity 스펙트럼",
+    ],
+    reuses: [
+      { label: "Affine quantizer의 scale·zero-point·round·clip", href: "/ai/quantization#affine-map" },
+      { label: "PTQ calibration의 scale 공유 범위와 metadata", href: "/ai/ptq-calibration#scale-granularity" },
+      { label: "GPTQ·AWQ method와 format·container 경계", href: "/ai/weight-only-quantization#artifact-boundary" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "FP8·NVFP4 format claim은 NVIDIA 공식 문서·블로그의 해당 version·GPU·조건으로 제한한다." },
+      { kind: "primary-source", rule: "BitNet b1.58 수치는 논문의 model 크기·학습 토큰 수·평가 조건으로 제한한다." },
+    ],
+  },
+  "training-memory-budget": {
+    title: "학습 메모리 예산·activation checkpointing 글이 소유하는 범위",
+    owns: [
+      "Weight·gradient·optimizer state를 byte 단위로 더하는 training memory math",
+      "Mixed-precision Adam 학습의 parameter당 16byte 분해(FP16 4byte+FP32 12byte)",
+      "Activation checkpointing의 O(√n) 메모리·forward 재실행 절충",
+    ],
+    reuses: [
+      { label: "Adam의 momentum·variance raw moments", href: "/ai/adam-optimizer#moments" },
+      { label: "Reverse-mode autodiff의 save–recompute 경계", href: "/ai/reverse-mode-autodiff#save-recompute" },
+      { label: "QLoRA training-memory ledger", href: "/ai/lora-finetuning#qlora" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "16byte/param·120GB 수치는 ZeRO paper Figure 1의 Ψ=7.5B·K=12 조건으로 제한한다." },
+      { kind: "primary-source", rule: "48GB→7GB·+30% 시간 수치는 Chen et al. 2016의 1,000-layer residual network 실험 조건으로 제한한다." },
     ],
   },
 } as const satisfies Record<string, EditorialBoundary>;

@@ -12,6 +12,16 @@ export default function Multiplication() {
           행렬 하나로 미리 계산합니다. B의 output dimension과 A의 input dimension이
           같아야 하는 이유도 중간 interface의 좌표 수가 맞아야 하기 때문입니다.
         </p>
+        <p>
+          결합법칙 <code>(AB)C=A(BC)</code>는 항상 성립하지만 계산량은 순서에
+          따라 크게 달라집니다. A가 10×100, B가 100×5, C가 5×50이면 (AB)C는
+          약 7,500번의 곱셈이면 끝나지만, A(BC)는 약 75,000번으로 10배 더
+          듭니다.
+        </p>
+        <p>
+          SVD도 <code>U(Σ(Vᵀx))</code>처럼 작은 차원부터 순서대로 곱해 같은
+          원리로 계산량을 줄입니다.
+        </p>
       </div>
       <CompositionViz />
       <ExplainedFormula

@@ -3,6 +3,9 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { StructuredPruningViz } from "../pruning/viz/ModernPruningViz";
+import CompressionTaxonomy from "./CompressionTaxonomy";
+import PruningGranularity from "./PruningGranularity";
+import SparseKernelExecution from "./SparseKernelExecution";
 
 export default function StructuredPruningArticle() {
   return (
@@ -47,6 +50,7 @@ export default function StructuredPruningArticle() {
         <StructuredPruningViz />
         <ContentBoundary article="structured-pruning" />
       </section>
+      <CompressionTaxonomy />
       <section id="shape-propagation" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">
           앞 layer의 output 축과 뒤 layer의 input 축을 같은 계약으로 줄입니다
@@ -165,10 +169,12 @@ export default function StructuredPruningArticle() {
           interpretation="[1100|1010]은 각 group이 2개를 남겨 적격입니다. [1110|1000]은 3개와 1개라 전체 density .5여도 부적격입니다."
         />
       </section>
+      <PruningGranularity />
+      <SparseKernelExecution />
       <section id="paper-structured-sparsity" className="scroll-mt-20">
         <CitationBlock
           source="NVIDIA TensorRT · Structured Sparsity"
-          citeKey={1}
+          citeKey={5}
           href="https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/advanced.html#structured-sparsity"
         >
           <strong>문제:</strong> 2:4 weight를 지원 tactic으로 실행함.{" "}

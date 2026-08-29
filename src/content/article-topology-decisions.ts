@@ -139,6 +139,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     rationale: "UTM·firewall·IDS/IPS·SIEM 제품 나열보다 zone enforcement→detection/observation→correlation→release라는 실제 arc가 제목의 중심이어야 합니다.",
     targetRoutes: ["isms-aml/isms-security-infra"],
   },
+  "ai/model-vram-budgeting": {
+    action: "keep",
+    status: "reviewed",
+    reviewedAt: "2026-08-29",
+    rationale:
+      "Weight footprint에서 KV cache, runtime headroom을 거쳐 device sweet spot 판정까지가 하나의 VRAM 예산 계산 절차입니다. 2026-08-29 보강으로 owned concept가 9개, section이 10개로 늘었지만 quantization level tradeoff·2-way GPU 분배·dense vs MoE decode bandwidth는 모두 같은 예산 계산의 서로 다른 입력 축이며, tensor/pipeline parallel 세부 구현은 ai/tensor-and-pipeline-parallel-inference, MoE routing 세부는 ai/moe-routing-and-load-balancing으로 이미 분리돼 있습니다.",
+    sharedGate:
+      "같은 model config·hardware profile에서 quantization level·GPU 구성별 VRAM 소요와 device capacity 대비 여유를 한 receipt로 비교합니다.",
+  },
 };
 
 /**
@@ -173,6 +182,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/vllm-spec-decode": "033ea8067d38760d",
   "ai/vllm-scheduler": "3388fbba0894a8a1",
   "ai/retrieval-ranking-funnel": "6f8840ae50720a9e",
+  "ai/model-vram-budgeting": "b778e941fafa0eb1",
   "ai/xml-prompting": "a8fe599b80c579e6",
   "blockchain/cometbft-abci": "95ca71232816d16a",
   "blockchain/cometbft-consensus": "9bb6fd231f8bb08f",

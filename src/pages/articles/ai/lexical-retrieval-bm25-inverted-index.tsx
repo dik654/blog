@@ -53,10 +53,14 @@ export default function LexicalRetrievalBm25InvertedIndexArticle() {
             남긴다는 뜻입니다.
           </p>
           <p>
+            여기서 document frequency(DF)는 그 단어가 등장한 문서의 개수만 셉니다.
+            한 문서 안에서 몇 번 나왔는지를 보는 term frequency 와는 다른 축으로,
+            같은 문서에서 열 번 나와도 DF 는 1만 늘어납니다.
+          </p>
+          <p>
             TF 만으로는 문제가 있습니다. 모든 문서에 흔히 나오는 단어도 TF 가 크면
-            중요해 보이기 때문입니다. Inverse document frequency(IDF)는 그 단어가
-            나타난 문서 수(document frequency)가 많을수록 값을 줄여 이 문제를
-            보정합니다.
+            중요해 보이기 때문입니다. Inverse document frequency(IDF)는 이 document
+            frequency 가 많을수록 값을 줄여 이 문제를 보정합니다.
           </p>
           <p>
             3문서 코퍼스로 봅시다. D1="apple apple banana", D2="apple cherry
@@ -77,7 +81,8 @@ export default function LexicalRetrievalBm25InvertedIndexArticle() {
           items={[
             { term: "Bag of words", description: "문서를 단어별 등장 횟수로만 표현하고 순서를 버립니다.", example: "D1=apple apple banana → {apple:2, banana:1}.", boundary: "순서를 버려 'not good' 과 'good' 을 구별하지 못합니다." },
             { term: "Term frequency (TF)", description: "문서 하나 안에서 단어가 나온 횟수입니다.", example: "TF(apple, D1)=2.", boundary: "문서 길이가 다르면 raw TF 만으로 문서 간 비교가 왜곡됩니다." },
-            { term: "Inverse document frequency (IDF)", description: "그 단어가 나온 문서 수가 많을수록 값이 작아지는 가중치입니다.", example: "df(apple)=3(N=3) → idf=ln(3/3)=0.", boundary: "코퍼스가 바뀌면 df·idf 도 다시 계산해야 합니다." },
+            { term: "Document frequency (DF)", description: "그 단어가 등장한 문서의 개수입니다. 한 문서 안 등장 횟수(TF)와 달리 문서 수만 셉니다.", example: "df(apple)=3, df(cherry)=1(N=3).", boundary: "DF 는 IDF·BM25 idf 항이 공유하는 값이라 코퍼스가 바뀌면 다시 계산해야 합니다." },
+            { term: "Inverse document frequency (IDF)", description: "Document frequency 가 많을수록 값이 작아지는 가중치입니다.", example: "df(apple)=3(N=3) → idf=ln(3/3)=0.", boundary: "코퍼스가 바뀌면 df·idf 도 다시 계산해야 합니다." },
             { term: "TF-IDF", description: "TF 와 IDF 를 곱해 흔한 단어를 깎고 희귀한 단어를 키운 가중치입니다.", example: "TF-IDF(cherry, D2)=2×1.099≈2.197.", boundary: "동의어·문맥은 여전히 보지 못하는 term 단위 가중치입니다." },
           ]}
         />

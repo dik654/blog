@@ -11,6 +11,19 @@ export default function MatrixMap() {
           scalar 배율을 바꿔도 결과가 같은 방식으로 더해지고 늘어납니다. 이 성질이
           <code>A(αx+βz)=αAx+βAz</code>라는 linearity입니다.
         </p>
+        <p>
+          Ax 계산 자체에는 표준 이름이 있습니다. BLAS(선형대수 연산 표준)는 이
+          matrix-vector 곱을 <strong>GEMV</strong>(GEneral Matrix-Vector multiply)라
+          부르고, PyTorch의 <code>torch.mv</code>나 <code>nn.Linear</code> 내부도
+          결국 이 연산을 호출합니다. 뒤에서 다룰 SVD의 <code>Ax=U(Σ(Vᵀx))</code>도
+          같은 GEMV를 세 번 순서대로 실행한 것에 지나지 않습니다.
+        </p>
+        <p>
+          Transpose <code>Aᵀ</code>는 행과 열을 맞바꿔 (Aᵀ)ᵢⱼ=Aⱼᵢ로 만든 행렬이며,
+          m×n 행렬의 transpose는 n×m이 되어 input·output 방향이 뒤집힙니다. SVD의
+          <code>Vᵀ</code>가 바로 이 연산으로 V의 column을 row로 바꿔 input을 새
+          좌표로 회전시킵니다.
+        </p>
       </div>
       <ExplainedFormula
         question="2×2 행렬이 input의 두 좌표를 어떻게 새 좌표 두 개로 섞을까요?"

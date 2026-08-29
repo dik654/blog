@@ -52,9 +52,17 @@ export default function LlmTrainingStagesArticle() {
           interpretation="Pretraining은 corpus 문자열을 그대로 재생하는 lookup table이 아닙니다. 그러나 next-token objective만으로 사용자의 의도나 장기 task 성공이 완전히 정의되는 것도 아닙니다."
         />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <h3>Continued training은 같은 objective를 새 분포에서 이어 갑니다</h3>
+          <h3 id="mid-training" className="scroll-mt-20">
+            Mid-training은 pretrain과 SFT 사이에서 같은 objective를 좁은 분포로 이어 갑니다
+          </h3>
           <p>
-            Domain-adaptive pretraining과 long-context stage처럼 pretraining objective를 새 corpus·길이·mixture에서 이어 가는 단계는 SFT와 다릅니다. 자세한 corpus mixture와 forgetting 검사는 <Link to="/ai/continued-pretraining">continued pretraining 글</Link>이 소유합니다. “Mid-training”은 조직마다 범위가 달라질 수 있으므로 이름보다 data·objective·checkpoint handoff를 적어야 합니다.
+            Mid-training은 위 next-token objective를 그대로 두고 corpus만 code·수학·특정 언어·long-context처럼 좁은 분포로 바꿔 이어 학습하는 단계입니다. 아직 labeled instruction-response 쌍을 쓰지 않는다는 점에서 뒤에 오는 SFT와 다릅니다.
+          </p>
+          <p>
+            예를 들어 pretraining 말기 mixture에서 10%였던 code 비중을 40%로 올려 수백억 token을 더 학습하면, 이후 SFT가 더 적은 demonstration만으로도 code 관련 목표 행동에 도달하기 쉬워집니다. Label 없는 target 분포에서 같은 self-supervised objective를 이어간다는 점에서, 이 단계는 <Link to="/ai/transfer-learning-practice#domain-shift">domain-adaptive continued pretraining</Link>과 같은 축 위에 있습니다.
+          </p>
+          <p>
+            “Mid-training”이라는 이름은 조직마다 범위가 달라질 수 있으므로, 이름보다 data mixture·objective·checkpoint handoff를 명시해야 합니다. 자세한 corpus mixture와 forgetting 검사는 <Link to="/ai/continued-pretraining">continued pretraining 글</Link>이 소유합니다.
           </p>
         </div>
       </section>
@@ -68,6 +76,17 @@ export default function LlmTrainingStagesArticle() {
             <thead className="bg-muted/20"><tr>{["방법", "관측하는 것", "학습 신호", "정본"].map((cell) => <th key={cell} className="border-b border-border px-4 py-3 font-black">{cell}</th>)}</tr></thead>
             <tbody>{postTrainingSignals.map(([method, observation, signal, href]) => <tr key={method} className="border-b border-border last:border-b-0"><td className="px-4 py-3 font-black">{method}</td><td className="px-4 py-3 text-muted-foreground">{observation}</td><td className="px-4 py-3 text-muted-foreground">{signal}</td><td className="px-4 py-3"><Link className="text-primary hover:underline" to={href}>이어 읽기</Link></td></tr>)}</tbody>
           </table>
+        </div>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            SFT가 학습하는 각 sample, 즉 demonstration data는 prompt와 원하는 response를 role·template·provenance와 함께 기록한 것입니다. 이 data를 어떻게 만들고 검증하는지는 <Link to="/ai/supervised-fine-tuning#data-contract">SFT의 data contract 글</Link>이 다룹니다.
+          </p>
+          <p>
+            이 SFT가 특히 지시-형식을 따르는 능력 자체를 목표로 할 때를 흔히 instruction tuning이라고 부릅니다. Fine-tuning이 바꾸는 목표를 instruction·domain·task·style·behavior 다섯 축으로 나눈 <Link to="/ai/fine-tuning-tradeoffs-forgetting-and-merging#goal-taxonomy">fine-tuning 목표 분류 글</Link>에서 instruction 축이 이 이름에 대응합니다.
+          </p>
+          <p>
+            Preference 항목의 chosen·rejected 쌍, 즉 preference data의 pair 구조와 상대 비교 label은 <Link to="/ai/dpo#pair-contract">DPO의 pair contract 글</Link>이 정의합니다.
+          </p>
         </div>
         <TermLesson
           name="Post-training terminology boundary"

@@ -36,7 +36,7 @@ function ConceptViz({
         className="min-w-0 overflow-hidden border-y border-border/70 bg-background px-4 py-6 outline-none focus-visible:ring-2 focus-visible:ring-primary sm:px-6"
       >
         <p className="text-[11px] font-black uppercase tracking-[0.16em] text-primary">{eyebrow} · {String(controls.active + 1).padStart(2, "0")}</p>
-        <h3 className="mt-2 text-lg font-bold leading-7">{scene.title}</h3>
+        <h3 className="mt-2 min-h-[7.25rem] text-lg font-bold leading-7 sm:min-h-[2.5rem]">{scene.title}</h3>
         <svg viewBox="0 0 360 230" role="img" aria-label={`${scene.label}: ${scene.title}`} className="mx-auto mt-5 block h-auto w-full max-w-[560px] overflow-visible">
           <defs>
             <marker id={`${id}-arrow`} markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
@@ -62,7 +62,7 @@ function ConceptViz({
             return <circle key={`${node.label}-${index}`} cx={x} cy="184" r={index <= controls.active ? 5 : 3} fill={index <= controls.active ? "var(--primary)" : "var(--muted-foreground)"} />;
           })}
         </svg>
-        <p className="mt-2 border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground">{scene.note}</p>
+        <p className="mt-2 min-h-[8.75rem] border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground sm:min-h-[3.5rem]">{scene.note}</p>
         <AnimatedSceneControls labels={scenes.map((item) => item.label)} {...controls} />
       </div>
     </VizFrame>
