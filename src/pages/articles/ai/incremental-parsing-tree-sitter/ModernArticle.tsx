@@ -48,6 +48,56 @@ export default function IncrementalParsingTreeSitterArticle() {
         <ContentBoundary article="incremental-parsing-tree-sitter" />
       </section>
 
+      <section id="lexer-fsm-foundation" className="scroll-mt-20">
+        <span id="fsm-dfa-nfa" className="scroll-mt-20" />
+        <h2 className="mb-5 text-2xl font-bold">
+          Lexer는 DFA·NFA로 컴파일한 패턴으로 문자열을 token으로 바꿉니다
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            <strong>Finite-state machine(FSM)</strong>은 유한한 state와 그
+            사이 transition만으로 입력을 인식하는 일반 모델입니다. 각 state에서
+            입력 symbol마다 다음 state가 정확히 하나로 정해지면{" "}
+            <strong>deterministic finite automaton(DFA)</strong>이고, 하나의
+            symbol에서 여러 state로 동시에 갈 수 있거나 입력 없이 이동하는
+            transition을 허용하면 <strong>nondeterministic finite
+            automaton(NFA)</strong>입니다.
+          </p>
+          <span id="lexer-tokenization" className="scroll-mt-20" />
+          <p>
+            <strong>Lexer</strong>는 원본 문자열을 한 글자씩 훑어
+            keyword·identifier·숫자·기호 같은 token 단위로 묶는 첫 단계입니다.
+            각 token 패턴을 DFA로 미리 컴파일해 두면 지금까지 읽은 문자들이
+            어떤 token류에 속하는지를 state 전이만으로 빠르게 판정할 수
+            있습니다. Parser는 문자가 아니라 이 lexer가 만든 token sequence를
+            입력으로 받습니다.
+          </p>
+        </div>
+      </section>
+
+      <section id="parse-tree-cst-ast" className="scroll-mt-20">
+        <h2 className="mb-5 text-2xl font-bold">
+          CST는 문법 규칙 그대로, AST는 의미 단위로 남깁니다
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            <strong>Parse tree</strong>는 문법 규칙을 따라 입력이 어떻게
+            유도됐는지 보여 주는 일반적인 이름입니다. 그 중 모든 규칙과
+            punctuation·괄호까지 source 그대로 보존한 것이{" "}
+            <strong>concrete syntax tree(CST)</strong>이고, 규칙 자체보다
+            의미 단위만 남기고 괄호 같은 구분자를 지운 것이{" "}
+            <strong>abstract syntax tree(AST)</strong>입니다.
+          </p>
+          <p>
+            <code>1 + 2 * 3</code>을 CST는 <code>expr → term</code>,{" "}
+            <code>term → factor</code> 같은 규칙과 괄호 자리까지 그대로
+            담지만, AST는 <code>+(1, *(2, 3))</code>처럼 연산자와 피연산자만
+            남깁니다. Tree-sitter가 유지하는 것은 편집기가 원본 위치를 다시
+            가리켜야 하는 CST 쪽입니다.
+          </p>
+        </div>
+      </section>
+
       <section id="incremental-update" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">
           바뀌지 않은 subtree를 재사용해 feedback을 빠르게 갱신합니다
@@ -73,6 +123,15 @@ export default function IncrementalParsingTreeSitterArticle() {
             error node와 부분 tree를 제공해야 합니다. 반대로 constrained
             decoder는 이런 prefix에서 다음에 올 수 없는 token을 금지하는 것이
             목적입니다.
+          </p>
+          <p>
+            <strong>Error recovery</strong>는 문법을 어기는 구간이 있어도
+            parser 전체를 중단시키지 않고, 그 구간만 error node로 표시한 뒤
+            다음으로 매칭되는 지점부터 parsing을 재개해 나머지 유효한 부분의
+            tree를 계속 만드는 방법입니다. Tree-sitter는 이런 부분 tree에
+            <code>ERROR</code> node를 끼워 넣어 반환하므로, 편집기는 파일
+            나머지의 highlighting과 navigation을 끊지 않고 이어 갈 수
+            있습니다.
           </p>
         </div>
       </section>

@@ -3770,7 +3770,8 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://blog.cloudflare.com/code-mode-mcp/",
       note: "MCP binding과 sandbox program 실행",
     },
-  ],
+    { kind: "핵심 논문", label: "CodeAct: Executable Code Actions Elicit Better LLM Agents", href: "https://arxiv.org/abs/2402.01030", note: "여러 tool 호출을 하나의 실행 가능한 program으로 합성하는 code-as-action 제안" },
+],
   "ai/code-mode-runtime-contracts": [
     {
       kind: "공식 문서",
@@ -6348,5 +6349,22 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "ai/graphrag-community-and-multihop-search": [
     { kind: "핵심 논문", label: "From Local to Global: A Graph RAG Approach to Query-Focused Summarization (Edge et al., arXiv 2404.16130)", href: "https://arxiv.org/abs/2404.16130", note: "Leiden community detection·계층 summary, local/global search 구분, global search map-reduce 절차, community level 별 성능·token 비율의 근거. 수치는 저자 자기보고" },
+  ],
+  "ai/vision-language-model-architecture": [
+    { kind: "핵심 논문", label: "Liu et al. · Visual Instruction Tuning / LLaVA (NeurIPS 2023)", href: "https://arxiv.org/abs/2304.08485", note: "Linear/MLP projector와 concat-projection 결합 방식의 근거" },
+    { kind: "핵심 논문", label: "Alayrac et al. · Flamingo (NeurIPS 2022)", href: "https://arxiv.org/abs/2204.14198", note: "Perceiver Resampler·gated cross-attention·tanh gating 수치의 근거" },
+    { kind: "핵심 논문", label: "Li et al. · BLIP-2 (ICML 2023)", href: "https://arxiv.org/abs/2301.12597", note: "Q-Former query bottleneck과 파라미터 효율 수치의 근거" },
+  ],
+  "ai/tool-calling-lifecycle-and-costs": [
+    { kind: "핵심 논문", label: "OpenAI · Function calling (API 공식 문서)", href: "https://developers.openai.com/api/docs/guides/function-calling", note: "Tool 정의 schema·5단계 왕복 루프·parallel_tool_calls의 근거" },
+    { kind: "핵심 논문", label: "Anthropic · Tool use overview (API 공식 문서)", href: "https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview", note: "tool_use·tool_result 왕복과 model별 고정 token 가격표의 근거" },
+    { kind: "핵심 논문", label: "Anthropic · Parallel tool use (API 공식 문서)", href: "https://platform.claude.com/docs/en/agents-and-tools/tool-use/parallel-tool-use", note: "병렬 tool 호출의 실행 순서·결과 매칭 계약의 근거" },
+    { kind: "핵심 논문", label: "Yao et al. · ReAct (2022)", href: "https://arxiv.org/abs/2210.03629", note: "Tool-use loop이 되먹임 구조여야 하는 이유의 근거" },
+    { kind: "핵심 논문", label: "OpenAI · Introducing Structured Outputs (2024)", href: "https://openai.com/index/introducing-structured-outputs-in-the-api/", note: "JSON schema 준수 실패율(40% 미만 vs 100%) 수치의 근거" },
+  ],
+  "ai/multimodal-retrieval-and-visual-grounding": [
+    { kind: "핵심 논문", label: "Radford et al. · CLIP (ICML 2021)", href: "https://arxiv.org/abs/2103.00020", note: "Image-text 대조학습과 공유 embedding 공간 수치의 근거" },
+    { kind: "핵심 논문", label: "Faysse et al. · ColPali (ICLR 2025)", href: "https://arxiv.org/abs/2407.01449", note: "Screenshot retrieval 인덱싱 속도·ViDoRe 성능 수치의 근거" },
+    { kind: "핵심 논문", label: "Peng et al. · Kosmos-2 (ICLR 2024)", href: "https://arxiv.org/abs/2306.14824", note: "Bounding box location token 양자화와 GrIT 규모의 근거" },
   ],
 };

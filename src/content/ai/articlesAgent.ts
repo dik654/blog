@@ -264,6 +264,31 @@ export const agentArticles: Article[] = [
     component: () => import("@/pages/articles/ai/agent-loop-foundations"),
   },
   {
+    slug: "tool-calling-lifecycle-and-costs",
+    title: "Tool calling 수명주기: 선택·인자 생성·호출 오류와 context 비용",
+    subcategory: "ai-agents",
+    sections: [
+      { id: "problem", title: "Tool calling lifecycle" },
+      { id: "selection-and-routing", title: "Tool selection · routing · dynamic loading" },
+      { id: "argument-generation-and-invocation", title: "Argument generation · invocation" },
+      { id: "tool-use-loop", title: "Tool-use loop · multi-step · parallel" },
+      { id: "context-cost", title: "Tool schema · result context cost" },
+      { id: "error-handling-and-retry", title: "Error handling · retry policy" },
+      {
+        id: "sources",
+        title: "근거 문서",
+        subsections: [
+          { id: "paper-openai-function-calling", title: "OpenAI Function calling" },
+          { id: "paper-anthropic-tool-use", title: "Anthropic Tool use" },
+          { id: "paper-anthropic-parallel-tool-use", title: "Anthropic Parallel tool use" },
+          { id: "paper-react", title: "ReAct" },
+          { id: "paper-openai-structured-outputs", title: "OpenAI Structured Outputs" },
+        ],
+      },
+    ],
+    component: () => import("@/pages/articles/ai/tool-calling-lifecycle-and-costs"),
+  },
+  {
     slug: "agent-plan-replanning",
     title: "Agent Plan: Artifact · Replanning · Reflection",
     subcategory: "ai-agents",

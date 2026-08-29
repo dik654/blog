@@ -203,8 +203,10 @@ class Editor {
     const entry = `${" ".repeat(indent)}${keyText}: ${reindent(valueText, indent)},`;
     const existing = objectProps(obj).get(key);
     if (existing) {
-      // 항목 전체(줄 시작부터 뒤 쉼표까지)를 교체
-      const start = lineStart(this.text, existing.getStart(sf));
+      // 항목 전체(줄 시작부터 뒤 쉼표까지)를 교체하되, 같은 줄 앞에 다른 코드(예: 한 줄짜리
+      // 컨테이너의 여는 괄호나 이전 형제 항목)가 있으면 줄 시작까지 삼키지 않는다 — 그러면
+      // 그 앞 코드까지 지워버려 구조가 깨진다(단일 원소 한 줄 배열/객체에서 실제로 발생했던 사고).
+      const start = safeReplaceStart(this.text, existing.getStart(sf));
       let end = existing.end;
       if (this.text[end] === ",") end += 1;
       this.replaceRange(start, end, entry);
@@ -230,7 +232,7 @@ class Editor {
     const entry = `${" ".repeat(indent)}${reindent(valueText, indent)},`;
     const existing = arrayNode.elements.find((el) => matcher(el));
     if (existing) {
-      const start = lineStart(this.text, existing.getStart(sf));
+      const start = safeReplaceStart(this.text, existing.getStart(sf));
       let end = existing.end;
       if (this.text[end] === ",") end += 1;
       this.replaceRange(start, end, entry);
@@ -258,6 +260,19 @@ class Editor {
 function lineStart(text, position) {
   const index = text.lastIndexOf("\n", position - 1);
   return index === -1 ? 0 : index + 1;
+}
+
+/**
+ * "항목 전체(줄 시작부터)를 교체" 최적화는 그 항목이 자기 줄을 혼자 쓸 때만 안전하다.
+ * 한 줄짜리 컨테이너(`introducedHere: [{ id: "x" }],`처럼 key·여는 괄호·원소가 같은 줄)에서는
+ * lineStart 가 그 key·괄호까지 삼켜 구조를 깨뜨린다. lineStart 부터 실제 원소 시작 사이에
+ * 공백이 아닌 문자가 있으면(=같은 줄에 이미 다른 코드가 있으면) 줄 시작으로 확장하지 않고
+ * 원소 자신의 시작 위치만 쓴다 — 들여쓰기 재포맷을 조금 포기하는 대신 구조 손상을 막는다.
+ */
+function safeReplaceStart(text, elementStart) {
+  const candidate = lineStart(text, elementStart);
+  const between = text.slice(candidate, elementStart);
+  return between.trim() === "" ? candidate : elementStart;
 }
 
 function propValue(objNode, key) {

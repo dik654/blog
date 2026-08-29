@@ -51,6 +51,28 @@ export default function CfgPushdownAutomataArticle() {
         <ContentBoundary article="cfg-pushdown-automata" />
       </section>
 
+      <section id="regular-cfg-hierarchy" className="scroll-mt-20">
+        <h2 className="mb-5 text-2xl font-bold">
+          정규언어는 finite automaton이 인식하는 만큼만 표현하고 CFG보다 좁습니다
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            <strong>정규언어(regular language)</strong>는 finite automaton이
+            정확히 인식할 수 있는 언어 class이고, 그 언어를 기술하는 표준
+            표기가 <strong>regular expression</strong>입니다. 앞서 본 finite
+            state의 한계, 즉 임의 깊이 중첩을 세지 못한다는 한계가 그대로
+            정규언어의 표현 한계입니다.
+          </p>
+          <p>
+            Chomsky hierarchy에서 정규언어는 CFG가 만드는 언어의 진부분집합
+            한 단계 아래입니다. <code>a*b*</code> 같은 regular expression은
+            유한 상태만으로 판정되지만, 짝을 맞춰야 하는 <code>(()())</code>
+            같은 언어는 상한 없는 깊이를 세야 해 정규표현식으로 쓸 수 없고
+            <code>S → ( S ) | ε</code> 같은 CFG 재귀가 필요합니다.
+          </p>
+        </div>
+      </section>
+
       <section id="cfg-recursion" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">
           CFG는 한 nonterminal을 문맥과 무관하게 전개합니다
@@ -152,7 +174,36 @@ export default function CfgPushdownAutomataArticle() {
         </p>
       </section>
 
+      <section id="lr-glr-parsing" className="scroll-mt-20">
+        <h2 className="mb-5 text-2xl font-bold">
+          LR parsing은 stack 하나로, GLR parsing은 여러 stack으로 PDA를
+          구현합니다
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            PDA는 다음 production을 어떻게 고를지 규정하지 않는 이론
+            모델입니다. <strong>LR parsing</strong>은 몇 토큰의 lookahead와
+            parsing table로 다음 action(shift 또는 reduce)을 결정적으로 골라
+            stack을 하나만 유지합니다.
+          </p>
+          <p>
+            문법이 모호해 같은 lookahead에서 다음 action이 둘 이상이면 LR
+            table은 충돌합니다. <strong>GLR parsing</strong>은 이 지점에서
+            바로 reject하는 대신 stack을 여러 개로 fork해 가능한 해석을 모두
+            병렬로 진행하다가, 뒤의 입력과 모순되는 branch만 버립니다.
+          </p>
+          <p>
+            예를 들어 충돌이 2개 나면 GLR은 stack을 2개로 늘려 각각
+            shift·reduce를 이어가고, 몇 토큰 뒤 하나만 유효하게 남으면 그
+            stack만 채택합니다. 여러 stack을 동시에 유지하는 만큼 LR보다
+            메모리·시간 비용이 커서, 충돌이 드문 대부분의 프로그래밍 언어
+            문법에는 LR 계열이 더 흔히 쓰입니다.
+          </p>
+        </div>
+      </section>
+
       <section id="implementation-boundary" className="scroll-mt-20">
+        <span id="parser-bridge" className="scroll-mt-20" />
         <h2 className="mb-5 text-2xl font-bold">
           PDA는 이유를 설명하고, parser 구현은 더 많은 상태를 소유합니다
         </h2>
@@ -161,8 +212,14 @@ export default function CfgPushdownAutomataArticle() {
             JSON parser는 괄호 깊이뿐 아니라 string escape, number 형식, comma
             위치와 object key도 추적합니다. LR·Earley·specialized automata와
             cache를 조합할 수 있으므로 “CFG를 쓰면 구현은 단순 PDA 하나”라고
-            결론내리지 않습니다. 다음 글에서는 이미 존재하는 source를 갱신하는
-            incremental parser라는 별도 문제를 다룹니다.
+            결론내리지 않습니다.
+          </p>
+          <p>
+            LR·GLR 엔진이 현재 state·stack·전이 table을 들고 있는 부분을
+            <strong>parser state machine</strong>이라 부릅니다. 다음 글의
+            tree-sitter incremental parsing은 편집할 때마다 이 상태 기계를
+            처음부터 다시 돌리지 않고, 바뀐 범위만 다시 parsing해
+            <strong>incremental syntax tree</strong>를 갱신합니다.
           </p>
           <p>
             <a href="/ai/incremental-parsing-tree-sitter">

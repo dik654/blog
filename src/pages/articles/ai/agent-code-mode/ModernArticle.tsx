@@ -31,6 +31,28 @@ export default function AgentCodeModeArticle() {
           example="listIssues 결과를 filter하고 team별 count로 reduce하는 TypeScript program을 한 번 생성합니다."
           boundary="단일 표준 protocol이 아니며 language·sandbox·tool binding은 product마다 다릅니다."
         />
+        <TermLesson
+          name="Code-as-action · program synthesis"
+          oneLine="Tool을 하나씩 골라 호출하는 대신 여러 호출을 코드 한 덩어리로 조합해 실행하는 code-as-action 패러다임으로, 자연어 명세로부터 실행 가능한 program을 만들어내는 program synthesis를 tool 사용에 적용한 것입니다."
+          shape="tool마다 개별 action → model이 program 하나로 합성 → runtime 실행"
+          example="Tool 5개를 순서대로 호출하면 매번 model이 다시 판단해 5번의 round-trip이 생기지만, code-as-action으로 다섯 호출을 담은 program 하나를 합성하면 model round-trip은 1번으로 줄어듭니다."
+          boundary="Program synthesis 자체가 program의 정확성을 보장하지 않으므로 합성된 code도 실행 전 sandbox·capability 검사를 거쳐야 합니다."
+        />
+        <div id="paper-codeact" className="scroll-mt-24">
+          <CitationBlock
+            source="CodeAct — Executable Code Actions Elicit Better LLM Agents"
+            citeKey={3}
+            href="https://arxiv.org/abs/2402.01030"
+          >
+            <EvidenceGrid
+              problem="고정된 tool call 목록으로 action space를 제한하면 tool 수·중첩 실행이 늘수록 표현력이 부족해지는 문제"
+              contribution="실행 가능한 code를 통합 action space로 써서 여러 tool을 하나의 program으로 조합하는 CodeAct 제시"
+              assumptions="논문이 사용한 model·benchmark(API-Bank 등)와 evaluation 조건"
+              scope="ICML 2024의 CodeAct 실험 범위(API-Bank·success rate 비교)"
+              notClaim="모든 provider·sandbox 구현이 같은 실행 안전성이나 성능을 재현한다는 뜻은 아님"
+            />
+          </CitationBlock>
+        </div>
         <CodeModeProgramViz />
       </section>
 

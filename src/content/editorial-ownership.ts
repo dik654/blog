@@ -4458,7 +4458,8 @@ export const EDITORIAL_BOUNDARIES = {
       "tool call 연속과 sandbox program 실행의 차이",
       "반복·분기·중간 데이터가 context 밖에서 처리될 때의 비용 모델",
       "tool discovery·local reduction과 direct call·agent loop·program 선택 경계",
-    ],
+      "Code-as-action 패러다임과 program synthesis의 관계, tool 5개 순차 호출 대 code-as-action 1회 round-trip 수치 비교",
+],
     reuses: [
       { label: "MCP의 tool·resource 계약", href: "/ai/mcp-protocol" },
       { label: "하네스의 검증·권한 계층", href: "/ai/llm-harness" },
@@ -4469,7 +4470,8 @@ export const EDITORIAL_BOUNDARIES = {
         kind: "primary-source",
         rule: "Code Mode라는 이름을 쓰는 구현의 실제 실행 모델을 공식 문서와 구분해 인용한다.",
       },
-    ],
+      { kind: "primary-source", rule: "CodeAct claim은 원 논문 조건(API-Bank 등 benchmark, 논문이 사용한 model)으로 제한한다." },
+],
   },
   "code-mode-runtime-contracts": {
     title: "Code Mode runtime 계약 글이 소유하는 범위",
@@ -4478,7 +4480,9 @@ export const EDITORIAL_BOUNDARIES = {
       "요청별 typed tool·resource·account capability binding",
       "Final result의 schema·크기·redaction·provenance disclosure 계약",
       "여러 external write의 partial success·receipt·retry·compensation 경계",
-    ],
+      "Allowlisted API·execution timeout으로 sandbox 실행 표면과 시간을 제한하는 이유",
+      "Code execution feedback이 program repair를 가능하게 하는 mechanism",
+],
     reuses: [
       { label: "Code Mode program IR와 local data", href: "/ai/agent-code-mode" },
       { label: "Process·container resource boundary", href: "/ai/agent-sandbox-security" },
@@ -4507,14 +4511,24 @@ export const EDITORIAL_BOUNDARIES = {
   },
   "cfg-pushdown-automata": {
     title: "CFG와 PDA 글이 소유하는 범위",
-    owns: ["Finite-state memory 한계", "Recursive CFG와 PDA stack의 대응", "Depth accept·reject와 구현 경계"],
+    owns: ["Finite-state memory 한계", "Recursive CFG와 PDA stack의 대응", "Depth accept·reject와 구현 경계",
+      "정규언어·regular expression과 CFG 사이 Chomsky hierarchy 한 단계 관계",
+      "LR parsing(단일 stack)·GLR parsing(다중 stack)이 PDA를 구현하는 방식",
+      "Parser state machine·incremental syntax tree라는 이름과 다음 글로의 연결",
+],
     reuses: [{ label: "Formal language 기초", href: "/ai/grammar-constrained-generation" }],
     evidence: [{ kind: "standard", rule: "PDA는 계산 모델로 설명하며 특정 parser 제품의 내부 자료구조라고 단정하지 않는다." }],
   },
   "incremental-parsing-tree-sitter": {
     title: "Incremental parsing 글이 소유하는 범위",
-    owns: ["Source·CST·edit range의 형태", "Unchanged subtree reuse와 error recovery", "Tree-sitter와 generation matcher의 입출력 경계"],
-    reuses: [{ label: "CFG와 stack memory", href: "/ai/cfg-pushdown-automata" }],
+    owns: ["Source·CST·edit range의 형태", "Unchanged subtree reuse와 error recovery", "Tree-sitter와 generation matcher의 입출력 경계",
+      "Lexer의 이론적 기반인 FSM·DFA·NFA와 token 패턴 컴파일",
+      "Parse tree·concrete syntax tree(CST)·abstract syntax tree(AST) 구분",
+      "Tree-sitter의 error recovery와 ERROR node 전략",
+],
+    reuses: [{ label: "CFG와 stack memory", href: "/ai/cfg-pushdown-automata" },
+      { label: "Context-free grammar recursion", href: "/ai/cfg-pushdown-automata#cfg-recursion" },
+],
     evidence: [{ kind: "primary-source", rule: "Tree-sitter의 기능은 공식 문서에 확인되는 incremental parsing 범위로만 주장한다." }],
   },
   "grammar-tokenizer-decoding": {
@@ -4525,8 +4539,13 @@ export const EDITORIAL_BOUNDARIES = {
   },
   "structured-generation-serving": {
     title: "Structured generation serving 글이 소유하는 범위",
-    owns: ["Dynamic schema compile cache identity", "Sequence별 matcher state lifetime", "Syntax-valid와 semantic execution policy 경계"],
-    reuses: [{ label: "Grammar token masking", href: "/ai/grammar-tokenizer-decoding" }, { label: "Code Mode program 실행", href: "/ai/agent-code-mode" }],
+    owns: ["Dynamic schema compile cache identity", "Sequence별 matcher state lifetime", "Syntax-valid와 semantic execution policy 경계",
+      "매 token mask 계산 overhead와 사전 compile로 줄이는 방법",
+      "Structured generation runtime이 vLLM·SGLang batching loop에 통합되는 지점",
+],
+    reuses: [{ label: "Grammar token masking", href: "/ai/grammar-tokenizer-decoding" }, { label: "Code Mode program 실행", href: "/ai/agent-code-mode" },
+      { label: "Grammar-tokenizer compilation·token mask", href: "/ai/grammar-tokenizer-decoding#tokenizer-compilation" },
+],
     evidence: [{ kind: "primary-source", rule: "Dynamic schema·cache 성능 주장은 XGrammar 2의 engine·model·workload 범위와 함께 표시한다." }],
   },
   "mixture-of-experts": {
@@ -10292,6 +10311,67 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [
       { kind: "primary-source", rule: "Community detection·local/global search·global search 절차·community level 비교·token 비율은 GraphRAG 논문(arXiv 2404.16130)의 서술·실험 범위로만 쓰고 저자 자기보고로 표기한다." },
       { kind: "standard", rule: "그래프 예(node 7·edge 6)와 modularity Q 계산(0.208·0.167)은 modularity 개념을 보이기 위해 만든 산수이며 논문이 실제로 다룬 그래프가 아니라고 본문에 밝힌다." },
+    ],
+  },
+  "vision-language-model-architecture": {
+    title: "VLM은 image patch를 projector로 LLM token에 맞춥니다 글이 소유하는 범위",
+    owns: [
+      "Multimodal model과 vision-language model(VLM)의 정의, vision encoder·projector·LLM 조립 구조",
+      "Multimodal projector가 patch embedding과 LLM hidden 차원을 맞추는 방법(linear·MLP)",
+      "Cross-modal alignment의 결합 방식 비교(concat-projection·cross-attention·query bottleneck)",
+    ],
+    reuses: [
+      { label: "Vision encoder가 image를 patch embedding으로 바꾸는 절차(ViT patch-sequence contract)", href: "/ai/vision-transformer#patch-embedding" },
+      { label: "Visual token이 reconstruction·semantic 중 무엇을 보존하는지의 objective 경계", href: "/ai/visual-representation-tokenizers#objective" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "LLaVA·Flamingo·BLIP-2의 구조·수치는 각 논문 저자 자기보고이며 이 글이 재현·측정한 값이 아니다." },
+      { kind: "primary-source", rule: "Vicuna-13B hidden dimension(5120)·CLIP ViT-L/14 patch embedding(1024) 같은 model config 수치는 공개된 설정값이며 특정 배포본의 실측치가 아니다." },
+      { kind: "project-claim", rule: "고정 LLM 유지 vs 통합 학습 트레이드오프는 세 논문의 설계 선택 비교이며 어느 한쪽이 항상 우월하다는 뜻은 아니다." },
+    ],
+  },
+  "tool-calling-lifecycle-and-costs": {
+    title: "Tool calling 수명주기 글이 소유하는 범위",
+    owns: [
+      "Tool calling lifecycle 전체(select→generate→invoke→validate)와 OpenAI·Anthropic 이름 차이",
+      "Tool selection·routing·dynamic tool loading의 역할 구분",
+      "Tool argument generation·invocation 단계와 JSON schema 준수 실패율",
+      "Tool-use loop, multi-step tool use, parallel tool calling의 latency 예시",
+      "Tool schema·result가 만드는 context token 비용 수식과 수치 예",
+      "Tool error handling의 실패 유형 구분과 exponential backoff retry policy",
+    ],
+    reuses: [
+      { label: "Agent loop의 observation-action 최소 단위", href: "/ai/agent-loop-foundations#overview" },
+      { label: "Typed tool observation contract", href: "/ai/agent-loop-foundations#observation-contract" },
+      { label: "Code Mode의 tool-call round trip·selective schema loading", href: "/ai/agent-code-mode#overview" },
+      { label: "Context token budget 전체 장부 계산", href: "/ai/context-window-optimization#budget" },
+      { label: "Tool permission model의 policy 평가 순서", href: "/ai/claw-permissions#policy" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Tool 정의·왕복 루프·가격표는 OpenAI·Anthropic 공식 API 문서를, JSON schema 준수 실패율(40% 미만 vs 100%)은 OpenAI 자기보고 평가를 근거로 삼는다." },
+      { kind: "primary-source", rule: "ReAct의 벤치마크 수치는 저자 자기보고이며 이 글이 새로 측정한 값이 아니다." },
+      { kind: "project-claim", rule: "Tool 10개의 schema token(200 token/tool), 순차·병렬 호출 latency(400ms·1,200ms), retry backoff 예시(500ms·8000ms·4회) 수치는 mechanism을 보여 주는 계산된 가정이며 특정 provider·시스템의 실측값이 아니다." },
+    ],
+  },
+  "multimodal-retrieval-and-visual-grounding": {
+    title: "같은 embedding 공간이 검색을, grounding primitive가 위치를 정합니다 글이 소유하는 범위",
+    owns: [
+      "Multimodal embedding·cross-modal retrieval·multimodal RAG의 정의와 CLIP 대조학습 산수",
+      "Visual document retrieval·screenshot retrieval이 OCR·layout parsing을 건너뛰는 방식과 비용 비교",
+      "Visual grounding의 위치 표현 단위(bounding box·point·segmentation mask)와 표현력·비용 비교",
+      "Vision-in-the-loop reasoning이 grounding 결과를 반복 참조하는 절차",
+    ],
+    reuses: [
+      { label: "VLM이 vision encoder·projector·LLM을 조립해 image·text를 함께 추론하는 방식", href: "/ai/vision-language-model-architecture#architecture" },
+      { label: "Image가 patch embedding sequence로 바뀌는 절차", href: "/ai/vision-transformer#patch-embedding" },
+      { label: "Text 중심 dense retrieval의 embedding space·ANN index", href: "/ai/vector-search-and-ann-indexes#dense-retrieval-embedding-space" },
+      { label: "OCR·layout parsing 기반 문서 구조 파싱 경로", href: "/ai/document-parsing-and-table-extraction#layout-and-order" },
+      { label: "RAG generation 단계의 context budget·citation 규칙", href: "/ai/rag-pipeline#generation" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "CLIP·ColPali·Kosmos-2의 구조·수치는 각 논문 저자 자기보고이며 이 글이 재현·측정한 값이 아니다." },
+      { kind: "primary-source", rule: "ViDoRe nDCG@5·인덱싱 시간 비교는 ColPali 저자가 구성한 특정 OCR 파이프라인 대비 수치이며 모든 OCR 구현에 그대로 일반화되지 않는다." },
+      { kind: "project-claim", rule: "컵 image·좌표 예시는 grounding primitive를 비교하기 위한 구성 예시이며 특정 데이터셋의 실측값이 아니다." },
     ],
   },
 } as const satisfies Record<string, EditorialBoundary>;

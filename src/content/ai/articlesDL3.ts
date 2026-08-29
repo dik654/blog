@@ -52,6 +52,49 @@ export const dlFoundation2Articles: Article[] = [
     component: () =>
       import("@/pages/articles/ai/reconstruction-anomaly-detection"),
   },
+  {
+    slug: "vision-language-model-architecture",
+    title: "VLM은 image patch를 projector로 LLM token에 맞춥니다",
+    subcategory: "ai-vision",
+    sections: [
+      { id: "problem", title: "Vision encoder·projector·LLM 조립" },
+      { id: "architecture", title: "Multimodal model, VLM, vision encoder" },
+      { id: "projector", title: "Multimodal projector와 차원 산수" },
+      { id: "alignment", title: "Cross-modal alignment: concat vs cross-attention vs query bottleneck" },
+      {
+        id: "sources",
+        title: "근거 문서",
+        subsections: [
+          { id: "paper-llava", title: "LLaVA" },
+          { id: "paper-flamingo", title: "Flamingo" },
+          { id: "paper-blip2", title: "BLIP-2" },
+        ],
+      },
+    ],
+    component: () => import("@/pages/articles/ai/vision-language-model-architecture"),
+  },
+  {
+    slug: "multimodal-retrieval-and-visual-grounding",
+    title: "같은 embedding 공간이 검색을, grounding primitive가 위치를 정합니다",
+    subcategory: "ai-vision",
+    sections: [
+      { id: "problem", title: "검색은 무엇인지, grounding은 어디인지" },
+      { id: "embedding-and-retrieval", title: "Multimodal embedding, cross-modal retrieval, multimodal RAG" },
+      { id: "document-retrieval", title: "Visual document retrieval과 screenshot retrieval" },
+      { id: "grounding", title: "Bounding box, point, segmentation grounding" },
+      { id: "vision-in-the-loop", title: "Vision-in-the-loop reasoning" },
+      {
+        id: "sources",
+        title: "근거 문서",
+        subsections: [
+          { id: "paper-clip", title: "CLIP" },
+          { id: "paper-colpali", title: "ColPali" },
+          { id: "paper-kosmos2", title: "Kosmos-2" },
+        ],
+      },
+    ],
+    component: () => import("@/pages/articles/ai/multimodal-retrieval-and-visual-grounding"),
+  },
 ];
 
 // ── Computer Vision ──

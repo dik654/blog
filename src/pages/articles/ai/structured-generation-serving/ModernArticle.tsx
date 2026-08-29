@@ -133,6 +133,23 @@ export default function StructuredGenerationServingArticle() {
           ]}
           interpretation="Schema만 같고 tokenizer가 다르면 H=0입니다. 조금 느리더라도 다시 compile해야 잘못된 token index를 허용하지 않습니다."
         />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <span id="constraint-overhead" className="scroll-mt-20" />
+          <p>
+            Compile을 미리 해 두는 이유는 그렇지 않을 때의 비용이 크기
+            때문입니다. Matcher는 매 decoding step마다 현재 state에서
+            vocabulary token 각각이 유효한 continuation인지 FSM 상태 전이로
+            검사해 mask를 새로 만들어야 하고, 이 <strong>constraint
+            overhead</strong>는 vocabulary 크기와 token 길이에 비례해
+            커집니다.
+          </p>
+          <p>
+            예를 들어 vocabulary가 32,000개면 순진하게는 step마다 최대
+            32,000번의 state 전이를 검사해야 합니다. Token 전이를 미리
+            compile해 두면 decoding 중에는 이 전이표를 조회만 하면 되므로,
+            매 step 비용이 compile 시점의 1회 비용으로 옮겨 갑니다.
+          </p>
+        </div>
       </section>
 
       <section id="sequence-state" className="scroll-mt-20">
@@ -146,6 +163,15 @@ export default function StructuredGenerationServingArticle() {
             state와 mask buffer는 sequence별 lifetime을 가집니다. Continuous
             batching에서는 sequence가 끝나거나 취소될 때 이 state를 회수하는
             경계도 필요합니다.
+          </p>
+          <span id="runtime-integration" className="scroll-mt-20" />
+          <p>
+            Grammar 컴파일·mask 계산·matcher state 관리를 vLLM·SGLang 같은
+            serving engine의 batching·scheduling loop 안에 실제로 끼워 넣은
+            구성 요소를 <strong>structured generation runtime</strong>이라
+            부릅니다. 같은 continuous batch 안에도 요청마다 다른 grammar와
+            진행 상태가 섞여 있어, engine은 매 step마다 sequence별 matcher
+            state를 조회해 그 sequence 전용 mask만 logits에 적용해야 합니다.
           </p>
         </div>
       </section>
