@@ -43,7 +43,7 @@ export default function QueueBatching({
         </p>
 
         <h3 id="batching-generations" className="scroll-mt-20">
-          Static·dynamic batching 은 batch 를 끝까지 고정해 idle slot 을 만듭니다
+          Static·dynamic batching 은 batch 를 고정해 idle slot 을 남깁니다
         </h3>
         <p className="leading-8">
           Static batching 은 정해진 수의 요청을 함께 시작해 가장 긴 요청이 끝날 때까지
@@ -65,10 +65,12 @@ export default function QueueBatching({
         <p className="leading-8">
           Iteration-level scheduling 은 batch 를 iteration 이 끝날 때마다 다시 고릅니다.
           끝난 요청은 그 자리에서 빠지고 새 요청은 다음 iteration 경계에서 들어오므로 빈
-          slot 이 곧바로 채워집니다. 이 원리는{" "}
-          <Link to="/ai/vllm-serving#engine-loop">continuous batching</Link> 으로 vLLM 에
-          들어왔고, Orca 는 GPT-3 175B 에서 같은 지연 조건으로 FasterTransformer 대비
-          36.9× 처리량을 보고했습니다. 저자 자기보고 수치입니다.
+          slot 이 곧바로 채워집니다.
+        </p>
+        <p className="leading-8">
+          이 원리는 <Link to="/ai/vllm-serving#engine-loop">continuous batching</Link> 으로
+          vLLM 에 들어왔습니다. Orca 는 GPT-3 175B 에서 같은 지연 조건으로
+          FasterTransformer 대비 36.9× 처리량을 보고했고, 이는 저자 자기보고 수치입니다.
         </p>
       </div>
 

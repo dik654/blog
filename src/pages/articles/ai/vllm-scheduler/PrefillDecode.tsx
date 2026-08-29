@@ -59,7 +59,7 @@ export default function PrefillDecode({
   return (
     <section id="prefill-decode" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
-        통합 token budget은 계산 단위를 맞추지만 prefill과 decode의 충돌까지 없애지는 않습니다
+        통합 token budget은 단위를 맞출 뿐 prefill·decode 충돌은 남깁니다
       </h2>
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
@@ -118,7 +118,7 @@ T_{prefill,total} &\approx \sum_{j=1}^{C}T_{model}(c_j)
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3 id="paper-sarathi" className="scroll-mt-20">
-          Sarathi-Serve의 핵심 아이디어: decode를 멈추지 않도록 prefill을 batch의 남는 token 예산에 맞춥니다
+          Sarathi-Serve는 decode를 멈추지 않도록 prefill을 남는 예산에 맞춥니다
         </h3>
         <p className="leading-8">
           <a href="https://arxiv.org/abs/2403.02310">
@@ -127,15 +127,18 @@ T_{prefill,total} &\approx \sum_{j=1}^{C}T_{model}(c_j)
           는 full prefill이 ongoing decode를 오래 멈추게 하는 generation stall을 문제로
           삼았습니다. 논문은 prompt를 비슷한 크기의 chunk로 나누고, 먼저 decode
           token을 배치한 뒤 남은 token budget에 prefill chunk를 함께 넣는
-          stall-free schedule을 제안합니다. Pipeline parallel 환경에서는 iteration의
-          token 수를 더 균일하게 만들어 pipeline bubble도 줄이려 했습니다.
+          stall-free schedule을 제안합니다.
         </p>
         <p className="leading-8">
-          여기서 배워야 할 것은 특정 성능 배수가 아니라 <strong>prefill 효율과
-          decode tail latency를 같은 batch composition 문제로 다룬다</strong>는
-          아이디어입니다. 논문의 2.6×·3.7×·5.6× 결과는 명시된 model·A100·pipeline·
-          workload·latency constraint에서 나온 system 결과이며, 최신 vLLM에 옵션을
-          하나 켜면 그대로 재현된다는 뜻이 아닙니다.
+          Pipeline parallel 환경에서는 iteration의 token 수를 더 균일하게 만들어
+          pipeline bubble도 줄이려 했습니다. 배워야 할 것은 특정 성능 배수가 아니라{" "}
+          <strong>prefill 효율과 decode tail latency를 같은 batch composition 문제로
+          다룬다</strong>는 아이디어입니다.
+        </p>
+        <p className="leading-8">
+          논문의 2.6×, 3.7×, 5.6× 결과는 명시된 model과 A100, pipeline 구성, workload,
+          latency constraint에서 나온 system 결과이며, 최신 vLLM에 옵션을 하나 켜면
+          그대로 재현된다는 뜻이 아닙니다.
         </p>
 
         <h3 id="scheduler-knobs" className="scroll-mt-20">
@@ -153,9 +156,11 @@ T_{prefill,total} &\approx \sum_{j=1}^{C}T_{model}(c_j)
           평균 prompt가 1,000 token인 두 traffic도 전부 1,000 token인 경우와 99%가
           짧고 1%가 수만 token인 경우는 scheduler에 주는 압력이 다릅니다. 후자는
           긴 prompt가 들어온 순간 TTFT·ITL tail과 KV pressure가 함께 튈 수 있습니다.
-          Production trace에서 prompt/output histogram, arrival burst, priority·tenant
-          mix를 보존하고 p50만이 아니라 p95·p99 TTFT와 ITL, queue age, preemption,
-          SLO goodput을 같은 run에서 비교해야 합니다.
+        </p>
+        <p className="leading-8">
+          Production trace에서 prompt/output histogram과 arrival burst, priority·tenant
+          mix를 보존해야 합니다. 비교 지표는 p50만이 아니라 p95·p99 TTFT와 ITL,
+          queue age, preemption, SLO goodput을 같은 run에서 함께 봅니다.
         </p>
         <p className="leading-8">
           Priority가 높은 요청이 계속 들어오면 낮은 priority 요청은 hard constraint를

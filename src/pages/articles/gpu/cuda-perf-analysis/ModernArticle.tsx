@@ -252,6 +252,182 @@ export default function ModernCudaPerfAnalysisArticle() {
           ]}
           interpretation="Roofline은 첫 가설을 고르는 지도입니다. 점이 roof 아래라고 해서 uncoalesced access, dependency, 부족한 ready warp 중 무엇이 원인인지는 아직 결정되지 않습니다."
         />
+        <div id="throughput-vs-peak" className="space-y-6 pt-4">
+          <h3 className="text-xl font-bold">
+            Profiler 의 throughput 퍼센트는 roofline 의 peak 를 분모로 둔 값입니다
+          </h3>
+          <p>
+            Nsight Compute 가 보여 주는 DRAM throughput 90% 나 L2 throughput 40% 같은
+            숫자는 모두 같은 꼴입니다. 그 unit 이 실제로 낸 속도를 그 unit 의 theoretical
+            peak 로 나눈 비율이고, peak 는 roofline 의 지붕을 만드는 바로 그 값입니다.
+            달성률이 100% 에 가까운 unit 이 kernel 을 붙잡고 있는 자원입니다.
+          </p>
+          <p>
+            Theoretical peak 는 spec 의 clock 과 폭에서 계산한 상한입니다. Best Practices
+            Guide 는 V100 의 memory clock 877 MHz, bus 4096 bit, DDR 의 2 를 곱해 898 GB/s
+            를 얻는 계산을 보여 줍니다. Profiler 는 이 상한을 sustained rate 로 두고
+            achieved 를 그 위에 얹습니다.
+          </p>
+          <p>
+            둘 사이의 거리가 utilization gap 입니다. Peak 3.35 TB/s 인 HBM 에서 achieved
+            1.0 TB/s 면 throughput 은 30% 이고 gap 은 70% 입니다. Gap 이 큰 unit 은 병목이
+            아니며, 모든 unit 의 gap 이 크면 kernel 은 어느 자원에도 닿지 못한 latency
+            bound 입니다.
+          </p>
+          <p>
+            Memory throughput 은 한 숫자가 아닙니다. Profiler 는 DRAM, L2, L1/TEX, shared
+            memory 각각을 자기 peak 로 나누고, Compute 쪽은 FMA·ALU·Tensor 같은 pipe 마다
+            나눕니다. Speed Of Light 의 Memory 값은 그 가운데 가장 높은 하나이고 Compute 값도
+            같은 방식이므로, breakdown 을 열어 어느 unit 인지 확인해야 합니다.
+          </p>
+          <p>
+            같은 metric 에 두 분모가 있습니다. Active 기준은 그 unit 이 일한 clock 만 세고
+            elapsed 기준은 kernel 전체 clock 을 셉니다. Active 90% 에 elapsed 45% 면 unit 은
+            일할 때는 꽉 찼지만 kernel 의 절반 동안 놀았다는 뜻이며, 이 차이는 tail 이나 launch
+            간격에서 옵니다.
+          </p>
+          <p>
+            Cache hit rate 는 throughput 과 다른 종류의 숫자입니다. L1 과 L2 의 hit rate
+            는 요청된 sector 가운데 miss 하지 않은 비율이고, miss 한 sector 만 다음 계층으로
+            내려가 그 계층의 throughput 을 만듭니다. L2 hit rate 20% 는 L2 에 온 byte 의
+            80% 가 DRAM 까지 간다는 뜻입니다.
+          </p>
+          <TermBreakdown
+            title="Throughput 계열 metric 과 각각의 peak"
+            description="이름은 unit 을 말하고 분모는 그 unit 의 theoretical peak 입니다. 100% 에 가까운 unit 이 병목 후보입니다."
+            items={[
+              {
+                term: "DRAM throughput",
+                description: "HBM 을 지난 byte 를 시간과 peak bandwidth 로 나눈 비율입니다.",
+                example: "H100 SXM5 peak 3.35 TB/s 에서 3.0 TB/s 면 90% 입니다.",
+                boundary: "90% 이상이면 byte 를 줄이는 처방만 남고 warp 를 늘려도 빨라지지 않습니다.",
+              },
+              {
+                term: "L2 throughput · L2 hit rate",
+                description: "L2 가 처리한 sector 의 peak 대비 비율과, L2 요청 중 miss 하지 않은 비율입니다.",
+                example: "L2 hit 20% 면 L2 에 온 byte 의 80% 가 DRAM 요청이 됩니다.",
+                boundary: "Hit rate 가 높아도 L2 throughput 이 peak 에 닿으면 L2 자체가 병목입니다.",
+              },
+              {
+                term: "L1/TEX hit rate · L1 throughput",
+                description: "L1 에 요청된 sector 중 miss 하지 않은 비율과 L1 pipe 의 peak 대비 비율입니다.",
+                example: "Uncoalesced 접근은 요청당 sector 를 늘려 hit 가 높아도 throughput 을 채웁니다.",
+                boundary: "Shared memory 와 L1 이 용량을 나누므로 hit rate 는 carveout 설정에 따라 달라집니다.",
+              },
+              {
+                term: "Shared memory throughput",
+                description: "Shared memory bank 가 처리한 요청의 peak 대비 비율입니다.",
+                example: "Bank conflict 로 한 warp 요청이 4 wavefront 로 나뉘면 같은 일에 4배의 throughput 을 씁니다.",
+                boundary: "Wavefront 수가 늘어 100% 에 닿는 것은 유효 byte 가 늘어난 것이 아닙니다.",
+              },
+              {
+                term: "Tensor Core throughput",
+                description: "Tensor pipe 가 일한 clock 의 peak 대비 비율입니다.",
+                example: "GEMM 에서 80% 면 compute-bound 에 가깝고 0% 면 Tensor 경로를 쓰지 않은 것입니다.",
+                boundary: "Precision 마다 peak 가 다르므로 FP8 peak 로 FP16 kernel 을 나누면 안 됩니다.",
+              },
+            ]}
+          />
+          <div id="paper-nsight-compute-profiling-guide">
+            <CitationBlock
+              type="code"
+              citeKey={4}
+              source="NVIDIA Nsight Compute Profiling Guide · GPU Speed Of Light, Memory Workload Analysis, Metrics Reference"
+              href="https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html"
+            >
+              <p>
+                <strong>문제:</strong> Kernel 이 어느 unit 의 peak 에 얼마나 가까운지를 한
+                눈에 보고 세부 unit 으로 내려가야 합니다.
+              </p>
+              <p>
+                <strong>핵심 아이디어:</strong> Throughput metric 은 achieved / peak
+                sustained rate 의 백분율이며 active·elapsed 두 분모를 두고, Speed Of Light
+                은 sub-metric 의 최대값을 보여 줍니다.
+              </p>
+              <p>
+                <strong>중요 가정:</strong> Hit rate 는 sector 기준 hits / (hits + misses)
+                이며 tag hit rate 와 다릅니다.
+              </p>
+              <p>
+                <strong>근거 범위:</strong> Profiling Guide 의 metric 정의이며 특정 kernel
+                의 측정치가 아닙니다.
+              </p>
+              <p>
+                <strong>일반화 금지:</strong> 어느 unit 이 90% 라는 사실만으로 그 unit 을
+                줄이면 elapsed 가 준다고 단정할 수 없습니다.
+              </p>
+            </CitationBlock>
+          </div>
+        </div>
+        <div id="counter-correlation" className="space-y-6 pt-4">
+          <h3 className="text-xl font-bold">
+            Counter 하나가 아니라 두 counter 의 상관이 병목 가설을 만듭니다
+          </h3>
+          <p>
+            DRAM throughput 90% 는 혼자서는 memory-bound 라는 사실만 말합니다. 그 옆에
+            L2 hit rate 20% 를 놓으면 가설이 하나로 좁혀집니다. L2 에 온 byte 의 80% 가 DRAM
+            까지 내려가고 있으므로, 같은 data 를 여러 block 이 다시 읽는데 L2 에 남아 있지
+            않다는 뜻이고 처방은 재사용을 tile 안으로 끌어오는 것입니다.
+          </p>
+          <p>
+            같은 DRAM 90% 에 L2 hit rate 85% 면 이야기가 다릅니다. L2 는 잘 맞는데도 DRAM
+            이 차 있다면 처음 읽는 byte 자체가 많은 것이므로 재사용이 아니라 요청량, 즉
+            precision 을 낮추거나 읽는 범위를 줄이는 처방으로 갑니다.
+          </p>
+          <p>
+            DRAM 20% 에 long scoreboard stall 이 지배적이면 세 번째 경우입니다. Memory 는
+            비어 있는데 warp 가 memory 를 기다린다면 bandwidth 가 아니라 latency 를 숨기지
+            못한 것이고, 처방은 warp 당 outstanding 요청을 늘리는 쪽입니다. Stall 을 읽는
+            순서는{" "}
+            <a
+              className="text-primary hover:underline"
+              href="/gpu/warp-stall-reasons-and-issue-utilization#reading-procedure"
+            >
+              warp stall reason 글
+            </a>
+            이 소유합니다.
+          </p>
+          <p>
+            상관은 원인의 증명이 아닙니다. 두 counter 가 같은 방향으로 움직였다는 사실은
+            가설을 하나로 좁힐 뿐이고, 그 가설이 맞는지는 변경 하나 뒤에 elapsed 와 두
+            counter 가 예상한 방향으로 함께 움직이는지로만 확인됩니다.
+          </p>
+          <ExplainedFormula
+            question="L2 hit rate 가 DRAM throughput 을 어떻게 결정하나요?"
+            idea="L2 에서 miss 한 sector 만 DRAM 요청이 되므로 DRAM 이 옮긴 byte 는 L2 에 요청된 byte 에 miss 비율을 곱한 값이고, 그것을 elapsed 와 peak bandwidth 로 나누면 profiler 의 DRAM throughput 퍼센트가 됩니다."
+            formula={String.raw`\begin{aligned}
+Q_{\mathrm{DRAM}} &\approx (1-h_{L2})\,Q_{L2} \\
+T_{\mathrm{DRAM}} &= \frac{Q_{\mathrm{DRAM}}}{t\,B_{\mathrm{peak}}}
+\end{aligned}`}
+            annotatedFormula={String.raw`\begin{aligned}
+Q_{\mathrm{DRAM}} &\approx \underbrace{(1-h_{L2})}_{\text{L2 miss 비율}}\,\underbrace{Q_{L2}}_{\text{L2 에 요청된 byte}} \\
+T_{\mathrm{DRAM}} &= \underbrace{\frac{Q_{\mathrm{DRAM}}}{t\,B_{\mathrm{peak}}}}_{\text{achieved 를 peak 로 나눈 비율}}
+\end{aligned}`}
+            operations={[
+              {
+                expression: String.raw`(1-h_{L2})\,Q_{L2}`,
+                annotation: ["L2 요청 byte 에 miss 비율을 곱해", "DRAM 까지 내려간 byte 를 구함"],
+              },
+              {
+                expression: String.raw`\frac{Q_{\mathrm{DRAM}}}{t\,B_{\mathrm{peak}}}`,
+                annotation: ["그 byte 를 elapsed 와 peak bandwidth 로 나눠", "DRAM throughput 퍼센트를 얻음"],
+              },
+            ]}
+            terms={[
+              { symbol: String.raw`h_{L2}`, name: "L2 hit rate", description: "L2 에 요청된 sector 가운데 miss 하지 않은 비율입니다." },
+              { symbol: String.raw`Q_{L2}`, name: "L2 요청 byte", description: "L1 에서 miss 해 L2 로 내려온 sector 의 총 byte 입니다." },
+              { symbol: String.raw`Q_{\mathrm{DRAM}}`, name: "DRAM 이동 byte", description: "HBM 을 실제로 지난 byte 로 profiler 의 dram bytes 가 이 값입니다." },
+              { symbol: String.raw`t`, name: "Kernel elapsed", description: "같은 측정 경계의 kernel 실행 시간입니다." },
+              { symbol: String.raw`B_{\mathrm{peak}}`, name: "DRAM peak bandwidth", description: "Roofline 의 memory roof 를 만드는 theoretical peak 입니다." },
+              { symbol: String.raw`T_{\mathrm{DRAM}}`, name: "DRAM throughput", description: "Nsight Compute 가 백분율로 보여 주는 값입니다." },
+            ]}
+            assumptions={[
+              "L2 miss 가 모두 DRAM 요청이 되는 단순화이며 L2 write-back 과 compression 은 무시합니다.",
+              "Elapsed 기준 분모를 씁니다. Active 기준이면 t 가 DRAM unit 이 일한 clock 으로 바뀝니다.",
+            ]}
+            interpretation="Q_L2 가 100 GB, h_L2 가 0.2, t 가 0.03 s, B_peak 가 3.35 TB/s 면 DRAM byte 는 80 GB 이고 throughput 은 약 80% 입니다. 재사용으로 h_L2 를 0.8 로 올리면 같은 Q_L2 에서 DRAM byte 는 20 GB 로 줄어 memory roof 에서 멀어집니다."
+          />
+        </div>
       </section>
 
       <section id="profiling" className="space-y-6">
@@ -263,6 +439,66 @@ export default function ModernCudaPerfAnalysisArticle() {
             Timeline에서 좁히고 counter 하나로 가설을 반증한다
           </h2>
         </header>
+        <div id="profiler-roles" className="space-y-6">
+          <h3 className="text-xl font-bold">
+            Nsight Systems 는 어디가 느린지를, Nsight Compute 는 왜 느린지를 봅니다
+          </h3>
+          <p>
+            GPU profiling 은 도구 하나로 끝나지 않습니다. Nsight Systems 는 CPU thread,
+            CUDA API 호출, GPU 의 kernel 과 copy 를 하나의 시간축에 놓는 system 수준 도구이고,
+            Nsight Compute 는 kernel 하나를 골라 그 안의 hardware counter 를 읽는 kernel
+            수준 도구입니다. 앞의 것이 어디를 볼지 정하고 뒤의 것이 이유를 말합니다.
+          </p>
+          <p>
+            Nsight Systems 의 CUDA trace 는 두 줄로 나뉩니다. API trace 는 host 가 부른
+            cudaLaunchKernel 이나 cudaMemcpy 같은 호출의 시작과 반환을 적고, workload trace
+            는 GPU 에서 실제로 돈 kernel 과 memory 작업을 stream 별 row 에 적습니다. 이 두
+            줄을 잇는 것이 kernel timeline 입니다.
+          </p>
+          <p>
+            Kernel timeline 에서 읽는 것은 간격입니다. Launch 호출이 반환된 시각과 kernel 이
+            실제로 시작한 시각의 차이는 queue 대기이고, kernel 사이의 빈 구간은 host 가
+            다음 일을 늦게 제출했거나 synchronization 에 막힌 시간입니다. 3 μs 짜리 kernel
+            1000개 사이에 5 μs 씩 비어 있으면 GPU 시간의 절반 이상이 kernel 밖에 있습니다.
+          </p>
+          <p>
+            Nsight Compute 는 그 timeline 에서 고른 kernel 하나를 replay 하며 counter 를
+            모읍니다. Kernel 을 여러 번 다시 돌려 pass 마다 다른 counter 를 읽으므로 그
+            아래의 elapsed 는 실제와 다르고, 대신 DRAM byte, cache hit, warp stall 같은
+            timeline 에는 없는 숫자를 줍니다.
+          </p>
+          <p>
+            역할을 바꾸면 틀린 결론이 나옵니다. Timeline 의 상관만으로 kernel 안의 stall
+            원인을 말할 수 없고, kernel 하나의 counter 만으로 전체 시간의 어디가 비었는지
+            말할 수 없습니다. 그래서 순서는 언제나 Systems 로 좁힌 뒤 Compute 로 내려가는
+            것이며, Nsight Systems 는 timeline 의 kernel 에서 Nsight Compute 를 바로 띄우는
+            연결을 제공합니다.
+          </p>
+          <TermBreakdown
+            title="두 도구가 보는 것과 보지 못하는 것"
+            description="같은 kernel 을 두 도구가 다른 해상도로 봅니다. 질문이 '어디' 인지 '왜' 인지로 도구를 고릅니다."
+            items={[
+              {
+                term: "Nsight Systems · timeline",
+                description: "CPU thread, CUDA API, GPU kernel·copy 를 한 시간축에 놓은 system 수준 trace 입니다.",
+                example: "Kernel 사이의 빈 구간, copy 와 kernel 의 겹침, sync 에 막힌 host thread 를 봅니다.",
+                boundary: "Kernel 안의 stall 원인이나 cache hit 는 보이지 않습니다.",
+              },
+              {
+                term: "Nsight Compute · kernel counter",
+                description: "Kernel 하나를 replay 하며 hardware counter 와 warp sampling 을 모으는 kernel 수준 profiler 입니다.",
+                example: "DRAM throughput, L2 hit rate, eligible warps, stall reason 을 봅니다.",
+                boundary: "Replay 로 elapsed 가 바뀌며 전체 시간에서 이 kernel 의 비중은 말하지 못합니다.",
+              },
+              {
+                term: "Kernel timeline",
+                description: "API 호출의 반환 시각과 GPU 에서 kernel 이 실제로 돈 구간을 stream 별로 잇는 row 입니다.",
+                example: "Launch 반환과 kernel 시작 사이의 간격이 queue 대기입니다.",
+                boundary: "Timeline 의 상관은 원인의 증명이 아니므로 counter 로 반증해야 합니다.",
+              },
+            ]}
+          />
+        </div>
         <ol className="space-y-4 pl-5 text-sm leading-7">
           <li>
             <strong>1. Timeline:</strong> Nsight Systems에서

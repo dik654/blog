@@ -35,11 +35,14 @@ export default function Overview() {
         <p className="leading-8">
           <Link to="/ai/vllm-serving#resource-feasibility">Serving 입문 글</Link>에서
           한 iteration이 token·sequence·KV라는 세 hard budget을 모두 통과해야
-          한다는 조건을 만들었습니다. 여기서는 그 예산을 RUNNING과 WAITING 요청에
+          한다는 조건을 만들었습니다. 이 글은 그 예산을 RUNNING과 WAITING 요청에
           어떤 순서로 배정하는지, 긴 prefill을 왜 나누는지, KV가 부족할 때 어떤
-          state transition이 일어나는지를 추적합니다. KV의 logical·physical block
-          mapping과 prefix sharing은 <Link to="/ai/vllm-paged-attention">PagedAttention</Link>,
-          KV tensor 한 token의 실제 byte는 <Link to="/ai/kv-cache-fundamentals#kv-shape">KV
+          state transition이 일어나는지를 추적합니다.
+        </p>
+        <p className="leading-8">
+          KV의 logical·physical block mapping과 prefix sharing은{" "}
+          <Link to="/ai/vllm-paged-attention">PagedAttention</Link>, KV tensor 한
+          token의 실제 byte는 <Link to="/ai/kv-cache-fundamentals#kv-shape">KV
           cache와 hybrid attention</Link>이 정본입니다.
         </p>
         <p className="leading-8">

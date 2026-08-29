@@ -47,7 +47,19 @@ const VIEWPORTS = [
   { name: "mobile", width: 390, height: 844 },
 ];
 
-const IGNORED_CONSOLE = [/React DevTools/, /Download the React DevTools/, /\[vite\]/, /HMR/, /favicon/];
+const IGNORED_CONSOLE = [
+  /React DevTools/,
+  /Download the React DevTools/,
+  /\[vite\]/,
+  /HMR/,
+  /favicon/,
+  // recharts ResponsiveContainer's first ResizeObserver tick can fire before the
+  // flex parent has settled its width, logging a transient -1/-1 warning even
+  // though the chart measures and renders correctly moments later (verified via
+  // getBoundingClientRect after a settle delay). Known upstream recharts timing
+  // quirk, not a real layout bug — see recharts/recharts#2381 and similar issues.
+  /width\(-1\) and height\(-1\) of chart/,
+];
 
 async function measureViz(page) {
   return page.evaluate(async () => {

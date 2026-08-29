@@ -37,6 +37,11 @@ const KATEX_TEXT_UNICODE_REPLACEMENTS: Readonly<Record<string, string>> = {
   κ: "kappa",
   λ: "lambda",
   μ: "mu",
+  // U+00B5 MICRO SIGN (visually near-identical to μ but a distinct codepoint,
+  // typically typed as the unit prefix in "µs"/"µm") also lacks \text{} metrics.
+  // Spelling it "mu" would misread as the letter name, so use the ASCII "u"
+  // engineering convention for the micro- prefix instead ("48 µs" → "48 us").
+  µ: "u",
   ν: "nu",
   ξ: "xi",
   ο: "omicron",

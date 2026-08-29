@@ -1,5 +1,7 @@
+import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
+import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import PersistentQueueViz from "./viz/PersistentQueueViz";
@@ -7,6 +9,8 @@ import PersistentQueueViz from "./viz/PersistentQueueViz";
 const PERSISTENT_THREADS = "https://doi.org/10.1109/InPar.2012.6339596";
 const PROGRAMMING =
   "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-programming-guide/index.html";
+const CUTLASS_EFFICIENT_GEMM =
+  "https://github.com/NVIDIA/cutlass/blob/main/media/docs/cpp/efficient_gemm.md";
 
 export default function ModernCudaPersistentKernelArticle() {
   return (
@@ -26,6 +30,38 @@ export default function ModernCudaPersistentKernelArticle() {
           Persistent kernel은 일부 worker blocks를 GPU에 계속 resident하게 두고,
           host나 device producer가 게시한 task를 queue에서 꺼내 반복 처리합니다.
           Kernel의 수명과 각 task의 수명이 분리되는 실행 모델입니다.
+        </p>
+        <p>
+          이 모델의 원래 이름이 Persistent Threads 입니다. Gupta, Stuart, Owens
+          의 2012년 정의는 두 조건으로 이루어집니다. 첫째, kernel 은 GPU 에
+          동시에 올라갈 수 있는 만큼만 block 을 띄웁니다(maximal launch).
+          둘째, 각 thread 는 한 번 일하고 끝나는 대신 work queue 에서 다음
+          일을 꺼내는 loop 를 돕니다.
+        </p>
+        <p>
+          하드웨어 block scheduler 대신 software 가 block 을 SM 에 배치하는
+          셈입니다.
+        </p>
+        <p>
+          그 논문은 이 모델이 쓸모 있는 경우를 넷으로 나눕니다. Host 를 거치지
+          않는 CPU–GPU 동기화, 일의 크기가 고르지 않을 때의 load balancing,
+          producer 가 만든 결과를 같은 SM 의 consumer 가 바로 쓰는 locality,
+          그리고 kernel 안에서의 global synchronization 입니다. 이 글의 queue 는
+          그중 둘째와 첫째를 다루고, 넷째는{" "}
+          <Link
+            className="text-primary hover:underline"
+            to="/gpu/megakernel-design-tradeoffs#task-loop"
+          >
+            megakernel 글
+          </Link>
+          이 이어받습니다.
+        </p>
+        <p>
+          같은 논문은 손해도 함께 적습니다. Work item 이 작아 atomic 으로 queue
+          를 읽는 횟수가 계산보다 자주 일어나면 atomic 압력이 커져 일반 launch
+          보다 느려지고, 실험은 2009년의 GTX 295 에 묶여 있습니다. 어느 쪽이
+          이기는지는 work item 하나의 시간과 queue 한 번의 비용의 비율로
+          정해지며, 그 셈은 아래 work assignment 절이 합니다.
         </p>
         <TermBreakdown
           title="먼저 queue에서 이동하는 세 가지를 구분합니다"
@@ -225,6 +261,134 @@ export default function ModernCudaPersistentKernelArticle() {
         />
       </section>
 
+      <section id="work-assignment" className="space-y-6">
+        <header>
+          <p className="text-sm font-semibold text-primary">
+            02b · Work assignment
+          </p>
+          <h2 className="mt-2 text-2xl font-bold">
+            Static 배분은 마지막 wave 에서, dynamic 배분은 atomic 에서 비용을 냅니다
+          </h2>
+        </header>
+        <p>
+          Queue 에 있는 일을 worker 에 나누는 방법은 둘뿐입니다. 어느 block 이
+          어느 tile 을 맡을지 launch 전에 정해 두는 static work assignment 와,
+          block 이 tile 을 끝낼 때마다 공용 counter 를 atomic 으로 올려 다음
+          tile 번호를 받는 dynamic work assignment 입니다.
+        </p>
+        <p>
+          둘 다 host 가 아니라 device 의 block 이 다음 일을 고르므로
+          device-side scheduling 입니다.
+        </p>
+        <p>
+          Static 은 CUTLASS 의 persistent tile scheduler 가 쓰는 방식입니다.
+          Grid 를 SM 수 g 로 고정하고 block b 가 tile b, b+g, b+2g 를 차례로
+          맡습니다. Queue 를 읽는 비용이 덧셈 하나라 0 에 가깝지만, tile 수가
+          g 의 배수가 아니면 마지막 wave 가 비고 tile 시간이 고르지 않으면
+          누군가는 늦게 끝납니다. 그 loop 는{" "}
+          <Link
+            className="text-primary hover:underline"
+            to="/gpu/cutlass-collectives-and-tile-schedulers#tile-scheduler"
+          >
+            persistent tile scheduler
+          </Link>{" "}
+          글이 소유합니다.
+        </p>
+        <p>
+          숫자로 보면 SM 132개에 tile 1,000개를 static 으로 나누면 1,000/132
+          = 7.58 이라 block 76개는 tile 8개, 56개는 7개를 맡습니다. 모든 tile 이
+          같은 시간 t 라면 kernel 은 8t 에 끝나고 이상값 7.58t 대비 5.5% 가
+          마지막 wave 의 불균형입니다. Tile 시간이 t 와 2t 사이에서 흔들리면
+          가장 늦은 block 은 12t 근처까지 밀려 불균형이 30% 를 넘습니다.
+        </p>
+        <p>
+          Dynamic 은 그 불균형을 atomic 하나로 바꿉니다. Block 은 tile 을 끝낼
+          때마다 atomicAdd(&next, 1) 로 다음 번호를 받으므로 빨리 끝난 block 이
+          더 많이 맡고, 마지막에는 모든 block 이 한 tile 안쪽 차이로 끝납니다.
+          비용은 tile 1,000개에 atomic 1,000번이고, 같은 주소를 향한 atomic 은
+          L2 에서 직렬화되므로 block 132개가 동시에 부딪히면 그 줄의 길이만큼
+          기다립니다.
+        </p>
+        <p>
+          그 비용의 크기는 이렇게 셉니다. Global atomic 한 번의 왕복을 가정값
+          1 µs 로 두면 tile 하나에 1 µs 가 붙고, tile 시간이 50 µs 면 2% 입니다.
+          Tile 이 5 µs 면 같은 1 µs 가 20% 가 되어 static 의 5.5% 보다 나쁩니다.
+          Gupta 등이 관찰한 atomic 압력의 slowdown 이 이 경우이며, 처방은 tile 을
+          키우거나 atomic 한 번에 tile 여러 개(chunk)를 받는 것입니다.
+        </p>
+        <p>
+          Work stealing 은 contention 을 queue 하나에서 여러 queue 로 나눕니다.
+          Block 마다(또는 SM 마다) 자기 queue 를 두고 평소에는 자기 queue 에서만
+          꺼내며, 자기 queue 가 비면 다른 block 의 queue 꼬리에서 훔쳐 옵니다.
+          평상시 atomic 은 자기 queue 에만 가서 contention 이 없고, 훔치는
+          atomic 은 kernel 끝 무렵에만 몰립니다.
+        </p>
+        <p>
+          훔치기의 비용은 victim 을 고르는 일과 victim queue 의 head·tail 을 두
+          쪽이 동시에 만지는 race 입니다. Tail 은 주인이, head 는 도둑이 만지게
+          하고 마지막 한 항목에서만 compare-and-swap 으로 겨루게 하면 대부분의
+          꺼내기가 atomic 없이 끝납니다. Queue 가 132개면 한 queue 당 contention
+          은 평균 1/132 로 줄지만, 빈 queue 를 도는 도둑의 polling 은 남습니다.
+        </p>
+        <p>
+          Load balancing 은 이 셋을 고르는 기준입니다. 측정값은 가장 늦게 끝난
+          block 의 시간을 block 평균 시간으로 나눈 비율이고, 1 에 가까울수록
+          고릅니다. Tile 시간이 고르고 수가 많으면 static, 고르지 않고 크면
+          dynamic counter, 고르지 않고 작으면 work stealing 이 그 비율을 가장
+          낮추며, 이 판단은 tile 시간의 분포를 먼저 재야 할 수 있습니다.
+        </p>
+        <AlgorithmBlock
+          title="Device-side work assignment: static·dynamic·stealing 의 한 loop"
+          input={[
+            "T: tile(work item) 수, g: resident block 수(= grid), b: 이 block 의 번호",
+            "next: global atomic counter (dynamic), queue[b]: block 별 deque (stealing)",
+            "run(tile): tile 하나의 계산 (시간이 고르지 않을 수 있음)",
+          ]}
+          steps={[
+            { code: "static:   for (tile = b; tile < T; tile += g) run(tile)", note: "Queue 읽기가 덧셈 하나라 비용 0. 마지막 wave 의 빈 자리와 tile 시간 편차가 그대로 kernel 끝 시각이 됩니다." },
+            { code: "dynamic:  while ((tile = atomicAdd(&next, 1)) < T) run(tile)", note: "빨리 끝난 block 이 더 많이 맡아 불균형이 tile 하나 안쪽으로 줍니다. Tile 당 atomic 왕복 한 번이 비용입니다." },
+            { code: "dynamic (chunk): while ((base = atomicAdd(&next, k)) < T) for (i < k) run(base+i)", note: "Atomic 한 번에 tile k 개를 받아 atomic 비용을 1/k 로 줄이되 불균형은 최대 k tile 로 늘어납니다." },
+            { code: "stealing: while ((tile = pop_tail(queue[b])) != EMPTY) run(tile)", note: "자기 queue 는 주인만 tail 을 만지므로 대부분 atomic 없이 꺼냅니다." },
+            { code: "stealing: victim = pick(); tile = steal_head(queue[victim]); if (tile != EMPTY) run(tile) else retry/exit", note: "훔치기는 victim queue 의 head 에서 CAS 로 겨루며, 모든 queue 가 비었음을 확인해야 종료합니다." },
+          ]}
+          repeatUntil="자기 몫(static)·counter(dynamic)·모든 queue(stealing)가 빌 때까지 반복합니다."
+          output="모든 tile 이 정확히 한 번 실행되고, 가장 늦은 block 의 종료 시각이 load balance 의 측정값이 됩니다"
+        />
+        <div id="paper-cutlass-persistent-scheduler">
+          <CitationBlock
+            type="code"
+            citeKey={3}
+            source="NVIDIA CUTLASS · Efficient GEMM in CUDA (media/docs/cpp/efficient_gemm.md) · Persistent kernels, Tile Scheduler"
+            href={CUTLASS_EFFICIENT_GEMM}
+          >
+            <p>
+              <strong>문제:</strong> Output tile 마다 thread block 을 새로
+              띄우면 block launch 와 kernel prologue 비용이 tile 수만큼
+              반복됩니다.
+            </p>
+            <p>
+              <strong>핵심 아이디어:</strong> SM 수만큼의 persistent thread
+              block 을 띄우고 Tile Scheduler 가 cluster 모양과 SM 수를 보고
+              output tile 을 block 에 static 으로 배분하며, ping-pong 변형은
+              consumer warp group 둘이 다른 tile 을 맡아 epilogue 와 mainloop
+              을 겹칩니다.
+            </p>
+            <p>
+              <strong>중요 가정:</strong> Tile 시간이 고른 dense GEMM 이며
+              KernelHardwareInfo 로 SM 수를 알고 있습니다.
+            </p>
+            <p>
+              <strong>근거 범위:</strong> CUTLASS 3.x 의 공식 설계 문서이며
+              static 배분의 정본 구현입니다.
+            </p>
+            <p>
+              <strong>일반화 금지:</strong> Tile 시간이 고르지 않은 irregular
+              workload 에서 같은 static 배분이 load balance 를 보장하지 않습니다.
+            </p>
+          </CitationBlock>
+        </div>
+      </section>
+
       <section id="shutdown" className="space-y-6">
         <header>
           <p className="text-sm font-semibold text-primary">
@@ -285,10 +449,12 @@ export default function ModernCudaPersistentKernelArticle() {
         <p>
           Baseline multi-launch와 persistent candidate를 같은 task stream에서
           비교합니다. Output parity, task ordering·duplicate·loss, end-to-end
-          median·p95, queue depth, worker utilization, 다른 streams의 progress와
-          clean shutdown을 모두 통과해야 합니다. Queue overflow·device
-          error·host cancel fixture에서 bounded fallback과 rollback도
-          확인합니다.
+          median·p95는 정답이 바뀌지 않았는지와 실제로 빨라졌는지를 함께 봅니다.
+        </p>
+        <p>
+          Queue depth, worker utilization, 다른 streams의 progress와 clean
+          shutdown도 모두 통과해야 합니다. Queue overflow·device error·host
+          cancel fixture에서 bounded fallback과 rollback도 확인합니다.
         </p>
         <div id="paper-cuda-cooperative-progress">
           <CitationBlock

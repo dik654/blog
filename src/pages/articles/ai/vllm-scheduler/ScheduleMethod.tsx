@@ -60,7 +60,7 @@ export default function ScheduleMethod({
   return (
     <section id="schedule-method" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
-        요청의 “진행률”을 token 차이로 바꾸면 prefill과 decode를 같은 budget에서 다룰 수 있습니다
+        진행률을 token 차이로 바꾸면 prefill과 decode가 같은 budget에 섭니다
       </h2>
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
@@ -119,8 +119,10 @@ n_r^{need} &= \max\!\left(0,\;n_r^{target}-n_r^{computed}\right) \\
           ITL이 바로 나빠집니다. 현재 V1의 기본 흐름은 RUNNING queue를 먼저
           순회하며 token과 KV slot을 배정하고, preemption이 발생하지 않았으며
           request slot과 budget이 남아 있을 때 WAITING queue의 요청을 받습니다.
-          이것은 “RUNNING이면 언제나 실행된다”는 보장이 아니라, budget·KV·model
-          length 등의 조건을 통과하는 요청부터 진행한다는 뜻입니다.
+        </p>
+        <p className="leading-8">
+          이것은 RUNNING이면 언제나 실행된다는 보장이 아닙니다. Budget·KV·model
+          length 같은 조건을 통과하는 요청부터 진행한다는 뜻입니다.
         </p>
       </div>
 
@@ -161,16 +163,18 @@ n_r^{need} &= \max\!\left(0,\;n_r^{target}-n_r^{computed}\right) \\
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3 id="closed-loop-update" className="scroll-mt-20">
-          Model output은 다음 schedule의 입력이므로 scheduler는 closed-loop입니다
+          Scheduler는 output이 다음 입력이 되는 closed-loop입니다
         </h3>
         <p className="leading-8">
           Worker가 model forward를 마치면 실제로 계산한 token, sampling 결과,
           speculative acceptance, stop·cancel 상태를 engine에 돌려줍니다. Engine은
           <code>num_computed_tokens</code>와 output state를 갱신하고 완료 요청의
-          resource를 반환합니다. 갱신 없이 다음 schedule을 만들면 이미 처리한
-          token을 다시 넣거나, 끝난 요청이 KV block을 계속 점유할 수 있습니다.
-          이 때문에 schedule과 output update는 두 함수가 아니라 하나의 상태 전이
-          루프로 이해해야 합니다.
+          resource를 반환합니다.
+        </p>
+        <p className="leading-8">
+          갱신 없이 다음 schedule을 만들면 이미 처리한 token을 다시 넣거나, 끝난
+          요청이 KV block을 계속 점유할 수 있습니다. Schedule과 output update는 두
+          함수가 아니라 하나의 상태 전이 루프로 이해해야 합니다.
         </p>
         <p className="leading-8">
           전체 engine 경계와 timestamp는 <Link to="/ai/vllm-serving#v1-boundary">vLLM

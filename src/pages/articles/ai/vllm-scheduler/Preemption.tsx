@@ -46,8 +46,12 @@ export default function Preemption({
           model execution을 시작할 수 없습니다. 현재 V1 scheduler의 기본 경로는
           낮은 우선순위의 RUNNING 요청을 고르고, 그 요청의 KV·encoder cache를
           해제한 뒤 상태를 <code>PREEMPTED</code>로 바꾸어 WAITING queue 앞쪽에
-          다시 넣습니다. 이 과정에서 <code>num_computed_tokens</code>를 0으로
-          재설정하고 speculative 후보도 비웁니다.
+          다시 넣습니다.
+        </p>
+        <p className="leading-8">
+          이 과정에서 <code>num_computed_tokens</code>를 0으로 재설정하고
+          speculative 후보도 비웁니다. 재개할 때는 prefix cache에 남은 만큼만 건너뛰고
+          나머지를 다시 prefill합니다.
         </p>
         <p className="leading-8">
           여기서 preemption은 오류 메시지가 아니라 memory pressure에 대응하는
@@ -106,8 +110,11 @@ C_{preempt} &\approx T_{model}\!\left(W_r^{recompute}\right)
           </a>
           는 긴 generation job이 짧은 job을 막는 head-of-line blocking을 문제로
           삼고, output token 경계에서 preemption하는 skip-join MLFQ scheduler를
-          제안했습니다. 중단한 state는 GPU와 host memory 사이에서 offload·reload해
-          response time을 줄이려 했습니다.
+          제안했습니다.
+        </p>
+        <p className="leading-8">
+          중단한 state는 GPU와 host memory 사이에서 offload·reload해 response
+          time을 줄이려 했습니다.
         </p>
         <p className="leading-8">
           이 논문은 <em>preemptive scheduling의 근거</em>이지 현재 vLLM V1이
@@ -118,7 +125,7 @@ C_{preempt} &\approx T_{model}\!\left(W_r^{recompute}\right)
         </p>
 
         <h3 id="preemption-diagnosis" className="scroll-mt-20">
-          Preemption counter는 출발점이고, 원인은 같은 시간축의 memory·queue·길이에서 찾습니다
+          Preemption counter는 출발점이고 원인은 같은 시간축에서 찾습니다
         </h3>
         <ol className="leading-8">
           <li>

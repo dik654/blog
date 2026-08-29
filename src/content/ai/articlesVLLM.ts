@@ -229,6 +229,20 @@ export const vllmServingArticles: Article[] = [
     component: () => import("@/pages/articles/ai/disaggregated-prefill-decode-serving"),
   },
   {
+    slug: "inference-optimization-layers",
+    title: "추론 최적화의 층: model·kernel·runtime·system 과 ROI",
+    subcategory: "ai-llm-serving",
+    sections: [
+      { id: "problem", title: "네 층과 자기 구간만 줄이는 구조" },
+      { id: "layers", title: "층은 건드리는 병목으로 구분" },
+      { id: "amdahl", title: "Amdahl 로 계산하는 end-to-end 상한" },
+      { id: "interactions", title: "층 사이 상호작용과 hardware-aware 설계" },
+      { id: "roi", title: "ROI 와 최적화 선택 loop" },
+      { id: "regression-gate", title: "Regression 과 benchmark gate" },
+    ],
+    component: () => import("@/pages/articles/ai/inference-optimization-layers"),
+  },
+  {
     slug: "vllm-paged-attention",
     title: "vLLM PagedAttention: KV Block · Allocation · Prefix Cache",
     subcategory: "ai-llm-serving",
@@ -740,5 +754,19 @@ export const vllmServingArticles: Article[] = [
       },
     ],
     component: () => import("@/pages/articles/ai/cuda-graph-capture"),
+  },
+  {
+    slug: "launch-overhead-and-cpu-gpu-synchronization",
+    title: "Launch overhead 는 CPU 의 고정 비용이고 GPU 는 그것을 기다리다 굶습니다",
+    subcategory: "ai-llm-serving",
+    sections: [
+      { id: "problem", title: "GPU 가 노는 이유는 CPU 가 아직 안 보내서" },
+      { id: "launch-overhead", title: "Host launch overhead 와 상각" },
+      { id: "submission-pipeline", title: "CPU 제출 병목과 GPU starvation" },
+      { id: "sync-points", title: "동기화 지점이 pipeline 을 비우는 방식" },
+      { id: "graph-replay", title: "Graph replay latency 와 warmup" },
+      { id: "capture-failure", title: "Capture failure 의 세 증상과 진단" },
+    ],
+    component: () => import("@/pages/articles/ai/launch-overhead-and-cpu-gpu-synchronization"),
   },
 ];

@@ -135,6 +135,50 @@ export default function ModernCudaKernelFusionArticle() {
           ]}
           interpretation="Δt=5 μs=0.005 ms, T_base=100 ms이면 G_e2e=0.005%입니다. 반대로 3–5 μs kernels가 수천 번 반복되면 합산 비중이 커질 수 있습니다."
         />
+        <div id="fusion-shapes" className="space-y-4">
+          <h3 className="text-lg font-bold">
+            Vertical·horizontal·epilogue는 같은 traffic 절감 공식을 쓰지 않는다
+          </h3>
+          <p>
+            세 모양은 이름만 다른 같은 최적화가 아니라 각각 다른 것을 줄입니다.
+            Vertical fusion은 producer→consumer 사슬의 중간 tensor 왕복을,
+            epilogue fusion은 GEMM 출력의 read+write를, horizontal fusion은
+            traffic이 아니라 launch 수와 SM 채우기를 줄입니다.
+          </p>
+          <TermBreakdown
+            title="세 fusion 모양이 줄이는 비용"
+            description="같은 “fusion”이라는 말 아래 있지만 절감식과 절감 대상이 다릅니다."
+            items={[
+              {
+                term: "Vertical fusion",
+                description:
+                  "Producer→consumer 사슬에서 중간 tensor를 HBM에 쓰지 않고 register·shared memory로 바로 넘깁니다. k개 연산을 이으면 중간 왕복 2(k−1)B를 없앱니다.",
+                example:
+                  "32 MiB tensor에 elementwise 연산 3개를 이으면 unfused는 192 MiB(각 단계 read+write), vertical fusion은 64 MiB(첫 read + 마지막 write)로 줄어듭니다.",
+                boundary:
+                  "사슬이 아니라 이웃 원소를 참조하는 reduction이 끼면 shared memory나 grid sync 없이는 이어 붙일 수 없습니다.",
+              },
+              {
+                term: "Horizontal fusion",
+                description:
+                  "서로 독립인 연산을 같은 grid에 나란히 넣어 launch 수를 줄이고 작은 kernel이 SM을 못 채우던 문제를 고칩니다.",
+                example:
+                  "작은 batch의 GEMM 여러 개를 grouped GEMM 하나로 묶으면 각 GEMM은 그대로지만 launch가 N개에서 1개로 줍니다.",
+                boundary:
+                  "각 연산이 읽고 쓰는 bytes는 그대로이므로 traffic 절감은 거의 없고, 이득은 launch overhead와 occupancy에서 옵니다.",
+              },
+              {
+                term: "Epilogue fusion",
+                description:
+                  "GEMM mainloop가 끝나 accumulator가 register에 있는 상태에서 bias·activation을 바로 적용하고 한 번만 store합니다.",
+                example:
+                  "4096×4096 FP16 GEMM 출력을 bias·GELU kernel로 따로 돌리면 read 32 MiB + write 32 MiB = 64 MiB 왕복이 생기고 3.35 TB/s에서 약 20 μs입니다. Epilogue fusion은 이 64 MiB를 0으로 만듭니다.",
+                boundary:
+                  "Epilogue가 이웃 원소나 다른 row를 참조하면(예: row softmax) accumulator만으로 끝나지 않습니다.",
+              },
+            ]}
+          />
+        </div>
       </section>
 
       <section id="megakernel" className="space-y-6">
@@ -263,8 +307,11 @@ export default function ModernCudaKernelFusionArticle() {
           Naive attention은 QKᵀ, softmax, PV 사이의 큰 attention matrix를 HBM에
           materialize할 수 있습니다. FlashAttention은 Q·K·V tiles를 on-chip
           memory에 stage하고 online softmax와 V 곱을 tile budget 안에서 연결해
-          full matrix HBM 왕복을 피합니다. Exact attention semantics를
-          유지하면서 fusion 범위를 자원에 맞춰 설계한 사례입니다.
+          full matrix HBM 왕복을 피합니다.
+        </p>
+        <p>
+          Exact attention semantics를 유지하면서 fusion 범위를 자원에 맞춰
+          설계한 사례입니다.
         </p>
         <p>
           이를 “attention 전체를 아무 제약 없이 한 거대한 kernel에 넣었다”고
@@ -316,11 +363,14 @@ export default function ModernCudaKernelFusionArticle() {
         <p>
           Fusion boundary를 정한 뒤에는 그 boundary를 어느 abstraction에서
           표현할지 고릅니다. CUDA C++는 thread·shared memory·synchronization을
-          직접 소유합니다. CUTLASS는 GEMM mainloop와 epilogue를 reusable
-          collectives로 조립하고, 그 아래 CuTe는 shape·stride layout과 copy/MMA
-          atoms의 thread–value mapping을 기술합니다. Triton은 한 program
-          instance가 value block을 다루게 쓰고 compiler가 coalescing,
-          vectorization과 memory placement의 상당 부분을 낮춥니다.
+          직접 소유합니다.
+        </p>
+        <p>
+          CUTLASS는 GEMM mainloop와 epilogue를 reusable collectives로 조립하고,
+          그 아래 CuTe는 shape·stride layout과 copy/MMA atoms의 thread–value
+          mapping을 기술합니다. Triton은 한 program instance가 value block을
+          다루게 쓰고 compiler가 coalescing, vectorization과 memory placement의
+          상당 부분을 낮춥니다.
         </p>
         <TermBreakdown
           title="이름 대신 누가 어떤 결정을 소유하는지 봅니다"
@@ -438,6 +488,54 @@ export default function ModernCudaKernelFusionArticle() {
           </a>
           에서 이어집니다.
         </p>
+        <p>
+          CUDA graph는 fusion과 경쟁하지 않고 다른 병목을 줄입니다. Fusion이
+          줄이는 것은 kernel 사이의 HBM traffic과 GPU 실행 시간이고, CUDA
+          graph가 줄이는 것은 짧은 kernel을 여러 개 낼 때 매번 드는 CPU launch
+          제출 비용입니다.
+        </p>
+        <p>
+          둘은 같은 workload에 함께 적용할 수 있으며, graph는 fusion으로
+          kernel 수를 줄인 뒤에도 남은 launch 제출 비용을 마저 줄이는 층입니다.
+          Graph 자체의 capture·instantiate·replay 구조는{" "}
+          <a
+            className="text-primary hover:underline"
+            href="/ai/cuda-graph-capture"
+          >
+            CUDA graph 수업
+          </a>
+          이 소유합니다.
+        </p>
+        <div id="paper-cuda-graphs-vs-fusion">
+          <CitationBlock
+            type="code"
+            citeKey={4}
+            source="NVIDIA CUDA Programming Guide · CUDA Graphs"
+            href="https://docs.nvidia.com/cuda/cuda-programming-guide/04-special-topics/cuda-graphs.html"
+          >
+            <p>
+              <strong>문제:</strong> 짧은 kernel이 많을 때 launch 제출 비용이
+              end-to-end의 큰 비중이 됩니다.
+            </p>
+            <p>
+              <strong>핵심 아이디어:</strong> Graph 정의와 실행을 분리해
+              setup을 instantiate 때 한 번 내고 replay마다 적은 비용으로
+              띄우는 work submission model입니다.
+            </p>
+            <p>
+              <strong>중요 가정:</strong> 같은 workflow가 반복 실행되고
+              capture 구간의 topology·주소가 고정됩니다.
+            </p>
+            <p>
+              <strong>근거 범위:</strong> CPU launch 비용 절감과 반복
+              workflow의 graph semantics입니다.
+            </p>
+            <p>
+              <strong>일반화 금지:</strong> Graph가 kernel 사이 HBM traffic이나
+              GPU 쪽 실행 시간을 줄인다는 뜻은 아닙니다.
+            </p>
+          </CitationBlock>
+        </div>
         <div id="paper-cuda-fusion-measurement">
           <CitationBlock
             type="code"

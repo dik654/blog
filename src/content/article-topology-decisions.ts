@@ -72,6 +72,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "같은 draft/target·α·K·batch fixture에서 accepted length·forward 수·wall-clock을 함께 재어 break-even을 판정합니다.",
   },
+  "ai/vllm-scheduler": {
+    action: "keep",
+    status: "reviewed",
+    reviewedAt: "2026-08-29",
+    rationale:
+      "Static·dynamic·iteration-level batching 세대→request queue 정책·fairness·HOL blocking→scheduler overhead가 하나의 큐 정책 학습 단위입니다. 2026-08-29 보강으로 concept가 14개로 늘었지만 step 내부 token budget 배분은 continuous-batching-step-anatomy, admission·preemption은 serving-memory-admission-and-preemption으로 이미 분리돼 있어 이 글은 queue 자체의 정책·세대·비용만 소유합니다.",
+    sharedGate:
+      "같은 request-rate·길이 분포 fixture에서 batching 세대별 idle율·HOL 지연·scheduler overhead를 한 receipt로 비교합니다.",
+  },
   "ai/xml-prompting": KEEP("Role framing→serialization→parser/schema/security validation→format evaluation이 한 XML prompt contract입니다."),
   "blockchain/cometbft-abci": KEEP("PrepareProposal→ProcessProposal→FinalizeBlock→Commit이 ABCI state transition 순서와 일치합니다."),
   "blockchain/cometbft-consensus": KEEP("Height/round/step 입력에서 safety·liveness·accountability까지 한 consensus state machine입니다."),
@@ -102,6 +111,8 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     targetRoutes: ["gpu/cuda-basics"],
   },
   "gpu/gpu-arch-hopper": KEEP("TMA·cluster·precision feature를 같은 Hopper compatibility gate 아래 비교하는 generation overview입니다."),
+  "gpu/cuda-persistent-kernels": KEEP("Persistent thread 정의→work queue 계약→static/dynamic 배분→release gate가 하나의 device-side scheduling 학습 단위입니다. CUTLASS tile scheduler는 이 정의의 구체 사례로만 링크하며 별도 prerequisite로 만들지 않아 순환을 피합니다."),
+  "gpu/cuda-register-pressure": KEEP("Register file 예산→allocation granularity→spill/rematerialization→theoretical/achieved occupancy가 하나의 register 자원 판정 arc입니다."),
   "isms-aml/isms-security-infra": {
     action: "rename",
     status: "implemented",
@@ -140,6 +151,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/vae": "41e2e0c24bd2879f",
   "ai/vllm-paged-attention": "d9f43052865ba377",
   "ai/vllm-spec-decode": "033ea8067d38760d",
+  "ai/vllm-scheduler": "3388fbba0894a8a1",
   "ai/xml-prompting": "a8fe599b80c579e6",
   "blockchain/cometbft-abci": "95ca71232816d16a",
   "blockchain/cometbft-consensus": "9bb6fd231f8bb08f",
@@ -158,5 +170,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "crypto/mpc": "487961f55cafda95",
   "gpu/cuda-basics": "1cb2c76d985028b5",
   "gpu/gpu-arch-hopper": "2e359a85e0b08225",
+  "gpu/cuda-persistent-kernels": "0993e126d9521089",
+  "gpu/cuda-register-pressure": "bb8de1b5a0f91f2c",
   "isms-aml/isms-security-infra": "3c313e4c01bcc569",
 };

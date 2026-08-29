@@ -35,29 +35,31 @@ export function CitationBlock({
       <button
         onClick={() => setOpen((o) => !o)}
         className={`
-          inline-flex items-center gap-2 px-3 py-1.5
-          rounded-lg border text-xs font-medium
+          flex w-full max-w-full flex-wrap items-center gap-2 px-3 py-1.5
+          rounded-lg border text-xs font-medium text-left
           cursor-pointer select-none transition-all duration-200
           ${open ? accent + " border-opacity-100" : "border-border hover:bg-accent"}
         `}
       >
         <span
           className={`
-          inline-flex items-center justify-center
+          inline-flex shrink-0 items-center justify-center
           w-6 h-6 rounded-md text-xs font-bold border
           ${badgeColor}
         `}
         >
           {citeKey}
         </span>
-        <span className="text-muted-foreground">{icon}</span>
-        <span className={open ? "text-foreground" : "text-muted-foreground"}>
+        <span className="shrink-0 text-muted-foreground">{icon}</span>
+        <span
+          className={`min-w-0 flex-1 break-words ${open ? "text-foreground" : "text-muted-foreground"}`}
+        >
           {source}
         </span>
         <motion.span
           animate={{ rotate: open ? 180 : 0 }}
           transition={{ duration: 0.2 }}
-          className="text-muted-foreground"
+          className="shrink-0 text-muted-foreground"
         >
           ▾
         </motion.span>
