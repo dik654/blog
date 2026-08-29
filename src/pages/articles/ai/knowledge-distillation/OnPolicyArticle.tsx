@@ -99,6 +99,19 @@ export default function OnPolicyDistillationArticle() {
           ]}
           interpretation="λ=0은 fixed response, λ=1은 student rollout입니다. λ=.5는 두 source를 섞지만 teacher confidence를 절반으로 낮춘다는 뜻은 아닙니다."
         />
+        <p>
+          λ=1에서 student가 자기 rollout 분포(student rollout distribution,
+          위 식의 d_{"{π_s}"})로 배우는 것과 λ=0에서 teacher distribution(또는
+          고정 데이터)만 그대로 모방하는 것은{" "}
+          <Link
+            className="text-primary hover:underline"
+            to="/ai/rl-foundations-for-llm-post-training#on-vs-off-policy"
+          >
+            on-policy·off-policy 학습
+          </Link>
+          구분의 한 사례입니다. On-policy distillation이라는 이름은 이 축에서
+          student rollout distribution 쪽을 가리킵니다.
+        </p>
       </section>
       <section id="teacher-feedback" className="mb-16 scroll-mt-20 space-y-6">
         <header>
@@ -115,6 +128,12 @@ export default function OnPolicyDistillationArticle() {
           distribution은 stop-gradient target이고 student distribution만
           update합니다. 선택 token 하나가 아니라 vocabulary 전체의 상대 정보가
           feedback입니다.
+        </p>
+        <p>
+          매 token마다 teacher의 vocabulary 확률 분포 전체를 신호로 쓰는 이
+          방식을 token-level teacher signal이라고 부릅니다. 정답 token 하나만
+          맞히라는 신호보다 훨씬 조밀해, 같은 prefix에서 student가 무엇을
+          더·덜 배워야 하는지를 매 위치마다 알려줍니다.
         </p>
         <ExplainedFormula
           question="Student-visited prefix의 token feedback은 어떻게 계산하는가?"

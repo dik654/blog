@@ -241,7 +241,7 @@ export function MemoryLifecycleViz() {
   return (
     <SceneFrame id="memory-lifecycle-viz" eyebrow="State lifetime" title="기억을 한 서랍에 넣지 않고 수명과 책임으로 나눕니다" description="Working state·memory·artifact·resume test의 이동 경로입니다." labels={labels} notes={notes}>
       {(active) => (
-        <svg viewBox={mobile ? ["20 30 225 235", "460 25 245 150", "460 145 245 145", "220 65 490 215"][active] : "0 0 720 300"} role="img" aria-label={labels[active]} className="block h-auto w-full">
+        <svg viewBox={mobile ? ["20 30 225 235", "460 25 245 150", "460 145 245 145", "220 65 490 215"][active] : "0 0 720 300"} role="img" aria-label={labels[active]} className={mobile ? "block aspect-[225/235] h-auto w-full" : "block h-auto w-full"}>
           <g opacity={active === 0 || active === 3 ? 1 : 0.52}>
             <rect x="34" y="42" width="185" height="186" rx="7" fill="var(--background)" stroke={active === 0 ? accent : border} strokeWidth="1.25" />
             <text x="52" y="69" className="fill-foreground text-[13px] font-bold">WORKING STATE</text>

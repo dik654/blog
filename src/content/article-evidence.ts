@@ -2624,7 +2624,9 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://claude.com/blog/context-management",
       note: "Context editing과 file-based memory tool의 제품 경계·내부 평가 조건",
     },
-  ],
+    { kind: "핵심 논문", label: "Generative Agents: Interactive Simulacra of Human Behavior", href: "https://arxiv.org/abs/2304.03442", note: "Memory stream·recency·importance·relevance 가중합 salience scoring과 reflection" },
+    { kind: "핵심 논문", label: "Cognitive Architectures for Language Agents", href: "https://arxiv.org/abs/2309.02427", note: "Working·episodic·semantic·procedural memory 구분을 language agent에 대응" },
+],
   "ai/context-window-optimization": [
     {
       kind: "핵심 논문",
@@ -6366,5 +6368,42 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "핵심 논문", label: "Radford et al. · CLIP (ICML 2021)", href: "https://arxiv.org/abs/2103.00020", note: "Image-text 대조학습과 공유 embedding 공간 수치의 근거" },
     { kind: "핵심 논문", label: "Faysse et al. · ColPali (ICLR 2025)", href: "https://arxiv.org/abs/2407.01449", note: "Screenshot retrieval 인덱싱 속도·ViDoRe 성능 수치의 근거" },
     { kind: "핵심 논문", label: "Peng et al. · Kosmos-2 (ICLR 2024)", href: "https://arxiv.org/abs/2306.14824", note: "Bounding box location token 양자화와 GrIT 규모의 근거" },
+  ],
+  "ai/synthetic-data-and-data-flywheel": [
+    { kind: "핵심 논문", label: "Wang et al. · Self-Instruct (2022)", href: "https://arxiv.org/abs/2212.10560", note: "175개 seed task→52,445개 instruction 확장 절차와 ROUGE-L 필터의 근거" },
+    { kind: "핵심 논문", label: "Xu et al. · WizardLM/Evol-Instruct (2023)", href: "https://arxiv.org/abs/2304.12244", note: "In-Depth/In-Breadth Evolving과 4 epoch 확장 수치의 근거" },
+    { kind: "핵심 논문", label: "Yuan et al. · RFT (2023)", href: "https://arxiv.org/abs/2308.01825", note: "k=100 best-of-N 생성과 verifier filtering GSM8K 수치의 근거" },
+    { kind: "핵심 논문", label: "Chen et al. · Codex pass@k (2021)", href: "https://arxiv.org/abs/2107.03374", note: "pass@k 불편추정량 식의 근거" },
+    { kind: "공식 문서", label: "NVIDIA · Data Flywheel 용어집", href: "https://www.nvidia.com/en-us/glossary/data-flywheel/", note: "data flywheel 공식 정의의 근거" },
+    { kind: "핵심 논문", label: "Luo et al. · Arena Learning (2024)", href: "https://arxiv.org/abs/2407.10627", note: "배틀 기반 failure mining과 data flywheel 사례의 근거" },
+  ],
+  "ai/llm-dataset-engineering-and-cleaning": [
+    { kind: "핵심 논문", label: "Gao et al. · The Pile", href: "https://arxiv.org/abs/2101.00027", note: "22개 domain을 의도적으로 섞은 코퍼스 구성과 다중 source 필요성의 근거" },
+    { kind: "핵심 논문", label: "Penedo et al. · The RefinedWeb Dataset for Falcon LLM", href: "https://arxiv.org/abs/2306.01116", note: "필터링·dedup 파이프라인의 단계별 데이터 유지율(Figure 2) 근거" },
+    { kind: "핵심 논문", label: "Soldaini et al. · Dolma", href: "https://arxiv.org/abs/2402.00159", note: "source mixing부터 PII/유해 필터링까지 전체 pipeline 구조의 근거" },
+    { kind: "핵심 논문", label: "Broder · Identifying and Filtering Near-Duplicate Documents", href: "https://cs.brown.edu/courses/cs253/papers/nearduplicate.pdf", note: "MinHash shingle sketch와 near-duplicate 탐지 원리의 근거" },
+    { kind: "리뷰 논문", label: "A Comprehensive Survey of Contamination Detection Methods in LLMs", href: "https://arxiv.org/abs/2404.00699", note: "모델별 contamination 임계값(n-gram·substring) 비교의 근거" },
+    { kind: "핵심 논문", label: "Xie et al. · DoReMi", href: "https://arxiv.org/abs/2305.10429", note: "mixture 비율 최적화가 downstream 성능·학습 step에 미치는 수치 근거" },
+    { kind: "핵심 논문", label: "Zhou et al. · LIMA", href: "https://arxiv.org/abs/2305.11206", note: "quality·diversity가 데이터 양보다 중요하다는 superficial alignment hypothesis의 근거" },
+    { kind: "핵심 논문", label: "Bengio et al. · Curriculum Learning", href: "https://dl.acm.org/doi/10.1145/1553374.1553380", note: "쉬운 예제부터 배치하는 curriculum의 수렴·일반화 효과 근거" },
+    { kind: "핵심 논문", label: "Ratner et al. · Snorkel", href: "https://arxiv.org/abs/1711.10160", note: "weak supervision의 labeling function·노이즈 모델 결합 방식과 수치 근거" },
+    { kind: "핵심 논문", label: "Lee · Pseudo-Label", href: "http://deeplearning.net/wp-content/uploads/2013/03/pseudo_label_final.pdf", note: "pseudo-labeling의 최초 형태(confident 예측 재사용)의 근거" },
+    { kind: "핵심 논문", label: "Gilardi, Alizadeh, Kubli · ChatGPT Outperforms Crowd-Workers", href: "https://arxiv.org/abs/2303.15056", note: "model annotation과 human annotation의 정확도·비용 비교 수치 근거" },
+  ],
+  "ai/agent-failure-modes-and-recovery": [
+    { kind: "핵심 논문", label: "Where LLM Agents Fail and How They can Learn From Failures (arXiv 2509.25370)", href: "https://arxiv.org/abs/2509.25370", note: "Agent failure mode 분류의 근거 taxonomy와 benchmark." },
+    { kind: "공식 문서", label: "Stripe · Idempotent requests", href: "https://docs.stripe.com/api/idempotent_requests", note: "Idempotent action·retry loop 안전성의 실제 mechanism." },
+    { kind: "공식 문서", label: "Anthropic · Effective harnesses for long-running agents", href: "https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents", note: "Premature termination 관찰과 checkpoint 기반 recovery strategy 근거." },
+    { kind: "공식 문서", label: "LangChain · Human-in-the-loop", href: "https://docs.langchain.com/oss/python/langchain/human-in-the-loop", note: "HITL 승인 결정 mechanism과 checkpoint 연계 근거." },
+  ],
+  "ai/rl-foundations-for-llm-post-training": [
+    { kind: "핵심 논문", label: "Policy Gradient Methods for Reinforcement Learning with Function Approximation", href: "https://proceedings.neurips.cc/paper/1999/hash/464d828b85b0bed98e80ade0a5c43b0f-Abstract.html", note: "Policy gradient theorem의 형식적 정의와 증명의 출처" },
+    { kind: "공식 문서", label: "Reinforcement Learning: An Introduction (2nd ed.)", href: "https://mitpress.mit.edu/9780262039246/reinforcement-learning/", note: "Return·MDP·REINFORCE 정의의 표준 교과서 출처" },
+  ],
+  "ai/reward-design-for-verifiable-rl": [
+    { kind: "핵심 논문", label: "Let's Verify Step by Step", href: "https://arxiv.org/abs/2305.20050", note: "Outcome/process reward 구분과 MATH 정확도 수치의 출처" },
+    { kind: "핵심 논문", label: "Defining and Characterizing Reward Hacking", href: "https://arxiv.org/abs/2209.13085", note: "Reward hacking의 형식적 정의와 unhackable 조건의 출처" },
+    { kind: "핵심 논문", label: "Concrete Problems in AI Safety", href: "https://arxiv.org/abs/1606.06565", note: "Specification gaming·reward misspecification 이름의 출처" },
+    { kind: "핵심 논문", label: "Policy Invariance Under Reward Transformations", href: "https://dl.acm.org/doi/10.5555/645528.657613", note: "Potential-based reward shaping의 optimal policy 보존 증명 출처" },
   ],
 };

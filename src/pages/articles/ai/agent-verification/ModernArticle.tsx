@@ -1,6 +1,7 @@
 import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { VerificationLayersViz } from "../llm-harness/viz/ModernHarnessViz";
 
 export default function AgentVerificationArticle() {
@@ -48,6 +49,63 @@ export default function AgentVerificationArticle() {
         />
         <VerificationLayersViz />
         <ContentBoundary article="agent-verification" />
+      </section>
+      <section id="verifier-truth-source" className="scroll-mt-20">
+        <h2 className="mb-5 text-2xl font-bold">
+          Verifier는 진실이 어디서 오는지로도 갈립니다
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            Compiler exit code나 test 실행 결과처럼 시스템 밖에서 그대로
+            확정되는 값을 <strong>external ground truth</strong>라 부릅니다.
+            반대로 rubric judge나 LLM이 설명·구조·톤을 읽고 점수를 매기는
+            판정은 <strong>semantic verifier</strong>입니다.
+          </p>
+          <p>
+            External ground truth는 채점자가 바뀌어도 값이 그대로입니다. 27개
+            test case 중 compiler가 확정하는 통과 개수는 항상 같은
+            26/27입니다. 반면 같은 코드 설명의 품질을 semantic verifier
+            셋이 각각 매기면 0.6, 0.7, 0.8처럼 흔들릴 수 있습니다.
+          </p>
+          <p>
+            이 구분이 앞서 본 deterministic check·environment oracle이
+            rubric judge보다 먼저 오는 이유입니다. Test-based
+            verification·compiler feedback·runtime feedback은 전부
+            external ground truth의 구체적인 형태이고, 해석 없이 pass·fail을
+            내는 쪽부터 통과시키는 편이 judge 예산을 아낍니다.
+          </p>
+          <p>
+            다만 external ground truth도 test coverage가 좁으면 실제 실패를
+            그냥 통과시키고, semantic verifier도 calibration 없이 배포하면
+            같은 실수를 매번 놓칠 수 있습니다. 둘 중 하나만으로 verifier
+            layer 전체를 대체할 수는 없습니다.
+          </p>
+        </div>
+      </section>
+      <section id="critic-architecture" className="scroll-mt-20">
+        <h2 className="mb-5 text-2xl font-bold">
+          Critic이 분리된 model인지 generator 자신인지가 신뢰 범위를 정합니다
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            Generator-critic 구조는 결과를 만든 model과 다른 critic model이
+            따로 채점합니다. Generator-verifier 구조는 같은 model이 생성과
+            검증을 모두 맡습니다.
+          </p>
+          <p>
+            가령 7B model이 만든 코드를 70B critic model이 다시 채점하면
+            generator 혼자 판정할 때보다 놓치던 오류를 더 잡지만, critic
+            호출 자체가 token을 한 번 더 씁니다. 같은 model이 자기 출력을
+            다시 보는 generator-verifier는 별도 호출 비용은 없지만, 처음에
+            놓친 가정을 검증 단계에서도 같은 이유로 놓치기 쉽습니다.
+          </p>
+          <p>
+            그래서 되돌리기 어려운 effect일수록 critic model을 generator와
+            분리하거나, 앞 절의 external ground truth로 교차 확인하는 쪽을
+            택합니다. Generator-verifier만으로 충분한 경우는 실수의 대가가
+            작고 재시도 비용이 낮을 때로 좁혀 둡니다.
+          </p>
+        </div>
       </section>
       <section id="trajectory-effect" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">
@@ -102,6 +160,46 @@ export default function AgentVerificationArticle() {
             "필수 gate를 평균 score로 상쇄하지 않습니다.",
           ]}
           interpretation="코드가 맞아도 secret 전송이나 중복 deploy가 있으면 trajectory/effect가 0이라 전체 run은 실패합니다."
+        />
+      </section>
+      <section id="plan-execute-verify" className="scroll-mt-20">
+        <h2 className="mb-5 text-2xl font-bold">
+          Verifier-guided agent는 매 단계마다 plan-execute-verify를 반복합니다
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            Plan-execute-verify loop는 다음 action을 계획하고, 실행하고,
+            그 결과를 앞서 정한 verifier로 확인한 뒤에야 다음 plan을
+            세웁니다. Verify를 건너뛰면 한 단계의 부분 실패가 다음 plan의
+            잘못된 전제로 그대로 넘어갑니다.
+          </p>
+        </div>
+        <AlgorithmBlock
+          title="Plan-execute-verify loop"
+          input={[
+            "objective와 이번 run의 verifier 정의(gate A_a·A_t·A_e·A_b)",
+            "현재 observable state",
+          ]}
+          steps={[
+            {
+              code: "plan ← propose_next_action(objective, state)",
+              note: "현재 state에서 다음 action 하나를 제안합니다.",
+            },
+            {
+              code: "result ← execute(plan)",
+              note: "Runtime이 허가한 범위 안에서만 실행합니다.",
+            },
+            {
+              code: "verdict ← verify(result, gate)",
+              note: "External ground truth와 semantic verifier를 상황에 맞게 적용합니다.",
+            },
+            {
+              code: "state ← update(state, result, verdict)",
+              note: "통과·실패 여부를 다음 plan의 입력에 반영합니다.",
+            },
+          ]}
+          repeatUntil="A_a∧A_t∧A_e∧A_b가 모두 통과하거나 budget이 끝나 human checkpoint로 넘길 때까지 반복합니다."
+          output="검증된 artifact 또는 실패 사유가 붙은 중단 상태"
         />
       </section>
       <section id="regression" className="scroll-mt-20">

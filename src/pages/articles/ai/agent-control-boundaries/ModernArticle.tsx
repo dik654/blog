@@ -59,6 +59,32 @@ export default function AgentControlBoundariesArticle() {
             </li>
           </ul>
         </div>
+        <span id="blast-radius" className="scroll-mt-20" />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            Checkpoint를 어디에 둘지는 그 action이 실패했을 때 번지는 범위인{" "}
+            <strong>blast radius</strong>로 정합니다. 한 action의 blast
+            radius를 미리 제한해 두면, checkpoint를 놓친 예외 상황에서도
+            피해가 그 범위 밖으로 넘어가지 않습니다.
+          </p>
+          <p>
+            Least privilege는 이 blast radius를 만드는 실제 방법입니다. 이번
+            action이 필요한 자원과 권한만 미리 부여해 두면, agent가 잘못된
+            경로를 골라도 실패의 반경이 그 권한 범위로 저절로 좁혀집니다.
+          </p>
+          <p>
+            가령 배포 agent에게 project 전체 write 권한 대신 이번 release
+            하나의 target·revision만 write 가능한 scoped credential을 주면,
+            같은 실수라도 번지는 범위가 project 전체에서 release 1건으로
+            줄어듭니다. Least privilege가 애초에 커질 수 있는 반경 자체를
+            줄여 주는 셈입니다.
+          </p>
+          <p>
+            다만 least privilege만으로 blast radius가 0이 되지는 않습니다.
+            그 좁은 권한 안에서 일어난 effect도 checkpoint의 receipt와
+            rollback 경로가 없으면 되돌릴 수 없습니다.
+          </p>
+        </div>
       </section>
       <section id="loop-authority" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">

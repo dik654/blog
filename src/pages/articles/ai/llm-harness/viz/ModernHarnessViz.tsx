@@ -35,13 +35,13 @@ function Scene({
         <p className="text-[11px] font-black uppercase tracking-[.16em] text-primary">
           Animated lesson · {String(controls.active + 1).padStart(2, "0")}
         </p>
-        <h3 className="mt-2 text-lg font-bold leading-7">
+        <h3 className="mt-2 min-h-[4.25rem] text-lg font-bold leading-7 sm:min-h-[2rem]">
           {labels[controls.active]}
         </h3>
         <div data-viz-canvas className="mt-5 min-w-0 overflow-hidden">
           {children(controls.active)}
         </div>
-        <p className="mt-4 border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground">
+        <p className="mt-4 min-h-[5.5rem] border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground sm:min-h-[1.75rem]">
           {notes[controls.active]}
         </p>
         <AnimatedSceneControls labels={labels} {...controls} />

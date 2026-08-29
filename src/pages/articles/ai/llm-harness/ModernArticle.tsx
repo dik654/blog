@@ -19,6 +19,21 @@ export default function LlmHarnessArticle() {
             일어났는지, 언제 run을 끝낼지는 runtime이 강제해야 합니다.
           </p>
         </div>
+        <span id="agent-scaffold" className="scroll-mt-20" />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            이 model 제안·runtime 권한·executor·observation을 매 step 반복하는
+            기본 구조를 <strong>agent scaffold</strong>라 부릅니다. 어떤
+            business task를 맡기든 새로 짜지 않고 재사용하는 loop 뼈대와
+            상태 관리 부분입니다.
+          </p>
+          <p>
+            가령 문서 요약 agent와 배포 agent는 만드는 결과물이 다르지만,
+            propose→authorize→execute→observe 4단계와 다음 step에 넘길 state
+            형식은 같은 scaffold를 씁니다. Scaffold가 바뀌는 부분은 여기에
+            꽂히는 tool 목록과 verifier뿐입니다.
+          </p>
+        </div>
         <TermBreakdown
           title="한 action을 실행 결과로 바꾸는 네 주체"
           items={[
@@ -240,6 +255,21 @@ export default function LlmHarnessArticle() {
             영구 규칙으로 고정하면 안 됩니다. 같은 frozen fixture에서 장치 하나를
             제거하고 correctness·tool call·token·latency·새 실패를 함께 비교해,
             model이 이미 흡수한 보정은 줄여야 합니다.
+          </p>
+          <span id="harness-quality" className="scroll-mt-20" />
+          <p>
+            같은 model이라도 <strong>harness quality</strong>에 따라 실제
+            성능이 크게 갈립니다. Tool 설명이 argument 예시까지 주는지,
+            에러 메시지가 “실패했습니다” 대신 어떤 필드가 왜 거부됐는지
+            말해 주는지, 재시도 로직이 같은 실수를 무한 반복하지 않고
+            원인을 바꿔 재시도하는지가 harness quality를 가릅니다.
+          </p>
+          <p>
+            앞서 본 9B·27B 비교가 이 관점을 그대로 보여 줍니다. 같은
+            9B model이 strict-count 요구를 0/27에서 27/27로 옮긴 것은
+            model이 좋아져서가 아니라 cardinality 검사를 deterministic
+            renderer로 옮긴 harness 쪽 변화였습니다. Model quality를
+            고정해도 harness quality만으로 결과가 이렇게 바뀔 수 있습니다.
           </p>
         </div>
         <ProgressiveDetail

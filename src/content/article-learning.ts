@@ -19413,8 +19413,9 @@ export const ARTICLE_LEARNING: Readonly<
       {
         "id": "cross-tokenizer-sequence-distillation",
         "role": "고정 teacher sequence에서 생기는 state mismatch의 출발점입니다."
-      }
-    ],
+      },
+      { id: "on-vs-off-policy-learning", role: "λ=1의 student rollout distribution 학습과 λ=0의 teacher distribution 모방을 on-policy·off-policy 학습 구분의 한 사례로 잇습니다." },
+],
     "introducedHere": [
       {
         "id": "autoregressive-state-distribution-mismatch",
@@ -19442,18 +19443,18 @@ export const ARTICLE_LEARNING: Readonly<
         "boundary": "Exposure bias는 mismatch의 한 원인이며 on-policy sampling만으로 teacher 오류·긴 horizon credit assignment·environment drift가 해결되지는 않습니다."
       },
       {
-        "id": "generalized-on-policy-distillation",
-        "sectionId": "state-mismatch",
-        "intuition": "고정된 모범답안에서 배우는 비율과 현재 student가 직접 만든 답안을 teacher에게 첨삭받는 비율을 섞습니다.",
-        "workedExample": "λ=0이면 fixed response KD, λ=1이면 student rollout에서만 teacher distribution을 비교하고 λ=.5이면 두 minibatch source를 같은 비율로 사용합니다.",
-        "boundary": "λ는 teacher 신뢰도나 hard/soft loss weight가 아니라 sequence prefix를 생성한 data source의 비율이며 sampling에는 역전파하지 않습니다."
+        id: "generalized-on-policy-distillation",
+        sectionId: "state-mismatch",
+        intuition: "고정된 모범답안에서 배우는 비율과 현재 student가 직접 만든 답안을 teacher에게 첨삭받는 비율을 섞습니다.",
+        workedExample: "λ=0이면 fixed response KD(teacher distribution 모방), λ=1이면 student rollout distribution에서만 teacher distribution을 비교하고 λ=.5이면 두 minibatch source를 같은 비율로 사용합니다.",
+        boundary: "λ는 teacher 신뢰도나 hard/soft loss weight가 아니라 sequence prefix를 생성한 data source의 비율이며 sampling에는 역전파하지 않습니다. λ=1을 student rollout distribution 학습, λ=0을 teacher distribution 모방으로 부르는 것은 on-policy·off-policy 학습 구분의 한 사례입니다.",
       },
       {
-        "id": "on-policy-token-teacher-feedback",
-        "sectionId": "teacher-feedback",
-        "intuition": "학생이 실제로 틀린 풀이의 각 줄에서 선생이 다음 한 줄의 선택지를 모두 채점합니다.",
-        "workedExample": "Student prefix h_t에서 student·teacher vocabulary distribution의 reverse KL을 계산하고 response 길이 L에 걸쳐 평균합니다.",
-        "boundary": "Teacher/student tokenizer support가 맞아야 full-logit KL이 가능하고 dense immediate signal이 sequence outcome의 장기 credit assignment를 대신하지 않습니다."
+        id: "on-policy-token-teacher-feedback",
+        sectionId: "teacher-feedback",
+        intuition: "학생이 실제로 틀린 풀이의 각 줄에서 선생이 다음 한 줄의 선택지를 모두 채점합니다.",
+        workedExample: "Student prefix h_t에서 student·teacher vocabulary distribution의 reverse KL을 계산하고 response 길이 L에 걸쳐 평균합니다.",
+        boundary: "Teacher/student tokenizer support가 맞아야 full-logit KL이 가능하고, 이 token-level teacher signal은 dense하지만 sequence outcome의 장기 credit assignment를 대신하지 않습니다.",
       },
       {
         "id": "multi-teacher-policy-space-integration",
@@ -19463,184 +19464,23 @@ export const ARTICLE_LEARNING: Readonly<
         "boundary": "Domain routing·teacher origin·prompt mixture가 고정돼야 하며 평균 score가 높아도 worst-domain regression과 general capability를 숨길 수 있습니다."
       }
     ],
-    "conceptStages": [
-      {
-        "label": "00 mismatch",
-        "relation": "고정 prefix와 student-visited state를 구분합니다.",
-        "concepts": [
-          "autoregressive-decoding",
-          "autoregressive-state-distribution-mismatch"
-        ]
-      },
-      {
-        "label": "01 mixture",
-        "relation": "Fixed와 student rollout source를 λ로 섞습니다.",
-        "concepts": [
-          "autoregressive-state-distribution-mismatch",
-          "generalized-on-policy-distillation"
-        ]
-      },
-      {
-        "label": "02 feedback",
-        "relation": "같은 visited prefix에서 dense teacher signal을 받습니다.",
-        "concepts": [
-          "generalized-on-policy-distillation",
-          "on-policy-token-teacher-feedback"
-        ]
-      },
-      {
-        "label": "03 specialists",
-        "relation": "Domain별 teacher를 shared student에 통합합니다.",
-        "concepts": [
-          "on-policy-token-teacher-feedback",
-          "multi-teacher-policy-space-integration",
-          "train-validation-test"
-        ]
-      }
+    conceptStages: [
+      { label: "00 mismatch", relation: "고정 prefix와 student-visited state를 구분합니다.", concepts: ["autoregressive-decoding", "autoregressive-state-distribution-mismatch"] },
+      { label: "01 mixture", relation: "Fixed와 student rollout source를 λ로 섞고, 이를 on-policy·off-policy 학습 구분의 한 사례로 잇습니다.", concepts: ["autoregressive-state-distribution-mismatch", "on-vs-off-policy-learning", "generalized-on-policy-distillation"] },
+      { label: "02 feedback", relation: "같은 visited prefix에서 dense token-level teacher signal을 받습니다.", concepts: ["generalized-on-policy-distillation", "on-policy-token-teacher-feedback"] },
+      { label: "03 specialists", relation: "Domain별 teacher를 shared student에 통합합니다.", concepts: ["on-policy-token-teacher-feedback", "multi-teacher-policy-space-integration", "train-validation-test"] },
     ],
-    "exercises": [
-      {
-        "level": "basic",
-        "question": "Teacher A→B→C와 student A→X 예로 state mismatch를 설명하세요.",
-        "answerChecklist": [
-          "fixed A B",
-          "student A X",
-          "feedback loop",
-          "unseen state"
-        ],
-        "requiredConcepts": [
-          "autoregressive-state-distribution-mismatch"
-        ],
-        "sectionId": "state-mismatch"
-      },
-      {
-        "level": "basic",
-        "question": "λ=0·.5·1이 고르는 prefix source를 설명하세요.",
-        "answerChecklist": [
-          "fixed",
-          "mixed",
-          "student rollout",
-          "not teacher weight"
-        ],
-        "requiredConcepts": [
-          "generalized-on-policy-distillation"
-        ],
-        "sectionId": "state-mismatch"
-      },
-      {
-        "level": "basic",
-        "question": "Student rollout sampling에 gradient를 통과시키지 않는 경계를 설명하세요.",
-        "answerChecklist": [
-          "discrete sampling",
-          "stop gradient",
-          "teacher target",
-          "policy update"
-        ],
-        "requiredConcepts": [
-          "generalized-on-policy-distillation"
-        ],
-        "sectionId": "state-mismatch"
-      },
-      {
-        "level": "basic",
-        "question": "같은 prefix에서 teacher token feedback을 계산하는 순서를 설명하세요.",
-        "answerChecklist": [
-          "student prefix",
-          "teacher distribution",
-          "student distribution",
-          "divergence"
-        ],
-        "requiredConcepts": [
-          "on-policy-token-teacher-feedback"
-        ],
-        "sectionId": "teacher-feedback"
-      },
-      {
-        "level": "basic",
-        "question": "Token-level dense feedback과 final sequence reward를 구분하세요.",
-        "answerChecklist": [
-          "next token",
-          "vocabulary support",
-          "immediate",
-          "long horizon separate"
-        ],
-        "requiredConcepts": [
-          "on-policy-token-teacher-feedback"
-        ],
-        "sectionId": "teacher-feedback"
-      },
-      {
-        "level": "basic",
-        "question": "Multi-teacher integration에서 prompt routing이 필요한 이유를 설명하세요.",
-        "answerChecklist": [
-          "domain label",
-          "specialist teacher",
-          "shared student",
-          "no weight averaging"
-        ],
-        "requiredConcepts": [
-          "multi-teacher-policy-space-integration"
-        ],
-        "sectionId": "multi-teacher"
-      },
-      {
-        "level": "advanced",
-        "question": "λ schedule을 높일 때 quality·cost·stability gate를 설계하세요.",
-        "answerChecklist": [
-          "rollout quality",
-          "teacher cost",
-          "divergence",
-          "independent evaluation"
-        ],
-        "requiredConcepts": [
-          "generalized-on-policy-distillation"
-        ],
-        "sectionId": "release-gate"
-      },
-      {
-        "level": "advanced",
-        "question": "Teacher scoring cache가 잘못 재사용되는 prefix-identity 반례를 설계하세요.",
-        "answerChecklist": [
-          "exact prefix",
-          "teacher revision",
-          "temperature",
-          "cache key",
-          "negative fixture"
-        ],
-        "requiredConcepts": [
-          "on-policy-token-teacher-feedback"
-        ],
-        "sectionId": "teacher-feedback"
-      },
-      {
-        "level": "advanced",
-        "question": "ρ=(.5,.3,.2) domain mixture의 batch routing과 worst-domain 검증을 설계하세요.",
-        "answerChecklist": [
-          "domain sample",
-          "student rollout",
-          "teacher route",
-          "weighted loss",
-          "worst domain"
-        ],
-        "requiredConcepts": [
-          "multi-teacher-policy-space-integration"
-        ],
-        "sectionId": "multi-teacher"
-      },
-      {
-        "level": "advanced",
-        "question": "평균 capability는 오르지만 SWE가 하락하는 multi-teacher candidate의 승인 여부를 판단하세요.",
-        "answerChecklist": [
-          "average insufficient",
-          "protected domain",
-          "regression budget",
-          "rollback"
-        ],
-        "requiredConcepts": [
-          "multi-teacher-policy-space-integration"
-        ],
-        "sectionId": "release-gate"
-      }
+    exercises: [
+      { level: "basic", question: "Teacher A→B→C와 student A→X 예로 state mismatch를 설명하세요.", answerChecklist: ["fixed A B", "student A X", "feedback loop", "unseen state"], requiredConcepts: ["autoregressive-state-distribution-mismatch"], sectionId: "state-mismatch" },
+      { level: "basic", question: "λ=0·.5·1이 고르는 prefix source를 설명하고, λ=1의 student rollout distribution 학습과 λ=0의 teacher distribution 모방이 각각 on-policy·off-policy 중 무엇에 해당하는지 쓰세요.", answerChecklist: ["fixed", "mixed", "student rollout", "student rollout=on-policy", "teacher 모방=off-policy 쪽"], requiredConcepts: ["generalized-on-policy-distillation", "on-vs-off-policy-learning"], sectionId: "state-mismatch" },
+      { level: "basic", question: "Student rollout sampling에 gradient를 통과시키지 않는 경계를 설명하세요.", answerChecklist: ["discrete sampling", "stop gradient", "teacher target", "policy update"], requiredConcepts: ["generalized-on-policy-distillation"], sectionId: "state-mismatch" },
+      { level: "basic", question: "같은 prefix에서 teacher token feedback을 계산하는 순서를 설명하세요.", answerChecklist: ["student prefix", "teacher distribution", "student distribution", "divergence"], requiredConcepts: ["on-policy-token-teacher-feedback"], sectionId: "teacher-feedback" },
+      { level: "basic", question: "Token-level teacher signal과 final sequence reward를 구분하세요.", answerChecklist: ["next token", "vocabulary support", "immediate", "long horizon separate"], requiredConcepts: ["on-policy-token-teacher-feedback"], sectionId: "teacher-feedback" },
+      { level: "basic", question: "Multi-teacher integration에서 prompt routing이 필요한 이유를 설명하세요.", answerChecklist: ["domain label", "specialist teacher", "shared student", "no weight averaging"], requiredConcepts: ["multi-teacher-policy-space-integration"], sectionId: "multi-teacher" },
+      { level: "advanced", question: "λ schedule을 높일 때 quality·cost·stability gate를 설계하세요.", answerChecklist: ["rollout quality", "teacher cost", "divergence", "independent evaluation"], requiredConcepts: ["generalized-on-policy-distillation"], sectionId: "release-gate" },
+      { level: "advanced", question: "Teacher scoring cache가 잘못 재사용되는 prefix-identity 반례를 설계하세요.", answerChecklist: ["exact prefix", "teacher revision", "temperature", "cache key", "negative fixture"], requiredConcepts: ["on-policy-token-teacher-feedback"], sectionId: "teacher-feedback" },
+      { level: "advanced", question: "ρ=(.5,.3,.2) domain mixture의 batch routing과 worst-domain 검증을 설계하세요.", answerChecklist: ["domain sample", "student rollout", "teacher route", "weighted loss", "worst domain"], requiredConcepts: ["multi-teacher-policy-space-integration"], sectionId: "multi-teacher" },
+      { level: "advanced", question: "평균 capability는 오르지만 SWE가 하락하는 multi-teacher candidate의 승인 여부를 판단하세요.", answerChecklist: ["average insufficient", "protected domain", "regression budget", "rollback"], requiredConcepts: ["multi-teacher-policy-space-integration"], sectionId: "release-gate" },
     ],
     "papers": [
       {
@@ -24825,79 +24665,67 @@ export const ARTICLE_LEARNING: Readonly<
       "LLM 하네스는 model이 낸 제안을 실제 action과 검증된 artifact로 바꾸는 runtime입니다. Model proposal, 역할별 operation 권한, executor, typed observation과 독립 교정 loop의 책임을 분리해야 model이 바뀌어도 외부 effect의 안전성과 완료 판정을 유지할 수 있습니다.",
     assumedKnowledge: [],
     introducedHere: [
-      {
-        id: "llm-harness-system-boundary",
-        role: "Model proposal과 runtime enforcement의 책임을 먼저 나눕니다.",
-      },
-      {
-        id: "agent-operation-role-boundary",
-        role: "관찰·결정적 변환·창작 산출물·상태 변경의 권한과 실패 처리를 나눕니다.",
-      },
-      {
-        id: "typed-artifact-repair-loop",
-        role: "산출물을 구조화한 뒤 독립 검사에서 실패한 부분만 고치고 재검사합니다.",
-      },
-    ],
+      { id: "llm-harness-system-boundary", role: "Model proposal과 runtime enforcement의 책임을 먼저 나눕니다." },
+      { id: "agent-operation-role-boundary", role: "관찰·결정적 변환·창작 산출물·상태 변경의 권한과 실패 처리를 나눕니다." },
+      { id: "typed-artifact-repair-loop", role: "산출물을 구조화한 뒤 독립 검사에서 실패한 부분만 고치고 재검사합니다." },
+      { id: "agent-scaffold-runtime-structure", role: "어떤 task든 재사용하는 harness의 기본 loop·상태 관리 구조를 정의합니다." },
+      { id: "harness-quality-model-invariance", role: "같은 model이라도 harness 설계에 따라 성능이 크게 갈린다는 관점을 고정합니다." },
+],
     conceptExplanations: [
       {
         id: "llm-harness-system-boundary",
         sectionId: "overview",
-        intuition:
-          "Model은 다음 행동을 제안하는 두뇌이고, 하네스는 출입문·작업대·검사대·작업 기록을 제공하는 실행 환경입니다.",
-        workedExample:
-          "Model이 deploy 명령을 제안해도 runtime은 target project·identity·approval·canary 상태를 검사한 뒤 실행하고 결과 receipt를 돌려줍니다.",
-        boundary:
-          "하네스는 특정 SDK 이름이나 model의 추론 능력을 뜻하지 않으며, 규칙을 많이 넣는 것 자체가 좋은 하네스는 아닙니다.",
+        intuition: "Model은 다음 행동을 제안하는 두뇌이고, 하네스는 출입문·작업대·검사대·작업 기록을 제공하는 실행 환경입니다.",
+        workedExample: "Model이 deploy 명령을 제안해도 runtime은 target project·identity·approval·canary 상태를 검사한 뒤 실행하고 결과 receipt를 돌려줍니다.",
+        boundary: "하네스는 특정 SDK 이름이나 model의 추론 능력을 뜻하지 않으며, 규칙을 많이 넣는 것 자체가 좋은 하네스는 아닙니다.",
       },
       {
         id: "agent-operation-role-boundary",
         sectionId: "operation-roles",
-        intuition:
-          "같은 사무실 장비라도 문서를 읽는 스캐너, 숫자를 계산하는 계산기, 문서를 쓰는 편집기, 실제 계약을 체결하는 결재 도장은 서로 다른 권한을 가져야 합니다.",
-        workedExample:
-          "계산기는 문서에서 검증된 금액과 세율만 계산하고, creative writer는 그 결과를 문장으로 만들며, 파일 변경은 one-use 승인·backup·journal이 있는 state-mutation 경로만 사용합니다.",
-        boundary:
-          "Tool 이름이나 자연어 설명만으로 역할을 정하지 않고 현재 operation의 input source·effect·failure semantics를 기준으로 분류합니다.",
+        intuition: "같은 사무실 장비라도 문서를 읽는 스캐너, 숫자를 계산하는 계산기, 문서를 쓰는 편집기, 실제 계약을 체결하는 결재 도장은 서로 다른 권한을 가져야 합니다.",
+        workedExample: "계산기는 문서에서 검증된 금액과 세율만 계산하고, creative writer는 그 결과를 문장으로 만들며, 파일 변경은 one-use 승인·backup·journal이 있는 state-mutation 경로만 사용합니다.",
+        boundary: "Tool 이름이나 자연어 설명만으로 역할을 정하지 않고 현재 operation의 input source·effect·failure semantics를 기준으로 분류합니다.",
       },
       {
         id: "typed-artifact-repair-loop",
         sectionId: "artifact-repair",
-        intuition:
-          "보고서 전체를 매번 다시 쓰지 않고, 맞춤법 검사나 schema validator가 표시한 위반 구간만 고친 뒤 같은 검사를 다시 돌리는 방식입니다.",
-        workedExample:
-          "DOCX를 저장한 뒤 package validator와 PDF render를 실행하고, 누락된 표 caption만 patch한 다음 기존 통과 항목의 회귀까지 재검사합니다.",
-        boundary:
-          "Model self-critique만 독립 검사로 세지 않으며, validator가 판정할 수 없는 의미 품질은 fresh reader·rubric·사람 검토 범위를 따로 기록합니다.",
+        intuition: "보고서 전체를 매번 다시 쓰지 않고, 맞춤법 검사나 schema validator가 표시한 위반 구간만 고친 뒤 같은 검사를 다시 돌리는 방식입니다.",
+        workedExample: "DOCX를 저장한 뒤 package validator와 PDF render를 실행하고, 누락된 표 caption만 patch한 다음 기존 통과 항목의 회귀까지 재검사합니다.",
+        boundary: "Model self-critique만 독립 검사로 세지 않으며, validator가 판정할 수 없는 의미 품질은 fresh reader·rubric·사람 검토 범위를 따로 기록합니다.",
       },
-    ],
+      {
+        id: "agent-scaffold-runtime-structure",
+        sectionId: "agent-scaffold",
+        intuition: "요약 agent와 배포 agent는 산출물이 다르지만 propose→authorize→execute→observe라는 같은 뼈대 위에서 돌아갑니다.",
+        workedExample: "두 agent 모두 같은 4단계 loop와 state 형식을 쓰고, 바뀌는 부분은 여기에 꽂히는 tool 목록과 verifier뿐입니다.",
+        boundary: "Scaffold 자체는 business logic이 아니며, scaffold가 좋아도 tool·verifier 설계가 나쁘면 결과는 나쁩니다.",
+      },
+      {
+        id: "harness-quality-model-invariance",
+        sectionId: "harness-quality",
+        intuition: "같은 요리사라도 부엌 도구가 좋으면 같은 요리를 더 안정적으로 냅니다. Model도 tool 설명·에러 메시지·재시도 로직이 좋을수록 안정적으로 성공합니다.",
+        workedExample: "같은 9B model이 cardinality 검사를 deterministic renderer로 옮긴 뒤 strict-count 요구를 0/27에서 27/27로 통과시켰습니다.",
+        boundary: "Harness quality를 높였다고 model 자체의 일반 추론 능력이 좋아진 것은 아니며, 다른 task class로 일반화되는지는 별도로 확인해야 합니다.",
+      },
+],
     conceptStages: [
-      {
-        label: "00 System boundary",
-        relation: "제안·권한·실행·관측 owner를 먼저 나눕니다.",
-        concepts: ["llm-harness-system-boundary"],
-      },
-      {
-        label: "01 Operation roles",
-        relation: "각 operation이 관찰·변환·창작·상태 변경 중 무엇을 소유하는지 제한합니다.",
-        concepts: ["agent-operation-role-boundary"],
-      },
-      {
-        label: "02 Artifact repair",
-        relation: "Typed artifact와 독립 validator를 targeted patch·recheck loop로 묶습니다.",
-        concepts: ["typed-artifact-repair-loop"],
-      },
+      { label: "00 System boundary", relation: "제안·권한·실행·관측 owner를 먼저 나눕니다.", concepts: ["llm-harness-system-boundary"] },
+      { label: "01 Scaffold", relation: "재사용하는 기본 loop·상태 관리 구조를 정의합니다.", concepts: ["agent-scaffold-runtime-structure"] },
+      { label: "02 Operation roles", relation: "각 operation이 관찰·변환·창작·상태 변경 중 무엇을 소유하는지 제한합니다.", concepts: ["agent-operation-role-boundary"] },
+      { label: "03 Artifact repair", relation: "Typed artifact와 독립 validator를 targeted patch·recheck loop로 묶습니다.", concepts: ["typed-artifact-repair-loop"] },
+      { label: "04 Harness quality", relation: "Model quality를 고정한 채 harness 설계만으로 성능이 갈리는 지점을 확인합니다.", concepts: ["harness-quality-model-invariance"] },
     ],
     exercises: [
       { level: "basic", question: "Model proposal과 runtime execution을 구분하세요.", answerChecklist: ["untrusted proposal", "runtime authority", "executor", "typed observation"], requiredConcepts: ["llm-harness-system-boundary"], sectionId: "overview" },
-      { level: "basic", question: "파일 삭제 요청에서 model과 runtime의 책임을 나누세요.", answerChecklist: ["path proposal", "identity", "scope", "execution receipt"], requiredConcepts: ["llm-harness-system-boundary"], sectionId: "proposal-runtime" },
+      { level: "basic", question: "Agent scaffold가 요약 agent와 배포 agent에서 같은 이유를 설명하세요.", answerChecklist: ["propose", "authorize", "execute", "observe", "재사용 loop"], requiredConcepts: ["agent-scaffold-runtime-structure"], sectionId: "agent-scaffold" },
       { level: "basic", question: "Tool schema와 capability가 다른 이유를 설명하세요.", answerChecklist: ["argument shape", "not authority", "resource scope", "current identity"], requiredConcepts: ["llm-harness-system-boundary"], sectionId: "proposal-runtime" },
       { level: "basic", question: "Observation selector·deterministic transform·creative artifact·state mutation의 권한 차이를 예로 설명하세요.", answerChecklist: ["관찰만", "검증된 입력만 계산", "writer는 사실 확정 불가", "승인·backup·journal"], requiredConcepts: ["agent-operation-role-boundary"], sectionId: "operation-roles" },
-      { level: "basic", question: "Typed observation에 필요한 필드를 제안하세요.", answerChecklist: ["status", "resource identity", "checksum", "retry class"], requiredConcepts: ["llm-harness-system-boundary"], sectionId: "feedback-loop" },
       { level: "basic", question: "Typed artifact 교정 loop의 contract→observe→write→validate→patch→recheck 순서를 설명하세요.", answerChecklist: ["acceptance", "current evidence", "typed fields", "independent validator", "targeted patch", "regression recheck"], requiredConcepts: ["typed-artifact-repair-loop"], sectionId: "artifact-repair" },
+      { level: "basic", question: "Harness quality를 이루는 세 요소를 쓰세요.", answerChecklist: ["tool 설명", "에러 메시지 형식", "재시도 로직"], requiredConcepts: ["harness-quality-model-invariance"], sectionId: "model-change" },
       { level: "advanced", question: "Timeout 뒤 effect가 unknown인 action의 runtime 경계를 설계하세요.", answerChecklist: ["unknown outcome", "operation key", "receipt lookup", "no blind retry"], requiredConcepts: ["llm-harness-system-boundary"], sectionId: "feedback-loop" },
-      { level: "advanced", question: "Prompt 금지 문구가 authorization을 대신하지 못하는 반례를 만드세요.", answerChecklist: ["prompt bypass", "fresh identity", "target scope", "runtime deny"], requiredConcepts: ["llm-harness-system-boundary"], sectionId: "proposal-runtime" },
       { level: "advanced", question: "새 model이 strict 형식 지시를 잘 따르게 됐을 때 제거할 보정과 유지할 runtime 불변식을 ablation으로 나누세요.", answerChecklist: ["frozen fixture", "model-specific prompt/shim 후보", "identity·approval·idempotency 유지", "correctness·cost·new failure"], requiredConcepts: ["llm-harness-system-boundary", "agent-operation-role-boundary"], sectionId: "model-change" },
       { level: "advanced", question: "자동 evaluator가 20/20을 냈지만 artifact가 잘린 사례에서 검증 stack을 교정하세요.", answerChecklist: ["top-line score 한계", "raw transcript", "artifact render/schema", "fresh reader 또는 human audit", "held-out regression"], requiredConcepts: ["typed-artifact-repair-loop"], sectionId: "artifact-repair" },
+      { level: "advanced", question: "9B·27B 실측에서 model scale 우위와 harness quality 기여를 분리하세요.", answerChecklist: ["같은 model 비교", "cardinality를 runtime으로 이동", "model call 0", "harness quality가 원인"], requiredConcepts: ["harness-quality-model-invariance"], sectionId: "model-change" },
     ],
     papers: [
       {
@@ -24991,27 +24819,53 @@ export const ARTICLE_LEARNING: Readonly<
     introducedHere: [
       { id: "layered-agent-verification", role: "증거의 확실성과 위험에 맞는 검증층을 고릅니다." },
       { id: "agent-trajectory-effect-evaluation", role: "결과·경로·외부 상태·비용을 독립 판정합니다." },
-    ],
+      { id: "external-ground-truth-vs-semantic-verifier", role: "Verifier가 판정하는 진실이 외부 시스템에서 오는지 의미 해석에서 오는지를 구분합니다." },
+      { id: "generator-critic-verifier-architecture", role: "Critic이 generator와 분리된 model인지 generator 자신인지에 따른 신뢰 범위를 정합니다." },
+      { id: "plan-execute-verify-loop", role: "Plan→execute→verify를 반복해 부분 실패가 다음 plan에 그대로 넘어가지 않게 합니다." },
+],
     conceptExplanations: [
       { id: "layered-agent-verification", sectionId: "overview", intuition: "계산기로 확인할 일부터 검사하고 애매한 품질에만 judge와 사람을 씁니다.", workedExample: "Typecheck→Playwright→blind design rubric→production approval 순으로 올립니다.", boundary: "Judge는 deterministic oracle을 대체하지 않습니다." },
       { id: "agent-trajectory-effect-evaluation", sectionId: "trajectory-effect", intuition: "목적지뿐 아니라 길·외부 변화·비용도 따로 채점합니다.", workedExample: "코드가 맞아도 secret 전송이나 중복 deploy가 있으면 reject합니다.", boundary: "Private reasoning이 아니라 observable call·artifact·receipt를 평가합니다." },
-    ],
+      {
+        id: "external-ground-truth-vs-semantic-verifier",
+        sectionId: "verifier-truth-source",
+        intuition: "Compiler·test 결과는 채점자가 바뀌어도 같은 값이고, LLM judge 점수는 채점자마다 흔들릴 수 있습니다.",
+        workedExample: "27개 test 중 compiler가 확정하는 통과 개수는 항상 같은 26/27이지만, 같은 설명을 semantic verifier 셋이 매기면 0.6·0.7·0.8로 갈립니다.",
+        boundary: "External ground truth도 test coverage가 좁으면 실제 실패를 놓치고, semantic verifier도 calibration 없이는 같은 실수를 반복해서 통과시킬 수 있습니다.",
+      },
+      {
+        id: "generator-critic-verifier-architecture",
+        sectionId: "critic-architecture",
+        intuition: "다른 사람이 내 답을 채점하는 것과 내가 직접 내 답을 다시 보는 것은 놓치는 지점이 다릅니다.",
+        workedExample: "7B generator의 코드를 70B critic이 다시 채점하면 놓친 오류를 더 잡지만 critic 호출이 token을 한 번 더 씁니다.",
+        boundary: "Generator-verifier는 처음에 놓친 가정을 검증 단계에서도 같은 이유로 놓치기 쉬워, 고위험 effect에는 분리된 critic이나 external ground truth를 병행합니다.",
+      },
+      {
+        id: "plan-execute-verify-loop",
+        sectionId: "plan-execute-verify",
+        intuition: "계획→실행→확인을 매번 거쳐야 다음 계획이 틀린 전제 위에 서지 않습니다.",
+        workedExample: "propose_next_action→execute→verify→update state를 A_a∧A_t∧A_e∧A_b가 모두 통과할 때까지 반복합니다.",
+        boundary: "Verify 단계를 생략하면 한 action의 부분 실패가 다음 plan에 그대로 전제로 들어갑니다.",
+      },
+],
     conceptStages: [
-      { label: "00 oracle", relation: "결정적 검사와 환경 관측을 먼저 통과시킵니다.", concepts: ["layered-agent-verification"] },
-      { label: "01 rubric", relation: "불확실한 품질 판단을 calibration합니다.", concepts: ["layered-agent-verification"] },
-      { label: "02 effect", relation: "Trajectory·effect·budget을 독립 gate로 둡니다.", concepts: ["agent-trajectory-effect-evaluation"] },
-      { label: "03 release", relation: "회귀 fixture와 사람 승인을 결합합니다.", concepts: ["layered-agent-verification", "agent-trajectory-effect-evaluation"] },
+      { label: "00 truth source", relation: "External ground truth와 semantic verifier를 진실이 오는 곳으로 구분합니다.", concepts: ["external-ground-truth-vs-semantic-verifier"] },
+      { label: "01 layers", relation: "확실한 검사부터 rubric judge·human review까지 쌓습니다.", concepts: ["layered-agent-verification"] },
+      { label: "02 critic architecture", relation: "Critic이 분리된 model인지 generator 자신인지로 신뢰 범위를 정합니다.", concepts: ["generator-critic-verifier-architecture"] },
+      { label: "03 effect", relation: "Trajectory·effect·budget을 독립 gate로 둡니다.", concepts: ["agent-trajectory-effect-evaluation"] },
+      { label: "04 loop", relation: "Plan→execute→verify를 반복해 다음 plan의 전제를 지킵니다.", concepts: ["plan-execute-verify-loop"] },
+      { label: "05 release", relation: "회귀 fixture와 사람 승인을 결합합니다.", concepts: ["layered-agent-verification", "agent-trajectory-effect-evaluation"] },
     ],
     exercises: [
       { level: "basic", question: "Typecheck·Playwright·design rubric·배포 승인을 네 검증층에 배치하세요.", answerChecklist: ["deterministic", "environment", "rubric", "human"], requiredConcepts: ["layered-agent-verification"], sectionId: "overview" },
       { level: "basic", question: "확실한 검사를 먼저 실행하는 이유를 설명하세요.", answerChecklist: ["cheap", "deterministic", "early rejection", "judge budget"], requiredConcepts: ["layered-agent-verification"], sectionId: "overview" },
+      { level: "basic", question: "External ground truth와 semantic verifier를 구분하는 기준을 설명하세요. Compiler feedback·test-based verification·runtime feedback이 같은 범주인 이유도 함께 쓰세요.", answerChecklist: ["외부에서 확정", "해석 없음", "의미 판단", "채점자마다 흔들림"], requiredConcepts: ["external-ground-truth-vs-semantic-verifier"], sectionId: "verifier-truth-source" },
+      { level: "basic", question: "Generator-critic과 generator-verifier 구조를 구분하세요.", answerChecklist: ["분리된 model", "같은 model", "추가 호출 비용", "같은 맹점 반복"], requiredConcepts: ["generator-critic-verifier-architecture"], sectionId: "critic-architecture" },
       { level: "basic", question: "Artifact와 trajectory gate를 구분하세요.", answerChecklist: ["final result", "allowed path", "tool calls", "both required"], requiredConcepts: ["agent-trajectory-effect-evaluation"], sectionId: "trajectory-effect" },
-      { level: "basic", question: "Effect receipt가 필요한 외부 작업 예를 드세요.", answerChecklist: ["resource identity", "operation ID", "state", "count"], requiredConcepts: ["agent-trajectory-effect-evaluation"], sectionId: "trajectory-effect" },
-      { level: "basic", question: "Budget gate의 네 항목을 정하세요.", answerChecklist: ["token", "tool calls", "time", "retry"], requiredConcepts: ["agent-trajectory-effect-evaluation"], sectionId: "trajectory-effect" },
-      { level: "basic", question: "운영 trace를 regression fixture로 바꾸세요.", answerChecklist: ["input", "observable calls", "artifact", "receipts", "metrics"], requiredConcepts: ["layered-agent-verification"], sectionId: "regression" },
+      { level: "basic", question: "Plan-execute-verify loop의 네 단계를 순서대로 쓰세요.", answerChecklist: ["plan", "execute", "verify", "update state"], requiredConcepts: ["plan-execute-verify-loop"], sectionId: "plan-execute-verify" },
       { level: "advanced", question: "좋은 artifact가 secret 전송 실패를 상쇄하지 못하게 설계하세요.", answerChecklist: ["AND semantics", "trajectory fail", "effect fail", "overall reject"], requiredConcepts: ["agent-trajectory-effect-evaluation"], sectionId: "trajectory-effect" },
-      { level: "advanced", question: "Worker와 judge가 같은 오류를 공유하는 fixture를 만드세요.", answerChecklist: ["shared bias", "false pass", "independent oracle", "human label"], requiredConcepts: ["layered-agent-verification"], sectionId: "release" },
-      { level: "advanced", question: "Judge upgrade를 calibration하고 rollback하세요.", answerChecklist: ["version", "blind set", "human labels", "threshold", "rollback"], requiredConcepts: ["layered-agent-verification"], sectionId: "release" },
+      { level: "advanced", question: "고위험 effect에서 generator-verifier만으로는 부족한 이유와 대안을 설계하세요.", answerChecklist: ["같은 맹점", "분리된 critic", "external ground truth 교차확인", "human checkpoint"], requiredConcepts: ["generator-critic-verifier-architecture", "external-ground-truth-vs-semantic-verifier"], sectionId: "critic-architecture" },
+      { level: "advanced", question: "Verify 단계를 생략한 plan-execute loop의 실패 전파를 설명하고 고치세요.", answerChecklist: ["부분 실패", "다음 plan 전제", "verify 삽입", "budget 종료 시 checkpoint"], requiredConcepts: ["plan-execute-verify-loop"], sectionId: "plan-execute-verify" },
       { level: "advanced", question: "High-risk effect에 필요한 독립 증거를 설계하세요.", answerChecklist: ["deterministic invariant", "external receipt", "approval", "replay", "escalation"], requiredConcepts: ["layered-agent-verification", "agent-trajectory-effect-evaluation"], sectionId: "release" },
     ],
     papers: [],
@@ -25051,27 +24905,36 @@ export const ARTICLE_LEARNING: Readonly<
     introducedHere: [
       { id: "workflow-agent-checkpoint-boundary", role: "경로 불확실성과 effect 위험에 맞는 제어 주체를 고릅니다." },
       { id: "loop-timescale-authority-separation", role: "Run 행동과 harness 개선의 주기·권한을 분리합니다." },
-    ],
+      { id: "blast-radius-least-privilege-boundary", role: "Checkpoint를 놓쳐도 피해가 넘어가지 않을 반경을 least privilege로 미리 좁힙니다." },
+],
     conceptExplanations: [
       { id: "workflow-agent-checkpoint-boundary", sectionId: "overview", intuition: "정해진 철도·현장 탐색·국경 검문소를 같은 운행 방식으로 다루지 않습니다.", workedExample: "Source 탐색은 agent, build는 workflow, production deploy는 approval checkpoint가 맡습니다.", boundary: "Agent나 graph가 workflow보다 높은 성숙도라는 뜻이 아닙니다." },
       { id: "loop-timescale-authority-separation", sectionId: "loop-authority", intuition: "한 경기의 작전과 시즌 규칙 변경을 같은 선수가 즉시 결정하지 않습니다.", workedExample: "Run loop는 bounded tool action을, 개선 loop는 여러 trace·review·canary를 다룹니다.", boundary: "Judge feedback 하나가 global harness를 즉시 바꾸면 안 됩니다." },
-    ],
+      {
+        id: "blast-radius-least-privilege-boundary",
+        sectionId: "blast-radius",
+        intuition: "한 action이 잘못됐을 때 번질 수 있는 최대 범위를 먼저 정하고, least privilege로 그 범위 자체를 좁혀 둡니다.",
+        workedExample: "Project 전체 write 권한 대신 이번 release의 target·revision만 write 가능한 scoped credential을 주면 실수의 반경이 release 1건으로 줄어듭니다.",
+        boundary: "Least privilege가 blast radius를 0으로 만들지는 않으며, 좁은 권한 안의 effect도 receipt·rollback 경로가 없으면 되돌릴 수 없습니다.",
+      },
+],
     conceptStages: [
       { label: "00 route", relation: "경로 불확실성으로 workflow와 agent를 고릅니다.", concepts: ["workflow-agent-checkpoint-boundary"] },
       { label: "01 risk", relation: "되돌리기 어려운 effect 앞에 checkpoint를 둡니다.", concepts: ["workflow-agent-checkpoint-boundary"] },
-      { label: "02 run loop", relation: "한 run의 budget·capability 안에서 행동합니다.", concepts: ["loop-timescale-authority-separation"] },
-      { label: "03 improve", relation: "여러 trace로 harness 변경을 검토·canary합니다.", concepts: ["loop-timescale-authority-separation"] },
+      { label: "02 blast radius", relation: "Checkpoint 위치를 실패 영향 범위와 least privilege로 정합니다.", concepts: ["blast-radius-least-privilege-boundary"] },
+      { label: "03 run loop", relation: "한 run의 budget·capability 안에서 행동합니다.", concepts: ["loop-timescale-authority-separation"] },
+      { label: "04 improve", relation: "여러 trace로 harness 변경을 검토·canary합니다.", concepts: ["loop-timescale-authority-separation"] },
     ],
     exercises: [
       { level: "basic", question: "자료 조사·build·production deploy를 세 제어 형태에 배치하세요.", answerChecklist: ["agent", "workflow", "checkpoint", "reason"], requiredConcepts: ["workflow-agent-checkpoint-boundary"], sectionId: "overview" },
       { level: "basic", question: "Workflow와 agent의 차이를 설명하세요.", answerChecklist: ["predefined path", "model-directed path", "not maturity", "hybrid"], requiredConcepts: ["workflow-agent-checkpoint-boundary"], sectionId: "overview" },
       { level: "basic", question: "낮은 불확실성·낮은 위험 작업의 제어를 고르세요.", answerChecklist: ["workflow", "fixed steps", "deterministic checks", "no needless agent"], requiredConcepts: ["workflow-agent-checkpoint-boundary"], sectionId: "selection" },
-      { level: "basic", question: "높은 불확실성·낮은 위험 작업의 제어를 고르세요.", answerChecklist: ["bounded agent", "exploration", "budget", "observation"], requiredConcepts: ["workflow-agent-checkpoint-boundary"], sectionId: "selection" },
+      { level: "basic", question: "Blast radius와 least privilege의 관계를 설명하세요.", answerChecklist: ["실패 영향 범위", "권한을 최소로 부여", "반경 축소", "checkpoint와 별개"], requiredConcepts: ["blast-radius-least-privilege-boundary"], sectionId: "blast-radius" },
       { level: "basic", question: "높은 위험 action에 필요한 checkpoint를 쓰세요.", answerChecklist: ["target diff", "fresh approval", "receipt", "rollback"], requiredConcepts: ["workflow-agent-checkpoint-boundary"], sectionId: "selection" },
       { level: "basic", question: "Run loop와 harness 개선 loop를 구분하세요.", answerChecklist: ["single run", "multi-run sample", "different budget", "different authority"], requiredConcepts: ["loop-timescale-authority-separation"], sectionId: "loop-authority" },
       { level: "advanced", question: "높은 불확실성·높은 위험 배포 흐름을 설계하세요.", answerChecklist: ["sandbox exploration", "candidate artifact", "deterministic gate", "human approval", "receipt"], requiredConcepts: ["workflow-agent-checkpoint-boundary"], sectionId: "selection" },
+      { level: "advanced", question: "Project 전체 write 권한을 scoped credential로 좁혀 blast radius를 줄이세요.", answerChecklist: ["scoped credential", "target·revision만", "실수 반경 축소", "receipt·rollback 유지"], requiredConcepts: ["blast-radius-least-privilege-boundary"], sectionId: "blast-radius" },
       { level: "advanced", question: "Judge feedback poisoning이 global skill로 퍼지는 경로를 막으세요.", answerChecklist: ["quarantine", "multiple traces", "review", "canary", "rollback"], requiredConcepts: ["loop-timescale-authority-separation"], sectionId: "loop-authority" },
-      { level: "advanced", question: "모든 단계를 agent graph로 고정한 과설계를 단순화하세요.", answerChecklist: ["fixed steps to workflow", "semantic branch only", "risk checkpoint", "compare baseline"], requiredConcepts: ["workflow-agent-checkpoint-boundary"], sectionId: "paper-loop-control" },
       { level: "advanced", question: "Harness 변경의 release contract를 작성하세요.", answerChecklist: ["version", "representative traces", "review", "canary", "rollback trigger"], requiredConcepts: ["loop-timescale-authority-separation"], sectionId: "paper-loop-control" },
     ],
     papers: [
@@ -31398,15 +31261,57 @@ export const ARTICLE_LEARNING: Readonly<
     introducedHere: [
       { id: "working-state-long-term-memory-boundary", role: "현재 run state와 session 간 재사용 memory를 수명·동의·삭제로 구분합니다." },
       { id: "context-compaction-fidelity", role: "Summary가 다음 행동을 바꾸는 state를 원 trace와 같은 값·source로 복원하는지 측정합니다." },
-    ],
+      { id: "episodic-semantic-procedural-memory-types", role: "저장 기간 축과 별개로 기억 내용을 episodic·semantic·procedural 세 종류로 나누는 축을 추가합니다." },
+      { id: "agent-memory-write-retrieval-consolidation-lifecycle", role: "Write→retrieval→consolidation 순서로 기억이 쌓이는 실행 파이프라인을 고정합니다." },
+      { id: "memory-compression-vs-forgetting", role: "요약해 남기는 compression과 완전히 지우는 forgetting을 다른 gate로 구분합니다." },
+      { id: "memory-salience-scoring", role: "Recency·importance·relevance 가중합으로 어떤 기억이 남을지 정하는 salience score를 도입합니다." },
+      { id: "memory-contamination-and-grounding", role: "오염된 기억이 판단을 왜곡하는 위험과 source로 되짚어 검증하는 grounding을 짝으로 고정합니다." },
+],
     conceptExplanations: [
       { id: "working-state-long-term-memory-boundary", sectionId: "overview", intuition: "오늘 할 일과 여러 달 재사용할 사용자 선호, 긴 원문 log, 반복 절차를 같은 서랍에 영구 보관하지 않습니다.", workedExample: "현재 migration의 failed test는 working state, 동의된 언어 선호는 long-term memory, stdout은 artifact, build 절차는 versioned procedure입니다.", boundary: "Model 안에 자동으로 생기는 인간식 장기 기억이 아니며 source·동의·expiry·update·delete·tenant isolation이 필요합니다." },
       { id: "context-compaction-fidelity", sectionId: "compaction", intuition: "긴 일지를 줄여도 다음 작업자가 결정을 뒤집지 않게 objective·reason·unresolved·artifact·next action을 보존합니다.", workedExample: "50개 tool 원문은 URI·digest로 옮기고 6개 필수 state key 중 4개만 정확히 복원되면 fidelity는 4/6입니다.", boundary: "요약 문장이 자연스럽거나 짧다는 것과 state가 충실하다는 것은 다르며 already-executed effect도 별도 보존해야 합니다." },
-    ],
+      {
+        id: "episodic-semantic-procedural-memory-types",
+        sectionId: "memory-types",
+        intuition: "오늘 무슨 일이 있었는지, 무엇이 사실인지, 어떻게 하는지를 같은 서랍에 넣지 않고 내용 종류로 나눕니다.",
+        workedExample: "지난주 결제 실패 사건은 episodic, ‘한국어를 선호한다’는 semantic, 배포 5단계 순서는 procedural입니다.",
+        boundary: "이 축은 working state·long-term memory라는 수명 축과 독립적이며, 수명 분류를 대체하지 않습니다.",
+      },
+      {
+        id: "agent-memory-write-retrieval-consolidation-lifecycle",
+        sectionId: "lifecycle",
+        intuition: "언제 적을지, 언제 다시 꺼낼지, 언제 오래 남길지를 한 순서로 고정해 기억이 무작위로 쌓이지 않게 합니다.",
+        workedExample: "하루 12개 사건을 write하고, 다음 session에서 query와 관련 있는 top-5만 retrieve하며, 그중 반복 언급된 2개만 consolidate합니다.",
+        boundary: "이 파이프라인은 compaction과 다른 층위이며, 한 run 안의 state 압축이 아니라 여러 session에 걸친 장기 통합을 다룹니다.",
+      },
+      {
+        id: "memory-compression-vs-forgetting",
+        sectionId: "lifecycle",
+        intuition: "압축은 줄여서라도 흔적을 남기고, forgetting은 흔적 자체를 없앱니다.",
+        workedExample: "tool log 100개를 20개 요약 문장으로 압축하거나, 만료된 기억 5건을 완전히 삭제합니다.",
+        boundary: "Forgetting 대상은 expiry·동의 철회처럼 되돌릴 필요가 없는 항목으로 좁혀야 하며, 압축된 기억과 달리 재검증할 원문이 남지 않습니다.",
+      },
+      {
+        id: "memory-salience-scoring",
+        sectionId: "salience-integrity",
+        intuition: "최근에 봤는지, 중요한지, 지금 상황과 관련 있는지를 각각 점수로 매겨 더한 값으로 우선순위를 정합니다.",
+        workedExample: "recency=0.9·importance=0.2·relevance=0.1이면 합은 1.2로, 세 값이 모두 높은 다른 기억(2.5)보다 밀립니다.",
+        boundary: "가중치는 구현마다 다르게 둘 수 있으며, Generative Agents 논문 구현은 세 가중치를 모두 1로 둔 조건일 뿐입니다.",
+      },
+      {
+        id: "memory-contamination-and-grounding",
+        sectionId: "salience-integrity",
+        intuition: "틀린 정보가 한 번 기억에 섞이면 이후 판단마다 계속 잘못 참조되므로, 기억이 어디서 왔는지 되짚을 수 있어야 합니다.",
+        workedExample: "잘못 말한 예산 100만원이 semantic memory로 저장되면 이후 세 번의 추천이 모두 그 값을 참조합니다.",
+        boundary: "Grounding은 source·turn id·문서 존재 여부만 확인하며, 그 source 내용 자체가 최신이거나 옳다는 것까지 보장하지는 않습니다.",
+      },
+],
     conceptStages: [
-      { label: "Classify", relation: "Working state·memory·artifact·procedure를 수명으로 분류", concepts: ["working-state-long-term-memory-boundary"] },
+      { label: "Classify", relation: "Working state·memory·artifact·procedure를 수명으로, episodic·semantic·procedural을 내용 종류로 분류", concepts: ["working-state-long-term-memory-boundary", "episodic-semantic-procedural-memory-types"] },
       { label: "Govern", relation: "Owner·source·consent·expiry·delete path 부착", concepts: ["context-source-provenance-freshness", "working-state-long-term-memory-boundary"] },
+      { label: "Lifecycle", relation: "Write→retrieval→consolidation 순서로 기억을 쌓고, 낮은 우선순위는 compression·forgetting으로 줄임", concepts: ["agent-memory-write-retrieval-consolidation-lifecycle", "memory-compression-vs-forgetting"] },
       { label: "Compact", relation: "필수 state schema와 artifact receipt 보존", concepts: ["working-state-long-term-memory-boundary", "context-compaction-fidelity"] },
+      { label: "Integrity", relation: "Salience score로 남을 기억을 정하고 contamination·grounding으로 신뢰성을 검사", concepts: ["memory-salience-scoring", "memory-contamination-and-grounding"] },
       { label: "Resume", relation: "새 context에서 원 trace와 next action replay", concepts: ["context-compaction-fidelity"] },
     ],
     exercises: [
@@ -31424,7 +31329,9 @@ export const ARTICLE_LEARNING: Readonly<
     papers: [
       { title: "MemGPT: Towards LLMs as Operating Systems", href: "https://arxiv.org/abs/2310.08560", problem: "고정 context window를 넘는 document와 multi-session state를 필요할 때 사용할 수 있게 관리하는 문제", contribution: "OS memory hierarchy에서 영감을 받은 virtual context management와 tier 이동을 제안", assumptions: "논문의 model·memory implementation·document analysis·chat evaluation", evidenceScope: "MemGPT system과 공개 task의 extended-context management", notClaim: "외부 memory가 무제한·무손실 인간 기억이 되거나 모든 agent에서 같은 성능을 보장한다는 뜻은 아님", sectionId: "paper-memgpt" },
       { title: "Anthropic — Managing context on the Claude Developer Platform", href: "https://claude.com/blog/context-management", problem: "긴 agent run에서 stale tool result와 durable note가 context를 잠식하는 문제", contribution: "Context editing과 client-side file memory tool의 product boundary와 내부 evaluation을 설명", assumptions: "공개 시점의 Claude product·model·agentic-search 조건", evidenceScope: "Anthropic platform의 context-management 기능과 측정", notClaim: "모든 model·workload에서 같은 compaction 성능이 보장된다는 뜻은 아님", sectionId: "paper-anthropic-context-management" },
-    ],
+      { title: "Generative Agents: Interactive Simulacra of Human Behavior", href: "https://arxiv.org/abs/2304.03442", problem: "여러 agent가 오래 상호작용할 때 어떤 기억을 저장하고 언제 다시 불러올지 정하는 문제", contribution: "Memory stream과 recency·importance·relevance 가중합 salience scoring, retrieval, reflection을 결합한 architecture를 제시", assumptions: "논문의 sandbox 환경·agent 수·model 조건", evidenceScope: "해당 sandbox 실험에서 관측한 believability·memory retrieval 행동", notClaim: "다른 model·workload·agent 규모에서 같은 가중치·성능이 재현된다는 보장은 아님", sectionId: "paper-generative-agents" },
+      { title: "Cognitive Architectures for Language Agents", href: "https://arxiv.org/abs/2309.02427", problem: "Language agent의 memory·action·decision을 흩어진 구현이 아니라 공통 인지구조로 설명하는 문제", contribution: "Working·episodic·semantic·procedural memory 구분을 language agent에 대응시킨 CoALA framework를 제안", assumptions: "논문이 조사한 공개 agent 구현과 저자들의 framework 정의", evidenceScope: "여러 기존 agent 시스템을 framework로 재해석한 conceptual survey 범위", notClaim: "이 구분을 채택하면 성능이 개선된다는 실험적 주장은 아님", sectionId: "paper-coala" },
+],
   },
   "ai/context-window-optimization": {
     entryLevel: true,
@@ -67188,6 +67095,659 @@ export const ARTICLE_LEARNING: Readonly<
         evidenceScope: "저자 자기보고 실험이며 ICLR 2024 발표 기준입니다.",
         notClaim: "32×32 bin 해상도의 양자화 오차가 모든 downstream grounding task에서 무시할 수준이라는 뜻은 아닙니다.",
         sectionId: "paper-kosmos2",
+      },
+    ],
+  },
+  "ai/synthetic-data-and-data-flywheel": {
+    entryNote:
+      "Teacher가 student에 신호를 전달하는 distillation loss 자체나 GRPO 같은 on-policy RL update는 이미 안다고 가정하지 않습니다. 대신 그 학습에 쓸 후보 데이터를 어떻게 만들고 거르고 다음 라운드로 되먹임하는지, 즉 학습 이전 단계에만 집중합니다.",
+    coreIdea:
+      "합성 데이터는 teacher-generated·self-generated 두 축으로 생성되고, best-of-N 후보를 verifier·model이 채점해 quality threshold를 넘는 것만 남기며, 남은 문제는 difficulty estimation으로 난이도를 재 curriculum sampling으로 순서를 정하고, 학습된 모델이 다시 만든 실패·성공 trajectory가 hard-example mining을 거쳐 다음 라운드 seed pool로 되돌아가는 data flywheel을 이룹니다.",
+    assumedKnowledge: [
+      { id: "sft", role: "합성 데이터가 최종적으로 어떤 학습 단계의 대상이 되는지를 재사용합니다." },
+      { id: "best-of-n-verifier-selection", role: "추론 시점에 verifier 점수로 후보 하나를 고르는 기존 절차를 데이터 생성 맥락으로 확장하는 출발점입니다." },
+      { id: "reasoning-data-lineage", role: "Source·checkpoint·verifier·filter 결과를 연결하는 provenance를 flywheel의 라운드 추적에 재사용합니다." },
+      { id: "train-validation-test", role: "모델 성능을 재는 held-out 평가와 curriculum sampling에 넣을 문제 pool의 난이도 측정을 구분합니다." },
+    ],
+    introducedHere: [
+      { id: "synthetic-data-generation-sources", role: "Teacher-generated·self-generated 축과 Self-Instruct·Evol-Instruct 절차를 정의합니다." },
+      { id: "best-of-n-data-generation-and-filtering", role: "Best-of-N 생성 후보를 verifier·model로 채점해 quality threshold로 거르는 절차를 정의합니다." },
+      { id: "difficulty-based-curriculum-sampling", role: "Pass rate 기반 난이도 추정·필터링과 curriculum sampling을 정의합니다." },
+      { id: "failure-and-success-trajectory-mining", role: "실패·hard-example·성공·실패 trajectory 네 수집 방법을 구분합니다." },
+      { id: "data-flywheel-and-feedback-loop", role: "생성·필터·학습·수집이 다시 seed로 되먹임되는 순환 구조를 정의합니다." },
+    ],
+    conceptExplanations: [
+      {
+        id: "synthetic-data-generation-sources",
+        sectionId: "generation-sources",
+        intuition: "선생님이 만든 문제집을 그대로 쓰는 것과, 학생이 자기 문제를 스스로 늘려 가며 푸는 것의 차이와 같습니다.",
+        workedExample: "Self-Instruct는 175개 seed task를 4단계 bootstrap으로 52,445개 instruction, 82,439개 instance로 늘립니다.",
+        boundary: "생성된 문자열을 어떤 loss로 student에 전달할지는 이 개념의 범위가 아니라 knowledge-distillation 글의 범위입니다.",
+      },
+      {
+        id: "best-of-n-data-generation-and-filtering",
+        sectionId: "verifier-filtering",
+        intuition: "같은 문제를 여러 번 풀게 한 뒤 채점해서 맞은 답만 골라 다음 학습 교재로 쓰는 것과 같습니다.",
+        workedExample: "RFT는 문제당 k=100개 reasoning path를 생성해 정답 불일치·중복을 제거한 뒤 약 10만 개 샘플로 GSM8K 정확도를 35.9%→49.3%로 올렸습니다.",
+        boundary: "답 하나를 즉시 채택하는 추론 시점 best-of-N 선택과 달리, 이 절차는 threshold를 넘는 후보 여러 개를 나중에 쓸 데이터로 저장·중복제거하는 별도 비용이 듭니다.",
+      },
+      {
+        id: "difficulty-based-curriculum-sampling",
+        sectionId: "difficulty-curriculum",
+        intuition: "이미 다 맞히는 문제나 전혀 못 맞히는 문제를 빼고, 반반 정도 맞히는 문제 위주로 연습하는 것과 같습니다.",
+        workedExample: "문제당 k=8개 생성 시 pass rate 0/8과 8/8은 curriculum에서 빼고, 3/8(37.5%) 같은 중간 난이도 문제에 더 높은 가중치를 줍니다.",
+        boundary: "Pass rate를 재려면 매 라운드 checkpoint로 다시 여러 번 굴려야 하므로, 이 추정 자체가 데이터 생성보다 더 비싼 추론 비용을 요구합니다.",
+      },
+      {
+        id: "failure-and-success-trajectory-mining",
+        sectionId: "trajectory-mining",
+        intuition: "시험에서 틀린 문제 위주로 오답 노트를 만들어 다음 공부에 쓰는 것과 비슷하지만, 여기서는 모델이 스스로 오답 노트를 만듭니다.",
+        workedExample: "Arena Learning의 WizardArena는 배틀에서 진 사례만 골라 다음 SFT·RL 라운드 데이터로 재사용해 WizardLM-2를 개선했습니다.",
+        boundary: "성공 trajectory만 모으면 이미 잘하는 문제만 반복 강화되므로, 실패·hard-example 수집이 함께 있어야 다음 라운드 데이터의 난이도 분포가 실제로 바뀝니다.",
+      },
+      {
+        id: "data-flywheel-and-feedback-loop",
+        sectionId: "flywheel-loop",
+        intuition: "자전거 페달을 밟을수록 바퀴가 저절로 더 잘 돌듯, 라운드가 돌수록 다음 라운드 데이터가 더 정교해지는 순환입니다.",
+        workedExample: "NVIDIA는 이를 'AI 상호작용에서 수집한 데이터로 모델을 계속 다듬어 더 나은 결과와 더 가치 있는 데이터를 만드는 self-improving loop'로 정의합니다.",
+        boundary: "초기 모델이 너무 약하면 pass rate가 모두 0%에 가까워 verifier 신호 자체가 없어 loop가 시작되지 않고, teacher 없이 혼자 도는 loop는 편향을 증폭시킬 수 있어 독립적인 정지 기준이 필요합니다.",
+      },
+    ],
+    conceptStages: [
+      { label: "00 생성 소스", relation: "Teacher-generated·self-generated 데이터를 만드는 절차입니다.", concepts: ["synthetic-data-generation-sources"] },
+      { label: "01 verifier·model 필터링", relation: "생성된 후보를 채점해 상위만 남깁니다.", concepts: ["best-of-n-data-generation-and-filtering"] },
+      { label: "02 난이도 curriculum", relation: "남은 문제를 난이도로 걸러 순서를 정합니다.", concepts: ["difficulty-based-curriculum-sampling"] },
+      { label: "03 trajectory mining", relation: "학습된 모델의 실패·성공 사례를 수집합니다.", concepts: ["failure-and-success-trajectory-mining"] },
+      { label: "04 flywheel", relation: "수집된 데이터가 다음 seed로 되먹임되는 순환입니다.", concepts: ["data-flywheel-and-feedback-loop"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Teacher-generated data와 self-generated data의 차이를 생성 주체 기준으로 설명하세요.", answerChecklist: ["teacher는 더 강한 별도 model", "self-generated는 학습 대상 자신이나 같은 계열", "필터링 없이 재학습하면 편향이 반복될 수 있음"], requiredConcepts: ["synthetic-data-generation-sources"], sectionId: "generation-sources" },
+      { level: "basic", question: "Self-Instruct가 175개 seed task를 52,445개 instruction으로 늘리는 절차를 4단계로 쓰세요.", answerChecklist: ["instruction generation", "classification task 식별", "instance generation", "filtering(ROUGE-L<0.7)"], requiredConcepts: ["synthetic-data-generation-sources"], sectionId: "generation-sources" },
+      { level: "basic", question: "Verifier-filtered data와 model-filtered data가 언제 각각 쓰이는지 예를 들어 설명하세요.", answerChecklist: ["verifier는 정답 규칙이 있는 경우(수학·코드)", "model filtering은 규칙이 없는 열린 작업", "judge model의 오차를 물려받는 한계"], requiredConcepts: ["best-of-n-data-generation-and-filtering"], sectionId: "verifier-filtering" },
+      { level: "basic", question: "Difficulty filtering이 pass rate 0%·100% 문제를 curriculum에서 빼는 이유를 쓰세요.", answerChecklist: ["100%는 이미 쉬운 문제", "0%는 verifier 신호 자체가 없음", "중간 난이도가 학습에 더 유용"], requiredConcepts: ["difficulty-based-curriculum-sampling"], sectionId: "difficulty-curriculum" },
+      { level: "basic", question: "Hard-example mining과 success trajectory mining의 수집 기준 차이를 쓰세요.", answerChecklist: ["hard-example은 pass rate 낮은 문제 우선", "success trajectory는 verifier 통과 사례", "success만 모으면 이미 잘하는 문제만 반복"], requiredConcepts: ["failure-and-success-trajectory-mining"], sectionId: "trajectory-mining" },
+      { level: "basic", question: "Data flywheel에서 feedback data가 다음 라운드의 무엇이 되는지 쓰세요.", answerChecklist: ["실패·성공 trajectory", "다음 seed pool", "라운드마다 반복"], requiredConcepts: ["data-flywheel-and-feedback-loop"], sectionId: "flywheel-loop" },
+      { level: "advanced", question: "Best-of-N data generation과 추론 시점 best-of-N verifier selection이 같은 채점 구조를 쓰면서도 왜 다른 병목을 갖는지 설명하세요.", answerChecklist: ["추론 시점은 답 하나 채택", "데이터 생성은 threshold 넘는 후보 다수를 보존", "저장·dedup이라는 새 비용"], requiredConcepts: ["best-of-n-data-generation-and-filtering"], sectionId: "verifier-filtering" },
+      { level: "advanced", question: "pass@k 식에서 n을 늘렸을 때 verifier 통과 확률과 필터링 비용이 각각 어떻게 변하는지 설명하세요.", answerChecklist: ["n이 커지면 통과 확률은 단조 증가", "채점·저장 비용도 함께 증가", "식 자체는 통과 확률만 알려주고 남는 데이터 양은 별도"], requiredConcepts: ["best-of-n-data-generation-and-filtering"], sectionId: "verifier-filtering" },
+      { level: "advanced", question: "초기 모델이 너무 약할 때 data flywheel이 시작되지 않는 이유를 difficulty filtering과 연결해 설명하세요.", answerChecklist: ["모든 문제 pass rate가 0%에 가까움", "difficulty filtering이 전부 제외", "curriculum에 남는 데이터가 사라짐"], requiredConcepts: ["data-flywheel-and-feedback-loop", "difficulty-based-curriculum-sampling"], sectionId: "flywheel-loop" },
+      { level: "advanced", question: "Success trajectory mining만 반복할 때 data flywheel이 정체되는 이유와 hard-example mining이 그 문제를 어떻게 푸는지 설명하세요.", answerChecklist: ["성공 사례만 쌓이면 쉬운 영역만 강화", "생성 분포가 바뀌지 않음", "hard-example이 다음 seed로 들어가야 난이도 분포가 바뀜"], requiredConcepts: ["failure-and-success-trajectory-mining", "data-flywheel-and-feedback-loop"], sectionId: "trajectory-mining" },
+    ],
+    papers: [
+      {
+        title: "Wang, Kordi, Mishra, Liu, Smith, Khashabi, Hajishirzi · Self-Instruct: Aligning Language Models with Self-Generated Instructions (2022)",
+        href: "https://arxiv.org/abs/2212.10560",
+        problem: "사람이 쓴 instruction-tuning 데이터를 대량으로 만드는 비용이 너무 크다는 문제",
+        contribution: "175개 seed task에서 instruction generation·classification 판별·instance generation·filtering 4단계를 bootstrap해 52,445개 instruction, 82,439개 instance를 생성하는 절차를 제안합니다.",
+        assumptions: "GPT-3 같은 충분히 능력 있는 base model이 instruction·instance를 생성할 수 있다는 전제입니다.",
+        evidenceScope: "저자 자기보고 실험이며 Super-NaturalInstructions 평가 기준입니다.",
+        notClaim: "생성된 데이터가 사람이 작성한 고품질 데이터와 모든 면에서 동등하다는 뜻은 아닙니다.",
+        sectionId: "paper-self-instruct",
+      },
+      {
+        title: "Xu, Sun, Zheng, Geng, Zhao, Lin, Jiang · WizardLM: Empowering Large Language Models to Follow Complex Instructions (2023)",
+        href: "https://arxiv.org/abs/2304.12244",
+        problem: "고정된 seed instruction만으로는 instruction의 난이도·다양성이 한정된다는 문제",
+        contribution: "In-Depth Evolving(제약 추가·deepening·concretizing·추론 단계 증가·입력 확장)과 In-Breadth Evolving으로 instruction을 반복 진화시키고 Elimination Evolving으로 저품질 결과를 거르는 Evol-Instruct를 제안합니다.",
+        assumptions: "진화를 수행하는 LLM이 원 instruction의 의도를 유지한 채 난이도만 높일 수 있다는 전제입니다.",
+        evidenceScope: "저자 자기보고 실험이며 사람 평가와 AlpacaEval·MT-Bench 등 벤치마크 기준입니다.",
+        notClaim: "250,000개로 늘어난 데이터 전체가 사람이 검수한 것과 같은 정확성을 갖는다는 뜻은 아닙니다.",
+        sectionId: "paper-evol-instruct",
+      },
+      {
+        title: "Yuan, Yuan, Li, Dong, Lu, Tan, Zhou, Zhou · Scaling Relationship on Learning Mathematical Reasoning with Large Language Models (2023)",
+        href: "https://arxiv.org/abs/2308.01825",
+        problem: "수학 reasoning 학습에서 정답률이 높은 augmented 데이터를 어떻게 효율적으로 모을지의 문제",
+        contribution: "문제당 k개 reasoning path를 생성해 정답 불일치·계산 오류를 verifier로 제거하고 방정식 리스트 기준 중복을 제거하는 rejection sampling fine-tuning(RFT)을 제안합니다.",
+        assumptions: "Python으로 계산을 검증할 수 있는 수학 문제라는 전제이며 검증 규칙이 없는 열린 작업에는 그대로 적용되지 않습니다.",
+        evidenceScope: "저자 자기보고 실험이며 GSM8K 등 수학 벤치마크 기준입니다.",
+        notClaim: "k=100 같은 큰 샘플 수가 모든 모델 크기·문제 난이도에서 같은 폭의 개선을 낸다는 뜻은 아닙니다.",
+        sectionId: "paper-rft",
+      },
+      {
+        title: "Chen, Tworek, Jun, Yuan, Pinto et al. · Evaluating Large Language Models Trained on Code (2021)",
+        href: "https://arxiv.org/abs/2107.03374",
+        problem: "적은 샘플만으로 pass@k를 추정하면 분산이 커 정확한 비교가 어렵다는 문제",
+        contribution: "문제당 n개 샘플을 생성하고 정답 개수 c를 확인한 뒤 조합으로 계산하는 pass@k 불편추정량을 제시합니다.",
+        assumptions: "n개 샘플이 서로 독립적으로 생성되고 verifier가 정답 여부를 정확히 판정한다는 전제입니다.",
+        evidenceScope: "저자 자기보고 실험이며 코드 생성 벤치마크(HumanEval) 기준입니다.",
+        notClaim: "이 추정량이 verifier 자체의 오판정 오류까지 보정해 준다는 뜻은 아닙니다.",
+        sectionId: "paper-codex-passk",
+      },
+      {
+        title: "NVIDIA · Data Flywheel (공식 용어집)",
+        href: "https://www.nvidia.com/en-us/glossary/data-flywheel/",
+        problem: "여러 산업에서 쓰이는 'data flywheel'이라는 용어를 하나의 공식 정의로 정리할 필요",
+        contribution: "AI data flywheel을 AI 상호작용에서 수집한 데이터로 모델을 계속 다듬어 더 나은 결과와 더 가치 있는 데이터를 만드는 self-improving loop로 정의합니다.",
+        assumptions: "기업이 자체 데이터·모델 커스터마이징 파이프라인을 운영한다는 일반적인 전제입니다.",
+        evidenceScope: "공식 용어집 문서이며 2026-08 시점 게시 내용 기준입니다.",
+        notClaim: "이 정의가 모든 도메인에서 동일한 6단계 구현을 요구한다는 뜻은 아닙니다.",
+        sectionId: "paper-nvidia-flywheel",
+      },
+      {
+        title: "Luo, Suo, Lu, Xu, Chen, Yang, Weng, Cheng, Tao, Zhu, Lin, Jiang · Arena Learning: Build Data Flywheel for LLMs Post-training via Simulated Chatbot Arena (2024)",
+        href: "https://arxiv.org/abs/2407.10627",
+        problem: "사람이 매 라운드 배틀을 심사해 약점을 찾는 방식은 비용이 커 확장하기 어렵다는 문제",
+        contribution: "WizardArena로 여러 model 간 배틀 결과를 AI가 자동 판정해 대상 model이 지는 사례를 다음 SFT·RL 데이터로 재사용하는 data flywheel을 제안합니다.",
+        assumptions: "AI 판정이 사람 심사와 충분히 상관된 순위를 만든다는 전제입니다.",
+        evidenceScope: "저자 자기보고 실험이며 WizardLM-2 개발에 쓰인 사례 기준입니다.",
+        notClaim: "AI 배틀 판정이 모든 안전성·사실성 문제까지 걸러 준다는 뜻은 아닙니다.",
+        sectionId: "paper-arena-learning",
+      },
+    ],
+  },
+  "ai/llm-dataset-engineering-and-cleaning": {
+    entryNote:
+      "Pretraining objective가 다음 token의 negative log-likelihood를 낮추는 loss라는 사실을 안다고 가정합니다. 이 글은 그 loss가 관측하는 데이터 분포, 즉 corpus 자체를 source부터 curriculum까지 어떻게 만드는지에만 집중합니다.",
+    coreIdea:
+      "LLM pretraining corpus는 source를 고르는 data curation에서 시작해, quality 기준으로 문서를 filtering·cleaning·normalization한 뒤, 코퍼스 내부 중복을 near-duplicate·semantic dedup으로 지우고, benchmark와의 겹침을 contamination detection으로 걸러내고, human·model·weak supervision·pseudo-label로 annotation을 붙인 뒤, domain별 data mixture 비율과 data curriculum 순서를 정해 만들어지며, 그 결과는 diversity·coverage·balance로 사후 검증됩니다.",
+    assumedKnowledge: [
+      { id: "autoregressive-pretraining-objective", role: "Pretraining이 다음 token의 negative log-likelihood를 낮추는 objective라는 사실이며, 이 글은 그 objective가 보는 데이터 분포를 만드는 절차만 다룹니다." },
+    ],
+    introducedHere: [
+      { id: "dataset-engineering-pipeline", role: "Source 선택부터 curriculum 배치까지 이어지는 dataset engineering 전체 절차를 정의합니다." },
+      { id: "data-quality-and-cleaning", role: "문서를 남기고 고치고 표준화하는 quality·filtering·cleaning·normalization·canonicalization을 구분합니다." },
+      { id: "deduplication-methods", role: "exact·near-duplicate·semantic 세 층위의 dedup 방법을 정의합니다." },
+      { id: "benchmark-contamination-detection", role: "학습 데이터와 benchmark 사이 겹침을 찾는 절차와 모델별 임계값 차이를 정의합니다." },
+      { id: "annotation-methods", role: "human·model annotation과 weak supervision·pseudo-labeling 네 label 확보 방법을 구분합니다." },
+      { id: "data-mixture-and-curriculum", role: "domain별 비율을 정하는 mixture와 순서를 정하는 curriculum을 정의합니다." },
+      { id: "data-diversity-coverage-balance", role: "mixture·curriculum 결과를 사후 검증하는 diversity·coverage·balance 세 기준을 정의합니다." },
+    ],
+    conceptExplanations: [
+      { id: "dataset-engineering-pipeline", sectionId: "pipeline", intuition: "재료를 고르는 일과 요리 순서를 정하는 일이 다르듯, source 선택과 이후 가공 단계는 서로 다른 층위의 결정입니다.", workedExample: "The Pile은 22개 도메인 subset을 의도적으로 섞어 웹 크롤에는 적은 학술·코드 도메인을 보강한 825GiB 코퍼스를 만들었습니다.", boundary: "Source 선택 단계에서 이미 어떤 도메인을 완전히 배제하면 이후 filtering·mixture로도 그 도메인은 복구되지 않습니다." },
+      { id: "data-quality-and-cleaning", sectionId: "quality", intuition: "불량품을 골라내는 것과 흠집을 고치는 것, 표기를 통일하는 것은 순서가 다른 세 작업입니다.", workedExample: "RefinedWeb은 제대로 필터링·dedup한 웹 데이터만으로 사람이 큐레이션한 The Pile 기반 모델을 능가하는 결과를 보였습니다.", boundary: "규칙 기반 filtering·cleaning은 예상 못한 형식의 문서를 잘못 제거하거나 훼손할 수 있습니다." },
+      { id: "deduplication-methods", sectionId: "dedup-contamination", intuition: "완전히 같은 사본을 찾는 것과, 광고 한 줄만 다른 거의 같은 문서를 찾는 것은 다른 난이도의 문제입니다.", workedExample: "MinHash는 문서를 shingle 집합으로 바꾸고 여러 해시 함수의 최솟값 sketch로 두 문서의 Jaccard 유사도를 선형 시간에 추정합니다.", boundary: "해시 함수 개수를 늘려도 추정 오차가 0이 되지는 않으므로 항상 threshold와 오차 범위를 함께 명시해야 합니다." },
+      { id: "benchmark-contamination-detection", sectionId: "dedup-contamination", intuition: "시험 문제를 미리 본 것과 같은 상태를 학습 데이터 단계에서 미리 걸러내는 절차입니다.", workedExample: "GPT-3는 13-gram 겹침, GPT-4는 50글자 substring 겹침으로 학습 데이터와 benchmark의 중복을 검사합니다.", boundary: "정확 일치 기반 검사는 문장을 바꿔 쓴 rephrasing 유출을 잡아내지 못합니다." },
+      { id: "annotation-methods", sectionId: "annotation", intuition: "누가 답을 붙이느냐(사람·모델)와 답이 없을 때 어떻게 답을 추정하느냐(weak supervision·pseudo-label)는 서로 다른 질문입니다.", workedExample: "ChatGPT는 트윗 annotation 5개 task 중 4개에서 crowd-worker보다 정확했고 비용은 20배 저렴했습니다.", boundary: "특정 task·도메인에서 검증된 model annotation 결과를 다른 task로 그대로 일반화할 수 없습니다." },
+      { id: "data-mixture-and-curriculum", sectionId: "mixture", intuition: "재료 비율을 정하는 것과 그 재료를 넣는 순서를 정하는 것은 다른 결정입니다.", workedExample: "GPT-3는 Common Crawl이 토큰 수로 82%를 차지해도 mixture weight는 60%만 주고, Wikipedia는 1%도 안 되는 토큰 수에 3% weight를 줘 3.4 epoch 오버샘플링합니다.", boundary: "Mixture 비율만 정하고 curriculum 순서를 정하지 않으면 언제 어떤 데이터를 보여줄지는 여전히 미정입니다." },
+      { id: "data-diversity-coverage-balance", sectionId: "mixture", intuition: "다양한 재료를 갖췄는지, 필요한 재료를 빠짐없이 갖췄는지, 그 재료 비율이 한쪽으로 쏠리지 않았는지는 서로 다른 세 질문입니다.", workedExample: "LIMA는 1,000개라는 적은 개수로도 다양한 주제·형식을 갖춘 curation 덕분에 GPT-4와 대등한 평가를 받았습니다.", boundary: "diversity가 높아도 목표 domain의 coverage가 빠지거나 balance가 깨지면 각 문제는 따로 남습니다." },
+    ],
+    conceptStages: [
+      { label: "00 pipeline", relation: "Source를 고르고 curation하는 dataset engineering의 전체 구조를 먼저 봅니다.", concepts: ["dataset-engineering-pipeline"] },
+      { label: "01 quality", relation: "문서 단위로 filtering·cleaning·normalization·canonicalization을 적용합니다.", concepts: ["data-quality-and-cleaning"] },
+      { label: "02 dedup·contamination", relation: "코퍼스 내부 중복과 benchmark와의 겹침을 각각 제거합니다.", concepts: ["deduplication-methods", "benchmark-contamination-detection"] },
+      { label: "03 annotation", relation: "남은 데이터에 human·model·weak supervision·pseudo-label로 label을 붙입니다.", concepts: ["annotation-methods"] },
+      { label: "04 mixture·curriculum", relation: "domain 비율과 순서를 정하고, 그 결과를 diversity·coverage·balance로 검증합니다.", concepts: ["data-mixture-and-curriculum", "data-diversity-coverage-balance"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Data source·data curation·data generation pipeline 세 용어의 관계를 설명하세요.", answerChecklist: ["source는 원본 저장소", "curation은 source를 고르고 비중을 다듬는 활동", "pipeline은 이후 단계까지 이어지는 전체 순서"], requiredConcepts: ["dataset-engineering-pipeline"], sectionId: "pipeline" },
+      { level: "basic", question: "Data filtering과 data cleaning의 차이를 처리 단위 관점에서 설명하세요.", answerChecklist: ["filtering은 문서 단위 통째 제거", "cleaning은 문서 내부 결함 수정", "normalization·canonicalization은 표기 통일"], requiredConcepts: ["data-quality-and-cleaning"], sectionId: "quality" },
+      { level: "basic", question: "Exact duplicate·near-duplicate·semantic duplicate 세 dedup 층위의 차이를 예로 설명하세요.", answerChecklist: ["exact는 완전히 같은 문서", "near-duplicate는 일부만 다른 문서(MinHash)", "semantic은 표현이 달라도 뜻이 같은 문서(embedding)"], requiredConcepts: ["deduplication-methods"], sectionId: "dedup-contamination" },
+      { level: "basic", question: "Benchmark contamination detection이 n-gram·substring 겹침을 보는 이유를 쓰세요.", answerChecklist: ["benchmark 문항 원문이 학습 데이터에 있는지 확인", "정확 일치 기반 검사", "임계값보다 짧으면 우연한 일치까지 포함"], requiredConcepts: ["benchmark-contamination-detection"], sectionId: "dedup-contamination" },
+      { level: "basic", question: "Human annotation·model annotation·weak supervision·pseudo-labeling을 label의 출처 기준으로 구분하세요.", answerChecklist: ["human은 사람이 직접", "model은 더 큰 모델이 생성", "weak supervision은 약한 규칙 결합", "pseudo-labeling은 학습 중인 모델 자신의 예측 재사용"], requiredConcepts: ["annotation-methods"], sectionId: "annotation" },
+      { level: "basic", question: "Data mixture와 data curriculum의 차이를 예로 설명하세요.", answerChecklist: ["mixture는 domain별 비율 결정", "curriculum은 보여주는 순서 결정", "둘은 독립적으로 정해질 수 있는 결정"], requiredConcepts: ["data-mixture-and-curriculum"], sectionId: "mixture" },
+      { level: "advanced", question: "K=128에서 K=512로 MinHash 해시 함수 개수를 4배 늘리면 추정 오차가 왜 정확히 1/4이 아니라 절반 가까이만 줄어드는지 설명하세요.", answerChecklist: ["표준편차는 분산의 제곱근", "분산이 1/K에 비례하므로 표준편차는 1/√K에 비례", "K를 4배 늘리면 표준편차는 1/2로 감소"], requiredConcepts: ["deduplication-methods"], sectionId: "dedup-contamination" },
+      { level: "advanced", question: "GPT-3의 13-gram 임계값과 GPT-4의 50글자 substring 임계값이 놓치는 contamination 유형이 왜 같은지 설명하세요.", answerChecklist: ["둘 다 정확 일치 기반", "문장을 바꿔 쓴 rephrasing은 두 방식 모두 놓침", "임계값 단위(word n-gram vs character substring)만 다를 뿐 한계는 공유"], requiredConcepts: ["benchmark-contamination-detection"], sectionId: "dedup-contamination" },
+      { level: "advanced", question: "GPT-3 데이터에서 Common Crawl이 토큰 수로는 82%인데 mixture weight는 60%인 이유를 data quality·mixture 개념으로 설명하세요.", answerChecklist: ["원본 토큰 비중과 mixture weight는 다른 개념", "품질이 낮다고 판단된 대량 source는 낮은 weight로 undersampling", "Wikipedia처럼 적지만 고품질인 source는 오버샘플링"], requiredConcepts: ["data-quality-and-cleaning", "data-mixture-and-curriculum"], sectionId: "mixture" },
+      { level: "advanced", question: "LIMA가 1,000개 예제만으로 성능을 낸 사실이 data diversity·coverage·balance 중 어느 것을 특히 보여주는 사례인지, 그리고 이 결과가 왜 데이터 양이 무의미하다는 뜻은 아닌지 설명하세요.", answerChecklist: ["적은 개수라도 diversity·curation 품질이 높으면 충분할 수 있음", "논문 실험은 65B 모델·특정 조건에 한정", "모든 모델 크기·상황에 일반화된다는 뜻은 아님"], requiredConcepts: ["data-diversity-coverage-balance"], sectionId: "mixture" },
+    ],
+    papers: [
+      {
+        title: "Gao et al. · The Pile: An 800GB Dataset of Diverse Text for Language Modeling",
+        href: "https://arxiv.org/abs/2101.00027",
+        problem: "언어모델이 학술·전문 도메인처럼 웹 크롤에 적은 도메인에서 약하다는 문제",
+        contribution: "22개의 서로 다른 고품질 domain subset을 의도적으로 섞은 825GiB 코퍼스를 공개하고, Common Crawl 단독 학습보다 여러 도메인에서 더 나은 성능을 보였습니다.",
+        assumptions: "영문 텍스트에 한정하고 학술·전문 자료를 우선 포함한다는 전제입니다.",
+        evidenceScope: "저자 자기보고 실험이며 2020-2021 시점 공개 기준입니다.",
+        notClaim: "이 코퍼스가 데이터의 완전성이나 윤리적 중립성을 보장한다는 뜻은 아닙니다.",
+        sectionId: "paper-the-pile",
+      },
+      {
+        title: "Penedo et al. · The RefinedWeb Dataset for Falcon LLM",
+        href: "https://arxiv.org/abs/2306.01116",
+        problem: "사람이 큐레이션한 코퍼스가 대규모 학습에 필수라는 통념이 실제로 성립하는지의 문제",
+        contribution: "제대로 필터링·dedup한 웹 데이터만으로 The Pile 기반 모델을 능가함을 보였고, CommonCrawl 5조 token 중 6,000억 token을 공개했습니다. Figure 2 기준 언어 식별 후 약 48%, 품질 필터 후 약 23%가 남습니다.",
+        assumptions: "웹 데이터 필터링·dedup만으로 충분하다는 전제로 CommonCrawl을 사용합니다.",
+        evidenceScope: "저자 자기보고 실험이며 2023 공개 기준입니다.",
+        notClaim: "웹 데이터 단독이 모든 상황에서 최적이라거나 curation이 불필요하다는 뜻은 아닙니다.",
+        sectionId: "paper-refinedweb",
+      },
+      {
+        title: "Soldaini et al. · Dolma: an Open Corpus of Three Trillion Tokens for Language Model Pretraining Research",
+        href: "https://arxiv.org/abs/2402.00159",
+        problem: "학습 데이터가 공개되지 않아 데이터가 모델 성능에 미치는 영향을 과학적으로 연구하기 어려운 문제",
+        contribution: "source mixing·quality filtering·dedup·PII/유해 콘텐츠 필터링을 문서화한 3조 token 규모 오픈 영어 코퍼스와 재현 가능한 도구를 공개했습니다.",
+        assumptions: "영어 중심 코퍼스이며 공개된 도구·문서로 각 단계를 재현할 수 있다는 전제입니다.",
+        evidenceScope: "공식 오픈소스 논문이며 v1(2024-01)·v2(2024-06) 공개 기준입니다.",
+        notClaim: "특정 벤치마크 성능이나 최종 모델 평가 결과를 이 논문 자체가 직접 주장하지는 않습니다.",
+        sectionId: "paper-dolma",
+      },
+      {
+        title: "Broder · Identifying and Filtering Near-Duplicate Documents",
+        href: "https://cs.brown.edu/courses/cs253/papers/nearduplicate.pdf",
+        problem: "웹 크롤링에서 미러 사이트·템플릿 페이지가 만드는 near-duplicate 문서가 검색 인덱싱을 방해하는 문제",
+        contribution: "문서를 shingle 집합으로 바꾸고 여러 해시 함수의 최솟값만 남기는 MinHash sketch로 Jaccard 유사도를 선형 시간에 추정하는 방법을 제시했습니다.",
+        assumptions: "텍스트 기반 웹 문서를 전제하며 minor 수정은 여전히 near-duplicate로 간주할 수 있다고 가정합니다.",
+        evidenceScope: "AltaVista 검색엔진에 실제 적용된 공식 논문이며 1997/2000년 발표 기준입니다.",
+        notClaim: "이미지·멀티미디어 near-duplicate 탐지는 이 논문의 범위가 아닙니다.",
+        sectionId: "paper-broder-minhash",
+      },
+      {
+        title: "A Comprehensive Survey of Contamination Detection Methods in Large Language Models",
+        href: "https://arxiv.org/abs/2404.00699",
+        problem: "벤치마크 점수가 상업적 가치와 직결되면서 contamination detection 필요성이 커진 문제",
+        contribution: "2025년 초까지 논문 100편 이상·기법 50개 이상을 open-data·closed-data로 분류하고, GPT-2 8-gram·GPT-3 13-gram·GPT-4 50글자 substring·Llama-2 10-token n-gram(최대 4 skip) 같은 모델별 임계값을 정리했습니다.",
+        assumptions: "각 모델 제공자가 공개한 방법론 설명을 그대로 인용한다는 전제입니다.",
+        evidenceScope: "리뷰 논문이며 인용된 원 보고를 모은 2차 자료입니다.",
+        notClaim: "이 survey 자체가 새로운 contamination을 측정하거나 임계값의 우열을 판정하지는 않습니다.",
+        sectionId: "paper-contamination-survey",
+      },
+      {
+        title: "Xie et al. · DoReMi: Optimizing Data Mixtures Speeds Up Language Model Pretraining",
+        href: "https://arxiv.org/abs/2305.10429",
+        problem: "도메인 mixture 비율을 정할 표준 방법이 없다는 문제",
+        contribution: "Group DRO로 280M 프록시 모델의 도메인 가중치를 구해 30배 큰 모델에 적용해, downstream task 정보 없이도 few-shot accuracy 6.5%p 개선과 2.6배 적은 step으로 동일 성능 도달을 보고했습니다.",
+        assumptions: "The Pile·GLaM 데이터셋과 프록시-실제 모델 30배 파라미터 비율이라는 조건입니다.",
+        evidenceScope: "저자 자기보고 실험이며 2023 발표 기준입니다.",
+        notClaim: "이 비율·개선폭이 다른 데이터셋·파라미터 비율에서도 동일하다는 뜻은 아닙니다.",
+        sectionId: "paper-doremi",
+      },
+      {
+        title: "Zhou et al. · LIMA: Less Is More for Alignment",
+        href: "https://arxiv.org/abs/2305.11206",
+        problem: "사전학습과 instruction tuning 중 무엇이 성능을 더 좌우하는지 불명확한 문제",
+        contribution: "65B LLaMA에 1,000개의 엄선된 prompt-response 쌍만 supervised로 학습시켜 GPT-4·Bard 대비 대등하거나 우월한 평가를 받았고, 이를 quality·diversity가 양보다 중요하다는 superficial alignment hypothesis로 설명합니다.",
+        assumptions: "사전학습된 65B 기초 모델이 이미 존재한다는 전제이며 instruction tuning 효과만 측정합니다.",
+        evidenceScope: "저자 자기보고 실험이며 2023 발표 기준입니다.",
+        notClaim: "다른 모델 크기·아키텍처로의 일반화나 강화학습이 완전히 불필요하다는 주장은 아닙니다.",
+        sectionId: "paper-lima",
+      },
+      {
+        title: "Bengio, Louradour, Collobert, Weston · Curriculum Learning",
+        href: "https://dl.acm.org/doi/10.1145/1553374.1553380",
+        problem: "예제 순서가 비볼록 목적함수 학습의 수렴과 일반화에 영향을 주는지의 문제",
+        contribution: "쉬운 예제에서 어려운 예제 순서로 학습을 배치하면 수렴 속도와 도달하는 local minimum의 품질이 함께 좋아짐을 continuation method 관점에서 제안·검증했습니다.",
+        assumptions: "비볼록 목적함수를 갖는 딥러닝 학습이라는 전제입니다.",
+        evidenceScope: "저자 자기보고 실험이며 ICML 2009 발표 기준입니다.",
+        notClaim: "모든 과제·모든 curriculum 설계에서 항상 개선이 있다는 뜻은 아닙니다.",
+        sectionId: "paper-curriculum-learning",
+      },
+      {
+        title: "Ratner et al. · Snorkel: Rapid Training Data Creation with Weak Supervision",
+        href: "https://arxiv.org/abs/1711.10160",
+        problem: "수동 레이블링이 머신러닝 시스템 배포의 가장 큰 병목이라는 문제",
+        contribution: "정확도가 서로 다른 여러 labeling function의 출력을 노이즈 모델로 결합하는 data programming을 엔드투엔드로 구현해, 전문가 수기 레이블링 대비 2.8배 빠른 모델 구축과 공개 데이터셋 평균 45.5% 성능 개선을 보고했습니다.",
+        assumptions: "labeling function이 임의의 휴리스틱으로 주어지고 서로 독립에 가깝다는 전제입니다.",
+        evidenceScope: "저자 자기보고 실험이며 VLDB 2017 발표 기준입니다.",
+        notClaim: "labeling function 설계 자체가 불필요하다거나 완전한 자동화를 의미하지 않습니다.",
+        sectionId: "paper-snorkel",
+      },
+      {
+        title: "Lee · Pseudo-Label: The Simple and Efficient Semi-Supervised Learning Method for Deep Neural Networks",
+        href: "http://deeplearning.net/wp-content/uploads/2013/03/pseudo_label_final.pdf",
+        problem: "비지도 사전학습 없이 딥러닝에서 semi-supervised 학습이 가능한지의 문제",
+        contribution: "unlabeled 샘플에 모델이 매긴 최댓값 class를 그대로 pseudo-label로 채택해 supervised loss에 섞어 학습하는 방법을 제안했습니다.",
+        assumptions: "MNIST 규모 이미지 분류 실험이라는 전제입니다.",
+        evidenceScope: "저자 자기보고 실험이며 ICML 2013 workshop 발표 기준입니다.",
+        notClaim: "대규모 텍스트 코퍼스나 다른 도메인으로의 확장은 이 논문이 다루지 않습니다.",
+        sectionId: "paper-pseudo-label",
+      },
+      {
+        title: "Gilardi, Alizadeh, Kubli · ChatGPT Outperforms Crowd-Workers for Text-Annotation Tasks",
+        href: "https://arxiv.org/abs/2303.15056",
+        problem: "수동 annotation의 시간·비용 문제와 대규모 언어모델이 이를 대체할 수 있는지의 문제",
+        contribution: "트윗 2,382개에 5개 annotation task를 시켜 ChatGPT의 zero-shot 정확도가 4개 task에서 crowd-worker를 앞섰고 비용은 MTurk 대비 약 20배 저렴함을 보였습니다.",
+        assumptions: "트윗 기반 관련성·입장·주제·프레임 탐지라는 특정 task 범위입니다.",
+        evidenceScope: "저자 자기보고 실험이며 PNAS 2023 발표 기준입니다.",
+        notClaim: "모든 annotation 작업에서의 우월성이나 보편적 자동화 적용가능성을 주장하지 않습니다.",
+        sectionId: "paper-chatgpt-annotator",
+      },
+    ],
+  },
+  "ai/agent-failure-modes-and-recovery": {
+    entryNote:
+      "Agent의 state·action·observation loop와 exit-state machine, run contract의 recovery field를 알고 들어옵니다. 실패를 유형으로 나누는 일과 복구 절차를 정의하는 일은 이 글에서 새로 다룹니다.",
+    coreIdea:
+      "Agent 실패는 goal drift·context drift·tool misuse·premature termination처럼 서로 다른 신호를 남기고, retry loop는 그 action이 idempotent할 때만 안전하며, 되돌릴 수 없는 action은 실행 전 side-effect control로, retry로 해결되지 않는 실패는 checkpoint를 남긴 human-in-the-loop escalation으로 처리합니다.",
+    assumedKnowledge: [
+      { id: "agent-observation-action-loop", role: "실패가 관찰되는 반복 실행 단위의 기준선입니다." },
+      { id: "typed-tool-observation-contract", role: "성공·실패를 구분하는 관찰 계약이 tool misuse 판정의 전제입니다." },
+      { id: "agent-exit-state-machine", role: "Premature termination과 human escalation이 원래 속한 terminal state 목록입니다." },
+      { id: "agent-run-contract", role: "Recovery field가 이미 retry·rollback·escalation을 완료 조건에 넣어 둡니다." },
+      { id: "layered-agent-verification", role: "Verifier 실패가 failure detection의 핵심 신호입니다." },
+      { id: "workflow-agent-checkpoint-boundary", role: "되돌리기 어려운 effect 앞에 checkpoint를 두는 경계입니다." },
+      { id: "checkpoint-replay-boundary", role: "Checkpoint resume과 replay를 구분해야 복구가 side effect를 중복시키지 않습니다." },
+      { id: "harness-failure-layer-ablation", role: "사후 재현 기준의 layer 분류와 이 글의 실시간 유형 분류를 대조합니다." },
+    ],
+    introducedHere: [
+      { id: "agent-reliability", role: "정답률이 아니라 실패 뒤 안전한 마무리 비율로 agent 실행을 평가하는 기준을 정의합니다." },
+      { id: "agent-failure-mode-taxonomy", role: "Goal drift·context drift·tool misuse·premature termination을 신호로 구분합니다." },
+      { id: "retry-loop", role: "실패 action을 다시 시도하는 절차와 그 위험 조건을 정의합니다." },
+      { id: "idempotent-action", role: "Retry가 안전한지 가르는 idempotency 성질과 idempotency key mechanism을 설명합니다." },
+      { id: "side-effect-control", role: "Dry-run과 confirmation gate로 되돌릴 수 없는 action을 실행 전에 막는 방법을 설명합니다." },
+      { id: "recovery-and-checkpointing", role: "Failure detection과 checkpointing을 결합한 recovery strategy를 정의합니다." },
+      { id: "human-in-the-loop-escalation", role: "Retry로 해결되지 않는 실패를 사람에게 넘기는 HITL과 escalation policy를 정의합니다." },
+    ],
+    conceptExplanations: [
+      {
+        id: "agent-reliability",
+        sectionId: "problem",
+        intuition: "한 번 성공했는지가 아니라 여러 번 돌렸을 때 실패가 나도 전체 작업이 안전하게 끝나는 비율을 보는 관점입니다.",
+        workedExample: "같은 작업을 100번 돌려 60번은 한 번에 통과하고 35번은 retry로 통과하고 5번만 사람에게 넘어가면 reliability가 높은 편입니다.",
+        boundary: "정답률과 달리 실패가 나더라도 감지·복구가 안전하게 이어지면 reliability는 크게 떨어지지 않습니다.",
+      },
+      {
+        id: "agent-failure-mode-taxonomy",
+        sectionId: "failure-taxonomy",
+        intuition: "실행 로그에 남는 서로 다른 신호(목표 이탈, 도구 오류, 이른 종료)를 원인별로 나눠 이름 붙인 분류입니다.",
+        workedExample: "8단계 작업에서 4단계부터 요청에 없던 분석을 더하면 goal drift, tool 이름을 지어내 호출하면 tool hallucination으로 분류됩니다.",
+        boundary: "harness failure ablation의 사후·재현 기준 layer 분류와는 축이 다른, 실행 중 실시간 분류입니다.",
+      },
+      {
+        id: "retry-loop",
+        sectionId: "retry-idempotent",
+        intuition: "실패로 보이는 action을 그대로 다시 시도하는 절차이고 action 성격을 확인하지 않으면 위험해집니다.",
+        workedExample: "카드 청구가 timeout 나서 같은 청구를 다시 호출하면 첫 요청이 이미 처리된 경우 두 번 청구됩니다.",
+        boundary: "Infra 성격의 일시적 실패에만 안전하고 goal drift 같은 실패는 몇 번을 다시 시도해도 고쳐지지 않습니다.",
+      },
+      {
+        id: "idempotent-action",
+        sectionId: "retry-idempotent",
+        intuition: "같은 요청을 몇 번 다시 보내도 실제 효과가 한 번 실행한 것과 같이 남는 action의 성질입니다.",
+        workedExample: "Idempotency key를 실어 보낸 청구 요청은 같은 key로 다시 보내도 카드가 한 번만 청구됩니다.",
+        boundary: "원래 결과가 같은 GET·삭제 같은 action과, key를 붙여 인위적으로 idempotent하게 만든 action은 구분해야 합니다.",
+      },
+      {
+        id: "side-effect-control",
+        sectionId: "side-effect-control",
+        intuition: "실행 전에 무엇이 바뀔지 먼저 보여주고 승인을 받아 되돌릴 수 없는 action이 그냥 실행되지 않게 막는 방법입니다.",
+        workedExample: "DELETE 대신 영향받을 행 수를 dry-run으로 먼저 보여주고 승인 뒤에만 실제 삭제를 실행합니다.",
+        boundary: "이미 실행된 뒤의 위험(retry 중복)이 아니라 실행 자체를 막을지 정하는 사전 통제입니다.",
+      },
+      {
+        id: "recovery-and-checkpointing",
+        sectionId: "recovery-checkpointing",
+        intuition: "실패를 알아채는 감지와 되돌아갈 지점을 미리 저장해 두는 준비가 함께 있어야 실제로 복구할 수 있습니다.",
+        workedExample: "매 단계 git commit과 진행 기록을 checkpoint로 남기고 세션 시작마다 테스트를 돌려 이전 완료 주장을 다시 검사합니다.",
+        boundary: "감지만 있고 checkpoint가 없으면 처음부터 다시 시작해야 하고, checkpoint만 있고 감지가 늦으면 정상 작업까지 함께 버립니다.",
+      },
+      {
+        id: "human-in-the-loop-escalation",
+        sectionId: "human-in-the-loop-escalation",
+        intuition: "자동 retry로 해결되지 않는 실패나 되돌릴 수 없는 action 앞에서 결정을 사람에게 넘기도록 미리 정해 두는 규칙입니다.",
+        workedExample: "삭제 tool 호출 앞에서 실행을 멈추고 사람이 approve·edit·reject·respond 중 하나로 재개시킵니다.",
+        boundary: "모든 실패를 사람에게 넘기면 자동화 이점이 사라지므로 retry로 안전한 실패는 이 정책 대상에서 뺍니다.",
+      },
+    ],
+    conceptStages: [
+      { label: "00 신뢰도", relation: "여러 번 실행에서 실패가 나도 전체가 안전하게 끝나는 비율을 정의합니다.", concepts: ["agent-reliability"] },
+      { label: "01 분류", relation: "실행 중 신호를 goal·context drift·tool misuse·premature termination으로 나눕니다.", concepts: ["agent-failure-mode-taxonomy"] },
+      { label: "02 재시도", relation: "Infra 성격 실패만 idempotent 여부를 확인한 뒤 다시 시도합니다.", concepts: ["retry-loop", "idempotent-action"] },
+      { label: "03 사전 통제", relation: "되돌릴 수 없는 action은 dry-run·confirmation gate로 실행 전에 막습니다.", concepts: ["side-effect-control"] },
+      { label: "04 복구", relation: "감지된 실패를 checkpoint 지점으로 되돌리거나 다른 경로로 다시 시도합니다.", concepts: ["recovery-and-checkpointing"] },
+      { label: "05 승격", relation: "Retry로 해결되지 않는 실패는 escalation policy에 따라 사람에게 넘깁니다.", concepts: ["human-in-the-loop-escalation"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Goal drift와 context drift를 각각 한 문장으로 구분하세요.", answerChecklist: ["목표 자체 이탈", "근거·제약을 잊음", "국소 판단 누적", "기억 손실"], requiredConcepts: ["agent-failure-mode-taxonomy"], sectionId: "failure-taxonomy" },
+      { level: "basic", question: "Invalid tool call과 tool hallucination의 차이를 설명하세요.", answerChecklist: ["스키마 위반", "존재하는 tool 오용", "존재하지 않는 tool 지어냄"], requiredConcepts: ["agent-failure-mode-taxonomy"], sectionId: "failure-taxonomy" },
+      { level: "basic", question: "Premature termination이 verifier와 어떤 관계인지 설명하세요.", answerChecklist: ["verifier 미통과", "model 자체 완료 선언", "end-to-end 테스트 부재"], requiredConcepts: ["agent-failure-mode-taxonomy"], sectionId: "failure-taxonomy" },
+      { level: "basic", question: "Idempotent action의 정의를 idempotency key 예로 설명하세요.", answerChecklist: ["같은 요청 여러 번", "효과는 한 번과 동일", "idempotency key"], requiredConcepts: ["idempotent-action"], sectionId: "retry-idempotent" },
+      { level: "basic", question: "Retry loop가 idempotent하지 않은 action에서 왜 위험한지 결제 예로 설명하세요.", answerChecklist: ["timeout", "이미 처리된 첫 요청", "중복 청구"], requiredConcepts: ["retry-loop", "idempotent-action"], sectionId: "retry-idempotent" },
+      { level: "basic", question: "Dry-run과 confirmation gate의 역할 차이를 설명하세요.", answerChecklist: ["변경 예상만 계산", "사람 승인 문턱", "실제 실행은 gate 통과 후"], requiredConcepts: ["side-effect-control"], sectionId: "side-effect-control" },
+      { level: "advanced", question: "Failure detection만 있고 checkpoint가 없을 때, 또는 그 반대일 때 각각 무엇이 문제인지 설명하세요.", answerChecklist: ["감지만 있으면 되돌릴 지점 없음", "checkpoint만 있고 감지 늦으면 정상 작업도 버림"], requiredConcepts: ["recovery-and-checkpointing"], sectionId: "recovery-checkpointing" },
+      { level: "advanced", question: "실패 감지→분류→idempotent 확인→retry 또는 escalation 절차를 순서대로 쓰세요.", answerChecklist: ["신호 감지", "유형 분류", "idempotent 확인", "retry 또는 checkpoint 후 escalation"], requiredConcepts: ["retry-loop", "recovery-and-checkpointing"], sectionId: "retry-idempotent" },
+      { level: "advanced", question: "Escalation policy가 어떤 실패 유형 앞에서 발동해야 하는지, 발동 뒤 checkpoint와 어떻게 이어지는지 설명하세요.", answerChecklist: ["retry로 해결 안 되는 실패", "되돌릴 수 없는 action", "approve/edit/reject/respond", "checkpoint로 되돌아감"], requiredConcepts: ["human-in-the-loop-escalation", "recovery-and-checkpointing"], sectionId: "human-in-the-loop-escalation" },
+      { level: "advanced", question: "Agent reliability를 정답률과 다르게 정의해야 하는 이유를 실패-복구 관점에서 설명하세요.", answerChecklist: ["실패 자체보다 복구 성공률", "retry·checkpoint·escalation 포함", "정답률만으로는 놓치는 것"], requiredConcepts: ["agent-reliability", "agent-failure-mode-taxonomy"], sectionId: "problem" },
+    ],
+    papers: [
+      {
+        title: "Xu et al. · Where LLM Agents Fail and How They can Learn From Failures (arXiv 2509.25370, 2025)",
+        href: "https://arxiv.org/abs/2509.25370",
+        problem: "ALFWorld·GAIA·WebShop에서 agent 실패 원인을 일관되게 분류하고 그 분류로 재학습에 쓸 신호를 만드는 문제입니다.",
+        contribution: "Memory·reflection·planning·action·system-level 다섯 층의 AgentErrorTaxonomy와 주석된 실패 trace 데이터셋 AgentErrorBench를 제시합니다.",
+        assumptions: "세 환경의 trace가 실제 배포 agent의 실패 분포를 대표한다고 가정합니다.",
+        evidenceScope: "저자 자기보고 · ALFWorld·GAIA·WebShop 세 benchmark 환경 한정 · 2025년 9월 기준",
+        notClaim: "이 글의 goal drift·context drift·tool misuse 이름은 그 다섯 층을 실행 로그에서 흔한 이름으로 재정리한 것이며 논문 자체의 범주 이름은 아닙니다.",
+        sectionId: "failure-taxonomy",
+      },
+      {
+        title: "Stripe · Idempotent requests (API Reference)",
+        href: "https://docs.stripe.com/api/idempotent_requests",
+        problem: "네트워크 오류 뒤 안전하게 요청을 재시도하되 같은 side effect가 중복되지 않게 하는 문제입니다.",
+        contribution: "클라이언트가 만든 idempotency key로 첫 요청의 결과를 저장해 두고 같은 key의 후속 요청에는 재실행 없이 같은 결과를 돌려주는 mechanism입니다.",
+        assumptions: "클라이언트가 충분한 엔트로피를 가진 고유 key를 매 논리적 요청마다 새로 만든다고 가정합니다.",
+        evidenceScope: "공식 API 문서 · Stripe 자체 서비스 계약 · 키는 최소 24시간 보관",
+        notClaim: "모든 외부 서비스가 idempotency key를 지원한다는 뜻은 아니며, 지원 없는 API는 이 mechanism을 그대로 쓸 수 없습니다.",
+        sectionId: "retry-idempotent",
+      },
+      {
+        title: "Anthropic Engineering · Effective harnesses for long-running agents (2025-11-26)",
+        href: "https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents",
+        problem: "장기 실행 agent harness에서 절반만 구현하고 완료라고 보고하는 premature termination을 어떻게 걸러낼지의 문제입니다.",
+        contribution: "Git commit과 진행 기록 파일을 checkpoint로 남기고 세션 시작마다 end-to-end 테스트를 돌려 이전 완료 주장을 재검증하는 harness 설계를 보고합니다.",
+        assumptions: "코드 변경이 git으로 추적 가능하고 매 세션 개발 서버를 다시 띄울 수 있는 환경을 가정합니다.",
+        evidenceScope: "Anthropic 자체 harness 실험 관찰 · 특정 벤치마크 수치 공개 없음 · 2025년 11월 기준",
+        notClaim: "이 checkpoint 방식이 모든 failure detection 상황에 최적이라는 비교 실험 결과는 아닙니다.",
+        sectionId: "recovery-checkpointing",
+      },
+      {
+        title: "LangChain · Human-in-the-loop (docs.langchain.com)",
+        href: "https://docs.langchain.com/oss/python/langchain/human-in-the-loop",
+        problem: "Tool 실행 직전 사람의 검토를 끼워 넣고, 검토 대기 중 상태를 안전하게 보존하는 문제입니다.",
+        contribution: "Interrupt primitive로 graph를 멈추고 approve·edit·reject·respond 중 허용된 결정만 받아 Command(resume=...)로 재개하는 mechanism을 제공합니다.",
+        assumptions: "실행이 LangGraph의 checkpoint 저장소 위에서 thread id로 식별된다고 가정합니다.",
+        evidenceScope: "공식 구현 문서 · LangGraph API 기준 · escalation 규칙 자체는 운영자가 정의",
+        notClaim: "무엇을 위험한 action으로 볼지 정하는 escalation policy 규칙 자체를 제공하는 문서는 아닙니다.",
+        sectionId: "human-in-the-loop-escalation",
+      },
+    ],
+  },
+  "ai/rl-foundations-for-llm-post-training": {
+    entryNote: "RLHF의 PPO 절에서 policy가 직접 만든 response를 reward·KL로 평가해 update한다는 것을 이미 안다고 가정하고, 그 update가 정확히 무엇을 미분하고 어느 action에 credit을 돌려주는지를 채웁니다.",
+    coreIdea: "Policy gradient theorem은 return의 기댓값을 log-probability gradient의 기댓값으로 바꿔 REINFORCE update를 만들고, 그 return이 어떤 trajectory(on/off-policy)에서 왔는지와 trajectory의 어느 action에 credit으로 돌아가는지가 이 update의 두 가지 남은 자유도입니다.",
+    assumedKnowledge: [
+      { id: "online-rollout", role: "현재 policy가 직접 response를 만드는 것이 이 글의 trajectory·on-policy 논의의 출발점입니다." },
+      { id: "ppo-rlhf", role: "RLHF의 clipped update가 암묵적으로 다루던 return·credit assignment를 이 글이 명시적으로 풉니다." },
+    ],
+    introducedHere: [
+      { id: "rl-mdp-and-return", role: "State·action·reward 상호작용과 그 reward를 누적하는 return을 정의합니다." },
+      { id: "on-vs-off-policy-learning", role: "Return을 추정하는 trajectory가 현재 policy 것인지 아닌지를 나누고 표본 효율 차이를 보입니다." },
+      { id: "policy-gradient-theorem", role: "Return 기댓값의 gradient를 log-probability gradient의 기댓값으로 바꾸는 정리와 REINFORCE를 정의합니다." },
+      { id: "credit-assignment-problem", role: "정리가 만든 update 신호를 trajectory의 어느 action에 돌려줄지의 문제와 long-horizon에서의 한계를 정의합니다." },
+    ],
+    conceptExplanations: [
+      {
+        id: "rl-mdp-and-return",
+        sectionId: "return",
+        intuition: "Agent가 state에서 action을 고르고 reward를 받는 상호작용을 반복하며, 지금부터 받을 reward 전부를 할인해 하나의 숫자로 합친 것이 return입니다.",
+        workedExample: "r1=1, r2=0, r3=2, γ=0.9이면 G3=2, G2=0+0.9×2=1.8, G1=1+0.9×1.8=2.62입니다.",
+        boundary: "Return 자체는 policy를 바꾸지 않고, policy gradient가 이 값을 update 방향으로 바꿔야 합니다.",
+      },
+      {
+        id: "on-vs-off-policy-learning",
+        sectionId: "on-vs-off-policy",
+        intuition: "지금 배우는 policy가 직접 겪은 경험만 쓰는지, 아니면 다른 시점·다른 policy의 경험도 재사용하는지의 차이입니다.",
+        workedExample: "On-policy는 batch 2,048개를 몇 epoch 쓰고 버리고, off-policy는 replay buffer 최대 100만 개 transition을 수백~수천 번 재사용합니다.",
+        boundary: "재사용 폭이 커질수록 표본 효율은 오르지만 데이터를 만든 policy와 현재 policy가 멀어질 때 update가 왜곡되는 위험이 함께 커집니다.",
+      },
+      {
+        id: "policy-gradient-theorem",
+        sectionId: "policy-gradient",
+        intuition: "Action sampling은 미분할 수 없지만, log 미분 항등식을 쓰면 기댓값의 gradient를 gradient의 기댓값으로 바꿔 표본으로 추정할 수 있습니다.",
+        workedExample: "REINFORCE는 trajectory 하나를 뽑고 각 시점의 G_t를 계산해 θ ← θ + α·Σ∇log π(a_t|s_t)·G_t로 update합니다.",
+        boundary: "정리 자체는 trajectory가 현재 policy로 직접 뽑힌 on-policy 표본이라는 가정 위에서만 성립합니다.",
+        proofIdea: "기댓값 안의 미분을 log-probability에 대한 미분으로 바꾸는 log-derivative trick(∇π=π∇logπ)을 trajectory 확률의 곱에 적용하면, 환경 전이 확률의 미분항은 θ에 의존하지 않아 사라지고 policy의 log-probability 미분항만 남습니다.",
+        counterexample: "Off-policy로 수집한 trajectory에 이 식을 그대로 적용하면, 그 trajectory를 만든 확률이 현재 π_θ가 아니므로 기댓값 추정이 편향되어(importance weight 없이는) 정리가 보장하는 gradient 방향과 어긋납니다.",
+      },
+      {
+        id: "credit-assignment-problem",
+        sectionId: "credit-assignment",
+        intuition: "Trajectory 끝의 reward 하나를 그 이전 모든 action에 얼마씩 나눠줘야 할지 정하는 문제이고, return은 이를 시간 거리만으로 나눕니다.",
+        workedExample: "5-step trajectory에서 γ=0.9면 첫 action의 return은 γ⁴≈0.656이고, 20-step으로 늘리면 γ¹⁹≈0.135로 줄어듭니다.",
+        boundary: "이 분배는 각 action의 실제 인과 기여도를 구분하지 못하고, trajectory가 길어질수록(long-horizon) 이른 action에 남는 신호가 지수적으로 옅어집니다.",
+      },
+    ],
+    conceptStages: [
+      { label: "00 rollout", relation: "RLHF의 online rollout·PPO update를 전제합니다.", concepts: ["online-rollout", "ppo-rlhf"] },
+      { label: "01 return", relation: "State·action·reward 상호작용과 return을 정의합니다.", concepts: ["rl-mdp-and-return"] },
+      { label: "02 on/off-policy", relation: "Return을 추정하는 trajectory의 출처를 나눕니다.", concepts: ["on-vs-off-policy-learning"] },
+      { label: "03 policy gradient", relation: "Return 기댓값을 log-probability gradient로 바꿉니다.", concepts: ["policy-gradient-theorem"] },
+      { label: "04 credit assignment", relation: "Update 신호를 action에 나누는 문제와 long-horizon 한계를 봅니다.", concepts: ["credit-assignment-problem"] },
+    ],
+    exercises: [
+      { level: "basic", question: "State·action·reward 상호작용에서 return이 무엇을 누적한 값인지 설명하세요.", answerChecklist: ["감가율", "미래 reward", "누적", "policy 목표"], requiredConcepts: ["rl-mdp-and-return"], sectionId: "return" },
+      { level: "basic", question: "r1=1, r2=0, r3=2, γ=0.9일 때 G1을 계산하세요.", answerChecklist: ["G3=2", "G2=1.8", "G1=2.62"], requiredConcepts: ["rl-mdp-and-return"], sectionId: "return" },
+      { level: "basic", question: "On-policy와 off-policy의 데이터 재사용 차이를 설명하세요.", answerChecklist: ["현재 policy만", "과거·다른 policy 재사용", "표본 효율"], requiredConcepts: ["on-vs-off-policy-learning"], sectionId: "on-vs-off-policy" },
+      { level: "basic", question: "GRPO의 group sampling이 왜 on-policy 사례인지 설명하세요.", answerChecklist: ["매 update마다", "현재 policy로", "새로 뽑음"], requiredConcepts: ["on-vs-off-policy-learning"], sectionId: "on-vs-off-policy" },
+      { level: "basic", question: "Policy gradient theorem에서 log-probability gradient에 무엇을 곱해 가중치로 쓰는지 쓰세요.", answerChecklist: ["return", "G_t", "그 시점 이후 reward"], requiredConcepts: ["policy-gradient-theorem"], sectionId: "policy-gradient" },
+      { level: "basic", question: "5-step trajectory에서 γ=0.9일 때 첫 action의 return을 계산하세요.", answerChecklist: ["γ^4", "0.656", "마지막 reward만 1"], requiredConcepts: ["credit-assignment-problem"], sectionId: "credit-assignment" },
+      { level: "advanced", question: "Action sampling이 미분 불가능한데도 policy gradient theorem이 성립하는 이유를 log-derivative trick으로 설명하세요.", answerChecklist: ["∇π=π∇logπ", "환경 전이 확률 항 소거", "θ 의존 항만 남음"], requiredConcepts: ["policy-gradient-theorem"], sectionId: "policy-gradient" },
+      { level: "advanced", question: "Off-policy trajectory에 REINFORCE gradient 식을 그대로 적용하면 왜 편향되는지 설명하세요.", answerChecklist: ["다른 policy가 생성", "importance weight 없음", "기댓값 추정 편향"], requiredConcepts: ["policy-gradient-theorem", "on-vs-off-policy-learning"], sectionId: "policy-gradient" },
+      { level: "advanced", question: "Trajectory 길이가 5에서 20으로 늘어나면 첫 action의 credit이 어떻게 바뀌는지 수치로 설명하세요.", answerChecklist: ["γ^4≈0.656", "γ^19≈0.135", "long-horizon일수록 신호 감소"], requiredConcepts: ["credit-assignment-problem"], sectionId: "credit-assignment" },
+      { level: "advanced", question: "Off-policy replay buffer 재사용이 표본 효율을 높이면서도 위험해지는 조건을 설명하세요.", answerChecklist: ["오래된 transition", "현재 policy와 괴리", "update 왜곡"], requiredConcepts: ["on-vs-off-policy-learning"], sectionId: "on-vs-off-policy" },
+    ],
+    papers: [
+      {
+        title: "Policy Gradient Methods for Reinforcement Learning with Function Approximation",
+        href: "https://proceedings.neurips.cc/paper/1999/hash/464d828b85b0bed98e80ade0a5c43b0f-Abstract.html",
+        problem: "Value function 근사가 action 선택의 불연속성 때문에 policy iteration의 수렴을 보장하기 어려운 문제",
+        contribution: "Policy를 직접 parameterize하고 기대 reward의 gradient로 update하는 policy gradient theorem을 제시하고 임의의 미분 가능한 함수 근사기에 대한 첫 수렴 증명을 제공",
+        assumptions: "논문이 다룬 일반 MDP 정식화와 tabular·근사 policy 조건",
+        evidenceScope: "1999년 NeurIPS 논문 저자가 제시한 이론적 증명과 함수 근사 실험 범위",
+        notClaim: "모든 policy 표현이나 LLM 규모 trajectory에서 같은 분산·수렴 속도를 보장한다는 뜻은 아님",
+        sectionId: "paper-policy-gradient",
+      },
+      {
+        title: "Reinforcement Learning: An Introduction (2nd ed.)",
+        href: "https://mitpress.mit.edu/9780262039246/reinforcement-learning/",
+        problem: "Return·policy gradient·credit assignment를 포함한 RL의 표준 정식화가 흩어져 있던 문제",
+        contribution: "MDP·return·REINFORCE를 포함한 RL의 기초 이론과 알고리즘을 체계적으로 정리",
+        assumptions: "교과서가 다루는 일반 MDP·tabular·함수근사 정식화",
+        evidenceScope: "2018년 개정판 교과서의 이론적 정의와 예시 범위",
+        notClaim: "LLM post-training의 특정 구현(GRPO 등)을 다루거나 그 성능을 보장한다는 뜻은 아님",
+        sectionId: "paper-rl-textbook",
+      },
+    ],
+  },
+  "ai/reward-design-for-verifiable-rl": {
+    entryNote: "앞 글의 policy gradient·credit assignment를 이미 안다고 가정하고, 그 return을 만드는 reward 자체를 무엇으로 어떻게 설계할지로 넘어갑니다.",
+    coreIdea: "Reward 설계는 검증 가능성(RLVR·verifiable task)부터 정하고, 그 reward를 언제(sparse/dense) 무엇을(outcome/process) 채점할지 고른 뒤, 그 선택이 실제 목표와 어긋나는 proxy가 되지 않는지(reward hacking)와 값 형태·척도(binary/continuous·calibration)가 일관되는지를 확인하는 순서로 이뤄집니다.",
+    assumedKnowledge: [
+      { id: "rl-mdp-and-return", role: "Reward를 누적한 return의 정의가 이 글이 설계하는 reward 자체의 재료입니다." },
+      { id: "credit-assignment-problem", role: "Return의 신호 희석 문제가 sparse/dense·reward shaping 설계의 동기입니다." },
+      { id: "reward-model", role: "RLHF의 scalar reward model이 outcome/process reward 축을 대비할 기준점입니다." },
+    ],
+    introducedHere: [
+      { id: "rlvr-verifiable-task", role: "자동 검증 가능한 task와 그 결과를 reward로 쓰는 RLVR을 정의합니다." },
+      { id: "sparse-vs-dense-reward", role: "Reward를 언제 주는지의 축과 학습 속도 차이를 정의합니다." },
+      { id: "outcome-vs-process-reward", role: "Reward가 무엇을 채점하는지의 독립적인 축을 정의합니다." },
+      { id: "reward-hacking-and-specification-gaming", role: "Proxy reward 최적화가 true objective에서 멀어지는 현상과 원인을 정의합니다." },
+      { id: "reward-shaping", role: "Optimal policy를 보존하면서 신호를 앞당기는 potential-based 형태를 정의합니다." },
+      { id: "binary-vs-continuous-reward", role: "Reward의 값 형태 축을 값 형태·outcome/process·sparse/dense와 독립적으로 정의합니다." },
+      { id: "reward-calibration", role: "서로 다른 reward 원천의 척도를 맞추는 절차를 정의합니다." },
+    ],
+    conceptExplanations: [
+      {
+        id: "rlvr-verifiable-task",
+        sectionId: "rlvr",
+        intuition: "정답 여부를 사람 없이 프로그램으로 바로 확인할 수 있는 task에서는 그 확인 결과를 reward로 바로 쓸 수 있습니다.",
+        workedExample: "Code 생성 task에서 unit test 5개 중 5개 통과하면 reward 1, 하나라도 실패하면 0을 그대로 씁니다.",
+        boundary: "Verifier가 확인하지 못하는 중간 추론의 타당성이나 안전성은 RLVR reward에 반영되지 않습니다.",
+      },
+      {
+        id: "sparse-vs-dense-reward",
+        sectionId: "sparse-vs-dense",
+        intuition: "결과가 나올 때만 점수를 주는 것과 매 단계 진척을 채점하는 것은 학습 신호의 빈도가 다릅니다.",
+        workedExample: "6-station 경로에서 목표 도달만 +1인 sparse reward는 초기 rollout 대부분이 0으로 끝나지만, 진척 비율을 주는 dense reward는 S3까지만 가도 0.5를 남깁니다.",
+        boundary: "Dense reward의 중간 신호를 잘못 정의하면 policy가 실제 목표 대신 그 신호를 최적화하는 reward hacking 위험이 생깁니다.",
+      },
+      {
+        id: "outcome-vs-process-reward",
+        sectionId: "outcome-vs-process",
+        intuition: "최종 답만 보는 채점과 풀이 과정 각 단계를 보는 채점은 같은 결과에도 다른 점수를 줄 수 있습니다.",
+        workedExample: "10단계 풀이 중 3단계 계산이 틀렸는데 우연히 최종 답이 맞으면 outcome reward는 1이지만 process reward는 3단계에서 이미 낮은 점수를 매깁니다.",
+        boundary: "Process reward는 단계 채점 기준 자체를 사람이나 별도 model이 정해야 해 outcome reward보다 설계·주석 비용이 큽니다.",
+      },
+      {
+        id: "reward-hacking-and-specification-gaming",
+        sectionId: "hacking",
+        intuition: "설계한 reward(proxy)를 열심히 높였는데 정작 원하던 진짜 목표는 그대로거나 나빠지는 상황입니다.",
+        workedExample: "거리 감소를 진척 reward로 정의했더니 policy가 실제 목표로 가지 않고 거리 계산만 속이는 위치에서 맴돕니다.",
+        boundary: "Reward accuracy나 proxy 점수가 높다는 사실만으로는 hacking이 없다는 증명이 되지 않고, true objective 기준 별도 검증이 필요합니다.",
+      },
+      {
+        id: "reward-shaping",
+        sectionId: "shaping",
+        intuition: "추가 reward 항을 아무렇게나 더하면 hacking 위험이 생기지만, 상태 potential의 차이로만 만들면 안전합니다.",
+        workedExample: "R'(s,a,s')=R(s,a,s')+γΦ(s')−Φ(s) 형태로 더하면 trajectory 전체를 합칠 때 중간 potential 항이 상쇄됩니다.",
+        boundary: "Φ가 episode 끝에서 항상 같은 값으로 고정되지 않으면 상쇄가 깨지고, Φ를 목표와 무관하게 고르면 optimal policy는 보존돼도 속도 이득은 사라질 수 있습니다.",
+        proofIdea: "임의의 policy에서 return을 전개하면 각 시점의 γΦ(s_{t+1})−Φ(s_t) 항이 telescoping sum으로 상쇄돼 시작 상태 potential과 끝 상태 potential의 차이만 남고, 이 차이는 모든 policy에서 같은 상수이므로 policy 사이의 return 순위(따라서 optimal policy)를 바꾸지 않습니다.",
+        counterexample: "Φ를 episode 끝에서 0으로 고정하지 않고 trajectory마다 다른 값으로 두면 telescoping이 깨져, shaping 이전에는 열등했던 policy가 shaping 이후 더 높은 return을 받아 optimal policy가 바뀔 수 있습니다.",
+      },
+      {
+        id: "binary-vs-continuous-reward",
+        sectionId: "reward-shape-and-calibration",
+        intuition: "성공·실패만 구분하는 채점과 얼마나 성공했는지까지 재는 채점은 값의 해상도가 다릅니다.",
+        workedExample: "Unit test 전부 통과하면 binary reward는 1, 5개 중 3개만 통과하면 continuous reward는 0.6입니다.",
+        boundary: "값 형태가 연속적이라고 해서 다른 reward 원천과 척도가 자동으로 맞는 것은 아니며 별도 calibration이 필요합니다.",
+      },
+      {
+        id: "reward-calibration",
+        sectionId: "reward-shape-and-calibration",
+        intuition: "서로 다른 채점 기준이 내는 값의 범위를 맞추지 않으면 범위가 큰 쪽이 학습을 사실상 독점합니다.",
+        workedExample: "Verifier A가 {0,1}만, verifier B가 0~100 원점수를 낼 때 그대로 더하면 B가 A보다 100배 큰 영향을 줘 0~1로 정규화한 뒤 합쳐야 합니다.",
+        boundary: "척도를 맞춰도 두 reward가 재는 대상 자체가 다르면 여전히 서로 다른 것을 채점하는 것이라는 사실은 calibration으로 해결되지 않습니다.",
+      },
+    ],
+    conceptStages: [
+      { label: "00 재료", relation: "Return과 credit assignment, RLHF의 reward model을 전제합니다.", concepts: ["rl-mdp-and-return", "credit-assignment-problem", "reward-model"] },
+      { label: "01 검증 가능성", relation: "자동 검증 가능한 task와 그 reward를 정의합니다.", concepts: ["rlvr-verifiable-task"] },
+      { label: "02 시점과 대상", relation: "언제 주는지와 무엇을 채점하는지의 두 독립 축을 나눕니다.", concepts: ["sparse-vs-dense-reward", "outcome-vs-process-reward"] },
+      { label: "03 hacking", relation: "Proxy reward 최적화가 true objective에서 벗어나는 현상을 다룹니다.", concepts: ["reward-hacking-and-specification-gaming"] },
+      { label: "04 shaping", relation: "Optimal policy를 보존하며 신호를 앞당기는 방법을 다룹니다.", concepts: ["reward-shaping"] },
+      { label: "05 형태와 척도", relation: "값 형태와 서로 다른 reward 원천의 척도를 맞춥니다.", concepts: ["binary-vs-continuous-reward", "reward-calibration"] },
+    ],
+    exercises: [
+      { level: "basic", question: "Verifiable task의 정의와 RLVR이 그 결과를 reward로 쓰는 방식을 설명하세요.", answerChecklist: ["프로그램으로 확인", "사람 판단 없음", "검증 결과 그대로 reward"], requiredConcepts: ["rlvr-verifiable-task"], sectionId: "rlvr" },
+      { level: "basic", question: "6-station 경로 예로 sparse reward와 dense reward의 신호 빈도 차이를 설명하세요.", answerChecklist: ["끝에만 +1", "진척 비율마다", "gradient 신호 빈도"], requiredConcepts: ["sparse-vs-dense-reward"], sectionId: "sparse-vs-dense" },
+      { level: "basic", question: "Outcome reward와 process reward가 각각 무엇을 채점하는지 구분하세요.", answerChecklist: ["최종 결과만", "중간 단계 각각", "독립적인 축"], requiredConcepts: ["outcome-vs-process-reward"], sectionId: "outcome-vs-process" },
+      { level: "basic", question: "Reward hacking에서 proxy reward와 true objective가 어떻게 갈라지는지 예로 설명하세요.", answerChecklist: ["proxy 개선", "true objective 정체·악화", "구체 예"], requiredConcepts: ["reward-hacking-and-specification-gaming"], sectionId: "hacking" },
+      { level: "basic", question: "Potential-based reward shaping이 optimal policy를 보존하는 이유를 한 문장으로 쓰세요.", answerChecklist: ["potential 차이", "telescoping 상쇄", "policy 순위 불변"], requiredConcepts: ["reward-shaping"], sectionId: "shaping" },
+      { level: "basic", question: "Binary reward와 continuous reward의 값 형태 차이를 예로 설명하세요.", answerChecklist: ["0 또는 1", "0~1 실수", "부분 성공 구분"], requiredConcepts: ["binary-vs-continuous-reward"], sectionId: "reward-shape-and-calibration" },
+      { level: "advanced", question: "Verifier reward가 outcome reward의 한 구현이면서도 hacking에 취약할 수 있는 이유를 설명하세요.", answerChecklist: ["verifier 확인 범위 조작", "예외 삼키기 예", "확인 범위 밖 오류"], requiredConcepts: ["rlvr-verifiable-task", "reward-hacking-and-specification-gaming"], sectionId: "hacking" },
+      { level: "advanced", question: "Sparse reward를 dense reward로 바꿀 때 hacking 위험이 왜 커지는지 설계 관점에서 논하세요.", answerChecklist: ["중간 신호 새로 정의", "신호 자체가 조작 대상", "proxy misspecification"], requiredConcepts: ["sparse-vs-dense-reward", "reward-hacking-and-specification-gaming"], sectionId: "sparse-vs-dense" },
+      { level: "advanced", question: "Potential function Φ를 episode 끝에서 고정하지 않으면 무엇이 깨지는지 설명하세요.", answerChecklist: ["telescoping 실패", "optimal policy 변경 가능", "counterexample"], requiredConcepts: ["reward-shaping"], sectionId: "shaping" },
+      { level: "advanced", question: "서로 다른 verifier의 원점수를 calibration 없이 합쳤을 때 생기는 문제를 설계 관점에서 서술하세요.", answerChecklist: ["척도 큰 쪽 지배", "정규화 필요", "재는 대상 차이는 별개"], requiredConcepts: ["reward-calibration"], sectionId: "reward-shape-and-calibration" },
+    ],
+    papers: [
+      {
+        title: "Let's Verify Step by Step",
+        href: "https://arxiv.org/abs/2305.20050",
+        problem: "최종 답만 채점하는 outcome supervision이 중간 추론 오류를 놓치는 문제",
+        contribution: "각 추론 단계를 채점하는 process supervision을 제시하고 outcome supervision과 비교",
+        assumptions: "논문의 MATH 데이터셋·PRM800K 주석·GPT 계열 model 조건",
+        evidenceScope: "MATH test 부분집합에서 process-supervised model이 78% 정확도를 기록했다는 저자 자기보고",
+        notClaim: "다른 domain이나 model 규모에서 같은 정확도 격차가 난다는 뜻은 아님",
+        sectionId: "paper-prm",
+      },
+      {
+        title: "Defining and Characterizing Reward Hacking",
+        href: "https://arxiv.org/abs/2209.13085",
+        problem: "부정확한 proxy reward를 최적화하면 true reward 기준 성능이 나빠질 수 있다는 현상이 형식적으로 정의되지 않은 문제",
+        contribution: "Reward hacking을 형식적으로 정의하고 proxy 개선이 true reward를 해치지 않는 unhackable 조건을 분석",
+        assumptions: "논문의 MDP 정식화와 확률적/결정적 policy 조건",
+        evidenceScope: "저자가 제시한 이론적 증명과 조건 분석 범위",
+        notClaim: "모든 실제 reward model·verifier 설계가 이 조건을 만족하거나 만족하지 않는다는 개별 판정은 아님",
+        sectionId: "paper-reward-hacking",
+      },
+      {
+        title: "Concrete Problems in AI Safety",
+        href: "https://arxiv.org/abs/1606.06565",
+        problem: "잘못된 objective function이 만드는 의도치 않은 harmful behavior(accident)를 체계적으로 분류하지 못한 문제",
+        contribution: "Reward hacking을 포함한 다섯 범주의 AI safety 연구 문제를 제시",
+        assumptions: "논문이 정의한 accident 범주와 당시 RL·ML 시스템 조건",
+        evidenceScope: "저자가 제시한 문제 분류와 예시 범위",
+        notClaim: "다섯 범주가 AI safety 문제 전체를 망라한다는 뜻은 아님",
+        sectionId: "paper-concrete-problems",
+      },
+      {
+        title: "Policy Invariance Under Reward Transformations: Theory and Application to Reward Shaping",
+        href: "https://dl.acm.org/doi/10.5555/645528.657613",
+        problem: "Sparse reward에 임의의 추가 항을 더하면 optimal policy가 바뀔 위험이 있는 문제",
+        contribution: "상태 potential 함수의 차이로만 추가 항을 만드는 potential-based shaping만이 임의의 MDP에서 optimal policy를 보존한다는 것을 증명",
+        assumptions: "논문의 MDP 정식화와 potential function Φ의 episode-끝 고정 조건",
+        evidenceScope: "1999년 ICML 논문 저자가 제시한 이론적 증명 범위",
+        notClaim: "Potential-based가 아닌 다른 형태의 추가 reward 항도 같은 보장을 갖는다는 뜻은 아님",
+        sectionId: "paper-reward-shaping",
       },
     ],
   },

@@ -384,6 +384,20 @@ export const agentArticles: Article[] = [
     component: () => import("@/pages/articles/ai/agent-verification"),
   },
   {
+    slug: "agent-failure-modes-and-recovery",
+    title: "복구는 idempotent 여부로 retry 나 escalation 으로 갈립니다",
+    subcategory: "ai-agents",
+    sections: [
+      { id: "problem", title: "Agent reliability와 실패 유형 개요" },
+      { id: "failure-taxonomy", title: "Goal·context drift와 tool misuse" },
+      { id: "retry-idempotent", title: "Retry loop와 idempotent action" },
+      { id: "side-effect-control", title: "Dry-run과 confirmation gate" },
+      { id: "recovery-checkpointing", title: "Failure detection과 checkpointing" },
+      { id: "human-in-the-loop-escalation", title: "Human-in-the-loop과 escalation policy" },
+    ],
+    component: () => import("@/pages/articles/ai/agent-failure-modes-and-recovery"),
+  },
+  {
     slug: "harness-failure-ablation",
     title: "Harness failure ablation: 고장 난 layer 찾기",
     subcategory: "ai-agents",
