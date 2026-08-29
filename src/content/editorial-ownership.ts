@@ -3892,9 +3892,19 @@ export const EDITORIAL_BOUNDARIES = {
   },
   "context-window-optimization": {
     title: "Context window 최적화 글이 소유하는 범위",
-    owns: ["Output reserve를 포함한 source별 serialized token ledger", "Evidence position utilization 평가와 stable-prefix cache invalidation"],
-    reuses: [{ label: "Context curation lifecycle", href: "/ai/context-engineering#curation" }, { label: "Compaction fidelity", href: "/ai/agent-memory-lifecycle#compaction" }],
-    evidence: [{ kind: "primary-source", rule: "Lost in the Middle의 위치 민감도는 논문의 model·task·context 조건으로 제한하고 고정된 U자 법칙으로 일반화하지 않는다." }],
+    owns: ["Output reserve를 포함한 source별 serialized token ledger", "Evidence position utilization 평가와 stable-prefix cache invalidation",
+      "Context relevance가 noise(무관 fragment 혼입)와 dilution(길이 증가에 따른 relevant 비율 하락) 두 mechanism으로 낮아지는 구분",
+      "Lost-in-the-middle effect의 실제 수치(GPT-3.5-Turbo 20-document QA 위치별 정확도)",
+      "Context compression(evidence·history 요약·추출)과 prompt compression(token 단위 삭제)의 구분과 caching과의 경계",
+],
+    reuses: [{ label: "Context curation lifecycle", href: "/ai/context-engineering#curation" }, { label: "Compaction fidelity", href: "/ai/agent-memory-lifecycle#compaction" },
+      { label: "Prompt 문구·완료 조건 설계", href: "/ai/prompt-engineering" },
+      { label: "Retrieval 후보 선정과 RAG 평가", href: "/ai/rag-pipeline" },
+],
+    evidence: [{ kind: "primary-source", rule: "Lost in the Middle의 위치 민감도는 논문의 model·task·context 조건으로 제한하고 고정된 U자 법칙으로 일반화하지 않는다." },
+      { kind: "project-claim", rule: "LLMLingua의 최대 20배 압축과 LongLLMLingua의 21.4%·94.0%·1.4-2.6배 수치는 각 논문의 데이터셋·model 조건에 묶인 저자 자기보고로 표기하고 다른 model·workload의 보장으로 옮기지 않는다." },
+      { kind: "standard", rule: "GPT-3.5-Turbo 20-document 실험의 75.8/53.8/63.2%는 Liu et al.(2023) Table 6의 실측치이며, 그 사이 위치의 곡선은 보간선일 뿐 추가 측정값이 아니라고 본문·Viz에 밝힌다." },
+],
   },
   "sionic-eureka": {
     title: "EUREKA가 소유하는 범위",
@@ -4202,7 +4212,9 @@ export const EDITORIAL_BOUNDARIES = {
       "Instruction과 untrusted evidence의 역할 경계",
       "Completion criteria와 validator 책임 연결",
       "Prompt·model·template·decoding regression loop와 portability gate",
-    ],
+      "Instruction following이 SFT·RLHF로 학습되는 능력이라는 관점",
+      "Prompt sensitivity(표현에 따른 출력 변동)와 그 완화인 prompt robustness(variant 평가·ensemble)",
+],
     reuses: [
       {
         label: "System instruction·untrusted data·runtime enforcement",
@@ -4217,7 +4229,9 @@ export const EDITORIAL_BOUNDARIES = {
         href: "/ai/prompt-reasoning",
       },
       { label: "Few-shot demonstration", href: "/ai/prompt-few-shot" },
-    ],
+      { label: "Instruction demonstration의 response-only loss", href: "/ai/supervised-fine-tuning#overview" },
+      { label: "사람 선호로 다듬는 RLHF의 reward model·PPO", href: "/ai/rlhf#overview" },
+],
     evidence: [
       {
         kind: "primary-source",
@@ -4227,7 +4241,8 @@ export const EDITORIAL_BOUNDARIES = {
         kind: "standard",
         rule: "Prompt instruction과 runtime authorization·schema validation·domain verification을 서로 대체 가능한 안전장치로 표현하지 않는다.",
       },
-    ],
+      { kind: "standard", rule: "Prompt sensitivity의 성공률 수치(92%·71% 등)는 mechanism을 보여주는 예시이며 특정 model의 측정값으로 표기하지 않는다." },
+],
   },
   "prompt-reasoning": {
     title: "Reasoning prompting 글이 소유하는 범위",
@@ -4255,7 +4270,9 @@ export const EDITORIAL_BOUNDARIES = {
       "Zero-shot·few-shot·fine-tuning 선택 경계",
       "Demonstration selection·order·label prior 민감도",
       "Request마다 반복되는 example token·prefill 비용 경계",
-    ],
+      "System/user prompt 역할 구분과 prompt template의 변수 치환 mechanism",
+      "Demonstration 선택 전략(무작위 vs 유사도 기반)과 그 비용·leakage 경계",
+],
     reuses: [
       { label: "Prompt request contract", href: "/ai/prompt-engineering" },
       { label: "Fine-tuning과 response loss", href: "/ai/supervised-fine-tuning" },
@@ -4265,7 +4282,8 @@ export const EDITORIAL_BOUNDARIES = {
         kind: "primary-source",
         rule: "Few-shot와 calibration 결과는 해당 model·classification task·example·ordering 조건을 벗어나 일반화하지 않는다.",
       },
-    ],
+      { kind: "standard", rule: "System/user prompt 예시 문구, template placeholder, pool 크기·top-k 수치는 mechanism을 보여주는 예시이며 특정 model·서비스의 측정값으로 표기하지 않는다." },
+],
   },
   "prompt-structured-output": {
     title: "Structured output 글이 소유하는 범위",
@@ -4274,18 +4292,23 @@ export const EDITORIAL_BOUNDARIES = {
       "Parse→schema→domain validation ladder",
       "Prompt-only·constrained decoding·post-hoc repair 선택 경계",
       "Bounded retry·typed fallback·release measurement",
-    ],
+      "Structured prompting(prompt 설계)과 grammar-constrained generation(decoder 강제)의 층 구분",
+      "Output constraint 스펙트럼과 JSON mode가 보장하는 범위·보장하지 않는 범위의 경계",
+],
     reuses: [
       { label: "Prompt request contract", href: "/ai/prompt-engineering" },
       { label: "CFG·token mask 구현", href: "/ai/grammar-constrained-generation" },
       { label: "XML output parsing", href: "/ai/xml-prompting#parsing" },
-    ],
+      { label: "Grammar를 tokenizer에 compile해 token을 mask하는 decoding 강제", href: "/ai/grammar-tokenizer-decoding#token-mask" },
+      { label: "Schema-driven 동적 grammar compile과 mask cache", href: "/ai/structured-generation-serving#dynamic-schema-cache" },
+],
     evidence: [
       {
         kind: "standard",
         rule: "Syntax·schema·domain validity를 구분하고 constrained decoding이 실제 ID·권한·사실성까지 보장한다고 표현하지 않는다.",
       },
-    ],
+      { kind: "standard", rule: "JSON mode의 `{\"result\": true}` 같은 예시와 schema 위반 시나리오는 mechanism을 보여주는 예시이며 특정 provider의 측정값으로 표기하지 않는다." },
+],
   },
   "xml-prompting": {
     title: "XML prompting 글이 소유하는 범위",
@@ -10003,6 +10026,68 @@ export const EDITORIAL_BOUNDARIES = {
         kind: "standard",
         rule: "Vocabulary 크기·embedding matrix 메모리·parameter 수 계산은 예시 수치의 산수이며 특정 배포의 실측이 아니라고 본문에 밝힌다.",
       },
+    ],
+  },
+  "llm-evaluation-criteria-and-methods": {
+    title: "LLM 평가 criteria·metric·비교 방식 글이 소유하는 범위",
+    owns: [
+      "LLM 평가를 criteria·metric·비교 단위 세 층으로 나누는 전체 틀",
+      "Evaluation criteria 와 evaluation metric 의 구분",
+      "Functional correctness 와 semantic similarity evaluation 의 계산 방식과 예시 수치",
+      "Reference-based 와 reference-free evaluation 의 축, exact match 를 대표 사례로 다룸",
+      "Pointwise·pairwise·ranking evaluation 의 정의, 집계 방식, pairwise win-rate 집계 절차",
+    ],
+    reuses: [
+      { label: "Prompt output validation ladder(parse→schema→domain)", href: "/ai/prompt-structured-output" },
+      { label: "Prompt evaluation regression loop", href: "/ai/prompt-engineering" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "HELM·BIG-bench·BERTScore·Codex 의 수치는 각 논문이 평가한 정확한 model·시나리오·benchmark 조합에 한정하고 일반화하지 않는다." },
+      { kind: "project-claim", rule: "Pointwise·pairwise 비교의 illustrative 수치(4.2/5, win rate 0.62 등)는 예시로만 쓰고 특정 실제 model 의 실측치로 제시하지 않는다." },
+      { kind: "standard", rule: "A/B 배포, online/offline 평가, LLM 을 judge 로 쓰는 방법과 그 bias 는 이 글이 다루지 않고 후속 글(llm-as-a-judge)이 소유한다." },
+    ],
+  },
+  "evaluation-datasets-and-pipelines": {
+    title: "평가 데이터셋과 파이프라인 글이 소유하는 범위",
+    owns: [
+      "Evaluation dataset·golden dataset·evaluation example(test case)의 층위 구분과 evaluation coverage 척도",
+      "Edge case·adversarial example·OOD evaluation 을 golden set 에 의도적으로 채우는 전략과 distribution shift 의 정의",
+      "Slice-based evaluation 으로 찾는 failure slice 와 이전 버전 대비 regression test",
+      "Evaluation harness 를 automated evaluation pipeline·continuous evaluation 으로 굳히는 절차",
+      "Offline·online·shadow evaluation 의 구분과 A/B testing 의 표본 크기 관계, 배포 후 golden set 으로 되먹이는 feedback loop",
+    ],
+    reuses: [
+      { label: "실험 하나를 판정하는 가설·비교 축·채택 기준 규칙", href: "/ai/paired-experiment-design#overview" },
+      { label: "Baseline·candidate 를 짝지어 비교하는 통계", href: "/ai/paired-experiment-design#paired-delta" },
+      { label: "반복 표본의 분산 추정량", href: "/ai/math-variance-sampling#sample-estimation" },
+      { label: "운영 변경 효과를 canary·control 로 검증하는 방법", href: "/ai/llm-serving-ops#observability-aiops" },
+      { label: "Prompt 버전 비교의 좁은 규모 regression loop", href: "/ai/prompt-engineering#anti-patterns" },
+      { label: "평가 지표 자체(정확도·judge score)의 측정", href: "/ai/prompt-structured-output#output-measurement" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "HELM·OpenAI Evals 의 flag·registry 구조는 문서 이름을 그대로 옮기고 버전에 따라 바뀔 수 있음을 적는다." },
+      { kind: "primary-source", rule: "CheckList·WILDS·ML Test Score·Kohavi 논문의 수치(bug 발견 비율, OOD 격차, 국가 slice 하락, 표본 크기 관계)는 저자 자기보고이며 이 글이 새로 측정한 값이 아니다." },
+      { kind: "project-claim", rule: "Golden set 200 개, category 분포, edge case 10 %, 언어별 slice 정확도, shadow 트래픽 10 % 같은 수치는 파이프라인 구조를 보여 주는 설명용 가정이며 특정 시스템의 실측값으로 인용하지 않는다." },
+    ],
+  },
+  "llm-as-a-judge": {
+    title: "LLM-as-a-judge 글이 소유하는 범위",
+    owns: [
+      "Human evaluation 과 LLM-as-a-judge(judge model)의 구분과 agreement rate 기준",
+      "Evaluation rubric 의 설계(chain-of-thought + form-filling)와 효과",
+      "Judge bias 총칭과 position·verbosity·self-preference bias 세 구체 사례의 실측치",
+      "Position bias 를 상쇄하는 양방향 pairwise judge 호출 절차",
+      "Judge calibration — rubric·순서 교차 검증·human agreement 재확인의 조합",
+    ],
+    reuses: [
+      { label: "Pointwise·pairwise·ranking evaluation", href: "/ai/llm-evaluation-criteria-and-methods#pointwise-pairwise-ranking" },
+      { label: "Reference-based vs reference-free evaluation", href: "/ai/llm-evaluation-criteria-and-methods#reference-based-vs-free" },
+      { label: "Evaluation criteria vs evaluation metric", href: "/ai/llm-evaluation-criteria-and-methods#criteria-metric" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Position·verbosity bias 수치는 MT-Bench 논문이 실제로 평가한 judge model·공격 유형에 한정하고 다른 judge 로 일반화하지 않는다." },
+      { kind: "primary-source", rule: "Self-preference(self-enhancement) bias 는 저자 자신이 통계적으로 확정하지 못한다고 명시한 진술을 반드시 함께 적는다." },
+      { kind: "standard", rule: "Agreement rate·상관계수는 그 값을 측정한 정확한 benchmark·judge 버전을 밝히고 다른 조합에 그대로 이식하지 않는다." },
     ],
   },
 } as const satisfies Record<string, EditorialBoundary>;

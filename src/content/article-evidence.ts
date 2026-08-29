@@ -2631,7 +2631,9 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://arxiv.org/abs/2307.03172",
       note: "긴 문맥에서 정보 위치에 따라 활용 성능이 달라지는 조건을 측정",
     },
-  ],
+    { kind: "핵심 논문", label: "LLMLingua: Compressing Prompts for Accelerated Inference of Large Language Models", href: "https://arxiv.org/abs/2310.05736", note: "작은 model perplexity 기반 token-level 압축, 저자 데이터셋에서 최대 20배 압축·손실 최소 자기보고" },
+    { kind: "핵심 논문", label: "LongLLMLingua: Accelerating and Enhancing LLMs in Long Context Scenarios via Prompt Compression", href: "https://arxiv.org/abs/2310.06839", note: "질문 인지 압축·재배치, NaturalQuestions 4배 감소·성능 최대 21.4%↑, LooGLE 비용 94.0%↓ 저자 자기보고" },
+],
   "ai/mcp-protocol": [
     {
       kind: "공식 문서",
@@ -6276,5 +6278,23 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "핵심 논문", label: "Parallelizing Linear Transformers with the Delta Rule over Sequence Length", href: "https://arxiv.org/abs/2406.06484", note: "Chunkwise WY/UT transform 알고리즘과 4~16배 속도 수치의 출처" },
     { kind: "핵심 논문", label: "Gated Delta Networks: Improving Mamba2 with Delta Rule", href: "https://arxiv.org/abs/2412.06464", note: "Gated delta rule 식과 perplexity·retrieval 벤치마크의 출처" },
     { kind: "공식 규격", label: "Blelloch · Prefix Sums and Their Applications (CMU-CS-90-190)", href: "https://www.cs.cmu.edu/~guyb/papers/Ble93.pdf", note: "Up-sweep·down-sweep parallel scan 의 원 출처, 1990년 기술보고서" },
+  ],
+  "ai/llm-evaluation-criteria-and-methods": [
+    { kind: "핵심 논문", label: "Holistic Evaluation of Language Models (HELM)", href: "https://arxiv.org/abs/2211.09110", note: "Criteria·metric 대응과 42개 시나리오 설계의 출처" },
+    { kind: "핵심 논문", label: "BERTScore: Evaluating Text Generation with BERT", href: "https://arxiv.org/abs/1904.09675", note: "Semantic similarity evaluation 의 F1 계산식과 WMT18 상관관계 수치의 출처" },
+    { kind: "핵심 논문", label: "Evaluating Large Language Models Trained on Code (Codex)", href: "https://arxiv.org/abs/2107.03374", note: "pass@k 정의와 HumanEval pass@1·pass@100 수치의 출처" },
+    { kind: "Benchmark 논문", label: "Beyond the Imitation Game (BIG-bench)", href: "https://arxiv.org/abs/2206.04615", note: "204개 task 의 criteria·metric 다양성과 사람 기준선의 출처" },
+  ],
+  "ai/evaluation-datasets-and-pipelines": [
+    { kind: "공식 문서", label: "Stanford CRFM · HELM tutorial", href: "https://crfm-helm.readthedocs.io/en/latest/tutorial/", note: "Scenario·subject 분류와 group 별 coverage 리포트 구조의 근거" },
+    { kind: "공식 문서", label: "OpenAI · Evals build-eval 가이드", href: "https://github.com/openai/evals/blob/main/docs/build-eval.md", note: "Eval 등록·harness 자동 실행 방식과 좋은 eval 데이터 기준의 근거" },
+    { kind: "핵심 논문", label: "Ribeiro et al. · CheckList (ACL 2020)", href: "https://arxiv.org/abs/2005.04118", note: "Edge case·behavioral test 로 숨은 실패를 찾는 방법과 실측 bug 발견 비율의 근거" },
+    { kind: "핵심 논문", label: "Koh et al. · WILDS (ICML 2021)", href: "https://arxiv.org/abs/2012.07421", note: "실제 domain 분포 이동에서 in-distribution·OOD 성능 격차의 근거" },
+    { kind: "핵심 논문", label: "Breck et al. · The ML Test Score (IEEE Big Data 2017)", href: "https://research.google/pubs/the-ml-test-score-a-rubric-for-ml-production-readiness-and-technical-debt-reduction/", note: "Slice 별 품질 하한, canary(shadow), offline·online 상관, regression test 항목의 근거" },
+    { kind: "핵심 논문", label: "Kohavi, Tang, Xu et al. · Online RCTs at Scale (Trials 2020)", href: "https://pmc.ncbi.nlm.nih.gov/articles/PMC7007661/", note: "A/B 표본 크기와 감지 효과의 제곱 관계, 대규모 실험 운영 규모의 근거" },
+  ],
+  "ai/llm-as-a-judge": [
+    { kind: "핵심 논문", label: "Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena", href: "https://arxiv.org/abs/2306.05685", note: "Position·verbosity·self-enhancement bias 실측치와 human agreement rate 의 출처" },
+    { kind: "핵심 논문", label: "G-Eval: NLG Evaluation using GPT-4 with Better Human Alignment", href: "https://arxiv.org/abs/2303.16634", note: "Chain-of-thought + form-filling rubric 설계와 Spearman 0.514 의 출처" },
   ],
 };

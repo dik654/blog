@@ -51,6 +51,81 @@ export const agentArticles: Article[] = [
     component: () => import("@/pages/articles/ai/prompt-structured-output"),
   },
   {
+    slug: "evaluation-datasets-and-pipelines",
+    title: "평가는 golden set을 채우고 offline·shadow·A/B를 통과해야 신뢰됩니다",
+    subcategory: "ai-agents",
+    sections: [
+      { id: "problem", title: "Golden set 하나로 평가가 끝나지 않는 이유" },
+      { id: "golden-set", title: "Golden dataset, evaluation example, coverage" },
+      { id: "edge-case", title: "Edge case, adversarial example, OOD, distribution shift" },
+      { id: "slice-analysis", title: "Slice-based evaluation, failure slice, regression test" },
+      { id: "pipeline", title: "Evaluation harness와 automated pipeline, continuous evaluation" },
+      { id: "deployment", title: "Offline, online, shadow, A/B, feedback loop" },
+      {
+        id: "sources",
+        title: "근거 문서",
+        subsections: [
+          { id: "paper-helm", title: "HELM" },
+          { id: "paper-openai-evals", title: "OpenAI Evals" },
+          { id: "paper-checklist", title: "CheckList" },
+          { id: "paper-wilds", title: "WILDS" },
+          { id: "paper-ml-test-score", title: "The ML Test Score" },
+          { id: "paper-kohavi", title: "Online RCTs at Scale" },
+        ],
+      },
+    ],
+    component: () => import("@/pages/articles/ai/evaluation-datasets-and-pipelines"),
+  },
+  {
+    slug: "llm-evaluation-criteria-and-methods",
+    title: "LLM 평가는 criteria·metric·비교 방식 세 층으로 나뉩니다",
+    subcategory: "ai-agents",
+    sections: [
+      { id: "problem", title: "세 층의 질문: criteria·metric·비교 단위" },
+      {
+        id: "criteria-metric",
+        title: "Criteria 는 잴 대상, Metric 은 숫자로 바꾸는 함수",
+        subsections: [{ id: "paper-helm", title: "HELM 논문의 문제와 기여" }],
+      },
+      {
+        id: "functional-vs-semantic",
+        title: "Functional correctness 대 semantic similarity",
+        subsections: [
+          { id: "paper-bertscore", title: "BERTScore 논문의 문제와 기여" },
+          { id: "paper-codex", title: "Codex pass@k 정의와 수치" },
+        ],
+      },
+      {
+        id: "reference-based-vs-free",
+        title: "Reference-based 대 reference-free, exact match",
+        subsections: [{ id: "paper-big-bench", title: "BIG-bench 논문의 문제와 기여" }],
+      },
+      { id: "pointwise-pairwise-ranking", title: "Pointwise·pairwise·ranking 비교와 집계" },
+    ],
+    component: () => import("@/pages/articles/ai/llm-evaluation-criteria-and-methods"),
+  },
+  {
+    slug: "llm-as-a-judge",
+    title: "LLM-as-a-judge 는 rubric 과 순서로 판정이 갈립니다",
+    subcategory: "ai-agents",
+    sections: [
+      { id: "problem", title: "Human evaluation 을 대체하는 judge model" },
+      {
+        id: "rubric",
+        title: "Evaluation rubric 의 설계와 효과",
+        subsections: [{ id: "paper-geval", title: "G-Eval 논문의 문제와 기여" }],
+      },
+      {
+        id: "position-bias",
+        title: "Judge bias 와 position bias 실측치",
+        subsections: [{ id: "paper-mtbench", title: "MT-Bench 논문의 문제와 기여" }],
+      },
+      { id: "verbosity-self-preference", title: "Verbosity bias 와 self-preference bias" },
+      { id: "calibration", title: "Judge calibration: 세 조각의 조합" },
+    ],
+    component: () => import("@/pages/articles/ai/llm-as-a-judge"),
+  },
+  {
     slug: "xml-prompting",
     title: "XML 프롬프팅: 역할 경계·파싱·보안",
     subcategory: "ai-agents",

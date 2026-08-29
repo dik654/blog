@@ -34,10 +34,35 @@ export default function StructuredOutput() {
           사람이 읽는 보고서는 표현이 조금 달라도 되지만 program이 읽는 결과는
           field name, type, 허용 값, 누락과 오류 표현이 안정적이어야 합니다.
           “JSON으로 답해 줘”만 적으면 JSON처럼 보이는 text를 유도할 뿐 필요한
-          field나 의미까지 고정하지 못합니다. 먼저 consumer가 실제로 필요한
-          record를 정의하고 <code>required</code>, <code>enum</code>,
-          <code>null</code>, <code>additionalProperties</code>와 error state를 schema에
-          포함해야 합니다.
+          field나 의미까지 고정하지 못합니다.
+        </p>
+        <p>
+          먼저 consumer가 실제로 필요한 record를 정의하고 <code>required</code>,{" "}
+          <code>enum</code>, <code>null</code>, <code>additionalProperties</code>와
+          error state를 schema에 포함해야 합니다.
+        </p>
+      </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3 id="prompt-design-layer" className="scroll-mt-20">
+          Structured prompting은 설계이고 강제는 decoder의 책임입니다
+        </h3>
+        <p>
+          Structured prompting은 원하는 field·type·example을 prompt 문장으로
+          미리 보여주는 설계 기법입니다. Model이 그 설명을 따르길 기대할
+          뿐이고, 다른 token을 아예 못 내놓게 막는 decoder-level 강제는 이
+          층에 없습니다.
+        </p>
+        <p>
+          반면 grammar-constrained generation은 JSON Schema나 CFG를
+          tokenizer에 맞게 compile해, 생성 중 허용되지 않는 token의 logit을
+          직접 지우는 decoding 강제입니다. 두 층은 함께 쓸 수 있지만 막는
+          실패가 다릅니다. Prompt 설계는 model에게 모양을 알려줄 뿐이고, 실제
+          token 강제의 원리는{" "}
+          <Link to="/ai/grammar-tokenizer-decoding#token-mask">
+            grammar-tokenizer decoding
+          </Link>
+          에서 이어집니다.
         </p>
       </div>
 
@@ -97,9 +122,11 @@ export default function StructuredOutput() {
         <h3 id="output-paths" className="scroll-mt-24">세 경로는 “형식이 잘 맞는가”와 “얼마나 오래 걸리는가”를 함께 비교합니다</h3>
         <p>
           같은 schema를 전달해도 runtime 경로는 세 가지로 나뉩니다. Prompt-only는
-          model에게 규칙을 요청할 뿐이고, <strong>constrained decoding</strong>은
-          생성 가능한 token을 decoder에서 제한합니다. <strong>Post-hoc
-          repair</strong>는 이미 생성된 invalid output을 나중에 고치는 경로입니다.
+          model에게 규칙을 요청할 뿐이고, constrained decoding은 생성 가능한
+          token을 decoder에서 제한합니다. Post-hoc repair는 이미 생성된 invalid
+          output을 나중에 고치는 경로입니다.
+        </p>
+        <p>
           어느 하나가 항상 가장 빠르다고 단정할 수는 없습니다. Constrained
           decoding에는 grammar 처리 비용이 있지만 retry를 줄일 수 있고, prompt-only
           한 번은 가벼워도 실패가 잦으면 p95 latency가 더 커질 수 있기 때문입니다.
@@ -117,6 +144,31 @@ export default function StructuredOutput() {
             <p className="break-words text-sm leading-6 text-muted-foreground">{tradeoff}</p>
           </div>
         ))}
+      </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3 id="json-mode-boundary" className="scroll-mt-20">
+          JSON mode는 문법만 보장하고 schema는 보장하지 않습니다
+        </h3>
+        <p>
+          <strong>Output constraint</strong>는 prompt 설계·decoder token
+          mask·post-hoc validation 가운데 어느 층에서 model 출력의 가능한
+          모양을 좁히느냐를 통칭하는 말입니다. 한 층만 쓰면 그 층이 막지
+          못하는 실패가 그대로 남습니다.
+        </p>
+        <p>
+          <strong>JSON mode</strong>는 여러 provider가 제공하는 decoder
+          옵션으로, 출력이 문법적으로 유효한 JSON임을 보장합니다. 그러나 어떤
+          field가 있어야 하는지, <code>item_id</code>가 string인지 number인지
+          같은 schema 제약은 검사하지 않습니다.
+        </p>
+        <p>
+          예를 들어 JSON mode를 켜면 <code>{`{"result": true}`}</code>처럼
+          항상 parse되는 JSON이 나오지만, schema가 <code>status</code>·
+          <code>item_id</code> field를 요구해도 JSON mode 혼자서는 그 누락을
+          막지 못합니다. 그래서 JSON mode 뒤에도 schema validation을 그대로
+          둬야 합니다.
+        </p>
       </div>
 
       <div id="output-measurement" className="scroll-mt-24">
@@ -179,9 +231,12 @@ L_{95}&=\underbrace{Q_{0.95}(\{T_i\})}_{\text{95\% 요청이 끝나는 시간 �
           JSON은 typed API payload에, Markdown은 사람이 읽을 보고서에 적합하고 XML
           tag는 긴 prompt 안에서 instruction·example·evidence의 경계를 표시할 때
           유용합니다. 그러나 XML이나 Markdown을 선택했다고 output validity가
-          보장되지는 않습니다. Syntax 실패 비용이 크다면 prompt-only generation이
-          아니라 JSON Schema나 grammar로 invalid token을 막는 decoder-level
-          constraint를 검토합니다.
+          보장되지는 않습니다.
+        </p>
+        <p>
+          Syntax 실패 비용이 크다면 prompt-only generation이 아니라 JSON
+          Schema나 grammar로 invalid token을 막는 decoder-level constraint를
+          검토합니다.
         </p>
         <p>비교 experiment에서는 세 경로를 같은 validator에 통과시킨 뒤 결과를 세 묶음으로 기록합니다.</p>
         <ul>
@@ -225,9 +280,11 @@ L_{95}&=\underbrace{Q_{0.95}(\{T_i\})}_{\text{95\% 요청이 끝나는 시간 �
           운영 경로는 generate→parse→schema validate→domain validate→limited retry→
           fallback 순서로 구성합니다. Retry에는 최대 횟수와 원인별 수정 strategy를
           두고, 원문 근거가 없거나 policy상 실행할 수 없는 경우에는 억지로 record를
-          채우지 않고 typed abstention을 반환해야 합니다. 이때 validator failure를
-          eval set에 축적하면 format prompt와 schema를 어떤 순서로 고쳐야 하는지도
-          추적할 수 있습니다.
+          채우지 않고 typed abstention을 반환해야 합니다.
+        </p>
+        <p>
+          이때 validator failure를 eval set에 축적하면 format prompt와 schema를
+          어떤 순서로 고쳐야 하는지도 추적할 수 있습니다.
         </p>
       </div>
     </section>

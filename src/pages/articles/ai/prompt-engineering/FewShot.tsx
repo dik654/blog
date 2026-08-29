@@ -10,6 +10,41 @@ export default function FewShot() {
         Few-shot은 예시 개수보다 경계 coverage와 순서 민감도가 중요하다
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3 id="prompt-roles" className="scroll-mt-20">
+          System prompt는 고정 규칙, user prompt는 그 turn의 가변 입력입니다
+        </h3>
+        <p>
+          System prompt는 role=system 메시지에 담겨 대화 내내 유지되는 standing
+          instruction입니다. 매 request마다 다시 전송되지만 화면에는 보이지
+          않고, persona나 출력 형식처럼 세션 전체에 적용할 규칙을 한 번만 적어
+          두면 이후 모든 turn에 반복 설명 없이 적용됩니다.
+        </p>
+        <p>
+          User prompt는 role=user 메시지로 그 turn에서 실제로 처리할 질문이나
+          데이터를 담습니다. System prompt가 고정 규칙이라면 user prompt는
+          request마다 바뀌는 가변 입력이고, few-shot demonstration은 보통 이
+          user turn 앞뒤에 예시 대화쌍으로 끼워 넣습니다.
+        </p>
+
+        <h3 id="prompt-template" className="scroll-mt-20">
+          Prompt template은 변수 치환으로 이 두 역할을 채워 넣습니다
+        </h3>
+        <p>
+          Prompt template은 <code>{"{{query}}"}</code>·<code>{"{{examples}}"}</code>처럼
+          이름 붙은 자리표시자가 있는 고정 문자열입니다. 요청마다 그 자리에
+          실제 사용자 입력과 선택된 demonstration을 채우는 변수 치환을 거쳐야
+          최종 prompt 문자열이 완성됩니다.
+        </p>
+        <p>
+          이 치환 단계 덕분에 instruction 뼈대는 그대로 두고 example 개수나
+          순서만 바꾸는 A/B 비교가 가능합니다. 예컨대 <code>{"{{examples}}"}</code> 자리에
+          예시 3개를 이어 붙이면 template 코드를 고치지 않고도 few-shot 조건을
+          4개로 늘릴 수 있습니다.
+        </p>
+
+        <h3 className="scroll-mt-20">
+          이제 그 예시 하나의 형태를 봅니다
+        </h3>
         <p>
           <strong>In-context learning(ICL)</strong>은 model weight를 update하지 않고
           현재 request의 instruction과 demonstration을 조건으로 completion behavior가
@@ -63,6 +98,28 @@ export default function FewShot() {
             fine-tuning보다 낫다는 뜻은 아닙니다.
           </CitationBlock>
         </div>
+      </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3 id="example-selection" className="scroll-mt-20">
+          예시는 무작위로 뽑을 수도, 유사도로 고를 수도 있습니다
+        </h3>
+        <p>
+          Demonstration을 고르는 방법은 크게 둘로 나뉩니다. 무작위 선택은 고정된
+          example 집합에서 매번 같은 것을 재사용해 비용이 가장 싸고 재현이
+          쉽지만, 현재 입력과 관련 없는 예시가 섞여 있어도 그대로 나갑니다.
+        </p>
+        <p>
+          유사도 기반 선택은 현재 query를 embedding으로 바꿔 후보 pool에서 가장
+          가까운 k개를 검색해 그때그때 다른 demonstration을 골라 넣습니다.
+          예를 들어 pool 500개에서 top-5를 매 request마다 조회하면 관련성은
+          오르지만 embedding 계산과 검색이 request 지연에 더해집니다.
+        </p>
+        <p>
+          이때 후보 pool을 평가에 쓸 held-out set과 겹치게 두면 train/eval
+          leakage가 생기므로, 선택에 쓰는 pool과 평가에 쓰는 pool은 미리
+          분리해야 합니다.
+        </p>
       </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">

@@ -54,7 +54,7 @@ function SceneFrame({
         <div data-viz-canvas className="mt-5 min-w-0 overflow-hidden">
           {children(controls.active)}
         </div>
-        <p className="mt-4 border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground">
+        <p className="mt-4 min-h-[6.5rem] border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground sm:min-h-[4.5rem]">
           {notes[controls.active]}
         </p>
         <AnimatedSceneControls labels={[...labels]} {...controls} />

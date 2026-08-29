@@ -62,14 +62,40 @@ export default function AntiPatterns() {
       <div className="not-prose my-8"><PromptRegressionViz /></div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3>Prompt·model·template·decoding을 함께 versioning한다</h3>
+        <h3 id="prompt-sensitivity" className="scroll-mt-20">
+          같은 뜻이라도 표현이 바뀌면 결과가 달라질 수 있습니다
+        </h3>
+        <p>
+          Prompt sensitivity는 같은 의미를 가진 지시를 다른 문장으로 바꿔
+          썼을 뿐인데 완료율이나 형식 준수율이 달라지는 현상입니다. 예를 들어
+          “표를 만들어라”와 “표 형식으로 정리해라”가 같은 model에서 성공률
+          92%와 71%로 갈릴 수 있습니다.
+        </p>
+        <p>
+          Prompt robustness는 이 변동을 줄이는 설계 목표입니다. 같은 요청을
+          표현만 바꾼 문장 서너 개로 evaluation set을 만들어 평균과 최저
+          성공률을 함께 보고하거나, 여러 표현의 출력을 실제로 ensemble해
+          다수결로 답을 고르는 방식으로 확보합니다.
+        </p>
+        <p>
+          한 표현에서만 잘 나온 결과를 그 prompt의 성능으로 보고하면
+          robustness를 검증한 것이 아닙니다. 그래서 아래 paired regression에는
+          표현을 바꾼 variant도 함께 넣어야 합니다.
+        </p>
+      </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>Prompt·model 구성을 함께 버전 관리합니다</h3>
         <p>
           Failure trace를 versioned eval case로 저장하고 prompt 한 요소만 바꿔 paired
           comparison을 수행합니다. Trace에는 prompt hash뿐 아니라 model snapshot,
           system message, chat template, tool schema, temperature·top-p·max token을
-          기록합니다. 새 model로 옮길 때는 같은 regression suite와 production canary를
-          통과한 뒤 traffic을 늘리고, quality·constraint violation·p95 latency·token
-          cost 중 하나라도 guardrail을 넘으면 rollback합니다.
+          기록합니다.
+        </p>
+        <p>
+          새 model로 옮길 때는 같은 regression suite와 production canary를 통과한
+          뒤 traffic을 늘리고, quality·constraint violation·p95 latency·token cost
+          중 하나라도 guardrail을 넘으면 rollback합니다.
         </p>
         <p>
           이 과정을 거치면 prompt engineering은 모델과 말씨를 맞추는 개인 기술이
