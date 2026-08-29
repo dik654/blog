@@ -21956,14 +21956,15 @@
    "batch": "vla",
    "sourceIndex": null,
    "term": "Coordinate-as-Text / String Action Prediction",
-   "status": "planned",
+   "status": "done",
    "action": "new",
-   "conceptId": null,
-   "owner": null,
+   "conceptId": "coordinate-as-text-action-prediction",
+   "owner": "/ai/robot-action-representations#pose-and-text-actions",
    "plannedArticle": "robot-action-representations",
    "plannedRoute": "ai/robot-action-representations",
    "inProse": false,
-   "reason": "그래프·본문 모두 없음"
+   "reason": "그래프·본문 모두 없음",
+   "updatedAt": "2026-08-29"
   },
   {
    "batch": "vla",
@@ -21997,14 +21998,15 @@
    "batch": "vla",
    "sourceIndex": null,
    "term": "Diffusion Policy / Diffusion Action Head",
-   "status": "planned",
-   "action": "new",
-   "conceptId": null,
-   "owner": null,
+   "status": "done",
+   "action": "alias",
+   "conceptId": "flow-matching-and-diffusion-action-head",
+   "owner": "/ai/robot-action-representations#diffusion-and-flow-heads",
    "plannedArticle": "robot-action-representations",
    "plannedRoute": "ai/robot-action-representations",
    "inProse": true,
-   "reason": "본문 언급은 있으나 canonical node 없음"
+   "reason": "본문 언급은 있으나 canonical node 없음",
+   "updatedAt": "2026-08-29"
   },
   {
    "batch": "vla",
