@@ -1337,7 +1337,9 @@ export const EDITORIAL_BOUNDARIES = {
       "Cross-embodiment pretraining과 target-robot adaptation을 observation·action·data·adaptation receipt로 분리하는 방법",
       "Monolithic VLA와 hierarchical VLM·geometry·planner·controller system boundary",
       "Pixel-to-3D waypoint의 coordinate transform·error composition과 embodied closed-loop release gate",
-    ],
+      "VLM → VLA transfer가 왜 필요한지를 world knowledge transfer·internet-scale pretraining·robot data scarcity·embodied AI로 설명하는 근거",
+      "Action/spatial/language grounding과 spatial reasoning을 구분하고 VLM output space를 robot action space에 맞추는 action-space alignment",
+],
     reuses: [
       { label: "Vision task의 output coordinate 보존", href: "/ai/vision-task-spatial-contracts" },
       { label: "Conditional flow-matching objective", href: "/ai/diffusion-continuous-time#flow-matching" },
@@ -10659,6 +10661,61 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "primary-source", rule: "Circuit breaker 상태 전이는 Martin Fowler의 CircuitBreaker 패턴 범위 안에서만 주장하고 특정 라이브러리 API로 일반화하지 않습니다." },
       { kind: "primary-source", rule: "Token bucket·leaky bucket의 refill rate·burst 개념은 RFC 2697과 nginx 공식 문서 범위 안에서만 인용합니다." },
       { kind: "standard", rule: "임계값·rate·backoff 수치 예시는 절차를 보여 주기 위한 예시이며 특정 배포의 실측값이라고 주장하지 않습니다." },
+    ],
+  },
+  "robot-action-representations": {
+    title: "로봇 action representation 글이 소유하는 범위",
+    owns: [
+      "Continuous·discrete action space의 표현 정밀도와 vocabulary 재사용 trade-off",
+      "End-effector pose의 6-DoF 자유도 구성과 quaternion 표현의 자유도-숫자 불일치",
+      "Coordinate-as-text(RT-2식) discretize-then-string action tokenization의 구체적 절차",
+      "Action chunking의 chunk 길이·temporal ensembling과 compounding error 완화 메커니즘",
+      "Diffusion·flow matching action head의 학습·추론 절차와 chunking·discretization으로부터의 독립성",
+    ],
+    reuses: [
+      { label: "Action-interface 실행 계약(무엇을 표준화해야 하는가)", href: "/ai/vla-embodiment-gap#action-interface" },
+      { label: "Conditional flow-matching objective", href: "/ai/diffusion-continuous-time#flow-matching" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Bin 개수·chunk 길이·성공률·latency 수치는 RT-2·ACT·Diffusion Policy·π0 각 논문의 저자 자기보고 범위로 제한한다." },
+      { kind: "project-claim", rule: "특정 action head가 다른 head보다 보편적으로 우월하다고 결론짓지 않고, chunk 길이·discretization·sampling cost는 항상 독립 축으로 분리해 비교한다." },
+    ],
+  },
+  "imitation-learning-and-policy-generalization": {
+    title: "Imitation learning과 policy generalization 글이 소유하는 범위",
+    owns: [
+      "Robot demonstration data·robot action dataset의 구성과 behavior cloning objective",
+      "여러 기관·robot 데이터를 표준화해 규모를 키우는 embodied data scaling 흐름과 그 수치",
+      "Compositional generalization과 out-of-distribution generalization을 구분하는 policy generalization taxonomy",
+      "Sim-to-real gap과 이를 줄이는 domain randomization 절차",
+    ],
+    reuses: [
+      { label: "Action 표현(continuous·discrete·chunk·diffusion)", href: "/ai/robot-action-representations" },
+      { label: "Cross-embodiment pretraining과 target adaptation", href: "/ai/vla-embodiment-gap#embodiment-alignment" },
+      { label: "Embodied closed-loop release gate", href: "/ai/vla-embodiment-gap#closed-loop-release" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Dataset 규모·성공률·무작위화 범위 수치는 ALVINN·Open X-Embodiment·Domain Randomization 각 논문의 저자 자기보고 범위로 제한한다." },
+      { kind: "project-claim", rule: "데이터 규모 확대가 compositional generalization을 개선하는 것과 OOD generalization을 개선하는 것을 같은 효과로 합치지 않는다." },
+    ],
+  },
+  "vision-language-navigation": {
+    title: "Vision-Language Navigation 글이 소유하는 범위",
+    owns: [
+      "VLN·VLN-CE의 task 정의 차이와 discrete graph~continuous waypoint 표현력 spectrum",
+      "SLAM controller와 selective reasoning의 저수준 실행·고수준 재추론 책임 분리",
+      "Trajectory memory·anchor-trajectory memory·spatial-temporal memory의 압축·인덱싱 구조",
+      "Two-level alignment의 고수준 계획·저수준 제어 정렬 objective",
+    ],
+    reuses: [
+      { label: "Pixel-to-3D waypoint interface", href: "/ai/vla-embodiment-gap#pixel-to-3d" },
+      { label: "Hierarchical VLA system boundary", href: "/ai/vla-embodiment-gap#system-boundary" },
+      { label: "Outcome reward vs process reward", href: "/ai/reward-design-for-verifiable-rl#outcome-vs-process" },
+      { label: "Policy generalization taxonomy", href: "/ai/imitation-learning-and-policy-generalization#policy-generalization-taxonomy" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "R2R·VLN-CE·waypoint predictor·TAMP-Nav의 규모·성능 수치는 각 논문의 저자 자기보고 범위로 제한한다." },
+      { kind: "project-claim", rule: "Preprint 단계인 TAMP-Nav의 결과를 독립 재현되거나 다른 embodiment·benchmark에 일반화되는 결론으로 확대하지 않는다." },
     ],
   },
 } as const satisfies Record<string, EditorialBoundary>;

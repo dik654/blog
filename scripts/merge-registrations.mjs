@@ -431,14 +431,25 @@ function mergeCatalog(module, obj) {
   const slug = propValue(entryNode, "slug");
   const ed = editor(file);
   const exports = exportedInitializers(ed.sf());
+  const candidateArrays = [];
+  for (const [name, init] of exports) {
+    if (ts.isArrayLiteralExpression(init)) candidateArrays.push({ name, init });
+  }
   let arrayName;
   let arrayNode;
-  for (const [name, init] of exports) {
-    if (ts.isArrayLiteralExpression(init)) {
-      arrayName = name;
-      arrayNode = init;
-      break;
-    }
+  // 한 catalog 파일이 여러 Article[] 를 export 할 수 있으므로(예: articlesDL3.ts 의
+  // dlFoundation2Articles·dlVisionArticles), 무조건 첫 배열을 고르면 slug 가 실제로
+  // 속한 배열과 다른 배열에 중복 삽입될 수 있다. slug 가 이미 있는 배열(update)을
+  // 최우선으로, 없으면 after slug 가 있는 배열(정확한 삽입 위치)을 찾고, 그래도
+  // 없으면 이전 동작대로 첫 배열을 쓴다.
+  const arrayHas = (init, matchSlug) =>
+    init.elements.some((el) => propValue(el, "slug") === matchSlug);
+  const existing = candidateArrays.find((candidate) => arrayHas(candidate.init, slug));
+  const afterHolder = after ? candidateArrays.find((candidate) => arrayHas(candidate.init, after)) : undefined;
+  const chosen = existing ?? afterHolder ?? candidateArrays[0];
+  if (chosen) {
+    arrayName = chosen.name;
+    arrayNode = chosen.init;
   }
   if (!arrayNode) {
     // category index (gpu/index.ts 처럼 `const gpu: Category = { articles: [ ... ] }; export default gpu;` 인 경우 —
@@ -468,14 +479,35 @@ function mergeCatalog(module, obj) {
 function mergeLedger(module, arr) {
   const rows = literalValue(arr);
   const ledger = fs.existsSync(LEDGER_PATH) ? JSON.parse(fs.readFileSync(LEDGER_PATH, "utf8")) : { rows: [] };
-  const rowKey = (row) => `${row.batch ?? "1560"}::${row.sourceIndex ?? ""}::${row.term}`;
+  // `batch` is a provenance tag for which original input paste a term came from — it is not
+  // something a worker should be asked to reproduce exactly, and in practice workers have
+  // written inconsistent values here (e.g. the total term count instead of the row's real
+  // batch tag). Keying the upsert on batch caused a real incident: 62 rows across 3 articles
+  // silently duplicated instead of updating, because the worker's LEDGER export used
+  // batch:"1649" while the existing row was batch:"1560" — same sourceIndex+term, different
+  // key, so mergeLedger inserted a second row instead of upserting the first. sourceIndex+term
+  // is already a unique, worker-independent identifier (sourceIndex traces back to the
+  // original input list), so key on that alone; fall back to term alone only when sourceIndex
+  // is absent (never emitted by this pipeline, but keeps old rows without it matchable).
+  const rowKey = (row) =>
+    row.sourceIndex !== undefined && row.sourceIndex !== null
+      ? `sourceIndex::${row.sourceIndex}::${row.term}`
+      : `term::${row.term}`;
   const index = new Map(ledger.rows.map((row, i) => [rowKey(row), i]));
   let updated = 0;
   let added = 0;
   for (const row of rows) {
     const key = rowKey(row);
     const existing = index.get(key);
-    const merged = { ...(existing !== undefined ? ledger.rows[existing] : { batch: row.batch ?? "1560" }), ...row, updatedAt: new Date().toISOString().slice(0, 10) };
+    // Never let an incoming row overwrite the original `batch` provenance tag — only use the
+    // incoming batch when there is no existing row to preserve one from.
+    const preservedBatch = existing !== undefined ? ledger.rows[existing].batch : (row.batch ?? "1560");
+    const merged = {
+      ...(existing !== undefined ? ledger.rows[existing] : {}),
+      ...row,
+      batch: preservedBatch,
+      updatedAt: new Date().toISOString().slice(0, 10),
+    };
     if (existing !== undefined) {
       ledger.rows[existing] = merged;
       updated += 1;

@@ -522,7 +522,9 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "후속 논문", label: "3D Diffuser Actor · Policy Diffusion with 3D Scene Representations", href: "https://arxiv.org/abs/2402.10885", note: "Point-cloud 기반 3D scene representation과 diffusion policy를 결합한 대조 계열로 pixel-to-3D lifting이 유일한 interface가 아님을 보여 줌" },
     { kind: "평가 논문", label: "RADAR · Robustness Assessment of Vision-Language-Action Models", href: "https://arxiv.org/abs/2602.10980", note: "Dynamics·observation perturbation에서 nominal success와 robustness를 분리한 독립 평가" },
     { kind: "평가 논문", label: "SO-101 real-robot VLA failure and recovery benchmark", href: "https://arxiv.org/abs/2606.08881", note: "실제 저비용 robot의 failure taxonomy와 recovery를 final success와 분리한 독립 평가" },
-  ],
+    { kind: "핵심 논문", label: "A Survey of Embodied AI: From Simulators to Research Tasks", href: "https://arxiv.org/abs/2103.04918", note: "인터넷 dataset이 아니라 자기 몸으로 환경과 상호작용하며 배우는 embodied AI 정의의 출처이며 이후 VLA 계열의 성능을 규정하지 않음" },
+    { kind: "핵심 논문", label: "LAION-5B", href: "https://arxiv.org/abs/2210.08402", note: "58억 5천만 image-text pair 규모의 공식 artifact이며 robot demonstration data 규모(수십만 trajectory)와의 자릿수 차이를 보여 주는 대표 수치, VLM/RT-2 학습에 직접 쓰였다는 근거는 아님" },
+],
   "ai/word2vec": [
     {
       kind: "핵심 논문",
@@ -6448,5 +6450,22 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 문서", label: "Martin Fowler · CircuitBreaker", href: "https://martinfowler.com/bliki/CircuitBreaker.html", note: "circuit breaker 패턴과 상태 전이 정의의 근거" },
     { kind: "공식 규격", label: "RFC 2697 · A Single Rate Three Color Marker", href: "https://www.rfc-editor.org/rfc/rfc2697", note: "token bucket의 refill rate·burst capacity 정의의 근거" },
     { kind: "공식 문서", label: "nginx · ngx_http_limit_req_module", href: "https://nginx.org/en/docs/http/ngx_http_limit_req_module.html", note: "leaky bucket rate limiting의 rate·burst 파라미터 근거" },
+  ],
+  "ai/robot-action-representations": [
+    { kind: "핵심 논문", label: "RT-2 · Vision-Language-Action Models Transfer Web Knowledge to Robotic Control", href: "https://arxiv.org/abs/2307.15818", note: "8차원 action의 256 bin discretization과 문자열 token 표현의 저자 자기보고 근거이며 임의 robot의 zero-shot control 보장은 아님" },
+    { kind: "핵심 논문", label: "ACT · Learning Fine-Grained Bimanual Manipulation with Low-Cost Hardware", href: "https://arxiv.org/abs/2304.13705", note: "Chunk 길이 k=100·temporal ensembling의 근거이며 모든 task에 같은 chunk length가 최적이라는 뜻은 아님" },
+    { kind: "핵심 논문", label: "Diffusion Policy · Visuomotor Policy Learning via Action Diffusion", href: "https://arxiv.org/abs/2303.04137", note: "Denoising step 수·action horizon의 근거이며 모든 control rate에서 다른 head보다 우월하다는 뜻은 아님" },
+    { kind: "핵심 논문", label: "π0 · A Vision-Language-Action Flow Model for General Robot Control", href: "https://arxiv.org/abs/2410.24164", note: "Flow matching chunk 길이·integration step·inference latency의 저자 측정 근거이며 다른 action head에 대한 보편 우위를 뜻하지 않음" },
+  ],
+  "ai/imitation-learning-and-policy-generalization": [
+    { kind: "핵심 논문", label: "Pomerleau · ALVINN: An Autonomous Land Vehicle in a Neural Network", href: "https://proceedings.neurips.cc/paper/1988/hash/812b4ba287f5ee0bc9d43bbf5bbe87fb-Abstract.html", note: "Behavior cloning과 discrete steering action head의 초기 구현 근거이며 현대 환경 재현을 보장하지 않음" },
+    { kind: "핵심 논문", label: "Open X-Embodiment · Robotic Learning Datasets and RT-X Models", href: "https://arxiv.org/abs/2310.08864", note: "Embodied data scaling 규모(21 기관·22 robot·100만+ trajectory)의 근거이며 coverage나 품질 보장은 아님" },
+    { kind: "핵심 논문", label: "Domain Randomization for Transferring Deep Neural Networks from Simulation to the Real World", href: "https://arxiv.org/abs/1703.06907", note: "무작위화 항목과 real robot 성공률(40회 중 38회)의 근거이며 모든 환경 변화 폭을 덮는다는 뜻은 아님" },
+  ],
+  "ai/vision-language-navigation": [
+    { kind: "핵심 논문", label: "Vision-and-Language Navigation (R2R)", href: "https://arxiv.org/abs/1711.07280", note: "VLN task 정의와 discrete navigation graph·R2R 규모의 근거이며 continuous real robot 성능을 뜻하지 않음" },
+    { kind: "핵심 논문", label: "Beyond the Nav-Graph: VLN-CE", href: "https://arxiv.org/abs/2004.02857", note: "Continuous environment에서의 low-level action과 성능 하락의 근거이며 모든 결과가 비례 재현된다는 뜻은 아님" },
+    { kind: "핵심 논문", label: "Waypoint Models for Instruction-guided Navigation in Continuous Environments", href: "https://arxiv.org/abs/2110.02207", note: "Waypoint 표현력 spectrum과 경로 효율성의 근거이며 모든 embodiment를 대표하지 않음" },
+    { kind: "후속 논문", label: "Embodied-Navigator · TAMP-Nav (2026-08-18 preprint)", href: "https://arxiv.org/abs/2608.17512", note: "Selective reasoning·anchor-trajectory memory·two-level alignment와 R2R-CE 66.2% SR의 최신 자기보고이며 독립 재현은 아님" },
   ],
 };

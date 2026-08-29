@@ -20641,6 +20641,156 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "시스템이 계속 올바르게 동작하는 정도(reliability)라는 최상위 목표를, 중복 구성으로 서비스를 계속 응답하게 하는 목표(HA)와 장애에도 계속 정상 동작하는 능력(fault tolerance)이 정의하고, 주 구성 요소 장애 시 예비로 트래픽을 옮기는 절차(failover)와 전체 기능 대신 일부 기능을 줄여 서비스를 유지하는 방식(graceful degradation)이 실제로 달성하는 구조입니다.",
     canonicalHref: "/ai/rate-limiting-and-reliability-patterns#graceful-degradation-and-failover",
   },
+  "continuous-vs-discrete-action-space": {
+    id: "continuous-vs-discrete-action-space",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Continuous vs discrete action space",
+    aliases: ["Continuous action space", "Discrete action space"],
+    definition:
+      "Robot action 값을 실수 벡터로 그대로 regression할지(continuous), 미리 정한 bin으로 나눠 정수 token으로 예측할지(discrete) 정하는 action 표현의 첫 갈림길입니다.",
+    canonicalHref: "/ai/robot-action-representations#continuous-vs-discrete",
+  },
+  "end-effector-pose-and-6dof": {
+    id: "end-effector-pose-and-6dof",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "End-effector pose and 6-DoF",
+    aliases: ["End-effector pose", "6-DoF pose"],
+    definition:
+      "로봇 팔 끝(end-effector)이 있어야 할 위치 3자유도와 방향 3자유도를 합친 6-DoF pose를 quaternion 등 구체적 숫자 표현으로 나타내는 방법입니다.",
+    canonicalHref: "/ai/robot-action-representations#pose-and-text-actions",
+  },
+  "coordinate-as-text-action-prediction": {
+    id: "coordinate-as-text-action-prediction",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Coordinate-as-text action prediction",
+    aliases: ["Coordinate-as-text", "String action prediction"],
+    definition:
+      "Continuous pose·gripper 값을 bin으로 discretize한 정수로 바꾼 뒤 공백으로 이어 하나의 문자열 token sequence로 예측하는 action 표현 방법입니다.",
+    canonicalHref: "/ai/robot-action-representations#pose-and-text-actions",
+  },
+  "action-chunking": {
+    id: "action-chunking",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Action chunking",
+    aliases: ["Action Chunking with Transformers", "Chunked action prediction"],
+    definition:
+      "다음 action 하나가 아니라 앞으로 k timestep 동안 실행할 action sequence를 한 번의 forward pass로 함께 예측하는 방법입니다.",
+    canonicalHref: "/ai/robot-action-representations#action-chunking",
+  },
+  "flow-matching-and-diffusion-action-head": {
+    id: "flow-matching-and-diffusion-action-head",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Flow matching and diffusion action head",
+    aliases: ["Flow matching action head", "Diffusion action head", "Diffusion policy"],
+    definition:
+      "정답 action에 noise를 섞은 중간 상태에서 정답으로 되돌리는 velocity 또는 score를 반복 추정해, continuous action의 multimodal 분포에서 표본을 생성하는 action head입니다.",
+    canonicalHref: "/ai/robot-action-representations#diffusion-and-flow-heads",
+  },
+  "vlm-to-vla-transfer": {
+    id: "vlm-to-vla-transfer",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "VLM → VLA transfer",
+    aliases: ["World Knowledge Transfer", "Internet-Scale Pretraining", "Robot Data Scarcity", "Embodied AI"],
+    definition:
+      "Vision-language model이 internet-scale image-text pretraining으로 얻은 semantic·상식·물리 지식을 robot이 실행하는 action policy로 넘기는 절차이며, robot demonstration data가 internet data보다 자릿수로 부족한 robot data scarcity를 보완하는 이유입니다. Embodied AI, 즉 인터넷 dataset이 아니라 자기 몸으로 환경과 상호작용하며 배우는 agent라는 상위 개념 위에서 이 transfer가 일어납니다.",
+    canonicalHref: "/ai/vla-embodiment-gap#overview",
+  },
+  "grounding-and-action-space-alignment": {
+    id: "grounding-and-action-space-alignment",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Grounding taxonomy and action-space alignment",
+    aliases: ["Action Grounding", "Spatial Grounding", "Language Grounding", "Spatial Reasoning", "Action-Space Alignment"],
+    definition:
+      "언어를 실제 object에 연결하는 language grounding, 그 object를 3D 좌표·자세에 연결하는 spatial grounding, 그 좌표를 robot action sequence로 매핑하는 action grounding을 object 사이 공간 관계를 추론하는 spatial reasoning과 함께 구분하고, VLM의 discrete output space와 robot의 continuous action space 표현 차이를 맞추는 action-space alignment 문제를 함께 다루는 계약입니다.",
+    canonicalHref: "/ai/vla-embodiment-gap#action-interface",
+  },
+  "imitation-learning-and-behavior-cloning": {
+    id: "imitation-learning-and-behavior-cloning",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Imitation learning and behavior cloning",
+    aliases: ["Imitation learning", "Behavior cloning", "Robot demonstration data", "Robot action dataset"],
+    definition:
+      "사람이 남긴 (observation, action) demonstration을 모아 robot action dataset으로 만들고, policy가 낸 action과 demonstration의 action 차이를 supervised loss로 직접 맞히는 학습 방법입니다.",
+    canonicalHref: "/ai/imitation-learning-and-policy-generalization#imitation-and-behavior-cloning",
+  },
+  "embodied-data-scaling": {
+    id: "embodied-data-scaling",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Embodied data scaling",
+    aliases: ["Embodied data scale", "Cross-institution robot dataset scaling"],
+    definition:
+      "여러 기관·여러 robot embodiment의 demonstration을 공통 형식으로 합쳐 한 policy가 학습에 쓸 수 있는 robot trajectory 데이터의 총량을 키우는 흐름입니다.",
+    canonicalHref: "/ai/imitation-learning-and-policy-generalization#embodied-data-scaling",
+  },
+  "policy-generalization-taxonomy": {
+    id: "policy-generalization-taxonomy",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Policy generalization taxonomy",
+    aliases: ["Compositional generalization", "Out-of-distribution generalization", "Policy generalization"],
+    definition:
+      "학습 분포 밖 상황에서의 policy 성능을, 이미 아는 요소의 새 조합에 대응하는 compositional generalization과 관측·행동 분포 자체가 다른 out-of-distribution(OOD) generalization으로 나눠 보는 분류입니다.",
+    canonicalHref: "/ai/imitation-learning-and-policy-generalization#policy-generalization-taxonomy",
+  },
+  "sim-to-real-and-domain-randomization": {
+    id: "sim-to-real-and-domain-randomization",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Sim-to-real and domain randomization",
+    aliases: ["Sim-to-real", "Domain randomization"],
+    definition:
+      "Simulation에서 학습한 policy를 real robot으로 옮길 때 남는 sim-to-real gap을, episode마다 색상·질감·조명·camera 등 simulation 파라미터를 무작위화해 줄이는 학습 방법입니다.",
+    canonicalHref: "/ai/imitation-learning-and-policy-generalization#sim-to-real-and-domain-randomization",
+  },
+  "vln-taxonomy": {
+    id: "vln-taxonomy",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Vision-Language Navigation (VLN) and VLN-CE taxonomy",
+    aliases: ["VLN", "VLN-CE", "Navigation action space", "Waypoint prediction"],
+    definition:
+      "언어 instruction을 따라 environment를 이동하는 embodied task를 discrete navigation graph에서 정의한 VLN과, continuous environment에서 low-level action·waypoint로 정의한 VLN-CE로 나누고, 그 사이 action space의 표현력 spectrum(고정 step ~ 연속 waypoint)을 규정하는 taxonomy입니다.",
+    canonicalHref: "/ai/vision-language-navigation#vln-taxonomy",
+  },
+  "slam-controller-and-selective-reasoning": {
+    id: "slam-controller-and-selective-reasoning",
+    kind: "method",
+    domain: "computer-science",
+    label: "SLAM controller and selective reasoning",
+    aliases: ["SLAM controller", "Selective reasoning"],
+    definition:
+      "저수준 위치 추정·지도 갱신·이동 실행은 SLAM 기반 controller에 맡기고, VLM은 분기점처럼 실제 판단이 필요한 지점에서만 chain-of-thought reasoning을 호출해 나머지 구간의 재추론 비용을 줄이는 구조입니다.",
+    canonicalHref: "/ai/vision-language-navigation#slam-controller-and-selective-reasoning",
+  },
+  "trajectory-and-spatial-temporal-memory": {
+    id: "trajectory-and-spatial-temporal-memory",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Trajectory and spatial-temporal memory",
+    aliases: ["Trajectory memory", "Anchor-trajectory memory", "Spatial-temporal memory"],
+    definition:
+      "지나온 경로 전체를 그대로 쌓는 trajectory memory 대신, 분기점 같은 anchor만 고해상도로 남기고 나머지는 가벼운 space-time indicator로 압축한 뒤 위치·시간을 함께 인덱싱해 반복 방문을 알아보는 memory 구조입니다.",
+    canonicalHref: "/ai/vision-language-navigation#trajectory-and-spatial-temporal-memory",
+  },
+  "two-level-alignment": {
+    id: "two-level-alignment",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Two-level alignment",
+    aliases: ["Two-level alignment training"],
+    definition:
+      "고수준 계획(어디로 갈지)과 저수준 제어(어떻게 갈지)를 하나의 reward로 뭉치지 않고 각각 outcome reward와 process reward로 따로 정렬해 학습하는 구조입니다.",
+    canonicalHref: "/ai/vision-language-navigation#two-level-alignment",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -37776,6 +37926,36 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "prerequisite",
     reason: "일부 요청을 거절하는 load shedding은 남은 요청만이라도 정상 응답하게 지키는 graceful degradation의 한 구현 수단입니다.",
   },
+  { from: "robot-action-representation-contract", to: "continuous-vs-discrete-action-space", relation: "produces", reason: "Frame·unit·frequency 계약을 채우려면 값을 continuous로 낼지 discrete token으로 낼지부터 실제로 정해야 합니다." },
+  { from: "robot-action-representation-contract", to: "end-effector-pose-and-6dof", relation: "produces", reason: "Action 계약이 pose를 다룰 때는 위치·회전 자유도를 구체적 숫자 표현으로 고정해야 합니다." },
+  { from: "robot-action-representation-contract", to: "coordinate-as-text-action-prediction", relation: "produces", reason: "Action tokenization이라는 계약 항목을 RT-2식 discretize-then-string 방법으로 구체화합니다." },
+  { from: "robot-action-representation-contract", to: "action-chunking", relation: "produces", reason: "Action head 계약이 한 번에 몇 timestep을 낼지(horizon)를 결정해야 하는 지점을 구체화합니다." },
+  { from: "flow-matching-objective", to: "flow-matching-and-diffusion-action-head", relation: "extends", reason: "일반 conditional flow-matching training 원리를 robot action chunk를 생성하는 구체적 head로 확장합니다." },
+  { from: "continuous-vs-discrete-action-space", to: "coordinate-as-text-action-prediction", relation: "prerequisite", reason: "Discretization 개념을 알아야 RT-2가 값을 정수 token 문자열로 바꾸는 이유를 이해할 수 있습니다." },
+  { from: "end-effector-pose-and-6dof", to: "coordinate-as-text-action-prediction", relation: "extends", reason: "6-DoF pose 벡터가 discretize되어 문자열로 예측되는 구체적 대상이 됩니다." },
+  { from: "continuous-vs-discrete-action-space", to: "flow-matching-and-diffusion-action-head", relation: "contrasts", reason: "이산 token 예측과 달리 연속 분포에서 표본을 뽑는 방식이라는 점을 대비합니다." },
+  { from: "action-chunking", to: "flow-matching-and-diffusion-action-head", relation: "prerequisite", reason: "Diffusion·flow head가 한 번에 생성하는 단위가 바로 action chunk이므로 chunking 개념이 먼저 필요합니다." },
+  { from: "action-chunking", to: "coordinate-as-text-action-prediction", relation: "contrasts", reason: "Chunking은 여러 timestep을 묶는 축이고 coordinate-as-text는 한 timestep 값을 인코딩하는 축이라 서로 독립적임을 대비합니다." },
+  { from: "vlm-to-vla-transfer", to: "vla-embodiment-gap", relation: "produces", reason: "VLM이 넘겨주는 semantic·상식 지식이 3D geometry·action interface·controller까지는 보증하지 않기 때문에 남는 embodiment gap을 만듭니다." },
+  { from: "vlm-to-vla-transfer", to: "grounding-and-action-space-alignment", relation: "constrains", reason: "VLM이 이식하는 semantic 지식의 범위가 language·spatial·action grounding에서 무엇을 다시 배워야 하는지를 제한합니다." },
+  { from: "grounding-and-action-space-alignment", to: "robot-action-representation-contract", relation: "prerequisite", reason: "언어를 object·좌표·action으로 grounding하고 VLM output space를 robot action space에 맞춰야 action head가 소비할 표현을 고를 수 있습니다." },
+  { from: "continuous-vs-discrete-action-space", to: "imitation-learning-and-behavior-cloning", relation: "constrains", reason: "Action이 discrete token인지 continuous 값인지에 따라 behavior cloning의 per-sample loss(cross-entropy·MSE)가 달라집니다." },
+  { from: "agent-observation-action-loop", to: "imitation-learning-and-behavior-cloning", relation: "prerequisite", reason: "Demonstration이 기록하는 (observation, action) 쌍은 observation-action loop의 한 timestep 인스턴스입니다." },
+  { from: "embodied-data-scaling", to: "cross-embodiment-adaptation", relation: "prerequisite", reason: "여러 robot·기관의 데이터를 표준 형식으로 합쳐야 그 위에서 cross-embodiment pretraining과 target adaptation을 실행할 수 있습니다." },
+  { from: "policy-generalization-taxonomy", to: "embodied-closed-loop-release-gate", relation: "prerequisite", reason: "Compositional·OOD 축을 구분해야 release gate의 perturbation slice를 원인별로 설계할 수 있습니다." },
+  { from: "sim-to-real-and-domain-randomization", to: "embodied-closed-loop-release-gate", relation: "prerequisite", reason: "Sim에서 학습한 policy가 real robot release gate를 통과하려면 무작위화 coverage를 먼저 알아야 합니다." },
+  { from: "imitation-learning-and-behavior-cloning", to: "embodied-data-scaling", relation: "prerequisite", reason: "Demonstration을 (observation, action) 쌍의 dataset으로 정의해야 그 dataset을 여러 기관에서 표준화해 규모를 키우는 논의가 성립합니다." },
+  { from: "embodied-data-scaling", to: "policy-generalization-taxonomy", relation: "prerequisite", reason: "데이터가 늘 때 compositional gap이 줄고 OOD 축은 왜 그대로 남는지 비교하려면 scaling 개념이 먼저 필요합니다." },
+  { from: "policy-generalization-taxonomy", to: "sim-to-real-and-domain-randomization", relation: "contrasts", reason: "Compositional·OOD는 같은 real 관측-행동 분포 내부의 축이고 sim-to-real은 시뮬레이터와 실제 사이의 별도 축이라는 점을 대비합니다." },
+  { from: "imitation-learning-and-behavior-cloning", to: "sim-to-real-and-domain-randomization", relation: "prerequisite", reason: "BC objective를 알아야 그 학습을 simulation에서 수행하고 real로 옮기는 문제의 의미가 성립합니다." },
+  { from: "pixel-to-3d-waypoint-interface", to: "vln-taxonomy", relation: "extends", reason: "VLM이 고른 2D pixel을 depth·calibration으로 3D waypoint로 바꾸는 절차가 VLN의 waypoint prediction이 실제로 소비하는 입력을 만듭니다." },
+  { from: "policy-generalization-taxonomy", to: "vln-taxonomy", relation: "prerequisite", reason: "VLN의 val-seen/val-unseen split이 compositional·OOD 구분의 구체적 사례이므로 그 개념이 먼저 필요합니다." },
+  { from: "hierarchical-vla-system-boundary", to: "slam-controller-and-selective-reasoning", relation: "extends", reason: "느린 semantic 판단과 빠른 geometry·control을 나누는 원칙을 '언제 semantic 판단을 다시 호출할지'까지 조건화한 구체적 사례입니다." },
+  { from: "agent-observation-action-loop", to: "trajectory-and-spatial-temporal-memory", relation: "prerequisite", reason: "매 step의 observation-action 쌍이 쌓여야 그중 무엇을 anchor로 남기고 무엇을 압축할지의 문제가 성립합니다." },
+  { from: "outcome-vs-process-reward", to: "two-level-alignment", relation: "extends", reason: "Outcome/process reward 구분을 고수준 계획과 저수준 제어라는 두 층에 각각 적용하는 방식으로 확장합니다." },
+  { from: "vln-taxonomy", to: "slam-controller-and-selective-reasoning", relation: "prerequisite", reason: "Action space가 discrete인지 continuous waypoint인지 알아야 그 waypoint를 실행하는 controller의 책임을 정의할 수 있습니다." },
+  { from: "slam-controller-and-selective-reasoning", to: "trajectory-and-spatial-temporal-memory", relation: "prerequisite", reason: "Controller가 만든 이동 이력이 있어야 그 이력을 anchor로 압축할지 결정하는 memory 설계가 의미를 가집니다." },
+  { from: "trajectory-and-spatial-temporal-memory", to: "two-level-alignment", relation: "prerequisite", reason: "Memory가 남긴 anchor·경로 정보가 process reward를 각 step에서 채점하는 근거 중 하나가 됩니다." },
 ];
 
 export function getKnowledgeConcept(id: string): KnowledgeConcept {

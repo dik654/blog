@@ -41,6 +41,31 @@ export default function ModernArticle() {
             그 용어를 결론으로 사용하지 않고 RT-2·OpenVLA·Octo·독립 robustness 평가가 공통으로 드러내는
             경계를 묶는 분석 틀로만 사용합니다.
           </p>
+          <p className="leading-8">
+            <strong>VLM → VLA transfer</strong>, 즉 vision-language model이 image-text data로 얻은 semantic·상식·물리
+            지식을 robot이 실행하는 action policy로 넘기는 절차가 이 글 전체의 실제 출발점입니다.
+          </p>
+          <p className="leading-8">
+            Embodied AI는 인터넷에서 수집한 dataset이 아니라 자기 몸으로 환경과 상호작용하며 지각·행동을 함께
+            배우는 agent를 가리키고, VLA는 그 embodied agent에 VLM 지식을 이식하려는 구체적 시도입니다.
+          </p>
+          <p className="leading-8">
+            <EvidenceTag>공식 artifact</EvidenceTag>
+            이 이식이 필요한 이유는 데이터 규모 차이입니다. LAION-5B 같은 internet-scale image-text corpus는
+            58억 5천만 쌍을 공개했지만, 이 글이 다루는 OpenVLA·Octo의 robot demonstration은 각각 97만·80만
+            trajectory에 그칩니다.
+          </p>
+          <p className="leading-8">
+            Robot data scarcity, 즉 자릿수로 3~4자리 차이 나는 이 격차가 VLM의 world knowledge를 그대로
+            재사용해야 하는 이유입니다.
+          </p>
+          <p className="leading-8">
+            <EvidenceTag>논문 자기보고</EvidenceTag>
+            RT-2는 이 world knowledge transfer 효과를 수치로 보고합니다. Unseen object·background·environment
+            평가 평균에서 이전 최고 baseline은 32~35% success였고 RT-2는 62%를 기록했습니다. Web-scale VLM
+            co-fine-tuning이 구체적으로 측정 가능한 이득이라는 근거이지, 모든 robot·task에 그대로 재현된다는
+            뜻은 아닙니다.
+          </p>
         </div>
 
         <EmbodimentGapViz />
@@ -53,6 +78,24 @@ export default function ModernArticle() {
             <p><strong>전제:</strong> TMLR 2026년 8월 논문과 2026-08-19 arXiv v1의 문헌 선정 범위입니다.</p>
             <p><strong>근거 범위:</strong> 이 글이 사용하는 “embodiment gap”의 최신 분류 틀입니다. 블로그 편집부가 2026-09-19에 공개 revision을 다시 확인합니다.</p>
             <p><strong>비주장:</strong> Survey의 taxonomy가 합의된 표준이거나 특정 architecture의 우월성을 입증한다는 뜻은 아닙니다.</p>
+          </CitationBlock>
+        </div>
+        <div id="paper-embodied-ai-survey" className="scroll-mt-20">
+          <CitationBlock source="A Survey of Embodied AI: From Simulators to Research Tasks" citeKey={15} type="paper" href="https://arxiv.org/abs/2103.04918">
+            <p><strong>문제:</strong> Internet dataset 학습과 구분되는 embodied agent 연구의 simulator·task·평가 범위를 정리합니다.</p>
+            <p><strong>핵심 기여:</strong> Agent가 자기 몸으로 환경과 상호작용하며 egocentric perception으로 배운다는 embodied AI 정의와 연구 분류를 제시합니다.</p>
+            <p><strong>전제:</strong> 2021년 survey 시점에 공개된 simulator·benchmark·연구 범위입니다.</p>
+            <p><strong>근거 범위:</strong> 이 글이 VLA를 embodied AI의 한 사례로 놓을 때 쓰는 정의 출처입니다.</p>
+            <p><strong>비주장:</strong> 이후 등장한 VLA·foundation model 계열의 성능이나 taxonomy를 규정하지 않습니다.</p>
+          </CitationBlock>
+        </div>
+        <div id="paper-laion5b" className="scroll-mt-20">
+          <CitationBlock source="LAION-5B: An Open Large-Scale Dataset for Training Next Generation Image-Text Models" citeKey={16} type="paper" href="https://arxiv.org/abs/2210.08402">
+            <p><strong>문제:</strong> Web-scale image-text pretraining에 쓸 수 있는 공개 규모의 dataset 부재를 다룹니다.</p>
+            <p><strong>핵심 기여:</strong> CLIP-filtered image-text pair 58억 5천만 개(영어 23억 2천만 개 포함)를 공개합니다.</p>
+            <p><strong>전제:</strong> 논문이 공개한 시점의 crawling·filtering 절차와 language 분포입니다.</p>
+            <p><strong>근거 범위:</strong> Internet-scale pretraining과 robot demonstration data 규모 차이를 보여 주는 대표 수치입니다.</p>
+            <p><strong>비주장:</strong> 이 corpus가 VLM 또는 RT-2 학습에 직접 쓰였다는 뜻은 아닙니다.</p>
           </CitationBlock>
         </div>
       </section>
@@ -72,6 +115,27 @@ export default function ModernArticle() {
             다룹니다. 이 순서는 세대 교체가 아닙니다. Multimodal action을 표현하는 능력, iterative sampling
             cost, control frequency, demonstration 수가 함께 맞아야 합니다. Flow matching의 일반 objective는
             <Link to="/ai/diffusion-continuous-time#flow-matching">별도 정본 글</Link>에서 재사용합니다.
+          </p>
+          <p className="leading-8">
+            언어 지시를 robot 행동으로 옮기려면 서로 다른 세 grounding을 구분해야 합니다. Language grounding은
+            “컵”이라는 단어를 실제 세계의 특정 object instance에 연결하고, spatial grounding은 그 object를 3D
+            공간의 좌표·자세에 연결하며, action grounding은 그 좌표를 구체적인 robot action sequence로
+            매핑합니다.
+          </p>
+          <p className="leading-8">
+            세 grounding은 순서대로 쌓이지만 자동으로 이어지지 않습니다. Spatial reasoning, 즉 “컵이 접시
+            왼쪽에 있다”처럼 object 사이 공간 관계를 추론하는 단계가 틀리면 spatial grounding이 잘못된
+            좌표를 내고, 그 오차가 action grounding까지 그대로 전파됩니다.
+          </p>
+          <p className="leading-8">
+            <EvidenceTag>논문 자기보고</EvidenceTag>
+            세 grounding을 모두 통과해도 action-space alignment 문제가 남습니다. VLM은 discrete text token이나
+            image region으로 학습했지만 robot은 continuous joint velocity·6-DoF pose·gripper force라는 전혀
+            다른 action space를 요구합니다.
+          </p>
+          <p className="leading-8">
+            RT-2는 각 action 차원을 256개 bin으로 이산화하고 8개 차원(6-DoF pose delta·gripper·episode 종료)을
+            언어 vocabulary의 token ID로 재사용해 이 정렬 문제를 text token 공간 안에서 풀었습니다.
           </p>
         </div>
 
