@@ -4,7 +4,7 @@ export interface LineNote {
   note: string;
 }
 
-export type Lang = "rust" | "go" | "python" | "typescript" | "c";
+export type Lang = "rust" | "go" | "python" | "typescript" | "c" | "scala";
 
 export interface CodeRef {
   path: string;

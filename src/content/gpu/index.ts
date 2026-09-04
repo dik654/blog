@@ -50,6 +50,12 @@ const gpu: Category = {
       description: "MSM, NTT, 증명 GPU 가속 기법",
       icon: "⚡",
     },
+    {
+      slug: "accelerator-design",
+      name: "Accelerator Design",
+      description: "시스톨릭 어레이 RTL, Chisel, FPGA·ASIC 합성 흐름",
+      icon: "🧮",
+    },
   ],
   articles: [
     ...hwArticles,
@@ -617,6 +623,21 @@ const gpu: Category = {
         { id: "release-gate", title: "Witness release gate" },
       ],
       component: () => import("@/pages/articles/gpu/gpu-witness-gen"),
+    },
+    {
+      slug: "gemmini-pe-mac-dataflow",
+      title: "PE 한 칸: MAC 을 이중 레지스터로 감싸 데이터플로우를 전환합니다",
+      subcategory: "accelerator-design",
+      sections: [
+        { id: "problem", title: "PE 한 칸은 systolic array 전체의 반복 단위" },
+        { id: "mac-unit", title: "MacUnit — 곱셈+누산 원자 연산" },
+        { id: "dataflow", title: "Weight-/Output-Stationary 전환" },
+        { id: "double-buffer", title: "c1·c2 이중 레지스터와 flip" },
+        { id: "build", title: "직접 만들어 시뮬레이션까지" },
+        { id: "boundary", title: "PE 혼자서는 계산이 안 되는 이유" },
+        { id: "paper-gemmini", title: "근거: Gemmini DAC 2021" },
+      ],
+      component: () => import("@/pages/articles/gpu/gemmini-pe-mac-dataflow"),
     },
   ],
 };

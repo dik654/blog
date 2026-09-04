@@ -251,6 +251,13 @@ export const CATEGORY_READING_PATHS: Readonly<
           "수학 연산의 병렬성을 kernel에 배치하고 CPU·GPU 경계 비용까지 포함해 성능을 측정합니다.",
         subcategories: ["zk-acceleration"],
       },
+      {
+        eyebrow: "04 · 가속기 설계",
+        title: "PE 한 칸에서 시스톨릭 배열까지",
+        description:
+          "GPU가 소프트웨어로 만드는 재사용을 이번에는 RTL 배선 자체로 만듭니다. 실제 오픈소스 NPU 저장소를 코드 단위로 추적합니다.",
+        subcategories: ["accelerator-design"],
+      },
     ],
     featuredArticles: [
       "gpu-architecture",
@@ -264,6 +271,7 @@ export const CATEGORY_READING_PATHS: Readonly<
       "msm-ntt",
       "msm-gpu-impl",
       "ntt-gpu-impl",
+      "gemmini-pe-mac-dataflow",
     ],
   },
   tee: {

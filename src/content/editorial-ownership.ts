@@ -10852,6 +10852,24 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "primary-source", rule: "48GB→7GB·+30% 시간 수치는 Chen et al. 2016의 1,000-layer residual network 실험 조건으로 제한한다." },
     ],
   },
+  "gemmini-pe-mac-dataflow": {
+    title: "PE 한 칸: MAC 을 이중 레지스터로 감싸 데이터플로우를 전환합니다 글이 소유하는 범위",
+    owns: [
+      "MacUnit이 PE의 유일한 곱셈+누산 원자 연산이라는 회로 구조와 그 이유",
+      "Weight-/Output-Stationary 두 dataflow가 같은 MacUnit을 배선만 바꿔 공유하는 방식",
+      "c1·c2 이중 레지스터와 flip·shift_offset이 파이프라인을 끊지 않게 하는 메커니즘",
+      "PE 한 칸의 국소 arithmetic intensity(I_PE = 2K/w) 계산과 그 한계",
+    ],
+    reuses: [
+      { label: "Roofline과 arithmetic intensity", href: "/gpu/gpu-memory-hierarchy-and-roofline#roofline-bound" },
+      { label: "GPU의 소프트웨어 tile 재사용과의 대조", href: "/gpu/cuda-matrix-multiply#tiled" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "PE.scala 코드 인용은 2026-09 시점 ucb-bar/gemmini main 브랜치 clone을 기준으로 하며 이후 리팩터로 줄 번호가 달라질 수 있다." },
+      { kind: "primary-source", rule: "Gemmini 논문의 성능 배수는 저자 자기보고로 표기하고 이 글의 회로 설명과는 독립된 주장으로 취급한다." },
+      { kind: "project-claim", rule: "PE 단독 chiseltest는 저장소에 없다는 사실을 명시하고, 이 글이 제안하는 실습은 검증되지 않은 제안임을 분명히 한다." },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

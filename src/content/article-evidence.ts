@@ -6503,4 +6503,9 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "핵심 논문", label: "Rajbhandari et al. — ZeRO: Memory Optimizations Toward Training Trillion Parameter Models", href: "https://arxiv.org/abs/1910.02054", note: "Model-state memory (2+2+K)Ψ·16byte/param 수치의 근거" },
     { kind: "핵심 논문", label: "Chen et al. — Training Deep Nets with Sublinear Memory Cost", href: "https://arxiv.org/abs/1604.06174", note: "Activation checkpointing의 O(√n) 메모리·48GB→7GB·+30% 시간 수치의 근거" },
   ],
+  "gpu/gemmini-pe-mac-dataflow": [
+    { kind: "핵심 논문", label: "Gemmini: Enabling Systematic Deep-Learning Architecture Evaluation via Full-Stack Integration", href: "https://arxiv.org/abs/1911.09925", note: "Systolic array 가속기 generator를 제안한 DAC 2021 원 논문, 성능 배수는 저자 자기보고" },
+    { kind: "공식 구현", label: "ucb-bar/gemmini — PE.scala", href: "https://github.com/ucb-bar/gemmini/blob/main/src/main/scala/gemmini/PE.scala", note: "이 글이 그대로 인용한 MacUnit·PE의 실제 Chisel 소스" },
+    { kind: "공식 문서", label: "Gemmini README — Quick Start", href: "https://github.com/ucb-bar/gemmini#quick-start", note: "Chipyard 설치부터 Verilator·Spike 시뮬레이션까지의 공식 절차, build 절 근거" },
+  ],
 };

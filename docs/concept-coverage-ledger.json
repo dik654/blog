@@ -23234,6 +23234,56 @@
    "status": "done",
    "reason": "GPU-host 통합 memory로 residency 제약을 피하는 대안 — multi-GPU 전략 node의 alias로 등록",
    "updatedAt": "2026-08-29"
+  },
+  {
+   "batch": "npu-series",
+   "term": "Systolic PE",
+   "action": "new",
+   "conceptId": "gemmini-pe-mac-atom",
+   "owner": "/gpu/gemmini-pe-mac-dataflow#mac-unit",
+   "status": "done",
+   "reason": "Gemmini PE의 MAC 원자 연산 canonical",
+   "updatedAt": "2026-09-04"
+  },
+  {
+   "batch": "npu-series",
+   "term": "Weight-Stationary Dataflow",
+   "action": "new",
+   "conceptId": "weight-stationary-dataflow",
+   "owner": "/gpu/gemmini-pe-mac-dataflow#dataflow",
+   "status": "done",
+   "reason": "WS 배선의 canonical",
+   "updatedAt": "2026-09-04"
+  },
+  {
+   "batch": "npu-series",
+   "term": "Output-Stationary Dataflow",
+   "action": "new",
+   "conceptId": "output-stationary-dataflow",
+   "owner": "/gpu/gemmini-pe-mac-dataflow#dataflow",
+   "status": "done",
+   "reason": "OS 배선의 canonical",
+   "updatedAt": "2026-09-04"
+  },
+  {
+   "batch": "npu-series",
+   "term": "PE Double Buffering",
+   "action": "new",
+   "conceptId": "pe-double-buffered-pipelining",
+   "owner": "/gpu/gemmini-pe-mac-dataflow#double-buffer",
+   "status": "done",
+   "reason": "c1/c2 ping-pong 파이프라이닝의 canonical",
+   "updatedAt": "2026-09-04"
+  },
+  {
+   "batch": "npu-series",
+   "term": "Systolic Arithmetic Reuse",
+   "action": "new",
+   "conceptId": "systolic-dataflow-arithmetic-reuse",
+   "owner": "/gpu/gemmini-pe-mac-dataflow#dataflow",
+   "status": "done",
+   "reason": "PE 재사용이 roofline intensity를 하드웨어로 구현한 것이라는 canonical",
+   "updatedAt": "2026-09-04"
   }
  ]
 }

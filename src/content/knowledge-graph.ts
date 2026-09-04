@@ -21275,6 +21275,56 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "Model이 training data의 noise·특수성까지 학습해 training error는 계속 낮아지지만 unseen data의 error는 오히려 커지는 현상입니다. Split leakage·pipeline mismatch·label noise·distribution shift 같은 다른 원인을 모두 배제하고 training error가 낮은데도 gap이 남을 때만 이 이름을 붙이며, regularization은 이 현상을 줄이기 위해 model의 자유도나 update 경로를 의도적으로 제한하는 개입입니다.",
     canonicalHref: "/ai/regularization-practice#audit",
   },
+  "gemmini-pe-mac-atom": {
+    id: "gemmini-pe-mac-atom",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Systolic PE MAC atom",
+    aliases: ["MacUnit", "PE의 원자 연산", "곱셈-누산 유닛"],
+    definition:
+      "Systolic array 한 칸(PE)이 감싸는 별도 module로, in_c(누적값)에 in_a·in_b의 곱을 더한 값을 한 사이클에 반환하는 곱셈+누산(MAC) 원자 연산입니다. WS·OS 두 dataflow가 이 module 하나를 배선만 바꿔 공유합니다.",
+    canonicalHref: "/gpu/gemmini-pe-mac-dataflow#mac-unit",
+  },
+  "weight-stationary-dataflow": {
+    id: "weight-stationary-dataflow",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Weight-stationary dataflow",
+    aliases: ["WS dataflow", "Weight Stationary"],
+    definition:
+      "Weight를 PE 레지스터에 고정해 두고 activation만 흘려보내, 고정된 weight 하나가 activation이 흐르는 사이클 수만큼 반복 재사용되게 하는 systolic array dataflow입니다.",
+    canonicalHref: "/gpu/gemmini-pe-mac-dataflow#dataflow",
+  },
+  "output-stationary-dataflow": {
+    id: "output-stationary-dataflow",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Output-stationary dataflow",
+    aliases: ["OS dataflow", "Output Stationary"],
+    definition:
+      "Partial sum(누적 중인 출력)을 PE 레지스터에 고정해 두고 weight와 activation을 함께 흘려보내며 그 위에 계속 누적하는 systolic array dataflow입니다. propagate 신호가 켜질 때만 값이 밖으로 나갑니다.",
+    canonicalHref: "/gpu/gemmini-pe-mac-dataflow#dataflow",
+  },
+  "pe-double-buffered-pipelining": {
+    id: "pe-double-buffered-pipelining",
+    kind: "method",
+    domain: "computer-science",
+    label: "PE double-buffered ping-pong pipelining",
+    aliases: ["c1/c2 이중 버퍼링", "propagate/compute flip"],
+    definition:
+      "PE가 c1·c2 두 레지스터를 두고 한쪽은 propagate(출력 중), 다른 쪽은 compute(누적 중) 역할을 매 사이클 맞바꿔, 진행 중인 행렬곱의 출력을 흘려보내면서 동시에 다음 행렬곱의 누산을 시작하는 파이프라이닝 기법입니다. 역할이 뒤집힌 첫 사이클(flip)에만 반올림을 적용해 중복 적용을 막습니다.",
+    canonicalHref: "/gpu/gemmini-pe-mac-dataflow#double-buffer",
+  },
+  "systolic-dataflow-arithmetic-reuse": {
+    id: "systolic-dataflow-arithmetic-reuse",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Systolic dataflow arithmetic reuse",
+    aliases: ["PE 재사용", "하드웨어로 굳힌 arithmetic intensity"],
+    definition:
+      "Systolic array의 PE 격자에서 한 번 읽은 weight 또는 partial sum이 레지스터에 머무르며 여러 사이클 동안 재사용돼, 메모리에서 다시 읽지 않고도 arithmetic intensity(FLOP/byte)를 높이는 원리입니다. WS는 weight를, OS는 partial sum을 고정해 이 재사용을 만듭니다.",
+    canonicalHref: "/gpu/gemmini-pe-mac-dataflow#dataflow",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -38561,6 +38611,13 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   { from: "adam-optimizer", to: "optimizer-update", relation: "produces", reason: "Adam도 결국 gradient와 state로 다음 parameter를 정하는 optimizer update 계약을 만족하는 한 구현입니다." },
   { from: "observed-generalization-gap", to: "overfitting", relation: "prerequisite", reason: "관측된 gap이 있어야 그것이 leakage·shift가 아니라 overfitting인지 감사할 대상이 생깁니다." },
   { from: "overfitting", to: "regularization-ablation-contract", relation: "prerequisite", reason: "Gap의 원인이 진짜 overfitting이라고 확인된 뒤에만 regularizer를 골라 ablation으로 비교하는 것이 의미가 있습니다." },
+  { from: "roofline-arithmetic-intensity", to: "systolic-dataflow-arithmetic-reuse", relation: "prerequisite", reason: "Intensity가 왜 병목을 가르는지 알아야 그것을 회로로 굳힌 systolic 재사용의 의미를 이해할 수 있습니다." },
+  { from: "cuda-gemm-tile-reuse-budget", to: "systolic-dataflow-arithmetic-reuse", relation: "contrasts", reason: "GPU는 shared memory에 소프트웨어로 tile을 올려 재사용하지만 PE는 레지스터 배선 자체로 재사용을 고정합니다." },
+  { from: "gemmini-pe-mac-atom", to: "weight-stationary-dataflow", relation: "prerequisite", reason: "MAC 하나가 있어야 그 MAC이 무엇을 고정할지 정하는 dataflow 선택이 의미를 가집니다." },
+  { from: "gemmini-pe-mac-atom", to: "output-stationary-dataflow", relation: "prerequisite", reason: "같은 MacUnit을 공유하므로 OS도 MAC 원자 연산의 존재를 전제로 배선만 바꿉니다." },
+  { from: "weight-stationary-dataflow", to: "systolic-dataflow-arithmetic-reuse", relation: "produces", reason: "Weight를 고정해 두면 같은 weight가 여러 activation과 곱해지며 다시 읽지 않고도 재사용됩니다." },
+  { from: "output-stationary-dataflow", to: "pe-double-buffered-pipelining", relation: "prerequisite", reason: "출력을 고정해 누적하는 동안 다음 값을 흘려보내려면 레지스터가 최소 두 벌 있어야 충돌이 없습니다." },
+  { from: "pe-double-buffered-pipelining", to: "systolic-dataflow-arithmetic-reuse", relation: "extends", reason: "이중 버퍼링이 있어야 재사용이 파이프라인 정지 없이 매 사이클 이어집니다." },
 ];
 
 export function getKnowledgeConcept(id: string): KnowledgeConcept {
