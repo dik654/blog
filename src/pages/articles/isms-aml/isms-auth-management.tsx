@@ -14,17 +14,15 @@ export default function IsmsAuthManagement() {
         <h2 className="mb-6 text-2xl font-bold">인증은 주체를 확인하고, 권한관리는 그 주체가 할 수 있는 일을 제한합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Authentication은 “이 요청자가 등록된 Alice인가?”를 확인하고, authorization은
-            “Alice가 지금 production customer table을 읽어도 되는가?”를 결정합니다. 두 단계를
-            합치면 MFA에 성공한 사용자에게 오래된 관리자 권한이 그대로 허용되거나, 강한
-            password policy를 적용했는데 퇴직자의 API key는 계속 살아 있는 문제가 생깁니다.
+            Authentication은 “이 요청자가 등록된 Alice인가?”를 확인하고 authorization은 “Alice가 지금 production customer table을
+            읽어도 되는가?”를 결정합니다. 두 단계를 합치면 MFA에 성공한 사용자에게 오래된 관리자 권한이 그대로 허용되거나 강한 password policy를 적용했는데 퇴직자의
+            API key는 계속 살아 있는 문제가 생깁니다.
           </p>
           <p>
-            안전한 identity lifecycle은 계정, authenticator, entitlement, session·token을 서로
-            다른 상태로 추적하면서 joiner·mover·leaver event에 맞춰 함께 전이시킵니다. 이 글은
-            초심자가 세 인증요소, MFA, password hash, recovery, 계정 review와 퇴직 회수를 한
-            흐름으로 이해하도록 설명합니다. 국내 규정은 2026-08-14 현재를 기준으로 하며,
-            NIST SP 800-63B-4는 한국의 법적 의무가 아니라 기술 설계 비교 기준입니다.
+            안전한 identity lifecycle은 계정, authenticator, entitlement, session·token을 서로 다른 상태로 추적하면서
+            joiner·mover·leaver event에 맞춰 함께 전이시킵니다. 이 글은 초심자가 세 인증요소, MFA, password hash, recovery, 계정
+            review와 퇴직 회수를 한 흐름으로 이해하도록 설명합니다. 국내 규정은 2026-08-14 현재를 기준으로 하며 NIST SP 800-63B-4는 한국의 법적 의무가 아니라
+            기술 설계 비교 기준입니다.
           </p>
         </div>
 
@@ -42,11 +40,9 @@ export default function IsmsAuthManagement() {
             resistance를 제공합니다.
           </p>
           <p>
-            관리자·remote access·wallet 승인처럼 영향이 큰 작업에는 risk와 법적 요구에 맞춘
-            높은 assurance를 적용하고, enrollment·새 device binding·factor 교체·recovery도
-            같은 수준으로 보호합니다. Recovery email 하나로 MFA를 우회할 수 있다면 정상
-            login의 강도는 의미가 없습니다. Factor 변경에는 기존 강한 인증, 독립 알림,
-            cooling-off 또는 관리자 검토, 기존 token 폐기와 audit receipt를 둡니다.
+            관리자·remote access·wallet 승인처럼 영향이 큰 작업에는 risk와 법적 요구에 맞춘 높은 assurance를 적용하고 enrollment·새 device
+            binding·factor 교체·recovery도 같은 수준으로 보호합니다. Recovery email 하나로 MFA를 우회할 수 있다면 정상 login의 강도는 의미가
+            없습니다. Factor 변경에는 기존 강한 인증, 독립 알림, cooling-off 또는 관리자 검토, 기존 token 폐기와 audit receipt를 둡니다.
           </p>
         </div>
 
@@ -66,18 +62,16 @@ export default function IsmsAuthManagement() {
         <h2 className="mb-6 text-2xl font-bold">비밀번호 정책은 외우기 어려운 조합보다 online·offline 공격 경로를 나눠 설계합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Online guessing은 rate limit, progressive delay, bot detection과 account lock 정책으로
-            시도 속도를 낮춥니다. 무작정 영구 잠금을 걸면 공격자가 다른 사용자를 lockout하는
-            denial-of-service를 만들 수 있으므로, 위험 기반 challenge·알림·복구 경로를 함께
-            둡니다. Password 생성 시에는 충분한 길이, 유출·흔한 값 blocklist, password manager
-            와 paste 지원을 우선하며 username·서비스명 같은 context-specific guess도 거릅니다.
+            Online guessing은 rate limit, progressive delay, bot detection과 account lock 정책으로 시도 속도를 낮춥니다. 무작정
+            영구 잠금을 걸면 공격자가 다른 사용자를 lockout하는 denial-of-service를 만들 수 있으므로 위험 기반 challenge·알림·복구 경로를 함께 둡니다.
+            Password 생성 시에는 충분한 길이, 유출·흔한 값 blocklist, password manager 와 paste 지원을 우선하며 username·서비스명 같은
+            context-specific guess도 거릅니다.
           </p>
           <p>
-            Offline attack은 password DB를 탈취한 공격자가 verifier를 거치지 않고 후보를
-            계산하는 상황입니다. 계정별 random salt는 같은 password의 hash를 다르게 만들고,
-            Argon2id·scrypt·bcrypt 같은 password hashing scheme의 memory/time cost는 각 후보의
-            비용을 높입니다. Algorithm, parameter, salt와 version을 record에 저장하고 target
-            hardware에서 정상 login latency·peak concurrency를 측정해 cost를 정기 상향합니다.
+            Offline attack은 password DB를 탈취한 공격자가 verifier를 거치지 않고 후보를 계산하는 상황입니다. 계정별 random salt는 같은
+            password의 hash를 다르게 만들고 Argon2id·scrypt·bcrypt 같은 password hashing scheme의 memory/time cost는 각 후보의
+            비용을 높입니다. Algorithm, parameter, salt와 version을 record에 저장하고 target hardware에서 정상 login
+            latency·peak concurrency를 측정해 cost를 정기 상향합니다.
           </p>
         </div>
 
@@ -105,21 +99,16 @@ export default function IsmsAuthManagement() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <h3>주기적 변경과 침해 기반 변경을 구분합니다</h3>
           <p>
-            NIST SP 800-63B-4는 사용자 password의 기계적 주기 변경을 요구하지 않고 침해 증거가
-            있을 때 강제 변경하도록 권고합니다. 반면 조직은 KISA 인증기준 해설, 계약·업종별
-            규정과 현재 심사 기대를 별도로 확인해야 합니다. 따라서 “90일이 세계 표준” 또는
-            “주기 변경은 언제나 금지”라고 단정하지 않고, 적용 근거·계정 유형·MFA 강도·유출
-            탐지·예외를 compliance profile로 versioning합니다. Service account는 사람의
-            password 변경 화면이 아니라 vault와 short-lived credential, 자동 rotation과
-            dependency test로 관리합니다.
+            NIST SP 800-63B-4는 사용자 password의 기계적 주기 변경을 요구하지 않고 침해 증거가 있을 때 강제 변경하도록 권고합니다. 반면 조직은 KISA 인증기준
+            해설, 계약·업종별 규정과 현재 심사 기대를 별도로 확인해야 합니다. 따라서 “90일이 세계 표준” 또는 “주기 변경은 언제나 금지”라고 단정하지 않고 적용 근거·계정
+            유형·MFA 강도·유출 탐지·예외를 compliance profile로 versioning합니다. Service account는 사람의 password 변경 화면이 아니라
+            vault와 short-lived credential, 자동 rotation과 dependency test로 관리합니다.
           </p>
           <h3>Reset은 별도의 고위험 protocol입니다</h3>
           <p>
-            Reset token은 한 번만 사용하고 짧게 만료하며, account identifier나 token을 URL log·
-            analytics·referrer에 노출하지 않습니다. 성공하면 기존 session·refresh token과
-            위험한 device binding을 폐기하고 사용자에게 독립 알림을 보냅니다. Help desk가
-            지식형 질문 몇 개만으로 관리자 password를 초기화하지 않도록 identity proofing,
-            dual approval, recording과 escalation 절차를 둡니다.
+            Reset token은 한 번만 사용하고 짧게 만료하며 account identifier나 token을 URL log· analytics·referrer에 노출하지 않습니다.
+            성공하면 기존 session·refresh token과 위험한 device binding을 폐기하고 사용자에게 독립 알림을 보냅니다. Help desk가 지식형 질문 몇
+            개만으로 관리자 password를 초기화하지 않도록 identity proofing, dual approval, recording과 escalation 절차를 둡니다.
           </p>
         </div>
       </section>

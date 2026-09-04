@@ -261,7 +261,9 @@ export default function RetentionPolicy() {
         <div className="my-6">
           <AccessControlInlineViz />
         </div>
-        <p>분리보관 DB에 대한 접근은 엄격히 통제해야 한다:</p>
+        <p>
+            분리보관 DB 접근은 엄격히 통제해야 한다:
+          </p>
         <ul>
           <li>
             <strong>최소 인원</strong> — CPO, 법무팀, DBA(Database

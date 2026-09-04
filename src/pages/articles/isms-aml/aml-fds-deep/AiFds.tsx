@@ -199,9 +199,8 @@ export default function AiFds() {
           어려운 "의심 커뮤니티"를 식별한다.
         </p>
         <p>
-          예: 10개의 주소가 각각 독립적으로 보면 정상이지만, 이들 간의 순환 거래
-          패턴(A→B→C→...→A)이 감지되면 세탁을 위한 자금 순환(Round-tripping)
-          의심으로 분류된다.
+          예: 10개의 주소가 각각 독립적으로 보면 정상이지만 주소 사이의 순환 거래 패턴(A→B→C→...→A)이 감지되면 세탁을 위한 자금 순환(Round-tripping) 의심으로
+          분류된다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">실시간 스코어링</h3>

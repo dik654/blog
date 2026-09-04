@@ -95,7 +95,9 @@ export default function Overview() {
           <AuditLoopInlineViz />
         </div>
 
-        <p>심사원은 한 항목에 대해 세 가지 방법을 조합하여 검증한다:</p>
+        <p>
+            심사원은 한 항목마다 세 가지 방법을 조합해 검증한다:
+          </p>
         <ol>
           <li>
             <strong>문서 확인</strong> — 정책서, 지침서, 절차서가 존재하는지
@@ -270,8 +272,7 @@ export default function Overview() {
         </div>
 
         <p>
-          심사원이 발견한 문제는 결함 보고서에 기록되며, 등급에 따라 후속 조치가
-          다르다:
+          심사원이 발견한 문제는 결함 보고서에 기록되며 등급에 따라 후속 조치가 다르다:
         </p>
         <ul>
           <li>

@@ -104,8 +104,7 @@ export default function Overview() {
         </div>
 
         <p>
-          이 아티클에서는 VASP에 특히 중요한 네트워크 접근(2.6.1)과 데이터베이스
-          접근(2.6.4)을 중점적으로 다룬다.
+          이 아티클은 VASP에 특히 중요한 네트워크 접근(2.6.1)과 데이터베이스 접근(2.6.4)을 집중해서 다룬다.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">

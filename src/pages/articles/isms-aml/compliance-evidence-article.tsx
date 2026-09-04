@@ -291,7 +291,11 @@ export default function ComplianceEvidenceArticle({ article }: { article: Articl
       <section id={config.releaseId} className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">03 · 실패 주입과 release gate</p><h2 className="mt-2 text-2xl font-bold">정상 화면보다 누락·우회·잘못된 권한·복구 뒤 재발을 먼저 시험한다</h2></header>
         <div className="overflow-hidden rounded-lg border border-border"><div className="grid grid-cols-[minmax(0,.72fr)_minmax(0,1.28fr)] gap-3 bg-muted/40 px-4 py-3 text-xs font-semibold"><span>실패 주입</span><span>기대 결과</span></div>{config.failures.map(([fault, oracle, receipt]) => <div key={fault} className="grid grid-cols-[minmax(0,.72fr)_minmax(0,1.28fr)] gap-3 border-t border-border px-4 py-3 text-sm"><span className="font-medium">{fault}</span><span className="min-w-0 break-words text-muted-foreground">{oracle} <strong className="text-foreground">[{receipt}]</strong></span></div>)}</div>
-        <p className="leading-7">Base와 candidate는 같은 population·fixture·effective date·policy·code·model generation에서 비교합니다. Missing·unknown은 pass가 아니며, owner·reviewer·artifact digest·canary·rollback과 외부 effect receipt를 하나의 release record로 남깁니다.</p>
+        <p className="leading-7">
+            Base와 candidate는 같은 population·fixture·effective date·policy·code·model generation에서 비교합니다.
+            Missing·unknown은 pass가 아니며 owner·reviewer·artifact digest·canary·rollback과 외부 effect receipt를 하나의
+            release record로 남깁니다.
+          </p>
         <h3 className="text-xl font-semibold">이 글만으로 풀어야 하는 10문제</h3>
         <p className="leading-7">기초 6문제는 용어·흐름·작은 계산을, 심화 4문제는 반례·실패 주입·독립 평가·rollback을 묻습니다. 정답 체크리스트의 전제와 비보장은 위 절에서 직접 회수할 수 있어야 합니다.</p>
       </section>

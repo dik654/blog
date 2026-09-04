@@ -90,7 +90,9 @@ export default function SecureDeletion() {
         <div className="my-6">
           <OverwriteStandardsInlineViz />
         </div>
-        <p>덮어쓰기의 횟수와 패턴에 따라 여러 표준이 존재한다:</p>
+        <p>
+            덮어쓰기 횟수와 패턴에 따라 여러 표준이 있다:
+          </p>
         <ul>
           <li>
             <strong>DoD 5220.22-M</strong> — 미국 국방부 표준. 3회 덮어쓰기: (1)
@@ -171,7 +173,9 @@ export default function SecureDeletion() {
         </ul>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">물리적 파기 방법</h3>
-        <p>저장매체 자체를 폐기하는 경우 물리적 파기를 수행한다:</p>
+        <p>
+            저장매체 자체를 폐기할 때는 물리적 파기를 수행한다:
+          </p>
         <ul>
           <li>
             <strong>디가우징(Degaussing)</strong> — 강력한 자기장을 사용하여
@@ -243,8 +247,7 @@ export default function SecureDeletion() {
           파기 대장과 증적 관리
         </h3>
         <p>
-          파기를 실행한 후에는 그 사실을 기록하고 증적을 보관해야 한다. ISMS-P
-          심사에서 반드시 확인하는 항목.
+          파기한 뒤에는 그 사실을 기록하고 증적을 보관해야 한다. ISMS-P 심사에서 반드시 확인하는 항목.
         </p>
 
         <div className="not-prose overflow-x-auto my-4">

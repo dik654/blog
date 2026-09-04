@@ -50,7 +50,7 @@ export default function ProofOfReserves() {
         </p>
 
         <p className="leading-7">
-          PoR에서 머클 트리를 사용하는 방식은 다음과 같다.
+          PoR에서 머클 트리는 이렇게 쓴다.
         </p>
 
         <div className="not-prose overflow-x-auto my-4">
@@ -163,7 +163,7 @@ export default function ProofOfReserves() {
         </p>
 
         <p className="leading-7">
-          zk-SNARK가 적용된 PoR에서는 다음 세 가지 조건이 동시에 증명된다.
+          zk-SNARK를 적용한 PoR은 다음 세 조건을 동시에 증명한다.
         </p>
 
         <div className="not-prose overflow-x-auto my-4">
@@ -206,8 +206,7 @@ export default function ProofOfReserves() {
         </div>
 
         <p className="leading-7">
-          이 세 조건을 영지식으로 증명하면, 개별 이용자의 잔고 정보를 노출하지
-          않으면서도 전체 준비금의 건전성을 검증할 수 있다.
+          이 세 조건을 영지식으로 증명하면 개별 이용자의 잔고 정보를 노출하지 않으면서도 전체 준비금의 건전성을 검증할 수 있다.
         </p>
 
         <div className="not-prose my-6">
@@ -216,7 +215,7 @@ export default function ProofOfReserves() {
 
         <h3 className="text-xl font-semibold mt-8 mb-4">PoR의 한계</h3>
         <p className="leading-7">
-          PoR이 만능은 아니다. 구조적 한계가 존재한다.
+          PoR이 만능은 아니다. 구조적인 한계가 있다.
         </p>
 
         <p className="leading-7">

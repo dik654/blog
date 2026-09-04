@@ -38,9 +38,8 @@ export default function WebAppSecurity() {
           로그)까지 노출되었다.
         </p>
         <p>
-          서버 소프트웨어와 버전 정보가 노출되면, 공격자가 해당 버전의 알려진
-          취약점(CVE, Common Vulnerabilities and Exposures)을 검색하여 타겟
-          공격이 가능하다.
+          서버 소프트웨어와 버전 정보가 노출되면 공격자가 해당 버전의 알려진 취약점(CVE, Common Vulnerabilities and Exposures)을 검색해 타겟 공격이
+          가능하다.
         </p>
 
         <h4 className="text-lg font-semibold mt-4 mb-2">AFTER</h4>
@@ -159,7 +158,7 @@ export default function WebAppSecurity() {
 
         <h4 className="text-lg font-semibold mt-4 mb-2">AFTER</h4>
         <p>
-          AWS Secrets Manager를 도입하여 모든 시크릿을 중앙 관리하도록 변경했다.
+          AWS Secrets Manager를 도입해 모든 시크릿을 중앙 관리하도록 변경했다.
         </p>
         <ol>
           <li>

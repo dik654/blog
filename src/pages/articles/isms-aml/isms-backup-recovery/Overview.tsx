@@ -101,9 +101,7 @@ export default function Overview() {
 
         <h3 className="text-xl font-semibold mt-8 mb-4">백업 유형</h3>
         <p className="leading-7">
-          전체백업(Full Backup)은 대상 데이터 전체를 매번 복사하는 방식이다.
-          복원이 단순하고 빠르지만, 데이터 양이 크면 백업 시간과 저장 공간이
-          많이 소요된다.
+          전체백업(Full Backup)은 대상 데이터 전체를 매번 복사하는 방식이다. 복원이 단순하고 빠르지만 데이터 양이 크면 백업 시간이 오래 걸리고 저장 공간도 많이 든다.
         </p>
         <p className="leading-7">
           증분백업(Incremental Backup)은 마지막 백업(전체 또는 증분) 이후 변경된

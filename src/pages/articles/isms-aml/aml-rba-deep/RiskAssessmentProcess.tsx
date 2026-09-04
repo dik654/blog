@@ -193,8 +193,7 @@ export default function RiskAssessmentProcess() {
           3단계 — 위험 평가(Risk Evaluation)
         </h3>
         <p>
-          분석된 위험에 대해 현재의 통제(control)가 얼마나 효과적인지를 반영하여
-          최종 위험 수준을 결정하는 단계.
+          분석한 위험마다 현재 통제(control)가 얼마나 효과적인지를 반영해 최종 위험 수준을 결정하는 단계.
         </p>
 
         <div className="not-prose my-4 p-3 bg-muted/20 rounded border border-border/30 text-sm">

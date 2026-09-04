@@ -153,7 +153,9 @@ export default function PrivacyWebAudit() {
 
         {/* --- 동의 화면 --- */}
         <h3 className="text-xl font-semibold mt-6 mb-3">2. 동의 화면 확인</h3>
-        <p>심사원이 직접 회원가입 페이지에 접속하여 확인하는 항목:</p>
+        <p>
+            심사원이 직접 회원가입 페이지에 접속해 확인하는 항목:
+          </p>
         <ul>
           <li>
             <strong>필수/선택 구분</strong> — 개인정보 수집 동의가 "필수 동의"와
@@ -459,7 +461,9 @@ export default function PrivacyWebAudit() {
         <h3 className="text-xl font-semibold mt-6 mb-3">
           현장심사 대응 종합 체크리스트
         </h3>
-        <p>마지막으로, 현장심사 전 최종 확인 항목을 정리:</p>
+        <p>
+            마지막으로 현장심사 전 최종 확인 항목을 정리:
+          </p>
 
         <div className="not-prose overflow-x-auto my-4">
           <table className="w-full text-sm border border-border">

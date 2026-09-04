@@ -63,8 +63,7 @@ export default function CryptoAuth() {
           취약하므로 salt는 필수.
         </p>
         <p>
-          기존 bcrypt 해시값은 일괄 변환이 불가능하므로(해시는 복호화 불가),
-          마이그레이션 전략을 세웠다:
+          기존 bcrypt 해시값은 일괄 변환이 불가능하므로(해시는 복호화 불가) 마이그레이션 전략을 세웠다:
         </p>
         <ol>
           <li>신규 가입자는 즉시 SHA-256+Salt 적용</li>

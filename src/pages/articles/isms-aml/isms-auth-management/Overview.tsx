@@ -37,8 +37,7 @@ export default function Overview() {
 
         <h3 className="text-xl font-semibold mt-6 mb-3">인증 3요소</h3>
         <p>
-          인증 수단은 세 가지 범주로 분류. 각 범주의 특성과 취약점이 다르므로,
-          서로 다른 범주를 조합해야 효과적.
+          인증 수단은 세 가지 범주로 분류. 각 범주의 특성과 취약점이 다르므로 서로 다른 범주를 조합해야 효과적.
         </p>
 
         <div className="not-prose overflow-x-auto my-4">

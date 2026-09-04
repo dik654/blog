@@ -42,9 +42,8 @@ export default function SiemMonitoring() {
           </li>
         </ul>
         <p>
-          SIEM이 이 세 로그를 상관분석하면: "특정 외부 IP → 포트 스캔(방화벽) →
-          로그인 무차별 대입(인증) → SQL Injection 시도(IPS)"라는 공격 체인을
-          하나의 사건으로 연결할 수 있다.
+          SIEM이 이 세 로그를 상관분석하면 "특정 외부 IP → 포트 스캔(방화벽) → 로그인 무차별 대입(인증) → SQL Injection 시도(IPS)"라는 공격 체인을 하나의
+          사건으로 묶을 수 있다.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">수집 대상</h3>

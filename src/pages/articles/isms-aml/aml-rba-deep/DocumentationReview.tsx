@@ -20,7 +20,9 @@ export default function DocumentationReview() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">문서화 대상</h3>
-        <p>AML/CFT 관련 문서화 대상은 크게 5가지 범주로 나뉜다.</p>
+        <p>
+            AML/CFT 문서화 대상은 5가지 범주로 나뉜다.
+          </p>
 
         <div className="not-prose overflow-x-auto my-4">
           <table className="w-full text-sm border border-border">
@@ -297,7 +299,9 @@ export default function DocumentationReview() {
         </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">AML 세부 감사 항목</h3>
-        <p>외부 감사에서 점검하는 세부 항목은 다음과 같다.</p>
+        <p>
+            외부 감사에서는 세부 항목을 이렇게 점검한다.
+          </p>
 
         <div className="not-prose overflow-x-auto my-4">
           <table className="w-full text-sm border border-border">
@@ -459,9 +463,8 @@ export default function DocumentationReview() {
         </p>
 
         <p>
-          동일 지적이 2회 연속 반복되면 "체계적 미흡(systemic deficiency)"으로
-          분류하여 근본 원인 분석(root cause analysis)을 수행하고, 단순 보완이
-          아닌 프로세스 재설계를 검토해야 한다.
+          동일 지적이 2회 연속 반복되면 "체계적 미흡(systemic deficiency)"으로 분류해 근본 원인 분석(root cause analysis)을 수행하고 단순 보완이 아닌
+          프로세스 재설계를 검토해야 한다.
         </p>
 
         <p className="text-sm border-l-2 border-blue-500/50 pl-3 mt-4">

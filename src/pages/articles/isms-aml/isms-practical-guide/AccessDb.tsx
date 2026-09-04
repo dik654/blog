@@ -51,7 +51,9 @@ export default function AccessDb() {
         </ul>
 
         <h4 className="text-lg font-semibold mt-4 mb-2">AFTER</h4>
-        <p>보완조치로 대규모 계정 재구성 작업을 진행했다.</p>
+        <p>
+            보완조치로 계정을 대규모로 재구성했다.
+          </p>
 
         <p>
           <strong>1단계: DB 물리 분리</strong>
@@ -227,7 +229,9 @@ export default function AccessDb() {
           솔루션으로, DB로 가는 모든 쿼리를 중간에서 가로채서 정책에 따라
           허용/차단한다.
         </p>
-        <p>도입 후 3중 통제 체계가 구축되었다:</p>
+        <p>
+            도입 후 3중 통제 체계를 갖췄다:
+          </p>
         <ul>
           <li>
             <strong>세션 통제</strong> — 망분리 PC에서만 PETRA UI 접근 허용.

@@ -74,7 +74,7 @@ export default function CddProcess() {
 
         <h3 className="text-xl font-semibold mt-8 mb-3">CDD 이행 시기</h3>
         <p>
-          CDD는 "한 번 하고 끝"이 아니라, 특정 조건이 충족될 때마다 수행한다.
+          CDD는 "한 번 하고 끝"이 아니라 특정 조건이 충족될 때마다 수행한다.
         </p>
 
         <div className="not-prose overflow-x-auto my-4">

@@ -92,8 +92,7 @@ export default function IncidentResponse() {
 
         <h3 className="text-xl font-semibold mt-8 mb-4">재발방지 제도화</h3>
         <p className="leading-7">
-          사고 후 일회성 조치로 끝내지 않고, 재발방지를 제도 수준에서 정착시켜야
-          한다.
+          사고 후 일회성 조치로 끝내지 않고 재발방지를 제도 수준에서 정착시켜야 한다.
         </p>
         <p className="leading-7">
           <strong>내부자 모니터링 강화</strong>: 임직원의 비정상 시스템 접근,

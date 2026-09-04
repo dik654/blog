@@ -221,7 +221,7 @@ export default function Overview() {
           보관 체계의 전체 구조
         </h3>
         <p className="leading-7">
-          정리하면, VASP의 보관 의무는 다음 5개 층으로 구성된다.
+          VASP의 보관 의무는 다음 5개 층으로 구성된다.
         </p>
 
         <div className="not-prose overflow-x-auto my-4">

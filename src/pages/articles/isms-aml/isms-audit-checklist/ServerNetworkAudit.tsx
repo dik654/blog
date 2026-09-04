@@ -145,7 +145,9 @@ export default function ServerNetworkAudit() {
 
         {/* --- 불필요 포트 --- */}
         <h3 className="text-xl font-semibold mt-6 mb-3">3. 불필요 포트 확인</h3>
-        <p>심사원이 서버에서 직접 실행을 요청하는 명령어:</p>
+        <p>
+            심사원이 서버에서 직접 실행해 달라고 요청하는 명령어:
+          </p>
 
         <div className="not-prose bg-muted/30 rounded-lg p-4 my-4 font-mono text-sm overflow-x-auto">
           <p className="text-muted-foreground mb-2">

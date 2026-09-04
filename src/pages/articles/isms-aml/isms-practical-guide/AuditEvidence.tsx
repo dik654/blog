@@ -146,8 +146,7 @@ export default function AuditEvidence() {
         {/* ── 증적 작성 팁 ── */}
         <h3 className="text-xl font-semibold mt-8 mb-3">증적 작성 실전 팁</h3>
         <p>
-          인증 준비를 하면서 체득한 증적 관련 팁들을 정리한다. 다 한 번씩
-          실수해보고 배운 것들이다.
+          인증을 준비하며 체득한 증적 팁을 정리한다. 다 한 번씩 실수해보고 배운 것들이다.
         </p>
 
         <h4 className="text-lg font-semibold mt-4 mb-2">
@@ -272,8 +271,7 @@ export default function AuditEvidence() {
           </li>
         </ul>
         <p>
-          연장은 통상 1회, 최대 40일 추가. 연장 기간까지 완료하지 못하면 인증
-          불가 판정을 받을 수 있으므로, 일정 관리가 중요하다.
+          연장은 통상 1회, 최대 40일 추가. 연장 기간까지 완료하지 못하면 인증 불가 판정을 받을 수 있으므로 일정 관리가 중요하다.
         </p>
 
         {/* ── 전체 교훈 ── */}

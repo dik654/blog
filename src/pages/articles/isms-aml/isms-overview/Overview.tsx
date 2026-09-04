@@ -54,8 +54,7 @@ export default function Overview() {
 
         <h3 className="text-xl font-semibold mt-6 mb-3">인증 범위: 3개 영역</h3>
         <p>
-          ISMS-P 인증 기준은 크게 세 영역으로 구분. 각 영역은 번호 체계로
-          관리되며, 심사 시 항목별로 적합/부적합을 판정.
+          ISMS-P 인증 기준은 크게 세 영역으로 구분. 각 영역은 번호 체계로 관리되며 심사 시 항목별로 적합/부적합을 판정.
         </p>
 
         <div className="not-prose overflow-x-auto my-4">

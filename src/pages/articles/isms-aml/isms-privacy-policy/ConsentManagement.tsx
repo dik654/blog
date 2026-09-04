@@ -149,9 +149,7 @@ export default function ConsentManagement() {
           <li>서면 동의서 제출</li>
         </ul>
         <p>
-          VASP의 경우 대부분 만 19세(성인) 이상만 가입을 허용하여 이 문제를
-          회피하지만, 서비스 약관에 연령 제한을 명시하고 본인인증 단계에서
-          연령을 검증해야 한다.
+          VASP의 경우 대부분 만 19세(성인) 이상만 가입을 허용해 이 문제를 회피하지만 서비스 약관에 연령 제한을 명시하고 본인인증 단계에서 연령을 검증해야 한다.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">

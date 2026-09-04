@@ -19,7 +19,9 @@ export default function SarProcess() {
         <h3 className="text-xl font-semibold mt-8 mb-3">
           1단계 — 현업 의심 인지
         </h3>
-        <p>의심거래의 최초 인지는 두 가지 경로로 발생한다.</p>
+        <p>
+            의심거래를 처음 인지하는 경로는 두 가지다.
+          </p>
         <ul>
           <li>
             <strong>FDS 경보</strong> — 이상거래탐지시스템이 자동으로 경보를

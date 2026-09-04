@@ -19,8 +19,7 @@ export default function TippingOff() {
 
         <h3 className="text-xl font-semibold mt-8 mb-3">왜 금지되는가</h3>
         <p>
-          고객이 "나에 대한 의심거래보고가 접수되었다"는 사실을 알게 되면 다음과
-          같은 행동을 할 수 있다:
+          고객이 "나에 대한 의심거래보고가 접수되었다"는 사실을 알게 되면 이런 행동을 할 수 있다:
         </p>
         <ul>
           <li>

@@ -78,9 +78,8 @@ export default function MarketManipulation() {
         </p>
 
         <p className="leading-7">
-          탐지 신호는 다음과 같다 -- 동일 IP에서 매수/매도가 동시 발생, 동일
-          기기 지문(device fingerprint), 주문 패턴의 기계적 반복, 거래량 대비
-          호가 스프레드가 비정상적으로 넓은 경우.
+          탐지 신호는 이렇다 -- 동일 IP에서 매수/매도가 동시 발생, 동일 기기 지문(device fingerprint), 주문 패턴의 기계적 반복, 거래량 대비 호가 스프레드가
+          비정상적으로 넓은 경우.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-4">통정 매매</h3>

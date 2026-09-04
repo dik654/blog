@@ -136,7 +136,9 @@ export default function Overview() {
         <h3 className="text-xl font-semibold mt-6 mb-3">
           결함 유형: 중결함 vs 경결함
         </h3>
-        <p>현장심사 후 도출되는 결함은 두 가지 유형으로 나뉜다.</p>
+        <p>
+            현장심사 후 나오는 결함은 두 가지 유형으로 나뉜다.
+          </p>
 
         <div className="not-prose overflow-x-auto my-4">
           <table className="w-full text-sm border border-border">

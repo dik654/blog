@@ -98,7 +98,7 @@ export default function ExternalCustody() {
 
         <h3 className="text-xl font-semibold mt-8 mb-4">수탁기관 선정 기준</h3>
         <p className="leading-7">
-          VASP가 수탁기관을 선정할 때 확인해야 할 사항은 다음과 같다.
+          VASP가 수탁기관을 선정할 때는 다음을 확인한다.
         </p>
 
         <div className="not-prose overflow-x-auto my-4">

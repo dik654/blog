@@ -18,9 +18,7 @@ export default function ThreeLines() {
         </p>
 
         <p>
-          원래 은행업에서 발전한 모델이지만, FATF 권고사항 R.18(내부 통제 및
-          해외 지점)과 R.26(금융기관 감독)이 이 구조를 기반으로 설계되어 있어
-          VASP에도 동일하게 적용된다.
+          원래 은행업에서 발전한 모델이지만 FATF 권고사항 R.18(내부 통제 및 해외 지점)과 R.26(금융기관 감독)이 이 구조를 바탕으로 설계돼 있어 VASP에도 동일하게 적용된다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">

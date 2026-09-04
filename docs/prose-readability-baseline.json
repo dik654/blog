@@ -122,7 +122,7 @@
       "score": 30
     },
     "isms-aml/isms-practical-guide": {
-      "fingerprint": "abff7aefd6a7588a",
+      "fingerprint": "cc89cf3c173a2abc",
       "score": 30
     },
     "blockchain/dydx": {
@@ -174,7 +174,7 @@
       "score": 28
     },
     "isms-aml/isms-auth-management": {
-      "fingerprint": "8a88427e5c9d8bf4",
+      "fingerprint": "2f621396766bb208",
       "score": 28
     },
     "blockchain/kohaku-provider": {
@@ -430,7 +430,7 @@
       "score": 20
     },
     "isms-aml/isms-access-control": {
-      "fingerprint": "c5c2ec31420b63d0",
+      "fingerprint": "04a399e0ec4c9e62",
       "score": 20
     },
     "p2p/nat-traversal": {
@@ -1010,7 +1010,7 @@
       "score": 8
     },
     "isms-aml/isms-overview": {
-      "fingerprint": "8a272a0fe26b352c",
+      "fingerprint": "e0100cefed26e60d",
       "score": 8
     },
     "p2p/libp2p-gossipsub": {
@@ -1210,19 +1210,19 @@
       "score": 6
     },
     "isms-aml/aml-fds-deep": {
-      "fingerprint": "6bb47a3fe2e7f3fb",
+      "fingerprint": "dc872bb120159689",
       "score": 6
     },
     "isms-aml/isms-audit-checklist": {
-      "fingerprint": "96ddf45d2842d887",
+      "fingerprint": "8f0b60e9012dde65",
       "score": 6
     },
     "isms-aml/isms-privacy-lifecycle": {
-      "fingerprint": "33dc49526f34ac0a",
+      "fingerprint": "a4b2935f15554c17",
       "score": 6
     },
     "isms-aml/isms-privacy-policy": {
-      "fingerprint": "c0a12dc00fdef924",
+      "fingerprint": "8f10ad5fc022ccca",
       "score": 6
     },
     "p2p/iroh": {

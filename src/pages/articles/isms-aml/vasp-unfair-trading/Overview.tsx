@@ -23,7 +23,7 @@ export default function Overview() {
 
         <h3 className="text-xl font-semibold mt-8 mb-4">3대 유형</h3>
         <p className="leading-7">
-          제10조가 금지하는 불공정거래는 크게 세 가지 유형으로 나뉜다.
+          제10조가 금지하는 불공정거래는 크게 세 유형이다.
         </p>
 
         <div className="not-prose overflow-x-auto my-4">
@@ -171,7 +171,7 @@ export default function Overview() {
 
         <OverviewPenaltyViz />
         <p className="leading-7">
-          불공정거래에 대한 처벌은 형사처벌과 행정 제재로 나뉜다.
+          불공정거래 처벌은 형사처벌과 행정 제재로 나뉜다.
         </p>
 
         <div className="not-prose overflow-x-auto my-4">

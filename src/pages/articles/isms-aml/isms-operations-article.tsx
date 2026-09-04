@@ -532,10 +532,10 @@ export default function IsmsOperationsArticle({ article }: { article: ArticleKey
           ))}
         </div>
         <p className="leading-7">
-          Base와 candidate는 같은 업무 fixture, clock, account·network·data snapshot과 external stub에서 비교합니다.
-          허용되지 않은 effect는 0이어야 하며, reason code·attempt ID·artifact·policy generation·owner와 recovery time을
-          함께 기록합니다. 실패하면 이전 binary·policy·configuration으로 rollback하고 이미 발생한 외부 effect는
-          idempotency key와 provider receipt로 reconcile합니다.
+          Base와 candidate는 같은 업무 fixture, clock, account·network·data snapshot과 external stub에서 비교합니다. 허용되지 않은
+          effect는 0이어야 하며 reason code·attempt ID·artifact·policy generation·owner와 recovery time을 함께 기록합니다.
+          실패하면 이전 binary·policy·configuration으로 rollback하고 이미 발생한 외부 effect는 idempotency key와 provider
+          receipt로 reconcile합니다.
         </p>
         <h3 className="text-xl font-semibold">이 글만으로 풀어야 하는 10문제</h3>
         <p className="leading-7">

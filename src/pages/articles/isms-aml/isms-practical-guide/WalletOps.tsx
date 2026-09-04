@@ -36,8 +36,7 @@ export default function WalletOps() {
           <li>콜드월렛 서명 담당자</li>
         </ul>
         <p>
-          이 구성이 문제가 될 줄은 몰랐다. 셋 다 보안이나 월렛 관련 업무를
-          담당하는 사람이므로 합리적이라고 생각했다.
+          이 구성이 문제가 될 줄은 몰랐다. 셋 다 보안이나 월렛 업무를 담당하는 사람이라 합리적이라고 생각했다.
         </p>
 
         <h4 className="text-lg font-semibold mt-4 mb-2">심사원 지적</h4>

@@ -162,8 +162,7 @@ export default function WalletArchitecture() {
           외부 수탁 시 준수 사항
         </h3>
         <p className="leading-7">
-          자체 보관이 아닌 외부 수탁업체에 가상자산 보관을 위탁하는 경우,
-          추가적인 통제 요건이 적용된다.
+          자체 보관이 아니라 외부 수탁업체에 가상자산 보관을 위탁하면 추가 통제 요건이 적용된다.
         </p>
         <p className="leading-7">
           첫째, 수탁업체는 사고예방 체계를 갖추어야 한다. 콜드월렛 보관 비율,

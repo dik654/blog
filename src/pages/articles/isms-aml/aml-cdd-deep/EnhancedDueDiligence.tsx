@@ -19,8 +19,7 @@ export default function EnhancedDueDiligence() {
 
         <h3 className="text-xl font-semibold mt-8 mb-3">EDD 대상</h3>
         <p>
-          FATF 권고사항 R.10, R.12, R.19와 특금법 시행령이 정하는 EDD 의무
-          대상은 크게 세 범주.
+          FATF 권고사항 R.10, R.12, R.19와 특금법 시행령이 정하는 EDD 의무 대상은 세 범주.
         </p>
 
         <div className="not-prose overflow-x-auto my-4">
@@ -84,7 +83,9 @@ export default function EnhancedDueDiligence() {
           별도의 강화 확인 대상으로 지정한 범주다.
         </p>
 
-        <p>FATF 권고사항 R.12가 정의하는 PEP의 범위는 다음과 같다.</p>
+        <p>
+            FATF 권고사항 R.12는 PEP의 범위를 이렇게 정의한다.
+          </p>
 
         <div className="not-prose overflow-x-auto my-4">
           <table className="w-full text-sm border border-border">

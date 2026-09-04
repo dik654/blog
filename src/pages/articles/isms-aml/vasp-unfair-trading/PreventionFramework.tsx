@@ -242,7 +242,7 @@ export default function PreventionFramework() {
 
         <h3 className="text-xl font-semibold mt-8 mb-4">위반 시 조치 절차</h3>
         <p className="leading-7">
-          불공정거래 위반이 확인되면 내부적으로 다음 절차를 따른다.
+          불공정거래 위반이 확인되면 내부에서 다음 절차를 따른다.
         </p>
 
         <div className="not-prose overflow-x-auto my-4">
@@ -330,7 +330,7 @@ export default function PreventionFramework() {
           금융위·금감원의 외부 감시
         </h3>
         <p className="leading-7">
-          VASP 내부 예방 체계 외에, 정부 차원의 외부 감시 체계가 작동한다.
+          VASP 내부 예방 체계 외에 정부 차원의 외부 감시 체계도 작동한다.
         </p>
 
         <p className="leading-7">
@@ -354,8 +354,7 @@ export default function PreventionFramework() {
           예방 체계의 전체 구조
         </h3>
         <p className="leading-7">
-          불공정거래 예방은 단일 장치가 아니라, 여러 층위가 중첩된 방어 체계로
-          작동한다.
+          불공정거래 예방은 단일 장치가 아니라 여러 층위가 중첩된 방어 체계로 작동한다.
         </p>
 
         <div className="not-prose overflow-x-auto my-4">

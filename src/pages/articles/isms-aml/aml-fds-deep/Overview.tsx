@@ -123,7 +123,9 @@ export default function Overview() {
         <FdsArchitectureViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">FDS 아키텍처</h3>
-        <p>FDS는 크게 네 단계로 구성된다.</p>
+        <p>
+            FDS는 네 단계로 구성된다.
+          </p>
 
         <div className="not-prose overflow-x-auto my-4">
           <table className="w-full text-sm border border-border">
@@ -201,7 +203,7 @@ export default function Overview() {
 
         <h3 className="text-xl font-semibold mt-8 mb-3">감시 조직</h3>
         <p>
-          FDS 운영은 단일 부서의 업무가 아니라 여러 부서의 협력 체계로 운영된다.
+          FDS는 단일 부서의 업무가 아니라 여러 부서가 협력하는 체계로 운영된다.
         </p>
 
         <div className="not-prose overflow-x-auto my-4">

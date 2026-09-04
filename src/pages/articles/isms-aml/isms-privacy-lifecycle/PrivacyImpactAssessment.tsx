@@ -20,9 +20,8 @@ export default function PrivacyImpactAssessment() {
           프라이버시 보호)" 접근법의 핵심 도구.
         </p>
         <p>
-          EU의 GDPR(General Data Protection Regulation)에서는 이를 DPIA(Data
-          Protection Impact Assessment)로 부르며, 고위험 처리 활동에 대해
-          의무적으로 수행하도록 규정한다(GDPR 제35조).
+          EU의 GDPR(General Data Protection Regulation)에서는 이를 DPIA(Data Protection Impact Assessment)로 부르며 고위험
+          처리 활동이라면 의무적으로 수행하도록 규정한다(GDPR 제35조).
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">
@@ -123,8 +122,7 @@ export default function PrivacyImpactAssessment() {
           <PIAStepsInlineViz />
         </div>
         <p>
-          PIA는 다음 5단계로 수행된다. 각 단계에서 산출물을 작성하고, 최종적으로
-          영향평가서를 완성한다.
+          PIA는 다음 5단계로 수행된다. 각 단계에서 산출물을 작성하고 최종적으로 영향평가서를 완성한다.
         </p>
         <ol>
           <li>

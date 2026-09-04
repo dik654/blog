@@ -105,9 +105,7 @@ export default function RiskBasedApproach() {
           2단계: 분석 (Analysis)
         </h4>
         <p>
-          식별한 위험 요소 각각에 대해 "발생 가능성(Likelihood)"과
-          "영향도(Impact)"를 평가하고, 두 값을 조합하여 위험 등급(고/중/저)을
-          산출한다.
+          식별한 위험 요소마다 "발생 가능성(Likelihood)"과 "영향도(Impact)"를 평가하고 두 값을 조합해 위험 등급(고/중/저)을 산출한다.
         </p>
 
         <div className="not-prose overflow-x-auto my-4">
@@ -184,8 +182,7 @@ export default function RiskBasedApproach() {
           3단계: 평가 (Evaluation)
         </h4>
         <p>
-          2단계에서 산출한 "고유위험(Inherent Risk)"에 현재 통제 수준을 반영하여
-          "잔여위험(Residual Risk)"을 산출한다.
+          2단계에서 산출한 "고유위험(Inherent Risk)"에 현재 통제 수준을 반영해 "잔여위험(Residual Risk)"을 산출한다.
         </p>
 
         <p>
@@ -305,8 +302,7 @@ export default function RiskBasedApproach() {
 
         <h3 className="text-xl font-semibold mt-8 mb-3">위험관리 위원회</h3>
         <p>
-          일정 규모 이상의 VASP는 위험관리 위원회를 구성하여 전사 차원의 위험을
-          논의한다.
+          일정 규모 이상의 VASP는 위험관리 위원회를 구성해 전사 차원의 위험을 논의한다.
         </p>
         <ul>
           <li>
