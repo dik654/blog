@@ -27,7 +27,7 @@ export default function GemminiPeMacDataflowArticle() {
           <p className="text-lg leading-8">
             Gemmini 의 systolic array(시스톨릭 배열)는 특별한 회로가 아니라 PE(processing element, 처리 요소) 한 칸을
             격자 모양으로 수백 번 복제한 것입니다. PE 한 칸이 곱셈+누산(MAC)을 한 사이클에 처리하고 그 결과를 이웃
-            PE 로 흘려보내는 규칙만 알면, 16×16 이든 32×32 든 같은 규칙이 반복될 뿐입니다.
+            PE 로 흘려보내는 규칙만 알면 16×16 이든 32×32 든 같은 규칙이 반복될 뿐입니다.
           </p>
           <p>
             이 반복이 중요한 이유는 roofline 에서 이미 본 arithmetic intensity(연산 강도, 메모리에서 읽은 1바이트당
@@ -36,7 +36,7 @@ export default function GemminiPeMacDataflowArticle() {
             스위치입니다.
           </p>
           <p>
-            이 글은 실제 Gemmini 저장소의 PE.scala 파일 하나만 놓고, MacUnit 이라는 원자 연산부터
+            이 글은 실제 Gemmini 저장소의 PE.scala 파일 하나만 놓고 MacUnit 이라는 원자 연산부터
             Weight-/Output-Stationary 전환, 그리고 그 전환을 끊기지 않게 만드는 이중 레지스터까지 따라갑니다.
           </p>
         </div>
@@ -55,7 +55,7 @@ export default function GemminiPeMacDataflowArticle() {
           <p>
             MacUnit 을 별도로 뗀 이유는 dataflow 전환 때문입니다. Weight-Stationary 와 Output-Stationary 는 mac_unit
             에 넣는 입력의 배선만 다르고 연산 자체는 같습니다. 회로 합성 도구가 이를 눈치채지 못하면 곱셈기를 두 벌
-            만들어 칩 면적을 낭비할 수 있어, Gemmini 는 module 하나로 재사용을 강제합니다.
+            만들어 칩 면적을 낭비할 수 있어 Gemmini 는 module 하나로 재사용을 강제합니다.
           </p>
         </div>
         <div className="not-prose my-4 flex flex-wrap gap-3">
@@ -67,7 +67,7 @@ export default function GemminiPeMacDataflowArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             MacUnit 혼자서는 곱셈기 하나에 불과합니다. 그 앞뒤로 어떤 값을 넣고 뺄지 정하는 것이 PE 본체의 dataflow
-            로직이고, 다음 절에서 이어집니다.
+            로직입니다. 다음 절에서 이어집니다.
           </p>
         </div>
       </section>
@@ -77,7 +77,7 @@ export default function GemminiPeMacDataflowArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             PEControl.dataflow 한 비트가 이 PE 가 무엇을 고정할지 정합니다. Weight-Stationary(WS)는 weight 를 PE
-            레지스터에 붙박아 두고 activation 만 흘려보내며, Output-Stationary(OS)는 반대로 partial sum 을 붙박아
+            레지스터에 붙박아 두고 activation 만 흘려보내며 Output-Stationary(OS)는 반대로 partial sum 을 붙박아
             두고 weight 와 activation 을 함께 흘려보냅니다.
           </p>
           <p>
@@ -144,7 +144,7 @@ export default function GemminiPeMacDataflowArticle() {
             파이프라인이 끊기지 않습니다.
           </p>
           <p>
-            last_s 는 한 사이클 전의 propagate 값을 저장해 두고, flip 은 그 값이 지금 값과 다른지를 봅니다. flip 이
+            last_s 는 한 사이클 전의 propagate 값을 저장해 두고 flip 은 그 값이 지금 값과 다른지를 봅니다. flip 이
             참인 사이클, 즉 역할이 막 뒤집힌 그 순간에만 shift(반올림 자리수)를 적용하고 나머지 사이클에는 0 을
             씁니다 — 매 사이클 shift 를 적용하면 같은 값을 여러 번 깎는 실수가 생기기 때문입니다.
           </p>
@@ -171,8 +171,8 @@ export default function GemminiPeMacDataflowArticle() {
         <h2 className="mb-6 text-2xl font-bold">PE 하나를 직접 poke·peek 해 보면 두 dataflow 전환이 눈에 보입니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Gemmini 저장소에는 Mesh 전체를 검증하는 MeshWithDelaysUnitTest 는 있지만, PE 한 칸만 떼어 테스트하는
-            파일은 없습니다. 이 글이 다룬 WS·OS 전환을 직접 눈으로 확인하려면 그 자리를 스스로 채우는 것이 가장 빠른
+            Gemmini 저장소에는 Mesh 전체를 검증하는 MeshWithDelaysUnitTest 는 있지만 PE 한 칸만 떼어 테스트하는
+            파일은 없습니다. 이 글이 다룬 WS·OS 전환을 눈으로 확인하려면 그 자리를 스스로 채워 보는 것이 가장 빠른
             실습입니다. 아래는 그 실습을 포함해 Chipyard 환경에서 Gemmini 를 처음 받아 시뮬레이션까지 돌리는
             절차입니다.
           </p>
@@ -194,13 +194,13 @@ export default function GemminiPeMacDataflowArticle() {
         <h2 className="mb-6 text-2xl font-bold">PE 혼자서는 곱셈기 하나일 뿐, 격자로 엮여야 행렬곱이 됩니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            이 글이 다룬 것은 PE 한 칸의 내부뿐입니다. 실제 Gemmini 는 이 PE 를 격자로 늘어놓고, activation 은
+            이 글이 다룬 것은 PE 한 칸의 내부뿐입니다. 실제 Gemmini 는 이 PE 를 격자로 늘어놓고 activation 은
             왼쪽에서 오른쪽으로, weight·partial sum 은 위에서 아래로 흘려보내는 배선(Mesh.scala)까지 갖춰야 비로소
             행렬곱을 계산합니다.
           </p>
           <p>
             앞서 구한 I_PE = 2K/w 는 PE 하나의 국소적인 재사용일 뿐입니다. 칩 전체가 DDR·HBM 에서 실제로 읽는 바이트
-            수는 Scratchpad(온칩 SRAM)가 weight 를 얼마나 오래 들고 있는지에 따라 또 달라지며, 그 병목의 읽는
+            수는 Scratchpad(온칩 SRAM)가 weight 를 얼마나 오래 들고 있는지에 따라 또 달라집니다. 그 병목을 읽는
             방법은{" "}
             <Link to="/gpu/gpu-memory-hierarchy-and-roofline#roofline-bound">
               GPU roofline 과 ridge point
@@ -234,9 +234,9 @@ export default function GemminiPeMacDataflowArticle() {
           citeKey={1}
           href="https://arxiv.org/abs/1911.09925"
         >
-          RISC-V Rocket/BOOM 코어에 RoCC 로 붙는 systolic array 가속기를 설계 공간 전체에서 생성하고, 고성능 CPU
+          RISC-V Rocket/BOOM 코어에 RoCC 로 붙는 systolic array 가속기를 설계 공간 전체에서 생성하고 고성능 CPU
           대비 최대 세 자릿수(orders-of-magnitude) 배 speedup 을 여러 DNN benchmark 에서 보였다고 저자들이
-          보고합니다. 이 배수는 저자 자기보고이며 이 글은 그 성능 주장을 검증하지 않고, PE.scala 라는 실제 소스
+          보고합니다. 이 배수는 저자 자기보고이며 이 글은 그 성능 주장을 검증하지 않고 PE.scala 라는 실제 소스
           하나의 회로 구조만 다룹니다.
         </CitationBlock>
       </section>
