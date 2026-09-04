@@ -76,9 +76,8 @@ export default function PolyDiv() {
           일반적 경우: 배치 역원 (Montgomery Trick)
         </h3>
         <p>
-          vanishing polynomial은 상수로 단순화되지만, 일반적인 다항식
-          나눗셈에서는 n개 서로 다른 값의 역원이 필요하다. Fp 역원은 확장
-          유클리드 또는 페르마 소정리(a^(p-2))로 계산하며, 둘 다 비용이 크다.
+          vanishing polynomial은 상수로 단순화된다. 하지만 일반적인 다항식 나눗셈에서는 n개 서로 다른 값의 역원이 필요하다. Fp 역원은 확장 유클리드 또는 페르마
+          소정리(a^(p-2))로 계산한다. 둘 다 비용이 크다.
         </p>
         <p>
           Montgomery의 배치 역원 기법: n개 역원을{" "}

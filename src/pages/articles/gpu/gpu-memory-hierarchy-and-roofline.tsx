@@ -30,22 +30,18 @@ export default function GpuMemoryHierarchyAndRooflineArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Kernel 이 읽는 byte 하나는 register, shared memory 와 L1, L2, HBM 가운데
-            어디서 오느냐에 따라 시간과 대역폭이 열 배 단위로 달라집니다. 이 글은 그 계층을
-            숫자로 놓고, warp 의 요청이 transaction 으로 바뀌는 규칙과 latency·bandwidth 의
-            구분을 거쳐 kernel 이 네 가지 bound 가운데 어디에 묶였는지 판정하는 데까지 갑니다.
+            Kernel 이 읽는 byte 하나는 register, shared memory 와 L1, L2, HBM 가운데 어디서 오느냐에 따라 시간과 대역폭이 열 배 단위로 달라집니다.
+            이 글은 그 계층을 숫자로 놓고 warp 의 요청이 transaction 으로 바뀌는 규칙과 latency·bandwidth 의 구분을 거쳐 kernel 이 네 가지 bound
+            가운데 어디에 묶였는지 판정하는 데까지 갑니다.
           </p>
           <p>
-            H100 SXM5 를 예로 두면 SM 하나에 register file 256 KB, shared memory 와 합쳐
-            쓰는 L1 data cache 256 KB 가 있고, chip 전체가 공유하는 L2 는 50 MB, 그 바깥의
-            HBM3 는 80 GB 를 3.35 TB/s 로 읽습니다. 위로 갈수록 작고 가까우며 아래로 갈수록
-            크고 멉니다.
+            H100 SXM5 를 예로 두면 SM 하나에 register file 256 KB, shared memory 와 합쳐 쓰는 L1 data cache 256 KB 가 있고
+            chip 전체가 공유하는 L2 는 50 MB, 그 바깥의 HBM3 는 80 GB 를 3.35 TB/s 로 읽습니다. 위로 갈수록 작고 가까우며 아래로 갈수록 크고 멉니다.
           </p>
           <p>
-            L1 cache 는 SM 안에 있어 그 SM 의 warp 만 쓰고, global load 가 L1 을 거칠지는
-            compiler 와 instruction 종류가 정합니다. L2 cache 는 모든 SM 이 공유하는 마지막
-            on-chip 계층이라 HBM 에서 온 byte 는 반드시 여기를 지나고, 다른 SM 이 방금 읽은
-            줄을 다시 읽으면 HBM 까지 가지 않습니다.
+            L1 cache 는 SM 안에 있어 그 SM 의 warp 만 쓰고 global load 가 L1 을 거칠지는 compiler 와 instruction 종류가 정합니다. L2
+            cache 는 모든 SM 이 공유하는 마지막 on-chip 계층이라 HBM 에서 온 byte 는 반드시 여기를 지나고 다른 SM 이 방금 읽은 줄을 다시 읽으면 HBM 까지
+            가지 않습니다.
           </p>
           <p>
             CUDA local memory 는 이름과 달리 가까운 곳이 아닙니다. Thread 하나만 보는 주소
@@ -54,10 +50,8 @@ export default function GpuMemoryHierarchyAndRooflineArticle() {
             <Link to="/gpu/cuda-register-pressure#spill-path">register spill 경로</Link> 에 있습니다.
           </p>
           <p>
-            Constant memory 는 64 KB 짜리 읽기 전용 공간으로 SM 마다 constant cache 를
-            거칩니다. Warp 의 32 lane 이 같은 주소를 읽으면 한 번 읽어 broadcast 하지만,
-            서로 다른 주소를 읽으면 주소 수만큼 직렬화됩니다. Kernel 인자와 모든 thread 가
-            같은 값을 보는 계수표에 맞는 자리입니다.
+            Constant memory 는 64 KB 짜리 읽기 전용 공간으로 SM 마다 constant cache 를 거칩니다. Warp 의 32 lane 이 같은 주소를 읽으면 한 번
+            읽어 broadcast 하지만 서로 다른 주소를 읽으면 주소 수만큼 직렬화됩니다. Kernel 인자와 모든 thread 가 같은 값을 보는 계수표에 맞는 자리입니다.
           </p>
           <p>
             이 다섯 계층의 scope 와 traffic 경로는{" "}
@@ -75,9 +69,8 @@ export default function GpuMemoryHierarchyAndRooflineArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Memory 는 byte 하나씩 오지 않습니다. Warp 의 load instruction 하나가 낸 32개
-            주소를 하드웨어가 32-byte sector 로 묶고, 걸린 sector 하나가 memory transaction
-            하나가 됩니다. Best Practices Guide 는 compute capability 6.0 이상에서 warp 의
+            Memory 는 byte 하나씩 오지 않습니다. Warp 의 load instruction 하나가 낸 32개 주소를 하드웨어가 32-byte sector 로 묶고 걸린
+            sector 하나가 memory transaction 하나가 됩니다. Best Practices Guide 는 compute capability 6.0 이상에서 warp 의
             접근이 필요한 32-byte transaction 수만큼으로 합쳐진다고 적습니다.
           </p>
           <p>
@@ -92,10 +85,8 @@ export default function GpuMemoryHierarchyAndRooflineArticle() {
             uncoalesced access 입니다.
           </p>
           <p>
-            Uncoalesced access 의 비용은 두 겹입니다. 같은 useful byte 를 위해 HBM 대역폭을
-            여덟 배 쓰고, transaction 이 여덟 배 많아 load 하나의 latency 도 길어집니다.
-            Nsight Compute 는 이 둘을 requested byte 와 실제 옮긴 sector 수의 비율로
-            보여 줍니다.
+            Uncoalesced access 의 비용은 두 겹입니다. 같은 useful byte 를 위해 HBM 대역폭을 여덟 배 쓰고 transaction 이 여덟 배 많아 load
+            하나의 latency 도 길어집니다. Nsight Compute 는 이 둘을 requested byte 와 실제 옮긴 sector 수의 비율로 보여 줍니다.
           </p>
           <p>
             접근 pattern 을 바꿔 sector 수를 줄이는 설계가{" "}
@@ -113,10 +104,9 @@ export default function GpuMemoryHierarchyAndRooflineArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Memory latency 는 요청 하나를 내고 첫 byte 가 돌아오기까지의 시간이고, memory
-            bandwidth 는 충분히 많은 요청이 겹칠 때 초당 옮겨지는 byte 입니다. HBM 의
-            latency 는 수백 clock, bandwidth 는 3.35 TB/s 처럼 단위부터 다르며, 요청이
-            하나뿐이면 bandwidth 가 아무리 커도 latency 만큼 기다립니다.
+            Memory latency 는 요청 하나를 내고 첫 byte 가 돌아오기까지의 시간이고, memory bandwidth 는 충분히 많은 요청이 겹칠 때 초당 옮겨지는 byte
+            입니다. HBM 의 latency 는 수백 clock, bandwidth 는 3.35 TB/s 처럼 단위부터 다르며 요청이 하나뿐이면 bandwidth 가 아무리 커도
+            latency 만큼 기다립니다.
           </p>
           <p>
             둘을 잇는 것이 Little's law 입니다. 대역폭을 다 쓰려면 latency 동안 옮겨질 만큼의
@@ -132,16 +122,13 @@ export default function GpuMemoryHierarchyAndRooflineArticle() {
             못 채우는 이유입니다.
           </p>
           <p>
-            Effective bandwidth 는 kernel 이 실제로 낸 성적입니다. Best Practices Guide 의
-            식대로 읽은 byte 와 쓴 byte 를 더해 시간으로 나눕니다. 1 GB 를 읽고 1 GB 를
-            쓰는 kernel 이 0.8 ms 걸렸으면 2 GB / 0.8 ms = 2.5 TB/s 이고, 3.35 TB/s 의
-            약 75% 입니다.
+            Effective bandwidth 는 kernel 이 실제로 낸 성적입니다. Best Practices Guide 의 식대로 읽은 byte 와 쓴 byte 를 더해 시간으로
+            나눕니다. 1 GB 를 읽고 1 GB 를 쓰는 kernel 이 0.8 ms 걸렸으면 2 GB / 0.8 ms = 2.5 TB/s 이고 3.35 TB/s 의 약 75% 입니다.
           </p>
           <p>
-            이 식의 byte 는 kernel 이 필요로 한 useful byte 입니다. Uncoalesced access 로
-            실제 옮긴 byte 는 그보다 클 수 있으므로, effective bandwidth 가 낮은 kernel 은
-            HBM 이 놀고 있는 것일 수도, 쓸모없는 byte 를 나르느라 꽉 차 있는 것일 수도
-            있습니다. 둘을 가르는 것이 profiler 의 실제 sector 수입니다.
+            이 식의 byte 는 kernel 이 필요로 한 useful byte 입니다. Uncoalesced access 로 실제 옮긴 byte 는 그보다 클 수 있으므로
+            effective bandwidth 가 낮은 kernel 은 HBM 이 놀고 있는 것일 수도, 쓸모없는 byte 를 나르느라 꽉 차 있는 것일 수도 있습니다. 둘을 가르는 것이
+            profiler 의 실제 sector 수입니다.
           </p>
         </div>
         <ExplainedFormula
@@ -177,9 +164,8 @@ B_{\mathrm{flight}} &= \underbrace{BW_{\mathrm{peak}} \cdot L_{\mathrm{mem}}}_{\
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Roofline 은 kernel 의 FLOP/byte 인 arithmetic intensity 를 x 축에 놓고 도달
-            가능한 FLOP/s 를 min(peak compute, bandwidth × intensity) 로 긋는 그림입니다.
-            두 지붕이 만나는 x 가 ridge point 이고, kernel 의 intensity 가 그보다 작으면
+            Roofline 은 kernel 의 FLOP/byte 인 arithmetic intensity 를 x 축에 놓고 도달 가능한 FLOP/s 를 min(peak compute,
+            bandwidth × intensity) 로 긋는 그림입니다. 두 지붕이 만나는 x 가 ridge point 이고 kernel 의 intensity 가 그보다 작으면
             memory-bound, 크면 compute-bound 입니다.
           </p>
           <p>
@@ -195,11 +181,9 @@ B_{\mathrm{flight}} &= \underbrace{BW_{\mathrm{peak}} \cdot L_{\mathrm{mem}}}_{\
             로 compute-bound 이며 989 TFLOPS 기준 0.14 ms 가 하한입니다.
           </p>
           <p>
-            Compute-bound 의 증거는 pipe utilization 입니다. Nsight Compute 는 FMA·ALU 같은
-            CUDA core pipe 와 Tensor pipe 가 전체 cycle 가운데 바쁜 비율을 따로 보여 주고,
-            Tensor pipe 가 80% 넘게 바쁘면 그 kernel 은 지붕에 닿은 것입니다. ALU
-            utilization 이 높은데 Tensor utilization 이 0 이면 Tensor Core 를 안 쓰는
-            compute-bound 입니다.
+            Compute-bound 의 증거는 pipe utilization 입니다. Nsight Compute 는 FMA·ALU 같은 CUDA core pipe 와 Tensor pipe
+            가 전체 cycle 가운데 바쁜 비율을 따로 보여 주고 Tensor pipe 가 80% 넘게 바쁘면 그 kernel 은 지붕에 닿은 것입니다. ALU utilization 이
+            높은데 Tensor utilization 이 0 이면 Tensor Core 를 안 쓰는 compute-bound 입니다.
           </p>
           <p>
             Memory-bound 의 증거는 DRAM throughput 이 peak 에 가깝고 pipe utilization 은
@@ -276,10 +260,8 @@ I_{\mathrm{ridge}} &= \underbrace{\frac{P_{\mathrm{peak}}}{BW_{\mathrm{peak}}}}_
             timeline 에서 kernel 사이 빈틈이 kernel 자체보다 길면 이 부류입니다.
           </p>
           <p>
-            네 부류는 서로 배타가 아닙니다. Uncoalesced access 는 memory-bound 처럼 DRAM 을
-            채우면서 useful byte 로는 latency-bound 처럼 보이고, decode 는 step 이 짧아
-            memory-bound 와 launch-bound 를 함께 앓습니다. 판정은 아래 순서로 한 번에 하나씩
-            좁힙니다.
+            네 부류는 서로 배타가 아닙니다. Uncoalesced access 는 memory-bound 처럼 DRAM 을 채우면서 useful byte 로는 latency-bound
+            처럼 보이고 decode 는 step 이 짧아 memory-bound 와 launch-bound 를 함께 앓습니다. 판정은 아래 순서로 한 번에 하나씩 좁힙니다.
           </p>
         </div>
         <AlgorithmBlock
@@ -311,15 +293,12 @@ I_{\mathrm{ridge}} &= \underbrace{\frac{P_{\mathrm{peak}}}{BW_{\mathrm{peak}}}}_
           preview="지붕이 계층마다 따로 생깁니다. L2 bandwidth 는 HBM 보다 높아 ridge 가 오른쪽으로 가고, HBM 기준으로 compute-bound 인 kernel 이 L2 기준으로는 memory-bound 일 수 있습니다."
         >
           <p>
-            Q 를 HBM byte 로 잡은 roofline 은 HBM 이 병목일 때만 맞습니다. L2 hit 이 많은
-            kernel 은 HBM byte 가 적어 intensity 가 커 보이지만, 실제로는 L2 bandwidth 에
-            묶여 있을 수 있습니다. Nsight Compute 의 roofline chart 는 계층별 지붕을 함께
-            그려 이 경우를 가립니다.
+            Q 를 HBM byte 로 잡은 roofline 은 HBM 이 병목일 때만 맞습니다. L2 hit 이 많은 kernel 은 HBM byte 가 적어 intensity 가 커
+            보이지만 실제로는 L2 bandwidth 에 묶여 있을 수 있습니다. Nsight Compute 의 roofline chart 는 계층별 지붕을 함께 그려 이 경우를 가립니다.
           </p>
           <p>
-            같은 이유로 shared memory 를 많이 쓰는 tiled GEMM 은 HBM roofline 으로는 여유가
-            있어도 shared memory bandwidth 나 bank conflict 에 묶일 수 있습니다. 어느 경계의
-            지붕에 닿았는지를 먼저 정하고, 그 경계의 byte 로 intensity 를 다시 계산해야 합니다.
+            같은 이유로 shared memory 를 많이 쓰는 tiled GEMM 은 HBM roofline 으로는 여유가 있어도 shared memory bandwidth 나 bank
+            conflict 에 묶일 수 있습니다. 어느 경계의 지붕에 닿았는지를 먼저 정하고 그 경계의 byte 로 intensity 를 다시 계산해야 합니다.
           </p>
         </ProgressiveDetail>
       </section>
@@ -343,9 +322,8 @@ I_{\mathrm{ridge}} &= \underbrace{\frac{P_{\mathrm{peak}}}{BW_{\mathrm{peak}}}}_
             H100 제품 명세에서 읽었습니다.
           </p>
           <p>
-            Memory latency 600 ns 와 launch overhead 4 µs 는 문서 수치가 아니라 계산 예를
-            위한 가정값입니다. Bound 판정의 80% 같은 문턱도 관행이지 규격이 아니므로, 자기
-            kernel 의 값은 같은 GPU 에서 profiler 로 직접 읽어야 합니다.
+            Memory latency 600 ns 와 launch overhead 4 µs 는 문서 수치가 아니라 계산 예를 위한 가정값입니다. Bound 판정의 80% 같은 문턱도
+            관행이지 규격이 아니므로 자기 kernel 의 값은 같은 GPU 에서 profiler 로 직접 읽어야 합니다.
           </p>
         </div>
         <div id="paper-cuda-best-practices-memory" className="not-prose my-8 scroll-mt-24">

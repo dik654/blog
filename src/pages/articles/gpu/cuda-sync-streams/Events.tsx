@@ -34,12 +34,10 @@ export default function Events() {
           있습니다.
         </p>
         <p>
-          Timing event 두 개를 같은 stream 구간에 기록하면 device-side elapsed
-          time을 얻을 수 있지만, 첫 launch의 JIT·cache warm-up·clock
-          variation·다른 workload contention을 자동으로 제거하지는 않습니다.
-          Warm-up, 반복 횟수, synchronization point, GPU clock/power state,
-          input size와 statistic을 기록해야 재현 가능한 measurement가 됩니다.
-          Event timing을 끈 marker는 dependency용으로 더 명확합니다.
+          Timing event 두 개를 같은 stream 구간에 기록하면 device-side elapsed time을 얻을 수 있지만 첫 launch의 JIT·cache warm-
+          up·clock variation·다른 workload contention을 자동으로 제거하지는 않습니다. Warm-up, 반복 횟수, synchronization point,
+          GPU clock/power state, input size와 statistic을 기록해야 재현 가능한 measurement가 됩니다. Event timing을 끈 marker는
+          dependency용으로 더 명확합니다.
         </p>
       </div>
       <CodePanel
@@ -74,9 +72,8 @@ export default function Events() {
           </li>
         </ol>
         <p>
-          API success만으로 data dependency가 맞는 것은 아닙니다. Buffer
-          ownership과 offset·generation을 trace에 남기고, race detector나
-          deterministic reference output으로 correctness를 확인해야 합니다.
+          API success만으로 data dependency가 맞는 것은 아닙니다. Buffer ownership과 offset·generation을 trace에 남기고 race
+          detector나 deterministic reference output으로 correctness를 확인해야 합니다.
         </p>
       </div>
     </section>

@@ -25,17 +25,13 @@ export default function ModernCfdFiniteVolumeGpuArticle() {
           </h2>
         </header>
         <p className="text-lg leading-8 text-foreground/90">
-          Computational Fluid Dynamics는 질량·운동량·에너지 보존식을 컴퓨터가
-          풀 수 있는 유한한 상태와 연산으로 바꿉니다. 여기서는 압축성 유동의
-          보존형 Navier–Stokes를 기준으로, finite volume discretization이 face
-          flux를 어떻게 만들고 그 local stencil이 GPU memory traffic으로 어떻게
-          이어지는지 봅니다.
+          Computational Fluid Dynamics는 질량·운동량·에너지 보존식을 컴퓨터가 풀 수 있는 유한한 상태와 연산으로 바꿉니다. 여기서는 압축성 유동의 보존형
+          Navier–Stokes를 기준으로 finite volume discretization이 face flux를 어떻게 만드는지, 그 local stencil이 GPU memory
+          traffic으로 어떻게 이어지는지 봅니다.
         </p>
         <p>
-          물리 model과 실행 최적화는 다른 층입니다. Flux 식이나 turbulence
-          closure를 바꾸는 일은 계산 결과의 의미를 바꾸지만, 같은 face flux를
-          더 coalesced하게 읽는 일은 같은 이산식을 더 효율적으로 실행하는
-          후보입니다. 둘 모두 검증 없이 교환할 수 없습니다.
+          물리 model과 실행 최적화는 다른 층입니다. Flux 식이나 turbulence closure를 바꾸면 계산 결과의 의미가 달라집니다. 같은 face flux를 더
+          coalesced하게 읽는 일은 이산식은 그대로 두고 실행만 효율화하는 후보입니다. 둘 모두 검증 없이 교환할 수 없습니다.
         </p>
         <ExplainedFormula
           question="Control volume 안 보존량은 무엇 때문에 변할까요?"
@@ -116,11 +112,9 @@ export default function ModernCfdFiniteVolumeGpuArticle() {
           </h2>
         </header>
         <p>
-          Finite volume method는 각 cell에서 보존식을 적분하고 Gauss theorem으로
-          divergence를 face flux 합으로 바꿉니다. Face 하나를 공유하는 owner와
-          neighbour cell은 같은 numerical flux를 각각 +와 −로 사용합니다. 이
-          pairwise cancellation이 cell-local update와 domain-global conservation을
-          연결합니다.
+          Finite volume method는 각 cell에서 보존식을 적분합니다. Gauss theorem이 divergence를 face flux 합으로 바꿉니다. Face 하나를
+          공유하는 owner와 neighbour cell은 같은 numerical flux를 각각 +와 −로 사용합니다. 이 pairwise cancellation이 cell-local
+          update와 domain-global conservation을 연결합니다.
         </p>
         <FiniteVolumePipelineViz />
         <ExplainedFormula
@@ -198,10 +192,9 @@ export default function ModernCfdFiniteVolumeGpuArticle() {
           </h2>
         </header>
         <p>
-          Explicit scheme에서 한 update가 참조하는 stencil보다 정보가 더 멀리
-          이동하면 numerical domain of dependence가 physical propagation을 따라가지
-          못할 수 있습니다. 단순한 1D 압축성 예에서는 local velocity와 sound speed의
-          합을 cell length와 비교해 Courant number를 만듭니다.
+          Explicit scheme에서 한 update가 참조하는 stencil보다 정보가 더 멀리 이동하면 numerical domain of dependence가 physical
+          propagation을 따라가지 못하는 경우가 생깁니다. 단순한 1D 압축성 예에서는 local velocity와 sound speed의 합을 cell length와 비교해
+          Courant number를 만듭니다.
         </p>
         <ExplainedFormula
           question="Target CFL에서 허용할 global time step은 어떻게 고를까요?"
@@ -263,11 +256,9 @@ export default function ModernCfdFiniteVolumeGpuArticle() {
           </h2>
         </header>
         <p>
-          Structured mesh의 regular stencil은 이웃 offset이 예측 가능하지만,
-          unstructured mesh는 face owner/neighbour connectivity를 따라 indirect gather를
-          수행합니다. Cell-centered fields를 Structure of Arrays로 연속 배치해도
-          face 순서와 neighbour index가 흩어져 있으면 transaction과 cache reuse가
-          나빠질 수 있습니다.
+          Structured mesh의 regular stencil은 이웃 offset이 예측 가능하지만 unstructured mesh는 face owner/neighbour
+          connectivity를 따라 indirect gather를 수행합니다. Cell-centered fields를 Structure of Arrays로 연속 배치해도 face 순서와
+          neighbour index가 흩어져 있으면 transaction과 cache reuse가 나빠지기도 합니다.
         </p>
         <CfdGpuMappingViz />
         <p>

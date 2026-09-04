@@ -28,12 +28,9 @@ export default function Overview() {
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          GPU kernel이 느릴 때 global memory 값을 shared memory로 복사하는
-          것만으로는 해결되지 않습니다. 추가 copy와 barrier 비용을 냈다면, 같은
-          block의 thread가 그 값을 여러 번 재사용하거나 global address를 더
-          효율적인 순서로 바꾸어야 합니다. Shared memory는 SM에 있는
-          programmer-managed on-chip storage이며, allocation의 lifetime과
-          visibility는 기본적으로 thread block에 묶입니다.
+          GPU kernel이 느릴 때 global memory 값을 shared memory로 복사하는 것만으로는 해결되지 않습니다. 추가 copy와 barrier 비용을 냈다면, 같은
+          block의 thread가 그 값을 여러 번 재사용하거나 global address를 더 효율적인 순서로 바꾸어야 합니다. Shared memory는 SM에 있는
+          programmer-managed on-chip storage이며 allocation의 lifetime과 visibility는 기본적으로 thread block에 묶입니다.
         </p>
         <p>
           이 글은 두 병목을 분리합니다. <strong>Coalescing</strong>은 한 warp의
@@ -114,13 +111,10 @@ export default function Overview() {
       />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Shared memory capacity는 device와 kernel configuration에 따라
-          달라지며, static allocation과 launch의 dynamic shared bytes를 합쳐
-          block당 자원으로 계산합니다. 한 block이 너무 많이 쓰면 한 SM에 동시에
-          머무는 block 수가 줄어 memory latency를 숨기기 어려울 수 있습니다.
-          “Global보다 몇 배 빠르다”는 고정 latency 숫자 대신, target GPU에서
-          shared throughput·bank conflicts·occupancy·kernel time을 함께 측정해야
-          합니다.
+          Shared memory capacity는 device와 kernel configuration에 따라 달라지며 static allocation과 launch의 dynamic
+          shared bytes를 합쳐 block당 자원으로 계산합니다. 한 block이 너무 많이 쓰면 한 SM에 동시에 머무는 block 수가 줄어 memory latency를 숨기기
+          어려울 수 있습니다. “Global보다 몇 배 빠르다”는 고정 latency 숫자 대신, target GPU에서 shared throughput·bank
+          conflicts·occupancy·kernel time을 함께 측정해야 합니다.
         </p>
         <div id="paper-cuda-memory" className="scroll-mt-24">
           <CitationBlock
@@ -129,12 +123,9 @@ export default function Overview() {
             href="https://docs.nvidia.com/cuda/cuda-programming-guide/02-basics/writing-cuda-kernels.html#memory-performance"
           >
             <p>
-              공식 guide는 global access를 32-byte transaction 관점에서
-              설명하고, shared memory를 32 banks의 동시 접근 구조로 설명합니다.
-              Matrix transpose 예제는 shared memory가 global read/write를
-              coalescing하고 block thread 사이 data를 교환하는 두 역할을 보여
-              줍니다. 이 예제가 임의 kernel에서 자동 speedup을 보장하는 것은
-              아닙니다.
+              공식 guide는 global access를 32-byte transaction 관점에서, shared memory를 32 banks의 동시 접근 구조로 설명합니다.
+              Matrix transpose 예제는 shared memory가 global read/write를 coalescing하고 block thread 사이 data를 교환하는 두
+              역할을 보여 줍니다. 이 예제가 임의 kernel에서 자동 speedup을 보장하는 것은 아닙니다.
             </p>
           </CitationBlock>
         </div>

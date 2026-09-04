@@ -25,9 +25,7 @@ export default function MemoryManagement() {
           href="https://github.com/ingonyama-zk/icicle"
         >
           <p className="text-xs">
-            ICICLE 프레임워크는 pinned memory와 CUDA 스트림을 활용하여 H2D
-            전송과 MSM 커널 실행을 오버랩합니다. 2^26 MSM에서 전송 오버헤드를
-            80% 감소시킵니다.
+            ICICLE 프레임워크는 pinned memory와 CUDA 스트림으로 H2D 전송과 MSM 커널 실행을 오버랩합니다. 2^26 MSM에서는 전송 오버헤드를 80% 줄입니다.
           </p>
         </CitationBlock>
         <p>

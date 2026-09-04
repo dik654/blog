@@ -69,12 +69,9 @@ export default function Overview() {
             href="https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html"
           >
             <p>
-              공식 guide는 grid·block·thread의 programming hierarchy와 32-thread
-              warp의 SIMT 실행을 구분합니다. 또한 compute capability 9.0부터의
-              thread block cluster는 선택적 추가 계층이며, portable cluster
-              size와 distributed shared memory 조건은 device별로 확인해야
-              합니다. 이 글은 모든 CUDA GPU에 cluster가 있다는 뜻으로 일반화하지
-              않습니다.
+              공식 guide는 grid·block·thread의 programming hierarchy와 32-thread warp의 SIMT 실행을 구분합니다. 또한 compute
+              capability 9.0부터의 thread block cluster는 선택적 추가 계층이며 portable cluster size와 distributed shared
+              memory 조건은 device별로 확인해야 합니다. 이 글은 모든 CUDA GPU에 cluster가 있다는 뜻으로 일반화하지 않습니다.
             </p>
           </CitationBlock>
         </div>

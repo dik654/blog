@@ -3,7 +3,9 @@ export function IcicleRuntimeViz() {
     <figure className="not-prose my-8 rounded-xl border border-border bg-background p-4 sm:p-6">
       <figcaption className="mb-5">
         <p className="text-sm font-bold">한 primitive call이 backend 구현을 찾는 경로</p>
-        <p className="mt-1 text-xs leading-5 text-muted-foreground">공통 API가 수학·memory·stream 계약을 없애는 것이 아니라 같은 호출 경계로 모읍니다.</p>
+        <p className="mt-1 text-xs leading-5 text-muted-foreground">
+            공통 API가 수학·memory·stream 계약을 없애지 않고 같은 호출 경계로 모읍니다.
+          </p>
       </figcaption>
       <div className="grid min-w-0 gap-3 md:grid-cols-[1fr_1.2fr_1fr]">
         <div className="min-w-0 rounded-lg border border-border bg-muted/20 p-4"><p className="text-xs font-bold text-primary">Caller</p><p className="mt-2 break-words text-sm font-semibold">MSM · NTT · Poseidon</p><p className="mt-1 text-xs leading-5 text-muted-foreground">typed config + slices + stream</p></div>

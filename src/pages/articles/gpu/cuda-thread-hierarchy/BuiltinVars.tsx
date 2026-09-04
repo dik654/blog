@@ -96,14 +96,10 @@ export default function BuiltinVars() {
           Block size의 실제 trade-off
         </h3>
         <p>
-          Warp 배수는 마지막 warp의 빈 lane을 줄이는 데 유리하지만, block을 크게
-          만들수록 항상 빠른 것은 아닙니다. 큰 block은 block당 warp 수를 늘리는
-          대신 register와 shared-memory budget을 한 번에 더 소비하며, 긴
-          dependency chain이나 memory latency가 병목이면 resident warp 수가
-          부족해질 수 있습니다. 반대로 block이 너무 작으면 scheduler가 가진
-          block 한도에 먼저 걸릴 수 있습니다. 먼저 128·256·512처럼 합법적인
-          후보를 만들고, 같은 workload에서 achieved occupancy·eligible
-          warps·memory throughput·kernel time을 비교합니다.
+          Warp 배수는 마지막 warp의 빈 lane을 줄이는 데 유리하지만 block을 크게 만들수록 항상 빠른 것은 아닙니다. 큰 block은 block당 warp 수를 늘리는 대신
+          register와 shared-memory budget을 한 번에 더 소비합니다. 긴 dependency chain이나 memory latency가 병목이면 resident
+          warp 수가 부족해질 수 있습니다. 반대로 block이 너무 작으면 scheduler가 가진 block 한도에 먼저 걸릴 수 있습니다. 먼저 128·256·512처럼 합법적인
+          후보를 만들고 같은 workload에서 achieved occupancy·eligible warps·memory throughput·kernel time을 비교합니다.
         </p>
       </div>
     </section>

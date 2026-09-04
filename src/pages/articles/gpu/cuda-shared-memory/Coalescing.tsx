@@ -23,11 +23,9 @@ export default function Coalescing() {
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Warp의 한 load instruction에는 최대 32개의 address가 생깁니다. Memory
-          coalescer는 이 address가 걸친 32-byte segment를 모아 필요한
-          transaction을 발행합니다. “연속이면 한 번”이라고 외우면 32 float가 128
-          B이므로 최소 네 개의 32 B transaction이 필요하다는 사실을 놓칩니다.
-          중요한 것은 requested byte 중 실제로 사용한 byte의 비율입니다.
+          Warp의 한 load instruction에는 최대 32개의 address가 생깁니다. Memory coalescer는 이 address가 걸친 32-byte segment를
+          모아 필요한 transaction을 발행합니다. “연속이면 한 번”이라고 외우면 32 float가 128 B이므로 최소 네 개의 32 B transaction이 필요하다는 사실을
+          놓칩니다. requested byte 중 실제로 사용한 byte의 비율이 중요합니다.
         </p>
       </div>
       <ExplainedFormula

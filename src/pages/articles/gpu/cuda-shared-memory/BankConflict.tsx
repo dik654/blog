@@ -21,12 +21,9 @@ export default function BankConflict() {
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          CUDA guide가 설명하는 32-bit bank mode에서는 연속된 32-bit word가 32
-          banks에 순환 배치됩니다. 한 warp instruction에서 서로 다른 banks를
-          읽으면 병렬로 서비스할 수 있지만, 여러 lane이 같은 bank의 서로 다른
-          word를 요구하면 hardware가 request를 여러 wave로 나눕니다. 반면 여러
-          lane이 정확히 같은 word를 읽으면 broadcast가 가능하므로 address
-          equality까지 확인해야 합니다.
+          CUDA guide가 설명하는 32-bit bank mode에서는 연속된 32-bit word가 32 banks에 순환 배치됩니다. 한 warp instruction에서 서로 다른
+          banks를 읽으면 병렬로 서비스할 수 있지만 여러 lane이 같은 bank의 서로 다른 word를 요구하면 hardware가 request를 여러 wave로 나눕니다. 반면 여러
+          lane이 정확히 같은 word를 읽으면 broadcast가 가능하므로 address equality까지 확인해야 합니다.
         </p>
       </div>
       <ExplainedFormula
@@ -86,13 +83,10 @@ export default function BankConflict() {
           Padding은 무료가 아닙니다
         </h3>
         <p>
-          32×32 float tile은 4,096 B이고 32×33은 4,224 B이므로 block당 128 B를
-          더 씁니다. 작은 차이처럼 보여도 여러 tile과 double buffering을 합치면
-          resident block 수 경계를 넘을 수 있습니다. 먼저 profiler의 shared
-          load/store transactions per request로 conflict가 실제 bottleneck인지
-          확인하고, padding 뒤 kernel time과 occupancy가 함께 좋아졌는지
-          비교합니다. Access가 이미 broadcast이거나 compute-bound라면 padding은
-          성능을 바꾸지 않을 수 있습니다.
+          32×32 float tile은 4,096 B이고 32×33은 4,224 B이므로 block당 128 B를 더 씁니다. 작은 차이처럼 보여도 여러 tile과 double
+          buffering을 합치면 resident block 수 경계를 넘을 수 있습니다. 먼저 profiler의 shared load/store transactions per
+          request로 conflict가 실제 bottleneck인지 확인합니다. 그다음 padding 이후의 kernel time과 occupancy가 함께 좋아졌는지 비교합니다.
+          Access가 이미 broadcast이거나 compute-bound라면 padding은 성능을 바꾸지 않을 수 있습니다.
         </p>
       </div>
     </section>

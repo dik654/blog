@@ -12,7 +12,11 @@ export default function ModernRapidsnarkGpuArticle() {
   return <article className="space-y-14">
     <section id="overview" className="space-y-6">
       <header className="space-y-3"><p className="text-sm font-semibold text-primary">현재 CPU prover와 GPU offload 제안을 같은 사실로 섞지 않기</p><h2 className="text-3xl font-bold tracking-tight">Pinned rapidsnark에는 GPU backend가 없다—먼저 WTNS·zkey·CPU stage map을 읽고 별도 adapter의 경계를 설계한다</h2></header>
-      <p className="text-lg leading-8 text-foreground/90">rapidsnark는 Circom/snarkjs artifact로 Groth16 proof를 만드는 C++ prover이며, commit 81eddf1의 README는 Intel/ARM assembly 구현으로 소개합니다. Source tree에는 CUDA kernel이나 GPU runtime path가 없습니다. 따라서 기존 글의 “rapidsnark GPU prover가 NTT와 MSM을 실행한다”는 설명은 현재 구현 사실이 아닙니다.</p>
+      <p className="text-lg leading-8 text-foreground/90">
+            rapidsnark는 Circom/snarkjs artifact로 Groth16 proof를 만드는 C++ prover입니다. commit 81eddf1의 README에도
+            Intel/ARM assembly 구현이라고 적혀 있습니다. Source tree에는 CUDA kernel이나 GPU runtime path가 없습니다. 따라서 기존 글의
+            “rapidsnark GPU prover가 NTT와 MSM을 실행한다”는 설명은 현재 구현 사실이 아닙니다.
+          </p>
       <p>이 글은 두 층을 분리합니다. 먼저 pinned CPU path가 <code>.zkey</code>와 <code>.wtns</code>를 어떻게 승인하고 thread pool·FFT·MSM으로 proof를 만드는지 설명합니다. 그 다음 <a className="text-primary hover:underline" href="/gpu/gpu-proof-pipeline">GPU proof pipeline 정본</a>을 재사용해, NTT/MSM backend를 붙이려면 어떤 representation·buffer·completion·fallback 계약이 필요한지 제안합니다.</p>
       <RapidsnarkBoundaryViz />
       <ContentBoundary article="rapidsnark-gpu" />
@@ -21,7 +25,12 @@ export default function ModernRapidsnarkGpuArticle() {
 
     <section id="input-contract" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">01 · WTNS·zkey input contract</p><h2 className="mt-2 text-2xl font-bold">확장자보다 section header·prime·variable count·protocol을 먼저 확인한다</h2></header>
-      <p>Pinned loader는 zkey protocol id가 Groth16인지 확인하고 q/r primes, nVars, nPublic, domainSize와 query sections를 읽습니다. Witness header에서는 field byte width, prime과 nVars를 읽으며 prover는 zkey와 witness variable count, supported scalar prime을 비교합니다. 이 검사는 시작점일 뿐이므로 deployment wrapper는 file digest, schema/version, section bounds와 proving-key point admission도 receipt에 추가해야 합니다.</p>
+      <p>
+            Pinned loader는 zkey protocol id가 Groth16인지 먼저 확인합니다. 그다음 q/r primes와 nVars, nPublic, domainSize,
+            query sections를 읽습니다. Witness header에서 읽는 것은 field byte width와 prime, nVars입니다. prover는 zkey와
+            witness variable count, supported scalar prime을 비교합니다. 이 검사는 시작점일 뿐입니다. deployment wrapper라면 file
+            digest와 schema/version, section bounds, proving-key point admission까지 receipt에 넣습니다.
+          </p>
       <ExplainedFormula question="Witness bytes와 proving key가 같은 scalar field·layout을 가리키는지 최소한 무엇을 비교할까?" idea={<>Prime, variable counts, public count, domain과 exact artifact digests를 하나의 admission predicate로 묶습니다.</>} formula={String.raw`\operatorname{admit}\iff p_w=p_z\ \land\ N_w=N_z\ \land\ N_{pub}<N_z\ \land\ n\in\mathcal D\ \land\ d_w,d_z\in P`}
       annotatedFormula={String.raw`\operatorname{admit}\iff p_w=\underbrace{p_z\ \land\ N_w=N_z\ \land\ N_{pub}<N_z\ \land\ n\in\mathcal D\ \land\ d_w,d_z\in P}_{\text{판정 조건 결합}}`}
       operations={[
@@ -47,7 +56,13 @@ export default function ModernRapidsnarkGpuArticle() {
 
     <section id="gpu-boundary" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">03 · Proposed GPU offload boundary</p><h2 className="mt-2 text-2xl font-bold">GPU adapter는 새 구현이다—field encoding·NTT order·MSM query layout과 completion receipt를 명시한다</h2></header>
-      <p>GPU로 옮기기 좋은 후보는 large-domain NTT와 MSM이지만 함수 이름만 바꿔 끼울 수는 없습니다. Scalar와 points의 canonical/Montgomery representation, bit-reversal/coset order, affine/projective layout, device ownership, stream/event completion과 async error propagation을 adapter profile에 고정합니다. Small workload, unsupported domain, OOM 또는 parity failure에서는 pinned CPU path로 명시적으로 fallback하고 이유를 남깁니다.</p>
+      <p>
+            GPU로 옮기기 좋은 후보는 large-domain NTT와 MSM입니다. 다만 함수 이름만 바꿔 끼울 수는 없습니다. Scalar와 points의
+            canonical/Montgomery representation, bit-reversal/coset order는 adapter profile에 고정합니다.
+            affine/projective layout과 device ownership, stream/event completion, async error propagation도 같은
+            profile에 박아 둡니다. Small workload와 unsupported domain, OOM 또는 parity failure에서는 pinned CPU path로
+            명시적으로 fallback하고 그 이유를 남깁니다.
+          </p>
       <ExplainedFormula question="GPU offload가 이득이 되는 조건을 transfer까지 포함해 어떻게 판단할까?" idea={<>CPU 시간과 GPU의 upload·queue·kernel·download·sync 전체를 같은 stage output parity 뒤 비교합니다.</>} formula={String.raw`\Delta T=T_{CPU}-\left(T_{H2D}+T_{queue}+T_{kernel}+T_{D2H}+T_{sync}\right)`}
       annotatedFormula={String.raw`\Delta T=\underbrace{T_{CPU}-\left(T_{H2D}+T_{queue}+T_{kernel}+T_{D2H}+T_{sync}\right)}_{\text{허용 경계 판정}}`}
       operations={[
@@ -59,7 +74,14 @@ export default function ModernRapidsnarkGpuArticle() {
 
     <section id="release-gate" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">04 · Hybrid release gate</p><h2 className="mt-2 text-2xl font-bold">CPU reference·snarkjs-compatible verifier parity 뒤 stage와 end-to-end를 함께 측정하고 즉시 rollback 가능하게 한다</h2></header>
-      <p>Valid fixtures뿐 아니라 wrong WTNS prime/count, zkey protocol/domain/query length, corrupted points, unsatisfied witness, NTT order·coset mismatch, MSM scalar/point permutation, stale event, OOM과 device loss를 넣습니다. 같은 witness/zkey에서 CPU와 GPU outputs, final proof/public JSON과 independent verifier 결과를 비교합니다. 배포 receipt에는 source/backend SHA, GPU model/driver, profile digest, fallback reason, cold/warm median·p95와 peak host/device memory를 남깁니다.</p>
+      <p>
+            Valid fixtures만 넣지 않습니다. wrong WTNS prime/count와 zkey protocol/domain/query length, corrupted
+            points, unsatisfied witness를 함께 넣습니다. NTT order·coset mismatch, MSM scalar/point permutation,
+            stale event, OOM, device loss도 같은 목록입니다. 비교는 같은 witness/zkey에서 합니다. CPU와 GPU outputs, final
+            proof/public JSON, independent verifier 결과를 나란히 놓습니다. 배포 receipt에는 source/backend SHA와 GPU
+            model/driver, profile digest를 남깁니다. fallback reason과 cold/warm median·p95, peak host/device
+            memory도 함께 적습니다.
+          </p>
       <ExplainedFormula question="Hybrid prover의 처리량을 correctness와 fallback을 숨기지 않고 어떻게 보고할까?" idea={<>Independent verification을 통과한 proofs만 end-to-end wall time으로 나누고 GPU 선택·fallback·failure counts를 함께 기록합니다.</>} formula={String.raw`R_{proof}=\frac{N_{verified}}{\sum_i T_{e2e,i}},\qquad N=N_{gpu}+N_{fallback}+N_{failed}`}
       annotatedFormula={String.raw`R_{proof}=\underbrace{\frac{N_{verified}}{\sum_i T_{e2e,i}},\qquad N=N_{gpu}+N_{fallback}+N_{failed}}_{\text{기준량당 비율}}`}
       operations={[

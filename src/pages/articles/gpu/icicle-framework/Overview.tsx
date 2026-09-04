@@ -50,9 +50,8 @@ export default function Overview() {
           GPU에서 실행한다.
         </p>
         <p>
-          C++ CUDA 코어 위에 C API를 두고, 그 위에 Rust/Go/Python 바인딩을
-          제공하는 구조다. gnark, Polygon zkEVM, Scroll 등 주요 ZK 프로젝트에서
-          사용 중이다.
+          C++ CUDA 코어 위에 C API를 두고 그 위에 Rust/Go/Python 바인딩을 제공하는 구조다. gnark, Polygon zkEVM, Scroll 등 주요 ZK
+          프로젝트에서 사용 중이다.
         </p>
         <CodePanel
           title="ICICLE 아키텍처 레이어"

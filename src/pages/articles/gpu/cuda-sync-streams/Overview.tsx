@@ -52,12 +52,10 @@ export default function Overview() {
           lane이 같은 protocol을 따라야 합니다.
         </p>
         <p>
-          Barrier는 atomicity를 대신하지 않습니다. 여러 thread가 같은 counter에
-          동시에 read–modify–write한다면 barrier를 앞뒤에 둬도 중간 update가
-          손실될 수 있으므로 atomic operation이나 단일 writer reduction이
-          필요합니다. 또한 kernel launch 사이 같은 stream ordering은 앞 kernel
-          완료 뒤 다음 kernel이 시작되는 dependency를 표현하지만, 서로 다른
-          streams는 event 등으로 edge를 추가하지 않으면 독립으로 간주됩니다.
+          Barrier는 atomicity를 대신하지 않습니다. 여러 thread가 같은 counter에 동시에 read–modify–write한다면 barrier를 앞뒤에 둬도 중간
+          update가 손실될 수 있으므로 atomic operation이나 단일 writer reduction이 필요합니다. 또한 kernel launch 사이 같은 stream
+          ordering은 앞 kernel 완료 뒤 다음 kernel이 시작되는 dependency를 표현하지만 서로 다른 streams는 event 등으로 edge를 추가하지 않으면
+          독립으로 간주됩니다.
         </p>
         <div id="paper-cuda-async" className="scroll-mt-24">
           <CitationBlock
@@ -66,12 +64,9 @@ export default function Overview() {
             href="https://docs.nvidia.com/cuda/cuda-programming-guide/02-basics/asynchronous-execution.html"
           >
             <p>
-              공식 guide는 asynchronous API가 concurrency를 표현할 뿐 실제
-              overlap은 compute capability와 available hardware resources에
-              의존한다고 구분합니다. Stream·event·device synchronization과
-              default-stream semantics도 설정에 따라 달라질 수 있으므로, 이 글은
-              stream 수만 늘리면 작업이 반드시 동시에 실행된다고 주장하지
-              않습니다.
+              공식 guide는 asynchronous API가 concurrency를 표현할 뿐 실제 overlap은 compute capability와 available
+              hardware resources에 의존한다고 구분합니다. Stream·event·device synchronization과 default-stream semantics도
+              설정에 따라 달라질 수 있으므로 이 글은 stream 수만 늘리면 작업이 반드시 동시에 실행된다고 주장하지 않습니다.
             </p>
           </CitationBlock>
         </div>
@@ -170,10 +165,8 @@ export default function Overview() {
           보장하지 않습니다.
         </p>
         <p>
-          따라서 fence 뒤에 다른 thread가 실제로 그 값을 읽었는지는 fence가
-          정하지 않으며, "언제 읽어도 되는가"는 여전히 barrier나 별도 flag
-          변수로 신호를 보내야 합니다. Barrier보다 가볍지만 rendezvous를
-          대신하지는 않습니다.
+          따라서 fence 뒤에 다른 thread가 실제로 그 값을 읽었는지는 fence가 정하지 않으며 "언제 읽어도 되는가"는 여전히 barrier나 별도 flag 변수로 신호를 보내야
+          합니다. Barrier보다 가볍지만 rendezvous를 대신하지는 않습니다.
         </p>
         <div id="paper-cuda-memory-fence" className="scroll-mt-24">
           <CitationBlock
@@ -197,11 +190,9 @@ export default function Overview() {
           Barrier가 공짜가 아닌 이유: overhead와 divergence
         </h3>
         <p>
-          Barrier는 공짜가 아닙니다. 가장 늦게 도착하는 thread(또는 warp)
-          까지 나머지가 기다리므로, load imbalance가 있으면 그 대기 시간이
-          synchronization overhead로 그대로 드러납니다. 불필요하게 barrier를
-          자주 두거나 넓은 scope를 쓰면 독립적으로 진행할 수 있었던 작업까지
-          함께 멈춥니다.
+          Barrier는 공짜가 아닙니다. 가장 늦게 도착하는 thread(또는 warp) 까지 나머지가 기다리므로 load imbalance가 있으면 그 대기 시간이
+          synchronization overhead로 그대로 드러납니다. 불필요하게 barrier를 자주 두거나 넓은 scope를 쓰면 독립적으로 진행할 수 있었던 작업까지 함께
+          멈춥니다.
         </p>
         <p>
           더 심각한 문제는 barrier divergence입니다. 조건문 안에{" "}

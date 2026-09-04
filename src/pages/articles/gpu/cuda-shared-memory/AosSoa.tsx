@@ -39,12 +39,10 @@ export default function AosSoa() {
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          AoS(Array of Structures)는 한 record의 fields를 붙여 저장하고,
-          SoA(Structure of Arrays)는 같은 field끼리 모읍니다. Warp lanes가
-          particle마다 x만 읽는다면 AoS의 y·z·mass bytes는 transaction에 함께
-          실려도 쓰이지 않을 수 있습니다. SoA에서는 x 값이 연속이므로 같은 byte
-          budget으로 더 많은 useful x를 가져옵니다. 그러나 한 thread가 record의
-          모든 field를 바로 쓴다면 AoS의 locality도 유용할 수 있습니다.
+          AoS(Array of Structures)는 한 record의 fields를 붙여 저장합니다. SoA(Structure of Arrays)는 같은 field끼리 모읍니다.
+          Warp lanes가 particle마다 x만 읽는다면 AoS의 y·z·mass bytes는 transaction에 함께 실려도 쓰이지 않고 버려지기도 합니다. SoA에서는 x
+          값이 연속이므로 같은 byte budget으로 더 많은 useful x를 가져옵니다. 그러나 한 thread가 record의 모든 field를 바로 쓴다면 AoS의
+          locality도 유용할 수 있습니다.
         </p>
       </div>
       <CodePanel
@@ -84,13 +82,10 @@ export default function AosSoa() {
       </div>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          고정된 “SoA가 몇 배 빠르다”는 수치는 model·record
-          size·alignment·cache·GPU·compiler가 없는 한 재현 가능한 근거가
-          아닙니다. 실제 kernel의 field subset과 access direction을 기록하고,
-          layout만 바꾼 paired benchmark에서 global load efficiency·transaction
-          수·kernel time·end-to-end conversion cost를 비교해야 합니다. CPU와 GPU
-          사이에서 매번 transpose한다면 kernel 이득보다 layout conversion이 더
-          클 수도 있습니다.
+          고정된 “SoA가 몇 배 빠르다”는 수치는 model·record size·alignment·cache·GPU·compiler가 없는 한 재현 가능한 근거가 아닙니다. 실제
+          kernel의 field subset과 access direction을 기록하고 layout만 바꾼 paired benchmark에서 global load
+          efficiency·transaction 수·kernel time·end-to-end conversion cost를 비교해야 합니다. CPU와 GPU 사이에서 매번
+          transpose한다면 kernel 이득보다 layout conversion이 더 클 수도 있습니다.
         </p>
       </div>
     </section>

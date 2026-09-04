@@ -77,10 +77,9 @@ export default function MultiGpu() {
             href="https://docs.nvidia.com/cuda/cuda-programming-guide/03-advanced/multi-gpu-systems.html"
           >
             <p>
-              공식 guide는 allocation·launch·stream·event가 current device와
-              연결된다는 ownership 규칙과 peer access 절차를 설명합니다. Event와
-              stream이 다른 devices에 속할 때 일부 API가 실패하며, topology별
-              peer capability와 성능은 query·measurement가 필요합니다.
+              공식 guide는 allocation·launch·stream·event가 current device와 연결된다는 ownership 규칙과 peer access 절차를
+              설명합니다. Event와 stream이 다른 devices에 속할 때 일부 API가 실패하며 topology별 peer capability와 성능은
+              query·measurement가 필요합니다.
             </p>
           </CitationBlock>
         </div>

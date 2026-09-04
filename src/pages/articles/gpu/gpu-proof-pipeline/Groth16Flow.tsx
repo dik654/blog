@@ -27,9 +27,7 @@ export default function Groth16Flow() {
           href="https://eprint.iacr.org/2016/260"
         >
           <p className="text-xs">
-            Groth16 증명자는 A, B, C 세 원소를 생성합니다. A와 C는 G1 위의
-            점이고 B는 G2 위의 점입니다. 각 원소의 계산에 n-크기 MSM이
-            필요합니다.
+            Groth16 증명자는 A, B, C 세 원소를 생성합니다. A와 C는 G1 위의 점이고 B는 G2 위의 점입니다. 원소를 하나 계산할 때마다 n-크기 MSM이 필요합니다.
           </p>
         </CitationBlock>
         <CodePanel

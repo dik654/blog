@@ -56,10 +56,9 @@ export default function CutlassGemmHierarchyAndCuteLayoutsArticle() {
             lane 이 어느 원소를 드는지는 명령이 고정합니다.
           </p>
           <p>
-            Lane 번호를 4로 나눈 몫이 행, 나머지가 열 쌍을 정합니다. C fragment 에서 lane 5 는
-            몫 1, 나머지 1 이므로 행 1 의 열 2·3 과 행 9 의 열 2·3 을 듭니다. 이 규칙이 아래
-            CuTe 절의 thread-value layout 으로 그대로 적히며, 이 글의 Viz 는 tile 이 좁혀져
-            lane 하나의 fragment 가 드러날 때까지를 보여 줍니다.
+            Lane 번호를 4로 나눈 몫이 행, 나머지가 열 쌍을 정합니다. C fragment 에서 lane 5 는 몫 1, 나머지 1 이므로 행 1 의 열 2·3 과 행 9 의 열
+            2·3 을 듭니다. 이 규칙이 아래 CuTe 절의 thread-value layout 으로 그대로 적히며 이 글의 Viz 는 tile 이 좁혀져 lane 하나의 fragment
+            가 드러날 때까지를 보여 줍니다.
           </p>
         </div>
         <CutlassGemmHierarchyAndCuteLayoutsViz />
@@ -81,9 +80,8 @@ export default function CutlassGemmHierarchyAndCuteLayoutsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            GEMM kernel 의 몸통은 두 구간입니다. Mainloop 은 K 를 bK 폭으로 잘라 k-iteration
-            마다 A·B 조각을 올리고 MMA 로 accumulator 에 더하는 반복이고, epilogue 는 반복이
-            끝난 뒤 register 의 accumulator 에 alpha·beta 와 bias·activation 을 적용해 C 로
+            GEMM kernel 의 몸통은 두 구간입니다. Mainloop 은 K 를 bK 폭으로 잘라 k-iteration 마다 A·B 조각을 올리고 MMA 로 accumulator 에
+            더하는 반복입니다. Epilogue 는 반복이 끝난 뒤 register 의 accumulator 에 alpha·beta 와 bias·activation 을 적용해 C 로
             내보내는 한 번의 구간입니다. K 4096 을 bK 32 로 돌면 mainloop 은 128번 돕니다.
           </p>
           <p>
@@ -137,10 +135,9 @@ export default function CutlassGemmHierarchyAndCuteLayoutsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            위 계층의 모든 조각은 결국 memory 의 어느 위치를 누가 읽느냐의 문제입니다.
-            CuTe 는 이 문제를 layout 하나로 적습니다. Layout 은 shape 와 stride 의 쌍이고,
-            좌표를 받아 각 축의 좌표에 그 축의 stride 를 곱해 더한 offset 을 돌려주는
-            함수입니다. Tensor 는 이 layout 에 데이터 pointer 를 붙인 것입니다.
+            위 계층의 모든 조각은 결국 memory 의 어느 위치를 누가 읽느냐의 문제입니다. CuTe 는 이 문제를 layout 하나로 적습니다. Layout 은 shape 와
+            stride 의 쌍입니다. 좌표를 받아 각 축의 좌표에 그 축의 stride 를 곱해 더한 offset 을 돌려주는 함수입니다. Tensor 는 이 layout 에 데이터
+            pointer 를 붙인 것입니다.
           </p>
           <p>
             <code>(4,8):(1,4)</code> 는 4×8 행렬을 열 우선으로 놓은 layout 입니다. 좌표
@@ -221,10 +218,9 @@ L(c) &= \underbrace{\sum_{i} c_i\, d_i}_{\text{좌표와 stride 의 내적}},\qq
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Tile 을 잘랐으면 그 안의 원소를 thread 에 나눠야 합니다. CuTe 는 이 분배를
-            thread layout 과 value layout 두 개로 적습니다. Value layout 은 thread 하나가 한 번에
-            드는 원소의 모양이고, thread layout 은 그 단위를 어느 thread 가 tile 의 어느 위치에서
-            맡는지입니다. 둘을 곱하면 (thread, value) 쌍에서 tile 좌표로 가는 TV layout 이 됩니다.
+            Tile 을 잘랐으면 그 안의 원소를 thread 에 나눠야 합니다. CuTe 는 이 분배를 thread layout 과 value layout 두 개로 적습니다. Value
+            layout 은 thread 하나가 한 번에 드는 원소의 모양입니다. Thread layout 은 그 단위를 어느 thread 가 tile 의 어느 위치에서 맡는지입니다. 둘을
+            곱하면 (thread, value) 쌍에서 tile 좌표로 가는 TV layout 이 됩니다.
           </p>
           <p>
             Global 에서 shared memory 로 128×32 halves tile 을 옮기는 예를 봅니다. Vector copy
@@ -246,13 +242,12 @@ L(c) &= \underbrace{\sum_{i} c_i\, d_i}_{\text{좌표와 stride 의 내적}},\qq
             <code>partition_C</code> 로 accumulator tensor 를 thread 몫으로 자릅니다.
           </p>
           <p>
-            결과가 (4, 4, 8) 모양인 이유는 value 4개에 M 방향 tile 4개, N 방향 tile 8개가
-            곱해졌기 때문이며, 그 128개가 앞 절의 accumulator register 128개입니다.
+            결과가 (4, 4, 8) 모양인 이유는 value 4개에 M 방향 tile 4개, N 방향 tile 8개가 곱해졌기 때문이며 그 128개가 앞 절의 accumulator
+            register 128개입니다.
           </p>
           <p>
-            Copy atom 과 MMA atom 은 이 TV layout 을 hardware 명령에 묶어 둔 단위입니다.
-            Copy atom 은 명령 하나가 옮기는 원소를 source·destination 양쪽의 TV layout 으로
-            적고, MMA atom 은 명령 하나의 A·B·C 각각을 TV layout 으로 적습니다.
+            Copy atom 과 MMA atom 은 이 TV layout 을 hardware 명령에 묶어 둔 단위입니다. Copy atom 은 명령 하나가 옮기는 원소를
+            source·destination 양쪽의 TV layout 으로 적고 MMA atom 은 명령 하나의 A·B·C 각각을 TV layout 으로 적습니다.
           </p>
           <p>
             Atom 을 thread layout 으로 펼친 것이 TiledCopy·TiledMMA 이고, 이 둘이 mainloop 의{" "}
@@ -265,8 +260,7 @@ L(c) &= \underbrace{\sum_{i} c_i\, d_i}_{\text{좌표와 stride 의 내적}},\qq
             행 1칸입니다.
           </p>
           <p>
-            Value mode 의 stride 16·8·128 은 열 1칸, 행 8칸, 열 8칸이며, 이것이 첫 절에서 말로
-            적은 lane 규칙과 같은 내용입니다.
+            Value mode 의 stride 16·8·128 은 열 1칸, 행 8칸, 열 8칸이며 이것이 첫 절에서 말로 적은 lane 규칙과 같은 내용입니다.
           </p>
         </div>
         <TermBreakdown
@@ -351,10 +345,9 @@ L(c) &= \underbrace{\sum_{i} c_i\, d_i}_{\text{좌표와 stride 의 내적}},\qq
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Threadblock·warp·instruction 의 세 층과 shared memory·register 의 double buffering 은
-            CUTLASS 의 efficient GEMM 문서가 설명하는 구조입니다. 이 글의 128×128×32 와
-            64×64 warp tile 은 그 구조에 Ampere fp16 명령 모양을 넣어 계산한 산수이며, 특정
-            GPU 에서 이 구성이 가장 빠르다는 뜻은 아닙니다.
+            Threadblock·warp·instruction 의 세 층과 shared memory·register 의 double buffering 은 CUTLASS 의
+            efficient GEMM 문서가 설명하는 구조입니다. 이 글의 128×128×32 와 64×64 warp tile 은 그 구조에 Ampere fp16 명령 모양을 넣어 계산한
+            산수이며 특정 GPU 에서 이 구성이 가장 빠르다는 뜻은 아닙니다.
           </p>
           <p>
             Layout 함수의 정의와 합성·divide 의 예는 CuTe 의 layout 과 layout algebra 문서에서,

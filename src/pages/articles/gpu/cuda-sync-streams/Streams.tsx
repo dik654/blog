@@ -27,12 +27,10 @@ export default function Streams() {
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          같은 stream에 enqueue한 H2D copy → kernel → D2H copy는 제출 순서대로
-          실행됩니다. 서로 다른 streams의 작업은 dependency가 없다고 표현되며,
-          hardware copy engine·compute engine·memory bandwidth·kernel resource가
-          허용할 때 overlap할 수 있습니다. Default stream은 legacy와 per-thread
-          mode, blocking/non-blocking stream 조합에 따라 interaction이 달라질 수
-          있으므로 build option과 creation flag를 기록해야 합니다.
+          같은 stream에 enqueue한 H2D copy → kernel → D2H copy는 제출 순서대로 실행됩니다. 서로 다른 streams의 작업은 dependency가 없다고
+          표현되며 hardware copy engine·compute engine·memory bandwidth·kernel resource가 허용할 때 overlap할 수 있습니다.
+          Default stream은 legacy와 per-thread mode, blocking/non-blocking stream 조합에 따라 interaction이 달라질 수 있으므로
+          build option과 creation flag를 기록해야 합니다.
         </p>
       </div>
       <ExplainedFormula

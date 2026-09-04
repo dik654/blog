@@ -49,9 +49,8 @@ export default function CudaCompilationAndIsaAnalysisArticle() {
             <code>cubin</code> 이고, <code>fatbinary</code> 도구가 PTX 와 cubin 을 한 컨테이너에 묶습니다.
           </p>
           <p>
-            마지막으로 host compiler(gcc·clang·cl.exe) 가 stub 이 붙은 host 코드와 fatbinary 를
-            함께 컴파일합니다. 그래서 nvcc 의 결과는 평범한 host object 이며, 그 안에 GPU 코드가
-            데이터처럼 들어 있습니다. Runtime 은 kernel 이 처음 launch 될 때 그 fatbinary 를 열어
+            마지막으로 host compiler(gcc·clang·cl.exe) 가 stub 이 붙은 host 코드와 fatbinary 를 함께 컴파일합니다. 그래서 nvcc 의 결과는
+            평범한 host object 이며 그 안에 GPU 코드가 데이터처럼 들어 있습니다. Runtime 은 kernel 이 처음 launch 될 때 그 fatbinary 를 열어
             현재 GPU 에 맞는 이미지를 고릅니다.
           </p>
           <p>
@@ -81,9 +80,8 @@ export default function CudaCompilationAndIsaAnalysisArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            PTX(Parallel Thread Execution) 는 NVIDIA 가 문서로 공개하고 세대를 넘어 유지하는 가상
-            instruction set 입니다. 실제 GPU 는 PTX 를 직접 실행하지 않습니다. PTX 를 읽는 것은
-            항상 ptxas 이거나 driver 안의 JIT compiler 이며, 그들이 낸 SASS 만 SM 위에서 돕니다.
+            실제 GPU 는 PTX 를 직접 실행하지 않습니다. PTX(Parallel Thread Execution) 는 NVIDIA 가 문서로 공개하고 세대를 넘어 유지하는 가상
+            instruction set 입니다. PTX 를 읽는 것은 항상 ptxas 이거나 driver 안의 JIT compiler 이고 그들이 낸 SASS 만 SM 위에서 돕니다.
           </p>
           <p>
             PTX instruction 은 <code>@p opcode.type d, a, b, c;</code> 꼴입니다. 앞의
@@ -210,10 +208,9 @@ $L__BB0_2:
             PTX 를 JIT 하는 경로로 빠지고 Hopper 전용 기능은 하나도 쓰지 않습니다.
           </p>
           <p>
-            JIT 의 비용은 첫 launch 의 지연과, ptxas 버전이 driver 의 것으로 바뀐다는 점입니다.
-            빌드 때 쓴 ptxas 와 다른 register allocation 이 나올 수 있어 성능이 조용히 달라집니다.
-            그래서 배포 대상 GPU 세대가 정해져 있으면 그 sm_XX cubin 을 넣고, 미래 GPU 를 위해
-            가장 높은 compute_XX PTX 하나를 덧붙이는 것이 표준 조합입니다.
+            JIT 의 비용은 첫 launch 의 지연과 ptxas 버전이 driver 의 것으로 바뀐다는 점입니다. 빌드 때 쓴 ptxas 와 다른 register allocation 이
+            나올 수 있어 성능이 조용히 달라집니다. 그래서 배포 대상 GPU 세대가 정해져 있으면 그 sm_XX cubin 을 넣고 미래 GPU 를 위해 가장 높은 compute_XX
+            PTX 하나를 덧붙입니다. 이것이 표준 조합입니다.
           </p>
         </div>
         <AlgorithmBlock
@@ -247,15 +244,13 @@ $L__BB0_2:
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            ptxas 는 두 가지 결정을 합니다. 어떤 값을 어느 register 에 언제까지 둘지(register
-            allocation) 와 instruction 을 어떤 순서로 낼지(instruction scheduling) 입니다. 이 둘은
-            서로를 밀어냅니다. Load 를 앞당겨 latency 를 숨기면 그 값이 더 오래 살아 있어 register
-            가 늘고, register 를 아끼려 하면 load 를 미뤄야 해서 stall 이 늘어납니다.
+            ptxas 는 두 가지 결정을 합니다. 어떤 값을 어느 register 에 언제까지 둘지(register allocation) 와 instruction 을 어떤 순서로
+            낼지(instruction scheduling) 입니다. 이 둘은 서로를 밀어냅니다. Load 를 앞당겨 latency 를 숨기면 그 값이 더 오래 살아 있어 register
+            가 늡니다. 거꾸로 register 를 아끼려 하면 load 를 미뤄야 해서 stall 이 늘어납니다.
           </p>
           <p>
-            Register allocation 의 입력은 각 값의 live range 입니다. 값이 정의된 instruction 부터
-            마지막으로 읽히는 instruction 까지가 그 값의 생존 구간이고, 어느 시점에 겹쳐 살아 있는
-            값의 수가 그 시점의 register 요구량입니다.
+            Register allocation 의 입력은 각 값의 live range 입니다. 값이 정의된 instruction 부터 마지막으로 읽히는 instruction 까지가 그
+            값의 생존 구간입니다. 어느 시점에 겹쳐 살아 있는 값의 수가 그 시점의 register 요구량입니다.
           </p>
           <p>
             ptxas 는 그 최댓값을 물리 register 에 담되, <code>-maxrregcount</code> 나
@@ -264,16 +259,14 @@ $L__BB0_2:
             <Link to="/gpu/cuda-register-pressure#live-range">register pressure 글</Link> 이 다룹니다.
           </p>
           <p>
-            Instruction scheduling 은 dependency 를 지키는 범위 안에서 순서를 바꿉니다. GPU 는
-            in-order issue 라 한 warp 안에서는 앞 instruction 의 결과를 기다리는 동안 다음
-            instruction 을 내지 못합니다. 그래서 ptxas 는 global load 를 최대한 앞으로 끌어올리고
-            그 결과를 쓰는 FFMA 를 뒤로 미뤄, 같은 warp 안에서도 여러 load 가 동시에 날아가게 합니다.
+            Instruction scheduling 은 dependency 를 지키는 범위 안에서 순서를 바꿉니다. GPU 는 in-order issue 라 한 warp 안에서는 앞
+            instruction 의 결과를 기다리는 동안 다음 instruction 을 내지 못합니다. 그래서 ptxas 는 global load 를 최대한 앞으로 끌어올리고 그 결과를
+            쓰는 FFMA 를 뒤로 미룹니다. 그러면 같은 warp 안에서도 여러 load 가 동시에 날아갑니다.
           </p>
           <p>
-            Loop unrolling 은 이 두 결정을 한꺼번에 흔드는 최적화입니다. Loop 본문을 U 번 복사해
-            counter 증가·비교·branch 를 U 번에 한 번만 하게 만들면 instruction 수가 줄고, U 개의
-            load 를 한 덩어리로 앞당길 수 있어 scheduling 여지가 커집니다. 대신 그 U 개의 값이
-            동시에 살아 있으니 register 가 늘어납니다.
+            Loop unrolling 은 이 두 결정을 한꺼번에 흔드는 최적화입니다. Loop 본문을 U 번 복사해 counter 증가·비교·branch 를 U 번에 한 번만 하게 만들면
+            instruction 수가 줄어듭니다. U 개의 load 를 한 덩어리로 앞당길 수 있어 scheduling 여지도 커집니다. 대신 그 U 개의 값이 동시에 살아 있으니
+            register 가 늘어납니다.
           </p>
           <p>
             <code>a[i] = b[i]*c + d</code> 를 thread 하나가 여러 i 에 대해 stride loop 으로 돌린다고
@@ -291,10 +284,8 @@ $L__BB0_2:
             상한의 크기 관계를 보이는 것이며, 정확한 수는 <code>-Xptxas -v</code> 가 알려 줍니다.
           </p>
           <p>
-            그래서 unrolling 의 손익은 register 가 occupancy 를 깎기 시작하는 지점에서 갈립니다.
-            Register 가 32개에서 40개로 늘어도 SM 당 warp 수가 그대로면 이득만 남고, 64개를 넘겨
-            resident warp 가 반으로 줄면 latency 를 숨길 warp 가 없어져 loop 제어를 아낀 것보다
-            더 잃습니다.
+            그래서 unrolling 의 손익은 register 가 occupancy 를 깎기 시작하는 지점에서 갈립니다. Register 가 32개에서 40개로 늘어도 SM 당 warp
+            수가 그대로면 이득만 남습니다. 64개를 넘겨 resident warp 가 반으로 줄면 latency 를 숨길 warp 가 없어져 loop 제어를 아낀 것보다 더 잃습니다.
           </p>
           <p>
             nvcc 는 trip count 가 상수인 작은 loop 를 기본으로 unroll 합니다.
@@ -335,10 +326,9 @@ R(U) &\approx \underbrace{R_0}_{\text{unroll 전 register}} + \underbrace{(U-1)\
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            CPU compiler 에서 익숙한 고전 최적화가 CUDA 경로에도 두 곳에 나뉘어 들어 있습니다.
-            값의 의미만 보고 할 수 있는 것은 cicc 가 PTX 를 내기 전에 하고, 어떤 기계 instruction
-            을 쓸지 골라야 하는 것은 ptxas 가 SASS 를 만들며 합니다. 어느 단계의 출력을 열어야
-            원하는 최적화가 일어났는지 볼 수 있는지가 이 구분에서 정해집니다.
+            CPU compiler 에서 익숙한 고전 최적화가 CUDA 경로에도 두 곳에 나뉘어 들어 있습니다. 값의 의미만 보고 할 수 있는 것은 cicc 가 PTX 를 내기 전에
+            처리합니다. 어떤 기계 instruction 을 쓸지 골라야 하는 것은 ptxas 가 SASS 를 만들며 합니다. 어느 단계의 출력을 열어야 원하는 최적화가 일어났는지 볼 수
+            있는지가 이 구분에서 정해집니다.
           </p>
           <p>
             Common subexpression elimination(CSE) 은 같은 식을 두 번 계산하지 않고 첫 결과를
@@ -346,8 +336,8 @@ R(U) &\approx \underbrace{R_0}_{\text{unroll 전 register}} + \underbrace{(U-1)\
             계산하면 <code>b[i]*c</code> 는 한 번만 곱해집니다.
           </p>
           <p>
-            Dead code elimination(DCE) 은 결과가 어디에도 쓰이지 않는 계산을 지웁니다. 결과를
-            global memory 에 쓰지 않는 microbenchmark kernel 이 0 ms 로 측정되는 이유가 이것입니다.
+            Dead code elimination(DCE) 은 결과가 어디에도 쓰이지 않는 계산을 지웁니다. 그래서 결과를 global memory 에 쓰지 않는
+            microbenchmark kernel 은 0 ms 로 측정됩니다.
           </p>
           <p>
             Constant folding 은 상수끼리의 계산을 컴파일 시점에 끝냅니다. <code>x * 2.0f * 0.5f</code>
@@ -409,10 +399,9 @@ R(U) &\approx \underbrace{R_0}_{\text{unroll 전 register}} + \underbrace{(U-1)\
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            PTX–SASS gap 은 PTX 에서 세었던 것이 SASS 에서 다른 수가 되는 현상입니다. Register 수,
-            instruction 수, load 의 개수와 순서, 분기의 유무가 모두 ptxas 를 거치며 바뀌므로, PTX
-            를 보고 "register 20개를 쓴다"거나 "load 가 두 번이다"라고 말하면 틀립니다. 성능을
-            판단하는 유일한 근거는 실제 GPU 에 올라가는 SASS 입니다.
+            PTX–SASS gap 은 PTX 에서 세었던 것이 SASS 에서 다른 수가 되는 현상입니다. Register 수, instruction 수, load 의 개수와 순서, 분기의
+            유무가 모두 ptxas 를 거치며 바뀌므로 PTX 를 보고 "register 20개를 쓴다"거나 "load 가 두 번이다"라고 말하면 틀립니다. 성능을 판단하는 유일한 근거는
+            실제 GPU 에 올라가는 SASS 입니다.
           </p>
           <p>
             <code>cuobjdump</code> 는 host 실행 파일과 cubin 양쪽에서 내용을 꺼내는 도구입니다.

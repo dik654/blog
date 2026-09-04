@@ -34,7 +34,11 @@ export default function ModernCudaMatrixMultiplyArticle() {
           { symbol: "K", name: "Reduction 길이", description: "각 output이 수행하는 multiply-accumulate 횟수입니다." },
           { symbol: "F", name: "정의한 FLOP 수", description: "일반 dense GEMM의 대략적 연산량이며 FMA를 2 FLOPs로 셉니다." },
         ]} assumptions={["A·B·C는 row-major dense matrix이고 shape가 M×K, K×N, M×N으로 맞습니다.", "FMA를 2 FLOPs로 세며 padding·epilogue·index 연산은 제외합니다."]} interpretation="M=N=K=4이면 output 16개가 각각 4번 곱하고 더해 약 128 FLOPs입니다. 이 수는 실제 실행 instruction 수나 Tensor Core throughput을 그대로 뜻하지 않습니다." />
-        <p>나이브 kernel에서는 각 output thread가 A row와 B column을 global memory에서 읽습니다. Cache가 일부 중복을 흡수할 수 있지만 재사용을 명시적으로 보장하지 않으며, B의 column access는 data layout에 따라 coalescing도 나쁠 수 있습니다. 따라서 코드는 단순하지만 큰 K에서 requested bytes와 실제 memory transactions가 커질 수 있습니다.</p>
+        <p>
+            나이브 kernel에서는 각 output thread가 A row와 B column을 global memory에서 읽습니다. Cache가 일부 중복을 흡수하기는 해도 재사용을
+            명시적으로 보장하지는 않습니다. B의 column access는 data layout에 따라 coalescing도 나빠지기 쉽습니다. 코드는 단순하지만 큰 K에서
+            requested bytes와 실제 memory transactions가 불어나기도 합니다.
+          </p>
       </section>
 
       <section id="tiled" className="space-y-6">
@@ -56,7 +60,11 @@ export default function ModernCudaMatrixMultiplyArticle() {
 
       <section id="performance" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">03 · Measurement</p><h2 className="mt-2 text-2xl font-bold">Warm-up·동기화·연산량·bytes의 경계를 고정하고 비교한다</h2></header>
-        <p>첫 실행에는 context 초기화, module load와 cache cold effect가 섞일 수 있으므로 결과를 먼저 reference와 비교하고 여러 번 warm-up합니다. Kernel-only 시간은 같은 stream에 CUDA start/stop event를 기록하고 stop을 synchronize한 뒤 반복 분포를 보고합니다. CPU wall-clock으로 end-to-end를 잴 때는 측정 구간 앞뒤 GPU completion을 명시해야 비동기 launch 반환 시간만 재는 실수를 피할 수 있습니다.</p>
+        <p>
+            첫 실행에는 context 초기화, module load와 cache cold effect가 섞일 수 있으므로 결과를 먼저 reference와 비교하고 여러 번 warm-
+            up합니다. Kernel-only 시간은 같은 stream에 CUDA start/stop event를 기록하고 stop을 synchronize한 뒤 반복 분포를 보고합니다.
+            CPU wall-clock으로 end-to-end를 잴 때는 측정 구간 앞뒤 GPU completion을 명시해야 비동기 launch 반환 시간만 재는 실수를 피합니다.
+          </p>
         <GemmMeasurementViz />
         <ExplainedFormula question="GEMM에서 achieved FLOP/s와 achieved bandwidth를 같은 실행에서 어떻게 계산할까?" idea={<>정의한 useful FLOPs와 requested bytes를 동일한 elapsed time으로 나눕니다. Profiler가 보고한 actual DRAM bytes도 별도로 보존해 coalescing·cache 효과와 algorithmic traffic을 구분합니다.</>} formula={String.raw`\begin{aligned}P_{ach}&=\frac{2MNK}{t}\\[3pt]B_{eff}&=\frac{B_{read}+B_{write}}{t}\end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}P_{ach}&=\underbrace{\frac{2MNK}{t}}_{\text{기준량당 비율}}\\[3pt]B_{eff}&=\underbrace{\frac{B_{read}+B_{write}}{t}}_{\text{기준량당 비율}}\end{aligned}`}
@@ -77,7 +85,11 @@ export default function ModernCudaMatrixMultiplyArticle() {
 
       <section id="release-gate" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">04 · 채택 기준</p><h2 className="mt-2 text-2xl font-bold">Tile 크기는 occupancy 최대값이 아니라 병목과 end-to-end 결과로 고른다</h2></header>
-        <p>Tile을 키우면 재사용은 늘지만 block당 threads·shared bytes·thread당 registers가 커져 resident blocks가 줄 수 있습니다. 아주 작은 matrix는 launch·barrier 비용이 더 크고, 극단적으로 가는 K나 skinny shape은 정사각 tile이 맞지 않으며, vendor library는 Tensor Core·pipeline·epilogue를 더 잘 활용할 수 있습니다.</p>
+        <p>
+            Tile을 키우면 재사용은 늘지만 block당 threads·shared bytes·thread당 registers가 커져 resident blocks가 줄 수 있습니다. 아주
+            작은 matrix는 launch·barrier 비용이 더 큽니다. 극단적으로 가는 K나 skinny shape은 정사각 tile이 맞지 않습니다. Vendor library는
+            Tensor Core·pipeline·epilogue를 더 잘 활용하기도 합니다.
+          </p>
         <aside className="rounded-lg border border-border bg-card p-5 text-sm leading-6 text-muted-foreground"><strong className="text-foreground">Release gate:</strong> 0·1·odd·non-multiple M/N/K와 여러 magnitude에서 CPU 또는 library reference tolerance를 통과한 뒤, 같은 seed·dtype·compiler·driver·clock에서 warm-up 횟수와 반복수를 고정합니다. Naive·tiled·cuBLAS 후보의 median/p95 kernel time, end-to-end time, achieved FLOP/s·bandwidth, actual DRAM traffic, occupancy·stall을 저장하고 목표 workload에서만 채택합니다.</aside>
       </section>
     </article>

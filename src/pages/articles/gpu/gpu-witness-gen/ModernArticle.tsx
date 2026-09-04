@@ -36,7 +36,10 @@ export default function ModernGpuWitnessArticle() {
 
     <section id="frontier-schedule" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">02 · Frontier schedule</p><h2 className="mt-2 text-2xl font-bold">같은 level의 node 수보다 전체 work와 긴 dependency chain을 함께 본다</h2></header>
-      <p>GPU는 frontier가 넓을 때 유리하지만, 한 signal의 긴 recurrence는 threads를 늘려도 사라지지 않습니다. 따라서 “constraint 수가 크다”만으로 GPU 적합성을 판단하지 않고, compiler가 만든 witness instructions의 work와 span을 측정합니다.</p>
+      <p>
+            GPU는 frontier가 넓을 때 유리하지만 한 signal의 긴 recurrence는 threads를 늘려도 사라지지 않습니다. 따라서 “constraint 수가
+            크다”만으로 GPU 적합성을 판단하지 않고 compiler가 만든 witness instructions의 work와 span을 측정합니다.
+          </p>
       <ExplainedFormula question="P개 worker가 있어도 witness가 더 빨라질 수 없는 하한은 무엇일까?" idea={<>전체 연산을 P개가 나누는 시간과 가장 긴 dependency chain 시간 가운데 큰 값보다 빨라질 수 없습니다.</>} formula={String.raw`T_P\ge\max\!\left(\frac{W}{P},D\right)`}
       annotatedFormula={String.raw`\underbrace{T_P}_{\text{Parallel time 계산}}\ge\underbrace{\max}_{\text{경계 후보 선택}}\!\left(\frac{\underbrace{W}_{\text{Work 계산}}}{P},D\right)`}
       operations={[
@@ -73,7 +76,12 @@ export default function ModernGpuWitnessArticle() {
 
     <section id="release-gate" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">04 · Release gate</p><h2 className="mt-2 text-2xl font-bold">Witness bytes, constraint satisfaction, proof verification을 차례로 통과한 결과만 성능표에 넣는다</h2></header>
-      <p>Zero·one·maximum canonical field value, branch 양쪽, unused signal, dependency cycle, divide-by-zero, malformed input, device OOM·timeout을 포함합니다. CPU/reference witness와 canonical field values를 비교하고, 전체 constraints와 최종 verifier가 같은 statement를 승인해야 합니다. GPU failure는 generation을 폐기하고 검증된 CPU 경로나 이전 scheduler artifact로 되돌립니다.</p>
+      <p>
+            Zero·one·maximum canonical field value, branch 양쪽, unused signal, dependency cycle, divide-by-
+            zero, malformed input, device OOM·timeout을 포함합니다. CPU/reference witness와 canonical field values를
+            비교하고 전체 constraints와 최종 verifier가 같은 statement를 승인해야 합니다. GPU failure는 generation을 폐기하고 검증된 CPU
+            경로나 이전 scheduler artifact로 되돌립니다.
+          </p>
       <ExplainedFormula question="Witness GPU 경로의 유효 처리량을 어떤 경계에서 셀까?" idea={<>최종 proof verifier까지 통과한 witnesses만 세고 parse·transfer·kernel·sync·fallback 시간을 wall clock에 포함합니다.</>} formula={String.raw`R_{witness}=\frac{N_{verified}}{T_{wall}}`}
       annotatedFormula={String.raw`R_{witness}=\underbrace{\frac{N_{verified}}{T_{wall}}}_{\text{기준량당 비율}}`}
       operations={[

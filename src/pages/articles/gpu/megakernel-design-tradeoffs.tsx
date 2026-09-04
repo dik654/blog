@@ -32,10 +32,9 @@ export default function MegakernelDesignTradeoffsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Decode 한 step 은 token 하나를 만들려고 layer 마다 kernel 을 여러 개 띄웁니다.
-            Batch 가 1 이면 kernel 하나가 하는 일은 수 µs 에서 수십 µs 로 작고, kernel
-            사이의 launch 와 tail 이 그 일과 같은 크기로 남습니다. Megakernel 은 이 경계를
-            없애려고 forward 전체를 kernel 하나에 넣는 설계입니다.
+            Decode 한 step 은 token 하나를 만들려고 layer 마다 kernel 을 여러 개 띄웁니다. Batch 가 1 이면 kernel 하나가 하는 일은 수 µs 에서
+            수십 µs 로 작고 kernel 사이의 launch 와 tail 이 그 일과 같은 크기로 남습니다. Megakernel 은 이 경계를 없애려고 forward 전체를 kernel
+            하나에 넣는 설계입니다.
           </p>
           <p>
             숫자로 보면 이렇습니다. Hazy Research 는 Llama-1B 의 forward 가 kernel 약
@@ -51,11 +50,9 @@ export default function MegakernelDesignTradeoffsArticle() {
             과 같은 식으로 셉니다.
           </p>
           <p>
-            Batch 가 크면 같은 kernel 이 수 ms 를 돌아 launch 와 tail 이 비율로 사라집니다.
-            Batch 1 은 반대여서, MPK 논문은 Qwen3-8B 가 token 하나에 kernel 293개를
-            띄운다고 적고 Hazy Research 는 기존 시스템이 H100 memory bandwidth 의 50%
-            이하만 쓴다고 적습니다. 이 설정을 이 글은 batch-1 megakernel optimization
-            이라고 부릅니다.
+            Batch 가 크면 같은 kernel 이 수 ms 를 돌아 launch 와 tail 이 비율로 사라집니다. Batch 1 은 반대여서 MPK 논문은 Qwen3-8B 가
+            token 하나에 kernel 293개를 띄운다고 적고 Hazy Research 는 기존 시스템이 H100 memory bandwidth 의 50% 이하만 쓴다고 적습니다. 이
+            설정을 이 글은 batch-1 megakernel optimization 이라고 부릅니다.
           </p>
           <p>
             이 글의 순서는 이렇습니다. 먼저 kernel 경계를 지우면 무엇이 전역으로 바뀌는지,
@@ -74,10 +71,9 @@ export default function MegakernelDesignTradeoffsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Megakernel 의 이득은 launch 를 아끼는 데서 끝나지 않습니다. Kernel 경계가 있을
-            때 하드웨어는 operator 하나의 block 만 볼 수 있어 그 operator 안에서만 배치를
-            정하고, 경계를 지우면 device 쪽 scheduler 가 forward 전체의 task 를 보고 어느
-            SM 에 무엇을 놓을지 정합니다. 이것이 global scheduling 입니다.
+            Megakernel 의 이득은 launch 를 아끼는 데서 끝나지 않습니다. Kernel 경계가 있을 때 하드웨어는 operator 하나의 block 만 볼 수 있어 그
+            operator 안에서만 배치를 정하고 경계를 지우면 device 쪽 scheduler 가 forward 전체의 task 를 보고 어느 SM 에 무엇을 놓을지 정합니다. 이것이
+            global scheduling 입니다.
           </p>
           <p>
             Operator 하나만 보고 고른 최적이 local optimum 입니다. GEMM 하나를 SM 132개에
@@ -92,10 +88,9 @@ export default function MegakernelDesignTradeoffsArticle() {
             가 있어 중앙 lock 없이 task 를 꺼냅니다.
           </p>
           <p>
-            이득을 식으로 쓰면 없앤 경계마다 launch 와 tail 을 더하고, 대신 생긴 device
-            쪽 동기화 비용과 자원 공유 비용을 뺀 값입니다. MPK 는 Qwen3-8B 의 A100 token
-            당 latency 를 14.5 ms 에서 12.5 ms 로 줄였다고 자기보고하며, vLLM·SGLang 대비
-            1.0~1.7배로 적습니다. 뺄셈 쪽 항이 얼마나 큰지가 이 글의 나머지입니다.
+            이득을 식으로 쓰면 없앤 경계마다 launch 와 tail 을 더하고 대신 생긴 device 쪽 동기화 비용과 자원 공유 비용을 뺀 값입니다. MPK 는 Qwen3-8B 의
+            A100 token 당 latency 를 14.5 ms 에서 12.5 ms 로 줄였다고 자기보고하며 vLLM·SGLang 대비 1.0~1.7배로 적습니다. 뺄셈 쪽 항이 얼마나
+            큰지가 이 글의 나머지입니다.
           </p>
         </div>
         <ExplainedFormula
@@ -136,10 +131,9 @@ export default function MegakernelDesignTradeoffsArticle() {
             이고 그 범위는 <Link to="/gpu/cuda-sync-streams#streams">stream ordering</Link> 이 정합니다.
           </p>
           <p>
-            경계를 지우면 그 의존을 kernel 안에서 직접 표현해야 합니다. Hazy Research 는
-            global memory 에 counter 배열을 두고 instruction 이 끝나면 counter 를 올리며,
-            다음 instruction 은 시작 전에 필요한 counter 를 확인합니다. MPK 는 같은 것을
-            event 라고 부르고 task 마다 기다리는 event 하나와 올리는 event 하나로 정규화합니다.
+            경계를 지우면 그 의존을 kernel 안에서 직접 표현해야 합니다. Hazy Research 는 global memory 에 counter 배열을 두고 instruction 이
+            끝나면 counter 를 올리며 다음 instruction 은 시작 전에 필요한 counter 를 확인합니다. MPK 는 같은 것을 event 라고 부르고 task 마다
+            기다리는 event 하나와 올리는 event 하나로 정규화합니다.
           </p>
           <p>
             이 counter 대기가 intra-kernel synchronization 이고 비용은 세 가지입니다.
@@ -148,10 +142,9 @@ export default function MegakernelDesignTradeoffsArticle() {
             풀리도록 task 를 잘게 나누는 설계 비용입니다.
           </p>
           <p>
-            잘게 나누면 kernel 경계보다 일찍 시작할 수 있습니다. Hazy Research 의 예에서
-            down-projection 은 hidden state 전체가 아니라 자기 input chunk 만 끝나면
-            시작합니다. Kernel 경계였다면 앞 operator 의 마지막 block 까지 기다렸을 시간이
-            겹치고, 이것이 cross-operator pipelining 입니다.
+            잘게 나누면 kernel 경계보다 일찍 시작할 수 있습니다. Hazy Research 의 예에서 down-projection 은 hidden state 전체가 아니라 자기
+            input chunk 만 끝나면 시작합니다. Kernel 경계였다면 앞 operator 의 마지막 block 까지 기다렸을 시간이 겹치고 이것이 cross-operator
+            pipelining 입니다.
           </p>
           <p>
             Block 안의 동기화는 다른 층입니다. FlashAttention-3 는 한 block 안에서
@@ -195,10 +188,9 @@ export default function MegakernelDesignTradeoffsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Kernel 은 launch 순간에 thread 당 register 수와 block 당 shared memory 를
-            정하고, 그 값은 kernel 이 끝날 때까지 바뀌지 않습니다. 이것이 kernel resource
-            lifetime 이고, megakernel 에서는 그 lifetime 이 forward 전체라서 가장 무거운
-            task 의 요구가 모든 task 의 예산이 됩니다.
+            Kernel 은 launch 순간에 thread 당 register 수와 block 당 shared memory 를 정하고 그 값은 kernel 이 끝날 때까지 바뀌지
+            않습니다. 이것이 kernel resource lifetime 이고 megakernel 에서는 그 lifetime 이 forward 전체라서 가장 무거운 task 의 요구가
+            모든 task 의 예산이 됩니다.
           </p>
           <p>
             Register 부터 봅니다. Task 가 switch 로 갈라져 live range 가 서로 겹치지 않으면
@@ -207,10 +199,9 @@ export default function MegakernelDesignTradeoffsArticle() {
             96, norm 40 이면 kernel 은 128 이고 norm task 도 thread 당 128 을 잡습니다.
           </p>
           <p>
-            Occupancy 로 바꾸면 이렇습니다. SM 의 register file 65,536개에서 thread 당 128
-            이면 warp 당 4,096 이라 warp 16개, 40 이면 warp 당 1,280 이라 warp 51개까지
-            올라갑니다. Norm task 가 도는 동안 latency 를 숨길 warp 가 51개가 아니라 16개인
-            것이 cross-operator register pressure 입니다.
+            Occupancy 로 바꿔 봅니다. SM 의 register file 65,536개에서 thread 당 128 이면 warp 당 4,096 이라 warp 16개, 40 이면
+            warp 당 1,280 이라 warp 51개까지 올라갑니다. Norm task 가 도는 동안 latency 를 숨길 warp 가 51개가 아니라 16개인 것이 cross-
+            operator register pressure 입니다.
           </p>
           <p>
             두 operator 를 task 로 나누지 않고 한 task 안에 이어 붙이면 앞 operator 의
@@ -220,16 +211,14 @@ export default function MegakernelDesignTradeoffsArticle() {
             <Link to="/gpu/cuda-register-pressure#spill-path">register spill</Link> 글이 다룹니다.
           </p>
           <p>
-            Shared memory 는 반대로 시간에 따라 나눠 쓸 수 있습니다. Hazy Research 는 H100
-            의 213 kB 를 16 KiB page 13개로, MPK 는 32 KB page 로 나눠(H100 에서 7개) task
-            가 필요한 만큼 빌리고 돌려줍니다. 이것이 cross-operator shared-memory reuse
-            이고, 앞 task 가 남긴 page 에 다음 task 의 weight 를 미리 올리는 데도 씁니다.
+            Shared memory 는 반대로 시간에 따라 나눠 쓸 수 있습니다. Hazy Research 는 H100 의 213 kB 를 16 KiB page 13개로, MPK 는 32
+            KB page 로 나눠(H100 에서 7개) task 가 필요한 만큼 빌리고 돌려줍니다. 이것이 cross-operator shared-memory reuse 이고 앞 task
+            가 남긴 page 에 다음 task 의 weight 를 미리 올리는 데도 씁니다.
           </p>
           <p>
-            Register 는 왜 page 처럼 못 나누는지가 두 자원의 차이입니다. Register 배정은
-            컴파일 시점에 code 에 박히고 하드웨어가 warp 를 올릴 때 한 번에 잡지만, shared
-            memory 는 주소만 있으면 kernel 안에서 어느 task 가 쓰든 상관없습니다. Hopper 의
-            setmaxnreg 가 warpgroup 사이에서 register 를 옮기는 유일한 예외입니다.
+            Register 는 왜 page 처럼 못 나누는지가 두 자원의 차이입니다. Register 배정은 컴파일 시점에 code 에 박히고 하드웨어가 warp 를 올릴 때 한 번에
+            잡지만 shared memory 는 주소만 있으면 kernel 안에서 어느 task 가 쓰든 상관없습니다. Hopper 의 setmaxnreg 가 warpgroup 사이에서
+            register 를 옮기는 유일한 예외입니다.
           </p>
         </div>
       </section>
@@ -240,35 +229,29 @@ export default function MegakernelDesignTradeoffsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Kernel 하나에 operator 가 모두 들어가면 code 도 모두 들어갑니다. SM 은
-            instruction 을 register 처럼 미리 잡지 않고 cache 에서 읽으므로, task 가 GEMM
-            에서 attention 으로 바뀔 때마다 다른 code 영역을 읽어야 하고 그 영역이 cache
-            보다 크면 miss 가 납니다. 이것이 instruction cache pressure 입니다.
+            Kernel 하나에 operator 가 모두 들어가면 code 도 모두 들어갑니다. SM 은 instruction 을 register 처럼 미리 잡지 않고 cache 에서
+            읽으므로 task 가 GEMM 에서 attention 으로 바뀔 때마다 다른 code 영역을 읽어야 하고 그 영역이 cache 보다 크면 miss 가 납니다. 이것이
+            instruction cache pressure 입니다.
           </p>
           <p>
-            크기를 보면 이렇습니다. Volta V100 microbenchmark 는 scheduler 마다 L0
-            instruction cache 약 12 KiB, SM 당 L1 instruction cache 128 KiB 를 측정했습니다.
-            SASS instruction 하나가 16 byte 이니 L0 는 instruction 약 768개, L1 은 약
-            8,192개입니다. Hopper 의 값은 NVIDIA 가 공개하지 않아 이 글은 Volta 수치로 셉니다.
+            크기는 이렇습니다. Volta V100 microbenchmark 는 scheduler 마다 L0 instruction cache 약 12 KiB, SM 당 L1
+            instruction cache 128 KiB 를 측정했습니다. SASS instruction 하나가 16 byte 이니 L0 는 instruction 약 768개, L1 은
+            약 8,192개입니다. Hopper 의 값은 NVIDIA 가 공개하지 않아 이 글은 Volta 수치로 셉니다.
           </p>
           <p>
-            GEMM mainloop 하나가 unroll 뒤 수천 instruction 이면 그 하나로 L0 를 넘고,
-            operator 열 개면 L1 도 넘습니다. Task 마다 hot loop 는 L0 에 맞아야 miss 없이
-            돌며, task 가 바뀌는 순간의 miss 는 L1 에서 채우면 수십 clock, L2 까지 가면
-            수백 clock 입니다. 같은 종류의 task 를 한 SM 에 이어 붙이면 이 miss 가 줄어듭니다.
+            GEMM mainloop 하나가 unroll 뒤 수천 instruction 이면 그 하나로 L0 를 넘고, operator 열 개면 L1 도 넘습니다. Task 마다 hot
+            loop 는 L0 에 맞아야 miss 없이 돌며 task 가 바뀌는 순간의 miss 는 L1 에서 채우면 수십 clock, L2 까지 가면 수백 clock 입니다. 같은 종류의
+            task 를 한 SM 에 이어 붙이면 이 miss 가 줄어듭니다.
           </p>
           <p>
-            Control-flow complexity 는 같은 원인의 다른 얼굴입니다. Task 종류를 고르는
-            switch, page 를 빌리는 분기, counter 를 기다리는 loop 이 모든 task 의 경로에
-            붙습니다. 이 분기는 warp 전체가 같은 쪽으로 가므로 divergence 는 아니지만,
-            컴파일러가 분기 너머로 instruction 을 옮기지 못해 각 task 의 code 가 독립
-            kernel 이었을 때보다 느슨해질 수 있습니다.
+            Control-flow complexity 는 같은 원인의 다른 얼굴입니다. Task 종류를 고르는 switch, page 를 빌리는 분기, counter 를 기다리는 loop
+            이 모든 task 의 경로에 붙습니다. 이 분기는 warp 전체가 같은 쪽으로 가므로 divergence 는 아니지만 컴파일러가 분기 너머로 instruction 을 옮기지
+            못해 각 task 의 code 가 독립 kernel 이었을 때보다 느슨해질 수 있습니다.
           </p>
           <p>
-            Megakernel 이 정적 code 를 줄이는 방법이 interpreter 구조입니다. Hazy Research
-            는 SM 마다 instruction 열을 주고 공통 CUDA template 이 그것을 해석하게 했습니다.
-            Operator 마다 kernel 을 새로 짜는 대신 instruction 종류 수만큼의 code 만 kernel
-            에 남고, 배치는 Python 쪽에서 미리 계산해 수백 번의 forward 에 재사용합니다.
+            Megakernel 이 정적 code 를 줄이는 방법이 interpreter 구조입니다. Hazy Research 는 SM 마다 instruction 열을 주고 공통 CUDA
+            template 이 그것을 해석하게 했습니다. Operator 마다 kernel 을 새로 짜는 대신 instruction 종류 수만큼의 code 만 kernel 에 남고 배치는
+            Python 쪽에서 미리 계산해 수백 번의 forward 에 재사용합니다.
           </p>
         </div>
         <TermBreakdown
@@ -302,17 +285,14 @@ export default function MegakernelDesignTradeoffsArticle() {
             크기라는 이 글의 비용을 전부 떠안습니다.
           </p>
           <p>
-            선택 기준은 kernel 당 일의 크기입니다. Kernel 하나가 수백 µs 이상 돌면 graph 로
-            launch 만 지워도 tail 과 sync 는 비율로 사라져 megakernel 의 추가 이득이 작고,
-            batch-1 decode 처럼 kernel 하나가 수 µs 면 경계 자체가 시간이라 megakernel 이
-            이깁니다. Llama-1B 는 H100 에서 1 ms 안팎, memory bandwidth 78% 로 baseline 의
-            50% 이하와 대비됩니다.
+            선택 기준은 kernel 당 일의 크기입니다. Kernel 하나가 수백 µs 이상 돌면 graph 로 launch 만 지워도 tail 과 sync 는 비율로 사라져
+            megakernel 의 추가 이득이 작고 batch-1 decode 처럼 kernel 하나가 수 µs 면 경계 자체가 시간이라 megakernel 이 이깁니다. Llama-1B
+            는 H100 에서 1 ms 안팎, memory bandwidth 78% 로 baseline 의 50% 이하와 대비됩니다.
           </p>
           <p>
-            둘은 배타적이지 않습니다. Megakernel 도 launch 는 하므로 graph 안의 node 하나로
-            넣을 수 있고, MPK 는 multi-GPU 의 allreduce 를 task 로 넣어 계산과 통신을 kernel
-            안에서 겹칩니다. Graph 가 못 하는 것은 kernel 경계를 넘는 overlap 이고,
-            megakernel 이 못 하는 것은 operator 마다 다른 launch configuration 입니다.
+            둘은 배타적이지 않습니다. Megakernel 도 launch 는 하므로 graph 안의 node 하나로 넣을 수 있고 MPK 는 multi-GPU 의 allreduce 를
+            task 로 넣어 계산과 통신을 kernel 안에서 겹칩니다. Graph 가 못 하는 것은 kernel 경계를 넘는 overlap 이고, megakernel 이 못 하는 것은
+            operator 마다 다른 launch configuration 입니다.
           </p>
           <p>
             Fusion 글의{" "}
@@ -333,11 +313,9 @@ export default function MegakernelDesignTradeoffsArticle() {
             <Link to="/gpu/cuda-persistent-kernels#queue-progress">persistent kernel 글</Link> 이 소유합니다.
           </p>
           <p>
-            MPK 와 Hazy Research 의 megakernel 은 둘 다 persistent 하게 worker 를 띄우고
-            그 위에 GEMM·attention·norm·통신 task 를 섞어 올립니다. 이 글이 다루는 register
-            최대값, shared memory page, instruction cache, counter 대기는 모두 서로 다른
-            operator 가 한 kernel 의 예산을 나눌 때 생기는 비용이며, 단일 operator 의
-            persistent kernel 에는 나타나지 않습니다.
+            MPK 와 Hazy Research 의 megakernel 은 둘 다 persistent 하게 worker 를 띄우고 그 위에 GEMM·attention·norm·통신 task
+            를 섞어 올립니다. 이 글이 다루는 register 최대값, shared memory page, instruction cache, counter 대기는 모두 서로 다른
+            operator 가 한 kernel 의 예산을 나눌 때 생기는 비용이며 단일 operator 의 persistent kernel 에는 나타나지 않습니다.
           </p>
         </ProgressiveDetail>
       </section>
@@ -348,10 +326,9 @@ export default function MegakernelDesignTradeoffsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Kernel 293개, task 13,867개, worker 128개와 scheduler warp 16개, register 를
-            task type 최대값으로 고정한다는 서술, 32 KB shared memory page 와 Qwen3-8B 의
-            14.5 ms 에서 12.5 ms 로의 latency 는 MPK 논문의 자기보고입니다. 독립 재현은 이
-            글이 확인하지 못했습니다.
+            Kernel 293개, task 13,867개, worker 128개와 scheduler warp 16개, register 를 task type 최대값으로 고정한다는 서술,
+            32 KB shared memory page, Qwen3-8B 의 latency 를 14.5 ms 에서 12.5 ms 로 줄였다는 수치는 MPK 논문의 자기보고입니다. 독립
+            재현은 이 글이 확인하지 못했습니다.
           </p>
           <p>
             Launch 2.1 µs 와 1.3 µs, Llama-1B kernel 약 100개, 213 kB 를 16 KiB page 13개로

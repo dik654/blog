@@ -20,7 +20,9 @@ export function WitnessFrontierViz() {
           </div>
         ))}
       </div>
-      <p className="mt-4 rounded-lg border border-border px-3 py-2 text-xs leading-5 text-muted-foreground">예: x=3이면 L1에서 a=9와 b=8을 함께 계산하고, L2가 두 결과를 받아 out=72를 만듭니다.</p>
+      <p className="mt-4 rounded-lg border border-border px-3 py-2 text-xs leading-5 text-muted-foreground">
+            예: x=3이면 L1에서 a=9와 b=8을 함께 계산하고 L2가 두 결과를 받아 out=72를 만듭니다.
+          </p>
     </figure>
   );
 }

@@ -25,21 +25,19 @@ export default function WarpSpecializationAndAsyncPipelinesArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Warp specialization 은 한 threadblock 안의 warp 에 서로 다른 역할을 주는 kernel
-            구조입니다. Producer warp 는 global memory 에서 shared memory 로 tile 을 옮기는 일만
-            하고, consumer warp 는 shared memory 의 tile 로 계산만 합니다. 두 역할은 같은
-            kernel 코드 안에서 warp 번호로 갈라집니다.
+            Warp specialization 은 한 threadblock 안의 warp 에 서로 다른 역할을 주는 kernel 구조입니다. Producer warp 는 global
+            memory 에서 shared memory 로 tile 을 옮기는 일만 하고 consumer warp 는 shared memory 의 tile 로 계산만 합니다. 두 역할은
+            같은 kernel 코드 안에서 warp 번호로 갈라집니다.
           </p>
           <p>
-            나누는 이유는 한 warp 가 load 와 계산을 번갈아 하면 둘 중 하나가 늘 기다리기
-            때문입니다. Load 를 낸 warp 가 그 결과로 계산하려면 데이터가 도착할 때까지 멈추고,
-            그 사이 tensor core 는 놉니다. 역할을 나누면 producer 는 다음 tile 을 계속 요청하고
-            consumer 는 이미 도착한 tile 을 계속 계산합니다.
+            나누는 이유는 한 warp 가 load 와 계산을 번갈아 하면 둘 중 하나가 늘 기다리기 때문입니다. Load 를 낸 warp 가 그 결과로 계산하려면 데이터가 도착할 때까지
+            멈추고 그 사이 tensor core 는 놉니다. 역할을 나누면 producer 는 다음 tile 을 계속 요청하고 consumer 는 이미 도착한 tile 을 계속
+            계산합니다.
           </p>
           <p>
-            Hopper 의 CUTLASS 3.x GEMM 은 threadblock 을 384 thread, 곧 warpgroup 3개로 잡습니다.
-            Warpgroup 0 이 producer, 1 과 2 가 consumer 입니다. Producer 128 thread 가운데 실제로
-            TMA 명령을 내는 것은 thread 하나뿐이고, 나머지는 register 를 반납하고 대기합니다.
+            Hopper 의 CUTLASS 3.x GEMM 은 threadblock 을 384 thread, 곧 warpgroup 3개로 잡습니다. Warpgroup 0 이
+            producer, 1 과 2 가 consumer 입니다. Producer 128 thread 가운데 실제로 TMA 명령을 내는 것은 thread 하나뿐이고 나머지는
+            register 를 반납하고 대기합니다.
           </p>
           <p>
             Register 반납이 이 구조를 완성합니다. SM 의 register 는 65,536개이고 384 thread 가
@@ -73,11 +71,9 @@ export default function WarpSpecializationAndAsyncPipelinesArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Asynchronous copy 는 명령을 낸 thread 가 데이터 도착을 기다리지 않고 다음 명령으로
-            넘어가는 memory 이동입니다. 보통의 load 는 global 값을 register 에 받은 뒤 다시
-            shared memory 에 store 해야 하므로 thread 가 두 번 개입하고 register 도 씁니다.
-            Asynchronous copy 는 global 에서 shared memory 로 바로 가고, 완료는 별도 장치가
-            알립니다.
+            Asynchronous copy 는 명령을 낸 thread 가 데이터 도착을 기다리지 않고 다음 명령으로 넘어가는 memory 이동입니다. 보통의 load 는 global 값을
+            register 에 받은 뒤 다시 shared memory 에 store 해야 하므로 thread 가 두 번 개입하고 register 도 씁니다. Asynchronous
+            copy 는 global 에서 shared memory 로 바로 갑니다. 완료는 별도 장치가 알립니다.
           </p>
           <p>
             Ampere 부터 있는 <code>cp.async</code> 는 thread 하나가 4·8·16 B 를 옮기는 명령입니다.
@@ -93,9 +89,8 @@ export default function WarpSpecializationAndAsyncPipelinesArticle() {
             tensor 의 box 하나를 통째로 옮깁니다.
           </p>
           <p>
-            Tensor map 이 곧 TMA descriptor 입니다. 원소 형식, 1~5 차원의 크기와 stride, 한 번에
-            옮길 box 의 각 차원 크기(차원당 256 이하), swizzle 방식, 경계 밖 채움값을 담습니다.
-            128×64 bf16 box 는 16 KB 이므로 A·B 한 stage 32 KB 가 명령 2개입니다. cp.async 의
+            Tensor map 이 곧 TMA descriptor 로, 원소 형식, 1~5 차원의 크기와 stride, 한 번에 옮길 box 의 각 차원 크기(차원당 256 이하),
+            swizzle 방식, 경계 밖 채움값을 담습니다. 128×64 bf16 box 는 16 KB 이므로 A·B 한 stage 32 KB 가 명령 2개입니다. cp.async 의
             2,048번과 비교하면 producer 가 낼 명령이 천 분의 일로 줄어 warp 하나로 충분해집니다.
           </p>
           <p>
@@ -166,22 +161,19 @@ export default function WarpSpecializationAndAsyncPipelinesArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Multi-stage pipeline 은 shared memory 를 같은 크기의 stage S 개로 나누고 ring 처럼
-            돌려 쓰는 구조입니다. Producer 는 stage 0, 1, 2 를 차례로 채우고 S−1 을 지나면 다시
-            0 으로 돌아오며, consumer 는 그 뒤를 같은 순서로 따라갑니다. Stage 2개가 double
-            buffering, 3개가 triple buffering 이고, S 개로 일반화한 것이 이 pipeline 입니다.
+            Multi-stage pipeline 은 shared memory 를 같은 크기의 stage S 개로 나누고 ring 처럼 돌려 쓰는 구조입니다. Producer 는 stage
+            0, 1, 2 를 차례로 채우고 S−1 을 지나면 다시 0 으로 돌아오며 consumer 는 그 뒤를 같은 순서로 따라갑니다. Stage 2개가 double buffering,
+            3개가 triple buffering 이고, S 개로 일반화한 것이 이 pipeline 입니다.
           </p>
           <p>
-            Stage 수를 정하는 산수는 간단합니다. Tile 하나의 load 가 L 만큼 걸리고 계산이 C 만큼
-            걸리면, consumer 가 한 tile 을 계산하는 동안 producer 는 L/C 개 tile 의 load 를 날려
-            두어야 다음 tile 이 제때 도착합니다. 그 tile 들과 지금 계산 중인 tile 을 합쳐 S 는
-            ⌈L/C⌉ + 1 이상이어야 합니다.
+            Tile 하나의 load 가 L 만큼 걸리고 계산이 C 만큼 걸리면 consumer 가 한 tile 을 계산하는 동안 producer 는 L/C 개 tile 의 load 를
+            날려 두어야 다음 tile 이 제때 도착합니다. 그 tile 들과 지금 계산 중인 tile 을 합쳐 S 는 ⌈L/C⌉ + 1 이상이어야 합니다. Stage 수를 정하는 산수는
+            이게 전부입니다.
           </p>
           <p>
-            128×128×64 bf16 tile 의 계산은 2×128×128×64 ≈ 2.1 MFLOP 이고, H100 의 dense bf16
-            989 TFLOP/s 를 SM 132개로 나눈 SM 당 7.5 TFLOP/s 로는 약 0.3 µs 입니다. Load 지연을
-            HBM 왕복과 전송을 합쳐 1.2 µs 로 잡으면 S ≥ ⌈4⌉ + 1 = 5 이고 stage 당 32 KB 이므로
-            160 KB 입니다. 이 값은 산수이지 측정이 아닙니다.
+            128×128×64 bf16 tile 의 계산은 2×128×128×64 ≈ 2.1 MFLOP 이고, H100 의 dense bf16 989 TFLOP/s 를 SM 132개로
+            나눈 SM 당 7.5 TFLOP/s 로는 약 0.3 µs 입니다. Load 지연을 HBM 왕복과 전송을 합쳐 1.2 µs 로 잡으면 S ≥ ⌈4⌉ + 1 = 5 이고 stage
+            당 32 KB 이므로 160 KB 입니다. 이 값은 계산으로 낸 산수입니다. 측정한 값이 아닙니다.
           </p>
           <p>
             Shared memory 가 상한입니다. H100 은 threadblock 당 227 KB 까지 허용하므로 32 KB
@@ -191,9 +183,8 @@ export default function WarpSpecializationAndAsyncPipelinesArticle() {
             있습니다.
           </p>
           <p>
-            Stage 를 늘려도 이득이 멈추는 지점이 있습니다. L 이 C 보다 작아지면 S = 2 로 충분하고,
-            K 방향 tile 수가 S 보다 적으면 ring 이 한 바퀴도 돌지 못합니다. 아래 Viz 는 stage 4
-            ring 이 채워지고 소비되는 한 바퀴를 보여 줍니다.
+            Stage 를 늘려도 이득이 멈추는 지점이 있습니다. L 이 C 보다 작아지면 S = 2 로 충분하고 K 방향 tile 수가 S 보다 적으면 ring 이 한 바퀴도 돌지
+            못합니다. 아래 Viz 는 stage 4 ring 이 채워지고 소비되는 한 바퀴를 보여 줍니다.
           </p>
         </div>
         <WarpSpecializationAndAsyncPipelinesViz />
@@ -230,10 +221,9 @@ S &\ge \underbrace{\left\lceil \frac{L}{C} \right\rceil}_{\text{계산 한 번 �
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Ring 의 각 stage 에는 mbarrier 두 개가 붙습니다. Full barrier 는 데이터가 다 도착했음을
-            consumer 에게 알리고, empty barrier 는 consumer 가 다 읽었음을 producer 에게 알립니다.
-            mbarrier 는 shared memory 에 놓인 64 bit 객체로, 도착 횟수와 기다리는 byte 수를 세다가
-            둘 다 채워지면 phase 가 뒤집힙니다.
+            Ring 의 각 stage 에는 mbarrier 두 개가 붙습니다. Full barrier 는 데이터가 다 도착했음을 consumer 에게 알리고 empty barrier 는
+            consumer 가 다 읽었음을 producer 에게 알립니다. mbarrier 는 shared memory 에 놓인 64 bit 객체로, 도착 횟수와 기다리는 byte 수를
+            세다가 둘 다 채워지면 phase 가 뒤집힙니다.
           </p>
           <p>
             TMA 와 짝을 이루는 것이 transaction byte 입니다. Producer thread 는 full barrier 에{" "}
@@ -245,10 +235,8 @@ S &\ge \underbrace{\left\lceil \frac{L}{C} \right\rceil}_{\text{계산 한 번 �
             그 phase 를 기다리던 consumer 가 풀립니다.
           </p>
           <p>
-            Phase 는 ring 이 한 바퀴 돌 때마다 0 과 1 을 오갑니다. Consumer 가 stage 2 를 두 번째
-            방문했을 때 첫 번째 방문의 완료를 보고 착각하지 않으려면 어느 phase 를 기다리는지 함께
-            들고 다녀야 하며, CUTLASS 의 pipeline state 가 stage index 와 phase bit 를 이 목적으로
-            묶습니다.
+            Phase 는 ring 이 한 바퀴 돌 때마다 0 과 1 을 오갑니다. Consumer 가 stage 2 를 두 번째 방문했을 때 첫 번째 방문의 완료를 보고 착각하지 않으려면
+            어느 phase 를 기다리는지 함께 들고 다녀야 합니다. CUTLASS 의 pipeline state 가 stage index 와 phase bit 를 이 목적으로 묶습니다.
           </p>
           <p>
             같은 손잡이가 cp.async 에도 있습니다. <code>cp.async.mbarrier.arrive</code> 는 그 thread 의
@@ -283,31 +271,27 @@ S &\ge \underbrace{\left\lceil \frac{L}{C} \right\rceil}_{\text{계산 한 번 �
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            지금까지의 구조를 한 단어로 부르면 software pipelining 입니다. 반복문의 i 번째 load 와
-            i−1 번째 계산을 같은 반복에 놓아 서로 다른 반복의 일이 동시에 진행되게 하는 compiler
-            기법이며, GPU kernel 에서는 stage ring 과 barrier 로 손으로 씁니다. Load 를 register 로
-            받아 두는 Ampere 방식과 shared memory 로 받는 Hopper 방식이 같은 원리입니다.
+            지금까지의 구조를 한 단어로 부르면 software pipelining 입니다. 반복문의 i 번째 load 와 i−1 번째 계산을 같은 반복에 놓아 서로 다른 반복의 일이
+            동시에 진행되게 하는 compiler 기법이며 GPU kernel 에서는 stage ring 과 barrier 로 손으로 씁니다. Load 를 register 로 받아 두는
+            Ampere 방식과 shared memory 로 받는 Hopper 방식이 같은 원리입니다.
           </p>
           <p>
-            효과는 latency amortization 으로 읽힙니다. Tile T 개를 순서대로 처리하면 시간은
-            T×(L + C) 이지만, pipeline 이 차면 첫 tile 의 L 만 드러나고 나머지는 max(L, C) 씩
-            갑니다. T = 64, L = 1.2 µs, C = 0.3 µs 면 96 µs 가 1.2 + 64×1.2 ≈ 78 µs 로 줄고, 여기서
-            남은 병목은 L 이므로 HBM traffic 을 줄이는 쪽으로 넘어가야 합니다.
+            효과는 latency amortization 으로 읽힙니다. Tile T 개를 순서대로 처리하면 시간은 T×(L + C) 이지만 pipeline 이 차면 첫 tile 의 L 만
+            드러나고 나머지는 max(L, C) 씩 갑니다. T = 64, L = 1.2 µs, C = 0.3 µs 면 96 µs 가 1.2 + 64×1.2 ≈ 78 µs 로 줄어듭니다.
+            여기서 남은 병목은 L 이므로 HBM traffic 을 줄이는 쪽으로 넘어가야 합니다.
           </p>
           <p>
-            같은 원리를 consumer 끼리 적용한 것이 CUTLASS 의 ping-pong schedule 입니다. Consumer
-            warpgroup 두 개가 서로 다른 output tile 을 맡고, 한쪽이 mainloop 의 wgmma 를 내는 동안
-            다른 쪽이 epilogue 를 하도록 ordered barrier 로 차례를 강제합니다. Tensor core 와
-            epilogue 의 memory store 가 다른 자원이므로 둘이 겹칩니다.
+            같은 원리를 consumer 끼리 적용한 것이 CUTLASS 의 ping-pong schedule 입니다. Consumer warpgroup 두 개가 서로 다른 output
+            tile 을 맡고 한쪽이 mainloop 의 wgmma 를 내는 동안 다른 쪽이 epilogue 를 하도록 ordered barrier 로 차례를 강제합니다. Tensor
+            core 와 epilogue 의 memory store 가 다른 자원이므로 둘이 겹칩니다.
           </p>
           <p>
-            FlashAttention-3 는 이 ping-pong 을 attention 에 옮겼습니다. Warpgroup 1 의 GEMM 이
-            먼저 잡히도록 named barrier 로 순서를 정하면, 그 사이 warpgroup 2 는 softmax 의 exp 를
-            계산합니다.
+            FlashAttention-3 는 이 ping-pong 을 attention 에 옮겼습니다. Warpgroup 1 의 GEMM 이 먼저 잡히도록 named barrier 로
+            순서를 정하면 그 사이 warpgroup 2 는 softmax 의 exp 를 계산합니다.
           </p>
           <p>
-            Tensor core 와 multi-function unit 이 다른 pipe 이므로 둘이 겹치며, 저자들은 H100 FP16
-            forward 에서 740 TFLOP/s, 곧 peak 989 의 75% 를 자기보고했습니다.
+            Tensor core 와 multi-function unit 이 다른 pipe 이므로 둘이 겹칩니다. 저자들은 H100 FP16 forward 에서 740 TFLOP/s, 곧
+            peak 989 의 75% 를 자기보고했습니다.
           </p>
           <p>
             한계도 같은 자리에 있습니다. Pipelining 은 서로 다른 자원의 일을 겹칠 뿐 한 자원의
@@ -336,9 +320,8 @@ S &\ge \underbrace{\left\lceil \frac{L}{C} \right\rceil}_{\text{계산 한 번 �
             의 warp 가 SM 에 함께 있어야 빈 issue slot 을 채웁니다.
           </p>
           <p>
-            Hopper 의 3.x mainloop 은 producer 하나가 TMA 를 내고 consumer 가 wgmma 를 내므로
-            wait 가 한쪽에만 걸립니다. Threadblock 하나가 SM 을 독점해도 pipeline 이 돌기 때문에
-            shared memory 를 stage 에 더 쓸 수 있고, 그 대신 mbarrier 초기화와 phase 관리가 코드에
+            Hopper 의 3.x mainloop 은 producer 하나가 TMA 를 내고 consumer 가 wgmma 를 내므로 wait 가 한쪽에만 걸립니다. Threadblock
+            하나가 SM 을 독점해도 pipeline 이 돌기 때문에 shared memory 를 stage 에 더 쓸 수 있고 그 대신 mbarrier 초기화와 phase 관리가 코드에
             드러납니다.
           </p>
           <p>

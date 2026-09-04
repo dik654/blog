@@ -44,7 +44,11 @@ export default function ModernGpuProofPipelineArticle() {
 
     <section id="buffer-liveness" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">02 · Buffer liveness</p><h2 className="mt-2 text-2xl font-bold">VRAM은 전체 bytes가 아니라 같은 순간 살아 있는 buffers의 합으로 예산한다</h2></header>
-      <p>Buffer는 생성 직후부터 마지막 consumer completion까지 살아 있습니다. Polynomial 하나를 마지막 MSM이 읽기 전에 workspace로 덮어쓰면 race가 나며, host가 비동기 copy 중인 pinned page를 수정해도 같은 문제가 생깁니다. Allocation pool은 size만 재사용할 뿐 generation·event가 끝나기 전에는 ownership을 넘기지 않습니다.</p>
+      <p>
+            Buffer는 생성 직후부터 마지막 consumer completion까지 살아 있습니다. Polynomial 하나를 마지막 MSM이 읽기 전에 workspace로 덮어쓰면
+            race가 나며 host가 비동기 copy 중인 pinned page를 수정해도 같은 문제가 생깁니다. Allocation pool은 size만 재사용할 뿐
+            generation·event가 끝나기 전에는 ownership을 넘기지 않습니다.
+          </p>
       <ExplainedFormula question="시간 τ에서 필요한 VRAM과 pipeline 전체 peak를 어떻게 계산할까?" idea={<>각 buffer b의 생존 구간에 τ가 들어갈 때만 size를 더하고, 모든 τ 중 가장 큰 합을 peak live bytes로 잡습니다.</>} formula={String.raw`\begin{aligned}I_b(\tau)&=[birth_b\le\tau<death_b]\\B(\tau)&=\sum_b size(b)I_b(\tau)\\B_{peak}&=\max_\tau B(\tau)\end{aligned}`}
       annotatedFormula={String.raw`\begin{aligned}I_b(\tau)&=\underbrace{[birth_b\le\tau<death_b]}_{\text{허용 경계 판정}}\\B(\tau)&=\underbrace{\sum_b size(b)I_b(\tau)}_{\text{Indicator 계산}}\\B_{peak}&=\underbrace{\max_\tau B(\tau)}_{\text{경계 후보 선택}}\end{aligned}`}
       operations={[

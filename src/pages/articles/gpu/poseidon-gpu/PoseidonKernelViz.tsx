@@ -9,7 +9,9 @@ export function PoseidonKernelViz() {
     <figure className="not-prose my-8 rounded-xl border border-border bg-background p-4 sm:p-6">
       <figcaption className="mb-5">
         <p className="text-sm font-bold">Parameter artifact에서 batch tree까지</p>
-        <p className="mt-1 text-xs leading-5 text-muted-foreground">Kernel은 profile이 정한 round를 실행할 뿐, constants나 tree semantics를 임의로 고르지 않습니다.</p>
+        <p className="mt-1 text-xs leading-5 text-muted-foreground">
+            Kernel은 profile이 정한 round를 그대로 실행할 뿐입니다. constants나 tree semantics는 kernel이 임의로 정하지 않습니다.
+          </p>
       </figcaption>
       <div className="grid min-w-0 gap-3 lg:grid-cols-[1fr_1.7fr_1fr]">
         <div className="min-w-0 rounded-lg border border-border bg-muted/20 p-4"><p className="text-xs font-bold text-primary">Profile</p><p className="mt-2 break-words text-xs leading-5">field · width · rate/capacity · α · RF/RP · constants digest</p></div>

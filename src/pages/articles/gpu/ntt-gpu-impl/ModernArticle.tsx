@@ -12,7 +12,11 @@ export default function ModernNttGpuArticle() {
     <section id="overview" className="space-y-6">
       <header className="space-y-3"><p className="text-sm font-semibold text-primary">Finite-field transform를 launch plan으로 내리기</p><h2 className="text-3xl font-bold tracking-tight">GPU NTT의 핵심은 butterfly 수가 아니라 stage 사이의 order·twiddle·buffer 계약이다</h2></header>
       <p className="text-lg leading-8 text-foreground/90">Number theoretic transform(NTT)의 field, root of unity, forward/inverse 수식은 <a className="text-primary hover:underline" href="/crypto/fft#dft">NTT 정본</a>에서 먼저 설명합니다. 여기서는 같은 transform을 pinned sppark의 Cooley–Tukey(CT)·Gentleman–Sande(GS) kernels, bit-reversal, coset power pass로 실행하는 구현 경계만 소유합니다.</p>
-      <p>고정 예제는 N=8 coefficient buffer를 evaluation form으로 바꾼 뒤 inverse로 복원하는 workload입니다. 호출 receipt에 field, N, root/domain id, direction, coset, input/output order, normalization, backend SHA를 넣지 않으면 길이가 같은 잘못된 배열도 성공처럼 보입니다.</p>
+      <p>
+            고정 예제는 N=8 coefficient buffer를 evaluation form으로 바꾼 뒤 inverse로 복원하는 workload입니다. 호출 receipt에는
+            field와 N, root/domain id, direction을 적습니다. coset, input/output order, normalization, backend SHA도
+            같은 자리에 들어갑니다. 하나라도 빠지면 길이가 같은 잘못된 배열이 성공처럼 보입니다.
+          </p>
       <ModernNttGpuViz />
       <ContentBoundary article="ntt-gpu-impl" />
     </section>
@@ -31,7 +35,11 @@ export default function ModernNttGpuArticle() {
         {symbol:"g",name:"Group index",description:"길이 2h인 butterfly group 번호입니다."},
         {symbol:"i_0,i_1",name:"Input indices",description:"한 butterfly가 읽고 쓰는 두 array indices입니다."},
       ]} assumptions={["N은 field가 지원하는 2의 거듭제곱 domain이며 t<N/2입니다.","이 index 식은 radix-2 설명용입니다. Pinned sppark의 mixed-radix launch details를 같은 식으로 단정하지 않습니다."]} interpretation="N=8,s=1이면 h=2입니다. t=3은 j=1,g=1이므로 indices (5,7)을 처리합니다." />
-      <p>Shared memory에 여러 stages를 묶으면 global traffic을 줄일 수 있지만 block 안 barrier와 shared capacity·bank mapping이 새 제약입니다. Tile 밖 stage는 kernel boundary 또는 global synchronization이 필요하며, block barrier만으로 grid 전체 순서를 만들 수 없습니다.</p>
+      <p>
+            Shared memory에 여러 stages를 묶으면 global traffic이 줄어듭니다. 대신 block 안 barrier와 shared capacity·bank
+            mapping이 새 제약으로 붙습니다. Tile 밖 stage에는 kernel boundary나 global synchronization이 필요합니다. block
+            barrier만으로는 grid 전체 순서를 만들지 못합니다.
+          </p>
     </section>
 
     <section id="twiddle-contract" className="space-y-6">
@@ -64,13 +72,22 @@ export default function ModernNttGpuArticle() {
         {symbol:"r",name:"Bit position",description:"0부터 k−1까지 순회하는 index입니다."},
         {symbol:"rev_k(i)",name:"Bit-reversed index",description:"k bits의 순서를 뒤집어 얻은 position입니다."},
       ]} assumptions={["N=2^k이고 index는 정확히 k bits로 zero-pad합니다.","CT/GS 및 in/out ordering 계약에 따라 별도 permutation pass가 필요 없을 수도 있지만 output tag는 남깁니다."]} interpretation="N=8,k=3에서 i=3=011₂이면 rev₃(i)=110₂=6입니다." />
-      <p>In-place permutation은 pair를 한 번만 swap해야 하며, out-of-place permutation은 별도 buffer와 read/write traffic을 요구합니다. Pinned kernels에는 작은 domain용 direct bit reversal과 shared-memory를 쓰는 큰-domain path가 있으므로, “bit reverse는 항상 CPU 전처리”라고 쓰지 않습니다.</p>
+      <p>
+            In-place permutation은 pair를 한 번만 swap해야 합니다. out-of-place permutation에는 별도 buffer와 read/write
+            traffic이 듭니다. Pinned kernels에는 작은 domain용 direct bit reversal과 shared-memory를 쓰는 큰-domain path가 둘
+            다 있습니다. 그래서 “bit reverse는 항상 CPU 전처리”라고 쓰지 않습니다.
+          </p>
       <div id="paper-sppark-permutation"><CitationBlock type="code" citeKey={2} source="sppark kernels.cu · commit 17278d7" href={SPPARK_KERNEL}><p><strong>문제:</strong> NTT input/output order와 coset powers를 GPU memory에 실제 배치해야 합니다.</p><p><strong>핵심 기여:</strong> Direct·shared-memory bit-reversal kernels와 LDE power kernels를 제공합니다.</p><p><strong>중요 가정:</strong> Commit 17278d7, lg_domain_size, launch bounds와 field type을 고정합니다.</p><p><strong>근거 범위:</strong> 해당 permutation·power kernel source입니다.</p><p><strong>일반화 금지:</strong> 고정 bandwidth·bank conflict·모든 domain 우위를 제공하지 않습니다.</p></CitationBlock></div>
     </section>
 
     <section id="release-gate" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">04 · Release gate</p><h2 className="mt-2 text-2xl font-bold">Round-trip·naive DFT·convolution을 통과한 뒤 stage traffic과 전체 시간을 잰다</h2></header>
-      <p>N=1/2/8, zero/constant/basis vector, invalid domain, wrong root, wrong order와 coset mismatch를 검사합니다. 작은 N은 O(N²) field DFT와, 큰 N은 pinned CPU NTT·round-trip·convolution identity와 비교합니다. Warm-up 후 stage별 events, final sync, actual/requested bytes, field butterfly/s, occupancy·bank conflicts·stalls와 H2D/D2H를 기록합니다.</p>
+      <p>
+            검사 대상은 N=1/2/8과 zero/constant/basis vector입니다. invalid domain, wrong root, wrong order, coset
+            mismatch도 함께 넣습니다. 작은 N은 O(N²) field DFT와 비교하고 큰 N은 pinned CPU NTT·round-trip·convolution
+            identity와 맞춥니다. Warm-up 뒤에는 stage별 events와 final sync, actual/requested bytes를 남깁니다. field
+            butterfly/s와 occupancy·bank conflicts·stalls, H2D/D2H도 같이 기록합니다.
+          </p>
       <ExplainedFormula question="Out-of-place radix-2 NTT의 최소 requested traffic을 어떻게 추정할까?" idea={<>각 stage가 N field elements를 한 번 읽고 한 번 쓴다고 단순화해 stage 수만큼 합합니다.</>} formula={String.raw`B_{req}=2Ns_F\log_2N,\qquad BW_{req}=\frac{B_{req}}{t_{stages}}`}
       annotatedFormula={String.raw`B_{req}=\underbrace{2Ns_F\log_2N,\qquad BW_{req}=\frac{B_{req}}{t_{stages}}}_{\text{기준량당 비율}}`}
       operations={[

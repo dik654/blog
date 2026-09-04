@@ -20,7 +20,12 @@ export default function ModernEcGpuGenArticle() {
     <section id="parameter-contract" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">01 · Parameter contract</p><h2 className="mt-2 text-2xl font-bold">GpuField adapter가 제공하는 값과 generator가 유도하는 값을 구분한다</h2></header>
       <p>Pinned interface의 <code>GpuName</code>/<code>GpuField</code> boundary는 GPU-safe type 이름과 little-endian u32 words의 <code>one</code>, <code>r2</code>, <code>modulus</code>, optional subfield를 제공합니다. Curve coefficient나 generator 좌표까지 trait가 모두 제공한다고 설명하면 실제 API와 다릅니다. Generator는 이 snapshot과 backend limb width에서 필요한 derived constants를 만듭니다.</p>
-      <p>CUDA와 OpenCL이 허용하는 limb width도 같다고 가정하면 안 됩니다. Pinned source에서 CUDA는 32-bit limbs, OpenCL generated source는 64-bit limbs를 사용하며, prime의 most-significant bit가 unset이라는 reduction 전제를 둡니다. 따라서 새 field를 추가할 때 modulus만 바꾸는 것이 아니라 top-bit, limb packing, derived constants와 reference vectors를 함께 검증합니다.</p>
+      <p>
+            CUDA와 OpenCL이 허용하는 limb width도 같다고 가정하면 안 됩니다. Pinned source에서 CUDA는 32-bit limbs, OpenCL
+            generated source는 64-bit limbs를 사용하며 prime의 most-significant bit가 unset이라는 reduction 전제를 둡니다. 따라서
+            새 field를 추가할 때 modulus만 바꾸는 것이 아니라 top-bit, limb packing, derived constants와 reference vectors를 함께
+            검증합니다.
+          </p>
       <ExplainedFormula question="Modulus p와 backend limb width w에서 representation constants는 어떻게 정해질까?" idea={<>p를 담을 최소 limb 수 L을 정한 뒤 radix R을 limb capacity로 두고, normal residue를 Montgomery domain으로 옮길 R²와 낮은 word cancellation constant를 준비합니다.</>} formula={String.raw`\begin{aligned}L&=\left\lceil\frac{\operatorname{bitlen}(p)}{w}\right\rceil\\R&=2^{wL}\\R_2&=R^2\bmod p\\p'&=-p_0^{-1}\bmod 2^w\end{aligned}`}
       annotatedFormula={String.raw`\begin{aligned}L&=\underbrace{\left\lceil\frac{\operatorname{bitlen}(p)}{w}\right\rceil}_{\text{기준량당 비율}}\\R&=\underbrace{2^{wL}}_{\text{Montgomery radix 계산}}\\R_2&=\underbrace{R^2\bmod p}_{\text{Conversion constant 계산}}\\p'&=-p_0^{-1}\bmod 2^w\end{aligned}`}
       operations={[
@@ -82,7 +87,12 @@ export default function ModernEcGpuGenArticle() {
     <section id="runtime-dispatch" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">04 · Runtime dispatch</p><h2 className="mt-2 text-2xl font-bold">CUDA와 OpenCL은 unified Program 뒤에 있지만 artifact lifecycle은 다르다</h2></header>
       <p>ec-gpu는 <code>cuda</code>와 <code>opencl</code> feature를 지원하고, 둘 다 활성화되면 runtime framework selection을 제공합니다. 그러나 CUDA fatbin과 OpenCL runtime source compile은 artifact lifecycle이 다르며, integer overflow·shift·address-space·work-group semantics가 source 언어와 compiler에서 같다는 보장도 없습니다.</p>
-      <p>Parity test는 CPU reference, CUDA, OpenCL에 같은 canonical field/point vectors를 넣고 output을 canonical form으로 decode해 비교합니다. 0·p−1·carry chain, invalid/noncanonical input, infinity·doubling, FFT round trip, MSM zero/repeated points와 unsupported device를 포함합니다. Backend별 work-group/block size가 달라도 결과와 failure class는 같아야 하며, 하나가 성공하고 다른 하나가 silently truncates하면 release하지 않습니다.</p>
+      <p>
+            Parity test는 CPU reference, CUDA, OpenCL에 같은 canonical field/point vectors를 넣고 output을 canonical
+            form으로 decode해 비교합니다. 0·p−1·carry chain, invalid/noncanonical input, infinity·doubling, FFT round
+            trip, MSM zero/repeated points와 unsupported device를 포함합니다. Backend별 work-group/block size가 달라도 결과와
+            failure class는 같아야 합니다. 하나가 성공하고 다른 하나가 silently truncates하면 release하지 않습니다.
+          </p>
       <div id="paper-ec-gpu-program-dispatch"><CitationBlock type="code" citeKey={4} source="ec-gpu program dispatch · commit 16d38ef" href={`${ECGPU}/ec-gpu-gen/src/program.rs`}><p><strong>문제:</strong> Feature-supported backend를 고르고 embedded artifact로 device program을 만들어야 합니다.</p><p><strong>핵심 기여:</strong> Pinned <code>program!</code> path의 environment/device selection과 CUDA load·OpenCL compile branches를 보여 줍니다.</p><p><strong>중요 가정:</strong> Embedded artifacts, enabled features와 available device/backend가 일치합니다.</p><p><strong>근거 범위:</strong> 링크 revision의 runtime dispatch behavior입니다.</p><p><strong>일반화 금지:</strong> CUDA/OpenCL numerical parity, driver quality나 같은 성능을 보장하지 않습니다.</p></CitationBlock></div>
       <div id="paper-opencl-api"><CitationBlock type="code" citeKey={5} source="Khronos OpenCL 3.0 Unified Specification" href={OPENCL}><p><strong>문제:</strong> OpenCL program build, kernel, memory와 command-queue semantics가 필요합니다.</p><p><strong>핵심 기여:</strong> OpenCL 3.0 API contract와 feature query boundary를 정의합니다.</p><p><strong>중요 가정:</strong> 실제 platform이 광고한 version과 optional features를 runtime에 조회합니다.</p><p><strong>근거 범위:</strong> OpenCL API와 execution semantics입니다.</p><p><strong>일반화 금지:</strong> CUDA와 bit-identical code generation이나 같은 성능을 보장하지 않습니다.</p></CitationBlock></div>
       <div id="paper-bellperson-ec-gpu-build"><CitationBlock type="code" citeKey={6} source="bellperson build integration · commit 728306c" href={`${BELLPERSON}/build.rs`}><p><strong>문제:</strong> Consumer prover가 Scalar FFT와 G1/G2 multiexp sources를 build에 포함해야 합니다.</p><p><strong>핵심 기여:</strong> Pinned build script의 실제 SourceBuilder integration을 보여 줍니다.</p><p><strong>중요 가정:</strong> Commit 728306c, selected Cargo features와 matching ec-gpu dependency를 고정합니다.</p><p><strong>근거 범위:</strong> Bellperson의 build-time capability registration입니다.</p><p><strong>일반화 금지:</strong> Prover 시간 비율, 고정 speedup이나 현재 production deployment를 주장하지 않습니다.</p></CitationBlock></div>
@@ -90,8 +100,18 @@ export default function ModernEcGpuGenArticle() {
 
     <section id="release-gate" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">04 · Release gate</p><h2 className="mt-2 text-2xl font-bold">Parameter diff에서 proof parity·rollback까지 한 변경 단위로 검증한다</h2></header>
-      <p>새 field/curve 또는 compiler flag를 넣으면 먼저 generated constants와 source digest를 review하고 CPU vectors를 통과시킵니다. 그다음 지원 GPU마다 clean build와 cache-hit build를 나누고 CUDA/OpenCL/CPU output과 failure parity를 검사합니다. Finally fixed proof workload에서 build, cold startup, warm kernel, H2D/D2H, synchronization, peak memory와 end-to-end median/p95를 기록합니다.</p>
-      <p>Release artifact에는 crate/source SHA, compiler·driver, target architecture, generated source/fatbin digest와 proof verification receipt를 붙입니다. Unknown device, compiler error, OOM, concurrent program conflict에서는 typed error와 승인된 CPU fallback을 사용하고, 이전 artifact key로 되돌릴 수 있어야 합니다. 코드 생성 성공은 proof correctness가 아니며 independent verifier 성공이 마지막 gate입니다.</p>
+      <p>
+            새 field/curve 또는 compiler flag를 넣으면 먼저 generated constants와 source digest를 review하고 CPU vectors를
+            통과시킵니다. 그다음 지원 GPU마다 clean build와 cache-hit build를 나누고 CUDA/OpenCL/CPU output과 failure parity를
+            검사합니다. 마지막으로 fixed proof workload에서 build, cold startup, warm kernel, H2D/D2H, synchronization,
+            peak memory와 end-to-end median/p95를 기록합니다.
+          </p>
+      <p>
+            Release artifact에는 crate/source SHA, compiler·driver, target architecture, generated source/fatbin
+            digest와 proof verification receipt를 붙입니다. Unknown device, compiler error, OOM, concurrent program
+            conflict에서는 typed error와 승인된 CPU fallback을 사용하고 이전 artifact key로 되돌릴 수 있어야 합니다. 코드 생성 성공은 proof
+            correctness가 아니며 independent verifier 성공이 마지막 gate입니다.
+          </p>
       <aside className="rounded-lg border border-border bg-card p-5 text-sm leading-6 text-muted-foreground"><strong className="text-foreground">역검사:</strong> Reader는 SourceBuilder→artifact→program 흐름을 설명하고, artifact key와 amortized 150ms 예를 계산하며, CUDA/OpenCL parity fixture와 provenance·fallback·rollback release gate를 설계할 수 있어야 합니다.</aside>
     </section>
   </article>;

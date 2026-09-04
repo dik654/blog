@@ -38,7 +38,7 @@
       "score": 41
     },
     "gpu/ec-gpu-gen": {
-      "fingerprint": "b5969057e5d00beb",
+      "fingerprint": "de9814b51fed1943",
       "score": 37
     },
     "blockchain/aa-fundamentals": {
@@ -274,11 +274,15 @@
       "score": 24
     },
     "gpu/cuda-sync-streams": {
-      "fingerprint": "401d045bc8e9f44d",
+      "fingerprint": "07e11522fd79302d",
       "score": 24
     },
     "gpu/ec-gpu-ops": {
-      "fingerprint": "b0794bb1dc5e762a",
+      "fingerprint": "eb7ba63e7c677ad7",
+      "score": 24
+    },
+    "gpu/poseidon-gpu": {
+      "fingerprint": "526a02032903be0a",
       "score": 24
     },
     "p2p/quic-fundamentals": {
@@ -342,11 +346,7 @@
       "score": 22
     },
     "gpu/cuda-shared-memory": {
-      "fingerprint": "a890c312be6383d7",
-      "score": 22
-    },
-    "gpu/poseidon-gpu": {
-      "fingerprint": "02416820e205ab8f",
+      "fingerprint": "6a02e2a587a99e43",
       "score": 22
     },
     "blockchain/impl-elliptic-curve": {
@@ -362,7 +362,7 @@
       "score": 21
     },
     "gpu/rapidsnark-gpu": {
-      "fingerprint": "81e5f6512cb00591",
+      "fingerprint": "3099c617f9587ffd",
       "score": 21
     },
     "ai/claw-config": {
@@ -422,7 +422,7 @@
       "score": 20
     },
     "gpu/cuda-thread-hierarchy": {
-      "fingerprint": "382a0a1f0b7d4b39",
+      "fingerprint": "9bfa9c574962402c",
       "score": 20
     },
     "gpu/hw-gpu-comparison": {
@@ -518,7 +518,7 @@
       "score": 18
     },
     "gpu/gpu-proof-pipeline": {
-      "fingerprint": "5b1ee2a24d3ced09",
+      "fingerprint": "122292ace5e77157",
       "score": 18
     },
     "gpu/msm-ntt": {
@@ -674,11 +674,11 @@
       "score": 14
     },
     "gpu/kzg-gpu": {
-      "fingerprint": "f7be72a79fe081c8",
+      "fingerprint": "4a6b9fcc7690b40c",
       "score": 14
     },
     "gpu/poly-ops-gpu": {
-      "fingerprint": "54b5bc2c2b569cb8",
+      "fingerprint": "3fcfb72f9cb24662",
       "score": 14
     },
     "tee/tee-attestation": {
@@ -770,11 +770,11 @@
       "score": 12
     },
     "gpu/gpu-witness-gen": {
-      "fingerprint": "4031cc5ff744b62d",
+      "fingerprint": "bc1d110859bb8fa3",
       "score": 12
     },
     "gpu/icicle-framework": {
-      "fingerprint": "2cd5dd4c4bba13a1",
+      "fingerprint": "1ccb722f5d92262b",
       "score": 12
     },
     "p2p/content-addressing": {
@@ -886,7 +886,7 @@
       "score": 10
     },
     "gpu/cuda-matrix-multiply": {
-      "fingerprint": "d3579489277bcee5",
+      "fingerprint": "745db47653b53abb",
       "score": 10
     },
     "gpu/gpu-collective-network": {
@@ -990,7 +990,7 @@
       "score": 8
     },
     "gpu/gpu-arch-hopper": {
-      "fingerprint": "eb6b2734f79e587a",
+      "fingerprint": "274f12cacf15862b",
       "score": 8
     },
     "gpu/gpu-interconnects": {
@@ -1002,11 +1002,11 @@
       "score": 8
     },
     "gpu/msm-gpu-impl": {
-      "fingerprint": "b3ff8d469cb30280",
+      "fingerprint": "18a593eb3bdd4205",
       "score": 8
     },
     "gpu/ntt-gpu-impl": {
-      "fingerprint": "eb2a0e74988bbea0",
+      "fingerprint": "54ba1d24740ebd04",
       "score": 8
     },
     "isms-aml/isms-overview": {
@@ -1207,6 +1207,10 @@
     },
     "gpu/rdma-roce": {
       "fingerprint": "b0e017cf12730d53",
+      "score": 6
+    },
+    "gpu/warp-stall-reasons-and-issue-utilization": {
+      "fingerprint": "c72efc30467545f1",
       "score": 6
     },
     "isms-aml/aml-fds-deep": {

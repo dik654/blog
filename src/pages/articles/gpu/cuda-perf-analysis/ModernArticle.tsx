@@ -76,11 +76,9 @@ export default function ModernCudaPerfAnalysisArticle() {
           </h2>
         </header>
         <p>
-          첫 iteration에는 CUDA context 생성, module load, allocator와 cache
-          cold state가 섞일 수 있습니다. 별도 warm-up 뒤 같은 stream에 start
-          event, kernel, stop event를 순서대로 기록하고 stop event가 완료될
-          때까지 기다립니다. End-to-end 실험은 입력 준비부터 소비 가능한
-          출력까지 별도 wall-clock 경계로 잽니다.
+          첫 iteration에는 CUDA context 생성, module load, allocator와 cache cold state가 섞이기도 합니다. 별도 warm-up 뒤 같은
+          stream에 start event, kernel, stop event를 순서대로 기록하고 stop event가 완료될 때까지 기다립니다. End-to-end 실험은 입력 준비부터
+          소비 가능한 출력까지 별도 wall-clock 경계로 잽니다.
         </p>
         <MetricBoundaryViz />
         <p>
@@ -257,10 +255,9 @@ export default function ModernCudaPerfAnalysisArticle() {
             Profiler 의 throughput 퍼센트는 roofline 의 peak 를 분모로 둔 값입니다
           </h3>
           <p>
-            Nsight Compute 가 보여 주는 DRAM throughput 90% 나 L2 throughput 40% 같은
-            숫자는 모두 같은 꼴입니다. 그 unit 이 실제로 낸 속도를 그 unit 의 theoretical
-            peak 로 나눈 비율이고, peak 는 roofline 의 지붕을 만드는 바로 그 값입니다.
-            달성률이 100% 에 가까운 unit 이 kernel 을 붙잡고 있는 자원입니다.
+            Nsight Compute 가 보여 주는 DRAM throughput 90% 나 L2 throughput 40% 같은 숫자는 모두 같은 꼴입니다. 그 unit 이 실제로 낸
+            속도를 그 unit 의 theoretical peak 로 나눈 비율입니다. Peak 는 roofline 의 지붕을 만드는 바로 그 값입니다. 달성률이 100% 에 가까운
+            unit 이 kernel 을 붙잡고 있는 자원입니다.
           </p>
           <p>
             Theoretical peak 는 spec 의 clock 과 폭에서 계산한 상한입니다. Best Practices
@@ -269,28 +266,22 @@ export default function ModernCudaPerfAnalysisArticle() {
             achieved 를 그 위에 얹습니다.
           </p>
           <p>
-            둘 사이의 거리가 utilization gap 입니다. Peak 3.35 TB/s 인 HBM 에서 achieved
-            1.0 TB/s 면 throughput 은 30% 이고 gap 은 70% 입니다. Gap 이 큰 unit 은 병목이
-            아니며, 모든 unit 의 gap 이 크면 kernel 은 어느 자원에도 닿지 못한 latency
-            bound 입니다.
+            둘 사이의 거리가 utilization gap 입니다. Peak 3.35 TB/s 인 HBM 에서 achieved 1.0 TB/s 면 throughput 은 30% 이고 gap
+            은 70% 입니다. Gap 이 큰 unit 은 병목이 아닙니다. 모든 unit 의 gap 이 크면 kernel 은 어느 자원에도 닿지 못한 latency bound 입니다.
           </p>
           <p>
-            Memory throughput 은 한 숫자가 아닙니다. Profiler 는 DRAM, L2, L1/TEX, shared
-            memory 각각을 자기 peak 로 나누고, Compute 쪽은 FMA·ALU·Tensor 같은 pipe 마다
-            나눕니다. Speed Of Light 의 Memory 값은 그 가운데 가장 높은 하나이고 Compute 값도
-            같은 방식이므로, breakdown 을 열어 어느 unit 인지 확인해야 합니다.
+            Memory throughput 은 한 숫자가 아닙니다. Profiler 는 DRAM, L2, L1/TEX, shared memory 각각을 자기 peak 로 나눕니다.
+            Compute 쪽은 FMA·ALU·Tensor 같은 pipe 마다 나눕니다. Speed Of Light 의 Memory 값은 그 가운데 가장 높은 하나이고 Compute 값도
+            같은 방식이므로 breakdown 을 열어 어느 unit 인지 확인해야 합니다.
           </p>
           <p>
-            같은 metric 에 두 분모가 있습니다. Active 기준은 그 unit 이 일한 clock 만 세고
-            elapsed 기준은 kernel 전체 clock 을 셉니다. Active 90% 에 elapsed 45% 면 unit 은
-            일할 때는 꽉 찼지만 kernel 의 절반 동안 놀았다는 뜻이며, 이 차이는 tail 이나 launch
-            간격에서 옵니다.
+            같은 metric 에 두 분모가 있습니다. Active 기준은 그 unit 이 일한 clock 만 세고 elapsed 기준은 kernel 전체 clock 을 셉니다.
+            Active 90% 에 elapsed 45% 면 unit 은 일할 때는 꽉 찼어도 kernel 의 절반 동안 놀았습니다. 이 차이는 tail 이나 launch 간격에서 옵니다.
           </p>
           <p>
-            Cache hit rate 는 throughput 과 다른 종류의 숫자입니다. L1 과 L2 의 hit rate
-            는 요청된 sector 가운데 miss 하지 않은 비율이고, miss 한 sector 만 다음 계층으로
-            내려가 그 계층의 throughput 을 만듭니다. L2 hit rate 20% 는 L2 에 온 byte 의
-            80% 가 DRAM 까지 간다는 뜻입니다.
+            Cache hit rate 는 throughput 과 다른 종류의 숫자입니다. L1 과 L2 의 hit rate 는 요청된 sector 가운데 miss 하지 않은 비율입니다.
+            Miss 한 sector 만 다음 계층으로 내려가 그 계층의 throughput 을 만듭니다. L2 hit rate 20% 라면 L2 에 온 byte 의 80% 가 DRAM
+            까지 내려갑니다.
           </p>
           <TermBreakdown
             title="Throughput 계열 metric 과 각각의 peak"
@@ -364,10 +355,9 @@ export default function ModernCudaPerfAnalysisArticle() {
             Counter 하나가 아니라 두 counter 의 상관이 병목 가설을 만듭니다
           </h3>
           <p>
-            DRAM throughput 90% 는 혼자서는 memory-bound 라는 사실만 말합니다. 그 옆에
-            L2 hit rate 20% 를 놓으면 가설이 하나로 좁혀집니다. L2 에 온 byte 의 80% 가 DRAM
-            까지 내려가고 있으므로, 같은 data 를 여러 block 이 다시 읽는데 L2 에 남아 있지
-            않다는 뜻이고 처방은 재사용을 tile 안으로 끌어오는 것입니다.
+            DRAM throughput 90% 는 혼자서는 memory-bound 라는 사실만 말합니다. 그 옆에 L2 hit rate 20% 를 놓으면 가설이 하나로 좁혀집니다. L2
+            에 온 byte 의 80% 가 DRAM 까지 내려가고 있으니 같은 data 를 여러 block 이 다시 읽는데도 L2 에 남아 있지 않습니다. 처방은 재사용을 tile 안으로
+            끌어오는 것입니다.
           </p>
           <p>
             같은 DRAM 90% 에 L2 hit rate 85% 면 이야기가 다릅니다. L2 는 잘 맞는데도 DRAM
@@ -388,8 +378,7 @@ export default function ModernCudaPerfAnalysisArticle() {
             이 소유합니다.
           </p>
           <p>
-            상관은 원인의 증명이 아닙니다. 두 counter 가 같은 방향으로 움직였다는 사실은
-            가설을 하나로 좁힐 뿐이고, 그 가설이 맞는지는 변경 하나 뒤에 elapsed 와 두
+            상관은 원인의 증명이 아닙니다. 두 counter 가 같은 방향으로 움직였다는 사실은 가설을 하나로 좁힐 뿐입니다. 그 가설이 맞는지는 변경 하나 뒤에 elapsed 와 두
             counter 가 예상한 방향으로 함께 움직이는지로만 확인됩니다.
           </p>
           <ExplainedFormula
@@ -444,35 +433,29 @@ T_{\mathrm{DRAM}} &= \underbrace{\frac{Q_{\mathrm{DRAM}}}{t\,B_{\mathrm{peak}}}}
             Nsight Systems 는 어디가 느린지를, Nsight Compute 는 왜 느린지를 봅니다
           </h3>
           <p>
-            GPU profiling 은 도구 하나로 끝나지 않습니다. Nsight Systems 는 CPU thread,
-            CUDA API 호출, GPU 의 kernel 과 copy 를 하나의 시간축에 놓는 system 수준 도구이고,
-            Nsight Compute 는 kernel 하나를 골라 그 안의 hardware counter 를 읽는 kernel
-            수준 도구입니다. 앞의 것이 어디를 볼지 정하고 뒤의 것이 이유를 말합니다.
+            GPU profiling 은 도구 하나로 끝나지 않습니다. Nsight Systems 는 CPU thread, CUDA API 호출, GPU 의 kernel 과 copy 를
+            하나의 시간축에 놓는 system 수준 도구입니다. Nsight Compute 는 kernel 하나를 골라 그 안의 hardware counter 를 읽는 kernel 수준
+            도구입니다. 앞의 것이 어디를 볼지 정하고 뒤의 것이 이유를 말합니다.
           </p>
           <p>
-            Nsight Systems 의 CUDA trace 는 두 줄로 나뉩니다. API trace 는 host 가 부른
-            cudaLaunchKernel 이나 cudaMemcpy 같은 호출의 시작과 반환을 적고, workload trace
-            는 GPU 에서 실제로 돈 kernel 과 memory 작업을 stream 별 row 에 적습니다. 이 두
-            줄을 잇는 것이 kernel timeline 입니다.
+            Nsight Systems 의 CUDA trace 는 두 줄로 나뉩니다. API trace 는 host 가 부른 cudaLaunchKernel 이나 cudaMemcpy 같은
+            호출의 시작과 반환을 적습니다. Workload trace 는 GPU 에서 실제로 돈 kernel 과 memory 작업을 stream 별 row 에 적습니다. 이 두 줄을 잇는
+            것이 kernel timeline 입니다.
           </p>
           <p>
-            Kernel timeline 에서 읽는 것은 간격입니다. Launch 호출이 반환된 시각과 kernel 이
-            실제로 시작한 시각의 차이는 queue 대기이고, kernel 사이의 빈 구간은 host 가
-            다음 일을 늦게 제출했거나 synchronization 에 막힌 시간입니다. 3 μs 짜리 kernel
-            1000개 사이에 5 μs 씩 비어 있으면 GPU 시간의 절반 이상이 kernel 밖에 있습니다.
+            Kernel timeline 에서 읽는 것은 간격입니다. Launch 호출이 반환된 시각과 kernel 이 실제로 시작한 시각의 차이는 queue 대기입니다. Kernel
+            사이의 빈 구간은 host 가 다음 일을 늦게 제출했거나 synchronization 에 막힌 시간입니다. 3 μs 짜리 kernel 1000개 사이에 5 μs 씩 비어 있으면
+            GPU 시간의 절반 이상이 kernel 밖에 있습니다.
           </p>
           <p>
-            Nsight Compute 는 그 timeline 에서 고른 kernel 하나를 replay 하며 counter 를
-            모읍니다. Kernel 을 여러 번 다시 돌려 pass 마다 다른 counter 를 읽으므로 그
-            아래의 elapsed 는 실제와 다르고, 대신 DRAM byte, cache hit, warp stall 같은
-            timeline 에는 없는 숫자를 줍니다.
+            Nsight Compute 는 그 timeline 에서 고른 kernel 하나를 replay 하며 counter 를 모읍니다. Kernel 을 여러 번 다시 돌려 pass 마다
+            다른 counter 를 읽으므로 그 아래의 elapsed 는 실제와 다릅니다. 대신 DRAM byte, cache hit, warp stall 처럼 timeline 에는 없는
+            숫자를 줍니다.
           </p>
           <p>
-            역할을 바꾸면 틀린 결론이 나옵니다. Timeline 의 상관만으로 kernel 안의 stall
-            원인을 말할 수 없고, kernel 하나의 counter 만으로 전체 시간의 어디가 비었는지
-            말할 수 없습니다. 그래서 순서는 언제나 Systems 로 좁힌 뒤 Compute 로 내려가는
-            것이며, Nsight Systems 는 timeline 의 kernel 에서 Nsight Compute 를 바로 띄우는
-            연결을 제공합니다.
+            역할을 바꾸면 틀린 결론이 나옵니다. Timeline 의 상관만으로는 kernel 안의 stall 원인을 말할 수 없습니다. 거꾸로 kernel 하나의 counter 만으로는
+            전체 시간의 어디가 비었는지 말할 수 없습니다. 그래서 순서는 언제나 Systems 로 좁힌 뒤 Compute 로 내려가는 것입니다. Nsight Systems 는
+            timeline 의 kernel 에서 Nsight Compute 를 바로 띄우는 연결을 제공합니다.
           </p>
           <TermBreakdown
             title="두 도구가 보는 것과 보지 못하는 것"
@@ -519,9 +502,8 @@ T_{\mathrm{DRAM}} &= \underbrace{\frac{Q_{\mathrm{DRAM}}}{t\,B_{\mathrm{peak}}}}
           </li>
         </ol>
         <p>
-          Counter 수집은 kernel replay와 overhead를 만들 수 있습니다. 따라서
-          profiler가 없는 반복에서 최종 latency를 다시 측정하고, counter의 이동
-          방향과 실제 elapsed 개선이 함께 나타나는지 확인합니다.
+          Counter 수집은 kernel replay와 overhead를 만들 수 있습니다. 따라서 profiler가 없는 반복에서 최종 latency를 다시 측정합니다. Counter의
+          이동 방향과 실제 elapsed 개선이 함께 나타나는지 확인합니다.
         </p>
         <div id="paper-nsight-systems">
           <CitationBlock

@@ -57,9 +57,7 @@ export default function WindowPartition() {
           사용해 x축은 점 인덱스, y축은 윈도우 인덱스에 대응시킨다.
         </p>
         <p>
-          윈도우 추출은 비트 시프트와 마스킹으로 구현한다. 256-bit 스칼라는
-          8개의 32-bit limb로 저장되므로, 윈도우가 limb 경계를 넘는 경우 두
-          limb를 참조해야 한다.
+          윈도우 추출은 비트 시프트와 마스킹으로 구현한다. 256-bit 스칼라는 8개의 32-bit limb로 저장되므로 윈도우가 limb 경계를 넘는 경우 두 limb를 참조해야 한다.
         </p>
         <CodePanel
           title="스칼라 윈도우 추출 CUDA 커널"

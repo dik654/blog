@@ -20,7 +20,11 @@ export default function ModernIcicleArticle() {
 
     <section id="backend-dispatch" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">01 · Backend dispatch</p><h2 className="mt-2 text-2xl font-bold">Active device와 primitive identity를 registry key로 묶고 exact implementation을 선택한다</h2></header>
-      <p>Pinned runtime은 thread-local active device를 관리하며 dynamically loaded backend가 제공하는 device API를 통해 allocate/copy/sync를 호출합니다. Primitive registry는 별도 field·curve registration과 함께 보아야 하며, “CUDA가 설치되어 있다”와 “이 field의 이 primitive 구현이 등록되어 있다”는 다른 조건입니다.</p>
+      <p>
+            Pinned runtime은 thread-local active device를 관리하며 dynamically loaded backend가 제공하는 device API를 통해
+            allocate/copy/sync를 호출합니다. Primitive registry는 별도 field·curve registration과 함께 보아야 하며 “CUDA가 설치되어
+            있다”와 “이 field의 이 primitive 구현이 등록되어 있다”는 다른 조건입니다.
+          </p>
       <ExplainedFormula question="한 ICICLE 호출이 어느 구현으로 가야 하는지 어떻게 표현할까?" idea={<>Device type, primitive, field/curve와 implementation revision을 하나의 lookup identity로 고정합니다.</>} formula={String.raw`I=\mathcal{R}[d,\,p,\,f,\,r]`}
       annotatedFormula={String.raw`I=\underbrace{\mathcal{R}[d,\,p,\,f,\,r]}_{\text{Registry 계산}}`}
       operations={[

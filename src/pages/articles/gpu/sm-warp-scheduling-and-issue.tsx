@@ -28,16 +28,14 @@ export default function SmWarpSchedulingAndIssueArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            GPU 가 한 clock 에 실제로 실행하는 단위는 thread 도 block 도 아니고 warp 의
-            instruction 하나입니다. 그 instruction 을 고르는 하드웨어가 SM(Streaming
-            Multiprocessor) 안의 subpartition 이고, subpartition 마다 warp scheduler 하나가
-            매 clock 자기 warp 들 가운데 하나를 골라 instruction 하나를 내보냅니다.
+            GPU 가 한 clock 에 실제로 실행하는 단위는 thread 도 block 도 아니고 warp 의 instruction 하나입니다. 그 instruction 을 고르는
+            하드웨어는 SM(Streaming Multiprocessor) 안의 subpartition 입니다. Subpartition 마다 warp scheduler 하나가 매 clock
+            자기 warp 들 가운데 하나를 골라 instruction 하나를 내보냅니다.
           </p>
           <p>
-            CUDA programming model 은 프로그래머에게 grid, block, thread 와 kernel 함수만
-            보여 줍니다. 그 계층이 어떤 SM 에 놓이고 어떤 순서로 실행되는지는 모델이 약속하지
-            않고 하드웨어가 정합니다. Block 은 SM 하나에 통째로 놓이고, block 의 thread 는
-            32개씩 warp 로 묶이며, 각 warp 는 SM 안의 subpartition 하나에 배정됩니다.
+            CUDA programming model 은 프로그래머에게 grid, block, thread 와 kernel 함수만 보여 줍니다. 그 계층이 어떤 SM 에 놓이고 어떤 순서로
+            실행되는지는 모델이 약속하지 않고 하드웨어가 정합니다. Block 은 SM 하나에 통째로 놓입니다. Block 의 thread 는 32개씩 warp 로 묶이고 각 warp 는
+            SM 안의 subpartition 하나에 배정됩니다.
           </p>
           <p>
             SM 하나는 subpartition 4개로 나뉩니다. Subpartition 마다 warp scheduler 하나,
@@ -46,10 +44,9 @@ export default function SmWarpSchedulingAndIssueArticle() {
             일차 처리 요소로 정의합니다.
           </p>
           <p>
-            숫자로 보면 이렇습니다. Scheduler 하나가 clock 당 warp instruction 하나를
-            issue 하므로 SM 하나는 clock 당 최대 4개, thread 기준으로는 128 thread
-            instruction 을 냅니다. H100 SXM5 의 SM 132개를 곱하면 chip 전체의 issue 상한은
-            clock 당 warp instruction 528개입니다.
+            숫자로 보면 scheduler 하나가 clock 당 warp instruction 하나를 issue 하므로 SM 하나는 clock 당 최대 4개, thread 기준으로는 128
+            thread instruction 을 냅니다. H100 SXM5 의 SM 132개를 곱하면 chip 전체의 issue 상한은 clock 당 warp instruction
+            528개입니다.
           </p>
           <p>
             이 상한은 subpartition 마다 ready 인 warp 가 매 clock 하나 이상 있을 때만
@@ -69,33 +66,28 @@ export default function SmWarpSchedulingAndIssueArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Scheduler 는 매 clock 자기 subpartition 에 resident 한 warp(active warp) 들을
-            보고, 그 가운데 다음 instruction 의 입력이 모두 준비된 warp(eligible warp, 이 글의
-            ready warp) 중 하나를 골라 instruction 하나를 issue 합니다. 준비되지 않은 warp 는
-            stalled warp 로 남고 그 clock 에는 후보에서 빠집니다.
+            Scheduler 는 매 clock 자기 subpartition 에 resident 한 warp(active warp) 들을 보고 그 가운데 다음 instruction 의
+            입력이 모두 준비된 warp(eligible warp, 이 글의 ready warp) 중 하나를 골라 instruction 하나를 issue 합니다. 준비되지 않은 warp 는
+            stalled warp 로 남아 그 clock 에는 후보에서 빠집니다.
           </p>
           <p>
-            준비 여부를 판정하는 장치가 scoreboard 입니다. Warp 가 instruction 을 issue 하면
-            그 결과 register 에 아직 값이 오지 않았다는 표시가 남고, 결과가 도착하면 표시가
-            지워집니다. 다음 instruction 이 그 register 를 읽으려면 표시가 지워질 때까지
-            기다려야 하므로, scoreboard 는 register 의존을 시간으로 바꾸는 장부입니다.
+            준비 여부는 scoreboard 가 판정합니다. Warp 가 instruction 을 issue 하면 그 결과 register 에 아직 값이 오지 않았다는 표시가 남고 결과가
+            도착하면 표시가 지워집니다. 다음 instruction 이 그 register 를 읽으려면 표시가 지워질 때까지 기다려야 합니다. Scoreboard 는 register 의존을
+            시간으로 바꾸는 장부입니다.
           </p>
           <p>
-            Nsight Compute 는 이 기다림을 원인별로 셉니다. Global·local memory 의 결과를
-            기다리면 long scoreboard, shared memory 같은 짧은 경로를 기다리면 short
-            scoreboard, 산술 instruction 의 고정 latency 를 기다리면 wait 입니다. 준비는
-            됐지만 다른 warp 가 선택돼 밀린 상태는 not selected 로 따로 셉니다.
+            Nsight Compute 는 이 기다림을 원인별로 셉니다. Global·local memory 의 결과를 기다리는 상태가 long scoreboard 입니다. Shared
+            memory 같은 짧은 경로를 기다리면 short scoreboard, 산술 instruction 의 고정 latency 를 기다리면 wait 입니다. 준비는 됐지만 다른
+            warp 가 선택돼 밀린 상태는 not selected 로 따로 셉니다.
           </p>
           <p>
-            Issue 와 dispatch 는 다른 단계입니다. Issue 는 scheduler 가 후보 가운데 warp 를
-            골라 instruction 을 내보내는 결정이고, dispatch 는 그 instruction 을 FMA·ALU·
-            LSU 같은 실제 pipe 로 보내는 단계입니다. Pipe 가 이미 차 있으면 issue 된
-            instruction 도 기다리며, 이 상태를 문서는 math pipe throttle 로 구분합니다.
+            Issue 와 dispatch 는 다른 단계입니다. Issue 는 scheduler 가 후보 가운데 warp 를 골라 instruction 을 내보내는 결정이고 dispatch
+            는 그 instruction 을 FMA·ALU· LSU 같은 실제 pipe 로 보내는 단계입니다. Pipe 가 이미 차 있으면 issue 된 instruction 도
+            기다립니다. 문서는 이 상태를 math pipe throttle 로 구분합니다.
           </p>
           <p>
-            Subpartition 하나에 warp 4개가 있고 매 clock 그중 하나만 준비돼 있어도 scheduler
-            는 clock 마다 issue 를 이어 갈 수 있습니다. 어느 clock 에 준비된 warp 가 하나도
-            없으면 그 clock 의 issue slot 은 비고, 이것이 다음 절의 pipeline bubble 입니다.
+            Subpartition 하나에 warp 4개가 있고 매 clock 그중 하나만 준비돼 있어도 scheduler 는 clock 마다 issue 를 이어 갈 수 있습니다. 어느
+            clock 에 준비된 warp 가 하나도 없으면 그 clock 의 issue slot 은 빕니다. 이것이 다음 절의 pipeline bubble 입니다.
           </p>
         </div>
         <AlgorithmBlock
@@ -120,16 +112,13 @@ export default function SmWarpSchedulingAndIssueArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            한 warp 안에서 앞 instruction 의 결과를 다음 instruction 이 바로 쓰면 그 사이의
-            시간은 어떤 최적화로도 없어지지 않습니다. 이 시간이 instruction dependency
-            latency 이고, 결과를 이어받는 instruction 의 줄이 dependency chain 입니다.
-            Scheduler 가 할 수 있는 일은 그 시간 동안 다른 warp 의 instruction 을 issue 하는
-            것뿐입니다.
+            한 warp 안에서 앞 instruction 의 결과를 다음 instruction 이 바로 쓰면 그 사이의 시간은 어떤 최적화로도 없어지지 않습니다. 이 시간이
+            instruction dependency latency 입니다. 결과를 이어받는 instruction 의 줄은 dependency chain 이라고 부릅니다. Scheduler
+            가 할 수 있는 일은 그 시간 동안 다른 warp 의 instruction 을 issue 하는 것뿐입니다.
           </p>
           <p>
-            CUDA C++ Programming Guide 는 compute capability 7.x 에서 대부분의 산술
-            instruction 의 latency 를 약 4 clock 으로 적고, scheduler 4개짜리 SM 이 이를
-            숨기려면 active warp 16개가 필요하다고 씁니다.
+            CUDA C++ Programming Guide 는 compute capability 7.x 에서 대부분의 산술 instruction 의 latency 를 약 4 clock
+            으로 적고 scheduler 4개짜리 SM 이 이를 숨기려면 active warp 16개가 필요하다고 씁니다.
           </p>
           <p>
             Scheduler 하나로 나누면 warp 4개입니다. Warp 하나가 issue 한 뒤 4 clock 을
@@ -143,18 +132,14 @@ export default function SmWarpSchedulingAndIssueArticle() {
             입니다.
           </p>
           <p>
-            Memory 는 같은 식에 큰 latency 를 넣는 경우입니다. Global load 의 latency 를
-            가정값 500 clock 으로 두면 기다리는 load 가 언제나 500개 있어야 하는데,
-            subpartition 의 warp 상한은 16개입니다. Warp 마다 독립 load 를 32개 가까이
-            띄워야 하고, 이렇게 한 warp 가 여러 memory 요청을 동시에 띄우는 정도가
-            memory-level parallelism(MLP) 입니다.
+            Memory 는 같은 식에 큰 latency 를 넣는 경우입니다. Global load 의 latency 를 가정값 500 clock 으로 두면 기다리는 load 가 언제나
+            500개 있어야 하는데 subpartition 의 warp 상한은 16개입니다. Warp 마다 독립 load 를 32개 가까이 띄워야 합니다. 이렇게 한 warp 가 여러
+            memory 요청을 동시에 띄우는 정도가 memory-level parallelism(MLP) 입니다.
           </p>
           <p>
-            준비된 warp 가 하나도 없는 clock 이 pipeline bubble 입니다. 이 글의 bubble 은
-            SM 의 issue pipeline 에 생기는 빈 slot 을 뜻하며, 분산 추론에서 pipeline
-            parallel stage 가 노는 bubble 과는 다른 층위의 말입니다. Nsight Compute 는 이
-            비율을 No Eligible 로 보여 주고, 1000 clock 에 600번 issue 했다면 slot 의 40%
-            가 bubble 입니다.
+            Pipeline bubble 은 준비된 warp 가 하나도 없는 clock 을 가리킵니다. 이 글의 bubble 은 SM 의 issue pipeline 에 생기는 빈 slot
+            을 뜻하며 분산 추론에서 pipeline parallel stage 가 노는 bubble 과는 다른 층위의 말입니다. Nsight Compute 는 이 비율을 No
+            Eligible 로 보여 줍니다. 1000 clock 에 600번 issue 했다면 slot 의 40% 가 bubble 입니다.
           </p>
           <p>
             Ready warp 를 늘리는 한도는 register 와 shared memory 입니다. Thread 당
@@ -196,31 +181,27 @@ W_{\mathrm{ready}} &\ge \underbrace{\left\lceil \frac{I_{\mathrm{flight}}}{\math
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Warp 의 32 lane 이 같은 조건문에서 다른 쪽으로 갈라지면 scheduler 는 두 경로를
-            차례로 issue 합니다. 각 경로를 도는 동안 그 경로에 속하지 않는 lane 은 active
-            mask 로 꺼지고, 두 경로가 다시 만나는 지점이 reconvergence point 입니다. 이 갈라짐이
-            warp divergence 이고 비용은 issue slot 을 두 배로 쓰는 것입니다.
+            Warp 의 32 lane 이 같은 조건문에서 다른 쪽으로 갈라지면 scheduler 는 두 경로를 차례로 issue 합니다. 각 경로를 도는 동안 그 경로에 속하지 않는
+            lane 은 active mask 로 꺼지고 두 경로가 다시 만나는 지점이 reconvergence point 입니다. 이 갈라짐이 warp divergence 이고 비용은
+            issue slot 을 두 배로 쓰는 것입니다.
           </p>
           <p>
-            비용은 lane 의 비율이 아니라 경로 길이의 합으로 정해집니다. Lane 16개가 10
-            instruction 짜리 A 로, 16개가 10 instruction 짜리 B 로 가면 issue slot 은 20개이고
-            lane 이용률은 (16×10+16×10)/(32×20)=50% 입니다.
+            비용은 lane 의 비율로 정해지지 않습니다. 경로 길이의 합이 정합니다. Lane 16개가 10 instruction 짜리 A 로, 16개가 10 instruction 짜리
+            B 로 가면 issue slot 은 20개이고 lane 이용률은 (16×10+16×10)/(32×20)=50% 입니다.
           </p>
           <p>
             Lane 하나만 30 instruction 짜리 경로로 빠지고 31개가 10 instruction 경로면
             slot 은 40개, 이용률은 (30+310)/(32×40)≈27% 입니다.
           </p>
           <p>
-            Lane 하나의 예외 처리가 warp 전체를 세 배 느리게 만드는 이유가 이것입니다.
-            Divergence 는 instruction 이 늘어나는 것이지 scheduler 가 멈추는 것이 아니므로,
-            scoreboard 로 인한 stall 과 profiler 에서 다른 항목으로 나타납니다. Divergence 는
-            issued instruction 대비 active thread 비율로 읽습니다.
+            Lane 하나의 예외 처리가 warp 전체를 세 배 느리게 만드는 이유가 이것입니다. Divergence 는 instruction 이 늘어나는 것이지 scheduler 가
+            멈추는 것이 아니므로 scoreboard 로 인한 stall 과 profiler 에서 다른 항목으로 나타납니다. Divergence 는 issued instruction 대비
+            active thread 비율로 읽습니다.
           </p>
           <p>
-            Volta 이후의 independent thread scheduling 은 lane 마다 program counter 와 call
-            stack 을 두어 갈라진 경로들을 하드웨어가 번갈아 issue 할 수 있게 했습니다. 갈라진
-            경로가 서로를 기다리는 lock 도 교착 없이 돌지만, 한 clock 에 issue 되는 것은 여전히
-            한 경로의 lane 들뿐이므로 처리량 비용은 그대로입니다.
+            Volta 이후의 independent thread scheduling 은 lane 마다 program counter 와 call stack 을 두어 갈라진 경로들을 하드웨어가
+            번갈아 issue 할 수 있게 했습니다. 갈라진 경로가 서로를 기다리는 lock 도 교착 없이 돕니다. 다만 한 clock 에 issue 되는 것은 여전히 한 경로의 lane
+            들뿐이므로 처리량 비용은 그대로입니다.
           </p>
           <p>
             같은 warp 의 lane 이 같은 방향으로 가도록 data 를 배치하면 divergence 는
@@ -247,10 +228,9 @@ W_{\mathrm{ready}} &\ge \underbrace{\left\lceil \frac{I_{\mathrm{flight}}}{\math
           preview="없애지 못합니다. Lane 별 PC 로 갈라진 경로를 번갈아 issue 할 수 있게 됐을 뿐 한 clock 의 issue 는 여전히 한 경로의 lane 들이고, 대신 갈라진 경로 사이의 교착이 사라지고 reconvergence 를 컴파일러가 보장하지 않게 됐습니다."
         >
           <p>
-            Volta 이전에는 warp 하나가 program counter 하나를 공유했으므로 갈라진 경로 중
-            한쪽이 다른 쪽이 잡은 lock 을 기다리면 영원히 진행하지 못했습니다. Compute
-            capability 7.0 부터는 lane 마다 PC 와 stack 을 두어 scheduler 가 두 경로를
-            번갈아 issue 할 수 있고, 그 결과 갈라진 경로 안의 spin lock 도 돌아갑니다.
+            Volta 이전에는 warp 하나가 program counter 하나를 공유했으므로 갈라진 경로 중 한쪽이 다른 쪽이 잡은 lock 을 기다리면 영원히 진행하지 못했습니다.
+            Compute capability 7.0 부터는 lane 마다 PC 와 stack 을 두어 scheduler 가 두 경로를 번갈아 issue 할 수 있고 그 결과 갈라진 경로
+            안의 spin lock 도 돌아갑니다.
           </p>
           <p>
             대신 두 경로가 언제 다시 합쳐지는지를 하드웨어가 보장하지 않습니다. 갈라진 뒤
@@ -283,10 +263,8 @@ W_{\mathrm{ready}} &\ge \underbrace{\left\lceil \frac{I_{\mathrm{flight}}}{\math
             이 글도 select 로만 적었습니다.
           </p>
           <p>
-            Global load latency 500 clock 은 문서 수치가 아니라 이 글이 계산 예를 위해 둔
-            가정값입니다. 실제 값은 cache hit 여부와 세대에 따라 수십에서 수백 clock 사이에서
-            움직이므로, 자기 kernel 의 수치는 Nsight Compute 의 warp state sampling 으로
-            직접 읽어야 합니다.
+            Global load latency 500 clock 은 문서 수치가 아니라 이 글이 계산 예를 위해 둔 가정값입니다. 실제 값은 cache hit 여부와 세대에 따라 수십에서
+            수백 clock 사이에서 움직이므로 자기 kernel 의 수치는 Nsight Compute 의 warp state sampling 으로 직접 읽어야 합니다.
           </p>
         </div>
         <div id="paper-cuda-simt-multithreading" className="not-prose my-8 scroll-mt-24">

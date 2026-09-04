@@ -26,10 +26,9 @@ export default function ModernCudaPersistentKernelArticle() {
           </h2>
         </header>
         <p className="text-lg leading-8 text-foreground/90">
-          일반 실행은 host가 kernel을 launch하고 grid가 일을 끝내면 종료합니다.
-          Persistent kernel은 일부 worker blocks를 GPU에 계속 resident하게 두고,
-          host나 device producer가 게시한 task를 queue에서 꺼내 반복 처리합니다.
-          Kernel의 수명과 각 task의 수명이 분리되는 실행 모델입니다.
+          일반 실행은 host가 kernel을 launch하고 grid가 일을 끝내면 종료합니다. Persistent kernel은 일부 worker blocks를 GPU에 계속
+          resident하게 둡니다. 이들이 host나 device producer가 게시한 task를 queue에서 꺼내 반복 처리합니다. Kernel의 수명과 각 task의 수명이
+          여기서 분리됩니다.
         </p>
         <p>
           이 모델의 원래 이름이 Persistent Threads 입니다. Gupta, Stuart, Owens
@@ -39,8 +38,7 @@ export default function ModernCudaPersistentKernelArticle() {
           일을 꺼내는 loop 를 돕니다.
         </p>
         <p>
-          하드웨어 block scheduler 대신 software 가 block 을 SM 에 배치하는
-          셈입니다.
+          하드웨어 block scheduler 가 아니라 software 가 block 을 SM 에 배치합니다.
         </p>
         <p>
           그 논문은 이 모델이 쓸모 있는 경우를 넷으로 나눕니다. Host 를 거치지
@@ -57,11 +55,9 @@ export default function ModernCudaPersistentKernelArticle() {
           이 이어받습니다.
         </p>
         <p>
-          같은 논문은 손해도 함께 적습니다. Work item 이 작아 atomic 으로 queue
-          를 읽는 횟수가 계산보다 자주 일어나면 atomic 압력이 커져 일반 launch
-          보다 느려지고, 실험은 2009년의 GTX 295 에 묶여 있습니다. 어느 쪽이
-          이기는지는 work item 하나의 시간과 queue 한 번의 비용의 비율로
-          정해지며, 그 셈은 아래 work assignment 절이 합니다.
+          같은 논문은 손해도 함께 적습니다. Work item 이 작아 atomic 으로 queue 를 읽는 횟수가 계산보다 자주 일어나면 atomic 압력이 커져 일반 launch 보다
+          느려집니다. 실험도 2009년의 GTX 295 에 묶여 있습니다. 어느 쪽이 이기는지는 work item 하나의 시간과 queue 한 번의 비용의 비율로 정해지며, 그 셈은 아래
+          work assignment 절이 합니다.
         </p>
         <TermBreakdown
           title="먼저 queue에서 이동하는 세 가지를 구분합니다"
@@ -110,11 +106,9 @@ export default function ModernCudaPersistentKernelArticle() {
           </h2>
         </header>
         <p>
-          Persistent blocks는 queue가 비어도 resident resource를 보유할 수
-          있습니다. Block당 registers·shared memory와 worker block 수를 함께
-          제한해 다른 kernels, communication work와 runtime progress에 공간을
-          남겨야 합니다. 모든 SM을 점유하면 낮은 queue latency를 얻는 대신 다른
-          stream과 collective를 굶길 수 있습니다.
+          Persistent blocks는 queue가 비어도 resident resource를 그대로 붙잡습니다. Block당 registers·shared memory와 worker
+          block 수를 함께 제한해 다른 kernels, communication work와 runtime progress에 공간을 남겨야 합니다. 모든 SM을 점유하면 낮은 queue
+          latency를 얻는 대신 다른 stream과 collective를 굶길 수 있습니다.
         </p>
         <ExplainedFormula
           question="Persistent worker blocks의 상한은 왜 여러 자원 중 최소값일까요?"
@@ -271,10 +265,9 @@ export default function ModernCudaPersistentKernelArticle() {
           </h2>
         </header>
         <p>
-          Queue 에 있는 일을 worker 에 나누는 방법은 둘뿐입니다. 어느 block 이
-          어느 tile 을 맡을지 launch 전에 정해 두는 static work assignment 와,
-          block 이 tile 을 끝낼 때마다 공용 counter 를 atomic 으로 올려 다음
-          tile 번호를 받는 dynamic work assignment 입니다.
+          Queue 에 있는 일을 worker 에 나누는 방법은 둘뿐입니다. 어느 block 이 어느 tile 을 맡을지 launch 전에 정해 두면 static work
+          assignment 입니다. Block 이 tile 을 끝낼 때마다 공용 counter 를 atomic 으로 올려 다음 tile 번호를 받으면 dynamic work
+          assignment 입니다.
         </p>
         <p>
           둘 다 host 가 아니라 device 의 block 이 다음 일을 고르므로
@@ -302,40 +295,29 @@ export default function ModernCudaPersistentKernelArticle() {
           가장 늦은 block 은 12t 근처까지 밀려 불균형이 30% 를 넘습니다.
         </p>
         <p>
-          Dynamic 은 그 불균형을 atomic 하나로 바꿉니다. Block 은 tile 을 끝낼
-          때마다 atomicAdd(&next, 1) 로 다음 번호를 받으므로 빨리 끝난 block 이
-          더 많이 맡고, 마지막에는 모든 block 이 한 tile 안쪽 차이로 끝납니다.
-          비용은 tile 1,000개에 atomic 1,000번이고, 같은 주소를 향한 atomic 은
-          L2 에서 직렬화되므로 block 132개가 동시에 부딪히면 그 줄의 길이만큼
-          기다립니다.
+          Dynamic 은 그 불균형을 atomic 하나로 바꿉니다. Block 은 tile 을 끝낼 때마다 atomicAdd(&next, 1) 로 다음 번호를 받습니다. 빨리 끝난
+          block 이 더 많이 맡으므로 마지막에는 모든 block 이 한 tile 안쪽 차이로 끝납니다. 비용은 tile 1,000개에 atomic 1,000번입니다. 같은 주소를 향한
+          atomic 은 L2 에서 직렬화되므로 block 132개가 동시에 부딪히면 그 줄의 길이만큼 기다립니다.
         </p>
         <p>
-          그 비용의 크기는 이렇게 셉니다. Global atomic 한 번의 왕복을 가정값
-          1 µs 로 두면 tile 하나에 1 µs 가 붙고, tile 시간이 50 µs 면 2% 입니다.
-          Tile 이 5 µs 면 같은 1 µs 가 20% 가 되어 static 의 5.5% 보다 나쁩니다.
-          Gupta 등이 관찰한 atomic 압력의 slowdown 이 이 경우이며, 처방은 tile 을
-          키우거나 atomic 한 번에 tile 여러 개(chunk)를 받는 것입니다.
+          그 비용의 크기는 이렇게 셉니다. Global atomic 한 번의 왕복을 가정값 1 µs 로 두면 tile 하나에 1 µs 가 붙습니다. Tile 시간이 50 µs 면 2%
+          입니다. Tile 이 5 µs 면 같은 1 µs 가 20% 가 되어 static 의 5.5% 보다 나쁩니다. Gupta 등이 관찰한 atomic 압력의 slowdown 이 이
+          경우이며, 처방은 tile 을 키우거나 atomic 한 번에 tile 여러 개(chunk)를 받는 것입니다.
         </p>
         <p>
-          Work stealing 은 contention 을 queue 하나에서 여러 queue 로 나눕니다.
-          Block 마다(또는 SM 마다) 자기 queue 를 두고 평소에는 자기 queue 에서만
-          꺼내며, 자기 queue 가 비면 다른 block 의 queue 꼬리에서 훔쳐 옵니다.
-          평상시 atomic 은 자기 queue 에만 가서 contention 이 없고, 훔치는
-          atomic 은 kernel 끝 무렵에만 몰립니다.
+          Work stealing 은 contention 을 queue 하나에서 여러 queue 로 나눕니다. Block 마다(또는 SM 마다) 자기 queue 를 두고 평소에는 자기
+          queue 에서만 꺼냅니다. 자기 queue 가 비면 다른 block 의 queue 꼬리에서 훔쳐 옵니다. 평상시 atomic 은 자기 queue 에만 가서 contention 이
+          없고 훔치는 atomic 은 kernel 끝 무렵에만 몰립니다.
         </p>
         <p>
-          훔치기의 비용은 victim 을 고르는 일과 victim queue 의 head·tail 을 두
-          쪽이 동시에 만지는 race 입니다. Tail 은 주인이, head 는 도둑이 만지게
-          하고 마지막 한 항목에서만 compare-and-swap 으로 겨루게 하면 대부분의
-          꺼내기가 atomic 없이 끝납니다. Queue 가 132개면 한 queue 당 contention
-          은 평균 1/132 로 줄지만, 빈 queue 를 도는 도둑의 polling 은 남습니다.
+          훔치기의 비용은 victim 을 고르는 일과 victim queue 의 head·tail 을 두 쪽이 동시에 만지는 race 입니다. Tail 은 주인이, head 는 도둑이
+          만지게 하고 마지막 한 항목에서만 compare-and-swap 으로 겨루게 하면 대부분의 꺼내기가 atomic 없이 끝납니다. Queue 가 132개면 한 queue 당
+          contention 은 평균 1/132 로 줄지만 빈 queue 를 도는 도둑의 polling 은 남습니다.
         </p>
         <p>
-          Load balancing 은 이 셋을 고르는 기준입니다. 측정값은 가장 늦게 끝난
-          block 의 시간을 block 평균 시간으로 나눈 비율이고, 1 에 가까울수록
-          고릅니다. Tile 시간이 고르고 수가 많으면 static, 고르지 않고 크면
-          dynamic counter, 고르지 않고 작으면 work stealing 이 그 비율을 가장
-          낮추며, 이 판단은 tile 시간의 분포를 먼저 재야 할 수 있습니다.
+          Load balancing 은 이 셋을 고르는 기준입니다. 측정값은 가장 늦게 끝난 block 의 시간을 block 평균 시간으로 나눈 비율입니다. 1 에 가까울수록 고릅니다.
+          Tile 시간이 고르고 수가 많으면 static, 고르지 않고 크면 dynamic counter, 고르지 않고 작으면 work stealing 이 그 비율을 가장 낮추며, 이
+          판단은 tile 시간의 분포를 먼저 재야 할 수 있습니다.
         </p>
         <AlgorithmBlock
           title="Device-side work assignment: static·dynamic·stealing 의 한 loop"
@@ -399,12 +381,9 @@ export default function ModernCudaPersistentKernelArticle() {
           </h2>
         </header>
         <p>
-          종료는 새 publish를 막고, 이미 ticket을 가진 in-flight tasks를
-          완료하거나 명시적으로 취소하고, queue가 비었음을 확인한 뒤 모든
-          workers가 exit하는 순서입니다. Sentinel 하나를 worker 하나만 소비하면
-          나머지가 polling을 계속할 수 있습니다. Device-side error와 host
-          cancellation도 completion state로 전달해야 silent hang을 피할 수
-          있습니다.
+          종료는 새 publish를 막고 이미 ticket을 가진 in-flight tasks를 완료하거나 명시적으로 취소하고, queue가 비었음을 확인한 뒤 모든 workers가
+          exit하는 순서입니다. Sentinel 하나를 worker 하나만 소비하면 나머지가 polling을 계속할 수 있습니다. Device-side error와 host
+          cancellation도 completion state로 전달해야 silent hang을 피합니다.
         </p>
         <div id="paper-persistent-threads">
           <CitationBlock

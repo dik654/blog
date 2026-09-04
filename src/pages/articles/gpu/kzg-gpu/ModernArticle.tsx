@@ -58,7 +58,11 @@ export default function ModernKzgGpuArticle() {
 
     <section id="opening-dag" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">03 · Opening DAG</p><h2 className="mt-2 text-2xl font-bold">Evaluation·exact quotient·proof MSM·pairing verify를 generation-bound DAG로 잇는다</h2></header>
-      <p>Claim y=f(z)를 계산하고 q=(f−y)/(X−z)의 remainder가 0인지 확인한 뒤 q coefficients와 SRS prefix를 MSM해 proof π를 만듭니다. Batch opening은 transcript challenge와 aggregation equation을 특정 protocol/version에 고정해야 하며, 여러 commitments를 무조건 하나의 MSM으로 이어 붙이는 식으로 group 결과를 분리할 수 없습니다.</p>
+      <p>
+            Claim y=f(z)를 계산하고 q=(f−y)/(X−z)의 remainder가 0인지 확인한 뒤 q coefficients와 SRS prefix를 MSM해 proof π를
+            만듭니다. Batch opening은 transcript challenge와 aggregation equation을 특정 protocol/version에 고정해야 하며 여러
+            commitments를 무조건 하나의 MSM으로 이어 붙이는 식으로 group 결과를 분리할 수 없습니다.
+          </p>
       <ExplainedFormula question="KZG artifact가 같은 입력 generation에서 만들어졌는지 어떻게 봉인할까?" idea={<>Polynomial, SRS, claim, backend와 output digests를 하나의 receipt identity에 묶어 verifier 결과와 함께 저장합니다.</>} formula={String.raw`R=H(A_f\|A_{SRS}\|z\|y\|H(C)\|H(\pi)\|v\|b)`}
       annotatedFormula={String.raw`R=\underbrace{H(A_f\|A_{SRS}\|z\|y\|H(C)\|H(\pi)\|v\|b)}_{\text{SRS artifact 계산}}`}
       operations={[
@@ -79,7 +83,12 @@ export default function ModernKzgGpuArticle() {
 
     <section id="release-gate" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">04 · Release gate</p><h2 className="mt-2 text-2xl font-bold">Independent verifier와 negative fixtures가 승인한 artifact만 성능 비교에 넣는다</h2></header>
-      <p>Zero/constant/max-degree, SRS short/wrong digest/wrong subgroup, coefficient/evaluation mismatch, y·z mutation, quotient remainder, malformed C/π, GPU OOM·timeout과 fallback을 포함합니다. CPU reference와 GPU C·π bytes 또는 normalized points를 비교하고, pinned independent verifier가 valid를 승인하고 invalid를 같은 failure class로 거절해야 합니다.</p>
+      <p>
+            Zero/constant/max-degree, SRS short/wrong digest/wrong subgroup, coefficient/evaluation mismatch,
+            y·z mutation, quotient remainder, malformed C/π, GPU OOM·timeout과 fallback을 포함합니다. CPU reference와
+            GPU C·π bytes 또는 normalized points를 비교하고 pinned independent verifier가 valid를 승인하고 invalid를 같은
+            failure class로 거절해야 합니다.
+          </p>
       <ExplainedFormula question="KZG GPU 경로의 유효 처리량과 speedup을 어떤 경계에서 계산할까?" idea={<>독립 verifier가 승인한 artifacts만 세고 setup cache hit/cold, transfer, polynomial work와 MSM을 포함한 같은 wall-clock 경계를 비교합니다.</>} formula={String.raw`R_{KZG}=\frac{N_{verified}}{T_{wall}},\qquad S=\frac{T_{reference}^{e2e}}{T_{GPU}^{e2e}}`}
       annotatedFormula={String.raw`R_{KZG}=\underbrace{\frac{N_{verified}}{T_{wall}},\qquad S=\frac{T_{reference}^{e2e}}{T_{GPU}^{e2e}}}_{\text{기준량당 비율}}`}
       operations={[

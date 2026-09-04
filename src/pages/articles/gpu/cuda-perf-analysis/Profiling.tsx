@@ -65,8 +65,7 @@ export default function Profiling() {
           Nsight Systems & Compute
         </h3>
         <p>
-          Nsight Systems로 전체 CPU-GPU 상호작용을 타임라인에서 파악한 뒤, 병목
-          커널을 Nsight Compute로 상세 분석한다. SOL 섹션의 연산/메모리 활용률로
+          Nsight Systems로 전체 CPU-GPU 상호작용을 타임라인에서 파악한 뒤 병목 커널을 Nsight Compute로 상세 분석한다. SOL 섹션의 연산/메모리 활용률로
           bound 유형을 즉시 판별할 수 있다.
         </p>
         <CodePanel

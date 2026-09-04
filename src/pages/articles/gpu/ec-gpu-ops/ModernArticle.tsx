@@ -49,7 +49,11 @@ export default function ModernEcGpuOpsArticle() {
         {symbol:"z_k",name:"Output limb",description:"Accumulator의 낮은 w bits입니다."},
         {symbol:"c_{k+1}",name:"Outgoing carry",description:"다음 column이 반드시 소비해야 하는 나머지 상위 값입니다."},
       ]} assumptions={["Accumulator type 또는 multiword schedule이 t_k의 최대값을 overflow 없이 보존합니다.","Signedness와 high-half multiply, carry flag semantics를 target instruction에서 고정합니다."]} interpretation="w=8에서 t_k=700이면 z_k=188, c_{k+1}=2입니다. 다음 column이 carry 2를 받기 전에 실행 결과를 확정하면 CPU reference와 달라집니다." />
-      <p>Montgomery constants와 final conditional subtraction은 이 글에서 새로 유도하지 않습니다. 다만 kernel은 input/output이 normal residue인지 R-domain인지 API boundary에 명시하고, 0·1·p−1·p·2p−1과 cross-domain 입력을 reference와 대조해야 합니다.</p>
+      <p>
+            Montgomery constants와 final conditional subtraction은 이 글에서 새로 유도하지 않습니다. 다만 kernel은 input/output이
+            normal residue인지 R-domain인지 API boundary에 명시하고 0·1·p−1·p·2p−1과 cross-domain 입력을 reference와 대조해야
+            합니다.
+          </p>
       <div id="paper-ec-gpu-field-kernel"><CitationBlock type="code" citeKey={1} source="ec-gpu field.cl · commit 16d38ef" href={`${ECGPU}/ec-gpu-gen/src/cl/field.cl`}><p><strong>문제:</strong> Fixed limbs의 wide product와 modular reduction을 CUDA/OpenCL source로 내려야 합니다.</p><p><strong>핵심 기여:</strong> Pinned implementation의 CUDA carry-chain path와 default CIOS-style field operations를 보여 줍니다.</p><p><strong>중요 가정:</strong> Generated constants, backend limb width와 README의 prime top-bit 전제를 고정합니다.</p><p><strong>근거 범위:</strong> 링크 revision의 field kernel functions입니다.</p><p><strong>일반화 금지:</strong> Instruction cycle 수·register 수·occupancy·speedup을 고정하지 않습니다.</p></CitationBlock></div>
     </section>
 
@@ -67,13 +71,21 @@ export default function ModernEcGpuOpsArticle() {
         {symbol:"Z^{-1}",name:"Field inverse",description:"Normalization에서 구하며 zero/infinity encoding은 별도 규칙을 따릅니다."},
         {symbol:String.raw`\sim`,name:"같은 point 관계",description:"서로 다른 nonzero scale triples가 같은 affine point를 표현합니다."},
       ]} assumptions={["Coordinates는 같은 base field와 curve parameter를 사용하고 Z≠0인 finite point 식입니다.","Point at infinity의 internal representation과 encode policy는 backend contract로 별도 정의합니다."]} interpretation="Z=2라면 x=X/4, y=Y/8입니다. Jacobian이 field operation 수를 항상 최소화하거나 모든 formula가 complete하다는 결론은 아닙니다." />
-      <p>한 thread-per-point는 여러 X/Y/Z temporaries를 들기 때문에 register pressure가 큽니다. Warp-cooperative point는 lane communication과 divergence가 늘 수 있습니다. Fixed batch에서 register count, spills, resident warps, branch efficiency와 point/s를 함께 보고, point normalization·serialization 비용을 end-to-end 구간에서 빼지 않습니다.</p>
+      <p>
+            한 thread-per-point는 여러 X/Y/Z temporaries를 들기 때문에 register pressure가 큽니다. Warp-cooperative point는
+            lane communication과 divergence가 늘 수 있습니다. Fixed batch에서 register count, spills, resident warps,
+            branch efficiency와 point/s를 함께 보고 point normalization·serialization 비용을 end-to-end 구간에서 빼지 않습니다.
+          </p>
       <div id="paper-ec-gpu-point-kernel"><CitationBlock type="code" citeKey={2} source="ec-gpu ec.cl · commit 16d38ef" href={`${ECGPU}/ec-gpu-gen/src/cl/ec.cl`}><p><strong>문제:</strong> 매 point add마다 inverse하지 않고 a=0 short-Weierstrass points를 처리해야 합니다.</p><p><strong>핵심 기여:</strong> Pinned Jacobian double, mixed/full add와 infinity·same-point branches를 concrete field operations로 내립니다.</p><p><strong>중요 가정:</strong> 지원 curve parameter, field domain과 internal point representation을 고정합니다.</p><p><strong>근거 범위:</strong> 링크 revision에 구현된 formulas와 branches입니다.</p><p><strong>일반화 금지:</strong> 모든 curve에서 complete formula이거나 untrusted point validation을 대신한다는 뜻은 아닙니다.</p></CitationBlock></div>
     </section>
 
     <section id="msm-mapping" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">04 · MSM consumer</p><h2 className="mt-2 text-2xl font-bold">한 work item은 window와 group을 고르고 자기 bucket slice를 누적한다</h2></header>
-      <p>Pinned multiexp kernel은 global work-item ID를 window와 group으로 풀어 해당 point/scalar range와 bucket slice를 처리합니다. 각 scalar의 digit이 0이면 건너뛰고, nonzero digit이면 대응 bucket에 mixed add한 뒤 뒤에서 앞으로 running sum을 누적해 window partial을 만듭니다. 이 ownership이 buffer size와 coalescing, work-group count를 정합니다.</p>
+      <p>
+            Pinned multiexp kernel은 global work-item ID를 window와 group으로 풀어 해당 point/scalar range와 bucket
+            slice를 처리합니다. 각 scalar의 digit이 0이면 건너뛰고 nonzero digit이면 대응 bucket에 mixed add한 뒤 뒤에서 앞으로 running
+            sum을 누적해 window partial을 만듭니다. 이 ownership이 buffer size와 coalescing, work-group count를 정합니다.
+          </p>
       <ExplainedFormula question="Global work-item ID가 어떤 MSM window와 group을 맡는지 어떻게 풀어낼까?" idea={<>Windows를 빠르게 변하는 축으로 두면 나머지가 window, 몫이 같은 point chunk를 처리할 group이 됩니다. Host와 kernel이 같은 num_windows를 써야 bucket slice가 겹치지 않습니다.</>} formula={String.raw`\begin{aligned}window&=gid\bmod W\\group&=\left\lfloor gid/W\right\rfloor\\B&=2^c-1\end{aligned}`}
       annotatedFormula={String.raw`\begin{aligned}window&=\underbrace{gid\bmod W}_{\text{Window index 계산}}\\group&=\underbrace{\left\lfloor gid/W\right\rfloor}_{\text{기준량당 비율}}\\B&=\underbrace{2^c-1}_{\text{Window bits 계산}}\end{aligned}`}
       operations={[

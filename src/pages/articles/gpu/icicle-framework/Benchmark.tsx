@@ -111,8 +111,7 @@ export default function Benchmark() {
           </table>
         </div>
         <p>
-          Multi-GPU 스케일링 효율은 약 90%다. 이론적 4x가 아닌 ~3.6x인 이유는
-          GPU 간 통신 오버헤드 때문이다.
+          Multi-GPU 스케일링 효율은 약 90%다. 이론적 4x가 아니라 ~3.6x에 그치는 것은 GPU 간 통신 오버헤드 때문이다.
         </p>
         <CitationBlock
           source="Ingonyama — ICICLE Benchmarks"

@@ -47,9 +47,7 @@ export default function Occupancy() {
       <h2 className="text-2xl font-bold mb-6">점유율(Occupancy) & 활성 워프</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          점유율은 SM에서 동시에 활성화된 워프 수를 최대 가능 워프 수로 나눈
-          비율이다. 높은 점유율은 메모리 지연을 숨기는 데 유리하지만, 항상
-          100%가 최적은 아니다.
+          점유율은 SM에서 동시에 활성화된 워프 수를 최대 가능 워프 수로 나눈 비율이다. 높은 점유율은 메모리 지연을 숨기는 데 유리하다. 그렇다고 항상 100%가 최적은 아니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
@@ -67,9 +65,7 @@ export default function Occupancy() {
 
         <h3 className="text-xl font-semibold mt-8 mb-3">점유율 계산 예시</h3>
         <p>
-          레지스터 사용량이 점유율을 가장 크게 좌우한다. 스레드당 레지스터를
-          64개에서 32개로 줄이면 점유율이 50%에서 100%로 올라가지만, spill이
-          발생하면 오히려 느려진다.
+          레지스터 사용량이 점유율을 가장 크게 좌우한다. 스레드당 레지스터를 64개에서 32개로 줄이면 점유율이 50%에서 100%로 올라가지만 spill이 발생하면 오히려 느려진다.
         </p>
         <CodePanel
           title="A100 점유율 계산 (레지스터 64 vs 32)"

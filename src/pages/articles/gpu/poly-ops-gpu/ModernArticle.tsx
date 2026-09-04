@@ -12,14 +12,22 @@ export default function ModernPolyOpsGpuArticle() {
     <section id="overview" className="space-y-6">
       <header className="space-y-3"><p className="text-sm font-semibold text-primary">Representation을 잃지 않는 polynomial kernel</p><h2 className="text-3xl font-bold tracking-tight">GPU polynomial 연산은 배열을 빠르게 처리하기 전에 그 배열이 coefficient인지 evaluation인지부터 증명해야 한다</h2></header>
       <p className="text-lg leading-8 text-foreground/90">Polynomial의 coefficient/evaluation form, interpolation, vanishing polynomial과 NTT는 <a className="text-primary hover:underline" href="/crypto/polynomials">다항식 정본</a>과 <a className="text-primary hover:underline" href="/crypto/fft">NTT 정본</a>이 소유합니다. 여기서는 하나의 proof workload가 coefficient buffer에서 coset evaluation으로 이동하고, pointwise 계산 뒤 quotient/opening용 coefficient로 돌아오는 GPU 구현 경계만 설명합니다.</p>
-      <p>Buffer receipt에는 field, representation form, domain/coset id, N, order, Montgomery/canonical state와 generation을 함께 둡니다. 길이와 element type만 같은 배열을 받는 API는 representation mismatch를 알아채지 못합니다.</p>
+      <p>
+            Buffer receipt에는 field와 representation form, domain/coset id를 둡니다. N과 order, Montgomery/canonical
+            state, generation도 같은 자리에 함께 적습니다. 길이와 element type만 맞춰 배열을 받는 API로는 representation mismatch를 잡아낼
+            수 없습니다.
+          </p>
       <ModernPolyOpsViz />
       <ContentBoundary article="poly-ops-gpu" />
     </section>
 
     <section id="form-domain" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">01 · Form/domain tag</p><h2 className="mt-2 text-2xl font-bold">Kernel input을 bytes가 아니라 typed polynomial artifact로 받는다</h2></header>
-      <p>Coefficient a_i는 monomial basis의 가중치이고 evaluation y_j는 특정 domain point에서의 값입니다. 같은 N field elements라도 pointwise multiplication은 evaluation form에서 convolution을 뜻하지만 coefficient form에서는 단순 coefficient별 곱일 뿐입니다. Domain root와 coset generator가 다르면 evaluation form끼리도 호환되지 않습니다.</p>
+      <p>
+            Coefficient a_i는 monomial basis의 가중치이고 evaluation y_j는 특정 domain point에서 갖는 값입니다. 같은 N field
+            elements라도 pointwise multiplication은 evaluation form에서 convolution을 뜻합니다. coefficient form에서는 단순
+            coefficient별 곱일 뿐입니다. Domain root와 coset generator가 다르면 evaluation form끼리도 호환되지 않습니다.
+          </p>
       <ExplainedFormula question="Polynomial buffer artifact를 어떤 identity로 구분할까?" idea={<>값 digest뿐 아니라 field·form·domain·order·generation을 묶어 같은 길이의 다른 의미를 분리합니다.</>} formula={String.raw`A=H(\mathrm{field}\|\mathrm{form}\|N\|\mathrm{domain}\|\mathrm{order}\|\mathrm{gen}\|H(\mathrm{bytes}))`}
       annotatedFormula={String.raw`A=\underbrace{H(\mathrm{field}\|\mathrm{form}\|N\|\mathrm{domain}\|\mathrm{order}\|\mathrm{gen}\|H(\mathrm{bytes}))}_{\text{Domain identity 계산}}`}
       operations={[
@@ -53,13 +61,21 @@ export default function ModernPolyOpsGpuArticle() {
         {symbol:"N",name:"Domain size",description:"Transform length이자 coefficient padding 길이입니다."},
         {symbol:"f",name:"Polynomial",description:"Degree가 N보다 작은 고정 field polynomial입니다."},
       ]} assumptions={["g≠0이고 gΩ는 의도한 coset이며 N은 field two-adicity가 지원합니다.","Inverse path는 inverse NTT normalization 뒤 g^{-i}로 untwist하고 output order를 확인합니다."]} interpretation="f=1+2X, g=3이면 twisted coefficients는 (1,6)입니다. ω-domain에서 평가한 값은 정확히 f(3ω^j)입니다." />
-      <p>Pinned sppark는 forward coset에서 NTT 전에, inverse coset에서는 inverse NTT 뒤에 LDE powers를 적용합니다. 이를 별도 kernel로 둘지 stage와 fuse할지는 traffic과 register pressure를 같은 workload에서 비교해야 합니다.</p>
+      <p>
+            Pinned sppark는 forward coset에서 NTT 전에, inverse coset에서는 inverse NTT 뒤에 LDE powers를 적용합니다. 이를 별도
+            kernel로 둘지 stage와 fuse할지는 같은 workload에서 잰 traffic과 register pressure가 판단 근거입니다.
+          </p>
       <div id="paper-sppark-coset"><CitationBlock type="code" citeKey={1} source="sppark ntt.cuh · commit 17278d7" href={SPPARK_NTT}><p><strong>문제:</strong> Forward/inverse NTT에서 coset powers와 bit order를 올바른 위치에 적용해야 합니다.</p><p><strong>핵심 기여:</strong> Pinned dispatch가 CT/GS, bit reversal과 forward-before/inverse-after LDE power passes를 조합합니다.</p><p><strong>중요 가정:</strong> Commit 17278d7의 field, NTTParameters, direction/type/order를 고정합니다.</p><p><strong>근거 범위:</strong> 해당 source revision의 coset NTT orchestration입니다.</p><p><strong>일반화 금지:</strong> 모든 library가 같은 pass 순서·fusion·성능을 갖는다는 뜻은 아닙니다.</p></CitationBlock></div>
     </section>
 
     <section id="recurrence-map" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">03 · Recurrence map</p><h2 className="mt-2 text-2xl font-bold">Horner와 synthetic division은 polynomial 사이에는 병렬이지만 한 polynomial 안에는 dependency chain이 있다</h2></header>
-      <p>임의 point 하나에서의 Horner evaluation과 (f−y)/(X−z) synthetic division은 높은 coefficient의 결과를 다음 coefficient가 소비합니다. “Coefficient마다 thread 하나”로 단순 분할하면 recurrence가 깨집니다. 여러 polynomials·points를 batch하거나 prefix-style 알고리즘을 고를 수 있지만, 추가 passes·workspace와 crossover를 측정해야 합니다.</p>
+      <p>
+            임의의 point 한 곳에서 하는 Horner evaluation과 (f−y)/(X−z) synthetic division은 높은 coefficient의 결과를 다음
+            coefficient가 소비합니다. 그래서 “Coefficient마다 thread 하나”로 단순 분할하면 recurrence가 깨집니다. 여러
+            polynomials·points를 batch하거나 prefix-style 알고리즘을 고르는 선택지가 있습니다. 어느 쪽이든 추가 passes·workspace와
+            crossover를 측정한 값이 근거입니다.
+          </p>
       <ExplainedFormula question="Horner evaluation의 순차 dependency는 어디에 있을까?" idea={<>가장 높은 coefficient에서 시작해 이전 accumulator에 z를 곱하고 다음 coefficient를 더합니다.</>} formula={String.raw`h_{d}=a_d,\qquad h_i=h_{i+1}z+a_i\;(i=d-1,\ldots,0),\qquad f(z)=h_0`}
       annotatedFormula={String.raw`h_{d}=\underbrace{a_d,\qquad h_i=h_{i+1}z+a_i\;(i=d-1,\ldots,0),\qquad f(z)=h_0}_{\text{Evaluation 계산}}`}
       operations={[
@@ -90,7 +106,11 @@ export default function ModernPolyOpsGpuArticle() {
 
     <section id="release-gate" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">04 · Release gate</p><h2 className="mt-2 text-2xl font-bold">Round-trip·exact remainder·form mismatch를 확인한 뒤 유효 element/s를 비교한다</h2></header>
-      <p>Zero/constant/max-degree, N=1, wrong form/domain/order, coset g=0, unsupported N, non-zero division remainder와 aliasing을 포함합니다. CPU reference와 coset round-trip, direct evaluation, f=(X−z)q+r identity를 먼저 맞춘 뒤 H2D·twist·NTT·pointwise·INTT·recurrence·D2H를 분리 측정합니다.</p>
+      <p>
+            Zero/constant/max-degree와 N=1, wrong form/domain/order를 넣습니다. coset g=0, unsupported N, non-zero
+            division remainder, aliasing도 포함합니다. CPU reference와 coset round-trip, direct evaluation,
+            f=(X−z)q+r identity를 먼저 맞춥니다. 그다음 H2D·twist·NTT·pointwise·INTT·recurrence·D2H를 분리 측정합니다.
+          </p>
       <ExplainedFormula question="Polynomial kernel 후보의 useful throughput을 어떻게 기록할까?" idea={<>검증된 logical elements만 세고 전체 pipeline 및 kernel-chain 시간을 별도로 둡니다.</>} formula={String.raw`R_{elem}=\frac{B\,N_{valid}}{t_{kernel}},\qquad S=\frac{T_{reference}^{e2e}}{T_{candidate}^{e2e}}`}
       annotatedFormula={String.raw`R_{elem}=\underbrace{\frac{B\,N_{valid}}{t_{kernel}},\qquad S=\frac{T_{reference}^{e2e}}{T_{candidate}^{e2e}}}_{\text{기준량당 비율}}`}
       operations={[

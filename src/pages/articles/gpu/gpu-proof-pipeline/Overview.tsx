@@ -25,9 +25,8 @@ export default function Overview() {
           href="https://github.com/filecoin-project/bellperson"
         >
           <p className="text-xs">
-            bellperson 프로파일링 결과, 2^20 constraints 기준 MSM이 전체 증명
-            시간의 65%, NTT/FFT가 25%를 차지합니다. GPU 가속 시 CPU 대비 40-90배
-            속도 향상이 가능합니다.
+            bellperson 프로파일링 결과, 2^20 constraints 기준 MSM이 전체 증명 시간의 65%, NTT/FFT가 25%를 차지합니다. GPU로 가속하면 CPU 대비
+            40-90배 빨라질 수 있습니다.
           </p>
         </CitationBlock>
         <p>

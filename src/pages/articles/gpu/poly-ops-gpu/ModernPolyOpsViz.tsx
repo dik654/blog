@@ -7,7 +7,9 @@ export function ModernPolyOpsViz() {
         <div className="rounded-lg border border-primary/40 bg-primary/5 p-4"><p className="text-xs font-semibold text-primary">TRANSFORM</p><p className="mt-2 text-sm font-bold">NTT(g · Ω)</p><p className="mt-2 text-xs leading-5 text-muted-foreground">domain id·order·direction을 receipt에 보존</p></div>
         <div className="rounded-lg border border-border bg-muted/20 p-4"><p className="text-xs font-semibold text-primary">EVALUATION</p><p className="mt-2 text-sm font-bold">f(gω⁰) … f(gωⁿ⁻¹)</p><p className="mt-2 text-xs leading-5 text-muted-foreground">pointwise gates 뒤 INTT·untwist로 복귀</p></div>
       </div>
-      <p className="mt-4 rounded-lg border border-border px-4 py-3 text-xs leading-5 text-muted-foreground">반례 · evaluation 배열을 coefficient 배열로 오인해 synthetic division에 넣으면 길이는 맞아도 다른 polynomial을 계산합니다.</p>
+      <p className="mt-4 rounded-lg border border-border px-4 py-3 text-xs leading-5 text-muted-foreground">
+            반례 · evaluation 배열을 coefficient 배열로 오인해 synthetic division에 넣으면 길이는 맞는데 결과는 다른 polynomial입니다.
+          </p>
     </figure>
   );
 }

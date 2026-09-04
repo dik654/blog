@@ -103,11 +103,9 @@ export default function ModernCudaRegisterPressureArticle() {
           반올림 손실은 없습니다.
         </p>
         <p>
-          Warp 수는 다시 SM의 subpartition 4개에 나눠 담기므로 4의 배수로
-          내립니다. 37개 예에서 65,536/1,280은 51.2지만 실제 상한은 48 warps이고,
-          128-thread block(4 warps)은 12개가 들어가 75%, 320-thread block(10
-          warps)은 4개만 들어가 63%가 됩니다. 같은 register 수에서도 block 크기가
-          occupancy를 바꾸는 이유입니다.
+          Warp 수는 다시 SM의 subpartition 4개에 나눠 담기므로 4의 배수로 내립니다. 37개 예에서 65,536/1,280은 51.2지만 실제 상한은 48
+          warps입니다. 128-thread block(4 warps)은 12개가 들어가 75%, 320-thread block(10 warps)은 4개만 들어가 63%가 됩니다. 같은
+          register 수에서도 block 크기가 occupancy를 이렇게 바꿉니다.
         </p>
         <AlgorithmBlock
           title="Registers/thread에서 register-limited resident warp 상한 계산"
@@ -189,21 +187,17 @@ export default function ModernCudaRegisterPressureArticle() {
           </h2>
         </header>
         <p>
-          Separate A, B, C는 kernel 경계에서 이전 temporaries의 lifetime이
-          끝납니다. 하나로 합치면 A output을 HBM에 쓰지 않는 대신 C가 사용할
-          때까지 붙잡을 수 있습니다. 여기에 B와 C의 index, accumulator,
-          predicate가 겹치면 register pressure가 커집니다.
+          Separate A, B, C는 kernel 경계에서 이전 temporaries의 lifetime이 끝납니다. 하나로 합치면 A output을 HBM에 쓰지 않는 대신 C가 사용할
+          때까지 붙잡습니다. 여기에 B와 C의 index, accumulator, predicate가 겹치면 register pressure가 커집니다.
         </p>
         <p>
           그래서 <code>ptxas -v</code>가 보고한 registers와 local bytes, 그리고
           target SASS를 실제 candidate마다 확인합니다.
         </p>
         <p>
-          Register reuse는 live range가 끝난 physical register를 다음 값이 곧바로
-          이어받는 일입니다. Loop 안에서 임시값 8개가 차례로 만들어지고 바로
-          소비되면 compiler는 register 2~3개를 돌려 쓰며, 요구량은 8이 아니라
-          동시에 살아 있는 최댓값입니다. 값을 일찍 만들고 늦게 쓰는 source가
-          reuse 기회를 없앱니다.
+          Register reuse는 live range가 끝난 physical register를 다음 값이 곧바로 이어받는 일입니다. Loop 안에서 임시값 8개가 차례로 만들어지고 바로
+          소비되면 compiler는 register 2~3개를 돌려 씁니다. 요구량은 8이 아니라 동시에 살아 있는 최댓값입니다. 값을 일찍 만들고 늦게 쓰는 source가 reuse
+          기회를 없앱니다.
         </p>
         <p>
           Rematerialization은 값을 register에 붙잡거나 spill하는 대신 필요한
@@ -318,19 +312,15 @@ export default function ModernCudaRegisterPressureArticle() {
           벌어지면 자원 한도가 아니라 일의 분배가 원인입니다.
         </p>
         <p>
-          차이를 만드는 첫 원인은 tail effect입니다. 132개 SM에 block 2개씩 264
-          slot이 있는데 grid가 300 blocks면 첫 wave는 가득 차지만 둘째 wave는 36
-          blocks만 남아 그 구간에는 slot의 14%만 일합니다. 둘째 원인은 block
-          안의 불균형으로, warp 8개 중 5개가 먼저 끝나도 마지막 warp가 끝날
-          때까지 block slot이 반납되지 않습니다.
+          차이를 만드는 첫 원인은 tail effect입니다. 132개 SM에 block 2개씩 264 slot이 있는데 grid가 300 blocks면 첫 wave는 가득 차지만 둘째
+          wave는 36 blocks만 남아 그 구간에는 slot의 14%만 일합니다. 둘째 원인은 block 안의 불균형입니다. Warp 8개 중 5개가 먼저 끝나도 마지막 warp가
+          끝날 때까지 block slot이 반납되지 않습니다.
         </p>
         <OccupancyWaveViz />
         <p>
-          Occupancy는 최대 active warps 대비 resident warps 비율입니다. 높은
-          occupancy가 자동으로 빠른 것은 아닙니다. Resident warp가 많아도 모두
-          같은 dependency를 기다리면 eligible warp가 부족할 수 있고,
-          reuse·instruction-level parallelism이 충분하면 낮은 occupancy가 더
-          빠를 수도 있습니다.
+          Occupancy는 최대 active warps 대비 resident warps 비율입니다. 높은 occupancy가 자동으로 빠른 것은 아닙니다. Resident warp가
+          많아도 모두 같은 dependency를 기다리면 eligible warp가 부족하기도 합니다. 거꾸로 reuse·instruction-level parallelism이 충분하면
+          낮은 occupancy가 더 빠를 때도 있습니다.
         </p>
       </section>
 
@@ -342,11 +332,9 @@ export default function ModernCudaRegisterPressureArticle() {
           </h2>
         </header>
         <p>
-          Spill된 값은 thread별 local address를 얻지만 physical backing은 device
-          memory에 있습니다. 지원 architecture에서 cache hit를 얻을 수 있어도
-          register access와 같은 비용이라고 볼 수 없습니다. Build report의 spill
-          bytes만 보지 말고 local load/store instruction, L2·DRAM traffic와
-          kernel elapsed를 함께 봅니다.
+          Spill된 값은 thread별 local address를 얻지만 physical backing은 device memory에 있습니다. 지원 architecture에서 cache
+          hit를 얻어도 register access와 같은 비용이라고 볼 수 없습니다. Build report의 spill bytes만 보지 말고 local load/store
+          instruction, L2·DRAM traffic와 kernel elapsed를 함께 봅니다.
         </p>
         <p>
           Spill store는 register 값을 local memory로 내리는 <code>STL</code>
@@ -442,10 +430,8 @@ export default function ModernCudaRegisterPressureArticle() {
           dependency가 그대로면 채택 근거가 아닙니다.
         </p>
         <p>
-          Theoretical과 achieved를 함께 적으면 다음 조치가 갈립니다.
-          Theoretical이 낮으면 register나 shared memory를 줄이는 문제이고,
-          theoretical은 높은데 achieved가 낮으면 grid 크기나 block 안의 일
-          분배를 고치는 문제입니다.
+          Theoretical과 achieved를 함께 적으면 다음 조치가 갈립니다. Theoretical이 낮으면 register나 shared memory를 줄여야 합니다.
+          Theoretical은 높은데 achieved가 낮다면 고칠 곳은 grid 크기나 block 안의 일 분배입니다.
         </p>
         <p>
           이 자원 경계가 실제 fusion 판단에 어떻게 들어가는지는

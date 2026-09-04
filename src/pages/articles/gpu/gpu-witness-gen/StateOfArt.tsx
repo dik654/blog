@@ -49,8 +49,7 @@ export default function StateOfArt() {
           href="https://github.com/Consensys/gnark"
         >
           <p className="text-xs">
-            gnark의 solver는 제약을 레벨별로 분류한 뒤 Go goroutine으로 병렬
-            실행한다. 8코어 CPU에서 순차 대비 4-8배 가속을 달성한다.
+            gnark의 solver는 제약을 레벨별로 분류한 뒤 Go goroutine으로 병렬 실행한다. 8코어 CPU에서 순차 실행보다 4-8배 빠르다.
           </p>
         </CitationBlock>
 

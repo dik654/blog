@@ -125,9 +125,8 @@ export default function BatchHash() {
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Neptune과 ec-gpu</h3>
         <p>
-          Neptune은 Filecoin의 Rust GPU Poseidon 라이브러리다. ec-gpu-gen의 Fp
-          커널 위에 Poseidon 라운드를 구성하며, arity 2/4/8/11에 대해 사전
-          계산된 MDS 행렬과 라운드 상수를 내장한다.
+          Neptune은 Filecoin의 Rust GPU Poseidon 라이브러리다. ec-gpu-gen의 Fp 커널 위에 Poseidon 라운드를 구성한다. arity
+          2/4/8/11에 대해서는 사전 계산된 MDS 행렬과 라운드 상수를 내장한다.
         </p>
       </div>
     </section>

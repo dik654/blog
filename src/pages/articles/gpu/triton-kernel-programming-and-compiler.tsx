@@ -23,10 +23,9 @@ export default function TritonKernelProgrammingAndCompilerArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            CUDA kernel 은 thread 하나가 원소 하나를 다루는 scalar program 이고, Triton kernel 은
-            program instance 하나가 BLOCK_SIZE 개의 원소를 한 번에 다루는 block program 입니다.
-            프로그래머는 block 안의 원소가 어느 thread 에 배정되는지를 쓰지 않고, compiler 가
-            그 배정과 메모리 접근 순서를 정합니다.
+            CUDA kernel 은 thread 하나가 원소 하나를 다루는 scalar program 이고 Triton kernel 은 program instance 하나가
+            BLOCK_SIZE 개의 원소를 한 번에 다루는 block program 입니다. 프로그래머는 block 안의 원소가 어느 thread 에 배정되는지를 쓰지 않습니다. 그
+            배정과 메모리 접근 순서는 compiler 가 정합니다.
           </p>
           <p>
             Triton 은 Python 문법 위에 얹힌 kernel DSL 입니다. <code>@triton.jit</code> 을 붙인
@@ -125,8 +124,8 @@ export default function TritonKernelProgrammingAndCompilerArticle() {
           </p>
           <p>
             Config 하나는 BLOCK_SIZE_M·BLOCK_SIZE_N·BLOCK_SIZE_K·GROUP_SIZE_M 같은 constexpr 값과
-            num_warps·num_stages 의 묶음입니다. 이 묶음 하나가 곧 kernel variant 하나이고,
-            config 목록 전체가 autotuning search space 입니다.
+            num_warps·num_stages 의 묶음입니다. 이 묶음 하나가 곧 kernel variant 하나이고 config 목록 전체가 autotuning search space
+            입니다.
           </p>
           <p>
             Config 6개에 서로 다른 (M, N, K) 가 2개 들어오면 첫 호출마다 6개 variant 를 컴파일하고
@@ -176,27 +175,20 @@ export default function TritonKernelProgrammingAndCompilerArticle() {
             specialization 입니다.
           </p>
           <p>
-            셋째가 눈에 덜 띄는 부분입니다. 정수 인자는 값이 16 의 배수인지, 1 과 같은지로 나뉘고,
-            pointer 인자는 16 byte 정렬 여부로 나뉩니다. N = 4096 과 N = 4100 은 둘 다 runtime
-            정수인데 전자만 16 의 배수이므로 서로 다른 variant 로 컴파일됩니다. 이것이 shape
-            specialization 입니다.
+            셋째가 눈에 덜 띄는 부분입니다. 정수 인자는 값이 16 의 배수인지, 1 과 같은지로 나뉘고 pointer 인자는 16 byte 정렬 여부로 나뉩니다. N = 4096 과 N
+            = 4100 은 둘 다 runtime 정수인데 전자만 16 의 배수이므로 서로 다른 variant 로 컴파일됩니다. 이것이 shape specialization 입니다.
           </p>
           <p>
-            Compiler 가 이 성질을 원하는 이유는 vectorization 때문입니다. 정렬된 pointer 와 16
-            의 배수 길이를 알면 lane 여러 개를 128-bit load 하나로 묶을 수 있고, stride 가 1 이면
-            곱셈을 없앨 수 있습니다. 성질을 모르는 채 컴파일하면 이 최적화를 포기해야 합니다.
+            Compiler 가 이 성질을 원하는 이유는 vectorization 때문입니다. 정렬된 pointer 와 16 의 배수 길이를 알면 lane 여러 개를 128-bit load
+            하나로 묶을 수 있고 stride 가 1 이면 곱셈을 없앨 수 있습니다. 성질을 모르는 채 컴파일하면 이 최적화를 포기해야 합니다.
           </p>
           <p>
-            비용은 variant 수입니다. 매 호출 길이가 달라지는 workload 에서 16 의 배수 여부가
-            섞이면 같은 kernel 이 두 번 컴파일되고, autotune 과 곱해지면 config 수 × 2 가 됩니다.
-            앞 절의 예에서 (M, N, K) 두 shape 이 하나는 16 의 배수이고 하나는 아니라면 12개
-            variant 가 전부 별개 코드입니다.
+            비용은 variant 수입니다. 매 호출 길이가 달라지는 workload 에서 16 의 배수 여부가 섞이면 같은 kernel 이 두 번 컴파일되고 autotune 과 곱해지면
+            config 수 × 2 가 됩니다. 앞 절의 예에서 (M, N, K) 두 shape 이 하나는 16 의 배수이고 하나는 아니라면 12개 variant 가 전부 별개 코드입니다.
           </p>
           <p>
-            둘 다 16 의 배수라면 autotune 의 key 는 두 번 갈리지만 JIT cache key 는 config 마다
-            하나뿐이라 컴파일은 6번이고, 두 번째 shape 의 탐색은 컴파일된 variant 를 다시 실행만
-            합니다. Autotune key 와 JIT cache key 가 다른 층이라는 점이 컴파일 시간을 셀 때의
-            핵심입니다.
+            둘 다 16 의 배수라면 autotune 의 key 는 두 번 갈리지만 JIT cache key 는 config 마다 하나뿐이라 컴파일은 6번입니다. 두 번째 shape 의
+            탐색은 컴파일된 variant 를 다시 실행만 합니다. Autotune key 와 JIT cache key 가 다른 층이라는 점이 컴파일 시간을 셀 때의 핵심입니다.
           </p>
           <p>
             Variant 폭발을 막는 손잡이는 <code>do_not_specialize</code> 입니다. 여기에 넣은 인자는
@@ -223,9 +215,8 @@ export default function TritonKernelProgrammingAndCompilerArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Triton compiler 는 MLIR 위에 지어진 여러 단계의 lowering 입니다. Python AST 가
-            Triton IR(ttir)이 되고, GPU 배치 정보가 붙은 TritonGPU IR(ttgir)을 거쳐 LLVM IR 로,
-            그리고 NVIDIA 라면 PTX 와 cubin 으로 내려갑니다. Block 을 warp 와 thread 에 나누는
+            Triton compiler 는 MLIR 위에 지어진 여러 단계의 lowering 입니다. Python AST 가 Triton IR(ttir)이 되고 GPU 배치 정보가 붙은
+            TritonGPU IR(ttgir)을 거쳐 LLVM IR 로, 그리고 NVIDIA 라면 PTX 와 cubin 으로 내려갑니다. Block 을 warp 와 thread 에 나누는
             결정은 전부 ttgir 단계에서 일어납니다.
           </p>
           <p>
@@ -233,9 +224,8 @@ export default function TritonKernelProgrammingAndCompilerArticle() {
             한 dialect 를 더 낮은 dialect 로 점진적으로 바꾸는 pass 를 재사용하게 합니다.
           </p>
           <p>
-            Triton 은 자기 연산(tl.load, tl.dot)을 담는 dialect 를 정의하고 MLIR 의 pass 기반
-            시설과 LLVM backend 를 빌려 씁니다. 2019년 논문의 Triton-IR 은 LLVM 위에 직접
-            지어졌고, MLIR 이행은 그 이후입니다.
+            Triton 은 자기 연산(tl.load, tl.dot)을 담는 dialect 를 정의하고 MLIR 의 pass 기반 시설과 LLVM backend 를 빌려 씁니다. 2019년
+            논문의 Triton-IR 은 LLVM 위에 직접 지어졌고 MLIR 이행은 그 이후입니다.
           </p>
           <p>
             Triton IR 은 hardware 를 모르는 block 연산의 dataflow 입니다. Inlining, 공통식 제거,
@@ -247,9 +237,8 @@ export default function TritonKernelProgrammingAndCompilerArticle() {
             num_warps 개 warp 와 그 안의 thread 에 어떻게 배분하는지를 적은 attribute 입니다.
           </p>
           <p>
-            coalesce pass 가 연속 offset 의 load 에 맞춘 layout 을 고르고, accelerate-matmul 이
-            tl.dot 의 operand 를 tensor core 가 요구하는 layout 으로 바꾸며,
-            remove-layout-conversions 가 그 사이의 불필요한 변환을 지웁니다.
+            coalesce pass 가 연속 offset 의 load 에 맞춘 layout 을 고릅니다. accelerate-matmul 은 tl.dot 의 operand 를 tensor
+            core 가 요구하는 layout 으로 바꾸고 그 사이의 불필요한 변환은 remove-layout-conversions 가 지웁니다.
           </p>
           <p>
             num_stages 는 pipeline pass 에서 쓰입니다. K 루프의 load 를 단계 수만큼 앞서 발행하고
@@ -258,10 +247,9 @@ export default function TritonKernelProgrammingAndCompilerArticle() {
             쓴 코드에는 이 구조가 한 줄도 없습니다.
           </p>
           <p>
-            Halide 나 TVM 은 알고리즘과 schedule(tiling·vectorize·순서)을 분리해 프로그래머가
-            schedule 을 따로 적게 합니다. Triton 은 그 schedule 을 언어에서 없앴습니다. Block 크기와
-            num_warps 만 받고 나머지 배치와 순서를 compiler 가 dataflow 분석으로 정하는 것이 Triton
-            의 schedule abstraction 이며, 대가는 그 결정을 손으로 뒤집을 자리가 거의 없다는 점입니다.
+            Halide 나 TVM 은 알고리즘과 schedule(tiling·vectorize·순서)을 분리해 프로그래머가 schedule 을 따로 적게 합니다. Triton 은 그
+            schedule 을 언어에서 없앴습니다. Block 크기와 num_warps 만 받고 나머지 배치와 순서를 compiler 가 dataflow 분석으로 정하는 것이 Triton
+            의 schedule abstraction 입니다. 대가는 그 결정을 손으로 뒤집을 자리가 거의 없다는 점입니다.
           </p>
           <p>
             Automatic vectorization 은 이 흐름의 결과물입니다. Layout 이 한 thread 에 연속 원소
@@ -271,9 +259,8 @@ export default function TritonKernelProgrammingAndCompilerArticle() {
             얻습니다.
           </p>
           <p>
-            같은 kernel 에서 offset 이 stride 로 띄엄띄엄이면 layout 이 연속 배정을 만들 수 없어
-            vectorization 이 사라지고, 성능이 몇 배 떨어져도 코드는 그대로 컴파일됩니다.
-            Triton 이 자동으로 해 준다는 말은 조건이 맞을 때 자동이라는 뜻입니다.
+            같은 kernel 에서 offset 이 stride 로 띄엄띄엄이면 layout 이 연속 배정을 만들 수 없어 vectorization 이 사라지고 성능이 몇 배 떨어져도
+            코드는 그대로 컴파일됩니다. Triton 이 자동으로 해 준다는 말은 조건이 맞을 때 자동이라는 뜻입니다.
           </p>
         </div>
         <ProgressiveDetail
@@ -312,10 +299,9 @@ export default function TritonKernelProgrammingAndCompilerArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            같은 fused softmax 를 두 언어로 쓰면 Triton 쪽은 row 하나를 block 으로 읽어 max·exp·sum
-            을 tl 연산 몇 줄로 적고 끝나고, CUDA 쪽은 warp reduction, shared memory 의 partial
-            sum, 경계 thread 처리를 직접 씁니다. 개발 비용의 차이는 이 코드 양이 아니라 register
-            와 shared memory 배치를 누가 검증하느냐에서 옵니다.
+            같은 fused softmax 를 두 언어로 쓰면 Triton 쪽은 row 하나를 block 으로 읽어 max·exp·sum 을 tl 연산 몇 줄로 적고 끝납니다. CUDA
+            쪽은 warp reduction, shared memory 의 partial sum, 경계 thread 처리를 직접 씁니다. 개발 비용의 차이는 이 코드 양이 아니라
+            register 와 shared memory 배치를 누가 검증하느냐에서 옵니다.
           </p>
           <p>
             제어 범위는 반대 방향입니다. CUDA 에서는 warp specialization 으로 load warp 와 MMA warp
@@ -328,21 +314,18 @@ export default function TritonKernelProgrammingAndCompilerArticle() {
             num_warps·num_stages·block 크기 정도입니다.
           </p>
           <p>
-            성능 재현 조건도 다릅니다. Triton 공식 tutorial 은 fused softmax 에서 naive PyTorch
-            대비 약 4배를 보고하지만, 그 조건은 row 하나가 SRAM 에 들어가는 크기이고 비교 대상이
-            fusion 없는 구현이라는 점을 함께 적습니다. Matmul 은 cuBLAS 와 비슷한 수준을 저자
-            자기보고로 제시하며, GPU 세대와 dtype·shape 이 바뀌면 다시 재야 하는 수치입니다.
+            성능 재현 조건도 다릅니다. Triton 공식 tutorial 은 fused softmax 에서 naive PyTorch 대비 약 4배를 보고하지만 그 조건은 row 하나가
+            SRAM 에 들어가는 크기이고 비교 대상이 fusion 없는 구현이라는 점을 함께 적습니다. Matmul 은 cuBLAS 와 비슷한 수준을 저자 자기보고로 제시하며, GPU
+            세대와 dtype·shape 이 바뀌면 다시 재야 하는 수치입니다.
           </p>
           <p>
-            컴파일 시간도 축 하나입니다. CUDA 는 빌드 시점에 한 번 컴파일되고, Triton 은 첫 호출
-            시점에 variant 마다 컴파일됩니다. Serving 처럼 shape 이 다양한 환경에서는 앞 절의
-            variant 수가 warmup 시간과 cache 크기로 그대로 나타납니다.
+            컴파일 시간도 축 하나입니다. CUDA 는 빌드 시점에 한 번 컴파일되고 Triton 은 첫 호출 시점에 variant 마다 컴파일됩니다. Serving 처럼 shape 이
+            다양한 환경에서는 앞 절의 variant 수가 warmup 시간과 cache 크기로 그대로 나타납니다.
           </p>
           <p>
-            판정의 축은 셋입니다. 이 kernel 의 병목이 compiler pass 가 다루는 패턴 안에 있는가,
-            hardware 기능 중 pass 가 아직 내지 못하는 것을 써야 하는가, 그리고 이 팀이 CUDA 의
-            검증 비용을 감당할 수 있는가입니다. 세 답이 모두 Triton 쪽이면 Triton 이 싸고, 하나라도
-            CUDA 쪽이면 두 구현을 같은 shape 에서 재 본 뒤 고릅니다.
+            이 kernel 의 병목이 compiler pass 가 다루는 패턴 안에 있는가, hardware 기능 중 pass 가 아직 내지 못하는 것을 써야 하는가, 이 팀이 CUDA
+            의 검증 비용을 감당할 수 있는가. 판정의 축은 이 셋입니다. 세 답이 모두 Triton 쪽이면 Triton 이 싸고 하나라도 CUDA 쪽이면 두 구현을 같은 shape 에서
+            재 본 뒤 고릅니다.
           </p>
           <p>
             CUDA·CUTLASS·CuTe·Triton 네 층이 각각 무엇을 소유하는지의 지도는

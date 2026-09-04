@@ -12,7 +12,11 @@ export default function ModernMsmGpuArticle() {
     <section id="overview" className="space-y-6">
       <header className="space-y-3"><p className="text-sm font-semibold text-primary">Scalar-point pairs를 device 작업표로 바꾸기</p><h2 className="text-3xl font-bold tracking-tight">GPU MSM은 점을 많이 더하는 문제가 아니라, window digit의 충돌과 bucket reduction을 재현 가능하게 배치하는 문제다</h2></header>
       <p className="text-lg leading-8 text-foreground/90">Multi-scalar multiplication(MSM)은 여러 scalar와 curve point를 받아 하나의 point를 만듭니다. 수학적 정의와 Pippenger의 원리는 <a className="text-primary hover:underline" href="/crypto/elliptic-curves#g1-curve">타원곡선 정본</a>이 소유하고, 이 글은 고정된 curve·scalar encoding·입력 길이를 pinned sppark CUDA 작업으로 내리는 경계만 다룹니다.</p>
-      <p>공통 예제는 coefficient polynomial에서 나온 scalar 8개와 같은 길이의 SRS points입니다. 먼저 scalar를 signed window digits로 나눈 뒤 같은 digit을 가진 point를 bucket에 모으고, running sum으로 window 결과를 만든 다음 높은 window부터 결합합니다. “GPU니까 모두 독립”인 것이 아니라 같은 bucket을 갱신하는 충돌을 누가 소유할지 정해야 합니다.</p>
+      <p>
+            공통 예제는 coefficient polynomial에서 나온 scalar 8개와 같은 길이의 SRS points입니다. 먼저 scalar를 signed window
+            digits로 나눈 뒤 같은 digit을 가진 point를 bucket에 모으고 running sum으로 window 결과를 만든 다음 높은 window부터 결합합니다.
+            “GPU니까 모두 독립”인 것이 아니라 같은 bucket을 갱신하는 충돌을 누가 소유할지 정해야 합니다.
+          </p>
       <ModernMsmGpuViz />
       <ContentBoundary article="msm-gpu-impl" />
     </section>
