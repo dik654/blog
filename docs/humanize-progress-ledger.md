@@ -128,7 +128,14 @@ finalize가 monolith 자체 등급 B를 판단해 리듬 분산까지 추가 수
 softmax 계산식·4차원 벡터 좌표의 괄호 숫자를 각주로 오탐한 것으로 확인. prose-readability 4건
 +2는 동일 E-1 패턴.
 
-남은 ai: 663개 파일(28개 서브배치, wave3부터 계속).
+| 9(wave3 aq~ax) | ai(192개 파일), 8개 서브배치(light 2·standard 2·heavy 4, 전부 finalize) | 704 추출 → 234 반영 | 등급 A×8 · 게이트 golden FAIL 1건 오탐 확인 후 진행 | `fe48cb47` |
+
+**ai wave3 완료**(576/1,047). au 배치에서 monolith 자체검증 신뢰성 문제 실증 — "C-11 잔존 2건"이라던
+자체보고가 finalizer 재검증 결과 실제 12건으로 드러남(10건 추가 제거). 원문 자체 내부 불일치("세
+절차"↔"다섯 단계")도 발견했으나 윤문 유래가 아닌 원문 결함으로 판정해 미수정·기록만. golden FAIL
+1건은 BM25 공식 "22/11.2)" 오탐. prose-readability는 이번 wave 소폭 상승 0건(신규 진입 1건만).
+
+남은 ai: 471개 파일(20개 서브배치, wave4부터 계속).
 
 `gpu-arch-hopper.tsx` 같은 조립 파일은 자체 `<p>`가 없고 프로즈가 하위 섹션 파일에 있다는 걸
 test 배치에서 확인했다 — 그래서 배치2부터는 `find ... -not -path "*/viz/*" -not -path
