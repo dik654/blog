@@ -11,11 +11,9 @@ export default function ConnectionPoll() {
           “substream protocol이 겹치지 않았다”를 한 timeout으로 뭉개지 않습니다.
         </p>
         <p>
-          Release gate는 정상 dial뿐 아니라 여러 address race의 loser 취소, 잘못된
-          PeerId, signature 실패, unsupported protocol, remote reset, queue saturation,
-          idle timeout과 graceful shutdown을 포함합니다. 성공 기준은 event loop가 오래
-          돌았다는 사실이 아니라 bounded memory 안에서 각 실패가 올바른 owner로
-          돌아가고, stale connection·task·timer가 남지 않는 것입니다.
+          Release gate는 정상 dial뿐 아니라 여러 address race의 loser 취소, 잘못된 PeerId, signature 실패, unsupported
+          protocol, remote reset, queue saturation, idle timeout과 graceful shutdown을 포함합니다. 성공 기준은 event loop가
+          오래 돌았다는 사실이 아니라 bounded memory 안에서 각 실패가 올바른 owner로 돌아가고 stale connection·task·timer가 남지 않는 것입니다.
         </p>
         <h3>한 connection trace의 완료 조건</h3>
         <ol>

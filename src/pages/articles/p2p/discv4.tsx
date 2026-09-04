@@ -11,12 +11,9 @@ export default function Discv4Article() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Alice의 새 실행 클라이언트가 bootnode 주소 하나만 알고 시작한다고
-            하자. Node Discovery Protocol v4, 즉 discv4는 UDP로 PING/PONG을
-            주고받고 Kademlia-like table에서 목표 ID에 가까운 후보를 찾는다.
-            여기서 얻는 것은 node identity와 endpoint가 담긴 발견 결과다.
-            RLPx 연결, ETH capability 협상, block 동기화는 그 다음 transport와
-            application protocol의 책임이다.
+            Alice의 새 실행 클라이언트가 bootnode 주소 하나만 알고 시작한다고 하자. Node Discovery Protocol v4, 즉 discv4는 UDP로
+            PING/PONG을 주고받고 Kademlia-like table에서 목표 ID에 가까운 후보를 찾는다. 여기서 얻는 것은 node identity와 endpoint가 담긴 발견
+            결과다. RLPx 연결, ETH capability 협상, block 동기화는 그다음 transport와 application protocol의 책임이다.
           </p>
           <p>
             고정 흐름은 bootnode packet 검증 → endpoint proof → FINDNODE와
@@ -83,12 +80,9 @@ export default function Discv4Article() {
         <h2 className="mb-6 text-2xl font-bold">PING/PONG은 endpoint proof이지 세션 handshake가 아니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Alice가 Bob에게 PING을 보내고, Bob의 PONG에 최근 PING의 hash가
-            들어 있으면 Alice는 그 응답을 요청과 맞춘다. 반대 방향에서 Bob도
-            Alice의 valid PONG을 최근 12시간 안에 받았을 때 Alice가 discovery에
-            실제 참여한다고 본다. 규격이 이 endpoint proof를 요구하는 이유는
-            작은 spoofed FINDNODE가 피해자에게 큰 NEIGHBORS traffic을 보내는
-            amplification을 줄이기 위해서다.
+            Alice가 Bob에게 PING을 보내고 Bob의 PONG에 최근 PING의 hash가 들어 있으면 Alice는 그 응답을 요청과 맞춘다. 반대 방향에서 Bob도 Alice의
+            valid PONG을 최근 12시간 안에 받았을 때 Alice가 discovery에 실제 참여한다고 본다. 규격이 이 endpoint proof를 요구하는 이유는 작은
+            spoofed FINDNODE가 피해자에게 큰 NEIGHBORS traffic을 보내는 amplification을 줄이기 위해서다.
           </p>
           <p>
             이 과정은 shared session key를 만들지 않고 encryption도 추가하지
@@ -139,11 +133,9 @@ export default function Discv4Article() {
             에서 다룬다.
           </p>
           <p>
-            배포 검증에는 protocol version 4, devp2p spec revision과 확인 날짜,
-            client semver·commit SHA를 함께 고정한다. Hash·signature·expiry,
-            fresh/stale proof, partial NEIGHBORS, ENR sequence와 dial outcome을
-            같은 packet fixture로 비교하고 packet 수·byte·pending state 상한을
-            넘으면 canary를 중단해 이전 build로 돌린다.
+            배포 검증에는 protocol version 4, devp2p spec revision과 확인 날짜, client semver·commit SHA를 함께 고정한다.
+            Hash·signature·expiry, fresh/stale proof, partial NEIGHBORS, ENR sequence와 dial outcome은 같은 packet
+            fixture로 비교한다. packet 수·byte·pending state 상한을 넘으면 canary를 중단해 이전 build로 돌린다.
           </p>
         </div>
 

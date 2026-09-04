@@ -9,12 +9,10 @@ export default function RecordProtocol() {
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          AEAD(Authenticated Encryption with Associated Data)는 plaintext를
-          숨기는 encryption과 변조를 검출하는 authentication tag를 한
-          interface로 묶습니다. TLS 1.3은 handshake에서 방향별 traffic secret을
-          만든 뒤, sender와 receiver가 같은 sequence number를 따라 record마다
-          nonce를 바꿉니다. Header는 암호화하지 않지만 associated data로
-          인증하므로 content와 함께 변조를 검출합니다.
+          AEAD(Authenticated Encryption with Associated Data)는 plaintext를 숨기는 encryption과 변조를 검출하는
+          authentication tag를 한 interface로 묶습니다. TLS 1.3은 handshake에서 방향별 traffic secret을 만든 뒤 sender와
+          receiver가 같은 sequence number를 따라 record마다 nonce를 바꿉니다. Header는 암호화하지 않지만 associated data로 인증하므로
+          content와 함께 변조를 검출합니다.
         </p>
       </div>
       <div className="not-prose my-8">
@@ -86,11 +84,9 @@ P_i &= \underbrace{\text{content}\,\|\,\text{inner type}\,\|\,\text{zero padding
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>무엇이 보이고 무엇이 숨겨지는지 구분합니다</h3>
         <p>
-          TLS 1.3 protected record의 outer content type은 application_data로
-          보이고 실제 inner content type은 ciphertext 안에 들어갑니다. 그러나
-          record length, 전송 시각, endpoint IP 같은 metadata까지 사라지는 것은
-          아닙니다. Padding은 길이 패턴을 완화하지만 bandwidth 비용이 들며,
-          일정하지 않은 padding 정책은 오히려 fingerprint가 될 수도 있습니다.
+          TLS 1.3 protected record의 outer content type은 application_data로 보이고 실제 inner content type은
+          ciphertext 안에 들어갑니다. 그래도 record length와 전송 시각, endpoint IP 같은 metadata는 그대로 남습니다. Padding은 길이 패턴을
+          완화하는 대신 bandwidth 비용이 듭니다. 일정하지 않은 padding 정책은 오히려 fingerprint가 될 수도 있습니다.
         </p>
       </div>
     </section>

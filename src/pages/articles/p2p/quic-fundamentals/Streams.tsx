@@ -9,11 +9,9 @@ export default function Streams() {
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          QUIC stream은 byte offset을 가진 ordered sequence입니다. 하나의
-          packet에 여러 stream frame이 들어갈 수 있고, 한 stream frame도 여러
-          packet으로 나뉠 수 있습니다. Receiver는 packet 도착 순서가 아니라
-          stream ID와 offset으로 bytes를 재조립하며, 중간 offset이 비면 그
-          stream만 해당 구간에서 기다립니다.
+          QUIC stream은 byte offset을 가진 ordered sequence입니다. 하나의 packet에 여러 stream frame이 들어갈 수 있고 한 stream
+          frame이 여러 packet으로 나뉘기도 합니다. Receiver는 packet 도착 순서와 무관하게 stream ID와 offset으로 bytes를 재조립합니다. 중간
+          offset이 비면 그 stream만 해당 구간에서 기다립니다.
         </p>
       </div>
       <div className="not-prose my-8">
@@ -82,12 +80,9 @@ o_s + \ell_s &\le \underbrace{M_s,}_{\text{stream offset 계산}}\\
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Loss isolation과 자원 격리는 다릅니다</h3>
         <p>
-          Stream A의 offset 100–199가 유실돼도 Stream B의 연속 bytes는
-          application에 전달할 수 있습니다. 그러나 두 stream은 congestion
-          controller, connection MAX_DATA, CPU와 socket buffer를 공유하므로 A가
-          다른 자원까지 전혀 방해하지 않는 것은 아닙니다. Priority와 per-stream
-          quota는 application protocol이나 implementation scheduler가 추가로
-          설계해야 합니다.
+          Stream A의 offset 100–199가 유실돼도 Stream B의 연속 bytes는 application에 전달할 수 있습니다. 다만 두 stream은 congestion
+          controller, connection MAX_DATA, CPU와 socket buffer를 공유하므로 A가 다른 자원에 주는 영향은 그대로 남습니다. Priority와 per-
+          stream quota는 application protocol이나 implementation scheduler가 추가로 설계하는 몫입니다.
         </p>
       </div>
     </section>

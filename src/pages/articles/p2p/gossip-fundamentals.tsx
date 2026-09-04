@@ -12,18 +12,14 @@ export default function GossipFundamentalsArticle() {
         <h2 className="mb-6 text-2xl font-bold">문제: 중앙 방송자 없이 소식을 퍼뜨리기</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            모든 peer에게 직접 보내는 flooding은 빠르지만 중복과 송신 비용이
-            크고, 하나의 spanning tree는 효율적이지만 링크 하나가 끊기면 하위
-            경로가 막힌다. Gossip은 각 노드가 일부 peer와 반복 교환해 여러 경로로
-            정보를 퍼뜨리는 family다. 확률적 중복을 비용으로 내고 churn과 부분
-            failure에서 복구 경로를 얻는다.
+            모든 peer에게 직접 보내는 flooding은 빠르지만 중복과 송신 비용이 크다. 하나의 spanning tree는 효율적이지만 링크 하나가 끊기면 하위 경로가 막힌다.
+            Gossip은 각 노드가 일부 peer와 반복 교환해 여러 경로로 정보를 퍼뜨리는 family다. 확률적 중복을 비용으로 내고 churn과 부분 failure에서 복구 경로를
+            얻는다.
           </p>
           <p>
-            먼저 push·pull·push-pull의 정보 이동을 보고, membership·overlay·broadcast
-            protocol의 역할을 구분한다. 이어서 GossipSub의 topic mesh, full message와
-            IHAVE/IWANT 경로, peer scoring·validation을 추적한다. “gossip이면 O(log N)”
-            같은 결론은 peer sampling·fanout·동기 round·연결성 전제가 있을 때의
-            분석이지 모든 배포의 latency 보장이 아니다.
+            먼저 push·pull·push-pull의 정보 이동을 본 다음 membership·overlay·broadcast protocol의 역할을 구분한다. 이어서
+            GossipSub의 topic mesh, full message와 IHAVE/IWANT 경로, peer scoring·validation을 추적한다. “gossip이면
+            O(log N)” 같은 결론은 peer sampling·fanout·동기 round·연결성 전제가 있을 때의 분석이지 모든 배포의 latency 보장이 아니다.
           </p>
         </div>
         <div className="not-prose my-8">
@@ -66,18 +62,14 @@ export default function GossipFundamentalsArticle() {
         </div>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            SWIM은 random direct probe와 indirect probe로 failure suspicion을 만들고,
-            membership update를 message에 piggyback한다. HyParView는 소수의 active
-            connection과 더 큰 passive backup view를 관리한다. Plumtree는 eager
-            push tree와 lazy announcement를 결합해 missing message 경로를 복구한다.
-            서로 보완할 수 있지만 같은 protocol의 세 이름은 아니다.
+            SWIM은 random direct probe와 indirect probe로 failure suspicion을 만들고 membership update를 message에
+            piggyback한다. HyParView는 소수의 active connection과 더 큰 passive backup view를 관리한다. Plumtree는 eager push
+            tree와 lazy announcement를 결합해 missing message 경로를 복구한다. 서로 보완할 수 있지만 같은 protocol의 세 이름은 아니다.
           </p>
           <p>
-            Failure detector의 suspect는 “죽음의 증명”이 아니다. Timeout은 load와
-            partition에서도 생긴다. Overlay diversity는 peer 선택의 입력을 만들고,
-            broadcast validation은 message별 accept/reject를 결정한다. 구현을 고를
-            때 membership accuracy, connection budget, delivery latency·duplication을
-            같은 지표로 섞지 않는다.
+            Failure detector의 suspect는 “죽음의 증명”이 아니다. Timeout은 load와 partition에서도 생긴다. Overlay diversity는 peer
+            선택의 입력을 만들고 broadcast validation은 message별 accept/reject를 결정한다. 구현을 고를 때 membership accuracy,
+            connection budget, delivery latency·duplication을 같은 지표로 섞지 않는다.
           </p>
         </div>
         <CitationBlock
@@ -134,17 +126,14 @@ export default function GossipFundamentalsArticle() {
         </div>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            수신 pipeline은 먼저 frame·size와 topic을 제한하고, message ID 중복을
-            확인한 뒤 signature·application validator를 수행한다. Invalid message는
-            전파 전에 거절하고 reason을 score·metric에 연결한다. Seen cache의 TTL은
-            무한 loop를 막는 protocol TTL이 아니라 일정 기간 같은 message ID를
-            기억하는 local memory/duplication trade-off다.
+            수신 pipeline은 먼저 frame·size와 topic을 제한하고 message ID 중복을 확인한 뒤 signature·application validator를
+            수행한다. Invalid message는 전파 전에 거절하고 reason을 score·metric에 연결한다. Seen cache의 TTL은 무한 loop를 막는
+            protocol TTL이 아니라 일정 기간 같은 message ID를 기억하는 local memory/duplication trade-off다.
           </p>
           <p>
-            Score는 mesh time, first delivery, mesh delivery deficit, invalid message,
-            IP colocation 같은 항목을 parameter와 decay로 조합한다. Threshold마다
-            gossip·publish·graylist action이 달라질 수 있다. 한 숫자를 정직함의
-            확률로 해석하지 말고, score component와 action reason을 함께 기록한다.
+            Score는 mesh time, first delivery, mesh delivery deficit, invalid message, IP colocation 같은 항목을
+            parameter와 decay로 조합한다. Threshold마다 gossip·publish·graylist action이 달라질 수 있다. 한 숫자를 정직함의 확률로 해석하지
+            말고 score component와 action reason을 함께 기록한다.
           </p>
           <h3>Release와 운영 체크</h3>
           <ul>

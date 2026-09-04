@@ -13,25 +13,20 @@ export default function Discv5Article() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Alice가 Bob의 ENR 하나를 bootstrapping으로 얻었다고 하자. Node
-            Discovery Protocol v5의 현재 규격은 protocol version v5.1이다.
-            Alice는 Bob의 node ID와 UDP endpoint를 사용해 discovery message를
-            보내고, Bob이 key를 모르면 WHOAREYOU challenge를 돌려준다. Alice가
-            identity proof와 ephemeral public key를 담은 handshake packet으로
-            응답하면 두 방향 session key가 만들어진다.
+            Alice가 Bob의 ENR 하나를 bootstrapping으로 얻었다고 하자. Node Discovery Protocol v5의 현재 규격은 protocol version
+            v5.1이다. Alice는 Bob의 node ID와 UDP endpoint를 사용해 discovery message를 보내고 Bob이 key를 모르면 WHOAREYOU
+            challenge를 돌려준다. Alice가 identity proof와 ephemeral public key를 담은 handshake packet으로 응답하면 두 방향
+            session key가 만들어진다.
           </p>
           <p>
-            이 글의 경계는 discovery다. Session은 discovery datagram의
-            confidentiality와 authentication을 제공하지만, 이후 QUIC·TCP·RLPx
-            transport나 application capability를 대신 협상하지 않는다. 고정
-            흐름은 ENR 확인 → WHOAREYOU handshake → key cache → FINDNODE/NODES
-            → 필요하면 TALKREQ/TALKRESP → 별도 transport dial이다.
+            이 글의 경계는 discovery다. Session은 discovery datagram의 confidentiality와 authentication을 제공하지만 이후
+            QUIC·TCP·RLPx transport나 application capability를 대신 협상하지 않는다. 고정 흐름은 ENR 확인 → WHOAREYOU handshake
+            → key cache → FINDNODE/NODES → 필요하면 TALKREQ/TALKRESP → 별도 transport dial이다.
           </p>
           <p>
-            V5.1 discovery packet은 63 byte보다 작거나 1280 byte보다 크면
-            처리하지 않는다. UDP는 loss와 reordering을 허용하며 짧은 timeout을
-            권하지만, 무응답 request 자체를 resend하지 않는다. Lookup은 그
-            candidate를 timeout으로 기록하고 아직 묻지 않은 다음 후보로 간다.
+            V5.1 discovery packet은 63 byte보다 작거나 1280 byte보다 크면 처리하지 않는다. UDP는 loss와 reordering을 허용하며 짧은
+            timeout을 권하지만 무응답 request 자체를 resend하지 않는다. Lookup은 그 candidate를 timeout으로 기록하고 아직 묻지 않은 다음 후보로
+            간다.
           </p>
         </div>
 
@@ -93,11 +88,9 @@ export default function Discv5Article() {
         <h2 className="mb-6 text-2xl font-bold">ECDH 결과를 두 방향 AES-GCM key로 나누기</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Alice는 ephemeral secp256k1 key pair를 만들고 Bob ENR의 static public
-            key와 ECDH를 수행한다. Raw shared secret을 바로 AES key로 쓰지 않고,
-            challenge data를 HKDF salt에 넣고 두 node ID와 role 순서를 info에
-            넣어 32 byte를 유도한다. 앞 16 byte는 initiator가 보내는 방향,
-            뒤 16 byte는 recipient가 보내는 방향의 AES-128-GCM key다.
+            Alice는 ephemeral secp256k1 key pair를 만들고 Bob ENR의 static public key와 ECDH를 수행한다. Raw shared
+            secret을 바로 AES key로 쓰지 않고 challenge data를 HKDF salt에 넣고 두 node ID와 role 순서를 info에 담아 32 byte를
+            유도한다. 앞 16 byte는 initiator가 보내는 방향, 뒤 16 byte는 recipient가 보내는 방향의 AES-128-GCM key다.
           </p>
           <p>
             구현은 ENR signature와 identity key, identity-scheme에 맞는 encoded
@@ -142,11 +135,9 @@ export default function Discv5Article() {
         <h2 className="mb-6 text-2xl font-bold">FINDNODE는 target ID가 아니라 거리 목록을 요청한다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Alice가 target x에 가까운 후보를 찾을 때 Bob과 x의 logarithmic
-            distance를 계산해 FINDNODE에 positive distance 목록을 넣는다.
-            Distance 0은 Bob 자신의 current ENR를 요청하는 특수값이다. Bob은
-            요청한 distance bucket에 맞고 liveness가 검증된 ENR를 모아 NODES로
-            답하며, 권장 result limit은 16개다.
+            Alice가 target x에 가까운 후보를 찾을 때 Bob과 x의 logarithmic distance를 계산해 FINDNODE에 positive distance 목록을
+            넣는다. Distance 0은 Bob 자신의 current ENR를 요청하는 특수값이다. Bob은 요청한 distance bucket에 맞고 liveness가 검증된 ENR를
+            모아 NODES로 답한다. 권장 result limit은 16개다.
           </p>
           <p>
             ENR 한 개가 최대 300 byte라 한 packet에 모두 담기지 않을 수 있다.
@@ -157,9 +148,8 @@ export default function Discv5Article() {
             candidate로 진행하는 lookup policy와 transport retry를 혼동하면 안 된다.
           </p>
           <p>
-            Receiver는 local resource policy로 NODES total 상한을 두고, oversize
-            ENR·wrong distance·bad signature·duplicate를 typed reject로 남긴다.
-            일부 datagram만 오면 partial response와 timeout을 함께 기록해 최종
+            Receiver는 local resource policy로 NODES total 상한을 두고 oversize ENR·wrong distance·bad
+            signature·duplicate를 typed reject로 남긴다. 일부 datagram만 오면 partial response와 timeout을 함께 기록해 최종
             shortlist가 완전한 응답에서 왔다고 가장하지 않는다.
           </p>
           <p>
@@ -175,19 +165,15 @@ export default function Discv5Article() {
         <h2 className="mb-6 text-2xl font-bold">TALKREQ는 작은 discovery 확장 통로다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            TALKREQ는 request ID, protocol byte string, request payload를 session
-            안에서 보낸다. Bob은 반드시 같은 request ID의 TALKRESP로 답하고,
-            protocol을 모르면 empty response를 보낸다. 이는 “지원하지 않음”을
-            typed response로 표현할 뿐 application 성공이나 새 transport stream을
-            만들지 않는다.
+            TALKREQ는 request ID, protocol byte string, request payload를 session 안에서 보낸다. Bob은 반드시 같은 request
+            ID의 TALKRESP로 답하고 protocol을 모르면 empty response를 보낸다. 이는 “지원하지 않음”을 typed response로 표현할 뿐
+            application 성공이나 새 transport stream을 만들지 않는다.
           </p>
           <p>
-            운영자는 1280-byte discovery packet 상한, parser와 handler CPU,
-            per-peer rate limit을 함께 둔다. Oversize, unknown protocol, handler
-            timeout, invalid response와 session expiry를 별도 receipt로 남기고,
-            큰 streaming payload는 적합한 상위 transport로 보낸다. Discv4의
-            signed plaintext packet과 비교하면 discv5의 session 보호 범위가
-            넓지만 Sybil·Eclipse 저항이 자동으로 생기는 것은 아니다.
+            운영자는 1280-byte discovery packet 상한, parser와 handler CPU, per-peer rate limit을 함께 둔다. Oversize,
+            unknown protocol, handler timeout, invalid response와 session expiry는 별도 receipt로 남기고 큰 streaming
+            payload는 적합한 상위 transport로 보낸다. Discv4의 signed plaintext packet과 비교하면 discv5의 session 보호 범위가 넓지만
+            Sybil·Eclipse 저항이 자동으로 생기는 것은 아니다.
           </p>
           <p>
             Discv4와 비교하는 release gate는 v4 signed plaintext와 v5.1

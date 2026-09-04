@@ -49,8 +49,7 @@ export default function Lookup({ title }: { title?: string }) {
 
         <h3>FIND_VALUE (값 조회)</h3>
         <p>
-          FIND_VALUE는 FIND_NODE와 동일하지만, 질의 노드가 해당 키를 알고 있으면
-          즉시 값을 반환합니다.
+          FIND_VALUE는 FIND_NODE와 동일하지만 질의 노드가 해당 키를 알고 있으면 즉시 값을 반환합니다.
         </p>
         <CodePanel
           title="FIND_VALUE & STORE"

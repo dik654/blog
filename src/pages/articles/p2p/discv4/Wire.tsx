@@ -97,8 +97,7 @@ export default function Wire() {
           Decode: MAC 검증 후 공개키 복원
         </h3>
         <p>
-          수신 측은 먼저 MAC을 재계산하여 대조합니다. 일치하면 서명에서 공개키를
-          복원하고, 첫 바이트로 패킷 타입을 판별한 뒤 RLP 디코딩합니다.
+          수신 측은 먼저 MAC을 재계산해 대조합니다. 일치하면 서명에서 공개키를 복원하고 첫 바이트로 패킷 타입을 판별한 뒤 RLP 디코딩합니다.
         </p>
         <CodePanel
           title="v4wire.Decode -- go-ethereum/p2p/discover/v4wire/v4wire.go"

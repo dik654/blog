@@ -38,8 +38,7 @@ export default function Session({
 
         <h3>HKDF-SHA256 키 도출</h3>
         <p>
-          공유 비밀을 HKDF에 입력하여 writeKey(16B) + readKey(16B)를 추출한다.
-          info에 양측 nodeID를 포함하여 방향성을 부여한다.
+          공유 비밀을 HKDF에 입력해 writeKey(16B) + readKey(16B)를 추출한다. info에 양측 nodeID를 담아 방향성을 부여한다.
         </p>
         <div className="not-prose flex flex-wrap gap-2 my-4">
           <CodeViewButton
@@ -59,8 +58,7 @@ export default function Session({
 
         <h3>AES-GCM 암호화</h3>
         <p>
-          세션 키 확립 후 모든 메시지는 AES-128-GCM으로 암호화된다. nonce
-          12바이트, AAD로 패킷 헤더를 사용하여 헤더 변조도 감지한다.
+          세션 키 확립 후 모든 메시지는 AES-128-GCM으로 암호화된다. nonce는 12바이트, AAD로는 패킷 헤더를 써서 헤더 변조도 감지한다.
         </p>
         <div className="not-prose flex flex-wrap gap-2 my-4">
           <CodeViewButton

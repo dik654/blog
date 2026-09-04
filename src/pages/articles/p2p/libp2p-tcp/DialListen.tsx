@@ -4,11 +4,9 @@ export default function DialListen() {
       <h2 className="mb-6 text-2xl font-bold">Dial과 listen은 같은 socket을 만들지만 state와 실패 방향이 다릅니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Outbound dial은 multiaddr component를 순서대로 읽어 TCP가 지원하는 IP·DNS와
-          port 부분을 추출합니다. Unsupported suffix나 빠진 port는 network를 호출하기
-          전에 address error로 거부해야 합니다. DNS를 포함하면 이름 하나가 여러 IP로
-          풀릴 수 있으며, 상위 Transport가 일부 dial future를 race하고 loser를 취소할 수
-          있습니다.
+          Outbound dial은 multiaddr component를 순서대로 읽어 TCP가 지원하는 IP·DNS와 port 부분을 추출합니다. Unsupported suffix나 빠진
+          port는 network를 호출하기 전에 address error로 거부해야 합니다. DNS를 포함하면 이름 하나가 여러 IP로 풀릴 수 있으며 상위 Transport가 일부
+          dial future를 race하고 loser를 취소할 수 있습니다.
         </p>
         <p>
           Nonblocking <code>connect</code>의 in-progress 결과는 실패가 아니라 readiness를

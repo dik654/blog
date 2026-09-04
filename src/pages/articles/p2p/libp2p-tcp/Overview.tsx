@@ -39,10 +39,8 @@ export default function Overview({ onCodeRef }: { onCodeRef?: (key: string, ref:
       <div id="paper-rust-libp2p-tcp" className="prose prose-neutral max-w-none scroll-mt-24 border-l border-primary/50 pl-4 dark:prose-invert">
         <p className="text-xs font-bold text-primary">API 정본 · rust-libp2p TCP</p>
         <p>
-          현재 0.56 문서는 default로 TCP_NODELAY 활성, port reuse 비활성, OS TTL,
-          listen backlog 1024를 명시합니다. 이 숫자는 protocol 보장이 아니라 해당 crate
-          version의 default이며, OS limit과 application load에 따라 실제 동작을 측정해야
-          합니다.
+          현재 0.56 문서는 default로 TCP_NODELAY 활성, port reuse 비활성, OS TTL, listen backlog 1024를 명시합니다. 이 숫자는
+          protocol 보장이 아니라 해당 crate version의 default이며 OS limit과 application load에 따라 실제 동작을 측정해야 합니다.
         </p>
         <CitationBlock source="rust-libp2p 0.56 — TCP Config and Transport" citeKey={1} href="https://docs.rs/libp2p/latest/libp2p/tcp/struct.Config.html">
           Current socket option default와 per-connection PortUse로 이동한 API 경계를 확인합니다.

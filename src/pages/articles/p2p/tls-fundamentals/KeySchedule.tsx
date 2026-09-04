@@ -10,12 +10,9 @@ export default function KeySchedule() {
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          ECDHE output을 그대로 모든 암호 연산에 쓰면 한 용도의 key 노출이나
-          protocol confusion이 다른 용도까지 번질 수 있습니다. HKDF(HMAC-based
-          Extract-and-Expand Key Derivation Function)는 입력 key material을 먼저
-          균일한 pseudorandom key로 추출하고, label과 transcript context를 넣어
-          client/server handshake·application·resumption secret을 따로
-          확장합니다.
+          ECDHE output을 그대로 모든 암호 연산에 쓰면 한 용도의 key 노출이나 protocol confusion이 다른 용도까지 번질 수 있습니다. HKDF(HMAC-based
+          Extract-and-Expand Key Derivation Function)는 입력 key material을 먼저 균일한 pseudorandom key로 추출합니다. 여기에
+          label과 transcript context를 넣어 client/server handshake와 application, resumption secret을 따로 확장합니다.
         </p>
       </div>
       <div className="not-prose my-8">
@@ -87,12 +84,10 @@ K &= \underbrace{\operatorname{ExpandLabel}(S_{role,phase},\text{"key"},\varnoth
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>세 단계와 운영 경계를 함께 봅니다</h3>
         <p>
-          Early secret은 PSK 또는 0에서 시작하고, handshake secret은 ECDHE
-          input을 섞어 handshake traffic key를 만듭니다. Master secret에서는
-          application traffic secret과 exporter·resumption master secret이
-          갈라집니다. KeyUpdate는 현재 application traffic secret에서 다음
-          generation을 만들지만, 이미 탈취된 endpoint가 계속 새 secret을 관찰할
-          수 있는 상황까지 스스로 치유한다고 보장하지 않습니다.
+          Early secret은 PSK 또는 0에서 시작합니다. Handshake secret은 ECDHE input을 섞어 handshake traffic key를 만듭니다.
+          Master secret에서는 application traffic secret과 exporter, resumption master secret이 갈라집니다. KeyUpdate는
+          현재 application traffic secret에서 다음 generation을 만듭니다. 다만 이미 탈취된 endpoint가 계속 새 secret을 관찰할 수 있는 상황까지
+          스스로 치유한다고 보장하지는 않습니다.
         </p>
         <div
           id="paper-rfc5869"
@@ -100,9 +95,8 @@ K &= \underbrace{\operatorname{ExpandLabel}(S_{role,phase},\text{"key"},\varnoth
         >
           <p className="text-xs font-bold text-primary">명세 읽기 · RFC 5869</p>
           <p>
-            RFC 5869은 generic HKDF의 Extract와 Expand를 정의합니다. TLS 1.3의
-            labeled tree는 RFC 8446이 그 primitive 위에 추가한 protocol-specific
-            구조이므로 두 문서의 책임을 구분해야 합니다.
+            RFC 5869은 generic HKDF의 Extract와 Expand를 정의합니다. TLS 1.3의 labeled tree는 RFC 8446이 그 primitive 위에
+            추가한 protocol-specific 구조입니다. 두 문서가 지는 책임은 여기서 갈립니다.
           </p>
           <CitationBlock
             source="IETF RFC 5869 — HMAC-based Extract-and-Expand Key Derivation Function"

@@ -17,11 +17,9 @@ export default function DhtSecurityArticle() {
             공격자에게 몰아 검열·관찰·거짓 응답을 시도할 수 있다.
           </p>
           <p>
-            이 글은 공격을 identity 생성(Sybil), 피해자의 neighbor view 장악
-            (Eclipse), lookup 응답 조작으로 나눈다. 방어는 admission cost,
-            network diversity, independently sourced bootstrap, record validation,
-            bounded retry와 관측을 겹친다. 어떤 한 정책도 “공격 방지”를 보장하지
-            않으므로 남는 우회 경로를 위협 모델에 기록한다.
+            이 글은 공격을 identity 생성(Sybil), 피해자의 neighbor view 장악(Eclipse), lookup 응답 조작으로 나눈다. 방어는 admission
+            cost, network diversity, independently sourced bootstrap, record validation, bounded retry와 관측을
+            겹친다. 어떤 한 정책도 “공격 방지”를 보장하지 않으므로 남는 우회 경로를 위협 모델에 기록한다.
           </p>
         </div>
         <ExplainedFormula
@@ -57,11 +55,9 @@ export default function DhtSecurityArticle() {
             달려 있다.
           </p>
           <p>
-            방어 선택지는 permissioned identity, stake·work 같은 자원비용,
-            rate limit, subnet/ASN diversity, 기존 연결의 수명 우선, 여러 source의
-            peer sampling이다. 자원비용은 자본 집중과 onboarding 비용을 만들고,
-            IP quota는 NAT 사용자를 과도하게 제한하면서 multi-prefix 공격자는
-            통과시킬 수 있다.
+            방어 선택지는 permissioned identity, stake·work 같은 자원비용, rate limit, subnet/ASN diversity, 기존 연결의 수명 우선,
+            여러 source의 peer sampling이다. 자원비용은 자본 집중과 onboarding 비용을 낳고 IP quota는 NAT 사용자를 과도하게 제한하면서 multi-
+            prefix 공격자는 통과시킬 수 있다.
           </p>
         </div>
         <CitationBlock
@@ -70,10 +66,8 @@ export default function DhtSecurityArticle() {
           href="https://www.microsoft.com/en-us/research/wp-content/uploads/2002/01/IPTPS2002.pdf"
         >
           <p id="paper-sybil" className="text-sm leading-6">
-            논문은 중앙의 신뢰된 식별 권한이 없는 분산 환경에서 entity와
-            identity의 일대일 대응을 일반적으로 보장하기 어렵다는 문제를
-            정식화한다. 모든 최신 DHT 구현이 동일 공격 능력·비용을 갖는다는
-            실험 결과로 일반화하지 않는다.
+            논문은 중앙의 신뢰된 식별 권한이 없는 분산 환경에서는 entity와 identity를 일대일로 대응시키기 어렵다는 문제를 정식화한다. 모든 최신 DHT 구현의 공격
+            능력·비용이 같다는 실험 결과로 일반화하지 않는다.
           </p>
         </CitationBlock>
       </section>
@@ -85,11 +79,9 @@ export default function DhtSecurityArticle() {
         </div>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Eclipse는 피해자의 inbound·outbound 이웃이나 lookup shortlist를
-            공격자 peer로 둘러싸 외부의 정직한 정보를 보지 못하게 만드는 결과다.
-            Sybil은 이를 위한 수단일 수 있지만 identity가 많다고 자동으로 eclipse가
-            완성되지는 않는다. 주소 table poisoning, 재시작 시 seed 선택, eviction,
-            target-near ID 생성과 connection policy를 함께 봐야 한다.
+            Eclipse는 공격자 peer가 피해자의 inbound·outbound 이웃이나 lookup shortlist를 둘러싸 외부의 정직한 정보를 보지 못하게 된 결과다.
+            Sybil은 이를 위한 수단일 수 있지만 identity가 많다고 자동으로 eclipse가 완성되지는 않는다. 주소 table poisoning, 재시작 시 seed 선택,
+            eviction, target-near ID 생성과 connection policy를 함께 봐야 한다.
           </p>
           <p>
             방어는 bucket·direction·source별 quota, anchor/boot source 다변화,
@@ -116,11 +108,9 @@ export default function DhtSecurityArticle() {
         <h2 className="mb-6 text-2xl font-bold">go-ethereum 방어를 layer와 우회 경로로 읽기</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Current go-ethereum table.go는 public IP에 대해 bucket별 같은 /24 최대
-            2개, table 전체 최대 10개를 적용하고, bucketSize 16과 bounded
-            replacement list를 둔다. 초기화 중 unsolicited inbound node를 바로
-            table에 넣지 않고, live entry와 node record를 재검증한다. 이는 공격
-            비용을 올리는 구현 제약이지 Sybil·Eclipse의 완전한 차단 증명이 아니다.
+            현재 go-ethereum table.go는 public IP에 bucket별 같은 /24 최대 2개, table 전체 최대 10개를 적용하고 bucketSize 16과
+            bounded replacement list를 둔다. 초기화 중 unsolicited inbound node를 바로 table에 넣지 않고 live entry와 node
+            record를 재검증한다. 이는 공격 비용을 올리는 구현 제약이지 Sybil·Eclipse의 완전한 차단 증명이 아니다.
           </p>
           <p>
             Release 검증에는 같은 /24 burst, 여러 /24·IPv6 prefix 분산, forged ENR,
@@ -144,8 +134,7 @@ export default function DhtSecurityArticle() {
           href="https://github.com/ethereum/go-ethereum/blob/master/p2p/discover/table.go"
         >
           <p id="paper-geth-defense" className="text-sm leading-6">
-            위 상수와 처리 순서는 현재 master 소스에서 확인한 구현 사실이다.
-            Production 판단에는 실제 배포 tag/SHA와 config를 고정하고, LAN 예외와
+            위 상수와 처리 순서는 현재 master 소스에서 확인한 구현 사실이다. Production 판단에는 실제 배포 tag/SHA와 config를 고정하고 LAN 예외와
             IPv6·proxy 환경을 포함해 같은 정책이 적용되는지 다시 확인한다.
           </p>
         </CitationBlock>

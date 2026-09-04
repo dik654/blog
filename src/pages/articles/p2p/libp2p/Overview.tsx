@@ -55,11 +55,9 @@ export default function Overview() {
         <div id="paper-libp2p-connections" className="scroll-mt-24 border-l border-primary/50 pl-4">
           <p className="text-xs font-bold text-primary">명세 읽기 · libp2p connection establishment</p>
           <p>
-            Connection specification은 raw transport 위에서 security protocol과
-            stream multiplexer를 협상하는 bootstrap 경로와, 이후 각 substream에서
-            application protocol을 고르는 경로를 구분합니다. 구현마다 API 이름은
-            달라도 interoperable wire negotiation과 output 책임은 이 경계로 읽어야
-            합니다.
+            Connection specification은 raw transport 위에서 security protocol과 stream multiplexer를 협상하는 bootstrap
+            경로와 이후 각 substream에서 application protocol을 고르는 경로를 구분합니다. 구현마다 API 이름은 달라도 interoperable wire
+            negotiation과 output 책임은 이 경계로 읽어야 합니다.
           </p>
           <CitationBlock
             source="libp2p Specifications — Connection Establishment"

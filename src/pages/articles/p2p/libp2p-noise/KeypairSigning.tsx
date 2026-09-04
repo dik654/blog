@@ -6,11 +6,9 @@ export default function KeypairSigning() {
       <h2 className="mb-6 text-2xl font-bold">Identity binding은 “이 Noise key를 이 PeerId가 승인했다”를 증명합니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          각 peer는 새 Noise static keypair를 만들고 static public key 앞에 spec이 정한
-          prefix를 붙인 bytes를 장기 libp2p identity private key로 서명합니다. Handshake
-          payload에는 identity public key와 signature가 실립니다. Receiver는 signature를
-          검증한 다음 그 public key로 PeerId를 유도하고, dial할 때 예상한 PeerId와 같은지
-          비교합니다.
+          각 peer는 새 Noise static keypair를 만들고 static public key 앞에 spec이 정한 prefix를 붙인 bytes를 장기 libp2p
+          identity private key로 서명합니다. Handshake payload에는 identity public key와 signature가 실립니다. Receiver는
+          signature를 검증한 다음 그 public key로 PeerId를 유도하고 dial할 때 예상한 PeerId와 같은지 비교합니다.
         </p>
       </div>
       <ExplainedFormula

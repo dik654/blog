@@ -17,10 +17,9 @@ export default function KadLookupArticle() {
             탐색이다.
           </p>
           <p>
-            핵심 상태는 한 “현재 노드”가 아니라 target distance로 정렬된
-            shortlist다. 각 후보에는 discovered·in-flight·responded·failed 같은
-            상태를 붙인다. 같은 ID를 중복 제거하고, 한 peer의 응답을 최종
-            진실로 믿지 않으며, 요청자 자신이 다음 query를 선택한다.
+            핵심 상태는 target distance로 정렬된 shortlist다. 한 “현재 노드”를 좇는 구조가 아니다. 각 후보에는 discovered·in-
+            flight·responded·failed 같은 상태를 붙이고 같은 ID는 중복 제거한다. 한 peer의 응답을 최종 진실로 믿지 않으며 다음 query는 요청자 자신이
+            고른다.
           </p>
         </div>
         <div className="not-prose my-8">
@@ -39,10 +38,8 @@ export default function KadLookupArticle() {
             <li>가까운 k개 후보가 모두 조회됐거나 구현의 종료 조건을 만족하면 결과와 receipt를 확정한다.</li>
           </ol>
           <p>
-            예를 들어 α=3, k=4이고 seed 거리가 [40, 52, 77]이라면 세 후보에
-            묻는다. 응답에서 [11, 18, 40, 65]를 얻으면 중복 40을 제거하고
-            shortlist를 [11, 18, 40, 52]로 자른다. 다음 round는 11과 18처럼
-            새로 발견된 가까운 후보부터 진행한다.
+            예를 들어 α=3, k=4이고 seed 거리가 [40, 52, 77]이라면 세 후보에 묻는다. 응답에서 [11, 18, 40, 65]를 얻으면 중복 40을 제거하고
+            shortlist를 [11, 18, 40, 52]로 자른 다음, 11과 18처럼 새로 발견된 가까운 후보부터 다음 round를 진행한다.
           </p>
         </div>
         <ExplainedFormula
@@ -68,10 +65,9 @@ export default function KadLookupArticle() {
           href="https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf"
         >
           <p id="paper-kademlia-lookup" className="text-sm leading-6">
-            원 논문은 α개 병렬 query와 k개 closest node를 향한 iterative search를
-            제시한다. 기대 logarithmic path 분석은 충분히 채워진 routing table,
-            균등한 ID와 응답 가능한 네트워크에 의존한다. Partition·adversarial
-            response·높은 churn에서는 같은 bound를 무조건 적용하지 않는다.
+            원 논문은 α개 병렬 query와 k개 closest node를 향한 iterative search를 제시한다. 기대 logarithmic path 분석은 충분히 채워진
+            routing table과 균등한 ID, 응답 가능한 네트워크에 의존한다. Partition이나 adversarial response, 높은 churn이 낀 환경에서는 같은
+            bound를 무조건 적용하지 않는다.
           </p>
         </CitationBlock>
       </section>
@@ -80,16 +76,13 @@ export default function KadLookupArticle() {
         <h2 className="mb-6 text-2xl font-bold">go-ethereum에서 상태와 종료 조건 추적하기</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            구현을 읽을 때 함수 이름보다 receipt를 먼저 그린다. Target ID,
-            initial seed source, queried ID, request start/deadline, response record,
-            validation outcome, discovered distance, final result를 같은 lookup ID에
-            묶으면 late response와 중복 query를 재현할 수 있다.
+            구현을 읽을 때 함수 이름보다 receipt를 먼저 그린다. Target ID와 최초 seed 출처, 질의한 ID를 적고 request start/deadline과 응답 기록,
+            검증 결과를 남긴다. 여기에 발견된 distance와 최종 결과까지 같은 lookup ID에 묶으면 late response와 중복 query를 재현할 수 있다.
           </p>
           <p>
-            Current go-ethereum discovery는 Kademlia-like table의 alpha=3을 사용하지만
-            discv4와 discv5의 wire request·target 표현·응답 검증은 동일하지 않다.
-            따라서 논문의 STORE/FIND_VALUE까지 geth node discovery가 구현한다고
-            읽으면 안 된다. Ethereum discovery의 목적은 node endpoint 발견이다.
+            현재 go-ethereum discovery는 Kademlia-like table의 alpha=3을 사용하지만 discv4와 discv5는 wire request와 target
+            표현, 응답 검증이 서로 같지 않다. 논문의 STORE/FIND_VALUE까지 geth node discovery가 구현한다고 읽으면 안 되는 이유다. Ethereum
+            discovery의 목적은 node endpoint 발견이다.
           </p>
           <h3>종료를 확인하는 체크리스트</h3>
           <ul>
@@ -106,9 +99,8 @@ export default function KadLookupArticle() {
           href="https://github.com/ethereum/go-ethereum/tree/master/p2p/discover"
         >
           <p id="paper-geth-lookup" className="text-sm leading-6">
-            구현 상수·query scheduling·failure 처리는 분석한 go-ethereum
-            revision에만 귀속한다. Moving master의 path나 behavior를 고정 API로
-            보지 않고 배포 binary의 version/SHA와 protocol을 함께 기록한다.
+            구현 상수와 query scheduling, 실패 처리는 분석한 go-ethereum revision에만 귀속한다. Moving master의 경로나 동작을 고정 API처럼
+            다루지 말고 배포 binary의 version/SHA와 protocol을 함께 기록한다.
           </p>
         </CitationBlock>
       </section>
@@ -117,25 +109,20 @@ export default function KadLookupArticle() {
         <h2 className="mb-6 text-2xl font-bold">Bootstrap·refresh와 실패를 운영하기</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            빈 table은 먼저 configured bootnode와 최근 검증된 DB seed로 연락
-            가능한 시작점을 만든다. Self lookup은 자기 ID 주변을 채우고,
-            random-target lookup은 다른 거리 구간을 다시 표본화한다. Bootnode는
-            특별한 신뢰의 원천이 아니라 첫 후보 source이므로 record와 응답을
-            똑같이 검증한다.
+            빈 table은 먼저 configured bootnode와 최근 검증된 DB seed로 연락 가능한 시작점을 만든다. Self lookup은 자기 ID 주변을 채우고
+            random-target lookup은 다른 거리 구간을 다시 표본화한다. Bootnode가 주는 것은 첫 후보일 뿐 특별한 신뢰가 아니다. record와 응답은 똑같이
+            검증한다.
           </p>
           <p>
-            운영 지표는 lookup별 round 수, unique queried peer, timeout 비율,
-            final closest distance, validated result 수, seed source, refresh 전후
-            distance coverage를 포함한다. “결과 0개”를 not-found로 단정하지 말고
-            partition·bootstrap failure·quota reject·모든 timeout을 구분한다.
+            운영 지표에는 lookup별 round 수와 unique queried peer, timeout 비율이 들어간다. final closest distance와 검증된 결과 수,
+            seed 출처, refresh 전후 distance coverage도 포함한다. “결과 0개”를 not-found로 단정하지 말고 partition과 bootstrap
+            failure, quota reject, 모든 timeout을 구분한다.
           </p>
           <h3>선택 기준과 한계</h3>
           <p>
-            α를 높이면 straggler 의존을 줄일 수 있지만 request와 공격 표면이
-            늘어난다. k를 높이면 후보 diversity와 메모리·검증 비용이 함께
-            증가한다. Adopt 전에는 정상 topology뿐 아니라 timeout, forged record,
-            duplicate ID, late response, partition fixture에서 동일한 terminal
-            outcome과 bounded work를 확인한다.
+            α를 높이면 straggler 의존을 줄일 수 있지만 request와 공격 표면이 늘어난다. k를 높이면 후보 diversity와 메모리·검증 비용이 함께 증가한다. 도입
+            전에는 정상 topology뿐 아니라 timeout과 forged record, duplicate ID, late response, partition fixture에서도 동일한
+            terminal outcome과 bounded work를 확인한다.
           </p>
         </div>
       </section>

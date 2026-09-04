@@ -11,10 +11,8 @@ export default function KademliaArticle() {
         <h2 className="mb-6 text-2xl font-bold">문제: 모든 노드를 알지 않고 목적지 찾기</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            수백만 노드가 참여하는 P2P 네트워크에서 각 노드가 전체 주소록을
-            복제하면 가입·이탈 때마다 비용이 폭증한다. Kademlia는 각 노드가
-            ID 공간의 일부 표본만 보관하면서도, 목표 ID에 더 가까운 후보를
-            다음 질의로 넘기는 분산 해시 테이블(DHT)이다.
+            수백만 노드가 참여하는 P2P 네트워크에서 각 노드가 전체 주소록을 복제하면 가입·이탈 때마다 비용이 폭증한다. Kademlia는 각 노드가 ID 공간의 일부 표본만
+            보관하면서도 목표 ID에 더 가까운 후보를 다음 질의로 넘기는 분산 해시 테이블(DHT)이다.
           </p>
           <p>
             이 글의 전체 흐름은 간단하다. 비트열 ID 두 개를 XOR 값으로
@@ -53,10 +51,8 @@ export default function KademliaArticle() {
           href="https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf"
         >
           <p id="paper-kademlia" className="text-sm leading-6">
-            원 논문은 대칭 XOR metric, k-bucket, 병렬성이 있는 iterative lookup을
-            한 설계로 결합한다. 분석은 node ID가 충분히 고르게 분포하고 routing
-            table이 유지되며 응답 가능한 경로가 있다는 모델에 놓여 있다.
-            따라서 “모든 배포에서 정확히 O(log N) 메시지”라는 보장은 아니다.
+            원 논문은 대칭 XOR metric과 k-bucket, 병렬성이 있는 iterative lookup을 한 설계로 결합한다. 분석은 node ID가 충분히 고르게 분포하고
+            routing table이 유지되며 응답 가능한 경로가 있다는 모델에 놓여 있어 “모든 배포에서 정확히 O(log N) 메시지”라는 보장은 아니다.
           </p>
         </CitationBlock>
       </section>
@@ -65,10 +61,8 @@ export default function KademliaArticle() {
         <h2 className="mb-6 text-2xl font-bold">XOR 거리와 prefix를 손으로 읽기</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            8비트 예에서 x=10110100, y=10111001이면 XOR는 00001101, 즉
-            13이다. 앞의 네 비트가 같고 다섯 번째 비트에서 처음 갈라진다.
-            구현은 전체 큰 정수를 매번 만들지 않고 첫 1의 위치를 세어
-            logarithmic distance를 구할 수 있다.
+            8비트 예에서 x=10110100, y=10111001이면 XOR는 00001101, 즉 13이고 앞의 네 비트가 같다가 다섯 번째 비트에서 처음 갈라진다. 구현은 전체 큰
+            정수를 매번 만들 필요 없이 첫 1의 위치만 세어도 logarithmic distance를 구할 수 있다.
           </p>
         </div>
         <ExplainedFormula
@@ -93,18 +87,13 @@ export default function KademliaArticle() {
         <h2 className="mb-6 text-2xl font-bold">k-bucket: 가까운 곳은 촘촘하게, 먼 곳은 넓게</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            각 bucket은 자기 ID와 같은 logarithmic distance 구간의 연락처를
-            최대 k개 보관한다. 먼 구간 하나는 넓은 ID 영역을 대표하고,
-            가까운 구간은 더 좁은 영역을 대표한다. 그래서 전체 노드를 저장하지
-            않아도 여러 거리 규모에 걸친 다음 홉을 갖는다. k는 프로토콜·구현
-            parameter이지 Kademlia라는 이름만으로 고정되는 상수가 아니다.
+            각 bucket은 자기 ID와 같은 logarithmic distance 구간의 연락처를 최대 k개 보관한다. 먼 구간 하나는 넓은 ID 영역을 대표하고 가까운 구간은 더 좁은
+            영역을 대표한다. 그래서 전체 노드를 저장하지 않아도 여러 거리 규모에 걸친 다음 홉을 갖는다. Kademlia라는 이름만으로 k가 고정되지는 않는다. k는 프로토콜과 구현이
+            정하는 parameter다.
           </p>
           <p>
-            예를 들어 원 논문의 k=20과 달리 현재 go-ethereum discovery table은
-            bucketSize=16, α=3을 사용하고 256개 거리 각각을 그대로 만들지 않는다.
-            구현은 상위 거리 구간 일부를 bucket에 접어 넣는다. 따라서 아래
-            그림은 거리 구간별 표본이라는 구조를 설명하며 현재 geth의 배열
-            개수를 그대로 묘사하지 않는다.
+            예를 들어 원 논문의 k=20과 달리 현재 go-ethereum discovery table은 bucketSize=16, α=3을 사용하고 256개 거리 각각을 그대로 만들지
+            않는다. 구현은 상위 거리 구간 일부를 bucket에 접어 넣는다. 아래 그림도 거리 구간별 표본이라는 구조를 설명할 뿐 현재 geth의 배열 개수를 그대로 묘사하지는 않는다.
           </p>
         </div>
         <div className="not-prose my-8">
@@ -134,9 +123,8 @@ export default function KademliaArticle() {
             <li>재검증에 실패한 live entry를 제거하고, 검증 정책에 따라 replacement 하나를 승격한다.</li>
           </ol>
           <p>
-            현재 geth는 replacement를 “가장 최근 하나”로 고정하지 않고 무작위로
-            선택한다. IP quota는 한 공격자가 주소 하나로 bucket을 채우는 비용을
-            높이지만, 여러 prefix·IPv6·relay를 가진 공격자를 제거하지는 않는다.
+            현재 geth는 replacement를 “가장 최근 하나”로 고정하지 않고 무작위로 선택한다. IP quota는 한 공격자가 주소 하나로 bucket을 채우는 비용을 높이지만
+            여러 prefix와 IPv6, relay를 가진 공격자를 제거하지는 않는다.
           </p>
         </div>
       </section>
@@ -145,10 +133,8 @@ export default function KademliaArticle() {
         <h2 className="mb-6 text-2xl font-bold">재검증과 운영 판단</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Routing table은 발견 결과가 아니라 계속 만료되는 cache다. 구현은
-            activity, 마지막 ping/pong, record sequence와 endpoint 변경을 보고
-            재검증 대상을 고른다. Timeout 하나만으로 악성이라고 단정하지 않고,
-            실패 이유와 retry budget을 기록해 churn과 공격을 구분해야 한다.
+            Routing table은 계속 만료되는 cache다. 발견 결과가 아니다. 구현은 activity와 마지막 ping/pong, record sequence, endpoint
+            변경을 보고 재검증 대상을 고른다. Timeout 하나만으로 악성이라고 단정하지 않고 실패 이유와 retry budget을 기록해 churn과 공격을 구분해야 한다.
           </p>
           <p>
             운영 시에는 bucket occupancy만 보지 말고 거리별 live 비율, unique
@@ -159,8 +145,7 @@ export default function KademliaArticle() {
           </p>
           <h3>다음 읽기</h3>
           <p>
-            이제 XOR 정렬과 bucket 표본을 알았으므로, 다음 글에서는 α개 질의를
-            보내고 shortlist를 merge해 언제 멈추는지 한 lookup receipt로 추적한다.
+            이제 XOR 정렬과 bucket 표본을 알았으므로 다음 글에서는 α개 질의를 보내고 shortlist를 merge해 언제 멈추는지 한 lookup receipt로 추적한다.
           </p>
         </div>
       </section>

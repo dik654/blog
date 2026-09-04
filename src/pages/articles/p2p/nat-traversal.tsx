@@ -15,20 +15,16 @@ export default function NatTraversalArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Alice와 Bob이 각각 다른 가정용 router 뒤에 있다고 하자. 둘의
-            192.168.x.x 주소는 인터넷에서 직접 dial할 수 없다. NAT는 outbound
-            packet을 보낼 때 private transport address를 public address로
-            mapping하고, inbound packet을 어떤 remote endpoint에서 받아들일지
-            filtering한다. 같은 장비도 mapping과 filtering behavior 조합이
-            다를 수 있으므로 오래된 cone 이름 하나로 성공을 단정하지 않는다.
+            Alice와 Bob이 각각 다른 가정용 router 뒤에 있다고 하자. 둘의 192.168.x.x 주소는 인터넷에서 직접 dial할 수 없다. NAT는 outbound
+            packet을 보낼 때 private transport address를 public address로 mapping하고 inbound packet을 어떤 remote
+            endpoint에서 받아들일지 filtering한다. 같은 장비도 mapping과 filtering behavior 조합이 다를 수 있으므로 오래된 cone 이름 하나로 성공을
+            단정하지 않는다.
           </p>
           <p>
-            고정 흐름은 STUN으로 각자가 관측된 public address를 얻고, signaling
-            channel로 candidate를 교환하고, ICE connectivity check로 실제
-            bidirectional path를 시험하는 것이다. Direct pair가 성공하면 그
-            transport를 사용하고, 실패하면 TURN relay candidate를 선택한다.
-            Identity authentication과 application encryption은 이 경로 탐색과
-            별도 책임이며, STUN 응답 주소만으로 상대 identity를 증명할 수 없다.
+            고정 흐름은 STUN으로 각자가 관측된 public address를 얻고 signaling channel로 candidate를 교환한 뒤 ICE connectivity
+            check로 실제 bidirectional path를 시험하는 것이다. Direct pair가 성공하면 그 transport를 사용하고 실패하면 TURN relay
+            candidate를 선택한다. Identity authentication과 application encryption은 이 경로 탐색과 별도 책임이며 STUN 응답 주소만으로
+            상대 identity를 증명할 수 없다.
           </p>
         </div>
 
@@ -194,12 +190,10 @@ export default function NatTraversalArticle() {
 
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Libp2p DCUtR은 이미 Circuit Relay로 연결된 두 peer가 Connect message로
-            observed/predicted address를 교환하고, Sync와 measured relay RTT의
-            절반 timer로 simultaneous open을 맞추는 protocol이다. 한 direct
-            connection이 성공하면 새 stream을 direct path에 우선 배치하고 relay는
-            grace period 뒤 닫는다. 실패하면 relay를 유지하며 다음 retry마다
-            Connect/Sync를 다시 해 잘못된 첫 RTT 측정을 계속 재사용하지 않는다.
+            Libp2p DCUtR은 이미 Circuit Relay로 연결된 두 peer가 Connect message로 observed/predicted address를 교환하고
+            Sync와 measured relay RTT의 절반 timer로 simultaneous open을 맞추는 protocol이다. 한 direct connection이 성공하면 새
+            stream을 direct path에 우선 배치하고 relay는 grace period 뒤 닫는다. 실패하면 relay를 유지하며 다음 retry마다 Connect/Sync를
+            다시 해 잘못된 첫 RTT 측정을 계속 재사용하지 않는다.
           </p>
           <p>
             Release gate는 direct success rate 하나가 아니라 connection time,

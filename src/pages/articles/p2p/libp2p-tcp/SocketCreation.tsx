@@ -11,10 +11,9 @@ export default function SocketCreation() {
           않습니다.
         </p>
         <p>
-          Listen backlog는 아직 accept되지 않은 연결의 OS queue hint이며 application의
-          established connection limit가 아닙니다. 너무 작은 값은 burst에서 connect
-          실패를 늘릴 수 있고, 큰 값은 overload admission control을 대신하지 못합니다.
-          TTL도 P2P hop limit policy일 뿐 peer lifetime과 관계가 없습니다.
+          Listen backlog는 아직 accept되지 않은 연결의 OS queue hint이며 application의 established connection limit가 아닙니다.
+          너무 작은 값은 burst에서 connect 실패를 늘릴 수 있고 큰 값은 overload admission control을 대신하지 못합니다. TTL도 P2P hop limit
+          policy일 뿐 peer lifetime과 관계가 없습니다.
         </p>
         <p>
           Port reuse는 NAT traversal에서 listener의 local port를 outbound dial에 재사용하려는

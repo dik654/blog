@@ -281,6 +281,10 @@
       "fingerprint": "b0794bb1dc5e762a",
       "score": 24
     },
+    "p2p/quic-fundamentals": {
+      "fingerprint": "44f01102bcfa5b97",
+      "score": 24
+    },
     "blockchain/filecoin-lotus": {
       "fingerprint": "a13e2a2786ad3249",
       "score": 23
@@ -430,11 +434,7 @@
       "score": 20
     },
     "p2p/nat-traversal": {
-      "fingerprint": "5ecb6816e41d0ce3",
-      "score": 20
-    },
-    "p2p/quic-fundamentals": {
-      "fingerprint": "58d3e28669cb48df",
+      "fingerprint": "39613c2c03e0fb29",
       "score": 20
     },
     "blockchain/reth-alloy-primitives": {
@@ -526,7 +526,7 @@
       "score": 18
     },
     "p2p/tls-fundamentals": {
-      "fingerprint": "2a5df3b5f39a43fa",
+      "fingerprint": "1ab5ebb3fcb2682a",
       "score": 18
     },
     "ai/rlhf": {
@@ -570,11 +570,11 @@
       "score": 16
     },
     "p2p/discv5": {
-      "fingerprint": "1c532ab1f630f25f",
+      "fingerprint": "a0c4fad39efd7c41",
       "score": 16
     },
     "p2p/libp2p": {
-      "fingerprint": "e08d4b039356375a",
+      "fingerprint": "2d08638934cadb78",
       "score": 16
     },
     "ai/claw-hooks": {
@@ -778,19 +778,19 @@
       "score": 12
     },
     "p2p/content-addressing": {
-      "fingerprint": "17159f1eb05e9696",
+      "fingerprint": "009f4acab0184bcf",
       "score": 12
     },
     "p2p/discv4": {
-      "fingerprint": "f08ba500dd8f30e4",
+      "fingerprint": "f34f841987e3db38",
       "score": 12
     },
     "p2p/libp2p-noise": {
-      "fingerprint": "8b4b433520fc0751",
+      "fingerprint": "b46ad7710e2f4e67",
       "score": 12
     },
     "p2p/rqbit": {
-      "fingerprint": "258736d040585769",
+      "fingerprint": "41bdbad5c8fecdc4",
       "score": 12
     },
     "ai/augmentation-evaluation": {
@@ -902,11 +902,11 @@
       "score": 10
     },
     "p2p/gossip-fundamentals": {
-      "fingerprint": "14dd5401f225cb32",
+      "fingerprint": "8579330327ea41af",
       "score": 10
     },
     "p2p/libp2p-tcp": {
-      "fingerprint": "70eda7f501faabeb",
+      "fingerprint": "115fea03636c5d94",
       "score": 10
     },
     "blockchain/cometbft-crypto": {
@@ -1014,11 +1014,11 @@
       "score": 8
     },
     "p2p/libp2p-gossipsub": {
-      "fingerprint": "9812d73d10d25017",
+      "fingerprint": "06a25e2554f20d1a",
       "score": 8
     },
     "p2p/libp2p-quic": {
-      "fingerprint": "2fe95a7d7a644bb7",
+      "fingerprint": "ebe75d5900277147",
       "score": 8
     },
     "p2p/libp2p-yamux": {
@@ -1227,10 +1227,6 @@
     },
     "p2p/iroh": {
       "fingerprint": "5685357c4d97621e",
-      "score": 6
-    },
-    "p2p/kubo": {
-      "fingerprint": "3f4d465a0f42ccb7",
       "score": 6
     }
   }

@@ -79,11 +79,9 @@ c_P &= \underbrace{\operatorname{CID}(b_P).}_{\text{오른쪽 항으로 결과 �
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Chunking과 codec도 root identity의 일부입니다</h3>
         <p>
-          같은 file bytes라도 256 KiB 고정 chunk와 content-defined chunking은
-          다른 leaf 경계를 만들 수 있고, dag-pb와 dag-cbor는 다른 parent bytes를
-          만듭니다. 따라서 root CID 비교는 “사용자에게 보이는 파일이 같다”보다
-          “같은 encoding pipeline으로 만든 graph bytes가 같다”는 더 좁은
-          주장입니다.
+          같은 file bytes라도 256 KiB 고정 chunk와 content-defined chunking은 다른 leaf 경계를 만들 수 있고 dag-pb와 dag-cbor는 다른
+          parent bytes를 만듭니다. 따라서 root CID 비교는 “사용자에게 보이는 파일이 같다”보다 “같은 encoding pipeline으로 만든 graph bytes가
+          같다”는 더 좁은 주장입니다.
         </p>
       </div>
     </section>

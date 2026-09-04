@@ -12,20 +12,14 @@ export default function Overview() {
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          영상 통화 중 Wi‑Fi에서 이동통신으로 바뀌거나, 한 HTTP response
-          packet이 유실되는 상황을 생각해 봅시다. TCP 연결은 IP·port 4‑tuple과
-          하나의 ordered byte stream에 묶입니다. QUIC은 UDP datagram 위에서
-          connection identity, packet number, acknowledgment, loss recovery,
-          congestion control, flow control과 여러 ordered stream을 하나의
-          암호화된 transport로 묶습니다.
+          영상 통화 중 Wi‑Fi에서 이동통신으로 바뀌거나 한 HTTP response packet이 유실되는 상황을 생각해 봅시다. TCP 연결은 IP·port 4‑tuple과 하나의
+          ordered byte stream에 묶입니다. QUIC은 connection identity, packet number, acknowledgment부터 loss recovery,
+          congestion control, flow control과 여러 ordered stream까지를 UDP datagram 위 하나의 암호화된 transport로 묶습니다.
         </p>
         <p>
-          UDP는 QUIC packet을 나르는 최소한의 demultiplexing·checksum 경계일 뿐
-          reliability를 제공하지 않습니다. QUIC endpoint가 ACK를 해석하고 lost
-          frame을 새 packet에 다시 싣고, congestion window와 receive credit을
-          지킵니다. 따라서 “UDP라서 빠르다”가 아니라 handshake와 transport
-          state를 함께 설계하고 kernel 배포 주기에서 분리할 수 있다는 점이
-          핵심입니다.
+          UDP는 QUIC packet을 나르는 최소한의 demultiplexing·checksum 경계일 뿐 reliability를 제공하지 않습니다. QUIC endpoint가 ACK를
+          해석하고 lost frame을 새 packet에 다시 실으며 congestion window와 receive credit을 지킵니다. QUIC의 이점은 “UDP라서 빠르다”로
+          요약되지 않습니다. Handshake와 transport state를 함께 설계하고 kernel 배포 주기에서 분리할 수 있다는 점이 핵심입니다.
         </p>
         <p>
           이 글은 <Link to="/p2p/tls-fundamentals">TLS 1.3 정본</Link>의
@@ -42,18 +36,14 @@ export default function Overview() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>한 packet을 관측하면 책임이 보입니다</h3>
         <p>
-          Sender는 stream bytes와 control frame을 QUIC packet에 넣고 packet
-          number를 붙인 뒤 packet protection을 적용해 UDP datagram으로 보냅니다.
-          Receiver는 packet을 인증·복호화하고 ACK range를 만들며 frame을 해당
-          stream offset에 배치합니다. Packet이 유실되면 같은 packet 자체를
-          재전송하는 대신 아직 필요한 frame을 새로운 packet number로 보냅니다.
+          Sender는 stream bytes와 control frame을 QUIC packet에 넣고 packet number를 붙인 뒤 packet protection을 적용해 UDP
+          datagram으로 보냅니다. Receiver는 packet을 인증·복호화하고 ACK range를 만들며 frame을 해당 stream offset에 배치합니다. Packet이
+          유실되어도 같은 packet을 그대로 재전송하지는 않습니다. 아직 필요한 frame을 새로운 packet number에 실어 보냅니다.
         </p>
         <p>
-          QUIC은 TCP의 transport-level head-of-line blocking을 stream 사이에서
-          제거하지만, 같은 connection의 congestion controller와 connection-level
-          flow-control budget은 공유합니다. 한 stream의 손실이 다른 stream
-          bytes의 순서 전달을 막지는 않아도 congestion window 감소로 전체
-          throughput이 줄 수 있습니다.
+          QUIC은 TCP의 transport-level head-of-line blocking을 stream 사이에서 제거하지만 같은 connection의 congestion
+          controller와 connection-level flow-control budget은 공유합니다. 한 stream의 손실이 다른 stream bytes의 순서 전달을 막지는
+          않아도 congestion window 감소로 전체 throughput이 줄 수 있습니다.
         </p>
         <div
           id="paper-rfc9000"
@@ -61,10 +51,8 @@ export default function Overview() {
         >
           <p className="text-xs font-bold text-primary">명세 읽기 · RFC 9000</p>
           <p>
-            RFC 9000은 QUIC transport의 connection·stream·packet·migration
-            계약을 정의합니다. Loss detection과 congestion control의 구체적
-            기준은 RFC 9002, TLS mapping과 packet protection은 RFC 9001이
-            소유합니다.
+            RFC 9000은 QUIC transport에서 connection과 stream, packet과 migration의 계약을 정의합니다. Loss detection과
+            congestion control의 구체적 기준은 RFC 9002가, TLS mapping과 packet protection은 RFC 9001이 소유합니다.
           </p>
           <CitationBlock
             source="IETF RFC 9000 — QUIC: A UDP-Based Multiplexed and Secure Transport"

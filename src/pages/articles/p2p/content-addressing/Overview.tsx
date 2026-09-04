@@ -12,17 +12,13 @@ export default function Overview() {
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          위치 주소인 URL은 어느 server에서 resource를 받을지 알려 주지만, 오늘
-          받은 bytes가 어제와 같은지는 주소만으로 증명하지 못합니다. Content
-          addressing(내용 주소 지정)은 canonical bytes의 cryptographic hash를
-          주소에 넣습니다. 어느 peer에서 받았든 다시 hash해 주소와 같으면 같은
-          bytes라는 무결성 검사를 할 수 있습니다.
+          위치 주소인 URL은 어느 server에서 resource를 받을지 알려 주지만 오늘 받은 bytes가 어제와 같은지는 주소만으로 증명하지 못합니다. Content
+          addressing(내용 주소 지정)은 canonical bytes의 cryptographic hash를 주소에 넣습니다. 어느 peer에서 받았든 다시 hash해 주소와 같으면
+          같은 bytes라는 무결성 검사를 할 수 있습니다.
         </p>
         <p>
-          이 성질은 availability와 다릅니다. CID를 알아도 해당 block을 가진
-          peer가 없으면 다운로드할 수 없고, malicious peer가 bytes를 숨기는 것도
-          막지 못합니다. 또한 hash는 작성자의 identity나 content의 진실성을
-          증명하지 않습니다. 누가 publish했는지는 signature·name
+          이 성질은 availability와 다릅니다. CID를 알아도 해당 block을 가진 peer가 없으면 다운로드할 수 없고 malicious peer가 bytes를 숨기는 것도
+          막지 못합니다. 또한 hash는 작성자의 identity나 content의 진실성을 증명하지 않습니다. 누가 publish했는지는 signature·name
           system·application policy가 별도로 담당합니다.
         </p>
       </div>
@@ -93,12 +89,9 @@ d &= \underbrace{H(b),}_{\text{canonical encoded bytes 계산}}\\
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Hash 함수의 직관과 실제 보안 경계</h3>
         <p>
-          장난감 예로 byte 합을 16으로 나눈 나머지를 주소로 쓰면 1+2와 0+3이
-          모두 3이어서 쉽게 collision이 납니다. SHA‑256 같은 cryptographic
-          hash는 이런 충돌을 현실적인 계산량으로 찾기 어렵게 설계하지만,
-          수학적으로 collision이 존재하지 않는 일대일 함수는 아닙니다.
-          Algorithm과 digest length를 주소가 함께 말해야 교체와 검증 정책을
-          명확히 할 수 있습니다.
+          간단한 예로 byte 합을 16으로 나눈 나머지를 주소로 쓰면 1+2와 0+3이 모두 3이어서 collision이 쉽게 납니다. SHA‑256 같은 cryptographic
+          hash는 이런 충돌을 현실적인 계산량으로 찾기 어렵게 설계하지만 수학적으로 collision이 존재하지 않는 일대일 함수는 아닙니다. Algorithm과 digest
+          length를 주소가 함께 말해야 교체와 검증 정책을 명확히 할 수 있습니다.
         </p>
         <div
           id="paper-cid-spec"
@@ -108,10 +101,8 @@ d &= \underbrace{H(b),}_{\text{canonical encoded bytes 계산}}\\
             명세 읽기 · CID specification
           </p>
           <p>
-            현재 CID specification은 CIDv1을 version, content multicodec와
-            multihash의 binary tuple로 정의하고, 문자열의 multibase는 binary CID
-            바깥 표현임을 구분합니다. 여기서는 IPFS product 동작이 아니라
-            identifier format만 근거로 사용합니다.
+            현재 CID specification은 CIDv1을 version, content multicodec과 multihash의 binary tuple로 정의하고 문자열의
+            multibase는 binary CID 바깥 표현임을 구분합니다. 여기서는 IPFS product 동작이 아니라 identifier format만 근거로 사용합니다.
           </p>
           <CitationBlock
             source="IPFS Standards — CID (Content IDentifier)"

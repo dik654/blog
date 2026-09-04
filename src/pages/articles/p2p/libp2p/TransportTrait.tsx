@@ -17,11 +17,9 @@ export default function TransportTrait({ onCodeRef }: { title?: string; onCodeRe
           lazy contract입니다.
         </p>
         <p>
-          이 contract 덕분에 상위 caller는 peer의 여러 주소를 동시에 시도해 먼저 성공한
-          연결을 선택할 수 있습니다. 반대로 future를 만들기만 하고 poll하지 않으면
-          network I/O는 진행되지 않으며, 취소된 future의 socket과 timer도 정리돼야
-          합니다. Transport success는 remote identity 검증이 아니라 raw 또는
-          transport-native connection 성공만 뜻합니다.
+          이 contract 덕분에 상위 caller는 peer의 여러 주소를 동시에 시도해 먼저 성공한 연결을 선택할 수 있습니다. 반대로 future를 만들기만 하고 poll하지 않으면
+          network I/O는 진행되지 않으며 취소된 future의 socket과 timer도 정리돼야 합니다. Transport success는 remote identity 검증이
+          아니라 raw 또는 transport-native connection 성공만 뜻합니다.
         </p>
       </div>
       {onCodeRef && (

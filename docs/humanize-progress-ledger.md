@@ -32,12 +32,20 @@ humanize-korean 파이프라인으로 블로그 전체 아티클의 AI 티 문�
 
 | 배치 | 파일 | 문단 | 결과 | 커밋 |
 |---|---|---|---|---|
-| test (0) | gpu 5개 아티클(assembly만, 실제 문단은 2개 파일에만 있었음) | 46 추출 | 등급 A · 변경률 1.4% · 게이트 OK | `feat/npu-gemmini-series`(다음 커밋 예정) |
+| test (0) | gpu 5개 아티클(assembly만, 실제 문단은 2개 파일에만 있었음) | 46 추출 | 등급 A · 변경률 1.4% · 게이트 OK | `729448a5` |
+| 2a·2b·2c | crypto(9)+filecoin(10)+hw(53) = 72개 파일, 3개 서브배치(24개씩) | 178 추출 → 119 반영 | 등급 A×3 · 게이트 OK(2b는 golden 각주 오탐 확인 후 진행) | `d79bd506`, `b5879fba` |
 
-적용된 파일: `gpu/cutlass-collectives-and-tile-schedulers.tsx`(16문단), `gpu/gpu-data-movement-optimization.tsx`(17문단).
-나머지 3개 파일(`gpu-arch-hopper.tsx` 등)은 조립 파일이라 자체 문단이 없었다 — 실제로는 하위
-섹션 파일(`gpu-arch-hopper/*.tsx`)에 프로즈가 있으므로 다음 배치부터는 섹션 파일까지 포함한
-3,014개 전체 목록에서 뽑아야 한다.
+`gpu-arch-hopper.tsx` 같은 조립 파일은 자체 `<p>`가 없고 프로즈가 하위 섹션 파일에 있다는 걸
+test 배치에서 확인했다 — 그래서 배치2부터는 `find ... -not -path "*/viz/*" -not -path
+"*/codebase/*"`로 섹션 파일까지 포함한 전체 목록(3,014개)에서 뽑는다.
+
+**배치 크기 교훈**: 파일 24개 = 문단 30~60개 = 입력 15~25KB 가 light/standard 단일 콜에 안전한
+크기였다. 72개를 한 번에 넣었더니 55KB로 커져 heavy/청킹 영역에 들어갔을 것 — **24개/서브배치**로
+쪼개는 걸 기본값으로 삼는다.
+
+**prose-readability 재검토 절차(매 배치 필수)**: `--refresh-baseline` 하기 전에 반드시
+`git stash`로 편집 전 점수와 대조해 점수가 늘지 않았는지(fingerprint drift인지 진짜 회귀인지)
+확인한다. 점수가 그대로면 안전하게 refresh, 늘었으면 원인 파악 후에만 진행한다.
 
 ## 다음 세션에서 이어가는 법
 

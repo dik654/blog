@@ -83,21 +83,16 @@ T_n &= \underbrace{\operatorname{Hash}(M_1\,\|\,M_2\,\|\cdots\|\,M_n),}_{\text{t
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Finished는 양쪽이 같은 상태에 도달했는지 확인합니다</h3>
         <p>
-          CertificateVerify가 server identity와 transcript를 묶는다면 Finished는
-          handshake traffic secret에서 파생한 finished key로 transcript MAC을
-          계산합니다. 따라서 한쪽이 다른 message sequence나 다른 key schedule을
-          계산했다면 검증이 실패합니다. Client Finished까지 확인한 후 양방향
-          application traffic secret을 사용합니다.
+          CertificateVerify가 server identity와 transcript를 묶는다면 Finished는 handshake traffic secret에서 파생한
+          finished key로 transcript MAC을 계산합니다. 한쪽이 다른 message sequence나 다른 key schedule을 계산했다면 검증은 실패합니다.
+          Client Finished까지 확인한 후 양방향 application traffic secret을 사용합니다.
         </p>
         <h3>0‑RTT는 latency와 replay risk를 교환합니다</h3>
         <p>
-          Resumption ticket의 PSK로 early traffic key를 만들면 ClientHello와
-          함께 early data를 보낼 수 있습니다. 하지만 공격자가 같은 encrypted
-          flight를 다시 전달할 수 있으므로, “GET이면 항상 안전” 같은 method
-          이름만으로 판정하면 안 됩니다. Payment·quota·logging처럼 재실행에 side
-          effect가 있는지 확인하고, ticket single-use·freshness window·replay
-          cache와 함께 application-level idempotency key를 설계하거나 0‑RTT를
-          거부해야 합니다.
+          Resumption ticket의 PSK로 early traffic key를 만들면 ClientHello와 함께 early data를 보낼 수 있습니다. 하지만 공격자가 같은
+          encrypted flight를 다시 전달할 수 있어 “GET이면 항상 안전” 같은 method 이름만으로는 판정이 서지 않습니다. Payment와 quota, logging처럼
+          재실행에 side effect가 있는지 확인합니다. Ticket single-use와 freshness window, replay cache와 함께 application-level
+          idempotency key를 설계하거나 0‑RTT를 거부해야 합니다.
         </p>
       </div>
     </section>

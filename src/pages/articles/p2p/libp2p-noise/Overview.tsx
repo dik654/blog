@@ -12,16 +12,14 @@ export default function Overview({ onCodeRef }: { onCodeRef?: (key: string, ref:
       <h2 className="mb-6 text-2xl font-bold">libp2p Noise는 암호화에 PeerId 인증을 덧붙인 secure-channel upgrade입니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          TCP 연결은 상대 IP와 port만 알려 줄 뿐 “내가 연결하려던 PeerId가 맞는가”를
-          증명하지 않습니다. libp2p Noise는 Noise XX handshake로 양쪽이 ephemeral·static
-          Diffie–Hellman key를 섞어 session key를 만들고, 별도의 libp2p identity key로
-          Noise static key를 서명해 그 channel을 PeerId에 묶습니다.
+          TCP 연결은 상대 IP와 port만 알려 줄 뿐 “내가 연결하려던 PeerId가 맞는가”를 증명하지 않습니다. libp2p Noise는 Noise XX handshake로 양쪽이
+          ephemeral·static Diffie–Hellman key를 섞어 session key를 만듭니다. 별도의 libp2p identity key로 Noise static
+          key를 서명해 그 channel을 PeerId에 묶습니다.
         </p>
         <p>
-          여기서 static key가 두 종류라는 점이 중요합니다. Noise static DH key는 channel
-          key agreement에 쓰고, libp2p identity key는 장기 peer identity를 증명합니다.
-          같은 key라고 가정하거나 Noise XX 자체가 PeerId를 자동 인증한다고 이해하면
-          signature 검증 누락을 발견하기 어렵습니다.
+          여기서 static key가 두 종류라는 점이 중요합니다. Noise static DH key는 channel key agreement에 쓰고 libp2p identity key는
+          장기 peer identity를 증명합니다. 같은 key라고 가정하거나 Noise XX 자체가 PeerId를 자동 인증한다고 이해하면 signature 검증 누락을 발견하기
+          어렵습니다.
         </p>
         <p>
           <Link to="/p2p/tls-fundamentals">TLS 1.3</Link>도 authenticated secure channel을

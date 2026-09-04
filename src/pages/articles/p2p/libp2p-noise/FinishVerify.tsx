@@ -11,11 +11,10 @@ export default function FinishVerify() {
           없는 inbound에서도 인증된 실제 PeerId를 상위 admission policy에 전달해야 합니다.
         </p>
         <p>
-          Transport phase에서는 각 message를 2-byte big-endian length와 ciphertext로
-          framing하고, 최대 message size와 AEAD tag를 검사합니다. Truncated length,
-          oversized frame, invalid tag, counter exhaustion과 unexpected EOF는 fail-closed로
-          connection을 끝냅니다. Noise는 encrypted record의 내용과 무결성을 보호하지만
-          packet timing·length·IP endpoint를 숨기지 않습니다.
+          Transport phase에서는 각 message를 2-byte big-endian length와 ciphertext로 framing하고 최대 message size와 AEAD
+          tag를 검사합니다. Truncated length, oversized frame, invalid tag, counter exhaustion과 unexpected EOF는
+          fail-closed로 connection을 끝냅니다. Noise는 encrypted record의 내용과 무결성을 보호하지만 packet timing·length·IP
+          endpoint를 숨기지 않습니다.
         </p>
         <h3>Release gate</h3>
         <ul>
