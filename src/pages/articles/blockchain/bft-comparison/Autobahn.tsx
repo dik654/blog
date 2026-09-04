@@ -121,7 +121,7 @@ export default function Autobahn() {
               <li>HotStuff-like 3-chain or 2-chain</li>
             </ul>
             <p className="text-xs text-muted-foreground mt-2">
-              분리의 장점: throughput decoupled from latency
+              분리의 장점은 throughput decoupled from latency
             </p>
           </div>
         </div>

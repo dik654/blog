@@ -12,7 +12,7 @@ function SnowflakeViz() {
   return (
     <div className="not-prose rounded-xl border p-4 mb-6">
       <p className="text-xs text-center text-foreground/75 mb-3">
-        Snowflake: 연속 α번 동일 응답 시 결정
+        연속 α번 동일 응답 시 결정하는 Snowflake
       </p>
       <svg
         viewBox="0 0 420 80"

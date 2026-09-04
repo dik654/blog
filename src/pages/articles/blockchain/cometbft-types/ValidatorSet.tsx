@@ -14,9 +14,9 @@ export default function ValidatorSet({
       <h2 className="mb-6 text-2xl font-bold">ValidatorSet은 검증 weight snapshot이고 proposer priority는 별도 scheduler state다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Validator는 address·public key·voting power와 proposer priority를 가집니다. Public key와 power는 vote를
-          검증하고 quorum weight를 계산하는 합의 입력입니다. 반면 proposer priority는 다음 proposer를 고르는 누적
-          scheduler 값이므로 block certificate의 의미와 혼동하면 안 됩니다.
+          Validator를 이루는 field는 address·public key·voting power, 그리고 proposer priority입니다. 이 중 public key와
+          power는 vote를 검증하고 quorum weight를 계산하는 합의 입력입니다. 반면 proposer priority는 다음 proposer를 고르는 누적 scheduler
+          값이라 block certificate의 의미와 섞으면 안 됩니다.
         </p>
       </div>
       <div className="not-prose my-4 flex flex-wrap gap-3">
@@ -49,20 +49,20 @@ export default function ValidatorSet({
         <h3>Validator update에는 높이 지연이 있습니다</h3>
         <p>
           Application이 FinalizeBlock에서 반환한 update가 어느 height의 block validation과 last-commit 정보에 반영되는지는
-          protocol lifecycle에 의해 정해집니다. 운영 로그에는 “현재 set”, “다음 set”, “commit을 검증한 historical set”을
-          구분하고 height와 hash를 함께 남겨야 합니다. 최신 set으로 과거 commit을 검증하면 정상 서명을 잘못 거부할 수 있습니다.
+          protocol lifecycle이 정합니다. 그래서 운영 로그에는 “현재 set”, “다음 set”, “commit을 검증한 historical set”을 구분해 적고
+          height와 hash를 나란히 남겨 둡니다. 최신 set으로 과거 commit을 검증하면 정상 서명을 잘못 거부할 수 있습니다.
         </p>
         <p>
-          작은 계산으로 power가 3과 1이고 priority가 둘 다 0이라고 하겠습니다. 첫 round에 power를 더하면 3과 1이므로
-          첫 validator를 고르고 total power 4를 빼 priority는 -1과 1이 됩니다. 다음 round에 다시 power를 더하면 2와
-          2가 되므로 pinned implementation의 deterministic tie-break가 proposer를 정합니다. 이 예는 scheduling 계산이지
-          proposal validity나 commit certificate가 아닙니다.
+          숫자를 작게 잡아 보겠습니다. power가 3과 1이고 priority는 둘 다 0입니다. 첫 round에 power를 더하면 3과 1이므로 첫 validator를 고르고
+          total power 4를 빼 priority는 -1과 1이 됩니다. 다음 round에 다시 power를 더하면 2와 2가 되므로 pinned implementation의
+          deterministic tie-break가 proposer를 정합니다. 이 예는 scheduling 계산이지 proposal validity나 commit certificate가
+          아닙니다.
         </p>
         <h3>Evidence는 signed conflict에서 application policy까지 이어지는 pipeline입니다</h3>
         <p>
-          DuplicateVoteEvidence는 같은 validator·height·round·vote type인데 BlockID가 다른 두 signed vote를 묶습니다.
-          하지만 두 bytes를 찾았다는 사실만으로 처벌이 끝나지는 않습니다. 당시 membership·power와 signature, chain ID,
-          age, 이미 commit됐는지를 검증하고 block에 포함한 뒤 FinalizeBlock의 misbehavior 입력으로 application에 전달합니다.
+          DuplicateVoteEvidence는 같은 validator·height·round·vote type인데 BlockID가 다른 두 signed vote를 묶습니다. 하지만 두
+          bytes를 찾았다는 사실만으로 처벌이 끝나지는 않습니다. 당시 membership·power와 signature를 봐야 하고 chain ID와 age, 이미 commit됐는지도
+          함께 검증합니다. 그렇게 통과한 evidence를 block에 포함한 뒤 FinalizeBlock의 misbehavior 입력으로 application에 전달합니다.
         </p>
       </div>
       <div className="not-prose my-4 flex flex-wrap gap-3">
@@ -73,7 +73,10 @@ export default function ValidatorSet({
       <div id="paper-cometbft-evidence-v040" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">공식 규격 읽기 · evidence accountability</p>
         <p className="mt-2 text-sm font-semibold">CometBFT Evidence Specification</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">문제는 Byzantine 행동을 객관적으로 검증·gossip·commit해 application에 전달하는 것입니다. 이 규격은 detection과 on-chain delivery를 설명하지만 경제적 penalty의 크기나 모든 공격의 예방까지 보장하지 않습니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            이 규격은 Byzantine 행동을 객관적으로 검증하고 gossip·commit해 application까지 전달하는 문제를 다룹니다. 다만 설명하는 범위는 detection과
+            on-chain delivery까지고 경제적 penalty의 크기나 모든 공격의 예방은 보장하지 않습니다.
+          </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://github.com/cometbft/cometbft/blob/v0.40.0/spec/consensus/evidence.md" target="_blank" rel="noreferrer">v0.40.0 evidence 규격 보기</a>
       </div>
     </section>

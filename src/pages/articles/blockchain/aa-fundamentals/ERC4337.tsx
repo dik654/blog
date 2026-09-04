@@ -23,8 +23,10 @@ export default function ERC4337() {
         </p>
         <h3>Bundler는 admission과 inclusion을 구분합니다</h3>
         <p>
-          첫 simulation은 signature·prefund·validation rule을 확인해 mempool admission을 결정합니다. 이후 다른 transaction이 validation이 읽는 state를 바꿀 수 있으므로 bundle을 만들기 직전에 다시 검증합니다.
-          첫 simulation 성공은 inclusion 보장이 아니고, validation reject와 account execution revert도 서로 다른 outcome입니다. ERC-7562의 opcode·storage·reputation 제한은 arbitrary validation이 대량 무효화를 일으키는 DoS surface를 줄이려는 규칙입니다.
+          첫 simulation은 signature·prefund·validation rule을 확인해 mempool admission을 결정합니다. 이후 validation이 읽는
+          state를 다른 transaction이 바꿀 수 있으므로 bundle을 만들기 직전에 다시 검증합니다. 첫 simulation 성공은 inclusion 보장이 아니고
+          validation reject와 account execution revert도 서로 다른 outcome입니다. ERC-7562의 opcode·storage·reputation
+          제한은 arbitrary validation이 대량 무효화를 일으키는 DoS surface를 줄이려는 규칙입니다.
         </p>
       </div>
 

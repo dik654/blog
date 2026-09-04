@@ -396,7 +396,7 @@ export default function BeaconKitArch({ onCodeRef }: Props) {
             </div>
           </div>
           <p className="text-xs text-muted-foreground mt-2">
-            BeaconKit가 SSZ를 선택한 이유: 이더리움 호환성 극대화
+            BeaconKit가 SSZ를 선택한 이유는 이더리움 호환성 극대화
           </p>
         </div>
       </div>

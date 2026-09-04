@@ -114,18 +114,15 @@ export default function ModernBerachainArticle() {
           interpretation="100/1,000=10%이고 Rv=50이면 Ru=5 BGT입니다. User share가 같아도 validator allocation이나 vault reward가 0이면 reward도 0입니다."
         />
         <p>
-          User는 protocol action으로 receipt token을 얻고 Reward Vault에 stake해
-          BGT를 적립합니다. BGT holder는 validator를 boost할 수 있고,
-          validator는 자신에게 발생한 variable emission을 whitelisted vault들에
-          percentage로 allocation합니다. Protocol은 incentive tokens로
-          allocation을 유도할 수 있습니다. Vault 생성과 emission eligibility는
-          같지 않으며 governance whitelist를 확인해야 합니다.
+          User는 protocol action으로 receipt token을 얻고 Reward Vault에 stake해 BGT를 적립합니다. BGT holder는 validator를
+          boost할 수 있으며 validator는 자신에게 발생한 variable emission을 whitelisted vault들에 percentage로 allocation합니다.
+          Protocol은 incentive tokens로 이 allocation을 유도하기도 합니다. Vault를 만들었다는 사실과 emission eligibility는 별개입니다.
+          Governance whitelist를 함께 확인해야 합니다.
         </p>
         <p>
-          BGT는 일반 ERC-20처럼 자유 전송되는 token으로 취급하지 않습니다.
-          Governance·boost·reward 권한과 BERA로의 current redemption path는
-          contract/API version을 고정해 해석합니다. BGT price를 임의
-          시장가격으로 두거나 one-way redemption을 양방향 peg로 부르지 않습니다.
+          BGT는 자유 전송되는 일반 ERC-20 token과 취급이 다릅니다. Governance·boost·reward 권한과 BERA로의 current redemption path는
+          contract/API version을 고정해 해석합니다. BGT price를 임의 시장가격으로 두거나 one-way redemption을 양방향 peg라고 부르면 그때부터 해석이
+          어긋납니다.
         </p>
         <div id="paper-berachain-vault">
           <CitationBlock
@@ -179,11 +176,10 @@ export default function ModernBerachainArticle() {
           evidence입니다.
         </p>
         <p>
-          따라서 “vault TVL이 커졌다→chain security가 같은 비율로 커졌다”거나
-          “BGT governance vote가 block을 finalized했다”고 말하지 않습니다.
-          Incentive design은 validator·protocol 행동과 centralization pressure를
-          바꿀 수 있으나 safety/liveness는 authenticated committee, fault bound,
-          networking과 implementation correctness를 별도로 검증합니다.
+          “vault TVL이 커졌다→chain security가 같은 비율로 커졌다”거나 “BGT governance vote가 block을 finalized했다”는 말은 여기서 성립하지
+          않습니다. Incentive design은 validator·protocol 행동과 centralization pressure를 바꿀 수 있습니다. 다만
+          safety/liveness는 authenticated committee, fault bound, networking과 implementation correctness로 따로
+          검증합니다.
         </p>
         <div id="paper-berachain-beaconkit">
           <CitationBlock
@@ -236,10 +232,9 @@ export default function ModernBerachainArticle() {
           generation에서 연결합니다.
         </p>
         <p>
-          기초 6문제는 세 token, fixed reward share, boost/allocation/vault와
-          consensus 경계를 묻습니다. 심화 4문제는 whitelist governance,
-          incentive attack, validator/reward reconciliation과 rollback release
-          matrix를 설계하게 합니다.
+          세 token, fixed reward share, boost/allocation/vault와 consensus 경계. 기초 6문제가 묻는 범위입니다. 심화 4문제로 넘어가면
+          whitelist governance, incentive attack, validator/reward reconciliation과 rollback release matrix를 직접
+          설계해야 합니다.
         </p>
       </section>
     </article>

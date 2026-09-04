@@ -14,9 +14,9 @@ export default function Timeout({
       <h2 className="mb-6 text-2xl font-bold">Timeout은 실패 판결이 아니라 더 높은 round로 넘어갈 조건이다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Proposal이나 quorum이 제때 도착하지 않으면 node는 해당 step의 timeout event를 예약합니다. Event에는 H/R/S가
-          들어 있어야 하며, 처리 시점의 current state와 맞지 않는 오래된 timer는 무시합니다. 그렇지 않으면 이미
-          precommit이나 다음 round에 간 node가 늦은 timer 때문에 뒤로 이동할 수 있습니다.
+          Proposal이나 quorum이 제때 도착하지 않으면 node는 해당 step의 timeout event를 예약합니다. Event에는 H/R/S가 들어 있어야 하며 처리 시점의
+          current state와 맞지 않는 오래된 timer는 무시합니다. 그렇지 않으면 이미 precommit이나 다음 round에 간 node가 늦은 timer 때문에 뒤로
+          이동합니다.
         </p>
       </div>
       <div className="not-prose my-4 flex flex-wrap gap-3">
@@ -43,9 +43,9 @@ export default function Timeout({
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>운영에서는 너무 짧음과 너무 김을 같은 실험에서 봅니다</h3>
         <p>
-          Timeout이 너무 짧으면 정상 message도 놓쳐 round churn과 vote traffic이 늘고, 너무 길면 faulty proposer를 오래
-          기다립니다. 같은 validator set·latency/loss schedule에서 commit latency, rounds per height, nil vote power,
-          stale timeout count, message bytes를 paired 측정하고 safety hard gate를 먼저 통과시킵니다.
+          Timeout이 너무 짧으면 정상 message도 놓쳐 round churn과 vote traffic이 늘고 너무 길면 faulty proposer를 오래 기다립니다. 같은
+          validator set·latency/loss schedule에서 commit latency, rounds per height, nil vote power, stale
+          timeout count, message bytes를 paired 측정하고 safety hard gate를 먼저 통과시킵니다.
         </p>
       </div>
     </section>

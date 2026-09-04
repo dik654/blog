@@ -5,10 +5,18 @@ import { ProofBoundaryViz, StorageBatchViz } from "./viz/ModernCommonwareStorage
 export default function ModernCommonwareStorageArticle(){return <article className="space-y-14">
   <section id="overview" className="space-y-6"><header className="space-y-3"><p className="text-sm font-semibold text-primary">Commonware Storage · MMR and QMDB</p><h2 className="text-3xl font-bold tracking-tight">저장 완료는 root를 계산한 순간이 아니라 winning batch를 적용하고 crash 뒤 복구한 순간까지 나눠 봐야 한다</h2></header>
     <p className="text-lg leading-8 text-foreground/90">현재 Alice 잔액 20, Bob 잔액 5에서 10을 보내면 두 update를 하나의 batch에 stage합니다. <code>merkleize</code>는 candidate root를 계산하지만 DB를 아직 바꾸지 않습니다. 그 batch가 현재 committed prefix에서 이어지는지 확인해 apply하고, durable commit·sync를 마쳐야 restart 뒤에도 같은 root를 복원할 수 있습니다.</p>
-    <p>Commonware storage에는 append-only list를 증명하는 Merkle Mountain Range(MMR)와 QMDB 계열의 authenticated databases가 있습니다. 이 글은 “Merkle root가 있다”를 하나의 성질로 뭉개지 않고, 무엇의 inclusion·history·current status를 어느 snapshot에서 증명하는지 구분합니다.</p><StorageBatchViz />
+    <p>
+            Commonware storage에는 append-only list를 증명하는 Merkle Mountain Range(MMR)와 QMDB 계열의 authenticated
+            databases가 있습니다. 이 글은 “Merkle root가 있다”를 하나의 성질로 뭉개지 않고 무엇의 inclusion·history·current status를 어느
+            snapshot에서 증명하는지 구분합니다.
+          </p><StorageBatchViz />
   </section>
   <section id="proof-layout" className="space-y-6"><header><p className="text-sm font-semibold text-primary">01 · MMR peaks and proof</p><h2 className="mt-2 text-2xl font-bold">MMR은 append할 때 기존 node 위치를 바꾸지 않고 여러 perfect-tree peaks를 bagging한다</h2></header>
-    <p>MMR에서 location은 leaf의 삽입 순서이고 position은 전체 nodes의 post-order index입니다. 11 leaves 예에서는 완전 이진트리 크기 8·2·1에 해당하는 세 peaks가 생깁니다. Proof는 leaf에서 자기 peak까지 sibling hashes를 복원하고, 다른 peaks를 정해진 bagging policy로 결합해 expected root와 비교합니다.</p>
+    <p>
+            MMR에서 location은 leaf의 삽입 순서이고 position은 전체 nodes의 post-order index입니다. 11 leaves 예에서는 완전 이진트리 크기
+            8·2·1에 해당하는 세 peaks가 생깁니다. Proof는 leaf에서 자기 peak까지 sibling hashes를 복원하고 다른 peaks를 정해진 bagging
+            policy로 결합해 expected root와 비교합니다.
+          </p>
     <ExplainedFormula question="N개 leaf를 가진 MMR에 peak가 몇 개 생기는가?" idea={<>N의 binary 표현에서 1인 bit 하나가 완전 이진트리 하나를 뜻합니다. 따라서 peak 수는 popcount(N)이고 전체 node 수는 각 tree의 nodes를 더한 값입니다.</>} formula={String.raw`\begin{aligned}peaks(N)&=popcount(N)\\nodes(N)&=2N-popcount(N)\\N=11&:\ 3\ peaks,\ 19\ nodes\end{aligned}`}
     annotatedFormula={String.raw`\begin{aligned}peaks(N)&=\underbrace{popcount(N)}_{\text{set-bit count 계산}}\\nodes(N)&=\underbrace{2N-popcount(N)}_{\text{set-bit count 계산}}\\N=11&:\ 3\ peaks,\ 19\ nodes\end{aligned}`}
     operations={[
@@ -23,8 +31,16 @@ export default function ModernCommonwareStorageArticle(){return <article classNa
     <div id="paper-commonware-qmdb"><CitationBlock source="Commonware QMDB source and lifecycle · v2026.7.0" citeKey={2} type="code" href="https://github.com/commonwarexyz/monorepo/blob/5950bf7179bb0650a57ed58b9e0478822944b335/storage/src/qmdb/mod.rs"><p><strong>문제:</strong> Append-only operation log에서 keyed updates·deletes와 authenticated roots를 batch 단위로 관리해야 합니다.</p><p><strong>기여:</strong> Any·Current·immutable·keyless variants와 stage→merkleize→apply→sync/prune lifecycle을 제공합니다.</p><p><strong>전제:</strong> Exact tag, selected Merkle family/hash/bagging, batch ancestry와 configured persistence backend를 고정합니다.</p><p><strong>근거 범위:</strong> v2026.7.0 QMDB module terminology, batch lifecycle과 public variant semantics에 한정합니다.</p><p><strong>말하지 않는 것:</strong> 모든 operation이 O(1)이거나 candidate root 계산이 durable commit이며, Any proof가 현재성을 증명한다는 뜻은 아닙니다.</p></CitationBlock></div>
   </section>
   <section id="release" className="space-y-6"><header><p className="text-sm font-semibold text-primary">03 · commit, prune, recovery</p><h2 className="mt-2 text-2xl font-bold">Root·floor·batch ancestry를 함께 복구하고 proof를 다시 검증한다</h2></header>
-    <p>Crash fixture는 merkleize 전, apply 도중, commit 전후를 나눕니다. Restart 뒤 journal bounds, last commit, root와 current bitmap metadata를 복원하고, Alice·Bob proof를 fresh verifier로 확인합니다. Applied memory state만 있고 durable commit이 없다면 client success를 재사용하지 않습니다.</p>
-    <p>Prune은 오래된 operation을 지우는 단순 정리가 아닙니다. Retained proof와 current root를 복원하는 데 필요한 floor와 pinned digests를 지켜야 하며, boundary보다 앞선 proof 요청은 명시적 pruned error로 끝내야 합니다. Release는 stale sibling 거절, tampered proof, wrong bagging, wrong inactive-peak metadata, torn write와 restart parity를 통과해야 합니다.</p>
+    <p>
+            Crash fixture는 merkleize 전, apply 도중, commit 전후를 나눕니다. Restart 뒤 journal bounds, last commit,
+            root와 current bitmap metadata를 복원합니다. Alice·Bob proof는 fresh verifier로 확인합니다. Applied memory
+            state만 있고 durable commit이 없다면 client success를 재사용하지 않습니다.
+          </p>
+    <p>
+            Prune은 오래된 operation을 지우는 단순 정리가 아닙니다. Retained proof와 current root를 복원하는 데 필요한 floor와 pinned
+            digests를 지켜야 하며 boundary보다 앞선 proof 요청은 명시적 pruned error로 끝내야 합니다. Release는 stale sibling 거절,
+            tampered proof, wrong bagging, wrong inactive-peak metadata, torn write와 restart parity를 통과해야 합니다.
+          </p>
     <h3 className="text-xl font-semibold">이 글만으로 확인할 10가지</h3><p>기초 6문제는 batch lifecycle, MMR location/position, 11-leaf 계산, Any/Current 차이, grafting과 stale branch를 묻습니다. 심화 4문제는 proof tampering, sibling race, crash window와 prune/recovery release를 설계하게 합니다.</p>
   </section>
 </article>}

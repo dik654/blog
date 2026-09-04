@@ -10,7 +10,7 @@ function SnowballViz() {
   return (
     <div className="not-prose rounded-xl border p-4 mb-6">
       <p className="text-xs text-center text-foreground/75 mb-3">
-        Snowball: 누적 신뢰도 카운터
+        Snowball의 누적 신뢰도 카운터
       </p>
       <svg
         viewBox="0 0 420 80"

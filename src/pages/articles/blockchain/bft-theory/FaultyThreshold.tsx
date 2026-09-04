@@ -46,17 +46,16 @@ export default function FaultyThreshold() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>산술은 protocol rule과 결합될 때 safety proof가 됩니다</h3>
         <p>
-          Honest overlap이 있어도 honest replica가 phase·height를 구분하지 않거나 lock 없이 conflicting
-          vote를 허용하면 두 certificate가 생길 수 있습니다. Signature set은 signer uniqueness, membership,
-          message domain, phase·view·height, value digest를 검증해야 하며 duplicate signature를 weight 두 번으로
-          세면 안 됩니다.
+          Honest overlap이 있어도 honest replica가 phase·height를 구분하지 않거나 lock 없이 conflicting vote를 허용하면 두
+          certificate가 생길 수 있습니다. Signature set은 signer uniqueness, membership, message domain,
+          phase·view·height, value digest를 검증해야 합니다. Duplicate signature는 weight 한 번으로만 셉니다.
         </p>
         <h3>Weighted stake는 사람 수 대신 weight 합을 계산합니다</h3>
         <p>
-          Stake-weighted protocol은 signer count가 아니라 total voting weight와 fault-weight bound를 사용합니다.
-          100개 key 중 한 운영자가 40% weight를 갖는다면 key 수가 분산돼 보여도 fault concentration은 40%입니다.
-          Rounding·membership update·epoch boundary와 quorum certificate의 weight snapshot을 versioned receipt로
-          고정해야 서로 다른 node가 threshold를 다르게 계산하지 않습니다.
+          Stake-weighted protocol은 signer count가 아니라 total voting weight와 fault-weight bound를 사용합니다. 100개 key
+          중 한 운영자가 40% weight를 갖는다면 key 수가 분산돼 보여도 fault concentration은 40%입니다. 서로 다른 node가 threshold를 다르게
+          계산하지 않으려면 rounding·membership update·epoch boundary와 quorum certificate의 weight snapshot을 versioned
+          receipt로 고정해야 합니다.
         </p>
       </div>
     </section>

@@ -34,7 +34,9 @@ export default function MempoolStateSync({
       <h2 className="mb-6 text-2xl font-bold">멤풀과 State Sync: 트랜잭션을 받는 경로와 새 노드가 따라잡는 경로</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          CometBFT의 멤풀과 State Sync는 서로 다른 문제를 해결합니다. 멤풀은 아직 블록에 포함되지 않은 트랜잭션을 검증하고 peer에 전파하는 실시간 경로이고, State Sync는 새 노드가 모든 과거 블록을 다시 실행하지 않고 검증된 application state에서 시작하게 하는 bootstrap 경로입니다. 둘을 함께 보면 “새 입력을 어떻게 받는가”와 “기존 상태를 어떻게 따라잡는가”가 분리되어 보입니다.
+          CometBFT의 멤풀과 State Sync는 서로 다른 문제를 해결합니다. 멤풀은 아직 블록에 포함되지 않은 트랜잭션을 검증해 peer에 전파하는 실시간 경로입니다. State
+          Sync는 bootstrap 경로로, 새 노드가 모든 과거 블록을 다시 실행하지 않고 검증된 application state에서 곧장 출발하게 합니다. 둘을 함께 보면 “새 입력을
+          어떻게 받는가”와 “기존 상태를 어떻게 따라잡는가”가 분리되어 보입니다.
         </p>
       </div>
       <div className="not-prose my-8">
@@ -54,7 +56,9 @@ export default function MempoolStateSync({
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>State Sync는 검증된 snapshot에서 실행을 재개합니다</h3>
         <p>
-          Ethereum snap sync가 state trie를 chunk 단위로 내려받는다면 CometBFT State Sync는 application이 내놓은 snapshot을 ABCI로 받아 적용합니다. 두 방식 모두 전체 chain history를 처음부터 replay하지 않는다는 목적은 같지만, CometBFT에서는 consensus node가 application state의 내부 형식을 알지 못한다는 점이 중요합니다.
+          Ethereum snap sync가 state trie를 chunk 단위로 내려받는다면 CometBFT State Sync는 application이 내놓은 snapshot을
+          ABCI로 받아 적용합니다. 전체 chain history를 처음부터 replay하지 않는다는 목적은 두 방식이 같습니다. 다만 CometBFT에서는 consensus node가
+          application state의 내부 형식을 알지 못한다는 점이 중요합니다.
         </p>
       </div>
 
@@ -110,7 +114,9 @@ export default function MempoolStateSync({
           <div className="rounded-xl border bg-card p-4">
             <p className="mb-3 text-sm font-semibold">왜 linked list인가</p>
             <p className="text-sm leading-6 text-muted-foreground">
-              뒤에 붙이고 이미 commit된 항목을 제거하는 작업은 각각 O(1)이며, peer gossip은 쓰기와 동시에 list를 순회할 수 있습니다. 이 구조 덕분에 block commit과 transaction 전파가 같은 global lock을 오래 점유하지 않습니다. 실제 최대 항목 수와 byte 제한은 node configuration으로 정합니다.
+              뒤에 붙이고 이미 commit된 항목을 제거하는 작업은 각각 O(1)입니다. peer gossip은 쓰기와 동시에 list를 순회할 수 있습니다. 이 구조 덕분에 block
+              commit과 transaction 전파가 같은 global lock을 오래 점유하지 않습니다. 실제 최대 항목 수와 byte 제한은 node configuration으로
+              정합니다.
             </p>
           </div>
         </div>

@@ -6,7 +6,11 @@ export default function AtokenDebt() {
     <section id="atoken-debt" className="mb-16 scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">Scaled balance와 reserve index가 사용자별 이자를 분리한다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p>매초 모든 사용자의 storage balance를 쓰지 않고, 공급·차입 시 normalized index로 나눈 scaled amount를 기록합니다. 조회 시 aToken은 liquidity index, VariableDebtToken은 variable borrow index를 곱합니다. 최신 V3 source에서는 stable debt mode가 deprecated되어 이 글은 variable debt path만 다룹니다.</p>
+        <p>
+            매초 모든 사용자의 storage balance를 쓰지 않고 공급·차입 시 normalized index로 나눈 scaled amount를 기록합니다. 조회 시 aToken은
+            liquidity index, VariableDebtToken은 variable borrow index를 곱합니다. 최신 V3 source에서는 stable debt mode가
+            deprecated되어 이 글은 variable debt path만 다룹니다.
+          </p>
       </div>
       <ModernAaveViz mode="index" />
       <ExplainedFormula

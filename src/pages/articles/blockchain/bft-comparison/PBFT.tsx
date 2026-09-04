@@ -181,8 +181,7 @@ export default function PBFT() {
           <div className="rounded-lg border p-4">
             <p className="font-semibold text-sm mb-1">O(n²) 통신 복잡도</p>
             <p className="text-sm">
-              검증자 수가 늘어나면 메시지 수가 기하급수적으로 증가. 이더리움처럼
-              수십만 검증자는 불가능.
+              validator 수가 늘어나면 메시지 수가 기하급수적으로 증가. 이더리움처럼 수십만 validator는 불가능.
             </p>
           </div>
           <div className="rounded-lg border p-4">

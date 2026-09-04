@@ -190,11 +190,9 @@ export default function Cryptography({
           </div>
         </div>
         <p className="leading-7">
-          Validator key 선택은 단순 benchmark가 아니라 ecosystem 호환성, key
-          관리 도구, 검증 비용을 함께 보는 문제다. CometBFT의 일반적인
-          validator 서명 경로는 Ed25519를 사용하며, 다른 signature scheme을
-          도입하려면 현재 protocol과 application이 그 key type을 실제로
-          지원하는지부터 확인해야 한다.
+          Validator key 선택은 ecosystem 호환성과 key 관리 도구, 검증 비용을 함께 놓고 보는 문제다. benchmark 숫자 하나로 정할 일이 아니다.
+          CometBFT의 일반적인 validator 서명 경로는 Ed25519를 쓴다. 다른 signature scheme을 도입한다면 현재 protocol과 application이 그
+          key type을 실제로 지원하는지부터 확인한다.
         </p>
       </div>
     </section>

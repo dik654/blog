@@ -14,10 +14,10 @@ export default function RoundState({
       <h2 className="mb-6 text-2xl font-bold">Prevote는 후보를 관찰한 증거이고 Precommit은 lock을 갱신한 증거다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Propose에서 validator는 proposal과 block parts를 받아 basic·application validity를 확인합니다. Prevote에서는
-          현재 lock과 proposal의 valid-round evidence를 고려해 block 또는 nil에 서명합니다. 같은 round에 특정 block의
-          prevote power가 +2/3이면 proof-of-lock-change(PoLC)가 생기고, validator는 lock을 갱신해 그 block에
-          precommit합니다. 같은 block의 precommit power가 +2/3이면 commit으로 이동합니다.
+          Propose에서 validator는 proposal과 block parts를 받아 basic·application validity를 확인합니다. Prevote에서는 현재
+          lock과 proposal의 valid-round evidence를 고려해 block 또는 nil에 서명합니다. 같은 round에 특정 block의 prevote power가
+          +2/3이면 proof-of-lock-change(PoLC)가 생기고 validator는 lock을 갱신해 그 block에 precommit합니다. 같은 block의
+          precommit power가 +2/3이면 commit으로 이동합니다.
         </p>
         <div className="not-prose my-4 flex flex-wrap gap-3">
           <CodeViewButton label="enterNewRound()" onClick={() => onCodeRef("enter-new-round", codeRefs["enter-new-round"])} />
@@ -25,9 +25,9 @@ export default function RoundState({
         </div>
         <h3>Nil vote는 error가 아니라 안전한 progress 신호일 수 있습니다</h3>
         <p>
-          Proposal을 받지 못했거나 invalid하거나 현재 lock과 호환되는 evidence가 없으면 validator는 nil에 prevote합니다.
-          +2/3 nil prevote는 그 round에서 block lock을 만들 수 없음을 보여 주며, nil precommit은 다음 round로 갈 수 있게
-          합니다. Nil과 absent를 섞으면 network loss와 protocol decision을 구분하지 못합니다.
+          Proposal을 받지 못했거나 invalid하거나 현재 lock과 호환되는 evidence가 없으면 validator는 nil에 prevote합니다. +2/3 nil
+          prevote는 그 round에서 block lock을 만들 수 없다는 신호고 nil precommit은 다음 round로 넘어가게 합니다. Nil과 absent를 섞으면
+          network loss와 protocol decision을 구분하지 못합니다.
         </p>
         <div className="not-prose my-4 flex flex-wrap gap-3">
           <CodeViewButton label="defaultDoPrevote()" onClick={() => onCodeRef("enter-prevote", codeRefs["enter-prevote"])} />

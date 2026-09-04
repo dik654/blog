@@ -19,10 +19,9 @@ export default function Overview() {
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          사용자가 보낸 transaction 한 건은 곧바로 chain state를 바꾸지 않습니다. 먼저 node가 bytes를
-          받아 후보 pool에 넣고, validator들이 어느 block을 다음 순서로 채택할지 합의한 다음,
-          application이 그 block을 같은 이전 state에 실행해야 합니다. CometBFT는 이 가운데 Byzantine
-          fault-tolerant state machine replication과 application handoff를 맡습니다.
+          사용자가 보낸 transaction 한 건은 곧바로 chain state를 바꾸지 않습니다. 먼저 node가 bytes를 받아 후보 pool에 넣습니다. 그다음
+          validator들이 어느 block을 다음 순서로 채택할지 합의하고 application이 그 block을 같은 이전 state에 실행합니다. CometBFT는 이 가운데
+          Byzantine fault-tolerant state machine replication과 application handoff를 맡습니다.
         </p>
         <p>
           이 구분을 놓치면 mempool의 CheckTx를 최종 실행으로, consensus commit을 application disk commit으로,
@@ -60,20 +59,18 @@ export default function Overview() {
           transition을 계산하며, Commit 뒤 app hash가 다음 height의 state identity가 됩니다.
         </p>
         <p>
-          따라서 같은 transaction ID에 receive time, CheckTx result, proposal height·round, block hash,
-          commit evidence, FinalizeBlock result, app hash와 persistence status를 연결해야 합니다. 어느 단계가
-          실패했는지 모르면 재시작 뒤 transaction을 누락하거나 이미 실행된 external effect를 중복할 수 있습니다.
-          Application transition은 deterministic해야 하고 외부 side effect는 outbox·idempotency receipt처럼
-          합의 state와 별도로 조정해야 합니다.
+          추적의 축은 transaction ID 하나입니다. 여기에 receive time과 CheckTx result를 먼저 잇고 proposal height·round, block
+          hash, commit evidence를 붙입니다. 마지막으로 FinalizeBlock result, app hash와 persistence status까지 이어 둡니다. 어느
+          단계가 실패했는지 모르면 재시작 뒤 transaction을 누락하거나 이미 실행된 external effect를 중복할 수 있습니다. Application transition은
+          deterministic해야 하고 외부 side effect는 outbox·idempotency receipt처럼 합의 state와 별도로 조정합니다.
         </p>
 
         <h3>Proposal과 실행은 같은 호출이 아닙니다</h3>
         <p>
-          PrepareProposal·ProcessProposal은 block 후보를 만들고 검증하는 consensus-time boundary이고,
-          FinalizeBlock은 합의된 block의 application transition을 계산하는 execution boundary입니다.
-          CheckTx도 admission signal일 뿐 최종 receipt가 아닙니다. 같은 transaction이 후보에서 제외되거나
-          다른 height에 포함될 수 있으므로 client는 mempool acceptance가 아니라 committed height·index·app
-          result를 확인해야 합니다.
+          PrepareProposal·ProcessProposal은 block 후보를 만들고 검증하는 consensus-time boundary입니다. FinalizeBlock 쪽은 합의된
+          block의 application transition을 계산하는 execution boundary입니다. CheckTx도 admission signal일 뿐 최종 receipt는
+          아닙니다. 같은 transaction이 후보에서 제외되거나 다른 height에 포함될 수 있으니 client가 확인할 것은 committed height·index·app
+          result입니다. mempool acceptance는 근거가 되지 못합니다.
         </p>
 
         <h3>Version을 고정하지 않은 코드 읽기는 재현할 수 없습니다</h3>
@@ -88,11 +85,10 @@ export default function Overview() {
         <h3>채택 검사는 정상 처리량보다 먼저 safety와 replay를 봅니다</h3>
         <p>
           Base와 candidate에 같은 genesis·validator set·application binary·transaction fixture·network schedule을
-          주고 invalid proposal, equivocation, delayed vote, app rejection, crash between FinalizeBlock and Commit,
-          restart와 state-sync를 반복합니다. Conflicting committed block 또는 app hash는 0건이어야 하며,
-          committed transaction·height·app hash의 parity와 restart recovery를 hard gate로 둡니다. Throughput과
-          p95는 그 뒤에 같은 workload에서 비교하고, gate를 넘지 못하면 이전 binary·config·database snapshot으로
-          rollback합니다.
+          줍니다. 그 위에서 invalid proposal, equivocation, delayed vote를 반복하고 이어서 app rejection, crash between
+          FinalizeBlock and Commit, restart와 state-sync를 반복합니다. Conflicting committed block 또는 app hash는 0건이어야
+          합니다. committed transaction·height·app hash의 parity와 restart recovery는 hard gate로 둡니다. Throughput과
+          p95는 그 뒤에 같은 workload에서 비교합니다. gate를 넘지 못하면 이전 binary·config·database snapshot으로 rollback합니다.
         </p>
         <p>
           이론 전제가 필요하면 <Link to="/blockchain/distributed-systems">분산 시스템 기초</Link>,
@@ -107,19 +103,30 @@ export default function Overview() {
       <div id="paper-cometbft-repository" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">공식 코드 · architecture snapshot</p>
         <p className="mt-2 text-sm font-semibold">cometbft/cometbft source repository</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">문제는 consensus·mempool·state·P2P 책임이 실제 release에서 어디에 구현됐는지 확인하는 것입니다. Repository는 source와 release history를 제공하지만 main의 현재 코드가 production binary와 같다고 가정할 수 없으므로 version·SHA를 함께 고정합니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            consensus·mempool·state·P2P 책임이 실제 release에서 어디에 구현됐는가, 여기서 확인할 것은 그것입니다. Repository가 주는 것은
+            source와 release history입니다. main의 현재 코드가 production binary와 같다고 가정할 수는 없으므로 version·SHA를 함께 고정합니다.
+          </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://github.com/cometbft/cometbft" target="_blank" rel="noreferrer">공식 repository 보기</a>
       </div>
       <div id="paper-cometbft-abci-spec" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">공식 규격 · application boundary</p>
         <p className="mt-2 text-sm font-semibold">CometBFT Application Blockchain Interface</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">문제는 consensus engine과 deterministic application 사이의 request·response·commit 경계를 정의하는 것입니다. 공식 문서는 현재 ABCI lifecycle을 설명하지만 특정 application의 business validity·external effect exactly-once까지 대신 보장하지 않습니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            consensus engine과 deterministic application 사이의 request·response·commit 경계를 정의하는 일이 여기 걸려 있습니다. 공식
+            문서는 현재 ABCI lifecycle을 설명하는 데까지고 특정 application의 business validity·external effect exactly-once는
+            보장하지 않습니다.
+          </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://docs.cosmos.network/cometbft/latest/spec/abci/Overview" target="_blank" rel="noreferrer">ABCI 공식 문서 보기</a>
       </div>
       <div id="paper-cometbft-consensus-spec" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">공식 규격 · consensus boundary</p>
         <p className="mt-2 text-sm font-semibold">CometBFT Byzantine Consensus Algorithm</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">문제는 proposal·prevote·precommit과 round change가 어떤 evidence로 block order를 결정하는지 설명하는 것입니다. 규격의 safety·liveness 주장은 해당 validator·timing·fault 전제에 제한되며 application 실행 결과나 모든 network 성능을 고정하지 않습니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            proposal·prevote·precommit과 round change가 어떤 evidence로 block order를 결정하는지, 규격이 설명하는 대상은 그 절차입니다.
+            safety·liveness 주장은 해당 validator·timing·fault 전제 안에서만 성립합니다. application 실행 결과나 모든 network 성능까지
+            고정해 주지는 않습니다.
+          </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://docs.cosmos.network/cometbft/latest/spec/consensus/Byzantine-Consensus-Algorithm.md" target="_blank" rel="noreferrer">Consensus 공식 문서 보기</a>
       </div>
     </section>

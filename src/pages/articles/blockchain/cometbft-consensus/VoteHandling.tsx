@@ -17,10 +17,9 @@ export default function VoteHandling({
         equivocation evidence 후보로 보존해야 합니다.
       </p>
       <p>
-        VoteSet에 추가됐다는 사실과 state transition도 분리합니다. 예를 들어 +2/3 prevote는 precommit 조건을 만들고,
-        +2/3 precommit은 commit 조건을 만들지만 현재 node가 block parts를 아직 받지 못했다면 필요한 data를 먼저
-        복구해야 합니다. 따라서 metric에는 vote count뿐 아니라 voting power, block availability, validation failure,
-        transition latency를 함께 둡니다.
+        VoteSet에 추가됐다는 사실과 state transition도 분리합니다. 예를 들어 +2/3 prevote는 precommit 조건을 만들고 +2/3 precommit은
+        commit 조건을 만듭니다. 다만 현재 node가 block parts를 아직 받지 못했다면 필요한 data를 먼저 복구해야 합니다. 따라서 metric에는 vote count뿐
+        아니라 voting power, block availability, validation failure, transition latency를 함께 둡니다.
       </p>
       <div className="not-prose my-4 flex flex-wrap gap-3">
         <CodeViewButton label="addVote()" onClick={() => onCodeRef("add-vote", codeRefs["add-vote"])} />

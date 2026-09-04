@@ -9,8 +9,7 @@ export default function Overview() {
       </div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          BlockExecutor.ApplyBlock()은 합의 결과를 실제 상태 전이에 반영하는
-          중심 진입점입니다. 이 아티클에서는 ValidateBlock → FinalizeBlock →
+          BlockExecutor.ApplyBlock()은 합의 결과를 실제 상태 전이에 반영하는 중심 진입점입니다. 이 글에서는 ValidateBlock → FinalizeBlock →
           SaveState 전체 호출 체인을 추적합니다.
         </p>
 

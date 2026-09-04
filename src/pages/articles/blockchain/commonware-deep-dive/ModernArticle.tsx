@@ -25,13 +25,27 @@ export default function ModernCommonwareOverviewArticle(){return <article classN
   </section>
   <section id="bridge-boundary" className="space-y-6">
     <header><p className="text-sm font-semibold text-primary">02 · bridge assembly boundary</p><h2 className="mt-2 text-2xl font-bold">Bridge validator는 wiring의 예시이지 모든 deployment의 표준 구성이 아니다</h2></header>
-    <p>Pinned bridge validator source는 runtime context를 만들고, authenticated networking·crypto scheme·Simplex engine과 application logic을 조립하는 concrete example입니다. Alice의 payload는 network admission 뒤 digest로 합의에 들어가고, application은 ordered digest에 맞는 bytes를 확보해 검증·실행해야 합니다. 이 예는 trait들이 어디서 만나는지 보여 주지만 production key custody, external effect, operator policy까지 대신 결정하지 않습니다.</p>
-    <p>특히 certificate를 application commit과 혼동하면 안 됩니다. Consensus finalization은 committee가 같은 payload digest에 합의했다는 evidence이고, durable state root는 storage commit 뒤 얻습니다. Bob에게 보낼 client success는 state root와 request id가 crash recovery 뒤에도 재생되는지 확인한 다음 내보냅니다.</p>
+    <p>
+            Pinned bridge validator source는 runtime context를 만들고 authenticated networking·crypto
+            scheme·Simplex engine과 application logic을 조립하는 concrete example입니다. Alice의 payload는 network
+            admission 뒤 digest로 합의에 들어가고 application은 ordered digest에 맞는 bytes를 확보해 검증·실행해야 합니다. 이 예는 trait들이
+            어디서 만나는지 보여 주지만 production key custody, external effect, operator policy까지 대신 결정하지 않습니다.
+          </p>
+    <p>
+            특히 certificate를 application commit과 혼동하면 안 됩니다. Consensus finalization은 committee가 같은 payload
+            digest에 합의했다는 evidence이고 durable state root는 storage commit 뒤 얻습니다. Bob에게 보낼 client success는 state
+            root와 request id가 crash recovery 뒤에도 재생되는지 확인한 다음 내보냅니다.
+          </p>
     <div id="paper-commonware-bridge"><CitationBlock source="commonware-bridge validator source · v2026.7.0" citeKey={2} type="code" href="https://docs.rs/crate/commonware-bridge/2026.7.0/source/src/bin/validator.rs"><p><strong>문제:</strong> Commonware primitives로 실행 가능한 validator를 어떻게 조립하는지 concrete wiring이 필요합니다.</p><p><strong>기여:</strong> Runtime, authenticated P2P, cryptography, Simplex와 application components의 construction path를 보여 줍니다.</p><p><strong>전제:</strong> commonware-bridge 2026.7.0 source와 그 dependency versions·example configuration을 사용합니다.</p><p><strong>근거 범위:</strong> Example validator의 component assembly와 startup boundary에 한정합니다.</p><p><strong>말하지 않는 것:</strong> 이 예시가 모든 Commonware deployment의 architecture이거나 운영 key·durability·SLA를 완성한다는 뜻은 아닙니다.</p></CitationBlock></div>
   </section>
   <section id="release" className="space-y-6">
     <header><p className="text-sm font-semibold text-primary">03 · failure, replay, release</p><h2 className="mt-2 text-2xl font-bold">Fault를 seed에 넣고 component receipt가 끊기는 지점을 재현한다</h2></header>
-    <p>Release fixture는 proposal 전 packet drop, notarization 뒤 payload loss, storage apply 뒤 commit 전 crash, restart 뒤 duplicate request를 따로 넣습니다. 각 실패에서 network receipt, consensus certificate, storage root와 client reply가 어느 단계까지 만들어졌는지 기록해야 합니다. 재시도는 같은 request id를 사용하고, 이미 durable한 state transition은 다시 적용하지 않습니다.</p>
+    <p>
+            Release fixture는 proposal 전 packet drop, notarization 뒤 payload loss, storage apply 뒤 commit 전
+            crash, restart 뒤 duplicate request를 따로 넣습니다. 각 실패에서 network receipt, consensus certificate,
+            storage root와 client reply가 어느 단계까지 만들어졌는지 기록해야 합니다. 재시도는 같은 request id를 사용하고 이미 durable한 state
+            transition은 다시 적용하지 않습니다.
+          </p>
     <ReleaseParityViz />
     <p>Rollback은 client effect가 외부로 나가기 전 candidate artifact를 이전 version으로 되돌리는 절차입니다. 이미 Bob에게 성공을 알렸다면 database를 조용히 되감는 대신 idempotent replay나 명시적 보상 절차가 필요합니다. Commonware deterministic runtime은 재현 도구이며 real network의 모든 timing을 증명하는 모델은 아닙니다.</p>
     <h3 className="text-xl font-semibold">이 글만으로 확인할 10가지</h3><p>기초 6문제는 primitive 구분, fixed request trace, digest와 bytes, certificate와 state, version pin, parity input을 묻습니다. 심화 4문제는 missing payload, crash window, duplicate replay와 release rollback을 설계하게 합니다.</p>

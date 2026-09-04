@@ -29,8 +29,9 @@ export default function UseCases() {
 
         <h3>Recovery는 threshold만이 아니라 delay·cancel·rotation을 포함합니다</h3>
         <p>
-          3명 중 2명 guardian이 새 owner를 제안하더라도 즉시 바꾸지 않고 timelock 동안 기존 owner의 cancel과 emergency freeze를 허용할 수 있습니다. Guardian 교체 자체도 같은 quorum을 요구하고,
-          compromised guardian과 lost owner가 동시에 생기는 반례를 훈련해야 합니다. Recovery 성공 뒤에는 session key·module·paymaster allowance를 rotate하거나 revoke합니다.
+          3명 중 2명 guardian이 새 owner를 제안하더라도 즉시 바꾸지 않고 timelock 동안 기존 owner의 cancel과 emergency freeze를 허용할 수
+          있습니다. Guardian 교체 자체도 같은 quorum을 요구하고 compromised guardian과 lost owner가 동시에 생기는 반례를 훈련해야 합니다.
+          Recovery 성공 뒤에는 session key·module·paymaster allowance를 rotate하거나 revoke합니다.
         </p>
       </div>
 
@@ -58,8 +59,9 @@ export default function UseCases() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Release gate는 happy path보다 실패 경계를 먼저 비교합니다</h3>
         <p>
-          Candidate wallet을 내보내기 전에 wrong chain·replayed nonce·expired session·disallowed selector·paymaster budget exhaustion·bundler timeout-after-submit·guardian conflict·delegate upgrade를
-          base와 candidate에 같은 fixture로 재생합니다. Authorization·admission·execution·settlement outcome이 같아야 latency와 gas를 비교하며,
+          Candidate wallet을 내보내기 전에 wrong chain·replayed nonce·expired session·disallowed selector·paymaster
+          budget exhaustion·bundler timeout-after-submit·guardian conflict·delegate upgrade를 base와 candidate에
+          같은 fixture로 재생합니다. Authorization·admission·execution·settlement outcome이 같아야 latency와 gas를 비교하며
           canary에서는 EntryPoint/delegate/module version과 rollback bundle을 함께 고정합니다.
         </p>
       </div>

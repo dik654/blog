@@ -42,7 +42,7 @@
       "score": 37
     },
     "blockchain/aa-fundamentals": {
-      "fingerprint": "c8c1e060cd18d8a0",
+      "fingerprint": "52fa8cfcadeee215",
       "score": 36
     },
     "blockchain/prysm": {
@@ -154,7 +154,7 @@
       "score": 28
     },
     "blockchain/cometbft-consensus": {
-      "fingerprint": "d640dbf401457820",
+      "fingerprint": "07a2692d18162bde",
       "score": 28
     },
     "blockchain/distributed-systems": {
@@ -202,7 +202,7 @@
       "score": 26
     },
     "blockchain/autobahn-deep": {
-      "fingerprint": "acb377205c73269a",
+      "fingerprint": "342a7f3dfdad3635",
       "score": 26
     },
     "blockchain/expected-consensus": {
@@ -242,7 +242,11 @@
       "score": 25
     },
     "blockchain/cometbft-abci": {
-      "fingerprint": "0f35308fad93b298",
+      "fingerprint": "4bdd7a6527acb49c",
+      "score": 24
+    },
+    "blockchain/cometbft-types": {
+      "fingerprint": "2937e23738317d62",
       "score": 24
     },
     "blockchain/narwhal-deep": {
@@ -306,15 +310,11 @@
       "score": 22
     },
     "blockchain/bft-comparison": {
-      "fingerprint": "01f14f504fcd822a",
+      "fingerprint": "c59d33a272cf8520",
       "score": 22
     },
     "blockchain/bullshark-deep": {
-      "fingerprint": "b9f228ef918bc103",
-      "score": 22
-    },
-    "blockchain/cometbft-types": {
-      "fingerprint": "9d1f2db9c18868d1",
+      "fingerprint": "02dabc7b1b33c306",
       "score": 22
     },
     "blockchain/filecoin-f3": {
@@ -386,11 +386,11 @@
       "score": 20
     },
     "blockchain/bft-theory": {
-      "fingerprint": "f52fb5987a9abf3d",
+      "fingerprint": "067483087398dad2",
       "score": 20
     },
     "blockchain/commonware-crypto-p2p": {
-      "fingerprint": "82d8f2e66b075ea9",
+      "fingerprint": "62c6402f8e0a03ea",
       "score": 20
     },
     "blockchain/consensus-comparison": {
@@ -478,11 +478,11 @@
       "score": 18
     },
     "blockchain/berachain": {
-      "fingerprint": "39b1b550147059c0",
+      "fingerprint": "f4f9ed2b3a1dc180",
       "score": 18
     },
     "blockchain/cometbft": {
-      "fingerprint": "1852bcfbf7be11d8",
+      "fingerprint": "8994581058fd2c37",
       "score": 18
     },
     "blockchain/cometbft-execution": {
@@ -602,19 +602,19 @@
       "score": 14
     },
     "blockchain/avalanche-consensus": {
-      "fingerprint": "37167161294b03ca",
+      "fingerprint": "f5196ba9d78ce53c",
       "score": 14
     },
     "blockchain/cometbft-p2p": {
-      "fingerprint": "333e9e9ca81817ae",
+      "fingerprint": "9fe073e860e4bad0",
       "score": 14
     },
     "blockchain/commonware-broadcast": {
-      "fingerprint": "ec8815ba9a1c34c4",
+      "fingerprint": "90d70e7b53c924e1",
       "score": 14
     },
     "blockchain/commonware-simplex": {
-      "fingerprint": "db4713dc142fc81a",
+      "fingerprint": "a6af479cab7cf4a7",
       "score": 14
     },
     "blockchain/curve-stable": {
@@ -830,11 +830,11 @@
       "score": 10
     },
     "blockchain/aave-v3": {
-      "fingerprint": "080eede14252751d",
+      "fingerprint": "564bdc110e17ea65",
       "score": 10
     },
     "blockchain/commonware-deep-dive": {
-      "fingerprint": "03e7c4cd49c613c0",
+      "fingerprint": "f16a24bd2315f29c",
       "score": 10
     },
     "blockchain/compound-v3": {
@@ -958,7 +958,7 @@
       "score": 8
     },
     "blockchain/commonware-storage": {
-      "fingerprint": "9eb5be898730c939",
+      "fingerprint": "d4ca9c24e15eb957",
       "score": 8
     },
     "blockchain/ethereum-future-roadmap": {

@@ -29,15 +29,35 @@ export default function ModernAutobahnArticle() {
       <header><p className="text-sm font-semibold text-primary">02 · Prepare, Confirm, view change</p><h2 className="mt-2 text-2xl font-bold">Slow path의 durable CommitQC와 all-node fast path를 서로 바꿔 쓰지 않는다</h2></header>
       <p>일반 view에서 leader가 cut을 제안하면 2f+1 Prep-Votes가 PrepareQC를 만듭니다. Slow path는 Confirm message 뒤 2f+1 Confirm-Acks를 모아 CommitQC를 만들기 때문에 다음 view에서도 decision evidence가 보존됩니다. Good interval의 fast path는 모든 n replicas의 Prep-Votes가 있을 때 Confirm 단계를 생략합니다. n=4,f=1 예에서 PrepareQC는 3, slow CommitQC는 Confirm-Ack 3, fast evidence는 Prep-Vote 4입니다. 이름과 threshold가 다른 evidence를 같은 boolean으로 저장하면 recovery safety를 잃습니다.</p>
       <AutobahnCommitViz />
-      <p>Progress가 없으면 f+1 Timeout messages가 적어도 한 honest complaint를 포함하므로 peers에게 timeout을 relay하게 하고, 2f+1 Timeouts가 Timeout Certificate(TC)를 만들어 다음 view의 ticket이 됩니다. 새 leader는 reports의 highest highQC와 f+1 reports에 나타난 highest proposal(highProp)을 비교해 paper rule에 따라 safe proposal을 복구합니다. Fixed timeout 숫자나 BLS signature 사용은 protocol core 전제가 아니므로 deployment가 정하고 측정해야 합니다.</p>
+      <p>
+            Progress가 없으면 f+1 Timeout messages가 적어도 한 honest complaint를 포함하므로 peers에게 timeout을 relay하게 하고 2f+1
+            Timeouts가 Timeout Certificate(TC)를 만들어 다음 view의 ticket이 됩니다. 새 leader는 reports의 highest highQC와
+            f+1 reports에 나타난 highest proposal(highProp)을 비교해 paper rule에 따라 safe proposal을 복구합니다. Fixed
+            timeout 숫자나 BLS signature 사용은 protocol core 전제가 아니므로 deployment가 정하고 측정해야 합니다.
+          </p>
       <div id="paper-autobahn-consensus"><CitationBlock source="Autobahn paper §5.2–5.4 — Cut consensus and view change" citeKey={2} href="https://arxiv.org/pdf/2401.10369"><p><strong>문제:</strong> 큰 backlog를 참조하는 cut을 낮은 agreement latency로 commit하고 fast/slow evidence를 view change에서 보존해야 합니다.</p><p><strong>기여:</strong> Prepare/Confirm, all-node fast commit, TC recovery, deterministic lane zipping과 parallel slots를 정의합니다.</p><p><strong>전제:</strong> Paper의 exact quorum domains, lane-history synchronization과 bounded concurrent-instance policy를 따릅니다.</p><p><strong>근거 범위:</strong> Autobahn cut consensus·view-change·processing algorithms와 correctness proofs에 한정합니다.</p><p><strong>말하지 않는 것:</strong> Cut commit이 payload synchronization·execution 완료나 모든 load에서 zero hangover를 뜻하지 않습니다.</p></CitationBlock></div>
     </section>
 
     <section id="release" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">03 · blip, backlog, release</p><h2 className="mt-2 text-2xl font-bold">Agreement cost와 payload drain 시간을 분리해 seamless라는 주장의 경계를 측정한다</h2></header>
-      <p>3초 blip 동안 네 lanes가 각각 20 cars 전진했다면 회복 뒤 cut 하나가 80-car frontier를 참조할 수 있습니다. Agreement message가 80 cars에 비례해 커지지는 않지만, 느린 node는 missing suffix bytes를 받아 hash와 parent chain을 검증하고 deterministic order로 실행해야 합니다. Offered load가 network·disk·execution capacity를 넘으면 backlog는 계속 쌓입니다. 그러므로 cut commit latency만 보고 “hangover가 없다”고 결론내리면 안 됩니다.</p>
-      <p>Safety는 synchrony와 무관하게 conflicting committed cuts·output sequence가 없는지 검사합니다. Liveness와 seamless recovery는 paper가 말하는 good interval, honest progress와 load/capacity 전제에서 cut이 다시 commit되고 backlog가 줄어드는지 검사합니다. Partition 동안 stall은 허용되지만 conflict는 허용되지 않으며, GST 이후 bounded delivery가 회복됐는데도 계속 commit하지 못하면 liveness failure입니다.</p>
-      <p>Release suite는 같은 lane position의 두 PoA, fast candidate 직후 view change, non-monotonic cuts와 concurrent slots를 재생합니다. Per-lane watermark 이하를 무시하고 slot order·suffix zipper·dedup으로 state digest parity를 확인합니다. Client success는 cut QC뿐 아니라 payload hash verification, deterministic transaction order와 application state receipt를 모두 포함해야 하며, 실패한 uncommitted local proposal과 cache만 rollback합니다.</p>
+      <p>
+            3초 blip 동안 네 lanes가 각각 20 cars 전진했다면 회복 뒤 cut 하나가 80-car frontier를 참조할 수 있습니다. Agreement message가
+            80 cars에 비례해 커지지는 않지만 느린 node는 missing suffix bytes를 받아 hash와 parent chain을 검증하고 deterministic
+            order로 실행해야 합니다. Offered load가 network·disk·execution capacity를 넘으면 backlog는 계속 쌓입니다. cut commit
+            latency만 보고 “hangover가 없다”고 결론내리면 안 됩니다.
+          </p>
+      <p>
+            Safety는 synchrony와 무관하게 conflicting committed cuts·output sequence가 없는지 검사합니다. Liveness와 seamless
+            recovery는 paper가 말하는 good interval, honest progress와 load/capacity 전제에서 cut이 다시 commit되고 backlog가
+            줄어드는지 검사합니다. Partition 동안 stall은 허용되지만 conflict는 허용되지 않으며 GST 이후 bounded delivery가 회복됐는데도 계속
+            commit하지 못하면 liveness failure입니다.
+          </p>
+      <p>
+            Release suite는 같은 lane position의 두 PoA, fast candidate 직후 view change, non-monotonic cuts와
+            concurrent slots를 재생합니다. Per-lane watermark 이하를 무시하고 slot order·suffix zipper·dedup으로 state digest
+            parity를 확인합니다. Client success는 cut QC뿐 아니라 payload hash verification, deterministic transaction
+            order와 application state receipt를 모두 포함해야 하며 실패한 uncommitted local proposal과 cache만 rollback합니다.
+          </p>
       <div id="paper-autobahn"><CitationBlock source="Autobahn: Seamless high speed BFT" citeKey={3} href="https://arxiv.org/abs/2401.10369"><p><strong>문제:</strong> Partial-synchrony blip 뒤 traditional BFT hangover와 DAG BFT의 good-interval latency를 함께 줄여야 합니다.</p><p><strong>기여:</strong> Chained lanes, f+1 car PoA, certified-tip cuts와 low-latency view-based consensus를 결합합니다.</p><p><strong>전제:</strong> n=3f+1 authenticated replicas, static Byzantine adversary를 두고 safety에는 synchrony가 필요 없지만 liveness에는 good interval을 사용합니다.</p><p><strong>근거 범위:</strong> Autobahn protocol, correctness·seamlessness definitions와 paper evaluation입니다.</p><p><strong>말하지 않는 것:</strong> Legacy fixed timeout·BLS·TPS 숫자나 다른 deployment의 speedup을 보편값으로 주장하지 않습니다.</p></CitationBlock></div>
       <h3 className="text-xl font-semibold">이 글만으로 확인할 10가지</h3><p>기초 6문제는 lane/car/passenger/PoA/tip, honest-holder 하한, cut suffix, slow·fast thresholds, timeout relay·TC와 cut/실행 경계를 묻습니다. 심화 4문제는 PoA equivocation, fast-view recovery, non-monotonic duplicate 방지와 blip·backlog release suite를 설계하게 합니다.</p>
     </section>

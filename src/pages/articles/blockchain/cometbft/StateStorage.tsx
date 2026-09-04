@@ -152,10 +152,8 @@ export default function StateStorage({
           </div>
         </div>
         <p className="leading-7">
-          운영 관점에서는 blockstore와 consensus state, application state가 서로
-          다른 책임과 보존 정책을 갖는다. 일반 validator는 필요한 조회·복구
-          범위를 남기면서 pruning을 적용할 수 있고, historical query를 제공하는
-          archive 구성은 더 긴 보존 기간과 별도 용량 계획이 필요하다.
+          운영 관점에서 blockstore와 consensus state, application state는 책임도 보존 정책도 서로 다르다. 일반 validator는 필요한 조회·복구
+          범위를 남기고 pruning을 적용할 수 있다. historical query를 제공하는 archive 구성이라면 보존 기간이 더 길어지고 용량 계획도 따로 세워야 한다.
         </p>
       </div>
     </section>

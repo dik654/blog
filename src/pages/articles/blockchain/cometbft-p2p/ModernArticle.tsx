@@ -47,7 +47,11 @@ export default function ModernCometBFTP2PArticle() {
         <CodeViewButton label="AddReactor()" onClick={() => sidebar.open("switch-add-reactor", codeRefs["switch-add-reactor"])} />
         <CodeViewButton label="Switch.OnStart()" onClick={() => sidebar.open("switch-onstart", codeRefs["switch-onstart"])} />
       </div>
-      <p>오류로 peer를 끊을 때 persistent peer이거나 transient error로 분류되면 reconnect를 시도할 수 있습니다. 그렇다고 연결 복구가 protocol liveness를 자동 복구하는 것은 아닙니다. 필요한 voting power와 block parts가 제시간에 도착해야 consensus가 진행되며, 잘못된 message·느린 peer·중복 연결을 어떤 이유로 끊었는지 운영 receipt를 남겨야 network 장애와 consensus 장애를 구분할 수 있습니다.</p>
+      <p>
+            오류로 peer를 끊을 때 persistent peer이거나 transient error로 분류되면 reconnect를 시도할 수 있습니다. 그렇다고 연결 복구가
+            protocol liveness를 자동으로 회복시키는 것은 아닙니다. 필요한 voting power와 block parts가 제시간에 도착해야 consensus가 진행되며,
+            잘못된 message·느린 peer·중복 연결을 어떤 이유로 끊었는지 운영 receipt를 남겨야 network 장애와 consensus 장애를 구분할 수 있습니다.
+          </p>
       <div className="not-prose flex flex-wrap gap-3">
         <CodeViewButton label="DialPeersAsync()" onClick={() => sidebar.open("switch-dial", codeRefs["switch-dial"])} />
         <CodeViewButton label="Broadcast()" onClick={() => sidebar.open("switch-broadcast", codeRefs["switch-broadcast"])} />

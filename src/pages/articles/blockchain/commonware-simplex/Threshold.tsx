@@ -261,9 +261,8 @@ export default function Threshold({
         <div className="rounded-lg border border-border bg-card p-4 mb-4">
           <h4 className="font-semibold text-sm mb-2">크로스체인 검증</h4>
           <p className="text-xs text-muted-foreground">
-            이더리움 컨트랙트에서 외부 체인 최종성 검증: BLS pairing ~200K gas ·
-            단일 트랜잭션에 포함 가능. 개별 서명(7 KB)은 가스 한도 초과. 임계
-            서명이 크로스체인 라이트 클라이언트를 실현 가능하게 만듦.
+            이더리움 컨트랙트에서 외부 체인 최종성 검증: BLS pairing ~200K gas · 단일 트랜잭션에 포함 가능. 개별 서명(7 KB)은 가스 한도 초과. 임계 서명 덕분에
+            크로스체인 라이트 클라이언트가 실현 가능해짐.
           </p>
         </div>
 

@@ -26,10 +26,13 @@ export default function ABCI({
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          ABCI(Application BlockChain Interface)는 CometBFT가 block의 순서와 finality를 결정하는 일과 application이 transaction을 실행해 state를 바꾸는 일을 분리합니다. 이 경계 덕분에 CometBFT는 account, contract, fee 같은 domain rule을 몰라도 되고, application은 P2P와 BFT voting을 직접 구현하지 않아도 됩니다.
+          ABCI(Application BlockChain Interface)는 CometBFT가 block의 순서와 finality를 결정하는 일과 application이
+          transaction을 실행해 state를 바꾸는 일을 분리합니다. 이 경계 덕분에 CometBFT는 account, contract, fee 같은 domain rule을 몰라도
+          됩니다. application 쪽은 P2P와 BFT voting을 직접 구현하지 않아도 됩니다.
         </p>
         <p>
-          Ethereum의 Engine API가 consensus layer와 execution layer를 연결한다는 점에서는 비슷하지만 호출 의미가 완전히 같지는 않습니다. 아래 대응은 두 architecture를 처음 읽을 때 책임의 위치를 비교하기 위한 guide이며, method를 일대일로 치환하는 표가 아닙니다.
+          Ethereum의 Engine API도 consensus layer와 execution layer를 연결한다는 점에서는 비슷합니다. 다만 호출 의미까지 같지는 않습니다. 아래
+          대응은 두 architecture를 처음 읽을 때 책임의 위치를 비교하려고 놓은 guide입니다. method를 일대일로 치환하는 표로 읽으면 안 됩니다.
         </p>
         <CitationBlock
           source="CometBFT Documentation"

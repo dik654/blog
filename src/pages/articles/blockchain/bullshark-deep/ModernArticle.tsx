@@ -7,7 +7,11 @@ export default function ModernBullsharkArticle() {
     <section id="overview" className="space-y-6">
       <header className="space-y-3"><p className="text-sm font-semibold text-primary">Certificate DAG · ordering plane</p><h2 className="text-3xl font-bold tracking-tight">Bullshark는 Narwhal certificate DAG의 edges를 leader vote로 읽고 한 sequence를 만든다</h2></header>
       <p className="text-lg leading-8 text-foreground/90">Narwhal이 Alice→Bob batch의 bytes를 분산 저장하고 certificate vertex를 만들었다고 하겠습니다. 이 시점에는 availability와 causal history는 있지만 transaction의 전역 순서는 없습니다. Bullshark는 rounds를 wave로 묶고 미리 정한 leader certificate가 다음 round children에게 충분히 참조됐는지 봅니다. Supported leader를 찾으면 그 leader가 도달하는 과거 leaders와 아직 출력하지 않은 ancestors를 오래된 순서로 펼칩니다.</p>
-      <p>따라서 책임은 세 층입니다. Narwhal certificate가 data availability를 맡고, Bullshark가 leader decision과 deterministic certificate order를 맡으며, application이 certificate가 가리키는 transactions를 실행합니다. Leader를 local에서 먼저 봤다는 사실이나 certificate arrival order는 합의 근거가 아닙니다.</p>
+      <p>
+            따라서 책임은 세 층입니다. Narwhal certificate가 data availability를 맡고 Bullshark가 leader decision과
+            deterministic certificate order를 맡으며 application이 certificate가 가리키는 transactions를 실행합니다. Leader를
+            local에서 먼저 봤다는 사실이나 certificate arrival order는 합의 근거가 아닙니다.
+          </p>
       <BullsharkWaveViz />
       <aside className="rounded-lg border border-primary/30 bg-primary/5 p-5 text-sm leading-6"><strong>핵심 아이디어:</strong> Bullshark가 추가 ordering vote messages를 보내는 대신 이미 certificate DAG에 들어 있는 causal references를 vote evidence로 해석합니다. 하지만 어떤 leader·threshold·timing 전제를 쓰는지는 protocol variant와 pinned 구현별로 구분해야 합니다.</aside>
     </section>
@@ -29,7 +33,12 @@ export default function ModernBullsharkArticle() {
 
     <section id="ordering" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">02 · deterministic sub-DAG</p><h2 className="mt-2 text-2xl font-bold">Leader의 새 ancestors만 stable key로 펼치고 이미 출력한 vertex는 제외한다</h2></header>
-      <p>Leader decision은 아직 transaction sequence 전체가 아닙니다. Node는 committed leader가 도달하는 certificates를 거슬러 올라가되 이미 committed한 vertices를 제외하고, round가 오래된 것부터 stable author/digest tie-break로 정렬합니다. Certificate 안의 transaction batch order까지 고정한 뒤 output digest를 계산합니다. HashMap iteration이나 local network arrival order를 tie-break로 사용하면 같은 DAG를 가진 replicas도 state root가 갈릴 수 있습니다.</p>
+      <p>
+            Leader decision은 아직 transaction sequence 전체가 아닙니다. Node는 committed leader가 도달하는 certificates를 거슬러
+            올라가되 이미 committed한 vertices를 제외하고 round가 오래된 것부터 stable author/digest tie-break로 정렬합니다.
+            Certificate 안의 transaction batch order까지 고정한 뒤 output digest를 계산합니다. HashMap iteration이나 local
+            network arrival order를 tie-break로 사용하면 같은 DAG를 가진 replicas도 state root가 갈릴 수 있습니다.
+          </p>
       <BullsharkOrderingViz />
       <p>예를 들어 node A가 C3→A1→B2 순서로 받고 node B가 B2→C3→A1 순서로 받더라도 검증된 DAG set과 edges가 같으면 결과가 같아야 합니다. L2 sub-DAG를 먼저 출력한 뒤 L4를 commit했다면 L4 history에서 L2 이전 vertices를 중복 출력하지 않고 새 causal suffix만 이어 붙입니다. 이는 certificate order이며 application validity, transaction fairness와 successful execution은 별도 receipt입니다.</p>
       <div id="paper-bullshark-utils-e67"><CitationBlock source="MystenLabs/narwhal commit e67f915 — consensus ordering utilities" citeKey={3} type="code" href="https://github.com/MystenLabs/narwhal/blob/e67f91530e6bd4ef7808e42f548f07e58764ec5b/consensus/src/utils.rs"><p><strong>문제:</strong> Committed leader의 causal history를 arrival order와 무관한 duplicate-free sequence로 바꿔야 합니다.</p><p><strong>기여:</strong> Reachable certificates를 수집하고 stable ordering으로 sub-DAG를 평탄화하는 historical utility를 제공합니다.</p><p><strong>전제:</strong> Exact archived commit e67f915, validated certificate DAG와 matching consensus state를 사용합니다.</p><p><strong>근거 범위:</strong> 이 pinned implementation의 leader sub-DAG traversal과 deterministic ordering 경로입니다.</p><p><strong>말하지 않는 것:</strong> Transaction 내부 fairness, application success, current Sui linearizer나 모든 DAG의 보편 tie-break를 규정하지 않습니다.</p></CitationBlock></div>
@@ -37,9 +46,20 @@ export default function ModernBullsharkArticle() {
 
     <section id="release" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">03 · variant·failure·release</p><h2 className="mt-2 text-2xl font-bold">Safety는 conflict 없음으로, liveness는 해당 timing model에서 eventual commit으로 따로 검사한다</h2></header>
-      <p>Network partition이나 leader omission 중 commit이 멈춰도 서로 다른 honest replicas가 conflicting sequences를 확정하지 않았다면 safety는 유지될 수 있습니다. Liveness는 variant가 요구하는 조건이 회복된 뒤 새 supported leader와 contiguous output이 결국 생기는지를 묻습니다. Partial-synchrony variant는 GST 이후 bounded delay와 honest leader/support를 재생하고, asynchronous variant는 논문의 common-coin 경로를 따로 검증해야 합니다. 두 설명을 하나의 implementation 특성처럼 합치면 안 됩니다.</p>
+      <p>
+            Network partition이나 leader omission 중 commit이 멈춰도 서로 다른 honest replicas가 conflicting sequences를
+            확정하지 않았다면 safety는 유지될 수 있습니다. Liveness는 variant가 요구하는 조건이 회복된 뒤 새 supported leader와 contiguous
+            output이 결국 생기는지를 묻습니다. Partial-synchrony variant는 GST 이후 bounded delay와 honest leader/support를
+            재생하고 asynchronous variant는 논문의 common-coin 경로를 따로 검증해야 합니다. 두 설명을 하나의 implementation 특성처럼 합치면 안
+            됩니다.
+          </p>
       <p>Release suite는 unsupported L2와 supported L4를 만들고 L4→L2 causal link가 있는 경우 L2→L4, 없는 경우 L4만 나오는지 비교합니다. 같은 certificates를 여러 arrival permutations과 map insertion orders로 replay해 output digest가 같은지도 봅니다. Leader omission·Byzantine equivocation에서는 invalid support를 배제하고 conflict 0을 safety oracle로, network recovery 뒤 eventual commit을 liveness oracle로 둡니다.</p>
-      <p>Crash·restart에서는 exact source commit과 variant manifest, last-committed leader map, DAG/GC watermark를 고정합니다. Persisted boundary에서 DAG를 재구성해 state parity를 확인하고, 불완전한 local output만 rollback합니다. Ordered certificate가 가리키는 payload를 hash-verify하고 application state receipt가 생긴 뒤에만 Bob의 balance 변경을 release합니다.</p>
+      <p>
+            Crash·restart에서는 exact source commit과 variant manifest, last-committed leader map, DAG/GC
+            watermark를 고정합니다. Persisted boundary에서 DAG를 재구성해 state parity를 확인하고 불완전한 local output만
+            rollback합니다. Ordered certificate가 가리키는 payload를 hash-verify하고 application state receipt가 생긴 뒤에만
+            Bob의 balance 변경을 release합니다.
+          </p>
       <h3 className="text-xl font-semibold">이 글만으로 확인할 10가지</h3><p>기초 6문제는 Narwhal/Bullshark 경계, round·wave·leader·support, f+1 예, direct/indirect leader 회수, sub-DAG order와 safety/liveness를 묻습니다. 심화 4문제는 causal-link 두 traces, arrival-order parity, partition/equivocation oracle와 archived restart·GC suite를 설계하게 합니다.</p>
     </section>
   </article>;

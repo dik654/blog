@@ -188,10 +188,9 @@ export default function P2PSecurity({
           </div>
         </div>
         <p className="leading-7">
-          Legacy P2P stack의 Switch는 peer 연결과 reactor 오류를 함께 관리한다.
-          악성 메시지나 protocol violation이 발견되면 peer를 disconnect하고
-          reconnect 정책에 반영할 수 있지만, 고정된 “영구 차단”이나 1시간
-          제한으로 일반화하지 말고 현재 AddrBook과 config를 확인해야 한다.
+          Legacy P2P stack의 Switch는 peer 연결과 reactor 오류를 함께 관리한다. 악성 메시지나 protocol violation이 발견되면 peer를
+          disconnect하고 reconnect 정책에 반영할 수 있다. 다만 고정된 “영구 차단”이나 1시간 제한으로 일반화하지 말고 현재 AddrBook과 config를 직접
+          확인한다.
         </p>
       </div>
     </section>

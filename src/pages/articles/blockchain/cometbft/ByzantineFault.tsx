@@ -17,7 +17,9 @@ export default function ByzantineFault({
       <h2 className="mb-6 text-2xl font-bold">비잔틴 장애 처리: 합의를 막는 vote와 처벌할 evidence를 구분한다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          CometBFT의 safety threshold는 validator 수가 아니라 voting power를 기준으로 합니다. Byzantine voting power가 3분의 1 미만이면 서로 충돌하는 두 block이 모두 3분의 2를 넘는 commit을 얻을 수 없습니다. 다만 node가 잘못된 vote를 무시하는 일과 validator stake를 실제로 처벌하는 일은 서로 다른 경로입니다.
+          CometBFT의 safety threshold는 voting power로 잽니다. validator 수를 세는 것이 아닙니다. Byzantine voting power가 3분의
+          1 미만이면 서로 충돌하는 두 block이 모두 3분의 2를 넘는 commit을 얻을 수 없습니다. 다만 node가 잘못된 vote를 무시하는 일과 validator stake를
+          실제로 처벌하는 일은 서로 다른 경로입니다.
         </p>
         <p>
           같은 height와 round에서 서로 다른 block에 서명하면 <code>DuplicateVoteEvidence</code>를 만들 수 있습니다. CometBFT는 서명과 유효 기간을 검증해 evidence pool에 보관하고 block에 포함하지만, slash fraction과 jail·tombstone 정책은 ABCI로 evidence를 받은 application이 결정합니다. 아래 흐름에서 consensus-level detection과 application-level punishment의 경계를 먼저 확인합니다.
@@ -136,8 +138,7 @@ export default function ByzantineFault({
                 <span>jail duration</span>
               </div>
               <p className="text-xs text-muted-foreground mt-2">
-                값은 on-chain governance와 application version에 따라 바뀌므로
-                현재 chain state를 조회해야 합니다.
+                값은 on-chain governance와 application version에 따라 바뀌므로 현재 chain state를 직접 조회해서 확인합니다.
               </p>
             </div>
           </div>

@@ -37,9 +37,8 @@ export default function Overview() {
           <li><strong>Termination:</strong> 정해진 fault·timing 조건에서 honest replica가 결국 결정합니다.</li>
         </ul>
         <p>
-          Agreement·validity·integrity는 나쁜 certificate가 만들어지지 않게 하는 safety이고,
-          termination은 progress를 말하는 liveness입니다. 실제 state-machine service에는 이
-          ordered decision을 모든 replica가 결정적으로 apply하는 계약이 추가됩니다.
+          Agreement·validity·integrity는 나쁜 certificate가 만들어지지 않게 하는 safety이고 termination은 progress를 말하는
+          liveness입니다. 실제 state-machine service에는 이 ordered decision을 모든 replica가 결정적으로 apply하는 계약이 추가됩니다.
         </p>
       </div>
 
@@ -47,10 +46,9 @@ export default function Overview() {
         <p className="text-xs font-bold text-primary">논문 읽기 · 문제와 인증 모델</p>
         <p className="mt-2 text-sm font-semibold">The Byzantine Generals Problem</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          문제는 traitor가 임의 message를 보낼 때 interactive consistency를 이루는 조건입니다.
-          Oral-message와 unforgeable signed-message model을 구분하고 각각의 algorithm·하한을
-          제시합니다. 현대 partial-synchrony quorum protocol의 3f+1을 모든 authenticated
-          synchronous setting의 동일 결론으로 바꾸면 안 됩니다.
+          문제는 traitor가 임의 message를 보낼 때 interactive consistency를 이루는 조건입니다. Oral-message와 unforgeable signed-
+          message model을 구분하고 각각의 algorithm·하한을 제시합니다. 현대 partial-synchrony quorum protocol의 3f+1을 모든
+          authenticated synchronous setting에 그대로 옮겨 같은 결론으로 읽으면 틀립니다.
         </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://lamport.azurewebsites.net/pubs/byz.pdf" target="_blank" rel="noreferrer">Lamport·Shostak·Pease 원문 보기</a>
       </div>

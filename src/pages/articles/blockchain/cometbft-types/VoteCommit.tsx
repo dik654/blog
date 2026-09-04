@@ -50,10 +50,10 @@ export default function VoteCommit({
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Absent·nil·commit을 구분합니다</h3>
         <p>
-          CommitSig의 absent는 vote를 받지 못했다는 뜻이고, nil은 validator가 명시적으로 nil BlockID에 투표했다는
-          뜻이며, commit flag는 majority block에 투표한 signature입니다. 이 셋을 모두 “반대표”로 합치면 participation과
-          protocol intent를 잃습니다. Vote extension도 non-nil precommit에 붙는 별도 application bytes이므로 base vote
-          signature와 extension signature의 검증 결과를 따로 기록합니다.
+          CommitSig의 absent는 vote를 받지 못했다는 뜻입니다. nil은 validator가 명시적으로 nil BlockID에 투표했다는 뜻이고 commit flag는
+          majority block에 투표한 signature입니다. 이 셋을 모두 “반대표”로 합치면 participation과 protocol intent를 잃습니다. Vote
+          extension도 non-nil precommit에 붙는 별도 application bytes이므로 base vote signature와 extension signature의
+          검증 결과를 따로 기록합니다.
         </p>
         <p>
           왜 두 quorum이 honest validator에서 겹치는지는 <Link to="/blockchain/bft-theory#faulty-threshold">BFT의

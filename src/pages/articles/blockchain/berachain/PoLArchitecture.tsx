@@ -250,8 +250,7 @@ export default function PoLArchitecture({ onCodeRef }: Props) {
           <div className="border-t border-border/50 mt-3 pt-2">
             <p className="text-xs font-medium mb-1">Trade-off</p>
             <p className="text-xs text-muted-foreground">
-              PoL 복잡도 높음 / BGT 변동성이 보안에 영향 / 검증자-프로토콜 결탁
-              위험
+              PoL 복잡도 높음 / BGT 변동성이 보안에 영향 / validator와 프로토콜의 결탁 위험
             </p>
           </div>
         </div>
@@ -306,8 +305,7 @@ export default function PoLArchitecture({ onCodeRef }: Props) {
             <span>보상 알림</span>
           </div>
           <p className="text-xs text-muted-foreground">
-            자산당 다수 vault 존재 — 각 vault는 서로 다른 프로토콜이 인센티브 —
-            검증자가 BGT 배출을 vault 간 할당
+            자산당 다수 vault 존재 · 각 vault는 서로 다른 프로토콜이 인센티브 · validator가 BGT 배출을 vault 간 할당
           </p>
         </div>
 
@@ -322,7 +320,9 @@ export default function PoLArchitecture({ onCodeRef }: Props) {
           </div>
           <div className="border-t border-border/50 pt-2 text-xs text-muted-foreground space-y-0.5">
             <p>악성 고래가 1/3+ BGT 위임 시 → 체인 중단 가능 (재작성 불가)</p>
-            <p>2/3+ BGT 악성 시 → Safety 위반 가능</p>
+            <p>
+            2/3+ BGT 악성 시 → safety 위반 가능
+          </p>
           </div>
         </div>
 

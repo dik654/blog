@@ -12,8 +12,13 @@ const Flow = () => (
 
 export default function ModernArticle() {
   return <article className="space-y-14">
-    <section id="overview" className="space-y-5"><h2 className="text-3xl font-bold">Circom은 계산기가 아니라 circuit compiler다</h2><p className="text-lg leading-8">Public output을 12로 고정하고 private inputs 3과 4를 알고 있음을 증명한다고 해 봅시다. Circom source는 prover가 witness를 계산하는 코드와 verifier가 그 witness를 강제할 R1CS를 함께 만듭니다. 둘 중 하나라도 빠지면 정상 입력 데모는 돌아가더라도 안전한 circuit이 아닙니다.</p><Flow /><p>Instance와 witness, R1CS의 수학은 기존 정본을 따라가고, 이 글은 Circom compiler가 그 수학을 어떤 artifact로 낮추는지만 소유합니다.</p></section>
-    <section id="lowering" className="space-y-5"><h2 className="text-2xl font-bold">Witness assignment과 constraint를 분리해 읽다</h2><p>z=(1,a,b,out)=(1,3,4,12)일 때 compiler가 남겨야 할 핵심 row는 a·b=out입니다. 값 12를 계산하는 로직은 prover를 돕지만, 이 row가 없으면 out=11인 malicious witness를 verifier가 거절할 근거가 없습니다.</p><ExplainedFormula question="Generated R1CS에서 정확히 무엇을 검사하는가?" idea={<>Witness vector의 선형 조합 두 개를 곱한 값이 세 번째 선형 조합과 같아야 합니다. 한 row가 성립한다는 사실과 intended semantics 전체가 충분히 제약된다는 사실은 구분합니다.</>} formula={String.raw`\langle A_i,z\rangle\,\langle B_i,z\rangle=\langle C_i,z\rangle,\qquad (3)(4)=12`}
+    <section id="overview" className="space-y-5"><h2 className="text-3xl font-bold">Circom은 계산기가 아니라 circuit compiler다</h2><p className="text-lg leading-8">Public output을 12로 고정하고 private inputs 3과 4를 알고 있음을 증명한다고 해 봅시다. Circom source는 prover가 witness를 계산하는 코드와 verifier가 그 witness를 강제할 R1CS를 함께 만듭니다. 둘 중 하나라도 빠지면 정상 입력 데모는 돌아가더라도 안전한 circuit이 아닙니다.</p><Flow /><p>
+            Instance와 witness, R1CS의 수학은 기존 정본을 따라가고 이 글은 Circom compiler가 그 수학을 어떤 artifact로 낮추는지만 소유합니다.
+          </p></section>
+    <section id="lowering" className="space-y-5"><h2 className="text-2xl font-bold">Witness assignment과 constraint를 분리해 읽다</h2><p>
+            z=(1,a,b,out)=(1,3,4,12)일 때 compiler가 남겨야 할 핵심 row는 a·b=out입니다. 값 12를 계산하는 로직은 prover를 돕지만 이 row가
+            없으면 out=11인 malicious witness를 verifier가 거절할 근거가 없습니다.
+          </p><ExplainedFormula question="Generated R1CS에서 정확히 무엇을 검사하는가?" idea={<>Witness vector의 선형 조합 두 개를 곱한 값이 세 번째 선형 조합과 같아야 합니다. 한 row가 성립한다는 사실과 intended semantics 전체가 충분히 제약된다는 사실은 구분합니다.</>} formula={String.raw`\langle A_i,z\rangle\,\langle B_i,z\rangle=\langle C_i,z\rangle,\qquad (3)(4)=12`}
     annotatedFormula={String.raw`\langle A_i,z\rangle\,\langle B_i,z\rangle=\underbrace{\langle C_i,z\rangle,\qquad (3)(4)=12}_{\text{Witness vector 계산}}`}
     operations={[
       { expression: String.raw`\langle C_i,z\rangle,\qquad (3)(4)=12`, annotation: ["Witness vector이(가) 식의 결과에 기여하는 방식을","계산합니다.","Witness vector의 선형 조합 두 개를 곱한 값이 세","번째 선형 조합과 같아야 합니다."] },

@@ -69,16 +69,15 @@ export default function PrepareProcess({
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Coherence는 proposer 자신도 검사 대상이라는 뜻입니다</h3>
         <p>
-          정상 proposer가 PrepareProposal로 만든 candidate는 correct validator의 ProcessProposal에서 ACCEPT돼야 progress할
-          수 있습니다. Proposer에서도 ProcessProposal이 호출될 수 있고 failure 상황에서는 이전 invocation의 candidate가
-          도착하거나 호출되지 않을 수 있으므로, “Prepare 직후 Process가 정확히 한 번 이어진다”는 local call sequence에
-          state correctness를 의존하면 안 됩니다.
+          정상 proposer가 PrepareProposal로 만든 candidate는 correct validator의 ProcessProposal에서 ACCEPT돼야
+          progress합니다. Proposer에서도 ProcessProposal이 호출될 수 있고 failure 상황에서는 이전 invocation의 candidate가 도착하거나 호출이
+          아예 없기도 합니다. “Prepare 직후 Process가 정확히 한 번 이어진다”는 local call sequence에 state correctness를 의존하면 안 됩니다.
         </p>
         <h3>Candidate execution은 cache이지 commit이 아닙니다</h3>
         <p>
-          Prepare/Process에서 block을 미리 실행해 FinalizeBlock을 빠르게 만들 수 있지만 각 candidate state는 block hash로
-          격리합니다. 여러 round candidate를 덮어쓰지 않고, decided block과 일치하는 결과만 FinalizeBlock에서 승격하며
-          나머지는 안전하게 폐기합니다. External side effect는 candidate path에서 실행하지 않습니다.
+          Prepare/Process에서 block을 미리 실행해 FinalizeBlock을 빠르게 만들 수 있지만 각 candidate state는 block hash로 격리합니다. 여러
+          round candidate를 덮어쓰지 않고 decided block과 일치하는 결과만 FinalizeBlock에서 승격하며 나머지는 안전하게 폐기합니다. External side
+          effect는 candidate path에서 실행하지 않습니다.
         </p>
       </div>
     </section>

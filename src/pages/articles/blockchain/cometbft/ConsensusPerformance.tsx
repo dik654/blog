@@ -99,18 +99,14 @@ export default function ConsensusPerformance({
           ))}
         </div>
         <p>
-          서로 다른 mainnet의 TPS나 block time만 나란히 놓으면 transaction 종류,
-          validator set, application 실행과 측정 구간이 섞여 원인을 알 수
-          없습니다. 같은 block fixture와 network profile에서 한 변수씩 바꾸고,
-          round 0 성공률과 end-to-end commit latency를 함께 비교해야 설정 변경의
-          효과를 설명할 수 있습니다.
+          서로 다른 mainnet의 TPS나 block time만 나란히 놓으면 transaction 종류, validator set, application 실행과 측정 구간이 섞여 원인을
+          알 수 없습니다. 같은 block fixture와 network profile에서 한 변수씩 바꿔 가며 round 0 성공률과 end-to-end commit latency를 함께
+          놓고 볼 때 비로소 설정 변경의 효과를 설명할 수 있습니다.
         </p>
         <p className="leading-7">
-          결국 성능은 validator 수 하나가 아니라 block 크기와 생성 주기,
-          vote 전파 지연, application 처리량이 만나는 지점에서 결정된다.
-          Timeout을 낮추거나 validator set을 줄이면 특정 환경의 latency가
-          개선될 수 있지만, 네트워크 변동성과 운영 분산성을 함께 측정하지 않은
-          채 보편적인 최적값으로 일반화해서는 안 된다.
+          성능은 validator 수 하나로 결정되지 않는다. block 크기와 생성 주기, vote 전파 지연, application 처리량이 만나는 지점에서 정해진다. Timeout을
+          낮추거나 validator set을 줄이면 특정 환경의 latency는 개선될 수 있다. 다만 네트워크 변동성과 운영 분산성을 함께 측정하지 않은 채 보편적인 최적값으로
+          일반화해서는 안 된다.
         </p>
       </div>
     </section>

@@ -52,7 +52,7 @@ export default function Overview() {
               </li>
             </ul>
             <p className="text-xs text-muted-foreground mt-2">
-              핵심 metric: validator 수
+              핵심 metric은 validator 수
             </p>
           </div>
           <div className="rounded-lg border p-4">
@@ -167,8 +167,7 @@ export default function Overview() {
           <div className="rounded-lg border p-4">
             <p className="font-semibold text-sm mb-1">6. Network Model</p>
             <p className="text-sm">
-              대부분 partial sync — Ditto: async fallback — Mysticeti: partial
-              sync + async
+              대부분 partial sync · Ditto: async fallback · Mysticeti: partial sync + async
             </p>
           </div>
           <div className="rounded-lg border p-4">

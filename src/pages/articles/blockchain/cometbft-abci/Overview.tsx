@@ -31,14 +31,18 @@ export default function Overview() {
           <li><strong>Commit:</strong> application이 FinalizeBlock state를 durable하게 저장하는 경계입니다.</li>
         </ul>
         <p>
-          Candidate execution을 성능 최적화로 미리 할 수는 있지만 committed state를 덮어쓰면 안 됩니다. 한 height에서
-          여러 proposal이 검사될 수 있고 그중 하나만 FinalizeBlock으로 오기 때문입니다.
+          Candidate execution을 성능 최적화로 미리 할 수는 있지만 committed state를 덮어쓰면 안 됩니다. 한 height에서 proposal이 여러 개
+          검사되기도 하는데 그중 FinalizeBlock으로 오는 것은 하나뿐이기 때문입니다.
         </p>
       </div>
       <div id="paper-cometbft-abci-methods-v040" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">공식 규격 읽기 · v0.40.0 ABCI++ methods</p>
         <p className="mt-2 text-sm font-semibold">CometBFT ABCI++ Methods</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">문제는 각 request·response의 field, 호출 시점, validation과 authority를 정의하는 것입니다. 규격은 interface lifecycle을 제공하지만 application business rule·database transaction·external side effect의 exactly-once를 대신 구현하지 않습니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            여기서 정의하는 것은 각 request·response의 field, 호출 시점, validation과 authority입니다. 규격이 맡는 범위는 interface
+            lifecycle까지고 application business rule·database transaction·external side effect의 exactly-once는 대신
+            구현해 주지 않습니다.
+          </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://github.com/cometbft/cometbft/blob/v0.40.0/spec/abci/abci%2B%2B_methods.md" target="_blank" rel="noreferrer">v0.40.0 method 규격 보기</a>
       </div>
     </section>

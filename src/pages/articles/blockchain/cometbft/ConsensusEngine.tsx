@@ -20,7 +20,9 @@ export default function ConsensusEngine({
           CometBFT는 각 block height에서 proposer가 block을 내고 validator들이 <strong>Propose → Prevote → Precommit</strong> 순서로 합의하는 Tendermint BFT를 사용합니다. 같은 height에서 voting power의 3분의 2를 넘는 precommit을 모으면 block이 곧바로 확정되므로, 이후 더 긴 chain이 나타나 결과가 뒤집히는 확률적 finality와는 성격이 다릅니다.
         </p>
         <p>
-          한 round가 끝까지 진행되지 못하면 같은 height를 유지한 채 proposer와 timeout을 바꿔 다음 round로 넘어갑니다. 이때 lock 규칙이 이미 지지한 block을 함부로 바꾸지 못하게 해 safety를 지키고, 점점 길어지는 timeout이 네트워크가 안정될 시간을 주어 liveness를 회복합니다. 아래 그림은 이 두 장치가 어느 단계에서 작동하는지 먼저 보여줍니다.
+          한 round가 끝까지 진행되지 못하면 같은 height를 유지한 채 proposer와 timeout을 바꿔 다음 round로 넘어갑니다. 이때 safety를 지키는 쪽은 lock
+          규칙입니다. 이미 지지한 block을 함부로 바꾸지 못하게 막습니다. liveness는 점점 길어지는 timeout이 네트워크가 안정될 시간을 주면서 회복시킵니다. 아래 그림은 이
+          두 장치가 어느 단계에서 작동하는지 먼저 보여줍니다.
         </p>
         <CitationBlock
           source='Buchman et al., "The latest gossip on BFT consensus", 2018'
@@ -275,7 +277,8 @@ export default function ConsensusEngine({
           </div>
         </div>
         <p>
-          따라서 lock은 단순한 구현 상태가 아니라 Tendermint safety의 핵심입니다. Validator는 더 높은 round에서 정당한 polka를 확인하기 전까지 lock된 block과 충돌하는 block을 지지하지 않으며, 이 제약이 같은 height에서 두 block이 동시에 확정되는 상황을 막습니다.
+          lock을 단순한 구현 상태로 보면 안 됩니다. Tendermint safety의 핵심이 여기 있습니다. Validator는 더 높은 round에서 정당한 polka를 확인하기
+          전까지 lock된 block과 충돌하는 block을 지지하지 않습니다. 이 제약이 같은 height에서 두 block이 동시에 확정되는 상황을 막습니다.
         </p>
 
         {/* ── Timeout 전략 ── */}
