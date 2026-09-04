@@ -96,10 +96,9 @@ export default function Training({
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Posterior collapse를 진단한다</h3>
         <p>
-          평균 KL만 보지 말고 dimension별 KL, active unit 수, encoder를 제거했을
-          때 reconstruction이 얼마나 변하는지 확인합니다. KL warm-up, free bits,
-          decoder capacity 조절은 collapse를 완화할 수 있지만 각 방법이 ELBO와
-          representation에 주는 trade-off를 validation해야 합니다.
+          평균 KL만 보지 말고 dimension별 KL과 active unit 수를 함께 봅니다. encoder를 제거했을 때 reconstruction이 얼마나 변하는지도 확인합니다.
+          KL warm-up과 free bits, decoder capacity 조절은 collapse를 완화할 수 있습니다. 각 방법이 ELBO와 representation에 주는
+          trade-off는 따로 validation합니다.
         </p>
         <p>
           예를 들어 두 latent dimension의 KL이 <code>(0.40, 0.30)</code>인
@@ -123,10 +122,8 @@ export default function Training({
             Autoencoders
           </p>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            초기 학습에서 inference network가 계속 움직이는 true posterior를
-            따라가지 못하는 현상을 관찰하고, inference update를 더 수행하는
-            방법을 평가합니다. 이는 collapse의 한 메커니즘과 완화법이지 모든
-            decoder·dataset에서의 유일한 원인이나 보편적 해결책은 아닙니다.
+            초기 학습에서 true posterior는 계속 움직이는데 inference network가 이를 따라가지 못합니다. 이 현상을 관찰하고 inference update를 더
+            수행하는 방법을 평가합니다. collapse의 한 메커니즘과 완화법일 뿐, 모든 decoder와 dataset에서 관찰되는 유일한 원인도 보편적 해결책도 아닙니다.
           </p>
           <a
             className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
@@ -140,24 +137,19 @@ export default function Training({
 
         <h3>평가 질문을 분리한다</h3>
         <p>
-          Density model로서는 held-out ELBO나 importance-weighted likelihood
-          estimate를 보고, reconstruction model로서는 데이터에 맞는
-          distortion을, generator로서는 sample quality와 coverage를 본다. Latent
-          traversal은 representation을 이해하는 보조 도구이지 disentanglement의
-          정량적 증거는 아닙니다. Anomaly detection에 reconstruction error를 쓸
-          때도 정상 데이터의 복원 편향과 threshold drift를 별도로 검증해야
-          합니다.
+          density model로서는 held-out ELBO나 importance-weighted likelihood estimate를 보고 reconstruction model로서는
+          데이터에 맞는 distortion을, generator로서는 sample quality와 coverage를 봅니다. latent traversal은 representation을
+          이해하는 보조 도구이지 disentanglement의 정량적 증거는 아닙니다. anomaly detection에 reconstruction error를 쓸 때도 정상 데이터의 복원
+          편향과 threshold drift는 별도로 검증합니다.
         </p>
 
         <h3>
           더 tight한 likelihood bound가 필요하면 importance sample을 늘립니다
         </h3>
         <p>
-          IWAE는 같은 encoder에서 latent를 여러 번 뽑고, joint-to-proposal
-          importance weight의 평균으로 lower bound를 구성합니다. K가 커질수록
-          bound는 일반적으로 더 tight해지지만, 계산량과 encoder gradient의
-          signal-to-noise 특성도 달라지므로 숫자 하나만 보고 기본 ELBO보다 항상
-          낫다고 판단하지 않습니다.
+          IWAE는 같은 encoder에서 latent를 여러 번 뽑고 joint-to-proposal importance weight의 평균으로 lower bound를 구성합니다. K가
+          커질수록 bound는 일반적으로 더 tight해지지만 계산량과 encoder gradient의 signal-to-noise 특성도 달라지므로 숫자 하나만 보고 기본 ELBO보다
+          항상 낫다고 판단하지 않습니다.
         </p>
         <p>
           각 weight를 <code>w=pθ(x,z)/qφ(z|x)</code>로 두면 q 아래의 기대값은
@@ -232,11 +224,9 @@ export default function Training({
             Importance Weighted Autoencoders
           </p>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            여러 posterior sample의 importance weight를 사용해 single-sample
-            ELBO보다 더 tight한 lower bound를 구성합니다. Sample 수를 늘리는
-            것은 objective와 estimator의 trade-off를 바꾸며, latent
-            representation이나 finite-sample gradient가 언제나 더 좋아진다고
-            단정할 수는 없습니다.
+            여러 posterior sample의 importance weight를 사용해 single-sample ELBO보다 더 tight한 lower bound를 구성합니다.
+            sample 수를 늘리는 것은 objective와 estimator의 trade-off를 바꾸며 latent representation이나 finite-sample
+            gradient가 언제나 더 좋아진다고 단정할 수는 없습니다.
           </p>
           <a
             className="mt-3 inline-block text-sm font-medium text-primary hover:underline"

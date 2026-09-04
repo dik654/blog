@@ -24,9 +24,8 @@ export default function VisionLanguageNavigationArticle() {
             memory, reward 구조로 나타나는지를 봅니다.
           </p>
           <p>
-            VLN은 discrete navigation graph 위의 문제로 시작했지만, 지금은 continuous
-            environment에서 waypoint 단위로 움직이고, 지나온 경로를 anchor로 압축해 기억하며,
-            고수준 계획과 저수준 제어를 서로 다른 reward로 정렬하는 방향으로 발전했습니다.
+            VLN은 discrete navigation graph 위의 문제로 시작했습니다. 지금은 continuous environment에서 waypoint 단위로 움직이고, 지나온
+            경로를 anchor로 압축해 기억하며, 고수준 계획과 저수준 제어를 서로 다른 reward로 정렬하는 방향으로 발전했습니다.
           </p>
         </div>
         <ContentBoundary article="vision-language-navigation" />
@@ -38,17 +37,14 @@ export default function VisionLanguageNavigationArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            원래 VLN은 Room-to-Room(R2R) benchmark처럼 미리 만들어 둔 navigation graph 위에서
-            정의됐습니다. Agent는 매 step "다음으로 갈 수 있는 viewpoint" 중 하나를 고르는
-            discrete action space를 씁니다. R2R은 90개 건물, 7,189개 경로, 평균 29단어짜리
-            instruction 21,567개로 구성되고, 경로 하나는 평균 4~6개의 graph edge, 약 10m
-            길이입니다.
+            원래 VLN은 Room-to-Room(R2R) benchmark처럼 미리 만들어 둔 navigation graph 위에서 정의됐습니다. 매 step "다음으로 갈 수 있는
+            viewpoint" 중 하나를 고르는 discrete action space를 agent가 씁니다. R2R은 90개 건물, 7,189개 경로, 평균 29단어짜리
+            instruction 21,567개로 구성되고 경로 하나는 평균 4~6개의 graph edge, 약 10m 길이입니다.
           </p>
           <p>
-            이 graph는 각 viewpoint 사이의 연결과 agent의 정확한 위치를 미리 안다고 가정합니다.
-            VLN-CE(VLN in Continuous Environments)는 이 가정을 없애고 agent가 실제 물리
-            environment에서 low-level action(전진·회전)만으로 움직이게 만들어, 훨씬 어려운
-            설정에서 성능이 크게 떨어짐을 보였습니다.
+            이 graph는 각 viewpoint 사이의 연결과 agent의 정확한 위치를 미리 안다고 가정합니다. VLN-CE(VLN in Continuous Environments)는
+            이 가정을 없앴습니다. Agent가 실제 물리 environment에서 low-level action(전진·회전)만으로 움직여야 하는 훨씬 어려운 설정이 되고 여기서 성능이
+            크게 떨어짐을 보였습니다.
           </p>
           <p>
             Waypoint prediction은 이 low-level action과 완전히 연속적인 이동 사이의 spectrum을
@@ -114,15 +110,13 @@ export default function VisionLanguageNavigationArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Waypoint를 고르는 것과 그 waypoint까지 안전하게 이동하는 것은 다른 책임입니다. SLAM
-            controller는 sensor로 자기 위치를 계속 추정(localization)하고 지도를 갱신하며
-            (mapping), 그 위에서 장애물을 피해 실제 motor command를 내는 저수준 실행을 맡습니다.
+            Waypoint를 고르는 것과 그 waypoint까지 안전하게 이동하는 것은 다른 책임입니다. SLAM controller는 sensor로 자기 위치를 계속
+            추정(localization)하고 지도를 갱신합니다(mapping). 그 위에서 장애물을 피해 실제 motor command를 내는 저수준 실행도 맡습니다.
           </p>
           <p>
-            VLM이 매 step 전체 상황을 다시 추론하면 계산 비용이 크고 느립니다. Selective
-            reasoning은 이 비용을 줄이기 위해, 분기점이나 지시문의 새 landmark가 나오는 것처럼
-            판단이 실제로 필요한 지점에서만 language reasoning(chain-of-thought)을 켜고, 나머지
-            구간은 SLAM controller에게 이동을 맡깁니다.
+            VLM이 매 step 전체 상황을 다시 추론하면 계산 비용이 크고 느립니다. Selective reasoning은 이 비용을 줄이려고 language
+            reasoning(chain-of-thought)을 켜는 자리를 고릅니다. 분기점이나 지시문의 새 landmark처럼 판단이 실제로 필요한 지점에서만 켜고 나머지 구간은
+            SLAM controller에게 이동을 맡깁니다.
           </p>
           <p>
             이 구조는{" "}
@@ -158,15 +152,13 @@ export default function VisionLanguageNavigationArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Trajectory memory는 지금까지 지나온 경로의 observation과 결정을 저장해 반복 방문이나
-            이미 실패한 경로를 다시 시도하지 않게 돕습니다. 문제는 매 step을 전부 고해상도로
-            쌓으면 경로가 길어질수록 메모리와 검색 비용이 함께 늘어난다는 점입니다.
+            Trajectory memory에는 지금까지 지나온 경로의 observation과 결정이 쌓입니다. 이 기록이 반복 방문이나 이미 실패한 경로를 다시 시도하지 않도록 돕습니다.
+            문제는 매 step을 전부 고해상도로 쌓으면 경로가 길어질수록 메모리와 검색 비용이 함께 늘어난다는 점입니다.
           </p>
           <p>
-            Anchor-trajectory memory는 분기점처럼 다시 참조할 가치가 큰 step만 anchor로 남기고,
-            나머지는 위치·시간만 담은 가벼운 space-time indicator로 압축합니다. Spatial-temporal
-            memory는 이 indicator를 위치와 시간 두 축으로 함께 인덱싱해, "같은 위치를 다른
-            시간에 다시 지난다"는 사실을 알아볼 수 있게 합니다.
+            Anchor-trajectory memory는 분기점처럼 다시 참조할 가치가 큰 step만 anchor로 남기고 나머지는 위치·시간만 담은 가벼운 space-time
+            indicator로 압축합니다. Spatial-temporal memory는 이 indicator를 위치와 시간 두 축으로 함께 인덱싱합니다. 그러면 "같은 위치를 다른 시간에
+            다시 지난다"는 사실을 알아볼 수 있습니다.
           </p>
         </div>
 
@@ -203,10 +195,9 @@ export default function VisionLanguageNavigationArticle() {
             로 나눠 각각 정렬합니다.
           </p>
           <p>
-            Outcome reward는 episode가 끝났을 때 목적지에 도달했는지처럼 최종 결과만 채점하고,
-            process reward는 각 step의 waypoint 선택이나 selective reasoning 판단이 지시문에
-            비춰 타당했는지를 중간중간 채점합니다. TAMP-Nav는 이 둘을 겹쳐 학습해 R2R-CE에서
-            66.2% success rate를 보고했습니다.
+            Outcome reward는 episode가 끝났을 때 목적지에 도달했는지처럼 최종 결과만 채점합니다. Process reward는 각 step의 waypoint 선택이나
+            selective reasoning 판단이 지시문에 비춰 타당했는지를 중간중간 채점합니다. TAMP-Nav는 이 둘을 겹쳐 학습해 R2R-CE에서 66.2% success
+            rate를 보고했습니다.
           </p>
         </div>
 
@@ -248,9 +239,8 @@ L(\theta)&=\underbrace{-\lambda_o R_{\text{outcome}}-\lambda_p\sum_t R_{\text{pr
         <h2 className="mb-6 text-2xl font-bold">네 층은 각자 다른 실패를 막는 독립된 설계 축입니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            VLN taxonomy, SLAM controller와 selective reasoning, trajectory·spatial-temporal
-            memory, two-level alignment는 순서대로 쌓이는 층이지만 서로 대체하지 않습니다.
-            Waypoint를 잘 골라도 memory가 없으면 같은 곳을 맴돌고, memory가 있어도 reward가
+            VLN taxonomy, SLAM controller와 selective reasoning, trajectory·spatial-temporal memory, two-level
+            alignment는 순서대로 쌓이는 층이지만 서로 대체하지 않습니다. Waypoint를 잘 골라도 memory가 없으면 같은 곳을 맴돌고 memory가 있어도 reward가
             결과만 보면 비효율적인 경로를 그대로 강화합니다.
           </p>
         </div>
@@ -290,11 +280,9 @@ L(\theta)&=\underbrace{-\lambda_o R_{\text{outcome}}-\lambda_p\sum_t R_{\text{pr
           preview="Action space만 넓히거나 memory만 추가해도 나머지 층의 실패는 그대로 남습니다."
         >
           <p>
-            Waypoint 표현력을 넓혀도 selective reasoning의 결정 지점 판정이 나쁘면 정말 방향을
-            바꿔야 할 순간에 SLAM controller가 이전 계획을 그대로 실행합니다. 반대로 memory를
-            정교하게 anchor로 압축해도 two-level alignment의 process reward가 없으면, 목적지에
-            도달하기만 하면 되는 policy가 비효율적이거나 위험한 경로를 그대로 강화학습으로
-            강화할 수 있습니다.
+            Waypoint 표현력을 넓혀도 selective reasoning의 결정 지점 판정이 나쁘면 정말 방향을 바꿔야 할 순간에 SLAM controller가 이전 계획을 그대로
+            실행합니다. 반대로 memory를 정교하게 anchor로 압축해도 two-level alignment의 process reward가 없으면 목적지에 도달하기만 하면 되는
+            policy가 비효율적이거나 위험한 경로를 그대로 강화학습으로 강화할 수 있습니다.
           </p>
           <p>
             그래서 이 네 층을 release 평가에 넣을 때는 waypoint 정확도, 결정 지점 판정 정확도,

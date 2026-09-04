@@ -18,11 +18,9 @@ export default function Overview() {
           배정할지</strong>를 결정합니다.
         </p>
         <p className="leading-8">
-          따라서 scheduler의 출력은 단순한 request ID 목록이 아닙니다. 요청별
-          scheduled token 수, 새 KV block, speculative token, multimodal encoder
-          input처럼 이번 실행에 필요한 정보를 worker가 소비할 수 있는 형태로
-          묶습니다. Model 실행이 끝나면 생성·수락·완료 결과가 request state로
-          돌아오고, 다음 iteration은 갱신된 상태에서 다시 시작합니다.
+          그래서 scheduler의 출력은 단순한 request ID 목록이 아닙니다. 요청별 scheduled token 수, 새 KV block, speculative token,
+          multimodal encoder input처럼 이번 실행에 필요한 정보를 worker가 소비할 수 있는 형태로 묶습니다. Model 실행이 끝나면 생성·수락·완료 결과가
+          request state로 돌아오고 다음 iteration은 갱신된 상태에서 다시 시작합니다.
         </p>
       </div>
 

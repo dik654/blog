@@ -46,8 +46,8 @@ export default function ModernArticle() {
             지식을 robot이 실행하는 action policy로 넘기는 절차가 이 글 전체의 실제 출발점입니다.
           </p>
           <p className="leading-8">
-            Embodied AI는 인터넷에서 수집한 dataset이 아니라 자기 몸으로 환경과 상호작용하며 지각·행동을 함께
-            배우는 agent를 가리키고, VLA는 그 embodied agent에 VLM 지식을 이식하려는 구체적 시도입니다.
+            Embodied AI는 인터넷에서 수집한 dataset이 아니라 자기 몸으로 환경과 상호작용하며 지각·행동을 함께 배우는 agent를 가리키고 VLA는 그 embodied
+            agent에 VLM 지식을 이식하려는 구체적 시도입니다.
           </p>
           <p className="leading-8">
             <EvidenceTag>공식 artifact</EvidenceTag>
@@ -123,9 +123,8 @@ export default function ModernArticle() {
             매핑합니다.
           </p>
           <p className="leading-8">
-            세 grounding은 순서대로 쌓이지만 자동으로 이어지지 않습니다. Spatial reasoning, 즉 “컵이 접시
-            왼쪽에 있다”처럼 object 사이 공간 관계를 추론하는 단계가 틀리면 spatial grounding이 잘못된
-            좌표를 내고, 그 오차가 action grounding까지 그대로 전파됩니다.
+            세 grounding은 순서대로 쌓이지만 자동으로 이어지지 않습니다. Spatial reasoning, 즉 “컵이 접시 왼쪽에 있다”처럼 object 사이 공간 관계를 추론하는
+            단계가 틀리면 spatial grounding이 잘못된 좌표를 내고 그 오차가 action grounding까지 그대로 전파됩니다.
           </p>
           <p className="leading-8">
             <EvidenceTag>논문 자기보고</EvidenceTag>
@@ -209,10 +208,9 @@ export default function ModernArticle() {
             target robot의 calibration을 뜻하지 않습니다.
           </p>
           <p className="leading-8">
-            중요한 점은 특정 모델만 fine-tuning이 필요하다는 식으로 선을 긋지 않는 것입니다. VLA family
-            전체가 정도의 차이는 있어도 sensor, morphology, action normalization, controller와 target
-            distribution을 맞춰야 합니다. Foundation policy의 이점은 adaptation을 0으로 만드는 것이 아니라
-            더 적은 data로 맞출 가능성을 높이는 데 있습니다.
+            중요한 점은 특정 모델만 fine-tuning이 필요하다는 식으로 선을 긋지 않는 것입니다. VLA family 전체가 정도의 차이는 있어도 sensor, morphology,
+            action normalization, controller와 target distribution을 맞춰야 합니다. Foundation policy는 adaptation을 0으로
+            만들어 주지 않습니다. 더 적은 data로 맞출 가능성을 높여 줄 뿐입니다.
           </p>
           <p className="leading-8">
             <EvidenceTag>논문 자기보고</EvidenceTag>
@@ -265,16 +263,15 @@ export default function ModernArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <h2>3단계 · Foundation model이 직접 할 일과 기존 robotics stack에 맡길 일을 분리합니다</h2>
           <p className="leading-8">
-            Monolithic VLA는 perception부터 action까지 공동 학습하지만, hierarchical system은 느린 semantic
-            decision과 빠른 geometry·planning·control을 나눕니다. 후자가 언제나 더 안전하거나 전자가 언제나
-            더 일반적인 것은 아닙니다. Modular path에서는 component를 개별 시험할 수 있는 대신 calibration,
-            stale observation, planner/controller interface error가 합성됩니다.
+            Monolithic VLA는 perception부터 action까지 공동 학습하지만 hierarchical system은 느린 semantic decision과 빠른
+            geometry·planning·control을 나눕니다. 후자가 언제나 더 안전하거나 전자가 언제나 더 일반적인 것은 아닙니다. Modular path에서는
+            component를 개별 시험할 수 있는 대신 calibration, stale observation, planner/controller interface error가
+            합성됩니다.
           </p>
           <p className="leading-8">
-            OK-Robot처럼 VLM, navigation, grasp primitive를 조합한 system은 foundation model이 모든 low-level
-            dynamics를 직접 예측하지 않아도 open-world task를 시도할 수 있음을 보여 줍니다. 동시에 component
-            success를 곱하면 end-to-end success가 급격히 낮아진다는 현실도 드러냅니다. 이것은 CFD에서 AI가
-            solver를 대체하기보다 적절한 solver와 조건을 선택하게 하는 경계와 닮았지만, 물리 실행의 error
+            OK-Robot처럼 VLM, navigation, grasp primitive를 조합한 system은 foundation model이 모든 low-level dynamics를
+            직접 예측하지 않아도 open-world task를 시도할 수 있음을 보여 줍니다. 동시에 component success를 곱하면 end-to-end success가 급격히
+            낮아진다는 현실도 드러냅니다. 이것은 CFD에서 AI가 solver를 대체하기보다 적절한 solver와 조건을 선택하게 하는 경계와 닮았지만 물리 실행의 error
             feedback이 더 빠르다는 차이가 있습니다.
           </p>
         </div>
@@ -305,10 +302,9 @@ export default function ModernArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <h2>4단계 · 2D pixel 선택은 3D action을 없애지 않고 geometry module로 넘깁니다</h2>
           <p className="leading-8">
-            Navigation에서는 VLM이 이미 잘 다루는 image pixel이나 region을 목표로 고르고, depth·camera
-            calibration·SLAM이 이를 3D waypoint로 바꾸는 interface가 등장합니다. Goal2Pixel과 2026-08-18
-            공개된 TAMP-Nav가 이 방향을 보고했습니다. 그러나 이는 최근 preprint의 자기보고 결과이며 이
-            글의 전체 결론이 아닙니다. 또한 manipulation의 grasp orientation·force·contact를 pixel 하나로
+            Navigation에서는 VLM이 이미 잘 다루는 image pixel이나 region을 목표로 고르고 depth·camera calibration·SLAM이 이를 3D
+            waypoint로 바꾸는 interface가 등장합니다. Goal2Pixel과 2026-08-18 공개된 TAMP-Nav가 이 방향을 보고했습니다. 그러나 최근
+            preprint의 자기보고 결과일 뿐 이 글의 전체 결론은 아닙니다. 또한 manipulation의 grasp orientation·force·contact를 pixel 하나로
             환원하지 못합니다.
           </p>
         </div>
@@ -394,16 +390,14 @@ p_w&=\underbrace{T_{wc}p_c}_{\text{world·map frame으로 변환}}
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <h2>5단계 · Release 단위는 한 frame의 action accuracy가 아니라 closed-loop trajectory입니다</h2>
           <p className="leading-8">
-            Mobile navigation은 observe→infer→move를 계속 반복하므로 waypoint가 맞아도 inference·planning
-            latency가 길면 이미 다른 위치의 observation을 사용하게 됩니다. Robot arm도 정적인 pick만 보면
-            느려도 되는 것처럼 보이지만, 미끄러지는 물체를 다시 잡거나 peg insertion 중 force spike를 피하는
-            contact-rich task에는 높은 feedback frequency와 force/tactile sensing이 필요합니다.
+            Mobile navigation은 observe→infer→move를 계속 반복하므로 waypoint가 맞아도 inference·planning latency가 길면 이미 다른
+            위치의 observation을 사용하게 됩니다. Robot arm도 정적인 pick만 보면 느려도 되는 것처럼 보이지만 미끄러지는 물체를 다시 잡거나 peg insertion
+            중 force spike를 피하는 contact-rich task에는 높은 feedback frequency와 force/tactile sensing이 필요합니다.
           </p>
           <p className="leading-8">
-            독립 benchmark도 이 경계를 지지합니다. RADAR는 dynamics와 observation noise 아래에서 여러 VLA의
-            fragility를 측정했고, SO-101 real-robot benchmark는 failure taxonomy와 recovery를 별도로 평가합니다.
-            이는 “VLM 성능이 VLA로 온전히 전이되지 않는다”는 경험담을 보편 법칙으로 바꾸는 증거가 아니라,
-            semantic benchmark와 embodied release test를 분리해야 한다는 독립 반증입니다.
+            독립 benchmark도 이 경계를 지지합니다. RADAR는 dynamics와 observation noise 아래에서 여러 VLA의 fragility를 측정했고 SO-101
+            real-robot benchmark는 failure taxonomy와 recovery를 별도로 평가합니다. 이 결과들은 “VLM 성능이 VLA로 온전히 전이되지 않는다”는
+            경험담을 보편 법칙으로 바꿔 주지 않습니다. 오히려 semantic benchmark와 embodied release test를 분리해야 한다는 독립 반증입니다.
           </p>
         </div>
 

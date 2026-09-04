@@ -13,10 +13,8 @@ export default function VideoUnderstandingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Model에 16장을 넣었다는 사실만으로 무엇을 관측했는지 알 수 없습니다.
-            30 fps 원본에서 연속 16장을 읽으면 약 0.5초지만, 8장마다 한 장을
-            읽으면 같은 16장이 약 4초를 덮습니다. 먼저 source timestamp와 event
-            duration을 seconds 단위로 고정한 뒤 frame count를 정합니다.
+            model에 16장을 넣었다는 사실만으로 무엇을 관측했는지 알 수 없습니다. 30 fps 원본에서 연속 16장을 읽으면 약 0.5초지만 8장마다 한 장을 읽으면 같은 16장이
+            약 4초를 덮습니다. 먼저 source timestamp와 event duration을 seconds 단위로 고정한 뒤 frame count를 정합니다.
           </p>
         </div>
         <TermBreakdown
@@ -56,8 +54,7 @@ export default function VideoUnderstandingArticle() {
           question="T개 frame과 stride s가 실제로 덮는 시간은 어떻게 계산하나요?"
           idea={
             <p>
-              T개 점 사이에는 T−1개 간격이 있습니다. 간격 하나는 source frame
-              s칸이고, source FPS로 나누면 seconds가 됩니다.
+              T개 점 사이에는 T−1개 간격이 있습니다. 간격 하나는 source frame s칸이고 source FPS로 나누면 seconds가 됩니다.
             </p>
           }
           formula={String.raw`D_{
@@ -148,8 +145,7 @@ m src}`}
           question="Stride 뒤 model의 effective sample rate는 왜 source FPS를 stride로 나누나요?"
           idea={
             <p>
-              Source frames s개마다 한 번 관측하므로 초당 source frames를 한
-              관측에 필요한 frame 수로 나눕니다.
+              source frames s개마다 한 번 관측하므로 초당 source frames를 한 관측에 필요한 frame 수로 나눕니다.
             </p>
           }
           formula={String.raw`f_{\rm sample}=f_{\rm src}/s`}
@@ -204,11 +200,8 @@ m src}`}
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            바퀴살이 실제보다 천천히 또는 거꾸로 도는 것처럼 보이는 현상이
-            시간축 aliasing입니다. 이상적인 band-limited 신호에서는 구분하려는
-            가장 빠른 frequency가 sample rate의 절반보다 낮아야 합니다. 이
-            조건은 최소 관측 경계이며 action classification 성공을 보장하는
-            규칙은 아닙니다.
+            바퀴살이 실제보다 천천히 돌거나 거꾸로 도는 것처럼 보일 때가 있습니다. 이것이 시간축 aliasing입니다. 이상적인 band-limited 신호에서는 구분하려는 가장 빠른
+            frequency가 sample rate의 절반보다 낮아야 합니다. 이 조건은 최소 관측 경계이며 action classification 성공을 보장하는 규칙은 아닙니다.
           </p>
         </div>
         <ExplainedFormula

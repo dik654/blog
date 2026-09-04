@@ -127,8 +127,7 @@ export default function UnstructuredPruningArticle() {
           question="왜 gradient와 weight를 곱하나요?"
           idea={
             <p>
-              Weight를 mask로 약하게 만들 때 task loss가 변하는 1차 방향을 얻기
-              위해 현재 값과 local gradient를 결합합니다.
+              weight를 mask로 약하게 만들 때 task loss가 변하는 1차 방향을 얻기 위해 현재 값과 local gradient를 결합합니다.
             </p>
           }
           formula={String.raw`g_i^{(t)}=\partial\mathcal L^{(t)}/\partial w_i^{(t)},\quad S_i\propto-\sum_t g_i^{(t)}w_i^{(t)}`}

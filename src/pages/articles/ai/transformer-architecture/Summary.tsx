@@ -38,11 +38,9 @@ export default function Summary({
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="text-lg leading-8">
-          Transformer block은 위치 정보가 포함된 token representation을 받아,
-          attention으로 token 축을 섞고 FFN으로 feature 축을 섞은 뒤 residual과
-          normalization을 거쳐 다음 block에 넘긴다. Encoder-only, decoder-only와
-          encoder–decoder의 차이는 이 block을 어떤 mask와 information source로
-          연결하느냐에 있다.
+          Transformer block은 위치 정보가 포함된 token representation을 받아 attention으로 token 축을 섞고 FFN으로 feature 축을 섞은 뒤
+          residual과 normalization을 거쳐 다음 block에 넘긴다. 이 block을 어떤 mask와 information source로 연결하느냐가 encoder-
+          only와 decoder-only, encoder–decoder를 가른다.
         </p>
       </div>
 
@@ -102,10 +100,9 @@ export default function Summary({
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          이후의 Transformer 계열은 이 기본 block을 버리기보다 attention 범위,
-          position encoding, normalization, FFN과 sparsity를 바꾸며 확장해 왔다.
-          따라서 새 model을 볼 때도 “무엇을 섞는가, 어떤 경로를 보존하는가,
-          계산량을 어디에 배분하는가” 세 질문으로 분해하면 구조를 비교하기 쉽다.
+          이후의 Transformer 계열은 이 기본 block을 버리지 않고 확장해 왔다. attention 범위와 position encoding을 바꾸고 normalization과
+          FFN, sparsity를 손보는 식이다. 새 model을 볼 때도 “무엇을 섞는가, 어떤 경로를 보존하는가, 계산량을 어디에 배분하는가” 세 질문으로 분해하면 구조를 비교하기
+          쉽다.
         </p>
       </div>
     </section>

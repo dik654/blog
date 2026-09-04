@@ -65,9 +65,8 @@ export default function Implementation() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Qwen 문서는 여러 open-source framework가 static YaRN을 구현한다고
-          명시한다. Static scaling은 짧은 입력에도 같은 factor를 쓰므로, 대부분의
-          요청이 짧다면 불필요한 품질 저하가 없는지 비교해야 한다.
+          Qwen 문서는 여러 open-source framework가 static YaRN을 구현한다고 명시한다. static scaling은 짧은 입력에도 같은 factor를 쓰므로
+          대부분의 요청이 짧다면 불필요한 품질 저하가 없는지 비교해야 한다.
         </p>
 
         <h3>vLLM</h3>
@@ -114,11 +113,9 @@ export default function Implementation() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>성공 조건은 “서버가 떴다”가 아니다</h3>
         <p>
-          먼저 original context 안에서 baseline과 결과를 비교하고, 목표 길이의
-          여러 위치에 needle을 배치해 retrieval을 측정한다. 그다음 여러 문서의
-          근거를 결합하는 task와 실제 workload를 평가한다. 마지막으로 GPU
-          memory, time to first token과 동시 처리량을 기록해야 위치 확장과 serving
-          capacity를 혼동하지 않을 수 있다.
+          먼저 original context 안에서 baseline과 결과를 비교하고 목표 길이의 여러 위치에 needle을 배치해 retrieval을 측정한다. 여러 문서의 근거를
+          결합하는 task와 실제 workload 평가가 그다음이다. 마지막으로 GPU memory와 time to first token, 동시 처리량을 기록해야 위치 확장과 serving
+          capacity를 혼동하지 않는다.
         </p>
 
         <h3>원문과 구현 문서는 따로 확인한다</h3>

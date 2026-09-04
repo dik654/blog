@@ -55,7 +55,9 @@ export default function AEvsVAE() {
       <figure className="not-prose my-8 grid gap-3 rounded-2xl border bg-card p-4 sm:grid-cols-2 sm:p-6">
         <div className="rounded-xl border bg-sky-500/5 p-4">
           <p className="font-semibold text-sky-700 dark:text-sky-300">Autoencoder</p>
-          <p className="mt-2 text-sm leading-6 text-muted-foreground">입력별 code와 reconstruction에 집중한다. Representation learning과 compression에 직접적이다.</p>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            입력별 code와 reconstruction에 집중한다. representation learning과 compression에 직접적이다.
+          </p>
         </div>
         <div className="rounded-xl border bg-violet-500/5 p-4">
           <p className="font-semibold text-violet-700 dark:text-violet-300">Variational autoencoder</p>

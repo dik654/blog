@@ -65,11 +65,9 @@ export default function ScheduleMethod({
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          Prompt를 처음 읽는 prefill은 한 번에 수백 token이 남을 수 있지만, 일반적인
-          decode는 다음 token 하나만 필요합니다. Speculative decoding에서는 검증할
-          후보가 여러 개 생길 수 있습니다. V1 scheduler는 이 서로 다른 일을
-          “현재 목표 위치까지 아직 계산하지 않은 token 수”로 바꾸어 같은 token
-          budget에서 비교합니다.
+          Prompt를 처음 읽는 prefill은 한 번에 수백 token이 남을 수 있지만 일반적인 decode는 다음 token 하나만 필요합니다. Speculative
+          decoding에서는 검증할 후보가 여러 개 생길 수 있습니다. V1 scheduler는 이 서로 다른 일을 “현재 목표 위치까지 아직 계산하지 않은 token 수”로 바꾸어 같은
+          token budget에서 비교합니다.
         </p>
       </div>
 
@@ -115,14 +113,11 @@ n_r^{need} &= \max\!\left(0,\;n_r^{target}-n_r^{computed}\right) \\
           현재 V1은 RUNNING을 검토한 뒤 남은 자리로 WAITING을 받습니다
         </h3>
         <p className="leading-8">
-          이미 답을 stream하는 RUNNING 요청을 오래 멈추면 token 사이의 간격인
-          ITL이 바로 나빠집니다. 현재 V1의 기본 흐름은 RUNNING queue를 먼저
-          순회하며 token과 KV slot을 배정하고, preemption이 발생하지 않았으며
-          request slot과 budget이 남아 있을 때 WAITING queue의 요청을 받습니다.
+          이미 답을 stream하는 RUNNING 요청을 오래 멈추면 token 사이의 간격인 ITL이 바로 나빠집니다. 현재 V1의 기본 흐름은 RUNNING queue를 먼저 순회하며
+          token과 KV slot을 배정하고 preemption이 발생하지 않았으며 request slot과 budget이 남아 있을 때 WAITING queue의 요청을 받습니다.
         </p>
         <p className="leading-8">
-          이것은 RUNNING이면 언제나 실행된다는 보장이 아닙니다. Budget·KV·model
-          length 같은 조건을 통과하는 요청부터 진행한다는 뜻입니다.
+          RUNNING이라고 언제나 실행되는 것은 아닙니다. Budget·KV·model length 같은 조건을 통과하는 요청부터 진행합니다.
         </p>
       </div>
 
@@ -172,9 +167,8 @@ n_r^{need} &= \max\!\left(0,\;n_r^{target}-n_r^{computed}\right) \\
           resource를 반환합니다.
         </p>
         <p className="leading-8">
-          갱신 없이 다음 schedule을 만들면 이미 처리한 token을 다시 넣거나, 끝난
-          요청이 KV block을 계속 점유할 수 있습니다. Schedule과 output update는 두
-          함수가 아니라 하나의 상태 전이 루프로 이해해야 합니다.
+          갱신 없이 다음 schedule을 만들면 이미 처리한 token을 다시 넣거나 끝난 요청이 KV block을 계속 점유할 수 있습니다. Schedule과 output update는
+          두 함수가 아니라 하나의 상태 전이 루프로 이해해야 합니다.
         </p>
         <p className="leading-8">
           전체 engine 경계와 timestamp는 <Link to="/ai/vllm-serving#v1-boundary">vLLM

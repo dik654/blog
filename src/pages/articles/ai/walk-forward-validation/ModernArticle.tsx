@@ -23,7 +23,10 @@ export default function WalkForwardValidationArticle() {
         <h2 className="mb-5 text-2xl font-bold">Label available time이 origin보다 이른 row만 training에 들어갑니다</h2>
         <ExplainedFormula
           question="30일 outcome과 7일 reporting delay가 있으면 왜 37일을 기다려야 하나요?"
-          idea={<p>Event 뒤 target horizon이 끝나야 결과를 알 수 있고, 그 결과가 system에 도착하는 reporting delay도 지나야 합니다. 둘을 더해 label available time을 만듭니다.</p>}
+          idea={<p>
+            Event 뒤 target horizon이 끝나야 결과를 알 수 있고 그 결과가 system에 도착하는 reporting delay도 지나야 합니다. 둘을 더해 label
+            available time을 만듭니다.
+          </p>}
           formula={String.raw`t_i^{\mathrm{label}}=t_i^{\mathrm{event}}+h_i+d_i,\quad i\in T_o\iff t_i^{\mathrm{label}}<o`}
           annotatedFormula={String.raw`\begin{aligned}t_i^{\mathrm{end}}&=\underbrace{t_i^{\mathrm{event}}+h_i}_{\text{target 관측 구간이 끝나는 시각}}\\t_i^{\mathrm{label}}&=\underbrace{t_i^{\mathrm{end}}+d_i}_{\text{reporting 지연 뒤 label이 도착}}\\i\in T_o&\Longleftrightarrow\underbrace{t_i^{\mathrm{label}}<o}_{\text{origin 이전 label만 허용}}
 \end{aligned}`}
@@ -52,7 +55,10 @@ export default function WalkForwardValidationArticle() {
       </section>
       <section id="boundary" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">Expanding과 rolling window는 production retraining policy에 맞춥니다</h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert"><p>Expanding window는 사용 가능한 모든 과거를 누적하고, rolling window는 최근 고정 길이만 남깁니다. Concept drift 때문에 오래된 data를 버리는 production이면 backtest도 같은 정책을 써야 합니다. Entity가 반복되면 시간 방향 위에 group 경계도 추가합니다.</p></div>
+        <div className="prose prose-neutral max-w-none dark:prose-invert"><p>
+            Expanding window는 사용 가능한 모든 과거를 누적하고 rolling window는 최근 고정 길이만 남깁니다. Concept drift 때문에 오래된 data를
+            버리는 production이면 backtest도 같은 정책을 써야 합니다. Entity가 반복되면 시간 방향 위에 group 경계도 추가합니다.
+          </p></div>
         <div id="paper-walk-forward" className="not-prose mt-8"><CitationBlock source="scikit-learn — TimeSeriesSplit" citeKey={1} type="paper" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit.html">
           순서가 있는 data에서 successive training sets가 누적되는 현재 splitter API와 gap parameter를 설명합니다. Label delay와 overlapping target purge가 자동 처리된다는 뜻은 아닙니다.
         </CitationBlock></div>

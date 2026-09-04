@@ -12,12 +12,9 @@ export default function Training() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          Layer 수와 hidden size가 같아도 initialization, optimizer,
-          learning-rate schedule, global token batch, sequence packing과
-          numerical precision이 다르면 안정성과 최종 loss가 달라집니다.
-          “Transformer는 AdamW와 warmup을 쓴다”는 목록보다 각 선택이 어떤
-          failure를 막는지, checkpoint resume 때 어떤 state가 보존되는지
-          확인해야 합니다.
+          Layer 수와 hidden size가 같아도 initialization과 optimizer, learning-rate schedule이 다르면 안정성과 최종 loss가
+          달라집니다. global token batch와 sequence packing, numerical precision도 마찬가지입니다. “Transformer는 AdamW와
+          warmup을 쓴다”는 목록보다 각 선택이 어떤 failure를 막는지, checkpoint resume 때 어떤 state가 보존되는지를 봅니다.
         </p>
       </div>
 
@@ -121,11 +118,9 @@ export default function Training() {
 
         <h3>Distributed strategy는 model 의미보다 tensor 소유권을 바꾼다</h3>
         <p className="leading-8">
-          Data parallel은 sample을, tensor parallel은 layer tensor를, pipeline
-          parallel은 layer 구간을 나누며 MoE는 expert routing communication을
-          추가합니다. 같은 global batch·optimizer state·randomness를 재현하려면
-          parallel topology와 gradient accumulation까지 실험 metadata에 남겨야
-          합니다.
+          data parallel은 sample을, tensor parallel은 layer tensor를, pipeline parallel은 layer 구간을 나누며 MoE는 expert
+          routing communication을 추가합니다. 같은 global batch·optimizer state·randomness를 재현하려면 실험 metadata의 범위가
+          parallel topology와 gradient accumulation까지 넓어집니다.
         </p>
       </div>
     </section>

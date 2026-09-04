@@ -64,18 +64,14 @@ export default function PrefillDecode({
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          긴 prefill은 여러 prompt token을 병렬 처리해 큰 GEMM을 만들기 좋지만 한
-          iteration을 오래 차지할 수 있습니다. Decode는 active request마다 보통 한
-          token만 계산하므로 개별 연산은 작지만, 이미 stream을 시작한 사용자에게
-          규칙적으로 돌아와야 합니다. 둘을 같은 token budget으로 표현해도 큰
-          prefill이 budget과 step time을 독점하면 decode ITL이 튈 수 있습니다.
+          긴 prefill은 여러 prompt token을 병렬 처리해 큰 GEMM을 만들기 좋지만 한 iteration을 오래 차지할 수 있습니다. Decode는 active
+          request마다 보통 한 token만 계산하므로 개별 연산은 작지만 이미 stream을 시작한 사용자에게 규칙적으로 돌아와야 합니다. 둘을 같은 token budget으로
+          표현해도 큰 prefill이 budget과 step time을 독점하면 decode ITL이 튈 수 있습니다.
         </p>
         <p className="leading-8">
-          Chunked prefill은 긴 prompt를 여러 iteration으로 나누고 그 사이에 decode를
-          섞어 이 충돌을 조절합니다. Chunk가 작을수록 decode가 끼어들 기회는
-          늘어나지만, prompt 하나를 끝내기 위한 iteration과 고정 overhead도 늘어납니다.
-          따라서 “작을수록 좋다”가 아니라 workload의 prompt 길이와 ITL SLO가 만나는
-          지점을 측정해야 합니다.
+          Chunked prefill은 긴 prompt를 여러 iteration으로 나누고 그 사이에 decode를 섞어 이 충돌을 조절합니다. Chunk가 작을수록 decode가 끼어들
+          기회는 늘어나지만 prompt 하나를 끝내기 위한 iteration과 고정 overhead도 늘어납니다. 그러니 “작을수록 좋다”가 아니라 workload의 prompt 길이와
+          ITL SLO가 만나는 지점을 측정해야 합니다.
         </p>
       </div>
 
@@ -136,9 +132,8 @@ T_{prefill,total} &\approx \sum_{j=1}^{C}T_{model}(c_j)
           다룬다</strong>는 아이디어입니다.
         </p>
         <p className="leading-8">
-          논문의 2.6×, 3.7×, 5.6× 결과는 명시된 model과 A100, pipeline 구성, workload,
-          latency constraint에서 나온 system 결과이며, 최신 vLLM에 옵션을 하나 켜면
-          그대로 재현된다는 뜻이 아닙니다.
+          논문의 2.6×, 3.7×, 5.6× 결과는 명시된 model과 A100, pipeline 구성, workload, latency constraint에서 나온 system 결과이며
+          최신 vLLM에 옵션을 하나 켜면 그대로 재현된다는 뜻이 아닙니다.
         </p>
 
         <h3 id="scheduler-knobs" className="scroll-mt-20">

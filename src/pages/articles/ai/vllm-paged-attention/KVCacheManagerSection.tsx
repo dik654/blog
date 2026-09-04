@@ -100,8 +100,7 @@ export default function KVCacheManagerSection({
           Allocation 실패는 manager가 알리고, 누구를 멈출지는 scheduler가 정합니다
         </h3>
         <p className="leading-8">
-          Manager가 충분한 block을 확보하지 못하면 scheduler에 실패를 돌려줍니다.
-          Manager가 임의로 다른 request를 중단하지는 않습니다.
+          Manager가 충분한 block을 확보하지 못하면 scheduler에 실패를 돌려줄 뿐, 임의로 다른 request를 중단하지는 않습니다.
         </p>
         <p className="leading-8">
           Scheduler가 policy와
@@ -120,9 +119,7 @@ export default function KVCacheManagerSection({
           group으로 묶고 coordinator가 group별 manager를 함께 움직입니다.
         </p>
         <p className="leading-8">
-          그래서
-          단일 block 식은 개념을 이해하는 출발점이고, 실제 capacity는 runtime이
-          만든 cache spec·group·block 수를 기준으로 확인해야 합니다.
+          그래서 단일 block 식은 개념을 이해하는 출발점이고 실제 capacity는 runtime이 만든 cache spec·group·block 수를 기준으로 확인해야 합니다.
         </p>
         <p className="leading-8">
           Layer 수·KV head·head dimension·local window가 token당 byte와 유효 token

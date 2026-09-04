@@ -127,15 +127,12 @@ export default function CostModel() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          앞 절의 계약이 지켜진다면 출력 분포는 target과 같습니다. 남는 질문은
-          얼마나 빨라지는가이고, 그 답은 세 숫자로 정리됩니다. Draft가 한 위치를
-          얼마나 자주 맞히는지(α), 한 번에 몇 개를 제안하는지(K), draft 한 step이
-          target 한 step에 비해 얼마나 싼지(c)입니다.
+          앞 절의 계약이 지켜진다면 출력 분포는 target과 같습니다. 남는 질문은 얼마나 빨라지는가입니다. 답은 세 숫자로 정리됩니다. Draft가 한 위치를 얼마나 자주
+          맞히는지(α), 한 번에 몇 개를 제안하는지(K), draft 한 step이 target 한 step에 비해 얼마나 싼지(c)입니다.
         </p>
         <p className="leading-8">
-          이 절은 Leviathan et al. 2023의 분석을 그대로 따릅니다. 위치별 수락이
-          서로 독립이고 확률이 같다는 단순화 아래 기대 확정 길이와 speedup이
-          닫힌 식으로 나오며, 그 식이 어디서 깨지는지를 마지막 절에서 봅니다.
+          이 절은 Leviathan et al. 2023의 분석을 그대로 따릅니다. 위치별 수락이 서로 독립이고 확률이 같다는 단순화 아래에서 기대 확정 길이와 speedup이 닫힌 식으로
+          나옵니다. 그 식이 어디서 깨지는지는 마지막 절에서 봅니다.
         </p>
 
         <h3 id="speculation-length" className="scroll-mt-20">
@@ -148,10 +145,8 @@ export default function CostModel() {
           위치를 채점하므로, 한 cycle이 확정할 수 있는 최대 길이는 K+1입니다.
         </p>
         <p className="leading-8">
-          K는 클수록 좋은 값이 아닙니다. 뒤쪽 위치일수록 앞의 모든 후보가
-          맞아야 쓸모가 있어 기대 이득은 빠르게 포화하는데, draft 비용은 K에
-          비례해 늘고 verification pass의 계산량도 K+1배로 커집니다. 그래서 K는
-          α와 c가 정해진 뒤 speedup 식을 최대로 하는 값으로 고릅니다.
+          뒤쪽 위치일수록 앞의 모든 후보가 맞아야 쓸모가 있어 기대 이득은 빠르게 포화합니다. draft 비용은 K에 비례해 늘고 verification pass의 계산량도 K+1배로
+          커집니다. K는 클수록 좋은 값이 아닙니다. α와 c가 정해진 뒤 speedup 식을 최대로 하는 값으로 고릅니다.
         </p>
 
         <h3 id="acceptance-rate" className="scroll-mt-20">
@@ -165,9 +160,8 @@ export default function CostModel() {
           0입니다.
         </p>
         <p className="leading-8">
-          예를 들어 p=(0.7, 0.3), q=(0.4, 0.6)이면 공유 질량은 0.4+0.3=0.7이므로
-          α=0.7입니다. 이 값을 모든 위치에 같은 확률로 가정하면 수락 길이는
-          최대 K인 기하 분포를 따르고, 기대 확정 길이가 등비 합으로 나옵니다.
+          예를 들어 p=(0.7, 0.3), q=(0.4, 0.6)이면 공유 질량은 0.4+0.3=0.7이므로 α=0.7입니다. 이 값을 모든 위치에 같은 확률로 가정하면 수락 길이는 최대
+          K인 기하 분포를 따르고 기대 확정 길이가 등비 합으로 나옵니다.
         </p>
       </div>
 
@@ -232,16 +226,12 @@ export default function CostModel() {
           Speedup은 기대 확정 길이를 cycle 비용으로 나눈 값입니다
         </h3>
         <p className="leading-8">
-          Target 한 step 시간을 1로 두면 한 cycle은 draft K번에 verification
-          pass 한 번을 더한 Kc+1만큼 걸립니다. 같은 시간에 target-only는 Kc+1
-          token을 만들고 speculative decoding은 평균 E[Y_K] token을 만들므로,
-          두 값의 비가 speedup입니다.
+          Target 한 step 시간을 1로 두면 한 cycle은 draft K번에 verification pass 한 번을 더한 Kc+1만큼 걸립니다. 같은 시간에 target-
+          only는 Kc+1 token을 만들고 speculative decoding은 평균 E[Y_K] token을 만듭니다. 두 값의 비가 speedup입니다.
         </p>
         <p className="leading-8">
-          여기서 draft overhead는 Kc 항이고 verification overhead는 1 항입니다.
-          Verification이 target-only의 한 step과 같은 1로 잡히는 이유는 다음
-          절에서 다루는 memory-bound 가정 때문입니다. 그 가정이 깨지면 1 대신
-          더 큰 값이 들어가고 speedup은 그만큼 줄어듭니다.
+          여기서 draft overhead는 Kc 항이고 verification overhead는 1 항입니다. Verification이 target-only의 한 step과 같은 1로
+          잡히는 근거는 다음 절에서 다루는 memory-bound 가정입니다. 그 가정이 깨지면 1 대신 더 큰 값이 들어가고 speedup은 그만큼 줄어듭니다.
         </p>
       </div>
 
@@ -297,17 +287,12 @@ S(1) &= \underbrace{\frac{1+\alpha}{1+c}}_{\text{K=1의 하한}} > 1 \iff \alpha
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          표를 읽으면 두 가지가 보입니다. 첫째, 같은 K에서 α를 0.6에서 0.9로
-          올리면 speedup이 두 배 넘게 뛰므로 draft의 품질이 K보다 먼저입니다.
-          둘째, α가 낮을수록 최적 K가 작고, K를 그 너머로 늘리면 오히려
-          느려집니다. Draft 비용은 계속 쌓이는데 뒤쪽 위치의 기대 이득은
-          거의 0이기 때문입니다.
+          표를 읽으면 두 가지가 보입니다. 첫째, 같은 K에서 α를 0.6에서 0.9로 올리면 speedup이 두 배 넘게 뛰므로 draft의 품질이 K보다 먼저입니다. 둘째, α가
+          낮을수록 최적 K가 작습니다. K를 그 너머로 늘리면 오히려 느려집니다. Draft 비용은 계속 쌓이는데 뒤쪽 위치의 기대 이득은 거의 0이기 때문입니다.
         </p>
         <p className="leading-8">
-          논문의 T5-XXL 실험에서는 α가 0.75 근처인 T5-small draft가 γ=7로 3.4배를
-          냈고, Chen et al. 2023은 Chinchilla 70B에 4B draft를 붙여 2배에서
-          2.5배를 보고했습니다. 둘 다 저자 자기보고이며 batch 1 근처의
-          memory-bound 조건에서 잰 값입니다.
+          논문의 T5-XXL 실험에서는 α가 0.75 근처인 T5-small draft가 γ=7로 3.4배를 냈습니다. Chen et al. 2023은 Chinchilla 70B에 4B
+          draft를 붙여 2배에서 2.5배를 보고했습니다. 둘 다 저자 자기보고이며 batch 1 근처의 memory-bound 조건에서 잰 값입니다.
         </p>
 
         <h3 id="not-always-faster" className="scroll-mt-20">
@@ -320,12 +305,9 @@ S(1) &= \underbrace{\frac{1+\alpha}{1+c}}_{\text{K=1의 하한}} > 1 \iff \alpha
           가정은 batch가 커지면 무너집니다.
         </p>
         <p className="leading-8">
-          Batch B에서 K개를 speculation하면 target이 한 step에 처리하는 유효
-          token 수는 B(K+1)입니다. 이 값이 GPU가 compute-bound로 넘어가는
-          경계를 지나면 verification 시간이 K에 비례해 늘고, 분모의 1이 K+1에
-          가까워지며 speedup은 1 아래로 떨어집니다. vLLM의 dynamic speculative
-          decoding이 동시성 구간별로 K를 줄이고 높은 구간에서 0으로 끄는 이유가
-          이것입니다.
+          Batch B에서 K개를 speculation하면 target이 한 step에 처리하는 유효 token 수는 B(K+1)입니다. 이 값이 GPU가 compute-bound로
+          넘어가는 경계를 지나면 verification 시간이 K에 비례해 늘어납니다. 분모의 1이 K+1에 가까워지면서 speedup은 1 아래로 떨어집니다. vLLM의 dynamic
+          speculative decoding이 동시성 구간별로 K를 줄이고 높은 구간에서 0으로 끄는 이유가 이것입니다.
         </p>
         <p className="leading-8">
           Draft 쪽에서도 같은 일이 생깁니다. c는 시간의 비이므로 draft가

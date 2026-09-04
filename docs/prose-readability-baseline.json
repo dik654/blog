@@ -90,7 +90,7 @@
       "score": 32
     },
     "ai/transformer-architecture": {
-      "fingerprint": "19fb3ad719519970",
+      "fingerprint": "568dd56ad909f3ba",
       "score": 32
     },
     "blockchain/filecoin-fvm": {
@@ -114,7 +114,7 @@
       "score": 30
     },
     "ai/vla-embodiment-gap": {
-      "fingerprint": "65a07c43f540866c",
+      "fingerprint": "a5ded040f56fb299",
       "score": 30
     },
     "blockchain/proofs-post": {
@@ -470,7 +470,7 @@
       "score": 18
     },
     "ai/vllm-serving": {
-      "fingerprint": "877a3214147b0948",
+      "fingerprint": "4d29eba5e041bd98",
       "score": 18
     },
     "blockchain/berachain": {
@@ -558,7 +558,7 @@
       "score": 16
     },
     "ai/vae": {
-      "fingerprint": "284f7deb7c7329c0",
+      "fingerprint": "7a0feecb222b0ceb",
       "score": 16
     },
     "blockchain/crypto-theory": {
@@ -602,7 +602,7 @@
       "score": 14
     },
     "ai/vision-transformer": {
-      "fingerprint": "1ad44cdddece45b2",
+      "fingerprint": "eb5aadc4c211fc7d",
       "score": 14
     },
     "blockchain/avalanche-consensus": {
@@ -826,7 +826,7 @@
       "score": 10
     },
     "ai/word2vec-negative-sampling": {
-      "fingerprint": "e3c358997d1676b9",
+      "fingerprint": "2591bb9f631f225f",
       "score": 10
     },
     "blockchain/aave-v3": {
@@ -962,7 +962,7 @@
       "score": 8
     },
     "ai/word2vec-prediction-objectives": {
-      "fingerprint": "8182dbeae6963ca9",
+      "fingerprint": "196f41479479ad03",
       "score": 8
     },
     "blockchain/commonware-storage": {
@@ -1151,6 +1151,10 @@
     },
     "ai/tensor-and-pipeline-parallel-inference": {
       "fingerprint": "0a35954b3b6e958f",
+      "score": 6
+    },
+    "ai/visual-representation-tokenizers": {
+      "fingerprint": "74d2579992c8a713",
       "score": 6
     },
     "blockchain/evm-advanced": {

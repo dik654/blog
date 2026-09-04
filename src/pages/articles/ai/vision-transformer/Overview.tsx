@@ -32,7 +32,11 @@ export default function Overview() {
       <div className="not-prose my-8"><OverviewViz /></div>
       <div id="paper-vit-core" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">논문 읽기 · Vision Transformer</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">Dosovitskiy 등은 image patch를 linear embedding sequence로 바꾸고 standard Transformer encoder를 large-scale supervised pretraining한 뒤 여러 image task로 transfer했습니다. JFT·ImageNet-21k 규모와 recipe를 제외한 채 작은 dataset scratch training의 보편적 우월성으로 읽으면 안 됩니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            Dosovitskiy 등은 image patch를 linear embedding sequence로 바꾸고 standard Transformer encoder를 large-
+            scale supervised pretraining한 뒤 여러 image task로 transfer했습니다. 이 결과를 읽을 때는 JFT·ImageNet-21k 규모와
+            recipe가 전제였다는 점을 함께 봐야 합니다. 작은 dataset scratch training의 보편적 우월성으로 읽으면 안 됩니다.
+          </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://openreview.net/forum?id=YicbFdNTTy" target="_blank" rel="noreferrer">Tokenization·pretraining·transfer 범위 보기</a>
       </div>
     </section>

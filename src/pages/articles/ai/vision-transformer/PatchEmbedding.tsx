@@ -91,11 +91,9 @@ y_{r,s,d}&=\underbrace{k_d^\top v_{r,s}+b_d,}_{\text{flattened patch 계산}}\\
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Resolution을 바꾸면 position grid도 바뀝니다</h3>
         <p>
-          224px·P=16 checkpoint의 14×14 position grid를 384px 입력의 24×24 grid에
-          그대로 더할 수는 없습니다. Class token을 spatial grid에서 분리하고 2D
-          interpolation한 뒤 다시 붙입니다. 이 과정은 learned spatial signal의
-          보간이지 새 위치 정보를 학습한 것이 아니므로 target resolution에서
-          fine-tuning과 boundary artifact 검사가 필요합니다.
+          224px·P=16 checkpoint의 14×14 position grid를 384px 입력의 24×24 grid에 그대로 더할 수는 없습니다. Class token을
+          spatial grid에서 분리하고 2D interpolation한 뒤 다시 붙입니다. 이렇게 해도 learned spatial signal을 보간했을 뿐 새 위치 정보를 학습한
+          것은 아니므로 target resolution에서 fine-tuning과 boundary artifact 검사가 따라와야 합니다.
         </p>
       </div>
     </section>

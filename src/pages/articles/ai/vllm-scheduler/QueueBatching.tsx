@@ -29,10 +29,9 @@ export default function QueueBatching({
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          Scheduler 가 답해야 할 질문은 둘입니다. Batch 의 구성을 언제 다시 고르느냐가
-          batching 의 세대를 가르고, waiting queue 에서 누구를 먼저 보느냐가 queue
-          discipline 입니다. 이 절은 그 두 질문과 거기서 생기는 fairness, head-of-line
-          blocking, 그리고 scheduler 자체가 쓰는 시간을 다룹니다.
+          Scheduler 가 답해야 할 질문은 둘입니다. Batch 의 구성을 언제 다시 고르느냐가 batching 의 세대를 가르고 waiting queue 에서 누구를 먼저 보느냐가
+          queue discipline 입니다. 이 절은 그 두 질문과 거기서 생기는 fairness, head-of-line blocking, 그리고 scheduler 자체가 쓰는 시간을
+          다룹니다.
         </p>
         <p className="leading-8">
           한 step 안에서 token budget 이 running 과 waiting 에 어떻게 나뉘는지는{" "}
@@ -46,21 +45,18 @@ export default function QueueBatching({
           Static·dynamic batching 은 batch 를 고정해 idle slot 을 남깁니다
         </h3>
         <p className="leading-8">
-          Static batching 은 정해진 수의 요청을 함께 시작해 가장 긴 요청이 끝날 때까지
-          batch 를 바꾸지 않는 방식입니다. Output 길이가 40, 120, 200, 400 token 인 요청
-          넷을 묶으면 batch 는 400 iteration 을 돌고, slot 넷이 쓸 수 있던 1,600
-          slot-iteration 가운데 760 만 일을 합니다. 나머지 52.5% 는 빈 slot 입니다.
+          Static batching 은 정해진 수의 요청을 함께 시작해 가장 긴 요청이 끝날 때까지 batch 를 바꾸지 않는 방식입니다. Output 길이가 40, 120, 200,
+          400 token 인 요청 넷을 묶으면 batch 는 400 iteration 을 돌고 slot 넷이 쓸 수 있던 1,600 slot-iteration 가운데 760 만 일을
+          합니다. 나머지 52.5% 는 빈 slot 입니다.
         </p>
         <p className="leading-8">
-          Orca 논문이 짚은 문제가 정확히 이것입니다. 먼저 끝난 요청의 결과는 batch 가
-          끝날 때까지 client 에게 돌아가지 못하고, 늦게 도착한 요청은 batch 가 끝날
-          때까지 들어오지 못합니다. 길이 편차가 클수록 두 대기가 함께 커집니다.
+          Orca 논문이 짚은 문제가 정확히 이것입니다. 먼저 끝난 요청의 결과는 batch 가 끝날 때까지 client 에게 돌아가지 못하고 늦게 도착한 요청은 batch 가 끝날 때까지
+          들어오지 못합니다. 길이 편차가 클수록 두 대기가 함께 커집니다.
         </p>
         <p className="leading-8">
-          Dynamic batching 은 server 쪽 batcher 가 짧은 window(예: 10 ms) 동안 도착한
-          요청을 모아 batch 를 만드는 방식입니다. 도착 시각이 흩어진 요청을 한 batch 에
-          넣을 수 있어 첫 admission 까지의 대기는 줄지만, 만들어진 batch 는 여전히 끝까지
-          고정입니다. 위의 idle 52.5% 는 그대로이고 window 만큼의 지연이 더해집니다.
+          Dynamic batching 에서는 server 쪽 batcher 가 짧은 window(예: 10 ms) 동안 도착한 요청을 모아 batch 를 만듭니다. 도착 시각이 흩어진
+          요청을 한 batch 에 넣을 수 있어 첫 admission 까지의 대기는 줄지만 만들어진 batch 는 여전히 끝까지 고정입니다. 위의 idle 52.5% 는 그대로이고
+          window 만큼의 지연이 더해집니다.
         </p>
         <p className="leading-8">
           Iteration-level scheduling 은 batch 를 iteration 이 끝날 때마다 다시 고릅니다.
@@ -104,16 +100,13 @@ export default function QueueBatching({
           Request queue 는 도착 순서를 담는 자리가 아니라 정책이 사는 자리입니다
         </h3>
         <p className="leading-8">
-          Request queue 는 아직 자리를 받지 못한 요청이 기다리는 자료구조이고, 그 안의
-          순서를 정하는 규칙이 queue discipline 입니다. vLLM V1 은 FCFS 정책이면 도착
-          순서의 deque 를, priority 정책이면 (priority, arrival) 순서의 heap 을 씁니다.
-          Preemption 으로 돌아온 요청도 같은 규칙으로 다시 꽂힙니다.
+          Request queue 는 아직 자리를 받지 못한 요청이 기다리는 자료구조이고 그 안의 순서를 정하는 규칙이 queue discipline 입니다. vLLM V1 은 FCFS
+          정책이면 도착 순서의 deque 를, priority 정책이면 (priority, arrival) 순서의 heap 을 씁니다. Preemption 으로 돌아온 요청도 같은 규칙으로
+          다시 꽂힙니다.
         </p>
         <p className="leading-8">
-          Queue 가 정하는 것은 검토 순서뿐입니다. 맨 앞 요청이 실제로 running 으로
-          올라가는지는 token·sequence·KV 세 예산이 정하고, 그 판정은 admission 글이
-          다룹니다. Queue 에서 읽어야 할 관측값은 길이보다 queue age, 곧 맨 앞 요청이
-          기다린 시간입니다.
+          Queue 가 정하는 것은 검토 순서뿐입니다. 맨 앞 요청이 실제로 running 으로 올라가는지는 token·sequence·KV 세 예산이 정하고 그 판정은 admission
+          글이 다룹니다. Queue 에서 읽어야 할 관측값은 길이보다 queue age, 곧 맨 앞 요청이 기다린 시간입니다.
         </p>
       </div>
       <CodeViewButton onClick={() => onCodeRef("priority-queue", codeRefs["priority-queue"])} />
@@ -130,17 +123,13 @@ export default function QueueBatching({
           에게 갑니다.
         </p>
         <p className="leading-8">
-          Rate limit 은 A 를 막을 수는 있지만 B 가 조용할 때도 A 를 막아 GPU 를 놀립니다.
-          Virtual Token Counter(VTC) 는 client 마다 처리한 input·output token 을 세어 가장
-          적게 받은 client 의 요청부터 admission 하는 continuous batching 용 fair
-          scheduler 이며, 두 backlogged client 의 service 차이가 2× 안에 묶인다는 상한을
-          증명했습니다.
+          Rate limit 은 A 를 막을 수는 있지만 B 가 조용할 때도 A 를 막아 GPU 를 놀립니다. Virtual Token Counter(VTC) 는 client 마다 처리한
+          input·output token 을 세어 가장 적게 받은 client 의 요청부터 admission 하는 continuous batching 용 fair scheduler 이며
+          두 backlogged client 의 service 차이가 2× 안에 묶인다는 상한을 증명했습니다.
         </p>
         <p className="leading-8">
-          vLLM V1 에는 client 단위 fairness 정책이 내장돼 있지 않습니다. Priority 와
-          arrival time 으로 순서를 정할 뿐이라, tenant 별 공정성이 필요하면 gateway 에서
-          priority 를 매기거나 queue age 상한을 SLO 로 두어야 합니다. 그 한계가 아래
-          starvation 절의 출발점입니다.
+          vLLM V1 에는 client 단위 fairness 정책이 내장돼 있지 않습니다. Priority 와 arrival time 으로 순서를 정할 뿐이라 tenant 별 공정성이
+          필요하면 gateway 에서 priority 를 매기거나 queue age 상한을 SLO 로 두어야 합니다. 그 한계가 아래 starvation 절의 출발점입니다.
         </p>
       </div>
 
@@ -149,14 +138,12 @@ export default function QueueBatching({
         preview="Counter 가 가장 작은 client 를 먼저 보되 그 client 의 요청이 없으면 다음 client 를 보므로 GPU 가 비지 않고, 새로 backlogged 가 된 client 의 counter 를 현재 최솟값으로 올려 과거의 조용함이 무한한 우선권이 되지 않게 합니다."
       >
         <p className="leading-8">
-          Sheng 외의 논문은 요청 길이를 미리 알 수 없고 batch 가 GPU 에서 병렬로 돈다는
-          LLM serving 의 두 조건 때문에 network fair queueing 을 그대로 쓸 수 없다고
-          보고, token 단위 cost 를 누적하는 counter 로 대신했습니다. 상한 2× 는 token
-          cost 의 정의와 batch 안에서의 병렬성을 전제로 한 이론값입니다.
+          Sheng 외의 논문은 요청 길이를 미리 알 수 없고 batch 가 GPU 에서 병렬로 돈다는 LLM serving 의 두 조건 때문에 network fair queueing 을
+          그대로 쓸 수 없다고 보고, token 단위 cost 를 누적하는 counter 로 대신했습니다. 상한 2× 는 token cost 의 정의와 batch 안에서 일어나는 병렬성을
+          전제로 한 이론값입니다.
         </p>
         <p className="leading-8">
-          이 글은 VTC 의 문제 정의와 상한만 가져옵니다. 실험 수치와 구현은 논문 조건에
-          묶이고, vLLM 에 이 정책이 그대로 들어 있다는 뜻은 아닙니다.
+          이 글은 VTC 의 문제 정의와 상한만 가져옵니다. 실험 수치와 구현은 논문 조건에 묶이고 vLLM 에 이 정책이 그대로 들어 있다는 뜻은 아닙니다.
         </p>
       </ProgressiveDetail>
 
@@ -183,16 +170,13 @@ export default function QueueBatching({
           하나는 waiting queue 의 admission, 다른 하나는 batch 안의 step 시간입니다.
         </p>
         <p className="leading-8">
-          Queue 쪽의 예입니다. 맨 앞 요청이 KV block 500 개를 필요로 하는데 free block 이
-          200 개뿐이면 V1 은 waiting 순회를 그 자리에서 멈춥니다. 바로 뒤에 20 block 이면
-          되는 요청이 있어도 이번 step 에는 들어오지 못합니다. FCFS 를 지키는 대가이며,
-          뒤를 건너뛰면 순서 보장이 깨지고 앞 요청이 굶을 수 있습니다.
+          Queue 쪽의 예입니다. 맨 앞 요청이 KV block 500 개를 필요로 하는데 free block 이 200 개뿐이면 V1 은 waiting 순회를 그 자리에서 멈춥니다.
+          바로 뒤에 20 block 이면 되는 요청이 있어도 이번 step 에는 들어오지 못합니다. FCFS 를 지키는 대가이며 뒤를 건너뛰면 순서 보장이 깨지고 앞 요청이 굶을 수
+          있습니다.
         </p>
         <p className="leading-8">
-          Batch 쪽의 예입니다. Decode 60 개가 도는 step 이 25 ms 인데 8,000-token prompt
-          의 prefill 을 통째로 한 step 에 넣으면 그 step 이 400 ms 가 된다고 합시다. 60 개
-          요청의 그 token 하나는 25 ms 대신 425 ms 뒤에 나오고, TPOT 가 한 번 17 배로
-          튑니다.
+          Batch 쪽의 예입니다. Decode 60 개가 도는 step 이 25 ms 인데 8,000-token prompt 의 prefill 을 통째로 한 step 에 넣으면 그
+          step 이 400 ms 가 된다고 합시다. 60 개 요청의 그 token 하나는 25 ms 대신 425 ms 뒤에 나오고 TPOT 가 한 번 17 배로 튑니다.
         </p>
         <p className="leading-8">
           Chunked prefill 로 512 token 씩 16 조각으로 나누면 mixed step 이 약 50 ms 씩 16
@@ -229,10 +213,9 @@ export default function QueueBatching({
           busy loop 라 CPU 를 빼앗기면 크게 느려진다고 경고합니다.
         </p>
         <p className="leading-8">
-          숨기는 데는 한계가 있습니다. Batch 가 작아 GPU step 이 8 ms 로 줄면 같은 5 ms 는
-          동기 구조에서 38% 의 overhead 이고, 겹쳐도 CPU 가 GPU 보다 느려지는 순간부터는
-          CPU 가 주기를 정합니다. 겹치기는 출력을 보기 전에 다음 step 을 짜야 하므로 stop
-          판정처럼 결과에 따라 달라지는 결정이 한 step 늦게 반영됩니다.
+          숨기는 데는 한계가 있습니다. Batch 가 작아 GPU step 이 8 ms 로 줄면 같은 5 ms 는 동기 구조에서 38% 의 overhead 이고 겹쳐도 CPU 가 GPU
+          보다 느려지는 순간부터는 CPU 가 주기를 정합니다. 겹치기는 출력을 보기 전에 다음 step 을 짜야 하므로 stop 판정처럼 결과에 따라 달라지는 결정이 한 step 늦게
+          반영됩니다.
         </p>
       </div>
 

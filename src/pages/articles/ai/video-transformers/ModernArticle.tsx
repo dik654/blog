@@ -14,11 +14,8 @@ export default function VideoTransformersArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Image patch에 시간축을 하나 더 붙이면 token 수가 frame 수만큼
-            늘어납니다. 그 뒤 모든 tokens를 직접 연결할지, 같은 시간의 공간
-            관계와 같은 위치의 시간 관계로 나눌지에 따라 계산량과 정보 경로가
-            달라집니다. 먼저 tubelet 하나의 모양과 전체 token count를
-            고정합니다.
+            image patch에 시간축을 하나 더 붙이면 token 수가 frame 수만큼 늘어납니다. 그 뒤 모든 tokens를 직접 연결할지, 같은 시간의 공간 관계와 같은 위치의
+            시간 관계로 나눌지에 따라 계산량과 정보 경로가 달라집니다. 먼저 tubelet 하나의 모양과 전체 token count를 고정합니다.
           </p>
         </div>
         <TermBreakdown
@@ -155,8 +152,7 @@ export default function VideoTransformersArticle() {
           question="Joint pair 수와 divided space-time pair 수는 어떻게 비교하나요?"
           idea={
             <p>
-              Joint는 TS개 tokens 전체를 제곱합니다. Divided는 frame마다 S²,
-              spatial position마다 T² interactions를 더합니다.
+              joint는 TS개 tokens 전체를 제곱합니다. divided는 frame마다 S², spatial position마다 T² interactions를 더합니다.
             </p>
           }
           formula={String.raw`C_j=(TS)^2,\quad C_d=TS^2+ST^2`}

@@ -134,11 +134,9 @@ export default function Overview() {
           Speculative decoding은 한 요청의 여러 미래 위치를 함께 검증해 비슷한 효과를 만듭니다.
         </p>
         <p className="leading-8">
-          Native MTP를 이용하든 별도 draft model을 이용하든,
-          평균 확정 길이가 3.5라면 이상적인 memory-bound 근사에서는 target
-          weight read가 token당 약 3.5분의 1로 나뉩니다. 다만 verify가 여러
-          위치의 activation·attention을 계산하고 proposer와 runtime overhead도
-          추가되므로 이것이 곧 3.5배 속도를 뜻하지는 않습니다.
+          Native MTP를 이용하든 별도 draft model을 이용하든 평균 확정 길이가 3.5라면 이상적인 memory-bound 근사에서는 target weight read가
+          token당 약 3.5분의 1로 나뉩니다. 다만 verify가 여러 위치의 activation·attention을 계산하고 proposer와 runtime overhead도
+          추가됩니다. 3.5라는 숫자가 곧 3.5배 속도는 아닙니다.
         </p>
       </div>
 

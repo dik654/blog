@@ -26,9 +26,9 @@ export default function VisionLanguageModelArchitectureArticle() {
             핵심 질문이 됩니다.
           </p>
           <p>
-            Vision encoder는 image를 patch embedding sequence로 바꾸고, LLM은 text token embedding
-            sequence를 입력받습니다. 두 sequence는 만들어진 차원도 학습된 분포도 다르기 때문에, 그
-            사이를 잇는 projector와 두 표현을 함께 추론하게 만드는 alignment 방식이 따로 필요합니다.
+            Image를 patch embedding sequence로 바꾸는 쪽이 vision encoder이고 LLM은 text token embedding sequence를
+            입력받습니다. 두 sequence는 만들어진 차원도 학습된 분포도 다릅니다. 그래서 그 사이를 잇는 projector와 두 표현을 함께 추론할 수 있게 하는 alignment
+            방식이 따로 필요합니다.
           </p>
           <p>
             이 글은 patch embedding이 projector를 거쳐 LLM token으로 바뀌는 조립 과정, projector가
@@ -46,9 +46,8 @@ export default function VisionLanguageModelArchitectureArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Multimodal model은 이미지·텍스트·오디오처럼 서로 다른 modality를 함께 입력받아 하나의
-            모델로 처리하는 모델을 통틀어 부르는 말입니다. 그중 image와 text 두 modality만 다루는
-            모델을 vision-language model(VLM)이라고 좁혀 부릅니다.
+            이미지·텍스트·오디오처럼 서로 다른 modality를 함께 입력받아 하나의 모델로 처리하는 모델을 통틀어 multimodal model이라고 부릅니다. 그중 image와
+            text 두 modality만 다루는 쪽을 vision-language model(VLM)이라고 좁혀 부릅니다.
           </p>
           <p>
             VLM은 대개 새 모델을 처음부터 학습하지 않습니다. <Link to="/ai/vision-transformer#patch-embedding">
@@ -57,9 +56,8 @@ export default function VisionLanguageModelArchitectureArticle() {
             사전학습된 채로 가져와 하나의 파이프라인으로 묶습니다.
           </p>
           <p>
-            두 모델을 단순히 나란히 두기만 하면 VLM이 되지는 않습니다. Image 표현과 text 표현이 같은
-            forward pass 안에서 함께 추론돼야, 즉 LLM이 image 내용을 참조하며 다음 token을 예측할 수
-            있어야 VLM이라고 부릅니다.
+            두 모델을 단순히 나란히 두기만 하면 VLM이 되지는 않습니다. 같은 forward pass 안에서 image 표현과 text 표현이 함께 추론돼야, 즉 LLM이 image
+            내용을 참조하며 다음 token을 예측할 수 있어야 VLM이라고 부릅니다.
           </p>
         </div>
         <AlgorithmBlock
@@ -101,19 +99,16 @@ export default function VisionLanguageModelArchitectureArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Multimodal projector는 vision encoder가 만든 patch embedding의 차원을 LLM의 hidden
-            dimension에 맞춰, image 표현을 LLM이 text token과 나란히 처리할 수 있는 형태로 바꾸는
-            linear 또는 MLP 계층입니다.
+            Multimodal projector는 linear 또는 MLP 계층입니다. 여기서 vision encoder가 만든 patch embedding의 차원을 LLM의 hidden
+            dimension에 맞춥니다. 그러면 LLM이 image 표현을 text token과 나란히 처리할 수 있는 형태가 됩니다.
           </p>
           <p>
-            CLIP ViT-L/14는 224px 이미지 한 장에서 patch embedding을 1024차원으로 만듭니다. 이 글이
-            예로 쓰는 Vicuna-13B의 hidden dimension은 5120차원이라, 두 벡터는 차원이 달라 그대로는
-            같은 sequence에 놓을 수 없습니다.
+            CLIP ViT-L/14는 224px 이미지 한 장에서 patch embedding을 1024차원으로 만듭니다. 이 글이 예로 쓰는 Vicuna-13B의 hidden
+            dimension은 5120차원입니다. 차원이 다르니 두 벡터를 그대로 같은 sequence에 놓을 수 없습니다.
           </p>
           <p>
-            LLaVA는 이 격차를 linear layer 하나(1024→5120)로 메웠고, 뒤이은 LLaVA-1.5는 그 자리를
-            GELU를 하나 끼운 2-layer MLP로 바꿔 표현력을 늘렸습니다. 두 방식 모두 vision encoder와
-            LLM 본체는 그대로 둔 채 이 다리 하나만 새로 학습합니다.
+            LLaVA는 이 격차를 linear layer 하나(1024→5120)로 메웠고 뒤이은 LLaVA-1.5는 그 자리를 GELU를 하나 끼운 2-layer MLP로 바꿔 표현력을
+            늘렸습니다. 두 방식 모두 vision encoder와 LLM 본체는 그대로 둔 채 이 다리 하나만 새로 학습합니다.
           </p>
         </div>
         <ExplainedFormula
@@ -142,29 +137,25 @@ export default function VisionLanguageModelArchitectureArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Cross-modal alignment는 image 표현과 text 표현을 같은 모델이 함께 추론할 수 있는 상태로
-            맞추는 것을 가리킵니다. Projector로 차원을 맞춘 뒤 어디에 어떻게 끼워 넣는지에 따라
-            결합 지점과 학습 비용이 달라집니다.
+            Image 표현과 text 표현을 같은 모델이 함께 추론할 수 있는 상태로 맞추는 일, 이것이 cross-modal alignment입니다. Projector로 차원을 맞춘 뒤
+            어디에 어떻게 끼워 넣느냐에 따라 결합 지점과 학습 비용이 달라집니다.
           </p>
           <p>
-            LLaVA는 projector가 만든 visual token(H_v)을 text token embedding과 그대로 이어붙여 LLM
-            입력 sequence 하나로 만듭니다. 이 concat-projection 방식은 LLM 구조를 바꾸지 않지만,
-            instruction tuning 단계에서는 LLM 파라미터까지 함께 업데이트합니다.
+            LLaVA는 projector가 만든 visual token(H_v)을 text token embedding과 그대로 이어붙여 LLM 입력 sequence 하나로 만듭니다. 이
+            concat-projection 방식은 LLM 구조를 바꾸지 않습니다. 다만 instruction tuning 단계에서는 LLM 파라미터까지 함께 업데이트합니다.
           </p>
           <p>
-            Flamingo는 이어붙이는 대신 고정된 LLM 층 사이사이에 gated cross-attention layer를 새로
-            끼워 넣습니다. 이 layer는 Perceiver Resampler가 만든 64개의 고정 개수 visual token만
-            참조하고, LLM 원래 층은 학습 내내 얼린 채로 둡니다.
+            Flamingo는 이어붙이는 대신 고정된 LLM 층 사이사이에 gated cross-attention layer를 새로 끼워 넣습니다. 이 layer는 Perceiver
+            Resampler가 만든 64개의 고정 개수 visual token만 참조하고 LLM 원래 층은 학습 내내 얼린 채로 둡니다.
           </p>
           <p>
-            학습 안정성을 위해 각 cross-attention layer의 출력에는 0으로 초기화한 scalar α를 tanh에
-            넣어 곱합니다. 학습 시작 시점에는 tanh(0)=0이라 cross-attention이 아무 영향도 주지 않고,
-            학습이 진행되며 α가 커지면서 image 정보가 서서히 섞여 들어갑니다.
+            학습 안정성을 위해 각 cross-attention layer의 출력에는 0으로 초기화한 scalar α를 tanh에 넣어 곱합니다. 학습 시작 시점에는 tanh(0)=0이라
+            cross-attention이 아무 영향도 주지 않습니다. 학습이 진행되며 α가 커지면 image 정보가 서서히 섞여 들어갑니다.
           </p>
           <p>
-            BLIP-2는 그 중간에 있는 병목을 씁니다. Q-Former라는 작은 transformer가 32개의 learnable
-            query embedding만으로 image feature를 압축해, 257개(patch 256+CLS 1)짜리 원본 feature보다
-            훨씬 작은 표현을 만든 뒤 이 결과를 linear layer로 LLM 입력에 연결합니다.
+            BLIP-2는 그 중간에 있는 병목을 씁니다. Q-Former라는 작은 transformer가 32개의 learnable query embedding만으로 image
+            feature를 압축합니다. 257개(patch 256+CLS 1)짜리 원본 feature보다 훨씬 작은 표현이 나오고 이 결과를 linear layer로 LLM 입력에
+            연결합니다.
           </p>
         </div>
         <TermBreakdown

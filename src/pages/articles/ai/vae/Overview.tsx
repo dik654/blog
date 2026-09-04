@@ -48,10 +48,9 @@ export default function Overview() {
           Auto-Encoding Variational Bayes
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Continuous latent와 intractable posterior가 있는 directed model에서
-          reparameterized lower-bound estimator와 amortized recognition model을
-          제시합니다. 논문의 estimator 조건과 실험 범위를 넘어 모든 discrete
-          latent나 decoder에 같은 식을 그대로 적용할 수 있다는 뜻은 아닙니다.
+          continuous latent와 intractable posterior가 있는 directed model에서 reparameterized lower-bound estimator와
+          amortized recognition model을 제시하지만 논문의 estimator 조건과 실험 범위를 넘어 모든 discrete latent나 decoder에 같은 식을
+          그대로 적용할 수 있다는 뜻은 아닙니다.
         </p>
         <a
           className="mt-3 inline-block text-sm font-medium text-primary hover:underline"

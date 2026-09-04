@@ -59,11 +59,9 @@ export default function BasicTags() {
           흐려집니다. 역할을 나타내는 이름은 순서와 독립적으로 읽힙니다.
         </p>
         <p>
-          이름을 길게 만든다고 자동으로 좋아지는 것은 아닙니다. 같은 역할에는
-          같은 tag를 쓰고, instruction과 source, example과 실제 input처럼 혼동될
-          경계만 분리합니다. 한 문장짜리 질문에 다섯 겹의 wrapper를 붙이는 것은
-          가독성과 token cost만 늘릴 수 있으므로, 필요한 구조를 가장 적은 수의
-          element로 표현하는 편이 낫습니다.
+          이름을 길게 만든다고 자동으로 좋아지는 것은 아닙니다. 같은 역할에는 같은 tag를 쓰고 instruction과 source, example과 실제 input처럼 혼동될 경계만
+          분리합니다. 한 문장짜리 질문에 다섯 겹의 wrapper를 붙이면 가독성과 token cost만 늘기 쉽습니다. 필요한 구조를 가장 적은 수의 element로 표현하는 편이
+          낫습니다.
         </p>
         <pre className="whitespace-pre-wrap break-words">
           <code>{`<request id="policy-comparison-17">
@@ -105,8 +103,7 @@ export default function BasicTags() {
           수 없습니다. Parser 권한이나 prompt injection을 막는 security boundary도 아닙니다.
         </p>
         <p>
-          즉 data가 markup 구조를 바꾸지 못하게 serialize하는 일과, model이 그 내용의 지시를
-          따르지 않게 통제하는 일은 별개입니다.
+          data가 markup 구조를 바꾸지 못하게 serialize하는 일과 model이 그 내용의 지시를 따르지 않게 통제하는 일은 별개입니다.
         </p>
 
         <div id="paper-w3c-xml-10" className="not-prose scroll-mt-24">

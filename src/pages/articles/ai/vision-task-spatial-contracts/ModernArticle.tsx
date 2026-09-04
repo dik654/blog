@@ -14,11 +14,9 @@ export default function VisionTaskArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            사진 전체에 이름 하나를 붙이는 classification과 모든 pixel에 label을
-            붙이는 segmentation은 같은 feature를 요구하지 않습니다. 먼저
-            prediction unit과 output tensor를 정하고, 그 답을 만들 수 있도록
-            backbone의 output stride·receptive field·boundary detail을
-            선택합니다.
+            사진 전체에 이름 하나를 붙이는 classification과 모든 pixel에 label을 붙이는 segmentation은 같은 feature를 요구하지 않습니다. 먼저
+            prediction unit과 output tensor를 정합니다. 그 답을 만들 수 있도록 backbone의 output stride·receptive
+            field·boundary detail을 선택합니다.
           </p>
         </div>
         <TermBreakdown
@@ -54,9 +52,8 @@ export default function VisionTaskArticle() {
           question="같은 feature tensor가 task별로 어떤 output shape가 되나요?"
           idea={
             <p>
-              Classification은 spatial axis를 모으고 class axis만 남깁니다.
-              Detection은 선택한 object 수 K에 class·box를 붙이고,
-              segmentation은 H·W grid에 class axis를 유지합니다.
+              Classification은 spatial axis를 모으고 class axis만 남깁니다. 선택한 object 수 K에 class·box를 붙이는 것이
+              detection이고 H·W grid에 class axis를 유지하는 것이 segmentation입니다.
             </p>
           }
           formula={String.raw`F\in\mathbb R^{B\times C\times H\times W}\longrightarrow Y_{task}`}

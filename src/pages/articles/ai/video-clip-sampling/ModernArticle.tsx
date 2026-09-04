@@ -152,10 +152,9 @@ export default function VideoClipSamplingArticle() {
         />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Training의 random start는 같은 video에서 다양한 구간을 보여주는 data
-            augmentation입니다. Evaluation까지 random이면 두 model의 차이와 뽑힌
-            clip 차이가 섞입니다. 평가 timestamps를 고정하되, 한 manifest만으로
-            충분하다고 가정하지 말고 coverage sweep을 별도 ablation으로 둡니다.
+            training의 random start는 같은 video에서 다양한 구간을 보여주는 data augmentation입니다. evaluation까지 random이면 두
+            model의 차이와 뽑힌 clip 차이가 섞입니다. 평가 timestamps를 고정하되 한 manifest만으로 충분하다고 가정하지 말고 coverage sweep을 별도
+            ablation으로 둡니다.
           </p>
         </div>
       </section>

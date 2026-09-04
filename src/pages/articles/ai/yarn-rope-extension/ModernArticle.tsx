@@ -25,7 +25,9 @@ function DeploymentAndPapers() {
           배포에서는 <code>rope_type</code>, extension <code>factor</code>, 원래 context length, RoPE base와 rotary dimension을 먼저 읽습니다. 같은 “YaRN” 이름이라도 library가 attention factor를 자동 계산하는지, model metadata를 CLI override가 덮는지, partial rotary dimension을 어떻게 해석하는지가 다를 수 있으므로 model revision과 runtime version을 함께 고정해야 합니다.
         </p>
         <p>
-          예를 들어 원래 32K를 학습한 checkpoint를 128K로 확장한다면 factor는 4입니다. 이 숫자는 계산의 출발점일 뿐 품질 보증이 아닙니다. Static scaling은 짧은 입력에도 같은 조정을 적용할 수 있고, 목표 길이가 늘면 full attention의 연산과 KV cache 비용도 그대로 커지므로 짧은 입력 regression과 serving capacity를 별도로 확인합니다.
+          예를 들어 원래 32K를 학습한 checkpoint를 128K로 확장한다면 factor는 4입니다. 이 숫자는 계산의 출발점일 뿐 품질 보증이 아닙니다. static
+          scaling은 짧은 입력에도 같은 조정을 적용합니다. 목표 길이가 늘면 full attention의 연산과 KV cache 비용도 그대로 커지므로 짧은 입력 regression과
+          serving capacity를 별도로 확인합니다.
         </p>
         <figure data-viz="yarn-release-matrix" className="not-prose rounded-xl border border-border bg-card p-5 sm:p-6">
           <figcaption>

@@ -28,20 +28,15 @@ export default function Applications() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          VAE 계열은 image generation뿐 아니라 representation learning,
-          missing-data imputation, molecule design와 anomaly scoring 등에
-          사용됩니다. 공통점은 latent variable과 variational objective이고,
-          prior·posterior family, decoder likelihood와 latent hierarchy를 어떻게
-          정하느냐가 변형을 나눕니다.
+          VAE 계열은 image generation뿐 아니라 representation learning과 missing-data imputation, molecule design과
+          anomaly scoring 등에 사용됩니다. 공통점은 latent variable과 variational objective입니다. 변형을 나누는 것은 prior·posterior
+          family와 decoder likelihood, latent hierarchy를 어떻게 정하느냐입니다.
         </p>
         <p>
-          기본 Gaussian VAE는 continuous posterior와 ELBO를 사용하며
-          dimension별 KL이 거의 0으로 가는 posterior collapse를 살핍니다.
-          β-VAE는 같은 KL에 β를 곱해 rate–distortion 균형을 바꾸지만, β를 크게
-          했다는 사실만으로 사람이 원하는 요인이 분리되지는 않습니다. VQ-VAE는
-          Gaussian sample 대신 가장 가까운 discrete code를 고르고 codebook·
-          commitment objective를 따로 사용하므로, posterior KL보다 codebook
-          usage와 별도 prior의 품질을 점검해야 합니다.
+          기본 Gaussian VAE는 continuous posterior와 ELBO를 사용하며 dimension별 KL이 거의 0으로 가는 posterior collapse를 살핍니다.
+          β-VAE는 같은 KL에 β를 곱해 rate–distortion 균형을 바꾸지만 β를 크게 했다는 사실만으로 사람이 원하는 요인이 분리되지는 않습니다. VQ-VAE는
+          Gaussian sample 대신 가장 가까운 discrete code를 고르고 codebook·commitment objective를 따로 사용하므로 posterior KL보다
+          codebook usage와 별도 prior의 품질을 점검해야 합니다.
         </p>
       </div>
 
@@ -59,12 +54,10 @@ export default function Applications() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>VQ-VAE와 latent diffusion은 같은 “VAE”라는 말로 묶지 않는다</h3>
         <p>
-          VQ-VAE는 codebook의 discrete latent를 사용하며 perceptual quality와
-          autoregressive prior 같은 후속 설계를 가능하게 했다. 그러나
-          quantization 하나가 blurry output을 자동으로 해결하는 것은 아니다.
-          Stable Diffusion 계열의 first-stage autoencoder는 pixel space를
-          spatial latent로 압축해 diffusion compute를 줄이지만, 구체적인
-          regularization과 compression factor는 model version마다 확인해야 한다.
+          VQ-VAE는 codebook의 discrete latent를 사용하며 perceptual quality와 autoregressive prior 같은 후속 설계를 가능하게 했지만
+          quantization 하나가 blurry output을 자동으로 해결하는 것은 아니다. Stable Diffusion 계열의 first-stage autoencoder는
+          pixel space를 spatial latent로 압축해 diffusion compute를 줄인다. 구체적인 regularization과 compression factor는
+          model version마다 다시 확인할 일이다.
         </p>
         <p>
           Latent에서 denoising을 수행하는 전체 경로는
@@ -84,11 +77,9 @@ export default function Applications() {
           Neural Discrete Representation Learning
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Continuous Gaussian posterior 대신 vector-quantized codebook과 학습된
-          prior를 사용해 image·video·speech의 discrete representation을
-          다룹니다. VQ-VAE의 objective와 straight-through update는 기본 Gaussian
-          VAE의 ELBO 유도를 그대로 유지한 변형이 아니므로 두 방법을 구분해서
-          읽어야 합니다.
+          image·video·speech의 discrete representation은 continuous Gaussian posterior 대신 vector-quantized
+          codebook과 학습된 prior로 다룹니다. VQ-VAE의 objective와 straight-through update는 기본 Gaussian VAE의 ELBO 유도를 그대로
+          유지한 변형이 아닙니다. 두 방법은 구분해서 읽습니다.
         </p>
         <a
           className="mt-3 inline-block text-sm font-medium text-primary hover:underline"

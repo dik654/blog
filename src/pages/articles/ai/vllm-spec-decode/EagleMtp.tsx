@@ -44,11 +44,8 @@ export default function EagleMtp() {
           만드는 정보와 비용이 다릅니다.
         </p>
         <p className="leading-8">
-          별도 draft model은 token distribution을
-          직접 예측하고, EAGLE 계열은 target의 feature를 활용해 불확실성을 줄이며,
-          native MTP는 학습할 때부터 붙어 있던 future-token module을 proposer로
-          사용합니다. N-gram·suffix 방식은 model 없이 이미 등장한 문자열 반복을
-          이용합니다.
+          별도 draft model은 token distribution을 직접 예측합니다. EAGLE 계열은 target의 feature를 활용해 불확실성을 줄이고 native MTP는
+          학습할 때부터 붙어 있던 future-token module을 proposer로 사용합니다. N-gram·suffix 방식은 model 없이 이미 등장한 문자열 반복을 이용합니다.
         </p>
       </div>
 
@@ -66,11 +63,9 @@ export default function EagleMtp() {
           예측하고, 원래 token sequence도 조건으로 제공하는 feature-level drafter를 제안했습니다.
         </p>
         <p className="leading-8">
-          Feature에는 다음 token 외의 문맥 정보가 들어 있지만 token이
-          정해져도 feature가 하나로 결정되지는 않으므로, 논문은 이 uncertainty를
-          줄이는 조건 설계를 함께 다룹니다. 결과적으로 target에 가까운 proposal을
-          더 작은 계산으로 만들려는 접근이며, 모든 target에 checkpoint 없이 바로
-          붙일 수 있다는 뜻은 아닙니다.
+          Feature에는 다음 token 외의 문맥 정보가 들어 있습니다. 그런데 token이 정해져도 feature가 하나로 결정되지는 않으므로 논문은 이 uncertainty를 줄이는
+          조건 설계를 함께 다룹니다. 결과적으로 target에 가까운 proposal을 더 작은 계산으로 만들려는 접근입니다. 그렇다고 모든 target에 checkpoint 없이 바로
+          붙일 수 있는 것은 아닙니다.
         </p>
 
         <h3 id="paper-mtp" className="scroll-mt-20">
@@ -84,21 +79,17 @@ export default function EagleMtp() {
           token 하나뿐 아니라 더 먼 미래 token까지 함께 예측하도록 학습했습니다.
         </p>
         <p className="leading-8">
-          원 논문의 주장은 auxiliary training objective가 representation과 sample
-          efficiency에 줄 수 있는 효과, 그리고 학습된 미래 예측을 inference에
-          활용할 가능성을 해당 model scale·task에서 평가한 것입니다. 모든 native
-          MTP model이 같은 head 구조나 같은 inference speedup을 가진다는 뜻은
-          아닙니다.
+          원 논문의 주장은 auxiliary training objective가 representation과 sample efficiency에 줄 수 있는 효과, 그리고 학습된 미래 예측을
+          inference에 활용할 가능성을 해당 model scale·task에서 평가한 것입니다. 모든 native MTP model의 head 구조나 inference speedup이
+          같다는 뜻은 아닙니다.
         </p>
         <h4 id="native-mtp" className="scroll-mt-20">
           Native MTP weight를 serving proposer로 사용하는 단계
         </h4>
         <p className="leading-8">
-          Serving에서는 model에 포함된 future-token module이 만든 후보를 target의
-          speculative verifier에 넣을 수 있습니다.
-          그러나 MTP head가 있다는 사실만으로 여러 token이 자동 확정되지는
-          않습니다. Runtime이 해당 architecture의 module을 읽고 draft tree 또는
-          chain을 만들며, target acceptance와 cache commit까지 구현해야 합니다.
+          Serving에서는 model에 포함된 future-token module이 만든 후보를 target의 speculative verifier에 넣을 수 있습니다. 그러나 MTP
+          head가 있다는 사실만으로 여러 token이 자동 확정되지는 않습니다. Runtime이 해당 architecture의 module을 읽고 draft tree 또는 chain을
+          만들며 target acceptance와 cache commit까지 구현해야 합니다.
         </p>
         <p className="leading-8">
           또 target과 proposer의 작은 수치 차이가 먼 후보까지 누적되므로 activation
@@ -122,11 +113,8 @@ export default function EagleMtp() {
           attention으로 함께 검증하는 serving system을 제안했습니다.
         </p>
         <p className="leading-8">
-          Chain 하나의
-          depth만 늘리는 대신 후보 폭도 활용해 target과 일치할 경로를 늘리는
-          접근입니다. 다만 tree가 넓어질수록 temporary KV·verification compute와
-          scheduling 복잡도도 늘어나므로, 논문의 workload와 system 조건 밖에서
-          동일한 속도 향상을 가정하면 안 됩니다.
+          Chain 하나의 depth만 늘리는 대신 후보 폭도 활용해 target과 일치할 경로를 늘리는 접근입니다. 다만 tree가 넓어질수록 temporary
+          KV·verification compute와 scheduling 복잡도도 늘어나므로 논문의 workload와 system 조건 밖에서 동일한 속도 향상을 가정하면 안 됩니다.
         </p>
       </div>
 
@@ -179,9 +167,8 @@ S(K)&\approx\frac{\mathbb{E}[Y_K],t_T(1)}{t_C(K)} \\
           temperature의 창작 문장은 같은 K를 쓰더라도 acceptance tail이 다릅니다.
         </p>
         <p className="leading-8">
-          vLLM의 dynamic speculative decoding처럼 runtime이 관측 신호에 따라
-          speculation을 줄이거나 끌 수 있지만, 정책의 입력과 선택 이유, 실제
-          결과를 trace에 남겨야 회귀를 찾을 수 있습니다.
+          vLLM의 dynamic speculative decoding처럼 runtime이 관측 신호에 따라 speculation을 줄이거나 끌 수 있습니다. 다만 정책의 입력과 선택
+          이유, 실제 결과를 trace에 남겨야 회귀를 찾을 수 있습니다.
         </p>
         <p className="leading-8">
           최소 benchmark ledger에는 target/draft artifact와 revision, K와 dynamic
@@ -190,10 +177,8 @@ S(K)&\approx\frac{\mathbb{E}[Y_K],t_T(1)}{t_C(K)} \\
           정의도 함께 적습니다.
         </p>
         <p className="leading-8">
-          시간 쪽에서는 draft/verify/runtime 시간과 TTFT, ITL, E2E latency를,
-          자원 쪽에서는 KV 사용량과 preemption을, 품질 쪽에서는 target-only 대비
-          검사를 기록합니다. Batch-1 tokens/s 한 숫자로 production throughput을
-          결론 내리지 않는 이유가 여기에 있습니다.
+          시간 쪽에서는 draft/verify/runtime 시간과 TTFT, ITL, E2E latency를 기록합니다. 자원 쪽은 KV 사용량과 preemption, 품질 쪽은
+          target-only 대비 검사입니다. Batch-1 tokens/s 한 숫자로 production throughput을 결론 내리지 않는 이유가 여기에 있습니다.
         </p>
       </div>
     </section>

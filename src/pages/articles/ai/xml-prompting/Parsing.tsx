@@ -12,27 +12,23 @@ export default function Parsing() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Model completion은 신뢰할 수 없는 text입니다. XML을 요청했더라도 앞뒤에
-          설명을 붙이거나 tag를 빠뜨리고, 예상하지 않은 element와 attribute를
-          만들 수 있습니다.
+          model completion은 신뢰할 수 없는 text입니다. XML을 요청했더라도 앞뒤에 설명을 붙이거나 tag를 빠뜨리고 예상하지 않은 element와 attribute를
+          만들기도 합니다.
         </p>
         <p>
-          따라서 output을 곧바로 업무 로직에 넘기지 않습니다. 먼저 byte·character size와
-          허용된 최상위 frame 수를 확인합니다.
+          output을 곧바로 업무 로직에 넘기지 않습니다. 먼저 byte·character size와 허용된 최상위 frame 수를 확인합니다.
         </p>
         <p>
           계약이 <code>&lt;result&gt;</code> 하나라면 그 밖의 text를 조용히 무시하지 말고
           명시적인 framing error로 기록합니다.
         </p>
         <p>
-          그다음 strict XML parser로 well-formedness를 검사합니다. 중첩 구조는
-          임의 깊이가 될 수 있고 escaped character와 같은 이름의 반복 element도
-          있으므로, 정규표현식으로 tag 사이를 잘라내는 방식은 일반 XML parser를 대신할 수
-          없습니다.
+          그다음 strict XML parser로 well-formedness를 검사합니다. 중첩 구조는 임의 깊이가 될 수 있고 escaped character와 같은 이름의 반복
+          element도 있으므로 정규표현식으로 tag 사이를 잘라내는 방식은 일반 XML parser를 대신할 수 없습니다.
         </p>
         <p>
-          Parse error를 “관대한 parser→regex” 순서로 조용히 복구하면 잘못된 구조가 다른 의미로
-          실행될 수 있습니다. 실패 원인을 typed error로 보존하는 편이 안전합니다.
+          parse error를 “관대한 parser→regex” 순서로 조용히 복구하면 잘못된 구조가 다른 의미로 실행되는 일이 생깁니다. 실패 원인을 typed error로 보존하는
+          편이 안전합니다.
         </p>
       </div>
 
@@ -43,9 +39,8 @@ export default function Parsing() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Well-formed, schema-valid, domain-valid는 서로 다른 판정이다</h3>
         <p>
-          Parser가 XML tree를 만들었다고 내용까지 맞는 것은 아닙니다. 첫째,
-          allowlist와 schema 단계에서 허용된 element·attribute, required field,
-          type, cardinality와 추가 field 금지를 검사합니다.
+          parser가 XML tree를 만들었다고 내용까지 맞는 것은 아닙니다. 첫째, allowlist와 schema 단계에서는 허용된 element·attribute와 required
+          field, type, cardinality를 검사하고 추가 field가 없는지도 확인합니다.
         </p>
         <p>
           XML 1.0에서 <em>valid</em>는 선언된 DTD를 만족한다는 규범적 의미입니다. 실무에서는
@@ -59,8 +54,8 @@ export default function Parsing() {
           하지만 환불액이 음수일 수 없다는 업무 규칙에는 실패합니다.
         </p>
         <p>
-          Product ID가 catalog에 실제로 있는지, citation ID가 input document를 가리키는지,
-          evidence span이 원문에 존재하는지도 이 단계에서 확인합니다.
+          product ID가 catalog에 실제로 있는지, citation ID가 input document를 가리키는지, evidence span이 원문에 존재하는지도 이 단계에서
+          확인합니다.
         </p>
         <p>
           셋째, policy validation은 값이 현재 caller 권한과 실행 정책에 맞는지
@@ -83,21 +78,18 @@ export default function Parsing() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Retry는 실패 원인과 최대 횟수가 정해진 복구 경로다</h3>
         <p>
-          닫는 tag 하나가 빠진 syntax error라면 error location과 기대 root를
-          포함해 한 번 재생성할 수 있고, 필수 field 누락이면 누락 field만 알려 줄
-          수 있습니다.
+          닫는 tag 하나가 빠진 syntax error라면 error location과 기대 root를 포함해 한 번 재생성해도 되고 필수 field 누락이면 누락 field만 알려 주면
+          됩니다.
         </p>
         <p>
-          반면 존재하지 않는 상품 ID나 근거 없는 citation은 문법을 다시 요청해도 해결되지
-          않습니다. Evidence 재검색, abstention 또는 human review로 전환해야 합니다.
+          반면 존재하지 않는 상품 ID나 근거 없는 citation은 문법을 다시 요청해도 해결되지 않습니다. evidence 재검색이나 abstention, human review로
+          전환해야 합니다.
         </p>
         <p>
-          Retry count와 누적 token·latency budget을 정하고, 한도를 넘으면 명시적으로 실패하게
-          해야 무한 재시도와 silent repair를 피할 수 있습니다.
+          retry count와 누적 token·latency budget을 정하고 한도를 넘으면 명시적으로 실패하게 해야 무한 재시도와 silent repair를 피합니다.
         </p>
         <p>
-          문법 위반 자체를 생성 단계에서 줄여야 하고 XML을 선택할 특별한 이유가
-          없다면 JSON Schema 같은 native structured output이 더 단순할 수 있습니다.
+          문법 위반 자체를 생성 단계에서 줄여야 하고 XML을 선택할 특별한 이유가 없다면 JSON Schema 같은 native structured output이 더 단순합니다.
         </p>
         <p>
           Parser와 grammar state로 invalid token을 막는 원리는
@@ -116,21 +108,19 @@ export default function Parsing() {
           of service가 발생할 수 있으며, 이를 XXE(XML External Entity)라고 부릅니다.
         </p>
         <p>
-          Prompt에 태그를 쓰는 것과 server가 untrusted XML을 parser로 읽는 것은 서로 다른
-          threat surface입니다. 후자에는 parser hardening이 필요합니다.
+          prompt에 태그를 쓰는 것과 server가 untrusted XML을 parser로 읽는 것은 서로 다른 threat surface입니다. 후자에는 parser
+          hardening이 필요합니다.
         </p>
         <p>
-          기본 원칙은 DTD와 general·parameter external entity resolution,
-          external DTD, XInclude와 network access를 사용하지 않는 것입니다. 문서 size, element
-          depth, attribute·text 길이, entity expansion, CPU time과 memory에도 limit를 둡니다.
+          기본 원칙은 DTD와 general·parameter external entity resolution, external DTD, XInclude, network access를 쓰지
+          않는 것입니다. 문서 size와 element depth, attribute·text 길이, entity expansion, CPU time, memory에도 limit를 둡니다.
         </p>
         <p>
-          “Billion Laughs”처럼 작은 입력에서 entity를 반복 확장하는 공격은 외부 network 없이도
-          발생합니다. 따라서 XXE 설정 하나로 끝내지 않습니다.
+          “Billion Laughs”처럼 작은 입력에서 entity를 반복 확장하는 공격은 외부 network 없이도 발생하므로 XXE 설정 하나로 끝내지 않습니다.
         </p>
         <p>
-          사용하는 language binding과 underlying parser version을 함께 기록하고, 공격 fixture로
-          실제 설정을 테스트합니다. Python이라면 pyexpat와 연결된 Expat version까지 확인합니다.
+          사용하는 language binding과 underlying parser version을 함께 기록하고 공격 fixture로 실제 설정을 테스트합니다. Python이라면
+          pyexpat와 연결된 Expat version까지 확인합니다.
         </p>
 
         <div id="paper-python-xml-security" className="not-prose scroll-mt-24">

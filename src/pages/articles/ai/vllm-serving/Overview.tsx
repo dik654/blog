@@ -41,11 +41,9 @@ export default function Overview() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          한 사용자의 문장 생성은 prompt를 읽고 다음 token을 반복해서 만드는
-          과정입니다. 온라인 서비스에서는 수십 개의 요청이 서로 다른 시점에
-          들어오고, prompt와 output 길이도 모두 다릅니다. 그러므로 “batch size
-          32로 model을 실행한다”는 설명만으로는 어느 요청이 기다리고, 언제 batch에
-          합류하며, 완료된 자리의 memory가 언제 반환되는지 알 수 없습니다.
+          한 사용자의 문장 생성은 prompt를 읽고 다음 token을 반복해서 만드는 과정입니다. 온라인 서비스에서는 수십 개의 요청이 서로 다른 시점에 들어오고 prompt와
+          output 길이도 모두 다릅니다. “batch size 32로 model을 실행한다”는 설명만으로는 어느 요청이 기다리고, 언제 batch에 합류하며, 완료된 자리의
+          memory가 언제 반환되는지 알 수 없습니다.
         </p>
         <p className="leading-8">
           vLLM은 각 요청을 <em>sequence state</em>로 보관하고, scheduler가 GPU

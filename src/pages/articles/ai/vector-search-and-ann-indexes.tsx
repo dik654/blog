@@ -24,16 +24,12 @@ export default function VectorSearchAndAnnIndexesArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Embedding 을 이용한 검색은 결국 벡터 하나(query)와 가장 가까운 벡터들(document)을
-            찾는 문제입니다. 색인에 벡터가 100만 개만 넘어가도 매 query 마다 전부와 비교하는
-            것은 비용이 커서, 실무는 그 비교 횟수와 저장량을 줄이는 대신 정확도를 조금
-            내주는 근사 방법을 씁니다.
+            embedding을 이용한 검색은 결국 벡터 하나(query)와 가장 가까운 벡터들(document)을 찾는 문제입니다. 색인에 벡터가 100만 개만 넘어가도 매 query마다
+            전부와 비교하기에는 비용이 큽니다. 실무는 그 비교 횟수와 저장량을 줄이는 대신 정확도를 조금 내주는 근사 방법을 씁니다.
           </p>
           <p>
-            이 글은 d=768차원 embedding 벡터 100만 개라는 하나의 수치 예를 끝까지
-            따라갑니다. Exact 검색이 매 query 마다 몇 번 비교하는지부터 세고, IVF 가
-            cluster 분할로 그 수를 어떻게 줄이는지, PQ 가 벡터 자체를 어떻게 압축하는지,
-            마지막으로 cosine 검색을 위해 벡터를 정규화하는 이유를 봅니다.
+            이 글은 d=768차원 embedding 벡터 100만 개라는 하나의 수치 예를 끝까지 따라갑니다. exact 검색이 매 query마다 몇 번 비교하는지부터 셉니다. 이어서
+            IVF가 cluster 분할로 그 수를 어떻게 줄이는지, PQ가 벡터 자체를 어떻게 압축하는지, 마지막으로 cosine 검색을 위해 벡터를 정규화하는 이유를 봅니다.
           </p>
         </div>
         <VectorSearchAndAnnIndexesViz />
@@ -46,10 +42,8 @@ export default function VectorSearchAndAnnIndexesArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Embedding model 은 text·이미지 같은 원본 입력을 고정 길이 벡터로 바꾸는
-            함수입니다. Query 와 document 를 같은 model 로 embedding 하면 둘 다 같은
-            embedding space 에 놓이고, 그 공간에서 거리가 가까울수록 의미가 가깝다고
-            봅니다.
+            embedding model은 text·이미지 같은 원본 입력을 고정 길이 벡터로 바꾸는 함수입니다. query와 document를 같은 model로 embedding하면 둘
+            다 같은 embedding space에 놓이고 그 공간에서 거리가 가까울수록 의미가 가깝다고 봅니다.
           </p>
           <p>
             Query embedding 은 이 model 을 검색어에 적용한 결과일 뿐 별도의 표현이
@@ -60,9 +54,8 @@ export default function VectorSearchAndAnnIndexesArticle() {
             잃습니다.
           </p>
           <p>
-            Embedding dimension d 는 이 공간의 좌표 개수입니다. BERT-base 계열은 흔히
-            d=768, 일부 model 은 d=1536 을 씁니다. d 가 클수록 표현력은 늘지만 비교·저장
-            비용도 그만큼 커지고, 이 글의 모든 수치 예는 d=768 을 씁니다.
+            embedding dimension d는 이 공간의 좌표 개수입니다. BERT-base 계열은 흔히 d=768, 일부 model은 d=1536을 씁니다. d가 클수록 표현력은
+            늘지만 비교·저장 비용도 그만큼 커집니다. 이 글의 모든 수치 예는 d=768을 씁니다.
           </p>
           <p>
             Dense retrieval 은 이 embedding space 에서 벡터 거리로 candidate 를 찾는
@@ -92,30 +85,24 @@ export default function VectorSearchAndAnnIndexesArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Nearest neighbor search 는 query 벡터와 거리가 가장 가까운 벡터를 찾는
-            문제입니다. Vector search 라 부르는 검색은 결국 이 nearest neighbor 문제를
-            매 query 마다 푸는 일입니다.
+            nearest neighbor search는 query 벡터와 거리가 가장 가까운 벡터를 찾는 문제입니다. vector search라 부르는 검색은 결국 이 nearest
+            neighbor 문제를 매 query마다 푸는 일입니다.
           </p>
           <p>
-            Exact nearest neighbor 는 정답을 보장합니다. Query 를 색인의 벡터 N개
-            전부와 비교해 가장 가까운 것을 고르는 linear scan 이고, d=768, N=1,000,000
-            이면 query 하나당 100만 번의 거리 계산, 성분 단위로는 약 7억 6,800만 번의
-            곱셈-덧셈이 듭니다.
+            exact nearest neighbor는 정답을 보장합니다. query를 색인의 벡터 N개 전부와 비교해 가장 가까운 것을 고르는 linear scan입니다. d=768,
+            N=1,000,000이면 query 하나당 100만 번의 거리 계산, 성분 단위로는 약 7억 6,800만 번의 곱셈-덧셈이 듭니다.
           </p>
           <p>
-            Euclidean-distance retrieval 은 이 비교를 squared L2 거리로 하는 exact
-            방식의 한 예입니다. Cosine·dot product 를 쓰는 방식도 있지만 거리 함수가
-            무엇이든 전부와 비교한다는 구조는 같습니다.
+            Euclidean-distance retrieval은 이 비교를 squared L2 거리로 하는 exact 방식의 한 예입니다. cosine·dot product를 쓰는 방식도
+            있지만 거리 함수가 무엇이든 전부와 비교한다는 구조는 같습니다.
           </p>
           <p>
-            ANN(approximate nearest neighbor)은 이 전수 비교를 포기합니다. 후보를 미리
-            줄여 둔 부분집합만 비교하고, 그 부분집합에 진짜 최근접이 없으면 놓칠 수
+            ANN(approximate nearest neighbor)은 이 전수 비교를 포기합니다. 후보를 미리 줄여 둔 부분집합만 비교하고 그 부분집합에 진짜 최근접이 없으면 놓칠 수
             있습니다. 이 정확도 손실은 recall(진짜 최근접을 실제로 찾은 비율)로 잽니다.
           </p>
           <p>
-            IVF 와 PQ 는 이 근사를 서로 다른 방법으로 만듭니다. IVF 는 비교할 후보 수를
-            줄이고 PQ 는 비교 자체를 싸게, 그리고 압축해서 만듭니다. 두 방법은 vector
-            database 의 index 안에서 함께 쓰이는 경우가 많습니다.
+            IVF와 PQ는 이 근사를 서로 다른 방법으로 만듭니다. IVF는 비교할 후보 수를 줄이고 PQ는 비교 자체를 싸게, 그리고 압축해서 만듭니다. 두 방법은 vector
+            database의 index 안에서 함께 쓰이는 경우가 많습니다.
           </p>
         </div>
       </section>
@@ -126,18 +113,15 @@ export default function VectorSearchAndAnnIndexesArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Vector database 는 벡터와 metadata 를 저장하고 insert·delete·filter 같은
-            연산과 영속성을 제공하며 그 위에서 nearest neighbor 검색을 서비스하는
-            시스템입니다.
+            vector database는 벡터와 metadata를 저장하고 insert·delete·filter 같은 연산과 영속성을 제공하며 그 위에서 nearest neighbor
+            검색을 서비스하는 시스템입니다.
           </p>
           <p>
             Milvus·pgvector·Pinecone 같은 제품이 이 계층에 해당합니다.
           </p>
           <p>
-            Vector index 는 그 database 안에서 실제 비교를 정하는 자료구조입니다.
-            Flat(전부 저장해 exact 비교), IVF(cluster 분할), PQ(compressed code), 또는
-            이 셋을 결합한 IVF-PQ 처럼 database 하나가 여러 index 타입 중 하나를 고를 수
-            있습니다.
+            vector index는 그 database 안에서 실제 비교를 정하는 자료구조입니다. database 하나는 Flat(전부 저장해 exact 비교)과 IVF(cluster
+            분할), PQ(compressed code), 또는 이 셋을 결합한 IVF-PQ처럼 여러 index 타입 중 하나를 고를 수 있습니다.
           </p>
           <p>
             <Link to="/ai/bi-encoder-retrieval#offline-index">Bi-encoder retrieval 글</Link>{" "}
@@ -152,16 +136,12 @@ export default function VectorSearchAndAnnIndexesArticle() {
             IVF 는 cluster 안에서만 비교해 후보를 줄입니다
           </h3>
           <p>
-            IVF(inverted file index)는 색인의 벡터를 k-means 로 nlist개 cluster 로
-            나누고, 각 벡터를 가장 가까운 centroid 의 inverted list 에 등록합니다.
-            검색할 때는 query 와 가까운 centroid nprobe개만 골라 그 안의 벡터만 정확
-            거리로 비교합니다.
+            IVF(inverted file index)는 색인의 벡터를 k-means로 nlist개 cluster로 나누고 각 벡터를 가장 가까운 centroid의 inverted
+            list에 등록합니다. 검색할 때는 query와 가까운 centroid nprobe개만 골라 그 안의 벡터만 정확 거리로 비교합니다.
           </p>
           <p>
-            d=768, N=1,000,000, nlist=1,000 이면 cluster 하나의 평균 크기는 1,000개
-            입니다. nprobe=10 이면 centroid 비교 1,000회에 cluster 내부 비교
-            10×1,000=10,000회를 더해 총 11,000회이고, exact 의 1,000,000회 대비 약
-            90.9배 적습니다.
+            d=768, N=1,000,000, nlist=1,000이면 cluster 하나의 평균 크기는 1,000개입니다. nprobe=10이면 centroid 비교 1,000회에
+            cluster 내부 비교 10×1,000=10,000회를 더해 총 11,000회입니다. exact의 1,000,000회 대비 약 90.9배 적습니다.
           </p>
         </div>
         <ExplainedFormula
@@ -194,10 +174,8 @@ C_{ivf} &= \underbrace{n_{list}}_{\text{centroid 비교}} + \underbrace{n_{probe
         />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Nprobe 를 늘리면 더 많은 cluster 를 보므로 recall 이 오르지만 비교 횟수도
-            그만큼 늘어 exact 에 가까워집니다. Nlist 를 늘리면 cluster 가 작아져 내부
-            비교는 줄지만 centroid 비교가 늘어, FAISS 문서는 보통 nlist ≈ C√N 근방을
-            권장값으로 둡니다.
+            nprobe를 늘리면 더 많은 cluster를 보므로 recall이 오르지만 비교 횟수도 그만큼 늘어 exact에 가까워집니다. nlist를 늘리면 cluster가 작아져 내부
+            비교는 줄지만 centroid 비교가 늘어납니다. FAISS 문서는 보통 nlist ≈ C√N 근방을 권장값으로 둡니다.
           </p>
         </div>
         <AlgorithmBlock
@@ -218,15 +196,13 @@ C_{ivf} &= \underbrace{n_{list}}_{\text{centroid 비교}} + \underbrace{n_{probe
             PQ 는 벡터를 subvector 코드로 압축합니다
           </h3>
           <p>
-            Product quantization 은 d차원 벡터를 m개의 동일 크기 subvector 로 나누고,
-            subvector 마다 독립적으로 학습한 k개의 centroid(codebook) 중 가장 가까운
-            것의 id 로 원본을 대신합니다. Vector quantization(연속값을 유한 개의
-            대표값 중 하나로 바꾸는 일반 기법)을 subvector 단위로 적용한 것이 PQ 입니다.
+            product quantization은 d차원 벡터를 m개의 동일 크기 subvector로 나누고 subvector마다 독립적으로 학습한 k개의
+            centroid(codebook) 중 가장 가까운 것의 id로 원본을 대신합니다. vector quantization(연속값을 유한 개의 대표값 중 하나로 바꾸는 일반 기법)을
+            subvector 단위로 적용한 것이 PQ입니다.
           </p>
           <p>
-            d=768 을 m=8, k=256 으로 압축하면 subvector 하나는 96차원이고, k=256 이라
-            centroid id 하나는 1byte(2⁸=256)에 들어갑니다. 벡터 하나의 저장은 원본
-            3,072byte(float32 768개)에서 code 8byte 로 줄어 384배 압축됩니다.
+            d=768을 m=8, k=256으로 압축하면 subvector 하나는 96차원입니다. k=256이라 centroid id 하나는 1byte(2⁸=256)에 들어갑니다. 벡터
+            하나의 저장은 원본 3,072byte(float32 768개)에서 code 8byte로 줄어 384배 압축됩니다.
           </p>
         </div>
         <ExplainedFormula
@@ -259,11 +235,9 @@ S_{pq} &= \underbrace{m}_{\text{subvector 개수}}\cdot\underbrace{\left\lceil\f
         />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            대가는 거리 계산이 근사가 된다는 것입니다. Code 사이 원본 거리를 정확히
-            복원하지 못하고, query 의 각 subvector 와 codebook 사이 거리를 미리
-            표(lookup table)로 만들어 code 별로 더하는 asymmetric distance computation
-            으로 근사합니다. IVF 의 cluster 안에서 이 code 로 저장하는 조합이 IVF-PQ
-            입니다.
+            대가는 거리 계산이 근사가 된다는 것입니다. code 사이 원본 거리는 정확히 복원하지 못합니다. 대신 query의 각 subvector와 codebook 사이 거리를 미리
+            표(lookup table)로 만들어 code별로 더하는 asymmetric distance computation으로 근사합니다. IVF의 cluster 안에서 이 code로
+            저장하는 조합이 IVF-PQ입니다.
           </p>
         </div>
       </section>
@@ -274,15 +248,12 @@ S_{pq} &= \underbrace{m}_{\text{subvector 개수}}\cdot\underbrace{\left\lceil\f
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            많은 vector index 는 dot product(inner product)나 L2 거리 전용으로
-            최적화돼 있습니다. Embedding 을 미리 L2 norm 1로 맞춰 두면(embedding
-            normalization), 이런 index 로도 cosine similarity 순서를 그대로 얻을 수
-            있습니다.
+            많은 vector index는 dot product(inner product)나 L2 거리 전용으로 최적화돼 있습니다. embedding을 미리 L2 norm 1로 맞춰
+            두면(embedding normalization) 이런 index로도 cosine similarity 순서를 그대로 얻을 수 있습니다.
           </p>
           <p>
-            단위 벡터 a=(1,0,0), b=(0.6,0.8,0)을 봅시다. 두 벡터 모두 norm 이 1이라 dot
-            product a·b=0.6 이 곧 cosine similarity 입니다. Squared Euclidean distance
-            는 (1−0.6)²+(0−0.8)²=0.8 이고, 이는 2−2×0.6=0.8 과 같습니다.
+            단위 벡터 a=(1,0,0), b=(0.6,0.8,0)을 봅시다. 두 벡터 모두 norm이 1이라 dot product a·b=0.6이 곧 cosine
+            similarity입니다. Squared Euclidean distance는 (1−0.6)²+(0−0.8)²=0.8이고 이는 2−2×0.6=0.8과 같습니다.
           </p>
           <p>
             <Link to="/ai/triplet-metric-learning#geometry">
@@ -294,11 +265,9 @@ S_{pq} &= \underbrace{m}_{\text{subvector 개수}}\cdot\underbrace{\left\lceil\f
             결과가 모두 같은 순서입니다.
           </p>
           <p>
-            정규화하지 않은 벡터에 dot product index 를 그대로 쓰면 문제가 생깁니다.
-            벡터 길이가 큰 문서가 실제로 의미가 안 가까워도 dot product 값이 커져
-            순위가 올라갑니다. IVF 의 centroid 거리나 PQ 의 codebook 학습도 정규화
-            여부에 따라 다른 결과를 내므로, 정규화는 색인을 만들기 전 한 번과 매 query
-            마다 반복하는 전처리로 다룹니다.
+            정규화하지 않은 벡터에 dot product index를 그대로 쓰면 문제가 생깁니다. 벡터 길이가 큰 문서가 실제로 의미가 안 가까워도 dot product 값이 커져 순위가
+            올라갑니다. IVF의 centroid 거리나 PQ의 codebook 학습도 정규화 여부에 따라 다른 결과를 내므로 정규화는 색인을 만들기 전 한 번과 매 query마다 반복하는
+            전처리로 다룹니다.
           </p>
         </div>
       </section>
@@ -309,18 +278,15 @@ S_{pq} &= \underbrace{m}_{\text{subvector 개수}}\cdot\underbrace{\left\lceil\f
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            IVF 의 nlist·nprobe, PQ 의 m·nbits·code size 계산은 FAISS 의 공식 index
-            문서에서 왔습니다.
+            IVF의 nlist·nprobe, PQ의 m·nbits·code size 계산은 FAISS의 공식 index 문서에서 왔습니다.
           </p>
           <p>
-            Cluster 수 권장값(nlist ≈ C√N)과 subquantizer bit 수 제약(8·12·16 bits)도
-            같은 문서입니다.
+            cluster 수 권장값(nlist ≈ C√N)과 subquantizer bit 수 제약(8·12·16 bits)도 같은 문서입니다.
           </p>
           <p>
-            Product quantization 자체는 Jégou·Douze·Schmid 의 2011년 논문이
-            제안했습니다. Subvector 마다 독립적인 codebook 을 학습하는 것과 asymmetric
-            distance computation, IVF 와 결합한 IVFADC 가 이 논문의 기여입니다.
-            수치(recall·압축률)는 SIFT·GIST 데이터셋에서의 저자 자기보고입니다.
+            product quantization 자체는 Jégou·Douze·Schmid의 2011년 논문이 제안했습니다. subvector마다 독립적인 codebook을 학습하는 것과
+            asymmetric distance computation, IVF와 결합한 IVFADC가 이 논문의 기여입니다. 수치(recall·압축률)는 SIFT·GIST 데이터셋에서 나온
+            저자 자기보고입니다.
           </p>
           <p>
             HNSW 처럼 graph 기반 ANN 은 이 글이 다루지 않습니다.{" "}

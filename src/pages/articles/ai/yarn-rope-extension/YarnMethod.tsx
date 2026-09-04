@@ -11,10 +11,8 @@ export default function YarnMethod() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          YaRN의 첫 번째 구성 요소는 NTK-by-parts다. 각 RoPE 차원의 파장과 원래
-          context length를 비교한 뒤, 저주파에는 interpolation을 적용하고
-          고주파에는 원래 frequency를 더 많이 남긴다. 두 영역 사이에서는 ramp
-          function으로 부드럽게 전환한다.
+          YaRN의 첫 번째 구성 요소는 NTK-by-parts다. 각 RoPE 차원의 파장과 원래 context length를 비교한 뒤 저주파에는 interpolation을 적용하고
+          고주파에는 원래 frequency를 더 많이 남긴다. 두 영역 사이에서는 ramp function으로 부드럽게 전환한다.
         </p>
       </div>
 
@@ -87,10 +85,8 @@ export default function YarnMethod() {
 
         <h3>논문의 실험 결과를 모든 모델의 보증으로 읽으면 안 된다</h3>
         <p>
-          YaRN 논문은 LLaMA 계열에서 PI보다 적은 token과 step으로 더 긴 context에
-          적응한 결과를 보고했다. 그러나 이 수치는 해당 checkpoint, data와
-          evaluation setting에 대한 결과다. 다른 model에 같은 factor를 넣었다고
-          동일한 품질이나 학습 효율이 자동으로 재현되지는 않는다.
+          YaRN 논문은 LLaMA 계열에서 PI보다 적은 token과 step으로 더 긴 context에 적응한 결과를 보고했다. 그러나 이 수치는 해당 checkpoint와 data,
+          evaluation setting에 대한 결과다. 다른 model에 같은 factor를 넣었다고 동일한 품질이나 학습 효율이 자동으로 재현되지는 않는다.
         </p>
 
         <h3>원 논문이 실제로 입증한 범위를 구분한다</h3>

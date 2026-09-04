@@ -49,7 +49,10 @@ export default function Word2VecArticle() {
 
     <section id="window" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">Dynamic window는 가까운 pair를 더 자주 보되 먼 pair도 일부 남깁니다</h2>
-      <div className="prose prose-neutral max-w-none dark:prose-invert"><p>Maximum radius가 c라고 해서 매 center마다 항상 ±c를 전부 쓰는 것은 아닙니다. 실제 radius r을 1부터 c 사이에서 뽑으면 거리 δ의 context는 r≥δ일 때만 포함됩니다. 가까운 δ=1은 모든 draw에 들어오고 가장 먼 δ=c는 한 draw에서만 들어옵니다.</p></div>
+      <div className="prose prose-neutral max-w-none dark:prose-invert"><p>
+            Maximum radius가 c여도 매 center마다 항상 ±c를 전부 쓰지는 않습니다. 실제 radius r을 1부터 c 사이에서 뽑으면 거리 δ의 context는 r≥δ일
+            때만 포함됩니다. 가까운 δ=1은 모든 draw에 들어오고 가장 먼 δ=c는 한 draw에서만 들어옵니다.
+          </p></div>
       <ExplainedFormula question="Maximum radius c에서 거리 δ인 context가 pair에 포함될 확률은 얼마인가요?" idea={<p>가능한 radius는 c개입니다. 그중 δ 이상인 radius가 c−δ+1개이므로 이 개수를 전체 c로 나눕니다.</p>} formula={String.raw`r\sim\operatorname{Unif}\{1,\ldots,c\},\quad P(\delta\text{ included})=(c-\delta+1)/c`} annotatedFormula={String.raw`\begin{aligned}r&\sim\underbrace{\operatorname{Unif}\{1,\ldots,c\}}_{\text{실제 radius 하나를 sampling}}\\I_\delta&=\underbrace{\mathbf 1[r\ge\delta]}_{\substack{\text{뽑은 radius가 거리 }\delta\text{에 닿을 때만}\\\text{pair에 포함}}}\\N_\delta&=\underbrace{c-\delta+1}_{\text{거리 }\delta\text{ 이상인 radius의 개수}}\\P(I_\delta=1)&=\underbrace{N_\delta/c}_{\text{포함 draw 수를 전체 draw 수로 나눔}}\end{aligned}`} operations={[
         { expression: String.raw`r\sim\operatorname{Unif}\{1,\ldots,c\}`, annotation: ["최대 반경 안에서 실제 반경을 뽑아", "example마다 window 크기를 바꿈"] },
         { expression: String.raw`\mathbf 1[r\ge\delta]`, annotation: ["radius가 context 거리까지 닿는지 비교해", "pair 포함 여부를 0·1로 만듦"] },

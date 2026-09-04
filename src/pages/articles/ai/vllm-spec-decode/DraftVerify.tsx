@@ -67,11 +67,9 @@ export default function DraftVerify({
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          Greedy decoding은 비교적 단순합니다. 각 위치에서 draft token이 target의
-          argmax와 같은 동안 수락하고, 처음 달라지는 위치에서 target token으로
-          이어 가면 됩니다. Sampling에서는 target이 두 번째·세 번째 후보도 일정
-          확률로 선택해야 하므로 “draft와 target의 top-1이 같으면 수락”하는
-          규칙만으로는 원래 분포가 바뀝니다.
+          Greedy decoding은 비교적 단순합니다. 각 위치에서 draft token이 target의 argmax와 같은 동안 수락하고 처음 달라지는 위치에서 target
+          token으로 이어 가면 됩니다. Sampling에서는 target이 두 번째·세 번째 후보도 일정 확률로 선택해야 하므로 “draft와 target의 top-1이 같으면
+          수락”하는 규칙만으로는 원래 분포가 바뀝니다.
         </p>
         <p className="leading-8">
           Speculative sampling은 draft가 target보다 적게 준 확률 질량은 그대로
@@ -137,22 +135,17 @@ m_{\mathrm{out}}(x)&=m_{\mathrm{accept}}(x)+m_{\mathrm{correct}}(x) \\
           target model이 병렬로 검증할 proposal로 사용했습니다.
         </p>
         <p className="leading-8">
-          위 acceptance와
-          correction 규칙이 있으므로 논문의 전제 안에서는 target-only sampling과
-          같은 분포를 유지하면서 target의 serial step 수를 줄일 수 있습니다.
-          “작은 모델이 품질을 대신한다”가 아니라 “작은 모델은 계산 경로만 제안하고
-          품질 계약은 target이 계속 소유한다”는 것이 핵심입니다.
+          위 acceptance와 correction 규칙이 있으므로 논문의 전제 안에서는 target-only sampling과 같은 분포를 유지하면서 target의 serial step
+          수를 줄일 수 있습니다. “작은 모델이 품질을 대신한다”가 아닙니다. “작은 모델은 계산 경로만 제안하고 품질 계약은 target이 계속 소유한다”가 핵심입니다.
         </p>
 
         <h3 id="verification-pass" className="scroll-mt-20">
           Verification pass는 K+1개 분포를 한 번의 forward로 얻습니다
         </h3>
         <p className="leading-8">
-          Draft가 K개 후보를 만들면 target은 확정 prefix 뒤에 그 K개를 이어 붙여
-          한 번만 실행합니다. Causal attention 덕분에 마지막 K+1개 위치의 출력이
-          각각 prefix, prefix+t₁, …, prefix+t₁..t_K를 조건으로 한 next-token
-          분포가 되므로, 수락 판정에 필요한 p를 위치마다 따로 실행하지 않아도
-          됩니다.
+          Draft가 K개 후보를 만들면 target은 확정 prefix 뒤에 그 K개를 이어 붙여 한 번만 실행합니다. Causal attention 덕분에 마지막 K+1개 위치의 출력은
+          각각 prefix, prefix+t₁, …, prefix+t₁..t_K를 조건으로 한 next-token 분포가 됩니다. 그래서 수락 판정에 필요한 p를 위치마다 따로 실행하지
+          않아도 됩니다.
         </p>
         <p className="leading-8">
           이 한 번의 forward가 verification pass이고, 그 비용이 token 하나짜리
@@ -167,10 +160,8 @@ m_{\mathrm{out}}(x)&=m_{\mathrm{accept}}(x)+m_{\mathrm{correct}}(x) \\
           Rejection point에서는 residual로 다시 뽑고 그 뒤 후보는 버립니다
         </h3>
         <p className="leading-8">
-          Verification pass가 끝나면 위치 1부터 차례로 uniform 난수 r_i를 뽑아
-          r_i ≤ p_i/q_i 인지 봅니다. 처음 실패한 위치 n이 rejection point이고,
-          그 앞의 n−1개 draft는 그대로 확정합니다. 위치 n의 token은 target에만
-          남은 질량 (p−q)₊를 정규화한 분포에서 다시 뽑습니다.
+          Verification pass가 끝나면 위치 1부터 차례로 uniform 난수 r_i를 뽑아 r_i ≤ p_i/q_i 인지 봅니다. 처음 실패한 위치 n이 rejection
+          point입니다. 그 앞의 n−1개 draft는 그대로 확정합니다. 위치 n의 token은 target에만 남은 질량 (p−q)₊를 정규화한 분포에서 다시 뽑습니다.
         </p>
         <p className="leading-8">
           거부가 한 번도 없으면 K+1번째 분포 <Math>{String.raw`p_{K+1}`}</Math>에서 bonus token 하나를
@@ -214,9 +205,8 @@ m_{\mathrm{out}}(x)&=m_{\mathrm{accept}}(x)+m_{\mathrm{correct}}(x) \\
           correction token으로 바뀌면 네 번째 후보는 더 이상 현재 prefix에서 만든 값이 아닙니다.
         </p>
         <p className="leading-8">
-          그래서 첫 거부 뒤의 suffix를 그대로 이어 쓰면 target
-          distribution 보장도 깨집니다. Runtime은 거부 지점까지 sequence length와
-          KV state를 확정하고, 바뀐 prefix에서 다음 cycle을 시작해야 합니다.
+          첫 거부 뒤의 suffix를 그대로 이어 쓰면 target distribution 보장도 깨집니다. Runtime은 거부 지점까지 sequence length와 KV state를
+          확정하고 바뀐 prefix에서 다음 cycle을 시작해야 합니다.
         </p>
       </div>
 
@@ -269,9 +259,8 @@ A &= \underbrace{\sum_{i=1}^{K} I_i}_{\text{오른쪽 항으로 결과 계산}} 
           뜻은 아닙니다.
         </p>
         <p className="leading-8">
-          같은 seed 재현성만 확인할 것이 아니라 여러 prompt와 seed의
-          task quality·token frequency·failure rate가 target-only 기준에서 벗어나지
-          않는지도 봐야 합니다.
+          같은 seed 재현성만 확인해서는 부족합니다. 여러 prompt와 seed의 task quality·token frequency·failure rate가 target-only
+          기준에서 벗어나지 않는지도 봐야 합니다.
         </p>
 
         <h3>Scheduler·KV cache·sampler가 같은 acceptance 결과를 공유해야 합니다</h3>
@@ -282,9 +271,8 @@ A &= \underbrace{\sum_{i=1}^{K} I_i}_{\text{오른쪽 항으로 결과 계산}} 
           prefix를 가리켜야 합니다.
         </p>
         <p className="leading-8">
-          이 가운데 하나라도 suffix를 확정된 state로
-          남기면 다음 cycle의 조건이 어긋납니다. Speculative decoding은 proposer
-          하나를 추가하는 기능이 아니라 이 세 계층의 commit protocol입니다.
+          이 가운데 하나라도 suffix를 확정된 state로 남기면 다음 cycle의 조건이 어긋납니다. Speculative decoding의 실체는 이 세 계층의 commit
+          protocol입니다. proposer 하나를 추가하는 기능이 아닙니다.
         </p>
       </div>
     </section>

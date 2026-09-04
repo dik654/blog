@@ -26,17 +26,13 @@ export default function Overview() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="text-lg leading-8">
-          LLM 설정에서 최대 길이만 크게 바꾸면 더 많은 token을 메모리에 올릴
-          수는 있지만, 모델이 그 위치를 올바르게 해석한다는 보장은 없다.
-          Pretraining에서 보지 못한 위치로 RoPE 각도가 확장되면 attention pattern이
-          달라질 수 있기 때문이다. YaRN은 기존 checkpoint의 RoPE frequency를
-          조정하고 적은 long-context data로 adaptation해 이 간극을 줄이는 방법이다.
+          LLM 설정에서 최대 길이만 크게 바꾸면 더 많은 token을 메모리에 올릴 수는 있지만 모델이 그 위치를 올바르게 해석한다는 보장은 없다. pretraining에서 보지 못한
+          위치로 RoPE 각도가 확장되면 attention pattern이 달라질 수 있기 때문이다. YaRN은 기존 checkpoint의 RoPE frequency를 조정하고 적은
+          long-context data로 adaptation해 이 간극을 줄이는 방법이다.
         </p>
         <p>
-          이 글은 먼저 RoPE가 상대 위치를 어떻게 만드는지 살펴본 뒤, Position
-          Interpolation(PI)과 NTK-aware scaling을 거쳐 YaRN이 어떤 문제를
-          보완했는지 설명한다. 마지막에는 현재 라이브러리 설정을 그대로 복사하기
-          전에 확인해야 할 항목을 정리한다.
+          이 글은 먼저 RoPE가 상대 위치를 어떻게 만드는지 살펴본 뒤 Position Interpolation(PI)과 NTK-aware scaling을 거쳐 YaRN이 어떤 문제를
+          보완했는지 설명한다. 마지막에는 현재 라이브러리 설정을 그대로 복사하기 전에 확인해야 할 항목을 정리한다.
         </p>
       </div>
 
@@ -77,10 +73,8 @@ export default function Overview() {
           품질을 함께 평가해야 한다.
         </p>
         <p>
-          또한 full attention의 계산량은 sequence length에 따라 빠르게 늘고 KV
-          cache도 길이에 비례해 커진다. RoPE scaling은 위치 표현을 바꾸는
-          기술이지 attention 계산량이나 KV cache를 줄이는 기술은 아니므로,
-          serving capacity는 별도로 설계해야 한다.
+          full attention의 계산량은 sequence length에 따라 빠르게 늘고 KV cache도 길이에 비례해 커진다. RoPE scaling은 위치 표현을 바꾸는 기술이지
+          attention 계산량이나 KV cache를 줄이는 기술은 아니므로 serving capacity는 별도로 설계해야 한다.
         </p>
 
         <h3>먼저 세 가지를 분리해야 한다</h3>

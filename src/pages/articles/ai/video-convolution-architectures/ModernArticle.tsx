@@ -58,8 +58,8 @@ export default function VideoConvolutionArchitecturesArticle() {
           question="Temporal kernel이 직접 보는 첫·마지막 source timestamp 차이는 얼마인가요?"
           idea={
             <p>
-              Kernel 위치 수와 dilation로 sampled-frame index 폭을 만들고, input
-              stride를 곱해 source-frame 폭으로 바꾼 뒤 source FPS로 나눕니다.
+              kernel 위치 수와 dilation으로 sampled-frame index 폭을 만들고 input stride를 곱해 source-frame 폭으로 바꾼 뒤 source
+              FPS로 나눕니다.
             </p>
           }
           formula={String.raw`D_{\rm span}=(k_t-1)d_ts/f_{\rm src}`}
@@ -226,8 +226,7 @@ export default function VideoConvolutionArchitecturesArticle() {
           question="Fast path의 frame 수와 channel 수는 Slow path에서 어떻게 정하나요?"
           idea={
             <p>
-              Fast path는 시간축을 α배 촘촘하게 읽고, 그 비용을 제한하도록
-              channel capacity는 β배만 사용합니다.
+              fast path는 시간축을 α배 촘촘하게 읽고 그 비용을 제한하도록 channel capacity는 β배만 사용합니다.
             </p>
           }
           formula={String.raw`T_f=\alpha T_s,\quad C_f=\beta C_s`}

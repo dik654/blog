@@ -37,9 +37,8 @@ export default function ExtensionAttempts() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          PI, NTK-aware scaling, YaRN은 모두 RoPE scaling이라 부르는 방법군에 속한다.
-          Checkpoint를 다시 학습하지 않고 position index나 frequency base를 조정해 학습
-          밖 길이에서도 동작하게 만드는 것이 공통 목표다.
+          PI, NTK-aware scaling, YaRN은 모두 RoPE scaling이라 부르는 방법군에 속한다. 공통 목표는 checkpoint를 다시 학습하지 않고 position
+          index나 frequency base를 조정해 학습 밖 길이에서도 동작하게 만드는 것이다.
         </p>
         <p className="leading-7">
           원래 context length가 <M>{"L"}</M>이고 목표 길이가
@@ -68,17 +67,14 @@ export default function ExtensionAttempts() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          PI는 구현이 단순하고 짧은 continued training으로 적응시킬 수 있지만,
-          모든 frequency의 각도 차이를 같은 비율로 줄인다. 따라서 가까운
-          token을 구분하던 고주파까지 압축되는 trade-off가 생긴다.
+          PI는 구현이 단순하고 짧은 continued training으로 적응시킬 수 있지만 모든 frequency의 각도 차이를 같은 비율로 줄인다. 가까운 token을 구분하던
+          고주파까지 압축되는 trade-off가 여기서 생긴다.
         </p>
 
         <h3>NTK-aware scaling은 RoPE base를 바꾼다</h3>
         <p>
-          NTK-aware scaling은 position index를 줄이는 대신 RoPE base를 키워
-          inverse frequency를 조정한다. 지수적으로 배열된 frequency에 base
-          변경이 다르게 반영되므로, 고주파는 상대적으로 덜 바뀌고 저주파는 더
-          느려진다. 이 아이디어는 커뮤니티 구현에서 시작해 여러 inference
+          NTK-aware scaling은 position index를 줄이는 대신 RoPE base를 키워 inverse frequency를 조정한다. 지수적으로 배열된
+          frequency에 base 변경이 다르게 반영되므로 고주파는 상대적으로 덜 바뀌고 저주파는 더 느려진다. 이 아이디어는 커뮤니티 구현에서 시작해 여러 inference
           library의 dynamic NTK 계열로 이어졌다.
         </p>
       </div>
@@ -106,10 +102,8 @@ export default function ExtensionAttempts() {
           b′≈82,685다. 지수 d/(d−2)가 1에 가까워 base 변화가 s와 거의 비례한다.
         </p>
         <p>
-          다만 “NTK-aware”라는 이름 아래 static·dynamic 변형과 구현 convention이
-          섞여 있으므로 config 이름만 보고 같은 동작이라고 가정하면 안 된다.
-          Model repository와 사용하는 library가 factor를 어떻게 해석하는지
-          확인해야 한다.
+          다만 “NTK-aware”라는 이름 아래 static·dynamic 변형과 구현 convention이 섞여 있으므로 config 이름만 보고 같은 동작이라고 가정하면 안 된다.
+          사용하는 library와 model repository가 factor를 어떻게 해석하는지 확인해야 한다.
         </p>
       </div>
 
@@ -137,10 +131,8 @@ export default function ExtensionAttempts() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          여기서 YaRN의 출발점이 보인다. 모든 frequency를 같은 비율로
-          interpolation하지도 않고, base 하나로 변화량을 간접 조절하지도 않는다.
-          대신 각 차원의 파장이 원래 context에서 얼마나 관찰됐는지를 기준으로
-          처리 방식을 나눈다.
+          여기서 YaRN의 출발점이 보인다. 모든 frequency를 같은 비율로 interpolation하지도 않고 base 하나로 변화량을 간접 조절하지도 않는다. 대신 각 차원의
+          파장이 원래 context에서 얼마나 관찰됐는지를 기준으로 처리 방식을 나눈다.
         </p>
       </div>
     </section>

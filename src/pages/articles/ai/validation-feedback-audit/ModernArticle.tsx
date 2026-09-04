@@ -52,7 +52,10 @@ export default function ValidationFeedbackAuditArticle() {
       </section>
       <section id="boundary" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">Audit는 적응 편향을 지우지 않으므로 unused holdout으로 닫습니다</h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert"><p>Metric fixture→row checksum→preprocess parity→group/time shift→pairwise direction을 검사한 뒤 protocol을 동결합니다. 그 과정에서 보지 않은 기간·site·private test에서 마지막으로 확인하고, 결과를 본 뒤 다시 바꾸면 새 holdout이 필요합니다.</p></div>
+        <div className="prose prose-neutral max-w-none dark:prose-invert"><p>
+            metric fixture→row checksum→preprocess parity→group/time shift→pairwise direction을 검사한 뒤 protocol을
+            동결합니다. 그 과정에서 보지 않은 기간·site·private test에서 마지막으로 확인하고 결과를 본 뒤 다시 바꾸면 새 holdout이 필요합니다.
+          </p></div>
         <div id="paper-validation-feedback" className="not-prose mt-8"><CitationBlock source="Blum & Hardt — The Ladder" citeKey={1} type="paper" href="https://proceedings.mlr.press/v37/blum15.html">
           반복적·적응적 submission이 leaderboard holdout에 overfit하는 문제와 score 공개 제한을 다룹니다. 특정 대회의 private score나 일반적인 unbiasedness를 보장하는 근거는 아닙니다.
         </CitationBlock></div>

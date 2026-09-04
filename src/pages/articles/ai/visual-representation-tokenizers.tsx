@@ -22,18 +22,14 @@ export default function VisualRepresentationTokenizersArticle() {
             보존하도록 요구했는가</strong>에서 시작합니다.
           </p>
           <p>
-            생성 model의 latent는 decoder가 원래 image를 되살릴 수 있어야 합니다.
-            반면 CLIP·SigLIP·DINO 계열의 representation은 text와의 대응, 같은 image의
-            view 일치, teacher-student 일치처럼 semantic relation을 보존하도록
-            학습됩니다. 좋은 retrieval feature가 반드시 좋은 image decoder input인
-            것도 아니고, reconstruction이 좋은 latent가 반드시 object·affordance를
-            잘 분리하는 것도 아닙니다.
+            생성 model의 latent는 decoder가 원래 image를 되살릴 수 있어야 합니다. 반면 CLIP·SigLIP·DINO 계열의 representation은 text와의
+            대응, 같은 image의 view 일치, teacher-student 일치처럼 semantic relation을 보존하도록 학습됩니다. 그래서 좋은 retrieval
+            feature가 곧 좋은 image decoder input은 아닙니다. 반대로 reconstruction이 좋은 latent라고 해서 object·affordance를 잘
+            분리하는 것도 아닙니다.
           </p>
           <p>
-            이 구분은 뒤의 world model에서 더 중요해집니다. 다음 상태를 예측하려면
-            texture를 모두 보존하는 것보다 움직일 물체와 접촉 상태를 남기는 편이
-            유리할 수 있지만, 로봇이 작은 손잡이를 잡아야 한다면 그 detail을 지운
-            semantic feature도 부족할 수 있기 때문입니다.
+            이 구분은 뒤의 world model에서 더 중요해집니다. 다음 상태를 예측하려면 texture를 모두 보존하는 것보다 움직일 물체와 접촉 상태를 남기는 편이 유리할 수 있지만
+            로봇이 작은 손잡이를 잡아야 한다면 그 detail을 지운 semantic feature도 부족할 수 있기 때문입니다.
           </p>
         </div>
         <VisualRepresentationMap />
@@ -117,12 +113,10 @@ N_z&=\underbrace{\frac{H}{f}\frac{W}{f}}_{\substack{\text{두 공간축을 각�
             의도적으로 무시한 결과입니다.
           </p>
           <p>
-            최근에는 pretrained semantic encoder에 별도 decoder를 붙여 생성 latent로
-            재사용하는 representation autoencoder 연구도 나왔습니다. 의미가 풍부한
-            feature를 생성 backbone에 넣을 수 있다는 장점이 있지만, latent channel이
-            넓어지고 feature 통계가 기존 VAE와 달라 transformer head와 decoder를 다시
-            설계해야 합니다. 2025년 RAE 결과는 유망한 연구 방향이지 모든 production
-            image model의 새 기본값으로 확정된 사실은 아닙니다.
+            최근에는 pretrained semantic encoder에 별도 decoder를 붙여 생성 latent로 재사용하는 representation autoencoder 연구도
+            나왔습니다. 의미가 풍부한 feature를 생성 backbone에 넣을 수 있다는 장점이 있지만 latent channel이 넓어지고 feature 통계가 기존 VAE와 달라
+            transformer head와 decoder를 다시 설계해야 합니다. 2025년 RAE 결과는 유망한 연구 방향이지 모든 production image model의 새
+            기본값으로 확정된 사실은 아닙니다.
           </p>
         </div>
         <TermBreakdown
@@ -170,11 +164,9 @@ N_z&=\underbrace{\frac{H}{f}\frac{W}{f}}_{\substack{\text{두 공간축을 각�
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Image generator는 조건에 맞는 한 장을 만드는 데 성공하면 됩니다. 월드모델은
-            현재 state와 action을 받았을 때 다음 state가 어떻게 변하는지 예측해야 합니다.
-            따라서 visual tokenizer를 고를 때도 reconstruction FID만 볼 수 없습니다.
-            Object permanence, motion, contact, camera motion과 controllability가 feature에
-            남아 있는지 별도로 검증해야 합니다.
+            Image generator는 조건에 맞는 한 장을 만드는 데 성공하면 됩니다. 월드모델은 현재 state와 action을 받았을 때 다음 state가 어떻게 변하는지 예측해야
+            합니다. visual tokenizer를 고를 때 reconstruction FID만 볼 수 없는 이유가 여기 있습니다. Object permanence, motion,
+            contact, camera motion과 controllability가 feature에 남아 있는지 별도로 검증해야 합니다.
           </p>
           <p>
             다음 글인 <Link to="/ai/diffusion-transformer-architecture">Diffusion
@@ -189,15 +181,12 @@ N_z&=\underbrace{\frac{H}{f}\frac{W}{f}}_{\substack{\text{두 공간축을 각�
           preview="같은 appearance 안에서 action만 바꾸고 next-state 예측이 달라지는지, 반대로 무관한 texture 변화에는 안정적인지 짝지어 봅니다."
         >
           <p>
-            같은 장면에서 push-left와 push-right action만 바꾼 두 rollout을 만들고,
-            representation predictor가 서로 다른 next state를 내는지 확인합니다. 이어
-            물체와 action은 같고 조명만 바꾼 pair에서 state prediction이 불필요하게
-            흔들리지 않는지 봅니다.
+            같은 장면에서 push-left와 push-right action만 바꾼 두 rollout을 만들고 representation predictor가 서로 다른 next
+            state를 내는지 확인합니다. 이어 물체와 action은 같고 조명만 바꾼 pair에서 state prediction이 불필요하게 흔들리지 않는지 봅니다.
           </p>
           <p>
-            이 두 실험은 각각 action sensitivity와 nuisance invariance를 봅니다. Pixel
-            reconstruction 하나로 둘을 대신할 수 없으며, 실제 policy consumer의 success와
-            closed-loop error까지 연결해야 합니다.
+            이 두 실험은 각각 action sensitivity와 nuisance invariance를 봅니다. Pixel reconstruction 하나로 둘을 대신할 수 없으며 실제
+            policy consumer의 success와 closed-loop error까지 연결해야 합니다.
           </p>
         </ProgressiveDetail>
       </section>

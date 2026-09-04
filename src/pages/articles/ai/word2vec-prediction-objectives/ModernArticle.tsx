@@ -128,13 +128,10 @@ P(w\mid w_I)&=\underbrace{\prod_{j=1}^{L(w)-1}\sigma(\mathrm{sign}_j\cdot s_j)}_
       />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          매 iteration마다 가장 작은 두 frequency를 먼저 합치는 greedy
-          선택은, 결과 tree의 가중 경로 길이(frequency × path 길이의 합)를
-          가능한 tree 중 최소로 만든다는 Huffman의 고전적 보장을 그대로
-          물려받습니다. 자연어 word frequency는 소수의 흔한 단어가 대부분의
-          학습 example을 차지하는 극단적인 skew를 가지므로, 이 흔한
-          단어들에 짧은 경로를 몰아주면 balanced tree(모든 word에 같은
-          경로 길이)보다 학습 한 번당 평균 sigmoid 연산 수가 더 줄어듭니다.
+          매 iteration마다 가장 작은 두 frequency를 먼저 합치는 greedy 선택은 Huffman의 고전적 보장을 그대로 물려받습니다. 결과 tree의 가중 경로
+          길이(frequency × path 길이의 합)를 가능한 tree 중 최소로 만든다는 보장입니다. 자연어 word frequency는 skew가 극심해 소수의 흔한 단어가 대부분의
+          학습 example을 차지합니다. 이 흔한 단어들에 짧은 경로를 몰아주면 balanced tree(모든 word에 같은 경로 길이)보다 학습 한 번당 평균 sigmoid 연산 수가
+          더 줄어듭니다.
         </p>
       </div>
       <div id="paper-word2vec-objectives" className="not-prose mt-8 scroll-mt-24"><CitationBlock type="paper" citeKey={1} source="Mikolov et al. — Efficient Estimation of Word Representations" href="https://arxiv.org/abs/1301.3781#page=3">CBOW·Skip-gram prediction direction과 hierarchical softmax를 큰 vocabulary 학습에 사용한 원 연구입니다. 당시 speed·analogy 결과는 논문의 corpus와 구현 조건에 제한됩니다.</CitationBlock></div>

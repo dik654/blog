@@ -8,7 +8,11 @@ export default function Word2VecNegativeSamplingArticle() {
   return <div className="space-y-16">
     <section id="overview" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Negative sampling은 단어 확률을 근사하는 꼼수가 아니라 관측 pair와 noise pair를 구분하는 새 학습 문제입니다</h2>
-      <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8">Skip-gram의 flat softmax는 center 하나를 vocabulary의 모든 output row와 비교합니다. SGNS는 이 계산을 그대로 근사하지 않습니다. Corpus window에서 실제 관측한 pair에는 positive label을 주고, 별도의 noise distribution에서 뽑은 context에는 negative label을 줍니다. 한 step은 선택한 몇 개 row만 읽지만 결과 score는 정규화된 word probability가 아닙니다.</p></div>
+      <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8">
+            Skip-gram의 flat softmax는 center 하나를 vocabulary의 모든 output row와 비교합니다. SGNS는 이 계산을 그대로 근사하지 않습니다.
+            Corpus window에서 실제 관측한 pair에는 positive label을 주고 별도의 noise distribution에서 뽑은 context에는 negative
+            label을 줍니다. 한 step은 선택한 몇 개 row만 읽지만 결과 score는 정규화된 word probability가 아닙니다.
+          </p></div>
       <TermBreakdown title="SGNS 한 step을 구성하는 용어" items={[
         { term: "Positive pair", description: "Corpus window에서 실제 함께 관찰한 center–context pair입니다.", example: "‘따뜻한 창가’에서 center=창가, context=따뜻한." },
         { term: "Noise pair", description: "Noise distribution에서 context를 뽑아 center와 임시로 결합한 label-0 pair입니다.", boundary: "실제로 corpus에 절대 나오지 않는다는 뜻은 아닙니다." },

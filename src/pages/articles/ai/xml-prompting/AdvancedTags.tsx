@@ -22,8 +22,7 @@ export default function AdvancedTags() {
           identity를 부여합니다.
         </p>
         <p>
-          Output citation도 이 ID를 참조하게 해야 model의 주장과 application-side 원문 조회가
-          같은 record를 가리킬 수 있습니다.
+          Output citation도 이 ID를 참조하게 해야 model의 주장과 application-side 원문 조회가 같은 record를 가리킵니다.
         </p>
         <pre className="whitespace-pre-wrap break-words">
           <code>{`<documents>
@@ -41,8 +40,7 @@ export default function AdvancedTags() {
           선언하거나 application validator가 중복 ID와 존재하지 않는 citation을 검사해야 합니다.
         </p>
         <p>
-          ID에는 민감한 내부 경로나 임시 access token을 넣지 않습니다. Log와 재시도에서도
-          안전하게 유지할 수 있는 opaque identifier를 사용합니다.
+          ID에는 민감한 내부 경로나 임시 access token을 넣지 않습니다. 재시도와 log에 남아도 안전한 opaque identifier를 사용합니다.
         </p>
       </div>
 
@@ -108,8 +106,8 @@ export default function AdvancedTags() {
           넣는 code가 아닙니다.
         </p>
         <p>
-          반복, 분기, retry budget, tool permission, database write와 network egress는
-          application code나 agent runtime에 남깁니다.
+          반복이나 분기, retry budget, tool permission, database write, network egress는 application code나 agent
+          runtime에 남깁니다.
         </p>
         <p>
           실전에서는 model이 <code>confidence</code>, <code>status</code>,
@@ -117,9 +115,8 @@ export default function AdvancedTags() {
           runtime이 type과 허용 값을 확인한 뒤 다음 state를 선택합니다.
         </p>
         <p>
-          그러면 prompt는 “무엇을 읽고 무엇을 제안할지”에 집중하고, system은 “무엇을 실제로
-          실행할 수 있는지”를 코드와 policy로 통제합니다. XML을 작은 workflow language처럼
-          확장할수록 두 책임이 섞이고 테스트하기 어려워집니다.
+          그러면 prompt는 “무엇을 읽고 무엇을 제안할지”에 집중하고 system은 “무엇을 실제로 실행할 수 있는지”를 코드와 policy로 통제합니다. XML을 작은 workflow
+          language처럼 확장할수록 두 책임이 섞이고 테스트하기 어려워집니다.
         </p>
       </div>
     </section>

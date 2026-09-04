@@ -52,13 +52,10 @@ export default function ServingArchitecture() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          API frontend는 request validation·tokenization·HTTP streaming을 맡고,
-          engine core는 request state와 scheduling을 소유합니다. Model executor는
-          worker 실행과 collective communication을 조정하며, GPU worker는 실제
-          model forward·attention kernel·sampling을 수행합니다. 이 경계를 지키면
-          느린 client connection, engine queue 증가, collective stall, kernel
-          regression을 같은 “latency 문제”로 뭉개지 않고 각 span과 metric으로
-          좁힐 수 있습니다.
+          API frontend는 request validation·tokenization·HTTP streaming을 맡습니다. request state와 scheduling은
+          engine core가 소유합니다. Model executor는 worker 실행과 collective communication을 조정하고 GPU worker는 실제 model
+          forward·attention kernel·sampling을 수행합니다. 이 경계를 지키면 느린 client connection, engine queue 증가,
+          collective stall, kernel regression을 같은 “latency 문제”로 뭉개지 않고 각 span과 metric으로 좁힐 수 있습니다.
         </p>
       </div>
 
@@ -113,11 +110,9 @@ export default function ServingArchitecture() {
           최대 tokens/s보다 SLO를 지킨 goodput을 승인 기준으로 둡니다
         </h3>
         <p className="leading-8">
-          Batch를 계속 키우면 aggregate throughput은 오르면서 TTFT나 ITL tail이
-          나빠질 수 있습니다. 그래서 실제 prompt/output/arrival trace를 replay하고,
-          latency와 오류율 기준을 통과한 요청이 만든 token만 goodput으로 셉니다.
-          이렇게 해야 느린 요청을 무시해 얻은 높은 처리량을 성공으로 착각하지
-          않습니다.
+          Batch를 계속 키우면 aggregate throughput은 오르면서 TTFT나 ITL tail이 나빠질 수 있습니다. 그래서 실제 prompt/output/arrival
+          trace를 replay하고 latency와 오류율 기준을 통과한 요청이 만든 token만 goodput으로 셉니다. 이렇게 해야 느린 요청을 무시해 얻은 높은 처리량을 성공으로
+          착각하지 않습니다.
         </p>
       </div>
 

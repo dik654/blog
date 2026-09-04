@@ -53,24 +53,17 @@ export default function EngineLoop({
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          Static batching은 함께 시작한 요청 묶음이 모두 끝날 때까지 같은 batch를
-          유지합니다. 먼저 끝난 sequence 자리는 가장 긴 요청이 끝날 때까지 비게
-          됩니다. Continuous batching은 model forward가 끝날 때마다 완료 요청을
-          빼고 waiting 요청이나 남은 prefill chunk를 넣습니다. 그래서 서로 다른
+          Static batching은 함께 시작한 요청 묶음이 모두 끝날 때까지 같은 batch를 유지합니다. 먼저 끝난 sequence 자리는 가장 긴 요청이 끝날 때까지 비게 됩니다.
+          Continuous batching은 model forward가 끝날 때마다 완료 요청을 빼고 waiting 요청이나 남은 prefill chunk를 넣습니다. 서로 다른
           output 길이가 섞여도 GPU iteration의 빈 자리를 줄일 수 있습니다.
         </p>
         <p className="leading-8">
-          다만 이름 때문에 “항상 최대 batch를 유지한다”고 이해하면 안 됩니다.
-          Scheduler는 token budget·sequence cap·KV block이라는 서로 다른 제약을
-          모두 만족해야 하며, 긴 prefill 하나가 decode latency를 밀어내지 않도록
-          priority와 chunk 크기도 결정합니다.
+          다만 이름 때문에 “항상 최대 batch를 유지한다”고 이해하면 안 됩니다. Scheduler는 token budget·sequence cap·KV block이라는 서로 다른
+          제약을 모두 만족해야 합니다. 긴 prefill 하나가 decode latency를 밀어내지 않도록 priority와 chunk 크기까지 결정합니다.
         </p>
         <p className="leading-8">
-          여기서 역사적 경계를 하나 먼저 분리해야 합니다. 요청이 끝날 때까지
-          batch를 고정하지 않고 model iteration마다 다시 조립한다는 아이디어는
-          vLLM이 처음 제안한 것이 아닙니다. 아래의 Orca는 vLLM 내부 모듈명이
-          아니라, 이 scheduling 문제를 먼저 정식화한 별도의 선행 serving
-          system입니다.
+          요청이 끝날 때까지 batch를 고정하지 않고 model iteration마다 다시 조립한다는 아이디어는 vLLM이 처음 제안한 것이 아닙니다. 역사적 경계를 여기서 먼저 분리해
+          두어야 합니다. 아래의 Orca는 vLLM 내부 모듈명이 아니라, 이 scheduling 문제를 먼저 정식화한 별도의 선행 serving system입니다.
         </p>
       </div>
 
@@ -102,10 +95,8 @@ export default function EngineLoop({
             자체 attention kernel과 KV block manager를 사용합니다.
           </p>
           <p>
-            따라서 계보는 두 단계로 읽는 편이 정확합니다. Orca가 먼저 연 것은
-            “언제 batch를 다시 짤 것인가”이고, vLLM의 원 논문이 새로 밀어낸 핵심
-            병목은 “그 batch의 동적인 KV state를 어떻게 낭비 없이 보관할
-            것인가”입니다.
+            계보는 두 단계로 읽는 편이 정확합니다. Orca가 먼저 연 것은 “언제 batch를 다시 짤 것인가”입니다. vLLM의 원 논문이 새로 밀어낸 핵심 병목은 “그 batch의
+            동적인 KV state를 어떻게 낭비 없이 보관할 것인가”입니다.
           </p>
         </ProgressiveDetail>
         <h3 id="resource-feasibility" className="scroll-mt-20">

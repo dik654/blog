@@ -31,10 +31,8 @@ export default function RopeFoundation() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          Transformer는 순서를 모른다. Token embedding만으로는 어순이 사라지므로 위치를
-          attention 계산 어딘가에 넣어야 하고, 이 절대·상대 위치 표현 방식을 통틀어
-          positional encoding이라 부른다. RoPE는 그 중 좌표 쌍을 회전시켜 상대 위치를
-          넣는 방식이다.
+          Transformer는 순서를 모른다. token embedding만으로는 어순이 사라지므로 위치를 attention 계산 어딘가에 넣어야 하고 이 절대·상대 위치 표현 방식을
+          통틀어 positional encoding이라 부른다. RoPE는 그 중 좌표 쌍을 회전시켜 상대 위치를 넣는 방식이다.
         </p>
         <p className="leading-7">
           Rotary Position Embedding(RoPE)은 attention head의 차원을 2차원
@@ -147,12 +145,9 @@ export default function RopeFoundation() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>확장 문제는 frequency마다 다르게 나타난다</h3>
         <p>
-          학습 context 안에서 여러 번 회전한 고주파 차원과 한 바퀴도 완성하지
-          못한 저주파 차원은 학습 범위 밖에서 같은 방식으로 움직이지 않는다.
-          모든 frequency를 동일하게 늘리면 가까운 token의 위치 해상도까지
-          희생할 수 있고, 아무것도 바꾸지 않으면 저주파가 낯선 각도로
-          extrapolation된다. 이후 방법들의 차이는 이 frequency band를 어디까지
-          보존하고 어디부터 늘릴지 정하는 방식에 있다.
+          학습 context 안에서 여러 번 회전한 고주파 차원과 한 바퀴도 완성하지 못한 저주파 차원은 학습 범위 밖에서 같은 방식으로 움직이지 않는다. 모든 frequency를 동일하게
+          늘리면 가까운 token의 위치 해상도까지 희생하기 쉽고 아무것도 바꾸지 않으면 저주파가 낯선 각도로 extrapolation된다. 이후 방법들의 차이는 이 frequency
+          band를 어디까지 보존하고 어디부터 늘릴지 정하는 방식에 있다.
         </p>
       </div>
     </section>

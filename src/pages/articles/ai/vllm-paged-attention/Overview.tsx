@@ -58,10 +58,8 @@ export default function Overview() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          Autoregressive decode는 과거 token의 K·V를 다시 계산하지 않도록 request별
-          KV cache에 남깁니다. 문제는 output이 몇 token에서 끝날지 admission 시점에
-          알 수 없다는 점입니다. 최대 context 길이만큼 연속 GPU memory를 미리
-          예약하면 실제로 쓰지 않는 공간이 커지고, 크기가 다른 요청을 반복해서
+          Autoregressive decode는 과거 token의 K·V를 다시 계산하지 않도록 request별 KV cache에 남깁니다. 문제는 output이 몇 token에서 끝날지
+          admission 시점에 알 수 없다는 점입니다. 최대 context 길이만큼 연속 GPU memory를 미리 예약하면 실제로 쓰지 않는 공간이 커지고 크기가 다른 요청을 반복해서
           넣고 빼면 남은 free memory가 여러 조각으로 갈라집니다.
         </p>
         <p className="leading-8">
@@ -116,23 +114,17 @@ w_r &= \underbrace{m_rB-n_r, \qquad 0\le w_r < B}_{\text{허용 경계 판정}}
           넘는 예약이 한 번도 쓰이지 않은 채 request 수명 내내 잠깁니다.
         </p>
         <p className="leading-8">
-          Fixed-size block에서는 이 낭비가 마지막 block 하나의 빈 slot으로 줄어듭니다.
-          B=16에서 1,000 token request는 63 block, 1,008 slot을 받고 8 slot만
-          비어 있으므로 낭비율은 0.8%입니다. 길이에 관계없이 request당 낭비는 B보다
-          작고, 평균으로 보면 B의 절반 정도입니다.
+          Fixed-size block에서는 이 낭비가 마지막 block 하나의 빈 slot으로 줄어듭니다. B=16에서 1,000 token request는 63 block, 1,008
+          slot을 받고 8 slot만 비어 있으므로 낭비율은 0.8%입니다. 길이에 관계없이 request당 낭비는 B보다 작고 평균으로 보면 B의 절반 정도입니다.
         </p>
         <p className="leading-8">
-          External fragmentation은 남은 공간의 합은 충분한데 연속된 조각이 없어서
-          새 request를 못 받는 상태입니다. 2,048·512·1,024 slot을 연속으로 잡은 세
-          request 중 가운데 512가 끝나면 그 자리는 512보다 큰 요청을 담지 못합니다.
-          앞뒤의 free 조각과 합칠 수 없기 때문입니다.
+          남은 공간의 합은 충분한데 연속된 조각이 없어서 새 request를 못 받는 상태, 이것이 external fragmentation입니다. 2,048·512·1,024 slot을
+          연속으로 잡은 세 request 중 가운데 512가 끝나면 그 자리는 512보다 큰 요청을 담지 못합니다. 앞뒤의 free 조각과 합칠 수 없기 때문입니다.
         </p>
         <p className="leading-8">
-          Paging에서는 이 문제가 block 단위에서 사라집니다. 어느 physical block이든
-          크기가 같고, block table이 logical 순서를 보존하므로 어떤 free block도 어떤
-          logical block 자리에 들어갈 수 있습니다. 흩어진 free block 3개는 3 block이
-          필요한 어느 request에게나 쓸모가 있어 free block 수가 유일한 admission
-          조건이 됩니다.
+          Paging에서는 이 문제가 block 단위에서 사라집니다. 어느 physical block이든 크기가 같고 block table이 logical 순서를 보존하므로 어떤 free
+          block도 어떤 logical block 자리에 들어갈 수 있습니다. 흩어진 free block 3개는 3 block이 필요한 어느 request에게나 쓸모가 있어 free
+          block 수가 유일한 admission 조건이 됩니다.
         </p>
         <p className="leading-8">
           vLLM 논문의 profiling은 기존 system에서 실제 token state가 KV memory의
@@ -141,10 +133,8 @@ w_r &= \underbrace{m_rB-n_r, \qquad 0\le w_r < B}_{\text{허용 경계 판정}}
           저자의 자기보고 수치이며 model과 workload에 따라 비율은 달라집니다.
         </p>
         <p className="leading-8">
-          Block size는 두 낭비 사이의 조절 손잡이입니다. B를 키우면 block table과
-          hash 항목은 줄지만 마지막 block의 평균 빈 slot이 커지고, prefix 공유
-          단위도 거칠어집니다. vLLM의 기본값 16은 이 균형에서 나온 값이며, 다른
-          kernel이나 hardware는 다른 값을 요구할 수 있습니다.
+          Block size는 두 낭비 사이의 조절 손잡이입니다. B를 키우면 block table과 hash 항목은 줄지만 마지막 block의 평균 빈 slot이 커지고 prefix 공유
+          단위도 거칠어집니다. vLLM의 기본값 16은 이 균형에서 나온 값이며 다른 kernel이나 hardware는 다른 값을 요구할 수 있습니다.
         </p>
       </div>
 
@@ -221,15 +211,12 @@ o(j) &= \underbrace{j \bmod B}_{\text{오른쪽 항으로 결과 계산}}
           Paged KV manager와 paged attention kernel은 책임이 다릅니다
         </h3>
         <p className="leading-8">
-          Memory manager는 block allocation, reference count, free, cache lookup과
-          eviction을 맡습니다. Block을 누가 언제까지 소유하는지를 아는 유일한
-          계층이므로, 다른 계층은 block ID를 받아 읽기만 하고 수명은 건드리지
-          않습니다.
+          Memory manager는 block allocation, reference count, free, cache lookup과 eviction을 맡습니다. Block을 누가
+          언제까지 소유하는지를 아는 유일한 계층이므로 다른 계층은 block ID를 받아 읽기만 하고 수명은 건드리지 않습니다.
         </p>
         <p className="leading-8">
-          Attention kernel은 block table과 slot mapping을 읽어 Q가 참조할 K·V를
-          찾아 dot-product attention을 계산합니다. Kernel이 보는 것은 주소뿐이므로
-          block이 공유되었는지, 언제 free될지는 kernel 성능이나 정확도와 무관합니다.
+          Attention kernel은 block table과 slot mapping을 읽어 Q가 참조할 K·V를 찾아 dot-product attention을 계산합니다. Kernel이
+          보는 것은 주소뿐이라 block이 공유되었는지, 언제 free될지는 kernel 성능이나 정확도와 무관합니다.
         </p>
         <p className="leading-8">
           Scheduler는 필요한 slot을 manager에 요청하고 실패하면 request를 줄이거나

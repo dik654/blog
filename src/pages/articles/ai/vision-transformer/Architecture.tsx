@@ -7,12 +7,10 @@ export default function Architecture() {
       <h2 className="mb-6 text-2xl font-bold">ViT 이후의 계보는 같은 구조의 세대교체가 아니라 서로 다른 병목에 대한 분기입니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          DeiT는 ImageNet-1K 안에서 강한 augmentation·regularization과 teacher
-          distillation을 결합해 supervised training recipe를 바꿨습니다. Swin은
-          global attention 대신 local window와 shifted window, patch merging을
-          사용해 high-resolution hierarchy를 만들었습니다. MAE는 label이 아니라
-          가린 patch 복원으로 encoder를 사전학습했습니다. 해결한 문제가 다르므로
-          이름을 한 줄의 단순한 진화 순서로 놓으면 핵심이 사라집니다.
+          DeiT는 ImageNet-1K 안에서 강한 augmentation·regularization과 teacher distillation을 결합해 supervised training
+          recipe를 바꿨습니다. Swin은 global attention 대신 local window와 shifted window, patch merging을 사용해 high-
+          resolution hierarchy를 만들었습니다. MAE는 label이 아니라 가린 patch 복원으로 encoder를 사전학습했습니다. 셋이 해결한 문제가 서로 다르니 이름을
+          한 줄의 단순한 진화 순서로 놓는 순간 핵심이 사라집니다.
         </p>
       </div>
       <ExplainedFormula
@@ -87,9 +85,17 @@ N_{\mathrm{vis}}&=\underbrace{(1-\rho)N=vN,}_{\text{오른쪽 항으로 결과 �
         interpretation="ρ=.75이면 v=.25이고 attention-score 항은 단순 근사로 1/16입니다. 이것이 encoder를 크게 만들 수 있는 compute 여유를 주지만 전체 wall-time speedup과 같지는 않습니다."
       />
       <div className="not-prose my-8"><ArchitectureViz /></div>
-      <div id="paper-deit" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"><p className="text-xs font-bold text-primary">논문 읽기 · DeiT</p><p className="mt-2 text-sm leading-6 text-muted-foreground">Touvron 등은 ImageNet-1K 중심의 강한 recipe와 convolutional teacher의 distillation token으로 external pretraining data 없이 경쟁력 있는 ViT 학습을 보였습니다. Teacher가 사용한 학습과 recipe cost까지 지운 채 student label 수만으로 data efficiency를 주장하지 않습니다.</p><a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://proceedings.mlr.press/v139/touvron21a.html" target="_blank" rel="noreferrer">Distillation token과 recipe ablation 보기</a></div>
+      <div id="paper-deit" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"><p className="text-xs font-bold text-primary">논문 읽기 · DeiT</p><p className="mt-2 text-sm leading-6 text-muted-foreground">
+            Touvron 등은 ImageNet-1K 중심의 강한 recipe와 convolutional teacher의 distillation token으로 external
+            pretraining data 없이 경쟁력 있는 ViT 학습을 보였습니다. 여기서 data efficiency를 따지려면 teacher가 사용한 학습과 recipe cost까지
+            함께 세어야 하며 student label 수만 놓고 주장할 문제는 아닙니다.
+          </p><a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://proceedings.mlr.press/v139/touvron21a.html" target="_blank" rel="noreferrer">Distillation token과 recipe ablation 보기</a></div>
       <div id="paper-swin" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"><p className="text-xs font-bold text-primary">논문 읽기 · Swin Transformer</p><p className="mt-2 text-sm leading-6 text-muted-foreground">Liu 등은 non-overlapping local windows, shifted partition과 hierarchical patch merging으로 classification뿐 아니라 detection·segmentation backbone을 구성했습니다. Window complexity 식만으로 모든 hardware에서 faster latency를 보장하지는 않습니다.</p><a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://openaccess.thecvf.com/content/ICCV2021/html/Liu_Swin_Transformer_Hierarchical_Vision_Transformer_Using_Shifted_Windows_ICCV_2021_paper.html" target="_blank" rel="noreferrer">Shifted window와 hierarchy 실험 보기</a></div>
-      <div id="paper-mae" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"><p className="text-xs font-bold text-primary">논문 읽기 · Masked Autoencoder</p><p className="mt-2 text-sm leading-6 text-muted-foreground">He 등은 높은 비율의 random patch를 가리고 visible patch만 큰 encoder에 넣은 뒤 작은 decoder가 pixel을 복원하는 asymmetric design을 제안했습니다. ImageNet-1K pretraining과 downstream transfer 결과를 모든 reconstruction target의 semantic quality 보장으로 확대하지 않습니다.</p><a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://openaccess.thecvf.com/content/CVPR2022/html/He_Masked_Autoencoders_Are_Scalable_Vision_Learners_CVPR_2022_paper.html" target="_blank" rel="noreferrer">Visible-only encoder와 mask-ratio ablation 보기</a></div>
+      <div id="paper-mae" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"><p className="text-xs font-bold text-primary">논문 읽기 · Masked Autoencoder</p><p className="mt-2 text-sm leading-6 text-muted-foreground">
+            He 등은 높은 비율의 random patch를 가리고 visible patch만 큰 encoder에 넣은 뒤 작은 decoder가 pixel을 복원하는 asymmetric
+            design을 제안했습니다. 여기서 나온 ImageNet-1K pretraining과 downstream transfer 결과는 딱 그 범위이며 모든 reconstruction
+            target의 semantic quality 보장으로 넓히지 않습니다.
+          </p><a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://openaccess.thecvf.com/content/CVPR2022/html/He_Masked_Autoencoders_Are_Scalable_Vision_Learners_CVPR_2022_paper.html" target="_blank" rel="noreferrer">Visible-only encoder와 mask-ratio ablation 보기</a></div>
     </section>
   );
 }

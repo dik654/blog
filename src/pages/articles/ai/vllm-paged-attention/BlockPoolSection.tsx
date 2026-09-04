@@ -42,10 +42,8 @@ export default function BlockPoolSection({
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          Physical block은 한 request만 영구 소유하는 객체가 아닙니다. Prefix가 같은
-          여러 request나 parallel branch가 같은 block을 함께 볼 수 있으므로,
-          request 하나가 끝났다고 즉시 내용을 덮어쓰면 다른 request의 attention
-          결과가 깨집니다.
+          Physical block은 한 request만 영구 소유하는 객체가 아닙니다. Prefix가 같은 여러 request나 parallel branch가 같은 block을 함께 볼
+          수 있으므로 request 하나가 끝났다고 즉시 내용을 덮어쓰면 다른 request의 attention 결과가 깨집니다.
         </p>
         <p className="leading-8">
           BlockPool은 reference count와 free queue를 단일 기준으로
@@ -100,11 +98,9 @@ export default function BlockPoolSection({
           Free queue는 빈 block 목록이면서 cached block의 eviction order입니다
         </h3>
         <p className="leading-8">
-          Prefix caching이 켜져 있으면 reference count가 0이 된 block도 hash와
-          함께 남아 다음 요청의 cache hit가 될 수 있습니다. 동시에 새 token을 위한
-          block이 부족하면 이 block은 eviction 후보입니다. 현재 V1 BlockPool은
-          ref=0 block을 free queue에 두고, allocation이 그 block을 꺼낼 때 이전 hash
-          mapping을 제거한 뒤 새 내용에 사용합니다.
+          Prefix caching이 켜져 있으면 reference count가 0이 된 block도 hash와 함께 남아 다음 요청의 cache hit가 될 수 있습니다. 동시에 새
+          token을 위한 block이 부족하면 이 block은 eviction 후보입니다. 현재 V1 BlockPool은 ref=0 block을 free queue에 두고
+          allocation이 그 block을 꺼낼 때 이전 hash mapping을 제거한 뒤 새 내용에 사용합니다.
         </p>
         <p className="leading-8">
           따라서 <strong>free</strong>는 “내용이 이미 지워졌다”가 아니라 “현재
@@ -113,38 +109,31 @@ export default function BlockPoolSection({
           올라가 다시 사용 중 상태가 됩니다.
         </p>
         <p className="leading-8">
-          이 ref=0 block의 집합이 free block pool입니다. Pool의 크기는 "지금 새
-          request에 줄 수 있는 block 수"이며, 그 안에는 내용이 남은 cached block과
-          한 번도 쓰지 않은 block이 섞여 있습니다. 8,000 block 중 6,300이 참조
-          중이면 free pool은 1,700 block이고, 그중 몇 개가 hash를 갖고 있는지가
-          cache의 잠재 hit 폭을 정합니다.
+          이 ref=0 block의 집합이 free block pool입니다. Pool의 크기는 "지금 새 request에 줄 수 있는 block 수"이며 그 안에는 내용이 남은
+          cached block과 한 번도 쓰지 않은 block이 섞여 있습니다. 8,000 block 중 6,300이 참조 중이면 free pool은 1,700 block입니다. 그중
+          hash가 남아 있는 block이 몇 개인지가 cache의 잠재 hit 폭을 정합니다.
         </p>
 
         <h3 id="block-allocator" className="scroll-mt-20">
           Allocator는 free pool에서 꺼내고 ref가 0일 때 돌려주는 두 연산입니다
         </h3>
         <p className="leading-8">
-          KV block allocator는 physical block의 free pool을 소유하고 allocate와
-          free 두 연산으로 block의 소유자를 바꾸는 부품입니다. vLLM V1에서는
-          BlockPool이 이 역할을 맡고, KVCacheManager는 필요한 block 수만 계산해
-          BlockPool에 요청합니다. Allocator 자신은 어느 request가 급한지 모릅니다.
+          KV block allocator는 physical block의 free pool을 소유하고 allocate와 free 두 연산으로 block의 소유자를 바꾸는 부품입니다.
+          vLLM V1에서 이 역할은 BlockPool이 맡고 KVCacheManager는 필요한 block 수만 계산해 BlockPool에 요청합니다. Allocator 자신은 어느
+          request가 급한지 모릅니다.
         </p>
         <p className="leading-8">
-          Free block pool의 크기는 엔진 시작 시 한 번 정해집니다. Model weight와
-          activation workspace를 뺀 GPU memory를 block 하나의 byte로 나눈 값이
-          전체 block 수이고, 이 수에서 ref가 0이 아닌 block을 뺀 나머지가 지금
-          allocate할 수 있는 free pool입니다.
+          Free block pool의 크기는 엔진 시작 시 한 번 정해집니다. Model weight와 activation workspace를 뺀 GPU memory를 block 하나의
+          byte로 나눈 값이 전체 block 수이고 이 수에서 ref가 0이 아닌 block을 뺀 나머지가 지금 allocate할 수 있는 free pool입니다.
         </p>
         <p className="leading-8">
           8,000 block pool에서 63 block짜리
           request 100개를 받으면 6,300 block이 점유되고 1,700 block이 남습니다.
         </p>
         <p className="leading-8">
-          Allocate는 free queue의 head에서 block을 꺼내 ref를 1로 올리고 request
-          block table 끝에 붙입니다. Free는 block table을 비우면서 각 block의 ref를
-          내리고, 0이 된 block만 free queue tail로 되돌립니다. V1은 request의 block을
-          역순으로 되돌리는데, 마지막 block일수록 더 긴 prefix를 hash하고 있어
-          재사용 확률이 낮기 때문입니다.
+          Free queue의 head에서 block을 꺼내 ref를 1로 올리고 request block table 끝에 붙이는 것이 allocate입니다. Free는 block
+          table을 비우면서 각 block의 ref를 내리고 0이 된 block만 free queue tail로 되돌립니다. V1은 request의 block을 역순으로 되돌리는데,
+          마지막 block일수록 더 긴 prefix를 hash하고 있어 재사용 확률이 낮기 때문입니다.
         </p>
       </div>
 
@@ -171,18 +160,14 @@ export default function BlockPoolSection({
           Fork는 block table을 복사하고 마지막 block만 copy-on-write로 나눕니다
         </h3>
         <p className="leading-8">
-          Sequence forking은 한 request의 KV state를 여러 branch가 이어서 쓰게
-          만드는 연산입니다. Parallel sampling처럼 같은 prompt에서 output을 n개 받을
-          때, prompt KV를 n번 복사하는 대신 block table만 복사하고 각 physical
-          block의 reference count를 n으로 올립니다. 이 시점에 새로 잡는 block은
-          없습니다.
+          Sequence forking은 한 request의 KV state를 여러 branch가 이어서 쓰도록 넘기는 연산입니다. Parallel sampling처럼 같은 prompt에서
+          output을 n개 받을 때, prompt KV를 n번 복사하는 대신 block table만 복사하고 각 physical block의 reference count를 n으로
+          올립니다. 이 시점에 새로 잡는 block은 없습니다.
         </p>
         <p className="leading-8">
-          Branch가 갈라지는 순간은 첫 output token을 쓸 때입니다. 마지막 block은
-          아직 slot이 남아 있어 두 branch가 서로 다른 token을 같은 자리에 쓰려
-          합니다. 그래서 쓰기 직전에 ref를 확인하고, ref가 1보다 크면 새 block을
-          받아 내용을 복사한 뒤 자기 table만 새 block으로 바꿉니다. 이것이 OS
-          process fork에서 빌려 온 copy-on-write입니다.
+          첫 output token을 쓰는 순간에 branch가 갈라집니다. 마지막 block은 아직 slot이 남아 있어 두 branch가 서로 다른 token을 같은 자리에 쓰려
+          합니다. 그래서 쓰기 직전에 ref를 확인하고 ref가 1보다 크면 새 block을 받아 내용을 복사한 뒤 자기 table만 새 block으로 바꿉니다. 이것이 OS process
+          fork에서 빌려 온 copy-on-write입니다.
         </p>
         <p className="leading-8">
           B=16에서 35-token prompt를 두 sample로 fork하면 세 block의 ref가 2가
@@ -214,41 +199,33 @@ export default function BlockPoolSection({
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          절약 폭은 prompt 길이와 branch 수에 비례합니다. 1,000-token prompt를 4개
-          sample로 fork하면 공유 없이는 63 block씩 252 block이 필요하지만, 공유하면
-          63 block에 CoW 복사 3개를 더한 66 block으로 시작합니다. 논문은 parallel
-          sampling에서 6.1%에서 9.8%, ShareGPT prompt에서는 16.2%에서 30.5%의
-          block 절감을 자기보고했습니다.
+          절약 폭은 prompt 길이와 branch 수에 비례합니다. 1,000-token prompt를 4개 sample로 fork하면 공유 없이는 63 block씩 252 block이
+          필요하지만 공유하면 63 block에 CoW 복사 3개를 더한 66 block으로 시작합니다. 논문은 parallel sampling에서 6.1%에서 9.8%, ShareGPT
+          prompt에서는 16.2%에서 30.5%의 block 절감을 자기보고했습니다.
         </p>
 
         <h3 id="beam-branch-sharing" className="scroll-mt-20">
           Beam search에서는 공유 관계가 매 step 바뀌고 pruning이 block을 돌려줍니다
         </h3>
         <p className="leading-8">
-          Beam search는 매 step 상위 k개 candidate만 남기므로 어느 branch가 어느
-          조상을 공유하는지가 계속 바뀝니다. Reference count 기반 공유는 이
-          동적인 관계를 별도 tree 없이 표현합니다. 살아남은 candidate가 가리키는
-          block은 ref가 남아 유지되고, 버려진 candidate만 가리키던 block은 ref가
+          Beam search는 매 step 상위 k개 candidate만 남기므로 어느 branch가 어느 조상을 공유하는지가 계속 바뀝니다. Reference count 기반 공유는 이
+          동적인 관계를 별도 tree 없이 표현합니다. 살아남은 candidate가 가리키는 block은 ref가 남아 유지되고 버려진 candidate만 가리키던 block은 ref가
           0이 되어 free queue로 돌아갑니다.
         </p>
         <p className="leading-8">
-          논문의 k=4 예에서 모든 candidate는 prompt block 0을 공유하고, candidate
-          0에서 2는 앞 세 block을 함께 씁니다. 다음 step의 상위 4개가 모두
-          candidate 1과 2에서 나오면 candidate 0과 3이 버려지고, 그들만 참조하던
-          block 2, 4, 5, 8이 ref 0으로 반환된 뒤 새 block 9에서 12가 할당됩니다.
+          논문의 k=4 예에서 모든 candidate는 prompt block 0을 공유하고 candidate 0에서 2는 앞 세 block을 함께 씁니다. 다음 step의 상위 4개가
+          모두 candidate 1과 2에서 나오면 candidate 0과 3이 버려지고, 그들만 참조하던 block 2, 4, 5, 8이 ref 0으로 반환된 뒤 새 block 9에서
+          12가 할당됩니다.
         </p>
         <p className="leading-8">
-          이전 system은 매 step 살아남은 candidate의 KV 전체를 복사했습니다.
-          Block 공유에서는 새 token이 공유 block 안에 떨어질 때만 block 하나를
-          복사하므로 복사량이 sequence 길이에 비례하지 않습니다. 논문은 beam
-          search에서 37.6%에서 55.2%, ShareGPT에서는 44.3%에서 66.3%의 block
-          절감을 자기보고했으며, beam width가 클수록 공유 비율이 올라갑니다.
+          이전 system은 매 step 살아남은 candidate의 KV 전체를 복사했습니다. Block 공유에서는 새 token이 공유 block 안에 떨어질 때만 block 하나를
+          복사하므로 복사량이 sequence 길이에 비례하지 않습니다. 논문은 beam search에서 37.6%에서 55.2%, ShareGPT에서는 44.3%에서 66.3%의 block
+          절감을 자기보고했으며 beam width가 클수록 공유 비율이 올라갑니다.
         </p>
         <p className="leading-8">
-          현재 V1은 논문의 sequence group fork API 대신 beam마다 별도 request를
-          내고 prefix cache로 앞부분 block을 공유하는 쪽으로 구현이 바뀌었습니다.
-          어느 쪽이든 물리적 공유 단위는 full block이고 partial block은 복사되므로,
-          절감률은 block size와 candidate가 갈라지는 위치에 따라 달라집니다.
+          현재 V1은 논문의 sequence group fork API 대신 beam마다 별도 request를 내고 prefix cache로 앞부분 block을 공유하는 쪽으로 구현이
+          바뀌었습니다. 어느 쪽이든 물리적 공유 단위는 full block이고 partial block은 복사되므로 절감률은 block size와 candidate가 갈라지는 위치에 따라
+          달라집니다.
         </p>
 
         <h3 id="block-invariants" className="scroll-mt-20">
