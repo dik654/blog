@@ -6,7 +6,10 @@ import { AugmentationEvaluationViz } from "../data-augmentation/viz/ModernAugmen
 
 export default function AugmentationEvaluationArticle() {
   return <div className="space-y-16">
-    <section id="overview" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">Augmentation 평가는 transform 이름이 아니라 실행 가능한 policy artifact에서 시작합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8">“강한 augmentation 사용”은 재현 가능한 설명이 아닙니다. Operation·parameter 범위·확률·순서·input unit·target map·seed를 한 artifact로 고정해야 어떤 training distribution을 비교했는지 알 수 있습니다.</p></div><TermBreakdown title="평가 전에 고정할 네 산출물" items={[
+    <section id="overview" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">Augmentation 평가는 transform 이름이 아니라 실행 가능한 policy artifact에서 시작합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8">
+            “강한 augmentation 사용”은 재현 가능한 설명이 아닙니다. Operation과 parameter 범위, 확률과 순서, input unit·target
+            map·seed까지 한 artifact로 고정해야 어떤 training distribution을 비교했는지 알 수 있습니다.
+          </p></div><TermBreakdown title="평가 전에 고정할 네 산출물" items={[
       {term:"Policy artifact",description:"Transform family·range·probability·order·revision을 담은 실행 config입니다."},
       {term:"Clean validation",description:"Training randomness를 넣지 않은 원본 preprocessing 기준선입니다."},
       {term:"Robustness slice",description:"예상 deployment shift를 고정 fixture로 만든 별도 평가 집합입니다."},

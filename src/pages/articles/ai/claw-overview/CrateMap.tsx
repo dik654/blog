@@ -62,11 +62,9 @@ export default function CrateMap() {
           dependency direction을 먼저 보면 수정의 영향 범위를 예측하기 쉽습니다.
         </p>
         <p>
-          고정 사례에서 UI는 로그인 실패 요청을 받지만 agent loop를 직접 구현하지
-          않습니다. CLI는 runtime을 구성하고, runtime은 session과 turn을 진행하며,
-          API adapter는 provider stream을 해석합니다. Tool registry와 executor는
-          허용된 file edit와 test만 수행합니다. 이 책임이 섞이면 같은 permission
-          check나 session update가 여러 경로에 복제되어 한쪽에서 빠지기 쉽습니다.
+          고정 사례에서 UI는 로그인 실패 요청을 받지만 agent loop를 직접 구현하지 않습니다. CLI는 runtime을 구성하고 runtime은 session과 turn을 진행하며
+          API adapter는 provider stream을 해석합니다. Tool registry와 executor는 허용된 file edit와 test만 수행합니다. 이 책임이 섞이면
+          같은 permission check나 session update가 여러 경로에 복제되어 한쪽에서 빠지기 쉽습니다.
         </p>
       </div>
 
@@ -118,19 +116,14 @@ export default function CrateMap() {
           각각 구현할 수 있습니다.
         </p>
         <p>
-          “runtime이 tool을 호출한다”는 실행 순서와 “tools crate가 runtime type에
-          의존한다”는 compile-time 방향은 반대처럼 보일 수 있습니다. 전자는
-          control flow이고 후자는 source dependency입니다. Runtime이 concrete
-          tool을 import하지 않고 interface를 호출하면 의존성 역전이 일어나며,
-          test harness도 같은 interface를 끼울 수 있습니다.
+          “runtime이 tool을 호출한다”는 실행 순서와 “tools crate가 runtime type에 의존한다”는 compile-time 방향은 반대처럼 보일 수 있습니다.
+          전자는 control flow이고 후자는 source dependency입니다. Runtime이 concrete tool을 import하지 않고 interface를 호출하면 의존성
+          역전이 일어나며 test harness도 같은 interface를 끼울 수 있습니다.
         </p>
         <p>
-          역방향 의존도 경계 위반을 찾는 신호입니다. Runtime이 CLI rendering
-          type을 import하면 다른 UI가 중심 loop를 재사용하기 어렵고, provider나
-          tool이 session store를 직접 갱신하면 state owner가 둘이 됩니다. 실제 실행
-          crate가 parity harness의 fixture type을 import하는 경우도 test support가
-          실제 실행 경로의 전제가 되므로 dependency direction을 다시 설계해야
-          합니다.
+          역방향 의존도 경계 위반을 찾는 신호입니다. Runtime이 CLI rendering type을 import하면 다른 UI가 중심 loop를 재사용하기 어렵고 provider나
+          tool이 session store를 직접 갱신하면 state owner가 둘이 됩니다. 실제 실행 crate가 parity harness의 fixture type을
+          import하는 경우도 test support가 실제 실행 경로의 전제가 되므로 dependency direction을 다시 설계해야 합니다.
         </p>
 
         <h3>고정 사례를 crate 경계에서 추적합니다</h3>
@@ -143,11 +136,9 @@ export default function CrateMap() {
           <li>마지막 provider response를 CLI가 rendering하되, session의 정본 상태를 화면 문자열로 대체하지 않습니다.</li>
         </ol>
         <p>
-          단계가 실패하면 owner도 달라집니다. 잘린 SSE JSON은 API/parser 문제이고,
-          거부됐는데 file이 바뀌면 permission enforcement 문제이며, test가 실패했는데
-          “완료”로 종료되면 runtime exit condition 문제입니다. Crate map은 이런
-          진단 순서를 주는 지도이지 package 수가 많을수록 설계가 좋다는 순위표가
-          아닙니다.
+          단계가 실패하면 owner도 달라집니다. 잘린 SSE JSON은 API/parser 문제이고 거부됐는데 file이 바뀌면 permission enforcement 문제이며
+          test가 실패했는데 “완료”로 종료되면 runtime exit condition 문제입니다. Crate map은 이런 진단 순서를 주는 지도이지 package 수가 많을수록
+          설계가 좋다는 순위표가 아닙니다.
         </p>
 
         <h3>Registry, permission, executor는 연속되지만 같은 판정이 아닙니다</h3>
@@ -161,21 +152,16 @@ export default function CrateMap() {
           executor가 workspace 안에서 실행합니다.
         </p>
         <p>
-          Executor의 typed result는 runtime으로 돌아가 session observation이 되지만,
-          executor가 session을 직접 고치는 것은 아닙니다. Login test도 model의
-          확신을 점수화하는 tool이 아니라 patch가 지정된 behavior를 만들었는지
-          결정론적으로 확인하는 verifier입니다. Test 실패는 성공 response로
-          바꾸지 않고 exit state와 evidence에 남깁니다.
+          Executor의 typed result는 runtime으로 돌아가 session observation이 되지만 executor가 session을 직접 고치는 것은 아닙니다.
+          Login test도 model의 확신을 점수화하는 tool이 아니라 patch가 지정된 behavior를 만들었는지 결정론적으로 확인하는 verifier입니다. Test 실패는
+          성공 response로 바꾸지 않고 exit state와 evidence에 남깁니다.
         </p>
 
         <h3>변경되는 snapshot과 유지할 invariant를 나눕니다</h3>
         <p>
-          Crate 이름과 개수, public type은 commit마다 바뀔 수 있습니다. 분석을
-          갱신할 때는 version 또는 git SHA, Cargo dependency, public interface와
-          state mutation path를 함께 기록해야 합니다. 반면 주 실행 경로가
-          test harness에 의존하지 않고, denied tool이 executor에 도달하지 않으며,
-          tool이 session을 몰래 수정하지 않는다는 조건은 regression test로 오래
-          유지할 invariant입니다.
+          Crate 이름과 개수, public type은 commit마다 바뀔 수 있습니다. 분석을 갱신할 때는 version 또는 git SHA, Cargo dependency,
+          public interface, state mutation path를 함께 기록합니다. 이와 달리 regression test로 오래 유지할 invariant도 있습니다. 주 실행
+          경로가 test harness에 의존하지 않고 denied tool이 executor에 도달하지 않으며 tool이 session을 몰래 수정하지 않는다는 조건이 그렇습니다.
         </p>
       </div>
 

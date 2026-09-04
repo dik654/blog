@@ -100,7 +100,10 @@ export default function AgentLoopArticle() {
         <h2 className="mb-5 text-2xl font-bold">Proposal과 effect 사이에 runtime을 둡니다</h2>
         <ExplainedFormula
           question="현재 state에서 다음 state까지 어떤 순서로 책임을 넘길까요?"
-          idea={<p>Model proposal을 authorization이 좁히고, executor가 만든 observation을 state update가 commit합니다. 각 함수는 서로 다른 실패 owner입니다.</p>}
+          idea={<p>
+            Model proposal을 authorization이 좁히고 executor가 만든 observation을 state update가 commit합니다. 각 함수는 서로 다른
+            실패 owner입니다.
+          </p>}
           formula={String.raw`a_t\sim\pi_\theta(\cdot\mid s_t),\quad \tilde a_t=\mathcal A(a_t),\quad o_t=\mathcal E(\tilde a_t),\quad s_{t+1}=\mathcal U(s_t,a_t,o_t)`}
           annotatedFormula={String.raw`\begin{aligned}
 a_t&\sim\underbrace{\pi_\theta(\cdot\mid s_t)}_{\text{현재 state에서 action을 제안}}\\

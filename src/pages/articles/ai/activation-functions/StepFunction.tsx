@@ -7,8 +7,7 @@ export default function StepFunction() {
       <h2 className="mb-6 text-2xl font-bold">계단 함수: 결정을 만들지만 gradient는 만들지 못한다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          초기 인공 뉴런과 perceptron은 입력의 가중합이 threshold를 넘는지에 따라 0과
-          1을 출력했다. 이 step function은 이진 결정을 표현하기에는 직관적이지만,
+          초기 인공 뉴런과 perceptron은 입력의 가중합이 threshold를 넘는지에 따라 0과 1을 출력했다. 이 step function은 이진 결정을 표현하기에는 직관적이지만
           현재의 backpropagation으로 여러 층을 학습하기에는 맞지 않는다.
         </p>
       </div>
@@ -26,9 +25,8 @@ export default function StepFunction() {
       />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          출력의 작은 변화를 보고 앞선 weight를 조정해야 하는 gradient descent에는 이
-          평평한 구간이 학습 신호를 전달하지 못합니다. 그래서 현대 hidden layer는
-          sigmoid, tanh, ReLU처럼 backward 경로를 설계할 수 있는 함수를 사용하게 됐습니다.
+          gradient descent는 출력의 작은 변화를 보고 앞선 weight를 조정해야 하는데, 이 평평한 구간은 학습 신호를 전달하지 못합니다. 그래서 현대 hidden
+          layer는 sigmoid, tanh, ReLU처럼 backward 경로를 설계할 수 있는 함수를 사용하게 됐습니다.
         </p>
         <p>
           그렇다고 threshold 연산 자체가 사라진 것은 아니다. binary neural network나

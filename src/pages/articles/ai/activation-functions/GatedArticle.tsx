@@ -14,7 +14,10 @@ export default function GatedActivationsArticle() {
 
     <section id="gelu-silu" className="mb-16 scroll-mt-20 space-y-6">
       <header><p className="text-sm font-semibold text-primary">01 · smooth self-gate</p><h2 className="mt-2 text-2xl font-bold">GELU와 SiLU는 input을 버리거나 살리는 대신 연속적인 비율로 통과시킨다</h2></header>
-      <p>두 함수 모두 원래 값 x에 0–1 gate를 곱합니다. GELU는 Gaussian CDF Φ(x)를, SiLU는 sigmoid σ(x)를 통과 비율로 사용합니다. 그래서 ReLU의 hard hinge보다 부드럽지만, gate 계산 비용과 수치 구현까지 포함해 비교해야 합니다.</p>
+      <p>
+            두 함수 모두 원래 값 x에 0–1 gate를 곱합니다. GELU는 Gaussian CDF Φ(x)를, SiLU는 sigmoid σ(x)를 통과 비율로 사용합니다. 그래서
+            ReLU의 hard hinge보다 부드럽지만 gate 계산 비용과 수치 구현까지 포함해 비교해야 합니다.
+          </p>
       <ExplainedFormula
         question="GELU와 SiLU에서 곱셈은 왜 필요한가?"
         idea={<>Φ(x)와 σ(x)는 input 크기에 따라 얼마나 통과시킬지를 정하는 gate입니다. 이 비율을 원래 값 x에 곱해야 부호와 크기를 가진 signal이 실제로 선택됩니다.</>}
@@ -41,7 +44,11 @@ export default function GatedActivationsArticle() {
 
     <section id="gated-ffn" className="mb-16 scroll-mt-20 space-y-6">
       <header><p className="text-sm font-semibold text-primary">02 · gate와 value branch</p><h2 className="mt-2 text-2xl font-bold">SwiGLU는 scalar activation이 아니라 서로 다른 두 projection을 결합하는 FFN 구조다</h2></header>
-      <p>Hidden state x는 gate projection Wg와 value projection Wv로 갈라집니다. Gate branch에는 SiLU를 적용하고 value branch와 coordinate-wise로 곱은 뒤 Wo로 model dimension에 되돌립니다. 곱셈은 두 branch가 같은 feature 위치에 대해 모두 동의한 크기만 통과시키는 결합입니다.</p>
+      <p>
+            Hidden state x는 gate projection Wg와 value projection Wv로 갈라집니다. Gate branch에는 SiLU를 적용하고 value
+            branch와 coordinate-wise로 곱은 뒤 Wo로 model dimension에 되돌립니다. 곱셈은 두 branch가 같은 feature 위치에서 모두 동의한 크기만
+            통과시키는 결합입니다.
+          </p>
       <ExplainedFormula
         question="SwiGLU의 세 projection과 element-wise 곱은 각각 무슨 역할인가?"
         idea={<>Wg는 통과량을, Wv는 전달할 내용을 따로 만듭니다. 두 결과를 같은 coordinate끼리 곱해 조건부 feature를 만들고 Wo가 residual stream 차원으로 되돌립니다.</>}
@@ -69,7 +76,10 @@ export default function GatedActivationsArticle() {
 
     <section id="parameter-budget" className="mb-16 scroll-mt-20 space-y-6">
       <header><p className="text-sm font-semibold text-primary">03 · fair budget</p><h2 className="mt-2 text-2xl font-bold">Projection이 하나 늘었으므로 같은 width 비교는 공정하지 않다</h2></header>
-      <p>Bias를 제외한 plain FFN은 up·down projection 두 개, gated FFN은 gate·value·output projection 세 개를 가집니다. 같은 parameter budget을 맞추려면 gated intermediate width를 plain width의 약 2/3로 줄여야 합니다.</p>
+      <p>
+            Bias를 제외한 plain FFN은 up·down projection 두 개, gated FFN은 gate·value·output projection 세 개를 씁니다. 같은
+            parameter budget을 맞추려면 gated intermediate width를 plain width의 약 2/3로 줄여야 합니다.
+          </p>
       <ExplainedFormula
         question="Plain FFN과 gated FFN의 parameter 수를 같게 만들려면 width를 어떻게 조정하는가?"
         idea={<>Model dimension d와 plain width m을 고정하면 plain은 두 matrix, gated는 세 matrix가 필요합니다. 두 예산을 같다고 놓고 gated width를 풉니다.</>}

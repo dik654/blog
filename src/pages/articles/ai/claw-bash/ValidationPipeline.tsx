@@ -207,10 +207,8 @@ export default function ValidationPipeline() {
           함께 관리해야 합니다.
         </p>
         <p>
-          특히 warning을 반환하는 함수가 존재한다는 사실만으로 사람이 실제
-          warning을 봤거나 승인이 생성됐다고 볼 수 없습니다. Dispatch가 결과를
-          소비하는지, warning 상태에서 process 수가 0인지, 승인 뒤 arguments가
-          바뀌면 다시 판정하는지를 integration test로 확인해야 합니다.
+          특히 warning을 반환하는 함수가 존재한다는 사실만으로 사람이 실제 warning을 봤거나 승인이 생성됐다고 볼 수 없습니다. dispatch가 결과를 소비하는지,
+          warning 상태에서 process 수가 0인지, 승인 뒤 arguments가 바뀌면 다시 판정하는지는 integration test로 확인합니다.
         </p>
       </div>
 
@@ -290,18 +288,15 @@ export default function ValidationPipeline() {
           expansion이나 target은 fail-closed 또는 더 좁은 sandbox로 보냅니다.
         </p>
         <p>
-          Login edit에서는 canonical root와 target을 check 시점에 기록한 뒤 parent
-          directory handle을 기준으로 descriptor-relative open을 수행하고 symlink를
-          따라가지 않는 no-follow resolution을 사용합니다. 새 file은 가능한 경우
-          같은 directory에서 atomic create·rename으로 반영합니다. Decision의
-          resource identity와 실제 handle identity, policy generation과 before/after
-          effect를 같은 receipt에 넣어야 합니다. 이 절차도 platform별 API와 동시
-          attacker를 사용한 negative test 없이는 완전하다고 주장할 수 없습니다.
+          로그인 edit에서는 canonical root와 target을 check 시점에 기록합니다. 그 뒤에는 parent directory handle을 기준으로 descriptor-
+          relative open을 수행하고 symlink를 따라가지 않는 no-follow resolution을 씁니다. 새 파일은 가능한 경우 같은 directory에서 atomic
+          create·rename으로 반영합니다. decision의 resource identity와 실제 handle identity, policy generation과
+          before/after effect는 같은 receipt에 넣습니다. 이 절차도 platform별 API와 동시 attacker를 사용한 negative test 없이는 완전하다고
+          주장할 수 없습니다.
         </p>
         <p>
-          다음 negative fixture는 단순히 error string을 확인하는 test가 아닙니다.
-          Deny·malformed·Unknown 뒤 child process와 workspace diff가 없고, 허용한
-          로그인 search만 같은 cwd에서 실행됐다는 evidence까지 확인합니다.
+          다음 negative fixture는 단순히 error string을 확인하는 test가 아닙니다. Deny·malformed·Unknown 뒤 child process와
+          workspace diff가 없고 허용한 로그인 search만 같은 cwd에서 실행됐다는 evidence까지 확인합니다.
         </p>
       </div>
 
@@ -328,10 +323,8 @@ export default function ValidationPipeline() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          이 단계가 끝나도 만들어지는 것은 “실행 후보”일 뿐입니다. 최종 allow는
-          다음 절의 host permission policy가 결정하고, 실제 effect 한도는 마지막
-          절의 OS sandbox가 강제합니다. Login 수정의 완료 여부는 그 뒤에 남은
-          observation·diff와 deterministic test receipt로만 판단합니다.
+          이 단계가 끝나도 만들어지는 것은 “실행 후보”일 뿐입니다. 최종 allow는 다음 절의 host permission policy가 결정하고 실제 effect 한도는 마지막 절의
+          OS sandbox가 강제합니다. 로그인 수정의 완료 여부는 그 뒤에 남은 observation·diff와 deterministic test receipt로만 판단합니다.
         </p>
       </div>
     </section>

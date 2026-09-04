@@ -21,10 +21,9 @@ export default function AttentionKernelAnatomyAndBackendsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Attention kernel 은 Q, K, V 를 받아 softmax(QKᵀ/√d)V 를 계산하는 GPU kernel 하나를
-            뜻합니다. 안에는 QK matmul, softmax, PV matmul 세 단계가 있고, 빠른 kernel 은 이
-            셋을 tile 하나가 on-chip 에 머무는 동안 끝냅니다. 어떤 tile 을 건너뛰고, 어떤
-            축으로 병렬화하고, 어떤 세대의 kernel 을 고르는지가 이 글의 내용입니다.
+            Attention kernel 은 Q, K, V 를 받아 softmax(QKᵀ/√d)V 를 계산하는 GPU kernel 하나를 뜻합니다. 안에는 QK matmul,
+            softmax, PV matmul 세 단계가 있고 빠른 kernel 은 이 셋을 tile 하나가 on-chip 에 머무는 동안 끝냅니다. 어떤 tile 을 건너뛰는지, 어떤
+            축으로 병렬화하는지, 어떤 세대의 kernel 을 고르는지가 이 글의 내용입니다.
           </p>
           <p>
             앞 글 <Link to="/ai/flash-attention-io-aware-kernel#tiling">FlashAttention</Link> 은
@@ -33,15 +32,12 @@ export default function AttentionKernelAnatomyAndBackendsArticle() {
             kernel 을 요구하는 이유, FlashAttention-2 와 3 가 각각 무엇을 고쳤는지를 봅니다.
           </p>
           <p>
-            마지막 절은 serving engine 이 이 kernel 들을 backend 라는 이름으로 어떻게 고르는지
-            다룹니다. vLLM 은 FlashAttention, FlashInfer, Triton 구현을 우선순위 목록에서
-            hardware 와 설정에 맞춰 하나 고르고, kernel 안의 tile 크기는 autotuning 으로
-            정합니다.
+            마지막 절은 serving engine 이 이 kernel 들을 backend 라는 이름으로 어떻게 고르는지 다룹니다. vLLM 은 FlashAttention,
+            FlashInfer, Triton 구현을 우선순위 목록에서 hardware 와 설정에 맞춰 하나 고르고 kernel 안의 tile 크기는 autotuning 으로 정합니다.
           </p>
           <p>
-            아래 그림은 이 글 전체의 지도입니다. Q block 과 K/V block 의 격자에서 어떤 tile 이
-            실제로 계산되는지가 prefill, causal, decode 마다 달라지고, 그 차이가 kernel 의 모양을
-            정합니다.
+            아래 그림은 이 글 전체의 지도입니다. Q block 과 K/V block 의 격자에서 어떤 tile 이 실제로 계산되는지가 prefill, causal, decode 마다
+            달라집니다. 그 차이가 kernel 의 모양을 정합니다.
           </p>
         </div>
         <AttentionKernelAnatomyAndBackendsViz />
@@ -54,32 +50,27 @@ export default function AttentionKernelAnatomyAndBackendsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Fused attention kernel 은 QK matmul, softmax, PV matmul 을 kernel 세 개가 아니라
-            하나로 돌리는 구현입니다. 세 단계 사이의 중간 결과인 점수 tile 과 확률 tile 이
-            register 와 shared memory 에만 머물고, HBM 에는 최종 출력만 갑니다.
+            QK matmul, softmax, PV matmul 을 kernel 세 개가 아니라 하나로 돌리는 구현을 fused attention kernel 이라 부릅니다. 세 단계
+            사이의 중간 결과인 점수 tile 과 확률 tile 은 register 와 shared memory 에만 머물고 HBM 에는 최종 출력만 갑니다.
           </p>
           <p>
-            QK matmul 은 Q block(B_r×d) 과 K block(B_c×d) 의 곱으로 B_r×B_c 점수 tile 을 만드는
-            단계입니다. Tensor core 가 처리하고, tile 하나에 2·B_r·B_c·d FLOP 이 듭니다.
-            B_r=B_c=128, d=128 이면 4.2 MFLOP 입니다.
+            QK matmul 은 Q block(B_r×d) 과 K block(B_c×d) 의 곱으로 B_r×B_c 점수 tile 을 만드는 단계입니다. Tensor core 가 처리하고
+            tile 하나에 2·B_r·B_c·d FLOP 이 듭니다. B_r=B_c=128, d=128 이면 4.2 MFLOP 입니다.
           </p>
           <p>
-            Softmax fusion 은 그 점수 tile 에 scale, mask, 지수, 행 합을 register 안에서 바로
-            적용하는 일을 부릅니다. 이 단계는 tensor core 가 아니라 일반 연산기와 special
-            function unit 이 맡고, tile 당 B_r·B_c 번의 지수 계산이 듭니다. 같은 tile 에서
-            16,384 번입니다.
+            Scale, mask, 지수, 행 합을 그 점수 tile 에 register 안에서 바로 적용하는 일을 softmax fusion 이라 부릅니다. 이 단계는 tensor
+            core 가 아니라 일반 연산기와 special function unit 이 맡고 tile 당 B_r·B_c 번의 지수 계산이 듭니다. 같은 tile 에서 16,384
+            번입니다.
           </p>
           <p>
-            PV matmul 은 정규화 전 확률 tile(B_r×B_c) 과 V block(B_c×d) 을 곱해 출력 누적
-            Õ(B_r×d) 에 더하는 단계입니다. FLOP 수는 QK 와 같은 2·B_r·B_c·d 이고, 결과는 tile 을
-            바꿔도 register 에 남아 있습니다. 세 단계를 합치면 tile 당 matmul 8.4 MFLOP 에
-            지수 16,384 번입니다.
+            PV matmul 은 정규화 전 확률 tile(B_r×B_c) 과 V block(B_c×d) 을 곱해 출력 누적 Õ(B_r×d) 에 더하는 단계입니다. FLOP 수는 QK 와
+            같은 2·B_r·B_c·d 이고 결과는 tile 을 바꿔도 register 에 남아 있습니다. 세 단계를 합치면 tile 당 matmul 8.4 MFLOP 에 지수 16,384
+            번입니다.
           </p>
           <p>
-            비율이 중요합니다. 점수 원소 하나당 matmul 은 4d = 512 FLOP 인데 지수는 한 번입니다.
-            H100 의 matmul 처리량은 989 TFLOP/s 이고 지수 처리량은 3.9 T/s 이므로, 원소당
-            matmul 시간은 0.52 ps 이고 지수 시간은 0.26 ps 입니다. 겹치지 않으면 softmax 가
-            전체의 3 분의 1 을 차지합니다.
+            비율이 중요합니다. 점수 원소 하나당 matmul 은 4d = 512 FLOP 인데 지수는 한 번입니다. H100 의 matmul 처리량은 989 TFLOP/s 이고 지수
+            처리량은 3.9 T/s 입니다. 그래서 원소당 matmul 시간은 0.52 ps 이고 지수 시간은 0.26 ps 입니다. 겹치지 않으면 softmax 가 전체의 3 분의 1 을
+            차지합니다.
           </p>
         </div>
         <ExplainedFormula
@@ -117,15 +108,12 @@ export default function AttentionKernelAnatomyAndBackendsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Causal attention kernel 은 query 가 자기보다 뒤의 key 를 보지 못하는 mask 를 tile
-            단위로 적용하는 kernel 입니다. Query block i 보다 뒤에 있는 K/V block j 는 tile
-            전체가 가려지므로 HBM 에서 읽지도, 곱하지도 않습니다. 대각선 위의 tile 을 통째로
-            건너뛰어 일이 절반 가까이 줄어듭니다.
+            Causal attention kernel 에서는 query 가 자기보다 뒤의 key 를 보지 못합니다. Mask 는 tile 단위로 적용합니다. Query block i 보다
+            뒤에 있는 K/V block j 는 tile 전체가 가려지므로 HBM 에서 읽지도, 곱하지도 않습니다. 대각선 위의 tile 을 통째로 건너뛰어 일이 절반 가까이 줄어듭니다.
           </p>
           <p>
-            개수를 세어 보겠습니다. N=4096, B_r=B_c=128 이면 Q block 과 K/V block 이 32 개씩이라
-            tile 은 32×32 = 1,024 개입니다. Causal 에서는 j ≤ i 인 tile 만 필요하므로
-            32×33/2 = 528 개이고, 496 개(48 %)를 건너뜁니다. FLOP 도 같은 비율로 줍니다.
+            개수를 세어 보겠습니다. N=4096, B_r=B_c=128 이면 Q block 과 K/V block 이 32 개씩이라 tile 은 32×32 = 1,024 개입니다.
+            Causal 에서는 j ≤ i 인 tile 만 필요하므로 32×33/2 = 528 개이고 496 개(48 %)를 건너뜁니다. FLOP 도 같은 비율로 줍니다.
           </p>
           <p>
             남은 528 개 가운데 mask 계산이 실제로 필요한 tile 은 대각선의 32 개뿐입니다. 나머지
@@ -134,10 +122,9 @@ export default function AttentionKernelAnatomyAndBackendsArticle() {
             보고했습니다.
           </p>
           <p>
-            건너뛴 tile 은 load balancing 문제를 남깁니다. 마지막 Q block 은 tile 32 개를
-            계산하고 첫 Q block 은 1 개만 계산하므로, Q block 을 순서대로 SM 에 배정하면 뒤쪽
-            SM 이 앞쪽보다 32 배 오래 일합니다. FlashAttention-2 는 무거운 block 부터 먼저
-            띄우는 순서로 이 편차를 줄입니다.
+            건너뛴 tile 은 load balancing 문제를 남깁니다. 마지막 Q block 은 tile 32 개를 계산하고 첫 Q block 은 1 개만 계산합니다. 그래서 Q
+            block 을 순서대로 SM 에 배정하면 뒤쪽 SM 이 앞쪽보다 32 배 오래 일합니다. FlashAttention-2 는 무거운 block 부터 먼저 띄우는 순서로 이 편차를
+            줄입니다.
           </p>
         </div>
         <AlgorithmBlock
@@ -161,14 +148,13 @@ export default function AttentionKernelAnatomyAndBackendsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Prefill attention 은 prompt 의 N 개 query 가 N 개 key 를 동시에 보는 kernel 이고,
-            decode attention 은 새 token 하나의 query 가 KV cache 전체를 읽는 kernel 입니다.
-            같은 수식이지만 앞은 FLOP 이 병목이고 뒤는 byte 가 병목이라 kernel 을 따로 짭니다.
+            Prefill attention 은 prompt 의 N 개 query 가 N 개 key 를 동시에 보는 kernel 이고 decode attention 은 새 token 하나의
+            query 가 KV cache 전체를 읽는 kernel 입니다. 같은 수식이지만 앞은 FLOP 이 병목이고 뒤는 byte 가 병목이라 kernel 을 따로 짭니다.
           </p>
           <p>
-            Attention compute intensity 는 kernel 이 HBM 에서 읽은 byte 당 수행하는 FLOP 수입니다.
-            Prefill 에서 N=4096, d=128, FP16 이면 head 당 FLOP 은 4N²d = 8.6 GFLOP 이고 읽고 쓰는
-            byte 는 Q, K, V, O 네 행렬 4 MiB 이므로 약 2,000 FLOP/B 입니다.
+            Kernel 이 HBM 에서 읽은 byte 당 수행하는 FLOP 수를 attention compute intensity 라 부릅니다. Prefill 에서 N=4096,
+            d=128, FP16 이면 head 당 FLOP 은 4N²d = 8.6 GFLOP 입니다. 읽고 쓰는 byte 는 Q, K, V, O 네 행렬 4 MiB 이므로 약 2,000
+            FLOP/B 입니다.
           </p>
           <p>
             H100 의 ridge point 는 989 TFLOP/s ÷ 3.35 TB/s ≈ 295 FLOP/B 이므로 prefill attention 은
@@ -190,9 +176,8 @@ export default function AttentionKernelAnatomyAndBackendsArticle() {
             읽어 3.35 TB/s 로 5 ms 가 듭니다.
           </p>
           <p>
-            그래서 decode kernel 은 Q 축이 아니라 K/V 축을 나눠 병렬화합니다. Query 한 행을
-            K/V block 32 개에 대해 SM 32 개가 나눠 맡고, 각자의 부분 max 와 normalizer 를 마지막에
-            합칩니다. Online softmax 의 보정식이 그 병합을 정확하게 만듭니다.
+            그래서 decode kernel 은 Q 축이 아니라 K/V 축을 나눠 병렬화합니다. Query 한 행을 K/V block 32 개에 대해 SM 32 개가 나눠 맡고 각자의 부분
+            max 와 normalizer 를 마지막에 합칩니다. Online softmax 의 보정식이 그 병합을 정확하게 만듭니다.
           </p>
         </div>
         <ExplainedFormula
@@ -241,16 +226,14 @@ export default function AttentionKernelAnatomyAndBackendsArticle() {
             겹쳐 H100 에서 1.5~2 배를 얻었습니다. 두 수치 모두 각 논문의 자기보고입니다.
           </p>
           <p>
-            첫 세대의 warp 분할은 split-K 였습니다. Thread block 의 warp 4 개가 K block 을 네
-            조각으로 나눠 각자 Q(128×d) 와 K 조각(32×d) 을 곱하면 128×32 부분 점수가 나오는데,
-            softmax 는 행 전체가 필요하므로 네 warp 가 부분 결과를 shared memory 에 쓰고 동기화한
-            뒤 다시 읽어 합쳐야 했습니다.
+            첫 세대의 warp 분할은 split-K 였습니다. Thread block 의 warp 4 개가 K block 을 네 조각으로 나눠 각자 Q(128×d) 와 K 조각(32×d)
+            을 곱하면 128×32 부분 점수가 나옵니다. 그런데 softmax 는 행 전체가 필요하므로 네 warp 가 부분 결과를 shared memory 에 쓰고 동기화한 뒤 다시
+            읽어 합쳐야 했습니다.
           </p>
           <p>
-            그 왕복을 세어 보면 tile 당 FP32 부분 점수 4×(128×32×4 B) = 64 KiB 를 쓰고 다시
-            읽습니다. FlashAttention-2 는 대신 Q 를 네 warp 에 32 행씩 나눕니다. 각 warp 가 자기
-            행의 점수 전체를 갖게 되어 softmax 가 warp 안에서 끝나고, V 는 모든 warp 가 읽기만
-            하므로 warp 사이 교환이 0 byte 가 됩니다.
+            그 왕복을 세어 보면 tile 당 FP32 부분 점수 4×(128×32×4 B) = 64 KiB 를 쓰고 다시 읽습니다. FlashAttention-2 는 대신 Q 를 네
+            warp 에 32 행씩 나눕니다. 각 warp 가 자기 행의 점수 전체를 갖게 되어 softmax 가 warp 안에서 끝나고 V 는 모든 warp 가 읽기만 하므로 warp
+            사이 교환이 0 byte 가 됩니다.
           </p>
           <p>
             2 세대의 두 번째 변경은 병렬화 축입니다. 첫 세대는 batch×head 마다 thread block
@@ -259,14 +242,12 @@ export default function AttentionKernelAnatomyAndBackendsArticle() {
             block 으로 SM 을 채웁니다.
           </p>
           <p>
-            3 세대는 Hopper 의 TMA 와 비동기 WGMMA 를 씁니다. Warp specialization 으로
-            producer warpgroup 은 K/V tile 을 TMA 로 불러오기만 하고, consumer warpgroup 둘은
-            matmul 과 softmax 를 맡습니다.
+            3 세대는 Hopper 의 TMA 와 비동기 WGMMA 를 씁니다. Warp specialization 으로 producer warpgroup 은 K/V tile 을 TMA 로
+            불러오기만 하고 consumer warpgroup 둘은 matmul 과 softmax 를 맡습니다.
           </p>
           <p>
-            Pingpong scheduling 은 한 warpgroup 의 softmax 가 도는 동안 다른 warpgroup 의
-            matmul 을 돌리는 배치입니다. 앞 절에서 계산한 3 분의 1 의 공백을 이 겹치기가
-            메웁니다.
+            한 warpgroup 의 softmax 가 도는 동안 다른 warpgroup 의 matmul 을 돌립니다. 이 배치가 pingpong scheduling 입니다. 앞 절에서
+            계산한 3 분의 1 의 공백을 이 겹치기가 메웁니다.
           </p>
           <p>
             3 세대의 FP8 은 block 단위 scale 과 Q, K 에 무작위 직교 행렬을 곱하는 incoherent
@@ -302,14 +283,12 @@ export default function AttentionKernelAnatomyAndBackendsArticle() {
           preview="1 세대는 HBM 왕복, 2 세대는 shared memory 왕복과 SM 점유율, 3 세대는 tensor core 와 special function unit 의 직렬 대기를 풀었습니다."
         >
           <p>
-            같은 GPU 안에서도 병목은 층층이 있습니다. HBM 왕복을 없앤 뒤에는 shared memory
-            왕복이 보이고, 그것을 없앤 뒤에는 연산기 사이의 대기가 보입니다. 각 세대는 바로
-            아래 층의 병목을 겨눴고, 그래서 이전 세대의 수학을 바꾸지 않습니다.
+            같은 GPU 안에서도 병목은 층층이 있습니다. HBM 왕복을 없앤 뒤에는 shared memory 왕복이 보이고 그것을 없앤 뒤에는 연산기 사이의 대기가 보입니다. 각 세대는
+            바로 아래 층의 병목을 겨눴습니다. 그래서 이전 세대의 수학을 바꾸지 않습니다.
           </p>
           <p>
-            2 세대의 FLOP 축소는 앞 글의 지연 정규화와 logsumexp 저장입니다. 3 세대의 warpgroup
-            안 2 단 pipelining 은 다음 tile 의 QK matmul 을 현재 tile 의 softmax 와 겹치려고
-            register buffer 를 하나 더 두는 방식이라 register 압박이 커져 tile 크기를 제한합니다.
+            2 세대의 FLOP 축소는 앞 글의 지연 정규화와 logsumexp 저장입니다. 3 세대의 warpgroup 안 2 단 pipelining 은 다음 tile 의 QK
+            matmul 을 현재 tile 의 softmax 와 겹치려고 register buffer 를 하나 더 둡니다. 그만큼 register 압박이 커져 tile 크기를 제한합니다.
           </p>
         </ProgressiveDetail>
       </section>
@@ -320,10 +299,9 @@ export default function AttentionKernelAnatomyAndBackendsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Attention backend 는 serving engine 이 attention 을 어느 kernel 구현으로 돌릴지
-            가리키는 선택지의 이름입니다. vLLM 은 FlashAttention, FlashInfer, Triton,
-            FlexAttention 같은 backend 를 우선순위 목록에 두고, 지정이 없으면 GPU 세대, dtype,
-            head dim, KV cache 형식에 맞는 첫 번째를 고릅니다.
+            Serving engine 은 attention 을 어느 kernel 구현으로 돌릴지 고릅니다. 그 선택지를 가리키는 이름이 attention backend 입니다. vLLM
+            은 FlashAttention, FlashInfer, Triton, FlexAttention 같은 backend 를 우선순위 목록에 두고 지정이 없으면 GPU 세대,
+            dtype, head dim, KV cache 형식에 맞는 첫 번째를 고릅니다.
           </p>
           <p>
             명시 선택은 `--attention-backend FLASH_ATTN` 같은 인자로 합니다. MLA 처럼 prefill 과
@@ -331,23 +309,22 @@ export default function AttentionKernelAnatomyAndBackendsArticle() {
             받습니다. 이 구분이 앞 절의 두 regime 이 engine 설정에 드러난 모양입니다.
           </p>
           <p>
-            FlashInfer 는 serving 을 겨냥한 attention engine 입니다. KV cache 를 block-sparse row
-            형식 하나로 표현해 paged KV, radix tree, 공유 prefix 를 같은 kernel 이 읽고, attention
-            변형(RoPE 융합, logit soft-cap, mask)을 JIT 로 kernel 에 끼워 넣습니다.
+            Serving 을 겨냥한 attention engine 으로는 FlashInfer 가 있습니다. KV cache 를 block-sparse row 형식 하나로 표현해 paged
+            KV, radix tree, 공유 prefix 를 같은 kernel 이 읽고 attention 변형(RoPE 융합, logit soft-cap, mask)을 JIT 로
+            kernel 에 끼워 넣습니다.
           </p>
           <p>
             논문은 Triton 기반 backend 대비 inter-token latency 29~69 % 감소를 H100 과 A100
             에서 보고했습니다. 저자 측정이며 FlashAttention 계열과의 직접 비교는 아닙니다.
           </p>
           <p>
-            FlashInfer 의 plan–run 구조가 decode 의 load balancing 을 맡습니다. Plan 단계가 긴
-            KV 를 chunk 로 나눠 SM 에 greedy 로 배분하고, run 단계는 그 계획대로 kernel 을 돌린
-            뒤 부분 결과를 정해진 순서로 합칩니다. 계획이 고정 workspace 에 담기므로 CUDA graph
-            안에서도 재생됩니다.
+            FlashInfer 의 plan–run 구조가 decode 의 load balancing 을 맡습니다. Plan 단계가 긴 KV 를 chunk 로 나눠 SM 에 greedy 로
+            배분하고 run 단계는 그 계획대로 kernel 을 돌린 뒤 부분 결과를 정해진 순서로 합칩니다. 계획이 고정 workspace 에 담기므로 CUDA graph 안에서도
+            재생됩니다.
           </p>
           <p>
-            Attention kernel autotuning 은 backend 가 정해진 뒤 그 kernel 의 tile 크기, warp 수,
-            pipeline 단 수를 실측으로 고르는 절차입니다.
+            Backend 가 정해지면 그 kernel 의 tile 크기, warp 수, pipeline 단 수를 실측으로 고릅니다. 이 절차가 attention kernel
+            autotuning 입니다.
           </p>
           <p>
             FlashAttention-2 는 B_r 과 B_c 를 64 또는 128 가운데 head dim 과 causal 여부별로
@@ -355,10 +332,9 @@ export default function AttentionKernelAnatomyAndBackendsArticle() {
             마다 벤치마크해 가장 빠른 것을 기억합니다.
           </p>
           <p>
-            비용을 세어 보면 config 가 B_r 2 종, B_c 2 종, warp 수 2 종, stage 수 2 종이면 16
-            개이고, 각 config 를 컴파일해 몇 번 돌리는 데 수 초가 듭니다. Shape key 가 (head dim,
-            causal, sequence bucket) 이면 key 마다 한 번씩만 치르고 이후 호출은 표에서 꺼내
-            씁니다. 첫 요청의 지연이 그 비용입니다.
+            비용을 세어 보면 config 가 B_r 2 종, B_c 2 종, warp 수 2 종, stage 수 2 종이면 16 개입니다. 각 config 를 컴파일해 몇 번 돌리는 데
+            수 초가 듭니다. Shape key 가 (head dim, causal, sequence bucket) 이면 key 마다 한 번씩만 치르고 이후 호출은 표에서 꺼내 씁니다. 첫
+            요청의 지연이 그 비용입니다.
           </p>
         </div>
         <div id="paper-flashinfer" className="not-prose my-8 scroll-mt-24">

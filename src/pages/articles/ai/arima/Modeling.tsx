@@ -10,12 +10,9 @@ export default function Modeling() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          시계열을 무작위로 섞으면 미래의 level과 event가 학습 구간으로 들어가므로,
-          parameter 탐색 전에 cutoff를 고정해야 한다. 한 번의 holdout은 특정 시기에
-          우연히 쉽거나 어려울 수 있어 forecast origin을 앞으로 이동시키는
-          rolling-origin evaluation을 사용한다. 각 fold에서는 preprocessing,
-          differencing order와 model fitting도 그 시점까지의 data로 다시 수행해야
-          leakage를 막을 수 있다.
+          시계열을 무작위로 섞으면 미래의 level과 event가 학습 구간으로 들어간다. Parameter 탐색 전에 cutoff를 고정해야 하는 이유다. 한 번의 holdout은 특정
+          시기에 우연히 쉽거나 어려울 수 있어 forecast origin을 앞으로 이동시키는 rolling-origin evaluation을 사용한다. 각 fold에서는
+          preprocessing, differencing order와 model fitting도 그 시점까지의 data로 다시 수행해야 leakage를 막을 수 있다.
         </p>
       </div>
 
@@ -23,11 +20,10 @@ export default function Modeling() {
         <p className="text-xs font-bold text-primary">논문 읽기 · Residual lack-of-fit</p>
         <p className="mt-2 text-sm font-semibold">On a Measure of Lack of Fit in Time Series Models</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Ljung과 Box는 여러 residual lag의 autocorrelation을 한꺼번에 검사하는 Box–Pierce
-          statistic의 finite-sample 근사를 개선했습니다. 논문의 결과는 적합된 시계열 모형과 선택한
-          lag 범위에서 남은 선형 serial dependence를 진단하며, 작은 p-value는 누락된 구조의 신호일
-          뿐 추가해야 할 order를 자동으로 정하지 않습니다. 큰 p-value 역시 variance 변화·비선형성·
-          structural break가 없다는 증거는 아닙니다.
+          Ljung과 Box는 여러 residual lag의 autocorrelation을 한꺼번에 검사하는 Box–Pierce statistic의 finite-sample 근사를
+          개선했습니다. 논문의 결과가 진단하는 것은 적합된 시계열 모형과 선택한 lag 범위에서 남은 선형 serial dependence입니다. 작은 p-value는 누락된 구조의 신호일
+          뿐 추가해야 할 order를 자동으로 정해 주지 않습니다. 큰 p-value 쪽도 마찬가지입니다. Variance 변화·비선형성· structural break가 없다는 증거까지는
+          되지 못합니다.
         </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://doi.org/10.1093/biomet/65.2.297" target="_blank" rel="noreferrer">원 논문의 statistic과 finite-sample 보정 보기</a>
       </div>
@@ -37,12 +33,10 @@ export default function Modeling() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>ACF와 PACF는 식별 규칙이 아니라 diagnostic이다</h3>
         <p>
-          ACF(autocorrelation function)는 lag k까지 전파된 전체 correlation을,
-          PACF(partial autocorrelation function)는 그 사이 lag들의 선형 영향을
-          통제한 direct correlation을 본다. 이상적인 AR(p)에서는 PACF가 p 뒤에서,
-          MA(q)에서는 ACF가 q 뒤에서 약해지는 전형적 pattern이 있지만, 유한 표본,
-          계절성, ARMA 혼합에서는 cutoff가 선명하지 않다. Plot은 search space를
-          줄이는 heuristic으로 쓰고 후보를 확정하는 oracle로 쓰지 않는다.
+          ACF(autocorrelation function)는 lag k까지 전파된 전체 correlation을, PACF(partial autocorrelation function)는
+          그 사이 lag들의 선형 영향을 통제한 direct correlation을 본다. 이상적인 AR(p)에서는 PACF가 p 뒤에서, MA(q)에서는 ACF가 q 뒤에서 약해지는
+          전형적 pattern이 있다. 다만 유한 표본, 계절성, ARMA 혼합에서는 cutoff가 선명하지 않다. Plot은 search space를 줄이는 heuristic으로 쓰고
+          후보를 확정하는 oracle로 쓰지 않는다.
         </p>
       </div>
 

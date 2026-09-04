@@ -16,10 +16,8 @@ export default function Rules() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          policy engine의 rule은 자연어로 “상황을 봐서 적당히 처리하라”고
-          지시하는 prompt가 아닙니다. 고정된 snapshot을 대상으로 condition을
-          평가하고, 참일 때 실행 가능한 action proposal을 만드는 데이터입니다.
-          실제 side effect는 별도 executor가 최신 상태와 권한을 다시 확인한 뒤
+          policy engine의 rule은 자연어로 “상황을 봐서 적당히 처리하라”고 지시하는 prompt가 아닙니다. 고정된 snapshot을 대상으로 condition을 평가하고
+          참일 때 실행 가능한 action proposal을 만드는 데이터입니다. 실제 side effect는 별도 executor가 맡습니다. 최신 상태와 권한을 다시 확인한 뒤에
           수행합니다.
         </p>
         <p className="leading-7">
@@ -70,43 +68,33 @@ export default function Rules() {
           evaluator 안에서는 side effect를 만들지 않는다
         </h3>
         <p className="leading-7">
-          condition을 확인하는 동안 shell command를 실행하거나 CI를 다시
-          요청하면 평가를 반복할 때마다 외부 상태가 바뀝니다. collector가 먼저
-          evidence를 모아 immutable snapshot을 만들고 evaluator는 순수 함수처럼
-          그 값만 읽어야 같은 입력에서 같은 결과가 나옵니다.
+          condition을 확인하는 동안 shell command를 실행하거나 CI를 다시 요청하면 평가를 반복할 때마다 외부 상태가 바뀝니다. 순서를 나눠야 합니다. collector가
+          먼저 evidence를 모아 immutable snapshot을 만들고 evaluator는 순수 함수처럼 그 값만 읽습니다. 그래야 같은 입력에서 같은 결과가 나옵니다.
         </p>
         <p className="leading-7">
-          custom script condition이 꼭 필요하면 read-only input, sandbox,
-          deadline, output schema와 version을 고정합니다. 임의 Lua나 shell
-          표현식을 engine process 안에서 실행하는 것은 DSL의 유연성이 아니라 새
-          code execution boundary입니다.
+          custom script condition이 꼭 필요하다면 read-only input과 sandbox, deadline, output schema, version을 모두
+          고정합니다. 임의 Lua나 shell 표현식을 engine process 안에서 실행하는 것은 DSL의 유연성이 아니라 새 code execution boundary입니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
           여러 rule의 proposal을 먼저 모은 뒤 충돌을 해결한다
         </h3>
         <p className="leading-7">
-          priority가 높은 첫 rule을 즉시 실행하면 뒤에 있는 block·escalate
-          rule을 보지 못할 수 있습니다. 같은 snapshot에 매칭된 proposal을 모두
-          모으고, incompatible action을 감지한 뒤 deterministic arbitration으로
-          하나의 plan을 만듭니다. 안전을 넓히는 action보다 제한·중단 action이
-          우선하는 규칙도 이 단계에서 명시합니다.
+          priority가 높은 첫 rule을 즉시 실행하면 뒤에 있는 block·escalate rule을 보지 못할 수 있습니다. 같은 snapshot에 매칭된 proposal을 모두
+          모으고 incompatible action을 감지한 뒤 deterministic arbitration으로 하나의 plan을 만듭니다. 안전을 넓히는 action보다 제한·중단
+          action이 우선한다는 규칙도 이 단계에서 명시합니다.
         </p>
         <p className="leading-7">
-          동일 priority의 상충 proposal은 config 순서에 기대지 말고 validation
-          error나 명시적 tie-breaker로 처리합니다. static validation은 같은
-          condition에서 충돌하는 action을 찾고, runtime trace는 실제로 함께
-          매칭된 rule ID와 선택 이유를 기록합니다.
+          priority가 같은데 서로 상충하는 proposal은 config 순서에 기대지 말고 validation error나 명시적 tie-breaker로 처리합니다. static
+          validation은 같은 condition에서 충돌하는 action을 찾습니다. runtime trace는 실제로 함께 매칭된 rule ID와 선택 이유를 기록합니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
           action 직전에 snapshot version을 다시 확인한다
         </h3>
         <p className="leading-7">
-          평가가 끝난 뒤 CI나 branch head가 바뀔 수 있으므로 proposal에는
-          snapshot version과 expected resource identity를 넣습니다. executor는
-          optimistic concurrency check를 통과한 경우에만 action을 수행하고,
-          상태가 달라졌다면 새 snapshot으로 재평가합니다.
+          평가가 끝난 뒤에도 CI나 branch head가 바뀔 수 있습니다. proposal에 snapshot version과 expected resource identity를 넣는
+          이유입니다. executor는 optimistic concurrency check를 통과한 경우에만 action을 수행하고 상태가 달라졌다면 새 snapshot으로 재평가합니다.
         </p>
         <p className="leading-7">
           periodic reconciliation과 event trigger가 같은 rule을 동시에 깨울 수
@@ -119,10 +107,9 @@ export default function Rules() {
           rule test는 decision table과 trace를 함께 본다
         </h3>
         <p className="leading-7">
-          rule마다 true·false·unknown과 경계 시간을 포함한 table test를 두고,
-          여러 rule 조합에서는 충돌과 priority를 검증합니다. production
-          trace에는 snapshot reference, matched condition, rejected proposal와
-          최종 plan을 남기면 “왜 이 action이 실행됐는가”를 재현할 수 있습니다.
+          rule마다 true·false·unknown과 경계 시간을 포함한 table test를 둡니다. 여러 rule을 조합할 때는 충돌과 priority를 검증합니다.
+          production trace에 snapshot reference와 matched condition, rejected proposal, 최종 plan을 남기면 “왜 이
+          action이 실행됐는가”를 재현할 수 있습니다.
         </p>
       </div>
     </section>

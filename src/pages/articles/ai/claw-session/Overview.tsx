@@ -95,12 +95,9 @@ export default function Overview() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          사용자가 로그인 401 오류 수정을 요청했다고 해 보겠습니다. 모델이
-          원인을 설명하는 것만으로는 작업이 끝나지 않습니다. Runtime은 어떤
-          요청에서 시작했는지, 어느 workspace를 읽었는지, 어떤 tool call이
-          허용됐고 실제로 무엇을 바꿨는지, 마지막 test가 통과했는지를 서로
-          연결해야 합니다. 이 연결을 process가 종료된 뒤에도 찾게 해 주는 단위가
-          session입니다.
+          사용자가 로그인 401 오류 수정을 요청했다고 해 보겠습니다. 모델이 원인을 설명하는 것만으로는 작업이 끝나지 않습니다. Runtime은 어떤 요청에서 시작했는지, 어느
+          workspace를 읽었는지, 어떤 tool call이 허용됐고 실제로 무엇을 바꿨는지, 마지막 test가 통과했는지를 서로 연결해야 합니다. process가 종료된 뒤에도 이
+          연결을 찾게 해 주는 단위가 session입니다.
         </p>
         <p>
           여기서 session은 모델 내부의 장기 기억도, 현재 model context도
@@ -135,11 +132,9 @@ export default function Overview() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>먼저 session·turn·attempt·effect를 구분합니다</h3>
         <p>
-          이 네 단어를 모두 “대화”라고 부르면 crash가 났을 때 무엇을 다시
-          실행해도 되는지 판단할 수 없습니다. Session은 여러 turn의 바깥
-          identity이고, 한 turn에는 provider retry나 여러 tool attempt가 들어갈
-          수 있습니다. Effect는 attempt와도 다릅니다. Edit attempt가
-          timeout됐더라도 파일은 이미 바뀌었을 수 있기 때문입니다.
+          이 네 단어를 모두 “대화”라고 부르면 crash가 났을 때 무엇을 다시 실행해도 되는지 판단할 수 없습니다. Session은 여러 turn의 바깥 identity이고 한 turn
+          안에는 provider retry나 여러 tool attempt가 들어갈 수 있습니다. Effect는 attempt와도 다릅니다. Edit attempt가 timeout됐더라도
+          파일은 이미 바뀌었을 수 있기 때문입니다.
         </p>
       </div>
 
@@ -267,21 +262,15 @@ export default function Overview() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>JSONL record와 event sourcing은 같은 말이 아닙니다</h3>
         <p>
-          Pinned 구현은 metadata와 message를 JSONL record로 저장하고, 일부
-          write는 뒤에 append합니다. 그렇다고 모든 model attempt, permission
-          decision, 외부 effect와 lifecycle transition을 immutable event로
-          보존해 임의의 revision view를 재구성할 수 있는 것은 아닙니다. “한 줄씩
-          저장한다”는 파일 형식과 “모든 상태 변화를 event가 소유한다”는
-          event-sourcing architecture를 구분해야 합니다.
+          Pinned 구현은 metadata와 message를 JSONL record로 저장하고 일부 write는 뒤에 append합니다. 그렇다고 모든 model attempt와
+          permission decision, 외부 effect, lifecycle transition을 immutable event로 보존해 임의의 revision view를 재구성할 수
+          있는 것은 아닙니다. “한 줄씩 저장한다”는 파일 형식과 “모든 상태 변화를 event가 소유한다”는 event-sourcing architecture를 구분해야 합니다.
         </p>
         <p>
-          더 강한 운영 계약에서는 원본 event와 현재 view를 분리하고, snapshot은
-          어느 event revision에서 파생됐는지 기록합니다. 복원할 때는 snapshot
-          뒤의 event만 replay하고, optimistic concurrency로 같은 base revision의
-          동시 update를 검출합니다. 이 방식은 감사에 유리하지만 event schema
-          version과 migration, ordering, secret redaction과 storage 비용도 함께
-          설계해야 합니다. 아래 문서는 이 일반 pattern의 근거이며 Claw
-          snapshot의 구현 사실을 늘려 주는 근거가 아닙니다.
+          더 강한 운영 계약에서는 원본 event와 현재 view를 분리하고 snapshot이 어느 event revision에서 파생됐는지 기록합니다. 복원할 때는 snapshot 뒤의
+          event만 replay합니다. 같은 base revision을 동시에 update하는 경우는 optimistic concurrency로 검출합니다. 이 방식은 감사에 유리하지만
+          event schema version과 migration, ordering, secret redaction, storage 비용도 함께 설계해야 합니다. 아래 문서는 이 일반
+          pattern의 근거이며 Claw snapshot의 구현 사실을 늘려 주는 근거가 아닙니다.
         </p>
       </div>
 
@@ -327,10 +316,8 @@ export default function Overview() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>이제 한 turn의 실제 순서를 따라갑니다</h3>
         <p>
-          다음 절에서는 401 사례의 user message가 저장된 뒤 provider stream,
-          assistant tool call, permission, edit와 test result가 어떤 순서로
-          session에 추가되는지 살펴봅니다. 이 순서를 알아야 저장됐다는 사실과
-          외부 effect가 완료됐다는 사실 사이의 빈틈도 찾을 수 있습니다.
+          다음 절에서는 401 사례의 user message가 저장된 뒤 provider stream과 assistant tool call, permission, edit, test
+          result가 어떤 순서로 session에 붙는지 살펴봅니다. 이 순서를 알아야 저장됐다는 사실과 외부 effect가 완료됐다는 사실 사이의 빈틈을 찾을 수 있습니다.
         </p>
       </div>
     </section>

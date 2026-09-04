@@ -97,7 +97,9 @@ export default function ModernHooksArticle() {
       <section id="release-gate" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">04 · 역검사와 배포</p><h2 className="mt-2 text-2xl font-bold">정상 출력보다 충돌·형식 오류·취소를 먼저 고정한다</h2></header>
         <p>
-          이 글만으로 기초 여섯 문제를 풀 수 있어야 합니다. 세 event와 실행 순서, matcher, JSON stdin과 environment, exit 0·2·기타 결과, 순차 지연 135 ms, Ask→Deny→미실행 예시를 각각 설명할 수 있어야 합니다. 심화 네 문제는 updatedInput 재승인, malformed JSON 정책, descendant cancellation, base/candidate release gate를 설계하는 문제입니다.
+          이 글만으로 기초 여섯 문제를 풀 수 있어야 합니다. 세 event와 실행 순서, matcher, JSON stdin과 environment, exit 0·2·기타 결과, 순차
+          지연 135 ms, Ask→Deny→미실행 예시를 각각 설명할 수 있으면 됩니다. 심화 네 문제는 설계 쪽입니다. updatedInput 재승인, malformed JSON 정책,
+          descendant cancellation, base/candidate release gate가 여기 해당합니다.
         </p>
         <aside className="rounded-lg border border-border bg-card p-5 text-sm leading-6 text-muted-foreground">
           <strong className="text-foreground">Release gate:</strong> 같은 hook 목록·tool input·environment와 full commit SHA에서 base/candidate를 실행합니다. No match, plain text, valid JSON, malformed JSON, exit 2, later override, updatedInput, timeout·cancel, descendant linger를 주입하고 executor 호출 수 0/1, 최종 decision·reason·input, process cleanup, stdout/stderr digest를 비교합니다. Unauthorized executor call이 하나라도 있거나 terminal receipt가 모호하면 배포하지 않습니다.

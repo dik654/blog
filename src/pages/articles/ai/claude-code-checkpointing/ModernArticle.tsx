@@ -14,10 +14,8 @@ export default function ClaudeCodeCheckpointingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Session을 되감는다는 말이 machine 전체를 과거로 돌린다는 뜻은
-            아닙니다. Claude Code가 direct edit 전에 snapshot한 file content와
-            conversation 지점이 복구 대상이고, Bash·database·API·deploy effect는
-            밖에 남습니다.
+            Session을 되감는다는 말이 machine 전체를 과거로 돌린다는 뜻은 아닙니다. Claude Code가 direct edit 전에 snapshot한 file
+            content와 conversation 지점이 복구 대상이고 Bash·database·API·deploy effect는 밖에 남습니다.
           </p>
         </div>
         <TermBreakdown

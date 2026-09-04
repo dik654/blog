@@ -109,12 +109,9 @@ export default function Overview() {
           않습니다.
         </p>
         <p>
-          새 provider를 추가할 때는 happy-path text 한 건으로 호환을 선언하지
-          않습니다. Text·여러 tool call·partial JSON·unknown event·mid-stream EOF·
-          rate limit·usage 누락을 같은 fixture로 재생하고, 공통 event와 terminal
-          outcome이 base adapter와 같은지 비교합니다. Wire format 자체가 다른
-          경우에도 runtime이 받는 의미가 같아야 하며, 의미가 다르면 capability
-          matrix에 차이를 남깁니다.
+          새 provider를 추가할 때는 happy-path text 한 건으로 호환을 선언하지 않습니다. Text·여러 tool call·partial JSON·unknown
+          event·mid-stream EOF·rate limit·usage 누락을 같은 fixture로 재생하고 공통 event와 terminal outcome이 base adapter와
+          같은지 비교합니다. Wire format 자체가 다른 경우에도 runtime이 받는 의미가 같아야 하며 의미가 다르면 capability matrix에 차이를 남깁니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">

@@ -39,11 +39,9 @@ export default function Comparison() {
       <ActivationDecisionViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-8">
         <p>
-          initialization도 activation과 함께 본다. ReLU 계열에는 He initialization,
-          tanh·sigmoid 계열에는 Xavier initialization이 흔한 출발점이지만,
-          normalization과 residual path가 있는 현대 architecture에서는 전체 신호
-          전달을 측정해야 한다. 학습이 불안정할 때 activation만 바꾸기 전에 activation
-          분포, gradient norm, learning rate를 먼저 확인하는 편이 원인을 찾기 쉽다.
+          initialization도 activation과 함께 본다. ReLU 계열에는 He initialization, tanh·sigmoid 계열에는 Xavier
+          initialization이 흔한 출발점이지만 normalization과 residual path가 있는 현대 architecture에서는 전체 신호 전달을 측정해야 한다. 학습이
+          불안정할 때 activation만 바꾸기 전에 activation 분포, gradient norm, learning rate를 먼저 확인하는 편이 원인을 찾기 쉽다.
         </p>
       </div>
     </section>

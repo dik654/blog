@@ -23,11 +23,9 @@ export default function Rendering() {
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          모델이 보내는 것은 완성된 Markdown 문서가 아니라 작은 text delta와
-          tool 이벤트의 연속입니다. 이 조각을 받는 즉시 ANSI 문자열로 출력하면
-          아직 닫히지 않은 코드 블록 때문에 스타일이 깨지고, 여러 tool call이
-          겹칠 때 어느 줄을 고쳐야 하는지도 알기 어렵습니다. 그래서 provider
-          이벤트를 공통 화면 상태로 먼저 줄인 뒤 렌더링해야 합니다.
+          모델이 보내는 것은 완성된 Markdown 문서가 아니라 작은 text delta와 tool 이벤트의 연속입니다. 이 조각을 받는 즉시 ANSI 문자열로 출력하면 아직 닫히지 않은
+          코드 블록 때문에 스타일이 깨지고 여러 tool call이 겹칠 때 어느 줄을 고쳐야 하는지도 알기 어렵습니다. provider 이벤트를 공통 화면 상태로 먼저 줄인 뒤에
+          렌더링해야 하는 이유가 여기 있습니다.
         </p>
 
         <MarkdownViz />
@@ -112,11 +110,9 @@ export default function Rendering() {
           부분 Markdown은 안정된 경계까지만 확정한다
         </h3>
         <p>
-          text delta는 backtick 하나나 링크의 여는 괄호에서 끊길 수 있습니다.
-          줄바꿈만 기다리는 방식도 코드 블록과 긴 단락에서는 지연이 커집니다.
-          실용적인 구현은 누적 버퍼를 유지하면서 parser가 확정할 수 있는 block
-          경계까지만 화면에 반영하고, 나머지는 임시 텍스트로 보여줍니다.
-          스트림이 끝나면 남은 버퍼를 한 번 더 parse해 최종 화면을 확정합니다.
+          text delta는 backtick 하나나 링크의 여는 괄호에서 끊길 수 있습니다. 줄바꿈만 기다리는 방식도 코드 블록과 긴 단락에서는 지연이 커집니다. 실용적인 구현은 누적
+          버퍼를 유지하면서 parser가 확정할 수 있는 block 경계까지만 화면에 반영하고 나머지는 임시 텍스트로 보여줍니다. 스트림이 끝나면 남은 버퍼를 한 번 더 parse해 최종
+          화면을 확정합니다.
         </p>
         <p>
           Pinned <code>StreamRenderBuffer</code>도 누적 문자열에서 stream-safe
@@ -171,8 +167,7 @@ export default function Rendering() {
               파이프·CI·로그
             </p>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              커서 제어 없이 한 이벤트를 한 record로 기록하고, stderr와 종료
-              코드를 안정적인 계약으로 유지합니다.
+              커서 제어 없이 한 이벤트를 한 record로 기록하고 stderr와 종료 코드를 안정적인 계약으로 유지합니다.
             </p>
           </section>
         </div>
@@ -181,12 +176,9 @@ export default function Rendering() {
           꾸미기보다 실행 상태를 설명하는 것이 우선이다
         </h3>
         <p>
-          syntax highlighting과 색상은 가독성을 높이지만, 사용자가 정말 알아야
-          하는 것은 지금 모델이 생성 중인지, tool이 실행 중인지, 자신의 승인을
-          기다리는지입니다. 애니메이션이 멈춰도 실제 heartbeat와 마지막 이벤트
-          시각을 확인할 수 있어야 하며, 취소 후에는 어느 작업이 중단됐고 어느
-          결과가 이미 반영됐는지를 명확히 남겨야 합니다. 좋은 CLI는 화려한
-          출력보다 런타임의 상태를 숨기지 않는 데서 시작합니다.
+          syntax highlighting과 색상은 가독성을 높이지만 사용자가 정말 알아야 하는 것은 지금 모델이 생성 중인지, tool이 실행 중인지, 자신의 승인을 기다리는지입니다.
+          애니메이션이 멈춰도 실제 heartbeat와 마지막 이벤트 시각은 확인할 수 있어야 합니다. 취소 후에는 어느 작업이 중단됐고 어느 결과가 이미 반영됐는지를 분명히 남깁니다. 좋은
+          CLI는 화려한 출력보다 런타임의 상태를 숨기지 않는 데서 시작합니다.
         </p>
       </div>
     </section>

@@ -18,11 +18,9 @@ export default function PromptCache() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          먼저 이름이 비슷한 두 cache를 분리해야 합니다. Provider prompt cache는
-          tools, system instruction와 이전 message로 이루어진 동일한 prefix의
-          model 계산을 재사용하지만 suffix와 새 output은 계속 계산합니다. 반면
-          response cache는 동일한 전체 request에 과거 response를 그대로 돌려주므로
-          sampling·최신 데이터·side effect 의미가 달라집니다.
+          먼저 이름이 비슷한 두 cache를 분리해야 합니다. Provider prompt cache는 tools·system instruction·이전 message로 이루어진 동일한
+          prefix의 model 계산을 재사용하지만 suffix와 새 output은 계속 계산합니다. 반면 response cache는 동일한 전체 request에 과거 response를
+          그대로 돌려주므로 sampling·최신 데이터·side effect 의미가 달라집니다.
         </p>
         <p className="leading-7">
           Pinned Claw <code>PromptCache</code>는 둘을 함께 다룹니다. Provider가
@@ -94,10 +92,9 @@ export default function PromptCache() {
           automatic caching과 explicit breakpoint를 구분한다
         </h3>
         <p className="leading-7">
-          provider가 자동으로 eligible prefix를 cache할 수도 있고, client가
-          breakpoint나 cache-control marker를 명시할 수도 있습니다. 자동 동작을
-          추측해 자체 TTL timer를 만들기보다 response usage로 실제 read·write를
-          확인하고 provider profile에 지원 방식과 model 조건을 기록합니다.
+          provider가 자동으로 eligible prefix를 cache할 수도 있고 client가 breakpoint나 cache-control marker를 명시할 수도 있습니다.
+          자동 동작을 추측해 자체 TTL timer를 만들기보다 response usage로 실제 read·write를 확인하고 provider profile에 지원 방식과 model
+          조건을 기록합니다.
         </p>
         <p className="leading-7">
           Anthropic의 현재 문서는 automatic caching과 explicit cache breakpoint,
@@ -182,19 +179,15 @@ export default function PromptCache() {
           로컬 completion cache는 별도의 correctness·privacy 경계다
         </h3>
         <p className="leading-7">
-          Pinned 구현은 직렬화한 전체 request를 FNV-1a 계열 fingerprint로 만들고,
-          response JSON을 session cache directory에 기록합니다. 이 hash는 빠른 key일
-          뿐 MAC이나 암호화가 아니므로 secret 보호·tenant isolation·tamper proof로
-          해석할 수 없습니다. Directory permission, at-rest encryption, quota와
-          삭제 정책을 별도로 검증해야 합니다.
+          Pinned 구현은 직렬화한 전체 request를 FNV-1a 계열 fingerprint로 만들고 response JSON을 session cache directory에
+          기록합니다. 이 hash는 빠른 key일 뿐 MAC이나 암호화가 아니므로 secret 보호·tenant isolation·tamper proof로 해석할 수 없습니다.
+          Directory permission, at-rest encryption, quota와 삭제 정책을 별도로 검증해야 합니다.
         </p>
         <p className="leading-7">
-          Tool 실행을 유도할 수 있는 response를 그대로 replay하면 같은 tool call이
-          다시 제안될 수 있습니다. Runtime은 cache source를 event에 표시하고 새
-          permission·idempotency·effect receipt를 거치게 해야 하며, time-sensitive
-          prompt·nondeterministic sampling·external state read에는 completion cache를
-          끄거나 key에 relevant state version을 포함해야 합니다. Pinned source에
-          이 모든 보강이 구현됐다고 주장하지 않습니다.
+          Tool 실행을 유도할 수 있는 response를 그대로 replay하면 같은 tool call이 다시 제안될 수 있습니다. Runtime은 cache source를 event에
+          표시하고 새 permission·idempotency·effect receipt를 거치게 해야 하며 time-sensitive prompt·nondeterministic
+          sampling·external state read에는 completion cache를 끄거나 key에 relevant state version을 포함해야 합니다. Pinned
+          source에 이 모든 보강이 구현됐다고 주장하지 않습니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
@@ -207,10 +200,8 @@ export default function PromptCache() {
           latency 요구와 failure blast radius를 함께 봅니다.
         </p>
         <p className="leading-7">
-          provider cache가 만료되거나 unavailable해도 요청 결과의 correctness가
-          달라져서는 안 됩니다. caching은 optimization이므로 miss는 정상 경로로
-          처리하고, cache marker error가 request 전체를 막을지 marker 없이
-          fallback할지는 provider별 contract test로 정합니다.
+          provider cache가 만료되거나 unavailable해도 요청 결과의 correctness가 달라져서는 안 됩니다. caching은 optimization이므로 miss는
+          정상 경로로 처리하고 cache marker error가 request 전체를 막을지 marker 없이 fallback할지는 provider별 contract test로 정합니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">

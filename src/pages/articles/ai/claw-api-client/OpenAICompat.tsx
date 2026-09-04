@@ -18,10 +18,9 @@ export default function OpenAICompat() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          많은 provider가 OpenAI와 비슷한 endpoint와 JSON을 제공하지만, 같은
-          base URL을 쓴다고 role, tool call delta, structured output와 usage까지
-          같지는 않습니다. Chat Completions 계열과 Responses API 계열도 event
-          model이 다르므로 하나의 느슨한 parser에 모두 넣지 않는 편이 낫습니다.
+          많은 provider가 OpenAI와 비슷한 endpoint와 JSON을 제공하지만 같은 base URL을 쓴다고 role, tool call delta, structured
+          output과 usage까지 같지는 않습니다. Chat Completions 계열과 Responses API 계열도 event model이 다르므로 하나의 느슨한 parser에
+          모두 넣지 않는 편이 낫습니다.
         </p>
         <p className="leading-7">
           adapter는 provider-neutral semantic model에서 각 API family로
@@ -74,11 +73,9 @@ export default function OpenAICompat() {
           provider-neutral model은 공통분모보다 넓어야 한다
         </h3>
         <p className="leading-7">
-          text만 남긴 최소 공통분모는 thinking, refusal, citation, image와 tool
-          result 같은 의미를 잃습니다. 내부 content item을 tagged union으로 두고
-          source-specific metadata를 보존하면 지원 provider에서는 그대로
-          round-trip하고, 미지원 provider에서는 명시적 capability error나
-          configured fallback을 선택할 수 있습니다.
+          text만 남긴 최소 공통분모는 thinking, refusal, citation, image와 tool result 같은 의미를 잃습니다. 내부 content item을
+          tagged union으로 두고 source-specific metadata를 보존하면 지원 provider에서는 그대로 round-trip하고 미지원 provider에서는 명시적
+          capability error나 configured fallback을 선택할 수 있습니다.
         </p>
         <p className="leading-7">
           system과 developer role, assistant tool call, tool result 연결 ID도
@@ -117,10 +114,9 @@ export default function OpenAICompat() {
           capability profile은 관측된 사실이어야 한다
         </h3>
         <p className="leading-7">
-          provider 이름만 보고 지원 feature를 하드코딩하면 model·region·API
-          version이 바뀔 때 틀립니다. profile에 API family, model, endpoint
-          version, supported content·tool·stream feature와 확인 날짜를 저장하고,
-          startup probe 또는 staging contract test로 검증합니다.
+          provider 이름만 보고 지원 feature를 하드코딩하면 model·region·API version이 바뀔 때 틀립니다. profile에 API family, model,
+          endpoint version, supported content·tool·stream feature와 확인 날짜를 저장하고 startup probe 또는 staging
+          contract test로 검증합니다.
         </p>
         <p className="leading-7">
           provider가 무시하는 field도 성공 응답만 보면 발견하기 어렵습니다.
@@ -148,9 +144,8 @@ export default function OpenAICompat() {
           status를 cause로 보존해야 support와 incident 분석이 가능합니다.
         </p>
         <p className="leading-7">
-          unknown error를 rate limit으로 추측해 재시도하지 않습니다. backoff는
-          provider hint와 local retry budget을 따르고, 일부 stream을 받은
-          attempt는 자동 재시도 대상에서 제외합니다.
+          unknown error를 rate limit으로 추측해 재시도하지 않습니다. backoff는 provider hint와 local retry budget을 따르고 일부
+          stream을 받은 attempt는 자동 재시도 대상에서 제외합니다.
         </p>
       </div>
     </section>

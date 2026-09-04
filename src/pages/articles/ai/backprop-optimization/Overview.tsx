@@ -16,9 +16,8 @@ export default function Overview() {
           각각 얼마나 기여했는지 알아내는 문제입니다.
         </p>
         <p>
-          Parameter를 하나씩 조금 바꾸고 loss를 다시 측정하면 비용이 parameter
-          수에 비례하므로, 계산 graph를 출력에서 입력 방향으로 한 번 거슬러
-          올라가며 중간 derivative를 재사용합니다.
+          Parameter를 하나씩 조금 바꾸고 loss를 다시 측정하면 비용이 parameter 수에 비례하므로 계산 graph를 출력에서 입력 방향으로 한 번 거슬러 올라가며 중간
+          derivative를 재사용합니다.
         </p>
         <p>
           이 재사용 계산이 <strong>backpropagation</strong>이며, 더 넓게는
@@ -77,9 +76,8 @@ export default function Overview() {
           재사용으로 효율적으로 계산한 데 있습니다.
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          논문의 family-tree와 text-to-speech 사례는 이 방법이 useful internal
-          feature를 만들 수 있음을 보여 주지만, 오늘날의 대규모 network에서
-          optimization과 generalization이 자동으로 보장된다는 결과는 아닙니다.
+          논문의 family-tree와 text-to-speech 사례는 이 방법이 useful internal feature를 만들 수 있음을 보여 주지만 오늘날의 대규모
+          network에서 optimization과 generalization이 자동으로 보장된다는 결과는 아닙니다.
         </p>
       </div>
     </section>

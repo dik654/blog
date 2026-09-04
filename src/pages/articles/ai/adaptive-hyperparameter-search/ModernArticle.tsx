@@ -74,8 +74,7 @@ export default function AdaptiveHyperparameterSearchArticle() {
           question="과거 관측이 다음 configuration으로 어떻게 이어지나요?"
           idea={
             <p>
-              비교 가능한 trial rows를 history로 묶고, 현재 surrogate가 계산한
-              acquisition이 큰 feasible configuration을 선택합니다.
+              비교 가능한 trial rows를 history로 묶고 현재 surrogate가 계산한 acquisition이 큰 feasible configuration을 선택합니다.
             </p>
           }
           formula={String.raw`\mathcal H_t=\{(\lambda_i,y_i,s_i)\}_{i=1}^t,\quad \lambda_{t+1}=\arg\max_{\lambda\in\Lambda_{\rm feasible}}a_t(\lambda\mid\mathcal H_t)`}
@@ -212,11 +211,9 @@ export default function AdaptiveHyperparameterSearchArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Optuna에서 Study는 optimization task와 history를 소유하고, Trial은
-            실행 한 건입니다. Sampler는 proposal을 만들고 Pruner는 intermediate
-            value로 중단을 제안하며 Storage는 여러 worker가 같은 history를 보게
-            합니다. Version·sampler seed·parallelism·pending count가 달라지면
-            같은 이름의 sampler도 다른 proposal sequence를 만들 수 있습니다.
+            Optuna에서 Study는 optimization task와 history를 소유하고 Trial은 실행 한 건입니다. Sampler는 proposal을 만들고 Pruner는
+            intermediate value로 중단을 제안하며 Storage는 여러 worker가 같은 history를 보게 합니다. Version·sampler
+            seed·parallelism·pending count가 달라지면 같은 이름의 sampler도 다른 proposal sequence를 만들 수 있습니다.
           </p>
         </div>
         <div id="paper-optuna" className="scroll-mt-24">

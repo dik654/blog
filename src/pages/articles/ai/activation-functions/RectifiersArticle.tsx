@@ -7,14 +7,21 @@ export default function RectifierActivationsArticle() {
   return <article>
     <section id="overview" className="mb-16 scroll-mt-20 space-y-7">
       <header className="space-y-3"><p className="text-sm font-semibold text-primary">먼저 0에서 꺾이는 선 하나를 봅니다</p><h2 className="text-3xl font-bold tracking-tight">Rectifier는 양수 신호를 살리는 대신 음수 gradient 경로를 어떻게 다룰지 선택한다</h2></header>
-      <p className="text-lg leading-8 text-foreground/90">ReLU는 음수를 0으로 자르고 양수를 그대로 통과시킵니다. 이 단순한 hinge 덕분에 양수 구간의 local derivative는 1이지만, 뉴런이 계속 음수에 머물면 update 경로가 끊깁니다. 먼저 ReLU의 형태를 고정하고 dying state, negative slope, self-normalizing recipe를 한 단계씩 보강합니다.</p>
+      <p className="text-lg leading-8 text-foreground/90">
+            ReLU는 음수를 0으로 자르고 양수를 그대로 통과시킵니다. 이 단순한 hinge 덕분에 양수 구간의 local derivative는 1이지만 뉴런이 계속 음수에 머물면
+            update 경로가 끊깁니다. ReLU의 형태부터 고정하고 dying state, negative slope, self-normalizing recipe를 한 단계씩
+            보강합니다.
+          </p>
       <ActivationFamilyFlowViz mode="rectifiers" />
       <ContentBoundary article="rectifier-activations" />
     </section>
 
     <section id="relu" className="mb-16 scroll-mt-20 space-y-6">
       <header><p className="text-sm font-semibold text-primary">01 · ReLU hinge</p><h2 className="mt-2 text-2xl font-bold">ReLU는 양수 구간의 값과 gradient를 그대로 통과시킨다</h2></header>
-      <p>ReLU activation은 pre-activation z가 음수이면 0, 양수이면 z를 그대로 냅니다. Forward에서는 sparse activation을 만들고, backward에서는 양수인 coordinate만 gradient를 통과시키는 binary mask처럼 동작합니다.</p>
+      <p>
+            ReLU activation은 pre-activation z가 음수이면 0, 양수이면 z를 그대로 냅니다. Forward에서는 sparse activation을 만들고
+            backward에서는 양수인 coordinate만 gradient를 통과시키는 binary mask처럼 동작합니다.
+          </p>
       <ExplainedFormula
         question="ReLU의 forward와 backward mask는 어떻게 연결되는가?"
         idea={<>Forward에서 0과 z 중 큰 값을 고르고, backward에서는 forward 때 z가 양수였던 위치만 1로 열어 upstream gradient를 통과시킵니다.</>}
@@ -61,7 +68,11 @@ export default function RectifierActivationsArticle() {
 
     <section id="negative-slope" className="mb-16 scroll-mt-20 space-y-6">
       <header><p className="text-sm font-semibold text-primary">03 · negative path</p><h2 className="mt-2 text-2xl font-bold">Leaky ReLU와 PReLU는 음수 구간에 작은 직선 통로를 남긴다</h2></header>
-      <p>Negative-slope rectifier는 음수 입력을 0으로 만들지 않고 a배로 줄여 통과시킵니다. Leaky ReLU는 a를 hyperparameter로 고정하고, PReLU는 a를 parameter로 학습합니다. 이 선택은 끊긴 local gradient를 복구하지만 learning rate나 잘못된 initialization 같은 원인 전체를 없애지는 않습니다.</p>
+      <p>
+            Negative-slope rectifier는 음수 입력을 0으로 만들지 않고 a배로 줄여 통과시킵니다. Leaky ReLU는 a를 hyperparameter로 고정하고
+            PReLU는 a를 parameter로 학습합니다. 이 선택은 끊긴 local gradient를 복구하지만 learning rate나 잘못된 initialization 같은 원인
+            전체를 없애지는 않습니다.
+          </p>
       <ExplainedFormula
         question="음수 slope a는 forward 값과 backward gradient를 어떻게 바꾸는가?"
         idea={<>양수 구간은 identity를 유지하고 음수 구간에서 z에 a를 곱합니다. 같은 a가 backward local slope가 되어 upstream gradient의 작은 통로를 남깁니다.</>}

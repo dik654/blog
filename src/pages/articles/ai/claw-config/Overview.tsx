@@ -82,12 +82,9 @@ export default function Overview() {
           Secret과 일반 설정은 저장 경로가 다르다
         </h3>
         <p>
-          API key나 OAuth token을 프로젝트 설정에 저장하면 저장소와 로그를 통해
-          노출될 수 있습니다. 일반적인 hardening에서는 OS keychain이나 전용
-          secret store를 사용하지만, 이 snapshot의 OAuth 구현은 별도 credentials
-          JSON을 임시 파일에 쓴 뒤 rename합니다. 따라서 “권장 저장 방식”과 “현재
-          구현 방식”을 구분하고, 진단 출력의 redaction·파일 권한·crash durability를
-          별도로 검증해야 합니다.
+          API key나 OAuth token을 프로젝트 설정에 저장하면 저장소와 로그를 통해 노출될 수 있습니다. 일반적인 hardening에서는 OS keychain이나 전용
+          secret store를 사용하지만, 이 snapshot의 OAuth 구현은 별도 credentials JSON을 임시 파일에 쓴 뒤 rename합니다. 여기서는 “권장 저장
+          방식”과 “현재 구현 방식”을 구분하고 진단 출력의 redaction·파일 권한·crash durability를 별도로 검증합니다.
         </p>
         <p>
           다음에는 <strong>bootstrap</strong>에서 설정 출처를 발견하는 순서를,

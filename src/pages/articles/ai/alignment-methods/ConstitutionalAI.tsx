@@ -9,11 +9,9 @@ export default function ConstitutionalAI() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          Constitutional AI(CAI)는 model이 constitution을 기준으로 자신의 응답을
-          critique하고 revise한 data를 만든 뒤, AI-generated preference를 활용하는
-          방법을 제시했다. Human label을 전혀 쓰지 않는다는 뜻으로 넓히기보다,
-          harmfulness feedback의 일부를 explicit principles와 AI feedback으로
-          대체한 설계로 읽는 편이 정확하다.
+          Constitutional AI(CAI)는 model이 constitution을 기준으로 자신의 응답을 critique하고 revise한 data를 만든 뒤, AI-
+          generated preference를 활용하는 방법을 제시했다. Human label을 전혀 쓰지 않는다는 뜻으로 넓히기보다 harmfulness feedback의 일부를
+          explicit principles와 AI feedback으로 대체한 설계로 읽는 편이 정확하다.
         </p>
       </div>
 
@@ -111,10 +109,9 @@ export default function ConstitutionalAI() {
           핵심 기여는 판단 기준의 provenance를 자연어 원칙으로 드러낸 것이다
         </h3>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Supervised phase에서는 model이 원칙에 따라 harmful response를 critique하고
-          revise하며, RL phase에서는 AI가 만든 preference signal을 사용합니다.
-          Constitution은 기준을 추적 가능하게 만들지만 principle 충돌, evaluator
-          bias와 최종 human oversight까지 자동으로 해결하지는 않습니다.
+          Supervised phase에서는 model이 원칙에 따라 harmful response를 critique하고 revise하며 RL phase에서는 AI가 만든
+          preference signal을 사용합니다. Constitution은 기준을 추적 가능하게 만들지만 principle 충돌, evaluator bias와 최종 human
+          oversight까지 자동으로 해결하지는 않습니다.
         </p>
       </div>
     </section>

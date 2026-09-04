@@ -16,16 +16,12 @@ export default function ShellExecution() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          shell hook은 설정이 간단하지만 host의 file, environment와 network에
-          접근할 수 있는 외부 코드입니다. 문자열 command를 shell에 넘기는 기능이
-          아니라, 정해진 JSON request를 받아 제한된 JSON response를 반환하는
-          protocol worker로 취급해야 합니다.
+          shell hook은 설정이 간단하지만 host의 file, environment, network에 접근할 수 있는 외부 코드입니다. 문자열 command를 shell에 넘기는
+          기능으로 보면 안 됩니다. 정해진 JSON request를 받아 제한된 JSON response를 반환하는 protocol worker로 취급합니다.
         </p>
         <p className="leading-7">
-          hook binary나 script의 신뢰 수준은 hook이 검사하는 tool보다 자동으로
-          높지 않습니다. project config에서 처음 발견된 executable은 source와
-          digest를 보여주고 승인을 받거나, 신뢰된 admin policy에서 배포한 hook만
-          자동 실행하는 식으로 provenance를 확인해야 합니다.
+          hook binary나 script의 신뢰 수준은 hook이 검사하는 tool보다 자동으로 높지 않습니다. provenance는 따로 확인합니다. project config에서
+          처음 발견된 executable은 source와 digest를 보여주고 승인을 받는 방식, 또는 신뢰된 admin policy에서 배포한 hook만 자동 실행하는 방식이 있습니다.
         </p>
 
         <div className="not-prose my-8">
@@ -68,10 +64,9 @@ export default function ShellExecution() {
           inherited environment는 allowlist로 줄인다
         </h3>
         <p className="leading-7">
-          parent environment 전체를 넘기면 API key, cloud credential과 다른
-          provider token이 hook에 노출될 수 있습니다. PATH 같은 최소 runtime
-          variable과 event ID, workspace처럼 필요한 metadata만 명시적으로 넣고,
-          secret은 해당 hook이 요구하는 scope로만 전달합니다.
+          parent environment 전체를 넘기면 API key, cloud credential, 그 밖의 provider token이 hook에 노출될 수 있습니다. PATH 같은
+          최소 runtime variable과 event ID, workspace처럼 필요한 metadata만 명시적으로 넣습니다. secret은 해당 hook이 요구하는 scope로만
+          전달합니다.
         </p>
         <p className="leading-7">
           hook input JSON에도 full prompt나 file content를 기본으로 넣지
@@ -84,16 +79,14 @@ export default function ShellExecution() {
           stdout은 protocol, stderr는 진단으로 분리한다
         </h3>
         <p className="leading-7">
-          single request hook은 stdin에서 versioned JSON object 하나를 받고
-          stdout에 response object 하나만 씁니다. streaming이 필요하다면
-          framing이 명확한 JSON Lines 같은 별도 protocol을 정하며, 일반 log는
-          stderr로 보내야 parser가 안내 문구를 response로 오인하지 않습니다.
+          single request hook은 stdin에서 versioned JSON object 하나를 받고 stdout에 response object 하나만 씁니다.
+          streaming이 필요하다면 framing이 명확한 JSON Lines 같은 별도 protocol을 정합니다. 일반 log는 stderr로 보내야 parser가 안내 문구를
+          response로 오인하지 않습니다.
         </p>
         <p className="leading-7">
-          response에는 protocol version, event ID, outcome, reason code와
-          optional user message를 넣고 unknown field 정책을 정합니다.
-          stdout·stderr 모두 byte limit를 적용하고 truncation 여부를 기록해 악성
-          hook이 memory와 context를 고갈시키지 못하게 합니다.
+          response에는 protocol version과 event ID, outcome, reason code, optional user message를 넣고 unknown field
+          정책도 함께 정합니다. stdout·stderr 모두 byte limit를 적용하고 truncation 여부를 기록해 악성 hook이 memory와 context를 고갈시키지
+          못하게 합니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
@@ -107,10 +100,9 @@ export default function ShellExecution() {
           명시해야 합니다.
         </p>
         <p className="leading-7">
-          error message에는 hook ID, phase, exit status, timeout과 redacted
-          stderr를 포함하되 input과 environment의 secret을 그대로 출력하지
-          않습니다. 같은 failure가 반복되면 bounded circuit breaker로 hook을
-          격리하고 필수 hook이면 operator에게 escalation합니다.
+          error message에는 hook ID, phase, exit status, timeout, redacted stderr까지 포함하되 input과 environment의
+          secret은 그대로 출력하지 않습니다. 같은 failure가 반복되면 bounded circuit breaker로 hook을 격리합니다. 필수 hook이면 operator에게
+          escalation합니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">

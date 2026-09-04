@@ -30,16 +30,13 @@ export default function Escalation() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          escalation은 단순히 더 높은 권한자에게 알림을 보내는 기능이 아닙니다.
-          자동화가 더 진행하면 위험하거나 같은 실패를 반복할 때 task를 안전한
-          상태에 멈추고, 다음 주체가 판단할 evidence와 선택지를 넘기는
-          handoff입니다.
+          escalation은 handoff입니다. 자동화가 더 나가면 위험하거나 같은 실패를 반복할 때 task를 안전한 상태에 멈추고 다음 주체에게 판단할 evidence와 선택지를
+          넘깁니다. 더 높은 권한자에게 알림을 보내는 기능만은 아닙니다.
         </p>
         <p className="leading-7">
-          permission deny가 발생했다고 곧바로 on-call page를 보내는 식의 고정
-          level은 실제 severity를 반영하지 못합니다. user action이 필요한 로컬
-          승인, team queue가 맡을 결함, service incident를 구분하고 ownership과
-          response SLA가 있는 target으로 route합니다.
+          permission deny가 났다고 곧바로 on-call page를 보내는 식의 고정 level은 실제 severity를 반영하지 못합니다. user action이 필요한 로컬
+          승인과 team queue가 맡을 결함, service incident를 먼저 구분합니다. 그다음 ownership과 response SLA를 갖춘 target으로
+          route합니다.
         </p>
 
         <div className="not-prose my-8">
@@ -66,32 +63,26 @@ export default function Escalation() {
           trigger는 횟수뿐 아니라 상태와 위험을 본다
         </h3>
         <p className="leading-7">
-          retry budget exhaustion, 같은 failure fingerprint 반복, destructive
-          recovery 필요, permission 확장과 verifier 불일치는 대표적인
-          trigger입니다. 단순한 elapsed time도 process가 실제로 stalled인지,
-          외부 job을 기다리는지 구분한 뒤 사용합니다.
+          대표적인 trigger는 retry budget exhaustion과 같은 failure fingerprint 반복, destructive recovery 필요,
+          permission 확장, verifier 불일치입니다. 단순한 elapsed time은 그대로 쓰지 않습니다. process가 실제로 stalled인지 외부 job을 기다리는지
+          구분한 뒤에 씁니다.
         </p>
         <p className="leading-7">
-          escalation 시점에는 새 recovery action을 중단하고 write lease와
-          temporary credential을 회수합니다. 진행 중인 외부 job이 있다면 cancel
-          가능 여부와 job ID를 evidence에 포함합니다.
+          escalation 시점에는 새 recovery action을 멈추고 write lease와 temporary credential을 회수합니다. 진행 중인 외부 job이 있다면
+          cancel 가능 여부와 job ID를 evidence에 담습니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
           incident key로 알림을 묶고 acknowledgement를 추적한다
         </h3>
         <p className="leading-7">
-          같은 lane과 target만 기준으로 cooldown을 두면 failure가 바뀌었는데
-          알림을 놓치거나, 같은 incident가 여러 lane에서 중복 전송될 수
-          있습니다. service, failure fingerprint, affected resource와 time
-          window로 incident key를 만들고 update는 기존 thread나 issue에 이어
-          붙입니다.
+          같은 lane과 target만 기준으로 cooldown을 두면 failure가 바뀌었는데도 알림을 놓칠 수 있습니다. 반대로 같은 incident가 여러 lane에서 중복
+          전송되기도 합니다. incident key는 service와 failure fingerprint, affected resource, time window로 만들고 update는
+          기존 thread나 issue에 이어 붙입니다.
         </p>
         <p className="leading-7">
-          전송 성공은 사람이 인수했다는 뜻이 아닙니다. target message ID,
-          acknowledgement, current owner와 deadline을 저장하고, 응답이 없을 때만
-          다음 route로 escalation합니다. 해결됐다고 확인한 뒤에는 후속 알림과
-          자동 retry를 함께 종료합니다.
+          메시지가 전송됐다는 것과 사람이 그 일을 인수했다는 것은 다릅니다. target message ID와 acknowledgement, current owner, deadline을
+          저장하고 응답이 없을 때만 다음 route로 escalation합니다. 해결됐다고 확인한 뒤에는 후속 알림과 자동 retry를 함께 종료합니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
@@ -103,16 +94,12 @@ export default function Escalation() {
         </div>
 
         <p className="leading-7">
-          메시지에는 무엇이 실패했고 사용자에게 어떤 영향이 있는지, 자동화가
-          무엇을 시도했으며 현재 state가 안전한지, 가능한 다음 action과 link를
-          넣습니다. raw log와 diff는 별도 artifact로 연결하고 secret, user
-          data와 prompt content는 redaction합니다.
+          메시지에는 무엇이 실패했고 사용자에게 어떤 영향이 있는지를 먼저 씁니다. 자동화가 무엇을 시도했는지, 현재 state가 안전한지, 다음에 할 수 있는 action과 link도 함께
+          넣습니다. raw log와 diff는 별도 artifact로 연결하고 secret과 user data, prompt content는 redaction합니다.
         </p>
         <p className="leading-7">
-          template variable은 typed field에서 가져오고, 외부 입력을 URL이나
-          markup에 넣을 때 escaping합니다. notifier별 message rendering과
-          delivery retry가 task recovery 자체를 다시 실행하지 않도록 두
-          pipeline도 분리합니다.
+          template variable은 typed field에서 가져오고 외부 입력을 URL이나 markup에 넣을 때는 escaping합니다. notifier별 message
+          rendering과 delivery retry가 task recovery 자체를 다시 실행하면 안 되므로 두 pipeline도 분리합니다.
         </p>
 
         <div id="paper-anthropic-long-running-harness" className="scroll-mt-24">

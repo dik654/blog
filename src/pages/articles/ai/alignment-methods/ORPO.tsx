@@ -9,11 +9,10 @@ export default function ORPO() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          Odds Ratio Preference Optimization(ORPO)은 SFT가 chosen response를
-          모방하는 동안 rejected response를 명시적으로 낮추지 않는다는 관찰에서
-          출발한다. Chosen의 negative log-likelihood에 chosen·rejected generation
-          odds를 벌리는 term을 더해, 별도의 reference model과 후속 preference
-          stage 없이 domain adaptation과 preference separation을 함께 수행한다.
+          SFT는 chosen response를 모방하는 동안 rejected response를 명시적으로 낮추지 않는다. Odds Ratio Preference
+          Optimization(ORPO)은 이 관찰에서 출발한다. Chosen의 negative log-likelihood에 chosen·rejected generation odds를
+          벌리는 term을 더해 별도의 reference model과 후속 preference stage 없이 domain adaptation과 preference separation을
+          함께 수행한다.
         </p>
       </div>
 
@@ -68,10 +67,9 @@ o_-(x)
           핵심 기여는 chosen imitation과 rejected separation을 한 stage에 둔 것이다
         </h3>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          SFT term이 chosen response의 token likelihood를 유지하고 odds-ratio term이
-          rejected와의 상대 margin을 만듭니다. “Monolithic”은 data collection과
-          evaluation이 하나가 된다는 뜻이 아니라, 별도의 SFT checkpoint와 후속
-          reference-based preference stage를 요구하지 않는다는 뜻입니다.
+          SFT term이 chosen response의 token likelihood를 유지하고 odds-ratio term이 rejected와의 상대 margin을 만듭니다. 여기서
+          “Monolithic”이 지우는 것은 별도의 SFT checkpoint와 후속 reference-based preference stage뿐입니다. Data collection과
+          evaluation까지 하나로 묶는다는 말은 아닙니다.
         </p>
       </div>
     </section>

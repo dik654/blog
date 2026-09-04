@@ -96,8 +96,7 @@ export default function CfgPushdownAutomataArticle() {
           question="괄호 하나를 읽을 때 아직 닫아야 할 깊이를 왜 더하거나 빼나요?"
           idea={
             <p>
-              여는 괄호는 미래에 닫아야 할 의무 하나를 만들고, 닫는 괄호는 가장
-              최근 의무 하나를 해소합니다.
+              여는 괄호는 미래에 닫아야 할 의무 하나를 만들고 닫는 괄호는 가장 최근 의무 하나를 해소합니다.
             </p>
           }
           formula={String.raw`d_t=d_{t-1}+1\;(x_t=\texttt{(}),\quad d_t=d_{t-1}-1\;(x_t=\texttt{)})`}
@@ -134,9 +133,8 @@ export default function CfgPushdownAutomataArticle() {
           interpretation="입력 (()())은 깊이가 0→1→2→1→2→1→0이 됩니다. 중간에 음수가 되거나 마지막에 양수로 남으면 잘못된 string입니다."
         />
         <p className="text-sm leading-7 text-muted-foreground">
-          위 예는 괄호 깊이 하나만 세지만, 실제로 임의의 CFG를 PDA로 옮기는
-          construction은 표준 절차가 있습니다 — stack에 정수 대신 grammar
-          symbol 자체를 쌓습니다.
+          위 예는 괄호 깊이 하나만 세지만 실제로 임의의 CFG를 PDA로 옮기는 construction은 표준 절차가 있습니다 — stack에 정수 대신 grammar symbol 자체를
+          쌓습니다.
         </p>
         <AlgorithmBlock
           title="CFG → PDA construction (표준 절차)"
@@ -166,11 +164,9 @@ export default function CfgPushdownAutomataArticle() {
           repeatUntil="Stack이 비거나 더 이상 적용할 규칙이 없을 때까지 반복합니다."
         />
         <p className="text-sm leading-7 text-muted-foreground">
-          Nonterminal 선택(어떤 production을 고를지)이 여러 개일 수 있어 이
-          construction은 원래 비결정적(nondeterministic)입니다. 실제
-          top-down parser는 다음 몇 토큰을 미리 보는 lookahead로 이 선택을
-          결정적으로 좁히거나, 여러 선택지를 동시에 추적합니다 — 다음
-          section의 grammar-constrained decoding이 이 확장에 해당합니다.
+          Nonterminal 선택(어떤 production을 고를지)이 여러 개일 수 있어 이 construction은 원래 비결정적(nondeterministic)입니다. 실제 top-
+          down parser는 다음 몇 토큰을 미리 보는 lookahead로 이 선택을 결정적으로 좁히거나 여러 선택지를 동시에 추적합니다 — 다음 section의 grammar-
+          constrained decoding이 이 확장에 해당합니다.
         </p>
       </section>
 
@@ -193,11 +189,8 @@ export default function CfgPushdownAutomataArticle() {
             병렬로 진행하다가, 뒤의 입력과 모순되는 branch만 버립니다.
           </p>
           <p>
-            예를 들어 충돌이 2개 나면 GLR은 stack을 2개로 늘려 각각
-            shift·reduce를 이어가고, 몇 토큰 뒤 하나만 유효하게 남으면 그
-            stack만 채택합니다. 여러 stack을 동시에 유지하는 만큼 LR보다
-            메모리·시간 비용이 커서, 충돌이 드문 대부분의 프로그래밍 언어
-            문법에는 LR 계열이 더 흔히 쓰입니다.
+            예를 들어 충돌이 2개 나면 GLR은 stack을 2개로 늘려 각각 shift·reduce를 이어가고 몇 토큰 뒤 하나만 유효하게 남으면 그 stack만 채택합니다. 여러
+            stack을 동시에 유지하는 만큼 LR보다 메모리·시간 비용이 커서 충돌이 드문 대부분의 프로그래밍 언어 문법에는 LR 계열이 더 흔히 쓰입니다.
           </p>
         </div>
       </section>

@@ -57,8 +57,7 @@ export default function AutoregressiveGenerativeModelsArticle() {
           question="왜 sequence probability가 prefix conditional의 곱이 되나요?"
           idea={
             <p>
-              첫 token이 나올 확률과, 그 결과를 조건으로 둘째 token이 나올
-              확률을 같은 event path에서 연속으로 곱합니다.
+              첫 token이 나올 확률과 그 결과를 조건으로 둘째 token이 나올 확률을 같은 event path에서 연속으로 곱합니다.
             </p>
           }
           formula={String.raw`\begin{aligned}q_t&=p_\theta(x_t\mid x_{<t})\\p_\theta(x_{1:T})&=\prod_{t=1}^{T}q_t\end{aligned}`}
@@ -124,9 +123,8 @@ export default function AutoregressiveGenerativeModelsArticle() {
             decision이 순서대로 이어집니다.
           </p>
           <p>
-            따라서 exact likelihood가 있다는 사실과 low-latency sampling은 같은
-            장점이 아닙니다. KV cache는 이전 hidden projection의 재계산을
-            줄이지만 token dependency 자체를 없애지는 않습니다.
+            따라서 exact likelihood가 있다는 사실과 low-latency sampling은 서로 다른 장점입니다. KV cache는 이전 hidden projection의
+            재계산을 줄이지만 token dependency 자체를 없애지는 않습니다.
           </p>
         </div>
       </section>

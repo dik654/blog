@@ -52,9 +52,8 @@ export default function BertObjectivesArticle() {
           question="NSP와 SOP의 binary loss는 같아 보여도 무엇이 다른가요?"
           idea={
             <p>
-              두 objective 모두 CLS에서 binary probability를 만들지만, label을
-              만드는 pair distribution이 다릅니다. Loss 식만 같고 supervision
-              source가 다릅니다.
+              두 objective 모두 CLS에서 binary probability를 만들지만 label을 만드는 pair distribution이 다릅니다. Loss 식만 같고
+              supervision source가 다릅니다.
             </p>
           }
           formula={String.raw`L_{pair}=-y\log p-(1-y)\log(1-p)`}

@@ -28,15 +28,13 @@ export default function Tanh() {
       />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          tanh의 derivative는 0에서 1이고 sigmoid는 0에서 0.25지만, 이것만으로
-          tanh가 모든 네트워크에서 네 배 더 잘 학습된다고 말할 수는 없다. 입력 분포와
+          tanh의 derivative는 0에서 1이고 sigmoid는 0에서 0.25지만 이것만으로 tanh가 모든 네트워크에서 네 배 더 잘 학습된다고 말할 수는 없다. 입력 분포와
           초기화, normalization, 전체 Jacobian이 함께 gradient 크기를 결정한다.
         </p>
         <h3>recurrent gate 안에서의 역할</h3>
         <p>
-          LSTM과 GRU에서는 sigmoid가 정보를 얼마나 통과시킬지 0~1의 gate를 만들고,
-          tanh가 cell에 더할 signed candidate를 만든다. 두 함수는 경쟁 관계라기보다
-          서로 다른 범위와 의미를 이용해 역할을 나눈다.
+          LSTM과 GRU에서는 sigmoid가 정보를 얼마나 통과시킬지 0~1의 gate를 만들고 tanh가 cell에 더할 signed candidate를 만든다. 두 함수는 경쟁
+          관계라기보다 서로 다른 범위와 의미를 이용해 역할을 나눈다.
         </p>
       </div>
       <div className="not-prose my-8"><TanhViz /></div>

@@ -93,10 +93,9 @@ export default function Search() {
           추가·삭제된 뒤 같은 offset을 보내면 누락이나 중복이 생길 수 있습니다.
         </p>
         <p className="leading-7">
-          Hardening된 pagination은 normalized path·line·column의 stable ordering,
-          query digest와 snapshot version을 cursor에 묶어야 합니다. 현재 API를
-          사용할 때는 offset을 “같은 순간의 다음 page”로 믿지 말고, truncated
-          결과를 좁힐 새 glob·path·regex 조건으로 이어가는 편이 안전합니다.
+          hardening된 pagination은 normalized path·line·column의 stable ordering, query digest와 snapshot version을
+          cursor에 묶어야 합니다. 현재 API를 사용할 때는 offset을 “같은 순간의 다음 page”로 믿지 말고 truncated 결과를 좁힐 새 glob·path·regex
+          조건으로 이어가는 편이 안전합니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">

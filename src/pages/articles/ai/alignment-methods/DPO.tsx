@@ -98,11 +98,10 @@ r_-(x)
           핵심 아이디어는 reward를 없앤 것이 아니라 optimal policy 안으로 흡수한 것이다
         </h3>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          KL-regularized reward maximization의 closed-form optimal policy를 reward에
-          대해 다시 쓰고 Bradley–Terry preference likelihood에 대입하면, prompt별
-          partition function이 chosen–rejected 차이에서 상쇄됩니다. 그래서 별도
-          reward network와 online rollout 없이 policy log-ratio를 직접 학습하지만,
-          preference model의 가정과 reference policy는 그대로 남습니다.
+          KL-regularized reward maximization의 closed-form optimal policy를 reward에 대해 다시 쓰고 Bradley–Terry
+          preference likelihood에 대입하면 prompt별 partition function이 chosen–rejected 차이에서 상쇄됩니다. 그래서 별도 reward
+          network와 online rollout 없이 policy log-ratio를 직접 학습하지만 preference model의 가정과 reference policy는 그대로
+          남습니다.
         </p>
       </div>
     </section>

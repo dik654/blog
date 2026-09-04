@@ -39,9 +39,8 @@ export default function Comparison() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Framework 비교표는 흔히 tool 수, memory, multi-agent 지원 여부에 check mark를
-          붙입니다. 하지만 기능 이름이 같아도 보장하는 범위는 다르고, version에 따라 빠르게
-          바뀝니다.
+          Framework 비교표는 흔히 tool 수, memory, multi-agent 지원 여부에 check mark를 붙입니다. 하지만 기능 이름이 같아도 보장하는 범위는 다르고
+          version에 따라 빠르게 바뀝니다.
         </p>
         <p>
           그래서 아래 표는 “무엇을 지원하는가?”보다 “어떤 실행 책임을 가져가며 무엇은
@@ -59,9 +58,8 @@ export default function Comparison() {
           책임지는지도 별도 항목입니다.
         </p>
         <p>
-          표는 2026년 8월 13일 공식 문서의 계층을 요약한 당시 정리입니다. Managed platform
-          기능과 open-source library의 보장을 섞지 않았으며, 후보 version에서 다시 확인해야
-          합니다.
+          표는 2026년 8월 13일 공식 문서의 계층을 요약한 당시 정리입니다. Managed platform 기능과 open-source library의 보장을 섞지 않았으며 후보
+          version에서 다시 확인해야 합니다.
         </p>
         <p>
           Durable execution도 LangGraph만의 개념은 아닙니다. CrewAI Flows, 범용 workflow
@@ -111,9 +109,8 @@ export default function Comparison() {
           framework 전체를 runtime 기준으로 삼을 이유는 줄어듭니다.
         </p>
         <p>
-          공식 문서가 직접 LLM call과 manual tool loop도 함께 보여 준다는 점은 중요합니다.
-          Framework abstraction을 채택하기 전에 direct baseline을 만들 수 있고, 필요한 memory,
-          context, event와 persistence만 단계적으로 가져올 수 있기 때문입니다.
+          공식 문서가 직접 LLM call과 manual tool loop도 함께 보여 준다는 점은 중요합니다. Framework abstraction을 채택하기 전에 direct
+          baseline을 만들 수 있고 필요한 memory, context, event와 persistence만 단계적으로 가져올 수 있기 때문입니다.
         </p>
         <p>
           이름이 agent framework라고 해서 모든 loop를 한 abstraction에 넣어야 하는 것은
@@ -282,9 +279,8 @@ export default function Comparison() {
           budget을 acceptance gate로 둡니다.
         </p>
         <p>
-          위반 시 package, graph, prompt와 state reader를 함께 rollback할 수 있어야 합니다.
-          Framework 선택은 예제 코드 길이가 아니라 장기 실행 state와 recovery contract의 owner를
-          정하는 일입니다.
+          위반 시 package, graph, prompt와 state reader를 함께 rollback할 수 있어야 합니다. Framework 선택은 예제 코드 길이를 보고 하는 일이
+          아닙니다. 장기 실행 state와 recovery contract의 owner를 정하는 일입니다.
         </p>
       </ProgressiveDetail>
     </section>

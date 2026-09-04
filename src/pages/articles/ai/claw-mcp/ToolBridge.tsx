@@ -16,10 +16,8 @@ export default function ToolBridge() {
           <code>McpToolRegistry</code>와 executor의 역할입니다.
         </p>
         <p className="leading-7">
-          MCP specification은 tool을 model-controlled primitive로 정의하지만
-          실제 user interaction과 승인 정책을 강제하지는 않습니다. 따라서 외부
-          server가 tool을 광고했다는 사실은 실행 권한이 아니라 capability
-          discovery일 뿐이며, 최종 호출은 harness의 permission enforcer를
+          MCP specification은 tool을 model-controlled primitive로 정의하지만 실제 user interaction과 승인 정책을 강제하지는 않습니다.
+          외부 server가 tool을 광고했다는 사실은 capability discovery일 뿐 실행 권한이 아닙니다. 최종 호출은 harness의 permission enforcer를
           통과해야 합니다.
         </p>
 
@@ -70,17 +68,13 @@ export default function ToolBridge() {
           권한은 server 단위와 호출 단위를 나눠 본다
         </h3>
         <p className="leading-7">
-          server를 신뢰 목록에 넣었다고 그 server의 모든 미래 tool을 자동
-          승인하는 것은 위험합니다. read-only search와 destructive database
-          update가 같은 server에 있을 수 있고, reconnect 뒤 tool catalog가 바뀔
-          수도 있습니다. server identity, tool annotation, argument와 현재
-          workspace 정책을 함께 평가해 실제 permission을 정합니다.
+          server를 신뢰 목록에 넣었다고 그 server의 모든 미래 tool을 자동 승인하는 것은 위험합니다. read-only search와 destructive database
+          update가 같은 server에 있을 수 있고 reconnect 뒤 tool catalog가 바뀔 수도 있습니다. server identity와 tool annotation,
+          argument, 현재 workspace 정책을 함께 평가해 실제 permission을 정합니다.
         </p>
         <p className="leading-7">
-          등록 시점에는 기본 위험 등급을 붙이고, 호출 시점에는 구체적인
-          argument로 다시 판정합니다. 승인 UI에는 remote server와 tool 이름,
-          영향 범위와 전달할 주요 argument를 보여 줘야 사용자가 무엇을
-          허용하는지 알 수 있습니다.
+          등록 시점에는 기본 위험 등급을 붙이고 호출 시점에는 구체적인 argument로 다시 판정합니다. 승인 UI에는 remote server와 tool 이름, 영향 범위, 전달할 주요
+          argument를 보여 줘야 사용자가 무엇을 허용하는지 알 수 있습니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
@@ -95,11 +89,8 @@ export default function ToolBridge() {
           처리할 수 있습니다.
         </p>
         <p className="leading-7">
-          server가 끊기면 registry에서 무조건 tool을 즉시 지우기보다 unavailable
-          상태와 catalog version을 관리합니다. 재연결 후 catalog를 다시 받아
-          diff를 검증하고, 사라진 tool을 model이 호출하려 할 때 구조화된
-          unavailable error를 반환하면 세션 전체를 종료하지 않고 복구할 수
-          있습니다.
+          server가 끊기면 registry에서 무조건 tool을 즉시 지우기보다 unavailable 상태와 catalog version을 관리합니다. 재연결 후에는 catalog를
+          다시 받아 diff를 검증합니다. 사라진 tool을 model이 호출하려 할 때 구조화된 unavailable error를 반환하면 세션 전체를 종료하지 않고 복구할 수 있습니다.
         </p>
       </div>
     </section>

@@ -93,10 +93,8 @@ export default function SelfAttention({
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          각 head가 항상 “문법 담당”, “공참조 담당”처럼 하나의 사람이 읽을 수
-          있는 기능으로 분리되는 것은 아니다. 다만 서로 다른 projection을
-          사용하므로 하나의 attention map만 쓸 때보다 여러 관계를 병렬로 표현할
-          여지가 생긴다.
+          각 head가 언제나 “문법 담당”, “공참조 담당”처럼 사람이 읽을 수 있는 기능 하나로 갈리지는 않는다. 다만 서로 다른 projection을 사용하므로 하나의
+          attention map만 쓸 때보다 여러 관계를 병렬로 표현할 여지가 생긴다.
         </p>
         <p>
           Training compute만 보면 score matrix 계산은 대략
@@ -127,7 +125,11 @@ export default function SelfAttention({
       <div id="paper-attention-all-you-need" className="not-prose my-8 border-l border-primary/50 pl-4 scroll-mt-24">
         <p className="text-xs font-bold text-primary">논문 읽기 · Scaled dot-product와 multi-head self-attention</p>
         <p className="mt-2 text-sm font-semibold">Attention Is All You Need</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">Scaled dot-product attention을 multi-head로 병렬화하고 recurrence 없이 encoder–decoder sequence transduction 경로를 구성했습니다. 근거는 WMT 번역과 parsing을 포함한 논문의 설정에 한정되며, 모든 현대 LLM 구조나 긴 문맥 비용 해결책을 원 논문 하나가 제안했다는 뜻은 아닙니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            Scaled dot-product attention을 multi-head로 병렬화하고 recurrence 없이 encoder–decoder sequence
+            transduction 경로를 구성했습니다. 근거는 WMT 번역과 parsing을 포함한 논문의 설정에 한정됩니다. 모든 현대 LLM 구조나 긴 문맥 비용 해결책까지 원 논문
+            하나가 제안했다고 읽을 수는 없습니다.
+          </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary underline-offset-4 hover:underline" href="https://arxiv.org/abs/1706.03762" target="_blank" rel="noreferrer">원 논문과 architecture 보기</a>
       </div>
     </section>

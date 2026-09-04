@@ -11,21 +11,14 @@ export default function Overview() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="text-lg leading-8">
-          다음 달 수요를 예측하려는데 최근 몇 달의 상승세가 계속될지, 직전의
-          일시적 충격이 얼마나 남을지부터 설명하지 못한다면 더 큰 neural model을
-          넣어도 개선 이유를 알기 어렵다. ARIMA(AutoRegressive Integrated Moving
-          Average)는 한 시계열을 차분해 안정된 변화량으로 만든 뒤, 과거 값의
-          관성과 과거 예측 오차의 잔여 효과를 선형식으로 분리한다. 적은 data에서도
-          강한 기준선이 되고 parameter의 역할과 residual을 진단할 수 있다는 점이
-          여전히 중요하다.
+          다음 달 수요를 예측하려는데 최근 몇 달의 상승세가 계속될지, 직전의 일시적 충격이 얼마나 남을지부터 설명하지 못한다면 더 큰 neural model을 넣어도 개선 이유를 알기
+          어렵다. ARIMA(AutoRegressive Integrated Moving Average)는 한 시계열을 차분해 안정된 변화량으로 만든 뒤 과거 값의 관성과 과거 예측 오차의
+          잔여 효과를 선형식으로 분리한다. 적은 data에서도 강한 기준선이 되고 parameter의 역할과 residual을 진단할 수 있다. 이 점이 여전히 중요하다.
         </p>
         <p>
-          다만 ARIMA는 p·d·q를 자동으로 맞히는 주문이 아니다. Target의 sampling
-          interval, forecast horizon, 예측 시점에 알 수 있는 feature를 먼저 고정하고,
-          stationary representation을 찾은 다음 ARMA dynamics를 추정해야 한다.
-          마지막에는 미래를 흉내 낸 validation과 residual diagnostic으로 가정을
-          다시 확인한다. 이 순서를 지켜야 in-sample fit이 아니라 forecasting
-          system으로 읽을 수 있다.
+          다만 ARIMA는 p·d·q를 자동으로 맞히는 주문이 아니다. Target의 sampling interval, forecast horizon, 예측 시점에 알 수 있는
+          feature를 먼저 고정하고 stationary representation을 찾은 다음 ARMA dynamics를 추정해야 한다. 마지막에는 미래를 흉내 낸 validation과
+          residual diagnostic으로 가정을 다시 확인한다. 이 순서를 지켜야 in-sample fit이 아니라 forecasting system으로 읽을 수 있다.
         </p>
       </div>
 
@@ -34,11 +27,9 @@ export default function Overview() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>ARMA가 다루는 대상은 weakly stationary series다</h3>
         <p>
-          Weak stationarity(약정상성)는 평균과 분산이 시간에 따라 일정하고,
-          두 시점의 covariance가 달력상의 절대 위치보다 lag에만 의존한다는
-          second-order 가정이다. 모든 joint distribution이 shift에 불변인 strict
-          stationarity보다 약하며, 실제 ARIMA 계산은 이 평균·공분산 구조를
-          기준으로 한다.
+          Weak stationarity(약정상성)는 평균과 분산이 시간에 따라 일정하고 두 시점의 covariance가 달력상의 절대 위치보다 lag에만 의존한다는 second-order
+          가정이다. 모든 joint distribution이 shift에 불변인 strict stationarity보다 약하다. 실제 ARIMA 계산은 이 평균·공분산 구조를 기준으로
+          한다.
         </p>
       </div>
 
@@ -98,11 +89,9 @@ export default function Overview() {
         <p className="text-xs font-bold text-primary">논문 읽기 · Unit-root 검정의 출발점</p>
         <p className="mt-2 text-sm font-semibold">Distribution of the Estimators for Autoregressive Time Series with a Unit Root</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Dickey와 Fuller는 AR coefficient가 unit root 경계에 있을 때 estimator와 test statistic이
-          통상적인 t 분포를 따르지 않는 문제를 다뤘습니다. 핵심 기여는 이 경계 상황의 비표준
-          limit distribution을 유도한 것이며, deterministic term과 error 가정이 정해진 모형 안에서
-          읽어야 합니다. ADF p-value 하나가 모든 추세·계절성·구조 변화를 진단하거나 stationarity를
-          보장한다는 결론으로 일반화하면 안 됩니다.
+          Dickey와 Fuller는 AR coefficient가 unit root 경계에 있을 때 estimator와 test statistic이 통상적인 t 분포를 따르지 않는 문제를
+          다뤘습니다. 핵심 기여는 이 경계 상황의 비표준 limit distribution 유도입니다. 다만 deterministic term과 error 가정이 정해진 모형 안에서 읽어야
+          합니다. ADF p-value 하나가 모든 추세·계절성·구조 변화를 진단하거나 stationarity를 보장한다는 결론으로 일반화하면 안 됩니다.
         </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://doi.org/10.1080/01621459.1979.10482531" target="_blank" rel="noreferrer">원 논문의 unit-root 경계와 검정 분포 보기</a>
       </div>

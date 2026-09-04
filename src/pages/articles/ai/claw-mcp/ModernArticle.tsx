@@ -78,7 +78,9 @@ export default function ModernMcpArticle() {
           Claw는 server와 tool 이름을 정규화해 <code>mcp__server__tool</code> 형태의 qualified name을 만듭니다. <code>docs/search</code>는 <code>mcp__docs__search</code>가 됩니다. 이 namespacing은 서로 다른 server의 <code>search</code>가 이름만으로 충돌하는 문제를 줄이지만, normalize 결과 충돌·server reload·schema 변경까지 자동 해결하지는 않습니다.
         </p>
         <p>
-          Bridge는 server가 Connected인지, 발견 목록에 tool이 있는지 확인한 다음 manager를 통해 호출합니다. Pinned call path는 별도 current-thread runtime을 만들고 discovery를 다시 수행한 뒤 tool을 호출하고 manager를 shutdown합니다. 따라서 registry에 보인 장기 연결과 실제 call instance가 같은 generation인지, 매 호출의 discovery·shutdown 비용이 어떤지는 측정해야 합니다.
+          Bridge는 server가 Connected인지, 발견 목록에 tool이 있는지 확인한 다음 manager를 통해 호출합니다. Pinned call path는 별도
+          current-thread runtime을 만들고 discovery를 다시 수행한 뒤 tool을 호출하고 manager를 shutdown합니다. registry에 보인 장기 연결과
+          실제 call instance가 같은 generation인지, 매 호출의 discovery·shutdown 비용이 어떤지는 측정해 봐야 알 수 있습니다.
         </p>
         <div className="overflow-x-auto rounded-lg border border-border"><table className="min-w-[740px] w-full text-sm"><thead className="bg-muted/50 text-left"><tr><th className="p-3">보존할 값</th><th className="p-3">docs.search 예시</th><th className="p-3">잃었을 때 생기는 문제</th></tr></thead><tbody className="divide-y divide-border text-muted-foreground"><tr><td className="p-3">Server·instance</td><td className="p-3">docs · process generation 7</td><td className="p-3">reload 뒤 다른 process 결과를 같은 call로 오인</td></tr><tr><td className="p-3">Tool·schema digest</td><td className="p-3">search · schema a91…</td><td className="p-3">model이 본 argument 계약과 executor가 달라짐</td></tr><tr><td className="p-3">Request ID·attempt</td><td className="p-3">id 3 · attempt 1</td><td className="p-3">timeout 뒤 late response와 retry 결과 혼동</td></tr><tr><td className="p-3">Terminal outcome</td><td className="p-3">result·RPC error·timeout·disconnect</td><td className="p-3">부분 실패를 성공 text로 표시</td></tr></tbody></table></div>
         <div id="paper-mcp-tools"><CitationBlock source="Model Context Protocol · official tools" citeKey={3} href="https://modelcontextprotocol.io/specification/2026-07-28/server/tools">
@@ -91,7 +93,9 @@ export default function ModernMcpArticle() {
       <section id="degraded-release" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">04 · Degraded와 배포</p><h2 className="mt-2 text-2xl font-bold">Timeout 뒤 retry는 새 request identity와 old response 처리를 함께 설계한다</h2></header>
         <p>
-          Timeout, EOF, 잘못된 version·ID, child 종료는 모두 “검색 결과 없음”과 다릅니다. Manager가 connection을 reset하거나 한 번 retry하더라도 첫 attempt가 실제 server에서 effect를 냈을 가능성을 지울 수는 없습니다. Read-only search와 write tool은 같은 retry policy를 사용해서는 안 되며, write에는 operation key·status lookup·effect receipt가 필요합니다.
+          Timeout, EOF, 잘못된 version·ID, child 종료는 모두 “검색 결과 없음”과 다릅니다. Manager가 connection을 reset하거나 한 번
+          retry하더라도 첫 attempt가 실제 server에서 effect를 냈을 가능성을 지울 수는 없습니다. Read-only search와 write tool은 같은 retry
+          policy를 사용해서는 안 됩니다. write에는 operation key·status lookup·effect receipt가 필요합니다.
         </p>
         <p>
           역검사의 기초 여섯 문제는 MCP의 host/client/server 역할, lifecycle 여섯 단계, 4,000 ms budget, Content-Length frame과 request ID, qualified tool name, registry와 call instance의 차이를 묻습니다. 심화 네 문제는 version mismatch, timeout·late response, reload generation, write-tool retry를 다룹니다. 위 정의와 docs.search 수치만으로 답할 수 있어야 합니다.

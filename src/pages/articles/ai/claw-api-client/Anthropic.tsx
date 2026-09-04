@@ -17,11 +17,9 @@ export default function Anthropic() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          Anthropic Messages API는 response를 message 안의 여러 content
-          block으로 표현하고, streaming에서는 message와 각 block의
-          시작·delta·종료가 분리돼 도착합니다. adapter는 이 lifecycle을
-          보존하면서 conversation runtime이 사용하는 provider-neutral event로
-          변환해야 합니다.
+          Anthropic Messages API는 response를 message 안의 여러 content block으로 표현하고 streaming에서는 message와 각 block의
+          시작·delta·종료가 분리돼 도착합니다. adapter는 이 lifecycle을 보존하면서 conversation runtime이 사용하는 provider-neutral
+          event로 변환해야 합니다.
         </p>
         <p className="leading-7">
           credential을 API key로 가져올지 다른 provider-supported login에서

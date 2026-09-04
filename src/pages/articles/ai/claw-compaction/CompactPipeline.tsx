@@ -146,10 +146,9 @@ export default function CompactPipeline() {
           배열이라면 더 뒤로 걸어가 안전한 시작점을 찾습니다.
         </p>
         <p>
-          다만 이 guard는 형식적 adjacency를 지키는 장치입니다. Tool ID가 정말
-          일치하는지, edit result에 operation digest가 있는지, 여러 tool call이
-          섞였을 때 모두 완전한지는 별도 검증이 필요합니다. 즉 provider 400을
-          피하는 최소 경계이지 effect reconciliation까지 완성하는 규칙은 아닙니다.
+          다만 이 guard는 형식적 adjacency를 지키는 장치입니다. tool ID가 정말 일치하는지, edit result에 operation digest가 있는지, 여러 tool
+          call이 섞였을 때 모두 완전한지는 별도 검증이 필요합니다. provider 400을 피하는 최소 경계일 뿐, effect reconciliation까지 완성하는 규칙은
+          아닙니다.
         </p>
         <pre className="overflow-x-auto text-xs">
           {`[assistant] ToolUse(id="edit-7", name="write_file")
@@ -174,11 +173,9 @@ guard 결과: boundary를 한 칸 앞당겨 ToolUse부터 보존`}
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>수동·auto·recovery는 같은 이름 아래 다른 trigger입니다</h3>
         <p>
-          세 경로를 하나로 뭉뚱그리면 threshold와 retry의 성격을 오해하기
-          쉽습니다. 아래 값은 이 commit의 default snapshot이지 모든 model에 맞는
-          권장값이 아닙니다. 특히 manual은 local rough estimate를 보고, auto는
-          provider가 보고한 누적 input usage를 봅니다. Recovery는 정상적인 budget
-          check가 아니라 실패 문자열을 보고 시작합니다.
+          세 경로를 하나로 뭉뚱그리면 threshold와 retry의 성격을 오해하기 쉽습니다. 아래 값은 이 commit의 default snapshot이지 모든 model에 맞는
+          권장값이 아닙니다. 특히 manual은 local rough estimate를 보고, auto는 provider가 보고한 누적 input usage를 봅니다. recovery는
+          정상적인 budget check가 아니라 실패 문자열을 보고 시작합니다.
         </p>
       </div>
 
@@ -206,15 +203,11 @@ guard 결과: boundary를 한 칸 앞당겨 ToolUse부터 보존`}
           바꾸지 못한다고 보고 즉시 중단해야 합니다.
         </p>
         <p>
-          문자열 분류는 provider가 같은 문장을 다른 장애에 사용하면 잘못 retry할
-          수 있습니다. 따라서 structured error code가 있으면 우선하고, context
-          문제가 아닌 인증·rate limit·permission 실패는 반복하지 않아야 합니다.
-          분류 규칙과 provider adapter version을 receipt에 남겨 오분류를 재현할 수
-          있어야 합니다. Retry할 때는 원 user request와 session branch를 그대로
-          유지하되, write effect의 operation ID·idempotency key를 먼저 조회하고
-          permission 범위를 넓히지 않은 채 다시 평가해야 합니다. 전체 recovery에는
-          token·latency budget을 두며, 네 번 모두 실패하면 마지막 오류와 시도한
-          preserve schedule을 숨기지 않고 사용자에게 반환합니다.
+          문자열 분류는 provider가 같은 문장을 다른 장애에 사용하면 잘못 retry할 수 있습니다. structured error code가 있으면 그쪽을 우선하고, context
+          문제가 아닌 인증·rate limit·permission 실패는 반복하지 않습니다. 분류 규칙과 provider adapter version을 receipt에 남겨야 오분류를
+          재현할 수 있습니다. retry할 때는 원 user request와 session branch를 그대로 유지합니다. write effect의 operation
+          ID·idempotency key를 먼저 조회하고 permission 범위를 넓히지 않은 채 다시 평가합니다. 전체 recovery에는 token·latency budget을
+          두며, 네 번 모두 실패하면 마지막 오류와 시도한 preserve schedule을 숨기지 않고 사용자에게 반환합니다.
         </p>
       </div>
 
@@ -244,11 +237,9 @@ guard 결과: boundary를 한 칸 앞당겨 ToolUse부터 보존`}
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>로그인 401에는 이 projection이 최소 안전선입니다</h3>
         <p>
-          Actual heuristic을 설명한 뒤에야 무엇을 보강해야 하는지 분명해집니다.
-          로그인 사례에서는 아래 다섯 field를 versioned schema로 저장하고, summary
-          text는 사람이 읽는 projection으로 만드는 편이 안전합니다. Parse나
-          invariant check가 실패하면 기존 context를 유지하는 fail-closed 정책을
-          적용합니다.
+          actual heuristic을 설명한 뒤에야 무엇을 보강해야 하는지 분명해집니다. 로그인 사례에서는 아래 다섯 field를 versioned schema로 저장하고,
+          summary text는 사람이 읽는 projection으로 만드는 편이 안전합니다. parse나 invariant check가 실패하면 기존 context를 유지하는 fail-
+          closed 정책을 적용합니다.
         </p>
       </div>
 

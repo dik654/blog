@@ -68,17 +68,13 @@ export default function AgentVerificationArticle() {
             셋이 각각 매기면 0.6, 0.7, 0.8처럼 흔들릴 수 있습니다.
           </p>
           <p>
-            이 구분이 앞서 본 deterministic check·environment oracle이
-            rubric judge보다 먼저 오는 이유입니다. Test-based
-            verification·compiler feedback·runtime feedback은 전부
-            external ground truth의 구체적인 형태이고, 해석 없이 pass·fail을
-            내는 쪽부터 통과시키는 편이 judge 예산을 아낍니다.
+            이 구분이 앞서 본 deterministic check·environment oracle이 rubric judge보다 먼저 오는 이유입니다. Test-based
+            verification·compiler feedback·runtime feedback은 전부 external ground truth의 구체적인 형태이고 해석 없이
+            pass·fail을 내는 쪽부터 통과시키는 편이 judge 예산을 아낍니다.
           </p>
           <p>
-            다만 external ground truth도 test coverage가 좁으면 실제 실패를
-            그냥 통과시키고, semantic verifier도 calibration 없이 배포하면
-            같은 실수를 매번 놓칠 수 있습니다. 둘 중 하나만으로 verifier
-            layer 전체를 대체할 수는 없습니다.
+            다만 external ground truth도 test coverage가 좁으면 실제 실패를 그냥 통과시키고 semantic verifier도 calibration 없이
+            배포하면 같은 실수를 매번 놓칠 수 있습니다. 둘 중 하나만으로 verifier layer 전체를 대체할 수는 없습니다.
           </p>
         </div>
       </section>
@@ -93,17 +89,13 @@ export default function AgentVerificationArticle() {
             검증을 모두 맡습니다.
           </p>
           <p>
-            가령 7B model이 만든 코드를 70B critic model이 다시 채점하면
-            generator 혼자 판정할 때보다 놓치던 오류를 더 잡지만, critic
-            호출 자체가 token을 한 번 더 씁니다. 같은 model이 자기 출력을
-            다시 보는 generator-verifier는 별도 호출 비용은 없지만, 처음에
-            놓친 가정을 검증 단계에서도 같은 이유로 놓치기 쉽습니다.
+            가령 7B model이 만든 코드를 70B critic model이 다시 채점하면 generator 혼자 판정할 때보다 놓치던 오류를 더 잡지만 critic 호출 자체가
+            token을 한 번 더 씁니다. 같은 model이 자기 출력을 다시 보는 generator-verifier는 별도 호출 비용은 없지만 처음에 놓친 가정을 검증 단계에서도 같은
+            이유로 놓치기 쉽습니다.
           </p>
           <p>
-            그래서 되돌리기 어려운 effect일수록 critic model을 generator와
-            분리하거나, 앞 절의 external ground truth로 교차 확인하는 쪽을
-            택합니다. Generator-verifier만으로 충분한 경우는 실수의 대가가
-            작고 재시도 비용이 낮을 때로 좁혀 둡니다.
+            그래서 되돌리기 어려운 effect일수록 critic model을 generator와 분리하거나 앞 절의 external ground truth로 교차 확인하는 쪽을 택합니다.
+            Generator-verifier만으로 충분한 경우는 실수의 대가가 작고 재시도 비용이 낮을 때로 좁혀 둡니다.
           </p>
         </div>
       </section>
@@ -168,10 +160,8 @@ export default function AgentVerificationArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Plan-execute-verify loop는 다음 action을 계획하고, 실행하고,
-            그 결과를 앞서 정한 verifier로 확인한 뒤에야 다음 plan을
-            세웁니다. Verify를 건너뛰면 한 단계의 부분 실패가 다음 plan의
-            잘못된 전제로 그대로 넘어갑니다.
+            Plan-execute-verify loop는 다음 action을 계획해 실행하고 그 결과를 앞서 정한 verifier로 확인한 뒤에야 다음 plan을 세웁니다. Verify를
+            건너뛰면 한 단계의 부분 실패가 다음 plan의 잘못된 전제로 그대로 넘어갑니다.
           </p>
         </div>
         <AlgorithmBlock
@@ -221,9 +211,8 @@ export default function AgentVerificationArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Worker와 judge가 같은 오류를 공유할 수 있습니다. Rubric·judge
-            version·input order를 고정하고 사람 label과 calibration하며, 고위험
-            invariant는 deterministic oracle이나 독립 검토로 교차 확인합니다.
+            Worker와 judge가 같은 오류를 공유할 수 있습니다. Rubric·judge version·input order를 고정하고 사람 label과 calibration하며
+            고위험 invariant는 deterministic oracle이나 독립 검토로 교차 확인합니다.
           </p>
         </div>
       </section>

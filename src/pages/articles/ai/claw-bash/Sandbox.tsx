@@ -42,11 +42,9 @@ export default function Sandbox() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          같은 shell effect를 여러 문자열로 표현할 수 있으므로 validation과 intent
-          분류만으로 안전을 보장하기 어렵습니다. Sandbox는 command가 착한 의도인지
-          맞히기보다 실제 process가 볼 수 있는 filesystem·network·다른 process와
-          사용할 resource를 제한합니다. Permission이 “이 action을 허용할지”를
-          결정한다면 sandbox는 허용 뒤에도 넘지 못할 바깥 경계입니다.
+          같은 shell effect를 여러 문자열로 표현할 수 있으므로 validation과 intent 분류만으로 안전을 보장하기 어렵습니다. sandbox는 command가 착한
+          의도인지 맞히기보다 실제 process가 볼 수 있는 filesystem·network·다른 process와 사용할 resource를 제한합니다. permission이 “이
+          action을 허용할지”를 결정한다면 sandbox는 허용 뒤에도 넘지 못할 바깥 경계입니다.
         </p>
         <p>
           고정된 Claw snapshot이 제공하는 것은 bubblewrap이나 VM이 아닙니다.
@@ -177,11 +175,9 @@ export default function Sandbox() {
           남깁니다.
         </p>
         <p>
-          Writable workspace는 그 안의 source를 보호하지 않습니다. Login 수정
-          command가 source를 지우거나 두 file 중 하나만 바꾼 뒤 실패할 수 있습니다.
-          Pinned Bash runtime에는 filesystem effect의 atomic rollback이 확인되지
-          않으므로, candidate worktree·overlay에서 실행하고 deterministic test와
-          diff review가 통과한 뒤에만 선택한 patch를 baseline에 반영합니다.
+          writable workspace는 그 안의 source를 보호하지 않습니다. 로그인 수정 command가 source를 지우거나 두 file 중 하나만 바꾼 뒤 실패할 수
+          있습니다. pinned Bash runtime에는 filesystem effect의 atomic rollback이 확인되지 않으므로, candidate
+          worktree·overlay에서 실행하고 deterministic test와 diff review가 통과한 뒤에만 선택한 patch를 baseline에 반영합니다.
         </p>
 
         <h3>Network는 command intent가 아니라 실제 egress 경로에서 제한합니다</h3>
@@ -208,10 +204,9 @@ export default function Sandbox() {
           않습니다.
         </p>
         <p>
-          PID namespace의 init process와 host에서 추적하는 process group은 해결하는
-          문제가 다릅니다. Namespace는 process가 보이는 PID 공간을 분리할 수 있지만,
-          deadline 뒤 모든 descendant에게 종료 signal을 보내고 사라질 때까지 reap하는
-          lifecycle은 executor가 별도로 소유해야 합니다.
+          PID namespace의 init process와 host에서 추적하는 process group은 해결하는 문제가 다릅니다. namespace는 process가 보이는 PID
+          공간을 분리할 수 있지만 deadline 뒤 모든 descendant에게 종료 signal을 보내고 사라질 때까지 reap하는 lifecycle은 executor가 따로 소유해야
+          합니다.
         </p>
       </div>
 
@@ -266,11 +261,9 @@ export default function Sandbox() {
           backend로 전체 tree에 적용합니다.
         </p>
         <p>
-          Observation은 process created, timeout signaled, force killed, descendants
-          remaining, final exit/signal과 output truncation을 구분해야 합니다. Cleanup
-          중 host가 crash하면 stable task identity로 다시 조회해 종료를 이어 가고,
-          effect 완료 여부를 모른 채 login test나 edit를 곧바로 중복 실행하지
-          않습니다.
+          observation은 process created, timeout signaled, force killed, descendants remaining을 각각 구분합니다. 여기에
+          final exit/signal과 output truncation도 별도 항목으로 둡니다. cleanup 중 host가 crash하면 stable task identity로 다시
+          조회해 종료를 이어 갑니다. effect 완료 여부를 모른 채 login test나 edit를 곧바로 중복 실행하지는 않습니다.
         </p>
 
         <h3>Crash 뒤에는 먼저 effect를 reconciliation하고 같은 command를 재실행합니다</h3>
@@ -283,39 +276,29 @@ export default function Sandbox() {
           ambiguous입니다.
         </p>
         <p>
-          복구 시 stable idempotency key로 process-group·cleanup status를 조회하고,
-          workspace before/after digest와 실제 diff를 effect receipt로 재구성합니다.
-          Child가 남으면 먼저 정리하고, edit가 이미 적용됐으면 같은 mutation을
-          blindly rerun하지 않은 채 deterministic login test만 새 attempt로
-          실행합니다. 상태를 판정할 수 없거나 안전한 compensation이 없으면
-          baseline worktree를 폐기하거나 사람에게 escalation합니다. 이는
-          exactly-once 보장이 아니라 reconciliation 뒤 중복 effect를 줄이는
-          계약입니다.
+          복구 시 stable idempotency key로 process-group·cleanup status를 조회하고 workspace before/after digest와 실제
+          diff를 effect receipt로 재구성합니다. child가 남으면 먼저 정리합니다. edit가 이미 적용됐으면 같은 mutation을 blindly rerun하지 않고
+          deterministic login test만 새 attempt로 실행합니다. 상태를 판정할 수 없거나 안전한 compensation이 없으면 baseline worktree를
+          폐기하거나 사람에게 escalation합니다. 이는 exactly-once 보장이 아니라 reconciliation 뒤 중복 effect를 줄이는 계약입니다.
         </p>
 
         <h3>실제 backend를 공격하는 probe와 login test를 한 release gate로 묶습니다</h3>
         <p>
-          Config snapshot이나 status boolean만 검사하지 않고 release artifact가
-          실행되는 동일 host/backend에서 아래 probe를 수행합니다. 각 fixture는
-          expected denial뿐 아니라 host에 file·flow·descendant가 남지 않았다는
-          negative evidence를 요구합니다.
+          config snapshot이나 status boolean만 검사하지 않고 release artifact가 실행되는 동일 host/backend에서 아래 probe를 수행합니다.
+          각 fixture는 expected denial뿐 아니라 host에 file·flow·descendant가 남지 않았다는 negative evidence를 요구합니다.
         </p>
         <p>
-          Paired 평가는 pinned base full SHA와 candidate full SHA를 기록하고 동일한
-          workspace revision, cwd, environment, model, tool set, policy, sandbox request와
-          host capability에서 replay합니다. Shell string과 direct argv 차이, variable
-          expansion·compound command, canonical path와 symlink TOCTOU, missing enforcer,
-          unsupported sandbox fallback, timeout·16 KiB truncation, descendant linger,
-          crash 뒤 duplicate effect를 각각 주입합니다.
+          paired 평가는 pinned base full SHA와 candidate full SHA를 기록합니다. replay 조건은 동일한 workspace revision, cwd,
+          environment, model, tool set, policy, sandbox request와 host capability로 고정합니다. 주입하는 실패는 shell
+          string과 direct argv 차이, variable expansion·compound command, canonical path와 symlink TOCTOU입니다. 여기에
+          missing enforcer, unsupported sandbox fallback, timeout·16 KiB truncation, descendant linger, crash
+          뒤 duplicate effect도 각각 주입합니다.
         </p>
         <p>
-          Candidate의 unauthorized execution 허용치는 0입니다. 모든 attempt에
-          cleanup receipt, 최소 auth diff와 deterministic login test receipt가 있어야
-          canary로 진행하고, cleanup·effect 상태가 Unknown이거나 base보다 false
-          negative가 하나라도 늘면 중단합니다. Rollback artifact에는 base binary·full
-          SHA, policy·sandbox profile과 baseline workspace snapshot을 포함합니다. 이
-          gate는 desired hardening이며 pinned runtime이 이미 통과했다는 보장이
-          아닙니다.
+          candidate의 unauthorized execution 허용치는 0입니다. 모든 attempt에 cleanup receipt, 최소 auth diff와
+          deterministic login test receipt가 있어야 canary로 진행합니다. cleanup·effect 상태가 Unknown이거나 base보다 false
+          negative가 하나라도 늘면 중단합니다. rollback artifact에는 base binary·full SHA, policy·sandbox profile과 baseline
+          workspace snapshot을 포함합니다. 이 gate는 desired hardening이며 pinned runtime이 이미 통과했다는 보장이 아닙니다.
         </p>
       </div>
 
@@ -342,11 +325,9 @@ export default function Sandbox() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          마지막으로 정상 login fixture를 처음부터 replay합니다. Search proposal의
-          shell·path·effect 판정, permission decision, 실제 sandbox profile과 process
-          receipt, 최소 diff, regression test exit와 cleanup evidence가 같은 run에
-          연결돼야 합니다. Namespace가 active라는 한 field나 test exit 0 하나만으로
-          안전한 실행과 수정 완료를 동시에 주장하지 않습니다.
+          마지막으로 정상 login fixture를 처음부터 replay합니다. search proposal의 shell·path·effect 판정과 permission decision이
+          같은 run에 연결돼야 합니다. 실제 sandbox profile과 process receipt, 최소 diff, regression test exit와 cleanup
+          evidence도 마찬가지입니다. namespace가 active라는 한 field나 test exit 0 하나만으로 안전한 실행과 수정 완료를 동시에 주장하지 않습니다.
         </p>
       </div>
     </section>

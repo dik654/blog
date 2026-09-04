@@ -24,10 +24,8 @@ export default function Boundary() {
           단계지만, 실제 filesystem target이 boundary 안이라는 보장은 아닙니다.
         </p>
         <p className="leading-7">
-          따라서 path authorization은 canonical target 확인, component 기반
-          containment, race-resistant open과 sandbox mount를 겹쳐 사용합니다. 각
-          계층이 막는 문제가 다르므로 문자열 prefix 비교 한 번이나
-          blacklist로 대체할 수 없습니다.
+          path authorization은 canonical target 확인, component 기반 containment, race-resistant open과 sandbox
+          mount를 겹쳐 사용합니다. 각 계층이 막는 문제가 다르므로 문자열 prefix 비교 한 번이나 blacklist로 대체할 수 없습니다.
         </p>
         <p className="leading-7">
           pinned workspace wrapper는 existing target을 canonicalize한 뒤 Rust

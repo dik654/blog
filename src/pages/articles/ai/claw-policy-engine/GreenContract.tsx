@@ -22,9 +22,8 @@ export default function GreenContract() {
           evidence를 분리합니다.
         </p>
         <p className="leading-7">
-          contract는 체크 목록만 저장하지 않습니다. 어떤 revision과 policy
-          version을 대상으로 어떤 evidence가 필요하며, 언제 stale해지고 누가
-          예외를 승인할 수 있는지까지 포함해야 재현 가능한 완료 판정이 됩니다.
+          contract에는 체크 목록 말고도 담을 것이 있습니다. 어떤 revision과 policy version을 대상으로 어떤 evidence가 필요한지, 언제 stale해지고 누가
+          예외를 승인할 수 있는지까지 들어가야 재현 가능한 완료 판정이 나옵니다.
         </p>
 
         <div className="not-prose my-8">
@@ -51,17 +50,13 @@ export default function GreenContract() {
           required check는 변경 영향과 release policy에서 정한다
         </h3>
         <p className="leading-7">
-          작은 팀은 build만, 큰 회사는 security까지 본다는 식의 고정 분류보다
-          변경된 경로, 배포 대상과 위험 수준으로 requirement를 선택하는 편이
-          정확합니다. 문서만 바뀐 변경과 인증 코드를 바꾼 변경에 같은 suite를
-          요구할 이유는 없지만, 영향 분석이 실패했다면 좁게 추측하지 않고 더
-          보수적인 기본 suite를 선택합니다.
+          작은 팀은 build만, 큰 회사는 security까지 본다는 식의 고정 분류는 잘 맞지 않습니다. 변경된 경로와 배포 대상, 위험 수준으로 requirement를 고르는 편이
+          정확합니다. 문서만 바뀐 변경과 인증 코드를 바꾼 변경에 같은 suite를 요구할 이유는 없습니다. 다만 영향 분석이 실패했다면 좁게 추측하지 말고 더 보수적인 기본 suite를
+          선택합니다.
         </p>
         <p className="leading-7">
-          coverage 80%, lint warning 0 같은 threshold도 보편적 정답이 아니라
-          versioned policy입니다. contract에는 check ID, runner, timeout,
-          threshold와 required·optional 여부를 명시해 결과를 해석하는 기준이
-          실행 사이에 바뀌지 않게 합니다.
+          coverage 80%, lint warning 0 같은 threshold도 보편적 정답이 아니라 versioned policy입니다. contract에 check ID와
+          runner, timeout, threshold를 적고 required인지 optional인지까지 명시해 둬야 결과를 해석하는 기준이 실행 사이에 흔들리지 않습니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
@@ -74,56 +69,45 @@ export default function GreenContract() {
           이름이라는 이유로 재사용하지 않습니다.
         </p>
         <p className="leading-7">
-          외부 CI의 status만 복사하지 말고 run ID와 artifact provenance를
-          보존합니다. callback이 늦게 도착했을 때도 expected revision과 contract
-          generation이 다르면 현재 gate를 덮어쓰지 않습니다.
+          외부 CI의 status만 복사하지 말고 run ID와 artifact provenance까지 보존합니다. callback이 늦게 도착했을 때도 expected revision과
+          contract generation이 다르면 현재 gate를 덮어쓰지 않습니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
           flaky test는 pass로 숨기지 않는다
         </h3>
         <p className="leading-7">
-          retry 뒤 통과한 test는 최초 pass와 같은 정보가 아닙니다. retry count와
-          failure fingerprint를 남기고, policy가 허용한 bounded retry를 넘으면
-          fail 또는 quarantine-required로 처리합니다. quarantine은 담당 owner와
-          만료일이 있는 명시적 예외여야 합니다.
+          retry 뒤 통과한 test는 최초 pass와 다른 정보입니다. retry count와 failure fingerprint를 남기고 policy가 허용한 bounded
+          retry를 넘으면 fail이나 quarantine-required로 처리합니다. quarantine은 담당 owner와 만료일이 붙은 명시적 예외여야 합니다.
         </p>
         <p className="leading-7">
-          custom check는 일반 Bash permission, sandbox, network policy와
-          deadline을 거치며 output schema를 검증합니다. contract engine이 특별
-          권한으로 임의 command를 실행하면 품질 게이트가 오히려 우회 통로가
-          됩니다.
+          custom check도 일반 Bash permission과 sandbox, network policy, deadline을 그대로 거치고 output schema까지 검증받습니다.
+          contract engine이 특별 권한으로 임의 command를 실행하면 품질 게이트가 오히려 우회 통로가 됩니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
           waiver는 evidence를 지우지 않는다
         </h3>
         <p className="leading-7">
-          긴급 배포처럼 failed check를 우회해야 할 수 있지만 결과를 pass로
-          바꾸면 사후 감사가 불가능합니다. waiver는 check result와 별도 record로
-          두고 actor, reason, scope, target revision과 expiry를 기록합니다.
-          허용되지 않은 check에는 waiver 자체를 만들 수 없어야 합니다.
+          긴급 배포처럼 failed check를 우회해야 할 때가 있습니다. 그렇다고 결과를 pass로 바꾸면 사후 감사가 불가능해집니다. waiver는 check result와 별도
+          record로 두고 여기에 actor와 reason, scope, target revision, expiry를 기록합니다. 허용되지 않은 check라면 waiver 자체를 만들 수
+          없어야 합니다.
         </p>
         <p className="leading-7">
-          사용자 화면에서는 required check의 pass·fail·pending·stale와 waiver를
-          한눈에 보여주고, 각 항목에서 run과 artifact로 바로 들어갈 수 있게
-          합니다. “green”이라는 요약만 보여주면 무엇을 확인했는지 알 수
-          없습니다.
+          사용자 화면에서는 required check의 pass·fail·pending·stale와 waiver를 한눈에 보여주고 각 항목에서 run과 artifact로 바로 들어갈 수
+          있게 합니다. “green”이라는 요약만 남으면 무엇을 확인했는지 알 수 없습니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
           merge 직전에 gate와 head를 함께 재검증한다
         </h3>
         <p className="leading-7">
-          contract가 통과한 뒤 다른 commit이 추가될 수 있으므로 merge executor는
-          expected head SHA, branch protection, approval과 contract generation을
-          원자적으로 다시 확인합니다. 하나라도 달라졌다면 merge하지 않고 새
-          evidence 수집으로 돌아갑니다.
+          contract가 통과한 뒤에도 다른 commit이 추가될 수 있습니다. merge executor는 expected head SHA와 branch protection,
+          approval, contract generation을 원자적으로 다시 확인합니다. 하나라도 달라졌다면 merge하지 않고 새 evidence 수집으로 돌아갑니다.
         </p>
         <p className="leading-7">
-          최종 decision에는 사용한 check result ID와 policy version을 남깁니다.
-          이렇게 해야 자동화가 잘못된 merge를 만들었을 때 당시 기준과 증거를
-          그대로 재현할 수 있습니다.
+          최종 decision에는 사용한 check result ID와 policy version을 남깁니다. 자동화가 잘못된 merge를 만들었을 때 당시 기준과 증거를 그대로 재현하려면
+          이 기록이 필요합니다.
         </p>
       </div>
     </section>

@@ -8,11 +8,9 @@ export default function Regularization() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Regularization은 모델을 막연히 “방해”하는 기법의 목록이 아니다. 어떤
-          objective를 최적화할지, activation에 어떤 noise를 넣을지, data
-          distribution을 어떻게 확장할지, 어느 checkpoint를 선택할지처럼 개입
-          지점이 서로 다르다. 같은 validation gain을 보여도 계산 비용과 실패 mode가
-          다르므로 이름보다 training loop에서의 위치를 먼저 봐야 한다.
+          Regularization은 모델을 막연히 “방해”하는 기법의 목록이 아니다. 어떤 objective를 최적화할지, activation에 어떤 noise를 넣을지, data
+          distribution을 어떻게 확장할지, 어느 checkpoint를 선택할지처럼 개입 지점이 서로 다르다. 같은 validation gain을 보여도 계산 비용과 실패 mode가
+          다르므로 이름보다 training loop 어디에 놓이는지를 먼저 봐야 한다.
         </p>
       </div>
 

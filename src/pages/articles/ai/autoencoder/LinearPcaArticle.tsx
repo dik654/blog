@@ -20,7 +20,10 @@ export default function LinearPcaArticle() {
     </section>
     <section id="rank-k" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">Encoder와 decoder를 합치면 rank-k reconstruction map이 됩니다</h2>
-      <ExplainedFormula question="왜 두 network의 학습을 low-rank matrix approximation으로 바꿀 수 있을까요?" idea={<p>Linear encoder와 decoder의 곱을 M 하나로 묶습니다. 중간 dimension k가 합성 map의 rank 상한을 만들고, 남는 문제는 X를 가장 잘 복원하는 rank-k M을 고르는 일입니다.</p>} formula={String.raw`M=ED,\quad \operatorname{rank}(M)\le k,\quad \min_M\lVert X-XM\rVert_F^2`} annotatedFormula={String.raw`\begin{aligned}M&=\underbrace{ED}_{\text{두 linear map을 합성}}\\\operatorname{rank}(M)&\le\underbrace{k}_{\text{보존 방향 수의 상한}}\\M^*&=\underset{\operatorname{rank}(M)\le k}{\arg\min}\;\underbrace{\lVert X-XM\rVert_F^2}_{\text{전체 복원 residual}}\end{aligned}`} operations={[
+      <ExplainedFormula question="왜 두 network의 학습을 low-rank matrix approximation으로 바꿀 수 있을까요?" idea={<p>
+            Linear encoder와 decoder의 곱을 M 하나로 묶습니다. 중간 dimension k가 합성 map의 rank 상한을 만들고 남는 문제는 X를 가장 잘 복원하는
+            rank-k M을 고르는 일입니다.
+          </p>} formula={String.raw`M=ED,\quad \operatorname{rank}(M)\le k,\quad \min_M\lVert X-XM\rVert_F^2`} annotatedFormula={String.raw`\begin{aligned}M&=\underbrace{ED}_{\text{두 linear map을 합성}}\\\operatorname{rank}(M)&\le\underbrace{k}_{\text{보존 방향 수의 상한}}\\M^*&=\underset{\operatorname{rank}(M)\le k}{\arg\min}\;\underbrace{\lVert X-XM\rVert_F^2}_{\text{전체 복원 residual}}\end{aligned}`} operations={[
         { expression: String.raw`ED`, annotation: ["encoder 뒤 decoder를 적용해", "하나의 reconstruction map으로 합성"] },
         { expression: String.raw`\operatorname{rank}(ED)\le k`, annotation: ["중간 coordinate가 k개이므로", "보존 가능한 독립 방향을 제한"] },
         { expression: String.raw`\arg\min_M\lVert X-XM\rVert_F^2`, annotation: ["허용 map을 모두 비교해", "squared reconstruction이 최소인 해 선택"] },

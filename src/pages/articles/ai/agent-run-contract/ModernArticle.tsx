@@ -86,8 +86,7 @@ export default function AgentRunContractArticle() {
           question="필수 contract field가 하나라도 비면 run을 시작해도 되나요?"
           idea={
             <p>
-              필수 항목의 존재 여부를 AND로 묶어, 목표만 있고 verifier나
-              recovery가 없는 run을 admission 전에 막습니다.
+              필수 항목의 존재 여부를 AND로 묶어 목표만 있고 verifier나 recovery가 없는 run을 admission 전에 막습니다.
             </p>
           }
           formula={String.raw`C=I_O\land I_A\land I_X\land I_P\land I_R`}
@@ -145,10 +144,8 @@ export default function AgentRunContractArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Timeout은 effect가 없었다는 뜻이 아닙니다. Receipt를 조회해 unknown
-            outcome을 해소하고, idempotent retry인지 rollback인지 사람
-            escalation인지 결정합니다. 다음 session에는 완료·미완료와 안전한
-            next action을 함께 넘깁니다.
+            Timeout은 effect가 없었다는 뜻이 아닙니다. Receipt를 조회해 unknown outcome을 해소하고 idempotent retry인지 rollback인지 사람
+            escalation인지 결정합니다. 다음 session에는 완료·미완료와 안전한 next action을 함께 넘깁니다.
           </p>
         </div>
       </section>

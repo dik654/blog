@@ -73,11 +73,9 @@ export default function Init() {
           아닙니다.
         </p>
         <p>
-          더 강한 설계에서는 read-only inspect가 기존 digest와 stack signal을
-          모으고, plan이 create·append·skip·conflict와 diff를 만든 뒤, 사용자가
-          확인한 plan만 apply합니다. 이 구분은 중간 실패와 concurrent edit를
-          다루기 위한 hardening 목표이며 현재 pinned source의 완료 기능으로
-          소개하지 않습니다.
+          더 강한 설계라면 read-only inspect가 기존 digest와 stack signal을 모으고 plan이 create·append·skip·conflict와 diff를
+          만듭니다. 사용자가 확인한 plan만 apply합니다. 이 구분은 중간 실패와 concurrent edit를 다루기 위한 hardening 목표이며 현재 pinned source의
+          완료 기능으로 소개하지 않습니다.
         </p>
         <div className="not-prose my-6 grid gap-3 md:grid-cols-3">
           {[
@@ -192,15 +190,11 @@ export default function Init() {
           재실행해도 사용자 편집을 지우지 않아야 한다
         </h3>
         <p>
-          안전한 init은 idempotent해야 합니다. 같은 버전과 같은 입력으로 다시
-          실행했을 때 새 변경이 없어야 하며, 도구가 생성한 block에는 marker와
-          schema version을 남겨 자기 영역만 갱신해야 합니다. marker 밖의 사용자
-          편집이나 알 수 없는 기존 설정은 자동 덮어쓰지 말고 conflict로
-          보고합니다. Pinned source는 create-if-missing과 exact ignore-entry 확인으로
-          반복 실행의 대부분을 안정화하지만 marker 기반 block ownership이나
-          expected digest는 없습니다. 임시 파일·fsync·atomic rename과 plan-wide
-          rollback 역시 source에서 확인되지 않으므로 production hardening 항목으로
-          남깁니다.
+          안전한 init은 idempotent해야 합니다. 같은 버전과 같은 입력으로 다시 실행하면 새 변경이 없어야 합니다. 도구가 생성한 block에는 marker와 schema
+          version을 남겨 자기 영역만 갱신합니다. marker 밖의 사용자 편집이나 알 수 없는 기존 설정은 자동 덮어쓰지 말고 conflict로 보고합니다. pinned
+          source는 create-if-missing과 exact ignore-entry 확인으로 반복 실행의 대부분을 안정화하지만 marker 기반 block ownership이나
+          expected digest는 없습니다. 임시 파일·fsync·atomic rename과 plan-wide rollback 역시 source에서 확인되지 않으므로
+          production hardening 항목으로 남깁니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">

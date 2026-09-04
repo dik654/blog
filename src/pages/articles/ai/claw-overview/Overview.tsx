@@ -28,31 +28,21 @@ export default function Overview() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          사용자가 “로그인 버튼을 누르면 401이 납니다. 원인을 찾아 고쳐
-          주세요”라고 요청했다고 가정하겠습니다. 모델이 곧바로 repository를
-          바꾸는 것은 아닙니다. 요청을 session에 넣고, provider의 streaming
-          response에서 tool call을 조립하고, host가 권한을 판정한 뒤에야 file을
-          읽거나 수정할 수 있습니다. 마지막에는 같은 실패를 재현하는 test가
-          통과해야 완료라고 말할 수 있습니다.
+          사용자가 “로그인 버튼을 누르면 401이 납니다. 원인을 찾아 고쳐 주세요”라고 요청했다고 가정하겠습니다. 모델이 곧바로 repository를 바꾸는 것은 아닙니다. 요청을
+          session에 넣고 provider의 streaming response에서 tool call을 조립하고 host가 권한을 판정한 뒤에야 file을 읽거나 수정할 수 있습니다.
+          마지막에는 같은 실패를 재현하는 test가 통과해야 완료라고 말할 수 있습니다.
         </p>
         <p>
-          이 요청을 끝까지 연결하는 프로그램이 agent harness입니다. Harness는
-          model 바깥에서 context, tool, permission, workspace, verification과
-          user-facing response를 묶는 실행 시스템입니다. 따라서 모델이 같은
-          경우에도 harness가 어떤 관찰을 제공하고 어떤 side effect를 허용하며
-          무엇을 완료 조건으로 삼는지에 따라 결과가 달라집니다.
+          이 요청을 끝까지 연결하는 프로그램이 agent harness입니다. Harness는 model 바깥에서 context, tool, permission, workspace,
+          verification, user-facing response를 묶는 실행 시스템입니다. 그래서 모델이 같아도 결과가 달라집니다. harness가 어떤 관찰을 제공하고 어떤
+          side effect를 허용하며 무엇을 완료 조건으로 삼는지가 갈리기 때문입니다.
         </p>
         <p>
-          여기서 다루는 Claw Code는 공개 repository에서 개발되는 독립 Rust
-          재구현입니다. 이 글은 그 project의 분석 snapshot이며,
-          Anthropic Claude Code나 OpenAI Codex의 비공개 source·내부 구조를
-          설명한다고 주장하지 않습니다. 이름이나 겉으로 보이는 behavior가
-          비슷해도 내부 구현까지 같다는 결론으로 넓히면 안 됩니다. Repository도
-          자신을 실험·학습을 위한 museum exhibit에 가깝다고 설명하며 serious
-          production project가 아니라고 밝힙니다. 또한 Anthropic이 유지·보증하거나
-          승인한 project도 아닙니다. 공개 README는 검증된 clean-room 절차까지
-          문서화하지 않으므로, 이 글도 독립 재구현이라는 project 성격을 그보다
-          강한 개발 공정 주장으로 확대하지 않습니다.
+          여기서 다루는 Claw Code는 공개 repository에서 개발되는 독립 Rust 재구현입니다. 이 글은 그 project의 분석 snapshot이며, Anthropic
+          Claude Code나 OpenAI Codex의 비공개 source·내부 구조를 설명한다고 주장하지 않습니다. 이름이나 겉으로 보이는 behavior가 비슷해도 내부 구현까지
+          같다는 결론으로 넓히면 안 됩니다. Repository도 자신을 실험·학습을 위한 museum exhibit에 가깝다고 설명하며 serious production project가
+          아니라고 밝힙니다. 또한 Anthropic이 유지·보증하거나 승인한 project도 아닙니다. 공개 README는 검증된 clean-room 절차까지 문서화하지 않으므로 이 글도
+          독립 재구현이라는 project 성격을 그보다 강한 개발 공정 주장으로 확대하지 않습니다.
         </p>
       </div>
 
@@ -65,10 +55,8 @@ export default function Overview() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>고정 사례의 한 turn을 여섯 경계로 나눕니다</h3>
         <p>
-          Turn은 사용자 입력 하나를 받아 필요한 model·tool 왕복을 수행하고 종료
-          상태를 만드는 작업 단위입니다. 아래 단계는 구현 class 이름을 외우기
-          위한 목록이 아니라, 문제가 생겼을 때 어느 소유자부터 확인해야 하는지
-          보여 주는 debugging map입니다.
+          Turn은 사용자 입력 하나를 받아 필요한 model·tool 왕복을 수행하고 종료 상태를 만드는 작업 단위입니다. 아래 단계는 구현 class 이름을 외우기 위한 목록이
+          아닙니다. 문제가 생겼을 때 어느 소유자부터 확인해야 하는지 보여 주는 debugging map입니다.
         </p>
       </div>
 
@@ -178,9 +166,8 @@ export default function Overview() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>세부 개념은 정본 글로 이어서 읽습니다</h3>
         <p>
-          이 글은 요청 하나가 전체 system을 통과하는 지도를 소유합니다. Session
-          저장, SSE parser, tool dispatch, permission 규칙과 file boundary의 세부
-          구현은 아래 글에서 중복 없이 이어집니다.
+          이 글은 요청 하나가 전체 system을 통과하는 지도를 소유합니다. Session 저장, SSE parser, tool dispatch, permission 규칙, file
+          boundary의 세부 구현은 아래 글에서 중복 없이 이어집니다.
         </p>
       </div>
 

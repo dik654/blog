@@ -126,10 +126,8 @@ export default function Overview() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>로그인 오류 한 건이 남겨야 하는 일곱 artifact</h3>
         <p>
-          앞의 네 단계는 아직 외부 effect가 없는 proposal·판정 구간입니다. 다섯
-          번째 단계에서 처음 process가 생기고, 여섯 번째 observation은 “실행을
-          허가했다”는 기록이 아니라 실제로 관측한 결과입니다. 마지막 test가 같은
-          수정본과 cwd에서 통과해야 “401을 고쳤다”는 결론을 낼 수 있습니다.
+          앞의 네 단계는 아직 외부 effect가 없는 proposal·판정 구간입니다. 다섯 번째 단계에 와서야 처음 process가 생깁니다. 여섯 번째 observation은 “실행을
+          허가했다”는 기록이 아니라 실제로 관측한 결과입니다. 마지막 test가 같은 수정본과 cwd에서 통과해야 “401을 고쳤다”는 결론을 낼 수 있습니다.
         </p>
       </div>
 
@@ -370,12 +368,9 @@ export default function Overview() {
           effect를 중복하는지 판단할 수 있습니다.
         </p>
         <p>
-          로그인 사례의 deterministic test는 고정된 fixture로 401이 재현되고,
-          최소 수정 뒤 예상 status와 response body가 나오며, 관련 없는 workspace
-          diff가 없다는 세 조건을 확인합니다. Shell command가 exit 0이었다는 사실만
-          가지고 login 동작이 고쳐졌다고 결론내리지 않습니다. 반대로 test timeout
-          뒤에도 child나 file mutation이 남을 수 있으므로 effect receipt를 먼저
-          reconciliation한 뒤 재실행합니다.
+          로그인 사례의 deterministic test는 고정된 fixture로 401이 재현되고, 최소 수정 뒤 예상 status와 response body가 나오며, 관련 없는
+          workspace diff가 없다는 세 조건을 확인합니다. shell command가 exit 0이었다는 사실만 가지고 login 동작이 고쳐졌다고 결론내리지는 않습니다. 반대로
+          test timeout 뒤에도 child나 file mutation이 남을 수 있으므로 effect receipt를 먼저 reconciliation한 뒤 재실행합니다.
         </p>
       </div>
 

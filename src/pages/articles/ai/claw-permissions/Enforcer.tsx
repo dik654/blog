@@ -61,12 +61,9 @@ export default function Enforcer() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Policy가 Deny를 계산해도 executor가 그 결과를 확인하지 않으면 아무런
-          효과가 없습니다. 로그인 사례의 read/search, edit, test는 각각 다른
-          arguments와 effect를 가지므로 dispatch는 tool name만 보지 않고 실제
-          path·command를 먼저 parse해야 합니다. 그 뒤 계산한 required mode와
-          active policy를 비교하고, Denied면 file write나 process 실행 전에
-          멈춥니다.
+          Policy가 Deny를 계산해도 executor가 그 결과를 확인하지 않으면 아무런 효과가 없습니다. 로그인 사례의 read/search, edit, test는 각각 다른
+          arguments와 effect를 가지므로 dispatch는 tool name만 보지 않고 실제 path·command를 먼저 parse해야 합니다. 그 뒤 계산한 required
+          mode와 active policy를 비교하고 Denied면 file write나 process 실행 전에 멈춥니다.
         </p>
         <p>
           Pinned <code>GlobalToolRegistry</code>의 built-in 실행 경로는 이
@@ -77,10 +74,9 @@ export default function Enforcer() {
           합니다.
         </p>
         <p>
-          Registry에 없는 tool name은 unsupported-tool error로 끝나며 executor를
-          시작하지 않습니다. 반면 등록된 built-in도 enforcer가 주입되지 않으면
-          permission check를 건너뛸 수 있으므로, “unknown은 막힌다”와 “known
-          tool은 항상 검사된다”를 같은 주장으로 묶으면 안 됩니다.
+          Registry에 없는 tool name은 unsupported-tool error로 끝나며 executor를 시작하지 않습니다. 등록된 built-in은 사정이 다릅니다.
+          enforcer가 주입되지 않으면 permission check를 건너뛸 수 있으므로 “unknown은 막힌다”와 “known tool은 항상 검사된다”를 같은 주장으로 묶으면 안
+          됩니다.
         </p>
       </div>
 
@@ -189,40 +185,30 @@ export default function Enforcer() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>문자열 분류는 유용하지만 sandbox의 대체물이 아닙니다</h3>
         <p>
-          Pinned tools dispatch는 존재하는 path를 canonicalize하고 workspace 밖
-          symlink나 absolute path를 높은 mode로 분류하려고 합니다. Bash도 알려진
-          read 계열 command와 path를 보수적으로 검사합니다. 그러나 shell
-          language 전체를 이해하는 parser는 아니며, source 스스로 heuristic의
-          한계를 남깁니다. Missing path, TOCTOU, interpreter, redirect와 새
-          shell syntax는 계속 negative test가 필요합니다.
+          Pinned tools dispatch는 존재하는 path를 canonicalize하고 workspace 밖 symlink나 absolute path를 높은 mode로 분류하려고
+          합니다. Bash도 알려진 read 계열 command와 path를 보수적으로 검사합니다. 그러나 shell language 전체를 이해하는 parser는 아니며 source
+          스스로 heuristic의 한계를 남깁니다. Missing path, TOCTOU, interpreter, redirect, 새 shell syntax는 계속 negative
+          test가 필요합니다.
         </p>
         <p>
-          TOCTOU(time-of-check to time-of-use)는 path나 policy를 확인한 뒤 실제
-          사용 직전에 대상이 바뀌는 문제입니다. 안전한 목표 설계에서는 승인한
-          canonical arguments와 policy generation을 digest로 묶고, executor
-          직전에 다시 검증합니다. File handle 기반 API, sandbox, non-root OS
-          identity와 egress 제한도 마지막 경계로 남습니다. 이 재검증 protocol은
-          pinned enforcer의 완성된 기능이 아니라 hardening 요구사항입니다.
+          TOCTOU(time-of-check to time-of-use)는 path나 policy를 확인한 뒤 실제 사용 직전에 대상이 바뀌는 문제입니다. 안전한 목표 설계에서는 승인한
+          canonical arguments와 policy generation을 digest로 묶고 executor 직전에 다시 검증합니다. File handle 기반 API,
+          sandbox, non-root OS identity, egress 제한도 마지막 경계로 남습니다. 이 재검증 protocol은 pinned enforcer의 완성된 기능이 아니라
+          hardening 요구사항입니다.
         </p>
 
         <h3>실행 성공과 승인 소비는 crash에서도 연결돼야 합니다</h3>
         <p>
-          Edit가 실제로 적용된 직후 process가 죽으면 tool result는 없지만
-          effect는 남을 수 있습니다. 재개할 때 approval을 다시 쓰고 edit를 blind
-          replay하면 중복 effect가 생깁니다. Stable operation ID, planned
-          operation, before/after digest와 status lookup을 보존하고, completed면
-          기존 effect에 result를 붙이고, failed면 안전 조건을 확인한 뒤
-          retry하며, unknown이면 사람의 확인이나 compensation으로 보내야 합니다.
-          Exactly-once를 주장하기보다 idempotency와 reconciliation을 설계하는
-          편이 정확합니다.
+          Edit가 실제로 적용된 직후 process가 죽으면 tool result는 없지만 effect는 남을 수 있습니다. 재개할 때 approval을 다시 쓰고 edit를 blind
+          replay하면 중복 effect가 생깁니다. Stable operation ID, planned operation, before/after digest, status
+          lookup을 보존해 둡니다. completed면 기존 effect에 result를 붙이고 failed면 안전 조건을 확인한 뒤 retry하며 unknown이면 사람의 확인이나
+          compensation으로 보냅니다. Exactly-once를 주장하기보다 idempotency와 reconciliation을 설계하는 편이 정확합니다.
         </p>
         <p>
-          구체적으로는 token과 stable operation ID를 planned operation에 먼저
-          묶고, 실행 직전에는 scope·executor·expiry를 다시 확인합니다. Consume을
-          effect 전에 끝내면 실행 실패 시 승인을 잃고, effect 뒤에만 하면 crash
-          때 같은 token이 재사용될 수 있습니다. 일반 file write와 in-memory
-          ledger 사이에는 원자적 transaction이 없으므로, 어느 시점을 택하든
-          status lookup과 reconciliation을 release contract에 포함해야 합니다.
+          구체적으로는 token과 stable operation ID를 planned operation에 먼저 묶고 실행 직전에는 scope·executor·expiry를 다시 확인합니다.
+          Consume을 effect 전에 끝내면 실행 실패 시 승인을 잃고 effect 뒤에만 하면 crash 때 같은 token이 재사용될 수 있습니다. 일반 file write와
+          in-memory ledger 사이에는 원자적 transaction이 없으므로 어느 시점을 택하든 status lookup과 reconciliation을 release
+          contract에 포함해야 합니다.
         </p>
       </div>
 

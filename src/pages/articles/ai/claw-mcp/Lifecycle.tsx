@@ -40,10 +40,8 @@ export default function Lifecycle() {
           cleanup을 일관되게 만들기 위해 존재합니다.
         </p>
         <p className="leading-7">
-          상태를 많이 나눈다고 자동으로 안전해지는 것은 아닙니다. 각 상태에
-          진입할 수 있는 event, 허용하는 operation, 빠져나가는 조건과 cleanup
-          책임이 명확해야 합니다. 전이 규칙이 코드 곳곳에 흩어지면 enum은 많지만
-          실제 lifecycle은 검증하기 어려워집니다.
+          상태를 많이 나눈다고 자동으로 안전해지는 것은 아닙니다. 각 상태에 진입할 수 있는 event, 허용하는 operation, 빠져나가는 조건, cleanup 책임이 명확해야
+          합니다. 전이 규칙이 코드 곳곳에 흩어지면 enum은 많지만 실제 lifecycle은 검증하기 어려워집니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
@@ -65,10 +63,8 @@ export default function Lifecycle() {
           <li>tool catalog를 내부 registry에 연결한 뒤 호출을 허용합니다.</li>
         </ol>
         <p className="leading-7">
-          server가 광고하지 않은 capability의 method를 추측해서 호출하면 안
-          됩니다. 반대로 tools는 정상인데 resources를 지원하지 않는 server를
-          전체 실패로 처리할 필요도 없습니다. 필수 capability와 선택
-          capability를 구분해야 graceful degradation이 의미를 가집니다.
+          server가 광고하지 않은 capability의 method를 추측해서 호출하면 안 됩니다. 그렇다고 tools는 정상인데 resources를 지원하지 않는 server를 전체
+          실패로 처리할 필요도 없습니다. 필수 capability와 선택 capability를 구분해야 graceful degradation이 의미를 가집니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
@@ -82,28 +78,21 @@ export default function Lifecycle() {
           발생합니다.
         </p>
         <p className="leading-7">
-          상태 event에는 server 이름, protocol revision, 실패 phase, retry
-          횟수와 root cause를 남깁니다. UI에는 “연결됨” 하나만 보여 주지 않고
-          어떤 기능을 사용할 수 없는지 알려야 모델과 사용자가 잘못된 tool을 계속
-          선택하지 않습니다.
+          상태 event에는 server 이름, protocol revision, 실패 phase, retry 횟수, root cause를 남깁니다. UI에 “연결됨” 하나만 띄우면 모델과
+          사용자가 잘못된 tool을 계속 고릅니다. 어떤 기능을 사용할 수 없는지까지 알려야 합니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
           timeout과 shutdown도 전이의 일부다
         </h3>
         <p className="leading-7">
-          MCP는 request마다 timeout을 두고, 기다리기를 중단할 때 cancellation을
-          알리도록 권장합니다. 고정된 5초·10초를 보편값으로 쓰기보다 spawn,
-          initialize, tool call처럼 operation별로 설정하고 progress
-          notification이 와도 전체 최대 시간은 제한합니다.
+          MCP는 request마다 timeout을 두고 기다리기를 중단할 때 cancellation을 알리도록 권장합니다. 고정된 5초·10초를 보편값으로 쓰기보다 spawn,
+          initialize, tool call처럼 operation별로 설정하고 progress notification이 와도 전체 최대 시간은 제한합니다.
         </p>
         <p className="leading-7">
-          legacy stdio shutdown에서는 stdin을 먼저 닫고 process 종료를 기다린
-          뒤, 필요할 때 SIGTERM과 SIGKILL 순으로 escalation합니다. reader task와
-          pending request도 함께 종료해 기다리는 caller가 영원히 남지 않게 해야
-          합니다. 최신 stateless revision으로 옮길 때는 이 process lifecycle은
-          유지하되 protocol handshake state를 분리하거나 제거하는 migration이
-          필요합니다.
+          legacy stdio shutdown에서는 stdin을 먼저 닫고 process 종료를 기다린 뒤 필요할 때 SIGTERM과 SIGKILL 순으로 escalation합니다.
+          reader task와 pending request도 함께 종료해 기다리는 caller가 영원히 남지 않게 합니다. 최신 stateless revision으로 옮길 때는 이
+          process lifecycle은 유지하되 protocol handshake state를 분리하거나 제거하는 migration이 필요합니다.
         </p>
       </div>
     </section>

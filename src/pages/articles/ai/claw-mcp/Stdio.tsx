@@ -9,11 +9,9 @@ export default function Stdio() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          MCP stdio transport에서는 client가 server를 child process로 시작하고,
-          server는 stdin에서 JSON-RPC message를 읽어 stdout으로 응답합니다.
-          message는 UTF-8 JSON 한 줄로 구분되며 embedded newline을 포함하지
-          않습니다. 따라서 stdout에 일반 log를 출력하면 protocol stream이
-          오염되고 전체 연결이 깨질 수 있습니다.
+          MCP stdio transport에서는 client가 server를 child process로 시작하고 server는 stdin에서 JSON-RPC message를 읽어
+          stdout으로 응답합니다. message는 UTF-8 JSON 한 줄로 구분되며 embedded newline을 포함하지 않습니다. stdout에 일반 log를 출력하면
+          protocol stream이 오염되고 전체 연결이 깨질 수 있습니다.
         </p>
         <p className="leading-7">
           Claw Code snapshot의 <code>McpStdioProcess</code>는 process handle,
@@ -31,17 +29,13 @@ export default function Stdio() {
           stdout은 protocol, stderr는 diagnostic channel이다
         </h3>
         <p className="leading-7">
-          process를 시작할 때 stdin, stdout, stderr를 각각 pipe로 확보합니다.
-          request는 stdin에 쓰고 response와 notification은 stdout에서 읽으며,
-          diagnostic log는 stderr에서 별도 task로 drain합니다. stderr를 읽지
-          않으면 child의 pipe buffer가 차 process가 멈출 수 있으므로 로그를
-          사용하지 않더라도 소비해야 합니다.
+          process를 시작할 때 stdin, stdout, stderr를 각각 pipe로 확보합니다. request는 stdin에 쓰고 response와 notification은
+          stdout에서 읽으며 diagnostic log는 stderr에서 별도 task로 drain합니다. stderr를 읽지 않으면 child의 pipe buffer가 차
+          process가 멈출 수 있으므로 로그를 사용하지 않더라도 소비해야 합니다.
         </p>
         <p className="leading-7">
-          command와 environment는 외부 입력이 아니라 신뢰 경계입니다.
-          executable과 argument를 shell string으로 합치지 않고 process API에
-          분리해 전달하며, secret은 필요한 server에만 주입합니다. child
-          process의 작업 디렉터리와 상속 file descriptor도 최소화해야 합니다.
+          command와 environment는 외부 입력이 아니라 신뢰 경계입니다. executable과 argument를 shell string으로 합치지 않고 process API에
+          분리해 전달하며 secret은 필요한 server에만 주입합니다. child process의 작업 디렉터리와 상속 file descriptor도 최소화합니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">

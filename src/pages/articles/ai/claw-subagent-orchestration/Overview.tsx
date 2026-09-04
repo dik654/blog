@@ -18,10 +18,8 @@ export default function Overview() {
       <ContentBoundary article="claw-subagent-orchestration" />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          긴 작업을 여러 agent에 나누면 탐색 결과가 메인 문맥을 가득 채우는 일을
-          줄이고 독립적인 조사를 병렬로 진행할 수 있습니다. 그러나 같은 파일을
-          동시에 수정하거나 목표가 겹치면 통합 비용과 충돌이 더 커집니다. 따라서
-          multi-agent가 항상 토큰을 절약하거나 품질을 높인다고 볼 수는 없습니다.
+          긴 작업을 여러 agent에 나누면 탐색 결과가 메인 문맥을 가득 채우는 일을 줄이고 독립적인 조사를 병렬로 진행할 수 있습니다. 그러나 같은 파일을 동시에 고치거나 목표가 겹치면
+          통합 비용과 충돌이 더 커집니다. multi-agent가 늘 토큰을 아끼거나 품질을 높인다고 보기는 어렵습니다.
         </p>
         <p>
           오케스트레이션의 핵심은 agent 수가 아니라{" "}
@@ -75,22 +73,17 @@ export default function Overview() {
           Agent tool은 새 세션과 권한 범위를 만든다
         </h3>
         <p>
-          메인 agent가 Agent tool을 호출하면 작업 설명만 넘기는 것이 아니라,
-          사용할 도구, 모델, 격리 방식, 반환 형식을 함께 정해야 합니다.
-          Explore나 Plan 같은 이름은 편의상 붙인 역할일 뿐이며, 실제 안전성과
-          품질은 허용 도구와 작업 계약에서 나옵니다. 원래 세션의 모든 secret과
-          권한을 그대로 상속하는 것은 피해야 합니다.
+          main agent가 Agent tool을 호출할 때는 작업 설명만 넘기지 않습니다. 사용할 도구와 모델, 격리 방식, 반환 형식까지 함께 정해야 합니다. Explore나 Plan
+          같은 이름은 편의상 붙인 역할일 뿐이고 실제 안전성과 품질은 허용 도구와 작업 계약에서 나옵니다. 원래 session의 모든 secret과 권한을 그대로 상속하는 것은 피해야
+          합니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
           결과 요약보다 검증 가능한 산출물이 먼저다
         </h3>
         <p>
-          sub-agent가 “완료했다”고 반환해도 파일, commit, 테스트 결과가 실제로
-          존재하는지 확인해야 합니다. 읽기 전용 조사는 근거 경로와 인용 위치를,
-          구현 작업은 diff와 검증 명령을 반환하게 하면 메인 agent가 결과를 다시
-          판단할 수 있습니다. 병렬 작업은 소유 파일을 분리하고, 겹치는 변경은 한
-          통합 주체가 순서대로 합치는 편이 안전합니다.
+          sub-agent가 “완료했다”고 반환해도 파일과 commit, test 결과가 실제로 있는지 확인해야 합니다. 읽기 전용 조사는 근거 경로와 인용 위치를, 구현 작업은 diff와
+          검증 명령을 반환하게 하면 main agent가 결과를 다시 판단할 수 있습니다. 병렬 작업은 소유 파일을 분리하고 겹치는 변경은 한 통합 주체가 순서대로 합치는 편이 안전합니다.
         </p>
         <p>
           다음에는 <strong>team lead와 worker</strong>의 책임 경계를,

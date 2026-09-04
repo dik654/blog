@@ -22,9 +22,8 @@ export default function PrePost() {
           지점이므로, 실패를 발견해도 원래 작업을 없던 일로 만들 수는 없습니다.
         </p>
         <p className="leading-7">
-          이 차이를 흐리면 post hook의 “deny”가 rollback처럼 보이거나 pre hook이
-          기본 permission을 넓히는 우회 통로가 됩니다. event type별로 가능한
-          outcome과 failure policy를 제한해야 합니다.
+          이 차이를 흐리면 post hook의 “deny”가 rollback처럼 보이거나 pre hook이 기본 permission을 넓히는 우회 통로가 됩니다. event type별로
+          가능한 outcome과 failure policy를 제한해 둡니다.
         </p>
 
         <div className="not-prose my-8">
@@ -51,10 +50,8 @@ export default function PrePost() {
           matcher는 canonical event를 대상으로 평가한다
         </h3>
         <p className="leading-7">
-          raw command string에 정규식 하나만 적용하면 quoting과 path 표현에 따라
-          같은 action이 다르게 매칭될 수 있습니다. dispatch가 tool input과
-          resource를 정규화한 뒤 tool name, effect class, canonical path와 event
-          type을 matcher에 전달하는 편이 안정적입니다.
+          raw command string에 정규식 하나만 적용하면 quoting과 path 표현에 따라 같은 action이 다르게 매칭될 수 있습니다. dispatch가 tool
+          input과 resource를 정규화한 뒤 tool name·effect class·canonical path와 event type을 matcher에 전달하는 편이 안정적입니다.
         </p>
         <p className="leading-7">
           hook config를 읽는 시점에 matcher를 compile하고 잘못된 표현은
@@ -83,32 +80,25 @@ export default function PrePost() {
           Post hook의 실패는 원래 result와 분리한다
         </h3>
         <p className="leading-7">
-          audit 전송 실패 때문에 이미 성공한 file write를 실패로 바꾸면 모델이
-          같은 write를 다시 실행할 수 있습니다. 원래 tool result와 post hook
-          result를 별도 field로 반환하고, 필수 compliance hook이 실패했다면 다음
-          action을 block하거나 escalation하되 완료된 side effect는 그대로
-          보고합니다.
+          audit 전송 실패 때문에 이미 성공한 file write를 실패로 바꾸면 모델이 같은 write를 다시 실행할 수 있습니다. 원래 tool result와 post hook
+          result는 별도 field로 반환합니다. 필수 compliance hook이 실패했다면 다음 action을 block하거나 escalation하되 완료된 side effect는
+          그대로 보고합니다.
         </p>
         <p className="leading-7">
-          단순 telemetry hook은 명시적으로 fail-open할 수 있지만, secret
-          scanner나 release gate처럼 보안·배포를 막는 hook은 fail-closed해야
-          합니다. 이 선택은 hook code가 아니라 config의 criticality contract에
-          둡니다.
+          단순 telemetry hook은 명시적으로 fail-open할 수 있지만 secret scanner나 release gate처럼 보안·배포를 막는 hook은 fail-
+          closed해야 합니다. 이 선택은 hook code가 아니라 config의 criticality contract에 둡니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
           재귀 호출과 중첩 깊이를 제한한다
         </h3>
         <p className="leading-7">
-          hook이 다시 tool을 호출하면 같은 hook이 재실행돼 무한 루프가 생길 수
-          있습니다. causal chain과 hook depth를 event에 넣고, 기본적으로 hook
-          process에서 시작된 내부 call은 동일 hook을 다시 호출하지 않게 합니다.
-          필요한 중첩은 명시적 allowlist와 작은 depth limit로만 허용합니다.
+          hook이 다시 tool을 호출하면 같은 hook이 재실행돼 무한 루프가 생길 수 있습니다. causal chain과 hook depth를 event에 넣습니다. 기본값은 hook
+          process에서 시작된 내부 call이 동일 hook을 다시 호출하지 않는 것입니다. 필요한 중첩은 명시적 allowlist와 작은 depth limit로만 허용합니다.
         </p>
         <p className="leading-7">
-          여러 hook은 config에 고정된 순서로 실행하되, 독립적인 read-only hook은
-          deadline 안에서 병렬화할 수 있습니다. 결과 결합은 completion order가
-          아니라 stable hook order를 사용합니다.
+          여러 hook은 config에 고정된 순서로 실행하되 독립적인 read-only hook은 deadline 안에서 병렬화할 수 있습니다. 결과 결합은 completion
+          order가 아니라 stable hook order를 사용합니다.
         </p>
       </div>
     </section>

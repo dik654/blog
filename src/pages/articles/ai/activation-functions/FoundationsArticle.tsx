@@ -33,7 +33,10 @@ export default function ActivationFoundationsArticle() {
 
     <section id="step-function" className="mb-16 scroll-mt-20 space-y-6">
       <header><p className="text-sm font-semibold text-primary">01 · hard threshold</p><h2 className="mt-2 text-2xl font-bold">Step function은 결정을 만들지만 gradient 학습 경로는 만들지 못한다</h2></header>
-      <p>Step activation은 score가 기준을 넘었는지만 보고 0 또는 1을 냅니다. 형태는 스위치처럼 명확하지만, threshold를 제외한 모든 구간에서 score를 조금 움직여도 출력이 변하지 않습니다. 따라서 forward decision과 standard backpropagation용 hidden activation을 구분해야 합니다.</p>
+      <p>
+            Step activation은 score가 기준을 넘었는지만 보고 0 또는 1을 냅니다. 형태는 스위치처럼 명확하지만 threshold를 제외한 모든 구간에서 score를 조금
+            움직여도 출력이 변하지 않습니다. 따라서 forward decision과 standard backpropagation용 hidden activation을 구분해야 합니다.
+          </p>
       <ExplainedFormula
         question="Step function이 hidden layer의 표준 gradient 학습에 맞지 않는 이유는 무엇인가?"
         idea={<>Threshold 통과 여부를 indicator로 만들면 forward 값은 분명하지만, 각 평평한 구간의 derivative가 0이라 upstream gradient가 parameter까지 이어지지 않습니다.</>}
@@ -56,7 +59,10 @@ export default function ActivationFoundationsArticle() {
 
     <section id="sigmoid" className="mb-16 scroll-mt-20 space-y-6">
       <header><p className="text-sm font-semibold text-primary">02 · probability와 saturation</p><h2 className="mt-2 text-2xl font-bold">Sigmoid는 logit을 0–1 비율로 바꾸고, 양 끝에서는 스스로 기울기를 줄인다</h2></header>
-      <p>Sigmoid activation은 범위가 없는 logit을 0과 1 사이로 압축합니다. Bernoulli probability나 gate 비율처럼 0–1 의미가 필요한 곳에 맞지만, 큰 양수·음수에서는 출력이 상한·하한에 붙습니다. 이 평평한 구간을 activation saturation이라 부릅니다.</p>
+      <p>
+            Sigmoid activation은 범위가 없는 logit을 0과 1 사이로 압축합니다. Bernoulli probability나 gate 비율처럼 0–1 의미가 필요한 곳에
+            맞지만 큰 양수·음수에서는 출력이 상한·하한에 붙습니다. 이 평평한 구간을 activation saturation이라 부릅니다.
+          </p>
       <ExplainedFormula
         question="Sigmoid의 출력과 local slope를 한 번에 어떻게 읽는가?"
         idea={<>지수로 logit의 부호와 크기를 양수 비율로 바꾼 뒤 1을 포함한 합으로 정규화합니다. Derivative는 출력 p와 남은 여유 1-p를 곱해 구합니다.</>}
@@ -80,7 +86,10 @@ export default function ActivationFoundationsArticle() {
 
     <section id="tanh" className="mb-16 scroll-mt-20 space-y-6">
       <header><p className="text-sm font-semibold text-primary">03 · signed bounded state</p><h2 className="mt-2 text-2xl font-bold">Tanh는 0을 중심으로 음수·양수 방향을 보존하지만 saturation은 남는다</h2></header>
-      <p>Tanh activation은 실수 입력을 -1과 1 사이로 압축합니다. 0 근처에서는 기울기가 1이라 signed candidate state를 비교적 그대로 전달하고, recurrent cell의 candidate처럼 방향을 보존해야 하는 곳에 쓰입니다. 하지만 큰 절댓값에서는 sigmoid와 마찬가지로 평평해집니다.</p>
+      <p>
+            Tanh activation은 실수 입력을 -1과 1 사이로 압축합니다. 0 근처에서는 기울기가 1이라 signed candidate state를 비교적 그대로 전달하고
+            recurrent cell의 candidate처럼 방향을 보존해야 하는 곳에 쓰입니다. 하지만 큰 절댓값에서는 sigmoid와 마찬가지로 평평해집니다.
+          </p>
       <ExplainedFormula
         question="Tanh가 0 근처에서는 신호를 살리고 큰 입력에서는 포화하는 이유는 무엇인가?"
         idea={<>Forward output h를 -1과 1 사이에 둔 뒤 derivative를 1-h²로 계산합니다. h가 0이면 기울기 1, ±1에 가까우면 기울기 0입니다.</>}

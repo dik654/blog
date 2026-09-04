@@ -8,11 +8,9 @@ export default function Overview() {
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          조직 전용 도구와 검증 로직을 모두 코어 바이너리에 넣으면 작은 변경도
-          전체 배포로 이어집니다. Plugin은 기능을 별도 artifact와 manifest로
-          패키징해 독립적으로 설치하고 교체하게 하지만, 그 순간 외부 코드가
-          워크스페이스와 세션 데이터에 접근할 수 있는 신뢰 경계가 생깁니다.
-          따라서 발견·승인·실행·종료를 하나의 lifecycle로 설계해야 합니다.
+          조직 전용 도구와 검증 로직을 모두 코어 바이너리에 넣으면 작은 변경 하나도 전체 배포가 됩니다. Plugin은 기능을 별도 artifact와 manifest로 묶어 독립적으로
+          설치하고 교체하게 해 주지만 그 순간 신뢰 경계가 하나 생깁니다. 외부 코드가 workspace와 session 데이터에 닿을 수 있는 경계입니다. 따라서 발견·승인·실행·종료를
+          하나의 lifecycle로 설계해야 합니다.
         </p>
         <p>
           이 글의 <code>ToolProvider</code>, <code>HookProvider</code>,
@@ -39,12 +37,10 @@ export default function Overview() {
           manifest는 소개문이 아니라 검증 가능한 실행 계약이다
         </h3>
         <p>
-          manifest에는 이름과 버전 외에도 plugin API version, entrypoint, 제공
-          capability, 입력·출력 schema, 필요한 파일·네트워크 범위, resource
-          limit과 lifecycle mode가 들어가야 합니다. loader는 이 선언을 실제
-          artifact digest와 묶고, entrypoint가 plugin root를 벗어나지 않는지
-          canonical path 기준으로 검사합니다. 선언한 권한은 요청일 뿐이며 실제
-          실행 시 host가 다시 강제합니다.
+          manifest에는 이름과 버전만 넣어서는 부족합니다. plugin API version과 entrypoint, 제공 capability, 입력·출력 schema는 물론 필요한
+          파일·네트워크 범위와 resource limit, lifecycle mode까지 들어가야 합니다. loader는 이 선언을 실제 artifact digest와 묶습니다.
+          entrypoint가 plugin root를 벗어나지 않는지도 canonical path 기준으로 검사합니다. 선언한 권한은 요청일 뿐이며 실제 실행 시 host가 다시
+          강제합니다.
         </p>
         <div className="not-prose my-6 grid gap-3 md:grid-cols-3">
           {[
@@ -65,10 +61,8 @@ export default function Overview() {
           subprocess는 crash 경계이지 자동 sandbox가 아니다
         </h3>
         <p>
-          별도 프로세스로 실행하면 plugin crash와 memory leak을 코어에서 분리할
-          수 있고 timeout 때 process tree를 종료하기도 쉽습니다. 그러나 같은
-          사용자 권한과 mount, network namespace를 공유하면 파일과 secret에
-          접근할 수 있으므로 보안 격리는 별도로 적용해야 합니다. 아래에서는 이
+          별도 프로세스로 실행하면 plugin crash와 memory leak이 코어까지 번지지 않고 timeout 때 process tree를 종료하기도 쉽습니다. 그러나 같은 사용자
+          권한과 mount, network namespace를 공유하면 plugin이 파일과 secret에 접근할 수 있습니다. 보안 격리는 그래서 따로 걸어야 합니다. 아래에서는 이
           경계를 registry, 실행 protocol, lifecycle 순서로 확장합니다.
         </p>
       </div>

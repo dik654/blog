@@ -8,11 +8,9 @@ export default function GradientUpdate() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          가장 단순한 gradient descent는 현재 gradient의 반대 방향으로 learning
-          rate만큼 움직인다. 실제 training은 mini-batch noise, parameter별 scale과
-          곡률 때문에 momentum, adaptive second moment, schedule을 함께 사용할 수
-          있지만, 어느 경우든 backward가 계산한 gradient를 update로 변환하는 별도
-          단계라는 구조는 같다.
+          가장 단순한 gradient descent는 현재 gradient의 반대 방향으로 learning rate만큼 움직인다. 실제 training은 mini-batch noise,
+          parameter별 scale과 곡률 때문에 momentum, adaptive second moment, schedule을 함께 사용할 수 있지만 어느 경우든 backward가
+          계산한 gradient를 update로 변환하는 별도 단계라는 구조는 같다.
         </p>
       </div>
 
@@ -40,8 +38,8 @@ export default function GradientUpdate() {
       <div className="not-prose mt-6 rounded-xl border border-border/75 bg-card p-5">
         <p className="text-sm font-semibold">SGD·Momentum·Adam·AdamW의 state와 update 차이는 별도 글이 소유합니다</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          이 글은 backward와 optimizer의 경계까지만 다루고, bias correction·moment
-          estimate·optimizer memory는 다음 글에서 같은 parameter budget으로 비교합니다.
+          이 글은 backward와 optimizer의 경계까지만 다루고 bias correction·moment estimate·optimizer memory는 다음 글에서 같은
+          parameter budget으로 비교합니다.
         </p>
         <Link to="/ai/optimizers" className="mt-3 inline-flex text-sm font-semibold text-primary hover:underline">Optimizer 글 바로 보기 →</Link>
       </div>

@@ -30,10 +30,8 @@ export default function Recipes() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          recovery recipe는 실패 이름에 명령 목록을 연결한 macro가 아닙니다.
-          같은 build failure라도 dependency outage, compile error와 disk full은
-          대응이 다르므로 evidence로 원인을 분류하고, 현재 state가 recipe의
-          precondition을 만족할 때만 실행해야 합니다.
+          recovery recipe는 실패 이름에 명령 목록을 연결한 macro가 아닙니다. 같은 build failure라도 dependency outage와 compile error,
+          disk full은 대응이 다릅니다. evidence로 원인을 분류하고 현재 state가 recipe의 precondition을 만족할 때만 실행해야 합니다.
         </p>
         <p className="leading-7">
           분석 snapshot의 <code>RecoveryRecipe</code>와 step enum은 내부
@@ -86,15 +84,12 @@ export default function Recipes() {
           transient failure만 단순 retry한다
         </h3>
         <p className="leading-7">
-          rate limit, 짧은 network timeout처럼 상태를 바꾸지 않고 시간이 지나면
-          나아질 수 있는 오류는 bounded backoff로 재시도할 수 있습니다. compile
-          error와 merge conflict는 입력이 같으면 결과도 같으므로 먼저 state를
-          수정하거나 다른 주체에게 넘겨야 합니다.
+          rate limit이나 짧은 network timeout은 상태를 바꾸지 않고도 시간이 지나면 나아질 수 있는 오류입니다. 이런 부류는 bounded backoff로 재시도할 수
+          있습니다. compile error와 merge conflict는 입력이 같으면 결과도 같습니다. 먼저 state를 고치거나 다른 주체에게 넘겨야 합니다.
         </p>
         <p className="leading-7">
-          retry budget은 recipe, task와 외부 dependency별로 추적하고 같은 실패
-          fingerprint가 반복되면 일찍 중단합니다. command가 실패했다고 무조건
-          LLM에게 다시 보내는 것은 recovery가 아니라 비용이 큰 반복입니다.
+          retry budget은 recipe와 task, 외부 dependency별로 따로 추적합니다. 같은 실패 fingerprint가 반복되면 일찍 중단합니다. command가
+          실패했다고 무조건 LLM에게 다시 보내는 것은 recovery가 아니라 비용이 큰 반복입니다.
         </p>
 
         <ExplainedFormula
@@ -128,10 +123,8 @@ export default function Recipes() {
           제외합니다.
         </p>
         <p className="leading-7">
-          shell step은 recovery engine의 특별 권한으로 실행하지 않고 일반 Bash와
-          같은 validation, permission과 sandbox를 통과합니다. 외부 CI 재실행은
-          idempotency key와 job ID를 기록해 timeout retry가 duplicate job을
-          만들지 않게 합니다.
+          shell step은 recovery engine의 특별 권한으로 실행하지 않습니다. 일반 Bash와 똑같이 validation과 permission, sandbox를 통과합니다.
+          외부 CI 재실행은 idempotency key와 job ID를 기록해 timeout retry가 duplicate job을 만들지 않게 합니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
@@ -144,9 +137,8 @@ export default function Recipes() {
           lockfile처럼 재생성할 수 있는 경우와 business logic을 구분합니다.
         </p>
         <p className="leading-7">
-          verifier는 원래 실패한 test만 먼저 실행해 빠르게 feedback을 주고, 통과
-          뒤에는 affected suite와 release gate를 실행합니다. local pass와 remote
-          CI pass를 서로 다른 evidence로 남깁니다.
+          verifier는 원래 실패한 test만 먼저 실행해 빠르게 feedback을 줍니다. 통과한 뒤에 affected suite와 release gate를 돌립니다. local
+          pass와 remote CI pass는 서로 다른 evidence로 남깁니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
@@ -159,8 +151,7 @@ export default function Recipes() {
           recovery attempt ID와 state version도 갱신합니다.
         </p>
         <p className="leading-7">
-          verifier가 성공 조건을 확인한 뒤에만 recovered terminal state로
-          전환합니다. 그 전에는 제한된 추가 recipe를 선택하거나 evidence
+          recovered terminal state로 전환하는 것은 verifier가 성공 조건을 확인한 뒤입니다. 그 전에는 제한된 추가 recipe를 고르거나 evidence
           bundle과 함께 escalation합니다.
         </p>
       </div>

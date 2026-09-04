@@ -8,10 +8,8 @@ export default function ReLU() {
       <h2 className="mb-6 text-2xl font-bold">ReLU: 양수 구간을 그대로 통과시키기</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          ReLU는 음수 입력을 0으로 만들고 양수 입력은 그대로 통과시킨다. 양수 구간의
-          derivative가 1이므로 sigmoid나 tanh처럼 큰 양수에서 포화하지 않고, 함수와
-          derivative 계산도 단순하다. 이런 성질 덕분에 deep convolutional network의
-          학습을 실용적으로 만드는 데 중요한 역할을 했다.
+          ReLU는 음수 입력을 0으로 만들고 양수 입력은 그대로 통과시킨다. 양수 구간의 derivative가 1이므로 sigmoid나 tanh처럼 큰 양수에서 포화하지 않고 함수와
+          derivative 계산도 단순하다. 이런 성질 덕분에 deep convolutional network의 학습을 실용적으로 만드는 데 중요한 역할을 했다.
         </p>
       </div>
       <ExplainedFormula
@@ -35,20 +33,17 @@ export default function ReLU() {
         </p>
         <h3>문제가 생겼을 때 확인할 것</h3>
         <p>
-          너무 큰 learning rate나 부적절한 initialization은 activation 분포를 음수
-          쪽으로 밀 수 있다. He initialization과 normalization으로 분포를 점검하고,
-          필요하면 음수 구간에 작은 기울기를 남기는 Leaky ReLU 같은 변형을 고려한다.
-          gradient clipping은 exploding gradient를 제한하는 도구이지 dying ReLU의
-          직접적인 해법으로 보기는 어렵다.
+          너무 큰 learning rate나 부적절한 initialization은 activation 분포를 음수 쪽으로 밀 수 있다. He initialization과
+          normalization으로 분포를 점검하고 필요하면 음수 구간에 작은 기울기를 남기는 Leaky ReLU 같은 변형을 고려한다. gradient clipping은
+          exploding gradient를 제한하는 도구이지 dying ReLU의 직접적인 해법으로 보기는 어렵다.
         </p>
       </div>
       <div id="paper-relu" className="prose prose-neutral dark:prose-invert max-w-none scroll-mt-20">
         <h3>논문으로 확인하기: rectifier가 겨냥한 문제</h3>
         <p>
-          Nair와 Hinton의 연구는 ReLU가 모든 깊은 모델에서 최선이라고 증명한 논문이
-          아니라, restricted Boltzmann machine의 hidden unit을 rectified linear unit으로
-          바꿨을 때의 표현과 학습 결과를 제시한 초기 근거입니다. 이후 CNN의 성과와
-          초기화 연구가 합쳐지며 rectifier가 널리 쓰였다는 범위를 구분해야 합니다.
+          Nair와 Hinton의 연구는 ReLU가 모든 깊은 모델에서 최선이라고 증명한 논문이 아닙니다. restricted Boltzmann machine의 hidden unit을
+          rectified linear unit으로 바꿨을 때의 표현과 학습 결과를 제시한 초기 근거입니다. 이후 CNN의 성과와 초기화 연구가 합쳐지며 rectifier가 널리 쓰였다는
+          범위를 구분해야 합니다.
         </p>
       </div>
       <ReLUViz />

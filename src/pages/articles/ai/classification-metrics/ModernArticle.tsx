@@ -76,8 +76,7 @@ export default function ClassificationMetricsArticle() {
           question="Brier loss는 왜 실제 probability p를 그대로 보고하도록 유도하나요?"
           idea={
             <p>
-              Bernoulli outcome의 두 경우를 probability로 평균하고, q=p일 때의
-              loss를 빼면 남는 값이 정확히 두 probability 차이의 제곱입니다.
+              Bernoulli outcome의 두 경우를 probability로 평균하고 q=p일 때의 loss를 빼면 남는 값이 정확히 두 probability 차이의 제곱입니다.
             </p>
           }
           formula={String.raw`\mathbb E[(Y-q)^2|X=x]-\mathbb E[(Y-p)^2|X=x]=(q-p)^2\ge0`}
@@ -152,8 +151,7 @@ export default function ClassificationMetricsArticle() {
           question="False negative와 false positive 비용이 다를 때 threshold를 어떻게 비교하나요?"
           idea={
             <p>
-              각 probability를 threshold와 비교해 hard action을 만들고, 실제
-              outcome과 만난 confusion branch마다 정한 비용을 합산합니다.
+              각 probability를 threshold와 비교해 hard action을 만들고 실제 outcome과 만난 confusion branch마다 정한 비용을 합산합니다.
             </p>
           }
           formula={String.raw`\hat y_i(\tau)=\mathbf1[p_i\ge\tau],\quad \widehat C(\tau)=n^{-1}\sum_i(c_{FN}\mathbf1[y_i=1,\hat y_i=0]+c_{FP}\mathbf1[y_i=0,\hat y_i=1])`}

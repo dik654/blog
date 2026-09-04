@@ -35,9 +35,8 @@ export default function PermissionOverride() {
           hook이 취소할 수 없습니다.
         </p>
         <p className="leading-7">
-          Deny에는 stable reason code와 사용자에게 보여줄 설명을 따로 둡니다.
-          여러 hook이 deny했다면 대표 이유 하나만 버리지 말고 관련 hook ID를
-          evidence에 남겨 운영자가 충돌을 확인할 수 있게 합니다.
+          Deny에는 stable reason code와 사용자에게 보여줄 설명을 따로 둡니다. 여러 hook이 deny했다면 대표 이유 하나만 버리지 말고 관련 hook ID를
+          evidence에 남깁니다. 그래야 운영자가 충돌을 확인할 수 있습니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
@@ -51,20 +50,16 @@ export default function PermissionOverride() {
           수 있습니다.
         </p>
         <p className="leading-7">
-          진행 중 process를 실제로 취소하려면 cancellation token을 executor와
-          process tree에 전달하고 cleanup 결과를 기다려야 합니다. hook
-          response가 abort라고 썼다는 사실만으로 OS process가 종료되지는
-          않습니다.
+          hook response가 abort라고 썼다는 사실만으로 OS process가 종료되지는 않습니다. 진행 중 process를 실제로 취소하려면 cancellation token을
+          executor와 process tree에 전달하고 cleanup 결과를 기다려야 합니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
           action 수정은 기존 approval을 무효화한다
         </h3>
         <p className="leading-7">
-          hook이 command나 path를 수정하도록 허용한다면 원래 action과 다른
-          permission 대상입니다. 수정된 arguments를 canonicalize하고 schema,
-          boundary, policy와 사용자 approval을 다시 거쳐야 하며, 예전 action
-          digest에 묶인 allow를 재사용하지 않습니다.
+          hook이 command나 path를 수정하도록 허용한다면 원래 action과 다른 permission 대상입니다. 수정된 arguments는 canonicalize한 뒤
+          schema, boundary, policy, 사용자 approval을 다시 거칩니다. 예전 action digest에 묶인 allow는 재사용하지 않습니다.
         </p>
         <p className="leading-7">
           대부분의 hook은 action을 직접 수정하기보다 deny reason이나 추가
@@ -76,10 +71,8 @@ export default function PermissionOverride() {
           권한을 넓히는 예외는 hook이 아니라 신뢰된 policy가 만든다
         </h3>
         <p className="leading-7">
-          특정 조직 hook이 기본 deny를 allow로 바꿔야 한다면 일반 hook output이
-          아니라 admin-signed policy, 좁은 capability와 명시적 scope를 가진 별도
-          제어면으로 설계해야 합니다. 대상 tool·resource·actor·expiry와 approval
-          owner가 모두 확인돼야 합니다.
+          특정 조직 hook이 기본 deny를 allow로 바꿔야 한다면 일반 hook output으로는 부족합니다. admin-signed policy와 좁은 capability, 명시적
+          scope를 가진 별도 제어면으로 설계합니다. 대상 tool·resource·actor·expiry, 그리고 approval owner가 모두 확인돼야 합니다.
         </p>
         <p className="leading-7">
           이 예외 역시 host sandbox와 OS permission을 넘을 수 없습니다. policy

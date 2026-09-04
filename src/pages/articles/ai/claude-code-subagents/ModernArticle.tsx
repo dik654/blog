@@ -14,9 +14,8 @@ export default function ClaudeCodeSubagentsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Main conversation을 복제하는 기능이 아닙니다. Objective·input
-            snapshot·tool scope·artifact·verification을 넘기고, 별도 context에서
-            나온 summary를 main이 다시 검증하는 handoff입니다.
+            Main conversation을 복제하는 기능이 아닙니다. Objective·input snapshot·tool scope·artifact·verification을 넘기고
+            별도 context에서 나온 summary를 main이 다시 검증하는 handoff입니다.
           </p>
         </div>
         <TermBreakdown

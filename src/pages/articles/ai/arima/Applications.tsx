@@ -11,11 +11,9 @@ export default function Applications() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          비계절 차분 뒤에도 lag s마다 dependence가 반복되면 seasonal difference와
-          seasonal AR·MA polynomial을 추가한 SARIMA를 고려한다. 월별 자료의 연간
-          pattern에 s=12가 자연스러울 수 있지만 영업일 수, 이동 휴일과 promotion
-          calendar처럼 실제 업무 주기가 sampling frequency와 다르면 plot과 domain
-          schedule에서 period를 확인해야 한다.
+          비계절 차분 뒤에도 lag s마다 dependence가 반복되면 seasonal difference와 seasonal AR·MA polynomial을 추가한 SARIMA를
+          고려한다. 월별 자료의 연간 pattern에는 s=12가 자연스러울 수 있다. 다만 영업일 수, 이동 휴일과 promotion calendar처럼 실제 업무 주기가 sampling
+          frequency와 다르면 plot과 domain schedule에서 period를 확인해야 한다.
         </p>
       </div>
 
@@ -44,12 +42,9 @@ export default function Applications() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Exogenous variable은 예측 시점에 실제로 이용할 수 있어야 한다</h3>
         <p>
-          회귀식에 ARIMA error를 결합하는 dynamic regression은 가격, 날씨, 행사처럼
-          target 밖의 정보를 사용할 수 있다. 그러나 test period의 실제 weather나
-          확정되지 않은 promotion 결과를 그대로 넣으면 future leakage가 된다.
-          Production에서 미래 값을 알 수 없다면 해당 variable 자체를 먼저
-          forecast하거나 scenario로 제공하고, 그 uncertainty가 최종 interval에
-          빠져 있음을 명시한다.
+          회귀식에 ARIMA error를 결합하는 dynamic regression은 가격, 날씨, 행사처럼 target 밖의 정보를 사용할 수 있다. 그러나 test period의 실제
+          weather나 확정되지 않은 promotion 결과를 그대로 넣으면 future leakage가 된다. Production에서 미래 값을 알 수 없다면 해당 variable
+          자체를 먼저 forecast하거나 scenario로 제공하고 그 uncertainty가 최종 interval에 빠져 있음을 명시한다.
         </p>
 
         <h3>ARIMA를 계속 쓸 때와 넘어갈 때</h3>
@@ -67,11 +62,10 @@ export default function Applications() {
           <p className="text-xs font-bold text-primary">논문 읽기 · Automatic ARIMA search</p>
           <p className="mt-2 text-sm font-semibold">Automatic Time Series Forecasting: The forecast Package for R</p>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            Hyndman과 Khandakar는 unit-root·seasonal-root test로 차분 후보를 정하고 AICc 기반
-            stepwise search로 ARIMA order를 탐색하는 실용 절차를 제시했습니다. 이는 논문의
-            likelihood·candidate space·implementation 조건에서 search 비용을 줄이는 방법이지,
-            선택된 model이 모든 horizon·structural break에서 최적이거나 rolling-origin 검증을
-            생략해도 된다는 결론은 아닙니다.
+            Hyndman과 Khandakar는 unit-root·seasonal-root test로 차분 후보를 정하고 AICc 기반 stepwise search로 ARIMA order를
+            탐색하는 실용 절차를 제시했습니다. 논문의 likelihood·candidate space·implementation 조건에서 search 비용을 줄이는 방법까지가 여기서
+            확인된 범위입니다. 선택된 model이 모든 horizon·structural break에서 최적이라거나 rolling-origin 검증을 생략해도 된다는 말은 여기서 나오지
+            않습니다.
           </p>
           <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://www.jstatsoft.org/article/view/v027i03" target="_blank" rel="noreferrer">원 논문의 차분·AICc·stepwise 절차 보기</a>
         </div>
@@ -82,10 +76,10 @@ export default function Applications() {
           operational cost에서 실제 추가 가치를 주는지 확인할 기준선으로 남긴다.
         </p>
         <p>
-          실제 교체 판단은 같은 forecast origins·horizons·available features에서 point error와
-          interval coverage, event·structural-break slice, p95 latency와 memory를 함께 비교한다.
-          Automatic search 결과도 이 gate를 통과해야 하며, canary에서 중요한 horizon의 error나
-          coverage가 hard limit를 넘으면 이전 ARIMA order·transform artifact로 rollback한다.
+          실제 교체 판단은 같은 forecast origins·horizons·available features에서 point error와 interval coverage,
+          event·structural-break slice, p95 latency와 memory를 함께 비교한다. Automatic search 결과도 이 gate를 통과해야 한다.
+          Canary에서 중요한 horizon의 error나 coverage가 hard limit를 넘으면 이전 ARIMA order·transform artifact로
+          rollback한다.
         </p>
       </div>
     </section>

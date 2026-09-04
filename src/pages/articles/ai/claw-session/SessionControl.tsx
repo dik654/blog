@@ -97,12 +97,9 @@ export default function SessionControl() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          JSONL file이 남아 있다는 사실은 login test process가 아직 실행
-          중이라는 뜻이 아닙니다. 반대로 runtime을 종료했다고 session record가
-          삭제되는 것도 아닙니다. Resume은 저장 record를 읽어 새 runtime을
-          만드는 작업이고, pause·shutdown은 현재 실행 자원을 정리하는
-          control입니다. 이 둘을 구분해야 “이어하기”가 이미 실행된 edit를 무심코
-          반복하지 않습니다.
+          JSONL file이 남아 있어도 login test process가 아직 돌고 있다는 뜻은 아닙니다. 반대로 runtime을 종료했다고 session record가 지워지지도
+          않습니다. Resume은 저장 record를 읽어 새 runtime을 만드는 작업입니다. pause·shutdown은 현재 실행 자원을 정리하는 control입니다. 이 둘을
+          구분해야 “이어하기”가 이미 실행된 edit를 무심코 반복하지 않습니다.
         </p>
       </div>
 
@@ -200,11 +197,9 @@ export default function SessionControl() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Temporary file과 rename은 한 file을 교체하다 찢어지는 위험을 줄이지만,
-          directory fsync, disk loss, 두 process의 동시 save, schema
-          migration이나 JSONL append와 filesystem edit의 원자성을 보장하지
-          않습니다. Recovery test는 마지막 줄이 일부만 쓰인 경우, snapshot이
-          손상된 경우와 rotation 중 crash를 따로 주입해야 합니다.
+          Temporary file과 rename은 한 file을 교체하다 찢어지는 위험을 줄여 줍니다. 그러나 directory fsync와 disk loss, 두 process의 동시
+          save, schema migration, JSONL append와 filesystem edit의 원자성까지 보장하지는 않습니다. Recovery test는 마지막 줄이 일부만
+          쓰인 경우와 snapshot이 손상된 경우, rotation 중 crash를 따로 주입해야 합니다.
         </p>
 
         <h3>Resume은 record load 뒤 다섯 경계를 다시 검증합니다</h3>
@@ -233,11 +228,9 @@ export default function SessionControl() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Process memory에 있던 provider connection, child process와 partial
-          stream은 session file에서 되살릴 수 없습니다. 저장된 ToolUse만 있고
-          ToolResult가 없다면 effect 상태를 먼저 조회하고, repository
-          revision·target digest와 artifact receipt가 맞지 않으면 자동 write를
-          거부해야 합니다.
+          Process memory에 있던 provider connection과 child process, partial stream은 session file에서 되살릴 수 없습니다.
+          저장된 ToolUse만 있고 ToolResult가 없다면 effect 상태를 먼저 조회합니다. repository revision·target digest와 artifact
+          receipt가 맞지 않으면 자동 write를 거부해야 합니다.
         </p>
 
         <h3>아래 lifecycle은 필요한 hardening contract입니다</h3>
@@ -305,11 +298,9 @@ export default function SessionControl() {
 
         <h3>Release는 paired failure-injection으로 검증합니다</h3>
         <p>
-          Session hardening은 happy path 하나로 평가할 수 없습니다. Base와
-          candidate의 full commit SHA를 고정하고, 같은 workspace snapshot, login
-          요청, model, deterministic provider fixture, tool registry와
-          permission policy를 사용합니다. 아래 fault를 각 crash cut에 주입해
-          record/view, artifact와 recovery outcome을 함께 비교합니다.
+          Session hardening은 happy path 하나로 평가할 수 없습니다. Base와 candidate의 full commit SHA를 고정합니다. 같은 workspace
+          snapshot과 login 요청, model, deterministic provider fixture, tool registry, permission policy를 그대로
+          씁니다. 아래 fault를 각 crash cut에 주입해 record/view와 artifact, recovery outcome을 함께 비교합니다.
         </p>
       </div>
 
@@ -332,13 +323,10 @@ export default function SessionControl() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Candidate는 artifact/test receipt의 일관성과 recovery 성공률뿐 아니라
-          latency와 storage 증가도 보고해야 합니다. Canary에서는 미리 정한
-          corruption, duplicate effect, wrong-workspace write와 pause timeout
-          허용치를 넘으면 즉시 base로 rollback하고, 실패한 session file,
-          normalized trace, workspace diff와 fixture version을 보존합니다. 이
-          paired test를 통과해도 모든 OS·filesystem·provider 조합의 production
-          durability를 보장하는 것은 아닙니다.
+          Candidate는 artifact/test receipt의 일관성과 recovery 성공률뿐 아니라 latency와 storage 증가도 보고해야 합니다. Canary에서는 미리
+          정한 corruption과 duplicate effect, wrong-workspace write, pause timeout 허용치를 넘으면 즉시 base로 rollback합니다.
+          이때 실패한 session file과 normalized trace, workspace diff, fixture version을 보존합니다. 이 paired test를 통과해도
+          모든 OS·filesystem·provider 조합의 production durability가 보장되는 것은 아닙니다.
         </p>
       </div>
     </section>

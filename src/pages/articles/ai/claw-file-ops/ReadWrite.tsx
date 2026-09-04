@@ -110,18 +110,14 @@ export default function ReadWrite() {
           Versioned update는 아직 구현 사실이 아니라 hardening 목표다
         </h3>
         <p className="leading-7">
-          개선된 API라면 create-only와 replace-existing을 나누고, edit에는 expected
-          digest와 expected match count를 받습니다. 새 content는 같은 directory의
-          temporary file에 쓴 뒤 permission·encoding을 확인하고 rename합니다.
-          Crash durability가 필요하면 file과 parent directory의 fsync policy도
-          별도로 정해야 합니다.
+          개선된 API라면 create-only와 replace-existing을 나누고 edit에는 expected digest와 expected match count를 받습니다. 새
+          content는 같은 directory의 temporary file에 쓴 뒤 permission·encoding을 확인하고 rename합니다. crash durability가
+          필요하면 file과 parent directory의 fsync policy도 별도로 정해 둡니다.
         </p>
         <p className="leading-7">
-          Atomic rename은 한 file의 이름 교체를 한 순간처럼 보이게 할 뿐 여러 file
-          변경 전체를 transaction으로 만들지 않습니다. Release test는 concurrent
-          writer, process crash, full disk, permission error와 symlink swap을
-          주입하고, original 또는 complete replacement 중 하나만 남는지 검증해야
-          합니다.
+          atomic rename은 한 file의 이름 교체를 한 순간처럼 보이게 할 뿐 여러 file 변경 전체를 transaction으로 만들지 않습니다. release test는
+          concurrent writer, process crash, full disk, permission error와 symlink swap을 주입해 original 또는
+          complete replacement 중 하나만 남는지 검증합니다.
         </p>
       </div>
     </section>

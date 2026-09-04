@@ -10,7 +10,10 @@ export default function DelegationContractsArticle() {
       <section id="overview" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">Multi-agent의 이점은 지능 합산이 아니라 경계 분리에서 나옵니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="text-lg leading-8">같은 model을 여러 번 호출한다고 판단력이 자동으로 더해지지 않습니다. 독립 탐색을 병렬화하고, writer와 verifier의 context를 분리하며, specialist마다 capability를 좁힐 때 이점이 생깁니다. 이 조건이 없으면 token·latency·merge conflict만 늘어납니다.</p>
+          <p className="text-lg leading-8">
+            같은 model을 여러 번 호출한다고 판단력이 자동으로 더해지지 않습니다. 독립 탐색을 병렬화하고 writer와 verifier의 context를 분리하며
+            specialist마다 capability를 좁힐 때 이점이 생깁니다. 이 조건이 없으면 token·latency·merge conflict만 늘어납니다.
+          </p>
         </div>
         <TermBreakdown title="위임 전에 네 소유권을 한 줄씩 정합니다" description="누가 일하고, 무엇을 쓰며, 누가 합치고, 누가 사용자 상태를 보존하는지 분리합니다." items={[
           { term: "Input owner", description: "Delegate에게 전달할 immutable source snapshot과 objective를 고정합니다.", example: "docs@commit-a와 question-v2만 read합니다.", boundary: "여러 worker가 움직이는 최신 tree를 제각각 읽게 두지 않습니다." },

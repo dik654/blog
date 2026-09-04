@@ -16,18 +16,15 @@ export default function LangChain() {
           LangGraph runtime 위에서 동작합니다.
         </p>
         <p>
-          LangGraph는 prompt나 agent architecture를 대신 정하지 않습니다. Long-running
-          stateful workflow에 persistence, durable execution, streaming과 human-in-the-loop를
-          제공하는 낮은 수준의 orchestration runtime입니다.
+          LangGraph는 prompt나 agent architecture를 대신 정하지 않습니다. 낮은 수준의 orchestration runtime으로서 long-running
+          stateful workflow에 persistence, durable execution, streaming과 human-in-the-loop를 제공합니다.
         </p>
         <p>
-          따라서 두 이름을 경쟁 제품처럼 놓기보다, 같은 stack에서 서로 다른 책임을 맡는
-          계층으로 읽는 편이 정확합니다.
+          따라서 두 이름을 경쟁 제품처럼 놓기보다 같은 stack에서 서로 다른 책임을 맡는 계층으로 읽는 편이 정확합니다.
         </p>
         <p>
-          환불 요청에서 model·tool 연결과 짧은 loop만 필요하면 LangChain agent로 시작할 수
-          있습니다. 주문 조회 뒤 담당자 승인을 오래 기다리거나, 장애 후 같은 위치에서
-          재개해야 한다면 LangGraph를 검토합니다.
+          환불 요청에서 model·tool 연결과 짧은 loop만 필요하면 LangChain agent로 시작할 수 있습니다. 주문 조회 뒤 담당자 승인을 오래 기다리거나 장애 후 같은
+          위치에서 재개해야 한다면 LangGraph를 검토합니다.
         </p>
         <p>
           이때 state machine을 명시하는 Graph API와 기존 if·for·function 구조를 유지하는
@@ -53,8 +50,7 @@ export default function LangChain() {
           고정 또는 조건부 transition입니다.
         </p>
         <p>
-          Graph가 업무 흐름의 정답을 발견하는 것은 아닙니다. 개발자가 정의한 state machine을
-          실행하고, 전이 상태를 추적할 뿐입니다.
+          Graph가 업무 흐름의 정답을 발견하는 것은 아닙니다. 개발자가 정의한 state machine을 실행하고 전이 상태를 추적할 뿐입니다.
         </p>
         <p>
           Node는 state 전체를 마음대로 고치기보다 update를 반환합니다. 같은 field에 update가
@@ -63,9 +59,8 @@ export default function LangChain() {
           새 event를 붙일 수 있습니다.
         </p>
         <p>
-          Single workflow에서도 reducer를 잘못 정하면 retry 때 event가 사라지거나 중복됩니다.
-          여러 node의 병렬 충돌과 안전한 merge는 multi-agent 정본에 맡기고, 여기서는 한
-          transition의 update semantics까지만 확인합니다.
+          Single workflow에서도 reducer를 잘못 정하면 retry 때 event가 사라지거나 중복됩니다. 여러 node의 병렬 충돌과 안전한 merge는 multi-
+          agent 정본에 맡기고 여기서는 한 transition의 update semantics까지만 확인합니다.
         </p>
 
         <div id="paper-langgraph-runtime" className="not-prose scroll-mt-24">
@@ -103,9 +98,8 @@ export default function LangChain() {
           합니다.
         </p>
         <p>
-          File handle, open database transaction, live HTTP response 같은 process-local object는
-          다른 worker가 복원하기 어렵습니다. 대신 stable ID와 필요한 data를 저장하고,
-          connection 같은 dependency는 runtime context에서 다시 주입합니다.
+          File handle, open database transaction, live HTTP response 같은 process-local object는 다른 worker가 복원하기
+          어렵습니다. 대신 stable ID와 필요한 data를 저장하고 connection 같은 dependency는 runtime context에서 다시 주입합니다.
         </p>
       </div>
 

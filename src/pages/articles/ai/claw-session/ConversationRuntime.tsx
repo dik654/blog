@@ -189,10 +189,8 @@ export default function ConversationRuntime() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Crash는 “turn 중간”이 아니라 정확한 cut에서 분석합니다</h3>
         <p>
-          같은 crash라도 edit 전과 edit 후의 재개 규칙은 정반대입니다. Effect
-          전에는 precondition과 permission을 다시 확인한 뒤 재시도할 수 있지만,
-          effect 뒤에는 이미 적용됐을 가능성이 있으므로 blind retry가
-          위험합니다. 아래 cut을 failure-injection test로 각각 재현해야 partial
+          같은 crash라도 edit 전과 edit 후의 재개 규칙은 정반대입니다. Effect 전이라면 precondition과 permission을 다시 확인한 뒤 재시도할 수
+          있습니다. effect 뒤에는 이미 적용됐을 수 있어서 blind retry가 위험합니다. 아래 cut을 failure-injection test로 각각 재현해야 partial
           final state를 숨기지 않을 수 있습니다.
         </p>
       </div>
@@ -286,11 +284,9 @@ export default function ConversationRuntime() {
           아닙니다
         </h3>
         <p>
-          긴 작업에서는 turn이 시작할 때 본 session과 workspace가 실행 끝까지
-          같은 의미를 유지해야 합니다. 그래서 아래 field를 묶은 snapshot과 base
-          revision 검사를 추가하는 것이 유용합니다. 다만 pinned source에서 이
-          generation pin과 optimistic concurrency가 확인된 것은 아니므로, 구현
-          기능이 아니라 설계·평가 요구사항으로 읽어야 합니다.
+          긴 작업에서는 turn이 시작할 때 본 session과 workspace가 실행이 끝날 때까지 같은 의미를 유지해야 합니다. 그래서 아래 field를 묶은 snapshot과
+          base revision 검사를 더하면 유용합니다. 다만 pinned source에서 이 generation pin과 optimistic concurrency가 확인된 것은
+          아니므로 구현 기능이 아니라 설계·평가 요구사항으로 읽어야 합니다.
         </p>
       </div>
 
@@ -313,19 +309,13 @@ export default function ConversationRuntime() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Read/search와 edit/test의 dependency도 명시합니다</h3>
         <p>
-          서로 다른 파일을 읽고 검색하는 작업은 독립성이 확인되면 병렬 후보가 될
-          수 있지만, edit는 그 evidence에 의존하고 login test는 edit receipt에
-          의존합니다. Pinned loop는 pending tool call을 순서대로 실행하므로 이
-          dependency-aware parallel graph를 구현했다는 주장은 하지 않습니다.
-          이를 추가한다면 하나가 실패했을 때 취소 범위, 늦게 도착한 결과의
-          attempt ID, model에 돌려줄 안정적인 result order까지 함께 정의해야
-          합니다.
+          서로 다른 파일을 읽고 검색하는 작업은 독립성이 확인되면 병렬 후보가 될 수 있습니다. 반면 edit는 그 evidence에 의존하고 login test는 edit receipt에
+          의존합니다. Pinned loop는 pending tool call을 순서대로 실행하므로 이 dependency-aware parallel graph를 구현했다는 주장은 하지
+          않습니다. 이를 추가한다면 하나가 실패했을 때의 취소 범위, 늦게 도착한 결과의 attempt ID, model에 돌려줄 안정적인 result order까지 함께 정의해야 합니다.
         </p>
         <p>
-          마지막으로 deadline, iteration, token·cost, 같은 action 반복과 사용자
-          cancel을 서로 다른 budget으로 추적해야 합니다. Budget이 끝났거나
-          test가 실패했다면 완료한 것처럼 응답하지 말고, 적용된 diff, 아직
-          불명확한 effect, 실패한 test receipt와 안전한 다음 행동을 partial
+          마지막으로 deadline과 iteration, token·cost, 같은 action 반복, 사용자 cancel은 서로 다른 budget으로 추적해야 합니다. Budget이
+          끝났거나 test가 실패했다면 완료한 것처럼 응답하지 않습니다. 적용된 diff와 아직 불명확한 effect, 실패한 test receipt, 안전한 다음 행동을 partial
           outcome으로 남깁니다.
         </p>
       </div>

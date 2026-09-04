@@ -9,12 +9,10 @@ export default function KTO() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          실제 제품 log에는 같은 prompt에 대한 두 응답의 ranking보다 개별 응답의
-          thumbs-up/down이 더 많이 쌓일 수 있다. Kahneman–Tversky
-          Optimization(KTO)은 response마다 desirable 또는 undesirable label만
-          있어도 학습할 수 있도록, policy와 reference의 log-ratio를 KL reference
-          point와 비교한다. Prospect theory는 이름의 배경이지만, 핵심 구현 계약은
-          gain과 loss를 기준점 양쪽에서 비대칭적으로 다루는 binary objective다.
+          실제 제품 log에는 같은 prompt에서 나온 두 응답의 ranking보다 개별 응답의 thumbs-up/down이 더 많이 쌓일 수 있다. Kahneman–Tversky
+          Optimization(KTO)은 response마다 desirable 또는 undesirable label만 있어도 학습할 수 있도록 policy와 reference의 log-
+          ratio를 KL reference point와 비교한다. 이름은 prospect theory에서 왔다. 다만 핵심 구현 계약은 gain과 loss를 기준점 양쪽에서 비대칭적으로
+          다루는 binary objective다.
         </p>
       </div>
 
@@ -56,12 +54,10 @@ v_U
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>방법 선택은 확보 가능한 feedback에서 시작한다</h3>
         <p>
-          Online exploration과 새 response scoring이 필요하면 PPO 계열, 정제된
-          pairwise preference가 있으면 DPO, SFT와 preference를 한 stage로 묶으려면
-          ORPO, 독립적인 binary feedback이 중심이면 KTO를 후보로 둔다. 다만 이
-          분류는 첫 필터일 뿐이며, 최종 선택은 같은 base checkpoint와 data budget,
-          decoding·judge 조건에서 capability·preference·safety regression을 함께
-          비교해 결정한다.
+          Online exploration과 새 response scoring이 필요하면 PPO 계열, 정제된 pairwise preference가 있으면 DPO, SFT와
+          preference를 한 stage로 묶으려면 ORPO, 독립적인 binary feedback이 중심이면 KTO를 후보로 둔다. 다만 이 분류는 첫 필터일 뿐이다. 최종 선택은
+          같은 base checkpoint와 data budget, decoding·judge 조건에서 capability·preference·safety regression을 함께 비교해
+          결정한다.
         </p>
         <p>
           <a href="https://arxiv.org/abs/2402.01306" target="_blank" rel="noreferrer">KTO 논문</a>은
@@ -82,11 +78,9 @@ v_U
           핵심 기여는 pair를 복원하지 않고 binary label을 기준점 양쪽에서 학습한 것이다
         </h3>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Policy/reference log-ratio를 implicit reward로 보고 batch KL을 reference
-          point로 사용해 desirable과 undesirable example의 utility 방향을 나눕니다.
-          Prospect theory는 이 비대칭 utility의 동기이며, 실제 제품 log에서는
-          exposure bias·class imbalance·사용자별 click propensity를 별도로 다뤄야
-          논문의 clean label 가정을 운영 환경에 옮길 수 있습니다.
+          Policy/reference log-ratio를 implicit reward로 보고 batch KL을 reference point로 사용해 desirable과
+          undesirable example의 utility 방향을 나눕니다. 이 비대칭 utility의 동기가 prospect theory입니다. 실제 제품 log에서는 exposure
+          bias·class imbalance·사용자별 click propensity를 별도로 다뤄야 논문의 clean label 가정을 운영 환경에 옮길 수 있습니다.
         </p>
       </div>
     </section>

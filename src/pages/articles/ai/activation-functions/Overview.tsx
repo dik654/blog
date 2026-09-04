@@ -29,11 +29,9 @@ export default function Overview() {
           활성화 함수 필수 요건
         </h3>
         <p className="leading-7">
-          가장 중요한 조건은 비선형성이다. gradient descent로 학습하려면 거의
-          모든 지점에서 유용한 gradient를 제공해야 하며, 계산 비용과 출력 범위,
-          zero-centered 여부도 optimization에 영향을 준다. ReLU처럼 한 점에서
-          미분되지 않아도 subgradient를 정해 학습할 수 있으므로 “모든 지점에서
-          미분 가능해야 한다”를 절대 조건으로 볼 필요는 없다.
+          가장 중요한 조건은 비선형성이다. gradient descent로 학습하려면 거의 모든 지점에서 유용한 gradient를 제공해야 하며 계산 비용과 출력 범위, zero-
+          centered 여부도 optimization에 영향을 준다. ReLU처럼 한 점에서 미분되지 않아도 subgradient를 정해 학습할 수 있으므로 “모든 지점에서 미분 가능해야
+          한다”를 절대 조건으로 볼 필요는 없다.
         </p>
       </div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
@@ -47,12 +45,9 @@ export default function Overview() {
       </div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          정리하면 activation function은 network에 비선형 표현력을 더하는 동시에
-          gradient가 어떤 형태로 흐를지를 결정한다. ReLU는 양수 구간에서
-          gradient를 보존하고 계산이 단순해 깊은 network 학습을 크게 도왔지만,
-          모든 기울기 소실을 해결하지는 않는다. 따라서 architecture의 관례를
-          출발점으로 삼되 실제 training stability와 validation 성능을 함께
-          확인해야 한다.
+          정리하면 activation function은 network에 비선형 표현력을 더하는 동시에 gradient가 어떤 형태로 흐를지를 결정한다. ReLU는 양수 구간에서
+          gradient를 보존하고 계산이 단순해 깊은 network 학습을 크게 도왔지만 모든 기울기 소실을 해결하지는 않는다. 따라서 architecture의 관례를 출발점으로 삼되
+          실제 training stability와 validation 성능을 함께 확인해야 한다.
         </p>
       </div>
     </section>

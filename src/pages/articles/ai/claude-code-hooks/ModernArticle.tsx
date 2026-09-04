@@ -133,12 +133,9 @@ export default function ClaudeCodeHooksArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Workspace가 바꿀 수 있는 script를 조직 credential로 실행하면 hook이
-            새로운 공격 경로가 됩니다. Handler
-            path·revision·environment·timeout·allowed URL·log retention을
-            고정하고, 실패할 때 fail-open인지 fail-closed인지 event별로
-            시험합니다. Event 이름과 matcher syntax는 제품 version에 따라
-            바뀌므로 고정 목록을 암기하지 않고 현재 schema를 확인합니다.
+            Workspace가 바꿀 수 있는 script를 조직 credential로 실행하면 hook이 새로운 공격 경로가 됩니다. Handler
+            path·revision·environment·timeout·allowed URL·log retention을 고정하고 실패할 때 fail-open인지 fail-closed인지
+            event별로 시험합니다. Event 이름과 matcher syntax는 제품 version에 따라 바뀌므로 고정 목록을 암기하지 않고 현재 schema를 확인합니다.
           </p>
         </div>
       </section>

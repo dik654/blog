@@ -11,11 +11,8 @@ export default function Overview() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="text-lg leading-8">
-          초기 Seq2Seq 모델은 입력 문장 전체를 마지막 hidden state 하나에 담아
-          decoder로 넘겼다. 짧은 문장에서는 잘 작동했지만, 입력이 길어질수록
-          하나의 고정 길이 vector가 보존해야 할 정보가 많아졌다. Attention은 이
-          병목을 없애기 위해 출력 token을 만들 때마다 입력의 어느 위치를 참고할지
-          다시 계산한다.
+          초기 Seq2Seq 모델은 입력 문장 전체를 마지막 hidden state 하나에 담아 decoder로 넘겼다. 짧은 문장에서는 잘 작동했다. 그러나 입력이 길어질수록 하나의 고정
+          길이 vector가 보존해야 할 정보가 많아졌다. Attention은 이 병목을 없애기 위해 출력 token을 만들 때마다 입력의 어느 위치를 참고할지 다시 계산한다.
         </p>
         <p>
           출발점은 “attention이 중요한 곳을 본다”는 비유가 아니라, query마다
@@ -36,10 +33,8 @@ export default function Overview() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>모든 attention이 공유하는 세 단계</h3>
         <p>
-          먼저 query와 각 key가 얼마나 관련 있는지 score를 계산한다. 그 score를
-          softmax로 정규화하면 합이 1인 weight가 되고, 마지막으로 같은 위치의
-          value를 가중합해 현재 query에 필요한 context를 만든다. 여기서 query는
-          “무엇을 찾는가”, key는 “각 위치가 어떤 정보를 대표하는가”, value는
+          먼저 query와 각 key가 얼마나 관련 있는지 score를 계산한다. 그 score를 softmax로 정규화하면 합이 1인 weight가 된다. 마지막으로 같은 위치의
+          value를 가중합해 현재 query에 필요한 context를 만든다. 여기서 query는 “무엇을 찾는가”, key는 “각 위치가 어떤 정보를 대표하는가”, value는
           “선택했을 때 실제로 가져올 정보”라고 이해하면 된다.
         </p>
       </div>
@@ -86,10 +81,8 @@ export default function Overview() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Additive attention과 dot-product attention의 차이는 첫 단계인 score를
-          만드는 방식에 있다. Self-attention은 이 틀을 그대로 두되 query, key,
-          value를 모두 같은 sequence에서 만든다. 따라서 attention을 특정 모델
-          하나의 이름으로 외우기보다, 세 단계로 분해해 보는 편이 이후
+          Additive attention과 dot-product attention의 차이는 첫 단계인 score를 만드는 방식에 있다. Self-attention은 이 틀을 그대로 두되
+          query, key, value를 모두 같은 sequence에서 만든다. Attention을 특정 모델 하나의 이름으로 외우기보다 세 단계로 분해해 보는 편이 이후
           Transformer를 이해하기 쉽다.
         </p>
 

@@ -16,10 +16,9 @@ export default function Registry() {
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          검색 경로에서 manifest를 찾았다는 사실은 실행 자격이 생겼다는 뜻이
-          아닙니다. Discovery는 후보와 출처를 수집하는 read-only 단계이고,
-          verification은 artifact와 호환성을 검사하며, activation은 사용자가
-          승인한 exact artifact를 runtime registry에 공개하는 단계입니다.
+          검색 경로에서 manifest를 찾으면 후보가 하나 늘어날 뿐 실행 자격은 아직 없습니다. Discovery는 후보와 출처를 모으는 read-only 단계입니다.
+          verification이 artifact와 호환성을 검사하고 activation에 이르러서야 사용자가 승인한 exact artifact가 runtime registry에
+          공개됩니다.
         </p>
 
         <RegistryViz />
@@ -28,12 +27,9 @@ export default function Registry() {
           검색 우선순위보다 출처를 보존한다
         </h3>
         <p>
-          system·user·workspace 경로를 둘 수는 있지만 같은 이름이 나오면 높은
-          우선순위가 조용히 덮어쓰게 해서는 안 됩니다. 특히 clone한 저장소의
-          plugin이 사용자 plugin을 shadow하면 공급망 공격으로 이어질 수
-          있습니다. registry key에는 canonical plugin ID와 publisher를 사용하고,
-          여러 후보가 충돌하면 경로·version·digest를 보여준 뒤 하나를 명시적으로
-          선택합니다.
+          system·user·workspace 경로를 함께 두는 것 자체는 괜찮습니다. 다만 같은 이름이 나왔을 때 우선순위가 높은 쪽이 조용히 덮어쓰게 해서는 안 됩니다. clone한
+          저장소의 plugin이 사용자 plugin을 shadow하면 공급망 공격으로 이어질 수 있습니다. registry key에는 canonical plugin ID와
+          publisher를 쓰고 여러 후보가 충돌하면 경로·version·digest를 보여준 뒤 하나를 명시적으로 선택합니다.
         </p>
         <div className="not-prose my-6 grid gap-3 md:grid-cols-3">
           {[
@@ -63,11 +59,9 @@ export default function Registry() {
           코드를 실행하기 전에 정적으로 검증한다
         </h3>
         <p>
-          verification은 plugin을 실행해 “정상인지 물어보는” 단계가 아닙니다.
-          manifest parsing, symlink를 해소한 path boundary, digest, signature,
-          API compatibility와 namespace collision을 부수 효과 없이 확인해야
-          합니다. 지원하지 않는 필드는 무시하기보다 version 정책에 따라
-          거부하거나 명시적인 warning을 남깁니다.
+          verification은 plugin을 실행해 “정상인지 물어보는” 단계가 아닙니다. manifest parsing과 symlink를 해소한 path boundary부터
+          digest·signature·API compatibility·namespace collision까지 모두 부수 효과 없이 검사해야 합니다. 지원하지 않는 필드는 무시하기보다
+          version 정책에 따라 거부하거나 명시적인 warning을 남깁니다.
         </p>
         <div className="not-prose my-6 overflow-hidden rounded-2xl border border-border/70">
           <div className="divide-y divide-border/70">
@@ -100,23 +94,18 @@ export default function Registry() {
           registry는 완성된 snapshot만 공개한다
         </h3>
         <p>
-          plugin 하나를 enable하면서 tool은 등록됐지만 hook 등록이 실패하면
-          runtime이 반쪽 상태가 됩니다. 새 registry generation을 별도로 만들고
-          모든 schema·collision·permission 검사를 통과한 뒤 pointer를 원자적으로
-          교체해야 합니다. 진행 중 호출은 자신이 시작한 generation을 계속
-          사용하고, 이전 generation은 reference가 사라질 때까지 draining합니다.
+          plugin 하나를 enable하다가 tool은 등록됐는데 hook 등록이 실패하면 runtime이 반쪽 상태로 남습니다. 그래서 새 registry generation을 따로
+          만들고 schema·collision·permission 검사를 모두 통과한 뒤에야 pointer를 원자적으로 교체합니다. 진행 중인 호출은 자신이 시작한 generation을
+          계속 씁니다. 이전 generation은 reference가 사라질 때까지 draining합니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
           disable·update·remove는 서로 다른 동작이다
         </h3>
         <p>
-          disable은 새 호출만 막고 설치 artifact와 승인 기록은 유지합니다.
-          update는 새 artifact를 검증해 별도 generation으로 올린 뒤 실패하면
-          이전 generation으로 rollback합니다. remove는 호출이 모두 끝난 뒤
-          registry와 artifact를 제거하되, 감사 기록과 사용자가 만든 데이터까지
-          임의로 지우지 않습니다. 이 구분이 있어야 운영 중 교체와 문제 조사 모두
-          가능합니다.
+          disable은 새 호출만 막습니다. 설치 artifact와 승인 기록은 그대로 둡니다. update는 새 artifact를 검증해 별도 generation으로 올린 뒤 실패하면
+          이전 generation으로 rollback합니다. remove는 호출이 모두 끝난 뒤 registry와 artifact를 제거하되 감사 기록과 사용자가 만든 데이터까지 임의로
+          지우지는 않습니다. 이 구분이 있어야 운영 중 교체와 문제 조사가 둘 다 가능합니다.
         </p>
       </div>
     </section>

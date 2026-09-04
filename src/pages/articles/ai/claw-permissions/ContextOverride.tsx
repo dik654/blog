@@ -94,10 +94,8 @@ export default function ContextOverride() {
           Standalone ledger와 context override를 자동으로 연결하지 않습니다
         </h3>
         <p>
-          앞 절의 approval token ledger는 별도 module이고, 이 context override와
-          dispatch에 연결된 소비 경로는 확인되지 않습니다. 따라서 hook Allow를
-          token 발급으로 간주하거나, token이 존재한다고 current override가
-          생긴다고 설명해서는 안 됩니다.
+          앞 절의 approval token ledger는 별도 module이고 이 context override와 dispatch에 연결된 소비 경로는 확인되지 않습니다. hook
+          Allow를 token 발급으로 간주하거나 token이 존재한다고 current override가 생긴다고 설명해서는 안 됩니다.
         </p>
         <p>
           안전한 통합에는 proposal의 canonical arguments, policy generation,
@@ -111,11 +109,9 @@ export default function ContextOverride() {
 
         <h3>Permission 변경은 같은 로그인 fixture로 paired 평가합니다</h3>
         <p>
-          Base와 candidate의 full SHA, request, workspace, model, tool
-          registry와 policy fixture를 고정한 뒤 아래 실패를 각각 주입합니다.
-          목표는 단순히 “정상 edit가 성공한다”가 아니라, 금지된 effect가 한 번도
-          실행되지 않고 허용된 경우에는 최종 deterministic test receipt까지
-          이어지는지 확인하는 것입니다.
+          Base와 candidate의 full SHA, request, workspace, model, tool registry, policy fixture를 고정한 뒤 아래 실패를 각각
+          주입합니다. 목표는 단순히 “정상 edit가 성공한다”가 아닙니다. 금지된 effect가 한 번도 실행되지 않고 허용된 경우에는 최종 deterministic test
+          receipt까지 이어지는지 확인하는 것입니다.
         </p>
       </div>
 
@@ -135,11 +131,9 @@ export default function ContextOverride() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Canary에서는 unauthorized execution, unexpected prompt, false denial,
-          effect/test receipt 누락을 관찰하고, 임계값을 넘으면 이전 pinned
-          build와 policy artifact로 rollback합니다. 한 fixture의 성공은
-          production 보안 인증이 아니므로 path·shell·network·credential과 실제
-          sandbox E2E는 별도 test layer로 남겨야 합니다.
+          Canary에서는 unauthorized execution, unexpected prompt, false denial, effect/test receipt 누락을 관찰하고 임계값을
+          넘으면 이전 pinned build와 policy artifact로 rollback합니다. 한 fixture의 성공은 production 보안 인증이 아니므로
+          path·shell·network·credential과 실제 sandbox E2E는 별도 test layer로 남겨야 합니다.
         </p>
       </div>
     </section>

@@ -51,11 +51,8 @@ export default function Additive() {
 
         <h3>정렬을 배우지만, 설명 자체는 아니다</h3>
         <p>
-          번역 모델을 별도의 단어 정렬 label 없이 학습해도 attention weight에서
-          source와 target의 대응 패턴이 나타날 수 있다. 다만 weight가 크다는
-          사실만으로 모델의 인과적 판단 근거를 모두 설명할 수 있는 것은 아니다.
-          Attention map은 유용한 진단 신호이지만 완전한 explanation으로 취급하지
-          않는 것이 안전하다.
+          번역 모델을 별도의 단어 정렬 label 없이 학습해도 attention weight에서 source와 target의 대응 패턴이 나타날 수 있다. 다만 weight가 크다는
+          사실은 모델의 인과적 판단 근거를 모두 설명해 주지 못한다. Attention map은 유용한 진단 신호까지다. 완전한 explanation으로 취급하지 않는 편이 안전하다.
         </p>
         <p>
           이 주의점은 해석 가능성 연구에서도 논쟁이 이어졌다.
@@ -70,14 +67,22 @@ export default function Additive() {
       <div id="paper-bahdanau" className="not-prose my-8 border-l border-primary/50 pl-4 scroll-mt-24">
         <p className="text-xs font-bold text-primary">논문 읽기 · Additive attention</p>
         <p className="mt-2 text-sm font-semibold">Neural Machine Translation by Jointly Learning to Align and Translate</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">Fixed-length source vector의 병목을 문제로 두고, decoder가 출력할 때마다 encoder annotation의 soft alignment와 context를 함께 학습했습니다. Alignment label 없이 나타난 attention pattern은 진단 근거이지만, weight만으로 prediction의 완전한 인과 설명을 얻었다는 주장은 아닙니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            Fixed-length source vector의 병목을 문제로 두고 decoder가 출력할 때마다 encoder annotation의 soft alignment와
+            context를 함께 학습했습니다. Alignment label 없이 나타난 attention pattern은 진단 근거까지입니다. Weight만으로 prediction의
+            완전한 인과 설명을 얻었다고까지는 말하지 않습니다.
+          </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary underline-offset-4 hover:underline" href="https://arxiv.org/abs/1409.0473" target="_blank" rel="noreferrer">원 논문과 alignment 식 보기</a>
       </div>
 
       <div id="paper-attention-explanation" className="not-prose my-8 border-l border-border pl-4 scroll-mt-24">
         <p className="text-xs font-bold text-primary">논문 읽기 · 해석의 경계</p>
         <p className="mt-2 text-sm font-semibold">Attention is not Explanation</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">서로 크게 다른 attention distribution이 비슷한 prediction을 만들 수 있는 사례를 통해 attention weight를 곧바로 feature importance나 causal explanation으로 동일시하는 해석을 비판합니다. 이는 attention map이 언제나 쓸모없다는 결론이 아니라 explanation의 정의와 검증 방법을 별도로 요구한다는 결과입니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            서로 크게 다른 attention distribution이 비슷한 prediction을 만들 수 있는 사례를 들어 attention weight를 곧바로 feature
+            importance나 causal explanation으로 동일시하는 해석을 비판합니다. 여기서 요구하는 것은 explanation의 정의와 검증 방법을 별도로 세우는
+            일입니다. Attention map이 언제나 쓸모없다는 결론까지 간 것은 아닙니다.
+          </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary underline-offset-4 hover:underline" href="https://aclanthology.org/N19-1357/" target="_blank" rel="noreferrer">논문과 실험 범위 보기</a>
       </div>
     </section>

@@ -10,11 +10,9 @@ export default function Components() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          차분된 series Zt가 준비되면 ARMA(p,q)는 현재 값을 과거 p개 관측값과
-          현재·과거 q개 innovation으로 설명한다. Innovation εt는 rolling average가
-          아니라 t−1까지의 정보로 예측하지 못한 새 충격이다. 따라서 AR은 series의
-          관성과 mean reversion을, MA는 관측된 충격이 이후 예측에 남기는 흔적을
-          모델링한다.
+          차분된 series Zt가 준비되면 ARMA(p,q)는 현재 값을 과거 p개 관측값과 현재·과거 q개 innovation으로 설명한다. Innovation εt는 rolling
+          average가 아니라 t−1까지의 정보로 예측하지 못한 새 충격이다. AR은 series의 관성과 mean reversion을 맡고 MA는 관측된 충격이 이후 예측에 남기는
+          흔적을 모델링한다.
         </p>
       </div>
 

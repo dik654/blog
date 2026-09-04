@@ -127,11 +127,9 @@ export default function OAuth() {
           파일의 근거 범위에 없습니다.
         </p>
         <p className="leading-7">
-          timeout은 고정된 표준값이 아니라 UX와 위협 모델에 맞춘 설정입니다.
-          timeout·사용자 취소·browser open 실패에서는 listener와 verifier를
-          정리하고, code와 query string 전체를 access log에 남기지 않습니다.
-          headless 환경에서는 provider가 지원할 때 Device Authorization Grant
-          같은 별도 flow를 선택합니다.
+          timeout은 고정된 표준값이 아니라 UX와 위협 모델에 맞춘 설정입니다. timeout·사용자 취소·browser open 실패에서는 listener와 verifier를
+          정리하고 code와 query string 전체를 access log에 남기지 않습니다. headless 환경에서는 provider가 지원할 때 Device
+          Authorization Grant 같은 별도 flow를 선택합니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
@@ -179,11 +177,9 @@ export default function OAuth() {
           합니다.
         </p>
         <p className="leading-7">
-          만료 판단에는 clock skew를 두고, refresh가 거부되면 오래된 token으로
-          계속 재시도하지 말고 다시 login하도록 안내합니다. logout은 local token
-          삭제로 끝내지 않고 provider가 revocation을 지원하면 server-side
-          credential도 폐기합니다. 이 전체 과정에서 token 값은 telemetry와 error
-          message에 나타나지 않아야 합니다.
+          만료 판단에는 clock skew를 두고 refresh가 거부되면 오래된 token으로 계속 재시도하지 말고 다시 login하도록 안내합니다. logout은 local token
+          삭제로 끝내지 않고 provider가 revocation을 지원하면 server-side credential도 폐기합니다. 이 전체 과정에서 token 값은 telemetry와
+          error message에 나타나지 않아야 합니다.
         </p>
       </div>
     </section>

@@ -41,7 +41,10 @@ export default function ModernPolicyArticle() {
       <section id="lane-context" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">02 · LaneContext</p><h2 className="mt-2 text-2xl font-bold">구조체에 값이 있다는 사실과 provenance가 검증됐다는 사실은 다르다</h2></header>
         <p>
-          LaneContext에는 lane ID, green level, green contract 충족 여부, branch age, blocker, review, diff scope, completion·reconciliation, retry와 approval token 같은 값이 들어갑니다. Evaluator가 같은 값을 받으면 같은 action을 내는 것은 가능하지만, 이 구조체 자체가 immutable event snapshot이거나 각 field에 source artifact·revision·timestamp가 붙어 있다는 뜻은 아닙니다.
+          LaneContext에는 lane ID와 green level, green contract 충족 여부, branch age, blocker, review, diff scope,
+          completion·reconciliation, retry, approval token 같은 값이 들어갑니다. Evaluator가 같은 값을 받으면 같은 action을 낼 수는
+          있습니다. 그렇다고 이 구조체 자체가 immutable event snapshot이라는 뜻은 아니며 각 field에 source artifact·revision·timestamp가
+          붙어 있다는 뜻도 아닙니다.
         </p>
         <p>
           예를 들어 <code>green_contract_satisfied=true</code>만 전달되면 누가 어느 commit에서 어떤 test command를 실행했는지 evaluator는 알 수 없습니다. Review approved도 현재 diff revision과 결속되지 않으면 review 뒤 변경된 code를 merge할 수 있습니다. Context를 만들 때 repository SHA, policy generation, evidence digest와 각 producer identity를 묶고, action executor가 같은 snapshot을 소비하는지 확인해야 합니다.
@@ -84,7 +87,9 @@ export default function ModernPolicyArticle() {
       <section id="release-gate" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">04 · 역검사와 배포</p><h2 className="mt-2 text-2xl font-bold">Rule unit test와 실제 action enforcement를 같은 fixture로 연결한다</h2></header>
         <p>
-          기초 여섯 문제는 rule 구성, boolean condition, stable priority, Chain expansion, lane context와 provenance, green conjunction 계산을 묻습니다. 심화 네 문제는 Merge·Block 충돌, stale review·policy generation, blocking flake 조작, evaluator-to-executor binding을 다룹니다. 위 lane-17의 값과 표·수식만으로 답할 수 있어야 합니다.
+          기초 여섯 문제는 rule 구성과 boolean condition, stable priority, Chain expansion, lane context와 provenance,
+          green conjunction 계산을 묻습니다. 심화 네 문제가 다루는 것은 Merge·Block 충돌, stale review·policy generation, blocking
+          flake 조작, evaluator-to-executor binding입니다. 답은 위 lane-17의 값과 표·수식만으로 낼 수 있어야 합니다.
         </p>
         <aside className="rounded-lg border border-border bg-card p-5 text-sm leading-6 text-muted-foreground"><strong className="text-foreground">Release gate:</strong> Lane input·repository SHA·policy generation·rule order·green evidence를 고정하고 missing field, stable tie, Chain, Merge+Block 충돌, stale base, changed diff after review, forged exit 0, blocking flake, approval expiry를 주입합니다. Base/candidate의 matching rules·ordered actions·decision events와 실제 executor effect를 비교하고 conflict가 미해결이거나 stale snapshot으로 effect가 실행되면 배포하지 않습니다.</aside>
       </section>

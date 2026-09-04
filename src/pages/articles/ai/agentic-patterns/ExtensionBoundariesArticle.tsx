@@ -34,7 +34,10 @@ export default function ExtensionBoundariesArticle() {
       <section id="skill-guardrail" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">Skill은 절차를 제공하고 Guardrail은 허용 범위를 줄입니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>Skill은 name·description으로 먼저 발견하고, 선택된 뒤에 본문과 필요한 reference만 읽는 progressive disclosure를 따릅니다. 모든 skill을 항상 system context에 넣으면 관련 없는 지침 충돌과 token 비용이 커집니다.</p>
+          <p>
+            Skill은 name·description으로 먼저 발견하고 선택된 뒤에 본문과 필요한 reference만 읽는 progressive disclosure를 따릅니다. 모든
+            skill을 항상 system context에 넣으면 관련 없는 지침 충돌과 token 비용이 커집니다.
+          </p>
           <p>Guardrail은 skill의 설명을 신뢰해 권한을 넓히지 않습니다. 실제 identity·resource·operation과 approval을 runtime policy로 다시 판정합니다. 작성 형식은 <Link to="/ai/skills-anatomy">Skills anatomy</Link>에서 이어집니다.</p>
         </div>
       </section>
@@ -45,7 +48,10 @@ export default function ExtensionBoundariesArticle() {
           <p><strong>Artifact verifier</strong><br />Schema·compiler·test·state invariant를 검사합니다.</p>
           <p><strong>Trajectory verifier</strong><br />Tool call·permission decision·retry·cost가 허용 경로를 따랐는지 확인합니다.</p>
           <p><strong>Effect verifier</strong><br />외부 상태 변경의 receipt와 rollback·idempotency를 확인합니다.</p>
-          <p>Open-ended quality는 model grader와 human review를 보조로 쓸 수 있지만, judge score 하나가 결정적 side-effect 검사를 대신하지 않습니다.</p>
+          <p>
+            Open-ended quality는 model grader와 human review를 보조로 쓸 수 있지만 judge score 하나가 결정적 side-effect 검사를
+            대신하지 않습니다.
+          </p>
         </div>
         <div id="paper-anthropic-agent-evals" className="not-prose mt-8 scroll-mt-24">
           <CitationBlock source="Anthropic — Demystifying evals for AI agents" citeKey={5} href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">Final outcome과 observable trajectory를 나누고 code-based·model-based·human grader를 조합하는 기준을 설명합니다. Judge score 하나가 모든 production failure와 side-effect 안전성을 보장한다는 뜻은 아닙니다.</CitationBlock>

@@ -52,10 +52,8 @@ export default function SummaryCompression() {
           없습니다.
         </p>
         <p>
-          이 차이는 단순한 이름 문제가 아닙니다. Helper가 줄인 결과는 더 짧고
-          재현 가능하지만 “최신 login test 실패가 더 중요하다”는 의미를 이해하지
-          못합니다. 따라서 actual source의 보장과, compaction fidelity를 위해
-          설계해야 할 검증을 분리해서 읽어야 합니다.
+          이 차이는 단순한 이름 문제가 아닙니다. helper가 줄인 결과는 더 짧고 재현 가능하지만 “최신 login test 실패가 더 중요하다”는 의미를 이해하지 못합니다.
+          actual source가 보장하는 것과 compaction fidelity를 위해 설계할 검증은 분리해서 읽어야 합니다.
         </p>
       </div>
 
@@ -117,10 +115,9 @@ export default function SummaryCompression() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Selection은 priority별로 source order를 훑되, 최종 출력은 선택된 원래
-          index 순서로 정렬됩니다. Budget 때문에 빠진 line이 있어도 notice를 넣을
-          공간이 없으면 omission 사실조차 출력되지 않을 수 있습니다. 이 module은
-          loss를 알려 주는 통계값을 반환하지만 누락된 의미를 복구하지는 않습니다.
+          selection은 priority별로 source order를 훑되 최종 출력은 선택된 원래 index 순서로 정렬됩니다. budget 때문에 빠진 line이 있어도
+          notice를 넣을 공간이 없으면 omission 사실조차 출력되지 않을 수 있습니다. 이 module은 loss를 알려 주는 통계값을 반환하지만 누락된 의미를 복구하지는
+          않습니다.
         </p>
         <pre className="overflow-x-auto text-xs">
           {`입력
@@ -140,10 +137,8 @@ Conversation summary:
 - … 1 additional line(s) omitted.`}
         </pre>
         <p>
-          이 예에서 whitespace collapse와 case-insensitive dedupe가 먼저 일어나고,
-          긴 stdout은 per-line truncate 뒤에도 전체 char budget에 들어가지 못해
-          빠집니다. 공간이 남아 omission notice는 추가되지만, 무엇이 빠졌는지를
-          semantic fact로 설명하지는 못합니다.
+          이 예에서 whitespace collapse와 case-insensitive dedupe가 먼저 일어나고 긴 stdout은 per-line truncate 뒤에도 전체 char
+          budget에 들어가지 못해 빠집니다. 공간이 남아 omission notice는 추가되지만, 무엇이 빠졌는지를 semantic fact로 설명하지는 못합니다.
         </p>
       </div>
 
@@ -184,18 +179,14 @@ Conversation summary:
           permission denial과 마지막 401을 보존했는지는 검사하지 않습니다.
         </p>
         <p>
-          Semantic fidelity를 확인하려면 candidate compacted state에서 아래 질문에
-          exact field로 답하게 하고, 원 session의 typed record와 비교해야 합니다.
-          Model judge의 자연어 평가는 보조 지표로 둘 수 있지만, permission과 effect
-          receipt 같은 safety field는 deterministic equality와 schema validation을
-          통과해야 합니다.
+          semantic fidelity를 확인하려면 candidate compacted state에서 아래 질문에 exact field로 답하게 한 뒤 원 session의 typed
+          record와 비교합니다. model judge의 자연어 평가는 보조 지표로 둘 수 있습니다. permission과 effect receipt 같은 safety field는
+          deterministic equality와 schema validation을 통과해야 합니다.
         </p>
         <p>
-          Artifact lookup은 secret이 redaction된 URI와 source digest를 사용하고,
-          tool call/result identity는 ID까지 정확히 비교합니다. Candidate가 근거 없이
-          “로그인 수정 완료”를 만들어 내면 schema가 유효하더라도 실패이며, old
-          context를 유지한 채 next-action replay가 실제 unresolved 401에서 test로
-          이어지는지 확인합니다.
+          artifact lookup은 secret이 redaction된 URI와 source digest를 사용하고 tool call/result identity는 ID까지 정확히
+          비교합니다. candidate가 근거 없이 “로그인 수정 완료”를 만들어 내면 schema가 유효하더라도 실패입니다. 이때는 old context를 유지한 채 next-action
+          replay가 실제 unresolved 401에서 test로 이어지는지 확인합니다.
         </p>
       </div>
 
@@ -236,10 +227,8 @@ Conversation summary:
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          이 평가를 통과해야 “context가 작아졌다”를 “작업을 안전하게 이어갈 수
-          있다”로 바꿔 말할 수 있습니다. Source heuristic 자체를 존중하되,
-          production에서는 typed lineage, exact receipt 검증과 rollback 가능한 canary를
-          별도 계층으로 둬야 합니다.
+          이 평가를 통과해야 “context가 작아졌다”를 “작업을 안전하게 이어갈 수 있다”로 바꿔 말할 수 있습니다. source heuristic 자체는 존중하되
+          production에서는 typed lineage, exact receipt 검증과 rollback 가능한 canary를 별도 계층으로 둡니다.
         </p>
       </div>
     </section>

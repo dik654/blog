@@ -37,11 +37,9 @@ export default function Overview() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          사용자가 “로그인 버튼이 401을 반환하니 원인을 찾아 최소 수정하고
-          test로 확인해 달라”고 요청했다고 해 보겠습니다. Agent가 파일을 읽고,
-          검색하고, 권한을 확인하고, 수정과 test를 반복하면 message history는
-          빠르게 커집니다. 이때 단순히 앞부분을 지우면 token은 줄지만 어떤 파일을
-          왜 바꿨는지와 무엇이 아직 실패하는지도 함께 사라질 수 있습니다.
+          사용자가 “로그인 버튼이 401을 반환하니 원인을 찾아 최소 수정하고 test로 확인해 달라”고 요청했다고 해 보겠습니다. agent가 파일을 읽고, 검색하고, 권한을 확인하고,
+          수정과 test를 반복하면 message history는 빠르게 커집니다. 이때 단순히 앞부분을 지우면 token은 줄지만 어떤 파일을 왜 바꿨는지와 무엇이 아직 실패하는지도 함께
+          사라질 수 있습니다.
         </p>
         <p>
           <strong>Compaction</strong>은 이 history를 다음 model request에 넣을 더
@@ -135,12 +133,9 @@ export default function Overview() {
           <a href="/ai/claw-tool-system"> tool receipt</a>에 있어야 합니다.
         </p>
         <p>
-          예를 들어 edit가 성공한 직후 ToolResult를 session에 저장하기 전에
-          process가 죽었다면, 다음 agent는 “결과 message가 없으니 edit를 다시
-          실행한다”고 결정해서는 안 됩니다. Stable operation ID와 before/after
-          digest로 workspace effect를 조회하고, 완료 여부가 불명확하면 사람에게
-          넘긴 뒤 test를 이어가야 합니다. Compaction은 이 reconciliation을
-          대신하지 않습니다.
+          예를 들어 edit가 성공한 직후 ToolResult를 session에 저장하기 전에 process가 죽었다면, 다음 agent는 “결과 message가 없으니 edit를 다시
+          실행한다”고 결정해서는 안 됩니다. stable operation ID와 before/after digest로 workspace effect를 조회하고, 완료 여부가 불명확하면
+          사람에게 넘긴 뒤 test를 이어갑니다. compaction은 이 reconciliation을 대신하지 않습니다.
         </p>
       </div>
 

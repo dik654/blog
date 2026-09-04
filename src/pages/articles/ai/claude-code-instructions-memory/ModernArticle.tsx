@@ -14,9 +14,8 @@ export default function ClaudeCodeInstructionsMemoryArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Instruction은 model이 현재 판단에 참고하는 글입니다. Permission이나
-            sandbox처럼 action을 강제하는 설정이 아닙니다. 먼저 누가 썼고, 어느
-            scope에 있고, 언제 load되는지를 분리합니다.
+            Instruction은 model이 현재 판단에 참고하는 글입니다. Permission이나 sandbox처럼 action을 강제하는 설정이 아닙니다. 먼저 누가 썼고 어느
+            scope에 있고 언제 load되는지를 분리합니다.
           </p>
         </div>
         <TermBreakdown
@@ -64,8 +63,7 @@ export default function ClaudeCodeInstructionsMemoryArticle() {
           question="현재 file을 읽을 때 어떤 instruction이 context에 합쳐지나요?"
           idea={
             <p>
-              전역·개인·project source를 먼저 잇고, 현재 file에 맞는 nested
-              rule과 repository memory를 뒤에 연결합니다.
+              전역·개인·project source를 먼저 잇고 현재 file에 맞는 nested rule과 repository memory를 뒤에 연결합니다.
             </p>
           }
           formula={String.raw`X=M\mathbin{\Vert}U\mathbin{\Vert}P\mathbin{\Vert}N_f\mathbin{\Vert}A`}

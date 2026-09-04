@@ -44,11 +44,9 @@ export default function SummaryMerge() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          긴 로그인 디버깅은 한 번의 compaction으로 끝나지 않습니다. 첫 summary
-          뒤에 새 search, edit와 test가 쌓이면 runtime은 다시 오래된 구간을
-          줄여야 합니다. 이때 이전 summary 전체를 새 summary의 한 항목으로 감싸면
-          압축할 때마다 “이전의 이전 context”라는 껍질이 늘고, 정작 최신 401
-          실패는 더 뒤로 밀립니다.
+          긴 로그인 디버깅은 한 번의 compaction으로 끝나지 않습니다. 첫 summary 뒤에 새 search, edit와 test가 쌓이면 runtime은 다시 오래된 구간을
+          줄여야 합니다. 이때 이전 summary 전체를 새 summary의 한 항목으로 감싸면 압축할 때마다 “이전의 이전 context”라는 껍질이 늘고 정작 최신 401 실패는 더
+          뒤로 밀립니다.
         </p>
         <p>
           Pinned 구현은 이 문제를 <strong>flattening</strong>, 즉 이전 highlight를
@@ -72,11 +70,9 @@ export default function SummaryMerge() {
           direct-resume instruction을 잘라낸 text가 merge 입력이 됩니다.
         </p>
         <p>
-          이 parser는 XML schema나 versioned JSON을 읽지 않습니다. Heading과 줄
-          prefix를 기준으로 highlight와 timeline을 구분할 뿐이며, 기존 timeline은
-          버리고 이번에 제거한 구간의 timeline만 넣습니다. 그래서 recursive
-          nesting은 막지만, 이전 timeline에만 있던 중요한 permission denial을
-          구조적으로 찾아 보존하지는 못합니다.
+          이 parser는 XML schema나 versioned JSON을 읽지 않습니다. heading과 줄 prefix를 기준으로 highlight와 timeline을 구분할
+          뿐입니다. 기존 timeline은 버리고 이번에 제거한 구간의 timeline만 넣습니다. 그래서 recursive nesting은 막지만 이전 timeline에만 있던 중요한
+          permission denial을 구조적으로 찾아 보존하지는 못합니다.
         </p>
       </div>
 
@@ -115,12 +111,9 @@ merged
   - tool: test exit=1; 401 remains.`}
         </pre>
         <p>
-          기존 timeline은 highlight 추출 단계에서 제외되므로 merge 결과에 다시
-          들어가지 않고, 이번 cycle의 timeline만 들어갑니다. 이전 highlight는
-          그대로 top level에 남기 때문에 recursive “previous context 안의 previous
-          context” 구조도 생기지 않습니다. 다만 두 Current work가 충돌한다는 사실을
-          text merge가 해결하지는 않으므로, desired typed state에서는 최신 revision을
-          별도 규칙으로 고릅니다.
+          기존 timeline은 highlight 추출 단계에서 제외되므로 merge 결과에 다시 들어가지 않고 이번 cycle의 timeline만 들어갑니다. 이전 highlight는
+          그대로 top level에 남기 때문에 recursive “previous context 안의 previous context” 구조도 생기지 않습니다. 다만 두 Current
+          work가 충돌한다는 사실을 text merge가 해결하지는 않으므로 desired typed state에서는 최신 revision을 별도 규칙으로 고릅니다.
         </p>
       </div>
 
@@ -136,10 +129,8 @@ merged
           확인합니다.
         </p>
         <p>
-          여기서 중요한 기준은 “잘 읽히는 문장이 나왔는가”가 아니라 “필수 field를
-          같은 identity로 다시 만들 수 있는가”입니다. Parse가 성공해도 goal,
-          permission decision, 마지막 test 실패가 누락됐다면 candidate를 채택하지
-          않습니다.
+          여기서 중요한 기준은 “잘 읽히는 문장이 나왔는가”가 아니라 “필수 field를 같은 identity로 다시 만들 수 있는가”입니다. parse가 성공해도 goal,
+          permission decision, 마지막 test 실패가 누락됐다면 candidate를 채택하지 않습니다.
         </p>
       </div>
 

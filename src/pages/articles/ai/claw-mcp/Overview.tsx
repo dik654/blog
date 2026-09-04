@@ -17,11 +17,9 @@ export default function Overview() {
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          MCP(Model Context Protocol)의 기본 개념과 tools·resources·prompts
-          구분은 별도의 MCP 입문 글에서 다룹니다. 이 글에서는 Claw Code가 MCP
-          서버를 시작하고 기능을 발견한 뒤, 그 기능을 기존 tool call 루프에
-          연결하는 구현 경계를 살펴봅니다. 같은 설명을 반복하기보다 “외부 서버가
-          언제 내부 도구처럼 보이기 시작하는가”에 집중합니다.
+          MCP(Model Context Protocol)의 기본 개념과 tools·resources·prompts 구분은 별도의 MCP 입문 글에서 다룹니다. 이 글에서는 Claw
+          Code가 MCP 서버를 시작하고 기능을 발견한 뒤 그 기능을 기존 tool call 루프에 연결하는 구현 경계를 살펴봅니다. 같은 설명을 반복하기보다 “외부 서버가 언제 내부
+          도구처럼 보이기 시작하는가”에 집중합니다.
         </p>
         <p>
           분석한 저장소의 모듈 이름과 지원 transport는 버전에 따라 달라질 수
@@ -51,22 +49,17 @@ export default function Overview() {
           Transport와 tool bridge는 다른 책임이다
         </h3>
         <p>
-          stdio transport는 자식 프로세스의 표준 입출력으로 JSON-RPC 메시지를
-          주고받는 방법이고, tool bridge는 MCP의 도구 설명과 호출 결과를 Claw
-          Code 내부 형식으로 바꾸는 계층입니다. 둘을 분리하면 같은 기능 발견
-          로직을 다른 transport에서도 재사용할 수 있고, 프로세스 로그가 프로토콜
-          stdout을 오염시키는 문제도 별도로 다룰 수 있습니다.
+          stdio transport는 자식 프로세스의 표준 입출력으로 JSON-RPC 메시지를 주고받는 방법이고 tool bridge는 MCP의 도구 설명과 호출 결과를 Claw Code
+          내부 형식으로 바꾸는 계층입니다. 둘을 분리하면 같은 기능 발견 로직을 다른 transport에서도 재사용할 수 있고 프로세스 로그가 프로토콜 stdout을 오염시키는 문제도
+          별도로 다룰 수 있습니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
           외부 도구도 내부 권한을 건너뛸 수 없다
         </h3>
         <p>
-          MCP 서버가 제공한 tool schema는 기능 설명이지 권한 증명서가 아닙니다.
-          서버 출처를 신뢰하더라도 실제 호출은 로컬 정책과 사용자 승인 범위
-          안에서 이뤄져야 하며, 서버 이름과 도구 이름 충돌도 등록 시점에
-          처리해야 합니다. 연결 실패나 잘못된 응답은 모델에게 구조화된 오류로
-          돌려주되, 전체 세션을 불필요하게 종료하지 않는 복구 경로도 필요합니다.
+          MCP 서버가 제공한 tool schema는 기능 설명이지 권한 증명서가 아닙니다. 서버 출처를 신뢰하더라도 실제 호출은 로컬 정책과 사용자 승인 범위 안에서 이뤄져야 합니다.
+          서버 이름과 도구 이름 충돌도 등록 시점에 처리합니다. 연결 실패나 잘못된 응답은 모델에게 구조화된 오류로 돌려주되 전체 세션을 불필요하게 종료하지 않는 복구 경로도 필요합니다.
         </p>
         <p>
           다음에는 <strong>lifecycle</strong>에서 legacy 초기화와 최신

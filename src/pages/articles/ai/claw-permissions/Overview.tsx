@@ -124,18 +124,14 @@ export default function Overview() {
           않아야 합니다.
         </p>
         <p>
-          그 안에서 permission mode가 세션의 기본 경계를 정하고, rule은 실제
-          tool과 input을 보고 deny·ask·allow를 좁힙니다. 승인이 필요하면 “Bash를
-          허용”처럼 넓게 저장하지 않고, 특정 action과 실행자·repository·branch,
-          만료와 사용 횟수에 묶습니다. 마지막으로 executor 바로 앞에서 판정을
-          소비해야 deny된 edit가 disk에 닿지 않습니다.
+          그 안에서 permission mode가 세션의 기본 경계를 정하고 rule은 실제 tool과 input을 보고 deny·ask·allow를 좁힙니다. 승인이 필요하면 “Bash를
+          허용”처럼 넓게 저장하지 않고 특정 action과 실행자·repository·branch, 만료, 사용 횟수에 묶습니다. 마지막으로 executor 바로 앞에서 판정을 소비해야
+          deny된 edit가 disk에 닿지 않습니다.
         </p>
         <p>
-          이 ceiling은 정상 사례만으로 검증할 수 없습니다. Workspace 밖 path와
-          symlink, production credential 접근, 임의 network egress, 승인하지
-          않은 process 실행을 각각 시도하고, 내부 mode나 유효한 approval이
-          있어도 host·sandbox·OS 경계에서 막히는지 negative test로 확인해야
-          합니다.
+          이 ceiling은 정상 사례만으로 검증할 수 없습니다. Workspace 밖 path와 symlink, production credential 접근, 임의 network
+          egress, 승인하지 않은 process 실행을 각각 시도하고 내부 mode나 유효한 approval이 있어도 host·sandbox·OS 경계에서 막히는지 negative
+          test로 확인해야 합니다.
         </p>
       </div>
 

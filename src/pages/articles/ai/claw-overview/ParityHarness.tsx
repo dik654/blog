@@ -86,18 +86,14 @@ export default function ParityHarness() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Deterministic harness는 같은 input에 같은 provider frame, 같은 tool result와
-          같은 clock·ID를 공급해 실행할 때마다 같은 관찰을 만드는 test 환경입니다.
-          Network와 live model의 변동을 제거하므로 provider stream parser,
-          tool roundtrip, permission과 session transition의 회귀를 정확히
-          재현할 수 있습니다.
+          Deterministic harness는 같은 input에 같은 provider frame, 같은 tool result, 같은 clock·ID를 공급합니다. 실행할 때마다 같은
+          관찰이 나오는 test 환경입니다. Network와 live model의 변동을 제거하므로 provider stream parser, tool roundtrip,
+          permission, session transition의 회귀를 정확히 재현할 수 있습니다.
         </p>
         <p>
-          하지만 “두 실행 trace가 같다”와 “login bug를 올바르게 고쳤다”는 다른
-          질문입니다. 전자는 정해 둔 contract의 deterministic equivalence이고,
-          후자는 unseen login condition, 보안, 유지보수성과 user intent까지 보는
-          semantic quality입니다. Harness가 scripted patch 하나만 기대한다면
-          엉뚱한 hard-coded fix도 parity를 통과할 수 있습니다.
+          하지만 “두 실행 trace가 같다”와 “login bug를 올바르게 고쳤다”는 다른 질문입니다. 전자는 정해 둔 contract의 deterministic
+          equivalence이고 후자는 unseen login condition, 보안, 유지보수성, user intent까지 보는 semantic quality입니다. Harness가
+          scripted patch 하나만 기대한다면 엉뚱한 hard-coded fix도 parity를 통과할 수 있습니다.
         </p>
       </div>
 
@@ -108,10 +104,8 @@ export default function ParityHarness() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>로그인 버그를 하나의 acceptance fixture로 고정합니다</h3>
         <p>
-          아래는 현재 repository에 동일한 이름으로 들어 있다고 주장하는 기존
-          scenario가 아니라, 공개 mock harness의 메커니즘으로 고정 사례를 검증할
-          때 추가할 설계입니다. Fixture는 model이 낼 법한 답을 흉내 내는 데서
-          끝나지 않고 host가 지켜야 할 precondition과 artifact를 포함해야 합니다.
+          아래는 현재 repository에 동일한 이름으로 들어 있다고 주장하는 기존 scenario가 아니라 공개 mock harness의 메커니즘으로 고정 사례를 검증할 때 추가할
+          설계입니다. Fixture는 model이 낼 법한 답을 흉내 내는 데서 끝나지 않고 host가 지켜야 할 precondition과 artifact를 포함해야 합니다.
         </p>
       </div>
 
@@ -153,12 +147,10 @@ export default function ParityHarness() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Failure fixture에는 block 종료 전 disconnect, 잘못된 JSON, 뒤섞인 block
-          index, provider error와 tool call 뒤 text-only 종료를 포함합니다. Parser는
-          이를 정상 final answer로 꾸미지 말고 typed error와 incomplete state를
-          반환해야 하며, executor 호출 수가 0인지도 함께 확인합니다. 완성되지 않은
-          tool input을 정상 assistant tool-call message로 session에 commit해서도 안
-          됩니다.
+          Failure fixture에는 block 종료 전 disconnect, 잘못된 JSON, 뒤섞인 block index, provider error, tool call 뒤
+          text-only 종료를 포함합니다. Parser는 이를 정상 final answer로 꾸미지 말고 typed error와 incomplete state를 반환해야 합니다.
+          executor 호출 수가 0인지도 함께 확인합니다. 완성되지 않은 tool input을 정상 assistant tool-call message로 session에 commit해서도
+          안 됩니다.
         </p>
       </div>
 
@@ -200,19 +192,14 @@ export default function ParityHarness() {
 
         <h3>Byte equality와 semantic trace equality를 구분합니다</h3>
         <p>
-          Wire protocol 자체를 검사할 때는 frame byte가 중요할 수 있습니다.
-          그러나 UUID, timestamp, temp path, map iteration order와 자연어 문장까지
-          byte로 비교하면 의미 없는 실패가 늘어납니다. Login fixture의 semantic
-          trace에는 tool name·canonical arguments, permission result, edit target,
-          diff digest, test exit code와 turn exit state를 남기고 비결정적 field는
-          사전에 정의한 normalizer로 바꿉니다.
+          Wire protocol 자체를 검사할 때는 frame byte가 중요할 수 있습니다. 그러나 UUID, timestamp, temp path, map iteration
+          order, 자연어 문장까지 byte로 비교하면 의미 없는 실패가 늘어납니다. Login fixture의 semantic trace에는 tool name·canonical
+          arguments, permission result, edit target, diff digest, test exit code, turn exit state를 남깁니다. 비결정적
+          field는 사전에 정의한 normalizer로 바꿉니다.
         </p>
         <p>
-          자연어 final response는 필수 evidence를 포함하는지와 성공·실패를 정확히
-          표현하는지 구조적으로 검사할 수 있지만, 단어 순서가 같다고 patch 품질이
-          좋아지는 것은 아닙니다. 반대로 문장이 다르더라도 동일 diff와 test
-          evidence를 정확히 보고하면 deterministic host contract는 지킬 수
-          있습니다.
+          자연어 final response는 필수 evidence를 포함하는지와 성공·실패를 정확히 표현하는지 구조적으로 검사할 수 있지만 단어 순서가 같다고 patch 품질이 좋아지는
+          것은 아닙니다. 문장이 다르더라도 동일 diff와 test evidence를 정확히 보고하면 deterministic host contract는 지킬 수 있습니다.
         </p>
       </div>
 
@@ -250,23 +237,17 @@ export default function ParityHarness() {
           report를 별도 artifact로 남깁니다.
         </p>
         <p>
-          Release decision은 두 결과를 함께 봅니다. Host contract mismatch는
-          regression이므로 먼저 고치고, semantic slice가 나빠졌다면 원인과 영향
-          범위를 조사합니다. Live provider canary에서는 protocol drift와 latency를
-          관찰하되 secret을 fixture에 복사하지 않고, 실패 시 pinned binary와
-          permission·runtime config, fixture·normalizer를 한 묶음으로 rollback할 수
-          있어야 합니다.
+          Release decision은 두 결과를 함께 봅니다. Host contract mismatch는 regression이므로 먼저 고칩니다. semantic slice가 나빠졌다면
+          원인과 영향 범위를 조사합니다. Live provider canary에서는 protocol drift와 latency를 관찰하되 secret을 fixture에 복사하지 않습니다.
+          실패 시 pinned binary와 permission·runtime config, fixture·normalizer를 한 묶음으로 rollback할 수 있어야 합니다.
         </p>
         <p>
-          이관이나 큰 refactor 전후에는 base와 candidate의 Rust·Python full commit
-          SHA, fixture·normalizer version, workspace digest, 동일 request와 permission
-          config를 고정한 paired run을 남깁니다. 의도된 차이는 단순 snapshot 갱신이 아니라 ADR이나
-          compatibility note에 이유를 기록하고 양쪽 fixture의 expected result를
-          review한 뒤 함께 바꿉니다. Canary가 실제 provider contract, deny path 또는
-          사전 등록한 semantic slice의 acceptance threshold를 벗어나면 이전
-          binary·config·fixture·normalizer 조합으로
-          rollback하고 두 run의 request·trace·diff·test receipt와 artifact digest를
-          release provenance로 보존합니다.
+          이관이나 큰 refactor 전후에는 base와 candidate의 Rust·Python full commit SHA, fixture·normalizer version,
+          workspace digest, 동일 request와 permission config를 고정한 paired run을 남깁니다. 의도된 차이는 단순 snapshot 갱신이 아니라
+          ADR이나 compatibility note에 이유를 기록하고 양쪽 fixture의 expected result를 review한 뒤 함께 바꿉니다. Canary가 실제
+          provider contract, deny path 또는 사전 등록한 semantic slice의 acceptance threshold를 벗어나면 이전
+          binary·config·fixture·normalizer 조합으로 rollback합니다. 두 run의 request·trace·diff·test receipt와 artifact
+          digest는 release provenance로 보존합니다.
         </p>
       </div>
 

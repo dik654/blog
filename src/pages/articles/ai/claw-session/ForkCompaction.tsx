@@ -93,11 +93,9 @@ export default function ForkCompaction() {
           fork된 session은 새 persistence path에 저장됩니다.
         </p>
         <p>
-          이 정보는 “어느 session에서 갈라졌는가”를 설명하지만 “부모의 어느
-          immutable revision을 공통 base로 삼았는가”를 가리키는 pointer는
-          아닙니다. 복제한 messages 이후에 양쪽이 바뀌어도 shared event
-          history나 copy-on-write storage가 관리되는 구조가 아니며, workspace
-          root를 상속한다고 별도 worktree가 생기는 것도 아닙니다.
+          이 정보는 “어느 session에서 갈라졌는가”를 설명합니다. 그러나 “부모의 어느 immutable revision을 공통 base로 삼았는가”를 가리키는 pointer는
+          아닙니다. 복제한 messages 이후에 양쪽이 바뀌어도 shared event history나 copy-on-write storage가 관리되는 구조는 아닙니다.
+          workspace root를 상속한다고 별도 worktree가 생기지도 않습니다.
         </p>
       </div>
 
@@ -157,18 +155,13 @@ export default function ForkCompaction() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Rewind도 현재 구현 사실과 목표 설계를 나눠 읽습니다</h3>
         <p>
-          일반적인 rewind는 과거 checkpoint를 삭제하는 동작이 아니라 그 지점에서
-          새 미래를 시작하는 동작입니다. 그러나 pinned fork metadata만으로 임의
-          revision을 선택해 rewind하거나, 과거 effect를 되돌리거나, 새 head를
-          만든다고 주장할 수는 없습니다. 이러한 기능을 추가하려면 immutable
-          base, event order, workspace state와 이미 발생한 외부 effect의 처리
-          규칙이 먼저 필요합니다.
+          일반적인 rewind는 그 지점에서 새 미래를 시작하는 동작입니다. 과거 checkpoint를 삭제하는 동작이 아닙니다. 그러나 pinned fork metadata만으로 임의
+          revision을 골라 rewind하거나 과거 effect를 되돌리거나 새 head를 만든다고 주장할 수는 없습니다. 이런 기능을 더하려면 immutable base와 event
+          order, workspace state, 이미 발생한 외부 effect의 처리 규칙이 먼저 필요합니다.
         </p>
         <p>
-          특히 대화를 과거로 돌렸다고 파일이 과거 상태로 돌아가지는 않습니다.
-          Candidate별 workspace를 분리하지 않았다면 다른 session의 transcript가
-          가리키는 코드와 실제 filesystem이 달라질 수 있습니다. 안전한 branch
-          contract에는 아래 정보가 추가돼야 합니다.
+          특히 대화를 과거로 돌렸다고 파일까지 과거 상태로 돌아가지는 않습니다. Candidate별 workspace를 분리하지 않았다면 다른 session의 transcript가 가리키는
+          코드와 실제 filesystem이 어긋날 수 있습니다. 안전한 branch contract에는 아래 정보가 추가돼야 합니다.
         </p>
       </div>
 
@@ -191,12 +184,9 @@ export default function ForkCompaction() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Merge는 transcript를 이어 붙이는 일이 아닙니다</h3>
         <p>
-          Candidate A의 assistant message 뒤에 B의 message를 붙여도 두 patch가
-          합쳐지지 않습니다. Merge 대상은 conversation text가 아니라 common base
-          대비 artifact diff입니다. 두 후보가 같은 줄을 고쳤다면 conflict를
-          해결해야 하고, permission과 deterministic login test도 merged
-          workspace에서 다시 수행해야 합니다. 이전 branch에서 통과한 test
-          receipt는 새로운 조합의 정답을 보장하지 않습니다.
+          Candidate A의 assistant message 뒤에 B의 message를 붙여도 두 patch가 합쳐지지는 않습니다. Merge 대상은 conversation text가
+          아니라 common base 대비 artifact diff입니다. 두 후보가 같은 줄을 고쳤다면 conflict를 해결해야 하고 permission과 deterministic
+          login test도 merged workspace에서 다시 수행해야 합니다. 이전 branch에서 통과한 test receipt는 새로운 조합의 정답을 보장하지 않습니다.
         </p>
       </div>
 
@@ -219,10 +209,9 @@ export default function ForkCompaction() {
           Checkpoint·replay framework는 비교 자료이지 Claw 구현 근거가 아닙니다
         </h3>
         <p>
-          Long-running workflow framework는 thread별 checkpoint, replay와 state
-          fork의 의미를 명시합니다. 이 비교는 Claw fork에서 무엇이 빠졌는지 설계
-          질문을 만드는 데 유용하지만, framework의 checkpointer가 filesystem
-          edit의 idempotency나 artifact merge를 대신 해결하지는 않습니다.
+          Long-running workflow framework는 thread별 checkpoint와 replay, state fork의 의미를 명시합니다. 이 비교는 Claw
+          fork에서 무엇이 빠졌는지 설계 질문을 만드는 데 유용합니다. 다만 framework의 checkpointer가 filesystem edit의 idempotency나
+          artifact merge를 대신 해결해 주지는 않습니다.
         </p>
       </div>
 
@@ -279,11 +268,9 @@ export default function ForkCompaction() {
           <a href="/ai/claw-compaction"> compaction 전용 글</a>에서 이어집니다.
         </p>
         <p>
-          Branch를 정리할 때도 transcript만 삭제해서는 안 됩니다. Candidate의
-          diff와 test receipt를 최종 결과가 참조하고 있다면 retention 기간 동안
-          lineage를 유지하고, 민감 데이터 삭제는 원본 record·summary·artifact의
-          파생 관계를 함께 추적해야 합니다. 이 retention·garbage collection 역시
-          pinned fork source의 구현 사실이 아니라 운영 계약입니다.
+          Branch를 정리할 때도 transcript만 지워서는 안 됩니다. 최종 결과가 candidate의 diff와 test receipt를 참조하고 있다면 retention 기간
+          동안 lineage를 유지합니다. 민감 데이터 삭제는 원본 record·summary·artifact의 파생 관계를 함께 추적해야 합니다. 이 retention·garbage
+          collection 역시 pinned fork source의 구현 사실이 아니라 운영 계약입니다.
         </p>
       </div>
     </section>

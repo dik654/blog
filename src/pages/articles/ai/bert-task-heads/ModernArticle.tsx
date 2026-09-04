@@ -59,8 +59,7 @@ export default function BertTaskHeadsArticle() {
           question="[B,L,H]에서 [B,C] class probability를 어떻게 만드나요?"
           idea={
             <p>
-              각 sequence의 CLS row만 모아 [B,H]를 만들고, linear projection으로
-              C logits를 만든 뒤 softmax합니다.
+              각 sequence의 CLS row만 모아 [B,H]를 만들고 linear projection으로 C logits를 만든 뒤 softmax합니다.
             </p>
           }
           formula={String.raw`p(y\mid x)=softmax(W_c h_{CLS}+b_c)`}

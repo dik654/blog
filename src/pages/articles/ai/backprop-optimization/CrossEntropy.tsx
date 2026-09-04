@@ -27,10 +27,8 @@ export default function CrossEntropy() {
       />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          class weighting, focal loss, label smoothing은 서로 다른 문제를 다룬다.
-          imbalance·easy example 집중·overconfidence를 구분해 validation 기준으로
-          적용해야 하며, label noise에 label smoothing을 쓰면 언제나 해결된다고 볼 수는
-          없다.
+          class weighting, focal loss, label smoothing은 서로 다른 문제를 다룬다. imbalance·easy example
+          집중·overconfidence를 구분해 validation 기준으로 적용해야 하며 label noise에 label smoothing을 쓰면 언제나 해결된다고 볼 수는 없다.
         </p>
       </div>
       <CrossEntropyViz />

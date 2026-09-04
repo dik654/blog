@@ -48,14 +48,18 @@ export default function ModernPluginArticle() {
           Input JSON은 stdin으로 쓰고 <code>CLAWD_PLUGIN_ID</code>, <code>CLAWD_PLUGIN_NAME</code>, <code>CLAWD_TOOL_NAME</code>, <code>CLAWD_TOOL_INPUT</code> environment를 추가합니다. Plugin root가 있으면 current directory와 <code>CLAWD_PLUGIN_ROOT</code>도 설정합니다. 부모 environment는 기본적으로 상속되고 stdout·stderr를 모아 process 종료까지 기다리며, 이 함수에서는 timeout·output limit·process group·sandbox가 보이지 않습니다.
         </p>
         <p>
-          Auth-lint가 workspace-write를 선언했다면 host는 canonical input, plugin ID·version·tool schema digest, policy generation과 approval을 묶어 실행 직전에 다시 검사해야 합니다. Plugin command가 다른 executable을 시작하거나 symlink target을 바꾸는 경우까지 label 하나가 의미를 설명하지 못하므로 실제 effect receipt도 필요합니다.
+          Auth-lint가 workspace-write를 선언했다면 host는 canonical input, plugin ID·version·tool schema digest,
+          policy generation, approval을 묶어 실행 직전에 다시 검사해야 합니다. Plugin command가 다른 executable을 시작하거나 symlink
+          target을 바꾸는 경우까지 label 하나가 의미를 설명하지 못하므로 실제 effect receipt도 필요합니다.
         </p>
       </section>
 
       <section id="lifecycle" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">03 · Lifecycle과 degraded</p><h2 className="mt-2 text-2xl font-bold">Initialize는 정방향, shutdown은 역방향이지만 rollback transaction은 아니다</h2></header>
         <p>
-          Registry initialize는 enabled plugin을 정렬된 순서대로 validate하고 init command를 실행합니다. Shutdown은 반대 순서로 실행합니다. Dependency를 쌓은 역순으로 내리는 기본 원칙에는 맞지만, 세 번째 plugin init이 실패했을 때 앞의 두 plugin을 자동으로 rollback했다는 근거는 별도로 확인해야 합니다. Lifecycle command도 shell process와 외부 effect를 만들 수 있기 때문입니다.
+          Registry initialize는 enabled plugin을 정렬된 순서대로 validate하고 init command를 실행합니다. Shutdown은 반대 순서로
+          실행합니다. Dependency를 쌓은 역순으로 내리는 기본 원칙에는 맞지만 세 번째 plugin init이 실패했을 때 앞의 두 plugin을 자동으로 rollback했다는
+          근거는 별도로 확인해야 합니다. Lifecycle command도 shell process와 외부 effect를 만들 수 있기 때문입니다.
         </p>
         <ExplainedFormula
           question="세 plugin 가운데 두 개만 ready라면 registry 가용 비율은 얼마인가?"

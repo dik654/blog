@@ -61,11 +61,9 @@ export default function CommandIntentSection() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Command intent는 명령을 read-only, write, destructive, network, process,
-          package, system 같은 범주로 묶는 metadata입니다. 사용자는 원문 전체를
-          해석하기 전에 예상 영향 범위를 볼 수 있고, host는 어떤 permission rule과
-          sandbox profile을 적용할지 고를 수 있습니다. 그러나 분류 label은 shell이
-          실제로 그 effect만 만든다는 증명도, 사용자의 승인도 아닙니다.
+          Command intent는 명령을 read-only, write, destructive, network, process, package, system 같은 범주로 묶는
+          metadata입니다. 사용자는 원문 전체를 해석하기 전에 예상 영향 범위를 볼 수 있고 host는 어떤 permission rule과 sandbox profile을 적용할지 고를
+          수 있습니다. 그러나 분류 label은 shell이 실제로 그 effect만 만든다는 증명도, 사용자의 승인도 아닙니다.
         </p>
         <p>
           Pinned snapshot에는 서로 다른 두 classifier가 있습니다. Production tools
@@ -230,20 +228,16 @@ export default function CommandIntentSection() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Root·device나 scope를 계산할 수 없는 삭제는 deny합니다. Workspace 안의
-          넓은 삭제는 exact target set, current revision과 rollback plan을 보여 준
-          뒤 좁은 승인을 받고, arguments·cwd·revision이 바뀌면 다시 승인합니다.
-          작은 generated output 삭제를 자동 허용하려면 generated directory,
-          clean baseline과 최대 file count 같은 invariant를 먼저 고정합니다.
+          Root·device나 scope를 계산할 수 없는 삭제는 deny합니다. Workspace 안의 넓은 삭제는 exact target set, current revision과
+          rollback plan을 보여 준 뒤 좁은 승인을 받고 arguments·cwd·revision이 바뀌면 다시 승인합니다. 작은 generated output 삭제를 자동
+          허용하려면 generated directory, clean baseline과 최대 file count 같은 invariant를 먼저 고정합니다.
         </p>
 
         <h3>Network intent는 URL 추출이나 command log로 강제할 수 없습니다</h3>
         <p>
-          Command 문자열에서 URL을 찾아 audit log에 남기면 조사에는 도움이 되지만,
-          DNS resolution 뒤 IP, redirect, proxy, interpreter와 dependency의 통신,
-          stdin·environment로 전달한 secret은 모두 드러나지 않을 수 있습니다.
-          실제 egress 제어는 network namespace나 proxy allowlist가 맡고, command와
-          output log에는 credential redaction을 적용해야 합니다.
+          Command 문자열에서 URL을 찾아 audit log에 남기면 조사에는 도움이 되지만 DNS resolution 뒤 IP, redirect, proxy, interpreter와
+          dependency의 통신, stdin·environment로 전달한 secret은 모두 드러나지 않을 수 있습니다. 실제 egress 제어는 network namespace나
+          proxy allowlist가 맡고 command와 output log에는 credential redaction을 적용해야 합니다.
         </p>
         <p>
           Regression fixture에는
@@ -269,11 +263,9 @@ export default function CommandIntentSection() {
           blocker로 다룹니다.
         </p>
         <p>
-          최종 test는 예측한 intent와 실제 process·network flow·workspace diff를
-          비교합니다. Classifier가 read로 예측했는데 file이 바뀌었다면 성공 exit와
-          무관하게 fixture를 실패시키고, 해당 command를 보수적 rule 또는 더 좁은
-          sandbox로 보냅니다. Intent는 다음 절의 isolation profile을 고르는 입력일
-          뿐, OS enforcement를 대신하지 않습니다.
+          최종 test는 예측한 intent와 실제 process·network flow·workspace diff를 비교합니다. Classifier가 read로 예측했는데 file이
+          바뀌었다면 성공 exit와 무관하게 fixture를 실패시키고 해당 command를 보수적 rule 또는 더 좁은 sandbox로 보냅니다. Intent는 다음 절의
+          isolation profile을 고르는 입력일 뿐, OS enforcement를 대신하지 않습니다.
         </p>
       </div>
     </section>

@@ -50,7 +50,9 @@ export default function FoundationArticle() {
     <section id="reconstruction" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">Reconstruction objective는 좌표 오차를 학습 신호 하나로 만듭니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert"><p>연속값에 MSE를 쓰면 fixed-variance Gaussian의 mean을 예측하는 해석이 가능합니다. Binary coordinate에 BCE를 쓰면 Bernoulli probability를 예측합니다. Loss는 이름이 아니라 관측값의 범위·likelihood·reduction과 함께 선택합니다.</p></div>
-      <ExplainedFormula question="Batch의 모든 coordinate 오차를 왜 제곱하고 평균할까요?" idea={<p>같은 위치의 차이를 먼저 만들고, 부호가 상쇄되지 않게 제곱한 뒤, batch와 feature 수가 달라도 비교하도록 평균합니다.</p>} formula={String.raw`\mathcal L_{\rm MSE}=\frac1{Bn}\sum_{b=1}^{B}\lVert x^{(b)}-\hat x^{(b)}\rVert_2^2`} annotatedFormula={String.raw`\begin{aligned}r_j^{(b)}&=\underbrace{x_j^{(b)}-\hat x_j^{(b)}}_{\text{같은 좌표의 residual}}\\e^{(b)}&=\underbrace{\frac1n\sum_{j=1}^{n}(r_j^{(b)})^2}_{\text{sample 안에서 제곱·평균}}\\\mathcal L_{\rm MSE}&=\underbrace{\frac1B\sum_{b=1}^{B}e^{(b)}}_{\text{batch 전체를 평균}}\end{aligned}`} operations={[
+      <ExplainedFormula question="Batch의 모든 coordinate 오차를 왜 제곱하고 평균할까요?" idea={<p>
+            같은 위치의 차이를 먼저 만들고 부호가 상쇄되지 않게 제곱한 뒤 batch와 feature 수가 달라도 비교하도록 평균합니다.
+          </p>} formula={String.raw`\mathcal L_{\rm MSE}=\frac1{Bn}\sum_{b=1}^{B}\lVert x^{(b)}-\hat x^{(b)}\rVert_2^2`} annotatedFormula={String.raw`\begin{aligned}r_j^{(b)}&=\underbrace{x_j^{(b)}-\hat x_j^{(b)}}_{\text{같은 좌표의 residual}}\\e^{(b)}&=\underbrace{\frac1n\sum_{j=1}^{n}(r_j^{(b)})^2}_{\text{sample 안에서 제곱·평균}}\\\mathcal L_{\rm MSE}&=\underbrace{\frac1B\sum_{b=1}^{B}e^{(b)}}_{\text{batch 전체를 평균}}\end{aligned}`} operations={[
         { expression: String.raw`x_j^{(b)}-\hat x_j^{(b)}`, annotation: ["같은 sample·coordinate에서", "복원 residual을 계산"] },
         { expression: String.raw`(x_j^{(b)}-\hat x_j^{(b)})^2`, annotation: ["양·음 residual을 상쇄하지 않고", "큰 오차를 더 크게 반영"] },
         { expression: String.raw`\frac1{Bn}\sum_{b,j}`, annotation: ["모든 기여를 누적한 뒤", "coordinate 수로 정규화"] },
@@ -63,9 +65,8 @@ export default function FoundationArticle() {
         question="Coordinate가 [0,1] 확률처럼 해석될 때 loss는 MSE와 무엇이 달라지나요?"
         idea={
           <p>
-            각 coordinate를 독립 Bernoulli 확률로 보고 decoder output을 그
-            확률의 추정치로 삼습니다. 실제 값이 1에 가까우면 예측도 1에
-            가까워야 loss가 작아지고, 0에 가까우면 그 반대입니다.
+            각 coordinate를 독립 Bernoulli 확률로 보고 decoder output을 그 확률의 추정치로 삼습니다. 실제 값이 1에 가까우면 예측도 1에 가까워야 loss가
+            작아지고 0에 가까우면 그 반대입니다.
           </p>
         }
         formula={String.raw`\mathcal L_{\rm BCE}=-\frac1{Bn}\sum_{b=1}^{B}\sum_{j=1}^{n}\Big[x_j^{(b)}\log \hat x_j^{(b)}+(1-x_j^{(b)})\log(1-\hat x_j^{(b)})\Big]`}

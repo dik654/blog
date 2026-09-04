@@ -88,17 +88,14 @@ export default function PythonLayer() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Mock I/O가 보여 주는 것과 보이지 않는 것을 나눕니다</h3>
         <p>
-          In-memory file map이나 scripted shell을 쓰면 login file의 초기 내용,
-          edit 결과와 test exit code를 매번 똑같이 만들 수 있습니다. 이 방식은
-          denied edit가 실제 mutation을 만들지 않는지, test failure가 완료 상태로
-          바뀌지 않는지 같은 control-flow invariant를 빠르게 검사합니다.
+          In-memory file map이나 scripted shell을 쓰면 login file의 초기 내용, edit 결과, test exit code를 매번 똑같이 만들 수
+          있습니다. 이 방식은 denied edit가 실제 mutation을 만들지 않는지, test failure가 완료 상태로 바뀌지 않는지 같은 control-flow
+          invariant를 빠르게 검사합니다.
         </p>
         <p>
-          반면 symlink resolution, filesystem permission, process signal, locale,
-          shell quoting과 network timeout은 실제 운영체제에서 달라집니다. 이런
-          위험은 temp repository integration test와 sandboxed end-to-end test로
-          넘겨야 합니다. “Python reference와 같았다”는 결과만으로 host security나
-          실제 provider compatibility를 인증할 수 없습니다.
+          symlink resolution, filesystem permission, process signal, locale, shell quoting, network timeout은
+          사정이 다릅니다. 실제 운영체제에서 달라지는 값이라 이런 위험은 temp repository integration test와 sandboxed end-to-end test로 넘겨야
+          합니다. “Python reference와 같았다”는 결과만으로 host security나 실제 provider compatibility를 인증할 수 없습니다.
         </p>
 
         <h3>Mismatch는 다섯 갈래로 분류합니다</h3>
@@ -110,10 +107,8 @@ export default function PythonLayer() {
           <li><strong>Intentional change:</strong> contract 자체를 바꾸기로 했으며 migration과 새 evidence가 필요합니다.</li>
         </ul>
         <p>
-          어느 경우든 expected snapshot만 새로 저장하고 끝내면 안 됩니다. 선택한
-          근거, 두 implementation SHA, fixture·normalizer version과 review 결과를
-          parity receipt에 남겨야 다음 차이가 regression인지 다시 판단할 수
-          있습니다.
+          어느 경우든 expected snapshot만 새로 저장하고 끝내면 안 됩니다. 선택한 근거, 두 implementation SHA, fixture·normalizer
+          version, review 결과를 parity receipt에 남겨야 다음 차이가 regression인지 다시 판단할 수 있습니다.
         </p>
       </div>
 

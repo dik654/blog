@@ -58,16 +58,13 @@ export default function Bootstrap() {
           외부 process는 trust 결정 뒤에 시작한다
         </h3>
         <p className="leading-7">
-          hardening된 실행기라면 먼저 config를 병합하고 canonical workspace
-          path와 source provenance를 계산해야 합니다. 그다음 project config,
-          plugin manifest와 executable의 신뢰 여부를 평가하며, 여기까지는 가능한
-          한 process 생성이나 network 요청 없이 끝내는 편이 좋습니다.
+          hardening된 실행기라면 먼저 config를 병합하고 canonical workspace path와 source provenance를 계산합니다. 그다음 project
+          config, plugin manifest와 executable의 신뢰 여부를 평가합니다. 여기까지는 가능한 한 process 생성이나 network 요청 없이 끝내는 편이
+          좋습니다.
         </p>
         <p className="leading-7">
-          신뢰 결정이 끝난 뒤에만 provider 연결, plugin enable, MCP spawn과 hook
-          등록을 시작합니다. 이 작업들은 서로 독립적이면 병렬화할 수 있지만,
-          취소 signal과 initialization generation을 공유해야 이전 실행에서 늦게
-          도착한 결과가 새 runtime에 섞이지 않습니다.
+          신뢰 결정이 끝난 뒤에만 provider 연결, plugin enable, MCP spawn과 hook 등록을 시작합니다. 이 작업들은 서로 독립적이면 병렬화할 수 있지만 취소
+          signal과 initialization generation을 공유해야 이전 실행에서 늦게 도착한 결과가 새 runtime에 섞이지 않습니다.
         </p>
       </div>
 
@@ -96,10 +93,8 @@ export default function Bootstrap() {
           뒤에만 <code>Ready</code>를 공개해야 합니다.
         </p>
         <p className="leading-7">
-          optional MCP나 telemetry가 실패했을 때는 해당 기능만 unavailable로
-          표시할 수 있습니다. 다만 사용자가 바로 그 기능을 요청하면 degraded
-          상태를 숨기지 말고 재연결하거나 명확히 실패해야 하며, 필수 구성요소의
-          실패를 optional처럼 취급해서는 안 됩니다.
+          optional MCP나 telemetry가 실패했을 때는 해당 기능만 unavailable로 표시할 수 있습니다. 다만 사용자가 바로 그 기능을 요청하면 degraded 상태를
+          숨기지 말고 재연결하거나 명확히 실패해야 합니다. 필수 구성요소의 실패를 optional처럼 취급해서는 안 됩니다.
         </p>
 
         <div className="not-prose my-8">
@@ -110,11 +105,9 @@ export default function Bootstrap() {
           부분 초기화에는 역순 cleanup이 필요하다
         </h3>
         <p className="leading-7">
-          MCP process를 시작한 뒤 provider 인증이 실패하면 이미 열린 child
-          process, socket과 임시 callback server를 닫아야 합니다. 각
-          initializer가 cleanup handle을 반환하게 하고, 실패나
-          cancellation에서는 생성의 역순으로 정리하면 누락을 줄일 수 있습니다.
-          credential과 callback code는 진단 로그에 남기지 않습니다.
+          MCP process를 시작한 뒤 provider 인증이 실패하면 이미 열린 child process, socket과 임시 callback server를 닫아야 합니다. 각
+          initializer가 cleanup handle을 반환하게 하고 실패나 cancellation에서는 생성의 역순으로 정리하면 누락을 줄일 수 있습니다. credential과
+          callback code는 진단 로그에 남기지 않습니다.
         </p>
         <p className="leading-7">
           runtime은 부분적으로 채운 <code>Option&lt;T&gt;</code> 묶음을 여러
@@ -127,11 +120,9 @@ export default function Bootstrap() {
           timing은 숫자보다 critical path를 보여줘야 한다
         </h3>
         <p className="leading-7">
-          MCP 시작 시간처럼 환경에 따라 크게 달라지는 값을 고정된 정상 범위로
-          제시하면 오히려 잘못된 기준이 됩니다. phase별 elapsed time, cache
-          여부, source, timeout과 cleanup 결과를 기록하고 실제 배포의
-          percentile로 baseline을 잡아야 합니다. 그래야 느린 시작이 network,
-          인증, plugin discovery 중 어디에서 발생했는지 설명할 수 있습니다.
+          MCP 시작 시간처럼 환경에 따라 크게 달라지는 값을 고정된 정상 범위로 제시하면 오히려 잘못된 기준이 됩니다. phase별 elapsed time, cache 여부,
+          source, timeout과 cleanup 결과를 기록하고 실제 배포의 percentile로 baseline을 잡습니다. 그래야 느린 시작이 network, 인증, plugin
+          discovery 중 어디에서 발생했는지 설명할 수 있습니다.
         </p>
       </div>
     </section>

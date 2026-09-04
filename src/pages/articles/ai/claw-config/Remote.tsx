@@ -25,11 +25,9 @@ export default function Remote() {
           data이며 WebSocket session protocol 전체는 아닙니다.
         </p>
         <p className="leading-7">
-          따라서 이 글은 먼저 현재 구현이 실제로 보장하는 활성 조건을 확인한 뒤,
-          장시간 원격 session에 필요하지만 아직 이 파일에서 확인되지 않는
-          sequence·ack·resume·permission 계약을 hardening 목표로 확장합니다. 이
-          경계를 지우면 URL을 만들었다는 사실을 안전한 remote execution이
-          완성됐다는 근거로 오해하게 됩니다.
+          이 글은 먼저 현재 구현이 실제로 보장하는 활성 조건을 확인합니다. 그다음 장시간 원격 session에 필요하지만 아직 이 파일에서 확인되지 않는
+          sequence·ack·resume·permission 계약을 hardening 목표로 확장합니다. 이 경계를 지우면 URL을 만들었다는 사실을 안전한 remote
+          execution이 완성됐다는 근거로 오해하게 됩니다.
         </p>
 
         <div id="paper-claw-remote-source" className="scroll-mt-24">
@@ -96,11 +94,9 @@ export default function Remote() {
           아래 protocol은 현재 근거가 아니라 다음 hardening 계약이다
         </h3>
         <p className="leading-7">
-          장시간 연결에서는 network가 끊긴 뒤 같은 event가 다시 오거나 일부가
-          빠질 수 있습니다. 이때 protocol version, session·request identity와
-          monotonic sequence를 가진 envelope가 있어야 duplicate와 gap을 구분할 수
-          있습니다. Receiver의 마지막 처리 sequence를 ack하고, 보존 범위 안에서
-          replay하거나 현재 snapshot을 다시 보내는 규칙도 필요합니다.
+          장시간 연결에서는 network가 끊긴 뒤 같은 event가 다시 오거나 일부가 빠질 수 있습니다. 이때 protocol version, session·request
+          identity와 monotonic sequence를 가진 envelope가 있어야 duplicate와 gap을 구분할 수 있습니다. receiver의 마지막 처리
+          sequence를 ack하고 보존 범위 안에서 replay하거나 현재 snapshot을 다시 보내는 규칙도 필요합니다.
         </p>
 
         <div className="not-prose my-8">
@@ -111,11 +107,9 @@ export default function Remote() {
           Permission은 사용자가 본 정확한 action에만 결합한다
         </h3>
         <p className="leading-7">
-          원격 runtime이 privileged tool을 실행한다면 prompt에는 canonical
-          arguments, resource, session·request·attempt와 만료 시각이 필요합니다.
-          허용 결정은 한 번 소비하고, argument나 attempt가 달라지면 다시 승인을
-          받아야 합니다. 그렇지 않으면 과거의 모호한 “허용”을 다른 command에
-          재사용할 수 있습니다.
+          원격 runtime이 privileged tool을 실행한다면 prompt에는 canonical arguments, resource, session·request·attempt와
+          만료 시각이 필요합니다. 허용 결정은 한 번 소비하고 argument나 attempt가 달라지면 다시 승인을 받아야 합니다. 그렇지 않으면 과거의 모호한 “허용”을 다른
+          command에 재사용할 수 있습니다.
         </p>
         <p className="leading-7">
           연결이 끊기면 새 privileged action을 pause하고, 이미 시작한 action은

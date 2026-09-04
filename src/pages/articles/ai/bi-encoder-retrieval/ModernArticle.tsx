@@ -8,7 +8,10 @@ export default function BiEncoderRetrievalArticle() {
   return <div className="space-y-16">
     <section id="overview" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Bi-encoder는 더 작은 BERT가 아니라 document 계산을 query 사이에서 재사용하는 구조입니다</h2>
-      <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8">검색할 문서가 백만 개라면 새 질문 하나마다 백만 pair를 Transformer에 넣을 수 없습니다. Bi-encoder는 document를 query 없이도 표현할 수 있게 학습하고, 그 결과를 미리 저장해 이 반복을 없앱니다.</p></div>
+      <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8">
+            검색할 문서가 백만 개라면 새 질문 하나마다 백만 pair를 Transformer에 넣을 수 없습니다. Bi-encoder는 document를 query 없이도 표현할 수 있게
+            학습하고 그 결과를 미리 저장해 이 반복을 없앱니다.
+          </p></div>
       <TermBreakdown title="먼저 분리할 세 계산 단위" items={[
         { term: "Cross-encoder", description: "Query와 document token을 한 입력으로 넣어 두 text 사이의 token interaction으로 점수를 만듭니다.", boundary: "정교하지만 새 query마다 각 document pair를 다시 읽습니다." },
         { term: "Bi-encoder", description: "Query와 document를 각각 vector로 만든 뒤 similarity로 비교합니다.", example: "Document vector는 밤에 만들고 query vector는 요청 때 만듭니다." },

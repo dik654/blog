@@ -129,11 +129,9 @@ export default function ClaudeCodePermissionsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            File tool rule만으로 Bash subprocess의 모든 file 접근을 막았다고 볼
-            수 없습니다. Credential scope·filesystem sandbox·network
-            policy·external service authorization을 별도 층으로 둡니다.
-            PreToolUse hook가 allow를 반환해도 matching deny·ask를 우회하지
-            못하며, blocking hook는 permission상 허용된 call도 막을 수 있습니다.
+            File tool rule만으로 Bash subprocess의 모든 file 접근을 막았다고 볼 수 없습니다. Credential scope·filesystem
+            sandbox·network policy·external service authorization을 별도 층으로 둡니다. PreToolUse hook가 allow를 반환해도
+            matching deny·ask를 우회하지 못하며 blocking hook는 permission상 허용된 call도 막을 수 있습니다.
           </p>
         </div>
       </section>

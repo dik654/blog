@@ -155,10 +155,8 @@ export default function Policy() {
           Rule matcher는 semantic parser가 아니라 문자열 subject matcher입니다
         </h3>
         <p>
-          Pinned matcher는 tool name과 input에서 뽑은 문자열 하나를
-          exact·prefix·any로 비교합니다. JSON object라면 command, path,
-          file_path, URL, pattern 같은 정해진 key 중 처음 발견한 문자열을
-          subject로 쓰며, parse하지 못해도 raw input이 비어 있지 않으면 그것을
+          Pinned matcher는 tool name과 input에서 뽑은 문자열 하나를 exact·prefix·any로 비교합니다. JSON object라면 command, path,
+          file_path, URL, pattern 같은 정해진 key 중 처음 발견한 문자열을 subject로 쓰며 parse하지 못해도 raw input이 비어 있지 않으면 그것을
           fallback으로 씁니다.
         </p>
       </div>

@@ -60,10 +60,8 @@ export default function SlashCommands() {
           명령 이름보다 효과를 먼저 분류한다
         </h3>
         <p>
-          모든 명령을 같은 레지스트리에 넣을 수는 있지만 보안 계약까지 같아지는
-          것은 아닙니다. 읽기 전용 명령은 즉시 실행해도 되지만 권한 모드나 외부
-          연결을 바꾸는 명령은 현재 정책을 확인하고, 변경된 값을 지속할 범위와
-          만료 시점을 분명히 해야 합니다.
+          모든 명령을 같은 레지스트리에 넣을 수는 있지만 보안 계약까지 같아지는 것은 아닙니다. 읽기 전용 명령은 즉시 실행해도 되지만 권한 모드나 외부 연결을 바꾸는 명령은 현재 정책을
+          확인하고 변경된 값을 지속할 범위와 만료 시점까지 분명히 해야 합니다.
         </p>
         <div className="not-prose my-6 grid gap-3 md:grid-cols-3">
           {commandGroups.map((group) => (
@@ -101,12 +99,9 @@ export default function SlashCommands() {
           통째로 받는지 token 단위로 받는지 source와 fixture로 확인해야 합니다.
         </p>
         <p>
-          더 넓은 argument를 지원하려면 quote·escape grammar를 명시하거나 JSON
-          input mode를 별도로 두고, parse error에 위치를 포함해야 합니다. 조회
-          단계에서는 canonical name과 alias 충돌을 startup에 거부하며, 도움말과
-          completion은 같은 registry metadata에서 생성해야 문서와 실제 동작이
-          어긋나지 않습니다. 이 문단은 pinned source의 구현 완료를 주장하는 것이
-          아니라 안정적인 command contract의 선택 기준입니다.
+          더 넓은 argument를 지원하려면 quote·escape grammar를 명시하거나 JSON input mode를 별도로 두고 parse error에 위치를 포함합니다. 조회
+          단계에서는 canonical name과 alias 충돌을 startup에 거부합니다. 도움말과 completion을 같은 registry metadata에서 생성해야 문서와 실제
+          동작이 어긋나지 않습니다. 이 문단은 pinned source의 구현 완료를 주장하는 것이 아니라 안정적인 command contract의 선택 기준입니다.
         </p>
         <div className="not-prose my-6 overflow-hidden rounded-lg border border-border/70">
           <div className="grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-4">

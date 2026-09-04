@@ -44,10 +44,8 @@ export default function Multiplicative() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          단순 dot product는 추가 parameter가 없지만 query와 key의 마지막 차원이
-          같아야 한다. General 또는 bilinear score는 학습 가능한 행렬로 한쪽을
-          변환하고, additive score는 비선형 network를 통과시킨다. 어느 방식이
-          항상 우월하다기보다 모델 구조와 계산 경로에 따라 선택이 달라진다.
+          단순 dot product는 추가 parameter가 없지만 query와 key의 마지막 차원이 같아야 한다. General 또는 bilinear score는 학습 가능한 행렬로
+          한쪽을 변환하고 additive score는 비선형 network를 통과시킨다. 어느 방식이 항상 우월하다기보다 모델 구조와 계산 경로에 따라 선택이 달라진다.
         </p>
 
         <h3>왜 √dₖ로 나누는가</h3>
@@ -82,15 +80,18 @@ export default function Multiplicative() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          이 스케일링은 모든 상황에서 분산을 정확히 1로 “보장”하는 규칙이 아니라,
-          초기화 단계의 분포를 바탕으로 softmax 입력 크기를 안정시키는 설계다.
+          이 스케일링은 초기화 단계의 분포를 바탕으로 softmax 입력 크기를 안정시키는 설계다. 모든 상황에서 분산을 정확히 1로 “보장”하는 규칙까지는 아니다.
         </p>
       </div>
 
       <div id="paper-luong" className="not-prose my-8 border-l border-primary/50 pl-4 scroll-mt-24">
         <p className="text-xs font-bold text-primary">논문 읽기 · Score와 attention 범위 비교</p>
         <p className="mt-2 text-sm font-semibold">Effective Approaches to Attention-based Neural Machine Translation</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">Global·local attention과 dot·general·concat score를 같은 neural machine translation 맥락에서 비교했습니다. 이 결과는 해당 architecture와 translation setting의 경험적 비교이며, dot product가 모든 hardware·dimension·task에서 additive scorer보다 우월하다는 보편 순위는 아닙니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            Global·local attention과 dot·general·concat score를 같은 neural machine translation 맥락에서 비교했습니다. 해당
+            architecture와 translation setting에서 얻은 경험적 비교입니다. Dot product가 모든 hardware·dimension·task에서
+            additive scorer보다 우월하다는 보편 순위로 읽으면 안 됩니다.
+          </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary underline-offset-4 hover:underline" href="https://arxiv.org/abs/1508.04025" target="_blank" rel="noreferrer">원 논문과 score 함수 표 보기</a>
       </div>
     </section>

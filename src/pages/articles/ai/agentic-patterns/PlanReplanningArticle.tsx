@@ -77,10 +77,8 @@ export default function PlanReplanningArticle() {
             부릅니다.
           </p>
           <p>
-            앞서 본 executable plan의 task node 하나하나가 바로 이
-            subgoal의 실행 단위입니다. Decomposition이 먼저 subgoal
-            경계를 정하고, 그 경계마다 input·output schema를 채워야
-            executable plan이 완성됩니다.
+            앞서 본 executable plan의 task node 하나하나가 바로 이 subgoal의 실행 단위입니다. Decomposition이 먼저 subgoal 경계를 정하고 그
+            경계마다 input·output schema를 채워야 executable plan이 완성됩니다.
           </p>
         </div>
         <span id="hierarchical-planning" className="scroll-mt-20" />
@@ -95,9 +93,8 @@ export default function PlanReplanningArticle() {
             <strong>hierarchical planning</strong>이라고 합니다.
           </p>
           <p>
-            층이 늘어날수록 상위 목표는 하위 결과가 다 모여야 완료를
-            판정할 수 있으므로, 각 층의 완료 조건과 dependency를 명시하지
-            않으면 어느 layer가 막혔는지 추적하기 어려워집니다.
+            층이 늘어날수록 상위 목표는 하위 결과가 다 모여야 완료를 판정할 수 있습니다. 각 층의 완료 조건과 dependency를 명시하지 않으면 어느 layer가 막혔는지 추적하기
+            어려워집니다.
           </p>
         </div>
       </section>
