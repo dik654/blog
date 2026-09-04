@@ -100,7 +100,18 @@ golden FAIL 1건(at)은 `(p^k−1)/r` 수학 표기 오탐으로 확인. prose-r
 (`λ=lcm(p−1,q−1)`, `(p^12-1)`)가 각주로 오탐된 것으로 확인. prose-readability 신규 진입
 1건(crypto/nova, 6점)은 동일 E-1 패턴.
 
-남은 blockchain: 245개 파일(11개 서브배치, wave5부터 계속 — 마지막 wave).
+| 8(wave5 bg~bq) | blockchain(245개 파일), 11개 서브배치(light 10·standard 1) | 508 추출 → 130 반영 | 등급 A×11 · 게이트 OK 전원, WARN·FAIL 0건 | `84c62141` |
+
+**blockchain 카테고리 완료**(1,013/1,013). wave1~5 최종 요약: 등급 A 43/43 서브배치, heavy 경로
+4건(ab·af·bb + standard→heavy 승급 aq)에서 finalizer가 실제 의미 드리프트(없던 단정 주입,
+hedge→단언, 검증요건→관찰사실, 목적어 관계 왜곡 등)를 매번 잡아 국소 보정. golden FAIL은 전부
+수학 표기(`z=(1,3,12,4)`·`λ=lcm(p−1,q−1)`·`(p^k−1)/r`)·인용연도(`DH(1976)`) 괄호 숫자를 각주로
+오인식한 false positive로 확인, 실제 위반 0건. prose-readability 소폭 상승 12건 전부 E-1
+문장분리로 인한 260자 압축 임계값 근접이며 매번 diff로 정보 손실 없음 확인 후 진행.
+
+**2026-09-04 세션 최종 누적**: crypto·filecoin·hw·p2p·isms-aml·gpu·tee·ethereum·blockchain
+9개 카테고리(1,964개 파일) + Gemmini 신규 아티클 1편 완료. 남은 카테고리: ai(1,047) — 전체
+humanize 프로그램의 마지막 조각.
 
 `gpu-arch-hopper.tsx` 같은 조립 파일은 자체 `<p>`가 없고 프로즈가 하위 섹션 파일에 있다는 걸
 test 배치에서 확인했다 — 그래서 배치2부터는 `find ... -not -path "*/viz/*" -not -path
