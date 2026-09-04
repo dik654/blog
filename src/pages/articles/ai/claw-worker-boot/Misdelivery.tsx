@@ -28,18 +28,13 @@ export default function Misdelivery() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          worker channel에 prompt를 썼다는 사실은 올바른 worker가 올바른 시점에
-          작업을 받았다는 뜻이 아닙니다. 이전 process의 늦은 event, 준비되지
-          않은 terminal, partial write와 재시도 때문에 같은 작업이 누락되거나
-          중복될 수 있습니다. 이 글에서는 이런 전달 실패를 misdelivery로 묶어
-          다룹니다.
+          worker channel에 prompt를 썼다는 사실은 올바른 worker가 올바른 시점에 작업을 받았다는 뜻이 아닙니다. 이전 process의 늦은 event나 준비되지 않은
+          terminal, partial write, 재시도 때문에 같은 작업이 누락되거나 중복됩니다. 이 글에서는 이런 전달 실패를 misdelivery로 묶어 다룹니다.
         </p>
         <p className="leading-7">
-          화면에 prompt 문자열이 다시 나타나는 echo-back은 terminal이 bytes를
-          표시했다는 보조 신호일 뿐, worker가 request를 parse하고 소유했다는
-          acknowledgement가 아닙니다. 가능하면 message ID, worker generation과
-          task attempt를 포함한 structured protocol로 전달 상태를 구분해야
-          합니다.
+          화면에 prompt 문자열이 다시 나타나는 echo-back은 terminal이 bytes를 표시했다는 보조 신호입니다. worker가 request를 parse하고 소유했다는
+          acknowledgement까지는 아닙니다. 가능하면 message ID와 worker generation, task attempt를 포함한 structured protocol로
+          전달 상태를 구분합니다.
         </p>
 
         <div className="not-prose my-8">
@@ -82,16 +77,12 @@ export default function Misdelivery() {
           retry 전에 idempotency를 설계한다
         </h3>
         <p className="leading-7">
-          acknowledgement가 timeout됐다고 같은 prompt를 바로 다시 보내면 첫
-          요청이 늦게 처리되어 side effect가 두 번 발생할 수 있습니다. worker는
-          task ID별 실행 기록을 두고 같은 attempt를 중복 실행하지 않거나,
-          coordinator가 새 attempt를 발급하기 전에 이전 실행을 조회·취소해야
-          합니다.
+          acknowledgement가 timeout됐다고 같은 prompt를 바로 다시 보내면 첫 요청이 늦게 처리되어 side effect가 두 번 발생합니다. worker가 task
+          ID별 실행 기록을 두고 같은 attempt를 중복 실행하지 않거나, coordinator가 새 attempt를 발급하기 전에 이전 실행을 조회·취소하는 편이 안전합니다.
         </p>
         <p className="leading-7">
-          backoff는 transport 과부하를 줄일 뿐 exactly-once delivery를 보장하지
-          않습니다. read-only 조사와 write 작업의 retry policy를 나누고, write는
-          commit·transaction·deduplication key 같은 복구 경계를 먼저 마련합니다.
+          backoff는 transport 과부하를 줄일 뿐 exactly-once delivery를 보장하지 않습니다. read-only 조사와 write 작업의 retry policy를
+          나눕니다. write는 commit·transaction·deduplication key 같은 복구 경계를 먼저 마련합니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
@@ -114,20 +105,17 @@ export default function Misdelivery() {
           회수한 뒤 새 generation으로 boot·trust·ready 검증을 다시 수행합니다.
         </p>
         <p className="leading-7">
-          이전 worker가 남긴 partial artifact는 검증한 뒤에만 새 attempt
-          입력으로 사용합니다. 재시작 자체를 성공 복구로 기록하지 않고, 새
-          worker가 완료 contract를 통과했을 때 비로소 recovered로 집계합니다.
+          이전 worker가 남긴 partial artifact는 검증한 뒤에만 새 attempt 입력으로 사용합니다. 재시작 자체를 성공 복구로 기록하지 않고 새 worker가 완료
+          contract를 통과했을 때 비로소 recovered로 집계합니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
           telemetry는 rate보다 원인 분포를 보여 준다
         </h3>
         <p className="leading-7">
-          전체 send 수와 timeout 수만 보면 transport 지연, stale generation,
-          duplicate execution과 worker crash를 구분할 수 없습니다. delivery
-          단계별 latency, retry reason, generation mismatch와 terminal state를
-          나눠 기록하고, prompt나 화면 dump에는 secret redaction과 짧은
-          retention을 적용합니다.
+          전체 send 수와 timeout 수만 보면 transport 지연과 stale generation, duplicate execution, worker crash가 구분되지
+          않습니다. delivery 단계별 latency와 retry reason, generation mismatch, terminal state를 나눠 기록합니다. prompt나 화면
+          dump에는 secret redaction과 짧은 retention을 적용합니다.
         </p>
       </div>
     </section>

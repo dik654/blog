@@ -40,9 +40,7 @@ export default function DeepLearningOverviewArticle() {
           <h2 className="mt-2 text-2xl font-bold">같은 입력이 층마다 다른 좌표가 된다</h2>
         </header>
         <p>
-          아래 Viz는 새 용어를 한 번에 쏟지 않습니다. 먼저 pixel 묶음을 보고,
-          오른쪽 화살표를 누를 때마다 다음 층이 무엇을 재사용하는지 하나씩
-          드러냅니다.
+          아래 Viz는 새 용어를 한 번에 쏟지 않습니다. 먼저 pixel 묶음을 보고 오른쪽 화살표를 누를 때마다 다음 층이 무엇을 재사용하는지 하나씩 드러냅니다.
         </p>
         <RepresentationDepthViz />
       </section>

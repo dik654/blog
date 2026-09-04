@@ -79,8 +79,7 @@ export default function EvaluationMetricsArticle() {
           question="Offline metric은 배포에서 생길 어떤 값을 근사해야 하나요?"
           idea={
             <p>
-              배포 사례를 하나 뽑고, model prediction에 policy를 적용한 action과
-              실제 outcome의 비용을 계산한 뒤 그 비용을 평균냅니다.
+              배포 사례를 하나 뽑고 model prediction에 policy를 적용한 action과 실제 outcome의 비용을 계산한 뒤 그 비용을 평균냅니다.
             </p>
           }
           formula={String.raw`R(f,a)=\mathbb E_{Z\sim P_{\rm deploy}}[c(a(f(X)),Y,Z)]`}
@@ -163,8 +162,7 @@ export default function EvaluationMetricsArticle() {
           question="반복 관측이 많은 unit이 전체 점수를 독점하지 않게 어떻게 집계하나요?"
           idea={
             <p>
-              관측 loss를 unit별로 먼저 줄이고, unit을 slice 안에서 평균한 다음,
-              사전에 정한 slice weight로 global 값을 만듭니다.
+              관측 loss를 unit별로 먼저 줄이고 unit을 slice 안에서 평균한 다음, 사전에 정한 slice weight로 global 값을 만듭니다.
             </p>
           }
           formula={String.raw`m_u=\operatorname{reduce}_{i\in I_u}\ell_i,\quad M_s=|U_s|^{-1}\sum_{u\in U_s}m_u,\quad M=\sum_s\omega_sM_s`}

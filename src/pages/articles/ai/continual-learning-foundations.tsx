@@ -90,10 +90,8 @@ export default function ContinualLearningFoundationsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Stability–plasticity dilemma는 continual learning 전체가
-            절충해야 하는 근본 긴장입니다. 새 데이터를 잘 반영하는
-            능력(plasticity)을 높이면 이전 지식을 지키는 능력(stability)이
-            떨어지고, 안정성을 높이면 새 정보 반영이 느려집니다.
+            Stability–plasticity dilemma는 continual learning 전체가 절충해야 하는 근본 긴장입니다. 새 데이터를 잘 반영하는
+            능력(plasticity)을 높이면 이전 지식을 지키는 능력(stability)이 떨어지고 안정성을 높이면 새 정보 반영이 느려집니다.
           </p>
           <p>
             <Link to="/ai/fine-tuning-tradeoffs-forgetting-and-merging#forgetting">
@@ -118,28 +116,21 @@ export default function ContinualLearningFoundationsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Experience replay는 가장 직접적인 전략입니다. 이전에 본 데이터
-            일부를 replay buffer라는 고정 크기 저장소에 남겨 두고, 새
-            데이터를 학습할 때 이 buffer에서 표본을 뽑아 함께 학습시켜
-            이전 분포에 대한 노출을 계속 유지합니다.
+            Experience replay는 가장 직접적인 전략입니다. 이전에 본 데이터 일부를 replay buffer라는 고정 크기 저장소에 남겨 두고 새 데이터를 학습할 때 이
+            buffer에서 표본을 뽑아 함께 학습시켜 이전 분포에 대한 노출을 계속 유지합니다.
           </p>
           <p>
-            Buffer 크기와 forgetting은 뚜렷한 관계를 보입니다. 예를 들어
-            task A를 90% 정확도로 학습한 뒤 task B를 배우면, buffer 없이는
-            task A 정확도가 55%까지 떨어지고, task A 데이터의 1%만
-            buffer에 남겨도 78%로, 10%면 85%로 회복됩니다. Buffer를 50%까지
-            늘려도 87%로 개선폭은 작아, 저장 비용 대비 이득이 줄어드는
-            지점이 존재합니다.
+            Buffer 크기와 forgetting은 뚜렷한 관계를 보입니다. 예를 들어 task A를 90% 정확도로 학습한 뒤 task B를 배우면, buffer 없이는 task A
+            정확도가 55%까지 떨어지고 task A 데이터의 1%만 buffer에 남겨도 78%로, 10%면 85%로 회복됩니다. Buffer를 50%까지 늘려도 87%로 개선폭은 작아
+            저장 비용 대비 이득이 줄어드는 지점이 존재합니다.
           </p>
         </div>
         <ReplayBufferForgettingViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Regularization-based continual learning은 데이터를 저장하지
-            않고, 이전 task에 중요했던 parameter일수록 그 값에서 멀어지는
-            것을 loss 페널티로 억제합니다. Elastic Weight Consolidation
-            (EWC)이 이 계열의 대표 방법으로, 각 parameter의 중요도를
-            Fisher information으로 근사합니다.
+            Regularization-based continual learning은 데이터를 저장하지 않고 이전 task에 중요했던 parameter일수록 그 값에서 멀어지는 것을
+            loss 페널티로 억제합니다. Elastic Weight Consolidation (EWC)이 이 계열의 대표 방법으로, 각 parameter의 중요도를 Fisher
+            information으로 근사합니다.
           </p>
         </div>
         <ExplainedFormula
@@ -208,12 +199,9 @@ export default function ContinualLearningFoundationsArticle() {
         </CitationBlock>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Parameter isolation은 아예 간섭을 없애려는 전략입니다. Task마다
-            서로 다른 parameter 부분집합을 쓰게 하거나, dynamic architecture
-            expansion으로 새 task를 위한 module·layer 자체를 모델에
-            추가합니다. Progressive Networks는 이전 task의 column을 그대로
-            얼린 채 새 column을 추가하고, lateral connection으로만 이전
-            column의 feature를 참조하게 했습니다.
+            Parameter isolation은 아예 간섭을 없애려는 전략입니다. Task마다 서로 다른 parameter 부분집합을 쓰게 하거나, dynamic architecture
+            expansion으로 새 task를 위한 module·layer 자체를 모델에 추가합니다. Progressive Networks는 이전 task의 column을 그대로 얼린 채
+            새 column을 추가하고 lateral connection으로만 이전 column의 feature를 참조하게 했습니다.
           </p>
         </div>
         <CitationBlock
@@ -295,12 +283,9 @@ export default function ContinualLearningFoundationsArticle() {
           preview="통계 몇 개만 조정하므로 반영할 수 있는 변화의 크기가 작습니다. 새 class나 큰 지식 변화는 여전히 재학습이 필요합니다."
         >
           <p>
-            Test-time adaptation이 조정하는 parameter 부분집합은 대개
-            전체의 1% 미만입니다. 입력 분포가 살짝 달라진 정도(조명·화질
-            변화 같은)에는 효과적이지만, 완전히 새로운 class를 인식하게
-            만들거나 근본적인 지식을 추가하는 일은 여전히 이 글 앞부분의
-            replay·regularization·parameter isolation 같은 학습 기반
-            갱신이 필요합니다.
+            Test-time adaptation이 조정하는 parameter 부분집합은 대개 전체의 1% 미만입니다. 입력 분포가 살짝 달라진 정도(조명·화질 변화 같은)에는 효과적이지만
+            완전히 새로운 class를 인식하게 만들거나 근본적인 지식을 추가하는 일은 여전히 이 글 앞부분의 replay·regularization·parameter isolation
+            같은 학습 기반 갱신이 필요합니다.
           </p>
         </ProgressiveDetail>
       </section>

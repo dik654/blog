@@ -25,18 +25,12 @@ export default function TrustResolver() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          처음 연 repository에는 source code뿐 아니라 project instruction, hook,
-          plugin과 MCP configuration이 들어 있을 수 있습니다. 파일을 읽는 것과
-          그 안의 명령을 실행하거나 외부 server에 연결하는 것은 위험 수준이
-          다르므로, 단순한 “이 경로를 신뢰한다” 한 비트로 모두 허용하면 안
-          됩니다.
+          처음 연 repository에는 source code뿐 아니라 project instruction과 hook, plugin, MCP configuration이 들어 있을 수
+          있습니다. 파일을 읽는 것과 그 안의 명령을 실행하거나 외부 server에 연결하는 것은 위험 수준이 다릅니다. 단순한 “이 경로를 신뢰한다” 한 비트로 모두 허용하면 안 됩니다.
         </p>
         <p className="leading-7">
-          trust resolver의 역할은 repository가 선하거나 악한지 맞히는 것이
-          아니라, 출처와 risk signal, 사용자 결정을 실제 capability set으로
-          바꾸는 것입니다. 기본 상태에서는 code를 관찰할 수 있어도 hooks와
-          network, secret, broad write는 기본적으로 차단하고 필요한 작업에서만 범위를
-          넓힙니다.
+          trust resolver는 출처와 risk signal, 사용자 결정을 실제 capability set으로 바꿉니다. repository가 선한지 악한지 맞히는 일이 아닙니다.
+          기본 상태에서는 code를 관찰할 수 있어도 hooks와 network, secret, broad write는 기본적으로 차단하고 필요한 작업에서만 범위를 넓힙니다.
         </p>
 
         <div className="not-prose my-8">
@@ -71,10 +65,8 @@ export default function TrustResolver() {
           확인합니다.
         </p>
         <p className="leading-7">
-          전체 workspace checksum도 만능 identity가 아닙니다. build artifact와
-          dependency 설치만으로 값이 자주 바뀌고, 승인한 commit 안에 위험한
-          hook이 원래 포함돼 있을 수 있습니다. 변경 감지는 재검토 signal로 쓰되
-          trust 자체를 대신하지 않습니다.
+          전체 workspace checksum도 만능 identity가 아닙니다. build artifact와 dependency 설치만으로 값이 자주 바뀌고 승인한 commit 안에
+          위험한 hook이 원래 포함돼 있을 수 있습니다. 변경 감지는 재검토 signal로 쓰되 trust 자체를 대신하지 않습니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
@@ -94,20 +86,16 @@ export default function TrustResolver() {
         </div>
 
         <p className="leading-7">
-          정규식으로 command 문자열을 검사하는 것은 triage에 도움이 되지만
-          encoded payload와 간접 실행을 놓칠 수 있습니다. 알려진 위험 패턴이
-          없다는 이유로 hook을 자동 실행하지 않고, 별도 sandbox와 permission
-          gate를 그대로 적용합니다.
+          정규식으로 command 문자열을 검사하는 것은 triage에 도움이 되지만 encoded payload와 간접 실행을 놓칠 수 있습니다. 알려진 위험 패턴이 없다는 이유로
+          hook을 자동 실행하지 않고 별도 sandbox와 permission gate를 그대로 적용합니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
           사용자 결정은 범위와 만료 조건을 포함한다
         </h3>
         <p className="leading-7">
-          “이 프로젝트를 신뢰하시겠습니까?”보다 “이 commit의 hook 2개를 실행하고
-          이 MCP endpoint에 연결할까요?”처럼 대상과 side effect를 보여 주는
-          prompt가 낫습니다. 선택은 repository·branch·capability별로 저장하고,
-          remote 변경, owner 변경이나 일정 시간이 지나면 재확인합니다.
+          “이 프로젝트를 신뢰하시겠습니까?”보다 “이 commit의 hook 2개를 실행하고 이 MCP endpoint에 연결할까요?”처럼 대상과 side effect를 보여 주는
+          prompt가 낫습니다. 선택은 repository·branch·capability별로 저장합니다. remote 변경이나 owner 변경, 일정 시간 경과 뒤에는 재확인합니다.
         </p>
         <p className="leading-7">
           prompt fatigue를 줄인다고 해서 오래된 승인을 무기한 재사용하면 안

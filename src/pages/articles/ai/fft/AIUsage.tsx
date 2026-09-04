@@ -8,11 +8,9 @@ export default function AIUsage() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          “주파수 domain을 쓴다”는 말만으로는 model의 inductive bias나 비용을 알 수
-          없다. Audio preprocessing은 local spectrum의 magnitude를 feature로 남기고,
-          FFT convolution은 같은 linear operator를 더 빠르게 계산하며, FNet은
-          learned attention 대신 fixed global mixing을 사용한다. 먼저 어떤
-          intermediate를 만들고 무엇을 버리는지 구분해야 한다.
+          “주파수 domain을 쓴다”는 말만으로는 model의 inductive bias나 비용을 알 수 없다. Audio preprocessing은 local spectrum의
+          magnitude를 feature로 남기고 FFT convolution은 같은 linear operator를 더 빠르게 계산하며, FNet은 learned attention 대신
+          fixed global mixing을 사용한다. 먼저 어떤 intermediate를 만들고 무엇을 버리는지 구분해야 한다.
         </p>
       </div>
 
@@ -98,12 +96,10 @@ export default function AIUsage() {
         </p>
         <h3>실제 선택 기준</h3>
         <p>
-          Feature pipeline이라면 sample rate·window·hop·normalization과 phase 보존
-          여부를 versioning한다. Operator acceleration이라면 end-to-end latency,
-          padding과 workspace, backward cost를 측정하며, architecture replacement라면
-          같은 parameter·training token·hardware budget에서 quality와 serving path를
-          함께 비교한다. FFT의 O(N log N)만 보고 model 전체가 빨라진다고 결론 내리면
-          안 된다.
+          Feature pipeline이라면 sample rate·window·hop·normalization과 phase 보존 여부를 versioning한다. Operator
+          acceleration이라면 end-to-end latency, padding과 workspace, backward cost를 측정하며 architecture
+          replacement라면 같은 parameter·training token·hardware budget에서 quality와 serving path를 함께 비교한다. FFT의 O(N
+          log N)만 보고 model 전체가 빨라진다고 결론 내리면 안 된다.
         </p>
       </div>
 

@@ -33,7 +33,10 @@ export default function CrossValidationFoundationArticle() {
         <h2 className="mb-5 text-2xl font-bold">Validation risk는 새 배포 단위의 loss를 평균낸 값입니다</h2>
         <ExplainedFormula
           question="왜 validation risk 식에는 training data와 새 배포 단위가 모두 들어가나요?"
-          idea={<p>학습 절차 A는 training sample D를 model로 바꿉니다. 그 model을 배포 분포에서 새로 뽑은 Z에 적용해 loss를 계산하고, D와 Z가 달라질 때의 평균을 냅니다.</p>}
+          idea={<p>
+            학습 절차 A는 training sample D를 model로 바꿉니다. 그 model을 배포 분포에서 새로 뽑은 Z에 적용해 loss를 계산한 뒤 D와 Z가 달라질 때의
+            평균을 냅니다.
+          </p>}
           formula={String.raw`R_{\mathrm{deploy}}(A)=\mathbb E_{D,Z}[\ell(A(D),Z)]`}
           annotatedFormula={String.raw`\begin{aligned}f_D&=\underbrace{A(D)}_{\text{training data로 model을 학습}}\\e_{D,Z}&=\underbrace{\ell(f_D,Z)}_{\text{새 배포 단위에서 실패를 측정}}\\R_{\mathrm{deploy}}(A)&=\underbrace{\mathbb E_{D,Z}[e_{D,Z}]}_{\text{D와 Z의 변동을 평균}}
 \end{aligned}`}
@@ -67,7 +70,10 @@ export default function CrossValidationFoundationArticle() {
 
       <section id="boundary" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">배포 분포가 바뀌면 과거 CV는 새 환경을 보장하지 않습니다</h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert"><p>좋은 split은 알려진 배포 질문을 재연할 뿐입니다. 새 국가·새 sensor·정책 변경처럼 분포가 바뀌면 새 기간이나 site에서 다시 검증하고 monitoring을 연결해야 합니다.</p></div>
+        <div className="prose prose-neutral max-w-none dark:prose-invert"><p>
+            좋은 split은 알려진 배포 질문을 재연할 뿐입니다. 새 국가·새 sensor·정책 변경처럼 분포가 바뀌면 새 기간이나 site에서 다시 검증하고 monitoring까지
+            연결해야 합니다.
+          </p></div>
         <div id="paper-cv-foundation" className="not-prose mt-8">
           <CitationBlock source="scikit-learn — Cross-validation: evaluating estimator performance" citeKey={1} type="paper" href="https://scikit-learn.org/stable/modules/cross_validation.html">
             KFold·GroupKFold·TimeSeriesSplit의 현재 splitter semantics를 확인하는 공식 문서입니다. Class 이름 선택만으로 deployment unit과 leakage boundary가 자동 결정된다는 근거는 아닙니다.

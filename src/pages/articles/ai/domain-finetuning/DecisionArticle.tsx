@@ -8,7 +8,10 @@ export default function DomainAdaptationDecisionArticle() {
   return <div className="space-y-16">
     <section id="overview" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">도메인 적응은 학습 방법이 아니라 부족한 능력을 찾는 진단에서 시작합니다</h2>
-      <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8">“우리 문서에서 성능이 낮다”는 말만으로는 원인을 알 수 없습니다. 전문 문체를 읽지 못하는지, 최신 사실을 갖고 있지 않은지, 이미 아는 내용을 원하는 JSON으로 내지 못하는지, 아니면 GPU memory가 부족한지부터 나눠야 합니다.</p><p>원인이 다르면 해결책도 달라집니다. 그래서 이 글은 방법 이름을 외우기보다 실패 sample에서 <strong>무엇이 부족한지</strong>를 증거로 분리하고 가장 작은 개입을 고르는 순서를 설명합니다.</p></div>
+      <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8">
+            “우리 문서에서 성능이 낮다”는 말만으로는 원인을 알 수 없습니다. 전문 문체를 못 읽는 건지, 최신 사실을 모르는 건지, 이미 아는 내용을 원하는 JSON으로 못 내는 건지,
+            아니면 GPU memory가 부족한 건지부터 나눠야 합니다.
+          </p><p>원인이 다르면 해결책도 달라집니다. 그래서 이 글은 방법 이름을 외우기보다 실패 sample에서 <strong>무엇이 부족한지</strong>를 증거로 분리하고 가장 작은 개입을 고르는 순서를 설명합니다.</p></div>
       <TermBreakdown title="먼저 하나씩 구분할 네 종류의 gap" items={[
         { term: "Language·style gap", description: "전문 용어·문장 구조·문서 형식의 token pattern을 충분히 학습하지 못한 상태입니다.", example: "특허 claim 문장을 일반 문장처럼 잘못 끊습니다.", boundary: "최신 사실 하나를 모르는 문제와는 다릅니다." },
         { term: "Fact freshness gap", description: "질문에 필요한 사실이 학습 시점 이후 생겼거나 출처와 함께 갱신되어야 하는 상태입니다.", example: "오늘 바뀐 약가와 최신 사내 규정.", boundary: "Weight에 다시 넣기보다 retrieval이 자연스러운 경우가 많습니다." },
@@ -21,7 +24,11 @@ export default function DomainAdaptationDecisionArticle() {
 
     <section id="evidence" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">방법을 고르기 전에 같은 실패를 재현하는 작은 baseline을 만듭니다</h2>
-      <div className="prose prose-neutral max-w-none dark:prose-invert"><p>먼저 base model, domain prompt, retrieval을 붙인 조건을 같은 sample에 실행합니다. Retrieval만으로 정답과 citation이 회복되면 freshness gap의 증거입니다. Retrieval 뒤에도 전문 문장을 잘못 읽으면 language gap 가설이 남습니다. 정답 내용은 맞지만 serialization만 틀리면 behavior gap으로 좁힙니다.</p><p>이때 test는 열지 않습니다. 진단과 방법 선택은 validation slice에서 끝내고 마지막 일반화 보고만 untouched test에서 수행합니다.</p></div>
+      <div className="prose prose-neutral max-w-none dark:prose-invert"><p>
+            base model, domain prompt, retrieval을 붙인 조건을 같은 sample에 실행합니다. retrieval만으로 정답과 citation이 회복되면
+            freshness gap의 증거입니다. 그러고도 전문 문장을 잘못 읽으면 language gap 가설이 남고 정답 내용은 맞는데 serialization만 틀리면
+            behavior gap으로 좁혀집니다.
+          </p><p>이때 test는 열지 않습니다. 진단과 방법 선택은 validation slice에서 끝내고 마지막 일반화 보고만 untouched test에서 수행합니다.</p></div>
     </section>
 
     <section id="candidates" className="scroll-mt-20">
@@ -33,12 +40,19 @@ export default function DomainAdaptationDecisionArticle() {
         { term: "SFT", description: "Input과 원하는 response example로 schema·label·abstention 같은 행동을 학습합니다." },
         { term: "PEFT", description: "Base weight 대부분을 고정하고 LoRA 등 작은 trainable parameter만 업데이트합니다.", boundary: "PEFT는 목적이 아니라 업데이트 범위이며 RAG·SFT와 같은 축의 이름이 아닙니다." },
       ]} />
-      <div className="prose prose-neutral max-w-none dark:prose-invert"><p>RAG는 지식을 외부 artifact에 두므로 출처를 보이고 즉시 교체할 수 있습니다. Weight adaptation은 반복되는 언어·행동 pattern을 model 내부에 넣지만 어느 training row가 특정 답을 만들었는지 바로 추적하기 어렵습니다. 이 차이를 먼저 이해해야 최신성 문제에 무조건 fine-tuning하는 일을 피할 수 있습니다.</p></div>
+      <div className="prose prose-neutral max-w-none dark:prose-invert"><p>
+            RAG는 지식을 외부 artifact에 두기 때문에 출처를 보이고 즉시 교체할 수 있습니다. 반면 weight adaptation은 반복되는 언어·행동 pattern을
+            model 내부에 넣지만 어느 training row가 특정 답을 만들었는지 바로 추적하기 어렵습니다. 이 차이를 이해해야 최신성 문제에 무조건 fine-tuning부터 하는
+            일을 피할 수 있습니다.
+          </p></div>
     </section>
 
     <section id="release" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">가장 높은 점수가 아니라 제약 안의 가장 작은 개입을 고릅니다</h2>
-      <ExplainedFormula question="Target gain을 얻으면서 일반 능력 회귀와 운영 비용을 제한하려면 무엇을 선택하나요?" idea={<p>같은 validation에서 후보마다 target gain·general change·cost를 측정합니다. 먼저 회귀와 예산 제약을 통과한 후보만 남기고, 그 안에서 target gain이 큰 가장 단순한 개입을 선택합니다.</p>} formula={String.raw`a^*=\operatorname*{arg\,max}_{a\in\mathcal A}\Delta_{\rm target}(a)\quad\text{s.t.}\quad\Delta_{\rm general}(a)\ge-\varepsilon,\;C(a)\le B`} annotatedFormula={String.raw`\begin{aligned}\mathcal E&=\underbrace{\{a\in\mathcal A:\Delta_{\rm general}(a)\ge-\varepsilon\}}_{\text{일반 능력 회귀 한도 통과}}\\\mathcal F&=\underbrace{\{a\in\mathcal E:C(a)\le B\}}_{\text{학습·서빙 예산 통과}}\\a^*&=\underbrace{\operatorname*{arg\,max}_{a\in\mathcal F}\Delta_{\rm target}(a)}_{\text{통과 후보 중 target gain 선택}}\end{aligned}`} operations={[
+      <ExplainedFormula question="Target gain을 얻으면서 일반 능력 회귀와 운영 비용을 제한하려면 무엇을 선택하나요?" idea={<p>
+            같은 validation에서 후보마다 target gain·general change·cost를 측정합니다. 회귀와 예산 제약을 통과한 후보만 남긴 다음 그 안에서 target
+            gain이 큰 가장 단순한 개입을 고릅니다.
+          </p>} formula={String.raw`a^*=\operatorname*{arg\,max}_{a\in\mathcal A}\Delta_{\rm target}(a)\quad\text{s.t.}\quad\Delta_{\rm general}(a)\ge-\varepsilon,\;C(a)\le B`} annotatedFormula={String.raw`\begin{aligned}\mathcal E&=\underbrace{\{a\in\mathcal A:\Delta_{\rm general}(a)\ge-\varepsilon\}}_{\text{일반 능력 회귀 한도 통과}}\\\mathcal F&=\underbrace{\{a\in\mathcal E:C(a)\le B\}}_{\text{학습·서빙 예산 통과}}\\a^*&=\underbrace{\operatorname*{arg\,max}_{a\in\mathcal F}\Delta_{\rm target}(a)}_{\text{통과 후보 중 target gain 선택}}\end{aligned}`} operations={[
         { expression: String.raw`\Delta_{\rm general}(a)\ge-\varepsilon`, annotation: ["일반 능력 변화와 허용 하락을 비교해", "회귀가 큰 후보를 먼저 제거"] },
         { expression: String.raw`C(a)\le B`, annotation: ["학습·latency·memory 비용을 합의한 단위로 재고", "운영 불가능한 후보를 제거"] },
         { expression: String.raw`\operatorname*{arg\,max}_{a\in\mathcal F}\Delta_{\rm target}(a)`, annotation: ["두 gate를 통과한 후보 안에서만", "target 개선이 가장 큰 개입을 선택"] },

@@ -12,7 +12,8 @@ export default function Overview({ onCodeRef }: { onCodeRef: (key: string, ref: 
       <h2 className="mb-6 text-2xl font-bold">자동 미분 다음에는 파라미터와 학습 상태를 관리해야 합니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          앞 글의 자동 미분 엔진만으로도 개별 함수의 gradient는 구할 수 있습니다. 그러나 신경망을 학습하려면 모델에 속한 파라미터를 빠짐없이 찾고, 예측과 loss를 계산한 뒤, optimizer가 같은 파라미터를 반복해서 갱신하도록 공통 구조를 만들어야 합니다.
+          앞 글의 자동 미분 엔진만으로도 개별 함수의 gradient는 구할 수 있습니다. 그러나 신경망을 학습하려면 모델에 속한 파라미터를 빠짐없이 찾고 예측과 loss를 계산한 뒤
+          optimizer가 같은 파라미터를 반복해서 갱신하도록 공통 구조를 만듭니다.
         </p>
         <p>
           이 글에서는 <code>Layer</code>와 <code>Model</code>의 역할을 먼저 정한 뒤 Linear, activation, SGD·Adam, 전체 학습 루프 순서로 확장합니다. PyTorch API를 그대로 복제하기보다 각 상태가 어느 객체에 속해야 하는지와, 다음 단계가 이전 단계의 어떤 계약에 의존하는지를 중심으로 봅니다.
@@ -25,15 +26,14 @@ export default function Overview({ onCodeRef }: { onCodeRef: (key: string, ref: 
       <div className="not-prose my-8"><OverviewViz onOpenCode={open} /></div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          구현을 따라갈 때는 매 단계마다 shape test와 수치 gradient check를 유지하는 편이 좋습니다. forward 값이 맞아도 broadcasting이나 gradient 누적이 틀릴 수 있기 때문입니다. 이 기본 학습 루프가 안정적으로 동작한 다음에야 시퀀스 상태, normalization, dropout 같은 기능을 추가할 수 있습니다.
+          구현을 따라갈 때는 매 단계마다 shape test와 수치 gradient check를 유지합니다. forward 값이 맞아도 broadcasting이나 gradient 누적이
+          틀릴 수 있기 때문입니다. 이 기본 학습 루프가 안정적으로 동작한 다음에야 시퀀스 상태, normalization, dropout 같은 기능을 추가할 수 있습니다.
         </p>
         <p>
-          Model의 parameter 탐색은 하위 Layer를 등록 순서대로 재귀 순회하되 같은
-          parameter identity를 두 번 update하지 않아야 합니다. 이름만 같은 다른
-          tensor와 두 경로가 공유하는 같은 tensor를 구분하고, checkpoint에는
-          stable parameter ID·shape·dtype·순서를 manifest로 남깁니다. 새 Layer를
-          추가한 뒤 전체 trainable parameter 수와 optimizer coverage가 함께
-          늘어나는지를 test하면 누락과 중복 등록을 일찍 찾을 수 있습니다.
+          Model의 parameter 탐색은 하위 Layer를 등록 순서대로 재귀 순회하되 같은 parameter identity를 두 번 update하지 않아야 합니다. 이름만 같은
+          다른 tensor와 두 경로가 공유하는 같은 tensor를 구분하고 checkpoint에는 stable parameter ID와 shape, dtype, 순서를 manifest로
+          남깁니다. 새 Layer를 추가한 뒤 전체 trainable parameter 수와 optimizer coverage가 함께 늘어나는지를 test하면 누락과 중복 등록이 일찍
+          드러납니다.
         </p>
       </div>
 

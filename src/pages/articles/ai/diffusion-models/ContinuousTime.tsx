@@ -77,10 +77,9 @@ export default function ContinuousTime() {
           Equations
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Discrete score model과 diffusion을 forward SDE·reverse-time SDE로
-          통합하고, predictor-corrector와 같은 marginals를 갖는 probability-flow
-          ODE를 제시합니다. SDE와 ODE의 개별 sample path가 같다는 주장이 아니라
-          시간별 marginal distribution이 같다는 정리입니다.
+          Discrete score model과 diffusion을 forward SDE·reverse-time SDE로 통합하고 predictor-corrector와 같은
+          marginals를 갖는 probability-flow ODE를 제시합니다. 여기서 같아지는 것은 시간별 marginal distribution입니다. SDE와 ODE의 개별
+          sample path가 같다는 주장은 아닙니다.
         </p>
         <a
           className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
@@ -196,11 +195,9 @@ export default function ContinuousTime() {
           Flow Matching for Generative Modeling
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Continuous normalizing flow를 simulation 없이 학습하기 위해,
-          sample하기 쉬운 conditional probability path의 vector field를
-          regression하는 objective를 제안합니다. Diffusion path도 포함하지만
-          score-SDE에서 자동으로 파생되는 동일한 training objective라는 뜻은
-          아닙니다.
+          Continuous normalizing flow를 simulation 없이 학습하려고 sample하기 쉬운 conditional probability path의 vector
+          field를 regression하는 objective를 제안합니다. Diffusion path도 여기 포함됩니다. 다만 score-SDE에서 자동으로 파생되는 동일한
+          training objective는 아닙니다.
         </p>
         <a
           className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
@@ -257,12 +254,10 @@ export default function ContinuousTime() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Step 수와 NFE를 구분합니다</h3>
         <p>
-          “4-step generation”은 네 번의 state update를 뜻할 수 있지만 Heun처럼
-          한 step에서 network를 두 번 호출하면 NFE는 8입니다. Classifier-free
-          guidance도 conditional·unconditional prediction을 별도로 계산하면
-          NFE나 한 evaluation의 batch cost를 바꿉니다. 따라서 latency를 비교할
-          때는 step 수만 적지 말고 실제 NFE, wall-clock, batch, precision과
-          hardware를 함께 기록해야 합니다.
+          “4-step generation”은 네 번의 state update를 뜻할 수 있지만 Heun처럼 한 step에서 network를 두 번 호출하면 NFE는 8입니다.
+          Classifier-free guidance도 conditional·unconditional prediction을 별도로 계산하면 NFE나 한 evaluation의 batch
+          cost를 바꿉니다. Latency를 비교할 때 step 수만 적어서는 안 되는 이유입니다. 실제 NFE, wall-clock, batch, precision과 hardware를
+          함께 기록해야 합니다.
         </p>
       </div>
 

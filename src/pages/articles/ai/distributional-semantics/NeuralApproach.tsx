@@ -13,12 +13,10 @@ export default function NeuralApproach() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          Word2Vec은 global matrix를 먼저 materialize하지 않고 sampled local
-          context를 분류하면서 embedding을 학습합니다. 그러나 Skip-gram with
-          negative sampling (SGNS)의 최적 dot product가 shifted PMI와 연결된다는
-          분석은 두 계열이 완전히 분리되지 않았음을 보여줍니다. GloVe는 nonzero
-          global co-occurrence count에 weighted log-bilinear regression을 적용해
-          두 관점을 더 직접적으로 연결합니다.
+          Word2Vec은 global matrix를 먼저 materialize하지 않고 sampled local context를 분류하면서 embedding을 학습합니다. Skip-
+          gram with negative sampling (SGNS)의 최적 dot product가 shifted PMI와 연결된다는 분석은 두 계열이 완전히 분리되지 않았음을
+          보여줍니다. GloVe는 nonzero global co-occurrence count에 weighted log-bilinear regression을 적용해 두 관점을 더
+          직접적으로 연결합니다.
         </p>
       </div>
 
@@ -74,22 +72,15 @@ export default function NeuralApproach() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          연결의 핵심은 한 word–context pair의 logistic objective를 score에 대해
-          미분해 0으로 놓는 것입니다. Positive data 확률과 k배 noise 확률의
-          log-odds가 나오고, noise가 context marginal일 때 PMI−log k로
-          정리됩니다. 예를 들어 PMI=4, k=5라면 4−log 5≈2.39입니다. 다만 실제
-          embedding은 모든 pair가 낮은 차원의 같은 parameter를 공유하므로 한
-          cell을 맞추는 update가 다른 cell과 충돌합니다. Smoothed noise,
-          subsampling과 유한한 SGD도 있어 이 등식은 해석 기준이지 각 cell의
-          보증값이 아닙니다.
+          한 word–context pair의 logistic objective를 score에 대해 미분해 0으로 놓으면 연결이 드러납니다. Positive data 확률과 k배 noise
+          확률의 log-odds가 나오고 noise가 context marginal일 때 PMI−log k로 정리됩니다. 예를 들어 PMI=4, k=5라면 4−log 5≈2.39입니다.
+          다만 실제 embedding은 모든 pair가 낮은 차원의 같은 parameter를 공유하므로 한 cell을 맞추는 update가 다른 cell과 충돌합니다. Smoothed
+          noise, subsampling과 유한한 SGD까지 있으니 이 등식은 해석의 기준일 뿐, 각 cell을 보증해 주지는 않습니다.
         </p>
         <p className="leading-8">
-          방법 선택도 이름보다 측정 계약에서 시작합니다. 해석 가능한 전역 count와
-          작은 corpus가 중요하면 PPMI+SVD를 먼저 비교하고, streaming pair와 큰
-          corpus에서 sparse update가 중요하면 SGNS가 실용적입니다. 문장마다 같은
-          표면형의 뜻을 나눠야 한다면 static table만으로는 부족하므로 contextual
-          model을 선택하되, tokenization·layer·pooling·평가 split을 함께
-          기록해야 공정한 비교가 됩니다.
+          방법 선택도 이름보다 측정 계약에서 시작합니다. 해석 가능한 전역 count와 작은 corpus가 중요하면 PPMI+SVD를 먼저 비교합니다. Streaming pair와 큰
+          corpus에서 sparse update가 중요하면 SGNS가 실용적입니다. 문장마다 같은 표면형의 뜻을 나눠야 한다면 static table만으로는 부족하므로 contextual
+          model을 선택하되 tokenization·layer·pooling·평가 split을 함께 기록해야 공정한 비교가 됩니다.
         </p>
       </div>
 
@@ -100,13 +91,10 @@ export default function NeuralApproach() {
           Static embedding에서 contextual representation으로 무엇이 달라졌나
         </h3>
         <p className="leading-8">
-          Static embedding은 “bank”에 하나의 vector를 배정하므로 금융기관과 강둑
-          의미가 섞입니다. 예를 들어 “bank approved the loan”과 “sat on the river
-          bank”는 static table에서 같은 bank vector를 조회하지만, contextual
-          model은 문장 안의 다른 token을 읽어 두 token instance의 hidden state를
-          각각 다시 계산합니다. 그렇다고 distributional assumption이 사라진 것은
-          아니며, 더 넓은 context와 더 복잡한 objective에서 사용 패턴을 학습하게
-          된 것입니다.
+          Static embedding은 “bank”에 하나의 vector를 배정하므로 금융기관과 강둑 의미가 섞입니다. 예를 들어 “bank approved the loan”과 “sat
+          on the river bank”는 static table에서 같은 bank vector를 조회하지만 contextual model은 문장 안의 다른 token을 읽어 두
+          token instance의 hidden state를 각각 다시 계산합니다. 그렇다고 distributional assumption이 사라지지는 않습니다. 더 넓은 context와
+          더 복잡한 objective에서 사용 패턴을 학습할 뿐입니다.
         </p>
       </div>
 
@@ -115,9 +103,8 @@ export default function NeuralApproach() {
           CBOW·Skip-gram·negative sampling의 상세 계산
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          이 글은 count와 prediction objective의 이론적 연결을 소유합니다. 실제
-          pair 생성, gradient update와 embedding table 사용은 Word2Vec 정본에서
-          이어집니다.
+          이 글은 count와 prediction objective의 이론적 연결을 다룹니다. 실제 pair 생성, gradient update와 embedding table 사용은
+          Word2Vec 정본에서 이어집니다.
         </p>
         <Link
           to="/ai/word2vec"
@@ -131,9 +118,8 @@ export default function NeuralApproach() {
         <p className="text-xs font-bold text-primary">논문 읽기 · Implicit factorization</p>
         <p className="mt-2 text-sm font-semibold">Neural Word Embedding as Implicit Matrix Factorization</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          SGNS objective의 독립 cell optimum을 풀어 dot product와 shifted PMI의 관계를
-          보인 분석입니다. 실제 finite dimension·shared parameter·SGD 결과가 모든 cell에서
-          정확한 등식을 만족한다는 뜻은 아닙니다.
+          SGNS objective의 독립 cell optimum을 풀어 dot product와 shifted PMI의 관계를 보인 분석입니다. 실제 finite
+          dimension·shared parameter·SGD 결과가 모든 cell에서 정확한 등식까지 만족하지는 않습니다.
         </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://proceedings.neurips.cc/paper_files/paper/2014/hash/b78666971ceae55a8e87efb7cbfd9ad4-Abstract.html" target="_blank" rel="noreferrer">분석의 가정과 유도 보기</a>
       </div>
@@ -153,9 +139,8 @@ export default function NeuralApproach() {
         <p className="text-xs font-bold text-primary">후속 분석 · 공정한 비교</p>
         <p className="mt-2 text-sm font-semibold">Improving Distributional Similarity with Lessons Learned from Word Embeddings</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Count-based와 prediction-based 방법의 차이보다 context·weighting·dimension·
-          hyperparameter가 결과에 큰 영향을 줄 수 있음을 같은 evaluation에서 비교합니다.
-          특정 benchmark 순위가 의미 표현의 보편적 우열을 확정한다는 뜻은 아닙니다.
+          Count-based와 prediction-based 방법의 차이보다 context·weighting·dimension·hyperparameter가 결과에 큰 영향을 줄 수 있음을
+          같은 evaluation에서 비교합니다. 특정 benchmark 순위로 의미 표현의 보편적 우열이 정해지지는 않습니다.
         </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://aclanthology.org/Q15-1016/" target="_blank" rel="noreferrer">비교 조건과 결과 보기</a>
       </div>

@@ -22,18 +22,13 @@ export default function CudaGraphCaptureArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            LLM decode는 매 step 같은 forward를 반복합니다. Attention·MLP·
-            normalization마다 별도 CUDA kernel이 launch되므로, 한 step
-            안에서만 수백 개 kernel이 CPU에서 GPU로 넘어갑니다.
+            LLM decode는 매 step 같은 forward를 반복합니다. Attention·MLP·normalization마다 별도 CUDA kernel이 launch되므로 한
+            step 안에서만 수백 개 kernel이 CPU에서 GPU로 넘어갑니다.
           </p>
           <p>
-            Batch가 크고 kernel 하나의 실제 연산(exec) 시간이 길면 이 launch
-            비용은 무시할 만합니다. 하지만 decode처럼 batch가 작고 layer당
-            연산량이 적으면, 커널 하나를 GPU에 올리는 데 드는 고정
-            overhead(CPU가 driver를 호출하고 GPU queue에 넣는 시간)가
-            실제 연산 시간보다 커질 수 있습니다 — GPU가 노는 시간의
-            대부분이 "일할 게 없어서"가 아니라 "다음 일이 아직 도착하지
-            않아서"입니다.
+            Batch가 크고 kernel 하나의 실제 연산(exec) 시간이 길면 이 launch 비용은 무시할 만합니다. 문제는 decode처럼 batch가 작고 layer당 연산량이
+            적을 때입니다. 커널 하나를 GPU에 올리는 데 드는 고정 overhead(CPU가 driver를 호출하고 GPU queue에 넣는 시간)가 실제 연산 시간보다 커질 수
+            있습니다 — GPU가 노는 시간의 대부분이 "일할 게 없어서"가 아니라 "다음 일이 아직 도착하지 않아서"입니다.
           </p>
           <p>
             같은 kernel 시퀀스를 매 step 반복한다면, 그 시퀀스를 한 번
@@ -140,9 +135,8 @@ T_{\rm replay}&=\underbrace{N\tau_E+\tau_{L,\rm graph}}_{\text{exec은 그대로
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            CUDA graph의 node는 GPU에 시킬 작업 하나입니다. kernel launch가 대부분이지만
-            memcpy, memset, event record, host callback, child graph도 node가 됩니다. edge는 두
-            node 사이의 의존 관계이고, edge로 이어지지 않은 node끼리는 driver가 실행 순서를
+            CUDA graph의 node는 GPU에 시킬 작업 하나입니다. kernel launch가 대부분이지만 memcpy·memset·event record·host
+            callback·child graph도 node가 됩니다. edge는 두 node 사이의 의존 관계라서 edge로 이어지지 않은 node끼리는 driver가 실행 순서를
             보장하지 않습니다.
           </p>
           <p>
@@ -156,9 +150,8 @@ T_{\rm replay}&=\underbrace{N\tau_E+\tau_{L,\rm graph}}_{\text{exec은 그대로
             stream에 launch하는 일입니다.
           </p>
           <p>
-            programming guide는 instantiate가 setup과 initialization의 대부분을 미리 끝낸다고
-            적습니다. 그래서 executable graph는 몇 번을 launch해도 instantiate를 다시 하지
-            않습니다.
+            programming guide에는 instantiate가 setup과 initialization의 대부분을 미리 끝낸다고 적혀 있습니다. executable graph를 몇
+            번 launch하든 instantiate를 다시 하지 않는 이유입니다.
           </p>
           <p>
             이 executable graph가 static execution graph입니다. topology와 각 node의 인자, 메모리
@@ -166,15 +159,13 @@ T_{\rm replay}&=\underbrace{N\tau_E+\tau_{L,\rm graph}}_{\text{exec은 그대로
             대신 instantiate 자체는 비쌉니다.
           </p>
           <p>
-            NVIDIA blog의 V100 예시는 kernel 20개짜리 graph를
-            만들고 instantiate하는 데 약 400 µs가 들었고, 이후에는 launch 한 번당 kernel 하나
-            비용이 3.4 µs였다고 보고합니다.
+            NVIDIA blog의 V100 예시를 보면 kernel 20개짜리 graph를 만들고 instantiate하는 데 약 400 µs가 들었고 이후에는 launch 한 번당
+            kernel 하나 비용이 3.4 µs였습니다.
           </p>
           <p>
-            같은 예시에서 stream launch만 겹쳐 쓰면 kernel당 3.8 µs이므로 graph는 kernel당 0.4
-            µs, launch 한 번(kernel 20개)당 8 µs를 아낍니다. 400 µs를 8 µs로 나누면 50이니 그
-            graph를 50번 넘게 replay해야 instantiate 비용을 회수합니다. decode처럼 같은 shape를
-            수천 step 반복하면 회수가 빠르고, 한 번 쓰고 버리는 shape라면 손해입니다.
+            같은 예시에서 stream launch만 겹쳐 쓰면 kernel당 3.8 µs이므로 graph는 kernel당 0.4 µs, launch 한 번(kernel 20개)당 8
+            µs를 아낍니다. 400 µs를 8 µs로 나누면 50이니 그 graph를 50번 넘게 replay해야 instantiate 비용을 회수합니다. decode처럼 같은
+            shape를 수천 step 반복하면 회수가 빠르고 한 번 쓰고 버리는 shape라면 손해입니다.
           </p>
         </div>
         <ExplainedFormula
@@ -221,9 +212,8 @@ T_{\rm replay}&=\underbrace{N\tau_E+\tau_{L,\rm graph}}_{\text{exec은 그대로
             거부되고, kernel node의 context와 memcpy의 device 위치도 바꿀 수 없습니다.
           </p>
           <p>
-            바꿀 수 있는 것은 kernel 인자와 grid 크기 같은 node parameter뿐입니다. batch size가
-            달라져 kernel 수나 tensor shape가 바뀌는 serving에서는 update가 아니라 shape별 새
-            capture가 필요하고, 그래서 다음 절의 batch shape dispatch가 등장합니다.
+            바꿀 수 있는 것은 kernel 인자와 grid 크기 같은 node parameter뿐입니다. batch size가 달라져 kernel 수나 tensor shape가 바뀌는
+            serving에서는 update가 아니라 shape별 새 capture가 필요합니다. 다음 절의 batch shape dispatch가 여기서 나옵니다.
           </p>
         </div>
         <AlgorithmBlock
@@ -276,16 +266,13 @@ T_{\rm replay}&=\underbrace{N\tau_E+\tau_{L,\rm graph}}_{\text{exec은 그대로
             메모리입니다.
           </p>
           <p>
-            동기화가 안 되는 이유는 capture 중에는 GPU가 아무것도 실행하지 않기 때문입니다. 값을
-            기다리는 호출은 영원히 오지 않을 결과를 기다리다 오류로 끝납니다. 분기가 안 되는
-            이유는 capture가 그 순간 택한 한 경로만 기록하기 때문입니다. 다음 step에 다른
-            경로로 갔어야 해도 replay는 기록된 경로를 그대로 돌립니다.
+            동기화가 안 되는 이유는 capture 중에는 GPU가 아무것도 실행하지 않기 때문입니다. 값을 기다리는 호출은 영원히 오지 않을 결과를 기다리다 오류로 끝납니다. 분기가 안
+            되는 이유는 capture가 그 순간 택한 한 경로만 기록하기 때문입니다. 다음 step에 다른 경로로 갔어야 해도 replay에서는 기록된 경로가 그대로 돕니다.
           </p>
           <p>
-            주소를 고정하는 장치가 graph pool입니다. capture 중 allocator가 준 tensor를 일반
-            pool에 돌려주면 다음 step에 다른 tensor가 그 주소를 받아 replay가 엉뚱한 값을
-            읽습니다. 그래서 PyTorch는 capture마다 private memory pool을 두고 그 안의 virtual
-            address를 replay 내내 보존합니다.
+            주소를 고정하는 장치가 graph pool입니다. capture 중 allocator가 준 tensor를 일반 pool에 돌려주면 다음 step에 다른 tensor가 그 주소를
+            받아 replay가 엉뚱한 값을 읽습니다. PyTorch가 capture마다 private memory pool을 두고 그 안의 virtual address를 replay 내내
+            보존하는 이유입니다.
           </p>
           <p>
             여러 graph를 만들 때 <code>graph_pool_handle()</code>로 같은 pool을 넘기면 그래프들이
@@ -340,9 +327,8 @@ T_{\rm replay}&=\underbrace{N\tau_E+\tau_{L,\rm graph}}_{\text{exec은 그대로
             저장해둔 <code>torch.cuda.CUDAGraph</code>를 replay합니다.
           </p>
           <p>
-            Debug 모드에서는 매 replay마다 capture 때 기록해 둔 input
-            주소와 실제 주소를 비교해, static-address 제약이 깨지면
-            즉시 assert로 잡습니다.
+            Debug 모드에서는 매 replay마다 capture 때 기록해 둔 input 주소와 실제 주소를 비교해 static-address 제약이 깨지면 즉시 assert로
+            잡습니다.
           </p>
         </div>
         <CudaGraphTimelineViz />
@@ -360,16 +346,14 @@ T_{\rm replay}&=\underbrace{N\tau_E+\tau_{L,\rm graph}}_{\text{exec은 그대로
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            dynamic shape problem은 replay가 shape를 바꿀 수 없다는 데서 옵니다. decode는 step마다
-            batch에 든 요청 수가 달라지는데, executable graph는 capture 때의 kernel 수와 주소를
-            그대로 돌리므로 그래프 하나로 모든 step을 처리할 수 없습니다. 모든 크기를 capture하면
+            dynamic shape problem은 replay가 shape를 바꿀 수 없다는 데서 옵니다. decode는 step마다 batch에 든 요청 수가 달라지는데
+            executable graph는 capture 때의 kernel 수와 주소를 그대로 돌리므로 그래프 하나로 모든 step을 처리할 수 없습니다. 모든 크기를 capture하면
             graph 수와 instantiate 시간, pool 메모리가 batch 상한만큼 늘어납니다.
           </p>
           <p>
-            해법이 padding to captured shape입니다. capture size 목록을 정해 두고, 도착한 batch보다
-            크거나 같은 가장 작은 size로 입력을 채워 그 graph를 replay합니다. 목록이 [1, 2, 4, 8,
-            16, 32]이고 batch가 5이면 8로 올라가며, dummy 행 3개는 결과를 버립니다. 행 수 기준
-            낭비는 (8 − 5)/8 = 37.5%입니다.
+            해법이 padding to captured shape입니다. capture size 목록을 정해 두고 도착한 batch보다 크거나 같은 가장 작은 size로 입력을 채워 그
+            graph를 replay합니다. 목록이 [1, 2, 4, 8, 16, 32]이고 batch가 5이면 8로 올라가며 dummy 행 3개는 결과를 버립니다. 행 수 기준 낭비는
+            (8 − 5)/8 = 37.5%입니다.
           </p>
           <p>
             vLLM 기본 목록은 훨씬 촘촘합니다. <code>compilation.py</code>는 [1, 2, 4] 뒤로 8부터

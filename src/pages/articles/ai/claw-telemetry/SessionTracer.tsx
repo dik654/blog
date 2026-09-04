@@ -31,11 +31,9 @@ export default function SessionTracer() {
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          SessionTracer는 세션별 통계를 모으는 객체에 그치지 않습니다. 사용자
-          요청이 어떤 model request와 tool call을 만들었고, retry나 권한 거부가
-          어느 단계에서 발생했는지 parent-child 관계로 남기는 tracer입니다.
-          TelemetrySink는 그 결과를 파일이나 OTLP backend로 보내는 출력
-          인터페이스이므로 두 책임을 분리해야 합니다.
+          SessionTracer는 사용자 요청이 어떤 model request와 tool call을 만들었는지, retry나 권한 거부가 어느 단계에서 발생했는지를 parent-child
+          관계로 남기는 tracer입니다. 세션별 통계를 모으는 객체에 그치지 않습니다. TelemetrySink는 그 결과를 파일이나 OTLP backend로 보내는 출력
+          인터페이스입니다. 책임이 다르니 둘은 분리합니다.
         </p>
 
         <SessionStatsViz />
@@ -44,11 +42,9 @@ export default function SessionTracer() {
           identity와 상태를 span 경계에서 확정한다
         </h3>
         <p>
-          모델 응답과 tool 실행을 나중에 문자열로 맞추지 말고 생성 시점에 trace
-          ID, span ID와 domain ID를 함께 전달해야 합니다. span은 시작할 때
-          parent와 operation을 확정하고, 종료할 때 status와 duration을 한 번만
-          기록합니다. 취소나 panic 경로에서도 종료가 보장되도록 guard 또는
-          finally 패턴을 사용하는 것이 좋습니다.
+          모델 응답과 tool 실행을 나중에 문자열로 맞추지 말고 생성 시점에 trace ID와 span ID, domain ID를 함께 전달합니다. span은 시작할 때 parent와
+          operation을 확정하고 종료할 때 status와 duration을 한 번만 기록합니다. 취소나 panic 경로에서도 종료가 보장되도록 guard 또는 finally 패턴을
+          사용하는 것이 좋습니다.
         </p>
         <div className="not-prose my-6 overflow-x-auto rounded-lg border border-border/70">
           <table className="w-full min-w-[720px] text-left text-sm">
@@ -79,11 +75,9 @@ export default function SessionTracer() {
           metric label에는 고유 ID를 넣지 않는다
         </h3>
         <p>
-          session ID, 파일 경로, prompt hash를 metric label로 쓰면 시계열 수가
-          요청마다 늘어나는 high-cardinality 문제가 생깁니다. 고유 값은 trace와
-          log에 두고 metric은 provider, model, operation, status처럼 가능한 값이
-          제한된 차원만 사용합니다. 평균 latency 하나보다 histogram을 기록해야
-          p50·p95·p99와 timeout 근처의 긴 꼬리를 볼 수 있습니다.
+          session ID나 파일 경로, prompt hash를 metric label로 쓰면 시계열 수가 요청마다 늘어납니다. high-cardinality 문제입니다. 고유 값은
+          trace와 log에 두고 metric은 provider, model, operation, status처럼 가능한 값이 제한된 차원만 사용합니다. 평균 latency 하나보다
+          histogram을 기록해야 p50·p95·p99와 timeout 근처의 긴 꼬리가 보입니다.
         </p>
         <div className="not-prose my-6 grid gap-3 md:grid-cols-3">
           {[
@@ -107,33 +101,26 @@ export default function SessionTracer() {
           sampling은 비용 절감이지 무작위 삭제가 아니다
         </h3>
         <p>
-          모든 정상 trace를 장기간 보존할 필요는 없지만, 오류·권한 거부·느린
-          요청까지 같은 확률로 버리면 조사에 필요한 표본이 사라집니다. 시작 전에
-          정하는 head sampling은 저렴하지만 결과를 모르고, 완료 후 결정하는 tail
-          sampling은 오류와 고지연 trace를 선택할 수 있는 대신 buffering 비용이
-          듭니다. 보안 감사 이벤트와 budget 차단 기록은 일반 sampling과 분리해
-          보존해야 합니다.
+          모든 정상 trace를 장기간 보존할 필요는 없습니다. 다만 오류·권한 거부·느린 요청까지 같은 확률로 버리면 조사에 필요한 표본이 사라집니다. 시작 전에 정하는 head
+          sampling은 저렴하지만 결과를 모르고 완료 후 결정하는 tail sampling은 오류와 고지연 trace를 고르는 대신 buffering 비용이 듭니다. 보안 감사 이벤트와
+          budget 차단 기록은 일반 sampling과 분리해 보존합니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
           queue와 flush에도 명시적인 실패 의미가 필요하다
         </h3>
         <p>
-          exporter queue는 반드시 bounded여야 하며, 가득 찼을 때 무엇을 먼저
-          버릴지 정해야 합니다. 종료 시 flush는 무한정 기다리지 않고 deadline
-          안에 전송된 수, 남은 수, drop된 수를 반환해야 합니다. 로컬 JSONL을
-          사용할 때도 rotation, 파일 권한, 보존 기간, schema version을 두어야
-          디버그 로그가 영구적인 민감 정보 저장소가 되지 않습니다.
+          exporter queue는 반드시 bounded여야 합니다. 가득 찼을 때 무엇을 먼저 버릴지도 함께 정합니다. 종료 시 flush는 무한정 기다리지 않고 deadline 안에
+          전송된 수와 남은 수, drop된 수를 반환합니다. 로컬 JSONL을 쓸 때도 rotation과 파일 권한, 보존 기간, schema version을 두어야 디버그 로그가 영구적인
+          민감 정보 저장소가 되지 않습니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
           좋은 dashboard는 다음 행동으로 이어진다
         </h3>
         <p>
-          “tool 성공률 95%” 같은 단일 숫자보다 어느 tool과 error type에서 실패가
-          늘었는지, model latency 상승이 retry와 연관됐는지, compaction 이후
-          token usage가 실제로 줄었는지를 함께 봐야 합니다. 이렇게 원인과 영향을
-          연결한 지표는 timeout 조정, tool schema 수정, cache 정책 변경 같은
+          “tool 성공률 95%” 같은 단일 숫자보다 어느 tool과 error type에서 실패가 늘었는지, model latency 상승이 retry와 연관됐는지, compaction
+          이후 token usage가 실제로 줄었는지를 함께 봅니다. 이렇게 원인과 영향을 연결한 지표는 timeout 조정이나 tool schema 수정, cache 정책 변경 같은
           구체적인 개선으로 이어집니다.
         </p>
       </div>

@@ -17,7 +17,7 @@ export default function AttentionDemo() {
   return (
     <div className="rounded-lg border p-6">
       <p className="text-sm text-foreground/75 mb-4">
-        토큰을 클릭하면 해당 토큰의 Attention 가중치를 확인할 수 있습니다.
+        토큰을 클릭하면 해당 토큰의 Attention 가중치가 나타납니다.
       </p>
       <div className="flex justify-center gap-3 mb-6">
         {tokens.map((token, i) => (

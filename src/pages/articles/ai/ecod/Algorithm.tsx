@@ -8,10 +8,9 @@ export default function Algorithm() {
       <h2 className="mb-6 text-2xl font-bold">작은 tail probability를 더하기 쉬운 evidence로 바꾼다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          분포 끝의 sample은 한쪽 ECDF가 작다. ECOD는 그 값에 negative log를 적용해
-          작은 probability를 큰 contribution으로 뒤집는다. 예를 들어 0.5는 약 0.69,
-          0.01은 약 4.61이므로 훨씬 드문 관측이 합산 결과를 더 크게 끌어올린다.
-          이 값은 calibrated probability가 아니라 row 사이의 outlyingness를 비교하는 score다.
+          분포 끝의 sample은 한쪽 ECDF가 작다. ECOD는 그 값에 negative log를 적용해 작은 probability를 큰 contribution으로 뒤집는다. 0.5는
+          약 0.69, 0.01은 약 4.61이 되므로 훨씬 드문 관측일수록 합산 결과를 더 크게 끌어올린다. 그렇게 나온 값은 row 사이의 outlyingness를 비교하는
+          score이며 calibrated probability로 읽으면 안 된다.
         </p>
       </div>
 
@@ -37,10 +36,9 @@ export default function Algorithm() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Skewness는 feature마다 우선할 tail을 고른다</h3>
         <p>
-          모든 열에서 왼쪽만 보거나 오른쪽만 보면 방향이 다른 anomaly를 놓친다. 원 논문은
-          sample skewness가 음수인 feature에서는 왼쪽, 0 이상이면 오른쪽 contribution을
-          선택해 automatic score를 만든다. Skewness가 0에 가깝거나 극단값 하나에 흔들리는
-          경우 방향 근거가 약해질 수 있으므로 left·right contribution도 함께 진단한다.
+          모든 열에서 왼쪽만 보거나 오른쪽만 보면 방향이 다른 anomaly를 놓친다. 원 논문은 sample skewness가 음수인 feature에서는 왼쪽, 0 이상이면 오른쪽
+          contribution을 골라 automatic score를 만든다. 다만 skewness가 0에 가깝거나 극단값 하나에 흔들리면 방향 근거가 약해질 수 있으므로
+          left·right contribution도 함께 진단한다.
         </p>
       </div>
 
@@ -108,10 +106,9 @@ export default function Algorithm() {
         <p className="text-xs font-bold text-primary">논문 읽기 · ECOD 원 방법</p>
         <p className="mt-2 text-sm font-semibold">ECOD: Unsupervised Outlier Detection Using Empirical CDFs</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Li 등은 label 없이 feature별 empirical tail probability를 계산하고, negative log·skewness
-          correction·row aggregation으로 global outlier ranking을 만드는 parameter-free score를
-          제안했습니다. 논문의 비교는 선정한 tabular benchmark와 원문의 aggregation 식을 전제로
-          하며, feature dependence를 정확히 모델링하거나 score를 실제 anomaly probability로
+          Li 등이 제안한 것은 parameter-free score입니다. label 없이 feature별 empirical tail probability를 계산한 뒤 negative
+          log·skewness correction·row aggregation을 거쳐 global outlier ranking을 만듭니다. 논문의 비교는 선정한 tabular
+          benchmark와 원문의 aggregation 식을 전제로 합니다. feature dependence를 정확히 모델링하거나 score를 실제 anomaly probability로
           calibration한다는 뜻은 아닙니다.
         </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/2201.00382" target="_blank" rel="noreferrer">원 논문의 score·복잡도·실험 범위 보기</a>

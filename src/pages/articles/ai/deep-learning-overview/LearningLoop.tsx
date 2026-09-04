@@ -31,9 +31,8 @@ export default function LearningLoop() {
         question="한 batch의 예측 오차가 어떻게 파라미터 update로 이어질까요?"
         idea={
           <p>
-            먼저 현재 파라미터로 각 example의 예측을 만들고, example별 loss의
-            평균을 구합니다. 그 평균 loss가 가장 빠르게 커지는 방향인 gradient의
-            반대쪽으로 파라미터를 조금 이동합니다.
+            현재 파라미터로 각 example의 예측을 만든 뒤 example별 loss의 평균을 구합니다. 그 평균 loss가 가장 빠르게 커지는 방향인 gradient의 반대쪽으로
+            파라미터를 조금 이동합니다.
           </p>
         }
         formula={
@@ -84,11 +83,9 @@ export default function LearningLoop() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Training·validation·test는 서로 다른 질문에 답한다</h3>
         <p>
-          Training set은 gradient update에 사용합니다. Validation set은 learning
-          rate, architecture, early stopping 같은 선택을 비교하지만 그 데이터로
-          파라미터를 직접 update하지 않습니다. Test set은 선택이 끝난 뒤 새
-          데이터에서의 성능을 보고하는 독립 기준이며, 결과를 본 뒤 설정을 계속
-          바꾸면 사실상 validation set으로 사용한 셈이 됩니다.
+          Training set은 gradient update에 사용합니다. Validation set은 learning rate, architecture, early stopping 같은
+          선택을 비교하는 데 쓰되 그 데이터로 파라미터를 직접 update하지는 않습니다. Test set은 선택이 끝난 뒤 새 데이터에서의 성능을 보고하는 독립 기준입니다. 결과를 본 뒤
+          설정을 계속 바꾸면 사실상 validation set으로 사용한 셈이 됩니다.
         </p>
         <p>
           Training loss가 내려가는데 validation loss가 다시 오르면 먼저
@@ -101,11 +98,9 @@ export default function LearningLoop() {
         </p>
         <h3>학습과 inference의 경계</h3>
         <p>
-          학습은 forward 뒤에 loss·backward·update가 이어지지만, inference는
-          학습된 θ를 고정하고 새 입력에 forward만 실행합니다. 그래서 inference는
-          gradient와 optimizer state를 보통 저장하지 않아도 되지만, 생성 모델은
-          KV cache처럼 다음 출력을 위한 runtime state를 별도로 가질 수 있습니다.
-          같은 모델이라도 학습과 서빙의 memory 병목이 달라지는 이유입니다.
+          학습은 forward 뒤에 loss·backward·update가 이어지지만 inference는 학습된 θ를 고정하고 새 입력에 forward만 실행합니다. 그래서
+          inference는 gradient와 optimizer state를 보통 저장하지 않아도 되지만 생성 모델은 KV cache처럼 다음 출력을 위한 runtime state를 별도로
+          둘 수 있습니다. 같은 모델이라도 학습과 서빙의 memory 병목이 달라지는 이유입니다.
         </p>
       </div>
     </section>

@@ -24,10 +24,8 @@ export default function Observe() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          외부 CLI를 worker로 재사용하면 내부 상태 API가 없을 수 있습니다. 이때
-          pseudo-terminal(PTY)의 화면을 읽어 prompt나 error를 추정할 수 있지만,
-          화면 문구는 버전과 locale, theme에 따라 달라지므로 authoritative
-          state로 쓰기에는 약합니다.
+          외부 CLI를 worker로 재사용하면 내부 상태 API가 없을 수 있습니다. 이때 pseudo-terminal(PTY)의 화면을 읽어 prompt나 error를 추정할 수 있지만
+          화면 문구는 버전과 locale, theme에 따라 달라지므로 authoritative state로 쓰기에는 약합니다.
         </p>
         <p className="leading-7">
           observer는 하나의 문자열 패턴으로 상태를 덮어쓰기보다 process
@@ -60,32 +58,26 @@ export default function Observe() {
           PTY snapshot은 원문과 파생 상태를 함께 남긴다
         </h3>
         <p className="leading-7">
-          terminal adapter는 최근 output을 bounded buffer에 보관하고 ANSI
-          escape와 screen update를 해석합니다. 단순히 마지막 열 줄을 자르면
-          progress UI나 carriage return으로 갱신된 화면을 잘못 읽을 수 있으므로,
-          가능하면 terminal emulator가 만든 logical screen과 raw event 둘 다
-          보관합니다.
+          terminal adapter는 최근 output을 bounded buffer에 보관하고 ANSI escape와 screen update를 해석합니다. 단순히 마지막 열 줄을
+          자르면 progress UI나 carriage return으로 갱신된 화면을 잘못 읽습니다. 가능하면 terminal emulator가 만든 logical screen과 raw
+          event 둘 다 보관합니다.
         </p>
         <p className="leading-7">
-          관찰 결과에는 inferred status, confidence, 근거가 된 pattern과
-          snapshot reference를 넣습니다. secret과 command output이 포함될 수
-          있으므로 저장 전 redaction과 retention limit도 필요합니다.
+          관찰 결과에는 inferred status와 confidence, 근거가 된 pattern, snapshot reference를 넣습니다. secret과 command
+          output이 포함될 수 있으므로 저장 전 redaction과 retention limit도 필요합니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
           polling 주기는 고정 숫자보다 상태에 맞춘다
         </h3>
         <p className="leading-7">
-          launching과 input wait처럼 빠른 반응이 필요한 동안은 짧게 polling하고,
-          장시간 build에서는 event-driven process notification이나 느린
-          interval로 전환합니다. worker마다 별도 tight loop를 만드는 대신 하나의
-          supervisor가 timer와 process event를 관리하면 worker 수가 늘어도
-          안정적입니다.
+          launching과 input wait처럼 빠른 반응이 필요한 동안은 짧게 polling하고 장시간 build에서는 event-driven process notification이나
+          느린 interval로 전환합니다. worker마다 별도 tight loop를 만드는 대신 하나의 supervisor가 timer와 process event를 관리하면 worker
+          수가 늘어도 안정적입니다.
         </p>
         <p className="leading-7">
-          timeout은 “화면이 변하지 않았다” 하나로 판단하지 않습니다. process
-          CPU, child activity와 protocol heartbeat를 함께 보고, 종료할 때는
-          process tree와 terminal handle을 정리합니다.
+          timeout은 “화면이 변하지 않았다” 하나로 판단하지 않습니다. process CPU와 child activity, protocol heartbeat를 함께 봅니다. 종료할
+          때는 process tree와 terminal handle을 정리합니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
@@ -99,10 +91,8 @@ export default function Observe() {
           결정합니다.
         </p>
         <p className="leading-7">
-          제어 가능한 worker에는 JSON event나 local IPC처럼 명시적인 protocol을
-          우선합니다. PTY 관찰은 기존 CLI를 통합하기 위한 compatibility
-          adapter로 남기고, pattern마다 fixture와 버전 범위를 관리하는 것이
-          좋습니다.
+          제어 가능한 worker에는 JSON event나 local IPC처럼 명시적인 protocol을 우선합니다. PTY 관찰은 기존 CLI를 통합하기 위한 compatibility
+          adapter로 남기고 pattern마다 fixture와 버전 범위를 관리하는 것이 좋습니다.
         </p>
       </div>
     </section>

@@ -53,7 +53,8 @@ export default function Normalization({ onCodeRef }: { onCodeRef: (key: string, 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>정규화 축과 수치 안정성을 테스트합니다</h3>
         <p>
-          forward에서 계산한 normalized value와 inverse standard deviation은 backward에서 다시 사용하므로 안전하게 캐시합니다. 상수 입력처럼 분산이 0에 가까운 경우에도 NaN이 생기지 않는지, gamma와 beta의 gradient가 정규화 축 이외의 차원을 올바르게 합산하는지 수치 gradient로 확인해야 합니다.
+          forward에서 계산한 normalized value와 inverse standard deviation은 backward에서 다시 사용하므로 안전하게 캐시합니다. 상수 입력처럼
+          분산이 0에 가까운 경우에도 NaN이 생기지 않는지, gamma와 beta의 gradient가 정규화 축 이외의 차원을 올바르게 합산하는지 수치 gradient로 확인합니다.
         </p>
       </div>
     </section>

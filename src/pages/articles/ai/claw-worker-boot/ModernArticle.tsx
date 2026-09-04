@@ -94,7 +94,9 @@ export default function ModernWorkerBootArticle() {
       <section id="release-gate" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">04 · 역검사와 배포</p><h2 className="mt-2 text-2xl font-bold">정상 boot보다 gate 충돌과 늦은 응답을 먼저 재생한다</h2></header>
         <p>
-          이 글만으로 기초 여섯 문제를 풀 수 있어야 합니다. Spawn과 Ready의 차이, 실제 status, trust auto-resolution, cue 기반 observation, StartupEvidenceBundle, Ready-only send와 replay의 한계를 각각 설명할 수 있어야 합니다. 심화 문제는 path identity 공격, false ready, stale attempt, restart 뒤 late result를 failure injection으로 설계합니다.
+          이 글만으로 기초 여섯 문제를 풀 수 있어야 합니다. Spawn과 Ready의 차이, 실제 status, trust auto-resolution, cue 기반
+          observation, StartupEvidenceBundle, 그리고 Ready-only send와 replay의 한계까지 각각 설명할 수 있어야 합니다. 심화 문제는 path
+          identity 공격과 false ready, stale attempt, restart 뒤 late result를 failure injection으로 설계합니다.
         </p>
         <aside className="rounded-lg border border-border bg-card p-5 text-sm leading-6 text-muted-foreground">
           <strong className="text-foreground">Release gate:</strong> 같은 commit·terminal fixture·cwd·task receipt에서 base와 candidate를 실행합니다. Trust prompt, tool permission prompt, plain shell prompt, ready cue, wrong cwd, wrong receipt, acceptance timeout과 restart 뒤 늦은 event를 주입한 다음 unauthorized send 0건, terminal state 1개, attempt별 evidence 보존, stale result 반영 0건을 확인합니다.

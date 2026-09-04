@@ -30,10 +30,9 @@ export default function DisaggregatedPrefillDecodeServingArticle() {
             달래는 대신 두 phase를 다른 GPU 풀에 두는 것이 disaggregated serving입니다.
           </p>
           <p>
-            분리에는 값이 붙습니다. Prefill이 만든 KV cache를 decode GPU로 옮겨야 하고,
-            그 전송이 decode step보다 오래 걸리면 간섭 대신 대기가 생깁니다. 그래서 이 글은
-            요청을 어느 replica로 보낼지 정하는 routing에서 출발해, prefill worker와 decode
-            worker의 역할, KV transfer의 byte와 시간, 두 풀의 크기 비율 순서로 갑니다.
+            분리에는 값이 붙습니다. Prefill이 만든 KV cache를 decode GPU로 옮겨야 하고 그 전송이 decode step보다 오래 걸리면 간섭 대신 대기가 생깁니다.
+            그래서 이 글은 요청을 어느 replica로 보낼지 정하는 routing에서 출발해 prefill worker와 decode worker의 역할, KV transfer의
+            byte와 시간, 두 풀의 크기 비율 순서로 갑니다.
           </p>
           <p>
             두 phase가 왜 다른 자원에 막히는지는{" "}
@@ -53,10 +52,9 @@ export default function DisaggregatedPrefillDecodeServingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            같은 model을 여러 replica가 서빙하면 요청마다 어느 replica로 보낼지 정해야 합니다.
-            그 결정을 내리는 구성 요소가 load balancer이고, 결정 규칙이 replica routing입니다.
-            가장 단순한 round-robin은 replica의 상태를 보지 않아, 긴 요청이 몰린 replica와
-            비어 있는 replica를 똑같이 대합니다.
+            같은 model을 여러 replica가 서빙하면 요청마다 어느 replica로 보낼지 정해야 합니다. 그 결정을 내리는 구성 요소가 load balancer이고 결정 규칙이
+            replica routing입니다. 가장 단순한 round-robin은 replica의 상태를 보지 않아 긴 요청이 몰린 replica와 비어 있는 replica를 똑같이
+            대합니다.
           </p>
           <p>
             상태를 보는 첫 단계는 shortest queue입니다. 실행 중이거나 대기 중인 요청 수가
@@ -72,16 +70,14 @@ export default function DisaggregatedPrefillDecodeServingArticle() {
             깨집니다. Hit rate와 load 균형은 한쪽을 얻으면 다른 쪽을 잃는 관계입니다.
           </p>
           <p>
-            둘을 함께 보는 것이 cache-aware load balancing입니다. SGLang router는 replica마다
-            보낸 prompt의 근사 radix tree를 들고 있다가, load가 균형 안에 있으면 prefix가
-            가장 길게 맞는 replica로, 균형이 깨지면 tree를 무시하고 shortest queue로
-            보냅니다. 균형의 기준은 절대 차이와 상대 비율 두 threshold입니다.
+            둘을 함께 보는 것이 cache-aware load balancing입니다. SGLang router는 replica마다 보낸 prompt의 근사 radix tree를 들고
+            있다가 load가 균형 안에 있으면 prefix가 가장 길게 맞는 replica로, 균형이 깨지면 tree를 무시하고 shortest queue로 보냅니다. 균형의 기준은 절대
+            차이와 상대 비율 두 threshold입니다.
           </p>
           <p>
-            수치로 보면 이렇습니다. Replica A에 40개, B에 8개가 돌고 있고 새 요청의 prefix
-            3,000 token이 A에 cache되어 있다고 합시다. 절대 threshold가 32이면 40 − 8 = 32는
-            32를 넘지 않으므로 균형 상태이고 요청은 A로 갑니다. A가 41개였다면 균형이
-            깨져 B로 가고, 3,000 token의 prefill을 다시 계산합니다.
+            수치로 보면 이렇습니다. Replica A에 40개, B에 8개가 돌고 있고 새 요청의 prefix 3,000 token이 A에 cache되어 있다고 합시다. 절대
+            threshold가 32이면 40 − 8 = 32는 32를 넘지 않으므로 균형 상태이고 요청은 A로 갑니다. A가 41개였다면 균형이 깨져 B로 가고 3,000 token의
+            prefill을 다시 계산합니다.
           </p>
           <p>
             Routing의 앞 단계인 model 선택, 즉 context 길이나 tool 지원 같은 hard
@@ -123,10 +119,9 @@ export default function DisaggregatedPrefillDecodeServingArticle() {
             tree가 가장 작은 replica로 보내 새 prefix를 심습니다.
           </p>
           <p>
-            Tree는 실제 KV cache가 아니라 router가 본 prompt의 근사이므로 replica가 그
-            block을 이미 evict했을 수 있습니다. 그래서 eviction_interval마다 tree를 비워
-            router의 추정과 replica의 실제 cache가 너무 멀어지지 않게 합니다. 기본값은
-            version마다 바뀔 수 있으므로 배포 시점의 README를 확인해야 합니다.
+            Tree는 실제 KV cache가 아니라 router가 본 prompt의 근사이므로 replica가 그 block을 이미 evict했을 수 있습니다.
+            eviction_interval마다 tree를 비워 router의 추정과 replica의 실제 cache가 너무 멀어지지 않게 합니다. 기본값은 version마다 바뀔 수
+            있으므로 배포 시점의 README를 확인해야 합니다.
           </p>
         </ProgressiveDetail>
       </section>
@@ -137,10 +132,9 @@ export default function DisaggregatedPrefillDecodeServingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Prefill–decode disaggregation은 한 요청의 두 phase를 서로 다른 GPU 풀에서
-            실행하는 배치입니다. Prefill worker는 prompt 전체를 한 번에 계산해 KV cache를
-            만들고, decode worker는 그 KV를 받아 token을 하나씩 생성합니다. 한 요청이 두
-            worker를 차례로 거치므로 요청은 GPU 사이를 한 번 이동합니다.
+            Prefill–decode disaggregation은 한 요청의 두 phase를 서로 다른 GPU 풀에서 실행하는 배치입니다. Prefill worker는 prompt 전체를
+            한 번에 계산해 KV cache를 만듭니다. Decode worker는 그 KV를 받아 token을 하나씩 생성합니다. 한 요청이 두 worker를 차례로 거치므로 요청은
+            GPU 사이를 한 번 이동합니다.
           </p>
           <p>
             이렇게 나누면 얻는 것은 두 가지입니다. 첫째, decode worker의 step에는 prefill이
@@ -151,21 +145,17 @@ export default function DisaggregatedPrefillDecodeServingArticle() {
             키울 이유가 없고, decode는 batch를 키워야 bandwidth를 활용합니다.
           </p>
           <p>
-            잃는 것도 분명합니다. 같은 GPU 수로 두 풀을 나누면 한 풀이 놀 때 다른 풀이
-            그 GPU를 쓰지 못합니다. vLLM 문서는 disaggregated prefill이 throughput을
-            높이지 않는다고 적어 두었고, 목적을 TTFT와 ITL을 따로 조정하는 것과 tail
-            ITL을 통제하는 것으로 한정합니다.
+            잃는 것도 분명합니다. 같은 GPU 수로 두 풀을 나누면 한 풀이 놀 때 다른 풀이 그 GPU를 쓰지 못합니다. vLLM 문서는 disaggregated prefill이
+            throughput을 높이지 않는다고 적어 두었고 목적을 TTFT와 ITL을 따로 조정하는 것과 tail ITL을 통제하는 것으로 한정합니다.
           </p>
           <p>
-            구현에서 두 worker는 같은 engine의 다른 역할입니다. vLLM은 kv_transfer_config의
-            kv_role로 prefill instance를 kv_producer, decode instance를 kv_consumer로
-            지정하고, SGLang은 disaggregation-mode를 prefill 또는 decode로 띄웁니다. 앞에
-            선 proxy나 router가 요청을 prefill로 보낸 뒤 같은 요청을 decode로 넘깁니다.
+            구현에서 두 worker는 같은 engine의 다른 역할입니다. vLLM은 kv_transfer_config의 kv_role로 prefill instance를
+            kv_producer, decode instance를 kv_consumer로 지정하고 SGLang은 disaggregation-mode를 prefill 또는 decode로
+            띄웁니다. 앞에 선 proxy나 router가 요청을 prefill로 보낸 뒤 같은 요청을 decode로 넘깁니다.
           </p>
           <p>
-            Decode worker는 prefill이 만든 token id도 함께 받습니다. Tokenization을 다시
-            하지 않기 위해서이며, vLLM은 kv_transfer_params의 prompt_token_ids로 이를
-            전달합니다. Decode worker의 첫 step은 KV가 도착한 뒤에야 시작되므로 이 시점이
+            Decode worker는 prefill이 만든 token id도 함께 받습니다. Tokenization을 다시 하지 않기 위해서입니다. vLLM은
+            kv_transfer_params의 prompt_token_ids로 이를 전달합니다. Decode worker의 첫 step은 KV가 도착한 뒤에야 시작되므로 이 시점이
             TTFT에 더해지는 transfer 비용의 자리입니다.
           </p>
         </div>
@@ -205,16 +195,14 @@ export default function DisaggregatedPrefillDecodeServingArticle() {
             link가 무엇인지가 전부를 정합니다.
           </p>
           <p>
-            수치로 보겠습니다. 32 layer, KV head 8, head dim 128, FP16 model은 token당
-            128 KiB이므로 4,096 token 요청의 KV는 512 MiB입니다. 같은 node 안의 NVLink를
-            600 GB/s로 잡으면 0.9 ms, 400 Gb/s InfiniBand는 50 GB/s이므로 10.7 ms, PCIe
-            Gen4 x16을 실효 25 GB/s로 잡으면 21 ms, 25 Gb/s Ethernet이면 172 ms입니다.
+            수치로 보겠습니다. 32 layer, KV head 8, head dim 128, FP16 model은 token당 128 KiB입니다. 4,096 token 요청이면 KV는
+            512 MiB가 됩니다. 같은 node 안의 NVLink를 600 GB/s로 잡으면 0.9 ms, 400 Gb/s InfiniBand는 50 GB/s이므로 10.7 ms,
+            PCIe Gen4 x16을 실효 25 GB/s로 잡으면 21 ms, 25 Gb/s Ethernet이면 172 ms입니다.
           </p>
           <p>
-            이 시간을 비교할 기준은 decode worker의 step 시간입니다. 같은 model의 batch 1
-            decode step은 weight 14 GB를 3.35 TB/s로 읽는 4.2 ms이고, batch 64면 약 14 ms입니다.
-            NVLink의 0.9 ms는 step 하나에 묻히지만, InfiniBand의 10.7 ms는 step 하나에
-            가깝고 Ethernet의 172 ms는 step 수십 개 분량이라 TTFT에 그대로 드러납니다.
+            이 시간을 비교할 기준은 decode worker의 step 시간입니다. 같은 model의 batch 1 decode step은 weight 14 GB를 3.35 TB/s로
+            읽는 4.2 ms이고 batch 64면 약 14 ms입니다. NVLink의 0.9 ms는 step 하나에 묻힙니다. InfiniBand의 10.7 ms는 step 하나에 가깝고
+            Ethernet의 172 ms는 step 수십 개 분량이라 TTFT에 그대로 드러납니다.
           </p>
           <p>
             전송을 계산과 겹치면 드러나는 시간이 줄어듭니다. Splitwise는 layer마다 KV가
@@ -223,18 +211,14 @@ export default function DisaggregatedPrefillDecodeServingArticle() {
             영향은 0.8%였다고 보고했습니다. 마지막 layer의 KV만 계산 뒤에 남기 때문입니다.
           </p>
           <p>
-            KV transfer bandwidth는 요청 하나가 아니라 초당 요청 수로 세어야 합니다. 초당
-            10개의 4,096 token 요청이 오면 link는 초당 5 GiB, 약 43 Gb/s를 계속 흘려야
-            합니다. DistServe는 OPT-66B의 512 token 요청 1.13 GB를 초당 10개 옮기려면
-            90 Gbps가 필요하다고 계산했고, 이 값이 node 사이 link를 넘으면 두 worker를
-            같은 node에 두는 배치를 택했습니다.
+            KV transfer bandwidth는 요청 하나가 아니라 초당 요청 수로 세어야 합니다. 초당 10개의 4,096 token 요청이 오면 link는 초당 5 GiB, 약
+            43 Gb/s를 계속 흘려야 합니다. DistServe는 OPT-66B의 512 token 요청 1.13 GB를 초당 10개 옮기려면 90 Gbps가 필요하다고 계산했고 이
+            값이 node 사이 link를 넘으면 두 worker를 같은 node에 두는 배치를 택했습니다.
           </p>
           <p>
-            Mooncake는 이 전송을 GPU 사이 직접 복사에 묶지 않고 CPU DRAM과 SSD에 paged
-            block으로 둔 분산 KV cache를 거치게 했습니다. Prefill이 끝난 KV를 DRAM에
-            내려놓고 decode가 RDMA로 가져가므로 prefill worker는 즉시 비고, 같은 prefix를
-            다른 prefill worker가 다시 쓸 수 있습니다. 대신 link는 node당 800 Gbps급 RDMA를
-            전제합니다.
+            Mooncake는 이 전송을 GPU 사이 직접 복사에 묶지 않고 CPU DRAM과 SSD에 paged block으로 둔 분산 KV cache를 거치게 했습니다. Prefill이
+            끝난 KV를 DRAM에 내려놓고 decode가 RDMA로 가져가므로 prefill worker는 즉시 비고 같은 prefix를 다른 prefill worker가 다시 쓸 수
+            있습니다. 대신 link는 node당 800 Gbps급 RDMA를 전제합니다.
           </p>
         </div>
         <ExplainedFormula
@@ -265,40 +249,32 @@ export default function DisaggregatedPrefillDecodeServingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Prefill 풀과 decode 풀의 크기는 같은 식으로 따로 계산합니다. 초당 요청 수에
-            요청 하나가 그 phase에서 쓰는 GPU 시간을 곱하면 초당 필요한 GPU 시간이 나오고,
-            이를 목표 이용률로 나눠 올림하면 GPU 수입니다. 두 phase의 GPU 시간이 다르므로
-            비율은 1:1이 아니라 workload가 정합니다.
+            Prefill 풀과 decode 풀의 크기는 같은 식으로 따로 계산합니다. 초당 요청 수에 요청 하나가 그 phase에서 쓰는 GPU 시간을 곱하면 초당 필요한 GPU 시간이
+            나옵니다. 이를 목표 이용률로 나눠 올림하면 GPU 수입니다. 두 phase의 GPU 시간이 다르므로 비율은 1:1이 아니라 workload가 정합니다.
           </p>
           <p>
-            수치로 보겠습니다. 초당 100개의 요청이 오고 prompt는 4,096 token, 생성은 256
-            token, 목표 이용률은 0.8이라고 합시다. Prefill은 요청당 95 ms이므로 100 × 0.095
-            ÷ 0.8 = 11.9, 즉 12 GPU입니다. Decode는 batch 64에서 step 14.2 ms이므로 요청당
-            256 × 14.2 ÷ 64 = 57 ms이고 100 × 0.057 ÷ 0.8 = 7.1, 즉 8 GPU입니다.
+            수치로 보겠습니다. 초당 100개의 요청이 오고 prompt는 4,096 token, 생성은 256 token, 목표 이용률은 0.8이라고 합시다. Prefill은 요청당 95
+            ms이므로 100 × 0.095 ÷ 0.8 = 11.9, 즉 12 GPU입니다. Decode는 batch 64에서 step 14.2 ms이므로 요청당 256 × 14.2 ÷
+            64 = 57 ms입니다. 100 × 0.057 ÷ 0.8 = 7.1, 즉 8 GPU입니다.
           </p>
           <p>
-            Prompt가 1,024 token으로 짧아지면 prefill은 요청당 24 ms로 줄어 3 GPU면 되고
-            decode는 그대로 8 GPU입니다. 12:8이던 비율이 3:8로 뒤집힙니다. 같은 model,
-            같은 요청률에서도 prompt와 생성 길이의 분포가 비율을 정하므로 비율은 고정
-            설정이 아니라 trace에서 다시 계산하는 값입니다.
+            Prompt가 1,024 token으로 짧아지면 prefill은 요청당 24 ms로 줄어 3 GPU면 되고 decode는 그대로 8 GPU입니다. 12:8이던 비율이 3:8로
+            뒤집힙니다. 같은 model, 같은 요청률에서도 prompt와 생성 길이의 분포가 비율을 정합니다. 고정해 둘 설정이 아니라 trace를 볼 때마다 다시 계산하는 값입니다.
           </p>
           <p>
-            DistServe는 이 계산을 simulator로 바꿔, 각 phase의 parallelism 후보를 전부
-            시험해 GPU당 goodput이 가장 높은 구성을 찾은 뒤 요청률에 맞춰 복제합니다.
-            그 결과가 같은 SLO에서 7.4배의 요청 또는 12.6배 엄격한 SLO를 감당한다는
-            저자 자기보고이며, chatbot SLO는 TTFT 0.25초와 TPOT 0.1초였습니다.
+            DistServe는 이 계산을 simulator로 바꿔 각 phase의 parallelism 후보를 전부 시험해 GPU당 goodput이 가장 높은 구성을 찾은 뒤 요청률에
+            맞춰 복제합니다. 그 결과가 같은 SLO에서 7.4배의 요청 또는 12.6배 엄격한 SLO를 감당한다는 저자 자기보고입니다. Chatbot SLO는 TTFT 0.25초와
+            TPOT 0.1초였습니다.
           </p>
           <p>
-            두 풀이 다른 자원에 막힌다는 사실은 두 풀에 다른 GPU를 써도 된다는 뜻입니다.
-            이것이 heterogeneous serving이고, 두 풀의 GPU가 세대나 종류에서 다른 상태를
-            resource heterogeneity라고 부릅니다. Prefill은 FLOP/s가 큰 GPU에, decode는
-            bandwidth 대비 값이 싼 GPU에 두면 같은 비용으로 더 많은 요청을 받습니다.
+            두 풀이 다른 자원에 막히니 두 풀에 서로 다른 GPU를 써도 됩니다. 이것이 heterogeneous serving이고 두 풀의 GPU가 세대나 종류에서 다른 상태를
+            resource heterogeneity라고 부릅니다. Prefill은 FLOP/s가 큰 GPU에, decode는 bandwidth 대비 값이 싼 GPU에 두면 같은 비용으로
+            더 많은 요청을 받습니다.
           </p>
           <p>
-            A100은 312 TFLOP/s에 2.0 TB/s, H100 SXM은 989 TFLOP/s에 3.35 TB/s입니다. FLOP/s는
-            3.2배 차이지만 bandwidth는 1.7배 차이이므로, decode를 A100에 두면 잃는 것이
-            prefill을 A100에 두는 것보다 작습니다. Splitwise는 이 배치로 같은 비용에서
-            1.4배 throughput, 또는 같은 전력과 비용에서 2.35배 throughput을 보고했습니다.
+            A100은 312 TFLOP/s에 2.0 TB/s, H100 SXM은 989 TFLOP/s에 3.35 TB/s입니다. FLOP/s는 3.2배 차이지만 bandwidth는
+            1.7배 차이이므로 decode를 A100에 두면 잃는 것이 prefill을 A100에 두는 것보다 작습니다. Splitwise는 이 배치로 같은 비용에서 1.4배
+            throughput, 또는 같은 전력과 비용에서 2.35배 throughput을 보고했습니다.
           </p>
         </div>
         <ExplainedFormula
@@ -327,10 +303,9 @@ export default function DisaggregatedPrefillDecodeServingArticle() {
           preview="Chunked prefill은 한 GPU 안에서 간섭의 크기를 줄이고, disaggregation은 간섭을 없애는 대신 link와 풀 분할 비용을 냅니다. Link가 느리거나 GPU가 적으면 chunking이, tail ITL이 SLO를 정하면 disaggregation이 맞습니다."
         >
           <p>
-            Chunked prefill은 prefill을 잘게 나눠 decode step에 얹으므로 총 연산은 그대로이고
-            TTFT가 늘어납니다. Disaggregation은 TTFT에 transfer 시간을 더하는 대신 decode
-            step에는 아무것도 얹지 않습니다. DistServe는 자기 구현에 chunking을 넣지
-            않았다고 밝혔고, vLLM은 두 기능을 함께 켤 수 있게 두었습니다.
+            Chunked prefill은 prefill을 잘게 나눠 decode step에 얹으므로 총 연산은 그대로이고 TTFT가 늘어납니다. Disaggregation은 TTFT에
+            transfer 시간을 더하는 대신 decode step에는 아무것도 얹지 않습니다. DistServe는 자기 구현에 chunking을 넣지 않았다고 밝혔고 vLLM은 두
+            기능을 함께 켤 수 있게 두었습니다.
           </p>
           <p>
             GPU가 두 개뿐인 배포에서 하나를 prefill, 하나를 decode로 나누면 prefill GPU가

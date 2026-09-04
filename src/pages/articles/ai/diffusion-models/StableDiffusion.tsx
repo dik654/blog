@@ -34,19 +34,14 @@ export default function StableDiffusion() {
           에서 이어진다.
         </p>
         <p>
-          “Stable Diffusion은 77×768 CLIP embedding을 쓴다” 같은 숫자는 특정
-          version의 계약이다. Text encoder, token length, latent channel과
-          spatial compression은 version마다 달라지므로 LDM의 일반 원리와
-          checkpoint configuration을 구분해야 합니다.
+          “Stable Diffusion은 77×768 CLIP embedding을 쓴다” 같은 숫자는 특정 version의 계약입니다. Text encoder, token length,
+          latent channel과 spatial compression은 version마다 달라지므로 LDM의 일반 원리와 checkpoint configuration을 구분해야 합니다.
         </p>
         <p>
-          Pixel diffusion과 latent diffusion을 공정하게 비교하려면 data와
-          resolution, condition, denoiser FLOPs 예산을 맞추고 autoencoder·latent
-          shape·scaling을 기록합니다. 그다음 autoencoder reconstruction을 별도로
-          측정해 품질 ceiling을 확인하고, denoiser NFE·wall-clock·memory와 sample
-          quality·coverage·condition adherence를 같은 evaluator에서 비교해야
-          합니다. Spatial 위치 수만 맞추거나 FID 하나만 보는 실험으로는 어느
-          stage가 만든 차이인지 분리할 수 없습니다.
+          Pixel diffusion과 latent diffusion을 공정하게 비교하려면 data와 resolution, condition, denoiser FLOPs 예산을 맞추고
+          autoencoder·latent shape·scaling을 기록합니다. 그다음 autoencoder reconstruction을 별도로 측정해 품질 ceiling을 확인합니다.
+          Denoiser NFE·wall-clock·memory와 sample quality·coverage·condition adherence는 같은 evaluator에서 비교해야
+          합니다. Spatial 위치 수만 맞추거나 FID 하나만 보는 실험으로는 어느 stage가 만든 차이인지 분리할 수 없습니다.
         </p>
       </div>
 
@@ -61,10 +56,9 @@ export default function StableDiffusion() {
           High-Resolution Image Synthesis with Latent Diffusion Models
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Pixel-space diffusion의 계산비를 줄이기 위해 pretrained autoencoder의
-          latent에서 denoising하고, cross-attention으로 text·layout 같은
-          condition을 주입합니다. Latent 압축은 공짜가 아니며 autoencoder가 버린
-          detail은 diffusion stage가 원본에서 복구할 수 없습니다.
+          Pixel-space diffusion의 계산비를 줄이기 위해 pretrained autoencoder의 latent에서 denoising하고 cross-attention으로
+          text·layout 같은 condition을 주입합니다. Latent 압축은 공짜가 아니며 autoencoder가 버린 detail은 diffusion stage가 원본에서
+          복구할 수 없습니다.
         </p>
         <a
           className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
@@ -118,10 +112,9 @@ export default function StableDiffusion() {
 
         <h3>제품 이름보다 component contract를 본다</h3>
         <p>
-          ControlNet, LoRA, image adapter 같은 확장은 condition을 넣는 경로나
-          weight update 범위를 바꾼다. 실제 pipeline을 재현할 때는 model name만
-          기록하지 말고 autoencoder, text encoder, denoiser, scheduler, sampler,
-          guidance scale과 precision을 함께 고정해야 합니다.
+          ControlNet, LoRA, image adapter 같은 확장은 condition을 넣는 경로나 weight update 범위를 바꿉니다. 실제 pipeline을 재현할 때는
+          model name만 기록하지 말고 autoencoder, text encoder, denoiser, scheduler, sampler, guidance scale과
+          precision을 함께 고정해야 합니다.
         </p>
       </div>
       <ExplainedFormula
@@ -175,11 +168,9 @@ export default function StableDiffusion() {
           Classifier-Free Diffusion Guidance
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Conditional model과 별도 unconditional model을 따로 학습하는 대신
-          condition dropout으로 하나의 network가 두 score를 모두 내도록 하고,
-          inference 때 차이를 결합해 fidelity–diversity trade-off를 조절합니다.
-          큰 guidance scale이 모든 checkpoint와 metric에서 더 좋다는 보장은
-          아닙니다.
+          Conditional model과 별도 unconditional model을 따로 학습하는 대신 condition dropout으로 하나의 network가 두 score를 모두
+          내도록 하고 inference 때 차이를 결합해 fidelity–diversity trade-off를 조절합니다. 큰 guidance scale이 모든 checkpoint와
+          metric에서 더 좋다는 보장은 없습니다.
         </p>
         <a
           className="mt-3 inline-block text-sm font-medium text-primary hover:underline"

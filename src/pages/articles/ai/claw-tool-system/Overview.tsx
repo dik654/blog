@@ -56,18 +56,14 @@ export default function Overview() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          사용자가 “로그인 버튼을 누르면 401이 납니다. 원인을 찾아 최소 수정한
-          뒤 test해 주세요”라고 요청했다고 가정하겠습니다. 모델은 먼저 인증
-          설정과 error 처리 코드를 읽거나 검색하자고 제안할 수 있지만, 이 제안이
-          곧 파일 접근 권한은 아닙니다. Host가 등록된 tool contract와 실제
-          arguments를 확인하고 권한을 허용한 뒤에야 executor가 움직입니다.
+          사용자가 “로그인 버튼을 누르면 401이 납니다. 원인을 찾아 최소 수정한 뒤 test해 주세요”라고 요청했다고 가정하겠습니다. 모델은 먼저 인증 설정과 error 처리 코드를
+          읽거나 검색하자고 제안할 수 있지만 이 제안이 곧 파일 접근 권한은 아닙니다. Host가 등록된 tool contract와 실제 arguments를 확인하고 권한을 허용한 뒤에야
+          executor가 움직입니다.
         </p>
         <p>
-          이 글에서 registry는 실행 가능한 tool definition을 이름으로 찾는
-          색인이고, schema는 JSON input의 모양을 검사하는 규칙이며, executor는
-          허용된 operation을 실제 filesystem이나 process로 옮기는 component입니다.
-          Runtime은 이 셋을 소유하는 대신, 반환된 observation을 session에
-          반영하고 다음 model call 또는 종료를 결정합니다.
+          이 글에서 registry는 실행 가능한 tool definition을 이름으로 찾는 색인입니다. schema는 JSON input의 모양을 검사하는 규칙이고 executor는
+          허용된 operation을 실제 filesystem이나 process로 옮기는 component입니다. Runtime은 이 셋을 소유하는 대신 반환된 observation을
+          session에 반영하고 다음 model call 또는 종료를 결정합니다.
         </p>
       </div>
 
@@ -94,13 +90,11 @@ export default function Overview() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          이 흐름을 재현하려면 원 request, registry snapshot 또는 digest, schema
-          validation 결과, canonical effect, permission decision, executor result,
-          workspace diff, test receipt와 session exit state를 같은 call ID로 묶어야
-          합니다. Final response만 남기면 denied call이 실제로 실행되지 않았는지,
-          test가 수정 뒤에 실행됐는지 확인할 수 없습니다. Artifact에는 stable run
-          ID를 두되 token·credential과 source의 secret은 redaction하고, 원문은
-          접근 통제된 저장소의 digest/reference로 연결합니다.
+          이 흐름을 재현하려면 같은 call ID로 묶을 것이 많습니다. 원 request와 registry snapshot 또는 digest, schema validation 결과,
+          canonical effect, permission decision, 그리고 executor result와 workspace diff, test receipt, session
+          exit state까지입니다. Final response만 남기면 denied call이 실제로 실행되지 않았는지, test가 수정 뒤에 실행됐는지 확인할 수 없습니다.
+          Artifact에는 stable run ID를 두되 token·credential과 source의 secret은 redaction합니다. 원문은 접근 통제된 저장소의
+          digest/reference로 연결합니다.
         </p>
 
         <h3>Tool 이름은 기능 분류이지 risk 등급이 아닙니다</h3>
@@ -171,11 +165,9 @@ export default function Overview() {
           넓은 주장입니다.
         </p>
         <p>
-          반면 call마다 source identity, schema digest와 registry generation을
-          고정하는 방식은 reload 중 계약이 바뀌는 문제를 막기 위해 이 글이
-          요구하는 hardening contract입니다. Pinned source가 그 풍부한 snapshot
-          envelope를 이미 모두 구현한다고 주장하지 않으며, release test에서
-          gap으로 따로 확인합니다.
+          반면 call마다 source identity와 schema digest, registry generation을 고정하는 방식은 reload 중 계약이 바뀌는 문제를 막기 위해 이
+          글이 요구하는 hardening contract입니다. Pinned source가 그 풍부한 snapshot envelope를 이미 모두 구현한다고 주장하지 않으며 release
+          test에서 gap으로 따로 확인합니다.
         </p>
       </div>
 

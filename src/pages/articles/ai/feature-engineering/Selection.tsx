@@ -9,11 +9,9 @@ export default function Selection() {
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          피처를 줄이는 목적은 validation 점수만이 아닙니다. Online lookup latency,
-          memory, source 장애 범위와 drift 감시 비용도 함께 줄일 수 있습니다.
-          먼저 상수·중복·예측 시점에 계산할 수 없는 피처를 계약 검사로 제거하고,
-          label을 보는 selection은 model tuning과 마찬가지로 cross-validation의
-          training fold 안에서 수행합니다.
+          피처를 줄이는 목적은 validation 점수만이 아닙니다. Online lookup latency, memory, source 장애 범위와 drift 감시 비용도 함께 줄일 수
+          있습니다. 먼저 상수·중복·예측 시점에 계산할 수 없는 피처를 계약 검사로 제거하고 label을 보는 selection은 model tuning과 마찬가지로 cross-
+          validation의 training fold 안에서 수행합니다.
         </p>
         <p>
           Model importance, permutation importance와 SHAP은 서로 다른 질문에
@@ -70,23 +68,17 @@ I_j&=\underbrace{\mathbb E_{\pi}\!\left[L_j^{\pi}-L_0\right].}_{\text{확률 가
 
         <h3>중요도는 후보를 만들고, ablation이 결정을 내립니다</h3>
         <p>
-          Boruta는 random shadow feature와 비교해 관련 피처를 넓게 찾는
-          all-relevant 접근이고, RFE는 estimator를 반복 학습하며 정해진 크기의
-          subset을 찾습니다. 목적과 계산 비용이 다르므로 여러 방법의 다수결을
-          정답처럼 쓰지 않습니다. 후보를 제거한 model을 같은 fold와 seed에서
-          다시 학습하고, 평균 metric·fold 분산·worst-group 성능·latency·수집
-          비용을 함께 비교합니다.
+          Boruta는 random shadow feature와 비교해 관련 피처를 넓게 찾는 all-relevant 접근이고 RFE는 estimator를 반복 학습하며 정해진 크기의
+          subset을 찾습니다. 목적과 계산 비용이 다르므로 여러 방법의 다수결을 정답처럼 쓰지 않습니다. 후보를 제거한 model을 같은 fold와 seed에서 다시 학습하고 평균
+          metric·fold 분산·worst-group 성능·latency·수집 비용을 함께 비교합니다.
         </p>
 
         <h3>마지막 검사는 training-serving parity입니다</h3>
         <p>
-          Offline notebook과 online service가 같은 이름의 피처를 서로 다른 SQL,
-          timezone, default value 또는 library version으로 계산하면
-          training-serving skew가 생깁니다. 대표 entity와 cutoff를 고정한 golden
-          fixture를 두고 batch 결과와 online 결과를 값·dtype·freshness까지
-          비교합니다. Model artifact와 함께 feature definition version을 배포하고,
-          missing rate·unknown rate·freshness·distribution drift를 운영 지표로
-          감시해야 selection 이후의 이득이 production에서도 유지됩니다.
+          Offline notebook과 online service가 같은 이름의 피처를 서로 다른 SQL, timezone, default value 또는 library version으로
+          계산하면 training-serving skew가 생깁니다. 대표 entity와 cutoff를 고정한 golden fixture를 두고 batch 결과와 online 결과를
+          값·dtype·freshness까지 비교합니다. Model artifact와 함께 feature definition version을 배포하고 missing rate·unknown
+          rate·freshness·distribution drift를 운영 지표로 감시해야 selection 이후의 이득이 production에서도 유지됩니다.
         </p>
       </div>
     </section>

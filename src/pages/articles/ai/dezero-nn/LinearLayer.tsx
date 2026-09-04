@@ -13,7 +13,8 @@ export default function LinearLayer({ onCodeRef }: { onCodeRef: (key: string, re
           Linear layer의 순전파는 <code>y = xW + b</code>로 짧지만, 구현에서는 입력과 weight의 차원, 배치 축, bias broadcasting을 먼저 고정해야 합니다. 이 계약이 모호하면 forward는 우연히 동작해도 backward에서 잘못된 축으로 gradient가 합산될 수 있습니다.
         </p>
         <p>
-          weight는 입력 차원에 따라 분산을 조절하는 Xavier 계열 초기화로 시작합니다. 예제 구현은 seed를 가진 LCG로 균등 난수를 만들고 Box–Muller transform으로 정규분포를 생성하므로 외부 RNG 없이 결과를 재현할 수 있습니다. 다만 실제 학습 라이브러리라면 검증된 RNG와 초기화 구현을 사용하는 편이 안전합니다.
+          weight는 입력 차원에 따라 분산을 조절하는 Xavier 계열 초기화로 시작합니다. 예제 구현은 seed를 가진 LCG로 균등 난수를 만들고 Box–Muller
+          transform으로 정규분포를 생성하므로 외부 RNG 없이도 결과가 재현됩니다. 다만 실제 학습 라이브러리라면 검증된 RNG와 초기화 구현을 사용하는 편이 안전합니다.
         </p>
       </div>
       <div className="not-prose my-8"><LinearViz onOpenCode={open} /></div>

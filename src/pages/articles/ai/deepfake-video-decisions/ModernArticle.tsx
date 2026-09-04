@@ -14,11 +14,9 @@ export default function DeepfakeVideoDecisionsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            한 video에는 여러 frame·clip·face track score가 있습니다. 이 값을
-            평균할지, 가장 큰 하나를 볼지, 높은 k개만 평균할지에 따라 같은
-            detector가 다른 video score를 냅니다. Reducer를 model 밖의 사소한
-            후처리로 숨기지 않고 calibration·coverage·threshold와 함께 decision
-            contract로 고정합니다.
+            Reducer는 model 밖의 사소한 후처리가 아니라 calibration·coverage·threshold와 함께 decision contract로 고정할 대상입니다. 한
+            video에는 여러 frame·clip·face track score가 있고 이 값을 평균할지, 가장 큰 하나를 볼지, 높은 k개만 평균할지에 따라 같은 detector가 다른
+            video score를 냅니다.
           </p>
         </div>
         <TermBreakdown

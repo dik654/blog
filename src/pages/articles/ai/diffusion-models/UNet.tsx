@@ -18,12 +18,9 @@ export default function UNet() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          Image DDPM은 전통적으로 multi-scale U-Net을 denoiser로 사용해
-          왔습니다. Contracting path가 넓은 context를 모으고 expanding path가
-          resolution을 복원하며, skip connection은 같은 spatial scale의 detail을
-          다시 전달합니다. 이는 ResNet의 identity shortcut과 목적이 완전히
-          같지는 않습니다. U-Net skip은 encoder feature를 decoder로 전달하는
-          long skip이라는 점이 핵심입니다.
+          Image DDPM은 전통적으로 multi-scale U-Net을 denoiser로 사용해 왔습니다. Contracting path가 넓은 context를 모으고 expanding
+          path가 resolution을 복원하며 skip connection은 같은 spatial scale의 detail을 다시 전달합니다. ResNet의 identity
+          shortcut과 목적이 완전히 같지는 않습니다. U-Net skip은 encoder feature를 decoder로 전달하는 long skip입니다. 차이는 거기에 있습니다.
         </p>
       </div>
 
@@ -38,11 +35,9 @@ export default function UNet() {
           U-Net: Convolutional Networks for Biomedical Image Segmentation
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          원 U-Net은 biomedical segmentation을 위해 contracting path와 symmetric
-          expanding path, 같은 scale의 feature를 잇는 long skip을 제안했습니다.
-          Diffusion U-Net은 여기에 timestep embedding·residual block·attention을
-          더한 후속 backbone이므로 원 논문의 구조와 DDPM 구현을 같은 것으로 보면
-          안 됩니다.
+          원 U-Net은 biomedical segmentation을 위해 contracting path와 symmetric expanding path, 같은 scale의 feature를
+          잇는 long skip을 제안했습니다. Diffusion U-Net은 여기에 timestep embedding·residual block·attention을 더한 후속
+          backbone입니다. 원 논문의 구조와 DDPM 구현은 구분해서 봐야 합니다.
         </p>
         <a
           className="mt-3 inline-block text-sm font-medium text-primary hover:underline"

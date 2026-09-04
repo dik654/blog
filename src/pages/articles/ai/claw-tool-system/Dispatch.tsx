@@ -32,11 +32,9 @@ export default function Dispatch() {
           진입점이 dispatch입니다.
         </p>
         <p>
-          Dispatch가 필요한 이유는 built-in, plugin과 MCP마다 검사 순서가 달라지는
-          것을 막기 위해서입니다. Tool implementation은 domain logic을 알지만
-          session owner가 아니며, permission engine은 policy를 알지만 JSON을
-          임의로 고치는 parser가 아닙니다. Call envelope가 이 component들을 같은
-          identity로 연결합니다.
+          Dispatch가 필요한 이유는 built-in과 plugin, MCP마다 검사 순서가 달라지는 것을 막기 위해서입니다. Tool implementation은 domain
+          logic을 알지만 session owner가 아니며 permission engine은 policy를 알지만 JSON을 임의로 고치는 parser가 아닙니다. Call
+          envelope가 이 component들을 같은 identity로 연결합니다.
         </p>
       </div>
 
@@ -63,18 +61,14 @@ export default function Dispatch() {
           가리키는지나 login test command가 state를 바꾸는지는 알지 못합니다.
         </p>
         <p>
-          Domain validation에서는 path를 canonicalize하고 file 존재 여부, edit의
-          before hash, command와 working directory 같은 application 조건을
-          검사합니다. 이어 effect descriptor가 filesystem read/write, process,
-          network와 credential 접근 가능성을 arguments에서 계산합니다. Schema를
-          통과했더라도 domain 또는 effect 검사가 실패하면 permission layer까지
-          보내지 않고 typed error로 끝냅니다.
+          Domain validation에서는 path를 canonicalize하고 file 존재 여부와 edit의 before hash, command와 working directory
+          같은 application 조건을 검사합니다. 이어 effect descriptor가 filesystem read/write와 process, network, credential
+          접근 가능성을 arguments에서 계산합니다. Schema를 통과했더라도 domain 또는 effect 검사가 실패하면 permission layer까지 보내지 않고 typed
+          error로 끝냅니다.
         </p>
         <p>
-          모델 편의를 이유로 unknown field를 버리거나 문자열을 숫자로 몰래
-          바꾸면 어떤 contract가 실행됐는지 모호해집니다. 오류에는 secret을
-          제외한 instance path, 실패한 keyword, 기대 type과 schema digest를 넣고,
-          수정된 call은 새 attempt로 다시 검증합니다.
+          모델 편의를 이유로 unknown field를 버리거나 문자열을 숫자로 몰래 바꾸면 어떤 contract가 실행됐는지 모호해집니다. 오류에는 secret을 제외한 instance
+          path와 실패한 keyword, 기대 type, schema digest를 넣습니다. 수정된 call은 새 attempt로 다시 검증합니다.
         </p>
       </div>
 
@@ -114,10 +108,9 @@ export default function Dispatch() {
           context에는 redacted summary와 reference만 넣습니다.
         </p>
         <p>
-          아래 envelope는 견고한 구현과 평가를 위해 이 글이 요구하는 contract이며,
-          pinned Claw source가 모든 field와 error taxonomy를 그대로 구현했다고
-          주장하지 않습니다. 특히 retryable, partial effect, artifact provenance를
-          분리하지 않으면 실패 뒤 같은 call을 안전하게 반복하기 어렵습니다.
+          아래 envelope는 견고한 구현과 평가를 위해 이 글이 요구하는 contract입니다. pinned Claw source가 모든 field와 error taxonomy를 그대로
+          구현했다고 주장하지 않습니다. 특히 retryable과 partial effect, artifact provenance를 분리하지 않으면 실패 뒤 같은 call을 안전하게 반복하기
+          어렵습니다.
         </p>
       </div>
 

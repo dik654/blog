@@ -28,10 +28,8 @@ export default function Overview() {
           출발점입니다.
         </p>
         <p className="leading-8">
-          따라서 embedding은 단어의 사전적 의미를 그대로 담은 좌표가 아닙니다.
-          Corpus, tokenization, window, weighting과 compression을 통과한 측정
-          결과입니다. One-hot ID는 symbol을 구분하지만 단어 관계를 정의하지
-          않고, distributional vector는 관측한 context를 공유하는 정도로 관계를
+          Embedding은 단어의 사전적 의미를 그대로 담은 좌표가 아닙니다. Corpus, tokenization, window, weighting과 compression을 통과한 측정
+          결과입니다. One-hot ID는 symbol을 구분하지만 단어 관계를 정의하지 않고 distributional vector는 관측한 context를 공유하는 정도로 관계를
           만듭니다.
         </p>
       </div>
@@ -103,9 +101,8 @@ export default function Overview() {
         <p className="text-xs font-bold text-primary">논문 읽기 · 출발 가정</p>
         <p className="mt-2 text-sm font-semibold">Distributional Structure</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Harris는 문장 속 환경에 나타나는 언어 요소의 분포를 구조적으로 분석했습니다.
-          현대 embedding의 특정 window·cosine 알고리즘을 제안한 논문으로 읽기보다,
-          관측 가능한 분포와 언어 구조를 연결한 역사적 출발점으로 읽어야 합니다.
+          Harris는 문장 속 환경에 나타나는 언어 요소의 분포를 구조적으로 분석했습니다. 현대 embedding의 특정 window·cosine 알고리즘을 제안한 논문으로 읽기보다 관측
+          가능한 분포와 언어 구조를 연결한 역사적 출발점으로 읽어야 합니다.
         </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://doi.org/10.1080/00437956.1954.11659520" target="_blank" rel="noreferrer">원 논문의 문제와 범위 보기</a>
       </div>

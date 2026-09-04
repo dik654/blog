@@ -76,8 +76,7 @@ export default function ExperimentTrackingArticle() {
           question="Configuration이 같은 반복과 조건이 다른 실험을 어떻게 기계적으로 구분하나요?"
           idea={
             <p>
-              정규화한 immutable inputs를 순서대로 직렬화해 spec digest를
-              만들고, seed·retry·worker를 붙여 실제 attempt를 구분합니다.
+              정규화한 immutable inputs를 순서대로 직렬화해 spec digest를 만들고 seed·retry·worker를 붙여 실제 attempt를 구분합니다.
             </p>
           }
           formula={String.raw`d_s=H(c\Vert d\Vert s\Vert g\Vert e\Vert k),\quad a=(d_s,z,r,w)`}
@@ -145,8 +144,8 @@ export default function ExperimentTrackingArticle() {
           question="URI가 바뀌거나 덮어써져도 과거 artifact를 같은 것으로 확인하려면 무엇이 필요한가요?"
           idea={
             <p>
-              Object 위치와 실제 bytes digest, 해석 schema, 크기, producer
-              attempt를 하나의 reference로 저장하고 소비 시 다시 검증합니다.
+              하나의 reference에 object 위치와 실제 bytes digest, 해석 schema, 크기, producer attempt를 담아 저장하고 소비 시 다시
+              검증합니다.
             </p>
           }
           formula={String.raw`R_a=(u_a,H(B_a),\sigma_a,n_a,p_a)`}

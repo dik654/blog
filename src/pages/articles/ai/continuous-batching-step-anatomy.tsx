@@ -93,8 +93,7 @@ export default function ContinuousBatchingStepAnatomyArticle() {
             올라갑니다.
           </p>
           <p>
-            다음 step 에서는 running 순회 안에서 decode 40 뒤에 남은 992 를 받고,
-            그 다음 step 부터는 decode 1 token 이 됩니다.
+            다음 step 에서는 running 순회 안에서 decode 40 뒤에 남은 992 를 받고 그 다음 step 부터는 decode 1 token 이 됩니다.
           </p>
         </div>
         <ExplainedFormula
@@ -204,11 +203,9 @@ n_w &= \underbrace{\min\!\left(P_w - c_w,\; B_{\mathrm{rem}}\right)}_{\text{남�
             따로 받아 내야 합니다.
           </p>
           <p>
-            Mixed batch 를 만드는 이유는 GPU 를 비우지 않기 위해서입니다. Decode 41 token 만
-            있는 step 은 weight 를 한 번 읽어 41 token 만 계산하니 memory-bound 로 남고, 거기에
-            prefill chunk 를 얹으면 같은 weight 읽기에 수천 token 의 연산이 붙습니다.
-            Sarathi-Serve 는 이렇게 채운 batch 로 decode 를 멈추지 않으면서 처리량을 올렸다고
-            보고했습니다.
+            Mixed batch 를 만드는 이유는 GPU 를 비우지 않기 위해서입니다. Decode 41 token 만 있는 step 은 weight 를 한 번 읽어 41 token 만
+            계산하니 memory-bound 로 남고 거기에 prefill chunk 를 얹으면 같은 weight 읽기에 수천 token 의 연산이 붙습니다. Sarathi-Serve 는
+            이렇게 채운 batch 로 decode 를 멈추지 않으면서 처리량을 올렸다고 보고했습니다.
           </p>
           <p>
             비용은 그 step 의 decode 지연입니다. 한 forward 는 batch 안에서 가장 무거운 작업이
@@ -216,9 +213,8 @@ n_w &= \underbrace{\min\!\left(P_w - c_w,\; B_{\mathrm{rem}}\right)}_{\text{남�
             기다립니다.
           </p>
           <p>
-            Decode-only step 이 수 ms 라면 mixed step 은 chunk 크기에 비례해
-            길어지고, 그 차이가 ITL 의 꼬리로 나타납니다. Budget 을 줄이면 chunk 가 작아져
-            ITL 은 안정되지만 prompt 완료가 늦어져 TTFT 가 밀립니다.
+            Decode-only step 이 수 ms 라면 mixed step 은 chunk 크기에 비례해 길어지고 그 차이가 ITL 의 꼬리로 나타납니다. Budget 을 줄이면
+            chunk 가 작아져 ITL 은 안정되지만 prompt 완료가 늦어져 TTFT 가 밀립니다.
           </p>
         </div>
         <TermBreakdown
@@ -235,10 +231,9 @@ n_w &= \underbrace{\min\!\left(P_w - c_w,\; B_{\mathrm{rem}}\right)}_{\text{남�
           preview="공식 문서는 max_num_batched_tokens 를 max_model_len 과 같게 두면 decode 를 먼저 보는 점만 빼고 V0 기본 정책과 거의 같아진다고 적습니다. Chunk 가 사라져 prompt 하나가 한 step 을 통째로 차지합니다."
         >
           <p>
-            문서는 작은 값(예 2048)이 prefill 을 잘게 나눠 ITL 을 좋게 하고, 큰 값이 한 step
-            에 더 많은 prefill token 을 넣어 TTFT 를 좋게 한다고 안내합니다. 큰 GPU 의 작은
-            model 에는 8192 를 넘기는 값을 권합니다. 이 권고는 처리량 기준이며, ITL SLO 가
-            있는 배포에서는 chunk 크기별 p99 ITL 을 함께 재야 합니다.
+            문서는 작은 값(예 2048)이 prefill 을 잘게 나눠 ITL 을 좋게 하고 큰 값이 한 step 에 더 많은 prefill token 을 넣어 TTFT 를 좋게 한다고
+            안내합니다. 큰 GPU 의 작은 model 에는 8192 를 넘기는 값을 권합니다. 이 권고는 처리량 기준이며, ITL SLO 가 있는 배포에서는 chunk 크기별 p99
+            ITL 을 함께 재야 합니다.
           </p>
           <p>
             <code>long_prefill_token_threshold</code> 는 잔액과 별도로 한 prompt 의 chunk 상한을

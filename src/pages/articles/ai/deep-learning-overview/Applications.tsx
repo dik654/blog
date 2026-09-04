@@ -31,10 +31,8 @@ export default function Applications() {
       <h2 className="text-2xl font-bold mb-6">딥러닝의 활용</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          딥러닝은 특정 산업의 제품 목록이라기보다 입력을 representation으로
-          바꾸고 원하는 출력을 학습하는 공통 계산 방식입니다. 같은 Transformer도
-          문서 분류, token 생성과 protein sequence 분석에 쓰일 수 있으며, 차이는
-          data와 objective, 평가 기준에서 생깁니다.
+          딥러닝은 특정 산업의 제품 목록이라기보다 입력을 representation으로 바꾸고 원하는 출력을 학습하는 공통 계산 방식입니다. 같은 Transformer도 문서 분류,
+          token 생성과 protein sequence 분석에 쓰일 수 있으며 차이는 data와 objective, 평가 기준에서 생깁니다.
         </p>
       </div>
 
@@ -68,11 +66,9 @@ export default function Applications() {
           적용 가능성과 운영 가능성은 다르다
         </h3>
         <p className="leading-7">
-          benchmark에서 높은 점수를 얻는 것만으로 제품 적용이 끝나지 않습니다.
-          의료에서는 false negative와 calibration, 자율주행에서는 tail event와
-          latency, 생성 모델에서는 factuality와 misuse처럼 분야마다 실패 비용이
-          다릅니다. 따라서 dataset split과 metric도 실제 의사결정의 비용을
-          반영해야 합니다.
+          benchmark에서 높은 점수를 얻는 것만으로 제품 적용이 끝나지 않습니다. 의료에서는 false negative와 calibration, 자율주행에서는 tail event와
+          latency, 생성 모델에서는 factuality와 misuse처럼 분야마다 실패 비용이 다릅니다. dataset split과 metric도 실제 의사결정의 비용을 반영해야 하는
+          이유입니다.
         </p>
         <p className="leading-7">
           새로운 모델 이름을 계속 나열하기보다{" "}

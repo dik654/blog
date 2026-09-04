@@ -79,12 +79,9 @@ export default function Dimensionality() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          가장 단순한 예로 M=diag(3,1)이면 singular value도 3과 1입니다. k=1은
-          크기 3인 첫 방향만 남기므로 rank-1 근사는 diag(3,0)이 되고, 버린
-          squared Frobenius error는 1²=1입니다. 이 값이 최소라는 것은 같은 rank와
-          Frobenius norm에서 matrix를 가장 잘 복원한다는 뜻이지, 버린 두 번째
-          방향이 downstream label이나 희귀한 의미 관계에 쓸모없다는 뜻은
-          아닙니다.
+          가장 단순한 예로 M=diag(3,1)이면 singular value도 3과 1입니다. k=1은 크기 3인 첫 방향만 남기므로 rank-1 근사는 diag(3,0)이 되고 버린
+          squared Frobenius error는 1²=1입니다. 이 값이 최소라는 말은 같은 rank와 Frobenius norm에서 matrix를 가장 잘 복원한다는 의미입니다.
+          버린 두 번째 방향이 downstream label이나 희귀한 의미 관계에 쓸모없다는 데까지는 미치지 않습니다.
         </p>
       </div>
 
@@ -92,10 +89,8 @@ export default function Dimensionality() {
         <p className="text-xs font-bold text-primary">논문 읽기 · Explicit matrix compression</p>
         <p className="mt-2 text-sm font-semibold">Indexing by Latent Semantic Analysis</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Term–document matrix에 truncated SVD를 적용해 lexical matching을 넘어서는
-          latent association을 검색에 사용했습니다. 결과는 논문이 사용한 corpus·rank·
-          retrieval 평가의 범위이며, SVD coordinate가 언어 의미의 고유 축이라는 뜻은
-          아닙니다.
+          Term–document matrix에 truncated SVD를 적용해 lexical matching을 넘어서는 latent association을 검색에 사용했습니다. 결과가
+          서는 범위는 논문이 쓴 corpus·rank·retrieval 평가까지입니다. SVD coordinate를 언어 의미의 고유 축으로 읽을 수는 없습니다.
         </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://doi.org/10.1002/(SICI)1097-4571(199009)41:6%3C391::AID-ASI1%3E3.0.CO;2-9" target="_blank" rel="noreferrer">LSA 원 논문 보기</a>
       </div>

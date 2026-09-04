@@ -6,7 +6,7 @@
       "score": 138
     },
     "ai/claw-tool-system": {
-      "fingerprint": "7a646d064ed8d497",
+      "fingerprint": "4c0d84f8189b3cb8",
       "score": 80
     },
     "ai/claw-session": {
@@ -241,6 +241,10 @@
       "fingerprint": "93aa15d19bcf9c8e",
       "score": 25
     },
+    "ai/ensemble-methods": {
+      "fingerprint": "cbe3cbe0760dc755",
+      "score": 24
+    },
     "blockchain/cometbft-abci": {
       "fingerprint": "4bdd7a6527acb49c",
       "score": 24
@@ -309,10 +313,6 @@
       "fingerprint": "b4f4334731fd1618",
       "score": 22
     },
-    "ai/ensemble-methods": {
-      "fingerprint": "6566cf675abe558e",
-      "score": 22
-    },
     "ai/transfer-learning-practice": {
       "fingerprint": "ecafce40b3b0c422",
       "score": 22
@@ -369,12 +369,8 @@
       "fingerprint": "4623bf689dc7fdd9",
       "score": 20
     },
-    "ai/feature-engineering": {
-      "fingerprint": "2d0959e510a4ffd7",
-      "score": 20
-    },
     "ai/fft": {
-      "fingerprint": "cd9fb58d190173e2",
+      "fingerprint": "fd3447c1671db76e",
       "score": 20
     },
     "ai/mixture-of-experts": {
@@ -454,7 +450,11 @@
       "score": 18
     },
     "ai/claw-telemetry": {
-      "fingerprint": "1a85166ee755fbd2",
+      "fingerprint": "3bbf40c1d51ceb9e",
+      "score": 18
+    },
+    "ai/feature-engineering": {
+      "fingerprint": "bf380b30e764b508",
       "score": 18
     },
     "ai/llm-serving-capacity": {
@@ -578,11 +578,15 @@
       "score": 16
     },
     "ai/compression-pipeline": {
-      "fingerprint": "0987e024e8deaf36",
+      "fingerprint": "17483ead885d58ec",
+      "score": 14
+    },
+    "ai/distributional-semantics": {
+      "fingerprint": "b60806349df08027",
       "score": 14
     },
     "ai/ecod": {
-      "fingerprint": "90a7edb9419ebfe2",
+      "fingerprint": "f8c28d8fe5916254",
       "score": 14
     },
     "ai/skills-anatomy": {
@@ -690,15 +694,11 @@
       "score": 14
     },
     "ai/claw-worker-boot": {
-      "fingerprint": "5f62a3ba35ce7061",
+      "fingerprint": "ae3966e383a721b8",
       "score": 13
     },
     "ai/claw-policy-engine": {
       "fingerprint": "7f042c17d85a3523",
-      "score": 12
-    },
-    "ai/distributional-semantics": {
-      "fingerprint": "bad2bde8225104da",
       "score": 12
     },
     "ai/hybrid-kv-cache-allocation": {
@@ -806,7 +806,7 @@
       "score": 10
     },
     "ai/claw-task-team": {
-      "fingerprint": "3fcd3ca30d1c14d6",
+      "fingerprint": "3e5d5354003a51f4",
       "score": 10
     },
     "ai/knowledge-distillation": {
@@ -909,8 +909,16 @@
       "fingerprint": "cf4c64a226cfacf3",
       "score": 8
     },
+    "ai/dezero-nn": {
+      "fingerprint": "8f2090439cbe2d72",
+      "score": 8
+    },
     "ai/dpo": {
-      "fingerprint": "63c5d22e65d244f2",
+      "fingerprint": "0edd250192563042",
+      "score": 8
+    },
+    "ai/embedding-serving-contract": {
+      "fingerprint": "e9fd544efac9911e",
       "score": 8
     },
     "ai/gru": {
@@ -1090,31 +1098,23 @@
       "score": 6
     },
     "ai/continued-pretraining": {
-      "fingerprint": "ed7f7283825580fd",
+      "fingerprint": "c7c99e3599222ba2",
       "score": 6
     },
     "ai/cross-entropy": {
-      "fingerprint": "11638c655d1cf6df",
+      "fingerprint": "226207af056395ae",
       "score": 6
     },
     "ai/deepfake-dataset-governance": {
-      "fingerprint": "00cb499b5bf6f1b2",
+      "fingerprint": "d9e8635ebcf0aeae",
       "score": 6
     },
     "ai/deepfake-preprocessing-lineage": {
-      "fingerprint": "1bb07f2a48f7f2e1",
+      "fingerprint": "ff3ca8f8d333fa50",
       "score": 6
     },
     "ai/denoising-masked-autoencoders": {
       "fingerprint": "bc28a2cd4a8bd6c3",
-      "score": 6
-    },
-    "ai/dezero-nn": {
-      "fingerprint": "1dbc7a47d6e0330f",
-      "score": 6
-    },
-    "ai/embedding-serving-contract": {
-      "fingerprint": "f2d1fc81aa9a19a8",
       "score": 6
     },
     "ai/image-augmentation-transforms": {

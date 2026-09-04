@@ -27,10 +27,9 @@ export default function DifferentialAttentionArticle() {
             map 에 공통으로 나타나는 성분을 상쇄하고 실제로 필요한 위치만 남깁니다.
           </p>
           <p>
-            Ye 등은 긴 context 에서 정답을 찾는 실험에서 표준 Transformer 가 정답 span 에 아주 작은
-            점수만 주고 나머지를 무관한 문서에 흩뿌린다는 것을 관찰했습니다. 이렇게 새어 나가는
-            점수를 논문은 attention noise 라 부르고, 이것이 긴 context 에서 검색·환각·in-context
-            learning 성능을 갉아먹는 원인이라고 진단합니다.
+            Ye 등은 긴 context 에서 정답을 찾는 실험에서 표준 Transformer 를 관찰했습니다. 정답 span 에는 아주 작은 점수만 주고 나머지를 무관한 문서에
+            흩뿌렸습니다. 이렇게 새어 나가는 점수를 논문은 attention noise 라 부르고 이것이 긴 context 에서 검색·환각·in-context learning 성능을
+            갉아먹는 원인이라고 진단합니다.
           </p>
           <p>
             이 글은 두 map 을 만드는 절차(paired attention maps), 차를 만드는 계수 λ(differential
@@ -60,15 +59,12 @@ export default function DifferentialAttentionArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Paired attention maps 는 같은 입력에서 만든 두 벌의 query·key(Q1, K1 과 Q2, K2)로
-            각각 독립적인 softmax 확률 분포를 계산한 결과입니다. 두 map 은 계산 방식이 표준
-            attention 과 완전히 같고, 다른 점은 나중에 하나를 다른 하나에서 뺀다는 것뿐입니다.
+            Paired attention maps 는 같은 입력에서 만든 두 벌의 query·key(Q1, K1 과 Q2, K2)로 각각 독립적인 softmax 확률 분포를 계산한
+            결과입니다. 두 map 은 계산 방식이 표준 attention 과 완전히 같고 다른 점은 나중에 하나를 다른 하나에서 뺀다는 것뿐입니다.
           </p>
           <p>
-            남겨 두는 쪽을 signal attention, 빼는 데 쓰는 쪽을 noise attention 이라 부릅니다.
-            이 이름은 정답을 미리 아는 분류표가 아니라 두 map 의 역할을 가리키는 이름입니다.
-            Noise map 이 실제로 무관한 token 만 가리킨다는 보장은 없고, 학습이 공통 성분으로
-            추정한 분포를 근사할 뿐입니다.
+            남겨 두는 쪽을 signal attention, 빼는 데 쓰는 쪽을 noise attention 이라 부릅니다. 이 이름은 정답을 미리 아는 분류표가 아니라 두 map 의
+            역할을 가리키는 이름입니다. Noise map 이 실제로 무관한 token 만 가리킨다는 보장은 없고 학습이 공통 성분으로 추정한 분포를 근사할 뿐입니다.
           </p>
           <p>
             <Link to="/ai/attention-theory#self-attention">Multi-head attention</Link>의 각
@@ -103,9 +99,8 @@ export default function DifferentialAttentionArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            DiffAttn 은 A1 에서 λA2 를 뺀 값을 value 에 곱합니다. λ 는 층마다 공유되는 학습된
-            스칼라이고, 두 map 이 각각 확률 분포(합 1)이므로 차의 합은 1−λ 로 줄어듭니다. 표준
-            softmax 와 달리 개별 항이 음수가 될 수 있다는 점이 이 식의 핵심 차이입니다.
+            DiffAttn 은 A1 에서 λA2 를 뺀 값을 value 에 곱합니다. λ 는 층마다 공유되는 학습된 스칼라이고 두 map 이 각각 확률 분포(합 1)이므로 차의 합은
+            1−λ 로 줄어듭니다. 표준 softmax 와 달리 개별 항이 음수가 될 수 있다는 점이 이 식의 핵심 차이입니다.
           </p>
           <p>
             4-token 예로 확인합니다. Signal map 이 [0.10, 0.10, 0.70, 0.10], noise map 이
@@ -184,9 +179,8 @@ export default function DifferentialAttentionArticle() {
         <DifferentialAttentionViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Head 하나가 값 두 벌을 계산하므로, 같은 파라미터·연산 예산을 맞추려면 head 수를 줄여야
-            합니다. 저자의 3B model 은 hidden 3072, head dim 128 에서 표준 Transformer 가 24
-            head(3072/128)를 쓰는 자리에 differential attention 은 12 head(3072/256)만 둡니다.
+            Head 하나가 값 두 벌을 계산하므로 같은 파라미터·연산 예산을 맞추려면 head 수를 줄여야 합니다. 저자의 3B model 은 hidden 3072, head dim
+            128 에서 표준 Transformer 가 24 head(3072/128)를 쓰는 자리에 differential attention 은 12 head(3072/256)만 둡니다.
           </p>
         </div>
       </section>
@@ -197,10 +191,9 @@ export default function DifferentialAttentionArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            논문은 이 mechanism 이 만드는 attention selectivity 를 key information retrieval
-            에서 직접 측정했습니다. 정답이 깊이 0% 에 있는 4K-길이 다중 문서에서, 표준
-            Transformer 는 정답 span 에 점수 0.03, 무관한 context 에 0.51 을 줬습니다. 같은
-            자리에서 differential Transformer 는 정답에 0.27, 무관한 context 에 0.01 을 줬습니다.
+            논문은 이 mechanism 이 만드는 attention selectivity 를 key information retrieval 에서 직접 측정했습니다. 정답이 깊이 0% 에
+            있는 4K-길이 다중 문서에서 표준 Transformer 는 정답 span 에 점수 0.03, 무관한 context 에 0.51 을 줬습니다. 같은 자리에서
+            differential Transformer 는 정답에 0.27, 무관한 context 에 0.01 을 줬습니다.
           </p>
           <p>
             검색 정확도로도 나타납니다. 4K 길이에서 needle 6개·질의 2개(N=6, R=2) 조건은
@@ -215,10 +208,9 @@ export default function DifferentialAttentionArticle() {
             벌어졌습니다.
           </p>
           <p>
-            같은 성질이 활성값 크기에도 나타납니다. Attention logit 의 최댓값이 표준
-            Transformer 에서 318.0(중앙값 5.4의 약 59 배)까지 오른 반면, differential
-            Transformer 는 38.8(중앙값 3.3의 약 12 배)에 그쳤습니다. 이 덕분에 4-bit
-            양자화에서도 6-bit 표준 Transformer 와 비슷한 정확도를 유지했습니다.
+            같은 성질이 활성값 크기에도 나타납니다. Attention logit 의 최댓값이 표준 Transformer 에서 318.0(중앙값 5.4의 약 59 배)까지 오른 반면
+            differential Transformer 는 38.8(중앙값 3.3의 약 12 배)에 그쳤습니다. 이 덕분에 4-bit 양자화에서도 6-bit 표준 Transformer 와
+            비슷한 정확도를 유지했습니다.
           </p>
         </div>
         <ProgressiveDetail

@@ -8,13 +8,13 @@ export default function Averaging() {
       <div className="prose max-w-none prose-neutral dark:prose-invert">
         <p>
           Regression prediction이나 같은 class order의 calibrated probability처럼 숫자의 의미가 같다면 arithmetic mean이 가장
-          해석하기 쉬운 baseline입니다. Probability를 합칠 때는 각 row에서 class 합이 1인지 확인하고, regression에서 log target을
-          썼다면 원래 단위로 inverse transform한 뒤 결합할지 log 공간에서 결합할지 loss 의미에 맞춰 정합니다.
+          해석하기 쉬운 baseline입니다. Probability를 합칠 때는 각 row에서 class 합이 1인지 확인합니다. log target을 쓴 regression이라면 원래
+          단위로 inverse transform한 뒤 결합할지, log 공간에서 결합할지를 loss 의미에 맞춰 정합니다.
         </p>
         <p>
-          Weighted average는 OOF objective에서 weight를 정합니다. 음수 weight까지 자유롭게 허용하면 cancellation으로 OOF noise를
-          과도하게 맞출 수 있으므로 처음에는 non-negative simplex 제약을 사용합니다. Weight를 찾는 과정 자체도 model selection이므로
-          여러 weight search를 비교했다면 별도 outer evaluation이 필요합니다.
+          Weighted average는 OOF objective에서 weight를 정합니다. 음수 weight까지 자유롭게 허용하면 cancellation으로 OOF noise를 과도하게
+          맞출 수 있으므로 처음에는 non-negative simplex 제약을 씁니다. Weight를 찾는 과정 자체도 model selection입니다. 여러 weight search를
+          비교했다면 그 비교는 별도 outer evaluation에서 판정합니다.
         </p>
       </div>
 

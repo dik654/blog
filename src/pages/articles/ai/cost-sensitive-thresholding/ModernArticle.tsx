@@ -68,8 +68,7 @@ export default function CostSensitiveThresholdingArticle() {
           question="CFP=1, CFN=9이면 왜 threshold가 .1인가요?"
           idea={
             <p>
-              Positive action은 실제 negative일 확률 1−p에 FP 비용을 곱하고,
-              negative action은 positive일 확률 p에 FN 비용을 곱합니다. 첫
+              Positive action은 실제 negative일 확률 1−p에 FP 비용을 곱하고 negative action은 positive일 확률 p에 FN 비용을 곱합니다. 첫
               비용이 더 작을 때 alert합니다.
             </p>
           }
@@ -139,8 +138,7 @@ export default function CostSensitiveThresholdingArticle() {
           question="하루 alert K개와 minimum recall rmin을 동시에 지키는 threshold는 어떻게 고르나요?"
           idea={
             <p>
-              각 candidate threshold의 alert count와 recall을 indicator로
-              검사하고, 둘 다 통과한 집합에서 expected cost가 가장 작은 값을
+              각 candidate threshold의 alert count와 recall을 indicator로 검사하고 둘 다 통과한 집합에서 expected cost가 가장 작은 값을
               선택합니다.
             </p>
           }

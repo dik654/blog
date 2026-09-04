@@ -14,10 +14,8 @@ export default function DepthwiseArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Dense convolution은 kernel 하나가 spatial tap과 모든 input channel을
-            동시에 읽어 output channel을 만듭니다. Depthwise 단계는 channel
-            안에서만 pattern을 찾고, 뒤의 1×1 pointwise 단계가 같은 위치의
-            channel vector를 섞습니다.
+            Dense convolution은 kernel 하나가 spatial tap과 모든 input channel을 동시에 읽어 output channel을 만듭니다.
+            Depthwise 단계는 channel 안에서만 pattern을 찾고 뒤의 1×1 pointwise 단계가 같은 위치의 channel vector를 섞습니다.
           </p>
         </div>
         <TermBreakdown
@@ -56,9 +54,8 @@ export default function DepthwiseArticle() {
           question="왜 depthwise separable convolution의 MAC가 작아지나요?"
           idea={
             <p>
-              Dense는 spatial tap마다 모든 input-output channel pair를
-              연결합니다. 분해하면 spatial tap은 channel별로만 처리하고 channel
-              pair 연결은 1×1에서 한 번만 처리합니다.
+              Dense는 spatial tap마다 모든 input-output channel pair를 연결합니다. 분해하면 spatial tap은 channel별로만 처리합니다.
+              channel pair 연결은 1×1에서 한 번만 일어납니다.
             </p>
           }
           formula={String.raw`\rho=\frac{k^2C_{in}+C_{in}C_{out}}{k^2C_{in}C_{out}}`}
@@ -116,10 +113,9 @@ export default function DepthwiseArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            두 kernel launch, intermediate feature write/read, 낮은 arithmetic
-            intensity, accelerator별 depthwise primitive 품질이 실제 시간을
-            바꿉니다. 같은 batch·shape·dtype·layout에서 dense와 separable의
-            median·p95, memory traffic, energy와 task quality를 함께 측정합니다.
+            두 kernel launch, intermediate feature write/read, 낮은 arithmetic intensity, accelerator별 depthwise
+            primitive 품질이 실제 시간을 바꿉니다. batch와 shape, dtype, layout을 같게 맞춘 뒤 dense와 separable의 median·p95,
+            memory traffic, energy, task quality를 함께 측정합니다.
           </p>
         </div>
       </section>

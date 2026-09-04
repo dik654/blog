@@ -63,8 +63,7 @@ export default function CnnFoundationArticle() {
           question="왜 CNN output cell은 local patch와 kernel의 곱을 더한 값인가요?"
           idea={
             <p>
-              Output 좌표 p,q가 정한 input window를 열고, input channel c와
-              kernel offset u,v가 같은 값끼리 곱합니다. 그 결과를 모두 더하고
+              Output 좌표 p,q가 정한 input window를 열고 input channel c와 kernel offset u,v가 같은 값끼리 곱합니다. 그 결과를 모두 더하고
               output-channel bias를 붙입니다.
             </p>
           }
@@ -129,10 +128,8 @@ export default function CnnFoundationArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            3×3, input channel 3, output channel 32라면 bias 제외 weight는
-            3×3×3×32=864개입니다. 32×32 image와 224×224 image는 같은 864개를
-            쓰지만, 큰 image는 더 많은 window를 처리하므로 activation과 FLOPs는
-            커집니다.
+            3×3, input channel 3, output channel 32라면 bias 제외 weight는 3×3×3×32=864개입니다. 32×32 image와 224×224
+            image는 같은 864개를 쓰지만 큰 image는 더 많은 window를 처리하므로 activation과 FLOPs는 커집니다.
           </p>
         </div>
       </section>

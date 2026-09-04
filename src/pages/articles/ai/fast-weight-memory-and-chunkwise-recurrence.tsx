@@ -27,9 +27,8 @@ export default function FastWeightMemoryAndChunkwiseRecurrenceArticle() {
             생긴 순차 의존성을 chunk 단위 병렬 scan 으로 되돌리는 방법을 다룹니다.
           </p>
           <p>
-            순수 덧셈으로 값을 눌러 담으면 지우거나 고칠 방법이 없습니다. 한 번 쓴 key-value
-            association 은 계속 남아 있고, 비슷한 key 로 다시 쓰면 새 값이 기존 값 위에
-            더해질 뿐입니다. 문맥이 바뀌어 예전 정보가 필요 없어져도 지울 수단이 없습니다.
+            순수 덧셈으로 값을 눌러 담으면 지우거나 고칠 방법이 없습니다. 한 번 쓴 key-value association 은 계속 남아 있고 비슷한 key 로 다시 쓰면 새 값이 기존
+            값 위에 더해질 뿐입니다. 문맥이 바뀌어 예전 정보가 필요 없어져도 지울 수단이 없습니다.
           </p>
           <p>
             Delta rule 은 새 값을 더하기 전에 지금 이 key 로 이미 읽히는 값을 먼저 빼서
@@ -38,9 +37,8 @@ export default function FastWeightMemoryAndChunkwiseRecurrenceArticle() {
             만듭니다. Chunkwise parallel form 이 이 문제를 되돌리는 절충입니다.
           </p>
           <p>
-            수치로 미리 봅니다. 4096 token 시퀀스를 64 개씩 chunk 로 나누면 순차적으로
-            기다려야 하는 단계가 4096 개에서 64 개로 줄고, 그 대가로 head 당 곱셈은 대략
-            50 % 늘어납니다. 이 교환이 순이익인 이유는 chunkwise-scan 절에서 계산합니다.
+            수치로 미리 봅니다. 4096 token 시퀀스를 64 개씩 chunk 로 나누면 순차적으로 기다려야 하는 단계가 4096 개에서 64 개로 줄고 그 대가로 head 당 곱셈은
+            대략 50 % 늘어납니다. 이 교환이 순이익인 이유는 chunkwise-scan 절에서 계산합니다.
           </p>
         </div>
         <div id="paper-schlag" className="not-prose my-8 scroll-mt-24">
@@ -64,16 +62,13 @@ export default function FastWeightMemoryAndChunkwiseRecurrenceArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Associative memory 는 key-value 쌍을 k⊗v 외적의 합으로 하나의 행렬 M 에 눌러
-            담고, query 때 M 과 곱해 값을 읽어내는 기억입니다. Key 로 값을 찾아간다는 점에서
-            주소가 아니라 내용으로 찾는다고 해서 content-addressable 이라 부릅니다.
+            Key-value 쌍을 k⊗v 외적의 합으로 하나의 행렬 M 에 눌러 담고 query 때 M 과 곱해 값을 읽어내는 기억이 associative memory 입니다. Key 로
+            값을 찾아간다는 점에서 주소가 아니라 내용으로 찾는다고 해서 content-addressable 이라 부릅니다.
           </p>
           <p>
-            신경망에서는 이 M 을 fast weight memory 라 부릅니다. 학습으로 천천히 정해지는
-            고정 weight 와 구분해, 매 시퀀스마다 새로 쓰이고 지워지는 weight 라는 뜻입니다.
-            Fast weight programmer 는 이 구도 자체를 가리킵니다. 느린 학습으로 고정된
-            slow network 가 매 시점 key·value 를 내보내 fast weight 행렬을 프로그래밍하고,
-            그 행렬이 별도의 계산을 수행합니다.
+            신경망에서는 이 M 을 fast weight memory 라 부릅니다. 고정 weight 는 학습으로 천천히 정해지는데, 그와 구분해 매 시퀀스마다 새로 쓰이고 지워지는
+            weight 라는 뜻입니다. Fast weight programmer 는 이 구도 자체를 가리킵니다. 느린 학습으로 고정된 slow network 가 매 시점 key·value
+            를 내보내 fast weight 행렬을 프로그래밍하고 그 행렬이 별도의 계산을 수행합니다.
           </p>
           <p>
             숫자로 겹쳐 쓰기를 봅니다. 4차원에서 k₁=(1,0,0,0), v₁=(2,0,0,0)과
@@ -105,9 +100,8 @@ export default function FastWeightMemoryAndChunkwiseRecurrenceArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Delta rule 은 새 값을 그대로 더하지 않고, 지금 key 로 이미 읽히는 값을 먼저
-            빼서 얻은 예측 오차(prediction error, delta)만 다시 씁니다. 같은 key 에 다시
-            쓸 때 옛 값과 새 값이 함께 쌓이지 않고, 새 값이 옛 값을 대체합니다.
+            Delta rule 은 새 값을 그대로 더하지 않고 지금 key 로 이미 읽히는 값을 먼저 빼서 얻은 예측 오차(prediction error, delta)만 다시 씁니다.
+            같은 key 에 다시 쓸 때 옛 값과 새 값이 함께 쌓이지 않고 새 값이 옛 값을 대체합니다.
           </p>
           <p>
             앞 절의 M 을 그대로 이어 씁니다. k₁ 의 값을 (2,0,0,0)에서 (5,0,0,0)으로
@@ -153,9 +147,8 @@ export default function FastWeightMemoryAndChunkwiseRecurrenceArticle() {
             gate 는 상태 전체에 곱해지는 decay 계수로 이 빠른 삭제를 담당합니다.
           </p>
           <p>
-            Gated delta rule 은 α_t 라는 0과 1 사이의 data-dependent 계수를 delta rule
-            앞에 곱합니다. α_t 를 0에 가깝게 만들면 correction 이 적용되기 전에 옛 상태
-            전체가 거의 지워지고, 1에 가까우면 delta rule 만 남아 특정 key 방향만 고칩니다.
+            Gated delta rule 은 α_t 라는 0과 1 사이의 data-dependent 계수를 delta rule 앞에 곱합니다. α_t 를 0에 가깝게 만들면
+            correction 이 적용되기 전에 옛 상태 전체가 거의 지워지고 1에 가까우면 delta rule 만 남아 특정 key 방향만 고칩니다.
           </p>
           <p>
             앞 절의 M 에 α=0.1 을 곱하면 k₁ 방향의 (2,1.8,0,0)은 (0.2,0.18,0,0)로 거의
@@ -199,10 +192,9 @@ export default function FastWeightMemoryAndChunkwiseRecurrenceArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            같은 상태 갱신 식은 한 step 씩 순서대로 계산하는 recurrent 형태로도, 여러
-            step 을 한 번의 행렬곱으로 계산하는 parallel 형태로도 쓸 수 있습니다. 학습은
-            parallel 형태로 GPU 를 채우고, 추론은 recurrent 형태로 고정 크기 상태만
-            들고 이어갑니다. 이 둘이 같은 계산의 다른 표현이라는 사실이 duality 입니다.
+            같은 상태 갱신 식은 한 step 씩 순서대로 계산하는 recurrent 형태로도, 여러 step 을 한 번의 행렬곱으로 계산하는 parallel 형태로도 쓸 수 있습니다.
+            학습은 parallel 형태로 GPU 를 채우고 추론은 recurrent 형태로 고정 크기 상태만 들고 이어갑니다. 이 둘이 같은 계산의 다른 표현이라는 사실이 duality
+            입니다.
           </p>
           <p>
             문제는 delta rule 의 오차 항 v_t−S_{"{t-1}"}k_t 가 이전 상태 전체에 의존한다는
@@ -211,9 +203,8 @@ export default function FastWeightMemoryAndChunkwiseRecurrenceArticle() {
             순서를 강제합니다.
           </p>
           <p>
-            Chunkwise parallel form 은 시퀀스를 길이 C 의 chunk 로 나눠 절충합니다. Chunk
-            안에서는 WY 표현과 UT transform 으로 순차 의존성을 C×C 크기의 작은 행렬
-            역행렬 하나로 미리 풀어 두고, chunk 사이에서만 상태를 순서대로 넘깁니다.
+            Chunkwise parallel form 은 시퀀스를 길이 C 의 chunk 로 나눠 절충합니다. Chunk 안에서는 WY 표현과 UT transform 으로 순차 의존성을
+            C×C 크기의 작은 행렬 역행렬 하나로 미리 풀어 두고 chunk 사이에서만 상태를 순서대로 넘깁니다.
           </p>
           <p>
             수치로 보면 절충이 뚜렷합니다. L=4096, C=64, d=128 이면 chunk 안 계산은
@@ -279,21 +270,16 @@ export default function FastWeightMemoryAndChunkwiseRecurrenceArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            순차 누적을 병렬화하는 문제는 delta rule 이전부터 있었습니다. Parallel scan
-            (prefix scan)은 n 개 원소의 누적합을 균형 이진 트리로 부분합을 모았다가
-            다시 내려보내는 두 단계로 바꿔, n 번이 아니라 O(log n) 번의 병렬 단계로
-            계산하는 일반 알고리즘입니다.
+            순차 누적을 병렬화하는 문제는 delta rule 이전부터 있었습니다. Parallel scan (prefix scan)은 이 누적합을 두 단계로 바꾸는 일반 알고리즘입니다.
+            균형 이진 트리로 n 개 원소의 부분합을 모았다가 다시 내려보내므로 n 번이 아니라 O(log n) 번의 병렬 단계면 됩니다.
           </p>
           <p>
-            n=64 라면 log₂64=6 이라, up-sweep 여섯 단계와 down-sweep 여섯 단계를 더해
-            열두 번의 병렬 단계로 끝납니다. 순차로 하나씩 누적하면 64 단계가 필요하니
-            단계 수가 약 5.3배 줄어듭니다. 앞 절의 chunk 크기 C=64 를 그대로 넣은 값입니다.
+            n=64 라면 log₂64=6 이라 up-sweep 여섯 단계와 down-sweep 여섯 단계를 더해 열두 번의 병렬 단계로 끝납니다. 순차로 하나씩 누적하면 64 단계가
+            필요하니 단계 수가 약 5.3배 줄어듭니다. 앞 절의 chunk 크기 C=64 를 그대로 넣은 값입니다.
           </p>
           <p>
-            DeltaNet 의 chunkwise 알고리즘은 이 일반 scan 을 그대로 쓰지는 않습니다.
-            대신 C×C 하삼각행렬을 통째로 역행렬 계산해 같은 목표(순차 의존성을 병렬
-            단계로 바꾸기)를 다른 방식으로 이룹니다. 둘은 같은 문제의 서로 다른 해법이고,
-            한쪽이 다른 쪽의 상위호환은 아닙니다.
+            DeltaNet 의 chunkwise 알고리즘은 이 일반 scan 을 그대로 쓰지는 않습니다. 대신 C×C 하삼각행렬을 통째로 역행렬 계산해 같은 목표(순차 의존성을 병렬
+            단계로 바꾸기)를 다른 방식으로 이룹니다. 둘은 같은 문제의 서로 다른 해법이고 한쪽이 다른 쪽의 상위호환은 아닙니다.
           </p>
         </div>
         <ProgressiveDetail
@@ -301,9 +287,8 @@ export default function FastWeightMemoryAndChunkwiseRecurrenceArticle() {
           preview="Up-sweep 은 트리를 따라 올라가며 부분합을 모으고, down-sweep 은 그 부분합을 이용해 각 위치의 정확한 prefix 값을 다시 내려보냅니다."
         >
           <p>
-            Up-sweep 은 인접한 두 원소를 합쳐 상위 노드에 저장하는 과정을 log₂n 번
-            반복해, 루트에 전체 합을 남깁니다. 이 단계만으로는 각 원소의 prefix 값을
-            아직 알 수 없고 부분합만 트리에 흩어져 있습니다.
+            Up-sweep 은 인접한 두 원소를 합쳐 상위 노드에 저장하는 과정을 log₂n 번 반복해 루트에 전체 합을 남깁니다. 이 단계만으로는 각 원소의 prefix 값을 아직 알
+            수 없고 부분합만 트리에 흩어져 있습니다.
           </p>
           <p>
             Down-sweep 은 루트에서부터 내려오며 왼쪽 자식이 가진 값을 오른쪽 자식에게
@@ -319,15 +304,12 @@ export default function FastWeightMemoryAndChunkwiseRecurrenceArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Chunkwise parallel form 은 공짜가 아닙니다. Chunk 크기 C 를 키우면 순차 대기
-            단계는 줄지만 chunk 안 계산(L·C·d 항)이 늘어, 어느 지점부터는 GPU 활용이
-            늘어난 만큼의 이득을 계산 증가가 갉아먹습니다. 논문이 보고한 4~16배는 H100,
-            특정 head 차원·chunk 크기 조합에서 저자가 잰 값입니다.
+            Chunkwise parallel form 은 공짜가 아닙니다. Chunk 크기 C 를 키우면 순차 대기 단계는 줄지만 chunk 안 계산(L·C·d 항)이 늘어 어느
+            지점부터는 GPU 활용이 늘어난 만큼의 이득을 계산 증가가 갉아먹습니다. 논문이 보고한 4~16배는 H100, 특정 head 차원·chunk 크기 조합에서 저자가 잰 값입니다.
           </p>
           <p>
-            Delta rule 은 정확한 key 재현에서만 완전합니다. β=1 로 정확히 겹쳐 썼던 key 는
-            정확히 대체되지만, 겹쳐 쓰지 않은 비슷한 key 는 이번 글의 수치 예처럼 여전히
-            일부 새어 듭니다. 완전한 직교 기저를 강제하지 않는 한 이 누출은 남습니다.
+            Delta rule 은 정확한 key 재현에서만 완전합니다. β=1 로 정확히 겹쳐 썼던 key 는 정확히 대체되지만 겹쳐 쓰지 않은 비슷한 key 는 이번 글의 수치 예처럼
+            여전히 일부 새어 듭니다. 완전한 직교 기저를 강제하지 않는 한 이 누출은 남습니다.
           </p>
           <p>
             <Link to="/ai/qwen36-hybrid-architecture#delta-update">Qwen3.6 의 Gated DeltaNet</Link>

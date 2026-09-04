@@ -9,11 +9,9 @@ export default function SoftmaxCEGradient() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Softmax는 K개의 logit을 합이 1인 probability vector로 바꾸기 때문에 한
-          logit을 바꾸면 모든 class probability가 함께 달라진다. Jacobian에는
-          diagonal 항과 class 사이의 coupling 항이 모두 생기지만, cross-entropy와
-          chain rule로 결합하면 최종 logit gradient가 예측 확률에서 target을 뺀
-          형태로 정리된다.
+          Softmax가 K개의 logit을 합이 1인 probability vector로 바꾸는 이상 한 logit을 건드리면 모든 class probability가 함께 달라진다.
+          Jacobian에는 diagonal 항과 class 사이의 coupling 항이 모두 생기지만 cross-entropy와 chain rule로 결합하면 최종 logit
+          gradient가 예측 확률에서 target을 뺀 형태로 정리된다.
         </p>
         <p>
           이 절은 cross-entropy 관점에서 그 결과를 사용한다. 계산 graph를 거꾸로

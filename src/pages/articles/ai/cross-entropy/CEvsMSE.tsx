@@ -8,11 +8,9 @@ export default function CEvsMSE({ title }: { title?: string }) {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          “분류에는 cross-entropy, 회귀에는 MSE”는 유용한 기본값이지만 원인은 문제의
-          이름이 아니다. 모델 output이 어떤 조건부 분포의 parameter인지 먼저 정하고,
-          관측 label의 negative log-likelihood를 계산하면 알맞은 loss가 나온다.
-          Categorical 분포에는 cross-entropy가, 고정 variance Gaussian에는 상수항과
-          scale을 제외한 MSE가 대응한다.
+          “분류에는 cross-entropy, 회귀에는 MSE”는 유용한 기본값이지만 원인은 문제의 이름이 아니다. 모델 output이 어떤 조건부 분포의 parameter인지 먼저 정하고
+          관측 label의 negative log-likelihood를 계산하면 알맞은 loss가 나온다. Categorical 분포에는 cross-entropy가, 고정 variance
+          Gaussian에는 상수항과 scale을 제외한 MSE가 대응한다.
         </p>
       </div>
 

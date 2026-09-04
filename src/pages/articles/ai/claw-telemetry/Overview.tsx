@@ -57,11 +57,8 @@ export default function Overview() {
           네 signal은 서로 대체하지 않는다
         </h3>
         <p>
-          trace는 한 요청의 인과관계를 보여주고, metric은 많은 요청의 분포를
-          빠르게 관찰하게 합니다. log는 특정 오류의 세부를 담으며, event는 span
-          안에서 일어난 의미 있는 변화를 표시합니다. 한 signal에 모든 것을
-          넣기보다 같은 trace identity로 다시 연결하는 편이 검색과 비용 양쪽에서
-          유리합니다.
+          trace는 한 요청의 인과관계를 보여주고 metric은 많은 요청의 분포를 빠르게 관찰하게 합니다. log는 특정 오류의 세부를 담으며 event는 span 안에서 일어난 의미
+          있는 변화를 표시합니다. 한 signal에 모든 것을 넣기보다 같은 trace identity로 다시 연결하는 편이 검색과 비용 양쪽에서 유리합니다.
         </p>
         <div className="not-prose my-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {signals.map(([name, description]) => (
@@ -121,24 +118,18 @@ export default function Overview() {
           내용 수집은 기본 비활성으로 시작한다
         </h3>
         <p>
-          prompt, model output, tool arguments에는 PII·secret·소스코드가 섞일 수
-          있습니다. 따라서 기본 telemetry는 내용 대신 model identity, duration,
-          token usage, status와 크기만 기록하고, 본문 capture는 별도의 opt-in
-          정책으로 둡니다. 수집이 필요한 환경에서도 exporter로 보내기 전에
-          redaction과 길이 제한을 적용하며, 원문과 hash를 모두 남기는 식의 우회
-          수집도 피해야 합니다.
+          prompt와 model output, tool arguments에는 PII·secret·소스코드가 섞일 수 있습니다. 기본 telemetry가 내용 대신 model
+          identity와 duration, token usage, status, 크기만 기록하고 본문 capture를 별도의 opt-in 정책으로 두는 이유입니다. 수집이 필요한
+          환경에서도 exporter로 보내기 전에 redaction과 길이 제한을 적용합니다. 원문과 hash를 모두 남기는 식의 우회 수집도 피합니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
           관측 시스템의 장애를 실행 장애로 키우지 않는다
         </h3>
         <p>
-          느린 exporter를 기다리느라 agent loop가 멈추면 telemetry가 서비스
-          장애를 확대합니다. queue 상한, batch 크기, retry budget과 drop
-          우선순위를 정하고, 보안 감사 이벤트는 진행률 이벤트보다 높은
-          우선순위를 가져야 합니다. drop과 export failure도 metric으로 남겨야
-          “아무 오류가 없었다”가 아니라 “관측하지 못했다”는 사실을 구분할 수
-          있습니다.
+          느린 exporter를 기다리느라 agent loop가 멈추면 telemetry가 서비스 장애를 확대합니다. queue 상한과 batch 크기를 정하고 retry budget과
+          drop 우선순위도 미리 잡아 둡니다. 보안 감사 이벤트에는 진행률 이벤트보다 높은 우선순위를 둡니다. drop과 export failure도 metric으로 남겨야 “아무 오류가
+          없었다”가 아니라 “관측하지 못했다”는 사실을 구분할 수 있습니다.
         </p>
         <p>
           아래에서는 trace topology와 집계 방식을 먼저 설명하고, 이어서 token

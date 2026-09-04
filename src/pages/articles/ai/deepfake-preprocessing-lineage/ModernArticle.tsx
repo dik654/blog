@@ -14,10 +14,8 @@ export default function DeepfakePreprocessingLineageArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            얼굴을 찾은 frame만 분류기에 보내고 실패 frame을 지우면 쉬운 pose와
-            큰 얼굴만 남습니다. 그러면 crop 뒤 classifier의 accuracy가 높아도 원
-            video를 안정적으로 읽었다고 말할 수 없습니다. Decode, detect,
-            identity track, align, crop을 별도 단계로 보고 성공과 실패를 모두
+            얼굴을 찾은 frame만 분류기에 보내고 실패 frame을 지우면 쉬운 pose와 큰 얼굴만 남습니다. crop 뒤 classifier의 accuracy가 높아도 원
+            video를 안정적으로 읽었다고 말할 수 없는 상태입니다. Decode·detect·identity track·align·crop을 별도 단계로 보고 성공과 실패를 모두
             source timestamp에 연결합니다.
           </p>
         </div>

@@ -51,10 +51,8 @@ export default function KLDivergence() {
           optimization 조건에 따른 경향이지 모든 문제에 적용되는 절대 법칙은 아니다.
         </p>
         <p>
-          Jensen–Shannon divergence는 두 방향의 KL을 mixture를 기준으로 평균내고,
-          Wasserstein distance는 확률 질량을 옮기는 최소 비용을 잰다. 목적 함수는
-          이름의 익숙함보다 support overlap, estimator variance, gradient가 실제로
-          계산 가능한지를 보고 선택한다.
+          Jensen–Shannon divergence는 두 방향의 KL을 mixture를 기준으로 평균내고 Wasserstein distance는 확률 질량을 옮기는 최소 비용을 잰다.
+          목적 함수는 이름의 익숙함보다 support overlap, estimator variance, gradient가 실제로 계산 가능한지를 보고 선택한다.
         </p>
       </div>
     </section>

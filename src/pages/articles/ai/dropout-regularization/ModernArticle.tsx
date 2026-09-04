@@ -8,7 +8,10 @@ export default function DropoutRegularizationArticle() {
   return <div className="space-y-16">
     <section id="overview" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Dropout은 activation을 지우는 학습 시점의 확률 연산입니다</h2>
-      <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8">먼저 activation 하나, 그다음 0/1 mask, 마지막에 살아남은 값을 보정하는 scaling을 봅니다. 이 세 물체를 이해한 뒤에야 여러 stochastic subnetwork라는 조합 해석으로 넘어갑니다.</p></div>
+      <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8">
+            activation 하나, 0/1 mask, 살아남은 값을 보정하는 scaling을 차례로 봅니다. 이 세 물체를 이해한 뒤에야 여러 stochastic subnetwork라는
+            조합 해석으로 넘어갑니다.
+          </p></div>
       <TermBreakdown title="Dropout을 이루는 세 물체" items={[
         { term: "Activation h", description: "Dropout 직전 layer가 만든 feature 값입니다.", example: "한 coordinate h=2를 추적합니다." },
         { term: "Keep mask m", description: "통로를 남기면 1, 끄면 0인 Bernoulli random variable입니다.", example: "p=.25이면 keep probability q=.75입니다.", boundary: "Channel dropout은 여러 좌표가 같은 mask를 공유합니다." },
@@ -19,7 +22,10 @@ export default function DropoutRegularizationArticle() {
     </section>
     <section id="mask" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">Inverted scaling은 평균을 보존하고 분산을 추가합니다</h2>
-      <ExplainedFormula question="왜 mask를 곱하고 다시 q로 나눌까요?" idea={<p>Mask를 곱해 일부 경로를 제거합니다. 그러면 평균이 q배 작아지므로 q로 나눠 평균만 원래 h로 되돌립니다. 대신 어떤 forward는 0, 어떤 forward는 큰 값이 되어 noise가 생깁니다.</p>} formula={String.raw`\widetilde h=(m/q)h`} annotatedFormula={String.raw`\begin{aligned}q&=\underbrace{1-p}_{\text{keep 확률}}\\m&\sim\underbrace{\operatorname{Bernoulli}(q)}_{\text{통로 선택}}\\\widetilde h&=\underbrace{m h}_{\text{꺼진 값은 0}}\;\underbrace{q^{-1}}_{\text{평균 보정}}\\\mathbb E[\widetilde h]&=\underbrace{h}_{\text{원래 평균}}\\\operatorname{Var}(\widetilde h)&=\underbrace{\frac{p}{q}h^2}_{\text{추가 noise}}\end{aligned}`} operations={[
+      <ExplainedFormula question="왜 mask를 곱하고 다시 q로 나눌까요?" idea={<p>
+            mask를 곱하면 일부 경로가 사라집니다. 평균이 q배 작아지므로 q로 나눠 평균만 원래 h로 되돌립니다. 대신 어떤 forward는 0이 되고 어떤 forward는 큰 값이
+            되어 noise가 생깁니다.
+          </p>} formula={String.raw`\widetilde h=(m/q)h`} annotatedFormula={String.raw`\begin{aligned}q&=\underbrace{1-p}_{\text{keep 확률}}\\m&\sim\underbrace{\operatorname{Bernoulli}(q)}_{\text{통로 선택}}\\\widetilde h&=\underbrace{m h}_{\text{꺼진 값은 0}}\;\underbrace{q^{-1}}_{\text{평균 보정}}\\\mathbb E[\widetilde h]&=\underbrace{h}_{\text{원래 평균}}\\\operatorname{Var}(\widetilde h)&=\underbrace{\frac{p}{q}h^2}_{\text{추가 noise}}\end{aligned}`} operations={[
         { expression: String.raw`m h`, annotation: ["Bernoulli 선택을 activation에 적용해", "이번 forward의 경로를 켜거나 끔"] },
         { expression: String.raw`\frac{m h}{q}`, annotation: ["keep 확률만큼 줄어든 평균을", "q로 나누어 복원"] },
         { expression: String.raw`\frac pq h^2`, annotation: ["drop 강도와 activation 크기로", "추가 noise variance를 계산"] },

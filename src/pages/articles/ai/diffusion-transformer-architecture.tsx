@@ -26,10 +26,9 @@ export default function DiffusionTransformerArchitectureArticle() {
             다릅니다.
           </p>
           <p>
-            첫 단계는 latent grid를 patch로 잘라 token sequence로 바꾸는 것입니다.
-            64×64 latent를 2×2 patch로 자르면 32×32, 즉 1024 token이 됩니다. Patch를
-            4×4로 키우면 token은 256개로 줄지만 한 token이 더 넓은 공간을 뭉칩니다.
-            따라서 patch size는 attention 비용과 detail granularity를 동시에 정합니다.
+            먼저 latent grid를 patch로 잘라 token sequence로 바꿉니다. 64×64 latent를 2×2 patch로 자르면 32×32, 즉 1024 token이
+            됩니다. Patch를 4×4로 키우면 token은 256개로 줄지만 한 token이 더 넓은 공간을 뭉칩니다. Patch size는 attention 비용과 detail
+            granularity를 한꺼번에 정합니다.
           </p>
         </div>
         <DiffusionTransformerBlockViz />
@@ -75,17 +74,14 @@ C_{\mathrm{attn}}&\propto\underbrace{N^2}_{\text{모든 token pair}}\underbrace{
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            같은 latent pattern도 noise가 거의 없는 마지막 step과 순수 noise에 가까운
-            첫 step에서 필요한 update가 다릅니다. 그래서 DiT는 timestep embedding으로
-            각 block의 normalization scale·shift와 residual gate를 조절할 수 있습니다.
-            AdaLN-Zero는 gate를 0에 가깝게 초기화해 학습 초기에 각 residual branch가
-            갑자기 큰 변화를 만들지 않게 합니다.
+            같은 latent pattern도 noise가 거의 없는 마지막 step과 순수 noise에 가까운 첫 step에서 필요한 update가 다릅니다. DiT는 timestep
+            embedding으로 각 block의 normalization scale·shift와 residual gate를 조절할 수 있습니다. AdaLN-Zero는 gate를 0에
+            가깝게 초기화해 학습 초기에 각 residual branch가 갑자기 큰 변화를 만들지 않게 합니다.
           </p>
           <p>
-            Text condition은 별도 문제입니다. 원 DiT처럼 class vector 하나라면 adaLN에
-            합칠 수 있지만, 긴 prompt의 token별 의미를 읽으려면 cross-attention 또는
-            text·image token이 만나는 joint stream이 필요합니다. Time modulation과
-            text-image interaction은 모두 conditioning이지만 같은 mechanism은 아닙니다.
+            Text condition은 별도 문제입니다. 원 DiT처럼 class vector 하나라면 adaLN에 합칠 수 있지만 긴 prompt의 token별 의미를 읽으려면
+            cross-attention 또는 text·image token이 만나는 joint stream이 필요합니다. Time modulation과 text-image
+            interaction은 모두 conditioning이지만 같은 mechanism은 아닙니다.
           </p>
         </div>
         <ExplainedFormula
@@ -127,20 +123,17 @@ C_{\mathrm{attn}}&\propto\underbrace{N^2}_{\text{모든 token pair}}\underbrace{
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Text token과 image token은 길이와 통계가 다릅니다. Dual-stream 설계는
-            modality별 weight로 먼저 처리한 뒤 attention에서 정보를 교환할 수 있고,
-            single-stream 설계는 한 sequence와 공통 block으로 합쳐 kernel과 구현을
-            단순하게 만들 수 있습니다. Hybrid는 앞부분과 뒷부분에서 두 방식을 섞습니다.
+            Text token과 image token은 길이와 통계가 다릅니다. Dual-stream 설계는 modality별 weight로 먼저 처리한 뒤 attention에서 정보를
+            교환할 수 있습니다. Single-stream 설계는 한 sequence와 공통 block으로 합쳐 kernel과 구현을 단순하게 만들 수 있습니다. Hybrid는 앞부분과
+            뒷부분에서 두 방식을 섞습니다.
           </p>
           <p>
             Stable Diffusion 3의 MMDiT는 text와 image modality에 별도 weight를 두면서
             joint attention으로 양방향 정보를 흐르게 했습니다.
           </p>
           <p>
-            Krea 2는 자체 ablation에서 hybrid가 약간 앞섰지만 단순성을 위해 최종
-            single-stream을 선택했다고 보고했습니다. 두 결과는 서로 다른 데이터와 규모,
-            학습 recipe에서 나왔습니다. 따라서 single stream을 MMDiT의 상위호환이라고
-            결론낼 수 없습니다.
+            Krea 2는 자체 ablation에서 hybrid가 약간 앞섰지만 단순성을 위해 최종 single-stream을 선택했다고 보고했습니다. 두 결과는 서로 다른 데이터와 규모,
+            학습 recipe에서 나왔습니다. Single stream을 MMDiT의 상위호환으로 읽을 근거는 여기에 없습니다.
           </p>
         </div>
         <TermBreakdown
@@ -189,10 +182,9 @@ C_{\mathrm{attn}}&\propto\underbrace{N^2}_{\text{모든 token pair}}\underbrace{
             특정 checkpoint가 몇 step에서 같은 품질을 내는지는 서로 다른 주장입니다.
           </p>
           <p>
-            또 image diffusion은 한 sampling step마다 전체 noisy token을 다시 읽습니다.
-            Decoder-only LLM처럼 변하지 않는 prefix의 K/V를 token-by-token cache하는
-            구조가 기본이 아닙니다. Krea 2 보고서가 diffusion inference를 “purely
-            prefill”이라고 표현한 것도 이 차이를 가리킵니다.
+            Image diffusion은 한 sampling step마다 전체 noisy token을 다시 읽습니다. Decoder-only LLM처럼 변하지 않는 prefix의 K/V를
+            token-by-token cache하는 구조가 기본이 아닙니다. Krea 2 보고서가 diffusion inference를 “purely prefill”이라고 표현한 것도 이
+            차이를 가리킵니다.
           </p>
           <p>
             다음 글인 <Link to="/ai/modern-image-model-stack">현대 이미지 모델
@@ -205,8 +197,8 @@ C_{\mathrm{attn}}&\propto\underbrace{N^2}_{\text{모든 token pair}}\underbrace{
           preview="하나는 forward 한 번의 시간, 다른 하나는 forward 호출 횟수를 바꿉니다. 총 latency에서는 곱으로 만나지만 실패 원인은 다릅니다."
         >
           <p>
-            FlashAttention과 GQA, kernel fusion은 한 NFE가 실행되는 시간을 바꿉니다.
-            반면 distillation과 solver 선택은 필요한 NFE 수를 바꿉니다.
+            FlashAttention과 GQA, kernel fusion은 한 NFE가 실행되는 시간을 바꿉니다. Distillation과 solver 선택은 필요한 NFE 수를
+            바꿉니다.
           </p>
           <p>
             비교할 때는 같은 prompt와 seed, resolution을 사용합니다. 그런 다음 한 번의

@@ -25,10 +25,8 @@ export default function Registry() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          task registry는 작업을 담는 HashMap 이상의 역할을 합니다. scheduler와
-          worker가 같은 task를 동시에 갱신할 때 어떤 전이가 유효한지 판정하고,
-          owner와 attempt, dependency와 result를 한곳에서 추적해야 합니다. 상태
-          값만 저장하면 재시작이나 늦은 event가 들어왔을 때 왜 그 상태가 됐는지
+          scheduler와 worker가 같은 task를 동시에 갱신할 때 task registry는 어떤 전이가 유효한지 판정합니다. owner와 attempt도, dependency와
+          result도 한곳에서 함께 추적합니다. 작업을 담는 HashMap으로만 쓰기에는 몫이 큽니다. 상태 값만 저장하면 재시작이나 늦은 event가 들어왔을 때 왜 그 상태가 됐는지
           복구하기 어렵습니다.
         </p>
 
@@ -76,32 +74,24 @@ export default function Registry() {
           create는 schema와 dependency graph를 함께 검증한다
         </h3>
         <p className="leading-7">
-          task를 만들 때 필수 field와 scope를 검증하고, 참조한 dependency가
-          존재하는지와 cycle이 생기지 않는지 확인합니다. 단일 task의
-          self-reference 검사만으로는 여러 task에 걸친 cycle을 잡을 수 없으므로
-          graph 전체를 기준으로 봐야 합니다.
+          task를 만들 때 필수 field와 scope를 검증하고 참조한 dependency가 존재하는지, cycle이 생기지 않는지 확인합니다. 단일 task의 self-
+          reference 검사만으로는 여러 task에 걸친 cycle이 잡히지 않습니다. graph 전체를 기준으로 봐야 하는 이유입니다.
         </p>
         <p className="leading-7">
-          client가 같은 create 요청을 재시도할 수 있으므로 idempotency key도
-          받습니다. 순차 번호만 발급하면 timeout 뒤 재시도에서 같은 작업이 두 개
-          생길 수 있습니다. 생성 성공과 event 발행도 같은 transaction 경계로
-          묶거나 outbox를 사용해 누락을 줄입니다.
+          client가 같은 create 요청을 재시도할 수 있으므로 idempotency key도 받습니다. 순차 번호만 발급하면 timeout 뒤 재시도에서 같은 작업이 두 개
+          생깁니다. 생성 성공과 event 발행도 같은 transaction 경계로 묶거나 outbox를 사용해 누락을 줄입니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
           assign은 조회와 갱신을 한 operation으로 만든다
         </h3>
         <p className="leading-7">
-          “다음 pending task를 찾고 나중에 worker를 기록”하면 두 scheduler가
-          같은 task를 가져갈 수 있습니다. expected status와 version을 조건으로
-          compare-and-set하거나 storage transaction 안에서 owner와 lease를 함께
-          갱신해야 합니다.
+          “다음 pending task를 찾고 나중에 worker를 기록”하면 두 scheduler가 같은 task를 가져갑니다. expected status와 version을 조건으로
+          compare-and-set하거나 storage transaction 안에서 owner와 lease를 함께 갱신하는 편이 안전합니다.
         </p>
         <p className="leading-7">
-          worker에는 영구 ownership보다 만료되는 lease를 주는 편이 복구하기
-          쉽습니다. heartbeat가 끊기면 바로 다른 worker에 재할당하지 않고 이전
-          attempt의 side effect와 cancellation 여부를 확인한 뒤 새 attempt를
-          발급합니다.
+          worker에는 영구 ownership보다 만료되는 lease를 주는 편이 복구하기 쉽습니다. heartbeat가 끊겼다고 바로 다른 worker에 재할당하지는 않습니다. 이전
+          attempt의 side effect와 cancellation 여부를 확인한 뒤에 새 attempt를 발급합니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
@@ -114,25 +104,20 @@ export default function Registry() {
           늦게 온 event는 task version이 다르면 거부합니다.
         </p>
         <p className="leading-7">
-          history에는 timestamp만이 아니라 actor, previous version, reason과
-          correlation ID를 기록합니다. 그래야 audit뿐 아니라 recovery가 같은
-          정보를 사용해 재현 가능한 결정을 내릴 수 있습니다.
+          history에는 timestamp만 남기지 않습니다. actor와 previous version, reason, correlation ID까지 함께 기록합니다. 그래야
+          audit뿐 아니라 recovery도 같은 정보를 사용해 재현 가능한 결정을 내립니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
           in-memory와 durable storage의 경계를 명시한다
         </h3>
         <p className="leading-7">
-          단일 process의 짧은 session에서는 in-memory registry가 단순하고
-          빠릅니다. 하지만 JSON snapshot을 가끔 저장하는 방식은 마지막 저장 이후
-          전이와 부분 write를 잃을 수 있고, 여러 instance가 같은 truth를
-          공유하지 못합니다. 이 한계를 기능 설명에 분명히 남겨야 합니다.
+          단일 process의 짧은 session에서는 in-memory registry가 단순하고 빠릅니다. 하지만 JSON snapshot을 가끔 저장하는 방식은 마지막 저장 이후
+          전이와 부분 write를 잃을 수 있고 여러 instance가 같은 truth를 공유하지 못합니다. 이 한계는 기능 설명에 분명히 남깁니다.
         </p>
         <p className="leading-7">
-          background scheduler, cron과 process restart를 지원한다면 SQLite나
-          다른 durable store, append-only event log를 고려합니다. storage
-          backend가 달라도 유효 전이, lease와 idempotency contract는 registry
-          interface 안에 유지합니다.
+          background scheduler와 cron, process restart까지 지원한다면 SQLite나 다른 durable store, append-only event log를
+          고려합니다. storage backend가 달라져도 유효 전이와 lease, idempotency contract는 registry interface 안에 유지합니다.
         </p>
 
         <div id="paper-aws-transactional-outbox" className="scroll-mt-24">

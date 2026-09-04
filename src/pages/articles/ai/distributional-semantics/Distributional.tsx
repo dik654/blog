@@ -11,19 +11,14 @@ export default function Distributional() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          Word–context matrix의 row는 target 단어, column은 context
-          feature입니다. Symmetric window를 쓰면 좌우 주변 token을 세고,
-          directional window는 left·right를 다른 feature로 둘 수 있습니다.
-          Dependency context는 “목적어-of-먹다”처럼 문법 관계를 보존하고,
-          term–document matrix는 같은 문서에 등장하는 주제적 관계를 강조합니다.
+          Word–context matrix의 row는 target 단어, column은 context feature입니다. Symmetric window를 쓰면 좌우 주변 token을
+          세고 directional window는 left·right를 다른 feature로 둘 수 있습니다. Dependency context는 “목적어-of-먹다”처럼 문법 관계를
+          보존하고 term–document matrix는 같은 문서에 등장하는 주제적 관계를 강조합니다.
         </p>
         <p className="leading-8">
-          작은 계산을 해보면 구조가 선명해집니다. Token sequence를 [고양이,
-          우유, 마신다]로 단순화하고 방향을 구분하지 않는 window 1을 쓰면, target
-          “우유”에서 X(우유, 고양이)와 X(우유, 마신다)가 각각 1 증가합니다.
-          Window 2로 넓히면 더 먼 token도 열에 들어오므로 count가 늘지만, 그
-          관계가 현재 task에 필요한 문법 관계인지 단순한 같은 문서의 주제
-          관계인지는 별도로 검증해야 합니다.
+          작은 계산을 해보면 구조가 선명해집니다. Token sequence를 [고양이, 우유, 마신다]로 단순화하고 방향을 구분하지 않는 window 1을 쓰면 target “우유”에서
+          X(우유, 고양이)와 X(우유, 마신다)가 각각 1 증가합니다. Window 2로 넓히면 더 먼 token도 열에 들어오므로 count가 늡니다. 다만 그 관계가 현재 task에
+          필요한 문법 관계인지 단순한 같은 문서의 주제 관계인지는 별도로 검증해야 합니다.
         </p>
       </div>
 
@@ -80,10 +75,8 @@ export default function Distributional() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Raw count는 association보다 frequency를 크게 반영한다</h3>
         <p className="leading-8">
-          “the”처럼 어디에나 나오는 context는 많은 row에서 count가 큽니다. PMI는
-          실제 joint probability를 w와 c가 독립일 때의 기대값과 비교해, 단순
-          빈도보다 pair의 놀라운 정도를 측정합니다. PPMI는 신뢰하기 어려운
-          negative association을 0으로 자르지만, rare pair의 noisy high PMI와
+          “the”처럼 어디에나 나오는 context는 많은 row에서 count가 큽니다. PMI는 실제 joint probability를 w와 c가 독립일 때의 기대값과 비교해 단순
+          빈도보다 pair의 놀라운 정도를 측정합니다. PPMI는 신뢰하기 어려운 negative association을 0으로 자릅니다. Rare pair의 noisy high PMI와
           zero cell 문제까지 해결하지는 않습니다.
         </p>
       </div>
@@ -140,11 +133,9 @@ export default function Distributional() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          예를 들어 같은 event 표본공간에서 P(w,c)=0.02이고 P(w)=P(c)=0.1이면
-          독립 기대는 0.1×0.1=0.01입니다. 실제 joint가 그 두 배이므로 자연로그
-          PMI는 log(2)≈0.693이고, 양수라서 PPMI도 0.693입니다. 반대로 count가
-          0이면 log(0)을 계산할 수 없으므로 smoothing을 할지, 최소 count 아래를
-          버릴지, 해당 cell을 관측 불가로 둘지 정책을 먼저 고정해야 합니다.
+          예를 들어 같은 event 표본공간에서 P(w,c)=0.02이고 P(w)=P(c)=0.1이면 독립 기대는 0.1×0.1=0.01입니다. 실제 joint가 그 두 배이므로 자연로그
+          PMI는 log(2)≈0.693이고 양수라서 PPMI도 0.693입니다. 반대로 count가 0이면 log(0)을 계산할 수 없으므로 smoothing을 할지, 최소 count
+          아래를 버릴지, 해당 cell을 관측 불가로 둘지 정책을 먼저 고정해야 합니다.
         </p>
       </div>
     </section>

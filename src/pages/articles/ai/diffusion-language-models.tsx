@@ -16,11 +16,9 @@ export default function DiffusionLanguageModelsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Autoregressive language model은 왼쪽 prefix가 정해진 뒤 다음 token 하나의
-            확률을 냅니다. Diffusion language model은 완성된 token sequence를 MASK로
-            점차 가리는 forward process를 만들고, 반대 방향에서는 현재 보이는 token
-            전체를 이용해 masked 위치들을 복원합니다. 둘 다 확률 model이지만
-            factorization과 sampling state가 다릅니다.
+            Autoregressive language model은 왼쪽 prefix가 정해진 뒤 다음 token 하나의 확률을 냅니다. Diffusion language model은
+            forward process부터 만듭니다. 완성된 token sequence를 MASK로 점차 가리는 과정입니다. 반대 방향에서는 현재 보이는 token 전체를 이용해
+            masked 위치를 복원합니다. 둘 다 확률 model이지만 factorization과 sampling state가 다릅니다.
           </p>
           <p>
             Image diffusion과 닮은 점은 data를 단순한 noise state로 보낸 뒤 여러 reverse
@@ -29,9 +27,8 @@ export default function DiffusionLanguageModelsArticle() {
             특별한 absorbing state인 <code>[MASK]</code>로 바꿉니다.
           </p>
           <p>
-            그래서 “Diffusion LLM은 image diffusion을 text에 그대로 적용했다”는 말은
-            절반만 맞습니다. 공통 생성 원리는 있지만 corruption kernel, output 분포,
-            loss와 runtime이 모두 이산 token에 맞게 다시 설계됩니다.
+            “Diffusion LLM은 image diffusion을 text에 그대로 적용했다”는 말은 절반만 맞습니다. 공통 생성 원리는 있습니다. 다만 corruption
+            kernel, output 분포, loss와 runtime은 모두 이산 token에 맞게 다시 설계됩니다.
           </p>
         </div>
         <DiffusionLanguageRefinementViz />
@@ -50,13 +47,12 @@ export default function DiffusionLanguageModelsArticle() {
             위치의 원 token만 cross-entropy로 맞힙니다.
           </p>
           <p>
-            BERT의 고정 15% masked-language modeling과 겉모양이 비슷하지만 역할은 다릅니다.
-            Masked diffusion은 0에서 1까지 여러 mask ratio를 학습하고 그 denoiser를 실제
-            generative reverse chain에 사용합니다.
+            겉모양은 BERT의 고정 15% masked-language modeling과 비슷합니다. 역할은 다릅니다. Masked diffusion은 0에서 1까지 여러 mask
+            ratio를 학습하고 그 denoiser를 실제 generative reverse chain에 씁니다.
           </p>
           <p>
-            MDLM은 absorbing mask process와 SUBS parameterization을 사용합니다. 이를 통해
-            objective를 mask ratio에 따라 가중된 masked-LM loss의 mixture로 단순화했습니다.
+            MDLM은 absorbing mask process와 SUBS parameterization으로 objective를 mask ratio에 따라 가중된 masked-LM
+            loss의 mixture까지 단순화했습니다.
           </p>
         </div>
         <ExplainedFormula
@@ -115,17 +111,14 @@ export default function DiffusionLanguageModelsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Sampling은 fully masked response에서 시작합니다. 각 step에서 bidirectional
-            Transformer가 모든 masked 위치의 vocabulary 분포를 냅니다. 그중 일부 token을
-            채운 뒤, 다음 time의 mask 수에 맞게 낮은 신뢰도 위치를 다시 MASK로 보낼 수
-            있습니다. 왼쪽 token을 영구 확정하는 AR과 달리 뒤쪽 문맥을 보고 앞쪽 후보를
-            고치는 경로가 열립니다.
+            Sampling은 fully masked response에서 시작합니다. 각 step에서 bidirectional Transformer가 모든 masked 위치의
+            vocabulary 분포를 냅니다. 그중 일부 token을 채운 뒤 다음 time의 mask 수에 맞게 낮은 신뢰도 위치를 다시 MASK로 보낼 수 있습니다. AR은 왼쪽
+            token을 영구 확정합니다. 여기서는 뒤쪽 문맥을 보고 앞쪽 후보를 고치는 경로가 열립니다.
           </p>
           <p>
-            하지만 반복 수정이 항상 정답을 향하는 것은 아닙니다. 초기의 잘못된 고신뢰도
-            token이 고정되거나, confidence가 calibration되지 않아 중요한 token이 계속
-            remask될 수 있습니다. Step 수·remasking schedule·token selection은 quality와
-            latency를 함께 바꾸는 sampler hyperparameter입니다.
+            반복 수정이 항상 정답을 향하지는 않습니다. 초기의 잘못된 고신뢰도 token이 고정되거나 confidence가 calibration되지 않아 중요한 token이 계속
+            remask될 수 있습니다. Step 수·remasking schedule·token selection은 quality와 latency를 함께 바꾸는 sampler
+            hyperparameter입니다.
           </p>
         </div>
         <AlgorithmBlock
@@ -162,11 +155,9 @@ export default function DiffusionLanguageModelsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Full-sequence masked diffusion은 한 forward에서 여러 token을 채울 수 있습니다.
-            그러나 다음 reverse step에서는 token 상태가 여러 위치에서 바뀌므로 전체 sequence의
-            attention을 다시 계산하는 것이 기본입니다. Decoder-only AR의 causal prefix처럼
-            “앞부분은 영원히 변하지 않는다”는 전제가 없어 일반적인 token-by-token KV cache를
-            그대로 쓰기 어렵습니다.
+            Full-sequence masked diffusion은 한 forward에서 여러 token을 채울 수 있습니다. 다음 reverse step에서는 token 상태가 여러
+            위치에서 바뀌므로 전체 sequence의 attention을 다시 계산하는 것이 기본입니다. Decoder-only AR의 causal prefix처럼 “앞부분은 영원히 변하지
+            않는다”는 전제가 없어 일반적인 token-by-token KV cache를 그대로 쓰기 어렵습니다.
           </p>
           <p>
             따라서 speed는 <code>한 step에서 채운 유효 token 수</code>만으로 판단하지 않습니다.
@@ -175,10 +166,9 @@ export default function DiffusionLanguageModelsArticle() {
             구현이라고 한계를 적었습니다.
           </p>
           <p>
-            Block diffusion은 이 비용을 줄이는 절충입니다. Block 사이는 autoregressive하게
-            확정해 이전 block을 causal prefix로 cache하고, 현재 block 안에서만 diffusion으로
-            여러 token을 고칩니다. 대신 미래 block 전체를 보며 앞 token을 자유롭게 수정하는
-            full diffusion의 장점 일부를 포기합니다.
+            Block diffusion은 이 비용을 줄이는 절충입니다. Block 사이는 autoregressive하게 확정해 이전 block을 causal prefix로 cache하고
+            현재 block 안에서만 diffusion으로 여러 token을 고칩니다. Full diffusion은 미래 block 전체를 보며 앞 token을 자유롭게 수정하는데, 그
+            장점 일부는 여기서 포기합니다.
           </p>
         </div>
         <TermBreakdown
@@ -207,10 +197,9 @@ export default function DiffusionLanguageModelsArticle() {
           preview="Mask-based discrete diffusion이라는 큰 계열은 같지만 initialization·noise rescheduling·training data가 달라 결과를 LLaDA나 MDLM에 그대로 귀속할 수 없습니다."
         >
           <p>
-            Dream 7B는 AR-based initialization과 context-adaptive token-level noise
-            rescheduling을 사용한다고 보고했습니다. 이는 from-scratch LLaDA나 MDLM의
-            실험 recipe와 다릅니다. 2025년 preprint의 planning·coding·infilling 결과는
-            해당 checkpoint와 evaluation으로 한정해 읽어야 합니다.
+            Dream 7B는 AR-based initialization과 context-adaptive token-level noise rescheduling을 사용한다고 보고했습니다.
+            From-scratch LLaDA나 MDLM의 실험 recipe와는 다른 설정입니다. 2025년 preprint의 planning·coding·infilling 결과도 해당
+            checkpoint와 evaluation 안에서 읽어야 합니다.
           </p>
         </ProgressiveDetail>
       </section>
@@ -221,18 +210,16 @@ export default function DiffusionLanguageModelsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Diffusion LLM은 arbitrary-order generation과 infilling처럼 language sequence를
-            수정하는 새로운 policy를 제공합니다. 그러나 token sequence를 복원하는 능력과
-            action 뒤의 physical state를 예측하는 능력은 다릅니다.
+            Diffusion LLM은 arbitrary-order generation과 infilling처럼 language sequence를 수정하는 새로운 policy를 제공합니다.
+            Token sequence를 복원하는 능력과 action 뒤의 physical state를 예측하는 능력은 별개입니다.
           </p>
           <p>
-            World model로 가려면 visual state와 time, action을 함께 표현해야 합니다. 또한
-            dynamics objective와 closed-loop evaluation이 추가돼야 합니다.
+            World model로 가려면 visual state와 time, action을 함께 표현해야 합니다. Dynamics objective와 closed-loop
+            evaluation도 추가로 필요합니다.
           </p>
           <p>
-            Diffusion backbone을 VLM·VLA에 붙이는 연구도 등장했지만 아직 빠르게 변하는
-            연구 단계입니다. “양방향으로 token을 고치니 계획을 잘한다”는 직관만으로 robot
-            success를 결론낼 수 없습니다.
+            Diffusion backbone을 VLM·VLA에 붙이는 연구도 등장했지만 아직 빠르게 변하는 연구 단계입니다. “양방향으로 token을 고치니 계획을 잘한다”는 직관만으로는
+            robot success가 결론 나지 않습니다.
           </p>
           <p>
             같은 base model과 데이터, inference budget에서 AR와 diffusion policy를 비교해야

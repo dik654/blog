@@ -14,12 +14,9 @@ export default function DeepfakeDetectionArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            한 source video에서 frame을 자르고, 얼굴을 crop하고, JPEG로 다시
-            저장하면 서로 다른 파일이 많이 생깁니다. 그러나 이 파일들은 같은
-            사람·배경·촬영 장비를 공유합니다. 파생본이 train과 test에 갈라지면
-            detector는 조작보다 source를 기억할 수 있습니다. 그래서 model을
-            고르기 전에 무엇을 한 group으로 묶고 무엇을 처음 보는 domain으로
-            남길지 정합니다.
+            model을 고르기 전에 무엇을 한 group으로 묶고 무엇을 처음 보는 domain으로 남길지부터 정합니다. 한 source video에서 frame을 자르고 얼굴을
+            crop하고 JPEG로 다시 저장하면 서로 다른 파일이 많이 생기지만 이 파일들은 같은 사람·배경·촬영 장비를 공유합니다. 파생본이 train과 test에 갈라지면
+            detector는 조작보다 source를 기억할 수 있습니다.
           </p>
         </div>
         <TermBreakdown
@@ -122,18 +119,15 @@ export default function DeepfakeDetectionArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Raw known-generator sample이 많으면 전체 평균은 좋아 보일 수
-            있습니다. 그러나 unseen generator를 social codec으로 재인코딩한
-            domain에서 error가 크면 실제 유통 환경의 약점은 그대로입니다.
-            Domain은 결과를 본 뒤 유리하게 쪼개지 않고 평가 전에 선언합니다.
+            Raw known-generator sample이 많으면 전체 평균은 좋아 보일 수 있지만 unseen generator를 social codec으로 재인코딩한 domain에서
+            error가 크면 실제 유통 환경의 약점은 그대로입니다. Domain은 결과를 본 뒤 유리하게 쪼개지 않고 평가 전에 선언합니다.
           </p>
         </div>
         <ExplainedFormula
           question="여러 evaluation domains 중 숨기면 안 되는 가장 큰 평균 loss는 어떻게 계산하나요?"
           idea={
             <p>
-              먼저 domain마다 같은 loss의 평균을 냅니다. 그런 다음 domain means
-              가운데 가장 큰 값을 선택합니다.
+              domain마다 같은 loss의 평균을 낸 다음 그 domain means 가운데 가장 큰 값을 선택합니다.
             </p>
           }
           formula={String.raw`R_{\rm worst}=\max_{d\in\mathcal D}R_d`}

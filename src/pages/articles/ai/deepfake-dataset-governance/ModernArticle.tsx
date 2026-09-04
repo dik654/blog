@@ -14,11 +14,9 @@ export default function DeepfakeDatasetGovernanceArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Video 한 개에서 수천 frames를 만들면 파일 수는 커지지만 새로운
-            사람·촬영 환경·generator evidence는 늘지 않습니다. 또한 인터넷에서
-            접근 가능하다는 사실은 얼굴을 조작하고 재배포할 consent가 있다는
-            뜻이 아닙니다. Source asset, person identity, consent scope와 모든
-            derivatives를 하나의 provenance chain으로 연결합니다.
+            Video 한 개에서 수천 frames를 만들면 파일 수는 커지지만 새로운 사람·촬영 환경·generator evidence는 늘지 않습니다. 인터넷에서 접근 가능하다는 사실이
+            얼굴을 조작하고 재배포할 consent가 있다는 뜻도 아닙니다. Source asset·person identity·consent scope와 모든 derivatives는
+            하나의 provenance chain으로 연결합니다.
           </p>
         </div>
         <TermBreakdown
@@ -95,8 +93,7 @@ export default function DeepfakeDatasetGovernanceArticle() {
           question="Coverage matrix의 한 cell에 같은 source의 파생본을 중복 없이 어떻게 세나요?"
           idea={
             <p>
-              Cell 조건을 만족하는 samples에서 source-group IDs만 뽑고 set으로
-              중복을 제거합니다. 그 set의 크기가 독립 coverage count입니다.
+              Cell 조건을 만족하는 samples에서 source-group IDs만 뽑아 set으로 중복을 제거합니다. 그 set의 크기가 독립 coverage count입니다.
             </p>
           }
           formula={String.raw`N_{gcr}=|\{u_i:(g_i,c_i,r_i)=(g,c,r)\}|`}

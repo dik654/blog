@@ -20,12 +20,9 @@ export default function Overview() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="text-lg leading-8">
-          깨끗한 사진에 Gaussian noise를 조금씩 더하면 어느 순간 화면 전체가
-          무작위 점처럼 보입니다. Diffusion model은 이처럼 data를 noise로 보내는
-          forward process를 사람이 먼저 고정하고, noisy sample에서 어느 방향으로
-          돌아가야 하는지만 network에 학습시킵니다. 학습할 때는 임의 noise
-          level의 sample을 한 번에 만들 수 있지만, 생성할 때는 보통 여러 번
-          방향을 다시 물으며 noise에서 data 쪽으로 이동합니다.
+          깨끗한 사진에 Gaussian noise를 조금씩 더하면 어느 순간 화면 전체가 무작위 점처럼 보입니다. Diffusion model은 이처럼 data를 noise로 보내는
+          forward process를 사람이 먼저 고정하고 noisy sample에서 어느 방향으로 돌아가야 하는지만 network에 학습시킵니다. 학습할 때는 임의 noise
+          level의 sample을 한 번에 만들 수 있습니다. 생성할 때는 보통 여러 번 방향을 다시 물으며 noise에서 data 쪽으로 이동합니다.
         </p>
         <p>
           VAE·GAN과 비교한 전체 좌표는{" "}
@@ -53,11 +50,9 @@ export default function Overview() {
           Denoising Diffusion Probabilistic Models
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Gaussian forward chain과 learned reverse process를 연결하고, weighted
-          variational bound와 denoising score matching의 관계에서 simplified
-          noise-prediction objective를 제시합니다. 논문의 1,000-step sampler와
-          특정 U-Net recipe가 모든 diffusion model의 고정 조건이라는 뜻은
-          아닙니다.
+          Gaussian forward chain과 learned reverse process를 연결하고 weighted variational bound와 denoising score
+          matching의 관계에서 simplified noise-prediction objective를 제시합니다. 논문이 쓴 1,000-step sampler와 특정 U-Net
+          recipe는 모든 diffusion model이 지켜야 할 고정 조건까지는 아닙니다.
         </p>
         <a
           className="mt-3 inline-block text-sm font-medium text-primary hover:underline"

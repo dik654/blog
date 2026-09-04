@@ -9,11 +9,9 @@ export default function Order() {
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Distillation은 student architecture와 behavior distribution을 만들고,
-          structured pruning은 tensor shape와 activation을 바꿉니다. 이 둘보다
-          먼저 quantization scale을 맞춰 놓으면 뒤 단계가 만든 새 tensor에 이전
-          통계가 대응하지 않을 수 있습니다. 일반 출발점은 student/structure
-          결정→recovery→final graph calibration→quantization→engine build입니다.
+          Distillation은 student architecture와 behavior distribution을 만들고 structured pruning은 tensor shape와
+          activation을 바꿉니다. 이 둘보다 먼저 quantization scale을 맞춰 놓으면 뒤 단계가 만든 새 tensor에 이전 통계가 대응하지 않을 수 있습니다. 일반
+          출발점은 student/structure 결정→recovery→final graph calibration→quantization→engine build입니다.
         </p>
         <p>
           다만 공동 학습이나 hardware constraint 때문에 다른 순서가 나을 수

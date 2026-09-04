@@ -16,11 +16,8 @@ export default function Aggregation() {
           서로 다른 업무 가설을 측정합니다.
         </p>
         <p>
-          가장 중요한 계약은 cutoff time입니다. 예측 시점 뒤의 event까지
-          groupby하면 미래 누출이 생기므로, 각 row마다 그 시점 이전 기록만
-          사용하는 point-in-time join을 구성합니다. Validation entity의 label이
-          training aggregation에 들어가지 않도록 split도 이 계산보다 먼저
-          확정해야 합니다.
+          가장 중요한 계약은 cutoff time입니다. 예측 시점 뒤의 event까지 groupby하면 미래 누출이 생기므로 각 row마다 그 시점 이전 기록만 사용하는 point-in-
+          time join을 구성합니다. Validation entity의 label이 training aggregation에 들어가지 않도록 split도 이 계산보다 먼저 확정합니다.
         </p>
       </div>
 
@@ -62,11 +59,9 @@ I_r={}&\mathbf 1[e_r=e]\\
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Window는 최근성과 안정성 사이의 가설입니다</h3>
         <p>
-          Rolling window는 최근 상태를, expanding statistic은 누적 이력을
-          표현합니다. 1일·7일·30일 count를 함께 두면 속도 변화도 읽을 수 있지만
-          서로 강하게 상관될 수 있습니다. Event-time 기준인지 ingestion-time
-          기준인지, timezone과 day boundary는 무엇인지, 늦게 도착한 record를
-          backfill할지를 schema에 포함해야 합니다.
+          Rolling window는 최근 상태를, expanding statistic은 누적 이력을 표현합니다. 1일·7일·30일 count를 함께 두면 속도 변화도 읽을 수 있지만 서로
+          강하게 상관될 수 있습니다. Event-time 기준인지 ingestion-time 기준인지, timezone과 day boundary는 무엇인지, 늦게 도착한 record를
+          backfill할지를 schema에 적어 둡니다.
         </p>
         <p>
           user×category처럼 key를 세분화하면 더 구체적인 맥락을 얻지만 관측이

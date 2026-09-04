@@ -14,12 +14,9 @@ export default function DeepfakeFrequencyEvidenceArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            FFT는 image를 공간 좌표 대신 주파수 성분으로 정확히 표현합니다.
-            하지만 spectrum에서 보이는 반복 pattern을 왜 생성됐는지 해석하는
-            것은 별도 문제입니다. Upsampling artifact가 한 generator에서 잘
-            보여도 JPEG, resize, blur와 새 generator가 pattern을 바꿀 수
-            있습니다. 따라서 raw in-domain score가 아니라 corruption cell에서
-            보존되는지 확인합니다.
+            FFT는 image를 공간 좌표 대신 주파수 성분으로 정확히 표현합니다. spectrum에 보이는 반복 pattern이 왜 생겼는지 해석하는 일은 그와 별개입니다.
+            Upsampling artifact가 한 generator에서 잘 보여도 JPEG·resize·blur와 새 generator가 pattern을 바꿀 수 있습니다. 확인할 것은
+            raw in-domain score가 아니라 corruption cell에서 보존되는지 여부입니다.
           </p>
         </div>
         <TermBreakdown
@@ -88,11 +85,9 @@ export default function DeepfakeFrequencyEvidenceArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            RGB와 frequency branch에 같은 source split, crop과 frame budget을
-            사용합니다. 각 source에서 corruption만 바꾼 paired examples를 만들면
-            source identity 차이를 generator artifact 차이로 오인하는 일을 줄일
-            수 있습니다. Frequency branch가 codec source를 분류하는지 보려면
-            generator와 codec을 교차한 cell이 필요합니다.
+            RGB와 frequency branch에는 같은 source split·crop·frame budget을 사용합니다. 각 source에서 corruption만 바꾼 paired
+            examples를 만들면 source identity 차이를 generator artifact 차이로 오인하는 일을 줄일 수 있습니다. Frequency branch가
+            codec source를 분류하는지 보려면 generator와 codec을 교차한 cell이 필요합니다.
           </p>
         </div>
       </section>
@@ -105,9 +100,8 @@ export default function DeepfakeFrequencyEvidenceArticle() {
           question="RGB와 frequency branch가 서로 보완하는지 같은 held-out samples에서 어떻게 측정하나요?"
           idea={
             <p>
-              각 branch가 틀린 sample에 1을 표시합니다. 두 indicators를 곱하면
-              둘 다 틀린 sample만 1로 남고, 이를 평균하면 joint error rate가
-              됩니다.
+              각 branch가 틀린 sample에 1을 표시합니다. 두 indicators를 곱하면 둘 다 틀린 sample만 1로 남고 이를 평균한 값이 joint error
+              rate입니다.
             </p>
           }
           formula={String.raw`Q_{\rm joint}=n^{-1}\sum_i e_i^{\rm rgb}e_i^{\rm freq}`}

@@ -8,7 +8,10 @@ export default function DomainTaskFinetuningArticle() {
   return <div className="space-y-16">
     <section id="overview" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Task fine-tuning은 지식 묶음이 아니라 원하는 행동의 예시를 학습합니다</h2>
-      <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8">정보 추출 model에게 “의료 문서를 잘 읽어라”라고만 하면 정답 형태가 없습니다. 어떤 context를 읽고, 어떤 JSON을 만들며, 근거가 없을 때 어떻게 abstain할지를 demonstration 한 건에 명시해야 합니다.</p></div>
+      <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8">
+            정보 추출 model에게 “의료 문서를 잘 읽어라”라고만 하면 정답 형태가 없습니다. 어떤 context를 읽고 어떤 JSON을 만들며 근거가 없을 때 어떻게
+            abstain할지까지 demonstration 한 건에 명시해야 합니다.
+          </p></div>
       <TermBreakdown title="Demonstration 한 건을 이루는 네 부분" items={[
         { term: "Input contract", description: "System·user role, context source, 최대 길이와 truncation 방향을 정합니다." },
         { term: "Target contract", description: "Response schema·label taxonomy·citation·abstention·허용 ambiguity를 정합니다." },
@@ -21,8 +24,14 @@ export default function DomainTaskFinetuningArticle() {
 
     <section id="demonstration" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">Prompt는 읽게 하고 response token만 채점할 수 있습니다</h2>
-      <div className="prose prose-neutral max-w-none dark:prose-invert"><p>Loss mask는 attention mask와 다릅니다. Prompt token에 loss 0을 두어도 model은 그 token을 context로 읽습니다. Multi-turn이라면 어느 assistant turn을 target으로 삼을지도 dataset revision에 고정합니다.</p></div>
-      <ExplainedFormula question="전체 대화는 context로 유지하면서 response token만 평균 loss에 넣으려면 어떻게 하나요?" idea={<p>각 target position에 binary loss mask를 붙입니다. Mask가 1인 token의 NLL만 더하고, 1의 개수로 나누어 response 길이가 다른 sample을 비교합니다.</p>} formula={String.raw`N_{\rm resp}=\sum_t m_t,\qquad\mathcal L_{\rm SFT}=-\frac1{N_{\rm resp}}\sum_{t=1}^T m_t\log\pi_\theta(y_t\mid y_{<t})`} annotatedFormula={String.raw`\begin{aligned}N_{\rm resp}&=\underbrace{\sum_{t=1}^{T}m_t}_{\text{채점할 response token 수}}\\s_t&=\underbrace{-\log\pi_\theta(y_t\mid y_{<t})}_{\text{관측 target token의 error}}\\e_t&=\underbrace{m_t s_t}_{\text{prompt error는 0, response error만 유지}}\\\mathcal L_{\rm SFT}&=\underbrace{\frac1{N_{\rm resp}}\sum_{t=1}^{T}e_t}_{\text{response token당 평균 loss}}\end{aligned}`} operations={[
+      <div className="prose prose-neutral max-w-none dark:prose-invert"><p>
+            attention mask와 loss mask는 다릅니다. prompt token에 loss 0을 두어도 model은 그 token을 context로 읽습니다. multi-
+            turn이라면 어느 assistant turn을 target으로 삼을지도 dataset revision에 고정합니다.
+          </p></div>
+      <ExplainedFormula question="전체 대화는 context로 유지하면서 response token만 평균 loss에 넣으려면 어떻게 하나요?" idea={<p>
+            각 target position에 binary loss mask를 붙입니다. mask가 1인 token의 NLL만 더한 뒤 1의 개수로 나누어 response 길이가 다른
+            sample을 비교합니다.
+          </p>} formula={String.raw`N_{\rm resp}=\sum_t m_t,\qquad\mathcal L_{\rm SFT}=-\frac1{N_{\rm resp}}\sum_{t=1}^T m_t\log\pi_\theta(y_t\mid y_{<t})`} annotatedFormula={String.raw`\begin{aligned}N_{\rm resp}&=\underbrace{\sum_{t=1}^{T}m_t}_{\text{채점할 response token 수}}\\s_t&=\underbrace{-\log\pi_\theta(y_t\mid y_{<t})}_{\text{관측 target token의 error}}\\e_t&=\underbrace{m_t s_t}_{\text{prompt error는 0, response error만 유지}}\\\mathcal L_{\rm SFT}&=\underbrace{\frac1{N_{\rm resp}}\sum_{t=1}^{T}e_t}_{\text{response token당 평균 loss}}\end{aligned}`} operations={[
         { expression: String.raw`\sum_t m_t`, annotation: ["binary mask의 1을 더해", "실제 채점 token 수를 계산"] },
         { expression: String.raw`-\log\pi_\theta(y_t\mid y_{<t})`, annotation: ["관측 token 확률을 negative log로 바꿔", "틀릴수록 큰 학습 error 생성"] },
         { expression: String.raw`m_t s_t`, annotation: ["error에 mask를 곱해", "prompt는 context로만 두고 response만 채점"] },
@@ -50,7 +59,10 @@ export default function DomainTaskFinetuningArticle() {
           <li><strong>학습량</strong> — 같은 effective batch와 optimizer step을 사용합니다.</li>
           <li><strong>평가</strong> — 같은 split과 decoding revision을 사용합니다.</li>
         </ul>
-        <p>Trainable parameter 수가 적어도 wall time이 더 길거나 adapter merge 뒤 memory가 같을 수 있습니다. 따라서 peak memory, throughput, artifact size는 각각 별도 줄로 기록합니다.</p>
+        <p>
+            trainable parameter 수가 적어도 wall time이 더 길거나 adapter merge 뒤 memory가 같을 수 있습니다. peak memory,
+            throughput, artifact size는 각각 별도 줄로 기록합니다.
+          </p>
       </div>
     </section>
 

@@ -56,11 +56,9 @@ export default function PermissionGating() {
           <li>Executor result와 permission decision ID를 receipt에 연결해 runtime에 반환합니다.</li>
         </ol>
         <p>
-          승인을 받은 뒤 path, command, schema generation 또는 arguments가 바뀌면
-          새로운 operation입니다. 이전 approval을 재사용하지 않고 validation과
-          permission을 처음부터 반복해야 합니다. 사용자에게 보여 준 요약과 실제
-          실행 effect의 digest가 같아야 “보여 준 것과 다른 command 실행”을 막을
-          수 있습니다.
+          승인을 받은 뒤 path나 command, schema generation 또는 arguments가 바뀌면 새로운 operation입니다. 이전 approval을 재사용하지 않고
+          validation과 permission을 처음부터 반복합니다. 사용자에게 보여 준 요약과 실제 실행 effect의 digest가 같아야 “보여 준 것과 다른 command
+          실행”을 막습니다.
         </p>
 
         <h3>Deny와 판정 불가는 executor 이전에 끝납니다</h3>
@@ -72,12 +70,9 @@ export default function PermissionGating() {
           rollback 실패와 외부 effect를 남길 수 있기 때문입니다.
         </p>
         <p>
-          반대로 permission을 통과한 executor가 test error나 I/O error를 낸 것은
-          실행 실패입니다. 같은 approval을 다시 물을 문제가 아니라 retry가
-          안전한지, partial effect가 있는지 판단할 문제입니다. Decision ID,
-          execution attempt, before/after digest와 error category를 분리해 남겨야
-          model이 permission denial을 command 실패로 오해하고 우회 call을 만들지
-          않습니다.
+          반대로 permission을 통과한 executor가 test error나 I/O error를 낸 것은 실행 실패입니다. 같은 approval을 다시 물을 문제가 아니라
+          retry가 안전한지, partial effect가 있는지 판단할 문제입니다. Decision ID와 execution attempt, before/after digest,
+          error category를 분리해 남겨야 model이 permission denial을 command 실패로 오해하고 우회 call을 만들지 않습니다.
         </p>
 
         <h3>Extension metadata는 힌트이지 보안 판정이 아닙니다</h3>
@@ -90,11 +85,8 @@ export default function PermissionGating() {
           deny 또는 explicit ask로 올립니다.
         </p>
         <p>
-          Sandbox는 permission을 대신하지 않습니다. Permission은 “이 요청을
-          실행해도 되는가”를 판정하고, sandbox·OS policy는 허용된 executor가
-          약속한 범위를 넘어가지 못하게 제한합니다. 두 경계를 함께 통과시켜야
-          잘못된 metadata와 implementation bug가 하나의 방어 실패로 이어지지
-          않습니다.
+          Sandbox는 permission을 대신하지 않습니다. Permission은 “이 요청을 실행해도 되는가”를 판정하고 sandbox·OS policy는 허용된 executor가
+          약속한 범위를 넘어가지 못하게 제한합니다. 두 경계를 함께 통과시켜야 잘못된 metadata와 implementation bug가 하나의 방어 실패로 이어지지 않습니다.
         </p>
         <p>
           Negative fixture에는 schema-valid한 <code>read-only</code> plugin call이

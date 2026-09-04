@@ -31,11 +31,8 @@ export default function History() {
       <h2 className="text-2xl font-bold mb-6">딥러닝의 초기 역사</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          딥러닝의 역사는 하나의 알고리즘이 갑자기 등장한 이야기가 아닙니다.
-          미분 가능한 network, 충분한 데이터, 병렬 hardware와 안정적인
-          optimization이 서로 다른 시기에 축적되다가 함께 작동하기 시작한
-          과정입니다. 연구 침체를 특정 논문이나 한 사람의 선택으로만 설명하면 이
-          상호작용을 놓치게 됩니다.
+          딥러닝의 역사는 하나의 알고리즘이 갑자기 등장한 이야기가 아닙니다. 미분 가능한 network, 충분한 데이터, 병렬 hardware와 안정적인 optimization이 서로 다른
+          시기에 축적되다가 함께 작동하기 시작한 과정입니다. 연구 침체를 특정 논문이나 한 사람의 선택으로만 설명하면 이 상호작용을 놓칩니다.
         </p>
       </div>
 
@@ -46,8 +43,7 @@ export default function History() {
             네 시기로 보는 발전 흐름
           </p>
           <p className="mt-1 text-xs leading-5 text-muted-foreground">
-            각 시기는 이전 방법을 폐기한 것이 아니라 다음 규모의 학습 조건을
-            추가했습니다.
+            각 시기마다 이전 방법이 폐기된 것이 아니라 다음 규모의 학습 조건이 하나씩 더해졌습니다.
           </p>
         </figcaption>
         <div data-viz-canvas className="grid gap-6 rounded-xl border border-border/70 bg-muted/15 p-5 sm:grid-cols-2 sm:gap-7 sm:p-7">

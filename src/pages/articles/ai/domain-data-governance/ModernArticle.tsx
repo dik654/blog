@@ -45,7 +45,10 @@ export default function DomainDataGovernanceArticle() {
 
     <section id="coverage-release" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">평균 점수보다 근거가 있는 slice의 범위를 먼저 공개합니다</h2>
-      <ExplainedFormula question="기관·계통·장비·희귀 조건 중 독립 근거가 충분한 cell의 비율을 어떻게 계산하나요?" idea={<p>각 required cell에서 row가 아니라 독립 group 수를 셉니다. 최소 근거 수를 넘은 cell만 1로 두고, 전체 required cell 중 통과 비율과 빈 cell 목록을 함께 냅니다.</p>} formula={String.raw`n_c=|\{g:\operatorname{slice}(g)=c\}|,\qquad\mathrm{Coverage}=\frac1{|\mathcal C|}\sum_{c\in\mathcal C}\mathbb 1[n_c\ge n_{\min}]`} annotatedFormula={String.raw`\begin{aligned}S_c&=\underbrace{\{g:\operatorname{slice}(g)=c\}}_{\text{cell c에 속한 독립 group 집합}}\\n_c&=\underbrace{|S_c|}_{\text{row가 아닌 독립 group 수}}\\I_c&=\underbrace{\mathbb 1[n_c\ge n_{\min}]}_{\text{최소 근거 수 통과 여부}}\\\mathrm{Coverage}&=\underbrace{\frac1{|\mathcal C|}\sum_{c\in\mathcal C}I_c}_{\text{required cell 중 근거가 있는 비율}}\end{aligned}`} operations={[
+      <ExplainedFormula question="기관·계통·장비·희귀 조건 중 독립 근거가 충분한 cell의 비율을 어떻게 계산하나요?" idea={<p>
+            각 required cell에서 row가 아니라 독립 group 수를 셉니다. 최소 근거 수를 넘은 cell만 1로 두고 전체 required cell 중 통과 비율과 빈
+            cell 목록을 함께 냅니다.
+          </p>} formula={String.raw`n_c=|\{g:\operatorname{slice}(g)=c\}|,\qquad\mathrm{Coverage}=\frac1{|\mathcal C|}\sum_{c\in\mathcal C}\mathbb 1[n_c\ge n_{\min}]`} annotatedFormula={String.raw`\begin{aligned}S_c&=\underbrace{\{g:\operatorname{slice}(g)=c\}}_{\text{cell c에 속한 독립 group 집합}}\\n_c&=\underbrace{|S_c|}_{\text{row가 아닌 독립 group 수}}\\I_c&=\underbrace{\mathbb 1[n_c\ge n_{\min}]}_{\text{최소 근거 수 통과 여부}}\\\mathrm{Coverage}&=\underbrace{\frac1{|\mathcal C|}\sum_{c\in\mathcal C}I_c}_{\text{required cell 중 근거가 있는 비율}}\end{aligned}`} operations={[
         { expression: String.raw`\{g:\operatorname{slice}(g)=c\}`, annotation: ["group을 slice 조건으로 걸러", "평가 cell의 독립 표본 집합 생성"] },
         { expression: String.raw`|S_c|`, annotation: ["집합 원소 수를 세어", "중복 row가 아닌 독립 근거 수 계산"] },
         { expression: String.raw`\mathbb 1[n_c\ge n_{\min}]`, annotation: ["근거 수를 최소 기준과 비교해", "주장 가능한 cell만 1로 표시"] },

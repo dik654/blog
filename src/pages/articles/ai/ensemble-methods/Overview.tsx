@@ -14,7 +14,7 @@ export default function Overview() {
         </p>
         <p>
           먼저 각 model의 prediction이 동일한 row ID·target definition·class order·scale을 갖는지 맞춥니다. 그다음 단순 평균을
-          baseline으로 두고, weight나 meta-model은 OOF prediction에서만 학습합니다. Test prediction을 보며 weight를 고르거나 base
+          baseline으로 두고 weight나 meta-model은 OOF prediction에서만 학습합니다. Test prediction을 보며 weight를 고르거나 base
           model이 학습한 행의 in-sample prediction으로 meta-model을 학습하면 결합 단계에서 평가 정보가 새어 들어갑니다.
         </p>
       </div>
@@ -60,10 +60,10 @@ export default function Overview() {
           글에서 다룹니다. 같은 말을 여러 글에 흩어 놓지 않기 위한 경계입니다.
         </p>
         <p>
-          Diversity audit에서는 먼저 OOF artifact를 row ID와 같은 fold·target으로 정렬한 뒤 residual covariance와 correlation,
-          두 모델이 함께 틀린 행을 봅니다. Accuracy 같은 전체 점수만 비교하지 않고 group·time·class slice마다 error 방향을 확인하며,
-          ranking·F1처럼 행별 loss로 단순 분해되지 않는 metric은 결합 prediction 전체에서 다시 계산합니다. 이 판단도 여러 seed에서
-          흔들릴 수 있으므로 후보 선택은 OOF에서 하고, 최종 이득은 탐색에 쓰지 않은 outer data에서 확인합니다.
+          Diversity audit에서는 먼저 OOF artifact를 row ID와 같은 fold·target으로 정렬합니다. 그런 다음 residual covariance와
+          correlation, 두 모델이 함께 틀린 행을 봅니다. Accuracy 같은 전체 점수만 비교하지 않고 group·time·class slice마다 error 방향을 확인하며
+          ranking·F1처럼 행별 loss로 단순 분해되지 않는 metric은 결합 prediction 전체에서 다시 계산합니다. 이 판단도 여러 seed에서 흔들릴 수 있으므로 후보
+          선택은 OOF에서 하고 최종 이득은 탐색에 쓰지 않은 outer data에서 확인합니다.
         </p>
       </div>
 

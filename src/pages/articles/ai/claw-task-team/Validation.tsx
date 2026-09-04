@@ -24,10 +24,8 @@ export default function Validation() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          task contract를 한 번 validate했다고 실행과 완료까지 보장되는 것은
-          아닙니다. 등록 시에는 명세가 well-formed인지, dispatch 시에는 선택한
-          worker가 실제 scope를 수행할 권한이 있는지, 완료 시에는 결과가
-          acceptance criteria를 만족하는지 확인합니다.
+          task contract를 한 번 validate했다고 실행과 완료까지 보장되지는 않습니다. 등록 시에는 명세가 well-formed인지 봅니다. dispatch 시에는 선택한
+          worker가 실제 scope를 수행할 권한이 있는지, 완료 시에는 결과가 acceptance criteria를 만족하는지 확인합니다.
         </p>
 
         <div className="not-prose my-8">
@@ -54,26 +52,21 @@ export default function Validation() {
           등록 검증은 구조와 모순을 찾는다
         </h3>
         <p className="leading-7">
-          goal과 acceptance criteria가 비어 있지 않은지, dependency가 존재하고
-          cycle이 없는지, read-only constraint와 write deliverable이 충돌하지
-          않는지 확인합니다. title 길이 같은 값 검증은 필요하지만, task가 실제로
-          좋은 계획인지까지 보장하지는 않습니다.
+          goal과 acceptance criteria가 비어 있지 않은지, dependency가 존재하고 cycle이 없는지, read-only constraint와 write
+          deliverable이 충돌하지 않는지 확인합니다. title 길이 같은 값 검증은 필요하지만 task가 실제로 좋은 계획인지까지 보장하지는 않습니다.
         </p>
         <p className="leading-7">
-          completion command를 task packet 안의 임의 shell 문자열로 저장하는
-          방식은 또 하나의 code execution surface가 됩니다. 가능한 검증은 test
-          ID, repository script와 structured assertion으로 참조하고, 새
-          command가 필요하면 Bash와 동일한 permission·sandbox 경계를 거칩니다.
+          completion command를 task packet 안의 임의 shell 문자열로 저장하는 방식은 또 하나의 code execution surface가 됩니다. 가능한 검증은
+          test ID와 repository script, structured assertion으로 참조합니다. 새 command가 필요하면 Bash와 동일한
+          permission·sandbox 경계를 거칩니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
           scope는 path pattern에서 실제 capability로 resolve한다
         </h3>
         <p className="leading-7">
-          task의 include·exclude pattern과 team policy, worker capability를 합쳐
-          effective scope를 계산합니다. exclude가 include보다 우선하며,
-          symlink와 canonical path를 반영한 뒤 executor가 같은 scope를 강제해야
-          합니다.
+          task의 include·exclude pattern과 team policy, worker capability를 합쳐 effective scope를 계산합니다. exclude가
+          include보다 우선합니다. symlink와 canonical path를 반영한 뒤 executor가 같은 scope를 강제합니다.
         </p>
         <p className="leading-7">
           permission이 부족하면 validator가 몰래 scope를 넓히지 않습니다. 작업을
@@ -85,10 +78,8 @@ export default function Validation() {
           완료 검증은 isolated verifier에서 실행한다
         </h3>
         <p className="leading-7">
-          test와 lint, schema check는 worker가 작업한 environment와 분리된 clean
-          checkout에서 실행해야 결과 조작과 숨은 상태 의존을 줄일 수 있습니다.
-          verifier에는 필요한 read·execute capability만 주고 network와 secret은
-          기본적으로 제거합니다.
+          test와 lint, schema check는 worker가 작업한 environment와 분리된 clean checkout에서 돌립니다. 그래야 결과 조작과 숨은 상태 의존이
+          줄어듭니다. verifier에는 필요한 read·execute capability만 주고 network와 secret은 기본적으로 제거합니다.
         </p>
         <p className="leading-7">
           여러 criterion이 있으면 passed·failed·not-run을 각각 기록합니다.

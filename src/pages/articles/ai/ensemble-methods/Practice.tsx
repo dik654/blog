@@ -7,10 +7,9 @@ export default function Practice() {
       <h2 className="mb-6 text-2xl font-bold">새 모델은 단독 점수가 아니라 현재 앙상블에 더하는 OOF 이득과 운영 비용으로 평가합니다</h2>
       <div className="prose max-w-none prose-neutral dark:prose-invert">
         <p>
-          가장 재현 가능한 단일 model에서 시작해 후보 하나를 임시로 추가하고 동일 OOF rows에서 loss 차이를 계산합니다. 가장 큰
-          marginal gain을 주는 후보를 채택한 뒤 반복하는 forward selection은 큰 library를 다루는 실용적인 방법입니다. 같은 model을
-          여러 번 선택하도록 허용하면 선택 횟수가 정수 weight가 되지만, 반복 탐색은 OOF noise에도 맞출 수 있어 ensemble size와
-          stopping rule을 제한해야 합니다.
+          가장 재현 가능한 단일 model에서 시작해 후보 하나를 임시로 추가하고 동일 OOF rows에서 loss 차이를 계산합니다. 가장 큰 marginal gain을 주는 후보를
+          채택한 뒤 이 과정을 반복합니다. 이것이 forward selection이고 큰 library를 다룰 때 실용적입니다. 같은 model을 여러 번 선택하도록 허용하면 선택 횟수가
+          정수 weight가 되지만 반복 탐색은 OOF noise에도 맞출 수 있어 ensemble size와 stopping rule을 제한해야 합니다.
         </p>
       </div>
 
@@ -53,19 +52,19 @@ export default function Practice() {
       <div id="paper-ensemble-selection" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">핵심 논문 · Ensemble Selection from Libraries of Models</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          논문은 여러 algorithm과 hyperparameter로 만든 큰 model library에서 validation metric을 가장 개선하는 model을 forward
-          stepwise로 추가하는 방법을 제안했습니다. Accuracy·cross entropy·ROC area 등 목표 metric에 맞춰 선택할 수 있다는 점이
-          핵심입니다. 7개 문제와 10개 metric의 실험 결과를 모든 현대 workload의 보장으로 확대하지 않으며, selection set 재사용에
-          따른 overfit은 별도 outer evidence로 관리해야 합니다.
+          논문이 제안한 방법은 forward stepwise 추가입니다. 여러 algorithm과 hyperparameter로 만든 큰 model library에서 validation
+          metric을 가장 개선하는 model을 하나씩 넣습니다. Accuracy·cross entropy·ROC area 등 목표 metric에 맞춰 선택할 수 있다는 점이 핵심입니다.
+          7개 문제와 10개 metric의 실험 결과를 모든 현대 workload의 보장으로 확대하지 않으며 selection set 재사용에 따른 overfit은 별도 outer
+          evidence로 관리해야 합니다.
         </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://doi.org/10.1145/1015330.1015432" target="_blank" rel="noreferrer">논문 초록과 출판 정보 보기</a>
       </div>
 
       <div className="prose max-w-none prose-neutral dark:prose-invert">
         <p>
-          배포 artifact에는 base model IDs, OOF/test prediction checksum, row/class mapping, transforms, weights 또는 meta checkpoint,
-          fold-test aggregation, dependency versions를 묶습니다. 한 base model이 실패했을 때 전체 요청을 실패시킬지 degraded ensemble로
-          응답할지도 미리 정해야 합니다. Quality gain이 반복되지 않거나 운영 비용을 정당화하지 못하는 마지막 model에서 멈춥니다.
+          배포 artifact에는 base model IDs, OOF/test prediction checksum, row/class mapping, transforms, weights
+          또는 meta checkpoint, fold-test aggregation, dependency versions를 묶습니다. 한 base model이 실패했을 때 전체 요청을
+          실패시킬지 degraded ensemble로 응답할지도 미리 정해 둡니다. Quality gain이 반복되지 않거나 운영 비용을 정당화하지 못하는 마지막 model에서 멈춥니다.
         </p>
       </div>
     </section>

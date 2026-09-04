@@ -9,29 +9,32 @@ export default function Training({ onCodeRef }: { onCodeRef: (key: string, ref: 
       <h2 className="mb-6 text-2xl font-bold">학습 루프는 loss를 계산하고 상태를 한 번만 갱신합니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          한 스텝은 batch forward, loss 계산, gradient 초기화, backward, optimizer update로 이어집니다. gradient를 누적해 큰 effective batch를 만들 의도가 없다면 이전 스텝의 gradient를 반드시 비워야 하며, 평가 구간에서는 그래프 기록과 dropout을 끄고 파라미터 update를 실행하지 않습니다.
+          한 스텝은 batch forward, loss 계산, gradient 초기화, backward, optimizer update로 이어집니다. gradient를 누적해 큰
+          effective batch를 만들 의도가 없다면 이전 스텝의 gradient를 반드시 비워야 합니다. 평가 구간에서는 그래프 기록과 dropout을 끄고 파라미터 update를
+          실행하지 않습니다.
         </p>
         <p>
-          Mean squared error는 기존 Sub, Pow, Sum, Div 연산을 조합해 구현할 수 있어 자동 미분의 composability를 보여 줍니다. 반면 softmax cross-entropy는 logits에서 행별 최댓값을 빼는 log-sum-exp trick을 적용하고, forward와 backward를 한 Function으로 묶으면 수치 안정성과 메모리 사용을 함께 관리하기 쉽습니다.
+          Mean squared error는 기존 Sub, Pow, Sum, Div 연산을 조합해 구현할 수 있어 자동 미분의 composability를 보여 줍니다. 반면 softmax
+          cross-entropy는 logits에서 행별 최댓값을 빼는 log-sum-exp trick을 적용하고 forward와 backward를 한 Function으로 묶으면 수치
+          안정성과 메모리 사용을 함께 관리하기 쉽습니다.
         </p>
       </div>
       <div className="not-prose my-8"><TrainingViz onOpenCode={open} /></div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>loss 값만 보지 말고 단계별 검증을 둡니다</h3>
         <p>
-          작은 고정 batch에서 loss가 감소하는지 확인하고, 각 연산의 analytic gradient를 finite difference와 비교합니다. 이어서 seed, optimizer step, train/eval mode를 저장해 같은 조건에서 결과가 재현되는지 확인하면, 학습 실패가 데이터 문제인지 자동 미분이나 상태 관리 문제인지 빠르게 분리할 수 있습니다.
+          작은 고정 batch에서 loss가 감소하는지 확인하고 각 연산의 analytic gradient를 finite difference와 비교합니다. 이어서 seed,
+          optimizer step, train/eval mode를 저장해 같은 조건에서 결과가 재현되는지 확인하면 학습 실패가 데이터 문제인지 자동 미분이나 상태 관리 문제인지 빠르게
+          분리됩니다.
         </p>
         <p>
           Resume test에서는 연속 20 step과 12 step 뒤 checkpoint를 저장하고 새 process에서 8 step을 이어간 결과를 나란히 비교합니다. Parameter뿐 아니라 안정적인 parameter ID, optimizer <code>m</code>·<code>v</code>, step, RNG state와 data cursor를 복원하고, sample 순서·loss·최종 weight가 허용 오차 안에서 같은지 확인합니다. Weight만 같은 파일은 inference artifact일 수 있지만 학습 재개 checkpoint라고 볼 수는 없습니다.
         </p>
         <p>
-          Release fixture에는 정상 고정 batch뿐 아니라 gradient가 없는 parameter,
-          parameter registry 순서 변경, NaN loss, 중간 checkpoint truncate,
-          train/eval mode 누락을 넣습니다. Baseline과 candidate는 같은 data·seed·
-          precision에서 forward, analytic/finite-difference gradient, update receipt,
-          resume 결과를 비교하고 하나라도 contract가 깨지면 이전 artifact와
-          manifest로 되돌립니다. 작은 toy loss 감소만으로 framework 전체의
-          수치 안정성과 실제 model 품질을 보장하지는 않습니다.
+          Release fixture에는 정상 고정 batch뿐 아니라 gradient가 없는 parameter, parameter registry 순서 변경, NaN loss, 중간
+          checkpoint truncate, train/eval mode 누락을 넣습니다. Baseline과 candidate는 같은 data와 seed, precision에서
+          forward, analytic/finite-difference gradient, update receipt, resume 결과를 비교합니다. 하나라도 contract가 깨지면
+          이전 artifact와 manifest로 되돌립니다. 작은 toy loss 감소만으로 framework 전체의 수치 안정성과 실제 model 품질을 보장하지는 않습니다.
         </p>
       </div>
     </section>

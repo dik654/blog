@@ -12,7 +12,8 @@ export default function Overview({ onCodeRef }: { onCodeRef: (key: string, ref: 
       <h2 className="mb-6 text-2xl font-bold">자동 미분은 값과 계산 이력을 함께 다루는 문제입니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          신경망의 미분식을 매번 손으로 전개하지 않으려면, 순전파에서 어떤 연산이 어떤 값을 만들었는지 기록해야 합니다. 출력에서 이 기록을 거꾸로 따라가며 chain rule을 적용하는 방식이 reverse-mode automatic differentiation이며, PyTorch의 동적 계산 그래프도 같은 큰 흐름을 따릅니다.
+          신경망의 미분식을 매번 손으로 전개하지 않으려면 순전파에서 어떤 연산이 어떤 값을 만들었는지 기록해야 합니다. 출력에서 이 기록을 거꾸로 따라가며 chain rule을 적용하는
+          방식이 reverse-mode automatic differentiation이며 PyTorch의 동적 계산 그래프도 같은 큰 흐름을 따릅니다.
         </p>
         <p>
           이 글은 DeZero의 교육용 설계를 Rust로 옮겨 <code>Variable</code>, <code>Function</code>, 계산 그래프와 backward를 직접 구현합니다. 완성된 프레임워크 사용법을 설명하기보다, 값·gradient·연산 순서·소유권이 왜 함께 설계되어야 하는지를 확인하는 첫 번째 글입니다.

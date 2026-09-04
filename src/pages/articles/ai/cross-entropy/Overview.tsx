@@ -24,10 +24,8 @@ export default function Overview({ title }: { title?: string }) {
           이 글에서는 그 계산을 probability에 적용하는 지점부터 이어 갑니다.
         </p>
         <p>
-          Claude Shannon의 정보이론은 독립 사건이 함께 일어날 확률의 곱을 정보량의
-          합으로 바꾸는 함수를 요구했고, log가 그 조건을 만족한다. 밑이 2이면 단위가
-          bit이고 자연로그를 쓰면 nat이지만, 밑이 고정되어 있다면 학습 optimum은
-          달라지지 않고 loss의 scale만 달라진다.
+          Claude Shannon의 정보이론은 독립 사건이 함께 일어날 확률의 곱을 정보량의 합으로 바꾸는 함수를 요구했고 log가 그 조건을 만족한다. 밑이 2이면 단위가 bit이고
+          자연로그를 쓰면 nat이지만 밑이 고정되어 있다면 학습 optimum은 달라지지 않고 loss의 scale만 달라진다.
         </p>
       </div>
 
@@ -57,11 +55,9 @@ export default function Overview({ title }: { title?: string }) {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>이 글에서 따라갈 경로</h3>
         <p>
-          한 사건의 surprisal만으로는 model 전체를 평가할 수 없으므로 먼저 실제
-          분포에 대한 기대값을 정의한다. 그다음 log 안에 실제 분포를 넣으면 entropy,
-          모델 분포를 넣으면 cross-entropy가 되고, 두 값의 차이가 KL divergence가
-          된다. 마지막에는 categorical likelihood와 softmax를 연결해 실제 구현에서
-          사용하는 gradient까지 내려간다.
+          한 사건의 surprisal만으로는 model 전체를 평가할 수 없으므로 먼저 실제 분포에 대한 기대값을 정의한다. 그다음 log 안에 실제 분포를 넣으면 entropy, 모델
+          분포를 넣으면 cross-entropy가 되고 두 값의 차이가 KL divergence가 된다. 마지막에는 categorical likelihood와 softmax를 연결해 실제
+          구현에서 사용하는 gradient까지 내려간다.
         </p>
         <p>
           이 연결은 Shannon의 원 논문에서 출발한다. 역사적 정의와 coding theorem의

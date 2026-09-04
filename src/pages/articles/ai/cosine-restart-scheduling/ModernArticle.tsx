@@ -65,8 +65,7 @@ export default function CosineRestartSchedulingArticle() {
           question="ηmax=.1, ηmin=.001에서 cycle 중간 LR가 왜 .0505인가요?"
           idea={
             <p>
-              Local progress를 π배해 cosine에 넣고, 1+cos를 2로 나눠 1→0 scale로
-              바꾼 뒤 LR range에 적용합니다.
+              Local progress를 π배해 cosine에 넣고 1+cos를 2로 나눠 1→0 scale로 바꾼 뒤 LR range에 적용합니다.
             </p>
           }
           formula={String.raw`\begin{aligned}r_t&=t/T\\a_t&=\tfrac12[1+\cos(\pi r_t)]\\\eta_t&=\eta_{\min}+(\eta_{\max}-\eta_{\min})a_t\end{aligned}`}

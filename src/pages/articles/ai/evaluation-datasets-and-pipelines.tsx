@@ -21,18 +21,15 @@ export default function EvaluationDatasetsAndPipelinesArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            LLM 평가는 golden set 하나만으로 끝나지 않습니다. Coverage 가 부족한 golden set 은
-            애초에 특정 카테고리의 실패를 담지 못하고, 전체 평균 정확도는 특정 slice 의 붕괴를
-            가리며, offline 에서 통과한 model 도 실 트래픽의 분포가 다르면 온라인에서 다시
-            무너집니다.
+            LLM 평가는 golden set 하나만으로 끝나지 않습니다. Coverage 가 부족한 golden set 은 애초에 특정 카테고리의 실패를 담지 못합니다. 전체 평균
+            정확도는 특정 slice 의 붕괴를 가리고, offline 에서 통과한 model 도 실 트래픽의 분포가 다르면 온라인에서 다시 무너집니다.
           </p>
           <p>
-            이 글은 golden set 을 채우는 법에서 시작해 harness 로 자동화하고, offline·shadow·A/B
-            순서로 차례차례 실 트래픽에 내보내는 하나의 파이프라인으로 다룹니다.
+            이 글은 golden set 을 채우는 법에서 시작해 harness 로 자동화하고 offline·shadow·A/B 순서로 차례차례 실 트래픽에 내보내는 하나의 파이프라인으로
+            다룹니다.
           </p>
           <p>
-            평가 지표 자체(정확도·judge score)를 어떻게 정의하는지는 다루지 않고, 그 지표를
-            무엇에 얼마나, 어떤 순서로 적용해야 결과를 믿을 수 있는지에 집중합니다.
+            평가 지표 자체(정확도·judge score)를 어떻게 정의하는지는 다루지 않고 그 지표를 무엇에 얼마나, 어떤 순서로 적용해야 결과를 믿을 수 있는지에 집중합니다.
           </p>
         </div>
         <ContentBoundary article="evaluation-datasets-and-pipelines" />
@@ -44,24 +41,20 @@ export default function EvaluationDatasetsAndPipelinesArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Evaluation dataset 은 시스템의 품질을 재려고 모은 example 전체를 가리키고, golden
-            set 은 그중 사람이 직접 정답을 확인해 신뢰도를 높인 핵심 부분집합입니다. Example
-            하나(입력과 기대 출력 한 쌍)를 test case 라고 부릅니다.
+            Evaluation dataset 은 시스템의 품질을 재려고 모은 example 전체를 가리키고 golden set 은 그중 사람이 직접 정답을 확인해 신뢰도를 높인 핵심
+            부분집합입니다. Example 하나(입력과 기대 출력 한 쌍)를 test case 라고 부릅니다.
           </p>
           <p>
-            가정: golden set 200 개를 fact QA 60 개, 요약 40 개, code 생성 50 개, 안전 거절
-            30 개, multi-turn 20 개로 채웠습니다. 운영 트래픽에서 code 질문 비중이 35 % 인데
-            golden set 엔 25 % 밖에 없다면, code 카테고리의 coverage 가 부족한 것입니다.
+            가정: golden set 200 개를 fact QA 60 개, 요약 40 개, code 생성 50 개, 안전 거절 30 개, multi-turn 20 개로 채웠습니다. 운영
+            트래픽에서 code 질문 비중이 35 % 인데 golden set 엔 25 % 밖에 없다면 code 카테고리의 coverage 가 부족합니다.
           </p>
           <p>
-            Evaluation coverage 는 golden set 이 실제로 마주칠 카테고리·언어·길이·난이도를 얼마나
-            고르게 담았는지 나타내는 척도입니다. 표본 수만 많고 특정 범주에 쏠리면 그 범주의
-            실패는 애초에 보이지 않습니다.
+            golden set 이 실제로 마주칠 카테고리·언어·길이·난이도를 얼마나 고르게 담았는지 나타내는 척도가 evaluation coverage 입니다. 표본 수만 많고 특정
+            범주에 쏠리면 그 범주의 실패는 애초에 보이지 않습니다.
           </p>
           <p>
-            HELM 은 MMLU 시나리오에서 57 개 subject 로 example 을 나누고, subject·group 별로
-            따로 통계를 냅니다. 카테고리를 먼저 나누고 그 안에서 example 을 채우는 방식이
-            coverage 를 셀 수 있게 만드는 전제입니다.
+            HELM 은 MMLU 시나리오에서 57 개 subject 로 example 을 나누고 subject·group 별로 따로 통계를 냅니다. 카테고리를 먼저 나누고 그 안에서
+            example 을 채우는 방식이 coverage 를 셀 수 있게 만드는 전제입니다.
           </p>
           <p>
             Golden set 이 아무리 커도 coverage 표를 붙이지 않으면 어느 범주가 비었는지 알 수
@@ -87,9 +80,8 @@ export default function EvaluationDatasetsAndPipelinesArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Edge case 는 정상 입력 분포의 경계에 있는 드문 입력이고, adversarial example 은
-            model 이 틀리도록 일부러 설계한 입력입니다. 두 종류를 golden set 에 일부러 섞어 넣지
-            않으면 평범한 입력에서만 잘 도는 model 이 통과해 버립니다.
+            정상 입력 분포의 경계에 있는 드문 입력이 edge case 이고 model 이 틀리도록 일부러 설계한 입력이 adversarial example 입니다. 두 종류를
+            golden set 에 일부러 섞어 넣지 않으면 평범한 입력에서만 잘 도는 model 이 통과해 버립니다.
           </p>
           <p>
             가정: golden set 200 개 중 20 개(10 %)를 edge case·adversarial 로 채웠습니다. 나머지
@@ -97,15 +89,13 @@ export default function EvaluationDatasetsAndPipelinesArticle() {
             놓쳤을 문제입니다.
           </p>
           <p>
-            CheckList 연구는 이미 널리 검증된 상용 감성분석 model 도 edge case 중심 test 로 새
-            bug 를 찾아냈고, 이 방법을 쓴 사람이 그렇지 않은 사람보다 거의 세 배 많은 bug 를
-            찾았다고 보고합니다. 평균 정확도가 높다고 edge case 가 없다는 뜻은 아닙니다.
+            CheckList 연구는 이미 널리 검증된 상용 감성분석 model 도 edge case 중심 test 로 새 bug 를 찾아냈고 이 방법을 쓴 사람이 그렇지 않은 사람보다
+            거의 세 배 많은 bug 를 찾았다고 보고합니다. 평균 정확도가 높다고 edge case 가 없다는 뜻은 아닙니다.
           </p>
           <p>
-            Out-of-distribution(OOD) evaluation 은 학습·golden set 어디에도 없던 분포의 입력에
-            model 을 넣어 보는 것이고, 그 분포 차이 자체를 distribution shift 라고 부릅니다.
-            WILDS benchmark 는 병원별 종양 판독처럼 실제로 일어나는 분포 이동에서 in-distribution
-            보다 OOD 정확도가 뚜렷하게 낮다는 것을 여러 domain 에서 보였습니다.
+            Out-of-distribution(OOD) evaluation 은 학습·golden set 어디에도 없던 분포의 입력에 model 을 넣어 보는 것이고 그 분포 차이 자체를
+            distribution shift 라고 부릅니다. WILDS benchmark 는 병원별 종양 판독처럼 실제로 일어나는 분포 이동에서 in-distribution 보다 OOD
+            정확도가 뚜렷하게 낮다는 것을 여러 domain 에서 보였습니다.
           </p>
           <p>
             Edge case·adversarial 비율을 너무 올리면 golden set 전체가 실제 트래픽과 멀어져
@@ -130,9 +120,8 @@ export default function EvaluationDatasetsAndPipelinesArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Slice-based evaluation 은 전체 표본을 언어·길이·카테고리 같은 축으로 나눠 정확도를
-            따로 재는 방법입니다. 전체 평균만 보면 한 slice 의 붕괴가 다른 slice 의 개선에
-            가려집니다.
+            전체 표본을 언어·길이·카테고리 같은 축으로 나눠 정확도를 따로 재는 것이 slice-based evaluation 입니다. 전체 평균만 보면 한 slice 의 붕괴가 다른
+            slice 의 개선에 가려집니다.
           </p>
           <p>
             Google 의 ML Test Score 논문은 실제 사례로 전체 정확도가 1 % 올랐는데 특정 국가
@@ -145,9 +134,8 @@ export default function EvaluationDatasetsAndPipelinesArticle() {
             자원이 적은 언어의 문제가 잘 보이지 않습니다.
           </p>
           <p>
-            Regression test 는 이전 버전에서 쟀던 같은 slice 를 다시 재 품질이 되돌아가지
-            않았는지 확인하는 것입니다. Slice 별 절대 기준(예: 오차 5 % 미만)과 이전 대비 상대
-            기준(예: 1 % 이상 하락 금지)을 함께 두는 것이 ML Test Score 논문의 권고입니다.
+            Regression test 는 이전 버전에서 쟀던 같은 slice 를 다시 재서 품질이 되돌아가지 않았는지 확인합니다. Slice 별 절대 기준(예: 오차 5 % 미만)과
+            이전 대비 상대 기준(예: 1 % 이상 하락 금지)을 함께 두는 것이 ML Test Score 논문의 권고입니다.
           </p>
           <p>
             Prompt 버전만 바꾸는 좁은 범위에서는 이미 실패 trace 를 고정해 두고 한 축씩 바꾸는{" "}
@@ -171,10 +159,8 @@ export default function EvaluationDatasetsAndPipelinesArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Evaluation harness 는 golden set 을 model 에 넣고 채점해 지표를 뽑는 재사용 가능한
-            코드입니다. 사람이 매번 손으로 돌리면 코드가 바뀔 때마다 빠뜨리기 쉬우므로, 이
-            harness 를 코드·model 변경마다 자동으로 도는 automated evaluation pipeline 으로
-            굳힙니다.
+            Golden set 을 model 에 넣고 채점해 지표를 뽑는 재사용 가능한 코드가 evaluation harness 입니다. 사람이 매번 손으로 돌리면 코드가 바뀔 때마다
+            빠뜨리기 쉬우므로 이 harness 를 코드·model 변경마다 자동으로 도는 automated evaluation pipeline 으로 굳힙니다.
           </p>
           <p>
             OpenAI Evals 는 eval 하나를 데이터(JSON)와 채점 방식(YAML)으로 등록해 두면 설치 뒤
@@ -182,14 +168,12 @@ export default function EvaluationDatasetsAndPipelinesArticle() {
             돌지 않는 eval 은 harness 가 아니라 그냥 문서입니다.
           </p>
           <p>
-            이 pipeline 을 CI 처럼 커밋마다 상시로 돌리는 것이 continuous evaluation 입니다. ML
-            Test Score 논문은 pipeline 전체를 정기적으로 통합 테스트해야 하고, 빠른 피드백을 위해
-            데이터 부분집합이나 더 단순한 model 로 먼저 돌리는 것을 권합니다.
+            이 pipeline 을 CI 처럼 커밋마다 상시로 돌리는 것이 continuous evaluation 입니다. ML Test Score 논문은 pipeline 전체를 정기적으로
+            통합 테스트해야 하고 빠른 피드백을 위해 데이터 부분집합이나 더 단순한 model 로 먼저 돌리는 것을 권합니다.
           </p>
           <p>
-            Harness 가 자동으로 돌아도 채점 기준 자체가 낡으면 소용없습니다. Golden set 이
-            늘어나면 harness 실행 시간도 늘어나므로, 매 커밋에는 빠른 부분집합을, 배포 전에는
-            전체 golden set 을 돌리는 두 단계로 나누는 경우가 많습니다.
+            Harness 가 자동으로 돌아도 채점 기준 자체가 낡으면 소용없습니다. Golden set 이 늘어나면 harness 실행 시간도 늘어나므로 매 커밋에는 빠른 부분집합을,
+            배포 전에는 전체 golden set 을 돌리는 두 단계로 나누는 경우가 많습니다.
           </p>
         </div>
         <ProgressiveDetail
@@ -197,10 +181,8 @@ export default function EvaluationDatasetsAndPipelinesArticle() {
           preview="정답이 하나로 정해지면 rule-based 채점을, 자유 서술형이면 judge model 채점을 씁니다. 이 글은 채점 기준 자체의 설계보다 그 결과를 파이프라인 어디서 쓰는지를 다룹니다."
         >
           <p>
-            Rule-based 채점은 정답 문자열 일치나 정규식처럼 결정적이라 harness 에 넣기 쉽고
-            비용도 거의 없습니다. 자유 서술형 답변은 rubric 을 정해 두고 다른 model 이 채점하는
-            방식을 쓰는데, 그 채점 자체의 신뢰도는 이 글이 아니라 채점 기준을 다루는 글의
-            범위입니다.
+            Rule-based 채점은 정답 문자열 일치나 정규식처럼 결정적이라 harness 에 넣기 쉽고 비용도 거의 없습니다. 자유 서술형 답변은 rubric 을 정해 두고 다른
+            model 이 채점하는 방식을 쓰는데 그 채점 자체의 신뢰도는 이 글이 아니라 채점 기준을 다루는 글의 범위입니다.
           </p>
         </ProgressiveDetail>
       </section>
@@ -211,35 +193,29 @@ export default function EvaluationDatasetsAndPipelinesArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Offline evaluation 은 golden set 같은 정적 데이터셋에서 배포 전에 재는 것이고,
-            online evaluation 은 실제 트래픽에서 재는 것입니다. Offline 을 통과했다고 online 에서도
-            통과한다는 보장은 없습니다.
+            Offline evaluation 은 golden set 같은 정적 데이터셋에서 배포 전에 재고 online evaluation 은 실제 트래픽에서 잽니다. Offline 을
+            통과했다고 online 에서도 통과한다는 보장은 없습니다.
           </p>
           <p>
-            가정: golden set 정확도는 92 % 인데 실 트래픽에 내보내니 78 % 로 떨어졌습니다. 운영
-            입력의 길이·언어 분포가 golden set 과 달라 distribution shift 가 생긴 것이며, WILDS
-            가 보인 in-distribution 과 OOD 사이의 정확도 격차와 같은 종류의 문제입니다.
+            가정: golden set 정확도는 92 % 인데 실 트래픽에 내보내니 78 % 로 떨어졌습니다. 운영 입력의 길이·언어 분포가 golden set 과 달라
+            distribution shift 가 생긴 것이며 WILDS 가 보인 in-distribution 과 OOD 사이의 정확도 격차와 같은 종류의 문제입니다.
           </p>
           <p>
-            ML Test Score 논문도 validation 데이터는 항상 실제 serving 입력보다 오래됐고, 서빙
-            시점의 정답 label 을 바로 알기 어려워 품질 측정 자체가 어렵다고 지적합니다. 그래서
-            online 회귀를 잡으려면 별도 monitoring 이 필요합니다.
+            ML Test Score 논문도 validation 데이터는 항상 실제 serving 입력보다 오래됐고 서빙 시점의 정답 label 을 바로 알기 어려워 품질 측정 자체가
+            어렵다고 지적합니다. 그래서 online 회귀를 잡으려면 별도 monitoring 이 필요합니다.
           </p>
           <p>
-            Shadow evaluation 은 새 model 을 실 트래픽 일부에 A/B 분할 없이 붙여 관찰하는
-            방법입니다. 트래픽 10 % 에 candidate 를 붙이되 사용자에게는 기존 model 응답을 그대로
-            보내고 candidate 의 지표만 기록하며, 문제가 없으면 그 비율을 점점 늘립니다. ML Test
-            Score 가 말하는 canary 가 이 방식입니다.
+            새 model 을 실 트래픽 일부에 A/B 분할 없이 붙여 관찰하는 방법이 shadow evaluation 입니다. 트래픽 10 % 에 candidate 를 붙이되 사용자에게는
+            기존 model 응답을 그대로 보내고 candidate 의 지표만 기록하며 문제가 없으면 그 비율을 점점 늘립니다. ML Test Score 가 말하는 canary 가 이
+            방식입니다.
           </p>
           <p>
-            A/B testing 은 트래픽을 candidate 와 control 로 무작위 분할해 사용자가 실제로
-            candidate 응답을 받게 한 뒤, 목표 지표의 차이가 우연보다 큰지 유의성 검정으로
-            판정합니다. Shadow 와 달리 사용자 경험에 직접 영향을 줍니다.
+            A/B testing 은 트래픽을 candidate 와 control 로 무작위 분할해 사용자가 실제로 candidate 응답을 받게 한 뒤 목표 지표의 차이가 우연보다 큰지
+            유의성 검정으로 판정합니다. Shadow 와 달리 사용자 경험에 직접 영향을 줍니다.
           </p>
           <p>
-            Kohavi 등의 연구는 감지하려는 효과가 절반이 되면 필요한 표본 수는 네 배가 되는 제곱
-            관계를 보고하며, 이 때문에 대형 서비스의 실험 하나가 수백만 사용자에 노출되고 한
-            회사가 연간 2 만 건이 넘는 실험을 동시에 돌리기도 합니다.
+            Kohavi 등의 연구는 제곱 관계를 보고합니다. 감지하려는 효과가 절반이 되면 필요한 표본 수는 네 배가 됩니다. 이 때문에 대형 서비스의 실험 하나가 수백만 사용자에
+            노출되고 한 회사가 연간 2 만 건이 넘는 실험을 동시에 돌리기도 합니다.
           </p>
         </div>
         <ExplainedFormula
@@ -265,9 +241,8 @@ export default function EvaluationDatasetsAndPipelinesArticle() {
           interpretation="δ 가 절반이 되면 n 은 네 배가 됩니다. 그래서 아주 작은 효과를 잡으려는 A/B 는 수백만 단위의 트래픽이 필요하고, 그만큼 작은 회귀도 큰 트래픽에서는 통계적으로 잡힙니다."
         />
         <p className="prose prose-neutral max-w-none dark:prose-invert">
-          Evaluation–development feedback loop 는 A/B 나 online 에서 찾은 실패를 새 evaluation
-          example 로 golden set 에 되먹여 harness 의 coverage 를 넓히는 순환입니다. 이 loop 가
-          없으면 같은 실패가 배포마다 반복됩니다.
+          A/B 나 online 에서 찾은 실패는 새 evaluation example 로 golden set 에 되먹입니다. 이렇게 harness 의 coverage 를 넓히는 순환이
+          evaluation–development feedback loop 입니다. 이 loop 가 없으면 같은 실패가 배포마다 반복됩니다.
         </p>
         <AlgorithmBlock
           title="Golden set 구축부터 배포까지 이어지는 평가 파이프라인"

@@ -35,11 +35,9 @@ export default function Acceleration() {
       <h2 className="text-2xl font-bold mb-6">딥러닝 고속화</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          딥러닝의 주요 계산은 matrix multiplication과 convolution처럼 병렬화하기
-          쉬운 연산이지만, peak FLOPS만 높다고 학습이 자동으로 빨라지지는
-          않습니다. 실제 시간은 kernel이 hardware를 얼마나 채우는지, weight와
-          activation을 얼마나 자주 메모리에서 옮기는지, 여러 device가 기다리는
-          시간이 얼마나 되는지에 따라 달라집니다.
+          딥러닝의 주요 계산은 matrix multiplication과 convolution처럼 병렬화하기 쉬운 연산이지만 peak FLOPS만 높다고 학습이 자동으로 빨라지지는 않습니다.
+          실제 시간은 kernel이 hardware를 얼마나 채우느냐, weight와 activation을 얼마나 자주 메모리에서 옮기느냐, 여러 device가 얼마나 오래 기다리느냐에
+          달려 있습니다.
         </p>
       </div>
 
@@ -111,11 +109,9 @@ export default function Acceleration() {
           recipe의 결합이었습니다
         </h3>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          AlexNet은 ImageNet의 대규모 labeled image, 다섯 convolution layer와
-          두 fully connected layer, non-saturating unit, GPU convolution,
-          regularization을 한 실험에 결합했습니다. 논문이 보여 준 것은 해당
-          dataset·metric에서 이 조합이 큰 오차 감소를 냈다는 결과이며, ReLU나
-          GPU 하나만 떼어 모든 domain의 성공 원인으로 일반화할 수는 없습니다.
+          AlexNet이 한 실험에 결합한 것은 ImageNet의 대규모 labeled image, 다섯 convolution layer와 두 fully connected layer,
+          non-saturating unit, GPU convolution, regularization입니다. 논문이 보여 준 것은 해당 dataset·metric에서 이 조합이 큰 오차
+          감소를 냈다는 결과입니다. ReLU나 GPU 하나만 떼어 모든 domain의 성공 원인으로 일반화할 수는 없습니다.
         </p>
       </div>
     </section>

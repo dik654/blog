@@ -9,12 +9,9 @@ export default function Numeric() {
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          소득 5,000만 원과 연체 횟수 2회를 그대로 한 vector에 놓으면 숫자 크기가
-          다릅니다. 거리 기반 모델, regularized linear model과 신경망의 gradient는
-          이 scale 차이에 영향을 받지만, tree는 보통 threshold의 순서만 사용하므로
-          같은 정도로 민감하지 않습니다. Scaling은 분포를 예쁘게 만드는 의식이
-          아니라 model geometry와 optimizer가 좌표를 다루는 방식을 조정하는
-          선택입니다.
+          소득 5,000만 원과 연체 횟수 2회를 그대로 한 vector에 놓으면 숫자 크기가 다릅니다. 거리 기반 모델, regularized linear model과 신경망의
+          gradient는 이 scale 차이에 영향을 받지만 tree는 보통 threshold의 순서만 사용하므로 같은 정도로 민감하지 않습니다. Scaling은 분포를 예쁘게 만드는
+          의식이 아니라 model geometry와 optimizer가 좌표를 다루는 방식을 조정하는 선택입니다.
         </p>
       </div>
 
@@ -50,13 +47,9 @@ export default function Numeric() {
         </p>
         <h3>결측, clipping과 binning은 서로 다른 결정을 담습니다</h3>
         <p>
-          결측 대치는 관측되지 않은 값을 어떻게 표현할지 정하고, clipping은
-          측정 오류나 정책상 상한을 다루며, binning은 연속값을 구간 결정으로
-          바꿉니다. 결측이 업무 과정 자체를 나타낼 수 있으면 대치값과 함께
-          missing indicator를 둡니다. Binning은 세율 구간처럼 실제 경계가 있을
-          때 유용하지만, 임의 경계 양옆의 가까운 두 값을 전혀 다른 category로
-          만들어 정보를 잃을 수 있습니다. 모든 통계와 경계는 fold 안에서
-          fit하고 validation의 residual과 slice를 확인합니다.
+          결측 대치는 관측되지 않은 값을 어떻게 표현할지 정하고 clipping은 측정 오류나 정책상 상한을 다루며, binning은 연속값을 구간 결정으로 바꿉니다. 결측이 업무 과정
+          자체를 나타낼 수 있으면 대치값과 함께 missing indicator를 둡니다. Binning은 세율 구간처럼 실제 경계가 있을 때 유용하지만 임의 경계 양옆의 가까운 두 값을
+          전혀 다른 category로 만들어 정보를 잃을 수 있습니다. 모든 통계와 경계는 fold 안에서 fit하고 validation의 residual과 slice를 확인합니다.
         </p>
       </div>
     </section>

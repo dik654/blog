@@ -29,11 +29,9 @@ export default function TeamCron() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          team은 backend나 docs 같은 이름표가 아니라 worker pool, capability,
-          writable scope와 concurrency policy를 묶는 실행 단위입니다. cron은
-          특정 시각마다 이 team을 직접 실행하는 것이 아니라, 검증 가능한 task
-          contract를 생성해 동일한 registry와 dispatch 경로에 넣는
-          producer입니다.
+          team은 worker pool과 capability, writable scope, concurrency policy를 묶는 실행 단위입니다. backend나 docs 같은
+          이름표로 읽기 쉽지만 그렇지 않습니다. cron도 특정 시각마다 이 team을 직접 실행하지 않습니다. 검증 가능한 task contract를 생성해 동일한 registry와
+          dispatch 경로에 넣는 producer입니다.
         </p>
         <p className="leading-7">
           두 개념을 분리하면 수동 task와 scheduled task가 같은 validation과
@@ -85,10 +83,9 @@ export default function TeamCron() {
           team matching은 tag보다 capability를 먼저 본다
         </h3>
         <p className="leading-7">
-          task tag와 file pattern은 후보 team을 찾는 데 유용하지만, 실제 배정은
-          required tool, path, model class와 isolation profile을 모두 만족해야
-          합니다. 여러 team이 가능하면 queue depth뿐 아니라 같은 file을 이미
-          수정 중인지, dependency를 가진 task가 있는지 확인합니다.
+          task tag와 file pattern은 후보 team을 찾는 데 유용하지만 실제 배정은 required tool과 path, model class, isolation
+          profile을 모두 만족해야 합니다. 여러 team이 가능하면 queue depth뿐 아니라 같은 file을 이미 수정 중인지, dependency가 걸린 task가 있는지
+          확인합니다.
         </p>
         <p className="leading-7">
           team instruction은 worker의 context를 돕는 문서이지 enforcement가
@@ -100,10 +97,8 @@ export default function TeamCron() {
           cron parser보다 timezone과 misfire 정책이 중요하다
         </h3>
         <p className="leading-7">
-          cron expression만 저장하면 daylight saving time, scheduler downtime과
-          clock change에서 실행 의미가 모호해집니다. schedule과 함께 timezone,
-          start·end boundary, misfire 시 건너뛸지 따라잡을지, 최대 지연을
-          저장합니다.
+          cron expression만 저장하면 daylight saving time이나 scheduler downtime, clock change에서 실행 의미가 모호해집니다.
+          schedule과 함께 timezone과 start·end boundary를 저장합니다. misfire 때 건너뛸지 따라잡을지, 최대 지연은 얼마인지도 같이 적어 둡니다.
         </p>
         <p className="leading-7">
           scheduler loop는 polling 간격에 기대기보다 durable{" "}
@@ -123,9 +118,8 @@ export default function TeamCron() {
           replace는 이전 task cancellation과 cleanup이 확인된 뒤에만 시작합니다.
         </p>
         <p className="leading-7">
-          cron이 만든 task도 당시 template version과 source revision을
-          기록합니다. 그래야 결과를 어느 정책과 코드에 따라 실행했는지 추적하고,
-          template 변경 뒤 오래된 queued task를 재검토할 수 있습니다.
+          cron이 만든 task도 당시 template version과 source revision을 기록합니다. 그래야 결과를 어느 정책과 코드에 따라 실행했는지 추적하고
+          template 변경 뒤 오래된 queued task를 재검토합니다.
         </p>
       </div>
     </section>

@@ -28,7 +28,9 @@ export default function ModernArticle() {
       <section id="pair-contract" className="scroll-mt-20 space-y-7">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <h2>Pair를 loss에 넣기 전에 네 항목을 한 줄씩 검사합니다</h2>
-          <p className="leading-8">긴 tuple을 한 문장에 나열하지 않고, 각 항목이 무엇을 소유하고 무엇을 보장하지 않는지 분리합니다.</p>
+          <p className="leading-8">
+            긴 tuple을 한 문장에 나열하지 말고 각 항목이 무엇을 소유하고 무엇을 보장하지 않는지 분리합니다.
+          </p>
         </div>
         <TermBreakdown
           title="DPO example의 형태"
@@ -46,8 +48,15 @@ export default function ModernArticle() {
       <section id="evaluation" className="scroll-mt-20 space-y-7">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <h2>마지막에는 pair accuracy가 아니라 배포 behavior를 다시 봅니다</h2>
-          <p className="leading-8">Reference revision·chat template·β·sequence log-prob 집계 방식을 한 실험 receipt에 남깁니다. 그 뒤 길이·문체 shortcut, pair 밖 prompt, 사실성, over-refusal, jailbreak와 base capability regression을 서로 다른 slice로 평가합니다.</p>
-          <p className="leading-8">DPO가 PPO보다 운영하기 단순하다는 말은 online generation cluster와 reward serving이 빠진다는 뜻입니다. Preference data 수집·정제, reference forward, independent human audit와 실패 시 rollback까지 사라진다는 뜻은 아닙니다.</p>
+          <p className="leading-8">
+            reference revision·chat template·β·sequence log-prob 집계 방식은 한 실험 receipt에 남깁니다. 그 뒤 평가는 길이·문체
+            shortcut, pair 밖 prompt, 사실성, over-refusal, jailbreak와 base capability regression을 서로 다른 slice로 나눠
+            봅니다.
+          </p>
+          <p className="leading-8">
+            DPO가 PPO보다 운영하기 단순하다는 말은 online generation cluster와 reward serving이 빠진다는 뜻입니다. 그래도 preference data
+            수집·정제, reference forward, independent human audit, 실패 시 rollback은 그대로 남습니다.
+          </p>
         </div>
         <div id="paper-dpo-implementation" className="scroll-mt-20">
           <CitationBlock source="Hugging Face TRL · DPO Trainer" citeKey={2} type="code" href="https://huggingface.co/docs/trl/dpo_trainer">

@@ -16,10 +16,8 @@ export default function Benchmark() {
           representative sampling run을 구분합니다.
         </p>
         <p>
-          Baseline, A, B, A+B를 모두 남겨야 결합 이득이 단일 효과의 합인지 알 수
-          있습니다. Quality guardrail을 통과한 후보만 resource frontier에
-          올리며, 더 느리고 더 크면서 품질도 낮은 dominated artifact는
-          제거합니다.
+          Baseline, A, B, A+B를 모두 남겨야 결합 이득이 단일 효과의 합인지 알 수 있습니다. Quality guardrail을 통과한 후보만 resource
+          frontier에 올리며 더 느리고 더 크면서 품질도 낮은 dominated artifact는 제거합니다.
         </p>
       </div>
       <ExplainedFormula
@@ -175,11 +173,9 @@ D(a)&=\mathbf1[\exists b\in\mathcal A:b\succ a],\\
           공식 benchmark 참고 · MLPerf Inference
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          MLPerf Inference는 deployment scenario를 나누고 LoadGen으로 query
-          scheduling·latency tracking·accuracy validation을 함께 관리합니다. 이
-          블로그의 내부 benchmark가 MLPerf submission이라는 뜻은 아니며,
-          workload scenario와 accuracy/performance run을 분리하는 재현 원칙을
-          참고합니다.
+          MLPerf Inference는 deployment scenario를 나누고 LoadGen으로 query scheduling·latency tracking·accuracy
+          validation을 함께 관리합니다. 이 블로그의 내부 benchmark가 MLPerf submission이라는 뜻은 아니며 workload scenario와
+          accuracy/performance run을 분리하는 재현 원칙을 참고합니다.
         </p>
         <a
           className="mt-3 inline-block text-sm font-medium text-primary hover:underline"

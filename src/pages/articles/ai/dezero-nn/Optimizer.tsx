@@ -10,10 +10,13 @@ export default function Optimizer({ onCodeRef }: { onCodeRef: (key: string, ref:
       <h2 className="mb-6 text-2xl font-bold">Optimizer는 gradient와 파라미터별 상태를 update 규칙으로 묶습니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          SGD는 현재 gradient에 학습률을 곱해 파라미터에서 빼는 가장 단순한 기준점입니다. 모델 참조를 받아 파라미터를 순회하게 만들면 새 레이어를 추가해도 optimizer 코드는 바뀌지 않으며, gradient가 없는 파라미터는 건너뛸 수 있습니다.
+          가장 단순한 기준점은 SGD입니다. 현재 gradient에 학습률을 곱해 파라미터에서 뺍니다. 모델 참조를 받아 파라미터를 순회하게 만들면 새 레이어를 추가해도 optimizer
+          코드는 바뀌지 않고 gradient가 없는 파라미터는 건너뜁니다.
         </p>
         <p>
-          Adam은 파라미터마다 gradient의 1차 모멘트와 제곱 gradient의 2차 모멘트를 저장합니다. 두 상태가 0에서 시작해 초기값이 작게 추정되므로 bias correction을 적용하고, 작은 분모를 막기 위해 epsilon을 더합니다. AdamW는 weight decay를 gradient 기반 update와 분리해 적용한다는 점도 Adam에 L2 penalty를 단순히 더하는 방식과 구분해야 합니다.
+          Adam은 파라미터마다 gradient의 1차 모멘트와 제곱 gradient의 2차 모멘트를 저장합니다. 두 상태가 0에서 시작해 초기값이 작게 추정되므로 bias
+          correction을 적용하고 작은 분모를 막기 위해 epsilon을 더합니다. AdamW는 weight decay를 gradient 기반 update와 분리해 적용합니다.
+          Adam에 L2 penalty를 단순히 더하는 방식과는 다릅니다.
         </p>
       </div>
       <div className="not-prose my-8"><OptimizerViz onOpenCode={open} /></div>

@@ -34,11 +34,9 @@ export default function Usage() {
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          UsageTracker는 숫자를 네 개 더하는 counter가 아니라, 어느 provider의
-          어떤 응답에서 어떤 정의의 token usage가 발생했는지 보존하는 원장에
-          가깝습니다. 요청 전에 tokenizer로 센 값과 provider가 응답에 포함한
-          billable usage를 구분해야 예산 경고와 실제 비용 분석을 동시에 할 수
-          있습니다.
+          UsageTracker는 원장에 가깝습니다. 어느 provider의 어떤 응답에서 어떤 정의의 token usage가 발생했는지를 보존합니다. 숫자를 네 개 더하는
+          counter와는 하는 일이 다릅니다. 요청 전에 tokenizer로 센 값과 provider가 응답에 포함한 billable usage를 구분해야 예산 경고와 실제 비용 분석을
+          함께 할 수 있습니다.
         </p>
 
         <UsageTrackerViz />
@@ -110,12 +108,9 @@ export default function Usage() {
           retry와 stream 재연결의 중복을 막는다
         </h3>
         <p>
-          네트워크 오류 뒤 같은 응답의 완료 이벤트를 다시 받거나 retry된 요청이
-          별도 응답을 만들 수 있습니다. provider response ID와 request attempt
-          ID를 함께 저장하고, 한 response의 usage는 idempotency key로 한 번만
-          반영해야 합니다. retry가 새 응답을 만들었다면 두 usage 모두 실제
-          비용일 수 있으므로 하나를 임의로 지우지 말고 같은 logical turn 아래
-          attempt별로 묶습니다.
+          네트워크 오류 뒤 같은 응답의 완료 이벤트를 다시 받거나 retry된 요청이 별도 응답을 만들 수 있습니다. provider response ID와 request attempt
+          ID를 함께 저장하고 한 response의 usage는 idempotency key로 한 번만 반영합니다. retry가 새 응답을 만들었다면 두 usage 모두 실제 비용일 수
+          있으므로 하나를 임의로 지우지 말고 같은 logical turn 아래 attempt별로 묶습니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
@@ -182,24 +177,18 @@ export default function Usage() {
           budget warning과 hard limit을 분리한다
         </h3>
         <p>
-          경고는 현재 추정 비용이 threshold를 넘으면 보여주면 되지만, hard
-          limit은 동시 요청 때문에 쉽게 초과할 수 있습니다. 요청을 시작할 때
-          예상 최대 비용을 reserve하고 완료 후 실제 usage로 정산해야 하며,
-          timeout이나 취소 때 reservation을 언제 해제할지도 정해야 합니다. 팀
-          환경에서는 일일 한도뿐 아니라 project·user·provider별 scope와
-          timezone을 명확히 해야 합니다.
+          경고는 현재 추정 비용이 threshold를 넘으면 보여주면 됩니다. hard limit은 사정이 다릅니다. 동시 요청 때문에 쉽게 초과합니다. 요청을 시작할 때 예상 최대 비용을
+          reserve하고 완료 후 실제 usage로 정산합니다. timeout이나 취소 때 reservation을 언제 해제할지도 미리 정해 둡니다. 팀 환경에서는 일일 한도뿐 아니라
+          project·user·provider별 scope와 timezone까지 명확히 합니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
           사용자가 행동할 수 있는 breakdown을 보여준다
         </h3>
         <p>
-          총액 하나만 보여주면 무엇을 바꿔야 할지 알 수 없습니다. model과
-          operation, input·output·cache category, 성공·실패 attempt별로
-          breakdown을 제공하면 긴 prompt를 줄일지, output limit을 조정할지,
-          cache hit rate를 개선할지 판단할 수 있습니다. 다만 session ID 같은
-          고유 값을 metric label로 만들지 말고 상세 분석은 trace나 usage
-          ledger에서 수행합니다.
+          총액 하나만 보여주면 무엇을 바꿔야 할지 알 수 없습니다. model과 operation, input·output·cache category, 성공·실패 attempt별로
+          breakdown을 제공하면 긴 prompt를 줄일지, output limit을 조정할지, cache hit rate를 개선할지가 보입니다. 다만 session ID 같은 고유
+          값을 metric label로 만들지 말고 상세 분석은 trace나 usage ledger에서 수행합니다.
         </p>
 
         <div id="paper-otel-genai-semconv" className="scroll-mt-24">

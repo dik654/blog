@@ -19,12 +19,9 @@ export default function Overview() {
           <strong> 예측 시점에 사용 가능한 현실을 재현하는 일</strong>입니다.
         </p>
         <p>
-          원본 record를 그대로 넣기 어려운 이유도 여기에 있습니다. 거래 log는
-          여러 행이고, model은 보통 한 prediction entity를 고정 길이 vector로
-          받습니다. 따라서 최근 30일 거래 횟수처럼 event를 집계하거나, 매출과
-          거래 수에서 객단가를 계산하고, category를 model이 처리할 숫자로
-          바꿉니다. 이 변환에는 항상 entity, cutoff time, source, 단위, 결측·새
-          category 처리 규칙이 따라야 합니다.
+          원본 record를 그대로 넣기 어려운 이유도 여기에 있습니다. 거래 log는 여러 행이고 model은 보통 한 prediction entity를 고정 길이 vector로
+          받습니다. 따라서 최근 30일 거래 횟수처럼 event를 집계하거나 매출과 거래 수에서 객단가를 계산하고, category를 model이 처리할 숫자로 바꿉니다. 이 변환에는 항상
+          entity, cutoff time, source, 단위, 결측·새 category 처리 규칙이 따라야 합니다.
         </p>
         <p>
           이 글은 <Link to="/ai/deep-learning-overview#learning-loop">input feature와 target, train·validation·test</Link>,{" "}
@@ -88,11 +85,9 @@ x_j(e,t_0)&=\underbrace{g_j\!\left(\mathcal R(e,t_0)\right).}_{\text{허용 경�
           <p className="text-xs font-bold text-primary">논문 읽기 · 사용할 자격이 있는 정보인가</p>
           <p className="mt-2 text-sm font-semibold">Leakage in Data Mining: Formulation, Detection, and Avoidance</p>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            Kaufman 등은 leakage를 target을 추론하는 데 정당하게 사용할 수 없는
-            정보가 학습에 들어간 문제로 정식화하고, observation별 legitimacy와
-            learn–predict separation을 제안했습니다. 이는 시간 필터 하나로 모든
-            누출을 막는다는 주장이 아니라, 실제 의사결정 시점과 데이터 생성
-            과정을 먼저 정의해야 한다는 근거입니다.
+            Kaufman 등은 leakage를 target을 추론하는 데 정당하게 사용할 수 없는 정보가 학습에 들어간 문제로 정식화하고 observation별 legitimacy와
+            learn–predict separation을 제안했습니다. 이는 시간 필터 하나로 모든 누출을 막는다는 주장이 아니라, 실제 의사결정 시점과 데이터 생성 과정을 먼저 정의해야
+            한다는 근거입니다.
           </p>
           <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://doi.org/10.1145/2382577.2382579" target="_blank" rel="noreferrer">원 논문의 leakage 정의와 회피 절차 보기</a>
         </div>

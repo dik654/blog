@@ -24,10 +24,9 @@ export default function ExpertParallelismMoeSystemsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            MoE layer의 expert는 전체를 한 GPU에 올리기에 너무 많고 크므로 GPU마다 일부
-            expert만 둡니다. 그러면 token은 자기 GPU에 없는 expert에게 가야 하고, 계산이
-            끝나면 돌아와야 합니다. 이 두 번의 이동이 all-to-all 통신이고, expert 계산보다
-            오래 걸리는 순간 MoE는 연산이 아니라 network에 막힙니다.
+            MoE layer의 expert는 전체를 한 GPU에 올리기에 너무 많고 크므로 GPU마다 일부 expert만 둡니다. 그러면 token은 자기 GPU에 없는 expert에게
+            가야 하고 계산이 끝나면 돌아와야 합니다. 이 두 번의 이동이 all-to-all 통신이고 expert 계산보다 오래 걸리는 순간 MoE는 연산이 아니라 network에
+            막힙니다.
           </p>
           <p>
             이 글은 그 이동만 다룹니다. Expert를 어느 GPU에 둘지 정하는 sharding, token을
@@ -53,28 +52,24 @@ export default function ExpertParallelismMoeSystemsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Expert parallelism(EP)은 MoE layer의 expert 집합을 여러 GPU에 나눠 두고, 각
-            token을 자기가 고른 expert가 있는 GPU로 보내 계산하는 병렬화입니다. Tensor
-            parallel이 한 weight 행렬을 여러 GPU가 조각내 함께 계산하는 것과 달리, EP는
-            expert 하나를 통째로 한 GPU가 맡고 token 쪽이 움직입니다.
+            Expert parallelism(EP)은 MoE layer의 expert 집합을 여러 GPU에 나눠 두고 각 token을 자기가 고른 expert가 있는 GPU로 보내
+            계산하는 병렬화입니다. Tensor parallel이 한 weight 행렬을 여러 GPU가 조각내 함께 계산하는 것과 달리, EP는 expert 하나를 통째로 한 GPU가 맡고
+            token 쪽이 움직입니다.
           </p>
           <p>
-            Expert sharding은 그 배치표입니다. 64 expert를 8 GPU에 8개씩 두면 GPU g는
-            expert 8g부터 8g+7까지를 갖습니다. GShard는 expert 하나를 device 하나에 두는
-            가장 단순한 배치였고, DeepSeek-V3의 decode 배포는 320 GPU에 expert를 하나씩
-            두되 64 GPU를 자주 뽑히는 expert의 복제본에 썼습니다.
+            64 expert를 8 GPU에 8개씩 두면 GPU g는 expert 8g부터 8g+7까지를 갖습니다. 이 배치표가 expert sharding입니다. GShard는
+            expert 하나를 device 하나에 두는 가장 단순한 배치였고 DeepSeek-V3의 decode 배포는 320 GPU에 expert를 하나씩 두되 64 GPU를 자주
+            뽑히는 expert의 복제본에 썼습니다.
           </p>
           <p>
-            배치표가 정해지면 token 하나의 경로가 정해집니다. GPU 0에 있는 token이 expert
-            13과 42를 골랐다면 expert 13은 GPU 1에, 42는 GPU 5에 있으므로 token의 hidden
-            vector를 두 GPU로 복사해 보내고, 각 GPU가 자기 expert FFN을 계산한 뒤 결과를
-            GPU 0으로 돌려보내 gate 가중치로 합칩니다.
+            배치표가 정해지면 token 하나의 경로가 정해집니다. GPU 0에 있는 token이 expert 13과 42를 골랐다면 expert 13은 GPU 1에, 42는 GPU 5에
+            있으므로 token의 hidden vector를 두 GPU로 복사해 보냅니다. 각 GPU가 자기 expert FFN을 계산한 뒤 결과를 GPU 0으로 돌려보내면 gate
+            가중치로 합칩니다.
           </p>
           <p>
-            EP는 보통 data parallel과 함께 씁니다. 8 GPU가 각자 다른 batch를 들고
-            attention과 shared layer는 replica처럼 따로 계산하다가 MoE layer에서만 token을
-            교환합니다. 그래서 EP group의 GPU 수는 곧 all-to-all에 참여하는 rank 수이고,
-            이 수가 클수록 한 token이 자기 GPU에 남을 확률이 낮아집니다.
+            EP는 보통 data parallel과 함께 씁니다. 8 GPU가 각자 다른 batch를 들고 attention과 shared layer는 replica처럼 따로 계산하다가
+            MoE layer에서만 token을 교환합니다. 그래서 EP group의 GPU 수는 곧 all-to-all에 참여하는 rank 수이고 이 수가 클수록 한 token이 자기
+            GPU에 남을 확률이 낮아집니다.
           </p>
           <p>
             Weight memory 관점에서 EP는 expert weight를 GPU 수로 나눕니다. Expert 하나가
@@ -101,16 +96,14 @@ export default function ExpertParallelismMoeSystemsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            All-to-all은 group의 모든 rank가 다른 모든 rank에게 서로 다른 조각을 보내는
-            collective입니다. All-reduce가 같은 값을 모두에게 합쳐 주는 것과 달리, rank i가
-            rank j에게 보내는 chunk는 j마다 다르고 크기도 다를 수 있습니다. MoE의 dispatch는
-            GPU i의 token 가운데 GPU j의 expert를 고른 것만 j에게 보내므로 정확히 이 모양입니다.
+            Group의 모든 rank가 다른 모든 rank에게 서로 다른 조각을 보내는 collective가 all-to-all입니다. All-reduce가 같은 값을 모두에게 합쳐 주는
+            것과 달리, rank i가 rank j에게 보내는 chunk는 j마다 다르고 크기도 다를 수 있습니다. MoE의 dispatch는 GPU i의 token 가운데 GPU j의
+            expert를 고른 것만 j에게 보내므로 정확히 이 모양입니다.
           </p>
           <p>
-            한 MoE layer에는 all-to-all이 두 번 있습니다. Dispatch는 token의 hidden vector를
-            expert가 있는 GPU로 보내고, combine은 expert 출력을 원래 GPU로 돌려보냅니다.
-            둘의 byte는 같으므로 layer당 통신량은 dispatch의 두 배입니다. Combine 뒤에
-            gate 가중치를 곱해 더하는 계산은 원래 GPU에서 합니다.
+            한 MoE layer에는 all-to-all이 두 번 있습니다. Dispatch는 token의 hidden vector를 expert가 있는 GPU로 보내고 combine은
+            expert 출력을 원래 GPU로 돌려보냅니다. 둘의 byte는 같으므로 layer당 통신량은 dispatch의 두 배입니다. Combine 뒤에 gate 가중치를 곱해 더하는
+            계산은 원래 GPU에서 합니다.
           </p>
           <p>
             수치로 보겠습니다. GPU마다 token 2,048개, top-2, hidden 4,096, FP16이면 GPU 하나가
@@ -119,16 +112,13 @@ export default function ExpertParallelismMoeSystemsArticle() {
             실제로 link를 건너는 byte는 56 MiB입니다.
           </p>
           <p>
-            시간은 link가 정합니다. NVLink를 단방향 450 GB/s로 잡으면 56 MiB는 0.13 ms이고,
-            node 사이 InfiniBand를 50 GB/s로 잡으면 1.2 ms입니다. 같은 GPU가 받은 token
-            4,096개에 expert FFN 3개 행렬을 곱하는 계산은 약 1.1 TFLOP이라 600 TFLOP/s에서
-            1.85 ms입니다. NVLink에서는 통신이 계산의 7%, InfiniBand에서는 63%입니다.
+            시간은 link가 정합니다. NVLink를 단방향 450 GB/s로 잡으면 56 MiB는 0.13 ms이고 node 사이 InfiniBand를 50 GB/s로 잡으면 1.2
+            ms입니다. 같은 GPU가 받은 token 4,096개에 expert FFN 3개 행렬을 곱하는 계산은 약 1.1 TFLOP이라 600 TFLOP/s에서 1.85 ms입니다.
+            NVLink에서는 통신이 계산의 7%, InfiniBand에서는 63%입니다.
           </p>
           <p>
-            이 비율이 EP 설계의 첫 번째 숫자입니다. Payload는 token 수와 top-k, hidden에
-            비례하고 GPU 수에는 거의 무관하지만, 계산은 GPU당 받은 token 수에 비례합니다.
-            그래서 GPU를 늘려 expert를 더 잘게 나눠도 GPU당 통신은 줄지 않고 계산만
-            줄어, 비율은 GPU 수와 함께 나빠집니다.
+            이 비율이 EP 설계의 첫 번째 숫자입니다. Payload는 token 수와 top-k, hidden에 비례하고 GPU 수에는 거의 무관하지만 계산은 GPU당 받은 token
+            수에 비례합니다. 그래서 GPU를 늘려 expert를 더 잘게 나눠도 GPU당 통신은 줄지 않고 계산만 줄어 비율은 GPU 수와 함께 나빠집니다.
           </p>
         </div>
         <ExplainedFormula
@@ -180,10 +170,8 @@ export default function ExpertParallelismMoeSystemsArticle() {
             IB를 건너는 복사본 수를 줄이는 것이 expert locality의 목표입니다.
           </p>
           <p>
-            가장 직접적인 방법이 node-limited routing입니다. Router가 token마다 top-k를 고를
-            때 expert가 속한 node 수를 M개 이하로 제한합니다. DeepSeek-V3는 256 expert 가운데
-            8개를 고르되 64-way EP가 8 node에 걸쳐 있으므로, token 하나가 보내지는 node를
-            최대 4개로 묶었습니다.
+            가장 직접적인 방법이 node-limited routing입니다. Router가 token마다 top-k를 고를 때 expert가 속한 node 수를 M개 이하로 제한합니다.
+            DeepSeek-V3는 256 expert 가운데 8개를 고르되 64-way EP가 8 node에 걸쳐 있으므로 token 하나가 보내지는 node를 최대 4개로 묶었습니다.
           </p>
           <p>
             제한이 없을 때와 비교해 보겠습니다. 8 node에 expert가 32개씩 있고 8개를 고르게
@@ -192,16 +180,14 @@ export default function ExpertParallelismMoeSystemsArticle() {
             대신 router가 고를 수 있는 조합이 줄어 품질과의 맞바꿈이 됩니다.
           </p>
           <p>
-            같은 node로 가는 복사본 여러 개를 하나로 묶으면 더 줄어듭니다. DeepSeek-V3의
-            all-to-all kernel은 token을 목적 node의 같은 in-node index GPU로 IB를 통해 한 번만
-            보내고, 그 node 안에서 NVLink로 목적 GPU에 뿌립니다. IB를 건너는 byte가 expert
-            수가 아니라 node 수에 비례하게 되어 M = 4면 token당 최대 4 복사본입니다.
+            같은 node로 가는 복사본 여러 개를 하나로 묶으면 더 줄어듭니다. DeepSeek-V3의 all-to-all kernel은 token을 목적 node의 같은 in-node
+            index GPU로 IB를 통해 한 번만 보내고 그 node 안에서 NVLink로 목적 GPU에 뿌립니다. IB를 건너는 byte가 expert 수가 아니라 node 수에
+            비례하게 되어 M = 4면 token당 최대 4 복사본입니다.
           </p>
           <p>
-            이 두 단계 전송이 hierarchical all-to-all입니다. DeepSpeed-MoE가 같은 이름으로
-            node 안 all-to-all과 node 사이 all-to-all을 나눠 hop 수를 줄였고, DeepSeek-V3는
-            거기에 IB와 NVLink의 forwarding을 겹쳐 20개 SM만으로 두 link를 채웠다고
-            보고했습니다. 나머지 SM은 계산에 남습니다.
+            이 두 단계 전송이 hierarchical all-to-all입니다. DeepSpeed-MoE가 같은 이름으로 node 안 all-to-all과 node 사이 all-to-
+            all을 나눠 hop 수를 줄였고 DeepSeek-V3는 거기에 IB와 NVLink의 forwarding을 겹쳐 20개 SM만으로 두 link를 채웠다고 보고했습니다. 나머지
+            SM은 계산에 남습니다.
           </p>
         </div>
         <ExplainedFormula
@@ -230,16 +216,14 @@ export default function ExpertParallelismMoeSystemsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            MoE communication bottleneck은 한 MoE layer의 step 시간이 expert GEMM이 아니라
-            all-to-all이 정하는 상태입니다. 두 조건 가운데 하나면 충분합니다. 통신 시간이
-            계산 시간보다 길거나, 둘을 겹쳐도 가장 늦게 끝나는 GPU가 나머지를 기다리게 하는
-            경우입니다. 앞의 것은 byte와 link의 문제이고 뒤의 것은 imbalance의 문제입니다.
+            한 MoE layer의 step 시간이 expert GEMM이 아니라 all-to-all에 매여 있으면 MoE communication bottleneck입니다. 두 조건
+            가운데 하나면 충분합니다. 통신 시간이 계산 시간보다 길거나, 둘을 겹쳐도 가장 늦게 끝나는 GPU가 나머지를 기다리게 하는 경우입니다. 앞의 것은 byte와 link의
+            문제이고 뒤의 것은 imbalance의 문제입니다.
           </p>
           <p>
-            첫 조건은 앞 절의 비율입니다. 예시 구성에서 InfiniBand는 통신 1.2 ms 대 계산
-            1.85 ms로 아직 계산이 길지만, batch가 절반으로 줄면 계산은 0.9 ms로 떨어지는데
-            통신은 latency 바닥 때문에 그만큼 줄지 않습니다. Decode처럼 GPU당 token이 수십
-            개면 payload는 수백 KiB뿐이라 시간은 byte가 아니라 kernel 왕복 latency가 정합니다.
+            첫 조건은 앞 절의 비율입니다. 예시 구성에서 InfiniBand는 통신 1.2 ms 대 계산 1.85 ms로 아직 계산이 길지만 batch가 절반으로 줄면 계산은 0.9
+            ms로 떨어지는데 통신은 latency 바닥 때문에 그만큼 줄지 않습니다. Decode처럼 GPU당 token이 수십 개면 payload는 수백 KiB뿐이라 시간은 byte가
+            아니라 kernel 왕복 latency가 정합니다.
           </p>
           <p>
             둘째 조건은 straggler입니다. All-to-all은 모든 rank가 끝나야 끝나므로 expert
@@ -256,22 +240,19 @@ export default function ExpertParallelismMoeSystemsArticle() {
             것입니다.
           </p>
           <p>
-            Capacity는 straggler의 상한을 정하지만 공짜가 아닙니다. Factor 1.0이면 평균만큼만
-            받으므로 hot expert의 초과분은 계산되지 않고 residual로 지나가며, 2.0이면 버리는
-            token은 줄지만 buffer의 절반이 padding이 되어 GEMM과 all-to-all이 빈 자리를
-            옮깁니다. DeepSeek-V3는 학습에서 token을 버리지 않고 bias로만 균형을 잡았습니다.
+            Capacity는 straggler의 상한을 정하지만 공짜가 아닙니다. Factor 1.0이면 평균만큼만 받으므로 hot expert의 초과분은 계산되지 않고 residual로
+            지나갑니다. 2.0이면 버리는 token은 줄지만 buffer의 절반이 padding이 되어 GEMM과 all-to-all이 빈 자리를 옮깁니다. DeepSeek-V3는
+            학습에서 token을 버리지 않고 bias로만 균형을 잡았습니다.
           </p>
           <p>
-            EP routing overhead는 payload가 아닌 비용의 묶음입니다. Top-k 정렬과 permutation,
-            rank별 count 교환, receive buffer 할당, CPU와 GPU 사이의 동기화, all-to-all kernel의
-            고정 latency가 여기에 듭니다. Batch가 크면 payload 시간에 묻히지만 decode에서는 이
-            overhead가 layer마다 반복되어 통신 시간의 대부분이 됩니다.
+            EP routing overhead는 payload가 아닌 비용의 묶음이라 top-k 정렬과 permutation, rank별 count 교환, receive buffer
+            할당, CPU와 GPU 사이의 동기화, all-to-all kernel의 고정 latency가 모두 여기에 듭니다. Batch가 크면 payload 시간에 묻히지만
+            decode에서는 이 overhead가 layer마다 반복되어 통신 시간의 대부분이 됩니다.
           </p>
           <p>
-            DeepEP는 이 두 영역을 kernel 두 벌로 나눴습니다. 학습과 prefill용 normal kernel은
-            대역폭을 채우는 데 맞추고, decode용 low-latency kernel은 routing metadata를
-            iteration 사이에 재사용해 CPU 동기화를 줄입니다. README는 SM90과 CX7 기준
-            node 사이 dispatch 약 90 GB/s, node 안 NVLink 700 GB/s대를 표로 적었습니다.
+            DeepEP는 이 두 영역을 kernel 두 벌로 나눴습니다. 학습과 prefill용 normal kernel은 대역폭을 채우는 데 맞추고 decode용 low-latency
+            kernel은 routing metadata를 iteration 사이에 재사용해 CPU 동기화를 줄입니다. README는 SM90과 CX7 기준 node 사이 dispatch
+            약 90 GB/s, node 안 NVLink 700 GB/s대를 표로 적었습니다.
           </p>
         </div>
         <ExplainedFormula
@@ -315,11 +296,9 @@ export default function ExpertParallelismMoeSystemsArticle() {
             줄입니다. 대신 복제된 expert만큼 weight memory가 늘어납니다.
           </p>
           <p>
-            학습 쪽의 bias 갱신은 expert마다 routing score에 더하는 bias를 두고, 과부하면
-            γ만큼 내리고 부족하면 γ만큼 올립니다. DeepSeek-V3는 γ를 처음 14.3T token 동안
-            0.001로 두고 이후 0으로 내렸습니다. Loss 항이 없어 gradient가 균형 때문에
-            왜곡되지 않는다는 것이 논문의 주장이며, 그 효과는 논문의 학습 범위 안의
-            자기보고입니다.
+            학습 쪽의 bias 갱신은 expert마다 routing score에 더하는 bias를 두고 과부하면 γ만큼 내리고 부족하면 γ만큼 올립니다. DeepSeek-V3는 γ를 처음
+            14.3T token 동안 0.001로 두고 이후 0으로 내렸습니다. Loss 항이 없어 gradient가 균형 때문에 왜곡되지 않는다는 것이 논문의 주장이며 그 효과는 논문의
+            학습 범위 안의 자기보고입니다.
           </p>
         </ProgressiveDetail>
       </section>
@@ -330,10 +309,9 @@ export default function ExpertParallelismMoeSystemsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            GShard가 expert 하나를 device 하나에 두는 EP와 einsum all-to-all, capacity를 처음
-            정의했고, Switch Transformer가 capacity factor와 top-1을 더했습니다. DeepSpeed-MoE는
-            추론용 hierarchical all-to-all을, DeepSeek-V3는 node-limited routing과 IB에서
-            NVLink로 잇는 forwarding을 보탰습니다.
+            GShard가 expert 하나를 device 하나에 두는 EP와 einsum all-to-all, capacity를 처음 정의했고 Switch Transformer가
+            capacity factor와 top-1을 더했습니다. DeepSpeed-MoE는 추론용 hierarchical all-to-all을, DeepSeek-V3는 node-
+            limited routing과 IB에서 NVLink로 잇는 forwarding을 보탰습니다.
           </p>
           <p>
             수치는 모두 각 논문의 hardware 범위 안의 저자 자기보고입니다.

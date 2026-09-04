@@ -48,10 +48,9 @@ export default function PluginTools() {
           전혀 다른 effect가 실행됩니다.
         </p>
         <p>
-          Adapter의 역할은 source 차이를 숨기는 것이 아니라 공통 dispatch
-          contract로 번역하는 것입니다. Name·schema·typed result는 통일하되
-          source identity, instance, permission hint, timeout과 reconnect owner는
-          telemetry와 receipt에 남겨야 장애·보안 판단을 되돌릴 수 있습니다.
+          Adapter는 source 차이를 공통 dispatch contract로 번역합니다. 차이를 숨기는 일이 아닙니다. Name·schema·typed result는 통일하되
+          source identity와 instance, permission hint, timeout, reconnect owner는 telemetry와 receipt에 남깁니다. 그래야
+          장애·보안 판단을 되돌릴 수 있습니다.
         </p>
       </div>
 
@@ -71,11 +70,9 @@ export default function PluginTools() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>충돌은 등록 시점에 거부하고 identity를 정규화합니다</h3>
         <p>
-          한 registry snapshot 안에서 model-visible name은 하나의 executor만 가리켜야
-          합니다. Pinned Claw source는 built-in과 plugin, 여러 plugin, 이어 붙인
-          runtime tool 사이의 duplicate name을 거부합니다. 여러 MCP server의 같은
-          local name을 함께 쓰려면 server identity를 포함한 qualified name을 만들고,
-          사용자에게 보이는 title과 실행 identity를 분리해야 합니다.
+          한 registry snapshot 안에서 model-visible name은 하나의 executor만 가리켜야 합니다. Pinned Claw source는 built-in과
+          plugin, 여러 plugin, 이어 붙인 runtime tool 사이의 duplicate name을 거부합니다. 여러 MCP server의 같은 local name을 함께
+          쓰려면 server identity를 포함한 qualified name을 만들고 사용자에게 보이는 title과 실행 identity를 분리합니다.
         </p>
         <p>
           Source label만 붙이는 것으로 끝나지는 않습니다. Plugin ID와 artifact
@@ -125,14 +122,11 @@ export default function PluginTools() {
           취소한 뒤 N+1 definition을 넣어 model에 다시 요청하는 것입니다.
         </p>
         <p>
-          Pinned Claw source가 이러한 generation-pinned call envelope를 완성했다고
-          주장하지 않습니다. 이는 reload 중 schema drift와 stale executor handle을
-          찾기 위한 hardening/evaluation requirement입니다. In-flight N call의
-          deadline까지 old instance를 drain할지 즉시 reject할지 사전에 정하고,
-          stale rejection·re-discovery·재계획을 audit receipt에 남깁니다. N+1
-          registry가 unhealthy하면 이전 registry snapshot과 executor instance로
-          atomic rollback할 수 있어야 하며, release fixture에서는 N세대 call이
-          N+1 schema로 조용히 reinterpret되지 않는지 확인해야 합니다.
+          Pinned Claw source가 이러한 generation-pinned call envelope를 완성했다고 주장하지 않습니다. reload 중 schema drift와
+          stale executor handle을 찾기 위한 hardening/evaluation requirement입니다. In-flight N call의 deadline까지 old
+          instance를 drain할지 즉시 reject할지는 사전에 정합니다. stale rejection·re-discovery·재계획은 audit receipt에 남깁니다. N+1
+          registry가 unhealthy하면 이전 registry snapshot과 executor instance로 atomic rollback할 수 있어야 합니다. release
+          fixture에서는 N세대 call이 N+1 schema로 조용히 reinterpret되지 않는지 확인합니다.
         </p>
       </div>
 
@@ -204,21 +198,16 @@ export default function PluginTools() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Release는 같은 login fixture의 paired evidence로 결정합니다</h3>
         <p>
-          Base와 candidate의 full commit SHA를 고정하고 registry definition, schema
-          digest, plugin artifact, MCP config, workspace, user request, permission mode,
-          fixture와 normalizer를 같게 둡니다. 그런 다음 built-in/plugin/MCP name
-          collision, N→N+1 schema drift, deny, timeout, partial write와 login test
-          failure를 각각 주입해 trace·typed result·workspace effect·session exit를
-          비교합니다.
+          Base와 candidate의 full commit SHA를 고정합니다. 그리고 registry definition과 schema digest, plugin artifact,
+          MCP config, workspace, user request, permission mode, fixture, normalizer를 전부 같게 둡니다. 그런 다음 built-
+          in/plugin/MCP name collision과 N→N+1 schema drift, deny, timeout, partial write, login test failure를
+          각각 주입해 trace·typed result·workspace effect·session exit를 비교합니다.
         </p>
         <p>
-          Candidate가 collision을 조용히 덮거나 deny 뒤 effect를 만들고, ambiguous
-          timeout을 success로 기록하거나 test failure를 완료로 보고하면 즉시
-          rollback 대상입니다. Canary는 사전 등록한 latency, context size, error
-          rate와 effect invariant threshold를 모두 만족해야 하며, 실패하면 이전
-          binary, registry/schema, plugin/MCP config와 fixture 묶음으로 되돌립니다.
-          이 paired test는 선택한 call contract의 회귀를 찾을 뿐 project의
-          실서비스 적합성을 보장하지 않습니다.
+          Candidate가 collision을 조용히 덮거나 deny 뒤 effect를 만들고 ambiguous timeout을 success로 기록하거나 test failure를 완료로
+          보고하면 즉시 rollback 대상입니다. Canary는 사전 등록한 latency와 context size, error rate, effect invariant
+          threshold를 모두 만족해야 합니다. 실패하면 이전 binary와 registry/schema, plugin/MCP config, fixture 묶음으로 되돌립니다. 이
+          paired test는 선택한 call contract의 회귀를 찾을 뿐 project의 실서비스 적합성을 보장하지 않습니다.
         </p>
         <p>
           Plugin 설치·활성화와 local artifact trust는 <Link to="/ai/claw-plugin">Plugin

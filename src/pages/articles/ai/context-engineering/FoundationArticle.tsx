@@ -31,7 +31,10 @@ export default function ContextEngineeringFoundationArticle() {
         <h2 className="mb-5 text-2xl font-bold">Context state는 source를 고른 뒤 순서를 가진 message로 직렬화합니다</h2>
         <ExplainedFormula
           question="여러 저장소의 정보가 어떻게 이번 generation의 context가 되나요?"
-          idea={<p>먼저 task·권한·freshness 조건으로 후보를 선택하고, 선택 결과를 instruction과 data의 역할이 보존되는 순서로 직렬화합니다. 단순 합집합이 아니라 두 단계의 변환입니다.</p>}
+          idea={<p>
+            먼저 task·권한·freshness 조건으로 후보를 선택하고 그 결과를 instruction과 data의 역할이 보존되는 순서로 직렬화합니다. 단순 합집합이 아니라 두 단계의
+            변환입니다.
+          </p>}
           formula={String.raw`C_t=\operatorname{serialize}(\operatorname{select}(S_t;q_t,A_t,F_t))`}
           annotatedFormula={String.raw`\begin{aligned}E_t&=\underbrace{\operatorname{select}(S_t;q_t,A_t,F_t)}_{\substack{\text{task 관련성·권한·freshness로}\\\text{이번에 읽을 fragment만 선택}}}\\C_t&=\underbrace{\operatorname{serialize}(I_t,U_t,E_t,H_t,O_t)}_{\substack{\text{instruction·user·evidence·history·tool 결과를}\\\text{역할과 순서를 보존한 token state로 변환}}}\end{aligned}`}
           operations={[
