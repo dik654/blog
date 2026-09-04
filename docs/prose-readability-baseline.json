@@ -662,7 +662,7 @@
       "score": 14
     },
     "gpu/hw-server-vs-desktop": {
-      "fingerprint": "c4a2dca157543e62",
+      "fingerprint": "f5ecaacd3071d8de",
       "score": 14
     },
     "gpu/hw-storage-comparison": {
@@ -797,10 +797,6 @@
       "fingerprint": "c948f66d5b32c54e",
       "score": 10
     },
-    "ai/backprop-optimization": {
-      "fingerprint": "330b1cecc3f250f3",
-      "score": 10
-    },
     "ai/claw-mcp": {
       "fingerprint": "aacf4e76c86fa972",
       "score": 10
@@ -894,7 +890,7 @@
       "score": 10
     },
     "gpu/hw-nvme-storage": {
-      "fingerprint": "7b25389168fda990",
+      "fingerprint": "e5b94f36d5c5ac4a",
       "score": 10
     },
     "p2p/bittorrent": {
@@ -1006,7 +1002,7 @@
       "score": 8
     },
     "gpu/hw-power-cooling": {
-      "fingerprint": "72c8f698da247b74",
+      "fingerprint": "31725ba7981d4b4b",
       "score": 8
     },
     "gpu/msm-gpu-impl": {

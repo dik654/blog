@@ -122,9 +122,8 @@ export default function Overview() {
         <div className="not-prose my-6 border-l-4 border-amber-400 bg-amber-50/60 dark:bg-amber-950/20 rounded-r-lg p-4">
           <p className="font-semibold mb-1">💡 nameplate 합계는 시작점</p>
           <p className="text-sm leading-6">
-            구매 전에는 제조사 최대값으로 상한을 확인하고, 배치 후에는 rPDU와
-            BMC에서 workload별 입력 전력·온도·스로틀을 함께 측정함. 둘 중
-            하나만으로 회로와 냉각을 확정하지 않음
+            구매 전에는 제조사 최대값으로 상한을 확인하고 배치 후에는 rPDU와 BMC에서 workload별 입력 전력·온도·스로틀을 함께 측정함. 둘 중 하나만으로 회로와 냉각을
+            확정하지 않음
           </p>
         </div>
 

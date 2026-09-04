@@ -56,9 +56,8 @@ export default function Overview() {
           폼팩터는 최고 속도보다 시스템 설계에 더 직접적인 영향을 줌
         </p>
         <p className="leading-7">
-          M.2가 소비자용, U.2와 EDSFF가 무조건 고성능이라는 구분은 정확하지
-          않음. 같은 데이터센터 SSD 제품군도 여러 폼팩터로 제공되며
-          내구성·PLP·성능은 SKU마다 따로 결정됨
+          M.2가 소비자용, U.2와 EDSFF가 무조건 고성능이라는 구분은 정확하지 않음. 같은 데이터센터 SSD 제품군도 여러 폼팩터로 나오며 내구성·PLP·성능은 SKU마다 따로
+          결정됨
         </p>
 
         <div className="not-prose my-6 grid grid-cols-1 sm:grid-cols-2 gap-3">

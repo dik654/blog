@@ -47,10 +47,8 @@ export default function Cooling() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          냉각 방식의 이름보다 component에서 실외 heat rejection까지 열이 끊김
-          없이 이동하는지가 중요함. 데이터센터용 PCIe GPU는 카드 fan이 없는 수동
-          히트싱크 제품도 많아 서버 fan과 duct가 필수이고, 소비자용 open-air
-          카드는 여러 장을 좁게 배치하면 더운 공기를 서로 다시 흡입할 수 있음
+          냉각 방식의 이름보다 component에서 실외 heat rejection까지 열이 끊김 없이 이동하는지가 중요함. 데이터센터용 PCIe GPU는 카드 fan이 없는 수동 히트싱크
+          제품도 많아 서버 fan과 duct가 필수임. 소비자용 open-air 카드는 여러 장을 좁게 배치하면 더운 공기를 서로 다시 흡입할 수 있음
         </p>
 
         <div className="overflow-x-auto not-prose my-6">
@@ -90,10 +88,8 @@ export default function Cooling() {
           공랭은 뜨거운 공기의 재순환부터 막는다
         </h3>
         <p className="leading-7">
-          cold aisle에서 들어온 공기가 장비를 한 번 통과해 hot aisle로 빠지도록
-          rack 방향을 맞추고, 빈 U와 cable opening을 막아 배기 공기가 inlet으로
-          돌아오는 길을 줄임. 서버 전면 평균 온도만 보지 말고 상·중·하 inlet과
-          hotspot을 함께 기록해야 국소적인 냉각 부족을 찾을 수 있음
+          cold aisle에서 들어온 공기가 장비를 한 번 통과해 hot aisle로 빠지도록 rack 방향을 맞추고 빈 U와 cable opening을 막아 배기 공기가 inlet으로
+          돌아오는 길을 줄임. 서버 전면 평균 온도만 보지 말고 상·중·하 inlet과 hotspot을 함께 기록해야 국소적인 냉각 부족을 찾을 수 있음
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">

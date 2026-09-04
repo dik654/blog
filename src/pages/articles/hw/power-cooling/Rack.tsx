@@ -129,9 +129,8 @@ export default function Rack() {
             표시된 redundancy를 그대로 믿지 않는다
           </p>
           <p className="text-sm leading-6">
-            전기 작업은 자격을 갖춘 시설 담당자가 승인된 절차로 수행하고,
-            circuit 하나씩 차단하는 검증으로 실제 경로를 확인함. workload
-            checkpoint와 안전 종료 정책도 같은 시험에 포함함
+            전기 작업은 자격을 갖춘 시설 담당자가 승인된 절차로 수행하고 circuit 하나씩 차단하는 검증으로 실제 경로를 확인함. workload checkpoint와 안전 종료
+            정책도 같은 시험에 포함함
           </p>
         </div>
 
