@@ -8,7 +8,11 @@ export default function ModernSTARKTheoryArticle() {
     <article className="space-y-14">
       <section id="overview" className="space-y-6">
         <header className="space-y-3"><p className="text-sm font-semibold text-primary">한 줄 실행을 검증 가능한 trace로 바꾸는 STARK</p><h2 className="text-3xl font-bold tracking-tight">계산의 매 step을 기록하고 그 규칙을 low-degree claim으로 낮춘다</h2></header>
-        <p className="text-lg leading-8 text-foreground/90">F₁₇에서 f(X)=X²+2X+3을 x=4에 계산하는 Horner 방법을 써 봅시다. v₀=1, v₁=v₀·4+2=6, v₂=v₁·4+3=27≡10입니다. STARK의 execution trace는 이 중간 상태를 표로 기록하고, AIR(algebraic intermediate representation)는 인접 행이 같은 전이 규칙을 따르는지 검사합니다.</p>
+        <p className="text-lg leading-8 text-foreground/90">
+            F₁₇에서 f(X)=X²+2X+3을 x=4에 계산하는 Horner 방법을 써 봅시다. v₀=1, v₁=v₀·4+2=6, v₂=v₁·4+3=27≡10입니다. STARK의
+            execution trace는 이 중간 상태를 표로 기록하고 AIR(algebraic intermediate representation)는 인접 행이 같은 전이 규칙을 따르는지
+            검사합니다.
+          </p>
         <p>그다음 여러 제약을 composition polynomial 하나로 결합하고 더 큰 domain에 low-degree extension(LDE)한 뒤 Merkle root로 commit합니다. 마지막 low-degree proximity 검사는 FRI가 담당합니다. 즉 STARK는 특정 polynomial commitment 한 식이 아니라 trace·AIR·composition·LDE·oracle transcript의 파이프라인입니다.</p>
         <aside className="rounded-lg border border-primary/30 bg-primary/5 p-5 text-sm leading-6"><strong>핵심 아이디어:</strong> “프로그램을 실행했다”는 의미를 trace와 AIR가 소유하고, “그 제약 polynomial이 낮은 차수다”는 검사를 FRI가 소유합니다. Hash 기반 transparent setup은 trusted ceremony를 없애지만 보안 가정 자체를 없애지는 않습니다.</aside>
         <ContentBoundary article="stark-theory" />
@@ -58,13 +62,21 @@ export default function ModernSTARKTheoryArticle() {
       <section id="lde-fri" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">02 · LDE, Merkle, FRI</p><h2 className="mt-2 text-2xl font-bold">Trace domain 밖으로 평가해 distance를 만든 뒤 일부만 연다</h2></header>
         <p>Trace가 n개 row에만 있으면 그 n개 값에는 degree&lt;n polynomial이 항상 하나 존재하므로 “낮은 차수” 검사가 약합니다. STARK는 NTT-friendly larger coset domain으로 polynomial을 다시 평가해 LDE oracle를 만듭니다. Blowup factor가 커지면 code distance와 sampling 여유가 늘 수 있지만 prover의 FFT·hash·memory와 proof query path도 늘어납니다.</p>
-        <p>Prover는 trace LDE와 composition evaluations를 Merkle root로 고정하고, transcript challenge를 받은 다음 필요한 consistency openings와 FRI queries를 제공합니다. FRI는 oracle proximity만 검사하므로 trace root, public statement, AIR identifier, domain, round roots와 challenges의 순서가 모두 transcript에 binding되어야 합니다.</p>
+        <p>
+            Prover는 trace LDE와 composition evaluations를 Merkle root로 고정하고 transcript challenge를 받은 다음 필요한
+            consistency openings와 FRI queries를 제공합니다. FRI는 oracle proximity만 검사하므로 trace root, public
+            statement, AIR identifier, domain, round roots와 challenges의 순서가 모두 transcript에 binding되어야 합니다.
+          </p>
         <div className="overflow-x-auto rounded-lg border border-border"><table className="min-w-[720px] w-full text-sm"><thead className="bg-muted/50 text-left"><tr><th className="p-3">비용 축</th><th className="p-3">주요 원인</th><th className="p-3">같이 기록할 경계</th></tr></thead><tbody className="divide-y divide-border text-muted-foreground"><tr><td className="p-3 font-medium text-foreground">Prover time</td><td className="p-3">trace 생성, NTT/LDE, composition, hash, FRI</td><td className="p-3">같은 trace 길이·blowup·query 수</td></tr><tr><td className="p-3 font-medium text-foreground">Peak memory</td><td className="p-3">여러 LDE columns와 Merkle layers</td><td className="p-3">Streaming 여부와 materialized buffers</td></tr><tr><td className="p-3 font-medium text-foreground">Proof bytes</td><td className="p-3">roots, field openings, authentication paths</td><td className="p-3">Batch path dedup·hash width</td></tr><tr><td className="p-3 font-medium text-foreground">Verifier</td><td className="p-3">hash paths, field checks, FRI rounds</td><td className="p-3">Security target와 failure parity</td></tr></tbody></table></div>
       </section>
 
       <section id="security-cost" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">03 · 보안·ZK·release gate</p><h2 className="mt-2 text-2xl font-bold">Transparent는 ceremony가 없다는 뜻이지 assumption-free라는 뜻이 아니다</h2></header>
-        <p>STARK의 soundness는 AIR reduction, polynomial degree bounds, field size, code distance, sampling, Fiat–Shamir modeling과 collision-resistant hash에 걸쳐 있습니다. Post-quantum 방향이라는 표현도 선택 hash와 security model에 귀속해야 하며, 모든 parameter와 구현이 자동으로 양자 공격에 안전하다는 뜻은 아닙니다.</p>
+        <p>
+            STARK의 soundness는 AIR reduction, polynomial degree bounds, field size, code distance, sampling,
+            Fiat–Shamir modeling과 collision-resistant hash에 걸쳐 있습니다. Post-quantum 방향이라는 표현도 선택 hash와 security
+            model에 귀속해야 하며 모든 parameter와 구현이 자동으로 양자 공격에 안전하다는 뜻은 아닙니다.
+          </p>
         <p>또한 STARK라는 이름만으로 zero knowledge가 생기지 않습니다. Raw trace LDE를 그대로 commit하면 private witness가 query openings나 algebraic relation을 통해 새어 나갈 수 있습니다. ZK가 필요하면 trace/composition blinding, randomized padding, query distribution과 simulator argument가 protocol profile에 명시되어야 합니다.</p>
         <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-5 text-sm leading-6"><strong>Release gate:</strong> 잘못된 첫·마지막 row, 누락 transition, wrong public input, composition remainder, LDE domain, Merkle path, FRI fold, transcript reorder를 각각 주입합니다. False accept 0과 stable reason code를 확인한 다음 prover phase time·peak RSS·proof bytes·verify hash/field time을 측정합니다.</div>
         <div id="paper-stark"><CitationBlock source="Ben-Sasson et al. · Scalable, transparent, and post-quantum secure computational integrity (2018)" citeKey={1} href="https://eprint.iacr.org/2018/046.pdf"><p><strong>문제:</strong> Trusted setup 없이 큰 계산의 integrity를 scalable prover와 succinct verifier로 증명해야 합니다.</p><p><strong>기여:</strong> Algebraic execution trace, constraint composition, oracle commitment와 FRI 계열을 잇는 STARK construction·evaluation을 제시합니다.</p><p><strong>전제:</strong> 논문의 RAM/AIR encoding, field·hash·random-oracle, proximity와 parameter model을 사용합니다.</p><p><strong>근거 범위:</strong> 논문 construction과 보고된 implementation experiment 범위입니다.</p><p><strong>말하지 않는 것:</strong> 모든 STARK library의 동일 보안·성능이나 자동 zero knowledge를 보장하지 않습니다.</p></CitationBlock></div>

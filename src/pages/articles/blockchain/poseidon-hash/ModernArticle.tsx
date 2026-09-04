@@ -14,7 +14,11 @@ export default function ModernPoseidonArticle() {
     </section>
     <section id="profile" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">01 · Parameter profile</p><h2 className="mt-2 text-2xl font-bold">같은 이름보다 같은 artifact hash가 중요하다</h2></header>
-      <p>Field와 state width가 같아도 round constants나 MDS가 다르면 출력은 다릅니다. Sponge로 쓸 때 rate/capacity, padding, input length와 domain tag까지 profile ID에 넣습니다. “Poseidon on BN254”만 기록한 proof나 database root는 재현 가능한 protocol identifier가 아닙니다.</p>
+      <p>
+            Field와 state width가 같아도 round constants나 MDS가 다르면 출력은 달라집니다. Sponge로 쓸 때는 rate/capacity와 padding,
+            input length, domain tag까지 profile ID에 넣습니다. “Poseidon on BN254”만 기록한 proof나 database root로는
+            protocol을 재현하지 못합니다.
+          </p>
     </section>
     <section id="rounds" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">02 · S-box와 diffusion</p><h2 className="mt-2 text-2xl font-bold">왜 xᵅ가 permutation이어야 하는가</h2></header>
@@ -39,12 +43,20 @@ export default function ModernPoseidonArticle() {
       <p><strong>Security margin</strong>은 정확한 parameter profile의 전체 rounds와 알려진 공격 범위 사이의 여유를 평가하는 말입니다. 새 algebraic attack이 더 많은 reduced rounds를 다루면 여유가 줄 수 있지만, 곧바로 deployed full-round instance가 깨졌다는 뜻은 아닙니다. Field·width·S-box·linear layer·attack model을 함께 적어야 합니다.</p>
       <p>Poseidon의 선택 논리는 명확했습니다. SHA/BLAKE의 bit logic이 prime-field circuit에서 비싸므로 hash workload를 field-native하게 바꿉니다. 반대 방향은 기존 hash의 긴 cryptanalysis 역사와 생태계를 유지하고, <a className="text-primary underline" href="/crypto/binary-field-proving#overview">binary-field proving</a>처럼 proof layer를 Boolean workload에 맞춥니다.</p>
       <PoseidonSecurityShiftViz />
-      <p>어느 쪽도 이름만으로 승리하지 않습니다. Exact primitive profile·known attacks·circuit constraints·prover wall time·memory·proof size·verifier cost·hardware와 audit maturity를 같은 statement에서 비교합니다.</p>
+      <p>
+            어느 쪽도 이름만으로 승리하지 않습니다. 비교는 같은 statement 안에서 합니다. Exact primitive profile과 known attacks, circuit
+            constraints, prover wall time과 memory, proof size와 verifier cost, hardware와 audit maturity가 모두 그
+            대상입니다.
+          </p>
       <div id="paper-poseidon-cryptanalysis"><CitationBlock source="Algebraic cryptanalysis of Poseidon" citeKey={3} href="https://eprint.iacr.org/2023/537.pdf"><p><strong>문제:</strong> Poseidon 계열의 algebraic structure에 대한 reduced-round attack 범위를 분석합니다.</p><p><strong>기여:</strong> 기존 분석보다 강화된 cryptanalytic techniques와 적용 범위를 제시합니다.</p><p><strong>전제:</strong> 논문이 고정한 variant·parameters·round definition·attack model로 읽습니다.</p><p><strong>근거 범위:</strong> 명시된 reduced-round analysis입니다.</p><p><strong>말하지 않는 것:</strong> 모든 production Poseidon/Poseidon2 profile의 full-round break를 뜻하지 않습니다.</p></CitationBlock></div>
     </section>
     <section id="release" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">05 · Release gate</p><h2 className="mt-2 text-2xl font-bold">공식 vectors와 native/circuit parity가 먼저다</h2></header>
-      <p>Parameter artifact hash, field/width/rounds/constants/MDS/domain을 receipt에 둡니다. Zero·one·p−1, permutation inverse, wrong constant/profile/domain, noncanonical field, byte packing ambiguity, native/circuit output mismatch를 주입한 뒤 constraints·prove time·memory를 같은 backend에서 비교합니다.</p>
+      <p>
+            Receipt에는 parameter artifact hash와 field/width/rounds/constants/MDS/domain을 둡니다. Zero·one·p−1,
+            permutation inverse, wrong constant/profile/domain, noncanonical field, byte packing ambiguity,
+            native/circuit output mismatch를 주입한 뒤 constraints·prove time·memory를 같은 backend에서 비교합니다.
+          </p>
       <div id="paper-poseidon"><CitationBlock source="Grassi et al. · Poseidon" citeKey={1} href="https://eprint.iacr.org/2019/458.pdf"><p><strong>문제:</strong> ZK circuits에서 bit-oriented hash가 비쌉니다.</p><p><strong>기여:</strong> HADES strategy와 field S-box, parameter/security 분석을 제시합니다.</p><p><strong>전제:</strong> 논문의 field·round·linear-layer generation과 attack model을 씁니다.</p><p><strong>근거 범위:</strong> Poseidon construction과 논문 cost/security 분석입니다.</p><p><strong>말하지 않는 것:</strong> 임의 constants나 축소 rounds의 안전성을 보장하지 않습니다.</p></CitationBlock></div>
       <div id="paper-poseidon2-source"><CitationBlock source="HorizenLabs · poseidon2 pinned 055bde3" citeKey={2} href="https://github.com/HorizenLabs/poseidon2/tree/055bde3f4782731ba5f5ce5888a440a94327eaf3"><p><strong>문제:</strong> 실제 field/width parameter와 source seam을 확인해야 합니다.</p><p><strong>기여:</strong> Poseidon2 Rust source snapshot을 제공합니다.</p><p><strong>전제:</strong> Commit과 feature/field를 고정합니다.</p><p><strong>근거 범위:</strong> 선택 source와 vectors입니다.</p><p><strong>말하지 않는 것:</strong> 원 Poseidon 호환이나 모든 profile audit를 뜻하지 않습니다.</p></CitationBlock></div>
     </section>

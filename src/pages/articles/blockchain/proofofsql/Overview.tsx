@@ -36,10 +36,8 @@ export default function Overview() {
         </ul>
         <h3>데이터 플로우</h3>
         <p>
-          사용자 SQL &rarr; 파서(AST) &rarr; 증명 계획 &rarr; 데이터 접근 &rarr;
-          Commitment 생성 &rarr; Sumcheck 증명 &rarr; Inner Product 증명 &rarr;
-          검증 완료. 전체 파이프라인이 Rust로 구현되어 있고, 검증만 Solidity로
-          온체인 실행됩니다.
+          사용자 SQL &rarr; 파서(AST) &rarr; 증명 계획 &rarr; 데이터 접근 &rarr; Commitment 생성 &rarr; Sumcheck 증명 &rarr;
+          Inner Product 증명 &rarr; 검증 완료. 전체 파이프라인이 Rust로 구현되어 있고 검증만 Solidity로 온체인 실행됩니다.
         </p>
       </div>
       <div className="mt-8">

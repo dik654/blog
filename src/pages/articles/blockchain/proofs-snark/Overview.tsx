@@ -14,11 +14,9 @@ export default function Overview({
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Filecoin chain이 PoRep와 PoSt 계산 전체를 다시 실행하면 block
-          validation 비용을 감당하기 어렵습니다. Prover는 graph·Merkle
-          constraint를 만족하는 witness를 만들고, Groth16 proof로 압축해
-          제출합니다. Verifier는 proof와 public input만으로 같은 statement를
-          확인합니다.
+          Filecoin chain이 PoRep와 PoSt 계산 전체를 다시 실행하면 block validation 비용을 감당하기 어렵습니다. Prover는 graph·Merkle
+          constraint를 만족하는 witness를 만들고 Groth16 proof로 압축해 제출합니다. Verifier는 proof와 public input만으로 같은
+          statement를 확인합니다.
         </p>
         <p>
           PoRep C2, WindowPoSt와 WinningPoSt는 모두 proof system을 사용하지만
@@ -33,10 +31,9 @@ export default function Overview({
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>작은 proof와 싼 proving은 같은 말이 아니다</h3>
         <p>
-          Groth16은 compact proof와 짧은 verification path를 제공하는 대신
-          circuit-specific setup과 무거운 proving을 요구합니다. Network 전체
-          proof 수나 GPU 소비량은 계속 변하므로 “가장 GPU를 많이 쓰는 chain”
-          같은 순위 대신 proof type별 throughput와 energy를 측정합니다.
+          Groth16은 proof가 compact하고 verification path가 짧은 대신 circuit-specific setup과 무거운 proving이 따릅니다.
+          Network 전체 proof 수나 GPU 소비량은 계속 변하므로 “가장 GPU를 많이 쓰는 chain” 같은 순위 대신 proof type별 throughput과 energy를
+          측정합니다.
         </p>
       </div>
     </section>

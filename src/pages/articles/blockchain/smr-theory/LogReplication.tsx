@@ -7,11 +7,9 @@ export default function LogReplication() {
       <h2 className="mb-6 text-2xl font-bold">Raft는 log prefix와 leader epoch를 함께 지킨다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Raft의 term은 leader epoch를 나타내는 logical number입니다. Candidate는
-          majority vote를 얻어 leader가 되고, leader는 AppendEntries에 이전
-          entry의 index·term을 담아 follower prefix가 맞는지 확인합니다. Follower가
-          다른 term의 conflicting suffix를 갖고 있으면 그 지점부터 고쳐 같은
-          prefix를 만듭니다.
+          Raft의 term은 leader epoch를 나타내는 logical number입니다. Candidate는 majority vote를 얻어 leader가 되고 leader는
+          AppendEntries에 이전 entry의 index·term을 담아 follower prefix가 맞는지 확인합니다. Follower가 다른 term의 conflicting
+          suffix를 갖고 있으면 그 지점부터 고쳐 같은 prefix를 만듭니다.
         </p>
       </div>
       <LogReplicationViz />

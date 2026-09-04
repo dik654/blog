@@ -20,7 +20,12 @@ export default function RouterSwap() {
       </div>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Token behavior는 invariant 바깥의 입력 계약이다</h3>
-        <p>Pair는 callback 뒤 실제 balance로 입력을 관측하지만, Router가 중간 hop의 nominal amount를 다음 Pair에 그대로 전달한다고 가정하면 transfer fee가 있는 token에서 경로 계산이 어긋날 수 있습니다. “supportingFeeOnTransferTokens” 계열도 모든 rebasing·callback·blacklist token을 일반적으로 안전하게 만드는 보증이 아닙니다. Release fixture에는 nominal sent, received balance delta, final recipient delta를 따로 기록합니다.</p>
+        <p>
+            Pair는 callback 뒤 실제 balance로 입력을 관측하지만 Router가 중간 hop의 nominal amount를 다음 Pair에 그대로 전달한다고 가정하면
+            transfer fee가 있는 token에서 경로 계산이 어긋날 수 있습니다. “supportingFeeOnTransferTokens” 계열도 모든
+            rebasing·callback·blacklist token을 일반적으로 안전하게 만드는 보증이 아닙니다. Release fixture에는 nominal sent,
+            received balance delta, final recipient delta를 따로 기록합니다.
+          </p>
       </div>
     </section>
   );

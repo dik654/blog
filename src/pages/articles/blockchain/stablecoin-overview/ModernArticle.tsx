@@ -26,7 +26,11 @@ export default function ModernStablecoinOverviewArticle() {
 
     <section id="failure-boundaries" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">02 · failure map</p><h2 className="mt-2 text-2xl font-bold">Depeg를 발견하면 가격보다 먼저 상환 queue와 backing ledger의 끊어진 edge를 찾는다</h2></header>
-      <p>같은 0.97달러라도 원인은 다릅니다. 은행 영업시간·KYC 때문에 상환이 지연될 수 있고, reserve asset의 만기·유동성이 맞지 않을 수 있습니다. Crypto-backed 구조에서는 oracle lag나 liquidation congestion이, bridge-wrapped token에서는 canonical issuer가 아닌 bridge custody가 failure owner일 수 있습니다. Governance pause·sanctions·chain finality도 별도 경계입니다.</p>
+      <p>
+            같은 0.97달러라도 원인은 다릅니다. 은행 영업시간·KYC 때문에 상환이 지연될 수 있고 reserve asset의 만기·유동성이 맞지 않을 수 있습니다. Crypto-
+            backed 구조에서는 oracle lag나 liquidation congestion이, bridge-wrapped token에서는 canonical issuer가 아닌
+            bridge custody가 failure owner일 수 있습니다. Governance pause·sanctions·chain finality도 별도 경계입니다.
+          </p>
       <p>따라서 incident ledger는 <code>price source/time</code>, circulating supply, redeemable population, reserve·collateral snapshot, queue·settlement status, oracle/bridge/governance version을 한 줄에 묶습니다. 한 축만 정상이라고 전체가 안전하다고 판정하지 않습니다.</p>
       <div id="paper-bis-stablecoin"><CitationBlock source="BIS Working Paper 905 · Stablecoins: risks, potential and regulation" citeKey={2} href="https://www.bis.org/publ/work905.htm"><p><strong>문제:</strong> 다양한 stablecoin 설계가 지급·금융안정에 주는 효용과 위험을 구분해야 합니다.</p><p><strong>기여:</strong> Backing, governance, settlement, network와 market-liquidity risk를 함께 분석합니다.</p><p><strong>전제:</strong> 2020년 공개 설계와 당시 시장을 분석한 정책 연구입니다.</p><p><strong>근거 범위:</strong> Stablecoin 유형별 위험 축을 비교하는 개념 근거입니다.</p><p><strong>말하지 않는 것:</strong> 2026년 개별 발행자·토큰의 현재 reserve나 규제 지위를 판정하지 않습니다.</p></CitationBlock></div>
     </section>

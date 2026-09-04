@@ -27,7 +27,13 @@ export default function FlashSwap() {
       />
       <div id="uniswap-v2-release-gate" className="scroll-mt-24 prose prose-neutral max-w-none dark:prose-invert">
         <h3>Release gate</h3>
-        <p>Core tag/SHA·factory/pair init-code hash·router version·token behavior profile을 receipt에 고정합니다. zero liquidity, first mint, imbalanced mint, exact-in/out rounding, reserve edge, protocol fee on/off, fee-on-transfer/rebase, callback underpayment·reentrancy, multi-hop min/max, stale deadline, timestamp wrap와 short-window manipulation을 재생합니다. Candidate와 pinned source의 balances·reserves·LP supply·events·revert selector·cumulative price가 같아진 뒤 gas를 비교합니다.</p>
+        <p>
+            Core tag/SHA·factory/pair init-code hash·router version·token behavior profile을 receipt에 고정합니다.
+            zero liquidity, first mint, imbalanced mint, exact-in/out rounding, reserve edge, protocol fee
+            on/off, fee-on-transfer/rebase, callback underpayment·reentrancy, multi-hop min/max, stale
+            deadline, timestamp wrap과 short-window manipulation을 재생합니다. Candidate와 pinned source의
+            balances·reserves·LP supply·events·revert selector·cumulative price가 같아진 뒤 gas를 비교합니다.
+          </p>
       </div>
     </section>
   );

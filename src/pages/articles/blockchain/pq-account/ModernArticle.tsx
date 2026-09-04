@@ -9,7 +9,9 @@ function Flow() {
     ["03", "EntryPoint validation", "Account/paymaster authorization"],
     ["04", "Execution · receipt", "Call effect·gas settlement·chain receipt"],
   ];
-  return <figure data-viz="pq-account-flow" data-viz-canvas className="not-prose overflow-hidden rounded-xl border border-border bg-card"><figcaption className="border-b border-border px-4 py-4"><p className="text-sm font-semibold">0.1 ETH 전송 의도를 AA와 ML-DSA가 통과하는 경로</p><p className="mt-1 text-xs text-muted-foreground">Account abstraction은 검증 위치를 바꾸고 ML-DSA는 그 위치에서 사용할 수 있는 서명 방식 하나입니다.</p></figcaption><div className="grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-4">{rows.map(([n,t,d]) => <div key={n} className="min-w-0 bg-background p-4"><p className="text-xs font-bold text-primary">{n}</p><p className="mt-2 text-sm font-semibold">{t}</p><p className="mt-2 break-words text-xs leading-5 text-muted-foreground">{d}</p></div>)}</div></figure>;
+  return <figure data-viz="pq-account-flow" data-viz-canvas className="not-prose overflow-hidden rounded-xl border border-border bg-card"><figcaption className="border-b border-border px-4 py-4"><p className="text-sm font-semibold">0.1 ETH 전송 의도를 AA와 ML-DSA가 통과하는 경로</p><p className="mt-1 text-xs text-muted-foreground">
+            Account abstraction은 검증 위치를 바꾸고 ML-DSA는 그 위치에서 쓸 수 있는 서명 방식 하나입니다.
+          </p></figcaption><div className="grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-4">{rows.map(([n,t,d]) => <div key={n} className="min-w-0 bg-background p-4"><p className="text-xs font-bold text-primary">{n}</p><p className="mt-2 text-sm font-semibold">{t}</p><p className="mt-2 break-words text-xs leading-5 text-muted-foreground">{d}</p></div>)}</div></figure>;
 }
 
 function Evidence({ id, source, href, children }: { id: string; source: string; href: string; children: React.ReactNode }) {
@@ -22,7 +24,11 @@ export default function ModernArticle() {
     <section id="overview" className="space-y-6">
       <p className="text-sm font-semibold text-primary">Post-quantum account · validation에서 migration까지</p>
       <h2 className="text-3xl font-bold tracking-tight">양자내성 계정은 새 서명 이름을 붙이는 일이 아니라 기존 계정의 권한·gas·replay·복구 경계를 함께 옮기는 일이다</h2>
-      <p className="text-lg leading-8">민지의 smart account가 0.1 ETH를 보내려 합니다. Wallet은 목적지·금액·chain·EntryPoint·nonce가 묶인 UserOperation을 만들고, bundler는 이를 simulation한 뒤 EntryPoint가 account validation과 execution을 분리해 처리합니다. Account가 ML-DSA를 검증하도록 설계할 수는 있지만, ERC-4337 자체가 ML-DSA나 EVM native precompile을 제공하는 것은 아닙니다.</p>
+      <p className="text-lg leading-8">
+            민지의 smart account가 0.1 ETH를 보내려 합니다. Wallet이 목적지·금액·chain·EntryPoint·nonce를 묶어 UserOperation을 만들면
+            bundler가 이를 simulation하고 EntryPoint는 account validation과 execution을 나눠 처리합니다. Account가 ML-DSA를
+            검증하도록 설계할 수는 있지만 ERC-4337 자체가 ML-DSA나 EVM native precompile을 제공하지는 않습니다.
+          </p>
       <aside className="rounded-lg border border-border p-4 text-sm leading-6">Post-quantum(PQ)은 큰 양자컴퓨터 공격을 고려한 암호 전환 범주입니다. NIST FIPS 204의 정식 이름은 ML-DSA이며 CRYSTALS-Dilithium 계열에서 표준화됐습니다. 이 글은 표준 내부 수학 전체를 다시 소유하지 않고, ML-DSA artifact를 ERC-4337 account validation에 연결할 때 필요한 구현·gas·migration 경계를 소유합니다.</aside>
       <Flow />
       <ContentBoundary article="pq-account" />
@@ -31,9 +37,22 @@ export default function ModernArticle() {
     <section id="account-abstraction-validation" className="space-y-5">
       <p className="text-sm font-semibold text-primary">01 · UserOperation과 EntryPoint</p>
       <h2 className="text-2xl font-bold">검증 성공과 외부 실행을 두 loop로 나눠 읽는다</h2>
-      <p className="leading-7">UserOperation은 일반 transaction이 아니라 sender, nonce, factory, callData, gas limits·fees, paymaster와 signature를 담은 상위 계층 객체입니다. Hash는 signature를 제외한 operation, EntryPoint address와 chainId에 결속돼야 합니다. 같은 nonce라도 다른 chain·EntryPoint에서 replay되지 않게 만드는 이유입니다.</p>
-      <p className="leading-7">Bundler는 mempool 수락 전에 validation을 simulation하고 fee·storage·opcode 규칙을 검사합니다. EntryPoint의 verification loop는 account 생성, gas precharge, account/paymaster validation을 수행하고, execution loop는 승인된 call을 실행한 뒤 실제 gas와 deposit을 정산합니다. Simulation 통과는 future block inclusion이나 call success 보장이 아닙니다.</p>
-      <p className="leading-7">Account는 trusted EntryPoint caller와 userOpHash, nonce, signature, time range와 recovery policy를 검증합니다. Paymaster가 있어도 서명 authority와 execution 권한을 대신하지 않습니다. Validation 실패 operation은 실행하지 않아야 하며, execution revert와 validation reject를 같은 오류로 숨기지 않습니다.</p>
+      <p className="leading-7">
+            UserOperation은 일반 transaction이 아니라 sender, nonce, factory, callData, gas limits·fees, paymaster와
+            signature를 담은 상위 계층 객체입니다. Hash는 signature를 제외한 operation과 EntryPoint address, chainId에 결속돼야 합니다.
+            그래야 같은 nonce라도 다른 chain·EntryPoint에서 replay되지 않습니다.
+          </p>
+      <p className="leading-7">
+            Bundler는 mempool 수락 전에 validation을 simulation하며 fee·storage·opcode 규칙을 검사합니다. EntryPoint의
+            verification loop는 account 생성과 gas precharge, account/paymaster validation을 맡고 execution loop는 승인된
+            call을 실행한 뒤 실제 gas와 deposit을 정산합니다. Simulation을 통과해도 future block inclusion이나 call success가 보장되지는
+            않습니다.
+          </p>
+      <p className="leading-7">
+            Account는 trusted EntryPoint caller와 userOpHash, nonce, signature, time range와 recovery policy를
+            검증합니다. Paymaster가 붙어 있어도 서명 authority와 execution 권한을 대신하지는 않습니다. Validation에 실패한 operation은 실행하지
+            않으며 execution revert와 validation reject를 같은 오류로 뭉뚱그리지도 않습니다.
+          </p>
       <ExplainedFormula question="같은 UserOperation이 다른 chain이나 EntryPoint에서 replay되지 않게 무엇을 서명하는가?" idea={<>Operation 내용만이 아니라 실행 domain을 함께 hash합니다. 실제 encoding·hash 함수는 적용 ERC-4337 revision과 account implementation을 고정합니다.</>} formula={String.raw`h=H(\operatorname{pack}(u),\;E,\;c)`}
       annotatedFormula={String.raw`h=\underbrace{H(\operatorname{pack}(u),\;E,\;c)}_{\text{Packed UserOperation 계산}}`}
       operations={[
@@ -44,9 +63,23 @@ export default function ModernArticle() {
     <section id="ml-dsa-signature-boundary" className="space-y-5">
       <p className="text-sm font-semibold text-primary">02 · ML-DSA verifier capability</p>
       <h2 className="text-2xl font-bold">표준 signature artifact와 EVM에서의 검증 비용을 분리한다</h2>
-      <p className="leading-7">FIPS 204는 ML-DSA-44·65·87 parameter set의 key generation, signing, verification과 encoding을 정의합니다. Account artifact에는 parameter set, public-key hash, verifier code hash, signature encoding, context/prehash mode와 policy generation을 넣습니다. ‘Dilithium’이라는 옛 이름만 저장하면 표준 revision과 encoding을 재현할 수 없습니다.</p>
-      <p className="leading-7">EVM에서 ML-DSA를 검증하려면 account bytecode, library, aggregator, rollup-specific precompile 같은 실제 capability가 필요합니다. ERC-4337이 자유로운 signature field를 허용한다는 사실은 값싼 native verifier가 존재한다는 뜻이 아닙니다. Bytecode size, calldata bytes, validation gas, bundler allowlist·simulation support를 target chain에서 측정합니다.</p>
-      <p className="leading-7">Reject fixture에는 wrong chain/EntryPoint, nonce replay, altered callData, wrong parameter set, non-canonical encoding, truncated key/signature, expired policy와 verifier generation mismatch를 둡니다. FIPS known-answer test와 account-level UserOperation test를 분리해 어느 층이 실패했는지 남깁니다.</p>
+      <p className="leading-7">
+            FIPS 204는 ML-DSA-44·65·87 parameter set의 key generation, signing, verification과 encoding을 정의합니다.
+            Account artifact에는 parameter set과 public-key hash, verifier code hash를 넣고 signature encoding,
+            context/prehash mode, policy generation까지 함께 남깁니다. ‘Dilithium’이라는 옛 이름만 저장해서는 표준 revision과
+            encoding을 재현하지 못합니다.
+          </p>
+      <p className="leading-7">
+            EVM에서 ML-DSA를 검증하려면 account bytecode, library, aggregator, rollup-specific precompile 같은 실제
+            capability가 필요합니다. ERC-4337이 signature field를 자유롭게 열어 뒀다고 해서 값싼 native verifier가 딸려 오는 것은 아닙니다.
+            Bytecode size와 calldata bytes, validation gas, bundler allowlist·simulation support는 target
+            chain에서 직접 측정합니다.
+          </p>
+      <p className="leading-7">
+            Reject fixture에는 wrong chain/EntryPoint와 nonce replay, altered callData를 먼저 두고 wrong parameter
+            set, non-canonical encoding, truncated key/signature, expired policy와 verifier generation
+            mismatch를 이어 붙입니다. FIPS known-answer test와 account-level UserOperation test를 분리해 어느 층이 실패했는지 남깁니다.
+          </p>
       <ExplainedFormula question="하이브리드 migration에서 두 서명을 언제 모두 요구하는가?" idea={<>초기 canary에서는 기존 ECDSA와 ML-DSA를 모두 검증해 한 verifier의 결함이 즉시 권한 상실로 이어지지 않게 할 수 있습니다. 이후 policy는 명시적 generation과 recovery 조건으로 바꿉니다.</>} formula={String.raw`V_{\mathrm{hybrid}}=V_{\mathrm{ECDSA}}(h)\land V_{\mathrm{ML\text{-}DSA}}(h)`}
       annotatedFormula={String.raw`V_{\mathrm{hybrid}}=\underbrace{V_{\mathrm{ECDSA}}(h)\land V_{\mathrm{ML\text{-}DSA}}(h)}_{\text{판정 조건 결합}}`}
       operations={[
@@ -57,9 +90,22 @@ export default function ModernArticle() {
     <section id="migration-release" className="space-y-5">
       <p className="text-sm font-semibold text-primary">03 · Migration release gate</p>
       <h2 className="text-2xl font-bold">Key 등록, dual validation, recovery와 rollback을 한 artifact로 묶는다</h2>
-      <p className="leading-7">Migration은 새 key 생성·backup/recovery test, account verifier upgrade, bundler/EntryPoint compatibility, funding·deposit, nonce continuity, wallet UI와 monitoring까지 함께 바뀝니다. Base와 candidate를 같은 UserOperation fixture에서 simulation·on-chain canary·receipt로 비교합니다.</p>
-      <p className="leading-7">Release manifest에는 chain/EntryPoint/account/verifier bytecode hash, FIPS revision·parameter set, classical/PQ public-key hashes, signature bytes, validation/call gas, bundler version, policy/recovery generation과 rollback call을 넣습니다. Unauthorized execution 0과 successful receipt만 세고, simulation-only 성공을 production 성공으로 합치지 않습니다.</p>
-      <p className="leading-7">Verifier bug, signature size limit, bundler rejection, paymaster failure, key loss, replay와 upgrade race를 주입합니다. Rollback은 이전 verifier가 여전히 권한을 가진 명시적 경로여야 하며 attacker가 downgrade를 선택할 수 없어야 합니다.</p>
+      <p className="leading-7">
+            Migration에서는 새 key 생성·backup/recovery test와 account verifier upgrade가 함께 움직입니다. 여기에
+            bundler/EntryPoint compatibility와 funding·deposit, nonce continuity, wallet UI와 monitoring까지 같이
+            바뀝니다. Base와 candidate는 같은 UserOperation fixture에서 simulation·on-chain canary·receipt로 비교합니다.
+          </p>
+      <p className="leading-7">
+            Release manifest에는 chain/EntryPoint/account/verifier bytecode hash와 FIPS revision·parameter set,
+            classical/PQ public-key hashes를 넣습니다. 여기에 signature bytes와 validation/call gas, bundler version,
+            policy/recovery generation과 rollback call까지 넣습니다. Unauthorized execution 0과 successful receipt만 세며
+            simulation-only 성공을 production 성공으로 합치지 않습니다.
+          </p>
+      <p className="leading-7">
+            Verifier bug와 signature size limit, bundler rejection, paymaster failure, key loss, replay와
+            upgrade race를 주입합니다. Rollback은 이전 verifier가 여전히 권한을 가진 명시적 경로여야 하며 attacker가 downgrade를 선택할 수 없어야
+            합니다.
+          </p>
       <div className="grid gap-3 md:grid-cols-2">{[["WRONG DOMAIN","다른 chain/EntryPoint signature를 validation에서 거절"],["NONCE REPLAY","이미 소비한 key·sequence를 effect 전에 거절"],["VERIFIER DRIFT","Code hash/parameter mismatch를 fail closed"],["RECOVERY","분실 fixture에서 승인된 새 generation만 복구"]].map(([t,d]) => <div key={t} className="rounded-lg border border-border p-4"><p className="text-xs font-bold text-primary">{t}</p><p className="mt-2 text-sm leading-6 text-muted-foreground">{d}</p></div>)}</div>
       <Evidence id="paper-erc4337" source="ERC-4337 · Account Abstraction Using Alt Mempool" href="https://eips.ethereum.org/EIPS/eip-4337"><p><strong>문제:</strong> Consensus 변경 없이 smart account가 자체 validation·fee·execution policy를 쓰게 합니다.</p><p><strong>기여:</strong> UserOperation, bundler, EntryPoint, account/paymaster validation과 두-loop execution을 정의합니다.</p><p><strong>전제:</strong> 적용 EIP revision·EntryPoint deployment·bundler rules·chain을 고정합니다.</p><p><strong>근거 범위:</strong> ERC-4337 protocol interface와 security boundary입니다.</p><p><strong>하지 않는 주장:</strong> ML-DSA verifier·native precompile·cheap gas·block inclusion을 제공한다고 말하지 않습니다.</p></Evidence>
       <Evidence id="paper-fips204" source="NIST FIPS 204 · ML-DSA" href="https://csrc.nist.gov/pubs/fips/204/final"><p><strong>문제:</strong> 양자 공격을 고려한 디지털 서명 표준의 algorithm·parameter·encoding을 고정합니다.</p><p><strong>기여:</strong> ML-DSA-44/65/87 key generation·sign·verify 표준과 공식 publication/errata 진입점을 제공합니다.</p><p><strong>전제:</strong> 적용 parameter set, FIPS 204 revision과 errata, approved implementation profile을 고정합니다.</p><p><strong>근거 범위:</strong> ML-DSA cryptographic standard입니다.</p><p><strong>하지 않는 주장:</strong> EVM integration, gas, account recovery, implementation side-channel safety를 보장하지 않습니다.</p></Evidence>

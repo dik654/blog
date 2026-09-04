@@ -114,7 +114,7 @@
       "score": 30
     },
     "blockchain/proofs-post": {
-      "fingerprint": "fb91279d904707ac",
+      "fingerprint": "96c450382cc27be0",
       "score": 30
     },
     "blockchain/reth-net": {
@@ -194,7 +194,7 @@
       "score": 27
     },
     "crypto/sp1": {
-      "fingerprint": "a1067bafabef1501",
+      "fingerprint": "c557c5d189e29c6b",
       "score": 27
     },
     "ai/arima": {
@@ -230,7 +230,7 @@
       "score": 26
     },
     "blockchain/pos-theory": {
-      "fingerprint": "2a6a63de6cf9eee6",
+      "fingerprint": "e9eea57598ee6461",
       "score": 26
     },
     "blockchain/filecoin-pdp": {
@@ -257,6 +257,10 @@
       "fingerprint": "9e46576ed4428408",
       "score": 24
     },
+    "blockchain/pq-account": {
+      "fingerprint": "a0f2dbbe3d6e1d1f",
+      "score": 24
+    },
     "blockchain/prysm-beacon-db": {
       "fingerprint": "55c2dfb04175b224",
       "score": 24
@@ -274,7 +278,7 @@
       "score": 24
     },
     "blockchain/uniswap-v4": {
-      "fingerprint": "b41bda034a29dd76",
+      "fingerprint": "560c93310e1930e3",
       "score": 24
     },
     "crypto/crypto-primitives": {
@@ -333,16 +337,12 @@
       "fingerprint": "193ee31b0cb058ef",
       "score": 22
     },
-    "blockchain/pq-account": {
-      "fingerprint": "754c34f4a174286f",
-      "score": 22
-    },
     "blockchain/prysm-bls": {
       "fingerprint": "e6cbb34970c69bcf",
       "score": 22
     },
     "blockchain/rwa-composition": {
-      "fingerprint": "f63b21b1285f5fd5",
+      "fingerprint": "a137373cf65e5050",
       "score": 22
     },
     "gpu/cuda-shared-memory": {
@@ -358,7 +358,7 @@
       "score": 21
     },
     "blockchain/proofs-snark": {
-      "fingerprint": "cd3f6efd09e85349",
+      "fingerprint": "287fc8d0d4d398fb",
       "score": 21
     },
     "gpu/rapidsnark-gpu": {
@@ -418,7 +418,7 @@
       "score": 20
     },
     "blockchain/tendermint-bft": {
-      "fingerprint": "a25903057ec6cc73",
+      "fingerprint": "1c7f56a74af62f67",
       "score": 20
     },
     "crypto/csprng": {
@@ -654,11 +654,11 @@
       "score": 14
     },
     "blockchain/rollup-fundamentals": {
-      "fingerprint": "3d677ccb0e43535a",
+      "fingerprint": "69e18aaad939b4ff",
       "score": 14
     },
     "blockchain/usdc-circle": {
-      "fingerprint": "6cc5375ddfb3c6a1",
+      "fingerprint": "57b913e1b74ef906",
       "score": 14
     },
     "gpu/gpu-architecture": {
@@ -738,19 +738,19 @@
       "score": 12
     },
     "blockchain/railgun": {
-      "fingerprint": "dfefa8b93587617a",
+      "fingerprint": "b57485fd9cdccc62",
       "score": 12
     },
     "blockchain/smr-theory": {
-      "fingerprint": "f78a8a6f2bfbd053",
+      "fingerprint": "bb2c1c565761d962",
       "score": 12
     },
     "blockchain/stablecoin-overview": {
-      "fingerprint": "b7858d5b430e0bfb",
+      "fingerprint": "516f5aee2abac8c0",
       "score": 12
     },
     "blockchain/tusk": {
-      "fingerprint": "5e4b2fc0aaf2041a",
+      "fingerprint": "57b99d5b8ace9a1b",
       "score": 12
     },
     "crypto/binary-field-proving": {
@@ -770,7 +770,7 @@
       "score": 12
     },
     "crypto/scroll-zkevm": {
-      "fingerprint": "fccd34c6650bb7e8",
+      "fingerprint": "a180dd8eef99e661",
       "score": 12
     },
     "gpu/cuda-basics": {
@@ -869,16 +869,8 @@
       "fingerprint": "84f328d397f37781",
       "score": 10
     },
-    "crypto/poseidon-hash": {
-      "fingerprint": "6006903d17b9505c",
-      "score": 10
-    },
-    "crypto/snark-overview": {
-      "fingerprint": "433ca36ea4ad38c6",
-      "score": 10
-    },
     "crypto/sparse-multiplication": {
-      "fingerprint": "de0d9bc95fcd7a9a",
+      "fingerprint": "b89ab0230e396375",
       "score": 10
     },
     "gpu/cuda-matrix-multiply": {
@@ -985,12 +977,20 @@
       "fingerprint": "5bf9aea0cec11847",
       "score": 8
     },
+    "crypto/poseidon-hash": {
+      "fingerprint": "036b31069f516288",
+      "score": 8
+    },
     "crypto/proofofsql": {
       "fingerprint": "1ac130429af31b96",
       "score": 8
     },
+    "crypto/snark-overview": {
+      "fingerprint": "6f359cb12b70b1b1",
+      "score": 8
+    },
     "crypto/stark-theory": {
-      "fingerprint": "6f4d119512b0f07c",
+      "fingerprint": "70c521e82b911173",
       "score": 8
     },
     "gpu/gpu-arch-hopper": {
@@ -1174,7 +1174,7 @@
       "score": 6
     },
     "blockchain/uniswap-v2": {
-      "fingerprint": "6f8f532e2912c3e5",
+      "fingerprint": "42835547d707c577",
       "score": 6
     },
     "crypto/fft": {
@@ -1202,7 +1202,7 @@
       "score": 6
     },
     "crypto/zk-theory": {
-      "fingerprint": "38a1e87710e37eba",
+      "fingerprint": "d7ae9ff29a7293fd",
       "score": 6
     },
     "gpu/b300-switchless-network": {

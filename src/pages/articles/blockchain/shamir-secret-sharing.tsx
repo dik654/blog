@@ -15,11 +15,9 @@ export default function ShamirSecretSharingArticle() {
       <section id="overview" className="space-y-5">
         <h2 className="text-3xl font-bold">Secret을 값 조각이 아니라 polynomial points로 나눈다</h2>
         <p className="text-lg leading-8">
-          Shamir Secret Sharing은 secret을 degree-t polynomial의 상수항으로 숨기고,
-          서로 다른 nonzero x에서 평가한 points를 parties에 나눕니다. t+1개 points는
-          polynomial을 유일하게 정하지만 t개 이하는 secret 후보를 하나로 결정하지
-          못합니다. 이 글은 그 correctness·privacy와 plain sharing이 보장하지 않는
-          active security를 분리합니다.
+          Shamir Secret Sharing은 secret을 degree-t polynomial의 상수항으로 숨기고 서로 다른 nonzero x에서 평가한 points를 parties에
+          나눕니다. t+1개 points는 polynomial을 유일하게 정하지만 t개 이하는 secret 후보를 하나로 결정하지 못합니다. 이 글은 그
+          correctness·privacy와 plain sharing이 보장하지 않는 active security를 분리합니다.
         </p>
         <ContentBoundary article="shamir-secret-sharing" />
       </section>
@@ -27,9 +25,8 @@ export default function ShamirSecretSharingArticle() {
       <section id="share-generation" className="space-y-5">
         <h2 className="text-2xl font-bold">Share generation: random coefficients가 privacy를 만든다</h2>
         <p>
-          F₁₇에서 secret s=5와 threshold degree t=1을 선택하고 uniform random
-          coefficient a₁=3을 뽑으면 f(x)=5+3x입니다. Index 0은 f(0)=s이므로 share로
-          배포하지 않고, parties에는 distinct nonzero field elements를 배정합니다.
+          F₁₇에서 secret s=5와 threshold degree t=1을 선택하고 uniform random coefficient a₁=3을 뽑으면 f(x)=5+3x입니다.
+          Index 0은 f(0)=s이므로 share로 배포하지 않고 parties에는 distinct nonzero field elements를 배정합니다.
         </p>
         <figure data-viz="shamir-share-points" className="not-prose rounded-xl border border-border bg-card p-5">
           <figcaption className="text-sm font-semibold">F₁₇에서 f(x)=5+3x의 points</figcaption>
@@ -98,9 +95,8 @@ export default function ShamirSecretSharingArticle() {
           complaint protocol과 authenticated identity가 필요한 이유입니다.
         </p>
         <p>
-          Proactive refresh도 “새 share를 다시 나눔”이 아닙니다. Constant term이 0인
-          random polynomial을 기존 shares에 더해 secret은 유지하면서 share 분포를
-          바꾸고, refresh round 자체를 검증해야 합니다.
+          Proactive refresh도 “새 share를 다시 나눔”이 아닙니다. Constant term이 0인 random polynomial을 기존 shares에 더해
+          secret은 유지하면서 share 분포를 바꾸고 refresh round 자체를 검증해야 합니다.
         </p>
       </section>
 

@@ -14,10 +14,8 @@ export default function Groth16({
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Circuit은 “이 replica와 Merkle path가 public commitment에
-          일치한다”는 statement를 constraint로 표현합니다. Prover는 witness와
-          proving key로 proof를 만들고, verifier는 public input과 verifying
-          key를 pairing equation에 넣어 확인합니다.
+          Circuit은 “이 replica와 Merkle path가 public commitment에 일치한다”는 statement를 constraint로 표현합니다. Prover는
+          witness와 proving key로 proof를 만들고 verifier는 public input과 verifying key를 pairing equation에 넣어 확인합니다.
         </p>
         <p>
           Groth16의 setup은 circuit에 결합되므로 parameter file의 출처와

@@ -20,10 +20,9 @@ export default function Overview({
           protocol이 정한 graph와 commitment 규칙을 따랐음을 증명합니다.
         </p>
         <p>
-          구현은 PC1, PC2, C1, C2로 나뉩니다. PC1이 graph dependency를 따라
-          label을 만들고, PC2가 replica와 Merkle commitment를 완성합니다.
-          Randomness가 정해진 뒤 C1이 challenge용 witness를 준비하고 C2가
-          on-chain verification에 사용할 SNARK proof를 생성합니다.
+          구현은 PC1, PC2, C1, C2로 나뉩니다. PC1이 graph dependency를 따라 label을 만들고 PC2가 replica와 Merkle commitment를
+          완성합니다. Randomness가 정해진 뒤 C1이 challenge용 witness를 준비하고 C2가 on-chain verification에 사용할 SNARK proof를
+          생성합니다.
         </p>
       </div>
       <div className="not-prose my-8">

@@ -17,7 +17,11 @@ export default function ModernProofsSnark() {
 
     <section id="assignment-artifact" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">01 · Assignment artifact</p><h2 className="mt-2 text-2xl font-bold">Circuit synthesis 결과를 A·B·C evaluations, inputs, auxiliary variables와 density maps로 고정한다</h2></header>
-      <p>ProvingAssignment는 witness 숫자만 담는 배열이 아닙니다. Public input과 auxiliary assignment, A/B/C query가 실제로 참조하는 auxiliary 위치의 density까지 함께 기록합니다. 회로·field·parameter digest, public-input order와 expected vector lengths를 artifact header에 넣어야 잘못된 proving key나 다른 회로의 assignment가 조용히 섞이지 않습니다.</p>
+      <p>
+            ProvingAssignment는 witness 숫자만 담는 배열이 아닙니다. Public input과 auxiliary assignment는 물론, A/B/C query가
+            실제로 참조하는 auxiliary 위치의 density까지 함께 기록합니다. 회로·field·parameter digest, public-input order와 expected
+            vector lengths를 artifact header에 넣어야 잘못된 proving key나 다른 회로의 assignment가 조용히 섞이지 않습니다.
+          </p>
       <ExplainedFormula question="Density map은 왜 별도 artifact인가?" idea={<>0이 아닌 query 항만 MSM에 보내면 결과는 유지하면서 불필요한 scalar-point 곱을 피할 수 있기 때문입니다.</>} formula={String.raw`M_A=\sum_{i=0}^{N_{aux}-1}\mathbf{1}[D_A(i)=1],\quad \rho_A=M_A/N_{aux}`}
       annotatedFormula={String.raw`M_A=\underbrace{\sum_{i=0}^{N_{aux}-1}\mathbf{1}[D_A(i)=1],\quad \rho_A=M_A/N_{aux}}_{\text{기준량당 비율}}`}
       operations={[

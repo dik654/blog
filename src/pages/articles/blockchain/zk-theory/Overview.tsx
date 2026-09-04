@@ -36,9 +36,8 @@ export default function Overview() {
               }
             </M>
             <p className="text-sm text-muted-foreground mt-2">
-              x = 공개 입력(statement), w = 비밀 증인(witness), R = 관계(x와 w가
-              올바른 쌍), pi = 증명(proof), V = 검증자 알고리즘, negl = 무시
-              가능 함수(보안 파라미터에 대해 역다항식보다 빠르게 감소).
+              x = 공개 입력(statement), w = 비밀 증인(witness), R = 관계(x와 w가 올바른 쌍), pi = 증명(proof), V = 검증자 알고리즘,
+              negl = 무시 가능 함수(보안 파라미터의 역다항식보다 빠르게 감소).
             </p>
           </div>
           <div className="rounded-lg border bg-card p-4">

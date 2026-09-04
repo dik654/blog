@@ -17,15 +17,13 @@ export default function TotalOrder() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>네 성질과 경계</h3>
         <p>
-          Agreement와 total order가 replica 사이 prefix를 맞추고, integrity는
-          duplicate·fabricated delivery를 막습니다. Validity는 correct sender의
-          message가 명시한 fault·timing 조건에서 결국 deliver된다는 progress
-          성질입니다. “모든 message를 즉시 전 세계에 전달”하는 SLA가 아닙니다.
+          Agreement와 total order가 replica 사이 prefix를 맞추고 integrity는 duplicate·fabricated delivery를 막습니다.
+          Validity는 correct sender의 message가 명시한 fault·timing 조건에서 결국 deliver된다는 progress 성질입니다. “모든 message를
+          즉시 전 세계에 전달”하는 SLA가 아닙니다.
         </p>
         <p>
-          Atomic broadcast와 consensus는 적절한 model에서 서로 reduce할 수 있지만,
-          구현에서 batching·leader election·reconfiguration·storage durability가
-          사라지는 것은 아닙니다. Log index는 결정 순서를 나타내고 wall-clock
+          Atomic broadcast와 consensus는 적절한 model에서 서로 reduce할 수 있지만 구현에서 batching·leader
+          election·reconfiguration·storage durability가 사라지는 것은 아닙니다. Log index는 결정 순서를 나타내고 wall-clock
           timestamp와 같지 않습니다.
         </p>
       </div>

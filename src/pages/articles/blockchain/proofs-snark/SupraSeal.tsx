@@ -13,10 +13,8 @@ export default function SupraSeal({
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          SupraSeal 계열 최적화의 목표는 새로운 proof를 만드는 것이 아니라
-          동일한 Filecoin proof를 더 효율적으로 생성하는 것입니다. MSM
-          scheduling, point representation, prefetch와 multi-GPU work
-          distribution을 조정해 device가 기다리는 시간을 줄입니다.
+          SupraSeal 계열 최적화의 목표는 새로운 proof를 만드는 게 아니라 동일한 Filecoin proof를 더 효율적으로 생성하는 데 있습니다. MSM scheduling,
+          point representation, prefetch와 multi-GPU work distribution을 조정해 device가 기다리는 시간을 줄입니다.
         </p>
         <p>
           따라서 “50% 빨라졌다” 같은 발표 수치는 해당 hardware와 batch의

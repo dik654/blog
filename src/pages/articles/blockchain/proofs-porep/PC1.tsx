@@ -20,8 +20,7 @@ export default function PC1({
           sector와 sealing context가 달라지면 replica 결과가 달라집니다.
         </p>
         <p>
-          각 node의 label은 DRG와 expander graph가 선택한 parent label에
-          의존합니다. 그래서 계산 순서와 cache locality가 성능의 핵심이며,
+          각 node의 label은 DRG와 expander graph가 선택한 parent label에 의존합니다. 그래서 계산 순서와 cache locality가 성능의 핵심이며
           thread 수만 늘린다고 선형으로 빨라지지 않습니다.
         </p>
       </div>

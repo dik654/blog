@@ -74,13 +74,10 @@ export default function ModernRwaCompositionArticle() {
           </h2>
         </header>
         <p>
-          Issuer는 token과 contractual claim을 발행하고, SPV나 fund vehicle은
-          reference assets를 보유할 수 있습니다. Custodian은 securities/cash를
-          보관하고, servicer는 coupon·rent·loan payment를 모으며,
-          administrator는 NAV를 계산합니다. Transfer agent 또는 registry가 legal
-          holder record를 관리할 수 있습니다. Smart contract는 mint/burn과
-          allowlist를 집행하지만 offchain asset existence·lien·cash collection을
-          스스로 관찰하지 못합니다.
+          Issuer는 token과 contractual claim을 발행하고 SPV나 fund vehicle은 reference assets를 보유할 수 있습니다. Custodian은
+          securities/cash를 보관하고 servicer는 coupon·rent·loan payment를 모으며 administrator는 NAV를 계산합니다. Transfer
+          agent 또는 registry가 legal holder record를 관리할 수 있습니다. Smart contract는 mint/burn과 allowlist를 집행하지만
+          offchain asset existence·lien·cash collection을 스스로 관찰하지 못합니다.
         </p>
         <ExplainedFormula
           question="102달러 순자산을 100 tokens가 나타낼 때 token당 NAV와 80% haircut 담보가치는 얼마인가요?"

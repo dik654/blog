@@ -49,7 +49,11 @@ export default function ModernUniswapV4Article() {
         { expression: String.raw`\underbrace{C_c-D_c}_{\text{남은 순 obligation}}`, annotation: ["currency identity이(가) 식의 결과에 기여하는","방식을 계산합니다.","각 currency의 받을 권리에서 낼 의무를 빼 net","delta를 만들고, callback 반환 전에 모든"] },
       ]} terms={[{symbol:"c",name:"currency identity",description:"Native currency 또는 token address로 구분한 회계 단위입니다."},{symbol:"credit_c,k",name:"caller credit",description:"Action k가 caller에게 받을 권리를 만든 amount입니다."},{symbol:"debit_c,k",name:"caller debt",description:"Action k가 caller가 PoolManager에 낼 의무를 만든 amount입니다."},{symbol:"Δ_c",name:"net currency delta",description:"Unlock context에서 caller와 PoolManager 사이에 남은 currency별 순 obligation입니다."}]} assumptions={["같은 caller unlock context와 exact currency identity를 사용합니다.","Signed delta direction을 integration contract에서 한 번 고정합니다.","ERC20 settle 전 sync와 actual received balance를 검증합니다.","Delta zero는 AMM price quality·hook safety·external transfer finality를 보장하지 않습니다."]} interpretation="Token0 credit 50과 debit 20이면 Δ0=+30이므로 take 30이 필요합니다. Token1 debit 20이면 settle 20이 필요합니다. 둘 중 하나라도 남으면 unlock 전체가 revert합니다." />
       <div id="paper-uniswap-v4-whitepaper"><CitationBlock source="Uniswap v4 Core whitepaper" citeKey={3} href="https://app.uniswap.org/whitepaper-v4.pdf"><p><strong>문제:</strong> AMM customization과 multi-pool routing의 deployment·transfer 비용을 줄이면서 atomic settlement를 유지해야 합니다.</p><p><strong>기여:</strong> Singleton, hooks, flash accounting, native ETH와 custom accounting architecture를 제안합니다.</p><p><strong>전제:</strong> Whitepaper의 EVM transient-storage·singleton execution model과 V4 design scope입니다.</p><p><strong>근거 범위:</strong> V4 architectural motivation과 accounting design입니다.</p><p><strong>말하지 않는 것:</strong> 모든 hook·router의 안전성, gas 절감 폭, liquidity·price execution을 보장하지 않습니다.</p></CitationBlock></div>
-      <p>Release fixture는 wrong PoolKey, invalid hook flag, hook revert, malicious returned delta, unsynced ERC20, under-settlement와 nested unlock을 주입합니다. Pinned core tag·hook codehash·router version·pool key·events/reverts·gas를 함께 비교하고, 실패 시 기존 router로 되돌리되 이미 finalized transaction을 되감는다고 표현하지 않습니다.</p>
+      <p>
+            Release fixture는 wrong PoolKey, invalid hook flag, hook revert, malicious returned delta, unsynced
+            ERC20, under-settlement와 nested unlock을 주입합니다. Pinned core tag·hook codehash·router version·pool
+            key·events/reverts·gas를 함께 비교하고 실패 시 기존 router로 되돌리되 이미 finalized transaction을 되감는다고 표현하지 않습니다.
+          </p>
     </section>
   </article>;
 }

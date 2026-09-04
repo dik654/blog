@@ -14,15 +14,12 @@ export default function WinningPost({
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Provider는 chain randomness와 자신의 power로 election proof를
-          계산합니다. Win count가 생기면 protocol이 선택한 sector challenge에
-          답하는 WinningPoSt를 만들고, election proof와 함께 block header에
-          포함합니다.
+          Provider는 chain randomness와 자신의 power로 election proof를 계산합니다. Win count가 생기면 protocol이 선택한 sector
+          challenge에 답하는 WinningPoSt를 만들고 election proof와 함께 block header에 포함합니다.
         </p>
         <p>
-          이 과정의 공정성을 “storage가 많으면 무조건 당선”으로 설명하면
-          안 됩니다. Quality-adjusted power는 확률을 바꾸고, 실제 당선 여부는
-          epoch별 randomness와 proof 검증 결과로 결정됩니다.
+          이 과정의 공정성을 “storage가 많으면 무조건 당선”으로 설명하면 안 됩니다. Quality-adjusted power는 확률을 바꾸고 실제 당선 여부는 epoch별
+          randomness와 proof 검증 결과로 결정됩니다.
         </p>
       </div>
       <div className="not-prose my-8">

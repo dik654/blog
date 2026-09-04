@@ -189,10 +189,8 @@ export default function ProofPipeline() {
             </div>
           </div>
           <p className="text-sm text-neutral-700 dark:text-neutral-300">
-            1 bundle = 수백 batches = 수천 chunks = 수만 transactions를 500K
-            gas로 L1 제출. Per-tx cost ~$0.005 (L1 gas 20 gwei 기준). Recursive
-            SNARK의 힘 — 증명의 증명 생성 가능. Trade-off로 prover 비용
-            증가하지만, L1 cost 절감이 훨씬 큼.
+            1 bundle = 수백 batches = 수천 chunks = 수만 transactions를 500K gas로 L1 제출. Per-tx cost ~$0.005 (L1 gas
+            20 gwei 기준). Recursive SNARK의 힘 — 증명의 증명 생성 가능. Trade-off로 prover 비용 증가하지만 L1 cost 절감이 훨씬 큼.
           </p>
         </div>
 

@@ -27,7 +27,9 @@ export default function ModernRollupArticle() {
           Rollup은 트랜잭션 실행을 L1 밖에서 처리하되, 누구나 같은 L2 결과를 재현하거나 잘못된 결과를 거부할 수 있도록 필요한 데이터와 증거를 L1에 연결하는 시스템입니다. “트랜잭션을 묶어 올리니 싸다”는 설명만으로는 부족합니다. 실제 안전성은 <strong>어디에서 실행했는가</strong>, <strong>재현할 데이터가 어디에 있는가</strong>, <strong>잘못된 state transition을 어떤 규칙으로 거부하는가</strong>를 따로 봐야 이해할 수 있습니다.
         </Lead>
         <p>
-          먼저 온라인 쇼핑몰을 떠올려 보겠습니다. L2 sequencer는 주문을 빠르게 받아 임시 순서를 정하고, batcher는 그 주문 목록을 L1 blob이나 calldata로 게시합니다. 다른 노드는 게시된 입력에서 똑같은 L2 block을 만들고 실행합니다. 마지막으로 L1 contract가 output claim이나 proof를 확인합니다. 한 회사 서버가 빠른 결과를 먼저 보여줄 수는 있지만, 그 서버가 사라졌을 때도 L1 데이터에서 L2를 다시 만들 수 있어야 rollup의 검증 경계가 유지됩니다.
+          먼저 온라인 쇼핑몰을 떠올려 보겠습니다. L2 sequencer는 주문을 빠르게 받아 임시 순서를 정하고 batcher는 그 주문 목록을 L1 blob이나 calldata로
+          게시합니다. 다른 노드는 게시된 입력에서 똑같은 L2 block을 만들고 실행합니다. 마지막으로 L1 contract가 output claim이나 proof를 확인합니다. 한 회사
+          서버가 빠른 결과를 먼저 보여줄 수는 있지만 그 서버가 사라졌을 때도 L1 데이터에서 L2를 다시 만들 수 있어야 rollup의 검증 경계가 유지됩니다.
         </p>
         <RollupPipelineViz />
         <dl className="grid gap-4 md:grid-cols-3">
@@ -77,7 +79,9 @@ export default function ModernRollupArticle() {
           <h2 className="mt-2 text-2xl font-bold">출력을 먼저 제안하고, 이견이 있을 때 한 step까지 좁힌다</h2>
         </header>
         <p>
-          Optimistic rollup은 proposer가 낸 output root를 무조건 믿지 않습니다. 일정한 challenge window 안에 이견이 없으면 받아들이는 낙관적 절차를 사용합니다. Challenger는 L1에 게시된 입력과 합의된 이전 상태에서 실행을 다시 해보고, claim이 다르면 dispute를 시작합니다. 이때 challenger가 데이터를 구할 수 없다면 잘못된 실행 위치를 제시할 수 없으므로 data availability는 fault proof의 선행 조건입니다.
+          Optimistic rollup은 proposer가 낸 output root를 무조건 믿지 않습니다. 일정한 challenge window 안에 이견이 없으면 받아들이는 낙관적
+          절차를 사용합니다. Challenger는 L1에 게시된 입력과 합의된 이전 상태에서 실행을 다시 해보고 claim이 다르면 dispute를 시작합니다. 이때 challenger가
+          데이터를 구할 수 없다면 잘못된 실행 위치를 제시할 수 없으므로 data availability는 fault proof의 선행 조건입니다.
         </p>
         <ol className="space-y-3 pl-5 text-sm leading-6">
           <li><strong>Claim:</strong> proposer가 특정 L2 block의 state root를 주장합니다.</li>
@@ -124,7 +128,9 @@ export default function ModernRollupArticle() {
           <h2 className="mt-2 text-2xl font-bold">전체 실행 대신 “이 transition이 맞다”는 짧은 proof를 검증한다</h2>
         </header>
         <p>
-          Validity rollup에서도 operator는 transaction을 실행합니다. 차이는 새 state root를 정산할 때 proving system이 “공개 입력으로 주어진 이전 root와 transaction commitment를 사용해 protocol program을 실행하면 이 새 root가 나온다”는 proof를 만들고, L1 verifier가 그 proof를 확인한다는 점입니다. 그래서 invalid transition은 challenge를 기다리지 않고 verifier 단계에서 거부할 수 있습니다.
+          Validity rollup에서도 operator는 transaction을 실행합니다. 차이는 새 state root를 정산할 때 proving system이 “공개 입력으로
+          주어진 이전 root와 transaction commitment를 사용해 protocol program을 실행하면 이 새 root가 나온다”는 proof를 만들고 L1
+          verifier가 그 proof를 확인한다는 점입니다. 그래서 invalid transition은 challenge를 기다리지 않고 verifier 단계에서 거부할 수 있습니다.
         </p>
         <p>
           여기서 자주 섞이는 세 가지를 분리해야 합니다. <strong>Validity</strong>는 계산이 맞다는 성질이고, <strong>zero knowledge</strong>는 witness의 일부를 숨기는 성질이며, <strong>data availability</strong>는 사용자가 transaction data를 얻을 수 있다는 성질입니다. Validity proof가 있다고 privacy가 자동으로 생기지 않으며, proof만 L1에 올리고 원본 데이터를 숨기면 사용자가 자신의 상태를 재구성하지 못할 수 있습니다.
@@ -143,7 +149,10 @@ export default function ModernRollupArticle() {
         </header>
         <ProofComparisonViz />
         <p>
-          Sequencer censorship은 사용자의 transaction이 빠른 경로에 들어가지 않는 문제이며, invalid state root는 실행 정합성 문제입니다. Blob withholding은 검증 입력을 구하지 못하는 DA 문제이고, L1 reorg는 derivation origin이 바뀌는 consensus 문제입니다. 서로 다른 문제를 “proof가 해결한다”는 한 문장으로 합치면 운영 대응도 잘못됩니다. Forced inclusion, DA fallback, claim dispute, derivation reset은 각각 다른 runbook을 가져야 합니다.
+          Sequencer censorship은 사용자의 transaction이 빠른 경로에 들어가지 않는 문제이며 invalid state root는 실행 정합성 문제입니다. Blob
+          withholding은 검증 입력을 구하지 못하는 DA 문제이고 L1 reorg는 derivation origin이 바뀌는 consensus 문제입니다. 서로 다른 문제를
+          “proof가 해결한다”는 한 문장으로 합치면 운영 대응도 잘못됩니다. Forced inclusion, DA fallback, claim dispute, derivation
+          reset은 각각 다른 runbook을 가져야 합니다.
         </p>
         <div className="overflow-x-auto rounded-lg border border-border">
           <table className="min-w-[760px] w-full text-sm">

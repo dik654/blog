@@ -14,10 +14,8 @@ export default function WindowPost({
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          한 provider의 모든 active sector를 한 번에 증명하면 failure domain과
-          proving peak가 너무 커집니다. 그래서 actor state는 sector를 deadline과
-          partition으로 나누고, 각 window에 해당하는 challenge와 proof를
-          제출하게 합니다.
+          한 provider의 모든 active sector를 한 번에 증명하면 failure domain과 proving peak가 너무 커집니다. 그래서 actor state는
+          sector를 deadline과 partition으로 나누고 각 window에 해당하는 challenge와 proof를 제출하게 합니다.
         </p>
         <p>
           Partition은 GPU 병렬화 단위가 될 수 있지만 처리량이 GPU 수에 정확히
@@ -31,11 +29,9 @@ export default function WindowPost({
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>운영 기준은 “몇 분 걸렸다”보다 deadline slack이다</h3>
         <p>
-          같은 partition fixture에서 challenge 수신부터 proof 생성, message
-          publish와 on-chain inclusion까지 시간을 나누고, 종료 시점까지 남은
-          slack을 기록합니다. Proving period와 deadline 수는 network parameter에
-          속하므로 문서의 과거 시간표보다 현재 actor policy를 기준으로
-          alerting해야 합니다.
+          같은 partition fixture에서 challenge 수신부터 proof 생성, message publish와 on-chain inclusion까지 시간을 나누고 종료
+          시점까지 남은 slack을 기록합니다. Proving period와 deadline 수는 network parameter에 속하므로 문서의 과거 시간표보다 현재 actor
+          policy를 기준으로 alerting해야 합니다.
         </p>
       </div>
     </section>

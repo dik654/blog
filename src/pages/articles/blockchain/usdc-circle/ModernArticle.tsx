@@ -27,7 +27,11 @@ export default function ModernUsdcArticle() {
     <section id="cctp-burn-mint" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">02 · CCTP</p><h2 className="mt-2 text-2xl font-bold">CCTP는 source USDC를 lock한 wrapper가 아니라 burn message를 attest한 뒤 destination native USDC를 mint한다</h2></header>
       <p>25 USDC transfer는 source domain의 <code>depositForBurn</code>에서 시작합니다. Message에는 source·destination domain, nonce, recipient, amount, finality threshold 같은 identity가 들어갑니다. Attestation service가 burn event를 확인한 뒤 destination <code>receiveMessage</code>가 signature와 message uniqueness를 검증하고 25를 mint합니다. Source burn만 끝난 중간 상태는 손실이 아니라 pending이지만, retry는 같은 message를 두 번 mint하지 않아야 합니다.</p>
-      <p>Recipient bytes, domain mapping, contract version, finality threshold와 fee를 고정하지 않은 UI quote는 execution contract가 아닙니다. Destination mint 전에 message hash를 저장하고, duplicate·wrong domain·wrong recipient·insufficient finality를 fail closed로 시험합니다.</p>
+      <p>
+            Recipient bytes, domain mapping, contract version, finality threshold와 fee를 고정하지 않은 UI quote는
+            execution contract가 아닙니다. Destination mint 전에 message hash를 저장하고 duplicate·wrong domain·wrong
+            recipient·insufficient finality를 fail closed로 시험합니다.
+          </p>
       <div id="paper-circle-cctp"><CitationBlock source="Circle · CCTP Technical Guide and Contracts" citeKey={3} type="code" href="https://developers.circle.com/cctp/references/technical-guide"><p><strong>문제:</strong> Native USDC를 source에서 제거하고 destination에서 중복 없이 다시 발행해야 합니다.</p><p><strong>기여:</strong> Burn message, attestation, domain routing, MessageTransmitter·TokenMessenger/TokenMinter lifecycle을 정의합니다.</p><p><strong>전제:</strong> 선택한 CCTP version, supported domains/contracts, finality policy와 Circle attestation service를 고정합니다.</p><p><strong>근거 범위:</strong> CCTP native burn-and-mint protocol과 message verification surface입니다.</p><p><strong>말하지 않는 것:</strong> General bridge security·destination application safety·issuer reserve solvency나 zero-latency delivery를 보장하지 않습니다.</p></CitationBlock></div>
     </section>
 

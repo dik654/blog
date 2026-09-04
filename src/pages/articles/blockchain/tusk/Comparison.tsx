@@ -96,8 +96,7 @@ function CompareViz() {
         ))}
       </svg>
       <p className="text-xs text-center text-foreground/75 mt-2">
-        💡 Tusk는 활성을 항상 보장하지만, 좋은 조건에서는 Bullshark가 1라운드
-        빠름
+        💡 Tusk는 활성을 항상 보장하지만 좋은 조건에서는 Bullshark가 1라운드 빠름
       </p>
     </div>
   );

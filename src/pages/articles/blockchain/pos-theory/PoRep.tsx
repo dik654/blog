@@ -9,10 +9,10 @@ export default function PoRep() {
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          같은 raw data 한 벌로 replica 여러 개의 보상을 받는 deduplication attack을 줄이려면 claimed
-          replica마다 다른 committed representation을 요구해야 합니다. Filecoin sealing은 exact sector data,
-          provider·sector·protocol randomness에서 replica identity를 만들고 construction-specific encoding을
-          수행한 뒤 data commitment와 replica commitment의 관계를 succinct proof로 검증합니다.
+          같은 raw data 한 벌로 replica 여러 개의 보상을 받는 deduplication attack을 줄이려면 claimed replica마다 committed
+          representation이 서로 달라야 합니다. Filecoin sealing은 exact sector data와 provider·sector·protocol
+          randomness에서 replica identity를 뽑아냅니다. 여기에 construction-specific encoding을 건 다음 data commitment와
+          replica commitment의 관계를 succinct proof로 검증합니다.
         </p>
       </div>
       <PoRepFlowViz />
@@ -47,15 +47,20 @@ export default function PoRep() {
         <h3>구현 수치를 이론 정의와 분리합니다</h3>
         <p>
           Sealing phase 수, graph layer 수, sector size, proof system, proof bytes, 시간과 hardware는 network
-          upgrade·proof parameter·implementation에 따라 달라집니다. 따라서 고정 “몇 시간·몇 byte”를 PoRep의
-          정의로 쓰지 않고, network version·proving parameter digest·hardware·peak memory·wall time을 run
-          receipt에 기록합니다.
+          upgrade·proof parameter·implementation에 따라 달라집니다. 따라서 고정된 “몇 시간·몇 byte”를 PoRep의 정의로 쓰는 대신 network
+          version·proving parameter digest·hardware·peak memory·wall time을 run receipt에 남깁니다.
         </p>
       </div>
       <div id="paper-filecoin-porep" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
-        <p className="text-xs font-bold text-primary">논문 읽기 · PoRep와 PoSt</p>
+        <p className="text-xs font-bold text-primary">
+            PoRep와 PoSt, 논문으로 읽기
+          </p>
         <p className="mt-2 text-sm font-semibold">Filecoin: A Decentralized Storage Network</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">문제는 decentralized storage market에서 claimed storage를 공개 검증하는 것입니다. Proof-of-Replication과 Proof-of-Spacetime, market·power accounting의 초기 설계를 제시합니다. 현재 production proof constants·actors·penalties의 최종 규격으로 읽으면 안 됩니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            decentralized storage market에서 claimed storage를 공개 검증하는 것이 문제입니다. Proof-of-Replication과 Proof-of-
+            Spacetime, market·power accounting의 초기 설계를 제시할 뿐 현재 production proof constants·actors·penalties의
+            최종 규격으로 읽으면 안 됩니다.
+          </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://filecoin.io/filecoin.pdf" target="_blank" rel="noreferrer">Filecoin paper 보기</a>
       </div>
     </section>

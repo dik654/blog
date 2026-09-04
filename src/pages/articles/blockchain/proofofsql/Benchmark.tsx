@@ -52,8 +52,7 @@ export default function Benchmark() {
         </ul>
         <h3>향후 방향</h3>
         <p>
-          JOIN, GROUP BY, 집계 함수 지원 확대, PLONK/FRI 기반 새로운 증명 통합,
-          Lattice 기반 암호로 양자 저항성 확보 등이 계획되어 있습니다.
+          JOIN과 GROUP BY, 집계 함수 지원 확대, PLONK/FRI 기반 새 증명 통합, Lattice 기반 암호로 양자 저항성 확보 등이 계획되어 있습니다.
         </p>
       </div>
       <div className="mt-8">

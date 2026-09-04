@@ -204,7 +204,7 @@ export default function LookupMechanisms() {
           </div>
           <div className="rounded border bg-amber-50/50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800 p-3">
             <p className="text-sm font-semibold text-amber-700 dark:text-amber-300 mb-1">
-              zkEVM에서의 Lookup 활용
+              zkEVM의 Lookup 활용
             </p>
             <div className="grid sm:grid-cols-2 gap-x-4 gap-y-1 text-sm text-neutral-600 dark:text-neutral-400">
               <p>

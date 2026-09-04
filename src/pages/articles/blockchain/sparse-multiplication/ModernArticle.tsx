@@ -23,11 +23,9 @@ export default function ModernSparseMultiplicationArticle() {
           사용할 수 있습니다.
         </p>
         <p>
-          하지만 “0이 많다”는 관찰만으로 전용 함수를 호출하면 안 됩니다. 어느 slot이
-          0인지, 그 pattern이 protocol과 field profile에서 항상 유지되는지, coefficient
-          order가 같은지를 먼저 고정해야 합니다. Pattern이 runtime마다 달라지는 일반
-          sparse matrix와, `mul_by_014`처럼 type과 호출 지점이 고정한 pairing field
-          schedule은 서로 다른 구현 문제입니다.
+          하지만 “0이 많다”는 관찰만으로 전용 함수를 호출하면 안 됩니다. 어느 slot이 0인지, 그 pattern이 protocol과 field profile에서 항상 유지되는지,
+          coefficient order가 같은지를 먼저 고정해야 합니다. Pattern이 runtime마다 달라지는 일반 sparse matrix와 `mul_by_014`처럼 type과
+          호출 지점이 고정한 pairing field schedule은 서로 다른 구현 문제입니다.
         </p>
         <aside className="rounded-lg border border-primary/30 bg-primary/5 p-5 text-sm leading-6">
           <strong>핵심 아이디어:</strong> Dense operand의 모든 coefficient를 sparse
@@ -44,11 +42,10 @@ export default function ModernSparseMultiplicationArticle() {
           <h2 className="mt-2 text-2xl font-bold">Coefficient 값과 위치를 함께 저장한다</h2>
         </header>
         <p>
-          Polynomial A(x)=∑aᵢxⁱ의 dense 표현은 degree까지 모든 coefficient를 저장합니다.
-          Sparse 표현은 aᵢ≠0인 (i,aᵢ)만 저장합니다. 예를 들어 B(x)=5+7x²의 dense
-          배열은 [5,0,7,0]처럼 보일 수 있지만 support는 Sᴮ=&#123;0,2&#125;입니다. 이 정보가
-          compile-time에 고정돼 있으면 branch 없이 전용 straight-line schedule을 만들
-          수 있고, runtime sparse라면 index 검사·indirection 비용이 추가됩니다.
+          Polynomial A(x)=∑aᵢxⁱ의 dense 표현은 degree까지 모든 coefficient를 저장합니다. Sparse 표현은 aᵢ≠0인 (i,aᵢ)만 저장합니다. 예를
+          들어 B(x)=5+7x²의 dense 배열은 [5,0,7,0]처럼 보일 수 있지만 support는 Sᴮ=&#123;0,2&#125;입니다. 이 정보가 compile-time에
+          고정돼 있으면 branch 없이 전용 straight-line schedule을 만들 수 있고 runtime sparse라면 index 검사·indirection 비용이
+          추가됩니다.
         </p>
         <ExplainedFormula
           question="두 coefficient 표현을 곱을 때 어떤 출력 위치에 어떤 partial product가 더해지는가?"
@@ -70,10 +67,8 @@ export default function ModernSparseMultiplicationArticle() {
         />
         <ModernSparseViz />
         <p>
-          A=1+2x+3x²+4x³, B=5+7x²라면 8개의 실제 곱으로
-          5+10x+22x²+34x³+21x⁴+28x⁵를 얻습니다. Dense 길이 4 두 개를 기계적으로
-          곱하면 16개 후보를 만들지만, B의 1·3번 slot이 0임을 알고 있으면 그 열을
-          전부 생략할 수 있습니다.
+          A=1+2x+3x²+4x³, B=5+7x²라면 8개의 실제 곱으로 5+10x+22x²+34x³+21x⁴+28x⁵를 얻습니다. Dense 길이 4 두 개를 기계적으로 곱하면 16개
+          후보를 만들지만 B의 1·3번 slot이 0임을 알고 있으면 그 열을 전부 생략할 수 있습니다.
         </p>
       </section>
 
@@ -83,12 +78,10 @@ export default function ModernSparseMultiplicationArticle() {
           <h2 className="mt-2 text-2xl font-bold">Fp¹² slot 이름은 tower profile에 종속된다</h2>
         </header>
         <p>
-          Pairing 구현은 Fp¹² 원소를 Fp² coefficient 여섯 개로 볼 수 있지만, 그 여섯
-          slot의 order와 basis unit은 구현이 선택한 Fp²→Fp⁶→Fp¹² tower에 달려
-          있습니다. Miller line ℓ(P)는 twist에서 base field point P로 평가한 뒤 특정
-          세 slot만 채울 수 있습니다. 이때 dense accumulator f에 line을 곱하는 전용
-          함수는 입력 세 coefficient만 받고 나머지가 정확히 0이라는 contract를 코드
-          구조로 보존합니다.
+          Pairing 구현은 Fp¹² 원소를 Fp² coefficient 여섯 개로 볼 수 있지만 그 여섯 slot의 order와 basis unit은 구현이 선택한
+          Fp²→Fp⁶→Fp¹² tower에 달려 있습니다. Miller line ℓ(P)는 twist에서 base field point P로 평가한 뒤 특정 세 slot만 채울 수
+          있습니다. 이때 dense accumulator f에 line을 곱하는 전용 함수는 입력 세 coefficient만 받고 나머지가 정확히 0이라는 contract를 코드 구조로
+          보존합니다.
         </p>
         <p>
           예를 들어 arkworks의 pinned Fp12 model에는 `mul_by_034`와 `mul_by_014`가
@@ -113,11 +106,10 @@ export default function ModernSparseMultiplicationArticle() {
           <h2 className="mt-2 text-2xl font-bold">부분 곱 수와 end-to-end latency를 분리한다</h2>
         </header>
         <p>
-          Dense×sparse의 일차 비교는 coefficient multiplication 수에서 시작하지만,
-          최종 선택은 더 넓은 장부가 필요합니다. Fp² multiplication 안의 base-field
-          mul/add, non-residue 곱, lazy reduction 범위, temporary register, load/store,
-          instruction-level parallelism을 함께 세어야 합니다. Sparse schedule의 dependency
-          chain이 길면 곱셈 수가 적어도 hardware utilization이 나빠질 수 있습니다.
+          Dense×sparse의 일차 비교는 coefficient multiplication 수에서 시작하지만 최종 선택은 더 넓은 장부가 필요합니다. Fp² multiplication
+          안의 base-field mul/add, non-residue 곱, lazy reduction 범위, temporary register, load/store,
+          instruction-level parallelism을 함께 세어야 합니다. Sparse schedule의 dependency chain이 길면 곱셈 수가 적어도 hardware
+          utilization이 나빠질 수 있습니다.
         </p>
         <ExplainedFormula
           question="Miller loop 전체에서 sparse 전용 곱셈이 절약할 수 있는 시간의 상한을 어떻게 읽는가?"

@@ -35,7 +35,11 @@ export default function ModernSNARKOverviewArticle() {
           assumptions={["Relation, field, public-input ordering, encoding과 key identifier가 양쪽에서 같습니다.", "Setup randomness·transcript challenge·prover blinding randomness는 scheme의 보안 요구를 충족합니다.", "Verify의 true는 해당 relation과 assumptions 아래의 cryptographic acceptance이지 외부 data provenance나 authorization이 아닙니다."]}
           interpretation="x=(3,12), w=4이면 completeness는 honest proof가 accept해야 한다고 말합니다. w=5인 거짓 relation을 accept시키기 어렵다는 것은 soundness이고, w=4라는 값에 관해 validity 이외를 드러내지 않는 성질은 zero knowledge입니다."
         />
-        <p>Setup에는 세 가지를 구분해야 합니다. Groth16은 보통 회로별 CRS가 필요합니다. PLONK는 최대 degree를 위한 universal updatable SRS를 여러 회로에서 trim해 쓸 수 있지만, KZG 계열이라면 여전히 toxic waste 가정이 있습니다. STARK처럼 transparent public randomness를 쓰는 계열은 trusted setup이 없지만 proof size·hash·field·query 가정이 달라집니다.</p>
+        <p>
+            Setup에는 세 가지를 구분해야 합니다. Groth16은 보통 회로별 CRS가 필요합니다. PLONK는 최대 degree를 위한 universal updatable SRS를
+            여러 회로에서 trim해 쓸 수 있지만 KZG 계열이라면 여전히 toxic waste 가정이 있습니다. STARK처럼 transparent public randomness를
+            쓰는 계열은 trusted setup이 없지만 proof size·hash·field·query 가정이 달라집니다.
+          </p>
       </section>
 
       <section id="security" className="space-y-6">
@@ -73,7 +77,11 @@ export default function ModernSNARKOverviewArticle() {
           <p><strong>근거 범위:</strong> 해당 construction과 당시 prototype의 program/circuit 규모·평가에 한정합니다.</p>
           <p><strong>말하지 않는 것:</strong> 모든 SNARK가 같은 setup·proof size·post-quantum security를 갖거나 임의 application circuit이 안전하다는 뜻은 아닙니다.</p>
         </CitationBlock></div>
-        <p>이 글의 10문항은 acronym, relation/instance/witness, 세 알고리즘, 세 보안 성질, setup 유형, random evaluation bound, Fiat–Shamir transcript, 잘못된 public binding, 비용 측정, 시스템 선택을 다룹니다. 따라서 아래의 Groth16·PLONK 글로 이동하기 전에 공통 언어와 실패 경계를 이 글 하나로 복원할 수 있습니다.</p>
+        <p>
+            이 글의 10문항은 acronym, relation/instance/witness, 세 알고리즘, 세 보안 성질, setup 유형, random evaluation bound,
+            Fiat–Shamir transcript, 잘못된 public binding, 비용 측정, 시스템 선택을 다룹니다. 아래의 Groth16·PLONK 글로 이동하기 전에 공통
+            언어와 실패 경계를 이 글 하나로 복원할 수 있습니다.
+          </p>
       </section>
     </article>
   );

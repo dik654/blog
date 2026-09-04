@@ -63,11 +63,9 @@ export default function Overview() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Command·log·state·reply를 구분합니다</h3>
         <p>
-          Client의 요청은 command이고, consensus가 정한 위치가 log index입니다.
-          Entry가 replica disk에 append된 상태, quorum에 복제되어 commit된 상태,
-          state machine에 apply된 상태는 서로 다릅니다. Client success는 protocol이
-          정한 durability와 commit 조건 뒤에만 반환해야 하며, apply result와 request
-          ID를 함께 보존해야 retry가 같은 effect를 두 번 만들지 않습니다.
+          Client의 요청은 command이고, consensus가 정한 위치가 log index입니다. Entry가 replica disk에 append된 상태, quorum에 복제되어
+          commit된 상태, state machine에 apply된 상태는 서로 다릅니다. Client success는 protocol이 정한 durability와 commit 조건
+          뒤에만 반환해야 하며 apply result와 request ID를 함께 보존해야 retry가 같은 effect를 두 번 만들지 않습니다.
         </p>
         <p>
           예를 들어 request <code>r-17: increment</code>가 commit된 직후 reply가
