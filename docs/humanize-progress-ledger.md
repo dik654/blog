@@ -74,7 +74,15 @@ af는 P2(C-8 대구 5→0 전멸)가 "A가 아니라 B"→"A가 아닙니다. B�
 보존으로 확인. prose-readability는 cometbft-types 22→24 1건만 진짜 변동(E-1 문장분리로
 260자 임계 초과, 정보 손실 없음 확인) — 나머지 17건은 fingerprint drift.
 
-남은 blockchain: 821개 파일(35개 서브배치, wave2부터 계속).
+| 8(wave2 ai~ap) | blockchain(192개 파일), 8개 서브배치(light 5·standard 3) | 362 추출 → 124 반영 | 등급 A×8 · 게이트 golden FAIL 2건 모두 오탐 확인 후 진행 | `3a6e5a3c` |
+
+**blockchain wave2 완료**(384/1013). golden FAIL 2건은 footnote_anchor 검사기가 수학 튜플
+표기(`z=(1,3,12,4)`)와 인용연도 표기(`DH(1976)`)를 각주 마커로 오인식한 false positive —
+final.md에서 원형 보존 확인 후 진행. prose-readability는 5건 각 +2(da-theory·dag-consensus·
+cosmos-sdk·consensus-mechanisms·cuda-basics) 소폭 상승, 전부 wave1과 동일한 E-1 문장분리
+패턴으로 정보 손실 없음 확인.
+
+남은 blockchain: 629개 파일(27개 서브배치, wave3부터 계속).
 
 `gpu-arch-hopper.tsx` 같은 조립 파일은 자체 `<p>`가 없고 프로즈가 하위 섹션 파일에 있다는 걸
 test 배치에서 확인했다 — 그래서 배치2부터는 `find ... -not -path "*/viz/*" -not -path
