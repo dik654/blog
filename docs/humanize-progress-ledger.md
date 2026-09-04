@@ -82,7 +82,17 @@ final.md에서 원형 보존 확인 후 진행. prose-readability는 5건 각 +2
 cosmos-sdk·consensus-mechanisms·cuda-basics) 소폭 상승, 전부 wave1과 동일한 E-1 문장분리
 패턴으로 정보 손실 없음 확인.
 
-남은 blockchain: 629개 파일(27개 서브배치, wave3부터 계속).
+| 8(wave3 aq~ax) | blockchain(192개 파일), 8개 서브배치(light 4·standard 4) | 636 추출 → 138 반영 | 등급 A×8 · aq는 finalize로 진단 오류 발견·수정 | `146de577` |
+
+**blockchain wave3 완료**(576/1013). aq는 이번 세션 중 유일하게 "게이트 지표가 실제로 미개선"으로
+나온 사례 — 진단서가 정량 게이트 ★S1 트리거(ending_comma_rate)의 원인을 A-13으로 잘못 짚어
+monolith가 진짜 C-11(원문 19건)을 방치했고, A-13 분절 과정에서 C-11을 3건 더 만들어 z-score가
++4.41→+4.67로 악화. finalizer가 metrics.py 정규식을 직접 대조해 원인 재확정 후 19건 국소
+보정(인간 baseline 수준까지만, 과교정 방지) + 원문에 없던 "흔히 말하는" 주장 1건 롤백.
+golden FAIL 1건(at)은 `(p^k−1)/r` 수학 표기 오탐으로 확인. prose-readability 4건 +2 소폭
+상승은 wave1·2와 동일한 E-1 패턴.
+
+남은 blockchain: 437개 파일(19개 서브배치, wave4부터 계속).
 
 `gpu-arch-hopper.tsx` 같은 조립 파일은 자체 `<p>`가 없고 프로즈가 하위 섹션 파일에 있다는 걸
 test 배치에서 확인했다 — 그래서 배치2부터는 `find ... -not -path "*/viz/*" -not -path
