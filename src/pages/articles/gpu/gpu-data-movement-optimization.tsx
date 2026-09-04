@@ -31,15 +31,13 @@ export default function GpuDataMovementOptimizationArticle() {
             계산량을 바꾸지 않고 시간을 줄이는 두 손잡이가 byte 와 overlap 입니다.
           </p>
           <p>
-            층마다 대역폭이 크게 다르기 때문입니다. H100 의 HBM3 는 3.35 TB/s 이고, shared memory
-            는 SM 마다 clock 당 128 B 를 내므로 SM 132개에 1.7 GHz 를 곱하면 약 28.7 TB/s 로 HBM
-            의 8.6배입니다. Register 는 그 위에서 명령마다 읽히므로 다시 한 자릿수 이상 빠릅니다.
+            층마다 대역폭이 크게 다르기 때문입니다. H100 의 HBM3 는 3.35 TB/s 이고 shared memory 는 SM 마다 clock 당 128 B 를 내므로 SM
+            132개에 1.7 GHz 를 곱하면 약 28.7 TB/s 로 HBM 의 8.6배입니다. Register 는 그 위에서 명령마다 읽히므로 다시 한 자릿수 이상 빠릅니다.
           </p>
           <p>
-            같은 tile 을 세 층에서 따라가 봅니다. 128×32 fp16 tile 은 8 KB 이고, global 에서
-            shared memory 로 한 번, shared memory 에서 register 로 warp 마다 한 번 내려옵니다.
-            HBM 에서 SM 하나의 몫 25 GB/s 로 8 KB 를 받는 데 0.32 µs 가 걸리지만, shared memory 가
-            같은 8 KB 를 쓰는 데는 37 ns 입니다.
+            같은 tile 을 세 층에서 따라가 봅니다. 128×32 fp16 tile 은 8 KB 이고 global 에서 shared memory 로 한 번, shared memory
+            에서 register 로 warp 마다 한 번 내려옵니다. HBM 에서 SM 하나의 몫 25 GB/s 로 8 KB 를 받는 데 0.32 µs 가 걸리지만 shared
+            memory 가 같은 8 KB 를 쓰는 데는 37 ns 입니다.
           </p>
           <p>
             그래서 최적화의 순서가 정해집니다. 먼저 가장 느린 global 층의 byte 를 줄이고, 다음으로
@@ -73,15 +71,13 @@ export default function GpuDataMovementOptimizationArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Shared-memory staging 은 global memory 의 조각을 shared memory 에 한 번 내려놓고 여러
-            warp 가 여러 번 읽게 하는 방식입니다. 각 warp 가 필요한 값을 global 에서 직접 읽으면
-            같은 값이 warp 수만큼 HBM 을 오가지만, staging 을 거치면 HBM 은 한 번만 읽습니다.
+            Shared-memory staging 은 global memory 의 조각을 shared memory 에 한 번 내려놓고 여러 warp 가 여러 번 읽게 하는 방식입니다. 각
+            warp 가 필요한 값을 global 에서 직접 읽으면 같은 값이 warp 수만큼 HBM 을 오가지만 staging 을 거치면 HBM 은 한 번만 읽습니다.
           </p>
           <p>
-            GEMM 에서 세어 봅니다. Threadblock tile 128×128 을 warp 4개가 2×2 로 나누면 A 의 한
-            행 조각을 N 방향의 warp 2개가, B 의 한 열 조각을 M 방향의 warp 2개가 씁니다. Staging
-            없이 읽으면 A·B 가 각각 두 번 HBM 을 오가고, staging 을 하면 한 번입니다. K 를 32 씩
-            도는 반복마다 8 KB 두 벌이 16 KB 대신 32 KB 가 되는 차이입니다.
+            GEMM 에서 세어 봅니다. Threadblock tile 128×128 을 warp 4개가 2×2 로 나누면 A 의 한 행 조각을 N 방향의 warp 2개가, B 의 한 열
+            조각을 M 방향의 warp 2개가 씁니다. Staging 없이 읽으면 A·B 가 각각 두 번 HBM 을 오가고 staging 을 하면 한 번입니다. K 를 32 씩 도는
+            반복마다 8 KB 두 벌이 16 KB 대신 32 KB 가 되는 차이입니다.
           </p>
           <p>
             둘째 이득은 접근 순서의 재배열입니다. Global 은 warp 의 32 lane 이 연속한 128 B 를 읽을
@@ -98,10 +94,9 @@ export default function GpuDataMovementOptimizationArticle() {
             소유합니다.
           </p>
           <p>
-            비용은 shared memory 용량과 barrier 입니다. Tile 을 내려놓은 뒤 모든 warp 가 읽을 수
-            있으려면 도착을 알리는 동기화가 필요하고, stage 를 여러 벌 두면 그만큼 용량을
-            먹습니다. 용량이 곧 SM 에 함께 머무는 threadblock 수를 정하므로 staging 의 이득은
-            재사용 횟수가 barrier 와 occupancy 손실을 넘을 때만 남습니다.
+            비용은 shared memory 용량과 barrier 입니다. Tile 을 내려놓은 뒤 모든 warp 가 읽을 수 있으려면 도착을 알리는 동기화가 필요하고 stage 를 여러
+            벌 두면 그만큼 용량을 먹습니다. 용량이 곧 SM 에 함께 머무는 threadblock 수를 정하므로 staging 의 이득은 재사용 횟수가 barrier 와 occupancy
+            손실을 넘을 때만 남습니다.
           </p>
         </div>
       </section>
@@ -112,10 +107,9 @@ export default function GpuDataMovementOptimizationArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Shared memory 에서 register 로 내려오는 단위는 warp 하나가 tensor core 명령에 넣을
-            fragment 입니다. 이 층의 병목은 byte 가 아니라 명령 수와 bank conflict 입니다. Shared
-            memory 는 충분히 빠르지만 warp 가 내는 load 명령 하나하나가 issue slot 을 쓰기 때문에,
-            같은 byte 를 더 적은 명령으로 올리는 것이 목표가 됩니다.
+            Shared memory 에서 register 로 내려오는 단위는 warp 하나가 tensor core 명령에 넣을 fragment 입니다. 이 층의 병목은 byte 가 아니라
+            명령 수와 bank conflict 입니다. Shared memory 는 충분히 빠르지만 warp 가 내는 load 명령 하나하나가 issue slot 을 쓰기 때문에 같은
+            byte 를 더 적은 명령으로 올리는 것이 목표가 됩니다.
           </p>
           <p>
             <code>ldmatrix</code> 가 그 명령입니다. Warp 의 32 lane 이 8개 행의 주소를 나눠 주면
@@ -150,10 +144,9 @@ export default function GpuDataMovementOptimizationArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Global memory round trip 은 한 kernel 이 결과를 HBM 에 쓰고 다음 kernel 이 그것을
-            다시 읽는 왕복입니다. 중간 결과가 register 나 shared memory 에 있는 동안 다음 연산을
-            이어 붙이면 이 왕복이 사라지며, 이것을 memory traffic elimination 이라 부릅니다. 계산은
-            그대로이고 byte 만 줄어듭니다.
+            Global memory round trip 은 한 kernel 이 결과를 HBM 에 쓰고 다음 kernel 이 그것을 다시 읽는 왕복입니다. 중간 결과가 register 나
+            shared memory 에 있는 동안 다음 연산을 이어 붙이면 이 왕복이 사라지며 이것을 memory traffic elimination 이라 부릅니다. 계산은 그대로이고
+            byte 만 줄어듭니다.
           </p>
           <p>
             GEMM 뒤에 bias 와 GELU 가 오는 경우를 셉니다. M = N = K = 4096, bf16 이면 출력 C 는
@@ -161,16 +154,14 @@ export default function GpuDataMovementOptimizationArticle() {
             GELU kernel 이 읽고 쓰므로(64) 출력 쪽 traffic 만 160 MB 입니다.
           </p>
           <p>
-            Epilogue 에 bias 와 GELU 를 넣으면 accumulator 가 register 에 있는 동안 두 연산이
-            적용되고 store 는 한 번, 32 MB 입니다. HBM 3.35 TB/s 로 160 MB 는 48 µs, 32 MB 는
-            9.5 µs 입니다. GEMM 자체의 137 GFLOP 이 989 TFLOP/s 로 139 µs 이므로, 없앤 38 µs 는
-            GEMM 시간의 4분의 1이 넘습니다.
+            Epilogue 에 bias 와 GELU 를 넣으면 accumulator 가 register 에 있는 동안 두 연산이 적용되고 store 는 한 번, 32 MB 입니다. HBM
+            3.35 TB/s 로 160 MB 는 48 µs, 32 MB 는 9.5 µs 입니다. GEMM 자체의 137 GFLOP 이 989 TFLOP/s 로 139 µs 이므로 없앤
+            38 µs 는 GEMM 시간의 4분의 1이 넘습니다.
           </p>
           <p>
-            중간값이 register 에서 다음 연산으로 바로 넘어가는 경로를 register-to-register
-            dataflow 라 부릅니다. Fragment 하나에 bias 를 더하고 GELU 를 계산해 같은 register 에
-            두는 것이며, Hopper 의 wgmma 는 accumulator 를 register 에 두므로 epilogue 가 그 위에서
-            바로 돕니다.
+            중간값이 register 에서 다음 연산으로 바로 넘어가는 경로를 register-to-register dataflow 라 부릅니다. Fragment 하나에 bias 를 더하고
+            GELU 를 계산해 같은 register 에 두는 것이며 Hopper 의 wgmma 는 accumulator 를 register 에 두므로 epilogue 가 그 위에서 바로
+            돕니다.
           </p>
           <p>
             한계는 register 와 fusion 범위입니다. 이어 붙일 연산이 이웃 원소를 필요로 하면
@@ -196,10 +187,8 @@ export default function GpuDataMovementOptimizationArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Prefetching 은 데이터가 필요해지기 전에 요청을 내서, 실제로 쓰는 시점에는 이미
-            가까운 층에 와 있게 하는 기법입니다. Byte 를 줄이지는 않고 지연이 드러나는 시점을
-            앞으로 옮깁니다. 요청을 program 이 내면 software prefetching, hardware 가 내면
-            hardware prefetching 입니다.
+            Prefetching 은 데이터가 필요해지기 전에 요청을 내서 실제로 쓰는 시점에는 이미 가까운 층에 와 있게 하는 기법입니다. Byte 를 줄이지는 않고 지연이 드러나는
+            시점을 앞으로 옮깁니다. 요청을 program 이 내면 software prefetching, hardware 가 내면 hardware prefetching 입니다.
           </p>
           <p>
             Software prefetching 의 GPU 형태는 다음 tile 의 load 를 현재 tile 의 계산보다 먼저
@@ -222,9 +211,8 @@ export default function GpuDataMovementOptimizationArticle() {
             <Link to="/gpu/sm-warp-scheduling-and-issue#latency-hiding">TLP·ILP·MLP</Link> 에 있습니다.
           </p>
           <p>
-            Prefetch 거리가 너무 길면 가져온 데이터가 쓰이기 전에 cache 에서 밀려나고, 너무 짧으면
-            지연이 그대로 드러납니다. L2 50 MB 를 SM 132개가 나눠 쓰므로 SM 당 몫은 400 KB 남짓이며,
-            그보다 앞서 prefetch 한 tile 은 남아 있다는 보장이 없습니다.
+            Prefetch 거리가 너무 길면 가져온 데이터가 쓰이기 전에 cache 에서 밀려나고 너무 짧으면 지연이 그대로 드러납니다. L2 50 MB 를 SM 132개가 나눠 쓰므로
+            SM 당 몫은 400 KB 남짓입니다. 그보다 앞서 prefetch 한 tile 은 남아 있다는 보장이 없습니다.
           </p>
         </div>
         <ProgressiveDetail
@@ -237,10 +225,8 @@ export default function GpuDataMovementOptimizationArticle() {
             stage 당 tile 한 벌의 shared memory 입니다.
           </p>
           <p>
-            L2 prefetch 는 shared memory 를 쓰지 않으므로 거리를 더 길게 잡을 수 있지만, 도착을
-            알리는 barrier 가 없어 실제 load 때 L2 hit 을 기대할 뿐입니다. 그래서 CUTLASS 는 다음
-            tile 의 TMA 를 내기 전에 그 다음 tile 의 tensor 를 L2 로 prefetch 하는 식으로 둘을
-            겹쳐 씁니다.
+            L2 prefetch 는 shared memory 를 쓰지 않으므로 거리를 더 길게 잡을 수 있지만 도착을 알리는 barrier 가 없어 실제 load 때 L2 hit 을
+            기대할 뿐입니다. 그래서 CUTLASS 는 다음 tile 의 TMA 를 내기 전에 그 다음 tile 의 tensor 를 L2 로 prefetch 하는 식으로 둘을 겹쳐 씁니다.
           </p>
         </ProgressiveDetail>
       </section>
@@ -251,9 +237,8 @@ export default function GpuDataMovementOptimizationArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Memory pipeline overlap 은 한 tile 의 load 와 다른 tile 의 계산, 또 다른 tile 의 store
-            가 같은 시간에 진행되는 상태입니다. 겹침이 없으면 시간은 이동 시간과 계산 시간의 합이고,
-            완전히 겹치면 둘 중 큰 쪽입니다. 이 차이가 data movement 최적화의 둘째 손잡이입니다.
+            Memory pipeline overlap 은 한 tile 의 load 와 다른 tile 의 계산, 또 다른 tile 의 store 가 같은 시간에 진행되는 상태입니다. 겹침이
+            없으면 시간은 이동 시간과 계산 시간의 합이고 완전히 겹치면 둘 중 큰 쪽입니다. 이 차이가 data movement 최적화의 둘째 손잡이입니다.
           </p>
           <p>
             Tile 하나의 load 가 1.2 µs, 계산이 0.8 µs 라 합시다. 순서대로 하면 tile 당 2.0 µs 이고
@@ -262,10 +247,9 @@ export default function GpuDataMovementOptimizationArticle() {
             앞 절들입니다.
           </p>
           <p>
-            같은 식을 kernel 전체에 적용하면 roofline 이 됩니다. 앞 절의 GEMM 은 출력 traffic
-            160 MB 가 48 µs, 계산이 139 µs 이므로 겹치면 139 µs 이고 겹치지 않으면 187 µs 입니다.
-            Fusion 으로 traffic 을 32 MB 로 줄이면 합도 148 µs 로 내려오지만, 겹친 경우는 여전히
-            139 µs 로 compute-bound 입니다.
+            같은 식을 kernel 전체에 적용하면 roofline 이 됩니다. 앞 절의 GEMM 은 출력 traffic 160 MB 가 48 µs, 계산이 139 µs 이므로 겹치면
+            139 µs 이고 겹치지 않으면 187 µs 입니다. Fusion 으로 traffic 을 32 MB 로 줄이면 합도 148 µs 로 내려오지만 겹친 경우는 여전히 139 µs
+            로 compute-bound 입니다.
           </p>
           <p>
             Compute–communication overlap 이라는 이름은 같은 원리를 GPU 사이의 이동에 쓴 것입니다.
@@ -275,10 +259,9 @@ export default function GpuDataMovementOptimizationArticle() {
             소유합니다.
           </p>
           <p>
-            Overlap 이 성립하려면 이동과 계산이 서로 다른 자원을 써야 합니다. TMA 와 tensor core,
-            copy engine 과 SM 은 다른 자원이라 겹치지만, 일반 load 명령은 warp 의 issue slot 을 계산과
-            나눠 쓰므로 그만큼 덜 겹칩니다. 아래 Viz 는 세 층 사이를 tile 이 흐르며 겹침이 생기는
-            순서를 보여 줍니다.
+            Overlap 이 성립하려면 이동과 계산이 서로 다른 자원을 써야 합니다. TMA 와 tensor core, copy engine 과 SM 은 다른 자원이라 겹치지만 일반
+            load 명령은 warp 의 issue slot 을 계산과 나눠 쓰므로 그만큼 덜 겹칩니다. 아래 Viz 는 세 층 사이를 tile 이 흐르며 겹침이 생기는 순서를 보여
+            줍니다.
           </p>
         </div>
         <GpuDataMovementOptimizationViz />
@@ -337,14 +320,12 @@ T_{\text{overlap}} &\approx \underbrace{\max\!\left(\frac{B}{\mathrm{BW}},\ \fra
             L2 목적지는 PTX ISA 에서 읽었습니다.
           </p>
           <p>
-            3.35 TB/s 와 989 TFLOP/s 는 NVIDIA 의 H100 제품 사양이고, shared memory 의 SM 당 128 B/clk
-            는 bank 32개 × 4 B 에서 계산한 값입니다. 이 글의 0.32 µs·37 ns·48 µs·139 µs 는 그 사양으로
-            계산한 산수이며 어느 kernel 의 측정값도 아닙니다.
+            3.35 TB/s 와 989 TFLOP/s 는 NVIDIA 의 H100 제품 사양이고 shared memory 의 SM 당 128 B/clk 는 bank 32개 × 4 B 에서
+            계산한 값입니다. 이 글의 0.32 µs·37 ns·48 µs·139 µs 는 그 사양으로 계산한 산수이며 어느 kernel 의 측정값도 아닙니다.
           </p>
           <p>
-            GEMM + bias + GELU 의 160 MB 대 32 MB 는 dtype 과 shape 에서 곧바로 나오는 산수이고,
-            fusion 이 실제로 그만큼의 시간을 돌려주는지는 profiler 의 achieved traffic 으로 따로
-            확인해야 합니다.
+            GEMM + bias + GELU 의 160 MB 대 32 MB 는 dtype 과 shape 에서 곧바로 나오는 산수이고 fusion 이 실제로 그만큼의 시간을 돌려주는지는
+            profiler 의 achieved traffic 으로 따로 확인해야 합니다.
           </p>
         </div>
         <div id="paper-cuda-best-practices-staging" className="not-prose my-8 scroll-mt-24">
