@@ -20,10 +20,8 @@ export default function Subnet({
           </span>
         </div>
         <p className="leading-7">
-          subnet 생성은 “합의 알고리즘 이름 하나를 고르는 호출”이 아니다. 부모의
-          Registry에 subnet을 등록하고, Gateway가 사용할 공급원과 collateral
-          규칙을 정한 뒤, 충분한 validator가 참여한 genesis를 모든 노드가
-          동일하게 시작해야 한다.
+          subnet 생성은 “합의 알고리즘 이름 하나를 고르는 호출”로 끝나지 않는다. 부모의 Registry에 subnet을 등록하고 Gateway가 사용할 공급원과 collateral
+          규칙을 정한 뒤, 충분한 validator가 참여한 genesis를 모든 노드가 동일하게 시작해야 한다.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">생성부터 활성화까지</h3>
@@ -77,8 +75,7 @@ export default function Subnet({
           <div className="rounded-lg border bg-card p-4">
             <h4 className="font-semibold text-sm mb-2">Supply source</h4>
             <p className="text-xs text-muted-foreground">
-              부모 native asset 또는 지원되는 ERC-20을 child circulating
-              supply의 근원으로 연결한다.
+              child circulating supply의 근원을 부모 native asset이나 지원되는 ERC-20에 연결한다.
             </p>
           </div>
           <div className="rounded-lg border bg-card p-4">
@@ -91,9 +88,8 @@ export default function Subnet({
         </div>
 
         <p className="leading-7">
-          validator의 로컬 block reward, slashing, 최소 stake 같은 값은 IPC
-          전체의 고정 상수가 아니다. subnet의 계약 구성과 공급 모델이 정하는
-          정책이므로 글에서는 흐름과 책임 경계만 고정한다.
+          validator의 로컬 block reward, slashing, 최소 stake 같은 값은 subnet마다 다르다. subnet의 계약 구성과 공급 모델이 정하는 정책이므로
+          글에서는 흐름과 책임 경계만 고정한다.
         </p>
       </div>
     </section>

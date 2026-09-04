@@ -8,10 +8,8 @@ export default function PolynomialArithmetic() {
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          다항식은 계수 벡터로 저장하거나 여러 x에서의 평가값으로 저장할 수
-          있습니다. 계수 표현은 덧셈과 degree 확인에 편하고, 같은 평가점에서의
-          곱은 평가 표현에서 pointwise multiplication이 됩니다. Lagrange 보간과
-          NTT는 이 두 표현 사이를 바꾸는 방법입니다.
+          다항식은 계수 벡터로 저장할 수도 있고 여러 x에서 평가한 값으로 저장할 수도 있습니다. 계수 표현은 덧셈과 degree 확인에 편하고 같은 평가점에서 곱하는 연산은 평가 표현에서
+          pointwise multiplication이 됩니다. Lagrange 보간과 NTT는 이 두 표현 사이를 바꾸는 방법입니다.
         </p>
         <p>
           0이 아닌 다항식 A와 B의 곱에서는 degree(AB)=degree(A)+degree(B)가

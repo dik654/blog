@@ -15,11 +15,9 @@ export default function HotStorage() {
           연결해야 합니다.
         </p>
         <p>
-          Boost는 Filecoin storage deal의 data transfer와 provider workflow를
-          다루고, PDP 기반 서비스는 특정 data를 계속 보유하는지 반복해서
-          증명하는 별도 경로입니다. 두 구성요소를 하나의 protocol처럼
-          합치기보다 onboarding, proof, retrieval과 settlement 책임을
-          분리해 보는 편이 정확합니다.
+          Boost는 Filecoin storage deal의 data transfer와 provider workflow를 다루고 PDP 기반 서비스는 특정 data를 계속 보유하는지
+          반복해서 증명하는 별도 경로입니다. 두 구성요소를 하나의 protocol처럼 합치기보다 onboarding, proof, retrieval과 settlement 책임을 분리해 보는
+          편이 정확합니다.
         </p>
       </div>
       <div className="not-prose my-8">

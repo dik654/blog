@@ -615,11 +615,9 @@ export default function ModernFilecoinOnchainCloud() {
         />
         <PaymentRailViz />
         <p>
-          필드의 뜻을 확인했으므로 이제 admission 규칙으로 조합합니다. 새 piece
-          때문에 rate가 커지면 미래 구간용 variable lockup과 fixed reserve를
-          모두 감당할 수 있어야 합니다. Lockup은 provider의 미지급 위험을
-          낮추지만, proof 실패에도 무조건 지급되는 보험이나 protocol 전체의
-          solvency 보장은 아닙니다.
+          필드의 뜻을 확인했으므로 이제 admission 규칙으로 조합합니다. 새 piece 때문에 rate가 커지면 미래 구간용 variable lockup과 fixed reserve를
+          모두 감당할 수 있어야 합니다. Lockup은 provider의 미지급 위험을 낮춥니다. 다만 proof 실패에도 무조건 지급되는 보험이나 protocol 전체의 solvency
+          보장은 아닙니다.
         </p>
         <ExplainedFormula
           question="새 storage rate를 적용하기 전에 필요한 자금 여유를 어떻게 생각할까?"
@@ -728,21 +726,17 @@ export default function ModernFilecoinOnchainCloud() {
           </h2>
         </header>
         <p>
-          이제 앞에서 정의한 네 기록을 처음으로 한 흐름에 놓습니다. Upload
-          receipt는 bytes 수신, dataset record는 주문 identity, period state는
-          보관 판정, payment rail은 지급 위치를 각각 소유합니다. 한 단계의
-          성공이 다른 단계의 성공을 대신하지 않으므로 네 receipt가 같은
-          dataset과 contract generation을 가리키는지 대조합니다.
+          이제 앞에서 정의한 네 기록을 처음으로 한 흐름에 놓습니다. Upload receipt는 bytes 수신, dataset record는 주문 identity, period
+          state는 보관 판정, payment rail은 지급 위치를 각각 소유합니다. 단계마다 판정이 따로이므로 네 receipt가 같은 dataset과 contract
+          generation을 가리키는지 대조합니다.
         </p>
         <OnchainCloudFlowViz />
         <p>
-          검증 fixture에는 stored-but-not-committed upload, wrong
-          provider/dataset, duplicate piece, underfunded rail, stale price list,
-          proven→reorg, fault/open 혼동, rate-change boundary와 double
-          settlement를 주입합니다. Canary는 event log만 보지 않고 contract
-          state와 piece bytes retrieval sample을 대조합니다. 실패하면 이전
-          SDK·contract manifest와 price-list policy로 rollback하되 이미
-          finalized된 transaction은 idempotency key로 중복 실행하지 않습니다.
+          검증 fixture에는 stored-but-not-committed upload, wrong provider/dataset, duplicate piece, underfunded
+          rail을 주입합니다. stale price list, proven→reorg, fault/open 혼동, rate-change boundary와 double settlement도
+          같이 넣습니다. Canary는 event log만 보지 않고 contract state와 piece bytes retrieval sample을 대조합니다. 실패하면 이전
+          SDK·contract manifest와 price-list policy로 rollback하되 이미 finalized된 transaction은 idempotency key로 중복
+          실행하지 않습니다.
         </p>
         <ExplainedFormula
           question="Onchain Cloud service를 사용자에게 완료로 표시할 조건은 무엇일까?"

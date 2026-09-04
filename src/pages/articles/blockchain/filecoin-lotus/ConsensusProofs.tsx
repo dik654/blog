@@ -39,10 +39,8 @@ export default function ConsensusProofs({
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h2>합의·finality·저장 증명을 한 덩어리로 보지 않는다</h2>
         <p>
-          Filecoin block에는 producer 선출 근거와 저장 증명이 함께 등장하지만,
-          세 메커니즘의 질문은 다릅니다. EC는 chain head를 고르고, F3는 이미
-          선택된 chain의 checkpoint를 확정하며, PoRep·PoSt는 provider의 저장
-          약속을 검증합니다.
+          Filecoin block에는 producer 선출 근거와 저장 증명이 함께 등장하지만 세 메커니즘이 답하는 질문은 다릅니다. EC는 chain head를 고릅니다. F3는 이미
+          선택된 chain의 checkpoint를 확정하고 PoRep·PoSt는 provider의 저장 약속을 검증합니다.
         </p>
       </div>
 
@@ -79,10 +77,8 @@ export default function ConsensusProofs({
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>ValidateBlock은 후보가 규칙을 만족하는지 확인한다</h3>
         <p>
-          height·timestamp·parent weight 같은 구조 조건과 election·WinningPoSt
-          근거를 검증합니다. 여기서 통과했다고 곧바로 finality가 생기는 것은
-          아닙니다. 유효한 후보가 된 뒤 chain selection과 F3가 각자의 역할을
-          수행합니다.
+          height·timestamp·parent weight 같은 구조 조건과 election·WinningPoSt 근거를 검증합니다. 여기서 통과하면 유효한 후보가 될 뿐이고
+          finality는 그 뒤 chain selection과 F3가 각자의 역할을 수행해야 생깁니다.
         </p>
       </div>
       <ValidateBlockViz onOpenCode={openCode} />

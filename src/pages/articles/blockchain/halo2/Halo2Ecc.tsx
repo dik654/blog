@@ -116,9 +116,8 @@ export default function Halo2Ecc({ title }: { title?: string }) {
           Non-native Field Arithmetic
         </h3>
         <p>
-          Halo2의 native field는 BN254 scalar (254-bit prime)이지만, ECC 연산
-          대상은 secp256k1 (256-bit prime) &mdash; 서로 다른 field에서 연산해야
-          하는 "non-native" 문제입니다.
+          Halo2의 native field는 BN254 scalar (254-bit prime)이지만 ECC 연산 대상은 secp256k1 (256-bit prime) &mdash; 서로
+          다른 field에서 연산해야 하는 "non-native" 문제입니다.
         </p>
 
         {/* Non-native 개요 */}

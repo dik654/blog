@@ -10,9 +10,8 @@ export default function GossipBFT({
     <section id="gossipbft" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-3">GPBFT: 후보 수렴에서 결정까지</h2>
       <p className="text-sm text-muted-foreground mb-6 max-w-2xl">
-        GPBFT는 participant 수가 아니라 storage power table로 vote weight를
-        계산한다. phase 이름만 외우기보다 어떤 value가 어느 quorum certificate를
-        거쳐 다음 phase의 유일한 안전 후보가 되는지 추적한다.
+        GPBFT는 vote weight를 storage power table로 계산한다. participant 수는 여기 들어가지 않는다. phase 이름만 외우기보다 어떤 value가
+        어느 quorum certificate를 거쳐 다음 phase의 유일한 안전 후보가 되는지 추적한다.
       </p>
       <div className="not-prose mb-8">
         <GossipBFTDetailViz onOpenCode={onCodeRef} />
@@ -63,9 +62,8 @@ export default function GossipBFT({
           <div className="rounded-lg border bg-card p-4">
             <h4 className="font-semibold text-sm mb-2">Liveness</h4>
             <p className="text-sm text-muted-foreground">
-              충분한 honest power와 eventual message delivery가 있어야 round가
-              전진한다. timeout과 rebroadcast 값은 manifest/configuration이지
-              protocol 설명의 고정 초 단위 상수가 아니다.
+              충분한 honest power와 eventual message delivery가 있어야 round가 전진한다. timeout과 rebroadcast 값은
+              manifest/configuration에서 온다. 고정된 초 단위 상수처럼 protocol 설명에 박아 둘 값이 아니다.
             </p>
           </div>
         </div>

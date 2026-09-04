@@ -35,12 +35,9 @@ export default function Optimization() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <div id="gpu-peak-achieved-boundary" className="scroll-mt-24">
           <p>
-            사양표의 peak FLOPS와 HBM bandwidth는 이상적인 상한이고, achieved
-            throughput은 실제 연산량 또는 byte를 wall-clock kernel time으로 나눈
-            측정값입니다. 최적화는 한 번에 여러 기법을 붙이는 일이 아니라 먼저
-            trace에서 가장 긴 kernel과 idle gap을 찾고, metric으로 bottleneck
-            가설을 세운 뒤 한 축만 바꾸고 correctness와 end-to-end time을 다시
-            측정하는 과정입니다.
+            사양표의 peak FLOPS와 HBM bandwidth는 이상적인 상한이고 achieved throughput은 실제 연산량 또는 byte를 wall-clock kernel
+            time으로 나눈 측정값입니다. 최적화는 한 번에 여러 기법을 붙이는 일이 아닙니다. 먼저 trace에서 가장 긴 kernel과 idle gap을 찾고 metric으로
+            bottleneck 가설을 세운 다음 한 축만 바꿔 correctness와 end-to-end time을 다시 측정하는 과정입니다.
           </p>
         </div>
         <div className="not-prose my-6 overflow-hidden rounded-lg border border-border/70">

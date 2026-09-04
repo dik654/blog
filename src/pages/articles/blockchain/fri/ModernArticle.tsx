@@ -9,7 +9,10 @@ export default function ModernFRIArticle() {
       <section id="overview" className="space-y-6">
         <header className="space-y-3"><p className="text-sm font-semibold text-primary">Low-degree oracle를 검사하는 FRI</p><h2 className="text-3xl font-bold tracking-tight">긴 평가표가 낮은 차수 다항식에 가깝다는 것을 일부만 읽고 확인한다</h2></header>
         <p className="text-lg leading-8 text-foreground/90">F₁₇의 f(X)=X²+2X+3을 16개의 서로 다른 domain point에서 계산하면 evaluation vector가 됩니다. Degree 2 이하 polynomial에서 나온 이런 vector들의 집합이 Reed–Solomon code입니다. FRI는 committed oracle가 이 집합의 한 codeword와 충분히 가깝다는 <strong>proximity</strong>를 검사합니다.</p>
-        <p>모든 값을 읽는 대신 값을 반복해서 절반 크기로 접고, 각 중간 oracle를 Merkle root로 고정한 뒤 일부 위치만 엽니다. 따라서 FRI가 답하는 질문은 “이 실행이 맞는가?”가 아니라 “이 oracle가 합의한 degree bound를 만족하는 codeword에 가까운가?”입니다. 실행 의미는 STARK의 trace와 AIR가 담당합니다.</p>
+        <p>
+            모든 값을 읽는 대신 값을 반복해서 절반 크기로 접고 각 중간 oracle를 Merkle root로 고정한 뒤 일부 위치만 엽니다. 따라서 FRI가 답하는 질문은 “이 실행이
+            맞는가?”가 아니라 “이 oracle가 합의한 degree bound를 만족하는 codeword에 가까운가?”입니다. 실행 의미는 STARK의 trace와 AIR가 담당합니다.
+          </p>
         <aside className="rounded-lg border border-primary/30 bg-primary/5 p-5 text-sm leading-6"><strong>핵심 아이디어:</strong> polynomial의 짝수 차수 항과 홀수 차수 항을 분리하면 두 polynomial의 차수가 절반가량 됩니다. Commitment 뒤에 받은 random β로 둘을 섞으면 거짓 oracle가 모든 round를 일관되게 통과하기 어렵습니다.</aside>
         <ContentBoundary article="fri" />
         <FRIFoldingViz />
@@ -41,7 +44,11 @@ export default function ModernFRIArticle() {
 
       <section id="soundness" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">02 · Merkle query와 soundness</p><h2 className="mt-2 text-2xl font-bold">봉인은 값을 인증하고, folding과 sampling이 차수를 검사한다</h2></header>
-        <p>각 round에서 prover는 oracle의 Merkle root를 보낸 뒤 β를 받습니다. 모든 round root가 정해진 다음 query index를 transcript에서 뽑고, 원래 oracle의 f(x), f(−x), 다음 oracle의 g(x²)와 각 Merkle authentication path를 엽니다. Merkle tree는 “root에 들어 있던 값”을 확인할 뿐 낮은 차수를 보장하지 않습니다.</p>
+        <p>
+            각 round에서 prover는 oracle의 Merkle root를 보낸 뒤 β를 받습니다. 모든 round root가 정해진 다음 query index를
+            transcript에서 뽑고 원래 oracle의 f(x), f(−x), 다음 oracle의 g(x²)와 각 Merkle authentication path를 엽니다.
+            Merkle tree는 “root에 들어 있던 값”을 확인할 뿐 낮은 차수를 보장하지 않습니다.
+          </p>
         <ExplainedFormula
           question="δ 비율의 잘못된 위치를 q번 독립 sampling이 모두 놓칠 단순 상한은 얼마인가?"
           idea={<>각 query가 bad set을 피할 확률이 1−δ이고, replacement가 있는 독립 query라면 조건부 확률을 q번 곱합니다. 이는 FRI 전체 theorem이 아니라 sampling intuition의 작은 구성요소입니다.</>}
@@ -58,12 +65,20 @@ export default function ModernFRIArticle() {
           assumptions={["Query index들은 bad set이 고정된 뒤 독립적이고 충분히 균일하게 뽑힙니다.", "각 query는 필요한 pair·folded value·Merkle path를 모두 검사합니다.", "실제 FRI soundness에는 code distance, round correlation, list decoding, field/domain과 final degree 검사가 추가됩니다."]}
           interpretation="δ=1/4, q=3이면 miss≤(3/4)³=27/64≈0.422입니다. 같은 index를 세 번 반복하면 독립성이 없어 실제 miss는 3/4이므로 이 식을 쓸 수 없습니다. 실제 parameter는 FRI 논문의 전체 proximity bound와 구현 profile로 산정해야 합니다."
         />
-        <p>Release 전에는 wrong pair, wrong fold, altered root/path, final degree 초과, transcript round reorder를 각각 주입해야 합니다. 정상 proof뿐 아니라 이 실패들이 같은 reason code로 prover/verifier 구현에서 재현된 뒤 query 수·proof bytes·hash count·verification time을 비교합니다.</p>
+        <p>
+            Release 전에는 wrong pair, wrong fold, altered root/path, final degree 초과, transcript round reorder를
+            각각 주입해야 합니다. 정상 proof는 물론이고 이 실패들까지 같은 reason code로 prover/verifier 구현에서 재현된 다음에야 query 수·proof
+            bytes·hash count·verification time을 비교합니다.
+          </p>
       </section>
 
       <section id="stark-boundary" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">03 · STARK에 넘기는 경계</p><h2 className="mt-2 text-2xl font-bold">FRI는 low degree만 맡고 실행의 의미는 AIR가 맡는다</h2></header>
-        <p>STARK는 execution trace에서 transition·boundary constraints를 만들고, 이를 composition polynomial과 low-degree extension oracle로 바꾼 다음 FRI에 넘깁니다. FRI가 성공해도 AIR constraint가 누락됐거나 trace column 의미가 틀렸다면 원래 프로그램은 여전히 잘못될 수 있습니다.</p>
+        <p>
+            STARK는 execution trace에서 transition·boundary constraints를 만들고 이를 composition polynomial과 low-
+            degree extension oracle로 바꾼 다음 FRI에 넘깁니다. FRI가 성공해도 AIR constraint가 누락됐거나 trace column 의미가 틀렸다면 원래
+            프로그램은 여전히 잘못될 수 있습니다.
+          </p>
         <p>같은 F₁₇ 예를 STARK가 사용한다면 trace와 AIR가 “x=4에서 Horner 계산 결과가 10”이라는 관계를 만들고, FRI는 그 결과로 얻은 committed composition oracle의 degree proximity를 검사합니다. 두 소유 경계를 섞지 않아야 soundness bug를 어디서 찾아야 할지 알 수 있습니다.</p>
         <div id="paper-fri"><CitationBlock source="Ben-Sasson et al. · Fast Reed–Solomon IOP of Proximity (ICALP 2018)" citeKey={1} href="https://drops.dagstuhl.de/entities/document/10.4230/LIPIcs.ICALP.2018.14"><p><strong>문제:</strong> 큰 evaluation oracle가 low-degree Reed–Solomon codeword에 가까운지 sublinear communication으로 검사해야 합니다.</p><p><strong>기여:</strong> Interactive oracle proof of proximity와 recursive folding construction·soundness 분석을 제시합니다.</p><p><strong>전제:</strong> 논문의 field, evaluation domain, distance, randomness, oracle-access model과 parameter 조건을 사용합니다.</p><p><strong>근거 범위:</strong> FRI proximity protocol과 논문 theorem·complexity 범위에 한정합니다.</p><p><strong>말하지 않는 것:</strong> AIR completeness, STARK 전체 zero knowledge, 단순 (1−δ)^q만으로의 전체 soundness를 보장하지 않습니다.</p></CitationBlock></div>
         <p>이 글의 10문항은 RS membership/proximity, 수치 folding, β 순서, Merkle 역할, 단순 miss bound, FRI 출력, malformed pair, correlated query 반례, parameter 비용, STARK 경계를 묻습니다. 답에 필요한 계산과 caveat를 모두 본문에 두었습니다.</p>

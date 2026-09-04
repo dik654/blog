@@ -11,7 +11,9 @@ export function FvmExecutionViz() {
     <figure data-viz="fvm-execution-receipt" className="not-prose overflow-hidden rounded-xl border border-border bg-card p-4 sm:p-6">
       <figcaption className="mb-5">
         <p className="text-sm font-bold">한 message가 state root receipt가 되기까지</p>
-        <p className="mt-1 text-xs leading-5 text-muted-foreground">화살표는 시간 순서이고, 각 칸은 서로 바꿔 쓸 수 없는 검증 경계입니다.</p>
+        <p className="mt-1 text-xs leading-5 text-muted-foreground">
+            화살표는 시간 순서이고 각 칸은 서로 바꿔 쓸 수 없는 검증 경계입니다.
+          </p>
       </figcaption>
       <div className="grid min-w-0 gap-3 md:grid-cols-4">
         <Step n="01" title="Envelope admission" text="sender·nonce·value·gas limit와 network version을 고정합니다." />

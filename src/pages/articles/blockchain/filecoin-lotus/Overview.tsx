@@ -73,10 +73,8 @@ export default function Overview({
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h2>Lotus를 하나의 프로그램으로 보면 헷갈린다</h2>
         <p className="lead">
-          Lotus는 Go로 작성된 Filecoin 참조 구현이지만, 실제 운영 단위는 한
-          프로세스가 아닙니다. 체인을 따라가는 노드, 저장 작업을 조정하는
-          프로세스, 무거운 증명 계산을 수행하는 worker, deal을 받는 입구가 서로
-          다른 책임을 가집니다.
+          Lotus는 Go로 작성된 Filecoin 참조 구현이지만 실제 운영 단위는 한 프로세스가 아닙니다. 체인을 따라가는 노드, 저장 작업을 조정하는 프로세스, 무거운 증명 계산을
+          수행하는 worker, deal을 받는 입구가 각각 다른 책임을 맡습니다.
         </p>
         <p>
           따라서 이 글은 패키지 목록부터 외우지 않습니다. 먼저

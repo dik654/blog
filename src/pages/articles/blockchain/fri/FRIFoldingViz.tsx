@@ -10,7 +10,9 @@ export default function FRIFoldingViz() {
     <figure data-viz="fri-folding-flow" data-viz-canvas className="not-prose my-8 min-w-0 rounded-xl border border-border/70 bg-card p-4 sm:p-6">
       <figcaption className="mb-5">
         <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">FRI folding</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">각 round는 현재 oracle root를 먼저 고정하고 challenge를 받은 뒤, x와 −x를 새 값 하나로 접습니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            각 round는 현재 oracle root를 먼저 고정하고 challenge를 받은 뒤 x와 −x를 새 값 하나로 접습니다.
+          </p>
       </figcaption>
       <div className="grid gap-3 md:grid-cols-4">
         {rounds.map((round, index) => (

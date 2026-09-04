@@ -36,13 +36,22 @@ export default function ModernGroth16Article() {
           interpretation="한 행 xw=y에서 w=4면 numerator가 0이고 h=0입니다. w=5면 numerator가 3이어서 t=X−1로 나누어떨어지지 않습니다. 이 algebraic failure가 proof 생성 실패 또는 verifier reject로 이어져야 합니다."
         />
         <h3 className="text-xl font-semibold">왜 α·β·γ·δ를 나누어 쓰는가</h3>
-        <p>α와 β는 A·B pairing의 기준 항을 만들고, γ는 public input linear combination을, δ는 private witness·quotient와 proof randomization을 서로 다른 denominator domain에 묶습니다. 정확한 reduction은 generic-group/knowledge assumptions와 construction variant에 의존합니다. “임의의 group element 세 개가 식만 맞으면 witness를 안다”는 직관만으로 soundness를 증명할 수는 없습니다.</p>
+        <p>
+            α와 β는 A·B pairing의 기준 항을 만들고 γ는 public input linear combination을, δ는 private witness·quotient와
+            proof randomization을 서로 다른 denominator domain에 묶습니다. 정확한 reduction은 generic-group/knowledge
+            assumptions와 construction variant에 의존합니다. “임의의 group element 세 개가 식만 맞으면 witness를 안다”는 직관만으로
+            soundness를 증명할 수는 없습니다.
+          </p>
         <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-5 text-sm leading-6"><strong>Toxic-waste 반례:</strong> τ·α·β·γ·δ를 공격자가 복원할 수 있으면 polynomial relation을 만족하지 않는 encoded element를 조합해 위조할 수 있습니다. Ceremony transcript가 유효하고 최소 한 contribution이 정직하게 폐기됐다는 전제, final key hash와 회로 hash가 일치한다는 운영 검사가 필요합니다.</div>
       </section>
 
       <section id="prove-verify" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">02 · Prove와 Verify</p><h2 className="mt-2 text-2xl font-bold">A·B·C와 public-input linear combination을 같은 statement에 묶는다</h2></header>
-        <p>Prover는 QAP assignment, quotient h와 fresh randomness r,s를 proving-key elements의 MSM으로 조합해 A∈G₁, B∈G₂, C∈G₁을 만듭니다. Randomness는 proof를 다시 만들 때 같은 witness에서도 다른 A·B·C가 나오게 해 zero knowledge를 돕지만, 약한 RNG·reuse·로그 유출은 별도 위협입니다.</p>
+        <p>
+            Prover는 QAP assignment, quotient h와 fresh randomness r,s를 proving-key elements의 MSM으로 조합해 A∈G₁,
+            B∈G₂, C∈G₁을 만듭니다. Randomness는 proof를 다시 만들 때 같은 witness에서도 다른 A·B·C가 나오게 해 zero knowledge를 돕지만 약한
+            RNG·reuse·로그 유출은 별도 위협입니다.
+          </p>
         <ExplainedFormula
           question="Verifier가 public input과 proof 세 요소를 어떤 pairing 관계로 검사하는가?"
           idea={<>Public inputs xᵢ로 verifying-key basis를 합친 vkₓ를 만들고, proof pairing이 setup 기준항과 public/private contribution의 pairing 곱으로 분해되는지 확인합니다.</>}

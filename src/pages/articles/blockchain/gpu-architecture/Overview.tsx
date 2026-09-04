@@ -36,20 +36,15 @@ export default function Overview() {
           Programming model과 hardware는 1:1 대응표가 아닙니다
         </h3>
         <p>
-          Kernel launch가 만드는 grid와 block은 software가 표현한 작업
-          단위입니다. 반면 SM(Streaming Multiprocessor), warp scheduler와
-          execution unit은 그 작업을 실행하는 hardware입니다. Block은 실행되는
-          동안 한 SM에 머물지만, 어느 SM에 언제 배치될지는 보장되지 않으며
-          thread 하나가 CUDA core 하나를 계속 소유하지도 않습니다. SM은 block의
-          thread를 32-lane warp로 묶어 ready instruction을 issue합니다.
+          Kernel launch가 만드는 grid와 block은 software가 표현한 작업 단위입니다. 반면 SM(Streaming Multiprocessor), warp
+          scheduler와 execution unit은 그 작업을 실행하는 hardware입니다. Block은 실행되는 동안 한 SM에 머물지만 어느 SM에 언제 배치될지는 보장되지
+          않으며 thread 하나가 CUDA core 하나를 계속 소유하지도 않습니다. SM은 block의 thread를 32-lane warp로 묶어 ready instruction을
+          issue합니다.
         </p>
         <p>
-          CPU는 보통 복잡한 분기와 한 thread의 지연을 줄이기 위해 큰 cache,
-          branch prediction과 out-of-order 실행에 많은 transistor를 씁니다.
-          GPU는 제어 자원을 상대적으로 줄이고 더 많은 arithmetic lane과 resident
-          thread state를 둡니다. 그래서 동일한 계산을 충분히 많은 data에 적용할
-          때 강하지만, 작업이 작거나 분기가 크게 갈리고 memory parallelism이
-          부족하면 launch와 data movement 비용을 상쇄하지 못합니다.
+          CPU는 보통 복잡한 분기와 한 thread의 지연을 줄이기 위해 큰 cache, branch prediction과 out-of-order 실행에 많은 transistor를
+          씁니다. GPU는 제어 자원을 상대적으로 줄이고 더 많은 arithmetic lane과 resident thread state를 둡니다. 그래서 동일한 계산을 충분히 많은
+          data에 적용할 때 강하지만 작업이 작거나 분기가 크게 갈리고 memory parallelism이 부족하면 launch와 data movement 비용을 상쇄하지 못합니다.
         </p>
       </div>
       <CpuGpuCompareViz />

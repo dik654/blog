@@ -10,11 +10,9 @@ export default function FrScalar() {
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          BN254에서 Fp는 curve coordinate를 환원하는 base field이고, Fr은
-          prime-order subgroup에서 점을 몇 번 더할지 정하는 scalar field입니다.
-          두 modulus는 모두 254-bit 부근이지만 값과 역할이 다릅니다. Witness가
-          어떤 field에 놓이는지도 proof system의 circuit field 선택에 달렸으므로
-          “모든 ZK 값은 BN254 Fr”이라고 일반화할 수 없습니다.
+          BN254에서 Fp는 curve coordinate를 환원하는 base field이고 Fr은 prime-order subgroup에서 점을 몇 번 더할지 정하는 scalar
+          field입니다. 두 modulus 모두 254-bit 부근입니다. 그래도 값과 역할은 다릅니다. Witness가 어떤 field에 놓이는지는 proof system이
+          circuit field를 무엇으로 잡았느냐에 달렸으니 “모든 ZK 값은 BN254 Fr”이라는 일반화는 성립하지 않습니다.
         </p>
       </div>
       <FrScalarViz />

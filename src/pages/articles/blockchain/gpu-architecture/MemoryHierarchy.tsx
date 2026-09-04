@@ -13,13 +13,10 @@ export default function MemoryHierarchy() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <div id="gpu-memory-traffic-hierarchy" className="scroll-mt-24">
           <p>
-            Register는 thread의 operand를, shared memory는 같은 block의 협업
-            데이터를, L1은 주로 SM-local access를, L2는 chip-wide access를
-            가깝게 보관합니다. 마지막 device memory인 HBM·GDDR은 용량과 순차
-            대역폭이 크지만 load의 종단 latency가 길기 때문에, 많은 ready warp와
-            연속 transaction으로 기다림을 가려야 합니다. 세대에 따라 cache와
-            shared-memory partition이 달라지므로 “항상 몇 cycle”이라는 표는
-            정본이 될 수 없습니다.
+            Register는 thread의 operand를, shared memory는 같은 block의 협업 데이터를 가깝게 보관합니다. L1은 주로 SM-local access를,
+            L2는 chip-wide access를 가깝게 둡니다. 마지막 device memory인 HBM·GDDR은 용량과 순차 대역폭이 크지만 load의 종단 latency가 길기
+            때문에 많은 ready warp와 연속 transaction으로 기다림을 가려야 합니다. 세대에 따라 cache와 shared-memory partition이 달라지므로 “항상
+            몇 cycle”이라는 표는 정본이 될 수 없습니다.
           </p>
           <p>
             Register가 부족해 compiler가 값을 spill하면 thread-private 값이
@@ -34,9 +31,8 @@ export default function MemoryHierarchy() {
           question="Kernel이 HBM bandwidth 상한에 가까워질 수 있는지 계산량과 memory traffic으로 어떻게 가늠하는가?"
           idea={
             <p>
-              실행한 연산 수를 HBM에서 이동한 byte로 나눈 arithmetic intensity와
-              장치의 peak compute·peak bandwidth를 결합하면 이상적인 처리량
-              상한을 얻습니다.
+              Arithmetic intensity는 실행한 연산 수를 HBM에서 이동한 byte로 나눈 값입니다. 여기에 장치의 peak compute와 peak bandwidth를
+              결합하면 이상적인 처리량 상한을 얻습니다.
             </p>
           }
           formula={

@@ -36,10 +36,8 @@ export default function Overview({
           문제 — 실행을 분리하면 연결 책임이 생긴다
         </h3>
         <p className="leading-7">
-          전용 체인은 처리량과 정책을 독립적으로 정할 수 있지만, 그 순간
-          validator set 변경과 자산 공급, 부모에서 자식으로 내려오는 명령,
-          자식에서 부모로 올라오는 결과를 안전하게 전달해야 한다. IPC는 이를
-          임의 브리지 묶음이 아니라 재귀적인 parent–child 프로토콜로 정의한다.
+          전용 체인은 처리량과 정책을 독립적으로 정할 수 있다. 대신 그 순간부터 validator set 변경과 자산 공급, 부모에서 자식으로 내려오는 명령, 자식에서 부모로 올라오는
+          결과를 안전하게 전달해야 한다. IPC는 이를 재귀적인 parent–child 프로토콜로 정의한다.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">세 개의 경계</h3>
@@ -68,9 +66,8 @@ export default function Overview({
         </div>
 
         <p className="leading-7">
-          “부모 보안을 그대로 상속한다”는 표현도 주의해야 한다. child의 안전성은
-          로컬 validator quorum과 parent checkpoint가 각각 보장하는 범위,
-          메시지가 어느 단계까지 final해졌는지를 함께 봐야 한다.
+          “부모 보안을 그대로 상속한다”는 표현도 주의해야 한다. child의 안전성을 보려면 로컬 validator quorum과 parent checkpoint가 각각 보장하는 범위,
+          메시지가 어느 단계까지 final해졌는지를 함께 확인해야 한다.
         </p>
 
         <CitationBlock {...OFFICIAL_SOURCES.ipc.architecture} citeKey={1}>

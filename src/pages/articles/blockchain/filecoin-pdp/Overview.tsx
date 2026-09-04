@@ -31,11 +31,8 @@ export default function Overview({
           문제 — 신뢰와 전체 재다운로드 사이
         </h3>
         <p className="leading-7">
-          제공자의 API가 “보관 중”이라고 답하는 것만으로는 데이터 보유를 검증할
-          수 없다. 반대로 확인할 때마다 전체 데이터 세트를 내려받으면 데이터가
-          커질수록 검증 비용도 함께 커진다. 필요한 것은 작은 증명으로 임의
-          위치의 데이터를 확인하고, 검사를 반복하며 손실 탐지 확률을 쌓는
-          방식이다.
+          제공자의 API가 “보관 중”이라고 답하는 것만으로는 데이터 보유를 검증할 수 없다. 반대로 확인할 때마다 전체 데이터 세트를 내려받으면 데이터가 커질수록 검증 비용도 함께
+          커진다. 필요한 것은 작은 증명으로 임의 위치의 데이터를 확인하고 검사를 반복하며 손실 탐지 확률을 쌓는 방식이다.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">
@@ -76,15 +73,12 @@ export default function Overview({
           <div className="rounded-lg border bg-card p-4">
             <h4 className="font-semibold text-sm mb-2">PDP</h4>
             <p className="text-xs text-muted-foreground">
-              접근 가능한 원본 데이터 세트의 지속 보유를 서비스 계약이
-              검증하도록 한다.
+              서비스 계약이 접근 가능한 원본 데이터 세트를 계속 보유하고 있는지 검증한다.
             </p>
           </div>
         </div>
         <p className="leading-7">
-          둘은 “cold 대 hot”이라는 가격표로 단순 치환할 관계가 아니다. 증명
-          대상과 경제적 역할이 다르므로 애플리케이션은 접근성, 장기 보존, 결제
-          조건에 맞춰 조합한다.
+          둘의 관계를 “cold 대 hot”이라는 가격표로 단순 치환할 수는 없다. 증명 대상과 경제적 역할이 다르므로 애플리케이션은 접근성, 장기 보존, 결제 조건에 맞춰 조합한다.
         </p>
 
         <CitationBlock

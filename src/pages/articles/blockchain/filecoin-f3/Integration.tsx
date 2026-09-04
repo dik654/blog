@@ -12,9 +12,8 @@ export default function Integration({
         EC chain을 certificate chain에 연결한다
       </h2>
       <p className="text-sm text-muted-foreground mb-6 max-w-2xl">
-        EC와 F3는 역할은 다르지만 “완전히 독립”하지 않는다. F3 input은 EC
-        chain과 power table에서 오고, node의 fork choice와 외부 consumer는 F3
-        certificate가 가리키는 finalized prefix를 지켜야 한다.
+        EC와 F3는 역할이 다르지만 완전히 독립하지는 않는다. F3 input은 EC chain과 power table에서 온다. node의 fork choice와 외부 consumer는
+        F3 certificate가 가리키는 finalized prefix를 기준으로 삼는다.
       </p>
       <div className="not-prose mb-8">
         <IntegrationDetailViz onOpenCode={onCodeRef} />

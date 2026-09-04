@@ -22,10 +22,8 @@ export default function BuiltinActors({
           </span>
         </div>
         <p className="leading-7">
-          Built-in Actor는 Filecoin 네트워크의 공통 규칙을 구현하고, user
-          Actor는 개발자가 배포한 애플리케이션 로직을 구현한다. 둘 다 FVM의
-          메시지·state 모델을 쓰지만, built-in bundle은 합의 규칙의 일부이므로
-          임의 배포로 교체되지 않는다.
+          Built-in Actor는 Filecoin 네트워크의 공통 규칙을 구현하고 user Actor는 개발자가 배포한 애플리케이션 로직을 구현한다. 둘 다 FVM의 메시지·state
+          모델을 쓰지만, built-in bundle은 합의 규칙의 일부이므로 임의 배포로 교체되지 않는다.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">
@@ -66,21 +64,17 @@ export default function BuiltinActors({
           Actor upgrade는 네트워크 업그레이드다
         </h3>
         <p className="leading-7">
-          새 built-in bundle은 code CID만 바꿔 개인이 활성화하는 기능이 아니다.
-          네트워크 버전 전환에서 모든 구현체가 같은 bundle manifest와 state
-          migration을 적용해야 하며, method 번호와 state schema의 호환성도 함께
-          관리한다. 그러므로 글에 고정된 Actor 개수·주소·메서드 목록을 장기
-          API처럼 박아 두지 않는다.
+          새 built-in bundle은 code CID만 바꿔 개인이 활성화하는 기능이 아니다. 네트워크 버전 전환에서 모든 구현체가 같은 bundle manifest와 state
+          migration을 적용하고 method 번호와 state schema의 호환성도 함께 관리한다. 그래서 글에 고정된 Actor 개수·주소·메서드 목록을 장기 API처럼 박아 두지
+          않는다.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">
           사용자 계약에서 접근하기
         </h3>
         <p className="leading-7">
-          FEVM 계약은 Solidity library나 Filecoin actor-call precompile을 통해
-          공개된 built-in method를 호출한다. 모든 내부 method가 외부 계약에 열려
-          있는 것은 아니며, actor version과 Filecoin Solidity library의 지원
-          범위를 함께 확인해야 한다.
+          FEVM 계약은 Solidity library나 Filecoin actor-call precompile을 통해 공개된 built-in method를 호출한다. 모든 내부
+          method가 외부 계약에 열려 있지는 않다. actor version과 Filecoin Solidity library의 지원 범위를 함께 확인한다.
         </p>
 
         <CitationBlock {...OFFICIAL_SOURCES.filecoin.actors} citeKey={3}>

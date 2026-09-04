@@ -11,7 +11,10 @@ export default function ModernCurveImplementationArticle() {
     <section id="overview" className="space-y-6">
       <header className="space-y-3"><p className="text-sm font-semibold text-primary">Bytes를 G1/G2와 pairing receipt로 안전하게 승격하기</p><h2 className="text-3xl font-bold tracking-tight">타원곡선 구현은 점 공식을 옮기는 일보다 curve profile과 admission 순서를 지키는 일이 먼저다</h2></header>
       <p className="text-lg leading-8 text-foreground/90">증명 파일에서 읽은 좌표 두 개를 곧바로 G1으로 다루면 안 됩니다. Encoding을 canonical하게 해석하고 curve equation과 subgroup을 확인한 뒤에야 typed point가 됩니다. <a className="text-primary hover:underline" href="/crypto/elliptic-curves">곡선군·Jacobian·pairing 정본</a>이 수학을 소유하며, 이 글은 BN254를 예로 Rust artifact, 좌표 연산 profile과 release gate를 설명합니다.</p>
-      <p>고정 workload는 compressed point를 읽어 G1 scalar multiplication과 G2 pairing product를 수행하고 검증 receipt를 만드는 흐름입니다. G1과 G2는 서로 바꿀 수 없고, infinity·twist·subgroup·encoding rules도 같은 profile revision에 묶습니다.</p>
+      <p>
+            고정 workload는 compressed point를 읽어 G1 scalar multiplication과 G2 pairing product를 수행하고 검증 receipt를
+            만드는 흐름입니다. G1과 G2는 서로 바꿀 수 없고 infinity·twist·subgroup·encoding rules도 같은 profile revision에 묶습니다.
+          </p>
       <CurveImplementationViz />
       <ContentBoundary article="impl-elliptic-curve" />
     </section>
@@ -31,7 +34,11 @@ export default function ModernCurveImplementationArticle() {
 
     <section id="point-encoding" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">02 · Point encoding admission</p><h2 className="mt-2 text-2xl font-bold">tag→canonical coordinate→equation→subgroup 순서가 끝나기 전에는 point 타입을 만들지 않는다</h2></header>
-      <p>Decoder는 compression/infinity/sign flags와 고정 길이를 먼저 확인합니다. x나 y가 field modulus 이상이면 거절하고, 압축 형식이면 equation에서 y를 복구해 sign rule을 적용합니다. Infinity encoding은 profile이 허용한 단 하나의 형태만 받고, on-curve와 subgroup check를 통과한 뒤 G1/G2 타입을 반환합니다.</p>
+      <p>
+            Decoder는 compression/infinity/sign flags와 고정 길이를 먼저 확인합니다. x나 y가 field modulus 이상이면 거절하고 압축 형식이면
+            equation에서 y를 복구해 sign rule을 적용합니다. Infinity encoding은 profile이 허용한 단 하나의 형태만 받고, on-curve와
+            subgroup check를 통과한 뒤 G1/G2 타입을 반환합니다.
+          </p>
       <ExplainedFormula question="Compressed x에서 y 후보를 복구한 뒤 왜 검사가 더 필요한가?" idea={<>Equation의 square root는 두 후보를 만들며 sign bit가 하나를 고릅니다. 그러나 subgroup membership은 equation만으로 결정되지 않습니다.</>} formula={String.raw`y^2=x^3+ax+b\pmod p,\qquad y\in\{y_0,\ p-y_0\},\qquad [r]P=\mathcal O`}
       annotatedFormula={String.raw`y^2=\underbrace{x^3+ax+b\pmod p,\qquad y\in\{y_0,\ p-y_0\},\qquad [r]P=\mathcal O}_{\text{Identity 계산}}`}
       operations={[

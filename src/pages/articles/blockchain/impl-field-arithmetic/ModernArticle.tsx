@@ -11,7 +11,11 @@ export default function ModernFieldImplementationArticle() {
     <section id="overview" className="space-y-6">
       <header className="space-y-3"><p className="text-sm font-semibold text-primary">수학의 field element를 검증 가능한 Rust artifact로 내리기</p><h2 className="text-3xl font-bold tracking-tight">유한체 구현은 큰 정수 연산 하나가 아니라 parameter·내부 표현·직렬화 경계를 함께 고정하는 일이다</h2></header>
       <p className="text-lg leading-8 text-foreground/90">증명기는 같은 수를 세 모습으로 다룹니다. 파일과 네트워크에서는 canonical bytes, 함수 안에서는 여러 machine-word limbs, 곱셈이 반복될 때는 Montgomery domain을 씁니다. <a href="/crypto/field-arithmetic" className="text-primary hover:underline">소수체와 Montgomery reduction 정본</a>이 수학을 소유하므로, 이 글은 그 수학을 Rust 타입과 artifact로 구현하고 잘못된 bytes를 거절하는 경계만 설명합니다.</p>
-      <p>고정 예시는 BN254 scalar field의 element 하나가 proof input에서 들어와 곱셈을 거쳐 다시 canonical bytes로 나가는 흐름입니다. Base field와 scalar field는 비트 길이가 비슷해도 서로 다른 타입이며, modulus·encoding·domain digest가 맞지 않으면 계산을 시작하지 않습니다.</p>
+      <p>
+            고정 예시는 BN254 scalar field의 element 하나가 proof input에서 들어와 곱셈을 거쳐 다시 canonical bytes로 나가는 흐름입니다.
+            Base field와 scalar field는 비트 길이가 비슷해도 서로 다른 타입이며 modulus·encoding·domain digest가 맞지 않으면 계산을 시작하지
+            않습니다.
+          </p>
       <FieldImplementationViz />
       <ContentBoundary article="impl-field-arithmetic" />
     </section>

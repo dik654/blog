@@ -225,10 +225,9 @@ export default function PoSt({
         </div>
 
         <p className="leading-7">
-          정리하면 WindowPoSt와 WinningPoSt는 서로 다른 운영 시점에서 같은 질문을 던집니다. 저장 제공자가
-          randomness로 선택된 데이터를 바로 열 수 있는지를 Merkle proof로 확인하고, 그 검증 과정을 SNARK로
-          압축해 체인 비용을 제한합니다. proof를 놓치거나 잘못 제출했을 때 storage power와 담보에 불이익이 생기는
-          이유도 이 반복 검사를 경제적 약속으로 연결하기 위해서입니다.
+          WindowPoSt와 WinningPoSt는 서로 다른 운영 시점에서 같은 질문을 던집니다. 저장 제공자가 randomness로 선택된 데이터를 바로 열 수 있는지 Merkle
+          proof로 확인하고 그 검증 과정을 SNARK로 압축해 체인 비용을 제한합니다. proof를 놓치거나 잘못 제출했을 때 storage power와 담보에 불이익이 생기는 이유도
+          이 반복 검사를 경제적 약속으로 묶기 위해서입니다.
         </p>
       </div>
     </section>

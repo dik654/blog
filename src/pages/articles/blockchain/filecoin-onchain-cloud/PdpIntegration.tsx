@@ -81,9 +81,7 @@ export default function PdpIntegration({
           </div>
         </div>
         <p className="leading-7">
-          따라서 proof 성공을 곧바로 “모든 요청의 지연·가용성 SLA 충족”으로
-          해석해서는 안 된다. 저장 보유, 데이터 전달, 서비스 정산은 연결되지만
-          서로 다른 관측값이다.
+          proof 성공을 곧바로 “모든 요청의 지연·가용성 SLA 충족”으로 해석해서는 안 된다. 저장 보유, 데이터 전달, 서비스 정산은 연결되지만 서로 다른 관측값이다.
         </p>
       </div>
     </section>

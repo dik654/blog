@@ -39,8 +39,7 @@ export default function Settlement({
           <div className="rounded-lg border bg-card p-4">
             <h4 className="font-semibold text-sm mb-2">Accrual</h4>
             <p className="text-xs text-muted-foreground">
-              시간·요율과 서비스 validator가 허용한 구간을 바탕으로 provider의
-              누적 가능액을 계산한다.
+              provider의 누적 가능액은 시간·요율과 서비스 validator가 허용한 구간으로 계산한다.
             </p>
           </div>
           <div className="rounded-lg border bg-card p-4">
@@ -77,9 +76,8 @@ export default function Settlement({
           </div>
         </div>
         <p className="leading-7">
-          고정 99.9% SLA, 일률적인 10배 penalty, 30초마다 자동 송금 같은 값은
-          Filecoin Pay 자체의 보편 규칙이 아니다. 실제 통화·가격·proof 주기·종료
-          조건은 사용 중인 Warm Storage 배포와 SDK 설정에서 읽어야 한다.
+          고정 99.9% SLA, 일률적인 10배 penalty, 30초마다 자동 송금 같은 값은 Filecoin Pay가 정해 주지 않는다. 실제 통화·가격·proof 주기·종료 조건은
+          사용 중인 Warm Storage 배포와 SDK 설정에서 읽어야 한다.
         </p>
 
         <CitationBlock {...OFFICIAL_SOURCES.filecoin.pay} citeKey={3}>

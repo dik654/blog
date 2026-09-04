@@ -11,11 +11,9 @@ export default function Overview({
       <h2 className="text-2xl font-bold mb-6">Storacha는 upload와 delegation을 UCAN 기반 service로 분리한다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none mb-8">
         <p className="leading-7">
-          Storacha는 Web3.Storage가 이어진 현재 서비스다. 애플리케이션은
-          content-addressed data를 업로드하고 HTTP 또는 IPFS로 빠르게 읽으면서,
-          별도의 Filecoin storage path를 통해 장기 보존 사본을 확보한다. 과거
-          Saturn CDN을 합친 서비스나 PDP 상품으로 설명하면 현재 architecture와
-          맞지 않는다.
+          Storacha는 Web3.Storage가 이어진 현재 서비스다. 애플리케이션은 content-addressed data를 업로드하고 HTTP 또는 IPFS로 빠르게 읽으면서
+          별도의 Filecoin storage path로 장기 보존 사본을 확보한다. 과거 Saturn CDN을 합친 서비스나 PDP 상품으로 설명하면 현재 architecture와 맞지
+          않는다.
         </p>
       </div>
       <div className="not-prose">

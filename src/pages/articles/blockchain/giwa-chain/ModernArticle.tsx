@@ -21,15 +21,13 @@ export default function ModernGiwaChainArticle() {
           </h2>
         </header>
         <p className="text-lg leading-8 text-foreground/90">
-          GIWA는 공식 문서상 OP Stack 기반 Ethereum Layer 2입니다. 사용자는 sequencer가 만든
-          빠른 block을 보지만, verifier node는 L1 data와 rollup config를 읽어 같은 L2 payload를
-          derivation하고 execution client에서 다시 실행합니다. 그러므로 process가 떠 있고 RPC가
-          응답한다는 사실만으로 같은 chain을 검증하고 있다고 판단할 수 없습니다.
+          GIWA는 공식 문서상 OP Stack 기반 Ethereum Layer 2입니다. 사용자는 sequencer가 만든 빠른 block을 보지만 verifier node는 L1
+          data와 rollup config를 읽어 같은 L2 payload를 derivation하고 execution client에서 다시 실행합니다. process가 떠 있고 RPC가
+          응답한다는 사실만으로는 같은 chain을 검증하는 중이라고 판단할 수 없습니다.
         </p>
         <p>
-          이 글은 2026-08-14에 공개된 GIWA Sepolia와 pinned node v0.6.0을 고정 예제로
-          사용합니다. 공식 연결 문서는 chain ID 91342의 testnet을 제공하며 Mainnet은 개발
-          중이라고 표시합니다. 따라서 1-second block, 60,000,000 gas limit, endpoint와
+          이 글은 2026-08-14에 공개된 GIWA Sepolia와 pinned node v0.6.0을 고정 예제로 사용합니다. 공식 연결 문서에는 chain ID 91342의
+          testnet이 올라와 있고 Mainnet은 개발 중이라고 적혀 있습니다. 따라서 1-second block과 60,000,000 gas limit, endpoint와
           contract addresses 같은 current profile을 미래 Mainnet의 영구 약속으로 읽지 않습니다.
         </p>
         <aside className="rounded-lg border border-primary/30 bg-primary/5 p-5 text-sm leading-6">
@@ -63,10 +61,9 @@ export default function ModernGiwaChainArticle() {
           실행하고 state root와 receipts를 계산하며 JSON-RPC state를 제공합니다.
         </p>
         <p>
-          Pinned v0.6.0 repository의 compose는 op-node v1.19.1과 op-reth v2.3.3을 build하고,
-          두 service가 shared 32-byte JWT secret으로 Engine endpoint에 접근하게 합니다. 과거
-          레거시 글의 “geth/reth 중 선택”은 현재 source와 맞지 않습니다. Pinned README는 Karst
-          hardfork 이후 op-geth가 GIWA를 따라갈 수 없어 더 이상 지원하지 않는다고 명시합니다.
+          Pinned v0.6.0 repository의 compose는 op-node v1.19.1과 op-reth v2.3.3을 빌드하고 두 service가 shared 32-byte
+          JWT secret으로 Engine endpoint에 접근하게 합니다. 과거 레거시 글의 “geth/reth 중 선택”은 현재 source와 맞지 않습니다. Pinned
+          README에는 Karst hardfork 이후 op-geth가 GIWA를 따라가지 못해 더 이상 지원하지 않는다고 적혀 있습니다.
         </p>
         <ExplainedFormula
           question="두 processes가 같은 GIWA network generation을 검증한다고 언제 말할까?"
@@ -95,15 +92,15 @@ export default function ModernGiwaChainArticle() {
           <article className="rounded-lg border border-border p-4">
             <h3 className="font-semibold">Engine JWT가 하는 일</h3>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              op-node가 private Engine endpoint를 호출할 권한을 인증합니다. Payload validity,
-              L1 RPC honesty나 chain finality를 증명하지 않습니다.
+              op-node가 private Engine endpoint를 호출할 권한을 인증합니다. Payload validity와 L1 RPC honesty, chain
+              finality를 증명하는 것은 아닙니다.
             </p>
           </article>
           <article className="rounded-lg border border-border p-4">
             <h3 className="font-semibold">Sync mode의 비용</h3>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              Pinned source는 snap, archive, consensus-driven sync를 구분합니다. Historical
-              retention·startup time·disk와 trust assumptions를 같은 profile에서 측정합니다.
+              Pinned source에서는 snap과 archive, consensus-driven sync를 구분합니다. Historical retention과 startup
+              time, disk, trust assumptions를 같은 profile에서 측정합니다.
             </p>
           </article>
         </div>
@@ -132,11 +129,10 @@ export default function ModernGiwaChainArticle() {
           </h2>
         </header>
         <p>
-          Sequencer가 transaction T를 L2 block 120에 넣으면 사용자는 먼저 unsafe head에서
-          결과를 볼 수 있습니다. op-node는 이후 L1 blocks·receipts와 batch frames/channels를
-          rollup rules로 해석해 payloads를 재현합니다. 해당 batch가 canonical L1 input에서
-          derivation되면 safe head가 전진하고, 그 L1 origin이 finalized되면 finalized head가
-          따라갑니다. L1 reorg가 나면 origin까지 되감아 batches를 다시 읽습니다.
+          Sequencer가 transaction T를 L2 block 120에 넣으면 사용자는 먼저 unsafe head에서 결과를 볼 수 있습니다. op-node는 이후 L1
+          blocks와 receipts, batch frames/channels를 rollup rules로 해석해 payloads를 재현합니다. 해당 batch가 canonical L1
+          input에서 derivation되면 safe head가 전진하고 그 L1 origin이 finalized되면 finalized head가 따라갑니다. L1 reorg가 나면
+          origin까지 되감아 batches를 다시 읽습니다.
         </p>
         <ExplainedFormula
           question="같은 L1 view에서 같은 safe payload를 만들려면 무엇을 고정해야 할까?"
@@ -214,11 +210,9 @@ export default function ModernGiwaChainArticle() {
           </h2>
         </header>
         <p>
-          UI preview처럼 되돌릴 수 있는 read는 unsafe 120을 사용할 수 있지만, 상품 출고나 다른
-          network 지급처럼 되돌리기 어려운 effect에는 safe 또는 finalized policy와
-          reconciliation ledger가 필요합니다. 고정 transaction T의 receipt에는 L2 block hash,
-          L1 origin, observed cursor, application effect ID를 기록해 reorg 뒤 중복 지급과 누락을
-          찾아냅니다.
+          UI preview처럼 되돌릴 수 있는 read라면 unsafe 120을 써도 됩니다. 상품 출고나 다른 network 지급처럼 되돌리기 어려운 effect에는 safe 또는
+          finalized policy와 reconciliation ledger가 필요합니다. 고정 transaction T의 receipt에는 L2 block hash와 L1
+          origin, observed cursor, application effect ID를 기록해 reorg 뒤 중복 지급과 누락을 찾아냅니다.
         </p>
         <ExplainedFormula
           question="Transaction T의 외부 effect를 승인할 최소 조건은 무엇일까?"
@@ -245,8 +239,8 @@ export default function ModernGiwaChainArticle() {
           <article className="rounded-lg border border-border p-4">
             <h3 className="font-semibold">Chain이 제공하는 것</h3>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              EVM execution, ordered L2 state, L1 batch publication과 OP fault-proof/settlement
-              surface입니다. 정확한 범위는 active protocol·contracts에 귀속합니다.
+              EVM execution과 ordered L2 state, L1 batch publication, 그리고 OP fault-proof/settlement surface입니다.
+              정확한 범위는 active protocol과 contracts에 귀속합니다.
             </p>
           </article>
           <article className="rounded-lg border border-border p-4">
@@ -274,11 +268,10 @@ export default function ModernGiwaChainArticle() {
           </h2>
         </header>
         <p>
-          Canary manifest에는 GIWA node source SHA, op-node/op-reth revisions와 images,
-          genesis·rollup config digests, L1 endpoint/trust profile, JWT generation, sync mode와
-          data snapshot generation을 기록합니다. 같은 L1 origin 구간에서 reference node와
-          derived payload hashes, receipts, state roots, unsafe/safe/finalized transitions를
-          비교한 뒤에야 latency·disk·RPC throughput을 측정합니다.
+          Canary manifest에는 GIWA node source SHA와 op-node/op-reth revisions와 images를 적습니다. 여기에 genesis·rollup
+          config digests, L1 endpoint/trust profile, JWT generation, sync mode와 data snapshot generation도 함께
+          기록합니다. 같은 L1 origin 구간에서 reference node와 derived payload hashes, receipts, state roots,
+          unsafe/safe/finalized transitions를 비교합니다. 그 뒤에야 latency와 disk, RPC throughput을 측정합니다.
         </p>
         <ol className="grid gap-3 sm:grid-cols-2">
           {[
@@ -294,10 +287,9 @@ export default function ModernGiwaChainArticle() {
           ))}
         </ol>
         <p>
-          Testnet은 공식 terms상 중단·reset·rollback될 수 있으며 free RPC도 production 용도가
-          아닙니다. 그래서 testnet canary 성공을 Mainnet readiness로 바꾸지 않습니다. Benchmark
-          역시 같은 L1 source, head distance, sync mode, snapshot age, hardware와 request mix에서
-          p50·p95·p99, reorg catch-up, disk growth를 함께 비교해야 합니다.
+          Testnet은 공식 terms상 중단·reset·rollback될 수 있으며 free RPC도 production 용도가 아닙니다. 그래서 testnet canary 성공을
+          Mainnet readiness로 바꾸지 않습니다. Benchmark 역시 같은 L1 source와 head distance, sync mode, snapshot age,
+          hardware, request mix에서 p50·p95·p99와 reorg catch-up, disk growth를 함께 비교해야 합니다.
         </p>
         <aside className="rounded-lg border border-border bg-muted/20 p-5 text-sm leading-6 text-muted-foreground">
           <strong className="text-foreground">Article-only 10/10:</strong> GIWA generation의 다섯

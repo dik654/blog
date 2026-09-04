@@ -20,7 +20,11 @@ export default function ModernInitiaEvmArticle() {
     <section id="tx-envelope" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">01 · transaction envelope and sequence</p><h2 className="mt-2 text-2xl font-bold">형식은 바꾸되 sender·nonce·chain·gas·data·value의 의미는 보존한다</h2></header>
       <p>Pinned MiniEVM source의 <code>ConvertEthereumTxToCosmosTx</code>와 역변환 함수는 Ethereum transaction과 Cosmos SDK transaction 사이의 경계를 드러냅니다. Raw transaction의 signature에서 sender를 복원하고, chain ID·nonce·gas·destination·value·calldata를 SDK message와 auth 정보에 담아 Cosmos pipeline을 통과시킵니다. 변환이 성공했다는 사실만으로 mempool admission이나 execution success가 보장되지는 않습니다.</p>
-      <p>가장 놓치기 쉬운 부분은 sequence입니다. Cosmos Ante 경로가 account sequence를 올렸는데 EVM create/call 경로까지 같은 증가를 독립적으로 적용하면 nonce가 한 요청에 두 번 증가합니다. Pinned source는 context에 Ante의 sequence 증가 여부를 기록하고 message server가 이를 조정합니다. 시작 sequence가 7이면 성공 뒤 8이어야 하며, 9가 되면 double increment 버그입니다.</p>
+      <p>
+            가장 놓치기 쉬운 부분은 sequence입니다. Cosmos Ante 경로가 account sequence를 올렸는데 EVM create/call 경로까지 같은 증가를
+            독립적으로 적용하면 nonce가 한 요청에 두 번 증가합니다. Pinned source는 context에 Ante의 sequence 증가 여부를 기록하고 message
+            server가 이를 조정합니다. 시작 sequence가 7이면 성공 뒤 8이어야 하며 9가 되면 double increment 버그입니다.
+          </p>
       <ExplainedFormula
         question="Ethereum↔Cosmos 변환과 실행 revision을 언제 release해도 되는가?"
         idea={<>한 field만 비교하지 않고 transaction의 왕복 의미, sender, sequence 증가와 candidate state root를 함께 대조합니다. 이 식은 protocol theorem이 아니라 versioned release gate입니다.</>}
@@ -59,7 +63,12 @@ export default function ModernInitiaEvmArticle() {
 
     <section id="release" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">03 · failure, replay and release</p><h2 className="mt-2 text-2xl font-bold">같은 transaction을 실패 지점별로 재생해 sequence·state·receipt가 한 번만 바뀌는지 확인한다</h2></header>
-      <p>Negative fixture는 signature 불일치, wrong chain ID, stale sequence, Ante 통과 뒤 EVM REVERT, token bridge 중 error와 block commit 전 crash를 따로 주입합니다. 재시도는 같은 transaction identity를 사용하며, 이미 commit된 sequence나 balance effect를 다시 적용해서는 안 됩니다. CheckTx·recheck를 통과한 사실과 Deliver/FinalizeBlock에서 상태가 바뀐 사실도 분리해 기록합니다.</p>
+      <p>
+            Negative fixture는 signature 불일치, wrong chain ID, stale sequence, Ante 통과 뒤 EVM REVERT, token
+            bridge 중 error와 block commit 전 crash를 따로 주입합니다. 재시도는 같은 transaction identity를 사용하며 이미 commit된
+            sequence나 balance effect를 다시 적용해서는 안 됩니다. CheckTx·recheck를 통과한 사실과 Deliver/FinalizeBlock에서 상태가 바뀐
+            사실도 분리해 기록합니다.
+          </p>
       <p>Release artifact에는 MiniEVM commit, Cosmos SDK dependency, chain config, enabled precompiles와 fee denomination을 함께 pin합니다. Candidate와 oracle에서 transaction fields, sender, sequence, status, gas used, logs, token balance, app hash를 비교하고 한 항목이라도 다르면 이전 bundle로 rollback합니다. 이미 client에게 durable success를 알린 뒤에는 state를 조용히 되감지 않고 idempotent replay나 명시적 보상 절차를 사용합니다.</p>
       <div id="paper-minievm-compat"><CitationBlock source="Initia Docs · MiniEVM EVM compatibility and changes" citeKey={3} href="https://docs.initia.xyz/home/core-concepts/initia-and-rollups/rollups/vms/minievm/evm-compatibility-and-changes"><p><strong>문제:</strong> Ethereum tooling을 사용하는 개발자가 MiniEVM과 standard EVM 사이의 지원 범위와 차이를 알아야 합니다.</p><p><strong>기여:</strong> MiniEVM의 current compatibility surface와 transaction·RPC 관련 차이를 공식 문서로 정리합니다.</p><p><strong>전제:</strong> 2026-08-14에 확인한 공식 문서와 배포 chain의 exact software·configuration을 함께 확인합니다.</p><p><strong>근거 범위:</strong> 문서가 명시한 현재 compatibility와 known differences에 한정합니다.</p><p><strong>말하지 않는 것:</strong> 문서의 current 목록이 future releases에도 고정되거나 모든 wallet·tool의 완전한 동작을 보장한다는 뜻은 아닙니다.</p></CitationBlock></div>
       <h3 className="text-xl font-semibold">이 글만으로 확인할 10가지</h3>

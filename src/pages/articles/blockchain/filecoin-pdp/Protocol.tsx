@@ -20,10 +20,8 @@ export default function Protocol({
           </span>
         </div>
         <p className="leading-7">
-          PDPVerifier는 data set을 piece들의 논리적 배열로 본다. 각 piece는
-          CID·크기와 Merkle commitment를 가지며, verifier는 전체 크기에서
-          challenge 위치를 정한 뒤 그 위치가 어느 piece와 leaf에 속하는지
-          찾는다.
+          PDPVerifier는 data set을 piece들의 논리적 배열로 본다. 각 piece는 CID·크기와 Merkle commitment를 가진다. verifier는 전체
+          크기에서 challenge 위치를 정한 뒤 그 위치가 어느 piece와 leaf에 속하는지 찾는다.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">
@@ -73,9 +71,8 @@ export default function Protocol({
           ))}
         </div>
         <p className="leading-7">
-          challenge 수와 proving period는 탐지 확률·가스·서비스 비용 사이의
-          선택이다. 따라서 특정 proof 크기나 검증 비용을 영구적인 상수로
-          제시하지 않고, 배포된 계약 버전과 서비스 설정에서 확인해야 한다.
+          challenge 수와 proving period는 탐지 확률·가스·서비스 비용 사이의 선택이다. 따라서 특정 proof 크기나 검증 비용을 영구적인 상수로 제시하지 않고 배포된
+          계약 버전과 서비스 설정에서 확인해야 한다.
         </p>
       </div>
     </section>

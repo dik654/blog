@@ -9,10 +9,8 @@ export default function SchwartzZippel() {
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Prover가 두 거대한 다항식 P와 Q가 같다고 주장할 때 모든 계수를
-          비교하는 대신, verifier는 예측하기 어려운 r을 고르고 P(r)=Q(r)인지
-          확인할 수 있습니다. 거짓 주장의 차이 R=P−Q는 0이 아닌 다항식이므로
-          무작위 점에서 우연히 0이 될 가능성이 작다는 것이 핵심입니다.
+          Prover가 두 거대한 다항식 P와 Q가 같다고 주장할 때 모든 계수를 비교하는 대신, verifier는 예측하기 어려운 r을 고르고 P(r)=Q(r)인지 확인할 수 있습니다.
+          거짓 주장의 차이 R=P−Q는 0이 아닌 다항식이므로 무작위 점에서 우연히 0이 될 가능성이 작습니다.
         </p>
       </div>
       <SchwartzZippelViz />
@@ -65,11 +63,9 @@ export default function SchwartzZippel() {
           Polynomial Identities
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          문제는 symbolic polynomial identity verification의 비용입니다. 논문은
-          무작위 평가를 사용한 빠른 검증과 degree에 따른 오류 확률을 분석합니다.
-          Bound는 uniformly sampled challenge와 고정된 nonzero polynomial을
-          전제로 하며, 암호 프로토콜의 challenge 생성·commitment binding까지
-          자동으로 증명하지는 않습니다.
+          문제는 symbolic polynomial identity verification의 비용입니다. 논문은 무작위 평가를 사용한 빠른 검증과 degree에 따른 오류 확률을
+          분석합니다. 이 bound는 uniformly sampled challenge와 고정된 nonzero polynomial을 전제로 합니다. 암호 프로토콜의 challenge
+          생성이나 commitment binding까지 자동으로 증명해 주지는 않습니다.
         </p>
         <a
           href="https://doi.org/10.1145/322186.322189"

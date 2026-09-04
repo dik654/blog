@@ -78,9 +78,7 @@ export default function Onchain({
           </div>
         </div>
         <p className="leading-7">
-          이 분리 덕분에 PDPVerifier는 여러 제공자와 서비스가 공유하는 증명
-          기반이 되고, 각 서비스는 검증 로직을 복제하지 않은 채 경제 규칙을 바꿀
-          수 있다.
+          이 분리 덕분에 PDPVerifier는 여러 제공자와 서비스가 공유하는 증명 기반이 되고 각 서비스는 검증 로직을 복제하지 않은 채 경제 규칙을 바꿀 수 있다.
         </p>
       </div>
     </section>

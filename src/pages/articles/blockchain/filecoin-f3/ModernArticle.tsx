@@ -11,20 +11,40 @@ export default function ModernFilecoinF3Article() {
   <article className="space-y-14">
     <section id="overview" className="space-y-6">
       <header className="space-y-3"><p className="text-sm font-semibold text-primary">Filecoin F3 integration</p><h2 className="text-3xl font-bold tracking-tight">바뀔 수 있는 EC head를 certificate checkpoint로 고정하고 다음 fork choice의 울타리로 쓴다</h2></header>
-      <p className="text-lg leading-8 text-foreground/90">Alice→Bob transaction이 Expected Consensus(EC) head의 block D에 들어갔다고 하겠습니다. 이 inclusion만으로는 D가 다시 바뀌지 않는다고 말할 수 없습니다. F3는 이전에 finalized한 base B와 그 위의 current EC proposal B→C→D, versioned power table을 GPBFT instance에 넣습니다. GPBFT가 prefix를 결정하면 서명 evidence가 붙은 finality certificate가 되고, 이후 EC는 그 checkpoint를 정확히 포함하는 branches 안에서만 weight를 비교합니다.</p>
-      <p>이 경계에는 세 owner가 있습니다. EC는 valid weighted head를 제공하고, GPBFT는 weighted phases와 decision certificate를 만들며, F3 integration은 input/base·committee binding, certificate chain sync와 finalized-prefix fork-choice fence를 연결합니다. F3 process가 멈춰도 EC chain은 계속 자랄 수 있지만 새 F3 certificate가 없다면 새 fast finality는 생기지 않습니다.</p>
+      <p className="text-lg leading-8 text-foreground/90">
+            Alice→Bob transaction이 Expected Consensus(EC) head의 block D에 들어갔다고 하겠습니다. 이 inclusion만으로는 D가 다시
+            바뀌지 않는다고 말할 수 없습니다. F3는 이전에 finalized한 base B와 그 위의 current EC proposal B→C→D, versioned power
+            table을 GPBFT instance에 넣습니다. GPBFT가 prefix를 결정하면 서명 evidence가 붙은 finality certificate가 됩니다. 이후 EC는
+            그 checkpoint를 정확히 포함하는 branches 안에서만 weight를 비교합니다.
+          </p>
+      <p>
+            이 경계에는 세 owner가 있습니다. EC는 valid weighted head를 제공하고 GPBFT는 weighted phases와 decision certificate를
+            만듭니다. F3 integration은 input/base·committee binding, certificate chain sync와 finalized-prefix fork-
+            choice fence를 연결합니다. F3 process가 멈춰도 EC chain은 계속 자랄 수 있지만 새 F3 certificate가 없다면 새 fast finality는
+            생기지 않습니다.
+          </p>
       <FilecoinF3TraceViz />
       <aside className="rounded-lg border border-primary/30 bg-primary/5 p-5 text-sm leading-6"><strong>핵심 아이디어:</strong> Finality는 “현재 가장 무거운 head”라는 점수가 아니라, 어느 committee가 어떤 base 위의 어느 prefix를 어떤 instance에서 결정했는지 재검증할 수 있는 certificate chain과 그 결과를 강제하는 fork-choice fence입니다.</aside>
     </section>
 
     <section id="ec-f3-boundary" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">01 · EC input, base, committee</p><h2 className="mt-2 text-2xl font-bold">Proposal은 움직일 수 있지만 이전 finalized base와 historical power table은 instance에 고정한다</h2></header>
-      <p>F3 instance의 proposal은 node가 관찰한 current canonical EC chain이므로 consensus가 끝나기 전에 달라질 수 있습니다. 반면 base는 이전 certificate에서 이미 합의한 chain prefix이며 새 proposal은 그 base를 연장해야 합니다. Proposal이 바뀌었다는 이유로 base까지 되돌리면 이전 agreement를 무효화하므로 input validation에서 extension 관계와 commitments를 검사합니다.</p>
+      <p>
+            F3 instance의 proposal은 node가 관찰한 current canonical EC chain입니다. consensus가 끝나기 전에는 이 값이 달라질 수
+            있습니다. 반면 base는 이전 certificate에서 이미 합의한 chain prefix이며 새 proposal은 그 base를 연장해야 합니다. Proposal이
+            바뀌었다는 이유로 base까지 되돌리면 이전 agreement가 무효가 됩니다. input validation에서 extension 관계와 commitments를 검사하는 것은
+            그래서입니다.
+          </p>
       <div className="not-prose flex flex-wrap gap-3">
         <CodeViewButton label="F3.Run() 개요" onClick={() => sidebar.open("f3-run", codeRefs["f3-run"])} />
         <CodeViewButton label="GPBFT phases" onClick={() => sidebar.open("gpbft-run", codeRefs["gpbft-run"])} />
       </div>
-      <p>투표 power도 현재 head에서 임의로 읽지 않습니다. Protocol manifest와 finalized chain state의 lookback으로 instance committee와 signing keys, scaled power를 정하고 power-table CID·network name·instance·supplemental data에 결속합니다. 그래서 certificate i를 과거 PTᵢ가 아니라 현재 PT로 검증해서는 안 됩니다. Member가 바뀌면 동일 signatures의 weight 합이 달라져 history를 재해석하게 됩니다.</p>
+      <p>
+            투표 power도 현재 head에서 임의로 읽지 않습니다. Protocol manifest와 finalized chain state의 lookback으로 instance
+            committee와 signing keys, scaled power를 정하고 power-table CID·network name·instance·supplemental
+            data에 결속합니다. 그래서 certificate i는 그때의 PTᵢ로 검증합니다. 현재 PT를 가져다 쓰면 안 됩니다. Member가 바뀌면 동일 signatures의
+            weight 합이 달라져 history를 재해석하게 됩니다.
+          </p>
       <ExplainedFormula question="F3 certificate signer 집합이 strong quorum인지 무엇으로 판정하는가?" idea={<>Certificate가 가리키는 historical power table에서 distinct valid signers의 power를 더하고, table total의 2/3를 엄격히 넘어야 합니다. 그 전에 network·instance·base·decision과 aggregate signature를 같은 domain에서 검증합니다.</>} formula={String.raw`q(C_i)=\sum_{v\in Signers(C_i)}w_i(v),\qquad 3q(C_i)>2W_i`}
       annotatedFormula={String.raw`q(C_i)=\underbrace{\sum_{v\in Signers(C_i)}w_i(v),\qquad 3q(C_i)>2W_i}_{\text{허용 경계 판정}}`}
       operations={[
@@ -35,7 +55,12 @@ export default function ModernFilecoinF3Article() {
 
     <section id="cert-sync" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">02 · certificate chain과 fork-choice fence</p><h2 className="mt-2 text-2xl font-bold">Cold start node는 신뢰한 시작점에서 certificate와 power table을 한 칸씩 이어 검증한다</h2></header>
-      <p>최신 certificate 한 장과 aggregate signature만 받아서는 누가 signer인지 판단할 trusted table이 없습니다. Catch-up node는 신뢰한 certificate Cᵢ와 PTᵢ에서 시작해 다음 instance 번호, network, base linkage, decision chain과 supplemental data를 확인하고 PTᵢ로 signatures와 quorum을 검증합니다. 그 certificate에 결속된 power-table diff를 검증해 PTᵢ₊₁을 만든 뒤에야 Cᵢ₊₁을 검사합니다. 중간 instance를 건너뛰거나 stale table을 섞으면 fail closed합니다.</p>
+      <p>
+            최신 certificate 한 장과 aggregate signature만 받아서는 누가 signer인지 판단할 trusted table이 없습니다. Catch-up node는
+            신뢰한 certificate Cᵢ와 PTᵢ에서 시작합니다. 다음 instance 번호, network, base linkage, decision chain과
+            supplemental data를 확인하고 PTᵢ로 signatures와 quorum을 검증합니다. 그 certificate에 결속된 power-table diff를 검증해
+            PTᵢ₊₁을 만든 뒤에야 Cᵢ₊₁을 검사합니다. 중간 instance를 건너뛰거나 stale table을 섞으면 fail closed합니다.
+          </p>
       <CertificateCatchupViz />
       <ExplainedFormula question="Finalized checkpoint F가 생긴 뒤 EC head 후보는 어떤 순서로 고르는가?" idea={<>먼저 candidate branch가 F와 그 ancestors를 정확히 포함하는지 boolean fence로 거릅니다. 그 다음 통과한 valid branches 안에서만 EC chain weight의 argmax를 계산합니다. 더 무겁다는 이유로 fence를 먼저 넘을 수는 없습니다.</>} formula={String.raw`Head=\underset{B\in Valid:\;F\preceq B}{\operatorname{argmax}}\;W_{EC}(B)`}
       annotatedFormula={String.raw`Head=\underbrace{\underset{B\in Valid:\;F\preceq B}{\operatorname{argmax}}\;W_{EC}(B)}_{\text{prefix relation 계산}}`}
@@ -49,9 +74,19 @@ export default function ModernFilecoinF3Article() {
     <section id="release" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">03 · halt, retry, release</p><h2 className="mt-2 text-2xl font-bold">EC height와 certificate instance를 따로 관찰하고 finality-dependent action은 후자에 묶는다</h2></header>
       <p>F3 participants나 dissemination이 멈추면 EC는 새로운 head를 계속 만들 수 있습니다. 운영 화면이 EC height만 보여 주면 사용자는 새 blocks도 finalized되었다고 오해합니다. 따라서 <code>ec_head_height</code>, <code>latest_f3_instance</code>, <code>finalized_epoch</code>, certificate age와 catch-up error를 따로 노출하고, withdrawal·bridge checkpoint 같은 action은 certificate와 application state receipt가 모두 맞을 때만 release합니다.</p>
-      <p>Cold-start test는 stale power table, skipped instance, wrong network, broken base link, invalid aggregate signature를 하나씩 주입해야 합니다. 어느 하나라도 나오면 마지막 trusted certificate에서 멈추고 peer를 바꾸어 bounded retry하며, 최신 한 장을 강제로 수락하지 않습니다. Fork-choice test에서는 finalized C와 충돌하는 더 무거운 X를 거절하고 C를 잇는 D·D′만 weight로 비교합니다. Rollback은 아직 release하지 않은 local candidate와 cache에만 적용하며 finalized prefix를 운영 편의로 되돌리지 않습니다.</p>
+      <p>
+            Cold-start test는 stale power table, skipped instance, wrong network, broken base link, invalid
+            aggregate signature를 하나씩 주입합니다. 어느 하나라도 나오면 마지막 trusted certificate에서 멈추고 peer를 바꾸어 bounded
+            retry합니다. 최신 한 장을 강제로 수락하지 않습니다. Fork-choice test에서는 finalized C와 충돌하는 더 무거운 X를 거절하고 C를 잇는 D·D′만
+            weight로 비교합니다. Rollback은 아직 release하지 않은 local candidate와 cache에만 적용하며 finalized prefix를 운영 편의로
+            되돌리지 않습니다.
+          </p>
       <div className="grid gap-4 md:grid-cols-2"><aside className="rounded-lg border border-border p-4"><h3 className="font-semibold">통과 receipt</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">Trusted base, contiguous instances, certificate digests, power-table CIDs, finalized prefix, application state root.</p></aside><aside className="rounded-lg border border-border p-4"><h3 className="font-semibold">중단 조건</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">Certificate domain·signature·table·base mismatch, F3 lag SLO 초과, finalized prefix 밖의 head 후보.</p></aside></div>
-      <h3 className="text-xl font-semibold">이 글만으로 풀어야 하는 10문제</h3><p>기초 6문제는 proposal/base, F3 halt, committee binding, certificate context, power-table diff와 fork-choice fence를 묻습니다. 심화 4문제는 stale/skipped sync, lag policy, conflicting heavy branch와 cold-start-to-release test를 설계하게 합니다. 위 단계만으로 신뢰 시작점과 실패 시 행동까지 답할 수 있어야 합니다.</p>
+      <h3 className="text-xl font-semibold">이 글만으로 풀어야 하는 10문제</h3><p>
+            기초 6문제는 proposal/base, F3 halt, committee binding, certificate context, power-table diff와 fork-
+            choice fence를 묻습니다. 심화 4문제는 stale/skipped sync, lag policy, conflicting heavy branch와 cold-start-
+            to-release test를 설계하게 합니다. 위 단계만으로 신뢰 시작점과 실패 시 행동까지 답이 나오는지가 기준입니다.
+          </p>
     </section>
   </article>
   <CodeSidebar

@@ -17,7 +17,11 @@ export default function ModernFilecoinGpuProofsArticle() {
     <section id="overview" className="space-y-6">
       <header className="space-y-3"><p className="text-sm font-semibold text-primary">Sector input에서 independently verified proof artifact까지</p><h2 className="text-3xl font-bold tracking-tight">Filecoin proof GPU 가속은 커널 목록이 아니라 phase artifact와 cache identity가 이어지는 전체 job이다</h2></header>
       <p className="text-lg leading-8 text-foreground/90">고정 workload는 sector data·ticket·prover identity에서 replica와 cache를 만들고, vanilla proof와 Groth16 proof artifact를 거쳐 verification receipt로 끝납니다. <a className="text-primary hover:underline" href="/gpu/gpu-proof-pipeline">일반 GPU proof DAG</a>, <a className="text-primary hover:underline" href="/gpu/msm-ntt">MSM·NTT</a>, field/hash 정본은 연결 글을 재사용합니다. 이 글은 rust-fil-proofs snapshot의 Filecoin phase boundary와 bellperson accelerator integration만 소유합니다.</p>
-      <p>PC1·PC2·C1·C2라는 이름은 “GPU kernel 네 개”가 아닙니다. Disk-backed tree/cache, public commitments, vanilla proof, circuit inputs와 SNARK proof가 서로 다른 단계에서 만들어집니다. GPU는 내부 일부 연산을 가속할 수 있지만, 잘못된 cache를 올바른 proof로 바꾸지는 못합니다.</p>
+      <p>
+            PC1·PC2·C1·C2라는 이름은 “GPU kernel 네 개”가 아닙니다. Disk-backed tree/cache, public commitments, vanilla
+            proof, circuit inputs와 SNARK proof가 서로 다른 단계에서 만들어집니다. GPU는 내부 일부 연산을 가속할 수 있지만 잘못된 cache를 올바른
+            proof로 바꾸지는 못합니다.
+          </p>
       <FilecoinProofFlowViz />
       <ContentBoundary article="filecoin-gpu-proofs" />
     </section>
@@ -46,7 +50,11 @@ export default function ModernFilecoinGpuProofsArticle() {
 
     <section id="parameter-binding" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">02 · Parameter and cache binding</p><h2 className="mt-2 text-2xl font-bold">Proof type·sector size·API version·parameter/cache digests를 job identity에 봉인한다</h2></header>
-      <p>같은 filename이나 “32GiB용” 같은 label만으로 artifact를 재사용하지 않습니다. Proof config, sector/pieces, ticket/seed, prover/sector IDs, parameter manifest와 cache outputs의 canonical digests를 기록합니다. Network 규칙과 library snapshot은 별도 version fields로 둡니다.</p>
+      <p>
+            같은 filename이나 32GiB용 같은 label만으로 artifact를 재사용하지 않습니다. Proof config, sector/pieces, ticket/seed,
+            prover/sector IDs, parameter manifest와 cache outputs의 canonical digests를 기록합니다. Network 규칙과
+            library snapshot은 별도 version fields로 둡니다.
+          </p>
       <ExplainedFormula question="한 sealing job의 artifact identity를 어떻게 만들까?" idea={<>Statement를 정하는 inputs, proof profile과 단계별 cache digests를 하나의 length-delimited manifest hash에 결속합니다.</>} formula={String.raw`G=H(q\|s\|a\|H(P)\|H(I)\|H(K)\|r)`}
       annotatedFormula={String.raw`G=\underbrace{H(q\|s\|a\|H(P)\|H(I)\|H(K)\|r)}_{\text{Job generation 계산}}`}
       operations={[
@@ -70,7 +78,11 @@ export default function ModernFilecoinGpuProofsArticle() {
 
     <section id="accelerator-split" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">03 · Accelerator work split</p><h2 className="mt-2 text-2xl font-bold">Bellperson의 FFT·MSM 후보를 가속하되 CPU preparation·locking·fallback과 verifier를 전체 경계에 남긴다</h2></header>
-      <p>Pinned bellperson prover는 GPU multiexponentiation과 FFT 경로를 CPU work와 함께 orchestration하고, 환경·device failure에 따른 fallback 경계를 가집니다. 따라서 “Filecoin proof가 GPU에서 실행된다”보다 어느 stage의 어떤 buffers가 accelerator에 갔는지 기록해야 합니다. GPU kernel timing은 C2 proof artifact latency와 같지 않습니다.</p>
+      <p>
+            Pinned bellperson prover는 GPU multiexponentiation과 FFT 경로를 CPU work와 함께 orchestration하고 환경·device
+            failure에 따른 fallback 경계를 가집니다. 기록에 남길 것은 “Filecoin proof가 GPU에서 실행된다”라는 문장이 아니라 어느 stage의 어떤
+            buffers가 accelerator에 갔는지입니다. GPU kernel timing은 C2 proof artifact latency와 같지 않습니다.
+          </p>
       <div className="not-prose flex flex-wrap gap-3">
         <CodeViewButton label="CpuGpuMultiexpKernel" onClick={() => sidebar.open("bp-gpu-multiexp", codeRefs["bp-gpu-multiexp"])} />
         <CodeViewButton label="create_proof_batch_priority_inner" onClick={() => sidebar.open("bp-groth16-prover", codeRefs["bp-groth16-prover"])} />
@@ -90,7 +102,12 @@ export default function ModernFilecoinGpuProofsArticle() {
 
     <section id="release-gate" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">04 · Deadline release gate</p><h2 className="mt-2 text-2xl font-bold">독립 verification과 deadline slack을 함께 통과한 artifact만 배포하고 실패 generation은 격리한다</h2></header>
-      <p>Wrong ticket/seed/prover/sector, piece/CommD mismatch, parameter digest mismatch, missing/truncated/stale cache, phase reorder, GPU OOM·timeout·wrong result, crash와 retry를 포함합니다. CPU/reference commitments와 final proof verifier parity를 먼저 통과한 뒤 cold/warm cache, disk I/O, queue, GPU stages, p50/p95, peak host/VRAM과 retry rate를 기록합니다.</p>
+      <p>
+            Wrong ticket/seed/prover/sector와 piece/CommD mismatch, parameter digest mismatch를 포함합니다.
+            missing/truncated/stale cache, phase reorder, GPU OOM·timeout·wrong result, crash와 retry도 함께 넣습니다.
+            CPU/reference commitments와 final proof verifier parity를 먼저 통과시킵니다. 그다음 cold/warm cache, disk I/O,
+            queue, GPU stages를 기록합니다. p50/p95와 peak host/VRAM, retry rate를 남깁니다.
+          </p>
       <div className="not-prose flex flex-wrap gap-3">
         <CodeViewButton label="verify_proof()" onClick={() => sidebar.open("bp-verifier", codeRefs["bp-verifier"])} />
         <CodeViewButton label="Proof<E> struct" onClick={() => sidebar.open("bp-proof", codeRefs["bp-proof"])} />

@@ -39,11 +39,8 @@ export default function BlockCreation({
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h2>블록 생성은 sealing 파이프라인과 다른 경로다</h2>
         <p>
-          Storage provider가 sector를 준비하는 작업은 장시간 비동기로 진행될 수
-          있습니다. 반면 block producer의 critical path는 현재 부모 문맥에서
-          election 결과와 WinningPoSt를 확인하고, message와 header를 조립해
-          전파하는 과정입니다. 둘을 한 타임라인에 넣으면 병목과 책임을 잘못
-          해석하게 됩니다.
+          Storage provider가 sector를 준비하는 작업은 장시간 비동기로 진행될 수 있습니다. 반면 block producer의 critical path는 현재 부모 문맥에서
+          election 결과와 WinningPoSt를 확인하고 message와 header를 조립해 전파하는 과정입니다. 둘을 한 타임라인에 넣으면 병목과 책임을 잘못 해석하게 됩니다.
         </p>
       </div>
 
@@ -80,10 +77,9 @@ export default function BlockCreation({
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>header는 결과가 아니라 검증 약속의 묶음이다</h3>
         <p>
-          header의 parent·message root·state root 계열 필드는 다른 node가 같은
-          입력을 검증하고 실행 결과를 대조할 수 있게 합니다. ticket과 election
-          proof는 producer 선정 근거를, WinningPoSt는 해당 block 생산에 필요한
-          저장 근거를 제공합니다. 서명은 이 약속을 producer key와 결합합니다.
+          header의 parent·message root·state root 계열 필드는 다른 node가 같은 입력을 검증하고 실행 결과를 대조할 수 있게 합니다. ticket과
+          election proof는 producer 선정 근거를, WinningPoSt는 해당 block 생산에 필요한 저장 근거를 제공하고 서명은 이 약속을 producer key와
+          결합합니다.
         </p>
 
         <h3>sealing은 어디에서 이어지나</h3>

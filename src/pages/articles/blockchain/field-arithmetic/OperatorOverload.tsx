@@ -42,12 +42,10 @@ export default function OperatorOverload() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>공리 테스트만으로는 충분하지 않다</h3>
         <p>
-          잘못된 representation에서도 덧셈·곱셈이 내부적으로 일관되면 교환·결합
-          법칙 test가 통과할 수 있습니다. 따라서 p−1,p,p+1, 최대 limb carry,
-          zero inverse, non-canonical bytes를 포함한 boundary vector와 독립 bigint
-          구현의 differential test가 필요합니다. Secret operand가 있다면 branch,
-          lookup, instruction latency를 포함한 side-channel 검토는 기능 test와
-          별도 gate입니다.
+          잘못된 representation에서도 덧셈·곱셈이 내부적으로 일관되면 교환·결합 법칙 test가 통과할 수 있습니다. 그래서 p−1,p,p+1, 최대 limb carry,
+          zero inverse, non-canonical bytes를 포함한 boundary vector가 필요하고 독립 bigint 구현과의 differential test도 함께
+          필요합니다. Secret operand가 있다면 branch, lookup, instruction latency를 포함한 side-channel 검토는 기능 test와 별도
+          gate입니다.
         </p>
       </div>
     </section>

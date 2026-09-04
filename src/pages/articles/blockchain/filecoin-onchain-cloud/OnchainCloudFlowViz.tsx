@@ -52,8 +52,7 @@ export function PeriodStateViz() {
         <div>
           <p className="text-sm font-bold text-foreground">Period state의 형태</p>
           <p className="mt-1 text-xs leading-5 text-muted-foreground">
-            하나의 period는 정해진 epoch 구간과 proof deadline을 가진 기록이며, 판정은
-            아래 세 상태 중 하나입니다.
+            하나의 period는 정해진 epoch 구간과 proof deadline을 가진 기록이며 판정은 아래 세 상태 중 하나입니다.
           </p>
         </div>
         <button
@@ -259,7 +258,7 @@ export function OnchainCloudFlowViz() {
         <div>
           <p className="text-sm font-bold text-foreground">이제 네 개념을 하나의 서비스 흐름으로 합칩니다</p>
           <p className="mt-1 text-xs leading-5 text-muted-foreground">
-            앞에서 각각의 형태를 이해했으므로, 여기서 처음으로 upload부터 settlement까지 연결합니다.
+            앞에서 각각의 형태를 이해했으므로 여기서 처음으로 upload부터 settlement까지 연결합니다.
           </p>
         </div>
         <button

@@ -20,10 +20,8 @@ export default function WasmRuntime({
           </span>
         </div>
         <p className="leading-7">
-          실행기는 메시지의 송신자와 수신 Actor를 찾고, 적용 가능한 네트워크
-          버전의 Actor code를 로드한 뒤 메서드를 호출한다. Actor는 blockstore나
-          시스템 자원에 직접 접근하지 않고 runtime이 노출한 syscall을 통해서만
-          상태와 체인 컨텍스트를 사용한다.
+          실행기는 메시지의 송신자와 수신 Actor를 찾고 적용 가능한 네트워크 버전의 Actor code를 로드한 뒤 메서드를 호출한다. Actor는 blockstore나 시스템 자원에
+          직접 접근하지 않고 runtime이 노출한 syscall을 통해서만 상태와 체인 컨텍스트를 사용한다.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">

@@ -74,10 +74,8 @@ export default function ChainStore({
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>StateManager: tipset을 실행 가능한 상태 문맥으로 바꾼다</h3>
         <p>
-          StateManager는 ChainStore에서 부모와 message를 읽고 executor에 tipset
-          실행을 위임합니다. network version에 맞는 규칙·migration을 선택하고,
-          반복 계산을 줄이기 위한 cache도 관리합니다. cache hit rate 같은 수치는
-          고정된 프로토콜 특성이 아니라 workload와 구현 설정의 결과입니다.
+          StateManager는 ChainStore에서 부모와 message를 읽고 executor에 tipset 실행을 위임합니다. network version에 맞는
+          규칙·migration을 선택하고 반복 계산을 줄이기 위한 cache도 관리합니다. cache hit rate 같은 수치는 workload와 구현 설정에 따라 달라집니다.
         </p>
       </div>
       <StateMgrViz onOpenCode={openCode} />

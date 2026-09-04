@@ -45,11 +45,10 @@ export default function Montgomery() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>CIOS는 전체 공식을 word 단위로 섞어 실행한다</h3>
         <p>
-          Coarsely Integrated Operand Scanning(CIOS)은 한 operand limb의
-          multiply-accumulate와 최하위 word cancellation을 같은 outer loop에
-          배치합니다. “64-bit round 네 번”은 L=4인 특정 backend의 설명이지
-          Montgomery reduction의 보편 정의가 아닙니다. 32-bit target, 다른
-          modulus 크기, assembly backend에서는 L과 carry schedule이 달라집니다.
+          Coarsely Integrated Operand Scanning(CIOS)은 한 operand limb의 multiply-accumulate와 최하위 word
+          cancellation을 같은 outer loop에 배치합니다. “64-bit round 네 번”은 L=4인 특정 backend를 두고 하는 설명입니다. Montgomery
+          reduction의 보편 정의는 아닙니다. 32-bit target이나 다른 modulus 크기, assembly backend로 가면 L과 carry schedule이
+          달라집니다.
         </p>
       </div>
       <div id="paper-montgomery-1985" className="scroll-mt-24">

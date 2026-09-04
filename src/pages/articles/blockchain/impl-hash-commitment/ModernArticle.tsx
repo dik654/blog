@@ -40,7 +40,11 @@ export default function ModernHashCommitmentArticle() {
     </section>
     <section id="release" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">04 · Release gate</p><h2 className="mt-2 text-2xl font-bold">Negative fixtures와 reference differential 뒤 benchmark한다</h2></header>
-      <p>Crate commit, hash/Poseidon profile, byte/field encoding, tree schema를 receipt에 기록합니다. Known vectors·chunk parity·p 이상 field·wrong prefix/order/index/root·truncated/malformed path·root update fixtures를 reference와 비교하고, 그 다음 동일 workload의 throughput·RSS·proof bytes를 측정합니다.</p>
+      <p>
+            Crate commit, hash/Poseidon profile, byte/field encoding, tree schema를 receipt에 기록합니다. Known
+            vectors·chunk parity·p 이상 field·wrong prefix/order/index/root·truncated/malformed path·root update
+            fixtures를 reference와 비교하고 그 다음 동일 workload의 throughput·RSS·proof bytes를 측정합니다.
+          </p>
       <div id="paper-fips-180-4-impl"><CitationBlock source="NIST · FIPS 180-4" citeKey={1} href="https://csrc.nist.gov/pubs/fips/180-4/upd1/final"><p><strong>문제:</strong> SHA-2의 exact computation을 규정합니다.</p><p><strong>기여:</strong> Padding·functions·digest contract를 제공합니다.</p><p><strong>전제:</strong> 선택 variant와 message convention을 고정합니다.</p><p><strong>근거 범위:</strong> SHA-2 semantics와 vectors입니다.</p><p><strong>말하지 않는 것:</strong> Rust API나 Merkle schema는 규정하지 않습니다.</p></CitationBlock></div>
       <div id="paper-arkworks-crypto-primitives"><CitationBlock source="arkworks · crypto-primitives pinned 7816710" citeKey={2} href="https://github.com/arkworks-rs/crypto-primitives/tree/7816710fc19cd4d18d6239785dac8937d7b9b3ce"><p><strong>문제:</strong> Native/circuit hash·Merkle 구현 seam을 확인해야 합니다.</p><p><strong>기여:</strong> Source, gadgets와 tests의 pinned snapshot입니다.</p><p><strong>전제:</strong> Commit과 features/dependencies를 고정합니다.</p><p><strong>근거 범위:</strong> 선택 source/API behavior입니다.</p><p><strong>말하지 않는 것:</strong> 모든 parameter audit나 향후 호환성을 보장하지 않습니다.</p></CitationBlock></div>
     </section>

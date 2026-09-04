@@ -32,7 +32,12 @@ export default function ModernGroth16ImplementationArticle() {
 
     <section id="setup-key" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">02 · Setup key admission</p><h2 className="mt-2 text-2xl font-bold">key를 mmap한 뒤 query length와 모든 encoded point를 검증하고 relation profile과 맞지 않으면 실패한다</h2></header>
-      <p>Loader는 magic/schema/version, curve id, relation digest, domain size, public count와 query lengths를 먼저 검사합니다. Point bytes는 canonical decode, on-curve와 subgroup validation을 거칩니다. Setup transcript나 ceremony provenance가 필요하면 별도 attestation을 profile에 연결하며, key 파일을 성공적으로 읽었다는 사실을 toxic waste 폐기 증명으로 바꾸지 않습니다.</p>
+      <p>
+            Loader는 magic/schema/version, curve id, relation digest, domain size, public count와 query lengths를
+            먼저 검사합니다. Point bytes는 canonical decode, on-curve와 subgroup validation을 거칩니다. Setup transcript나
+            ceremony provenance가 필요하면 별도 attestation을 profile에 연결하며 key 파일을 성공적으로 읽었다는 사실을 toxic waste 폐기 증명으로
+            바꾸지 않습니다.
+          </p>
       <ExplainedFormula question="Proving key query 길이가 witness와 domain에 맞는지 어떤 bounds로 검사할까?" idea={<>A/B queries는 전체 variables, L query는 private variables, H query는 quotient domain에 맞아야 합니다.</>} formula={String.raw`|A|,|B_1|,|B_2|\ge N_v,\qquad |L|=N_v-N_{pub}-1,\qquad |H|\ge n-1`}
       annotatedFormula={String.raw`|A|,|B_1|,|B_2|\ge N_v,\qquad |L|=\underbrace{N_v-N_{pub}-1,\qquad |H|\ge n-1}_{\text{허용 경계 판정}}`}
       operations={[

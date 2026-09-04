@@ -10,10 +10,8 @@ export default function Architecture({
       <h2 className="text-2xl font-bold mb-6">업로드에서 retrieval까지</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          Storacha를 Storage·Indexing·CDN이라는 고정 3-node topology로 보면 실제
-          책임이 흐려진다. 사용자 관점에서는 space 권한, content upload,
-          location commitment, hot retrieval, Filecoin aggregation을 순서대로
-          추적하는 편이 정확하다.
+          Storacha를 Storage·Indexing·CDN이라는 고정 3-node topology로 보면 실제 책임이 흐려진다. 사용자 관점에서는 space 권한과 content
+          upload, location commitment, hot retrieval, Filecoin aggregation을 순서대로 추적하는 편이 정확하다.
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose my-6">

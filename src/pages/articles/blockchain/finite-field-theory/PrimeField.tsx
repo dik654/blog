@@ -6,11 +6,9 @@ export default function PrimeField() {
       <h2 className="mb-6 text-2xl font-bold">소수체의 나눗셈과 곱셈군</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Fₚ에서는 정수를 계산한 뒤 p로 나눈 나머지를 취합니다. p가 소수이면
-          1,…,p−1 가운데 어떤 값도 p와 공약수를 갖지 않으므로, extended
-          Euclidean algorithm이 ax+py=1을 만드는 x를 찾습니다. 이 x mod p가 a의
-          곱셈 역원입니다. 합성수 modulus에서는 zero divisor가 생길 수 있어 같은
-          결론이 성립하지 않습니다.
+          Fₚ에서는 정수를 계산한 뒤 p로 나눈 나머지를 취합니다. p가 소수이면 1,…,p−1 가운데 어떤 값도 p와 공약수를 갖지 않으므로 extended Euclidean
+          algorithm이 ax+py=1을 만드는 x를 찾습니다. 이 x mod p가 a의 곱셈 역원입니다. 합성수 modulus에서는 zero divisor가 생길 수 있어 같은 결론이
+          성립하지 않습니다.
         </p>
       </div>
 
@@ -54,10 +52,8 @@ export default function PrimeField() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Fₚ*는 p−1개 원소를 가진 cyclic group입니다</h3>
         <p>
-          0을 뺀 Fₚ*는 곱셈에 대해 순환군(cyclic group)입니다. 어떤 생성원 g의
-          거듭제곱은 모든 0이 아닌 원소를 한 번씩 방문합니다. 원소 a의 order는
-          aᵈ=1이 되는 가장 작은 양의 d이며, Lagrange theorem에 따라 d는 p−1을
-          나눕니다. 생성원은 order가 정확히 p−1인 원소입니다.
+          0을 뺀 Fₚ*는 곱셈에 대해 순환군(cyclic group)입니다. 어떤 생성원 g의 거듭제곱은 모든 0이 아닌 원소를 한 번씩 방문합니다. 원소 a의 order는 aᵈ=1이
+          되는 가장 작은 양의 d이며 Lagrange theorem에 따라 d는 p−1을 나눕니다. 생성원은 order가 정확히 p−1인 원소입니다.
         </p>
       </div>
 

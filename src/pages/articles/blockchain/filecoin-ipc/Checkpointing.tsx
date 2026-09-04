@@ -90,11 +90,9 @@ export default function Checkpointing({
 
         <h3 className="text-xl font-semibold mt-6 mb-3">Finality를 읽는 법</h3>
         <p className="leading-7">
-          로컬 child block finality, bottom-up checkpoint quorum, parent
-          transaction finality는 서로 다른 시점이다. sibling subnet으로 가는
-          메시지는 공통 조상까지 올라간 뒤 다시 내려가므로 “항상 두 checkpoint
-          주기” 같은 고정 지연으로 설명할 수 없다. 애플리케이션은 목적지에서
-          실행된 단계까지 추적해야 한다.
+          로컬 child block finality, bottom-up checkpoint quorum, parent transaction finality는 서로 다른 시점이다.
+          sibling subnet으로 가는 메시지는 공통 조상까지 올라간 뒤 다시 내려가므로 “항상 두 checkpoint 주기” 같은 고정 지연으로 설명할 수 없다. 애플리케이션은
+          목적지에서 실행된 단계까지 추적한다.
         </p>
 
         <CitationBlock {...OFFICIAL_SOURCES.ipc.bottomUp} citeKey={3}>

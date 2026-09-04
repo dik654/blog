@@ -21,11 +21,9 @@ export default function ModernFrobeniusArticle() {
           map을 coefficient 재배열, 부호 변경, 미리 계산한 상수 곱으로 실행할 수 있습니다.
         </p>
         <p>
-          Characteristic p라는 말은 1을 p번 더하면 0이 된다는 뜻입니다. 그래서
-          binomial coefficient C(p,i)가 0&lt;i&lt;p에서 p의 배수이고,
-          (a+b)ᵖ=aᵖ+bᵖ가 됩니다. Base field Fp에서는 aᵖ=a이지만, extension field
-          Fpᵏ에서는 coefficient는 고정돼도 추가한 basis 원소가 움직이므로 φ가
-          nontrivial합니다.
+          Characteristic p라는 말은 1을 p번 더하면 0이 된다는 뜻입니다. 그래서 binomial coefficient C(p,i)가 0&lt;i&lt;p에서 p의 배수이고
+          (a+b)ᵖ=aᵖ+bᵖ가 됩니다. Base field Fp에서는 aᵖ=a이지만 extension field Fpᵏ에서는 coefficient가 고정돼도 추가한 basis 원소가
+          움직이므로 φ가 nontrivial합니다.
         </p>
         <aside className="rounded-lg border border-primary/30 bg-primary/5 p-5 text-sm leading-6">
           <strong>핵심 아이디어:</strong> “p제곱을 생략”하는 것이 아닙니다. 선택한
@@ -57,11 +55,9 @@ export default function ModernFrobeniusArticle() {
           interpretation="φ는 0과 1, 덧셈, 곱셈을 보존합니다. Finite field에서는 bijection이므로 automorphism입니다. 이 성질만으로 특정 coefficient table이나 memory layout이 맞다는 결론은 나오지 않습니다."
         />
         <p>
-          증명 아이디어를 한 단계 더 내려가면, (a+b)ᵖ의 가운데 항에는
-          C(p,i)aⁱb^(p−i)가 붙습니다. p가 소수라 C(p,i)는 p로 나누어떨어져
-          characteristic p field에서는 0입니다. 또한 finite set에서 xᵖ map의 kernel은
-          0뿐이므로 injective이고, finite set의 injective map은 surjective입니다.
-          합성수 modulus ring에서는 이 논리를 그대로 automorphism이라고 부를 수 없습니다.
+          증명 아이디어를 한 단계 더 내려가면, (a+b)ᵖ의 가운데 항에는 C(p,i)aⁱb^(p−i)가 붙습니다. p가 소수라 C(p,i)는 p로 나누어떨어져 characteristic
+          p field에서는 0입니다. finite set에서 xᵖ map의 kernel은 0뿐이므로 injective이고 finite set의 injective map은
+          surjective입니다. 합성수 modulus ring에서는 같은 논리로 automorphism이라고 부르지 못합니다.
         </p>
         <ExplainedFormula
           question="Fp^k에서 Frobenius를 몇 번 적용하면 원래 원소로 돌아오는가?"
@@ -87,19 +83,16 @@ export default function ModernFrobeniusArticle() {
           <h2 className="mt-2 text-2xl font-bold">Basis unit의 p제곱을 table로 고정한다</h2>
         </header>
         <p>
-          x=∑cᵢeᵢ로 적으면 cᵢ는 base-field coefficient이고 eᵢ는 tower basis unit입니다.
-          cᵢᵖ=cᵢ이므로 φ(x)=∑cᵢeᵢᵖ입니다. 결국 runtime에 필요한 것은 각 eᵢᵖ를
-          같은 basis로 다시 나타내는 coefficient뿐입니다. Tower의 special form은 이
-          matrix action을 permutation·conjugation·몇 개의 constant multiplication으로
-          줄여 줍니다.
+          x=∑cᵢeᵢ로 적으면 cᵢ는 base-field coefficient이고 eᵢ는 tower basis unit입니다. cᵢᵖ=cᵢ이므로 φ(x)=∑cᵢeᵢᵖ입니다. 결국
+          runtime에 필요한 것은 각 eᵢᵖ를 같은 basis로 다시 나타내는 coefficient뿐입니다. Tower가 special form이면 이 matrix action은
+          permutation과 conjugation, constant multiplication 몇 개로 줄어듭니다.
         </p>
         <ModernFrobeniusViz />
         <p>
-          “Frobenius가 무료다”라는 표현은 full variable×variable Fp12 multiplication이나
-          수천 bit exponentiation보다 싸다는 상대적 표현입니다. 실제 구현에는 Fp2
-          conjugation, precomputed coefficient load, constant multiplication, memory access가
-          남습니다. 또한 power j에 사용할 table index는 j mod k이고, table이 다른
-          non-residue나 coefficient order에서 만들어졌다면 그럴듯한 오답이 나옵니다.
+          “Frobenius가 무료다”라는 말은 full variable×variable Fp12 multiplication이나 수천 bit exponentiation보다 싸다는 상대적
+          표현입니다. 실제 구현에는 Fp2 conjugation과 precomputed coefficient load, constant multiplication, memory
+          access가 그대로 남습니다. power j에 쓸 table index는 j mod k입니다. table이 다른 non-residue나 coefficient order에서
+          만들어졌다면 그럴듯한 오답이 나옵니다.
         </p>
         <div id="paper-arkworks-frobenius-source">
           <CitationBlock source="arkworks algebra 0.5.0 · Fp12 Frobenius source" citeKey={1} type="code" href="https://github.com/arkworks-rs/algebra/blob/7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c/ff/src/fields/models/fp12_2over3over2.rs">
@@ -116,11 +109,9 @@ export default function ModernFrobeniusArticle() {
           <h2 className="mt-2 text-2xl font-bold">지수를 p의 다항식으로 분해해 cheap map을 끼운다</h2>
         </header>
         <p>
-          Pairing의 Miller output을 order r인 target group으로 보내려면
-          (p^k−1)/r만큼 거듭제곱합니다. k=12인 BN 계열에서는 p^12−1의 factorization을
-          이용해 easy part와 hard part를 나눕니다. Easy part는 inverse, conjugation,
-          Frobenius와 적은 multiplication으로 처리하고, hard part는 curve parameter에
-          맞춘 addition chain과 cyclotomic squaring을 사용합니다.
+          Pairing의 Miller output을 order r인 target group으로 보내려면 (p^k−1)/r만큼 거듭제곱합니다. k=12인 BN 계열에서는 p^12−1의
+          factorization을 이용해 easy part와 hard part를 나눕니다. Easy part는 inverse, conjugation, Frobenius와 적은
+          multiplication으로 처리하고 hard part는 curve parameter에 맞춘 addition chain과 cyclotomic squaring을 씁니다.
         </p>
         <ExplainedFormula
           question="Embedding degree 12의 final exponent를 어떤 두 부분으로 나눌 수 있는가?"
@@ -154,11 +145,9 @@ export default function ModernFrobeniusArticle() {
           <h2 className="mt-2 text-2xl font-bold">F3²에서는 conjugation을 손으로 검산할 수 있다</h2>
         </header>
         <p>
-          F3[u]/(u²+1)을 보겠습니다. u²=−1=2이고, φ(a+bu)=(a+bu)³입니다.
-          가운데 binomial 항은 characteristic 3에서 사라지고 u³=u·u²=2u이므로
-          φ(a+bu)=a−bu입니다. x=1+u라면 φ(x)=1+2u이고 다시 적용하면
-          φ²(x)=1+u로 돌아옵니다. 이 작은 예는 coefficient conjugation과 degree-2
-          cycle을 동시에 보여 줍니다.
+          F3[u]/(u²+1)을 보겠습니다. u²=−1=2이고 φ(a+bu)=(a+bu)³입니다. 가운데 binomial 항은 characteristic 3에서 사라지고
+          u³=u·u²=2u이므로 φ(a+bu)=a−bu입니다. x=1+u라면 φ(x)=1+2u이고 다시 적용하면 φ²(x)=1+u로 돌아옵니다. 이 작은 예 하나로 coefficient
+          conjugation과 degree-2 cycle을 한꺼번에 확인합니다.
         </p>
         <ExplainedFormula
           question="F3²의 x=1+u에 Frobenius를 적용한 결과를 어떻게 손으로 확인하는가?"
@@ -177,14 +166,19 @@ export default function ModernFrobeniusArticle() {
           interpretation="두 번 적용해 원래 값으로 돌아오고, 직접 세제곱한 결과와 table 결과가 같아야 합니다. F5에서 u²+1은 reducible하므로 같은 표기를 field 예로 재사용할 수 없습니다."
         />
         <div className="grid gap-4 md:grid-cols-3">
-          <div className="rounded-lg border border-border bg-card p-4"><p className="text-sm font-semibold">Parameter receipt</p><p className="mt-2 text-sm leading-6 text-muted-foreground">p·tower polynomial·non-residue·basis order·table·library SHA를 하나의 profile ID로 묶습니다.</p></div>
-          <div className="rounded-lg border border-border bg-card p-4"><p className="text-sm font-semibold">Algebra parity</p><p className="mt-2 text-sm leading-6 text-muted-foreground">Basis unit, random x, product 보존, φ^12, independent x^(p^j)를 비교합니다.</p></div>
-          <div className="rounded-lg border border-border bg-card p-4"><p className="text-sm font-semibold">Performance last</p><p className="mt-2 text-sm leading-6 text-muted-foreground">Correctness와 pairing vector가 맞은 뒤 exponentiation·Frobenius의 mul/load/cycle을 같은 target에서 측정합니다.</p></div>
+          <div className="rounded-lg border border-border bg-card p-4"><p className="text-sm font-semibold">Parameter receipt</p><p className="mt-2 text-sm leading-6 text-muted-foreground">
+            p와 tower polynomial, non-residue, basis order, table, library SHA를 묶어 하나의 profile ID로 만듭니다.
+          </p></div>
+          <div className="rounded-lg border border-border bg-card p-4"><p className="text-sm font-semibold">Algebra parity</p><p className="mt-2 text-sm leading-6 text-muted-foreground">
+            Basis unit과 random x, product 보존, φ^12, 그리고 independent x^(p^j)를 비교합니다.
+          </p></div>
+          <div className="rounded-lg border border-border bg-card p-4"><p className="text-sm font-semibold">Performance last</p><p className="mt-2 text-sm leading-6 text-muted-foreground">
+            Correctness와 pairing vector가 맞은 뒤에 exponentiation과 Frobenius의 mul/load/cycle을 같은 target에서 측정합니다.
+          </p></div>
         </div>
         <p>
-          10문항 역검사는 characteristic p, Freshman&apos;s dream, F3² conjugation,
-          φ^k cycle, coefficient table, “무료”라는 표현의 경계를 기초로 확인합니다.
-          심화에서는 automorphism 증명, reducible quotient 반례, degree-12 exponent
+          10문항 역검사에서는 characteristic p와 Freshman&apos;s dream, F3² conjugation, φ^k cycle, coefficient table,
+          “무료”라는 표현의 경계를 기초로 확인합니다. 심화에서는 automorphism 증명과 reducible quotient 반례, degree-12 exponent
           factorization, wrong-table release fixture를 설계하게 합니다.
         </p>
       </section>

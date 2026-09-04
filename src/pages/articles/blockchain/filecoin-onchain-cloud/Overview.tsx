@@ -61,16 +61,14 @@ export default function Overview({
           <div className="rounded-lg border bg-card p-4">
             <h4 className="font-semibold text-sm mb-2">Synapse SDK · Beam</h4>
             <p className="text-xs text-muted-foreground">
-              SDK가 계약·업로드 흐름을 추상화하고, Beam은 선택 가능한 데이터
-              전달 계층을 제공한다.
+              SDK가 계약·업로드 흐름을 추상화하고 Beam은 선택 가능한 데이터 전달 계층을 제공한다.
             </p>
           </div>
         </div>
 
         <p className="leading-7">
-          이 구조의 핵심은 특정 가격이나 “검열 불가” 같은 절대적 수사가 아니다.
-          저장 증거와 결제 조건을 누구나 감사할 수 있고, 서비스 계약을 다른
-          애플리케이션이 재사용하거나 확장할 수 있다는 점이다.
+          저장 증거와 결제 조건은 누구나 감사할 수 있고 서비스 계약은 다른 애플리케이션이 재사용하거나 확장할 수 있다. 특정 가격이나 “검열 불가” 같은 절대적 수사보다 이 점이 이
+          구조의 핵심이다.
         </p>
 
         <CitationBlock {...OFFICIAL_SOURCES.filecoin.onchainCloud} citeKey={1}>

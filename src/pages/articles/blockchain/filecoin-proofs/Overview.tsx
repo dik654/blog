@@ -207,9 +207,8 @@ export default function Overview({
         </div>
 
         <p className="leading-7">
-          전체 생명주기를 다시 묶으면, PoRep는 sealing 과정에서 복제본과 commitment를 한 번 확정하고 PoSt는
-          활성화된 섹터를 주기적으로 다시 확인합니다. 두 경로의 큰 중간 결과는 Groth16 proof로 압축되므로 체인은
-          저장 데이터 전체를 읽지 않고도 검증 결과를 확인할 수 있습니다.
+          PoRep는 sealing 과정에서 복제본과 commitment를 한 번 확정하고 PoSt는 활성화된 섹터를 주기적으로 다시 확인합니다. 두 경로의 큰 중간 결과는 Groth16
+          proof로 압축되므로 체인은 저장 데이터 전체를 읽지 않고도 검증 결과를 확인할 수 있습니다.
         </p>
       </div>
     </section>

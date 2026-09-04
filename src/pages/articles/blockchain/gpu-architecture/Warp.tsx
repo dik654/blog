@@ -25,8 +25,8 @@ export default function Warp() {
           question="한 SM에 동시에 resident할 수 있는 block 수는 무엇이 제한하는가?"
           idea={
             <p>
-              Thread·register·shared-memory·architecture block limit가 각각
-              허용하는 block 수를 계산하고, 가장 작은 값이 실제 상한이 됩니다.
+              Thread와 register, shared-memory, architecture block limit가 각각 허용하는 block 수를 계산하면 가장 작은 값이 실제 상한이
+              됩니다.
             </p>
           }
           formula={
@@ -72,11 +72,9 @@ export default function Warp() {
           interpretation="예를 들어 thread 기준 8 blocks, register 기준 3 blocks, shared-memory 기준 5 blocks라면 resident 상한은 3 blocks입니다. Register를 더 줄여 4 blocks가 되어도 spill traffic이 늘면 실행 시간은 오히려 나빠질 수 있습니다."
         />
         <p>
-          같은 warp 안 branch가 갈리면 active mask로 경로를 나누어 실행할 수
-          있어 lane utilization이 줄어듭니다. 하지만 divergence가 곧 틀린 결과를
-          뜻하지 않으며, 짧은 branch를 억지로 없애 instruction을 늘리는 것도
-          항상 이득은 아닙니다. Profiler에서 eligible warps, stall reason,
-          branch efficiency와 kernel time을 함께 봅니다.
+          같은 warp 안 branch가 갈리면 active mask로 경로를 나누어 실행할 수 있어 lane utilization이 줄어듭니다. 하지만 divergence가 곧 틀린
+          결과를 뜻하지 않으며 짧은 branch를 억지로 없애 instruction을 늘리는 것도 항상 이득은 아닙니다. Profiler에서 eligible warps와 stall
+          reason, branch efficiency, kernel time을 함께 봅니다.
         </p>
         <div id="paper-cuda-occupancy" className="scroll-mt-24">
           <CitationBlock
