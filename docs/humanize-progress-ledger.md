@@ -40,9 +40,13 @@ humanize-korean 파이프라인으로 블로그 전체 아티클의 AI 티 문�
 
 **gpu 카테고리 완료**(Gemmini 신규 1편 + 128개 파일 전부).
 
-**2026-09-04 세션 누적**: crypto·filecoin·hw·p2p·isms-aml·gpu 6개 카테고리(431개 파일) +
-Gemmini 신규 아티클 1편 완료. 남은 카테고리(파일 수는 섹션 파일 포함): tee(138),
-ethereum(382), blockchain(1013), ai(1047).
+| 6(aa~af) | tee(138개 파일), 6개 서브배치(24개씩) | 116 추출 → 15 반영 | 등급 A×6 · 게이트 OK. 대부분 "인사이트: X" 헤딩 라벨이라 실질 산문이 적었음 | `47868be5` |
+
+**tee 카테고리 완료**.
+
+**2026-09-04 세션 누적**: crypto·filecoin·hw·p2p·isms-aml·gpu·tee 7개 카테고리(569개 파일) +
+Gemmini 신규 아티클 1편 완료. 남은 카테고리(파일 수는 섹션 파일 포함): ethereum(382),
+blockchain(1013), ai(1047) — 총 2,442개 파일.
 
 `gpu-arch-hopper.tsx` 같은 조립 파일은 자체 `<p>`가 없고 프로즈가 하위 섹션 파일에 있다는 걸
 test 배치에서 확인했다 — 그래서 배치2부터는 `find ... -not -path "*/viz/*" -not -path
