@@ -113,6 +113,15 @@ hedge→단언, 검증요건→관찰사실, 목적어 관계 왜곡 등)를 매
 9개 카테고리(1,964개 파일) + Gemmini 신규 아티클 1편 완료. 남은 카테고리: ai(1,047) — 전체
 humanize 프로그램의 마지막 조각.
 
+| 9(wave1 aa~ah) | ai(192개 파일), 8개 서브배치(light 3·heavy 5, 전부 finalize) | 687 추출 → 199 반영 | 등급 A×8 · 게이트 OK 전원 | `d71456d6` |
+
+**ai wave1 착수**(192/1,047). claw-* 시리즈(Claude Code 내부 구조 해설) 비중이 높아 heavy
+5/8로 blockchain보다 훨씬 무거웠다. finalize 5건 전부 실제 의미 드리프트 발견·수정(hedge 소실,
+양방향 명제 축소, 열린 예시→닫힌 단정, 인접 문단에서 번진 과잉 한정 등). prose-readability
+claw-bash·claw-hooks 각 +2는 동일한 E-1 패턴으로 확인.
+
+남은 ai: 855개 파일(36개 서브배치, wave2부터 계속).
+
 `gpu-arch-hopper.tsx` 같은 조립 파일은 자체 `<p>`가 없고 프로즈가 하위 섹션 파일에 있다는 걸
 test 배치에서 확인했다 — 그래서 배치2부터는 `find ... -not -path "*/viz/*" -not -path
 "*/codebase/*"`로 섹션 파일까지 포함한 전체 목록(3,014개)에서 뽑는다.
