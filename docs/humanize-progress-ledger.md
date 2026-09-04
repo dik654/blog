@@ -92,7 +92,15 @@ monolith가 진짜 C-11(원문 19건)을 방치했고, A-13 분절 과정에서 
 golden FAIL 1건(at)은 `(p^k−1)/r` 수학 표기 오탐으로 확인. prose-readability 4건 +2 소폭
 상승은 wave1·2와 동일한 E-1 패턴.
 
-남은 blockchain: 437개 파일(19개 서브배치, wave4부터 계속).
+| 8(wave4 ay~bf) | blockchain(192개 파일), 8개 서브배치(light 7·heavy 1) | 459 추출 → 92 반영 | 등급 A×8 · bb는 finalize로 I-4 과처방 6건 복원 | `ae6c6bc6` |
+
+**blockchain wave4 완료**(768/1013). bb finalize는 진단이 지시한 I-4(권고형→평서문) 처방이
+의도보다 넓게 먹어 검증 요건 2건이 관찰 사실로, hedge 2건이 단정으로 바뀐 걸 원문 대조로
+복원(없던 주장 주입은 0건). golden FAIL 1건(bd)은 Paillier/pairing 수식 괄호 숫자
+(`λ=lcm(p−1,q−1)`, `(p^12-1)`)가 각주로 오탐된 것으로 확인. prose-readability 신규 진입
+1건(crypto/nova, 6점)은 동일 E-1 패턴.
+
+남은 blockchain: 245개 파일(11개 서브배치, wave5부터 계속 — 마지막 wave).
 
 `gpu-arch-hopper.tsx` 같은 조립 파일은 자체 `<p>`가 없고 프로즈가 하위 섹션 파일에 있다는 걸
 test 배치에서 확인했다 — 그래서 배치2부터는 `find ... -not -path "*/viz/*" -not -path
