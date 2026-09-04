@@ -37,32 +37,30 @@ export default function FinalizationPruning({ onCodeRef }: { onCodeRef: (key: st
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Finalization pattern은 연속된 justification history를 검사합니다</h3>
         <p>
-          Consensus state는 recent justification을 bit window로 유지하고 old previous/current justified checkpoint의 epoch와
-          현재 epoch 차이를 대조합니다. 인접 epoch가 연속 justified되는 경우와 한 epoch gap을 허용하는 규격 pattern이 따로
-          있으므로 단일 counter가 threshold를 두 번 넘었다는 정보만으로는 같은 결과를 재현할 수 없습니다. Fork별 spec
-          function을 oracle로 두고 fixture마다 bits와 checkpoint tuple을 저장합니다.
+          Consensus state는 recent justification을 bit window로 유지하고 old previous/current justified checkpoint의
+          epoch와 현재 epoch 차이를 대조합니다. 인접 epoch가 연속 justified되는 경우와 한 epoch gap을 허용하는 규격 pattern은 서로 다릅니다. 단일
+          counter가 threshold를 두 번 넘었다는 정보만으로는 같은 결과를 재현할 수 없습니다. Fork별 spec function을 oracle로 두고 fixture마다
+          bits와 checkpoint tuple을 저장합니다.
         </p>
 
         <h3>Prune은 finality 결정 뒤의 storage lifecycle입니다</h3>
         <p>
-          Finalized checkpoint와 충돌하는 branch는 fork-choice 후보에서 제거할 수 있고, finalized root 이전의 transient node와
-          weight cache도 수명 정책에 따라 정리할 수 있습니다. 다만 block archive, slashing evidence, historical state와 API
-          retention은 별도 owner를 갖습니다. Fork-choice tree에서 prune했다고 디스크의 모든 역사 데이터를 지워도 된다는 뜻은
-          아닙니다.
+          Finalized checkpoint와 충돌하는 branch는 fork-choice 후보에서 제거할 수 있습니다. Finalized root 이전의 transient node와
+          weight cache도 수명 정책에 따라 정리할 수 있습니다. 다만 block archive, slashing evidence, historical state, API
+          retention에는 각각 별도 owner가 있습니다. Fork-choice tree의 prune은 디스크의 모든 역사 데이터를 지워도 된다는 허가와 다릅니다.
         </p>
         <p>
-          Crash-safe prune은 새 finalized checkpoint와 prune intent를 기록하고, child relink·cache 삭제·persisted index 갱신을
-          idempotent 단계로 수행한 뒤 완료 marker를 남깁니다. 중간에 재시작하면 marker와 generation을 보고 계속하거나 이전
-          snapshot으로 복구합니다. 먼저 node를 지우고 finalized pointer 쓰기에 실패하면 parent 없는 retained node가 남는 반례가
-          생깁니다.
+          Crash-safe prune은 새 finalized checkpoint와 prune intent를 기록합니다. 이어서 child relink·cache 삭제·persisted
+          index 갱신을 idempotent 단계로 수행한 뒤 완료 marker를 남깁니다. 중간에 재시작하면 marker와 generation을 보고 계속하거나 이전 snapshot으로
+          복구합니다. 먼저 node를 지우고 finalized pointer 쓰기에 실패하면 parent 없는 retained node가 남는 반례가 생깁니다.
         </p>
 
         <h3>Release gate</h3>
         <p>
-          Base와 candidate에 동일 checkpoint vote fixture를 주고 exact-threshold 63/96·64/96, duplicate validator,
-          slashable overlap, skipped epoch, competing roots, reorg와 prune crash를 재생합니다. Justified/finalized tuple,
-          justification bits, retained tree, restart head와 evidence availability가 모두 같아야 하며 그 뒤 prune time·memory·DB
-          size를 비교합니다.
+          Base와 candidate에 동일 checkpoint vote fixture를 줍니다. 재생하는 상황은 exact-threshold 63/96·64/96, duplicate
+          validator, slashable overlap, skipped epoch, competing roots, reorg, prune crash입니다.
+          Justified/finalized tuple, justification bits, retained tree, restart head, evidence availability가
+          모두 같아야 합니다. 그 뒤에 prune time·memory·DB size를 비교합니다.
         </p>
       </div>
     </section>

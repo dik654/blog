@@ -35,9 +35,10 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
           archive availability나 proof validity가 자동 보장되지는 않습니다.
         </p>
         <p>
-          Schema migration에서는 old/new provider를 같은 pinned query로 dual-read해 value·root·typed outcome을 비교한 뒤 storage manifest의
-          active generation을 원자적으로 전환합니다. 이미 열린 old view는 끝까지 old generation을 읽거나 StaleView로 전체 query를
-          재시도하며, old header와 new state를 조용히 합치지 않습니다. Rollback 가능한 binary·schema·snapshot은 전환 receipt에 묶습니다.
+          Schema migration에서는 old/new provider를 같은 pinned query로 dual-read해 value·root·typed outcome을 비교한 뒤
+          storage manifest의 active generation을 원자적으로 전환합니다. 이미 열린 old view는 끝까지 old generation을 읽거나 StaleView로
+          전체 query를 재시도하며 old header와 new state를 조용히 합치지 않습니다. Rollback 가능한 binary·schema·snapshot은 전환
+          receipt에 묶습니다.
         </p>
       </div>
       <div id="paper-reth-provider-source" className="scroll-mt-24">

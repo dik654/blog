@@ -114,7 +114,9 @@ export default function BlobPool({
           </div>
         </div>
         <p>
-          Stateless validation은 database를 읽기 전에 transaction과 sidecar 자체에서 확인할 수 있는 type, field count, versioned hash와 size limit을 검사합니다. 비용은 hash와 sidecar element 수에 따라 늘지만 chain-state I/O가 없으므로, 명백히 잘못된 input을 nonce·balance 조회나 KZG verification보다 앞에서 저렴하게 거를 수 있습니다.
+          Stateless validation은 database를 읽기 전에 transaction과 sidecar 자체에서 확인할 수 있는 항목을 검사합니다. type과 field
+          count, versioned hash, size limit입니다. 비용은 hash와 sidecar element 수에 따라 늘지만 chain-state I/O가 없으므로 명백히
+          잘못된 input은 nonce·balance 조회나 KZG verification보다 앞에서 저렴하게 걸러집니다.
         </p>
 
         {/* ── KZG 검증 ── */}
@@ -142,7 +144,8 @@ export default function BlobPool({
                 2. KZG 증명 검증 (비싼 연산)
               </p>
               <p className="text-xs leading-5 text-foreground/60">
-                구현은 single 또는 batch KZG verification API로 blob·commitment·proof가 서로 결속되어 있는지 확인합니다. 비용은 blob 수, c-kzg backend, batching strategy와 hardware에 따라 측정해야 합니다.
+                구현은 single 또는 batch KZG verification API로 blob·commitment·proof가 서로 결속되어 있는지 확인합니다. 비용은 blob
+                수와 c-kzg backend, batching strategy, hardware를 놓고 측정합니다.
               </p>
             </div>
             <div className="rounded bg-muted/40 p-3">
@@ -156,7 +159,9 @@ export default function BlobPool({
           </div>
         </div>
         <p>
-          KZG verification은 account database 없이 수행할 수 있는 cryptographic check이지만 단순한 format check보다 비쌉니다. Nonce, balance와 fee affordability는 별도 provider lookup이 필요하므로 validation pipeline은 값싼 structural rule을 먼저 적용하고 crypto·state-dependent work를 뒤로 미룹니다.
+          KZG verification은 account database 없이 수행할 수 있는 cryptographic check입니다. 대신 단순한 format check보다 비쌉니다.
+          Nonce와 balance, fee affordability는 별도 provider lookup이 필요하므로 validation pipeline은 값싼 structural
+          rule을 먼저 적용하고 crypto·state-dependent work를 뒤로 미룹니다.
         </p>
 
         {/* ── Blob TX 풀 특성 ── */}
@@ -243,7 +248,9 @@ export default function BlobPool({
           </div>
         </div>
         <p>
-          Blob transaction은 sidecar storage와 blob-fee cap 때문에 별도의 subpool rule이 필요하지만 sender와 nonce ordering까지 일반 pool과 완전히 독립된 것은 아닙니다. Reth는 blob-specific size·replacement·propagation condition을 추적하면서도 전체 txpool의 sender sequence와 memory budget 안에서 함께 scheduling합니다.
+          Blob transaction은 sidecar storage와 blob-fee cap 때문에 별도의 subpool rule을 씁니다. 그래도 sender와 nonce
+          ordering은 일반 pool과 함께 갑니다. Reth는 blob-specific size·replacement·propagation condition을 추적하면서도 전체
+          txpool의 sender sequence와 memory budget 안에서 함께 scheduling합니다.
         </p>
       </div>
     </section>

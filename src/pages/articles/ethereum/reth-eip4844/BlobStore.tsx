@@ -215,7 +215,9 @@ export default function BlobStore({
           </div>
         </div>
         <p>
-          Delayed deletion은 logical removal과 physical file cleanup을 분리합니다. Cleanup 시점에 대기 중인 항목을 묶을 수 있지만 crash recovery, retry와 concurrent read의 정확한 behavior는 현재 implementation을 기준으로 검증해야 하며, batch가 언제나 더 빠르다고 단정할 수는 없습니다.
+          Delayed deletion은 logical removal과 physical file cleanup을 분리합니다. Cleanup 시점에 대기 중인 항목을 묶을 수 있습니다. 다만
+          crash recovery와 retry, concurrent read의 정확한 behavior는 현재 implementation을 기준으로 봅니다. batch가 언제나 더 빠르다고
+          단정할 수는 없습니다.
         </p>
       </div>
     </section>

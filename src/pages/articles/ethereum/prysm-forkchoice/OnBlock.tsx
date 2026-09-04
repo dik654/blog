@@ -15,9 +15,9 @@ export default function OnBlock({ onCodeRef }: { onCodeRef: (key: string, ref: C
       <h2 className="mb-5 text-2xl font-bold">Handler는 검증된 event만 store transition으로 바꾼다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Fork choice는 network callback의 부수 효과가 아니라 명시적인 event-driven state machine으로 읽는 편이 안전합니다.
-          Block, attestation, clock tick과 slashing evidence는 서로 다른 validation과 state dependency를 가지며, handler가
-          실패하면 store를 부분 갱신하지 않아야 합니다. 이 원자성이 깨지면 같은 input replay에서 다른 head가 나올 수 있습니다.
+          Fork choice를 network callback의 부수 효과로 두기보다 명시적인 event-driven state machine으로 읽는 편이 안전합니다. Block,
+          attestation, clock tick, slashing evidence는 서로 다른 validation과 state dependency를 따릅니다. Handler가 실패하면
+          store를 부분 갱신하지 않아야 합니다. 이 원자성이 깨지면 같은 input replay에서 다른 head가 나올 수 있습니다.
         </p>
       </div>
 
@@ -46,17 +46,15 @@ export default function OnBlock({ onCodeRef }: { onCodeRef: (key: string, ref: C
           <li>Timely block이면 해당 slot에서만 proposer boost root를 설정하고 이후 tick에서 제거합니다.</li>
         </ol>
         <p>
-          Proposer boost는 제시간에 전파된 block이 network latency 때문에 아직 attestation을 충분히 받지 못한 짧은 구간을
-          보정하는 임시 weight입니다. 영구 stake나 proposer의 특권이 아니며 slot boundary와 timeliness 조건이 틀리면 다른
-          node와 head가 갈릴 수 있습니다.
+          Proposer boost는 제시간에 전파된 block이 network latency 때문에 아직 attestation을 충분히 받지 못한 짧은 구간을 보정하는 임시
+          weight입니다. 영구 stake나 proposer의 특권과는 다르며 slot boundary와 timeliness 조건이 틀리면 다른 node와 head가 갈릴 수 있습니다.
         </p>
 
         <h3>실패를 상태로 남겨야 하는 이유</h3>
         <p>
-          Future block, unknown parent, finalized checkpoint 충돌, invalid execution payload와 duplicate input은 모두 같은
-          “실패”가 아닙니다. 일부는 나중에 parent가 도착하면 retry할 수 있고 일부는 영구 reject이며 duplicate는 idempotent
-          no-op일 수 있습니다. Receipt에 reason, retryability, store generation과 pre/post head를 남겨야 restart 후 안전하게
-          재생할 수 있습니다.
+          Future block, unknown parent, finalized checkpoint 충돌, invalid execution payload, duplicate input을 한
+          종류의 실패로 묶을 수는 없습니다. 일부는 나중에 parent가 도착하면 retry할 수 있고 일부는 영구 reject이며 duplicate는 idempotent no-op일 수
+          있습니다. Receipt에 reason, retryability, store generation, pre/post head를 남겨야 restart 후 안전하게 재생할 수 있습니다.
         </p>
         <p>
           특히 execution client가 SYNCING인 상태와 INVALID를 합치면 안 됩니다. 전자는 optimistic path에서 재평가될 수 있지만

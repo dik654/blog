@@ -46,10 +46,8 @@ export default function FullSync({
             Pipeline::run() — Full Sync 루프
           </p>
           <p className="text-sm text-foreground/80 mb-3">
-            orchestrator가 정한 target → 등록된 Stage들을 순서대로 실행. 각
-            Stage는 target과 checkpoint 범위를 받아 처리한다. 한 batch에서
-            target을 다 처리하지 못하면 다음 실행에서 checkpoint 이후를
-            이어가며, 전체 pipeline이 target에 도달하면 live path로 handoff한다.
+            orchestrator가 정한 target → 등록된 Stage들을 순서대로 실행. 각 Stage는 target과 checkpoint 범위를 받아 처리한다. 한 batch에서
+            target을 다 처리하지 못하면 다음 실행에서 checkpoint 이후를 이어가며 전체 pipeline이 target에 도달하면 live path로 handoff한다.
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm">
             <div className="rounded border border-border/40 p-2 text-center">
@@ -83,7 +81,8 @@ export default function FullSync({
           </div>
         </div>
         <p>
-          Pipeline은 한 stage가 지나치게 오래 독점하지 않도록 정해진 threshold에서 cycle을 양보할 수 있으며, 다음 cycle은 저장된 checkpoint부터 이어집니다. 같은 checkpoint가 crash recovery 지점으로도 쓰이기 때문에 node가 재시작되어도 이미 완료한 긴 범위를 처음부터 반복하지 않습니다.
+          Pipeline은 한 stage가 지나치게 오래 독점하지 않도록 정해진 threshold에서 cycle을 양보할 수 있으며 다음 cycle은 저장된 checkpoint부터
+          이어집니다. 같은 checkpoint가 crash recovery 지점으로도 쓰이기 때문에 node가 재시작되어도 이미 완료한 긴 범위를 처음부터 반복하지 않습니다.
         </p>
 
         {/* ── 비용 분석 ── */}
@@ -228,7 +227,8 @@ export default function FullSync({
           </div>
         </div>
         <p>
-          Unwind는 stage를 역순으로 호출해 downstream index부터 되돌리고, storage provider의 transaction과 checkpoint 경계가 부분적으로 되감긴 상태의 노출을 막습니다. 이후 검증된 canonical block을 기준으로 pipeline을 다시 실행해 database와 consensus view를 맞춥니다.
+          Unwind는 stage를 역순으로 호출해 downstream index부터 되돌리고 storage provider의 transaction과 checkpoint 경계가 부분적으로
+          되감긴 상태를 노출하지 않게 막습니다. 이후 검증된 canonical block을 기준으로 pipeline을 다시 실행해 database와 consensus view를 맞춥니다.
         </p>
       </div>
 

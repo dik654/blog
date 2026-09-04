@@ -49,10 +49,8 @@ export default function Overview({
           처리해 33으로 만든 뒤 block 33의 operations를 적용할 준비가 끝납니다.
         </p>
         <p>
-          Target이 현재 slot 이하이면 과거로 되감거나 같은 slot을 두 번 적용하지
-          않고 reject합니다. Cancellation이나 error가 중간에 발생하면 마지막으로
-          검증된 slot·pre/post root·epoch phase를 남기며, 부분 state를 target
-          도달로 표시하지 않습니다.
+          Target이 현재 slot 이하이면 과거로 되감거나 같은 slot을 두 번 적용하지 않고 reject합니다. Cancellation이나 error가 중간에 발생하면 마지막으로
+          검증된 slot·pre/post root·epoch phase를 남기며 부분 state를 target 도달로 표시하지 않습니다.
         </p>
       </div>
       <div id="paper-slot-processing-spec" className="scroll-mt-24">

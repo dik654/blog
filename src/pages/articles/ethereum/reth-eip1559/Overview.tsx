@@ -24,18 +24,14 @@ export default function Overview({
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
         <p className="leading-7">
-          EIP-1559는 block-wide base fee와 sender가 제시하는 fee cap·priority
-          fee를 분리합니다. base fee는 parent header의 gas used, gas limit와
-          활성 chain parameters로 다음 block 값을 결정하고 burn됩니다. priority
-          fee는 transaction cap이 허용하는 범위에서 block beneficiary에
-          돌아갑니다.
+          EIP-1559는 block-wide base fee와 sender가 제시하는 fee cap·priority fee를 분리합니다. base fee는 parent header의
+          gas used와 gas limit, 활성 chain parameters로 다음 block 값을 결정하고 burn됩니다. priority fee는 transaction cap이
+          허용하는 범위에서 block beneficiary에 돌아갑니다.
         </p>
         <p className="leading-7">
-          Mainnet의 London rules는 elasticity multiplier와 change denominator를
-          사용하지만, 구현은 숫자를 UI 여러 곳에 복사하지 않고 ChainSpec에서
-          활성 parameters를 가져와야 합니다. consensus에서 중요한 것은 widened
-          integer multiplication, division 순서, rounding과 increase branch의
-          최소 1 wei 규칙입니다.
+          Mainnet의 London rules는 elasticity multiplier와 change denominator를 씁니다. 구현 쪽에서는 그 숫자를 UI 여러 곳에 복사하지
+          않고 ChainSpec에서 활성 parameters를 가져오는 것이 기준입니다. consensus에서 중요한 것은 widened integer multiplication과
+          division 순서, 그리고 rounding과 increase branch의 최소 1 wei 규칙입니다.
         </p>
         <p className="leading-7">
           고정 예시를 먼저 잡겠습니다. Parent gas limit은 30,000,000 gas,

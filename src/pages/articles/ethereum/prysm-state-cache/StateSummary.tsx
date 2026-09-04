@@ -43,7 +43,11 @@ export default function StateSummary({ onCodeRef }: { onCodeRef: (key: string, r
       />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>빈 slot을 건너뛰면 같은 slot 번호라도 다른 state가 됩니다</h3>
-        <p>빈 slot에서도 state slot, historical root, epoch-boundary processing이 바뀔 수 있습니다. 따라서 저장된 block만 재생하거나 epoch boundary를 한 번에 점프하면 post-state가 달라질 수 있으며, replay 구현은 official transition vector와 full replay를 oracle로 비교해야 합니다.</p>
+        <p>
+            빈 slot에서도 state slot, historical root, epoch-boundary processing이 바뀔 수 있습니다. 따라서 저장된 block만 재생하거나
+            epoch boundary를 한 번에 점프하면 post-state가 달라질 수 있으며 replay 구현은 official transition vector와 full
+            replay를 oracle로 비교해야 합니다.
+          </p>
       </div>
     </section>
   );

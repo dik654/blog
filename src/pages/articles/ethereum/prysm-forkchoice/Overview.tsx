@@ -30,27 +30,27 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>핵심 아이디어: validator마다 가장 최근 vote 하나만 셉니다</h3>
         <p>
-          LMD는 Latest Message Driven의 약자로 validator 한 명의 과거 attestation을 모두 누적하지 않고 관찰한 최신
-          message만 사용한다는 뜻입니다. GHOST는 Greedy Heaviest Observed SubTree의 약자로 justified checkpoint에서
-          시작해 현재 node의 자식 중 subtree weight가 가장 큰 자식을 반복 선택합니다. 따라서 “최다 block 수”나 “마지막에
-          도착한 block”이 아니라 active unslashed balance가 어느 subtree를 지지하는지가 기준입니다.
+          LMD는 Latest Message Driven의 약자로 validator 한 명의 과거 attestation을 모두 누적하지 않고 관찰한 최신 message만 사용한다는
+          뜻입니다. GHOST는 Greedy Heaviest Observed SubTree의 약자로 justified checkpoint에서 시작해 현재 node의 자식 중 subtree
+          weight가 가장 큰 자식을 반복 선택합니다. 판단 기준은 최다 block 수도, 마지막에 도착한 block도 아닙니다. Active unslashed balance가 어느
+          subtree를 지지하는지를 봅니다.
         </p>
         <p>
-          이 계산에는 신뢰 경계가 있습니다. Block과 attestation은 먼저 해당 fork의 validation을 통과해야 하고, equivocation이
-          확인된 validator는 weight에서 제외됩니다. 또한 finalized checkpoint와 충돌하는 branch는 아무리 무거워도 후보가
-          아닙니다. Network에서 보이는 모든 branch를 무조건 비교하는 알고리즘으로 이해하면 안 됩니다.
+          이 계산에는 신뢰 경계가 있습니다. Block과 attestation은 먼저 해당 fork의 validation을 통과해야 하고 equivocation이 확인된 validator는
+          weight에서 제외됩니다. 또한 finalized checkpoint와 충돌하는 branch는 아무리 무거워도 후보에 들지 못합니다. Network에서 보이는 모든 branch를
+          무조건 비교하는 알고리즘으로 이해하면 안 됩니다.
         </p>
 
         <h3>숫자로 먼저 보는 head 선택</h3>
         <p>
-          Justified root J의 자식이 A와 B라고 합시다. 최신 vote의 effective balance가 A subtree에 64 ETH, B subtree에
-          48 ETH를 지지하면 첫 단계에서 A를 고릅니다. A의 자식 A1과 A2가 각각 24 ETH와 40 ETH라면 A2로 내려가고,
-          더 이상 eligible child가 없으면 A2가 head입니다. 이후 32 ETH validator의 최신 message가 A2에서 B1으로
-          이동하면 예전 32 ETH를 A2 ancestor에서 빼고 B1 ancestor에 더해야 하므로 head가 B1로 바뀔 수 있습니다.
+          Justified root J의 자식이 A와 B라고 합시다. 최신 vote의 effective balance가 A subtree에 64 ETH, B subtree에 48 ETH를
+          지지하면 첫 단계에서 A를 고릅니다. A의 자식 A1과 A2가 각각 24 ETH와 40 ETH라면 A2로 내려가고 더 이상 eligible child가 없으면 A2가
+          head입니다. 이후 32 ETH validator의 최신 message가 A2에서 B1으로 이동하면 예전 32 ETH를 A2 ancestor에서 빼고 B1 ancestor에
+          더해야 하므로 head가 B1로 바뀔 수 있습니다.
         </p>
         <p>
-          동률은 root의 사전식 순서 같은 protocol tie-break로 결정합니다. Tie-break는 “더 안전한 branch”를 알아내는 별도
-          판단이 아니라 모든 honest node가 같은 store에서 같은 결과를 내게 하는 결정 규칙입니다.
+          동률은 root의 사전식 순서 같은 protocol tie-break로 결정합니다. Tie-break가 하는 일은 모든 honest node가 같은 store에서 같은 결과를 내게
+          만드는 것이고 더 안전한 branch를 알아내는 별도 판단은 여기에 없습니다.
         </p>
       </div>
 

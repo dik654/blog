@@ -9,9 +9,9 @@ export default function SlashingProtection({ onCodeRef }: { onCodeRef: (key: str
       <h2 className="mb-5 text-2xl font-bold">Slashing protection은 check와 record를 서명 권한 앞의 원자적 gate로 만든다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Proposer는 같은 slot에 서로 다른 block을 서명하면 안 되고, attester는 같은 target epoch에 서로 다른 vote를 내거나
-          과거 vote interval을 감싸는 vote를 내면 안 됩니다. Database는 최근 숫자 하나만 저장하는 cache가 아니라 과거 signing
-          intent와 root를 근거로 새 request를 허용하거나 거부하는 안전 상태입니다.
+          Proposer는 같은 slot에 서로 다른 block을 서명하면 안 됩니다. Attester는 같은 target epoch에 서로 다른 vote를 내거나 과거 vote
+          interval을 감싸는 vote를 내면 안 됩니다. Database는 과거 signing intent와 root를 근거로 새 request를 허용하거나 거부하는 안전 상태입니다.
+          최근 숫자 하나만 저장하는 cache와는 역할이 다릅니다.
         </p>
       </div>
 
@@ -51,24 +51,24 @@ export default function SlashingProtection({ onCodeRef }: { onCodeRef: (key: str
           <li>Timeout이면 기존 intent/root 상태를 조회해 동일 root만 조정하고 새 root로 blind retry하지 않습니다.</li>
         </ol>
         <p>
-          Check와 record 사이에 다른 worker가 들어오면 두 request가 모두 “안전” 판정을 받은 뒤 conflicting signature를 만들 수
-          있습니다. 따라서 process-local mutex만으로는 다중 replica나 remote signer를 막지 못하며 single-writer fencing 또는
-          signer-side atomic protection까지 authority boundary를 이어야 합니다.
+          Check와 record 사이에 다른 worker가 들어오면 두 request가 모두 “안전” 판정을 받은 뒤 conflicting signature를 만들 수 있습니다.
+          Process-local mutex만으로는 다중 replica나 remote signer를 막지 못합니다. Authority boundary를 single-writer
+          fencing 또는 signer-side atomic protection까지 이어야 합니다.
         </p>
 
         <h3>Migration은 key와 history를 함께 옮깁니다</h3>
         <p>
           EIP-3076 interchange는 signed block·attestation history를 다른 client로 옮길 공통 format을 제공합니다. Source
-          validator를 중지하고 export snapshot을 고정한 뒤 destination에 import·검증하고, key별 highest/lowest epoch와 sample
-          root가 맞는지 확인한 다음에만 destination signing을 엽니다. Source와 destination이 겹쳐 실행되는 시간을 만들지
-          않습니다.
+          validator를 중지하고 export snapshot을 고정한 뒤 destination에 import·검증합니다. Key별 highest/lowest epoch와 sample
+          root가 맞는지 확인한 다음에만 destination signing을 엽니다. Source와 destination이 겹쳐 실행되는 시간은 만들지 않습니다.
         </p>
 
         <h3>Adversarial release gate</h3>
         <p>
-          동일 slot의 다른 block, 같은 target의 다른 vote, 양방향 surround, duplicate same-root, concurrent workers,
-          signer timeout-after-success, DB crash, stale replica와 EIP-3076 migration을 base/candidate에 주입합니다. Allow/deny,
-          persisted intent, signature count와 restart decision이 같아야 하며, missed-duty 개선은 이 안전성 gate 뒤에 비교합니다.
+          동일 slot의 다른 block, 같은 target의 다른 vote, 양방향 surround, duplicate same-root를 base/candidate에 주입합니다.
+          Concurrent workers, signer timeout-after-success, DB crash, stale replica, EIP-3076 migration도 함께
+          넣습니다. Allow/deny와 persisted intent, signature count, restart decision이 같아야 합니다. Missed-duty 개선 비교는 이
+          안전성 gate 뒤입니다.
         </p>
       </div>
     </section>

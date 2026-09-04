@@ -22,8 +22,8 @@ export default function Primitives({ onCodeRef }: { onCodeRef: (key: string, ref
           내부 표현과 wire byte sequence는 다릅니다.
         </p>
         <p>
-          `as` cast나 unchecked slice는 짧고 빠르지만 length·overflow evidence를 지웁니다. External bytes는 checked constructor로
-          받고, truncate·pad가 protocol rule인 경우에만 함수 이름과 source/target width를 receipt에 남깁니다.
+          `as` cast나 unchecked slice는 짧고 빠르지만 length·overflow evidence를 지웁니다. External bytes는 checked
+          constructor로 받습니다. Truncate·pad가 protocol rule인 경우에만 함수 이름과 source/target width를 receipt에 남깁니다.
         </p>
       </div>
     </section>

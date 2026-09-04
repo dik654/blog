@@ -29,9 +29,8 @@ export default function UseCases({
         </p>
         <h3>문제</h3>
         <p>
-          같은 프로세스라는 이유만으로 latency 개선이나 event 무손실을 보장하지
-          않습니다. Blocking DB write, unbounded queue, reorg 누락과 너무 이른
-          checkpoint는 오히려 node lifecycle을 위험하게 만듭니다.
+          같은 프로세스라는 이유만으로 latency 개선이나 event 무손실을 보장하지 않습니다. Blocking DB write와 unbounded queue, reorg 누락, 너무
+          이른 checkpoint는 오히려 node lifecycle을 위험하게 만듭니다.
         </p>
         <h3>아이디어</h3>
         <p>
@@ -41,9 +40,8 @@ export default function UseCases({
         </p>
         <h3>구현</h3>
         <p>
-          파생 DB에는 block hash와 canonical status를 저장하고, notification
-          단위 transaction·idempotency·rollback test를 둡니다. FinishedHeight,
-          WAL size, queue capacity와 processing lag를 함께 모니터링합니다.
+          파생 DB에는 block hash와 canonical status를 저장하고 notification 단위 transaction·idempotency·rollback test를
+          둡니다. FinishedHeight와 WAL size, queue capacity, processing lag는 함께 모니터링합니다.
         </p>
         <p>
           외부 webhook이나 bridge message는 ExEx의 local DB transaction과 한 번에

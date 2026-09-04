@@ -80,14 +80,11 @@ export default function Overview({
 
         <h3>Run manifest가 moving docs와 production binary를 분리합니다</h3>
         <p>
-          최소 receipt에는 Reth semver와 git SHA, Cargo feature, command line의
-          민감정보 제거본, config digest, chain spec digest, storage
-          schema·pruning profile, data directory identity, RPC·P2P bind address,
-          Engine API version과 OS·hardware를 넣습니다. 이 글은 2026-08-14에 Reth
-          2.x 공식 문서와 source를 확인했지만, current docs의 type·default를
-          이전 binary에 소급하지 않습니다. 예를 들어 v2.2.0 release에서 Discv5
-          default가 바뀌었다는 사실은 해당 release line의 migration 판단에만
-          사용합니다.
+          최소 receipt에는 Reth semver와 git SHA, Cargo feature, command line의 민감정보 제거본, config digest, chain spec
+          digest, storage schema·pruning profile, data directory identity, RPC·P2P bind address, Engine API
+          version과 OS·hardware를 넣습니다. 이 글은 2026-08-14에 Reth 2.x 공식 문서와 source를 확인했지만 current docs의
+          type·default를 이전 binary에 소급하지 않습니다. 예를 들어 v2.2.0 release에서 Discv5 default가 바뀌었다는 사실은 해당 release
+          line의 migration 판단에만 사용합니다.
         </p>
       </div>
 

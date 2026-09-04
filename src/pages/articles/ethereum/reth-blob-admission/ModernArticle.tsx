@@ -29,7 +29,10 @@ export default function ModernRethBlobAdmission() {
     </section>
     <section id="cheap-checks" className="space-y-6">
       <h2 className="text-2xl font-bold">Cheap checks는 공격자가 강제할 수 있는 실패 비용을 제한합니다</h2>
-      <p>검사 순서는 단순한 최적화가 아닙니다. 10-byte header만 읽고 거부할 수 있는 입력에 pairing work와 큰 allocation을 수행하면, invalid traffic이 CPU와 memory를 독점할 수 있습니다.</p>
+      <p>
+            검사 순서는 단순한 최적화가 아닙니다. 10-byte header만 읽고 거부할 수 있는 입력에 pairing work와 큰 allocation을 수행하면 invalid
+            traffic이 CPU와 memory를 독점할 수 있습니다.
+          </p>
       <TermBreakdown title="싼 것부터 읽는 이유" items={[
         { term: "Size", description: "Blob 하나가 정확한 고정 크기인지 확인합니다.", example: "131,071-byte와 131,073-byte payload는 둘 다 거부합니다." },
         { term: "Count", description: "Transaction hashes와 blobs·commitments·proofs의 길이를 맞춥니다." },

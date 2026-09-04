@@ -15,7 +15,9 @@ export default function Overview({
       <h2 className="text-2xl font-bold mb-6">Blob transaction은 execution payload와 sidecar를 분리한다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          EIP-4844는 Cancun upgrade에서 rollup data를 위한 blob transaction과 별도의 fee market을 도입했습니다. 핵심은 execution block에는 blob을 식별하는 versioned hash만 남기고, 실제 data와 KZG proof는 sidecar로 전파한다는 점입니다. 이 글에서는 그 경계가 Reth의 transaction validation, blob store와 fee 계산에 어떻게 이어지는지 차례로 추적합니다.
+          EIP-4844는 Cancun upgrade에서 rollup data를 위한 blob transaction과 별도의 fee market을 도입했습니다. execution
+          block에는 blob을 식별하는 versioned hash만 남고 실제 data와 KZG proof는 sidecar로 전파됩니다. 이 글에서는 그 경계가 Reth의
+          transaction validation과 blob store, fee 계산으로 어떻게 이어지는지 차례로 추적합니다.
         </p>
         <div className="not-prose flex flex-wrap gap-2 mt-4 mb-4">
           <CodeViewButton
@@ -42,7 +44,9 @@ export default function Overview({
               EIP-4844 이전
             </p>
             <p className="text-sm leading-6 text-foreground/80">
-              Rollup은 batch data를 calldata로 게시했기 때문에 일반 execution gas를 사용했고, 다른 transaction과 같은 L1 block space에서 경쟁했습니다. 비용은 batch 압축률과 당시 fee market에 따라 달랐지만, data availability traffic이 execution 수요와 같은 가격 신호를 받는 구조였습니다.
+              Rollup은 batch data를 calldata로 게시했기 때문에 일반 execution gas를 썼고 다른 transaction과 같은 L1 block space에서
+              경쟁했습니다. 비용은 batch 압축률과 당시 fee market에 따라 달랐지만 data availability traffic이 execution 수요와 같은 가격 신호를
+              받는 구조였습니다.
             </p>
           </div>
           <div className="rounded-lg border border-border/60 p-4">
@@ -69,7 +73,8 @@ export default function Overview({
           </div>
         </div>
         <p>
-          그래서 Proto-Danksharding의 직접적인 변화는 “data를 없앤 것”이 아니라 blob data의 수명과 가격을 execution state에서 분리한 것입니다. 비용 절감 효과는 고정 배수가 아니며, blob 수요와 fork별 공급 schedule, 각 rollup의 batching 효율을 함께 측정해야 합니다.
+          그래서 Proto-Danksharding의 직접적인 변화는 “data를 없앤 것”이 아니라 blob data의 수명과 가격을 execution state에서 분리한 것입니다. 비용
+          절감 효과는 고정 배수가 아닙니다. blob 수요와 fork별 공급 schedule, 각 rollup의 batching 효율을 함께 측정합니다.
         </p>
 
         {/* ── BlobTransaction 구조 ── */}
@@ -147,7 +152,9 @@ export default function Overview({
           </div>
         </div>
         <p>
-          정리하면 type-3 transaction은 실행과 fee에 필요한 on-chain transaction과 가용성 검증에 필요한 sidecar로 나뉩니다. Blob 본체를 execution state에 영구 보관하지 않기 때문에 state growth를 제한할 수 있지만, 가용성 기간에는 consensus client와 networking layer가 sidecar를 정상적으로 전파하고 검증해야 합니다.
+          정리하면 type-3 transaction은 실행과 fee에 필요한 on-chain transaction과 가용성 검증에 필요한 sidecar로 나뉩니다. Blob 본체를
+          execution state에 영구 보관하지 않으므로 state growth가 제한됩니다. 대신 가용성 기간에는 consensus client와 networking layer가
+          sidecar를 정상적으로 전파하고 검증해야 합니다.
         </p>
 
         {/* ── 블록 헤더 확장 ── */}

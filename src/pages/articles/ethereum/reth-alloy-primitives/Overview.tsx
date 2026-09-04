@@ -11,8 +11,8 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
       <h2 className="mb-5 text-2xl font-bold">Alloy primitive는 같은 32 bytes라도 주소·hash·정수를 섞지 않게 만든다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          Ethereum node는 block hash, address, balance와 RLP bytes를 끊임없이 옮깁니다. 모두 메모리에서는 byte처럼 보일 수 있지만
-          길이·숫자 해석·wire encoding이 다르므로, 타입 경계를 잃으면 정상 데이터도 다른 값으로 읽히거나 잘못된 hash를 만들게 됩니다.
+          Ethereum node는 block hash, address, balance와 RLP bytes를 끊임없이 옮깁니다. 메모리에서는 모두 byte처럼 보이지만 길이와 숫자 해석,
+          wire encoding이 다릅니다. 타입 경계를 잃으면 정상 데이터도 다른 값으로 읽히거나 잘못된 hash를 만들게 됩니다.
         </p>
         <p>
           이 글은 <strong>Address 0x…01과 nonce 15를 typed value→canonical RLP→exact decode→hash·DB key</strong>로 보내는 한
@@ -25,14 +25,14 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>고정 사례와 네 개의 서로 다른 경계</h3>
         <p>
-          Address는 정확히 20 bytes, B256은 정확히 32 bytes이며 U256은 0부터 2²⁵⁶−1까지의 unsigned integer입니다. U256의 내부
-          limb 배치와 RLP의 외부 big-endian minimal integer는 같은 개념이 아닙니다. 따라서 receipt에는 Rust type, logical value,
-          encoded bytes, consumed length와 decode result를 함께 남깁니다.
+          Address는 정확히 20 bytes, B256은 정확히 32 bytes이며 U256은 0부터 2²⁵⁶−1까지의 unsigned integer입니다. U256의 내부 limb
+          배치와 RLP의 외부 big-endian minimal integer는 서로 다른 개념입니다. 따라서 receipt에는 Rust type, logical value, encoded
+          bytes, consumed length와 decode result를 함께 남깁니다.
         </p>
         <p>
           RLP decode가 성공해도 그 bytes가 block hash나 address라는 의미는 상위 schema가 정합니다. 반대로 타입이 맞아도 crate
-          version·feature·encoding rule이 달라지면 byte identity가 달라질 수 있으므로, current source fact는 pinned Alloy/Reth
-          version에 귀속하고 exact-consume·round-trip·boundary fixture는 별도의 hardening contract로 둡니다.
+          version·feature·encoding rule이 달라지면 byte identity가 달라질 수 있습니다. Current source fact는 pinned
+          Alloy/Reth version에 귀속하고 exact-consume·round-trip·boundary fixture는 별도의 hardening contract로 둡니다.
         </p>
       </div>
       <div id="paper-alloy-primitives-source" className="scroll-mt-24">

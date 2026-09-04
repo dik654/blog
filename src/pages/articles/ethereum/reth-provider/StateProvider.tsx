@@ -29,8 +29,9 @@ export default function StateProvider({ onCodeRef }: { onCodeRef: (key: string, 
       />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Provider factory는 latest·pending·historical 요청을 canonical hash와 state root로 resolve한 뒤 view handle을 만듭니다. Account와
-          storage slot 두 번의 호출 사이에도 같은 handle을 써야 하며, latest를 매 method에서 다시 resolve하면 reorg 중 mixed state가 됩니다.
+          Provider factory는 latest·pending·historical 요청을 canonical hash와 state root로 resolve한 뒤 view handle을
+          만듭니다. Account와 storage slot 두 번의 호출 사이에도 같은 handle을 써야 하며 latest를 매 method에서 다시 resolve하면 reorg 중
+          mixed state가 됩니다.
         </p>
         <p>
           `None`은 존재하지 않음일 수 있지만 pruned history, unknown block, corrupt segment와 backend error는 별도입니다. Caller가

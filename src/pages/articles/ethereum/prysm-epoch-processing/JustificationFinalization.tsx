@@ -9,7 +9,11 @@ export default function JustificationFinalization({ onCodeRef }: { onCodeRef: (k
       <h2 className="mb-6 text-2xl font-bold">Justification은 weight threshold이고 finalization은 checkpoint pattern이다</h2>
       <div className="not-prose mb-5 flex flex-wrap items-center gap-3"><CodeViewButton onClick={() => onCodeRef("process-justification", codeRefs["process-justification"])} /><span className="text-xs text-muted-foreground">Prysm checkpoint transition seam</span></div>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p>Validator 수를 세는 대신 effective balance를 셉니다. 이전·현재 epoch의 timely target에 참여했고 slashed되지 않은 validator weight를 전체 active balance와 비교해 checkpoint를 justified합니다. 그 뒤 최근 justification pattern과 checkpoint epoch 거리 조건이 맞으면 더 오래된 checkpoint를 finalized로 옮깁니다.</p>
+        <p>
+            Validator 수를 세는 대신 effective balance를 셉니다. 이전·현재 epoch의 timely target에 참여했고 slashed되지 않은 validator
+            weight를 전체 active balance와 비교해 checkpoint를 justified합니다. 그 뒤 최근 justification pattern과 checkpoint
+            epoch 거리 조건이 맞으면 더 오래된 checkpoint가 finalized로 옮겨갑니다.
+          </p>
       </div>
       <ExplainedFormula
         question="Target vote가 checkpoint를 justify할 만큼 충분한지 어떻게 판정할까요?"
@@ -28,7 +32,11 @@ export default function JustificationFinalization({ onCodeRef }: { onCodeRef: (k
       />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Justification bits는 최근 역사를 압축한 state입니다</h3>
-        <p>첫 두 epoch의 genesis stub 예외를 건너뛴 뒤 previous/current target balance를 계산하고, 기존 bitvector를 이동해 새 결과를 기록합니다. Finalization은 old previous/current justified checkpoint와 여러 bit pattern의 epoch 거리를 함께 검사합니다. 따라서 “두 epoch가 2/3이면 무조건 final”이라는 요약은 실패 recovery pattern을 설명하지 못합니다.</p>
+        <p>
+            첫 두 epoch의 genesis stub 예외를 건너뛴 뒤 previous/current target balance를 계산하고 기존 bitvector를 이동해 새 결과를
+            기록합니다. Finalization은 old previous/current justified checkpoint와 여러 bit pattern의 epoch 거리를 함께
+            검사합니다. 두 epoch가 2/3이면 무조건 final이라는 요약으로는 실패 recovery pattern을 설명하지 못합니다.
+          </p>
         <h3>Finalized는 현재 head와 다른 시간축입니다</h3>
         <p>새 attestation으로 fork-choice head가 같은 slot 안에서도 바뀔 수 있지만 finalized checkpoint는 epoch-level supermajority pattern으로 움직입니다. API·cache·pruning에서 head·justified/safe·finalized identity를 명시하지 않으면 reorg 중 서로 다른 branch state를 섞게 됩니다.</p>
       </div>

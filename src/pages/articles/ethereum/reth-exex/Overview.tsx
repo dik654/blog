@@ -23,8 +23,7 @@ export default function Overview({
       <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
         <h3>배경</h3>
         <p>
-          인덱서, 브릿지와 분석기는 canonical chain이 commit, revert 또는
-          reorg될 때 자신의 파생 상태도 같은 순서로 갱신해야 합니다. ExEx는 Reth와
+          인덱서와 브릿지, 분석기는 canonical chain이 commit, revert 또는 reorg될 때 자신의 파생 상태도 같은 순서로 갱신해야 합니다. ExEx는 Reth와
           함께 실행되는 long-lived future로 이 변화를 소비합니다.
         </p>
         <h3>문제</h3>
@@ -42,18 +41,14 @@ export default function Overview({
         </p>
         <h3>구현</h3>
         <p>
-          ExEx manager는 WAL과 bounded buffer를 통해 각 extension의 readiness를
-          고려해 알림을 보냅니다. 여러 ExEx가 있으면 가장 낮은 finished height가
-          전체 안전 경계가 됩니다. ExEx는 main execution을 block하지 않도록
-          blocking I/O와 unbounded memory를 자체적으로 통제해야 합니다.
+          ExEx manager는 WAL과 bounded buffer로 각 extension의 readiness를 고려해 알림을 보냅니다. 여러 ExEx가 있으면 가장 낮은 finished
+          height가 전체 안전 경계가 됩니다. ExEx는 main execution을 block하지 않도록 blocking I/O와 unbounded memory를 스스로 통제해야
+          합니다.
         </p>
         <p>
-          고정 예시로 extension A는 block 100까지, B는 97까지 durable commit했다고
-          해보겠습니다. Node head가 105여도 안전하게 prune 가능한 공통 경계는
-          느린 B의 97을 넘을 수 없습니다. 103~105 reorg가 오면 external webhook을
-          먼저 다시 보내는 것이 아니라 파생 DB에서 old branch rollback과 new
-          branch apply를 원자적으로 끝내고 checkpoint·outbox receipt를 함께
-          확정해야 합니다.
+          고정 예시로 extension A는 block 100까지, B는 97까지 durable commit했다고 해보겠습니다. Node head가 105여도 안전하게 prune 가능한
+          공통 경계는 느린 B의 97을 넘을 수 없습니다. 103~105 reorg가 오면 external webhook 재전송보다 파생 DB 쪽이 먼저입니다. old branch
+          rollback과 new branch apply를 원자적으로 끝내고 checkpoint·outbox receipt를 함께 확정합니다.
         </p>
       </div>
       <ContentBoundary article="reth-exex" />

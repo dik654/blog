@@ -11,9 +11,9 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
       <h2 className="mb-5 text-2xl font-bold">GossipSub는 받은 메시지를 복제하기 전에 topic·bytes·consensus validity를 단계별로 판정한다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          Pub/sub mesh는 한 peer가 보낸 block·attestation을 여러 peer로 빠르게 전달하지만, 잘못된 bytes까지 증폭하면 CPU와
-          bandwidth가 공격자에게 넘어갑니다. Prysm은 topic의 fork·message identity, compressed/raw size, SSZ decode,
-          duplicate, signature와 state-dependent rule을 순서대로 확인한 뒤 accept·reject·ignore를 구분합니다.
+          Pub/sub mesh는 한 peer가 보낸 block·attestation을 여러 peer로 빠르게 전달합니다. 잘못된 bytes까지 증폭하면 CPU와 bandwidth가
+          공격자에게 넘어갑니다. Prysm은 topic의 fork·message identity, compressed/raw size, SSZ decode, duplicate,
+          signature, state-dependent rule을 순서대로 확인한 뒤 accept·reject·ignore를 구분합니다.
         </p>
         <p>
           이 글은 beacon block 한 개를 <strong>topic→bounded Snappy→SSZ object→stateless/stateful validation→decision→mesh
@@ -26,9 +26,10 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>고정 사례: beacon block gossip 하나</h3>
         <p>
-          Receipt에는 source PeerId, exact topic, compressed byte length, declared/uncompressed length, SSZ type·fork, block root·slot,
-          dedupe key, signature/state validation result, final decision과 propagation targets를 연결합니다. Decode 전에는 allocation을
-          제한하고, stateful check 전에는 untrusted object가 fork-choice store나 database를 바꾸지 못하게 합니다.
+          Receipt에는 source PeerId, exact topic, compressed byte length, declared/uncompressed length를 남깁니다.
+          SSZ type·fork, block root·slot, dedupe key, signature/state validation result, final decision,
+          propagation targets도 같은 receipt에서 연결합니다. Decode 전에는 allocation을 제한하고 stateful check 전에는 untrusted
+          object가 fork-choice store나 database를 바꾸지 못하게 합니다.
         </p>
         <p>
           Accept는 local validation을 통과해 mesh로 전달 가능한 상태, Reject는 peer penalty 근거가 되는 명백한 invalid input,

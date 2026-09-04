@@ -30,8 +30,8 @@ export default function U256Arithmetic({ onCodeRef }: { onCodeRef: (key: string,
       />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Multi-limb 덧셈은 낮은 limb에서 생긴 carry를 다음 limb로 전달합니다. EVM arithmetic은 256-bit modulo가 필요한 곳이 있지만
-          balance 합산·length 계산처럼 overflow를 오류로 봐야 하는 경계도 있으므로 함수 이름만이 아니라 호출 목적을 확인합니다.
+          Multi-limb 덧셈은 낮은 limb에서 생긴 carry를 다음 limb로 전달합니다. EVM arithmetic은 256-bit modulo가 필요한 곳이 있습니다.
+          Balance 합산·length 계산처럼 overflow를 오류로 봐야 하는 경계도 있으므로 함수 이름 너머 호출 목적까지 확인합니다.
         </p>
       </div>
     </section>

@@ -20,14 +20,12 @@ export default function EngineApi({
       <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
         <h3>배경</h3>
         <p>
-          Consensus client는 fork choice와 beacon block proposal을 담당하고,
-          execution client는 execution payload를 만들고 검증합니다. Engine API가
-          두 client 사이의 versioned protocol입니다.
+          Consensus client는 fork choice와 beacon block proposal을 담당하고 execution client는 execution payload를 만들고
+          검증합니다. Engine API가 두 client 사이의 versioned protocol입니다.
         </p>
         <h3>문제</h3>
         <p>
-          Head 갱신, payload build 시작, 외부 payload 검증과 local payload
-          조회는 서로 다른 lifecycle을 가집니다. 네트워크 fork마다 payload
+          Head 갱신, payload build 시작, 외부 payload 검증과 local payload 조회는 lifecycle이 서로 다릅니다. 네트워크 fork마다 payload
           fields가 늘어나므로 unversioned method 하나로 설명할 수도 없습니다.
         </p>
         <h3>아이디어와 구현</h3>
@@ -56,10 +54,8 @@ export default function EngineApi({
           둡니다.
         </p>
         <p>
-          Authenticated endpoint는 기본적으로 localhost:8551이지만
-          address·port는 설정할 수 있습니다. JWT는 256-bit shared secret과 HS256을
-          사용하는 caller authentication이며, 암호화 채널 자체를 제공하거나 공개
-          노출을 안전하게 만들어 주는 장치는 아닙니다.
+          Authenticated endpoint는 기본적으로 localhost:8551이지만 address·port는 설정할 수 있습니다. JWT는 256-bit shared
+          secret과 HS256을 사용하는 caller authentication이며 암호화 채널 자체를 제공하거나 공개 노출을 안전하게 만들어 주는 장치는 아닙니다.
         </p>
       </div>
       <div className="not-prose mb-6">

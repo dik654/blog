@@ -72,12 +72,9 @@ export default function StateInterface({
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Read view와 mutable owner를 type으로 분리합니다</h3>
         <p>
-          Reader가 얻은 state view는 관찰하는 동안 slot·fork·root generation이
-          바뀌지 않아야 합니다. Writer는 setter를 통해서만 mutation하고,
-          reference count가 1인지 확인한 뒤 backing data를 고유화합니다.
-          Getter가 내부 slice를 그대로 노출해 caller가 수정할 수 있으면
-          setter·dirty tracking을 우회하므로 defensive copy나 read-only view가
-          필요합니다.
+          Reader가 얻은 state view는 관찰하는 동안 slot·fork·root generation이 바뀌지 않아야 합니다. Writer는 setter를 통해서만
+          mutation하고 reference count가 1인지 확인한 뒤 backing data를 고유화합니다. Getter가 내부 slice를 그대로 노출해 caller가 수정할 수
+          있으면 setter·dirty tracking을 우회하므로 defensive copy나 read-only view가 필요합니다.
         </p>
         <h3>Aliasing 반례</h3>
         <p>

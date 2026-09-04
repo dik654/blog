@@ -40,20 +40,15 @@ export default function StateFork({
           </li>
         </ol>
         <p>
-          새 field를 zero value로 두면 될 것이라는 일반 규칙은 없습니다. 어떤
-          값은 기존 field에서 유도하거나 committee 계산이 필요할 수 있으므로
-          fork별 upgrade function과 official test vector가 정본입니다. Unknown
-          future fork를 latest known schema로 조용히 decode하면 field가 빠진
-          다른 object를 만들 수 있어 reject해야 합니다.
+          새 field를 zero value로 두면 된다는 일반 규칙은 없습니다. 어떤 값은 기존 field에서 유도하거나 committee 계산이 필요할 수 있으므로 fork별
+          upgrade function과 official test vector가 정본입니다. Unknown future fork를 latest known schema로 조용히
+          decode하면 field가 빠진 다른 object를 만들 수 있어 reject해야 합니다.
         </p>
         <h3>Reorg와 fork activation 경계</h3>
         <p>
-          Activation epoch 주변에서 old branch와 new branch를 오갈 때 cache
-          key가 fork를 포함하지 않으면 같은 slot 비슷한 field를 잘못 재사용할 수
-          있습니다. Common ancestor가 fork 전이라면 새 branch의 slot
-          processing과 upgrade를 다시 수행하고, state root·fork digest·head는
-          함께 조정하되 finalized checkpoint가 허용하지 않는 과거로 되돌아가지
-          않습니다.
+          Activation epoch 주변에서 old branch와 new branch를 오갈 때 cache key가 fork를 포함하지 않으면 같은 slot 비슷한 field를 잘못
+          재사용할 수 있습니다. Common ancestor가 fork 전이라면 새 branch의 slot processing과 upgrade를 다시 수행합니다. State
+          root·fork digest·head는 함께 조정하되 finalized checkpoint가 허용하지 않는 과거로 되돌아가지 않습니다.
         </p>
         <h3>Version receipt와 paired release gate</h3>
         <p>
@@ -67,10 +62,8 @@ export default function StateFork({
           가능한 DB snapshot을 보존합니다.
         </p>
         <p>
-          2026-08의 consensus-spec repository에는 stable과 unstable fork가 함께
-          보입니다. “master에 존재한다”는 사실은 mainnet에서 활성화됐다는 뜻이
-          아니며, 실제 network schedule과 stable status를 기준으로 feature를
-          켭니다.
+          2026-08의 consensus-spec repository에는 stable과 unstable fork가 함께 보입니다. “master에 존재한다”는 사실은 mainnet에서
+          활성화됐다는 뜻이 아닙니다. 실제 network schedule과 stable status를 기준으로 feature를 켭니다.
         </p>
       </div>
     </section>

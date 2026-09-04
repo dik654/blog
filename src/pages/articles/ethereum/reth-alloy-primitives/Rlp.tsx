@@ -13,14 +13,14 @@ export default function Rlp({ onCodeRef }: { onCodeRef: (key: string, ref: CodeR
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           RLP(Recursive Length Prefix)는 byte string과 그 list만 구분합니다. Address·nonce·transaction이라는 의미와 field 순서는
-          상위 schema가 정하므로, 같은 bytes라도 schema가 다르면 다른 object입니다. 0x00..0x7f인 한 byte는 자기 자신이고, 길이
-          0..55의 string/list는 kind와 payload length를 prefix 한 byte에 담으며 더 길면 length-of-length를 사용합니다.
+          상위 schema가 정합니다. 같은 bytes라도 schema가 다르면 다른 object입니다. 0x00..0x7f인 한 byte는 자기 자신이고 길이 0..55의
+          string/list는 kind와 payload length를 prefix 한 byte에 담습니다. 더 길면 length-of-length를 사용합니다.
         </p>
         <h3>숫자 15와 1024의 worked example</h3>
         <p>
-          Integer는 unsigned big-endian minimal bytes로 바꾼 뒤 byte string으로 encode합니다. 15는 0x0f 하나라 그대로 0x0f이고,
-          1024는 0x0400 두 bytes라 short-string prefix 0x82를 붙여 0x82 04 00이 됩니다. 1024를 0x00 04 00으로 쓰면 leading zero가
-          있는 non-canonical 표현이며 같은 수의 byte identity가 둘이 생기므로 거절해야 합니다.
+          Integer는 unsigned big-endian minimal bytes로 바꾼 뒤 byte string으로 encode합니다. 15는 0x0f 하나라 그대로 0x0f입니다.
+          1024는 0x0400 두 bytes라 short-string prefix 0x82를 붙여 0x82 04 00이 됩니다. 1024를 0x00 04 00으로 쓰면 leading
+          zero가 있는 non-canonical 표현이며 같은 수의 byte identity가 둘이 생기므로 거절해야 합니다.
         </p>
         <h3>Schema가 소유하는 것</h3>
         <p>

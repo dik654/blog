@@ -20,9 +20,8 @@ export default function Subpool({
       <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
         <h3>배경</h3>
         <p>
-          Accepted transaction도 즉시 block candidate가 되는 것은 아닙니다.
-          sender의 canonical nonce부터 끊김 없이 이어져야 하고, 각 transaction의
-          fee cap이 현재 base fee를 감당해야 합니다.
+          Accepted transaction도 즉시 block candidate가 되는 것은 아닙니다. sender의 canonical nonce부터 끊김 없이 이어져야 하고 각
+          transaction의 fee cap이 현재 base fee를 감당해야 합니다.
         </p>
         <h3>문제</h3>
         <p>
@@ -33,10 +32,8 @@ export default function Subpool({
         </p>
         <h3>아이디어와 구현</h3>
         <p>
-          Pending, BaseFee, Queued 같은 logical states로 실행 가능성의 이유를
-          보존합니다. Canonical state change 때 affected senders를 다시 평가하고,
-          replacement·eviction도 sender chain을 깨뜨린 뒤 descendants를
-          재분류하도록 처리합니다.
+          Pending, BaseFee, Queued 같은 logical states로 실행 가능성의 이유를 보존합니다. Canonical state change 때 affected
+          senders를 다시 평가하고 replacement·eviction도 sender chain을 깨뜨린 뒤 descendants를 재분류하도록 처리합니다.
         </p>
         <p>
           Blob transaction의 signed envelope, versioned hashes와 sidecar data는

@@ -73,10 +73,8 @@ export default function ProcessSlot({
           채웁니다.
         </p>
         <p>
-          Zero가 아닌 header state root를 무조건 덮어쓰거나, backfill 전에
-          header root를 계산하면 다른 commitment가 됩니다. Receipt에는 slot,
-          pre-state root, zero/backfill branch, header root, ring index와 fork를
-          남깁니다.
+          Zero가 아닌 header state root를 무조건 덮어쓰거나 backfill 전에 header root를 계산하면 다른 commitment가 됩니다. Receipt에는
+          slot, pre-state root, zero/backfill branch, header root, ring index와 fork를 남깁니다.
         </p>
       </div>
       <div className="not-prose my-4 flex flex-wrap gap-3">

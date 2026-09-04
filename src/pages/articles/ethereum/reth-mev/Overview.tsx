@@ -53,18 +53,14 @@ export default function Overview({
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
         <p className="leading-7">
-          Transaction ordering이 만드는 추가 가치는 arbitrage, liquidation,
-          backrun과 harmful ordering까지 여러 전략을 낳습니다. 현재
-          proposer-builder 시장에서는 searcher, external builder, relay와
-          proposer-side middleware가 이를 나눠 처리하지만 이 전체를 execution
-          client의 “MEV module”로 보면 책임이 뒤섞입니다.
+          Transaction ordering이 만드는 추가 가치는 arbitrage와 liquidation, backrun, harmful ordering까지 여러 전략을 낳습니다. 현재
+          proposer-builder 시장에서는 searcher와 external builder, relay, proposer-side middleware가 이를 나눠 처리합니다. 이
+          전체를 execution client의 “MEV module”로 보면 책임이 뒤섞입니다.
         </p>
         <p className="leading-7">
-          Reth node의 core 역할은 consensus client가 Engine API로 요청한 local
-          execution payload를 유효하게 만드는 것입니다. mev-boost가 relay bids를
-          받아 blinded block을 선택하는 경로는 validator·consensus-client 쪽에
-          있고, rbuilder는 Reth의 crates와 provider를 재사용할 수 있는 별도
-          builder application입니다.
+          Reth node의 core 역할은 consensus client가 Engine API로 요청한 local execution payload를 유효하게 만드는 것입니다. mev-
+          boost가 relay bids를 받아 blinded block을 선택하는 경로는 validator·consensus-client 쪽에 있고 rbuilder는 Reth의
+          crates와 provider를 재사용할 수 있는 별도 builder application입니다.
         </p>
       </div>
 
@@ -93,12 +89,18 @@ export default function Overview({
       </div>
       <div id="paper-builder-specs" className="mt-8 scroll-mt-24">
         <CitationBlock citeKey={1} source="Ethereum Builder Specifications @ 78a5546d" href="https://github.com/ethereum/builder-specs/tree/78a5546d9d8253beabf7db8baf988a58abdec87f">
-          <p>Validator registration, header bid, blinded block와 payload delivery의 proposer-builder protocol은 이 snapshot에 귀속합니다.</p>
+          <p>
+            Validator registration과 header bid, blinded block, payload delivery의 proposer-builder protocol은 이
+            snapshot에 귀속합니다.
+          </p>
         </CitationBlock>
       </div>
       <div id="paper-mev-boost-source" className="scroll-mt-24">
         <CitationBlock citeKey={2} type="code" source="Flashbots mev-boost source @ 203bb965" href="https://github.com/flashbots/mev-boost/tree/203bb9659eea613caefd198c67df4c6a8e6bf5d6">
-          <p>Relay aggregation과 proposer middleware 구현 설명은 이 SHA에 고정하며, neutral relay·delivery·best-value를 보장하는 protocol 정리로 확대하지 않습니다.</p>
+          <p>
+            Relay aggregation과 proposer middleware 구현 설명은 이 SHA에 고정하며 neutral relay·delivery·best-value를 보장하는
+            protocol 정리로 확대하지 않습니다.
+          </p>
         </CitationBlock>
       </div>
       <div id="paper-rbuilder-source" className="scroll-mt-24">

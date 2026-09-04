@@ -11,8 +11,7 @@ export default function DutyAssignment({ onCodeRef }: { onCodeRef: (key: string,
         <p>
           Beacon node는 epoch마다 validator index별 proposer·attester·aggregator 같은 duty를 제공합니다. Validator client는
           이를 cache하되 chain reorg, dependent root 변화와 epoch transition에서 stale duty인지 확인합니다. 한 slot에 여러
-          validator와 역할이 겹칠 수 있으므로 worker를 병렬로 실행할 수 있지만 각 작업은 같은 slot clock과 shutdown context를
-          공유해야 합니다.
+          validator와 역할이 겹칠 수 있으므로 worker는 병렬로 실행하되 각 작업이 같은 slot clock과 shutdown context를 공유해야 합니다.
         </p>
       </div>
 
@@ -47,18 +46,18 @@ export default function DutyAssignment({ onCodeRef }: { onCodeRef: (key: string,
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Duty receipt가 있어야 “왜 놓쳤는지”를 구분할 수 있습니다</h3>
         <p>
-          Receipt에는 epoch, dependent root, validator index/pubkey, role, committee/index, slot, beacon-node endpoint와 응답
-          revision을 남깁니다. 실행 단계에는 head/root를 받은 시각, signing root 확정 시각, slashing check와 signer
-          latency, submit 결과를 이어 붙입니다. 그래야 duty가 없었던 것과 API 지연, stale head, signer timeout, broadcast 실패를
-          서로 다른 원인으로 분류할 수 있습니다.
+          Receipt에 남기는 것은 epoch, dependent root, validator index/pubkey입니다. 여기에 role, committee/index, slot,
+          beacon-node endpoint와 응답 revision을 더합니다. 실행 단계에는 head/root를 받은 시각, signing root 확정 시각, slashing
+          check와 signer latency, submit 결과를 이어 붙입니다. 그래야 duty가 없었던 것과 API 지연, stale head, signer timeout,
+          broadcast 실패를 서로 다른 원인으로 분류할 수 있습니다.
         </p>
 
         <h3>Reorg와 deadline이 만나는 반례</h3>
         <p>
-          Attestation 준비 중 head가 바뀌었다고 이미 승인된 signing root를 무조건 새 root로 교체하면 double vote나
-          surround condition을 만들 수 있습니다. 반대로 너무 일찍 root를 고정하면 stale head에 vote할 수 있습니다. Client는
-          validator spec의 observation timing에 맞춰 head를 선택하고, slashing history가 허용하는 동일 duty identity 안에서만
-          서명하며 deadline 이후에는 안전하게 missed duty로 종료합니다.
+          Attestation 준비 중 head가 바뀌었다고 이미 승인된 signing root를 무조건 새 root로 교체하면 double vote나 surround condition을
+          만들 수 있습니다. 반대로 너무 일찍 root를 고정하면 stale head에 vote할 수 있습니다. Client는 validator spec의 observation
+          timing에 맞춰 head를 선택합니다. 서명은 slashing history가 허용하는 동일 duty identity 안에서만 하고 deadline 이후에는 안전하게
+          missed duty로 종료합니다.
         </p>
       </div>
     </section>

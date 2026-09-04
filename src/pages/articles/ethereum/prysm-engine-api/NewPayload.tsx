@@ -27,7 +27,12 @@ export default function NewPayload({ onCodeRef }: { onCodeRef: (key: string, ref
         <h3>latestValidHash는 rollback 지점이지 에러 메시지의 부록이 아닙니다</h3>
         <p>A–B–C branch에서 C가 INVALID이고 B가 fully validated라면 <code>latestValidHash=B</code>는 invalid suffix를 C부터 잘라낼 수 있는 기준입니다. EL이 유효 ancestor를 아직 판정할 수 없다면 null일 수 있으므로, null을 genesis나 parent hash로 임의 치환하면 안 됩니다. <code>validationError</code>는 진단용 문자열이고 machine decision은 versioned status와 hash 규칙을 따릅니다.</p>
         <h3>SYNCING을 자동 retry 가능한 VALID로 바꾸지 않습니다</h3>
-        <p>SYNCING은 필요한 ancestor/state가 아직 없다는 뜻입니다. 같은 payload identity에 대한 validity는 확정 전까지 optimistic marker로 유지하고, 이후 VALID면 marker를 해제하며 INVALID면 latest valid ancestor 이후의 descendant와 관련 head를 조정합니다. Transport timeout도 status가 아니므로 요청 ID·method version·deadline을 남긴 뒤 progression에 필요할 때만 idempotent validation을 다시 요청합니다.</p>
+        <p>
+            SYNCING은 필요한 ancestor/state가 아직 없다는 뜻입니다. 같은 payload identity의 validity는 확정 전까지 optimistic marker로
+            남습니다. 이후 VALID면 marker를 해제하고 INVALID면 latest valid ancestor 이후의 descendant와 관련 head를 조정합니다.
+            Transport timeout도 status가 아니므로 요청 ID·method version·deadline을 남긴 뒤 progression에 필요할 때만 idempotent
+            validation을 다시 요청합니다.
+          </p>
         <h3>Version별 입력의 길이와 순서가 validation 일부입니다</h3>
         <p>Prague <code>newPayloadV4</code>의 <code>executionRequests</code>는 request type 오름차순이어야 하고 empty data·duplicate type·null array는 invalid params입니다. <code>expectedBlobVersionedHashes</code>와 commitment, parent beacon block root도 block hash 검증 문맥에 들어가므로 transaction execution만 성공했다고 V4 payload가 valid한 것은 아닙니다.</p>
       </div>

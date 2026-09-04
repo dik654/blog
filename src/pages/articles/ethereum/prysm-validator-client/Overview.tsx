@@ -12,9 +12,9 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
           Validator는 모든 slot에 같은 일을 하지 않습니다. Beacon node가 계산한 proposer·attester·aggregator·sync-committee
-          duty를 받아 정해진 시간에 수행하고, fork domain과 signing root를 검토한 뒤 local key 또는 remote signer에 서명을
-          요청합니다. 이때 잘못된 재시도 한 번이 같은 slot의 conflicting block이나 같은 target epoch의 double vote를 만들어
-          slashable evidence가 될 수 있습니다.
+          duty를 받아 정해진 시간에 수행합니다. Fork domain과 signing root를 검토한 뒤 local key 또는 remote signer에 서명을 요청합니다. 이때
+          잘못된 재시도 한 번이 같은 slot의 conflicting block이나 같은 target epoch의 double vote를 만들어 slashable evidence가 될 수
+          있습니다.
         </p>
         <p>
           이 글은 <strong>duty 조회→slot deadline→signing context→keymanager trust boundary→slashing-protection
@@ -30,23 +30,23 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>핵심 아이디어: duty ID와 signing history를 같은 원자적 결정으로 묶습니다</h3>
         <p>
-          최소 duty identity에는 validator public key/index, duty type, slot 또는 source·target epoch, fork domain과 signing
-          root가 들어갑니다. 서명 전에 이 identity를 slashing-protection history와 비교하고, 허용된 signing root를 기록하는
-          시점과 실제 signature receipt의 관계를 명시해야 합니다. “Timeout이 났으니 다른 signer에서 다시 시도”하는 방식은 첫
-          요청이 성공했는지 모르는 상태에서 두 번째 signature를 만들 수 있으므로 안전하지 않습니다.
+          최소 duty identity에는 validator public key/index, duty type, slot 또는 source·target epoch, fork domain과
+          signing root가 들어갑니다. 서명 전에 이 identity를 slashing-protection history와 비교합니다. 허용된 signing root를 기록하는
+          시점과 실제 signature receipt의 관계도 명시해야 합니다. “Timeout이 났으니 다른 signer에서 다시 시도”하는 방식은 첫 요청이 성공했는지 모르는 상태에서
+          두 번째 signature를 만들 수 있으므로 안전하지 않습니다.
         </p>
         <p>
-          예를 들어 slot 100의 proposal root R1을 remote signer에 보낸 뒤 응답만 잃었다면, 같은 stable duty ID로 R1의
-          receipt를 조회하거나 동일 root 재요청만 허용해야 합니다. R2로 바꿔 blind retry하면 두 signed block이 network에
-          보이는 순간 proposer slashing 조건을 만족할 수 있습니다.
+          예를 들어 slot 100의 proposal root R1을 remote signer에 보낸 뒤 응답만 잃었다면 같은 stable duty ID로 R1의 receipt를 조회하거나
+          동일 root 재요청만 허용해야 합니다. R2로 바꿔 blind retry하면 두 signed block이 network에 보이는 순간 proposer slashing 조건을
+          만족할 수 있습니다.
         </p>
 
         <h3>Local key와 remote signer는 위험이 없어지는 대신 위치가 달라집니다</h3>
         <p>
           Local keymanager는 secret key를 validator host에서 복호화하므로 file permission, memory exposure와 backup이 핵심
-          경계입니다. Remote signer는 secret을 분리하지만 authentication, authorization, network partition, signer-side
-          slashing history와 timeout reconciliation이 새 dependency가 됩니다. 어느 방식이든 beacon node가 준 object를 그대로
-          서명하지 않고 domain·root·duty·chain identity를 확인해야 합니다.
+          경계입니다. Remote signer는 secret을 분리합니다. 대신 authentication과 authorization, network partition, signer-
+          side slashing history, timeout reconciliation이 새 dependency로 붙습니다. 어느 방식이든 beacon node가 준 object를
+          그대로 서명하지 않고 domain·root·duty·chain identity를 확인해야 합니다.
         </p>
       </div>
 

@@ -74,11 +74,9 @@ export default function EncodeDecode({
           경계입니다.
         </p>
         <p>
-          Fixed-size container는 offset table이 없으므로 원하는 field 위치를
-          schema에서 바로 계산할 수 있습니다. Dynamic container도 offset만 읽어
-          field slice를 찾을 수 있지만, slice를 찾았다는 사실과 nested value가
-          canonical이라는 사실은 다릅니다. Nested offsets·bitlist termination
-          bit·boolean 0/1과 trailing bytes까지 재귀적으로 검사해야 합니다.
+          Fixed-size container는 offset table이 없으므로 원하는 field 위치를 schema에서 바로 계산할 수 있습니다. Dynamic container도
+          offset만 읽어 field slice를 찾을 수 있지만 slice를 찾았다는 사실과 nested value가 canonical이라는 사실은 다릅니다. Nested
+          offsets·bitlist termination bit·boolean 0/1과 trailing bytes까지 재귀적으로 검사해야 합니다.
         </p>
         <h3>구현을 읽을 때 남길 receipt</h3>
         <p>

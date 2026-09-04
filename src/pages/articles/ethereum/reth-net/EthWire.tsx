@@ -65,13 +65,10 @@ export default function EthWire({
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Announcement를 full broadcast와 혼동하지 않습니다</h3>
         <p>
-          Transaction hash announcement를 받은 node는 known set과 policy로
-          dedupe한 뒤 필요한 object만 요청합니다. 모든 peer에 full transaction을
-          보내거나 announcement를 받은 즉시 txpool에 넣는다고 가정하면
-          bandwidth와 validation budget이 무제한인 것처럼 설계하게 됩니다. Hash
-          count, advertised size·type, response bytes, inflight request와
-          per-peer channel을 제한하고 malformed·unsolicited·duplicate response를
-          별도 reason으로 버립니다.
+          Transaction hash announcement를 받은 node는 known set과 policy로 dedupe한 뒤 필요한 object만 요청합니다. 모든 peer에
+          full transaction을 보내거나 announcement를 받은 즉시 txpool에 넣는다고 가정하면 bandwidth와 validation budget이 무제한인 것처럼
+          설계하게 됩니다. Hash count와 advertised size·type을 제한하고 response bytes, inflight request, per-peer
+          channel에도 상한을 둡니다. malformed·unsolicited·duplicate response는 별도 reason으로 버립니다.
         </p>
         <h3>Backpressure는 성능 옵션이 아니라 memory safety 경계입니다</h3>
         <p>
@@ -98,10 +95,9 @@ export default function EthWire({
           Ethereum Wire Protocol (eth)
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          문제는 Status와 block·transaction message의 versioned wire semantics를
-          정의하는 것입니다. 규격은 field·request·response contract를 제공하지만
-          local queue limit·peer scoring·sync strategy나 received block의
-          validity를 대신 정하지 않습니다.
+          문제는 Status와 block·transaction message의 versioned wire semantics를 정의하는 것입니다. 규격이 제공하는 것은
+          field·request·response contract까지입니다. local queue limit·peer scoring·sync strategy나 received block의
+          validity는 여기서 정해지지 않습니다.
         </p>
         <a
           className="mt-3 inline-block text-sm font-medium text-primary hover:underline"

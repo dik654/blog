@@ -23,8 +23,9 @@ export default function StaticFiles({ onCodeRef }: { onCodeRef: (key: string, re
           <li>Provider dual-read parity와 rollback window를 지난 뒤 mutable copy를 prune합니다.</li>
         </ol>
         <p>
-          Publish 전 crash는 staging을 버리고, publish 후 prune 전 crash는 두 copy 중 manifest owner를 따릅니다. Prune이 먼저 일어나거나
-          manifest가 DB canonical generation과 다르면 history gap이 생기므로 startup reconciliation에서 fail closed합니다.
+          Publish 전 crash는 staging을 버리고 publish 후 prune 전 crash는 두 copy 중 manifest owner를 따릅니다. Prune이 먼저
+          일어나거나 manifest가 DB canonical generation과 다르면 history gap이 생기므로 startup reconciliation에서 fail
+          closed합니다.
         </p>
         <h3>DB release gate</h3>
         <p>

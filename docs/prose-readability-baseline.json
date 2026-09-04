@@ -46,15 +46,11 @@
       "score": 36
     },
     "blockchain/prysm": {
-      "fingerprint": "0510543934cb8943",
+      "fingerprint": "b68417978dce017f",
       "score": 36
     },
     "blockchain/reth": {
-      "fingerprint": "84140861367c22e3",
-      "score": 36
-    },
-    "blockchain/reth-provider": {
-      "fingerprint": "1e0973554d09d3db",
+      "fingerprint": "73a952b80323e8cc",
       "score": 36
     },
     "blockchain/helios-state": {
@@ -62,15 +58,19 @@
       "score": 35
     },
     "blockchain/prysm-engine-api": {
-      "fingerprint": "b5085f6db9bdab72",
+      "fingerprint": "0b3da75c8574bc2c",
       "score": 34
     },
     "blockchain/prysm-finality": {
-      "fingerprint": "82d7bc846812c22e",
+      "fingerprint": "4dc15ec6329c3f66",
       "score": 34
     },
     "blockchain/reth-cli": {
-      "fingerprint": "b462f754fba1faa8",
+      "fingerprint": "3918864d3258041b",
+      "score": 34
+    },
+    "blockchain/reth-provider": {
+      "fingerprint": "0f96089e7d1cbc93",
       "score": 34
     },
     "crypto/risc0": {
@@ -118,7 +118,7 @@
       "score": 30
     },
     "blockchain/reth-net": {
-      "fingerprint": "63b88637f7413b3b",
+      "fingerprint": "f2ad941a4d6f8eb7",
       "score": 30
     },
     "isms-aml/isms-practical-guide": {
@@ -134,7 +134,7 @@
       "score": 29
     },
     "blockchain/reth-chainspec": {
-      "fingerprint": "8ee43d64adb5621f",
+      "fingerprint": "195954538970e5c2",
       "score": 29
     },
     "ai/claw-file-ops": {
@@ -170,7 +170,7 @@
       "score": 28
     },
     "blockchain/prysm-validator-client": {
-      "fingerprint": "d986749f0dff2cc9",
+      "fingerprint": "a1c7b0b6b4b1e61f",
       "score": 28
     },
     "isms-aml/isms-auth-management": {
@@ -182,7 +182,7 @@
       "score": 27
     },
     "blockchain/reth-db": {
-      "fingerprint": "92c553ab0edb6b31",
+      "fingerprint": "3636891f3a913e98",
       "score": 27
     },
     "crypto/sp1": {
@@ -254,15 +254,15 @@
       "score": 24
     },
     "blockchain/prysm-beacon-state": {
-      "fingerprint": "3e8bfe5865a3bffe",
+      "fingerprint": "f49e81eefe23571c",
       "score": 24
     },
     "blockchain/prysm-p2p-libp2p": {
-      "fingerprint": "6df46bb869b3801a",
+      "fingerprint": "ef4ab700d85505cd",
       "score": 24
     },
     "blockchain/prysm-sync": {
-      "fingerprint": "1ac8b52cb4f46002",
+      "fingerprint": "f6ce1c796026fac3",
       "score": 24
     },
     "blockchain/uniswap-v4": {
@@ -338,7 +338,7 @@
       "score": 22
     },
     "blockchain/prysm-bls": {
-      "fingerprint": "c5bbac9be4e545ed",
+      "fingerprint": "e6cbb34970c69bcf",
       "score": 22
     },
     "blockchain/rwa-composition": {
@@ -409,8 +409,16 @@
       "fingerprint": "584bc29c16568a1d",
       "score": 20
     },
+    "blockchain/prysm-epoch-processing": {
+      "fingerprint": "21e03eb3081fb69d",
+      "score": 20
+    },
+    "blockchain/prysm-gossipsub": {
+      "fingerprint": "fdd377c175ab60f8",
+      "score": 20
+    },
     "blockchain/reth-block-execution": {
-      "fingerprint": "ef51a0cfae68ce0f",
+      "fingerprint": "d2015a9bdf2bf26f",
       "score": 20
     },
     "blockchain/tendermint-bft": {
@@ -438,11 +446,11 @@
       "score": 20
     },
     "blockchain/reth-alloy-primitives": {
-      "fingerprint": "f0b51737753f78b6",
+      "fingerprint": "aeb9eefb4e880ec7",
       "score": 19
     },
     "blockchain/reth-sync": {
-      "fingerprint": "60153769baa32106",
+      "fingerprint": "2e3c5f22fac277df",
       "score": 19
     },
     "ai/claw-cli": {
@@ -506,15 +514,7 @@
       "score": 18
     },
     "blockchain/prysm-block-processing": {
-      "fingerprint": "8623e3390d045d98",
-      "score": 18
-    },
-    "blockchain/prysm-epoch-processing": {
-      "fingerprint": "db0c06aa4fcd6347",
-      "score": 18
-    },
-    "blockchain/prysm-gossipsub": {
-      "fingerprint": "acf1b32b649c55b2",
+      "fingerprint": "7ae04dfdc47572b9",
       "score": 18
     },
     "gpu/gpu-proof-pipeline": {
@@ -559,10 +559,6 @@
     },
     "blockchain/dai-maker": {
       "fingerprint": "dd4a31c6c8a66871",
-      "score": 16
-    },
-    "blockchain/prysm-forkchoice": {
-      "fingerprint": "141bcd61f8625719",
       "score": 16
     },
     "crypto/elliptic-curves": {
@@ -645,8 +641,12 @@
       "fingerprint": "89d10fc7b26c02ea",
       "score": 14
     },
+    "blockchain/prysm-forkchoice": {
+      "fingerprint": "b7834bbe38bbe88f",
+      "score": 14
+    },
     "blockchain/prysm-ssz": {
-      "fingerprint": "9ff860dd59484945",
+      "fingerprint": "373d05a833f7b90f",
       "score": 14
     },
     "blockchain/rollup-fundamentals": {
@@ -854,15 +854,15 @@
       "score": 10
     },
     "blockchain/prysm-state-cache": {
-      "fingerprint": "c64dc09a9eb6d2bc",
+      "fingerprint": "e2b66445ee663056",
       "score": 10
     },
     "blockchain/prysm-sync-committee": {
-      "fingerprint": "37c6c5df75ecbb65",
+      "fingerprint": "4aa35d803abb4d1d",
       "score": 10
     },
     "blockchain/reth-mev": {
-      "fingerprint": "56735ad9ae56f0ac",
+      "fingerprint": "d02260188517b1fb",
       "score": 10
     },
     "blockchain/uniswap-v3": {
@@ -1066,7 +1066,7 @@
       "score": 8
     },
     "blockchain/reth-pipeline": {
-      "fingerprint": "db9f28e4b88a5763",
+      "fingerprint": "983bee5e9acc8e4d",
       "score": 7
     },
     "crypto/field-arithmetic": {
@@ -1158,15 +1158,19 @@
       "score": 6
     },
     "blockchain/prysm-slot-processing": {
-      "fingerprint": "93a585e6568bbc61",
+      "fingerprint": "bfe671a8fd8fb55f",
+      "score": 6
+    },
+    "blockchain/reth-eip1559": {
+      "fingerprint": "6a76d2f192ceaa62",
       "score": 6
     },
     "blockchain/reth-exex": {
-      "fingerprint": "a021063c474f6766",
+      "fingerprint": "74976cd545de9cb9",
       "score": 6
     },
     "blockchain/reth-trie": {
-      "fingerprint": "bbecd948b896ce61",
+      "fingerprint": "b617202ecd1a1318",
       "score": 6
     },
     "blockchain/uniswap-v2": {

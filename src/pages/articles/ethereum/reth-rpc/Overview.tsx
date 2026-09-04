@@ -37,10 +37,8 @@ export default function Overview({
         </p>
         <h3>아이디어</h3>
         <p>
-          Transport listener와 middleware가 connection policy를 담당하고, typed
-          RPC module이 method·params·result contract를 정의합니다. Handler는
-          provider, txpool, EVM과 payload service를 호출하며 protocol error로
-          결과를 변환합니다.
+          Transport listener와 middleware가 connection policy를 담당하고 typed RPC module이 method·params·result
+          contract를 정의합니다. Handler는 provider, txpool, EVM과 payload service를 호출하며 protocol error로 결과를 변환합니다.
         </p>
         <p>
           Reth의 일반 HTTP/WS RPC는 명시적으로 활성화해야 하며 address, port와

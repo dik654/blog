@@ -16,7 +16,9 @@ export default function ModernBlobReorgRelease() {
   const sidebar = useCodeSidebar();
   return <article className="space-y-14">
     <section id="overview" className="space-y-6">
-      <header className="space-y-3"><p className="text-sm font-semibold text-primary">Canonical chain이 바뀌어도 blob transaction을 다시 실행 가능하게 만들기</p><h2 className="text-3xl font-bold tracking-tight">Reorg는 transaction과 sidecar의 생명주기를 다시 결합합니다</h2></header>
+      <header className="space-y-3"><p className="text-sm font-semibold text-primary">
+            Canonical chain이 바뀌어도 blob transaction을 다시 실행할 수 있게 만들기
+          </p><h2 className="text-3xl font-bold tracking-tight">Reorg는 transaction과 sidecar의 생명주기를 다시 결합합니다</h2></header>
       <p className="text-lg leading-8 text-foreground/90"><strong>Reorg</strong>는 이전 canonical branch의 block이 빠지고 다른 branch가 canonical이 되는 사건입니다. Orphaned 일반 transaction은 body를 pool에 되돌릴 수 있지만, blob transaction은 대응 sidecar도 다시 확보해야 완전한 후보가 됩니다.</p>
       <TermBreakdown title="Reorg에서 따로 추적할 네 상태" items={[
         { term: "Orphaned transaction", description: "Old canonical block에서 빠져 다시 pool 후보가 될 type-3 transaction body입니다." },
@@ -33,7 +35,10 @@ export default function ModernBlobReorgRelease() {
     </section>
     <section id="reinsert" className="space-y-6">
       <h2 className="text-2xl font-bold">Body, sidecar, receipt가 모두 있어야 fast reinsert가 열립니다</h2>
-      <ExplainedFormula question="어떤 orphaned blob transaction을 network fetch 없이 바로 재주입할 수 있나요?" idea={<p>Old chain에서 빠진 body, local sidecar, 같은 generation의 verified receipt를 별도로 확인합니다. 세 조건을 모두 통과한 경우에만 fast path를 엽니다.</p>} formula={String.raw`I_{fast}=I_{orphan}\land I_{sidecar}\land I_{receipt}`} annotatedFormula={String.raw`\begin{aligned}I_{artifact}&=\underbrace{I_{sidecar}\land I_{receipt}}_{\text{local bytes와 검증 provenance를 함께 확인}}\\I_{fast}&=\underbrace{I_{orphan}\land I_{artifact}}_{\text{old-chain body와 reusable artifact를 결합}}\\I_{miss}&=\underbrace{1-I_{artifact}}_{\text{fast path 없으면 fetch·failure로 전환}}
+      <ExplainedFormula question="어떤 orphaned blob transaction을 network fetch 없이 바로 재주입할 수 있나요?" idea={<p>
+            Old chain에서 빠진 body, local sidecar, 같은 generation의 verified receipt를 별도로 확인합니다. 세 조건을 모두 통과할 때만
+            fast path를 엽니다.
+          </p>} formula={String.raw`I_{fast}=I_{orphan}\land I_{sidecar}\land I_{receipt}`} annotatedFormula={String.raw`\begin{aligned}I_{artifact}&=\underbrace{I_{sidecar}\land I_{receipt}}_{\text{local bytes와 검증 provenance를 함께 확인}}\\I_{fast}&=\underbrace{I_{orphan}\land I_{artifact}}_{\text{old-chain body와 reusable artifact를 결합}}\\I_{miss}&=\underbrace{1-I_{artifact}}_{\text{fast path 없으면 fetch·failure로 전환}}
 \end{aligned}`} operations={[
         { expression: String.raw`I_{sidecar}\land I_{receipt}`, annotation: ["sidecar 존재와 receipt 일치를 AND해", "재사용 가능한 artifact를 판정"] },
         { expression: String.raw`I_{orphan}\land I_{artifact}`, annotation: ["orphaned body와 artifact를 결합해", "fast reinsert eligibility를 생성"] },

@@ -39,10 +39,9 @@ export default function Overview({
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>세 가지 identity를 먼저 고정합니다</h3>
         <p>
-          Input receipt에는 block hash/number, parent hash와 pre-state root,
-          chain-spec digest와 active fork를 넣습니다. Parent state가 다른데
-          block bytes만 같거나, 같은 block에서 다른 fork rule을 고르면
-          deterministic EVM이라도 서로 다른 결과가 나옵니다.
+          Input receipt에는 block hash/number, parent hash와 pre-state root, chain-spec digest와 active fork를
+          넣습니다. Parent state가 다른데 block bytes만 같거나 같은 block에서 다른 fork rule을 고르면 deterministic EVM이라도 서로 다른 결과가
+          나옵니다.
         </p>
         <h3>Execute 성공과 block acceptance는 다릅니다</h3>
         <p>

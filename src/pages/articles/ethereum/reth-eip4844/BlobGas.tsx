@@ -82,7 +82,8 @@ export default function BlobGas({
               피드백 루프
             </p>
             <p className="text-sm leading-6 text-foreground/80">
-              사용량이 target을 계속 넘으면 excess와 다음 block의 가격이 올라가 수요를 억제합니다. 반대로 target보다 적게 사용하면 excess가 줄어듭니다. Fork upgrade가 target과 maximum을 바꾸더라도 같은 state variable을 이어 쓰기 때문에 가격 변화가 block 경계에서 갑자기 초기화되지는 않습니다.
+              사용량이 target을 계속 넘으면 excess와 다음 block의 가격이 올라가 수요를 억제하고 반대로 target보다 적게 쓰면 excess가 줄어듭니다. Fork
+              upgrade가 target과 maximum을 바꾸더라도 같은 state variable을 이어 쓰기 때문에 가격 변화가 block 경계에서 갑자기 초기화되지는 않습니다.
             </p>
           </div>
         </div>
@@ -158,7 +159,8 @@ export default function BlobGas({
               사용량 = 현재 max
             </p>
             <p className="text-sm leading-6 text-foreground/80">
-              Maximum까지 사용하면 target과 maximum의 차이만큼 excess가 빠르게 쌓입니다. Fork가 maximum 공급을 늘렸더라도 target과 fee parameter가 함께 어떻게 바뀌었는지 확인해야 합니다.
+              Maximum까지 사용하면 target과 maximum의 차이만큼 excess가 빠르게 쌓입니다. Fork가 maximum 공급을 늘렸더라도 target과 fee
+              parameter가 함께 어떻게 바뀌었는지를 봅니다.
             </p>
           </div>
           <div className="rounded-lg border border-border/60 p-4">
@@ -171,7 +173,8 @@ export default function BlobGas({
           </div>
         </div>
         <p>
-          이 네 경우를 관통하는 목표는 block마다 정확히 target을 강제하는 것이 아니라 장기 평균을 target 주변으로 유도하는 것입니다. 따라서 운영 화면에서는 고정된 fee 예시보다 현재 excess와 활성 chain spec parameter를 함께 표시해야 fork 이후에도 같은 해석을 유지할 수 있습니다.
+          이 네 경우를 관통하는 목표는 block마다 정확히 target을 강제하는 것이 아니라 장기 평균을 target 주변으로 유도하는 것입니다. 운영 화면에 고정된 fee 예시 대신
+          현재 excess와 활성 chain spec parameter를 함께 띄우면 fork 이후에도 해석을 그대로 유지할 수 있습니다.
         </p>
       </div>
     </section>

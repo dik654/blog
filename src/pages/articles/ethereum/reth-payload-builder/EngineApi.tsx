@@ -24,10 +24,8 @@ export default function EngineApi({ onCodeRef }: Props) {
 
         <h3 className="text-xl font-semibold mt-6 mb-3">Payload id의 역할</h3>
         <p className="leading-7">
-          payload id는 CL이 이후 job 결과를 찾는 opaque handle이다. 구현이 어떤
-          입력으로 id를 만드는지는 collision과 재사용 요구를 만족해야 하지만,
-          호출자는 특정 hash 조합이나 “같은 attributes면 항상 같은 id”에
-          의존하지 않는다.
+          payload id는 CL이 이후 job 결과를 찾는 opaque handle이다. 구현이 어떤 입력으로 id를 만드는지는 collision과 재사용 요구를 만족해야 하지만
+          호출자는 특정 hash 조합이나 “같은 attributes면 항상 같은 id”에 의존하지 않는다.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">Job lifecycle</h3>

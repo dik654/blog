@@ -16,11 +16,9 @@ export default function Overview({
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          Genesis부터 head까지 수백만 block을 한 transaction에서 처리하면 중간
-          실패 뒤 처음부터 다시 시작해야 하고, header·body·sender·state가 서로
-          다른 높이에 멈춘 이유도 알기 어렵습니다. Reth pipeline은 의존 관계가
-          있는 stage가 bounded range를 처리하고 durable checkpoint를 남기게 해
-          historical sync를 재시작 가능한 작업으로 만듭니다.
+          Genesis부터 head까지 수백만 block을 한 transaction에서 처리하면 중간 실패 뒤 처음부터 다시 시작해야 하고 header·body·sender·state가
+          서로 다른 높이에 멈춘 이유도 알기 어렵습니다. Reth pipeline은 의존 관계가 있는 stage가 bounded range를 처리하고 durable checkpoint를
+          남기게 해 historical sync를 재시작 가능한 작업으로 만듭니다.
         </p>
         <p>
           이 글은 checkpoint 99, target 250, batch limit 64인 고정 사례로{" "}
@@ -46,11 +44,9 @@ export default function Overview({
         </p>
         <h3>Reorg는 뒤에서 앞으로 unwind합니다</h3>
         <p>
-          Common ancestor가 140이면 derived output을 만드는
-          Merkle·Execution·Senders 등이 먼저 140으로 되돌아가고, body/header
-          canonical view를 조정한 뒤 새 branch를 순서대로 실행합니다. Unwind
-          checkpoint와 forward checkpoint를 한 필드로 덮어쓰지 않아야 crash 뒤
-          현재 phase를 판단할 수 있습니다.
+          Common ancestor가 140이면 derived output을 만드는 Merkle·Execution·Senders 등이 먼저 140으로 되돌아가고 body/header
+          canonical view를 조정한 뒤 새 branch를 순서대로 실행합니다. Unwind checkpoint와 forward checkpoint를 한 필드로 덮어쓰지 않아야
+          crash 뒤 현재 phase를 판단할 수 있습니다.
         </p>
       </div>
       <div id="paper-eels-pipeline" className="scroll-mt-24">

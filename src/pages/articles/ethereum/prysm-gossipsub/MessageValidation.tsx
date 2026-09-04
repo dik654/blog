@@ -22,22 +22,23 @@ export default function MessageValidation({ onCodeRef }: { onCodeRef: (key: stri
 
         <h3>Accept·Reject·Ignore를 구분하는 기준</h3>
         <p>
-          Bad signature, impossible index와 canonical decode failure처럼 peer가 보내서는 안 되는 input은 Reject 후보입니다. 이미 본
-          같은 object, local node가 아직 parent/state를 갖지 못한 경우, 허용 window 밖이지만 악의로 단정하기 어려운 input은
-          Ignore 또는 deferred 처리할 수 있습니다. Exact mapping은 current specification과 client release를 따르되 typed reason을
-          잃지 않습니다.
+          Bad signature, impossible index, canonical decode failure처럼 peer가 보내서는 안 되는 input은 Reject 후보입니다. 이미
+          본 같은 object, local node가 아직 parent/state를 갖지 못한 경우, 허용 window 밖이지만 악의로 단정하기 어려운 input은 Ignore 또는
+          deferred로 처리할 수 있습니다. Exact mapping은 current specification과 client release를 따르되 typed reason을 잃지
+          않습니다.
         </p>
         <p>
-          Duplicate cache를 decode 전에 compressed bytes hash만으로 두면 다른 invalid encoding이 같은 semantic object처럼
-          취급되거나, 반대로 같은 object의 byte variant가 비싼 검증을 반복할 수 있습니다. Ethereum의 message-id domain과
-          valid/invalid Snappy 경계를 따르고, semantic seen key는 canonical decode 뒤 object type별 invariant로 관리합니다.
+          Duplicate cache를 decode 전에 compressed bytes hash만으로 두면 다른 invalid encoding이 같은 semantic object처럼 취급될
+          수 있습니다. 반대로 같은 object의 byte variant가 비싼 검증을 반복하기도 합니다. Ethereum의 message-id domain과 valid/invalid
+          Snappy 경계를 따르고 semantic seen key는 canonical decode 뒤 object type별 invariant로 관리합니다.
         </p>
 
         <h3>Backpressure와 side-effect invariant</h3>
         <p>
-          Validation worker·queued bytes·state lookup과 signature batch에 각각 cap과 deadline을 둡니다. Queue가 찼다는 local
-          saturation을 remote-invalid penalty로 바꾸지 않고 overload reason으로 drop합니다. Validation 중 timeout·panic·cancel이
-          나면 seen-accepted marker, fork-choice store와 DB가 부분 갱신되지 않아야 동일 message replay가 결정적입니다.
+          Validation worker·queued bytes·state lookup·signature batch에 각각 cap과 deadline을 둡니다. Queue가 찼다는 local
+          saturation을 remote-invalid penalty로 바꾸지 않고 overload reason으로 drop합니다. Validation 중
+          timeout·panic·cancel이 나면 seen-accepted marker, fork-choice store와 DB가 부분 갱신되지 않아야 동일 message replay가
+          결정적입니다.
         </p>
       </div>
     </section>

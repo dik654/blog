@@ -13,9 +13,8 @@ export default function PeerDiscovery({ onCodeRef }: { onCodeRef: (key: string, 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           Ethereum Node Record(ENR)는 node identity key가 서명한 key-value record입니다. Sequence number가 증가할수록 새
-          address·fork/subnet metadata를 나타내며, 같은 node ID의 낮은 sequence record는 stale 후보로 처리합니다. Signature가
-          맞아도 endpoint가 reachable하거나 advertised fork가 실제 handshake와 일치한다는 뜻은 아니므로 candidate state에만
-          넣습니다.
+          address·fork/subnet metadata를 나타내며 같은 node ID의 낮은 sequence record는 stale 후보로 처리합니다. Signature가 맞아도
+          endpoint가 reachable하거나 advertised fork가 실제 handshake와 일치한다는 뜻은 아니므로 candidate state에만 넣습니다.
         </p>
 
         <h3>Lookup에서 dial queue까지</h3>
@@ -34,10 +33,10 @@ export default function PeerDiscovery({ onCodeRef }: { onCodeRef: (key: string, 
 
         <h3>ENR, multiaddr와 PeerId는 역할이 다릅니다</h3>
         <p>
-          ENR는 discovery identity와 signed endpoint metadata, multiaddr는 dial할 transport address, PeerId는 libp2p identity
-          public key에서 파생한 연결 identity입니다. 같은 endpoint에 여러 record가 있거나 NAT 때문에 advertised address가
-          실패할 수 있고, expected PeerId와 secure handshake identity가 다르면 connection을 닫습니다. 이 세 값을 하나의
-          “peer 주소” 문자열로 합치면 stale record와 identity mismatch를 구분할 수 없습니다.
+          ENR는 discovery identity와 signed endpoint metadata, multiaddr는 dial할 transport address, PeerId는
+          libp2p identity public key에서 파생한 연결 identity입니다. 같은 endpoint에 여러 record가 있거나 NAT 때문에 advertised
+          address가 실패할 수 있고 expected PeerId와 secure handshake identity가 다르면 connection을 닫습니다. 이 세 값을 하나의 “peer
+          주소” 문자열로 합치면 stale record와 identity mismatch를 구분할 수 없습니다.
         </p>
       </div>
     </section>

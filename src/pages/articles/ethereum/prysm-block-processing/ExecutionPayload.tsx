@@ -8,7 +8,12 @@ export default function ExecutionPayload({ onCodeRef }: { onCodeRef: (key: strin
       <h2 className="mb-6 text-2xl font-bold">Execution payload handler는 consensus state와 EL 판정을 같은 block에 결합한다</h2>
       <div className="not-prose mb-5 flex flex-wrap items-center gap-3"><CodeViewButton onClick={() => onCodeRef("execution-payload", codeRefs["execution-payload"])} /><span className="text-xs text-muted-foreground">Prysm execution payload 처리 seam</span></div>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p>Consensus state는 이전 execution payload header를 기억합니다. 새 payload의 parent hash, timestamp, prevRandao와 withdrawals·blob·execution requests 같은 fork별 commitment가 beacon block context와 일치해야 하며, transaction/EVM validity는 Engine API로 execution client에 묻습니다. CL의 local field check와 EL의 payload status를 한 boolean으로 줄이면 어느 소유자가 무엇을 거절했는지 사라집니다.</p>
+        <p>
+            Consensus state는 이전 execution payload header를 기억합니다. 새 payload의 parent hash, timestamp,
+            prevRandao와 withdrawals·blob·execution requests 같은 fork별 commitment가 beacon block context와 일치해야
+            합니다. Transaction/EVM validity는 Engine API로 execution client에 묻습니다. CL의 local field check와 EL의
+            payload status를 한 boolean으로 줄이면 어느 소유자가 무엇을 거절했는지가 사라집니다.
+          </p>
         <h3>세 가지 실패를 나눕니다</h3>
         <ul><li><strong>Consensus-context mismatch:</strong> parent hash·timestamp·prevRandao·withdrawals 등이 state와 다릅니다.</li><li><strong>Engine INVALID:</strong> execution rule이나 fork-specific commitment를 위반했고 latestValidHash로 invalid suffix를 조정해야 합니다.</li><li><strong>Engine SYNCING:</strong> data 부족으로 아직 판정하지 못했으며 optimistic marker가 필요합니다.</li></ul>
         <h3>Post-state root는 optimistic status의 의미를 숨기면 안 됩니다</h3>

@@ -11,9 +11,9 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
       <h2 className="mb-5 text-2xl font-bold">Prysm P2P는 발견한 주소를 곧바로 consensus peer로 믿지 않는다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          Beacon node는 중앙 서버 목록 없이 후보를 찾지만, signed ENR을 받았다는 사실만으로 그 node가 같은 Ethereum network에서
-          유용한 block을 제공한다는 뜻은 아닙니다. 후보는 address와 network metadata를 거쳐 dial되고, libp2p transport·peer
-          identity·stream protocol 협상 뒤 Ethereum Status compatibility와 resource policy까지 통과해야 active peer가 됩니다.
+          Beacon node는 중앙 서버 목록 없이 후보를 찾지만 signed ENR을 받았다는 사실만으로 그 node가 같은 Ethereum network에서 유용한 block을
+          제공한다는 뜻은 아닙니다. 후보는 address와 network metadata를 거쳐 dial되고 libp2p transport·peer identity·stream
+          protocol 협상 뒤 Ethereum Status compatibility와 resource policy까지 통과해야 active peer가 됩니다.
         </p>
         <p>
           이 글은 한 후보를 <strong>ENR→dial→authenticated PeerId→multiplexed connection→Status→score·gate→close</strong>
@@ -26,10 +26,10 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>고정 사례: ENR 후보 한 개가 active peer가 되기까지</h3>
         <p>
-          Candidate receipt에는 discovery source, node ID, ENR sequence, IP/UDP/TCP 또는 QUIC address, fork digest와 subnet
-          bitfield를 남깁니다. Dial attempt에는 transport, timeout과 expected PeerId를 연결하고, secure channel 뒤 실제 PeerId가
-          다르면 즉시 닫습니다. 마지막으로 Status의 fork digest·finalized root/epoch·head root/slot을 local chain context와
-          비교하고, 통과한 peer만 gossip과 Req/Resp resource budget을 얻습니다.
+          Candidate receipt에는 discovery source, node ID, ENR sequence, IP/UDP/TCP 또는 QUIC address, fork
+          digest와 subnet bitfield를 남깁니다. Dial attempt에는 transport, timeout과 expected PeerId를 연결하고 secure
+          channel 뒤 실제 PeerId가 다르면 즉시 닫습니다. 마지막으로 Status의 fork digest·finalized root/epoch·head root/slot을
+          local chain context와 비교하고 통과한 peer만 gossip과 Req/Resp resource budget을 얻습니다.
         </p>
         <p>
           각 단계는 서로 다른 보장입니다. ENR signature는 record origin을, Noise/TLS는 channel peer identity를, Status는 protocol

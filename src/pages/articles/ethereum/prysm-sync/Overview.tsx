@@ -11,9 +11,9 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
       <h2 className="mb-5 text-2xl font-bold">Prysm sync는 block을 많이 받는 작업이 아니라 검증된 연속 state cursor를 head까지 옮기는 작업이다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          새 beacon node는 local state가 network head보다 멀리 뒤에 있어 gossip block을 곧바로 처리할 수 없습니다. Genesis부터
-          검증하거나 recent trusted checkpoint에서 시작한 뒤, peer에게 block range를 요청하고 parent·signature·state transition을
-          순서대로 검증해 contiguous prefix만 durable commit해야 합니다.
+          새 beacon node는 local state가 network head보다 멀리 뒤에 있어 gossip block을 곧바로 처리할 수 없습니다. Genesis부터 검증하거나
+          recent trusted checkpoint에서 시작해야 합니다. 그 뒤로는 peer에게 block range를 요청하고 parent·signature·state
+          transition을 순서대로 검증해 contiguous prefix만 durable commit해야 합니다.
         </p>
         <p>
           이 글은 <strong>anchor→peer target→range request→out-of-order response→ordered validation→commit cursor→regular
@@ -27,13 +27,13 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
         <h3>고정 사례: slot 100 anchor에서 112 head까지</h3>
         <p>
           Local committed cursor가 slot 100이고 peer target이 112라고 합시다. Client는 101부터 bounded range를 여러 peer에
-          요청할 수 있지만 empty slot 때문에 모든 slot에 block이 오지는 않습니다. Response를 slot/root로 정렬·dedupe한 뒤
-          parent가 이어지는 block만 state transition하고, 검증된 마지막 block/state root를 cursor와 같은 transaction에 기록합니다.
+          요청하지만 empty slot 때문에 모든 slot에 block이 오지는 않습니다. Response는 slot/root로 정렬·dedupe한 뒤 parent가 이어지는 block만
+          state transition합니다. 검증된 마지막 block/state root는 cursor와 같은 transaction에 기록합니다.
         </p>
         <p>
-          Slot 106 block이 invalid이면 107 이후를 먼저 받아 두었더라도 committed cursor를 105 너머로 옮기지 않습니다. 다른
-          peer에서 106을 다시 구하고 같은 root가 계속 invalid면 peer fault와 chain candidate fault를 구분하며, 106이 empty slot인지도
-          range semantics와 descendant parent/slot로 확인합니다.
+          Slot 106 block이 invalid이면 107 이후를 먼저 받아 두었더라도 committed cursor를 105 너머로 옮기지 않습니다. 다른 peer에서 106을 다시
+          구했는데 같은 root가 계속 invalid라면 peer fault와 chain candidate fault를 구분합니다. 106이 empty slot인지도 range
+          semantics와 descendant parent/slot로 확인합니다.
         </p>
       </div>
       <div id="paper-ethereum-sync-network-spec" className="scroll-mt-24">

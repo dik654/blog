@@ -10,7 +10,11 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
     <section id="overview" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Block processing은 signed block을 parent state에 적용해 하나의 post-state를 만드는 함수다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p className="text-lg leading-8">Beacon block은 transaction 묶음만이 아니라 consensus state를 바꾸는 입력입니다. 같은 parent state와 같은 fork 규칙에 같은 block을 적용한 정상 client는 같은 post-state root를 만들어야 하며, 중간 검증 하나라도 실패하면 그 block transition 전체가 invalid입니다.</p>
+        <p className="text-lg leading-8">
+            Beacon block은 transaction 묶음만이 아니라 consensus state를 바꾸는 입력입니다. 같은 parent state와 같은 fork 규칙에 같은
+            block을 적용한 정상 client는 같은 post-state root를 만들어야 합니다. 중간 검증 하나라도 실패하면 그 block transition 전체가
+            invalid입니다.
+          </p>
         <p>이 글은 network gossip·SSZ decode를 이미 통과한 signed block이 <strong>slot 정렬 → proposer signature → fork별 process_block → post-state root 확인</strong>으로 내려가는 경로를 추적합니다. SSZ·BLS·BeaconState의 긴 정의는 각 정본 글에 두되, 현재 단계에서 필요한 직관과 실패 경계는 여기에도 남깁니다.</p>
       </div>
       <ContentBoundary article="prysm-block-processing" />

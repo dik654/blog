@@ -9,7 +9,12 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
     <section id="overview" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Engine API는 합의 결과와 EVM 실행 결과를 맞추는 상태 있는 경계다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p className="text-lg leading-8">Prysm은 어떤 beacon block을 head·safe·finalized로 볼지 결정하지만 transaction을 EVM으로 실행하지 않습니다. 반대로 execution client는 payload의 state root와 receipts root를 계산할 수 있지만 validator vote로 canonical chain을 고르지 않습니다. Engine API는 이 두 판단을 합치지 않은 채 검증·chain pointer 갱신·다음 payload 생성을 순서대로 조정합니다.</p>
+        <p className="text-lg leading-8">
+            어떤 beacon block을 head·safe·finalized로 볼지는 Prysm이 결정합니다. 다만 transaction을 EVM으로 실행하는 일은 Prysm의 몫이
+            아닙니다. 반대로 execution client는 payload의 state root와 receipts root를 계산할 수 있지만 canonical chain을 고르는
+            validator vote에는 관여하지 않습니다. Engine API는 이 두 판단을 합치지 않은 채 검증·chain pointer 갱신·다음 payload 생성을 순서대로
+            조정합니다.
+          </p>
         <p>이 글은 JSON-RPC 메서드 이름을 외우는 대신 <strong>수신 payload 검증 → fork-choice 적용 → build handle 발급 → payload 회수</strong>를 block hash 하나로 추적합니다. 먼저 <Link to="/blockchain/prysm">Prysm 전체 지도</Link>의 consensus/execution owner 경계를 짧게 재사용하고, 이 글에서는 method version·status·latestValidHash·payloadId·JWT가 만드는 Engine 전용 계약만 정의합니다.</p>
       </div>
       <ContentBoundary article="prysm-engine-api" />
@@ -27,13 +32,20 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
       <div id="paper-engine-api-spec" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">공식 규격 읽기 · Engine API</p>
         <p className="mt-2 text-sm font-semibold">Ethereum Execution APIs — Engine namespace</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">문제는 CL과 EL의 독립 구현이 method version, message ordering, payload status와 build lifecycle을 같은 wire contract로 해석하는 것입니다. 규격은 protocol behavior를 정의하지만 Prysm 내부 package나 특정 EL의 latency·storage를 정하지 않습니다. 이 글은 2026-08-14 main commit 742d45d를 기준으로 읽었으며 배포 시에는 사용한 commit을 다시 고정해야 합니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            문제는 CL과 EL의 독립 구현이 method version, message ordering, payload status, build lifecycle을 모두 같은 wire
+            contract로 해석하는 것입니다. 규격은 protocol behavior를 정의하지만 Prysm 내부 package나 특정 EL의 latency·storage까지 정해주지는
+            않습니다. 이 글은 2026-08-14 main commit 742d45d를 기준으로 읽었습니다. 배포할 때는 사용한 commit을 다시 고정하는 것이 전제입니다.
+          </p>
         <a href="https://github.com/ethereum/execution-apis/tree/main/src/engine" target="_blank" rel="noreferrer" className="mt-3 inline-block text-sm font-medium text-primary hover:underline">Engine API 공식 규격 보기</a>
       </div>
       <div id="paper-engine-authentication" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">공식 규격 읽기 · authentication</p>
         <p className="mt-2 text-sm font-semibold">Engine API Authentication</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">256-bit shared secret, HS256, 필수 iat와 공격 범위를 정의합니다. Caller가 인증됐다는 사실을 payload validity·confidentiality·replay protection으로 일반화하면 안 됩니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            정의하는 것은 256-bit shared secret, HS256, 필수 iat입니다. 공격 범위도 여기서 함께 정합니다. Caller가 인증됐다는 사실을 payload
+            validity·confidentiality·replay protection으로 일반화하는 것은 규격이 보장하지 않는 범위입니다.
+          </p>
         <a href="https://github.com/ethereum/execution-apis/blob/main/src/engine/authentication.md" target="_blank" rel="noreferrer" className="mt-3 inline-block text-sm font-medium text-primary hover:underline">Authentication 규격 보기</a>
       </div>
     </section>

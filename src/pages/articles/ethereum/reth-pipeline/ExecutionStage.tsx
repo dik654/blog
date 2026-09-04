@@ -15,10 +15,8 @@ export default function ExecutionStage({
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          검증된 header·body·sender와 parent state를 같은 block identity로 읽고,
-          chain spec이 선택한 EVM 환경에서 transaction을 순서대로 실행합니다.
-          Receipt·gas·log와 account/storage bundle을 함께 만들며 block 중간
-          상태를 canonical DB에 먼저 공개하지 않습니다.
+          검증된 header·body·sender와 parent state를 같은 block identity로 읽고 chain spec이 선택한 EVM 환경에서 transaction을
+          순서대로 실행합니다. Receipt·gas·log와 account/storage bundle을 함께 만들며 block 중간 상태를 canonical DB에 먼저 공개하지 않습니다.
         </p>
         <p>
           이 stage는 execution output을 소유하지만 state-root 알고리즘을 다시

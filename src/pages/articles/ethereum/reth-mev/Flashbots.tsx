@@ -28,21 +28,15 @@ export default function Flashbots({
           주체와 trust boundary가 사라집니다.
         </p>
         <p className="leading-7">
-          Blinded block exchange는 proposer가 payload body를 받기 전에 header
-          commitment에 서명하는 흐름입니다. Relay는 builder submission과 payload
-          delivery를 중개하지만 neutral하거나 always available하다고 가정할 수
-          없습니다. 운영자는 여러 relay의 latency뿐 아니라 censorship policy,
-          payload non-delivery와 fallback readiness를 관측해야 합니다.
+          Blinded block exchange는 proposer가 payload body를 받기 전에 header commitment에 서명하는 흐름입니다. Relay는 builder
+          submission과 payload delivery를 중개하지만 neutral하거나 always available하다고 가정할 수 없습니다. 운영자는 여러 relay의
+          latency뿐 아니라 censorship policy와 payload non-delivery, fallback readiness까지 함께 관측합니다.
         </p>
         <p className="leading-7">
-          Bid 검증은 relay 이름 확인으로 끝나지 않습니다. 응답의 slot·parent
-          hash·proposer pubkey가 요청과 일치하는지, fork version에 맞는 header인지,
-          builder signature와 block hash/value encoding이 유효한지를 먼저
-          확인합니다. 이 검사를 통과한 후보만 arrival time·검증 시간·delivery
-          reserve가 남은 집합에 넣고 value를 비교합니다. 선택 receipt에는 relay,
-          builder, block hash, advertised value, 도착 시각과 제외 이유를 남겨야
-          사후에 “높은 bid를 놓친 것”과 “invalid bid를 거른 것”을 구분할 수
-          있습니다.
+          Bid 검증은 relay 이름 확인으로 끝나지 않습니다. 응답의 slot·parent hash·proposer pubkey가 요청과 일치하는지, fork version에 맞는
+          header인지, builder signature와 block hash/value encoding이 유효한지를 먼저 확인합니다. 이 검사를 통과한 후보만 arrival
+          time·검증 시간·delivery reserve가 남은 집합에 넣고 value를 비교합니다. 선택 receipt에는 relay와 builder, block hash,
+          advertised value, 도착 시각, 제외 이유를 남깁니다. 그래야 사후에 “높은 bid를 놓친 것”과 “invalid bid를 거른 것”을 구분할 수 있습니다.
         </p>
         <div className="not-prose">
           <CodeViewButton

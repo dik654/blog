@@ -13,10 +13,9 @@ export default function FieldTrie({
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          BeaconState root를 매번 모든 field와 collection 원소에서 다시 계산하면
-          같은 validator registry를 반복해서 hash하게 됩니다. FieldTrie는
-          field별 SSZ subtree layer와 dirty index를 보관하고, mutation이 닿은
-          leaf의 ancestor만 갱신한 뒤 최상위 state container root에 반영합니다.
+          BeaconState root를 매번 모든 field와 collection 원소에서 다시 계산하면 같은 validator registry를 반복해서 hash하게 됩니다.
+          FieldTrie는 field별 SSZ subtree layer와 dirty index를 보관하고 mutation이 닿은 leaf의 ancestor만 갱신한 뒤 최상위 state
+          container root에 반영합니다.
         </p>
       </div>
 

@@ -21,11 +21,9 @@ export default function Overview({
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          두 node가 모두 chain ID 1이라고 말해도 genesis state나 hardfork
-          schedule이 다르면 같은 block을 다르게 검증할 수 있습니다. Reth의 chain
-          specification은 chain identity, genesis, ordered fork activation과
-          fee·blob parameter를 묶고, validator·EVM·payload builder·network fork
-          filter가 같은 context에서 같은 rule을 선택하게 합니다.
+          두 node가 모두 chain ID 1이라고 말해도 genesis state나 hardfork schedule이 다르면 같은 block을 다르게 검증할 수 있습니다. Reth의
+          chain specification은 chain identity, genesis, ordered fork activation과 fee·blob parameter를 묶고
+          validator·EVM·payload builder·network fork filter가 같은 context에서 같은 rule을 선택하게 합니다.
         </p>
         <p>
           이 글은{" "}
@@ -72,13 +70,10 @@ export default function Overview({
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>한 decision을 네 consumer가 반복 계산합니다</h3>
         <p>
-          Boundary block에서 validator가 old rule을 쓰고 executor가 new EVM
-          rule을 쓰면 header는 통과했는데 execution result가 갈라질 수 있습니다.
-          Payload builder가 아직 허용되지 않은 field를 넣거나 network가 잘못된
-          fork ID peer를 받아도 같은 문제가 생깁니다. 그래서 validation,
-          execution, header construction와 peer filtering이 같은 immutable
-          ChainSpec reference와 current block context를 사용하고, decision
-          receipt에 spec digest·fork·condition·context를 남깁니다.
+          Boundary block에서 validator가 old rule을 쓰고 executor가 new EVM rule을 쓰면 header는 통과했는데 execution result가
+          갈라질 수 있습니다. Payload builder가 아직 허용되지 않은 field를 넣거나 network가 잘못된 fork ID peer를 받아도 같은 문제가 생깁니다. 그래서
+          validation, execution, header construction과 peer filtering이 같은 immutable ChainSpec reference와
+          current block context를 사용하고 decision receipt에 spec digest·fork·condition·context를 남깁니다.
         </p>
         <h3>
           Version을 고정하지 않은 code example은 설명 자료일 뿐 계약이 아닙니다
@@ -104,11 +99,8 @@ export default function Overview({
           Reth ChainSpec documentation
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          문제는 chain identity·genesis·hardfork·fee/blob parameter를 current
-          Reth type이 어떻게 묶는지 확인하는 것입니다. 문서는 field와 query
-          surface를 보여 주지만, 임의 custom genesis의 안전성이나 모든
-          consumer가 같은 instance를 사용한다는 운영 사실까지 보장하지는
-          않습니다.
+          확인할 것은 chain identity·genesis·hardfork·fee/blob parameter를 current Reth type이 어떻게 묶는가입니다. 문서는 field와
+          query surface를 보여 주지만 임의 custom genesis의 안전성이나 모든 consumer가 같은 instance를 사용한다는 운영 사실까지 보장하지는 않습니다.
         </p>
         <a
           className="mt-3 inline-block text-sm font-medium text-primary hover:underline"

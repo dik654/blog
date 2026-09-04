@@ -12,16 +12,35 @@ export default function PayloadRetrieval({ onCodeRef }: { onCodeRef: (key: strin
       <div className="not-prose my-5 flex flex-wrap items-center gap-3"><CodeViewButton onClick={() => onCodeRef("engine-get-payload", codeRefs["engine-get-payload"])} /><span className="text-xs text-muted-foreground">Prysm payload retrieval 경계</span></div>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Method version은 반환 envelope까지 바꿉니다</h3>
-        <p>초기 version은 execution payload를 중심으로 했지만 이후 version은 withdrawals, block value, blob bundle, builder override hint와 execution requests 같은 fork별 정보를 추가했습니다. 그러므로 generic struct로 모르는 field를 조용히 버리기보다 active fork가 요구하는 response shape와 commitment를 모두 검증합니다.</p>
+        <p>
+            초기 version은 execution payload를 중심으로 했습니다. 이후 version이 withdrawals, block value, blob bundle,
+            builder override hint, execution requests 같은 fork별 정보를 차례로 추가했습니다. 모르는 field를 generic struct로 조용히
+            버리는 대신 active fork가 요구하는 response shape와 commitment를 모두 검증합니다.
+          </p>
         <h3>Local build와 외부 builder path는 같은 신뢰 경계가 아닙니다</h3>
-        <p>Local EL의 payload를 회수하는 path는 Engine build lifecycle 안에 있습니다. MEV-Boost 같은 외부 builder path는 bid·signed blinded block·unblinding·relay availability라는 별도 dependency가 있으므로 value만 비교해 같은 결과로 취급할 수 없습니다. Slot deadline 전에 full payload를 얻지 못하면 이미 서명한 header 때문에 무조건 local payload로 교체할 수 없는 경우도 있습니다.</p>
+        <p>
+            Local EL의 payload를 회수하는 path는 Engine build lifecycle 안에 있습니다. MEV-Boost 같은 외부 builder path에는
+            bid·signed blinded block·unblinding·relay availability라는 별도 dependency가 붙어 있어 value만 비교해서는 같은 결과로
+            취급할 수 없습니다. Slot deadline 전에 full payload를 얻지 못하면 이미 서명한 header 때문에 무조건 local payload로 교체하지 못하는
+            경우도 생깁니다.
+          </p>
         <h3>Release gate는 method별 상태 전이를 재현합니다</h3>
-        <p>Base와 candidate에 같은 execution-api commit, fork schedule, CL/EL version, payload tree와 clock/JWT fixture를 줍니다. Unsupported version, malformed V4 requests, wrong JWT·75초 clock skew, newPayload의 VALID/INVALID/SYNCING, inconsistent safe pointer, unknown payloadId, EL restart와 timeout을 주입한 뒤 status·latestValidHash·pointer·payloadId·payload envelope parity를 hard gate로 확인합니다. 그 뒤에만 p50/p99 latency와 missed proposal을 비교하며 실패하면 binary·config·secret·DB snapshot을 함께 rollback합니다.</p>
+        <p>
+            Base와 candidate에는 같은 execution-api commit, fork schedule, CL/EL version, payload tree를 줍니다.
+            Clock/JWT fixture도 동일하게 맞춥니다. 주입하는 input은 unsupported version, malformed V4 requests, wrong
+            JWT·75초 clock skew, newPayload의 VALID/INVALID/SYNCING입니다. 여기에 inconsistent safe pointer, unknown
+            payloadId, EL restart, timeout을 더합니다. 그런 다음 status·latestValidHash·pointer·payloadId·payload
+            envelope parity를 hard gate로 확인합니다. 그 뒤에만 p50/p99 latency와 missed proposal을 비교하고 실패하면
+            binary·config·secret·DB snapshot을 함께 rollback합니다.
+          </p>
       </div>
       <div id="paper-prysm-engine-source" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">공식 구현 읽기 · Prysm</p>
         <p className="mt-2 text-sm font-semibold">OffchainLabs/prysm Engine integration</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">규격의 method/status가 선택한 Prysm release에서 호출·timeout·optimistic state로 연결되는 위치를 확인합니다. Moving master의 함수 이름이나 한 benchmark를 모든 release의 고정 behavior로 일반화하지 않습니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            규격의 method/status가 선택한 Prysm release에서 호출·timeout·optimistic state로 연결되는 위치를 확인합니다. Moving master의
+            함수 이름이나 한 benchmark를 모든 release의 고정 behavior로 읽는 것은 근거 없는 확대입니다.
+          </p>
         <a href="https://github.com/OffchainLabs/prysm" target="_blank" rel="noreferrer" className="mt-3 inline-block text-sm font-medium text-primary hover:underline">Prysm 공식 source 보기</a>
       </div>
     </section>

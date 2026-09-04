@@ -29,12 +29,12 @@ export default function Cursor({ onCodeRef }: { onCodeRef: (key: string, ref: Co
       />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Seek는 exact match와 lower-bound를 구분하고, next/prev는 현재 cursor position을 바꿉니다. Returned slice가 mmap page를
+          Seek는 exact match와 lower-bound를 구분하고 next/prev는 현재 cursor position을 바꿉니다. Returned slice가 mmap page를
           borrow한다면 transaction 종료 뒤 참조하면 안 되므로 decode/복사 ownership도 API lifetime에 포함됩니다.
         </p>
         <p>
-          Write cursor의 put·upsert·append에는 정렬 precondition과 duplicate policy가 다릅니다. 오류나 panic이 나면 transaction을
-          abort하고 cursor·borrow를 모두 폐기하며, retry는 stable operation ID와 같은 input에서 새 transaction으로 시작합니다.
+          Write cursor의 put·upsert·append는 정렬 precondition과 duplicate policy가 다릅니다. 오류나 panic이 나면 transaction을
+          abort하고 cursor·borrow를 모두 폐기하며 retry는 stable operation ID와 같은 input에서 새 transaction으로 시작합니다.
         </p>
       </div>
     </section>

@@ -31,8 +31,8 @@ export default function Topics({ onCodeRef }: { onCodeRef: (key: string, ref: Co
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Topic string의 세 축</h3>
         <p>
-          Ethereum gossip topic은 보통 fork digest, message name과 encoding으로 구성됩니다. Beacon block처럼 global topic이 있는
-          반면 attestation은 subnet ID가 message name에 포함돼 traffic을 나눕니다. Node가 자신의 validator duty와 persistent
+          Ethereum gossip topic은 보통 fork digest, message name, encoding으로 구성됩니다. Beacon block처럼 global topic이
+          있는 반면 attestation은 subnet ID가 message name에 포함돼 traffic을 나눕니다. Node가 자신의 validator duty와 persistent
           subnet metadata를 바꿀 때 subscribe/unsubscribe generation을 기록해야 fork transition에서 old/new topic이 겹치는
           기간을 설명할 수 있습니다.
         </p>

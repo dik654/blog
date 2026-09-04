@@ -17,12 +17,12 @@ export default function BundleState({ onCodeRef }: { onCodeRef: (key: string, re
         </p>
         <h3>Overlay revision과 승격</h3>
         <p>
-          View receipt에는 parent hash, executed block hash/range, bundle revision과 base generation을 고정합니다. 새 block을 extend하면
-          revision이 증가하고, 다른 parent branch의 bundle은 섞지 않습니다. DB commit은 bundle write set·revert set·receipts와 canonical
-          marker를 원자적 generation으로 승격하며 성공 receipt 뒤에만 cache를 durable로 표시합니다.
+          View receipt에는 parent hash, executed block hash/range, bundle revision과 base generation을 고정합니다. 새
+          block을 extend하면 revision이 증가하고 다른 parent branch의 bundle은 섞지 않습니다. DB commit은 bundle write set·revert
+          set·receipts와 canonical marker를 원자적 generation으로 승격하며 성공 receipt 뒤에만 cache를 durable로 표시합니다.
         </p>
         <p>
-          Crash가 commit 전이면 bundle을 다시 실행할 수 있고, commit 성공 여부가 불명확하면 DB generation과 block marker를 조회해
+          Crash가 commit 전이면 bundle을 다시 실행할 수 있고 commit 성공 여부가 불명확하면 DB generation과 block marker를 조회해
           reconcile합니다. 단순 retry로 같은 changeset을 두 번 적용하거나 revert journal 없이 post-state만 저장하면 reorg 안전성을 잃습니다.
         </p>
       </div>

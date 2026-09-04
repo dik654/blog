@@ -21,7 +21,10 @@ export default function ModernRethEip4844() {
           <p className="text-sm font-semibold text-primary">큰 data를 transaction에 직접 넣지 않는 이유</p>
           <h2 className="text-3xl font-bold tracking-tight">먼저 blob, commitment, transaction, sidecar를 한 줄씩 분리합니다</h2>
         </header>
-        <p className="text-lg leading-8 text-foreground/90">Rollup이 큰 data를 Ethereum에 게시하려고 합니다. 실행 노드가 그 bytes를 영원히 state로 보관하게 하지 않으면서도, block이 어떤 data를 약속했는지는 검증해야 합니다. EIP-4844는 큰 bytes와 실행 reference를 서로 다른 artifact로 나누고 commitment로 다시 묶습니다.</p>
+        <p className="text-lg leading-8 text-foreground/90">
+            Rollup이 큰 data를 Ethereum에 게시하려고 합니다. 실행 노드가 그 bytes를 영원히 state로 보관하게 하지 않으면서도 block이 어떤 data를
+            약속했는지는 검증해야 합니다. EIP-4844는 큰 bytes와 실행 reference를 서로 다른 artifact로 나누고 commitment로 다시 묶습니다.
+          </p>
         <TermBreakdown title="제출을 이루는 네 artifact" description="각 줄은 하나의 역할만 소유합니다. 아직 네 용어를 한 문장으로 합치지 않습니다." items={[
           { term: "Blob", description: "4096개의 32-byte field-element slot으로 구성된 131,072-byte data 묶음입니다.", example: "Rollup batch bytes를 한 blob의 slot에 맞춰 encode합니다.", boundary: "EVM contract가 blob bytes를 직접 읽는 영구 storage가 아닙니다." },
           { term: "KZG commitment", description: "특정 blob을 나중에 같은 data인지 검증할 수 있게 약속하는 48-byte 값입니다.", example: "Blob B에서 commitment C를 계산합니다.", boundary: "압축 파일이 아니므로 C에서 B를 복원할 수 없습니다." },
@@ -44,10 +47,15 @@ export default function ModernRethEip4844() {
 
       <section id="versioned-binding" className="space-y-6">
         <h2 className="text-2xl font-bold">Versioned hash는 commitment에 scheme 이름표를 붙입니다</h2>
-        <p>먼저 commitment를 SHA-256으로 digest합니다. 그 뒤 첫 byte를 현재 KZG scheme version으로 교체합니다. 나머지 31 bytes는 digest의 뒤쪽을 보존하므로, transaction reference가 어느 scheme의 어떤 commitment를 가리키는지 함께 표현합니다.</p>
+        <p>
+            먼저 commitment를 SHA-256으로 digest한 뒤 첫 byte를 현재 KZG scheme version으로 교체합니다. 나머지 31 bytes는 digest의
+            뒤쪽을 보존하므로 transaction reference가 어느 scheme의 어떤 commitment를 가리키는지 함께 표현합니다.
+          </p>
         <ExplainedFormula
           question="Commitment C에서 transaction에 넣을 32-byte reference를 어떻게 만드나요?"
-          idea={<p>Commitment를 고정 길이 digest로 바꾸고, 첫 byte를 scheme version으로 덮어써 해석 규칙과 payload binding을 함께 남깁니다.</p>}
+          idea={<p>
+            Commitment를 고정 길이 digest로 바꾸고 첫 byte를 scheme version으로 덮어써 해석 규칙과 payload binding을 함께 남깁니다.
+          </p>}
           formula={String.raw`h_v=v\,\|\,\operatorname{SHA256}(C)[1{:}32]`}
           annotatedFormula={String.raw`\begin{aligned}d&=\underbrace{\operatorname{SHA256}(C)}_{\text{48-byte commitment를 32-byte digest로 변환}}\\s&=\underbrace{d[1{:}32]}_{\text{version 자리를 비우고 뒤 31 bytes를 보존}}\\h_v&=\underbrace{v\,\|\,s}_{\text{scheme version과 digest suffix를 연결}}
 \end{aligned}`}

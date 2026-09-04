@@ -14,11 +14,9 @@ export default function BatchVerification({
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Aggregate는 protocol이 의도한 여러 signature를 하나의 signature로
-          표현하는 기능이고, batch verification은 서로 독립된 verification
-          equation을 더 적은 pairing work로 함께 검사하는 구현 최적화입니다.
-          Batch 실패 뒤 모든 message를 reject할지, batch를 나눠 invalid item을
-          찾을지는 latency·CPU·peer penalty 정책까지 포함한 별도 선택입니다.
+          Aggregate는 protocol이 의도한 여러 signature를 하나의 signature로 표현하는 기능입니다. Batch verification은 서로 독립된
+          verification equation을 더 적은 pairing work로 함께 검사하는 구현 최적화입니다. Batch 실패 뒤 모든 message를 reject할지, batch를
+          나눠 invalid item을 찾을지는 latency·CPU·peer penalty 정책까지 포함한 별도 선택입니다.
         </p>
       </div>
 
@@ -68,12 +66,9 @@ export default function BatchVerification({
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Failure isolation은 queue 정책의 일부입니다</h3>
         <p>
-          64개 batch가 실패했을 때 개별 64개를 모두 다시 검증하면 정상 경로의
-          이득이 공격 입력에서 사라집니다. 반으로 나누는 binary isolation은
-          invalid item이 적을 때 재검증 수를 줄이지만, deadline을 넘긴 stale
-          attestation은 찾기 전에 폐기하는 편이 낫습니다. Queue에는 object root,
-          peer, arrival/deadline, fork/domain, batch ID와 fallback 결과를
-          남깁니다.
+          64개 batch가 실패했을 때 개별 64개를 모두 다시 검증하면 정상 경로의 이득이 공격 입력에서 사라집니다. 반으로 나누는 binary isolation은 invalid
+          item이 적을 때 재검증 수를 줄이지만 deadline을 넘긴 stale attestation은 찾기 전에 폐기하는 편이 낫습니다. Queue에는 object root,
+          peer, arrival/deadline, fork/domain, batch ID와 fallback 결과를 남깁니다.
         </p>
         <h3>Release gate</h3>
         <p>

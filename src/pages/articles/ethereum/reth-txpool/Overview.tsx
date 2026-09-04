@@ -25,11 +25,9 @@ export default function Overview({
       <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
         <h3>배경</h3>
         <p>
-          Transaction pool은 block 포함 전의 signed transactions를 보관합니다.
-          같은 sender의 transaction은 nonce 순서에 묶이고 fee eligibility는 다음
-          block의 base fee에 따라 바뀝니다. Consensus state가 아니라 각 노드의
-          임시 대기실이므로, 두 정직한 노드의 pool 내용이나 replacement 설정이
-          완전히 같을 필요는 없습니다.
+          Transaction pool은 block 포함 전의 signed transactions를 보관합니다. 같은 sender의 transaction은 nonce 순서에 묶이고 fee
+          eligibility는 다음 block의 base fee에 따라 바뀝니다. Consensus state가 아니라 각 노드의 임시 대기실이므로 두 정직한 노드의 pool 내용이나
+          replacement 설정이 완전히 같을 필요는 없습니다.
         </p>
         <h3>문제</h3>
         <p>
@@ -40,10 +38,8 @@ export default function Overview({
         </p>
         <h3>아이디어</h3>
         <p>
-          validation 결과와 sender state로 transaction의 조건을 표현하고, 실행
-          가능성에 따라 logical subpool로 분류합니다. Canonical head가 바뀌면
-          nonce, balance, base fee와 mined/reorged transactions를 반영해 다시
-          분류합니다.
+          validation 결과와 sender state로 transaction의 조건을 표현하고 실행 가능성에 따라 logical subpool로 분류합니다. Canonical
+          head가 바뀌면 nonce, balance, base fee와 mined/reorged transactions를 반영해 다시 분류합니다.
         </p>
         <h3>구현 경계</h3>
         <ul>

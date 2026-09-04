@@ -30,14 +30,15 @@ export default function BytesAndBloom({ onCodeRef }: { onCodeRef: (key: string, 
       />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Bytes는 길이가 변할 수 있는 owned buffer이고 FixedBytes는 폭 invariant를 갖습니다. Bloom을 만들 때는 address/topic의
-          exact bytes를 Keccak-256에 넣어 protocol이 정한 세 위치를 켜며, query도 같은 bytes·bit ordering을 써야 합니다.
+          Bytes는 길이가 변할 수 있는 owned buffer이고 FixedBytes는 폭 invariant를 갖습니다. Bloom을 만들 때는 address/topic의 exact
+          bytes를 Keccak-256에 넣어 protocol이 정한 세 위치를 켭니다. Query도 같은 bytes·bit ordering을 써야 합니다.
         </p>
         <h3>Type·codec release gate</h3>
         <p>
-          Boundary value(0, 127, 128, 255, U256 MAX), wrong width, endian reversal, non-canonical RLP, trailing bytes, CREATE/CREATE2
-          domain과 bloom false positive를 old/new crate에 재생합니다. Typed value·encoded bytes·decode error·hash/address·bloom bits
-          parity를 먼저 통과한 뒤 allocation·throughput을 비교하고 crate version과 rollback lockfile을 함께 보존합니다.
+          Boundary value(0, 127, 128, 255, U256 MAX)와 wrong width, endian reversal을 old/new crate에 재생합니다. Non-
+          canonical RLP, trailing bytes, CREATE/CREATE2 domain, bloom false positive도 같이 넣습니다. Typed
+          value·encoded bytes·decode error·hash/address·bloom bits parity를 먼저 통과한 뒤 allocation·throughput을
+          비교합니다. Crate version과 rollback lockfile은 함께 보존합니다.
         </p>
       </div>
     </section>

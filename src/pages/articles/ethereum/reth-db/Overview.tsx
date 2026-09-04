@@ -10,8 +10,8 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
       <h2 className="mb-5 text-2xl font-bold">Reth DB는 record를 저장하는 곳이 아니라 schema·transaction·durability를 함께 지키는 경계다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          Block 1,000을 저장할 때 header 한 줄만 쓰는 것으로 끝나지 않습니다. Canonical hash, body·receipt, latest state, change history와
-          index가 같은 block identity를 가리켜야 하며, crash가 나면 전부 보이거나 전부 보이지 않는 일관된 generation으로 복구돼야 합니다.
+          Block 1,000을 저장할 때 header 한 줄만 쓰는 것으로 끝나지 않습니다. Canonical hash, body·receipt, latest state, change
+          history와 index가 같은 block identity를 가리켜야 하며 crash가 나면 전부 보이거나 전부 보이지 않는 일관된 generation으로 복구돼야 합니다.
         </p>
         <p>
           이 글은 <strong>block 1,000의 header·receipt·state change를 typed key/value로 encode하고 transaction commit 뒤 immutable
@@ -34,9 +34,9 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
           sync policy에 달려 있으므로 두 성공을 같은 말로 기록하지 않습니다.
         </p>
         <p>
-          현재 Reth release의 backend·table·migration 경로는 pinned source의 사실이고, crash injection·fsync policy·schema migration
-          parity와 rollback snapshot은 운영 hardening 계약입니다. Storage V2가 새 node의 default라는 사실만으로 기존 V1 DB가 자동
-          변환되거나 모든 write가 즉시 전원 장애에 durable하다고 추론하지 않습니다.
+          현재 Reth release의 backend·table·migration 경로는 pinned source의 사실이고 crash injection·fsync policy·schema
+          migration parity와 rollback snapshot은 운영 hardening 계약입니다. Storage V2가 새 node의 default라는 사실만으로 기존 V1
+          DB가 자동 변환되거나 모든 write가 즉시 전원 장애에 durable하다고 추론하지 않습니다.
         </p>
       </div>
       <div id="paper-reth-db-source" className="scroll-mt-24">

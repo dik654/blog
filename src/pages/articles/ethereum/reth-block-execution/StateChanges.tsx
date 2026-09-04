@@ -34,10 +34,8 @@ export default function StateChanges({
           tx/s, allocation, state-read count와 commit latency를 비교합니다.
         </p>
         <p>
-          Reth v2.2.0 source가 관찰한 bundle과 executor 구조는 구현
-          snapshot이며, fault injection·receipt completeness·rollback artifact는
-          이 글의 hardening 계약입니다. 둘을 protocol 자체의 필수 type 이름으로
-          일반화하지 않습니다.
+          Reth v2.2.0 source가 관찰한 bundle과 executor 구조는 구현 snapshot이며 fault injection·receipt
+          completeness·rollback artifact는 이 글의 hardening 계약입니다. 둘을 protocol 자체의 필수 type 이름으로 일반화하지 않습니다.
         </p>
       </div>
     </section>

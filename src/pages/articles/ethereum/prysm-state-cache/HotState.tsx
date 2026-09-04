@@ -20,7 +20,11 @@ export default function HotState({ onCodeRef }: { onCodeRef: (key: string, ref: 
           <li>Caller mutation 뒤 원본 bytes·full SSZ root·다른 caller view가 그대로인지 negative test로 확인합니다.</li>
         </ol>
         <h3>Finality와 eviction을 한 규칙으로 합치지 않습니다</h3>
-        <p>Finality는 consensus safety 문맥이고 LRU·memory cap은 resource policy입니다. Finalized state도 memory pressure로 eviction될 수 있고, non-finalized branch도 active fork-choice 계산 때문에 잠시 필요할 수 있습니다. 퇴출은 durable state나 summary의 존재, replay budget과 함께 결정해야 합니다.</p>
+        <p>
+            Finality는 consensus safety 문맥이고 LRU·memory cap은 resource policy입니다. Finalized state도 memory
+            pressure로 eviction될 수 있고 non-finalized branch도 active fork-choice 계산 때문에 잠시 필요할 수 있습니다. 퇴출은
+            durable state나 summary의 존재, replay budget과 함께 결정해야 합니다.
+          </p>
         <p>운영 지표도 hit ratio 하나로 끝내지 않습니다. Cache generation별 hit/miss, clone bytes·시간, DB fallback, replay distance와 output-root mismatch를 나누면 “hit가 늘었는데 p95가 악화된” 원인이 large-state copy인지 lock contention인지 드러납니다.</p>
       </div>
     </section>

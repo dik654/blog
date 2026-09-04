@@ -12,11 +12,9 @@ export default function BodiesStage({
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Body의 transaction·ommer·withdrawal/request 목록은 block hash만 보고
-          신뢰하지 않습니다. 활성 fork에 해당 field가 존재하는지와 list bounds를
-          확인하고, transaction root 등 header가 약속한 commitment를 다시
-          계산합니다. Header checkpoint보다 높은 body는 검증할 header가 없으므로
-          진행할 수 없습니다.
+          Body의 transaction·ommer·withdrawal/request 목록은 block hash만 보고 신뢰하지 않습니다. 활성 fork에 해당 field가 존재하는지와
+          list bounds를 확인하고 transaction root 등 header가 약속한 commitment를 다시 계산합니다. Header checkpoint보다 높은 body는
+          검증할 header가 없으므로 진행할 수 없습니다.
         </p>
         <p>
           같은 block number에 competing bodies가 있을 수 있어 number만

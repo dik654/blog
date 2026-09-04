@@ -64,11 +64,9 @@ export default function StateRootCaching({
         </p>
         <h3>Restart 가능한 replay receipt</h3>
         <p>
-          각 반복의 input slot/root, output root, ring index, epoch-trigger
-          여부와 완료 marker를 기록합니다. Crash가 slot root 기록 뒤 slot
-          increment 전에 났다면 receipt로 동일 step을 idempotent하게 다시
-          계산하고 root를 비교합니다. Target marker만 먼저 쓰는 방식은 부분
-          replay를 완료로 오인하게 합니다.
+          각 반복의 input slot/root, output root, ring index, epoch-trigger 여부와 완료 marker를 기록합니다. Crash가 slot root
+          기록 뒤 slot increment 전에 났다면 receipt로 동일 step을 idempotent하게 다시 계산하고 root를 비교합니다. Target marker만 먼저 쓰면
+          부분 replay를 완료로 오인하기 쉽습니다.
         </p>
         <h3>Release gate</h3>
         <p>

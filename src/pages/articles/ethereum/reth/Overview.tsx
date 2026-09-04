@@ -70,26 +70,26 @@ export default function Overview() {
 
         <h3>과거 sync와 live path는 합류점은 같아도 cursor가 다릅니다</h3>
         <p>
-          Historical pipeline은 긴 block range를 stage checkpoint로 전진시키고 unwind point에서 잘못된 suffix를
-          되돌릴 수 있어야 합니다. Live Engine path는 head 근처 payload와 forkchoice update를 낮은 latency로
-          처리하면서 safe·finalized marker와 reorg를 반영합니다. 두 경로는 같은 chain spec·EVM semantics·storage
-          invariants를 공유해야 하며, 동일 block을 처리했을 때 execution output과 state root가 같아야 합니다.
+          Historical pipeline은 긴 block range를 stage checkpoint로 전진시키고 unwind point에서 잘못된 suffix를 되돌릴 수 있어야
+          합니다. Live Engine path는 head 근처 payload와 forkchoice update를 낮은 latency로 처리하면서 safe·finalized marker와
+          reorg를 반영합니다. 두 경로는 같은 chain spec·EVM semantics·storage invariants를 공유해야 하며 동일 block을 처리했을 때
+          execution output과 state root가 같아야 합니다.
         </p>
 
         <h3>Provider는 storage 종류를 숨기는 대신 일관된 view를 약속해야 합니다</h3>
         <p>
-          최신 mutable state, immutable historical segment, trie·receipt·header index는 서로 다른 storage tier에
-          놓일 수 있습니다. Provider abstraction의 핵심은 consumer가 같은 block identifier에서 섞이지 않은
-          view를 읽는 것입니다. Query 시작 시 canonical hash·state root·storage generation을 고정하고, reorg나
-          migration 중 view가 바뀌면 silent mixed result보다 retryable error로 끝내는 편이 안전합니다.
+          최신 mutable state, immutable historical segment, trie·receipt·header index는 서로 다른 storage tier에 놓일 수
+          있습니다. Provider abstraction의 핵심은 consumer가 같은 block identifier에서 섞이지 않은 view를 읽는 것입니다. Query 시작 시
+          canonical hash·state root·storage generation을 고정하고 reorg나 migration 중 view가 바뀌면 silent mixed
+          result보다 retryable error로 끝내는 편이 안전합니다.
         </p>
 
         <h3>현재 문서와 실제 binary의 version을 함께 기록합니다</h3>
         <p>
-          2026-08-14 확인 시 Reth 공식 문서는 v2.5.0을 표시하고 repository는 Storage V2가 새 node의 default라고
-          설명합니다. 이 숫자를 영구 사실로 쓰지 않고 실제 run에는 Reth semver·git SHA, chain spec digest,
-          execution/Engine API fork version, storage format·schema, pruning profile와 OS·hardware를 기록합니다.
-          Moving main과 최신 문서를 이전 production binary의 구조 설명으로 섞지 않습니다.
+          2026-08-14 확인 시 Reth 공식 문서는 v2.5.0을 표시하고 repository는 Storage V2가 새 node의 default라고 설명합니다. 이 숫자를 영구
+          사실로 쓰지 않고 실제 run에는 Reth semver·git SHA, chain spec digest, execution/Engine API fork version,
+          storage format·schema, pruning profile과 OS·hardware를 기록합니다. Moving main과 최신 문서를 이전 production
+          binary의 구조 설명으로 섞지 않습니다.
         </p>
 
         <h3>Release gate는 sync 속도보다 state parity를 먼저 봅니다</h3>

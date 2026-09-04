@@ -18,10 +18,10 @@ export default function Overview() {
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          Ethereum consensus object는 network에서 받았다는 이유만으로 beacon state를 바꾸지 않습니다.
-          SSZ decode·topic·fork digest·signature·state-dependent validation을 통과하고, slot·epoch 순서에 맞는
-          state transition에 적용된 다음 fork choice와 finality evidence에 반영돼야 합니다. Prysm beacon node는
-          이 경로를 구현하고 validator client는 그 state에서 배정된 duty에 서명합니다.
+          Ethereum consensus object는 network에서 받았다는 이유만으로 beacon state를 바꾸지 않습니다. SSZ decode·topic·fork
+          digest·signature·state-dependent validation을 통과하고 slot·epoch 순서에 맞는 state transition에 적용된 다음에야 fork
+          choice와 finality evidence에 반영됩니다. Prysm beacon node는 이 경로를 구현하고 validator client는 그 state에서 배정된
+          duty에 서명합니다.
         </p>
         <p>
           이 글에서는 package 이름보다 하나의 beacon block과 attestation을
@@ -47,15 +47,15 @@ export default function Overview() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>한 consensus object의 evidence를 끝까지 잇습니다</h3>
         <p>
-          Object root 하나에 source peer·gossip topic, fork digest, SSZ type/version, slot·proposer 또는 committee,
-          signature domain·signing root, stateless/stateful validation result, pre/post-state root, fork-choice status와
-          justified·finalized checkpoint를 연결합니다. Validator duty라면 validator index·epoch·duty type,
-          signing data와 slashing-protection decision까지 같은 trace에 둡니다.
+          Object root 하나에 source peer·gossip topic, fork digest, SSZ type/version을 연결합니다. 여기에 slot·proposer 또는
+          committee, signature domain·signing root, stateless/stateful validation result를 붙입니다. Pre/post-state
+          root와 fork-choice status, justified·finalized checkpoint까지 같은 root에 걸어 둡니다. Validator duty라면
+          validator index·epoch·duty type, signing data와 slashing-protection decision도 같은 trace에 둡니다.
         </p>
         <p>
-          Decode 성공은 signature 성공이 아니며, state transition 성공은 canonical head 또는 finality가 아닙니다.
-          Gossip accept 역시 다른 peer의 처리 완료를 보장하지 않습니다. 단계마다 reject reason과 spec fork,
-          state root를 남겨야 restart·replay 뒤 같은 object를 안전하게 dedupe하거나 재검증할 수 있습니다.
+          Decode 성공은 signature 성공이 아닙니다. State transition이 성공해도 그 block이 canonical head가 되거나 finality를 얻은 것은
+          아닙니다. Gossip accept 역시 다른 peer의 처리 완료를 보장하지 않습니다. 단계마다 reject reason과 spec fork, state root를 남겨야
+          restart·replay 뒤 같은 object를 안전하게 dedupe하거나 재검증할 수 있습니다.
         </p>
 
         <h3>Beacon state, head와 finality는 같은 포인터가 아닙니다</h3>
@@ -77,10 +77,10 @@ export default function Overview() {
 
         <h3>Execution payload status는 consensus transition의 별도 dependency입니다</h3>
         <p>
-          Bellatrix 이후 계열 fork에서 beacon block은 execution payload를 포함할 수 있고 beacon node는 Engine API로
-          execution client와 validity를 교환합니다. Prysm이 EVM transaction을 직접 실행한다고 가정하면 안 되며,
-          VALID·INVALID·SYNCING 같은 execution status와 latest valid hash, consensus block root를 함께 기록해야
-          optimistic processing과 최종 acceptance 경계를 설명할 수 있습니다.
+          Bellatrix 이후 계열 fork에서 beacon block은 execution payload를 포함할 수 있고 beacon node는 Engine API로 execution
+          client와 validity를 교환합니다. Prysm이 EVM transaction을 직접 실행한다고 가정하면 안 됩니다. VALID·INVALID·SYNCING 같은
+          execution status와 latest valid hash, consensus block root를 함께 기록해야 optimistic processing과 최종
+          acceptance 경계를 설명할 수 있습니다.
         </p>
 
         <h3>Spec fork와 code branch를 함께 고정합니다</h3>
@@ -93,12 +93,12 @@ export default function Overview() {
 
         <h3>Release gate는 missed duty 수보다 먼저 consensus parity를 봅니다</h3>
         <p>
-          Base와 candidate에 같은 genesis·spec fork·block/attestation fixture·peer schedule·Engine response를 주고
-          malformed SSZ, wrong fork digest, bad signature, invalid transition, equivocation, reorg, execution SYNCING/
-          INVALID, restart와 signer timeout을 반복합니다. Accepted/rejected object, pre/post-state root, head·finalized
-          checkpoint, duty·signing root와 slashing decision parity를 hard gate로 두고 그 뒤 slot processing p95,
-          peer score, missed duty와 resource cost를 비교합니다. Gate 실패 시 이전 binary·config·DB snapshot으로
-          rollback합니다.
+          Base와 candidate에 같은 genesis·spec fork·block/attestation fixture·peer schedule·Engine response를 줍니다.
+          그 위에서 malformed SSZ, wrong fork digest, bad signature, invalid transition을 반복하고 equivocation, reorg,
+          execution SYNCING/ INVALID, restart, signer timeout도 같이 반복합니다. Accepted/rejected object, pre/post-
+          state root, head·finalized checkpoint, duty·signing root와 slashing decision parity가 hard gate입니다. 그
+          뒤에 slot processing p95, peer score, missed duty와 resource cost를 비교합니다. Gate 실패 시 이전 binary·config·DB
+          snapshot으로 rollback합니다.
         </p>
         <p>
           Protocol 원리는 <Link to="/blockchain/consensus-mechanisms">PoS 합의</Link>와
@@ -113,13 +113,21 @@ export default function Overview() {
       <div id="paper-prysm-repository" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">공식 코드 · implementation snapshot</p>
         <p className="mt-2 text-sm font-semibold">OffchainLabs/prysm</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">문제는 beacon node·validator client·network·state·API 책임이 실제 release에서 어디에 구현됐는지 확인하는 것입니다. Repository는 stable master와 development branch를 구분하므로 분석한 release·SHA를 함께 고정하며 branch head를 production 전체로 일반화하지 않습니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            문제는 beacon node·validator client·network·state·API 책임이 실제 release에서 어디에 구현됐는가입니다. Repository는
+            stable master와 development branch를 구분하므로 분석한 release·SHA를 함께 고정하고 branch head를 production 전체로
+            일반화하지 않습니다.
+          </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://github.com/OffchainLabs/prysm" target="_blank" rel="noreferrer">공식 repository 보기</a>
       </div>
       <div id="paper-ethereum-consensus-specs" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">공식 규격 · protocol source</p>
         <p className="mt-2 text-sm font-semibold">Ethereum Proof-of-Stake Consensus Specifications</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">문제는 fork별 beacon state transition·fork choice·validator·P2P·execution handoff 규칙을 정의하는 것입니다. 규격은 protocol 정본이지만 Prysm의 package layout·DB schema·performance를 정하지 않으며 stable/unstable fork와 commit을 구분해 읽어야 합니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            문제는 fork별 beacon state transition·fork choice·validator·P2P·execution handoff 규칙을 정의하는 것입니다. 규격은
+            protocol 정본입니다. 다만 Prysm의 package layout·DB schema·performance까지 정하지는 않습니다. 읽을 때는 stable/unstable
+            fork와 commit을 구분해야 합니다.
+          </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://ethereum.github.io/consensus-specs/" target="_blank" rel="noreferrer">Consensus specs 보기</a>
       </div>
     </section>

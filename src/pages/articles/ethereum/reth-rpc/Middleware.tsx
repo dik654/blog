@@ -19,17 +19,15 @@ export default function Middleware() {
         </p>
         <h3>문제</h3>
         <p>
-          CORS는 browser origin policy이지 일반 client authentication이 아닙니다.
-          Rate limit 하나만으로 request body, response size, concurrent
-          execution과 range query를 모두 보호할 수도 없습니다. JWT도 bearer secret을
-          읽거나 traffic을 탈취한 공격자에 대한 encryption을 제공하지 않습니다.
+          CORS는 browser origin policy이지 일반 client authentication이 아닙니다. Rate limit 하나만으로 request body,
+          response size, concurrent execution과 range query를 모두 보호할 수도 없습니다. JWT도 bearer secret을 읽거나 traffic을
+          탈취한 공격자를 막는 encryption은 제공하지 않습니다.
         </p>
         <h3>아이디어와 구현</h3>
         <p>
-          Listener bind address, enabled modules, host/origin checks,
-          body/response limits, concurrency/timeout, JWT와 observability를
-          겹칩니다. 비용이 큰 method는 global transport limit 외에도
-          method-specific range와 result constraints를 가져야 합니다.
+          Listener bind address, enabled modules, host/origin checks, body/response limits,
+          concurrency/timeout, JWT와 observability를 겹칩니다. 비용이 큰 method는 global transport limit 외에도 method-
+          specific range와 result constraints가 있어야 합니다.
         </p>
         <p>
           Engine auth는 consensus/execution clients가 공유한 256-bit secret으로

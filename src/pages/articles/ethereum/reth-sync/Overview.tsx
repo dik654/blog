@@ -22,19 +22,21 @@ export default function Overview({
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
         <p className="leading-7">
-          실행 클라이언트의 동기화는 로컬에 없는 canonical block 범위를
-          확보하고, 실행·state root 검증·인덱싱·영속화를 올바른 순서로 따라잡는
-          과정이다.
+          실행 클라이언트의 동기화는 로컬에 없는 canonical block 범위를 확보하고 실행·state root 검증·인덱싱·영속화를 올바른 순서로 따라잡는 과정이다.
         </p>
         <p>
-          Reth는 긴 block 범위를 순차 처리하기 좋은 staged pipeline과 chain head 주변의 fork를 빠르게 바꾸기 좋은 engine tree를 함께 사용합니다. Backfill orchestrator는 local head와 consensus head 사이의 gap에 따라 두 실행 경로의 소유권을 전환합니다. 아래 비교는 별도의 사용자용 sync mode 이름이 아니라 이 세 내부 역할을 구분하기 위한 것입니다.
+          Reth는 긴 block 범위를 순차 처리하기 좋은 staged pipeline과 chain head 주변의 fork를 빠르게 바꾸기 좋은 engine tree를 함께 사용합니다.
+          Backfill orchestrator는 local head와 consensus head 사이의 gap에 따라 두 실행 경로의 소유권을 전환합니다. 아래 비교는 별도의 사용자용
+          sync mode 이름이 아니라 이 세 내부 역할을 구분하려는 것입니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">
           세 역할, 두 실행 경로
         </h3>
         <p>
-          실제 block 실행은 pipeline과 live engine tree가 담당하며, backfill은 큰 gap에서 pipeline을 구동한 뒤 live path로 제어권을 넘기는 coordination layer입니다. 공개 modular snapshot은 초기 database를 빠르게 배포하는 별도의 bootstrap 수단이지 세 번째 peer sync protocol은 아닙니다.
+          실제 block 실행은 pipeline과 live engine tree가 담당하며 backfill은 큰 gap에서 pipeline을 구동한 뒤 live path로 제어권을 넘기는
+          coordination layer입니다. 공개 modular snapshot은 초기 database를 빠르게 배포하는 별도의 bootstrap 수단이지 세 번째 peer sync
+          protocol은 아닙니다.
         </p>
 
         {/* ── FCU 기반 동기화 ── */}

@@ -15,7 +15,12 @@ export default function Operations({ onCodeRef }: { onCodeRef: (key: string, ref
       <h2 className="mb-6 text-2xl font-bold">Operations는 각기 다른 권한과 상한을 가진 순서 있는 list다</h2>
       <div className="not-prose mb-5 flex flex-wrap items-center gap-3"><CodeViewButton onClick={() => onCodeRef("process-operations", codeRefs["process-operations"])} /><span className="text-xs text-muted-foreground">Prysm operation dispatch 경계</span></div>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p>Block body의 operation은 같은 타입의 command가 아닙니다. Proposer/attester slashing은 객관적 충돌 evidence를, attestation은 committee vote를, deposit·withdrawal·consolidation request는 validator lifecycle 변경을 표현합니다. 각 list에는 fork별 SSZ limit이 있어 decode 전에 크기를 제한하고, handler는 list 순서대로 현재 candidate state를 소비합니다.</p>
+        <p>
+            Block body의 operation은 같은 타입의 command가 아닙니다. Proposer/attester slashing은 객관적 충돌 evidence를,
+            attestation은 committee vote를, deposit·withdrawal·consolidation request는 validator lifecycle 변경을
+            표현합니다. 각 list에는 fork별 SSZ limit이 있어 decode 전에 크기를 제한합니다. Handler는 list 순서대로 현재 candidate state를
+            소비합니다.
+          </p>
       </div>
       <div className="not-prose my-7 overflow-x-auto"><table className="w-full min-w-[720px] border-collapse text-left text-sm"><thead><tr className="border-b border-border"><th className="p-3">family</th><th className="p-3">무엇을 주장하나</th><th className="p-3">별도로 검증할 것</th></tr></thead><tbody>{OPS.map(([name, claim, checks]) => <tr key={name} className="border-b border-border/70"><td className="p-3 font-mono text-primary">{name}</td><td className="p-3">{claim}</td><td className="p-3 text-muted-foreground">{checks}</td></tr>)}</tbody></table></div>
       <div className="prose prose-neutral max-w-none dark:prose-invert">

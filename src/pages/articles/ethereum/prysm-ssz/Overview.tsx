@@ -42,12 +42,9 @@ export default function Overview({
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>먼저 붙잡을 핵심 아이디어</h3>
         <p>
-          Schema는 field의 순서, 각 field가 고정 길이인지 가변 길이인지,
-          collection의 최대 길이를 미리 정합니다. 따라서 decoder는 payload 안에
-          type 이름을 다시 넣지 않아도 어디까지 읽을지 계산할 수 있고,
-          Merkleizer는 각 값이 tree의 어느 leaf에 놓이는지 결정할 수 있습니다.
-          같은 bytes라도 다른 schema로 읽으면 다른 object가 될 수 있으므로
-          receipt에는 fork와 SSZ type을 반드시 남깁니다.
+          Schema는 field의 순서, 각 field가 고정 길이인지 가변 길이인지, collection의 최대 길이를 미리 정합니다. 따라서 decoder는 payload 안에
+          type 이름을 다시 넣지 않아도 어디까지 읽을지 계산할 수 있고 Merkleizer는 각 값이 tree의 어느 leaf에 놓이는지 결정할 수 있습니다. 같은 bytes라도 다른
+          schema로 읽으면 다른 object가 될 수 있으므로 receipt에는 fork와 SSZ type을 반드시 남깁니다.
         </p>
         <p>
           예를 들어 <code>List[uint64, 4]</code> 값 <code>[7, 9]</code>는 원소를

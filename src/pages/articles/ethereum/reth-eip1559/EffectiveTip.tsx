@@ -28,11 +28,9 @@ export default function EffectiveTip({
           이후에는 gas price에서 base fee를 뺀 나머지가 tip이 됩니다.
         </p>
         <p className="leading-7">
-          이 값은 block beneficiary에게 돌아갈 per-gas value를 비교하는 데
-          쓰이지만, “tip 내림차순이 곧 block 순서”는 아닙니다. sender nonce
-          dependencies, transaction validity, execution gas·blob gas budgets와
-          builder policy를 함께 적용해야 합니다. 고정 gwei 시세나 MEV 유형별
-          숫자는 protocol invariant가 아니므로 설명에서 분리합니다.
+          이 값은 block beneficiary에게 돌아갈 per-gas value를 비교하는 데 쓰입니다. 다만 “tip 내림차순이 곧 block 순서”는 아닙니다. sender
+          nonce dependencies와 transaction validity가 함께 적용되고, execution gas·blob gas budgets와 builder policy도
+          같이 걸립니다. 고정 gwei 시세나 MEV 유형별 숫자는 protocol invariant가 아니므로 설명에서 분리합니다.
         </p>
       </div>
 

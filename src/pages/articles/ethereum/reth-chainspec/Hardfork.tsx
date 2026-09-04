@@ -18,11 +18,9 @@ export default function Hardfork({
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Block-based fork는 current block number를, timestamp-based fork는
-          header timestamp를 비교합니다. Merge의 역사적 전환은 TTD context를
-          포함하며, custom chain은 어떤 fork를 Never로 둘 수도 있습니다. “평균
-          block time을 곱해 activation timestamp를 추정”하는 방식은 missed
-          slot과 reorg를 무시하므로 consensus rule이 될 수 없습니다.
+          Block-based fork는 current block number를, timestamp-based fork는 header timestamp를 비교합니다. Merge의 역사적
+          전환은 TTD context를 포함하며 custom chain은 어떤 fork를 Never로 둘 수도 있습니다. “평균 block time을 곱해 activation
+          timestamp를 추정”하는 방식은 missed slot과 reorg를 무시하므로 consensus rule이 될 수 없습니다.
         </p>
       </div>
 
@@ -106,12 +104,9 @@ export default function Hardfork({
           Fork ID는 execution proof가 아니라 peer compatibility filter입니다
         </h3>
         <p>
-          Fork ID는 genesis에서 시작해 활성 fork history와 다음 fork 정보를
-          압축해 peer가 명백히 다른 schedule을 빠르게 거르게 합니다. 이것이
-          같다고 peer의 block이 유효하거나 honest하다는 뜻은 아니며, 다르다고
-          무조건 악성이라는 뜻도 아닙니다. Local head context와 EIP가 정한
-          validation rule로 판단하고, 실제 block은 다시 full validation을
-          거칩니다.
+          Fork ID는 genesis에서 시작해 활성 fork history와 다음 fork 정보를 압축해 peer가 명백히 다른 schedule을 빠르게 거르게 합니다. 이것이 같다고
+          peer의 block이 유효하거나 honest하다는 뜻은 아니며 다르다고 무조건 악성이라는 뜻도 아닙니다. Local head context와 EIP가 정한 validation
+          rule로 판단하고 실제 block은 다시 full validation을 거칩니다.
         </p>
       </div>
 
@@ -126,10 +121,8 @@ export default function Hardfork({
           EIP-6122 — Fork identifier update
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          문제는 timestamp fork까지 포함한 chain compatibility를 handshake에서
-          압축 판정하는 것입니다. 규격은 fork hash와 next field
-          계산·validation을 정의하지만, peer honesty·block validity·network
-          reachability까지 보장하지 않습니다.
+          확인할 것은 timestamp fork까지 포함한 chain compatibility를 handshake에서 압축 판정하는 방식입니다. 규격은 fork hash와 next
+          field 계산·validation을 정의하지만 peer honesty·block validity·network reachability까지 보장하지 않습니다.
         </p>
         <a
           className="mt-3 inline-block text-sm font-medium text-primary hover:underline"

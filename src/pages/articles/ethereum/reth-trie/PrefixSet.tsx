@@ -15,11 +15,9 @@ export default function PrefixSet({
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          실행 bundle에는 account A가 바뀌었다는 사실이 있지만, trie 계산기는
-          A의 hashed key에서 어느 subtree가 dirty인지 알아야 합니다. Reth는
-          변경된 account와 storage key를 정렬된 prefix 집합으로 바꾸고, walker가
-          해당 prefix와 겹치는 subtree만 database·overlay에서 다시 펼치게
-          합니다.
+          실행 bundle에는 account A가 바뀌었다는 사실이 있지만 trie 계산기는 A의 hashed key에서 어느 subtree가 dirty인지 알아야 합니다. Reth는
+          변경된 account와 storage key를 정렬된 prefix 집합으로 바꾸고 walker가 해당 prefix와 겹치는 subtree만 database·overlay에서 다시
+          펼치게 합니다.
         </p>
       </div>
       <ExplainedFormula
@@ -57,12 +55,9 @@ export default function PrefixSet({
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Account와 storage의 dirty 범위를 따로 둡니다</h3>
         <p>
-          Balance·nonce·code가 바뀌면 account path가 dirty입니다. Contract
-          storage slot이 바뀌면 먼저 그 account의 storage trie root를 다시
-          계산하고, 바뀐 storage root를 담는 account leaf까지 dirty가
-          전파됩니다. Account delete나 storage wipe는 한 key update가 아니라
-          기존 descendant가 사라지는 경계이므로 별도 marker와 full-subtree
-          처리가 필요합니다.
+          Balance·nonce·code가 바뀌면 account path가 dirty입니다. Contract storage slot이 바뀌면 먼저 그 account의 storage
+          trie root를 다시 계산하고 바뀐 storage root를 담는 account leaf까지 dirty가 전파됩니다. Account delete나 storage wipe는 한
+          key update가 아니라 기존 descendant가 사라지는 경계이므로 별도 marker와 full-subtree 처리가 필요합니다.
         </p>
         <h3>Prefix가 적다는 사실만으로 빠르다고 단정하지 않습니다</h3>
         <p>

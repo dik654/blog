@@ -21,10 +21,8 @@ export default function Crypto({
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
         <p className="leading-7">
-          초기 precompile은 서로 다른 암호 문제를 풀지만 실행 순서는 같습니다.
-          활성 registry에서 주소를 찾고, 입력 길이로 gas를 계산한 뒤, encoding을
-          검증하고 native implementation을 실행합니다. gas 숫자는 라이브러리의
-          실제 실행 시간을 뜻하는 benchmark가 아니라 block을 검증하는 consensus
+          초기 precompile은 서로 다른 암호 문제를 풀지만 실행 순서는 같습니다. 활성 registry에서 주소를 찾고 입력 길이로 gas를 계산한 뒤, encoding을 검증하고
+          native implementation을 실행합니다. gas 숫자는 라이브러리의 실제 실행 시간을 뜻하는 benchmark가 아니라 block을 검증하는 consensus
           schedule입니다.
         </p>
         <p className="leading-7">

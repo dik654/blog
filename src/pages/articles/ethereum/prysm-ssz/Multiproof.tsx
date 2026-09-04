@@ -85,18 +85,14 @@ export default function Multiproof({
           </li>
         </ol>
         <p>
-          Multiproof는 여러 target과 ancestor 집합을 먼저 만들고, 다른 target
-          branch로 이미 계산할 수 있는 sibling을 proof에서 제거합니다. 하지만
-          proof parser가 중복 gindex, ancestor/descendant target 충돌, 빠진
-          helper node나 초과 node를 허용하면 모호한 입력이 됩니다. Canonical
-          ordering·unique target·bounded node count를 먼저 검사합니다.
+          Multiproof는 여러 target과 ancestor 집합을 먼저 만들고 다른 target branch로 이미 계산할 수 있는 sibling을 proof에서 제거합니다. 하지만
+          proof parser가 중복 gindex, ancestor/descendant target 충돌, 빠진 helper node나 초과 node를 허용하면 모호한 입력이 됩니다.
+          Canonical ordering·unique target·bounded node count를 먼저 검사합니다.
         </p>
         <h3>Light client가 root를 신뢰하는 과정은 별도입니다</h3>
         <p>
-          Merkle proof는 “이 field가 이 root에 포함됐다”만 답합니다. 그 root가
-          canonical·finalized state에서 왔는지는 sync committee signature와
-          light-client update rule이 정합니다. 공격자가 준 임의 root에 proof가
-          맞는 것은 아무런 chain 신뢰를 만들지 않습니다.
+          Merkle proof는 “이 field가 이 root에 포함됐다”만 답합니다. 그 root가 canonical·finalized state에서 왔는지는 sync committee
+          signature와 light-client update rule이 정합니다. 공격자가 준 임의 root에 proof가 맞는다고 해서 chain 신뢰가 생기지는 않습니다.
         </p>
       </div>
 

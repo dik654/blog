@@ -18,13 +18,14 @@ export default function RlpDecoding({ onCodeRef }: { onCodeRef: (key: string, re
           <li>Bounded subslice 안에서 child를 decode하고 마지막에 남은 bytes가 0인지 확인합니다.</li>
         </ol>
         <p>
-          예를 들어 0xb8 0x02 0xaa는 “2-byte string”을 선언하지만 payload가 한 byte뿐이므로 InputTooShort입니다. 0x81 0x01은
-          0x01 하나로 표현할 수 있어 non-canonical이고, valid object 뒤에 0x00을 붙인 input은 prefix object만 읽는 API와
-          exact-object API를 구분하지 않으면 smuggling이 됩니다.
+          예를 들어 0xb8 0x02 0xaa는 “2-byte string”을 선언하지만 payload가 한 byte뿐이므로 InputTooShort입니다. 0x81 0x01은 0x01
+          하나로 표현할 수 있어 non-canonical입니다. Valid object 뒤에 0x00을 붙인 input은 prefix object만 읽는 API와 exact-object
+          API를 구분하지 않으면 smuggling이 됩니다.
         </p>
         <p>
-          Decoder error는 truncated, non-canonical, overflow, wrong kind, schema mismatch, trailing bytes로 나눕니다. Fuzz·boundary
-          fixture에서는 panic·unbounded allocation·partial state mutation이 없어야 하며 오류의 peer 책임은 호출 문맥에서 정합니다.
+          Decoder error는 truncated, non-canonical, overflow, wrong kind, schema mismatch, trailing bytes로
+          나눕니다. Fuzz·boundary fixture에서는 panic·unbounded allocation·partial state mutation이 없어야 합니다. 오류의 peer
+          책임은 호출 문맥에서 정합니다.
         </p>
       </div>
     </section>

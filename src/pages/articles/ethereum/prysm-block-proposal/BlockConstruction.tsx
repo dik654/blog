@@ -30,9 +30,8 @@ export default function BlockConstruction({ onCodeRef }: Props) {
           ProduceBlockV3 — 블록 조립 흐름
         </h3>
         <p className="text-sm text-muted-foreground mb-3">
-          validator client가 beacon node의 block production API를 호출한다. REST
-          v3처럼 blinded/unblinded 결과와 builder 경로를 표현할 수 있는 현재
-          endpoint를 우선하고, 내부 전송 경계는 버전별 구현으로 본다.
+          validator client가 beacon node의 block production API를 호출한다. REST v3처럼 blinded/unblinded 결과와 builder
+          경로를 표현할 수 있는 현재 endpoint를 우선하고 내부 전송 경계는 버전별 구현으로 본다.
         </p>
         <div className="grid grid-cols-1 gap-3 not-prose mb-4">
           <div className="rounded-lg border bg-card p-4">

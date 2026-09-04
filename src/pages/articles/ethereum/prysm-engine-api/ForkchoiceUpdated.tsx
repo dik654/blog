@@ -19,7 +19,11 @@ export default function ForkchoiceUpdated({ onCodeRef }: { onCodeRef: (key: stri
         <h3>PayloadAttributes는 pointer update와 build request를 한 호출에 싣습니다</h3>
         <p>Attributes가 null이면 pointer만 갱신하고 <code>payloadId</code>는 null입니다. 값이 있고 timestamp·fork별 field가 유효하면 EL은 head 위에서 build를 시작하고 opaque 8-byte <code>payloadId</code>를 반환할 수 있습니다. Attributes validation이 실패해도 이미 성공한 fork-choice update를 되돌리지 않는 규격 경계를 기억해야 합니다.</p>
         <h3>Unknown head와 invalid head는 같은 실패가 아닙니다</h3>
-        <p>필요한 data가 없는 unknown head는 SYNCING과 null payloadId로 응답할 수 있지만, INVALID head에는 latestValidHash를 이용한 branch reconciliation이 필요합니다. Client-specific reorg limit을 넘으면 too-deep-reorg error가 날 수 있으므로, 모든 실패를 동일한 exponential retry로 보내면 영구 오류가 폭주합니다.</p>
+        <p>
+            필요한 data가 없는 unknown head는 SYNCING과 null payloadId로 응답할 수 있지만 INVALID head에는 latestValidHash를 이용한
+            branch reconciliation이 필요합니다. Client-specific reorg limit을 넘으면 too-deep-reorg error가 날 수 있으므로 모든
+            실패를 동일한 exponential retry로 보내면 영구 오류가 폭주합니다.
+          </p>
       </div>
     </section>
   );

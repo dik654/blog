@@ -9,10 +9,10 @@ export default function CheckpointManagement({ onCodeRef }: { onCodeRef: (key: s
       <h2 className="mb-5 text-2xl font-bold">Justification은 2/3 effective balance가 같은 checkpoint link를 지지했다는 기록이다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Validator attestation의 FFG vote는 source와 target checkpoint를 연결합니다. Node는 같은 source→target link를
-          지지한 active·unslashed validator의 effective balance를 한 번씩 합하고, 기준 epoch state의 total active balance와
-          비교합니다. Signature 수나 validator 수가 아니라 balance를 세므로 10명의 vote와 20명의 vote만 비교해서는
-          threshold를 판단할 수 없습니다.
+          Validator attestation의 FFG vote는 source와 target checkpoint를 연결합니다. Node는 같은 source→target link를 지지한
+          active·unslashed validator의 effective balance를 한 번씩 합한 뒤 기준 epoch state의 total active balance와
+          비교합니다. 세는 단위는 signature 수도 validator 수도 아닌 balance이므로 10명의 vote와 20명의 vote만 비교해서는 threshold를 판단할 수
+          없습니다.
         </p>
       </div>
 
@@ -45,24 +45,24 @@ export default function CheckpointManagement({ onCodeRef }: { onCodeRef: (key: s
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Current와 previous checkpoint를 옮기는 순서가 중요합니다</h3>
         <p>
-          Epoch processing은 기존 current justified checkpoint를 previous로 옮기고, 최근 epoch의 target vote가 threshold를
-          넘으면 새 current justified checkpoint를 기록합니다. 동시에 justification bits가 최근 epoch들의 justification
-          history를 짧은 bit window로 보존합니다. Finalization 판정은 업데이트 전 checkpoint와 업데이트된 bit pattern을 함께
-          사용하므로 assignment 순서를 바꾸면 다른 checkpoint를 finalize할 수 있습니다.
+          Epoch processing은 기존 current justified checkpoint를 previous로 옮깁니다. 최근 epoch의 target vote가 threshold를
+          넘으면 새 current justified checkpoint를 기록합니다. 동시에 justification bits가 최근 epoch들의 justification history를
+          짧은 bit window로 보존합니다. Finalization 판정은 업데이트 전 checkpoint와 업데이트된 bit pattern을 함께 사용하므로 assignment 순서를
+          바꾸면 다른 checkpoint를 finalize할 수 있습니다.
         </p>
         <p>
-          예를 들어 epoch 2의 C2가 이미 justified이고 epoch 3에서 C2→C3 link가 68/96 ETH를 얻었다면 C3를 justify합니다.
-          다음 epoch에 연속된 link가 충분한 balance를 얻으면 규격의 인접 또는 한 epoch 건너뛴 pattern에 따라 C2나 C3보다
-          이전 checkpoint가 finalized될 수 있습니다. “두 번 2/3가 나왔다”만으로 대상 root를 정하지 않고 source·target epoch와
-          justification bit positions를 대조해야 합니다.
+          예를 들어 epoch 2의 C2가 이미 justified이고 epoch 3에서 C2→C3 link가 68/96 ETH를 얻었다면 C3를 justify합니다. 다음 epoch에
+          연속된 link가 충분한 balance를 얻으면 규격의 인접 또는 한 epoch 건너뛴 pattern에 따라 C2나 C3보다 이전 checkpoint가 finalized될 수
+          있습니다. 두 번 2/3가 나왔다는 사실만으로 대상 root를 정하지 않고 source·target epoch와 justification bit positions를 대조해야
+          합니다.
         </p>
 
         <h3>Partial participation과 duplicate를 구분합니다</h3>
         <p>
-          Aggregated attestation 여러 개에 같은 validator가 포함될 수 있으므로 raw object를 단순 합산하면 balance를 중복으로
-          셉니다. Participation flag 또는 validator index 집합으로 한 번만 세어야 하며, slashed·inactive status와 target root가
-          다른 vote도 분리합니다. 64/96 ETH라는 결과를 재현하려면 source/target roots, included indices, effective-balance
-          snapshot과 spec fork를 receipt에 남깁니다.
+          Aggregated attestation 여러 개에 같은 validator가 포함될 수 있으므로 raw object를 단순 합산하면 balance를 중복으로 셉니다.
+          Participation flag 또는 validator index 집합으로 한 번만 세어야 하고 slashed·inactive status와 target root가 다른
+          vote도 분리합니다. 64/96 ETH라는 결과를 재현하려면 source/target roots, included indices, effective-balance
+          snapshot, spec fork를 receipt에 남깁니다.
         </p>
       </div>
     </section>

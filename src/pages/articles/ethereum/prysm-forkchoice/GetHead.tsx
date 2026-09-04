@@ -39,8 +39,8 @@ export default function GetHead({ onCodeRef }: { onCodeRef: (key: string, ref: C
         <h3>Eligibility가 weight보다 먼저입니다</h3>
         <p>
           GetHead는 finalized checkpoint의 descendant가 아니거나 voting source가 현재 justified checkpoint와 양립하지 않는
-          leaf를 먼저 제거합니다. 그 뒤 justified root에서 시작해 child score를 비교합니다. 따라서 100 ETH가 지지하는
-          conflicting branch와 60 ETH가 지지하는 eligible branch가 있어도 100 ETH branch를 선택하지 않습니다.
+          leaf를 먼저 제거합니다. 그 뒤 justified root에서 시작해 child score를 비교합니다. 100 ETH가 지지하는 conflicting branch와 60
+          ETH가 지지하는 eligible branch가 함께 있어도 선택은 100 ETH branch로 가지 않습니다.
         </p>
 
         <h3>Reorg와 prune은 같은 동작이 아닙니다</h3>
@@ -51,15 +51,16 @@ export default function GetHead({ onCodeRef }: { onCodeRef: (key: string, ref: C
         </p>
         <p>
           Release 비교에서는 full recomputation oracle과 optimized store가 같은 head를 내는지 먼저 봅니다. Equal-weight tie,
-          delayed attestation, validator vote 이동, equivocation, proposer boost expiry, checkpoint update, execution INVALID와 restart를
-          같은 event order로 재생해 event별 head·weight·eligible set parity를 검사한 뒤 처리량과 memory를 비교합니다.
+          delayed attestation, validator vote 이동, equivocation을 같은 event order로 재생합니다. Proposer boost expiry,
+          checkpoint update, execution INVALID, restart도 같은 순서에 넣습니다. Event별 head·weight·eligible set parity를
+          검사한 뒤 처리량과 memory를 비교합니다.
         </p>
 
         <h3>읽으면 안 되는 과도한 결론</h3>
         <p>
-          LMD-GHOST가 Byzantine network에서 어떤 조건 없이 최종성을 보장하는 것은 아닙니다. Head 선택은 Casper FFG finality와
-          validator slashing assumptions, message timing에 결합됩니다. 또한 optimized 자료구조의 benchmark는 특정 tree shape와
-          attestation churn에 좌우되므로 하나의 O 표기나 평균 latency를 production 전체로 확대하지 않습니다.
+          LMD-GHOST가 Byzantine network에서 어떤 조건 없이 최종성을 보장하지는 않습니다. Head 선택은 Casper FFG finality와 validator
+          slashing assumptions, message timing에 결합됩니다. Optimized 자료구조의 benchmark도 특정 tree shape와 attestation
+          churn에 좌우되므로 하나의 O 표기나 평균 latency를 production 전체로 확대하지 않습니다.
         </p>
       </div>
     </section>

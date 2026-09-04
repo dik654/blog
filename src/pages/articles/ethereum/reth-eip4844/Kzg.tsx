@@ -14,7 +14,9 @@ export default function Kzg({
       <h2 className="mb-6 text-2xl font-bold">KZG commitment: blob 전체를 block에 넣지 않고도 같은 data인지 검증한다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Blob transaction에는 실제 128 KiB data 대신 48-byte KZG commitment에서 만든 versioned hash가 들어갑니다. Commitment는 data를 압축해 복원하는 값이 아니라 특정 polynomial에 결속시키는 cryptographic reference이며, proof와 evaluation point를 함께 사용해 “이 위치의 값이 맞다”는 사실을 짧게 검증할 수 있습니다.
+          Blob transaction에는 실제 128 KiB data 대신 48-byte KZG commitment에서 만든 versioned hash가 들어갑니다. Commitment는
+          data를 압축해 복원하는 값이 아니라 특정 polynomial에 결속시키는 cryptographic reference입니다. proof와 evaluation point를 함께
+          쓰면 “이 위치의 값이 맞다”는 사실을 짧게 검증할 수 있습니다.
         </p>
         <div className="not-prose flex flex-wrap gap-2 mb-4">
           <CodeViewButton
@@ -189,7 +191,9 @@ export default function Kzg({
           </div>
         </div>
         <p>
-          KZG의 안전성은 ceremony가 끝난 뒤 어느 누구도 최종 τ를 알지 못한다는 가정에 기대고 있습니다. 참가자 가운데 한 명이라도 자신의 entropy를 제대로 폐기했다면 전체 toxic waste를 복원할 수 없습니다. Node를 배포할 때는 이 cryptographic 가정과 별개로 trusted setup file의 hash, package version과 공식 배포 경로도 함께 확인해야 합니다.
+          KZG의 안전성은 ceremony가 끝난 뒤 어느 누구도 최종 τ를 알지 못한다는 가정에 기댑니다. 참가자 가운데 한 명이라도 자신의 entropy를 제대로 폐기했다면 전체
+          toxic waste를 복원할 수 없습니다. Node를 배포할 때는 이 cryptographic 가정과 별개로 trusted setup file의 hash와 package
+          version, 공식 배포 경로까지 함께 확인합니다.
         </p>
 
         <p className="mt-3 border-l-2 border-amber-500/50 pl-3 text-sm">

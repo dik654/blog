@@ -39,15 +39,13 @@ export default function Notification({
         </p>
         <h3>문제</h3>
         <p>
-          reorg에서 new chain을 먼저 쓰면 old rows와 중복될 수 있고, rollback 중
-          실패했는데 checkpoint를 앞당기면 재시작해도 손상 지점을 다시 받지
+          reorg에서 new chain을 먼저 쓰면 old rows와 중복될 수 있습니다. rollback 중 실패했는데 checkpoint를 앞당기면 재시작해도 손상 지점을 다시 받지
           못합니다.
         </p>
         <h3>아이디어</h3>
         <p>
-          notification의 old/new 방향을 보존하고, 파생 저장소 transaction 안에서
-          rollback과 apply를 원자적으로 처리한 뒤에만 finished height를
-          전송합니다.
+          notification의 old/new 방향을 보존하고 파생 저장소 transaction 안에서 rollback과 apply를 원자적으로 처리한 뒤에만 finished
+          height를 전송합니다.
         </p>
         <h3>구현</h3>
         <p>

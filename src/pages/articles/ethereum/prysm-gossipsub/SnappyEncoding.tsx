@@ -25,21 +25,22 @@ export default function SnappyEncoding({ onCodeRef: _onCodeRef }: { onCodeRef: (
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Decompression bomb을 막는 순서</h3>
         <p>
-          먼저 transport/pubsub frame에서 compressed bytes를 bounded reader로 받고, Snappy decoded length를 allocation 전에
-          확인합니다. Streaming decoder가 cap을 넘는 output을 쓰려 하면 즉시 중단하고, 정확히 한 frame을 소비했는지 trailing
-          data와 truncation도 검사합니다. 그다음 fork-specific SSZ decoder에 제한된 bytes만 넘깁니다.
+          먼저 transport/pubsub frame에서 compressed bytes를 bounded reader로 받고 Snappy decoded length를 allocation
+          전에 확인합니다. Streaming decoder가 cap을 넘는 output을 쓰려 하면 즉시 중단합니다. 정확히 한 frame을 소비했는지 trailing data와
+          truncation도 검사합니다. 그다음 fork-specific SSZ decoder에 제한된 bytes만 넘깁니다.
         </p>
         <p>
-          “압축 후 1 MiB” 같은 단일 cap만 두면 작은 input이 큰 output을 만드는 공격을 막지 못합니다. 반대로 raw cap만 너무
-          이르게 적용해 legitimate worst-case Snappy overhead를 빼먹으면 valid 최대 payload를 거절할 수 있습니다. Spec-derived
-          두 cap과 per-peer/global queued byte budget을 함께 사용합니다.
+          압축 후 1 MiB 같은 단일 cap만 두면 작은 input이 큰 output을 만드는 공격을 막지 못합니다. 반대로 raw cap만 너무 이르게 적용해 legitimate
+          worst-case Snappy overhead를 빼먹으면 valid 최대 payload를 거절할 수 있습니다. Spec-derived 두 cap과 per-peer/global
+          queued byte budget을 함께 사용합니다.
         </p>
 
         <h3>Release gate</h3>
         <p>
-          Valid boundary payload, compressed cap ±1, declared raw cap ±1, truncated stream, trailing bytes, malformed varint,
-          expansion bomb와 valid-Snappy-but-invalid-SSZ를 같은 fixture로 재생합니다. Accept/reject/ignore, allocated peak bytes,
-          worker cleanup, message ID와 peer score signal parity를 통과한 뒤 decode throughput을 비교합니다.
+          Valid boundary payload, compressed cap ±1, declared raw cap ±1, truncated stream을 같은 fixture로 재생합니다.
+          Trailing bytes, malformed varint, expansion bomb, valid-Snappy-but-invalid-SSZ도 같은 자리에서 함께 돌립니다.
+          Accept/reject/ignore, allocated peak bytes, worker cleanup, message ID, peer score signal parity를
+          통과한 뒤 decode throughput을 비교합니다.
         </p>
       </div>
     </section>

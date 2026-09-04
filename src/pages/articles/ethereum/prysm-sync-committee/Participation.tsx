@@ -83,7 +83,9 @@ export default function Participation({ onCodeRef }: Props) {
           </div>
         </div>
         <p>
-          Sync committee member는 active validator에서 effective balance에 가중된 sampling으로 뽑습니다. Sampling은 preset size만큼 position을 채우며 replacement를 허용하므로 같은 validator가 두 position 이상에 선정될 수 있습니다. 개별 확률은 active set과 balance distribution, 활성 fork의 effective-balance rule에 따라 달라집니다.
+          Sync committee member는 active validator에서 effective balance에 가중된 sampling으로 뽑습니다. Sampling은 preset
+          size만큼 position을 채우면서 replacement를 허용하므로 같은 validator가 두 position 이상에 선정될 수 있습니다. 개별 확률은 active set과
+          balance distribution, 활성 fork의 effective-balance rule이 함께 정합니다.
         </p>
 
         <ExplainedFormula

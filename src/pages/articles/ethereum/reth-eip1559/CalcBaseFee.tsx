@@ -23,17 +23,14 @@ export default function CalcBaseFee({
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
         <p className="leading-7">
-          계산은 parent gas limit을 elasticity로 나눈 target에서 시작합니다.
-          사용량이 target과 같으면 유지하고, 초과·미달 편차에 parent base fee를
-          곱한 뒤 target과 change denominator로 순서대로 나눕니다. increase
-          branch만 integer truncation으로 변화가 사라지지 않도록 최소 1 wei를
-          보장합니다.
+          계산은 parent gas limit을 elasticity로 나눈 target에서 시작합니다. 사용량이 target과 같으면 유지하고 초과·미달 편차에 parent base
+          fee를 곱한 뒤 target과 change denominator로 순서대로 나눕니다. increase branch만 integer truncation으로 변화가 사라지지 않도록
+          최소 1 wei를 보장합니다.
         </p>
         <p className="leading-7">
-          구현 언어나 heap allocation을 비교하는 것은 consensus 설명이 아닙니다.
-          Reth에서 중요한 점은 중간 곱을 충분히 넓은 타입으로 수행하고,
-          overflow·narrowing과 subtraction semantics를 명시하며, EIP에 정의된
-          연산 순서를 payload building과 validation에서 공유하는 것입니다.
+          구현 언어나 heap allocation을 비교하는 것은 consensus 설명이 아닙니다. Reth에서 중요한 점은 중간 곱을 충분히 넓은 타입으로 수행하고
+          overflow·narrowing과 subtraction semantics를 명시하며 EIP에 정의된 연산 순서를 payload building과 validation에서 공유하는
+          것입니다.
         </p>
       </div>
 

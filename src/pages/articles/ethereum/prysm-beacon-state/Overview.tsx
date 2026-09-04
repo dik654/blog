@@ -65,11 +65,9 @@ export default function Overview({
         </p>
         <h3>Prysm이 최적화해도 보존해야 할 invariant</h3>
         <p>
-          Full deep copy, copy-on-write와 incremental FieldTrie 중 어느 경로를
-          사용해도 같은 fork·pre-state·block이면 같은 post-state root가 나와야
-          합니다. Cache hit는 결과를 바꾸는 protocol input이 아니며 cache
-          generation이나 dirty marker가 불확실하면 느린 full recomputation으로
-          확인하거나 fail-closed합니다.
+          Full deep copy, copy-on-write와 incremental FieldTrie 중 어느 경로를 사용해도 같은 fork·pre-state·block이면 같은
+          post-state root가 나와야 합니다. Cache hit는 결과를 바꾸는 protocol input이 아닙니다. Cache generation이나 dirty marker가
+          불확실하면 느린 full recomputation으로 확인하거나 fail-closed합니다.
         </p>
       </div>
 

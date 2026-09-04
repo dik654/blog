@@ -265,12 +265,10 @@ h\bmod m&=0
 
         <h3 className="text-xl font-semibold mt-6 mb-3">Light client가 믿는 범위와 release gate</h3>
         <p>
-          신뢰는 공격자가 건넨 committee의 자기서명에서 시작하지 않습니다.
-          사용자가 고정한 trusted block root에서 current committee Merkle
-          branch를 확인하고, update의 participant-position public keys와 BLS
-          signature, finalized·next-committee branch, update selection rule을
-          차례로 검증합니다. 이 경로는 full execution과 모든 BeaconState
-          transition을 대신하지 않습니다.
+          신뢰는 공격자가 건넨 committee의 자기서명에서 시작하지 않습니다. 사용자가 고정한 trusted block root에서 current committee Merkle
+          branch를 확인하고 update의 participant-position public keys와 BLS signature, finalized·next-committee
+          branch, update selection rule을 차례로 검증합니다. 이 경로는 full execution과 모든 BeaconState transition을 대신하지
+          않습니다.
         </p>
         <p>
           Release 전에는 period 전환, duplicate positions, wrong domain·root,

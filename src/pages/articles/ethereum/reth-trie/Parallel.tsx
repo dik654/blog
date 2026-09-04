@@ -22,12 +22,10 @@ export default function Parallel() {
         </p>
         <h3>Release gate</h3>
         <p>
-          Empty state, account create/delete, storage update/wipe, shared
-          prefix, inline/hash 경계, reorg와 restart를 sequential full-trie
-          oracle과 비교합니다. Account/storage root·node set·changeset parity를
-          통과한 뒤 visited nodes, DB read bytes, hash count, wall time과 peak
-          memory를 비교하며, 평균 speedup만으로 worst-case correctness를
-          대신하지 않습니다.
+          Empty state, account create/delete, storage update/wipe, shared prefix, inline/hash 경계, reorg와
+          restart를 sequential full-trie oracle과 비교합니다. Account/storage root·node set·changeset parity를 통과한 뒤
+          visited nodes, DB read bytes, hash count, wall time과 peak memory를 비교하며 평균 speedup만으로 worst-case
+          correctness를 대신하지 않습니다.
         </p>
       </div>
     </section>

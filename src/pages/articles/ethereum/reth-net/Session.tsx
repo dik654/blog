@@ -16,12 +16,9 @@ export default function Session({
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Pending session은 handshake deadline과 buffer를 쓰지만 아직
-          application message를 처리할 권한이 없습니다. RLPx identity와
-          encryption이 확정되고, Hello capability 교집합에서 ETH version을 고른
-          뒤, Status가 local chain과 호환돼야 active slot을 받습니다. 이 순서를
-          생략하면 공격자가 TCP만 열어 slot을 붙잡거나 다른 genesis의 message가
-          handler까지 들어올 수 있습니다.
+          Pending session은 handshake deadline과 buffer를 쓰지만 아직 application message를 처리할 권한이 없습니다. RLPx
+          identity와 encryption이 확정되고 Hello capability 교집합에서 ETH version을 고른 뒤 Status가 local chain과 호환돼야 active
+          slot을 받습니다. 이 순서를 생략하면 공격자가 TCP만 열어 slot을 붙잡거나 다른 genesis의 message가 handler까지 들어올 수 있습니다.
         </p>
       </div>
 
@@ -109,10 +106,9 @@ export default function Session({
           Ethereum devp2p RLPx specification
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          문제는 peer authentication, encrypted framing과 capability
-          negotiation을 어떻게 연결하는지 정의하는 것입니다. 규격은 wire
-          contract를 제공하지만 peer가 honest하거나 ETH chain data가 valid하다는
-          보장은 하지 않으며 Status와 full block validation이 뒤따라야 합니다.
+          문제는 peer authentication과 encrypted framing, capability negotiation을 어떻게 연결하는지 정의하는 것입니다. 규격은 wire
+          contract를 제공합니다. peer가 honest하거나 ETH chain data가 valid하다는 보장까지는 하지 않으며 Status와 full block
+          validation이 그 뒤를 잇습니다.
         </p>
         <a
           className="mt-3 inline-block text-sm font-medium text-primary hover:underline"

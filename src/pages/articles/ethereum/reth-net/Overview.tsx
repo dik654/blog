@@ -17,11 +17,9 @@ export default function Overview({
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          실행 클라이언트는 bootnode·DNS·discovery에서 endpoint를 얻고,
-          transport를 열어 RLPx identity와 encrypted frame을 설정한 뒤 공통
-          devp2p capability와 ETH Status compatibility를 확인해야 합니다. 이 네
-          단계를 모두 통과하기 전까지 상대는 block·transaction을 신뢰해 받을
-          active peer가 아니라 후보 또는 pending session입니다.
+          실행 클라이언트는 bootnode·DNS·discovery에서 endpoint를 얻고 transport를 열어 RLPx identity와 encrypted frame을 설정한 뒤
+          공통 devp2p capability와 ETH Status compatibility를 확인합니다. 이 네 단계를 모두 통과하기 전까지 상대는 후보 또는 pending
+          session입니다. block·transaction을 신뢰해 받을 active peer는 아직 아닙니다.
         </p>
         <p>
           이 글은{" "}
@@ -54,13 +52,11 @@ export default function Overview({
         </p>
         <h3>Phase별 receipt가 있어야 실패 원인을 구분할 수 있습니다</h3>
         <p>
-          Connection receipt에는 candidate source와 record sequence·age,
-          local/remote endpoint, inbound/outbound direction, handshake peer
-          identity, negotiated capabilities, ETH version·fork ID·head, channel
-          limit와 close reason을 남깁니다. 그래야 stale record, timeout,
-          identity mismatch, no shared capability, wrong genesis, malformed
-          message와 local overload를 같은 “connection failed” counter로 뭉개지
-          않습니다.
+          Connection receipt에는 candidate source와 record sequence·age를 남깁니다. local/remote endpoint와
+          inbound/outbound direction, handshake peer identity, negotiated capabilities도 함께 남기고 ETH
+          version·fork ID·head와 channel limit, close reason까지 붙입니다. 그래야 stale record와 timeout, identity
+          mismatch, no shared capability, wrong genesis, malformed message, local overload를 같은 “connection
+          failed” counter로 뭉개지 않습니다.
         </p>
       </div>
 
@@ -69,13 +65,10 @@ export default function Overview({
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Reth 2.x라는 범위도 version receipt가 필요합니다</h3>
         <p>
-          2026-08-14에 확인한 공식 repository layout은 network core가
-          ingress/egress, peer와 session management를 소유하고,
-          discovery·eth-wire/RLPx·downloaders를 별도 crate 책임으로 나눕니다.
-          그러나 crate path와 default는 release에서 바뀝니다. 예를 들어 v2.2.0
-          release note의 Discv5 default change를 이전 version이나 custom build에
-          일반화하지 않고 semver·SHA, Cargo feature, network config digest와
-          실제 enabled discovery protocol을 함께 기록합니다.
+          2026-08-14에 확인한 공식 repository layout은 network core가 ingress/egress, peer와 session management를 소유하고
+          discovery·eth-wire/RLPx·downloaders를 별도 crate 책임으로 나눕니다. 그러나 crate path와 default는 release에서 바뀝니다. 예를
+          들어 v2.2.0 release note의 Discv5 default change를 이전 version이나 custom build에 일반화하지 않고 semver·SHA와 Cargo
+          feature, network config digest, 실제 enabled discovery protocol을 함께 기록합니다.
         </p>
       </div>
 
@@ -90,10 +83,8 @@ export default function Overview({
           Reth Project Layout — Networking
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          문제는 peer·session·discovery·wire·downloader의 실제 source owner를
-          찾는 것입니다. 공식 layout은 current repository의 crate 책임을
-          설명하지만, 특정 release의 path가 영구 API이거나 모든 protocol
-          feature가 default-enabled라는 뜻은 아닙니다.
+          문제는 peer·session·discovery·wire·downloader의 실제 source owner를 찾는 것입니다. 공식 layout은 current repository의
+          crate 책임을 설명합니다. 특정 release의 path가 영구 API이거나 모든 protocol feature가 default-enabled라는 뜻은 아닙니다.
         </p>
         <a
           className="mt-3 inline-block text-sm font-medium text-primary hover:underline"

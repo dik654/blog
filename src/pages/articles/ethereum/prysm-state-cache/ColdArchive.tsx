@@ -25,7 +25,11 @@ export default function ColdArchive({ onCodeRef: _onCodeRef }: { onCodeRef: (key
         <p>예를 들어 validator profile이 slot 101 full state를 직접 보존하지 않아도 anchor 96과 block history로 bounded replay가 가능할 수 있습니다. 하지만 audit API가 slot 101의 당시 bytes와 source receipt를 즉시 반환해야 한다면 별도 archive가 필요합니다. Finalized라는 사실은 data availability·장기 보존·application audit 요구를 대신하지 않습니다.</p>
         <h3>Release gate는 parity를 latency보다 먼저 봅니다</h3>
         <p>Base와 candidate에 같은 Prysm·spec commit, fork schedule, DB snapshot, root/slot query trace와 memory budget을 줍니다. Root/slot collision, stale generation, nested alias mutation, missing/corrupt block, 20개 empty slot, reorg와 transition 중 crash를 주입하고 full-transition oracle과 state bytes/root·typed outcome·restart result를 비교합니다.</p>
-        <p>Partial replay는 cache나 DB에 승격하지 않고, corruption은 다른 branch나 임의 anchor로 조용히 우회하지 않습니다. Correctness·recovery parity가 모두 맞은 뒤 hit rate, DB bytes, transition count, memory, p50·p95를 비교하고 regression이면 이전 binary·config·DB schema와 snapshot으로 rollback합니다.</p>
+        <p>
+            Partial replay는 cache나 DB에 승격하지 않고 corruption은 다른 branch나 임의 anchor로 조용히 우회하지 않습니다.
+            Correctness·recovery parity가 모두 맞은 뒤 hit rate, DB bytes, transition count, memory, p50·p95를 비교하고
+            regression이면 이전 binary·config·DB schema와 snapshot으로 rollback합니다.
+          </p>
       </div>
     </section>
   );

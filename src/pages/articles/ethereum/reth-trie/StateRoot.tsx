@@ -67,11 +67,9 @@ export default function StateRoot({
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Base snapshot과 hashed overlay를 결합합니다</h3>
         <p>
-          Reader는 parent root에 고정된 database trie를 base로 읽고 execution
-          bundle의 account/storage 변경을 overlay로 우선 적용합니다. Dirty
-          prefix 밖의 child는 기존 hash를 재사용하지만, overlay가 delete한
-          value를 base가 되살리거나 서로 다른 storage generation을 섞으면 안
-          됩니다.
+          Reader는 parent root에 고정된 database trie를 base로 읽고 execution bundle의 account/storage 변경을 overlay로 우선
+          적용합니다. Dirty prefix 밖의 child는 기존 hash를 재사용하지만 overlay가 delete한 value를 base가 되살리거나 서로 다른 storage
+          generation을 섞으면 안 됩니다.
         </p>
         <h3>Root 비교가 storage write보다 먼저입니다</h3>
         <p>

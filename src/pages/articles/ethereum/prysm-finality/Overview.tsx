@@ -11,10 +11,10 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
       <h2 className="mb-5 text-2xl font-bold">Finality는 현재 head가 아니라 되돌리려면 slashable evidence가 필요한 checkpoint를 만든다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          Fork choice의 head는 새 attestation에 따라 바뀔 수 있습니다. Casper FFG는 validator가 epoch 경계의 checkpoint
-          사이에 남긴 source→target vote를 모아 justified checkpoint를 만들고, 이어진 supermajority link가 생기면 더 오래된
-          checkpoint를 finalized로 올립니다. Finalized는 단순히 “오래된 head”가 아니라 conflicting finality를 만들 때
-          최소 1/3의 stake가 slashable 행동을 남기는 안전성 경계입니다.
+          Fork choice의 head는 새 attestation에 따라 바뀔 수 있습니다. Casper FFG는 validator가 epoch 경계의 checkpoint 사이에 남긴
+          source→target vote를 모아 justified checkpoint를 만들고 이어진 supermajority link가 생기면 더 오래된 checkpoint를
+          finalized로 올립니다. Finalized는 오래된 head를 가리키는 말로 읽히기 쉽지만 실제로는 conflicting finality를 만들 때 최소 1/3의 stake가
+          slashable 행동을 남기는 안전성 경계입니다.
         </p>
         <p>
           이 글은 <strong>checkpoint→vote link→2/3 threshold→justification→finalization→prune→weak-subjectivity
@@ -34,18 +34,17 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
           다르면 다른 checkpoint이며, 참여율을 셀 때는 attestation 개수가 아니라 해당 validator들의 effective balance를 합합니다.
         </p>
         <p>
-          예를 들어 active unslashed balance가 96 ETH라면 2/3 threshold는 64 ETH입니다. Justified checkpoint C2를
-          source로 C3를 target으로 한 valid vote가 68 ETH면 C2→C3가 supermajority link가 되어 C3를 justify할 수 있습니다.
-          이어지는 규격의 finalization pattern까지 만족해야 C2가 finalized가 되며, 68 ETH라는 수치만으로 C3 자체가 즉시
-          finalized되는 것은 아닙니다.
+          예를 들어 active unslashed balance가 96 ETH라면 2/3 threshold는 64 ETH입니다. Justified checkpoint C2를 source로
+          C3를 target으로 한 valid vote가 68 ETH면 C2→C3가 supermajority link가 되어 C3를 justify할 수 있습니다. 이어지는 규격의
+          finalization pattern까지 만족해야 C2가 finalized가 됩니다. 68 ETH라는 수치만으로 C3 자체가 즉시 finalized되지는 않습니다.
         </p>
 
         <h3>Finality와 availability는 다른 질문입니다</h3>
         <p>
-          Finalized root가 있다는 사실은 그 root와 충돌하는 다른 finalized history를 honest assumptions 아래 만들기 어렵다는
-          뜻입니다. 모든 node가 block body와 historical state를 영구 보관한다거나 application response가 성공했다는 뜻은
-          아닙니다. 반대로 participation이 2/3 아래로 떨어지면 chain이 즉시 잘못되는 것이 아니라 새 finality가 멈출 수 있으며,
-          이는 safety와 liveness를 분리해 읽어야 하는 대표적인 상황입니다.
+          Finalized root가 있다는 사실은 그 root와 충돌하는 다른 finalized history를 honest assumptions 아래 만들기 어렵다는 뜻입니다. 모든
+          node가 block body와 historical state를 영구 보관한다거나 application response가 성공했다는 뜻은 아닙니다. 반대로
+          participation이 2/3 아래로 떨어졌을 때 chain이 즉시 잘못되지는 않고 새 finality가 멈출 수 있습니다. Safety와 liveness를 분리해 읽어야 하는
+          대표적인 상황입니다.
         </p>
       </div>
 

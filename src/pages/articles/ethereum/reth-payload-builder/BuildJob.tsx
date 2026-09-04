@@ -35,10 +35,8 @@ export default function BuildJob({ onCodeRef }: Props) {
           </li>
         </ol>
         <p className="leading-7">
-          큰 gas limit transaction이 현재 남은 공간에 들어가지 않는다고 즉시
-          전체 탐색을 끝낼 수는 없다. 뒤의 더 작은 transaction은 포함 가능할 수
-          있다. 반대로 임의의 “90% gas”에서 항상 멈추는 것도 protocol 규칙이
-          아니다.
+          큰 gas limit transaction이 현재 남은 공간에 들어가지 않는다고 해서 즉시 전체 탐색을 끝낼 수는 없다. 뒤의 더 작은 transaction은 포함될 수 있다.
+          반대로 임의의 “90% gas”에서 항상 멈추는 것도 protocol 규칙이 아니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">

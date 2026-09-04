@@ -26,10 +26,8 @@ export default function Validation({
         </p>
         <h3>문제</h3>
         <p>
-          Signature 오류처럼 영구 invalid한 입력과, 미래 nonce·현재 base fee처럼
-          head가 바뀌면 실행 가능해질 조건은 결과가 다릅니다. 검사를 단순
-          boolean으로 만들면 보관·propagation·peer policy를 정확히 결정할 수
-          없습니다.
+          Signature 오류처럼 영구 invalid한 입력과 미래 nonce·현재 base fee처럼 head가 바뀌면 실행 가능해질 조건은 결과가 다릅니다. 검사를 단순
+          boolean으로 만들면 보관·propagation·peer policy를 정확히 결정할 수 없습니다.
         </p>
         <h3>아이디어와 구현</h3>
         <p>
@@ -39,10 +37,8 @@ export default function Validation({
           hashes·sidecar availability와 blob-specific policy를 적용합니다.
         </p>
         <p>
-          검사 순서는 cheap-before-expensive 원칙을 따를 수 있지만 정확한 호출
-          순서와 비용은 구현 버전에 따라 달라집니다. 핵심은 expensive work 전에
-          명백한 invalid input을 제거하고, 결과 reason을 pool classification과
-          연결하는 것입니다.
+          검사 순서는 cheap-before-expensive 원칙을 따를 수 있지만 정확한 호출 순서와 비용은 구현 버전에 따라 달라집니다. 핵심은 expensive work 전에 명백한
+          invalid input을 제거하고 결과 reason을 pool classification과 연결하는 것입니다.
         </p>
       </div>
       <div className="not-prose mb-6">

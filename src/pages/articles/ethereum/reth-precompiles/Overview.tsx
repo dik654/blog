@@ -34,11 +34,8 @@ export default function Overview({
           backend가 달라도 결과는 같아야 합니다.
         </p>
         <p className="leading-7">
-          따라서 주소 범위를 고정해 검사하는 것으로는 부족합니다. Reth가
-          사용하는 EVM은 block의 spec id에 맞는 registry를 선택해야 합니다.
-          Prague가 활성인 체인에서는 Pectra로 도입된 EIP-2537 주소까지 보이지만,
-          같은 binary로 Prague 이전 block을 재실행할 때는 아직 존재하지 않는
-          주소처럼 처리해야 합니다.
+          따라서 주소 범위를 고정해 검사하는 것으로는 부족합니다. Reth가 사용하는 EVM은 block의 spec id에 맞는 registry를 선택해야 합니다. Prague가 활성인
+          체인에서는 Pectra로 도입된 EIP-2537 주소까지 보이지만 같은 binary로 Prague 이전 block을 재실행할 때는 아직 존재하지 않는 주소처럼 처리해야 합니다.
         </p>
         <p className="leading-7">
           이 글에서는 하나의 호출을 끝까지 따라갑니다. Alice의 nonce 7

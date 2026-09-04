@@ -79,8 +79,7 @@ export default function Lifecycle({
                 Inclusion (블록 포함)
               </p>
               <p className="text-xs text-foreground/60">
-                BlobPool에서 활성 포크의 blob 한도 안에서 TX를 선택합니다.
-                versioned hash는 transaction 본체에 있고, EL payload에는
+                BlobPool에서 활성 포크의 blob 한도 안에서 TX를 선택합니다. versioned hash는 transaction 본체에 있고 EL payload에는
                 sidecar가 들어가지 않습니다.
               </p>
             </div>
@@ -122,7 +121,9 @@ export default function Lifecycle({
           </div>
         </div>
         <p>
-          Blob은 pool 유입, sidecar 검증·보관, block inclusion, canonicalization과 cleanup의 다섯 경계를 거칩니다. Execution transaction에는 versioned hash가 남고 beacon block body에는 KZG commitment가 들어가지만, 실제 sidecar는 영구 execution state와 분리되어 consensus protocol이 정한 availability window 동안 전파·보관됩니다.
+          Blob은 pool 유입, sidecar 검증·보관, block inclusion, canonicalization과 cleanup의 다섯 경계를 거칩니다. Execution
+          transaction에는 versioned hash가 남고 beacon block body에는 KZG commitment가 들어갑니다. 실제 sidecar는 영구 execution
+          state와 분리되어 consensus protocol이 정한 availability window 동안 전파·보관됩니다.
         </p>
 
         {/* ── BlobStoreCanonTracker ── */}
@@ -233,7 +234,8 @@ export default function Lifecycle({
           </div>
         </div>
         <p>
-          Reorg가 발생하더라도 old chain의 sidecar를 아직 보관하고 있으면 검증 결과와 함께 재사용할 수 있어 재주입 경로의 비용을 줄입니다. 다만 cleanup이 먼저 되었거나 node가 sidecar를 받지 못했다면 network 재요청이 필요하므로, 이 경로를 항상 cache hit한다고 가정해서는 안 됩니다.
+          Reorg가 발생하더라도 old chain의 sidecar를 아직 보관하고 있으면 검증 결과와 함께 재사용해 재주입 경로의 비용을 줄입니다. 다만 cleanup이 먼저 되었거나
+          node가 sidecar를 받지 못했다면 network 재요청이 들어갑니다. 이 경로를 항상 cache hit로 가정할 수는 없습니다.
         </p>
       </div>
     </section>

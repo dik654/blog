@@ -28,12 +28,9 @@ export default function Discovery({
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Bootnode는 첫 접점이지 중앙 신뢰 기관이 아니며, discovery record의
-          서명은 record가 해당 node key에서 왔음을 보일 뿐 endpoint가 지금
-          reachable하거나 peer가 honest하다는 뜻은 아닙니다. Sequence가 더
-          최신인지, address family와 port가 local policy에 맞는지, 최근
-          liveness가 있는지를 확인한 뒤에도 결과는 active peer가 아니라 dial
-          후보입니다.
+          Bootnode는 첫 접점이지 중앙 신뢰 기관이 아닙니다. discovery record의 서명은 record가 해당 node key에서 왔음을 보일 뿐입니다. endpoint가
+          지금 reachable하다거나 peer가 honest하다는 뜻은 아닙니다. Sequence가 더 최신인지, address family와 port가 local policy에 맞는지,
+          최근 liveness가 있는지를 확인해도 결과는 active peer가 아니라 dial 후보에 머뭅니다.
         </p>
       </div>
 
@@ -54,13 +51,10 @@ export default function Discovery({
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Stale·Sybil·eclipse input을 서로 다른 축에서 제한합니다</h3>
         <p>
-          Stale record는 sequence·age와 failed dial history로 줄이고, 한 IP
-          prefix·ASN·identity cluster가 table과 outbound slot을 독점하지 않도록
-          diversity와 rate limit을 둡니다. 그러나 diversity heuristic이 Sybil
-          resistance를 증명하지 않으며, trusted/static peer도 identity·protocol
-          handshake와 message validation을 생략할 권한은 없습니다. Discovery
-          result와 session behavior score를 분리해 한 번의 transient timeout을
-          영구 ban으로 확대하지 않습니다.
+          Stale record는 sequence·age와 failed dial history로 줄입니다. 한 IP prefix·ASN·identity cluster가 table과
+          outbound slot을 독점하지 않도록 diversity와 rate limit을 둡니다. 그러나 diversity heuristic이 Sybil resistance를 증명하지는
+          않으며 trusted/static peer도 identity·protocol handshake와 message validation을 생략할 권한은 없습니다. Discovery
+          result와 session behavior score를 분리해 한 번의 transient timeout을 영구 ban으로 확대하지 않습니다.
         </p>
         <h3>Release test는 deterministic candidate fixture에서 시작합니다</h3>
         <p>
@@ -88,10 +82,9 @@ export default function Discovery({
         </p>
         <p className="mt-2 text-sm font-semibold">Ethereum Node Discovery v5</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          문제는 중앙 peer 목록 없이 signed node record를 찾고 갱신하는
-          것입니다. 규격은 discovery session·lookup·record semantics를
-          설명하지만 application protocol compatibility, peer honesty와
-          eclipse-free topology를 자동 보장하지는 않습니다.
+          문제는 중앙 peer 목록 없이 signed node record를 찾고 갱신하는 것입니다. 규격이 담은 것은 discovery session·lookup·record
+          semantics까지입니다. application protocol compatibility와 peer honesty, eclipse-free topology는 자동으로 따라오지
+          않습니다.
         </p>
         <a
           className="mt-3 inline-block text-sm font-medium text-primary hover:underline"

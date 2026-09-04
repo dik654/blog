@@ -17,12 +17,9 @@ export default function Genesis({
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Genesis alloc은 address별 balance·nonce·code·storage를 기술합니다.
-          구현은 이를 canonical account와 trie key/value로 바꿔 state root를
-          계산하고, genesis 시점에 활성인 fork rule로 base fee·withdrawals·blob
-          관련 조건부 header field를 채운 뒤 sealed header hash를 만듭니다.
-          Input byte를 읽었다는 사실보다 이 derivation이 모든 node에서 같다는
-          점이 중요합니다.
+          Genesis alloc은 address별 balance·nonce·code·storage를 기술합니다. 구현은 이를 canonical account와 trie key/value로
+          바꿔 state root를 계산하고 genesis 시점에 활성인 fork rule로 base fee·withdrawals·blob 관련 조건부 header field를 채운 뒤
+          sealed header hash를 만듭니다. Input byte를 읽었다는 사실보다 이 derivation이 모든 node에서 같다는 점이 중요합니다.
         </p>
       </div>
 
@@ -31,12 +28,9 @@ export default function Genesis({
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>한 계정 차이가 왜 chain을 바꾸는지 단계별로 추적합니다</h3>
         <p>
-          Alice의 초기 balance가 100에서 101로 바뀌면 account encoding이
-          달라지고 해당 trie path와 state root가 달라집니다. Header의 state
-          root가 바뀌므로 canonical header encoding과 genesis hash도 달라집니다.
-          Chain ID를 그대로 두어도 두 database는 같은 chain state를 공유하지
-          않으며, expected genesis hash와 기존 database identity가 다르면
-          fail-closed해야 합니다.
+          Alice의 초기 balance가 100에서 101로 바뀌면 account encoding이 달라지고 해당 trie path와 state root가 달라집니다. Header의
+          state root가 바뀌므로 canonical header encoding과 genesis hash도 달라집니다. Chain ID를 그대로 두어도 두 database는 같은
+          chain state를 공유하지 않습니다. Expected genesis hash와 기존 database identity가 다르면 fail-closed해야 합니다.
         </p>
         <h3>Conditional field도 genesis context에서 rule을 따릅니다</h3>
         <p>
@@ -71,10 +65,8 @@ export default function Genesis({
           reth-chainspec source and crate documentation
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          문제는 Genesis에서 ChainSpec과 sealed header가 만들어지는 실제 release
-          경로를 확인하는 것입니다. Source는 parser·builder· header
-          construction을 보여 주지만, custom input의 경제적 안전성이나 다른
-          client와의 상호운용을 자동으로 검증하지는 않습니다.
+          확인할 것은 Genesis에서 ChainSpec과 sealed header가 만들어지는 실제 release 경로입니다. Source는 parser·builder·header
+          construction을 보여 주지만 custom input의 경제적 안전성이나 다른 client와의 상호운용을 자동으로 검증하지는 않습니다.
         </p>
         <a
           className="mt-3 inline-block text-sm font-medium text-primary hover:underline"

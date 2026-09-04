@@ -147,11 +147,8 @@ export default function Overview({
           </div>
         </div>
         <p className="leading-7">
-          Block proposal은 duty 확인, parent·payload 선택, consensus operation
-          수집, state root 계산, 서명과 전파로 이어진다. 가능한 한 slot 초반에
-          완료해야 하지만,
-          구체 시간은 네트워크 slot 설정과 제안 경로(local execution 또는
-          builder)에 따라 해석한다.
+          Block proposal은 duty 확인, parent·payload 선택, consensus operation 수집, state root 계산, 서명과 전파로 이어진다. 가능한
+          한 slot 초반에 완료해야 하지만 구체 시간은 네트워크 slot 설정과 제안 경로(local execution 또는 builder)에 따라 해석한다.
         </p>
       </div>
       <ContentBoundary article="prysm-block-proposal" />

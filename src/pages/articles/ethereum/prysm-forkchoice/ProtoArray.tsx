@@ -9,10 +9,9 @@ export default function ProtoArray({ onCodeRef }: { onCodeRef: (key: string, ref
       <h2 className="mb-5 text-2xl font-bold">Store는 block tree와 validator별 latest message를 별도 상태로 유지한다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Fork-choice 자료구조가 저장해야 하는 것은 block parent/children, slot, justified·finalized compatibility, node weight와
-          best-child cache입니다. Vote 쪽에는 validator index마다 이전 latest root와 새 latest root를 둡니다. 둘을 분리해야
-          validator 한 명이 vote를 바꿨을 때 모든 attestation을 처음부터 세지 않고 old path에서 balance를 빼고 new path에
-          더할 수 있습니다.
+          Fork-choice 자료구조가 저장해야 하는 것은 block parent/children, slot, justified·finalized compatibility, node
+          weight, best-child cache입니다. Vote 쪽에는 validator index마다 이전 latest root와 새 latest root를 둡니다. 둘을 분리해야
+          validator 한 명이 vote를 바꿨을 때 모든 attestation을 처음부터 세지 않고 old path에서 balance를 빼고 new path에 더할 수 있습니다.
         </p>
       </div>
 
@@ -47,10 +46,9 @@ export default function ProtoArray({ onCodeRef }: { onCodeRef: (key: string, ref
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>doubly-linked tree가 해결하는 구현 문제</h3>
         <p>
-          Prysm의 자료구조 이름은 release에 따라 달라질 수 있지만 핵심은 parent 방향의 weight propagation과 child 방향의
-          head traversal을 모두 빠르게 만드는 것입니다. Parent pointer만 있으면 delta를 위로 올리기 쉽고, children과
-          best-descendant cache가 있으면 justified root에서 아래로 내려가기 쉽습니다. Cache는 정답의 근거가 아니라 같은
-          protocol 결과를 더 적은 반복으로 계산하는 최적화입니다.
+          Prysm의 자료구조 이름은 release에 따라 달라질 수 있지만 핵심은 parent 방향의 weight propagation과 child 방향의 head traversal을
+          모두 빠르게 만드는 것입니다. Parent pointer만 있으면 delta를 위로 올리기 쉽고 children과 best-descendant cache가 있으면 justified
+          root에서 아래로 내려가기 쉽습니다. Cache는 같은 protocol 결과를 더 적은 반복으로 계산하는 최적화이고 정답의 근거가 되지는 않습니다.
         </p>
         <p>
           노드 삭제가 상수 시간이라는 식의 단정은 위험합니다. Finalization 뒤 prune할 때는 child relink, index/cache 제거,
@@ -66,8 +64,8 @@ export default function ProtoArray({ onCodeRef }: { onCodeRef: (key: string, ref
           <li>Balance snapshot이나 justified checkpoint가 바뀌면 이전 generation의 cache를 그대로 재사용하지 않습니다.</li>
         </ul>
         <p>
-          두 validator의 message가 같은 root를 가리킨다고 두 attestation object가 같다는 뜻은 아닙니다. Fork choice에는 최신
-          support만 필요하지만 감사·slashing 검증에는 source/target, signature와 inclusion context가 별도로 필요합니다.
+          두 validator의 message가 같은 root를 가리킨다고 두 attestation object가 같다는 뜻은 아닙니다. Fork choice에는 최신 support만
+          필요하지만 감사·slashing 검증에는 source/target, signature, inclusion context가 별도로 필요합니다.
         </p>
       </div>
     </section>

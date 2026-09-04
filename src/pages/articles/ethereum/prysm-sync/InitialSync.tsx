@@ -31,21 +31,21 @@ export default function InitialSync({ onCodeRef }: { onCodeRef: (key: string, re
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Scheduler와 commit owner를 나눕니다</h3>
         <p>
-          Scheduler는 peers의 finalized/head status와 inflight byte/request budget으로 disjoint range를 배정합니다. Fetch worker는
-          response framing·bounds·request match를 검사해 staged buffer에 넣고, ordered processor만 current state를 mutate합니다.
-          따라서 peer B의 뒤 range가 먼저 와도 앞 range가 검증되기 전 durable cursor를 건너뛰지 않습니다.
+          Scheduler는 peers의 finalized/head status와 inflight byte/request budget으로 disjoint range를 배정합니다. Fetch
+          worker는 response framing·bounds·request match를 검사해 staged buffer에 넣습니다. Current state를 mutate하는 것은
+          ordered processor뿐입니다. 앞 range가 검증되기 전에는 peer B의 뒤 range가 먼저 와도 durable cursor를 건너뛰지 않습니다.
         </p>
         <p>
-          Peer timeout은 해당 range lease를 만료시켜 다른 compatible peer에 재배정합니다. Retry attempt ID와 range identity를
-          유지해 늦게 도착한 첫 response를 dedupe하며, invalid block은 단순 timeout보다 강한 evidence로 기록합니다. 한 peer의
-          head가 높다는 이유만으로 모든 range를 몰아주지 않고 diversity와 useful-response history를 봅니다.
+          Peer timeout은 해당 range lease를 만료시켜 다른 compatible peer에 재배정합니다. Retry attempt ID와 range identity를 유지해
+          늦게 도착한 첫 response를 dedupe합니다. Invalid block은 단순 timeout보다 강한 evidence로 기록합니다. 한 peer의 head가 높다는
+          이유만으로 모든 range를 몰아주지 않고 diversity와 useful-response history를 봅니다.
         </p>
 
         <h3>Contiguous commit invariant</h3>
         <p>
-          Durable checkpoint에는 anchor, last verified block root/slot, post-state root, finalized/head context와 request manifest를
-          함께 저장합니다. Crash 뒤 DB에 block bytes만 있고 state cursor가 이전이면 bytes를 재검증하거나 staged data로
-          정리하며, state cursor만 앞서고 block/state evidence가 없는 상태는 허용하지 않습니다.
+          Durable checkpoint에는 anchor, last verified block root/slot, post-state root, finalized/head context와
+          request manifest를 함께 저장합니다. Crash 뒤 DB에 block bytes만 있고 state cursor가 이전이라면 bytes를 재검증하거나 staged
+          data로 정리합니다. 거꾸로 state cursor만 앞서고 block/state evidence가 없는 상태는 허용하지 않습니다.
         </p>
       </div>
     </section>
