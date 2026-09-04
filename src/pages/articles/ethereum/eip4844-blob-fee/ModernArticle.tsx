@@ -47,14 +47,21 @@ export default function ModernBlobFee() {
     </section>
     <section id="integer-fee" className="space-y-6">
       <h2 className="text-2xl font-bold">정수 fake-exponential은 client마다 같은 price를 만들기 위한 계산법입니다</h2>
-      <p>다음 blob base fee는 excess가 커질수록 증가합니다. Consensus client가 서로 다른 floating-point rounding을 내지 않도록, 규격은 정수 항을 반복해 더하는 결정론적 근사를 사용합니다. 이것은 “가짜 가격”이라는 뜻이 아니라 exponential 형태를 integer arithmetic으로 재현한다는 이름입니다.</p>
+      <p>
+            다음 blob base fee는 excess가 커질수록 증가합니다. 규격은 consensus client가 서로 다른 floating-point rounding을 내지 않도록
+            정수 항을 반복해 더하는 결정론적 근사를 사용합니다. 이것은 “가짜 가격”이라는 뜻이 아니라 exponential 형태를 integer arithmetic으로 재현한다는
+            이름입니다.
+          </p>
       <TermBreakdown title="Price 계산에서 구분할 것" items={[
         { term: "Consensus input", description: "Header에 기록된 excess와 fork parameter입니다." },
         { term: "Integer recurrence", description: "정해진 순서와 rounding으로 항을 더하는 계산입니다." },
         { term: "Blob base fee", description: "Blob gas 한 단위의 protocol minimum price입니다." },
         { term: "Rollup total cost", description: "Compression, execution, proving, posting을 모두 포함한 별도 비용입니다.", boundary: "Blob base fee 감소를 총비용의 같은 비율 감소로 읽지 않습니다." },
       ]} />
-      <ExplainedFormula question="왜 나눗셈과 반복 곱을 써서 지수 함수를 흉내내나요?" idea={<p>부동소수점 없이 factor·e^(n/d) 모양을 만들려고, 이전 항에 n/(d·i)를 곱해 다음 Taylor 항을 순서대로 만들고 전부 더한 뒤 마지막에 한 번만 d로 나눕니다.</p>} formula={String.raw`P=\frac{1}{d}\sum_{i=0}^{k} a_i,\quad a_0=fd,\ a_i=a_{i-1}\cdot\frac{n}{d\,i}`} annotatedFormula={String.raw`\begin{aligned}a_0&=\underbrace{f\cdot d}_{\text{초기 누적자 — factor를 denom 배로 키워 정수 나눗셈 오차를 늦춤}}\\a_i&=\underbrace{a_{i-1}\cdot\frac{n}{d\,i}}_{\text{이전 항에 }n/(di)\text{를 곱해 다음 Taylor 항을 생성}}\\P&=\underbrace{\frac{1}{d}\sum_{i=0}^{k} a_i}_{\text{모든 항을 더한 뒤 }d\text{로 나눠 최종 price로 정규화}}
+      <ExplainedFormula question="왜 나눗셈과 반복 곱을 써서 지수 함수를 흉내내나요?" idea={<p>
+            부동소수점 없이 factor·e^(n/d) 모양을 만들려고 이전 항에 n/(d·i)를 곱해 다음 Taylor 항을 순서대로 만들고 전부 더한 뒤 마지막에 한 번만 d로
+            나눕니다.
+          </p>} formula={String.raw`P=\frac{1}{d}\sum_{i=0}^{k} a_i,\quad a_0=fd,\ a_i=a_{i-1}\cdot\frac{n}{d\,i}`} annotatedFormula={String.raw`\begin{aligned}a_0&=\underbrace{f\cdot d}_{\text{초기 누적자 — factor를 denom 배로 키워 정수 나눗셈 오차를 늦춤}}\\a_i&=\underbrace{a_{i-1}\cdot\frac{n}{d\,i}}_{\text{이전 항에 }n/(di)\text{를 곱해 다음 Taylor 항을 생성}}\\P&=\underbrace{\frac{1}{d}\sum_{i=0}^{k} a_i}_{\text{모든 항을 더한 뒤 }d\text{로 나눠 최종 price로 정규화}}
 \end{aligned}`} operations={[
         { expression: String.raw`f\cdot d`, annotation: ["factor를 denom 배로 확대해", "정수 나눗셈에서 정밀도를 보존"] },
         { expression: String.raw`a_{i-1}\cdot\frac{n}{d\,i}`, annotation: ["이전 항에 n/(d·i)를 곱해", "다음 Taylor 항을 순서대로 생성"] },

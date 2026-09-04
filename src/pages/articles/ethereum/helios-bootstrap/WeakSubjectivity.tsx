@@ -36,9 +36,9 @@ export default function WeakSubjectivity({ title }: { title: string }) {
       />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Sync committee가 mainnet preset에서 256 epochs, 즉 8,192 slots마다 바뀌는 약 27.3시간은 committee rotation 주기입니다.
-          과거 글처럼 이를 weak-subjectivity 유효 기간으로 쓰면 전혀 다른 두 경계를 합치게 됩니다. Full validator나 consensus node도 오래
-          offline이었다면 PoS의 weak-subjectivity bootstrap 문제를 피하지 못하며, “제네시스부터 실행하니 신뢰 입력이 없다”는 설명도 정확하지 않습니다.
+          Sync committee는 mainnet preset에서 256 epochs, 즉 8,192 slots마다 바뀝니다. 이 약 27.3시간이 committee rotation
+          주기입니다. 과거 글처럼 이를 weak-subjectivity 유효 기간으로 쓰면 전혀 다른 두 경계를 합치게 됩니다. Full validator나 consensus node도
+          오래 offline이었다면 PoS의 weak-subjectivity bootstrap 문제를 피하지 못하며 “제네시스부터 실행하니 신뢰 입력이 없다”는 설명도 정확하지 않습니다.
         </p>
       </div>
     </section>

@@ -17,12 +17,9 @@ export default function Overview({
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          Beacon node는 block root로 원본을 찾고, slot으로 후보를 열거하며,
-          finalized checkpoint와 state를 restart 뒤 복원해야 합니다. 하나의
-          object가 primary bucket에는 있지만 secondary index에는 없거나
-          checkpoint가 먼저 움직이면 reader마다 다른 chain view를 보게 됩니다.
-          그래서 저장의 핵심은 bucket 수가 아니라 atomic write와 recoverable
-          ownership입니다.
+          Beacon node는 block root로 원본을 찾고 slot으로 후보를 열거하며 finalized checkpoint와 state를 restart 뒤 복원해야 합니다. 하나의
+          object가 primary bucket에는 있지만 secondary index에는 없거나 checkpoint가 먼저 움직이면 reader마다 다른 chain view를 보게
+          됩니다. 그래서 저장의 핵심은 bucket 수가 아니라 atomic write와 recoverable ownership입니다.
         </p>
         <p>
           이 글은{" "}

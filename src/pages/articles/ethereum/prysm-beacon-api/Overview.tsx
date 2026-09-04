@@ -19,7 +19,11 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
         <p>REST adapter는 method·path·headers·query·body를 typed request로 바꾸고 HTTP status·JSON/SSZ response를 만듭니다. gRPC adapter는 protobuf message와 gRPC status를 다룹니다. 두 adapter는 공통 service를 호출할 수 있지만 core handler 공유만으로 schema·error·authorization parity가 자동으로 생기지는 않습니다.</p>
         <p>따라서 receipt에는 API/spec version, endpoint, transport, request digest, resolved state/dependent root, deadline, status와 response/effect digest가 필요합니다. HTTP 2xx는 transport가 response를 만들었다는 뜻이지 block inclusion·canonical head·finality를 증명하지 않습니다.</p>
         <h3>Endpoint version은 API 전체 세대가 아닙니다</h3>
-        <p>Beacon API endpoint는 개별적으로 versioning됩니다. 모든 v2 endpoint가 v1보다 “최신 전체 API”라고 볼 수 없고, field가 추가되는 일부 compatible change는 endpoint version 증가 없이 일어날 수 있습니다. Client는 사용한 OpenAPI commit과 endpoint schema를 고정하고 unknown field 처리도 테스트해야 합니다.</p>
+        <p>
+            Beacon API endpoint는 개별적으로 versioning됩니다. 모든 v2 endpoint가 v1보다 “최신 전체 API”라고 볼 수 없고 field가 추가되는 일부
+            compatible change는 endpoint version 증가 없이 일어날 수 있습니다. Client는 사용한 OpenAPI commit과 endpoint schema를
+            고정하고 unknown field 처리도 테스트해야 합니다.
+          </p>
       </div>
       <div id="paper-beacon-api-spec" className="scroll-mt-24">
         <CitationBlock source="Ethereum Beacon APIs — OpenAPI specification" href="https://ethereum.github.io/beacon-APIs/" citeKey={1}>

@@ -9,16 +9,17 @@ export default function SyncLoop({ title, onCodeRef: _onCodeRef }: Props) {
       <h2 className="mb-5 text-2xl font-bold">{title}: fetch·validate·rank·apply·persist를 분리한다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Sync loop는 “12초마다 덮어쓰기”가 아닙니다. New update event나 polling schedule에서 후보를 받고, current slot을 다시 계산해
-          validate한 뒤, 기존 best-valid update와 participation·relevance·finality 조건으로 비교합니다. 채택할 때는 optimistic header,
-          finalized header, current/next committee와 participation counters를 하나의 새 store generation으로 적용합니다.
+          Sync loop는 “12초마다 덮어쓰기”가 아닙니다. New update event나 polling schedule에서 후보를 받고 current slot을 다시 계산해
+          validate한 뒤, 기존 best-valid update와 participation·relevance·finality 조건으로 비교합니다. 채택할 때는 optimistic
+          header, finalized header, current/next committee와 participation counters를 하나의 새 store generation으로
+          적용합니다.
         </p>
         <h3>실패해도 마지막 검증 상태를 유지합니다</h3>
         <p>
-          Endpoint timeout은 backoff/failover할 수 있지만 invalid signature·wrong branch·future slot은 같은 payload를 다른 endpoint에서 받아도
-          valid가 되지 않습니다. Persist 응답이 timeout으로 끝나 commit 여부가 불명확하면 generation과 update root로 재조회해 이미 적용됐는지
-          조정하고, 같은 update를 두 번 누적하지 않습니다. Local clock이 크게 어긋나면 future/stale 판정이 모두 흔들리므로 fail-closed
-          상태와 clock diagnostic을 분리합니다.
+          Endpoint timeout은 backoff/failover할 수 있지만 invalid signature·wrong branch·future slot은 같은 payload를 다른
+          endpoint에서 받아도 valid가 되지 않습니다. Persist 응답이 timeout으로 끝나 commit 여부가 불명확하면 generation과 update root로
+          재조회해 이미 적용됐는지 조정하고 같은 update를 두 번 누적하지 않습니다. Local clock이 크게 어긋나면 future/stale 판정이 모두 흔들리므로 fail-
+          closed 상태와 clock diagnostic을 분리합니다.
         </p>
         <h3>Release gate</h3>
         <p>

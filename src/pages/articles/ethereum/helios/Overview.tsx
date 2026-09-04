@@ -15,9 +15,9 @@ export default function Overview({ title }: { title: string }) {
           데 있습니다. 그래서 네트워크와 저장 비용은 줄지만 full node와 완전히 같은 검증 범위가 되는 것은 아닙니다.
         </p>
         <p>
-          이 글은 “block 1,000의 A 잔액은 7 ETH”라는 한 응답을 따라갑니다. 먼저 최근 weak-subjectivity checkpoint에서 beacon
-          header를 검증하고, 그 header가 약속한 execution state root에 account proof를 묶습니다. 이때 checkpoint를 어디서 얻었는지는
-          여전히 외부 신뢰이며, RPC availability·정확한 network/fork 설정도 별도 운영 조건입니다.
+          이 글은 “block 1,000의 A 잔액은 7 ETH”라는 응답 하나를 따라갑니다. 먼저 최근 weak-subjectivity checkpoint에서 beacon header를
+          검증하고 그 header가 약속한 execution state root에 account proof를 묶습니다. 이때 checkpoint를 어디서 얻었는지는 여전히 외부 신뢰입니다.
+          RPC availability·정확한 network/fork 설정도 별도 운영 조건입니다.
         </p>
       </div>
 
@@ -66,15 +66,15 @@ export default function Overview({ title }: { title: string }) {
           <li>Block hash·slot·proof outcome을 함께 local JSON-RPC 응답으로 반환합니다.</li>
         </ol>
         <p>
-          현재 Helios source가 어떤 RPC method와 endpoint를 연결하는지는 아래 pinned snapshot의 사실입니다. 반면 여러 provider의 결과를
-          교차 확인하고, stale checkpoint·reorg·proof corruption을 같은 fixture에서 재생한 뒤 배포하는 절차는 이 글이 제안하는
-          hardening contract입니다. Source에 함수가 있다는 사실만으로 그 운영 계약까지 구현됐다고 주장하지 않습니다.
+          현재 Helios source가 어떤 RPC method와 endpoint를 연결하는지는 아래 pinned snapshot의 사실입니다. 반면 여러 provider의 결과를 교차
+          확인하고 stale checkpoint·reorg·proof corruption을 같은 fixture에서 재생한 뒤 배포하는 절차는 이 글이 제안하는 hardening
+          contract입니다. Source에 함수가 있다는 사실만으로 그 운영 계약까지 구현됐다고 주장하지 않습니다.
         </p>
         <h3>무엇을 보장하지 않는가</h3>
         <p>
-          Valid proof는 해당 root 아래의 값 integrity를 말할 뿐 RPC가 항상 응답한다는 뜻이 아닙니다. 또한 unsupported method나 proof를
-          제공하지 않는 데이터, mempool의 미래 상태, 오래된 checkpoint의 안전성은 별도 문제입니다. Block number만 기록하면 reorg 뒤 다른
-          hash를 가리킬 수 있으므로 응답 receipt에는 network·slot·block hash·state root·source endpoint·Helios SHA를 함께 남겨야 합니다.
+          Valid proof는 해당 root 아래의 값 integrity를 말할 뿐 RPC가 항상 응답한다는 뜻이 아닙니다. unsupported method나 proof를 제공하지 않는
+          데이터, mempool의 미래 상태, 오래된 checkpoint의 안전성은 별도 문제입니다. Block number만 기록하면 reorg 뒤 다른 hash를 가리킬 수 있으므로
+          응답 receipt에는 network·slot·block hash·state root·source endpoint·Helios SHA를 함께 남겨야 합니다.
         </p>
       </div>
 

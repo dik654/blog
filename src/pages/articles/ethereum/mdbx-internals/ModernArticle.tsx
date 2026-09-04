@@ -32,7 +32,11 @@ export default function ModernArticle() {
 
     <section id="transaction" className="space-y-5">
       <h2 className="text-2xl font-bold">Copy-on-Write path를 만든 뒤 meta root를 publish한다</h2>
-      <p>R1이 txid 100의 root 1→branch 8→leaf 42를 pin한 동안 writer 101은 수정 leaf 52, parent 18, root 2를 새로 만듭니다. Root 2와 geometry·transaction identity를 나타내는 meta state가 publish되기 전에는 old graph가 완전하고, publish된 뒤에는 new graph가 완전합니다. 그래서 R1은 계속 old root를 읽고 새 reader는 txid 101을 선택할 수 있습니다.</p>
+      <p>
+            R1이 txid 100의 root 1→branch 8→leaf 42를 pin한 동안 writer 101은 수정 leaf 52, parent 18, root 2를 새로 만듭니다.
+            Root 2와 geometry·transaction identity를 나타내는 meta state가 publish되기 전에는 old graph가 완전하고 publish된 뒤에는
+            new graph가 완전합니다. 그래서 R1은 계속 old root를 읽고 새 reader는 txid 101을 선택할 수 있습니다.
+          </p>
       <p>한 시점의 writer를 직렬화한다고 해서 readers도 writer lock을 기다릴 필요는 없습니다. 대신 active readers 중 가장 오래된 generation이 아직 참조할 수 있는 retired pages를 재사용하지 않아야 합니다. Long reader가 끝나지 않으면 free pages 회수가 늦어져 file/map growth가 늘 수 있습니다.</p>
       <ExplainedFormula
         question="Retired page를 언제 안전하게 재사용할 수 있을까?"
@@ -56,7 +60,10 @@ export default function ModernArticle() {
 
     <section id="dupsort" className="space-y-5">
       <h2 className="text-2xl font-bold">DUPSORT는 key 안에 두 번째 ordered domain을 만든다</h2>
-      <p>key A 아래 values [2,5,9]가 있으면 next-duplicate는 같은 A에서 2→5→9로 움직이고, next-key는 다음 key B로 이동합니다. 이것은 unordered set이나 application array와 다르며 duplicate comparator와 value codec이 persisted schema의 일부입니다.</p>
+      <p>
+            key A 아래 values [2,5,9]가 있으면 next-duplicate는 같은 A에서 2→5→9로 움직이고 next-key는 다음 key B로 이동합니다. 이것은
+            unordered set이나 application array와 다르며 duplicate comparator와 value codec이 persisted schema의 일부입니다.
+          </p>
       <p>Numeric 256을 little-endian bytes 00 01로 저장하고 2를 02 00으로 저장하면서 lexicographic byte comparator를 쓰면 사람이 기대한 numeric ordering과 달라질 수 있습니다. Key/value type, byte encoding, comparator, DUPSORT/DUPFIXED flags와 cursor operation을 하나의 schema receipt로 고정해야 합니다.</p>
     </section>
 

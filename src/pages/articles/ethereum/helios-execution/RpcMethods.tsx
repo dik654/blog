@@ -35,12 +35,10 @@ export default function RpcMethods({ title, onCodeRef: _onCodeRef }: Props) {
           Logs: Bloom은 후보 필터이고 receipt root가 membership을 증명합니다
         </h3>
         <p>
-          Bloom filter는 특정 address/topic이 “없음”을 빠르게 판단할 수 있지만
-          false positive가 있으므로 log inclusion proof가 아닙니다. Helios
-          0.11.1의 RPC provider는 반환된 log가 속한 block들의 전체 receipts를
-          가져와 ordered receipts root를 header와 비교하고, 각 log의 RLP bytes가
-          해당 transaction receipt에 실제로 있는지와 filter 조건까지 확인합니다.
-          즉 Bloom만으로 검증한다는 레거시 설명은 현재 source와 다릅니다.
+          Bloom filter는 특정 address/topic이 “없음”을 빠르게 판단할 수 있지만 false positive가 있으므로 log inclusion proof가 아닙니다.
+          Helios 0.11.1의 RPC provider는 반환된 log가 속한 block들의 전체 receipts를 가져와 ordered receipts root를 header와
+          비교하고 각 log의 RLP bytes가 해당 transaction receipt에 실제로 있는지와 filter 조건까지 확인합니다. 즉 Bloom만으로 검증한다는 레거시 설명은
+          현재 source와 다릅니다.
         </p>
 
         <h3 id="send-tx" className="scroll-mt-24">
@@ -48,12 +46,10 @@ export default function RpcMethods({ title, onCodeRef: _onCodeRef }: Props) {
           분리합니다
         </h3>
         <p>
-          Signed bytes 자체의 transaction hash는 로컬에서 계산할 수 있지만,
-          provider가 peer에 전파했는지, mempool이 받아들였는지, 어느 block에
-          포함될지는 요청 시점에 증명할 수 없습니다. Helios 0.11.1은 이 method를
-          execution provider에 전달해 받은 hash를 반환합니다. 따라서 status는
-          “broadcast 요청/acknowledgement”이고, 이후 verified block의 receipts
-          root에 연결된 receipt를 조회했을 때만 inclusion을 별도 확인합니다.
+          Signed bytes 자체의 transaction hash는 로컬에서 계산할 수 있지만 provider가 peer에 전파했는지, mempool이 받아들였는지, 어느 block에
+          포함될지는 요청 시점에 증명할 수 없습니다. Helios 0.11.1은 이 method를 execution provider에 전달해 받은 hash를 반환합니다. 따라서
+          status는 “broadcast 요청/acknowledgement”이고, 이후 verified block의 receipts root에 연결된 receipt를 조회했을 때만
+          inclusion을 별도 확인합니다.
         </p>
 
         <h3>Cache·release gate는 method별 anchor를 보존합니다</h3>

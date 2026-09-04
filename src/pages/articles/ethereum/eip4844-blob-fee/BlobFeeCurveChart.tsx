@@ -14,8 +14,8 @@ export default function BlobFeeCurveChart() {
     <div className="not-prose rounded-lg border border-border/70 bg-background p-4 sm:p-6">
       <p className="text-xs font-bold text-primary">excess가 커질수록 price는 얼마나 가파르게 뛰는가</p>
       <p className="mt-1 text-xs leading-5 text-muted-foreground">
-        x = excess ÷ update fraction, y = price ÷ factor로 무차원화했습니다. 실제 client는 이 곡선을
-        정수 recurrence로 근사하지만(위 수식), 모양 자체는 이 지수 곡선과 같습니다.
+        x = excess ÷ update fraction, y = price ÷ factor로 무차원화했습니다. 실제 client는 이 곡선을 정수 recurrence로 근사하지만(위
+        수식) 모양 자체는 이 지수 곡선과 같습니다.
       </p>
       <div className="themed-mafs mt-4 min-w-0 overflow-x-auto">
         <Mafs height={220} viewBox={{ x: [0, 3], y: [0, 20], padding: 0 }}>
@@ -31,9 +31,8 @@ export default function BlobFeeCurveChart() {
         </Mafs>
       </div>
       <p className="mt-3 text-xs leading-5 text-muted-foreground">
-        x=1(즉 excess=update fraction)까지는 완만하지만, x가 2·3으로 늘어나면 price는 각각
-        e²≈7.4배, e³≈20배로 뛰어오릅니다. Target을 반복해서 넘기면 price가 선형이 아니라
-        기하급수적으로 벌금을 매기는 이유입니다.
+        x=1(즉 excess=update fraction)까지는 완만하지만 x가 2·3으로 늘어나면 price는 각각 e²≈7.4배, e³≈20배로 뛰어오릅니다. Target을 반복해서
+        넘기면 price가 선형이 아니라 기하급수적으로 벌금을 매기는 이유입니다.
       </p>
     </div>
   );

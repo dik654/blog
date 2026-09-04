@@ -42,9 +42,10 @@ export default function SszInternal({ title, onCodeRef: _onCodeRef }: Props) {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>안전한 decode→proof 순서</h3>
         <p>
-          Input byte 상한과 fork-specific schema를 고른 뒤 canonical decode와 full consumption을 확인합니다. 그 다음 object root를 계산하고,
-          expected generalized index·branch length·sibling order로 trusted root를 재구성합니다. Wrong fork·trailing bytes·oversized list·short branch·root
-          mismatch는 서로 다른 reject reason이어야 하며 어느 경우에도 Store를 수정하지 않습니다.
+          input byte 상한과 fork-specific schema를 고른 뒤 canonical decode와 full consumption을 확인합니다. 그 다음 object
+          root를 계산하고 expected generalized index·branch length·sibling order로 trusted root를 재구성합니다. wrong
+          fork·trailing bytes·oversized list·short branch·root mismatch는 서로 다른 reject reason이어야 하며 어느 경우에도
+          Store를 수정하지 않습니다.
         </p>
         <p>
           Packing·mix-in-length·multiproof의 일반 유도는 <Link to="/blockchain/prysm-ssz">SSZ 정본 글</Link>에서 이어서 볼 수 있습니다.

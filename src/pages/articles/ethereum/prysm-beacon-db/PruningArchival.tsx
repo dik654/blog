@@ -57,11 +57,9 @@ export default function PruningArchival({
         </p>
         <h3>Compaction은 별도 migration입니다</h3>
         <p>
-          Compaction은 큰 I/O와 temporary capacity를 요구하며
-          crash·disk-full에서 원본을 보존해야 합니다. Snapshot/backup을 검증하고
-          reader·writer quiescence 또는 지원되는 online contract를 지킨 뒤
-          temporary artifact를 완성하고 atomic switch합니다. Delete 직후 파일
-          크기가 그대로라고 다시 위험하게 삭제하지 않습니다.
+          Compaction에는 큰 I/O와 temporary capacity가 필요하며 crash·disk-full에서 원본을 보존해야 합니다. Snapshot/backup을 검증하고
+          reader·writer quiescence 또는 지원되는 online contract를 지킨 뒤 temporary artifact를 완성하고 atomic switch합니다.
+          Delete 직후 파일 크기가 그대로라고 다시 위험하게 삭제하지 않습니다.
         </p>
         <h3>Archive와 serving contract</h3>
         <p>

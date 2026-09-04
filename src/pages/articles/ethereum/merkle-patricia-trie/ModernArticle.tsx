@@ -19,20 +19,41 @@ export default function ModernArticle() {
   return <article className="space-y-14">
     <section id="overview" className="space-y-5">
       <h2 className="text-3xl font-bold">Ethereum MPT: key/value DB가 아니라 root로 검증하는 authenticated state</h2>
-      <p className="text-lg leading-8">한 byte key 0xab를 경로로 쓴다면 먼저 4-bit 단위 a와 b로 나눌 수 있습니다. Ethereum은 account address나 storage slot의 canonical key bytes를 Keccak-256해 32 bytes, 즉 64 nibbles의 secure path를 만들고 그 path를 branch·extension·leaf nodes에 나눠 담습니다.</p>
+      <p className="text-lg leading-8">
+            한 byte key 0xab를 경로로 쓴다면 먼저 4-bit 단위 a와 b로 나눌 수 있습니다. Ethereum은 account address나 storage slot의
+            canonical key bytes를 Keccak-256으로 해시해 32 bytes, 즉 64 nibbles의 secure path를 만듭니다. 이 path를
+            branch·extension·leaf nodes에 나눠 담습니다.
+          </p>
       <TrieFlow />
-      <p>MPT node bytes는 일반 DB에 저장될 수 있지만 B+ tree의 page I/O, LSM의 compaction, MDBX의 transaction durability를 대신하지 않습니다. MPT가 제공하려는 것은 trusted root에 특정 path/value 또는 구조적으로 확인된 absence가 결속되었다는 cryptographic verification boundary입니다.</p>
+      <p>
+            MPT node bytes는 일반 DB에 저장될 수 있지만 B+ tree의 page I/O, LSM의 compaction, MDBX의 transaction durability를
+            대신하지 않습니다. MPT가 제공하려는 것은 trusted root에 특정 path/value 또는 구조적으로 확인된 absence가 묶여 있다는 cryptographic
+            verification boundary입니다.
+          </p>
     </section>
 
     <section id="path-encoding" className="space-y-5">
       <h2 className="text-2xl font-bold">Nibble path를 branch·extension·leaf로 압축한다</h2>
-      <p>Branch node는 nibble 0부터 f까지의 child slots 16개와 node 자체에서 끝나는 value slot 하나를 가집니다. Extension node는 여러 keys가 공유하는 nonterminal prefix와 다음 child reference를, leaf node는 남은 terminating suffix와 value를 담습니다. 따라서 64단계 sparse radix path를 매번 전부 만들지 않고 공통 구간을 건너뜁니다.</p>
-      <p>두 항목 node의 compact hex-prefix는 leaf/extension과 odd/even path length를 첫 flag nibble에 함께 넣습니다. Leaf odd path [1,2,3,4,5]는 flag 3을 앞에 붙여 nibble sequence [3,1,2,3,4,5], bytes 0x31 0x23 0x45가 됩니다. Extension even path [a,b]는 flag 0과 padding 0을 붙여 bytes 0x00 0xab가 됩니다. Flag나 padding을 느슨하게 받으면 같은 logical path가 여러 bytes를 가져 root identity가 갈라집니다.</p>
+      <p>
+            Branch node에는 nibble 0부터 f까지의 child slots 16개와 node 자체에서 끝나는 value slot 하나가 있습니다. Extension node는
+            여러 keys가 공유하는 nonterminal prefix와 다음 child reference를, leaf node는 남은 terminating suffix와 value를
+            담습니다. 따라서 64단계 sparse radix path를 매번 전부 만들지 않고 공통 구간을 건너뜁니다.
+          </p>
+      <p>
+            두 항목 node의 compact hex-prefix는 leaf/extension과 odd/even path length를 첫 flag nibble에 함께 넣습니다. Leaf
+            odd path [1,2,3,4,5]는 flag 3을 앞에 붙여 nibble sequence [3,1,2,3,4,5], bytes 0x31 0x23 0x45가 됩니다.
+            Extension even path [a,b]는 flag 0과 padding 0을 붙여 bytes 0x00 0xab가 됩니다. Flag나 padding을 느슨하게 받으면 같은
+            logical path가 여러 bytes가 되어 root identity가 갈라집니다.
+          </p>
     </section>
 
     <section id="root-proof" className="space-y-5">
       <h2 className="text-2xl font-bold">Canonical RLP와 inline/hash 경계가 root를 고정한다</h2>
-      <p>각 logical node를 canonical RLP bytes로 직렬화한 뒤 child node의 RLP이 32 bytes 미만이면 parent 안에 그대로 inline하고, 32 bytes 이상이면 Keccak-256 digest로 참조합니다. 31-byte node를 hash하거나 32-byte node를 inline하는 구현은 logical entries가 같아도 다른 ancestor bytes와 root를 만듭니다.</p>
+      <p>
+            각 logical node를 canonical RLP bytes로 직렬화한 뒤 child node의 RLP가 32 bytes 미만이면 parent 안에 그대로 inline하고
+            32 bytes 이상이면 Keccak-256 digest로 참조합니다. 31-byte node를 hash하거나 32-byte node를 inline하는 구현은 logical
+            entries가 같아도 다른 ancestor bytes와 root를 만듭니다.
+          </p>
       <ExplainedFormula
         question="한 node의 bytes가 어떻게 root-bound reference가 될까?"
         idea="Child의 canonical RLP 길이에 따라 reversible inline bytes 또는 fixed digest를 parent에 넣고, root node는 canonical bytes를 Keccak해 block header의 root identity로 만듭니다."
@@ -65,7 +86,12 @@ export default function ModernArticle() {
     <section id="release" className="space-y-5">
       <h2 className="text-2xl font-bold">Encoding·update·inclusion·absence를 한 root oracle에 맞춘다</h2>
       <p>Empty tree, shared prefix, odd/even path, branch value slot, 31/32-byte inline boundary, noncanonical/malformed RLP, wrong root/path/value, missing/extra/truncated node, valid absence, insert/update/delete를 pinned reference source와 비교합니다. Logical lookup result만 맞는 것이 아니라 root, emitted node bytes/set, proof acceptance와 typed failure가 같아야 합니다.</p>
-      <p>Protocol/source SHA, key schema·hash, RLP/hex-prefix profile, database adapter와 block fixture를 pin하고 update/prove/verify time, proof/node bytes, hash/RLP count와 memory를 기록합니다. Root·proof parity가 깨지면 이전 trie implementation/profile로 rollback하며, DB fsync latency를 MPT hash algorithm의 성능으로 섞지 않습니다.</p>
+      <p>
+            Protocol/source SHA, key schema·hash, RLP/hex-prefix profile, database adapter와 block fixture를
+            pin하고 update/prove/verify time, proof/node bytes, hash/RLP count와 memory를 기록합니다. Root·proof
+            parity가 깨지면 이전 trie implementation/profile로 rollback합니다. DB fsync latency를 MPT hash algorithm의
+            성능으로 섞지 않습니다.
+          </p>
       <div id="paper-ethereum-mpt-docs"><CitationBlock source="ethereum.org · Merkle Patricia Trie" citeKey={1} href="https://ethereum.org/developers/docs/data-structures-and-encoding/patricia-merkle-trie/"><p><b>문제:</b> Ethereum state의 radix path·Patricia compression·Merkle commitment를 설명합니다.</p><p><b>기여:</b> Branch/extension/leaf, hex-prefix, RLP inline/hash와 state/storage trie의 official overview를 제공합니다.</p><p><b>전제:</b> 현재 문서의 execution-layer MPT profile과 referenced protocol semantics를 따릅니다.</p><p><b>근거 범위:</b> MPT node·path·root 구조의 공식 설명입니다.</p><p><b>말하지 않는 것:</b> Moving page가 특정 client source version이나 모든 verifier edge case를 고정하지 않습니다.</p></CitationBlock></div>
       <div id="paper-geth-trie-source"><CitationBlock source="ethereum/go-ethereum trie pinned source 6bb0588" citeKey={2} href="https://github.com/ethereum/go-ethereum/tree/6bb0588ad8e7f922e4ad5580f51265a4097af08f/trie"><p><b>문제:</b> MPT update·node encoding·proof implementation seam을 exact source로 고정합니다.</p><p><b>기여:</b> Official go-ethereum trie source·tests의 pinned snapshot을 제공합니다.</p><p><b>전제:</b> Commit 6bb0588과 chain·protocol·database configuration을 pin합니다.</p><p><b>근거 범위:</b> 선택 commit에서 확인되는 trie implementation behavior입니다.</p><p><b>말하지 않는 것:</b> 다른 clients, future Verkle transition, generic storage durability를 대신하지 않습니다.</p></CitationBlock></div>
     </section>

@@ -75,10 +75,9 @@ export default function KvSchema({
         </p>
         <h3>Schema는 migration 가능한 versioned artifact입니다</h3>
         <p>
-          Bucket 이름·key codec·value envelope·compression·fork decoder와
-          migration checkpoint를 version에 묶습니다. Startup은 existing DB의
-          network/genesis와 schema compatibility를 확인한 뒤 서비스를 열고,
-          unknown/newer schema를 추측해 읽지 않습니다.
+          Bucket 이름·key codec·value envelope·compression·fork decoder와 migration checkpoint를 version에 묶습니다.
+          Startup은 existing DB의 network/genesis와 schema compatibility를 확인한 뒤 서비스를 열고 unknown/newer schema를 추측해
+          읽지 않습니다.
         </p>
       </div>
       <div className="not-prose my-4">

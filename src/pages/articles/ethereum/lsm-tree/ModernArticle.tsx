@@ -26,8 +26,17 @@ export default function ModernArticle() {
 
     <section id="write-path" className="space-y-5">
       <h2 className="text-2xl font-bold">WAL·memtable·SSTable은 서로 다른 실패를 막는다</h2>
-      <p>seq 41 Put(A,7)은 먼저 WAL에 append되고 선택한 sync policy의 acknowledgement boundary를 통과한 뒤 mutable memtable에 반영됩니다. Memtable이 차면 immutable로 freeze되어 foreground mutation에서 분리되고, key·sequence 순으로 정렬된 SSTable로 flush됩니다. SSTable은 immutable이므로 나중 변경은 새 entry 또는 tombstone으로 추가됩니다.</p>
-      <p>WAL은 crash 뒤 아직 flush되지 않은 acknowledged writes를 replay하기 위한 것이고 memtable은 빠른 ordered memory update를, SSTable은 persistent sorted run을 담당합니다. Memtable만 갱신하고 성공을 돌려준 직후 process가 죽으면 A=7이 사라집니다. 반대로 WAL write가 OS buffer에만 있고 stable media에 도달하지 않은 상태를 durable이라고 부를 수 있는지는 engine의 sync option과 filesystem contract에 달려 있습니다.</p>
+      <p>
+            seq 41 Put(A,7)은 먼저 WAL에 append되고 선택한 sync policy의 acknowledgement boundary를 통과한 뒤 mutable
+            memtable에 반영됩니다. Memtable이 차면 immutable로 freeze되어 foreground mutation에서 분리되고 key·sequence 순으로 정렬된
+            SSTable로 flush됩니다. SSTable은 immutable이므로 나중 변경은 새 entry 또는 tombstone으로 추가됩니다.
+          </p>
+      <p>
+            WAL은 crash 뒤 아직 flush되지 않은 acknowledged writes를 replay하는 데 쓰이고 memtable은 빠른 ordered memory
+            update를, SSTable은 persistent sorted run을 담당합니다. Memtable만 갱신하고 성공을 돌려준 직후 process가 죽으면 A=7이 사라집니다.
+            반대로 WAL write가 OS buffer에만 있고 stable media에 도달하지 않은 상태를 durable이라고 부를 수 있는지는 engine의 sync option과
+            filesystem contract에 달려 있습니다.
+          </p>
     </section>
 
     <section id="read-path" className="space-y-5">

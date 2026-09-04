@@ -50,12 +50,10 @@ export default function ProofTrace({
       >
         <h3>RLP decode는 field 수와 canonical integer까지 확인합니다</h3>
         <p>
-          Account leaf는 네 field의 RLP list입니다. Nonce와 balance는 leading
-          zero가 없는 canonical integer, 두 root는 32-byte 값이어야 합니다. Trie
-          node도 RLP의 short/long form, hex-prefix의 leaf/extension·odd/even
-          flag와 inline/hash child 경계를 지켜야 합니다. Hash chain이 맞는다는
-          이유로 non-canonical bytes나 trailing data를 허용하면 client 간 root
-          해석이 갈릴 수 있습니다.
+          Account leaf는 네 field의 RLP list입니다. 이 중 nonce와 balance는 leading zero가 없는 canonical integer, 두 root는
+          32-byte 값이어야 합니다. 제약은 trie node에도 이어집니다. RLP의 short/long form을 따르고 hex-prefix의 leaf/extension과
+          odd/even flag, inline/hash child 경계까지 지켜야 합니다. hash chain이 맞는다는 이유로 non-canonical bytes나 trailing
+          data를 허용하면 client 간 root 해석이 갈릴 수 있습니다.
         </p>
       </div>
     </section>

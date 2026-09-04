@@ -31,12 +31,10 @@ export default function UpdateTrace({
           확인합니다.
         </p>
         <p>
-          Finalized header나 next committee가 있다면 각각의 SSZ Merkle branch를
-          attested header의 state root에 연결합니다. 마지막으로 선택한
-          current/next committee에서 set bit의 public key를 aggregate하고,
-          signature slot의 fork version·genesis root로 만든 domain에서 BLS
-          signature를 검증합니다. 서명만 맞아도 branch나 period가 틀리면 update
-          전체를 거부합니다.
+          finalized header나 next committee가 있다면 각각의 SSZ Merkle branch를 attested header의 state root에 연결합니다.
+          마지막으로 선택한 current/next committee에서 set bit의 public key를 aggregate하고 signature slot의 fork
+          version·genesis root로 만든 domain에서 BLS signature를 검증합니다. 서명만 맞아도 branch나 period가 틀리면 update 전체를
+          거부합니다.
         </p>
       </div>
 
@@ -102,12 +100,9 @@ export default function UpdateTrace({
         </p>
         <h3>Committee handoff는 finalized evidence에 묶습니다</h3>
         <p>
-          Store에 next committee가 없고 같은 period의 finalized update가
-          committee branch를 제공하면 next를 채웁니다. Finalized slot이 다음
-          period로 넘어가면 기존 next를 current로 승격하고 새 next를 저장합니다.
-          단순히 wall clock이 period 경계를 지났다는 이유로 committee를
-          회전시키지 않으므로, 검열이나 네트워크 단절이 곧 잘못된 key set
-          선택으로 이어지지 않습니다.
+          Store에 next committee가 없고 같은 period의 finalized update가 committee branch를 제공하면 next를 채웁니다. finalized
+          slot이 다음 period로 넘어가면 기존 next를 current로 승격하고 새 next를 저장합니다. 단순히 wall clock이 period 경계를 지났다는 이유로
+          committee를 회전시키지 않으므로 검열이나 네트워크 단절이 곧 잘못된 key set 선택으로 이어지지 않습니다.
         </p>
       </div>
     </section>

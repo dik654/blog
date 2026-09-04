@@ -13,8 +13,8 @@ export default function FetchCheckpoint({ title, onCodeRef: _onCodeRef }: Props 
           Decode와 validation은 서로 다른 단계이므로 알 수 없는 fork version이나 trailing data를 임의의 현재 구조로 읽지 않습니다.
         </p>
         <p>
-          Retry할 때도 request identity는 network와 C로 고정합니다. Endpoint A가 timeout난 뒤 endpoint B를 쓰는 것은 괜찮지만, retry 도중
-          더 최신이라는 이유로 root를 C′로 바꾸면 다른 trust decision이 됩니다. 그런 변경은 새 checkpoint approval로 기록해야 합니다.
+          Retry할 때도 request identity는 network와 C로 고정합니다. Endpoint A가 timeout난 뒤 endpoint B를 쓰는 것은 괜찮지만 retry
+          도중 더 최신이라는 이유로 root를 C′로 바꾸면 다른 trust decision이 됩니다. 그런 변경은 새 checkpoint approval로 기록해야 합니다.
         </p>
       </div>
     </section>

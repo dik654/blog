@@ -73,20 +73,15 @@ export default function MptTraversal({ title, onCodeRef: _onCodeRef }: Props) {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Branch·extension·leaf마다 멈춰야 할 조건이 다릅니다</h3>
         <p>
-          Branch는 다음 nibble index의 child를 고르고, extension은 압축한 shared
-          prefix가 남은 path와 같은지 확인합니다. Leaf에서는 terminator가 있는
-          마지막 suffix와 value를 비교합니다. Encoded child가 짧으면 parent 안에
-          inline되고, 길면 Keccak hash로 참조되므로 모든 child를 32-byte
-          hash라고 가정해서는 안 됩니다.
+          Branch는 다음 nibble index의 child를 고르고 extension은 압축한 shared prefix가 남은 path와 같은지 확인합니다. Leaf에서는
+          terminator가 있는 마지막 suffix와 value를 비교합니다. Encoded child가 짧으면 parent 안에 inline되고 길면 Keccak hash로 참조되므로
+          모든 child를 32-byte hash라고 가정해서는 안 됩니다.
         </p>
         <h3>Absence proof도 검증 결과이며 “응답 누락”과 다릅니다</h3>
         <p>
-          요청 path가 branch의 빈 child에서 끝나거나, extension/leaf의 남은
-          suffix와 갈라지면 그 root 아래 key가 없다는 부재 proof가 됩니다.
-          Helios 0.11.1은 empty account·slot의 RLP를 expected value 없음으로
-          바꿔 trie verifier에 전달합니다. 반대로 provider가 proof node를
-          중간에서 잘라 보낸 것은 cryptographic absence가 아니라 invalid proof
-          오류입니다.
+          요청 path가 branch의 빈 child에서 끝나거나 extension/leaf의 남은 suffix와 갈라지면 그 root 아래 key가 없다는 부재 proof가 됩니다.
+          Helios 0.11.1은 empty account·slot의 RLP를 expected value 없음으로 바꿔 trie verifier에 전달합니다. 반대로 provider가
+          proof node를 중간에서 잘라 보낸 것은 cryptographic absence가 아니라 invalid proof 오류입니다.
         </p>
       </div>
     </section>

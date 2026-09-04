@@ -10,7 +10,7 @@ export default function CommitteeLifecycle({ title, onCodeRef: _onCodeRef }: Pro
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           Store는 current와 next committee를 함께 보관해 period 경계 전에 다음 public keys를 검증해 둡니다. Update의 next committee는
-          attested/finalized state의 Merkle branch에 묶여야 하며, 단지 signature가 valid하다는 이유로 교체하지 않습니다. 경계에서는 검증된
+          attested/finalized state의 Merkle branch에 묶여야 하며 단지 signature가 valid하다는 이유로 교체하지 않습니다. 경계에서는 검증된
           next를 current로 옮기고 새 next를 채울 수 있는 update를 기다립니다.
         </p>
       </div>

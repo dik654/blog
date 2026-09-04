@@ -4,9 +4,9 @@ export default function CheckpointSources({ title }: { title: string }) {
       <h2 className="mb-5 text-2xl font-bold">{title}</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Checkpoint는 consensus RPC가 자기 응답과 함께 증명해 줄 수 없습니다. 사용자가 CLI·config로 넣은 root, 이전 실행에서 검증하고
-          저장한 finalized root, 별도 checkpoint service의 응답은 편의성은 달라도 모두 provenance를 확인해야 하는 외부 신뢰 입력입니다.
-          같은 운영 주체의 URL 세 개가 같은 root를 준다고 독립적인 세 근거가 되는 것도 아닙니다.
+          Checkpoint는 consensus RPC가 자기 응답과 함께 증명해 줄 수 없습니다. 사용자가 CLI·config로 넣은 root, 이전 실행에서 검증하고 저장한
+          finalized root, 별도 checkpoint service의 응답은 편의성만 다를 뿐 모두 provenance를 확인해야 하는 외부 신뢰 입력입니다. 같은 운영 주체의
+          URL 세 개가 같은 root를 준다고 독립적인 세 근거가 되지는 않습니다.
         </p>
         <h3>고정 사례: 두 독립 경로가 같은 checkpoint를 가리킬 때</h3>
         <p>
@@ -16,9 +16,9 @@ export default function CheckpointSources({ title }: { title: string }) {
         </p>
         <h3>Fallback은 availability 기능이지 자동 신뢰 승격이 아닙니다</h3>
         <p>
-          Helios README의 external fallback은 여러 community endpoint에서 자주 나타난 checkpoint를 고를 수 있지만, 공식 문서 자체도
-          보안 보장을 제공하지 않는 last resort라고 경고합니다. 따라서 production hardening에서는 source independence·서명된 release
-          manifest·manual approval 같은 별도 정책을 두고, fallback 결과를 protocol이 보증한 값처럼 취급하지 않습니다.
+          Helios README의 external fallback은 여러 community endpoint에서 자주 나타난 checkpoint를 고를 수 있지만 공식 문서 자체도 보안
+          보장을 제공하지 않는 last resort라고 경고합니다. 따라서 production hardening에서는 source independence·서명된 release
+          manifest·manual approval 같은 별도 정책을 두고 fallback 결과를 protocol이 보증한 값처럼 취급하지 않습니다.
         </p>
       </div>
     </section>

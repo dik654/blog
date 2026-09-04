@@ -23,11 +23,9 @@ export default function BlockStateOps({
           crash가 cache-only object를 만든 것으로 보이지 않습니다.
         </p>
         <p>
-          같은 root의 동일 bytes 재저장은 idempotent success가 될 수 있지만 같은
-          root에 다른 bytes가 오면 hash collision을 추정하기 전에
-          schema/fork/corruption mismatch로 fail-closed합니다. State 저장은
-          block root·state root·slot·fork와 reconstruction base를 구분하고,
-          “async”라는 이유로 durability requirement를 없애지 않습니다.
+          같은 root의 동일 bytes 재저장은 idempotent success가 될 수 있지만 같은 root에 다른 bytes가 오면 hash collision을 추정하기 전에
+          schema/fork/corruption mismatch로 fail-closed합니다. State 저장은 block root·state root·slot·fork와
+          reconstruction base를 구분하고 “async”라는 이유로 durability requirement를 없애지 않습니다.
         </p>
         <h3>Read path</h3>
         <p>

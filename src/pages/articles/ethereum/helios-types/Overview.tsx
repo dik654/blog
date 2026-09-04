@@ -19,9 +19,9 @@ export default function Overview({ onCodeRef }: Props) {
       <h2 className="mb-5 text-2xl font-bold">Helios 타입은 untrusted bytes를 검증된 실행 상태 view로 바꾸는 계약이다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          타입 이름을 외우기 전에 한 요청을 끝까지 따라가 보겠습니다. Slot 8,192의 light-client update가 도착하면 Helios는 fork에 맞는
-          SSZ schema로 bytes를 읽고, sync committee signature와 Merkle branch를 검증한 뒤, beacon header에 결속된 execution payload
-          header의 state root를 얻습니다. 그 root가 이후 account·storage proof를 확인할 실행 상태의 기준입니다.
+          타입 이름을 외우기 전에 한 요청을 끝까지 따라가 보겠습니다. slot 8,192의 light-client update가 도착하면 Helios는 fork에 맞는 SSZ
+          schema로 bytes를 읽습니다. 그다음 sync committee signature와 Merkle branch를 검증한 뒤 beacon header에 결속된 execution
+          payload header의 state root를 얻습니다. 그 root가 이후 account·storage proof를 확인할 실행 상태의 기준입니다.
         </p>
         <p>
           여기서 <code>BeaconBlockHeader.state_root</code>는 BeaconState root이며 EVM account trie root가 아닙니다. 실행 상태 root는

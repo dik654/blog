@@ -6,14 +6,15 @@ export default function ErrorCases({ title }: { title: string }) {
       <h2 className="mb-5 text-2xl font-bold">{title}: 부분 성공을 store로 승격하지 않는다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Timeout·oversized response·unknown fork는 transport/schema failure이고, checkpoint root mismatch·invalid committee branch는 trust
-          failure입니다. Stale checkpoint는 provenance는 맞지만 freshness policy를 통과하지 못한 경우입니다. 이들을 모두 “sync 실패” 한
-          종류로 합치면 retry해도 되는 문제와 operator 승인이 필요한 문제를 구분할 수 없습니다.
+          Timeout·oversized response·unknown fork는 transport/schema failure이고 checkpoint root mismatch·invalid
+          committee branch는 trust failure입니다. Stale checkpoint는 provenance는 맞지만 freshness policy를 통과하지 못한
+          경우입니다. 이들을 모두 “sync 실패” 한 종류로 합치면 retry해도 되는 문제와 operator 승인이 필요한 문제의 구분이 사라집니다.
         </p>
         <p>
-          Release 전에는 wrong network/genesis, C와 다른 header, branch sibling 한 bit 변경, old checkpoint, response truncation, unknown
-          fork, store write 전후 crash, endpoint failover를 같은 fixture로 재생합니다. Base와 candidate가 accept/reject reason, resulting
-          store root, restart outcome에서 같음을 확인한 뒤 latency를 비교하며 rollback에는 binary·config·last verified checkpoint를 묶습니다.
+          Release 전에 재생하는 fixture는 wrong network/genesis, C와 다른 header, branch sibling 한 bit 변경, old
+          checkpoint입니다. 여기에 response truncation, unknown fork, store write 전후 crash, endpoint failover도 같은
+          fixture로 돌립니다. Base와 candidate가 accept/reject reason, resulting store root, restart outcome에서 같음을
+          확인한 뒤 latency를 비교하며 rollback에는 binary·config·last verified checkpoint를 묶습니다.
         </p>
       </div>
       <div id="paper-helios-bootstrap-source" className="scroll-mt-24">

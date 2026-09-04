@@ -53,14 +53,15 @@ export default function CoreTypes({ title, onCodeRef }: Props) {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Update를 Store에 적용할 때 확인할 것</h3>
         <p>
-          먼저 signature slot이 어떤 sync committee period에 속하는지 계산하고, participant bits로 고른 public keys에 대해 signing root를
-          검증합니다. Finality branch가 있을 때만 finalized header 후보를 만들고, next committee branch가 있을 때만 다음 period의 committee를
-          저장할 수 있습니다. Optimistic header는 충분한 참여 조건과 더 나은 slot을 만족할 때 전진하며 finalized header와 같은 뜻이 아닙니다.
+          먼저 signature slot이 어떤 sync committee period에 속하는지 계산하고 participant bits로 고른 public keys로 signing
+          root를 검증합니다. finalized header 후보는 finality branch가 있을 때만 만들 수 있고 다음 period의 committee는 next
+          committee branch가 있을 때만 저장할 수 있습니다. 충분한 참여 조건과 더 나은 slot을 만족하면 optimistic header가 전진합니다. 전진했다고
+          finalized header와 같은 뜻이 되지는 않습니다.
         </p>
         <p>
-          따라서 update를 decode했다는 이유로 store를 수정하면 안 됩니다. Validation은 pre-store snapshot을 읽고 typed outcome을 만든 뒤,
-          apply 단계가 pre/post store identity와 채택한 field를 한 receipt에 남겨야 합니다. 실패한 update는 부분적으로 committee나 header를
-          바꾸지 않습니다.
+          따라서 update를 decode했다는 이유로 store를 수정하면 안 됩니다. validation은 pre-store snapshot을 읽고 typed outcome을 만든 뒤
+          apply 단계가 pre/post store identity와 채택한 field를 한 receipt에 남겨야 합니다. 실패한 update가 committee나 header를
+          부분적으로 바꿔놓는 일은 없습니다.
         </p>
       </div>
     </section>

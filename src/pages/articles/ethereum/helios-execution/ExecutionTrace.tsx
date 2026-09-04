@@ -29,11 +29,9 @@ export default function ExecutionTrace({
           다시 실행합니다.
         </p>
         <p>
-          이 replay는 execution result를 추측하는 retry가 아니라 필요한
-          witness를 채우는 adapter입니다. Provider error나 invalid proof는
-          실패로 종료해야 하며, state override를 쓰면 override field는 chain
-          proof가 아니라 caller가 의도적으로 바꾼 simulation input이라는 점도
-          결과에 표시해야 합니다.
+          이 replay는 execution result를 추측하는 retry가 아니라 필요한 witness를 채우는 adapter입니다. Provider error나 invalid
+          proof는 실패로 종료해야 하며 state override를 쓰면 override field는 chain proof가 아니라 caller가 의도적으로 바꾼 simulation
+          input이라는 점도 결과에 표시해야 합니다.
         </p>
       </div>
 

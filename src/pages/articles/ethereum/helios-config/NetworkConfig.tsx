@@ -20,9 +20,9 @@ export default function NetworkConfig({ title, onCodeRef }: Props) {
           한 묶음으로 만듭니다. 목록과 숫자는 source snapshot의 값이지 영구 protocol 상수가 아닙니다.
         </p>
         <p>
-          Consensus RPC는 light-client update와 head를 가져오고, execution RPC는 block·receipt·proof 재료를 제공합니다. 둘 다 availability와
-          equivocation 관측이 필요합니다. 특히 checkpoint source는 light-client가 처음 chain을 선택하는 trust anchor이므로 “나중에 BLS를
-          검증하니 아무 URL이나 괜찮다”고 볼 수 없습니다.
+          Consensus RPC는 light-client update와 head를 가져오고 execution RPC는 block·receipt·proof 재료를 제공합니다. 둘 다
+          availability와 equivocation 관측이 필요합니다. 특히 checkpoint source는 light-client가 처음 chain을 선택하는 trust
+          anchor이므로 “나중에 BLS를 검증하니 아무 URL이나 괜찮다”고 볼 수 없습니다.
         </p>
       </div>
       <div className="not-prose my-4">

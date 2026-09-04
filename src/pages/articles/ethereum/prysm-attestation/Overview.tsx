@@ -18,10 +18,8 @@ export default function Overview({
       </div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          이 글은 “검증자 한 명이 본 head가 어떻게 네트워크의 합의 입력이
-          되는가?”에서 시작합니다. 같은 한 표 안의 head·source·target을
-          구분하고, duty의 dependent root, signing domain, subnet, aggregation
-          bits를 고정한 사례 하나로 끝까지 추적합니다.
+          이 글은 “검증자 한 명이 본 head가 어떻게 네트워크의 합의 입력이 되는가?”에서 시작합니다. 같은 한 표 안의 head·source·target을 구분하고 duty의
+          dependent root, signing domain, subnet, aggregation bits를 고정한 사례 하나로 끝까지 추적합니다.
         </p>
         <p className="leading-7">
           어테스테이션은 head 선택과 finality에 함께 쓰이지만 두 판단은 같지
@@ -215,11 +213,9 @@ export default function Overview({
           </div>
         </div>
         <p className="leading-7">
-          Attestation은 committee assignment에서 시작해 서명, subnet gossip,
-          aggregation, block inclusion, reward 계산으로 이어진다. 각 단계의
-          책임을 나눠 보면 단일 vote가 합의 입력으로 바뀌는 흐름을 추적할 수 있고,
-          구체 시각과 포함 한도는 네트워크 preset과 fork별 operation 규칙을
-          따른다.
+          Attestation은 committee assignment에서 시작해 서명, subnet gossip, aggregation, block inclusion, reward 계산으로
+          이어진다. 각 단계의 책임을 나눠 보면 단일 vote가 합의 입력으로 바뀌는 흐름을 추적할 수 있다. 구체 시각과 포함 한도는 네트워크 preset과 fork별 operation
+          규칙을 따른다.
         </p>
       </div>
       <ContentBoundary article="prysm-attestation" />

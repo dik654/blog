@@ -60,10 +60,11 @@ export default function Persistence({ title, onCodeRef }: Props) {
         </p>
         <h3>Release gate</h3>
         <p>
-          Base와 candidate에 valid 32-byte file, 31/33-byte file, truncated write, permission error, wrong-network root, expired checkpoint,
-          unavailable fallback과 conflicting fallback을 재생합니다. 같은 accept/reject reason과 resulting Store를 먼저 확인한 뒤 startup p95와 network
-          request 수를 비교합니다. Production hardening 후보는 temp-write→file fsync→atomic rename→directory fsync와 crash injection을 통과하고,
-          rollback에는 이전 binary·config digest·checkpoint backup을 묶습니다.
+          Base와 candidate에 valid 32-byte file, 31/33-byte file, truncated write, permission error, wrong-
+          network root, expired checkpoint, unavailable fallback과 conflicting fallback을 재생합니다. 같은
+          accept/reject reason과 resulting Store를 먼저 확인한 뒤 startup p95와 network request 수를 비교합니다. Production
+          hardening 후보는 temp-write→file fsync→atomic rename→directory fsync와 crash injection을 통과하고 rollback에는
+          이전 binary·config digest·checkpoint backup을 묶습니다.
         </p>
       </div>
     </section>

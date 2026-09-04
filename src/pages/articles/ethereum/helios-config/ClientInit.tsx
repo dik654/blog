@@ -36,8 +36,9 @@ export default function ClientInit({ title, onCodeRef }: Props) {
           <li>그 뒤에만 local RPC readiness generation을 공개합니다.</li>
         </ol>
         <p>
-          Wrong chain, malformed local checkpoint, expired anchor, CL/EL head mismatch에서는 fail closed합니다. 이미 socket을 bind했다면 not-ready
-          response만 반환하고, 이전 ready generation이 있다면 명시적인 rollback policy 없이는 새 config와 섞지 않습니다.
+          Wrong chain, malformed local checkpoint, expired anchor, CL/EL head mismatch에서는 fail closed합니다. 이미
+          socket을 bind했다면 not-ready response만 반환하고 이전 ready generation이 있다면 명시적인 rollback policy 없이는 새 config와
+          섞지 않습니다.
         </p>
       </div>
     </section>
