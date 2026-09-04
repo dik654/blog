@@ -22,13 +22,12 @@ export default function SparseWindowedAttentionPatternsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Full attention 은 query 하나가 과거 n 개 key 전부를 보므로 layer 하나의 attention
-            FLOP 이 n 의 제곱에 비례합니다. n 이 수만 token 을 넘으면 이 항이 나머지 계산을
-            누르고, KV cache 도 n 에 비례해 계속 커집니다.
+            Full attention 은 query 하나가 과거 n 개 key 전부를 보므로 layer 하나의 attention FLOP 이 n 의 제곱에 비례합니다. n 이 수만
+            token 을 넘으면 이 항이 나머지 계산을 누르고 KV cache 도 n 에 비례해 계속 커집니다.
           </p>
           <p>
-            Sliding-window, sparse, hybrid attention 은 계산을 빨리 하는 대신, query 가 애초에
-            볼 수 있는 key 의 집합을 n 보다 훨씬 작게 미리 정해 둡니다.
+            Sliding-window, sparse, hybrid attention 은 계산을 빨리 하는 대신 query 가 애초에 볼 수 있는 key 의 집합을 n 보다 훨씬 작게 미리
+            정해 둡니다.
           </p>
           <p>
             <Link to="/ai/attention-kernel-anatomy-and-backends#anatomy">Attention kernel 글</Link>
@@ -38,14 +37,12 @@ export default function SparseWindowedAttentionPatternsArticle() {
             아예 비워 둘지를 다룹니다.
           </p>
           <p>
-            먼저 최근 w 개 token 만 보는 sliding-window(local) attention 을 보고, window 로는
-            닿지 않는 원거리 정보를 위해 global token 몇 개를 더한 sparse attention(Longformer,
-            BigBird)으로 넘어갑니다.
+            먼저 최근 w 개 token 만 보는 sliding-window(local) attention 을 봅니다. 그다음 window 로는 닿지 않는 원거리 정보를 위해 global
+            token 몇 개를 더한 sparse attention(Longformer, BigBird)으로 넘어갑니다.
           </p>
           <p>
-            그다음 token 이 아니라 layer 단위로 local 과 global 을 나누는 hybrid
-            attention(Gemma)을 보고, 마지막으로 이 고정 패턴들과 학습된 sparsity 를 쓰는
-            Native Sparse Attention 을 대조합니다.
+            이어서 token 이 아니라 layer 단위로 local 과 global 을 나누는 hybrid attention(Gemma)을 봅니다. 마지막으로 이 고정 패턴들과 학습된
+            sparsity 를 쓰는 Native Sparse Attention 을 대조합니다.
           </p>
         </div>
         <SparseWindowedAttentionPatternsViz />
@@ -58,22 +55,19 @@ export default function SparseWindowedAttentionPatternsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Sliding-window attention(local attention)은 위치 i 의 query 가 전체 과거 대신
-            직전 w 개 key 만 보도록 mask 를 고정하는 패턴입니다. Attention 이 보는 폭이 i 가
-            커져도 w 로 일정하므로, 한 layer 의 attention FLOP 과 그 layer 가 저장해야 하는
-            KV 폭이 모두 n 이 아니라 w 에 비례합니다.
+            Sliding-window attention(local attention)은 mask 를 고정해 둡니다. 위치 i 의 query 는 전체 과거 대신 직전 w 개 key 만
+            봅니다. Attention 이 보는 폭은 i 가 커져도 w 로 일정합니다. 한 layer 의 attention FLOP 과 그 layer 가 저장해야 하는 KV 폭이 모두 n
+            이 아니라 w 에 비례합니다.
           </p>
           <p>
-            Mistral 7B 는 W=4096, layer 32 개에 이 패턴을 씁니다. 한 layer 는 4096 개 밖의
-            token 을 보지 못하지만, layer 를 쌓으면 정보가 한 칸씩 더 멀리 전달됩니다. k 번째
-            layer 까지 쌓은 뒤의 이론적 수신 범위(receptive field)는 W×k 이고, 32 layer 전부를
-            지나면 약 131,072 token, 즉 32K 문맥 전체보다 넓어집니다.
+            Mistral 7B 는 W=4096, layer 32 개에 이 패턴을 씁니다. 한 layer 는 4096 개 밖의 token 을 보지 못하지만 layer 를 쌓으면 정보가 한
+            칸씩 더 멀리 전달됩니다. k 번째 layer 까지 쌓은 뒤의 이론적 수신 범위(receptive field)는 W×k 이고 32 layer 전부를 지나면 약 131,072
+            token, 즉 32K 문맥 전체보다 넓어집니다.
           </p>
           <p>
-            그렇다고 첫 layer 부터 먼 정보가 보이는 것은 아닙니다. n=32,768, w=4096 인
-            sequence 를 8 layer 만 지나야 겨우 W×8=32,768 로 전체 길이를 덮습니다. 그 전
-            layer 에서는 멀리 있는 사실 하나를 찾는 task 가 window 폭보다 먼 거리에서는 아예
-            신호를 못 받는다는 뜻이고, 이 한계가 다음 절의 global token 을 부릅니다.
+            그렇다고 첫 layer 부터 먼 정보가 보이는 것은 아닙니다. n=32,768, w=4096 인 sequence 를 8 layer 만 지나야 겨우 W×8=32,768 로 전체
+            길이를 덮습니다. 그 전 layer 에서는 멀리 있는 사실 하나를 찾는 task 가 window 폭보다 먼 거리에서는 아예 신호를 못 받습니다. 이 한계가 다음 절의
+            global token 을 부릅니다.
           </p>
         </div>
         <ExplainedFormula
@@ -127,8 +121,8 @@ export default function SparseWindowedAttentionPatternsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Global attention 은 소수의 token g 개만 window 제한 없이 전체 n 개 위치와 서로
-            attend 하게 두는 예외입니다. 나머지 보통 token 은 여전히 window w 안만 봅니다.
+            소수의 token g 개만 window 제한을 벗겨 주는 예외가 global attention 입니다. 이 g 개는 전체 n 개 위치와 서로 attend 합니다. 나머지 보통
+            token 은 여전히 window w 안만 봅니다.
           </p>
           <p>
             Global token 은 자신이 본 것을 한 layer 만에 sequence 전체로 퍼뜨리고 전체로부터도
@@ -141,8 +135,8 @@ export default function SparseWindowedAttentionPatternsArticle() {
             token 에 문단 제목과 문장 시작 token 까지 더합니다.
           </p>
           <p>
-            언어모델링 실험은 애초에 window 폭을 layer 마다 다르게(아래층 32 부터 위층 8192 나
-            23040 까지) 키워, global token 없이도 깊은 layer 에서 넓은 범위를 보게 합니다.
+            언어모델링 실험은 애초에 window 폭을 layer 마다 다르게(아래층 32 부터 위층 8192 나 23040 까지) 키워 global token 없이도 깊은 layer 에서
+            넓은 범위를 보게 합니다.
           </p>
           <p>
             BigBird 는 여기에 무작위로 고른 key r 개를 더해 window·global·random 세 mask 를
@@ -208,11 +202,9 @@ export default function SparseWindowedAttentionPatternsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Hybrid attention 은 한 attention 안에서 window·global mask 를 섞는 대신, layer
-            자체를 두 종류로 나눕니다. 일부 layer 는 window 만 보는 local layer, 나머지는 그
-            layer 가 다루는 전체 문맥을 보는 global layer 입니다. KV cache 총량은 local layer
-            비율이 높을수록 줄어들고, 원거리 정보는 global layer 를 지날 때만 한 번에
-            전달됩니다.
+            Hybrid attention 은 한 attention 안에서 window·global mask 를 섞지 않습니다. layer 자체를 두 종류로 나눕니다. 일부 layer 는
+            window 만 보는 local layer, 나머지는 그 layer 가 다루는 전체 문맥을 보는 global layer 입니다. KV cache 총량은 local layer
+            비율이 높을수록 줄어들고 원거리 정보는 global layer 를 지날 때만 한 번에 전달됩니다.
           </p>
           <p>
             Gemma 2 는 이 비율을 1:1 로 둡니다. Layer 하나 걸러 하나가 window=4096 인 local,
@@ -233,8 +225,7 @@ export default function SparseWindowedAttentionPatternsArticle() {
             <code>(5n+25w)/(30n) ≈ 19.3%</code>, 즉 약 5.2 배 절감입니다.
           </p>
           <p>
-            이는 이 글이 만든 산수 예이고, Gemma 3 가 보고한 15% 미만이라는 수치와는
-            별개입니다. 두 계산이 비슷한 자리에 오는 이유는 같습니다. Local layer 가 많고
+            이는 이 글이 만든 산수 예일 뿐 Gemma 3 가 보고한 15% 미만이라는 수치와는 별개입니다. 두 계산이 비슷한 자리에 오는 이유는 같습니다. Local layer 가 많고
             window 가 좁을수록 global layer 몇 개의 KV 만 n 에 비례해 남기 때문입니다.
           </p>
         </div>
@@ -275,20 +266,17 @@ export default function SparseWindowedAttentionPatternsArticle() {
             연산으로 바꿔, 어떤 block 을 볼지를 매 query 마다 content 기반으로 고릅니다.
           </p>
           <p>
-            NSA 는 세 갈래를 함께 씁니다. Block 32 개를 stride 16 으로 묶어 압축하는 branch,
-            압축 단계의 attention score 로 중요도를 매겨 64 크기 block 16 개를 고르는 선택
-            branch, 그리고 최근 512 token 을 보는 sliding-window branch입니다.
+            NSA 가 함께 돌리는 branch 는 셋입니다. Block 32 개를 stride 16 으로 묶어 압축하는 branch, 압축 단계의 attention score 로 중요도를
+            매겨 64 크기 block 16 개를 고르는 선택 branch, 최근 512 token 을 보는 sliding-window branch입니다.
           </p>
           <p>
-            이 가운데 선택 branch 만 놓고 보면 BigBird 의 고정 random block 자리에 학습된
-            중요도 순위가 들어간 모습이고, 나머지 두 branch 는 이 글의 window·global
-            아이디어와 겹칩니다.
+            이 가운데 선택 branch 만 놓고 보면 BigBird 의 고정 random block 자리에 학습된 중요도 순위가 들어간 모습입니다. 나머지 두 branch 는 이 글의
+            window·global 아이디어와 겹칩니다.
           </p>
           <p>
-            논문은 64K 길이에서 forward 9.0 배, backward 6.0 배, decoding 최대 11.6 배 속도를
-            보고했습니다. 다만 이 수치는 저자가 고른 kernel·hardware·model 크기에서 잰
-            값이고, 고정 패턴과 달리 block 선택 자체가 추가 연산과 kernel 복잡도를 요구한다는
-            점은 이 글의 window·hybrid 패턴에는 없는 비용입니다.
+            논문은 64K 길이에서 forward 9.0 배, backward 6.0 배, decoding 최대 11.6 배 속도를 보고했습니다. 다만 이 수치는 저자가 고른
+            kernel·hardware·model 크기에서 잰 값입니다. 고정 패턴과 달리 block 선택 자체가 추가 연산과 kernel 복잡도를 요구한다는 점은 이 글의
+            window·hybrid 패턴에는 없는 비용입니다.
           </p>
         </div>
         <TermBreakdown
@@ -306,14 +294,12 @@ export default function SparseWindowedAttentionPatternsArticle() {
           preview="입력 분포가 안정적이고 원거리 정보의 위치를 미리 알거나 task 가 정해 줄 수 있으면 고정 패턴으로 충분하고, 어느 과거 token 이 중요한지가 입력마다 달라지면 NSA 같은 학습된 선택이 필요합니다."
         >
           <p>
-            Longformer 의 global token 은 질문이 무엇인지 알기 때문에 사람이 정할 수 있는
-            경우입니다. 반대로 어떤 과거 문장이 나중에 중요해질지 미리 알 수 없는 일반적인
-            긴 문서 생성이라면, 고정된 window 나 global 위치는 우연히 중요한 token 을 놓칠
-            수 있습니다.
+            Longformer 의 global token 은 질문이 무엇인지 알기 때문에 사람이 정할 수 있는 경우입니다. 반대로 어떤 과거 문장이 나중에 중요해질지 미리 알 수 없는
+            일반적인 긴 문서 생성이라면 고정된 window 나 global 위치는 우연히 중요한 token 을 놓칠 수 있습니다.
           </p>
           <p>
-            NSA 의 선택 branch 는 이 경우를 위해 매 query 마다 다시 고르되, 그 대가로
-            압축·선택·window 세 branch 를 함께 학습하고 서빙해야 하는 복잡도를 더합니다.
+            NSA 의 선택 branch 는 이 경우를 위해 매 query 마다 다시 고릅니다. 대가로 압축·선택·window 세 branch 를 함께 학습하고 서빙해야 하는 복잡도가
+            붙습니다.
           </p>
           <p>
             이 글이 다룬 mask 가 정해진 뒤, 그 mask 안에 남은 tile 을 GPU 가 실제로 어떻게

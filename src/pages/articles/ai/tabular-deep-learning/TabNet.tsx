@@ -15,9 +15,8 @@ export default function TabNet() {
           사용됩니다.
         </p>
         <p>
-          Attentive transformer의 score에는 이전 step의 사용 이력을 담은 prior가
-          곱해지고, sparsemax가 이를 합이 1인 mask로 바꿉니다. Softmax와 달리
-          일부 좌표를 정확히 0으로 만들 수 있어 현재 step의 계산 경로가 희소해집니다.
+          Attentive transformer의 score에는 이전 step의 사용 이력을 담은 prior가 곱해지고 sparsemax가 이를 합이 1인 mask로 바꿉니다.
+          Softmax와 달리 일부 좌표를 정확히 0으로 만들 수 있어 현재 step의 계산 경로는 희소해집니다.
         </p>
       </div>
 
@@ -79,24 +78,24 @@ P^{(s)}&=\underbrace{P^{(s-1)}\odot\left(\gamma-M^{(s)}\right).}_{\text{허용 �
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>사전학습과 해석성은 별개의 claim입니다</h3>
         <p>
-          원 논문은 일부 column을 가리고 나머지 column으로 복원하는
-          self-supervised pretraining도 제안합니다. Unlabeled row가 많고 pretrain과
-          downstream population의 schema·분포가 맞을 때 representation을 먼저
-          배울 수 있지만, label 없는 data가 많다는 사실만으로 이득이 보장되지는
-          않습니다.
+          원 논문은 일부 column을 가리고 나머지 column으로 복원하는 self-supervised pretraining도 제안합니다. Unlabeled row가 많고
+          pretrain과 downstream population의 schema·분포까지 맞아떨어질 때 representation을 먼저 배웁니다. 이득은 두 조건이 함께 설 때만
+          성립하며, label 없는 data가 많다는 사실 하나로는 따라오지 않습니다.
         </p>
         <p>
-          Mask는 모델이 실제로 사용한 계산 경로의 관찰값이지만 causal effect가
-          아닙니다. Feature 하나를 바꿀 때 현실적으로 함께 변해야 하는 column이
-          있을 수 있고, correlated proxy가 역할을 대신할 수도 있습니다. 따라서
-          mask visualization은 ablation·permutation·domain review를 시작하는
-          진단 자료로 사용합니다.
+          Mask는 모델이 실제로 사용한 계산 경로의 관찰값이지만 causal effect가 아닙니다. Feature 하나를 바꿀 때 현실적으로 함께 변해야 하는 column이 있을 수
+          있고 correlated proxy가 그 역할을 대신하기도 합니다. mask visualization은 ablation·permutation·domain review를 시작하는
+          진단 자료로 씁니다.
         </p>
 
         <div id="paper-tabnet" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
           <p className="text-xs font-bold text-primary">논문 읽기 · Sequential attention과 masked pretraining</p>
           <p className="mt-2 text-sm font-semibold">TabNet: Attentive Interpretable Tabular Learning</p>
-          <p className="mt-2 text-sm leading-6 text-muted-foreground">Arik과 Pfister는 row별 sparse feature selection을 여러 decision step에 결합하고 masked-column reconstruction을 제안했습니다. 논문 속 정확도와 사전학습 이득은 사용한 dataset·split·hyperparameter 조건의 결과이며, mask가 causal explanation이거나 TabNet이 모든 tabular task의 정답이라는 주장은 아닙니다.</p>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            Arik과 Pfister는 row별 sparse feature selection을 여러 decision step에 결합하고 masked-column reconstruction을
+            제안했습니다. 논문 속 정확도와 사전학습 이득은 어디까지나 사용한 dataset·split·hyperparameter 조건에서 나온 결과입니다. mask를 causal
+            explanation으로, TabNet을 모든 tabular task의 정답으로 읽으면 논문이 한 주장을 넘어섭니다.
+          </p>
           <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/1908.07442" target="_blank" rel="noreferrer">원 논문의 architecture·mask·실험 범위 보기</a>
         </div>
       </div>

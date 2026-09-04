@@ -24,12 +24,9 @@ export default function Overview() {
           한 row 안의 조건부 관계를 찾아야 합니다.
         </p>
         <p>
-          수치형·범주형 feature가 섞인 중소 규모 표에서는 tree boosting이 강한
-          baseline인 경우가 많습니다. Tree는 scale 정규화 없이 threshold를 찾고,
-          불규칙한 구간 경계를 작은 data에서도 직접 만들 수 있기 때문입니다.
-          TabNet은 row마다 여러 차례 feature를 골라 처리하고, FT-Transformer는
-          각 column을 vector token으로 바꿔 상호작용을 학습하지만 어느 구조도
-          모든 표에서 기본 승자는 아닙니다.
+          수치형·범주형 feature가 섞인 중소 규모 표에서는 tree boosting이 강한 baseline인 경우가 많습니다. tree 쪽은 scale 정규화 없이 threshold를
+          찾고 불규칙한 구간 경계를 작은 data에서도 직접 만들 수 있기 때문입니다. TabNet은 row마다 여러 차례 feature를 골라 처리하고 FT-Transformer는 각
+          column을 vector token으로 바꿔 상호작용을 학습합니다. 그렇다고 어느 구조가 모든 표에서 기본 승자가 되지는 않습니다.
         </p>
         <p>
           이 글은 <Link to="/ai/feature-engineering">예측 시점과 누출 없는 feature</Link>,{" "}

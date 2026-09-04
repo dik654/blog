@@ -11,10 +11,9 @@ export default function LanguageModel() {
       <h2 className="mb-6 text-2xl font-bold">RNN language model: context를 state로 접어 다음 token을 예측한다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Language modeling에서는 token ID를 embedding으로 바꾸고, 지금까지의 context를
-          반영한 hidden state를 vocabulary 크기의 logits로 투영합니다. softmax가 만든
-          distribution에서 실제 다음 token에 배정한 probability가 높아지도록 모든
-          시점의 cross-entropy를 학습합니다.
+          Language modeling에서는 token ID를 embedding으로 바꾼 뒤 지금까지의 context를 반영한 hidden state를 vocabulary 크기의
+          logits로 투영합니다. softmax가 만든 distribution에서 실제 다음 token에 배정한 probability가 높아지도록 모든 시점의 cross-entropy를
+          학습합니다.
         </p>
         <p>
           중요한 indexing은 입력과 정답이 한 칸 어긋난다는 점입니다. 입력
@@ -43,7 +42,9 @@ export default function LanguageModel() {
         <p className="text-xs font-bold text-primary">논문 해설 · Recurrent Neural Network Based Language Model</p>
         <h3 className="mt-2 text-base font-bold">고정 n-gram 대신 recurrent state로 가변 길이 문맥을 조건화했다</h3>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Mikolov 등의 모델은 이전 word와 hidden state로 다음 word distribution을 만들고, 당시 speech-recognition language-model 평가에서 n-gram과 feed-forward baseline을 비교했습니다. 이 결과는 해당 vocabulary·corpus·model scale의 근거이며, hidden state가 긴 문맥을 완전하게 복원하거나 현대 Transformer보다 일반적으로 우수하다는 결론은 아닙니다.
+          Mikolov 등의 모델은 이전 word와 hidden state로 다음 word distribution을 만들고 당시 speech-recognition language-model
+          평가에서 n-gram과 feed-forward baseline을 비교했습니다. 이 결과가 받쳐 주는 범위는 해당 vocabulary·corpus·model scale입니다.
+          hidden state가 긴 문맥을 완전하게 복원한다거나 현대 Transformer보다 일반적으로 우수하다는 결론은 그 밖의 이야기입니다.
         </p>
       </div>
 

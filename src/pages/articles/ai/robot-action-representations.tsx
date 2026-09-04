@@ -37,20 +37,17 @@ export default function RobotActionRepresentationsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Continuous action space는 delta position이나 joint velocity 같은 값을 실수 벡터로 그대로
-            냅니다. 표현 정밀도는 float precision만큼 높지만, discrete token만 다루는 언어모델의
-            vocabulary와 cross-entropy loss를 그대로 재사용할 수 없습니다.
+            Continuous action space는 delta position이나 joint velocity 같은 값을 실수 벡터로 그대로 냅니다. 표현 정밀도는 float
+            precision만큼 높습니다. 대신 discrete token만 다루는 언어모델의 vocabulary와 cross-entropy loss를 그대로 재사용할 수 없습니다.
           </p>
           <p>
-            Discrete action space는 같은 실수 값을 미리 정한 개수의 bin으로 나눠 정수 index로
-            바꿉니다. RT-2는 이렇게 만든 정수를 language token처럼 예측해, image-text 데이터로 미리
-            학습된 VLM의 next-token 예측 head를 그대로 action 예측에 씁니다. 대신 bin 폭보다 작은
-            움직임은 표현하지 못합니다.
+            Discrete action space는 같은 실수 값을 미리 정한 개수의 bin으로 나눠 정수 index로 바꿉니다. RT-2는 이렇게 만든 정수를 language
+            token처럼 예측해 image-text 데이터로 미리 학습된 VLM의 next-token 예측 head를 그대로 action 예측에 씁니다. 대신 bin 폭보다 작은 움직임은
+            표현하지 못합니다.
           </p>
           <p>
-            예를 들어 값의 범위를 256개 bin으로 균등하게 나누면 bin 하나의 폭은 범위의 1/256입니다.
-            범위가 20cm인 축이라면 bin 하나는 약 0.8mm이고, 이는 많은 manipulation task에는 충분하지만
-            정교한 force control에는 거칠 수 있습니다.
+            예를 들어 값의 범위를 256개 bin으로 균등하게 나누면 bin 하나의 폭은 범위의 1/256입니다. 범위가 20cm인 축이라면 bin 하나는 약 0.8mm입니다. 많은
+            manipulation task에는 충분하지만 정교한 force control에는 거칠 수 있습니다.
           </p>
         </div>
       </section>
@@ -61,9 +58,8 @@ export default function RobotActionRepresentationsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            End-effector pose는 로봇 팔 끝(그리퍼)이 있어야 할 위치와 방향을 나타내는 숫자 집합입니다.
-            위치는 3차원 공간의 (x, y, z) 세 자유도(degree of freedom, DoF)이고, 방향은 roll·pitch·yaw
-            회전 세 자유도입니다. 이 둘을 합쳐 6-DoF pose라고 부릅니다.
+            End-effector pose는 로봇 팔 끝(그리퍼)이 있어야 할 위치와 방향을 나타내는 숫자 집합입니다. 위치는 3차원 공간의 (x, y, z) 세 자유도(degree of
+            freedom, DoF)입니다. 방향은 roll·pitch·yaw 회전 세 자유도입니다. 이 둘을 합쳐 6-DoF pose라고 부릅니다.
           </p>
           <p>
             6개 숫자로 충분하다는 사실이 표현 방법까지 정하지는 않습니다. Roll·pitch·yaw를 그대로 쓰면
@@ -79,11 +75,9 @@ export default function RobotActionRepresentationsArticle() {
             표현됩니다.
           </p>
           <p>
-            이 방식의 장점은 VLM의 기존 tokenizer와 vocabulary를 그대로 재사용한다는 점입니다.
-            PaLI-X처럼 숫자 token을 이미 갖는 tokenizer는 bin 값을 해당 token에 직접 매핑하고,
-            PaLM-E처럼 그렇지 않은 tokenizer는 가장 적게 쓰이는 token 256개를 action vocabulary로
-            덮어씁니다. 대신 문자열이 문법적으로 유효해도 kinematics나 collision까지 유효하다는 뜻은
-            아닙니다.
+            이 방식은 VLM의 기존 tokenizer와 vocabulary를 그대로 재사용한다는 게 장점입니다. PaLI-X처럼 숫자 token을 이미 갖는 tokenizer는 bin
+            값을 해당 token에 직접 매핑합니다. PaLM-E처럼 그렇지 않은 tokenizer는 가장 적게 쓰이는 token 256개를 action vocabulary로 덮어씁니다.
+            대신 문자열이 문법적으로 유효하다고 kinematics나 collision까지 유효한 것은 아닙니다.
           </p>
         </div>
 
@@ -142,21 +136,18 @@ b&=\underbrace{\left\lfloor r\,(B-1) \right\rfloor}_{\text{bin 개수를 곱하�
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Action chunking은 매 timestep마다 action 하나만 내지 않고, 앞으로 k step 동안 실행할
-            action을 한 번에 예측하는 방식입니다. ACT(Action Chunking with Transformers)는 k=100,
-            즉 50Hz control에서 2초 분량의 action을 한 번의 forward pass로 냅니다.
+            Action chunking은 매 timestep마다 action 하나만 내지 않고 앞으로 k step 동안 실행할 action을 한 번에 예측하는 방식입니다.
+            ACT(Action Chunking with Transformers)는 k=100, 즉 50Hz control에서 2초 분량의 action을 한 번의 forward pass로
+            냅니다.
           </p>
           <p>
-            저자들의 ablation에서 chunk가 없는 k=1은 성공률 1%에 그쳤지만 k=100에서는 44%까지
-            올랐고, k=200·400처럼 더 늘리면 오히려 소폭 떨어졌습니다. Chunk가 커질수록 policy가
-            독립적으로 결정해야 하는 지점이 줄어 compounding error(작은 오차가 다음 step 입력에
-            누적되는 현상)의 실효 horizon이 짧아지기 때문입니다.
+            저자들의 ablation에서 chunk가 없는 k=1은 성공률 1%에 그쳤지만 k=100에서는 44%까지 올랐습니다. k=200·400처럼 더 늘리면 오히려 소폭 떨어졌습니다.
+            Chunk가 커질수록 policy가 독립적으로 결정해야 하는 지점이 줄어 compounding error(작은 오차가 다음 step 입력에 누적되는 현상)의 실효
+            horizon이 짧아지기 때문입니다.
           </p>
           <p>
-            다만 chunk를 그대로 실행하면 open-loop 구간이 늘어나 그 사이에 물체가 움직여도 반응하지
-            못합니다. ACT는 이를 temporal ensembling으로 완화합니다. 매 step마다 새 chunk를 다시
-            예측하고, 여러 chunk가 같은 timestep에 대해 낸 예측을 지수 가중 평균으로 섞어 최종
-            action을 만듭니다.
+            다만 chunk를 그대로 실행하면 open-loop 구간이 늘어나 그 사이에 물체가 움직여도 반응하지 못합니다. ACT는 이를 temporal ensembling으로
+            완화합니다. 매 step마다 새 chunk를 다시 예측한 뒤 여러 chunk가 같은 timestep에 대해 낸 예측을 지수 가중 평균으로 섞어 최종 action을 만듭니다.
           </p>
         </div>
 
@@ -208,16 +199,14 @@ b&=\underbrace{\left\lfloor r\,(B-1) \right\rfloor}_{\text{bin 개수를 곱하�
             자체에서 표본을 뽑아 이 문제를 피합니다.
           </p>
           <p>
-            Diffusion Policy는 순수 noise에서 시작해 여러 번 denoising을 반복해 action chunk를
-            만듭니다. 실시간성을 위해 학습은 100 step DDPM으로 하고 추론은 DDIM으로 10 step만
-            밟아, 약 0.1초 지연으로 하나의 action chunk를 생성합니다. 실행 길이(action horizon)는
-            여러 task에서 8 step 근처가 가장 좋았습니다.
+            Diffusion Policy는 순수 noise에서 시작해 여러 번 denoising을 반복해 action chunk를 만듭니다. 실시간성을 위해 학습은 100 step
+            DDPM으로 하고 추론은 DDIM으로 10 step만 밟아 약 0.1초 지연으로 하나의 action chunk를 생성합니다. 실행 길이(action horizon)는 여러
+            task에서 8 step 근처가 가장 좋았습니다.
           </p>
           <p>
-            π0는 diffusion 대신 flow matching으로 같은 문제를 풉니다. Action chunk 길이 H=50에서
-            시작해, 50Hz 로봇은 0.5초, 20Hz 로봇은 0.8초마다 새 chunk를 추론합니다. 추론은 순수
-            noise에서 시작해 10번의 integration step만 밟으면 되고, 저자 측정으로 RTX 4090에서
-            전체 inference가 약 73ms(약 13~14Hz)입니다.
+            π0는 diffusion 대신 flow matching으로 같은 문제를 풉니다. Action chunk 길이 H=50에서 시작해 50Hz 로봇은 0.5초, 20Hz 로봇은
+            0.8초마다 새 chunk를 추론합니다. 추론은 순수 noise에서 시작해 10번의 integration step만 밟으면 됩니다. 저자 측정으로 RTX 4090에서 전체
+            inference가 약 73ms(약 13~14Hz)입니다.
           </p>
         </div>
 
@@ -289,10 +278,9 @@ L^{\tau}(\theta)&=\underbrace{\mathbb{E}\left\|v_\theta(A_t^{\tau},o_t)-u\right\
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            지금까지 본 continuous 직접 회귀, discrete coordinate-as-text, action chunking,
-            diffusion·flow head는 서로 배타적이지 않습니다. Chunking은 discrete token 예측에도
-            diffusion·flow 예측에도 함께 쓸 수 있는 별도의 축입니다. 그래서 "어느 것이 최신이다"가
-            아니라 "이 축들을 어떻게 조합했는가"로 비교해야 합니다.
+            지금까지 본 continuous 직접 회귀, discrete coordinate-as-text, action chunking, diffusion·flow head는 서로
+            배타적이지 않습니다. Chunking은 discrete token 예측에도 diffusion·flow 예측에도 함께 쓸 수 있는 별도의 축입니다. 그래서 “어느 것이
+            최신이다”가 아니라 “이 축들을 어떻게 조합했는가”로 비교해야 합니다.
           </p>
         </div>
 
@@ -331,15 +319,12 @@ L^{\tau}(\theta)&=\underbrace{\mathbb{E}\left\|v_\theta(A_t^{\tau},o_t)-u\right\
           preview="Bin이 너무 크거나 chunk가 너무 길면 각각 정밀도와 반응성을 잃습니다."
         >
           <p>
-            Bin 개수를 줄이면 tokenizer vocabulary 부담은 줄지만 fine manipulation에서 목표에 못
-            미치는 discretization error가 커집니다. Chunk 길이를 k=400까지 늘리면 ACT 실험에서
-            성공률이 k=100보다 낮아졌는데, 그만큼 긴 구간 동안 실제 environment 변화를 무시하기
-            때문입니다.
+            Bin 개수를 줄이면 tokenizer vocabulary 부담은 줄지만 fine manipulation에서 목표에 못 미치는 discretization error가 커집니다.
+            Chunk 길이를 k=400까지 늘리면 ACT 실험에서 성공률이 k=100보다 낮아졌습니다. 그만큼 긴 구간 동안 실제 environment 변화를 무시하기 때문입니다.
           </p>
           <p>
-            두 축 모두 "클수록 좋다"가 아니라 task가 필요로 하는 정밀도와 disturbance 빈도에 맞춰
-            고르는 값입니다. 같은 chunk 길이라도 정적인 pick-and-place와 미끄러지는 물체를 다시
-            잡는 task는 다른 최적값을 가집니다.
+            두 축 모두 클수록 좋은 값이 아닙니다. task가 필요로 하는 정밀도와 disturbance 빈도에 맞춰 고르는 값입니다. 같은 chunk 길이라도 정적인 pick-and-
+            place와 미끄러지는 물체를 다시 잡는 task는 최적값이 다릅니다.
           </p>
         </ProgressiveDetail>
 

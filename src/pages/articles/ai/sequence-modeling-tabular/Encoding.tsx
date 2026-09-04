@@ -8,11 +8,9 @@ export default function Encoding() {
       <h2 className="mb-6 text-2xl font-bold">Event token은 의미·순번·실제 경과 시간을 서로 다른 신호로 합칩니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Event type은 discrete embedding으로, amount·duration 같은 numerical
-          attributes는 projection으로 같은 hidden width에 맞춥니다. 여기에 sequence
-          position과 직전 event부터 흐른 time delta를 더하거나 concat합니다.
-          Position 3이라는 순번과 14일이 흘렀다는 간격은 irregular log에서 서로
-          대체할 수 없는 정보입니다.
+          Event type은 discrete embedding으로, amount·duration 같은 numerical attributes는 projection으로 같은 hidden
+          width에 맞춥니다. 여기에 sequence position과 직전 event부터 흐른 time delta를 더하거나 concat합니다. Position 3이라는 순번과 14일이
+          흘렀다는 간격은 irregular log에서 서로를 대신하지 못합니다.
         </p>
       </div>
 
@@ -46,23 +44,20 @@ export default function Encoding() {
           버리는지 length slice와 positive-pattern coverage로 비교합니다.
         </p>
         <p>
-          Sequence length percentile만으로 cap을 정하지 않고 padding waste, peak
-          memory, latency와 잘리는 label precursor의 비율을 함께 기록합니다. 같은
-          raw log에서 training과 serving tokenizer가 완전히 같은 token IDs·delta·mask를
-          만드는 golden fixture가 필요합니다.
+          Cap은 sequence length percentile만으로 정하지 않고 padding waste, peak memory, latency와 잘리는 label precursor의
+          비율을 함께 기록합니다. Golden fixture도 필요합니다. 같은 raw log에서 training tokenizer와 serving tokenizer가 완전히 같은
+          token IDs·delta·mask를 만들어야 합니다.
         </p>
         <p>
-          예를 들어 event가 1,000개인 history를 최근 128개로 제한하면 872개를
-          버립니다. 이 숫자는 memory 절감량만 뜻하지 않습니다. Purchase 직전의
-          precursor가 오래된 구간에 있었다면 recent-only 정책은 그 evidence도 함께
-          없애므로, important-event 보존 정책과 같은 cutoff·split에서 비교해야 합니다.
+          예를 들어 event가 1,000개인 history를 최근 128개로 제한하면 872개를 버립니다. 이 숫자는 memory 절감량만 뜻하지 않습니다. Purchase 직전의
+          precursor가 오래된 구간에 있었다면 recent-only 정책은 그 evidence도 함께 없앱니다. Important-event 보존 정책과 같은 cutoff·split에
+          놓고 비교해야 합니다.
         </p>
         <div className="not-prose my-8 border-l border-primary/50 pl-4">
           <p className="text-xs font-bold text-primary">논문 따라 읽기 · Time2Vec</p>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            Time2Vec은 scalar time을 linear coordinate와 학습 가능한 periodic
-            coordinates로 바꿉니다. Event 사이의 Δt에 적용할 수 있지만, position과
-            available-time 경계까지 대신 정해 주는 방법은 아닙니다.
+            Time2Vec은 scalar time을 linear coordinate와 학습 가능한 periodic coordinates로 바꿉니다. Event 사이의 Δt에 적용할 수
+            있습니다. 다만 position과 available-time 경계까지 대신 정해 주지는 않습니다.
           </p>
           <Link className="mt-3 inline-block text-sm font-medium text-primary hover:underline" to="/ai/time-features#paper-time2vec">
             시간 표현 정본 글의 수식·전제·근거 범위 보기

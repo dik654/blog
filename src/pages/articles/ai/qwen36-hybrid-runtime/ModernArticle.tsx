@@ -82,11 +82,9 @@ export default function ModernArticle() {
             관리해야 합니다.
           </p>
           <p className="leading-8">
-            Prompt를 읽는 prefill, token 하나를 만드는 decode, 여러 token을 미리
-            제안하는 MTP는 계산 형태가 다릅니다. 하지만 Attention KV·Delta
-            matrix·convolution history가 서로 다른 token 경계를 가리키면 다음
-            출력은 하나의 과거에서 나온 결과가 아닙니다. 이 글은 그 state
-            lifecycle만 집중해서 설명합니다.
+            Prefill은 prompt를 읽고 decode는 token 하나를 만듭니다. MTP는 여러 token을 미리 제안합니다. 셋은 계산 형태가 서로 다릅니다. 그런데
+            Attention KV·Delta matrix·convolution history가 서로 다른 token 경계를 가리키면 다음 출력은 하나의 과거에서 나온 결과가 아닙니다. 이
+            글은 그 state lifecycle만 집중해서 설명합니다.
           </p>
         </div>
 
@@ -138,8 +136,7 @@ export default function ModernArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <h2>길이 비례 KV와 request당 고정 state를 따로 합산합니다</h2>
           <p className="leading-8">
-            긴 request 하나에서는 KV가 지배하고, 짧은 request를 많이 동시에
-            띄우면 request마다 반복되는 Delta state가 중요해집니다. “최대
+            긴 request 하나에서는 KV가 지배합니다. 짧은 request를 많이 동시에 띄우면 request마다 반복되는 Delta state가 중요해집니다. “최대
             context”와 “최대 concurrency”는 같은 질문이 아닙니다.
           </p>
         </div>

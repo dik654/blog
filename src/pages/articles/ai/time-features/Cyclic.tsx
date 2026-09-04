@@ -8,11 +8,8 @@ export default function Cyclic() {
       <h2 className="mb-6 text-2xl font-bold">Sin·cos encoding은 숫자 경계 대신 원 위의 위상을 표현합니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Hour를 0부터 23까지의 scalar로만 넣으면 23시와 0시의 차이는 23이지만
-          실제 clock에서는 한 시간 차이입니다. Period T의 위치를 angle로 바꿔
-          unit circle에 놓으면 끝과 시작이 같은 점에서 이어집니다. Sin 하나만
-          사용하면 서로 다른 두 angle이 같은 값을 가질 수 있으므로 cos와 함께
-          두 좌표를 사용합니다.
+          Hour를 0부터 23까지의 scalar로만 넣으면 23시와 0시의 차이는 23이지만 실제 clock에서는 한 시간 차이입니다. Period T의 위치를 angle로 바꿔 unit
+          circle에 놓으면 끝과 시작이 같은 점에서 이어집니다. Sin 하나만 사용하면 서로 다른 두 angle이 같은 값이 될 수 있으므로 cos와 함께 두 좌표를 사용합니다.
         </p>
       </div>
 
@@ -70,7 +67,11 @@ export default function Cyclic() {
         <div id="paper-time2vec" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
           <p className="text-xs font-bold text-primary">논문 읽기 · 고정 주기에서 학습 가능한 시간 표현으로</p>
           <p className="mt-2 text-sm font-semibold">Time2Vec: Learning a Vector Representation of Time</p>
-          <p className="mt-2 text-sm leading-6 text-muted-foreground">Kazemi 등은 하나의 linear time coordinate와 여러 학습 가능한 periodic coordinates를 결합한 model-agnostic time representation을 제안했습니다. 이는 hour-of-day에 T=24를 고정한 sin·cos pair의 확장이지만, 어떤 dataset에서도 실제 period를 자동으로 올바르게 발견하거나 calendar irregularity를 해결한다는 보장은 아닙니다.</p>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            Kazemi 등은 하나의 linear time coordinate와 여러 학습 가능한 periodic coordinates를 결합한 model-agnostic time
+            representation을 제안했습니다. hour-of-day에 T=24를 고정한 sin·cos pair를 확장한 형태입니다. 다만 실제 period를 어떤
+            dataset에서도 자동으로 올바르게 찾아 주거나 calendar irregularity를 풀어 주는 데까지는 보장이 미치지 않습니다.
+          </p>
           <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/1907.05321" target="_blank" rel="noreferrer">원 논문의 periodic activation과 실험 범위 보기</a>
         </div>
       </div>

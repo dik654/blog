@@ -9,11 +9,9 @@ export default function CompressionTaxonomy() {
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          Model 크기를 줄이는 방법은 하나가 아닙니다. Numeric precision을 낮추는
-          quantization, teacher 지식을 더 작은 student가 다시 배우는
-          distillation, 그리고 기존 parameter 자체를 지우는 pruning이 서로
-          다른 lever로 나란히 존재합니다. 이 글은 그중 pruning, 그것도 개별
-          weight가 아니라 연결된 단위를 지우는 쪽을 다룹니다.
+          모델 크기를 줄이는 길은 하나가 아닙니다. 수치 정밀도를 낮추는 quantization, teacher 지식을 더 작은 student가 다시 배우는 distillation, 기존
+          parameter 자체를 지우는 pruning이 서로 다른 lever로 나란히 놓여 있습니다. 이 글이 다루는 쪽은 그중 pruning, 그것도 개별 weight가 아니라 연결된
+          단위를 지우는 경우입니다.
         </p>
         <p>
           Parameter pruning은 이 세 lever 중 pruning 하나를 가리키는 이름이고,
@@ -24,11 +22,9 @@ export default function CompressionTaxonomy() {
           지우는 쪽이 structured pruning, 곧 이 글입니다.
         </p>
         <p>
-          10B parameter 모델에서 개별 weight 90%를 지우면 저장 공간은 크게
-          줄어도 weight matrix의 shape 자체는 그대로 남습니다. 반면 channel을
-          25% 지우면 다음 layer로 넘어가는 dense matmul의 크기 자체가
-          줄어듭니다. 같은 90%·25%라는 숫자가 왜 다른 종류의 이득으로
-          이어지는지는 아래 절에서 각각 확인합니다.
+          10B parameter 모델에서 개별 weight 90%를 지우면 저장 공간은 크게 줄지만 weight matrix의 shape 자체는 그대로 남습니다. channel을 25%
+          지우면 반대로 다음 layer로 넘어가는 dense matmul의 크기 자체가 줄어듭니다. 같은 90%·25%라는 숫자가 왜 다른 종류의 이득으로 이어지는지는 아래 절에서 각각
+          확인합니다.
         </p>
       </div>
       <TermBreakdown

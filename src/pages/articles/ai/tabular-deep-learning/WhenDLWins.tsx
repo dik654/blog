@@ -7,18 +7,14 @@ export default function WhenDLWins() {
       <h2 className="mb-6 text-2xl font-bold">딥러닝 선택은 row 수 임계값이 아니라 추가로 배울 구조로 판단합니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          “10만 row 이상이면 딥러닝” 같은 경계는 dataset과 validation budget이
-          바뀌면 유지되지 않습니다. 중간 규모의 전형적인 표에서는 GBDT가
-          irregular decision boundary와 중요하지 않은 feature에 강한 baseline인
-          경우가 많고, neural model은 optimization과 preprocessing에 더 민감할
-          수 있습니다.
+          “10만 row 이상이면 딥러닝” 같은 경계는 dataset과 validation budget이 바뀌면 유지되지 않습니다. 중간 규모의 전형적인 표에서는 GBDT가
+          irregular decision boundary와 중요하지 않은 feature에 강한 baseline인 경우가 많습니다. neural model 쪽이 optimization과
+          preprocessing에 더 민감한 편입니다.
         </p>
         <p>
-          반대로 stable vocabulary의 고 cardinality category에서 embedding을
-          재사용하거나, image·text·event sequence와 end-to-end로 결합하거나,
-          같은 schema의 많은 unlabeled row로 pretraining할 수 있다면 neural
-          representation을 시험할 이유가 생깁니다. 다만 후보가 생겼다는 뜻이지
-          승리가 확정됐다는 뜻은 아닙니다.
+          반대로 stable vocabulary의 고 cardinality category에서 embedding을 재사용하거나, image·text·event sequence와 end-
+          to-end로 결합하거나, 같은 schema의 많은 unlabeled row로 pretraining할 수 있다면 neural representation을 시험할 이유가 생깁니다.
+          다만 그렇게 얻는 것은 시험해 볼 후보 하나입니다. 승리는 그다음 문제입니다.
         </p>
       </div>
 
@@ -33,9 +29,8 @@ export default function WhenDLWins() {
           <li>Training cost, peak memory, latency와 train-serving preprocessing도 판정에 넣습니다.</li>
         </ol>
         <p>
-          GBDT와 neural model의 error가 실제로 다를 때는 ensemble이 이득일 수
-          있습니다. 그러나 평균 점수 두 개만 보고 고정 비율 blending을 적용하면
-          같은 row에서 함께 틀리는 모델을 중복 운영할 수 있습니다.
+          GBDT와 neural model의 error가 실제로 다를 때는 ensemble이 이득일 수 있습니다. 그러나 평균 점수 두 개만 보고 고정 비율 blending을 걸면 같은
+          row에서 함께 틀리는 모델을 중복 운영할 수 있습니다.
         </p>
       </div>
 
@@ -68,12 +63,10 @@ e_{m,i}&=\underbrace{y_i-\hat y_{m,i},}_{\text{오른쪽 항으로 결과 계산
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          TabPFN 같은 pretrained tabular model도 별도의 비교 후보일 뿐 모든 작은
-          dataset의 자동 정답은 아닙니다. 최종 선택은 동일한 entity·time split,
-          feature artifact, tuning trial 또는 wall-clock, hardware, metric으로 만든
-          표에서 이루어져야 합니다. 평균과 seed 분산, worst group, calibration,
-          peak memory, single-row·batch latency를 함께 남기면 구조 이름이 아니라
-          재현 가능한 증거로 선택할 수 있습니다.
+          TabPFN 같은 pretrained tabular model도 비교 후보 하나로 목록에 오를 뿐, 작은 dataset이면 자동으로 정답이 되지는 않습니다. 최종 선택은 동일한
+          entity·time split, feature artifact, tuning trial 또는 wall-clock, hardware, metric으로 만든 표에서 이루어져야
+          합니다. 평균과 seed 분산, worst group, calibration, peak memory, single-row·batch latency를 함께 남기면 선택의 근거가 구조
+          이름 대신 재현 가능한 증거 위에 섭니다.
         </p>
       </div>
     </section>

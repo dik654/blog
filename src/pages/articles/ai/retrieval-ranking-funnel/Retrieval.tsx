@@ -20,10 +20,8 @@ export default function Retrieval() {
           있습니다. 어느 하나만 쓰면 다른 종류의 정답을 놓칠 수 있습니다.
         </p>
         <p>
-          그래서 실용적인 검색은 보통 네 단계로 흐릅니다. BM25와 dense index가
-          각자 후보를 만들고, 두 순위를 합친 뒤, 더 비싼 reranker가 작은 후보 집합을
-          자세히 읽습니다. 아래 네 카드는 이 순서에서 각 부품이 맡는 일과 넘지 못하는
-          경계를 요약합니다.
+          그래서 실용적인 검색은 보통 네 단계로 흐릅니다. BM25와 dense index가 각자 후보를 만들고 두 순위를 합친 뒤 더 비싼 reranker가 작은 후보 집합을 자세히
+          읽습니다. 아래 네 카드는 이 순서에서 각 부품이 맡는 일과 넘지 못하는 경계를 요약합니다.
         </p>
       </div>
       <div className="not-prose my-8 grid gap-3 md:grid-cols-2">
@@ -59,10 +57,8 @@ export default function Retrieval() {
       />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          여기서 검색 범위를 정하는 권한 조건은 첫 단계보다 앞에 와야 합니다.
-          ACL·tenant·valid-time filter를 검색 뒤에 적용하면, 허가된 문서는 이미
-          top-k 밖으로 밀렸을 수 있습니다. 금지 문서의 본문이나 점수가 뒤 단계에
-          노출될 위험도 생깁니다.
+          여기서 검색 범위를 정하는 권한 조건은 첫 단계보다 앞에 와야 합니다. ACL·tenant·valid-time filter를 검색 뒤에 적용하면 허가된 문서는 이미 top-k
+          밖으로 밀렸을 수 있습니다. 금지 문서의 본문이나 점수가 뒤 단계에 노출될 위험도 생깁니다.
         </p>
         <p>
           허가된 후보를 넓게 모은 다음에는 cross-encoder나 late-interaction model이
@@ -71,12 +67,9 @@ export default function Retrieval() {
           문서를 새로 만들어 내지 못합니다.
         </p>
         <p>
-          GraphRAG도 이 원칙에서 예외가 아닙니다. 지식 그래프의 local subgraph나
-          community summary를 또 하나의 후보 통로로 추가할 뿐, lexical·vector
-          retrieval 전체를 대체하지는 않습니다. 따라서 어떤 원문에서 graph를
-          만들었는지, entity를 어떻게 합쳤는지, 몇 hop까지 탐색했는지를 함께
-          기록해야 합니다. 빠진 edge는 뒤의 reranker가 원문 사실만으로 복구할 수
-          없기 때문입니다.
+          GraphRAG도 이 원칙에서 예외가 아닙니다. 지식 그래프의 local subgraph나 community summary를 또 하나의 후보 통로로 추가할 뿐,
+          lexical·vector retrieval 전체를 대체하지는 않습니다. 어떤 원문에서 graph를 만들었는지, entity를 어떻게 합쳤는지, 몇 hop까지 탐색했는지를 함께
+          기록해 두어야 합니다. 빠진 edge는 뒤의 reranker가 원문 사실만으로 복구할 수 없기 때문입니다.
         </p>
       </div>
       <ExplainedFormula
@@ -104,22 +97,38 @@ O_q&\subseteq C_q\\
       <div className="not-prose my-8"><RetrievalViz /></div>
       <div id="reading-dpr" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">핵심 논문 · Dense Passage Retrieval</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">DPR은 질문과 passage를 두 encoder로 독립 변환하고 dense vector similarity로 open-domain QA 후보를 회수했습니다. 작은 수의 question–passage pair로 학습한 dual encoder가 논문 조건에서 강한 BM25 baseline보다 top-20 passage accuracy를 개선한 것이 핵심 결과입니다. 이 수치가 모든 언어·identifier-heavy corpus·최신 BM25 설정에서도 그대로 유지된다는 주장은 아닙니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            DPR은 질문과 passage를 두 encoder로 독립 변환하고 dense vector similarity로 open-domain QA 후보를 회수했습니다. 핵심 결과는
+            dual encoder 쪽입니다. 작은 수의 question–passage pair로 학습했는데도 논문 조건에서 강한 BM25 baseline보다 top-20 passage
+            accuracy를 개선했습니다. 다만 이 수치가 모든 언어·identifier-heavy corpus·최신 BM25 설정에서도 그대로 유지된다는 데까지 논문이 가지는 않습니다.
+          </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/2004.04906" target="_blank" rel="noreferrer">Dual encoder와 평가 조건 보기</a>
       </div>
       <div id="reading-hnsw" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">핵심 논문 · HNSW</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">Malkov와 Yashunin은 vector를 확률적으로 선택된 여러 graph layer에 배치하고, 위층의 장거리 탐색에서 아래층의 세밀한 이웃 탐색으로 내려오는 approximate nearest-neighbor index를 제안했습니다. 이는 exact scan과 같은 결과를 자동 보장하는 구조가 아니므로 target corpus에서 exact subset 대비 recall·latency·memory를 함께 측정해야 합니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            Malkov와 Yashunin은 approximate nearest-neighbor index를 제안했습니다. vector를 확률적으로 선택된 여러 graph layer에
+            배치하고 위층의 장거리 탐색에서 아래층의 세밀한 이웃 탐색으로 내려오는 구조입니다. exact scan과 같은 결과를 자동으로 보장하는 구조는 아니니 target
+            corpus에서 exact subset 대비 recall·latency·memory를 함께 측정해야 합니다.
+          </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/1603.09320" target="_blank" rel="noreferrer">HNSW graph construction과 search 보기</a>
       </div>
       <div id="reading-cross-encoder" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">핵심 논문 · BERT passage reranking</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">Nogueira와 Cho는 query–passage pair를 BERT에 함께 넣어 binary relevance를 계산하는 second-stage reranker를 보였습니다. 논문의 MS MARCO·TREC-CAR 결과는 해당 model과 benchmark의 근거이며, candidate를 늘릴수록 모든 production RAG에서 비용 대비 품질이 좋아진다는 보장은 아닙니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            Nogueira와 Cho는 second-stage reranker를 보였습니다. query–passage pair를 BERT에 함께 넣어 binary relevance를
+            계산하는 방식입니다. 논문의 MS MARCO·TREC-CAR 결과가 뒷받침하는 것은 해당 model과 benchmark까지입니다. candidate를 늘릴수록 모든
+            production RAG에서 비용 대비 품질이 좋아진다는 데까지는 미치지 않습니다.
+          </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/1901.04085" target="_blank" rel="noreferrer">Passage Re-ranking with BERT 보기</a>
       </div>
       <div id="reading-rrf" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">핵심 연구 · Reciprocal Rank Fusion</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">Cormack·Clarke·Büttcher는 서로 다른 IR system의 순위를 1/(k+rank)로 합치는 단순한 fusion을 제안하고 당시 TREC·LETOR 실험에서 개별 system과 다른 fusion baseline을 비교했습니다. 핵심 기여는 score scale을 맞추지 않고 rank evidence를 합치는 방법이며, 특정 k나 모든 corpus의 성능 우위를 보장하는 법칙은 아닙니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            Cormack·Clarke·Büttcher는 서로 다른 IR system의 순위를 1/(k+rank)로 합치는 단순한 fusion을 제안하고 당시 TREC·LETOR 실험에서
+            개별 system과 다른 fusion baseline을 비교했습니다. 핵심 기여는 score scale을 맞추지 않고 rank evidence를 합쳤다는 데 있습니다. 특정
+            k나 모든 corpus의 성능 우위를 법칙으로 세운 것까지는 아닙니다.
+          </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://cormack.uwaterloo.ca/cormacksigir09-rrf.pdf" target="_blank" rel="noreferrer">RRF 정의와 실험 범위 보기</a>
       </div>
     </section>

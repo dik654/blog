@@ -15,10 +15,8 @@ export default function DataBoundary() {
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          합성 쿼리는 원문서가 표현할 수 있는 세계를 벗어나지 못한다. 그래서
-          EUREKA는 단일 데이터셋이 아니라 여러 공개 소스를 모아 문서 풀을
-          만들고, 출처와 라이선스, 언어, 도메인, 길이, 중복 계보를 문서 단위
-          metadata로 남긴다.
+          합성 쿼리는 원문서가 표현할 수 있는 세계를 벗어나지 못한다. 그래서 EUREKA는 단일 데이터셋이 아니라 여러 공개 소스를 모아 문서 풀을 만들고 출처와 라이선스, 언어,
+          도메인, 길이, 중복 계보를 문서 단위 metadata로 남긴다.
         </p>
         <div className="not-prose my-6 grid gap-3 sm:grid-cols-2">
           {corpusAxes.map(([axis, coverage]) => (
@@ -33,11 +31,9 @@ export default function DataBoundary() {
           누출 방지는 split 이후의 필터가 아니다
         </h3>
         <p className="leading-7">
-          benchmark의 test 문서·쿼리만 문자열로 제거하면 paraphrase, 번역본,
-          동일 원문의 재배포본이 남을 수 있다. 수집 단계에서 benchmark 원천과
-          문서 계보를 먼저 격리하고, exact hash와 near-duplicate 검사를 함께
-          적용해야 한다. 최종 평가는 학습 source와 분리된 공개 benchmark와 사내
-          OOD set으로 나눈다.
+          benchmark의 test 문서·쿼리만 문자열로 제거하면 paraphrase, 번역본, 동일 원문의 재배포본이 남을 수 있다. 수집 단계에서 benchmark 원천과 문서 계보를
+          먼저 격리하고 exact hash와 near-duplicate 검사를 함께 적용해야 한다. 최종 평가는 학습 source와 분리된 공개 benchmark와 사내 OOD set으로
+          나눈다.
         </p>
         <p className="leading-7">
           reasoning이 필요한 현실 검색의 별도 평가가 필요한 이유는 BRIGHT 같은

@@ -23,11 +23,9 @@ export default function HybridDepth() {
           못해 순위가 밀릴 수 있습니다.
         </p>
         <p>
-          반대로 “세션이 조기에 만료된다”라는 질의와 “로그인 유지 시간이
-          짧다”라는 문서처럼 겹치는 단어가 하나도 없는 paraphrase에서는 BM25
-          점수가 0이 되어 후보 밖으로 빠지지만, dense encoder는 의미
-          유사도로 두 문장을 가까이 배치해 rank 1을 줍니다. 어느 한쪽만
-          쓰면 이 가운데 한 종류의 정답을 구조적으로 놓칩니다.
+          반대 경우도 있습니다. “세션이 조기에 만료된다”라는 질의와 “로그인 유지 시간이 짧다”라는 문서는 겹치는 단어가 하나도 없습니다. 이런 paraphrase에서 BM25 점수는
+          0이 되어 후보 밖으로 빠집니다. dense encoder는 의미 유사도로 두 문장을 가까이 배치해 rank 1을 줍니다. 어느 한쪽만 쓰면 이 가운데 한 종류의 정답을 구조적으로
+          놓칩니다.
         </p>
       </div>
       <TermBreakdown
@@ -50,10 +48,8 @@ export default function HybridDepth() {
       />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Hybrid retrieval은 이 두 실패를 한 후보 집합으로 보완하는
-          전략입니다. Sparse와 dense를 각각 top-k까지 실행해 두 결과를
-          만들고, 이 둘을 하나로 합칩니다. 합치는 가장 단순한 방법이
-          candidate union, 곧 문서 id 기준으로 중복을 지운 집합 연산입니다.
+          Hybrid retrieval은 이 두 실패를 한 후보 집합으로 보완하는 전략입니다. Sparse와 dense를 각각 top-k까지 실행해 두 결과를 만든 다음 하나로 합칩니다.
+          합치는 가장 단순한 방법이 candidate union, 곧 문서 id 기준으로 중복을 지운 집합 연산입니다.
         </p>
         <p>
           예를 들어 sparse top-5가 {"{d1,d2,d3,d4,d5}"}이고 dense top-5가{" "}
@@ -62,9 +58,7 @@ export default function HybridDepth() {
           문서 수만큼 그보다 작아지며, 이 단계에는 아직 순서가 없습니다.
         </p>
         <p>
-          이 union에 순서를 매기는 일은 위 RRF가 이미 맡고 있습니다. Union은
-          무엇을 후보에 넣을지를 정하고, RRF는 그 후보를 어떤 순서로 읽을지를
-          정합니다.
+          이 union에 순서를 매기는 일은 위 RRF가 이미 맡고 있습니다. Union이 정하는 것은 무엇을 후보에 넣을지까지입니다. 어떤 순서로 읽을지는 RRF가 정합니다.
         </p>
 
         <h3 id="candidate-generation" className="scroll-mt-20">
@@ -85,10 +79,9 @@ export default function HybridDepth() {
           Top-k retrieval과 rerank depth는 서로 다른 예산입니다
         </h3>
         <p>
-          First-stage retriever가 후보로 인정하는 깊이를 top-k retrieval이라고
-          하고, reranker가 그 후보 가운데 실제로 다시 채점하는 더 얕은 깊이를
-          rerank depth라고 합니다. 흔한 조합은 top-k retrieval k1=100으로
-          넓게 모은 뒤 rerank depth k2=10만 cross-encoder에 넣는 방식입니다.
+          First-stage retriever가 후보로 인정하는 깊이를 top-k retrieval이라고 합니다. reranker가 그 후보 가운데 실제로 다시 채점하는 깊이는 그보다
+          얕습니다. 이쪽을 rerank depth라고 합니다. 흔한 조합은 top-k retrieval k1=100으로 넓게 모은 뒤 rerank depth k2=10만 cross-
+          encoder에 넣는 방식입니다.
         </p>
       </div>
       <ExplainedFormula

@@ -15,10 +15,9 @@ export default function Checkpoint() {
           필요합니다.
         </p>
         <p>
-          Momentum과 Adam moment를 잃으면 같은 weight에서 시작해도 다음 update가
-          달라집니다. Scheduler 위치나 GradScaler state를 잃어도 learning rate와
-          skipped update가 달라질 수 있습니다. Stream 또는 distributed sampler는
-          “epoch=3”만으로 다음 sample을 재현할 수 있는지도 별도로 확인해야 합니다.
+          Momentum과 Adam moment를 잃으면 같은 weight에서 시작해도 다음 update가 달라집니다. 마찬가지로 scheduler 위치나 GradScaler state를
+          잃으면 learning rate와 skipped update가 어긋날 수 있습니다. Stream이나 distributed sampler라면 “epoch=3”만으로 다음
+          sample을 재현할 수 있는지도 별도로 확인해야 합니다.
         </p>
       </div>
 
@@ -27,11 +26,9 @@ export default function Checkpoint() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Resume 가능성은 새 process에서 비교해야 합니다</h3>
         <p>
-          같은 초기 상태 C로 K+M updates를 연속 실행한 reference를 만들고, 다른
-          실행은 K updates 뒤 저장한 다음 process를 완전히 종료합니다. 새 process가
-          checkpoint를 load해 M updates를 더 수행했을 때 sample ID 순서, learning
-          rate, global update, loss와 최종 parameter가 허용 오차 안에서 맞는지
-          비교합니다.
+          같은 초기 상태 C로 K+M updates를 연속 실행한 reference를 먼저 만듭니다. 다른 실행은 K updates 뒤 저장한 다음 process를 완전히 종료합니다. 새
+          process가 checkpoint를 load해 M updates를 더 수행했을 때 sample ID 순서와 learning rate, global update, loss와 최종
+          parameter가 허용 오차 안에서 맞는지 비교합니다.
         </p>
       </div>
 
@@ -69,10 +66,8 @@ export default function Checkpoint() {
       <div id="docs-pytorch-checkpoint" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">공식 예제 따라 읽기 · Saving and Loading Models</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          공식 recipe도 inference용 weight 저장과 general checkpoint를 구분하고,
-          resume에는 optimizer state를 포함해야 한다고 설명합니다. 다만 sampler·RNG·
-          distributed cursor는 각 pipeline이 사용하는 무작위성과 data path에 맞춰
-          추가해야 합니다.
+          공식 recipe도 inference용 weight 저장과 general checkpoint를 구분하며 resume에는 optimizer state를 포함해야 한다고 설명합니다.
+          다만 sampler·RNG·distributed cursor는 각 pipeline이 쓰는 무작위성과 data path에 맞춰 직접 채워 넣어야 합니다.
         </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://docs.pytorch.org/tutorials/beginner/saving_loading_models.html" target="_blank" rel="noreferrer">공식 state_dict·general checkpoint recipe 보기</a>
       </div>

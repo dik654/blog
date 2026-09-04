@@ -7,10 +7,8 @@ export default function Lag() {
       <h2 className="mb-6 text-2xl font-bold">Lag를 만들기 전에 “k step 전”과 “Δ시간 전”을 구분합니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          매일 정확히 한 번 측정된 series에서는 한 row 전과 하루 전이 같습니다.
-          그러나 거래처럼 event 간격이 불규칙하면 이전 7개 거래와 최근 7일은
-          전혀 다른 질문입니다. Observation lag는 정렬된 같은 entity의 k번째
-          이전 값을, duration lag는 cutoff−Δ 부근에 존재하거나 as-of join으로
+          매일 정확히 한 번 측정된 series에서는 한 row 전과 하루 전이 같습니다. 그러나 거래처럼 event 간격이 불규칙하면 이전 7개 거래와 최근 7일은 전혀 다른 질문입니다.
+          Observation lag는 같은 entity를 정렬해 놓고 k번째 이전 값을 가져옵니다. duration lag는 cutoff−Δ 부근에 존재하거나 as-of join으로
           확정된 값을 가져옵니다.
         </p>
         <p>
@@ -52,11 +50,9 @@ export default function Lag() {
           얼마인지도 artifact에 기록합니다.
         </p>
         <p>
-          ACF는 같은 series의 값이 lag k만큼 떨어졌을 때 선형적으로 함께 움직이는
-          정도를 보여 주므로 후보를 좁히는 진단입니다. Trend·seasonality와 split
-          경계를 그대로 둔 높은 ACF가 새로운 기간의 예측력을 보장하지는 않습니다.
-          업무 주기에서 제안한 lag set을 horizon별 rolling-origin validation으로
-          비교합니다.
+          ACF는 같은 series의 값이 lag k만큼 떨어졌을 때 선형적으로 함께 움직이는 정도를 보여 주므로 후보를 좁히는 진단입니다. Trend·seasonality와 split
+          경계를 그대로 둔 채 ACF만 높다고 새로운 기간의 예측력이 보장되지는 않습니다. 업무 주기에서 제안한 lag set을 horizon별 rolling-origin
+          validation으로 비교합니다.
         </p>
       </div>
     </section>

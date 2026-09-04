@@ -50,27 +50,21 @@ export default function Freezing() {
       />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Running mean을 0에서 시작하고 α=0.1, 두 batch mean을 10과 20으로
-          관측하면 첫 값은 0.9×0+0.1×10=1, 둘째 값은 0.9×1+0.1×20=2.9가
-          됩니다. Weight checksum만 같다고 “완전히 frozen”이라고 판정하면 이
-          buffer 변화를 놓치므로 parameter·buffer·prediction checksum을 함께
-          비교합니다.
+          Running mean을 0에서 시작하고 α=0.1, 두 batch mean을 10과 20으로 관측하면 첫 값은 0.9×0+0.1×10=1, 둘째 값은
+          0.9×1+0.1×20=2.9가 됩니다. Weight checksum만 같다고 “완전히 frozen”이라고 판정하면 이 buffer 변화를 놓칩니다.
+          parameter·buffer·prediction checksum을 함께 비교하는 이유입니다.
         </p>
       </div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Gradual unfreezing은 검증할 후보이지 보편 규칙이 아닙니다</h3>
         <p>
-          Head-only에서 upper block, full model 순으로 여는 방식은 추가 자유도가
-          어디서 이득을 만드는지 추적하기 좋습니다. 하지만 각 stage에서 optimizer
-          membership, state initialization, LR와 warmup이 바뀌므로 별도 stage receipt를
-          남깁니다. Modern architecture와 충분한 target data에서는 처음부터 안정적인
-          full fine-tuning이 더 단순할 수도 있습니다.
+          Head-only에서 upper block, full model 순으로 여는 방식은 추가 자유도가 어디서 이득을 만드는지 추적하기 좋습니다. 하지만 각 stage마다
+          optimizer membership과 state initialization, LR와 warmup이 바뀌므로 stage receipt를 따로 남깁니다. Modern
+          architecture와 충분한 target data가 있다면 처음부터 안정적인 full fine-tuning이 오히려 단순할 수도 있습니다.
         </p>
         <p>
-          Resume test는 unfreeze 경계 직전 checkpoint를 저장한 뒤 연속 실행과 새
-          process 복원 실행에 같은 다음 batch를 넣어 LR trace·optimizer membership·
-          buffer와 다음 parameter를 비교합니다. 이 parity가 없으면 stage gain과
-          복원 오류를 구분할 수 없습니다.
+          Resume test는 unfreeze 경계 직전 checkpoint를 저장하는 데서 시작합니다. 연속 실행과 새 process 복원 실행에 같은 다음 batch를 넣고 LR
+          trace·optimizer membership·buffer와 다음 parameter를 비교합니다. 이 parity가 없으면 stage gain과 복원 오류를 구분할 수 없습니다.
         </p>
       </div>
     </section>

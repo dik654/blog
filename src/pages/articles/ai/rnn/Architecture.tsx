@@ -51,11 +51,9 @@ C_{\rm forward}
         </p>
         <h3>bidirectional RNN은 미래를 본다</h3>
         <p>
-          bidirectional RNN은 왼쪽에서 오른쪽으로 읽은 state와 반대 방향 state를
-          결합합니다. 문장 전체가 이미 주어진 tagging·encoding에는 유용하지만, 아직
-          나오지 않은 미래 token을 사용할 수 없는 autoregressive generation이나
-          실시간 streaming에는 그대로 적용할 수 없습니다. “양방향이 더 정확하다”와
-          “causal하게 배포할 수 있다”는 별도 조건입니다.
+          bidirectional RNN은 왼쪽에서 오른쪽으로 읽은 state와 반대 방향 state를 결합합니다. 문장 전체가 이미 주어진 tagging·encoding에는 유용합니다.
+          아직 나오지 않은 미래 token을 쓸 수 없는 autoregressive generation이나 실시간 streaming에는 그대로 적용할 수 없습니다. 양방향이 더 정확하다는
+          것과 causal하게 배포할 수 있다는 것은 별도 조건입니다.
         </p>
       </div>
     </section>

@@ -5,7 +5,11 @@ export default function Objective() {
   return (
     <section id="response-loss" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Response-only loss는 prompt를 읽게 하되 prompt token을 정답으로 채점하지 않는다</h2>
-      <div className="prose prose-neutral max-w-none dark:prose-invert"><p>Model은 response를 예측하려면 prompt token을 attention context로 읽어야 합니다. 그러나 loss mask를 response 위치에만 1로 두면 prompt 자체를 재생하는 gradient는 내지 않습니다. Full-sequence loss를 쓰는 recipe도 가능하지만 목적과 data mixture가 달라지므로 둘을 같은 설정으로 취급하면 안 됩니다.</p></div>
+      <div className="prose prose-neutral max-w-none dark:prose-invert"><p>
+            response를 예측하려면 model은 prompt token을 attention context로 읽어야 합니다. 그러나 loss mask를 response 위치에만 1로
+            두면 prompt 자체를 재생하는 gradient는 내지 않습니다. full-sequence loss를 쓰는 recipe도 물론 가능합니다. 다만 목적과 data
+            mixture가 달라지므로 둘을 같은 설정으로 취급하면 안 됩니다.
+          </p></div>
       <ExplainedFormula
         question="한 demonstration에서 어떤 next-token prediction만 SFT objective에 포함하는가?"
         idea={<>전체 token sequence의 conditional NLL을 계산하되 response target 위치에만 mask 1을 두고, 유효 target 수로 나누어 sample 길이에 따른 scale을 통제합니다.</>}

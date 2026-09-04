@@ -89,6 +89,10 @@
       "fingerprint": "3c66cec7822edfc6",
       "score": 32
     },
+    "ai/transformer-architecture": {
+      "fingerprint": "19fb3ad719519970",
+      "score": 32
+    },
     "blockchain/filecoin-fvm": {
       "fingerprint": "b68b47f9136605fb",
       "score": 32
@@ -150,11 +154,7 @@
       "score": 28
     },
     "ai/resnet": {
-      "fingerprint": "4437e4576d4ff8d1",
-      "score": 28
-    },
-    "ai/transformer-architecture": {
-      "fingerprint": "974bd8be543c0e90",
+      "fingerprint": "756d927fce5f01ee",
       "score": 28
     },
     "blockchain/cometbft-consensus": {
@@ -206,7 +206,11 @@
       "score": 26
     },
     "ai/rag-pipeline": {
-      "fingerprint": "1e33bb4eb3716e40",
+      "fingerprint": "97b2479231efa120",
+      "score": 26
+    },
+    "ai/transfer-learning-practice": {
+      "fingerprint": "04fdcfff6266feaf",
       "score": 26
     },
     "blockchain/autobahn-deep": {
@@ -317,10 +321,6 @@
       "fingerprint": "b4f4334731fd1618",
       "score": 22
     },
-    "ai/transfer-learning-practice": {
-      "fingerprint": "ecafce40b3b0c422",
-      "score": 22
-    },
     "blockchain/bft-comparison": {
       "fingerprint": "c59d33a272cf8520",
       "score": 22
@@ -373,8 +373,8 @@
       "fingerprint": "4623bf689dc7fdd9",
       "score": 20
     },
-    "ai/training-pipeline": {
-      "fingerprint": "44e6d8c2b0266786",
+    "ai/supervised-fine-tuning": {
+      "fingerprint": "d940a477aed47821",
       "score": 20
     },
     "blockchain/bft-theory": {
@@ -461,8 +461,12 @@
       "fingerprint": "2d15cd61ccb816b9",
       "score": 18
     },
-    "ai/supervised-fine-tuning": {
-      "fingerprint": "b853158014aa4cbf",
+    "ai/seq2seq": {
+      "fingerprint": "e02c91411baed23a",
+      "score": 18
+    },
+    "ai/training-pipeline": {
+      "fingerprint": "9d53b6a88382ccdd",
       "score": 18
     },
     "ai/vllm-serving": {
@@ -542,15 +546,15 @@
       "score": 16
     },
     "ai/rlhf": {
-      "fingerprint": "30e50a31a9e3d1ba",
+      "fingerprint": "cdd2ba3552da27df",
       "score": 16
     },
-    "ai/seq2seq": {
-      "fingerprint": "1e647e9b5df0fe92",
+    "ai/sparse-autoencoder": {
+      "fingerprint": "54bd83a3d2179b30",
       "score": 16
     },
     "ai/text-unicode-encoding": {
-      "fingerprint": "3c985c47c2e376c3",
+      "fingerprint": "0c8c120310f91e58",
       "score": 16
     },
     "ai/vae": {
@@ -590,15 +594,11 @@
       "score": 14
     },
     "ai/skills-anatomy": {
-      "fingerprint": "aef6882d96ad4f13",
-      "score": 14
-    },
-    "ai/sparse-autoencoder": {
-      "fingerprint": "21ed032ae0561521",
+      "fingerprint": "5b80fcab39b4d624",
       "score": 14
     },
     "ai/tokenizer": {
-      "fingerprint": "22da105a2ef2bbff",
+      "fingerprint": "0a253c49edbbad20",
       "score": 14
     },
     "ai/vision-transformer": {
@@ -797,6 +797,10 @@
       "fingerprint": "a04251a688f40fcd",
       "score": 11
     },
+    "ai/bptt": {
+      "fingerprint": "a29f6f2bdf80120d",
+      "score": 10
+    },
     "ai/claw-mcp": {
       "fingerprint": "fcf3ddd1212d116e",
       "score": 10
@@ -901,10 +905,6 @@
       "fingerprint": "56e7097d95e69527",
       "score": 8
     },
-    "ai/bptt": {
-      "fingerprint": "a1b168843b2beefc",
-      "score": 8
-    },
     "ai/cnn-translation-equivariance": {
       "fingerprint": "cf4c64a226cfacf3",
       "score": 8
@@ -942,7 +942,7 @@
       "score": 8
     },
     "ai/rnn-language-model": {
-      "fingerprint": "2ca89b1db45b77e8",
+      "fingerprint": "268e4518906c46e2",
       "score": 8
     },
     "ai/self-distillation": {
@@ -951,6 +951,14 @@
     },
     "ai/sequence-distillation": {
       "fingerprint": "0f7d25e563ad7125",
+      "score": 8
+    },
+    "ai/subword-static-embeddings": {
+      "fingerprint": "addb94fd905c9dbe",
+      "score": 8
+    },
+    "ai/tabular-deep-learning": {
+      "fingerprint": "572348699618b1dc",
       "score": 8
     },
     "ai/word2vec-prediction-objectives": {
@@ -1129,20 +1137,20 @@
       "fingerprint": "63086e49c69fd5b1",
       "score": 6
     },
+    "ai/reward-design-for-verifiable-rl": {
+      "fingerprint": "a5cfa7ebd5615143",
+      "score": 6
+    },
     "ai/sequence-modeling-tabular": {
-      "fingerprint": "eed80e51bdb9fe9b",
+      "fingerprint": "cec0080c6f40863d",
       "score": 6
     },
     "ai/sionic-glm-b300": {
-      "fingerprint": "52674453009ffa5a",
+      "fingerprint": "dce4d0dddce2ff8a",
       "score": 6
     },
-    "ai/subword-static-embeddings": {
-      "fingerprint": "711ddd5e8d511780",
-      "score": 6
-    },
-    "ai/tabular-deep-learning": {
-      "fingerprint": "0e5180e85c9d1ba2",
+    "ai/tensor-and-pipeline-parallel-inference": {
+      "fingerprint": "0a35954b3b6e958f",
       "score": 6
     },
     "blockchain/evm-advanced": {

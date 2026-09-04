@@ -16,11 +16,9 @@ export default function Overview() {
           정렬해 하나의 variable-length input으로 묶습니다.
         </p>
         <p>
-          그렇다고 sequence model부터 선택하지는 않습니다. Count·recency·lag처럼
-          어떤 순서를 버리는지 명확한 flat baseline을 먼저 만들고, 순서 또는 먼
-          event 관계가 실제 validation gain을 낼 때 RNN·CNN·Transformer를
-          추가합니다. 길어진 input이 더 많은 정보와 더 큰 padding·attention 비용을
-          동시에 가져온다는 점도 함께 측정합니다.
+          그렇다고 sequence model부터 선택하지는 않습니다. Count·recency·lag처럼 어떤 순서를 버리는지 명확한 flat baseline을 먼저 만듭니다. 순서 또는
+          먼 event 관계가 실제 validation gain을 낼 때 RNN·CNN·Transformer를 추가합니다. 길어진 input이 더 많은 정보와 더 큰
+          padding·attention 비용을 동시에 가져온다는 점도 함께 측정합니다.
         </p>
         <p>
           Entity·origin·horizon·available-time 정의는{" "}

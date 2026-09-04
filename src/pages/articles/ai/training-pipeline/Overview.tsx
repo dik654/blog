@@ -35,10 +35,8 @@ export default function Overview() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          뒤에서는 sample이 batch가 되는 경로를 먼저 고정하고, optimizer update가
-          일어나는 clock과 validation의 read-only 경계를 분리합니다. 이어서 best
-          artifact와 resume checkpoint를 구분하고, 마지막에는 중단 없는 실행과
-          저장 후 재개한 실행을 실제로 비교합니다. 저장 파일이 존재한다는 사실은
+          뒤에서는 sample이 batch가 되는 경로를 먼저 고정한 다음 optimizer update가 일어나는 clock과 validation의 read-only 경계를 분리합니다.
+          이어서 best artifact와 resume checkpoint를 구분하고 마지막에는 중단 없는 실행과 저장 후 재개한 실행을 실제로 비교합니다. 저장 파일이 존재한다는 사실은
           아직 복구가 된다는 증거가 아닙니다.
         </p>
       </div>

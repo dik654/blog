@@ -52,20 +52,15 @@ export default function RateLimitingAndReliabilityPatternsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Request retry는 실패한 요청을 같은 대상에 다시 보내는 절차입니다.
-            일시적 network 오류나 순간적인 과부하처럼 다시 보내면 성공할 수
-            있는 실패에 대응합니다.
+            실패한 요청을 같은 대상에 다시 보내는 것이 request retry입니다. 일시적 network 오류나 순간적인 과부하처럼 다시 보내면 성공할 수 있는 실패에 대응합니다.
           </p>
           <p>
-            문제는 실패 직후 모든 client가 동시에 재시도하면 이미 힘든
-            backend가 더 힘들어진다는 점입니다. Retry with backoff는 이
-            문제를 줄이려고 재시도 사이 대기 시간을 시도할 때마다 점점 늘리는
-            정책입니다.
+            문제는 실패 직후 모든 client가 동시에 재시도하면 이미 힘든 backend가 더 힘들어진다는 점입니다. Retry with backoff는 이 문제를 줄이려고 재시도 사이
+            대기 시간을 시도할 때마다 점점 늘립니다.
           </p>
           <p>
-            대기 시간을 매번 두 배로 늘리는 exponential backoff가 널리
-            쓰이고, 여기에 무작위 값(jitter)을 더해 여러 client의 재시도
-            시점이 정확히 겹치지 않게 흩어 놓습니다.
+            대기 시간을 매번 두 배로 늘리는 exponential backoff가 널리 쓰입니다. 여기에 무작위 값(jitter)을 더해 여러 client의 재시도 시점이 정확히 겹치지
+            않게 흩어 놓습니다.
           </p>
         </div>
         <ExplainedFormula
@@ -105,22 +100,16 @@ export default function RateLimitingAndReliabilityPatternsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Backoff를 아무리 정교하게 짜도 backend 자체가 완전히 죽었다면
-            재시도는 결과 없이 시간과 자원만 씁니다. Circuit breaker는 실패가
-            반복되면 이후 요청을 backend로 보내지 않고 즉시 실패시키는
-            장치입니다.
+            Backoff를 아무리 정교하게 짜도 backend 자체가 완전히 죽었다면 재시도는 결과 없이 시간과 자원만 씁니다. Circuit breaker는 실패가 반복되면 이후 요청을
+            backend로 보내지 않고 즉시 실패시킵니다.
           </p>
           <p>
-            Circuit breaker는 세 상태를 오갑니다. 평소에는 요청을 그대로
-            통과시키는 closed 상태이고, 실패율이 임계값을 넘으면 모든 요청을
-            즉시 실패시키는 open 상태로 바뀝니다. 일정 시간이 지나면
-            half-open 상태로 바뀌어 시험 요청 하나만 통과시켜 봅니다.
+            Circuit breaker는 세 상태를 오갑니다. 평소에는 요청을 그대로 통과시키는 closed 상태입니다. 실패율이 임계값을 넘으면 모든 요청을 즉시 실패시키는 open
+            상태로 바뀝니다. 일정 시간이 지나면 half-open 상태로 바뀌어 시험 요청 하나만 통과시켜 봅니다.
           </p>
           <p>
-            Health check는 backend가 지금 요청을 처리할 수 있는 상태인지
-            확인하는 별도의 점검입니다. Circuit breaker의 half-open 시험
-            요청과 달리, health check는 실제 트래픽과 무관하게 주기적으로
-            backend 상태만 따로 묻습니다.
+            Health check는 backend가 지금 요청을 처리할 수 있는 상태인지 따로 확인합니다. Circuit breaker의 half-open 시험 요청과 달리 health
+            check는 실제 트래픽과 무관하게 주기적으로 backend 상태만 묻습니다.
           </p>
         </div>
         <RateLimitingAndReliabilityPatternsViz />
@@ -169,24 +158,16 @@ export default function RateLimitingAndReliabilityPatternsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Rate limiting은 일정 시간 동안 허용할 처리량에 상한을 두어 그 이상
-            요청이 backend에 닿지 않게 막는 절차입니다. 무엇을 세느냐에 따라
-            request rate limit(요청 수), token rate limit(LLM이 처리·생성한
-            token 수), concurrency limit(동시에 진행 중인 요청 수) 세 종류로
-            나뉩니다.
+            Rate limiting은 일정 시간 동안 허용할 처리량에 상한을 두어 그 이상 요청이 backend에 닿지 않게 막습니다. 무엇을 세느냐에 따라 request rate
+            limit(요청 수), token rate limit(LLM이 처리·생성한 token 수), concurrency limit(동시에 진행 중인 요청 수) 세 종류로 나뉩니다.
           </p>
           <p>
-            Request rate limit은 초당 요청 수를 세고, token rate limit은
-            초당 소비·생성한 token 수를 셉니다. 같은 요청 수라도 요청마다
-            token 수가 크게 다른 LLM 서비스에서는 token rate limit이 더 정확한
-            부하 지표입니다.
+            Request rate limit은 초당 요청 수를 셉니다. Token rate limit은 초당 소비·생성한 token 수를 셉니다. 같은 요청 수라도 요청마다 token
+            수가 크게 다른 LLM 서비스에서는 token rate limit이 더 정확한 부하 지표입니다.
           </p>
           <p>
-            이 상한을 실제로 구현하는 표준 알고리즘이 token bucket과 leaky
-            bucket입니다. Token bucket은 일정 속도로 token을 채우는 통에서
-            요청마다 token을 꺼내 쓰고, 통이 비면 요청을 막습니다. Leaky
-            bucket은 요청을 큐에 담아 고정된 속도로만 흘려보내고 큐가 넘치면
-            초과분을 버립니다.
+            이 상한을 실제로 구현하는 표준 알고리즘이 token bucket과 leaky bucket입니다. Token bucket은 일정 속도로 token을 채우는 통에서 요청마다
+            token을 꺼내 씁니다. 통이 비면 요청을 막습니다. Leaky bucket은 요청을 큐에 담아 고정된 속도로만 흘려보내고 큐가 넘치면 초과분을 버립니다.
           </p>
         </div>
         <ExplainedFormula
@@ -243,11 +224,8 @@ export default function RateLimitingAndReliabilityPatternsArticle() {
           preview="Rate limit은 '초당 몇 건'을 세지만, concurrency limit은 '지금 동시에 진행 중인 요청이 몇 건'을 셉니다. 요청 하나가 오래 걸리는 LLM 서비스에서는 이 차이가 큽니다."
         >
           <p>
-            초당 요청 수가 낮아도 각 요청이 수십 초씩 걸리면 동시에 진행 중인
-            요청 수는 계속 쌓일 수 있습니다. Concurrency limit은 이 동시
-            진행 건수 자체에 상한을 둬, rate limit만으로는 못 막는 자원 고갈을
-            막습니다. 두 제한은 서로 다른 신호를 보므로 함께 쓰는 경우가
-            많습니다.
+            초당 요청 수가 낮아도 각 요청이 수십 초씩 걸리면 동시에 진행 중인 요청 수는 계속 쌓일 수 있습니다. Concurrency limit은 이 동시 진행 건수 자체에 상한을 둬
+            rate limit만으로는 못 막는 자원 고갈을 막습니다. 두 제한은 서로 다른 신호를 보므로 함께 쓰는 경우가 많습니다.
           </p>
         </ProgressiveDetail>
         <TermBreakdown
@@ -269,16 +247,12 @@ export default function RateLimitingAndReliabilityPatternsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Rate limit을 걸어도 순간적인 traffic 급증이나 backend 성능 저하로
-            시스템이 감당 범위를 넘을 수 있습니다. Load shedding은 이럴 때
-            일부 요청을 의도적으로 거절해 나머지 요청이라도 정상적으로 처리되게
-            지키는 절차입니다.
+            Rate limit을 걸어도 순간적인 traffic 급증이나 backend 성능 저하로 시스템이 감당 범위를 넘을 수 있습니다. Load shedding은 이럴 때 일부 요청을
+            의도적으로 거절해 나머지 요청이라도 정상적으로 처리되게 지킵니다.
           </p>
           <p>
-            Admission policy는 어떤 요청을 먼저 거절할지 정하는 규칙입니다.
-            예를 들어 유료 tenant보다 무료 tenant의 요청을 먼저 거절하거나,
-            이미 큐에서 오래 기다린 요청보다 방금 도착한 요청을 먼저
-            거절하는 식입니다.
+            어떤 요청을 먼저 거절할지는 admission policy가 정합니다. 예를 들어 유료 tenant보다 무료 tenant의 요청을 먼저 거절하거나, 이미 큐에서 오래 기다린
+            요청보다 방금 도착한 요청을 먼저 거절하는 식입니다.
           </p>
           <p>
             <Link to="/ai/vllm-serving#overview">vLLM 서빙</Link> 글이 다루는
@@ -303,18 +277,13 @@ export default function RateLimitingAndReliabilityPatternsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Reliability는 시스템이 요구된 조건에서 계속 올바르게 동작하는
-            정도를 가리키는 최상위 목표입니다. 이 목표는 그 자체로 구현하는
-            것이 아니라 앞 절들의 retry·circuit breaker·rate limiting과,
-            지금부터 볼 HA·fault tolerance·graceful degradation·failover가
-            함께 쌓아 만드는 결과입니다.
+            Reliability는 시스템이 요구된 조건에서 계속 올바르게 동작하는 정도를 가리키는 최상위 목표입니다. 이 목표는 그 자체로 구현하는 것이 아닙니다. 앞 절들의
+            retry·circuit breaker·rate limiting과 지금부터 볼 HA·fault tolerance·graceful degradation·failover가 함께
+            쌓아 만드는 결과입니다.
           </p>
           <p>
-            High availability(HA)는 중복 구성으로 한 구성 요소가 죽어도
-            서비스 전체가 계속 응답하게 만드는 목표이고, fault tolerance는
-            장애가 발생해도 시스템이 계속 정상적으로 동작하는 능력입니다.
-            Failover는 이 둘을 실제로 구현하는 절차로, 주 구성 요소가 죽으면
-            대기 중이던 예비 구성 요소로 트래픽을 옮깁니다.
+            High availability(HA)는 중복 구성으로 한 구성 요소가 죽어도 서비스 전체가 계속 응답하게 만드는 목표입니다. Fault tolerance는 장애가 발생해도
+            시스템이 계속 정상적으로 동작하는 능력을 말합니다. Failover는 이 둘을 실제로 구현하는 절차로, 주 구성 요소가 죽으면 대기 중이던 예비 구성 요소로 트래픽을 옮깁니다.
           </p>
           <p>
             Graceful degradation은 failover로도 전체 기능을 유지할 수 없을 때

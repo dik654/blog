@@ -73,9 +73,8 @@ export default function ReproducibleMlExecutionArticle() {
           question="두 output이 수치적으로 같다는 판정을 scale이 다른 tensor에도 적용하려면 어떻게 하나요?"
           idea={
             <p>
-              각 원소 차이를 absolute tolerance와 값의 크기에 비례한 relative
-              tolerance의 합과 비교하고, 모든 원소가 통과해야 numeric equality로
-              판정합니다.
+              각 원소 차이를 absolute tolerance와 값의 크기에 비례한 relative tolerance의 합과 비교합니다. 모든 원소가 통과해야 numeric
+              equality로 판정합니다.
             </p>
           }
           formula={String.raw`\begin{aligned}e_i&=|y_i-\hat y_i|\\\tau_i&=\varepsilon_a+\varepsilon_r|y_i|\\Q_{\rm num}&=\bigwedge_i[e_i\le\tau_i]\end{aligned}`}

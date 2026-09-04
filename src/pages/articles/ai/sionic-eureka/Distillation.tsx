@@ -23,9 +23,8 @@ export default function Distillation() {
           question="Teacher가 후보들 사이에 매긴 상대적 relevance를 student에게 어떻게 전달하는가?"
           idea={
             <p>
-              Query마다 positive와 15개 negative를 하나의 목록으로 묶고, teacher와
-              student 점수를 같은 temperature의 확률분포로 바꾼 뒤 두 분포의
-              차이를 줄입니다.
+              Query마다 positive와 15개 negative를 하나의 목록으로 묶습니다. Teacher와 student 점수를 같은 temperature의 확률분포로 바꾼 뒤 두
+              분포의 차이를 줄입니다.
             </p>
           }
           formula={String.raw`\begin{aligned}
@@ -61,10 +60,9 @@ P_i^S=\frac{e^{s_i/\tau}}{\sum_j e^{s_j/\tau}}`, annotation: ["분자에 둔 관
           interpretation="낮은 temperature는 teacher가 높게 둔 후보의 차이를 더 강조합니다. KL은 embedding 좌표 자체가 아니라 현재 후보 목록 안의 상대 점수 분포를 전달합니다."
         />
         <p className="leading-7">
-          student score는 cosine similarity이고, loss는 query별 후보군 안에서
-          teacher와 student의 분포를 맞춘다. 이 실험에서는 in-batch negative를
-          loss에 더하지 않아 저장한 teacher 후보와 student 후보의 support를
-          일치시켰다. temperature가 작을수록 상위 후보의 차이가 더 강조된다.
+          student score는 cosine similarity이고 loss는 query별 후보군 안에서 teacher와 student의 분포를 맞춘다. 이 실험에서는 in-batch
+          negative를 loss에 더하지 않아 저장한 teacher 후보와 student 후보의 support를 일치시켰다. temperature가 작을수록 상위 후보의 차이가 더
+          강조된다.
         </p>
         <p className="rounded-xl border-l-4 border-amber-400 bg-amber-500/5 p-4 text-sm leading-6">
           <strong>미공개 구현:</strong> “두 teacher 결합”은 프로젝트 설계지만,

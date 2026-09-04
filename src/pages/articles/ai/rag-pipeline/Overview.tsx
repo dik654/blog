@@ -7,7 +7,10 @@ export default function Overview() {
     <section id="overview" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">RAG의 목적은 모델에게 문서를 많이 보여주는 것이 아니라, 답변에서 허가된 원문까지 검증 가능한 경로를 만드는 것입니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p className="text-lg leading-8">사용자가 “지난달에 바뀐 환불 규정은 무엇인가?”라고 물었을 때 모델 파라미터만으로 답하면 최신성·출처·접근 권한을 확인하기 어렵습니다. Retrieval-Augmented Generation(RAG)은 질문에 필요한 외부 문서를 먼저 찾고, 선택한 근거를 모델 입력에 넣은 뒤, 답변의 각 주장과 원문 위치를 다시 연결합니다.</p>
+        <p className="text-lg leading-8">
+            사용자가 “지난달에 바뀐 환불 규정은 무엇인가?”라고 물었을 때 모델 파라미터만으로 답하면 최신성·출처·접근 권한을 확인하기 어렵습니다. Retrieval-Augmented
+            Generation(RAG)은 질문에 필요한 외부 문서를 먼저 찾습니다. 선택한 근거를 모델 입력에 넣은 뒤 답변의 각 주장과 원문 위치를 다시 연결합니다.
+          </p>
         <p>이 구조는 지식 저장소 자체가 아닙니다. 원문을 가져오지 못하거나, 가져온 문맥에서 정답 부분을 잘라냈거나, 모델이 근거와 다른 말을 하면 여전히 실패합니다. 그래서 ingestion·chunking·index·retrieval·context assembly·generation·citation을 하나의 trace로 관리해야 합니다.</p>
         <p>문서가 적고 안정적이며 한 번에 읽을 수 있다면 long-context prompting이 더 단순할 수 있습니다. 반대로 사실을 바꾸는 것이 아니라 출력 형식이나 말투를 익히게 하려면 <a href="/ai/domain-finetuning">fine-tuning</a>이 맞습니다. RAG는 자주 갱신되는 문서, source-level ACL, citation과 삭제 반영이 중요한 경우에 특히 유용합니다.</p>
       </div>
@@ -39,7 +42,12 @@ S(q)&=\underbrace{I_{\mathrm{source}}(q)I_{\mathrm{retrieve}}(q)}_{\text{query �
       <div className="not-prose my-8"><OverviewViz /></div>
       <div id="reading-rag" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">핵심 논문 · Retrieval-Augmented Generation</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">Lewis 등은 seq2seq parametric memory와 Wikipedia dense index라는 non-parametric memory를 결합하고, 같은 passage를 sequence 전체에 쓰는 방식과 token마다 passage를 달리할 수 있는 방식을 비교했습니다. 핵심 아이디어는 생성 모델 바깥의 명시적 memory를 검색해 provenance와 지식 갱신 경로를 마련한 것입니다. 논문의 Wikipedia·knowledge-intensive task 결과가 모든 사내 corpus와 최신 RAG 구현의 성능을 보장하는 것은 아닙니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            Lewis 등은 seq2seq parametric memory와 Wikipedia dense index라는 non-parametric memory를 결합했습니다. 그리고 같은
+            passage를 sequence 전체에 쓰는 방식과 token마다 passage를 달리할 수 있는 방식을 비교했습니다. 핵심 아이디어는 생성 모델 바깥의 명시적 memory를
+            검색해 provenance와 지식 갱신 경로를 마련한 것입니다. 논문의 Wikipedia·knowledge-intensive task 결과가 모든 사내 corpus와 최신
+            RAG 구현의 성능을 보장하는 것은 아닙니다.
+          </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/2005.11401" target="_blank" rel="noreferrer">문제 정의와 두 RAG formulation 보기</a>
       </div>
     </section>

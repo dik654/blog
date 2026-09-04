@@ -328,11 +328,9 @@ M_{KV}(T)
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <h2>DeltaNet은 같은 크기의 matrix를 읽고, 틀린 만큼만 고쳐 씁니다</h2>
           <p className="leading-8">
-            단순 누적은 새 key·value가 올 때마다 outer product를 계속 더합니다.
-            하지만 같은 key 방향에 이미 알맞은 value가 기록돼 있다면 또 더할
-            이유가 없습니다. Delta rule은 현재 state가 그 key에서 예측하는 값을
-            먼저 읽고, 실제 value와의 차이만 다시 씁니다. 그래서 이름의 delta는
-            “새 value 전체”가 아니라 “현재 예측에서 어긋난 양”입니다.
+            단순 누적은 새 key·value가 올 때마다 outer product를 계속 더합니다. 하지만 같은 key 방향에 이미 알맞은 value가 기록돼 있다면 또 더할 이유가
+            없습니다. Delta rule은 현재 state가 그 key에서 예측하는 값을 먼저 읽습니다. 그리고 실제 value와의 차이만 다시 씁니다. 이름의 delta가 “새
+            value 전체”가 아니라 “현재 예측에서 어긋난 양”인 건 그래서입니다.
           </p>
         </div>
 
@@ -467,23 +465,17 @@ M_\Delta
           <div className="prose prose-neutral max-w-none dark:prose-invert">
             <h3>DeltaNet의 state는 token이 아니라 key-value 연관을 압축합니다</h3>
             <p className="leading-8">
-              DeltaNet의 48개 state head는 각각 128×128 association matrix
-              하나만 유지하고, 새 token은 그 위에 prediction error만 다시 써
-              표현을 갱신합니다. 압축하는 대상은 개별 token 원본이 아니라
-              key가 가리키는 value의 연관 그 자체입니다.
+              DeltaNet의 48개 state head는 각각 128×128 association matrix 하나만 유지합니다. 새 token은 그 위에 prediction
+              error만 다시 써 표현을 갱신합니다. 이때 압축 대상은 개별 token 원본이 아닙니다. Key가 가리키는 value의 연관 그 자체입니다.
             </p>
             <p className="leading-8">
-              그래서 이 state는 attention layer가 갖는 explicit token memory,
-              즉 token마다의 key와 value를 그대로 나열해 둔 기록과 저장
-              방식부터 다릅니다.
+              그래서 이 state는 attention layer의 explicit token memory와 저장 방식부터 다릅니다. Explicit token memory는
+              token마다의 key와 value를 그대로 나열해 둔 기록입니다.
             </p>
             <p className="leading-8">
-              역할 분담은 이 차이에서 나옵니다. Attention layer 16개는
-              explicit token memory를 그대로 남겨 두므로 어떤 token이든
-              정확히 다시 찾아 올 수 있고, DeltaNet layer 48개는 compressed
-              state로 대부분의 문맥을 요약해 memory와 연산을 아낍니다. 한쪽이
-              정확한 조회를, 다른 쪽이 압축을 맡는 구도이며 두 state를 합쳐야
-              request 하나가 실제로 쓰는 memory가 됩니다.
+              역할 분담은 이 차이에서 나옵니다. Attention layer 16개는 explicit token memory를 그대로 남겨 두므로 어떤 token이든 정확히 다시 찾아
+              올 수 있습니다. DeltaNet layer 48개 쪽은 compressed state로 대부분의 문맥을 요약해 memory와 연산을 아낍니다. 한쪽이 정확한 조회를 맡고
+              다른 쪽이 압축을 맡습니다. 두 state를 합쳐야 request 하나가 실제로 쓰는 memory가 됩니다.
             </p>
           </div>
           <TermBreakdown
@@ -510,9 +502,8 @@ M_\Delta
           />
           <div className="prose prose-neutral max-w-none dark:prose-invert">
             <p className="leading-8">
-              추론 시점의 memory는 이 두 state를 더한 값입니다. Context
-              32K에서 attention KV는 약 2 GiB, DeltaNet core state는
-              request마다 고정된 144 MiB이므로 합은 약 2.14 GiB입니다.
+              추론 시점의 memory는 이 두 state를 더해 나옵니다. Context 32K에서 attention KV는 약 2 GiB이고 DeltaNet core state는
+              request마다 고정된 144 MiB이니 합은 약 2.14 GiB입니다.
             </p>
             <p className="leading-8">
               Context가 262K로 늘어도 DeltaNet 쪽은 그대로인 채 attention

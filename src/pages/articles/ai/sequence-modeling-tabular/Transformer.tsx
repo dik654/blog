@@ -45,11 +45,9 @@ export default function Transformer() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>여러 event hidden state를 한 개의 sample representation으로 모읍니다</h3>
         <p>
-          Sequence-level target에는 [CLS], 마지막 유효 token, masked mean 같은
-          pooling이 필요합니다. 마지막 token은 최근 상태를 강조하고, mean은 모든
-          위치를 균등하게 모으며, [CLS]는 attention을 통해 필요한 정보를 학습해
-          모읍니다. 어느 방식이 맞는지는 target의 evidence가 어디에 놓이는지에
-          따라 달라집니다.
+          Sequence-level target에는 [CLS], 마지막 유효 token, masked mean 같은 pooling이 필요합니다. 마지막 token은 최근 상태를 강조하고
+          mean은 모든 위치를 균등하게 모읍니다. [CLS]는 attention을 통해 필요한 정보를 학습해 모읍니다. 어느 방식이 맞는지는 target의 evidence가 어디에
+          놓이는지에 따라 달라집니다.
         </p>
       </div>
 
@@ -74,11 +72,9 @@ export default function Transformer() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Order-shuffle intervention으로 순서가 실제 성능을 만드는지 확인합니다</h3>
         <p>
-          Sequence model이 flat baseline보다 좋아도 그 원인이 순서라고 단정할 수는
-          없습니다. 더 큰 parameter 수나 event embedding만으로 좋아졌을 수 있기
-          때문입니다. Validation sample 안에서 event multiset과 길이는 유지한 채
-          순서만 섞고 같은 model을 평가하면 order signal에 대한 의존도를 분리할 수
-          있습니다.
+          Sequence model이 flat baseline보다 좋아도 그 원인이 순서라고 단정할 수는 없습니다. 더 큰 parameter 수나 event embedding만으로 좋아졌을
+          수 있기 때문입니다. Validation sample 안에서 event multiset과 길이는 그대로 두고 순서만 섞어 같은 model을 평가하면 order signal 의존도를
+          분리할 수 있습니다.
         </p>
       </div>
 

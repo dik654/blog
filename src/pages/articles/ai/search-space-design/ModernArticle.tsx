@@ -139,10 +139,9 @@ export default function SearchSpaceDesignArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Cartesian product는 모든 optimizer에 momentum·beta1·beta2를 동시에
-            붙입니다. 그러면 사용되지 않는 값만 다른 duplicate configurations가
-            생깁니다. Conditional space는 optimizer를 먼저 고르고 해당 branch의
-            children만 생성해 한 configuration이 한 실행 의미를 갖게 합니다.
+            Cartesian product는 모든 optimizer에 momentum·beta1·beta2를 동시에 붙입니다. 그러면 사용되지 않는 값만 다른 duplicate
+            configurations가 생깁니다. Conditional space는 optimizer를 먼저 고르고 해당 branch의 children만 생성하므로
+            configuration 하나가 실행 하나에 정확히 대응합니다.
           </p>
         </div>
         <ExplainedFormula
@@ -215,10 +214,8 @@ export default function SearchSpaceDesignArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Upper bound가 반복해서 선택되면 더 큰 값이 좋다는 신호일 수도 있고,
-            다른 축·budget·regularization이 잘못됐다는 신호일 수도 있습니다.
-            Pilot evidence와 failure distribution을 확인하고 search-space
-            revision을 올린 새 study에서 확장합니다. 그래야 이전 sampler
+            Upper bound가 반복해서 선택되면 더 큰 값이 좋다는 신호일 수도 있고 다른 축·budget·regularization이 잘못됐다는 신호일 수도 있습니다. Pilot
+            evidence와 failure distribution을 확인하고 search-space revision을 올린 새 study에서 확장합니다. 그래야 이전 sampler
             history가 어느 확률 모델에서 만들어졌는지 남습니다.
           </p>
         </div>

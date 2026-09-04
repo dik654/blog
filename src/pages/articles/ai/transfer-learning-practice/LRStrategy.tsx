@@ -8,11 +8,9 @@ export default function LRStrategy() {
       <h2 className="mb-6 text-2xl font-bold">Discriminative LR은 같은 gradient라도 layer별 이동량을 다르게 정합니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Random initialization인 head와 이미 유용한 representation을 가진 lower
-          backbone이 같은 learning rate를 써야 할 이유는 없습니다. Param group을
-          lower·upper·head로 나누고 head에는 큰 후보 LR, lower block에는 작은 후보
-          LR을 둘 수 있습니다. 다만 “층마다 10배”는 법칙이 아니므로 실제 update가
-          parameter 크기에 비해 얼마나 큰지 측정합니다.
+          Head는 random initialization 상태이고 lower backbone은 이미 쓸 만한 representation을 갖췄습니다. 둘이 같은 learning rate를
+          써야 할 이유는 없습니다. Param group을 lower·upper·head로 나누고 head에는 큰 후보 LR, lower block에는 작은 후보 LR을 둘 수 있습니다.
+          다만 “층마다 10배”는 법칙이 아니므로 실제 update가 parameter 크기에 비해 얼마나 큰지를 측정합니다.
         </p>
       </div>
       <ExplainedFormula
@@ -42,7 +40,11 @@ export default function LRStrategy() {
         </p>
         <div id="paper-ulmfit-transfer" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
           <p className="text-xs font-bold text-primary">논문 읽기 · ULMFiT</p>
-          <p className="mt-2 text-sm leading-6 text-muted-foreground">ULMFiT은 AWD-LSTM language model transfer에서 discriminative fine-tuning, slanted triangular learning rate와 gradual unfreezing을 함께 제안했습니다. 이 recipe는 중요한 역사적 근거지만, 현재의 모든 Transformer·vision backbone에도 같은 layer ratio와 순서가 최적이라는 뜻은 아닙니다.</p>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            ULMFiT은 AWD-LSTM language model transfer에서 discriminative fine-tuning, slanted triangular learning
+            rate와 gradual unfreezing을 함께 제안했습니다. 이 recipe는 중요한 역사적 근거입니다. 다만 그 실험이 쓴 layer ratio와 순서를 현재의 모든
+            Transformer·vision backbone에 그대로 옮겨도 최적이라는 보장은 없습니다.
+          </p>
           <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://aclanthology.org/P18-1031/" target="_blank" rel="noreferrer">논문의 세 fine-tuning 기법과 실험 범위 보기</a>
         </div>
       </div>

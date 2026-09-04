@@ -31,7 +31,10 @@ export default function CodePoints() {
       <div id="paper-unicode-segmentation" className="not-prose my-8 border-l border-primary/50 pl-4 scroll-mt-24">
         <p className="text-xs font-bold text-primary">표준 읽기 · 사용자에게 보이는 text 경계</p>
         <p className="mt-2 text-sm font-semibold">Unicode Standard Annex #29 — Unicode Text Segmentation</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">Code point sequence에서 grapheme cluster·word·sentence boundary를 판정하는 기본 규칙과 확장 규칙을 정의합니다. Font가 그리는 glyph 수나 모든 언어의 의미론적 ‘글자’를 하나의 영구 규칙으로 고정한다는 뜻은 아닙니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            Code point sequence에서 grapheme cluster·word·sentence boundary를 판정하는 기본 규칙과 확장 규칙을 정의합니다. Font가 그리는
+            glyph 수도, 모든 언어의 의미론적 ‘글자’도 하나의 영구 규칙으로 고정하지는 않습니다.
+          </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary underline-offset-4 hover:underline" href="https://www.unicode.org/reports/tr29/" target="_blank" rel="noreferrer">최신 Unicode text segmentation 규격 보기</a>
       </div>
     </section>

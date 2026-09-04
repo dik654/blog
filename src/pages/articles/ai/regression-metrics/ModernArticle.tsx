@@ -20,10 +20,8 @@ export default function RegressionMetricsArticle() {
             공유하지만, 크기에 붙이는 비용 곡선이 다릅니다.
           </p>
           <p>
-            Metric을 바꾸면 report 숫자만 바뀌는 것이 아닙니다. 같은 loss로
-            학습할 경우 model이 향하는 population target도 조건부 평균 또는
-            중앙값으로 달라집니다. 먼저 residual의 모양을 보고, 그다음 비용
-            곡선과 예측 target을 조합합니다.
+            Metric을 바꾸면 report 숫자만 바뀌는 것이 아닙니다. 같은 loss로 학습할 경우 model이 향하는 population target도 조건부 평균 또는 중앙값으로
+            달라집니다. 먼저 residual의 모양을 봅니다. 그다음 비용 곡선과 예측 target을 조합합니다.
           </p>
         </div>
         <TermBreakdown
@@ -73,9 +71,8 @@ export default function RegressionMetricsArticle() {
           question="Residual [1,1,1,9]에서 MAE와 RMSE가 왜 다르게 반응하나요?"
           idea={
             <p>
-              먼저 각 residual의 방향을 없앱니다. MAE는 절댓값을 그대로
-              평균하고, RMSE는 제곱으로 큰 오류를 확대한 평균에 마지막으로
-              제곱근을 씌워 원래 단위로 돌아옵니다.
+              먼저 각 residual의 방향을 없앱니다. MAE는 절댓값을 그대로 평균합니다. RMSE는 제곱으로 큰 오류를 확대한 평균에 마지막으로 제곱근을 씌워 원래 단위로
+              돌아옵니다.
             </p>
           }
           formula={String.raw`r_i=y_i-\hat y_i,\quad \mathrm{MAE}=n^{-1}\sum_i|r_i|,\quad \mathrm{RMSE}=\sqrt{n^{-1}\sum_i r_i^2}`}

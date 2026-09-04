@@ -17,10 +17,8 @@ export default function Loading() {
           <code> SKILL.md</code> 전체를 읽습니다.
         </p>
         <p>
-          본문에서 reference를 가리키더라도 모두 한꺼번에 읽는 것이 아니라 현재
-          task에 필요한 파일만 이어서 엽니다. 예를 들어 PDF 처리 Skill이
-          spreadsheet와 PDF 지침을 모두 갖고 있어도, PDF 요청에서는 PDF reference만
-          읽습니다. 이 구조 때문에 metadata는 routing에 충분히 구체적이어야 하고,
+          본문에서 reference를 가리키더라도 모두 한꺼번에 읽지는 않습니다. 현재 task에 필요한 파일만 이어서 엽니다. 예를 들어 PDF 처리 Skill이 spreadsheet와
+          PDF 지침을 모두 갖고 있어도 PDF 요청에서는 PDF reference만 읽습니다. 이 구조 때문에 metadata는 routing에 충분히 구체적이어야 하고
           reference는 본문에서 언제 읽을지 명시해야 합니다.
         </p>
       </div>
@@ -39,11 +37,9 @@ export default function Loading() {
           일부만 읽어도 된다는 뜻은 아닙니다.
         </p>
         <p>
-          따라서 “설치되어 있다”와 “이번 request의 후보에 노출되었다”를 구분해야
-          합니다. 많은 Skill을 운용할 때는 충돌하는 description, hard negative
-          request, 누락 경고와 실제 token·latency를 함께 측정합니다. 비슷한 Skill을
-          무작정 늘리기보다 한 job의 정본 Skill로 통합하거나 trigger scope를 더
-          분명히 나누는 편이 안전합니다.
+          “설치되어 있다”와 “이번 request의 후보에 노출되었다”는 구분해야 합니다. 많은 Skill을 운용할 때는 충돌하는 description, hard negative
+          request, 누락 경고를 실제 token·latency와 나란히 놓고 잽니다. 비슷한 Skill을 무작정 늘리기보다 한 job의 정본 Skill로 통합하거나 trigger
+          scope를 더 분명히 나누는 편이 안전합니다.
         </p>
       </div>
     </section>

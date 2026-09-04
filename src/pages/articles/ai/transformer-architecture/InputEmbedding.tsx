@@ -12,12 +12,9 @@ export default function InputEmbedding() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          Position 정보가 없는 self-attention은 입력 token을 함께 순열해도 같은
-          규칙으로 출력 순서만 함께 바뀌는 permutation-equivariant 연산입니다.
-          문장에서 순서와 거리를 구분하려면 별도 신호가 필요합니다. 원 논문의
-          sinusoidal encoding은 embedding에 더했고, learned absolute embedding도
-          같은 위치에 들어갑니다. RoPE는 Q·K를 회전시키며, ALiBi 계열은 score에
-          거리 bias를 더합니다.
+          Position 정보가 없는 self-attention은 permutation-equivariant 연산입니다. 입력 token을 함께 순열하면 같은 규칙 아래 출력 순서만 따라
+          바뀝니다. 문장에서 순서와 거리를 구분하려면 별도 신호가 필요합니다. 원 논문의 sinusoidal encoding은 embedding에 더했고 learned absolute
+          embedding도 같은 위치에 들어갑니다. RoPE는 Q·K를 회전시키고 ALiBi 계열은 score에 거리 bias를 더합니다.
         </p>
         <p>
           예를 들어 <code>개가 사람을 문다</code>와 <code>사람이 개를 문다</code>는

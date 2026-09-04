@@ -14,10 +14,8 @@ export default function Rolling() {
           제외하도록 오른쪽이 열린 과거 window를 사용합니다.
         </p>
         <p>
-          Row-count window는 최근 N개 사건의 상태를, duration window는 최근 Δ시간의
-          활동량을 묻습니다. Event가 불규칙하면 둘의 표본 수가 달라지므로 mean과
-          함께 count·coverage·time-since-last-event를 기록하면 “평균 10”이 한 번의
-          관측인지 백 번의 관측인지 구분할 수 있습니다.
+          Row-count window는 최근 N개 사건의 상태를, duration window는 최근 Δ시간의 활동량을 묻습니다. Event가 불규칙하면 둘의 표본 수가 달라집니다.
+          mean과 함께 count·coverage·time-since-last-event를 기록하면 “평균 10”이 한 번의 관측인지 백 번의 관측인지 구분됩니다.
         </p>
       </div>
 
@@ -60,10 +58,8 @@ export default function Rolling() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          짧은 window는 변화에 빠르게 반응하지만 noise가 크고, 긴 window는
-          안정적이지만 regime change를 늦게 반영합니다. 여러 window를 늘어놓기
-          전에 각 window가 나타내는 업무 시간 척도를 적고 seeded ablation으로
-          품질·latency·feature freshness를 비교합니다.
+          짧은 window는 변화에 빠르게 반응하지만 noise가 큽니다. 긴 window는 안정적인 대신 regime change를 늦게 반영합니다. 여러 window를 늘어놓기 전에 각
+          window가 나타내는 업무 시간 척도를 적고 seeded ablation으로 품질·latency·feature freshness를 비교합니다.
         </p>
       </div>
     </section>

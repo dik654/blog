@@ -76,15 +76,26 @@ export default function FeedForward() {
 
       <div id="paper-pre-ln" className="not-prose mt-8 scroll-mt-24 border-l border-border/80 pl-4">
         <p className="text-xs font-bold text-primary">논문 해설 · On Layer Normalization in the Transformer Architecture</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">이 분석은 initialization 부근의 gradient behavior를 통해 Post-LN이 warm-up에 더 민감할 수 있는 이유와 Pre-LN의 경로 차이를 설명합니다. 특정 mean-field 가정과 실험 설정의 분석이므로 Pre-LN이 모든 깊이·optimizer·residual variant에서 항상 더 좋은 최종 성능을 보장한다는 뜻은 아닙니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            이 분석은 initialization 부근의 gradient behavior로 Post-LN이 warm-up에 더 민감해질 수 있는 이유와 Pre-LN의 경로 차이를
+            설명합니다. 전제가 특정 mean-field 가정과 실험 설정인 만큼 결론이 미치는 범위도 거기까지입니다. 모든 깊이·optimizer·residual variant에서
+            Pre-LN의 최종 성능이 늘 앞선다는 보장은 여기서 나오지 않습니다.
+          </p>
       </div>
       <div id="paper-glu" className="not-prose mt-6 scroll-mt-24 border-l border-border/80 pl-4">
         <p className="text-xs font-bold text-primary">논문 해설 · GLU Variants Improve Transformer</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">논문은 Transformer FFN에서 ReLU/GELU과 여러 gated linear unit을 controlled recipe로 비교해 GEGLU·SwiGLU 계열의 개선을 보고했습니다. 이는 activation 이름 하나의 보편 우월성이 아니라 parameter budget과 FFN 폭을 맞춘 실험 범위의 결과입니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            논문은 Transformer FFN에서 ReLU/GELU과 여러 gated linear unit을 controlled recipe로 비교해 GEGLU·SwiGLU 계열의 개선을
+            보고했습니다. 이 개선은 activation 이름 하나의 보편 우월성이 아니라 parameter budget과 FFN 폭을 맞춰 놓은 실험 범위 안의 결과입니다.
+          </p>
       </div>
       <div id="paper-pure-attention-rank" className="not-prose mt-6 scroll-mt-24 border-l border-border/80 pl-4">
         <p className="text-xs font-bold text-primary">후속 분석 · Pure attention의 rank collapse</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">Pure self-attention을 깊게 쌓을 때 token representation이 uniform해지는 이론적 경향을 분석해 skip connection과 MLP의 역할을 분리합니다. 분석한 simplified attention 조건의 결과이므로 실제 trained Transformer가 반드시 같은 속도로 collapse한다는 예측으로 읽으면 안 됩니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            Pure self-attention을 깊게 쌓으면 token representation이 uniform해지는 이론적 경향이 나타납니다. 이 경향을 분석해 skip
+            connection과 MLP의 역할을 갈라냅니다. 어디까지나 simplified attention 조건에서 얻은 결과이므로 실제 trained Transformer가 반드시
+            같은 속도로 collapse한다는 예측으로 읽어서는 안 됩니다.
+          </p>
       </div>
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
@@ -119,23 +130,18 @@ export default function FeedForward() {
           실제 model의 공개 parameter 수와는 다를 수 있습니다.
         </p>
         <p className="leading-8">
-          같은 12d² 예산이라도 d_model을 늘려 폭을 넓히거나 layer 수를 늘려
-          깊이를 더할 수 있습니다. 폭을 넓히면 한 층이 한 번에 표현하는
-          관계가 늘지만 attention·FFN 연산량은 d²에 비례해 빠르게 커지고,
-          깊이를 늘리면 같은 폭에서 함수를 여러 번 합성해 표현력을 쌓지만
-          층이 깊어질수록 residual stream을 타고 흐르는 gradient가 불안정해지기
-          쉽습니다. 이 맞바꿈이 depth-width tradeoff입니다.
+          같은 12d² 예산이라도 d_model을 늘려 폭을 넓힐 수도, layer 수를 늘려 깊이를 더할 수도 있습니다. 폭을 넓히면 한 층이 한 번에 표현하는 관계가 늘지만
+          attention·FFN 연산량이 d²에 비례해 빠르게 커집니다. 깊이를 늘리면 같은 폭에서 함수를 여러 번 합성해 표현력을 쌓는 대신 층이 깊어질수록 residual
+          stream을 타고 흐르는 gradient가 불안정해지기 쉽습니다. 이 맞바꿈이 depth-width tradeoff입니다.
         </p>
 
         <h3 id="residual-stream" className="scroll-mt-20">
           Residual 덧셈이 쌓여 만드는 공유 통로가 residual stream이다
         </h3>
         <p className="leading-8">
-          Residual connection은 sublayer가 낸 update F(x)로 state를 덮어
-          쓰는 대신 입력 x에 그대로 더해 y=x+F(x)를 만드는 shortcut입니다.
-          Block마다 이 덧셈이 반복되며 쌓이는 하나의 누적 vector를 모든
-          layer가 읽고 쓰는 공유 통로로 보는 관점을 residual stream이라
-          부릅니다.
+          Residual connection은 sublayer가 낸 update F(x)로 state를 덮어 쓰지 않습니다. 대신 입력 x에 그대로 더해 y=x+F(x)를 만드는
+          shortcut입니다. 이 덧셈이 block마다 반복되면 누적 vector 하나가 쌓입니다. 모든 layer가 그 vector를 읽고 쓰는 공유 통로로 보는 관점을 residual
+          stream이라 부릅니다.
         </p>
         <p className="leading-8">
           역전파에서 y=x+F(x)의 x에 대한 Jacobian은 I+∂F/∂x로, 항등 항 I가
@@ -148,12 +154,9 @@ export default function FeedForward() {
           32개 layer를 지나도 최초 gradient 크기가 유지됩니다.
         </p>
         <p className="leading-8">
-          Pre-norm은 F 앞에 normalization을 둬 sublayer가 항상 정규화된
-          입력을 보게 하고 update 자체의 초기 크기를 작게 유지시켜, 깊은
-          network에서 이 identity 경로의 이점이 학습 초반부터 안정적으로
-          작동하게 만듭니다. Post-norm은 덧셈 결과를 정규화하므로 residual
-          stream의 raw scale이 layer마다 달라져 warm-up 없이는 초기
-          gradient가 더 크게 흔들립니다.
+          Pre-norm은 F 앞에 normalization을 둡니다. Sublayer는 늘 정규화된 입력을 보게 되고 update 자체의 초기 크기도 작게 유지됩니다. 그래서 깊은
+          network에서도 이 identity 경로의 이점이 학습 초반부터 안정적으로 작동합니다. Post-norm은 덧셈 결과를 정규화하므로 residual stream의 raw
+          scale이 layer마다 달라져 warm-up 없이는 초기 gradient가 더 크게 흔들립니다.
         </p>
       </div>
 
@@ -245,10 +248,8 @@ export default function FeedForward() {
       >
         <p className="text-xs font-bold text-primary">논문 해설 · Root Mean Square Layer Normalization</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          평균을 빼는 연산 없이 제곱평균만으로 재정규화해도 LayerNorm과 비슷한
-          안정화 효과를 내면서 reduction 연산과 실행 시간을 줄일 수 있음을
-          여러 model·task 실험으로 보였습니다. 모든 architecture·규모에서
-          LayerNorm을 완전히 대체해야 한다는 결론은 아닙니다.
+          평균을 빼는 연산 없이 제곱평균만으로 재정규화해도 LayerNorm과 비슷한 안정화 효과를 내면서 reduction 연산과 실행 시간을 줄일 수 있다는 것을 여러
+          model·task 실험으로 보였습니다. 그렇다고 모든 architecture·규모에서 LayerNorm을 완전히 걷어내라는 이야기는 아닙니다.
         </p>
       </div>
     </section>

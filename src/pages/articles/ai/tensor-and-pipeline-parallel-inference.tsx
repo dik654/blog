@@ -24,22 +24,19 @@ export default function TensorAndPipelineParallelInferenceArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Distributed inference 는 model 하나를 여러 GPU 에 나누거나 복제해 forward 를 돌리는
-            일입니다. 나눌 수 있는 차원은 넷입니다. weight 행렬의 안쪽 차원을 나누는 tensor
-            parallel(TP), layer 를 구간으로 나누는 pipeline parallel(PP), model 을 통째로 복제하는
-            data parallel(DP), token 열을 나누는 sequence·context parallel 입니다.
+            Model 하나를 여러 GPU 에 나누거나 복제해 forward 를 돌리는 일이 distributed inference 입니다. 나눌 수 있는 차원은 넷입니다. weight
+            행렬의 안쪽 차원을 나누는 tensor parallel(TP), layer 를 구간으로 나누는 pipeline parallel(PP), model 을 통째로 복제하는 data
+            parallel(DP), token 열을 나누는 sequence·context parallel 입니다.
           </p>
           <p>
-            어느 차원을 나누느냐가 GPU 사이에 오가는 통신을 정합니다. TP 는 layer 마다 부분합을
-            합치는 all-reduce 를 두 번 보내고, PP 는 stage 경계에서 activation 을 한 번 넘기며, DP
-            는 요청을 나눠 받을 뿐 forward 중에는 아무것도 보내지 않습니다. context parallel 은
-            attention 안에서 key·value 블록을 이웃 GPU 로 돌립니다.
+            어느 차원을 나누느냐가 GPU 사이에 오가는 통신을 정합니다. TP 는 layer 마다 부분합을 합치는 all-reduce 를 두 번 보내고 PP 는 stage 경계에서
+            activation 을 한 번 넘깁니다. DP 는 요청을 나눠 받을 뿐 forward 중에 아무것도 보내지 않습니다. context parallel 은 attention 안에서
+            key·value 블록을 이웃 GPU 로 돌립니다.
           </p>
           <p>
-            이 글은 그 통신을 byte 와 μs 로 셉니다. hidden 8192 인 layer 하나를 TP 8 로 나누면
-            token 2048 개의 prefill 에서 all-reduce 한 번이 GPU 당 약 59 MB 를 옮기고, PP 4 에
-            microbatch 8 개를 흘리면 시간의 27% 가 bubble 로 빕니다. 이런 숫자가 다음 글의 배치
-            판단 입력이 됩니다.
+            이 글은 그 통신을 byte 와 μs 로 셉니다. hidden 8192 인 layer 하나를 TP 8 로 나누면 token 2048 개의 prefill 에서 all-reduce
+            한 번이 GPU 당 약 59 MB 를 옮깁니다. PP 4 에 microbatch 8 개를 흘리면 시간의 27% 가 bubble 로 빕니다. 이런 숫자가 다음 글의 배치 판단
+            입력이 됩니다.
           </p>
           <p>
             GPU 수가 세 축의 곱 DP × TP × PP 라는 layout 규칙은{" "}
@@ -58,33 +55,28 @@ export default function TensorAndPipelineParallelInferenceArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Tensor parallelism 은 한 layer 의 weight 행렬을 GPU 여러 장이 조각으로 나눠 갖고 같은
-            입력에 대해 각자 자기 조각의 곱만 계산하는 방식입니다. 나누는 GPU 수가 TP degree 이고,
-            degree 가 8 이면 각 GPU 의 weight 와 그 weight 를 읽는 시간이 8 분의 1 이 됩니다.
+            한 layer 의 weight 행렬을 GPU 여러 장이 조각으로 나눠 갖고 같은 입력에 대해 각자 자기 조각의 곱만 계산합니다. 이것이 tensor parallelism
+            입니다. 나누는 GPU 수가 TP degree 이고 degree 가 8 이면 각 GPU 의 weight 와 그 weight 를 읽는 시간이 8 분의 1 이 됩니다.
           </p>
           <p>
-            자르는 축은 두 가지입니다. 행렬 A 를 열 방향으로 A = [A₁, A₂] 로 나누면 각 GPU 가 XA₁,
-            XA₂ 를 독립적으로 계산하고 결과도 열 조각으로 남는데 이것이 column parallelism 입니다.
-            행 방향으로 B = [B₁; B₂] 로 나누면 입력도 열 조각으로 들어와야 하고 출력은 Y₁B₁ + Y₂B₂
-            의 부분합이 되어 합쳐야 하는데 이것이 row parallelism 입니다.
+            자르는 축은 두 가지입니다. 행렬 A 를 열 방향으로 A = [A₁, A₂] 로 나누면 각 GPU 가 XA₁, XA₂ 를 독립적으로 계산하고 결과도 열 조각으로 남습니다.
+            이것이 column parallelism 입니다. 행 방향으로 B = [B₁; B₂] 로 나누면 입력도 열 조각으로 들어와야 하고 출력은 Y₁B₁ + Y₂B₂ 의 부분합이 되어
+            합쳐야 합니다. 이쪽이 row parallelism 입니다.
           </p>
           <p>
-            Megatron-LM 은 MLP 의 첫 GEMM 을 column, 둘째 GEMM 을 row 로 자릅니다. 이유는 그 사이의
-            GeLU 때문입니다. 첫 GEMM 을 row 로 자르면 GeLU(X₁A₁ + X₂A₂) 를 계산하기 전에 부분합을
-            합쳐야 하지만, column 으로 자르면 GeLU(XA₁) 과 GeLU(XA₂) 를 따로 적용해도 결과가
-            같습니다. 그 열 조각이 둘째 GEMM 의 row 입력으로 그대로 들어갑니다.
+            Megatron-LM 은 MLP 의 첫 GEMM 을 column, 둘째 GEMM 을 row 로 자릅니다. 그 사이의 GeLU 때문입니다. 첫 GEMM 을 row 로 자르면
+            GeLU(X₁A₁ + X₂A₂) 를 계산하기 전에 부분합을 합쳐야 하지만 column 으로 자르면 GeLU(XA₁) 과 GeLU(XA₂) 를 따로 적용해도 결과가 같습니다. 그
+            열 조각이 둘째 GEMM 의 row 입력으로 그대로 들어갑니다.
           </p>
           <p>
-            Attention 도 같은 꼴입니다. Q·K·V projection 은 head 단위로 column 을 나눠 각 GPU 가 자기
-            head 의 attention 을 완전히 로컬로 계산하고, 그 뒤의 output projection 을 row 로 잘라
-            부분합을 만듭니다. 그래서 transformer layer 하나의 forward 에는 attention 끝과 MLP 끝,
-            딱 두 곳에서만 all-reduce 가 필요합니다.
+            Attention 도 같은 꼴입니다. Q·K·V projection 은 head 단위로 column 을 나눠 각 GPU 가 자기 head 의 attention 을 완전히 로컬로
+            계산합니다. 그 뒤의 output projection 을 row 로 잘라 부분합을 만듭니다. 그래서 transformer layer 하나의 forward 에는 attention
+            끝과 MLP 끝, 딱 두 곳에서만 all-reduce 가 필요합니다.
           </p>
           <p>
-            All-reduce 가 옮기는 byte 는 그 지점의 activation 크기입니다. token 수 T, hidden h, FP16
-            이면 T × h × 2 byte 이고, 아래 식은 ring 방식으로 그 byte 를 합칠 때 GPU 하나가 실제로
-            내보내는 양과 시간을 셉니다. TP degree 를 올릴수록 각 GPU 의 계산은 줄지만 이 두 번의
-            all-reduce 는 layer 마다 그대로 남는 것이 TP communication overhead 입니다.
+            All-reduce 가 옮기는 byte 는 그 지점의 activation 크기입니다. token 수 T, hidden h, FP16 이면 T × h × 2 byte 입니다.
+            아래 식은 ring 방식으로 그 byte 를 합칠 때 GPU 하나가 실제로 내보내는 양과 시간을 셉니다. TP degree 를 올릴수록 각 GPU 의 계산은 줄지만 이 두 번의
+            all-reduce 는 layer 마다 그대로 남습니다. 이것이 TP communication overhead 입니다.
           </p>
         </div>
         <ExplainedFormula
@@ -143,16 +135,14 @@ export default function TensorAndPipelineParallelInferenceArticle() {
             에 돌려줍니다.
           </p>
           <p>
-            NCCL 문서는 reduce-scatter 뒤에 all-gather 를 실행하면 all-reduce 와 같다고 적습니다. 이
-            등식이 중요한 이유는 둘로 쪼개면 그 사이에 계산을 끼울 수 있기 때문입니다. sequence
-            parallel 절에서 보듯 all-reduce 하나를 reduce-scatter 와 all-gather 로 바꾸면 추가
-            통신 없이 그 사이의 LayerNorm 을 sequence 축으로 나눌 수 있습니다.
+            NCCL 문서는 reduce-scatter 뒤에 all-gather 를 실행하면 all-reduce 와 같다고 적습니다. 이 등식이 중요한 것은 둘로 쪼개면 그 사이에 계산을
+            끼울 수 있어서입니다. sequence parallel 절에서 보듯 all-reduce 하나를 reduce-scatter 와 all-gather 로 바꾸면 추가 통신 없이 그
+            사이의 LayerNorm 을 sequence 축으로 나눌 수 있습니다.
           </p>
           <p>
-            비용은 두 항으로 셉니다. byte 가 0 이어도 남는 collective communication latency α 와,
-            byte n 을 communication bandwidth B 로 나눈 전송 시간입니다. 작은 message 는 α 가, 큰
-            message 는 n/B 가 지배하고, 그 경계는 n = αB 입니다. B 가 900 GB/s 이고 α 가 5 μs 면
-            경계는 4.5 MB 이므로 decode 의 1 MB all-reduce 는 latency 영역에 있습니다.
+            비용은 두 항으로 셉니다. byte 가 0 이어도 남는 collective communication latency α 와, byte n 을 communication
+            bandwidth B 로 나눈 전송 시간입니다. 작은 message 는 α 가, 큰 message 는 n/B 가 지배합니다. 그 경계가 n = αB 입니다. B 가 900
+            GB/s 이고 α 가 5 μs 면 경계는 4.5 MB 이므로 decode 의 1 MB all-reduce 는 latency 영역에 있습니다.
           </p>
           <p>
             같은 collective 라도 알고리즘에 따라 실제 옮기는 byte 가 다릅니다. ring 은 GPU 당
@@ -203,41 +193,34 @@ export default function TensorAndPipelineParallelInferenceArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Pipeline parallelism 은 layer 열을 연속 구간으로 잘라 GPU 마다 한 구간을 맡기는
-            방식입니다. 그 구간이 분산 추론의 pipeline stage 이고, GPU 실행 pipeline 의 stage 와는
-            이름만 같은 다른 개념입니다. 80 layer 를 PP 4 로 나누면 stage 마다 20 layer 이고, GPU 당
-            weight 는 4 분의 1 입니다.
+            Pipeline parallelism 은 layer 열을 연속 구간으로 잘라 GPU 마다 한 구간씩 맡깁니다. 그 구간이 분산 추론의 pipeline stage 입니다. GPU
+            실행 pipeline 의 stage 와는 이름만 같은 다른 개념입니다. 80 layer 를 PP 4 로 나누면 stage 마다 20 layer 이고 GPU 당 weight 는
+            4 분의 1 입니다.
           </p>
           <p>
-            통신은 stage 경계에서 activation 을 다음 GPU 로 넘기는 point-to-point send 한 번뿐입니다.
-            token 2048 개, hidden 8192, FP16 이면 33.6 MB 이고, TP 처럼 layer 마다가 아니라 stage
-            경계마다이므로 80 layer 에 세 번입니다. 이것이 PP 가 느린 link 를 건너는 데 쓰이는
-            이유입니다.
+            통신은 stage 경계에서 activation 을 다음 GPU 로 넘기는 point-to-point send 한 번뿐입니다. token 2048 개, hidden 8192,
+            FP16 이면 33.6 MB 입니다. layer 마다 내보내는 TP 와 달리 stage 경계에서만 나가므로 80 layer 에 세 번입니다. 이것이 PP 가 느린 link 를
+            건너는 데 쓰이는 이유입니다.
           </p>
           <p>
-            대가는 순서 의존입니다. stage 1 은 stage 0 이 끝나야 시작하므로 batch 하나만 흘리면 한
-            시점에 GPU 하나만 일합니다. 그래서 batch 를 m 개의 microbatch 로 잘라 stage 0 이 두 번째
-            microbatch 를 처리하는 동안 stage 1 이 첫 번째를 처리하게 합니다. 이것이 microbatching
-            이고, GPipe 가 이 schedule 을 처음 정리했습니다.
+            대가는 순서 의존입니다. stage 1 은 stage 0 이 끝나야 시작하므로 batch 하나만 흘리면 한 시점에 GPU 하나만 일합니다. 그래서 batch 를 m 개의
+            microbatch 로 잘라 stage 0 이 두 번째 microbatch 를 처리하는 동안 stage 1 이 첫 번째를 처리하게 합니다. 이것이 microbatching
+            입니다. GPipe 가 이 schedule 을 처음 정리했습니다.
           </p>
           <p>
-            그래도 pipeline 이 차기 전과 비워질 때의 빈 시간은 남습니다. 이것이 pipeline bubble 이고,
-            stage p 개와 microbatch m 개에서 전체 시간의 (p−1)/(m+p−1) 을 차지합니다. PP 4 에
-            microbatch 8 이면 3/11 로 27% 이고, 32 로 늘리면 3/35 로 8.6% 입니다. GPipe 는 m ≥ 4p 면
-            무시할 만하다고 적습니다.
+            그래도 pipeline 이 차기 전과 비워질 때의 빈 시간은 남습니다. 이것이 pipeline bubble 입니다. stage p 개와 microbatch m 개에서 전체
+            시간의 (p−1)/(m+p−1) 을 차지합니다. PP 4 에 microbatch 8 이면 3/11 로 27%, 32 로 늘리면 3/35 로 8.6% 입니다. GPipe 는 m
+            ≥ 4p 면 무시할 만하다고 적습니다.
           </p>
           <p>
-            Decode 에서는 microbatch 로도 숨길 수 없는 비용이 있습니다. 한 sequence 의 다음 token 은
-            네 stage 를 차례로 다 지나야 나오므로 그 token 의 latency 는 stage 시간의 합에 hop 세 번이
-            더해진 값입니다. 같은 8 GPU 를 TP 8 로 쓰면 각 GPU 가 weight 의 8 분의 1 만 읽어 step 이
-            8 분의 1 로 줄지만, PP 8 은 8 분의 1 짜리 step 여덟 개를 직렬로 지납니다.
+            Decode 에서는 microbatch 로도 숨길 수 없는 비용이 있습니다. 한 sequence 의 다음 token 은 네 stage 를 차례로 다 지나야 나오므로 그
+            token 의 latency 는 stage 시간의 합에 hop 세 번이 더해진 값입니다. 같은 8 GPU 를 TP 8 로 쓰면 각 GPU 가 weight 의 8 분의 1 만
+            읽어 step 이 8 분의 1 로 줄지만 PP 8 은 8 분의 1 짜리 step 여덟 개를 직렬로 지납니다.
           </p>
           <p>
-            숫자로 보면 70B FP16 을 PP 8 로 두면 stage 마다 17.5 GB 를 읽어 3.35 TB/s 에서 5.2 ms
-            이고, 한 token 은 여덟 stage 를 지나 약 42 ms 가 됩니다. TP 8 은 5.2 ms 에 all-reduce 약
-            1 ms 를 더한 6 ms 남짓입니다. 이것이 PP latency penalty 이며, PP 는 동시 요청이 많아
-            microbatch 가 채워질 때 throughput 을 지키는 도구이지 한 요청을 빠르게 하는 도구가
-            아닙니다.
+            숫자로 보면 70B FP16 을 PP 8 로 두면 stage 마다 17.5 GB 를 읽어 3.35 TB/s 에서 5.2 ms 입니다. 한 token 은 여덟 stage 를 지나
+            약 42 ms 가 됩니다. TP 8 은 5.2 ms 에 all-reduce 약 1 ms 를 더한 6 ms 남짓입니다. 이것이 PP latency penalty 입니다. PP 가
+            지키는 것은 동시 요청이 많아 microbatch 가 채워질 때의 throughput 이고, 한 요청의 속도는 PP 로 빨라지지 않습니다.
           </p>
         </div>
         <ExplainedFormula
@@ -279,9 +262,8 @@ export default function TensorAndPipelineParallelInferenceArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Data parallelism 은 model 전체를 GPU 묶음마다 복제하고 들어오는 요청을 replica 사이에
-            나누는 방식입니다. training 의 DP 는 step 마다 gradient all-reduce 를 하지만, inference 는
-            weight 가 바뀌지 않으므로 replica 끼리 forward 중에 주고받을 것이 없습니다.
+            Data parallelism 은 model 전체를 GPU 묶음마다 복제하고 들어오는 요청을 replica 사이에 나눕니다. training 의 DP 는 step 마다
+            gradient all-reduce 를 하지만 inference 는 weight 가 바뀌지 않으므로 replica 끼리 forward 중에 주고받을 것이 없습니다.
           </p>
           <p>
             그래서 DP throughput scaling 은 거의 선형입니다. replica 하나가 초당 1000 token 을 내면
@@ -290,14 +272,12 @@ export default function TensorAndPipelineParallelInferenceArticle() {
             <Link to="/ai/llm-serving-capacity#capacity">serving capacity</Link> 글에 있습니다.
           </p>
           <p>
-            비용은 memory 입니다. replica 마다 weight 전체를 다시 올리므로 70B FP16 을 DP 2 로 두면
-            weight 만 280 GB 이고, replica 마다 KV pool 도 따로 잡습니다. weight 가 한 GPU 묶음에
-            들어가지 않으면 DP 는 아예 선택지가 아니며, 그때 TP 나 PP 가 먼저 옵니다.
+            비용은 memory 입니다. replica 마다 weight 전체를 다시 올리므로 70B FP16 을 DP 2 로 두면 weight 만 280 GB 입니다. replica 마다
+            KV pool 도 따로 잡습니다. weight 가 한 GPU 묶음에 들어가지 않으면 DP 는 아예 선택지가 아니고 그때는 TP 나 PP 가 먼저 옵니다.
           </p>
           <p>
-            선형에서 벗어나는 지점은 두 곳입니다. 요청을 나누는 router 가 한쪽 replica 에 긴 요청을
-            몰아 주면 그 replica 의 queue 만 길어지고, prefix cache 가 replica 마다 따로 있어 같은
-            prompt 가 다른 replica 로 가면 cache 가 빗나갑니다. 둘 다 통신이 아니라 routing 문제입니다.
+            선형에서 벗어나는 지점은 두 곳입니다. 요청을 나누는 router 가 한쪽 replica 에 긴 요청을 몰아 주면 그 replica 의 queue 만 길어집니다. prefix
+            cache 는 replica 마다 따로 있어 같은 prompt 가 다른 replica 로 가면 cache 가 빗나갑니다. 둘 다 통신이 아니라 routing 문제입니다.
           </p>
           <p>
             예외는 MoE 입니다. expert 를 GPU 에 나눠 두면 attention 은 DP 로 돌리고 expert 층에서만
@@ -315,22 +295,19 @@ export default function TensorAndPipelineParallelInferenceArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            TP 가 나누지 못하는 부분이 있습니다. LayerNorm 과 dropout, residual add 는 hidden 축으로
-            나눌 수 없어 모든 TP rank 가 같은 계산을 중복하고 같은 activation 을 통째로 들고 있습니다.
-            Sequence parallelism 은 그 구간을 token 축으로 나눠 rank 마다 sequence 의 1/p 만 들게
-            하는 방식입니다.
+            TP 가 나누지 못하는 부분이 있습니다. LayerNorm 과 dropout, residual add 는 hidden 축으로 나눌 수 없어 모든 TP rank 가 같은 계산을
+            중복하고 같은 activation 을 통째로 들고 있습니다. Sequence parallelism 은 그 구간을 token 축으로 나눠 rank 마다 sequence 의 1/p
+            만 들게 합니다.
           </p>
           <p>
-            추가 통신은 없습니다. TP 구간이 끝나는 all-reduce 를 reduce-scatter 로 바꾸면 각 rank 는
-            자기 token 조각의 완성된 합만 받고, 다음 TP 구간이 시작하기 전에 all-gather 로 다시 전체
-            sequence 를 모읍니다. 앞 절의 등식대로 reduce-scatter 와 all-gather 를 합치면 all-reduce
-            와 byte 가 같으므로 memory 만 줄고 통신은 그대로입니다.
+            추가 통신은 없습니다. TP 구간이 끝나는 all-reduce 를 reduce-scatter 로 바꾸면 각 rank 는 자기 token 조각의 완성된 합만 받고 다음 TP
+            구간이 시작하기 전에 all-gather 로 다시 전체 sequence 를 모읍니다. 앞 절의 등식대로 reduce-scatter 와 all-gather 를 합치면 all-
+            reduce 와 byte 가 같으므로 memory 만 줄고 통신은 그대로입니다.
           </p>
           <p>
-            Context parallelism 은 한 걸음 더 나가 attention 자체를 token 축으로 나눕니다. sequence
-            를 GPU 수만큼의 block 으로 잘라 각 GPU 가 자기 query block 을 들고, key·value block 은
-            ring 을 따라 이웃 GPU 로 한 칸씩 돌립니다. GPU 는 지금 손에 있는 KV block 으로 부분
-            attention 을 계산하면서 동시에 그 block 을 다음 GPU 로 보냅니다.
+            Context parallelism 은 한 걸음 더 나가 attention 자체를 token 축으로 나눕니다. sequence 를 GPU 수만큼의 block 으로 잘라 각
+            GPU 가 자기 query block 을 들고 key·value block 은 ring 을 따라 이웃 GPU 로 한 칸씩 돌립니다. GPU 는 지금 손에 있는 KV block
+            으로 부분 attention 을 계산하면서 동시에 그 block 을 다음 GPU 로 보냅니다.
           </p>
           <p>
             이것이 context-parallel attention 이며 Ring Attention 이 그 대표 구현입니다. 부분 결과를
@@ -340,16 +317,14 @@ export default function TensorAndPipelineParallelInferenceArticle() {
             절이 소유합니다.
           </p>
           <p>
-            통신이 숨겨지는 조건은 block 하나의 계산 시간이 그 block 의 KV 전송 시간보다 길다는
-            것입니다. block 크기 c, hidden d 에서 계산은 4dc² FLOP, 전송은 4cd byte 이므로 조건은
-            c ≥ F/B 입니다. Ring Attention 논문의 A100 예시로 NVLink 300 GB/s 면 block 은 약 1000
-            token 이면 되고, InfiniBand 12.5 GB/s 면 약 25000 token 이 필요합니다.
+            통신은 block 하나의 계산 시간이 그 block 의 KV 전송 시간보다 길 때 숨겨집니다. block 크기 c, hidden d 에서 계산은 4dc² FLOP, 전송은
+            4cd byte 이므로 조건은 c ≥ F/B 입니다. Ring Attention 논문의 A100 예시로 NVLink 300 GB/s 면 block 은 약 1000 token
+            이면 되고 InfiniBand 12.5 GB/s 면 약 25000 token 이 필요합니다.
           </p>
           <p>
-            추론에서 이 축이 필요한 곳은 긴 prompt 의 prefill 입니다. 100 만 token 의 KV 는 GPU 한
-            장에 들어가지 않고, prefill 계산은 sequence 길이의 제곱이라 token 축으로 나누면 계산도
-            같이 나뉩니다. decode 에서는 query 가 token 하나라 block 계산이 짧아 c ≥ F/B 를 만족하지
-            못하므로, KV 를 나눠 둔 채 부분 attention 결과만 모으는 쪽이 보통입니다.
+            추론에서 이 축이 필요한 곳은 긴 prompt 의 prefill 입니다. 100 만 token 의 KV 는 GPU 한 장에 들어가지 않습니다. prefill 계산은
+            sequence 길이의 제곱이라 token 축으로 나누면 계산도 같이 나뉩니다. decode 에서는 query 가 token 하나라 block 계산이 짧아 c ≥ F/B 를
+            만족하지 못하므로 KV 를 나눠 둔 채 부분 attention 결과만 모으는 쪽이 보통입니다.
           </p>
         </div>
         <AlgorithmBlock
@@ -420,10 +395,9 @@ export default function TensorAndPipelineParallelInferenceArticle() {
           preview="weight 읽기 시간은 degree 분의 1 로 줄지만 layer 마다 붙는 all-reduce latency α × 2 × layers 는 degree 와 무관하게 남기 때문입니다."
         >
           <p>
-            TP 8 에서 TP 16 으로 올리면 GPU 당 weight 는 17.5 GB 에서 8.75 GB 로, 읽기 시간은 5.2 ms
-            에서 2.6 ms 로 줍니다. 통신은 all-reduce 참여 rank 가 16 으로 늘어 ring 단계가 두 배가
-            되므로 오히려 조금 늘어, TPOT 은 6.2 ms 에서 3.7 ms 로 41% 만 줄고 통신 비율은 28% 로
-            오릅니다.
+            TP 8 에서 TP 16 으로 올리면 GPU 당 weight 는 17.5 GB 에서 8.75 GB 로, 읽기 시간은 5.2 ms 에서 2.6 ms 로 줍니다. 통신은 all-
+            reduce 참여 rank 가 16 으로 늘어 ring 단계가 두 배가 되므로 오히려 조금 늘어납니다. TPOT 은 6.2 ms 에서 3.7 ms 로 41% 만 줄고 통신
+            비율은 28% 로 오릅니다.
           </p>
           <p>
             게다가 TP 16 은 한 node 의 8 GPU 를 넘으므로 all-reduce 의 한 hop 이 NVLink 가 아니라

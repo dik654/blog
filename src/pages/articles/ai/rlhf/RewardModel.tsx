@@ -10,14 +10,11 @@ export default function RewardModel() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          Labeler에게 “이 답은 73점”이라고 묻기보다 같은 prompt에 대한 A와 B 중
-          어느 쪽이 나은지 묻는 편이 판단 기준을 맞추기 쉽다. Reward model은 이
-          pairwise preference를 response 하나당 scalar score로 압축하며, 이후 현재
-          policy가 새로 생성한 응답에도 같은 scorer를 적용한다.
+          Labeler에게 “이 답은 73점”이라고 묻기보다 같은 prompt에 대한 A와 B 중 어느 쪽이 나은지 묻는 편이 판단 기준을 맞추기 쉽다. Reward model은 이
+          pairwise preference를 response 하나당 scalar score로 압축한다. 이후 현재 policy가 새로 생성한 응답에도 같은 scorer를 적용한다.
         </p>
         <p className="leading-7">
-          이 scorer를 사람 선호를 직접 예측한다는 뜻에서 preference model이라고도
-          부르는데, 별도 구성 요소가 아니라 reward model과 같은 model을 가리키는
+          이 scorer를 사람 선호를 직접 예측한다는 뜻에서 preference model이라고도 부른다. 별도 구성 요소는 아니고 reward model과 같은 model을 가리키는
           다른 이름이다.
         </p>
       </div>
@@ -58,18 +55,14 @@ p_+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Scalar reward가 숨기는 것</h3>
         <p>
-          도움됨, 사실성, style과 safety를 한 숫자로 합치면 서로 다른 failure
-          mode가 같은 score에 묻힐 수 있다. Response 순서, 길이와 formatting처럼
-          정답과 우연히 함께 나타난 feature도 reward shortcut이 된다. 그래서
-          response 순서를 무작위화하고 annotator 간 agreement를 확인하며,
-          category별 held-out set에서 reward accuracy를 따로 본다.
+          도움됨, 사실성, style과 safety를 한 숫자로 합치면 서로 다른 failure mode가 같은 score에 묻힐 수 있다. Response 순서, 길이와
+          formatting처럼 정답과 우연히 함께 나타난 feature도 reward shortcut이 된다. 그래서 response 순서를 무작위화하고 annotator 간
+          agreement를 확인한다. category별 held-out set에서는 reward accuracy를 따로 본다.
         </p>
         <p>
-          Reward hacking은 optimization이 실제 품질보다 reward model의 빈틈을 더
-          빠르게 찾는 현상이다. Training pair에서 accuracy가 높더라도 policy가
-          distribution 밖의 response를 생성하기 시작하면 scorer가 extrapolation을
-          잘한다는 보장이 없으므로, 현재 policy sample을 사람이 다시 살피고 reward
-          margin과 independent quality metric이 함께 오르는지 확인해야 한다.
+          Reward hacking은 optimization이 실제 품질보다 reward model의 빈틈을 더 빠르게 찾는 현상이다. Training pair에서 accuracy가
+          높더라도 policy가 distribution 밖의 response를 생성하기 시작하면 scorer가 extrapolation을 잘한다는 보장이 없다. 현재 policy
+          sample을 사람이 다시 살피고 reward margin과 independent quality metric이 함께 오르는지 확인해야 한다.
         </p>
       </div>
     </section>

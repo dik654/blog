@@ -9,20 +9,15 @@ export default function Overview() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          분류 문제에서는 입력 하나에 label 하나를 붙이지만 번역은 그렇지 않습니다.
-          “Thank you”를 “고마워”로 번역하면 token 수와 어순이 달라지며, speech
-          recognition·summarization·image captioning도 입력 전체를 조건으로 새로운
-          sequence를 만들어야 합니다. 그래서 Seq2Seq(sequence-to-sequence)는
-          먼저 source를 읽는 encoder와 지금까지의 답을 이어 쓰는 decoder로 역할을
-          나눴고, 출력 길이도 EOS token을 통해 함께 학습했습니다.
+          분류 문제에서는 입력 하나에 label 하나를 붙이지만 번역은 그렇지 않습니다. “Thank you”를 “고마워”로 번역하면 token 수와 어순이 달라집니다. Speech
+          recognition·summarization·image captioning도 입력 전체를 조건으로 새로운 sequence를 만들어야 합니다. Seq2Seq(sequence-to-
+          sequence)는 먼저 source를 읽는 encoder와 지금까지의 답을 이어 쓰는 decoder로 역할을 나눴고 출력 길이도 EOS token을 통해 함께 학습했습니다.
         </p>
         <p>
-          2014년 LSTM Seq2Seq는 encoder가 source를 fixed-dimensional vector로 압축하고
-          decoder가 그 vector를 초기 조건으로 target을 autoregressive하게 생성했다.
-          이후 attention과 Transformer가 내부 operator를 바꿨지만, source X를 읽어
-          target sequence Y의 조건부 probability를 모델링한다는 문제 정의는 그대로 남아 있다.
-          BERT 같은 encoder-only model과 GPT 같은 decoder-only model은 모두
-          Transformer를 사용하더라도 이 encoder–decoder contract와는 다르다.
+          2014년 LSTM Seq2Seq는 encoder가 source를 fixed-dimensional vector로 압축하고 decoder가 그 vector를 초기 조건으로
+          target을 autoregressive하게 생성했다. 이후 attention과 Transformer가 내부 operator를 바꿨지만 source X를 읽어 target
+          sequence Y의 조건부 probability를 모델링한다는 문제 정의는 그대로 남아 있다. BERT 같은 encoder-only model과 GPT 같은 decoder-
+          only model은 모두 Transformer를 사용하더라도 이 encoder–decoder contract와는 다르다.
         </p>
         <p>
           아래 식의 vertical bar와 product가 낯설다면 먼저
@@ -58,7 +53,11 @@ export default function Overview() {
         <div id="paper-seq2seq" className="not-prose my-8 border-l border-primary/50 pl-4 scroll-mt-24">
           <p className="text-xs font-bold text-primary">논문 읽기 · 2014 Seq2Seq</p>
           <p className="mt-2 text-sm font-semibold">Sequence to Sequence Learning with Neural Networks</p>
-          <p className="mt-2 text-sm leading-6 text-muted-foreground">이 논문이 보여 준 핵심은 깊은 LSTM 두 개로 가변 길이 source를 fixed-dimensional representation에 담고, 그 조건에서 가변 길이 target을 생성할 수 있다는 점입니다. Source 단어 순서를 뒤집은 실험은 해당 WMT setup에서 source와 target 사이의 짧은 dependency를 만들어 optimization을 도왔지만, 모든 sequence task에 reversal이 필요하다는 결론은 아닙니다.</p>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            깊은 LSTM 두 개면 가변 길이 source를 fixed-dimensional representation에 담고 그 조건에서 가변 길이 target을 생성할 수 있습니다. 이
+            논문이 보여 준 핵심입니다. Source 단어 순서를 뒤집은 실험은 해당 WMT setup에서 source와 target 사이의 짧은 dependency를 만들어
+            optimization을 도왔습니다. Reversal이 모든 sequence task에 필요한지는 이 실험 하나로 정해지지 않습니다.
+          </p>
           <a className="mt-3 inline-block text-sm font-medium text-primary underline-offset-4 hover:underline" href="https://proceedings.neurips.cc/paper_files/paper/2014/hash/a14ac55a4f27472c5d894ec1c3c743d2-Abstract.html" target="_blank" rel="noreferrer">원 논문과 실험 조건 보기</a>
         </div>
         <p>

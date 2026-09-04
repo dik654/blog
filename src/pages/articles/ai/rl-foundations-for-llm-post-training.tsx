@@ -21,11 +21,9 @@ export default function RlFoundationsForLlmPostTrainingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            LLM 을 강화학습(reinforcement learning, RL)으로 post-training 한다는
-            것은 결국 policy 가 만든 trajectory 에 붙은 reward 를, 그 trajectory
-            의 각 token 을 고른 확률이 오르거나 내리는 방향으로 바꾸는 일입니다.
-            어떤 reward 를 얼마나 누적해서(return) 어느 시점의 선택으로
-            돌려줄지(credit assignment)가 이 변환의 핵심 질문입니다.
+            LLM 을 강화학습(reinforcement learning, RL)으로 post-training 한다는 것은 결국 policy 가 만든 trajectory 에 붙은
+            reward 를 그 trajectory 의 각 token 을 고른 확률이 오르거나 내리는 방향으로 바꾸는 일입니다. 어떤 reward 를 얼마나 누적해서(return) 어느
+            시점의 선택으로 돌려줄지(credit assignment)가 이 변환의 핵심 질문입니다.
           </p>
           <p>
             <Link to="/ai/rlhf#ppo">RLHF 의 PPO 절</Link> 은 policy 가 직접 만든
@@ -35,15 +33,12 @@ export default function RlFoundationsForLlmPostTrainingArticle() {
             부품 네 가지를 채웁니다.
           </p>
           <p>
-            순서는 이렇습니다. 먼저 return 을 정의해 reward 를 누적하는
-            방법을 고정하고, 그 return 을 만든 데이터가 현재 policy 것인지
-            아닌지(on/off-policy)를 나눕니다.
+            순서는 이렇습니다. 먼저 return 을 정의해 reward 를 누적하는 방법을 고정하고 그 return 을 만든 데이터가 현재 policy 것인지 아닌지(on/off-
+            policy)를 나눕니다.
           </p>
           <p>
-            그 다음 policy gradient theorem 으로 return 을 policy
-            parameter 의 변화로 바꾸는 식을 유도하고, 마지막으로 그
-            변화량이 trajectory 의 어느 action 에 돌아가야 하는지(credit
-            assignment)의 한계를 봅니다.
+            그 다음 policy gradient theorem 으로 return 을 policy parameter 의 변화로 바꾸는 식을 유도합니다. 마지막으로 그 변화량이
+            trajectory 의 어느 action 에 돌아가야 하는지(credit assignment)의 한계를 봅니다.
           </p>
         </div>
         <RlFoundationsForLlmPostTrainingViz />
@@ -56,17 +51,13 @@ export default function RlFoundationsForLlmPostTrainingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            강화학습은 agent 가 state 에서 action 을 고르고 reward 를 받아
-            다음 state 로 넘어가는 상호작용을 trajectory 길이만큼 반복하는
-            문제입니다. Return 은 어느 시점 t 이후 받을 reward 전부를 감가율
-            γ(0 이상 1 미만)로 할인해 하나의 숫자로 누적한 값이고, policy 가
-            최대화하려는 목표가 바로 이 return 의 기댓값입니다.
+            강화학습은 agent 가 state 에서 action 을 고르고 reward 를 받아 다음 state 로 넘어가는 상호작용을 trajectory 길이만큼 반복하는 문제입니다.
+            Return 은 어느 시점 t 이후 받을 reward 전부를 감가율 γ(0 이상 1 미만)로 할인해 하나의 숫자로 누적한 값입니다. policy 가 최대화하려는 목표가 바로 이
+            return 의 기댓값입니다.
           </p>
           <p>
-            3-step trajectory 에서 reward 가 r1=1, r2=0, r3=2 이고 γ=0.9 라고
-            하면, t=3 부터 거꾸로 G3=2, G2=0+0.9×2=1.8, G1=1+0.9×1.8=2.62
-            가 됩니다. 감가율이 1 에 가까울수록 먼 미래의 reward 도 지금
-            action 의 return 에 크게 반영됩니다.
+            3-step trajectory 에서 reward 가 r1=1, r2=0, r3=2 이고 γ=0.9 라고 하면 t=3 부터 거꾸로 G3=2, G2=0+0.9×2=1.8,
+            G1=1+0.9×1.8=2.62 가 됩니다. 감가율이 1 에 가까울수록 먼 미래의 reward 도 지금 action 의 return 에 크게 반영됩니다.
           </p>
           <p>
             LLM post-training 에서 trajectory 는 흔히 한 response 의 token
@@ -92,26 +83,18 @@ export default function RlFoundationsForLlmPostTrainingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            On-policy learning 은 update 에 쓰는 trajectory 가 반드시 지금
-            update 하려는 policy 자신이 만든 것이어야 하는 학습 방식이고,
-            off-policy learning 은 과거의 자신이나 별도 behavior policy 가
-            만든 trajectory 를 재사용해도 되는 학습 방식입니다. 이 구분은
-            같은 환경 상호작용 하나를 몇 번까지 다시 써도 되는지를 가릅니다.
+            On-policy learning 은 update 에 쓰는 trajectory 를 지금 update 하려는 policy 자신이 만들어야 합니다. off-policy
+            learning 은 과거의 자신이나 별도 behavior policy 가 만든 trajectory 를 재사용해도 됩니다. 이 구분은 같은 환경 상호작용 하나를 몇 번까지 다시
+            써도 되는지를 가릅니다.
           </p>
           <p>
-            On-policy 방식은 batch 를 한 번 쓰고 나면 policy 가 이미
-            바뀌었으므로 그 batch 를 버리고 새로 rollout 해야 합니다.
-            Trajectory 2,048 개를 뽑아 update 를 몇 epoch 반복한 뒤 그대로
-            버린다면, 환경 상호작용 한 번당 얻는 gradient step 수가 적어
-            표본 효율이 낮습니다.
+            On-policy 방식은 batch 를 한 번 쓰고 나면 policy 가 이미 바뀌었으므로 그 batch 를 버리고 새로 rollout 해야 합니다. Trajectory
+            2,048 개를 뽑아 update 를 몇 epoch 반복한 뒤 그대로 버린다면 환경 상호작용 한 번당 얻는 gradient step 수가 적어 표본 효율이 낮습니다.
           </p>
           <p>
-            Off-policy 방식은 replay buffer 에 과거 trajectory 를 최대
-            100만 개까지 쌓아 두고, 새 상호작용 없이도 그 buffer 에서
-            minibatch 를 계속 뽑아 update 합니다. 같은 transition 하나가
-            수백~수천 번 재사용될 수 있어 환경 상호작용당 update 수는
-            늘지만, 그 데이터를 만든 policy 와 지금 policy 의 차이가 커질수록
-            update 방향이 왜곡되는 대가가 붙습니다.
+            Off-policy 방식은 replay buffer 에 과거 trajectory 를 최대 100만 개까지 쌓아 둡니다. 새 상호작용 없이도 그 buffer 에서
+            minibatch 를 계속 뽑아 update 합니다. 같은 transition 하나가 수백~수천 번 재사용될 수 있어 환경 상호작용당 update 수는 늘어납니다. 대가도
+            있습니다. 그 데이터를 만든 policy 와 지금 policy 의 차이가 커질수록 update 방향이 왜곡됩니다.
           </p>
           <p>
             <Link to="/ai/open-r1#grpo-process">GRPO 의 group sampling</Link>
@@ -136,17 +119,13 @@ export default function RlFoundationsForLlmPostTrainingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Return 의 기댓값을 policy parameter θ 로 직접 미분하려면 문제가
-            생깁니다. Trajectory 를 만드는 action sampling 이 이산적이라
-            미분 경로가 없기 때문입니다. Policy gradient theorem 은 이 기댓값의
-            gradient 를, 실제로 고른 action 의 log-probability 를 return 으로
-            가중한 또 다른 기댓값으로 바꿔 이 문제를 우회합니다.
+            Return 의 기댓값을 policy parameter θ 로 직접 미분하려면 문제가 생깁니다. Trajectory 를 만드는 action sampling 이 이산적이라 미분
+            경로가 없기 때문입니다. Policy gradient theorem 은 이 기댓값의 gradient 를 실제로 고른 action 의 log-probability 를 return
+            으로 가중한 또 다른 기댓값으로 바꿔 이 문제를 우회합니다.
           </p>
           <p>
-            이 결과를 Monte Carlo trajectory 표본 하나로 추정해 그대로
-            update 에 쓰는 방법이 REINFORCE 입니다. Trajectory 를 뽑고,
-            각 시점의 return 을 계산하고, 그 return 으로 가중한
-            log-probability gradient 를 더해 한 번 update 합니다.
+            이 결과를 Monte Carlo trajectory 표본 하나로 추정해 그대로 update 에 쓰는 방법이 REINFORCE 입니다. Trajectory 를 뽑아 각 시점의
+            return 을 계산하고 그 return 으로 가중한 log-probability gradient 를 더해 한 번 update 합니다.
           </p>
         </div>
         <ExplainedFormula
@@ -201,12 +180,9 @@ export default function RlFoundationsForLlmPostTrainingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Credit assignment problem 은 trajectory 끝에서 받은 reward
-            (또는 그것이 누적된 return)를 그 이전의 어느 action 에 얼마나
-            돌려줘야 하는지 정하는 문제입니다. REINFORCE 의 return G_t 는
-            이 몫을 시점 거리만 따라 γ 의 거듭제곱으로 줄어드는 형태로
-            정하고, 각 action 이 실제로 결과에 얼마나 기여했는지는 따로
-            묻지 않습니다.
+            trajectory 끝에서 받은 reward (또는 그것이 누적된 return)는 그 이전의 어느 action 에 얼마나 돌아가야 할까요. 이 몫을 정하는 일이 credit
+            assignment problem 입니다. REINFORCE 의 return G_t 는 이 몫을 시점 거리만 따라 γ 의 거듭제곱으로 줄어드는 형태로 정합니다. 각 action
+            이 실제로 결과에 얼마나 기여했는지는 따로 묻지 않습니다.
           </p>
           <p>
             5-step trajectory 에서 마지막에만 reward +1 을 받고 γ=0.9 라면
@@ -215,10 +191,8 @@ export default function RlFoundationsForLlmPostTrainingArticle() {
             줄어듭니다.
           </p>
           <p>
-            Trajectory 가 길어질수록 이른 action 에 남는 신호가 옅어지는
-            것이 long-horizon credit assignment 가 어려운 이유이며, LLM 의
-            긴 reasoning trace 나 다단계 agent trajectory 에서 특히
-            두드러집니다.
+            Trajectory 가 길어질수록 이른 action 에 남는 신호가 옅어집니다. long-horizon credit assignment 가 어려운 이유입니다. LLM 의 긴
+            reasoning trace 나 다단계 agent trajectory 에서 특히 두드러집니다.
           </p>
         </div>
         <TermBreakdown

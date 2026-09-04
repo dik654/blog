@@ -15,7 +15,9 @@ function PaperReadingNotes() {
         <h2 className="mt-2 text-2xl font-bold">Superposition·SAE 품질·steering은 서로 다른 근거 층이다</h2>
       </header>
       <p>
-        아래 연구들은 하나의 결론을 반복한 것이 아닙니다. Toy model은 superposition이 생길 수 있는 조건을 보였고, SAE 연구는 activation을 sparse dictionary로 복원하는 방법과 평가를 제안했으며, steering 사례는 특정 feature direction에 개입했을 때 출력이 변한 결과를 보여 줍니다. 따라서 “SAE feature가 보였다”에서 곧바로 “모델의 유일한 인간 개념을 찾았다”로 넘어가면 안 됩니다.
+        아래 연구들은 하나의 결론을 반복한 것이 아닙니다. Toy model은 superposition이 생길 수 있는 조건을 보였고 SAE 연구는 activation을 sparse
+        dictionary로 복원하는 방법과 평가를 제안했습니다. steering 사례가 내놓은 것은 특정 feature direction에 개입했을 때 출력이 변한 결과입니다. 이 셋을
+        뭉뚱그려 “SAE feature가 보였다”에서 곧바로 “모델의 유일한 인간 개념을 찾았다”로 넘어가면 안 됩니다.
       </p>
 
       <div id="paper-sae-superposition">

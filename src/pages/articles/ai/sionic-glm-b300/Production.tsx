@@ -31,10 +31,8 @@ export default function Production() {
           ))}
         </div>
         <p className="leading-7">
-          최적화의 순서는 재사용 가능하다. 먼저 traffic roofline으로 기대치를
-          세우고, profile로 underutilization을 찾고, kernel·runtime을 고친 뒤,
-          MTP acceptance를 quality와 함께 튜닝한다. 특정 µs 숫자보다 이 측정
-          순서와 evidence ledger가 다음 model·GPU로 이전 가능한 자산이다.
+          최적화의 순서는 재사용 가능하다. 먼저 traffic roofline으로 기대치를 세우고 profile로 underutilization을 찾는다. kernel·runtime을 고친
+          뒤 MTP acceptance를 quality와 함께 튜닝한다. 특정 µs 숫자보다 이 측정 순서와 evidence ledger가 다음 model·GPU로 이전 가능한 자산이다.
         </p>
       </div>
     </section>

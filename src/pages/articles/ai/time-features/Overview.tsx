@@ -21,11 +21,9 @@ export default function Overview() {
           먼저 이용할 수 있었던 event history를 고정 길이의 표로 요약합니다.
         </p>
         <p>
-          여기에는 서로 다른 네 시간이 있습니다. Event time은 현상이 일어난
-          시점이고, available time은 시스템이 값을 알게 된 시점이며, cutoff는
-          model이 결정을 내리는 시점입니다. Label horizon은 정답을 측정할 미래
-          구간입니다. Calendar상 과거라도 available time이 cutoff보다 늦으면
-          feature로 사용할 수 없습니다.
+          여기에는 서로 다른 네 시간이 있습니다. Event time은 현상이 일어난 시점, available time은 시스템이 값을 알게 된 시점, cutoff는 model이 결정을
+          내리는 시점입니다. Label horizon은 정답을 측정할 미래 구간입니다. Calendar상 과거라도 available time이 cutoff보다 늦으면 feature로 사용할
+          수 없습니다.
         </p>
         <p>
           이 글은 <Link to="/ai/feature-engineering#aggregation">point-in-time aggregation과 feature availability</Link>,{" "}

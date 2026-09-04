@@ -19,11 +19,9 @@ export default function Architecture({
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          ResNet은 stem 뒤에 residual block을 stage별로 쌓고, stage가 바뀔 때
-          spatial resolution을 줄이며 channel을 늘립니다. ResNet-18·34의
-          BasicBlock은 같은 width의 3×3 convolution 두 개를 사용하고,
-          ResNet-50·101·152의 Bottleneck은 1×1로 내부 width를 조절한 뒤 3×3을
-          수행하고 마지막 1×1로 output channel을 확장합니다.
+          ResNet은 stem 뒤에 residual block을 stage별로 쌓습니다. stage가 바뀔 때는 spatial resolution을 줄이며 channel을 늘립니다.
+          ResNet-18·34의 BasicBlock은 같은 width의 3×3 convolution 두 개를 씁니다. ResNet-50·101·152의 Bottleneck은 다릅니다.
+          1×1로 내부 width를 조절한 뒤 3×3을 수행하고 마지막 1×1로 output channel을 확장합니다.
         </p>
       </div>
 
@@ -31,10 +29,9 @@ export default function Architecture({
         <p className="text-xs font-bold text-primary">논문 읽기 · Identity propagation</p>
         <p className="mt-2 text-sm font-semibold">Identity Mappings in Deep Residual Networks</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Shortcut과 addition 뒤 mapping을 identity로 유지할 때 forward state와
-          backward signal이 직접 전개되는 관계를 제시하고 pre-activation unit을
-          실험했습니다. 이 algebra가 finite-precision training에서 gradient 크기의
-          절대 하한이나 최적해 도달을 보장하는 정리는 아닙니다.
+          Shortcut과 addition 뒤 mapping을 identity로 유지할 때 forward state와 backward signal이 직접 전개되는 관계를 제시하고 pre-
+          activation unit을 실험했습니다. 이 algebra가 말해 주는 것은 거기까지입니다. finite-precision training에서 gradient 크기의 절대
+          하한이나 최적해 도달은 여기서 보장되지 않습니다.
         </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/1603.05027" target="_blank" rel="noreferrer">원 논문의 전개·unit ablation 보기</a>
       </div>
@@ -44,11 +41,9 @@ export default function Architecture({
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Bottleneck은 parameter를 무조건 줄이는 장치가 아니다</h3>
         <p className="leading-8">
-          Input·output channel이 C이고 내부 width가 B인 단순 bottleneck을
-          생각하면, 두 1×1 convolution은 각각 CB parameter, 가운데 3×3은 9B²
-          parameter를 사용합니다. B를 얼마나 줄였는지와 output expansion에 따라
-          비용이 달라지므로 “1×1이 있으니 항상 더 싸다”라고 판단하지 않고 실제
-          stage shape를 계산합니다.
+          단순 bottleneck 하나를 생각해 봅시다. input·output channel이 C, 내부 width가 B라면 두 1×1 convolution은 각각 CB
+          parameter를, 가운데 3×3은 9B² parameter를 씁니다. 비용은 B를 얼마나 줄였는지와 output expansion에 따라 달라집니다. 그러니 1×1이 있으니
+          항상 더 싸다고 판단하지 말고 실제 stage shape를 계산합니다.
         </p>
       </div>
 
@@ -184,12 +179,9 @@ y_i&=\underbrace{\gamma\hat x_i+\beta}_{\text{학습 가능한 scale·shift로 �
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Post-activation과 pre-activation은 activation 위치가 다르다</h3>
         <p className="leading-8">
-          Original ResNet v1은 residual과 shortcut을 더한 뒤 ReLU를 적용합니다.
-          Identity Mappings 논문의 pre-activation ResNet v2는 normalization과
-          ReLU를 convolution 앞에 두어 addition 뒤의 identity path를 더
-          직접적으로 유지했습니다. 두 구현은 checkpoint-compatible하지 않으며
-          “BN 순서만 조금 바꾼 것” 이상으로 forward·backward mapping이
-          달라집니다.
+          Original ResNet v1은 residual과 shortcut을 더한 뒤 ReLU를 적용합니다. Identity Mappings 논문의 pre-activation
+          ResNet v2는 normalization과 ReLU를 convolution 앞에 두어 addition 뒤의 identity path를 더 직접적으로 유지했습니다. 두 구현은
+          checkpoint-compatible하지 않습니다. “BN 순서만 조금 바꾼 것” 이상으로 forward·backward mapping 자체가 달라집니다.
         </p>
       </div>
 
@@ -234,12 +226,9 @@ y_i&=\underbrace{\gamma\hat x_i+\beta}_{\text{학습 가능한 scale·shift로 �
           구현에서는 stride 위치와 zero initialization까지 version 차이를 본다
         </h3>
         <p className="leading-8">
-          Torchvision의 현재 Bottleneck은 원 논문 표기와 달리 stride를 첫 1×1이
-          아닌 3×3 convolution에 두는 ResNet v1.5 변형을 사용합니다. 또한 마지막
-          normalization scale을 0으로 초기화하면 residual branch가 처음에 0에
-          가까워져 block을 identity 근처에서 시작시킬 수 있습니다. Architecture
-          이름만으로 이런 recipe 차이가 결정되지는 않으므로 source와 checkpoint
-          metadata를 함께 확인합니다.
+          Torchvision의 현재 Bottleneck은 ResNet v1.5 변형을 씁니다. 원 논문 표기와 달리 stride가 첫 1×1이 아니라 3×3 convolution에
+          붙습니다. 마지막 normalization scale을 0으로 초기화하면 residual branch가 처음에 0에 가까워져 block을 identity 근처에서 시작시킬 수
+          있습니다. Architecture 이름만으로는 이런 recipe 차이가 결정되지 않습니다. source와 checkpoint metadata를 함께 확인합니다.
         </p>
       </div>
     </section>

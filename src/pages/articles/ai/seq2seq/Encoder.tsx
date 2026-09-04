@@ -15,11 +15,9 @@ export default function Encoder({
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          LSTM encoder는 source embedding을 순서대로 읽으며 hidden state와 cell state를
-          갱신한다. Fixed-context Seq2Seq에서는 마지막 두 state를 decoder의 초기 state로
-          넘기는데, 이는 “문장의 의미를 담은 벡터”라기보다 두 recurrent network 사이의
-          learned interface로 보는 편이 정확하다. Decoder는 원문 token을 직접 보지 않고
-          이 interface에 남아 있는 정보만 사용할 수 있다.
+          LSTM encoder는 source embedding을 순서대로 읽으며 hidden state와 cell state를 갱신한다. Fixed-context Seq2Seq에서는
+          마지막 두 state를 decoder의 초기 state로 넘긴다. 이 state는 두 recurrent network 사이의 learned interface다. “문장의 의미를
+          담은 벡터”라는 설명보다 이쪽이 정확하고, decoder는 원문 token을 직접 보지 않고 이 interface에 남아 있는 정보만 사용할 수 있다.
         </p>
       </div>
 

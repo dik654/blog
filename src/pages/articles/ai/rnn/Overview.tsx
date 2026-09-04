@@ -49,7 +49,9 @@ export default function Overview({
         <p className="text-xs font-bold text-primary">논문 해설 · Finding Structure in Time</p>
         <h3 className="mt-2 text-base font-bold">시간을 별도 좌표로 펼치기보다 이전 처리 결과를 다시 입력으로 돌렸다</h3>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Elman의 simple recurrent network는 직전 hidden activation의 복사본을 다음 시점 입력에 제공해 sequence의 시간 구조를 학습했습니다. 논문 실험은 작은 synthetic language와 당시의 network·training 조건에서 recurrent context가 구조를 포착한 근거이며, state가 원문을 손실 없이 저장하거나 임의 길이 dependency를 학습한다는 보장은 아닙니다.
+          Elman의 simple recurrent network는 직전 hidden activation의 복사본을 다음 시점 입력에 제공해 sequence의 시간 구조를 학습했습니다.
+          논문 실험이 보인 것은 작은 synthetic language와 당시의 network·training 조건에서 recurrent context가 구조를 포착했다는 데까지입니다.
+          state가 원문을 손실 없이 저장하거나 임의 길이 dependency를 학습한다는 보장은 여기 없습니다.
         </p>
       </div>
 

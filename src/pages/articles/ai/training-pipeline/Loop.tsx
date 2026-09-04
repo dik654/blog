@@ -16,10 +16,8 @@ export default function Loop() {
           끄므로 둘은 서로 대신하지 않습니다.
         </p>
         <p>
-          Scheduler·logging·checkpoint 주기를 “step”으로 적을 때는 micro-batch
-          iteration인지 optimizer update인지 반드시 명시합니다. Gradient
-          accumulation을 켜면 둘의 숫자가 달라지고, resume 후 scheduler가 한 칸
-          밀리는 흔한 원인이 됩니다.
+          Scheduler·logging·checkpoint 주기를 “step”으로 적는다면 그 step이 micro-batch iteration인지 optimizer update인지
+          반드시 밝혀야 합니다. Gradient accumulation을 켜면 둘의 숫자가 달라지는데 이것이 resume 후 scheduler가 한 칸 밀리는 흔한 원인입니다.
         </p>
       </div>
 
@@ -77,10 +75,8 @@ export default function Loop() {
       <div id="docs-pytorch-amp" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">공식 문서 따라 읽기 · Automatic Mixed Precision</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          PyTorch 문서는 autocast를 forward와 loss 구간에 적용하고 backward를
-          context 밖에서 실행하도록 안내합니다. FP16은 GradScaler와 함께 쓰는
-          일반 경로를 설명하지만, 모든 model이 FP16 범위와 호환된다고 보장하지는
-          않으며 scale이 항상 1보다 크다는 보장도 없습니다.
+          PyTorch 문서는 autocast를 forward와 loss 구간에 적용하고 backward는 context 밖에서 실행하도록 안내합니다. FP16을 GradScaler와 함께
+          쓰는 일반 경로도 설명하지만 모든 model이 FP16 범위와 호환된다고 보장하지는 않습니다. Scale이 항상 1보다 크다는 보장도 없습니다.
         </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://docs.pytorch.org/docs/stable/amp.html" target="_blank" rel="noreferrer">현재 AMP API와 op별 dtype 정책 보기</a>
       </div>

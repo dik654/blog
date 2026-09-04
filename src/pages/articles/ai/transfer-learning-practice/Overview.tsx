@@ -16,11 +16,9 @@ export default function Overview() {
           아니라 <strong>parameter initialization과 preprocessing contract</strong>입니다.
         </p>
         <p>
-          첫 baseline은 pretrained backbone을 고정하고 새 head만 학습하는 fixed
-          feature입니다. 여기서 input·label·metric이 정상임을 확인한 뒤 upper
-          blocks, 전체 model 순으로 trainable scope를 넓힙니다. “label이 몇 개면
-          full fine-tuning” 같은 고정 임계값 대신 source–target 차이, 반복 분산,
-          memory·wall time과 target validation gain으로 단계마다 판단합니다.
+          첫 baseline은 pretrained backbone을 고정하고 새 head만 학습하는 fixed feature입니다. 여기서 input·label·metric이 정상임을
+          확인한 뒤 upper blocks, 전체 model 순으로 trainable scope를 넓혀 갑니다. “label이 몇 개면 full fine-tuning” 같은 고정 임계값에
+          기대는 대신 source–target 차이와 반복 분산, memory·wall time과 target validation gain을 보고 단계마다 판단합니다.
         </p>
         <p>
           Training loop·checkpoint는 <Link to="/ai/training-pipeline">학습 파이프라인 글</Link>,
@@ -53,7 +51,11 @@ export default function Overview() {
       <div className="not-prose my-8"><OverviewViz /></div>
       <div id="docs-transfer-tutorial" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">공식 예제 따라 읽기 · PyTorch Transfer Learning</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">공식 tutorial은 ImageNet pretrained ConvNet을 initialization으로 전체 fine-tuning하는 경우와 마지막 layer만 학습하는 fixed feature extractor를 구분합니다. Ant·bee 소규모 image classification 예제의 결과를 다른 modality와 domain의 보편적 우월성으로 일반화해서는 안 됩니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            공식 tutorial은 두 경우를 구분합니다. ImageNet pretrained ConvNet을 initialization으로 삼아 전체를 fine-tuning하는 쪽과
+            마지막 layer만 학습하는 fixed feature extractor 쪽입니다. Ant·bee 소규모 image classification 예제에서 나온 결과를 다른
+            modality와 domain의 보편적 우월성으로 일반화할 수는 없습니다.
+          </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://docs.pytorch.org/tutorials/beginner/transfer_learning_tutorial.html" target="_blank" rel="noreferrer">현재 tutorial의 두 시나리오 보기</a>
       </div>
     </section>

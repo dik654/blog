@@ -23,11 +23,9 @@ export default function ServingMemoryAdmissionAndPreemptionArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            LLM serving에서 GPU memory 가운데 크기가 계속 변하는 항목은 KV cache입니다.
-            요청마다 길이가 다르고 decode가 진행될수록 자라기 때문에 scheduler는 매 step
-            두 가지를 정합니다. 대기 중인 요청을 지금 받아들여도 되는지가 admission이고,
-            다음 token을 저장할 block이 없을 때 실행 중인 요청 가운데 누구를 내보낼지가
-            preemption입니다.
+            LLM serving에서 GPU memory 가운데 크기가 계속 변하는 항목은 KV cache입니다. 요청마다 길이가 다르고 decode가 진행될수록 자라기 때문에
+            scheduler는 매 step 두 가지를 정합니다. 대기 중인 요청을 지금 받아들여도 되는지가 admission입니다. 다음 token을 저장할 block이 없을 때 실행
+            중인 요청 가운데 누구를 내보낼지가 preemption입니다.
           </p>
           <p>
             이 글은 그 두 결정만 다룹니다. Block을 어떻게 나누고 fragmentation을 어떻게
@@ -52,10 +50,8 @@ export default function ServingMemoryAdmissionAndPreemptionArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            요청 하나가 GPU에서 차지할 KV memory는 세 숫자로 정해집니다. Block 하나가
-            담는 token 수, block 하나의 byte, 그리고 그 요청이 최종적으로 갖게 될 token
-            수입니다. Token 수는 prompt 길이에 생성 상한을 더한 값이고, block 경계에서
-            올림하므로 마지막 block은 일부가 비어 있습니다.
+            요청 하나가 GPU에서 차지할 KV memory는 세 숫자로 정해집니다. Block 하나가 담는 token 수, block 하나의 byte, 그리고 그 요청이 최종적으로 갖게
+            될 token 수입니다. Token 수는 prompt 길이에 생성 상한을 더한 값입니다. Block 경계에서 올림하므로 마지막 block은 일부가 비어 있습니다.
           </p>
           <p>
             Block당 byte는 model 구조에서 나옵니다. Layer마다 key와 value를 각각 저장하므로
@@ -70,16 +66,12 @@ export default function ServingMemoryAdmissionAndPreemptionArticle() {
             나머지는 decode가 진행될 때 한 block씩 추가합니다.
           </p>
           <p>
-            이렇게 token 수를 따라 자라는 sequence-length-dependent allocation이 admission
-            계산을 두 층으로 나눕니다. 지금 당장 필요한 block과 끝까지 갔을 때 필요한
-            block이 다르고, scheduler는 앞의 것으로 받아들인 뒤 뒤의 것을 감당하지 못하면
-            preemption으로 되돌립니다.
+            이렇게 token 수를 따라 자라는 sequence-length-dependent allocation이 admission 계산을 두 층으로 나눕니다. 지금 당장 필요한
+            block과 끝까지 갔을 때 필요한 block이 다릅니다. Scheduler는 앞의 것으로 받아들인 뒤 뒤의 것을 감당하지 못하면 preemption으로 되돌립니다.
           </p>
           <p>
-            같은 계산을 model 크기와 나란히 놓으면 왜 memory가 모자라는지 보입니다. vLLM
-            논문은 OPT-13B의 token당 KV를 800 KB로 계산했고, 40 GB A100에서 weight가 약
-            65%, 동적 state가 약 30%를 차지한다고 적었습니다. 그 30% 안에서 요청 수백 개의
-            footprint가 경쟁합니다.
+            같은 계산을 model 크기와 나란히 놓으면 왜 memory가 모자라는지 보입니다. vLLM 논문은 OPT-13B의 token당 KV를 800 KB로 계산했고 40 GB
+            A100에서 weight가 약 65%, 동적 state가 약 30%를 차지한다고 적었습니다. 그 30% 안에서 요청 수백 개의 footprint가 경쟁합니다.
           </p>
         </div>
         <ExplainedFormula
@@ -132,15 +124,14 @@ export default function ServingMemoryAdmissionAndPreemptionArticle() {
             preemption이 시작됩니다. Watermark는 그 성장분을 미리 남겨 두는 예약입니다.
           </p>
           <p>
-            수치로 보면 이렇습니다. 80 GiB GPU에 gpu_memory_utilization 0.9를 주면 72 GiB가
-            engine 몫이고, 여기서 weight 16 GiB와 profiling에서 잰 activation 최대치 2 GiB를
-            빼면 KV pool은 54 GiB, 2 MiB block 27,648개입니다. Watermark 1%는 276 block입니다.
+            수치로 보면 이렇습니다. 80 GiB GPU에 gpu_memory_utilization 0.9를 주면 72 GiB가 engine 몫이고 여기서 weight 16 GiB와
+            profiling에서 잰 activation 최대치 2 GiB를 빼면 KV pool은 54 GiB, 2 MiB block 27,648개입니다. Watermark 1%는 276
+            block입니다.
           </p>
           <p>
-            Free block이 300개일 때 63 block짜리 요청은 300 − 63 = 237이 276보다 작으므로
-            LATER로 대기하고, 350개면 287이 276 이상이므로 OK로 들어갑니다. 전체 pool에서
-            watermark를 뺀 것보다 큰 요청은 언제 와도 못 받으므로 NEVER로 거절합니다.
-            NEVER를 LATER로 다루면 그 요청이 queue 앞에서 영원히 다른 요청을 막습니다.
+            Free block이 300개일 때 63 block짜리 요청은 300 − 63 = 237이 276보다 작으므로 LATER로 대기하고 350개면 287이 276 이상이므로 OK로
+            들어갑니다. 전체 pool에서 watermark를 뺀 것보다 큰 요청은 언제 와도 못 받으므로 NEVER로 거절합니다. NEVER를 LATER로 다루면 그 요청이 queue
+            앞에서 영원히 다른 요청을 막습니다.
           </p>
           <p>
             Free block이 watermark 아래로 내려가 실행 중인 요청의 다음 step 수요조차 못
@@ -149,9 +140,8 @@ export default function ServingMemoryAdmissionAndPreemptionArticle() {
             들어갑니다.
           </p>
           <p>
-            다른 engine도 같은 여유를 다른 이름으로 조절합니다. SGLang은 mem-fraction-static으로
-            weight와 KV pool의 비율을, schedule-conservativeness로 받아들이는 보수성을 정하고,
-            요청이 자주 retract되면 후자를 키우라고 안내합니다.
+            다른 engine도 같은 여유를 다른 이름으로 조절합니다. SGLang은 mem-fraction-static으로 weight와 KV pool의 비율을, schedule-
+            conservativeness로 받아들이는 보수성을 정합니다. 요청이 자주 retract되면 후자를 키우라고 안내합니다.
           </p>
         </div>
         <ExplainedFormula
@@ -182,10 +172,9 @@ export default function ServingMemoryAdmissionAndPreemptionArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Memory pressure에 들어가면 scheduler는 실행 중인 요청 하나를 victim으로
-            고릅니다. vLLM 논문은 FCFS 순서에서 가장 늦게 온 요청부터 내보내고, 한 요청의
-            block은 전부 내보내거나 하나도 내보내지 않는 all-or-nothing을 택했습니다. 한
-            요청의 block은 함께 읽히므로 일부만 남겨서는 얻는 것이 없기 때문입니다.
+            Memory pressure에 들어가면 scheduler는 실행 중인 요청 하나를 victim으로 고릅니다. vLLM 논문은 FCFS 순서에서 가장 늦게 온 요청부터 내보내고
+            한 요청의 block은 전부 내보내거나 하나도 내보내지 않는 all-or-nothing을 택했습니다. 한 요청의 block은 함께 읽히므로 일부만 남겨서는 얻는 것이 없기
+            때문입니다.
           </p>
           <p>
             내보낸 뒤 KV를 어떻게 할지가 recompute와 swap의 갈림길입니다. Recompute
@@ -194,24 +183,19 @@ export default function ServingMemoryAdmissionAndPreemptionArticle() {
             prefill하므로, 원래 decode로 하나씩 만들던 시간보다 훨씬 짧게 복구됩니다.
           </p>
           <p>
-            Swap preemption은 block 내용을 CPU memory의 swap 영역으로 복사하고 요청을
-            SWAPPED 상태로 둡니다. 재개는 free block이 watermark를 넘길 만큼 남았을 때 다시
-            GPU로 복사하는 swap-in입니다. vLLM V0은 swap_space로 GPU당 CPU swap 크기를
-            잡았고 기본값은 4 GiB이며, CPU로 나간 block 수는 GPU 전체 block 수를 넘지
-            않습니다.
+            Swap preemption은 block 내용을 CPU memory의 swap 영역으로 복사하고 요청을 SWAPPED 상태로 둡니다. 재개는 free block이
+            watermark를 넘길 만큼 남았을 때 다시 GPU로 복사하는 swap-in입니다. vLLM V0은 swap_space로 GPU당 CPU swap 크기를 잡았고 기본값은 4
+            GiB입니다. CPU로 나간 block 수는 GPU 전체 block 수를 넘지 않습니다.
           </p>
           <p>
-            두 비용을 앞의 예시 요청으로 비교해 보겠습니다. 1,500 token을 계산한 뒤
-            내보내진 요청을 recompute로 복구하면 8B model 기준 prefill 연산이 2 × 8 × 10⁹ ×
-            1,500 ≈ 24 TFLOP이고, 유효 400 TFLOP/s로 잡으면 약 60 ms입니다. Swap은 188
-            MiB를 PCIe로 내보내고 되가져오므로 25 GB/s라면 왕복 약 16 ms입니다.
+            두 비용을 앞의 예시 요청으로 비교해 보겠습니다. 1,500 token을 계산한 뒤 내보내진 요청을 recompute로 복구하면 8B model 기준 prefill 연산이 2
+            × 8 × 10⁹ × 1,500 ≈ 24 TFLOP입니다. 유효 400 TFLOP/s로 잡으면 약 60 ms입니다. Swap은 188 MiB를 PCIe로 내보내고 되가져오므로
+            25 GB/s라면 왕복 약 16 ms입니다.
           </p>
           <p>
-            숫자만 보면 swap이 유리해 보이지만 전제가 있습니다. 188 MiB는 layer마다 key와
-            value가 따로 놓인 32 KiB짜리 조각 6,016개로 흩어져 있어, block이 작을수록 전송
-            횟수가 늘고 유효 PCIe 대역폭이 떨어집니다. 논문은 block 16~64에서 두 방식이
-            비슷하고 그보다 작은 block에서는 swap이 뚜렷이 불리하며, recompute 비용은 block
-            크기와 무관하다고 보고했습니다.
+            숫자만 보면 swap이 유리해 보이지만 전제가 있습니다. 188 MiB는 layer마다 key와 value가 따로 놓인 32 KiB짜리 조각 6,016개로 흩어져 있습니다.
+            Block이 작을수록 전송 횟수가 늘고 유효 PCIe 대역폭이 떨어집니다. 논문은 block 16~64에서 두 방식이 비슷하고 그보다 작은 block에서는 swap이 뚜렷이
+            불리하며 recompute 비용은 block 크기와 무관하다고 보고했습니다.
           </p>
           <p>
             현재 vLLM V1 문서는 기본 preemption mode를 RECOMPUTE로 두며 V1 구조에서
@@ -251,10 +235,9 @@ export default function ServingMemoryAdmissionAndPreemptionArticle() {
           preview="논문의 기본은 FCFS에서 가장 늦게 온 요청이지만, 우선순위 scheduling이 켜지면 우선순위가 낮은 요청이 먼저 나갑니다. Victim 정책과 KV 처리 방식은 독립적으로 바꿀 수 있습니다."
         >
           <p>
-            FCFS 최후 도착 규칙은 starvation을 막는 대신 긴 생성이 먼저 들어와 있으면 짧은
-            요청이 계속 밀려나는 head-of-line blocking을 감수합니다. FastServe처럼 output
-            token 경계에서 선점하는 MLFQ를 쓰면 victim 정책이 바뀌지만, 그 state를 GPU에
-            두는지 host로 내리는지는 여전히 이 글의 recompute·swap 축에서 따로 정합니다.
+            FCFS 최후 도착 규칙은 starvation을 막는 대신 긴 생성이 먼저 들어와 있으면 짧은 요청이 계속 밀려나는 head-of-line blocking을 감수합니다.
+            FastServe처럼 output token 경계에서 선점하는 MLFQ를 쓰면 victim 정책이 바뀌지만 그 state를 GPU에 두는지 host로 내리는지는 여전히 이 글의
+            recompute·swap 축에서 따로 정합니다.
           </p>
           <p>
             Swap을 고르면 한 가지 조건이 더 붙습니다. CPU swap에 victim의 block 수만큼
@@ -270,10 +253,9 @@ export default function ServingMemoryAdmissionAndPreemptionArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Attention과 recurrent layer를 섞은 hybrid model에서는 요청 footprint가 두 항으로
-            갈라집니다. Attention layer의 KV는 token 수에 비례해 block 단위로 자라지만,
-            DeltaNet·Mamba 계열 recurrent layer의 state는 요청당 shape가 고정입니다. 이
-            고정 항을 따로 잡는 것이 fixed recurrent-state allocation입니다.
+            Attention과 recurrent layer를 섞은 hybrid model에서는 요청 footprint가 두 항으로 갈라집니다. Attention layer의 KV는
+            token 수에 비례해 block 단위로 자랍니다. DeltaNet·Mamba 계열 recurrent layer의 state는 요청당 shape가 고정입니다. 이 고정 항을
+            따로 잡는 것이 fixed recurrent-state allocation입니다.
           </p>
           <p>
             고정 state는 자라지 않는 대신 처음부터 전부 있어야 합니다. Token을 하나
@@ -288,10 +270,8 @@ export default function ServingMemoryAdmissionAndPreemptionArticle() {
             72 MiB, 1,500 token 요청은 KV 94 MiB에 state 72 MiB입니다.
           </p>
           <p>
-            그래서 admission 조건의 필요 block은 prefill block에 고정 state block을 더한
-            값이 됩니다. 고정 state를 같은 pool의 block으로 환산하면 1 MiB block 기준
-            72개이므로, 짧은 요청 하나가 긴 요청과 비슷한 block을 즉시 요구하고 동시 요청
-            수 상한이 곧 memory 상한이 됩니다.
+            Admission 조건의 필요 block은 prefill block에 고정 state block을 더한 값이 됩니다. 고정 state를 같은 pool의 block으로 환산하면
+            1 MiB block 기준 72개입니다. 짧은 요청 하나가 긴 요청과 비슷한 block을 즉시 요구하고 동시 요청 수 상한이 곧 memory 상한이 됩니다.
           </p>
           <p>
             Layer 종류별 block을 한 pool에 놓는 방법은{" "}
@@ -299,10 +279,9 @@ export default function ServingMemoryAdmissionAndPreemptionArticle() {
             설명합니다. 이 글은 그 환산이 끝났다고 보고 admission 부등식만 다룹니다.
           </p>
           <p>
-            Preemption도 달라집니다. 고정 state를 내보내면 길이와 무관하게 72 MiB가
-            돌아오고, swap이라면 layer당 하나씩 48번의 큰 복사이므로 KV의 32 KiB 조각보다
-            PCIe를 잘 씁니다. 반면 recompute는 prompt 전체를 다시 훑어야만 recurrent state를
-            복원하므로, 긴 요청에서는 KV와 같은 속도로 비용이 늘어납니다.
+            Preemption도 달라집니다. 고정 state를 내보내면 길이와 무관하게 72 MiB가 돌아옵니다. Swap이라면 layer당 하나씩 48번의 큰 복사이므로 KV의 32
+            KiB 조각보다 PCIe를 잘 씁니다. 반면 recompute는 prompt 전체를 다시 훑어야만 recurrent state를 복원하므로 긴 요청에서는 KV와 같은 속도로
+            비용이 늘어납니다.
           </p>
         </div>
         <ExplainedFormula
@@ -337,10 +316,9 @@ export default function ServingMemoryAdmissionAndPreemptionArticle() {
             논문 값이 아니라 위 예시 구성으로 직접 계산한 것입니다.
           </p>
           <p>
-            설정값의 기본치는 각 engine 문서에서 가져왔습니다. Watermark 0.01은 vLLM V0
-            block manager code의 기본 인자이고, V1 문서는 기본 mode를 RECOMPUTE로 적었습니다.
-            SGLang과 TensorRT-LLM은 같은 문제를 다른 이름의 설정으로 다루므로, 수치는 각
-            engine 범위 안에서만 읽어야 합니다.
+            설정값의 기본치는 각 engine 문서에서 가져왔습니다. Watermark 0.01은 vLLM V0 block manager code의 기본 인자이고 V1 문서는 기본
+            mode를 RECOMPUTE로 적었습니다. SGLang과 TensorRT-LLM은 같은 문제를 다른 이름의 설정으로 다루므로 수치는 각 engine 범위 안에서만 읽어야
+            합니다.
           </p>
         </div>
         <CitationBlock

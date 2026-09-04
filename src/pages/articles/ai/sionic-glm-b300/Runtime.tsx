@@ -23,11 +23,9 @@ export default function Runtime() {
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          한 forward가 수백 개의 작은 kernel로 갈라지면 각 kernel은 peak
-          bandwidth에 도달하기 전에 끝나고, activation은 kernel 경계마다 HBM을
-          왕복한다. MTP로 draft depth가 늘면 GPU 계산 외에 scheduler와 CPU
-          synchronization도 더 자주 드러난다. 따라서 end-to-end 결과는 GEMM µs의
-          합으로 예측할 수 없다.
+          한 forward가 수백 개의 작은 kernel로 갈라지면 각 kernel은 peak bandwidth에 도달하기 전에 끝난다. activation은 kernel 경계마다 HBM을
+          왕복한다. MTP로 draft depth가 늘면 GPU 계산 외에 scheduler와 CPU synchronization도 더 자주 드러난다. 따라서 end-to-end 결과는
+          GEMM µs의 합으로 예측할 수 없다.
         </p>
         <ExplainedFormula
           question="한 kernel을 크게 가속했는데도 전체 forward가 조금만 빨라질 수 있는 이유는 무엇인가?"

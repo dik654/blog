@@ -88,10 +88,9 @@ export default function Overview() {
         <p className="text-xs font-bold text-primary">논문 읽기 · 원형 ResNet</p>
         <p className="mt-2 text-sm font-semibold">Deep Residual Learning for Image Recognition</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          더 깊은 plain network의 training error가 나빠지는 degradation을 확인하고,
-          identity shortcut과 residual mapping으로 152-layer network를 학습했습니다.
-          보고된 결과는 ImageNet·CIFAR와 논문의 architecture·training recipe 범위이며,
-          shortcut 하나가 모든 깊이의 optimization을 보장한다는 뜻은 아닙니다.
+          더 깊은 plain network의 training error가 나빠지는 degradation을 확인했고 identity shortcut과 residual mapping으로
+          152-layer network를 학습했습니다. 보고된 결과가 유효한 범위는 ImageNet·CIFAR와 논문의 architecture·training recipe까지입니다. 그
+          밖으로 shortcut 하나가 모든 깊이의 optimization을 보장한다고 읽을 근거는 없습니다.
         </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/1512.03385" target="_blank" rel="noreferrer">원 논문의 degradation·block·평가 보기</a>
       </div>
@@ -99,12 +98,10 @@ export default function Overview() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>깊이를 늘리는 것과 유효한 계산을 늘리는 것은 같지 않다</h3>
         <p className="leading-8">
-          Residual connection은 더 깊은 network를 최적화하기 쉬운 방향으로
-          바꾸지만, 깊이가 자동으로 accuracy를 높인다는 보장은 없습니다. Data
-          size, stage width, normalization, learning-rate schedule과
-          regularization이 함께 맞아야 하며, 지나치게 깊은 model은 latency와
-          activation memory를 늘릴 수 있습니다. 따라서 ResNet-18·50·101 같은
-          이름은 품질 서열이 아니라 서로 다른 compute·memory 선택지로 봅니다.
+          Residual connection은 더 깊은 network를 최적화하기 쉬운 방향으로 바꿉니다. 그렇다고 깊이가 자동으로 accuracy를 높인다는 보장이 따라오지는 않습니다.
+          Data size, stage width, normalization, learning-rate schedule과 regularization이 함께 맞아야 하고 지나치게 깊은
+          model은 latency와 activation memory를 늘리기도 합니다. ResNet-18·50·101 같은 이름은 품질 서열이 아니라 compute·memory를 어떻게
+          잡을지의 선택지로 읽습니다.
         </p>
       </div>
     </section>

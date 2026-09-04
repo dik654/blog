@@ -9,11 +9,9 @@ export default function Limitations() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          마지막 encoder state 하나만 넘기는 구조에서는 target step마다 source의 특정
-          위치를 다시 확인할 수 없다. Attention은 encoder state 전체를 memory로 남기고,
-          현재 decoder state와 각 source state의 compatibility를 계산해 step마다 다른
-          context를 만든다. 즉 encoder–decoder 분해를 유지하면서 둘 사이의 interface를
-          fixed vector에서 content-dependent read로 바꾼 것이다.
+          마지막 encoder state 하나만 넘기는 구조에서는 target step마다 source의 특정 위치를 다시 확인할 수 없다. Attention은 encoder state
+          전체를 memory로 남긴 뒤 현재 decoder state와 각 source state의 compatibility를 계산해 step마다 다른 context를 만든다.
+          Encoder–decoder 분해는 그대로 두고 둘 사이의 interface만 fixed vector에서 content-dependent read로 바뀐다.
         </p>
       </div>
 
@@ -42,20 +40,16 @@ export default function Limitations() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>병목을 완화해도 계산과 해석의 비용은 남는다</h3>
         <p>
-          Recurrent encoder·decoder는 timestep dependency 때문에 sequence 방향의 병렬성이
-          제한되고, attention은 target step마다 source state를 조회하므로 memory와 계산이
-          입력 길이에 따라 늘어난다. Transformer는 recurrence를 제거해 한 layer의 token
-          계산을 병렬화했지만 self-attention score matrix라는 다른 scaling 비용을 갖는다.
-          따라서 “attention이 긴 문장을 해결했다”는 설명만으로 serving trade-off까지
-          결론 내릴 수 없다.
+          Recurrent encoder·decoder는 timestep dependency 때문에 sequence 방향의 병렬성이 제한된다. Attention은 target step마다
+          source state를 조회하므로 memory와 계산이 입력 길이를 따라 늘어난다. Transformer는 recurrence를 제거해 한 layer의 token 계산을
+          병렬화했지만 self-attention score matrix라는 다른 scaling 비용이 붙는다. “attention이 긴 문장을 해결했다”는 설명만으로는 serving
+          trade-off까지 판단이 서지 않는다.
         </p>
         <p>
-          예를 들어 source 길이 S=40, target 길이 T=10이면 step별 attention은
-          10×40=400개의 compatibility score를 만들고 40개의 encoder state를 memory에
-          유지한다. Fixed context는 마지막 state 하나만 넘겨 이 직접 조회 비용을 줄이지만,
-          필요한 source 위치로 돌아가는 경로도 함께 잃는다. 따라서 state width만 늘린
-          실험과 source memory read를 추가한 실험을 같은 hardware·latency budget에서 두고,
-          length bucket별 quality와 memory를 함께 비교해야 한다.
+          예를 들어 source 길이 S=40, target 길이 T=10이면 step별 attention은 10×40=400개의 compatibility score를 만들고 40개의
+          encoder state를 memory에 유지한다. Fixed context는 마지막 state 하나만 넘겨 이 직접 조회 비용을 줄이는 대신 필요한 source 위치로 돌아가는
+          경로도 함께 잃는다. State width만 늘린 실험과 source memory read를 추가한 실험을 같은 hardware·latency budget에 두고 length
+          bucket별 quality와 memory를 함께 비교한다.
         </p>
         <p>Additive·dot-product·self-attention의 계산과 heatmap 해석은 여기에서 중복하지 않고 <Link to="/ai/attention-theory">Attention 이론 정본 글</Link>로 이어갑니다.</p>
       </div>
@@ -63,7 +57,11 @@ export default function Limitations() {
       <div id="paper-bahdanau-bridge" className="not-prose my-8 border-l border-primary/50 pl-4 scroll-mt-24">
         <p className="text-xs font-bold text-primary">논문 읽기 · Fixed context에서 dynamic read로</p>
         <p className="mt-2 text-sm font-semibold">Neural Machine Translation by Jointly Learning to Align and Translate</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">Fixed-length vector 하나가 긴 source의 정보를 모두 운반해야 한다는 병목을 문제로 두고, decoder step마다 encoder annotation을 가중합하는 soft alignment를 함께 학습합니다. 이는 attention 일반의 모든 변형이나 weight의 인과적 해석을 증명한 논문은 아닙니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            Fixed-length vector 하나가 긴 source의 정보를 모두 운반해야 한다는 병목을 문제로 두고 decoder step마다 encoder annotation을
+            가중합하는 soft alignment를 함께 학습합니다. 논문이 다루는 범위는 여기까지입니다. Attention 일반의 변형이나 weight의 인과적 해석은 논문 밖의
+            이야기입니다.
+          </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary underline-offset-4 hover:underline" href="https://arxiv.org/abs/1409.0473" target="_blank" rel="noreferrer">원 논문과 모델 식 보기</a>
       </div>
     </section>

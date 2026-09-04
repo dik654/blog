@@ -14,9 +14,8 @@ export default function StructuredGenerationServingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            고정 JSON 하나를 만드는 demo와 달리 agent serving은 요청마다 tool
-            목록, parameter schema와 policy가 달라집니다. 따라서 compiled
-            grammar의 cache와 sequence별 matcher state를 분리해 관리해야 합니다.
+            고정 JSON 하나를 만드는 demo와 달리 agent serving은 요청마다 tool 목록, parameter schema와 policy가 달라집니다. compiled
+            grammar의 cache와 sequence별 matcher state는 분리해 관리해야 합니다.
           </p>
         </div>
         <TermBreakdown
@@ -64,11 +63,9 @@ export default function StructuredGenerationServingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Request A의 weather/search union과 B의 payment/refund union은 전체
-            grammar가 다릅니다. 공통 string·number rule을 재사용할 수는 있지만
-            stale schema나 다른 tokenizer에서 만든 transition table을 재사용하면
-            금지 token을 허용할 수 있습니다. 먼저 identity를 정확히 만들고,
-            그다음 compile latency와 reuse granularity를 최적화합니다.
+            Request A의 weather/search union과 B의 payment/refund union은 전체 grammar가 다릅니다. 공통 string·number rule을
+            재사용할 수는 있지만 stale schema나 다른 tokenizer에서 만든 transition table을 재사용하면 금지 token을 허용할 수 있습니다. 먼저
+            identity를 정확히 만들고 그다음 compile latency와 reuse granularity를 최적화합니다.
           </p>
         </div>
         <ExplainedFormula
@@ -144,10 +141,8 @@ export default function StructuredGenerationServingArticle() {
             커집니다.
           </p>
           <p>
-            예를 들어 vocabulary가 32,000개면 순진하게는 step마다 최대
-            32,000번의 state 전이를 검사해야 합니다. Token 전이를 미리
-            compile해 두면 decoding 중에는 이 전이표를 조회만 하면 되므로,
-            매 step 비용이 compile 시점의 1회 비용으로 옮겨 갑니다.
+            예를 들어 vocabulary가 32,000개면 순진하게는 step마다 최대 32,000번의 state 전이를 검사해야 합니다. Token 전이를 미리 compile해 두면
+            decoding 중에는 이 전이표를 조회만 하면 되므로 매 step 비용이 compile 시점의 1회 비용으로 옮겨 갑니다.
           </p>
         </div>
       </section>
@@ -158,11 +153,9 @@ export default function StructuredGenerationServingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Compiled grammar는 여러 request가 읽기 전용으로 공유할 수 있습니다.
-            그러나 generated prefix가 다르면 allowed set도 다르므로 matcher
-            state와 mask buffer는 sequence별 lifetime을 가집니다. Continuous
-            batching에서는 sequence가 끝나거나 취소될 때 이 state를 회수하는
-            경계도 필요합니다.
+            Compiled grammar는 여러 request가 읽기 전용으로 공유할 수 있습니다. 그러나 generated prefix가 다르면 allowed set도 다르므로
+            matcher state와 mask buffer는 sequence별 lifetime이 따로 있습니다. Continuous batching에서는 sequence가 끝나거나 취소될
+            때 이 state를 회수하는 경계도 필요합니다.
           </p>
           <span id="runtime-integration" className="scroll-mt-20" />
           <p>

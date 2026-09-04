@@ -71,11 +71,9 @@ export default function DataPrep() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Padding mask와 loss mask는 같은 질문에 답하지 않는다</h3>
         <p className="leading-8">
-          Attention mask는 어떤 key position을 읽을 수 있는지 정하고, loss
-          mask는 어떤 target token을 objective에 포함할지 정합니다. Padding을
-          attention에서 가렸다고 자동으로 loss에서도 제외되는 것은 아닙니다.
-          Batch padding side, position ID, causal mask와 label shift를 따로
-          검사해야 silent training bug를 막을 수 있습니다.
+          Attention mask는 어떤 key position을 읽을 수 있는지 정하고 loss mask는 어떤 target token을 objective에 포함할지 정합니다.
+          Padding을 attention에서 가렸다고 loss에서도 자동으로 빠지는 것은 아닙니다. Batch padding side와 position ID, causal mask와
+          label shift를 따로 검사해야 silent training bug를 막을 수 있습니다.
         </p>
       </div>
     </section>

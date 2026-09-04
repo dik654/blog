@@ -48,11 +48,9 @@ export default function Kernel() {
           2. tcgen05와 TMEM pipeline
         </h3>
         <p className="leading-7">
-          Blackwell의 tcgen05 MMA는 한 thread가 instruction을 issue하고
-          accumulator를 TMEM에 둔다. TMEM은 TMA와 다른 on-chip tensor memory다.
-          accumulator를 register file 밖에 두면 register pressure를 줄이고
-          load·MMA·epilogue를 겹칠 여지가 생기지만, barrier와 stage 설계가
-          자동으로 해결되는 것은 아니다.
+          Blackwell의 tcgen05 MMA는 한 thread가 instruction을 issue하고 accumulator를 TMEM에 둔다. TMEM은 TMA와 다른 on-chip
+          tensor memory다. accumulator를 register file 밖에 두면 register pressure를 줄이고 load·MMA·epilogue를 겹칠 여지가
+          생기지만 barrier와 stage 설계가 자동으로 해결되는 것은 아니다.
         </p>
         <div className="not-prose my-5 flex items-center gap-3 rounded-xl border bg-card p-4 text-sm">
           <strong>{p.beforeTbPerSec} TB/s</strong>

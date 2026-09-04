@@ -113,12 +113,10 @@ export default function SkipConnection() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Element-wise addition에는 엄격한 tensor contract가 있다</h3>
         <p className="leading-8">
-          Residual output과 shortcut은 batch를 제외한 spatial·channel shape가
-          같아야 더할 수 있습니다. Stage transition에서는 residual branch의
-          stride로 resolution을 줄이고 shortcut에도 같은 stride의 1×1
-          convolution을 적용해 channel을 맞추는 projection이 흔합니다. 이
-          shortcut에는 parameter가 생기므로 더 이상 순수 identity path가 아니며,
-          compute와 gradient path도 달라집니다.
+          Residual output과 shortcut은 batch를 제외한 spatial·channel shape가 같아야 더할 수 있습니다. Stage transition에서는
+          projection이 흔합니다. residual branch의 stride로 resolution을 줄이고 shortcut에도 같은 stride의 1×1 convolution을
+          적용해 channel을 맞추는 방식입니다. 이 shortcut에는 parameter가 생기니 더 이상 순수 identity path가 아닙니다. compute와 gradient
+          path도 함께 달라집니다.
         </p>
       </div>
 

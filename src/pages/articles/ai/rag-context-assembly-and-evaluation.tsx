@@ -20,9 +20,8 @@ export default function RagContextAssemblyAndEvaluationArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Retrieval이 candidate를 넘겨도 그 자체로 좋은 답변이 나오지 않습니다. 예산 안에서
-            어떤 evidence를 남기고 어떤 순서로 배치하는지가 첫 번째 병목이고, 답변이 나온 뒤에는
-            어느 stage를 고쳐야 하는지 지표별로 나눠 봐야 두 번째 병목이 드러납니다.
+            Retrieval이 candidate를 넘겨도 그 자체로 좋은 답변이 나오지 않습니다. 예산 안에서 어떤 evidence를 남기고 어떤 순서로 배치하는지가 첫 번째 병목입니다.
+            답변이 나온 뒤에는 어느 stage를 고쳐야 하는지 지표별로 나눠 봐야 두 번째 병목이 드러납니다.
           </p>
           <p>
             이 글은 candidate를 넘겨받은 뒤 context를 조립하는 절차(evidence selection·packing·
@@ -51,9 +50,8 @@ export default function RagContextAssemblyAndEvaluationArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Retrieval budget(top-k=5, chunk당 500 token이면 2,500 token)을 넘는 candidate 전부를
-            context에 넣을 수 없습니다. Evidence selection은 그 예산 안에서 실제로 남길 chunk를
-            정하는 절차이고, 순위만으로 자르면 비슷한 내용이 중복돼 서로 다른 정보를 밀어냅니다.
+            Retrieval budget(top-k=5, chunk당 500 token이면 2,500 token)을 넘는 candidate 전부를 context에 넣을 수 없습니다. 그
+            예산 안에서 실제로 남길 chunk를 정하는 일이 evidence selection입니다. 순위만으로 자르면 비슷한 내용이 중복돼 서로 다른 정보를 밀어냅니다.
           </p>
           <p>
             Rerank 순위 top-8 중 top-5를 그대로 자르면 1·2위가 같은 문단을 다른 표현으로 반복해
@@ -69,14 +67,12 @@ export default function RagContextAssemblyAndEvaluationArticle() {
             이 이미 다룹니다. 이 글은 압축 전에 무엇을 남길지 정하는 selection 단계만 다룹니다.
           </p>
           <p>
-            선택된 chunk를 실제 prompt 문자열로 만드는 결정이 context packing이고, 그 chunk를 어떤
-            순서로 배치할지가 context ordering입니다. 두 결정은 붙어 있지만 서로 다른 실패를
-            만듭니다.
+            선택된 chunk를 실제 prompt 문자열로 만드는 결정이 context packing입니다. 그 chunk를 어떤 순서로 배치할지가 context ordering입니다. 두
+            결정은 붙어 있지만 서로 다른 실패를 만듭니다.
           </p>
           <p>
-            Packing은 각 chunk 앞뒤에 source id·구분자를 넣어 model이 어디까지가 한 evidence인지
-            알게 하는 작업입니다. 구분자가 없으면 model이 두 문서의 경계를 넘어 잘못된 조합으로
-            답을 만들 수 있습니다.
+            Packing에서는 각 chunk 앞뒤에 source id·구분자를 넣어 model이 어디까지가 한 evidence인지 알게 합니다. 구분자가 없으면 model이 두 문서의
+            경계를 넘어 잘못된 조합으로 답을 만들 수 있습니다.
           </p>
           <p>
             Ordering은{" "}
@@ -118,9 +114,8 @@ export default function RagContextAssemblyAndEvaluationArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            RAGAS는 reference 정답 없이 LLM으로 RAG 품질을 재는 네 지표를 정의합니다. Groundedness
-            (원 논문 명칭 faithfulness)와 answer relevance는 생성된 답변을, context precision과
-            context recall은 검색된 context 자체를 평가합니다.
+            RAGAS는 reference 정답 없이 LLM으로 RAG 품질을 재는 네 지표를 정의합니다. Groundedness (원 논문 명칭 faithfulness)와 answer
+            relevance는 생성된 답변을 평가합니다. 나머지 둘, context precision과 context recall은 검색된 context 자체를 봅니다.
           </p>
           <p>
             여기서 말하는 groundedness는{" "}
@@ -211,9 +206,8 @@ export default function RagContextAssemblyAndEvaluationArticle() {
         />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Context precision과 recall은 답변이 아니라 검색된 context 자체를 봅니다. Precision은
-            relevant chunk가 순위 위쪽에 오는지, recall은 정답에 필요한 근거가 하나도 빠지지
-            않았는지를 봅니다. RAGAS 논문 자체는 이 둘을 정의하지 않고, 후속 RAGAS 공식 문서가
+            Context precision과 recall은 답변이 아니라 검색된 context 자체를 봅니다. Precision이 보는 것은 relevant chunk가 순위 위쪽에
+            오는지입니다. Recall은 정답에 필요한 근거가 하나도 빠지지 않았는지를 봅니다. 다만 RAGAS 논문 자체는 이 둘을 정의하지 않았습니다. 후속 RAGAS 공식 문서가
             추가한 지표입니다.
           </p>
         </div>
@@ -310,15 +304,13 @@ export default function RagContextAssemblyAndEvaluationArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            같은 &apos;틀린 답&apos;도 원인이 다르면 고칠 곳이 다릅니다. Retrieval failure는 정답
-            문서가 corpus에 있어도 애초에 candidate로 회수되지 않은 경우이고, ranking failure는
-            candidate에는 있었지만 top-k 안에 들지 못한 경우이며, generation failure는 정답
-            evidence가 최종 context에 들어갔는데도 model이 이를 답변에 반영하지 못한 경우입니다.
+            같은 &apos;틀린 답&apos;도 원인이 다르면 고칠 곳이 다릅니다. Retrieval failure는 정답 문서가 corpus에 있어도 애초에 candidate로 회수되지
+            않은 경우입니다. Ranking failure는 candidate에는 있었지만 top-k 안에 들지 못한 경우를 가리킵니다. Generation failure에서는 정답
+            evidence가 최종 context에 들어갔는데도 model이 이를 답변에 반영하지 못합니다.
           </p>
           <p>
-            질문 100개 중 42개가 실패했다면, retrieval failure 12개·ranking failure 18개·
-            generation failure 12개로 나눌 수 있습니다. Ranking failure 비중이 가장 크면 reranker
-            재학습이나 top-k 조정이 먼저 손댈 곳입니다.
+            질문 100개 중 42개가 실패했다면 retrieval failure 12개·ranking failure 18개· generation failure 12개로 나눌 수 있습니다.
+            Ranking failure 비중이 가장 크면 reranker 재학습이나 top-k 조정이 먼저 손댈 곳입니다.
           </p>
           <p>
             이 세 층을 순서대로 지나가는 진단 자체는{" "}
@@ -361,9 +353,8 @@ export default function RagContextAssemblyAndEvaluationArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Retrieval ablation은 retrieval 단계를 완전히 끄고 순수 parametric LM 성능과 비교해
-            RAG 전체가 실제로 얼마나 기여하는지를 분리하는 실험입니다. Oracle retrieval은 반대로
-            실제 retriever 대신 정답이 포함된 것으로 알려진 이상적 context를 강제로 넣어
+            Retrieval ablation은 retrieval 단계를 완전히 끄고 순수 parametric LM 성능과 비교합니다. RAG 전체가 실제로 얼마나 기여하는지를 이렇게
+            분리해 냅니다. Oracle retrieval은 방향이 반대입니다. 실제 retriever 대신 정답이 포함된 것으로 알려진 이상적 context를 강제로 넣어
             generator 쪽 성능의 상한을 잽니다.
           </p>
           <p>
@@ -378,9 +369,8 @@ export default function RagContextAssemblyAndEvaluationArticle() {
             coverage 44.3%에 그쳐 20%p 이상의 격차가 남습니다.
           </p>
           <p>
-            이 oracle과 실제 retriever의 성능 차이를 retriever upper bound라고 부릅니다. 격차가
-            크면 reranker·query rewriting 개선의 여지가 아직 많다는 뜻이고, 격차가 이미 작다면
-            다음 개선은 retrieval이 아니라 generation 쪽에 있다는 신호입니다.
+            이 oracle과 실제 retriever의 성능 차이를 retriever upper bound라고 부릅니다. 격차가 크면 reranker·query rewriting을 개선할
+            여지가 아직 많습니다. 격차가 이미 작다면 다음 개선은 retrieval이 아니라 generation 쪽에 있다는 신호입니다.
           </p>
           <p>
             더 좁은 범위에서 첫 단계 candidate 자체의 상한은{" "}
@@ -399,10 +389,8 @@ export default function RagContextAssemblyAndEvaluationArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Groundedness가 지지 비율을 연속값 하나로 요약한다면, hallucination evaluation은 그
-            안에서 실제로 근거 없는 개별 주장을 찾아 사례로 남깁니다. 같은 groundedness=0.8이라도
-            놓친 20%가 사소한 부연 설명인지, 존재하지 않는 통계 수치를 지어낸 것인지는 다른
-            문제입니다.
+            Groundedness는 지지 비율을 연속값 하나로 요약합니다. Hallucination evaluation은 그 안에서 실제로 근거 없는 개별 주장을 찾아 사례로 남깁니다.
+            같은 groundedness=0.8이라도 놓친 20%가 사소한 부연 설명인지, 존재하지 않는 통계 수치를 지어낸 것인지는 다른 문제입니다.
           </p>
           <p>
             판정은 대개 <Link to="/ai/llm-as-a-judge#problem">LLM-as-a-judge</Link>로 하되,

@@ -15,10 +15,9 @@ export default function Decoder({
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Decoder는 SOS token과 encoder에서 받은 initial state로 시작한다. 각 step에서
-          이전 token embedding과 recurrent state로 새 state를 만들고, vocabulary logits를
-          계산해 다음 token을 선택한다. 선택한 token이 다음 step의 input이 되기 때문에
-          inference는 본질적으로 순차적이며 EOS나 최대 길이에 도달할 때 끝난다.
+          Decoder는 SOS token과 encoder에서 받은 initial state로 시작한다. 각 step에서는 이전 token embedding과 recurrent state로
+          새 state를 만들고 vocabulary logits를 계산해 다음 token을 선택한다. 선택한 token이 다음 step의 input이 되기 때문에 inference는
+          본질적으로 순차적이며 EOS나 최대 길이에 도달할 때 끝난다.
         </p>
       </div>
 

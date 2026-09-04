@@ -21,21 +21,17 @@ export default function SyntheticDataAndDataFlywheelArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Synthetic data generation은 사람이 직접 쓴 예시 대신, LLM 자신이나 더 강한
-            teacher model이 만들어 낸 instruction·response·reasoning trace를 학습 데이터로
-            쓰는 방법입니다. 사람이 라벨을 다는 속도로는 수십만 개 규모의 다양한 instruction을
-            감당할 수 없기 때문에, 생성·검증·재학습을 자동으로 도는 절차가 그 자리를 대신합니다.
+            사람이 직접 쓴 예시 대신 LLM 자신이나 더 강한 teacher model이 만들어 낸 instruction·response·reasoning trace를 학습 데이터로 쓰는
+            것, 이것이 synthetic data generation입니다. 사람이 라벨을 다는 속도로는 수십만 개 규모의 다양한 instruction을 감당할 수 없습니다. 그 자리를
+            생성·검증·재학습이 자동으로 도는 절차가 대신합니다.
           </p>
           <p>
-            이 글은 그 절차를 다섯 단계로 나눠 봅니다. 먼저 teacher-generated·self-generated
-            데이터를 어떻게 만드는지(Self-Instruct·Evol-Instruct), 만든 후보를 verifier·model로
-            어떻게 거르는지(best-of-N 생성과 quality thresholding)를 봅니다.
+            이 글은 그 절차를 다섯 단계로 나눠 봅니다. teacher-generated·self-generated 데이터를 어떻게 만드는지(Self-Instruct·Evol-
+            Instruct), 만든 후보를 verifier·model로 어떻게 거르는지(best-of-N 생성과 quality thresholding)가 앞의 둘입니다.
           </p>
           <p>
-            이어서 남은 문제를 난이도로 어떻게 줄 세우는지(difficulty estimation과 curriculum
-            sampling), 모델이 틀리는 사례를 어떻게 우선 모으는지(hard-example mining), 그리고
-            이 모든 단계가 하나의 순환 고리(data flywheel)로 어떻게 이어지는지를 순서대로
-            다룹니다.
+            남은 문제를 난이도로 어떻게 줄 세우는지(difficulty estimation과 curriculum sampling), 모델이 틀리는 사례를 어떻게 우선 모으는지(hard-
+            example mining), 이 모든 단계가 하나의 순환 고리(data flywheel)로 어떻게 이어지는지를 그다음에 순서대로 다룹니다.
           </p>
           <p>
             Teacher output을 student에 어떤 loss로 전달하는지는{" "}
@@ -55,28 +51,22 @@ export default function SyntheticDataAndDataFlywheelArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Synthetic data generation은 생성 주체를 기준으로 두 갈래로 나뉩니다.
-            Teacher-generated data는 학습 대상보다 강한 별도 model(흔히 더 큰 proprietary
-            model)이 만든 output을 가져다 쓰는 방식이고, self-generated data는 학습 대상
-            자신이거나 그와 같은 계열의 model이 만든 output을 다시 그 model 학습에 쓰는
-            방식입니다.
+            생성 주체를 기준으로 삼으면 synthetic data generation은 두 갈래로 나뉩니다. 한쪽은 teacher-generated data입니다. 학습 대상보다 강한
+            별도 model, 흔히 더 큰 proprietary model이 만든 output을 가져다 씁니다. 다른 한쪽인 self-generated data는 학습 대상 자신이거나 그와
+            같은 계열의 model이 만든 output을 다시 그 model 학습에 넣습니다.
           </p>
           <p>
-            Self-Instruct는 self-generated data를 만드는 대표적인 절차입니다. 사람이 직접 쓴
-            175개의 seed task에서 출발해, instruction generation·classification task
-            식별·instance generation·filtering 네 단계를 반복합니다.
+            Self-Instruct는 self-generated data를 만드는 대표적인 절차입니다. 사람이 직접 쓴 175개의 seed task에서 출발해 instruction
+            generation·classification task 식별·instance generation·filtering 네 단계를 반복합니다.
           </p>
           <p>
-            매 라운드에서 새로 생성된 instruction은 기존 instruction과 ROUGE-L 유사도가 0.7
-            미만일 때만 task pool에 다시 추가되어, 175개였던 seed가 최종 52,445개의
-            instruction과 82,439개의 input-output instance로 불어납니다.
+            매 라운드에서 새로 생성된 instruction은 기존 instruction과 ROUGE-L 유사도가 0.7 미만일 때만 task pool에 다시 들어갑니다. 그렇게
+            175개였던 seed가 최종 52,445개의 instruction과 82,439개의 input-output instance로 불어납니다.
           </p>
           <p>
-            Evol-Instruct는 같은 self-generated 계열이지만 난이도를 직접 조작합니다. Alpaca의
-            52,000개 instruction을 seed로 놓고, In-Depth Evolving으로 제약 추가·deepening·
-            concretizing·추론 단계 증가·입력 확장 다섯 방법 중 하나를 적용해 한 instruction을
-            더 어렵게 다시 쓰거나, In-Breadth Evolving으로 같은 영역의 더 드문 새 instruction을
-            만듭니다.
+            Evol-Instruct는 같은 self-generated 계열이지만 난이도를 직접 조작합니다. Alpaca의 52,000개 instruction을 seed로 놓습니다. 여기에
+            In-Depth Evolving으로 제약 추가·deepening· concretizing·추론 단계 증가·입력 확장 다섯 방법 중 하나를 적용해 한 instruction을 더
+            어렵게 다시 씁니다. 또는 In-Breadth Evolving으로 같은 영역의 더 드문 새 instruction을 만듭니다.
           </p>
           <p>
             정보 이득이 없거나 모델이 답을 만들지 못하는 진화 결과는 Elimination Evolving으로
@@ -109,31 +99,26 @@ export default function SyntheticDataAndDataFlywheelArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Best-of-N data generation은 같은 문제에서 N개의 독립적인 후보를 만든 뒤, 정답
-            여부를 판정할 수 있는 verifier나 판단을 대신하는 model로 각 후보를 채점해 기준을
-            넘는 것만 학습 데이터로 남기는 방법입니다. 후보를 많이 만들수록 그중 하나가 정답일
-            확률은 올라가지만, 그만큼 채점·필터링 비용도 함께 늘어납니다.
+            같은 문제에서 독립적인 후보를 N개 만듭니다. 그다음 정답 여부를 판정할 수 있는 verifier나 판단을 대신하는 model로 각 후보를 채점하고 기준을 넘는 것만 학습
+            데이터로 남깁니다. 이게 best-of-N data generation입니다. 후보를 많이 만들수록 그중 하나가 정답일 확률은 올라갑니다. 그만큼 채점·필터링 비용도 함께
+            늘어납니다.
           </p>
           <p>
-            Verifier-filtered data는 정답 여부를 규칙으로 확인할 수 있는 경우(수학 계산, 코드
-            테스트 통과 여부)에 그 규칙으로 후보를 거른 데이터이고, model-filtered data는 정답
-            규칙이 없는 열린 작업에서 또 다른 LLM을 judge로 세워 점수를 매긴 데이터입니다.
+            정답 여부를 규칙으로 확인할 수 있는 경우, 그러니까 수학 계산이나 코드 테스트 통과 여부라면 그 규칙으로 후보를 거릅니다. 이렇게 거른 것이 verifier-filtered
+            data입니다. model-filtered data는 정답 규칙이 없는 열린 작업 쪽입니다. 또 다른 LLM을 judge로 세워 점수를 매깁니다.
           </p>
           <p>
-            Verifier는 결정적이고 재현 가능하지만 규칙을 만들 수 있는 영역에서만 쓸 수 있고,
-            model filtering은 어떤 작업에도 쓸 수 있는 대신 judge 자체의 오차를 물려받습니다.
+            Verifier는 결정적이고 재현 가능합니다. 대신 규칙을 만들 수 있는 영역에서만 쓸 수 있습니다. model filtering은 어떤 작업에도 쓸 수 있지만 judge
+            자체의 오차를 물려받습니다.
           </p>
           <p>
-            Yuan 등의 rejection sampling fine-tuning(RFT)은 이 절차의 구체적인 수치를
-            보여 줍니다. 문제 하나당 온도 0.7로 k=100개의 reasoning path를 생성한 뒤, 정답과
-            어긋나거나 계산이 틀린 경로를 verifier로 제거하고, 같은 방정식 리스트를 쓰는
-            중복 경로는 하나만 남깁니다. 이렇게 필터링한 약 10만 개 샘플로 다시 학습한
-            LLaMA-7B는 GSM8K 정확도가 35.9%에서 49.3%로 올라갔습니다.
+            Yuan 등의 rejection sampling fine-tuning(RFT)은 이 절차의 구체적인 수치를 보여 줍니다. 문제 하나당 온도 0.7로 k=100개의
+            reasoning path를 생성합니다. 그중 정답과 어긋나거나 계산이 틀린 경로는 verifier로 제거하고 같은 방정식 리스트를 쓰는 중복 경로는 하나만 남깁니다. 이렇게
+            필터링한 약 10만 개 샘플로 다시 학습한 LLaMA-7B는 GSM8K 정확도가 35.9%에서 49.3%로 올라갔습니다.
           </p>
           <p>
-            Quality thresholding은 verifier·model 점수에 상위 몇 퍼센트만 남길지 정하는
-            기준선입니다. 문제당 100개 후보 중 verifier를 통과한 상위 20%만 남기는 식으로
-            기준을 조이면, 남는 데이터 양은 줄지만 평균 품질은 올라갑니다.
+            verifier·model 점수에 상위 몇 퍼센트만 남길지 정하는 기준선이 quality thresholding입니다. 문제당 100개 후보 중 verifier를 통과한 상위
+            20%만 남기는 식으로 기준을 조이면 남는 데이터 양은 줄어도 평균 품질은 올라갑니다.
           </p>
           <p>
             <Link to="/ai/search-based-reasoning-and-test-time-compute#best-of-n">
@@ -181,22 +166,17 @@ export default function SyntheticDataAndDataFlywheelArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Difficulty estimation은 한 문제에 여러 후보를 생성했을 때 그중 몇 개가 verifier를
-            통과했는지, 즉 pass rate로 난이도를 재는 방법입니다. Pass rate가 낮을수록 현재
-            모델에게 그 문제는 어렵다는 뜻이고, 이 값이 앞 절 best-of-N 채점에서 이미 계산해
-            둔 c/n과 같은 수치입니다.
+            한 문제에 여러 후보를 생성했을 때 그중 몇 개가 verifier를 통과했는지, 즉 pass rate로 난이도를 재는 것이 difficulty estimation입니다.
+            pass rate가 낮을수록 현재 모델에게 그 문제는 어렵다는 뜻입니다. 이 값은 앞 절 best-of-N 채점에서 이미 계산해 둔 c/n과 같은 수치입니다.
           </p>
           <p>
-            문제당 k=8개를 생성했다고 하면, 8개 모두 정답인 문제(pass rate 100%)는 지금
-            모델에게 이미 쉬운 문제이고, 0개만 정답인 문제(pass rate 0%)는 verifier 신호 자체가
-            없어 어느 후보를 남겨도 학습에 쓸 근거가 없습니다. 3개만 정답인 문제(pass rate
-            37.5%)는 정답과 오답이 함께 있어 두 부류의 차이를 학습에 담을 수 있는 중간
-            난이도입니다.
+            문제당 k=8개를 생성한 경우를 보겠습니다. 8개 모두 정답인 문제(pass rate 100%)는 지금 모델에게 이미 쉬운 문제입니다. 0개만 정답인 문제(pass rate
+            0%)는 verifier 신호 자체가 없어 어느 후보를 남겨도 학습에 쓸 근거가 없습니다. 3개만 정답인 문제(pass rate 37.5%)는 정답과 오답이 함께 있어 두
+            부류의 차이를 학습에 담을 수 있는 중간 난이도입니다.
           </p>
           <p>
-            Difficulty filtering은 이 극단, 즉 pass rate가 0%이거나 100%인 문제를 curriculum
-            에서 제외하는 단계입니다. 남은 문제에는 curriculum sampling이 적용되어, 중간
-            난이도 문제일수록 더 자주 뽑히도록 가중치를 주고 학습 순서를 정합니다.
+            이 극단, 즉 pass rate가 0%이거나 100%인 문제를 curriculum에서 제외하는 단계가 difficulty filtering입니다. 남은 문제에는
+            curriculum sampling이 적용됩니다. 중간 난이도 문제일수록 더 자주 뽑히도록 가중치를 주고 학습 순서를 정합니다.
           </p>
           <p>
             문제당 pass rate를 재려면 매 라운드 checkpoint로 다시 k개를 굴려야 하므로,
@@ -213,10 +193,8 @@ export default function SyntheticDataAndDataFlywheelArticle() {
           preview="Verifier 신호가 전혀 없는 문제는 지금 학습에는 못 쓰지만, 모델이 더 강해진 다음 라운드에서는 신호가 생길 수 있어 완전히 버리지 않고 대기열로 남겨 두는 편이 안전합니다."
         >
           <p>
-            0%였던 문제를 폐기하면 그 문제가 실제로 풀 수 없는 문제인지, 지금 모델이 아직
-            못 미치는 문제인지 구분할 수 없습니다. 다음 라운드 seed pool에 남겨 두고 모델이
-            개선된 뒤 다시 채점하면, 그때는 pass rate가 0%보다 커져 curriculum에 들어올 수
-            있습니다.
+            0%였던 문제를 폐기하면 그 문제가 실제로 풀 수 없는 문제인지, 지금 모델이 아직 못 미치는 문제인지 구분할 수 없습니다. 다음 라운드 seed pool에 남겨 두고 모델이
+            개선된 뒤 다시 채점하면 그때는 pass rate가 0%보다 커져 curriculum에 들어올 수 있습니다.
           </p>
         </ProgressiveDetail>
       </section>
@@ -227,29 +205,23 @@ export default function SyntheticDataAndDataFlywheelArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Failure mining은 verifier나 judge가 실패로 판정한 output을 따로 모으는 절차이고,
-            hard-example mining은 그중에서도 pass rate가 낮은 문제를 우선순위를 두고 더 많이
-            수집하는 전략입니다. 둘 다 difficulty estimation이 이미 계산해 둔 낮은 pass rate를
-            수집 대상을 고르는 신호로 다시 씁니다.
+            verifier나 judge가 실패로 판정한 output을 따로 모으는 절차가 failure mining입니다. hard-example mining은 그중에서도 pass
+            rate가 낮은 문제에 우선순위를 두고 더 많이 수집하는 전략입니다. 둘 다 difficulty estimation이 이미 계산해 둔 낮은 pass rate를 수집 대상을
+            고르는 신호로 다시 씁니다.
           </p>
           <p>
-            Success trajectory mining은 반대로 verifier를 통과한 성공 reasoning trace를 모아
-            SFT target으로 삼는 절차이고, failure trajectory mining은 실패한 시도의 중간 추론
-            단계까지 포함한 전체 trace를 보존해 그 실패가 어디서 갈렸는지 분석하거나 다음 학습
-            신호로 재활용할 수 있게 남겨 두는 절차입니다.
+            Success trajectory mining은 반대로 verifier를 통과한 성공 reasoning trace를 모아 SFT target으로 삼습니다. failure
+            trajectory mining 쪽은 실패한 시도의 전체 trace를 중간 추론 단계까지 포함해 보존합니다. 그 실패가 어디서 갈렸는지 분석하거나 다음 학습 신호로 재활용할 수
+            있게 남겨 두는 것입니다.
           </p>
           <p>
-            Luo 등의 Arena Learning은 이 수집을 배틀 형식으로 구현합니다. WizardArena
-            파이프라인이 여러 model끼리 같은 질문에 답하게 하고 승패를 판정해, 대상 model이
-            진 사례에서 "그 모델의 약점을 드러내는" 데이터만 골라 다음 SFT·RL 라운드 학습
-            데이터로 재사용합니다.
+            Luo 등의 Arena Learning은 이 수집을 배틀 형식으로 구현합니다. WizardArena 파이프라인이 여러 model끼리 같은 질문에 답하게 하고 승패를 판정합니다.
+            그런 다음 대상 model이 진 사례에서 "그 모델의 약점을 드러내는" 데이터만 골라 다음 SFT·RL 라운드 학습 데이터로 재사용합니다.
           </p>
           <p>
-            Success trajectory mining만 반복하면 이미 잘 푸는 문제의 정답 패턴만 계속 쌓여
-            모델이 이미 잘하는 영역만 강화됩니다. 반대로 failure·hard-example mining이 다음
-            라운드 seed로 들어가야, 생성 단계가 지금 모델이 못 푸는 문제 쪽으로 다시 향하고
-            그 결과 학습 데이터의 난이도 분포 자체가 바뀝니다. 이 재투입이 다음 절에서 다룰
-            data flywheel의 회전을 만드는 핵심 지점입니다.
+            Success trajectory mining만 반복하면 이미 잘 푸는 문제의 정답 패턴만 계속 쌓여 모델이 이미 잘하는 영역만 강화됩니다. 반대로 failure·hard-
+            example mining이 다음 라운드 seed로 들어가야 생성 단계가 지금 모델이 못 푸는 문제 쪽으로 다시 향합니다. 그 결과 학습 데이터의 난이도 분포 자체가 바뀝니다.
+            이 재투입이 다음 절에서 다룰 data flywheel의 회전을 만드는 핵심 지점입니다.
           </p>
         </div>
         <TermBreakdown
@@ -269,22 +241,18 @@ export default function SyntheticDataAndDataFlywheelArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Data flywheel은 데이터를 생성하고, 거르고, 그 데이터로 모델을 학습하고, 학습된
-            모델이 만든 실패·성공 trajectory를 다시 다음 라운드의 seed로 되돌리는 순환
-            구조입니다. NVIDIA는 이를 "AI 상호작용에서 수집한 데이터로 모델을 계속 다듬어
-            더 나은 결과와 더 가치 있는 데이터를 만드는 self-improving loop"라고 정의합니다.
+            데이터를 생성하고 거르고, 그 데이터로 모델을 학습하고, 학습된 모델이 만든 실패·성공 trajectory를 다시 다음 라운드의 seed로 되돌립니다. 이 순환 구조가 data
+            flywheel입니다. NVIDIA는 이를 "AI 상호작용에서 수집한 데이터로 모델을 계속 다듬어 더 나은 결과와 더 가치 있는 데이터를 만드는 self-improving
+            loop"라고 정의합니다.
           </p>
           <p>
-            Feedback data는 이 순환에 다시 투입되는 관측치 전체를 가리키는 말로, verifier
-            판정 결과·hard-example·battle 승패가 모두 여기에 포함됩니다. Data feedback loop는
-            그 재투입 경로 자체를 가리키는 더 일반적인 용어로, 생성형 데이터가 아니어도
-            추천 시스템의 클릭 로그 같은 경우에도 똑같이 쓰입니다. Data flywheel은 그중에서도
-            model이 스스로 만든 데이터로 도는 경우를 가리키는 구체적인 이름입니다.
+            Feedback data는 이 순환에 다시 투입되는 관측치 전체를 가리킵니다. verifier 판정 결과·hard-example·battle 승패가 모두 여기 들어갑니다. 그
+            재투입 경로 자체를 가리키는 더 일반적인 용어는 data feedback loop입니다. 생성형 데이터가 아니어도 추천 시스템의 클릭 로그 같은 경우에 똑같이 씁니다. data
+            flywheel은 그중에서도 model이 스스로 만든 데이터로 도는 경우를 부르는 구체적인 이름입니다.
           </p>
           <p>
-            Arena Learning은 이 순환으로 WizardLM-2를 개선했습니다. 한 라운드에서 배틀에 진
-            사례를 모아 다음 SFT·RL 데이터로 학습하면, 다음 라운드 배틀에서는 이전 약점이
-            메워진 자리에서 새로운 약점이 드러나 그 약점이 다시 다음 라운드 데이터가 됩니다.
+            Arena Learning은 이 순환으로 WizardLM-2를 개선했습니다. 한 라운드에서 배틀에 진 사례를 모아 다음 SFT·RL 데이터로 학습하면 다음 라운드 배틀에서는
+            이전 약점이 메워진 자리에서 새로운 약점이 드러납니다. 그 약점이 다시 다음 라운드 데이터가 됩니다.
           </p>
           <p>
             Loop가 항상 저절로 돌지는 않습니다. 초기 모델이 너무 약하면 모든 문제의 pass
@@ -327,9 +295,8 @@ export default function SyntheticDataAndDataFlywheelArticle() {
             가져왔습니다.
           </p>
           <p>
-            Best-of-N 필터링과 pass@k 식은 각각 RFT 논문과 Codex 논문의 저자 자기보고
-            수치이며, data flywheel의 공식 정의와 배틀 기반 사례는 NVIDIA 용어집과 Arena
-            Learning 논문을 근거로 삼았습니다.
+            Best-of-N 필터링과 pass@k 식은 각각 RFT 논문과 Codex 논문의 저자 자기보고 수치입니다. data flywheel의 공식 정의와 배틀 기반 사례는
+            NVIDIA 용어집과 Arena Learning 논문을 근거로 삼았습니다.
           </p>
         </div>
         <div id="paper-self-instruct" className="not-prose my-8 scroll-mt-24">

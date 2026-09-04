@@ -11,12 +11,10 @@ export default function Impact() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          ResNet은 ImageNet classification뿐 아니라 detection·segmentation
-          backbone으로 확장됐고, identity path는 ResNeXt·Wide ResNet·DenseNet과
-          현대 CNN 설계에 영향을 주었습니다. Transformer도 sublayer update를
-          residual stream에 더하지만, convolutional ResNet block을 그대로
-          복사했다기보다 residual learning이라는 더 넓은 parameterization 원리를
-          공유한다고 보는 편이 정확합니다.
+          ResNet은 ImageNet classification뿐 아니라 detection·segmentation backbone으로도 확장됐습니다. identity path는
+          ResNeXt·Wide ResNet·DenseNet과 현대 CNN 설계에 영향을 주었습니다. Transformer도 sublayer update를 residual stream에
+          더합니다. 다만 convolutional ResNet block을 그대로 옮겨 온 것이라고 단정하기는 어렵습니다. 공유하는 쪽은 residual learning이라는 더 넓은
+          parameterization 원리라고 보는 편이 정확합니다.
         </p>
       </div>
 
@@ -26,9 +24,8 @@ export default function Impact() {
         <p className="text-xs font-bold text-primary">후속 논문 읽기 · Path 관점</p>
         <p className="mt-2 text-sm font-semibold">Residual Networks Behave Like Ensembles of Relatively Shallow Networks</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Residual network를 서로 다른 길이의 computational path 모음으로 해석하고
-          lesion 실험으로 짧은 path의 역할을 분석합니다. 이는 유용한 후속 설명이지만
-          trained ResNet이 독립 model의 확률적 ensemble과 정확히 같다는 정의는 아닙니다.
+          Residual network를 서로 다른 길이의 computational path 모음으로 해석하고 lesion 실험으로 짧은 path의 역할을 분석합니다. 유용한 후속
+          설명입니다. 다만 trained ResNet이 독립 model의 확률적 ensemble과 정확히 같다는 정의로 읽으면 지나칩니다.
         </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/1605.06431" target="_blank" rel="noreferrer">원 논문의 path 전개·lesion 실험 보기</a>
       </div>
@@ -37,9 +34,8 @@ export default function Impact() {
         <p className="text-xs font-bold text-primary">후속 논문 읽기 · Loss landscape</p>
         <p className="mt-2 text-sm font-semibold">Visualizing the Loss Landscape of Neural Nets</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Filter-wise normalization을 포함한 1D·2D slice로 architecture별 loss surface를
-          비교하고 skip connection과 landscape의 관계를 관찰합니다. 고차원 objective
-          전체를 2D 그림 하나로 완전히 증명하거나 모든 optimizer 경로를 설명하지는 않습니다.
+          Filter-wise normalization을 포함한 1D·2D slice로 architecture별 loss surface를 비교하고 skip connection과
+          landscape의 관계를 관찰합니다. 물론 2D 그림 하나가 고차원 objective 전체를 완전히 증명하거나 모든 optimizer 경로를 설명해 주지는 못합니다.
         </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/1712.09913" target="_blank" rel="noreferrer">원 논문의 시각화 방법·비교 보기</a>
       </div>
@@ -47,12 +43,9 @@ export default function Impact() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>“얕은 network의 ensemble”은 유용한 후속 관점이지 정의가 아니다</h3>
         <p className="leading-8">
-          Shortcut을 선택하는 여러 computational path로 network를 전개해 짧은
-          path가 gradient에 기여한다는 분석은 residual 구조의 직관을 넓힙니다.
-          Loss landscape가 더 부드럽다는 시각화도 optimization 차이를 설명하는
-          증거입니다. 다만 어느 하나를 ResNet의 유일한 작동 원리로 단정하지
-          않고, 원 논문의 degradation 실험·identity mapping ablation·후속 분석을
-          서로 다른 증거로 구분합니다.
+          Shortcut을 선택하는 여러 computational path로 network를 전개하면 짧은 path가 gradient에 기여한다는 분석이 나옵니다. residual 구조의
+          직관을 넓히는 결과입니다. Loss landscape가 더 부드럽다는 시각화도 optimization 차이를 설명하는 증거입니다. 다만 어느 하나를 ResNet의 유일한 작동
+          원리로 단정하지는 않습니다. 원 논문의 degradation 실험·identity mapping ablation·후속 분석은 서로 다른 증거로 구분합니다.
         </p>
 
         <div id="paper-torchvision-resnet" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
@@ -84,11 +77,9 @@ export default function Impact() {
           Residual path도 architecture·data·training recipe를 대신하지 않는다
         </h3>
         <p className="leading-8">
-          Skip connection을 추가했다고 generalization이나 robustness가
-          보장되지는 않습니다. Width, downsampling 위치, normalization,
-          augmentation과 optimizer가 함께 결과를 만듭니다. 따라서 새 block을
-          평가할 때는 parameter·FLOPs·activation memory와 training budget을 맞춘
-          plain 또는 기존 residual baseline을 함께 둡니다.
+          Skip connection을 추가했다고 generalization이나 robustness가 보장되지는 않습니다. Width, downsampling 위치,
+          normalization, augmentation과 optimizer가 함께 결과를 만듭니다. 새 block을 평가할 때는 parameter·FLOPs·activation
+          memory와 training budget을 맞춘 plain 또는 기존 residual baseline을 함께 둡니다.
         </p>
       </div>
     </section>

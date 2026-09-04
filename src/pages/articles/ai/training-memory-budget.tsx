@@ -44,9 +44,8 @@ export default function TrainingMemoryBudgetArticle() {
             parameter 하나당 2+2+4+4+4=16byte입니다.
           </p>
           <p>
-            Parameter 수 Ψ=7.5×10⁹(75억)인 모델이면 weight·gradient·optimizer
-            state만으로 16×7.5×10⁹=1.2×10¹¹byte, 약 120GB가 필요합니다. 여기에
-            activation이 아직 더해지지 않았습니다.
+            모델의 parameter 수가 Ψ=7.5×10⁹(75억)이라면 weight와 gradient, optimizer state만으로 16×7.5×10⁹=1.2×10¹¹byte, 약
+            120GB가 듭니다. 게다가 여기에는 activation이 아직 더해지지 않았습니다.
           </p>
         </div>
         <ExplainedFormula
@@ -70,10 +69,9 @@ export default function TrainingMemoryBudgetArticle() {
           <p className="text-xs font-bold text-primary">근거 논문 · Model-state memory</p>
           <p className="mt-2 text-sm font-semibold">Rajbhandari, Rasley, Ruwase & He — ZeRO: Memory Optimizations Toward Training Trillion Parameter Models</p>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            Mixed-precision Adam 학습의 model-state memory를 (2+2+K)Ψ로 정식화하고,
-            Ψ=7.5B·K=12 예시에서 baseline 120GB를 Figure 1로 제시합니다. 이 수치는
-            model states(weight·gradient·optimizer state)만의 하한이며, 논문은 이
-            중복을 data-parallel rank에 나누는 ZeRO-DP로 줄이는 것이 본 기여입니다.
+            Mixed-precision Adam 학습의 model-state memory를 (2+2+K)Ψ로 정식화한 뒤 Ψ=7.5B·K=12 예시에서 baseline 120GB를
+            Figure 1로 제시합니다. 이 수치는 model states(weight·gradient·optimizer state)만의 하한입니다. 논문의 본 기여는 이 중복을
+            data-parallel rank에 나누는 ZeRO-DP로 줄이는 데 있습니다.
           </p>
           <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/1910.02054" target="_blank" rel="noreferrer">
             논문과 Figure 1 memory breakdown 보기
@@ -94,12 +92,9 @@ export default function TrainingMemoryBudgetArticle() {
             실행해 복원합니다.
           </p>
           <p>
-            Checkpoint 간격을 √n으로 고르면 저장하는 activation 수와 구간당
-            재계산 비용이 둘 다 √n 근처에서 균형을 이뤄, 전체 activation
-            메모리가 O(√n)으로 줄어듭니다. 1,000-layer residual network
-            실험에서는 이 방법으로 activation 메모리가 48GB에서 7GB로
-            줄었고, 대신 forward를 한 번 더 실행한 만큼 학습 시간이 약 30%
-            늘었습니다.
+            Checkpoint 간격을 √n으로 고르면 저장하는 activation 수와 구간당 재계산 비용이 둘 다 √n 근처에서 균형을 이룹니다. 전체 activation 메모리가
+            O(√n)으로 줄어드는 이유입니다. 1,000-layer residual network 실험에서 이 방법은 activation 메모리를 48GB에서 7GB로 줄였고 대신
+            forward를 한 번 더 실행한 만큼 학습 시간이 약 30% 늘었습니다.
           </p>
         </div>
         <AlgorithmBlock
@@ -118,11 +113,9 @@ export default function TrainingMemoryBudgetArticle() {
           <p className="text-xs font-bold text-primary">근거 논문 · Activation checkpointing</p>
           <p className="mt-2 text-sm font-semibold">Chen, Xu, Zhang & Guestrin — Training Deep Nets with Sublinear Memory Cost</p>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            n-layer network를 O(√n) 메모리로 학습하는 checkpointing 알고리즘을
-            제시하고, 1,000-layer residual network에서 activation 메모리를
-            48GB에서 7GB로 줄이면서 학습 시간은 약 30%만 늘어난다는 실험을
-            보였습니다. 더 극단적인 O(log n) 메모리도 가능하지만 그 경우 추가
-            비용이 O(n log n)으로 커진다고 명시합니다.
+            n-layer network를 O(√n) 메모리로 학습하는 checkpointing 알고리즘을 제시한 뒤 1,000-layer residual network에서
+            activation 메모리를 48GB에서 7GB로 줄이면서 학습 시간은 약 30%만 늘어난다는 실험을 보였습니다. 더 극단적인 O(log n) 메모리도 가능하지만 그 경우 추가
+            비용이 O(n log n)으로 커진다는 점도 함께 명시합니다.
           </p>
           <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/1604.06174" target="_blank" rel="noreferrer">
             논문과 O(√n) 증명·실험 보기
@@ -134,9 +127,8 @@ export default function TrainingMemoryBudgetArticle() {
         <h2 className="mb-6 text-2xl font-bold">이 메모리 예산이 실제로 쓰이는 곳</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            이 글이 정리한 model-state memory·activation checkpointing은 각각
-            다른 글에서 구체적인 구현으로 이어집니다. 아래는 정의를 반복하지
-            않고 각 응용이 이 원리를 어디에 쓰는지로 이어갑니다.
+            이 글이 정리한 model-state memory와 activation checkpointing은 각각 다른 글에서 구체적인 구현으로 이어집니다. 아래에서는 정의를 되풀이하지
+            않고 각 응용이 이 원리를 어디에 쓰는지만 짚습니다.
           </p>
         </div>
         <div className="not-prose mt-7 grid gap-5 md:grid-cols-3">

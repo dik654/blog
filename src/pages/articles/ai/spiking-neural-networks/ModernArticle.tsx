@@ -162,7 +162,10 @@ export default function SpikingNeuralNetworksArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <h3>SNN algorithm과 analog hardware는 같은 말이 아닙니다</h3>
           <p>
-            Loihi처럼 digital event-driven processor도 있고 BrainScaleS-2처럼 analog neuron core와 digital routing·plasticity processor를 합친 mixed-signal system도 있습니다. Process·voltage·temperature(PVT) variation은 analog circuit의 threshold·time constant와 calibration에 중요한 조건이지만, 이 문제를 SNN 전체의 필연적 속성으로 확대하면 안 됩니다.
+            Loihi처럼 digital event-driven processor도 있고 BrainScaleS-2처럼 analog neuron core와 digital
+            routing·plasticity processor를 합친 mixed-signal system도 있습니다. Process·voltage·temperature(PVT)
+            variation은 analog circuit의 threshold·time constant와 calibration에 중요한 조건이지만 이 문제를 SNN 전체의 필연적 속성으로
+            확대하면 안 됩니다.
           </p>
           <p>
             결론적으로 SNN의 가능성은 dense MAC을 sparse event로 바꾸는 것만이 아니라 workload 모양을 <strong>temporal state update와 event routing</strong>으로 바꾸는 데 있습니다. 기존 Transformer의 KV cache·GEMM·AllReduce 병목과는 다른 accelerator·compiler·measurement가 필요합니다.

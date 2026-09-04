@@ -26,11 +26,19 @@ export default function Eval() {
       />
       <div id="reading-ndcg" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">평가 정본 · Cumulated Gain-based Evaluation</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">Järvelin과 Kekäläinen은 binary relevant 여부를 넘어 graded relevance와 결과 순위를 함께 반영하는 cumulative gain 계열을 제안했습니다. NDCG는 ideal ordering으로 정규화해 query별 scale을 맞추지만, label의 완전성·사용자 행동·online utility까지 자동으로 보장하지는 않습니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            Järvelin과 Kekäläinen은 binary relevant 여부를 넘어 graded relevance와 결과 순위를 함께 반영하는 cumulative gain 계열을
+            제안했습니다. NDCG는 ideal ordering으로 정규화해 query별 scale을 맞추지만 label의 완전성·사용자 행동·online utility까지 자동으로
+            보장하지는 않습니다.
+          </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://doi.org/10.1145/582415.582418" target="_blank" rel="noreferrer">Gain·discount·normalization의 원 연구 보기</a>
       </div>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p>Context 단계에서는 answer-span coverage와 불필요한 문맥 비율을 보고, answer 단계에서는 정확성·근거 일치(faithfulness)·no-answer 거절을 분리합니다. Citation은 링크가 있다는 사실이 아니라, 인용된 source가 실제 주장을 지지하는지와 필요한 주장에 인용이 빠지지 않았는지를 봅니다.</p>
+        <p>
+            Context 단계에서는 answer-span coverage와 불필요한 문맥 비율을 봅니다. Answer 단계에서는 정확성·근거 일치(faithfulness)·no-
+            answer 거절을 분리합니다. Citation에서 볼 것은 링크가 있다는 사실이 아닙니다. 인용된 source가 실제 주장을 지지하는지, 그리고 필요한 주장에 인용이 빠지지
+            않았는지를 봅니다.
+          </p>
       </div>
       <ExplainedFormula
         question="인용이 많다는 사실과 인용이 정확하고 빠짐없다는 사실을 어떻게 구분할까요?"
@@ -62,7 +70,11 @@ R_{\mathrm{cite}}&=\underbrace{\frac{|U_{\mathrm{supported}}|}{|U_{\mathrm{verif
       </div>
       <div id="reading-ragas" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">평가 논문 · Ragas</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">Ragas는 RAG를 retrieval context와 LLM generation으로 나누고, ground-truth annotation에만 의존하지 않는 자동 평가 metric 묶음을 제안했습니다. 핵심은 여러 failure dimension을 분리한 점이며, reference-free evaluator가 사람 판정과 언제나 일치하거나 security·ACL·latency를 대신한다는 뜻은 아닙니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            Ragas는 RAG를 retrieval context와 LLM generation으로 나눕니다. 그 위에서 ground-truth annotation에만 의존하지 않는 자동
+            평가 metric 묶음을 제안했습니다. 핵심은 여러 failure dimension을 분리한 점입니다. 다만 reference-free evaluator가 사람 판정과 언제나
+            일치하거나 security·ACL·latency를 대신한다는 뜻은 아닙니다.
+          </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/2309.15217" target="_blank" rel="noreferrer">Metric 설계와 평가 범위 보기</a>
       </div>
     </section>

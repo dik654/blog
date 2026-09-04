@@ -8,7 +8,10 @@ export default function SentenceEmbeddingsArticle() {
   return <div className="space-y-16">
     <section id="overview" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">문장 임베딩은 문장을 숫자로 바꾸는 일이 아니라, 비교할 관계를 한 vector에 보존하는 일입니다</h2>
-      <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8">Encoder가 문장을 읽으면 token마다 문맥을 반영한 state가 나옵니다. 하지만 검색기는 길이가 다른 token 묶음을 그대로 비교하기 어렵습니다. 그래서 여러 state를 고정 길이 vector 하나로 줄이고, 어떤 문장끼리 가까워야 하는지를 training pair로 학습합니다.</p><p>여기서 두 질문을 분리해야 합니다. <strong>Pooling</strong>은 여러 token state를 vector 하나로 만드는 형태의 문제입니다. <strong>Relation objective</strong>는 그 vector의 가까움이 질문–답, paraphrase, entailment 중 무엇을 뜻할지 정하는 학습 문제입니다.</p></div>
+      <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8">
+            Encoder가 문장을 읽으면 token마다 문맥을 반영한 state가 나옵니다. 길이가 다른 token 묶음을 검색기가 그대로 비교하기는 어렵기 때문에 여러 state를 고정
+            길이 vector 하나로 줄입니다. 어떤 문장끼리 가까워야 하는지는 training pair로 학습합니다.
+          </p><p>여기서 두 질문을 분리해야 합니다. <strong>Pooling</strong>은 여러 token state를 vector 하나로 만드는 형태의 문제입니다. <strong>Relation objective</strong>는 그 vector의 가까움이 질문–답, paraphrase, entailment 중 무엇을 뜻할지 정하는 학습 문제입니다.</p></div>
       <TermBreakdown title="문장 하나가 vector가 될 때 만나는 네 용어" items={[
         { term: "Token hidden state", description: "Encoder가 한 token을 문장 전체 문맥 속에서 표현한 숫자 열입니다.", example: "‘bank’의 state는 강둑 문장과 금융 문장에서 서로 달라집니다.", boundary: "문장 전체를 대표하는 vector는 아직 아닙니다." },
         { term: "Padding mask", description: "Batch 길이를 맞추려고 넣은 빈 token을 계산에서 제외하는 0·1 표시입니다.", example: "실제 token 세 개는 1, 뒤의 PAD 두 개는 0입니다." },
@@ -22,7 +25,9 @@ export default function SentenceEmbeddingsArticle() {
     <section id="pooling" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">Mask pooling은 빈 칸을 빼고 실제 token만 평균합니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert"><p>문장 A가 세 token이고 문장 B가 다섯 token이면 batch tensor는 둘 다 다섯 칸을 갖습니다. A의 뒤 두 칸은 정보가 아니라 shape를 맞추는 padding입니다. Mask를 곱하는 이유는 이 빈 state가 합에 기여하지 못하게 하기 위해서이고, mask 합으로 나누는 이유는 문장 길이가 달라도 <em>valid token 한 개당 평균</em>을 만들기 위해서입니다.</p></div>
-      <ExplainedFormula question="Padding을 제외한 token state 세 개에서 sentence vector를 어떻게 만드나요?" idea={<p>먼저 mask가 1인 state만 합하고 valid-token 수로 평균합니다. 그다음 norm으로 한 번 더 나눠 vector 길이를 1로 만들면 내적을 방향 유사도로 읽을 수 있습니다.</p>} formula={String.raw`\mathbf h_{\rm pool}=\frac{\sum_t m_t\mathbf h_t}{\sum_t m_t},\quad \mathbf z=\frac{\mathbf h_{\rm pool}}{\lVert\mathbf h_{\rm pool}\rVert_2}`} annotatedFormula={String.raw`\begin{aligned}\mathbf s&=\underbrace{\sum_{t=1}^{T}m_t\mathbf h_t}_{\text{PAD는 0으로 지우고 valid state만 합산}}\\&n=\underbrace{\sum_{t=1}^{T}m_t}_{\text{실제 token 수를 세어 길이 차이를 제거}}\\\mathbf h_{\rm pool}&=\underbrace{\mathbf s/n}_{\text{valid token 한 개당 평균을 계산}}\\\mathbf z&=\underbrace{\mathbf h_{\rm pool}/\lVert\mathbf h_{\rm pool}\rVert_2}_{\text{크기를 1로 맞춰 방향만 비교}}\end{aligned}`} operations={[
+      <ExplainedFormula question="Padding을 제외한 token state 세 개에서 sentence vector를 어떻게 만드나요?" idea={<p>
+            Mask가 1인 state만 합해 valid-token 수로 평균합니다. Norm으로 한 번 더 나눠 vector 길이를 1로 만들면 내적을 방향 유사도로 읽을 수 있습니다.
+          </p>} formula={String.raw`\mathbf h_{\rm pool}=\frac{\sum_t m_t\mathbf h_t}{\sum_t m_t},\quad \mathbf z=\frac{\mathbf h_{\rm pool}}{\lVert\mathbf h_{\rm pool}\rVert_2}`} annotatedFormula={String.raw`\begin{aligned}\mathbf s&=\underbrace{\sum_{t=1}^{T}m_t\mathbf h_t}_{\text{PAD는 0으로 지우고 valid state만 합산}}\\&n=\underbrace{\sum_{t=1}^{T}m_t}_{\text{실제 token 수를 세어 길이 차이를 제거}}\\\mathbf h_{\rm pool}&=\underbrace{\mathbf s/n}_{\text{valid token 한 개당 평균을 계산}}\\\mathbf z&=\underbrace{\mathbf h_{\rm pool}/\lVert\mathbf h_{\rm pool}\rVert_2}_{\text{크기를 1로 맞춰 방향만 비교}}\end{aligned}`} operations={[
         { expression: String.raw`m_t\mathbf h_t`, annotation: ["mask 0인 PAD state를 없애고", "실제 token state만 남김"] },
         { expression: String.raw`\sum_t m_t\mathbf h_t`, annotation: ["남은 token의 정보를", "문장 전체 합으로 누적"] },
         { expression: String.raw`\mathbf s/\sum_t m_t`, annotation: ["문장마다 다른 valid 길이로 나눠", "token당 평균으로 정규화"] },
@@ -42,7 +47,11 @@ export default function SentenceEmbeddingsArticle() {
         { term: "Negative pair", description: "같은 batch나 corpus에 있지만 목표 relation에서는 멀어져야 하는 text입니다.", boundary: "Label이 없다는 이유만으로 진짜 negative라고 단정하면 false negative가 생깁니다." },
         { term: "Relation objective", description: "Positive score를 올리고 negative score를 내리도록 encoder를 업데이트하는 loss입니다.", boundary: "Paraphrase용 공간이 retrieval·classification에도 자동으로 최적이라는 뜻은 아닙니다." },
       ]} />
-      <div className="prose prose-neutral max-w-none dark:prose-invert"><p>Masked-language-model BERT의 CLS나 mean vector도 숫자는 만듭니다. 그러나 원래 objective는 query와 answer가 cosine 순서에서 가까워지도록 직접 채점하지 않았습니다. Sentence-BERT가 중요한 이유는 단지 Siamese 모양이 아니라 독립적으로 만든 vector에 pair relation이 남도록 supervision을 준 데 있습니다.</p></div>
+      <div className="prose prose-neutral max-w-none dark:prose-invert"><p>
+            Masked-language-model BERT의 CLS나 mean vector도 숫자는 만들지만 원래 objective가 query와 answer를 cosine 순서에서
+            가까워지도록 직접 채점한 적은 없습니다. Sentence-BERT는 독립적으로 만든 vector에 pair relation이 남도록 supervision을 줍니다.
+            Siamese 모양보다 이쪽이 핵심입니다.
+          </p></div>
       <div id="paper-sbert" className="not-prose mt-8 scroll-mt-24"><CitationBlock type="paper" citeKey={1} source="Reimers & Gurevych — Sentence-BERT" href="https://aclanthology.org/D19-1410/">Siamese·triplet BERT와 pooling으로 재사용 가능한 sentence embedding을 학습한 원 논문입니다. NLI·STS 결과가 모든 domain retrieval에서 같은 품질을 보장한다는 뜻은 아닙니다.</CitationBlock></div>
     </section>
 

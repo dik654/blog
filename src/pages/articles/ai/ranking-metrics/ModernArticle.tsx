@@ -226,10 +226,9 @@ export default function RankingMetricsArticle() {
             오히려 벌줄 수 있습니다.
           </p>
           <p>
-            Report에는 judged coverage, unjudged rate, pooling procedure와 label
-            source를 metric 옆에 둡니다. Head·tail·language·intent·freshness
-            slice를 나누고, click label은 position·presentation·selection bias가
-            있다는 경계를 명시합니다.
+            Report에는 judged coverage, unjudged rate, pooling procedure와 label source를 metric 옆에 둡니다.
+            Head·tail·language·intent·freshness slice를 나눕니다. Click label은 position·presentation·selection
+            bias가 있다는 경계를 명시합니다.
           </p>
         </div>
         <TermBreakdown

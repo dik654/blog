@@ -9,27 +9,19 @@ export default function SparseKernelExecution() {
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          Shape를 줄이거나 N:M pattern을 맞춰도, 그 결과를 계산에서 실제로
-          건너뛸 kernel이 없으면 저장만 줄고 latency는 그대로입니다. NVIDIA
-          Ampere Sparse Tensor Core는 정확히 2:4 pattern만 인식해서 2배
-          math throughput을 냅니다. 다른 pattern이나 다른 GPU에서는 같은
-          mask라도 이 2배가 나오지 않습니다.
+          저장만 줄고 latency는 그대로인 경우가 있습니다. shape를 줄이거나 N:M pattern을 맞춰도 그 결과를 계산에서 실제로 건너뛸 kernel이 없을 때입니다.
+          NVIDIA Ampere Sparse Tensor Core는 정확히 2:4 pattern만 인식해서 2배 math throughput을 냅니다. 다른 pattern이나 다른
+          GPU에서는 같은 mask라도 이 2배가 나오지 않습니다.
         </p>
         <p>
-          개별 weight를 임의 위치에서 지우는 unstructured sparsity는 이
-          조건을 대부분 만족하지 못합니다. 90%를 지워 sparse해도 남은 값의
-          위치가 불규칙하면 표준 dense GEMM kernel은 그 0을 건너뛰지 않고
-          원래 크기 그대로 곱셈을 수행합니다. 그래서 value·index로 저장
-          공간은 줄어도 wall-clock speedup은 거의 나타나지 않는 경우가
-          많습니다.
+          개별 weight를 임의 위치에서 지우는 unstructured sparsity는 이 조건을 대부분 만족하지 못합니다. 90%를 지워 sparse해져도 남은 값의 위치가 불규칙하면
+          표준 dense GEMM kernel은 그 0을 건너뛰지 않고 원래 크기 그대로 곱합니다. value·index로 저장 공간은 줄어도 wall-clock speedup이 거의
+          나타나지 않는 경우가 많은 이유입니다.
         </p>
         <p>
-          반대로 channel 자체를 지우는 구조적 pruning은 kernel 종류와
-          무관하게 이득이 생깁니다. Weight matrix의 shape 자체가 줄었으니
-          아무 dense GEMM kernel에 넣어도 더 작은 행렬을 곱하기 때문입니다.
-          N:M 같은 semi-structured pattern은 이 둘의 중간으로, shape는
-          그대로 두는 대신 kernel이 그 local pattern을 인식해야만 이득이
-          생깁니다.
+          반대로 channel 자체를 지우는 구조적 pruning은 kernel 종류와 무관하게 이득이 생깁니다. shape 자체가 줄어든 weight matrix는 아무 dense
+          GEMM kernel에 넣어도 더 작은 행렬을 곱하기 때문입니다. N:M 같은 semi-structured pattern은 이 둘의 중간에 있습니다. shape는 그대로 두는 대신
+          kernel이 그 local pattern을 인식해야만 이득이 생깁니다.
         </p>
       </div>
       <TermBreakdown

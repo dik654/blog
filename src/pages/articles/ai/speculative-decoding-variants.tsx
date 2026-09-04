@@ -21,10 +21,9 @@ export default function SpeculativeDecodingVariantsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Speculative decoding 의 변형은 두 축으로 정리됩니다. Draft token 을 별도 model,
-            자기 자신의 앞부분, 학습된 보조 head, 과거 출력의 통계 가운데 어디서 얻느냐가 한
-            축이고, verify 를 한 줄의 chain 으로 하느냐 여러 후보를 담은 tree 로 하느냐가 다른
-            축입니다. 두 축의 조합이 곧 변형의 이름입니다.
+            Speculative decoding 의 변형은 두 축으로 정리됩니다. 하나는 draft token 을 어디서 얻느냐입니다. 별도 model, 자기 자신의 앞부분, 학습된 보조
+            head, 과거 출력의 통계 가운데 하나를 고릅니다. 다른 하나는 verify 를 한 줄의 chain 으로 하느냐 여러 후보를 담은 tree 로 하느냐입니다. 두 축의 조합이
+            곧 변형의 이름입니다.
           </p>
           <p>
             <Link to="/ai/vllm-spec-decode#overview">앞 글</Link> 은 작은 draft model 이 K 개
@@ -57,9 +56,8 @@ export default function SpeculativeDecodingVariantsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Self-speculative decoding 은 별도 draft model 없이 target 의 앞 E 개 layer 에서
-            일찍 빠져나와 token 을 제안하고, 나머지 L−E 개 layer 로 검증하는 방식입니다. Draft 와
-            verify 가 같은 weight 와 같은 KV cache 를 쓰므로 메모리가 추가로 들지 않습니다.
+            Self-speculative decoding 에는 별도 draft model 이 없습니다. target 의 앞 E 개 layer 에서 일찍 빠져나와 token 을 제안하고
+            나머지 L−E 개 layer 로 검증합니다. Draft 와 verify 가 같은 weight 와 같은 KV cache 를 쓰므로 메모리가 추가로 들지 않습니다.
           </p>
           <p>
             비용은 layer 비율로 셉니다. L=32 에서 E=8 이면 draft token 하나에 forward 의 4 분의 1
@@ -67,9 +65,8 @@ export default function SpeculativeDecodingVariantsArticle() {
             나머지 24 개 layer 만 돌리므로 forward 의 0.75 배입니다.
           </p>
           <p>
-            K=4 이면 cycle 비용은 4×0.25+0.75 = 1.75 forward 입니다. α=0.7 이면 기대 확정 길이가
-            (1−0.7⁵)/0.3 = 2.77 이라 speedup 은 1.58 배이고, α=0.8 이면 3.36/1.75 = 1.92 배입니다.
-            LayerSkip 논문은 요약 2.16 배, 코드 1.82 배를 보고했습니다.
+            K=4 이면 cycle 비용은 4×0.25+0.75 = 1.75 forward 입니다. α=0.7 이면 기대 확정 길이가 (1−0.7⁵)/0.3 = 2.77 이라 speedup
+            은 1.58 배이고 α=0.8 이면 3.36/1.75 = 1.92 배입니다. LayerSkip 논문은 요약 2.16 배, 코드 1.82 배를 보고했습니다.
           </p>
           <p>
             전제가 있습니다. 보통의 model 은 마지막 layer 까지 가야 답이 나오도록 학습되어 8 번째
@@ -78,9 +75,8 @@ export default function SpeculativeDecodingVariantsArticle() {
             exit loss 로 앞 layer 의 α 를 올립니다.
           </p>
           <p>
-            학습을 바꾸지 않는 변형도 있습니다. Draft &amp; Verify 는 pretrained model 의 중간
-            layer 일부를 건너뛰는 부분 그래프를 Bayesian 탐색으로 골라 draft 로 쓰는데, 건너뛸
-            layer 를 고르는 탐색이 model 마다 한 번 필요합니다.
+            학습을 바꾸지 않는 변형도 있습니다. Draft &amp; Verify 는 pretrained model 의 중간 layer 일부를 건너뛰는 부분 그래프를 Bayesian
+            탐색으로 골라 draft 로 쓰는데 건너뛸 layer 를 고르는 탐색이 model 마다 한 번 필요합니다.
           </p>
         </div>
         <div id="paper-layerskip" className="not-prose my-8 scroll-mt-24">
@@ -103,16 +99,14 @@ export default function SpeculativeDecodingVariantsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            MTP head 는 target 학습 때 함께 훈련된 보조 module 로, 마지막 hidden state 와 다음
-            token 의 embedding 을 받아 그다음 token 을 예측합니다. DeepSeek-V3 의 MTP module 은
-            공유 embedding, Transformer block 하나, projection, 공유 output head 로 이뤄지고,
-            깊이 k 의 module 은 깊이 k−1 의 출력을 입력으로 받아 인과 사슬을 유지합니다.
+            MTP head 는 target 학습 때 함께 훈련된 보조 module 로, 마지막 hidden state 와 다음 token 의 embedding 을 받아 그다음 token
+            을 예측합니다. DeepSeek-V3 의 MTP module 은 공유 embedding, Transformer block 하나, projection, 공유 output head
+            로 이뤄집니다. 깊이 k 의 module 은 깊이 k−1 의 출력을 입력으로 받아 인과 사슬을 유지합니다.
           </p>
           <p>
-            Serving 에서 이 module 을 draft 로 쓰는 것이 MTP draft 입니다. Target forward 가 끝난
-            hidden state 에 module 하나를 더 돌리면 다음 token 후보가 나오므로 draft 비용 c 는
-            block 수의 비인 1/L 근처입니다. DeepSeek-V3 는 61 layer 에 module 1 개라 c≈0.016 이고,
-            논문은 둘째 token 의 수락률 85~90 % 와 TPS 1.8 배를 보고했습니다.
+            Serving 에서 이 module 을 draft 로 쓰는 것이 MTP draft 입니다. Target forward 가 끝난 hidden state 에 module 하나를 더
+            돌리면 다음 token 후보가 나오므로 draft 비용 c 는 block 수의 비인 1/L 근처입니다. DeepSeek-V3 는 61 layer 에 module 1 개라
+            c≈0.016 이고 논문은 둘째 token 의 수락률 85~90 % 와 TPS 1.8 배를 보고했습니다.
           </p>
           <p>
             식에 넣어 보면 K=1, α=0.85, c=0.016 에서 speedup 은 (1+0.85)/(1+0.016) = 1.82 배로
@@ -121,10 +115,9 @@ export default function SpeculativeDecodingVariantsArticle() {
             MTP 가 바꾼 것은 c 를 0.1~0.3 에서 0.02 로 내린 것뿐입니다.
           </p>
           <p>
-            효용 경계는 조건식으로 적습니다. Decode 가 memory-bound 인 동안 verify 는 token 수가
-            K+1 배가 돼도 weight 를 한 번 읽는 비용에 머물지만, batch 가 커져 B(K+1) 개 token 이
-            compute-bound 경계를 넘으면 verify 비용이 v 배로 늘어납니다. 이득이 남는 조건은
-            기대 확정 길이가 Kc+v 보다 큰 것입니다.
+            효용 경계는 조건식으로 적습니다. Decode 가 memory-bound 인 동안 verify 는 token 수가 K+1 배가 돼도 weight 를 한 번 읽는 비용에 머물지만
+            batch 가 커져 B(K+1) 개 token 이 compute-bound 경계를 넘으면 verify 비용이 v 배로 늘어납니다. 이득이 남는 조건은 기대 확정 길이가 Kc+v
+            보다 큰 것입니다.
           </p>
         </div>
         <ExplainedFormula
@@ -147,16 +140,12 @@ export default function SpeculativeDecodingVariantsArticle() {
         />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            숫자로 보면 K=1, α=0.85 에서 기대 확정 길이는 1.85 입니다. v=1 이면 1.82 배이고
-            v=1.5 면 1.22 배, v=2 면 0.92 배로 base 보다 느립니다. 같은 model 이라도 batch 가
-            ridge 의 절반을 넘는 순간 MTP 를 끄는 편이 낫다는 뜻이며, 그 batch 값은 자기 GPU
-            에서 재야 합니다.
+            숫자로 보면 K=1, α=0.85 에서 기대 확정 길이는 1.85 입니다. v=1 이면 1.82 배이고 v=1.5 면 1.22 배, v=2 면 0.92 배로 base 보다
+            느립니다. 같은 model 이라도 batch 가 ridge 의 절반을 넘는 순간 MTP 를 끄는 편이 낫습니다. 그 batch 값은 자기 GPU 에서 재야 합니다.
           </p>
           <p>
-            둘째 경계는 α 의 분포 의존입니다. MTP head 는 사전학습 분포에서 훈련되므로 코드나
-            구조화된 출력에서는 높고, 분포가 다른 입력에서는 떨어집니다. 셋째는 깊이입니다.
-            Module 이 하나뿐인 model 에서 K&gt;1 을 만들려면 같은 module 을 다시 돌리는데, 학습
-            때 없던 깊이라 α 가 위치마다 내려갑니다.
+            둘째 경계는 α 의 분포 의존입니다. MTP head 는 사전학습 분포에서 훈련되므로 코드나 구조화된 출력에서는 α 가 높고 분포가 다른 입력에서는 떨어집니다. 깊이도
+            걸립니다. Module 이 하나뿐인 model 에서 K&gt;1 을 만들려면 같은 module 을 다시 돌려야 하는데, 학습 때 없던 깊이라 α 가 위치마다 내려갑니다.
           </p>
         </div>
         <div id="paper-deepseek-v3-mtp" className="not-prose my-8 scroll-mt-24">
@@ -179,9 +168,8 @@ export default function SpeculativeDecodingVariantsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Tree 기반 speculation 은 draft 가 위치마다 top-1 하나가 아니라 top-s 개 후보를 내고,
-            그 후보들을 부모–자식으로 이어 token tree 를 만든 뒤 tree 전체를 target 의 한 forward
-            로 검증하는 방식입니다. 첫 위치에서 top-1 이 틀려도 top-2 가 맞으면 cycle 이 계속됩니다.
+            Tree 기반 speculation 에서 draft 는 위치마다 top-1 하나가 아니라 top-s 개 후보를 냅니다. 그 후보들을 부모–자식으로 이어 token tree 를
+            만든 뒤 tree 전체를 target 의 한 forward 로 검증합니다. 첫 위치에서 top-1 이 틀려도 top-2 가 맞으면 cycle 이 계속됩니다.
           </p>
           <p>
             Tree 의 크기는 각 깊이의 폭 s_k 의 곱을 더한 값입니다. 폭이 (3, 2, 2) 이면 깊이 1 에
@@ -189,10 +177,9 @@ export default function SpeculativeDecodingVariantsArticle() {
             같은 깊이의 chain 은 3 개만 검증하므로 verify 에 들어가는 token 이 7 배입니다.
           </p>
           <p>
-            이득은 위치별 성공 확률이 top-1 수락률에서 top-s 포함률로 오르는 데서 옵니다. SpecInfer
-            의 표는 폭을 5 로 늘리면 greedy 검증 성공률이 70 % 에서 89 % 로 오른다고 보고했습니다.
-            폭 (3, 2, 2) 에서 포함률이 0.89, 0.85, 0.80 이면 기대 확정 길이는
-            1+0.89+0.76+0.61 = 3.25 로, α=0.7 chain 의 2.53 보다 깁니다.
+            이득은 위치별 성공 확률이 top-1 수락률에서 top-s 포함률로 오르는 데서 옵니다. SpecInfer 의 표는 폭을 5 로 늘리면 greedy 검증 성공률이 70 % 에서
+            89 % 로 오른다고 보고했습니다. 폭 (3, 2, 2) 에서 포함률이 0.89, 0.85, 0.80 이면 기대 확정 길이는 1+0.89+0.76+0.61 = 3.25 로
+            α=0.7 chain 의 2.53 보다 깁니다.
           </p>
           <p>
             Tree 를 만드는 방식이 변형마다 다릅니다. Medusa 는 head k 가 위치 t+k+1 을 독립으로
@@ -202,11 +189,9 @@ export default function SpeculativeDecodingVariantsArticle() {
             이으며 가지를 칩니다.
           </p>
           <p>
-            비용은 후보 수에 비례해 늘어나는 verify token 입니다. Memory-bound decode 에서는
-            weight 읽기가 같아 21 개나 3 개나 시간이 비슷하지만, attention 의 KV 읽기와 batch
-            가 커진 뒤의 compute 는 21 배에 가깝게 늘어나므로 tree 크기는 batch 에 따라
-            줄여야 합니다. Medusa 는 head 별 정확도 추정으로 tree 를 가지치기해 64 node 안에
-            둡니다.
+            비용은 후보 수에 비례해 늘어나는 verify token 입니다. Memory-bound decode 에서는 weight 읽기가 같아 21 개나 3 개나 시간이 비슷하지만
+            attention 의 KV 읽기와 batch 가 커진 뒤의 compute 는 21 배에 가깝게 늘어나므로 tree 크기는 batch 에 따라 줄여야 합니다. Medusa 는
+            head 별 정확도 추정으로 tree 를 가지치기해 64 node 안에 둡니다.
           </p>
         </div>
         <ExplainedFormula
@@ -247,25 +232,20 @@ export default function SpeculativeDecodingVariantsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Speculative tree verification 은 tree 의 모든 node 를 한 sequence 로 펼쳐 target 에
-            넣되, 각 node 가 prefix 와 자기 조상만 보도록 attention mask 를 만드는 검증입니다.
-            형제 가지가 서로를 보지 못하므로 각 경로의 logit 은 그 경로만 chain 으로 넣었을 때와
-            같습니다.
+            Speculative tree verification 은 tree 의 모든 node 를 한 sequence 로 펼쳐 target 에 넣습니다. 이때 attention mask
+            는 각 node 가 prefix 와 자기 조상만 보도록 만듭니다. 형제 가지가 서로를 보지 못하므로 각 경로의 logit 은 그 경로만 chain 으로 넣었을 때와 같습니다.
           </p>
           <p>
-            Mask 는 |T|×|T| 의 0/1 행렬입니다. 행 i 의 node 가 열 j 의 node 를 볼 수 있으면 1 이고,
-            j 가 i 의 조상이거나 i 자신일 때만 1 입니다. 폭 (2, 2) 인 tree 는 node 6 개라 6×6 에
-            1 이 12 개이고, 같은 6 token 을 chain 으로 넣었을 때의 causal mask 21 개보다 적습니다.
+            Mask 는 |T|×|T| 의 0/1 행렬입니다. 행 i 의 node 가 열 j 의 node 를 볼 수 있으면 1 이고 j 가 i 의 조상이거나 i 자신일 때만 1 입니다. 폭
+            (2, 2) 인 tree 는 node 6 개라 6×6 에 1 이 12 개입니다. 같은 6 token 을 chain 으로 넣었을 때의 causal mask 21 개보다 적습니다.
           </p>
           <p>
-            검증은 root 에서 내려갑니다. 각 node 의 target 출력이 자식 가운데 하나와 일치하면 그
-            자식으로 내려가고, 일치하는 자식이 없으면 멈추고 target 이 낸 token 을 마지막에
-            붙입니다. 결과는 root 에서 내려온 경로 하나이고 다른 가지의 KV 는 버립니다.
+            검증은 root 에서 내려갑니다. 각 node 의 target 출력이 자식 가운데 하나와 일치하면 그 자식으로 내려가고 일치하는 자식이 없으면 멈추고 target 이 낸
+            token 을 마지막에 붙입니다. 결과는 root 에서 내려온 경로 하나이고 다른 가지의 KV 는 버립니다.
           </p>
           <p>
-            KV cache 도 tree 모양으로 씁니다. SpecInfer 는 depth-first 순서로 node 를 방문하며
-            공유 KV cache 를 채우고, 확정 경로 밖의 항목은 다음 step 에서 덮어씁니다. Paged KV
-            에서는 tree 의 token 들이 같은 block 에 이어 쓰이고 block table 만 정리하면 됩니다.
+            KV cache 도 tree 모양으로 씁니다. SpecInfer 는 depth-first 순서로 node 를 방문하며 공유 KV cache 를 채우고 확정 경로 밖의 항목은
+            다음 step 에서 덮어씁니다. Paged KV 에서는 tree 의 token 들이 같은 block 에 이어 쓰이고 block table 만 정리하면 됩니다.
           </p>
           <p>
             Stochastic 검증은 경로 선택을 rejection sampling 으로 합니다. Node 마다 target 확률과
@@ -308,32 +288,27 @@ export default function SpeculativeDecodingVariantsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Suffix decoding 은 model 없이 이전 요청의 출력과 현재 prompt 를 suffix tree 에 넣어
-            두고, 최근 token 몇 개와 일치하는 suffix 뒤에 무엇이 자주 왔는지를 세어 draft 로 내는
-            방식입니다. Draft 는 CPU 에서 token 당 약 20 µs 가 들어 GPU 비용이 없고, 반복이 많은
-            agent workload 에서 확정 길이가 깁니다.
+            Suffix decoding 에는 model 이 없습니다. 이전 요청의 출력과 현재 prompt 를 suffix tree 에 넣어 두고 최근 token 몇 개와 일치하는
+            suffix 뒤에 무엇이 자주 왔는지를 세어 draft 로 냅니다. Draft 는 CPU 에서 token 당 약 20 µs 가 들어 GPU 비용이 없고 반복이 많은 agent
+            workload 에서 확정 길이가 깁니다.
           </p>
           <p>
-            자료 구조는 두 개입니다. 이전 출력 전체로 만든 global tree 와 현재 prompt 로 만든
-            per-request tree 이고, node 마다 token 과 그 경로가 나온 횟수를 둡니다. 최근 token
-            열의 가장 긴 일치 suffix 를 찾고, 그 아래 자식들을 빈도로 점수 매겨 가장 높은 node
-            부터 greedy 로 확장해 speculation tree 를 만듭니다.
+            자료 구조는 두 개입니다. 이전 출력 전체로 만든 global tree 와 현재 prompt 로 만든 per-request tree 입니다. node 마다 token 과 그
+            경로가 나온 횟수를 둡니다. 최근 token 열의 가장 긴 일치 suffix 를 찾고 그 아래 자식들을 빈도로 점수 매깁니다. 가장 높은 node 부터 greedy 로 확장해
+            speculation tree 를 만듭니다.
           </p>
           <p>
-            비용 식에 넣으면 c 는 20 µs 를 decode step 약 25 ms 로 나눈 0.001 근처입니다. AgenticSQL
-            에서 논문이 보고한 step 당 평균 확정 6.3 token 을 넣으면 상한은 6.3/(1+K×0.001) ≈ 6.2 배
-            이고, 실측 5.3 배와의 차이는 긴 tree 를 verify 하는 target 쪽 비용입니다.
+            비용 식에 넣으면 c 는 20 µs 를 decode step 약 25 ms 로 나눈 0.001 근처입니다. AgenticSQL 에서 논문이 보고한 step 당 평균 확정 6.3
+            token 을 넣으면 상한은 6.3/(1+K×0.001) ≈ 6.2 배 이고 실측 5.3 배와의 차이는 긴 tree 를 verify 하는 target 쪽 비용입니다.
           </p>
           <p>
-            Cache miss 는 draft 길이 0 으로 나타납니다. 일치 suffix 가 짧으면 확장할 자식이 없거나
-            점수가 낮아 draft 를 몇 개만 내거나 아예 내지 않고, 그 step 은 보통 decode 와 같은
-            비용으로 끝납니다. Model 기반 draft 처럼 틀린 K 개를 만들고 버리는 손실이 없어
-            miss 가 speedup 을 1 아래로 끌어내리지 않습니다.
+            Cache miss 는 draft 길이 0 으로 나타납니다. 일치 suffix 가 짧으면 확장할 자식이 없거나 점수가 낮아 draft 를 몇 개만 내거나 아예 내지 않고 그
+            step 은 보통 decode 와 같은 비용으로 끝납니다. Model 기반 draft 처럼 틀린 K 개를 만들고 버리는 손실이 없어 miss 가 speedup 을 1 아래로
+            끌어내리지 않습니다.
           </p>
           <p>
-            한계는 분포입니다. 처음 보는 자유 서술에는 일치 suffix 가 없어 이득이 0 에 가깝고,
-            SQL 생성이나 도구 호출처럼 형식이 반복되는 workload 에서만 확정 길이가 길어집니다.
-            논문의 5.3 배는 AgenticSQL, 4.5 배는 SWE-Bench 에서 저자가 잰 값입니다.
+            한계는 분포입니다. 처음 보는 자유 서술에는 일치 suffix 가 없어 이득이 0 에 가깝습니다. SQL 생성이나 도구 호출처럼 형식이 반복되는 workload 에서만 확정
+            길이가 길어집니다. 논문의 5.3 배는 AgenticSQL, 4.5 배는 SWE-Bench 에서 저자가 잰 값입니다.
           </p>
         </div>
         <div id="paper-suffix-decoding" className="not-prose my-8 scroll-mt-24">
@@ -363,9 +338,8 @@ export default function SpeculativeDecodingVariantsArticle() {
           preview="MTP module 이 있는 model 은 작은 batch 에서 MTP 가 기본이고, 반복이 많은 agent workload 는 suffix decoding 이, 별도 학습 없이 메모리를 아껴야 하면 self-speculative 가, α 가 낮은 자유 서술은 tree 로 폭을 넓히는 것이 순서입니다."
         >
           <p>
-            판단은 세 값으로 닫힙니다. 자기 workload 에서 잰 α(또는 β), 자기 GPU 에서 잰 c 와
-            ridge batch, 그리고 운영 batch 의 분포입니다. 세 값을 speedup 식에 넣어 1 을 넘는
-            변형만 후보이고, 후보가 여럿이면 verify token 이 적은 쪽이 batch 변동에 안전합니다.
+            결국 세 값이 판단을 닫습니다. 자기 workload 에서 잰 α(또는 β), 자기 GPU 에서 잰 c 와 ridge batch, 운영 batch 의 분포입니다. 이 셋을
+            speedup 식에 넣어 1 을 넘는 변형만 후보입니다. 후보가 여럿이면 verify token 이 적은 쪽이 batch 변동에 안전합니다.
           </p>
           <p>
             변형은 겹쳐 쓸 수 있습니다. MTP head 위에 tree 를 얹거나 suffix tree 가 miss 일 때

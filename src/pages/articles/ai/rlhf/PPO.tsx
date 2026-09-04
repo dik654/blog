@@ -10,11 +10,10 @@ export default function PPO() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          PPO-RLHF의 구분점은 현재 policy가 직접 response를 sample한다는 데 있다.
-          Reward model이 완성된 response에 점수를 주고 reference policy에서 멀어진
-          정도를 penalty로 빼며, value function은 token trajectory의 baseline을
-          추정한다. 이 sample–score–update loop 덕분에 현재 policy의 support를
-          따라갈 수 있지만, generation engine과 학습 cluster를 함께 운영해야 한다.
+          PPO-RLHF는 현재 policy가 직접 response를 sample한다는 점에서 갈린다. Reward model이 완성된 response에 점수를 주고 reference
+          policy에서 멀어진 정도를 penalty로 뺀다. value function은 token trajectory의 baseline을 추정한다. 이
+          sample–score–update loop 덕분에 현재 policy의 support를 따라갈 수 있다. 대신 generation engine과 학습 cluster를 함께 운영해야
+          한다.
         </p>
       </div>
 
@@ -106,17 +105,14 @@ L^{CLIP}
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>네 역할과 네 벌의 full model은 같은 말이 아니다</h3>
         <p>
-          Policy, value, reward와 reference는 논리적으로 구분되지만 value head가
-          policy backbone을 공유하거나 frozen model을 sharding하고 reference
-          log-prob을 미리 계산하는 구현도 있다. Memory cost는 역할의 개수가 아니라
-          trainable parameter와 optimizer state, activation, rollout KV cache,
-          reference cache를 기준으로 계산해야 한다.
+          Policy, value, reward와 reference는 논리적으로 구분된다. 구현은 다를 수 있다. value head가 policy backbone을 공유하거나 frozen
+          model을 sharding하고 reference log-prob을 미리 계산하는 경우도 있다. Memory cost는 역할의 개수가 아니라 trainable parameter와
+          optimizer state, activation, rollout KV cache, reference cache를 기준으로 계산해야 한다.
         </p>
         <p>
-          PPO 원 논문은 interaction에서 sample한 data와 clipped surrogate를 반복
-          최적화하는 일반 RL algorithm을 제안했고, LLM의 sequence reward와 KL
-          shaping은 RLHF pipeline에서 결합된 것이다. 두 층을 구분해서 읽어야 PPO
-          clipping과 alignment 안전장치를 같은 것으로 오해하지 않는다.
+          PPO 원 논문이 제안한 것은 interaction에서 sample한 data와 clipped surrogate를 반복 최적화하는 일반 RL algorithm이다. LLM의
+          sequence reward와 KL shaping은 그 뒤 RLHF pipeline에서 결합됐다. 두 층을 구분해서 읽어야 PPO clipping과 alignment 안전장치를
+          같은 것으로 오해하지 않는다.
         </p>
       </div>
 

@@ -7,17 +7,15 @@ export default function Logging() {
       <h2 className="mb-6 text-2xl font-bold">로그는 점수에서 원인과 artifact까지 거슬러 올라가는 index입니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Validation score 하나만 남기면 어느 data와 code로 만든 결과인지 알 수
-          없습니다. Run ID에서 code revision, data snapshot, split manifest,
-          resolved config, environment fingerprint, checkpoint와 evaluation report로
-          이동할 수 있어야 합니다. Model 내부에서는 loss·task metric뿐 아니라
-          learning rate, gradient norm, AMP scale, skipped updates를 기록합니다.
+          기록으로 validation score 하나만 남기면 어느 data와 code로 만든 결과인지 알 수 없습니다. Run ID에서 code revision, data
+          snapshot, split manifest, resolved config, environment fingerprint, checkpoint와 evaluation report까지
+          따라갈 수 있어야 합니다. Model 내부에서도 loss·task metric뿐 아니라 learning rate, gradient norm, AMP scale, skipped
+          updates를 함께 기록합니다.
         </p>
         <p>
-          System 지표에는 samples/s 또는 valid tokens/s, data wait, device compute,
-          GPU memory를 포함합니다. 결과가 나빠졌을 때 optimization 문제인지 input
-          starvation인지 구분하려면 품질과 system timeline이 같은 optimizer update
-          clock에 정렬돼야 합니다.
+          여기에 더해 system 지표에는 samples/s 또는 valid tokens/s와 data wait, device compute, GPU memory가 들어갑니다. 결과가
+          나빠졌을 때 optimization 문제인지 input starvation인지 구분하려면 품질과 system timeline이 같은 optimizer update clock에
+          정렬돼야 합니다.
         </p>
       </div>
 
@@ -26,10 +24,9 @@ export default function Logging() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Batch metric의 평균이 dataset metric과 같지는 않습니다</h3>
         <p>
-          크기가 64인 batch와 마지막 크기 5인 batch의 accuracy를 단순 평균하면
-          두 batch에 같은 weight를 줍니다. Token task에서는 padding 양이 다른
-          batch도 같은 문제가 생깁니다. Metric이 합산 가능한 sufficient statistics로
-          표현되면 rank와 batch마다 분자·분모를 누적한 뒤 마지막에 한 번 나눕니다.
+          크기가 64인 batch와 마지막 크기 5인 batch의 accuracy를 단순 평균하면 두 batch에 같은 weight가 실립니다. Token task에서는 padding 양이
+          다른 batch에서도 같은 문제가 생깁니다. 반대로 metric을 합산 가능한 sufficient statistics로 표현해 두면 rank와 batch마다 분자와 분모를 누적한
+          뒤 마지막에 한 번만 나누면 됩니다.
         </p>
       </div>
 
@@ -56,21 +53,19 @@ export default function Logging() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Learning curve는 결론이 아니라 다음 진단을 고르는 신호입니다</h3>
         <p>
-          Train loss가 내려가고 validation이 나빠지면 overfitting일 수 있지만 split
-          shift·metric bug·eval mode 누락도 같은 모양을 만들 수 있습니다. Class,
-          source, sequence length 같은 slice와 representative prediction을 함께 보고
-          원인을 좁힙니다. Early stopping도 monitor metric·direction·minimum delta·
-          patience·evaluation interval을 사전에 정한 model-selection policy입니다.
+          Train loss가 내려가는데 validation이 나빠진다면 overfitting을 의심하게 되지만 split shift나 metric bug, eval mode 누락도 같은
+          모양을 만들기도 합니다. Class와 source, sequence length 같은 slice를 representative prediction과 함께 보며 원인을 좁힙니다.
+          Early stopping 역시 monitor metric·direction·minimum delta·patience·evaluation interval을 사전에 정해 둔
+          model-selection policy입니다.
         </p>
       </div>
 
       <div id="docs-pytorch-reproducibility" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">공식 문서 따라 읽기 · Reproducibility</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Seed는 출발점일 뿐입니다. PyTorch 문서는 release·platform·CPU/GPU가
-          달라지면 완전한 재현을 보장하지 않는다고 명시하고, Python·NumPy·PyTorch
-          RNG, DataLoader worker seed, cuDNN benchmark와 deterministic algorithms를
-          서로 다른 설정으로 설명합니다.
+          Seed는 출발점일 뿐입니다. PyTorch 문서는 release·platform·CPU/GPU가 달라지면 완전한 재현을 보장하지 않는다고 명시하면서
+          Python·NumPy·PyTorch RNG와 DataLoader worker seed, cuDNN benchmark와 deterministic algorithms를 서로 다른
+          설정으로 나눠 설명합니다.
         </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://docs.pytorch.org/docs/stable/notes/randomness" target="_blank" rel="noreferrer">재현성의 보장 범위와 worker seeding 보기</a>
       </div>

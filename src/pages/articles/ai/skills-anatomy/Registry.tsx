@@ -17,11 +17,9 @@ export default function Registry() {
           <code>/etc/codex/skills</code>, system Skill은 OpenAI가 함께 제공합니다.
         </p>
         <p>
-          같은 name이 여러 위치에 있어도 자동으로 합치거나 가까운 하나로
-          override하지 않으며 둘 다 selector에 나타날 수 있습니다. 그러므로
-          discovery 문제를 조사할 때는 file이 존재하는지만 확인하지 않고 실제
-          launch directory, repository root, symlink target, selector의 path와
-          description을 함께 봐야 합니다.
+          같은 name이 여러 위치에 있어도 자동으로 합치거나 가까운 하나로 override하지 않습니다. 둘 다 selector에 나타날 수 있습니다. discovery 문제를 조사할 때
+          file이 존재하는지만 확인하면 부족합니다. 실제 launch directory, repository root, symlink target, selector의 path와
+          description까지 펼쳐 놓고 대조해야 합니다.
         </p>
       </div>
 
@@ -31,11 +29,9 @@ export default function Registry() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          이 directory들은 local authoring과 repository 공유에 적합합니다. 다른
-          사용자가 설치하게 하거나 여러 Skill, registered 또는 bundled MCP server,
-          presentation asset을 함께 제공하려면 Plugin으로 package합니다. Local
-          Skill과 Plugin은 우열 관계가 아니라 배포 범위와 update 책임이 다른
-          선택입니다.
+          이 directory들은 local authoring과 repository 공유에 적합합니다. 다른 사용자가 설치하게 하거나 여러 Skill, registered 또는
+          bundled MCP server, presentation asset을 묶어 내려면 Plugin으로 package합니다. Local Skill과 Plugin 사이에 우열은
+          없습니다. 배포 범위와 update 책임이 다른 선택일 뿐입니다.
         </p>
         <p>
           실제 운영에서는 “어디에 둘까?”보다 owner·version·dependency·rollback을

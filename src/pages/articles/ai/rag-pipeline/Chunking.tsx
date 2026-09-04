@@ -6,7 +6,11 @@ export default function Chunking() {
     <section id="chunking" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Chunking은 글자 수를 맞추는 전처리가 아니라, 검색 단위와 인용 가능한 근거 단위의 경계를 정하는 작업입니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p>문서 전체를 vector 하나로 만들면 서로 다른 주제가 섞이고, 한 문장씩 자르면 조건과 예외가 흩어질 수 있습니다. 먼저 parser가 제목·문단·목록·표·code block과 원문 offset을 보존해야 합니다. 그 위에서 고정 token chunk를 baseline으로 두고 structure-aware 또는 parent–child 방식을 비교합니다.</p>
+        <p>
+            문서 전체를 vector 하나로 만들면 서로 다른 주제가 섞이기 쉽습니다. 한 문장씩 자르면 조건과 예외가 흩어질 수 있습니다. 먼저 parser가 제목·문단·목록·표·code
+            block과 원문 offset을 보존해야 합니다. 그 위에서 고정 token chunk를 baseline으로 두고 structure-aware 또는 parent–child
+            방식을 비교합니다.
+          </p>
         <p>Parent–child 방식은 작은 child로 검색 정밀도를 확보한 뒤, 그 child가 속한 더 큰 parent를 generation context로 복원합니다. 이때 overlap이 크다고 정답 coverage가 자동으로 좋아지지는 않습니다. 중복 chunk가 top-k를 차지해 서로 다른 근거를 밀어낼 수 있기 때문입니다.</p>
       </div>
       <ExplainedFormula
@@ -28,7 +32,10 @@ export default function Chunking() {
       />
       <div className="not-prose my-8"><ChunkingViz /></div>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p>각 chunk에는 source ID·revision·heading path·원문 offset·parser version·valid-time·ACL을 남깁니다. 표는 셀만 떼지 않고 header와 row 관계를 복원할 수 있어야 하며, 삭제된 원문에서 파생된 chunk와 vector까지 찾을 수 있어야 합니다.</p>
+        <p>
+            각 chunk에는 source ID·revision·heading path·원문 offset·parser version·valid-time·ACL을 남깁니다. 표는 셀만 떼지
+            않고 header와 row 관계를 복원할 수 있어야 합니다. 삭제된 원문에서 파생된 chunk와 vector까지 찾을 수 있어야 합니다.
+          </p>
       </div>
     </section>
   );

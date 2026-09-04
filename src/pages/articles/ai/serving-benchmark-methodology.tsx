@@ -26,10 +26,9 @@ export default function ServingBenchmarkMethodologyArticle() {
             전이었는지에 따라 같은 서버의 tokens/s 와 P99 TTFT 가 몇 배씩 달라집니다.
           </p>
           <p>
-            이 글은 그 조건을 하나씩 고정하는 방법론을 다룹니다. Benchmark 를 재는 범위와
-            입력 분포로 분류한 뒤, warm·cold 와 steady state 로 표본을 고르고, 반복 측정의
-            분산으로 차이를 판정합니다. 이어서 offered load 를 올리며 saturation point 를
-            찾는 utilization–latency 곡선을 M/M/1 직관으로 읽습니다.
+            이 글은 그 조건을 하나씩 고정하는 방법론을 다룹니다. 먼저 benchmark 를 재는 범위와 입력 분포로 분류합니다. 그 뒤 warm·cold 와 steady state 로
+            표본을 고르고 반복 측정의 분산으로 차이를 판정합니다. 이어서 offered load 를 올리며 saturation point 를 찾는 utilization–latency
+            곡선을 M/M/1 직관으로 읽습니다.
           </p>
           <p>
             지표 자체의 정의(TTFT·ITL·TPOT·percentile)는{" "}
@@ -47,41 +46,34 @@ export default function ServingBenchmarkMethodologyArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Performance benchmark 는 정해진 workload 를 system 에 넣고 latency 와 throughput
-            을 재는 실험입니다. 같은 이름으로 불려도 무엇을 감싸고 재느냐가 다르며, 그 범위가
-            좁을수록 원인은 잘 보이고 넓을수록 사용자가 겪는 값에 가까워집니다.
+            Performance benchmark 는 정해진 workload 를 system 에 넣고 latency 와 throughput 을 재는 실험입니다. 같은 이름으로 불려도
+            무엇을 감싸고 재느냐가 다릅니다. 범위가 좁을수록 원인이 잘 보이고 넓을수록 사용자가 겪는 값에 가까워집니다.
           </p>
           <p>
-            Microbenchmark 는 kernel 하나나 decode step 하나처럼 구성 요소 하나만 떼어 잽니다.
-            Attention kernel 의 실행 시간을 batch 32, sequence 2k 에서 1.8 ms 로 재는 식이며,
-            scheduler 나 network 는 들어 있지 않습니다. 병목이 어느 kernel 인지 가릴 때 씁니다.
+            Attention kernel 의 실행 시간을 batch 32, sequence 2k 에서 1.8 ms 로 재는 식입니다. 이렇게 kernel 하나나 decode step
+            하나처럼 구성 요소 하나만 떼어 재는 것이 microbenchmark 입니다. Scheduler 나 network 는 들어 있지 않습니다. 병목이 어느 kernel 인지 가릴
+            때 씁니다.
           </p>
           <p>
-            Macrobenchmark 는 engine 전체를 한 process 안에서 돌립니다. vLLM 의 throughput
-            benchmark 처럼 요청 1,000 개를 한꺼번에 넣고 완료까지의 tokens/s 를 재며,
-            network 와 도착 간격이 없으므로 scheduler 와 KV cache 가 만드는 상한에 가깝습니다.
+            Macrobenchmark 는 engine 전체를 한 process 안에서 돌립니다. vLLM 의 throughput benchmark 처럼 요청 1,000 개를 한꺼번에 넣고
+            완료까지의 tokens/s 를 잽니다. Network 와 도착 간격이 없으므로 scheduler 와 KV cache 가 만드는 상한에 가깝습니다.
           </p>
           <p>
-            End-to-end benchmark 는 client 가 HTTP 로 요청을 보내고 streaming 응답을 받는
-            경로 전체를 잽니다. vLLM 의 serving benchmark 와 GenAI-Perf 가 이 층이며, 앞 글의
-            TTFT·ITL 은 모두 이 층의 client timestamp 에서 나옵니다. 사용자에게 약속할 SLO
-            는 이 층에서만 검증됩니다.
+            Client 가 HTTP 로 요청을 보내고 streaming 응답을 받는 경로 전체를 재면 end-to-end benchmark 입니다. vLLM 의 serving
+            benchmark 와 GenAI-Perf 가 이 층이고 앞 글의 TTFT·ITL 은 모두 이 층의 client timestamp 에서 나옵니다. 사용자에게 약속할 SLO 는 이
+            층에서만 검증됩니다.
           </p>
           <p>
-            두 번째 축은 입력 분포입니다. Synthetic benchmark 는 무작위 token 을 정해진 길이로
-            만들어 넣고, representative benchmark 는 실제 trace 나 ShareGPT 같은 대화 자료의
-            길이 분포를 그대로 씁니다.
+            두 번째 축은 입력 분포입니다. Synthetic benchmark 는 무작위 token 을 정해진 길이로 만들어 넣습니다. Representative benchmark 는
+            실제 trace 나 ShareGPT 같은 대화 자료의 길이 분포를 그대로 씁니다.
           </p>
           <p>
-            입력 1,024·출력 128 로 고정한 synthetic 결과는 깔끔하지만, 운영 trace 의 입력이
-            200 에서 8,000 token 까지 퍼져 있다면 prefill 혼합 비율이 전혀 달라 그 tokens/s 는
-            운영을 대표하지 못합니다.
+            입력 1,024·출력 128 로 고정한 synthetic 결과는 깔끔합니다. 다만 운영 trace 의 입력이 200 에서 8,000 token 까지 퍼져 있다면 prefill
+            혼합 비율이 전혀 달라 그 tokens/s 는 운영을 대표하지 못합니다.
           </p>
           <p>
-            그래서 benchmark distribution, 곧 입력 길이·출력 길이·도착 간격의 분포를 결과와
-            함께 적습니다. GenAI-Perf 는 입력 token 의 평균과 표준편차를 flag 로 받고, vLLM 은
-            dataset 이름과 random 길이 옵션을 받습니다. 분포가 다른 두 결과는 같은 서버라도
-            비교하지 않습니다.
+            Benchmark distribution, 곧 입력 길이·출력 길이·도착 간격의 분포를 결과와 함께 적습니다. GenAI-Perf 는 입력 token 의 평균과 표준편차를
+            flag 로 받고 vLLM 은 dataset 이름과 random 길이 옵션을 받습니다. 분포가 다른 두 결과는 같은 서버라도 비교하지 않습니다.
           </p>
         </div>
         <TermBreakdown
@@ -102,9 +94,8 @@ export default function ServingBenchmarkMethodologyArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Cold benchmark 는 process 가 막 뜬 뒤의 첫 요청들을 표본에 넣은 측정이고, warm
-            benchmark 는 warmup 요청을 먼저 보내 준비를 끝낸 뒤 재는 측정입니다. 두 값은 같은
-            서버에서 수십 배 차이 나므로 어느 쪽인지 적지 않은 TTFT 는 비교할 수 없습니다.
+            Cold benchmark 는 process 가 막 뜬 뒤의 첫 요청들을 표본에 넣습니다. Warm benchmark 는 warmup 요청을 먼저 보내 준비를 끝낸 뒤 잽니다.
+            두 값은 같은 서버에서 수십 배 차이 나므로 어느 쪽인지 적지 않은 TTFT 는 비교할 수 없습니다.
           </p>
           <p>
             차이가 나는 이유는{" "}
@@ -114,32 +105,26 @@ export default function ServingBenchmarkMethodologyArticle() {
             두면 첫 요청의 TTFT 가 6.8 s 이고 그 다음부터는 0.35 s 인 식입니다.
           </p>
           <p>
-            Benchmark warmup 은 그 준비를 표본 밖에서 끝내는 요청들입니다. GenAI-Perf 는
-            warmup 요청 수를 flag 로 받고, MLPerf 는 측정 전 warm-up run 을 규칙으로 둡니다.
-            운영에서는 cold 값도 중요합니다. Autoscaling 으로 새 replica 가 뜰 때 사용자가 겪는
-            값이 cold TTFT 이기 때문이며, 그래서 warm 과 cold 를 둘 다 재되 따로 보고합니다.
+            Benchmark warmup 은 그 준비를 표본 밖에서 끝내는 요청들입니다. GenAI-Perf 는 warmup 요청 수를 flag 로 받고 MLPerf 는 측정 전
+            warm-up run 을 규칙으로 둡니다. 운영에서는 cold 값도 중요합니다. Autoscaling 으로 새 replica 가 뜰 때 사용자가 겪는 값이 cold TTFT
+            이기 때문입니다. Warm 과 cold 를 둘 다 재되 따로 보고합니다.
           </p>
           <p>
-            Warmup 이 끝나도 표본을 바로 세지는 않습니다. Steady-state performance 는 대기열
-            길이와 batch 크기가 더 이상 한 방향으로 움직이지 않는 구간의 값입니다. Offered load
-            를 켠 직후에는 대기열이 0 에서 시작해 차오르므로 초반 요청의 TTFT 는 정상 상태보다
-            낮고, 마지막 요청들은 새 도착이 끊겨 batch 가 작아지니 ITL 이 정상 상태보다 빠릅니다.
+            Warmup 이 끝나도 표본을 바로 세지는 않습니다. 대기열 길이와 batch 크기가 더 이상 한 방향으로 움직이지 않는 구간이 있는데, 그 구간의 값이 steady-state
+            performance 입니다. Offered load 를 켠 직후에는 대기열이 0 에서 시작해 차오르므로 초반 요청의 TTFT 가 정상 상태보다 낮습니다. 마지막 요청들은 새
+            도착이 끊겨 batch 가 작아지니 ITL 이 정상 상태보다 빠릅니다.
           </p>
           <p>
-            그래서 측정 window 는 ramp-up 뒤에 시작하고 마지막 요청들이 빠져나가는 drain 구간
-            전에 끝냅니다. MLPerf 는 scenario 마다 최소 600 s 를 돌리고, percentile 추정에 필요한
-            최소 query 수를 신뢰 구간으로 정합니다. 요청 20 개짜리 실행에서 나온 P99 는 정상
-            상태의 값이 아니라 ramp-up 의 값입니다.
+            측정 window 는 ramp-up 뒤에 시작하고 마지막 요청들이 빠져나가는 drain 구간 전에 끝냅니다. MLPerf 는 scenario 마다 최소 600 s 를 돌리고
+            percentile 추정에 필요한 최소 query 수를 신뢰 구간으로 정합니다. 요청 20 개짜리 실행에서 나온 P99 는 정상 상태의 값이 아니라 ramp-up 의 값입니다.
           </p>
           <p>
-            같은 조건에서 다시 돌려도 값은 흔들립니다. Measurement noise 는 GPU clock, 다른
-            tenant, network jitter, 무작위 입력 sampling 처럼 측정자가 통제하지 못한 요인이 만드는
-            흔들림이고, benchmark variance 는 그 흔들림이 반복 실행의 표준편차로 나타난 크기입니다.
+            같은 조건에서 다시 돌려도 값은 흔들립니다. GPU clock, 다른 tenant, network jitter, 무작위 입력 sampling 처럼 측정자가 통제하지 못한 요인이
+            그 흔들림을 만드는데, 이것이 measurement noise 입니다. Benchmark variance 는 그 흔들림이 반복 실행의 표준편차로 나타난 크기입니다.
           </p>
           <p>
-            설정 A 를 5 회 돌려 P50 TTFT 가 0.80, 0.83, 0.79, 0.84, 0.81 s 가 나왔다면 평균
-            0.814 s, 표준편차 0.021 s 입니다. 설정 B 가 0.78, 0.80, 0.76, 0.82, 0.79 s 로 평균
-            0.790 s 라면 차이 0.024 s 는 표준편차 한 개 정도라 A 보다 B 가 빠르다고 판정하지
+            설정 A 를 5 회 돌려 P50 TTFT 가 0.80, 0.83, 0.79, 0.84, 0.81 s 가 나왔다면 평균 0.814 s, 표준편차 0.021 s 입니다. 설정 B
+            가 0.78, 0.80, 0.76, 0.82, 0.79 s 로 평균 0.790 s 라면 차이 0.024 s 는 표준편차 한 개 정도입니다. A 보다 B 가 빠르다고 판정하지
             않습니다. 차이가 표준편차의 두 배를 넘고 반복이 5 회 이상일 때만 결론을 냅니다.
           </p>
           <p>
@@ -167,10 +152,9 @@ export default function ServingBenchmarkMethodologyArticle() {
           preview="Process cold(kernel·graph), cache cold(prefix KV 비어 있음), autoscaling cold(replica 가 traffic-ready 가 되기까지) 세 층이며 각각 다른 시간 규모입니다."
         >
           <p>
-            Process cold 는 kernel compile 과 graph capture 로 수 초에서 수십 초이고, vLLM 은
-            시작 시 profile run 과 capture 를 미리 하므로 첫 요청보다 시작 시간에 실립니다.
-            Cache cold 는 prefix cache 가 비어 같은 system prompt 도 다시 prefill 하는 상태로,
-            요청 몇 개면 풀립니다.
+            Process cold 는 kernel compile 과 graph capture 로 수 초에서 수십 초입니다. vLLM 은 시작 시 profile run 과 capture 를
+            미리 하므로 그 비용이 첫 요청보다 시작 시간에 실립니다. Cache cold 는 prefix cache 가 비어 같은 system prompt 도 다시 prefill 하는
+            상태이고 요청 몇 개면 풀립니다.
           </p>
           <p>
             Autoscaling cold 는 새 Pod 가 weight 를 내려받고 warmup 을 끝내 ready 가 되기까지의
@@ -187,16 +171,14 @@ export default function ServingBenchmarkMethodologyArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Offered load 는 client 가 서버에 보내려는 요청의 도착률 λ 입니다. 서버가 실제로
-            처리한 throughput 과는 다른 양이며, vLLM serving benchmark 의 request rate 와
-            GenAI-Perf 의 request rate 가 이 값을 정합니다. Concurrency 로 부하를 거는 closed
-            loop 방식은 요청이 끝나야 다음을 보내므로 offered load 가 서버 속도에 묶입니다.
+            Offered load 는 client 가 서버에 보내려는 요청의 도착률 λ 입니다. 서버가 실제로 처리한 throughput 과는 다른 양입니다. vLLM serving
+            benchmark 의 request rate 와 GenAI-Perf 의 request rate 가 이 값을 정합니다. Concurrency 로 부하를 거는 closed loop
+            방식은 요청이 끝나야 다음을 보내므로 offered load 가 서버 속도에 묶입니다.
           </p>
           <p>
-            λ 를 낮은 값부터 올리면 처리한 throughput 은 λ 를 그대로 따라 오릅니다. 서버가
-            단위 시간에 처리할 수 있는 상한 μ 에 가까워지면 throughput 은 μ 에서 멈추고, 그
-            직전부터 latency 가 가파르게 오릅니다. Throughput 이 더 늘지 않기 시작하는 λ 가
-            saturation point 이고, 그 너머의 요청은 대기열에 쌓여 결국 timeout 됩니다.
+            λ 를 낮은 값부터 올리면 처리한 throughput 은 λ 를 그대로 따라 오릅니다. 서버가 단위 시간에 처리할 수 있는 상한 μ 에 가까워지면 throughput 은 μ
+            에서 멈춥니다. Latency 는 그 직전부터 가파르게 오릅니다. Throughput 이 더 늘지 않기 시작하는 λ 가 saturation point 입니다. 그 너머의 요청은
+            대기열에 쌓여 결국 timeout 됩니다.
           </p>
           <p>
             Latency 가 왜 saturation 전에 먼저 오르는지는 queueing 으로 설명됩니다. 요청 하나의
@@ -217,14 +199,12 @@ export default function ServingBenchmarkMethodologyArticle() {
             throughput 이 <Link to="/ai/vllm-serving#serving-goodput">goodput</Link> 입니다.
           </p>
           <p>
-            LLM serving 은 M/M/1 보다 복잡합니다. Batch 가 커지면 μ 자체가 오르고, service
-            time 은 출력 길이에 비례해 지수 분포가 아니며, KV cache 가 차면 preemption 으로 μ
-            가 떨어집니다.
+            LLM serving 은 M/M/1 보다 복잡합니다. Batch 가 커지면 μ 자체가 오르고 service time 은 출력 길이에 비례해 지수 분포가 아닙니다. KV
+            cache 가 차면 preemption 으로 μ 가 떨어집니다.
           </p>
           <p>
-            그래서 곡선은 식으로 구하지 않고 λ 를 sweep 하며 잽니다. MLPerf Server scenario 가
-            Poisson 도착으로 latency 조건을 만족하는 최대 λ 를 이진 탐색하는 것이 바로 이
-            측정입니다.
+            곡선은 식으로 구하지 않고 λ 를 sweep 하며 잽니다. MLPerf Server scenario 가 Poisson 도착으로 latency 조건을 만족하는 최대 λ 를 이진
+            탐색하는 것이 바로 이 측정입니다.
           </p>
         </div>
         <ServingBenchmarkMethodologyViz />
@@ -265,10 +245,8 @@ export default function ServingBenchmarkMethodologyArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Benchmark reproducibility 는 같은 조건을 적어 둔 대로 다시 만들면 같은 분산 안의
-            값이 나오는 성질입니다. 재현되지 않는 숫자는 개선인지 noise 인지 가릴 수 없으므로,
-            결과보다 조건을 먼저 기록합니다. Model 과 GPU 이름만으로는 조건의 절반도 되지
-            않습니다.
+            같은 조건을 적어 둔 대로 다시 만들면 같은 분산 안의 값이 나옵니다. 이 성질이 benchmark reproducibility 입니다. 재현되지 않는 숫자는 개선인지
+            noise 인지 가릴 수 없으므로 결과보다 조건을 먼저 기록합니다. Model 과 GPU 이름만으로는 조건의 절반도 되지 않습니다.
           </p>
           <p>
             적어야 하는 조건은 앞 절들이 하나씩 드러낸 것들입니다. Benchmark 층과 도구 버전,
@@ -283,10 +261,8 @@ export default function ServingBenchmarkMethodologyArticle() {
             대상이 없는 숫자입니다.
           </p>
           <p>
-            Baseline 은 조건이 바뀔 때마다 새로 잡습니다. GPU driver 나 engine major 버전이
-            바뀌면 이전 baseline 과는 비교하지 않고, 두 버전을 같은 날 같은 node 에서 나란히
-            재어 새 baseline 으로 삼습니다. 시간이 떨어진 두 측정의 차이는 개선과 환경 변화가
-            섞여 있어 판정에 쓰지 않습니다.
+            Baseline 은 조건이 바뀔 때마다 새로 잡습니다. GPU driver 나 engine major 버전이 바뀌면 이전 baseline 과는 비교하지 않습니다. 두 버전을
+            같은 날 같은 node 에서 나란히 재어 새 baseline 으로 삼습니다. 시간이 떨어진 두 측정의 차이는 개선과 환경 변화가 섞여 있어 판정에 쓰지 않습니다.
           </p>
         </div>
         <AlgorithmBlock
@@ -307,15 +283,12 @@ export default function ServingBenchmarkMethodologyArticle() {
           preview="Capacity 를 찾을 때는 open loop(request rate) 가 맞습니다. Closed loop(concurrency) 는 서버가 느려지면 부하도 줄어 saturation 이 가려집니다."
         >
           <p>
-            Closed loop 는 동시 요청 수 N 을 고정하고 하나가 끝나면 다음을 보냅니다. 서버가
-            포화하면 응답이 늦어져 도착률이 스스로 낮아지므로 대기열이 무한히 자라지 않고,
-            latency 는 N 에 비례해 완만하게 늘어납니다. 사용자 N 명이 붙어 있는 상황의 모사에는
-            맞지만 saturation 의 무릎은 보이지 않습니다.
+            Closed loop 는 동시 요청 수 N 을 고정하고 하나가 끝나면 다음을 보냅니다. 서버가 포화하면 응답이 늦어져 도착률이 스스로 낮아지므로 대기열이 무한히 자라지
+            않습니다. Latency 는 N 에 비례해 완만하게 늘어납니다. 사용자 N 명이 붙어 있는 상황의 모사에는 맞지만 saturation 의 무릎은 보이지 않습니다.
           </p>
           <p>
-            Open loop 는 서버 상태와 무관하게 λ 로 보냅니다. vLLM 의 request rate 와 burstiness
-            (Gamma 분포의 shape, 1 이면 Poisson) 가 이 방식이며, λ &gt; μ 이면 대기열이 자라
-            timeout 이 납니다. 곡선의 무릎과 saturation point 는 이 방식에서만 정확히 잡힙니다.
+            Open loop 는 서버 상태와 무관하게 λ 로 보냅니다. vLLM 의 request rate 와 burstiness (Gamma 분포의 shape, 1 이면 Poisson)
+            가 이 방식입니다. λ &gt; μ 이면 대기열이 자라 timeout 이 납니다. 곡선의 무릎과 saturation point 는 이 방식에서만 정확히 잡힙니다.
           </p>
         </ProgressiveDetail>
       </section>

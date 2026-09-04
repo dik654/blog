@@ -10,12 +10,9 @@ export default function Overview() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="text-lg leading-8">
-          같은 질문에 사실을 잘 설명한 답과 그럴듯한 거짓말이 함께 가능하다면,
-          next-token likelihood만으로는 어느 쪽을 제품이 선택해야 하는지 정할 수
-          없다. Pretraining은 text distribution을 학습하지만 사용자의 의도,
-          사실성, 도움됨과 안전성 사이의 우선순위를 하나의 정답으로 제공하지 않기
-          때문이다. Post-training은 이 모호한 목표를 사람이 관찰하고 label을 남길
-          수 있는 behavior로 바꾼 뒤, 그 feedback을 policy update에 연결한다.
+          같은 질문에 사실을 잘 설명한 답과 그럴듯한 거짓말이 함께 가능하다면 next-token likelihood만으로는 어느 쪽을 제품이 선택해야 하는지 정할 수 없다.
+          Pretraining은 text distribution을 학습하지만 사용자의 의도, 사실성, 도움됨과 안전성 사이의 우선순위를 하나의 정답으로 제공하지 않기 때문이다. Post-
+          training은 이 모호한 목표를 사람이 관찰하고 label을 남길 수 있는 behavior로 바꾼 뒤 그 feedback을 policy update에 연결한다.
         </p>
         <p className="leading-7">
           이 글에서 <strong>policy</strong>는 prompt와 지금까지 생성한 token을
@@ -38,11 +35,9 @@ export default function Overview() {
           evaluation의 네 축으로 비교한다.
         </p>
         <p>
-          사람 labeler 대신 AI judge가 같은 판단을 내리면 이 pipeline은
-          RLAIF(Reinforcement Learning from AI Feedback)라고 부르는 변형이
-          된다. Reward model 학습과 PPO update 구조는 그대로 두고 preference
-          label의 출처만 사람에서 AI로 바꾼 것이므로, label 품질은 judge
-          model과 constitution 자체의 신뢰도에 종속된다.
+          사람 labeler 대신 AI judge가 같은 판단을 내리면 이 pipeline은 RLAIF(Reinforcement Learning from AI Feedback)라고 부르는
+          변형이 된다. Reward model 학습과 PPO update 구조는 그대로 두고 preference label의 출처만 사람에서 AI로 바꾼 것이다. label 품질이
+          judge model과 constitution 자체의 신뢰도에 종속되는 이유다.
         </p>
       </div>
 
@@ -51,19 +46,14 @@ export default function Overview() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Feedback은 목표 그 자체가 아니라 관측 가능한 proxy다</h3>
         <p>
-          Pairwise preference는 “A가 B보다 낫다”는 상대 판단이고 binary feedback은
-          개별 응답의 승인·비승인을 기록한다. Constitution은 판단 기준을
-          명시하지만, principle의 충돌 순서와 evaluator의 해석이 다시 label에
-          들어간다. 어느 경우든 학습되는 것은 인간 가치 전체가 아니라 수집
-          protocol에서 관측한 proxy이므로, alignment objective를 낮췄다는 사실과
-          실제 alignment가 좋아졌다는 결론을 구분해야 한다.
+          Pairwise preference는 “A가 B보다 낫다”는 상대 판단이고 binary feedback은 개별 응답의 승인·비승인을 기록한다. Constitution은 판단 기준을
+          명시한다. 그런데 principle의 충돌 순서와 evaluator의 해석이 다시 label에 들어간다. 어느 경우든 학습되는 것은 인간 가치 전체가 아니라 수집
+          protocol에서 관측한 proxy다. alignment objective를 낮췄다는 사실과 실제 alignment가 좋아졌다는 결론은 구분해야 한다.
         </p>
         <p>
-          따라서 held-out preference win rate 하나로 끝내지 않고, base capability
-          regression, 사실성, over-refusal, calibration과 adversarial prompt를
-          각각 측정한다. 특히 model judge를 쓴다면 policy와 judge가 같은 style
-          shortcut을 공유할 수 있으므로 blind pairwise human audit을 독립된
-          evaluation layer로 남겨야 한다.
+          held-out preference win rate 하나로 끝내지 않고 base capability regression, 사실성, over-refusal, calibration과
+          adversarial prompt를 각각 측정한다. 특히 model judge를 쓴다면 policy와 judge가 같은 style shortcut을 공유할 수 있으므로 blind
+          pairwise human audit을 독립된 evaluation layer로 남겨야 한다.
         </p>
       </div>
 
@@ -76,11 +66,9 @@ export default function Overview() {
           핵심 기여는 새 loss 하나가 아니라 세 종류의 data를 잇는 pipeline이다
         </h3>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          논문은 labeler demonstration으로 SFT를 만들고, 같은 prompt의 여러
-          output ranking으로 reward model을 학습한 뒤, 그 proxy reward와 KL
-          penalty를 사용해 PPO policy를 갱신했습니다. 이 결과는 특정 model·labeler
-          pool·evaluation에서 보고된 것이며, preference가 인간 가치 전체를
-          측정한다거나 PPO가 유일한 최적화 경로라는 결론은 아닙니다.
+          논문은 labeler demonstration으로 SFT를 만들고 같은 prompt의 여러 output ranking으로 reward model을 학습한 뒤 그 proxy
+          reward와 KL penalty를 사용해 PPO policy를 갱신했습니다. 이 결과가 보고된 조건은 특정 model·labeler pool·evaluation입니다. 여기서
+          preference가 인간 가치 전체를 측정한다거나 PPO가 유일한 최적화 경로라는 결론까지 나오지는 않습니다.
         </p>
       </div>
 
@@ -93,11 +81,9 @@ export default function Overview() {
           RLAIF는 새 objective가 아니라 reward model label의 출처를 바꾼 변형이다
         </h3>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Lee et al.(2023)은 사람 preference label 대신 off-the-shelf LLM이 같은
-          pairwise 질문에 답하게 해 reward model을 학습해도 사람 feedback 기준과
-          비슷한 win rate를 얻었다고 보고했습니다. 이 결과는 논문이 실험한
-          model·prompt·태스크 조건에서 관측된 것이며, 모든 judge model이 사람
-          labeler를 대체할 수 있다는 뜻은 아닙니다.
+          Lee et al.(2023)은 사람 preference label 대신 off-the-shelf LLM이 같은 pairwise 질문에 답하게 했습니다. 이렇게 학습한 reward
+          model도 사람 feedback 기준과 비슷한 win rate를 얻었다고 보고했습니다. 관측 조건은 논문이 실험한 model·prompt·태스크까지입니다. 그 밖으로 모든
+          judge model이 사람 labeler를 대체할 수 있다고 읽으면 어긋납니다.
         </p>
       </div>
     </section>

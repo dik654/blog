@@ -11,21 +11,27 @@ export default function ScalingLaws() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          Language-model validation loss는 일정 범위에서 parameter 수와 training
-          token 수에 대해 매끄러운 power-law 경향을 보였습니다. 이 곡선은 작은
-          pilot run에서 큰 run의 loss를 추정하고 고정 compute를 model과 data에
-          나누는 데 유용하지만, architecture·data mixture·optimizer·evaluation
-          domain이 바뀌면 coefficient도 다시 추정해야 합니다.
+          Language-model validation loss는 일정 범위 안에서 parameter 수와 training token 수에 대해 매끄러운 power-law 경향을
+          보였습니다. 이 곡선은 작은 pilot run으로 큰 run의 loss를 추정하고 고정 compute를 model과 data에 나누는 데 쓸모가 있습니다. 다만
+          architecture나 data mixture, optimizer, evaluation domain이 바뀌면 coefficient도 다시 추정해야 합니다.
         </p>
       </div>
 
       <div id="paper-scaling-laws" className="not-prose mt-8 scroll-mt-24 border-l border-border/80 pl-4">
         <p className="text-xs font-bold text-primary">논문 해설 · Scaling Laws for Neural Language Models</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">Kaplan 등은 고정된 실험 family에서 loss가 model size·data·compute에 대해 power-law로 변하는 경향과 compute allocation을 분석했습니다. Fitted exponent는 architecture·data·optimization 범위에 의존하며, 특정 capability나 serving cost까지 직접 예측하는 universal law가 아닙니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            Kaplan 등은 고정된 실험 family에서 loss가 model size·data·compute에 대해 power-law로 변하는 경향과 compute allocation을
+            분석했습니다. Fitted exponent는 architecture·data·optimization 범위에 딸린 값입니다. 특정 capability나 serving cost까지
+            직접 예측하는 universal law는 아닙니다.
+          </p>
       </div>
       <div id="paper-chinchilla" className="not-prose mt-6 scroll-mt-24 border-l border-border/80 pl-4">
         <p className="text-xs font-bold text-primary">논문 해설 · Training Compute-Optimal Large Language Models</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">Chinchilla 연구는 고정 training compute에서 model parameter와 training token을 함께 늘려야 한다는 배분을 재추정하고 70B model을 1.4T token으로 학습해 비교했습니다. 이 비율은 당시 model family·data·FLOP 회계의 training-optimal 결과이며 inference traffic과 latency까지 포함한 product optimum은 아닙니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            Chinchilla 연구는 고정 training compute에서 model parameter와 training token을 함께 늘려야 한다는 배분을 재추정하고 70B
+            model을 1.4T token으로 학습해 비교했습니다. 이 비율이 최적이라고 말할 수 있는 범위는 당시 model family·data·FLOP 회계의 training-
+            optimal까지입니다. Inference traffic과 latency까지 계산에 넣은 product optimum과는 다릅니다.
+          </p>
       </div>
 
       <ScalingDecisionViz />
@@ -79,11 +85,9 @@ export default function ScalingLaws() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          Aggregate loss가 매끄럽게 감소해도 특정 benchmark capability가 언제
-          나타날지는 바로 나오지 않습니다. Metric threshold, prompt format,
-          sampling variance와 contamination이 겉보기의 emergent jump를 만들 수
-          있으므로 scale claim에는 evaluation protocol과 confidence interval을
-          함께 남깁니다.
+          Aggregate loss가 매끄럽게 감소한다고 해서 특정 benchmark capability가 언제 나타날지까지 따라 나오지는 않습니다. Metric threshold와
+          prompt format, sampling variance와 contamination이 겉보기의 emergent jump를 만들기도 합니다. Scale claim에
+          evaluation protocol과 confidence interval을 함께 남기는 이유입니다.
         </p>
       </div>
     </section>

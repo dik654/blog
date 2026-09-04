@@ -16,10 +16,8 @@ export default function StructuredPruningArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Channel 하나를 제거하면 현재 layer의 output과 다음 layer의 input을
-            함께 줄여 더 작은 dense matrix를 만듭니다. N:M은 shape를 줄이지 않고
-            local group의 pattern을 hardware가 읽을 수 있게 제한하는 별도
-            계약입니다.
+            channel 하나를 제거하면 현재 layer의 output과 다음 layer의 input이 함께 줄어 더 작은 dense matrix가 됩니다. N:M이 거는 계약은 이와
+            별개입니다. shape는 그대로 두고 local group의 pattern만 hardware가 읽을 수 있게 제한합니다.
           </p>
         </div>
         <TermBreakdown
@@ -59,8 +57,7 @@ export default function StructuredPruningArticle() {
           question="Input·output width를 각각 75% 남기면 주된 dense 계산은 얼마나 남나요?"
           idea={
             <p>
-              Linear layer는 각 token row에 대해 모든 input과 output 조합을
-              계산하므로 두 retention ratio를 곱합니다.
+              두 retention ratio를 곱하는 이유는 linear layer가 각 token row에 대해 모든 input과 output 조합을 계산하기 때문입니다.
             </p>
           }
           formula={String.raw`C\approx2Td_{in}d_{out},\quad C'/C\approx\alpha\beta`}

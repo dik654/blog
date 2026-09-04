@@ -26,12 +26,9 @@ export default function QueryGeneration() {
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p id="paper-synthetic-query-recipes" className="scroll-mt-24 leading-7">
-          E5-Mistral은 task taxonomy를 먼저 발상한 뒤 query-document 예시를
-          만드는 두 단계 합성을 제안했고, Gecko는 LLM이 생성한 관련 passage를
-          검색해 candidate를 다시 labeling하는 distillation 절차를 쓴다. Qwen3
-          Embedding도 다국어·다도메인 합성 데이터를 multi-stage training에
-          사용한다. EUREKA는 이를 baseline으로 삼되 subset마다 단일 prompt를
-          고정하지 않는다.
+          E5-Mistral은 task taxonomy를 먼저 발상한 뒤 query-document 예시를 만드는 두 단계 합성을 제안했다. Gecko는 LLM이 생성한 관련
+          passage를 검색해 candidate를 다시 labeling하는 distillation 절차를 쓴다. Qwen3 Embedding도 다국어·다도메인 합성 데이터를 multi-
+          stage training에 사용한다. EUREKA는 이를 baseline으로 삼되 subset마다 단일 prompt를 고정하지 않는다.
         </p>
 
         <div className="not-prose my-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4 text-sm">

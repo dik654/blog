@@ -19,15 +19,24 @@ export default function TrainValidationTestArticle() {
 
       <section id="selection-feedback" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">01 · feedback의 방향</p><h2 className="mt-2 text-2xl font-bold">Validation은 weight를 직접 바꾸지 않아도 선택을 통해 procedure를 바꾼다</h2></header>
-        <p>Validation score를 보고 learning rate나 checkpoint를 고르는 순간 그 data는 선택 과정에 영향을 줍니다. 이것이 validation의 정상 역할입니다.</p>
-        <p>같은 validation을 수백 번 보며 candidate를 만들면 그 score의 우연한 noise에도 맞출 수 있습니다. 시도 횟수·선택 규칙·seed를 기록하고, 마지막에는 보지 않은 test가 필요합니다.</p>
+        <p>
+            어떤 learning rate를 쓸지, 어떤 checkpoint를 쓸지를 validation score로 고르는 순간 그 data는 선택 과정에 영향을 줍니다. 이 개입 자체가
+            validation의 정상 역할입니다.
+          </p>
+        <p>
+            다만 같은 validation을 수백 번 보며 candidate를 만들면 그 score에 섞인 우연한 noise까지 맞출 수 있습니다. 시도 횟수와 선택 규칙, seed를
+            기록해 두고 마지막에는 보지 않은 test가 필요합니다.
+          </p>
         <Term term="Validation selection feedback" description="Validation 결과가 model weight가 아니라 candidate·hyperparameter·stopping decision으로 돌아가는 경로입니다." boundary="‘Gradient에 안 썼으니 독립’이라는 주장은 틀립니다." />
         <Term term="Test-set reuse contamination" description="Test 결과를 보고 어떤 설정이든 바꾸면 test가 사실상 validation 역할을 하게 되는 상태입니다." boundary="이미 본 test를 다시 독립 final evidence로 부를 수 없습니다." />
       </section>
 
       <section id="generalization" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">02 · 무엇을 보고 싶은가</p><h2 className="mt-2 text-2xl font-bold">Generalization은 학습에 없던 같은 목표의 example에서 성능을 유지하는 능력이다</h2></header>
-        <p>Training score가 높은 것은 학습 data를 잘 맞혔다는 관측입니다. 새 data에서도 같은 규칙이 작동하는지는 validation·test처럼 학습 밖의 example로 따로 확인해야 합니다.</p>
+        <p>
+            여기서 training score가 높다는 것은 학습 data를 잘 맞혔다는 관측입니다. 새 data에서도 같은 규칙이 작동하는지는 validation·test처럼 학습 밖의
+            example로 따로 확인해야 합니다.
+          </p>
         <ExplainedFormula
           question="Train과 validation loss의 차이는 무엇을 먼저 경고할까요?"
           idea={<>같은 metric과 reduction으로 잰 validation loss에서 train loss를 빼, 학습 밖에서 추가로 생긴 오차를 봅니다.</>}

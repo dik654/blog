@@ -20,11 +20,9 @@ export default function SmoothieQwen() {
           별개의 모델 후보로 평가하고 저장해야 합니다.
         </p>
         <p>
-          이 방법의 대상은 “중국어라는 의미”가 아니라 tokenizer와 Unicode
-          조합으로 근사한 token risk입니다. 따라서 고정 사례에서 계산 설명에
-          우연히 섞인 중국어를 줄일 수 있어도, 사용자가 명시적으로 요구한 번역
-          “首尔” 역시 약해질 수 있습니다. suppression과 정상 예외 보존을 같은
-          paired evaluation에서 함께 봐야 하는 이유입니다.
+          이 방법의 대상은 “중국어라는 의미”가 아니라 tokenizer와 Unicode 조합으로 근사한 token risk입니다. 고정 사례에서 계산 설명에 우연히 섞인 중국어를 줄일 수
+          있어도 사용자가 명시적으로 요구한 번역 “首尔” 역시 약해질 수 있습니다. suppression과 정상 예외 보존을 같은 paired evaluation에 함께 올려야 하는 이유가
+          여기 있습니다.
         </p>
       </div>
 
@@ -81,10 +79,9 @@ export default function SmoothieQwen() {
           목표 문자를 만드는 비율을 sampling하고 risk를 근사합니다.
         </p>
         <p>
-          그러므로 “중국어 token 목록을 완벽하게 찾았다”가 아니라 “선택한 Unicode
-          범위와 sampling recipe 아래에서 위험도를 추정했다”가 정확한 설명입니다.
-          tokenizer version, normalization, n-gram window와 sample size가 바뀌면
-          risk도 달라질 수 있으므로 변환 artifact에 함께 기록해야 합니다.
+          정확한 설명은 “중국어 token 목록을 완벽하게 찾았다”가 아니라 “선택한 Unicode 범위와 sampling recipe 아래에서 위험도를 추정했다”입니다. tokenizer
+          version, normalization, n-gram window와 sample size가 바뀌면 risk도 달라질 수 있으니 이 조건들을 변환 artifact에 적어 둬야
+          합니다.
         </p>
 
         <h3>행을 줄여도 확률은 vocabulary 전체에서 다시 계산됩니다</h3>
@@ -186,11 +183,9 @@ p'(t\mid h)&=\underbrace{\frac{e^{z'_t}}{\sum_{j\in\mathcal V}e^{z'_j}}}_{\text{
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          변환본은 원본 checkpoint를 덮어쓰지 않고 config·tokenizer·risk 목록의
-          digest와 함께 versioning합니다. paired evaluation에서 정상 예외와
-          과제 품질을 통과했을 때만 canary로 보내며, 문자 suppression이 아니라
-          reasoning 구간 전체가 다른 언어로 전환되는 문제가 남는다면 다음 절의
-          SFT·RL이 더 직접적인 개입입니다.
+          변환본은 원본 checkpoint를 덮어쓰지 않습니다. config·tokenizer·risk 목록의 digest를 붙여 versioning합니다. canary로 보내는 것은
+          paired evaluation에서 정상 예외와 과제 품질을 통과한 뒤입니다. 문자 suppression이 아니라 reasoning 구간 전체가 다른 언어로 전환되는 문제가
+          남는다면 다음 절의 SFT·RL이 더 직접적인 개입입니다.
         </p>
       </div>
     </section>

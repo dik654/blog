@@ -9,11 +9,9 @@ export default function PruningGranularity() {
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          위 shape propagation 계약은 무엇을 지우는지를 지정하지 않습니다.
-          Channel 대신 attention head 하나, transformer layer 하나, MoE
-          expert 하나를 지워도 같은 계약(현재 output과 다음 input을 함께
-          줄이는)이 적용됩니다. 다만 어느 단위를 고르느냐에 따라 남는
-          품질과 절약량의 profile이 달라집니다.
+          위 shape propagation 계약은 무엇을 지우는지를 지정하지 않습니다. channel 대신 attention head 하나를 지우든 transformer layer 하나를
+          지우든 MoE expert 하나를 지우든 같은 계약(현재 output과 다음 input을 함께 줄이는)이 그대로 적용됩니다. 다만 어느 단위를 고르느냐에 따라 남는 품질과 절약량의
+          profile은 달라집니다.
         </p>
       </div>
       <TermBreakdown
@@ -53,24 +51,17 @@ export default function PruningGranularity() {
           Expert를 지우기 전에 얼마나 쓰이는지부터 잽니다
         </h3>
         <p>
-          MoE expert는 channel이나 head와 달리 서로 대칭이 아닙니다. Router가
-          어떤 token을 어느 expert로 보내는지에 따라 expert마다 실제로
-          처리하는 token 비율이 크게 다르고, 이 비율이 지워도 되는 expert를
-          찾는 첫 신호가 됩니다. Expert importance estimation은 이 신호에
-          출력 유사도나 제거 시 늘어나는 loss까지 더해 pruning 우선순위를
-          정하는 계산입니다.
+          MoE expert는 channel이나 head와 달리 서로 대칭이 아닙니다. 어떤 token을 어느 expert로 보낼지는 router가 정하는데, 그 결과 expert마다
+          실제로 처리하는 token 비율이 크게 벌어집니다. 이 비율이 지워도 되는 expert를 찾는 첫 신호입니다. 여기에 출력 유사도나 제거 시 늘어나는 loss까지 더하면
+          pruning 우선순위가 나옵니다. expert importance estimation이 하는 계산이 이것입니다.
         </p>
         <p>
-          예를 들어 8개 expert 중 2개가 router로부터 token의 40% 이상을
-          받는다면, 나머지 6개는 각각 10% 미만만 받습니다. 이 6개가 먼저
-          pruning 후보에 오르고, 그중에서도 다른 expert 출력과 겹치는
-          expert가 우선순위 상위로 갑니다.
+          예를 들어 8개 expert 중 2개가 router로부터 token의 40% 이상을 받는다면 나머지 6개는 각각 10% 미만만 받습니다. 먼저 pruning 후보에 오르는 쪽은 이
+          6개이고 그중에서도 다른 expert 출력과 겹치는 expert가 우선순위 상위로 갑니다.
         </p>
         <p>
-          이 신호는 하나로 고정돼 있지 않습니다. Routing 빈도만 보는 방법은
-          계산이 가볍지만, 드물게 호출돼도 결정적인 순간에만 쓰이는 expert를
-          놓칠 수 있습니다. 그래서 실제 방법들은 특정 task·calibration
-          data에서 expert를 지웠을 때 늘어나는 loss까지 함께 봅니다.
+          이 신호는 하나로 고정돼 있지 않습니다. 계산만 놓고 보면 routing 빈도만 세는 쪽이 가볍습니다. 대신 드물게 호출돼도 결정적인 순간에만 쓰이는 expert를 놓칠 수
+          있습니다. 그래서 실제 방법들은 특정 task·calibration data에서 expert를 지웠을 때 늘어나는 loss까지 함께 봅니다.
         </p>
       </div>
 

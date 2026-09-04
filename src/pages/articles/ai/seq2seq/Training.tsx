@@ -15,10 +15,9 @@ export default function Training({
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Training에서는 target sequence를 한 칸 오른쪽으로 이동해 이전 정답 token을
-          decoder input으로 준다. 이를 teacher forcing이라고 한다. 각 step이 올바른 prefix에
-          조건부이므로 token-level negative log-likelihood를 안정적으로 계산할 수 있지만,
-          recurrent decoder state는 여전히 이전 step에 의존해 시간축 전체가 완전히 병렬화되지는 않는다.
+          Training에서는 target sequence를 한 칸 오른쪽으로 이동해 이전 정답 token을 decoder input으로 준다. 이를 teacher forcing이라고
+          한다. 각 step이 올바른 prefix에 조건부이므로 token-level negative log-likelihood를 안정적으로 계산할 수 있지만 recurrent
+          decoder state는 여전히 이전 step에 의존해 시간축 전체가 완전히 병렬화되지는 않는다.
         </p>
       </div>
 
@@ -49,33 +48,38 @@ export default function Training({
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          작은 계산으로 mask의 역할을 확인할 수 있다. 정답 probability가 0.8, 0.5인
-          두 token 뒤에 padding 하나가 있다면 mask는 (1,1,0), 유효 token 수는 2다.
-          따라서 token-average NLL은 −(log 0.8+log 0.5)/2≈0.458이며 padding의
-          probability는 합과 분모에 모두 들어가지 않는다.
+          작은 계산으로 mask의 역할을 확인할 수 있다. 정답 probability가 0.8, 0.5인 두 token 뒤에 padding 하나가 있다면 mask는 (1,1,0), 유효
+          token 수는 2다. Token-average NLL은 −(log 0.8+log 0.5)/2≈0.458이며 padding의 probability는 합과 분모에 모두 들어가지
+          않는다.
         </p>
         <h3>Exposure bias는 진단할 현상이지 단일 원인으로 단정할 수 없다</h3>
         <p>
-          Inference에서는 정답 prefix를 알 수 없으므로 model이 선택한 token을 다음 input으로
-          사용한다. Scheduled sampling은 training input을 점차 model sample로 바꾸는
-          curriculum을 제안했지만 task와 estimator에 따라 trade-off가 있으며 보편적인
-          개선 공식은 아니다. 더 최근의 분석은 model의 self-recovery 때문에 오류가 항상
-          누적되는 것은 아니라는 결과도 보고하므로, prefix perturbation과 sequence metric으로
-          실제 failure를 측정한 뒤 intervention을 고른다.
+          Inference에서는 정답 prefix를 알 수 없으므로 model이 선택한 token을 다음 input으로 사용한다. Scheduled sampling은 training
+          input을 점차 model sample로 바꾸는 curriculum을 제안했다. 다만 그 효과는 task와 estimator에 따라 갈린다. 더 최근의 분석은 model의
+          self-recovery 덕분에 오류가 늘 누적되지는 않는다는 결과도 보고한다. Prefix perturbation과 sequence metric으로 실제 failure를 측정한
+          뒤 intervention을 고른다.
         </p>
       </div>
 
       <div id="paper-scheduled-sampling" className="not-prose my-8 border-l border-primary/50 pl-4 scroll-mt-24">
         <p className="text-xs font-bold text-primary">논문 읽기 · Prefix curriculum</p>
         <p className="mt-2 text-sm font-semibold">Scheduled Sampling for Sequence Prediction with Recurrent Neural Networks</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">정답 prefix만 주는 training과 model prefix를 쓰는 inference의 차이를 줄이기 위해, training 중 입력을 정답 token에서 model sample로 점차 바꾸는 curriculum을 제안합니다. 논문이 다룬 recurrent sequence task의 실험 결과이며, 어떤 schedule도 모든 task에서 일관되게 좋아진다는 보장은 아닙니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            Training은 정답 prefix만 주고 inference는 model prefix를 씁니다. 그 차이를 줄이려고 training 중 입력을 정답 token에서 model
+            sample로 점차 바꾸는 curriculum을 제안합니다. 실험은 recurrent sequence task 범위에서 이뤄졌습니다. Schedule의 이득이 모든 task에
+            일관되게 따라오는지는 여기서 확인되지 않습니다.
+          </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary underline-offset-4 hover:underline" href="https://proceedings.neurips.cc/paper/2015/hash/e995f98d56967d946471af29d7bf99f1-Abstract.html" target="_blank" rel="noreferrer">원 논문과 schedule 보기</a>
       </div>
 
       <div id="paper-self-recovery" className="not-prose my-8 border-l border-primary/50 pl-4 scroll-mt-24">
         <p className="text-xs font-bold text-primary">논문 읽기 · 통념의 적용 범위</p>
         <p className="mt-2 text-sm font-semibold">Exposure Bias versus Self-Recovery</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">Model이 이전 오류를 언제나 계속 증폭한다는 설명을 그대로 받아들이지 않고, perturbed prefix 뒤에서 정상 trajectory로 회복하는 현상을 측정합니다. 이 결과는 train–inference 조건 차이가 사라졌다는 뜻이 아니라, 실제 failure를 prefix perturbation과 sequence metric으로 확인해야 한다는 근거입니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            Model이 이전 오류를 언제나 계속 증폭한다는 설명을 그대로 받아들이는 대신 perturbed prefix 뒤에서 정상 trajectory로 회복하는 현상을 측정합니다.
+            회복이 관찰된다고 train–inference 조건 차이가 사라지지는 않습니다. 실제 failure는 prefix perturbation과 sequence metric으로 직접
+            확인합니다.
+          </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary underline-offset-4 hover:underline" href="https://aclanthology.org/2021.emnlp-main.415/" target="_blank" rel="noreferrer">논문과 평가 설정 보기</a>
       </div>
     </section>

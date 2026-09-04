@@ -7,17 +7,14 @@ export default function FeatureVsFinetune() {
       <h2 className="mb-6 text-2xl font-bold">Fixed·partial·full은 같은 validation 질문과 budget에서 비교합니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Fixed feature는 새 head만 학습하므로 가장 싼 data·metric smoke test입니다.
-          Partial은 target에 가까운 upper blocks까지, full은 전체 backbone까지
-          representation을 바꿉니다. Trainable parameter가 늘어날수록 target에
-          적응할 자유도와 optimizer state·activation memory·overfitting 위험이 함께
-          늘어납니다.
+          Fixed feature는 새 head만 학습하므로 가장 싼 data·metric smoke test입니다. Partial은 target에 가까운 upper blocks까지,
+          full은 전체 backbone까지 representation을 바꿉니다. Trainable parameter가 늘어날수록 target에 적응할 자유도가 커지지만 optimizer
+          state와 activation memory, overfitting 위험도 같이 커집니다.
         </p>
         <p>
-          세 실험은 같은 pretrained checkpoint·preprocessing·entity/time split,
-          augmentation family와 metric을 사용합니다. Search trial 수 또는 wall-clock
-          budget, seed 수도 맞추고, validation mean뿐 아니라 seed variance·worst
-          group·calibration·peak memory·training time을 보고 선택합니다.
+          세 실험은 같은 pretrained checkpoint·preprocessing·entity/time split과 augmentation family, metric을 씁니다.
+          Search trial 수나 wall-clock budget, seed 수까지 맞춘 다음 validation mean뿐 아니라 seed variance·worst
+          group·calibration·peak memory·training time을 보고 고릅니다.
         </p>
       </div>
       <div className="not-prose my-8"><FeatureVsFinetuneViz /></div>
@@ -41,11 +38,9 @@ export default function FeatureVsFinetune() {
       />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Head-only가 training data에도 fit하지 못하면 representation 부족을 바로
-          결론내리지 않습니다. Label·head shape·normalization·optimizer와 metric을
-          먼저 확인합니다. 반대로 partial의 이득이 특정 deployment slice에서만
-          생기면 전체 평균과 함께 그 slice의 sample 수와 confidence interval을
-          남깁니다.
+          Head-only가 training data에도 fit하지 못한다고 해서 representation이 부족하다고 바로 결론내지는 않습니다. Label과 head shape,
+          normalization, optimizer와 metric을 먼저 확인하는 게 순서입니다. 반대로 partial의 이득이 특정 deployment slice에서만 생기면 전체
+          평균과 함께 그 slice의 sample 수와 confidence interval을 남깁니다.
         </p>
       </div>
     </section>

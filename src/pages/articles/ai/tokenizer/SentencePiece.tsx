@@ -20,13 +20,10 @@ export default function SentencePiece() {
           것은 아닙니다.
         </p>
         <p>
-          Unigram trainer는 넓은 seed vocabulary(예: suffix array로 뽑은 자주
-          나오는 substring 모두)에서 출발해 EM(expectation-maximization)을
-          반복합니다. E-step은 현재 piece probability로 corpus의 각 문장을
-          여러 경로로 나눠 보고 piece별 기대 등장 횟수를 계산하고, M-step은 그
-          기대 횟수로 probability를 다시 추정합니다. 이 EM을 몇 round 돌린 뒤,
-          제거했을 때 corpus log-likelihood를 가장 덜 해치는 piece부터 얼마간
-          잘라내는 pruning을 반복해 목표 vocabulary 크기에 도달합니다.
+          Unigram trainer는 넓은 seed vocabulary(예: suffix array로 뽑은 자주 나오는 substring 모두)에서 출발해 EM(expectation-
+          maximization)을 반복합니다. E-step은 현재 piece probability로 corpus의 각 문장을 여러 경로로 나눠 보고 piece별 기대 등장 횟수를
+          계산합니다. M-step은 그 기대 횟수로 probability를 다시 추정합니다. 이 EM을 몇 round 돌린 뒤, 제거했을 때 corpus log-likelihood를 가장
+          덜 해치는 piece부터 얼마간 잘라내는 pruning을 반복해 목표 vocabulary 크기에 도달합니다.
         </p>
         <p className="leading-7">
           BPE가 병합 순서를 규칙으로 쌓는 반면 Unigram encoding은 현재
@@ -139,10 +136,8 @@ export default function SentencePiece() {
           SentencePiece: A simple and language independent subword tokenizer and detokenizer
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          핵심 기여는 language-specific pre-tokenizer에 의존하지 않고 raw sentence에서
-          고정 vocabulary size의 model을 학습하며, 공백까지 일반 symbol처럼 다루는
-          end-to-end toolkit입니다. 모든 언어에서 같은 품질을 보장한다는 주장은
-          아닙니다.
+          핵심 기여는 end-to-end toolkit입니다. language-specific pre-tokenizer에 의존하지 않고 raw sentence에서 고정 vocabulary
+          size의 model을 학습하며 공백까지 일반 symbol처럼 다룹니다. 품질이 모든 언어에서 같다는 보장까지 논문이 내놓지는 않습니다.
         </p>
         <a
           className="mt-3 inline-block text-sm font-medium text-primary underline-offset-4 hover:underline"
@@ -163,10 +158,8 @@ export default function SentencePiece() {
           Subword Regularization: Improving Neural Network Translation Models with Multiple Subword Candidates
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          하나의 정답 segmentation만 고정하는 대신 Unigram model의 여러 후보를
-          sampling해 translation model을 학습한 연구입니다. 보고된 개선은 실험한
-          번역 corpus와 model 조건의 결과이며, sampling을 켜면 모든 downstream
-          task가 자동으로 좋아진다는 뜻은 아닙니다.
+          하나의 정답 segmentation만 고정하는 대신 Unigram model의 여러 후보를 sampling해 translation model을 학습한 연구입니다. 보고된 개선은
+          실험한 번역 corpus와 model 조건에서 나온 결과입니다. sampling을 켠다고 모든 downstream task가 자동으로 좋아지지는 않습니다.
         </p>
         <a
           className="mt-3 inline-block text-sm font-medium text-primary underline-offset-4 hover:underline"

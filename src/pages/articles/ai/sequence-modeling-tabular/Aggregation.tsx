@@ -8,11 +8,9 @@ export default function Aggregation() {
       <h2 className="mb-6 text-2xl font-bold">Flat summary는 순서를 없애는 대신 무엇을 남길지 정한 압축입니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Sequence model이 언제나 첫 선택은 아닙니다. Event별 count, 마지막 발생 후
-          경과 시간, 최근 window의 합계처럼 고정 길이 feature를 만들면 강한 GBDT
-          baseline을 빠르게 세울 수 있습니다. 다만 이 변환은 단순한 전처리가 아니라
-          정보 일부를 의도적으로 버리는 압축입니다. 무엇을 버렸는지 알아야 sequence
-          model의 추가 비용이 필요한지도 판단할 수 있습니다.
+          Sequence model이 언제나 첫 선택은 아닙니다. Event별 count, 마지막 발생 후 경과 시간, 최근 window의 합계처럼 고정 길이 feature를 만들면 강한
+          GBDT baseline을 빠르게 세울 수 있습니다. 이 변환은 정보 일부를 의도적으로 버리는 압축입니다. 무엇을 버렸는지 알아야 sequence model의 추가 비용이
+          필요한지도 판단할 수 있습니다.
         </p>
         <p>
           Lag·rolling window의 시간 경계는 <Link to="/ai/time-features">시계열 feature 글</Link>에서
@@ -54,16 +52,14 @@ export default function Aggregation() {
           다른 evidence가 됩니다. 이것이 summary collision입니다.
         </p>
         <p>
-          Trigram·최근 event 위치·time gap을 추가하면 일부 collision을 줄일 수
-          있지만 vocabulary와 sequence 길이가 커질수록 feature가 빠르게 희소해집니다.
-          Minimum support, top-k vocabulary, hashing 같은 정책은 training fold에서
-          정하고 unknown bucket까지 serving artifact에 포함해야 합니다.
+          Trigram·최근 event 위치·time gap을 추가하면 일부 collision을 줄일 수 있습니다. 대신 vocabulary와 sequence 길이가 커질수록
+          feature가 빠르게 희소해집니다. Minimum support, top-k vocabulary, hashing 같은 정책은 training fold에서 정하고 unknown
+          bucket까지 serving artifact에 넣습니다.
         </p>
         <p>
-          최종 비교에서는 같은 cutoff와 split을 사용한 recency/count GBDT,
-          order-aware flat model, sequence model을 나란히 둡니다. Sequence model의
-          gain이 긴 history나 특정 transition slice에서만 생기는지도 확인하면,
-          평균 점수 뒤에 가려진 representation 이득을 찾을 수 있습니다.
+          최종 비교에서는 같은 cutoff와 split을 사용한 recency/count GBDT, order-aware flat model, sequence model을 나란히 둡니다.
+          Sequence model의 gain이 긴 history나 특정 transition slice에서만 생기는지 확인하면 평균 점수 뒤에 가려진 representation 이득이
+          드러납니다.
         </p>
       </div>
     </section>

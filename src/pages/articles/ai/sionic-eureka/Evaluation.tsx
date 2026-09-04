@@ -25,8 +25,7 @@ export default function Evaluation() {
           question="관련 문서를 상위에 배치했는지 query마다 어떻게 정규화해 비교하는가?"
           idea={
             <p>
-              Rank가 뒤로 갈수록 relevance gain을 할인한 DCG를 계산하고, 같은
-              judged 문서를 이상적으로 정렬한 IDCG로 나눠 query별 난이도와
+              Rank가 뒤로 갈수록 relevance gain을 할인한 DCG를 계산합니다. 같은 judged 문서를 이상적으로 정렬한 IDCG로 나눠 query별 난이도와
               positive 수 차이를 일부 정규화합니다.
             </p>
           }

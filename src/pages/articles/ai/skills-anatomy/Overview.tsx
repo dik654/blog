@@ -34,10 +34,8 @@ export default function Overview() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          따라서 좋은 Skill의 질문은 “무슨 tool을 넣을까?”에서 시작하지 않습니다.
-          먼저 반복되는 job과 적용하지 않을 경계를 정하고, 입력·산출물·검증·실패
-          시 fallback을 적은 뒤, 결정적으로 반복할 부분에만 script를 둡니다. 실제
-          tool 실행 권한은 Skill 밖의 runtime이 계속 검사합니다.
+          좋은 Skill의 질문은 “무슨 tool을 넣을까?”에서 시작하지 않습니다. 먼저 반복되는 job과 적용하지 않을 경계를 정합니다. 입력·산출물·검증·실패 시 fallback을
+          적고 나서 결정적으로 반복할 부분에만 script를 둡니다. 실제 tool 실행 권한은 Skill 밖의 runtime이 계속 검사합니다.
         </p>
         <ContentBoundary article="skills-anatomy" />
 

@@ -21,17 +21,14 @@ export default function RagIngestionAndChunkingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Retrieval-Augmented Generation(RAG)은 LLM 이 학습 시점 가중치만으로 답을 만드는 대신,
-            질문마다 외부 knowledge base 를 검색해 그 내용을 prompt context 에 넣고 그 위에서 답을
-            생성하게 하는 아키텍처입니다. 모델을 다시 학습하지 않고도 최신 정보나 사설 데이터를
-            답변에 반영할 수 있는 대신, 검색이 가져온 근거가 틀리면 생성 단계는 그 오류를 그대로
-            답에 옮깁니다.
+            Retrieval-Augmented Generation(RAG)은 LLM 이 학습 시점 가중치만으로 답을 만들게 두지 않는 아키텍처입니다. 질문마다 외부 knowledge
+            base 를 검색해 그 내용을 prompt context 에 넣고 그 위에서 답을 생성하게 합니다. 모델을 다시 학습하지 않고도 최신 정보나 사설 데이터를 답변에 반영할 수
+            있는 대신, 검색이 가져온 근거가 틀리면 생성 단계는 그 오류를 그대로 답에 옮깁니다.
           </p>
           <p className="text-lg leading-8">
-            RAG 가 검색하는 대상은 원본 파일이 아니라 knowledge base 입니다. Knowledge base 는
-            문서·chunk·metadata·embedding vector 를 함께 담은 저장소이고, document ingestion
-            pipeline 이 그 저장소를 채우는 절차입니다. 이 순서(parsing → chunking → embedding)를
-            한 단계라도 건너뛰면 다음 단계가 받는 입력의 모양 자체가 깨집니다.
+            RAG 가 검색하는 대상은 원본 파일이 아니라 knowledge base 입니다. Knowledge base 는 문서·chunk·metadata·embedding vector
+            를 함께 담은 저장소입니다. 그 저장소를 채우는 절차가 document ingestion pipeline 입니다. 이 순서(parsing → chunking →
+            embedding)를 한 단계라도 건너뛰면 다음 단계가 받는 입력의 모양 자체가 깨집니다.
           </p>
           <p>
             이 글은 그 pipeline 의 앞쪽 절반, 즉 문서를 읽어 들여 검색 가능한 단위로 자르는
@@ -56,8 +53,7 @@ export default function RagIngestionAndChunkingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            PDF, HTML, Markdown 은 저마다 다른 방식으로 제목과 문단, 표를 인코딩합니다. Parsing 은
-            그 포맷을 벗겨 내고 순서가 있는 일반 텍스트를 만드는 단계입니다.
+            PDF, HTML, Markdown 은 저마다 다른 방식으로 제목과 문단, 표를 인코딩합니다. Parsing 은 그 포맷을 벗겨 내고 순서가 있는 일반 텍스트를 만듭니다.
           </p>
           <p>
             이때 그 텍스트가 원래 어떤 구조(제목 경로, 문단, 표의 행과 열)에 속했는지도 함께
@@ -65,20 +61,16 @@ export default function RagIngestionAndChunkingArticle() {
             됩니다.
           </p>
           <p>
-            이 글은 parsing 을 ingestion pipeline 의 한 단계로만 다룹니다. 표를 셀 단위로
-            복원하거나 스캔 문서의 layout 을 분석하는 세부는 별도 글의 범위이며, 여기서는 parsing
-            결과가 무엇을 보존해야 다음 단계인 chunking 이 안전하게 작동하는지만 봅니다.
+            이 글은 parsing 을 ingestion pipeline 의 한 단계로만 다룹니다. 표를 셀 단위로 복원하거나 스캔 문서의 layout 을 분석하는 세부는 별도 글의
+            범위입니다. 여기서는 parsing 결과가 무엇을 보존해야 다음 단계인 chunking 이 안전하게 작동하는지만 봅니다.
           </p>
           <p>
-            가정: 표 하나가 3 행 4 열이고 header 행에 항목 이름이 있습니다. Parsing 이 header 와
-            data row 의 관계를 남기지 않으면, 뒤에 이어지는 chunking 은 숫자만 있는 행을 header
-            없이 잘라내고, 그 chunk 는 어떤 항목의 숫자인지 알 수 없는 상태로 knowledge base 에
-            들어갑니다.
+            가정: 표 하나가 3 행 4 열이고 header 행에 항목 이름이 있습니다. Parsing 이 header 와 data row 의 관계를 남기지 않으면 뒤에 이어지는
+            chunking 은 숫자만 있는 행을 header 없이 잘라냅니다. 그 chunk 는 어떤 항목의 숫자인지 알 수 없는 상태로 knowledge base 에 들어갑니다.
           </p>
           <p>
-            Parsing 이 남겨야 할 최소 단위는 문단 경계, 제목 계층, 표의 header-row 관계, 원문에서의
-            문자 offset 입니다. Offset 을 남기지 않으면 나중에 어떤 chunk 가 원문 어디서 왔는지
-            추적할 방법이 없습니다.
+            Parsing 이 남겨야 할 최소 단위는 문단 경계, 제목 계층, 표의 header-row 관계, 원문 기준 문자 offset 입니다. Offset 을 남기지 않으면 나중에
+            어떤 chunk 가 원문 어디서 왔는지 추적할 방법이 없습니다.
           </p>
         </div>
         <TermBreakdown
@@ -97,14 +89,12 @@ export default function RagIngestionAndChunkingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Document chunking 은 parsing 이 만든 연속 텍스트를 고정 길이(chunk size)로 나눠
-            검색 단위를 만드는 단계입니다. Chunk 를 너무 크게 두면 서로 다른 주제가 한 chunk 에
-            섞여 검색 정밀도가 떨어지고, 너무 작게 두면 조건과 예외가 다른 chunk 로 흩어집니다.
+            Document chunking 은 parsing 이 만든 연속 텍스트를 고정 길이(chunk size)로 나눠 검색 단위를 만듭니다. Chunk 를 너무 크게 두면 서로 다른
+            주제가 한 chunk 에 섞여 검색 정밀도가 떨어집니다. 너무 작게 두면 조건과 예외가 다른 chunk 로 흩어집니다.
           </p>
           <p>
-            그 사이를 메우는 것이 chunk overlap 입니다. 인접한 두 chunk 가 일부 구간을 공유하게
-            해서, chunk 경계(chunk boundary)에 걸친 문장이 한쪽 chunk 에는 통째로 남게 만드는
-            장치입니다.
+            그 사이를 메우는 것이 chunk overlap 입니다. 인접한 두 chunk 가 일부 구간을 공유하게 해서 chunk 경계(chunk boundary)에 걸친 문장이 한쪽
+            chunk 에는 통째로 남게 만듭니다.
           </p>
         </div>
         <ExplainedFormula
@@ -131,19 +121,16 @@ export default function RagIngestionAndChunkingArticle() {
         />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Overlap 의 효과는 경계에 걸친 문장에서 드러납니다. 480~530 번째 token 에 걸친 문장
-            하나가 있다고 하면, overlap 이 없는 경우(stride 500) chunk 는 [0,500) 과 [500,1,000)
-            으로 나뉘어 이 문장은 두 chunk 어디에도 온전히 남지 않습니다.
+            Overlap 의 효과는 경계에 걸친 문장에서 드러납니다. 480~530 번째 token 에 걸친 문장 하나가 있다고 하면 overlap 이 없는 경우(stride 500)
+            chunk 는 [0,500) 과 [500,1,000) 으로 나뉩니다. 이 문장은 두 chunk 어디에도 온전히 남지 않습니다.
           </p>
           <p>
-            같은 문장을 overlap 50 인 앞의 예로 다시 보면, 두 번째 chunk 가 [450,950) 구간을
-            담으므로 480~530 문장 전체가 그 chunk 안에 통째로 들어갑니다. Overlap 이 경계에 걸친
-            정보를 적어도 한쪽 chunk 에는 살려 두는 것입니다.
+            같은 문장을 overlap 50 인 앞의 예로 다시 보면 두 번째 chunk 가 [450,950) 구간을 담으므로 480~530 문장 전체가 그 chunk 안에 통째로
+            들어갑니다. Overlap 은 이런 식으로 경계에 걸친 정보를 적어도 한쪽 chunk 에는 살려 둡니다.
           </p>
           <p>
-            다만 overlap 이 문장 길이보다 짧으면 이 보장은 깨집니다. 400~560 번째 token 에 걸친
-            160-token 문장은 overlap 50 으로도 어느 chunk 에도 완전히 들어가지 않습니다. Overlap
-            을 키우면 이런 경우는 줄지만, chunk 개수와 중복 저장량이 함께 늘어납니다.
+            다만 overlap 이 문장 길이보다 짧으면 이 보장은 깨집니다. 400~560 번째 token 에 걸친 160-token 문장은 overlap 50 으로도 어느 chunk
+            에도 완전히 들어가지 않습니다. Overlap 을 키우면 이런 경우는 줄지만 chunk 개수와 중복 저장량이 함께 늘어납니다.
           </p>
         </div>
         <TermBreakdown
@@ -175,26 +162,21 @@ export default function RagIngestionAndChunkingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Fixed-size chunking 은 몇 번째 token 인지만 보고 자릅니다. Semantic chunking 은 문장을
-            하나씩 embedding 한 뒤 이웃한 문장 사이의 유사도를 계산해, 그 유사도가 갑자기 떨어지는
-            자리만 경계로 삼습니다. 주제가 바뀌는 자리에서 자르겠다는 뜻입니다.
+            Fixed-size chunking 은 몇 번째 token 인지만 보고 자릅니다. Semantic chunking 은 문장을 하나씩 embedding 한 뒤 이웃한 문장 사이의
+            유사도를 계산해 그 유사도가 갑자기 떨어지는 자리만 경계로 삼습니다. 그래서 주제가 바뀌는 자리에서 자릅니다.
           </p>
           <p>
-            절차는 이렇습니다. 문서를 문장 단위로 나누고, 각 문장(또는 이웃 몇 개를 묶은 group)을
-            embedding 합니다. 그다음 문장 i 와 문장 i+1 의 embedding 사이 거리를 차례로 계산해,
-            그 거리가 전체 분포에서 상위 몇 퍼센트(percentile)에 들 때만 그 자리를 chunk boundary
-            로 확정합니다.
+            절차는 이렇습니다. 문서를 문장 단위로 나누고 각 문장(또는 이웃 몇 개를 묶은 group)을 embedding 합니다. 그다음 문장 i 와 문장 i+1 의 embedding
+            사이 거리를 차례로 계산합니다. 그 거리가 전체 분포에서 상위 몇 퍼센트(percentile)에 들 때만 그 자리를 chunk boundary 로 확정합니다.
           </p>
           <p>
-            LlamaIndex 의 SemanticSplitterNodeParser 는 이 percentile 을 breakpoint_percentile_threshold
-            라는 이름으로 노출하고, 기본 예시 값은 95 입니다. 문장 사이 유사도 하락이 상위 5 %
-            안에 드는 자리만 경계로 인정한다는 뜻이며, buffer_size 파라미터로 경계를 계산할 때
-            앞뒤로 몇 문장을 더 묶어 볼지 조절합니다.
+            LlamaIndex 의 SemanticSplitterNodeParser 는 이 percentile 을 breakpoint_percentile_threshold 라는 이름으로
+            노출합니다. 기본 예시 값은 95 입니다. 문장 사이 유사도 하락이 상위 5 % 안에 드는 자리만 경계로 인정한다는 뜻입니다. buffer_size 파라미터로는 경계를 계산할
+            때 앞뒤로 몇 문장을 더 묶어 볼지 조절합니다.
           </p>
           <p>
-            이 방식은 chunk 길이를 고정하지 않으므로 어떤 chunk 는 두 문장, 어떤 chunk 는 열 문장이
-            될 수 있습니다. 그 대가로 문장마다 embedding 을 한 번 더 계산해야 해서, ingestion
-            시점의 연산 비용이 fixed-size chunking 보다 커집니다.
+            이 방식은 chunk 길이를 고정하지 않으므로 어떤 chunk 는 두 문장, 어떤 chunk 는 열 문장이 될 수 있습니다. 그 대가로 문장마다 embedding 을 한 번 더
+            계산해야 해서 ingestion 시점의 연산 비용이 fixed-size chunking 보다 커집니다.
           </p>
         </div>
         <TermBreakdown
@@ -212,9 +194,8 @@ export default function RagIngestionAndChunkingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Chunk 하나만 떼어 보면 "그 회사의 매출은 지난 분기보다 3 % 늘었다" 같은 문장은 어느
-            회사, 어느 분기인지 알 수 없습니다. Contextual retrieval 은 이 손실을 chunking 뒤,
-            embedding 하기 전에 chunk 앞에 짧은 설명을 붙여 메우는 방법입니다.
+            Chunk 하나만 떼어 보면 "그 회사의 매출은 지난 분기보다 3 % 늘었다" 같은 문장은 어느 회사, 어느 분기인지 알 수 없습니다. Contextual retrieval 은
+            이 손실을 chunking 뒤, embedding 하기 전에 chunk 앞에 짧은 설명을 붙여 메웁니다.
           </p>
           <p>
             LLM 이 문서 전체를 보고 각 chunk 를 위한 50~100 token 짜리 설명을 생성합니다. Anthropic
@@ -223,15 +204,13 @@ export default function RagIngestionAndChunkingArticle() {
             embedding·BM25 색인 양쪽에 들어갑니다.
           </p>
           <p>
-            Anthropic 은 codebase·소설·arXiv 논문·과학 논문을 섞은 데이터셋에서 top-20 chunk
-            검색의 실패율을 측정했습니다. 기존 방식의 실패율은 5.7 % 였고, contextual embedding
-            만 추가하면 3.7 %(35 % 개선), contextual BM25 를 더하면 2.9 %(49 % 개선), 그 뒤에
+            Anthropic 은 codebase·소설·arXiv 논문·과학 논문을 섞은 데이터셋에서 top-20 chunk 검색의 실패율을 측정했습니다. 기존 방식의 실패율은 5.7 %
+            였습니다. Contextual embedding 만 추가하면 3.7 %(35 % 개선), contextual BM25 를 더하면 2.9 %(49 % 개선), 그 뒤에
             reranking 까지 더하면 1.9 %(67 % 개선)로 낮아졌습니다.
           </p>
           <p>
-            문서마다 매번 이 설명을 새로 생성하면 비용이 크지만, prompt caching 으로 문서 본문을
-            한 번만 context 에 올려 두고 chunk 별 설명만 반복 생성하면, Anthropic 은 문서 100 만
-            token 당 1.02 달러의 일회성 비용으로 전체 chunk 의 설명을 만들 수 있다고 보고합니다.
+            문서마다 매번 이 설명을 새로 생성하면 비용이 큽니다. 그런데 prompt caching 으로 문서 본문을 한 번만 context 에 올려 두고 chunk 별 설명만 반복
+            생성할 수 있습니다. Anthropic 은 이 방식으로 문서 100 만 token 당 1.02 달러의 일회성 비용으로 전체 chunk 의 설명을 만들 수 있다고 보고합니다.
           </p>
         </div>
         <ProgressiveDetail
@@ -239,10 +218,8 @@ export default function RagIngestionAndChunkingArticle() {
           preview="아닙니다. 둘은 서로 다른 문제를 풉니다. Semantic chunking 은 경계를 어디서 자를지 정하고, contextual retrieval 은 잘린 chunk 에 빠진 문맥을 붙입니다."
         >
           <p>
-            Chunking 방식을 fixed-size 로 하든 semantic 으로 하든, 잘라낸 chunk 는 여전히 원문
-            전체의 맥락을 잃습니다. Contextual retrieval 은 어느 chunking 방식 위에도 적용할 수
-            있는 뒤 단계이며, Anthropic 의 실험도 chunking 자체는 고정해 두고 이 prefix 유무만
-            비교했습니다.
+            Chunking 방식을 fixed-size 로 하든 semantic 으로 하든, 잘라낸 chunk 는 여전히 원문 전체의 맥락을 잃습니다. Contextual retrieval
+            은 어느 chunking 방식 위에도 적용할 수 있는 뒤 단계입니다. Anthropic 의 실험도 chunking 자체는 고정해 두고 이 prefix 유무만 비교했습니다.
           </p>
         </ProgressiveDetail>
       </section>
@@ -253,9 +230,8 @@ export default function RagIngestionAndChunkingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            앞서 다룬 네 단계를 하나의 pipeline 으로 이으면, 원본이 바뀔 때 그 source 에서 파생된
-            chunk 만 다시 만들면 되는 구조가 됩니다. 전체를 매번 다시 도는 대신 바뀐 부분만
-            갱신하는 것이 knowledge base 를 최신 상태로 유지하는 실용적인 방법입니다.
+            앞서 다룬 네 단계를 하나의 pipeline 으로 이으면 원본이 바뀔 때 그 source 에서 파생된 chunk 만 다시 만들면 되는 구조가 됩니다. 전체를 매번 다시 도는
+            대신 바뀐 부분만 갱신하는 것이 knowledge base 를 최신 상태로 유지하는 실용적인 방법입니다.
           </p>
         </div>
         <AlgorithmBlock

@@ -22,16 +22,13 @@ export default function ServingLatencyMetricsAndSloArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            LLM 요청 하나는 첫 token 이 나오기까지의 시간과 그 뒤 token 사이의 간격이
-            전혀 다른 원인으로 정해집니다. 그래서 serving 품질은 latency 하나가 아니라
-            TTFT·TPOT·ITL·E2E 네 지표를 따로 재고, 각 지표를 평균이 아닌 분포로 읽은 뒤,
-            percentile 에 대한 약속인 SLO 로 계약합니다.
+            LLM 요청 하나는 첫 token 이 나오기까지의 시간과 그 뒤 token 사이의 간격이 전혀 다른 원인으로 정해집니다. 그래서 serving 품질은 latency 하나로 재지
+            않습니다. TTFT·TPOT·ITL·E2E 네 지표를 따로 재고 각 지표를 평균이 아닌 분포로 읽은 뒤 percentile 에 대한 약속인 SLO 로 계약합니다.
           </p>
           <p>
-            이 글은 그 세 단계를 순서대로 다룹니다. 먼저 vLLM 과 GenAI-Perf 가 실제로
-            계산하는 식으로 네 지표와 throughput 을 정의하고, 다음으로 요청 100개의 표본에서
-            P50·P95·P99 를 손으로 뽑아 꼬리가 왜 생기는지 봅니다. 마지막으로 SLO 를
-            window 와 violation budget 으로 판정하는 절차를 씁니다.
+            이 글은 그 세 단계를 순서대로 다룹니다. 먼저 vLLM 과 GenAI-Perf 가 실제로 계산하는 식으로 네 지표와 throughput 을 정의합니다. 다음으로 요청
+            100개의 표본에서 P50·P95·P99 를 손으로 뽑아 꼬리가 왜 생기는지 봅니다. 마지막으로 SLO 를 window 와 violation budget 으로 판정하는 절차를
+            씁니다.
           </p>
           <p>
             지표가 어느 timestamp 에서 나오는지는{" "}
@@ -50,10 +47,9 @@ export default function ServingLatencyMetricsAndSloArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            요청이 서버에 도착한 시각을 0 으로 두면, 첫 token 이 client 에 닿는 시각이
-            Time to First Token(TTFT) 이고 마지막 token 이 닿는 시각이 End-to-End latency(E2E)
-            입니다. 그 사이에 token 이 n 개 흘러갔다면 간격은 n−1 개이며, 간격 하나하나가
-            Inter-Token Latency(ITL) 입니다.
+            요청이 서버에 도착한 시각을 0 으로 두면 첫 token 이 client 에 닿는 시각이 Time to First Token(TTFT) 이고 마지막 token 이 닿는 시각이
+            End-to-End latency(E2E) 입니다. 그 사이에 token 이 n 개 흘러갔다면 간격은 n−1 개입니다. 간격 하나하나가 Inter-Token
+            Latency(ITL) 입니다.
           </p>
           <p>
             Time per Output Token(TPOT) 은 그 간격들의 요청 단위 평균입니다. vLLM 의
@@ -62,10 +58,9 @@ export default function ServingLatencyMetricsAndSloArticle() {
             같은 요청에서 TPOT 는 값 하나, ITL 은 n−1 개의 값입니다.
           </p>
           <p>
-            숫자를 넣어 보면 TTFT 1 s, TPOT 50 ms 인 서버가 200 token 을 내면 E2E 는
-            1 + 199 × 0.05 = 10.95 s 입니다. 같은 서버에서 TPOT 만 30 ms 로 줄이면 E2E 는
-            6.97 s 가 되고, TTFT 를 0.3 s 로 줄여도 E2E 는 10.25 s 에 머뭅니다. 긴 응답에서는
-            decode 간격이, 짧은 응답에서는 TTFT 가 E2E 를 지배합니다.
+            숫자를 넣어 보면 TTFT 1 s, TPOT 50 ms 인 서버가 200 token 을 내면 E2E 는 1 + 199 × 0.05 = 10.95 s 입니다. 같은 서버에서
+            TPOT 만 30 ms 로 줄이면 E2E 는 6.97 s 가 되지만 TTFT 를 0.3 s 로 줄여도 E2E 는 10.25 s 에 머뭅니다. 긴 응답에서는 decode 간격이,
+            짧은 응답에서는 TTFT 가 E2E 를 지배합니다.
           </p>
           <p>
             TTFT 안에는 gateway 와 queue 에서 기다린 시간, prefill 계산 시간이 함께 들어
@@ -111,16 +106,13 @@ export default function ServingLatencyMetricsAndSloArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Throughput 은 서버 전체가 단위 시간에 처리한 양입니다. vLLM benchmark 는 완료된
-            요청 수를 측정 시간으로 나눈 request throughput(RPS) 과, 생성한 output token 총수를
-            측정 시간으로 나눈 output token throughput(tokens/s) 을 따로 냅니다. 둘 다
-            benchmark 한 번에 값 하나이며 요청별 분포가 없습니다.
+            Throughput 은 서버 전체가 단위 시간에 처리한 양입니다. vLLM benchmark 는 완료된 요청 수를 측정 시간으로 나눈 request throughput(RPS)
+            과 생성한 output token 총수를 측정 시간으로 나눈 output token throughput(tokens/s) 을 따로 냅니다. 둘 다 benchmark 한 번에 값
+            하나이며 요청별 분포가 없습니다.
           </p>
           <p>
-            Latency 와 throughput 이 맞서는 이유는 decode step 의 비용 구조에 있습니다.
-            Decode 는 weight 를 한 번 읽어 batch 안의 모든 요청에 token 하나씩을 주므로,
-            batch 가 커져도 step 시간은 요청 수에 비례해 늘지 않습니다. 대신 그 step 시간이
-            batch 안 모든 요청의 ITL 이 됩니다.
+            Latency 와 throughput 이 맞서는 이유는 decode step 의 비용 구조에 있습니다. Decode 는 weight 를 한 번 읽어 batch 안의 모든 요청에
+            token 하나씩을 주므로 batch 가 커져도 step 시간은 요청 수에 비례해 늘지 않습니다. 대신 그 step 시간이 batch 안 모든 요청의 ITL 이 됩니다.
           </p>
           <p>
             Step 시간이 batch 1 에서 20 ms, 8 에서 28 ms, 32 에서 50 ms 라고 두면 tokens/s 는
@@ -183,10 +175,8 @@ export default function ServingLatencyMetricsAndSloArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            요청마다 latency 가 다르므로 한 benchmark 는 TTFT 표본 수백 개를 남깁니다.
-            그 표본을 작은 값부터 정렬했을 때 p % 위치의 값이 Pp percentile latency 이고,
-            P50 이 중앙값입니다. 요청의 절반은 P50 보다 빠르고, 95 % 는 P95 보다 빠르며,
-            100 명 중 한 명은 P99 보다 오래 기다립니다.
+            요청마다 latency 가 다르므로 한 benchmark 는 TTFT 표본 수백 개를 남깁니다. 그 표본을 작은 값부터 정렬했을 때 p % 위치의 값이 Pp percentile
+            latency 입니다. P50 은 중앙값입니다. 요청의 절반은 P50 보다 빠르고 95 % 는 P95 보다 빠릅니다. 100 명 중 한 명은 P99 보다 오래 기다립니다.
           </p>
           <p>
             요청 100개의 TTFT 를 정렬했더니 50 번째가 0.7 s, 95 번째가 1.45 s, 99 번째가
@@ -195,18 +185,14 @@ export default function ServingLatencyMetricsAndSloArticle() {
             오른쪽 꼬리 몇 개가 평균을 끌어올렸기 때문입니다.
           </p>
           <p>
-            이 꼬리 부분이 tail latency 입니다. Serving 에서 꼬리는 우연이 아니라 구조에서
-            나옵니다. 긴 prompt 는 prefill 이 길고, 대기열 뒤에 선 요청은 앞 요청의 prefill 을
-            기다리며, KV cache 가 차서 preempt 된 요청은 다시 prefill 을 겪습니다. 꼬리를
-            줄이려면 그 원인을 하나씩 찾아야 하고, 평균을 줄이는 최적화는 꼬리에 거의 닿지
-            않습니다.
+            이 꼬리 부분이 tail latency 입니다. Serving 에서 꼬리는 우연이 아니라 구조에서 나옵니다. 긴 prompt 는 prefill 이 길고 대기열 뒤에 선 요청은
+            앞 요청의 prefill 을 기다립니다. KV cache 가 차서 preempt 된 요청은 다시 prefill 을 겪습니다. 꼬리를 줄이려면 그 원인을 하나씩 찾아야 합니다.
+            평균을 줄이는 최적화는 꼬리에 거의 닿지 않습니다.
           </p>
           <p>
-            Streaming UX 에서는 ITL 의 분산이 P50 보다 먼저 보입니다. 평균 간격 50 ms 로
-            고르게 흐르는 응답과, 40 ms 로 흐르다 300 ms 씩 멈추는 응답은 TPOT 가 비슷해도
-            사용자는 후자를 끊긴다고 느낍니다. 그래서 ITL 은 요청별 평균이 아니라 간격
-            전체를 표본으로 두고 P99 를 봅니다. vLLM 이 TPOT 와 별도로 ITL 목록을 모아 두는
-            이유가 이것입니다.
+            Streaming UX 에서는 ITL 의 분산이 P50 보다 먼저 보입니다. 평균 간격 50 ms 로 고르게 흐르는 응답과 40 ms 로 흐르다 300 ms 씩 멈추는 응답은
+            TPOT 가 비슷합니다. 그래도 사용자는 후자를 끊긴다고 느낍니다. ITL 은 요청별 평균이 아니라 간격 전체를 표본으로 두고 P99 를 봅니다. vLLM 이 TPOT 와
+            별도로 ITL 목록을 모아 두는 이유가 이것입니다.
           </p>
           <p>
             Google SRE Book 의 SLO 장이 latency 에 평균 대신 percentile 을 쓰라고 하는 근거도
@@ -246,10 +232,9 @@ export default function ServingLatencyMetricsAndSloArticle() {
             "5 분 window 마다 P95 TTFT ≤ 1.5 s, 하루 window 의 99 % 만족" 이 그 꼴입니다.
           </p>
           <p>
-            SLO 위반은 두 층으로 나뉩니다. 한 window 에서 P95 TTFT 가 1.5 s 를 넘으면 그
-            window 가 위반이고, 하루 288 개 window 중 위반 window 가 허용 비율 1 %(2.88 개,
-            내림해 2 개) 를 넘으면 SLO 자체가 위반입니다. 위반 window 가 5 개면 위반율
-            1.74 % 로 SLO 를 어긴 것이고 3 개면 아직 budget 안입니다.
+            SLO 위반은 두 층으로 나뉩니다. 한 window 에서 P95 TTFT 가 1.5 s 를 넘으면 그 window 가 위반입니다. 하루 288 개 window 중 위반
+            window 가 허용 비율 1 %(2.88 개, 내림해 2 개) 를 넘으면 SLO 자체가 위반입니다. 위반 window 가 5 개면 위반율 1.74 % 로 SLO 를 어긴
+            것이고 3 개면 아직 budget 안입니다.
           </p>
           <p>
             앞의 100 표본 예에서는 P95 가 1.45 s 라 그 window 는 통과합니다. 같은 표본을
@@ -320,10 +305,9 @@ export default function ServingLatencyMetricsAndSloArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            이 글의 TTFT·TPOT·ITL·E2E 계산식은 vLLM 의 serving benchmark 구현이 실제로
-            쓰는 식이고, chunk 당 token 수로 간격을 나누는 ITL 정의는 NVIDIA GenAI-Perf
-            문서를 따랐습니다. 두 도구는 percentile 목록과 기본값이 다르므로 결과를 나란히
-            놓을 때는 어느 percentile 을 어떤 보간으로 냈는지 함께 적어야 합니다.
+            이 글의 TTFT·TPOT·ITL·E2E 계산식은 vLLM 의 serving benchmark 구현이 실제로 쓰는 식입니다. Chunk 당 token 수로 간격을 나누는 ITL
+            정의는 NVIDIA GenAI-Perf 문서를 따랐습니다. 두 도구는 percentile 목록과 기본값이 다르므로 결과를 나란히 놓을 때는 어느 percentile 을 어떤
+            보간으로 냈는지 함께 적어야 합니다.
           </p>
           <p>
             Percentile 을 SLO 로 계약하는 문법과 error budget 의 논리는 Google SRE Book 의

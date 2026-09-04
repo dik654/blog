@@ -20,7 +20,10 @@ export default function RegularizationDiagnosisArticle() {
     </section>
     <section id="gap" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">Gap은 같은 시점·같은 loss의 두 평균을 빼서 만듭니다</h2>
-      <ExplainedFormula question="관측 gap은 어떤 두 값을 왜 빼서 만들까요?" idea={<p>Validation에서 보지 못한 data의 오차를 보고, 이미 fitting에 사용한 train 오차를 기준선으로 제거합니다. 두 값의 차이가 시간에 따라 커지는지 추적합니다.</p>} formula={String.raw`G_t=\widehat R_{\mathrm{val}}(t)-\widehat R_{\mathrm{tr}}(t)`} annotatedFormula={String.raw`\begin{aligned}\widehat R_{\mathrm{tr}}(t)&=\underbrace{\frac{1}{n_{\mathrm{tr}}}\sum_{i\in\mathrm{tr}}\ell_i(\theta_t)}_{\text{학습 data에서 같은 loss를 평균}}\\[4pt]\widehat R_{\mathrm{val}}(t)&=\underbrace{\frac{1}{n_{\mathrm{val}}}\sum_{i\in\mathrm{val}}\ell_i(\theta_t)}_{\text{미사용 data에서 같은 loss를 평균}}\\[4pt]G_t&=\underbrace{\widehat R_{\mathrm{val}}(t)-\widehat R_{\mathrm{tr}}(t)}_{\text{미사용 data에서 늘어난 오차만 분리}}\end{aligned}`} operations={[
+      <ExplainedFormula question="관측 gap은 어떤 두 값을 왜 빼서 만들까요?" idea={<p>
+            Validation에서 보지 못한 data의 오차를 봅니다. 여기서 이미 fitting에 사용한 train 오차를 기준선으로 제거합니다. 두 값의 차이가 시간에 따라 커지는지
+            추적합니다.
+          </p>} formula={String.raw`G_t=\widehat R_{\mathrm{val}}(t)-\widehat R_{\mathrm{tr}}(t)`} annotatedFormula={String.raw`\begin{aligned}\widehat R_{\mathrm{tr}}(t)&=\underbrace{\frac{1}{n_{\mathrm{tr}}}\sum_{i\in\mathrm{tr}}\ell_i(\theta_t)}_{\text{학습 data에서 같은 loss를 평균}}\\[4pt]\widehat R_{\mathrm{val}}(t)&=\underbrace{\frac{1}{n_{\mathrm{val}}}\sum_{i\in\mathrm{val}}\ell_i(\theta_t)}_{\text{미사용 data에서 같은 loss를 평균}}\\[4pt]G_t&=\underbrace{\widehat R_{\mathrm{val}}(t)-\widehat R_{\mathrm{tr}}(t)}_{\text{미사용 data에서 늘어난 오차만 분리}}\end{aligned}`} operations={[
         { expression: String.raw`\frac1{n}\sum_i\ell_i`, annotation: ["sample 수가 다른 split도 비교하도록", "sample loss를 평균"] },
         { expression: String.raw`\widehat R_{\mathrm{val}}-\widehat R_{\mathrm{tr}}`, annotation: ["validation의 절대 오차에서", "train에 이미 남은 오차를 제거"] },
       ]} terms={[
@@ -48,16 +51,17 @@ export default function RegularizationDiagnosisArticle() {
       ]} />
       <div className="prose prose-neutral max-w-none dark:prose-invert mt-6">
         <p>
-          이 네 가지를 배제한 뒤 남은 gap이 바로 regularization이 다루는
-          대상입니다. Regularization은 leakage나 잘못된 pipeline을 고치지
-          않고, model이 training data를 과도하게 외우지 못하도록 자유도를
-          제한해 overfitting 자체를 줄입니다.
+          이 네 가지를 배제한 뒤 남은 gap이 바로 regularization이 다루는 대상입니다. Regularization은 leakage나 잘못된 pipeline을 고치지 않습니다.
+          Model이 training data를 과도하게 외우지 못하도록 자유도를 제한해 overfitting 자체를 줄입니다.
         </p>
       </div>
     </section>
     <section id="ablation" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">한 번에 한 축만 바꿔 이득과 부작용을 함께 비교합니다</h2>
-      <ExplainedFormula question="Regularizer의 효과를 baseline과 공정하게 어떻게 비교할까요?" idea={<p>같은 seed마다 regularized run에서 baseline metric을 빼 paired change를 만들고, 평균 gain뿐 아니라 train fit·worst slice·calibration·cost를 함께 봅니다.</p>} formula={String.raw`\Delta_s=M_s^{\mathrm{reg}}-M_s^{\mathrm{base}}`} annotatedFormula={String.raw`\begin{aligned}\Delta_s&=\underbrace{M_s^{\mathrm{reg}}-M_s^{\mathrm{base}}}_{\text{같은 seed의 공통 흔들림을 상쇄}}\\[4pt]\overline\Delta&=\underbrace{\frac1S\sum_{s=1}^{S}\Delta_s}_{\text{seed별 변화의 평균 효과}}\end{aligned}`} operations={[
+      <ExplainedFormula question="Regularizer의 효과를 baseline과 공정하게 어떻게 비교할까요?" idea={<p>
+            같은 seed마다 regularized run에서 baseline metric을 빼 paired change를 만듭니다. 평균 gain뿐 아니라 train fit·worst
+            slice·calibration·cost를 함께 봅니다.
+          </p>} formula={String.raw`\Delta_s=M_s^{\mathrm{reg}}-M_s^{\mathrm{base}}`} annotatedFormula={String.raw`\begin{aligned}\Delta_s&=\underbrace{M_s^{\mathrm{reg}}-M_s^{\mathrm{base}}}_{\text{같은 seed의 공통 흔들림을 상쇄}}\\[4pt]\overline\Delta&=\underbrace{\frac1S\sum_{s=1}^{S}\Delta_s}_{\text{seed별 변화의 평균 효과}}\end{aligned}`} operations={[
         { expression: String.raw`M_s^{\mathrm{reg}}-M_s^{\mathrm{base}}`, annotation: ["동일 seed 쌍끼리 빼서", "initialization 차이를 덜 섞음"] },
         { expression: String.raw`\frac1S\sum_s\Delta_s`, annotation: ["한 seed의 우연에 의존하지 않도록", "paired 변화량을 평균"] },
       ]} terms={[

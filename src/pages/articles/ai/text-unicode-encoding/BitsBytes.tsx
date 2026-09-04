@@ -6,7 +6,8 @@ export default function BitsBytes() {
       <h2 className="mb-6 text-2xl font-bold">Bit는 두 상태, byte는 bit 여덟 개를 묶은 저장 단위다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Bit 하나는 0 또는 1의 두 상태를 가집니다. Bit가 하나 늘어날 때마다 가능한 pattern 수가 두 배가 되므로, 여덟 bit를 묶은 byte 하나에는 256가지 pattern이 있습니다. Text file의 크기와 UTF-8 길이는 보통 이 byte 단위로 셉니다.
+          Bit 하나에는 0 또는 1의 두 상태만 있습니다. Bit가 하나 늘어날 때마다 가능한 pattern 수가 두 배가 되므로 여덟 bit를 묶은 byte 하나에는 256가지
+          pattern이 있습니다. Text file의 크기와 UTF-8 길이는 보통 이 byte 단위로 셉니다.
         </p>
       </div>
       <ExplainedFormula

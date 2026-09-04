@@ -59,9 +59,7 @@ export default function ScoreBasedGenerativeModelsArticle() {
           question="Standard Gaussian에서 score가 왜 −x가 되나요?"
           idea={
             <p>
-              Log density의 −x²/2를 x로 미분하면 현재 좌표 x의 부호를 뒤집은
-              방향이 남습니다. 양수 위치에서는 왼쪽, 음수 위치에서는 오른쪽을
-              가리킵니다.
+              Log density의 −x²/2를 x로 미분하면 현재 좌표 x의 부호를 뒤집은 방향이 남아, 양수 위치에서는 왼쪽을 음수 위치에서는 오른쪽을 가리킵니다.
             </p>
           }
           formula={String.raw`\begin{aligned}s(x)&=\nabla_x\log p(x)\\s(x)&=-x\end{aligned}`}
@@ -123,12 +121,10 @@ export default function ScoreBasedGenerativeModelsArticle() {
           question="왜 (계산 불가능한) marginal score 대신 x0 하나에 조건부인 score를 맞추는 것으로 충분한가요?"
           idea={
             <p>
-              진짜 목표인 marginal density p(x)의 score는 알 수 없습니다.
-              하지만 data 하나 x0에 Gaussian noise를 더한 조건부 분포
-              q_sigma(x|x0)의 score는 정확한 closed form으로 계산할 수 있습니다.
-              Denoising score matching(Vincent, 2011)은 이 계산 가능한
-              target을 맞추는 것이 실제로는 원하는 marginal score를 학습하는
-              것과(theta에 무관한 상수 차이를 빼면) 같은 objective임을 보였습니다.
+              진짜 목표인 marginal density p(x)의 score는 알 수 없지만 data 하나 x0에 Gaussian noise를 더한 조건부 분포
+              q_sigma(x|x0)의 score는 정확한 closed form으로 계산할 수 있습니다. Denoising score matching(Vincent, 2011)은 이
+              계산 가능한 target을 맞추는 것이 실제로는 원하는 marginal score를 학습하는 것과(theta에 무관한 상수 차이를 빼면) 같은 objective임을
+              보였습니다.
             </p>
           }
           formula={String.raw`\mathcal L_{\rm DSM}(\theta)=\mathbb E_{x_0,\,x\sim q_\sigma(x\mid x_0)}\big[\lVert s_\theta(x)-\nabla_x\log q_\sigma(x\mid x_0)\rVert^2\big]`}
@@ -186,10 +182,8 @@ q_\sigma(x\mid x_0)&=\underbrace{N(x_0,\sigma^2 I)}_{\text{x0 주변에 Gaussian
           question="왜 sθ=−εθ/√(1−ᾱₜ)에서 minus와 나눗셈이 모두 필요한가요?"
           idea={
             <p>
-              εθ는 clean data에서 noisy point로 밀어낸 방향을 예측합니다.
-              Score는 noisy point에서 높은 density 쪽으로 돌아가는 방향이므로
-              부호를 뒤집고, 서로 다른 t의 noise 크기를 같은 coordinate gradient
-              단위로 맞추기 위해 standard deviation으로 나눕니다.
+              εθ는 clean data에서 noisy point로 밀어낸 방향을 예측합니다. Score는 noisy point에서 높은 density 쪽으로 돌아가는 방향이므로 부호를
+              뒤집습니다. 서로 다른 t의 noise 크기를 같은 coordinate gradient 단위로 맞추기 위해 standard deviation으로 한 번 더 나눕니다.
             </p>
           }
           formula={String.raw`\begin{aligned}d_t&=-\varepsilon_\theta(x_t,t)\\\sigma_t&=\sqrt{1-\bar\alpha_t}\\s_\theta(x_t,t)&=d_t/\sigma_t\end{aligned}`}

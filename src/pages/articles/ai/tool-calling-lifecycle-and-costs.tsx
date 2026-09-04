@@ -20,15 +20,13 @@ export default function ToolCallingLifecycleAndCostsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Tool calling 은 model 이 다음에 할 일을 자유 텍스트 대신, 미리 등록해 둔 tool 하나를
-            골라 그 tool 의 schema 에 맞는 인자로 실행을 요청하는 것입니다. Model 은 실행 권한이
-            없고 제안만 하며, 그 제안을 실제로 실행해 결과를 돌려주는 것은 항상 host application 의
-            역할입니다.
+            Model 은 다음에 할 일을 자유 텍스트로 적는 대신 미리 등록해 둔 tool 하나를 고릅니다. 그리고 그 tool 의 schema 에 맞는 인자로 실행을 요청합니다. 이것이
+            tool calling 입니다. Model 에게 실행 권한은 없어 제안까지가 model 의 몫이고 그 제안을 실제로 실행해 결과를 돌려주는 것은 항상 host
+            application 의 역할입니다.
           </p>
           <p>
-            OpenAI 는 이 메커니즘을 function calling 이라 부르고, Anthropic 은 tool use(또는 tool
-            calling)라 부릅니다. 이름은 달라도 계약은 같습니다. Tool 마다 이름·설명·JSON schema 로
-            된 parameter 를 등록해 두면, model 이 요청을 보고 tool 을 고르거나(selection) 아무
+            OpenAI 는 이 메커니즘을 function calling 이라 부르고 Anthropic 은 tool use(또는 tool calling)라 부릅니다. 이름은 달라도 계약은
+            같습니다. Tool 마다 이름·설명·JSON schema 로 된 parameter 를 등록해 두면 model 이 요청을 보고 tool 을 고르거나(selection) 아무
             tool 도 필요 없다고 판단해 그대로 답합니다.
           </p>
           <p>
@@ -70,10 +68,8 @@ export default function ToolCallingLifecycleAndCostsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Tool selection 은 model 이 등록된 tool 이름·설명을 보고 지금 요청에 맞는 tool 을
-            고르는 판단입니다. 이 판단은 tool 의 description 문장 품질에 크게 좌우됩니다. 이름만
-            보고는 구분되지 않는 두 tool 이 있다면, model 은 description 에 적힌 사용 시점과
-            입력 형태로만 그 차이를 압니다.
+            Model 은 등록된 tool 이름·설명을 보고 지금 요청에 맞는 tool 을 고릅니다. 이 판단이 tool selection 이며 tool 의 description 문장
+            품질에 크게 좌우됩니다. 이름만 보고는 구분되지 않는 두 tool 이 있다면 model 은 description 에 적힌 사용 시점과 입력 형태로만 그 차이를 압니다.
           </p>
           <p>
             선택된 tool 이 실제로 어떤 코드나 서버로 실행되는지는 model 의 관심사가 아닙니다.
@@ -105,15 +101,13 @@ export default function ToolCallingLifecycleAndCostsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Tool 을 고른 뒤 model 은 그 tool 의 JSON schema(type·required·enum 등)에 맞는 값을
-            채워 인자를 만듭니다. 이 인자를 실제 함수·API·서버 호출로 전달해 실행하는 단계가
-            invocation 이며, 이 실행도 model 이 아니라 host application 이 합니다.
+            Tool 을 고른 뒤 model 은 그 tool 의 JSON schema(type·required·enum 등)에 맞는 값을 채워 인자를 만듭니다. 이 인자를 실제
+            함수·API·서버 호출로 전달해 실행하는 단계가 invocation 입니다. 이 실행도 model 이 아니라 host application 이 합니다.
           </p>
           <p>
-            인자 생성은 항상 schema 를 완벽히 지키지는 않습니다. OpenAI 는 Structured Outputs 를
-            발표하며, 복잡한 JSON schema 를 따르는 평가에서 기존 gpt-4-0613 의 function calling
-            은 40 % 에도 못 미치는 정확도를 보였고, schema 준수를 강제하는 Structured Outputs 를
-            쓴 gpt-4o-2024-08-06 은 100 % 를 기록했다고 보고했습니다.
+            인자 생성은 항상 schema 를 완벽히 지키지는 않습니다. OpenAI 는 Structured Outputs 를 발표하면서 관련 수치를 보고했습니다. 복잡한 JSON
+            schema 를 따르는 평가에서 기존 gpt-4-0613 의 function calling 은 40 % 에도 못 미치는 정확도를 보였습니다. schema 준수를 강제하는
+            Structured Outputs 를 쓴 gpt-4o-2024-08-06 은 100 % 를 기록했다고 합니다.
           </p>
           <p>
             이 격차는 strict schema 강제 기능이 없거나 꺼져 있을 때, 필수 필드 누락·타입 불일치·
@@ -137,26 +131,22 @@ export default function ToolCallingLifecycleAndCostsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Tool 을 한 번만 부르고 끝나는 요청도 있지만, 여러 tool 을 거쳐야 답이 나오는 요청도
-            있습니다. Tool-use loop 은 한 tool 의 결과를 다음 tool 선택의 입력으로 되먹이는
-            반복이며, 여러 단계를 거치는 경우를 multi-step tool use 라 부릅니다.
+            Tool 을 한 번만 부르고 끝나는 요청도 있지만 여러 tool 을 거쳐야 답이 나오는 요청도 있습니다. Tool-use loop 은 한 tool 의 결과를 다음 tool
+            선택의 입력으로 되먹이는 반복입니다. 여러 단계를 거치는 경우를 multi-step tool use 라 부릅니다.
           </p>
           <p>
-            ReAct 논문은 이 되먹임이 왜 필요한지 보여 줍니다. Reasoning trace 와 tool action 을
-            번갈아 생성하게 하자, HotpotQA·Fever 에서 hallucination 과 오류 전파가 줄었고,
-            ALFWorld 는 강화학습 방법 대비 34 %p, WebShop 은 모방학습 방법 대비 10 %p 의 절대
-            성공률 개선을 소량의 예시만으로 얻었다고 보고합니다.
+            ReAct 논문은 이 되먹임이 왜 필요한지 보여 줍니다. Reasoning trace 와 tool action 을 번갈아 생성하게 하자 HotpotQA·Fever 에서
+            hallucination 과 오류 전파가 줄었습니다. ALFWorld 는 강화학습 방법 대비 34 %p, WebShop 은 모방학습 방법 대비 10 %p 의 절대 성공률 개선을
+            소량의 예시만으로 얻었다고 보고합니다.
           </p>
           <p>
-            이전 결과가 다음 선택을 바꾸는 예를 보면, 파일을 읽는 tool 이 "파일 없음" 오류를
-            돌려주면 같은 경로로 read_file 을 다시 부르는 대신 list_directory 를 먼저 불러 실제
-            파일명을 확인하는 쪽으로 다음 tool 선택이 바뀝니다. 결과가 성공/실패 중 무엇인지가
-            아니라 무엇을 몰랐는지를 알려 주기 때문입니다.
+            이전 결과가 다음 선택을 바꾸는 예가 있습니다. 파일을 읽는 tool 이 "파일 없음" 오류를 돌려주면, 같은 경로로 read_file 을 다시 부르는 대신
+            list_directory 를 먼저 불러 실제 파일명을 확인하는 쪽으로 다음 tool 선택이 바뀝니다. 결과가 알려 주는 것은 성공/실패라는 사실이 아니라 무엇을 몰랐는지이기
+            때문입니다.
           </p>
           <p>
-            서로 의존하지 않는 tool 여러 개는 한 단계씩 순차로 부를 필요가 없습니다. Model 이 한
-            턴에 tool_use 블록 여러 개를 함께 돌려주면, host application 은 그 실행을 동시에
-            돌릴지 순서대로 돌릴지 스스로 정할 수 있고 이것이 parallel tool calling 입니다.
+            서로 의존하지 않는 tool 여러 개는 한 단계씩 순차로 부를 필요가 없습니다. Model 이 한 턴에 tool_use 블록 여러 개를 함께 돌려주면 host
+            application 은 그 실행을 동시에 돌릴지 순서대로 돌릴지 스스로 정할 수 있습니다. 이것이 parallel tool calling 입니다.
           </p>
           <p>
             독립된 read 전용 tool 3개를 실행 1회당 400ms 가 걸린다고 하면, 순차 호출은 3 × RTT ≈
@@ -180,10 +170,9 @@ export default function ToolCallingLifecycleAndCostsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Tool 을 등록해 두면 그 tool 을 이번 턴에 쓰든 안 쓰든, 이름·description·parameter
-            schema 가 매 요청 context 에 그대로 들어갑니다. 이 tool schema context cost 와, 이전
-            단계에서 이미 받은 결과가 다음 요청에도 남아 차지하는 tool result context cost 를
-            합친 것이 tool 사용의 전체 token 비용입니다.
+            Tool 을 등록해 두면 그 tool 을 이번 턴에 쓰든 안 쓰든 이름·description·parameter schema 가 매 요청 context 에 그대로 들어갑니다.
+            이것이 tool schema context cost 입니다. 여기에 이전 단계에서 이미 받은 결과가 다음 요청에도 남아 차지하는 몫, 곧 tool result context
+            cost 가 더해집니다. 둘을 합친 것이 tool 사용의 전체 token 비용입니다.
           </p>
           <p>
             Anthropic 공식 가격 안내는 tool 을 하나라도 등록하면 model·tool_choice 별로 고정된
@@ -246,10 +235,9 @@ export default function ToolCallingLifecycleAndCostsArticle() {
             계약을 다룹니다.
           </p>
           <p>
-            재시도가 의미 있는 실패(일시적 timeout, 서버 500 오류)와 재시도해도 똑같이 실패할
-            실패(잘못된 인자, permission denied)를 구분하지 않으면 재시도는 그저 같은 실패를
-            반복할 뿐입니다. Retry policy 는 재시도할 실패 종류, 대기 간격을 늘리는 방식(exponential
-            backoff), 그리고 포기하는 최대 횟수를 함께 정합니다.
+            실패에는 두 종류가 있습니다. 재시도가 의미 있는 실패(일시적 timeout, 서버 500 오류)와, 재시도해도 똑같이 실패할 실패(잘못된 인자, permission
+            denied)입니다. 둘을 구분하지 않으면 재시도는 그저 같은 실패를 반복할 뿐입니다. Retry policy 는 재시도할 실패 종류, 대기 간격을 늘리는
+            방식(exponential backoff), 그리고 포기하는 최대 횟수를 함께 정합니다.
           </p>
         </div>
         <ExplainedFormula

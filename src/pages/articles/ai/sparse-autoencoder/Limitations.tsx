@@ -6,19 +6,26 @@ export default function Limitations() {
       <h2 className="mb-6 text-2xl font-bold">SAE는 유용한 microscope지만 완성된 모델 설명서는 아니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          해석 가능한 사례 몇 개와 높은 FVE만으로 SAE 품질을 확정할 수 없습니다. Reconstruction residual에는 크기가 작아도 behavior에 중요한 성분이 남을 수 있고, dictionary width·seed·training corpus를 바꾸면 feature가 갈라지거나 합쳐집니다. 특정 feature를 찾지 못한 것이 LLM에 그 개념이 없다는 뜻인지 SAE가 놓쳤다는 뜻인지도 구분하기 어렵습니다.
+          해석 가능한 사례 몇 개와 높은 FVE만으로 SAE 품질을 확정할 수 없습니다. Reconstruction residual에는 크기가 작아도 behavior에 중요한 성분이 남을
+          수 있고 dictionary width·seed·training corpus를 바꾸면 feature가 갈라지거나 합쳐집니다. 특정 feature를 찾지 못한 것이 LLM에 그
+          개념이 없다는 뜻인지 SAE가 놓쳤다는 뜻인지도 구분하기 어렵습니다.
         </p>
       </div>
       <FailureModesViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Claim을 model·hook·dataset·intervention 범위로 제한한다</h3>
         <p>
-          “모델이 기만을 생각했다”보다 “이 model checkpoint의 특정 hook에서 SAE feature j가 이 prompt set에 활성화됐고, 정해진 α의 intervention에서 rubric score가 변했다”라고 기록하는 편이 검증 가능합니다. SAE checkpoint, feature index, activation threshold, prompt sampling, control direction, effect size와 부작용을 함께 남깁니다.
+          “모델이 기만을 생각했다”보다 “이 model checkpoint의 특정 hook에서 SAE feature j가 이 prompt set에 활성화됐고, 정해진 α의
+          intervention에서 rubric score가 변했다”라고 기록하는 편이 검증 가능합니다. 남기는 항목은 SAE checkpoint, feature index,
+          activation threshold, prompt sampling, control direction, effect size와 부작용입니다.
         </p>
 
         <h3>Feature stability는 번호가 아니라 direction과 activation으로 비교한다</h3>
         <p>
-          같은 held-out activation corpus에서 width와 random seed만 바꾼 SAE를 여러 개 학습한 뒤, decoder direction의 cosine similarity와 example별 activation overlap을 함께 비교합니다. 한 feature가 두 directions로 갈라졌다면 index 일치율을 낮은 안정성으로만 기록하지 않고 split으로, 여러 feature가 하나로 모였다면 merge로 분류해야 합니다. 이 비교에서도 model·hook·normalization과 sparsity 또는 LM loss recovery 조건을 같게 맞춰야 합니다.
+          같은 held-out activation corpus에서 width와 random seed만 바꾼 SAE를 여러 개 학습합니다. 그다음 decoder direction의
+          cosine similarity와 example별 activation overlap을 나란히 비교합니다. 한 feature가 두 directions로 갈라졌다면 index 일치율을
+          낮은 안정성으로만 기록하지 말고 split으로 분류합니다. 여러 feature가 하나로 모였다면 merge입니다. 이 비교에서도 model·hook·normalization과
+          sparsity 또는 LM loss recovery 조건을 같게 맞춰야 합니다.
         </p>
 
         <h3>Feature에서 circuit으로 가려면 연결 증거가 더 필요하다</h3>

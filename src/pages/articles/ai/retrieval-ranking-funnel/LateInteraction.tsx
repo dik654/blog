@@ -13,16 +13,12 @@ export default function LateInteraction() {
           ColBERT가 이 방식을 대표하는 이름입니다.
         </p>
         <p>
-          Bi-encoder는 query와 문서를 각각 하나의 벡터로 pooling한 뒤 벡터
-          하나끼리 내적을 구합니다. 문서 벡터는 미리 계산해 둘 수 있어
-          빠르지만, 여러 token의 의미를 한 벡터로 뭉치는 과정에서 세부 신호가
-          흐려질 수 있습니다.
+          Bi-encoder는 query와 문서를 각각 하나의 벡터로 pooling한 뒤 벡터 하나끼리 내적을 구합니다. 문서 벡터를 미리 계산해 둘 수 있어 빠릅니다. 대신 여러
+          token의 의미를 한 벡터로 뭉치는 과정에서 세부 신호가 흐려질 수 있습니다.
         </p>
         <p>
-          Cross-encoder는 query와 문서를 한 transformer에 함께 넣어 처음부터
-          다시 encoding합니다. Token 사이의 상호작용을 그대로 보므로
-          정확하지만, 문서 encoding이 query에 따라 달라져 미리 계산해 둘 수
-          없고 후보 하나마다 전체 forward pass가 새로 필요합니다.
+          Cross-encoder는 query와 문서를 한 transformer에 함께 넣어 처음부터 다시 encoding합니다. Token 사이의 상호작용을 그대로 보므로 정확합니다.
+          문제는 문서 encoding이 query에 따라 달라진다는 점입니다. 미리 계산해 둘 수 없고 후보 하나마다 전체 forward pass가 새로 필요합니다.
         </p>
         <p>
           Late interaction은 문서 token 벡터를 bi-encoder처럼 미리 계산해
@@ -50,24 +46,19 @@ export default function LateInteraction() {
       />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          세 방법의 비용 순서는 분명합니다. Bi-encoder는 후보당 벡터 내적
-          한 번, late interaction은 query token 수 곱하기 문서 token 수만큼의
-          내적, cross-encoder는 후보마다 전체 transformer forward pass입니다.
-          Late interaction은 그 사이 어딘가에 있으며, 문서 token 벡터를
-          저장하는 데 bi-encoder보다 훨씬 큰 index 공간을 씁니다.
+          세 방법의 비용 순서는 분명합니다. Bi-encoder는 후보당 벡터 내적 한 번, late interaction은 query token 수 곱하기 문서 token 수만큼의 내적,
+          cross-encoder는 후보마다 전체 transformer forward pass입니다. Late interaction은 그 사이 어딘가에 있습니다. 대신 문서 token
+          벡터를 저장하는 데 bi-encoder보다 훨씬 큰 index 공간을 씁니다.
         </p>
       </div>
       <div id="reading-colbert" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">핵심 논문 · ColBERT</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Khattab과 Zaharia는 query와 문서 token embedding을 각각 유지한 뒤
-          MaxSim으로 late interaction을 계산하는 ColBERT를 제안하고, 문서
-          encoding을 query와 무관하게 미리 계산해 둘 수 있어 cross-encoder보다
-          검색 시점 비용이 낮다고 보고했습니다.
+          Khattab과 Zaharia는 ColBERT를 제안했습니다. query와 문서 token embedding을 각각 유지한 뒤 MaxSim으로 late interaction을
+          계산하는 방식입니다. 문서 encoding을 query와 무관하게 미리 계산해 둘 수 있어 cross-encoder보다 검색 시점 비용이 낮다고 보고했습니다.
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          이는 논문의 MS MARCO passage ranking 실험 범위이며, 모든 corpus·index
-          구현에서 저장 공간 증가를 상쇄한다는 보장은 아닙니다.
+          여기까지가 논문의 MS MARCO passage ranking 실험이 보인 범위입니다. 모든 corpus·index 구현에서 저장 공간 증가가 상쇄되는지는 여기서 답하지 않습니다.
         </p>
         <a
           className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
