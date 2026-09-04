@@ -13,10 +13,9 @@ export default function SectorLifecycle({
         Sector lifecycle은 고정 8단계가 아니다
       </h2>
       <p className="text-sm text-muted-foreground mb-4">
-        핵심 protocol milestone은 data commitment 준비, precommit, chain
-        randomness 대기, provecommit, proving이다. 실제 scheduler는
-        batching·upgrade·retry·fault·termination 상태를 더 가지므로 UI의 단계
-        수를 consensus 규칙으로 읽으면 안 된다.
+        핵심 protocol milestone은 data commitment 준비와 precommit, chain randomness 대기, provecommit, proving이다. 실제
+        scheduler는 batching과 upgrade, retry, fault, termination 상태를 더 갖는다. UI의 단계 수를 consensus 규칙으로 읽으면 안 되는
+        이유다.
       </p>
       <div className="not-prose mb-8">
         <SectorDetailViz onOpenCode={(key) => onCodeRef(key, codeRefs[key])} />
@@ -44,9 +43,8 @@ export default function SectorLifecycle({
           </div>
         </div>
         <p className="leading-7">
-          PC1·PC2·C1·C2의 시간과 device 배치는 hardware, proof parameter, cache
-          상태와 software version에 크게 의존한다. “PC1은 항상 몇 시간”, “PC2는
-          GPU면 몇 분” 대신 task별 benchmark와 deadline slack을 기록한다.
+          PC1·PC2·C1·C2의 시간과 device 배치는 hardware와 proof parameter, cache 상태, software version에 크게 좌우된다. 그러니
+          “PC1은 항상 몇 시간”, “PC2는 GPU면 몇 분” 대신 task별 benchmark와 deadline slack을 기록한다.
         </p>
       </div>
     </section>

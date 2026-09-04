@@ -87,9 +87,7 @@ export default function MagicSock({
 
         <h3>경로 선택 알고리즘</h3>
         <p>
-          매 패킷 전송 시 최적 경로를 결정합니다. Primary 전송(IP)이
-          Backup(Relay)보다 우선하며, 같은 타입 내에서는 biased RTT가 낮은
-          경로를 선택합니다.
+          매 패킷 전송 시 최적 경로를 결정합니다. Primary 전송(IP)이 Backup(Relay)보다 우선하며 같은 타입 내에서는 biased RTT가 낮은 경로를 선택합니다.
         </p>
       </div>
       <div className="mt-8">

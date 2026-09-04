@@ -10,10 +10,8 @@ export default function PaillierCryptosystemArticle() {
           암호문을 곱하면 평문의 합이 됩니다
         </h2>
         <p className="text-lg leading-8">
-          Paillier cryptosystem의 특징은 암호를 풀지 않고도 값을 더할 수 있다는
-          점입니다. 두 ciphertext를 곱한 뒤 복호화하면, 원래 두 plaintext를 더한
-          결과가 나옵니다. 여러 사람의 투표 수나 통계 합계를 개별 값의 노출 없이
-          모을 때 이 성질을 이용할 수 있습니다.
+          Paillier cryptosystem은 암호를 풀지 않고도 값을 더할 수 있습니다. 두 ciphertext를 곱한 뒤 복호화하면 원래 두 plaintext를 더한 결과가
+          나옵니다. 여러 사람의 투표 수나 통계 합계를 개별 값의 노출 없이 모을 때 이 성질을 이용할 수 있습니다.
         </p>
         <p>
           다만 “더할 수 있다”와 “안전하게 쓸 수 있다”는 같은 주장이 아닙니다.
@@ -30,11 +28,9 @@ export default function PaillierCryptosystemArticle() {
           Key generation은 복호화가 가능한 조건까지 만듭니다
         </h2>
         <p>
-          서로 다른 primes p,q로 n=pq를 만들고 λ=lcm(p−1,q−1)를 계산합니다. Public
-          parameter g는 L(g^λ mod n²)가 modulo n에서 inverse를 가져야 하며,
-          L(u)=(u−1)/n과 μ=L(g^λ mod n²)⁻¹ mod n을 secret key에 둡니다. 흔한 g=n+1
-          profile은 식을 단순화하지만 library profile과 validation을 생략해도 된다는
-          뜻은 아닙니다.
+          서로 다른 primes p,q로 n=pq를 만들고 λ=lcm(p−1,q−1)를 계산합니다. Public parameter g는 L(g^λ mod n²)가 modulo n에서
+          inverse를 가져야 하며 L(u)=(u−1)/n과 μ=L(g^λ mod n²)⁻¹ mod n을 secret key에 둡니다. 흔한 g=n+1 profile은 식을 단순화하지만
+          library profile과 validation을 생략해도 된다는 뜻은 아닙니다.
         </p>
       </section>
 

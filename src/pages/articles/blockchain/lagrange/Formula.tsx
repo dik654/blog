@@ -9,10 +9,8 @@ export default function Formula() {
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          i번째 selector ℓᵢ는 다른 표본점 xⱼ에서는 numerator factor x−xⱼ 하나가
-          0이 되어 꺼지고, 자기 점 xᵢ에서는 numerator와 denominator가 같아져 1이
-          됩니다. 이 Kronecker-delta 성질 때문에 yᵢℓᵢ를 모두 더하면 원하는
-          표본값이 하나씩 남습니다.
+          i번째 selector ℓᵢ는 다른 표본점 xⱼ에서는 numerator factor x−xⱼ 하나가 0이 되어 꺼지고 자기 점 xᵢ에서는 numerator와 denominator가
+          같아져 1이 됩니다. 이 Kronecker-delta 성질 때문에 yᵢℓᵢ를 모두 더하면 원하는 표본값이 하나씩 남습니다.
         </p>
       </div>
       <LagrangeFormulaViz />

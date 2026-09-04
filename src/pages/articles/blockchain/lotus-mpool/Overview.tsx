@@ -18,9 +18,8 @@ export default function Overview({
       </div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          pending message는 서명만 유효하다고 pool에 영구히 남지 않는다. sender
-          nonce·잔액, gas parameters, network version과 현재 tipset이 바뀌면
-          admission 또는 block selection 결과도 달라진다.
+          pending message는 서명만 유효하다고 pool에 영구히 남지 않는다. sender nonce와 잔액, gas parameters, network version, 현재
+          tipset이 바뀌면 admission이나 block selection 결과도 달라진다.
         </p>
         <div className="not-prose flex flex-wrap gap-2 my-4">
           <CodeViewButton
@@ -43,8 +42,7 @@ export default function Overview({
           <div className="rounded-lg border bg-card p-4">
             <h3 className="font-semibold text-sm mb-2">Admit</h3>
             <p className="text-sm text-muted-foreground">
-              decode·signature·chain ID·size·gas와 sender funds를 검사하고
-              address/nonce별 후보로 저장한다.
+              decode와 signature, chain ID, size, gas, sender funds를 검사한 뒤 address/nonce별 후보로 저장한다.
             </p>
           </div>
           <div className="rounded-lg border bg-card p-4">
@@ -63,9 +61,8 @@ export default function Overview({
           </div>
         </div>
         <p className="leading-7">
-          pool 크기·per-sender limit·pruning threshold·replacement ratio는 node
-          configuration과 implementation policy다. 숫자 자체보다 nonce
-          dependency와 head change 시 재평가가 보존되는지 확인한다.
+          pool 크기와 per-sender limit, pruning threshold, replacement ratio는 node configuration이자 implementation
+          policy다. 숫자 자체보다 nonce dependency와 head change 시 재평가가 보존되는지를 확인한다.
         </p>
       </div>
     </section>

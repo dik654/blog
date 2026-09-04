@@ -26,11 +26,10 @@ export default function ModernArticle() {
           </h2>
         </header>
         <p className="text-lg leading-8 text-foreground/90">
-          합의 엔진은 누가 어떤 proposal을 확정했는지 결정하고, execution client는 transaction을 실행해
-          payload가 유효한지 판단합니다. Halo application의 Octane module은 이 둘 사이에서 payload를
-          Cosmos transaction message로 포장하고, Engine API status와 committed execution head를 조정합니다.
-          따라서 “CometBFT가 EVM을 실행한다”거나 “Engine API가 consensus finality를 만든다”는 설명은
-          책임 경계를 뒤섞습니다.
+          합의 엔진은 누가 어떤 proposal을 확정했는지 결정하고 execution client는 transaction을 실행해 payload가 유효한지 판단합니다. Halo
+          application의 Octane module은 이 둘 사이에서 payload를 Cosmos transaction message로 포장하고 Engine API status와
+          committed execution head를 조정합니다. 따라서 “CometBFT가 EVM을 실행한다”거나 “Engine API가 consensus finality를 만든다”는
+          설명은 책임 경계를 뒤섞습니다.
         </p>
         <p className="leading-7 text-muted-foreground">
           이 글은 현재 moving main이 아니라 commit <code>9864f25</code> snapshot을 설명합니다. 이 snapshot은
@@ -174,10 +173,10 @@ export default function ModernArticle() {
           <h2 className="text-2xl font-bold">Finalized payload 뒤의 log effect는 별도 transaction boundary와 실패 장부가 필요하다</h2>
         </header>
         <p className="leading-7">
-          Pinned source는 registered processors별로 finalized block logs를 가져와 log index 순으로 정렬하고,
-          address·topics·data를 검증합니다. 각 event는 별도 cached multistore branch에서 처리되며 성공한 branch만
-          write됩니다. Processor panic이나 error는 해당 event write를 버리고 다음 event를 계속하므로, 한 block의
-          모든 event가 원자적으로 적용된다고 말할 수 없습니다. 이 경계는 cross-chain 성공 증명도 아닙니다.
+          Pinned source는 registered processors별로 finalized block logs를 가져와 log index 순으로 정렬하고
+          address·topics·data를 검증합니다. 각 event는 별도 cached multistore branch에서 처리되며 성공한 branch만 write됩니다.
+          Processor panic이나 error는 해당 event write를 버리고 다음 event를 계속하므로 한 block의 모든 event가 원자적으로 적용된다고 말할 수
+          없습니다. 이 경계는 cross-chain 성공 증명도 아닙니다.
         </p>
         <ExplainedFormula
           question="한 block의 event bridge가 완전 적용됐는지 어떻게 측정하는가?"

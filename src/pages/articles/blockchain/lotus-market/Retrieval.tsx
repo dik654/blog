@@ -13,10 +13,9 @@ export default function Retrieval({
         Retrieval은 별도의 delivery contract다
       </h2>
       <p className="text-sm text-muted-foreground mb-4">
-        legacy retrieval-market snapshot은 query와 payment-channel voucher를
-        결합했지만, 현재 retrieval은 IPNI/content routing, HTTP·libp2p
-        transport, cache/unseal 상태와 provider별 payment policy를 독립적으로
-        조합할 수 있다.
+        legacy retrieval-market snapshot은 query와 payment-channel voucher를 하나로 묶었다. 지금 retrieval은 다르다.
+        IPNI/content routing과 HTTP·libp2p transport, cache/unseal 상태, provider별 payment policy를 독립적으로 조합할 수
+        있다.
       </p>
       <div className="not-prose mb-8">
         <RetrievalViz onOpenCode={(key) => onCodeRef(key, codeRefs[key])} />
@@ -34,8 +33,7 @@ export default function Retrieval({
           <div className="rounded-lg border bg-card p-4">
             <h3 className="font-semibold text-sm mb-2">Negotiate</h3>
             <p className="text-sm text-muted-foreground">
-              availability, unseal 필요 여부, byte range, price와
-              authorization을 확인한다.
+              확인 대상은 availability와 unseal 필요 여부, byte range, price, authorization이다.
             </p>
           </div>
           <div className="rounded-lg border bg-card p-4">
@@ -49,9 +47,8 @@ export default function Retrieval({
           </div>
         </div>
         <p className="leading-7">
-          payment channel은 가능한 결제 방식 중 하나이지 모든 retrieval의 필수
-          단계가 아니다. 또한 IPNI를 단일 중앙 indexer로 부르기보다 provider
-          advertisement를 조회하는 indexing network/API 경계로 이해해야 한다.
+          payment channel은 가능한 결제 방식 중 하나이지 모든 retrieval의 필수 단계가 아니다. IPNI도 단일 중앙 indexer는 아니다. provider
+          advertisement를 조회하는 indexing network/API 경계에 가깝다.
         </p>
       </div>
     </section>

@@ -43,9 +43,8 @@ export default function ModernKaratsubaArticle() {
           <h2 className="mt-2 text-2xl font-bold">두 조각씩 나누면 원래는 네 번 곱한다</h2>
         </header>
         <p>
-          B를 낮은 조각의 자리 크기라고 하겠습니다. 십진수 두 자리씩 나누면
-          B=100이고, k개의 w-bit limb씩 나누면 B=2^(kw)입니다. x=x₁B+x₀,
-          y=y₁B+y₀를 그대로 전개하면 높은 항, 낮은 항, 두 교차항이 나옵니다.
+          B를 낮은 조각의 자리 크기라고 하겠습니다. 십진수 두 자리씩 나누면 B=100이고 k개의 w-bit limb씩 나누면 B=2^(kw)입니다. x=x₁B+x₀, y=y₁B+y₀를
+          그대로 전개하면 높은 항, 낮은 항, 두 교차항이 나옵니다.
         </p>
         <ExplainedFormula
           question="두 조각으로 나눈 두 수를 schoolbook 방식으로 곱하면 어떤 네 곱이 생기는가?"

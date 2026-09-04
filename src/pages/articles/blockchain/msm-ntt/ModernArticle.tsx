@@ -59,7 +59,12 @@ export default function ModernMsmNttArticle() {
 
     <section id="residency-budget" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">03 · Residency</p><h2 className="mt-2 text-2xl font-bold">VRAM 용량보다 동시에 살아 있는 buffer와 transfer critical path를 계산한다</h2></header>
-      <p>MSM은 bases·scalars·buckets·partials, NTT는 coefficients·twiddles·workspace가 필요합니다. 이들을 모두 더한 최대 live set이 VRAM을 넘으면 chunking이 필요하지만, chunk마다 immutable bases나 twiddles를 다시 보내면 PCIe traffic이 kernel 이득을 삼킬 수 있습니다. 반대로 다음 chunk transfer와 현재 kernel이 서로 다른 copy engine/stream에서 진짜 overlap되는 경우에는 단순 합이 아니라 timeline의 가장 긴 경로를 봅니다.</p>
+      <p>
+            MSM은 bases·scalars·buckets·partials, NTT는 coefficients·twiddles·workspace가 필요합니다. 이들을 모두 더한 최대
+            live set이 VRAM을 넘으면 chunking이 필요하지만 chunk마다 immutable bases나 twiddles를 다시 보내면 PCIe traffic이 kernel
+            이득을 삼킬 수 있습니다. 반대로 다음 chunk transfer와 현재 kernel이 서로 다른 copy engine/stream에서 진짜 overlap되는 경우에는 단순
+            합이 아니라 timeline의 가장 긴 경로를 봅니다.
+          </p>
       <ExplainedFormula question="Proof workload의 device resident byte와 겹친 실행 시간을 어떻게 상한으로 잡을까?" idea={<>동시에 살아 있는 allocations만 합하고, 겹치지 않는 dependency 경로는 더하되 transfer와 compute가 실제로 겹치는 구간은 더 큰 쪽을 critical path로 둡니다.</>} formula={String.raw`\begin{aligned}B_{live}&=B_P+B_s+B_{poly}\\&\quad+B_{tw}+B_{work}\\T_{chunk}&\approx\max(T_{H2D},T_{kernel})\\&\quad+T_{barrier}\end{aligned}`}
       annotatedFormula={String.raw`\begin{aligned}B_{live}&=\underbrace{B_P+B_s+B_{poly}}_{\text{Polynomial bytes 계산}}\\&\quad+B_{tw}+B_{work}\\T_{chunk}&\approx\max(T_{H2D},T_{kernel})\\&\quad+T_{barrier}\end{aligned}`}
       operations={[
@@ -79,7 +84,13 @@ export default function ModernMsmNttArticle() {
 
     <section id="release-gate" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">04 · Release gate</p><h2 className="mt-2 text-2xl font-bold">Reference parity를 통과한 뒤 stage별 achieved traffic과 end-to-end proof를 잰다</h2></header>
-      <p>0·1·odd 항 수, zero scalar, identity point, repeated bucket, 최대 scalar, NTT impulse, forward→inverse round trip과 unsupported domain을 먼저 검사합니다. 그다음 context/module warm-up 뒤 같은 stream events로 kernel chain을 측정하고, end-to-end에는 H2D·D2H·synchronization·proof assembly를 포함합니다. Occupancy 하나가 높아졌다는 이유로 채택하지 않고 achieved bandwidth, useful field/point operations, actual bytes, stalls와 median/p95를 함께 보존합니다.</p>
+      <p>
+            0·1·odd 항 수, zero scalar, identity point, repeated bucket, 최대 scalar, NTT impulse, forward→inverse
+            round trip과 unsupported domain을 먼저 검사합니다. 그다음 context/module warm-up 뒤 같은 stream events로 kernel
+            chain을 측정하고 end-to-end에는 H2D·D2H·synchronization·proof assembly를 포함합니다. Occupancy 하나가 높아졌다는 이유로
+            채택하지 않고 achieved bandwidth, useful field/point operations, actual bytes, stalls와 median/p95를 함께
+            보존합니다.
+          </p>
       <p>예를 들어 MSM candidate가 kernel-only 2배 빨라도 bases를 매번 옮겨 proof latency가 같다면 residency나 batch 전략이 먼저입니다. NTT candidate가 한 size에서 빨라도 unsupported root, inverse normalization 또는 coset fixture에서 틀리면 즉시 탈락합니다. GPU OOM·driver error·backend mismatch 때 CPU fallback이 같은 output을 내는지와 timeout·rollback도 운영 계약에 포함합니다.</p>
       <div id="paper-cuda-execution-model"><CitationBlock type="code" citeKey={3} source="NVIDIA CUDA C++ Programming Guide 12.8.1" href={CUDA}><p><strong>문제:</strong> Kernel launch, memory hierarchy, synchronization과 concurrent execution의 공식 의미가 필요합니다.</p><p><strong>핵심 기여:</strong> Grid·block·thread, memory scope, stream ordering과 device capability 계약을 제공합니다.</p><p><strong>중요 가정:</strong> CUDA Toolkit 12.8.1 archive와 실제 compute capability·driver를 함께 고정합니다.</p><p><strong>근거 범위:</strong> CUDA programming semantics와 documented capabilities입니다.</p><p><strong>일반화 금지:</strong> 규격이 특정 MSM·NTT mapping의 정확성이나 성능 우위를 보장하지 않습니다.</p></CitationBlock></div>
       <aside className="rounded-lg border border-border bg-card p-5 text-sm leading-6 text-muted-foreground"><strong className="text-foreground">역검사:</strong> 이 글만으로 reader는 두 연산의 입력·dependency를 구분하고, b=8,w=2 window 수와 butterfly pair를 설명하며, live bytes·overlap 반례를 계산하고, correctness-first paired benchmark와 fallback gate를 설계할 수 있어야 합니다.</aside>

@@ -14,7 +14,13 @@ export default function ModernMysticetiArticle() {
 
     <section id="uncertified-votes" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">01 · support, vote, certificate pattern</p><h2 className="mt-2 text-2xl font-bold">각 author의 first-supported block만 세어 equivocation을 quorum 두 곳에 중복 사용하지 않는다</h2></header>
-      <p>Round r의 leader slot에 L과 L′이라는 conflicting blocks가 있다고 하겠습니다. Round r+1의 validator block이 causal ancestry에서 처음 지지한 leader block이 그 validator의 vote가 됩니다. 같은 author의 later references를 두 후보에 모두 세지 않으며, canonical traversal로 first support를 정합니다. Round r+2 blocks가 quorum의 vote blocks를 parents로 담으면 leader에 대한 certificate pattern을 만들 수 있습니다. Distinct voting power와 valid ancestry가 핵심이며 local arrival order는 의미가 없습니다.</p>
+      <p>
+            Round r의 leader slot에 L과 L′이라는 conflicting blocks가 있다고 하겠습니다. Round r+1의 validator block이 causal
+            ancestry에서 처음 지지한 leader block이 그 validator의 vote가 됩니다. 같은 author의 later references를 두 후보에 모두 세지
+            않으며 canonical traversal로 first support를 정합니다. Round r+2 blocks가 quorum의 vote blocks를 parents로 담으면
+            leader에 대한 certificate pattern을 만들 수 있습니다. Distinct voting power와 valid ancestry가 핵심이며 local
+            arrival order는 의미가 없습니다.
+          </p>
       <ExplainedFormula question="Mysticeti의 implicit certificate pattern에서 왜 distinct-author quorum과 first support를 함께 검사하는가?" idea={<>Signed later blocks가 leader vote를 운반하므로 각 author의 최초 causal support를 하나만 선택하고 그 distinct voting power를 더해야 합니다. 그래야 equivocation 두 후보가 같은 author stake를 동시에 사용하지 못합니다.</>} formula={String.raw`\begin{aligned}F(a)&=\operatorname{firstSupport}(B_a)\\V(L)&=\{a:F(a)=L\}\\\sum_{a\in V(L)}w(a)&\ge 2f+1\end{aligned}`}
       annotatedFormula={String.raw`\begin{aligned}F(a)&=\underbrace{\operatorname{firstSupport}(B_a)}_{\text{canonical first support 계산}}\\V(L)&=\underbrace{\{a:F(a)=L\}}_{\text{canonical first support 계산}}\\\sum_{a\in V(L)}w(a)&\ge \underbrace{2f+1}_{\text{distinct supporter set 계산}}\end{aligned}`}
       operations={[
@@ -28,7 +34,12 @@ export default function ModernMysticetiArticle() {
 
     <section id="decision-linearize" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">02 · direct, indirect, decided prefix</p><h2 className="mt-2 text-2xl font-bold">오래된 undecided slot이 있으면 newer commit도 보류해 모든 replica의 prefix를 지킨다</h2></header>
-      <p>Commit pattern이 충분하면 leader slot을 direct commit하고, 충분한 non-support 또는 blame pattern이면 direct skip합니다. 어느 쪽 evidence도 충분하지 않으면 undecided입니다. 이는 실패나 임의 선택이 아니라 미래의 decided anchor를 기다리는 안전한 상태입니다. Later committed anchor가 older leader와 certified causal link를 가지면 indirect commit하고, 해당 link가 없음을 protocol rule로 판정하면 indirect skip할 수 있습니다.</p>
+      <p>
+            Commit pattern이 충분하면 leader slot을 direct commit하고 충분한 non-support 또는 blame pattern이면 direct
+            skip합니다. 어느 쪽 evidence도 충분하지 않으면 undecided입니다. 이는 실패나 임의 선택이 아니라 미래의 decided anchor를 기다리는 안전한
+            상태입니다. Later committed anchor가 older leader와 certified causal link가 있으면 indirect commit하고 해당 link가
+            없음을 protocol rule로 판정하면 indirect skip할 수 있습니다.
+          </p>
       <MysticetiDecisionViz />
       <p>UniversalCommitter는 여러 leader deciders의 결과를 slot 순서로 합쳐 longest contiguous decided prefix만 consumer에게 줍니다. <code>[commit L1, skip L2, undecided L3, commit L4]</code>라면 L1·L2까지만 외부화합니다. L4를 먼저 출력하면 나중에 L3이 indirect commit될 때 stable order 앞에 새 sub-DAG를 끼워야 하므로 replicas가 갈릴 수 있습니다.</p>
       <p>결정된 leader는 Linearizer가 causal ancestors를 거슬러 올라가 이미 committed한 blocks를 제외하고 stable order로 펼칩니다. Commit digest에는 sequence boundary를 묶어 restart 때 같은 sub-DAG output을 재구성하게 합니다. Leader schedule, wave length와 leaders 수는 versioned ProtocolConfig이므로 paper의 예를 current mainnet 상수로 옮겨 적지 않습니다.</p>

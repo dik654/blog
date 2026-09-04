@@ -11,7 +11,10 @@ export default function ModernPolycommitArticle() {
           <p className="text-sm font-semibold text-primary">하나의 evaluation claim에서 시작하는 PCS</p>
           <h2 className="text-3xl font-bold tracking-tight">다항식은 숨겨 둔 채 f(4)=10만 검증한다</h2>
         </header>
-        <p className="text-lg leading-8 text-foreground/90">유한체 F₁₇에서 f(X)=X²+2X+3이라고 합시다. f(4)=16+8+3=27≡10입니다. Polynomial commitment scheme(PCS)은 prover가 f 전체를 먼저 짧은 값 C에 결속한 뒤, verifier가 요청한 점 z=4에서 값 y=10이 맞다는 opening proof π만 전달하게 합니다.</p>
+        <p className="text-lg leading-8 text-foreground/90">
+            유한체 F₁₇에서 f(X)=X²+2X+3이라고 합시다. f(4)=16+8+3=27≡10입니다. Polynomial commitment scheme(PCS)은 prover가 f
+            전체를 먼저 짧은 값 C에 결속한 뒤 verifier가 요청한 점 z=4에서 값 y=10이 맞다는 opening proof π만 전달하게 합니다.
+          </p>
         <p>이 인터페이스는 STARK·SNARK·rollup에서 긴 polynomial table을 매번 보내지 않기 위해 쓰입니다. 다만 <strong>binding</strong>, <strong>hiding</strong>, <strong>degree bound</strong>, <strong>setup trust</strong>는 별도 속성입니다. “Commitment를 썼다”는 사실만으로 네 조건이 한꺼번에 따라오지는 않습니다.</p>
         <aside className="rounded-lg border border-primary/30 bg-primary/5 p-5 text-sm leading-6"><strong>핵심 아이디어:</strong> 먼저 C를 고정한 뒤 z를 받는 순서가 중요합니다. KZG는 factor theorem을 pairing equation으로, IPA는 evaluation을 inner product로 바꿉니다. 두 방식은 같은 API를 제공하지만 전제와 비용 곡선이 다릅니다.</aside>
         <ContentBoundary article="polycommit" />
@@ -20,7 +23,11 @@ export default function ModernPolycommitArticle() {
 
       <section id="commit-open" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">01 · Commit / Open</p><h2 className="mt-2 text-2xl font-bold">KZG는 나머지가 0이라는 사실을 pairing으로 검사한다</h2></header>
-        <p>Commit은 polynomial과 scheme profile을 받아 C를 만들고, Open은 (f,z)에 대해 y=f(z)와 π를 만듭니다. Verify는 (C,z,y,π)만 보고 accept 또는 reject합니다. API가 짧더라도 degree 제한, key 식별자, field와 subgroup 검사는 외부에서 암묵적으로 생기지 않으므로 profile에 고정해야 합니다.</p>
+        <p>
+            Commit은 polynomial과 scheme profile을 받아 C를 만들고 Open은 (f,z)에 대해 y=f(z)와 π를 만듭니다. Verify는 (C,z,y,π)만
+            보고 accept 또는 reject합니다. API가 짧더라도 degree 제한, key 식별자, field와 subgroup 검사는 외부에서 암묵적으로 생기지 않으므로
+            profile에 고정해야 합니다.
+          </p>
         <ExplainedFormula
           question="f(z)=y라는 주장을 왜 quotient polynomial 하나로 바꿀 수 있는가?"
           idea={<>나머지 정리에 따라 f(X)−y가 X−z로 나누어떨어질 때와 f(z)=y일 때가 같습니다. KZG는 hidden setup point τ에서 이 항등식을 평가하고 pairing으로 양쪽의 곱을 비교합니다.</>}
@@ -67,7 +74,11 @@ export default function ModernPolycommitArticle() {
 
       <section id="selection" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">03 · 선택과 release gate</p><h2 className="mt-2 text-2xl font-bold">정상 proof보다 실패가 같은 이유로 거절되는지 먼저 본다</h2></header>
-        <p>같은 field·degree·opening 수로 KZG·IPA·FRI-style candidate를 비교해야 합니다. Setup bytes/time, commit·open·verify time, proof bytes, peak RSS, batch throughput을 모두 기록하되, 먼저 y·z·degree·SRS·subgroup·transcript를 하나씩 틀린 negative corpus가 모두 거절되는지 확인합니다.</p>
+        <p>
+            같은 field·degree·opening 수로 KZG·IPA·FRI-style candidate를 비교합니다. Setup bytes/time,
+            commit·open·verify time, proof bytes, peak RSS, batch throughput을 모두 기록하되 먼저
+            y·z·degree·SRS·subgroup·transcript를 하나씩 틀린 negative corpus가 모두 거절되는지 확인합니다.
+          </p>
         <p>작은 on-chain proof가 최우선이고 ceremony를 운영할 수 있다면 KZG가 유리할 수 있습니다. Transparent setup이 중요하면 IPA가 후보가 되지만 DLP와 verifier work가 남습니다. Hash·code 기반 post-quantum 방향이 중요하면 FRI 계열을 검토하되 proof와 query/hash 비용이 커질 수 있습니다. 단일 “최고 PCS”는 deployment 조건을 지운 표현입니다.</p>
         <div id="paper-kzg"><CitationBlock source="Kate·Zaverucha·Goldberg · Polynomial Commitments (ASIACRYPT 2010)" citeKey={1} href="https://www.iacr.org/archive/asiacrypt2010/6477178/6477178.pdf"><p><strong>문제:</strong> 큰 polynomial을 짧게 commit하고 특정 evaluation을 짧게 증명해야 합니다.</p><p><strong>기여:</strong> Pairing 기반 constant-size commitment와 evaluation witness construction을 제시합니다.</p><p><strong>전제:</strong> Degree-bounded SRS, bilinear groups와 논문의 binding assumptions를 사용합니다.</p><p><strong>근거 범위:</strong> KZG construction과 원 논문 application 범위에 한정합니다.</p><p><strong>말하지 않는 것:</strong> Transparent setup, post-quantum security, 기본 construction의 자동 hiding을 보장하지 않습니다.</p></CitationBlock></div>
         <div id="paper-halo-ipa"><CitationBlock source="Bowe·Grigg·Hopwood · Halo (2019)" citeKey={2} href="https://eprint.iacr.org/2019/1021.pdf"><p><strong>문제:</strong> Trusted setup 없이 recursive proof composition과 polynomial opening을 구성해야 합니다.</p><p><strong>기여:</strong> Inner-product 기반 polynomial commitment와 amortized verification 전략을 결합합니다.</p><p><strong>전제:</strong> Prime-order curve cycle, DLP, random-oracle과 논문의 amortization model을 사용합니다.</p><p><strong>근거 범위:</strong> Halo의 IPA PCS와 recursive construction 범위입니다.</p><p><strong>말하지 않는 것:</strong> 모든 IPA verifier의 동일 비용이나 post-quantum security를 뜻하지 않습니다.</p></CitationBlock></div>

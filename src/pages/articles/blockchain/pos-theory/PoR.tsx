@@ -9,10 +9,10 @@ export default function PoR() {
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Client는 file을 recovery-friendly encoding으로 바꾸고 block authenticator를 만든 뒤 prover에
-          맡깁니다. Verifier는 fresh random challenge를 보내 일부 encoded blocks에 대한 compact response를
-          검사합니다. PoR의 핵심은 단순 possession test가 아니라, 충분한 acceptance probability를 가진
-          prover와 반복 상호작용하는 extractor가 원 file을 복구할 수 있다는 security definition입니다.
+          Client는 file을 recovery-friendly encoding으로 바꾸고 block authenticator를 만든 뒤 prover에 맡깁니다. Verifier는
+          fresh random challenge를 보내 일부 encoded blocks에 대한 compact response를 검사합니다. PoR의 핵심은 단순 possession
+          test가 아니라 acceptance probability가 충분한 prover와 반복 상호작용하는 extractor가 원 file을 복구할 수 있다는 security
+          definition입니다.
         </p>
       </div>
       <PoRFlowViz />

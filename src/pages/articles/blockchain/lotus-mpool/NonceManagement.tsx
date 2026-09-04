@@ -36,8 +36,7 @@ export default function NonceManagement({
               Replacement &amp; reorg
             </h3>
             <p className="text-sm text-muted-foreground">
-              같은 nonce 교체는 현재 pool policy를 만족해야 하며, head change
-              뒤에는 포함·reverted message와 funds를 다시 계산한다.
+              같은 nonce 교체는 현재 pool policy를 만족해야 한다. head change 뒤에는 포함·reverted message와 funds를 다시 계산한다.
             </p>
           </div>
         </div>

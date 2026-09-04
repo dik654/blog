@@ -26,8 +26,7 @@ export default function GasEstimation({
           <div className="rounded-lg border bg-card p-4">
             <h3 className="font-semibold text-sm mb-2">Simulate</h3>
             <p className="text-sm text-muted-foreground">
-              method, params, sender state와 network version에 맞춰 execution
-              gas를 측정한다.
+              method와 params, sender state, network version에 맞춰 execution gas를 측정한다.
             </p>
           </div>
           <div className="rounded-lg border bg-card p-4">
@@ -46,10 +45,8 @@ export default function GasEstimation({
           </div>
         </div>
         <p className="leading-7">
-          base-fee change bound, target fill, block gas limit은 network
-          version의 consensus parameter다. Ethereum과의 단순 배수 비교나 고정
-          수치를 본문에 복제하기보다 해당 tipset의 network version과 actor
-          bundle에서 읽는다.
+          base-fee change bound와 target fill, block gas limit은 network version의 consensus parameter다.
+          Ethereum과의 단순 배수 비교나 고정 수치를 본문에 복제하지 않는다. 해당 tipset의 network version과 actor bundle에서 직접 읽는다.
         </p>
       </div>
     </section>

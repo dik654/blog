@@ -5,7 +5,11 @@ import { DittoFallbackViz, JolteonPathViz } from "./viz/ModernJolteonDittoViz";
 export default function ModernJolteonDittoArticle(){return <article className="space-y-14">
   <section id="overview" className="space-y-6">
     <header className="space-y-3"><p className="text-sm font-semibold text-primary">Jolteon &amp; Ditto · network-adaptive BFT</p><h2 className="text-3xl font-bold tracking-tight">Jolteon은 정상 구간을 two-chain으로 줄이고, Ditto는 오래 끊긴 network에서 별도의 asynchronous fallback을 연다</h2></header>
-    <p className="text-lg leading-8 text-foreground/90">Alice 요청이 round 10 block B10에 들어갔다고 하겠습니다. Jolteon은 B10의 QC를 one-chain lock으로 기억하고, round 11 block이 그 QC를 직접 연장하면 B10과 ancestors를 two-chain commit합니다. Leader가 멈추면 2f+1 timeout reports를 모은 timeout certificate(TC)가 다음 proposal이 따라야 할 highest QC를 알려 줍니다.</p>
+    <p className="text-lg leading-8 text-foreground/90">
+            Alice 요청이 round 10 block B10에 들어갔다고 하겠습니다. Jolteon은 B10의 QC를 one-chain lock으로 기억하고 round 11 block이
+            그 QC를 직접 연장하면 B10과 ancestors를 two-chain commit합니다. Leader가 멈추면 2f+1 timeout reports를 모은 timeout
+            certificate(TC)가 다음 proposal이 따라야 할 highest QC를 알려 줍니다.
+          </p>
     <p>Partial synchrony가 오래 회복되지 않으면 Jolteon normal path는 안전하게 멈출 수 있습니다. Ditto는 state-aware multi-valued Byzantine agreement(MVBA)를 열어 leader 한 명에 의존하지 않는 randomized fallback으로 progress를 시도합니다. 두 path는 다른 liveness assumptions를 쓰지만 같은 safety state를 이어 받아야 합니다.</p>
     <JolteonPathViz />
     <aside className="rounded-lg border border-primary/30 bg-primary/5 p-5 text-sm leading-6"><strong>핵심 아이디어:</strong> Jolteon의 TC는 commit certificate가 아니라 safe parent를 제한하는 recovery evidence입니다. Ditto의 MVBA decision도 client success가 아니라 certification·execution·normal rejoin의 출발점입니다.</aside>
@@ -32,7 +36,12 @@ export default function ModernJolteonDittoArticle(){return <article className="s
   </section>
   <section id="release" className="space-y-6">
     <header><p className="text-sm font-semibold text-primary">03 · certification, rejoin, current-source boundary</p><h2 className="mt-2 text-2xl font-bold">MVBA decision 뒤 ancestors를 commit하고 certificate를 맞춘 다음 normal path로 돌아간다</h2></header>
-    <p>Fallback에서 block B를 결정하면 replicas는 B의 ancestors를 같은 순서로 commit합니다. 이어 B에 vote shares를 보내 certificate를 만들고, view·highest QC·fallback flag를 맞춘 뒤 normal path에 재진입합니다. Missing payload를 복구하고 deterministic state root가 일치해야 Alice의 client result를 release합니다. Local MVBA output만 보고 success를 내면 crash replica와 external effect가 갈릴 수 있습니다.</p>
+    <p>
+            Fallback에서 block B를 결정하면 replicas는 B의 ancestors를 같은 순서로 commit합니다. 이어 B에 vote shares를 보내
+            certificate를 만들고 view·highest QC·fallback flag를 맞춘 뒤 normal path에 재진입합니다. Missing payload를 복구하고
+            deterministic state root가 일치해야 Alice의 client result를 release합니다. Local MVBA output만 보고 success를 내면
+            crash replica와 external effect가 갈릴 수 있습니다.
+          </p>
     <p>Aptos current source는 Proposal, Vote, QC, TwoChainTimeoutCertificate와 OrderVote를 처리하지만 이를 paper Ditto MVBA implementation이라고 부르지 않습니다. Release fixture는 paper variant와 exact tag를 따로 고정해 invalid TC, stale QC, non-consecutive chain, partition, fallback/rejoin crash를 재생합니다. 두 path의 conflicting commit은 0이어야 하며 rollback은 external receipt 전 speculation에만 허용합니다.</p>
     <div id="paper-aptos-round-v1486"><CitationBlock source="Aptos Core aptos-node-v1.48.6 — consensus round manager" citeKey={3} type="code" href="https://github.com/aptos-labs/aptos-core/blob/aptos-node-v1.48.6/consensus/src/round_manager.rs"><p><strong>문제:</strong> Current Aptos node에서 proposals·votes·QCs·two-chain timeouts·order votes를 검증해 lifecycle로 연결해야 합니다.</p><p><strong>기여:</strong> Pinned round-manager verification, block-store synchronization과 current pipeline interfaces를 구현합니다.</p><p><strong>전제:</strong> aptos-node-v1.48.6 exact tag commit e9051e9와 matching on-chain consensus config를 사용합니다.</p><p><strong>근거 범위:</strong> 2026-08-14 확인한 pinned Aptos consensus integration snapshot에 한정합니다.</p><p><strong>말하지 않는 것:</strong> 이 source가 paper Ditto MVBA fallback을 그대로 구현하거나 Jolteon constants를 고정한다는 뜻은 아닙니다.</p></CitationBlock></div>
     <h3 className="text-xl font-semibold">이 글만으로 확인할 10가지</h3><p>기초 6문제는 sync trace, lock/commit, n=4 quorum, TC parent, fallback trigger와 rejoin을 묻습니다. 심화 4문제는 safe-vote branches, false two-chain, prolonged partition assumptions와 pinned-source crash suite를 설계하게 합니다.</p>

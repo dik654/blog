@@ -8,8 +8,15 @@ export default function ModernPLONKArticle() {
     <article className="space-y-14">
       <section id="overview" className="space-y-6">
         <header className="space-y-3"><p className="text-sm font-semibold text-primary">산술 관계를 표로 배치하는 PLONK</p><h2 className="text-3xl font-bold tracking-tight">Gate·copy constraint·polynomial opening을 서로 다른 책임으로 나눈다</h2></header>
-        <p className="text-lg leading-8 text-foreground/90">공개 x=3, y=12와 비공개 witness w=4에 대해 x·w=y를 증명한다고 합시다. PLONK는 값을 a·b·c 같은 witness column의 row에 놓고, selector가 그 row에서 어떤 산술식을 적용할지 정합니다. 같은 값이 다른 row에서 다시 쓰인다는 사실은 별도의 permutation argument가 검사합니다.</p>
-        <p>이 표를 evaluation domain H 위의 다항식으로 보간하면 모든 row의 gate·copy 조건을 quotient identity로 묶을 수 있습니다. Prover는 먼저 wire·permutation·quotient polynomial에 commit하고, transcript challenge ζ에서 필요한 값을 엽니다. KZG 또는 IPA 같은 polynomial commitment scheme(PCS)은 PLONK의 산술 규칙과 별개의 backend입니다.</p>
+        <p className="text-lg leading-8 text-foreground/90">
+            공개 x=3, y=12와 비공개 witness w=4에 대해 x·w=y를 증명한다고 합시다. PLONK는 값을 a·b·c 같은 witness column의 row에 놓고
+            selector가 그 row에서 어떤 산술식을 적용할지 정합니다. 같은 값이 다른 row에서 다시 쓰인다는 사실은 별도의 permutation argument가 검사합니다.
+          </p>
+        <p>
+            이 표를 evaluation domain H 위의 다항식으로 보간하면 모든 row의 gate·copy 조건을 quotient identity로 묶을 수 있습니다. Prover는
+            먼저 wire·permutation·quotient polynomial에 commit하고 transcript challenge ζ에서 필요한 값을 엽니다. KZG 또는 IPA
+            같은 polynomial commitment scheme(PCS)은 PLONK의 산술 규칙과 별개의 backend입니다.
+          </p>
         <aside className="rounded-lg border border-primary/30 bg-primary/5 p-5 text-sm leading-6"><strong>핵심 아이디어:</strong> “이 row의 산술이 맞다”, “서로 연결된 cell 값이 같다”, “commit한 polynomial이 challenge point에서 이 값을 갖는다”를 gate identity·grand product·PCS opening으로 각각 증명한 뒤 transcript로 한 statement에 결속합니다.</aside>
         <ContentBoundary article="plonk" />
         <PLONKPipelineViz />
@@ -64,7 +71,12 @@ export default function ModernPLONKArticle() {
 
       <section id="opening-security" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">03 · Quotient·PCS·Fiat–Shamir</p><h2 className="mt-2 text-2xl font-bold">모든 항을 commit한 뒤 무작위 점에서 한 identity로 모은다</h2></header>
-        <p>Gate·permutation·public-input·boundary constraint에 α의 거듭제곱을 곱해 하나의 numerator N(X)로 합치고, domain vanishing polynomial Z_H(X)=Xⁿ−1로 나눈 quotient T(X)=N(X)/Z_H(X)를 만듭니다. T가 degree limit을 넘으면 여러 조각으로 나눠 commit합니다. Verifier는 domain 밖 challenge ζ에서 N(ζ)=T(ζ)Z_H(ζ)를 확인하고 PCS opening으로 commitment와 evaluation을 결속합니다.</p>
+        <p>
+            Gate·permutation·public-input·boundary constraint에 α의 거듭제곱을 곱해 하나의 numerator N(X)로 합치고 domain
+            vanishing polynomial Z_H(X)=Xⁿ−1로 나눈 quotient T(X)=N(X)/Z_H(X)를 만듭니다. T가 degree limit을 넘으면 여러 조각으로
+            나눠 commit합니다. Verifier는 domain 밖 challenge ζ에서 N(ζ)=T(ζ)Z_H(ζ)를 확인하고 PCS opening으로 commitment와
+            evaluation을 결속합니다.
+          </p>
         <ExplainedFormula
           question="PLONK verifier가 여러 constraint를 한 challenge point에서 묶어 확인하는 핵심 등식은 무엇인가?"
           idea={<>서로 다른 constraint family를 α powers로 섞은 N이 domain 전체에서 0이면 ZH로 나누어집니다. Commitment를 먼저 고정한 뒤 ζ에서 quotient identity와 batch opening을 확인합니다.</>}

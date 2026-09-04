@@ -20,18 +20,32 @@ export default function ModernLotusMpool() {
 
     <section id="admission" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">01 · Head-relative admission</p><h2 className="mt-2 text-2xl font-bold">Signed bytes만 보지 않고 head, actor state와 runtime policy를 receipt에 고정한다</h2></header>
-      <p>Alice의 actor nonce가 7이라면 nonce 7 message는 즉시 실행 가능한 후보지만, nonce 9만 먼저 도착하면 8이 올 때까지 gap 뒤에 머뭅니다. Admission은 signature와 CID뿐 아니라 sender protocol, network version별 message size·gas constraints, 현재 balance와 required funds, nonce 범위, duplicate와 same-nonce replacement policy를 검사합니다. Head가 움직이면 같은 bytes의 유효성도 달라질 수 있으므로 acceptance receipt에 base tipset key와 height를 기록합니다.</p>
+      <p>
+            Alice의 actor nonce가 7이라면 nonce 7 message는 즉시 실행 가능한 후보입니다. 반면 nonce 9만 먼저 도착하면 8이 올 때까지 gap 뒤에
+            머뭅니다. Admission이 보는 것은 signature와 CID만이 아닙니다. sender protocol과 network version별 message size·gas
+            constraints, 현재 balance와 required funds, nonce 범위, duplicate와 same-nonce replacement policy까지
+            검사합니다. Head가 움직이면 같은 bytes의 유효성도 달라질 수 있으므로 acceptance receipt에 base tipset key와 height를 기록합니다.
+          </p>
       <ExplainedFormula question="같은 message가 어느 chain context에서 admission됐는지 어떻게 재현할까?" idea={<>Signed message identity에 head와 validation policy snapshot을 함께 묶습니다.</>} formula={String.raw`A=H(C_{msg}\|K_H\|h\|N_V\|P_{mpool})`}
       annotatedFormula={String.raw`A=\underbrace{H(C_{msg}\|K_H\|h\|N_V\|P_{mpool})}_{\text{Mpool policy 계산}}`}
       operations={[
         { expression: String.raw`H(C_{msg}\|K_H\|h\|N_V\|P_{mpool})`, annotation: ["Mpool policy이(가) 식의 결과에 기여하는 방식을","계산합니다.","Signed message identity에 head와","validation policy snapshot을 함께"] },
       ]} terms={[{symbol:"A",name:"Admission digest",description:"한 local admission 판단을 재현하는 receipt identity입니다."},{symbol:"H",name:"Cryptographic hash",description:"Canonical serialization에 적용한 hash입니다."},{symbol:"C_{msg}",name:"Signed-message CID",description:"From, To, Nonce, Value, Gas fields, method parameters와 signature를 식별합니다."},{symbol:"K_H",name:"Head tipset key",description:"Admission 때 actor state를 읽은 exact heaviest tipset입니다."},{symbol:"h",name:"Head height",description:"Network-version과 base-fee context를 해석할 epoch입니다."},{symbol:"N_V",name:"Network version",description:"Message validity와 actor semantics를 선택하는 version입니다."},{symbol:"P_{mpool}",name:"Mpool policy",description:"Replacement ratio, queue limits와 local configuration snapshot입니다."}]} assumptions={["Fields는 Filecoin canonical message/CID rules와 deterministic policy encoding을 따릅니다.","A는 판단 provenance이며 이후 head에서도 message가 유효하거나 포함된다는 증명이 아닙니다."]} interpretation="Signed-message CID가 같아도 head나 mpool config가 바뀌면 admission digest가 달라지므로 stale 판단을 새 head에 재사용하지 않습니다." />
-      <p>같은 sender·nonce의 replacement도 단순히 새 메시지가 왔다고 허용하지 않습니다. 새 fee가 configured replace-by-fee threshold를 충족하고 dependent chain을 깨지 않아야 합니다. 정확한 threshold는 pinned config artifact에서 읽으며 이 글은 임의의 고정 퍼센트를 주장하지 않습니다.</p>
+      <p>
+            같은 sender·nonce의 replacement도 단순히 새 메시지가 왔다고 허용하지 않습니다. 새 fee가 configured replace-by-fee
+            threshold를 충족하고 dependent chain을 깨지 않아야 통과합니다. 정확한 threshold는 pinned config artifact에서 읽으며 이 글은
+            임의의 고정 퍼센트를 주장하지 않습니다.
+          </p>
     </section>
 
     <section id="nonce-packages" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">02 · Sender nonce chain and block selection</p><h2 className="mt-2 text-2xl font-bold">Actor nonce부터 끊기지 않은 chain만 실행 가능한 package로 만들고 block budgets 안에서 비교한다</h2></header>
-      <p>Filecoin actor는 sender별 nonce 순서대로 messages를 실행합니다. 따라서 Alice의 state nonce가 7이고 pending이 7·9라면 9의 fee가 아무리 높아도 8 없이 먼저 실행할 수 없습니다. Lotus selection은 sender마다 7→8→9처럼 contiguous한 package를 만든 뒤 base fee에서 얻을 수 있는 effective premium과 gas reward, block gas limit과 message count를 고려합니다. 이 단계는 local queue ordering이지 consensus가 모든 노드에 같은 candidate order를 강제한다는 뜻은 아닙니다.</p>
+      <p>
+            Filecoin actor는 sender별 nonce 순서대로 messages를 실행합니다. Alice의 state nonce가 7이고 pending이 7·9라면 9의 fee가
+            아무리 높아도 8 없이 9를 먼저 실행하지 못합니다. Lotus selection은 sender마다 7→8→9처럼 contiguous한 package를 만듭니다. 그다음
+            base fee에서 얻을 수 있는 effective premium과 gas reward, block gas limit과 message count를 고려합니다. 이 단계는
+            local queue ordering이지 consensus가 모든 노드에 같은 candidate order를 강제한다는 뜻은 아닙니다.
+          </p>
       <ExplainedFormula question="Sender의 어떤 pending messages가 하나의 실행 가능한 chain일까?" idea={<>On-chain actor nonce에서 시작해 정확히 1씩 증가하는 prefix만 선택합니다.</>} formula={String.raw`n_i=n_{state}+i,\quad i=0,\ldots,k-1`}
       annotatedFormula={String.raw`n_i=\underbrace{n_{state}+i,\quad i=0,\ldots,k-1}_{\text{Actor state nonce 계산}}`}
       operations={[

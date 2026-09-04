@@ -11,9 +11,8 @@ export default function StorageDeal({
     <section id="storage-deal" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-3">Storage deal lifecycle</h2>
       <p className="text-sm text-muted-foreground mb-4">
-        아래 code link는 legacy Lotus provider의 축약 흐름이다. 현재 설계에서는
-        Boost의 deal pipeline, Filecoin actor message, sector sealing을 서로
-        다른 failure domain으로 추적한다.
+        아래 code link는 legacy Lotus provider의 축약 흐름이다. 현재 설계에서는 Boost의 deal pipeline과 Filecoin actor message,
+        sector sealing을 각각 다른 failure domain으로 추적한다.
       </p>
       <div className="not-prose mb-8">
         <DealDetailViz onOpenCode={(key) => onCodeRef(key, codeRefs[key])} />
@@ -45,11 +44,9 @@ export default function StorageDeal({
           </div>
         </div>
         <p className="leading-7">
-          고정된 “16-state FSM”, 일정한 가격·기간·담보·reward multiplier는
-          implementation 및 network version에 따라 달라진다. 운영자는 deal UUID,
-          publish message CID, piece CID, sector number, on-chain
-          deal/allocation ID를 연결해 각 단계의 idempotency와 복구를 확인해야
-          한다.
+          고정된 “16-state FSM”이나 일정한 가격·기간·담보·reward multiplier는 implementation과 network version에 따라 달라진다. 운영자는
+          deal UUID와 publish message CID, piece CID, sector number, on-chain deal/allocation ID를 하나로 꿰어 각 단계의
+          idempotency와 복구를 확인한다.
         </p>
       </div>
     </section>

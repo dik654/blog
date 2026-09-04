@@ -25,8 +25,8 @@ export default function HamtAmt({
           <div className="rounded-lg border bg-card p-4">
             <h3 className="font-semibold text-sm mb-2">HAMT lookup</h3>
             <p className="text-sm text-muted-foreground">
-              hash algorithm·bit width·bucket policy로 path를 계산하고 bitfield
-              rank를 통해 compact pointer index를 찾는다.
+              hash algorithm과 bit width, bucket policy로 path를 계산한 다음 bitfield rank로 compact pointer index를
+              찾는다.
             </p>
           </div>
           <div className="rounded-lg border bg-card p-4">
@@ -38,10 +38,9 @@ export default function HamtAmt({
           </div>
         </div>
         <p className="leading-7">
-          bit width 5, bucket size 3, SHA-256 같은 값은 특정 HAMT
-          version·사용처의 parameter일 수 있지만 모든 actor collection의 영구
-          상수는 아니다. decoding할 때 actor schema가 기대하는 library version과
-          options를 함께 사용해야 같은 root를 재현한다.
+          bit width 5, bucket size 3, SHA-256 같은 값은 특정 HAMT version과 사용처의 parameter일 수는 있어도 모든 actor
+          collection의 영구 상수는 아니다. decoding할 때 actor schema가 기대하는 library version과 options를 함께 써야 같은 root를
+          재현한다.
         </p>
       </div>
     </section>

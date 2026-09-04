@@ -40,15 +40,13 @@ export default function WinningPoSt({
           <div className="rounded-lg border bg-card p-4">
             <h3 className="font-semibold text-sm mb-2">3. Block</h3>
             <p className="text-sm text-muted-foreground">
-              message selection, parent weight, ticket·proof를 block header에
-              묶어 서명하고 network에 전파한다.
+              message selection과 parent weight, ticket·proof를 block header에 묶어 서명한 다음 network에 전파한다.
             </p>
           </div>
         </div>
         <p className="leading-7">
-          경쟁력은 GPU 모델 하나로 결정되지 않는다. chain notification 지연,
-          sector read tail latency, proof worker availability, message
-          selection과 propagation까지 합친 end-to-end budget이 중요하다.
+          경쟁력은 GPU 모델 하나로 결정되지 않는다. chain notification 지연과 sector read tail latency, proof worker
+          availability, message selection과 propagation까지 합친 end-to-end budget이 관건이다.
         </p>
       </div>
     </section>

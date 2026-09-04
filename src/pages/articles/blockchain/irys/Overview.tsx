@@ -80,8 +80,7 @@ export default function Overview({
 
         <h3>Arweave vs Irys</h3>
         <p>
-          Irys는 Arweave의 영구 저장 개념을 계승하지만, Arweave의 RandomX PoW
-          대신 VDF를 사용하고 EVM 호환성을 추가했습니다.
+          Irys는 Arweave의 영구 저장 개념을 계승하지만 Arweave의 RandomX PoW 대신 VDF를 사용하고 EVM 호환성을 추가했습니다.
         </p>
       </div>
 

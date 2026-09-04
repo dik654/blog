@@ -9,10 +9,8 @@ export default function Usage() {
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          매 query마다 전체 coefficient polynomial을 전개할 필요는 없습니다.
-          고정된 xᵢ에 대해 barycentric weight를 한 번 precompute하면 새로운
-          z에서의 L(z)를 O(n) field operation으로 평가할 수 있습니다. 단 z가
-          표본점과 같으면 분모가 0이므로 해당 y값을 직접 반환합니다.
+          매 query마다 전체 coefficient polynomial을 전개할 필요는 없습니다. 고정된 xᵢ에 대해 barycentric weight를 한 번 precompute하면
+          새로운 z에서 L(z)를 O(n) field operation으로 평가할 수 있습니다. 단 z가 표본점과 같으면 분모가 0이므로 해당 y값을 직접 반환합니다.
         </p>
       </div>
       <ExplainedFormula
@@ -72,11 +70,9 @@ export default function Usage() {
           Berrut &amp; Trefethen (2004), Barycentric Lagrange Interpolation
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          문제는 Lagrange polynomial을 효율적이고 수치적으로 안정적으로 평가하는
-          방법입니다. 논문은 두 barycentric form과 실수 floating-point에서의
-          특성을 정리합니다. 이 글은 algebraic identity와 precomputation 구조를
-          finite field에 재사용하지만, 실수의 rounding-error 결론을 finite-field
-          구현에 그대로 적용하지 않습니다.
+          문제는 Lagrange polynomial을 효율적이고 수치적으로 안정적으로 평가하는 방법입니다. 논문은 두 barycentric form과 그 형태가 실수 floating-
+          point에서 갖는 특성을 정리합니다. 이 글은 algebraic identity와 precomputation 구조를 finite field에 재사용하지만 실수의 rounding-
+          error 결론을 finite-field 구현에 그대로 적용하지 않습니다.
         </p>
         <a
           href="https://doi.org/10.1137/S0036144502417715"

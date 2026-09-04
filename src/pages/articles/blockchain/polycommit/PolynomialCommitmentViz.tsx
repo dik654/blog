@@ -10,7 +10,9 @@ export default function PolynomialCommitmentViz() {
     <figure data-viz="polynomial-commitment-flow" data-viz-canvas className="not-prose my-8 min-w-0 rounded-xl border border-border/70 bg-card p-4 sm:p-6">
       <figcaption className="mb-5">
         <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Commit → open → verify</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">Polynomial 전체를 다시 보내지 않고, 먼저 고정한 C와 특정 evaluation의 일관성만 검사합니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            Polynomial 전체를 다시 보내지 않고 먼저 고정한 C와 특정 evaluation의 일관성만 검사합니다.
+          </p>
       </figcaption>
       <div className="grid gap-3 md:grid-cols-4">
         {items.map((item, index) => (

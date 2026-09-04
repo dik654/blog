@@ -53,7 +53,12 @@ export default function ModernKohakuProviderArticle() {
 
     <section id="release" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">03 · failure, retry and release</p><h2 className="mt-2 text-2xl font-bold">Alpha package는 exact commit으로 고정하고 silent downgrade가 없는지 method별로 검증한다</h2></header>
-      <p>Parity fixture는 같은 block hash에서 balance·code·logs·receipt·gas estimate를 각 adapter로 호출합니다. Null, missing code, receipt status와 bigint conversion을 canonical form으로 맞춘 뒤 값과 error class를 비교하고, timeout·unsupported·stale backend·reorg를 별도 negative cases로 남깁니다. Verified backend가 실패했을 때 trusted fallback으로 바뀌면 반드시 provenance를 노출하고 policy 승인을 다시 받아야 합니다.</p>
+      <p>
+            Parity fixture는 같은 block hash에서 balance·code·logs·receipt·gas estimate를 각 adapter로 호출합니다. Null,
+            missing code, receipt status와 bigint conversion을 canonical form으로 맞춘 뒤 값과 error class를 비교하고
+            timeout·unsupported·stale backend·reorg를 별도 negative cases로 남깁니다. Verified backend가 실패했을 때 trusted
+            fallback으로 바뀌면 반드시 provenance를 노출하고 policy 승인을 다시 받아야 합니다.
+          </p>
       <p>Release bundle에는 Kohaku commit, provider package version, Ethers·Viem·Helios·Colibri dependency versions, endpoint roles, bypass flags와 signer wiring을 담습니다. Canary에서 method parity, latency, failure rate, endpoint exposure와 signer prompts를 관찰하고 mismatch가 나면 이전 bundle로 rollback합니다. 이미 broadcast한 transaction은 다시 서명해 보내지 말고 hash·nonce로 receipt를 조회해 duplicate external effect를 막습니다.</p>
       <div id="paper-kohaku-repo"><CitationBlock source="ethereum/kohaku repository · commit 8d5a29e" citeKey={3} type="code" href="https://github.com/ethereum/kohaku/tree/8d5a29e3fba806431c881f72c0bc9accb0066ace"><p><strong>문제:</strong> Ethereum wallet privacy와 security tooling을 여러 packages와 research tracks로 개발하면서 현재 maturity를 분명히 표시해야 합니다.</p><p><strong>기여:</strong> Provider를 포함한 monorepo package layout, current versioned source와 project-level readiness notices를 제공합니다.</p><p><strong>전제:</strong> 2026-08-14에 확인한 commit 8d5a29e와 각 package의 own README·manifest를 함께 읽습니다.</p><p><strong>근거 범위:</strong> 해당 snapshot의 repository structure, code와 명시된 WIP·unaudited status에 한정합니다.</p><p><strong>말하지 않는 것:</strong> Roadmap의 privacy 기능이 provider package에 이미 구현되었거나 코드가 production-ready·audited라는 뜻은 아닙니다.</p></CitationBlock></div>
       <h3 className="text-xl font-semibold">이 글만으로 확인할 10가지</h3>

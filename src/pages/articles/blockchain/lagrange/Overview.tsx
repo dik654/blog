@@ -10,10 +10,8 @@ export default function Overview() {
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="text-lg leading-8">
-          서로 다른 x 좌표 n개와 그 위치의 y값이 주어지면, degree n−1 이하
-          다항식은 정확히 하나로 정해집니다. Lagrange interpolation은
-          연립방정식을 풀지 않고도 각 표본점에서 자기 값만 선택하는 basis
-          polynomial을 만들어 그 다항식을 직접 구성합니다.
+          서로 다른 x 좌표 n개와 그 위치의 y값이 주어지면 degree n−1 이하 다항식은 정확히 하나로 정해집니다. Lagrange interpolation은 연립방정식을 풀지
+          않고도 각 표본점에서 자기 값만 선택하는 basis polynomial을 만들어 그 다항식을 직접 구성합니다.
         </p>
         <p>
           나눗셈은 <Link to="/crypto/finite-field-theory">유한체 산술</Link>을
@@ -29,11 +27,8 @@ export default function Overview() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>존재와 유일성은 서로 다른 주장입니다</h3>
         <p>
-          Lagrange 식은 실제로 모든 점을 통과하는 다항식을 만들어 존재를 보여
-          줍니다. 유일성은 같은 점을 통과하는 두 degree n−1 이하 다항식의 차이가
-          n개의 서로 다른 root를 갖는다고 가정하면 얻습니다. 0이 아닌 degree n−1
-          다항식은 root가 많아야 n−1개이므로 차이는 zero polynomial일 수밖에
-          없습니다.
+          Lagrange 식은 실제로 모든 점을 통과하는 다항식을 만들어 존재를 보여 줍니다. 유일성은 같은 점을 통과하는 두 degree n−1 이하 다항식의 차이가 n개의 서로 다른
+          root를 갖는다고 가정하면 따라옵니다. 0이 아닌 degree n−1 다항식은 root가 많아야 n−1개이므로 차이는 zero polynomial일 수밖에 없습니다.
         </p>
       </div>
 

@@ -6,7 +6,11 @@ export default function ModernPbftArticle(){return <article className="space-y-1
   <section id="overview" className="space-y-6">
     <header className="space-y-3"><p className="text-sm font-semibold text-primary">PBFT · stable-primary BFT SMR</p><h2 className="text-3xl font-bold tracking-tight">PBFT는 request 하나를 slot에 고정하고 그 slot의 evidence를 view와 restart 너머로 운반한다</h2></header>
     <p className="text-lg leading-8 text-foreground/90">Alice가 Bob에게 10을 보내는 요청을 primary에 전송했다고 하겠습니다. PBFT replica는 요청 내용만 합의하지 않습니다. 어느 <em>view</em>(현재 primary의 임기)의 어느 <em>sequence number</em>(전역 실행 순번)에 어떤 request digest를 넣었는지 합의합니다. PRE-PREPARE가 slot을 제안하고, PREPARE가 같은 view의 배치를 확인하며, COMMIT이 그 배치를 다음 view에서도 보존할 honest evidence를 남깁니다.</p>
-    <p>PBFT는 이후 프로토콜이 단순히 대체한 낡은 세 단계가 아닙니다. Stable primary, all-to-all prepares/commits, slot별 view-change reconstruction과 checkpointed log라는 설계점을 가집니다. HotStuff는 QC chain과 leader rotation으로 다른 trade-off를 택하지만, 둘의 phase 이름이나 latency를 일대일로 치환해서는 안 됩니다.</p>
+    <p>
+            PBFT는 이후 프로토콜이 단순히 대체한 낡은 세 단계가 아닙니다. Stable primary, all-to-all prepares/commits, slot별 view-
+            change reconstruction과 checkpointed log라는 설계점이 있습니다. HotStuff는 QC chain과 leader rotation으로 다른
+            trade-off를 택하지만 둘의 phase 이름이나 latency를 일대일로 치환해서는 안 됩니다.
+          </p>
     <PbftNormalViz />
     <aside className="rounded-lg border border-primary/30 bg-primary/5 p-5 text-sm leading-6"><strong>핵심 아이디어:</strong> PBFT의 safety 단위는 단순 request가 아니라 <code>(view, sequence, digest)</code> tuple입니다. Client success는 replica의 committed-local·ordered execution 뒤 f+1 matching replies까지 확인한 별도 상태입니다.</aside>
   </section>
@@ -27,7 +31,12 @@ export default function ModernPbftArticle(){return <article className="space-y-1
 
   <section id="view-recovery" className="space-y-6">
     <header><p className="text-sm font-semibold text-primary">02 · view change와 checkpoint</p><h2 className="mt-2 text-2xl font-bold">새 primary는 2f+1 VIEW-CHANGE에서 slot별 highest prepared value를 재계산하고 빈 곳은 null로 채운다</h2></header>
-    <p>Timeout이 발생하면 replica는 last stable checkpoint proof와 그 이후 prepared certificates를 VIEW-CHANGE에 담습니다. 새 primary는 자기 것을 포함한 2f+1 valid messages로 NEW-VIEW를 만들며, 각 sequence에서 가장 높은 old view의 prepared digest를 선택합니다. Prepared evidence가 없는 gap에는 null request를 넣습니다. Backups도 같은 input에서 output set O를 다시 계산해 leader가 낮은 certificate를 숨기거나 slot을 바꾸지 않았는지 검증합니다.</p>
+    <p>
+            Timeout이 발생하면 replica는 last stable checkpoint proof와 그 이후 prepared certificates를 VIEW-CHANGE에
+            담습니다. 새 primary는 자기 것을 포함한 2f+1 valid messages로 NEW-VIEW를 만들며 각 sequence에서 가장 높은 old view의
+            prepared digest를 선택합니다. Prepared evidence가 없는 gap에는 null request를 넣습니다. Backups도 같은 input에서 output
+            set O를 다시 계산해 leader가 낮은 certificate를 숨기거나 slot을 바꾸지 않았는지 검증합니다.
+          </p>
     <p>Checkpoint는 실행 state digest와 sequence에 대한 distinct CHECKPOINT 2f+1개가 모여야 stable합니다. 그때 low watermark h를 올리고 h 이하 protocol log를 정리할 수 있습니다. State bytes가 없는 restarting replica는 certificate signers에게 checkpoint state를 받아 digest를 검증하고 h 위 requests를 replay합니다. Local snapshot 하나만으로 GC하면 recovery proof를 잃습니다.</p>
     <PbftRecoveryViz />
     <div id="paper-pbft-recovery"><CitationBlock source="PBFT paper §4.3–4.4 — Checkpoints and View Changes" citeKey={2} href="https://www.usenix.org/legacy/publications/library/proceedings/osdi99/full_papers/castro/castro_html/node4.html#SECTION00043000000000000000"><p><strong>문제:</strong> Primary failure를 넘겨 prepared slots를 보존하면서 protocol log를 유한하게 유지해야 합니다.</p><p><strong>기여:</strong> Stable checkpoint proof, watermarks, VIEW-CHANGE·NEW-VIEW slot reconstruction과 state transfer를 정의합니다.</p><p><strong>전제:</strong> 2f+1 valid evidence, highest-prepared selection, null gap fill과 deterministic replica verification을 사용합니다.</p><p><strong>근거 범위:</strong> PBFT recovery·garbage collection algorithm과 liveness sketch에 한정합니다.</p><p><strong>말하지 않는 것:</strong> Local snapshot·timer 하나가 globally stable checkpoint나 recovery 완료를 보장하지 않습니다.</p></CitationBlock></div>
@@ -36,7 +45,12 @@ export default function ModernPbftArticle(){return <article className="space-y-1
   <section id="release" className="space-y-6">
     <header><p className="text-sm font-semibold text-primary">03 · client reply와 failure release</p><h2 className="mt-2 text-2xl font-bold">Client timestamp, f+1 matching results와 state receipt가 맞아야 같은 요청을 두 번 실행하지 않는다</h2></header>
     <p>Replica는 committed-local만 보고 곧바로 reply하지 않고 낮은 sequence requests까지 deterministic하게 실행합니다. Reply에는 view, client timestamp, replica identity와 result가 들어갑니다. n=4,f=1 client는 서로 다른 replicas의 같은 timestamp·result replies 2개를 기다리므로 적어도 하나는 honest execution 결과입니다. Timeout retry가 오면 replicas는 client별 last timestamp와 cached reply를 사용해 같은 operation을 재실행하지 않고 결과를 다시 보냅니다.</p>
-    <p>Release suite는 Byzantine primary의 conflicting digests, delayed PREPARE/COMMIT, mixed checkpoints와 prepared slots, crash 중 log GC를 재생합니다. Partition 전후 conflicting committed result는 0이어야 하고, GST 전 stall은 허용합니다. Timeout이 늘어나고 2f+1 honest participants가 같은 view와 correct primary에 모인 뒤에는 새 request가 실행되고 f+1 replies가 나와야 합니다. Rollback 대상은 아직 executed receipt가 없는 local speculation뿐입니다.</p>
+    <p>
+            Release suite는 Byzantine primary의 conflicting digests, delayed PREPARE/COMMIT, mixed checkpoints와
+            prepared slots, crash 중 log GC를 재생합니다. Partition 전후 conflicting committed result는 0이어야 하고 GST 전
+            stall은 허용합니다. Timeout이 늘어나고 2f+1 honest participants가 같은 view와 correct primary에 모인 뒤에는 새 request가
+            실행되고 f+1 replies가 나와야 합니다. Rollback 대상은 아직 executed receipt가 없는 local speculation뿐입니다.
+          </p>
     <div id="paper-pbft-osdi"><CitationBlock source="Practical Byzantine Fault Tolerance — OSDI 1999" citeKey={3} href="https://www.usenix.org/conference/osdi-99/presentation/practical-byzantine-fault-tolerance"><p><strong>문제:</strong> Byzantine faults를 견디는 replicated service를 Internet-like environment에서 practical하게 만들어야 합니다.</p><p><strong>기여:</strong> PBFT client·normal case·view change·checkpoint protocol과 BFT NFS evaluation을 제시합니다.</p><p><strong>전제:</strong> 3f+1 authenticated replicas, 최대 f Byzantine faults, deterministic state machine과 eventual timing condition을 사용합니다.</p><p><strong>근거 범위:</strong> OSDI paper protocol·correctness sketch와 당시 NFS 실험입니다.</p><p><strong>말하지 않는 것:</strong> 1999 cryptography, 3% overhead나 checkpoint interval이 current deployment의 보안·성능 상수라는 뜻은 아닙니다.</p></CitationBlock></div>
     <h3 className="text-xl font-semibold">이 글만으로 확인할 10가지</h3><p>기초 6문제는 request lifecycle, slot admission, prepared·commit-local counts, client threshold, NEW-VIEW와 checkpoint를 묻습니다. 심화 4문제는 equivocation, mixed recovery, crash·GC·retry와 partition/GST release suite를 설계하게 합니다.</p>
   </section>

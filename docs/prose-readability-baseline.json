@@ -82,7 +82,7 @@
       "score": 33
     },
     "blockchain/ipfs-filecoin-storage": {
-      "fingerprint": "6130fef3490a62c0",
+      "fingerprint": "842795bc51e79960",
       "score": 33
     },
     "ai/lstm-timeseries": {
@@ -130,7 +130,7 @@
       "score": 29
     },
     "blockchain/lotus-state": {
-      "fingerprint": "1d6ebc230d16e803",
+      "fingerprint": "bdeebe88f477909c",
       "score": 29
     },
     "blockchain/reth-chainspec": {
@@ -170,11 +170,11 @@
       "score": 28
     },
     "blockchain/lotus-miner": {
-      "fingerprint": "803c558b47639392",
+      "fingerprint": "b8d1456e2a066e17",
       "score": 28
     },
     "blockchain/mysticeti": {
-      "fingerprint": "b5b07aaf17550a5a",
+      "fingerprint": "d08e071b07bc82eb",
       "score": 28
     },
     "blockchain/prysm-validator-client": {
@@ -186,7 +186,7 @@
       "score": 28
     },
     "blockchain/kohaku-provider": {
-      "fingerprint": "f13b91488cf6f146",
+      "fingerprint": "f8637c2889813413",
       "score": 27
     },
     "blockchain/reth-db": {
@@ -230,7 +230,7 @@
       "score": 26
     },
     "blockchain/pos-theory": {
-      "fingerprint": "5c2282e11de4d472",
+      "fingerprint": "2a6a63de6cf9eee6",
       "score": 26
     },
     "blockchain/filecoin-pdp": {
@@ -238,7 +238,7 @@
       "score": 25
     },
     "blockchain/lotus-market": {
-      "fingerprint": "c447a86d21762f56",
+      "fingerprint": "93aa15d19bcf9c8e",
       "score": 25
     },
     "blockchain/cometbft-abci": {
@@ -254,7 +254,7 @@
       "score": 24
     },
     "blockchain/narwhal-deep": {
-      "fingerprint": "4fbb4738bc60304b",
+      "fingerprint": "9e46576ed4428408",
       "score": 24
     },
     "blockchain/prysm-beacon-db": {
@@ -330,7 +330,7 @@
       "score": 22
     },
     "blockchain/pbft-deep": {
-      "fingerprint": "daa2a31bf1da21ed",
+      "fingerprint": "193ee31b0cb058ef",
       "score": 22
     },
     "blockchain/pq-account": {
@@ -401,12 +401,8 @@
       "fingerprint": "2ca1b77271852bff",
       "score": 20
     },
-    "blockchain/lotus-chain": {
-      "fingerprint": "199f969e3438daea",
-      "score": 20
-    },
     "blockchain/lotus-mpool": {
-      "fingerprint": "584bc29c16568a1d",
+      "fingerprint": "ec0bee34d00626d3",
       "score": 20
     },
     "blockchain/prysm-epoch-processing": {
@@ -517,8 +513,12 @@
       "fingerprint": "76f514be0d7c82cb",
       "score": 18
     },
+    "blockchain/lotus-chain": {
+      "fingerprint": "7b817c5b902ba74b",
+      "score": 18
+    },
     "blockchain/omni-octane": {
-      "fingerprint": "fbd35a58f6cda03b",
+      "fingerprint": "96d36628621c570c",
       "score": 18
     },
     "blockchain/prysm-block-processing": {
@@ -530,7 +530,7 @@
       "score": 18
     },
     "gpu/msm-ntt": {
-      "fingerprint": "592f58259fd8c4d7",
+      "fingerprint": "ab3284b9f479877a",
       "score": 18
     },
     "p2p/tls-fundamentals": {
@@ -630,11 +630,11 @@
       "score": 14
     },
     "blockchain/jolteon-ditto": {
-      "fingerprint": "8fbfc7994bbcfb93",
+      "fingerprint": "72a497e2668ddbff",
       "score": 14
     },
     "blockchain/longest-chain": {
-      "fingerprint": "2f12caa0d9e7cc55",
+      "fingerprint": "b76d94d33836bc83",
       "score": 14
     },
     "blockchain/merkle-patricia-trie": {
@@ -974,11 +974,11 @@
       "score": 8
     },
     "crypto/jolt": {
-      "fingerprint": "b82f5a11c2141aff",
+      "fingerprint": "09f3aa9780acf39a",
       "score": 8
     },
     "crypto/libiop": {
-      "fingerprint": "9bdc2e24172223ff",
+      "fingerprint": "fe40834994fa2062",
       "score": 8
     },
     "crypto/mpc": {
@@ -1189,8 +1189,12 @@
       "fingerprint": "785da7e3529f3655",
       "score": 6
     },
+    "crypto/nova": {
+      "fingerprint": "bf9b5182ef299162",
+      "score": 6
+    },
     "crypto/plonk": {
-      "fingerprint": "7623263a9c6a2479",
+      "fingerprint": "a7d9328948dd6b51",
       "score": 6
     },
     "crypto/plonky3": {
@@ -1234,7 +1238,7 @@
       "score": 6
     },
     "p2p/iroh": {
-      "fingerprint": "5685357c4d97621e",
+      "fingerprint": "7ce5c8d8f21abd48",
       "score": 6
     }
   }

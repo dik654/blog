@@ -39,7 +39,9 @@ export default function ModernLongestChainArticle() {
           <h2 className="mt-2 text-2xl font-bold">Target이 낮을수록 block work가 크고, branch에서는 이를 합한다</h2>
         </header>
         <p>
-          Mining은 block header hash를 256-bit 정수로 해석해 target T 이하가 되는 nonce를 찾는 반복 lottery입니다. Uniform hash를 가정하면 한 번에 성공할 확률은 대략 (T+1)/2²⁵⁶이고, 그 역수가 expected trials입니다. 구현은 이 기대량에 대응하는 정수 work를 각 block에 부여하고 branch를 따라 더합니다.
+          Mining은 block header hash를 256-bit 정수로 해석해 target T 이하가 되는 nonce를 찾는 반복 lottery입니다. Uniform hash를
+          가정하면 한 번에 성공할 확률은 대략 (T+1)/2²⁵⁶이고 그 역수가 expected trials입니다. 구현은 이 기대량에 대응하는 정수 work를 각 block에 부여하고
+          branch를 따라 더합니다.
         </p>
         <ExplainedFormula
           question="서로 다른 difficulty의 block을 block 개수가 아닌 하나의 누적 work 값으로 어떻게 비교하는가?"
@@ -76,7 +78,10 @@ export default function ModernLongestChainArticle() {
           <h2 className="mt-2 text-2xl font-bold">Confirmation은 공격자가 따라잡아야 할 work deficit을 키운다</h2>
         </header>
         <p>
-          Transaction이 들어간 block 뒤에 z개의 confirmations가 붙으면, 공격자는 canonical branch보다 부족한 work를 따라잡아야 history를 바꿀 수 있습니다. 공격자 hash share q가 정직한 share p보다 작고 network가 정상적으로 전파된다는 모델에서는 z가 커질수록 catch-up probability가 빠르게 작아집니다. 그러나 확률은 일반적으로 정확히 0이 되지 않으므로 PoW longest-chain에는 BFT checkpoint와 같은 deterministic finality 시점이 없습니다.
+          Transaction이 들어간 block 뒤에 z개의 confirmations가 붙으면 공격자는 canonical branch보다 부족한 work를 따라잡아야 history를 바꿀
+          수 있습니다. 공격자 hash share q가 정직한 share p보다 작고 network가 정상적으로 전파된다는 모델에서는 z가 커질수록 catch-up probability가
+          빠르게 작아집니다. 그러나 확률은 일반적으로 정확히 0이 되지 않으므로 PoW longest-chain에는 BFT checkpoint와 같은 deterministic
+          finality 시점이 없습니다.
         </p>
         <ProbabilisticFinalityViz />
         <ExplainedFormula
@@ -111,7 +116,9 @@ export default function ModernLongestChainArticle() {
           <h2 className="mt-2 text-2xl font-bold">Common prefix는 깊은 과거가 정직한 node 사이에서 같아지는 조건을 말한다</h2>
         </header>
         <p>
-          “확인이 많으면 안전하다”를 theorem으로 만들려면 먼저 관찰 대상을 정해야 합니다. 두 정직한 node가 서로 다른 시점에 가진 chain에서 마지막 k blocks를 잘라냈을 때, 더 오래된 prefix가 서로 일치한다면 k-common-prefix 성질이 성립합니다. 이 성질은 history가 영원히 고정된다는 절대 명제가 아니라, security parameter와 execution horizon에 대해 실패 확률이 작다는 확률 명제입니다.
+          “확인이 많으면 안전하다”를 theorem으로 만들려면 먼저 관찰 대상을 정해야 합니다. 두 정직한 node가 서로 다른 시점에 가진 chain에서 마지막 k blocks을
+          잘라냈을 때, 더 오래된 prefix가 서로 일치한다면 k-common-prefix 성질이 성립합니다. 이 성질은 history가 영원히 고정된다는 절대 명제가 아니라
+          security parameter와 execution horizon에 대해 실패 확률이 작다는 확률 명제입니다.
         </p>
         <p>
           Backbone 분석은 common prefix만 따로 약속하지 않습니다. 정직한 block이 일정한 속도로 chain에 들어가는 <strong>chain growth</strong>, 충분한 비율의 honest contribution을 뜻하는 <strong>chain quality</strong>와 함께 봅니다. 정직한 majority 성격의 mining power, bounded delay 또는 round model, hash query independence 같은 전제가 깨지면 theorem의 결론을 운영 SLA로 옮길 수 없습니다.
@@ -146,7 +153,10 @@ export default function ModernLongestChainArticle() {
           </table>
         </div>
         <p>
-          운영자는 단순히 confirmations 숫자를 고정하지 말고 transaction value, 최근 orphan/reorg rate, observed propagation delay, pool concentration, peer diversity와 eclipse signal을 함께 기록해야 합니다. Exchange deposit과 내부 UI의 “완료” 표시는 서로 다른 loss budget을 가질 수 있습니다. Fork choice가 canonical head를 정하는 규칙이고 finality policy가 그 head를 언제 외부 irreversible action에 연결할지 정하는 규칙이라는 분리가 중요합니다.
+          운영자는 단순히 confirmations 숫자를 고정하지 말고 transaction value, 최근 orphan/reorg rate, observed propagation
+          delay, pool concentration, peer diversity와 eclipse signal을 함께 기록해야 합니다. Exchange deposit과 내부 UI의
+          “완료” 표시는 loss budget이 서로 다를 수 있습니다. Fork choice는 canonical head를 정하는 규칙이고 finality policy는 그 head를
+          언제 외부 irreversible action에 연결할지 정하는 규칙입니다. 이 둘은 분리해서 다뤄야 합니다.
         </p>
         <h3 className="text-xl font-semibold">이 글 하나로 풀어야 하는 10문제</h3>
         <p>

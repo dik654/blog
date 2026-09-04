@@ -9,11 +9,9 @@ export default function IPFSArchitecture() {
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Kubo를 하나의 거대한 P2P process로 보면 장애 원인을 찾기 어렵습니다.
-          UnixFS와 IPLD는 file을 DAG block으로 표현하고, blockstore가 local
-          data를 보관하며, Bitswap·HTTP retrieval이 block을 전송합니다.
-          Libp2p host와 routing system은 peer 연결과 provider discovery를
-          담당합니다.
+          Kubo를 하나의 거대한 P2P process로 보면 장애 원인을 찾기 어렵습니다. UnixFS와 IPLD는 file을 DAG block으로 표현하고 blockstore가
+          local data를 보관하며 Bitswap·HTTP retrieval이 block을 전송합니다. Libp2p host와 routing system은 peer 연결과
+          provider discovery를 담당합니다.
         </p>
         <p>
           Content lookup도 DHT 하나로 끝나지 않습니다. Deployment에 따라

@@ -63,10 +63,9 @@ export default function ModernLotusStateArticle() {
           ))}
         </div>
         <p>
-          Head는 actor의 모든 state를 record 안에 복제하지 않게 해 줍니다. 같은 content는 같은
-          CID로 재사용할 수 있고, actor state만 바뀌면 그 경로와 상위 roots만 새로 생깁니다.
-          다만 같은 Head bytes를 최신 struct로 무조건 decode하면 안 됩니다. Network epoch에서
-          선택된 actor bundle과 Code CID가 기대하는 schema를 먼저 확인해야 합니다.
+          Head는 actor의 모든 state를 record 안에 복제하지 않게 해 줍니다. 같은 content는 같은 CID로 재사용할 수 있고 actor state만 바뀌면 그 경로와
+          상위 roots만 새로 생깁니다. 다만 같은 Head bytes를 최신 struct로 무조건 decode하면 안 됩니다. 먼저 볼 것은 network epoch에서 선택된
+          actor bundle과 Code CID가 기대하는 schema입니다.
         </p>
         <p>
           <strong>증명 아이디어:</strong> CID가 canonical encoded bytes의 digest라면 같은 actor
@@ -151,8 +150,7 @@ export default function ModernLotusStateArticle() {
           <article className="rounded-lg border border-border p-4">
             <h3 className="font-semibold">Structural sharing</h3>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              한 leaf가 바뀌면 해당 path의 nodes와 상위 root만 새 CID를 만들고, 바뀌지 않은
-              branches는 이전 CIDs를 재사용할 수 있습니다.
+              한 leaf가 바뀌면 해당 path의 nodes와 상위 root만 새 CID를 만듭니다. 바뀌지 않은 branches는 이전 CIDs를 그대로 재사용할 수 있습니다.
             </p>
           </article>
           <article className="rounded-lg border border-border p-4">
@@ -241,10 +239,9 @@ export default function ModernLotusStateArticle() {
           </h2>
         </header>
         <p>
-          Release artifact에는 Lotus source SHA, network와 StateTree version, actor manifest/bundle,
-          HAMT·AMT library/options, codec, base root와 blockstore generation을 기록합니다. Canary는
-          f0100 record·Head child fields를 reference reader와 비교하고, cold load와 warm cache가
-          같은 결과를 내는지 확인합니다.
+          Release artifact에 기록하는 것은 Lotus source SHA와 network·StateTree version, actor manifest/bundle입니다.
+          HAMT·AMT library/options와 codec, base root, blockstore generation도 함께 남깁니다. Canary는 f0100 record와
+          Head child fields를 reference reader와 비교하고 cold load와 warm cache가 같은 결과를 내는지 확인합니다.
         </p>
         <ol className="grid gap-3 sm:grid-cols-2">
           {[
@@ -260,11 +257,10 @@ export default function ModernLotusStateArticle() {
           ))}
         </ol>
         <p>
-          Canary가 실패하면 새 writes와 root publication을 멈추고 이전 compatible reader/writer와
-          schema generation으로 돌아갑니다. 이미 저장된 content-addressed blocks는 지울 필요가
-          없지만, 어느 root가 canonical하게 publish됐는지 확인한 뒤 orphan candidate를 구분해야
-          합니다. Benchmark는 같은 root, cache state, blockstore, hardware와 concurrency에서만
-          비교하며 “52 levels” 같은 구조적 상한을 latency 예측으로 바꾸지 않습니다.
+          Canary가 실패하면 새 writes와 root publication을 멈추고 이전 compatible reader/writer와 schema generation으로 돌아갑니다.
+          이미 저장된 content-addressed blocks는 지울 필요가 없습니다. 대신 어느 root가 canonical하게 publish됐는지 확인한 뒤 orphan
+          candidate를 가려냅니다. Benchmark는 같은 root와 cache state, blockstore, hardware, concurrency에서만 비교하며 “52
+          levels” 같은 구조적 상한을 latency 예측으로 바꾸지 않습니다.
         </p>
         <aside className="rounded-lg border border-border bg-muted/20 p-5 text-sm leading-6 text-muted-foreground">
           <strong className="text-foreground">Article-only 10/10:</strong> Actor record 네 fields,
