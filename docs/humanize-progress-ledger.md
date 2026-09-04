@@ -44,9 +44,22 @@ humanize-korean 파이프라인으로 블로그 전체 아티클의 AI 티 문�
 
 **tee 카테고리 완료**.
 
-**2026-09-04 세션 누적**: crypto·filecoin·hw·p2p·isms-aml·gpu·tee 7개 카테고리(569개 파일) +
-Gemmini 신규 아티클 1편 완료. 남은 카테고리(파일 수는 섹션 파일 포함): ethereum(382),
-blockchain(1013), ai(1047) — 총 2,442개 파일.
+| 7(wave1 aa~ah) | ethereum(192개 파일), 8개 서브배치 | 251 추출 → 92 반영 | 등급 A×8 · 게이트 OK | `dfc7c6cf` |
+| 7(wave2 ai~ap) | ethereum(190개 파일), 8개 서브배치(light 5·heavy 3) | 452 추출 → 225 반영 | 등급 A×8 · heavy 3개 finalize 실결함 발견·수정 | `7ed88ac0` |
+
+**ethereum 카테고리 완료**(382개 파일 전부). heavy 경로 finalize가 실제로 잡은 것들:
+- aj: 직접 인용 「놓친 reward = 동일한 penalty」의 따옴표·"=" 소실 복원(golden 게이트가 실제 위반이었던 유일한 사례)
+- al: hedge 약화 2건 + 없던 인과 승격 1건 + 없던 한정 주입 1건 롤백
+- an: hedge→단정 과윤문 5건 + 대구 해체 중 "active peer" 용어 누락 1건 복원
+
+prose-readability에서 2건(prysm-epoch-processing·prysm-gossipsub)이 18→20으로 소폭 상승 —
+E-1(장문 분리) 자체가 총 글자 수는 거의 안 줄이면서 문장 수만 늘려 이미 알려진 장문 문단이
+압축 임계값을 살짝 더 넘은 경우. 실제 diff로 정보 손실 없음을 확인 후 진행(AI 티 축소 vs
+문단 압축 두 지표의 트레이드오프로 기록).
+
+**2026-09-04 세션 누적**: crypto·filecoin·hw·p2p·isms-aml·gpu·tee·ethereum 8개 카테고리
+(951개 파일) + Gemmini 신규 아티클 1편 완료. 남은 카테고리(섹션 파일 포함):
+blockchain(1013), ai(1047) — 총 2,060개 파일.
 
 `gpu-arch-hopper.tsx` 같은 조립 파일은 자체 `<p>`가 없고 프로즈가 하위 섹션 파일에 있다는 걸
 test 배치에서 확인했다 — 그래서 배치2부터는 `find ... -not -path "*/viz/*" -not -path
