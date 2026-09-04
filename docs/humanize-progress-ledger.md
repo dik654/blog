@@ -35,6 +35,12 @@ humanize-korean 파이프라인으로 블로그 전체 아티클의 AI 티 문�
 | test (0) | gpu 5개 아티클(assembly만, 실제 문단은 2개 파일에만 있었음) | 46 추출 | 등급 A · 변경률 1.4% · 게이트 OK | `729448a5` |
 | 2a·2b·2c | crypto(9)+filecoin(10)+hw(53) = 72개 파일, 3개 서브배치(24개씩) | 178 추출 → 119 반영 | 등급 A×3 · 게이트 OK(2b는 golden 각주 오탐 확인 후 진행) | `d79bd506`, `b5879fba` |
 | 3(aa~ae) | p2p(118개 파일), 5개 서브배치(24개씩) | 201 추출 → 140 반영 | 등급 A×5 · 게이트 OK | `d074d157` |
+| 4(aa~ae) | isms-aml(116개 파일), 5개 서브배치(24개씩) | 250 추출 → 92 반영 | 등급 A×5 · 게이트 OK(ac는 P1 WARN을 원인 확인 후 진행) | `df3b4e0c` |
+
+**2026-09-04 세션 누적**: crypto·filecoin·hw·p2p·isms-aml 5개 카테고리(306개 파일) +
+gpu 2개 아티클(cutlass-collectives, gpu-data-movement) + Gemmini 신규 아티클 1편 완료.
+남은 카테고리(파일 수는 섹션 파일 포함): gpu 나머지(~120), tee(138), ethereum(382),
+blockchain(1013), ai(1047).
 
 `gpu-arch-hopper.tsx` 같은 조립 파일은 자체 `<p>`가 없고 프로즈가 하위 섹션 파일에 있다는 걸
 test 배치에서 확인했다 — 그래서 배치2부터는 `find ... -not -path "*/viz/*" -not -path
