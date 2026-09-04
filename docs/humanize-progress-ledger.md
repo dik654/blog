@@ -120,7 +120,15 @@ humanize 프로그램의 마지막 조각.
 양방향 명제 축소, 열린 예시→닫힌 단정, 인접 문단에서 번진 과잉 한정 등). prose-readability
 claw-bash·claw-hooks 각 +2는 동일한 E-1 패턴으로 확인.
 
-남은 ai: 855개 파일(36개 서브배치, wave2부터 계속).
+| 9(wave2 ai~ap) | ai(192개 파일), 8개 서브배치(light 2·standard 2·heavy 4, 전부 finalize) | 763 추출 → 260 반영 | 등급 A×8 · 게이트 golden FAIL 2건 모두 오탐 확인 후 진행 | `5881d99f` |
+
+**ai wave2 완료**(384/1,047). heavy 4개 전부 finalize가 실제 의미 드리프트 발견·수정(modality
+강화·약화 양방향, 인과·정보 소실, 없던 강조·확언 주입, caveat 문형 교체 부작용 등 — an 배치는
+finalize가 monolith 자체 등급 B를 판단해 리듬 분산까지 추가 수행). golden FAIL 2건(am·ap)은
+softmax 계산식·4차원 벡터 좌표의 괄호 숫자를 각주로 오탐한 것으로 확인. prose-readability 4건
++2는 동일 E-1 패턴.
+
+남은 ai: 663개 파일(28개 서브배치, wave3부터 계속).
 
 `gpu-arch-hopper.tsx` 같은 조립 파일은 자체 `<p>`가 없고 프로즈가 하위 섹션 파일에 있다는 걸
 test 배치에서 확인했다 — 그래서 배치2부터는 `find ... -not -path "*/viz/*" -not -path
