@@ -173,7 +173,9 @@ fee = imbalance × 0.02%
         </p>
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="font-semibold mb-2">인사이트: 수치 해의 현실성</p>
+          <p className="font-semibold mb-2">
+            인사이트: 수치 해는 현실적인가
+          </p>
           <p>
             StableSwap은 <strong>닫힌 형식 해 없음</strong> — Newton&apos;s
             method 필수

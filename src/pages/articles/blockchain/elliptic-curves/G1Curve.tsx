@@ -7,7 +7,9 @@ export default function G1Curve() {
       <h2 className="mb-6 text-2xl font-bold">G1 구현: point law, subgroup, 좌표 표현을 분리한다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          서로 다른 affine points P=(x₁,y₁), Q=(x₂,y₂)를 잇는 직선은 curve와 세 번째 점에서 만나며 그 y 좌표를 반전한 점을 P+Q로 정의합니다. P=Q일 때는 tangent slope를 쓰고, Q=−P이면 결과는 O입니다. 구현은 이 예외를 branch·complete formula·coordinate convention 중 하나로 정확히 다뤄야 합니다.
+          서로 다른 affine points P=(x₁,y₁), Q=(x₂,y₂)를 잇는 직선은 curve와 세 번째 점에서 만나며 그 y 좌표를 반전한 점을 P+Q로 정의합니다. P=Q일
+          때는 tangent slope를 쓰고 Q=−P이면 결과는 O입니다. 구현은 이 예외를 branch·complete formula·coordinate convention 중 하나로
+          정확히 다뤄야 합니다.
         </p>
       </div>
       <ExplainedFormula
@@ -28,7 +30,9 @@ export default function G1Curve() {
       />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          예외 matrix도 formula의 일부입니다. O+P=P이고, P=Q이면 tangent 식을 사용하며, P=−Q이면 vertical line이므로 O를 반환합니다. Doubling 대상의 y=0도 tangent가 수직이라 2P=O입니다. 두 입력이 같은 curve instance에 속하는지 확인하지 않은 채 좌표만 넣으면 denominator 분기와 결과가 아무 의미가 없으므로, 완전 덧셈 공식(complete formula)을 쓰거나 이 모든 branch를 reference vector로 고정합니다.
+          예외 matrix도 formula의 일부입니다. O+P=P입니다. P=Q이면 tangent 식을 사용하고 P=−Q이면 vertical line이므로 O를 반환합니다.
+          Doubling 대상의 y=0도 tangent가 수직이라 2P=O입니다. 두 입력이 같은 curve instance에 속하는지 확인하지 않은 채 좌표만 넣으면 denominator
+          분기와 결과가 아무 의미가 없으므로 완전 덧셈 공식(complete formula)을 쓰거나 이 모든 branch를 reference vector로 고정합니다.
         </p>
       </div>
       <CryptoFoundationsViz mode="jacobian-affine" />
@@ -51,7 +55,9 @@ export default function G1Curve() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Scalar multiplication과 subgroup check</h3>
         <p>
-          Double-and-add는 scalar bit마다 doubling, 1-bit마다 addition을 수행하지만 secret bit에 따른 branch와 table access는 side channel이 될 수 있습니다. Constant-time window method는 precomputation memory와 addition 수를 맞바꾸며, 공개 scalar인 subgroup check와 secret scalar multiplication은 같은 최적화 정책을 쓰지 않아도 됩니다.
+          Double-and-add는 scalar bit마다 doubling, 1-bit마다 addition을 수행하지만 secret bit에 따른 branch와 table access는
+          side channel이 될 수 있습니다. Constant-time window method는 precomputation memory와 addition 수를 맞바꿉니다. 공개
+          scalar인 subgroup check와 secret scalar multiplication은 같은 최적화 정책을 쓰지 않아도 됩니다.
         </p>
         <p>
           Untrusted point는 canonical decode, field range, curve equation, identity policy와 subgroup membership을 순서대로 확인합니다. Cofactor h=1인 G1에서는 on-curve point가 prime-order subgroup에 바로 들어갈 수 있지만 이를 다른 curve나 G2에 일반화하면 안 됩니다. 일반 판정은 [q]P=O이며, protocol에 따라 cofactor clearing으로 subgroup point를 만들지 invalid input을 reject할지 구분합니다.

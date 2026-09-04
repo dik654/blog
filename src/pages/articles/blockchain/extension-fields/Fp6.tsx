@@ -54,11 +54,9 @@ export default function Fp6() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>연산 장부는 subfield multiplication만 세면 안 된다</h3>
         <p>
-          Schoolbook 전개는 Fp² multiplication 9개를 만들고 Karatsuba 계열
-          schedule은 일부 교차항을 공유할 수 있습니다. 그러나 실제 비용에는
-          addition, subtraction, ξ multiplication, temporary와 memory traffic이
-          포함됩니다. 따라서 “9→6” 같은 symbolic count는 같은 backend 안의
-          후보 비교축일 뿐 end-to-end speedup 수치가 아닙니다.
+          Schoolbook 전개는 Fp² multiplication 9개를 만들고 Karatsuba 계열 schedule은 일부 교차항을 공유할 수 있습니다. 실제 비용에는
+          addition과 subtraction, ξ multiplication, temporary와 memory traffic까지 들어갑니다. “9→6” 같은 symbolic count는
+          같은 backend 안에서 후보를 견주는 비교축입니다. End-to-end speedup 수치로 쓸 수는 없습니다.
         </p>
       </div>
     </section>

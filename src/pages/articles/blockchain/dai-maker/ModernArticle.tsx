@@ -27,7 +27,11 @@ export default function ModernDaiArticle() {
 
     <section id="liquidation-peg-tools" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">02 · oracle, liquidation, peg tools</p><h2 className="mt-2 text-2xl font-bold">Unsafe 판정·collateral sale·bad debt 처리와 PSM swap은 서로 다른 상태 전이다</h2></header>
-      <p>Oracle update로 risk-adjusted collateral value가 debt 아래로 내려가면 liquidation module이 unsafe Vault debt·collateral을 떼어내고 auction 경로로 보냅니다. Auction 낙찰은 oracle 판정과 같지 않으며, congestion·price gap·keeper failure가 남습니다. Stability fee accrual은 debt를 늘리고, savings rate는 별도 holder incentive입니다.</p>
+      <p>
+            Oracle update로 risk-adjusted collateral value가 debt 아래로 내려가면 liquidation module이 unsafe Vault
+            debt·collateral을 떼어내고 auction 경로로 보냅니다. Auction 낙찰은 oracle 판정과 같지 않으며 congestion·price gap·keeper
+            failure가 남습니다. Stability fee accrual은 debt를 늘리고 savings rate는 별도 holder incentive입니다.
+          </p>
       <p>Peg Stability Module(PSM)은 승인된 stablecoin과 DAI를 governance fee 조건으로 교환해 direct arbitrage rail을 제공합니다. 이는 모든 DAI를 fiat reserve로 바꾸는 선언이 아닙니다. PSM collateral issuer risk, debt ceiling, pause, fees와 liquidity를 별도 기록합니다.</p>
       <div id="paper-dai-psm"><CitationBlock source="Sky ecosystem · Lite PSM (pinned)" citeKey={2} type="code" href="https://github.com/sky-ecosystem/dss-lite-psm/tree/dbf0022225f645f5697e5517d0cf00810471bccf"><p><strong>문제:</strong> Approved stablecoin과 DAI 사이의 low-slippage peg rail을 Vat interaction 비용과 risk limit 아래 운영해야 합니다.</p><p><strong>기여:</strong> Lite PSM·Pocket·Mom lifecycle, fees와 capacity control의 executable implementation을 제공합니다.</p><p><strong>전제:</strong> Commit dbf00222, configured gem·fees·bud·line과 issuer token behavior를 고정합니다.</p><p><strong>근거 범위:</strong> Pinned Lite PSM swap·liquidity architecture입니다.</p><p><strong>말하지 않는 것:</strong> PSM collateral의 무위험성, unlimited redemption, fee 0 또는 DAI 전체가 fiat-backed라는 뜻이 아닙니다.</p></CitationBlock></div>
     </section>

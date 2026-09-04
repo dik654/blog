@@ -9,11 +9,9 @@ export default function BFTTheory() {
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Crash-fault process는 멈추지만 그 전까지 protocol을 따릅니다. Byzantine
-          process는 receiver마다 다른 값을 보내는 equivocation, 유효하지 않은
-          state 제안, 선택적 침묵처럼 임의로 행동할 수 있습니다. Digital signature는
-          발신자와 내용의 무결성을 확인해도, 서명한 발신자가 서로 모순된 값을
-          보냈다는 사실 자체를 막지는 않습니다.
+          Crash-fault process는 멈추지만 그 전까지 protocol을 따릅니다. Byzantine process는 receiver마다 다른 값을 보내는
+          equivocation, 유효하지 않은 state 제안, 선택적 침묵처럼 임의로 행동할 수 있습니다. Digital signature는 발신자와 내용의 무결성을 확인해도 서명한
+          발신자가 서로 모순된 값을 보냈다는 사실 자체를 막지는 않습니다.
         </p>
       </div>
 

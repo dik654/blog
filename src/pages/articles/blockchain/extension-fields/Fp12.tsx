@@ -67,12 +67,11 @@ export default function Fp12() {
       <div id="extension-release-gate" className="scroll-mt-24 prose prose-neutral max-w-none dark:prose-invert">
         <h3>Release gate</h3>
         <p>
-          p·r·non-residue·tower polynomial·coefficient order·Frobenius table·crate
-          version/SHA를 먼저 고정합니다. 이어 zero/one, basis unit, inverse,
-          Frobenius 12-cycle, independent multiplication, G2/pairing official
-          vector와 serialization parity를 검사합니다. Wrong coefficient order와
-          reducible test polynomial, Fp/Fp² swap을 negative fixture로 넣은 뒤에만
-          multiplication·square·Frobenius benchmark를 비교합니다.
+          p와 r, non-residue를 먼저 정합니다. 여기에 tower polynomial과 coefficient order, Frobenius table, crate
+          version/SHA까지 함께 고정합니다. 그다음 zero/one과 basis unit, inverse를 검사하고 Frobenius 12-cycle·independent
+          multiplication·G2/pairing official vector·serialization parity를 확인합니다. Negative fixture로 wrong
+          coefficient order와 reducible test polynomial, Fp/Fp² swap을 넣은 뒤에야 multiplication·square·Frobenius
+          benchmark를 비교합니다.
         </p>
       </div>
       <div id="paper-eip197-extension" className="scroll-mt-24">

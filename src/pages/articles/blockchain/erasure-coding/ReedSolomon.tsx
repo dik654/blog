@@ -77,12 +77,9 @@ L_i(x)&=\underbrace{\prod_{j\ne i}\frac{x-x_j}{x_i-x_j}}_{\text{기준량당 비
           erasure로 바꿀 수 있는지 먼저 봅니다.
         </p>
         <p>
-          “Systematic”은 source symbol이 codeword에 그대로 포함된다는 배치
-          방식입니다. 다항식 평가라는 수학적 정의만으로 저장 배열의 앞 k칸이
-          자동으로 원문이 되는 것은 아니며, generator matrix와 encoding
-          profile을 고정해야 합니다. Field 크기와 symbol packing 역시 구현마다
-          다르므로 GF(2^8)을 모든 Reed–Solomon 또는 Ethereum blob의 보편적
-          field라고 부르지 않습니다.
+          “Systematic”은 source symbol이 codeword에 그대로 포함된다는 배치 방식입니다. 다항식 평가라는 수학적 정의만으로 저장 배열의 앞 k칸이 자동으로 원문이
+          되는 것은 아니며 generator matrix와 encoding profile을 고정해야 합니다. Field 크기와 symbol packing 역시 구현마다 다르므로
+          GF(2^8)을 모든 Reed–Solomon 또는 Ethereum blob의 보편적 field라고 부르지 않습니다.
         </p>
       </div>
 

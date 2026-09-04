@@ -8,7 +8,9 @@ export default function BabyGiant() {
       <h2 className="mb-6 text-2xl font-bold">Baby-step Giant-step: 시간과 메모리를 √q로 맞바꾼다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          q개 지수를 차례로 시험하는 대신 x를 i·m+j로 분해합니다. j 방향의 baby-step gʲ를 hash table에 저장하고, Y에 g⁻ᵐ을 반복 곱하는 giant-step이 table과 만나는 순간 i,j를 얻습니다. 이는 연산을 없애는 것이 아니라 동일한 중간값을 저장해 meet-in-the-middle하는 time–memory trade-off입니다.
+          q개 지수를 차례로 시험하는 대신 x를 i·m+j로 분해합니다. j 방향의 baby-step gʲ를 hash table에 저장하고 Y에 g⁻ᵐ을 반복 곱하는 giant-step이
+          table과 만나는 순간 i,j를 얻습니다. 이는 연산을 없애는 것이 아니라 동일한 중간값을 저장해 meet-in-the-middle하는 time–memory trade-
+          off입니다.
         </p>
       </div>
       <CryptoFoundationsViz mode="bsgs-grid" />
@@ -32,7 +34,11 @@ export default function BabyGiant() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Pollard rho와 실제 security bits</h3>
         <p>
-          Pollard rho는 group element를 pseudo-random walk로 순회하다 collision을 찾아 선형 congruence를 풀어 log를 얻습니다. 저장 table을 줄이고 기대 O(√q) group operations를 유지하지만 probabilistic runtime, distinguished points와 parallelization 조건이 있습니다. Prime-order q가 약 2²⁵⁶이면 generic square-root scale은 약 2¹²⁸이지만, 이것을 곧바로 “128-bit 보안”으로 보고하려면 curve-specific attacks, multi-target, hardware, protocol leakage와 quantum threat를 함께 제외하거나 평가해야 합니다.
+          Pollard rho는 group element를 pseudo-random walk로 순회하다 collision을 찾아 선형 congruence를 풀어 log를 얻습니다. 저장
+          table을 줄이고 기대 O(√q) group operations를 유지하지만 probabilistic runtime, distinguished points와
+          parallelization 조건이 있습니다. Prime-order q가 약 2²⁵⁶이면 generic square-root scale은 약 2¹²⁸이지만 이것을 곧바로
+          “128-bit 보안”으로 보고하려면 curve-specific attacks, multi-target, hardware, protocol leakage와 quantum
+          threat를 함께 제외하거나 평가해야 합니다.
         </p>
       </div>
       <div id="paper-shanks-bsgs" className="scroll-mt-24">

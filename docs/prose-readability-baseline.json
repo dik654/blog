@@ -126,7 +126,7 @@
       "score": 30
     },
     "blockchain/dydx": {
-      "fingerprint": "c11c2f8a6469e2a5",
+      "fingerprint": "c9dfce5590c1e933",
       "score": 29
     },
     "blockchain/lotus-state": {
@@ -158,7 +158,7 @@
       "score": 28
     },
     "blockchain/distributed-systems": {
-      "fingerprint": "98c30d21a90c63be",
+      "fingerprint": "7d24052353b2c7da",
       "score": 28
     },
     "blockchain/lotus-miner": {
@@ -274,7 +274,7 @@
       "score": 24
     },
     "crypto/crypto-primitives": {
-      "fingerprint": "e6630d8073d8104e",
+      "fingerprint": "088ba4b246be2a06",
       "score": 24
     },
     "gpu/cuda-sync-streams": {
@@ -394,7 +394,7 @@
       "score": 20
     },
     "blockchain/consensus-comparison": {
-      "fingerprint": "9516556f8f934cc6",
+      "fingerprint": "2195506846c5d0a1",
       "score": 20
     },
     "blockchain/impl-field-arithmetic": {
@@ -426,7 +426,7 @@
       "score": 20
     },
     "crypto/csprng": {
-      "fingerprint": "6c89e332a494f32d",
+      "fingerprint": "7e951a827eb36299",
       "score": 20
     },
     "gpu/cuda-thread-hierarchy": {
@@ -493,6 +493,14 @@
       "fingerprint": "68e5d19737105bb7",
       "score": 18
     },
+    "blockchain/da-theory": {
+      "fingerprint": "2cdb642e79516d3e",
+      "score": 18
+    },
+    "blockchain/dag-consensus": {
+      "fingerprint": "035eca8b3cd9931c",
+      "score": 18
+    },
     "blockchain/evmos": {
       "fingerprint": "0326c712c3bd3bb9",
       "score": 18
@@ -546,23 +554,15 @@
       "score": 16
     },
     "blockchain/crypto-theory": {
-      "fingerprint": "045b958541da947d",
-      "score": 16
-    },
-    "blockchain/da-theory": {
-      "fingerprint": "c130344a47832720",
-      "score": 16
-    },
-    "blockchain/dag-consensus": {
-      "fingerprint": "f40d614fec8f3279",
+      "fingerprint": "e71c4e8dac297beb",
       "score": 16
     },
     "blockchain/dai-maker": {
-      "fingerprint": "dd4a31c6c8a66871",
+      "fingerprint": "19b87f415d5ff71e",
       "score": 16
     },
     "crypto/elliptic-curves": {
-      "fingerprint": "80e62e66522b5381",
+      "fingerprint": "5d97f66db2a4c366",
       "score": 16
     },
     "p2p/discv5": {
@@ -617,8 +617,12 @@
       "fingerprint": "a6af479cab7cf4a7",
       "score": 14
     },
+    "blockchain/cosmos-sdk": {
+      "fingerprint": "bb8d66b871728758",
+      "score": 14
+    },
     "blockchain/curve-stable": {
-      "fingerprint": "4182c02c1cb3cdd5",
+      "fingerprint": "f7dd4df7625517f4",
       "score": 14
     },
     "blockchain/hotstuff2": {
@@ -725,12 +729,12 @@
       "fingerprint": "4340676e963614c9",
       "score": 12
     },
-    "blockchain/cosmos-sdk": {
-      "fingerprint": "4e6ecf01dd4984b7",
+    "blockchain/consensus-mechanisms": {
+      "fingerprint": "4e2652bfb5596014",
       "score": 12
     },
     "blockchain/erasure-coding": {
-      "fingerprint": "4b728c4c86329ff7",
+      "fingerprint": "8257c5d63b0b0305",
       "score": 12
     },
     "blockchain/railgun": {
@@ -758,7 +762,7 @@
       "score": 12
     },
     "crypto/discrete-log": {
-      "fingerprint": "f880e9395f7c4669",
+      "fingerprint": "8db442f746e08534",
       "score": 12
     },
     "crypto/frobenius-optimization": {
@@ -771,6 +775,10 @@
     },
     "crypto/scroll-zkevm": {
       "fingerprint": "fccd34c6650bb7e8",
+      "score": 12
+    },
+    "gpu/cuda-basics": {
+      "fingerprint": "2a1e3499bb193ecf",
       "score": 12
     },
     "gpu/gpu-witness-gen": {
@@ -838,11 +846,7 @@
       "score": 10
     },
     "blockchain/compound-v3": {
-      "fingerprint": "40f3d5bdbdc663aa",
-      "score": 10
-    },
-    "blockchain/consensus-mechanisms": {
-      "fingerprint": "861d1dfddafc37a4",
+      "fingerprint": "6e37d0452293df4a",
       "score": 10
     },
     "blockchain/helios-config": {
@@ -879,10 +883,6 @@
     },
     "crypto/sparse-multiplication": {
       "fingerprint": "de0d9bc95fcd7a9a",
-      "score": 10
-    },
-    "gpu/cuda-basics": {
-      "fingerprint": "45c872154838d0c8",
       "score": 10
     },
     "gpu/cuda-matrix-multiply": {
@@ -962,7 +962,7 @@
       "score": 8
     },
     "blockchain/ethereum-future-roadmap": {
-      "fingerprint": "d71a700cf98aa139",
+      "fingerprint": "114c3edae39c7cf7",
       "score": 8
     },
     "blockchain/lsm-tree": {
@@ -1142,7 +1142,7 @@
       "score": 6
     },
     "blockchain/evm-advanced": {
-      "fingerprint": "a66609656181a338",
+      "fingerprint": "78e332f76063d68b",
       "score": 6
     },
     "blockchain/helios": {
@@ -1178,7 +1178,7 @@
       "score": 6
     },
     "crypto/fft": {
-      "fingerprint": "de03aa6979cfdea7",
+      "fingerprint": "a07e523d9b1007f3",
       "score": 6
     },
     "crypto/halo2": {

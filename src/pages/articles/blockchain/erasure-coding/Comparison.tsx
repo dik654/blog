@@ -9,13 +9,9 @@ export default function Comparison() {
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Reed–Solomon은 고정된 block에서 정확한 MDS threshold가 중요할 때
-          강합니다. RaptorQ는 repair symbol을 계속 만들 수 있는 fountain
-          계열이라 수신자가 어떤 packet을 잃을지 모르고 수신 수가 유동적인
-          전송에 맞습니다. LDPC는 sparse parity-check graph와 iterative
-          decoder를 사용해 큰 block에서 높은 throughput을 노리지만, 필요한
-          수신량과 실패율은 선택한 code profile·channel·decoder에 따라
-          달라집니다.
+          Reed–Solomon은 고정된 block에서 정확한 MDS threshold가 중요할 때 강합니다. RaptorQ는 repair symbol을 계속 만들 수 있는 fountain
+          계열이라 수신자가 어떤 packet을 잃을지 모르고 수신 수가 유동적인 전송에 맞습니다. LDPC는 sparse parity-check graph와 iterative
+          decoder를 사용해 큰 block에서 높은 throughput을 노리지만 필요한 수신량과 실패율은 선택한 code profile·channel·decoder에 따라 달라집니다.
         </p>
       </div>
       <ECComparisonViz />

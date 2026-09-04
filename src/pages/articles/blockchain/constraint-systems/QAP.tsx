@@ -187,7 +187,7 @@ export default function QAP() {
           </div>
           <div className="rounded-lg border-l-4 border-l-emerald-500 bg-card p-4">
             <p className="font-semibold text-sm text-emerald-400 mb-2">
-              BN254에서의 구체적 확률
+              BN254에서 계산한 구체적 확률
             </p>
             <p className="text-sm text-muted-foreground">
               <M>{"d \\approx 1{,}000"}</M>, &ensp;

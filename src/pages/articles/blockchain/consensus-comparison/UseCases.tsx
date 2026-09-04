@@ -44,7 +44,7 @@ function UseCaseViz() {
         ))}
       </svg>
       <p className="text-xs text-center text-foreground/75 mt-2">
-        💡 은탄환은 없다 — 요구사항에 맞는 프로토콜 선택이 핵심
+        은탄환은 없다 — 요구사항에 맞는 프로토콜 선택이 핵심
       </p>
     </div>
   );

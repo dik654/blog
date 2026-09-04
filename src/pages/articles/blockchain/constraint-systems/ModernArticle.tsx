@@ -14,7 +14,10 @@ export default function ModernConstraintSystemsArticle() {
         <p className="text-lg leading-8 text-foreground/90">
           Alice가 공개값 <strong>x=3, y=12</strong>를 제시하면서 비공개값 <strong>w=4</strong>를 안다고 증명하고 싶다고 합시다. 검증할 관계는 x·w=y 한 줄입니다. x와 y는 누구나 보는 <strong>public input</strong>, w는 증명자만 아는 <strong>witness</strong>입니다. 제약 시스템은 이 관계를 유한체 위의 반복 가능한 형식으로 번역합니다.
         </p>
-        <p>상수 1, 공개 입력, witness를 한 벡터 z=(1,x,y,w)에 넣으면 verifier가 알아야 하는 값과 prover만 넣을 값을 분리하면서도 같은 식에 사용할 수 있습니다. 여기서 “회로가 만족된다”는 말은 올바른 z가 존재해 모든 행의 등식이 동시에 성립한다는 뜻이지, witness가 공개된다는 뜻이 아닙니다.</p>
+        <p>
+            상수 1과 공개 입력, witness를 한 벡터 z=(1,x,y,w)에 넣습니다. 그러면 verifier가 알아야 하는 값과 prover만 넣을 값을 분리하면서도 같은 식에 쓸
+            수 있습니다. 여기서 “회로가 만족된다”는 말은 올바른 z가 존재해 모든 행의 등식이 동시에 성립한다는 뜻입니다. witness가 공개된다는 말이 아닙니다.
+          </p>
         <aside className="rounded-lg border border-primary/30 bg-primary/5 p-5 text-sm leading-6"><strong>핵심 아이디어:</strong> R1CS는 계산을 여러 개의 “선형식 × 선형식 = 선형식” 행으로 만들고, QAP는 모든 행을 하나의 다항식 나눗셈 조건으로 압축합니다. 증명 시스템은 그 조건을 직접 다 공개하지 않고 cryptographic check로 바꿉니다.</aside>
         <ContentBoundary article="constraint-systems" />
         <ConstraintPipelineViz />
@@ -48,7 +51,10 @@ export default function ModernConstraintSystemsArticle() {
 
       <section id="qap" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">02 · QAP</p><h2 className="mt-2 text-2xl font-bold">행마다 맞던 값을 한 다항식 divisibility로 묶는다</h2></header>
-        <p>m개 행에 서로 다른 field point r₁,…,rₘ을 붙이고, 각 변수 j의 A·B·C coefficient column을 그 점들에서 갖는 다항식 Aⱼ(X), Bⱼ(X), Cⱼ(X)로 Lagrange 보간합니다. Assignment zⱼ로 이들을 선형 결합하면 각 rᵢ에서 원래 i번째 R1CS 등식이 재현됩니다.</p>
+        <p>
+            m개 행에 서로 다른 field point r₁,…,rₘ을 붙입니다. 그다음 각 변수 j의 A·B·C coefficient column을 그 점들에서 갖는 다항식 Aⱼ(X),
+            Bⱼ(X), Cⱼ(X)로 Lagrange 보간합니다. Assignment zⱼ로 이들을 선형 결합하면 각 rᵢ에서 원래 i번째 R1CS 등식이 재현됩니다.
+          </p>
         <ExplainedFormula
           question="모든 R1CS 행의 만족을 왜 target polynomial의 나눗셈 하나로 표현할 수 있는가?"
           idea={<>각 행 point에서 P(X)=A(X)B(X)−C(X)가 0이 되게 만듭니다. 모든 rᵢ를 root로 가지면 그 곱 t(X)가 P(X)를 나누므로 quotient h(X)가 존재합니다.</>}
@@ -73,7 +79,12 @@ export default function ModernConstraintSystemsArticle() {
 
       <section id="verification" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">03 · 증명으로 넘기는 경계</p><h2 className="mt-2 text-2xl font-bold">QAP는 cryptography가 아니라 검증할 algebraic relation이다</h2></header>
-        <p>R1CS/QAP 자체는 witness를 숨기거나 proof를 짧게 만들지 않습니다. Groth16은 relation별 CRS와 pairing으로 QAP를 압축하고, PLONK는 gate·permutation polynomial과 polynomial commitment opening으로 같은 목표를 다른 arithmetization에서 이룹니다. 따라서 constraint count, setup model, commitment assumption, transcript, public-input encoding을 따로 기록해야 합니다.</p>
+        <p>
+            R1CS/QAP 자체는 witness를 숨기거나 proof를 짧게 만들지 않습니다. Groth16은 relation별 CRS와 pairing으로 QAP를 압축합니다.
+            PLONK는 gate·permutation polynomial과 polynomial commitment opening으로 같은 목표를 다른 arithmetization에서
+            이룹니다. 그래서 constraint count와 setup model, commitment assumption, transcript, public-input encoding을
+            따로 기록해야 합니다.
+          </p>
         <div id="paper-pinocchio-qap"><CitationBlock source="Parno et al. · Pinocchio (IEEE S&amp;P 2013)" citeKey={1} href="https://eprint.iacr.org/2013/279.pdf">
           <p><strong>문제:</strong> 일반 계산의 실행을 원래 계산보다 싸게 공개 검증하고 싶습니다.</p>
           <p><strong>기여:</strong> Arithmetic circuit을 QAP로 바꾸고 pairing 기반 공개 검증·zero-knowledge 변형과 toolchain을 제시합니다.</p>
@@ -81,7 +92,11 @@ export default function ModernConstraintSystemsArticle() {
           <p><strong>근거 범위:</strong> QAP reduction과 논문에 보고된 일곱 application·당시 구현 조건에 한정합니다.</p>
           <p><strong>말하지 않는 것:</strong> 현재 모든 library의 안전성, 모든 회로의 고정 speedup, 누락된 constraint의 자동 발견을 보장하지 않습니다.</p>
         </CitationBlock></div>
-        <p>이 글의 10문항은 public/witness partition, 한 행 계산, 중간 변수, Boolean 반례, constraint 비용, 보간, divisibility 증명, 잘못된 witness, degree/random-point 경계, semantic release gate를 묻습니다. 답에 필요한 식·수치 예·전제·반례를 위 절들에 모두 두었습니다.</p>
+        <p>
+            이 글의 10문항은 public/witness partition, 한 행 계산, 중간 변수, Boolean 반례, constraint 비용을 묻습니다. 나머지는 보간과
+            divisibility 증명, 잘못된 witness, degree/random-point 경계, semantic release gate입니다. 답에 필요한 식과 수치 예,
+            전제, 반례는 위 절들에 모두 두었습니다.
+          </p>
       </section>
     </article>
   );

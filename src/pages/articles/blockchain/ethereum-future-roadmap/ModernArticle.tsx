@@ -25,7 +25,11 @@ export default function ModernEthereumFutureRoadmapArticle() {
     </section>
     <section id="formal-simplification" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">03 · Formal specification</p><h2 className="mt-2 text-2xl font-bold">LLM은 candidate를 만들고, deterministic verifier가 correctness를 결정한다</h2></header>
-      <p>자연어 spec은 읽기 쉽지만 모호합니다. Formal spec은 state·transition·invariant를 machine-checkable term으로 만들고, theorem prover가 proof를 확인합니다. AI는 invariant 제안, proof candidate, counterexample 탐색과 source-to-formal translation을 도울 수 있지만 최종 판정은 작은 trusted kernel이 수행해야 합니다.</p>
+      <p>
+            자연어 spec은 읽기 쉽지만 모호합니다. Formal spec은 state·transition·invariant를 machine-checkable term으로 만들고
+            theorem prover가 proof를 확인합니다. AI는 invariant 제안, proof candidate, counterexample 탐색과 source-to-
+            formal translation을 도울 수 있지만 최종 판정은 작은 trusted kernel이 수행해야 합니다.
+          </p>
       <ExplainedFormula question="AI-assisted formal verification의 권한 경계는 어떻게 쓰나요?" idea="AI가 만든 proof candidate를 채택하지 않고, formal kernel이 type-check한 결과만 검증된 theorem으로 인정합니다." formula={String.raw`\begin{aligned}c&=\underbrace{G_{AI}(s,i)}_{\text{proof candidate 생성}}\\v&=\underbrace{K(s,i,c)}_{\text{deterministic kernel 검사}}\\accepted&=\underbrace{[v=1]}_{\text{최종 Boolean 판정}}\end{aligned}`}
       annotatedFormula={String.raw`\begin{aligned}c&=\underbrace{\underbrace{G_{AI}(s,i)}_{\text{proof candidate 생성}}}_{\text{Formal specification 계산}}\\v&=\underbrace{\underbrace{K(s,i,c)}_{\text{deterministic kernel 검사}}}_{\text{Formal specification 계산}}\\accepted&=\underbrace{\underbrace{[v=1]}_{\text{최종 Boolean 판정}}}_{\text{오른쪽 항으로 결과 계산}}\end{aligned}`}
       operations={[

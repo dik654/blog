@@ -59,7 +59,7 @@ function PowerCycle() {
         </div>
       </div>
       <p className="mt-5 border-l border-border pl-4 text-xs leading-5 text-muted-foreground">
-        3의 order가 16이라 결과가 1…16을 정확히 한 번씩 방문합니다. y=5의 위치는 x=5이지만, 큰 군에서는 이 표 전체를 만들 수 없습니다.
+        3의 order가 16이라 결과가 1…16을 정확히 한 번씩 방문합니다. y=5의 위치는 x=5이지만 큰 군에서는 이 표 전체를 만들 수 없습니다.
       </p>
     </div>
   );

@@ -8,10 +8,8 @@ export default function DFT() {
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          coefficient aⱼ는 xʲ의 배율이고, output yₖ는 다항식을 ωᵏ에 대입한
-          값입니다. Direct NTT는 n개의 output마다 n개 coefficient를 더하므로
-          O(n²) field operation이 필요합니다. 빠른 알고리즘은 이 정의를 바꾸지
-          않고 matrix의 반복 패턴만 factorization합니다.
+          coefficient aⱼ는 xʲ의 배율이고 output yₖ는 다항식을 ωᵏ에 대입한 값입니다. Direct NTT는 n개의 output마다 n개 coefficient를 더하므로
+          O(n²) field operation이 필요합니다. 빠른 알고리즘은 이 정의를 바꾸지 않고 matrix의 반복 패턴만 factorization합니다.
         </p>
       </div>
       <ExplainedFormula

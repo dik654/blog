@@ -51,16 +51,14 @@ export default function ProofOfWork() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>유효한 block 두 개가 생기면 누적 work를 비교합니다</h3>
         <p>
-          Network delay 때문에 같은 parent를 가리키는 block이 동시에 보일 수 있습니다.
-          Bitcoin 계열 node는 각 branch의 valid proof가 나타내는 cumulative work를 계산해
-          더 큰 chainwork를 가진 branch를 따릅니다. 그래서 “가장 긴 chain”은 단순 block
-          개수가 아니라 가장 많은 proof-of-work가 누적된 valid chain으로 읽어야 합니다.
+          Network delay 때문에 같은 parent를 가리키는 block이 동시에 보일 수 있습니다. Bitcoin 계열 node는 각 branch의 valid proof가 나타내는
+          cumulative work를 계산해 chainwork가 더 큰 branch를 따릅니다. 그래서 “가장 긴 chain”은 단순 block 개수가 아닙니다. 가장 많은 proof-
+          of-work가 누적된 valid chain으로 읽어야 합니다.
         </p>
         <p>
-          공격자가 뒤처진 branch를 따라잡을 가능성은 honest work가 더 쌓일수록 낮아지지만
-          일반적으로 0이 되지는 않습니다. Confirmation policy는 attacker hash share,
-          transaction value, network condition과 허용 위험을 명시해야 하며 고정된 숫자를
-          모든 배포의 finality로 복사하면 안 됩니다.
+          공격자가 뒤처진 branch를 따라잡을 가능성은 honest work가 더 쌓일수록 낮아집니다. 다만 일반적으로 0이 되지는 않습니다. Confirmation policy에는
+          attacker hash share와 transaction value, network condition, 허용 위험을 명시해야 합니다. 고정된 숫자 하나를 모든 배포의
+          finality로 복사하면 안 됩니다.
         </p>
       </div>
 
@@ -68,10 +66,9 @@ export default function ProofOfWork() {
         <p className="text-xs font-bold text-primary">논문 읽기 · PoW 정본</p>
         <p className="mt-2 text-sm font-semibold">Bitcoin: A Peer-to-Peer Electronic Cash System</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          문제는 신뢰 기관 없이 transaction ordering과 double-spend 저항을 만드는 것입니다.
-          Hash-based proof-of-work와 가장 많은 누적 work를 가진 chain, 공격자가 따라잡을
-          확률을 결합합니다. 모든 hash function·모든 network·고정 confirmation 수에 같은
-          안전성이 자동으로 성립한다는 논문은 아닙니다.
+          신뢰 기관이 없습니다. 그 상태에서 transaction ordering과 double-spend 저항을 만드는 것이 이 논문의 출발점입니다. Hash-based proof-of-
+          work, 누적 work가 가장 많은 chain, 공격자가 따라잡을 확률을 결합합니다. 다만 모든 hash function, 모든 network, 고정 confirmation 수에
+          같은 안전성이 자동으로 성립한다고 말하는 논문은 아닙니다.
         </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://bitcoin.org/bitcoin.pdf" target="_blank" rel="noreferrer">Bitcoin paper 원문 보기</a>
       </div>

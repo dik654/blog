@@ -8,7 +8,10 @@ export default function G1G2BN254() {
       <h2 className="mb-6 text-2xl font-bold">BN254 G1·G2: 같은 order를 공유하지만 같은 좌표 타입은 아니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Ethereum EIP-197의 alt_bn128/BN254 pairing은 prime order q의 G1과 G2를 입력으로 받습니다. G1은 E(Fp)의 subgroup이고 generator가 (1,2)입니다. G2는 embedding-degree 12의 pairing을 위해 필요한 subgroup을 sextic twist를 통해 Fp² coordinates로 싸게 표현합니다. 두 군이 같은 q를 공유한다는 사실은 scalar를 공통으로 쓸 수 있다는 뜻이지 point bytes나 addition implementation을 무검증 cast할 수 있다는 뜻이 아닙니다.
+          Ethereum EIP-197의 alt_bn128/BN254 pairing은 prime order q의 G1과 G2를 입력으로 받습니다. G1은 E(Fp)의 subgroup이고
+          generator가 (1,2)입니다. G2는 embedding-degree 12의 pairing에 필요한 subgroup을 sextic twist를 써서 Fp²
+          coordinates로 싸게 표현합니다. 두 군이 같은 q를 공유한다는 사실은 scalar를 공통으로 쓸 수 있다는 뜻이지 point bytes나 addition
+          implementation을 무검증 cast할 수 있다는 뜻이 아닙니다.
         </p>
       </div>
       <CryptoFoundationsViz mode="pairing-groups" />
@@ -32,7 +35,10 @@ export default function G1G2BN254() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>G2에서는 on-curve check만으로 부족합니다</h3>
         <p>
-          EIP-197은 G1 입력에 대해 coordinate range와 curve equation이 충분한 구체 구조를 사용하지만, G2는 on-twist point가 order-q subgroup에 속하는지 추가 확인해야 한다고 명시합니다. Wrong-subgroup point를 받아들이면 pairing equation이 의도한 scalar relation이 아닌 cofactor component에서도 성립하거나 protocol soundness가 깨질 수 있습니다. Production parser는 exact 32-byte big-endian limbs, p보다 작은 field element, infinity encoding, Fp² coefficient order와 q-order 검사를 함께 고정합니다.
+          EIP-197은 G1 입력에 대해 coordinate range와 curve equation이 충분한 구체 구조를 사용하지만 G2는 on-twist point가 order-q
+          subgroup에 속하는지 추가 확인해야 한다고 명시합니다. Wrong-subgroup point를 받아들이면 pairing equation이 의도한 scalar relation이
+          아닌 cofactor component에서도 성립하거나 protocol soundness가 깨질 수 있습니다. Production parser는 exact 32-byte big-
+          endian limbs, p보다 작은 field element, infinity encoding, Fp² coefficient order와 q-order 검사를 함께 고정합니다.
         </p>
         <h3>구현 release gate</h3>
         <p>

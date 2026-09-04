@@ -81,11 +81,9 @@ export default function CAP() {
           Partition-Tolerant Web Services
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          문제는 asynchronous network model에서 atomic consistency와 availability를
-          partition execution까지 함께 보장할 수 있는지입니다. 두 node 반례로
-          불가능성을 보이고, 약한 consistency에서는 availability가 가능함을
-          구분합니다. 모든 database를 영구적인 CP/AP label 하나로 분류하거나
-          정상 상태 latency를 예측하는 논문은 아닙니다.
+          문제는 asynchronous network model에서 atomic consistency와 availability를 partition execution까지 함께 보장할 수
+          있는지입니다. 두 node 반례로 불가능성을 보이고 약한 consistency에서는 availability가 가능함을 구분합니다. 모든 database를 영구적인 CP/AP
+          label 하나로 분류하거나 정상 상태 latency를 예측하는 논문은 아닙니다.
         </p>
         <a
           className="mt-3 inline-block text-sm font-medium text-primary hover:underline"

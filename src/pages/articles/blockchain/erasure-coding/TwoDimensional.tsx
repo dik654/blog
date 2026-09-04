@@ -73,11 +73,8 @@ export default function TwoDimensional() {
           </li>
         </ol>
         <p>
-          Merkle/KZG proof 성공은 첫 질문에 주로 답하며, 나머지 두 질문을
-          대신하지 않습니다. Sampling index를 producer가 예측하거나 여러 요청이
-          같은 악성 peer에 묶이면 독립성 전제가 무너지므로 peer
-          diversity·custody·timeout·reconstruction attempt와 receipt가
-          필요합니다.
+          Merkle/KZG proof 성공은 첫 질문에 주로 답하며 나머지 두 질문을 대신하지 않습니다. Sampling index를 producer가 예측하거나 여러 요청이 같은 악성
+          peer에 묶이면 독립성 전제가 무너지므로 peer diversity·custody·timeout·reconstruction attempt와 receipt가 필요합니다.
         </p>
         <h3>Celestia의 2D 방식과 Ethereum PeerDAS를 구분합니다</h3>
         <p>

@@ -78,11 +78,9 @@ export default function FLP() {
           Impossibility of Distributed Consensus with One Faulty Process
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          문제는 비동기 process가 crash 가능할 때 deterministic binary consensus의
-          total correctness입니다. Bivalence와 critical event를 이용해 종료하지
-          않는 admissible execution이 존재함을 보입니다. Byzantine fault,
-          probabilistic protocol, partial synchrony를 같은 결론으로 일반화하면 안
-          되며, 모든 실제 실행이 멈춘다는 실험 결과도 아닙니다.
+          문제는 비동기 process가 crash 가능할 때 deterministic binary consensus의 total correctness입니다. Bivalence와
+          critical event를 이용해 종료하지 않는 admissible execution이 존재함을 보입니다. Byzantine fault, probabilistic
+          protocol, partial synchrony를 같은 결론으로 일반화하면 안 되며 모든 실제 실행이 멈춘다는 실험 결과도 아닙니다.
         </p>
         <a
           className="mt-3 inline-block text-sm font-medium text-primary hover:underline"

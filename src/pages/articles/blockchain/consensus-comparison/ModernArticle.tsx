@@ -15,7 +15,12 @@ export default function ModernConsensusComparisonArticle() {
     <section id="performance" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">01 · 계열과 성능</p><h2 className="mt-2 text-2xl font-bold">Message 차수는 payload bytes, fan-out, crypto와 client wait를 대신하지 않는다</h2></header>
       <ConsensusFamilyMatrixViz />
-      <p>Classical leader BFT는 고정된 validator 집합에서 proposal과 vote certificate로 명령 순서를 결정합니다. DAG-BFT는 여러 validator의 data dissemination을 병렬화하되, DAG의 causal history를 결정적인 total order로 펼치는 규칙이 추가됩니다. Nakamoto consensus는 열린 참여를 hash work 같은 희소 자원과 연결하고 cumulative work가 큰 유효 branch를 선택합니다. Sampling 계열은 작은 peer 표본을 반복해 선호 confidence를 키우므로 sample size·독립성·adversary fraction이 안전성 parameter가 됩니다.</p>
+      <p>
+            Classical leader BFT는 고정된 validator 집합에서 proposal과 vote certificate로 명령 순서를 결정합니다. DAG-BFT는 여러
+            validator의 data dissemination을 병렬화하되 DAG의 causal history를 결정적인 total order로 펼치는 규칙이 추가됩니다.
+            Nakamoto consensus는 열린 참여를 hash work 같은 희소 자원과 연결하고 cumulative work가 큰 유효 branch를 선택합니다. Sampling
+            계열은 작은 peer 표본을 반복해 선호 confidence를 키우므로 sample size·독립성·adversary fraction이 안전성 parameter가 됩니다.
+          </p>
       <ExplainedFormula question="사용자가 느끼는 commit latency를 어떤 항목으로 분해해야 protocol의 진짜 병목을 찾을 수 있는가?" idea={<>한 번의 평균 RTT로 뭉개지 않고 request가 batch를 기다리는 시간, data가 필요한 replicas에 도달하는 시간, order round, deterministic execution, finality policy와 queueing을 더합니다. 서로 겹쳐 실행되는 구간은 critical path에서만 세어야 합니다.</>} formula={String.raw`\begin{aligned}L_{client}={}&L_{batch}+L_{data}+r\Delta\\&+L_{exec}+L_{finality}+L_{queue}\end{aligned}`}
       annotatedFormula={String.raw`\begin{aligned}\underbrace{L_{client}}_{\text{Client-visible latency 계산}}={}&L_{batch}+L_{data}+r\Delta\\&+L_{exec}+L_{finality}+L_{queue}\end{aligned}`}
       operations={[
@@ -36,7 +41,11 @@ export default function ModernConsensusComparisonArticle() {
       <header><p className="text-sm font-semibold text-primary">03 · 선택과 검증</p><h2 className="mt-2 text-2xl font-bold">제품의 membership과 실패 비용을 protocol 요구로 번역한다</h2></header>
       <div className="overflow-x-auto rounded-lg border border-border"><table className="min-w-[780px] w-full text-sm"><thead className="bg-muted/50 text-left"><tr><th className="p-3">상황</th><th className="p-3">먼저 물을 질문</th><th className="p-3">후보와 주의점</th></tr></thead><tbody className="divide-y divide-border text-muted-foreground"><tr><td className="p-3 font-medium text-foreground">조직이 validator를 관리</td><td className="p-3">f, region, key·membership rotation</td><td className="p-3">Classical/DAG BFT; fault bound 초과와 operator correlation 검사</td></tr><tr><td className="p-3 font-medium text-foreground">Open participation ledger</td><td className="p-3">Sybil cost와 influence concentration</td><td className="p-3">PoW/PoS 계열; resource majority·custody·fork choice 분리</td></tr><tr><td className="p-3 font-medium text-foreground">큰 payload·높은 offered load</td><td className="p-3">Leader ingress와 data availability</td><td className="p-3">DAG/separated dissemination; order와 execution 병목은 그대로 측정</td></tr><tr><td className="p-3 font-medium text-foreground">간헐적 partition·blip</td><td className="p-3">정지 허용 시간과 conflict 비용</td><td className="p-3">Safety hard gate 뒤 recovery p99·backlog drain을 paired 비교</td></tr></tbody></table></div>
       <p>Release test는 같은 binary·membership·keys·genesis, transaction bytes·arrival trace와 network fault schedule을 후보 둘에 재생합니다. Equivocation, omission, minority/majority partition, GST marker, leader crash·restart, stale certificate, disk recovery를 넣고 conflicting commit 0과 deterministic state hash parity를 먼저 검사합니다. 그 뒤 client p50/p99, useful committed bytes/s, per-replica network bytes, CPU·memory, backlog와 recovery time을 비교합니다.</p>
-      <h3 className="text-xl font-semibold">이 글만으로 풀어야 하는 10문제</h3><p>기초 6문제는 safety·liveness, membership, 네 계열의 evidence, 결정적·확률적 finality, latency 분해와 비용 단위를 확인합니다. 심화 4문제는 서로 다른 finality를 같은 숫자로 비교한 반례, workload-normalized benchmark, partition trace, hard-gated 선택표를 만들게 합니다. 필요한 개념은 현재 글에서 직관과 예제로 설명하고, 증명과 protocol별 유도는 연결한 canonical article로 확장합니다.</p>
+      <h3 className="text-xl font-semibold">이 글만으로 풀어야 하는 10문제</h3><p>
+            기초 6문제는 safety·liveness, membership, 네 계열의 evidence, 결정적·확률적 finality, latency 분해와 비용 단위를 확인합니다.
+            심화 4문제는 서로 다른 finality를 같은 숫자로 비교한 반례, workload-normalized benchmark, partition trace, hard-gated
+            선택표를 만들게 합니다. 필요한 개념은 현재 글에서 직관과 예제로 설명하고 증명과 protocol별 유도는 연결한 canonical article로 확장합니다.
+          </p>
     </section>
   </article>;
 }

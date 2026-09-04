@@ -14,7 +14,11 @@ export default function ModernDydxArticle() {
     <section id="orderbook-architecture" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">01 · Order class</p><h2 className="mt-2 text-2xl font-bold">Short-term order는 node memory에, long-term·conditional order는 chain state에 더 길게 남는다</h2></header>
       <p><code>OrderId.OrderFlags</code>는 short-term, long-term, conditional, TWAP 계열을 구분합니다. Short-term order는 <code>OrderFlags=0</code>이고 block height로 expiry하며, CheckTx/gossip에서 validator의 in-memory CLOB인 MemClob에 반영됩니다. Long-term·conditional order는 stateful order로 MsgPlaceOrder path에서 KV state에 기록되고 MemClob view와 sync됩니다.</p>
-      <p>따라서 한 node의 orderbook에 Alice bid가 보인다는 것은 global commit receipt가 아닙니다. Validator마다 도착 시점과 short-term view가 다를 수 있으며, proposer가 operations로 block candidate에 실은 뒤 replicas가 validation·execution해야 fill과 removal이 authoritative해집니다.</p>
+      <p>
+            따라서 한 node의 orderbook에 Alice bid가 보인다는 것은 global commit receipt가 아닙니다. Validator마다 도착 시점과 short-
+            term view가 다를 수 있으며 proposer가 operations로 block candidate에 실은 뒤 replicas가 validation·execution해야
+            fill과 removal이 authoritative해집니다.
+          </p>
       <OrderPathViz />
       <div id="paper-dydx-order-types-v963"><CitationBlock source="dYdX v4-chain protocol/v9.6.3 — x/clob/types/order_id.go" citeKey={1} type="code" href="https://github.com/dydxprotocol/v4-chain/blob/protocol/v9.6.3/protocol/x/clob/types/order_id.go"><p><strong>문제:</strong> Order identity에 persistence·expiry class를 명시적으로 encode합니다.</p><p><strong>기여:</strong> Short-term·stateful·conditional·TWAP 판별과 deterministic sorting/state-key conversion을 구현합니다.</p><p><strong>전제:</strong> protocol/v9.6.3 OrderId flag·subaccount·client ID semantics을 사용합니다.</p><p><strong>근거 범위:</strong> dYdX order identity·class contract입니다.</p><p><strong>말하지 않는 것:</strong> Valid ID를 collateral validity·match·fill·commit으로 보장하지 않습니다.</p></CitationBlock></div>
     </section>
@@ -39,9 +43,18 @@ export default function ModernDydxArticle() {
     <section id="indexer" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">04 · Indexer projection</p><h2 className="mt-2 text-2xl font-bold">Indexer와 frontend는 chain event를 읽기 좋은 view로 재구성하지만 settlement owner가 아니다</h2></header>
       <p>Chain은 deterministic state transition과 versioned events를 남기지만 사용자가 필요한 candle, historical fills, account timeline, market aggregates를 모두 query-optimized 형태로 보관하지는 않습니다. Indexer는 event subtype/version과 block identity를 소비해 database projection을 만들고 frontend/API에 제공합니다.</p>
-      <p>이 projection은 lag·duplicate delivery·out-of-order processing·schema migration·reorg 처리에서 chain과 달라질 수 있으므로 block height/hash·event version을 idempotency key와 checkpoint로 사용해야 합니다. Indexer DB를 비운 뒤 retained chain/event source에서 replay했을 때 같은 projection을 재구성할 수 있어야 하며, 잔액·position·fill 분쟁에서는 committed chain state/receipt가 우선합니다.</p>
+      <p>
+            이 projection은 lag·duplicate delivery·out-of-order processing·schema migration·reorg 처리에서 chain과
+            달라질 수 있으므로 block height/hash·event version을 idempotency key와 checkpoint로 사용해야 합니다. Indexer DB를 비운
+            뒤 retained chain/event source에서 replay했을 때 같은 projection을 재구성할 수 있어야 합니다. 잔액·position·fill 분쟁에서는
+            committed chain state/receipt가 우선합니다.
+          </p>
       <div id="paper-dydx-indexer-v963"><CitationBlock source="dYdX v4-chain protocol/v9.6.3 — indexer event source" citeKey={3} type="code" href="https://github.com/dydxprotocol/v4-chain/tree/protocol/v9.6.3/indexer"><p><strong>문제:</strong> Consensus application event를 query-oriented off-chain records로 materialize합니다.</p><p><strong>기여:</strong> Versioned event types, ingestion handlers·schema와 service boundaries를 제공합니다.</p><p><strong>전제:</strong> protocol/v9.6.3 event encoding, ordered block identity와 retained replay source를 사용합니다.</p><p><strong>근거 범위:</strong> dYdX indexer projection implementation입니다.</p><p><strong>말하지 않는 것:</strong> API response를 consensus receipt로, indexer availability를 chain liveness로 보장하지 않습니다.</p></CitationBlock></div>
-      <h3 className="text-xl font-semibold">이 글만으로 풀어야 하는 10문제</h3><p>기초 6문제는 order/transaction, short-term/stateful, MemClob, matching·risk, settlement, indexer를 확인합니다. 심화 4문제는 divergent local books, malicious proposal, collateral failure과 indexer replay/reconciliation release gate를 설계하게 합니다.</p>
+      <h3 className="text-xl font-semibold">이 글만으로 풀어야 하는 10문제</h3><p>
+            기초 6문제는 order/transaction, short-term/stateful, MemClob, matching·risk, settlement, indexer를
+            확인합니다. 심화 4문제는 divergent local books, malicious proposal, collateral failure와 indexer
+            replay/reconciliation release gate를 설계하게 합니다.
+          </p>
     </section>
   </article>;
 }

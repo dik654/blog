@@ -45,10 +45,15 @@ export default function EntropySource() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>수집·conditioning·health test의 역할</h3>
         <p>
-          Raw noise는 bias와 correlation을 가질 수 있으므로 approved conditioning function으로 고정 길이 seed material을 만듭니다. Conditioning은 분포를 다루기 쉽게 만들지만 source failure를 감추는 장치가 아닙니다. Repetition count와 adaptive proportion 같은 online health test는 갑자기 stuck된 source를 빠르게 검출하고 fail closed해야 하며, offline statistical suite의 합격만으로 entropy rate를 인증하지 않습니다.
+          Raw noise는 bias와 correlation을 가질 수 있으므로 approved conditioning function으로 고정 길이 seed material을 만듭니다.
+          Conditioning은 분포를 다루기 쉽게 만들지만 source failure를 감추는 장치가 아닙니다. Repetition count와 adaptive proportion 같은
+          online health test는 갑자기 stuck된 source를 빠르게 검출하고 fail closed해야 하며 offline statistical suite의 합격만으로
+          entropy rate를 인증하지 않습니다.
         </p>
         <p>
-          단일 CPU instruction·시간·PID·network event만 독립 source라고 가정하지 않습니다. 여러 source를 섞을 때도 “각각 64-bit”를 더하는 대신 하나가 다른 하나를 관찰·조작할 수 있는지 분석합니다. VM image를 복제하거나 process를 fork하면 DRBG state도 복제될 수 있으므로 OS의 fork safety와 reseed semantics를 확인하고, container마다 같은 image secret을 seed로 쓰지 않습니다.
+          단일 CPU instruction·시간·PID·network event만 독립 source라고 가정하지 않습니다. 여러 source를 섞을 때도 “각각 64-bit”를 더하는 대신
+          하나가 다른 하나를 관찰·조작할 수 있는지 분석합니다. VM image를 복제하거나 process를 fork하면 DRBG state도 복제될 수 있으므로 OS의 fork
+          safety와 reseed semantics를 확인하고 container마다 같은 image secret을 seed로 쓰지 않습니다.
         </p>
       </div>
       <div id="paper-nist-entropy-source" className="scroll-mt-24">

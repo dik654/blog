@@ -32,7 +32,11 @@ export default function Ed25519() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Schnorr와 비교할 때 algorithm family와 instance를 구분합니다</h3>
         <p>
-          두 방식 모두 commitment–challenge–response의 선형 group equation을 쓰지만, BIP 340 Schnorr와 Ed25519는 curve, point encoding, challenge transcript, nonce derivation, 부호 convention과 cofactor가 다릅니다. 한 scheme의 signature bytes를 다른 verifier에 넣거나 “수학식이 비슷하다”는 이유로 parsing을 공유하면 malleability·small-order point·cross-protocol 문제가 생길 수 있습니다. 실무에서는 검증된 library, RFC test vector, malformed encoding corpus와 protocol-level domain separation을 함께 사용합니다.
+          두 방식 모두 commitment–challenge–response의 선형 group equation을 쓰지만 BIP 340 Schnorr와 Ed25519는 curve, point
+          encoding, challenge transcript, nonce derivation, 부호 convention과 cofactor가 다릅니다. 한 scheme의 signature
+          bytes를 다른 verifier에 넣거나 “수학식이 비슷하다”는 이유로 parsing을 공유하면 malleability·small-order point·cross-protocol
+          문제가 생길 수 있습니다. 실무에서는 검증된 library, RFC test vector, malformed encoding corpus와 protocol-level domain
+          separation을 함께 사용합니다.
         </p>
       </div>
       <div id="paper-rfc8032-ed25519" className="scroll-mt-24">

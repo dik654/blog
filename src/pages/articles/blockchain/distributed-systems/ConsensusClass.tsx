@@ -8,12 +8,10 @@ export default function ConsensusClass() {
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Dwork–Lynch–Stockmeyer(DLS)의 partial synchrony는 동기와 비동기의
-          중간 모델입니다. 한 형태에서는 실제 delay bound가 존재하지만 protocol이
-          값을 모르고, 다른 형태에서는 알려진 bound가 unknown GST(Global
-          Stabilization Time) 뒤부터 성립합니다. GST 전에는 network가 오래
-          불안정할 수 있으므로 protocol은 보통 safety를 항상 지키고 liveness는 GST
-          이후 honest leader와 충분한 통신 조건에서 보장합니다.
+          Dwork–Lynch–Stockmeyer(DLS)의 partial synchrony는 동기와 비동기의 중간 모델입니다. 한 형태에서는 실제 delay bound가 존재하지만
+          protocol이 값을 모르고 다른 형태에서는 알려진 bound가 unknown GST(Global Stabilization Time) 뒤부터 성립합니다. GST 전에는
+          network가 오래 불안정할 수 있으므로 protocol은 보통 safety를 항상 지키고 liveness는 GST 이후 honest leader와 충분한 통신 조건에서
+          보장합니다.
         </p>
       </div>
 
@@ -22,12 +20,9 @@ export default function ConsensusClass() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Timeout을 늘려 가는 이유</h3>
         <p>
-          Actual stable delay가 300ms인데 timeout을 100ms로 두면 정직한 leader도
-          반복해서 교체됩니다. Round마다 100→200→400ms로 늘리면 GST 뒤에는
-          timeout이 실제 bound보다 커지는 round가 오며, 그때 proposal과 vote가
-          완료될 수 있습니다. 이 계산은 safety proof가 아니라 progress argument의
-          일부입니다. Stale round의 proposal을 막는 view number와 certificate
-          rule은 별도로 필요합니다.
+          Actual stable delay가 300ms인데 timeout을 100ms로 두면 정직한 leader도 반복해서 교체됩니다. Round마다 100→200→400ms로 늘리면
+          GST 뒤에는 timeout이 실제 bound보다 커지는 round가 오며 그때 proposal과 vote가 완료될 수 있습니다. 이 계산은 safety proof가 아니라
+          progress argument의 일부입니다. Stale round의 proposal을 막는 view number와 certificate rule은 별도로 필요합니다.
         </p>
 
         <h3>가정 추가를 숨기지 않는 설계표</h3>
@@ -47,13 +42,10 @@ export default function ConsensusClass() {
 
         <h3>Release gate: theorem 전제와 실측을 같은 표에 두지 않습니다</h3>
         <p>
-          Model sheet에는 timing·failure·channel·membership 가정을 적고, run ledger에는
-          binary SHA, config, workload, seed, message schedule과 fault trace를 적습니다.
-          Safety gate는 conflicting decision과 invalid state가 0건이어야 합니다.
-          Liveness gate는 partition을 해제하고 honest leader가 나타난 뒤 p95
-          recovery time과 undecided request 수를 측정합니다. 같은 조건의 baseline과
-          candidate를 paired run으로 비교하고 safety violation 한 건이면 즉시
-          rollback합니다.
+          Model sheet에는 timing·failure·channel·membership 가정을 적고 run ledger에는 binary SHA, config, workload,
+          seed, message schedule과 fault trace를 적습니다. Safety gate는 conflicting decision과 invalid state가 0건이어야
+          합니다. Liveness gate는 partition을 해제하고 honest leader가 나타난 뒤 p95 recovery time과 undecided request 수를
+          측정합니다. 같은 조건의 baseline과 candidate를 paired run으로 비교하고 safety violation 한 건이면 즉시 rollback합니다.
         </p>
       </div>
 

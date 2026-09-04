@@ -25,7 +25,11 @@ export default function CollateralBorrow() {
       />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Collateral은 base 공급처럼 이자를 얻지 않는다</h3>
-        <p>Collateral token balance는 risk support로 저장되며 supply index를 곱하지 않습니다. Base asset을 supply하면 positive principal로 이자를 얻고, base를 withdraw해 0 아래로 내려가면 borrow가 됩니다. 따라서 “모든 supplied asset이 yield를 얻는다”는 V2식 mental model은 Comet에 맞지 않습니다.</p>
+        <p>
+            Collateral token balance는 risk support로 저장되며 supply index를 곱하지 않습니다. Base asset을 supply하면 positive
+            principal로 이자를 얻고 base를 withdraw해 0 아래로 내려가면 borrow가 됩니다. 따라서 “모든 supplied asset이 yield를 얻는다”는 V2식
+            mental model은 Comet에 맞지 않습니다.
+          </p>
       </div>
     </section>
   );

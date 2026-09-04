@@ -12,7 +12,9 @@ export default function Overview() {
           암호키·nonce·session token은 “무작위처럼 보이는 숫자”가 아니라 공격자가 관찰한 정보와 계산 예산으로 다음 값을 맞히기 어려운 숫자여야 합니다. Cryptographically secure pseudorandom number generator(CSPRNG)는 검증된 entropy source로 내부 state를 초기화하고, state를 공개하지 않은 채 많은 output bit를 생성하며, output 뒤 state를 갱신하고 필요할 때 새 entropy로 reseed합니다.
         </p>
         <p>
-          물리 noise를 매 요청마다 직접 읽는 장치와 deterministic random bit generator(DRBG)는 역할이 다릅니다. Noise source는 예측 불가능성을 공급하고, DRBG는 그 제한된 entropy를 빠르고 일관된 API로 확장합니다. 애플리케이션은 이 둘을 직접 조립하기보다 운영체제의 안전한 random API를 사용하고, early boot·VM clone·snapshot rollback·fork 뒤 state 중복 같은 수명 문제를 검증해야 합니다.
+          물리 noise를 매 요청마다 직접 읽는 장치와 deterministic random bit generator(DRBG)는 역할이 다릅니다. Noise source는 예측
+          불가능성을 공급하고 DRBG는 그 제한된 entropy를 빠르고 일관된 API로 확장합니다. 애플리케이션은 이 둘을 직접 조립하기보다 운영체제의 안전한 random API를
+          사용하고 early boot·VM clone·snapshot rollback·fork 뒤 state 중복 같은 수명 문제를 검증해야 합니다.
         </p>
       </div>
       <ContentBoundary article="csprng" />

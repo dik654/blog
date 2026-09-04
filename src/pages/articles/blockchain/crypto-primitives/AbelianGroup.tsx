@@ -7,7 +7,10 @@ export default function AbelianGroup() {
       <h2 className="mb-6 text-2xl font-bold">대수 구조는 프리미티브가 허용하는 계산을 정한다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          군·환·체를 단순한 “진화 단계”로 외우면 실제 타입 경계를 놓치기 쉽습니다. Schnorr의 point는 덧셈으로 쓰는 prime-order 아벨군 G의 원소이고, secret·challenge·response는 scalar field Fq의 원소입니다. Poseidon state는 별도의 prime field Fp 위에 있으며, BN254에서는 base field modulus p와 group order q가 서로 다른 수입니다. 따라서 point coordinate, scalar와 hash field element를 같은 정수 타입처럼 바꾸면 range·reduction bug가 생깁니다.
+          군·환·체를 단순한 “진화 단계”로 외우면 실제 타입 경계를 놓치기 쉽습니다. Schnorr의 point는 덧셈으로 쓰는 prime-order 아벨군 G의 원소이고
+          secret·challenge·response는 scalar field Fq의 원소입니다. Poseidon state는 별도의 prime field Fp 위에 있으며
+          BN254에서는 base field modulus p와 group order q가 서로 다른 수입니다. 따라서 point coordinate, scalar와 hash field
+          element를 같은 정수 타입처럼 바꾸면 range·reduction bug가 생깁니다.
         </p>
       </div>
       <CryptoFoundationsViz mode="algebra-contract" />

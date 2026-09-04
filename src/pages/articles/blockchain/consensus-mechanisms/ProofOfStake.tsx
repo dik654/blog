@@ -10,11 +10,9 @@ export default function ProofOfStake() {
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Validator는 stake와 signing key를 protocol state에 등록합니다. Protocol은
-          검증 가능한 randomness와 state를 이용해 proposer·committee를 정하고,
-          validator는 block과 fork-choice/finality 대상에 서명합니다. Stake가 많을수록
-          장기적으로 더 큰 선택·vote weight를 갖지만, 가장 큰 validator가 매 slot의
-          proposer가 되는 것은 아닙니다.
+          Validator는 stake와 signing key를 protocol state에 등록합니다. Protocol은 검증 가능한 randomness와 state를 이용해
+          proposer와 committee를 정합니다. validator는 block과 fork-choice/finality 대상에 서명합니다. Stake가 많을수록 장기적으로 더 큰
+          선택 권한과 vote weight를 갖습니다. 그렇다고 가장 큰 validator가 매 slot의 proposer가 되지는 않습니다.
         </p>
       </div>
 
@@ -43,16 +41,14 @@ export default function ProofOfStake() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Fork choice·finality·slashing은 같은 기능이 아닙니다</h3>
         <p>
-          Fork choice는 최신 attestation weight를 이용해 현재 head를 고릅니다. Finality
-          gadget은 checkpoint 사이의 충분한 stake vote로 history를 확정합니다. Slashing은
-          같은 role·height에서 서로 모순되는 서명처럼 객관적으로 검증 가능한 위반 evidence에
-          경제적 penalty를 연결합니다. Offline penalty와 slashing도 구분해야 합니다.
+          Fork choice는 최신 attestation weight를 이용해 현재 head를 고릅니다. Finality gadget은 checkpoint 사이의 충분한 stake
+          vote로 history를 확정합니다. Slashing은 위반 evidence에 경제적 penalty를 연결합니다. 이때 evidence는 객관적으로 검증 가능해야 합니다. 같은
+          role·height에서 서로 모순되는 서명이 그런 예입니다. Offline penalty와 slashing도 구분해야 합니다.
         </p>
         <p>
-          Honest supermajority·network recovery·key custody·client implementation 같은 전제가
-          깨지면 liveness나 safety가 달라집니다. “Stake가 비싸다”는 직관만으로 protocol
-          safety를 증명할 수 없고, 어떤 message가 어떤 threshold를 충족했으며 어떤 conflicting
-          evidence가 있었는지 trace로 검증해야 합니다.
+          Honest supermajority와 network recovery, key custody, client implementation 같은 전제가 깨지면 liveness나
+          safety가 달라집니다. “Stake가 비싸다”는 직관만으로는 protocol safety를 증명할 수 없습니다. 어떤 message가 어떤 threshold를 충족했는지, 어떤
+          conflicting evidence가 있었는지를 trace로 검증해야 합니다.
         </p>
       </div>
 
@@ -60,10 +56,9 @@ export default function ProofOfStake() {
         <p className="text-xs font-bold text-primary">논문 읽기 · Fork choice와 finality 결합</p>
         <p className="mt-2 text-sm font-semibold">Combining GHOST and Casper</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          문제는 block-tree fork choice와 accountable finality gadget을 하나의 protocol로
-          결합하는 것입니다. Honest stake·network timing·validator message 전제 아래 safety와
-          liveness 성질을 분석합니다. 현재 Ethereum client의 모든 upgrade 규칙을 이 논문
-          snapshot 하나로 대체할 수 있다는 뜻은 아닙니다.
+          Block-tree fork choice와 accountable finality gadget을 하나의 protocol로 묶는 것이 이 논문의 과제입니다. Honest stake와
+          network timing, validator message를 전제로 두고 safety와 liveness 성질을 분석합니다. 다만 이 논문 snapshot 하나가 현재
+          Ethereum client의 모든 upgrade 규칙을 대신하지는 않습니다.
         </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/2003.03052" target="_blank" rel="noreferrer">Gasper 논문 보기</a>
       </div>
@@ -72,9 +67,9 @@ export default function ProofOfStake() {
         <p className="text-xs font-bold text-primary">규격 읽기 · 현재 PoS 동작</p>
         <p className="mt-2 text-sm font-semibold">Ethereum Proof-of-Stake Consensus Specifications</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          현재 client가 구현해야 할 state transition·fork choice·validator operation의 versioned
-          정본입니다. 이 글은 역할과 이론을 설명하고, 실제 constant·fork epoch·handler는
-          배포한 client와 stable specification version에 고정합니다.
+          State transition과 fork choice, validator operation을 담은 versioned 정본입니다. 현재 client가 구현해야 할 내용이 여기 들어
+          있습니다. 이 글은 역할과 이론을 설명하는 데까지입니다. 실제 constant와 fork epoch, handler는 배포한 client와 stable specification
+          version에 고정합니다.
         </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://ethereum.github.io/consensus-specs/" target="_blank" rel="noreferrer">현재 consensus specs 보기</a>
       </div>

@@ -26,9 +26,8 @@ export default function ModernCryptoTheoryArticle() {
           않습니다.
         </p>
         <p>
-          이 글은 AES·ECDSA·BLS 같은 개별 알고리즘의 정본을 다시 만들지
-          않습니다. 보안 주장을 읽고 조합하기 위한 공통 언어를 소유하며,
-          algorithm·parameter 선택은 해당 표준과 threat model로 내려갑니다.
+          이 글은 AES·ECDSA·BLS 같은 개별 알고리즘의 정본을 다시 만들지 않습니다. 보안 주장을 읽고 조합하기 위한 공통 언어를 소유하며 algorithm·parameter
+          선택은 해당 표준과 threat model로 내려갑니다.
         </p>
         <ContentBoundary article="crypto-theory" />
         <ModernCryptoTheoryViz />
@@ -141,20 +140,15 @@ export default function ModernCryptoTheoryArticle() {
           </h2>
         </header>
         <p>
-          Reduction은 primitive를 깨는 adversary를 이용해 assumed-hard problem을
-          푸는 algorithm을 구성합니다. Tightness loss와 adversary resources를
-          포함해야 concrete parameter를 고를 수 있습니다. Computational
-          security는 제한된 resource에서 advantage가 작다는 뜻이고,
-          information-theoretic security는 computation이 무한해도 지정된 view가
-          정보를 주지 않는다는 뜻입니다. One-time pad와 Shamir sharing의 특정
-          threshold property를 일반 public-key system 전체로 확대하지 않습니다.
+          Reduction은 primitive를 깨는 adversary를 이용해 assumed-hard problem을 푸는 algorithm을 구성합니다. Tightness loss와
+          adversary resources를 포함해야 concrete parameter를 고를 수 있습니다. Computational security는 제한된 resource에서
+          advantage가 작다는 뜻이고 information-theoretic security는 computation이 무한해도 지정된 view가 정보를 주지 않는다는 뜻입니다.
+          One-time pad와 Shamir sharing의 특정 threshold property를 일반 public-key system 전체로 확대하지 않습니다.
         </p>
         <p>
-          Composition에서는 byte encoding, protocol/domain tag, key purpose,
-          nonce uniqueness, randomness source와 transcript order가 primitive
-          input을 정합니다. Signature가 valid해도 다른 protocol의 같은 bytes로
-          replay할 수 있고, AEAD nonce reuse는 표준 primitive를 안전하지 않게 쓸
-          수 있습니다. Key generation·storage·rotation·revocation과
+          Composition에서는 byte encoding, protocol/domain tag, key purpose, nonce uniqueness, randomness source와
+          transcript order가 primitive input을 정합니다. Signature가 valid해도 다른 protocol의 같은 bytes로 replay할 수 있고 AEAD
+          nonce reuse는 표준 primitive를 안전하지 않게 쓸 수 있습니다. Key generation·storage·rotation·revocation과
           implementation side channel은 security proof 밖의 운영 경계입니다.
         </p>
         <div id="paper-nist-key-management">

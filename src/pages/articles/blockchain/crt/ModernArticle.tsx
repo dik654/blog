@@ -43,11 +43,9 @@ export default function ModernCRTArticle() {
           <h2 className="mt-2 text-2xl font-bold">각 조건에만 1인 selector를 만든다</h2>
         </header>
         <p>
-          x≡aᵢ (mod mᵢ)인 조건 n개를 생각해 보겠습니다. modulus들이 두 개씩
-          모두 서로소라면 M=∏mᵢ를 만들고, i번째 modulus만 제외한 Mᵢ=M/mᵢ를
-          계산합니다. Mᵢ는 다른 모든 modulus의 배수이므로 그 조건들에서는
-          0입니다. 이제 Mᵢyᵢ≡1 (mod mᵢ)이 되도록 modular inverse yᵢ를 고르면
-          Mᵢyᵢ는 i번째 조건에서만 1인 selector가 됩니다.
+          x≡aᵢ (mod mᵢ)인 조건 n개를 생각해 보겠습니다. modulus들이 두 개씩 모두 서로소라면 M=∏mᵢ를 만들고 i번째 modulus만 제외한 Mᵢ=M/mᵢ를 계산합니다.
+          Mᵢ는 다른 모든 modulus의 배수이므로 그 조건들에서는 0입니다. 이제 Mᵢyᵢ≡1 (mod mᵢ)이 되도록 modular inverse yᵢ를 고르면 Mᵢyᵢ는 i번째
+          조건에서만 1인 selector가 됩니다.
         </p>
         <ExplainedFormula
           question="나머지 조건 n개를 동시에 만족하는 정수를 어떻게 직접 만들 수 있는가?"
@@ -99,13 +97,10 @@ export default function ModernCRTArticle() {
           <h2 className="mt-2 text-2xl font-bold">RSA-CRT는 결과가 아니라 계산 경로를 바꾼다</h2>
         </header>
         <p>
-          RSA modulus n=pq에서 private exponentiation m=cᵈ mod n을 바로 하는 대신,
-          m₁=cᵈᴾ mod p와 m₂=cᵈQ mod q를 계산하고 CRT로 합칠 수 있습니다.
-          여기서 dP=d mod (p−1), dQ=d mod (q−1), qInv=q⁻¹ mod p입니다.
-          p와 q가 대략 절반 bit 길이라 두 exponentiation의 operand가 작아지지만,
-          실제 speedup은 big-integer algorithm, window, hardware, blinding과
-          memory traffic에 따라 달라집니다. “항상 정확히 네 배”라고 말해서는 안
-          됩니다.
+          RSA modulus n=pq에서 private exponentiation m=cᵈ mod n을 바로 하는 대신, m₁=cᵈᴾ mod p와 m₂=cᵈQ mod q를 계산하고
+          CRT로 합칠 수 있습니다. 여기서 dP=d mod (p−1), dQ=d mod (q−1), qInv=q⁻¹ mod p입니다. p와 q가 대략 절반 bit 길이라 두
+          exponentiation의 operand가 작아지지만 실제 speedup은 big-integer algorithm, window, hardware, blinding과 memory
+          traffic에 따라 달라집니다. “항상 정확히 네 배”라고 말해서는 안 됩니다.
         </p>
         <ExplainedFormula
           question="두 RSA residue m₁과 m₂를 n=pq의 한 message representative로 어떻게 합치는가?"
@@ -144,11 +139,9 @@ export default function ModernCRTArticle() {
           </table>
         </div>
         <p>
-          이 글의 10문항 역검사는 congruence 읽기, 2·3·2 residue 검산, selector와
-          inverse 계산, 존재·유일성 증명, 비서로소 반례, RSA 재결합을 기초로
-          묻습니다. 심화에서는 일반화 CRT compatibility와 lcm 주기,
-          RSA fault fixture, direct/CRT paired benchmark를 설계하게
-          하며, 답에 필요한 전제와 경계는 모두 위에 두었습니다.
+          이 글의 10문항 역검사는 congruence 읽기, 2·3·2 residue 검산, selector와 inverse 계산, 존재·유일성 증명, 비서로소 반례, RSA 재결합을
+          기초로 묻습니다. 심화에서는 일반화 CRT compatibility와 lcm 주기, RSA fault fixture, direct/CRT paired benchmark를 설계하게
+          합니다. 답에 필요한 전제와 경계는 모두 위에 두었습니다.
         </p>
       </section>
     </article>

@@ -48,7 +48,10 @@ export default function Poseidon() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>선택 기준과 반례</h3>
         <p>
-          회로의 field·arity·입력 길이, 구현 가능한 검증된 parameter set, 다른 시스템과의 호환성을 먼저 고릅니다. 회로 밖에서만 hash한다면 SHA-2·SHA-3·BLAKE 계열이 더 나을 수 있습니다. “x⁵가 싸다”는 이유로 round 수를 줄이거나 임의 matrix를 쓰면 논문의 security argument가 사라지며, 서로 다른 tree node·leaf·protocol에 같은 encoding을 쓰면 collision resistance가 있어도 구조적 모호성이 생기므로 domain separation을 둡니다.
+          회로의 field·arity·입력 길이, 구현 가능한 검증된 parameter set, 다른 시스템과의 호환성을 먼저 고릅니다. 회로 밖에서만 hash한다면
+          SHA-2·SHA-3·BLAKE 계열이 더 나을 수 있습니다. “x⁵가 싸다”는 이유로 round 수를 줄이거나 임의 matrix를 쓰면 논문의 security argument가
+          사라집니다. 서로 다른 tree node·leaf·protocol에 같은 encoding을 쓰면 collision resistance가 있어도 구조적 모호성이 생기므로 domain
+          separation을 둡니다.
         </p>
       </div>
     </section>

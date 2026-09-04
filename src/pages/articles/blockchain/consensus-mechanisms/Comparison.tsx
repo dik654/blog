@@ -34,17 +34,16 @@ export default function Comparison() {
       <div className="prose prose-neutral dark:prose-invert mt-8 max-w-none">
         <h3>Release gate는 같은 fault trace에서 paired로 비교합니다</h3>
         <p>
-          Candidate protocol을 고를 때 “PoW는 느리고 PoS는 빠르다” 같은 표만으로는 부족합니다.
-          같은 transaction workload·node count·geography·binary·config에서 network partition,
-          delayed block/vote, equivocation, validator/miner outage, restart와 corrupted local state를
-          주입합니다. Conflicting finalized history는 0건이어야 하고, head reorg depth·recovery
-          time·resource cost·participation concentration을 함께 기록합니다.
+          Candidate protocol을 고를 때 “PoW는 느리고 PoS는 빠르다” 같은 표만으로는 부족합니다. transaction workload와 node count,
+          geography, binary, config를 똑같이 맞춘 다음 그 위에 장애를 주입합니다. network partition, delayed block/vote,
+          equivocation을 넣고 validator/miner outage와 restart, corrupted local state까지 이어서 넣습니다. Conflicting
+          finalized history는 0건이어야 합니다. 여기에 head reorg depth와 recovery time, resource cost, participation
+          concentration을 함께 기록합니다.
         </p>
         <p>
-          Throughput은 execution·data availability·block size·hardware·network와 결합된 결과라
-          consensus family만의 고정 상수가 아닙니다. 따라서 기존 글의 “PoW 7 TPS, PoS 100K
-          TPS”처럼 서로 다른 chain·layer·workload의 숫자는 삭제하고 동일 조건 측정만 채택
-          근거로 사용합니다.
+          Throughput은 execution과 data availability, block size, hardware, network가 함께 만들어낸 결과입니다. consensus
+          family만의 고정 상수가 아닙니다. 기존 글의 “PoW 7 TPS, PoS 100K TPS”처럼 서로 다른 chain·layer·workload에서 나온 숫자는 삭제하고 동일
+          조건 측정만 채택 근거로 씁니다.
         </p>
       </div>
 
@@ -52,9 +51,9 @@ export default function Comparison() {
         <p className="text-xs font-bold text-primary">규격 읽기 · 실제 전환 경계</p>
         <p className="mt-2 text-sm font-semibold">EIP-3675: Upgrade consensus to Proof-of-Stake</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          문제는 Ethereum Mainnet의 execution layer를 PoW block production에서 Beacon Chain
-          PoS consensus로 전환하는 것입니다. Terminal PoW block과 이후 block validity·fork-choice
-          연결을 규정합니다. PoW와 PoS 전체 성능을 보편적으로 비교하는 benchmark는 아닙니다.
+          Ethereum Mainnet의 execution layer를 PoW block production에서 Beacon Chain PoS consensus로 전환하는 것. 이것이 이
+          규격이 푸는 문제입니다. Terminal PoW block과 그 이후의 block validity·fork-choice 연결을 규정합니다. 다루는 범위는 거기까지입니다. PoW와
+          PoS 전체 성능을 보편적으로 비교하는 benchmark는 여기 없습니다.
         </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://eips.ethereum.org/EIPS/eip-3675" target="_blank" rel="noreferrer">EIP-3675 보기</a>
       </div>

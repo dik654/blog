@@ -14,7 +14,11 @@ export default function ModernCosmosSDKArticle() {
     <section id="baseapp" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">01 · BaseApp mode</p><h2 className="mt-2 text-2xl font-bold">같은 handler도 어떤 branch에서 실행되는지에 따라 권위가 다르다</h2></header>
       <p><code>CheckTx</code>는 node-local mempool admission을 위한 실행이며 write를 committed store에 반영하지 않습니다. <code>Simulate</code>도 gas·result를 미리 보기 위한 discarded branch입니다. 반면 <code>FinalizeBlock</code>은 CometBFT가 결정한 ordered txs를 block context에서 실행하고, 성공한 child cache writes만 block branch에 합친 뒤 <code>Commit</code>이 durable version으로 만듭니다.</p>
-      <p>Context에는 block height/time, gas meters, event manager, execution mode와 MultiStore branch가 들어있습니다. Handler가 global clock·random source·unpinned network response를 읽으면 replica마다 result가 달라질 수 있으므로 consensus input에 포함된 context만으로 deterministic하게 계산해야 합니다.</p>
+      <p>
+            Context에는 block height/time과 gas meters, event manager, execution mode, MultiStore branch가 들어있습니다.
+            Handler가 global clock이나 random source, unpinned network response를 읽으면 replica마다 result가 달라질 수
+            있습니다. 그래서 consensus input에 포함된 context만으로 deterministic하게 계산해야 합니다.
+          </p>
       <ExecutionModeViz />
       <div id="paper-cosmos-baseapp-v055"><CitationBlock source="Cosmos SDK v0.55.0 — baseapp" citeKey={1} type="code" href="https://github.com/cosmos/cosmos-sdk/tree/v0.55.0/baseapp"><p><strong>문제:</strong> ABCI request와 query/simulation을 mode별 isolated state transition으로 연결합니다.</p><p><strong>기여:</strong> BaseApp context, block execution, tx routing과 response/error 경계를 구현합니다.</p><p><strong>전제:</strong> v0.55.0 application wiring, deterministic module handlers와 compatible CometBFT ABCI를 사용합니다.</p><p><strong>근거 범위:</strong> Cosmos SDK BaseApp execution orchestration입니다.</p><p><strong>말하지 않는 것:</strong> CheckTx OK를 block inclusion·commit으로, handler return을 disk durability로 확대하지 않습니다.</p></CitationBlock></div>
     </section>
@@ -32,16 +36,31 @@ export default function ModernCosmosSDKArticle() {
 
     <section id="module-architecture" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">03 · Module과 keeper</p><h2 className="mt-2 text-2xl font-bold">Module은 API와 lifecycle을 드러내고 keeper가 state capability를 제한한다</h2></header>
-      <p>MsgServiceRouter는 protobuf type URL을 MsgServer method로 연결하고, keeper는 module이 접근할 store service와 다른 module capability를 구성자로 받습니다. Bank keeper가 account keeper를 필요한 interface로만 받는 이유는 모든 module이 raw keyspace와 module account를 임의로 수정하지 못하게 하려는 것입니다.</p>
-      <p>이 경계는 Go package visibility만으로 완성되지 않습니다. App wiring에서 너무 넓은 keeper interface를 넘기거나 raw store service를 공유하면 capability가 다시 넓어집니다. Release test는 unauthorized module account transfer, blocked address, malformed type URL과 module ordering drift를 포함해야 합니다.</p>
+      <p>
+            MsgServiceRouter는 protobuf type URL을 MsgServer method로 연결합니다. keeper는 module이 접근할 store service와
+            다른 module capability를 구성자로 받습니다. Bank keeper가 account keeper를 필요한 interface로만 받는 이유는 모든 module이
+            raw keyspace와 module account를 임의로 수정하지 못하게 하려는 것입니다.
+          </p>
+      <p>
+            이 경계는 Go package visibility만으로 완성되지 않습니다. App wiring에서 너무 넓은 keeper interface를 넘기거나 raw store
+            service를 공유하면 capability가 다시 넓어집니다. Release test에는 unauthorized module account transfer, blocked
+            address, malformed type URL, module ordering drift가 들어가야 합니다.
+          </p>
     </section>
 
     <section id="state-management" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">04 · CacheMultiStore</p><h2 className="mt-2 text-2xl font-bold">Child branch의 Write와 root store Commit은 다른 durability 경계다</h2></header>
       <p>CacheMultiStore는 mounted store마다 cache branch를 만듭니다. Transaction child가 성공하면 <code>Write()</code>로 parent block branch에 merge하고, failure면 child를 폐기합니다. 하지만 parent에 merge된 것은 아직 disk committed version이 아니며 block의 <code>Commit</code>이 store version과 root hash를 durable하게 만듭니다.</p>
-      <p>BlockSTM 같은 optimistic runner를 쓸 때도 observable result는 sequential semantics과 같아야 합니다. Read/write conflict, retry와 event order를 재현하지 못하면 performance optimization이 consensus semantics를 바꾸게 됩니다.</p>
+      <p>
+            BlockSTM 같은 optimistic runner를 쓸 때도 observable result는 sequential semantics과 같아야 합니다. Read/write
+            conflict와 retry, event order를 재현하지 못하면 performance optimization이 consensus semantics를 바꾸게 됩니다.
+          </p>
       <div id="paper-cosmos-cachemulti-v055"><CitationBlock source="Cosmos SDK v0.55.0 — store/cachemulti/store.go" citeKey={3} type="code" href="https://github.com/cosmos/cosmos-sdk/blob/v0.55.0/store/cachemulti/store.go"><p><strong>문제:</strong> Multi-module writes를 parent에 선택적으로 merge하는 isolated branch를 만듭니다.</p><p><strong>기여:</strong> Store-key별 lazy cache, nested CacheWrap과 Write merge를 구현합니다.</p><p><strong>전제:</strong> RootMultiStore와 application Commit ordering이 별도로 정상 작동합니다.</p><p><strong>근거 범위:</strong> v0.55.0 in-memory branch/parent merge semantics입니다.</p><p><strong>말하지 않는 것:</strong> Child Write를 durable database commit이나 external side effect rollback으로 보장하지 않습니다.</p></CitationBlock></div>
-      <h3 className="text-xl font-semibold">이 글만으로 풀어야 하는 10문제</h3><p>기초 6문제는 CometBFT/application 경계, mode, ante/message, gas, keeper, cache/commit을 확인합니다. 심화 4문제는 nondeterminism, partial failure, capability leak과 optimistic execution parity release gate를 설계하게 합니다.</p>
+      <h3 className="text-xl font-semibold">이 글만으로 풀어야 하는 10문제</h3><p>
+            기초 6문제는 CometBFT/application 경계와 mode, ante/message, gas, keeper, cache/commit을 확인합니다. 심화 4문제는
+            nondeterminism과 partial failure, capability leak, optimistic execution parity release gate를 설계하게
+            합니다.
+          </p>
     </section>
   </article>;
 }

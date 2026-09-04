@@ -16,10 +16,13 @@ export default function ModernCudaBasicsArticle() {
           <h2 className="text-3xl font-bold tracking-tight">GPU는 큰 일을 잘게 나누기만 하면 빨라지는 장치가 아니다</h2>
         </header>
         <p className="text-lg leading-8 text-foreground/90">
-          CUDA는 CPU가 준비한 data와 함수를 NVIDIA GPU에서 많은 thread로 실행하는 programming model입니다. GPU가 유리하려면 각 thread가 처리할 일이 충분히 독립적이고, 같은 instruction을 비슷한 흐름으로 실행하며, host↔device 복사 비용보다 병렬 계산에서 아끼는 시간이 커야 합니다.
+          CUDA는 CPU가 준비한 data와 함수를 NVIDIA GPU에서 많은 thread로 실행하는 programming model입니다. GPU가 유리하려면 각 thread가 처리할
+          일이 충분히 독립적이고 같은 instruction을 비슷한 흐름으로 실행해야 하며, host↔device 복사 비용보다 병렬 계산에서 아끼는 시간이 커야 합니다.
         </p>
         <p>
-          이 글은 길이 10인 vector를 더하는 작은 예로 host·device·kernel, grid·block·thread, global index와 memory traffic을 바닥부터 연결합니다. 마지막에는 이 구조를 hash candidate, signature batch, MSM·NTT 같은 blockchain workload에 적용하되, 특정 GPU의 고정 speedup을 일반 법칙처럼 제시하지 않습니다.
+          이 글은 길이 10인 vector를 더하는 작은 예로 host·device·kernel, grid·block·thread, global index와 memory traffic을
+          바닥부터 연결합니다. 마지막에는 이 구조를 hash candidate, signature batch, MSM·NTT 같은 blockchain workload에 적용합니다. 다만
+          특정 GPU의 고정 speedup을 일반 법칙처럼 제시하지는 않습니다.
         </p>
         <CudaExecutionPathViz />
         <ContentBoundary article="cuda-basics" />
@@ -31,7 +34,10 @@ export default function ModernCudaBasicsArticle() {
           <strong>Host</strong>는 일반적으로 CPU와 그 process를, <strong>device</strong>는 CUDA GPU를 뜻합니다. Host code는 device memory를 할당하고 input을 복사한 뒤 kernel launch를 queue에 넣습니다. Kernel은 GPU에서 실행되는 함수이며 같은 code를 여러 logical thread가 서로 다른 index로 수행합니다. Launch가 비동기일 수 있으므로 host API가 돌아왔다는 사실과 GPU 계산 완료도 구분해야 합니다.
         </p>
         <p>
-          Pinned CUDA guide의 software hierarchy는 grid &gt; block &gt; thread입니다. Grid는 launch 전체, block은 같은 SM에 함께 배치되어 shared memory와 block barrier를 공유할 수 있는 협력 단위, thread는 자기 register·index를 가진 logical worker입니다. 반면 hardware는 block threads를 32-lane warp로 묶어 instruction을 발행합니다. Thread 하나를 physical core 하나에 영구 고정된 존재로 보면 scheduling과 latency hiding을 잘못 이해하게 됩니다.
+          Pinned CUDA guide의 software hierarchy는 grid &gt; block &gt; thread입니다. Grid는 launch 전체, block은 같은
+          SM에 함께 배치되어 shared memory와 block barrier를 공유할 수 있는 협력 단위, thread는 자기 register·index를 가진 logical
+          worker입니다. 반면 hardware는 block threads를 32-lane warp로 묶어 instruction을 발행합니다. Thread 하나가 physical core
+          하나에 영구 고정돼 있다고 보는 순간 scheduling과 latency hiding이 어긋나기 시작합니다.
         </p>
         <div id="paper-cuda-programming-guide">
           <CitationBlock type="code" citeKey={1} source="NVIDIA CUDA C++ Programming Guide 12.8.1" href={PROGRAMMING_GUIDE}>
@@ -73,7 +79,9 @@ export default function ModernCudaBasicsArticle() {
       <section id="memory" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">03 · Memory traffic</p><h2 className="mt-2 text-2xl font-bold">계산 시간보다 옮기는 bytes와 재사용 범위를 먼저 센다</h2></header>
         <p>
-          Register는 thread가, shared memory는 block이 직접 사용하는 on-chip storage이며 global memory는 device 전체의 큰 data를 담습니다. Shared memory에 올리면 무조건 빨라지는 것이 아니라, 여러 threads가 같은 data를 재사용하거나 access 순서를 바꿔 global transaction을 줄일 때 이득이 있습니다. 그 대신 staging load, barrier, bank conflict와 block당 capacity가 추가됩니다.
+          Register는 thread가, shared memory는 block이 직접 사용하는 on-chip storage이며 global memory는 device 전체의 큰 data를
+          담습니다. Shared memory에 올린다고 무조건 빨라지지는 않습니다. 여러 threads가 같은 data를 재사용하거나 access 순서를 바꿔 global
+          transaction을 줄일 때 비로소 이득이 납니다. 그 대신 staging load, barrier, bank conflict와 block당 capacity가 추가됩니다.
         </p>
         <CudaMemoryPathViz />
         <ExplainedFormula
@@ -107,13 +115,20 @@ export default function ModernCudaBasicsArticle() {
       <section id="workload-fit" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">04 · Blockchain workload</p><h2 className="mt-2 text-2xl font-bold">독립성·batch·branch·data layout이 맞을 때 GPU 후보가 된다</h2></header>
         <p>
-          Nonce 후보나 많은 독립 hash처럼 같은 연산을 서로 다른 input에 반복하는 작업은 thread mapping이 직관적입니다. Batch signature verification도 여러 서명 사이 독립성을 활용할 수 있지만, 각 thread의 branch와 field-arithmetic cost가 다르면 warp divergence가 생깁니다. MSM은 point bucket을 모으는 과정의 memory contention과 reduction이, NTT는 stage별 butterfly dependency와 global synchronization이 설계를 좌우합니다.
+          Nonce 후보나 많은 독립 hash처럼 같은 연산을 서로 다른 input에 반복하는 작업은 thread mapping이 직관적입니다. Batch signature
+          verification도 여러 서명 사이 독립성을 활용할 수 있지만 각 thread의 branch와 field-arithmetic cost가 다르면 warp divergence가
+          생깁니다. MSM에서는 point bucket을 모으는 과정의 memory contention과 reduction이 설계를 좌우합니다. NTT 쪽 관건은 stage별
+          butterfly dependency와 global synchronization입니다.
         </p>
         <p>
-          Signature 형식이나 validation path가 여러 종류라면 같은 warp에 임의로 섞기보다 비슷한 control flow와 cost를 가진 input을 먼저 grouping하는 후보를 시험할 수 있습니다. 다만 grouping을 위한 host preprocessing과 추가 memory 이동이 생기므로 branch efficiency·warp stall의 개선뿐 아니라 end-to-end 시간을 함께 비교해야 합니다.
+          Signature 형식이나 validation path가 여러 종류라면 같은 warp에 임의로 섞기보다 control flow와 cost가 비슷한 input을 먼저
+          grouping하는 후보를 시험할 수 있습니다. 다만 grouping을 위한 host preprocessing과 추가 memory 이동이 생기므로 branch
+          efficiency·warp stall의 개선뿐 아니라 end-to-end 시간까지 같이 놓고 비교하는 게 순서입니다.
         </p>
         <p>
-          따라서 “cryptography라 GPU”라고 결정하지 말고 병렬 단위, batch 크기, input residency, field representation, branch 분포, device memory footprint와 CPU reference를 먼저 고정합니다. 그다음 kernel time뿐 아니라 end-to-end latency·throughput·energy·correctness를 같은 dataset에서 비교해야 합니다.
+          “cryptography라 GPU”라고 결정할 일이 아닙니다. 병렬 단위와 batch 크기, input residency와 field representation, branch
+          분포, device memory footprint, 그리고 CPU reference를 먼저 고정합니다. 그다음 kernel time만이 아니라 end-to-end
+          latency·throughput·energy·correctness를 같은 dataset에서 비교합니다.
         </p>
         <div id="paper-cuda-samples">
           <CitationBlock type="code" citeKey={3} source="NVIDIA cuda-samples v12.8" href={SAMPLES}>
@@ -129,7 +144,9 @@ export default function ModernCudaBasicsArticle() {
       <section id="release-gate" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">05 · 역검사와 채택</p><h2 className="mt-2 text-2xl font-bold">결과 parity를 먼저 확인한 뒤 병목이 실제로 줄었는지 본다</h2></header>
         <p>
-          기초 여섯 문제는 host/device/kernel 경로, grid·block·thread와 warp, ceiling launch, boundary guard, memory scope와 end-to-end 시간을 다룹니다. 심화 네 문제는 divergence, shared-memory trade-off, blockchain batch mapping과 paired release gate를 이 글의 식과 예시만으로 설계할 수 있어야 합니다.
+          기초 여섯 문제가 다루는 범위는 host/device/kernel 경로, grid·block·thread와 warp, ceiling launch, boundary guard,
+          memory scope, end-to-end 시간입니다. 심화 네 문제는 divergence, shared-memory trade-off, blockchain batch
+          mapping과 paired release gate를 이 글의 식과 예시만으로 설계하는 과제입니다.
         </p>
         <aside className="rounded-lg border border-border bg-card p-5 text-sm leading-6 text-muted-foreground">
           <strong className="text-foreground">Release gate:</strong> 같은 input·precision·compiler·driver·GPU에서 CPU reference와 output을 비교하고 invalid index·odd size·large batch를 포함합니다. 그 뒤 H2D·kernel·D2H·sync timeline, achieved bandwidth, warp stall, occupancy와 end-to-end throughput을 기록하며, correctness mismatch나 목표 latency regression이 있으면 채택하지 않습니다.

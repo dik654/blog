@@ -21,7 +21,9 @@ export default function Frobenius() {
 
       <h3 className="text-xl font-bold mb-4">유도: (a+bu)⁷ 전개</h3>
       <div className="prose prose-neutral dark:prose-invert max-w-none mb-4">
-        <p>왜 p제곱하면 u 부호만 뒤집히는지, 수식 전개로 확인한다.</p>
+        <p>
+            왜 p제곱하면 u 부호만 뒤집히는지 수식 전개로 확인한다.
+          </p>
       </div>
       <div className="not-prose mb-10 rounded-xl border p-5">
         <Step1Derive />

@@ -30,10 +30,15 @@ export default function Applications() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>운영 release gate</h3>
         <p>
-          동일 image로 부팅한 VM·container, fork 직후 parent/child, snapshot restore, entropy API 실패, short read, crash 뒤 counter rollback, state disclosure 전후 reseed를 fixture로 만듭니다. 각 run에는 OS/kernel·runtime·library version, API, boot/fork/snapshot identity, request length와 failure policy를 남깁니다. Output이 서로 다르다는 관찰은 필요한 smoke test일 뿐 security proof가 아니며, known-answer vector·state transition test·duplicate detector와 protocol-level negative test를 함께 통과한 뒤 throughput을 봅니다.
+          동일 image로 부팅한 VM·container, fork 직후 parent/child, snapshot restore, entropy API 실패, short read,
+          crash 뒤 counter rollback, state disclosure 전후 reseed를 fixture로 만듭니다. 각 run에는
+          OS/kernel·runtime·library version, API, boot/fork/snapshot identity, request length와 failure policy를
+          남깁니다. Output이 서로 다르다는 관찰은 필요한 smoke test일 뿐 security proof가 아니며 known-answer vector·state transition
+          test·duplicate detector와 protocol-level negative test를 함께 통과한 뒤 throughput을 봅니다.
         </p>
         <p>
-          OS API가 unavailable이면 약한 fallback으로 내려가지 않고 secret 생성 자체를 중단합니다. Test 환경의 fixed seed는 재현성에는 유용하지만 production secret path와 type/API를 분리해야 하며, log·core dump·telemetry에 state나 raw entropy를 남기지 않습니다.
+          OS API가 unavailable이면 약한 fallback으로 내려가지 않고 secret 생성 자체를 중단합니다. Test 환경의 fixed seed는 재현성에는 유용하지만
+          production secret path와 type/API를 분리해야 하며 log·core dump·telemetry에 state나 raw entropy를 남기지 않습니다.
         </p>
       </div>
       <div id="paper-heninger-weak-keys" className="scroll-mt-24">

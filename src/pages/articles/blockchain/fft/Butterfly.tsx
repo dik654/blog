@@ -9,10 +9,8 @@ export default function Butterfly() {
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          coefficient index를 even과 odd로 나누면 f(x)=E(x²)+xO(x²)입니다. ω²는
-          order n/2인 root이므로 E와 O는 각각 크기 n/2 transform으로 계산할 수
-          있습니다. 결합 단계에서는 같은 두 intermediate로 서로 n/2 떨어진
-          output을 만듭니다.
+          coefficient index를 even과 odd로 나누면 f(x)=E(x²)+xO(x²)입니다. ω²가 order n/2인 root이므로 E와 O는 각각 크기 n/2
+          transform으로 계산할 수 있고, 결합 단계에서는 같은 두 intermediate로 서로 n/2 떨어진 output을 만듭니다.
         </p>
       </div>
       <ButterflyViz />
@@ -65,11 +63,9 @@ export default function Butterfly() {
           Complex Fourier Series
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          문제는 composite length의 discrete Fourier sum을 효율적으로 계산하는
-          것입니다. 논문은 transform length를 factor에 따라 나누어
-          intermediate를 재사용합니다. 원 논문은 complex arithmetic을 다루며,
-          finite-field 적용에는 primitive roots와 invertible length라는 추가
-          대수 조건이 필요합니다.
+          composite length의 discrete Fourier sum을 효율적으로 계산하는 것이 문제입니다. 논문은 transform length를 factor에 따라 나누어
+          intermediate를 재사용합니다. 원 논문이 다루는 대상은 complex arithmetic입니다. Finite-field에 적용하려면 primitive roots와
+          invertible length라는 대수 조건이 더 필요합니다.
         </p>
         <a
           href="https://doi.org/10.1090/S0025-5718-1965-0178586-1"

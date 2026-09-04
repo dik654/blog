@@ -25,10 +25,8 @@ export default function ModernCurveStableArticle() {
           불균형에서는 후자에 가까워집니다.
         </p>
         <p>
-          낮은 slippage는 두 자산이 실제로 같은 가치라는 보증이 아닙니다. Issuer
-          default·bridge failure·redemption 중단으로 X가 depeg하면 arbitrage가
-          약한 자산을 pool에 몰아 넣을 수 있습니다. LP는 결국 그 자산을 더 많이
-          보유하게 됩니다.
+          낮은 slippage를 두 자산이 실제로 같은 가치라는 보증으로 읽으면 어긋납니다. Issuer default·bridge failure·redemption 중단으로 X가
+          depeg하면 arbitrage가 약한 자산을 pool에 몰아 넣을 수 있습니다. 결국 그 자산을 더 많이 떠안는 쪽은 LP입니다.
         </p>
         <ContentBoundary article="curve-stable" />
         <ModernCurveStableViz />
@@ -130,20 +128,14 @@ export default function ModernCurveStableArticle() {
           </h2>
         </header>
         <p>
-          작은 A는 더 빨리 constant-product처럼 반응하고, 큰 A는 균형 부근의
-          같은 거래에 더 작은 price impact를 줍니다. 그러나 이는 무료
-          liquidity가 아닙니다. 한 자산의 외부 공정가격이 1에서 0.8로 내려갔는데
-          pool이 여전히 1 근처에서 교환하면 arbitrageur가 약한 자산을 넣고 강한
-          자산을 빼 갑니다. A가 클수록 pool price가 외부 충격을 늦게 드러낼 수
-          있으므로 imbalance·oracle/rate stale·virtual price만 따로 보지
-          않습니다.
+          작은 A는 더 빨리 constant-product처럼 반응하고 큰 A는 균형 부근의 같은 거래에 더 작은 price impact를 줍니다. 그렇다고 무료 liquidity가 생기는
+          것은 아닙니다. 한 자산의 외부 공정가격이 1에서 0.8로 내려갔는데 pool이 여전히 1 근처에서 교환하면 arbitrageur가 약한 자산을 넣고 강한 자산을 빼 갑니다. A가
+          클수록 pool price가 외부 충격을 늦게 드러낼 수 있으므로 imbalance와 oracle/rate stale, virtual price를 따로 떼어 보지 않습니다.
         </p>
         <p>
-          A ramp는 시작값·목표값·시작/종료시각이 있는 parameter
-          transition입니다. Swap quote는 해당 block timestamp에서의 A를 사용해야
-          합니다. Fee는 trader output과 LP/admin accounting을 바꾸며, token의
-          transfer fee·rebasing·ERC-4626 rate는 지원 profile과 구현 generation을
-          함께 확인해야 합니다.
+          A ramp는 시작값·목표값·시작/종료시각이 있는 parameter transition입니다. Swap quote가 쓰는 A는 해당 block timestamp의 값이어야 합니다.
+          Fee는 trader output과 LP/admin accounting을 바꿉니다. Token의 transfer fee·rebasing·ERC-4626 rate는 지원
+          profile과 구현 generation까지 함께 확인할 대상입니다.
         </p>
         <div id="paper-curve-stableswap-ng">
           <CitationBlock
@@ -187,16 +179,13 @@ export default function ModernCurveStableArticle() {
           </h2>
         </header>
         <p>
-          Release fixture는 100/100 균형, 110/90 불균형, 10-unit swap, A ramp
-          중간 시각, stale rate, zero/near-zero balance, fee-on-transfer,
-          min-output failure와 one-asset depeg를 포함합니다. Reference
-          calculator와 onchain result를 같은 integer precision에서 비교하고 D
-          drift·output·fee·LP supply를 기록합니다.
+          Release fixture에는 100/100 균형과 110/90 불균형, 10-unit swap, A ramp 중간 시각이 들어갑니다. 여기에 stale rate,
+          zero/near-zero balance, fee-on-transfer, min-output failure, one-asset depeg까지 포함합니다. Reference
+          calculator와 onchain result를 같은 integer precision에서 비교하고 D drift·output·fee·LP supply를 기록합니다.
         </p>
         <p>
-          기초 6문제는 constant-sum/product 비교, 정규화, D, A, fee와 depeg
-          경계를 묻습니다. 심화 4문제는 bounded iteration, ramp race,
-          adversarial token과 paired release matrix를 설계하게 합니다.
+          기초 6문제가 묻는 건 constant-sum/product 비교와 정규화, D, A, fee, depeg 경계입니다. 심화 4문제는 bounded iteration과 ramp
+          race, adversarial token, paired release matrix를 설계하는 자리입니다.
         </p>
       </section>
     </article>

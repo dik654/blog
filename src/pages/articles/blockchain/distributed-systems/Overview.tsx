@@ -123,10 +123,8 @@ export default function Overview() {
           conflicting decision을 내지 않았다면 safety는 지킬 수 있습니다.
         </p>
         <p>
-          장애 주입에서는 둘을 다른 oracle로 측정합니다. Safety는 conflicting
-          commit certificate가 한 건이라도 생기면 실패이고, liveness는 network가
-          회복된 뒤 정해진 시간 안에 새 commit이 나오는지 측정합니다. 평균 latency
-          하나로 두 성질을 대신할 수 없습니다.
+          장애 주입에서는 둘을 다른 oracle로 측정합니다. Safety는 conflicting commit certificate가 한 건이라도 생기면 실패이고 liveness는
+          network가 회복된 뒤 정해진 시간 안에 새 commit이 나오는지 측정합니다. 평균 latency 하나로 두 성질을 대신할 수 없습니다.
         </p>
 
         <h3>세 축을 기록하는 최소 run contract</h3>
