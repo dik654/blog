@@ -22,11 +22,9 @@ export default function ImageVideoLoraArchitectureArticle() {
             정하기 때문입니다.
           </p>
           <p>
-            예를 들어 image denoiser의 attention projection을 바꾸면 한 장면의
-            subject나 style을 학습할 수 있습니다. 같은 이름의 projection이 video
-            model 안에 있어도 그것이 frame 내부의 공간 attention인지, frame 사이의
-            시간 attention인지, audio와 video를 잇는 cross-modal attention인지에
-            따라 update가 닿는 정보가 달라집니다.
+            예를 들어 image denoiser의 attention projection을 바꾸면 한 장면의 subject나 style을 학습할 수 있습니다. 같은 이름의
+            projection이 video model 안에 있어도 frame 내부의 공간 attention인지, frame 사이의 시간 attention인지, audio와 video를
+            잇는 cross-modal attention인지에 따라 update가 닿는 정보가 달라집니다.
           </p>
           <p>
             따라서 이 글은 <Link to="/ai/lora-finetuning#lora">LoRA의 행렬식</Link>을
@@ -69,11 +67,9 @@ export default function ImageVideoLoraArchitectureArticle() {
             component이기 때문입니다.
           </p>
           <p>
-            그렇다고 모든 denoiser가 같은 module 이름을 쓰는 것은 아닙니다.
-            U-Net은 spatial block과 attention을 섞을 수 있고, DiT는 transformer block을
-            중심으로 구성합니다. Fused QKV를 쓰는 model과 Q·K·V가 분리된 model도
-            다릅니다. 그래서 설정 문자열을 복사하기 전에 named module 목록과
-            실제 trainable parameter 수를 출력해야 합니다.
+            그렇다고 모든 denoiser가 같은 module 이름을 쓰는 것은 아닙니다. U-Net은 spatial block과 attention을 섞을 수 있고 DiT는
+            transformer block을 중심으로 구성합니다. Fused QKV를 쓰는 model과 Q·K·V가 분리된 model도 다릅니다. 그래서 설정 문자열을 복사하기 전에
+            named module 목록과 실제 trainable parameter 수를 출력해야 합니다.
           </p>
           <p>
             Hugging Face Diffusers의 text-to-image 예제는 U-Net의
@@ -222,18 +218,14 @@ export default function ImageVideoLoraArchitectureArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Image LoRA의 training sample은 image와 caption으로 시작할 수 있지만,
-            video LoRA의 sample은 clip 길이, frame rate, 해상도 bucket, crop과
-            conditioning 구간까지 포함합니다. 같은 영상을 서로 다른 FPS로 읽으면
-            model이 보는 motion 속도도 달라지므로 이 metadata는 단순 loader option이
-            아니라 학습 대상의 정의입니다.
+            Image LoRA의 training sample은 image와 caption으로 시작할 수 있지만 video LoRA의 sample은 clip 길이, frame rate,
+            해상도 bucket, crop과 conditioning 구간까지 포함합니다. 같은 영상을 서로 다른 FPS로 읽으면 model이 보는 motion 속도도 달라지므로 이
+            metadata는 단순 loader option이 아니라 학습 대상의 정의입니다.
           </p>
           <p>
-            학습 전에는 target module을 확정하고 trainable parameter 목록을
-            저장합니다. 학습 후에는 held-out prompt에서 frame quality, prompt
-            adherence, subject·style fidelity를 보고, 영상이면 여기에 temporal
-            consistency와 motion fidelity를 따로 더합니다. 첫 frame만 예쁘게 뽑아
-            성공으로 판정하면 temporal path의 실패를 숨기게 됩니다.
+            학습 전에는 target module을 확정하고 trainable parameter 목록을 저장합니다. 학습 후에는 held-out prompt에서 frame quality,
+            prompt adherence, subject·style fidelity를 보고 영상이면 여기에 temporal consistency와 motion fidelity를 따로
+            더합니다. 첫 frame만 예쁘게 뽑아 성공으로 판정하면 temporal path의 실패를 숨기게 됩니다.
           </p>
         </div>
         <AlgorithmBlock

@@ -8,19 +8,15 @@ export default function Applications() {
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Neural ODE는 neural network가 vector field를 parameterize하고 solver가
-          state를 운반합니다. Score-based diffusion의 reverse SDE는 learned
-          score와 random increment를 함께 사용하고, probability-flow ODE와 flow
-          matching은 deterministic vector field를 적분합니다. 모두 Euler·Heun
-          같은 이름을 쓸 수 있지만 학습 target과 경로의 의미는 서로 다릅니다.
+          Neural ODE는 neural network가 vector field를 parameterize하고 solver가 state를 운반합니다. Score-based
+          diffusion의 reverse SDE는 learned score와 random increment를 함께 사용합니다. probability-flow ODE와 flow
+          matching은 deterministic vector field를 적분합니다. 모두 Euler·Heun 같은 이름을 쓸 수 있지만 학습 target과 경로의 의미는 서로
+          다릅니다.
         </p>
         <p>
-          Solver benchmark에서 step 수만 비교하면 안 됩니다. Euler는
-          step당 NFE가 1이지만 Heun은 2이며 adaptive method는 거절한
-          step도 계산비용을 쓸 수 있습니다. 따라서 error tolerance,
-          accepted·rejected step, NFE, wall-clock, peak memory를 같이
-          기록하고, 참조해와의 차이인 discretization error를 learned
-          vector field 자체의 model error와 분리해야 합니다.
+          Solver benchmark에서 step 수만 비교하면 안 됩니다. Euler는 step당 NFE가 1이지만 Heun은 2이며 adaptive method는 거절한 step에도
+          계산비용을 씁니다. error tolerance와 accepted·rejected step, NFE, wall-clock, peak memory를 같이 기록해야 합니다. 참조해와의
+          차이인 discretization error도 learned vector field 자체의 model error와 분리해야 합니다.
         </p>
       </div>
       <div className="not-prose mt-8 grid gap-5 md:grid-cols-2">

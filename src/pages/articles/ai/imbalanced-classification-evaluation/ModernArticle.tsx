@@ -14,10 +14,8 @@ export default function ImbalancedClassificationEvaluationArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            먼저 한 threshold에서 TP·FP·FN·TN을 셉니다. 그 count로
-            precision·recall을 계산하고, population prevalence가 바뀌면
-            precision이 어떻게 달라지는지 봅니다. 마지막으로 probability bin의
-            예측값과 실제 빈도를 비교합니다.
+            먼저 한 threshold에서 TP·FP·FN·TN을 셉니다. 그 count로 precision·recall을 계산하고 population prevalence가 바뀌면
+            precision이 어떻게 달라지는지 봅니다. 마지막으로 probability bin의 예측값과 실제 빈도를 비교합니다.
           </p>
           <p>ROC-AUC나 PR-AUC 하나는 이 세 층을 대체하지 않습니다.</p>
         </div>

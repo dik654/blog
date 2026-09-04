@@ -24,9 +24,8 @@ export default function Applications() {
       <h2 className="mb-6 text-2xl font-bold">이 수학이 모델 안에서 쓰이는 곳</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          함수와 미분은 특정 모델의 전용 기술이 아닙니다. Activation은 local derivative의
-          모양을 정하고, backpropagation은 chain rule로 그 값을 전달하며, optimizer는
-          gradient를 parameter 변화로 바꿉니다. 아래 글은 정의를 반복하지 않고 실행 경로를 확장합니다.
+          함수와 미분은 특정 모델의 전용 기술이 아닙니다. Activation은 local derivative의 모양을 정하고 backpropagation은 chain rule로 그 값을
+          전달하며 optimizer는 gradient를 parameter 변화로 바꿉니다. 아래 글은 정의를 반복하지 않고 실행 경로를 확장합니다.
         </p>
       </div>
       <div className="not-prose mt-6 grid gap-5 md:grid-cols-3">

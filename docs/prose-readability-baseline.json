@@ -86,7 +86,7 @@
       "score": 33
     },
     "ai/lstm-timeseries": {
-      "fingerprint": "edd65569563a3571",
+      "fingerprint": "3c66cec7822edfc6",
       "score": 32
     },
     "blockchain/filecoin-fvm": {
@@ -104,10 +104,6 @@
     "blockchain/prysm-beacon-api": {
       "fingerprint": "99881913c4ec5185",
       "score": 31
-    },
-    "ai/llm-serving-ops": {
-      "fingerprint": "bea277974885f50b",
-      "score": 30
     },
     "ai/vla-embodiment-gap": {
       "fingerprint": "65a07c43f540866c",
@@ -143,6 +139,10 @@
     },
     "ai/claw-file-ops": {
       "fingerprint": "0c809efe2ce534fc",
+      "score": 28
+    },
+    "ai/llm-serving-ops": {
+      "fingerprint": "60d66f3902d1eaf4",
       "score": 28
     },
     "ai/multi-agent-implementation": {
@@ -369,10 +369,6 @@
       "fingerprint": "4623bf689dc7fdd9",
       "score": 20
     },
-    "ai/fft": {
-      "fingerprint": "fd3447c1671db76e",
-      "score": 20
-    },
     "ai/mixture-of-experts": {
       "fingerprint": "84abd80325629abd",
       "score": 20
@@ -457,8 +453,8 @@
       "fingerprint": "bf380b30e764b508",
       "score": 18
     },
-    "ai/llm-serving-capacity": {
-      "fingerprint": "799082bba2bd81fa",
+    "ai/fft": {
+      "fingerprint": "ae60871a33e70edd",
       "score": 18
     },
     "ai/neural-network": {
@@ -539,6 +535,10 @@
     },
     "ai/claw-hooks": {
       "fingerprint": "6ad8e0881cfa7ba4",
+      "score": 16
+    },
+    "ai/llm-serving-capacity": {
+      "fingerprint": "a62d7eb456298ecb",
       "score": 16
     },
     "ai/rlhf": {
@@ -718,7 +718,7 @@
       "score": 12
     },
     "ai/on-policy-distillation": {
-      "fingerprint": "38b8af5a4e13efaa",
+      "fingerprint": "5236b1b486b49594",
       "score": 12
     },
     "blockchain/bplus-tree": {
@@ -810,11 +810,11 @@
       "score": 10
     },
     "ai/knowledge-distillation": {
-      "fingerprint": "b69eb13aefafa359",
+      "fingerprint": "ed91ae55757588e1",
       "score": 10
     },
     "ai/lstm": {
-      "fingerprint": "5a772f3b4722774a",
+      "fingerprint": "5866f691743903da",
       "score": 10
     },
     "ai/qwen-korean-consistency": {
@@ -922,15 +922,15 @@
       "score": 8
     },
     "ai/gru": {
-      "fingerprint": "82e6a9faba4b6650",
+      "fingerprint": "15297b07419011ba",
       "score": 8
     },
     "ai/image-backbone-scaling": {
-      "fingerprint": "c6b8fb9c68c9910e",
+      "fingerprint": "655ca52d3c09cf25",
       "score": 8
     },
     "ai/kto": {
-      "fingerprint": "91bc23de4e1cef90",
+      "fingerprint": "81dc28e0ed0ff689",
       "score": 8
     },
     "ai/math-gradient-descent-convergence": {
@@ -946,11 +946,11 @@
       "score": 8
     },
     "ai/self-distillation": {
-      "fingerprint": "8762f7d8544ecd22",
+      "fingerprint": "c34ee0bc7f5383e8",
       "score": 8
     },
     "ai/sequence-distillation": {
-      "fingerprint": "d919919c2ea8bcbc",
+      "fingerprint": "0f7d25e563ad7125",
       "score": 8
     },
     "ai/word2vec-prediction-objectives": {
@@ -1115,6 +1115,10 @@
     },
     "ai/denoising-masked-autoencoders": {
       "fingerprint": "bc28a2cd4a8bd6c3",
+      "score": 6
+    },
+    "ai/hyper-connections-residual-streams": {
+      "fingerprint": "191f56964213d22e",
       "score": 6
     },
     "ai/image-augmentation-transforms": {

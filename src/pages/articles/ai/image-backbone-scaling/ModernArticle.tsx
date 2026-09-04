@@ -146,9 +146,8 @@ export default function ImageBackboneScalingArticle() {
           question="EfficientNet의 compound coefficient는 세 capacity 축을 어떻게 함께 움직이나요?"
           idea={
             <p>
-              공통 단계가 하나 증가할 때 depth·width·resolution을 미리 탐색한
-              비율로 각각 늘리고, convolutional compute가 대략 두 배가 되도록
-              비율을 제한합니다.
+              공통 단계가 하나 증가할 때 depth·width·resolution을 미리 탐색한 비율로 각각 늘리고 convolutional compute가 대략 두 배가 되도록 비율을
+              제한합니다.
             </p>
           }
           formula={String.raw`d=\alpha^\phi,\ w=\beta^\phi,\ r=\gamma^\phi`}

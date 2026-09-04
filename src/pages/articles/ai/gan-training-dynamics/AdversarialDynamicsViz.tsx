@@ -32,7 +32,7 @@ export default function AdversarialDynamicsViz() {
             <p className="text-xs font-black text-primary">D step</p>
             <p className="mt-2 text-sm font-bold">G(z) → detach → update D</p>
             <p className="mt-2 text-xs text-muted-foreground">
-              Generated value만 사용하고 G graph는 끊습니다.
+              생성된 값만 사용하고 G graph는 끊습니다.
             </p>
           </div>
           <div

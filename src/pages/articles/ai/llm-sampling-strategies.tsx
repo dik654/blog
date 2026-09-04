@@ -21,15 +21,13 @@ export default function LlmSamplingStrategiesArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            LLM 이 다음 token 을 고르는 규칙은 두 갈래로 나뉩니다. Greedy 와 beam search 는 점수가
-            가장 높은 후보를 그대로 고르는 결정적 tie-break 이고, temperature·top-k·top-p 는
-            확률 분포를 자르고 다시 정규화한 뒤 표본을 뽑는 확률적 규칙입니다. 이 글은 후자의 세
-            규칙과, 추론에 더 많은 연산을 써서 품질을 사는 test-time compute 축을 다룹니다.
+            LLM 이 다음 token 을 고르는 규칙은 두 갈래로 나뉩니다. Greedy 와 beam search 는 점수가 가장 높은 후보를 그대로 고르는 결정적 tie-break
+            입니다. Temperature·top-k·top-p 는 확률 분포를 자르고 다시 정규화한 뒤 표본을 뽑는 확률적 규칙입니다. 이 글은 뒤쪽 세 규칙과 추론에 더 많은 연산을
+            써서 품질을 사는 test-time compute 축을 다룹니다.
           </p>
           <p>
-            확률적 규칙은 한 step 안에서 순서대로 적용됩니다. Logit 을 temperature 로 나눠 분포의
-            뾰족함을 조절하고, top-k 나 top-p 로 일부 token 만 남긴 뒤, 남은 확률을 다시 1로
-            정규화해 그 위에서 표본을 뽑습니다. 이 네 단계가 이 글이 다루는 전부입니다.
+            확률적 규칙은 한 step 안에서 순서대로 적용됩니다. Logit 을 temperature 로 나눠 분포의 뾰족함을 조절합니다. Top-k 나 top-p 로 일부 token 만
+            남기고 남은 확률을 다시 1로 정규화한 다음 그 위에서 표본을 뽑습니다. 이 네 단계가 이 글이 다루는 전부입니다.
           </p>
           <p>
             이 결정은{" "}
@@ -76,9 +74,8 @@ export default function LlmSamplingStrategiesArticle() {
             top-k·top-p 의 입력으로 어떻게 들어가는지만 봅니다.
           </p>
           <p>
-            5개 token 분포 [0.50, 0.20, 0.15, 0.10, 0.05] 에 T=0.5 를 적용하면
-            [0.769, 0.123, 0.069, 0.031, 0.008] 로 1등 token 에 더 몰리고, T=2 를 적용하면
-            [0.340, 0.215, 0.186, 0.152, 0.107] 로 다섯 token 의 확률이 서로 가까워집니다.
+            5개 token 분포 [0.50, 0.20, 0.15, 0.10, 0.05] 에 T=0.5 를 적용하면 [0.769, 0.123, 0.069, 0.031, 0.008] 로 1등
+            token 에 더 몰리고 T=2 를 적용하면 [0.340, 0.215, 0.186, 0.152, 0.107] 로 다섯 token 의 확률이 서로 가까워집니다.
           </p>
           <p>
             Logit 을 T 로 나눈 뒤 다시 softmax 하는 이 변환은 원래 확률 p_i 를 p_i^(1/T) 로 올리고
@@ -94,14 +91,12 @@ export default function LlmSamplingStrategiesArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Top-k sampling 은 확률이 큰 순서로 k 개 token 만 남기고 나머지는 0으로 만든 뒤, 남은
-            k 개의 합이 1이 되도록 다시 정규화하는 방법입니다. k 는 분포 모양과 무관한 고정 값이라
-            아주 평평한 분포에서도 정확히 k 개만 남습니다.
+            Top-k sampling 은 확률이 큰 순서로 k 개 token 만 남기고 나머지는 0으로 만든 뒤 남은 k 개의 합이 1이 되도록 다시 정규화하는 방법입니다. k 는 분포
+            모양과 무관한 고정 값이라 아주 평평한 분포에서도 정확히 k 개만 남습니다.
           </p>
           <p>
-            원본 분포 [0.50, 0.20, 0.15, 0.10, 0.05] 에 k=2 를 적용하면 A, B 만 남고 나머지 세
-            token 은 확률 0이 됩니다. 남은 합 0.7 로 나누면 A=0.714, B=0.286 이 되어, C 의 0.15 가
-            B 의 0.2 와 크게 다르지 않아도 그대로 버려집니다.
+            원본 분포 [0.50, 0.20, 0.15, 0.10, 0.05] 에 k=2 를 적용하면 A, B 만 남고 나머지 세 token 은 확률 0이 됩니다. 남은 합 0.7 로
+            나누면 A=0.714, B=0.286 이 되어 C 의 0.15 가 B 의 0.2 와 크게 다르지 않아도 그대로 버려집니다.
           </p>
         </div>
         <ExplainedFormula
@@ -124,9 +119,8 @@ export default function LlmSamplingStrategiesArticle() {
         />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Fan 외 (2018) 는 이야기 생성에서 k=10 을 썼습니다. Beam search 는 흔한 구절만 반복해
-            짧고 일반적인 문장을 만들고, 순수 표본추출은 학습 때 보지 못한 낮은 확률 단어를 가끔
-            뽑아 생성을 망가뜨리므로, k 로 그 위험만 잘라내면서 다양성은 남긴다는 것이 근거였습니다.
+            Fan 외 (2018) 는 이야기 생성에서 k=10 을 썼습니다. Beam search 는 흔한 구절만 반복해 짧고 일반적인 문장을 만듭니다. 순수 표본추출은 학습 때 보지
+            못한 낮은 확률 단어를 가끔 뽑아 생성을 망가뜨립니다. k 로 그 위험만 잘라내면서 다양성은 남긴다는 것이 근거였습니다.
           </p>
         </div>
         <div id="paper-top-k-sampling" className="not-prose my-8 scroll-mt-24">
@@ -155,9 +149,8 @@ export default function LlmSamplingStrategiesArticle() {
             top-k 처럼 개수를 고정하지 않습니다.
           </p>
           <p>
-            같은 분포 [0.50, 0.20, 0.15, 0.10, 0.05] 에 p=0.8 을 적용하면 A+B=0.70 으로 아직
-            부족해 C 까지 더한 0.85 에서 넘습니다. 남는 건 A, B, C 세 개고 0.588, 0.235, 0.176 으로
-            재정규화되어, 같은 분포에 top-k=2 를 적용했을 때보다 하나 더 남습니다.
+            같은 분포 [0.50, 0.20, 0.15, 0.10, 0.05] 에 p=0.8 을 적용하면 A+B=0.70 으로 아직 부족해 C 까지 더한 0.85 에서 넘습니다. 남는 건
+            A, B, C 세 개고 0.588, 0.235, 0.176 으로 재정규화되어 같은 분포에 top-k=2 를 적용했을 때보다 하나 더 남습니다.
           </p>
         </div>
         <ExplainedFormula
@@ -297,10 +290,8 @@ export default function LlmSamplingStrategiesArticle() {
           preview="Sampling 을 쓰는 대화·생성형 서비스는 T=0.7~1.0 에 top-p=0.9 안팎을 기본으로 두고 top-k 는 극단적인 낮은 확률 token 을 막는 안전망으로만 남겨 둡니다. 평가나 재현성이 중요하면 greedy 로 고정하고, 정확도가 더 필요하면 test-time compute 를 늘립니다."
         >
           <p>
-            네 값은 서로 다른 실패를 막습니다. T 가 너무 낮으면 반복이, 너무 높으면 문법이
-            깨지는 표본이 늘고, top-k 가 너무 작으면 다양성이 죽고 top-p 가 너무 크면 저확률
-            token 이 다시 섞입니다. 자기 workload 의 반복률과 문법 오류율을 재는 것이 기본값을
-            정하는 유일한 방법입니다.
+            네 값은 서로 다른 실패를 막습니다. T 가 너무 낮으면 반복이, 너무 높으면 문법이 깨지는 표본이 늘고 top-k 가 너무 작으면 다양성이 죽고 top-p 가 너무 크면
+            저확률 token 이 다시 섞입니다. 자기 workload 의 반복률과 문법 오류율을 재는 것이 기본값을 정하는 유일한 방법입니다.
           </p>
           <p>
             Test-time compute 는 이 네 값과 독립적으로 조절할 수 있는 다섯 번째 축입니다. 같은

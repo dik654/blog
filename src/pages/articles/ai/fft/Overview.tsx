@@ -16,11 +16,9 @@ export default function Overview() {
           Fourier Transform)는 그 DFT를 중복 계산 없이 구하는 algorithm family다.
         </p>
         <p>
-          이 구분이 중요한 이유는 FFT가 정확도를 낮춘 근사가 아니기 때문이다. 같은
-          normalization과 numerical precision을 사용하면 direct DFT와 FFT의
-          mathematical output은 같다. 달라지는 것은 계산 graph이며, N개 output마다
-          N개 항을 더하는 O(N²) 작업을 symmetry와 factorization으로 O(N log N)까지
-          줄인다.
+          이 구분이 중요한 이유는 FFT가 정확도를 낮춘 근사가 아니기 때문이다. 같은 normalization과 numerical precision을 쓰면 direct DFT와 FFT의
+          mathematical output은 같다. 달라지는 것은 계산 graph다. N개 출력마다 N개 항을 더하는 O(N²) 작업을 symmetry와 factorization으로
+          O(N log N)까지 줄인다.
         </p>
         <p>
           아래 식의 <code>i</code>, <code>e^{'{iθ}'}</code>, <code>2π</code>가 아직 낯설다면 먼저 <Link to="/ai/math-complex-numbers-oscillations">복소수·회전·Euler 공식 글</Link>을 읽으면 됩니다. 그 글에서 radian과 단위원부터 roots of unity까지 만든 뒤 이 글로 돌아오도록 연결해 두었습니다.
@@ -51,18 +49,15 @@ export default function Overview() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>주파수 bin은 실제 Hz와 같지 않다</h3>
         <p>
-          DFT index k는 그 자체로 Hz가 아니다. Sample rate가 fₛ이면 k번째 bin의
-          physical frequency는 kfₛ/N이고 bin 간격은 fₛ/N이다. N만 늘리는
-          zero-padding은 spectrum을 더 촘촘하게 interpolation하지만 관측 시간이
-          늘어난 것은 아니므로 가까운 두 sinusoid를 실제로 구분하는 resolution을
-          새로 만들지는 않는다.
+          DFT index k는 그 자체로 Hz가 아니다. Sample rate가 fₛ이면 k번째 bin의 physical frequency는 kfₛ/N이고 bin 간격은 fₛ/N이다.
+          N만 늘리는 zero-padding은 spectrum을 더 촘촘하게 interpolation한다. 다만 관측 시간이 늘어난 것은 아니어서 가까운 두 sinusoid를 실제로
+          구분하는 resolution이 새로 생기지는 않는다.
         </p>
         <h3>이 글의 top-down 경로</h3>
         <p>
-          먼저 continuous Fourier representation에서 DFT가 생기는 sampling
-          경계를 확인한다. 그다음 Cooley–Tukey가 roots of unity의 symmetry를 어떻게
-          재사용하는지 유도하고, 마지막에는 STFT·large convolution·FNet·Hyena에서
-          FFT가 각각 무엇을 대체하며 어떤 정보가 남는지 구분한다.
+          먼저 continuous Fourier representation에서 DFT가 생기는 sampling 경계를 확인한다. 그다음 Cooley–Tukey가 roots of unity의
+          symmetry를 어떻게 재사용하는지 유도한다. 마지막에는 STFT·large convolution·FNet·Hyena에서 FFT가 각각 무엇을 대체하며 어떤 정보가 남는지
+          구분한다.
         </p>
       </div>
     </section>

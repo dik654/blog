@@ -23,9 +23,8 @@ export default function LaunchOverheadAndCpuGpuSynchronizationArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            GPU 는 CPU 가 queue 에 넣어 준 kernel 만 실행합니다. kernel 하나를 넣는 데 드는 CPU
-            쪽 고정 비용이 host launch overhead 이고, 그 비용이 GPU 가 kernel 을 끝내는 시간보다
-            길면 GPU 는 다음 일을 기다리며 비어 있습니다. 이 빈 시간이 GPU starvation 입니다.
+            GPU 는 CPU 가 queue 에 넣어 준 kernel 만 실행합니다. kernel 하나를 넣는 데 드는 CPU 쪽 고정 비용이 host launch overhead 입니다.
+            그 비용이 GPU 가 kernel 을 끝내는 시간보다 길면 GPU 는 다음 일을 기다리며 비어 있습니다. 이 빈 시간이 GPU starvation 입니다.
           </p>
           <p>
             decode 한 step 에 kernel 이 300개이고 launch 하나에 5 µs 가 들면 CPU 는 step 마다 1.5
@@ -41,9 +40,9 @@ export default function LaunchOverheadAndCpuGpuSynchronizationArticle() {
             지우는지 봅니다.
           </p>
           <p>
-            이어지는 절은 launch overhead 의 크기와 상각, CPU 제출 병목과 starvation 의 조건,
-            동기화가 pipeline 을 비우는 방식, graph replay 의 latency 와 warmup, capture 가
-            실패했을 때의 증상 순서로 갑니다.
+            순서는 비용의 크기에서 그 비용이 낳는 결과로 갑니다. launch overhead 가 얼마이고 어떻게 상각되는지, 그 비용이 언제 CPU 제출 병목과 starvation 으로
+            넘어가는지, 동기화가 pipeline 을 어떻게 비우는지, graph replay 의 latency 와 warmup 은 어떤지, capture 가 실패하면 무엇이 보이는지를
+            차례로 봅니다.
           </p>
         </div>
         <LaunchOverheadAndCpuGpuSynchronizationViz />
@@ -56,27 +55,23 @@ export default function LaunchOverheadAndCpuGpuSynchronizationArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            host launch overhead 는 Python 이 인자를 준비하고 C++ dispatcher 를 거쳐 driver 가
-            command 를 GPU queue 에 쓰기까지의 CPU 시간입니다. kernel 이 얼마나 큰 일을 하든 이
-            비용은 거의 같아서, 일이 작을수록 비중이 커집니다.
+            host launch overhead 로 재는 것은 CPU 시간입니다. Python 이 인자를 준비하고 C++ dispatcher 를 거쳐 driver 가 command 를
+            GPU queue 에 쓰기까지 걸리는 시간입니다. kernel 이 얼마나 큰 일을 하든 이 비용은 거의 같아서, 일이 작을수록 비중이 커집니다.
           </p>
           <p>
-            NVIDIA blog 의 V100 측정에서는 2.9 µs 짜리 kernel 을 stream 에 연달아 넣을 때
-            kernel 당 3.8 µs 가 걸렸습니다. kernel 자체보다 launch 가 0.9 µs 를 더 먹은 셈이고,
-            launch 마다 동기화를 넣으면 9.6 µs 로 뜁니다. PyTorch 처럼 Python 층이 위에 있으면
-            kernel 당 수 µs 에서 수십 µs 까지 늘어납니다.
+            NVIDIA blog 의 V100 측정에서는 2.9 µs 짜리 kernel 을 stream 에 연달아 넣을 때 kernel 당 3.8 µs 가 걸렸습니다. kernel 자체보다
+            launch 가 0.9 µs 를 더 먹은 셈입니다. launch 마다 동기화를 넣으면 9.6 µs 로 뜁니다. PyTorch 처럼 Python 층이 위에 있으면 kernel 당
+            수 µs 에서 수십 µs 까지 늘어납니다.
           </p>
           <p>
-            이 비용을 지우는 방법은 모두 상각입니다. launch amortization 은 고정 비용 하나를 더
-            많은 일에 나눠 붙이는 것으로, kernel fusion 은 launch 한 번당 일을 키우고, batch 는
-            같은 launch 로 더 많은 token 을 처리하며, graph 는 launch 300개를 하나로 묶습니다.
-            어느 쪽이든 kernel 당 CPU 비용은 그대로이고 나눠지는 분모가 커집니다.
+            이 비용을 지우는 방법은 모두 상각입니다. launch amortization 은 고정 비용 하나를 더 많은 일에 나눠 붙이는 것입니다. kernel fusion 은
+            launch 한 번당 일을 키우고 batch 는 같은 launch 로 더 많은 token 을 처리하며 graph 는 launch 300개를 하나로 묶습니다. 어느 쪽이든
+            kernel 당 CPU 비용은 그대로이고 나눠지는 분모가 커집니다.
           </p>
           <p>
-            CPU 가 kernel 을 넣는 속도와 GPU 가 비우는 속도를 비율로 보면 starvation 이 바로
-            보입니다. launch 하나에 5 µs 면 CPU 는 초당 20만 개를 넣고, GPU 가 kernel 하나를 4
-            µs 에 끝내면 초당 25만 개를 비웁니다. 들어오는 속도가 나가는 속도의 80% 이므로 GPU 는
-            시간의 20% 를 빈 queue 앞에서 보냅니다.
+            CPU 가 kernel 을 넣는 속도와 GPU 가 비우는 속도를 비율로 보면 starvation 이 바로 보입니다. launch 하나에 5 µs 면 CPU 는 초당 20만 개를
+            넣고 GPU 가 kernel 하나를 4 µs 에 끝내면 초당 25만 개를 비웁니다. 들어오는 속도가 나가는 속도의 80% 이므로 GPU 는 시간의 20% 를 빈 queue
+            앞에서 보냅니다.
           </p>
         </div>
         <ExplainedFormula
@@ -124,22 +119,18 @@ export default function LaunchOverheadAndCpuGpuSynchronizationArticle() {
             이 몫이 runtime CPU bottleneck 입니다.
           </p>
           <p>
-            Viz 의 첫 장면이 그 예입니다. scheduling 1.0 ms 에 launch 1.5 ms 를 더한 CPU step 이
-            2.5 ms 인데 GPU 실행은 2.0 ms 라서, GPU 는 step 마다 0.5 ms 를 빈 queue 앞에서
-            기다립니다. GPU 가 바쁜 비율은 2.0/2.5 = 80% 이고 TPOT 은 2.0 ms 가 아니라 2.5 ms
-            입니다.
+            Viz 의 첫 장면이 그 예입니다. scheduling 1.0 ms 에 launch 1.5 ms 를 더한 CPU step 이 2.5 ms 인데 GPU 실행은 2.0 ms 라서
+            GPU 는 step 마다 0.5 ms 를 빈 queue 앞에서 기다립니다. GPU 가 바쁜 비율은 2.0/2.5 = 80% 입니다. TPOT 도 GPU 실행 시간 2.0 ms
+            가 아닌 2.5 ms 로 찍힙니다.
           </p>
           <p>
-            반대로 batch 가 커서 GPU 실행이 4 ms 면 CPU 2.5 ms 는 그 뒤에 숨고 CPU 는 step 마다
-            1.5 ms 를 기다립니다. 이때는 launch 를 줄여도 step 시간이 줄지 않습니다. 어느 쪽이
-            병목인지는 두 timeline 을 profiler 로 나란히 놓아야 보이며, GPU 쪽만 보면 kernel 사이
-            빈틈으로 나타납니다.
+            반대로 batch 가 커서 GPU 실행이 4 ms 면 CPU 2.5 ms 는 그 뒤에 숨고 CPU 는 step 마다 1.5 ms 를 기다립니다. 이때는 launch 를 줄여도
+            step 시간이 줄지 않습니다. 어느 쪽이 병목인지는 두 timeline 을 profiler 로 나란히 놓아야 보이며 GPU 쪽만 보면 kernel 사이 빈틈으로 나타납니다.
           </p>
           <p>
-            graph replay 는 launch 1.5 ms 를 수십 µs 로 줄이므로 CPU step 이 1.06 ms 가 되고 GPU
-            2.0 ms 가 병목이 됩니다. 그러나 scheduling 1.0 ms 는 그대로이므로, model 이 작아
-            GPU 실행이 0.8 ms 로 내려오면 다시 CPU 가 병목입니다. 그 다음 수단은 launch 가 아니라
-            scheduling 자체를 GPU 실행과 겹치는 것입니다.
+            graph replay 는 launch 1.5 ms 를 수십 µs 로 줄이므로 CPU step 이 1.06 ms 가 되고 GPU 2.0 ms 가 병목이 됩니다. 그러나
+            scheduling 1.0 ms 는 그대로이므로 model 이 작아 GPU 실행이 0.8 ms 로 내려오면 다시 CPU 가 병목입니다. 그러면 손댈 곳은 launch 가
+            아닙니다. scheduling 자체를 GPU 실행과 겹쳐야 합니다.
           </p>
           <p>
             겹치려면 step n 의 GPU 실행 중에 step n+1 의 scheduling 을 돌려야 하고, 그러려면
@@ -193,10 +184,9 @@ export default function LaunchOverheadAndCpuGpuSynchronizationArticle() {
             <code>if tensor:</code> 처럼 GPU 값을 CPU 로 가져오는 모든 호출이 암묵적 지점입니다.
           </p>
           <p>
-            동기화가 비싼 이유는 기다리는 시간 자체가 아니라 pipeline 이 비기 때문입니다.
-            PyTorch 는 GPU 작업을 queue 에 넣고 바로 돌아오므로 평소에는 CPU 가 GPU 보다 앞서
-            달립니다. 동기화 지점에서 CPU 는 queue 가 다 빌 때까지 멈추고, 그 뒤 다음 step 의
-            scheduling 을 시작하는 동안 GPU 는 할 일이 없습니다.
+            동기화가 비싼 이유는 기다리는 시간 자체가 아니라 pipeline 이 비기 때문입니다. PyTorch 는 GPU 작업을 queue 에 넣고 바로 돌아오므로 평소에는 CPU 가
+            GPU 보다 앞서 달립니다. 동기화 지점에서 CPU 는 queue 가 다 빌 때까지 멈추고 그 뒤 다음 step 의 scheduling 을 시작하는 동안 GPU 는 할 일이
+            없습니다.
           </p>
           <p>
             Viz 의 두 번째 장면이 그 비용입니다. 동기화가 없을 때 2.5 ms 였던 step 이 step 끝
@@ -211,10 +201,8 @@ export default function LaunchOverheadAndCpuGpuSynchronizationArticle() {
             한 step 늦게 읽으면 지점이 사라집니다.
           </p>
           <p>
-            CUDA Best Practices Guide 는 CPU–GPU 동기화 지점이 GPU pipeline 의 stall 을 뜻하므로
-            드물게 써야 한다고 적습니다. 반대로 timing 을 잴 때는 동기화 없이는 CPU timer 가
-            제출 시간만 재므로, 측정에서는 일부러 넣되 그 값이 serving 의 step 시간이 아님을
-            구분해야 합니다.
+            CUDA Best Practices Guide 는 CPU–GPU 동기화 지점이 GPU pipeline 의 stall 을 뜻하므로 드물게 써야 한다고 적습니다. 반대로
+            timing 을 잴 때는 동기화 없이는 CPU timer 가 제출 시간만 재므로 측정에서는 일부러 넣되 그 값이 serving 의 step 시간이 아님을 구분해야 합니다.
           </p>
           <p>
             host 와 device 사이 copy 도 동기화 지점이 될 수 있습니다. pageable memory 에서의{" "}
@@ -268,15 +256,13 @@ export default function LaunchOverheadAndCpuGpuSynchronizationArticle() {
             무관한 수십 µs 이고, 나머지는 GPU 실행 시간이라 replay 가 줄이는 것은 앞부분뿐입니다.
           </p>
           <p>
-            NVIDIA blog 의 예시로 셈하면 kernel 20개 graph 의 kernel 당 시간이 3.4 µs 이고 kernel
-            실행이 2.9 µs 이므로 graph launch 의 몫은 20 × 0.5 = 10 µs 입니다. kernel 300개
-            decode step 이라면 eager launch 1.5 ms 가 수십 µs 로 내려오고, GPU 실행 1.2 ms 가
-            step 시간이 됩니다.
+            NVIDIA blog 의 예시로 셈하면 kernel 20개 graph 의 kernel 당 시간이 3.4 µs 이고 kernel 실행이 2.9 µs 이므로 graph launch
+            의 몫은 20 × 0.5 = 10 µs 입니다. kernel 300개 decode step 이라면 eager launch 1.5 ms 가 수십 µs 로 내려오고 GPU 실행
+            1.2 ms 가 step 시간이 됩니다.
           </p>
           <p>
-            첫 replay 는 이후보다 느립니다. blog 는 첫 graph launch 가 그 뒤보다 약 33% 느리다고
-            보고하며, executable graph 를 device 에 올리는 upload 가 첫 launch 에 섞이기 때문
-            입니다. 수천 번 반복하면 무시할 수 있지만 첫 요청의 TPOT 에는 그대로 보입니다.
+            첫 replay 는 이후보다 느립니다. blog 는 첫 graph launch 가 그 뒤보다 약 33% 느리다고 보고합니다. executable graph 를 device 에
+            올리는 upload 가 첫 launch 에 섞이기 때문입니다. 수천 번 반복하면 무시할 수 있지만 첫 요청의 TPOT 에는 그대로 보입니다.
           </p>
           <p>
             graph warmup 은 이 두 가지 첫 실행 비용을 요청 전에 치르는 일입니다. capture 전에는
@@ -343,16 +329,14 @@ export default function LaunchOverheadAndCpuGpuSynchronizationArticle() {
             호출이 그대로 찍히므로 가장 빨리 잡힙니다.
           </p>
           <p>
-            틀린 값을 재생하는 경우는 capture 가 성공했기 때문에 더 위험합니다. CPU 값에 따른 분기가
-            capture 때의 경로로 굳어 있거나, capture 밖에서 만든 tensor 를 replay 가 계속 읽거나,
-            graph pool 을 공유한 graph 를 순서 없이 replay 한 경우입니다. 증상은 오류가 아니라
-            품질 저하나 간헐적 이상 출력입니다.
+            틀린 값을 재생하는 경우는 capture 가 성공했기 때문에 더 위험합니다. CPU 값에 따른 분기가 capture 때의 경로로 굳어 있거나, capture 밖에서 만든
+            tensor 를 replay 가 계속 읽거나, graph pool 을 공유한 graph 를 순서 없이 replay 한 경우입니다. 증상은 오류로 뜨지 않습니다. 품질 저하나
+            간헐적 이상 출력으로 나타납니다.
           </p>
           <p>
-            eager fallback 은 runtime 이 호환되지 않는 backend 나 상한을 넘는 batch 를 만나 graph
-            없이 돌리는 경우입니다. 오류가 없으니 기동은 성공하고 TPOT 만 나빠집니다. 300개
-            launch 가 돌아오면 첫 절의 예시대로 step 이 1.2 ms 에서 1.5 ms 이상으로 늘어나며,
-            낮은 batch 에서만 나타나므로 부하 시험에서는 놓치기 쉽습니다.
+            eager fallback 은 runtime 이 호환되지 않는 backend 나 상한을 넘는 batch 를 만나 graph 없이 돌리는 경우입니다. 오류가 없으니 기동은
+            성공하고 TPOT 만 나빠집니다. 300개 launch 가 돌아오면 첫 절의 예시대로 step 이 1.2 ms 에서 1.5 ms 이상으로 늘어납니다. 낮은 batch 에서만
+            나타나므로 부하 시험에서는 놓치기 쉽습니다.
           </p>
           <p>
             진단 순서는 세 가지입니다. 먼저 profiler 에서 step 마다 launch 수가 1 인지 300 인지

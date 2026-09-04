@@ -12,10 +12,8 @@ export default function ServingDeployment() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          LLM Pod는 container가 시작된 뒤에도 weight를 읽고 GPU memory를
-          할당하며, tensor-parallel worker를 연결하고 kernel을 warm-up하는
-          시간이 필요합니다. 이때 process가 살아 있다는 사실만 보고 traffic을
-          보내면 첫 요청이 초기화 비용을 떠안고, rollout 중인 replica들이 연달아
+          LLM Pod는 container가 시작된 뒤에도 weight를 읽고 GPU memory를 할당하며 tensor-parallel worker를 연결하고 kernel을 warm-
+          up하는 시간이 필요합니다. 이때 process가 살아 있다는 사실만 보고 traffic을 보내면 첫 요청이 초기화 비용을 떠안고 rollout 중인 replica들이 연달아
           timeout을 만들 수 있습니다.
         </p>
         <p className="leading-8">
@@ -31,12 +29,9 @@ export default function ServingDeployment() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Startup, readiness, liveness는 같은 health check가 아니다</h3>
         <p className="leading-8">
-          Kubernetes에서 startup probe가 성공하기 전에는 readiness와 liveness
-          probe가 실행되지 않습니다. Readiness 실패는 Pod를 Service의
-          EndpointSlice에서 제외하지만 process는 계속 살려 두고, liveness 실패는
-          설정한 임계치 뒤 container를 재시작합니다. 따라서 “요청이 밀렸다”를
-          liveness 조건으로 쓰면 바쁜 replica를 재시작해 남은 replica의 부하까지
-          키우는 cascading failure가 생길 수 있습니다.
+          Kubernetes에서 startup probe가 성공하기 전에는 readiness와 liveness probe가 실행되지 않습니다. Readiness 실패는 Pod를
+          Service의 EndpointSlice에서 제외하지만 process는 계속 살려 두고 liveness 실패는 설정한 임계치 뒤 container를 재시작합니다. 그래서 “요청이
+          밀렸다”를 liveness 조건으로 쓰면 바쁜 replica를 재시작해 남은 replica의 부하까지 키우는 cascading failure가 생길 수 있습니다.
         </p>
       </div>
 
@@ -91,12 +86,9 @@ T_{\mathrm{start}}&\approx \underbrace{T_{\mathrm{delay}}}_{\text{initial delay 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Readiness는 첫 admission뿐 아니라 overload와 drain에도 사용한다</h3>
         <p className="leading-8">
-          Readiness endpoint는 HTTP process가 응답한다는 사실보다
-          model·tokenizer·worker가 같은 version으로 준비됐고 새 요청을 받을 수
-          있는지를 확인해야 합니다. 종료할 때는 먼저 새 admission을 막고,
-          EndpointSlice와 load balancer의 전파 시간을 고려한 뒤 진행 중인
-          stream에 grace period를 줍니다. 강제 종료까지 남은 시간보다 최대
-          stream 수명이 길다면 application-level cancellation과 resume 정책도
+          Readiness endpoint는 HTTP process가 응답한다는 사실보다 model·tokenizer·worker가 같은 version으로 준비됐고 새 요청을 받을 수
+          있는지를 확인해야 합니다. 종료할 때는 먼저 새 admission을 막고 EndpointSlice와 load balancer의 전파 시간을 고려한 뒤 진행 중인 stream에
+          grace period를 줍니다. 강제 종료까지 남은 시간보다 최대 stream 수명이 길다면 application-level cancellation과 resume 정책도
           필요합니다.
         </p>
 

@@ -8,11 +8,9 @@ export default function Fourier() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Fourier analysis는 “모든 signal이 몇 개의 sine wave로만 이루어진다”는
-          단순한 주장이 아니다. 적절한 함수 공간에서 signal을 서로 orthogonal한
-          oscillatory basis의 coefficient로 표현한다는 관점이다. Euler identity가
-          cosine과 sine을 하나의 complex exponential에 묶어 magnitude와 phase를
-          동시에 다룰 수 있게 한다.
+          Fourier analysis를 “모든 signal이 몇 개의 sine wave로만 이루어진다”는 주장으로 읽으면 너무 단순하다. 적절한 함수 공간에서 signal을 서로
+          orthogonal한 oscillatory basis의 coefficient로 표현하는 관점이다. Euler identity가 cosine과 sine을 하나의 complex
+          exponential에 묶어 magnitude와 phase를 동시에 다룰 수 있게 해 준다.
         </p>
       </div>
       <div id="nyquist-boundary" className="scroll-mt-24" />
@@ -61,17 +59,13 @@ export default function Fourier() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>유한 frame은 signal에 rectangular window를 곱한 것이다</h3>
         <p>
-          관측 구간의 시작과 끝이 자연스럽게 이어지지 않으면 DFT의 periodic
-          assumption에서 경계 discontinuity가 생기고 energy가 여러 bin으로 퍼지는
-          spectral leakage가 나타난다. Hann 같은 taper window는 경계를 부드럽게
-          만들어 side lobe를 줄이지만 main lobe를 넓힌다. 따라서 leakage 감소와
-          가까운 tone 분리 능력 사이에 trade-off가 있다.
+          관측 구간의 시작과 끝이 자연스럽게 이어지지 않으면 DFT의 periodic assumption에서 경계 discontinuity가 생기고 energy가 여러 bin으로 퍼지는
+          spectral leakage가 나타난다. Hann 같은 taper window는 경계를 부드럽게 만들어 side lobe를 줄이는 대신 main lobe를 넓힌다. Leakage
+          감소와 가까운 tone 분리 능력 사이에 trade-off가 있는 셈이다.
         </p>
         <p>
-          Aliasing, leakage와 zero-padding은 서로 다른 현상이다. Aliasing은
-          sampling 전 band limit 위의 성분이 낮은 frequency로 접히는 문제이고,
-          leakage는 유한 frame과 window의 문제이며, zero-padding은 이미 관측한
-          sequence의 DFT grid를 더 촘촘하게 읽는 방법이다.
+          Aliasing·leakage·zero-padding은 서로 다른 현상이다. Aliasing은 sampling 전 band limit 위의 성분이 낮은 frequency로 접히는
+          문제다. Leakage는 유한 frame과 window에서 오는 문제이고 zero-padding은 이미 관측한 sequence의 DFT grid를 더 촘촘하게 읽는 방법이다.
         </p>
         <h3>Nyquist 조건은 FFT가 만들어 주는 보장이 아니다</h3>
         <p>

@@ -61,10 +61,8 @@ export default function LlmAsAJudgeArticle() {
             물으면 judge 는 길이나 어조 같은 표면 특징에 기대기 쉽습니다.
           </p>
           <p>
-            G-Eval 은 평가 기준을 단계별 질문으로 풀어 쓰고 judge 가 그 순서를 따라 생각을 적은
-            뒤(chain-of-thought) 정해진 양식으로 점수를 채우게(form-filling) 하는 rubric 설계로,
-            요약 품질 평가에서 사람과 Spearman 상관 0.514 를 기록해 이전 자동 metric 들을
-            앞섰습니다.
+            G-Eval 은 rubric 설계 쪽에서 답을 찾았습니다. 평가 기준을 단계별 질문으로 풀어 쓰고 judge 가 그 순서를 따라 생각을 적은 뒤(chain-of-thought)
+            정해진 양식으로 점수를 채우게(form-filling) 합니다. 요약 품질 평가에서 사람과 Spearman 상관 0.514 를 기록해 이전 자동 metric 들을 앞섰습니다.
           </p>
           <p>
             Rubric 이 있어도 judge 가 그것을 실제로 따르는지는 별개 문제입니다. 다음 절의
@@ -166,10 +164,9 @@ export default function LlmAsAJudgeArticle() {
             높게 쳤습니다. Rubric 에 길이 기준이 없어도 분량 자체가 신호로 쓰인 것입니다.
           </p>
           <p>
-            Self-preference bias 는 GPT-4 judge 가 자기 계열 답을 평균보다 10%p 높은 승률로,
-            Claude-v1 judge 는 25%p 높은 승률로 골랐다는 관찰에서 나왔습니다. 다만 저자들은
-            표본이 적어 이 차이가 우연인지 진짜 편향인지 통계적으로 확정하지 못한다고 밝혔고,
-            GPT-3.5 judge 는 자기 선호가 거의 없었습니다.
+            Self-preference bias 는 GPT-4 judge 가 자기 계열 답을 평균보다 10%p 높은 승률로, Claude-v1 judge 는 25%p 높은 승률로 골랐다는
+            관찰에서 나왔습니다. 다만 저자들은 표본이 적어 이 차이가 우연인지 진짜 편향인지 통계적으로 확정하지 못한다고 밝혔습니다. GPT-3.5 judge 는 자기 선호가 거의
+            없었습니다.
           </p>
         </div>
         <ProgressiveDetail
@@ -177,9 +174,8 @@ export default function LlmAsAJudgeArticle() {
           preview="Rubric 이 분량에 대해 말한 바가 없으면 judge 는 길이를 노력이나 성실함의 대리 신호로 쓰기 쉽고, 짧고 정확한 답보다 길고 반복적인 답을 더 꼼꼼해 보인다고 판정하기 쉽습니다."
         >
           <p>
-            사람 평가자도 같은 함정에 빠지지만, judge model 은 그 경향이 rubric 문구 하나로
-            쉽게 재현·증폭된다는 점이 다릅니다. "자세히 설명하라"는 지시가 rubric 에 있으면
-            분량 편향이 더 커집니다.
+            사람 평가자도 같은 함정에 빠지지만 judge model 은 그 경향이 rubric 문구 하나로 쉽게 재현·증폭된다는 점이 다릅니다. "자세히 설명하라"는 지시가 rubric
+            에 있으면 분량 편향이 더 커집니다.
           </p>
           <p>
             대응은 rubric 에 "같은 정보량이면 짧은 답을 우대한다"처럼 분량에 대한 명시적 규칙을
@@ -202,22 +198,18 @@ export default function LlmAsAJudgeArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Judge calibration 은 judge 의 판정을 그대로 믿지 않고, 사람이 매긴 기준과 얼마나
-            일치하는지(agreement rate, 상관계수)를 재서 그 judge 를 쓸지, rubric 을 고칠지,
-            비대칭을 어떻게 보정할지를 정하는 작업입니다.
+            Judge calibration 은 judge 의 판정을 그대로 믿지 않는 데서 출발합니다. 사람이 매긴 기준과 얼마나 일치하는지(agreement rate, 상관계수)를 먼저
+            잽니다. 그 결과를 보고 이 judge 를 쓸지, rubric 을 고칠지, 비대칭을 어떻게 보정할지를 정합니다.
           </p>
           <p>
-            앞서 본 숫자들이 이 calibration 의 결과입니다. GPT-4 judge 는 MT-Bench 에서 사람과
-            85%, Chatbot Arena 에서 87%(단일 답변 채점은 95%) 일치했고, G-Eval 은 요약에서
-            사람과 Spearman 0.514 를 기록했습니다. 이 숫자가 사람-사람 일치율(81%)보다
-            높다는 것은 judge 가 못해도 사람 두 명이 서로 다투는 정도로는 신뢰할 만하다는
-            뜻이지, 언제나 옳다는 뜻은 아닙니다.
+            앞서 본 숫자들이 이 calibration 의 결과입니다. GPT-4 judge 는 MT-Bench 에서 사람과 85%, Chatbot Arena 에서 87%(단일 답변 채점은
+            95%) 일치했고, G-Eval 은 요약에서 사람과 Spearman 0.514 를 기록했습니다. 이 숫자가 사람-사람 일치율(81%)보다 높으니 judge 는 적어도 사람 두
+            명이 서로 다투는 정도로는 신뢰할 만합니다. 물론 언제나 옳다는 보장은 여기 없습니다.
           </p>
           <p>
-            Calibration 은 세 가지를 조합합니다. Rubric 으로 볼 기준을 고정하고, 순서를 두 번
-            돌려 position bias 를 상쇄하고, 사람 labeled sample 로 agreement rate 를 주기적으로
-            재확인하는 것입니다. 세 조각 중 하나만 있으면 judge 의 판정은 특정 task·model
-            조합에서만 우연히 맞을 위험이 남습니다.
+            Calibration 은 세 가지를 조합합니다. Rubric 으로 볼 기준을 고정하고 순서를 두 번 돌려 position bias 를 상쇄한 뒤, 사람 labeled
+            sample 로 agreement rate 를 주기적으로 재확인합니다. 세 조각 중 하나만 있으면 judge 의 판정은 특정 task·model 조합에서만 우연히 맞을 위험이
+            남습니다.
           </p>
         </div>
         <TermBreakdown

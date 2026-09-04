@@ -14,11 +14,9 @@ export default function Gates({
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          세 gate는 같은 현재 input xₜ와 이전 hidden state hₜ₋₁을 보지만 서로 다른
-          parameter로 0과 1 사이의 vector를 만든다. 한 scalar로 cell 전체를 켜는
-          것이 아니라 hidden dimension마다 다른 retention·write·exposure 비율을
-          학습한다. Sigmoid가 포화되면 gate policy가 0 또는 1에 가까운 장기 결정으로
-          바뀌지만 그만큼 gate network 자체의 gradient는 작아질 수 있다.
+          세 gate는 같은 현재 input xₜ와 이전 hidden state hₜ₋₁을 보지만 서로 다른 parameter로 0과 1 사이의 vector를 만든다. 한 scalar로
+          cell 전체를 켜는 것이 아니라 hidden dimension마다 다른 retention·write·exposure 비율을 학습한다. Sigmoid가 포화되면 gate
+          policy가 0 또는 1에 가까운 장기 결정으로 바뀌지만 그만큼 gate network 자체의 gradient는 작아진다.
         </p>
       </div>
 
@@ -56,7 +54,9 @@ g_t&=\underbrace{\tanh(a_g)}_{\text{부호 있는 후보값}}
         <p className="text-xs font-bold text-primary">논문 해설 · Learning to Forget</p>
         <h3 className="mt-2 text-base font-bold">연속 sequence에서는 memory를 쓰는 능력만큼 지울 시점을 학습하는 능력이 필요했다</h3>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Gers·Schmidhuber·Cummins는 episode boundary가 외부에서 명확히 주어지지 않는 continual prediction에서 오래된 cell content를 reset할 forget gate를 도입했습니다. 이 연구는 forget gate가 현대 LSTM의 기본 구성으로 자리 잡은 근거이지만, 모든 channel을 오래 보존하는 것이 항상 최적이거나 bias 1이 보편적인 정답이라는 뜻은 아닙니다.
+          Continual prediction에서는 episode boundary가 외부에서 명확히 주어지지 않습니다. Gers·Schmidhuber·Cummins는 그런 상황에서 오래된
+          cell content를 reset할 forget gate를 도입했습니다. forget gate가 현대 LSTM의 기본 구성으로 자리 잡은 근거가 이 연구입니다. 다만 모든
+          channel을 오래 보존하는 것이 항상 최적이라거나 bias 1이 보편적인 정답이라는 뜻은 아닙니다.
         </p>
       </div>
 
@@ -64,18 +64,18 @@ g_t&=\underbrace{\tanh(a_g)}_{\text{부호 있는 후보값}}
         <p className="text-xs font-bold text-primary">논문 해설 · LSTM: A Search Space Odyssey</p>
         <h3 className="mt-2 text-base font-bold">Component 이름의 직관보다 같은 실험 조건에서의 ablation을 봐야 한다</h3>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Jozefowicz 등은 여러 task와 수천 개 architecture configuration에서 gate·activation·bias 변형을 비교했고 forget-gate bias가 강한 baseline에 중요함을 관찰했습니다. 이는 논문의 task·search space·budget 안의 empirical result이며, 변형 하나의 보편적인 순위나 특정 framework default를 보장하지 않습니다.
+          Jozefowicz 등은 여러 task와 수천 개 architecture configuration에서 gate·activation·bias 변형을 비교했고 forget-gate
+          bias가 강한 baseline에 중요함을 관찰했습니다. 논문의 task·search space·budget 안에서 나온 empirical result입니다. 변형 하나의 보편적인
+          순위나 특정 framework default까지 보장하지는 않습니다.
         </p>
       </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Forget bias는 보존을 선호하게 만드는 초기 조건이다</h3>
         <p>
-          Forget gate bias를 양수로 두면 학습 초기에 sigmoid output이 0.5보다 커져
-          direct path가 너무 빨리 닫히는 일을 줄일 수 있다. Jozefowicz 등의 대규모
-          architecture 탐색에서는 forget bias 1이 중요한 baseline 개선으로 관찰됐다.
-          다만 framework 기본값과 normalization, sequence reset policy가 다르므로
-          모든 task의 고정 정답으로 사용하지 않는다.
+          Forget gate bias를 양수로 두면 학습 초기에 sigmoid output이 0.5보다 커져 direct path가 너무 빨리 닫히는 일이 줄어든다. Jozefowicz
+          등의 대규모 architecture 탐색에서는 forget bias 1이 중요한 baseline 개선으로 관찰됐다. 다만 framework 기본값과 normalization,
+          sequence reset policy가 다르므로 모든 task의 고정 정답으로 사용하지 않는다.
         </p>
         <p>
           예를 들어 다른 logit contribution이 0일 때 bias 1은 f=σ(1)≈0.731을
@@ -84,9 +84,8 @@ g_t&=\underbrace{\tanh(a_g)}_{\text{부호 있는 후보값}}
           memory horizon을 자동으로 보장하는 설정이 아니다.
         </p>
         <p>
-          Forget gate가 없는 1997년 원형과 이후 continual sequence를 위해 forget
-          gate를 추가한 연구를 구분해야 한다. 위 논문 해설처럼 두 구조의 역사와
-          수식 범위를 한 이름으로 합치지 않는 것이 중요하다.
+          1997년 원형에는 forget gate가 없다. continual sequence를 위해 forget gate를 추가한 연구는 그 뒤에 나왔다. 위 논문 해설처럼 두 구조의
+          역사와 수식 범위를 한 이름으로 합치지 않는 것이 중요하다.
         </p>
       </div>
     </section>

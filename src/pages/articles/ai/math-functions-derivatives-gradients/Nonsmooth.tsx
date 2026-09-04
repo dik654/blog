@@ -6,10 +6,8 @@ export default function Nonsmooth() {
       <h2 className="mb-6 text-2xl font-bold">매끈하지 않은 점: ReLU와 subgradient</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          모든 유용한 함수가 모든 점에서 미분 가능한 것은 아닙니다. ReLU는 0의 왼쪽
-          기울기가 0이고 오른쪽 기울기가 1이라 표준 derivative가 하나로 정해지지 않습니다.
-          그렇다고 학습 전체를 포기하지는 않습니다. Convex 함수에서는 그 점을 받치는
-          직선의 기울기 범위를 subgradient로 정의하고, 구현은 그중 일관된 값을 선택합니다.
+          모든 유용한 함수가 모든 점에서 미분 가능한 것은 아닙니다. ReLU는 0의 왼쪽 기울기가 0이고 오른쪽 기울기가 1이라 표준 derivative가 하나로 정해지지 않습니다.
+          그렇다고 학습 전체를 포기하지는 않습니다. Convex 함수에서는 그 점을 받치는 직선의 기울기 범위를 subgradient로 정의하고 구현은 그중 일관된 값을 선택합니다.
         </p>
       </div>
       <ExplainedFormula

@@ -77,8 +77,7 @@ export default function GrammarTokenizerDecodingArticle() {
           question="현재 grammar에서 금지된 token을 왜 절대로 뽑지 않게 되나요?"
           idea={
             <p>
-              먼저 matcher가 허용 index 집합을 만들고, 집합 밖 logit을 −∞로 바꾼
-              뒤 남은 후보끼리 softmax를 다시 계산합니다.
+              Matcher가 허용 index 집합을 만들고 집합 밖 logit을 −∞로 바꾼 뒤 남은 후보끼리 softmax를 다시 계산합니다.
             </p>
           }
           formula={String.raw`A(s)=\{i:\operatorname{valid}(s,v_i)\},\quad \ell'_i=\ell_i\;\text{or}\;-\infty,\quad p_i=e^{\ell'_i}/\sum_j e^{\ell'_j}`}
@@ -144,11 +143,8 @@ export default function GrammarTokenizerDecodingArticle() {
           interpretation="금지 token은 e^(−∞)=0이므로 뽑히지 않습니다. 허용 후보의 상대 선호는 남지만, 선택한 숫자가 사실인지 또는 실행 권한이 있는지는 이 식이 보장하지 않습니다."
         />
         <p className="text-sm leading-7 text-muted-foreground">
-          A(s)의 정의는 위 식으로 충분하지만, vocabulary가 수만~수십만 개인
-          현실에서 매 decode step마다 모든 token을 grammar로 하나씩 다시
-          시뮬레이션하면 너무 느립니다. 실제 구현(xgrammar·llguidance 등)은
-          token을 독립적으로 검사하지 않고, 공유 prefix를 trie로 묶어 한 번에
-          가지치기합니다.
+          A(s)의 정의는 위 식으로 충분하지만 vocabulary가 수만~수십만 개인 현실에서는 매 decode step마다 모든 token을 grammar로 하나씩 다시 시뮬레이션하면
+          너무 느립니다. 실제 구현(xgrammar·llguidance 등)은 token을 독립적으로 검사하지 않고 공유 prefix를 trie로 묶어 한 번에 가지치기합니다.
         </p>
         <AlgorithmBlock
           title="A(s) 계산 — vocabulary trie를 grammar와 함께 걷기"
@@ -195,10 +191,8 @@ export default function GrammarTokenizerDecodingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Sampler가 token을 고른 뒤 matcher가 그 token을 소비해 state를
-            갱신합니다. Batch를 공유해도 prefix가 다르면 state와 mask가 다르며,
-            empty allowed set은 retry·fallback·request rejection 중 하나로
-            명시적으로 처리해야 합니다.
+            Sampler가 token을 고른 뒤 matcher가 그 token을 소비해 state를 갱신합니다. Batch를 공유해도 prefix가 다르면 state와 mask가
+            달라집니다. Empty allowed set은 retry·fallback·request rejection 중 하나로 명시적으로 처리해야 합니다.
           </p>
         </div>
         <div

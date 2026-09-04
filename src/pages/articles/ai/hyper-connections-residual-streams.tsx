@@ -21,9 +21,8 @@ export default function HyperConnectionsResidualStreamsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            표준 residual connection 은 층의 update 를 하나의 stream 에 더하는 통로 하나뿐입니다.
-            Hyper-connection(HC)은 이 통로를 n 개의 병렬 residual stream 으로 늘려, 각 층이 n개
-            stream 중 필요한 부분만 읽고 결과를 다시 나눠 쓰게 합니다.
+            표준 residual connection 은 층의 update 를 하나의 stream 에 더하는 통로 하나뿐입니다. Hyper-connection(HC)은 이 통로를 n 개의
+            병렬 residual stream 으로 늘려 각 층이 n개 stream 중 필요한 부분만 읽고 결과를 다시 나눠 쓰게 합니다.
           </p>
           <p>
             <Link to="/ai/transformer-architecture#transformer-block">Pre-LN</Link> 은 층 안에서
@@ -32,10 +31,8 @@ export default function HyperConnectionsResidualStreamsArticle() {
             은 O(d√(ln d/L))로 깊을수록 오히려 작아진다는 것을 증명했습니다.
           </p>
           <p>
-            그 차이는 실제로 학습이 되는지를 가릅니다. IWSLT14 번역 실험에서 warm-up 없이 학습한
-            Post-LN Transformer 는 BLEU 8.45 에 그쳤지만, warm-up 을 쓴 모델은 34 근처까지
-            올라갔습니다. Hyper-connection 은 이 단일 stream 을 여러 개로 늘려 같은 문제를 다른
-            축에서 다룹니다.
+            그 차이는 실제로 학습이 되는지를 가릅니다. IWSLT14 번역 실험에서 warm-up 없이 학습한 Post-LN Transformer 는 BLEU 8.45 에 그쳤지만
+            warm-up 을 쓴 모델은 34 근처까지 올라갔습니다. Hyper-connection 은 이 단일 stream 을 여러 개로 늘려 같은 문제를 다른 축에서 다룹니다.
           </p>
           <p>
             이 글은 stream 을 늘리는 hyper-connection 의 구조, 층마다 stream 을 읽고 섞고 쓰는
@@ -75,9 +72,9 @@ export default function HyperConnectionsResidualStreamsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Multiple residual streams 는 layer 입력 h 를 n 번 복제해 만든 hyper hidden matrix
-            H ∈ R^(n×d)입니다. n 을 expansion rate 라 부르고, n=1 이면 표준 residual connection
-            과 정확히 같아집니다. n 이 커질수록 stream 사이에 정보를 나눠 옮길 여지가 늘어납니다.
+            Multiple residual streams 는 layer 입력 h 를 n 번 복제해 만든 hyper hidden matrix H ∈ R^(n×d)입니다. n 을
+            expansion rate 라 부르고 n=1 이면 표준 residual connection 과 정확히 같아집니다. n 이 커질수록 stream 사이에 정보를 나눠 옮길 여지가
+            늘어납니다.
           </p>
           <p>
             늘어난 stream 은 공짜가 아닙니다. Hidden 4096, sequence 2048, batch 1, bf16 이면
@@ -85,9 +82,8 @@ export default function HyperConnectionsResidualStreamsArticle() {
             matrix 가 64 MiB 로, 표준 residual 의 네 배를 메모리에 들고 있어야 합니다.
           </p>
           <p>
-            반대로 mixing 행렬 자체의 연산량은 작습니다. Am, Ar, B 는 각각 n×1, n×n, 1×n 크기라
-            n=4 에서도 원소 몇 십 개 수준이고, 저자들은 이 추가 연산이 층 전체의 FLOPs 에 비해
-            무시할 만하다고 보고합니다. 비용은 메모리 쪽에 있고 연산 쪽에는 거의 없습니다.
+            mixing 행렬 자체의 연산량은 작습니다. Am, Ar, B 는 각각 n×1, n×n, 1×n 크기라 n=4 에서도 원소 몇 십 개 수준이고 저자들은 이 추가 연산이 층
+            전체의 FLOPs 에 비해 무시할 만하다고 보고합니다. 비용은 메모리 쪽에 있고 연산 쪽에는 거의 없습니다.
           </p>
         </div>
         <TermBreakdown
@@ -116,14 +112,12 @@ export default function HyperConnectionsResidualStreamsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            층 T(attention 이나 FFN)는 여전히 벡터 하나를 입력받습니다. Read 단계가 Am 으로 n개
-            stream 을 가중합해 그 입력을 만들고, T 를 통과한 출력을 write 단계가 B 로 다시 n개
-            stream 에 나눠 씁니다. 그 사이 residual mixing 이 기존 stream 끼리를 Ar 로 섞습니다.
+            층 T(attention 이나 FFN)는 여전히 벡터 하나를 입력받습니다. Read 단계가 Am 으로 n개 stream 을 가중합해 그 입력을 만들고 T 를 통과한 출력을
+            write 단계가 B 로 다시 n개 stream 에 나눠 씁니다. 그 사이 residual mixing 이 기존 stream 끼리를 Ar 로 섞습니다.
           </p>
           <p>
-            Residual mixing 은 이 세 단계 중 유일하게 층 T 를 거치지 않는 부분입니다. Stream 이
-            서로 정보를 교환하는 것은 오직 이 Ar 행렬을 통해서이고, 다음 절에서 보듯 이 행렬에
-            제약이 없으면 층을 쌓을수록 문제가 생깁니다.
+            Residual mixing 은 이 세 단계 중 유일하게 층 T 를 거치지 않는 부분입니다. Stream 이 서로 정보를 교환하는 것은 오직 이 Ar 행렬을 통해서이고 다음
+            절에서 보듯 이 행렬에 제약이 없으면 층을 쌓을수록 문제가 생깁니다.
           </p>
         </div>
         <ExplainedFormula
@@ -165,16 +159,13 @@ export default function HyperConnectionsResidualStreamsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Ar 을 제약 없이 학습하면 L 개 층을 지나는 신호는 Ar 을 L 번 곱한 행렬을 통과합니다.
-            이 곱이 항등에서 벗어나 있으면 신호는 특정 방향으로 커지거나 작아지기를 반복하고,
-            층이 깊어질수록 그 편차가 누적됩니다. mHC 는 Ar 에 doubly-stochastic 제약을 걸어
-            이 누적을 막습니다.
+            Ar 을 제약 없이 학습하면 L 개 층을 지나는 신호는 Ar 을 L 번 곱한 행렬을 통과합니다. 이 곱이 항등에서 벗어나 있으면 신호는 특정 방향으로 커지거나 작아지기를
+            반복하고 층이 깊어질수록 그 편차가 누적됩니다. mHC 는 Ar 에 doubly-stochastic 제약을 걸어 이 누적을 막습니다.
           </p>
           <p>
-            Doubly-stochastic 행렬은 원소가 모두 0 이상이고 모든 행과 열의 합이 1인 행렬입니다.
-            이런 행렬은 spectral norm 이 1 을 넘지 않고, 행렬곱에 대해 닫혀 있어 L 개를 곱해도
-            같은 성질이 유지됩니다. mHC 는 Sinkhorn-Knopp 알고리즘으로 학습된 행렬을 지수화한
-            뒤 행·열을 번갈아 정규화해 이 제약 위로 투영합니다.
+            Doubly-stochastic 행렬은 원소가 모두 0 이상이고 모든 행과 열의 합이 1인 행렬입니다. 이런 행렬은 spectral norm 이 1 을 넘지 않고 행렬곱에 대해
+            닫혀 있어 L 개를 곱해도 같은 성질이 유지됩니다. mHC 는 Sinkhorn-Knopp 알고리즘으로 학습된 행렬을 지수화한 뒤 행·열을 번갈아 정규화해 이 제약 위로
+            투영합니다.
           </p>
         </div>
         <ExplainedFormula
@@ -213,9 +204,8 @@ export default function HyperConnectionsResidualStreamsArticle() {
           preview="27B 모델의 zero-shot 평균 점수가 baseline 43.8에서 HC 48.9, mHC 51.0으로 올랐습니다. mHC 가 HC 보다도 더 나은 것은 안정성 덕에 더 큰 학습률·더 오래 학습이 가능해졌기 때문입니다."
         >
           <p>
-            저자들은 3B, 9B, 27B 로 모델 크기를 늘려 가며 mHC 의 이득이 규모가 커져도 유지되는지
-            확인했습니다. 이 비교는 DeepSeek-V3 계열 설정을 전제로 하며, 다른 아키텍처·다른
-            tokenizer 조합에서 같은 폭의 개선이 나온다는 근거는 아닙니다.
+            저자들은 3B, 9B, 27B 로 모델 크기를 늘려 가며 mHC 의 이득이 규모가 커져도 유지되는지 확인했습니다. 이 비교는 DeepSeek-V3 계열 설정을 전제로 하며 다른
+            아키텍처·다른 tokenizer 조합에서 같은 폭의 개선이 나온다는 근거는 아닙니다.
           </p>
         </ProgressiveDetail>
       </section>
@@ -246,14 +236,12 @@ export default function HyperConnectionsResidualStreamsArticle() {
         </div>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            mHC 의 제약은 norm 이 커지거나 작아지지 않는다는 것만 보장합니다. 여러 층에 걸친
-            doubly-stochastic 행렬의 곱은 정보를 점점 고르게 섞는 방향으로도 움직일 수 있어,
-            stream 사이 표현이 지나치게 비슷해지지 않는지는 별도로 확인해야 합니다.
+            mHC 의 제약은 norm 이 커지거나 작아지지 않는다는 것만 보장합니다. 여러 층에 걸친 doubly-stochastic 행렬의 곱은 정보를 점점 고르게 섞는 방향으로도
+            움직일 수 있어 stream 사이 표현이 지나치게 비슷해지지 않는지는 별도로 확인해야 합니다.
           </p>
           <p>
-            비용도 분명합니다. n 배의 활성값 메모리는 그대로 남고, Sinkhorn 반복 20 회가 층마다
-            추가되어 저자 보고 기준 6.7% 의 학습 비용이 더 듭니다. Static HC 가 아니라 dynamic
-            HC(DHC)를 쓰면 이 위에 입력 의존 행렬을 계산하는 비용이 더 붙습니다.
+            비용도 분명합니다. n 배의 활성값 메모리는 그대로 남고 Sinkhorn 반복 20 회가 층마다 추가되어 저자 보고 기준 6.7% 의 학습 비용이 더 듭니다. Static HC
+            가 아니라 dynamic HC(DHC)를 쓰면 이 위에 입력 의존 행렬을 계산하는 비용이 더 붙습니다.
           </p>
           <p>
             <Link to="/ai/motif-3-architecture#mhc">Motif 3 의 modified mHC</Link>는 이 mechanism

@@ -18,11 +18,9 @@ export default function Variants({
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          GRU(Gated Recurrent Unit)는 별도의 cell state 없이 hidden state 하나에서
-          retention과 candidate update를 섞는다. LSTM의 네 affine block보다 적은 세
-          block을 사용해 같은 input·hidden size에서 parameter와 recurrent state가
-          줄어들지만, 어느 unit이 더 정확한지는 dependency와 data scale, kernel
-          implementation에 따라 달라진다.
+          GRU(Gated Recurrent Unit)는 별도의 cell state 없이 hidden state 하나에서 retention과 candidate update를 섞는다.
+          LSTM의 네 affine block보다 적은 세 block을 사용하므로 같은 input·hidden size에서 parameter와 recurrent state가 줄어든다. 어느
+          unit이 더 정확한지는 dependency와 data scale, kernel implementation에 따라 달라진다.
         </p>
       </div>
 
@@ -125,7 +123,9 @@ M_{\rm state}^{\rm LSTM}&=\underbrace{2H\,B}_{\text{cell·hidden 2H개 × B byte
         <p className="text-xs font-bold text-primary">논문 해설 · Learning Phrase Representations using RNN Encoder–Decoder</p>
         <h3 className="mt-2 text-base font-bold">GRU는 LSTM을 줄인 이름이 아니라 state와 gate를 다시 parameterize한 recurrent unit이다</h3>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Cho 등은 phrase representation을 학습하는 encoder–decoder와 reset·update gate를 가진 hidden unit을 제안했습니다. 논문의 machine-translation phrase scoring 결과는 해당 pipeline의 근거이며, GRU가 모든 sequence task에서 LSTM보다 작고 빠르면서 정확도도 높다는 보편 비교는 아닙니다.
+          Cho 등은 phrase representation을 학습하는 encoder–decoder와 reset·update gate를 가진 hidden unit을 제안했습니다. 논문의
+          machine-translation phrase scoring 결과가 뒷받침하는 것은 그 pipeline까지입니다. 모든 sequence task에서 GRU가 LSTM보다 작고
+          빠르면서 정확도도 높다는 보편 비교로 확장되지는 않습니다.
         </p>
       </div>
 
@@ -133,7 +133,9 @@ M_{\rm state}^{\rm LSTM}&=\underbrace{2H\,B}_{\text{cell·hidden 2H개 × B byte
         <p className="text-xs font-bold text-primary">논문 해설 · An Empirical Exploration of Recurrent Network Architectures</p>
         <h3 className="mt-2 text-base font-bold">Architecture 비교는 hidden size가 아니라 task·parameter·optimizer 조건까지 함께 읽는다</h3>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          대규모 empirical comparison은 LSTM·GRU와 여러 gated architecture를 다양한 task에서 비교해 어떤 unit도 모든 조건에서 일관되게 우세하지 않음을 보여 줍니다. 이 결론 역시 논문이 탐색한 configuration과 task distribution의 범위이며, 현재 hardware kernel과 현대 model scale의 serving 비용을 직접 측정한 결과는 아닙니다.
+          대규모 empirical comparison은 LSTM·GRU와 여러 gated architecture를 다양한 task에서 비교해 어떤 unit도 모든 조건에서 일관되게 우세하지
+          않음을 보여 줍니다. 이 결론이 서 있는 자리도 논문이 탐색한 configuration과 task distribution 안입니다. 현재 hardware kernel과 현대
+          model scale의 serving 비용은 여기서 직접 측정하지 않았습니다.
         </p>
       </div>
 

@@ -135,7 +135,8 @@ export default function LlmTrainingStagesArticle() {
         />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            행동주의 심리학은 feedback과 환경의 역할을 떠올리는 비유로는 유용하지만, next-token likelihood를 파블로프의 고전적 조건화와 동일한 mechanism으로 만들지는 않습니다. 현대 RL 역시 reward를 쓰지만 MDP·policy optimization·credit assignment라는 별도 수학 체계를 가집니다.
+            행동주의 심리학은 feedback과 환경의 역할을 떠올리는 비유로는 유용하지만 next-token likelihood를 파블로프의 고전적 조건화와 동일한 mechanism으로
+            만들지는 않습니다. 현대 RL 역시 reward를 쓰지만 MDP·policy optimization·credit assignment라는 수학 체계가 따로 있습니다.
           </p>
           <p>
             <Link to="/ai/motif-3-architecture">Motif 3</Link>처럼 최신 모델도 새 attention·residual·expert architecture와 SFT·RL·MOPD를 동시에 사용합니다. 이 사례는 관심의 중심이 하나에서 다른 하나로 완전히 이동했다기보다, architecture와 post-training·system co-design이 함께 커졌다는 쪽에 가깝습니다.

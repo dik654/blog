@@ -7,7 +7,12 @@ export default function LLMDistill() {
       <h2 className="mb-6 text-2xl font-bold">LLM에서 token logit을 공유할 수 없다면 teacher sequence를 provenance가 있는 supervised dataset으로 바꿉니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>API teacher처럼 logits와 hidden state에 접근할 수 없거나 teacher와 student tokenizer가 다르면 같은 timestep의 vocabulary probability를 바로 KL로 비교할 수 없습니다. 같은 문자열도 token boundary와 vocabulary index가 다르기 때문입니다. 이때 teacher가 생성한 response를 student tokenizer로 다시 encode하고 ordinary sequence NLL로 학습하는 sequence-level distillation이 자연스럽습니다.</p>
-        <p>이 방식에서 teacher generation은 label이 아니라 dataset construction입니다. Prompt source·rights·language·difficulty, teacher/version·system prompt·sampling, filter·verifier·dedup, student chat template·loss mask가 모두 결과를 결정합니다. 많이 생성했다는 숫자보다 deployment task와 rare slice를 얼마나 덮었는지 확인해야 합니다.</p>
+        <p>
+            이 방식에서 teacher generation은 label이 아닙니다. dataset construction입니다. Prompt
+            source·rights·language·difficulty, teacher/version·system prompt·sampling, filter·verifier·dedup,
+            student chat template·loss mask가 모두 결과를 결정합니다. 많이 생성했다는 숫자보다 deployment task와 rare slice를 얼마나 덮었는지
+            확인해야 합니다.
+          </p>
       </div>
       <ExplainedFormula
         question="Teacher가 만든 response를 student가 학습할 때 실제 loss는 무엇일까요?"

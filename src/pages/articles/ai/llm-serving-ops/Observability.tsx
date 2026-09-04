@@ -72,22 +72,17 @@ export default function Observability() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>SLO는 평균보다 workload와 percentile을 먼저 고정한다</h3>
         <p className="leading-8">
-          Interactive chat의 TTFT와 batch summarization의 완료 시간은 같은 SLO가
-          아닙니다. Model alias, priority, prompt/output length bucket과
-          streaming 여부별로 어떤 요청을 valid event로 셀지 정한 뒤, 그중 기준을
-          만족한 비율로 SLI를 계산합니다. 취소도 client가 떠난 것인지 server가
-          deadline을 넘긴 것인지 분리해야 실패율을 왜곡하지 않습니다.
+          Interactive chat의 TTFT와 batch summarization의 완료 시간은 같은 SLO가 아닙니다. Model alias, priority,
+          prompt/output length bucket과 streaming 여부별로 어떤 요청을 valid event로 셀지 정한 뒤 그중 기준을 만족한 비율로 SLI를 계산합니다.
+          취소도 client가 떠난 것인지 server가 deadline을 넘긴 것인지 분리해야 실패율을 왜곡하지 않습니다.
         </p>
 
         <h3>Page는 GPU 상태가 아니라 error budget 소진 속도에 건다</h3>
         <p className="leading-8">
-          GPU utilization과 waiting request는 진단과 scale에 유용하지만, 사용자
-          영향이 없는데도 당직자를 호출할 수 있습니다. Paging은
-          TTFT·completion·error 같은 SLO event가 허용 실패 비율을 얼마나 빠르게
-          소진하는지에 연결합니다. 짧은 spike와 지속 장애를 함께 잡기 위해 긴
-          window와 짧은 window를 결합하고, traffic이 적은 서비스에서는 한두 건이
-          과도한 burn rate를 만들 수 있으므로 최소 event 수나 synthetic probe를
-          함께 둡니다.
+          GPU utilization과 waiting request는 진단과 scale에 유용하지만 사용자 영향이 없는데도 당직자를 호출할 수 있습니다. Paging은
+          TTFT·completion·error 같은 SLO event가 허용 실패 비율을 얼마나 빠르게 소진하는지에 연결합니다. 짧은 spike와 지속 장애를 함께 잡기 위해 긴
+          window와 짧은 window를 결합하고 traffic이 적은 서비스에서는 한두 건이 과도한 burn rate를 만들 수 있으므로 최소 event 수나 synthetic
+          probe를 함께 둡니다.
         </p>
       </div>
 
@@ -228,9 +223,7 @@ export default function Observability() {
           </li>
         </ol>
         <p className="leading-8">
-          이 경계를 명시하면 결정론적 policy와 model 판단을 구분할 수 있고,
-          장애가 생겼을 때 어떤 입력이 어떤 변경을 만들었는지도 추적할 수
-          있습니다.
+          이 경계를 명시하면 결정론적 policy와 model 판단을 구분할 수 있고 장애가 생겼을 때 어떤 입력이 어떤 변경을 만들었는지도 추적할 수 있습니다.
         </p>
       </div>
     </section>

@@ -155,10 +155,8 @@ export default function ClassicDistillationArticle() {
           있다는 뜻입니다.
         </p>
         <p>
-          음성 인식 실험에서도 같은 패턴이 나옵니다. Baseline 단일 모델은 test
-          frame accuracy 58.9%·WER 10.9%였고, model 10개 ensemble은
-          61.1%·10.7%까지 좋아졌습니다. 그 ensemble의 soft target으로
-          distillation한 단일 모델은 60.8%·10.7%를 냈고, ensemble이 만든
+          음성 인식 실험에서도 같은 패턴이 나옵니다. Baseline 단일 모델은 test frame accuracy 58.9%·WER 10.9%였고 model 10개 ensemble은
+          61.1%·10.7%까지 좋아졌습니다. 그 ensemble의 soft target으로 distillation한 단일 모델은 60.8%·10.7%를 냈습니다. ensemble이 만든
           개선분의 80% 이상을 student 하나가 그대로 가져갔습니다.
         </p>
       </section>
@@ -171,9 +169,8 @@ export default function ClassicDistillationArticle() {
           </h2>
         </header>
         <p>
-          Teacher가 틀릴 수 있으므로 soft target만 모방하지 않습니다. Dataset
-          label cross-entropy와 teacher-to-student forward KL을 α로 섞고, 큰
-          T에서 약해지는 soft gradient를 T²로 보정합니다.
+          Teacher가 틀릴 수 있으므로 soft target만 모방하지 않습니다. Dataset label cross-entropy와 teacher-to-student forward
+          KL을 α로 섞고 큰 T에서 약해지는 soft gradient를 T²로 보정합니다.
         </p>
         <ExplainedFormula
           question="Hard와 soft loss를 왜 함께 더하는가?"

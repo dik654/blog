@@ -247,15 +247,11 @@ g_c&=\underbrace{w\,d_c}_{\text{condition 방향을 scale}}\\
           adversarial 실패 모드 없이 guidance 방향을 만듭니다.
         </p>
         <p className="text-sm leading-7 text-muted-foreground">
-          CFG의 같은 extrapolation 아이디어를 attention output 레벨로 옮기면
-          Normalized Attention Guidance(NAG)가 됩니다. Noise prediction
-          εᵤ·ε_c 대신 positive·negative attention output 사이에 같은 형태의
-          extrapolation을 적용하되, L1-norm 기반 clamp(τ)로 결과가 원래
-          norm의 τ배를 넘지 못하게 누르고 원래 값과 α만큼 blend해 되돌립니다.
-          이 두 안전장치는 CFG에는 없는 것으로, guidance scale이 클수록
-          extrapolation이 원래 attention output에서 점점 멀어지다 결국
-          collapse하는(few-step·distilled model에서 CFG가 자주 실패하는
-          지점) 현상을 완화하기 위해 추가됐습니다.
+          CFG의 같은 extrapolation 아이디어를 attention output 레벨로 옮기면 Normalized Attention Guidance(NAG)가 됩니다. Noise
+          prediction εᵤ·ε_c 대신 positive·negative attention output 사이에 같은 형태의 extrapolation을 적용합니다. 여기에 L1-norm
+          기반 clamp(τ)로 결과가 원래 norm의 τ배를 넘지 못하게 누르고 원래 값과 α만큼 blend해 되돌리는 두 단계가 붙습니다. CFG에는 없는 안전장치인데, guidance
+          scale이 클수록 extrapolation이 원래 attention output에서 점점 멀어지다 결국 collapse하는 현상(few-step·distilled model에서
+          CFG가 자주 실패하는 지점)을 완화하려고 추가됐습니다.
         </p>
         <div className="flex flex-wrap gap-2">
           <CodeViewButton

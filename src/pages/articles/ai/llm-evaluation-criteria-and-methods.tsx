@@ -32,10 +32,9 @@ export default function LlmEvaluationCriteriaAndMethodsArticle() {
             질문을 다룹니다.
           </p>
           <p>
-            HELM 은 30 개 model 을 42 개 시나리오에서 정확도·보정·강건성·공정성·편향·독성·효율성
-            7 개 criteria 로 나눠 재고, BIG-bench 는 204 개 task 마다 서로 다른 정답 형식과
-            metric 을 씁니다. 같은 model 도 어떤 criteria 와 metric 을 고르느냐에 따라 결론이
-            달라지는 이유가 여기 있습니다.
+            HELM 은 30 개 model 을 42 개 시나리오에서 정확도·보정·강건성·공정성·편향·독성·효율성 7 개 criteria 로 나눠 재고 BIG-bench 는 204 개
+            task 마다 서로 다른 정답 형식과 metric 을 씁니다. 같은 model 도 어떤 criteria 와 metric 을 고르느냐에 따라 결론이 달라지는 이유가 여기
+            있습니다.
           </p>
         </div>
         <TermBreakdown
@@ -56,19 +55,17 @@ export default function LlmEvaluationCriteriaAndMethodsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Evaluation criteria 는 정확성·안전성·간결성처럼 어떤 성질을 잴지 정하는 축이고,
-            evaluation metric 은 그 성질에 실제 숫자를 매기는 계산 방법입니다. 같은 criteria 라도
-            metric 을 무엇으로 고르느냐에 따라 같은 output 이 다른 점수를 받습니다.
+            Evaluation criteria 는 정확성·안전성·간결성처럼 어떤 성질을 잴지 정하는 축입니다. 그 성질에 실제 숫자를 매기는 계산 방법이 evaluation metric
+            입니다. 같은 criteria 라도 metric 을 무엇으로 고르느냐에 따라 같은 output 이 다른 점수를 받습니다.
           </p>
           <p>
-            가령 정답을 추출하는 task 에서 정확성이라는 criteria 를 정확한 문자열 일치(exact
-            match)로 잴 수도, 겹치는 단어 비율(F1)로 잴 수도 있습니다. 1,000 개 샘플 중 정답과
-            완전히 같은 문자열이 850 개면 exact match 는 0.85 이지만, 표현이 달라도 핵심 단어가
-            겹치면 부분 점수를 주는 F1 은 이보다 높게 나오기도 합니다.
+            가령 정답을 추출하는 task 에서 정확성이라는 criteria 를 정확한 문자열 일치(exact match)로 잴 수도, 겹치는 단어 비율(F1)로 잴 수도 있습니다.
+            1,000 개 샘플 중 정답과 완전히 같은 문자열이 850 개면 exact match 는 0.85 이지만 표현이 달라도 핵심 단어가 겹치면 부분 점수를 주는 F1 은 이보다
+            높게 나오기도 합니다.
           </p>
           <p>
-            HELM 은 이 구분을 시나리오 설계에 그대로 반영합니다. 시나리오마다 잴 criteria 목록을
-            먼저 정하고, 그 각각에 대응하는 metric 을 지정한 뒤에야 model 을 채점합니다.
+            HELM 은 이 구분을 시나리오 설계에 그대로 반영합니다. 시나리오마다 잴 criteria 목록을 먼저 정하고 그 각각에 대응하는 metric 을 지정한 뒤에야 model 을
+            채점합니다.
           </p>
         </div>
         <div id="paper-helm" className="not-prose my-8 scroll-mt-24">
@@ -99,24 +96,21 @@ export default function LlmEvaluationCriteriaAndMethodsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Functional correctness 는 output 을 직접 실행하거나 채점 규칙에 넣어 통과·실패로
-            판정하는 정확성이고, semantic similarity evaluation 은 output 과 참조문의 embedding
-            거리로 연속값 점수를 매기는 정확성입니다. 전자는 표현이 달라도 동작이 맞으면
-            통과이고, 후자는 동작을 몰라도 문장이 비슷하면 높은 점수를 줍니다.
+            Functional correctness 는 output 을 직접 실행하거나 채점 규칙에 넣어 통과·실패로 판정합니다. Semantic similarity evaluation
+            은 output 과 참조문의 embedding 거리로 연속값 점수를 매깁니다. 둘 다 정확성을 재지만 기준이 다릅니다. 앞쪽은 표현이 달라도 동작이 맞으면 통과시키고 뒤쪽은
+            동작을 몰라도 문장이 비슷하면 높은 점수를 줍니다.
           </p>
           <p>
-            코드 생성에서 흔한 metric 은 pass@k 입니다. 같은 문제에 k 개 sample 을 뽑아 그 중
-            하나라도 unit test 를 모두 통과하면 성공으로 세는 이진 판정입니다. Codex 12B 는
-            HumanEval 문제에서 pass@1 28.8%, pass@100 70.2% 를 보고했습니다. 한 번만 뽑으면
-            28.8% 가 맞았지만, 100 개 중 하나만 맞아도 인정하는 기준으로는 70.2% 로 오릅니다.
+            코드 생성에서 흔한 metric 은 pass@k 입니다. 같은 문제에 k 개 sample 을 뽑아 그 중 하나라도 unit test 를 모두 통과하면 성공으로 세는 이진
+            판정입니다. Codex 12B 는 HumanEval 문제에서 pass@1 28.8%, pass@100 70.2% 를 보고했습니다. 한 번만 뽑으면 28.8% 가 맞았지만 100
+            개 중 하나만 맞아도 인정하는 기준으로는 70.2% 로 오릅니다.
           </p>
         </div>
         <FunctionalVsSemanticViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Semantic similarity evaluation 의 대표 예는 BERTScore 입니다. Reference 문장과
-            candidate 문장의 각 token 을 contextual embedding 으로 바꾼 뒤, 상대 문장에서 가장
-            가까운 token 과 코사인 유사도를 매칭해 recall·precision·F1 을 계산합니다.
+            Semantic similarity evaluation 의 대표 예는 BERTScore 입니다. Reference 문장과 candidate 문장의 각 token 을
+            contextual embedding 으로 바꾼 뒤 상대 문장에서 가장 가까운 token 과 코사인 유사도를 매칭해 recall·precision·F1 을 계산합니다.
           </p>
         </div>
         <ExplainedFormula
@@ -178,25 +172,21 @@ export default function LlmEvaluationCriteriaAndMethodsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Reference-based evaluation 은 사람이 만든 정답(reference)과 output 을 비교해 점수를
-            내고, reference-free evaluation 은 정답 문장 없이 input 과 규칙, 또는 별도 판정자만
-            으로 output 을 봅니다. 정답을 만드는 비용과 채점의 재현성이 이 축을 가릅니다.
+            Reference-based evaluation 은 사람이 만든 정답(reference)과 output 을 비교해 점수를 냅니다. Reference-free evaluation
+            에는 정답 문장이 없고 input 과 규칙, 또는 별도 판정자만으로 output 을 봅니다. 정답을 만드는 비용과 채점의 재현성이 이 축을 가릅니다.
           </p>
           <p>
-            가장 단순한 reference-based metric 은 exact match 입니다. Output 문자열이 reference
-            와 완전히 같으면 1, 다르면 0 으로 재는 이진 metric 으로, 1,000 개 추출 결과 중 850
-            개가 정답과 정확히 같으면 exact match rate 는 0.85 입니다. 표현만 다른 정답은 전부
-            0 으로 떨어집니다.
+            가장 단순한 reference-based metric 은 exact match 입니다. Output 문자열이 reference 와 완전히 같으면 1, 다르면 0 을 주는 이진
+            metric 입니다. 1,000 개 추출 결과 중 850 개가 정답과 정확히 같으면 exact match rate 는 0.85 입니다. 표현만 다른 정답은 전부 0 으로
+            떨어집니다.
           </p>
           <p>
-            Functional correctness 는 이 축에서 애매한 자리에 있습니다. Unit test 라는 참조
-            사양은 있지만 정답 output 문자열은 없어 reference-free 쪽에 가깝고, exact match 나
-            BERTScore 처럼 정답 텍스트 자체가 필요한 metric 만 순수한 reference-based 입니다.
+            Functional correctness 는 이 축에서 애매한 자리에 있습니다. Unit test 라는 참조 사양은 있지만 정답 output 문자열은 없어 reference-
+            free 쪽에 가깝고 exact match 나 BERTScore 처럼 정답 텍스트 자체가 필요한 metric 만 순수한 reference-based 입니다.
           </p>
           <p>
-            Reference 없는 평가는 정답 데이터를 만들지 않아도 새 task 에 빠르게 적용되지만,
-            판정 기준을 규칙이나 또 다른 model 에 맡기는 대가가 있습니다. 그 판정자를 LLM
-            자신으로 쓰는 방법은 다음 글에서 다룹니다.
+            Reference 없는 평가는 정답 데이터를 만들지 않아도 새 task 에 빠르게 적용되지만 판정 기준을 규칙이나 또 다른 model 에 맡기는 대가가 있습니다. 그 판정자를
+            LLM 자신으로 쓰는 방법은 다음 글에서 다룹니다.
           </p>
         </div>
         <div id="paper-big-bench" className="not-prose my-8 scroll-mt-24">
@@ -243,21 +233,18 @@ export default function LlmEvaluationCriteriaAndMethodsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Pointwise evaluation 은 output 하나에 독립적으로 절대 점수를 매기고, pairwise
-            evaluation 은 두 output 을 맞대어 승패만 정하며, ranking evaluation 은 여러 output
-            을 한 번에 전체 순서로 정렬합니다. 세 방식은 같은 재료에서 서로 다른 정보를 만들어
-            집계 방법과 필요한 호출 수가 달라집니다.
+            Pointwise evaluation 은 output 하나에 독립적으로 절대 점수를 매깁니다. Pairwise evaluation 은 두 output 을 맞대어 승패만 정하고
+            ranking evaluation 은 여러 output 을 한 번에 전체 순서로 정렬합니다. 세 방식은 같은 재료에서 서로 다른 정보를 만들어 집계 방법과 필요한 호출 수가
+            달라집니다.
           </p>
           <p>
-            Pointwise 는 rater 나 judge 가 output 마다 1~5 점을 매기고 평균을 냅니다. Model A 의
-            응답 100 개 평균이 4.2/5 면 그 값 하나로 전체 품질을 요약합니다. 문제는 채점자마다
-            척도가 달라 어떤 rater 의 4점이 다른 rater 의 5점과 같은 품질일 수 있다는 점입니다.
+            Pointwise 는 rater 나 judge 가 output 마다 1~5 점을 매기고 평균을 냅니다. Model A 의 응답 100 개 평균이 4.2/5 면 그 값 하나로
+            전체 품질을 요약합니다. 다만 채점자마다 척도가 달라서 어떤 rater 의 4점이 다른 rater 의 5점과 같은 품질일 수 있습니다.
           </p>
           <p>
-            Pairwise 는 A 와 B 의 같은 질문 응답을 나란히 놓고 어느 쪽이 나은지만 묻습니다.
-            100 번의 비교에서 A 가 62 번 이겼다면 win rate 는 0.62 로, 절대 점수 없이도 두
-            model 의 상대적 우열을 알려줍니다. 척도 차이가 없어 pointwise 보다 일관적이라고
-            보고되지만, 후보가 n 개면 비교 쌍이 최대 C(n,2) 개로 늘어납니다.
+            Pairwise 는 A 와 B 의 같은 질문 응답을 나란히 놓고 어느 쪽이 나은지만 묻습니다. 100 번의 비교에서 A 가 62 번 이겼다면 win rate 는 0.62
+            입니다. 절대 점수가 없어도 두 model 의 상대적 우열을 알 수 있습니다. 척도 차이가 없어 pointwise 보다 일관적이라고 보고되지만 후보가 n 개면 비교 쌍이 최대
+            C(n,2) 개로 늘어납니다.
           </p>
           <p>
             Ranking evaluation 은 여러 후보를 한 번에 순서로 매깁니다. Pairwise 승수를 모아

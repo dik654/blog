@@ -7,10 +7,8 @@ export default function Derivatives() {
       <h2 className="mb-6 text-2xl font-bold">Derivative: 두 점의 평균 기울기를 한 점의 기울기로</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          두 점을 잇는 직선의 기울기는 출력 변화량을 입력 변화량으로 나눈 평균 변화율입니다.
-          두 번째 점을 첫 번째 점에 가까이 옮길수록 그 직선은 곡선에 접하는 선에 가까워집니다.
-          이 극한이 derivative이며, 물리에서는 순간 속도, optimization에서는 parameter 변화에
-          대한 loss의 민감도로 읽습니다.
+          두 점을 잇는 직선의 기울기는 출력 변화량을 입력 변화량으로 나눈 평균 변화율입니다. 두 번째 점을 첫 번째 점에 가까이 옮길수록 그 직선은 곡선에 접하는 선에 가까워집니다. 이
+          극한이 derivative이며 물리에서는 순간 속도, optimization에서는 parameter 변화에 대한 loss의 민감도로 읽습니다.
         </p>
       </div>
       <LocalLinearViz />

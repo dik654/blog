@@ -20,10 +20,9 @@ export default function Variants() {
           style modulation으로 control과 high-resolution synthesis를 발전시켰다.
         </p>
         <p>
-          이들은 하나의 직선 계보가 아니다. WGAN loss에 StyleGAN generator를 쓸
-          수도 있고 condition과 spectral normalization을 함께 넣을 수도 있다.
-          Dataset 크기·condition fidelity·resolution·latency·license와 재현
-          가능한 checkpoint를 먼저 정한 뒤 필요한 축만 선택한다.
+          이들이 하나의 직선 계보를 이루지는 않는다. WGAN loss에 StyleGAN generator를 쓸 수도 있고 condition과 spectral normalization을
+          함께 넣을 수도 있다. Dataset 크기·condition fidelity·resolution·latency·license·재현 가능한 checkpoint를 먼저 정한 뒤 필요한
+          축만 선택한다.
         </p>
       </div>
       <DesignAxisViz />
@@ -38,10 +37,9 @@ export default function Variants() {
           Conditional Generative Adversarial Nets
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Label y를 generator와 discriminator 모두에 제공해 adversarial game을
-          conditional distribution으로 확장하고 MNIST와 image tagging 예를
-          제시합니다. Condition을 입력했다는 사실만으로 모델이 그 조건을 정확히
-          따르거나 train 밖의 조합으로 일반화한다는 보장은 아닙니다.
+          Label y를 generator와 discriminator 모두에 제공해 adversarial game을 conditional distribution으로 확장하고 MNIST와
+          image tagging 예를 제시합니다. Condition을 입력했다는 사실만으로 모델이 그 조건을 정확히 따른다고 볼 수는 없습니다. Train 밖의 조합으로 일반화한다는
+          보장도 마찬가지입니다.
         </p>
         <a
           className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
@@ -57,11 +55,9 @@ export default function Variants() {
           FID 하나로 sample quality와 mode coverage를 모두 확정할 수는 없다
         </h3>
         <p>
-          FID는 fixed feature extractor에서 real과 generated feature를 각각
-          Gaussian으로 근사해 평균과 covariance 차이를 계산한다. 낮을수록 두
-          feature distribution이 가깝지만 encoder·preprocessing·sample count와
-          real reference split에 민감하다. Memorization, condition consistency,
-          rare mode coverage와 human utility는 별도 metric과 nearest-neighbor
+          FID는 fixed feature extractor에서 real과 generated feature를 각각 Gaussian으로 근사해 평균과 covariance 차이를 계산한다.
+          낮을수록 두 feature distribution이 가깝다. 다만 encoder·preprocessing·sample count·real reference split에 민감하다.
+          Memorization·condition consistency·rare mode coverage·human utility는 별도 metric과 nearest-neighbor
           audit가 필요하다.
         </p>
       </div>
@@ -114,10 +110,9 @@ export default function Variants() {
           Equilibrium
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Two-time-scale stochastic approximation 조건 아래 local stationary
-          Nash equilibrium 수렴을 분석하고 FID를 소개합니다. 정리의
-          step-size·regularity 가정은 임의의 finite deep GAN recipe에 자동
-          적용되지 않으며, FID도 선택한 feature·sample estimator의 metric입니다.
+          Two-time-scale stochastic approximation 조건 아래 local stationary Nash equilibrium 수렴을 분석하고 FID를 소개합니다.
+          정리의 step-size·regularity 가정은 임의의 finite deep GAN recipe에 자동으로 적용되지 않습니다. FID 역시 선택한 feature·sample
+          estimator에 딸린 metric입니다.
         </p>
         <a
           className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
@@ -140,10 +135,8 @@ export default function Variants() {
           Assessing Generative Models via Precision and Recall
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Scalar divergence 하나로 구분하기 어려운 sample quality와 target-mode
-          coverage를 precision·recall 두 축으로 나눕니다. 이는 특정 feature
-          representation과 finite sample algorithm에 의존하며 모든 의미적
-          다양성을 완전히 측정하는 보편 지표는 아닙니다.
+          Scalar divergence 하나로 구분하기 어려운 sample quality와 target-mode coverage를 precision·recall 두 축으로 나눕니다. 다만
+          특정 feature representation과 finite sample algorithm에 의존합니다. 모든 의미적 다양성을 완전히 재는 보편 지표로 쓸 수는 없습니다.
         </p>
         <a
           className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
@@ -157,12 +150,10 @@ export default function Variants() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Diffusion과는 품질 순위보다 system contract로 비교한다</h3>
         <p>
-          GAN generator는 보통 한 번의 forward로 sample을 만들어 낮은 sampling
-          latency가 강점이지만 adversarial game과 coverage를 관리해야 한다.
-          Diffusion은 여러 denoising step 때문에 network evaluation 수가
-          늘어나는 대신 objective와 coverage가 다루기 쉬운 경우가 많다. 같은
-          resolution·condition·data·compute에서 FID뿐 아니라 precision/recall,
-          condition metric, latency·memory·energy와 사용자 평가를 함께 본다.
+          GAN generator는 보통 한 번의 forward로 sample을 만들어 sampling latency가 낮은 것이 강점이다. 대신 adversarial game과
+          coverage를 관리해야 한다. Diffusion은 여러 denoising step 때문에 network evaluation 수가 늘어나는 대신 objective와
+          coverage가 다루기 쉬운 경우가 많다. 같은 resolution·condition·data·compute에서 FID뿐 아니라 precision/recall, condition
+          metric, latency·memory·energy, 사용자 평가를 함께 본다.
         </p>
         <p>
           Forward·reverse process와 sampling step, latent diffusion의 계산은{" "}

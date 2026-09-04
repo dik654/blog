@@ -11,9 +11,8 @@ export default function Overview() {
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          Full fine-tuning은 base weight 전체를 업데이트합니다. 그래서 gradient와
-          optimizer state도 전체 parameter에 맞춰 필요하고, task마다 큰
-          checkpoint가 하나씩 생깁니다.
+          Full fine-tuning은 base weight 전체를 업데이트합니다. 그래서 gradient와 optimizer state도 전체 parameter에 맞춰 필요하고
+          task마다 큰 checkpoint가 하나씩 생깁니다.
         </p>
         <p>
           LoRA는 base를 고정하고 선택한 linear layer의 <em>변화량</em>만 두 작은
@@ -34,8 +33,7 @@ export default function Overview() {
           비용도 만들 수 있습니다.
         </p>
         <p>
-          즉 LoRA는 inference quantization이나 작은 student처럼 모델 자체를 줄이는
-          압축 기법과 목적이 다릅니다.
+          LoRA는 inference quantization이나 작은 student처럼 모델 자체를 줄이는 압축 기법과 목적이 다릅니다.
         </p>
       </div>
       <ProgressiveDetail
@@ -43,10 +41,8 @@ export default function Overview() {
         preview="Base와 adapter의 경계를 잡은 뒤 rank·QLoRA·데이터·배포 artifact 순서로 내려갑니다."
       >
         <p>
-          먼저 low-rank update의 shape와 capacity를 계산합니다. 그다음 QLoRA의
-          저장·연산·학습 precision을 분리하고, chat template과 loss mask가 실제
-          학습 sequence를 어떻게 정하는지 확인합니다. 마지막에는 merge,
-          requantization과 serving artifact의 검증 경계를 다룹니다.
+          먼저 low-rank update의 shape와 capacity를 계산합니다. 그다음 QLoRA의 저장·연산·학습 precision을 분리하고 chat template과 loss
+          mask가 실제 학습 sequence를 어떻게 정하는지 확인합니다. 마지막에는 merge, requantization과 serving artifact의 검증 경계를 다룹니다.
         </p>
         <p>
           어떤 adaptation 방법을 고를지는

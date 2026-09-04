@@ -155,8 +155,7 @@ export default function HyperparameterTuningArticle() {
           question="한 trial이 좋은 영역을 만날 확률이 p일 때 N회 중 한 번 이상 성공할 확률은 얼마인가요?"
           idea={
             <p>
-              한 번 놓칠 확률을 먼저 구하고, 독립적인 N회가 모두 놓칠 확률을
-              만든 뒤 전체 확률 1에서 뺍니다.
+              한 번 놓칠 확률을 먼저 구하고 독립적인 N회가 모두 놓칠 확률을 만든 뒤 전체 확률 1에서 뺍니다.
             </p>
           }
           formula={String.raw`P(\text{hit})=1-(1-p)^N`}

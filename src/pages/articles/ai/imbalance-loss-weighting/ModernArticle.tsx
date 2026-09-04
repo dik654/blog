@@ -69,8 +69,7 @@ export default function ImbalanceLossWeightingArticle() {
           question="Positive example에 weight 9를 주면 batch risk는 어떻게 바뀌나요?"
           idea={
             <p>
-              각 sample loss에 target class의 weight를 곱하고, weight 합으로
-              나누어 scale을 안정화합니다.
+              각 sample loss에 target class의 weight를 곱하고 weight 합으로 나누어 scale을 안정화합니다.
             </p>
           }
           formula={String.raw`\hat R_w=\frac{\sum_i w_{y_i}\ell_i}{\sum_i w_{y_i}}`}

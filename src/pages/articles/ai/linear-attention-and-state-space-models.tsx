@@ -21,10 +21,9 @@ export default function LinearAttentionAndStateSpaceModelsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Attention은 이전 token 전부의 key와 value를 그대로 남겨 두고 현재 query가 그 기록을
-            다시 훑습니다. Linear attention과 state space model(SSM)은 그 기록을 다시 훑는 대신
-            하나의 고정 크기 state에 미리 눌러 담아, 문맥이 아무리 길어져도 state 크기와 한 token
-            처리 비용이 늘지 않게 만드는 계열입니다.
+            Attention은 이전 token 전부의 key와 value를 그대로 남겨 두고 현재 query가 그 기록을 다시 훑습니다. Linear attention과 state
+            space model(SSM)은 그 기록을 다시 훑지 않습니다. 하나의 고정 크기 state에 미리 눌러 담아, 문맥이 아무리 길어져도 state 크기와 한 token 처리
+            비용이 늘지 않게 만드는 계열입니다.
           </p>
           <p>
             이 두 계열과 attention을 한데 묶어 부르는 이름이 sequence mixer입니다. 현재 위치의
@@ -34,14 +33,13 @@ export default function LinearAttentionAndStateSpaceModelsArticle() {
             시작할 수 있습니다.
           </p>
           <p>
-            이 글은 그 state가 무엇이고 어떻게 갱신되는지부터 봅니다. Q, K, V를 kernel feature
-            map으로 바꿔 attention을 recurrent 형태로 다시 쓰는 선형화, 그 recurrence를
-            일반화한 state space model과 Mamba의 선택 메커니즘, 고정 state가 치르는
-            검색-압축 trade-off, 마지막으로 두 계열을 섞는 hybrid 구조까지 순서대로 다룹니다.
+            그 state가 무엇이고 어떻게 갱신되는지부터 봅니다. Q, K, V를 kernel feature map으로 바꿔 attention을 recurrent 형태로 다시 쓰는
+            선형화가 출발점이고, 그 recurrence를 일반화한 state space model과 Mamba의 선택 메커니즘이 이어집니다. 고정 state가 치르는 검색-압축
+            trade-off를 확인한 다음 두 계열을 섞는 hybrid 구조로 마칩니다.
           </p>
           <p>
-            아래 그림은 이 대비를 한눈에 보여 줍니다. Attention의 KV 기록이 token마다 자라는
-            동안, linear attention과 SSM의 state는 크기를 그대로 유지한 채 내용만 갱신됩니다.
+            아래 그림에 이 대비가 담겨 있습니다. Attention의 KV 기록이 token마다 자라는 동안, linear attention과 SSM의 state는 크기를 그대로 유지한
+            채 내용만 갱신됩니다.
           </p>
         </div>
         <LinearAttentionAndStateSpaceModelsViz />
@@ -54,20 +52,17 @@ export default function LinearAttentionAndStateSpaceModelsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Linear attention은 softmax(QKᵀ)의 지수 유사도를 kernel feature map φ의 내적으로
-            바꿔 attention을 kernel 함수로 다시 씁니다. Similarity(q, k)를 φ(q)·φ(k)로 정의하면
-            곱셈의 결합법칙에 따라 key와 value를 먼저 묶은 φ(K)ᵀV를 계산해 두고, 그 결과를
-            query마다 재사용할 수 있습니다.
+            Linear attention은 softmax(QKᵀ)의 지수 유사도를 kernel feature map φ의 내적으로 바꿔 attention을 kernel 함수로 다시
+            씁니다. Similarity(q, k)를 φ(q)·φ(k)로 정의하면 곱셈의 결합법칙에 따라 key와 value를 먼저 묶은 φ(K)ᵀV를 계산해 두고 그 결과를 query마다
+            재사용할 수 있습니다.
           </p>
           <p>
-            이 순서 교환이 계산량을 바꿉니다. 원래 attention은 query n개마다 key n개와의
-            유사도를 전부 계산해 O(n²)이 들지만, φ(K)ᵀV를 먼저 만들면 query는 그 결과 하나만
-            읽으면 되므로 전체 비용이 O(n)으로 줄어듭니다.
+            이 순서 교환이 계산량을 바꿉니다. 원래 attention은 query n개마다 key n개와의 유사도를 전부 계산해 O(n²)이 들지만 φ(K)ᵀV를 먼저 만들면 query는
+            그 결과 하나만 읽으면 되므로 전체 비용이 O(n)으로 줄어듭니다.
           </p>
           <p>
-            d=128인 head 하나를 예로 들면 φ(K)ᵀV는 128×128 행렬, 즉 원소 16,384개입니다. Query
-            수 n이 1,000이든 100만이든 이 행렬의 크기는 바뀌지 않고, 늘어나는 것은 그 행렬을
-            만드는 데 더해지는 key-value 쌍의 수뿐입니다.
+            d=128인 head 하나를 예로 들면 φ(K)ᵀV는 128×128 행렬, 즉 원소 16,384개입니다. Query 수 n이 1,000이든 100만이든 이 행렬의 크기는 바뀌지
+            않고 늘어나는 것은 그 행렬을 만드는 데 더해지는 key-value 쌍의 수뿐입니다.
           </p>
         </div>
         <ExplainedFormula
@@ -129,13 +124,12 @@ export default function LinearAttentionAndStateSpaceModelsArticle() {
             KiB로 고정되어 있고 문맥이 64K든 100만이든 그대로입니다.
           </p>
           <p>
-            두 값의 비는 512배입니다. Attention은 매 token마다 기록을 추가하므로 읽고 쓰는
-            byte가 문맥에 비례해 늘지만, recurrent linear attention은 같은 크기의 state를
-            읽고 다시 쓰는 것만 반복하므로 한 step의 state 크기가 문맥 길이에 갇히지 않습니다.
+            두 값의 비는 512배입니다. Attention은 매 token마다 기록을 추가하므로 읽고 쓰는 byte가 문맥에 비례해 늘지만 recurrent linear
+            attention은 같은 크기의 state를 읽고 다시 쓰는 것만 반복하므로 한 step의 state 크기가 문맥 길이에 갇히지 않습니다.
           </p>
           <p>
-            다만 전체 sequence를 처리하는 시간은 그래도 token 수 n에 비례해 늘어납니다. 이
-            O(n²)이 아니라 O(n)이라는 성질을 linear-time sequence modeling이라 부릅니다.
+            다만 전체 sequence를 처리하는 시간은 그래도 token 수 n에 비례해 늘어납니다. O(n²) 대신 O(n)으로 도는 이 성질을 linear-time sequence
+            modeling이라 부릅니다.
           </p>
         </div>
         <AlgorithmBlock
@@ -152,9 +146,8 @@ export default function LinearAttentionAndStateSpaceModelsArticle() {
         />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            원래 attention의 softmax는 정규화 항 하나를 행 전체에서 계산하지만, 여기서는 그
-            정규화도 z_t라는 별도 벡터로 함께 누적해야 합니다. 뒤에서 볼 selective state space
-            model은 이 recurrence를 다른 방식으로 확장합니다.
+            원래 attention의 softmax는 정규화 항 하나를 행 전체에서 계산하지만 여기서는 그 정규화도 z_t라는 별도 벡터로 함께 누적해야 합니다. 뒤에서 볼
+            selective state space model은 이 recurrence를 다른 방식으로 확장합니다.
           </p>
         </div>
       </section>
@@ -171,10 +164,8 @@ export default function LinearAttentionAndStateSpaceModelsArticle() {
             product 하나였다면, SSM의 state update는 행렬과 벡터의 곱입니다.
           </p>
           <p>
-            초기 SSM인 S4는 A, B, C를 학습은 하되 추론 중에는 고정된 값으로 씁니다. 이런
-            linear time-invariant 성질 덕분에 전체 sequence를 convolution으로 한 번에 계산할
-            수 있지만, 모든 token을 같은 강도로 기억하거나 잊어 내용에 따라 다르게 반응하지
-            못합니다.
+            초기 SSM인 S4는 A, B, C를 학습은 하되 추론 중에는 고정된 값으로 씁니다. 이런 linear time-invariant 성질 덕분에 전체 sequence를
+            convolution으로 한 번에 계산할 수 있지만 모든 token을 같은 강도로 기억하거나 잊어 내용에 따라 다르게 반응하지 못합니다.
           </p>
           <p>
             Mamba는 A, B, C와 discretization 간격 Δ를 현재 입력의 함수로 만들어 이 한계를
@@ -183,9 +174,8 @@ export default function LinearAttentionAndStateSpaceModelsArticle() {
             선택이 selective state space model이라는 이름의 이유입니다.
           </p>
           <p>
-            선택 자체는 병렬화를 어렵게 만듭니다. Mamba는 state 차원을 channel마다 독립인
-            대각 A로 두고, 이 recurrence를 GPU에서 hardware-aware scan 알고리즘으로 계산해
-            선택 메커니즘과 긴 sequence 처리 속도를 함께 얻습니다.
+            선택 자체는 병렬화를 어렵게 만듭니다. Mamba는 state 차원을 channel마다 독립인 대각 A로 두고 이 recurrence를 GPU에서 hardware-aware
+            scan 알고리즘으로 계산해 선택 메커니즘과 긴 sequence 처리 속도를 함께 얻습니다.
           </p>
         </div>
         <TermBreakdown
@@ -250,20 +240,16 @@ export default function LinearAttentionAndStateSpaceModelsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            d×d state가 표현할 수 있는 독립적인 key-value 연관의 수는 대략 d²개로 제한됩니다.
-            문맥에 담긴 사실 수가 이 용량을 넘어서면 서로 다른 연관이 같은 state 좌표에 겹쳐
-            쓰이고, 나중에 읽을 때 둘 중 하나 또는 둘 다 부정확하게 나옵니다.
+            d×d state가 표현할 수 있는 독립적인 key-value 연관의 수는 대략 d²개로 제한됩니다. 문맥에 담긴 사실 수가 이 용량을 넘어서면 서로 다른 연관이 같은
+            state 좌표에 겹쳐 쓰이고 나중에 읽을 때 둘 중 하나 또는 둘 다 부정확하게 나옵니다.
           </p>
           <p>
-            d=128이면 용량은 16,384 근처입니다. 문맥에 있는 서로 다른 사실이 이 수를 크게
-            밑돌면 state는 거의 손실 없이 요약하지만, 문맥이 수만 token을 넘는 긴 문서에서
-            사실 하나를 정확히 다시 꺼내야 하는 질의는 이 한계를 직접 건드립니다.
+            d=128이면 용량은 16,384 근처입니다. 문맥에 있는 서로 다른 사실이 이 수를 크게 밑돌면 state는 거의 손실 없이 요약하지만 문맥이 수만 token을 넘는 긴
+            문서에서 사실 하나를 정확히 다시 꺼내야 하는 질의는 이 한계를 직접 건드립니다.
           </p>
           <p>
-            Full attention은 token별 key와 value를 그대로 두므로 이런 겹침이 없습니다. 대신
-            그 대가로 기록이 문맥 길이만큼 자랍니다. 그래서 두 계열의 선택은 압축을 얼마나
-            감수하고 얼마나 정확한 검색을 사려는지의 문제이지, 한쪽이 다른 쪽의 상위 호환이
-            아닙니다.
+            Full attention은 token별 key와 value를 그대로 두므로 이런 겹침이 없습니다. 대신 그 대가로 기록이 문맥 길이만큼 자랍니다. 그래서 두 계열 사이의
+            선택은 압축을 얼마나 감수하고 얼마나 정확한 검색을 살 것인가의 문제입니다. 한쪽이 다른 쪽의 상위 호환은 아닙니다.
           </p>
         </div>
         <ProgressiveDetail
@@ -271,13 +257,11 @@ export default function LinearAttentionAndStateSpaceModelsArticle() {
           preview="문맥의 실제 정보량이 state 용량보다 훨씬 작으면 서로 다른 사실이 같은 좌표를 두고 다툴 일이 적어, 고정 state도 attention과 비슷한 결과를 냅니다."
         >
           <p>
-            자연어 문맥은 대개 중복과 예측 가능한 부분이 많아, token 수만큼의 독립적인 정보를
-            담고 있지 않습니다. State 용량이 그 실제 정보량보다 크게 남아 있는 동안에는
+            자연어 문맥은 대개 중복과 예측 가능한 부분이 많아 token 수만큼의 독립적인 정보를 담고 있지 않습니다. State 용량이 그 실제 정보량보다 크게 남아 있는 동안에는
             겹쳐쓰기가 드물어 요약이 원문과 거의 같은 답을 줍니다.
           </p>
           <p>
-            문제는 이 여유가 얼마나 남았는지 문맥만 보고는 알기 어렵다는 점입니다. 무작위
-            UUID나 서로 무관한 사실을 촘촘히 채운 needle-in-a-haystack benchmark는 정보량이
+            이 여유가 얼마나 남았는지는 문맥만 보고 알기 어렵습니다. 무작위 UUID나 서로 무관한 사실을 촘촘히 채운 needle-in-a-haystack benchmark는 정보량이
             용량에 가까워지도록 일부러 설계해 이 한계를 드러냅니다.
           </p>
         </ProgressiveDetail>
@@ -305,10 +289,8 @@ export default function LinearAttentionAndStateSpaceModelsArticle() {
             줄어듭니다.
           </p>
           <p>
-            State가 아무리 압축되어 있어도 나머지 attention layer는 여전히 token 전체를
-            정확히 조회할 수 있습니다. 이것이 attention layer를 8분의 1만 남겨도 검색 성능
-            대부분을 지킬 수 있는 이유이고, 나머지 7/8이 얻는 시간과 메모리 이득은 그대로
-            남습니다.
+            State가 아무리 압축되어 있어도 나머지 attention layer는 여전히 token 전체를 정확히 조회할 수 있습니다. 이것이 attention layer를 8분의 1만
+            남겨도 검색 성능 대부분을 지킬 수 있는 이유입니다. 나머지 7/8이 얻는 시간과 메모리 이득은 그대로 남습니다.
           </p>
           <p>
             정확한 비율과 어느 depth에 attention을 배치할지는 model마다 다르고, 이 글은 그

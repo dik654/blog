@@ -89,9 +89,8 @@ N_{\mathrm{LoRA}}&=\underbrace{r(d_{\mathrm{in}}+d_{\mathrm{out}})}_{\text{오�
           어디에 adapter를 붙일지도 capacity를 바꿉니다.
         </p>
         <p>
-          Model family마다 module 이름과 fused layout이 다릅니다. 다른 설정의
-          문자열을 그대로 복사하지 말고, 실제 named module과 trainable parameter
-          수를 확인해야 합니다.
+          Model family마다 module 이름과 fused layout이 다릅니다. 다른 설정의 문자열을 그대로 복사하지 말고 실제 named module과 trainable
+          parameter 수를 확인해야 합니다.
         </p>
         <p>
           후보를 비교할 때는 data, update 수, α, dropout과 initialization을
@@ -182,9 +181,8 @@ C_{\mathrm{step}}&\approx \underbrace{C(N_{\mathrm{model}})}_{\text{base FLOPs�
       <div id="reading-lora" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">핵심 논문 · LoRA</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Hu 등은 pretrained weight를 고정하고 Transformer layer에 trainable
-          rank-decomposition matrix를 삽입했습니다. 이를 통해 task별 trainable
-          parameter와 checkpoint 비용을 줄이는 방법을 제안했습니다.
+          Hu 등은 pretrained weight를 고정하고 Transformer layer에 trainable rank-decomposition matrix를 삽입했습니다. Task별
+          trainable parameter와 checkpoint 비용을 줄이자는 제안이었습니다.
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
           논문은 RoBERTa, DeBERTa, GPT-2와 GPT-3 조건에서 full fine-tuning과 품질,

@@ -20,10 +20,8 @@ export default function LlmGatewayAndModelRoutingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            여러 LLM provider를 쓰는 애플리케이션이 provider마다 다른 API 형식과 인증
-            방식을 그대로 노출하면 코드가 provider 수만큼 갈라집니다. LLM gateway는 이
-            형식을 하나의 interface로 통일하고, 그 뒤에서 실제로 어떤 model을 쓸지는
-            router가 정책에 따라 고릅니다.
+            여러 LLM provider를 쓰는 애플리케이션이 provider마다 다른 API 형식과 인증 방식을 그대로 노출하면 코드가 provider 수만큼 갈라집니다. LLM
+            gateway는 이 형식을 하나의 interface로 통일하고 그 뒤에서 실제로 어떤 model을 쓸지는 router가 정책에 따라 고릅니다.
           </p>
           <p>
             <Link to="/ai/llm-serving-ops#litellm-gateway">LLM 서빙 운영</Link> 글은
@@ -48,21 +46,17 @@ export default function LlmGatewayAndModelRoutingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            LLM gateway는 애플리케이션과 여러 LLM provider 사이에 놓여 요청을 받아
-            적절한 model endpoint로 전달하는 중개 계층입니다. Model endpoint는 실제로
-            요청을 처리하는 provider의 구체적인 API 주소와 인증 정보를 가리킵니다.
+            애플리케이션과 여러 LLM provider 사이에 놓여 요청을 받아 적절한 model endpoint로 전달하는 중개 계층이 LLM gateway입니다. 여기서 model
+            endpoint란 실제로 요청을 처리하는 provider의 구체적인 API 주소와 인증 정보입니다.
           </p>
           <p>
-            Provider abstraction은 OpenAI, Anthropic, Bedrock처럼 서로 다른 요청·응답
-            schema를 가진 provider를 같은 코드로 호출할 수 있게 감추는 설계입니다.
-            Unified model API는 이 abstraction이 애플리케이션에 보여 주는 결과물로,
-            하나의 함수 호출 형식으로 여러 provider를 부를 수 있게 만든 interface입니다.
+            Provider abstraction은 OpenAI, Anthropic, Bedrock처럼 요청·응답 schema가 제각각인 provider를 같은 코드로 호출하게 감추는
+            설계입니다. 그 abstraction이 애플리케이션 쪽에 내놓는 결과물이 unified model API입니다. 하나의 함수 호출 형식으로 여러 provider를 부를 수 있게
+            만든 interface입니다.
           </p>
           <p>
-            예를 들어 LiteLLM은 100개 이상의 provider를 OpenAI와 같은 요청·응답
-            형식으로 호출할 수 있게 하고, OpenRouter는 하나의 API endpoint 뒤에서
-            수백 개 model을 자동으로 routing합니다. 두 경우 모두 애플리케이션 코드는
-            provider가 바뀌어도 그대로 유지됩니다.
+            예를 들어 LiteLLM은 100개 이상의 provider를 OpenAI와 같은 요청·응답 형식으로 호출할 수 있게 하고 OpenRouter는 하나의 API endpoint
+            뒤에서 수백 개 model을 자동으로 routing합니다. 두 경우 모두 애플리케이션 코드는 provider가 바뀌어도 그대로 유지됩니다.
           </p>
           <p>
             <Link to="/ai/llm-serving-ops#litellm-gateway">LLM 서빙 운영</Link> 글의
@@ -89,20 +83,17 @@ export default function LlmGatewayAndModelRoutingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Model router는 unified API 뒤에 등록된 여러 model endpoint 후보 중 하나를
-            실제로 고르는 구성 요소입니다. Request routing은 이 선택 행위 자체를
-            가리키고, 그 기준은 다섯 가지로 나뉩니다.
+            Unified API 뒤에 등록된 여러 model endpoint 후보 중 하나를 실제로 고르는 구성 요소가 model router입니다. 이 선택 행위 자체는 request
+            routing이라 부릅니다. 기준은 다섯 가지입니다.
           </p>
           <p>
-            Load-based routing은 각 endpoint가 지금 처리 중인 요청 수나 큐 길이를
-            기준으로 가장 한가한 곳을 고릅니다. Latency-aware routing은 최근 응답
-            시간을 추적해 가장 빠르게 응답한 endpoint를 고릅니다.
+            Load-based routing은 각 endpoint가 지금 처리 중인 요청 수나 큐 길이를 기준으로 가장 한가한 곳에 요청을 보냅니다. Latency-aware
+            routing은 최근 응답 시간을 추적해 가장 빠르게 답한 endpoint를 고릅니다.
           </p>
           <p>
-            Cost-aware routing은 model·provider별 토큰 단가를 비교해 가장 저렴한
-            후보를 고릅니다. Capability-aware routing은 요청이 필요로 하는 context
-            길이나 tool 지원 여부를 만족하는 후보만 남깁니다. Policy-based routing은
-            tenant별 예산이나 data region 같은 조직 규칙으로 후보를 제한합니다.
+            Cost-aware routing은 model·provider별 토큰 단가를 비교해 가장 저렴한 후보를 고릅니다. Capability-aware routing은 요청에 필요한
+            context 길이나 tool 지원 여부를 만족하는 후보만 남깁니다. Policy-based routing은 tenant별 예산이나 data region 같은 조직 규칙으로
+            후보를 제한합니다.
           </p>
           <p>
             이 다섯 기준은 서로 배타적이지 않고 실무에서는 여러 개를 겹쳐 씁니다.{" "}
@@ -131,21 +122,16 @@ export default function LlmGatewayAndModelRoutingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Cascaded inference는 저렴하고 빠른 model부터 순서대로 시도하다가, 결과가
-            충분히 믿을 만하지 않으면 더 크고 비싼 model로 넘어가는 추론 방식입니다.
+            Cascaded inference는 저렴하고 빠른 model부터 순서대로 시도하다가 결과가 충분히 믿을 만하지 않으면 더 크고 비싼 model로 넘어가는 추론 방식입니다.
             이렇게 순서를 정한 model 목록을 model cascade라고 부릅니다.
           </p>
           <p>
-            Confidence-based escalation은 각 model의 응답에 확신도를 매겨, 그 값이
-            미리 정한 기준보다 낮을 때만 다음 model로 넘어가는 판단 규칙입니다.
-            확신도가 충분하면 저렴한 model의 응답을 그대로 쓰고 상위 model은 아예
-            호출하지 않습니다.
+            Confidence-based escalation은 각 model의 응답에 확신도를 매겨 그 값이 미리 정한 기준보다 낮을 때만 다음 model로 넘어가는 판단 규칙입니다.
+            확신도가 충분하면 저렴한 model의 응답을 그대로 쓰고 상위 model은 아예 호출하지 않습니다.
           </p>
           <p>
-            이 방식은 모든 요청에 가장 비싼 model을 쓰는 것과, 모든 요청에 가장 싼
-            model만 쓰는 것 사이의 절충입니다. 쉬운 요청은 싼 model이 이미 확신 있게
-            답하므로 비싼 model 호출을 건너뛰고, 어려운 요청만 비싼 model로
-            넘어갑니다.
+            이 방식은 모든 요청에 가장 비싼 model을 쓰는 것과 모든 요청에 가장 싼 model만 쓰는 것 사이의 절충입니다. 쉬운 요청은 싼 model이 이미 확신 있게 답하므로
+            비싼 model 호출을 건너뛰고 어려운 요청만 비싼 model로 넘어갑니다.
           </p>
         </div>
         <LlmGatewayAndModelRoutingViz />

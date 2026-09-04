@@ -113,9 +113,8 @@ L(\theta)&=\underbrace{\mathbb{E}\,\ell(\hat a,a)}_{\text{모든 쌍에서 예�
             합쳐 하나의 policy가 볼 수 있는 데이터 양을 키우는 흐름입니다.
           </p>
           <p>
-            Open X-Embodiment는 21개 기관이 모은 22종 robot의 dataset 60개를 RLDS라는 공통
-            형식으로 합쳐, 527개 skill과 160,266개 task, 100만 개 이상의 trajectory를
-            표준화했습니다. 이 규모는 한 실험실이 혼자 모으던 양보다 훨씬 큽니다.
+            Open X-Embodiment는 21개 기관이 모은 22종 robot의 dataset 60개를 RLDS라는 공통 형식으로 합쳐 527개 skill과 160,266개 task,
+            100만 개 이상의 trajectory를 표준화했습니다. 이 규모는 한 실험실이 혼자 모으던 양보다 훨씬 큽니다.
           </p>
           <p>
             이 흐름은 <Link to="/ai/vla-embodiment-gap#embodiment-alignment">cross-embodiment
@@ -151,10 +150,8 @@ L(\theta)&=\underbrace{\mathbb{E}\,\ell(\hat a,a)}_{\text{모든 쌍에서 예�
             통틀어 가리키는 말입니다. 이 능력은 다시 "무엇에 대해 일반화하는가"로 나뉩니다.
           </p>
           <p>
-            Compositional generalization은 이미 아는 요소들의 새로운 조합에 대응하는 능력입니다.
-            Policy가 "컵을 왼쪽에서 집기"와 "병을 오른쪽에서 집기"는 봤지만 "병을 왼쪽에서
-            집기"는 못 봤어도, object와 location이라는 같은 두 축 안에서의 새 조합이라면 맞힐
-            가능성이 있습니다.
+            Compositional generalization은 이미 아는 요소들의 새로운 조합에 대응하는 능력입니다. Policy가 "컵을 왼쪽에서 집기"와 "병을 오른쪽에서 집기"는
+            봤지만 "병을 왼쪽에서 집기"는 못 봤어도, object와 location이라는 같은 두 축 안의 새 조합이라면 맞힐 가능성이 있습니다.
           </p>
           <p>
             Out-of-distribution(OOD) generalization은 축 자체가 다른 상황을 가리킵니다. 학습에
@@ -200,9 +197,8 @@ L(\theta)&=\underbrace{\mathbb{E}\,\ell(\hat a,a)}_{\text{모든 쌍에서 예�
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Sim-to-real은 simulation에서 학습한 policy를 real robot에 그대로 또는 약간의
-            조정만으로 옮기는 문제입니다. Simulation은 저렴하고 안전하게 많은 rollout을 만들 수
-            있지만, 렌더링·물리·센서 noise가 실제와 다른 sim-to-real gap이 항상 남습니다.
+            Sim-to-real은 simulation에서 학습한 policy를 real robot에 그대로 또는 약간의 조정만으로 옮기는 문제입니다. Simulation은 저렴하고
+            안전하게 많은 rollout을 만들 수 있지만 렌더링·물리·센서 noise가 실제와 다른 sim-to-real gap이 항상 남습니다.
           </p>
           <p>
             Domain randomization은 이 gap을 줄이기 위해 simulation의 물체 색상·질감·조명 개수와
@@ -254,9 +250,8 @@ L(\theta)&=\underbrace{\mathbb{E}\,\ell(\hat a,a)}_{\text{모든 쌍에서 예�
         <h2 className="mb-6 text-2xl font-bold">네 개념은 서로 다른 실패를 막지, 서로를 대체하지 않습니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Demonstration 품질, dataset 규모, generalization 축, sim-to-real 격리는 서로 다른
-            실패를 막는 장치입니다. 데이터를 더 모은다고 compositional gap이 자동으로 없어지지
-            않고, domain randomization을 세게 건다고 아예 새로운 object category(OOD)까지 항상
+            Demonstration 품질, dataset 규모, generalization 축, sim-to-real 격리는 서로 다른 실패를 막는 장치입니다. 데이터를 더 모은다고
+            compositional gap이 자동으로 없어지지 않고 domain randomization을 세게 건다고 아예 새로운 object category(OOD)까지 항상
             해결되지는 않습니다.
           </p>
         </div>

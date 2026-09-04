@@ -31,7 +31,11 @@ export default function ModernArticle() {
       <KTOObjective />
 
       <section id="evaluation" className="scroll-mt-20 space-y-7">
-        <div className="prose prose-neutral max-w-none dark:prose-invert"><h2>Pair 수집 비용을 줄여도 logging contract는 더 엄격해집니다</h2><p className="leading-8">User·surface·position별 feedback propensity와 class balance를 기록하고, time split에서 reference revision과 KL estimate를 고정합니다. Offline utility가 좋아진 뒤에도 pairwise human audit, 사실성, over-refusal과 capability regression을 별도 holdout에서 확인합니다.</p></div>
+        <div className="prose prose-neutral max-w-none dark:prose-invert"><h2>Pair 수집 비용을 줄여도 logging contract는 더 엄격해집니다</h2><p className="leading-8">
+            Feedback propensity와 class balance는 user·surface·position별로 기록하고 reference revision과 KL estimate는
+            time split에서 고정합니다. Offline utility가 좋아진 뒤에도 pairwise human audit과 사실성, over-refusal과 capability
+            regression은 별도 holdout에서 다시 확인합니다.
+          </p></div>
         <div id="paper-kto-implementation" className="scroll-mt-20"><CitationBlock source="Ethayarajh et al. · KTO" citeKey={2} type="paper" href="https://arxiv.org/abs/2402.01306"><p><strong>문제:</strong> 같은 prompt의 pair보다 독립 like/dislike가 많은 현실의 feedback을 사용합니다.</p><p><strong>핵심 기여:</strong> Policy/reference log-ratio를 KL reference point 양쪽의 비대칭 utility로 학습합니다.</p><p><strong>전제:</strong> Binary label 품질, reference policy와 안정적인 KL 추정이 필요합니다.</p><p><strong>근거 범위:</strong> 논문의 1B–30B model·dataset·class imbalance 조건입니다.</p><p><strong>비주장:</strong> Binary feedback이 pairwise preference보다 항상 더 깨끗하거나 우월하다는 뜻은 아닙니다.</p></CitationBlock></div>
       </section>
     </article>

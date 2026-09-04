@@ -73,8 +73,7 @@ export default function HarnessFailureAblationArticle() {
           question="새 장치가 실패를 고쳤지만 기존 성공을 망치지 않았는지 어떻게 비교하나요?"
           idea={
             <p>
-              같은 fixture에서 candidate와 baseline의 target recovery를 빼고,
-              기존 success regression은 별도 gate로 둡니다.
+              같은 fixture에서 candidate와 baseline의 target recovery를 빼고 기존 success regression은 별도 gate로 둡니다.
             </p>
           }
           formula={String.raw`\Delta_k=M_k-M_0,\quad G=I[\Delta_k>0]\land I[R_k\le\tau]`}

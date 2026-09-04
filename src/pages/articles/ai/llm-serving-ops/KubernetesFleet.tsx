@@ -17,19 +17,14 @@ export default function KubernetesFleet() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          Kubernetes가 GPU request를 보고 Pod를 배치해도 그 순간부터 token을
-          생성할 수 있는 것은 아닙니다. 빈 GPU가 없으면 Pod가 Pending에 머물고,
-          새 node를 만든다면 machine provisioning 뒤에 driver·container
-          toolkit·device plugin과 label이 준비되어야 합니다. 그다음에도 image와
-          weight를 받고 distributed worker를 초기화한 뒤 warm-up을 통과해야 실제
-          capacity가 됩니다.
+          Kubernetes가 GPU request를 보고 Pod를 배치해도 그 순간부터 token을 생성할 수 있는 것은 아닙니다. 빈 GPU가 없으면 Pod가 Pending에 머물고 새
+          node를 만든다면 machine provisioning 뒤에 driver·container toolkit·device plugin과 label이 준비되어야 합니다. 그다음에도
+          image와 weight를 받고 distributed worker를 초기화한 뒤 warm-up을 통과해야 실제 capacity가 됩니다.
         </p>
         <p className="leading-8">
-          NVIDIA GPU Operator는 driver, Container Toolkit, Kubernetes device
-          plugin, GPU Feature Discovery(GFD), DCGM monitoring 등 이 준비 계층을
-          Operator로 관리합니다. 다만 설치 여부가 모든 node의 version과 기능이
-          같다는 뜻은 아니므로, 지원 matrix와 node label을 deployment 계약에
-          포함하고 upgrade 중 혼합 상태도 관측해야 합니다.
+          NVIDIA GPU Operator는 driver, Container Toolkit, Kubernetes device plugin, GPU Feature
+          Discovery(GFD), DCGM monitoring 등 이 준비 계층을 Operator로 관리합니다. 다만 설치 여부가 모든 node의 version과 기능이 같다는 뜻은
+          아니므로 지원 matrix와 node label을 deployment 계약에 포함하고 upgrade 중 혼합 상태도 관측해야 합니다.
         </p>
       </div>
 
@@ -126,21 +121,16 @@ export default function KubernetesFleet() {
           세면 같은 양이라는 것입니다.
         </p>
         <p className="leading-8">
-          이 관계는 특정 queue discipline이나 service-time 분포를 요구하지 않는다는
-          장점이 있지만, 평균들이 유한하고 장기적으로 안정된 경계를 전제로 합니다.
-          장애로 queue가 계속 증가해 arrival와 departure가 균형을 잃은 구간이나
-          관측 window 끝에 미완료 요청을 임의로 제외한 데이터에는 그대로 적용하면
-          안 됩니다. 또한 Little's law만으로 p99 queue time이나 필요한 replica 수를
-          계산할 수는 없습니다.
+          이 관계는 특정 queue discipline이나 service-time 분포를 요구하지 않는다는 장점이 있지만 평균들이 유한하고 장기적으로 안정된 경계를 전제로 합니다. 장애로
+          queue가 계속 증가해 arrival와 departure가 균형을 잃은 구간이나 관측 window 끝에 미완료 요청을 임의로 제외한 데이터에는 그대로 적용하면 안 됩니다. 또한
+          Little's law만으로 p99 queue time이나 필요한 replica 수를 계산할 수는 없습니다.
         </p>
 
         <h3>Scale latency가 SLO보다 길다면 반응형 autoscaling만으로 늦다</h3>
         <p className="leading-8">
-          GPU node 확보부터 model readiness까지 10분이 걸리는데 traffic spike가
-          1분 만에 SLO를 소진한다면, HPA threshold를 아무리 정교하게 조정해도 새
-          capacity는 늦게 도착합니다. 최소 warm replica, 예약 node, weight
-          cache와 예측형 provisioning 중 필요한 장치를 둬야 하며, scale path의
-          각 단계 시간을 histogram으로 남겨 어느 구간을 줄였는지 확인합니다.
+          GPU node 확보부터 model readiness까지 10분이 걸리는데 traffic spike가 1분 만에 SLO를 소진한다면, HPA threshold를 아무리 정교하게
+          조정해도 새 capacity는 늦게 도착합니다. 최소 warm replica, 예약 node, weight cache와 예측형 provisioning 중 필요한 장치를 둬야 하며
+          scale path의 각 단계 시간을 histogram으로 남겨 어느 구간을 줄였는지 확인합니다.
         </p>
       </div>
     </section>

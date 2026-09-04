@@ -30,19 +30,14 @@ export default function Deployment() {
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          24~32GB급 단일 장비에 agentic workload를 넣고 설치 artifact까지 한
-          묶음으로 관리하려면 Muse Glimmer가 먼저 검토할 후보입니다. Meta가
-          4-bit variant 두 종과 DFlash drafter를 함께 공개했고, 24GB·32GB
-          target을 model card에 명시했기 때문입니다. 반면 256k 문서·이미지·video
-          frame 입력과 기존 Gemma tooling을 중시한다면 Gemma 4 31B가 더
-          자연스럽습니다.
+          24~32GB급 단일 장비에 agentic workload를 넣고 설치 artifact까지 한 묶음으로 관리하려면 Muse Glimmer가 먼저 검토할 후보입니다. Meta가
+          4-bit variant 두 종과 DFlash drafter를 함께 공개했고 24GB·32GB target을 model card에 명시했기 때문입니다. 256k
+          문서·이미지·video frame 입력과 기존 Gemma tooling을 중시한다면 Gemma 4 31B가 더 자연스럽습니다.
         </p>
         <p>
-          이것은 benchmark 순위가 아니라 배포 적합성의 기본값입니다. Muse도 새
-          architecture라 runtime 지원 상태를 고정해야 하고, Gemma도 31B weight와
-          긴 request가 한 GPU의 동시성을 자동으로 보장하지 않습니다. 같은
-          hardware에서 동일한 quantization 수준, thinking budget, prompt set과
-          output cap을 맞춘 A/B test가 최종 선택을 결정해야 합니다.
+          이것은 benchmark 순위가 아니라 배포 적합성의 기본값입니다. Muse는 새 architecture라 runtime 지원 상태를 고정해야 합니다. Gemma 역시 31B
+          weight와 긴 request가 한 GPU의 동시성을 자동으로 보장하지는 않습니다. 같은 hardware에서 동일한 quantization 수준, thinking budget,
+          prompt set과 output cap을 맞춘 A/B test가 최종 선택을 결정해야 합니다.
         </p>
       </div>
       <div
@@ -77,17 +72,13 @@ export default function Deployment() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>제안서에는 model context와 service capacity를 따로 씁니다</h3>
         <p>
-          제안서의 모델 표에는 official maximum context와 지원 modality를 적고,
-          capacity 표에는 검증한 runtime build, quantization, GPU memory,
-          input/output percentile, replica 수와 SLA를 적습니다. “256k
-          model이므로 몇 명 수용”처럼 두 숫자를 바로 연결하면 운영자가 재현할 수
-          없고, 향후 runtime upgrade의 효과도 비교할 수 없습니다.
+          제안서의 모델 표에는 official maximum context와 지원 modality를 적고 capacity 표에는 검증한 runtime build, quantization,
+          GPU memory, input/output percentile, replica 수와 SLA를 적습니다. “256k model이므로 몇 명 수용”처럼 두 숫자를 바로 연결하면
+          운영자가 재현할 수 없고 향후 runtime upgrade의 효과도 비교할 수 없습니다.
         </p>
         <p>
-          따라서 첫 PoC의 산출물은 승자 이름 하나가 아니라 두 모델의 동일 조건
-          benchmark ledger여야 합니다. 그 ledger가 있으면 새 quantization이나
-          runtime이 들어와도 같은 quality·latency·memory gate를 다시 실행해 교체
-          여부를 판단할 수 있습니다.
+          첫 PoC의 산출물은 승자 이름 하나가 아니라 두 모델의 동일 조건 benchmark ledger여야 합니다. 그 ledger가 있으면 새 quantization이나
+          runtime이 들어와도 같은 quality·latency·memory gate를 다시 실행해 교체 여부를 판단할 수 있습니다.
         </p>
       </div>
     </section>

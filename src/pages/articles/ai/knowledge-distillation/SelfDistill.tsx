@@ -6,8 +6,16 @@ export default function SelfDistill() {
     <section id="self" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Self-distillation은 압축의 동의어가 아니라, 이전 checkpoint나 같은 family의 signal을 regularizer로 쓰는 반복 학습입니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p>Teacher와 student가 같은 architecture·parameter 수여도 이전 generation의 soft target을 사용하면 self-distillation입니다. Born-Again Networks는 같은 크기의 student가 teacher를 넘는 사례를 보여 주었지만, 이 경우 목표는 model size 축소가 아니라 optimization·regularization 효과입니다.</p>
-        <p>반복할수록 좋아진다고 가정하면 안 됩니다. Teacher가 특정 class·language에서 틀린 prediction을 confidence 있게 주면 다음 generation이 그 bias를 강화할 수 있습니다. 매 generation을 같은 독립 holdout에서 비교하고, teacher agreement 상승과 ground-truth quality 상승을 구분해야 합니다.</p>
+        <p>
+            Teacher와 student가 같은 architecture·parameter 수여도 이전 generation의 soft target을 사용하면 self-
+            distillation입니다. Born-Again Networks는 같은 크기의 student가 teacher를 넘는 사례를 보여 주었습니다. 다만 여기서 노린 것은 model
+            size 축소가 아닙니다. Optimization·regularization 효과 쪽입니다.
+          </p>
+        <p>
+            반복할수록 좋아진다고 가정하면 안 됩니다. Teacher가 특정 class·language에서 틀린 prediction을 confidence 있게 주면 다음
+            generation이 그 bias를 강화할 수 있습니다. 매 generation은 같은 독립 holdout에서 비교하고 teacher agreement 상승과 ground-
+            truth quality 상승을 갈라 봅니다.
+          </p>
       </div>
       <ExplainedFormula
         question="Teacher와의 일치도는 올라갔지만 정답 성능은 떨어지는 bias inheritance를 어떻게 측정할까요?"
@@ -29,7 +37,11 @@ export default function SelfDistill() {
       <div className="not-prose my-8"><SelfDistillViz /></div>
       <div id="paper-born-again" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">논문 읽기 · Born Again Neural Networks</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">핵심 기여는 teacher보다 작은 student가 아니라 동일 architecture student를 distillation해 성능이 향상될 수 있음을 보인 점입니다. DenseNet의 CIFAR와 language-modeling 실험, generation recipe 범위의 관찰이며 어떤 model이든 여러 세대 반복하면 계속 좋아진다는 보장은 아닙니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            이 논문이 새로 보인 것은 동일 architecture student를 distillation해도 성능이 오를 수 있다는 사실입니다. Teacher보다 작은 student
+            이야기가 아닙니다. 다만 DenseNet의 CIFAR와 language-modeling 실험, 그리고 그 generation recipe 범위 안에서의 관찰이라 어떤
+            model이든 여러 세대 반복하면 계속 좋아진다는 보장은 아닙니다.
+          </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/1805.04770" target="_blank" rel="noreferrer">Same-capacity student·세대별 실험 보기</a>
       </div>
     </section>

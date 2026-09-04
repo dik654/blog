@@ -27,9 +27,8 @@ export default function LlmApplicationCachingArticle() {
             저장하는 대상과 판정 방법이 갈립니다.
           </p>
           <p>
-            이 글은 application cache를 exact-match, semantic, retrieval, embedding,
-            tool result 다섯 종류로 나누고, 각 종류가 무엇을 key로 삼고 무엇을 hit 판정
-            기준으로 삼는지부터 다룹니다.
+            Application cache부터 exact-match, semantic, retrieval, embedding, tool result 다섯 종류로 나눕니다. 그리고 각
+            종류가 무엇을 key로 삼고 무엇을 hit 판정 기준으로 삼는지 봅니다.
           </p>
           <p>
             <Link to="/ai/vllm-paged-attention#prefix-caching">vLLM paged attention</Link>{" "}
@@ -40,9 +39,8 @@ export default function LlmApplicationCachingArticle() {
             무효화 조건이 다릅니다.
           </p>
           <p>
-            이어지는 절은 다섯 종류의 캐시 대상 → semantic cache의 유사도 threshold → cache
-            key·invalidation·TTL·staleness → cache hit/miss/hit rate → cache warming과 LRU
-            eviction 순서로 갑니다.
+            저장 대상에서 시작해 운영 지표로 내려갑니다. 다섯 종류의 캐시 대상 → semantic cache의 유사도 threshold → cache
+            key·invalidation·TTL·staleness → cache hit/miss/hit rate → cache warming과 LRU eviction 순서입니다.
           </p>
         </div>
         <ContentBoundary article="llm-application-caching" />
@@ -66,10 +64,8 @@ export default function LlmApplicationCachingArticle() {
             기준이 다릅니다.
           </p>
           <p>
-            Retrieval cache는 vector DB나 검색 엔진에 보낸 조회의 결과 문서 목록을
-            저장하고, embedding cache는 텍스트를 embedding vector로 바꾸는 계산 결과를
-            저장합니다. 둘 다 LLM 호출 이전 단계를 건너뛰므로 retrieval-augmented
-            generation 파이프라인의 앞부분에 위치합니다.
+            Retrieval cache는 vector DB나 검색 엔진에 보낸 조회의 결과 문서 목록을 저장하고, embedding cache는 텍스트를 embedding vector로
+            바꾸는 계산 결과를 저장합니다. 둘 다 LLM 호출 이전 단계를 건너뛰므로 retrieval-augmented generation 파이프라인의 앞부분에 놓입니다.
           </p>
           <p>
             Tool result cache는 외부 API·함수 호출의 결과를 저장합니다. 예를 들어 같은
@@ -129,16 +125,12 @@ export default function LlmApplicationCachingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Semantic cache threshold는 새 요청의 embedding과 저장된 요청의 embedding 사이
-            similarity 점수가 얼마 이상이어야 hit으로 인정할지 정하는 값입니다. Cosine
-            similarity를 쓴다면 보통 0과 1 사이 값으로, 예를 들어 0.95 이상만 hit으로
-            받아들이는 식입니다.
+            Semantic cache에서 hit을 인정하는 기준선이 threshold입니다. 새 요청의 embedding과 저장된 요청의 embedding 사이 similarity 점수가
+            이 값 이상이어야 hit이 됩니다. Cosine similarity를 쓴다면 보통 0과 1 사이 값으로, 예를 들어 0.95 이상만 hit으로 받아들이는 식입니다.
           </p>
           <p>
-            Threshold를 낮추면 더 많은 요청이 비슷하다고 인정되어 hit rate는 올라가지만,
-            의미가 실제로 다른 질문까지 hit으로 묶일 위험이 커집니다. “서울 인구는?”과
-            “서울 면적은?”은 문장 구조가 비슷해 similarity 점수가 높게 나올 수 있지만
-            정답은 전혀 다릅니다.
+            Threshold를 낮추면 더 많은 요청이 비슷하다고 인정되어 hit rate는 올라가지만 의미가 실제로 다른 질문까지 hit으로 묶일 위험이 커집니다. “서울 인구는?”과
+            “서울 면적은?”은 문장 구조가 비슷해 similarity 점수가 높게 나올 수 있지만 정답은 전혀 다릅니다.
           </p>
           <p>
             반대로 threshold를 너무 높이면 실제로 같은 의미의 질문도 miss로 처리되어
@@ -197,9 +189,8 @@ export default function LlmApplicationCachingArticle() {
             돌려주는 오류가 생깁니다.
           </p>
           <p>
-            Cache invalidation은 저장된 값을 더 이상 쓰지 못하게 지우거나 무효 표시하는
-            절차입니다. 원본 데이터가 바뀌었을 때 명시적으로 지우는 방식과, 일정 시간이
-            지나면 자동으로 무효가 되는 TTL(time to live) 방식 두 가지를 함께 씁니다.
+            저장된 값을 더 이상 쓰지 못하게 지우거나 무효로 표시하는 일을 cache invalidation이라 합니다. 방식은 두 가지를 함께 씁니다. 원본 데이터가 바뀌었을 때
+            명시적으로 지우는 쪽과, 일정 시간이 지나면 자동으로 무효가 되는 TTL(time to live) 쪽입니다.
           </p>
           <p>
             TTL은 값이 유효하다고 보는 최대 시간입니다. TTL을 짧게 잡으면 오래된 값을
@@ -249,9 +240,8 @@ export default function LlmApplicationCachingArticle() {
             일정 기간 동안 이 둘을 더한 전체 조회 중 hit이 차지한 비율입니다.
           </p>
           <p>
-            예를 들어 하루 10,000건의 요청 중 6,200건이 hit이고 3,800건이 miss였다면 hit
-            rate는 62%입니다. 이 숫자는 threshold·TTL·warming(다음 절) 설정을 바꿀 때마다
-            함께 움직이므로, 캐시 설정을 조정한 뒤 반드시 다시 재보는 지표입니다.
+            예를 들어 하루 10,000건의 요청 중 6,200건이 hit이고 3,800건이 miss였다면 hit rate는 62%입니다. 이 숫자는
+            threshold·TTL·warming(다음 절) 설정을 바꿀 때마다 함께 움직이므로 캐시 설정을 조정한 뒤 반드시 다시 재보는 지표입니다.
           </p>
           <p>
             <Link to="/ai/vllm-paged-attention#prefix-operations">
@@ -287,10 +277,8 @@ export default function LlmApplicationCachingArticle() {
           preview="Exact-match cache의 hit rate는 보통 한 자릿수~수십 %대에 머물지만, FAQ성 질의가 많은 서비스의 semantic cache는 그보다 훨씬 높게 나올 수 있습니다."
         >
           <p>
-            일반 채팅형 요청은 문장이 매번 달라서 exact-match hit rate가 낮게 나오는
-            경우가 많습니다. 반면 같은 질문 유형이 반복되는 고객 지원 FAQ 서비스는
-            semantic cache의 hit rate가 훨씬 높게 나올 수 있습니다. 이 차이는 캐시
-            설정의 문제가 아니라 요청 분포 자체의 차이이므로, hit rate 목표는 캐시
+            일반 채팅형 요청은 문장이 매번 달라서 exact-match hit rate가 낮게 나오는 경우가 많습니다. 반면 같은 질문 유형이 반복되는 고객 지원 FAQ 서비스는
+            semantic cache의 hit rate가 훨씬 높게 나올 수 있습니다. 이 차이는 캐시 설정의 문제가 아니라 요청 분포 자체의 차이이므로 hit rate 목표는 캐시
             종류뿐 아니라 실제 트래픽 패턴을 보고 정해야 합니다.
           </p>
         </ProgressiveDetail>
@@ -302,16 +290,12 @@ export default function LlmApplicationCachingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Cache warming은 실제 트래픽이 몰리기 전에 자주 나올 것으로 예상되는 요청의
-            결과를 미리 캐시에 채워 두는 절차입니다. 배포 직후처럼 캐시가 비어 있는
-            상태에서는 처음 몇 분간 모든 요청이 miss가 되므로, 자주 묻는 질문 목록을
-            미리 실행해 두면 이 구간을 줄일 수 있습니다.
+            Cache warming은 캐시를 미리 채워 두는 일입니다. 실제 트래픽이 몰리기 전에, 자주 나올 것으로 예상되는 요청을 먼저 실행해 그 결과를 넣어 둡니다. 배포 직후처럼
+            캐시가 비어 있는 상태에서는 처음 몇 분간 모든 요청이 miss가 되므로, 자주 묻는 질문 목록을 미리 실행해 두면 이 구간을 줄일 수 있습니다.
           </p>
           <p>
-            LRU(least recently used)는 캐시 용량이 가득 찼을 때 무엇을 먼저 지울지
-            정하는 eviction 정책입니다. 가장 오랫동안 조회되지 않은 항목부터 지우는
-            방식으로, “최근에 쓰인 항목이 곧 다시 쓰일 가능성이 높다”는 가정에
-            기댑니다.
+            캐시 용량이 가득 찼을 때 무엇을 먼저 지울지는 eviction 정책이 정합니다. 그 정책 가운데 LRU(least recently used)는 가장 오랫동안 조회되지 않은
+            항목부터 지우는 방식으로, “최근에 쓰인 항목이 곧 다시 쓰일 가능성이 높다”는 가정에 기댑니다.
           </p>
           <p>
             Warming은 캐시를 채우는 시작점을, LRU는 캐시가 넘칠 때 비우는 순서를

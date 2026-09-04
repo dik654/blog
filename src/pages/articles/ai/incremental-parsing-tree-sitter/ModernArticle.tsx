@@ -104,10 +104,8 @@ export default function IncrementalParsingTreeSitterArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            전체 file을 매 keystroke마다 처음부터 해석하는 대신 old tree에 edit
-            위치를 반영하고 다시 parse합니다. Parser는 영향을 받지 않은
-            subtree를 재사용할 수 있어 highlighting·folding·navigation 같은
-            editor feedback을 짧은 주기로 갱신합니다.
+            전체 file을 매 keystroke마다 처음부터 해석하지 않습니다. old tree에 edit 위치를 반영하고 다시 parse합니다. Parser는 영향을 받지 않은
+            subtree를 재사용할 수 있어서 highlighting·folding·navigation 같은 editor feedback을 짧은 주기로 갱신합니다.
           </p>
         </div>
       </section>
@@ -152,8 +150,7 @@ export default function IncrementalParsingTreeSitterArticle() {
             </li>
           </ul>
           <p>
-            Code Mode에서는 decoder가 output의 외형을 제한하고, Tree-sitter나
-            compiler가 완성된 program을 다시 분석하는 식으로 함께 쓸 수
+            Code Mode에서는 decoder가 output의 외형을 제한하고 Tree-sitter나 compiler가 완성된 program을 다시 분석하는 식으로 함께 쓸 수
             있습니다.
           </p>
         </div>

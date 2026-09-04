@@ -28,12 +28,9 @@ export default function LiteLLMGateway({
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          LiteLLM Proxy 같은 gateway는 여러 provider 요청을 OpenAI-compatible
-          interface로 정규화하면서 virtual key, budget, routing, retry와
-          fallback을 중앙에서 적용할 수 있게 합니다. 하지만 schema가 같다고
-          model의 behavior까지 같아지는 것은 아닙니다. 예를 들어 긴 context를
-          받는 model이 tool schema를 지원하지 않거나, fallback 후보가 다른
-          region에서 data를 처리할 수 있습니다.
+          LiteLLM Proxy 같은 gateway는 여러 provider 요청을 OpenAI-compatible interface로 정규화하면서 virtual key, budget,
+          routing, retry와 fallback을 중앙에서 적용할 수 있게 합니다. 하지만 schema가 같다고 model의 behavior까지 같아지는 것은 아닙니다. 예를 들어 긴
+          context를 받는 model이 tool schema를 지원하지 않거나 fallback 후보가 다른 region에서 data를 처리할 수 있습니다.
         </p>
         <p className="leading-8">
           그래서 model alias에는 가격순 후보 목록이 아니라 <em>호환성 계약</em>
@@ -74,11 +71,8 @@ export default function LiteLLMGateway({
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Retry 횟수보다 먼저 전체 deadline을 한곳에서 소유한다</h3>
         <p className="leading-8">
-          Client, gateway와 provider SDK가 각각 세 번씩 재시도하면 장애 중
-          backend 부하는 곱으로 커집니다. 더구나 앞선 시도가 이미 오래
-          기다렸다면 마지막 시도는 성공하더라도 사용자의 deadline을 넘깁니다.
-          따라서 최상위 계층이 전체 deadline을 소유하고, 하위 계층에는 남은
-          시간과 허용 시도 수를 전달하는 편이 안전합니다.
+          Client, gateway와 provider SDK가 각각 세 번씩 재시도하면 장애 중 backend 부하는 곱으로 커집니다. 더구나 앞선 시도가 이미 오래 기다렸다면 마지막
+          시도는 성공하더라도 사용자의 deadline을 넘깁니다. 그래서 전체 deadline은 최상위 계층이 소유하고 하위 계층에는 남은 시간과 허용 시도 수를 전달하는 편이 안전합니다.
         </p>
       </div>
 
@@ -187,12 +181,9 @@ T_{\mathrm{backoff}}+\widehat T_{\mathrm{attempt}}&<D_{\mathrm{remain}}
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Streaming과 tool side effect는 retry 경계를 바꾼다</h3>
         <p className="leading-8">
-          연결 자체가 맺어지지 않았다는 사실이 확인되면 재시도하기 쉽지만,
-          stream의 일부가 client에 전달됐거나 tool이 결제를 실행했을 가능성이
-          있다면 같은 prompt를 다시 보내는 순간 중복 출력이나 중복 작업이
-          생깁니다. 이 경우에는 idempotency key와 tool execution ledger로 완료
-          여부를 먼저 확인하고, 확인할 수 없다면 자동 retry보다 불확실한 결과를
-          명시적으로 반환해야 합니다.
+          연결 자체가 맺어지지 않았다는 사실이 확인되면 재시도하기 쉽습니다. 하지만 stream의 일부가 client에 전달됐거나 tool이 결제를 실행했을 가능성이 있다면 같은
+          prompt를 다시 보내는 순간 중복 출력이나 중복 작업이 생깁니다. 이 경우에는 idempotency key와 tool execution ledger로 완료 여부를 먼저 확인하고
+          확인할 수 없다면 자동 retry보다 불확실한 결과를 명시적으로 반환해야 합니다.
         </p>
         <p className="leading-8">
           운영 로그에는 alias만 남기지 않고 실제 deployment, provider request

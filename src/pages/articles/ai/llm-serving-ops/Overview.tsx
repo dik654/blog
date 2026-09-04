@@ -11,11 +11,9 @@ export default function Overview() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          LLM 서빙에서 GPU 한 장의 token/s를 높이는 일과, 여러 사용자의 요청을
-          예측 가능한 지연으로 처리하는 일은 서로 다른 문제입니다. 후자는
-          prompt와 output 길이가 매번 달라지고 stream이 오래 열리기 때문에, 평균
-          처리량만 높아도 긴 요청 몇 개가 queue를 밀어내거나 새 replica가
-          준비되는 동안 SLO를 놓칠 수 있습니다.
+          LLM 서빙에서 GPU 한 장의 token/s를 높이는 일과, 여러 사용자의 요청을 예측 가능한 지연으로 처리하는 일은 서로 다른 문제입니다. 뒤쪽 문제는 prompt와
+          output 길이가 매번 달라지고 stream이 오래 열리기 때문에 평균 처리량만 높아도 긴 요청 몇 개가 queue를 밀어내거나 새 replica가 준비되는 동안 SLO를 놓칠
+          수 있습니다.
         </p>
         <p className="leading-8">
           따라서 운영 설계는 먼저 서비스 계약을 정한 뒤 gateway, serving
@@ -34,12 +32,9 @@ export default function Overview() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Latency는 하나의 숫자가 아니라 서로 다른 사용자 경험이다</h3>
         <p className="leading-8">
-          Streaming 응답에서 사용자는 먼저 “언제 첫 글자가 보이는가”를 느끼고,
-          그다음에는 “출력이 얼마나 끊기지 않는가”를 느낍니다. 첫 질문이
-          TTFT(Time to First Token), 두 번째가 TPOT(Time Per Output
-          Token)입니다. 전체 완료 시간은 두 값을 합쳐야 알 수 있지만, TTFT가
-          나빠진 원인이 gateway인지 runtime queue인지도 구분해야 하므로 요청
-          수명주기에 timestamp를 남깁니다.
+          Streaming 응답에서 사용자는 먼저 “언제 첫 글자가 보이는가”를 느끼고 그다음에는 “출력이 얼마나 끊기지 않는가”를 느낍니다. 첫 질문이 TTFT(Time to First
+          Token), 두 번째가 TPOT(Time Per Output Token)입니다. 전체 완료 시간은 두 값을 합쳐야 알 수 있지만 TTFT가 나빠진 원인이 gateway인지
+          runtime queue인지도 구분해야 하므로 요청 수명주기에 timestamp를 남깁니다.
         </p>
       </div>
 

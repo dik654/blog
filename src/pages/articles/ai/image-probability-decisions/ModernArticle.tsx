@@ -143,8 +143,7 @@ export default function ImageProbabilityDecisionsArticle() {
           question="여러 views와 models를 어떤 probability 단위로 합치고 언제 threshold를 적용하나요?"
           idea={
             <p>
-              각 model의 valid TTA probabilities를 먼저 평균하고, model
-              weights로 다시 합친 뒤 마지막에 class threshold를 적용합니다.
+              각 model의 valid TTA probabilities를 먼저 평균하고 model weights로 다시 합친 뒤 마지막에 class threshold를 적용합니다.
             </p>
           }
           formula={String.raw`\bar p_c=\sum_mw_mA^{-1}\sum_ap_{m,c}(t_a(x))`}

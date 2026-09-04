@@ -14,15 +14,11 @@ export default function Overview() {
 
       <div className="prose prose-neutral mt-6 max-w-none dark:prose-invert">
         <p>
-          언어 모델은 지금까지의 token을 읽고 다음 token 하나를 만듭니다. 다음
-          step에서도 같은 과거를 다시 보므로, 모든 attention projection을 처음부터
-          계산하면 이미 한 일을 계속 반복하게 됩니다. KV cache는 이 반복을 줄이는
-          runtime 기억입니다.
+          언어 모델은 지금까지의 token을 읽고 다음 token 하나를 만듭니다. 다음 step에서도 같은 과거를 다시 보므로 모든 attention projection을 처음부터
+          계산하면 이미 한 일을 계속 반복하게 됩니다. KV cache는 이 반복을 줄이는 runtime 기억입니다.
         </p>
         <p>
-          먼저 Query·Key·Value를 하나씩 구분하고, 그 뒤에만 MHA·GQA·MQA를
-          조합합니다. 모델 이름이나 최대 context 숫자는 이 모양을 이해한 다음에
-          적용합니다.
+          먼저 Query·Key·Value를 하나씩 구분하고 그 뒤에만 MHA·GQA·MQA를 조합합니다. 모델 이름이나 최대 context 숫자는 이 모양을 이해한 다음에 적용합니다.
         </p>
         <ContentBoundary article="kv-cache-fundamentals" />
       </div>

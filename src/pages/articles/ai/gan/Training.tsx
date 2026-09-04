@@ -26,11 +26,9 @@ export default function Training() {
           남겨야 합니다.
         </p>
         <p>
-          Update ratio, 두 learning rate, optimizer momentum과 regularization은
-          독립적인 “팁”이 아니라 같은 dynamical system의 시간 scale을 정한다.
-          TTUR 연구는 G와 D에 다른 learning rate를 두는 조건을 분석했지만, 그
-          수렴 정리는 finite deep GAN의 모든 설정을 자동으로 보장하는 recipe가
-          아니다.
+          Update ratio·두 learning rate·optimizer momentum·regularization은 저마다 떨어진 “팁”처럼 보이지만 실은 같은 dynamical
+          system의 시간 scale을 함께 정한다. TTUR 연구는 G와 D에 다른 learning rate를 두는 조건을 분석했다. 다만 그 수렴 정리를 finite deep GAN의
+          모든 설정에 자동으로 적용되는 recipe로 읽을 수는 없다.
         </p>
         <p>
           TTUR의 stochastic-approximation 해석은 두 step-size sequence의 합은
@@ -85,17 +83,13 @@ export default function Training() {
           Mode collapse는 낮은 다양성만이 아니라 game의 feedback failure다
         </h3>
         <p>
-          Mode collapse에서는 서로 다른 latent가 비슷한 몇 종류의 sample로
-          mapping된다. 현재 discriminator가 높은 score를 주는 좁은 영역으로 많은
-          z가 몰려도 한동안 generator loss가 좋아질 수 있고, D가 이를 잡으면
-          다시 다른 mode로 이동하며 oscillation할 수 있다. Average loss만으로
-          quality·coverage·stability를 동시에 진단할 수 없는 이유다.
+          Mode collapse에서는 서로 다른 latent가 비슷한 몇 종류의 sample로 mapping된다. 현재 discriminator가 높은 score를 주는 좁은 영역으로
+          많은 z가 몰려도 한동안은 generator loss가 좋아질 수 있다. D가 이를 잡으면 다시 다른 mode로 이동하며 oscillation하기도 한다. Average
+          loss만으로 quality·coverage·stability를 동시에 진단할 수 없는 이유다.
         </p>
         <p>
-          같은 크기의 target mode가 8개인데 generated sample 10,000개의 95%가
-          2개 mode에 몰렸다면, 몇 장이 선명하더라도 먼저 낮은 coverage를
-          의심해야 합니다. Mode별 sample count와 generative recall, 서로 다른
-          latent를 넣었을 때 output이 달라지는지를 함께 보고, 중복 sample 한
+          같은 크기의 target mode가 8개인데 generated sample 10,000개의 95%가 2개 mode에 몰렸다면 몇 장이 선명하더라도 먼저 낮은 coverage를
+          의심해야 합니다. Mode별 sample count와 generative recall, 서로 다른 latent를 넣었을 때 출력이 달라지는지를 함께 봅니다. 중복 sample 한
           쌍이나 흔들리는 loss 하나만으로 collapse를 확정하지는 않습니다.
         </p>
       </div>
@@ -103,12 +97,9 @@ export default function Training() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>WGAN은 sigmoid classifier를 1-Lipschitz critic으로 바꾼다</h3>
         <p>
-          Real과 generated distribution이 낮은 차원 manifold에 놓여 support가
-          거의 겹치지 않으면 JS 계열 signal이 포화될 수 있다. WGAN은 scalar
-          critic이 만드는 expectation 차이로 Wasserstein-1 distance의
-          Kantorovich–Rubinstein dual을 근사한다. 이때 critic 출력은
-          probability가 아니며, 핵심 전제는 function이 1-Lipschitz family에
-          머무는 것이다.
+          Real과 generated distribution이 낮은 차원 manifold에 놓여 support가 거의 겹치지 않으면 JS 계열 signal이 포화될 수 있다. WGAN은
+          scalar critic이 만드는 expectation 차이로 Wasserstein-1 distance의 Kantorovich–Rubinstein dual을 근사한다. 이때
+          critic 출력은 probability가 아니다. 핵심 전제는 function이 1-Lipschitz family에 머무는 것이다.
         </p>
         <p>
           1-Lipschitz는 모든 두 입력에 대해
@@ -186,11 +177,9 @@ export default function Training() {
         </p>
         <p className="mt-2 text-sm font-semibold">Wasserstein GAN</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Distribution support가 떨어진 상황에서 divergence topology와 generator
-          continuity를 분석하고 1-Lipschitz critic의 expectation gap을
-          사용합니다. Neural critic과 weight clipping은 이상적인 Wasserstein
-          distance의 근사이며, 논문의 안정성 관찰이 mode collapse의 보편적
-          제거를 뜻하지는 않습니다.
+          Distribution support가 떨어진 상황에서 divergence topology와 generator continuity를 분석하고 1-Lipschitz critic의
+          expectation gap을 사용합니다. Neural critic과 weight clipping은 어디까지나 이상적인 Wasserstein distance의 근사입니다. 논문이
+          보고한 안정성 관찰만으로 mode collapse가 보편적으로 사라졌다고 읽을 수는 없습니다.
         </p>
         <a
           className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
@@ -206,13 +195,10 @@ export default function Training() {
           Gradient penalty와 spectral normalization은 서로 다른 constraint다
         </h3>
         <p>
-          Original WGAN의 weight clipping은 parameter를 좁은 상자에 넣어
-          function family를 거칠게 제한하며 capacity loss와 vanishing/exploding
-          gradient를 만들 수 있다. WGAN-GP는 real과 fake 사이 interpolation에서
-          input-gradient norm을 1에 가깝게 penalty하고, spectral normalization은
-          각 linear weight의 가장 큰 singular value로 weight를 나눠 layer
-          operator norm을 제한한다. 둘은 적용 위치와 보장 범위가 다르므로 이름만
-          보고 교체하지 않는다.
+          Original WGAN의 weight clipping은 parameter를 좁은 상자에 넣어 function family를 거칠게 제한하며 capacity loss와
+          vanishing/exploding gradient를 만들 수 있다. WGAN-GP는 real과 fake 사이 interpolation에서 input-gradient norm을
+          1에 가깝게 penalty한다. Spectral normalization은 각 linear weight의 가장 큰 singular value로 weight를 나눠 layer
+          operator norm을 제한한다. 둘은 적용 위치와 보장 범위가 다르므로 이름만 보고 교체하지 않는다.
         </p>
       </div>
       <ExplainedFormula
@@ -269,10 +255,9 @@ export default function Training() {
           Improved Training of Wasserstein GANs
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Weight clipping이 critic capacity와 gradient에 만드는 문제를 분석하고
-          real–fake interpolation의 input-gradient norm penalty를 제안합니다. 이
-          penalty는 sampled path에서의 근사 제약이며 전체 input space의 정확한
-          1-Lipschitz 보증은 아닙니다.
+          Weight clipping이 critic capacity와 gradient에 만드는 문제를 분석하고 real–fake interpolation의 input-gradient
+          norm penalty를 제안합니다. 이 penalty는 sample한 path 위에서만 걸리는 근사 제약입니다. 전체 input space의 정확한 1-Lipschitz
+          보증까지는 가지 못합니다.
         </p>
         <a
           className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
@@ -338,10 +323,8 @@ export default function Training() {
           Spectral Normalization for Generative Adversarial Networks
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Discriminator weight의 spectral norm을 가볍게 제한하는 normalization과
-          CIFAR-10·STL-10·ImageNet 실험을 제시합니다. Layer별 operator norm
-          제한이 전체 game의 global convergence나 optimal critic을 보장하는 것은
-          아닙니다.
+          Discriminator weight의 spectral norm을 가볍게 제한하는 normalization과 CIFAR-10·STL-10·ImageNet 실험을 제시합니다. 다만
+          layer별 operator norm 제한이 닿는 범위는 거기까지입니다. 전체 game의 global convergence나 optimal critic까지 보장하지는 못합니다.
         </p>
         <a
           className="mt-3 inline-block text-sm font-medium text-primary hover:underline"

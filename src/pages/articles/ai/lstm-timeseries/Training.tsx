@@ -6,7 +6,11 @@ export default function Training() {
     <section id="training" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">누출은 window 모양이 아니라 정보의 시점으로 판정한다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">전체 시계열로 scaler를 fit하거나 window를 먼저 만든 뒤 무작위로 나누면 미래 구간의 level과 target이 train에 섞인다. 먼저 raw timeline에 cutoff를 긋고, 각 rolling fold의 train 구간으로만 결측 처리·scaler·feature selection을 fit해야 한다. 다만 validation의 첫 origin이 train 마지막 L step을 history로 사용하는 것은 정상이다. 과거를 가져오는 것과 미래의 통계를 미리 아는 것은 다른 문제다.</p>
+        <p className="leading-7">
+            전체 시계열로 scaler를 fit하거나 window를 먼저 만든 뒤 무작위로 나누면 미래 구간의 level과 target이 train에 섞인다. 먼저 raw timeline에
+            cutoff를 긋는다. 결측 처리·scaler·feature selection은 각 rolling fold의 train 구간으로만 fit한다. 다만 validation의 첫
+            origin이 train 마지막 L step을 history로 사용하는 것은 정상이다. 과거를 가져오는 것과 미래의 통계를 미리 아는 것은 다른 문제다.
+          </p>
       </div>
       <LeakageBoundaryViz />
       <ExplainedFormula

@@ -346,11 +346,9 @@ export default function OnPolicyDistillationArticle() {
           </h2>
         </header>
         <p>
-          Motif 3의 MOPD는 general SFT student가 on-policy trajectory를 만들고,
-          prompt domain에 맞는 일곱 specialist 중 하나가 각 sampled token에 준
-          scalar log probability만 가져옵니다. Generation policy와 update 직전
-          old policy의 mismatch는 ICE-POP importance filter로 제한하고,
-          environment reward와 reference-policy KL은 distillation objective에서
+          Motif 3의 MOPD는 general SFT student가 on-policy trajectory를 만들고 prompt domain에 맞는 일곱 specialist 중 하나가
+          각 sampled token에 준 scalar log probability만 가져옵니다. Generation policy와 update 직전 old policy의 mismatch는
+          ICE-POP importance filter로 제한합니다. environment reward와 reference-policy KL은 distillation objective에서
           제외합니다.
         </p>
         <p>

@@ -21,15 +21,12 @@ export default function InferenceCostAndCapacityPlanningArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            LLM 추론 비용은 GPU 를 빌린 시간에서 나오고, 그 시간 동안 낸 token 수로 나누면
-            cost/token 이 됩니다. 필요한 GPU 수는 가장 바쁜 시간의 요청량(peak) 을 SLO 를
-            지키는 GPU 당 처리량으로 나눈 값에 headroom 을 더한 것이며, 이 두 계산이 capacity
-            planning 의 전부입니다.
+            LLM 추론 비용은 GPU 를 빌린 시간에서 나옵니다. 그 시간 동안 낸 token 수로 나누면 cost/token 이 됩니다. 필요한 GPU 수는 가장 바쁜 시간의
+            요청량(peak) 을 SLO 를 지키는 GPU 당 처리량으로 나눈 값에 headroom 을 더한 것입니다. capacity planning 은 이 두 계산이 전부입니다.
           </p>
           <p>
-            이 글은 먼저 GPU-hour 단가에서 cost/token 과 cost/request 를 유도하고, 그 값을
-            throughput per dollar·performance per watt·TCO 로 비교하는 법을 봅니다. 다음으로
-            peak 와 headroom 에서 GPU 수를 정하고, reserved 와 on-demand 의 분배, scale-up 과
+            이 글은 먼저 GPU-hour 단가에서 cost/token 과 cost/request 를 유도하고 그 값을 throughput per dollar·performance per
+            watt·TCO 로 비교하는 법을 봅니다. 다음으로 peak 와 headroom 에서 GPU 수를 정하고 reserved 와 on-demand 의 분배, scale-up 과
             scale-out, autoscaling 정책, GPU fragmentation 까지 운영 판단을 닫습니다.
           </p>
           <p>
@@ -48,19 +45,16 @@ export default function InferenceCostAndCapacityPlanningArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Inference cost 는 model 이 응답을 만드는 데 든 자원 비용 전체입니다. GPU 를 시간
-            단위로 빌리든 사든 비용은 시간에 비례하고, 그 시간에 서버가 낸 token 수는 benchmark
-            의 tokens/s 가 정하므로, 비용을 token 으로 나누면 두 값의 비가 됩니다.
+            GPU 를 시간 단위로 빌리든 사든 비용은 시간에 비례합니다. Inference cost 는 이렇게 model 이 응답을 만드는 데 든 자원 비용 전체입니다. 그 시간에 서버가
+            낸 token 수는 benchmark 의 tokens/s 가 정하므로 비용을 token 으로 나누면 두 값의 비가 됩니다.
           </p>
           <p>
-            GPU-hour 는 GPU 한 장을 한 시간 쓴 양입니다. 8 장을 3 시간 쓰면 24 GPU-h 이고,
-            clock 이나 utilization 과 무관하게 점유한 시간만 셉니다. 그래서 GPU 가 놀고 있어도
-            GPU-hour 는 그대로 나가고, 그만큼 cost/token 이 오릅니다.
+            8 장을 3 시간 쓰면 24 GPU-h 입니다. GPU-hour 는 GPU 한 장을 한 시간 쓴 양이고 clock 이나 utilization 과 무관하게 점유한 시간만 셉니다.
+            GPU 가 놀고 있어도 GPU-hour 는 그대로 나갑니다. 그만큼 cost/token 이 오릅니다.
           </p>
           <p>
-            GPU-h 단가를 $2 로 가정하고 서버 한 장이 SLO 아래에서 1,000 tokens/s 를 낸다고
-            하면, 한 시간에 3,600,000 token 이 나오므로 cost/token 은 2 / 3,600,000 ≈ $0.00000056
-            입니다. 숫자가 너무 작아 백만 token 당 비용으로 바꿔 부르며, 이 예에서는 $0.56 per
+            GPU-h 단가를 $2 로 가정하고 서버 한 장이 SLO 아래에서 1,000 tokens/s 를 낸다고 해 봅시다. 한 시간에 3,600,000 token 이 나오므로
+            cost/token 은 2 / 3,600,000 ≈ $0.00000056 입니다. 숫자가 너무 작아 백만 token 당 비용으로 바꿔 부릅니다. 이 예에서는 $0.56 per
             million tokens 입니다.
           </p>
           <p>
@@ -70,10 +64,9 @@ export default function InferenceCostAndCapacityPlanningArticle() {
             나눈 값(1,000 → 900) 이 이 차이를 바로 보여 줍니다.
           </p>
           <p>
-            Cost per request 는 같은 비용을 완료 요청 수로 나눈 값입니다. Benchmark 의 RPS 가
-            3 이면 시간당 10,800 요청이므로 2 / 10,800 ≈ $0.000185, 요청 1,000 건에 약 $0.19
-            입니다. 요청당 token 수가 다른 workload 끼리는 cost/token 이, 같은 API 의 가격을
-            정할 때는 cost/request 가 읽기 쉽습니다.
+            같은 비용을 완료 요청 수로 나누면 cost per request 가 됩니다. Benchmark 의 RPS 가 3 이면 시간당 10,800 요청이므로 2 / 10,800 ≈
+            $0.000185, 요청 1,000 건에 약 $0.19 입니다. 요청당 token 수가 다른 workload 끼리는 cost/token 이, 같은 API 의 가격을 정할 때는
+            cost/request 가 읽기 쉽습니다.
           </p>
           <p>
             이 식의 tokens/s 는 어떤 조건의 값인지가 중요합니다. Batch 를 무한히 키운 상한
@@ -119,32 +112,27 @@ export default function InferenceCostAndCapacityPlanningArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Resource efficiency 는 쓴 자원 대비 낸 유효 일의 비입니다. Serving 에서 자원은
-            돈과 전력 두 축으로 재며, 각각 throughput per dollar 와 performance per watt 가
-            됩니다. 두 값이 높을수록 같은 token 을 더 싸게, 더 적은 전력으로 냅니다.
+            Resource efficiency 는 쓴 자원 대비 낸 유효 일의 비입니다. Serving 에서 자원은 돈과 전력 두 축으로 재며 각각 throughput per dollar
+            와 performance per watt 가 됩니다. 두 값이 높을수록 같은 token 을 더 싸게, 더 적은 전력으로 냅니다.
           </p>
           <p>
-            Throughput per dollar 는 tokens/s 를 시간당 비용으로 나눈 값입니다. $2/GPU-h 에서
-            1,000 tokens/s 면 500 tokens/s 당 $/h, 다르게 말하면 $1 에 1,800,000 token 입니다.
-            $3/GPU-h 인 더 큰 GPU 가 1,800 tokens/s 를 낸다면 600 이라 장당 가격은 비싸도
-            효율은 20 % 높습니다.
+            $2/GPU-h 에서 1,000 tokens/s 면 500 tokens/s 당 $/h, 다르게 말하면 $1 에 1,800,000 token 입니다. tokens/s 를 시간당
+            비용으로 나눈 이 값이 throughput per dollar 입니다. $3/GPU-h 인 더 큰 GPU 가 1,800 tokens/s 를 낸다면 600 이라 장당 가격은
+            비싸도 효율은 20 % 높습니다.
           </p>
           <p>
-            Performance per watt 는 tokens/s 를 소비 전력 W 로 나눈 값입니다. 700 W 에서 1,000
-            tokens/s 면 1.43 tokens/J 입니다. 이 W 는 명판의 TDP 가 아니라 부하 중 실제로 잰
-            wall power 여야 하며, MLPerf 의 power 측정이 system 전체의 AC 전력을 벽에서 재는
-            이유가 그것입니다.
+            Performance per watt 는 tokens/s 를 소비 전력 W 로 나눈 값입니다. 700 W 에서 1,000 tokens/s 면 1.43 tokens/J 입니다.
+            이 W 는 명판의 TDP 가 아니라 부하 중 실제로 잰 wall power 여야 합니다. MLPerf 가 power 를 잴 때 system 전체의 AC 전력을 벽에서 재는 것도
+            그래서입니다.
           </p>
           <p>
-            Total cost of ownership(TCO) 은 장비를 소유할 때 구매가·전력·냉각·공간·운영 인력을
-            수명 전체에 걸쳐 더한 비용입니다. GPU 8 장 서버를 $250,000 에 사서 4 년 쓴다고
-            가정하면 장비만 250,000 / (4 × 8,760 × 8) ≈ $0.89/GPU-h 이고, 700 W × 8 × PUE 1.3
-            에 $0.12/kWh 를 곱한 전력이 약 $0.11/GPU-h 더해집니다.
+            Total cost of ownership(TCO) 은 장비를 소유할 때 드는 비용을 수명 전체에 걸쳐 더한 값입니다. 구매가에 전력·냉각·공간·운영 인력이 모두 들어갑니다.
+            GPU 8 장 서버를 $250,000 에 사서 4 년 쓴다고 가정하면 장비만 250,000 / (4 × 8,760 × 8) ≈ $0.89/GPU-h 입니다. 여기에 700 W
+            × 8 × PUE 1.3 에 $0.12/kWh 를 곱한 전력이 약 $0.11/GPU-h 더해집니다.
           </p>
           <p>
-            이 $1/GPU-h 는 GPU 가 4 년 내내 차 있을 때의 값입니다. 평균 utilization 이 40 % 면
-            token 당 실제 비용은 2.5 배가 되어 $2/GPU-h 의 임대와 비슷해집니다. 소유와 임대의
-            비교는 단가가 아니라 utilization 을 얼마나 높게 유지할 수 있는가의 비교입니다.
+            이 $1/GPU-h 는 GPU 가 4 년 내내 차 있을 때의 값입니다. 평균 utilization 이 40 % 면 token 당 실제 비용은 2.5 배가 되어 $2/GPU-h
+            의 임대와 비슷해집니다. 소유와 임대를 견줄 때 갈리는 것은 단가가 아닙니다. utilization 을 얼마나 높게 유지할 수 있느냐가 가릅니다.
           </p>
         </div>
         <TermBreakdown
@@ -160,10 +148,9 @@ export default function InferenceCostAndCapacityPlanningArticle() {
           preview="Prefill 은 compute-bound, decode 는 memory-bound 라 token 당 GPU 시간이 다릅니다. 같은 단가로 세면 긴 입력 workload 의 비용이 가려집니다."
         >
           <p>
-            입력 1,000 token 의 prefill 은 한 step 에 끝나지만 batch 안 다른 요청의 decode 를
-            그만큼 늦춥니다. 출력 300 token 은 300 step 에 걸쳐 weight 를 300 번 읽습니다.
-            그래서 API 가격표가 입력과 출력을 다르게 매기는 것이며, 내부 비용도 두 분포를
-            붙인 benchmark 에서 나온 tokens/s 로 계산해야 합니다.
+            입력 1,000 token 의 prefill 은 한 step 에 끝나지만 batch 안 다른 요청의 decode 를 그만큼 늦춥니다. 출력 300 token 은 300 step
+            에 걸쳐 weight 를 300 번 읽습니다. API 가격표가 입력과 출력을 다르게 매기는 것은 이 때문입니다. 내부 비용도 두 분포를 붙인 benchmark 에서 나온
+            tokens/s 로 계산해야 합니다.
           </p>
         </ProgressiveDetail>
       </section>
@@ -174,39 +161,32 @@ export default function InferenceCostAndCapacityPlanningArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Capacity planning 은 예상 트래픽을 SLO 안에서 받아 내는 데 필요한 자원의 양과 그
-            확보 방식을 정하는 일입니다. 입력은 시간대별 트래픽 예측과 benchmark 가 준 GPU 당
-            처리량이고, 출력은 GPU 수와 그것을 언제 어떻게 늘리고 줄일지의 정책입니다.
+            Capacity planning 은 예상 트래픽을 SLO 안에서 받아 내는 데 자원이 얼마나 필요한지 정합니다. 그 자원을 어떻게 확보할지도 여기서 정합니다. 입력은 시간대별
+            트래픽 예측과 benchmark 가 준 GPU 당 처리량입니다. 출력은 GPU 수, 그리고 그것을 언제 어떻게 늘리고 줄일지의 정책입니다.
           </p>
           <p>
-            Peak capacity 는 하루 중 가장 바쁜 구간의 요청량을 받아 내는 데 필요한 용량입니다.
-            Peak 가 20 RPS, 요청당 300 token 이면 6,000 tokens/s 가 필요하고, GPU 한 장이 SLO
-            아래에서 1,000 tokens/s 를 내면 6 장이 딱 맞습니다. 그러나 6 장은 앞 글의 곡선에서
+            Peak capacity 는 하루 중 가장 바쁜 구간의 요청량을 받아 내는 데 필요한 용량입니다. Peak 가 20 RPS, 요청당 300 token 이면 6,000
+            tokens/s 가 필요합니다. GPU 한 장이 SLO 아래에서 1,000 tokens/s 를 내면 6 장이 딱 맞습니다. 그러나 6 장은 앞 글의 곡선에서
             utilization 100 % 에 해당하므로 latency 가 발산하는 점입니다.
           </p>
           <p>
-            그래서 목표 utilization 을 무릎 앞인 0.7 정도로 두고 6,000 / (1,000 × 0.7) = 8.57,
-            올림해서 9 장으로 계획합니다. 남는 3 장 분량이 headroom 이며, 용량 9,000 tokens/s
-            대 peak 6,000 이므로 headroom 은 50 % 입니다. Headroom 은 예측 오차, 장애 replica
-            대체, 배포 중 일시적 용량 감소를 흡수하는 여유입니다.
+            목표 utilization 을 무릎 앞인 0.7 정도로 두고 6,000 / (1,000 × 0.7) = 8.57, 올림해서 9 장으로 계획합니다. 남는 3 장 분량이
+            headroom 입니다. 용량 9,000 tokens/s 대 peak 6,000 이므로 headroom 은 50 % 입니다. Headroom 은 예측 오차, 장애 replica
+            대체, 배포 중 일시적 용량 감소를 흡수합니다.
           </p>
           <p>
-            Headroom 을 peak 의 2 배로 잡으면 12 장이고, $2/GPU-h 가정에서 추가 3 장은 한 달에
-            3 × 2 × 720 = $4,320 입니다. 평균 트래픽이 8 RPS(2,400 tokens/s) 라면 9 장의 평균
-            utilization 은 27 % 이고, 그 시간대의 cost/token 은 만차 기준 $0.56/M 이 아니라
+            Headroom 을 peak 의 2 배로 잡으면 12 장입니다. $2/GPU-h 가정에서 추가 3 장은 한 달에 3 × 2 × 720 = $4,320 입니다. 평균 트래픽이 8
+            RPS(2,400 tokens/s) 라면 9 장의 평균 utilization 은 27 % 이고 그 시간대의 cost/token 은 만차 기준 $0.56/M 이 아니라
             $2.08/M 입니다.
           </p>
           <p>
-            이 상태가 overprovisioning 입니다. 용량이 트래픽보다 많아 GPU-hour 가 비어 나가고
-            cost/token 이 오릅니다. 반대로 underprovisioning 은 용량이 peak 보다 적은 상태라,
-            그 구간에서 offered load 가 capacity 를 넘어 대기열이 쌓이고 SLO 위반이 나며 결국
-            요청이 timeout 됩니다.
+            이 상태가 overprovisioning 입니다. 용량이 트래픽보다 많아 GPU-hour 가 비어 나가고 cost/token 이 오릅니다. 반대로
+            underprovisioning 은 용량이 peak 보다 적은 상태입니다. 그 구간에서는 offered load 가 capacity 를 넘어 대기열이 쌓이고 SLO 위반이 나며
+            결국 요청이 timeout 됩니다.
           </p>
           <p>
-            두 상태는 같은 GPU 수에서 시간대에 따라 번갈아 나타납니다. 낮의 peak 에 맞춘 9 장은
-            새벽에 과잉이고, 새벽에 맞춘 3 장은 낮에 부족합니다. 고정 용량으로는 둘 중 하나를
-            고를 수밖에 없으며, 그 간격을 메우는 것이 다음 절의 reserved·on-demand 분배와
-            autoscaling 입니다.
+            두 상태는 같은 GPU 수에서 시간대에 따라 번갈아 나타납니다. 낮의 peak 에 맞춘 9 장은 새벽에 과잉이고 새벽에 맞춘 3 장은 낮에 부족합니다. 고정 용량으로는 둘 중
+            하나를 고를 수밖에 없습니다. 그 간격은 다음 절의 reserved·on-demand 분배와 autoscaling 이 메웁니다.
           </p>
         </div>
         <InferenceCostAndCapacityPlanningViz />
@@ -247,10 +227,8 @@ export default function InferenceCostAndCapacityPlanningArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Reserved capacity 는 일정 기간 쓰겠다고 약정하고 할인받는 용량이고, on-demand 는
-            약정 없이 시간 단위로 빌리는 용량입니다. Cloud 는 약정형(Savings Plans·Reserved) 과
-            무약정 on-demand, 남는 자원을 싸게 파는 spot 을 나란히 두며, 약정은 쓰지 않아도
-            비용이 나갑니다.
+            Reserved capacity 는 일정 기간 쓰겠다고 약정하고 할인받는 용량이고 on-demand 는 약정 없이 시간 단위로 빌리는 용량입니다. Cloud 는
+            약정형(Savings Plans·Reserved) 과 무약정 on-demand, 남는 자원을 싸게 파는 spot 을 나란히 둡니다. 약정은 쓰지 않아도 비용이 나갑니다.
           </p>
           <p>
             그래서 하루 종일 있는 기본 부하는 reserved 로, 낮에만 있는 peak 는 on-demand 로
@@ -259,17 +237,14 @@ export default function InferenceCostAndCapacityPlanningArticle() {
             $7,344 입니다. 12 장을 모두 on-demand 로 두면 $17,280 입니다.
           </p>
           <p>
-            늘리는 방향에는 두 가지가 있습니다. Scale-up 은 replica 하나를 더 큰 GPU 나 더
-            많은 GPU(tensor parallel) 로 키우는 것이고, scale-out 은 같은 replica 를 여러 개
-            복제하는 것입니다. 70B 모델의 fp16 weight 140 GB 는 80 GB GPU 한 장에 들어가지
-            않으므로 최소 TP 2 의 scale-up 이 먼저이고, 그 다음 수요는 scale-out 으로 받습니다.
+            늘리는 방향은 둘입니다. Scale-up 은 replica 하나를 더 큰 GPU 나 더 많은 GPU(tensor parallel) 로 키웁니다. scale-out 은 같은
+            replica 를 여러 개 복제합니다. 70B 모델의 fp16 weight 140 GB 는 80 GB GPU 한 장에 들어가지 않으므로 최소 TP 2 의 scale-up 이
+            먼저이고 그 다음 수요는 scale-out 으로 받습니다.
           </p>
           <p>
-            둘의 비용 구조가 다릅니다. Scale-up 은 GPU 들이 layer 마다 all-reduce 로 통신해
-            장당 처리량이 떨어지지만(1,000 → 900) memory 를 합쳐 쓰므로 KV cache 가 커집니다.
-            Scale-out 은 replica 사이 통신이 없어 처리량이 선형으로 늘지만 replica 마다 weight
-            사본을 들고 있어 memory 가 중복되고, 앞단에 load balancer 와 prefix 기반 routing 이
-            필요합니다.
+            둘의 비용 구조가 다릅니다. Scale-up 은 GPU 들이 layer 마다 all-reduce 로 통신해 장당 처리량이 떨어지지만(1,000 → 900) memory 를 합쳐
+            쓰므로 KV cache 가 커집니다. Scale-out 은 replica 사이 통신이 없어 처리량이 선형으로 늡니다. 대신 replica 마다 weight 사본을 들고 있어
+            memory 가 중복되고 앞단에 load balancer 와 prefix 기반 routing 이 필요합니다.
           </p>
           <p>
             Autoscaling 은 replica 수를 측정치에 따라 자동으로 바꾸는 제어입니다. Kubernetes
@@ -278,10 +253,9 @@ export default function InferenceCostAndCapacityPlanningArticle() {
             <Link to="/ai/llm-serving-ops#serving-deployment">HPA control loop</Link> 이 맡습니다.
           </p>
           <p>
-            LLM 에서 정책의 핵심은 metric 과 지연입니다. CPU 가 아니라 대기열 길이나 KV cache
-            utilization 을 metric 으로 두고, 새 replica 가 weight 를 내려받아 warmup 을 마치기
-            까지 몇 분이 걸리므로 트래픽이 오른 뒤 반응하면 늦습니다. 그래서 시간대 예측으로
-            미리 늘리는 scheduled scaling 을 반응형 위에 겹칩니다.
+            LLM 에서 정책의 핵심은 metric 과 지연입니다. metric 은 CPU 가 아니라 대기열 길이나 KV cache utilization 으로 둡니다. 새 replica 가
+            weight 를 내려받아 warmup 을 마치기 까지 몇 분이 걸리므로 트래픽이 오른 뒤 반응하면 늦습니다. 시간대 예측으로 미리 늘리는 scheduled scaling 을
+            반응형 위에 겹칩니다.
           </p>
           <p>
             마지막 항목은 GPU fragmentation 입니다. 여러 model 이나 job 이 GPU 를 쪼개 쓸 때
@@ -291,10 +265,9 @@ export default function InferenceCostAndCapacityPlanningArticle() {
             1g.10gb 두 개뿐이라 4g.40gb 요청은 합이 맞아도 들어가지 못합니다.
           </p>
           <p>
-            Cluster 층에서도 같은 일이 생깁니다. 8 장 node 두 대에 각각 2 장씩 비어 있으면
-            합은 4 장이지만 TP 4 replica 는 한 node 에 4 장이 붙어 있어야 해서 뜨지 못합니다.
-            Time-slicing 은 memory 격리 없이 시간만 나누므로 조각은 없지만 서로의 latency 를
-            침범합니다. Fragmentation 을 줄이는 배치가 곧 utilization 을 올리는 배치입니다.
+            Cluster 층에서도 같은 일이 생깁니다. 8 장 node 두 대에 각각 2 장씩 비어 있으면 합은 4 장이지만 TP 4 replica 는 한 node 에 4 장이 붙어
+            있어야 해서 뜨지 못합니다. Time-slicing 은 memory 격리 없이 시간만 나누므로 조각은 없지만 서로의 latency 를 침범합니다. Fragmentation 을
+            줄이는 배치가 곧 utilization 을 올립니다.
           </p>
         </div>
         <AlgorithmBlock
@@ -332,8 +305,8 @@ export default function InferenceCostAndCapacityPlanningArticle() {
             여야 그 사이 SLO 를 지킵니다.
           </p>
           <p>
-            줄이는 쪽도 마찬가지입니다. 5 분 안정화 창 없이 줄이면 트래픽이 잠깐 내려갔다
-            돌아올 때 다시 cold replica 를 띄우게 되고, 그 사이 사용자는 cold TTFT 를 겪습니다.
+            줄이는 쪽도 마찬가지입니다. 5 분 안정화 창 없이 줄이면 트래픽이 잠깐 내려갔다 돌아올 때 다시 cold replica 를 띄우게 됩니다. 그 사이 사용자는 cold TTFT
+            를 겪습니다.
           </p>
         </ProgressiveDetail>
       </section>

@@ -27,10 +27,9 @@ export default function LlmDatasetEngineeringAndCleaningArticle() {
             engineering 파이프라인으로 다시 만들어집니다.
           </p>
           <p>
-            이 글은 그 파이프라인을 원본 문서가 각 단계를 지나며 무엇이 왜 걸러지는지 순서대로
-            따라갑니다. Source를 고르고 filtering·정규화로 품질을 만든 뒤, dedup·contamination
-            검사로 겹치는 문서와 평가 유출을 걷어내고, annotation으로 label을 붙인 뒤 mixture·
-            curriculum으로 학습 배치를 정하는 다섯 단계입니다.
+            이 글은 그 파이프라인을 따라갑니다. 원본 문서 하나가 각 단계를 지나며 무엇이 왜 걸러지는지 순서대로 봅니다. Source를 고르고 filtering·정규화로 품질을
+            만듭니다. 이어서 dedup·contamination 검사로 겹치는 문서와 평가 유출을 걷어내고 annotation으로 label을 붙인 다음
+            mixture·curriculum으로 학습 배치를 정합니다. 이렇게 다섯 단계입니다.
           </p>
           <p>
             <Link to="/ai/llm-training-stages#pretraining">Pretraining objective</Link> 글은
@@ -48,20 +47,16 @@ export default function LlmDatasetEngineeringAndCleaningArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Dataset engineering이란 pretraining에 쓸 corpus를 만드는 전체 작업을 가리키는
-            말이고, 그 작업이 순서대로 이어지는 단계 목록이 data generation pipeline입니다. 한
-            문서가 이 pipeline에 들어오는 저장소, 즉 웹 크롤·코드 저장소·책·논문 같은 원본을
-            data source라 부릅니다.
+            Pretraining에 쓸 corpus를 만드는 전체 작업이 dataset engineering입니다. 그 작업이 순서대로 이어지는 단계 목록은 data generation
+            pipeline이라 부릅니다. 한 문서가 이 pipeline에 들어오는 저장소가 data source입니다. 웹 크롤·코드 저장소·책·논문 같은 원본이 여기 해당합니다.
           </p>
           <p>
-            여러 source를 목적에 맞게 고르고 비중을 다듬는 활동을 data curation이라 합니다.
-            Curation은 source를 통째로 넣거나 빼는 판단이라, 다음 절에서 다룰 문서 단위 filtering
-            보다 더 거친 단위의 선택입니다.
+            Data curation은 여러 source를 목적에 맞게 고르고 비중을 다듬는 활동입니다. source를 통째로 넣거나 빼는 판단이므로 다음 절에서 다룰 문서 단위
+            filtering보다 선택의 단위가 거칩니다.
           </p>
           <p>
-            Gao et al.의 The Pile은 22개의 서로 다른 도메인 subset을 의도적으로 섞어 만든
-            825GiB 코퍼스입니다. 학술 논문·코드·책처럼 웹 크롤에는 적게 등장하는 도메인을 일부러
-            더 많이 넣어야, 그 도메인에서도 모델이 성능을 낸다는 것을 보여준 초기 사례입니다.
+            Gao et al.의 The Pile은 22개의 서로 다른 도메인 subset을 의도적으로 섞어 만든 825GiB 코퍼스입니다. 웹 크롤에는 적게 등장하는 학술 논문·코드·책
+            같은 도메인을 일부러 더 많이 넣어야 그 도메인에서도 모델이 성능을 낸다는 것을 보여준 초기 사례입니다.
           </p>
           <p>
             AI2의 Dolma는 이 pipeline을 실제로 구현합니다. 웹, 학술논문, 코드, 책, SNS,
@@ -96,25 +91,21 @@ export default function LlmDatasetEngineeringAndCleaningArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            문서 하나가 학습에 남을 가치가 있는지를 판단하는 기준을 data quality라 합니다. 그
-            기준에 미달하는 문서를 통째로 들어내는 작업이 data filtering이고, 남은 문서 안의
-            깨진 인코딩·boilerplate 같은 결함을 고치는 작업이 data cleaning입니다.
+            Data quality는 문서 하나가 학습에 남을 가치가 있는지 판단하는 기준입니다. 그 기준에 미달하는 문서를 통째로 들어내는 작업이 data filtering입니다. 남은
+            문서 안의 깨진 인코딩·boilerplate 같은 결함을 고치는 쪽은 data cleaning이라 부릅니다.
           </p>
           <p>
-            Cleaning 결과를 대소문자·유니코드·공백 같은 표준 형식으로 통일하는 것을 data
-            normalization이라 하고, 같은 대상을 가리키는 여러 표기(URL의 http/https, 전각·반각
-            숫자 등)를 하나의 표준 형태로 되돌리는 것을 data canonicalization이라 합니다.
+            Cleaning 결과를 대소문자·유니코드·공백 같은 표준 형식으로 통일하면 data normalization입니다. 같은 대상을 가리키는 여러 표기를 하나의 표준 형태로
+            되돌리는 쪽은 data canonicalization입니다. URL의 http/https, 전각·반각 숫자 같은 표기가 여기 해당합니다.
           </p>
           <p>
-            Penedo et al.의 RefinedWeb은 "제대로 필터링하고 dedup한 웹 데이터만으로도" The
-            Pile처럼 사람이 큐레이션한 코퍼스를 능가하는 모델을 만들 수 있음을 보였습니다. 즉
-            filtering·cleaning은 생략 가능한 전처리가 아니라 최종 성능을 가르는 단계입니다.
+            Penedo et al.의 RefinedWeb은 "제대로 필터링하고 dedup한 웹 데이터만으로도" The Pile처럼 사람이 큐레이션한 코퍼스를 능가하는 모델을 만들 수
+            있음을 보였습니다. filtering·cleaning은 생략 가능한 전처리가 아닙니다. 최종 성능을 가르는 단계입니다.
           </p>
           <p>
-            Zhou et al.의 LIMA는 반대 방향의 증거입니다. 65B 모델을 정교하게 고른 1,000개
-            prompt-response 쌍만으로 instruction tuning해도 GPT-4 응답과 대등한 평가를 받았고,
-            저자들은 이를 데이터 양보다 quality와 다양성이 결과를 더 많이 좌우한다는 "superficial
-            alignment hypothesis"로 설명합니다.
+            Zhou et al.의 LIMA는 반대 방향의 증거입니다. 65B 모델을 정교하게 고른 1,000개 prompt-response 쌍만으로 instruction tuning해도
+            GPT-4 응답과 대등한 평가를 받았습니다. 저자들은 이를 데이터 양보다 quality와 다양성이 결과를 더 많이 좌우한다는 "superficial alignment
+            hypothesis"로 설명합니다.
           </p>
         </div>
         <TermBreakdown
@@ -135,16 +126,14 @@ export default function LlmDatasetEngineeringAndCleaningArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            동일하거나 거의 동일한 문서를 코퍼스에서 제거하는 작업이 data deduplication입니다.
-            정확히 같은 문서(exact duplicate)뿐 아니라 광고 배너 한 줄만 다른 문서까지 잡아내는
-            것이 near-duplicate detection이고, 표현은 다르지만 뜻이 같은 문서를 embedding
-            유사도로 잡아내는 것이 semantic deduplication입니다.
+            동일하거나 거의 동일한 문서를 코퍼스에서 제거하는 작업이 data deduplication입니다. 정확히 같은 문서(exact duplicate)뿐 아니라 광고 배너 한 줄만
+            다른 문서까지 잡아내면 near-duplicate detection입니다. 표현은 달라도 뜻이 같은 문서를 embedding 유사도로 걸러내는 쪽이 semantic
+            deduplication입니다.
           </p>
           <p>
-            Near-duplicate detection의 표준 도구는 Broder가 제안한 MinHash입니다. 문서를 k개
-            단어의 연속 부분열(shingle) 집합으로 바꾼 뒤, 각 shingle 집합에 여러 개의 해시
-            함수를 적용해 그중 최솟값만 남기는 sketch를 만들고, 두 문서 sketch가 같은 해시
-            함수에서 일치한 비율로 Jaccard 유사도를 추정합니다.
+            Near-duplicate detection의 표준 도구는 Broder가 제안한 MinHash입니다. 문서를 k개 단어의 연속 부분열(shingle) 집합으로 바꿉니다. 각
+            shingle 집합에 여러 개의 해시 함수를 적용해 그중 최솟값만 남기면 sketch가 나옵니다. 두 문서 sketch가 같은 해시 함수에서 일치한 비율로 Jaccard
+            유사도를 추정합니다.
           </p>
         </div>
         <ExplainedFormula
@@ -166,22 +155,18 @@ export default function LlmDatasetEngineeringAndCleaningArticle() {
         />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Benchmark의 test 문항(또는 그와 거의 같은 문구)이 학습 데이터 안에 이미 들어 있어
-            모델이 실제로는 암기한 답을 낸 것을 일반화로 오인하게 되는 상태를 data
-            contamination이라 합니다. n-gram이나 substring 겹침으로 학습 데이터와 benchmark
-            사이 중복을 찾는 절차를 contamination detection이라 부릅니다.
+            Data contamination은 benchmark의 test 문항이 학습 데이터 안에 이미 들어 있는 상태를 말합니다. 그와 거의 같은 문구가 들어 있어도 마찬가지입니다.
+            이러면 모델이 실제로는 암기한 답을 냈는데 평가하는 쪽은 그것을 일반화로 오인합니다. n-gram이나 substring 겹침으로 학습 데이터와 benchmark 사이 중복을
+            찾는 절차는 contamination detection이라 부릅니다.
           </p>
           <p>
-            이 절차의 임계값은 모델 세대마다 달라졌습니다. GPT-2는 evaluation set의 8-gram이
-            학습 데이터에 있는지를 봤고, GPT-3는 13-gram 겹침을 기준으로 삼았습니다. GPT-4는
-            단어 단위 n-gram 대신 50글자 substring 일치로 바꿨고, Llama-2는 단어 대신 token
-            단위 10-gram(최대 4개 위치 skip 허용)을 씁니다.
+            이 절차의 임계값은 모델 세대마다 달라졌습니다. GPT-2는 evaluation set의 8-gram이 학습 데이터에 있는지를 봤고 GPT-3는 13-gram 겹침을 기준으로
+            삼았습니다. GPT-4는 단어 단위 n-gram 대신 50글자 substring 일치로 바꿨고 Llama-2는 단어 대신 token 단위 10-gram(최대 4개 위치 skip
+            허용)을 씁니다.
           </p>
           <p>
-            임계값이 짧을수록(8-gram) 우연한 일치까지 contamination으로 잡아 false positive가
-            늘고, 길수록(50자 substring) 놓치는 진짜 유출이 늘 수 있습니다. 어느 임계값을 써도
-            문장을 바꿔 쓴 rephrasing 유출은 정확 일치 방식으로는 잡히지 않는다는 한계가
-            남습니다.
+            임계값이 짧을수록(8-gram) 우연한 일치까지 contamination으로 잡아 false positive가 늘고 길수록(50자 substring) 놓치는 진짜 유출이 늘 수
+            있습니다. 어느 임계값을 써도 문장을 바꿔 쓴 rephrasing 유출은 정확 일치 방식으로는 잡히지 않는다는 한계가 남습니다.
           </p>
         </div>
         <ProgressiveDetail
@@ -194,9 +179,8 @@ export default function LlmDatasetEngineeringAndCleaningArticle() {
             바꿔 그 test가 독립적인 최종 평가 역할을 잃는 상황을 가리킵니다.
           </p>
           <p>
-            이 글의 data contamination은 그 이전, 즉 corpus를 만드는 시점에 benchmark 원문이
-            학습 데이터에 섞여 드는 문제입니다. 전자는 평가를 반복 관찰하는 절차에서, 후자는
-            corpus 구성 단계에서 생기므로 같은 이름의 오염이라도 고치는 지점이 다릅니다.
+            이 글의 data contamination은 그보다 앞선 시점, corpus를 만드는 단계에서 benchmark 원문이 학습 데이터에 섞여 드는 문제입니다. 앞의 오염은 평가를
+            반복 관찰하는 절차에서 생기고 이쪽은 corpus 구성 단계에서 생기므로 같은 이름의 오염이라도 고치는 지점이 다릅니다.
           </p>
         </ProgressiveDetail>
       </section>
@@ -207,27 +191,22 @@ export default function LlmDatasetEngineeringAndCleaningArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            원본 데이터에 label·rating·rationale 같은 부가 정보를 붙이는 작업 전체를 data
-            annotation이라 합니다. 사람이 직접 붙이면 human annotation, 더 큰 모델이 대신
-            붙이면 model annotation이라 부릅니다.
+            Data annotation은 원본 데이터에 label·rating·rationale 같은 부가 정보를 붙이는 작업 전체를 가리킵니다. 사람이 직접 붙이면 human
+            annotation, 더 큰 모델이 대신 붙이면 model annotation입니다.
           </p>
           <p>
-            Gilardi et al.은 트윗 2,382개에 관련성·입장·주제 같은 5개 annotation task를
-            수행시켜 비교했습니다. ChatGPT의 zero-shot 정확도가 5개 중 4개 task에서 crowd-worker를
-            앞섰고, 비용은 건당 0.003달러 미만으로 MTurk보다 약 20배 저렴했습니다. 다만 이
-            결과는 트윗 기반 5개 task에 한정되며 모든 annotation 작업에 일반화되지는 않습니다.
+            Gilardi et al.은 트윗 2,382개에 관련성·입장·주제 같은 5개 annotation task를 수행시켜 비교했습니다. ChatGPT의 zero-shot 정확도가
+            5개 중 4개 task에서 crowd-worker를 앞섰고 비용은 건당 0.003달러 미만으로 MTurk보다 약 20배 저렴했습니다. 다만 이 결과는 트윗 기반 5개 task에
+            한정되며 모든 annotation 작업에 일반화되지는 않습니다.
           </p>
           <p>
-            정답 label 없이 여러 개의 약한 규칙(labeling function)을 결합해 label을 추정하는
-            방법이 weak supervision입니다. Ratner et al.의 Snorkel은 정확도가 서로 다른 labeling
-            function들의 출력을 노이즈 모델로 결합해, 전문가가 손으로 레이블링한 것보다 2.8배
-            빠르게 모델을 만들면서도 대규모 수동 레이블 데이터셋 대비 평균 3.6%p 이내 성능을
-            냈습니다.
+            Weak supervision은 정답 label 없이 여러 개의 약한 규칙(labeling function)을 결합해 label을 추정하는 방법입니다. Ratner et
+            al.의 Snorkel은 정확도가 제각각인 labeling function들의 출력을 노이즈 모델로 묶습니다. 전문가가 손으로 레이블링한 것보다 2.8배 빠르게 모델을
+            만들면서도 대규모 수동 레이블 데이터셋 대비 평균 3.6%p 이내 성능을 냈습니다.
           </p>
           <p>
-            학습 중인 모델 자신의 confident 예측을 다시 label로 재사용하는 방법이
-            pseudo-labeling입니다. Lee가 제안한 초기 형태는 unlabeled 샘플에 대해 모델이 가장
-            높은 확률을 준 class를 그대로 정답처럼 사용해 supervised loss에 섞어 학습합니다.
+            Pseudo-labeling은 학습 중인 모델 자신의 confident 예측을 다시 label로 재사용합니다. Lee가 제안한 초기 형태에서는 unlabeled 샘플에서 모델이
+            가장 높은 확률을 준 class를 그대로 정답처럼 써서 supervised loss에 섞어 학습합니다.
           </p>
         </div>
         <TermBreakdown
@@ -247,16 +226,13 @@ export default function LlmDatasetEngineeringAndCleaningArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            여러 domain(web·code·academic 등) 데이터를 각각 얼마의 비율로 섞어 학습에 넣을지
-            정하는 것이 data mixture이고, 그 데이터를 어떤 순서로 모델에 보여줄지 정하는 것이
-            data curriculum입니다.
+            여러 domain(web·code·academic 등) 데이터를 각각 얼마의 비율로 섞어 학습에 넣을지 정하는 것이 data mixture입니다. 그 데이터를 어떤 순서로
+            모델에 보여줄지 정하면 data curriculum입니다.
           </p>
           <p>
-            GPT-3의 학습 데이터 구성이 mixture 비율과 원본 비중이 다르다는 것을 보여줍니다.
-            필터링한 Common Crawl은 토큰 수로 전체의 약 82%를 차지하지만 학습 mixture에서는
-            60% weight만 받아 300B token 학습 동안 0.44 epoch만 돕니다. 반대로 Wikipedia는
-            전체의 1%도 안 되지만 3% weight를 받아 3.4 epoch, 즉 같은 문서를 여러 번 오버샘플링
-            해서 봅니다.
+            GPT-3의 학습 데이터 구성을 보면 mixture 비율과 원본 비중이 서로 다릅니다. 필터링한 Common Crawl은 토큰 수로 전체의 약 82%를 차지하지만 학습
+            mixture에서는 60% weight만 받아 300B token 학습 동안 0.44 epoch만 돕니다. 반대로 Wikipedia는 전체의 1%도 안 되지만 3%
+            weight를 받아 3.4 epoch을 돕니다. 같은 문서를 여러 번 오버샘플링 해서 보는 셈입니다.
           </p>
           <p>
             Xie et al.의 DoReMi는 이 mixture 비율을 사람이 손으로 정하는 대신 최적화합니다.
@@ -265,16 +241,13 @@ export default function LlmDatasetEngineeringAndCleaningArticle() {
             2.6배 줄었습니다.
           </p>
           <p>
-            Bengio et al.이 제안한 curriculum learning은 쉬운 예제부터 어려운 예제 순서로
-            학습을 배치하면 수렴 속도와 도달하는 local minimum의 품질이 함께 좋아진다고
-            보고했습니다. 이 결과는 비볼록 목적함수를 최적화하는 continuation method의 한
-            사례로 설명됩니다.
+            Bengio et al.은 curriculum learning을 제안하면서 쉬운 예제부터 어려운 예제 순서로 학습을 배치하면 수렴 속도와 도달하는 local minimum의
+            품질이 함께 좋아진다고 보고했습니다. 비볼록 목적함수를 최적화하는 continuation method의 한 사례로 설명되는 결과입니다.
           </p>
           <p>
-            Mixture와 curriculum이 만든 코퍼스가 실제로 목표를 충족했는지는 세 기준으로
-            검증합니다. 서로 다른 주제와 문체, 난이도가 얼마나 다양한지가 data diversity이고,
-            목표 domain·언어·task 분포를 빠짐없이 담았는지가 data coverage, 그 분포가 한쪽으로
-            쏠리지 않았는지가 data balance입니다.
+            Mixture와 curriculum이 만든 코퍼스가 실제로 목표를 충족했는지는 세 기준으로 검증합니다. 서로 다른 주제와 문체, 난이도가 얼마나 다양한지를 보는 것이 data
+            diversity입니다. 목표 domain·언어·task 분포를 빠짐없이 담았는지가 data coverage, 그 분포가 한쪽으로 쏠리지 않았는지가 data
+            balance입니다.
           </p>
           <p>
             LIMA가 1,000개라는 적은 개수로도 성능을 낸 것은 curation이 이 세 기준을 좁은

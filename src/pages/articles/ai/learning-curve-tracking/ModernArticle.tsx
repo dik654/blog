@@ -20,9 +20,7 @@ export default function LearningCurveTrackingArticle() {
             기록입니다.
           </p>
           <p>
-            먼저 관측의 네 좌표를 분리합니다. 그다음 두 run을 같은 자원 지점에
-            정렬하고, 마지막에 validation artifact와 reducer가 같은지
-            확인합니다.
+            관측의 네 좌표를 분리하는 것이 출발점입니다. 두 run을 같은 자원 지점에 정렬한 뒤 validation artifact와 reducer가 같은지 확인합니다.
           </p>
         </div>
         <TermBreakdown
@@ -148,8 +146,7 @@ export default function LearningCurveTrackingArticle() {
           question="Run A와 B의 logging 간격이 다를 때 어느 두 관측을 비교해야 하나요?"
           idea={
             <p>
-              비교하려는 token budget에 가장 가까운 관측을 각 run에서 독립적으로
-              찾고, 선택된 두 metric의 차이를 계산합니다.
+              비교하려는 token budget에 가장 가까운 관측을 각 run에서 독립적으로 찾고 선택된 두 metric의 차이를 계산합니다.
             </p>
           }
           formula={String.raw`k_j(n^*)=\arg\min_k|n_{j,k}-n^*|,\quad \Delta=m_{A,k_A}-m_{B,k_B}`}
@@ -210,10 +207,9 @@ export default function LearningCurveTrackingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            각 point에는 checkpoint digest, evaluation dataset·slice, metric
-            implementation version, reducer, batch policy와 hardware receipt를
-            연결합니다. UI에 그려진 선은 이 관측들을 읽는 한 가지 view일 뿐이며
-            원본 관측을 대신하지 않습니다.
+            각 point에는 checkpoint digest와 evaluation dataset·slice를 붙인 다음 metric implementation
+            version·reducer·batch policy와 hardware receipt까지 연결합니다. UI에 그려진 선은 이 관측들을 읽는 한 가지 view일 뿐이며 원본 관측을
+            대신하지 않습니다.
           </p>
         </div>
         <div id="standard-wandb-tracking" className="scroll-mt-24">

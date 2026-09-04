@@ -7,7 +7,10 @@ export default function Overview() {
     <section id="overview" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">LSTM을 고르기 전에 예측 시점을 먼저 고정한다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="text-lg leading-8">“최근 24시간으로 다음 6시간의 전력 수요를 예측한다”는 문장에는 모델보다 중요한 계약이 들어 있다. Target과 관측 간격, 예측을 시작하는 forecast origin, 필요한 horizon, 그리고 그 시점에 실제로 알 수 있는 정보가 정해져야 비로소 학습 sample을 만들 수 있다.</p>
+        <p className="text-lg leading-8">
+            “최근 24시간으로 다음 6시간의 전력 수요를 예측한다”는 문장에는 모델보다 중요한 계약이 들어 있다. Target과 관측 간격, 예측을 시작하는 forecast origin,
+            필요한 horizon, 그 시점에 실제로 알 수 있는 정보가 정해져야 비로소 학습 sample을 만들 수 있다.
+          </p>
         <p>LSTM은 이 sample의 과거 값을 순서대로 읽으며 hidden·cell state를 갱신하는 함수다. 비선형 시간 의존성을 학습할 수 있지만 추세·계절성·데이터 누출을 알아서 해결하지는 않는다. Gate와 cell state의 수학은 <Link to="/ai/lstm">LSTM 구조 글</Link>이 소유하고, 이 글은 window·state lifecycle·horizon과 평가 계약에 집중한다. 선형 기준선이 필요하면 <Link to="/ai/arima">ARIMA 글</Link>을 함께 보면 된다.</p>
       </div>
       <ForecastWindowViz />
@@ -31,7 +34,11 @@ export default function Overview() {
       />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Window가 길수록 기억력이 좋아지는 것은 아니다</h3>
-        <p>Look-back을 늘리면 더 오래된 관측을 제공하지만 sequence 길이와 optimization path도 함께 늘어난다. 필요한 계절 주기와 지연 효과가 들어오지 않으면 under-specification이고, 관련 없는 오래된 구간까지 넣으면 계산량과 분산이 커진다. 따라서 domain에서 가능한 원인 구간을 후보로 정한 뒤 같은 rolling-origin validation에서 비교해야 한다.</p>
+        <p>
+            Look-back을 늘리면 더 오래된 관측을 제공하지만 sequence 길이와 optimization path도 함께 늘어난다. 필요한 계절 주기와 지연 효과가 들어오지 않으면
+            under-specification이다. 관련 없는 오래된 구간까지 넣으면 계산량과 분산이 커진다. domain에서 가능한 원인 구간을 후보로 정한 뒤 같은 rolling-
+            origin validation에서 비교한다.
+          </p>
       </div>
     </section>
   );

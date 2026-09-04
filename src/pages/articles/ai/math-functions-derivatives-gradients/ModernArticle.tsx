@@ -16,9 +16,8 @@ export default function DerivativeChainRuleArticle() {
           <h2 className="mt-2 text-2xl font-bold">Derivative는 입력 한 단위당 출력 변화가 한 점 근처에서 얼마나 되는지 묻는다</h2>
         </header>
         <p className="text-lg leading-8">
-          자동차가 2초 동안 6m 움직였다면 평균 속도는 초당 3m입니다. 곡선의 한 점에서도
-          같은 비율을 알고 싶지만, 점 하나만으로는 변화량을 만들 수 없습니다. 그래서 먼저
-          가까운 두 점을 잡고 출력 변화÷입력 변화를 계산한 뒤, 두 점 사이의 간격을 줄입니다.
+          자동차가 2초 동안 6m 움직였다면 평균 속도는 초당 3m입니다. 곡선의 한 점에서도 같은 비율을 알고 싶지만 점 하나만으로는 변화량을 만들 수 없습니다. 그래서 먼저 가까운 두
+          점을 잡고 출력 변화÷입력 변화를 계산한 뒤, 두 점 사이의 간격을 줄입니다.
         </p>
         <Term name="Difference quotient" idea="두 입력 사이의 평균 변화율입니다." shape="출력 변화 ÷ 입력 변화" example="f(x)=x², x=3이면 간격 h에서 quotient는 6+h입니다." boundary="h=0을 직접 넣으면 0/0이므로 아직 derivative가 아닙니다." />
         <Term name="Limit" idea="입력이 어떤 값과 같을 때가 아니라 계속 가까워질 때 출력이 모이는 값을 봅니다." shape="h→0" example="6+h는 h=1, 0.1, 0.01일 때 7, 6.1, 6.01로 6에 가까워집니다." boundary="왼쪽과 오른쪽 접근이 다른 값으로 가면 양쪽 limit은 없습니다." />
@@ -87,9 +86,8 @@ export default function DerivativeChainRuleArticle() {
           <h2 className="mt-2 text-2xl font-bold">Chain rule은 같은 작은 변화가 연속 구간에서 받은 배율을 곱한다</h2>
         </header>
         <p>
-          x가 u를 3배 빠르게 바꾸고, u가 y를 현재 지점에서 14배 빠르게 바꾼다면 x의
-          작은 변화는 첫 구간에서 3배, 다음 구간에서 다시 14배 확대됩니다. 그래서 전체
-          배율은 3+14가 아니라 3×14입니다.
+          x가 u를 3배 빠르게 바꾸고 u가 y를 현재 지점에서 14배 빠르게 바꾼다면 x의 작은 변화는 첫 구간에서 3배, 다음 구간에서 다시 14배 확대됩니다. 그래서 전체 배율은
+          3+14가 아니라 3×14입니다.
         </p>
         <ChainRateViz />
         <ExplainedFormula

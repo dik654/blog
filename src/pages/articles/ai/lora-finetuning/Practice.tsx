@@ -16,9 +16,8 @@ export default function Practice() {
           tokenizer와 target module 위에서만 의미가 있기 때문입니다.
         </p>
         <p>
-          따라서 실제 배포 단위는 base와 adapter를 함께 식별하고, load·merge와
-          task 평가를 통과한 serving artifact입니다. 이름이 비슷해도 base hash나
-          module shape가 다르면 조용히 계속하지 않고 실패시켜야 합니다.
+          그래서 실제 배포 단위는 base와 adapter를 함께 식별하고 load·merge와 task 평가를 통과한 serving artifact입니다. 이름이 비슷해도 base
+          hash나 module shape가 다르면 조용히 계속하지 않고 실패시켜야 합니다.
         </p>
         <p>
           평가는 frozen base와 adapter-enabled model을 같은 prompt와 decoding으로
@@ -96,10 +95,8 @@ Q(\widetilde W)&\ne q_W+Q(sBA)\\
       <div className="not-prose my-8"><PracticeWorkflowViz /></div>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Merge는 adapter 하나를 base에 영구히 합칠 때는 맞는 선택입니다. 하지만
-          같은 base로 task마다 다른 adapter를 계속 바꿔 서빙해야 한다면, task 수만큼
-          merged 전체 복사본을 만들고 로드하는 방식은 storage와 전환 지연 모두에서
-          비효율적입니다.
+          Merge는 adapter 하나를 base에 영구히 합칠 때는 맞는 선택입니다. 하지만 같은 base로 task마다 다른 adapter를 계속 바꿔 서빙해야 한다면 task 수만큼
+          merged 전체 복사본을 만들고 로드하는 방식은 storage와 전환 지연 모두에서 비효율적입니다.
         </p>
         <p>
           <strong>Multi-LoRA serving</strong>은 frozen base weight를 한 번만
@@ -107,16 +104,13 @@ Q(\widetilde W)&\ne q_W+Q(sBA)\\
           같은 batch 안에서 서로 다른 adapter를 쓰는 요청을 동시에 처리합니다.
         </p>
         <p>
-          Adapter switching은 요청(또는 batch)마다 어떤 adapter를 적용할지
-          고르는 결정입니다. Base를 다시 로드하지 않고 A·B만 바꿔 끼우는 것이
-          핵심이며, 그래서 전환 비용이 base 크기가 아니라 adapter 크기에 비례합니다.
+          Adapter switching은 요청(또는 batch)마다 어떤 adapter를 적용할지 고르는 결정입니다. Base를 다시 로드하지 않고 A·B만 바꿔 끼우는 것이 핵심이며
+          그래서 전환 비용이 base 크기가 아니라 adapter 크기에 비례합니다.
         </p>
         <p>
-          이 방식이 성립하려면 서로 다른 rank·target module을 가진 adapter를
-          하나의 batched 연산으로 묶는 kernel과, 자주 쓰지 않는 adapter를
-          GPU 메모리에서 내리고 다시 올리는 관리 정책이 필요합니다. Merge 전용
-          경로보다 구현이 복잡한 대신, adapter 전환 지연을 base 재로드 없이
-          요청 단위로 낮출 수 있습니다.
+          이 방식이 성립하려면 kernel과 관리 정책이 둘 다 필요합니다. Rank·target module이 서로 다른 adapter를 하나의 batched 연산으로 묶는 kernel,
+          그리고 자주 쓰지 않는 adapter를 GPU 메모리에서 내리고 다시 올리는 관리 정책입니다. Merge 전용 경로보다 구현이 복잡한 대신 adapter 전환 지연을 base
+          재로드 없이 요청 단위로 낮출 수 있습니다.
         </p>
       </div>
       <AlgorithmBlock
@@ -138,16 +132,12 @@ Q(\widetilde W)&\ne q_W+Q(sBA)\\
       <div id="reading-s-lora" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">핵심 논문 · S-LoRA</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Sheng 등은 하나의 base 위에서 수천 개의 LoRA adapter를 단일 또는
-          다중 GPU에서 동시에 서빙하기 위해, adapter 메모리를 unified paging으로
-          관리하고 서로 다른 adapter를 가진 요청들을 하나의 batched GEMM으로
-          처리하는 custom CUDA kernel을 제안했습니다.
+          Sheng 등은 하나의 base 위에서 수천 개의 LoRA adapter를 단일 또는 다중 GPU에서 동시에 서빙하는 방법을 내놓았습니다. Adapter 메모리를 unified
+          paging으로 관리하고, adapter가 서로 다른 요청들을 하나의 batched GEMM으로 처리하는 custom CUDA kernel을 제안했습니다.
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          논문은 이 설계로 동시에 서빙 가능한 adapter 수를 수 자릿수(orders of
-          magnitude) 늘리고, throughput을 최대 4배까지 높였다고 보고했습니다.
-          이는 논문의 benchmark 환경과 adapter rank·수 조건에서의 결과이며, 모든
-          base model이나 batch 구성에서 같은 배율을 보장하지는 않습니다.
+          논문은 이 설계로 동시에 서빙 가능한 adapter 수를 수 자릿수(orders of magnitude) 늘리고 throughput을 최대 4배까지 높였다고 보고했습니다. 이는
+          논문의 benchmark 환경과 adapter rank·수 조건에서의 결과이며, 모든 base model이나 batch 구성에서 같은 배율을 보장하지는 않습니다.
         </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/2311.03285" target="_blank" rel="noreferrer">Unified paging과 batched adapter 서빙 보기</a>
       </div>

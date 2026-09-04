@@ -6,7 +6,10 @@ export default function Logarithms() {
     <section id="logarithms" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">로그는 결과를 보고 필요한 지수를 되묻는다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p>2를 몇 번 곱해야 8이 되는지를 묻는 답은 3입니다. 이를 log₂8=3으로 씁니다. 따라서 exponential과 logarithm은 입력과 출력을 서로 되돌리는 inverse function이며, 둘 중 하나의 표를 읽을 수 있으면 다른 하나도 읽을 수 있습니다.</p>
+        <p>
+            2를 몇 번 곱해야 8이 되는지 물으면 답은 3입니다. 이를 log₂8=3으로 씁니다. exponential과 logarithm은 입력과 출력을 서로 되돌리는 inverse
+            function이며 둘 중 하나의 표를 읽을 수 있으면 다른 하나도 읽을 수 있습니다.
+          </p>
       </div>
       <ExplainedFormula
         question="a를 몇 제곱해야 양수 x가 되는가?"

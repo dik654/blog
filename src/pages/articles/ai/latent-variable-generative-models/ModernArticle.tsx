@@ -66,9 +66,8 @@ export default function LatentVariableGenerativeModelsArticle() {
           question="왜 p(x)를 구할 때 latent별 conditional과 prior를 곱한 뒤 더하나요?"
           idea={
             <p>
-              각 z branch가 선택될 prior probability와 그 branch에서 x가 나올
-              conditional probability를 곱해 joint contribution을 만들고, 어느
-              branch였는지 모르므로 모두 더합니다.
+              각 z branch가 선택될 prior probability와 그 branch에서 x가 나올 conditional probability를 곱해 joint
+              contribution을 만들고 어느 branch였는지 모르므로 모두 더합니다.
             </p>
           }
           formula={String.raw`\begin{aligned}c_z&=p(z)p_\theta(x\mid z)\\p_\theta(x)&=\sum_z c_z\end{aligned}`}
@@ -181,9 +180,8 @@ p_\theta(x)&=\underbrace{\int p_\theta(x,z)\,dz}_{\text{직접 계산 불가능�
           question="ELBO는 왜 log evidence보다 작고, 그 차이는 무엇인가요?"
           idea={
             <p>
-              Approximate posterior q로 reconstruction과 prior penalty를
-              계산하고, true posterior와의 KL을 더하면 정확한 log evidence가
-              됩니다.
+              Approximate posterior q로 reconstruction과 prior penalty를 계산하고 true posterior와의 KL을 더하면 정확한 log
+              evidence가 됩니다.
             </p>
           }
           formula={String.raw`\begin{aligned}G(x)&=D_{\mathrm{KL}}(q_\phi\Vert p_\theta)\\\log p_\theta(x)&=\mathcal L_{\mathrm{ELBO}}(x)+G(x)\end{aligned}`}

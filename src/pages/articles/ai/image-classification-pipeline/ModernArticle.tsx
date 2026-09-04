@@ -63,8 +63,7 @@ export default function ImageClassificationDataBoundaryArticle() {
           question="같은 실제 대상이 train과 validation을 건너지 않았는지 어떻게 검사하나요?"
           idea={
             <p>
-              각 image를 deployment identity로 투영하고, split별 identity 집합을
-              만든 뒤 교집합이 비었는지 확인합니다. 마지막 평균 loss도 그 고정된
+              각 image를 deployment identity로 투영하고 split별 identity 집합을 만든 뒤 교집합이 비었는지 확인합니다. 마지막 평균 loss도 그 고정된
               validation samples에서만 계산합니다.
             </p>
           }
@@ -166,8 +165,7 @@ export default function ImageClassificationDataBoundaryArticle() {
           question="Candidate가 baseline보다 좋아졌다고 말하려면 무엇을 같은 짝으로 비교하나요?"
           idea={
             <p>
-              같은 validation examples와 seeds에서 candidate와 baseline의 metric
-              차이를 먼저 만들고, 그 차이를 평균냅니다.
+              같은 validation examples와 seeds에서 candidate와 baseline의 metric 차이를 먼저 만들고 그 차이를 평균냅니다.
             </p>
           }
           formula={String.raw`\overline\Delta_q=K^{-1}\sum_k(q_k^{\rm cand}-q_k^{\rm base})`}

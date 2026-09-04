@@ -94,12 +94,9 @@ export default function Capacity() {
           이번 Gemma 결과에서는 sliding-window 절감이 보이지 않았습니다
         </h3>
         <p>
-          Gemma의 50개 local layer가 window 1,024까지만 KV를 보존했다면 context
-          65,536에서 full allocation보다 훨씬 작은 증가율을 보여야 합니다.
-          그러나 실측에서는 local KV head 16개와 head_dim 256의 넓은 shape가
-          먼저 드러났고 concurrency는 1.36×에 머물렀습니다. 따라서 이 vLLM build
-          또는 해당 model path가 local layer를 cache allocation에서 full
-          attention처럼 취급했을 가능성이 큽니다.
+          Gemma의 50개 local layer가 window 1,024까지만 KV를 보존했다면 context 65,536에서 full allocation보다 훨씬 작은 증가율을 보여야
+          합니다. 그러나 실측에서는 local KV head 16개와 head_dim 256의 넓은 shape가 먼저 드러났고 concurrency는 1.36×에 머물렀습니다. 이 vLLM
+          build 또는 해당 model path가 local layer를 cache allocation에서 full attention처럼 취급했을 가능성이 큽니다.
         </p>
         <p>
           vLLM 코드에도 hybrid allocator가 비활성화된 경우 sliding-window
@@ -328,13 +325,9 @@ C_{direct} &= \frac{N_{log}}{L_{max}} \\
           수용 인원은 최대 context 하나가 아니라 요청 길이 분포로 정합니다
         </h3>
         <p>
-          모든 사용자에게 65,536 token을 예약하지는 않습니다. 업무 로그의
-          input·output token p50·p95, multimodal token 수, prefix-cache hit
-          rate를 workload trace로 만들고, 동시에 active한 요청의 KV 합이 예산을
-          넘지 않도록 admission policy를 정합니다. 마지막에는
-          beginning·middle·end needle과 실제 문서 질의를 함께 사용해 긴
-          context가 단순히 실행만 되는 것이 아니라 필요한 정보를 회수하는지도
-          확인합니다.
+          모든 사용자에게 65,536 token을 예약하지는 않습니다. 업무 로그의 input·output token p50·p95, multimodal token 수, prefix-
+          cache hit rate를 workload trace로 만들고 동시에 active한 요청의 KV 합이 예산을 넘지 않도록 admission policy를 정합니다. 마지막에는
+          beginning·middle·end needle과 실제 문서 질의를 함께 사용해 긴 context가 단순히 실행만 되는 것이 아니라 필요한 정보를 회수하는지도 확인합니다.
         </p>
       </div>
     </section>

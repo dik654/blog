@@ -20,12 +20,9 @@ export default function FineTuningTradeoffsForgettingAndMergingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Fine-tuning이라는 한 단어 안에는 실제로 서로 다른 목적이 섞여
-            있습니다. 지시를 따르게 만드는 fine-tuning, 특정 분야 지식을
-            넣는 fine-tuning, 특정 작업 하나만 잘하게 만드는 fine-tuning,
-            말투를 바꾸는 fine-tuning, 정책상 특정 행동을 하거나 하지 않게
-            만드는 fine-tuning은 필요한 데이터와 뒤이어 생기는 forgetting
-            위험이 서로 다릅니다.
+            Fine-tuning이라는 한 단어 안에는 실제로 서로 다른 목적이 섞여 있습니다. 지시를 따르게 만들기, 특정 분야 지식을 넣기, 특정 작업 하나만 잘하게 만들기, 말투
+            바꾸기, 정책상 특정 행동을 하거나 하지 않게 만들기. 이 다섯은 다 fine-tuning이라 불리지만 필요한 데이터도, 뒤이어 생기는 forgetting 위험도 서로
+            다릅니다.
           </p>
           <p>
             <Link to="/ai/lora-finetuning">LoRA·QLoRA 글</Link>이 다룬
@@ -89,12 +86,9 @@ export default function FineTuningTradeoffsForgettingAndMergingArticle() {
         />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            데이터 규모도 목적마다 다릅니다. 예를 들어 instruction
-            fine-tuning은 다양한 task 유형을 수만 건만 모아도 형식 일반화가
-            시작되는 경우가 흔하지만, domain fine-tuning은 그 분야 어휘
-            분포를 안정적으로 덮으려면 수억 토큰 이상의 continued
-            pretraining 규모 코퍼스가 필요한 경우가 많습니다. 아래 절에서
-            이 규모 차이가 만드는 tradeoff를 봅니다.
+            Instruction fine-tuning은 다양한 task 유형을 수만 건만 모아도 형식 일반화가 시작되는 경우가 흔합니다. 반면 domain fine-tuning은 그 분야
+            어휘 분포를 안정적으로 덮으려면 수억 토큰 이상, continued pretraining 규모의 코퍼스가 필요한 경우가 많습니다. 목적마다 데이터 규모가 이렇게 갈립니다. 그
+            차이가 만드는 tradeoff를 아래 절에서 봅니다.
           </p>
         </div>
         <ContentBoundary article="fine-tuning-tradeoffs-forgetting-and-merging" />
@@ -106,31 +100,21 @@ export default function FineTuningTradeoffsForgettingAndMergingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Fine-tuning 데이터를 고를 때 답이 갈리는 질문은 규모가 아니라
-            분포입니다. Fine-tuning distribution, 즉 학습 데이터가 실제
-            배포 시점 입력 분포를 얼마나 대표하는지가 데이터 양보다 먼저
-            결과를 결정합니다.
+            Fine-tuning 데이터를 고를 때 답이 갈리는 지점은 규모보다 분포입니다. Fine-tuning distribution, 곧 학습 데이터가 실제 배포 시점 입력 분포를
+            얼마나 대표하는지가 데이터 양보다 먼저 결과를 결정합니다.
           </p>
           <p>
-            좁고 정제된 데이터 1만 건이 넓고 지저분한 데이터 10만 건보다
-            나은 경우가 많습니다. 이 dataset size vs quality tradeoff는,
-            양을 늘려 얻는 분포 커버리지 이득이 노이즈·중복·라벨 오류가
-            함께 늘어나는 비용보다 큰지로 판단합니다.
+            좁고 정제된 데이터 1만 건이 넓고 지저분한 데이터 10만 건보다 나은 경우가 많습니다. 이 dataset size vs quality tradeoff는 양을 늘려 얻는 분포
+            커버리지 이득이 노이즈·중복·라벨 오류가 함께 늘어나는 비용보다 큰지로 판단합니다.
           </p>
           <p>
-            예를 들어 같은 분류 task에서 정제 데이터 2,000건으로 held-out
-            정확도 91%를 얻었는데, 중복과 오라벨이 섞인 원본 20,000건을
-            그대로 쓰면 정확도가 87%로 오히려 떨어지는 경우가 흔히
-            보고됩니다. 데이터를 10배 늘렸는데 품질 저하가 그 이득을
-            상쇄한 것입니다.
+            예를 들어 같은 분류 task에서 정제 데이터 2,000건으로 held-out 정확도 91%가 나왔다고 해 봅시다. 여기서 중복과 오라벨이 섞인 원본 20,000건을 그대로
+            쓰면 정확도가 87%로 오히려 떨어지는 경우가 흔히 보고됩니다. 데이터를 10배 늘렸는데 품질 저하가 그 이득을 상쇄한 것입니다.
           </p>
           <p>
-            분포가 좁을수록 생기는 또 다른 위험이 fine-tuning
-            overfitting입니다. 학습 데이터의 특정 문구·순서·길이 패턴을
-            암기해, 같은 의미라도 표현만 다른 held-out 입력에서 성능이
-            갑자기 나빠지는 현상입니다. Epoch을 늘릴수록 train loss는
-            계속 줄어드는데 held-out 정확도는 어느 지점부터 꺾이는
-            곡선으로 관찰됩니다.
+            분포가 좁을수록 생기는 또 다른 위험이 fine-tuning overfitting입니다. 모델이 학습 데이터의 특정 문구·순서·길이 패턴을 암기해 버리면 같은 의미라도 표현만
+            다른 held-out 입력에서 성능이 갑자기 나빠집니다. Epoch을 늘릴수록 train loss는 계속 줄어드는데 held-out 정확도는 어느 지점부터 꺾이는 곡선으로
+            관찰됩니다.
           </p>
         </div>
       </section>
@@ -141,23 +125,16 @@ export default function FineTuningTradeoffsForgettingAndMergingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Catastrophic forgetting은 새 데이터로 fine-tuning할 때
-            parameter가 그 새 목표에 맞춰 움직이면서, 이전에 잘하던 다른
-            능력의 성능이 급격히 나빠지는 현상입니다. 새 task를 배우는
-            것과 옛 task를 잊는 것이 같은 gradient step 안에서 함께
-            일어난다는 뜻입니다.
+            Catastrophic forgetting은 새 데이터로 fine-tuning할 때 parameter가 그 새 목표 쪽으로 움직이면서 이전에 잘하던 다른 능력의 성능이 급격히
+            나빠지는 현상입니다. 새 task를 배우는 일과 옛 task를 잊는 일이 같은 gradient step 안에서 함께 일어납니다.
           </p>
           <p>
-            좁은 domain 데이터로 오래 fine-tuning할수록 이 위험이
-            커집니다. 예를 들어 법률 domain 코퍼스로 fine-tuning한 뒤
-            일반 상식 benchmark 정확도가 68%에서 61%로 7%p 떨어지는
-            식입니다. 법률 용어 정확도는 올랐지만 그 대가로 다른 능력이
-            깎였습니다.
+            좁은 domain 데이터로 오래 fine-tuning할수록 이 위험은 커집니다. 예를 들어 법률 domain 코퍼스로 fine-tuning한 뒤 일반 상식 benchmark
+            정확도가 68%에서 61%로 7%p 떨어지는 식입니다. 법률 용어 정확도는 올랐지만 그 대가로 다른 능력이 깎였습니다.
           </p>
           <p>
-            이 하락폭을 capability regression이라고 부릅니다. Forgetting이
-            현상의 이름이라면 capability regression은 그 결과로 held-out
-            benchmark 점수가 실제로 낮아진 측정치를 가리키는 이름입니다.
+            이 하락폭을 capability regression이라고 부릅니다. Forgetting이 현상의 이름이라면 capability regression은 그 결과로 held-out
+            benchmark 점수가 실제로 얼마나 낮아졌는지를 가리키는 측정치 쪽 이름입니다.
           </p>
         </div>
         <CitationBlock
@@ -176,14 +153,9 @@ export default function FineTuningTradeoffsForgettingAndMergingArticle() {
           preview="이전 지식의 손실이 점진적이지 않고 특정 시점부터 급격히 일어나기 때문입니다. 다만 급격함의 정도는 task 유사도와 learning rate에 따라 달라집니다."
         >
           <p>
-            McCloskey와 Cohen의 원 실험은 순서대로 제시되는 항목을
-            학습하는 작은 신경망에서, 새 항목 학습이 시작되자마자 이전
-            항목의 재현율이 몇 step 만에 무너지는 것을 보였습니다.
-            급격함의 정도는 이후 연구에서 새 task와 이전 task의 유사도,
-            learning rate, fine-tuning 길이에 따라 완만할 수도 있다는
-            것이 함께 보고되었습니다. 결론은 이름처럼 항상 파국적이라는
-            뜻이 아니라, 점진적 완충 장치가 없으면 급격해질 수 있다는
-            것입니다.
+            McCloskey와 Cohen의 원 실험은 순서대로 제시되는 항목을 학습하는 작은 신경망을 썼습니다. 새 항목 학습이 시작되자마자 이전 항목의 재현율이 몇 step 만에
+            무너졌습니다. 이후 연구에서는 새 task와 이전 task의 유사도·learning rate·fine-tuning 길이에 따라 그 급격함이 완만해질 수도 있다고 함께
+            보고했습니다. 이름과 달리 늘 파국적이지는 않습니다. 다만 점진적 완충 장치가 없으면 급격해질 수 있다는 쪽이 정확한 결론입니다.
           </p>
         </ProgressiveDetail>
       </section>
@@ -194,22 +166,16 @@ export default function FineTuningTradeoffsForgettingAndMergingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Forgetting을 줄이려면 학습이 시작되기 전에 무엇을 지킬지
-            정의하고, 학습 중에는 그 방향으로 이동을 억제하고, 학습 후에는
-            실제로 지켜졌는지 측정하는 세 가지를 함께 설계해야 합니다.
+            Forgetting을 줄이려면 세 가지를 함께 설계해야 합니다. 학습 전에는 무엇을 지킬지 정의합니다. 학습 중에는 그 방향으로 움직이는 것을 억제하고 학습 후에는 실제로
+            지켜졌는지 측정합니다.
           </p>
           <p>
-            Forgetting evaluation은 그 측정 방법입니다. 목표 task와
-            무관한 held-out general benchmark 점수를 fine-tuning 전후로
-            비교해 하락폭을 하나의 숫자로 남깁니다. 이 절 앞부분의
-            68%에서 61%로의 하락이 그 값입니다.
+            Forgetting evaluation은 그 측정 방법입니다. 목표 task와 무관한 held-out general benchmark 점수를 fine-tuning 전후로 비교해
+            하락폭을 숫자 하나로 남깁니다. 이 절 앞부분에서 68%가 61%로 떨어진 폭이 바로 그 값입니다.
           </p>
           <p>
-            Data replay는 완화 방법 중 가장 직접적입니다. Fine-tuning
-            배치 안에 원래 general instruction 데이터를 일정 비율 섞어,
-            모델이 새 목표만 보지 않고 옛 분포도 계속 보게 만듭니다.
-            예를 들어 domain 데이터에 general 데이터를 10% 섞으면 앞의
-            7%p 하락이 2%p까지 줄어드는 식으로 보고됩니다.
+            Data replay는 완화 방법 중 가장 직접적입니다. Fine-tuning 배치 안에 원래 general instruction 데이터를 일정 비율 섞어 모델이 새 목표만
+            보지 않고 옛 분포도 계속 보게 만듭니다. 예를 들어 domain 데이터에 general 데이터를 10% 섞으면 앞의 7%p 하락이 2%p까지 줄어드는 식으로 보고됩니다.
           </p>
           <p>
             Regularization against drift는 데이터를 섞는 대신 loss
@@ -258,10 +224,8 @@ export default function FineTuningTradeoffsForgettingAndMergingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            같은 base에서 서로 다른 목적으로 fine-tuning한 여러 checkpoint를
-            재학습 없이 하나로 합치는 것이 model merging입니다. 가장 단순한
-            형태가 weight interpolation, 즉 여러 checkpoint의 parameter를
-            좌표별로 평균 내는 것입니다.
+            Model merging은 같은 base에서 서로 다른 목적으로 fine-tuning한 여러 checkpoint를 재학습 없이 하나로 합칩니다. 가장 단순한 형태는 weight
+            interpolation, 곧 여러 checkpoint의 parameter를 좌표별로 평균 내는 방식입니다.
           </p>
           <p>
             Weight interpolation이 작동하려면 두 checkpoint가 같은
@@ -284,10 +248,8 @@ export default function FineTuningTradeoffsForgettingAndMergingArticle() {
         </CitationBlock>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Task arithmetic은 평균을 넘어, 각 fine-tuned 모델이 base에서
-            이동한 방향(task vector)만 따로 뽑아 더하거나 빼는 방법입니다.
-            평균은 방향을 무디게 섞지만, task arithmetic은 방향을 그대로
-            보존한 채 합치므로 여러 능력을 동시에 편집할 수 있습니다.
+            Task arithmetic은 각 fine-tuned 모델이 base에서 이동한 방향(task vector)만 따로 뽑아 더하고 뺍니다. 평균이 방향을 무디게 섞는 데 비해
+            task arithmetic은 방향을 그대로 보존한 채 합치므로 여러 능력을 동시에 편집할 수 있습니다.
           </p>
         </div>
         <ExplainedFormula
@@ -330,11 +292,9 @@ export default function FineTuningTradeoffsForgettingAndMergingArticle() {
         />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            예를 들어 base를 원점 (0, 0)으로 두는 2차원 toy 예에서 domain
-            fine-tuning이 τ_domain=(0.6, −0.2)로, style fine-tuning이
-            τ_style=(−0.1, 0.5)로 이동했다면, λ=1일 때 새 weight는
-            θ_new=(0.5, 0.3)이 됩니다. Domain 방향과 style 방향이 각각
-            보존된 채 한 지점으로 합쳐진 것입니다.
+            예를 들어 base를 원점 (0, 0)으로 두는 2차원 toy 예에서 domain fine-tuning이 τ_domain=(0.6, −0.2)로, style fine-
+            tuning이 τ_style=(−0.1, 0.5)로 이동했다면, λ=1일 때 새 weight는 θ_new=(0.5, 0.3)이 됩니다. Domain 방향과 style 방향이
+            각각 보존된 채 한 지점으로 합쳐집니다.
           </p>
         </div>
         <TaskArithmeticMergeViz />
@@ -384,17 +344,12 @@ export default function FineTuningTradeoffsForgettingAndMergingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            여러 checkpoint를 merge하기 전에, 각 fine-tuning 결과 중 어느
-            checkpoint를 최종 후보로 남길지 정하는 것이 checkpoint
-            selection입니다. 목표 task 점수만 보면 forgetting이 심한
-            checkpoint를 고를 수 있으므로 두 지표를 함께 봅니다.
+            여러 checkpoint를 merge하기 전에 각 fine-tuning 결과 중 어느 checkpoint를 최종 후보로 남길지 먼저 정해야 합니다. 이 단계가
+            checkpoint selection입니다. 목표 task 점수만 보면 forgetting이 심한 checkpoint를 고를 수 있으므로 두 지표를 함께 봅니다.
           </p>
           <p>
-            Fine-tuning ablation은 학습 조건 중 하나씩만 빼거나 바꿔
-            그 조건이 결과에 실제로 얼마나 기여했는지 확인하는 절차입니다.
-            데이터 replay 비율, learning rate schedule, epoch 수를 각각
-            하나씩 원래 값에서 바꿔 checkpoint selection에 쓸 두 지표가
-            어떻게 움직이는지 비교합니다.
+            Fine-tuning ablation은 학습 조건을 하나씩만 빼거나 바꿔 봅니다. 그 조건이 결과에 실제로 얼마나 기여했는지 확인하기 위해서입니다. 데이터 replay
+            비율·learning rate schedule·epoch 수를 각각 하나씩 원래 값에서 바꿔 checkpoint selection에 쓸 두 지표가 어떻게 움직이는지 비교합니다.
           </p>
         </div>
         <AlgorithmBlock
@@ -417,12 +372,9 @@ export default function FineTuningTradeoffsForgettingAndMergingArticle() {
           preview="한 조건을 뺐을 때 utility가 떨어졌다고 그 조건이 유일한 원인이라고 단정할 수 없습니다. 다른 조건과의 상호작용이 남아 있을 수 있습니다."
         >
           <p>
-            예를 들어 data replay를 껐을 때 utility가 떨어졌다고 해서
-            replay 비율만 올리면 항상 좋아진다는 뜻은 아닙니다.
-            Learning rate schedule과 replay 비율이 함께 바뀌는
-            상호작용이 있을 수 있으므로, 한 번에 하나씩 바꾸는 ablation은
-            그 조건 하나의 한계 효과만 알려 줍니다. 여러 조건을 동시에
-            바꾼 효과는 별도로 확인해야 합니다.
+            예를 들어 data replay를 껐을 때 utility가 떨어졌다고 합시다. 그렇다고 replay 비율만 올리면 항상 좋아지지는 않습니다. Learning rate
+            schedule과 replay 비율이 함께 바뀌는 상호작용이 있을 수 있습니다. 한 번에 하나씩 바꾸는 ablation은 그 조건 하나의 한계 효과만 알려 주므로, 여러 조건을
+            동시에 바꾼 효과는 따로 확인해야 합니다.
           </p>
         </ProgressiveDetail>
         <p className="prose prose-neutral max-w-none dark:prose-invert">

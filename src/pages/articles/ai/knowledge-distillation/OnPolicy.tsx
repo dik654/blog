@@ -12,7 +12,10 @@ export default function OnPolicy() {
           앞 절의 sequence distillation에서는 보통 teacher가 완성한 response를 고정 dataset으로 만들고 student가 그 문자열을 학습합니다. 그러나 inference에서는 student가 자기 token을 이어 붙입니다. 초반에 작은 실수를 하면 이후 prefix가 training dataset에 없던 상태로 바뀌고, student는 바로 그 상태에서 다음 token을 골라야 합니다. 이 차이를 <em>train–inference distribution mismatch</em> 또는 exposure bias라고 부릅니다.
         </p>
         <p>
-          On-policy distillation은 sequence를 만드는 역할을 student에게 돌려줍니다. 현재 student가 prompt에서 response를 sampling하고, frozen teacher는 그 student prefix를 그대로 입력받아 다음 token distribution을 계산합니다. 따라서 “student가 자주 방문하는 상태에서 teacher라면 무엇을 선택했는가”라는 dense feedback을 얻습니다. 여기서 on-policy는 teacher와 student가 같은 checkpoint이라는 뜻도, student가 자기 답을 정답으로 삼는다는 뜻도 아닙니다.
+          On-policy distillation은 sequence를 만드는 역할을 student에게 돌려줍니다. 현재 student가 prompt에서 response를 sampling하면
+          frozen teacher는 그 student prefix를 그대로 입력받아 다음 token distribution을 계산합니다. 그렇게 해서 “student가 자주 방문하는
+          상태에서 teacher라면 무엇을 선택했는가”라는 dense feedback을 얻습니다. 여기서 on-policy는 teacher와 student가 같은 checkpoint이라는
+          뜻도, student가 자기 답을 정답으로 삼는다는 뜻도 아닙니다.
         </p>
       </div>
 
@@ -59,10 +62,15 @@ export default function OnPolicy() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>On-policy는 자동으로 더 좋은 것이 아니라 다른 실패를 고릅니다</h3>
         <p>
-          Fixed sequence KD는 teacher response를 한 번 생성해 재사용할 수 있어 단순하고 저렴하지만, student가 inference에서 만드는 낯선 prefix를 직접 교정하지 못합니다. On-policy distillation은 이 mismatch를 줄이는 대신 매 step student rollout과 teacher scoring이 필요하고, student의 초반 품질이 너무 낮으면 teacher가 익숙하지 않은 state를 계속 채점하게 됩니다. Multi-turn agent에서는 작은 오류가 다음 observation과 tool state까지 바꾸므로 이 문제가 더 커집니다.
+          Fixed sequence KD는 teacher response를 한 번 생성해 재사용할 수 있어 단순하고 저렴하지만 student가 inference에서 만드는 낯선
+          prefix를 직접 교정하지 못합니다. On-policy distillation은 이 mismatch를 줄이는 대신 매 step student rollout과 teacher
+          scoring이 필요합니다. student의 초반 품질이 너무 낮으면 teacher가 익숙하지 않은 state를 계속 채점하게 됩니다. Multi-turn agent에서는 작은
+          오류가 다음 observation과 tool state까지 바꾸므로 이 문제가 더 커집니다.
         </p>
         <p>
-          따라서 비교 실험에서는 같은 SFT 시작점·prompt set·token budget 아래 fixed-sequence KD와 on-policy KD를 나누고, final accuracy뿐 아니라 teacher KL, rollout length, invalid/tool-error rate, domain별 slice와 teacher-scoring 비용을 함께 기록해야 합니다. Forward KL·reverse KL·JSD의 선택은 on/off-policy와 별개의 축입니다.
+          따라서 비교 실험에서는 같은 SFT 시작점·prompt set·token budget 아래 fixed-sequence KD와 on-policy KD를 나누고 final
+          accuracy뿐 아니라 teacher KL, rollout length, invalid/tool-error rate, domain별 slice와 teacher-scoring
+          비용을 함께 기록해야 합니다. Forward KL·reverse KL·JSD의 선택은 on/off-policy와 별개의 축입니다.
         </p>
       </div>
 
@@ -77,7 +85,10 @@ export default function OnPolicy() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>여러 teacher를 쓰면 model을 평균내는 대신 prompt domain마다 채점자를 고릅니다</h3>
         <p>
-          Multi-teacher on-policy distillation에서는 math·instruction following·software engineering처럼 서로 다른 RL recipe로 만든 teacher를 frozen 상태로 둡니다. Student가 각 prompt에서 rollout을 만들면 domain router가 담당 teacher를 고르고, 그 teacher가 student prefix의 token distribution을 제공합니다. 이는 teacher weight를 합치는 model merging과도, 여러 reward를 한 run에서 동시에 최적화하는 mixed RL과도 다릅니다.
+          Multi-teacher on-policy distillation에서는 math·instruction following·software engineering처럼 서로 다른 RL
+          recipe로 만든 teacher를 frozen 상태로 둡니다. Student가 각 prompt에서 rollout을 만들면 domain router가 담당 teacher를 고르고
+          그 teacher가 student prefix의 token distribution을 제공합니다. 이는 teacher weight를 합치는 model merging과도, 여러
+          reward를 한 run에서 동시에 최적화하는 mixed RL과도 다릅니다.
         </p>
       </div>
 

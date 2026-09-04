@@ -25,17 +25,13 @@ export default function LexicalRetrievalBm25InvertedIndexArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            검색어와 문서가 같은 단어(term)를 얼마나 공유하는지로 관련성을 매기는
-            것이 lexical retrieval 입니다. Term 을 세는 것 자체는 단순하지만, 어떤
-            단어에 얼마나 가중치를 줄지와 그 계산을 어떻게 빠르게 할지에서 TF-IDF·
-            BM25·inverted index 라는 세 겹의 답이 나옵니다.
+            Lexical retrieval 은 관련성을 이렇게 매깁니다. 검색어와 문서가 같은 단어(term)를 얼마나 공유하는지 봅니다. Term 을 세는 것 자체는 단순하지만, 어떤
+            단어에 얼마나 가중치를 줄지와 그 계산을 어떻게 빠르게 할지에서 TF-IDF·BM25·inverted index 라는 세 겹의 답이 나옵니다.
           </p>
           <p>
-            이 글은 3문서짜리 작은 코퍼스로 TF-IDF 를 손으로 계산하고, BM25 의 두
-            조절 파라미터(k1, b)가 숫자를 어떻게 바꾸는지 보고, inverted index 가
-            왜 문서 전체가 아니라 매칭된 문서 수에 비례한 비용으로 검색을 끝내는지
-            따라갑니다. 마지막으로 이 방식이 못 찾는 경우(vocabulary mismatch)를
-            봅니다.
+            3문서짜리 작은 코퍼스로 TF-IDF 를 손으로 계산해 보겠습니다. 그 위에서 BM25 의 두 조절 파라미터(k1, b)가 숫자를 어떻게 바꾸는지 보고, inverted
+            index 가 왜 문서 전체가 아니라 매칭된 문서 수에 비례한 비용으로 검색을 끝내는지 따라갑니다. 이 방식이 못 찾는 경우(vocabulary mismatch)가
+            마지막입니다.
           </p>
         </div>
         <LexicalRetrievalBm25InvertedIndexViz />
@@ -48,9 +44,8 @@ export default function LexicalRetrievalBm25InvertedIndexArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Bag of words 는 문서를 단어 순서 없이 각 단어가 몇 번 나왔는지(term
-            frequency, TF)만 세는 표현입니다. 문장 구조나 문맥은 버리고 등장 횟수만
-            남긴다는 뜻입니다.
+            Bag of words 는 문서를 단어 순서 없이 각 단어가 몇 번 나왔는지(term frequency, TF)만 세는 표현입니다. 문장 구조나 문맥은 버리고 등장 횟수만
+            남깁니다.
           </p>
           <p>
             여기서 document frequency(DF)는 그 단어가 등장한 문서의 개수만 셉니다.
@@ -63,16 +58,13 @@ export default function LexicalRetrievalBm25InvertedIndexArticle() {
             frequency 가 많을수록 값을 줄여 이 문제를 보정합니다.
           </p>
           <p>
-            3문서 코퍼스로 봅시다. D1="apple apple banana", D2="apple cherry
-            cherry", D3="apple banana durian"(N=3)입니다. Apple 은 세 문서 모두에
-            나와 df=3, idf=ln(3/3)=0 입니다. TF 가 아무리 커도 이 단어의 TF-IDF 는
-            0으로, 모든 문서에 나오는 단어는 구별력이 없다는 뜻입니다.
+            3문서 코퍼스로 봅시다. D1="apple apple banana", D2="apple cherry cherry", D3="apple banana durian"(N=3)입니다.
+            Apple 은 세 문서 모두에 나와 df=3, idf=ln(3/3)=0 입니다. TF 가 아무리 커도 이 단어의 TF-IDF 는 0입니다. 모든 문서에 나오는 단어에는 구별력이
+            없습니다.
           </p>
           <p>
-            Cherry 는 D2 에만 나와 df=1, idf=ln(3/1)≈1.099 입니다. D2 에서 TF=2 이니
-            TF-IDF(cherry, D2)=2×1.099≈2.197 로 이 코퍼스에서 가장 높은 점수를
-            받습니다. 희귀하면서 자주 나온 단어가 그 문서를 대표한다고 보는
-            것입니다.
+            Cherry 는 D2 에만 나와 df=1, idf=ln(3/1)≈1.099 입니다. D2 에서 TF=2 이니 TF-IDF(cherry, D2)=2×1.099≈2.197 로 이
+            코퍼스에서 가장 높은 점수를 받습니다. 희귀하면서 자주 나온 단어가 그 문서를 대표한다고 봅니다.
           </p>
         </div>
         <TermBreakdown
@@ -110,10 +102,8 @@ export default function LexicalRetrievalBm25InvertedIndexArticle() {
             약 2배만 오릅니다. 이것이 saturation 입니다.
           </p>
           <p>
-            TF=10 은 같지만 길이가 200(avgdl 의 4배)인 문서라면 점수는
-            2.30×(22/13.9)≈3.64 로, 같은 TF=10 인 길이 50 문서(4.51)보다 낮습니다.
-            같은 횟수라도 긴 문서에서의 한 번은 짧은 문서에서의 한 번보다 덜
-            의미 있다고 보는 것이 length normalization 입니다.
+            TF=10 은 같지만 길이가 200(avgdl 의 4배)인 문서라면 점수는 2.30×(22/13.9)≈3.64 로, 같은 TF=10 인 길이 50 문서(4.51)보다 낮습니다.
+            같은 횟수라도 긴 문서에서 나온 한 번은 짧은 문서에서 나온 한 번보다 덜 의미 있다고 봅니다. 이것이 length normalization 입니다.
           </p>
         </div>
         <ExplainedFormula
@@ -156,10 +146,8 @@ export default function LexicalRetrievalBm25InvertedIndexArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Inverted index 는 term 마다 그 term 이 나타나는 문서 id 목록(posting
-            list)을 저장합니다. Query 가 들어오면 문서를 처음부터 훑는 대신 각 query
-            term 의 posting list 만 찾아 그 안에서 계산하므로, 비용이 전체 문서 수가
-            아니라 매칭되는 문서 수에 비례합니다.
+            Inverted index 는 term 마다 그 term 이 나타나는 문서 id 목록(posting list)을 저장합니다. Query 가 들어오면 문서를 처음부터 훑는 대신
+            각 query term 의 posting list 만 찾아 그 안에서 계산합니다. 그래서 비용이 전체 문서 수와 무관하게 매칭되는 문서 수에만 비례합니다.
           </p>
           <p>
             문서 100만 개짜리 코퍼스에서 term 하나가 문서 200개에만 나타난다고

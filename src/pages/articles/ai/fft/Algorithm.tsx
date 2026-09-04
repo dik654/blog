@@ -8,11 +8,9 @@ export default function Algorithm() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Direct DFT는 N개의 k마다 N개 sample과 basis를 다시 곱해 O(N²) work를
-          만든다. 그러나 roots of unity는 주기성과 대칭성을 가지므로 N-point
-          transform을 factor N=N₁N₂에 맞춰 더 작은 transform으로 나눌 수 있다.
-          가장 이해하기 쉬운 radix-2 decimation-in-time은 input index를 even과
-          odd로 분리한다.
+          Direct DFT는 N개의 k마다 N개 sample과 basis를 다시 곱하므로 연산량이 O(N²)이 된다. 그러나 roots of unity에는 주기성과 대칭성이 있어서
+          N-point transform을 factor N=N₁N₂에 맞춰 더 작은 transform으로 쪼갤 수 있다. 가장 이해하기 쉬운 radix-2 decimation-in-
+          time은 입력 index를 even과 odd로 나눈다.
         </p>
       </div>
 
@@ -77,25 +75,24 @@ export default function Algorithm() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Bit reversal과 implementation locality</h3>
         <p>
-          Repeated even/odd split은 input index의 binary digit 순서를 뒤집은 배치를
-          만든다. Iterative in-place FFT는 bit-reversal permutation을 먼저 하거나
-          stage ordering에 흡수한다. 동일한 O(N log N) algorithm도 contiguous access,
-          SIMD width, shared memory bank conflict와 twiddle layout에 따라 실제
-          성능이 크게 달라진다.
+          even/odd 분할을 거듭하면 입력 index의 binary digit 순서가 뒤집힌 배치가 나온다. Iterative in-place FFT는 bit-reversal
+          permutation을 먼저 하거나 stage ordering에 흡수한다. 같은 O(N log N) algorithm이라도 실제 성능은 크게 달라지는데, contiguous
+          access·SIMD width·shared memory bank conflict·twiddle layout이 모두 여기에 관여한다.
         </p>
         <h3>Radix-2가 FFT의 전부는 아니다</h3>
         <p>
-          Cooley–Tukey는 composite N을 factorization하는 일반 원리다. FFTW와
-          cuFFT 같은 library는 N의 prime factors와 device에 따라 mixed-radix plan을
-          선택하며, prime length에는 Rader 또는 Bluestein algorithm을 사용할 수
-          있다. Zero-padding으로 power-of-two를 만드는 선택은 편리하지만 memory와
-          grid가 함께 바뀌므로 실제 benchmark로 결정한다.
+          Cooley–Tukey는 composite N을 factorization하는 일반 원리다. FFTW나 cuFFT 같은 library는 N의 prime factors와 장치에 따라
+          mixed-radix plan을 고른다. Prime length에는 Rader나 Bluestein algorithm을 쓸 수 있다. Zero-padding으로 power-of-
+          two를 만드는 선택은 편리하지만 memory와 grid가 함께 바뀌므로 실제 benchmark로 결정한다.
         </p>
       </div>
       <div id="paper-cooley-tukey" className="not-prose my-8 border-l border-primary/50 pl-4 scroll-mt-24">
         <p className="text-xs font-bold text-primary">논문 읽기 · DFT 계산의 factorization</p>
         <p className="mt-2 text-sm font-semibold">An Algorithm for the Machine Calculation of Complex Fourier Series</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">Composite sample count의 Fourier calculation을 작은 transform으로 나누고 intermediate를 재사용해 operation count를 줄입니다. 현대 FFT library 전체의 plan·radix·hardware 최적화를 이 논문 하나가 설명하거나 모든 N에서 radix-2가 최선이라는 뜻은 아닙니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            Composite sample count의 Fourier calculation을 작은 transform으로 나누고 intermediate를 재사용해 연산 수를 줄입니다. 다만
+            이 논문 하나로 현대 FFT library 전체의 plan·radix·hardware 최적화가 다 설명되지는 않고, 모든 N에서 radix-2가 최선인 것도 아닙니다.
+          </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary underline-offset-4 hover:underline" href="https://research.ibm.com/publications/an-algorithm-for-the-machine-calculation-of-complex-fourier-series" target="_blank" rel="noreferrer">원 논문과 계산량 유도 보기</a>
       </div>
     </section>

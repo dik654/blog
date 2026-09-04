@@ -22,15 +22,12 @@ export default function Data({
           sequence로 직렬화합니다.
         </p>
         <p>
-          따라서 학습 전에 실제 token ID, special token과 turn boundary를 표본으로
-          확인해야 합니다. 다른 model의 template을 복사하거나 special token을 두
-          번 넣으면 training과 serving이 서로 다른 입력을 보게 됩니다.
+          그러니 학습 전에 실제 token ID, special token과 turn boundary를 표본으로 확인해야 합니다. 다른 model의 template을 복사하거나
+          special token을 두 번 넣으면 training과 serving이 서로 다른 입력을 보게 됩니다.
         </p>
         <p>
-          그다음 loss mask가 sequence의 어느 부분을 정답으로 채점할지 정합니다.
-          Instruction tuning에서는 흔히 assistant response만 채점하지만, 목적에
-          따라 전체 sequence를 학습할 수도 있습니다. 어느 쪽이든 padding, packing,
-          truncation 경계까지 함께 명시해야 합니다.
+          그다음 loss mask가 sequence의 어느 부분을 정답으로 채점할지 정합니다. Instruction tuning에서는 흔히 assistant response만 채점하지만
+          목적에 따라 전체 sequence를 학습할 수도 있습니다. 어느 쪽이든 padding, packing, truncation 경계까지 함께 명시해야 합니다.
         </p>
       </div>
       <ProgressiveDetail

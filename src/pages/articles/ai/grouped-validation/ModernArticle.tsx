@@ -23,7 +23,9 @@ export default function GroupedValidationArticle() {
         <h2 className="mb-5 text-2xl font-bold">Train group과 validation group의 교집합을 0으로 만듭니다</h2>
         <ExplainedFormula
           question="Group split이 안전한지 가장 먼저 확인할 식은 무엇인가요?"
-          idea={<p>각 partition에 들어간 row의 group ID를 집합으로 바꿉니다. 두 집합의 교집합을 구해 shared entity가 하나도 없는지 확인합니다.</p>}
+          idea={<p>
+            각 partition에 들어간 row의 group ID를 집합으로 바꾼 뒤 두 집합의 교집합을 구해 shared entity가 하나도 없는지 확인합니다.
+          </p>}
           formula={String.raw`G_{\mathrm{train}}\cap G_{\mathrm{valid}}=\varnothing`}
           annotatedFormula={String.raw`\begin{aligned}G_{\mathrm{train}}&=\underbrace{\{g_i:i\in T\}}_{\text{train rows의 shared-cause ID를 수집}}\\G_{\mathrm{valid}}&=\underbrace{\{g_j:j\in V\}}_{\text{validation rows의 ID를 수집}}\\\mathcal L_G&=\underbrace{G_{\mathrm{train}}\cap G_{\mathrm{valid}}}_{\text{양쪽에 나타난 leakage group}}=\varnothing
 \end{aligned}`}
@@ -45,7 +47,10 @@ export default function GroupedValidationArticle() {
         <h2 className="mb-5 text-2xl font-bold">100,000 rows와 20 patients를 같은 sample size로 부르지 않습니다</h2>
         <ExplainedFormula
           question="독립 평가 단위 수는 왜 row 수가 아니라 고유 group 수인가요?"
-          idea={<p>같은 entity의 반복 row는 오류를 함께 움직일 수 있습니다. 따라서 배포에서 새 entity 성능을 주장할 근거 반복은 validation에 들어간 고유 group의 개수입니다.</p>}
+          idea={<p>
+            같은 entity의 반복 row는 오류를 함께 움직일 수 있습니다. 배포에서 새 entity 성능을 주장할 근거 반복은 validation에 들어간 고유 group의
+            개수입니다.
+          </p>}
           formula={String.raw`n_{\mathrm{unit}}=|\{g_i:i\in V\}|`}
           annotatedFormula={String.raw`n_{\mathrm{unit}}=\underbrace{\left|\underbrace{\{g_i:i\in V\}}_{\text{validation row의 group ID를 중복 제거}}\right|}_{\text{새 entity 근거 반복 수를 셈}}`}
           operations={[{ expression: String.raw`\{g_i:i\in V\}`, annotation: ["validation group IDs를 모으고", "동일 entity 반복을 하나로 축약"] }, { expression: String.raw`|\cdot|`, annotation: ["고유 group 집합의 크기를 세어", "독립에 가까운 근거 단위 수 계산"] }]}

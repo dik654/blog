@@ -8,7 +8,10 @@ export default function LabelSmoothingArticle() {
   return <div className="space-y-16">
     <section id="overview" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Label smoothing은 정답을 버리는 것이 아니라 target distribution을 다시 배분합니다</h2>
-      <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8">먼저 one-hot target과 uniform distribution을 따로 봅니다. 그 다음 두 distribution을 ε로 섞고, 마지막에 cross-entropy와 다른 soft-target 기법을 연결합니다.</p></div>
+      <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8">
+            One-hot target과 uniform distribution을 따로 본 다음 둘을 ε로 섞습니다. Cross-entropy와 다른 soft-target 기법을 연결하는
+            것은 그다음입니다.
+          </p></div>
       <TermBreakdown title="Target을 이루는 네 용어" items={[
         { term: "Class count K", description: "Model logit과 target probability가 가지는 class 축의 길이입니다.", example: "K=4입니다." },
         { term: "One-hot target y", description: "정답 class만 1이고 나머지는 0인 distribution입니다.", example: "두 번째 class면 (0,1,0,0)입니다." },
@@ -32,7 +35,9 @@ export default function LabelSmoothingArticle() {
     </section>
     <section id="loss" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">Cross-entropy는 모든 class의 target 질량으로 log probability를 가중합니다</h2>
-      <ExplainedFormula question="Soft target은 loss에서 어떻게 사용되나요?" idea={<p>Model logit을 softmax probability로 바꾸고, 각 class의 log probability에 smoothed target 질량을 곱해 더합니다.</p>} formula={String.raw`\mathcal L=-\sum_k\widetilde y_k\log p_k`} annotatedFormula={String.raw`\begin{aligned}p_k&=\underbrace{\frac{e^{z_k}}{\sum_j e^{z_j}}}_{\text{logit을 합이 1인 model probability로 변환}}\\\mathcal L&=-\underbrace{\sum_{k=1}^{K}\widetilde y_k\log p_k}_{\text{target 질량으로 class별 surprise를 가중 평균}}\end{aligned}`} operations={[
+      <ExplainedFormula question="Soft target은 loss에서 어떻게 사용되나요?" idea={<p>
+            Model logit을 softmax probability로 바꾸고 각 class의 log probability에 smoothed target 질량을 곱해 더합니다.
+          </p>} formula={String.raw`\mathcal L=-\sum_k\widetilde y_k\log p_k`} annotatedFormula={String.raw`\begin{aligned}p_k&=\underbrace{\frac{e^{z_k}}{\sum_j e^{z_j}}}_{\text{logit을 합이 1인 model probability로 변환}}\\\mathcal L&=-\underbrace{\sum_{k=1}^{K}\widetilde y_k\log p_k}_{\text{target 질량으로 class별 surprise를 가중 평균}}\end{aligned}`} operations={[
         { expression: String.raw`e^{z_k}/\sum_j e^{z_j}`, annotation: ["상대 logit을 양수로 바꾸고", "전체 합으로 나눠 probability 생성"] },
         { expression: String.raw`-\sum_k\widetilde y_k\log p_k`, annotation: ["target이 준 중요도로", "각 class의 negative log probability를 누적"] },
       ]} terms={[
@@ -43,7 +48,9 @@ export default function LabelSmoothingArticle() {
     </section>
     <section id="composition" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">Mixup과 함께 쓰면 이름이 아니라 최종 target을 계산합니다</h2>
-      <ExplainedFormula question="Mixup 뒤 smoothing을 적용하면 probability mass는 어디로 가나요?" idea={<p>먼저 두 one-hot target을 λ로 섞고, 그 결과 전체를 다시 (1−ε)만큼 유지한 뒤 uniform ε/K를 더합니다.</p>} formula={String.raw`\widetilde y=(1-\epsilon)(\lambda y_a+(1-\lambda)y_b)+\epsilon\mathbf1/K`} annotatedFormula={String.raw`\begin{aligned}y_{\mathrm{mix}}&=\underbrace{\lambda y_a+(1-\lambda)y_b}_{\text{두 sample target을 mix}}\\y_{\mathrm{kept}}&=\underbrace{(1-\epsilon)y_{\mathrm{mix}}}_{\text{mixed target을 유지}}\\y_{\mathrm{uniform}}&=\underbrace{\epsilon\mathbf1/K}_{\text{모든 class에 분배}}\\\widetilde y&=\underbrace{y_{\mathrm{kept}}+y_{\mathrm{uniform}}}_{\text{최종 soft target 결합}}\end{aligned}`} operations={[
+      <ExplainedFormula question="Mixup 뒤 smoothing을 적용하면 probability mass는 어디로 가나요?" idea={<p>
+            두 one-hot target을 λ로 섞고 그 결과 전체를 다시 (1−ε)만큼 유지한 뒤 uniform ε/K를 더합니다.
+          </p>} formula={String.raw`\widetilde y=(1-\epsilon)(\lambda y_a+(1-\lambda)y_b)+\epsilon\mathbf1/K`} annotatedFormula={String.raw`\begin{aligned}y_{\mathrm{mix}}&=\underbrace{\lambda y_a+(1-\lambda)y_b}_{\text{두 sample target을 mix}}\\y_{\mathrm{kept}}&=\underbrace{(1-\epsilon)y_{\mathrm{mix}}}_{\text{mixed target을 유지}}\\y_{\mathrm{uniform}}&=\underbrace{\epsilon\mathbf1/K}_{\text{모든 class에 분배}}\\\widetilde y&=\underbrace{y_{\mathrm{kept}}+y_{\mathrm{uniform}}}_{\text{최종 soft target 결합}}\end{aligned}`} operations={[
         { expression: String.raw`\lambda y_a+(1-\lambda)y_b`, annotation: ["두 sample target을", "input mixing 비율과 같은 비율로 결합"] },
         { expression: String.raw`(1-\epsilon)y_{\mathrm{mix}}+\epsilon\mathbf1/K`, annotation: ["이미 soft한 target에도", "uniform smoothing을 한 번 더 적용"] },
       ]} terms={[

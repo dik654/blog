@@ -23,11 +23,9 @@ export default function InferenceRuntimeAnatomyArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Inference runtime 은 model 을 GPU 에 올리고 들어온 요청을 실행 가능한 batch 로 바꿔
-            돌리는 프로그램 전체를 가리키며, vLLM 과 SGLang 같은 model serving engine 이 그
-            구현입니다. 첫 요청이 오기 전에 runtime 은 process 를 나누고, weight 를 나눠 싣고,
-            GPU memory 지도를 확정하고, kernel 을 한 번 미리 돌려 둡니다. 이 글은 그 준비
-            단계만 다룹니다.
+            Inference runtime 은 model 을 GPU 에 올리고 들어온 요청을 실행 가능한 batch 로 바꿔 돌리는 프로그램 전체입니다. vLLM 과 SGLang 같은
+            model serving engine 이 그 구현입니다. 첫 요청이 오기 전에 runtime 은 process 를 나누고, weight 를 나눠 싣고, GPU memory
+            지도를 확정하고, kernel 을 한 번 미리 돌려 둡니다. 이 글은 그 준비 단계만 다룹니다.
           </p>
           <p>
             가장 바깥에는 HTTP 요청을 받아 tokenize 하는 frontend process 가 있고, 그 안쪽에
@@ -36,9 +34,8 @@ export default function InferenceRuntimeAnatomyArticle() {
             token id 만 주고받습니다.
           </p>
           <p>
-            GPU 하나마다 worker process 가 하나 붙습니다. worker 안에는 model runner 객체가
-            있어 weight 적재와 forward 실행을 맡고, driver 쪽의 model executor 는 여러 worker 에
-            같은 명령을 보내고 결과를 모읍니다. vLLM 문서는 이 원칙을 process 하나가 accelerator
+            GPU 하나마다 worker process 가 하나 붙습니다. worker 안에는 model runner 객체가 있어 weight 적재와 forward 실행을 맡습니다.
+            driver 쪽의 model executor 는 여러 worker 에 같은 명령을 보내고 결과를 모읍니다. vLLM 문서는 이 원칙을 process 하나가 accelerator
             하나를 제어한다고 적습니다.
           </p>
           <p>
@@ -84,10 +81,9 @@ export default function InferenceRuntimeAnatomyArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Model loading 은 checkpoint file 을 열어 각 tensor 를 GPU 로 옮기고 module 의
-            parameter 자리에 끼우는 절차입니다. 그중 byte 를 실제로 옮기는 weight loading 이
-            시간의 대부분을 차지하고, 어느 GPU 가 어느 조각을 받을지 정하는 것이 weight
-            sharding 입니다.
+            Model loading 은 checkpoint file 을 열어 각 tensor 를 GPU 로 옮기고 module 의 parameter 자리에 끼우는 절차입니다. 그중
+            byte 를 실제로 옮기는 weight loading 이 시간의 대부분을 차지합니다. 어느 GPU 가 어느 조각을 받을지 정하는 일은 weight sharding 이라고
+            부릅니다.
           </p>
           <p>
             70B parameter model 을 FP16 으로 저장하면 parameter 하나가 2 byte 이므로 140 GB
@@ -140,10 +136,8 @@ export default function InferenceRuntimeAnatomyArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Runtime memory manager 는 GPU memory 를 요청이 올 때마다 새로 빌리지 않고, 기동
-            때 큰 덩어리를 미리 잡아 두고 그 안에서 나눠 씁니다. 미리 잡아 둔 덩어리가 memory
-            pool 이고, pool 을 하나의 연속 주소 공간으로 두고 앞에서부터 잘라 주는 관리 방식을
-            memory arena 라고 부릅니다.
+            Runtime memory manager 는 GPU memory 를 요청이 올 때마다 새로 빌리지 않습니다. 기동 때 큰 덩어리를 미리 잡아 두고 그 안에서 나눠 씁니다. 미리
+            잡아 둔 덩어리가 memory pool 입니다. pool 을 하나의 연속 주소 공간으로 두고 앞에서부터 잘라 주는 관리 방식은 memory arena 라고 부릅니다.
           </p>
           <p>
             이유는 <code>cudaMalloc</code> 과 <code>cudaFree</code> 가 device synchronization 을
@@ -165,16 +159,14 @@ export default function InferenceRuntimeAnatomyArticle() {
             이 그 예산의 상한입니다.
           </p>
           <p>
-            Workspace memory 는 kernel 이 계산 도중 잠깐 쓰는 scratch 영역입니다. attention 의
-            partial softmax buffer, GEMM 의 split-K 누적 buffer, sampling 의 logits 정렬 buffer 가
-            여기에 들어갑니다. 크기가 batch 와 sequence 길이의 최대값에서 정해지므로, runtime 은
-            최대 shape 로 한 번 돌려 본 peak 를 workspace 예약분으로 잡습니다.
+            Workspace memory 는 kernel 이 계산 도중 잠깐 쓰는 scratch 영역입니다. attention 의 partial softmax buffer, GEMM 의
+            split-K 누적 buffer, sampling 의 logits 정렬 buffer 가 여기에 들어갑니다. 크기가 batch 와 sequence 길이의 최대값에서 정해지므로
+            runtime 은 최대 shape 로 한 번 돌려 본 peak 를 workspace 예약분으로 잡습니다.
           </p>
           <p>
-            Memory reuse 는 그 peak 를 작게 유지하는 방법입니다. layer 1 의 activation 은 layer 2
-            가 끝나면 필요 없으므로 같은 주소를 layer 3 이 다시 씁니다. caching allocator 가 이를
-            자동으로 해 주지만 크기가 조금씩 다르면 block 이 쪼개지므로, vLLM 은 warmup 에서 큰
-            shape 를 먼저 돌려 큰 block 이 먼저 잡히게 순서를 정합니다.
+            Memory reuse 는 그 peak 를 작게 유지하는 방법입니다. layer 1 의 activation 은 layer 2 가 끝나면 필요 없으므로 같은 주소를 layer 3
+            이 다시 씁니다. caching allocator 가 이를 자동으로 해 주지만 크기가 조금씩 다르면 block 이 쪼개집니다. vLLM 이 warmup 에서 큰 shape 를
+            먼저 돌려 큰 block 이 먼저 잡히게 순서를 정하는 것도 이 때문입니다.
           </p>
         </div>
         <ExplainedFormula
@@ -276,16 +268,14 @@ export default function InferenceRuntimeAnatomyArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Cold start 는 process 가 없는 상태에서 첫 응답을 낼 수 있을 때까지의 시간이고, 그
-            안에서 runtime 이 자기 준비에 쓰는 부분이 model initialization latency 입니다. 앞
-            절의 예시로는 weight 전송 9 초에서 140 초, profile run 몇 초, graph capture 수십 초가
+            Cold start 는 process 가 없는 상태에서 첫 응답을 낼 수 있을 때까지의 시간입니다. 그 안에서 runtime 이 자기 준비에 쓰는 부분이 model
+            initialization latency 입니다. 앞 절의 예시로는 weight 전송 9 초에서 140 초, profile run 몇 초, graph capture 수십 초가
             더해집니다. 어느 항이 지배하는지는 hardware 마다 다릅니다.
           </p>
           <p>
-            Runtime warmup 은 첫 요청에서 처음 마주칠 일을 미리 겪게 하는 단계입니다. CUDA kernel
-            은 첫 호출에서 module 을 load 하고, Triton kernel 은 shape 마다 JIT compile 을 하며,
-            torch.compile 은 graph 를 trace 합니다. 이 비용이 사용자 요청 latency 에 섞이지 않도록
-            dummy batch 로 먼저 밟아 둡니다.
+            CUDA kernel 은 첫 호출에서 module 을 load 합니다. Triton kernel 은 shape 마다 JIT compile 을 하고 torch.compile 은
+            graph 를 trace 합니다. 이 비용이 사용자 요청 latency 에 섞이지 않도록 dummy batch 로 먼저 밟아 두는 단계가 runtime warmup 입니다. 첫
+            요청에서 처음 마주칠 일을 미리 겪어 둡니다.
           </p>
           <p>
             vLLM 의 <code>compile_or_warm_up_model</code> 은 capture size 목록을 큰 것부터 돌며
@@ -295,10 +285,9 @@ export default function InferenceRuntimeAnatomyArticle() {
             <Link to="/ai/cuda-graph-capture#mechanics">CUDA graph</Link> 글이 소유합니다.
           </p>
           <p>
-            Eager initialization 은 이 모든 준비를 ready 신호 전에 끝내는 방식이고, lazy
-            initialization 은 실제로 그 shape 나 kernel 이 필요해질 때 준비하는 방식입니다. eager
-            는 cold start 가 길지만 첫 요청부터 latency 가 균일하고, lazy 는 ready 가 빠르지만 초기
-            요청 몇 개가 compile 시간을 떠안습니다.
+            Eager initialization 은 이 모든 준비를 ready 신호 전에 끝냅니다. lazy initialization 은 실제로 그 shape 나 kernel 이
+            필요해질 때 준비합니다. eager 는 cold start 가 길지만 첫 요청부터 latency 가 균일하고 lazy 는 ready 가 빠르지만 초기 요청 몇 개가
+            compile 시간을 떠안습니다.
           </p>
           <p>
             선택 기준은 누가 그 비용을 내느냐입니다. 항상 켜 두는 production replica 는 eager 가
@@ -307,10 +296,8 @@ export default function InferenceRuntimeAnatomyArticle() {
             극단입니다.
           </p>
           <p>
-            Cold start 를 줄이는 방법도 지배 항에 따라 다릅니다. 전송이 지배하면 local NVMe cache
-            나 GPU 간 P2P 복사로 대역폭을 늘리고, capture 가 지배하면 size 목록을 실제 batch
-            분포에 맞게 줄입니다. 둘 다 아닌데 느리다면 대개 CPU 쪽 checkpoint 변환이나 tokenizer
-            초기화가 숨어 있습니다.
+            Cold start 를 줄이는 방법도 지배 항에 따라 다릅니다. 전송이 지배하면 local NVMe cache 나 GPU 간 P2P 복사로 대역폭을 늘리고 capture 가
+            지배하면 size 목록을 실제 batch 분포에 맞게 줄입니다. 둘 다 아닌데 느리다면 대개 CPU 쪽 checkpoint 변환이나 tokenizer 초기화가 숨어 있습니다.
           </p>
         </div>
         <ProgressiveDetail
@@ -318,9 +305,8 @@ export default function InferenceRuntimeAnatomyArticle() {
           preview="Profile run 은 torch allocator 안의 peak 만 재고, NCCL buffer 와 graph 의 일부는 그 뒤에 잡히므로 headroom 이 사라지면 실제 peak 가 예산을 넘습니다."
         >
           <p>
-            A_peak 는 dummy batch 한 번의 측정값이고, 실제 요청은 prefix 길이·sampling 옵션·
-            multimodal 입력에 따라 다른 kernel 경로를 탑니다. 그 경로의 workspace 가 dummy 보다
-            크면 headroom 이 그 차이를 흡수해야 합니다.
+            A_peak 는 dummy batch 한 번의 측정값입니다. 실제 요청은 prefix 길이·sampling 옵션· multimodal 입력에 따라 다른 kernel 경로를
+            탑니다. 그 경로의 workspace 가 dummy 보다 크면 headroom 이 그 차이를 흡수해야 합니다.
           </p>
           <p>
             vLLM 은 non-torch allocation 과 graph 추정치를 따로 빼지만 추정은 추정입니다. 같은
@@ -356,22 +342,19 @@ export default function InferenceRuntimeAnatomyArticle() {
             Worker class 를 두는 이유입니다.
           </p>
           <p>
-            같은 GPU 안에서도 attention kernel 은 여러 개입니다. FlashAttention, FlashInfer, Triton
-            구현은 지원 dtype 과 head size, sliding window 가 다르고, 어느 것이 빠른지는 GPU 세대와
-            shape 에 따라 갈립니다. runtime compatibility layer 는 model 코드가 이 차이를 모르도록
-            하나의 attention 호출 뒤에서 backend 를 고르는 층입니다.
+            같은 GPU 안에서도 attention kernel 은 여러 개입니다. FlashAttention, FlashInfer, Triton 구현은 지원 dtype 과 head
+            size, sliding window 가 다르고 어느 것이 빠른지는 GPU 세대와 shape 에 따라 갈립니다. runtime compatibility layer 는 model
+            코드가 이 차이를 모르도록 하나의 attention 호출 뒤에서 backend 를 고르는 층입니다.
           </p>
           <p>
-            Compatibility layer 가 없으면 model 마다 hardware 조합 수만큼 코드가 늘어납니다.
-            있으면 기동 때 한 번 이 GPU 와 dtype, head size 에서 쓸 수 있는 kernel 목록을 만들고
-            우선순위대로 고릅니다. 대신 fallback 이 조용히 느린 kernel 로 떨어질 수 있어, 기동
-            log 에서 선택된 backend 이름을 확인하는 것이 운영의 첫 점검입니다.
+            Compatibility layer 가 없으면 model 마다 hardware 조합 수만큼 코드가 늘어납니다. 있으면 기동 때 한 번 이 GPU 와 dtype, head
+            size 에서 쓸 수 있는 kernel 목록을 만들고 우선순위대로 고릅니다. 대신 fallback 이 조용히 느린 kernel 로 떨어질 수 있어 기동 log 에서 선택된
+            backend 이름을 확인하는 것이 운영의 첫 점검입니다.
           </p>
           <p>
-            Memory planning 도 backend 마다 다릅니다. ROCm 에서는 profile 중 free memory 가
-            늘어나는 경우가 있어 vLLM 이 별도 fallback 을 두고, CPU backend 는 KV pool 을 host
-            memory 에 잡습니다. 한 backend 에서 잰 KV pool 크기와 warmup 시간을 다른 backend 로
-            옮겨 적으면 안 되는 이유입니다.
+            Memory planning 도 backend 마다 다릅니다. ROCm 에서는 profile 중 free memory 가 늘어나는 경우가 있어 vLLM 이 별도 fallback
+            을 둡니다. CPU backend 는 KV pool 을 host memory 에 잡습니다. 한 backend 에서 잰 KV pool 크기와 warmup 시간을 다른
+            backend 로 옮겨 적으면 안 됩니다.
           </p>
           <p>
             다음 읽기는 확정된 KV pool 이 요청마다 어떻게 잘려 나가는지 다루는{" "}

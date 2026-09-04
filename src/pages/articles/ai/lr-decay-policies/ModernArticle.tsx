@@ -63,8 +63,7 @@ export default function LrDecayPoliciesArticle() {
           question="η₀=.1, γ=.5, K=100이면 t=250의 Step LR가 왜 .025인가요?"
           idea={
             <p>
-              현재 update가 milestone 구간을 몇 번 지났는지 floor로 세고, 그
-              횟수만큼 γ를 곱합니다.
+              현재 update가 milestone 구간을 몇 번 지났는지 floor로 센 다음 그 횟수만큼 γ를 곱합니다.
             </p>
           }
           formula={String.raw`\begin{aligned}j_t&=\lfloor t/K\rfloor\\\eta_t^{\rm step}&=\eta_0\gamma^{j_t}\\\eta_t^{\rm exp}&=\eta_0\gamma^t\end{aligned}`}
@@ -125,9 +124,7 @@ export default function LrDecayPoliciesArticle() {
           question="Min-mode에서 현재 metric이 best보다 얼마나 좋아야 bad-count를 reset하나요?"
           idea={
             <p>
-              현재 metric이 best에서 threshold를 뺀 경계보다 작을 때만
-              meaningful improvement로 인정하고, 아니면 bad-count를 하나
-              늘립니다.
+              현재 metric이 best에서 threshold를 뺀 경계보다 작을 때만 meaningful improvement로 인정합니다. 아니면 bad-count를 하나 늘립니다.
             </p>
           }
           formula={String.raw`\begin{aligned}q_e&=[m_e<b_e-\delta]\\c_e&=(1-q_e)(c_{e-1}+1)\\d_e&=[c_e>p]\end{aligned}`}
@@ -193,10 +190,9 @@ export default function LrDecayPoliciesArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            같은 validation metric을 두 state machine이 읽으면 decay 뒤 몇 번의
-            update를 더 허용할지 명시합니다. 그렇지 않으면 early stopping이 먼저
-            firing해 decay가 효과를 낼 기회가 없습니다. Global update·evaluation
-            index·metric·old/new LR·trigger reason을 한 trace로 남깁니다.
+            같은 validation metric을 두 state machine이 읽으면 decay 뒤 몇 번의 update를 더 허용할지 명시합니다. 그렇지 않으면 early
+            stopping이 먼저 firing해 decay가 효과를 낼 기회가 없습니다. global update와 evaluation index를 먼저 적고 metric·old/new
+            LR·trigger reason까지 한 trace에 함께 남깁니다.
           </p>
         </div>
         <div id="docs-pytorch-decay" className="scroll-mt-24">

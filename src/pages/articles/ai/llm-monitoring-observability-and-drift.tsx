@@ -27,9 +27,8 @@ export default function LlmMonitoringObservabilityAndDriftArticle() {
             “느려졌다”와 “틀리기 시작했다”를 구분하지 못합니다.
           </p>
           <p>
-            앞의 질문은 production monitoring 아래 model, system, input, output monitoring
-            네 층을 나누는 문제이고, 뒤의 질문은 data drift, concept drift, performance
-            drift라는 세 가지 변화 축을 나누는 문제입니다.
+            앞의 질문은 production monitoring 아래 model, system, input, output monitoring 네 층을 나누는 문제입니다. 뒤의 질문은
+            data drift, concept drift, performance drift라는 세 가지 변화 축을 가릅니다.
           </p>
           <p>
             <Link to="/ai/llm-serving-ops#observability-aiops">LLM 서빙 운영</Link> 글은 이미
@@ -57,20 +56,18 @@ export default function LlmMonitoringObservabilityAndDriftArticle() {
             가장 넓은 우산입니다. 그 안에 네 개의 좁은 층이 들어갑니다.
           </p>
           <p>
-            Model monitoring은 모델이 만드는 output의 품질과 분포를 보고, system monitoring은
-            GPU, queue, network 같은 infra 자원을 봅니다. Input monitoring은 들어오는 prompt와
-            context의 분포를, output monitoring은 나가는 completion의 분포와 형식을 봅니다.
+            Model monitoring은 모델이 만드는 output의 품질과 분포를 봅니다. System monitoring이 보는 것은 GPU, queue, network 같은
+            infra 자원입니다. Input monitoring은 들어오는 prompt와 context의 분포를, output monitoring은 나가는 completion의 분포와
+            형식을 봅니다.
           </p>
           <p>
-            층을 나누는 이유는 같은 증상이 다른 층에서 다른 원인을 가지기 때문입니다. p95
-            latency가 늘었다면 system monitoring은 GPU utilization과 queue depth를 보고, input
-            monitoring은 prompt 길이 분포가 길어졌는지를 봅니다. 둘 다 “느려졌다”는 같은
-            production 증상을 만들지만 고치는 방법은 다릅니다.
+            층을 나누는 이유는 같은 증상이라도 층마다 원인이 다르기 때문입니다. p95 latency가 늘었다면 system monitoring은 GPU utilization과 queue
+            depth를 보고 input monitoring은 prompt 길이 분포가 길어졌는지를 봅니다. 둘 다 “느려졌다”는 같은 production 증상을 만들지만 고치는 방법은
+            다릅니다.
           </p>
           <p>
-            Output monitoring은 특히 LLM에서 중요합니다. Completion의 길이·형식·거부율·toxicity
-            score 분포가 바뀌면, 모델 자체는 그대로여도 사용자가 받는 답이 달라진 것입니다. 이
-            신호는 다음 절 drift 판정의 입력이 됩니다.
+            Output monitoring은 특히 LLM에서 중요합니다. Completion의 길이·형식·거부율·toxicity score 분포가 바뀌면 모델 자체는 그대로여도 사용자가
+            받는 답이 달라집니다. 이 신호는 다음 절 drift 판정의 입력이 됩니다.
           </p>
         </div>
         <TermBreakdown
@@ -92,10 +89,9 @@ export default function LlmMonitoringObservabilityAndDriftArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            세 drift는 같은 “시간이 지나며 뭔가 달라졌다”는 증상을 서로 다른 자리에서 가리킵니다.
-            Data drift는 입력 분포 P(X)가 바뀐 것이고, concept drift는 입력과 정답 사이의 관계
-            P(y|X)가 바뀐 것이며, performance drift는 실제로 측정한 model quality metric이
-            떨어진 것입니다. 앞의 둘은 원인 쪽 분포이고 마지막은 결과 쪽 관측입니다.
+            세 drift는 같은 “시간이 지나며 뭔가 달라졌다”는 증상을 서로 다른 자리에서 가리킵니다. Data drift는 입력 분포 P(X)가 바뀐 것입니다. Concept
+            drift는 입력과 정답 사이의 관계 P(y|X)가 바뀝니다. Performance drift는 실제로 측정한 model quality metric이 떨어진 경우입니다. 앞의
+            둘은 원인 쪽 분포이고 마지막은 결과 쪽 관측입니다.
           </p>
           <p>
             Gama 등의 concept drift survey는 이 구분을 결합분포 p(X,y)의 시점별 비교로
@@ -244,9 +240,8 @@ export default function LlmMonitoringObservabilityAndDriftArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Token usage는 한 요청이 소비·생성한 token 수 전체를 가리키며, input token count(
-            prompt·context가 차지한 token 수)와 output token count(생성된 completion의 token
-            수)로 나뉩니다. 이 둘은 비용과 latency 예산을 정하는 가장 기본적인 단위입니다.
+            Token usage는 한 요청이 소비·생성한 token 수 전체입니다. Input token count(prompt·context가 차지한 token 수)와 output
+            token count(생성된 completion의 token 수)로 나뉩니다. 이 둘이 비용과 latency 예산을 정하는 가장 기본적인 단위입니다.
           </p>
           <p>
             <Link to="/ai/vllm-serving#prefill-decode">vLLM 서빙</Link> 글은 이미 TTFT·ITL·
@@ -254,9 +249,8 @@ export default function LlmMonitoringObservabilityAndDriftArticle() {
             시계로 재는가</em>라는 축입니다.
           </p>
           <p>
-            Model latency breakdown은 GPU forward 계산만(prefill 계산 + decode 계산) 재고,
-            application latency breakdown은 여기에 gateway routing, queue 대기, network
-            전송까지 더한 사용자 체감 전체 시간을 잽니다. 같은 요청도 두 시계는 다른 숫자를
+            Model latency breakdown은 GPU forward 계산만(prefill 계산 + decode 계산) 잽니다. Application latency
+            breakdown은 여기에 gateway routing, queue 대기, network 전송까지 더한 사용자 체감 전체 시간을 잽니다. 같은 요청이라도 두 시계는 다른 숫자를
             보여 줍니다.
           </p>
           <p>
@@ -292,10 +286,9 @@ export default function LlmMonitoringObservabilityAndDriftArticle() {
           preview="Input token count는 prefill 계산량을 늘리지만, 사용자가 체감하는 지연에는 output token 생성 구간만큼 직접적이지 않습니다."
         >
           <p>
-            Input token count가 늘면 prefill 연산량이 늘어 TTFT가 함께 늘어날 수 있지만,
-            증가 폭은 architecture와 batch 상황에 따라 다릅니다. 반면 context window budget과
-            비용은 input token count에 거의 선형으로 비례하므로, 같은 latency SLO 안에서도
-            input token count 상한을 별도로 관리해야 합니다.
+            Input token count가 늘면 prefill 연산량이 늘어 TTFT가 함께 늘어날 수 있지만 증가 폭은 architecture와 batch 상황에 따라 다릅니다. 반면
+            context window budget과 비용은 input token count에 거의 선형으로 비례하므로 같은 latency SLO 안에서도 input token count
+            상한을 별도로 관리해야 합니다.
           </p>
         </ProgressiveDetail>
       </section>
@@ -306,16 +299,13 @@ export default function LlmMonitoringObservabilityAndDriftArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            GPU utilization monitoring은 GPU가 실제로 연산 중인 시간 비율을 재고, GPU memory
-            monitoring은 KV cache·weight·activation이 차지한 메모리 양을 잽니다. 두 신호는
-            같은 GPU에서 나오지만 병목이 다릅니다. Utilization은 낮은데 memory가 가득 찼다면
-            batch를 못 키워서 GPU를 놀리고 있다는 뜻입니다.
+            GPU utilization monitoring은 GPU가 실제로 연산 중인 시간 비율을 잽니다. GPU memory monitoring은 KV
+            cache·weight·activation이 차지한 메모리 양을 잽니다. 두 신호는 같은 GPU에서 나오지만 병목이 다릅니다. Utilization은 낮은데 memory가 가득
+            찼다면 batch를 못 키워서 GPU를 놀리고 있다는 뜻입니다.
           </p>
           <p>
-            Queue depth는 지금 처리를 기다리는 요청 수이고, queue time은 한 요청이 그 줄에서
-            실제로 기다린 시간입니다. Queue depth가 늘어도 처리 속도가 함께 빨라지면 queue
-            time은 늘지 않을 수 있으므로, 두 지표를 같이 봐야 “밀리고 있다”를 확인할 수
-            있습니다.
+            Queue depth는 지금 처리를 기다리는 요청 수입니다. Queue time은 한 요청이 그 줄에서 실제로 기다린 시간입니다. Queue depth가 늘어도 처리 속도가
+            함께 빨라지면 queue time은 늘지 않을 수 있습니다. 두 지표를 같이 봐야 “밀리고 있다”를 확인할 수 있습니다.
           </p>
           <p>
             이 네 신호는 system monitoring 층에 속하지만 앞 절의 trace span과 연결됩니다.
@@ -346,15 +336,13 @@ export default function LlmMonitoringObservabilityAndDriftArticle() {
             확률도 함께 줄어듭니다.
           </p>
           <p>
-            Error classification은 실패한 요청을 timeout, invalid output, tool failure,
-            upstream 5xx 같은 원인별 범주로 나누는 절차입니다. 같은 “실패율 2%”도 timeout이
-            대부분이면 queue·GPU 문제이고, invalid output이 대부분이면 model이나 prompt 문제로
-            원인이 갈립니다.
+            Error classification은 실패한 요청을 timeout, invalid output, tool failure, upstream 5xx 같은 원인별 범주로 나누는
+            절차입니다. 같은 “실패율 2%”도 timeout이 대부분이면 queue·GPU 문제이고 invalid output이 대부분이면 model이나 prompt 문제로 원인이
+            갈립니다.
           </p>
           <p>
-            Production debugging은 이 분류와 trace tree를 실제 사고 조사에 쓰는 활동입니다.
-            Error 분류로 “어떤 종류가 늘었는지”를 좁히고, 그 종류에 해당하는 sampled trace를
-            열어 “그 요청에서 어느 span이 실패를 만들었는지”를 확인하는 순서로 진행합니다.
+            Production debugging은 이 분류와 trace tree를 실제 사고 조사에 쓰는 활동입니다. Error 분류로 “어떤 종류가 늘었는지”를 좁히고 그 종류에
+            해당하는 sampled trace를 열어 “그 요청에서 어느 span이 실패를 만들었는지”를 확인하는 순서로 진행합니다.
           </p>
         </div>
         <ExplainedFormula

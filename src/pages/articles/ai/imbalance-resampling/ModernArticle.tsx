@@ -215,11 +215,9 @@ export default function ImbalanceResamplingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Receipt에는 split digest, source IDs, sampling ratio, neighbor
-            metric·k, feature encoder, seed와 synthetic constraint failures를
-            남깁니다. Validation의 original prevalence에서
-            ranking·calibration·threshold cost를 비교하고, 단순
-            duplication·class weight baseline보다 낫지 않으면 되돌립니다.
+            Receipt에는 split digest, source IDs, sampling ratio, neighbor metric·k, feature encoder, seed와
+            synthetic constraint failures를 남깁니다. Validation의 original prevalence에서
+            ranking·calibration·threshold cost를 비교하고 단순 duplication·class weight baseline보다 낫지 않으면 되돌립니다.
           </p>
         </div>
       </section>

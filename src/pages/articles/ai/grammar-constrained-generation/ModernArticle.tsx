@@ -178,12 +178,9 @@ export default function GrammarConstrainedGenerationArticle() {
             쓰이는 세 형식은 표현할 수 있는 구조의 깊이가 서로 다릅니다.
           </p>
           <p>
-            Regex-constrained decoding은 정규표현식으로 규칙을 적고 유한
-            상태만으로 판정할 수 있어 빠르지만, 여는 괄호와 닫는 괄호 개수를
-            맞추는 임의 깊이 중첩은 표현하지 못합니다. CFG-constrained
-            decoding은 production rule을 그대로 써서 이 중첩을 recursion으로
-            표현하고, JSON schema decoding은 type·required·enum 같은 schema
-            명세를 CFG 규칙으로 컴파일해 같은 방식으로 강제합니다.
+            Regex-constrained decoding은 정규표현식으로 규칙을 적고 유한 상태만으로 판정하니 빠릅니다. 여는 괄호와 닫는 괄호 개수를 맞추는 임의 깊이 중첩은 표현하지
+            못합니다. CFG-constrained decoding은 production rule을 그대로 써서 이 중첩을 recursion으로 표현하고 JSON schema
+            decoding은 type·required·enum 같은 schema 명세를 CFG 규칙으로 컴파일해 같은 방식으로 강제합니다.
           </p>
         </div>
         <TermBreakdown
@@ -227,18 +224,13 @@ export default function GrammarConstrainedGenerationArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Grammar-constrained decoding을 그대로 구현하면 매 step마다
-            vocabulary 전체 token을 하나씩 grammar에 넣어 봐야 합니다. 수만
-            개 token을 매 step 검사하면 decoding이 눈에 띄게 느려지고,
-            XGrammar는 이 비용을 줄이기 위해 나온 constrained decoding
-            엔진입니다.
+            Grammar-constrained decoding을 그대로 구현하면 매 step마다 vocabulary 전체 token을 하나씩 grammar에 넣어 봐야 합니다. 수만 개
+            token을 매 step 검사하면 decoding이 눈에 띄게 느려집니다. XGrammar는 이 비용을 줄이려고 나온 constrained decoding 엔진입니다.
           </p>
           <p>
-            Token 대부분은 지금 grammar state와 무관하게 항상 같은 결과를
-            내는 context-independent token이어서 미리 계산해 둘 수 있고,
-            state에 따라 결과가 달라지는 소수 token만 매 step 다시 검사합니다.
-            CFG recursion이 만드는 반복되는 stack 상태도 매번 복제하지 않고
-            재사용해 pushdown automaton 비용을 줄입니다.
+            Token 대부분은 지금 grammar state와 무관하게 늘 같은 결과를 냅니다. 이런 context-independent token은 미리 계산해 두고 state에 따라
+            결과가 달라지는 소수 token만 매 step 다시 검사합니다. CFG recursion이 만드는 반복 stack 상태도 매번 복제하지 않고 재사용해 pushdown
+            automaton 비용을 줄입니다.
           </p>
         </div>
         <div id="paper-xgrammar" className="not-prose mt-8 scroll-mt-24">
@@ -263,10 +255,8 @@ export default function GrammarConstrainedGenerationArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            여기까지 언어의 재료·생성 규칙과 grammar가 decoding을 제약하는
-            방식까지 봤습니다. 다음 글에서는 finite automaton이 어디서
-            막히고, CFG의 recursion을 PDA stack이 어떻게 따라가는지 괄호
-            하나씩 확인합니다.
+            여기까지 언어의 재료·생성 규칙과 grammar가 decoding을 제약하는 방식을 봤습니다. 다음 글에서는 finite automaton이 어디서 막히고 CFG의
+            recursion을 PDA stack이 어떻게 따라가는지 괄호 하나씩 확인합니다.
           </p>
           <p>
             <a href="/ai/cfg-pushdown-automata">

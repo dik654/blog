@@ -42,9 +42,8 @@ export default function Overview() {
           Generative Adversarial Nets
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Generator와 discriminator의 minimax game, 고정 generator에서의 optimal
-          discriminator와 global equilibrium을 제시합니다. Arbitrary function
-          capacity와 ideal optimization을 전제로 한 정리를 finite neural
+          Generator와 discriminator의 minimax game을 세우고 generator를 고정했을 때의 optimal discriminator와 global
+          equilibrium을 제시합니다. Arbitrary function capacity와 ideal optimization을 전제로 한 정리이므로 finite neural
           network의 alternating SGD 수렴 보장으로 읽어서는 안 됩니다.
         </p>
         <a
@@ -102,11 +101,9 @@ export default function Overview() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Discriminator는 고정된 generator에 대한 density ratio를 배운다</h3>
         <p>
-          Original GAN은 real을 label 1, fake를 label 0으로 둔 binary
-          classification 문제와 generator 문제를 결합한다. Generator가 고정되어
-          있고 discriminator가 어떤 함수든 표현하며 최적으로 학습된다는 이상적
-          조건에서는, 한 위치의 real density가 generated density보다 얼마나
-          큰지가 최적 출력으로 나타난다.
+          Original GAN은 real을 label 1, fake를 label 0으로 둔 binary classification 문제와 generator 문제를 결합한다.
+          Generator가 고정돼 있고 discriminator가 어떤 함수든 표현하며 최적으로 학습된다고 하자. 이 이상적 조건에서는 한 위치의 real density가
+          generated density보다 얼마나 큰지가 최적 출력으로 나타난다.
         </p>
       </div>
       <ExplainedFormula

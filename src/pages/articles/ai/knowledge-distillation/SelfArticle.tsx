@@ -9,7 +9,7 @@ export default function SelfDistillationArticle() {
       <section id="overview" className="mb-16 scroll-mt-20 space-y-7">
         <header>
           <p className="text-sm font-semibold text-primary">
-            먼저 세대 경계를 고정합니다
+            세대 경계부터 고정합니다
           </p>
           <h2 className="mt-2 text-3xl font-bold">
             Self-distillation은 같은 이름의 model이 아니라 frozen teacher 세대와
@@ -17,10 +17,8 @@ export default function SelfDistillationArticle() {
           </h2>
         </header>
         <p className="text-lg leading-8">
-          한 checkpoint를 teacher로 freeze하고 같은 architecture 또는 같은
-          family의 새 initialization을 student로 학습합니다. Student가 teacher와
-          더 비슷해지는 것과 ground truth에 더 가까워지는 것은 다르므로 세대별
-          artifact와 두 지표를 분리합니다.
+          한 checkpoint를 teacher로 freeze한 뒤 student는 같은 architecture 또는 같은 family에서 새로 initialization해 학습합니다.
+          Student가 teacher와 더 비슷해지는 것과 ground truth에 더 가까워지는 것은 다릅니다. 세대별 artifact와 두 지표를 따로 두는 이유가 여기 있습니다.
         </p>
         <DistillationLearningFlowViz mode="self" />
         <ContentBoundary article="self-distillation" />
@@ -39,10 +37,9 @@ export default function SelfDistillationArticle() {
           </h2>
         </header>
         <p>
-          G0 checkpoint를 teacher로 freeze하고 G1을 새로 initialize합니다. 같은
-          data split과 label anchor에서 soft target을 추가하고, G1이 승인된
-          뒤에만 다음 teacher 후보가 됩니다. Teacher와 student가 같은
-          process에서 동시에 움직이면 어느 세대의 신호를 배웠는지 사라집니다.
+          G0 checkpoint를 teacher로 freeze하고 G1을 새로 initialize합니다. Soft target은 같은 data split과 label anchor에서
+          추가하며, 다음 teacher 후보 자격은 G1이 승인된 뒤에야 생깁니다. Teacher와 student가 같은 process에서 동시에 움직이면 어느 세대의 신호를 배웠는지
+          사라집니다.
         </p>
         <ExplainedFormula
           question="한 self-distillation 세대의 update target은 어떻게 고정하는가?"
@@ -125,9 +122,8 @@ export default function SelfDistillationArticle() {
           </h2>
         </header>
         <p>
-          Student가 teacher와 더 많이 일치해도 둘이 함께 틀릴 수 있습니다.
-          Frozen holdout에서 agreement 변화 ΔA와 accuracy 변화 ΔQ를 같은
-          percentage-point 단위로 측정합니다.
+          Student가 teacher와 더 많이 일치해도 둘이 함께 틀릴 수 있습니다. 그래서 agreement 변화 ΔA와 accuracy 변화 ΔQ를 frozen holdout에서
+          같은 percentage-point 단위로 잽니다.
         </p>
         <ExplainedFormula
           question="Agreement는 올랐지만 accuracy가 떨어진 세대를 어떻게 표시하는가?"
@@ -227,10 +223,9 @@ export default function SelfDistillationArticle() {
           </h2>
         </header>
         <p>
-          세대별 independent quality, calibration, worst slice, agreement,
-          compute와 student-only runtime을 비교합니다. 평균 quality가 좋아도
-          보호 slice가 하락하거나 세대 비용 대비 gain이 threshold 아래면 직전
-          승인 checkpoint로 rollback합니다.
+          비교 대상은 세대별 independent quality와 calibration, worst slice와 agreement, 그리고 compute와 student-only
+          runtime입니다. 평균 quality가 좋아도 보호 slice가 하락하거나 세대 비용 대비 gain이 threshold 아래면 직전 승인 checkpoint로
+          rollback합니다.
         </p>
         <ExplainedFormula
           question="다음 teacher 세대로 승격할 최소 gate는 어떻게 쓰는가?"

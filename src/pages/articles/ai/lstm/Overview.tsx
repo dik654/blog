@@ -10,18 +10,14 @@ export default function Overview() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Vanilla RNN은 같은 nonlinear transition을 시간축으로 반복하므로 먼 과거의
-          영향과 gradient가 recurrent Jacobian의 긴 곱을 지나야 한다. LSTM(Long
-          Short-Term Memory)은 별도의 cell state C와 multiplicative gate를 두어,
-          이전 값을 얼마나 남기고 새 candidate를 얼마나 기록하며 현재 output으로
-          얼마나 공개할지를 sample과 timestep마다 조절한다.
+          Vanilla RNN은 같은 nonlinear transition을 시간축으로 반복하므로 먼 과거의 영향과 gradient가 recurrent Jacobian의 긴 곱을 지나야
+          한다. LSTM(Long Short-Term Memory)은 별도의 cell state C와 multiplicative gate를 둔다. 이전 값을 얼마나 남기고 새
+          candidate를 얼마나 기록하며 현재 output으로 얼마나 공개할지를 sample과 timestep마다 조절한다.
         </p>
         <p>
-          현재 framework에서 흔히 말하는 “standard LSTM”은 1997년 원 논문의 구조에
-          1999–2000년에 제안된 forget gate가 결합된 형태다. 따라서 원 논문의
-          constant-error carousel과 현대식 update를 완전히 같은 식으로 설명하면 안
-          된다. 현대 LSTM의 direct memory path는 forget gate가 1에 가까울 때 오래
-          유지되지만, 무한한 기억이나 vanishing gradient의 완전한 제거를 보장하지 않는다.
+          현재 framework에서 흔히 말하는 “standard LSTM”은 1997년 원 논문의 구조에 1999–2000년에 제안된 forget gate가 결합된 형태다. 원 논문의
+          constant-error carousel과 현대식 update를 완전히 같은 식으로 설명하면 안 되는 이유가 여기 있다. 현대 LSTM의 direct memory path는
+          forget gate가 1에 가까울 때 오래 유지된다. 그렇다고 무한한 기억이나 vanishing gradient의 완전한 제거가 보장되지는 않는다.
         </p>
       </div>
 
@@ -42,7 +38,9 @@ export default function Overview() {
         <p className="text-xs font-bold text-primary">논문 해설 · Long Short-Term Memory</p>
         <h3 className="mt-2 text-base font-bold">원형 LSTM의 핵심은 현재의 forget 식이 아니라 constant error flow를 위한 memory cell이었다</h3>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          1997년 논문은 recurrent error가 급격히 사라지는 문제를 다루기 위해 self-connected memory cell과 input·output gate를 제안했습니다. 현재 framework의 forget gate 포함 식은 이후 확장까지 합친 구조이므로, 원 논문이 현대 LSTM의 모든 gate와 구현 convention을 한 번에 제안했다고 읽으면 안 됩니다.
+          1997년 논문은 recurrent error가 급격히 사라지는 문제를 다루기 위해 self-connected memory cell과 input·output gate를
+          제안했습니다. 현재 framework의 forget gate 포함 식은 이후 확장까지 합친 구조입니다. 원 논문에 현대 LSTM의 모든 gate와 구현 convention이 한
+          번에 담겨 있었다고 읽으면 안 됩니다.
         </p>
       </div>
 
@@ -75,11 +73,9 @@ h_t&=\underbrace{o_t\odot\tanh(C_t)}_{\text{현재 cell을 필요한 만큼 공�
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>한 channel을 끝까지 계산하면 gate의 역할이 분리된다</h3>
         <p>
-          Cₜ₋₁=2, fₜ=0.5, iₜ=0.75, gₜ=0.5, oₜ=0.5라면 보존분은
-          0.5×2=1이고 기록분은 0.75×0.5=0.375이므로 Cₜ=1.375다. 외부에
-          공개되는 값은 cell 자체가 아니라 hₜ=0.5×tanh(1.375)≈0.44다. 이
-          예에서 forget gate와 input gate는 cell을 만들고, output gate는 만들어진
-          cell 중 얼마를 hidden state로 내보낼지만 정한다.
+          Cₜ₋₁=2, fₜ=0.5, iₜ=0.75, gₜ=0.5, oₜ=0.5라면 보존분은 0.5×2=1이고 기록분은 0.75×0.5=0.375이므로 Cₜ=1.375다. 외부에 공개되는
+          값은 cell 자체가 아니라 hₜ=0.5×tanh(1.375)≈0.44다. 이 예에서 forget gate와 input gate는 cell을 만든다. output gate는
+          만들어진 cell 중 얼마를 hidden state로 내보낼지만 정한다.
         </p>
       </div>
 

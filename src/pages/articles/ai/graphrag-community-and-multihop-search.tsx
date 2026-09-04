@@ -49,9 +49,8 @@ export default function GraphragCommunityAndMultihopSearchArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Graph community 는 서로 조밀하게 연결된 entity 묶음입니다. Community
-            detection 은 그래프 전체를 이런 묶음 여러 개로 나누는 절차이고, community
-            summary 는 각 묶음이 무엇을 다루는지 LLM 이 미리 요약해 둔 결과입니다.
+            Graph community 는 서로 조밀하게 연결된 entity 묶음입니다. Community detection 은 그래프 전체를 이런 묶음 여러 개로 나눕니다.
+            Community summary 는 각 묶음이 무엇을 다루는지 LLM 이 미리 요약해 둔 결과입니다.
           </p>
           <p>
             <Link to="/ai/knowledge-graph-construction#property-graph">앞 글</Link>
@@ -61,10 +60,8 @@ export default function GraphragCommunityAndMultihopSearchArticle() {
             됩니다.
           </p>
           <p>
-            그래프는 이제 node 7개, edge 6개입니다. 마리 퀴리 쪽 5개 node(마리
-            퀴리, 피에르 퀴리, 바르샤바, 노벨 물리학상, 파리 대학)가 edge 4개로
-            조밀하게 얽혀 있고, 베크렐 쪽 2개 node(베크렐, 에콜 폴리테크닉)는
-            edge 1개와 다리 edge 1개로 얇게 이어져 있습니다.
+            그래프는 이제 node 7개, edge 6개입니다. 마리 퀴리 쪽 5개 node(마리 퀴리, 피에르 퀴리, 바르샤바, 노벨 물리학상, 파리 대학)가 edge 4개로 조밀하게
+            얽혀 있습니다. 베크렐 쪽 2개 node(베크렐, 에콜 폴리테크닉)는 edge 1개와 다리 edge 1개로 얇게만 이어져 있습니다.
           </p>
           <p>
             Leiden·Louvain 같은 community detection 알고리즘은 이 조밀함의 차이를
@@ -115,10 +112,8 @@ export default function GraphragCommunityAndMultihopSearchArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Local search 는 질문과 관련된 entity 하나에서 시작해 정해진 hop 수
-            안쪽만 살피고, global search 는 community summary 전체를 모아 그래프
-            전체에 걸친 답을 만듭니다. 두 방식은 살피는 범위가 다르니 비용도
-            다릅니다.
+            Local search 는 질문과 관련된 entity 하나에서 시작해 정해진 hop 수 안쪽만 살핍니다. Global search 는 community summary 전체를
+            모아 그래프 전체에 걸친 답을 만듭니다. 살피는 범위가 다르니 비용도 다릅니다.
           </p>
         </div>
         <div id="graph-traversal" className="scroll-mt-24">
@@ -127,9 +122,8 @@ export default function GraphragCommunityAndMultihopSearchArticle() {
               Graph traversal 은 local search 가 hop 으로 제한하는 걷기입니다
             </h3>
             <p>
-              Graph traversal 은 한 node 에서 시작해 edge 를 따라 이웃 node 로 옮겨
-              가는 절차입니다. 너비 우선(BFS)은 가까운 node 부터, 깊이 우선(DFS)은
-              한 경로를 끝까지 따라가며 찾습니다.
+              Graph traversal 은 한 node 에서 시작해 edge 를 따라 이웃 node 로 옮겨 갑니다. 너비 우선(BFS)이 가까운 node 부터 훑는다면 깊이
+              우선(DFS)은 한 경로를 끝까지 따라가며 찾습니다.
             </p>
             <p>
               Local search 는 이 traversal 을 hop 예산으로 제한합니다. "마리
@@ -146,10 +140,8 @@ export default function GraphragCommunityAndMultihopSearchArticle() {
         </div>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Global search 는 반대로 "이 그래프가 다루는 인물이 모두 몇 명이고
-            어떤 주제로 나뉘는가" 처럼 한 entity 에서 출발할 수 없는 질문에
-            씁니다. 어떤 community 부터 봐야 할지 알 수 없으니 모든 community
-            summary 를 읽습니다.
+            Global search 는 "이 그래프가 다루는 인물이 모두 몇 명이고 어떤 주제로 나뉘는가" 처럼 한 entity 에서 출발할 수 없는 질문에 씁니다. 어떤
+            community 부터 봐야 할지 알 수 없으니 모든 community summary 를 읽습니다.
           </p>
           <p>
             GraphRAG 저자들은 원본 podcast 대화록 전체(약 1,014,611 token)를 읽는
@@ -193,15 +185,12 @@ export default function GraphragCommunityAndMultihopSearchArticle() {
           preview="GraphRAG 저자들은 계층 맨 위(C0)보다 한두 단계 아래(C2·C3)의 더 잘게 나뉜 community 를 읽을 때 comprehensiveness·diversity 지표가 더 높았다고 보고합니다."
         >
           <p>
-            Community detection 은 한 번에 끝나지 않고, 큰 community 안에서 다시
-            작은 community 를 찾는 식으로 계층을 만듭니다. 맨 위 C0 는 가장 크게
-            묶은 소수의 community, 맨 아래로 갈수록 더 잘게 나뉩니다.
+            Community detection 은 한 번에 끝나지 않고 큰 community 안에서 다시 작은 community 를 찾는 식으로 계층을 만듭니다. 맨 위 C0 는 가장
+            크게 묶은 소수의 community 이고 맨 아래로 갈수록 더 잘게 나뉩니다.
           </p>
           <p>
-            저자들은 podcast·news 두 corpus 에서 C2 나 C3 수준으로 답했을 때
-            비교 대상(요약 없는 map-reduce) 대비 comprehensiveness 승률이 더
-            높았다고 보고합니다. 너무 위 단계는 세부를 뭉개고, 너무 아래 단계는
-            token 비용이 커집니다.
+            저자들은 podcast·news 두 corpus 에서 C2 나 C3 수준으로 답했을 때 비교 대상(요약 없는 map-reduce) 대비 comprehensiveness 승률이
+            더 높았다고 보고합니다. 너무 위 단계는 세부를 뭉개고 너무 아래 단계로 내려가면 token 비용이 커집니다.
           </p>
         </ProgressiveDetail>
       </section>
@@ -212,16 +201,12 @@ export default function GraphragCommunityAndMultihopSearchArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Local search 는 어디서 시작할지부터 정해야 합니다. Graph-vector
-            hybrid retrieval 은 질문 embedding 과 entity·relation description
-            embedding 사이의 유사도로 시작 entity 후보를 먼저 찾고, 그 지점에서
-            graph traversal 로 확장하는 두 단계 검색입니다.
+            Local search 는 어디서 시작할지부터 정해야 합니다. Graph-vector hybrid retrieval 은 두 단계로 움직입니다. 질문 embedding 과
+            entity·relation description embedding 사이의 유사도로 시작 entity 후보를 찾고 그 지점에서 graph traversal 로 확장합니다.
           </p>
           <p>
-            "노벨 물리학상을 받은 화학자 부부는 누구인가"라는 질문은 벡터
-            검색으로 "마리 퀴리" node 를 진입점으로 찾고, 그 다음은 벡터 유사도가
-            아니라 wonAward·succeededAt 같은 edge 를 따라 그래프를 traversal
-            합니다.
+            "노벨 물리학상을 받은 화학자 부부는 누구인가"라는 질문은 벡터 검색으로 "마리 퀴리" node 를 진입점으로 찾고 그 다음은 벡터 유사도가 아니라
+            wonAward·succeededAt 같은 edge 를 따라 그래프를 traversal 합니다.
           </p>
           <p>
             진입점을 못 찾으면 traversal 도 시작하지 못하므로, hybrid retrieval
@@ -239,10 +224,8 @@ export default function GraphragCommunityAndMultihopSearchArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Multi-hop reasoning 은 entity A 에서 B, B 에서 C 로 이어지는 관계를
-            차례로 밟아야 답이 나오는 질문입니다. 한 문서 안에 A 와 C 가 함께
-            언급된 적이 없어도, A-B, B-C 관계가 각각 다른 곳에 있으면 그래프는
-            둘을 잇습니다.
+            Multi-hop reasoning 은 entity A 에서 B, B 에서 C 로 이어지는 관계를 차례로 밟아야 답이 나오는 질문입니다. 한 문서 안에 A 와 C 가 함께
+            언급된 적이 없어도 A-B, B-C 관계가 각각 다른 곳에 있으면 그래프는 둘을 잇습니다.
           </p>
           <p>
             "마리 퀴리와 같은 상을 받은 사람은 어느 학교에서 공부했는가"를
@@ -250,15 +233,12 @@ export default function GraphragCommunityAndMultihopSearchArticle() {
             (역방향)→앙리 베크렐→studiedAt→에콜 폴리테크닉, 3-hop 으로 답합니다.
           </p>
           <p>
-            벡터 검색만으로는 이 질문에 답할 chunk 가 없을 수 있습니다. "마리
-            퀴리"를 다루는 chunk 와 "에콜 폴리테크닉"을 다루는 chunk 는 원문에서
-            함께 등장하지 않아 서로 낮은 유사도를 갖고, 질문 embedding 은 "마리
-            퀴리" chunk 쪽으로만 끌립니다.
+            벡터 검색만으로는 이 질문에 답할 chunk 가 없을 수 있습니다. "마리 퀴리"를 다루는 chunk 와 "에콜 폴리테크닉"을 다루는 chunk 는 원문에서 함께 등장하지 않아
+            유사도가 낮고 질문 embedding 은 "마리 퀴리" chunk 쪽으로만 끌립니다.
           </p>
           <p>
-            그 chunk 안에는 베크렐의 학교 정보가 없으므로 답은 나오지 않습니다.
-            그래프는 텍스트 유사도가 아니라 edge 로 이어져 있어, 중간에 있는
-            베크렐과 노벨 물리학상을 실제로 거쳐 에콜 폴리테크닉까지 닿습니다.
+            그 chunk 안에는 베크렐의 학교 정보가 없으므로 답은 나오지 않습니다. 그래프는 텍스트 유사도가 아니라 edge 로 이어져 있어 중간의 베크렐과 노벨 물리학상을 실제로 거쳐
+            에콜 폴리테크닉까지 닿습니다.
           </p>
         </div>
       </section>
@@ -269,10 +249,8 @@ export default function GraphragCommunityAndMultihopSearchArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Community detection 에 Leiden 알고리즘을 쓰고, 그 결과를 계층으로
-            나눠 community summary 를 만들고, local search 와 global search 를
-            구분하는 절차는 모두 Microsoft 의 GraphRAG 논문(arXiv 2404.16130)에서
-            확인했습니다.
+            Community detection 에 Leiden 알고리즘을 쓰고 그 결과를 계층으로 나눠 community summary 를 만들고, local search 와 global
+            search 를 구분하는 절차는 모두 Microsoft 의 GraphRAG 논문(arXiv 2404.16130)에서 확인했습니다.
           </p>
           <p>
             Global search 의 map(중간 답변과 helpfulness 점수)과 reduce(정렬 후

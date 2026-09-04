@@ -118,10 +118,8 @@ export default function KVFundamentals({
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Autoregressive decode는 지금까지 만든 문장을 조건으로 다음 token을
-          하나 생성하고, 그 token을 문장 끝에 붙여 같은 과정을 반복합니다. 이때
-          과거 token의 attention projection을 매번 다시 계산하면 문장이
-          길어질수록 같은 계산을 계속 반복하게 됩니다.
+          Autoregressive decode는 지금까지 만든 문장을 조건으로 다음 token을 하나 생성하고 그 token을 문장 끝에 붙여 같은 과정을 반복합니다. 이때 과거
+          token의 attention projection을 매번 다시 계산하면 문장이 길어질수록 같은 계산을 계속 반복하게 됩니다.
         </p>
         <p>
           그래서 runtime은 각 layer에서 이미 계산한 Key와 Value를 KV cache에
@@ -207,8 +205,7 @@ K,V &\in \mathbb{R}^{T \times H_{KV} \times D_{head}}
           MQA는 <Math>{"H_{KV}=1"}</Math>인 GQA의 끝점으로 볼 수 있습니다.
         </p>
         <p>
-          Attention score 계산은 계속 각 Q head마다 이뤄지지만 cache에 남는
-          K/V의 head 축만 작아지므로, decode 품질을 크게 잃지 않으면서 memory
+          Attention score 계산은 계속 각 Q head마다 이뤄지지만 cache에 남는 K/V의 head 축만 작아지므로 decode 품질을 크게 잃지 않으면서 memory
           bandwidth와 capacity를 줄이는 절충이 됩니다.
         </p>
 
@@ -232,10 +229,8 @@ K,V &\in \mathbb{R}^{T \times H_{KV} \times D_{head}}
           출발점은 attention FLOPs만이 아니었습니다.
         </p>
         <p>
-          Batch가 작고 한 번에 token 하나를 만드는 decode에서는 매 step마다
-          과거 K/V와 weight를 memory에서 읽는 비용이 커지므로, cache의 폭과
-          memory traffic을 줄이면 generation 속도가 좋아질 수 있다는
-          아이디어였습니다.
+          Batch가 작고 한 번에 token 하나를 만드는 decode에서는 매 step마다 과거 K/V와 weight를 memory에서 읽는 비용이 커지므로 cache의 폭과
+          memory traffic을 줄이면 generation 속도가 좋아질 수 있다는 아이디어였습니다.
         </p>
         <p>
           다만 하나의 K/V 표현을 모든 Q head가 공유하므로 model과 task에 따라
@@ -408,9 +403,8 @@ B_{token} &= L_{KV}E_{KV}N_{tensor}b_{dtype}
           총 capacity에 뚜렷한 이점으로 나타나지 않았습니다.
         </p>
         <p>
-          16개의 local KV head와 256차원 head가 만든 넓은 cache shape가 먼저
-          관측됐습니다. 반면 Muse는 모든 text layer에서 KV head 2개와 head_dim
-          128을 사용하므로, 공격적인 GQA가 capacity에 직접 드러났습니다.
+          local KV head 16개와 256차원 head가 넓은 cache shape를 만들었고 그 shape가 먼저 관측됐습니다. Muse는 모든 text layer에서 KV
+          head 2개와 head_dim 128을 쓰므로 공격적인 GQA가 capacity에 직접 드러났습니다.
         </p>
 
         <h3>
@@ -432,23 +426,19 @@ B_{token} &= L_{KV}E_{KV}N_{tensor}b_{dtype}
           Cache representation design은 무엇을 저장할지 바꾸는 축입니다
         </h3>
         <p>
-          KV cache 크기를 줄이는 방법은 head 공유(MQA·GQA)만이 아닙니다. Cache
-          representation design은 token 하나를 얼마나 압축된 형태로 저장할지
-          정하는 축입니다.
+          KV cache 크기를 줄이는 방법은 head 공유(MQA·GQA)만이 아닙니다. Cache representation design은 token 하나를 얼마나 압축된 형태로
+          저장할지를 정합니다.
         </p>
         <p>
-          GQA·MQA는 head 수를 줄이고, MLA(Multi-head Latent Attention)는 그
-          head 표현 자체를 low-rank latent로 압축합니다.
+          GQA·MQA는 head 수를 줄이고 MLA(Multi-head Latent Attention)는 그 head 표현 자체를 low-rank latent로 압축합니다.
         </p>
         <p>
-          GQA·MQA는 저장하는 K/V head의 개수를 물리적으로 줄입니다. 각 KV
-          head는 그대로 온전한 벡터이고, 여러 Q head가 그 벡터를 나눠 읽을 뿐
-          추가 연산은 필요 없습니다.
+          GQA·MQA는 저장하는 K/V head의 개수를 물리적으로 줄입니다. 각 KV head는 그대로 온전한 벡터이고 여러 Q head가 그 벡터를 나눠 읽을 뿐 추가 연산은 필요
+          없습니다.
         </p>
         <p>
-          MLA는 다릅니다. Token마다 훨씬 작은 latent vector 하나만 cache에
-          남기고, attention을 계산할 때 그 latent를 다시 head 차원으로
-          복원하는 projection을 거칩니다.
+          MLA는 다릅니다. Token마다 훨씬 작은 latent vector 하나만 cache에 남기고 attention을 계산할 때 그 latent를 다시 head 차원으로 복원하는
+          projection을 거칩니다.
         </p>
 
         <h3 id="mla-vs-gqa" className="scroll-mt-20">
@@ -459,17 +449,14 @@ B_{token} &= L_{KV}E_{KV}N_{tensor}b_{dtype}
           저장 byte를 줄이고 읽을 때 별도 복원 연산이 없습니다.
         </p>
         <p>
-          MLA는 latent 차원을 훨씬 작게 둬 저장 byte를 더 크게 줄이지만, 그
-          대신 읽을 때마다 up-projection 행렬곱을 거쳐야 합니다.
+          MLA는 latent 차원을 훨씬 작게 둬 저장 byte를 더 크게 줄이지만 그 대신 읽을 때마다 up-projection 행렬곱을 거쳐야 합니다.
         </p>
         <p>
-          이 차이가 capacity saving과 bandwidth saving을 가르는 지점입니다.
-          Capacity saving은 고정된 memory에 몇 token·request를 담을 수 있는지를
-          늘리는 것입니다.
+          이 차이가 capacity saving과 bandwidth saving을 가르는 지점입니다. Capacity saving은 고정된 memory에 담을 수 있는
+          token·request 수를 늘립니다.
         </p>
         <p>
-          Bandwidth saving은 decode 한 step이 실제로 읽는 byte를 줄여 그
-          step의 시간을 줄이는 것입니다.
+          Bandwidth saving은 decode 한 step이 실제로 읽는 byte를 줄여 그 step의 시간을 단축합니다.
         </p>
         <p>
           KV head를 줄이는 GQA는 두 절감이 같은 방향으로 움직입니다. 저장
@@ -484,9 +471,8 @@ B_{token} &= L_{KV}E_{KV}N_{tensor}b_{dtype}
           따라오지 않을 수 있습니다.
         </p>
         <p>
-          Latent를 읽는 byte는 줄어도, up-projection이 decode step에 tensor
-          core 연산을 더하므로 memory-bound였던 step이 그만큼 compute 시간을
-          새로 씁니다.
+          Latent를 읽는 byte는 줄어도 up-projection이 decode step에 tensor core 연산을 더하므로 memory-bound였던 step이 그만큼
+          compute 시간을 새로 씁니다.
         </p>
         <p>
           MLA의 latent 압축 자체는{" "}

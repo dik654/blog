@@ -84,7 +84,11 @@ export default function Logit() {
       <div className="not-prose my-8"><LogitViz /></div>
       <div id="paper-hinton-kd" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">논문 읽기 · Distilling the Knowledge in a Neural Network</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">핵심 문제는 여러 model의 ensemble이 정확하지만 deployment가 비싸다는 점이며, temperature-softened output과 hard target을 이용해 한 model로 behavior를 옮겼습니다. MNIST·speech system·specialist ensemble이라는 당시 범위의 결과이며, 모든 teacher–student 조합에서 작은 model이 teacher 성능을 보존한다는 보장은 아닙니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            핵심 문제는 여러 model의 ensemble이 정확하지만 deployment가 비싸다는 점입니다. temperature-softened output과 hard target을
+            이용해 한 model로 behavior를 옮겼습니다. MNIST·speech system·specialist ensemble이라는 당시 범위의 결과이며, 모든
+            teacher–student 조합에서 작은 model이 teacher 성능을 보존한다는 보장은 아닙니다.
+          </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/1503.02531" target="_blank" rel="noreferrer">Temperature·T²·specialist 실험 범위 보기</a>
       </div>
     </section>

@@ -214,10 +214,9 @@ export default function LrSchedulingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Checkpoint에는 global update·total budget·scheduler class와
-            version·state dict·optimizer state·현재 param-group LR·step 호출
-            순서를 저장합니다. 연속 1000 updates와 600+resume+400 updates의 LR
-            trace와 parameter를 비교해야 off-by-one을 발견할 수 있습니다.
+            Checkpoint에는 global update와 total budget, scheduler class와 version을 저장합니다. 여기에 state
+            dict·optimizer state·현재 param-group LR·step 호출 순서까지 함께 넣습니다. 연속 1000 updates와 600+resume+400
+            updates의 LR trace와 parameter를 비교해야 off-by-one이 드러납니다.
           </p>
         </div>
         <div id="docs-pytorch-scheduler" className="scroll-mt-24">

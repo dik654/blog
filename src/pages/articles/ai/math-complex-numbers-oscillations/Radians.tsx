@@ -7,7 +7,8 @@ export default function Radians() {
       <h2 className="mb-6 text-2xl font-bold">Radian은 각도를 원의 반지름으로 재는 단위다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          각도 360°는 한 바퀴를 360등분한 약속입니다. Radian은 원 위에서 이동한 호의 길이와 반지름의 비율로 각도를 정의합니다. 그래서 원의 크기가 달라져도 같은 회전을 같은 숫자로 나타내며, 미분과 Fourier 식에서 불필요한 환산 상수가 생기지 않습니다.
+          각도 360°는 한 바퀴를 360등분한 약속입니다. Radian은 원 위에서 이동한 호의 길이와 반지름의 비율로 각도를 정의합니다. 원의 크기가 달라져도 같은 회전을 같은 숫자로
+          나타냅니다. 미분과 Fourier 식에서 불필요한 환산 상수가 생기지 않는 것도 이 때문입니다.
         </p>
       </div>
       <ExplainedFormula

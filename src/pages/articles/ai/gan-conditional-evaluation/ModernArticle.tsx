@@ -275,8 +275,7 @@ R_{\rm gen}&=\underbrace{\frac{|R\cap \operatorname{cover}(G)|}{|R|}}_{\text{tar
           </li>
         </ul>
         <p className="leading-7">
-          평가표는 모델을 멋진 이미지 한 장으로 고르는 장치가 아니라 실패 원인을
-          분리하는 실험 계약입니다.
+          평가표는 멋진 이미지 한 장으로 모델을 고르기 위한 장치가 아닙니다. 실패 원인을 분리하는 실험 계약입니다.
         </p>
         <div data-viz="gan-evaluation-concept-ladder">
           <ConceptLadderViz

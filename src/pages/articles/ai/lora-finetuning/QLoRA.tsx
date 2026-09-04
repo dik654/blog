@@ -15,13 +15,11 @@ export default function QLoRA() {
           <em>연산</em>하고 <em>학습</em>하는지를 나눠야 합니다.
         </p>
         <p>
-          Base weight는 NF4 같은 low-bit code와 scale metadata로 저장됩니다.
-          Matmul 경로에서는 지정된 compute dtype으로 복원되고, LoRA parameter,
-          gradient와 optimizer state는 별도의 training dtype을 사용합니다.
+          Base weight는 NF4 같은 low-bit code와 scale metadata로 저장됩니다. Matmul 경로에서는 지정된 compute dtype으로 복원되고 LoRA
+          parameter, gradient와 optimizer state는 별도의 training dtype을 사용합니다.
         </p>
         <p>
-          따라서 base 저장량만 보고 전체 training memory나 최종 artifact dtype을
-          판단하면 안 됩니다.
+          그러니 base 저장량만 보고 전체 training memory나 최종 artifact dtype을 판단하면 안 됩니다.
         </p>
         <p>
           NF4·block quantization·double quantization의 일반 원리는
@@ -96,18 +94,15 @@ M_{\mathrm{train}}&\approx \underbrace{\frac{N_Wb}{8}+M_{\mathrm{qmeta}}}_{\text
           같게 둡니다. Storage dtype과 compute dtype, seed도 함께 기록합니다.
         </p>
         <p>
-          그런 다음 untouched test에서 target·general·safety slice를 평가하고,
-          peak memory와 step time을 같은 실행 조건에서 측정합니다. 그래야 메모리
-          절감과 품질 차이를 서로 다른 원인으로 분리할 수 있습니다.
+          그런 다음 untouched test에서 target·general·safety slice를 평가하고 peak memory와 step time을 같은 실행 조건에서 측정합니다.
+          그래야 메모리 절감과 품질 차이를 서로 다른 원인으로 분리할 수 있습니다.
         </p>
       </ProgressiveDetail>
       <div id="reading-qlora" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">핵심 논문 · QLoRA</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Dettmers 등은 frozen 4-bit quantized base를 통해 LoRA adapter로 gradient를
-          전달하고, NF4·double quantization·paged optimizer를 조합했습니다. 이
-          구성으로 65B model을 단일 48GB GPU에서 fine-tuning한 결과를
-          보고했습니다.
+          Dettmers 등은 frozen 4-bit quantized base를 통해 LoRA adapter로 gradient를 전달하고 NF4·double
+          quantization·paged optimizer를 조합했습니다. 이 구성으로 65B model을 단일 48GB GPU에서 fine-tuning한 결과를 보고했습니다.
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
           이는 논문의 LLaMA/T5, instruction dataset, Guanaco와 당시 chatbot 평가

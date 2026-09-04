@@ -21,10 +21,9 @@ export default function FlashAttentionIoAwareKernelArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Attention 의 곱셈 횟수는 sequence 길이 N 의 제곱에 비례하지만, 실제 시간을
-            잡아먹는 것은 N×N 점수 행렬을 GPU 주메모리에 적었다가 다시 읽는 왕복입니다.
-            FlashAttention 은 그 행렬을 메모리에 만들지 않고 작은 tile 단위로 on-chip
-            메모리 안에서 소비합니다. 결과는 표준 attention 과 같고 왕복만 사라집니다.
+            Attention 의 곱셈 횟수는 sequence 길이 N 의 제곱에 비례합니다. 그런데 실제 시간을 잡아먹는 것은 N×N 점수 행렬을 GPU 주메모리에 적었다가 다시 읽는
+            왕복입니다. FlashAttention 은 그 행렬을 메모리에 만들지 않고 작은 tile 단위로 on-chip 메모리 안에서 소비합니다. 결과는 표준 attention 과 같고
+            왕복만 사라집니다.
           </p>
           <p>
             HBM(high bandwidth memory)은 GPU 의 주메모리로, A100 기준 40 GB 용량에
@@ -39,16 +38,12 @@ export default function FlashAttentionIoAwareKernelArticle() {
             서로 다른 kernel 로 부르므로 kernel 사이마다 이 행렬이 HBM 을 거칩니다.
           </p>
           <p>
-            크기를 재 보면 문제가 보입니다. N=4096, head dim d=64, FP16 이면 Q, K, V 는
-            각각 4096×64×2 B = 512 KiB 입니다. 반면 S 는 4096×4096×2 B = 32 MiB 이고 P 도
-            32 MiB 입니다. S 쓰기와 읽기, P 쓰기와 읽기를 더하면 head 하나에 128 MiB 로
-            입력의 64 배가 오갑니다.
+            N=4096, head dim d=64, FP16 이면 Q, K, V 는 각각 4096×64×2 B = 512 KiB 입니다. 반면 S 는 4096×4096×2 B = 32
+            MiB 이고 P 도 32 MiB 입니다. S 쓰기와 읽기, P 쓰기와 읽기를 더하면 head 하나에 128 MiB, 입력의 64 배가 오갑니다.
           </p>
           <p>
-            Head 32 개, batch 8 이면 layer 하나가 32 GiB 를 왕복하고, 2 TB/s 로도 16 ms 가
-            듭니다. 같은 layer 의 곱셈은 tensor core 로 1 ms 안에 끝나므로 병목은 계산이
-            아니라 메모리입니다. 곱셈 횟수를 줄이는 근사 attention 이 wall-clock 을 못 줄인
-            이유가 여기에 있습니다.
+            Head 32 개, batch 8 이면 layer 하나가 32 GiB 를 왕복해 2 TB/s 로도 16 ms 가 듭니다. 같은 layer 의 곱셈은 tensor core 로 1
+            ms 안에 끝나므로 병목은 계산이 아니라 메모리입니다. 곱셈 횟수를 줄이는 근사 attention 이 wall-clock 을 못 줄인 이유가 여기에 있습니다.
           </p>
         </div>
         <div id="paper-flashattention" className="not-prose my-8 scroll-mt-24">
@@ -72,19 +67,16 @@ export default function FlashAttentionIoAwareKernelArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            IO-aware algorithm 은 계산 횟수가 아니라 메모리 계층 사이를 오가는 byte 수를
-            비용 함수로 삼는 알고리즘입니다. FlashAttention 은 attention 을 이 비용 함수로
-            다시 설계한 결과이고, 그래서 곱셈 횟수는 오히려 늘어도 시간은 줄어듭니다.
+            IO-aware algorithm 은 계산 횟수 대신 메모리 계층 사이를 오가는 byte 수를 비용 함수로 삼습니다. FlashAttention 은 attention 을 이
+            비용 함수로 다시 설계한 결과입니다. 그래서 곱셈 횟수는 오히려 늘어도 시간은 줄어듭니다.
           </p>
           <p>
-            비용 모델은 두 층입니다. 계산은 크기 M 인 빠른 SRAM 안에서만 일어나고, 크고
-            느린 HBM 과는 block 단위로만 데이터를 주고받습니다. 이 모델에서 표준 attention 의
-            HBM 접근량은 Θ(Nd + N²) 이고 FlashAttention 은 Θ(N²d²/M) 입니다.
+            비용 모델은 두 층입니다. 계산은 크기 M 인 빠른 SRAM 안에서만 일어나고 크고 느린 HBM 과는 block 단위로만 데이터를 주고받습니다. 이 모델에서 표준
+            attention 의 HBM 접근량은 Θ(Nd + N²) 이고 FlashAttention 은 Θ(N²d²/M) 입니다.
           </p>
           <p>
-            숫자를 넣어 보겠습니다. SRAM 에 FP16 원소 5 만 개(약 100 KB)가 들어간다고 두고
-            N=4096, d=64 를 대입하면 N² 은 1.7×10⁷ 원소이고 N²d²/M 은 1.3×10⁶ 원소입니다.
-            접근량이 12 배 넘게 줄고, SRAM 이 커질수록 격차는 더 벌어집니다.
+            SRAM 에 FP16 원소 5 만 개(약 100 KB)가 들어간다고 두고 N=4096, d=64 를 대입해 보겠습니다. N² 은 1.7×10⁷ 원소이고 N²d²/M 은
+            1.3×10⁶ 원소입니다. 접근량이 12 배 넘게 줄어듭니다. SRAM 이 커질수록 격차는 더 벌어집니다.
           </p>
           <p>
             SRAM residency 는 이 절감을 실제로 만드는 조건입니다. Tile 하나가 SRAM 에 올라온
@@ -134,9 +126,8 @@ export default function FlashAttentionIoAwareKernelArticle() {
             ℓ={"e^{3−5}"}×1.135+{"e^{2−5}"}+e⁰=0.154+0.050+1=1.203 입니다.
           </p>
           <p>
-            행 전체를 한 번에 계산하면 e⁻⁴+e⁻²+e⁻³+e⁰=0.018+0.135+0.050+1=1.203 으로 같은
-            값이 나옵니다. Milakov 와 Gimelshein 은 2018 년 이 갱신식을 세 번 읽던 softmax 를
-            두 번 읽기로 줄이는 데 썼고, FlashAttention 은 이것을 tile 사이의 접착제로 씁니다.
+            행 전체를 한 번에 계산하면 e⁻⁴+e⁻²+e⁻³+e⁰=0.018+0.135+0.050+1=1.203 으로 같은 값이 나옵니다. Milakov 와 Gimelshein 은
+            2018 년 이 갱신식으로 세 번 읽던 softmax 를 두 번 읽기로 줄였습니다. FlashAttention 은 같은 식을 tile 사이의 접착제로 씁니다.
           </p>
         </div>
         <ExplainedFormula
@@ -202,10 +193,9 @@ export default function FlashAttentionIoAwareKernelArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Tiled attention 은 Q 를 B_r 행짜리 block 으로, K 와 V 를 B_c 행짜리 block 으로 잘라
-            한 번에 한 쌍씩 SRAM 에 올리는 방식입니다. Q block 하나를 맡은 thread block 이 K/V
-            block 을 차례로 읽으며 B_r×B_c 점수 tile 을 만들고, online softmax 로 그 자리에서
-            소비합니다. N×N 행렬은 어느 순간에도 통째로 존재하지 않습니다.
+            Tiled attention 은 Q 를 B_r 행짜리 block 으로, K 와 V 를 B_c 행짜리 block 으로 잘라 한 번에 한 쌍씩 SRAM 에 올립니다. Q block
+            하나를 맡은 thread block 이 K/V block 을 차례로 읽으며 B_r×B_c 점수 tile 을 만들고 online softmax 로 그 자리에서 소비합니다. N×N
+            행렬은 어느 순간에도 통째로 존재하지 않습니다.
           </p>
           <p>
             Tile 크기는 SRAM 이 정합니다. B_r=B_c=128, d=64, FP16 이면 Q tile, K tile, V tile 이
@@ -214,10 +204,8 @@ export default function FlashAttentionIoAwareKernelArticle() {
             네 조각이 M 을 나눠 쓰게 합니다.
           </p>
           <p>
-            HBM 왕복을 세어 보면 절감이 보입니다. Q block 은 4096/128 = 32 개이고 각 block 이
-            K 와 V 전체 1 MiB 를 한 번씩 읽으므로 32 MiB, 여기에 Q 읽기와 O 쓰기 1 MiB 가
-            더해집니다. 표준 구현의 130 MiB 와 견주면 약 4 배이고, B_r 을 키울수록 비율이
-            커집니다.
+            HBM 왕복을 세어 보겠습니다. Q block 은 4096/128 = 32 개이고 각 block 이 K 와 V 전체 1 MiB 를 한 번씩 읽으므로 32 MiB, 여기에 Q
+            읽기와 O 쓰기 1 MiB 가 더해집니다. 표준 구현의 130 MiB 와 견주면 약 4 배 차이이고 B_r 을 키울수록 비율이 커집니다.
           </p>
           <p>
             아래 그림은 query 행 하나가 K/V tile 두 개를 차례로 만나는 동안 m, ℓ, Õ 가 어떻게
@@ -246,10 +234,9 @@ export default function FlashAttentionIoAwareKernelArticle() {
         />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            원 논문의 Algorithm 1 은 바깥 loop 가 K/V block, 안쪽 loop 가 Q block 이라 O, ℓ, m
-            을 tile 마다 HBM 에서 읽고 씁니다. 위 pseudocode 처럼 Q block 을 바깥에 두고 running
-            state 를 on-chip 에 고정한 것은 FlashAttention-2 의 재배치이며, 접근량 차수는 둘 다
-            Θ(N²d²/M) 입니다.
+            원 논문의 Algorithm 1 은 바깥 loop 가 K/V block, 안쪽 loop 가 Q block 이라 O, ℓ, m 을 tile 마다 HBM 에서 읽고 씁니다. 위
+            pseudocode 처럼 Q block 을 바깥에 두고 running state 를 on-chip 에 고정한 것은 FlashAttention-2 의 재배치입니다. 접근량 차수는
+            둘 다 Θ(N²d²/M) 입니다.
           </p>
         </div>
       </section>
@@ -266,10 +253,9 @@ export default function FlashAttentionIoAwareKernelArticle() {
             이것이 recompute-vs-store tradeoff 입니다.
           </p>
           <p>
-            저장량 차이는 큽니다. N=4096 이면 head 당 P 는 32 MiB 이지만 L 은 4096×4 B = 16 KiB
-            입니다. 대신 backward 가 점수 tile 을 얻으려고 QKᵀ 곱셈을 한 번 더 하므로 곱셈
-            횟수는 표준보다 늘어납니다. Memory-bound 인 kernel 에서는 계산이 늘어도 HBM 왕복이
-            줄면 wall-clock 이 짧아진다는 것이 논문의 주장이자 측정입니다.
+            N=4096 이면 head 당 P 는 32 MiB 이지만 L 은 4096×4 B = 16 KiB 로 저장량 차이가 큽니다. 대신 backward 가 점수 tile 을 얻으려고
+            QKᵀ 곱셈을 한 번 더 하므로 곱셈 횟수는 표준보다 늘어납니다. Memory-bound 인 kernel 에서는 계산이 늘어도 HBM 왕복이 줄면 wall-clock 이
+            짧아진다는 것이 논문의 주장이자 측정입니다.
           </p>
           <p>
             같은 판단을 layer 단위로 하는 것이 <Link to="/ai/reverse-mode-autodiff#save-recompute">autodiff 의 save–recompute 경계</Link>
@@ -278,9 +264,8 @@ export default function FlashAttentionIoAwareKernelArticle() {
             L 하나로 줄입니다.
           </p>
           <p>
-            Activation 이 N² 에서 N 으로 줄어든 덕에 같은 GPU 에서 훨씬 긴 sequence 를
-            학습할 수 있게 됐습니다. 논문이 Path-X(16K) 를 처음 우연 이상으로 푼 결과로 이
-            효과를 보고했는데, 이것 역시 저자 자기보고 범위입니다.
+            Activation 이 N² 에서 N 으로 줄어든 덕에 같은 GPU 에서 훨씬 긴 sequence 를 학습할 수 있게 됐습니다. 논문은 Path-X(16K) 를 처음 우연
+            이상으로 푼 결과로 이 효과를 보고했습니다. 이것 역시 저자 자기보고 범위입니다.
           </p>
         </div>
         <ProgressiveDetail
@@ -306,26 +291,22 @@ export default function FlashAttentionIoAwareKernelArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            FlashAttention 은 수학이 아니라 특정 GPU 의 메모리 계층에 맞춰 손으로 짠 CUDA
-            kernel 입니다. 결과는 exact 하지만 어떤 tile 크기가 맞는지, head dim 을 어디까지
-            받는지, 얼마나 빨라지는지는 전부 hardware 에 달려 있습니다.
+            FlashAttention 의 정체는 수학이 아닌 CUDA kernel 입니다. 특정 GPU 의 메모리 계층에 맞춰 손으로 짠 코드입니다. 결과는 exact 하지만 어떤
+            tile 크기가 맞는지, head dim 을 어디까지 받는지, 얼마나 빨라지는지는 전부 hardware 에 달려 있습니다.
           </p>
           <p>
-            첫 한계는 head dim 입니다. Q, K, V, S tile 이 한 SM 의 SRAM 에 같이 들어가야
-            하므로 d 가 커지면 B 를 줄여야 하고, 그러면 HBM 왕복이 다시 늘어납니다. 2022 년
-            구현은 d ≤ 128 만 지원했고, 더 큰 head dim 은 후속 버전에서 열렸습니다.
+            첫 한계는 head dim 입니다. Q, K, V, S tile 이 한 SM 의 SRAM 에 같이 들어가야 하므로 d 가 커지면 B 를 줄여야 하고 그러면 HBM 왕복이 다시
+            늘어납니다. 2022 년 구현은 d ≤ 128 만 지원했고 더 큰 head dim 은 후속 버전에서 열렸습니다.
           </p>
           <p>
-            둘째는 hardware 의존성입니다. SRAM 용량, tensor core 의 입력 형식, warp 수가
-            세대마다 달라 A100 용 tile 이 H100 에서 최적이 아닙니다. 그래서 FlashAttention-2,
-            3 가 같은 수학 위에 kernel 을 다시 썼고, Triton 같은 compiler 로 다시 짜는 시도도
-            같은 이유에서 나왔습니다.
+            Hardware 에 묶여 있다는 점도 한계입니다. SRAM 용량·tensor core 의 입력 형식·warp 수가 세대마다 달라 A100 용 tile 이 H100 에서 최적이
+            아닙니다. 그래서 FlashAttention-2, 3 가 같은 수학 위에 kernel 을 다시 썼습니다. Triton 같은 compiler 로 다시 짜는 시도도 같은 이유에서
+            나왔습니다.
           </p>
           <p>
-            셋째는 병렬화 축입니다. 2022 년 kernel 은 batch×head 단위로만 thread block 을 띄워,
-            sequence 가 길고 batch 가 작으면 SM 대부분이 놉니다. FlashAttention-2 가 sequence
-            축 병렬과 loop 순서 교체로 이 문제를 풀었고, 다음 글인 attention kernel anatomy 가
-            그 차이를 다룹니다.
+            마지막은 병렬화 축입니다. 2022 년 kernel 은 batch×head 단위로만 thread block 을 띄우기 때문에 sequence 가 길고 batch 가 작으면 SM
+            대부분이 놉니다. FlashAttention-2 가 sequence 축 병렬과 loop 순서 교체로 이 문제를 풀었고 그 차이는 다음 글인 attention kernel
+            anatomy 에서 다룹니다.
           </p>
           <p>
             Decode 에서는 모양이 달라집니다. Query 가 한 행뿐이라 Q tiling 은 의미가 없고,
@@ -340,9 +321,8 @@ export default function FlashAttentionIoAwareKernelArticle() {
           preview="FlashAttention 은 곱셈을 하나도 줄이지 않는 exact attention 입니다. Sparse·low-rank 근사는 FLOPs 를 줄이지만 memory-bound 병목을 건드리지 못해 wall-clock 이 잘 줄지 않았습니다."
         >
           <p>
-            논문은 block-sparse FlashAttention 도 함께 제시해, mask 로 통째로 가려지는 tile 을
-            읽지 않는 방식으로 IO 를 더 줄였습니다. 이때 근사가 들어가는 것은 sparsity pattern
-            뿐이고 kernel 자체는 남은 tile 을 여전히 exact 하게 계산합니다.
+            논문은 block-sparse FlashAttention 도 함께 제시해 mask 로 통째로 가려지는 tile 을 읽지 않는 방식으로 IO 를 더 줄였습니다. 근사가 들어가는
+            곳은 sparsity pattern 뿐이고 kernel 자체는 남은 tile 을 여전히 exact 하게 계산합니다.
           </p>
         </ProgressiveDetail>
       </section>

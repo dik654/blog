@@ -18,11 +18,9 @@ export default function Applications({
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          ID-LoRA(2026)는 IC-LoRA를 audio-driven talking video에 적용해,
-          reference 화자의 identity를 target 영상까지 유지하는 문제를
-          풉니다. 학습은 앞 절의 IC-LoRA 절차 그대로지만, inference에는
-          classifier-free guidance(CFG)와 같은 구조의 새 guidance 항을
-          하나 더 추가합니다.
+          ID-LoRA(2026)는 IC-LoRA를 audio-driven talking video에 적용해 reference 화자의 identity를 target 영상까지 유지하는 문제를
+          풉니다. 학습은 앞 절의 IC-LoRA 절차 그대로지만 inference에는 classifier-free guidance(CFG)와 같은 구조의 새 guidance 항을 하나 더
+          추가합니다.
         </p>
       </div>
 
@@ -83,10 +81,8 @@ export default function Applications({
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Identity guidance 비용을 two-stage로 나눠 감당한다</h3>
         <p>
-          Identity guidance는 매 denoising step마다 reference-없는 예측을
-          한 번 더 계산해야 해서 비용이 큽니다. ID-LoRA는 이 비용을 전체
-          생성 과정에 걸쳐 부담하지 않고, identity가 자리 잡는 초반 단계에만
-          집중시키는 two-stage serving으로 나눕니다.
+          Identity guidance는 매 denoising step마다 reference-없는 예측을 한 번 더 계산해야 해서 비용이 큽니다. ID-LoRA는 이 비용을 전체 생성
+          과정에 걸쳐 부담하지 않고 identity가 자리 잡는 초반 단계에만 집중시키는 two-stage serving으로 나눕니다.
         </p>
       </div>
 

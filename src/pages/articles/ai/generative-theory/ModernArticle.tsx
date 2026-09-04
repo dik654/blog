@@ -94,8 +94,7 @@ export default function GenerativeTheoryArticle() {
           question="여러 observation에 model이 준 probability를 어떻게 하나의 학습 점수로 모으나요?"
           idea={
             <p>
-              독립 sample의 probability는 곱하고, 숫자가 너무 작아지는 것을
-              피하려고 log를 취한 뒤 sample 수로 나눕니다.
+              독립 sample의 probability는 곱하고 숫자가 너무 작아지는 것을 피하려고 log를 취한 뒤 sample 수로 나눕니다.
             </p>
           }
           formula={String.raw`\begin{aligned}\mathcal L&=\prod_{i=1}^{N}p_\theta(x_i)\\\ell&=\log\mathcal L\\\operatorname{NLL}&=-\ell/N\end{aligned}`}

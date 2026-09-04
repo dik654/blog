@@ -28,10 +28,8 @@ export default function LlmHarnessArticle() {
             상태 관리 부분입니다.
           </p>
           <p>
-            가령 문서 요약 agent와 배포 agent는 만드는 결과물이 다르지만,
-            propose→authorize→execute→observe 4단계와 다음 step에 넘길 state
-            형식은 같은 scaffold를 씁니다. Scaffold가 바뀌는 부분은 여기에
-            꽂히는 tool 목록과 verifier뿐입니다.
+            가령 문서 요약 agent와 배포 agent는 만드는 결과물이 다르지만 propose→authorize→execute→observe 4단계와 다음 step에 넘길 state
+            형식은 같은 scaffold를 씁니다. Scaffold가 바뀌는 부분은 여기에 꽂히는 tool 목록과 verifier뿐입니다.
           </p>
         </div>
         <TermBreakdown
@@ -76,10 +74,8 @@ export default function LlmHarnessArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Prompt의 “삭제하지 마라”나 typed function argument는 authorization이
-            아닙니다. Runtime은 current identity와 resource scope를 다시
-            검사하고, 외부 write에는 stable operation key와 receipt를 요구해야
-            합니다.
+            Prompt의 “삭제하지 마라”나 typed function argument는 authorization이 아닙니다. Runtime은 current identity와
+            resource scope를 다시 검사하고 외부 write에는 stable operation key와 receipt를 요구해야 합니다.
           </p>
           <p>
             여기서 schema가 답하는 질문은 “argument 모양이 맞는가”입니다. 반면
@@ -95,11 +91,9 @@ export default function LlmHarnessArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            같은 “파일 도구”라도 목록을 읽는 operation과 내용을 바꾸는 operation은
-            실패했을 때의 결과가 다릅니다. 계산기는 수식을 정확히 계산할 수 있지만,
-            입력한 세율이 실제 문서에 있는 사실인지 결정할 권한은 없습니다. 따라서
-            tool family가 아니라 이번 step에서 맡은 역할로 실행 경계를 나누는 편이
-            모델과 adapter가 바뀌어도 안정적입니다.
+            같은 “파일 도구”라도 목록을 읽는 operation과 내용을 바꾸는 operation은 실패했을 때의 결과가 다릅니다. 계산기는 수식을 정확히 계산할 수 있지만 입력한 세율이
+            실제 문서에 있는 사실인지 결정할 권한은 없습니다. 그래서 실행 경계는 tool family가 아니라 이번 step에서 맡은 역할로 나누는 편이 모델과 adapter가 바뀌어도
+            안정적입니다.
           </p>
           <p>
             Office Secretary의 dogfooding에서는 이 차이를 네 역할로 일반화했습니다.
@@ -162,10 +156,8 @@ export default function LlmHarnessArticle() {
             이어집니다.
           </p>
           <p>
-            읽기 결과도 예외가 아닙니다. 선택한 업무 ID, 적용 규칙, 중간 계산과
-            최종값이 자유문자열 draft를 거치는 동안 바뀔 수 있으므로, 최종 답변
-            직전까지 역할이 붙은 field로 보존해야 합니다. 자연어 presenter는 이
-            envelope를 읽어 설명할 수 있지만 새 수치나 식별자를 만들 수 없습니다.
+            읽기 결과도 예외가 아닙니다. 선택한 업무 ID, 적용 규칙, 중간 계산과 최종값이 자유문자열 draft를 거치는 동안 바뀔 수 있으므로 최종 답변 직전까지 역할이 붙은
+            field로 보존해야 합니다. 자연어 presenter는 이 envelope를 읽어 설명할 수 있지만 새 수치나 식별자를 만들 수 없습니다.
           </p>
         </div>
       </section>
@@ -175,12 +167,9 @@ export default function LlmHarnessArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            로컬 Claude 산출물의 작업 기록을 보면 높은 품질의 HTML·DOCX가
-            one-shot으로 나온 것이 아니었습니다. 요구를 확인하고, 현재 artifact를
-            읽고, typed writer로 저장한 뒤, schema·render·fresh-reader 같은 독립
-            검사를 거쳐 실패한 구간만 좁게 수정했습니다. 여기서 재사용할 것은
-            Claude의 숨은 사고과정이나 특정 prompt가 아니라 외부에서 관찰하고
-            재실행할 수 있는 loop입니다.
+            로컬 Claude 산출물의 작업 기록을 보면 높은 품질의 HTML·DOCX가 one-shot으로 나온 것이 아니었습니다. 요구를 확인하고 현재 artifact를 읽고 typed
+            writer로 저장한 뒤 schema·render·fresh-reader 같은 독립 검사를 거쳐 실패한 구간만 좁게 수정했습니다. 여기서 재사용할 것은 Claude의 숨은
+            사고과정이나 특정 prompt가 아니라 외부에서 관찰하고 재실행할 수 있는 loop입니다.
           </p>
         </div>
         <AlgorithmBlock
@@ -225,17 +214,13 @@ export default function LlmHarnessArticle() {
           preview="같은 model과 context가 초안을 만들고 판정하면 같은 누락을 다시 보지 못할 수 있어, artifact 밖의 oracle이 필요합니다."
         >
           <p>
-            DOCX package validator, compiler, test, browser render처럼 결과를 직접
-            읽는 검사는 생성 문장의 그럴듯함과 무관하게 실패를 잡습니다. 자연어
-            품질처럼 결정적 oracle이 없는 항목도 새 context의 reader나 rubric judge를
-            사용할 수 있지만, 그 score는 raw artifact와 transcript 감사를 대체하지
-            않습니다.
+            DOCX package validator, compiler, test, browser render처럼 결과를 직접 읽는 검사는 생성 문장의 그럴듯함과 무관하게 실패를 잡습니다.
+            자연어 품질처럼 결정적 oracle이 없는 항목도 새 context의 reader나 rubric judge를 사용할 수 있지만 그 score는 raw artifact와
+            transcript 감사를 대체하지 않습니다.
           </p>
           <p>
-            Office Secretary의 held-out 자동 평가는 처음에 20/20을 통과시켰지만
-            수동 transcript 감사에서 structured-output 실패와 잘린 장문을 발견했습니다.
-            따라서 top-line score 뒤에 실패 원문과 tool result를 표본 감사하는 단계가
-            남아야 합니다.
+            Office Secretary의 held-out 자동 평가는 처음에 20/20을 통과시켰지만 수동 transcript 감사에서 structured-output 실패와 잘린
+            장문을 발견했습니다. 그래서 top-line score 뒤에는 실패 원문과 tool result를 표본 감사하는 단계가 남아야 합니다.
           </p>
         </ProgressiveDetail>
       </section>
@@ -251,10 +236,8 @@ export default function LlmHarnessArticle() {
             외부 effect의 권한과 사실성을 소유하기 때문입니다.
           </p>
           <p>
-            반대로 특정 model의 실수를 막으려고 붙인 prompt 반복, tool shim과 retry는
-            영구 규칙으로 고정하면 안 됩니다. 같은 frozen fixture에서 장치 하나를
-            제거하고 correctness·tool call·token·latency·새 실패를 함께 비교해,
-            model이 이미 흡수한 보정은 줄여야 합니다.
+            반대로 특정 model의 실수를 막으려고 붙인 prompt 반복, tool shim과 retry는 영구 규칙으로 고정하면 안 됩니다. 같은 frozen fixture에서 장치
+            하나를 제거하고 correctness·tool call·token·latency·새 실패를 함께 비교해 model이 이미 흡수한 보정은 줄여야 합니다.
           </p>
           <span id="harness-quality" className="scroll-mt-20" />
           <p>
@@ -282,12 +265,10 @@ export default function LlmHarnessArticle() {
             아니라 세대와 FP8 여부도 달라 “27B가 항상 낫다”는 비교로 읽을 수 없습니다.
           </p>
           <p>
-            같은 exact-32 요구를 deterministic renderer로 옮기자 9B 구성의 agent도
-            exact case 27/27과 표현 변형 135/135를 통과했고, 그 slice의 model call,
-            tool call과 token은 0이 됐습니다. 이는 작은 model의 일반 추론 우위를
-            뜻하지 않습니다. Model이 판단할 필요가 없는 cardinality·serialization을
-            runtime owner에게 옮기면 해당 실패 class를 model scale과 분리할 수 있다는
-            한 controlled fixture입니다.
+            같은 exact-32 요구를 deterministic renderer로 옮기자 9B 구성의 agent도 exact case 27/27과 표현 변형 135/135를 통과했고 그
+            slice의 model call, tool call과 token은 0이 됐습니다. 이는 작은 model의 일반 추론 우위를 뜻하지 않습니다. Model이 판단할 필요가 없는
+            cardinality·serialization을 runtime owner에게 옮기면 해당 실패 class를 model scale과 분리할 수 있다는 한 controlled
+            fixture입니다.
           </p>
           <p>
             원문 환경과 표는 <a href="https://github.com/dik654/ojs-agents/blob/c6b0fb756aa66a33e9f0b1cd4a53c2ee1202a618/products/office-secretary/experiments/MODEL_SIZE_DECISION.md">project measurement record</a>에

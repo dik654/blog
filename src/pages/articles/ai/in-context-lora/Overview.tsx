@@ -69,11 +69,9 @@ export default function Overview({
           In-Context LoRA for Diffusion Transformers
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Task마다 새 architecture나 adapter를 만들지 않고, reference와
-          target을 하나의 attention sequence로 이어붙인 뒤 LoRA만 학습해도
-          DiT가 in-context로 조건을 따를 수 있음을 보입니다. 논문이 실험한
-          DiT·dataset·task 범위를 넘어 모든 in-context LoRA 응용이 같은
-          품질을 낸다는 뜻은 아닙니다.
+          Task마다 새 architecture나 adapter를 만들지 않고 reference와 target을 하나의 attention sequence로 이어붙인 뒤 LoRA만 학습해도
+          DiT가 in-context로 조건을 따를 수 있음을 보입니다. 논문이 실험한 DiT·dataset·task 범위를 넘어 모든 in-context LoRA 응용이 같은 품질을
+          낸다는 뜻은 아닙니다.
         </p>
         <a
           className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
@@ -126,9 +124,8 @@ export default function Overview({
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>실제 어느 module에, 얼마나 큰 rank로 붙는지 확인한다</h3>
         <p>
-          "새 architecture 없이 기존 attention을 재사용한다"는 말이 실제
-          구현에서는 정확히 어느 weight에 LoRA가 붙고 어느 weight는 그대로
-          얼려지는지, 아래 실제 설정 파일에서 확인할 수 있습니다.
+          "새 architecture 없이 기존 attention을 재사용한다"는 말이 실제 구현에서는 정확히 어느 weight에 LoRA가 붙고 어느 weight는 그대로 얼어 있는지,
+          아래 실제 설정 파일에서 확인할 수 있습니다.
         </p>
       </div>
       <CodeViewButton

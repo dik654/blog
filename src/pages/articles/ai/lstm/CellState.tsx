@@ -7,12 +7,9 @@ export default function CellState() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Cₜ update에서 Cₜ₋₁로 직접 이어지는 edge만 미분하면 local derivative는
-          fₜ다. 여러 step을 지나면 이 direct contribution이 forget gate의 곱이
-          되므로, 각 gate가 1에 가까운 구간에서는 vanilla nonlinear transition보다
-          gradient를 오래 전달할 수 있다. 하지만 이것은 전체 derivative와 동일하지
-          않다. Gate 자체도 h와 C의 함수이므로 computational graph에는 다른 경로가
-          추가된다.
+          Cₜ update에서 Cₜ₋₁로 직접 이어지는 edge만 미분하면 local derivative는 fₜ다. 여러 step을 지나면 이 direct contribution이
+          forget gate의 곱이 된다. 각 gate가 1에 가까운 구간에서는 vanilla nonlinear transition보다 gradient를 오래 전달한다. 다만 이것이 전체
+          derivative와 같지는 않다. Gate 자체도 h와 C의 함수이므로 computational graph에는 다른 경로가 추가된다.
         </p>
       </div>
 
@@ -47,19 +44,15 @@ R_{k\to t}
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Additive path와 residual connection은 닮았지만 같지 않다</h3>
         <p>
-          두 구조 모두 identity에 가까운 additive path를 만들어 optimization을 돕지만,
-          LSTM은 recurrent state를 data-dependent gate로 보존·수정하고 residual block은
-          layer transformation의 입력을 shortcut으로 더한다. 비슷한 derivative
-          intuition을 공유한다고 architecture 목적과 state semantics까지 같아지는 것은
-          아니다.
+          두 구조 모두 identity에 가까운 additive path를 만들어 optimization을 돕는다. 그래도 LSTM은 recurrent state를 data-
+          dependent gate로 보존·수정하고 residual block은 layer transformation의 입력을 shortcut으로 더한다. 비슷한 derivative
+          intuition을 공유한다고 architecture 목적과 state semantics까지 같아지지는 않는다.
         </p>
         <h3>LSTM에서도 exploding과 학습 horizon 문제는 남는다</h3>
         <p>
-          Gate network와 recurrent projection을 통과하는 다른 Jacobian 경로에서는
-          exploding gradient가 생길 수 있어 gradient clipping을 함께 사용한다.
-          Truncated BPTT를 적용하면 state는 더 오래 전달하더라도 gradient는 detach
-          boundary를 넘어 학습되지 않는다. 따라서 inference memory horizon과 training
-          credit-assignment horizon을 분리해 봐야 한다.
+          Gate network와 recurrent projection을 지나는 다른 Jacobian 경로에서는 exploding gradient가 생길 수 있어 gradient
+          clipping을 함께 사용한다. Truncated BPTT를 적용하면 state는 더 오래 전달하더라도 gradient는 detach boundary를 넘어 학습되지 않는다.
+          inference memory horizon과 training credit-assignment horizon을 나눠서 봐야 하는 이유다.
         </p>
       </div>
     </section>

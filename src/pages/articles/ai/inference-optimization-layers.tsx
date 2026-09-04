@@ -24,16 +24,13 @@ export default function InferenceOptimizationLayersArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            inference optimization 은 같은 model 로 요청 하나의 시간과 GPU 시간당 처리량을 개선하는
-            모든 작업을 가리키며, 어디를 고치느냐에 따라 model, kernel, runtime, system 네 층으로
-            나뉩니다. 층마다 건드리는 병목이 다르고, 그래서 한 층의 이득은 나머지 층이 차지한 시간에
-            갇힙니다.
+            inference optimization 은 같은 model 로 요청 하나의 시간과 GPU 시간당 처리량을 개선하는 모든 작업을 가리킵니다. 어디를 고치느냐에 따라 model,
+            kernel, runtime, system 네 층으로 나뉩니다. 층마다 건드리는 병목이 다르므로 한 층의 이득은 나머지 층이 차지한 시간에 갇힙니다.
           </p>
           <p>
-            요청 하나가 100 ms 걸리고 그중 attention 이 40 ms 라면 attention kernel 을 2배 빠르게
-            해도 80 ms 입니다. 남은 60 ms 는 GEMM, scheduler 의 CPU 시간, 통신이 차지하고 있어
-            kernel 층이 손댈 수 없습니다. 이 글은 그 구조를 지도로 그리고, 지도 위에서 무엇을
-            먼저 할지 고르는 계산을 소유합니다.
+            요청 하나가 100 ms 걸리고 그중 attention 이 40 ms 라면 attention kernel 을 2배 빠르게 해도 80 ms 입니다. 남은 60 ms 는 GEMM,
+            scheduler 의 CPU 시간, 통신이 차지하고 있어 kernel 층이 손댈 수 없습니다. 이 글은 그 구조를 지도로 그리고 지도 위에서 무엇을 먼저 할지 고르는 계산을
+            소유합니다.
           </p>
           <p>
             기법 자체는 각자의 정본 글이 다룹니다. quantization 은{" "}
@@ -67,10 +64,9 @@ export default function InferenceOptimizationLayersArticle() {
             와 prefill 의 compute 입니다. 출력이 달라질 수 있어 품질 검증이 따라붙습니다.
           </p>
           <p>
-            kernel-level optimization 은 같은 계산을 GPU 에서 더 빨리 하도록 kernel 을 바꿉니다.
-            operator-level 은 attention 이나 GEMM 하나를 tile 크기, SRAM 재사용, 정밀도로 최적화하는
-            일이고, graph-level 은 여러 operator 를 fusion 해 HBM 왕복과 launch 를 줄이는 일입니다.
-            건드리는 병목은 kernel 의 HBM 대역폭과 SM 활용률이며 출력은 수치 오차 안에서 같습니다.
+            kernel-level optimization 은 같은 계산을 GPU 에서 더 빨리 하도록 kernel 을 바꿉니다. operator-level 은 attention 이나
+            GEMM 하나를 tile 크기, SRAM 재사용, 정밀도로 최적화합니다. graph-level 은 여러 operator 를 fusion 해 HBM 왕복과 launch 를
+            줄입니다. 건드리는 병목은 kernel 의 HBM 대역폭과 SM 활용률이며 출력은 수치 오차 안에서 같습니다.
           </p>
           <p>
             runtime-level optimization 은 kernel 사이와 요청 사이의 시간을 줄입니다. CUDA graph 로
@@ -86,10 +82,9 @@ export default function InferenceOptimizationLayersArticle() {
             cluster 전체의 GPU 시간입니다.
           </p>
           <p>
-            같은 이름의 기법이 다른 층에 놓일 수도 있습니다. FlashAttention 은 kernel 층이지만 attention
-            의 memory 접근을 바꾼다는 점에서 model 층의 설계 판단과 맞닿고, speculative decoding 은
-            runtime 층에 두지만 draft model 을 고르는 일은 model 층입니다. 분류의 기준은 이름이 아니라
-            무엇을 줄이는가입니다.
+            같은 이름의 기법이 다른 층에 놓일 수도 있습니다. FlashAttention 은 kernel 층이지만 attention 의 memory 접근을 바꾼다는 점에서 model 층의
+            설계 판단과 맞닿습니다. speculative decoding 은 runtime 층에 두지만 draft model 을 고르는 일은 model 층입니다. 분류의 기준은 이름이
+            아니라 무엇을 줄이는가입니다.
           </p>
         </div>
         <TermBreakdown
@@ -109,30 +104,25 @@ export default function InferenceOptimizationLayersArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Amdahl 의 법칙은 전체 시간 중 비율 p 를 차지하는 구간을 s 배 빠르게 했을 때 전체
-            speedup 이 1/((1−p)+p/s) 라는 식입니다. s 를 무한히 키워도 1/(1−p) 를 넘지 못하므로,
-            최적화를 고르기 전에 그 구간의 p 를 먼저 재야 합니다.
+            Amdahl 의 법칙은 전체 시간 중 비율 p 를 차지하는 구간을 s 배 빠르게 했을 때 전체 speedup 이 1/((1−p)+p/s) 라는 식입니다. s 를 무한히 키워도
+            1/(1−p) 를 넘지 못하므로 최적화를 고르기 전에 그 구간의 p 를 먼저 재야 합니다.
           </p>
           <p>
-            end-to-end 100 ms 에 attention 40 ms 면 p=0.4 입니다. attention 을 2배 빠르게 하면
-            1/(0.6+0.2)=1.25 배, 즉 80 ms 이고, 10배 빠르게 해도 1/(0.6+0.04)=1.56 배인 64 ms
-            입니다. 상한은 1/0.6=1.67 배, 60 ms 이며 그 아래로는 attention 이 아니라 나머지 60 ms
-            를 건드려야 합니다.
+            end-to-end 100 ms 에 attention 40 ms 면 p=0.4 입니다. attention 을 2배 빠르게 하면 1/(0.6+0.2)=1.25 배, 즉 80 ms
+            이고 10배 빠르게 해도 1/(0.6+0.04)=1.56 배인 64 ms 입니다. 상한은 1/0.6=1.67 배, 60 ms 이며 그 아래로는 attention 이 아니라
+            나머지 60 ms 를 건드려야 합니다.
           </p>
           <p>
-            end-to-end optimization 은 이 계산을 구간마다 하고 나서 층을 고르는 태도입니다. 구간
-            하나의 micro benchmark 가 3배 빨라졌다는 숫자는 p 를 곱하기 전에는 의미가 없고, p 는
-            model, batch, 입력 길이에 따라 달라지므로 대상 workload 의 profile 에서 읽어야 합니다.
+            end-to-end optimization 은 이 계산을 구간마다 하고 나서 층을 고르는 태도입니다. 구간 하나의 micro benchmark 가 3배 빨라졌다는 숫자는 p 를
+            곱하기 전에는 의미가 없습니다. p 는 model, batch, 입력 길이에 따라 달라지므로 대상 workload 의 profile 에서 읽어야 합니다.
           </p>
           <p>
-            model 층의 예로 weight-only quantization 은 weight byte 를 절반으로 줄이지만, 그 이득은
-            weight read 에 묶인 구간에만 납니다. decode 에서 GEMM 35 ms 중 28 ms 가 weight
-            streaming 이고 7 ms 가 compute 라면 절감은 14 ms 입니다.
+            model 층의 예로 weight-only quantization 은 weight byte 를 절반으로 줄이지만 그 이득은 weight read 에 묶인 구간에만 납니다.
+            decode 에서 GEMM 35 ms 중 28 ms 가 weight streaming 이고 7 ms 가 compute 라면 절감은 14 ms 입니다.
           </p>
           <p>
-            batch 가 커져 GEMM 이 compute-bound 가 되면 절감은 0 에 가까워집니다. 같은 기법의 p
-            가 batch 에 따라 0.28 에서 0 으로 움직이는 셈이고, 그래서 p 는 기법이 아니라 대상
-            workload 의 profile 에서 읽어야 합니다.
+            batch 가 커져 GEMM 이 compute-bound 가 되면 절감은 0 에 가까워집니다. 같은 기법의 p 가 batch 에 따라 0.28 에서 0 으로 움직이는 셈입니다.
+            기법 이름만 보고는 p 를 알 수 없으니 대상 workload 의 profile 에서 읽어야 합니다.
           </p>
           <p>
             이 글의 Amdahl 은 일반형이고, low-bit kernel 로 대체되는 비율만 s 배가 된다는{" "}
@@ -169,10 +159,9 @@ export default function InferenceOptimizationLayersArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Amdahl 의 직렬 가정은 층 사이의 상호작용에서 깨집니다. model 층에서 INT4 를 고르면
-            kernel 층은 dequant 가 붙은 GEMM kernel 을 새로 써야 하고, runtime 층에서 graph 를
-            켜면 kernel 은 capture 가능해야 하며, system 층에서 prefill 을 분리하면 decode GPU 의
-            병목이 compute 에서 weight read 로 옮겨 가 model 층의 p 가 커집니다.
+            Amdahl 의 직렬 가정은 층 사이의 상호작용에서 깨집니다. model 층에서 INT4 를 고르면 kernel 층은 dequant 가 붙은 GEMM kernel 을 새로 써야
+            합니다. runtime 층에서 graph 를 켜면 kernel 은 capture 가능해야 합니다. system 층에서 prefill 을 분리하면 decode GPU 의 병목이
+            compute 에서 weight read 로 옮겨 가 model 층의 p 가 커집니다.
           </p>
           <p>
             hardware-aware optimization 은 이 상호작용을 hardware 쪽에서 읽는 태도입니다. 같은
@@ -181,26 +170,22 @@ export default function InferenceOptimizationLayersArticle() {
             arithmetic intensity 경계를 먼저 보고 어느 층이 이득을 낼지 정합니다.
           </p>
           <p>
-            H100 에서 memory-bound 였던 decode GEMM 이 대역폭과 연산 비율이 다른 GPU 에서는
-            compute-bound 일 수 있고, 그러면 weight quantization 의 p 는 0 에 가까워집니다. 같은
-            기법의 층별 이득이 hardware 마다 다른 이유입니다.
+            H100 에서 memory-bound 였던 decode GEMM 이 대역폭과 연산 비율이 다른 GPU 에서는 compute-bound 일 수 있습니다. 그러면 weight
+            quantization 의 p 는 0 에 가까워집니다. 같은 기법의 층별 이득이 hardware 마다 다른 이유입니다.
           </p>
           <p>
-            algorithm–hardware co-design 은 한 걸음 더 가서 알고리즘 자체를 hardware 의 경계에 맞춰
-            바꿉니다. FlashAttention 은 SRAM 에 들어가는 tile 로 attention 을 다시 쓴 것이고,
-            PagedAttention 은 OS 의 paging 을 KV cache 에 옮긴 것이며, MLA 는 KV byte 를 줄이려고
-            attention 의 수식을 바꾼 것입니다.
+            algorithm–hardware co-design 은 한 걸음 더 가서 알고리즘 자체를 hardware 의 경계에 맞춰 바꿉니다. FlashAttention 은 SRAM 에
+            들어가는 tile 로 attention 을 다시 썼습니다. PagedAttention 은 OS 의 paging 을 KV cache 에 옮겼고 MLA 는 KV byte 를
+            줄이려고 attention 의 수식을 바꿨습니다.
           </p>
           <p>
-            세 예는 각각 kernel, runtime, model 층에 놓이지만 출발점은 모두 hardware 의 병목입니다.
-            층은 결과가 놓이는 자리이고, co-design 은 그 자리를 정하기 전에 병목을 먼저 보는
-            순서입니다.
+            세 예는 각각 kernel, runtime, model 층에 놓이지만 출발점은 모두 hardware 의 병목입니다. 층은 결과가 놓이는 자리입니다. co-design 은 그
+            자리를 정하기 전에 병목을 먼저 봅니다.
           </p>
           <p>
-            상호작용은 이득만이 아니라 손실도 만듭니다. quantization 이 만든 dequant 는 fusion 하지
-            않으면 새 kernel 과 launch 를 더하고, graph capture 는 dynamic 한 attention backend 를
-            piecewise 로 밀어내 launch 절감을 줄이며, disaggregation 은 KV 전송이라는 새 구간을
-            더해 p 의 분모를 키웁니다. 층을 하나 더할 때마다 profile 을 다시 재야 하는 이유입니다.
+            상호작용은 이득만이 아니라 손실도 만듭니다. quantization 이 만든 dequant 는 fusion 하지 않으면 새 kernel 과 launch 를 더합니다. graph
+            capture 는 dynamic 한 attention backend 를 piecewise 로 밀어내 launch 절감을 줄입니다. disaggregation 은 KV 전송이라는
+            새 구간을 더해 p 의 분모를 키웁니다. 층을 하나 더할 때마다 profile 을 다시 재야 하는 이유입니다.
           </p>
         </div>
         <ProgressiveDetail
@@ -208,20 +193,20 @@ export default function InferenceOptimizationLayersArticle() {
           preview="한 층의 변경은 다른 층의 병목 위치와 가능한 선택지를 함께 옮깁니다."
         >
           <p>
-            model → kernel: INT4 weight 는 FP16 tensor core 로 계산하려면 dequant 가 필요하고, 그
-            dequant 를 GEMM 안에 fusion 한 kernel 이 있어야 이득이 launch 로 새지 않습니다.
+            model → kernel: INT4 weight 는 FP16 tensor core 로 계산하려면 dequant 가 필요하고 그 dequant 를 GEMM 안에 fusion 한
+            kernel 이 있어야 이득이 launch 로 새지 않습니다.
           </p>
           <p>
-            runtime → kernel: CUDA graph 는 CPU 동기화와 값에 따른 분기가 없는 kernel 만 capture 하므로,
-            kernel 선택이 graph 호환성으로 제한됩니다.
+            runtime → kernel: CUDA graph 는 CPU 동기화와 값에 따른 분기가 없는 kernel 만 capture 하므로 kernel 선택이 graph 호환성으로
+            제한됩니다.
           </p>
           <p>
             system → model: prefill 을 분리한 decode GPU 는 batch 가 커져도 weight read 가 병목으로
             남는 시간이 길어져 weight quantization 의 p 가 커집니다.
           </p>
           <p>
-            runtime → system: prefix caching 의 hit rate 는 router 가 같은 prefix 를 같은 replica 로
-            보낼 때만 높고, 그래서 cache-aware routing 이 system 층의 전제 조건이 됩니다.
+            runtime → system: prefix caching 의 hit rate 는 router 가 같은 prefix 를 같은 replica 로 보낼 때만 높습니다. cache-
+            aware routing 이 system 층의 전제 조건이 됩니다.
           </p>
         </ProgressiveDetail>
       </section>
@@ -232,10 +217,8 @@ export default function InferenceOptimizationLayersArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            optimization ROI 는 어떤 최적화가 벌어 주는 값을 그것을 만들고 검증하고 유지하는
-            비용으로 나눈 비율입니다. 벌어 주는 값은 요청당 절감 시간에 트래픽과 GPU 시간의 단가를
-            곱한 것이고, 같은 절감이라도 트래픽이 100배면 값도 100배가 되므로 ROI 는 기법의 속성이
-            아니라 workload 의 속성입니다.
+            optimization ROI 는 어떤 최적화가 벌어 주는 값을 그것을 만들고 검증하고 유지하는 비용으로 나눈 비율입니다. 벌어 주는 값은 요청당 절감 시간에 트래픽과 GPU
+            시간의 단가를 곱한 것입니다. 같은 절감이라도 트래픽이 100배면 값도 100배가 됩니다. ROI 는 기법의 속성이 아니라 workload 의 속성입니다.
           </p>
           <p>
             attention kernel 교체가 요청당 20 ms 를 줄인다고 합시다. 하루 200만 요청이면 GPU 시간
@@ -244,20 +227,16 @@ export default function InferenceOptimizationLayersArticle() {
             낫습니다.
           </p>
           <p>
-            같은 기법을 하루 2억 요청에 적용하면 한 해 80만 달러라 회수 기간이 3주 미만입니다.
-            그래서 같은 조직 안에서도 ROI 순서는 model 별, endpoint 별로 다르고, 트래픽이 작은
-            endpoint 에서는 runtime 의 설정 변경처럼 구현 비용이 거의 없는 층부터 고르는 것이
-            맞습니다.
+            같은 기법을 하루 2억 요청에 적용하면 한 해 80만 달러라 회수 기간이 3주 미만입니다. 같은 조직 안에서도 ROI 순서는 model 별, endpoint 별로 다릅니다.
+            트래픽이 작은 endpoint 에서는 runtime 의 설정 변경처럼 구현 비용이 거의 없는 층부터 고르는 것이 맞습니다.
           </p>
           <p>
-            latency 절감의 값은 GPU 시간만이 아닙니다. TPOT 이 SLO 를 넘겨 요청이 거부되거나 사용자가
-            이탈하는 endpoint 라면 절감 1 ms 의 값은 GPU 단가보다 훨씬 크고, 이미 SLO 안에 있는
-            endpoint 라면 처리량으로 환산한 GPU 절감만이 값입니다. 식의 v 항이 그 차이를 담습니다.
+            latency 절감의 값은 GPU 시간만이 아닙니다. TPOT 이 SLO 를 넘겨 요청이 거부되거나 사용자가 이탈하는 endpoint 라면 절감 1 ms 의 값은 GPU
+            단가보다 훨씬 큽니다. 이미 SLO 안에 있는 endpoint 라면 처리량으로 환산한 GPU 절감만이 값입니다. 식의 v 항이 그 차이를 담습니다.
           </p>
           <p>
-            비용 쪽에는 구현만 넣으면 안 됩니다. model 층은 품질 parity 검증, kernel 층은 shape 별
-            tuning 과 hardware 세대마다의 재검증, system 층은 운영 복잡도가 붙습니다. 검증 비용이
-            구현 비용보다 큰 층이 흔하며, 그 검증이 다음 절의 benchmark gate 입니다.
+            비용 쪽에는 구현만 넣으면 안 됩니다. model 층은 품질 parity 검증, kernel 층은 shape 별 tuning 과 hardware 세대마다의 재검증, system
+            층은 운영 복잡도가 붙습니다. 검증 비용이 구현 비용보다 큰 층이 흔합니다. 그 검증이 다음 절의 benchmark gate 입니다.
           </p>
         </div>
         <ExplainedFormula
@@ -300,10 +279,9 @@ export default function InferenceOptimizationLayersArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            performance regression 은 변경 뒤에 같은 workload 의 latency 나 처리량이 나빠지는 일이며,
-            최적화 작업에서 특히 흔합니다. 한 층의 개선이 다른 층의 조건을 깨뜨리기 때문입니다.
-            graph 가 조용히 eager 로 떨어지거나, 새 kernel 이 특정 shape 에서 느리거나,
-            quantization 이 품질을 떨어뜨려 재시도를 늘리는 식입니다.
+            performance regression 은 변경 뒤에 같은 workload 의 latency 나 처리량이 나빠지는 일입니다. 최적화 작업에서 특히 흔한데, 한 층의 개선이
+            다른 층의 조건을 깨뜨리기 때문입니다. graph 가 조용히 eager 로 떨어지거나, 새 kernel 이 특정 shape 에서 느리거나, quantization 이 품질을
+            떨어뜨려 재시도를 늘리는 식입니다.
           </p>
           <p>
             benchmark gate 는 변경마다 같은 조건에서 같은 지표를 재고 정해진 문턱을 넘으면 변경을
@@ -312,14 +290,13 @@ export default function InferenceOptimizationLayersArticle() {
             와 SLO 안에서의 처리량, 그리고 model 층 변경이라면 품질 parity 입니다.
           </p>
           <p>
-            문턱은 noise 보다 커야 합니다. 같은 설정을 다섯 번 돌려 run 사이 편차가 2% 라면 3% 나빠짐은
-            noise 일 수 있으므로, 문턱을 편차의 2배 이상으로 두고 paired 로 비교합니다. 반대로 문턱을
-            10% 로 두면 5% 씩 세 번 쌓인 regression 을 놓칩니다.
+            문턱은 noise 보다 커야 합니다. 같은 설정을 다섯 번 돌려 run 사이 편차가 2% 라면 3% 나빠짐은 noise 일 수 있으므로 문턱을 편차의 2배 이상으로 두고
+            paired 로 비교합니다. 반대로 문턱을 10% 로 두면 5% 씩 세 번 쌓인 regression 을 놓칩니다.
           </p>
           <p>
-            gate 는 낮은 batch 와 높은 batch 를 모두 포함해야 합니다. graph fallback 은 낮은 batch
-            의 TPOT 에만 나타나고, quantization 의 이득 소멸과 새 kernel 의 shape 문제는 높은 batch
-            에서 나타나므로, 한 지점의 benchmark 는 두 종류의 regression 중 하나를 반드시 놓칩니다.
+            gate 는 낮은 batch 와 높은 batch 를 모두 포함해야 합니다. graph fallback 은 낮은 batch 의 TPOT 에만 나타납니다. quantization
+            의 이득 소멸과 새 kernel 의 shape 문제는 높은 batch 에서 나타납니다. 한 지점의 benchmark 는 두 종류의 regression 중 하나를 반드시
+            놓칩니다.
           </p>
           <p>
             regression 이 잡히면 첫 질문은 어느 층이 깨졌는가입니다. profile 을 다시 재 구간별 시간을
