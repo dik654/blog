@@ -12,10 +12,9 @@ export default function Ports() {
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          DGX B300에는 cluster network용 ConnectX-8 OSFP port가 8개 있다. 공식
-          split configuration을 적용하면 각 800G physical module이 두 400GbE
-          logical port와 두 RDMA device로 나타난다. BlueField-3는 별도의
-          storage·management path이므로 이 compute-fabric mapping에 섞지 않는다.
+          DGX B300에는 cluster network용 ConnectX-8 OSFP port가 8개 있고 공식 split configuration을 적용하면 각 800G physical
+          module이 두 400GbE logical port와 두 RDMA device로 나타난다. BlueField-3는 별도의 storage·management path다. 이
+          compute-fabric mapping에는 섞지 않는다.
         </p>
         <div id="paper-dgx-b300-ports" className="scroll-mt-24">
           <p className="border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground">
@@ -58,12 +57,9 @@ export default function Ports() {
           </div>
         </div>
         <p className="leading-7">
-          위 표의 BDF와 mlx5 번호는 프로젝트 장비에서 관측한 inventory다.
-          netdev 이름과 device 번호는 udev·firmware·PCI enumeration에 따라
-          달라질 수 있으므로 `eno6np0` 같은 이름을 다른 host에 그대로 복사하면
-          안 된다. 각 노드에서 OSFP label → PCI BDF → netdev → RDMA device를
-          `mst status -v`, `devlink`, `ibdev2netdev`로 다시 연결하고 결과를
-          topology manifest에 저장한다.
+          위 표의 BDF와 mlx5 번호는 프로젝트 장비에서 관측한 inventory다. netdev 이름과 device 번호는 udev·firmware·PCI enumeration에 따라
+          달라질 수 있으므로 `eno6np0` 같은 이름을 다른 host에 그대로 복사하면 안 된다. 각 노드에서 OSFP label → PCI BDF → netdev → RDMA
+          device를 `mst status -v`, `devlink`, `ibdev2netdev`로 다시 연결해 결과를 topology manifest에 저장한다.
         </p>
 
         <h3 className="mt-6 mb-3 text-xl font-semibold">
@@ -79,10 +75,8 @@ mlxconfig -d <device> set NUM_OF_PF=2
 # cold power cycle 뒤 다시 inventory`}</code>
         </pre>
         <p className="leading-7">
-          이는 NVIDIA DGX OS 가이드의 split 순서다. `mlxconfig reset`은 해당
-          device의 다른 설정도 되돌리므로 단순한 복구 명령처럼 실행하면 안
-          된다. Split 설정은 cold power cycle 뒤에 반영되므로 변경 전후 inventory
-          dump와 되돌릴 값을 함께 보관해야 한다.
+          이는 NVIDIA DGX OS 가이드의 split 순서다. `mlxconfig reset`은 해당 device의 다른 설정도 되돌리므로 단순한 복구 명령처럼 실행하면 안 된다.
+          Split 설정은 cold power cycle 뒤에 반영되므로 변경 전후 inventory dump와 되돌릴 값을 함께 보관한다.
         </p>
         <div id="paper-dgx-port-split" className="scroll-mt-24">
           <CitationBlock

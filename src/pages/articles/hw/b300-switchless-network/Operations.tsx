@@ -35,13 +35,10 @@ export default function Operations() {
           ))}
         </div>
         <p className="leading-7">
-          switchless는 2–8 node의 정적인 실험 cluster에서 비용·납기와
-          운영 복잡도를 맞바꾸는 선택지다. 한 direct link가 끊기면 switch가
-          우회 경로를 찾아주지 않으므로 해당 peer rail을 communicator에서
-          제거하거나 job을 중단하고 topology를 다시 구성해야 한다. Topology
-          변경, oversubscription, 자동 장애 우회, 다수 tenant와 표준 support가
-          중요해지면 Spectrum-X 또는 InfiniBand switched fabric이 운영상 더
-          단순해진다.
+          switchless는 2–8 node의 정적인 실험 cluster에서 비용·납기와 운영 복잡도를 맞바꾸는 선택지다. 한 direct link가 끊기면 switch가 우회 경로를
+          찾아주지 않으므로 해당 peer rail을 communicator에서 제거하거나 job을 중단하고 topology를 다시 구성한다. Topology 변경,
+          oversubscription, 자동 장애 우회, 다수 tenant와 표준 support가 중요해지면 Spectrum-X 또는 InfiniBand switched fabric이
+          운영상 더 단순해진다.
         </p>
       </div>
     </section>

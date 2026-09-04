@@ -30,12 +30,10 @@ export default function RDIMM() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <div id="dimm-electrical-load" className="scroll-mt-24">
           <p>
-            DIMM type은 단순한 성능 등급이 아니라 memory controller와 DRAM
-            사이의 electrical load와 data path 계약입니다. UDIMM은 buffer 없이
-            직접 연결하고, RDIMM은 RCD(Registering Clock Driver)가
-            command/address를 받아 다시 구동해 controller가 보는 load를
-            줄입니다. 3DS는 die를 적층해 capacity를 늘리고, MRDIMM은 지원
-            platform에서 rank data를 multiplex해 transfer rate를 높입니다.
+            DIMM type은 memory controller와 DRAM 사이의 electrical load와 data path 계약이지 단순한 성능 등급이 아닙니다. UDIMM은
+            buffer 없이 직접 연결하고 RDIMM은 RCD(Registering Clock Driver)가 command/address를 받아 다시 구동해 controller가 보는
+            load를 줄입니다. 3DS는 die를 적층해 capacity를 늘리고 MRDIMM은 지원 platform에서 rank data를 multiplex해 transfer rate를
+            높입니다.
           </p>
         </div>
         <div className="not-prose my-6 overflow-hidden rounded-lg border border-border/70">

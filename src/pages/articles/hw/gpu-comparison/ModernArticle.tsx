@@ -11,7 +11,11 @@ const H100="https://www.nvidia.com/en-us/data-center/h100/";
 export default function ModernGpuComparisonArticle(){return <article className="space-y-14">
   <section id="overview" className="space-y-6">
     <header className="space-y-3"><p className="text-sm font-semibold text-primary">RTX 4090·5090·A100·H100을 고르는 순서</p><h2 className="text-3xl font-bold tracking-tight">GPU 비교는 TFLOPS 순위표가 아니라 workload가 끝까지 통과할 경로를 고르는 일이다</h2></header>
-    <p className="text-lg leading-8 text-foreground/90">같은 “GPU”라도 GeForce RTX 4090·5090은 workstation/consumer board이고, A100·H100은 server platform에서 ECC memory, enterprise software·support, multi-GPU fabric과 운영 기능을 제공하는 datacenter accelerator입니다. 제품명만 놓고 peak 숫자를 비교하면 memory capacity, precision 조건, form factor와 scale-out 비용을 놓칩니다.</p>
+    <p className="text-lg leading-8 text-foreground/90">
+            같은 “GPU”라도 GeForce RTX 4090·5090은 workstation/consumer board이고 A100·H100은 server platform에서 ECC
+            memory, enterprise software·support, multi-GPU fabric과 운영 기능을 제공하는 datacenter accelerator입니다. 제품명만
+            놓고 peak 숫자를 비교하면 memory capacity, precision 조건, form factor와 scale-out 비용을 놓칩니다.
+          </p>
     <p>먼저 model·dataset·batch·precision·latency SLA와 concurrency를 고정하고 후보가 memory와 software 조건을 만족하는지 확인합니다. 그 뒤 같은 implementation에서 achieved throughput·latency·power를 측정합니다. 일반적인 Roofline은 <a className="text-primary hover:underline" href="/gpu/gpu-architecture#gpu-peak-achieved-boundary">GPU architecture 정본</a>, PCIe·NVLink 경계는 <a className="text-primary hover:underline" href="/gpu/gpu-interconnects">GPU interconnect 정본</a>, GPU–HCA direct path는 <a className="text-primary hover:underline" href="/gpu/rdma-roce#gpudirect-topology">RDMA·RoCE 정본</a>을 재사용합니다.</p>
     <GpuChoiceFlowViz />
     <ContentBoundary article="hw-gpu-comparison" />
@@ -20,7 +24,11 @@ export default function ModernGpuComparisonArticle(){return <article className="
   <section id="workload-envelope" className="space-y-6">
     <header><p className="text-sm font-semibold text-primary">01 · Workload envelope</p><h2 className="mt-2 text-2xl font-bold">평균 하나 대신 shape·batch·precision·동시 실행 범위를 적는다</h2></header>
     <p><strong>Workload envelope</strong>는 GPU가 실제로 처리해야 할 입력 범위와 운영 조건입니다. LLM inference라면 model revision, weight dtype, context/prefill/decode 길이, KV-cache dtype, batch·concurrency와 TTFT/TPOT SLA가 들어갑니다. CUDA kernel이라면 M/N/K 또는 input size, data layout, precision, correctness tolerance와 transfer 포함 여부가 필요합니다.</p>
-    <p>예를 들어 24GB board에 weight가 22GB 들어간다는 사실만으로 서비스가 가능한 것은 아닙니다. Runtime workspace, KV cache, graph capture, allocator fragmentation과 동시 request headroom을 더해야 합니다. 반대로 training에 필요한 memory를 inference 요구에 그대로 적용해서도 안 됩니다.</p>
+    <p>
+            예를 들어 24GB board에 weight가 22GB 들어간다는 사실만으로는 서비스가 되지 않습니다. Runtime workspace, KV cache, graph
+            capture, allocator fragmentation과 동시 request headroom이 그 위에 더 얹힙니다. 반대로 training에 필요한 memory를
+            inference 요구에 그대로 적용해서도 안 됩니다.
+          </p>
     <ExplainedFormula question="후보 GPU가 workload를 안정적으로 담을 수 있는지 어떤 예산으로 검사할까?" idea={<>고정 weight뿐 아니라 request마다 늘어나는 state와 runtime workspace, fragmentation·운영 headroom을 합쳐 usable device memory보다 작은지 봅니다.</>} formula={String.raw`\begin{aligned}M_{need}&=M_{weight}+C\,M_{state}\\&\quad+M_{workspace}+M_{headroom}\\[3pt]M_{need}&\le M_{usable}\end{aligned}`}
     annotatedFormula={String.raw`\begin{aligned}M_{need}&=\underbrace{M_{weight}+C\,M_{state}}_{\text{고정 memory 계산}}\\&\quad+M_{workspace}+M_{headroom}\\[3pt]M_{need}&\le \underbrace{M_{usable}}_{\text{실사용 가능 capacity 계산}}\end{aligned}`}
     operations={[
@@ -55,7 +63,12 @@ export default function ModernGpuComparisonArticle(){return <article className="
 
   <section id="blockchain" className="space-y-6">
     <header><p className="text-sm font-semibold text-primary">04 · Workload별 선택과 실측</p><h2 className="mt-2 text-2xl font-bold">Hash·MSM·NTT·LLM은 같은 GPU 비교표를 쓰지 않는다</h2></header>
-    <p>Hash batch는 integer/bit operation과 memory access, MSM은 field arithmetic·bucket contention·reduction, NTT는 stage별 global synchronization과 traffic이 병목일 수 있습니다. LLM decode는 weight·KV traffic과 batch에 민감하고 training은 matrix throughput·collective·optimizer memory가 중요합니다. 따라서 한 benchmark의 순위를 다른 workload에 옮기지 않습니다.</p>
+    <p>
+            Hash batch는 integer/bit operation과 memory access, MSM은 field arithmetic·bucket
+            contention·reduction, NTT는 stage별 global synchronization과 traffic이 병목일 수 있습니다. LLM decode는
+            weight·KV traffic과 batch에 민감하고 training은 matrix throughput·collective·optimizer memory가 중요합니다. 한
+            benchmark의 순위를 다른 workload에 옮기지 않습니다.
+          </p>
     <ExplainedFormula question="구매 비용이 아니라 실제 처리량 기준 비용을 어떻게 비교할까?" idea={<>같은 SLA와 quality를 만족한 후보만 대상으로 일정 기간의 장비·전력·운영비를 그 기간 완료한 유효 작업 수로 나눕니다.</>} formula={String.raw`C_{work}=\frac{C_{hardware}+C_{energy}+C_{ops}}{N_{valid\ work}}`}
     annotatedFormula={String.raw`C_{work}=\underbrace{\frac{C_{hardware}+C_{energy}+C_{ops}}{N_{valid\ work}}}_{\text{기준량당 비율}}`}
     operations={[

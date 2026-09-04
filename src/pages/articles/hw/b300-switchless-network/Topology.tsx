@@ -35,8 +35,7 @@ export default function Topology() {
           question="Node 수를 늘릴 때 cable 수와 node당 port 수는 얼마나 빨리 늘어나는가?"
           idea={
             <p>
-              Full mesh의 node pair 수는 조합 N choose 2입니다. Pair마다 c개
-              cable을 놓으면 전체 cable 수에는 c를 곱하고, 한 node는 나머지
+              Full mesh의 node pair 수는 조합 N choose 2입니다. Pair마다 c개 cable을 놓으면 전체 cable 수에는 c를 곱하고 한 node는 나머지
               N−1개 node마다 c개 port를 사용합니다.
             </p>
           }
@@ -94,11 +93,9 @@ export default function Topology() {
           </div>
         </div>
         <p className="leading-7">
-          한 800G OSFP direct cable이 split된 두 400G logical link를 같은 peer에
-          제공한다고 가정한 nominal 수치다. protocol overhead, collective
-          topology, PCIe·GPU affinity, 양방향 traffic 때문에 application
-          bandwidth와 같지 않다. 4-node·12-cable 구성은 pair마다 cable 두 개를
-          배정한 사례이며 8-node에도 그대로 적용할 수 없다.
+          한 800G OSFP direct cable이 split된 두 400G logical link를 같은 peer에 제공한다고 가정한 nominal 수치다. protocol
+          overhead, collective topology, PCIe·GPU affinity, 양방향 traffic 때문에 application bandwidth와는 다르다.
+          4-node·12-cable 구성은 pair마다 cable 두 개를 배정한 사례라 8-node에 그대로 옮길 수 없다.
         </p>
       </div>
     </section>

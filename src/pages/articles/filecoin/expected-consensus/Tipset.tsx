@@ -13,10 +13,8 @@ export default function Tipset({ onCodeRef }: Props) {
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          한 epoch에 여러 provider가 당선될 수 있으므로 Filecoin은 호환되는
-          block을 tipset으로 묶습니다. Height가 같다는 조건만으로는 부족하며
-          parent tipset과 parent state·receipt commitment 등 합의에 필요한
-          조건이 일치해야 같은 tipset이 됩니다.
+          한 epoch에 여러 provider가 당선될 수 있으므로 Filecoin은 호환되는 block을 tipset으로 묶습니다. Height가 같다는 조건만으로는 부족합니다. 여기에
+          parent tipset과 parent state·receipt commitment 등 합의에 필요한 조건까지 일치해야 같은 tipset이 됩니다.
         </p>
         <p>
           Node는 유효한 tipset을 이어 붙여 후보 chain을 만들고 누적 weight로
@@ -31,10 +29,8 @@ export default function Tipset({ onCodeRef }: Props) {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Null round도 chain history의 일부다</h3>
         <p>
-          어떤 epoch에는 유효한 block이 없을 수 있습니다. 이때 height는
-          건너뛰지만 다음 block의 state transition은 지나간 epoch와 cron
-          processing을 반영해야 합니다. 따라서 tipset 수와 epoch 수를 같은
-          값으로 가정하면 replay와 state computation을 잘못 해석하게 됩니다.
+          어떤 epoch에는 유효한 block이 없을 수 있습니다. 이때 height는 건너뛰지만 다음 block의 state transition은 지나간 epoch와 cron
+          processing을 반영합니다. 따라서 tipset 수와 epoch 수를 같은 값으로 가정하면 replay와 state computation을 잘못 해석하게 됩니다.
         </p>
         <h3>Cache 크기는 protocol 상수가 아니다</h3>
         <p>

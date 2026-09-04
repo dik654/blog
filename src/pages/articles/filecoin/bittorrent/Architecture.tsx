@@ -16,10 +16,8 @@ export default function Architecture() {
         </p>
         <h3 className="text-xl font-semibold mt-6 mb-3">Tit-for-Tat 전략</h3>
         <p>
-          클라이언트는 자신에게 데이터를 잘 보내는 피어를 우선적으로
-          unchoke하는 상호주의 전략을 사용한다. 다만 실제 구현에는 optimistic
-          unchoke와 peer selection 정책도 함께 들어가므로, tit-for-tat을 단순한
-          일대일 보상 규칙으로 이해하면 동작을 놓치기 쉽다.
+          클라이언트는 자신에게 데이터를 잘 보내는 피어를 우선적으로 unchoke하는 상호주의 전략을 사용한다. 다만 실제 구현에는 optimistic unchoke와 peer
+          selection 정책도 함께 들어가므로 tit-for-tat을 단순한 일대일 보상 규칙으로 이해하면 동작을 놓치기 쉽다.
         </p>
       </div>
     </section>

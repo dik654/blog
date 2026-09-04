@@ -56,14 +56,10 @@ export default function InfiniBand() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <div id="collective-rank-semantics" className="scroll-mt-24">
           <p className="leading-7">
-            InfiniBand는 GPU 전용이거나 단일 회사의 비공개 protocol이 아니라
-            server·storage 연결을 위한 IBTA 표준 channel-based switched
-            fabric이다. Reliable messaging와 RDMA semantics, HCA·switch·subnet
-            management를 하나의 ecosystem으로 제공해 HPC와 분산 학습에 널리
-            쓰인다. 다만 collective는 fabric 이름만으로 빨라지지 않는다. 같은
-            count와 datatype으로 참여한 rank들의 위치, node 안 NVLink·PCIe 경로,
-            node 밖 HCA와 fabric 경로, message size와 algorithm이 함께 완료
-            시간을 만든다.
+            InfiniBand는 server·storage 연결을 위한 IBTA 표준 channel-based switched fabric이다. GPU 전용도, 단일 회사의 비공개
+            protocol도 아니다. Reliable messaging와 RDMA semantics, HCA·switch·subnet management를 하나의 ecosystem으로
+            제공해 HPC와 분산 학습에 널리 쓰인다. 다만 collective는 fabric 이름만으로 빨라지지 않는다. 같은 count와 datatype으로 참여한 rank들의 위치,
+            node 안 NVLink·PCIe 경로, node 밖 HCA와 fabric 경로, message size와 algorithm이 함께 완료 시간을 만든다.
           </p>
         </div>
 
@@ -96,12 +92,9 @@ export default function InfiniBand() {
           NDR·XDR 이름만으로 포트 bandwidth를 읽지 않는다
         </h3>
         <p className="leading-7">
-          InfiniBand data rate 세대는 lane 속도를 포함한 규격 이름이고, 실제
-          port는 1x·2x·4x 같은 link width와 encoding·FEC를 조합한다. 같은
-          세대라도 adapter port, switch port와 cable breakout 방식에 따라
-          aggregate와 endpoint rate가 달라질 수 있다. 따라서 IBTA 규격 세대,
-          제품의 실제 width, 단방향·양방향 표기와 application payload goodput을
-          구분해 기록한다.
+          InfiniBand data rate 세대는 lane 속도를 포함한 규격 이름이고 실제 port는 1x·2x·4x 같은 link width와 encoding·FEC를 조합한다.
+          같은 세대라도 adapter port, switch port와 cable breakout 방식에 따라 aggregate와 endpoint rate가 달라질 수 있다. IBTA 규격
+          세대, 제품의 실제 width, 단방향·양방향 표기와 application payload goodput은 구분해 기록한다.
         </p>
 
         <h3
@@ -111,12 +104,10 @@ export default function InfiniBand() {
           노드 안과 밖의 topology를 함께 본다
         </h3>
         <p className="leading-7">
-          GPU collective는 노드 안의 NVLink·PCIe와 노드 밖의 HCA·fabric을
-          연속해서 사용한다. Rank가 어느 GPU에 있고 그 GPU에서 가장 가까운 HCA가
-          무엇인지, collective algorithm이 ring·tree 등의 path를 어떻게
-          만드는지가 성능에 영향을 준다. 단일 pair bandwidth 다음에는 실제 rank
-          수와 message size로 all-reduce·all-gather·reduce-scatter를 측정하고,
-          operation time·algorithm bandwidth·bus bandwidth를 함께 비교한다.
+          GPU collective는 노드 안의 NVLink·PCIe와 노드 밖의 HCA·fabric을 연속해서 사용한다. Rank가 어느 GPU에 있고 그 GPU에서 가장 가까운 HCA가
+          무엇인지, collective algorithm이 ring·tree 등의 path를 어떻게 만드는지가 성능에 영향을 준다. 단일 pair bandwidth 다음에는 실제 rank
+          수와 message size로 all-reduce·all-gather·reduce-scatter를 측정하고 operation time·algorithm bandwidth·bus
+          bandwidth를 함께 비교한다.
         </p>
 
         <ExplainedFormula
@@ -210,9 +201,8 @@ export default function InfiniBand() {
         <div className="not-prose my-6 rounded-r-lg border-l border-emerald-500/60 bg-emerald-500/5 p-4">
           <p className="mb-1 font-semibold">선택 기준</p>
           <p className="text-sm leading-6">
-            같은 모델·rank placement·message size에서 collective 완료 시간과 GPU
-            utilization을 비교하고, 혼잡·link loss 후 회복과 팀이 운영할 수 있는
-            telemetry까지 포함해 fabric을 결정한다.
+            같은 모델·rank placement·message size에서 collective 완료 시간과 GPU utilization을 비교하고 혼잡·link loss 후 회복과 팀이
+            운영할 수 있는 telemetry까지 포함해 fabric을 결정한다.
           </p>
         </div>
 

@@ -10,9 +10,8 @@ export default function Protocol() {
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          장난감 F₂₃*에서 g=5, Alice secret a=6, Bob secret b=15로 계산합니다.
-          공개값은 A=5⁶ mod23=8, B=5¹⁵ mod23=19입니다. 이 예는 메시지 순서와
-          등식의 직관만 주며 실제 보안은 group order 22가 너무 작아 없습니다.
+          장난감 F₂₃*에서 g=5, Alice secret a=6, Bob secret b=15로 계산합니다. 공개값은 A=5⁶ mod23=8, B=5¹⁵ mod23=19입니다. 이 예가
+          주는 것은 메시지 순서와 등식의 직관뿐입니다. group order가 22로 너무 작아 실제 보안은 없습니다.
         </p>
       </div>
       <DHFlowViz />

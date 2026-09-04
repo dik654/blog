@@ -12,11 +12,9 @@ export default function DDR() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <div id="ddr5-subchannel-burst" className="scroll-mt-24">
           <p>
-            DDR(Double Data Rate)의 MT/s는 초당 data transfer 횟수이지 MHz와
-            같은 clock 표기가 아닙니다. DDR5 DIMM은 일반적인 64-bit module data
-            path를 두 개의 독립 32-bit subchannel로 나누고 burst length를 늘려,
-            더 작은 요청을 서로 다른 bank에 배치하기 쉽게 만듭니다. 이것은 한
-            DIMM의 총 data width가 두 배가 되었다는 뜻이 아닙니다.
+            DDR(Double Data Rate)의 MT/s는 초당 data transfer 횟수이지 MHz와 같은 clock 표기가 아닙니다. DDR5 DIMM은 일반적인 64-bit
+            module data path를 두 개의 독립 32-bit subchannel로 나누고 burst length를 늘려 더 작은 요청을 서로 다른 bank에 배치하기 쉽게
+            만듭니다. 한 DIMM의 총 data width는 여전히 64-bit입니다.
           </p>
         </div>
         <div id="ddr-channel-bandwidth-latency" className="scroll-mt-24">
@@ -109,11 +107,9 @@ export default function DDR() {
           />
         </div>
         <p>
-          실제 측정에서는 한 DIMM을 더 꽂아 capacity가 늘어도 2DPC 신호 조건으로
-          MT/s가 낮아질 수 있고, thread가 remote NUMA node를 읽으면 socket 간
-          interconnect가 추가됩니다. 같은 CPU·firmware에서 channel population,
-          NUMA pinning과 read/write mix를 고정해 STREAM 같은 순차 bandwidth와
-          실제 application 시간을 함께 비교합니다.
+          실제 측정에서는 한 DIMM을 더 꽂아 capacity가 늘어도 2DPC 신호 조건으로 MT/s가 낮아질 수 있습니다. thread가 remote NUMA node를 읽으면
+          socket 간 interconnect도 추가됩니다. 같은 CPU·firmware에서 channel population, NUMA pinning과 read/write mix를
+          고정해 STREAM 같은 순차 bandwidth와 실제 application 시간을 함께 비교합니다.
         </p>
         <div id="paper-jedec-ddr5" className="scroll-mt-24">
           <CitationBlock

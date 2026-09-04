@@ -111,7 +111,9 @@ export default function Consumer() {
         </p>
 
         <div className="not-prose my-6 border-l-4 border-amber-400 bg-amber-50/60 dark:bg-amber-950/20 rounded-r-lg p-4">
-          <p className="font-semibold mb-1">💡 가격 대신 총 시스템 비용</p>
+          <p className="font-semibold mb-1">
+            가격 대신 총 시스템 비용
+          </p>
           <p className="text-sm leading-6">
             GPU 판매가는 시점과 지역에 따라 크게 변함.
             <br />

@@ -23,12 +23,10 @@ export default function Security() {
       <div id="authenticated-transcript" className="scroll-mt-24 prose prose-neutral max-w-none dark:prose-invert">
         <h3>MITM은 DH 등식을 깨지 않고 두 세션을 만든다</h3>
         <p>
-          Mallory는 Alice의 A를 Bob에게 전달하지 않고 M₁을 보내고, Bob의 B 대신
-          M₂를 Alice에게 보냅니다. Alice–Mallory와 Mallory–Bob은 각각 올바른 DH
-          key를 계산하므로 단순 key confirmation만으로 신원은 생기지 않습니다.
-          인증서는 public key와 identity를 연결하고 signature 또는 PSK MAC은 role,
-          algorithm negotiation, ephemeral A/B를 포함한 transcript를 인증해야
-          downgrade와 unknown-key-share를 막을 수 있습니다.
+          Mallory는 Alice의 A를 Bob에게 전달하지 않고 M₁을 보내고 Bob의 B 대신 M₂를 Alice에게 보냅니다. Alice–Mallory와 Mallory–Bob은 각각
+          올바른 DH key를 계산하므로 단순 key confirmation만으로 신원은 생기지 않습니다. 인증서는 public key와 identity를 연결합니다. downgrade와
+          unknown-key-share를 막으려면 signature 또는 PSK MAC이 transcript를 인증해야 합니다. 그 transcript에는 role, algorithm
+          negotiation, ephemeral A/B가 들어갑니다.
         </p>
       </div>
 
@@ -58,26 +56,22 @@ export default function Security() {
       <div id="ephemeral-lifecycle" className="scroll-mt-24 prose prose-neutral max-w-none dark:prose-invert">
         <h3>Forward secrecy는 ephemeral secret을 실제로 폐기할 때만 성립한다</h3>
         <p>
-          매 session 새 ephemeral a,b를 만들고 인증용 long-term key와 분리하며,
-          handshake 완료·실패 뒤 secret과 intermediate를 지웁니다. 훗날 long-term
-          signing key가 노출돼도 과거 ephemeral secret과 raw DH output이 남아 있지
-          않으면 recorded traffic의 과거 key 복원을 막을 수 있습니다. VM snapshot,
-          forked RNG state, crash dump, session ticket와 application plaintext 보관은
-          이 결론의 별도 반례입니다.
+          매 session 새 ephemeral a,b를 만들고 인증용 long-term key와 분리합니다. handshake가 완료되거나 실패한 뒤에는 secret과
+          intermediate를 지웁니다. 훗날 long-term signing key가 노출돼도 과거 ephemeral secret과 raw DH output이 남아 있지 않으면
+          recorded traffic의 과거 key 복원을 막을 수 있습니다. VM snapshot, forked RNG state, crash dump, session ticket와
+          application plaintext 보관은 이 결론의 별도 반례입니다.
         </p>
       </div>
 
       <div id="dh-release-gate" className="scroll-mt-24 prose prose-neutral max-w-none dark:prose-invert">
         <h3>Release gate와 선택 기준</h3>
         <p>
-          새 DH path는 protocol/library version, curve/group, role, credential,
-          transcript schema와 KDF labels를 receipt에 고정합니다. Official positive
-          vectors와 malformed length, noncanonical input policy, X25519 all-zero output,
-          wrong group/subgroup, reflection, swapped role, downgrade, replayed ephemeral,
-          bad signature/MAC, key-confirmation failure, RNG clone, crash/restart를 검사합니다.
-          Typed outcome과 derived-key parity가 맞은 뒤 latency와 allocation을 봅니다.
-          새 protocol을 직접 조합하기보다 TLS 1.3이나 검토된 Noise pattern처럼
-          인증과 schedule이 정의된 protocol을 우선합니다.
+          새 DH path는 protocol/library version, curve/group, role, credential, transcript schema와 KDF labels를
+          receipt에 고정합니다. Official positive vectors와 malformed length, noncanonical input policy, X25519 all-
+          zero output을 검사합니다. 여기에 wrong group/subgroup, reflection, swapped role, downgrade, replayed
+          ephemeral을 더합니다. 마지막은 bad signature/MAC과 key-confirmation failure, RNG clone, crash/restart입니다.
+          Typed outcome과 derived-key parity가 맞은 뒤 latency와 allocation을 봅니다. 새 protocol을 직접 조합하기보다 TLS 1.3이나
+          검토된 Noise pattern처럼 인증과 schedule이 정의된 protocol을 우선합니다.
         </p>
       </div>
 

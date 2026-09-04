@@ -115,10 +115,8 @@ export default function Overview() {
             question="800 Gb/s라고 적힌 포트에서 애플리케이션이 실제로 옮긴 데이터 속도는 어떻게 구분하는가?"
             idea={
               <p>
-                포트의 line rate는 wire가 전달하는 bit의 속도이고, goodput은
-                작업이 끝날 때까지 실제 payload byte를 옮긴 속도입니다. Bit를
-                byte로 바꾸고 protocol·FEC·header·idle·queue 시간을 제외해야 두
-                값을 같은 단위로 비교할 수 있습니다.
+                포트의 line rate는 wire가 전달하는 bit의 속도이고 goodput은 작업이 끝날 때까지 실제 payload byte를 옮긴 속도입니다. Bit를 byte로
+                바꾸고 protocol·FEC·header·idle·queue 시간을 제외해야 두 값을 같은 단위로 비교할 수 있습니다.
               </p>
             }
             formula={String.raw`G_{\mathrm{payload}}=\frac{Q_{\mathrm{payload}}}{T_{\mathrm{completion}}}\le \frac{R_{\mathrm{line}}}{8}`}
@@ -188,10 +186,8 @@ export default function Overview() {
           </p>
         </div>
         <p>
-          이 글은 GPU memory에서 PCIe·NVLink를 거쳐 HCA와 switched fabric으로
-          나가는 경로를 먼저 보고, 그 뒤 Ethernet·RDMA·InfiniBand의 계약을
-          확장합니다. CUDA block·stream은 각 정본 글에서 재사용하며 여기서는
-          interconnect topology와 end-to-end 측정만 소유합니다.
+          이 글은 GPU memory에서 PCIe·NVLink를 거쳐 HCA와 switched fabric으로 나가는 경로를 먼저 보고 그 뒤 Ethernet·RDMA·InfiniBand의
+          계약을 확장합니다. CUDA block·stream은 각 정본 글에서 재사용하며 여기서는 interconnect topology와 end-to-end 측정만 소유합니다.
         </p>
 
         <div id="paper-ethernet-8023" className="scroll-mt-24">

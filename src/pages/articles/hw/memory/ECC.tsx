@@ -25,13 +25,10 @@ export default function ECC() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <div id="ecc-protection-boundary" className="scroll-mt-24">
           <p>
-            DDR5 on-die ECC는 DRAM die 내부 cell array에서 read한 값을
-            내부적으로 교정해 yield와 신뢰성을 높입니다. 하지만 chip 밖 DQ pin,
-            module trace, memory bus에서 생긴 오류를 대신 보호하지 않습니다.
-            System ECC는 추가 check bit가 있는 DIMM과 memory controller가
-            codeword를 만들고 syndrome을 계산해 이 더 넓은 transfer 경계를
-            보호합니다. 따라서 “DDR5이므로 ECC”와 “system ECC memory”는 같은
-            말이 아닙니다.
+            DDR5 on-die ECC는 DRAM die 내부 cell array에서 read한 값을 내부적으로 교정해 yield와 신뢰성을 높입니다. 하지만 chip 밖 DQ pin,
+            module trace, memory bus에서 생긴 오류를 대신 보호하지 않습니다. System ECC는 추가 check bit가 있는 DIMM과 memory
+            controller가 codeword를 만들고 syndrome을 계산해 이 더 넓은 transfer 경계를 보호합니다. “DDR5이므로 ECC”와 “system ECC
+            memory”는 같은 말이 아닙니다.
           </p>
         </div>
         <div id="ecc-syndrome-secded" className="scroll-mt-24">
@@ -77,12 +74,9 @@ export default function ECC() {
           />
         </div>
         <p>
-          Corrected error는 즉시 data를 복구했다는 뜻이지 hardware가 건강하다는
-          뜻은 아닙니다. 같은 DIMM·rank에서 증가하면 열, 전원, socket contact나
-          device 열화의 신호일 수 있으므로 로그를 지우지 않고 시간당 비율과 물리
-          위치를 남깁니다. Uncorrectable error에는 process 종료나 machine
-          check가 뒤따를 수 있어 service failover와 host 격리를 실제로 시험해야
-          합니다.
+          Corrected error는 즉시 data를 복구했다는 뜻일 뿐입니다. hardware의 건강 상태를 말해 주지는 않습니다. 같은 DIMM·rank에서 증가하면 열, 전원,
+          socket contact나 device 열화의 신호일 수 있으므로 로그를 지우지 않고 시간당 비율과 물리 위치를 남깁니다. Uncorrectable error에는 process
+          종료나 machine check가 뒤따를 수 있어 service failover와 host 격리를 실제로 시험해야 합니다.
         </p>
         <div className="not-prose my-6 grid min-w-0 gap-3 sm:grid-cols-2">
           {operations.map(([title, detail]) => (

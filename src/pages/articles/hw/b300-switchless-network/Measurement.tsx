@@ -80,10 +80,8 @@ export default function Measurement() {
           Direct RDMA, duplex 방향을 함께 보존해야 재현 가능한 결과가 된다.
         </p>
         <p className="leading-7">
-          4–8 node에서 보고한 4–6Tb/s 범위는 별도 topology·collective 실측으로
-          분리해야 하며, 이 2-node 숫자에서 자동으로 외삽하지 않는다.
-          all-gather, all-to-all, reduce-scatter는 traffic pattern이 달라 각각
-          측정한다.
+          4–8 node에서 보고한 4–6Tb/s 범위는 별도 topology·collective 실측으로 분리한다. 이 2-node 숫자에서 자동으로 외삽하지 않는다. all-
+          gather, all-to-all, reduce-scatter는 traffic pattern이 달라 각각 측정한다.
         </p>
         <div id="paper-switchless-measurement" className="scroll-mt-24">
           <CitationBlock source="NVIDIA nccl-tests performance semantics" citeKey={6} href="https://github.com/NVIDIA/nccl-tests/blob/master/doc/PERFORMANCE.md">

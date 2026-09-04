@@ -6,7 +6,12 @@ export default function ModernExpectedConsensusArticle() {
   return <article className="space-y-14">
     <section id="overview" className="space-y-6">
       <header className="space-y-3"><p className="text-sm font-semibold text-primary">Filecoin Expected Consensus</p><h2 className="text-3xl font-bold tracking-tight">누가 block을 만들고, 어떤 blocks를 묶고, 어느 valid branch를 head로 볼지 나눈다</h2></header>
-      <p className="text-lg leading-8 text-foreground/90">Alice가 Bob에게 5 FIL을 보내는 signed message를 냈다고 하겠습니다. Storage provider는 자신의 quality-adjusted power(QAP, 유효 저장 기여도를 반영한 power)와 election proof로 그 epoch에 block을 만들 권리를 얻습니다. 여러 provider가 동시에 block을 만들 수 있으므로 compatible blocks는 하나의 tipset이 되고, node는 모든 block을 검증한 뒤 누적 weight가 큰 valid branch를 local head로 선택합니다.</p>
+      <p className="text-lg leading-8 text-foreground/90">
+            Alice가 Bob에게 5 FIL을 보내는 signed message를 냈다고 하겠습니다. Storage provider는 자신의 quality-adjusted
+            power(QAP, 유효 저장 기여도를 반영한 power)와 election proof로 그 epoch에 block을 만들 권리를 얻습니다. 여러 provider가 동시에
+            block을 만들 수 있으므로 compatible blocks는 하나의 tipset이 되고 node는 모든 block을 검증한 뒤 누적 weight가 큰 valid
+            branch를 local head로 선택합니다.
+          </p>
       <p>이 순서에서 reception, validation, inclusion, execution success, canonical head, irreversible finality는 서로 다른 milestone입니다. Message가 block에 들어가도 block이 invalid이면 후보에서 빠지고, valid branch가 head가 되어도 더 무거운 compatible branch가 나타나면 바뀔 수 있습니다. 이 글은 EC가 소유하는 leader sortition과 weighted fork choice까지만 설명하며 F3 certificate finality는 별도 글에서 이어집니다.</p>
       <ExpectedConsensusTraceViz />
       <aside className="rounded-lg border border-primary/30 bg-primary/5 p-5 text-sm leading-6"><strong>핵심 아이디어:</strong> Expected Consensus는 power 지분을 매 epoch의 확률적 win count로 바꾸고, 같은 parent state를 실행할 수 있는 blocks만 tipset으로 묶습니다. 그 다음에야 완전히 검증한 branches의 chain weight를 비교합니다.</aside>
@@ -14,7 +19,12 @@ export default function ModernExpectedConsensusArticle() {
 
     <section id="sortition" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">01 · Poisson sortition</p><h2 className="mt-2 text-2xl font-bold">Power 지분은 고정 일정표가 아니라 epoch별 win count 분포가 된다</h2></header>
-      <p>Provider의 election proof에는 VRF output이 들어가며 Lotus는 이를 균일 난수로 해석한 뒤 Poisson inverse CDF를 사용해 win count를 계산합니다. 한 provider가 10% power를 가졌다고 “열 epoch마다 정확히 한 번” 당첨되는 것이 아닙니다. 어떤 epoch에는 0회, 다른 epoch에는 여러 win을 받을 수 있고, expected leader count가 전체 평균을 정합니다. VRF domain, beacon randomness, miner identity와 power snapshot이 달라지면 같은 byte를 재사용할 수 없습니다.</p>
+      <p>
+            Provider의 election proof에는 VRF output이 들어가며 Lotus는 이를 균일 난수로 해석한 뒤 Poisson inverse CDF를 사용해 win
+            count를 계산합니다. 한 provider의 power가 10%라고 해서 “열 epoch마다 정확히 한 번” 당첨되지는 않습니다. 어떤 epoch에는 0회, 다른
+            epoch에는 여러 win을 받을 수 있고 expected leader count가 전체 평균을 정합니다. VRF domain, beacon randomness, miner
+            identity와 power snapshot이 달라지면 같은 byte를 재사용할 수 없습니다.
+          </p>
       <ExplainedFormula question="Power 지분 s인 provider가 한 epoch에 j번 당첨될 확률은 어떻게 정해지는가?" idea={<>전체 expected leaders E에 provider의 QAP 지분 s를 곱해 Poisson rate lambda를 만듭니다. 이 분포에서 나온 j는 block의 ElectionProof.WinCount에 들어가며 branch weight 증가에도 사용됩니다.</>} formula={String.raw`\lambda=E\frac{p}{P},\qquad \Pr[J=j]=e^{-\lambda}\frac{\lambda^j}{j!}`}
       annotatedFormula={String.raw`\lambda=\underbrace{E\frac{p}{P},\qquad \Pr[J=j]=e^{-\lambda}\frac{\lambda^j}{j!}}_{\text{기준량당 비율}}`}
       operations={[
@@ -26,8 +36,18 @@ export default function ModernExpectedConsensusArticle() {
 
     <section id="tipset-weight" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">02 · tipset, validation, weight</p><h2 className="mt-2 text-2xl font-bold">같은 height만 보지 않고 같은 부모 상태를 실행할 수 있는지부터 확인한다</h2></header>
-      <p>같은 epoch의 block A와 B라도 parent tipset, parent state root, parent message receipts 등 consensus-critical commitments가 맞아야 한 tipset으로 묶을 수 있습니다. 다른 parent를 가리키는 C는 height가 같아도 별도 fork입니다. 이 조건이 필요한 이유는 tipset의 messages를 하나의 deterministic parent state 위에서 실행해야 하기 때문입니다. Height만 비교해 A·C를 합치면 어느 state에서 시작할지 정할 수 없습니다.</p>
-      <p>호환성은 아직 validity가 아닙니다. Node는 parent와 height·timestamp, parent weight, miner와 power eligibility, election proof와 win count, WinningPoSt, block signature, message root와 message validity를 검사합니다. Valid signature 하나가 나머지 검사를 대신하지 않습니다. 검증에 실패한 block은 weight 경쟁에 넣지 않으며, 검증 결과도 application message의 business success와는 구분합니다.</p>
+      <p>
+            같은 epoch의 block A와 B라도 parent tipset, parent state root, parent message receipts 등 consensus-
+            critical commitments가 맞아야 한 tipset으로 묶을 수 있습니다. 다른 parent를 가리키는 C는 height가 같아도 별도 fork입니다. tipset의
+            messages를 하나의 deterministic parent state 위에서 실행하려면 이 조건이 필요합니다. Height만 비교해 A·C를 합치면 어느 state에서
+            시작할지 정할 수 없습니다.
+          </p>
+      <p>
+            호환성은 아직 validity가 아닙니다. Node는 parent와 height·timestamp, parent weight, miner와 power eligibility를
+            검사합니다. 여기에 election proof와 win count, WinningPoSt, block signature, message root와 message
+            validity가 더해집니다. Valid signature 하나가 나머지 검사를 대신하지 않습니다. 검증에 실패한 block은 weight 경쟁에 넣지 않으며 검증 결과도
+            application message의 business success와는 구분합니다.
+          </p>
       <ExplainedFormula question="두 valid EC branches 가운데 local head를 어떻게 비교하는가?" idea={<>Parent weight에 network power의 log term과 tipset election wins에 따른 증가분을 더합니다. 실제 Lotus는 consensus-critical integer arithmetic과 build constants를 사용하므로 아래 식은 구조를 읽기 위한 요약이고 exact comparison은 pinned code로 재현합니다.</>} formula={String.raw`W(T)=W(parent)+\Delta_{power}(P)+\Delta_{wins}(P,J_T)`}
       annotatedFormula={String.raw`W(T)=\underbrace{W(parent)+\Delta_{power}(P)+\Delta_{wins}(P,J_T)}_{\text{변화량 계산}}`}
       operations={[
@@ -39,9 +59,20 @@ export default function ModernExpectedConsensusArticle() {
 
     <section id="release" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">03 · failure와 release</p><h2 className="mt-2 text-2xl font-bold">Head change를 정상 상태로 취급하되 invalid branch와 finality 오표시는 차단한다</h2></header>
-      <p>Reorg test는 Alice→Bob message가 들어간 branch A와 다른 valid branch B를 같은 parent에서 만들고, 검증·tipset compatibility·weight를 순서대로 재생해야 합니다. Wrong election proof, stale parent state, invalid WinningPoSt, mismatched message root는 weight 계산 전에 거절되어야 합니다. 두 valid branches라면 weight가 큰 쪽으로 head가 이동하고, application state와 message receipt도 새 head를 기준으로 되돌려 재실행되어야 합니다.</p>
+      <p>
+            Reorg test는 같은 parent에서 branch A와 branch B를 만듭니다. A에는 Alice→Bob message가 들어가고 B는 그와 다른 valid
+            branch입니다. 그다음 검증·tipset compatibility·weight를 순서대로 재생합니다. Wrong election proof, stale parent
+            state, invalid WinningPoSt, mismatched message root는 weight 계산 전에 거절됩니다. 두 valid branches라면
+            weight가 큰 쪽으로 head가 이동하고 application state와 message receipt도 새 head를 기준으로 되돌려 재실행합니다.
+          </p>
       <p>Block이 하나도 만들어지지 않은 <strong>null epoch</strong>도 block이나 빈 tipset 한 개로 세면 안 됩니다. Epoch clock은 계속 전진하고 다음 tipset은 이전 tipset보다 height를 여러 칸 건너뛸 수 있으며, VM은 그 차이에 해당하는 cron·state effects를 protocol 순서대로 반영합니다. 따라서 tipset 개수와 epoch 차이는 같지 않습니다. 이 경계를 포함한 fixture는 null 구간 뒤 parent state와 다음 block의 height·timestamp가 같은 결과를 내는지 확인해야 합니다.</p>
-      <p>Sortition regression은 VRF bytes, domain separation inputs, power snapshot, expected leaders와 network version을 고정하고 inverse-Poisson 결과 j와 implementation의 maximum bound를 함께 확인합니다. Concurrent block validation은 모든 checks가 같은 parent tipset key·lookback state·network version을 읽었는지 receipt에 묶어 race를 차단합니다. Weight fixture는 exact constants와 parent weight·QAP·win counts를 저장하고, 같은 weight가 나온 경우에도 pinned chain-store의 deterministic tie rule을 재현한 뒤 head transition을 비교합니다.</p>
+      <p>
+            Sortition regression은 VRF bytes, domain separation inputs, power snapshot, expected leaders와
+            network version을 고정합니다. 그 상태에서 inverse-Poisson 결과 j와 implementation의 maximum bound를 함께 확인합니다.
+            Concurrent block validation은 모든 checks가 같은 parent tipset key·lookback state·network version을 읽었는지
+            receipt에 묶어 race를 차단합니다. Weight fixture는 exact constants와 parent weight·QAP·win counts를 저장합니다. 같은
+            weight가 나온 경우에도 pinned chain-store의 deterministic tie rule을 재현한 뒤 head transition을 비교합니다.
+          </p>
       <p>API는 <code>received</code>, <code>validated</code>, <code>EC head included</code>, <code>F3 finalized</code>를 따로 노출해야 합니다. EC head만 보고 irreversible이라고 표시하면 정상 reorg가 사용자에게 이중 지불처럼 보일 수 있습니다. Release에는 exact Lotus/network revision, power snapshot, tipset keys, validation receipt와 head-change trace를 남기고, F3 lag가 큰 동안에는 finality-dependent withdrawal을 보류합니다.</p>
       <div className="grid gap-4 md:grid-cols-2"><aside className="rounded-lg border border-border p-4"><h3 className="font-semibold">안전 gate</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">Invalid block weight 경쟁 0, incompatible tipset merge 0, wrong parent state execution 0.</p></aside><aside className="rounded-lg border border-border p-4"><h3 className="font-semibold">운영 gate</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">Head와 F3 certificate 높이를 분리하고 reorg depth·validation latency·certificate lag를 기록합니다.</p></aside></div>
       <h3 className="text-xl font-semibold">이 글만으로 풀어야 하는 10문제</h3><p>기초 6문제는 Poisson win count, 0-win 확률, tipset compatibility, validation, chain weight와 EC/F3 경계를 묻습니다. 심화 4문제는 stale power, invalid-heavy branch, reorg replay와 finality-dependent release를 설계하게 합니다. 위 수식과 반례만으로 각 답의 전제까지 설명할 수 있어야 합니다.</p>

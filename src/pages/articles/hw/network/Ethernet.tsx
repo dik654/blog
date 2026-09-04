@@ -61,12 +61,10 @@ export default function Ethernet() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <div id="ethernet-link-contract" className="scroll-mt-24">
           <p className="leading-7">
-          Ethernet 속도 이름은 배선 계약의 한 항목일 뿐이다. NIC와 switch가 같은
-          MAC rate를 지원해도 lane·PHY·FEC·module·fiber가 맞지 않으면 연결할 수
-          없고, 연결돼도 protocol overhead와 congestion 때문에 application
-          goodput은 line rate보다 낮다. 따라서 port 이름만 비교하지 않고 양 끝의
-          전체 compatibility chain을 확인한다.
-          </p>
+          Ethernet 속도 이름은 배선 계약의 한 항목일 뿐이다. NIC와 switch가 같은 MAC rate를 지원해도 lane·PHY·FEC·module·fiber가 맞지 않으면
+          연결할 수 없고 연결돼도 protocol overhead와 congestion 때문에 application goodput은 line rate보다 낮다. port 이름만 비교하지
+          말고 양 끝의 전체 compatibility chain을 확인한다.
+        </p>
         </div>
 
         <div data-viz="ethernet-link-contract-ledger" className="not-prose my-6 overflow-hidden rounded-lg border border-border/70">
@@ -88,21 +86,16 @@ export default function Ethernet() {
           leaf-spine의 실제 capacity
         </h3>
         <p className="leading-7">
-          host-facing port의 합을 leaf uplink 합으로 나눈 oversubscription은
-          출발점이고, 실제 결과는 동시에 통신하는 source·destination이 어느
-          leaf에 있는지와 ECMP hash가 path를 얼마나 고르게 쓰는지에 달린다. 장애로
-          uplink 하나가 빠졌을 때의 비율과 elephant·mice flow가 섞일 때의
-          queue도 함께 계산한다. 또한
-          필요하면 workload placement를 fabric topology에 맞춰 cross-leaf
-          traffic 자체를 줄인다.
+          host-facing port의 합을 leaf uplink 합으로 나눈 oversubscription은 출발점이다. 실제 결과는 동시에 통신하는 source·destination이
+          어느 leaf에 있는지와 ECMP hash가 path를 얼마나 고르게 쓰는지에 달린다. 장애로 uplink 하나가 빠졌을 때의 비율과 elephant·mice flow가 섞일 때의
+          queue도 함께 계산한다. 필요하면 workload placement를 fabric topology에 맞춰 cross-leaf traffic 자체를 줄인다.
         </p>
         <ExplainedFormula
           question="Leaf에 host-facing bandwidth가 많아도 uplink가 부족한 상태를 어떻게 수치로 나타내는가?"
           idea={
             <p>
-              동시에 fabric을 향할 수 있는 host port 용량의 합을 현재 살아 있는
-              uplink 용량의 합으로 나눕니다. 정상 상태와 한 uplink가 빠진 실패
-              상태를 따로 계산해야 장애 순간의 병목을 볼 수 있습니다.
+              동시에 fabric을 향할 수 있는 host port 용량을 모두 더해 현재 살아 있는 uplink 용량의 합으로 나눕니다. 정상 상태와 한 uplink가 빠진 실패 상태를
+              따로 계산해야 장애 순간의 병목을 볼 수 있습니다.
             </p>
           }
           formula={String.raw`\rho_{\mathrm{os}}=\frac{\sum_i C_{\mathrm{host},i}}{\sum_{j\in A}C_{\mathrm{uplink},j}}`}
@@ -149,10 +142,8 @@ export default function Ethernet() {
         </div>
 
         <p className="leading-7">
-          가동 후에는 link up만 보지 않고 corrected/uncorrected FEC, CRC, symbol
-          error, flap, drop, queue와 optical power를 기준선과 비교함. error가
-          증가하면 cable·optic·port를 한 번에 바꾸지 말고 한 요소씩 교체해
-          원인을 좁힌다.
+          가동 후에는 link up만 보지 않고 corrected/uncorrected FEC, CRC, symbol error, flap, drop, queue와 optical
+          power를 기준선과 비교한다. error가 증가하면 cable·optic·port를 한 번에 바꾸지 말고 한 요소씩 교체해 원인을 좁힌다.
         </p>
 
         <CitationBlock

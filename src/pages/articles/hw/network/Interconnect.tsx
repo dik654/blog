@@ -13,13 +13,10 @@ export default function Interconnect() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <div id="pcie-transaction-bandwidth-latency" className="scroll-mt-24">
           <p>
-            GPU kernel이 끝나도 결과가 다른 GPU나 node로 가려면 interconnect를
-            통과해야 합니다. PCIe는 CPU root complex, GPU와 NIC를 연결하는 범용
-            transaction fabric이고, NVLink는 지원되는 GPU 사이에 더 높은
-            대역폭과 peer access를 제공하는 device interconnect입니다. Node
-            밖에서는 HCA와 Ethernet·InfiniBand fabric이 이어집니다. 각 구간의
-            peak rate를 더하는 것이 아니라 실제 path에서 가장 좁고 가장 많이
-            공유되는 구간을 찾아야 합니다.
+            GPU kernel이 끝나도 결과가 다른 GPU나 node로 가려면 interconnect를 통과해야 합니다. PCIe는 CPU root complex, GPU와 NIC를
+            연결하는 범용 transaction fabric이고 NVLink는 지원되는 GPU 사이에 더 높은 대역폭과 peer access를 제공하는 device
+            interconnect입니다. Node 밖에서는 HCA와 Ethernet·InfiniBand fabric이 이어집니다. 실제 path에서 가장 좁고 가장 많이 공유되는 구간을
+            찾아야 합니다. 각 구간의 peak rate를 더하는 계산이 아닙니다.
           </p>
           <ExplainedFormula
             question="PCIe link의 raw transfer rate에서 한 방향 byte/s 상한을 어떻게 계산하는가?"

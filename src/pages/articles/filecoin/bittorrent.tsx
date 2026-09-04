@@ -14,11 +14,9 @@ export default function BitTorrentArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            민수의 노트북이 900 MiB 배포 이미지를 받는다고 하자. BitTorrent의
-            첫 질문은 “누가 파일을 갖고 있는가”이고, 다음 질문은 “서로 믿지
-            않는 여러 피어에게서 받은 바이트가 맞는가”다. 메타정보는 파일을
-            식별하고 piece 경계와 hash를 제공하며, tracker 또는 DHT는 같은
-            torrent에 참여한 피어의 endpoint를 찾는 출발점이 된다.
+            민수의 노트북이 900 MiB 배포 이미지를 받는다고 하자. BitTorrent의 첫 질문은 “누가 파일을 갖고 있는가”이고, 다음 질문은 “서로 믿지 않는 여러 피어에게서
+            받은 바이트가 맞는가”다. 메타정보는 파일을 식별하고 piece 경계와 hash를 제공하며 tracker 또는 DHT는 같은 torrent에 참여한 피어의 endpoint를
+            찾는 출발점이 된다.
           </p>
           <p>
             여기서 discovery, identity, transport를 섞지 않는 것이 중요하다.
@@ -30,12 +28,9 @@ export default function BitTorrentArticle() {
             다시 요청한다.
           </p>
           <p>
-            이 글은 Final 상태 BEP 3의 v1 metainfo와 Accepted 상태 BEP 5를
-            대상으로 한다. Session receipt에는 metainfo 원본 byte와 info-hash
-            rule, BEP/profile, client version, enabled extension·transport와 각
-            peer outcome을 남긴다. Private torrent, BEP 52 v2 또는 magnet
-            extension을 쓴다면 같은 포맷이라고 가정하지 않고 별도 profile로
-            검증한다.
+            이 글은 Final 상태 BEP 3의 v1 metainfo와 Accepted 상태 BEP 5를 대상으로 한다. Session receipt에는 metainfo 원본 byte와
+            info-hash rule, BEP/profile을 남긴다. 여기에 client version과 enabled extension·transport, 각 peer outcome도
+            남긴다. Private torrent, BEP 52 v2 또는 magnet extension을 쓴다면 같은 포맷이라고 가정하지 않고 별도 profile로 검증한다.
           </p>
         </div>
 
@@ -104,20 +99,14 @@ export default function BitTorrentArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            민수는 tracker와 DHT 결과를 합치고 endpoint 중복을 제거한다. TCP나
-            지원하는 별도 transport로 연결한 뒤 68-byte 기본 handshake에서
-            protocol string, reserved bits, info-hash, peer ID를 확인한다. Peer
-            ID는 연결을 구분하는 표식이지 현실의 독립된 사람을 증명하는 강한
-            identity가 아니다. Info-hash가 다르면 같은 swarm이 아니므로 그
-            연결에서 piece를 요청하지 않는다.
+            민수는 tracker와 DHT 결과를 합치고 endpoint 중복을 제거한다. TCP나 지원하는 별도 transport로 연결한 뒤 68-byte 기본 handshake에서
+            protocol string, reserved bits, info-hash, peer ID를 확인한다. Peer ID는 연결을 구분하는 표식일 뿐, 현실의 독립된 사람을
+            증명하는 강한 identity는 못 된다. Info-hash가 다르면 같은 swarm이 아니므로 그 연결에서 piece를 요청하지 않는다.
           </p>
           <p>
-            연결이 성립하면 bitfield/have로 상대가 가진 piece를 파악하고,
-            interested·choke 상태가 허용하는 동안 request를 보낸다. Request는
-            piece index, begin offset, length로 block을 지정하고 piece 메시지가
-            그 block을 돌려준다. 현재 BEP 3은 request 길이의 규범적 상한과
-            널리 수용되는 16 KiB 관행을 구분하므로 “모든 block은 반드시
-            16 KiB”라고 말해서는 안 된다.
+            연결이 성립하면 bitfield/have로 상대가 가진 piece를 파악하고 interested·choke 상태가 허용하는 동안 request를 보낸다. Request는
+            piece index, begin offset, length로 block을 지정하고 piece 메시지가 그 block을 돌려준다. 현재 BEP 3은 request 길이의 규범적
+            상한과 널리 수용되는 16 KiB 관행을 구분한다. “모든 block은 반드시 16 KiB”라는 말은 그래서 틀린다.
           </p>
         </div>
 
@@ -143,11 +132,10 @@ export default function BitTorrentArticle() {
             <Link to="/p2p/kad-lookup">반복 탐색</Link>을 이어 읽는다.
           </p>
           <p>
-            Release gate에서는 후보 수만 세지 않는다. Dial·handshake reject
-            reason, request timeout, duplicate bytes, hash-failure bytes, peak
-            in-flight memory와 completion time을 같은 torrent·peer fixture에서
-            base와 candidate에 기록한다. Correctness parity 뒤 canary를 열고
-            retry·resource threshold를 넘으면 이전 scheduler로 rollback한다.
+            Release gate는 같은 torrent·peer fixture에서 base와 candidate에 dial·handshake reject reason과 request
+            timeout, duplicate bytes, hash-failure bytes를 기록한다. 여기에 peak in-flight memory와 completion time도
+            남긴다. 후보 수만 세는 자리가 아니다. Correctness parity 뒤 canary를 열고 retry·resource threshold를 넘으면 이전 scheduler로
+            rollback한다.
           </p>
         </div>
       </section>

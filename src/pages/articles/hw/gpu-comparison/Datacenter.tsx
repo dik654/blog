@@ -102,7 +102,9 @@ export default function Datacenter() {
         </p>
 
         <div className="not-prose my-6 border-l-4 border-amber-400 bg-amber-50/60 dark:bg-amber-950/20 rounded-r-lg p-4">
-          <p className="font-semibold mb-1">💡 데이터센터 GPU의 구매 단위</p>
+          <p className="font-semibold mb-1">
+            데이터센터 GPU의 구매 단위
+          </p>
           <p className="text-sm leading-6">
             SXM 모듈만 고르는 문제가 아니라 HGX/DGX 또는 인증 서버의
             전력·네트워크·서비스 정책을 함께 선택하는 문제.

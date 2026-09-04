@@ -32,10 +32,8 @@ export default function Overview() {
           지연시간과 오류 보호는 서로 다른 질문입니다.
         </p>
         <p>
-          핵심 아이디어는 필요한 byte 수를 채운 뒤, 모든 memory channel을 활용할
-          수 있는 population과 실제 동작 MT/s를 확인하고, NUMA-local 배치와 오류
-          운영까지 한 acceptance test로 묶는 것입니다. ECC 로고나 DIMM 슬롯 수
-          하나만으로는 이 네 조건을 보장할 수 없습니다.
+          핵심 아이디어는 필요한 byte 수를 채운 뒤 모든 memory channel을 활용할 수 있는 population과 실제 동작 MT/s를 확인하고 NUMA-local 배치와 오류
+          운영까지 한 acceptance test로 묶는 것입니다. ECC 로고나 DIMM 슬롯 수 하나만으로는 이 네 조건을 보장할 수 없습니다.
         </p>
       </div>
       <ContentBoundary article="hw-memory" />
@@ -71,11 +69,9 @@ export default function Overview() {
             기록합니다.
           </p>
           <p>
-            예를 들어 peak RSS 180GiB, OS·cache 24GiB와 동시 job 32GiB를 합치면
-            236GiB이고, 여기에 20% 성장 여유를 적용하면 283.2GiB입니다. 256GiB
-            구성은 명목상 애플리케이션 하나를 담더라도 동시 실행에서 page
-            pressure가 생길 수 있으므로 다음 지원 구성으로 올리거나
-            concurrency를 제한해야 합니다.
+            예를 들어 peak RSS 180GiB, OS·cache 24GiB와 동시 job 32GiB를 합치면 236GiB이고 여기에 20% 성장 여유를 적용하면 283.2GiB입니다.
+            256GiB 구성은 명목상 애플리케이션 하나를 담더라도 동시 실행에서 page pressure가 생길 수 있으므로 다음 지원 구성으로 올리거나 concurrency를 제한해야
+            합니다.
           </p>
         </div>
         <div id="paper-amd-memory-population" className="scroll-mt-24">

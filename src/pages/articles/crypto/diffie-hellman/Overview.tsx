@@ -27,9 +27,8 @@ export default function Overview() {
           ephemeral lifecycle을 소유합니다.
         </p>
         <p>
-          배포 예시는 임의 mod-p group이 아니라 RFC 7748의 X25519 byte/function
-          contract와 RFC 5869 HKDF를 사용합니다. 아래 p=23 계산은 등식만 확인하는
-          장난감 예이며 작은 composite-order group이므로 보안 parameter가 아닙니다.
+          배포 예시는 RFC 7748의 X25519 byte/function contract와 RFC 5869 HKDF를 씁니다. 임의 mod-p group은 여기에 쓰지 않습니다. 아래
+          p=23 계산은 등식만 확인하는 장난감 예이며 작은 composite-order group이라 보안 parameter 구실을 못 합니다.
         </p>
       </div>
       <ContentBoundary article="diffie-hellman" />

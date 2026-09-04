@@ -116,7 +116,9 @@ export default function Blockchain() {
         </div>
 
         <div className="not-prose my-6 border-l-4 border-amber-400 bg-amber-50/60 dark:bg-amber-950/20 rounded-r-lg p-4">
-          <p className="font-semibold mb-1">💡 최종 선택은 종단 프로파일</p>
+          <p className="font-semibold mb-1">
+            최종 선택은 종단 프로파일
+          </p>
           <p className="text-sm leading-6">
             커널 하나가 2배 빨라도 witness 생성이나 CPU↔GPU 복사가 전체 시간의
             절반이면 종단 개선은 2배보다 작음.

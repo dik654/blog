@@ -13,10 +13,8 @@ export default function Overview() {
       </div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          DGX B300의 ConnectX-8 포트를 노드끼리 direct attach하면 소규모 GPU
-          cluster를 switch 없이 구성할 수 있다. 다만 단순히 switch 가격을 빼는
-          구성이 아니다. Switch가 맡던 path selection·subnet 연결·장애
-          우회·telemetry를 host 설정과 운영 절차가 직접 책임지는 설계다.
+          DGX B300의 ConnectX-8 포트를 노드끼리 direct attach하면 소규모 GPU cluster를 switch 없이 구성할 수 있다. Switch가 맡던 path
+          selection·subnet 연결·장애 우회·telemetry를 host 설정과 운영 절차가 직접 책임지는 설계다. switch 가격만 빠지는 구성이 아니다.
         </p>
         <ContentBoundary article="b300-switchless-network" />
         <p className="leading-7">
@@ -32,12 +30,9 @@ export default function Overview() {
           먼저 “가능한가”와 “운영할 만한가”를 나눈다
         </h3>
         <p className="leading-7">
-          이 구성은 node 수와 cable 배치가 자주 바뀌지 않고, 한 link가 끊겼을 때
-          영향을 받는 peer pair를 운영자가 바로 식별할 수 있는 실험 cluster에
-          잘 맞는다. 반대로 tenant가 많거나 topology 변경·자동 우회·vendor
-          support가 중요하다면 switched fabric이 더 단순하다. 따라서 아래
-          단계는 최고 bandwidth를 증명하는 절차가 아니라, 제한된 조건에서
-          switchless를 채택해도 되는지 확인하는 acceptance path다.
+          이 구성은 node 수와 cable 배치가 자주 바뀌지 않는 실험 cluster에 잘 맞는다. 한 link가 끊겼을 때 영향을 받는 peer pair를 운영자가 바로 식별할 수
+          있는 곳이라야 한다. 반대로 tenant가 많거나 topology 변경·자동 우회·vendor support가 중요하다면 switched fabric이 더 단순하다. 아래 단계는
+          최고 bandwidth를 증명하는 절차가 아니라 제한된 조건에서 switchless를 채택해도 되는지 확인하는 acceptance path다.
         </p>
         <div className="not-prose my-6">
           <PipelineViz />

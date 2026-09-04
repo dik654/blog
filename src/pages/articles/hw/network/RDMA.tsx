@@ -57,15 +57,11 @@ export default function RDMA() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <div id="rdma-control-data-path" className="scroll-mt-24">
           <p className="leading-7">
-          RDMA(Remote Direct Memory Access)는 애플리케이션이 등록한 memory와 NIC
-          queue를 사용해 data movement를 DMA로 처리하는 전송 모델이다. 큰
-          payload의 copy와 kernel data path 부담을 줄일 수 있지만 CPU가 사라지는
-          것은 아니다.
-          memory pinning·등록, work request 제출, completion 처리, 연결과 오류
-          복구에는 host software와 CPU가 계속 관여한다. 핵심은 control path를
-          없애는 것이 아니라, 반복되는 payload movement를 등록된 memory와 NIC
-          queue 사이의 비동기 경로로 옮기는 데 있다.
-          </p>
+          RDMA(Remote Direct Memory Access)는 애플리케이션이 등록한 memory와 NIC queue를 사용해 data movement를 DMA로 처리하는 전송
+          모델이다. 큰 payload의 copy와 kernel data path 부담을 줄일 수 있지만 CPU가 사라지는 것은 아니다. memory pinning·등록, work
+          request 제출, completion 처리, 연결과 오류 복구에는 host software와 CPU가 계속 관여한다. 핵심은 control path를 없애는 것이 아니라
+          반복되는 payload movement를 등록된 memory와 NIC queue 사이의 비동기 경로로 옮기는 데 있다.
+        </p>
         </div>
 
         <div data-viz="rdma-path-comparison-ledger" className="not-prose my-6 overflow-hidden rounded-lg border border-border/70">
@@ -90,24 +86,20 @@ export default function RDMA() {
           Memory registration은 성능 옵션이면서 접근 권한이다
         </h3>
         <p className="leading-7">
-          RDMA NIC가 process의 임의 virtual address를 곧바로 읽는 것은 아니다.
-          애플리케이션은 사용할 memory range와 local/remote read·write 권한을
-          등록하고, NIC가 해석할 address mapping과 lkey·rkey를 얻는다. 이 등록은
-          page pinning과 device mapping 비용이 있으므로 매 message마다 반복하지
-          않고 buffer lifetime에 맞춰 cache하지만, 해제된 buffer의 key를 계속
-          노출하지 않도록 lifetime과 revoke 순서를 함께 관리해야 한다.
+          RDMA NIC는 process의 임의 virtual address를 곧바로 읽지 못한다. 애플리케이션은 사용할 memory range와 local/remote read·write
+          권한을 등록하고 NIC가 해석할 address mapping과 lkey·rkey를 얻는다. 이 등록은 page pinning과 device mapping 비용이 있으므로 매
+          message마다 반복하지 않고 buffer lifetime에 맞춰 cache한다. 해제된 buffer의 key를 계속 노출하지 않도록 lifetime과 revoke 순서를 함께
+          관리해야 한다.
         </p>
 
         <h3 id="roce-gid-routing" className="scroll-mt-24 text-xl font-semibold mt-8 mb-3">
           RoCE v2는 Ethernet 위의 RDMA transport
         </h3>
         <p className="leading-7">
-          RoCE v1은 link layer 범위이고 RoCE v2는 UDP/IP encapsulation으로
-          routed fabric을 통과할 수 있다. IP address를 netdev에 붙이면 driver는
-          그 주소와 RoCE version에 대응하는 GID table entry를 만들며, connected
-          QP는 INIT→RTR 전환 시 source GID index와 remote address vector를 사용한다.
-          따라서 한 HCA에 여러 subnet이 있으면 “아무 GID나 하나”가 아니라 실제
-          peer로 갈 수 있는 netdev·address·RoCE type을 함께 골라야 한다.
+          RoCE v1은 link layer 범위이고 RoCE v2는 UDP/IP encapsulation으로 routed fabric을 통과할 수 있다. IP address를
+          netdev에 붙이면 driver는 그 주소와 RoCE version에 대응하는 GID table entry를 만들며 connected QP는 INIT→RTR 전환 시 source
+          GID index와 remote address vector를 사용한다. 한 HCA에 여러 subnet이 있으면 실제 peer로 갈 수 있는 netdev·address·RoCE
+          type을 함께 골라야 한다. “아무 GID나 하나”로는 안 된다.
         </p>
         <ExplainedFormula
           question="여러 local IP 가운데 remote peer와 같은 IPv4 subnet에 있는 주소는 어떻게 판정하는가?"
@@ -160,10 +152,9 @@ export default function RDMA() {
           GPUDirect RDMA도 topology가 조건이다
         </h3>
         <p className="leading-7">
-          GPUDirect RDMA는 NIC와 GPU memory 사이에 직접 DMA path를 제공해 CPU
-          bounce buffer를 줄임. 하지만 GPU와 NIC의 PCIe root complex, IOMMU·ACS,
-          BAR와 driver 지원이 경로 성능을 좌우하므로 GPU별 NIC affinity를
-          확인하고 host-staged path와 실제 collective 결과를 비교해야 한다.
+          GPUDirect RDMA는 NIC와 GPU memory 사이에 직접 DMA path를 제공해 CPU bounce buffer를 줄인다. 하지만 GPU와 NIC의 PCIe root
+          complex, IOMMU·ACS, BAR와 driver 지원이 경로 성능을 좌우하므로 GPU별 NIC affinity를 확인하고 host-staged path와 실제
+          collective 결과를 비교해야 한다.
         </p>
 
         <div className="not-prose my-6 grid grid-cols-1 sm:grid-cols-2 gap-3">

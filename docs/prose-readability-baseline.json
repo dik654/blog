@@ -206,7 +206,7 @@
       "score": 26
     },
     "blockchain/expected-consensus": {
-      "fingerprint": "460371961c929e0b",
+      "fingerprint": "7c549de9bfabc3e7",
       "score": 26
     },
     "blockchain/filecoin-ipc": {
@@ -422,7 +422,7 @@
       "score": 20
     },
     "gpu/hw-gpu-comparison": {
-      "fingerprint": "40590fa75b7c4626",
+      "fingerprint": "20f6f297a732be44",
       "score": 20
     },
     "isms-aml/isms-access-control": {
@@ -661,6 +661,10 @@
       "fingerprint": "c3813f6cf1469aa1",
       "score": 14
     },
+    "gpu/hw-memory": {
+      "fingerprint": "9fa668dd88f74250",
+      "score": 14
+    },
     "gpu/hw-server-vs-desktop": {
       "fingerprint": "f5ecaacd3071d8de",
       "score": 14
@@ -746,7 +750,7 @@
       "score": 12
     },
     "crypto/diffie-hellman": {
-      "fingerprint": "4b6d7168271c6c99",
+      "fingerprint": "d2c1135807162bf7",
       "score": 12
     },
     "crypto/discrete-log": {
@@ -767,10 +771,6 @@
     },
     "gpu/gpu-witness-gen": {
       "fingerprint": "4031cc5ff744b62d",
-      "score": 12
-    },
-    "gpu/hw-memory": {
-      "fingerprint": "ea9d024a4f225198",
       "score": 12
     },
     "gpu/icicle-framework": {
@@ -889,12 +889,16 @@
       "fingerprint": "d3579489277bcee5",
       "score": 10
     },
+    "gpu/gpu-collective-network": {
+      "fingerprint": "18d388909178baf7",
+      "score": 10
+    },
     "gpu/hw-nvme-storage": {
       "fingerprint": "e5b94f36d5c5ac4a",
       "score": 10
     },
     "p2p/bittorrent": {
-      "fingerprint": "ca407af9659cf103",
+      "fingerprint": "3334b80af71ec8cb",
       "score": 10
     },
     "p2p/gossip-fundamentals": {
@@ -985,20 +989,12 @@
       "fingerprint": "6f4d119512b0f07c",
       "score": 8
     },
-    "gpu/b300-switchless-network": {
-      "fingerprint": "6c354d3eeacc8d50",
-      "score": 8
-    },
     "gpu/gpu-arch-hopper": {
       "fingerprint": "eb6b2734f79e587a",
       "score": 8
     },
-    "gpu/gpu-collective-network": {
-      "fingerprint": "6a8faf38bdb88db9",
-      "score": 8
-    },
     "gpu/gpu-interconnects": {
-      "fingerprint": "0d8d20bbc1aa48b9",
+      "fingerprint": "fb5cb47e0973eb57",
       "score": 8
     },
     "gpu/hw-power-cooling": {
@@ -1201,12 +1197,16 @@
       "fingerprint": "38a1e87710e37eba",
       "score": 6
     },
+    "gpu/b300-switchless-network": {
+      "fingerprint": "b9453205a3cc0ce3",
+      "score": 6
+    },
     "gpu/hw-network": {
-      "fingerprint": "bd0cc2ec1b038ae3",
+      "fingerprint": "b3b3f838fef97bb4",
       "score": 6
     },
     "gpu/rdma-roce": {
-      "fingerprint": "ca3772d87e9bc0f8",
+      "fingerprint": "b0e017cf12730d53",
       "score": 6
     },
     "isms-aml/aml-fds-deep": {
