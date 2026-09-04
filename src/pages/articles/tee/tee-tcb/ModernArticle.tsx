@@ -18,7 +18,10 @@ export default function ModernTcbArticle() {
       <section id="tcb-closure" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">01 · TCB closure</p><h2 className="mt-2 text-2xl font-bold">작게 만든다는 말보다 property와 dependency를 먼저 쓴다</h2></header>
         <p>
-          “TCB가 작다”는 line count만의 주장이 아닙니다. Payroll key의 confidentiality를 기준으로 CPU package, memory-encryption key manager, TEE firmware/module, attestation key path, verifier와 reference manifest가 어떤 식으로 결과에 영향을 주는지 그립니다. Host VMM을 confidentiality TCB 밖에 둘 수 있어도 shared I/O parsing이나 availability에는 여전히 영향을 줍니다. Property가 바뀌면 TCB도 바뀝니다.
+          “TCB가 작다”는 line count만의 주장이 아닙니다. Payroll key의 confidentiality를 기준으로 CPU package, memory-encryption
+          key manager, TEE firmware/module, attestation key path, verifier와 reference manifest가 어떻게 결과에 영향을
+          주는지 그립니다. Host VMM을 confidentiality TCB 밖에 둘 수 있어도 shared I/O parsing이나 availability에는 여전히 영향을 미칩니다.
+          Property가 바뀌면 TCB도 바뀝니다.
         </p>
         <div className="grid gap-3 md:grid-cols-2">
           {[
@@ -33,7 +36,9 @@ export default function ModernTcbArticle() {
       <section id="secure-measured-boot" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">02 · Secure vs measured boot</p><h2 className="mt-2 text-2xl font-bold">실행을 막는 것과 실행한 것을 기록하는 것은 다른 동작이다</h2></header>
         <p>
-          Secure Boot는 signature와 allow/revoke policy를 검사해 다음 image의 실행 여부를 결정합니다. Measured Boot는 선택된 firmware·configuration·bootloader·kernel event의 digest를 순서대로 PCR에 extend하고 event log에 설명을 남깁니다. 허용된 image가 둘이면 Secure Boot는 둘 다 실행할 수 있지만, Measured Boot는 실제로 어느 image와 순서를 택했는지 구분합니다.
+          Secure Boot는 signature와 allow/revoke policy를 검사해 다음 image의 실행 여부를 결정합니다. Measured Boot는 선택된
+          firmware·configuration·bootloader·kernel event의 digest를 순서대로 PCR에 extend하고 event log에 설명을 남깁니다. 허용된
+          image가 둘이면 Secure Boot는 둘 다 실행할 수 있지만 Measured Boot는 실제로 어느 image와 순서를 택했는지 구분합니다.
         </p>
         <ExplainedFormula
           question="왜 같은 event 둘을 다른 순서로 측정하면 PCR 결과가 달라지는가?"

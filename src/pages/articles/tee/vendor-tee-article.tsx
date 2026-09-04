@@ -176,7 +176,11 @@ export default function VendorTeeArticle({ vendor }: { vendor: VendorKey }) {
 
       <section id="architecture" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">01 · Architecture</p><h2 className="mt-2 text-2xl font-bold">Control plane과 protected execution을 한 주체로 뭉개지 않는다</h2></header>
-        <p>관리 software가 page를 할당하고 vCPU를 schedule한다는 사실은 보호 대상을 읽거나 임의의 identity로 다시 연결할 권한을 뜻하지 않습니다. 각 access와 transition은 현재 owner·address·state·version을 다시 검사해야 하며, 실패를 “일시 오류”로 바꿔 무조건 재시도하면 stale operation이 다른 page나 workload에 적용될 수 있습니다.</p>
+        <p>
+            관리 software가 page를 할당하고 vCPU를 schedule한다고 해서 보호 대상을 읽거나 임의의 identity로 다시 연결할 권한이 있다는 뜻은 아닙니다. 각
+            access와 transition은 현재 owner·address·state·version을 다시 검사해야 합니다. 실패를 “일시 오류”로 바꿔 무조건 재시도하면 stale
+            operation이 다른 page나 workload에 적용될 수 있습니다.
+          </p>
         <div className="grid gap-3 md:grid-cols-2">
           {config.actors.map(([tag, title, body]) => <div key={tag} className="rounded-lg border border-border p-4"><p className="text-xs font-bold tracking-wide text-primary">{tag}</p><p className="mt-2 font-semibold">{title}</p><p className="mt-2 text-sm leading-6 text-muted-foreground">{body}</p></div>)}
         </div>

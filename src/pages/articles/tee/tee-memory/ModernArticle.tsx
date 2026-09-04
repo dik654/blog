@@ -18,7 +18,9 @@ export default function ModernTeeMemoryArticle() {
       <section id="private-shared" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">01 · Private와 shared</p><h2 className="mt-2 text-2xl font-bold">I/O 경계에서는 host가 준 bytes를 다시 untrusted input으로 취급한다</h2></header>
         <p>
-          Private page는 특정 enclave·VM·realm에 귀속되고, memory controller의 key selection과 CPU의 ownership·translation check를 거쳐 접근됩니다. Shared page는 host·device와 통신하기 위해 명시적으로 공개한 영역입니다. Payroll packet은 shared buffer에서 length와 schema를 검증한 뒤 private buffer로 복사하고, 결과도 private state를 직접 가리키지 않는 새 message로 내보냅니다.
+          Private page는 특정 enclave·VM·realm에 귀속되고 memory controller의 key selection과 CPU의 ownership·translation
+          check를 거쳐 접근됩니다. Shared page는 host·device와 통신하기 위해 명시적으로 공개한 영역입니다. Payroll packet은 shared buffer에서
+          length와 schema를 검증한 뒤 private buffer로 복사하고 결과도 private state를 직접 가리키지 않는 새 message로 내보냅니다.
         </p>
         <div className="grid gap-3 md:grid-cols-2">
           {[
@@ -54,7 +56,10 @@ export default function ModernTeeMemoryArticle() {
           interpretation="a≠b이면 보통 T(a)≠T(b)이므로 같은 P도 다른 ciphertext가 됩니다. 그러나 공격자가 old ciphertext와 metadata를 함께 replay할 수 있는지는 별도의 integrity·version 구조가 결정합니다."
         />
         <p>
-          Confidentiality는 plaintext 관찰을 어렵게 하고, integrity는 unauthorized modification을 탐지·차단하며, freshness는 예전의 유효한 block을 현재 상태로 되돌리는 replay를 막습니다. 어떤 제품은 cryptographic integrity tree를 쓰고, 어떤 제품은 page ownership·reverse map·address validation 같은 구조를 결합합니다. 따라서 “memory encryption 지원”이라는 한 줄에서 세 property를 추론하면 안 됩니다.
+          Confidentiality는 plaintext 관찰을 어렵게 하고 integrity는 unauthorized modification을 탐지·차단합니다. 예전의 유효한 block을
+          현재 상태로 되돌리는 replay는 freshness가 막습니다. 어떤 제품은 cryptographic integrity tree를 쓰고 어떤 제품은 page
+          ownership·reverse map·address validation 같은 구조를 결합합니다. 따라서 “memory encryption 지원”이라는 한 줄에서 세
+          property를 추론하면 안 됩니다.
         </p>
       </section>
 

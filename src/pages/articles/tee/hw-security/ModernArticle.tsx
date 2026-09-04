@@ -54,7 +54,9 @@ export default function ModernHardwareSecurityArticle() {
       <section id="roots-resilience" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">02 · Root와 resilience</p><h2 className="mt-2 text-2xl font-bold">Root of Trust는 작고 고정된 시작점이며 보호·탐지·복구가 함께 있어야 한다</h2></header>
         <p>
-          Root of Trust(RoT)는 모든 software를 무조건 신뢰한다는 뜻이 아니라 첫 검증 또는 첫 측정을 수행하는 최소 시작점입니다. Boot ROM이나 CPU의 hardware-backed key가 다음 firmware를 검증하고, 그 firmware가 다시 다음 단계를 검증하거나 측정합니다. 그러나 서명 확인만 성공했다고 runtime이 계속 정상이라는 뜻은 아니므로, firmware protection과 함께 변경 탐지와 known-good 복구 경로가 필요합니다.
+          Root of Trust(RoT)는 모든 software를 무조건 신뢰한다는 뜻이 아니라 첫 검증이나 첫 측정을 수행하는 최소 시작점입니다. Boot ROM이나 CPU의
+          hardware-backed key가 다음 firmware를 검증하고 그 firmware가 다시 다음 단계를 검증하거나 측정합니다. 그러나 서명 확인만 성공해도 runtime이
+          계속 정상인 것은 아니므로 firmware protection과 함께 변경 탐지와 known-good 복구 경로가 필요합니다.
         </p>
         <ul className="grid gap-3 md:grid-cols-3">
           <li className="rounded-lg border border-border p-4"><strong>Protect</strong><p className="mt-2 text-sm text-muted-foreground">승인된 update만 허용하고 rollback·write 경로를 제한합니다.</p></li>
@@ -78,14 +80,18 @@ export default function ModernHardwareSecurityArticle() {
           <div className="rounded-lg border border-border p-5"><h3 className="font-semibold">Attestation</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">측정된 상태와 freshness evidence를 원격 verifier에게 전달합니다. 최종 authorization은 relying party policy가 합니다.</p></div>
         </div>
         <p>
-          Payroll 사례의 안전한 순서는 image와 TCB reference를 version으로 고정하고, fresh attestation을 검증한 뒤에만 session key를 해당 channel에 묶어 지급하는 것입니다. Debug가 켜졌거나 patch minimum보다 낮거나 reference manifest가 없으면 fail closed합니다. 반대로 host가 실행을 멈추는 상황은 secret 미지급에는 성공해도 서비스 가용성에는 실패한 것이므로 별도 상태로 기록합니다.
+          Payroll 사례의 안전한 순서는 image와 TCB reference를 version으로 고정하고 fresh attestation을 검증한 뒤에만 session key를 해당
+          channel에 묶어 지급하는 것입니다. Debug가 켜졌거나 patch minimum보다 낮거나 reference manifest가 없으면 fail closed합니다. 반대로
+          host가 실행을 멈추면 secret 미지급에는 성공해도 서비스 가용성에는 실패한 것이니 별도 상태로 기록합니다.
         </p>
       </section>
 
       <section id="release-gate" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">04 · Release gate</p><h2 className="mt-2 text-2xl font-bold">제품 이름이 아니라 failure matrix와 evidence receipt로 채택한다</h2></header>
         <p>
-          이 글만으로 기초 여섯 문제에서는 threat model 네 요소, confidentiality·integrity·freshness·availability, RoT와 chain, protect·detect·recover, 세 control의 역할, Boolean release를 설명할 수 있어야 합니다. 심화 네 문제에서는 replay, stale firmware, malicious shared buffer, denial of service를 넣어 deny·review·recover를 구분합니다.
+          기초 여섯 문제에서는 이 글만으로 threat model 네 요소, confidentiality·integrity·freshness·availability, RoT와 chain,
+          protect·detect·recover, 세 control의 역할, Boolean release를 설명할 수 있어야 합니다. 심화 네 문제에서는 replay, stale
+          firmware, malicious shared buffer, denial of service를 넣어 deny·review·recover를 구분합니다.
         </p>
         <aside className="rounded-lg border border-border bg-card p-5 text-sm leading-6 text-muted-foreground"><strong className="text-foreground">Paired gate:</strong> 같은 workload image·host firmware·policy manifest에서 base/candidate를 실행하고 valid, altered image, old TCB, reused nonce, debug, malformed evidence, host pause를 주입합니다. Secret release count, false accept·false reject, appraisal p95, recovery time, evidence digest를 기록하며 unauthorized release가 한 건이라도 있으면 rollback합니다.</aside>
       </section>

@@ -1026,11 +1026,11 @@
       "score": 8
     },
     "tee/amd-sev": {
-      "fingerprint": "bd70de310aff73e7",
+      "fingerprint": "b80a7182f2f3f61c",
       "score": 8
     },
     "tee/arm-cca": {
-      "fingerprint": "591c61dade5ed74e",
+      "fingerprint": "936f3235e80c87fb",
       "score": 8
     },
     "tee/dstack": {
@@ -1038,15 +1038,15 @@
       "score": 8
     },
     "tee/hw-security": {
-      "fingerprint": "50df622bdd14dfc8",
+      "fingerprint": "f996db2c352ad634",
       "score": 8
     },
     "tee/intel-sgx": {
-      "fingerprint": "52c6ff620edc1ce5",
+      "fingerprint": "8e7f62a4c78f4e9e",
       "score": 8
     },
     "tee/intel-tdx": {
-      "fingerprint": "80b6c0a6a5d2319b",
+      "fingerprint": "294bdf6a39b42a48",
       "score": 8
     },
     "tee/oasis": {
@@ -1062,7 +1062,7 @@
       "score": 8
     },
     "tee/tee-memory": {
-      "fingerprint": "bfc76ca1716b91fb",
+      "fingerprint": "dd372d57626cce9a",
       "score": 8
     },
     "blockchain/reth-pipeline": {
