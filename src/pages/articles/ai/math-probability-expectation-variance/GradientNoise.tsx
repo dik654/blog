@@ -4,7 +4,11 @@ export default function GradientNoise() {
   return (
     <section id="gradient-noise" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Mini-batch gradient: 전체 gradient를 추정하는 random vector</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none"><p>Dataset에서 어떤 example을 뽑느냐가 무작위이므로 sample gradient도 random vector입니다. Mini-batch gradient는 이 vector들의 평균입니다. 균등 sampling과 적절한 weighting 아래에서는 전체 empirical gradient에 대해 unbiased지만, sampling 방식·중복·data correlation이 바뀌면 variance와 bias도 달라집니다.</p></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none"><p>
+            Dataset에서 어떤 example을 뽑느냐가 무작위이므로 sample gradient도 random vector입니다. Mini-batch gradient는 이
+            vector들의 평균입니다. 균등 sampling과 적절한 weighting 아래에서는 전체 empirical gradient에 대해 unbiased지만 sampling
+            방식·중복·data correlation이 바뀌면 variance와 bias도 달라집니다.
+          </p></div>
       <ExplainedFormula
         question="전체 N개 example 대신 B개만 보고 계산한 gradient는 무엇을 추정할까요?"
         idea={<>Example별 loss gradient를 random vector로 보고 mini-batch 안에서 평균냅니다. 균등 sampling이면 그 expectation은 전체 dataset gradient와 같습니다.</>}
@@ -32,17 +36,13 @@ g_B(\theta)&=\frac1B\sum_{b=1}^B\nabla_\theta\ell_{I_b}(\theta),\qquad I_b\sim\o
       <div id="paper-robbins-monro" className="prose prose-neutral dark:prose-invert max-w-none scroll-mt-20">
         <h3>Robbins–Monro가 연 문제</h3>
         <p>
-          1951년 Robbins와 Monro는 함수 자체를 정확히 보지 못하고 noise가 섞인 관측만
-          얻을 수 있을 때, expectation이 목표값과 일치하는 지점을 반복 update로 찾는
-          stochastic approximation을 제안했습니다. 현대 mini-batch SGD와 식이 완전히
-          같은 논문은 아니지만, noisy estimate와 감소하는 step size를 이용해 expectation으로
-          정의된 목표에 접근한다는 이론적 출발점입니다.
+          1951년 Robbins와 Monro는 stochastic approximation을 제안했습니다. 함수 자체를 정확히 보지 못하고 noise가 섞인 관측만 얻을 수 있을 때,
+          expectation이 목표값과 일치하는 지점을 반복 update로 찾아가는 방법입니다. 현대 mini-batch SGD와 식이 완전히 같은 논문은 아닙니다. 그래도 noisy
+          estimate와 감소하는 step size를 이용해 expectation으로 정의된 목표에 접근한다는 이론적 출발점입니다.
         </p>
         <p>
-          원 논문의 수렴 결론은 관측의 조건부 expectation·분산, 목표 함수의 단조성,
-          step-size sequence 같은 전제 아래에서 읽어야 합니다. 따라서 “noise가 있으면
-          언제나 더 좋은 minimum을 찾는다”거나 현대 nonconvex deep network의 수렴을
-          자동으로 보장한다는 근거로 사용할 수는 없습니다.
+          원 논문의 수렴 결론에는 전제가 붙습니다. 관측의 조건부 expectation·분산, 목표 함수의 단조성, step-size sequence 같은 조건 아래에서 읽어야 합니다.
+          따라서 “noise가 있으면 언제나 더 좋은 minimum을 찾는다”거나 현대 nonconvex deep network의 수렴을 자동으로 보장한다는 근거로 사용할 수는 없습니다.
         </p>
       </div>
     </section>

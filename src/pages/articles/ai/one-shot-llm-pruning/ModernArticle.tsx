@@ -14,10 +14,8 @@ export default function OneShotLlmPruningArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            모든 원본 training data와 장기 retraining 없이 calibration
-            prompt에서 layer input을 수집해 mask를 정합니다. 따라서 algorithm
-            이름보다 먼저 표본이 deployment 언어·길이·domain을 대표하는지
-            확인해야 합니다.
+            모든 원본 training data와 장기 retraining 없이 calibration prompt에서 layer input을 수집해 mask를 정합니다. algorithm
+            이름보다 먼저 확인할 것은 표본입니다. 이 표본이 deployment 언어·길이·domain을 대표하는지 봅니다.
           </p>
         </div>
         <TermBreakdown
@@ -57,8 +55,7 @@ export default function OneShotLlmPruningArticle() {
           question="Wanda가 왜 |w|에 input norm을 곱하나요?"
           idea={
             <p>
-              같은 weight라도 자주 크고 강하게 들어오는 input channel에 연결되면
-              layer output에 더 큰 영향을 줄 수 있기 때문입니다.
+              같은 weight라도 자주 크고 강하게 들어오는 input channel에 연결되면 layer output에 미치는 영향이 커지기 때문입니다.
             </p>
           }
           formula={String.raw`S_{ij}=|W_{ij}|\,\lVert X_{:,j}\rVert_2`}
@@ -116,8 +113,7 @@ export default function OneShotLlmPruningArticle() {
           question="왜 weight 차이 E만 보지 않고 X를 곱한 output error를 보나요?"
           idea={
             <p>
-              실제 layer가 만드는 답은 XW이므로 calibration input이 거의 쓰지
-              않는 방향의 weight error와 자주 쓰는 방향의 error를 다르게
+              실제 layer가 만드는 답은 XW입니다. 그래서 calibration input이 거의 쓰지 않는 방향의 weight error와 자주 쓰는 방향의 error를 다르게
               평가합니다.
             </p>
           }

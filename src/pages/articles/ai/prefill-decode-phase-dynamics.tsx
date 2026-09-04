@@ -23,10 +23,9 @@ export default function PrefillDecodePhaseDynamicsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Prefill 은 prompt 의 모든 token 을 한 번에 밀어 넣으니 한 번 읽은 weight 로 수천
-            token 분의 곱셈을 하고, decode 는 token 하나를 만들기 위해 같은 weight 전체를
-            다시 읽습니다. 연산량 대비 memory 읽기 비율이 수천 배 차이 나므로 두 phase 는
-            같은 GPU 에서 서로 다른 자원에 먼저 부딪힙니다.
+            Prefill 은 prompt 의 모든 token 을 한 번에 밀어 넣으니 한 번 읽은 weight 로 수천 token 분의 곱셈을 합니다. decode 는 token 하나를
+            만들기 위해 같은 weight 전체를 다시 읽습니다. 연산량 대비 memory 읽기 비율이 수천 배 차이 나므로 두 phase 는 같은 GPU 에서 서로 다른 자원에 먼저
+            부딪힙니다.
           </p>
           <p>
             이 차이는 <Link to="/ai/vllm-serving#prefill-decode">prefill 과 decode 를 나누는 이유</Link>를
@@ -65,10 +64,9 @@ export default function PrefillDecodePhaseDynamicsArticle() {
             이 듭니다.
           </p>
           <p>
-            Batch 1 decode 는 step 마다 14 GB 를 읽고 14 GFLOP 을 계산하니 intensity 가 약 1
-            FLOP/byte 입니다. Ridge 의 300 분의 1 이므로 시간은 14 GB ÷ 3.35 TB/s ≈ 4.2 ms 라는
-            bandwidth 하한이 정하고, 연산 시간 0.014 ms 는 그 안에 숨습니다. 이것이 decode 의
-            memory-bound 성질입니다.
+            Batch 1 decode 는 step 마다 14 GB 를 읽고 14 GFLOP 을 계산하니 intensity 가 약 1 FLOP/byte 입니다. Ridge 의 300 분의
+            1 이므로 시간은 14 GB ÷ 3.35 TB/s ≈ 4.2 ms 라는 bandwidth 하한이 정합니다. 연산 시간 0.014 ms 는 그 안에 숨습니다. 이것이 decode
+            의 memory-bound 성질입니다.
           </p>
           <p>
             같은 model 에 4,096-token prompt 를 prefill 하면 weight 는 여전히 한 번만 읽는데 연산은
@@ -110,21 +108,19 @@ export default function PrefillDecodePhaseDynamicsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            한 step 의 시간은 그 step 이 움직인 byte 를 bandwidth 로 나눈 memory 항과 FLOP 을
-            연산 성능으로 나눈 compute 항 중 큰 쪽이 하한입니다. Decode 만 있는 step 은 memory 항이
-            크고, prefill chunk 를 얹으면 compute 항만 자랍니다. 두 항이 교차하기 전까지는 chunk 가
-            공짜처럼 보이고, 넘어서면 step 시간이 chunk 크기에 비례해 늘어납니다.
+            한 step 의 시간은 그 step 이 움직인 byte 를 bandwidth 로 나눈 memory 항과 FLOP 을 연산 성능으로 나눈 compute 항 중 큰 쪽이
+            하한입니다. Decode 만 있는 step 은 memory 항이 큽니다. prefill chunk 를 얹으면 compute 항만 자랍니다. 두 항이 교차하기 전까지는 chunk
+            가 공짜처럼 보이고 넘어서면 step 시간이 chunk 크기에 비례해 늘어납니다.
           </p>
           <p>
-            예를 들어 64 개 decode request 가 각각 1,024 token 의 context 를 갖고 있으면 KV 읽기는
-            64 × 1,024 × 0.5 MB ≈ 33.5 GB 입니다. Weight 14 GB 를 더한 47.5 GB 를 3.35 TB/s 로 나누면
-            memory 항은 14.2 ms 이고, compute 항은 0.9 TFLOP ÷ 989 TFLOP/s ≈ 0.9 ms 에 불과합니다.
+            예를 들어 64 개 decode request 가 각각 1,024 token 의 context 를 갖고 있으면 KV 읽기는 64 × 1,024 × 0.5 MB ≈ 33.5 GB
+            입니다. Weight 14 GB 를 더한 47.5 GB 를 3.35 TB/s 로 나누면 memory 항은 14.2 ms 입니다. compute 항은 0.9 TFLOP ÷ 989
+            TFLOP/s ≈ 0.9 ms 에 불과합니다.
           </p>
           <p>
-            여기에 512-token prefill chunk 를 얹으면 compute 항이 7.2 TFLOP 만큼 늘어 8.2 ms 가 되지만
-            아직 memory 항 14.2 ms 아래라 roofline 하한은 그대로입니다. Chunk 를 2,048 로 키우면
-            compute 항이 30 ms 로 memory 항을 넘어서고, 64 개 decode 모두의 다음 token 이 14 ms 가
-            아니라 30 ms 뒤에 나옵니다.
+            여기에 512-token prefill chunk 를 얹으면 compute 항이 7.2 TFLOP 만큼 늘어 8.2 ms 가 되지만 아직 memory 항 14.2 ms 아래라
+            roofline 하한은 그대로입니다. Chunk 를 2,048 로 키우면 compute 항이 30 ms 로 memory 항을 넘어섭니다. 64 개 decode 모두의 다음
+            token 이 14 ms 가 아니라 30 ms 뒤에 나옵니다.
           </p>
           <p>
             이것이 prefill-decode interference 의 mechanism 입니다. Decode request 는 자기 일이
@@ -133,10 +129,9 @@ export default function PrefillDecodePhaseDynamicsArticle() {
             TPOT 를 밀어 올립니다.
           </p>
           <p>
-            Roofline 의 최댓값 모델은 하한입니다. 실제 kernel 은 memory 읽기와 연산을 완전히
-            겹치지 못하므로 측정값은 max 와 두 항의 합 사이에 놓이고, Sarathi-Serve 는 chunk 가
-            ridge 아래여도 decode 의 token 간격이 눈에 띄게 늘어나는 것을 관찰했습니다. 그래서
-            chunk 크기는 하한 계산보다 보수적으로 잡습니다.
+            Roofline 의 최댓값 모델은 하한입니다. 실제 kernel 은 memory 읽기와 연산을 완전히 겹치지 못하므로 측정값은 max 와 두 항의 합 사이에 놓입니다.
+            Sarathi-Serve 는 chunk 가 ridge 아래여도 decode 의 token 간격이 눈에 띄게 늘어나는 것을 관찰했습니다. 그래서 chunk 크기는 하한 계산보다
+            보수적으로 잡습니다.
           </p>
           <p>
             Decode priority 는 이 구조에서 나옵니다. Decode 는 bandwidth 로 정해지는 step 의
@@ -173,21 +168,17 @@ export default function PrefillDecodePhaseDynamicsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Chunk 크기는 throughput 을 위해 고르는 값이 아니라 decode 의 token 간격 상한을 지키기
-            위해 고르는 값입니다. 허용할 step 시간에서 decode 만의 바닥 시간을 빼면 prefill 에
-            쓸 수 있는 연산 시간이 나오고, 그 시간을 token 하나의 연산 시간으로 나누면 chunk 의
-            token 수가 나옵니다.
+            Chunk 크기는 decode 의 token 간격 상한을 지키기 위해 고릅니다. throughput 을 위해 고르는 값이 아닙니다. 허용할 step 시간에서 decode 만의
+            바닥 시간을 빼면 prefill 에 쓸 수 있는 연산 시간이 나옵니다. 그 시간을 token 하나의 연산 시간으로 나누면 chunk 의 token 수가 나옵니다.
           </p>
           <p>
-            앞의 예로 계산하면 이렇습니다. TPOT 목표가 25 ms 이고 decode 64 개의 바닥이 14.2 ms
-            이면 남는 시간은 10.8 ms 입니다. 실효 성능을 peak 의 60% 인 600 TFLOP/s 로 잡으면 그
-            시간에 6.5 TFLOP 을 계산할 수 있고, token 당 14 GFLOP 으로 나누면 약 460 token 이라
-            block 배수인 448 로 내립니다.
+            앞의 예로 계산하면 이렇습니다. TPOT 목표가 25 ms 이고 decode 64 개의 바닥이 14.2 ms 이면 남는 시간은 10.8 ms 입니다. 실효 성능을 peak 의
+            60% 인 600 TFLOP/s 로 잡으면 그 시간에 6.5 TFLOP 을 계산할 수 있고 token 당 14 GFLOP 으로 나누면 약 460 token 이라 block
+            배수인 448 로 내립니다.
           </p>
           <p>
-            이 값은 TTFT 를 늘립니다. 4,096-token prompt 는 한 번에 prefill 하면 약 100 ms 안팎이지만
-            448 씩 나누면 10 step 이 필요하고 각 step 이 25 ms 근처이므로 첫 token 까지 250 ms
-            가까이 걸립니다. TTFT 목표가 그보다 빡빡하면 chunk 를 키우고 TPOT 를 내주거나, decode
+            이 값은 TTFT 를 늘립니다. 4,096-token prompt 는 한 번에 prefill 하면 약 100 ms 안팎이지만 448 씩 나누면 10 step 이 필요하고 각
+            step 이 25 ms 근처이므로 첫 token 까지 250 ms 가까이 걸립니다. TTFT 목표가 그보다 빡빡하면 chunk 를 키우고 TPOT 를 내주거나 decode
             batch 를 줄여 바닥 시간을 낮춰야 합니다.
           </p>
           <p>
@@ -220,22 +211,18 @@ export default function PrefillDecodePhaseDynamicsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Prefill 의 연산은 linear layer 의 n 에 비례하는 항과 attention 의 n² 에 비례하는 항의
-            합입니다. 짧은 prompt 에서는 linear 항이 크지만, 두 항이 같아지는 길이를 넘으면 prompt
-            길이를 두 배로 늘릴 때 시간이 세 배 가까이 늘어납니다. 7B 급에서 그 교차점은 5만 token
-            근처입니다.
+            Prefill 의 연산은 linear layer 의 n 에 비례하는 항과 attention 의 n² 에 비례하는 항의 합입니다. 짧은 prompt 에서는 linear 항이
+            크지만 두 항이 같아지는 길이를 넘으면 prompt 길이를 두 배로 늘릴 때 시간이 세 배 가까이 늘어납니다. 7B 급에서 그 교차점은 5만 token 근처입니다.
           </p>
           <p>
-            계산해 보면 causal mask 로 절반을 건너뛴 attention FLOP 은 약 2n²dN 이고, linear
-            FLOP 은 2Pn 입니다. 둘이 같아지는 n 은 P/(dN) 이고 7B 에서 d = 4,096, N = 32 를 넣으면
-            약 53K 입니다. 64K prompt 에서는 attention 이 이미 linear 보다 크고, 128K 에서는 2.4 배,
-            256K 에서는 4.8 배입니다.
+            계산해 보면 causal mask 로 절반을 건너뛴 attention FLOP 은 약 2n²dN 이고, linear FLOP 은 2Pn 입니다. 둘이 같아지는 n 은
+            P/(dN) 이고 7B 에서 d = 4,096, N = 32 를 넣으면 약 53K 입니다. 64K prompt 에서는 attention 이 이미 linear 보다 크고 128K
+            에서는 2.4 배, 256K 에서는 4.8 배입니다.
           </p>
           <p>
-            시간으로 옮기면 64K prefill 은 linear 917 TFLOP 과 attention 약 1,100 TFLOP 을 합쳐
-            989 TFLOP/s 기준 2 초, 실효 60% 면 3.4 초입니다. 128K 는 6.3 PFLOP 으로 peak 기준 6.4 초가
-            됩니다. 이것이 long-context prefill 이 길이에 비해 더 나빠지는 이유이며, kernel 이
-            느려서가 아니라 일이 n² 으로 늘어서입니다.
+            시간으로 옮기면 64K prefill 은 linear 917 TFLOP 과 attention 약 1,100 TFLOP 을 합쳐 989 TFLOP/s 기준 2 초, 실효 60%
+            면 3.4 초입니다. 128K 는 6.3 PFLOP 으로 peak 기준 6.4 초가 됩니다. 이것이 long-context prefill 이 길이에 비해 더 나빠지는
+            이유입니다. kernel 이 느려서가 아니라 일이 n² 으로 늘어서입니다.
           </p>
           <p>
             Chunking 은 이 시간을 줄이지 못하고 나눌 뿐입니다. 오히려 chunk 마다 prefix 의 KV 를
@@ -277,16 +264,14 @@ export default function PrefillDecodePhaseDynamicsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Prefill 을 빠르게 하는 방법은 한 가지가 아니고 각 층이 다른 항을 줄입니다. Kernel 층은
-            attention 의 n² 항이 memory 를 오가는 횟수를 줄이고, chunking 층은 시간을 나눠 decode 와
-            공존하게 하며, scheduling 층은 어느 request 의 chunk 를 먼저 넣을지 정하고, 분리 배치는
-            간섭 자체를 다른 GPU 로 보냅니다.
+            Prefill 을 빠르게 하는 방법은 한 가지가 아니고 각 층이 다른 항을 줄입니다. Kernel 층은 attention 의 n² 항이 memory 를 오가는 횟수를 줄입니다.
+            chunking 층은 시간을 나눠 decode 와 공존하게 합니다. scheduling 층은 어느 request 의 chunk 를 먼저 넣을지 정합니다. 분리 배치는 간섭
+            자체를 다른 GPU 로 보냅니다.
           </p>
           <p>
-            어느 층을 먼저 만질지는 병목이 어디인지에 달려 있습니다. Prompt 가 짧고 decode batch 가
-            큰 workload 에서는 chunk 크기와 decode priority 가 TPOT 를 정하고, 64K 를 넘는 prompt 가
-            흔한 workload 에서는 attention kernel 과 attention 구조가 TTFT 를 정합니다. 두 지표를
-            동시에 빡빡하게 요구하면 한 GPU 안의 절충으로는 부족해 분리 배치로 넘어갑니다.
+            어느 층을 먼저 만질지는 병목이 어디인지에 달려 있습니다. Prompt 가 짧고 decode batch 가 큰 workload 에서는 chunk 크기와 decode
+            priority 가 TPOT 를 정합니다. 64K 를 넘는 prompt 가 흔한 workload 에서는 attention kernel 과 attention 구조가 TTFT 를
+            정합니다. 두 지표를 동시에 빡빡하게 요구하면 한 GPU 안의 절충으로는 부족해 분리 배치로 넘어갑니다.
           </p>
         </div>
         <TermBreakdown
@@ -309,10 +294,9 @@ export default function PrefillDecodePhaseDynamicsArticle() {
             full attention 이면 n² 항이 4 분의 1 이 되어 교차점이 200K 근처로 밀립니다.
           </p>
           <p>
-            그래서 이 글은 특정 model 의 체감치를 사실로 적지 않고 조건식으로만 말합니다. 어떤
-            model 의 long-context prefill 이 느리다는 보고를 읽으면 그 model 의 P, d, N, attention
-            구조를 식에 넣어 n* 를 구하고, 측정 장비의 F_eff 로 T_prefill 을 다시 계산해 보고와
-            맞는지 확인하는 것이 순서입니다.
+            그래서 이 글은 특정 model 의 체감치를 사실로 적지 않고 조건식으로만 말합니다. 어떤 model 의 long-context prefill 이 느리다는 보고를 읽으면 순서는
+            이렇습니다. 그 model 의 P, d, N, attention 구조를 식에 넣어 n* 를 구하고 측정 장비의 F_eff 로 T_prefill 을 다시 계산해 보고와 맞는지
+            확인합니다.
           </p>
         </ProgressiveDetail>
       </section>

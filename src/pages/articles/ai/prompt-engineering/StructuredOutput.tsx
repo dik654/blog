@@ -48,10 +48,8 @@ export default function StructuredOutput() {
           Structured prompting은 설계이고 강제는 decoder의 책임입니다
         </h3>
         <p>
-          Structured prompting은 원하는 field·type·example을 prompt 문장으로
-          미리 보여주는 설계 기법입니다. Model이 그 설명을 따르길 기대할
-          뿐이고, 다른 token을 아예 못 내놓게 막는 decoder-level 강제는 이
-          층에 없습니다.
+          Structured prompting은 원하는 field·type·example을 prompt 문장으로 미리 보여주는 설계 기법입니다. Model이 그 설명을 따르길 기대할
+          뿐입니다. 다른 token을 아예 못 내놓게 막는 decoder-level 강제는 이 층에 없습니다.
         </p>
         <p>
           반면 grammar-constrained generation은 JSON Schema나 CFG를
@@ -121,15 +119,12 @@ export default function StructuredOutput() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3 id="output-paths" className="scroll-mt-24">세 경로는 “형식이 잘 맞는가”와 “얼마나 오래 걸리는가”를 함께 비교합니다</h3>
         <p>
-          같은 schema를 전달해도 runtime 경로는 세 가지로 나뉩니다. Prompt-only는
-          model에게 규칙을 요청할 뿐이고, constrained decoding은 생성 가능한
-          token을 decoder에서 제한합니다. Post-hoc repair는 이미 생성된 invalid
-          output을 나중에 고치는 경로입니다.
+          같은 schema를 전달해도 runtime 경로는 세 가지로 나뉩니다. Prompt-only는 model에게 규칙을 요청할 뿐입니다. constrained decoding은 생성
+          가능한 token을 decoder에서 제한합니다. Post-hoc repair는 이미 생성된 invalid output을 나중에 고치는 경로입니다.
         </p>
         <p>
-          어느 하나가 항상 가장 빠르다고 단정할 수는 없습니다. Constrained
-          decoding에는 grammar 처리 비용이 있지만 retry를 줄일 수 있고, prompt-only
-          한 번은 가벼워도 실패가 잦으면 p95 latency가 더 커질 수 있기 때문입니다.
+          어느 하나가 항상 가장 빠르다고 단정할 수는 없습니다. Constrained decoding에는 grammar 처리 비용이 있지만 retry를 줄일 수 있습니다. prompt-
+          only 한 번은 가벼워도 실패가 잦으면 p95 latency가 더 커질 수 있기 때문입니다.
         </p>
       </div>
 
@@ -176,10 +171,8 @@ export default function StructuredOutput() {
         question="세 output 경로의 실패 확률과 tail latency를 같은 기준으로 어떻게 측정할까요?"
         idea={(
           <p>
-            동일한 N개 요청을 각 경로에 paired 방식으로 실행합니다. 제한된 retry와
-            fallback까지 끝난 뒤에도 validator를 통과하지 못한 요청의 비율을 최종
-            실패율로 세고, 요청 시작부터 최종 판정까지의 wall-clock time으로 p95를
-            구합니다. 한 번 repair하는 경로의 평균 latency는 첫 검증 실패 확률만큼
+            동일한 N개 요청을 각 경로에 paired 방식으로 실행합니다. 제한된 retry와 fallback까지 끝난 뒤에도 validator를 통과하지 못한 요청의 비율을 최종
+            실패율로 셉니다. 요청 시작부터 최종 판정까지의 wall-clock time으로 p95를 구합니다. 한 번 repair하는 경로의 평균 latency는 첫 검증 실패 확률만큼
             repair와 재검증 비용이 더해진다고 근사할 수 있습니다.
           </p>
         )}
@@ -277,10 +270,9 @@ L_{95}&=\underbrace{Q_{0.95}(\{T_i\})}_{\text{95\% 요청이 끝나는 시간 �
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          운영 경로는 generate→parse→schema validate→domain validate→limited retry→
-          fallback 순서로 구성합니다. Retry에는 최대 횟수와 원인별 수정 strategy를
-          두고, 원문 근거가 없거나 policy상 실행할 수 없는 경우에는 억지로 record를
-          채우지 않고 typed abstention을 반환해야 합니다.
+          운영 경로는 generate→parse→schema validate→domain validate→limited retry→ fallback 순서로 구성합니다. Retry에는 최대
+          횟수와 원인별 수정 strategy를 둡니다. 원문 근거가 없거나 policy상 실행할 수 없는 경우에는 억지로 record를 채우지 않고 typed abstention을 반환해야
+          합니다.
         </p>
         <p>
           이때 validator failure를 eval set에 축적하면 format prompt와 schema를

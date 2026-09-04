@@ -35,17 +35,14 @@ export default function MultiHeadLatentAttentionMechanicsArticle() {
             는 head 를 묶어 이 크기를 줄이지만 공유된 head 만큼 표현력을 나눠 씁니다.
           </p>
           <p>
-            MLA 는 다른 축을 택합니다. Head 별로 key·value 를 따로 두는 대신 모든 head 가
-            공유하는 저차원 latent 벡터 하나만 캐시하고, 필요할 때 head 별 up-projection 으로
-            복원합니다. 그런데 decode 에서 매 step 마다 이 복원을 다시 하면 압축한 의미가
-            없어지므로, DeepSeek-V2 는 복원 행렬을 query·output 쪽으로 옮겨 접어 두는 방법을
-            함께 제시했습니다.
+            MLA는 다른 축을 택합니다. head별로 key·value를 따로 두는 대신 모든 head가 공유하는 저차원 latent 벡터 하나만 캐시하고, 필요할 때 head별 up-
+            projection으로 복원합니다. 그런데 decode에서 매 step마다 이 복원을 다시 하면 압축한 의미가 없어지므로 DeepSeek-V2는 복원 행렬을
+            query·output 쪽으로 옮겨 접어 두는 방법을 함께 제시했습니다.
           </p>
           <p>
-            수치로 봅니다. DeepSeek-V2(236B)는 d_model=5120, head 128개, head 차원 128을
-            씁니다. 표준 방식이라면 layer 하나가 token 하나마다 key·value 를 합쳐 128×128×2=32768
-            개 원소를 캐시해야 합니다. MLA 는 이것을 latent 차원 512와 위치 전용 차원 64를
-            더한 576개 원소로 줄입니다. 원소 수 기준 약 56.9배입니다.
+            수치로 봅니다. DeepSeek-V2(236B)는 d_model=5120, head 128개, head 차원 128을 씁니다. 표준 방식이라면 layer 하나가 token
+            하나마다 key·value를 합쳐 128×128×2=32768개 원소를 캐시해야 합니다. MLA는 이것을 latent 차원 512와 위치 전용 차원 64를 더한 576개 원소로
+            줄입니다. 원소 수 기준 약 56.9배입니다.
           </p>
         </div>
         <div id="paper-deepseek-v2" className="not-prose my-8 scroll-mt-24">
@@ -69,19 +66,16 @@ export default function MultiHeadLatentAttentionMechanicsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            MLA 의 압축은 두 단계입니다. Token 의 hidden state h_t 를 작은 latent
-            c_t^KV 로 내리는 down-projection, 그리고 그 latent 에서 head 별 key·value 를
-            다시 만드는 up-projection입니다. 캐시에 남는 것은 첫 단계의 결과 하나뿐입니다.
+            MLA는 압축을 두 단계로 나눕니다. token의 hidden state h_t를 작은 latent c_t^KV로 내리는 down-projection, 그리고 그
+            latent에서 head별 key·value를 다시 만드는 up-projection입니다. 캐시에 남는 것은 첫 단계의 결과 하나뿐입니다.
           </p>
           <p>
-            KV down projection 은 W^DKV 라는 하나의 행렬로 h_t 를 d_c 차원 latent 로
-            내립니다. K와 V를 따로 내리지 않고 같은 latent 를 공유하는 것이 핵심이라,
-            압축률이 head 수만큼 곱으로 커집니다.
+            KV down projection은 W^DKV라는 하나의 행렬로 h_t를 d_c 차원 latent로 내립니다. K와 V를 따로 내리지 않고 같은 latent를 공유하는 것이
+            핵심이라 압축률이 head 수만큼 곱으로 커집니다.
           </p>
           <p>
-            KV up projection 은 W^UK, W^UV 두 행렬로 이 latent 를 head 별 key·value 로
-            되돌립니다. Prefill 처럼 모든 token 을 병렬로 처리할 때는 이 복원을 실제로
-            수행해 표준 attention 과 같은 모양으로 계산합니다.
+            KV up projection은 W^UK, W^UV 두 행렬로 이 latent를 head별 key·value로 되돌립니다. prefill처럼 모든 token을 병렬로 처리할
+            때는 이 복원을 실제로 수행해 표준 attention과 같은 모양으로 계산합니다.
           </p>
         </div>
         <ExplainedFormula
@@ -104,21 +98,17 @@ export default function MultiHeadLatentAttentionMechanicsArticle() {
         />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Low-rank KV bottleneck 은 이 latent 차원 d_c 가 만드는 좁은 통로 자체를
-            가리키는 이름입니다. 128개 head 가 각자 128차원 key 를 가지면 head 를 이어 붙인
-            차원은 16384인데, 이 정보 전부가 512차원 latent 하나를 거쳐야 합니다.
+            latent 차원 d_c는 좁은 통로 하나를 만듭니다. 이 통로 자체를 low-rank KV bottleneck이라고 부릅니다. 128개 head가 각자 128차원 key를
+            가지면 head를 이어 붙인 차원은 16384인데, 이 정보 전부가 512차원 latent 하나를 거쳐야 합니다.
           </p>
           <p>
-            압축률을 세어 보면 latent 자체는 16384/512=32배 좁습니다. 그런데 실제 캐시
-            바이트는 K 와 V 가 같은 latent 를 공유하고 위치 항까지 더한 뒤에 정해지므로,
-            바로 다음 절에서 볼 decoupled RoPE 를 더하면 비율이 달라집니다.
+            압축률을 세어 보면 latent 자체는 16384/512=32배 좁습니다. 그런데 실제 캐시 바이트는 K와 V가 같은 latent를 공유하고 위치 항까지 더한 뒤에 정해지므로
+            바로 다음 절에서 볼 decoupled RoPE를 더하면 비율이 달라집니다.
           </p>
           <p>
-            Rank–compression tradeoff 는 d_c 를 얼마로 잡을지의 선택입니다. d_c 를 줄이면
-            캐시와 up-projection 행렬이 함께 작아지지만, 512차원 통로에 16384차원 정보를
-            우겨넣는 부담도 커져 head 들이 서로 구분해야 할 정보가 겹치기 쉬워집니다.
-            DeepSeek-V2 는 512를 실험으로 골랐다고 밝혔을 뿐, 이 값이 최적이라는 증명은
-            논문에 없습니다.
+            d_c를 얼마로 잡을지가 rank–compression tradeoff입니다. d_c를 줄이면 캐시와 up-projection 행렬이 함께 작아지지만 512차원 통로에
+            16384차원 정보를 우겨넣는 부담도 커져 head들이 서로 구분해야 할 정보가 겹치기 쉬워집니다. DeepSeek-V2는 512를 실험으로 골랐다고 밝혔을 뿐, 이 값이
+            최적이라는 증명은 논문에 없습니다.
           </p>
           <p>
             <Link to="/ai/math-matrices-svd#low-rank">Low-rank approximation</Link> 이
@@ -140,15 +130,13 @@ export default function MultiHeadLatentAttentionMechanicsArticle() {
             그래서 MLA 는 위치 정보를 압축 경로 밖의 작은 벡터로 따로 만듭니다.
           </p>
           <p>
-            이유는 회전 자체가 위치 t 마다 달라지는 행렬이라는 데 있습니다. k_t^C=W^UK c_t^KV
-            에 RoPE 회전 R(t)를 곱하면 결과는 R(t)W^UK c_t^KV 가 되고, 이 R(t)W^UK 는 t 마다
-            다른 행렬이라 미리 한 번 W^Q 쪽으로 접어 재사용할 수 없습니다. 매 위치마다
-            다시 곱해야 하면 absorption 의 이득이 사라집니다.
+            이유는 회전 자체가 위치 t마다 달라지는 행렬이라는 데 있습니다. k_t^C=W^UK c_t^KV에 RoPE 회전 R(t)를 곱하면 결과는 R(t)W^UK c_t^KV가
+            됩니다. 이 R(t)W^UK는 t마다 다른 행렬이라 미리 한 번 W^Q 쪽으로 접어 재사용할 수 없습니다. 매 위치마다 다시 곱해야 하면 absorption의 이득이
+            사라집니다.
           </p>
           <p>
-            해법은 위치 항을 latent 를 거치지 않는 별도 경로로 빼는 것입니다. Query 쪽은
-            head 마다 다른 작은 벡터를, key 쪽은 모든 head 가 공유하는 벡터 하나를
-            hidden state 에서 직접 만들고, 여기에만 RoPE 를 적용합니다.
+            해법은 위치 항을 latent를 거치지 않는 별도 경로로 빼는 것입니다. query 쪽은 head마다 다른 작은 벡터를, key 쪽은 모든 head가 공유하는 벡터 하나를
+            hidden state에서 직접 만들고 여기에만 RoPE를 적용합니다.
           </p>
         </div>
         <ExplainedFormula
@@ -171,10 +159,8 @@ export default function MultiHeadLatentAttentionMechanicsArticle() {
         />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            수치로 보면 위치 경로가 얼마나 얇은지 드러납니다. d_h^R=64를 head 마다 따로
-            뒀다면 128개 head 가 64×128=8192개 원소를 캐시해야 하지만, key 쪽을 공유해
-            토큰당 64개만 늘어납니다. Content latent 512와 합쳐 576이라는 앞 절의 숫자가
-            여기서 나옵니다.
+            수치로 보면 위치 경로가 얼마나 얇은지 드러납니다. d_h^R=64를 head마다 따로 뒀다면 128개 head가 64×128=8192개 원소를 캐시해야 하지만 key 쪽을
+            공유해 토큰당 64개만 늘어납니다. content latent 512와 합쳐 576이라는 앞 절의 숫자가 여기서 나옵니다.
           </p>
         </div>
       </section>
@@ -185,24 +171,20 @@ export default function MultiHeadLatentAttentionMechanicsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Query 와 key 는 각각 content 부분과 위치 부분을 이어 붙인 벡터입니다. 두 벡터를
-            이어 붙이고 내적을 하면 결과는 이어 붙인 부분끼리의 내적을 각각 구해 더한
-            값과 같으므로, attention 점수는 자동으로 두 항의 합으로 갈라집니다.
+            query와 key는 각각 content 부분과 위치 부분을 이어 붙인 벡터입니다. 두 벡터를 이어 붙이고 내적을 하면 결과는 이어 붙인 부분끼리의 내적을 각각 구해 더한 값과
+            같으므로 attention 점수는 자동으로 두 항의 합으로 갈라집니다.
           </p>
           <p>
-            Content query 는 q_t^C=W^UQ c_t^Q, content key 는 k_t^C=W^UK c_t^KV 로 앞 절까지
-            나온 두 latent 에서 만들어집니다. Positional query·key 는 방금 만든 q_t^R,
-            k_t^R 입니다. 최종 벡터는 각각 [q_t^C; q_t^R], [k_t^C; k_t^R]입니다.
+            content query는 q_t^C=W^UQ c_t^Q, content key는 k_t^C=W^UK c_t^KV로 앞 절까지 나온 두 latent에서 만들어집니다.
+            positional query·key는 방금 만든 q_t^R, k_t^R입니다. 최종 벡터는 각각 [q_t^C; q_t^R], [k_t^C; k_t^R]입니다.
           </p>
           <p>
-            score = q_t^C·k_t^C + q_t^R·k_t^R 로, 앞 항은 512차원 latent 를 거친 content
-            유사도, 뒷 항은 64차원 위치 유사도입니다. 두 항은 서로 다른 weight 와 서로
-            다른 차원에서 독립적으로 계산되고 마지막에 더해질 뿐입니다.
+            score = q_t^C·k_t^C + q_t^R·k_t^R로, 앞 항은 512차원 latent를 거친 content 유사도, 뒷 항은 64차원 위치 유사도입니다. 두 항은
+            서로 다른 weight와 서로 다른 차원에서 독립적으로 계산되고 마지막에 더해질 뿐입니다.
           </p>
           <p>
-            Decoupled content/position attention 이라는 이름은 이 분리 자체를 가리킵니다.
-            표준 RoPE 적용 attention 은 이 둘을 애초에 나누지 않아 회전이 content 계산
-            속으로 섞여 들어가지만, MLA 는 둘을 끝까지 분리해 둡니다.
+            decoupled content/position attention이라는 이름이 가리키는 것은 이 분리 자체입니다. 표준 RoPE 적용 attention은 이 둘을 애초에 나누지
+            않아 회전이 content 계산 속으로 섞여 들어가지만 MLA는 둘을 끝까지 분리해 둡니다.
           </p>
         </div>
         <TermBreakdown
@@ -223,19 +205,16 @@ export default function MultiHeadLatentAttentionMechanicsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Weight absorption 은 학습이 끝난 뒤 고정된 W^UK, W^UV 를 다른 행렬과 미리
-            곱해 접어 두는 재결합입니다. Content 점수와 출력이 행렬곱의 결합 순서를
-            바꿔도 같은 값이라는 사실만으로 성립하며, 추가 학습은 필요 없습니다.
+            학습이 끝나면 W^UK, W^UV는 고정됩니다. 이 두 행렬을 다른 행렬과 미리 곱해 접어 두는 재결합이 weight absorption입니다. content 점수와 출력이
+            행렬곱의 결합 순서를 바꿔도 같은 값이라는 사실만으로 성립하며, 추가 학습은 필요 없습니다.
           </p>
           <p>
-            Query-side absorption 은 content 점수 계산에 씁니다. q_t^C·k_t^C = q_t^C·(W^UK
-            c_j^KV) 인데, 이를 (W^UK^T q_t^C)·c_j^KV 로 다시 묶으면 과거 token 마다 k_j^C
-            를 만들 필요 없이 캐시된 c_j^KV 를 latent 공간에서 바로 상대할 수 있습니다.
+            query-side absorption은 content 점수 계산에 씁니다. q_t^C·k_t^C = q_t^C·(W^UK c_j^KV)인데, 이를 (W^UK^T
+            q_t^C)·c_j^KV로 다시 묶으면 과거 token마다 k_j^C를 만들 필요 없이 캐시된 c_j^KV를 latent 공간에서 바로 상대할 수 있습니다.
           </p>
           <p>
-            Value-side absorption 은 출력 쪽입니다. 가중합 결과를 W^UV 로 복원한 뒤
-            W^O 를 곱하는 대신, W^O W^UV 를 먼저 곱해 둔 하나의 행렬로 latent 가중합을
-            바로 model 차원으로 보냅니다. v_j^C 도 끝까지 만들어지지 않습니다.
+            value-side absorption은 출력 쪽입니다. 가중합 결과를 W^UV로 복원한 뒤 W^O를 곱하는 대신, W^O W^UV를 먼저 곱해 둔 하나의 행렬로 latent
+            가중합을 바로 model 차원으로 보냅니다. v_j^C도 끝까지 만들어지지 않습니다.
           </p>
         </div>
         <ExplainedFormula
@@ -292,15 +271,12 @@ export default function MultiHeadLatentAttentionMechanicsArticle() {
             아래에서만 이 교환이 이득입니다.
           </p>
           <p>
-            그래서 실제 구현은 경로를 나눕니다. vLLM 의 MLA kernel 은 prefill 처럼
-            query·key 비율이 1에 가까울 때는 흡수하지 않은(naive) 경로로 head 별
-            key·value 를 실제로 복원해 계산량을 아끼고, decode 처럼 비율이 작을 때만
-            흡수된 경로를 씁니다.
+            그래서 실제 구현은 경로를 나눕니다. vLLM의 MLA kernel은 prefill처럼 query·key 비율이 1에 가까울 때는 흡수하지 않은(naive) 경로로 head별
+            key·value를 실제로 복원해 계산량을 아끼고 decode처럼 비율이 작을 때만 흡수된 경로를 씁니다.
           </p>
           <p>
-            둘째 한계는 absorption 이 선형 재결합이라는 점입니다. W^UK, W^UV 사이에
-            비선형이나 위치 의존 행렬이 끼면 결합법칙이 깨져 접을 수 없습니다. Decoupled
-            RoPE 가 있는 이유가 바로 이 한계를 피하기 위해서입니다.
+            둘째 한계는 absorption이 선형 재결합이라는 점입니다. W^UK, W^UV 사이에 비선형이나 위치 의존 행렬이 끼면 결합법칙이 깨져 접을 수 없습니다. decoupled
+            RoPE가 있는 이유가 바로 이 한계를 피하기 위해서입니다.
           </p>
           <p>
             셋째, d_c 를 더 줄이는 선택은 이 글의 범위가 아닙니다. Rank–compression

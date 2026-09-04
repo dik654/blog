@@ -18,27 +18,30 @@ export default function MultiGpuVramStrategies() {
           <Link to="/ai/tensor-and-pipeline-parallel-inference#tensor-parallel">tensor parallel linear sharding 글</Link>에서 다룹니다.
         </p>
         <p className="leading-8">
-          다만 장당 지분이 여유롭다고 통신이 사라지지는 않습니다. Layer마다 attention 뒤와 MLP 뒤 두 번의 all-reduce가 더해지고, 이 통신 비용은 TP degree를 올려도 layer 수만큼 남는 고정 비율입니다.
+          다만 장당 지분이 여유롭다고 통신이 사라지지는 않습니다. Layer마다 attention 뒤와 MLP 뒤로 all-reduce가 두 번 더해집니다. 이 통신 비용은 TP
+          degree를 올려도 layer 수만큼 남는 고정 비율입니다.
         </p>
 
         <h3 id="cpu-gpu-offloading" className="scroll-mt-20">
           CPU/GPU offloading은 일부 weight를 host에 두고 옮깁니다
         </h3>
         <p className="leading-8">
-          CPU/GPU offloading은 일부 layer의 weight를 host RAM에 두고 필요할 때만 PCIe로 옮기는 방법입니다. 48GiB 카드에서 44GiB만 안전하게 쓴다면, 51.75GiB 중 약 15%인 약 7.75GiB를 host에 내려야 나머지가 들어갑니다.
+          CPU/GPU offloading은 일부 layer의 weight를 host RAM에 두고 필요할 때만 PCIe로 옮기는 방법입니다. 48GiB 카드에서 44GiB만 안전하게
+          쓴다면 51.75GiB 중 약 15%인 약 7.75GiB를 host에 내려야 나머지가 들어갑니다.
         </p>
         <p className="leading-8">
-          다만 host에 내린 layer는 decode마다 그 바이트를 PCIe로 다시 옮겨야 해, 대역폭이 부족하면 offload 비율만큼 step 시간이 늘어날 수 있습니다.
+          다만 host에 내린 layer는 decode마다 그 바이트를 PCIe로 다시 옮겨야 하므로 대역폭이 부족하면 offload 비율만큼 step 시간이 늘어날 수 있습니다.
         </p>
 
         <h3 id="unified-large-memory" className="scroll-mt-20">
           Unified/large memory는 residency 문제 자체를 피합니다
         </h3>
         <p className="leading-8">
-          Unified/large memory capacity는 GPU와 host가 애초에 하나의 큰 주소 공간을 공유하는 아키텍처로, 수백 GiB급 usable capacity가 있으면 이 글의 BF16 known floor 전체를 파티션 없이 담을 수 있습니다.
+          Unified/large memory capacity는 GPU와 host가 애초에 하나의 큰 주소 공간을 공유하는 아키텍처입니다. 수백 GiB급 usable capacity가
+          있으면 이 글의 BF16 known floor 전체를 파티션 없이 담을 수 있습니다.
         </p>
         <p className="leading-8">
-          다만 이런 아키텍처는 discrete GPU HBM보다 대역폭이 낮은 경우가 많아, capacity 문제를 없애는 대신 bandwidth 여유를 다시 확인해야 합니다.
+          다만 이런 아키텍처는 discrete GPU HBM보다 대역폭이 낮은 경우가 많습니다. capacity 문제를 없애는 대신 bandwidth 여유를 다시 확인하는 단계가 남습니다.
         </p>
       </div>
 

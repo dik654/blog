@@ -22,9 +22,8 @@ export default function GRPOProcess({
           group 안에서 상대적으로 좋은 completion의 log-probability를 높입니다.
         </p>
         <p className="leading-8">
-          PPO처럼 별도의 learned value model을 두지 않는다는 점이 눈에 띕니다.
-          그렇다고 rollout, verification과 policy log-probability 계산 비용까지
-          없어지는 것은 아닙니다.
+          PPO처럼 별도의 learned value model을 두지 않는다는 점이 눈에 띕니다. 다만 rollout, verification, policy log-probability
+          계산 비용은 그대로 남습니다.
         </p>
       </div>
 
@@ -38,15 +37,12 @@ export default function GRPOProcess({
           핵심 논문 · DeepSeekMath의 GRPO
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          DeepSeekMath가 풀려던 문제는 PPO에서 prompt마다 value model을 함께
-          학습하는 메모리와 계산 부담이었습니다. 같은 prompt에서 여러 output을
-          뽑고 group reward의 평균을 baseline으로 사용해, 별도 critic 없이 상대
-          advantage를 만듭니다.
+          DeepSeekMath가 풀려던 문제는 PPO에서 prompt마다 value model을 함께 학습하는 메모리와 계산 부담이었습니다. 같은 prompt에서 여러 output을 뽑고
+          group reward의 평균을 baseline으로 삼아 별도 critic 없이 상대 advantage를 만듭니다.
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          논문은 DeepSeekMath 7B와 수학 data·reward 조건에서 이 방법을
-          평가했습니다. GRPO만 붙이면 임의의 base model과 domain에서 같은
-          reasoning gain이 난다는 결론으로 넓히면 안 됩니다.
+          논문은 DeepSeekMath 7B와 수학 data·reward 조건에서 이 방법을 평가했습니다. GRPO만 붙이면 임의의 base model과 domain에서 같은
+          reasoning gain이 난다는 결론까지 나아갈 근거는 없습니다.
         </p>
         <a
           className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
@@ -113,9 +109,8 @@ export default function GRPOProcess({
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Advantage가 정해져도 policy를 얼마나 움직일지는 별도 문제다</h3>
         <p className="leading-8">
-          Rollout을 만든 old policy와 update할 policy의 token probability 비율을
-          사용하면, 이미 probability가 크게 달라진 token이 update를 지배하지
-          않도록 clipping할 수 있습니다.
+          Rollout을 만든 old policy와 update할 policy의 token probability 비율을 쓰면 이미 probability가 크게 달라진 token이
+          update를 지배하지 않도록 clipping합니다.
         </p>
         <p className="leading-8">
           Reference policy에 대한 KL penalty도 선택할 수 있습니다. 다만 현재
@@ -207,15 +202,12 @@ c_{i,t}&=\underbrace{\operatorname{clip}(\rho_{i,t},1-\epsilon,1+\epsilon)\wideh
 
         <h3>Rollout engine과 trainer가 다른 확률을 계산할 수 있다</h3>
         <p className="leading-8">
-          vLLM이 sampling한 token의 log-probability와 training framework가 다시
-          계산한 값은 kernel, precision과 implementation 차이로 어긋날 수
-          있습니다. 그러면 이름은 on-policy여도 실제 update에는 distribution
-          mismatch가 생깁니다.
+          vLLM이 sampling한 token의 log-probability와 training framework가 다시 계산한 값은 kernel, precision과
+          implementation 차이로 어긋나기 쉽습니다. 그러면 이름은 on-policy여도 실제 update에는 distribution mismatch가 생깁니다.
         </p>
         <p className="leading-8">
-          현재 TRL은 이 차이와 importance-sampling ratio를 metric으로 제공하고
-          correction option도 둡니다. Reward curve와 함께 sampler와 trainer의
-          log-probability 차이를 감시해야 합니다.
+          현재 TRL은 이 차이와 importance-sampling ratio를 metric으로 제공하고 correction option도 둡니다. Reward curve만 보지 말고
+          sampler와 trainer의 log-probability 차이를 함께 봅니다.
         </p>
       </div>
 
@@ -227,10 +219,8 @@ c_{i,t}&=\underbrace{\operatorname{clip}(\rho_{i,t},1-\epsilon,1+\epsilon)\wideh
           후속 핵심 논문 · DAPO와 long-CoT loss
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          DAPO의 핵심 문제의식은 original GRPO의 sample별 길이 정규화가 긴
-          completion의 token contribution을 다르게 만들 수 있다는 점입니다. 이
-          논문은 전체 active token으로 loss를 정규화하고 dynamic sampling과 clip
-          설계를 함께 제안했습니다.
+          DAPO는 original GRPO의 sample별 길이 정규화를 문제 삼습니다. 그 정규화가 긴 completion의 token contribution을 다르게 만든다는
+          것입니다. 논문은 전체 active token으로 loss를 정규화하고 dynamic sampling과 clip 설계를 함께 제안했습니다.
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
           현재 TRL 문서가 <code>dapo</code>를 기본 loss type으로 두는 것은
@@ -261,10 +251,8 @@ c_{i,t}&=\underbrace{\operatorname{clip}(\rho_{i,t},1-\epsilon,1+\epsilon)\wideh
           설정값으로 노출합니다.
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          따라서 “GRPO를 사용했다”는 기록만으로 실행을 재현할 수 없습니다.
-          설치한 TRL commit과 설정을 run artifact로 남겨야 합니다. 공식 문서는
-          현재 API 의미의 근거이지 특정 조합의 품질 우위를 보장하는 benchmark는
-          아닙니다.
+          “GRPO를 사용했다”는 기록만으로는 실행이 재현되지 않습니다. 설치한 TRL commit과 설정을 run artifact로 함께 남깁니다. 공식 문서가 뒷받침하는 것은 현재
+          API의 의미까지입니다. 특정 조합의 품질 우위를 보장하는 benchmark는 아닙니다.
         </p>
         <a
           className="mt-3 inline-block text-sm font-medium text-primary hover:underline"

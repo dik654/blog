@@ -25,10 +25,8 @@ export default function Applications() {
       <h2 className="mb-6 text-2xl font-bold">같은 계산이 모델 안에서 맡는 역할</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Vector·norm·dot product는 모델 하나에 속한 기술이 아닙니다. 같은 계산이라도
-          normalization과 objective가 달라지면 해석이 달라집니다. 아래 글에서는 정의를
-          다시 복제하지 않고, 이 계산이 각 모델의 실행 경로에서 어떤 값을 만드는지
-          이어서 설명합니다.
+          Vector·norm·dot product는 모델 하나에 속한 기술이 아닙니다. 같은 계산이라도 normalization과 objective가 달라지면 해석이 달라집니다. 아래
+          글에서는 정의를 다시 복제하지 않고 이 계산이 각 모델의 실행 경로에서 어떤 값을 만드는지 이어서 설명합니다.
         </p>
       </div>
       <div className="not-prose mt-6 grid gap-4 md:grid-cols-3">

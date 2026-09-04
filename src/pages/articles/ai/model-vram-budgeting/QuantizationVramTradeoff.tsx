@@ -14,10 +14,13 @@ export default function QuantizationVramTradeoff() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h2>Q8과 NVFP4는 같은 payload+scale 공식의 다른 지점입니다</h2>
         <p className="leading-8">
-          Q8과 NVFP4는 서로 다른 계열이 아니라, payload bit에 block마다 붙는 scale bit을 원소 수로 나눠 더한 같은 공식 위의 두 지점입니다. Q8은 8bit payload에 32개 원소당 scale 1개를 더해 평균 8.5bit/parameter가 되고, NVFP4는 4bit payload에 16개 원소당 scale 1개를 더해 평균 4.5bit/parameter가 됩니다.
+          Q8과 NVFP4는 payload bit에 block마다 붙는 scale bit을 원소 수로 나눠 더한 같은 공식 위의 두 지점입니다. 서로 다른 계열로 갈라 볼 필요가 없습니다.
+          Q8은 8bit payload에 32개 원소당 scale 1개를 더해 평균 8.5bit/parameter가 되고 NVFP4는 4bit payload에 16개 원소당 scale
+          1개를 더해 평균 4.5bit/parameter가 됩니다.
         </p>
         <p className="leading-8">
-          27.781B parameter에 이 두 값을 적용하면 Q8은 약 27.48GiB, NVFP4는 약 14.55GiB입니다. Q8은 이미 계산한 mixed FP8 checkpoint의 28.75GiB와 거의 같은 자리이고, NVFP4는 그 절반에 가깝습니다.
+          27.781B parameter에 이 두 값을 적용하면 Q8은 약 27.48GiB, NVFP4는 약 14.55GiB입니다. Q8은 이미 계산한 mixed FP8
+          checkpoint의 28.75GiB와 거의 같은 자리이고 NVFP4는 그 절반에 가깝습니다.
         </p>
       </div>
 
@@ -58,7 +61,8 @@ export default function QuantizationVramTradeoff() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          다만 이 값은 payload와 scale을 더한 1차 근사일 뿐입니다. NVFP4는 Blackwell급 tensor core가 있어야 실행되고, Q8류 INT8 W8A8은 Turing 이후 더 넓은 세대에서 돌아 hardware 지원 범위 자체가 다릅니다.
+          다만 이 값은 payload와 scale을 더한 1차 근사일 뿐입니다. NVFP4는 Blackwell급 tensor core가 있어야 실행되고 Q8류 INT8 W8A8은
+          Turing 이후 더 넓은 세대에서 돌기 때문에 hardware 지원 범위 자체가 다릅니다.
         </p>
       </div>
 

@@ -9,11 +9,9 @@ export default function Convexity() {
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Convex 함수에서는 graph의 두 점을 잇는 선분이 함수 graph보다
-          아래로 내려가지 않습니다. 이 구조 때문에 local minimum은 global
-          minimum이고, 미분 가능한 convex 함수에서 gradient가 0인 점은 global
-          minimizer입니다. 단순히 그릇처럼 보인다는 인상보다 inequality와 domain을
-          확인해야 합니다.
+          Convex 함수에서는 graph의 두 점을 잇는 선분이 함수 graph보다 아래로 내려가지 않습니다. 이 구조 때문에 local minimum은 global minimum이고
+          미분 가능한 convex 함수에서 gradient가 0인 점은 global minimizer입니다. 단순히 그릇처럼 보인다는 인상보다 inequality와 domain을 확인해야
+          합니다.
         </p>
       </div>
       <ConvexChordViz />

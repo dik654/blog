@@ -8,10 +8,8 @@ export default function Objective() {
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Objective는 더 작게 또는 더 크게 만들고 싶은 scalar
-          함수입니다. Argmin은 가장 작은 함수값 자체가 아니라 그 값을
-          만드는 입력 위치들의 집합입니다. Local minimum과 global
-          minimum도 이 위치가 어느 범위에서 가장 좋은지에 따라 구분합니다.
+          Objective는 더 작게 또는 더 크게 만들고 싶은 scalar 함수를 가리킵니다. Argmin은 가장 작은 함수값 자체가 아니라 그 값을 만드는 입력 위치들의 집합입니다.
+          Local minimum과 global minimum도 이 위치가 어느 범위에서 가장 좋은지에 따라 구분합니다.
         </p>
       </div>
       <ExplainedFormula

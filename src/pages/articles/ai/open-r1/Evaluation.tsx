@@ -10,9 +10,8 @@ export default function Evaluation() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          Open-R1은 LightEval과 vLLM으로 AIME, MATH-500, GPQA Diamond와
-          LiveCodeBench 등을 평가합니다. 그러나 checkpoint와 최종 score만
-          적어서는 같은 실험을 재현할 수 없습니다.
+          Open-R1은 LightEval과 vLLM으로 AIME, MATH-500, GPQA Diamond와 LiveCodeBench 등을 평가합니다. 다만 checkpoint와 최종
+          score만 적어서는 같은 실험이 재현되지 않습니다.
         </p>
         <p className="leading-8">
           Reasoning model은 temperature, max token과 prompt당 sample 수에
@@ -20,9 +19,8 @@ export default function Evaluation() {
           variance도 큽니다.
         </p>
         <p className="leading-8">
-          Open-R1 README는 DeepSeek-R1 report가 benchmark별 sample 수를 모두
-          명시하지 않았다고 지적하며, reproduction에서 AIME 64회, MATH-500 4회,
-          GPQA 8회, LiveCodeBench 16회처럼 서로 다른 수를 공개했습니다.
+          Open-R1 README는 DeepSeek-R1 report가 benchmark별 sample 수를 모두 명시하지 않았다고 지적합니다. 그러면서 reproduction에서는
+          AIME 64회, MATH-500 4회, GPQA 8회, LiveCodeBench 16회처럼 서로 다른 수를 공개했습니다.
         </p>
         <p className="leading-8">
           따라서 표의 <em>pass@1</em> 추정값을 greedy decoding 한 번의 accuracy와
@@ -136,13 +134,11 @@ c_{n,k}&=\underbrace{\mathbf 1[V(q_n,o_{n,k})=1]}_{\text{sample별 판정 계산
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Accuracy와 reasoning cost를 같은 frontier에서 본다</h3>
         <p className="leading-8">
-          Held-out accuracy가 좋아져도 output이 지나치게 길어지거나 invalid
-          answer, verifier timeout과 serving cost가 늘 수 있습니다.
+          Held-out accuracy가 좋아져도 output이 지나치게 길어지거나 invalid answer, verifier timeout과 serving cost가 늘기도 합니다.
         </p>
         <p className="leading-8">
-          Problem별 output token, time-to-answer, parse failure와 accuracy를 함께
-          봅니다. 같은 정확도라면 더 짧고 안정적인 policy를 구분하며, response
-          length 증가를 곧 reasoning capability 증가로 해석하지 않습니다.
+          Problem별 output token, time-to-answer, parse failure와 accuracy를 함께 봅니다. 같은 정확도라면 더 짧고 안정적인 policy를
+          구분합니다. Response length 증가를 곧 reasoning capability 증가로 읽지는 않습니다.
         </p>
 
         <h3>학습 성공과 serving 성공은 별도 검증 단계다</h3>
@@ -170,10 +166,8 @@ c_{n,k}&=\underbrace{\mathbf 1[V(q_n,o_{n,k})=1]}_{\text{sample별 판정 계산
           LightEval 기반 구성을 제공합니다. 이 명령은 score 비교의 출발점입니다.
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          같은 estimand를 측정하려면 benchmark revision, prompt template,
-          sampling 횟수와 parser를 함께 고정해야 합니다. 공개 score는 해당
-          protocol의 결과이며 greedy 한 번의 정확도나 production latency를
-          대신하지 않습니다.
+          같은 estimand를 측정하려면 benchmark revision, prompt template, sampling 횟수와 parser를 함께 고정합니다. 공개 score는 해당
+          protocol의 결과입니다. Greedy 한 번의 정확도나 production latency를 대신하지는 않습니다.
         </p>
         <a
           className="mt-3 inline-block text-sm font-medium text-primary hover:underline"

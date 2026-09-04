@@ -69,7 +69,10 @@ export default function ChainOfThought() {
 
       <ExplainedFormula
         question="여러 reasoning path가 서로 다른 최종 답을 낼 때 self-consistency는 무엇을 계산할까요?"
-        idea={<p>같은 question에서 K개의 path와 answer를 sampling한 뒤, answer y를 낸 sample 수를 합산해 가장 많이 지지된 값을 고릅니다. Reasoning 문장을 평균내는 것이 아니라 최종 answer에 대해 sample marginalization을 근사합니다.</p>}
+        idea={<p>
+            같은 question에서 K개의 path와 answer를 sampling한 뒤 answer y를 낸 sample 수를 합산해 가장 많이 지지된 값을 고릅니다. Reasoning
+            문장을 평균내는 것이 아니라 최종 answer에 대해 sample marginalization을 근사합니다.
+          </p>}
         formula={String.raw`\hat y=\arg\max_{y}\sum_{k=1}^{K}\mathbf{1}\!\left[a_k=y\right]`}
         annotatedFormula={String.raw`\begin{aligned}
 v_k(y)&=\underbrace{\mathbf 1[a_k=y]}_{\text{k번째 answer가 y이면 1}}\\[3pt]

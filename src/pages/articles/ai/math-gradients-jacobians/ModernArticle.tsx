@@ -15,9 +15,8 @@ export default function GradientsJacobiansArticle() {
           <h2 className="mt-2 text-2xl font-bold">Partial derivative는 여러 입력 가운데 하나만 움직여 local sensitivity를 잰다</h2>
         </header>
         <p className="text-lg leading-8">
-          Loss가 weight 두 개 x와 y에 달려 있다면 어느 값을 바꿔야 loss가 변했는지 한 번에
-          분리하기 어렵습니다. 먼저 y를 고정하고 x만 움직인 rate를 재고, 다음에는 x를
-          고정하고 y만 움직입니다. 이 coordinate별 derivative가 partial derivative입니다.
+          Loss가 weight 두 개 x와 y에 달려 있다면 어느 값을 바꿔야 loss가 변했는지 한 번에 분리하기 어렵습니다. 먼저 y를 고정하고 x만 움직인 rate를 재고 다음에는
+          x를 고정하고 y만 움직입니다. 이 coordinate별 derivative가 partial derivative입니다.
         </p>
         <Term name="Partial derivative" shape="∂f/∂x" meaning="다른 coordinate를 고정하고 x 하나만 움직인 local rate입니다." example="f(x,y)=x²+3y이면 ∂f/∂x=2x, ∂f/∂y=3입니다." boundary="각 partial이 존재해도 전체 함수가 자동으로 differentiable하다는 뜻은 아닙니다." />
         <ExplainedFormula

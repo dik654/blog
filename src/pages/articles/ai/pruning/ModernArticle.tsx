@@ -69,8 +69,7 @@ export default function PruningArticle() {
           question="Weight 10개 중 4개를 남겼다는 말을 식으로 어떻게 고정하나요?"
           idea={
             <p>
-              같은 shape의 binary mask를 원소별로 곱하고, mask의 1 개수를 전체
-              대상 수로 나눕니다.
+              같은 shape의 binary mask를 원소별로 곱한 뒤 mask의 1 개수를 전체 대상 수로 나눕니다.
             </p>
           }
           formula={String.raw`W'=M\odot W,\quad \rho=\lVert M\rVert_0/N,\quad s=1-\rho`}
@@ -170,10 +169,8 @@ export default function PruningArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Pruning receipt에는 base checkpoint, 대상 tensor, removal unit, mask
-            generation, density 분모, export format과 예상 consumer를 남깁니다.
-            이 handoff가 없으면 “60% sparse”는 저장·실행 의미가 없는 통계일 수
-            있습니다.
+            Pruning receipt에 남길 것은 base checkpoint와 대상 tensor, removal unit, mask generation, density 분모,
+            export format, 그리고 예상 consumer입니다. 이 handoff가 없으면 “60% sparse”는 저장에도 실행에도 의미가 없는 통계일 수 있습니다.
           </p>
         </div>
       </section>

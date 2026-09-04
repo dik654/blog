@@ -19,9 +19,8 @@ export default function ModelArtifactRegistryArticle() {
             선택했는지 남기는 system입니다.
           </p>
           <p>
-            먼저 metadata store와 artifact store를 분리해 봅니다. 그다음 mutable
-            alias를 immutable version으로 resolve하고, 마지막에 registry 기록과
-            실제 endpoint를 대조합니다.
+            metadata store와 artifact store를 분리하는 데서 출발합니다. 그 위에서 mutable alias를 immutable version으로 resolve해야
+            registry 기록과 실제 endpoint를 대조할 수 있습니다.
           </p>
         </div>
         <TermBreakdown
@@ -76,8 +75,7 @@ export default function ModelArtifactRegistryArticle() {
           question="기록된 run을 실제로 replay할 수 있다고 판정하려면 어떤 검사를 모두 통과해야 하나요?"
           idea={
             <p>
-              필수 object마다 존재·읽기 권한·digest·schema 검사를 하고, 하나라도
-              실패하면 전체 replayability를 실패로 둡니다.
+              필수 object마다 존재·읽기 권한·digest·schema를 검사하고 하나라도 실패하면 전체 replayability를 실패로 둡니다.
             </p>
           }
           formula={String.raw`Q_{\rm replay}=Q_{\rm meta}\land\bigwedge_{a\in A_{\rm req}}(E_a\land R_a\land D_a\land S_a)`}
@@ -248,11 +246,9 @@ export default function ModelArtifactRegistryArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Endpoint는 시작할 때 loaded model version·artifact digest·container
-            digest·serving config digest를 내보냅니다. Controller는 promotion
-            receipt와 이 runtime attestation을 비교합니다. Alias가 v21을
-            가리켜도 오래된 pod가 v17을 들고 있으면 registry는 맞고 deployment
-            parity는 실패한 상태입니다.
+            시작할 때 endpoint는 loaded model version·artifact digest·container digest·serving config digest를 내보내고
+            controller는 promotion receipt와 이 runtime attestation을 비교합니다. 이때 alias가 v21을 가리켜도 오래된 pod가 v17을 들고
+            있다면 registry는 맞지만 deployment parity는 실패한 상태입니다.
           </p>
         </div>
       </section>

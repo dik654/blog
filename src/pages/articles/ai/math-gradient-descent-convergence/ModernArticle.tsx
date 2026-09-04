@@ -10,7 +10,10 @@ export default function GradientDescentConvergenceArticle() {
   return <article className="space-y-16">
     <section id="overview" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">00 · 반복 규칙</p><h2 className="mt-2 text-2xl font-bold">Gradient descent는 현재 slope의 반대 방향과 step size로 다음 위치를 만드는 반복이다</h2></header>
-      <p className="text-lg leading-8">Gradient는 현재 위치에서 가장 빠른 증가 방향을 알려 줍니다. 그 반대로 가면 아주 작은 범위에서는 objective가 줄지만, 얼마나 멀리 가도 되는지는 별개의 질문입니다. Algorithm은 direction·step·stopping rule을 함께 가져야 합니다.</p>
+      <p className="text-lg leading-8">
+            Gradient는 현재 위치에서 가장 빠른 증가 방향을 알려 줍니다. 그 반대로 가면 아주 작은 범위에서는 objective가 줄지만 얼마나 멀리 가도 되는지는 별개의
+            질문입니다. Algorithm은 direction·step·stopping rule을 함께 가져야 합니다.
+          </p>
       <Term name="Gradient descent" shape="xₜ₊₁=xₜ−η∇f(xₜ)" meaning="현재 gradient의 반대 방향으로 반복 이동하는 first-order method입니다." example="f=x²/2, x₀=4, η=0.5이면 4→2→1입니다." boundary="Constraint·nondifferentiability·stochastic noise는 이 기본 update 밖의 추가 처리가 필요합니다." />
       <Term name="Learning rate" shape="η>0" meaning="Descent direction을 실제 이동 거리로 바꾸는 보폭입니다." example="같은 gradient에서도 η=0.5는 수축하고 η=3은 발산합니다." boundary="같은 숫자도 parameter scale과 optimizer state가 다르면 다른 update magnitude를 만듭니다." />
       <DescentDynamicsViz />

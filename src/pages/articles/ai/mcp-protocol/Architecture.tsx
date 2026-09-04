@@ -19,11 +19,9 @@ export default function Architecture() {
           수 있습니다.
         </p>
         <p>
-          이 역할 구분은 process topology와 같지 않습니다. Server가 local
-          subprocess일 수도 있고 remote service일 수도 있지만, 별도 process라는
-          사실만으로 sandbox가 생기지는 않습니다. Local server에는 OS permission과
-          filesystem isolation이 필요하고, remote server에는 TLS·authorization·
-          tenant isolation이 필요합니다.
+          이 역할 구분은 process topology와 같지 않습니다. Server가 local subprocess일 수도 있고 remote service일 수도 있지만 별도
+          process라는 사실만으로 sandbox가 생기지는 않습니다. Local server에는 OS permission과 filesystem isolation이 필요하고 remote
+          server에는 TLS·authorization·tenant isolation이 필요합니다.
         </p>
       </div>
 
@@ -55,12 +53,9 @@ export default function Architecture() {
   }
 }`}</code></pre>
         <p>
-          Stateless라는 말은 server가 database나 job state를 갖지 못한다는 뜻이
-          아닙니다. 장기 job, shopping basket, browser context처럼 호출 사이에
-          상태가 필요하면 creation tool이 opaque handle을 반환하고 후속 tool이 그
-          handle을 argument로 받습니다. Server는 매 호출마다 caller의 권한과
-          expiry를 다시 확인해야 하며, handle을 가진 것만으로 권한이 생긴다고 보면
-          안 됩니다.
+          Stateless라는 말은 server가 database나 job state를 갖지 못한다는 뜻이 아닙니다. 장기 job, shopping basket, browser
+          context처럼 호출 사이에 상태가 필요하면 creation tool이 opaque handle을 반환하고 후속 tool이 그 handle을 argument로 받습니다.
+          Server는 매 호출마다 caller의 권한과 expiry를 다시 확인해야 하며 handle을 가진 것만으로 권한이 생긴다고 보면 안 됩니다.
         </p>
       </div>
 

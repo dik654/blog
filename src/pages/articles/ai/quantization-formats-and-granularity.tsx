@@ -24,8 +24,7 @@ export default function QuantizationFormatsAndGranularityArticle() {
             다룹니다.
           </p>
           <p>
-            첫 축은 정수 code부터 floating-point code, 극단적 저bit weight까지
-            몇 bit로 몇 개의 값을 어떻게 표현하는지입니다.
+            첫 축은 몇 bit로 몇 개의 값을 어떻게 표현하는가입니다. 정수 code부터 floating-point code, 극단적 저bit weight까지가 이 축 위에 놓입니다.
           </p>
           <p>
             둘째 축은 zero-point 선택과{" "}
@@ -86,9 +85,8 @@ export default function QuantizationFormatsAndGranularityArticle() {
             mantissa(E2M1)를 더해 0부터 6까지 여덟 개 값을 표현합니다.
           </p>
           <p>
-            같은 4bit인 INT4가 16개 code를 균일 간격으로 나누는 것과 달리,
-            NVFP4는 0 근처를 촘촘히 나누고 큰 값 쪽은 성기게 나눠 더 넓은
-            dynamic range를 얻습니다.
+            같은 4bit인 INT4는 16개 code를 균일 간격으로 나눕니다. 반면 NVFP4는 0 근처를 촘촘히 나누고 큰 값 쪽은 성기게 나눠 더 넓은 dynamic range를
+            얻습니다.
           </p>
           <p>
             Exponent bit가 늘수록 표현 가능한 값의 폭(dynamic range)은
@@ -142,9 +140,8 @@ export default function QuantizationFormatsAndGranularityArticle() {
             훨씬 적은 값만 남기는 극단적 저bit weight quantization입니다.
           </p>
           <p>
-            BitNet b1.58은 이 세 값만으로 학습부터 진행해, 학습이 끝난
-            checkpoint를 변환하는 PTQ나 fake quantization으로 재학습하는
-            QAT와 달리 처음부터 ternary weight를 optimizer가 직접 다룹니다.
+            BitNet b1.58은 이 세 값만으로 학습부터 진행합니다. 학습이 끝난 checkpoint를 변환하는 PTQ나 fake quantization으로 재학습하는 QAT와 달리
+            처음부터 ternary weight를 optimizer가 직접 다룹니다.
           </p>
         </div>
         <div id="paper-bitnet" className="scroll-mt-24">
@@ -173,9 +170,7 @@ export default function QuantizationFormatsAndGranularityArticle() {
           question="같은 quantize·dequantize 식에서 symmetric과 asymmetric은 어디가 다른가요?"
           idea={
             <p>
-              Zero-point z가 정확히 0이면 code 범위가 원점을 중심으로
-              대칭이고, z가 0이 아니면 code 범위가 실수 range의 한쪽으로
-              치우친 구간을 덮습니다.
+              Zero-point z가 정확히 0이면 code 범위는 원점을 중심으로 대칭입니다. z가 0이 아니면 code 범위는 실수 range의 한쪽으로 치우친 구간을 덮습니다.
             </p>
           }
           formula={String.raw`q=\mathrm{clip}\!\left(\mathrm{round}\left(\frac{x}{s}\right)+z,\,q_{\min},q_{\max}\right),\quad \hat{x}=s\,(q-z)`}
@@ -219,11 +214,9 @@ export default function QuantizationFormatsAndGranularityArticle() {
         />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            예를 들어 activation range가 [-2, 6]이고 8bit code가 [0, 255]면
-            scale=8/255≈0.0314, zero-point=round(0-(-2)/0.0314)≈64입니다.
-            Code 64가 실수 0에 대응하도록 range 전체를 옮긴 것이며, weight
-            range가 [-3, 3]처럼 원점 대칭이면 scale=3/127≈0.0236,
-            zero-point=0인 symmetric 쪽이 code 절반을 버리지 않습니다.
+            예를 들어 activation range가 [-2, 6]이고 8bit code가 [0, 255]면 scale=8/255≈0.0314, zero-
+            point=round(0-(-2)/0.0314)≈64입니다. Code 64가 실수 0에 대응하도록 range 전체를 옮긴 셈입니다. weight range가 [-3, 3]처럼
+            원점 대칭이면 scale=3/127≈0.0236, zero-point=0인 symmetric 쪽이 code 절반을 버리지 않습니다.
           </p>
         </div>
       </section>

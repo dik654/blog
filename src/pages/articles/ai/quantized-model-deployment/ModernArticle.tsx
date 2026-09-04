@@ -142,8 +142,7 @@ export default function QuantizedModelDeploymentArticle() {
           question="Weight-only quantization 뒤 peak VRAM이 4분의 1이 아닌 이유는 무엇인가요?"
           idea={
             <p>
-              줄어든 weight 항에 scale metadata, activation, KV·recurrent state,
-              workspace와 headroom을 다시 더합니다.
+              줄어든 weight 항에 scale metadata와 activation, KV·recurrent state, workspace, headroom을 다시 더합니다.
             </p>
           }
           formula={String.raw`M_{\rm peak}=M_{W,q}+M_{\rm meta}+M_{\rm act}+M_{\rm request}+M_{\rm workspace}+M_{\rm headroom}`}

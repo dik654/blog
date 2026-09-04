@@ -21,22 +21,19 @@ export default function QueryTransformationAndAdaptiveRetrievalArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            사용자가 쓰는 말과 knowledge base 에 저장된 문서의 말이 다르면, 아무리 좋은 index 도
-            관련 chunk 를 찾지 못합니다. Query transformation 은 검색을 걸기 전에 질문 자체를
-            바꿔 이 어휘 차이를 메우는 넓은 범주이며, query rewriting 과 query expansion 이 그
-            안에서 가장 단순한 형태입니다.
+            사용자가 쓰는 말과 knowledge base 에 저장된 문서의 말이 다르면 아무리 좋은 index 도 관련 chunk 를 찾지 못합니다. Query transformation
+            은 검색을 걸기 전에 질문 자체를 바꿔 이 어휘 차이를 메우는 넓은 범주입니다. 그 안에서 가장 단순한 형태가 query rewriting 과 query expansion
+            입니다.
           </p>
           <p>
-            Query rewriting 은 질문의 표현을 검색에 유리하게 다시 쓰는 것이고, query expansion 은
-            원 질문에 동의어·관련어를 더해 검색 범위를 넓히는 것입니다. 예를 들어 "그거 왜 안
-            되지"라는 질문은 이전 대화의 맥락 없이는 어떤 chunk 와도 어휘가 겹치지 않지만, "PDF
-            업로드가 500 에러로 실패하는 이유"로 rewriting 하면 관련 chunk 의 용어와 겹칩니다.
+            Query rewriting 은 질문의 표현을 검색에 유리하게 다시 쓰는 쪽이고 query expansion 은 원 질문에 동의어·관련어를 더해 검색 범위를 넓히는 쪽입니다.
+            예를 들어 "그거 왜 안 되지"라는 질문은 이전 대화의 맥락 없이는 어떤 chunk 와도 어휘가 겹치지 않습니다. "PDF 업로드가 500 에러로 실패하는 이유"로
+            rewriting 하면 관련 chunk 의 용어와 겹칩니다.
           </p>
           <p>
-            이 글은 rewriting·expansion 을 시작으로 여러 질의로 늘리는 방법(multi-query·
-            decomposition), 가상의 답변으로 검색하는 방법(HyDE), 질문을 추상화하는 방법
-            (step-back), 그리고 검색을 언제 실행하고 언제 반복할지 스스로 판정하는 방법(adaptive
-            retrieval, Self-RAG, CRAG)까지 순서대로 다룹니다.
+            이 글은 rewriting·expansion 에서 출발합니다. 여러 질의로 늘리는 방법(multi-query· decomposition), 가상의 답변으로 검색하는
+            방법(HyDE), 질문을 추상화하는 방법 (step-back), 그리고 검색을 언제 실행하고 언제 반복할지 스스로 판정하는 방법(adaptive retrieval, Self-
+            RAG, CRAG)까지 순서대로 다룹니다.
           </p>
         </div>
         <QueryTransformationAndAdaptiveRetrievalViz />
@@ -49,14 +46,12 @@ export default function QueryTransformationAndAdaptiveRetrievalArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Multi-query retrieval 은 원 질문 하나를 LLM 으로 여러 개의 변형 질의로 늘려 각각
-            따로 검색한 뒤, 그 결과를 합쳐 쓰는 방법입니다. 질문 하나로는 놓치는 관련 문서를 다른
-            표현의 질의가 잡아낼 수 있다는 것이 전제입니다.
+            Multi-query retrieval 은 원 질문 하나를 LLM 으로 여러 개의 변형 질의로 늘려 각각 따로 검색한 뒤 그 결과를 합쳐 쓰는 방법입니다. 질문 하나로는 놓치는
+            관련 문서를 다른 표현의 질의가 잡아낼 수 있다는 것이 전제입니다.
           </p>
           <p>
-            가정: 정답 근거 문서가 6 개 있는 질문에서 원 질의는 top-k 안에 2 개만 회수해 recall
-            이 33 % 입니다. 표현을 바꾼 변형 질의 세 개를 더 만들어 각각 검색하면, 변형마다 새로
-            잡아내는 문서가 있어 합집합 recall 이 5/6, 83 % 까지 오릅니다.
+            가정: 정답 근거 문서가 6 개 있는 질문에서 원 질의는 top-k 안에 2 개만 회수해 recall 이 33 % 입니다. 표현을 바꾼 변형 질의 세 개를 더 만들어 각각
+            검색하면 변형마다 새로 잡아내는 문서가 있어 합집합 recall 이 5/6, 83 % 까지 오릅니다.
           </p>
         </div>
         <ExplainedFormula
@@ -83,10 +78,8 @@ export default function QueryTransformationAndAdaptiveRetrievalArticle() {
         />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Query decomposition 은 방향이 조금 다릅니다. 질문 자체가 여러 하위 질문으로 쪼개지는
-            복합 질문일 때, "A 이면서 B 인 것"을 "A 인 것은 무엇인가"와 "그중 B 인 것은
-            무엇인가"라는 subquestion 으로 나눠 각각 검색·답변한 뒤 결합합니다. 이 패턴을
-            subquestion retrieval 이라고 부릅니다.
+            Query decomposition 은 방향이 조금 다릅니다. 질문 자체가 여러 하위 질문으로 쪼개지는 복합 질문일 때 "A 이면서 B 인 것"을 "A 인 것은 무엇인가"와
+            "그중 B 인 것은 무엇인가"라는 subquestion 으로 나눠 각각 검색·답변한 뒤 결합합니다. 이 패턴을 subquestion retrieval 이라고 부릅니다.
           </p>
         </div>
         <TermBreakdown
@@ -104,21 +97,17 @@ export default function QueryTransformationAndAdaptiveRetrievalArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            HyDE(Hypothetical Document Embeddings) 는 질문을 그대로 embedding 하는 대신, LLM 이
-            그 질문에 대한 그럴듯한 답변 문서를 먼저 생성하고, 그 가상 문서를 embedding 해 검색
-            질의로 씁니다. 실제 정답 문서나 사람이 매긴 relevance label 은 필요 없습니다.
+            HyDE(Hypothetical Document Embeddings) 는 질문을 그대로 embedding 하지 않습니다. LLM 이 그 질문에 대한 그럴듯한 답변 문서를 먼저
+            생성하고 그 가상 문서를 embedding 해 검색 질의로 씁니다. 실제 정답 문서나 사람이 매긴 relevance label 은 필요 없습니다.
           </p>
           <p>
-            이 가상 문서는 세부 사실이 틀릴 수 있습니다. HyDE 는 그 오류를 dense retriever 의
-            embedding 이 걸러낼 것이라고 가정합니다. Encoder 가 관련 문서들을 가까운 좌표로 모아
-            두는 공간이라면, 사실이 조금 틀린 가상 문서도 진짜 관련 문서와 비슷한 방향에 놓이기
-            때문입니다.
+            이 가상 문서는 세부 사실이 틀릴 수 있습니다. HyDE 는 그 오류를 dense retriever 의 embedding 이 걸러낼 것이라고 가정합니다. Encoder 가 관련
+            문서들을 가까운 좌표로 모아 두는 공간이라면 사실이 조금 틀린 가상 문서도 진짜 관련 문서와 비슷한 방향에 놓이기 때문입니다.
           </p>
           <p>
-            HyDE 논문은 비지도 dense retriever 인 Contriever 를 baseline 으로 두고, web 검색·
-            질의응답·사실 검증 등 여러 task 와 스와힐리어·한국어·일본어를 포함한 여러 언어에서
-            HyDE 가 Contriever 를 크게 앞서고, 지도학습으로 미세조정한 retriever 에 견줄 만한
-            성능을 보였다고 보고합니다.
+            HyDE 논문은 비지도 dense retriever 인 Contriever 를 baseline 으로 둡니다. 그 위에서 web 검색· 질의응답·사실 검증 등 여러 task 와
+            스와힐리어·한국어·일본어를 포함한 여러 언어에서 HyDE 가 Contriever 를 크게 앞서고 지도학습으로 미세조정한 retriever 에 견줄 만한 성능을 보였다고
+            보고합니다.
           </p>
         </div>
         <ProgressiveDetail
@@ -139,9 +128,8 @@ export default function QueryTransformationAndAdaptiveRetrievalArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Step-back prompting 은 구체적인 질문을 그대로 검색하지 않고, 그 질문이 속한 더 일반적인
-            원리나 배경 질문(step-back question)을 LLM 에 먼저 묻습니다. 그 답을 원 질문과 함께
-            배경 지식으로 제공한 뒤에야 최종 답을 생성합니다.
+            Step-back prompting 은 구체적인 질문을 그대로 검색하지 않습니다. 먼저 LLM 에 묻는 것은 그 질문이 속한 더 일반적인 원리나 배경 질문(step-back
+            question)입니다. 그 답을 원 질문과 함께 배경 지식으로 제공한 뒤에야 최종 답을 생성합니다.
           </p>
           <p>
             가정: "1990 년부터 2000 년 사이 특정 압력에서 어떤 기체의 부피는 어떻게 변했는가"라는
@@ -170,16 +158,12 @@ export default function QueryTransformationAndAdaptiveRetrievalArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            지금까지 다룬 방법들은 모두 "어떻게 검색할지"를 다뤘습니다. Adaptive retrieval 은 그
-            전에 "지금 검색이 필요한가"부터 판정합니다. 이 판정 지점을 retrieval trigger 라고
-            부르며, 이미 가진 정보로 답할 수 있는 질문에는 검색을 걸지 않아 지연시간과 비용을
-            아낍니다.
+            지금까지 다룬 방법들은 모두 "어떻게 검색할지"를 다뤘습니다. Adaptive retrieval 은 그 전에 "지금 검색이 필요한가"부터 판정합니다. 이 판정 지점을
+            retrieval trigger 라고 부릅니다. 이미 가진 정보로 답할 수 있는 질문에는 검색을 걸지 않아 지연시간과 비용을 아낍니다.
           </p>
           <p>
-            검색을 한 번 걸고 끝내지 않고, 회수한 근거가 부족하면 질의를 rewriting·decomposition·
-            HyDE·step-back 중 하나로 바꿔 다시 검색하는 과정을 iterative retrieval loop 라고
-            합니다. 이 반복은 충분성 판정을 통과하거나 정해 둔 최대 반복 횟수에 이르러야
-            끝납니다.
+            회수한 근거가 부족하면 질의를 rewriting·decomposition· HyDE·step-back 중 하나로 바꿔 다시 검색합니다. 이렇게 검색을 한 번으로 끝내지 않는
+            과정을 iterative retrieval loop 라고 합니다. 이 반복은 충분성 판정을 통과하거나 정해 둔 최대 반복 횟수에 이르러야 끝납니다.
           </p>
         </div>
         <AlgorithmBlock
@@ -210,9 +194,8 @@ export default function QueryTransformationAndAdaptiveRetrievalArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Self-RAG 는 이 판정을 언어 모델 자신의 생성 과정 안에 넣습니다. CRAG 는 반대로,
-            언어 모델 바깥에 가벼운 evaluator 를 하나 더 둬 검색 결과의 품질을 따로 판정합니다.
-            두 방법 모두 adaptive retrieval trigger 의 구체적인 구현입니다.
+            Self-RAG 는 이 판정을 언어 모델 자신의 생성 과정 안에 넣습니다. CRAG 는 반대로 언어 모델 바깥에 가벼운 evaluator 를 하나 더 둬 검색 결과의 품질을
+            따로 판정합니다. 두 방법 모두 adaptive retrieval trigger 의 구체적인 구현입니다.
           </p>
           <p>
             Self-RAG 는 생성 중에 특수 token 네 개를 함께 예측합니다. Retrieve 는 지금 검색이
@@ -221,14 +204,12 @@ export default function QueryTransformationAndAdaptiveRetrievalArticle() {
             응답 전체의 유용성을 1~5 점으로 매깁니다.
           </p>
           <p>
-            Self-RAG 논문은 7B·13B 모델로 PopQA 정확도 54.9 %·55.8 % 를 보고하며, 이는 같은
-            benchmark 에서 ChatGPT 의 29.3 %, Llama2-chat 13B 의 20.0 % 를 크게 앞섭니다.
-            PubHealth 에서도 72.4 %·74.5 % 로 ChatGPT 의 70.1 % 를 앞섭니다.
+            Self-RAG 논문은 7B·13B 모델로 PopQA 정확도 54.9 %·55.8 % 를 보고합니다. 같은 benchmark 에서 ChatGPT 의 29.3 %,
+            Llama2-chat 13B 의 20.0 % 를 크게 앞서는 수치입니다. PubHealth 에서도 72.4 %·74.5 % 로 ChatGPT 의 70.1 % 를 앞섭니다.
           </p>
           <p>
-            다만 모든 benchmark 에서 이기지는 않습니다. ARC-Challenge 에서는 Self-RAG 13B 가
-            73.1 % 로 ChatGPT 의 75.3 % 에 못 미칩니다. 검색 근거가 필요한 task 에서는 강하지만,
-            순수 추론에 가까운 task 에서는 검색 자체가 크게 도움이 되지 않을 수 있다는 뜻입니다.
+            다만 모든 benchmark 에서 이기지는 않습니다. ARC-Challenge 에서는 Self-RAG 13B 가 73.1 % 로 ChatGPT 의 75.3 % 에 못 미칩니다.
+            검색 근거가 필요한 task 에서는 강하지만 순수 추론에 가까운 task 에서는 검색 자체가 크게 도움이 되지 않을 수 있다는 뜻입니다.
           </p>
         </div>
         <ExplainedFormula

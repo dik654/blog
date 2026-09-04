@@ -97,9 +97,8 @@ export default function EmbeddedAgent({
       </div>
 
       <p className="text-sm text-muted-foreground">
-        위 문자열은 scope 차이를 보여 주기 위한 설명용 key입니다. 실제 저장 key의
-        직렬화 형식은 설치 version의 resolved session state에서 확인해야 하며,
-        이 예시를 public API로 사용해서는 안 됩니다.
+        위 문자열은 scope 차이를 보여 주기 위한 설명용 key입니다. 실제 저장 key의 직렬화 형식은 설치 version의 resolved session state에서 확인합니다. 이
+        예시를 public API로 쓰면 안 됩니다.
       </p>
 
       <p>

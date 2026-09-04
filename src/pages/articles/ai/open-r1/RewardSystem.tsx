@@ -18,11 +18,8 @@ export default function RewardSystem({
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          수학 정답의 동치나 code test처럼 자동으로 확인할 수 있는 outcome은
-          많은 rollout을 일관되게 채점할 수 있습니다. 이것이 RLVR의 장점이지만
-          verifier는 실제 목표의 일부만 관측합니다. Parser가 읽지 못한 정답을
-          0점으로 만들거나, 약한 test를 통과한 잘못된 code를 1점으로 만들 수
-          있습니다.
+          수학 정답의 동치나 code test처럼 자동으로 확인되는 outcome은 많은 rollout을 일관되게 채점합니다. RLVR의 장점입니다. 다만 verifier는 실제 목표의
+          일부만 관측합니다. Parser가 읽지 못한 정답이 0점이 되고, 약한 test를 통과한 잘못된 code가 1점이 되기도 합니다.
         </p>
       </div>
 
@@ -112,11 +109,9 @@ export default function RewardSystem({
 
         <h3>Reward hacking은 높은 점수와 목표 달성을 분리해서 찾는다</h3>
         <p className="leading-8">
-          Training reward와 held-out verifier 성능이 함께 오르는지 보고, 다른
-          parser, stronger hidden tests와 사람이 검토한 sample로 교차
-          확인합니다. 특히 answer length, zero-variance group, parse failure와
-          reward component별 분포를 보면 policy가 문제를 더 잘 푸는 대신
-          채점기의 빈틈을 배우는 징후를 찾을 수 있습니다.
+          Training reward와 held-out verifier 성능이 함께 오르는지 봅니다. 다른 parser, stronger hidden tests와 사람이 검토한
+          sample로도 교차 확인합니다. 특히 answer length, zero-variance group, parse failure와 reward component별 분포를 보면
+          policy가 문제를 더 잘 푸는 대신 채점기의 빈틈을 배우는 징후가 드러납니다.
         </p>
       </div>
 
@@ -128,15 +123,12 @@ export default function RewardSystem({
           공식 구현 · Open-R1 reward와 code sandbox
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Open-R1은 math answer와 competitive-programming output을 자동으로
-          확인하는 reward code를 제공합니다. 하지만 실제 측정 대상은 parser와
-          test가 관측한 결과입니다.
+          Open-R1은 math answer와 competitive-programming output을 자동으로 확인하는 reward code를 제공합니다. 실제 측정 대상은 어디까지나
+          parser와 test가 관측한 결과입니다.
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          같은 model output도 parser commit, test revision과 sandbox timeout이
-          바뀌면 reward가 달라질 수 있습니다. 이 세 항목을 model 밖의 versioned
-          evaluator artifact로 다뤄야 합니다. 저장소가 reasoning 과정 전체의
-          사실성이나 안전성을 검증한다는 뜻은 아닙니다.
+          같은 model output도 parser commit, test revision과 sandbox timeout이 바뀌면 reward가 달라집니다. 이 세 항목은 model 밖의
+          versioned evaluator artifact로 다룹니다. 저장소가 검증하는 범위는 여기까지입니다. Reasoning 과정 전체의 사실성이나 안전성은 포함되지 않습니다.
         </p>
         <a
           className="mt-3 inline-block text-sm font-medium text-primary hover:underline"

@@ -68,8 +68,7 @@ export default function NormalizingFlowsArticle() {
           question="x=2z처럼 공간이 늘어날 때 왜 inverse Jacobian을 density에 곱하나요?"
           idea={
             <p>
-              같은 probability mass가 두 배 넓은 x 구간에 퍼지면 단위 길이당
-              density는 절반이어야 합니다. Inverse derivative가 바로 그 보정
+              같은 probability mass가 두 배 넓은 x 구간에 퍼지면 단위 길이당 density는 절반이어야 합니다. inverse derivative가 바로 그 보정
               비율입니다.
             </p>
           }

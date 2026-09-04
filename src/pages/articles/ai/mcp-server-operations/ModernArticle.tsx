@@ -16,7 +16,10 @@ export default function ModernArticle() {
       </section>
 
       <section id="authorization" className="scroll-mt-20 space-y-7">
-        <div className="prose prose-neutral max-w-none dark:prose-invert"><h2>Discovery·proposal·consent·authorization은 서로 다른 문입니다</h2><p className="leading-8">Tool이 목록에 보인다는 사실은 존재를 알 뿐입니다. Model이 호출을 제안하면 host가 현재 사용자와 위험도에 맞춰 노출·확인을 판단하고, server는 token과 실제 resource ACL을 다시 검사합니다.</p></div>
+        <div className="prose prose-neutral max-w-none dark:prose-invert"><h2>Discovery·proposal·consent·authorization은 서로 다른 문입니다</h2><p className="leading-8">
+            Tool이 목록에 보인다는 사실은 존재를 알 뿐입니다. Model이 호출을 제안하면 host가 현재 사용자와 위험도에 맞춰 노출·확인을 판단하고 server는 token과 실제
+            resource ACL을 다시 검사합니다.
+          </p></div>
         <TermBreakdown title="create_ticket이 effect에 도달하기 전 네 판단" items={[
           { term: "Discovery", description: "Server가 제공한다고 광고한 tool과 schema를 host가 읽습니다.", boundary: "Server self-description은 trust proof가 아닙니다." },
           { term: "Model proposal", description: "현재 문맥에서 이 tool과 argument를 쓰자는 후보입니다.", boundary: "Model reasoning은 authorization decision이 아닙니다." },
@@ -26,7 +29,10 @@ export default function ModernArticle() {
       </section>
 
       <section id="retry-receipt" className="scroll-mt-20 space-y-7">
-        <div className="prose prose-neutral max-w-none dark:prose-invert"><h2>Timeout은 “실행되지 않음”이 아니라 “결과를 모름”입니다</h2><p className="leading-8">Client가 response를 못 받았어도 server는 ticket을 이미 만들었을 수 있습니다. 같은 요청을 새 identity로 다시 보내면 ticket이 두 개 생깁니다. Write tool은 stable operation ID를 받고 effect receipt를 저장하며, retry에서는 먼저 기존 receipt를 조회해야 합니다.</p></div>
+        <div className="prose prose-neutral max-w-none dark:prose-invert"><h2>Timeout은 “실행되지 않음”이 아니라 “결과를 모름”입니다</h2><p className="leading-8">
+            Client가 response를 못 받았어도 server는 ticket을 이미 만들었을 수 있습니다. 같은 요청을 새 identity로 다시 보내면 ticket이 두 개
+            생깁니다. Write tool은 stable operation ID를 받고 effect receipt를 저장하며 retry에서는 먼저 기존 receipt를 조회해야 합니다.
+          </p></div>
         <TermBreakdown title="안전한 retry가 보존하는 형태" items={[
           { term: "Operation ID", description: "논리적으로 같은 작업임을 여러 network attempt 사이에 고정합니다.", example: "create-ticket:tenant7:request42를 retry에도 그대로 보냅니다.", boundary: "JSON-RPC request id와 동일한 수명이라고 가정하지 않습니다." },
           { term: "Attempt", description: "같은 operation을 전송한 각 network 시도를 구분합니다.", example: "attempt 1은 timeout, attempt 2는 기존 receipt 조회입니다.", boundary: "Attempt가 늘어도 effect 수가 늘어서는 안 됩니다." },

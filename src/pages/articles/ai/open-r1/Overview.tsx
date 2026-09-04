@@ -11,15 +11,12 @@ export default function Overview() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          DeepSeek-R1은 weight와 technical report를 공개했습니다. 하지만 원
-          training data, 전체 code와 모든 hyperparameter까지 제공한 완전한 재현
-          package는 아닙니다.
+          DeepSeek-R1은 weight와 technical report를 공개했습니다. 원 training data와 전체 code, 모든 hyperparameter는 빠져 있습니다.
+          완전한 재현 package와는 거리가 있습니다.
         </p>
         <p className="leading-8">
-          Hugging Face의 Open-R1은 그 빈칸을 synthetic data generation, SFT,
-          GRPO와 LightEval 기반 평가로 다시 구축합니다. 목표는 특정 checkpoint를
-          복사하는 데서 끝나지 않고, 실험 조건을 바꿔도 결과를 다시 검증할 수
-          있게 만드는 것입니다.
+          Hugging Face의 Open-R1은 그 빈칸을 synthetic data generation, SFT, GRPO와 LightEval 기반 평가로 다시 채웁니다. 목표는 특정
+          checkpoint 복사가 아닙니다. 실험 조건을 바꿔도 결과를 다시 검증할 수 있게 만드는 쪽입니다.
         </p>
         <p className="leading-8">
           여기서 <strong>checkpoint</strong>는 특정 시점의 model parameter와
@@ -27,20 +24,16 @@ export default function Overview() {
           저장본을 만든 data, code, sampling, training과 evaluation 절차입니다.
         </p>
         <p className="leading-8">
-          같은 checkpoint와 비슷한 score를 얻었다고 해서 원래 recipe까지 재현한
-          것은 아닙니다. 반대로 weight가 완전히 같지 않더라도 공개 조건에서 같은
-          학습 현상과 성능 범위를 반복했다면 recipe의 일부를 재현했다고 말할 수
-          있습니다.
+          같은 checkpoint와 비슷한 score를 얻었다고 해서 원래 recipe까지 재현한 것은 아닙니다. 거꾸로 weight가 완전히 같지 않더라도 공개 조건에서 같은 학습 현상과
+          성능 범위를 반복했다면 recipe의 일부는 재현한 셈입니다.
         </p>
         <p className="leading-8">
-          그러므로 “R1을 재현했다”는 표현만으로는 부족합니다. Teacher trace를
-          작은 model에 SFT한 distillation과, cold-start 없이 base model에 RL을
+          “R1을 재현했다”는 표현만으로는 부족합니다. Teacher trace를 작은 model에 SFT한 distillation과 cold-start 없이 base model에 RL을
           적용한 R1-Zero-like 경로는 서로 다른 claim입니다.
         </p>
         <p className="leading-8">
-          여러 단계를 이어 붙인 최종 R1 recipe도 별도로 봐야 합니다. Open-R1
-          저장소가 distillation, pure RL과 multi-stage를 서로 다른 목표로 나누는
-          이유입니다.
+          여러 단계를 이어 붙인 최종 R1 recipe는 또 다른 항목입니다. Open-R1 저장소가 distillation, pure RL과 multi-stage를 서로 다른 목표로
+          나누는 이유입니다.
         </p>
       </div>
 
@@ -60,9 +53,8 @@ export default function Overview() {
           제시합니다.
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          공개 benchmark와 checkpoint는 이 세 경로의 가능성을 보여 줍니다.
-          그러나 원 training data와 모든 implementation detail이 포함된 완전한
-          재현 package라는 뜻은 아닙니다.
+          공개 benchmark와 checkpoint는 이 세 경로가 가능하다는 것을 보여 줍니다. 원 training data와 모든 implementation detail은 여기에 들어
+          있지 않습니다.
         </p>
         <a
           className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
@@ -90,10 +82,8 @@ export default function Overview() {
 
         <h3>Distillation과 on-policy RL은 data가 생기는 시점부터 다르다</h3>
         <p className="leading-8">
-          Distillation SFT에서는 teacher가 만든 trace dataset을 고정한 뒤
-          student가 그 token sequence를 모사합니다. 반면 on-policy RL에서는 현재
-          student policy가 completion을 만들고, verifier의 reward가 바로 다음
-          update의 신호가 됩니다.
+          Distillation SFT에서는 teacher가 만든 trace dataset을 고정한 뒤 student가 그 token sequence를 모사합니다. On-policy RL은
+          다릅니다. 현재 student policy가 completion을 만들고 verifier의 reward가 바로 다음 update의 신호가 됩니다.
         </p>
         <p className="leading-8">
           Policy가 달라지면 rollout distribution도 함께 바뀝니다. 그래서 고정된
@@ -103,9 +93,8 @@ export default function Overview() {
 
         <h3>결과는 model 하나가 아니라 recipe ledger로 남긴다</h3>
         <p className="leading-8">
-          Base checkpoint와 dataset revision만 저장해서는 부족합니다. Chat
-          template, rollout engine, reward code, optimizer config와 evaluation
-          protocol을 같은 ledger에 남겨야 합니다.
+          Base checkpoint와 dataset revision만 저장해서는 부족합니다. Chat template, rollout engine, reward code,
+          optimizer config와 evaluation protocol을 같은 ledger에 함께 남깁니다.
         </p>
         <p className="leading-8">
           이제 SFT의 token supervision에서 시작해 GRPO objective, verifier의

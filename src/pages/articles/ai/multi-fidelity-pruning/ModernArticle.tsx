@@ -20,10 +20,8 @@ export default function MultiFidelityPruningArticle() {
             다음 단계에 보냅니다.
           </p>
           <p>
-            핵심은 “epoch 1” 같은 이름이 아니라 비교 가능한 실제 자원입니다.
-            Batch 32와 128은 같은 epoch에서도 update 수가 다릅니다. Processed
-            tokens·optimizer updates·data fraction처럼 trial 사이에서 같은
-            진척을 뜻하는 좌표를 고정해야 합니다.
+            핵심은 “epoch 1” 같은 이름이 아니라 비교 가능한 실제 자원입니다. 같은 epoch이라도 batch 32와 128은 update 수가 다릅니다. 고정해야 할 것은
+            trial 사이에서 같은 진척을 뜻하는 좌표, 그러니까 processed tokens나 optimizer updates, data fraction 같은 값입니다.
           </p>
         </div>
         <TermBreakdown
@@ -74,8 +72,7 @@ export default function MultiFidelityPruningArticle() {
           question="Rung가 올라갈 때 후보 수와 후보당 resource는 어떻게 변하나요?"
           idea={
             <p>
-              각 단계에서 상위 1/η만 남기고, 살아남은 configuration에 이전
-              단계의 η배 resource를 줍니다.
+              각 단계에서 상위 1/η만 남기고 살아남은 configuration에 이전 단계의 η배 resource를 줍니다.
             </p>
           }
           formula={String.raw`n_j=\lfloor n_0\eta^{-j}\rfloor,\quad r_j=r_0\eta^j`}
@@ -141,18 +138,15 @@ export default function MultiFidelityPruningArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Completed pilot curves에 pruning policy를 사후 적용해 어떤 후보가
-            중단됐을지 계산합니다. 그중 final budget에서 채택 기준을 통과한
-            후보는 false prune입니다. 일부 실제 pruned 후보도 shadow cohort로
-            끝까지 보내 정책의 blind spot을 확인합니다.
+            Completed pilot curves에 pruning policy를 사후 적용해 어떤 후보가 중단됐을지 계산합니다. 그중 final budget에서 채택 기준을 통과한
+            후보가 false prune입니다. 실제로 pruned된 후보 일부도 shadow cohort로 끝까지 보내 정책의 blind spot을 확인합니다.
           </p>
         </div>
         <ExplainedFormula
           question="Pruner가 놓친 late bloomer 비율은 어떻게 계산하나요?"
           idea={
             <p>
-              정책이 중단했을 후보 중 full-budget 결과가 최종 채택 기준을 통과한
-              수를 세어, 정책이 중단할 후보 수로 나눕니다.
+              정책이 중단했을 후보 중 full-budget 결과가 최종 채택 기준을 통과한 수를 세어 정책이 중단할 후보 수로 나눕니다.
             </p>
           }
           formula={String.raw`\widehat{\mathrm{FPR}}_{\rm prune}=\frac{\sum_i\mathbf1[P_i=1,F_i=1]}{\sum_i\mathbf1[P_i=1]}`}

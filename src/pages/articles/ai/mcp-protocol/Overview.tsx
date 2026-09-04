@@ -51,11 +51,8 @@ export default function Overview() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          흔히 “AI 애플리케이션의 USB” 또는 “N×M 통합을 N+M으로 줄이는 규격”이라
-          비유하지만, 이는 wire contract를 재사용할 수 있다는 설명입니다. 같은
-          tool 이름이라도 domain 의미와 품질은 다를 수 있고, 악의적인 server도
-          명세에 맞는 JSON을 보낼 수 있습니다. 따라서 호환성과 신뢰성은 별도로
-          검증해야 합니다.
+          흔히 “AI 애플리케이션의 USB” 또는 “N×M 통합을 N+M으로 줄이는 규격”이라 비유하지만 이는 wire contract를 재사용할 수 있다는 설명입니다. 같은 tool
+          이름이라도 domain 의미와 품질은 다를 수 있고 악의적인 server도 명세에 맞는 JSON을 보낼 수 있습니다. 따라서 호환성과 신뢰성은 별도로 검증해야 합니다.
         </p>
         <ContentBoundary article="mcp-protocol" />
 

@@ -14,16 +14,12 @@ export default function FewShot() {
           System prompt는 고정 규칙, user prompt는 그 turn의 가변 입력입니다
         </h3>
         <p>
-          System prompt는 role=system 메시지에 담겨 대화 내내 유지되는 standing
-          instruction입니다. 매 request마다 다시 전송되지만 화면에는 보이지
-          않고, persona나 출력 형식처럼 세션 전체에 적용할 규칙을 한 번만 적어
-          두면 이후 모든 turn에 반복 설명 없이 적용됩니다.
+          System prompt는 role=system 메시지에 담겨 대화 내내 유지되는 standing instruction입니다. 매 request마다 다시 전송되지만 화면에는 보이지
+          않습니다. persona나 출력 형식처럼 세션 전체에 적용할 규칙을 한 번만 적어 두면 이후 모든 turn에 반복 설명 없이 적용됩니다.
         </p>
         <p>
-          User prompt는 role=user 메시지로 그 turn에서 실제로 처리할 질문이나
-          데이터를 담습니다. System prompt가 고정 규칙이라면 user prompt는
-          request마다 바뀌는 가변 입력이고, few-shot demonstration은 보통 이
-          user turn 앞뒤에 예시 대화쌍으로 끼워 넣습니다.
+          User prompt는 role=user 메시지로 그 turn에서 실제로 처리할 질문이나 데이터를 담습니다. System prompt가 고정 규칙이라면 user prompt는
+          request마다 바뀌는 가변 입력입니다. few-shot demonstration은 보통 이 user turn 앞뒤에 예시 대화쌍으로 끼워 넣습니다.
         </p>
 
         <h3 id="prompt-template" className="scroll-mt-20">
@@ -53,11 +49,9 @@ export default function FewShot() {
           영구적으로 학습한 것과 같다고 보면 안 됩니다.
         </p>
         <p>
-          Few-shot은 label 의미나 output format을 설명만으로 전달하기 어려울 때
-          유용하지만, example을 많이 넣는다고 단조롭게 좋아지지는 않습니다. 운영
-          distribution을 대표하는 사례, 서로 헷갈리는 decision boundary, minority
-          class와 abstention을 포함하고 실제 request와 같은 serialization을 사용해야
-          합니다.
+          Few-shot은 label 의미나 output format을 설명만으로 전달하기 어려울 때 유용하지만 example을 많이 넣는다고 단조롭게 좋아지지는 않습니다. 운영
+          distribution을 대표하는 사례, 서로 헷갈리는 decision boundary, minority class와 abstention을 포함하고 실제 request와 같은
+          serialization을 사용해야 합니다.
         </p>
       </div>
 
@@ -105,9 +99,8 @@ export default function FewShot() {
           예시는 무작위로 뽑을 수도, 유사도로 고를 수도 있습니다
         </h3>
         <p>
-          Demonstration을 고르는 방법은 크게 둘로 나뉩니다. 무작위 선택은 고정된
-          example 집합에서 매번 같은 것을 재사용해 비용이 가장 싸고 재현이
-          쉽지만, 현재 입력과 관련 없는 예시가 섞여 있어도 그대로 나갑니다.
+          Demonstration을 고르는 방법은 크게 둘로 나뉩니다. 무작위 선택은 고정된 example 집합에서 매번 같은 것을 재사용해 비용이 가장 싸고 재현이 쉽지만 현재 입력과
+          관련 없는 예시가 섞여 있어도 그대로 나갑니다.
         </p>
         <p>
           유사도 기반 선택은 현재 query를 embedding으로 바꿔 후보 pool에서 가장
@@ -116,20 +109,17 @@ export default function FewShot() {
           오르지만 embedding 계산과 검색이 request 지연에 더해집니다.
         </p>
         <p>
-          이때 후보 pool을 평가에 쓸 held-out set과 겹치게 두면 train/eval
-          leakage가 생기므로, 선택에 쓰는 pool과 평가에 쓰는 pool은 미리
-          분리해야 합니다.
+          이때 후보 pool을 평가에 쓸 held-out set과 겹치게 두면 train/eval leakage가 생기므로 선택에 쓰는 pool과 평가에 쓰는 pool은 미리 분리해야
+          합니다.
         </p>
       </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Example order와 label prior를 흔들어 본다</h3>
         <p>
-          Few-shot prediction은 마지막 example, label frequency, prompt format에 민감할
-          수 있습니다. 그래서 zero-shot baseline을 먼저 저장하고, example subset과
-          순서를 여러 번 바꾸며 class별 accuracy·prediction variance를 측정합니다.
-          한 ordering에서만 좋아진다면 task rule을 배운 것이 아니라 recency나 label
-          prior에 기대고 있을 수 있습니다.
+          Few-shot prediction은 마지막 example, label frequency, prompt format에 민감할 수 있습니다. 그래서 zero-shot
+          baseline을 먼저 저장합니다. example subset과 순서를 여러 번 바꾸며 class별 accuracy·prediction variance를 측정합니다. 한
+          ordering에서만 좋아진다면 task rule을 배운 것이 아니라 recency나 label prior에 기대고 있을 수 있습니다.
         </p>
         <div id="paper-calibrate-before-use" className="not-prose scroll-mt-24">
           <CitationBlock source="Calibrate Before Use" citeKey={5} href="https://arxiv.org/abs/2102.09690">
@@ -143,11 +133,9 @@ export default function FewShot() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Few-shot은 즉시 고치기 쉽지만 매 request에 example token과 prefill cost가
-          반복됩니다. 같은 behavior를 높은 volume에서 오래 유지해야 하고 example이
-          계속 늘어난다면 fine-tuning이나 별도 classifier를 비교합니다. 이때 prompt로
-          다듬은 examples와 failure cases는 학습 데이터와 evaluation set의 출발점이
-          될 수 있지만, train/eval leakage는 분리해야 합니다.
+          Few-shot은 즉시 고치기 쉽지만 매 request에 example token과 prefill cost가 반복됩니다. 같은 behavior를 높은 volume에서 오래 유지해야
+          하고 example이 계속 늘어난다면 fine-tuning이나 별도 classifier를 비교합니다. 이때 prompt로 다듬은 examples와 failure cases는 학습
+          데이터와 evaluation set의 출발점이 될 수 있지만 train/eval leakage는 분리해야 합니다.
         </p>
       </div>
     </section>

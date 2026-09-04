@@ -8,11 +8,10 @@ export default function MNIST() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          MNIST의 28×28 grayscale 이미지를 펼치면 784차원 vector가 되고, 열 개 class를
-          예측하면 output은 10개 logit이 된다. 이 작은 문제는 input normalization,
-          batch shape, forward, scalar loss, backward, optimizer, train/eval mode와 split
-          경계를 빠르게 점검하기 좋다. 반면 이미지를 펼치는 순간 pixel의 2D locality를
-          architecture prior로 사용하지 못하므로 현대 vision model의 성능을 대표하지 않는다.
+          MNIST의 28×28 grayscale 이미지를 펼치면 784차원 vector가 되고 열 개 class를 예측하면 output은 10개 logit이 된다. 이 작은 문제는
+          input normalization, batch shape, forward, scalar loss, backward, optimizer, train/eval mode와 split
+          경계를 빠르게 점검하기 좋다. 반면 이미지를 펼치는 순간 pixel의 2D locality를 architecture prior로 사용하지 못하므로 현대 vision model의
+          성능을 대표하지 않는다.
         </p>
       </div>
 
@@ -40,11 +39,9 @@ export default function MNIST() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>점수 하나보다 실패 패턴을 읽는다</h3>
         <p>
-          Train과 validation이 모두 낮으면 capacity 부족만 의심하지 말고 learning rate,
-          preprocessing, label과 gradient부터 확인한다. Train만 높고 validation이 낮으면
-          overfitting뿐 아니라 split leakage, class distribution과 data shift를 점검한다.
-          Accuracy가 높더라도 confusion matrix와 오분류 이미지를 보면 특정 숫자 쌍,
-          stroke 위치나 배경에 의존하는 shortcut을 찾을 수 있다.
+          train과 validation이 모두 낮으면 capacity 부족만 의심하지 말고 learning rate, preprocessing, label과 gradient부터 확인한다.
+          train만 높고 validation이 낮으면 overfitting뿐 아니라 split leakage, class distribution과 data shift를 점검한다.
+          accuracy가 높더라도 confusion matrix와 오분류 이미지를 보면 특정 숫자 쌍, stroke 위치나 배경에 의존하는 shortcut을 찾을 수 있다.
         </p>
         <p>
           MNIST를 포함한 문서 인식에서 end-to-end gradient 학습과 convolutional prior를
@@ -63,12 +60,10 @@ export default function MNIST() {
           문서 인식 결과는 architecture·data·학습 system을 함께 검증한 사례입니다
         </h3>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          LeCun 등은 convolutional network와 gradient 기반 학습을 문서 인식
-          pipeline에 연결하고, handwritten digit를 포함한 여러 실험을 정리했습니다.
-          핵심은 사람이 고정한 feature extractor와 classifier를 따로 최적화하는 대신
-          task error로 전체 system을 함께 학습한 데 있습니다. 이 결과는 MNIST를
-          펼친 dense MLP가 spatial prior를 가진 CNN과 동등하다거나, digit accuracy가
-          실제 image distribution shift의 robustness를 보장한다는 주장은 아닙니다.
+          LeCun 등은 convolutional network와 gradient 기반 학습을 문서 인식 pipeline에 연결하고 handwritten digit를 포함한 여러 실험을
+          정리했습니다. 핵심은 사람이 고정한 feature extractor와 classifier를 따로 최적화하는 대신 task error로 전체 system을 함께 학습한 데 있습니다.
+          이 결과는 MNIST를 펼친 dense MLP가 spatial prior를 가진 CNN과 동등하다거나, digit accuracy가 실제 image distribution
+          shift의 robustness를 보장한다는 주장은 아닙니다.
         </p>
       </div>
     </section>

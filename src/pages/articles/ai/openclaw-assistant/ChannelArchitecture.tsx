@@ -42,10 +42,9 @@ export default function ChannelArchitecture({
         channel adapter는 차이를 흡수하지만 identity를 지우지 않습니다
       </h3>
       <p>
-        Telegram과 Slack의 event payload는 서로 다르므로 adapter가 공통 inbound
-        shape로 정규화합니다. 다만 공통 형식으로 바꾸더라도 channel, account,
-        peer, thread 같은 identity와 reply metadata는 보존해야 합니다. 이 정보가
-        allowlist, binding, session scope, 최종 delivery를 결정하기 때문입니다.
+        Telegram과 Slack의 event payload는 서로 다르므로 adapter가 공통 inbound shape로 정규화합니다. 다만 공통 형식으로 바꾸더라도 channel,
+        account, peer, thread 같은 identity와 reply metadata는 그대로 남깁니다. 이 정보가 allowlist, binding, session scope,
+        최종 delivery를 결정하기 때문입니다.
       </p>
       <p>
         channel의 pairing·DM/group policy·allowlist가 message를 받아들인 다음에
@@ -115,9 +114,8 @@ export default function ChannelArchitecture({
         <aside className="not-prose my-6 rounded-lg border border-border/70 bg-muted/20 p-4">
           <p className="text-sm font-semibold">분석용 channel-router 스냅샷</p>
           <p className="mt-2 text-xs leading-5 text-muted-foreground">
-            아래 코드는 이 저장소에 함께 보관된 설명용 스냅샷입니다. 현재 OpenClaw의
-            public API나 파일 경로가 그대로 유지된다는 증거가 아니며, 위의 공식
-            문서 계약을 이해하기 위한 보조 자료로만 사용합니다.
+            아래 코드는 이 저장소에 함께 보관된 설명용 스냅샷입니다. 현재 OpenClaw의 public API나 파일 경로가 그대로 유지된다는 증거는 아닙니다. 위의 공식 문서 계약을
+            이해하기 위한 보조 자료로만 씁니다.
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
             <CodeViewButton

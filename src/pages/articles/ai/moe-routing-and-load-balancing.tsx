@@ -26,20 +26,17 @@ export default function MoeRoutingAndLoadBalancingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Router가 처음 학습을 시작할 때는 어느 expert도 똑같이 유망합니다. 그런데 초기
-            weight의 작은 편차만으로 특정 expert가 조금 더 자주 뽑히면, 그 expert는 더 많은
-            gradient를 받아 더 빨리 좋아지고 다음 batch에서 다시 더 자주 뽑힙니다. 이 되먹임을
-            그대로 두면 몇 expert만 일하고 나머지는 한 번도 선택되지 않는 상태로 수렴합니다.
+            Router가 처음 학습을 시작할 때는 어느 expert도 똑같이 유망합니다. 그런데 초기 weight의 작은 편차만으로 특정 expert가 조금 더 자주 뽑히면 그
+            expert는 더 많은 gradient를 받아 더 빨리 좋아지고 다음 batch에서 다시 더 자주 뽑힙니다. 이 되먹임을 그대로 두면 몇 expert만 일하고 나머지는 한 번도
+            선택되지 않는 상태로 수렴합니다.
           </p>
           <p>
-            이 글은 그 되먹임을 누르는 두 장치를 다룹니다. Load balancing loss는 학습 신호에
-            벌점을 더해 쏠림을 누르고, auxiliary-loss-free 방식은 loss 대신 선택 점수에
-            bias를 더해 같은 일을 합니다.
+            이 글은 그 되먹임을 누르는 두 장치를 다룹니다. Load balancing loss는 학습 신호에 벌점을 더해 쏠림을 누르고 auxiliary-loss-free 방식은
+            loss 대신 선택 점수에 bias를 더해 같은 일을 합니다.
           </p>
           <p>
-            두 장치가 늦거나 약하면 expert collapse가 일어나고, capacity factor가 정한 상한을
-            넘은 token은 버려집니다. 마지막으로 sparsity ratio로 이 model이 저장 parameter
-            대비 얼마나 좁은 경로만 쓰는지를 봅니다.
+            두 장치가 늦거나 약하면 expert collapse가 일어나고 capacity factor가 정한 상한을 넘은 token은 버려집니다. 그리고 sparsity ratio를
+            보면 이 model이 저장 parameter 대비 얼마나 좁은 경로만 쓰는지 드러납니다.
           </p>
           <p>
             Router가 logit을 만들고 top-k를 고르는 계산, capacity factor와 overflow policy의
@@ -60,17 +57,14 @@ export default function MoeRoutingAndLoadBalancingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            문제는 실제 배정이 argmax나 top-k로 정해져 미분할 수 없다는 점입니다. Load
-            balancing loss는 그 배정 비율 f_i를 router의 softmax 확률 P_i와 곱해 더한 값을
-            language-model loss에 더합니다. f_i가 큰 expert는 P_i도 함께 낮아지는 방향으로
-            gradient가 흐르므로, 미분 불가능한 배정을 미분 가능한 확률을 통해 간접적으로
-            누릅니다.
+            문제는 실제 배정이 argmax나 top-k로 정해져 미분할 수 없다는 점입니다. Load balancing loss는 그 배정 비율 f_i를 router의 softmax 확률
+            P_i와 곱해 더한 값을 language-model loss에 더합니다. f_i가 큰 expert는 P_i도 함께 낮아지는 방향으로 gradient가 흐르므로 미분 불가능한
+            배정을 미분 가능한 확률을 통해 간접적으로 누릅니다.
           </p>
           <p>
-            Top-1만 고르던 GShard·Switch와 달리 top-k(k≥2)에서는 f_i를 argmax 하나가 아니라
-            token마다 만들어지는 k개 슬롯 전체에서 셉니다. Expert 수 n, token 수 T이면 슬롯은
-            kT개이고, f_i는 그 가운데 expert i가 차지한 비율, P_i는 전체 T개 token에 대한
-            평균 softmax 확률입니다.
+            Top-1만 고르던 GShard·Switch와 달리 top-k(k≥2)에서는 f_i를 argmax 하나가 아니라 token마다 만들어지는 k개 슬롯 전체에서 셉니다.
+            Expert 수 n, token 수 T이면 슬롯은 kT개이고 f_i는 그 가운데 expert i가 차지한 비율, P_i는 전체 T개 token에 대한 평균 softmax
+            확률입니다.
           </p>
         </div>
         <ExplainedFormula
@@ -100,10 +94,9 @@ L_{\mathrm{aux}}&=\underbrace{\alpha N\sum_{i=1}^{N}f_iP_i}_{\text{완전히 균
         />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            이 항의 한계는 두 가지입니다. α를 키우면 균형은 좋아지지만 language-model loss와
-            경쟁해 token 내용보다 균등 배정을 우선하게 되고, α가 작으면 벌점이 약해 앞 절의
-            되먹임을 못 누릅니다. 또 이 항은 batch 단위 평균이라 batch 하나 안에서는 균형이어도
-            시간에 따라 특정 expert가 반복해 몰리는 것은 잡지 못합니다.
+            이 항의 한계는 두 가지입니다. α를 키우면 균형은 좋아지지만 language-model loss와 경쟁해 token 내용보다 균등 배정을 우선하게 되고 α가 작으면 벌점이
+            약해 앞 절의 되먹임을 못 누릅니다. 또 이 항은 batch 단위 평균이라 batch 하나 안에서는 균형이어도 시간에 따라 특정 expert가 반복해 몰리는 것은 잡지
+            못합니다.
           </p>
         </div>
       </section>
@@ -114,16 +107,13 @@ L_{\mathrm{aux}}&=\underbrace{\alpha N\sum_{i=1}^{N}f_iP_i}_{\text{완전히 균
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Load balancing loss는 language-model loss에 항을 더하므로 그 gradient가 원래
-            objective와 섞입니다. Auxiliary-loss-free balancing은 loss를 건드리지 않고, top-k
-            선택에만 쓰는 점수에 expert별 bias를 더합니다. 과부하 expert는 bias를 내려 다음
-            step에 덜 뽑히게 하고, 부족한 expert는 bias를 올립니다.
+            Load balancing loss는 language-model loss에 항을 더하므로 그 gradient가 원래 objective와 섞입니다. Auxiliary-loss-
+            free balancing은 loss를 건드리지 않고 top-k 선택에만 쓰는 점수에 expert별 bias를 더합니다. 과부하 expert는 bias를 내려 다음 step에
+            덜 뽑히게 하고 부족한 expert는 bias를 올립니다.
           </p>
           <p>
-            핵심은 이 bias가 combine 단계의 가중치에는 들어가지 않는다는 점입니다. Top-k를
-            고를 때만 점수에 더해지고, 선택된 expert의 출력을 합칠 때는 원래 확률을 씁니다.
-            그래서 bias를 아무리 키워도 model이 실제로 배우는 mixture weight는 왜곡되지
-            않습니다.
+            이 bias는 combine 단계의 가중치에 들어가지 않습니다. Top-k를 고를 때만 점수에 더해지고 선택된 expert의 출력을 합칠 때는 원래 확률을 씁니다. 그래서
+            bias를 아무리 키워도 model이 실제로 배우는 mixture weight는 왜곡되지 않습니다.
           </p>
         </div>
         <ExplainedFormula
@@ -160,24 +150,19 @@ L_{\mathrm{aux}}&=\underbrace{\alpha N\sum_{i=1}^{N}f_iP_i}_{\text{완전히 균
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Expert collapse는 문제 절에서 말한 되먹임이 끝까지 간 상태입니다. 자주 뽑히는
-            expert는 더 많은 gradient로 더 빨리 좋아지고, router는 이미 잘하는 expert를 다시
-            고르는 것이 loss를 더 줄이므로 그 expert를 더 선호하게 됩니다. 반대로 거의 뽑히지
-            않는 expert는 gradient를 받지 못해 초기화 상태에 가깝게 멈추고, 멈춰 있으니 router
-            입장에서는 고를 이유가 더 줄어듭니다.
+            Expert collapse는 문제 절에서 말한 되먹임이 끝까지 간 상태입니다. 자주 뽑히는 expert는 더 많은 gradient로 더 빨리 좋아지고 router는 이미
+            잘하는 expert를 다시 고르는 것이 loss를 더 줄이므로 그 expert를 더 선호하게 됩니다. 반대로 거의 뽑히지 않는 expert는 gradient를 받지 못해 초기화
+            상태에 가깝게 멈추고, 멈춰 있으니 router 입장에서는 고를 이유가 더 줄어듭니다.
           </p>
           <p>
-            Load balancing loss와 bias 갱신은 이 되먹임이 커지기 전에 누르는 장치입니다. α나
-            γ가 너무 작거나 학습 초반 몇 step 사이에 이미 큰 격차가 생기면, 두 장치가 있어도
-            일부 expert는 사실상 죽은 채로 남습니다. ST-MoE는 이런 학습 불안정을 router
-            z-loss로 따로 눌러야 했다고 보고했습니다.
+            Load balancing loss와 bias 갱신은 이 되먹임이 커지기 전에 누르는 장치입니다. α나 γ가 너무 작거나 학습 초반 몇 step 사이에 이미 큰 격차가 생기면
+            두 장치가 있어도 일부 expert는 사실상 죽은 채로 남습니다. ST-MoE는 이런 학습 불안정을 router z-loss로 따로 눌러야 했다고 보고했습니다.
           </p>
         </div>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Collapse의 직접적인 결과가 token dropping입니다. Capacity factor φ는 expert당
-            받을 token 상한을 정하고, 균형이 깨진 채로 그 상한을 넘으면 초과분은 계산되지
-            않고 버려지거나 다음 layer로 residual만 전달됩니다.
+            Collapse의 직접적인 결과가 token dropping입니다. Capacity factor φ는 expert당 받을 token 상한을 정하고 균형이 깨진 채로 그 상한을
+            넘으면 초과분은 계산되지 않고 버려지거나 다음 layer로 residual만 전달됩니다.
           </p>
         </div>
         <AlgorithmBlock
@@ -195,10 +180,9 @@ L_{\mathrm{aux}}&=\underbrace{\alpha N\sum_{i=1}^{N}f_iP_i}_{\text{완전히 균
         />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            숫자로 보면 이렇습니다. N=8, k=2, T=1,024이면 slot 2,048개의 이상적 평균은 expert당
-            256입니다. φ=1.25면 capacity는 ceil(1.25 × 256) = 320입니다. 앞 절의 collapse
-            예시처럼 expert 0이 614 slot을 받으면 320을 넘는 294 slot, 그 expert 수요의 약
-            48%가 계산되지 않고 버려집니다.
+            N=8, k=2, T=1,024이면 slot 2,048개의 이상적 평균은 expert당 256이고 φ=1.25면 capacity는 ceil(1.25 × 256) =
+            320입니다. 앞 절의 collapse 예시처럼 expert 0이 614 slot을 받으면 320을 넘는 294 slot, 그 expert 수요의 약 48%가 계산되지 않고
+            버려집니다.
           </p>
         </div>
         <ProgressiveDetail
@@ -206,11 +190,9 @@ L_{\mathrm{aux}}&=\underbrace{\alpha N\sum_{i=1}^{N}f_iP_i}_{\text{완전히 균
           preview="φ=1.0은 평균만큼만 받아 초과 전부를 버리고, φ=2.0은 거의 안 버리지만 buffer 절반이 빈 자리로 GEMM을 함께 태웁니다. Drop과 padding 사이에 공짜 지점은 없습니다."
         >
           <p>
-            같은 예시에서 φ=1.0이면 capacity는 256이라 614 가운데 358이 drop되고, φ=2.0이면
-            capacity가 512라 drop은 102로 줄지만 다른 여섯 expert는 각각 256 안팎만 받아 512
-            buffer의 절반 가까이가 빈 slot으로 GEMM에 그대로 들어갑니다. DeepSeek-V3는 학습에서
-            token을 아예 버리지 않는 대신 bias 갱신만으로 균형을 잡아 이 맞바꿈 자체를
-            피했습니다.
+            같은 예시에서 φ=1.0이면 capacity는 256이라 614 가운데 358이 drop되고 φ=2.0이면 capacity가 512라 drop은 102로 줄지만 다른 여섯
+            expert는 각각 256 안팎만 받아 512 buffer의 절반 가까이가 빈 slot으로 GEMM에 그대로 들어갑니다. DeepSeek-V3는 학습에서 token을 아예
+            버리지 않는 대신 bias 갱신만으로 균형을 잡아 이 맞바꿈 자체를 피했습니다.
           </p>
         </ProgressiveDetail>
       </section>
@@ -228,10 +210,8 @@ L_{\mathrm{aux}}&=\underbrace{\alpha N\sum_{i=1}^{N}f_iP_i}_{\text{완전히 균
             맡고, 이 절은 그 비율 하나만 봅니다.
           </p>
           <p>
-            공유 parameter가 무시할 만큼 작으면 이 비율은 대략 top-k를 expert 수로 나눈
-            값에 가까워집니다. 앞의 예시처럼 N=8, k=2이면 25%이고, expert 수를 늘리면서 k를
-            그대로 두면 비율은 계속 낮아집니다. DeepSeek-V3는 total 671B, active 37B로 이
-            비율이 약 5.5%라고 보고했습니다.
+            공유 parameter가 무시할 만큼 작으면 이 비율은 대략 top-k를 expert 수로 나눈 값에 가까워집니다. 앞의 예시처럼 N=8, k=2이면 25%이고 expert
+            수를 늘리면서 k를 그대로 두면 비율은 계속 낮아집니다. DeepSeek-V3는 total 671B, active 37B로 이 비율이 약 5.5%라고 보고했습니다.
           </p>
         </div>
         <TermBreakdown
@@ -249,14 +229,13 @@ L_{\mathrm{aux}}&=\underbrace{\alpha N\sum_{i=1}^{N}f_iP_i}_{\text{완전히 균
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            GShard와 Switch Transformer가 load balancing loss의 형태를 정했고, top-k
-            일반화는 Mixtral의 정의를 따릅니다. ST-MoE는 collapse에 가까운 학습 불안정과
-            그것을 누르는 추가 loss를, DeepSeek-V3는 auxiliary-loss-free bias 갱신과
-            sparsity ratio 수치를 보고했습니다.
+            GShard와 Switch Transformer가 load balancing loss의 형태를 정했고 top-k 일반화는 Mixtral의 정의를 따릅니다. ST-MoE는
+            collapse에 가까운 학습 불안정과 그것을 누르는 추가 loss를, DeepSeek-V3는 auxiliary-loss-free bias 갱신과 sparsity ratio
+            수치를 보고했습니다.
           </p>
           <p>
-            이 글의 2,048 slot, 614 slot, L_aux≈0.0115, capacity 320, drop 294 같은 수치는
-            논문 값이 아니라 본문이 정한 예시 구성으로 직접 계산한 것입니다.
+            이 글의 2,048 slot, 614 slot, L_aux≈0.0115, capacity 320, drop 294 같은 수치는 본문이 정한 예시 구성으로 직접 계산한 값입니다.
+            논문 값이 아닙니다.
           </p>
         </div>
         <div id="paper-gshard" className="not-prose my-8 scroll-mt-24">

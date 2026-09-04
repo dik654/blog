@@ -7,10 +7,8 @@ export default function PartialGradient() {
       <h2 className="mb-6 text-2xl font-bold">편미분과 gradient: 손잡이가 여러 개일 때</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          입력이 여러 개면 한 번에 하나만 움직이고 나머지는 고정해 민감도를 잴 수 있습니다.
-          이것이 partial derivative입니다. 모든 좌표의 partial derivative를 같은 순서로 묶은
-          vector가 gradient입니다. 따라서 gradient의 각 성분은 서로 다른 parameter 손잡이에
-          붙은 local slope입니다.
+          입력이 여러 개면 한 번에 하나만 움직이고 나머지는 고정해 민감도를 잽니다. 이것이 partial derivative입니다. 모든 좌표의 partial derivative를 같은
+          순서로 묶은 vector가 gradient입니다. gradient의 각 성분은 서로 다른 parameter 손잡이에 붙은 local slope입니다.
         </p>
       </div>
       <GradientDirectionViz />
@@ -29,10 +27,9 @@ export default function PartialGradient() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>출력이 여러 개면 Jacobian matrix가 된다</h3>
         <p>
-          Gradient는 scalar output 하나의 민감도 vector입니다. 반면 layer처럼 output도
-          vector라면 각 output coordinate마다 gradient가 하나씩 생깁니다. 이 row들을
-          모은 것이 Jacobian이며, 작은 input 변화 vector를 작은 output 변화 vector로
-          보내는 local linear map으로 읽을 수 있습니다.
+          Gradient는 scalar output 하나의 민감도 vector입니다. 반면 layer처럼 output도 vector라면 각 output coordinate마다
+          gradient가 하나씩 생깁니다. 이 row들을 모은 것이 Jacobian입니다. 작은 input 변화 vector를 작은 output 변화 vector로 보내는 local
+          linear map으로 읽으면 됩니다.
         </p>
       </div>
       <ExplainedFormula

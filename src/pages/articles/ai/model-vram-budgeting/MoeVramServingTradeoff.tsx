@@ -37,7 +37,8 @@ export default function MoeVramServingTradeoff() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          그래서 capacity는 넉넉해도 bandwidth가 상대적으로 낮은 consumer·workstation GPU에서는, 이 active/total 비율이 실제로 어느 쪽이 병목인지를 가르는 실무 질문이 됩니다.
+          그래서 capacity는 넉넉해도 bandwidth가 상대적으로 낮은 consumer·workstation GPU에서는 이 active/total 비율이 실제로 어느 쪽이
+          병목인지를 가르는 실무 질문이 됩니다.
         </p>
       </div>
 

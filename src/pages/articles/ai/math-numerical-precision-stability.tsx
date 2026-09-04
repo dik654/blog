@@ -17,10 +17,8 @@ export default function MathNumericalPrecisionStabilityArticle() {
         <h2 className="mb-6 text-2xl font-bold">숫자를 유한 bit로 저장하면 계산할 때마다 작은 오차가 남는다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            컴퓨터는 실수를 정확히 저장하지 못하고 정해진 bit 수만큼 유효숫자를
-            잘라 저장합니다. 그 결과 덧셈 하나에도 반올림 오차가 남고, 이 오차가
-            계산 단계를 거치며 사라지거나 커질 수 있습니다. Tensor의 shape가
-            어긋나는 문제도 같은 층위에서 조용히 틀린 결과를 만듭니다.
+            컴퓨터는 실수를 정확히 저장하지 못하고 정해진 bit 수만큼 유효숫자를 잘라 저장합니다. 그 결과 덧셈 하나에도 반올림 오차가 남고 이 오차가 계산 단계를 거치며 사라지거나
+            커집니다. Tensor의 shape가 어긋나는 문제도 같은 층위에서 조용히 틀린 결과를 만듭니다.
           </p>
           <p>
             이 글은 <Link to="/ai/math-vectors-inner-products#dot-product">벡터·내적
@@ -45,10 +43,8 @@ export default function MathNumericalPrecisionStabilityArticle() {
             경계)가 넓어집니다.
           </p>
           <p>
-            FP32는 mantissa 23bit로 십진 약 7.2자리를, FP16은 mantissa 10bit로
-            약 3.3자리만 남깁니다. BF16은 mantissa 7bit라 유효숫자는 약 2.3자리로
-            더 적지만, exponent가 FP32와 같은 8bit라 표현 범위는 FP32와
-            같습니다.
+            FP32는 mantissa 23bit로 십진 약 7.2자리를, FP16은 mantissa 10bit로 약 3.3자리만 남깁니다. BF16은 mantissa 7bit라 유효숫자는
+            약 2.3자리로 더 적지만 exponent가 FP32와 같은 8bit라 표현 범위는 FP32와 같습니다.
           </p>
         </div>
         <ExplainedFormula
@@ -115,11 +111,9 @@ export default function MathNumericalPrecisionStabilityArticle() {
           preview="크기가 비슷한 두 수를 빼면 앞자리가 서로 지워지고 뒷자리의 반올림 오차만 남아 상대 오차가 커집니다."
         >
           <p>
-            분산을 E[X²]−E[X]²로 계산하면 두 항이 모두 크고 비슷한 값일 때
-            뺄셈에서 앞자리 유효숫자가 서로 상쇄돼 사라지고, 원래 각 항에 있던
-            작은 반올림 오차만 결과에 남습니다. 이 현상을 catastrophic
-            cancellation이라 부르며, 수학적으로 같은 Σ(Xᵢ−mean)²/n 형태로 다시
-            쓰면 크기가 비슷한 두 큰 수를 빼는 단계 자체가 사라져 안정적입니다.
+            분산을 E[X²]−E[X]²로 계산하면 두 항이 모두 크고 비슷한 값일 때 뺄셈에서 앞자리 유효숫자가 서로 상쇄돼 사라집니다. 그러면 원래 각 항에 있던 작은 반올림 오차만
+            결과에 남습니다. 이 현상을 catastrophic cancellation이라 부릅니다. 수학적으로 같은 Σ(Xᵢ−mean)²/n 형태로 다시 쓰면 크기가 비슷한 두 큰 수를
+            빼는 단계 자체가 사라져 안정적입니다.
           </p>
         </ProgressiveDetail>
       </section>
@@ -134,11 +128,9 @@ export default function MathNumericalPrecisionStabilityArticle() {
             나지 않고, 의도와 다른 축으로 계산이 조용히 진행됩니다.
           </p>
           <p>
-            Shape (3,1)인 a와 shape (3,)인 b를 더하면, 두 shape 모두 (3,)로
-            보이더라도 실제로는 (3,3)으로 broadcast됩니다. a의 각 행(3개)이
-            b의 3개 원소 전체와 짝지어져 원소별 합 3개가 아니라 3×3 조합 9개가
-            나옵니다. 이 결과는 에러 없이 실행되므로, shape를 직접 찍어 보기
-            전에는 버그를 알아채기 어렵습니다.
+            Shape (3,1)인 a와 shape (3,)인 b를 더하면 두 shape 모두 (3,)로 보이더라도 실제로는 (3,3)으로 broadcast됩니다. a의 각 행(3개)이
+            b의 3개 원소 전체와 짝지어져 원소별 합 3개가 아니라 3×3 조합 9개가 나옵니다. 이 결과는 에러 없이 실행되므로 shape를 직접 찍어 보기 전에는 버그를 알아채기
+            어렵습니다.
           </p>
         </div>
         <TermBreakdown
@@ -170,9 +162,7 @@ export default function MathNumericalPrecisionStabilityArticle() {
         <h2 className="mb-6 text-2xl font-bold">정밀도·안정성·shape 계약이 실제로 쓰이는 곳</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            이 글이 정리한 세 축은 각각 다른 글에서 구체적인 구현으로 이어집니다.
-            아래는 정의를 반복하지 않고 각 응용이 이 원리를 어디에 쓰는지로
-            이어갑니다.
+            이 글이 정리한 세 축은 각각 다른 글에서 구체적인 구현으로 이어집니다. 아래에서는 정의를 반복하지 않고 각 응용이 이 원리를 어디에 쓰는지만 짚습니다.
           </p>
         </div>
         <div className="not-prose mt-7 grid gap-5 md:grid-cols-3">
@@ -192,11 +182,9 @@ export default function MathNumericalPrecisionStabilityArticle() {
           <p className="text-xs font-bold text-primary">근거 논문 · IEEE 754 부동소수점</p>
           <p className="mt-2 text-sm font-semibold">Goldberg — What Every Computer Scientist Should Know About Floating-Point Arithmetic (ACM Computing Surveys, 1991)</p>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            IEEE 754 형식의 sign·exponent·mantissa 구조, rounding error, machine
-            epsilon, catastrophic cancellation을 표준 사례로 정리한 survey
-            논문입니다. 이 글의 자릿수·오차 수치는 이 survey가 요약한 IEEE 754
-            표준 정의를 따르며, 특정 하드웨어의 실제 명령어 지연시간까지
-            보장하지는 않습니다.
+            IEEE 754 형식의 sign·exponent·mantissa 구조, rounding error, machine epsilon, catastrophic
+            cancellation을 표준 사례로 정리한 survey 논문입니다. 이 글의 자릿수·오차 수치는 이 survey가 요약한 IEEE 754 표준 정의를 따르며 특정 하드웨어의
+            실제 명령어 지연시간까지 보장하지는 않습니다.
           </p>
           <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://doi.org/10.1145/103162.103163" target="_blank" rel="noreferrer">
             논문과 IEEE 754 조건 보기

@@ -7,10 +7,8 @@ export default function CauchySchwarz() {
       <h2 className="mb-6 text-2xl font-bold">Cauchy–Schwarz: 방향 성분은 전체 길이를 넘지 못한다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="text-lg leading-8">
-          길이 5인 막대의 x축 그림자가 5보다 길 수는 없습니다. Cauchy–Schwarz
-          inequality는 이 당연해 보이는 기하학을 모든 차원의 vector에 적용합니다. 두
-          vector가 완전히 같은 직선 방향일 때 dot product의 절댓값이 가장 크고, 방향이
-          어긋날수록 그보다 작아집니다.
+          길이 5인 막대의 x축 그림자가 5보다 길 수는 없습니다. Cauchy–Schwarz inequality는 이 당연해 보이는 기하학을 모든 차원의 vector에 적용합니다. 두
+          vector가 완전히 같은 직선 방향일 때 dot product의 절댓값이 가장 크고 방향이 어긋날수록 그보다 작아집니다.
         </p>
       </div>
       <CauchyBoundViz />
@@ -42,11 +40,9 @@ export default function CauchySchwarz() {
         </p>
         <h3>어디까지 읽으면 안 되는가</h3>
         <p>
-          부등식은 raw dot product가 곧 의미 유사도라고 말하지 않습니다. 길이가 100인
-          vector와 길이가 1인 같은 방향 vector의 dot product는 100이지만, 두 방향은 이미
-          완전히 같습니다. 방향만 비교하려면 두 길이로 나눈 cosine similarity를 사용하며,
-          embedding의 norm 자체가 의미를 담는 모델이라면 그 normalization이 정보를 지울
-          수도 있습니다.
+          부등식은 raw dot product가 곧 의미 유사도라고 말하지 않습니다. 길이가 100인 vector와 길이가 1인 같은 방향 vector의 dot product는 100이지만
+          두 방향은 이미 완전히 같습니다. 방향만 비교하려면 두 길이로 나눈 cosine similarity를 사용합니다. Embedding의 norm 자체가 의미를 담는 모델이라면 그
+          normalization이 정보를 지울 수도 있습니다.
         </p>
       </div>
     </section>

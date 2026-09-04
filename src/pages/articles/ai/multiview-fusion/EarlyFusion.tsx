@@ -7,16 +7,12 @@ export default function EarlyFusion() {
       <h2 className="mb-6 text-2xl font-bold">Early fusion은 “같은 좌표”라는 강한 가정을 model 입구에서 사용합니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          RGB와 depth가 동일한 장면을 보더라도 pixel (u, v)가 같은 물리 지점을
-          가리킨다는 보장은 없습니다. Camera calibration과 reprojection으로 공통
-          좌표계에 옮긴 뒤에야 channel concat이 의미를 갖습니다. 이 조건이 맞으면
-          첫 layer부터 색·거리처럼 low-level 신호의 조합을 학습할 수 있습니다.
+          RGB와 depth가 동일한 장면을 보더라도 pixel (u, v)가 같은 물리 지점을 가리킨다는 보장은 없습니다. camera calibration과 reprojection으로
+          공통 좌표계에 옮긴 뒤에야 channel concat이 의미를 갖습니다. 이 조건이 맞으면 첫 layer부터 색·거리처럼 low-level 신호의 조합을 학습할 수 있습니다.
         </p>
         <p>
-          Input channel이 바뀌면 pretrained first-layer weight도 그대로 사용할 수
-          없습니다. Weight를 복제·평균하거나 새 layer를 학습하는 방법을 비교하고,
-          각 channel의 range와 normalization을 따로 보존합니다. 단순히 RGB
-          normalization을 모든 sensor에 적용하지 않습니다.
+          Input channel이 바뀌면 pretrained first-layer weight도 그대로 사용할 수 없습니다. weight를 복제·평균하거나 새 layer를 학습하는 방법을
+          비교하고 각 channel의 range와 normalization을 따로 보존합니다. 단순히 RGB normalization을 모든 sensor에 적용하지 않습니다.
         </p>
       </div>
       <ExplainedFormula
@@ -52,16 +48,13 @@ x_{\mathrm{cat}}(u)&=[x_{\mathrm{obs}}(u);m(u)].
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Missing view에 취약한 입력 계약입니다</h3>
         <p>
-          Channel 수가 고정되므로 view 하나가 없을 때 zero-fill만 하면 “관측되지
-          않음”과 실제 값 0을 구분하지 못합니다. Availability mask를 추가하고 view
-          dropout으로 이 상태를 학습해야 하며, 결측 조합이 많다면 view별 encoder를
-          두는 late fusion이 더 자연스럽습니다.
+          Channel 수가 고정되므로 view 하나가 없을 때 zero-fill만 하면 “관측되지 않음”과 실제 값 0을 구분하지 못합니다. availability mask를 추가하고
+          view dropout으로 이 상태를 학습해야 하며 결측 조합이 많다면 view별 encoder를 두는 late fusion이 더 자연스럽습니다.
         </p>
         <p>
-          Shared encoder로 각 image를 먼저 처리한 뒤 feature를 합치는 Siamese
-          방식은 input-level early fusion이 아니라 representation-level fusion에
-          가깝습니다. 이 구분을 유지해야 비교에서 parameter와 interaction 위치가
-          무엇 때문에 달라졌는지 해석할 수 있습니다.
+          shared encoder로 각 image를 먼저 처리한 뒤 feature를 합치는 Siamese 방식은 input-level early fusion이 아니라
+          representation-level fusion에 가깝습니다. 이 구분을 유지해야 비교에서 parameter와 interaction 위치가 무엇 때문에 달라졌는지 해석할 수
+          있습니다.
         </p>
       </div>
     </section>

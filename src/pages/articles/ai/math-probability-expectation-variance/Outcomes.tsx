@@ -5,8 +5,14 @@ export default function Outcomes() {
     <section id="outcomes" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Outcome과 probability distribution: 무엇이 일어날 수 있는가</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>실험은 결과가 아직 정해지지 않은 절차이고, outcome은 실제로 나온 결과 하나입니다. 가능한 outcome 전체가 sample space입니다. 질문이 정해지면 그 질문을 만족하는 outcome들을 event라는 부분집합으로 묶습니다.</p>
-        <p>Probability distribution은 각 outcome에 0 이상인 mass를 배정하며 전체 합은 1이어야 합니다. 서로 겹치지 않는 outcome이나 event의 probability는 더할 수 있지만, 겹치는 event를 더할 때는 intersection을 두 번 세지 않도록 빼야 합니다.</p>
+        <p>
+            실험은 결과가 아직 정해지지 않은 절차이고 outcome은 실제로 나온 결과 하나입니다. 가능한 outcome 전체를 sample space라고 부릅니다. 질문이 정해지면 그
+            질문을 만족하는 outcome들을 event라는 부분집합으로 묶습니다.
+          </p>
+        <p>
+            Probability distribution은 각 outcome에 0 이상인 mass를 배정하며 전체 합은 1이어야 합니다. 서로 겹치지 않는 outcome이나 event의
+            probability는 더할 수 있지만 겹치는 event를 더할 때는 intersection을 두 번 세지 않도록 빼야 합니다.
+          </p>
       </div>
       <ExplainedFormula
         question="공정한 동전을 두 번 던질 때 가능한 결과와 확률을 어떻게 적을까요?"

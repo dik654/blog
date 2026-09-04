@@ -36,11 +36,8 @@ export default function DecisionMatrix() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          프롬프트, Smoothie-Qwen, SFT·RL, 런타임 가드는 강도가 다른 같은 약이
-          아닙니다. 각각 요청 문맥, 출력층, 학습된 policy, 배포 경계라는 다른
-          부분을 바꿉니다. 먼저 고정 사례의 실패가 문자 span인지, reasoning 구간
-          전환인지, 정상 번역 오탐인지 분류한 다음 가장 직접적인 한 개입을
-          candidate로 만듭니다.
+          프롬프트, Smoothie-Qwen, SFT·RL, 런타임 가드는 각각 요청 문맥, 출력층, 학습된 policy, 배포 경계라는 다른 부분을 바꿉니다. 강도가 다른 같은 약이
+          아닙니다. 먼저 고정 사례의 실패가 문자 span인지, reasoning 구간 전환인지, 정상 번역 오탐인지 분류한 다음 가장 직접적인 한 개입을 candidate로 만듭니다.
         </p>
         <p>
           선택 질문은 네 가지입니다. <strong>Access</strong>는 model weight와
@@ -113,12 +110,9 @@ export default function DecisionMatrix() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>2. 제약에 맞는 candidate 하나와 baseline을 비교합니다</h3>
         <p>
-          Weight access가 없고 즉시 실패를 막아야 하면 prompt와 bounded runtime
-          guard가 현실적인 후보입니다. 오픈웨이트에서 특정 문자군만 반복적으로
-          과다 생성되면 Smoothie 변환본을 base와 비교하고, 표면 표기는 안정됐는데
-          연구용 reasoning trace의 언어·정답 policy가 계속 무너지면 SFT를 먼저
-          검토합니다. SFT 이후 여러 candidate의 상대 선호를 바꿀 reliable reward와
-          judge가 있을 때만 RL을 추가합니다.
+          Weight access가 없고 즉시 실패를 막아야 하면 prompt와 bounded runtime guard가 현실적인 후보입니다. 오픈웨이트에서 특정 문자군만 반복적으로 과다
+          생성되면 Smoothie 변환본을 base와 비교합니다. 표면 표기는 안정됐는데 연구용 reasoning trace의 언어·정답 policy가 계속 무너지면 SFT를 먼저
+          검토합니다. SFT 이후 여러 candidate의 상대 선호를 바꿀 reliable reward와 judge가 있을 때만 RL을 추가합니다.
         </p>
         <p>
           한 번에 모든 방법을 쌓으면 어느 층이 효과와 회귀를 만들었는지 알 수
@@ -130,30 +124,23 @@ export default function DecisionMatrix() {
 
         <h3>3. canary에서 offline 근거가 운영에서도 유지되는지 봅니다</h3>
         <p>
-          Offline 통과가 곧 전체 배포 승인은 아닙니다. Version을 pin한 candidate를
-          작은 traffic에 canary로 보내고, 언어 오류·정답·예외 보존·latency를
-          baseline과 동시에 관찰합니다. Judge가 개입하는 요청 비율과 human review
-          결과도 별도 metric으로 남겨, detector가 조용히 정상 응답을 막고 있지
-          않은지 확인합니다.
+          Offline 통과가 곧 전체 배포 승인은 아닙니다. Version을 pin한 candidate를 작은 traffic에 canary로 보냅니다. 언어 오류와 정답, 예외 보존,
+          latency는 baseline과 동시에 관찰합니다. Judge가 개입하는 요청 비율과 human review 결과도 별도 metric으로 남깁니다. 이 metric으로
+          detector가 조용히 정상 응답을 막고 있지 않은지 확인합니다.
         </p>
 
         <h3>4. rollback 기준은 배포 전에 수치와 action으로 연결합니다</h3>
         <p>
-          예를 들어 unexpected leakage가 목표 이하더라도 번역 예외 보존율이나
-          핵심 task accuracy가 preregistered floor 아래로 내려가면 rollback합니다.
-          Runtime guard의 p95 latency나 review queue가 한도를 넘을 때도 같은
-          action을 정의합니다. 원본 checkpoint·prompt·checker schema를 보존하고
-          route만 되돌릴 수 있어야, 사고 중에 새 모델을 다시 빌드하지 않아도
-          됩니다.
+          예를 들어 unexpected leakage가 목표 이하더라도 번역 예외 보존율이나 핵심 task accuracy가 preregistered floor 아래로 내려가면
+          rollback합니다. Runtime guard의 p95 latency나 review queue가 한도를 넘을 때도 같은 action을 정의합니다. 원본
+          checkpoint·prompt·checker schema를 보존하고 route만 되돌릴 수 있어야 사고 중에 새 모델을 다시 빌드하지 않아도 됩니다.
         </p>
 
         <h3>조합의 기준은 중복 차단이 아니라 책임 분담입니다</h3>
         <p>
-          Prompt는 기본 정책을 설명하고, model intervention은 반복되는 분포 문제를
-          줄이며, runtime guard는 드물게 남는 실패를 감지합니다. 세 층이 모두
-          “외국 문자를 삭제”하도록 만들면 정상 번역을 여러 번 손상시키고 원인도
-          찾기 어려워집니다. 각 층의 입력·출력·metric·fallback을 문서로 남긴 뒤,
-          목표를 달성한 가장 단순한 구성을 채택합니다.
+          Prompt는 기본 정책을 설명하고 model intervention은 반복되는 분포 문제를 줄이며 runtime guard는 드물게 남는 실패를 감지합니다. 세 층이 모두 “외국
+          문자를 삭제”하도록 만들면 정상 번역을 여러 번 손상시키고 원인도 찾기 어려워집니다. 각 층의 입력과 출력, metric, fallback을 문서로 남긴 뒤 목표를 달성한 가장
+          단순한 구성을 채택합니다.
         </p>
       </div>
     </section>

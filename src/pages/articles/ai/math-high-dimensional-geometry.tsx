@@ -18,11 +18,9 @@ export default function MathHighDimensionalGeometryArticle() {
         <h2 className="mb-6 text-2xl font-bold">차원이 늘면 거리 하나로 가까움을 구분하기 어려워진다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            좌표가 몇 개뿐인 공간에서는 가까운 점과 먼 점의 거리 차이가 뚜렷합니다.
-            그런데 좌표 수(차원)가 수백·수천 개로 늘면 무작위로 뽑은 점들 사이
-            거리가 서로 거의 같아져, "가장 가까운 이웃"이라는 말 자체가 흐려집니다.
-            embedding vector나 이미지 pixel처럼 좌표가 많은 데이터를 다룰 때
-            거리 계산과 차원 축소를 어떻게 다뤄야 하는지가 이 글의 질문입니다.
+            좌표가 몇 개뿐인 공간에서는 가까운 점과 먼 점의 거리 차이가 뚜렷합니다. 그런데 좌표 수(차원)가 수백·수천 개로 늘면 무작위로 뽑은 점들 사이 거리가 서로 거의 같아져
+            "가장 가까운 이웃"이라는 말 자체가 흐려집니다. embedding vector나 이미지 pixel처럼 좌표가 많은 데이터에서 거리 계산과 차원 축소를 어떻게 다뤄야 하는지가
+            이 글의 질문입니다.
           </p>
           <p>
             <Link to="/ai/math-vectors-inner-products#norm">벡터·norm 정본</Link>의
@@ -32,10 +30,8 @@ export default function MathHighDimensionalGeometryArticle() {
             수식으로 봅니다.
           </p>
           <p>
-            마지막으로 실제 데이터의 intrinsic dimension이 왜 ambient
-            dimension보다 훨씬 작은지, 그래서 latent·bottleneck
-            representation이 왜 정보를 거의 잃지 않고 압축할 수 있는지로
-            마무리합니다.
+            마지막으로 실제 데이터의 intrinsic dimension이 왜 ambient dimension보다 훨씬 작은지, 그래서 latent·bottleneck
+            representation이 왜 정보를 거의 잃지 않고 압축하는지를 보며 마무리합니다.
           </p>
         </div>
         <MathHighDimensionalGeometryViz />
@@ -91,10 +87,8 @@ export default function MathHighDimensionalGeometryArticle() {
             점입니다.
           </p>
           <p>
-            n=1,000,000개 점을 ε=0.1(10% 오차) 안에서 보존하려면, Dasgupta–Gupta의
-            elementary proof가 제시하는 충분 조건으로 k≥17,763이면 됩니다. n을
-            1,000개로 1,000배 줄여도 k≥8,882로 절반 정도만 줄어드는데, 이것이
-            "로그에 비례한다"는 말의 실제 크기입니다.
+            n=1,000,000개 점을 ε=0.1(10% 오차) 안에서 보존하려면 Dasgupta–Gupta의 elementary proof가 제시하는 충분 조건으로 k≥17,763이면
+            됩니다. n을 1,000개로 1,000배 줄여도 k≥8,882로 절반 정도만 줄어드는데, 이것이 "로그에 비례한다"는 말의 실제 크기입니다.
           </p>
         </div>
         <ExplainedFormula
@@ -129,10 +123,8 @@ export default function MathHighDimensionalGeometryArticle() {
           <p className="text-xs font-bold text-primary">원 정리·증명 읽기 · Johnson–Lindenstrauss lemma</p>
           <p className="mt-2 text-sm font-semibold">Dasgupta & Gupta — An Elementary Proof of a Theorem of Johnson and Lindenstrauss</p>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            Johnson과 Lindenstrauss가 1984년 처음 보인 정리를 확률론만으로 다시
-            증명하며 k의 명시적인 하한을 제시합니다. 이 하한은 충분조건이고,
-            실무에서 쓰는 random projection 라이브러리는 더 작은 k로도 실제
-            데이터에서는 잘 동작할 수 있습니다.
+            Johnson과 Lindenstrauss가 1984년 처음 보인 정리를 확률론만으로 다시 증명하며 k의 명시적인 하한을 제시합니다. 이 하한은 충분조건이고 실무에서 쓰는
+            random projection 라이브러리는 더 작은 k로도 실제 데이터에서는 잘 동작하기도 합니다.
           </p>
           <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://doi.org/10.1002/rsa.10073" target="_blank" rel="noreferrer">
             증명과 k 하한 조건 보기
@@ -151,22 +143,17 @@ export default function MathHighDimensionalGeometryArticle() {
             수 있습니다.
           </p>
           <p>
-            ImageNet 이미지는 224×224×3=150,528개 pixel로 저장되지만, 최근접
-            이웃 거리 통계로 추정한 intrinsic dimension은 26에서 43 사이입니다.
-            15만 개가 넘는 ambient 좌표 가운데 데이터가 실제로 쓰는 자유도는
-            수십 개뿐이라는 뜻입니다.
+            ImageNet 이미지는 224×224×3=150,528개 pixel로 저장되지만 최근접 이웃 거리 통계로 추정한 intrinsic dimension은 26에서 43
+            사이입니다. 15만 개가 넘는 ambient 좌표 가운데 데이터가 실제로 쓰는 자유도는 수십 개뿐입니다.
           </p>
         </div>
         <div id="paper-intrinsic-dimension" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
           <p className="text-xs font-bold text-primary">근거 논문 · Intrinsic dimension 추정</p>
           <p className="mt-2 text-sm font-semibold">Pope, Zhu, Abdelkader, Goldblum & Goldstein — The Intrinsic Dimension of Images and Its Impact on Learning (ICLR 2021)</p>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            MLE 기반 dimension 추정 도구를 MNIST·CIFAR·ImageNet 같은 자연 이미지
-            데이터셋에 적용해 ambient dimension보다 훨씬 작은 intrinsic
-            dimension을 측정하고, 이 값이 학습에 필요한 sample 수·일반화와
-            상관관계를 갖는다는 사실을 보였습니다. 이 논문은 특정 GAN 실험
-            조건에서의 dimension 추정치이며, 모든 데이터셋의 intrinsic
-            dimension이 항상 이만큼 작다고 일반화하지 않습니다.
+            MLE 기반 dimension 추정 도구를 MNIST·CIFAR·ImageNet 같은 자연 이미지 데이터셋에 적용해 ambient dimension보다 훨씬 작은
+            intrinsic dimension을 측정했습니다. 이 값이 학습에 필요한 sample 수·일반화와 상관관계를 갖는다는 사실도 함께 보였습니다. 이 논문의 수치는 특정 GAN
+            실험 조건에서 얻은 dimension 추정치입니다. 모든 데이터셋의 intrinsic dimension이 항상 이만큼 작다고 일반화하지는 않습니다.
           </p>
           <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/2104.08894" target="_blank" rel="noreferrer">
             논문과 dimension 추정치 표 보기
@@ -223,17 +210,13 @@ export default function MathHighDimensionalGeometryArticle() {
           preview="Bottleneck 차원이 데이터의 intrinsic dimension보다 작으면 reconstruction이 정확할 수 없고, 그 격차만큼 정보가 사라집니다."
         >
           <p>
-            Intrinsic dimension은 데이터가 실제로 필요로 하는 자유도의
-            하한입니다. Bottleneck을 그보다 좁게 만들면 서로 다른 두 입력이
-            같은 좌표로 압축될 수 있고, decoder는 그 둘을 구분해 복원할 방법이
-            없습니다.
+            Intrinsic dimension은 데이터에 실제로 필요한 자유도의 하한입니다. Bottleneck을 그보다 좁게 만들면 서로 다른 두 입력이 같은 좌표로 압축될 수 있고
+            decoder는 그 둘을 구분해 복원할 방법이 없습니다.
           </p>
           <p>
-            반대로 bottleneck을 필요 이상으로 넓게 두면 모델이 압축 대신
-            input을 거의 그대로 복사하는 identity mapping으로 loss를 낮출
-            위험이 커집니다. 실무에서는 intrinsic dimension을 정확히 알 수
-            없으므로, validation reconstruction error가 bottleneck 크기에 따라
-            어디서 꺾이는지를 보고 크기를 정합니다.
+            반대로 bottleneck을 필요 이상으로 넓게 두면 모델이 압축 대신 input을 거의 그대로 복사하는 identity mapping으로 loss를 낮출 위험이 커집니다.
+            실무에서는 intrinsic dimension을 정확히 알 수 없으므로 validation reconstruction error가 bottleneck 크기에 따라 어디서
+            꺾이는지를 보고 크기를 정합니다.
           </p>
         </ProgressiveDetail>
       </section>
@@ -242,9 +225,8 @@ export default function MathHighDimensionalGeometryArticle() {
         <h2 className="mb-6 text-2xl font-bold">거리 붕괴와 latent 압축이 실제로 쓰이는 곳</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            이 글이 정리한 거리 집중·JL 사영·intrinsic dimension은 각각 다른
-            글에서 구체적인 구현으로 이어집니다. 아래는 정의를 반복하지 않고
-            각 응용이 이 원리를 어디에 쓰는지로 이어갑니다.
+            이 글이 정리한 거리 집중·JL 사영·intrinsic dimension은 각각 다른 글에서 구체적인 구현으로 이어집니다. 아래에서는 정의를 반복하지 않고 각 응용이 이 원리를
+            어디에 쓰는지만 짚습니다.
           </p>
         </div>
         <div className="not-prose mt-7 grid gap-5 md:grid-cols-3">

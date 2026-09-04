@@ -59,17 +59,13 @@ export default function Overview({
           <strong> Gateway</strong>입니다.
         </p>
         <p>
-          여기서는 한 조직이 신뢰 경계를 함께 관리하는 두 endpoint를 예로 들되,
-          A와 B의 대화 상태는 분리해야 한다고 가정합니다. 서로 적대적인 사용자를
-          같은 개인 assistant에 넣어도 안전하다는 예가 아닙니다. 그런 환경은
-          뒤에서 살펴보듯 OS 계정과 Gateway부터 분리해야 합니다.
+          여기서는 한 조직이 신뢰 경계를 함께 관리하는 두 endpoint를 예로 듭니다. 다만 A와 B의 대화 상태는 분리되어 있다고 가정합니다. 서로 적대적인 사용자를 같은 개인
+          assistant에 넣어도 안전하다는 예는 아닙니다. 그런 환경이라면 뒤에서 살펴보듯 OS 계정과 Gateway부터 갈라놓습니다.
         </p>
         <p>
-          글 전체는 같은 두 요청을 따라갑니다. Telegram 사용자 A의 이력과 Slack
-          사용자 B의 이력이 섞이지 않아야 하고, model이 tool을 호출하더라도
-          policy와 sandbox 경계를 넘어서는 안 됩니다. 실행이 끝난 뒤에는 model이
-          “Slack으로 보낼지 Telegram으로 보낼지” 고르는 것이 아니라, Gateway가
-          원래 inbound route를 보존해 각 사용자에게 결과를 돌려보냅니다.
+          글 전체는 같은 두 요청을 따라갑니다. Telegram 사용자 A의 이력과 Slack 사용자 B의 이력은 섞이지 않아야 합니다. model이 tool을 호출하더라도 policy와
+          sandbox 경계를 넘어서는 안 됩니다. 실행이 끝난 뒤 model이 “Slack으로 보낼지 Telegram으로 보낼지” 고르지 않습니다. Gateway가 원래 inbound
+          route를 보존해 각 사용자에게 결과를 돌려보냅니다.
         </p>
       </div>
 
@@ -82,10 +78,8 @@ export default function Overview({
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>먼저 이름이 비슷한 네 층을 분리합니다</h3>
         <p>
-          “OpenClaw가 Claude를 쓴다”라는 한 문장에는 channel, provider, model,
-          runtime이 뒤섞이기 쉽습니다. 아래 정의를 분리해 두면 model 교체가
-          session 격리를 바꾸지 않고, runtime 교체가 답장 route를 가져가지 않는
-          이유를 이해할 수 있습니다.
+          “OpenClaw가 Claude를 쓴다”라는 한 문장에는 channel, provider, model, runtime이 뒤섞이기 쉽습니다. 아래 정의를 분리해 두면 model
+          교체가 session 격리를 바꾸지 않는 이유도, runtime 교체가 답장 route를 가져가지 않는 이유도 보입니다.
         </p>
       </div>
 
@@ -106,12 +100,10 @@ export default function Overview({
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>두 요청이 지나가는 고정 경로</h3>
         <p>
-          두 사용자의 자연어는 달라도 처리 순서는 같습니다. 채널 adapter가 원시
-          event를 정규화하면 Gateway가 인증과 allowlist를 적용하고, deterministic
-          binding으로 agent를 고릅니다. 이어 session key로 서로 다른 상태를
-          불러온 다음 provider·model과 runtime을 해석하고, skills와 tools를 붙인
-          loop를 policy 아래에서 실행합니다. 마지막 결과는 typed result로
-          Gateway에 돌아오며, Gateway가 보존해 둔 reply route로 전달합니다.
+          두 사용자의 자연어는 달라도 처리 순서는 같습니다. 채널 adapter가 원시 event를 정규화하면 Gateway가 인증과 allowlist를 적용합니다. 그 다음
+          deterministic binding으로 agent를 고릅니다. 이어 session key로 서로 다른 상태를 불러오고 provider·model과 runtime을 해석합니다.
+          Skills와 tools를 붙인 loop는 policy 아래에서 실행합니다. 마지막 결과는 typed result로 Gateway에 돌아오고 Gateway가 보존해 둔 reply
+          route로 전달합니다.
         </p>
       </div>
 

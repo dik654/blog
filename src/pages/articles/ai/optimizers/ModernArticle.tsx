@@ -77,8 +77,7 @@ export default function OptimizersArticle() {
           question="Training step에서 gradient가 어떻게 next parameter가 되나요?"
           idea={
             <p>
-              Backward가 gradient를 만들고 optimizer가 update rule U를 적용한
-              뒤, 그 결과를 현재 parameter에서 빼거나 더합니다.
+              Backward가 gradient를 만들고 optimizer가 update rule U를 적용합니다. 그 결과를 현재 parameter에서 빼거나 더합니다.
             </p>
           }
           formula={String.raw`\begin{aligned}g_t&=\nabla_\theta L_t(\theta_t)\\\Delta_t&=U(g_t,s_t)\\\theta_{t+1}&=\theta_t+\Delta_t\end{aligned}`}
@@ -148,8 +147,7 @@ export default function OptimizersArticle() {
             seed가 바뀌면 같은 parameter에서도 다른 g가 나옵니다.
           </p>
           <p>
-            따라서 optimizer 비교에서는 epoch 이름보다 processed
-            sample·optimizer update·effective batch를 함께 기록합니다.
+            그래서 optimizer 비교에서는 epoch 이름보다 processed sample과 optimizer update, effective batch를 함께 기록합니다.
           </p>
         </div>
       </section>
@@ -162,8 +160,7 @@ export default function OptimizersArticle() {
           question="θ=3, g=4, η=.1이면 왜 다음 parameter가 2.6인가요?"
           idea={
             <p>
-              Gradient가 loss 증가 방향이므로 부호를 뒤집고 learning rate를 곱해
-              이동량을 만든 뒤 현재 parameter에 더합니다.
+              Gradient는 loss가 증가하는 방향입니다. 부호를 뒤집고 learning rate를 곱해 이동량을 만든 뒤 현재 parameter에 더합니다.
             </p>
           }
           formula={String.raw`\begin{aligned}\Delta_t&=-\eta g_t\\\theta_{t+1}&=\theta_t+\Delta_t\end{aligned}`}
@@ -225,8 +222,8 @@ export default function OptimizersArticle() {
           question="Micro-batch 4를 8번 처리하면 effective batch 32가 되는 경계는 무엇인가요?"
           idea={
             <p>
-              각 micro-batch gradient를 같은 parameter snapshot에서 계산하고
-              평균한 뒤, parameter update를 정확히 한 번 실행합니다.
+              각 micro-batch gradient를 같은 parameter snapshot에서 계산해 평균합니다. 그런 다음 parameter update를 정확히 한 번
+              실행합니다.
             </p>
           }
           formula={String.raw`\begin{aligned}\bar g_t&=\frac1K\sum_{k=1}^{K}g_{t,k}\\B_{\rm eff}&=K B_{\rm micro}\end{aligned}`}
@@ -319,9 +316,8 @@ export default function OptimizersArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Parameter revision·gradient reduction·micro-batch·accumulation·world
-            size·learning rate·update index·AMP skipped-step을 한 receipt에
-            남깁니다.
+            한 receipt에는 parameter revision과 gradient reduction, micro-batch, accumulation, world size,
+            learning rate, update index, 그리고 AMP skipped-step을 남깁니다.
           </p>
           <p>
             그다음 Momentum·Adam 같은 stateful optimizer를 비교할 때 동일한

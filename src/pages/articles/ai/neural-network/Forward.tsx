@@ -8,10 +8,9 @@ export default function Forward() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Forward pass는 현재 parameter로 prediction을 만드는 과정이다. 뉴런마다
-          반복문을 돌리는 대신 sample을 batch로, unit을 feature axis로 묶어 matrix
-          multiplication을 수행한다. 그래서 layer를 이해할 때는 값 하나보다 어느 축을
-          합산하고 어떤 축을 새로 만드는지부터 확인하는 편이 구현 오류를 빨리 찾는다.
+          현재 parameter로 prediction을 만드는 과정이 forward pass다. 뉴런마다 반복문을 돌리는 대신 sample을 batch로, unit을 feature
+          axis로 묶어 matrix multiplication을 수행한다. 그래서 layer를 이해할 때는 값 하나보다 어느 축을 합산하고 어떤 축을 새로 만드는지부터 확인하는 편이 구현
+          오류를 빨리 찾는다.
         </p>
       </div>
 
@@ -39,21 +38,17 @@ export default function Forward() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Initialization은 layer를 통과하는 분산을 설계한다</h3>
         <p>
-          Weight를 모두 0으로 초기화하면 같은 layer의 unit들이 같은 gradient를 받아
-          대칭이 깨지지 않는다. 반대로 variance가 너무 크거나 작으면 activation과
-          gradient가 depth를 지날 때 폭발하거나 사라질 수 있다. Xavier/Glorot과 He
-          initialization은 fan-in·fan-out과 activation을 고려해 초기 scale을 정하는
-          출발점이며, normalization과 residual path가 있는 architecture에서는 전체
-          signal 경로를 함께 봐야 한다.
+          weight를 모두 0으로 초기화하면 같은 layer의 unit들이 같은 gradient를 받아 대칭이 깨지지 않는다. 반대로 variance가 너무 크거나 작으면
+          activation과 gradient가 depth를 지날 때 폭발하거나 사라질 수 있다. Xavier/Glorot과 He initialization은 fan-in·fan-out과
+          activation을 고려해 초기 scale을 정하는 출발점이며 normalization과 residual path가 있는 architecture에서는 전체 signal 경로를
+          함께 봐야 한다.
         </p>
         <p>
-          숫자로 보면 이유가 더 분명하다. 서로 독립이고 variance가 1인 input 100개를
-          variance 1인 weight와 합치면 preactivation variance는 단순화한 가정 아래 약
-          100까지 커질 수 있지만, weight variance를 fan-in의 역수인 1/100 수준으로
-          맞추면 약 1에서 시작한다. 실제 진단에서는 layer별 preactivation·activation의
-          mean과 variance, gradient norm을 같은 step에서 기록한다. 그다음 같은 seed·data
-          order·optimizer에서 activation에 맞는 초기화, normalization, residual path를
-          하나씩 바꿔 train loss와 validation 결과를 함께 비교해야 원인을 분리할 수 있다.
+          숫자로 보면 이유가 더 분명하다. 서로 독립이고 variance가 1인 input 100개를 variance 1인 weight와 합치면 preactivation variance는
+          단순화한 가정 아래 약 100까지 커질 수 있지만 weight variance를 fan-in의 역수인 1/100 수준으로 맞추면 약 1에서 시작한다. 실제 진단에서는 layer별
+          preactivation·activation의 mean과 variance, gradient norm을 같은 step에서 기록한다. 그다음 같은 seed·data
+          order·optimizer에서 activation에 맞는 초기화, normalization, residual path를 하나씩 바꿔 train loss와 validation
+          결과를 함께 비교해야 원인을 분리할 수 있다.
         </p>
         <p>
           Sigmoid saturation과 Jacobian singular value를 함께 분석한 근거는
@@ -71,12 +66,10 @@ export default function Forward() {
           Fan-in·fan-out scale은 깊이를 지나는 signal의 출발 조건을 맞춥니다
         </h3>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Glorot와 Bengio는 sigmoid가 positive mean과 saturation 때문에 깊은
-          network의 윗 layer에서 학습을 늦출 수 있음을 분석했고, layer Jacobian의
-          singular value가 1 근처에 있도록 fan-in과 fan-out을 함께 반영한 초기
-          scale을 제안했습니다. 이 결론은 당시 activation·architecture·dataset의
-          범위를 가지므로, ReLU·residual·normalization이 있는 모든 model에서 같은
-          분포가 최적이라는 법칙으로 일반화하면 안 됩니다.
+          Glorot와 Bengio는 sigmoid가 positive mean과 saturation 때문에 깊은 network의 윗 layer에서 학습을 늦출 수 있음을 분석했고 layer
+          Jacobian의 singular value가 1 근처에 있도록 fan-in과 fan-out을 함께 반영한 초기 scale을 제안했습니다. 이 결론은 당시
+          activation·architecture·dataset의 범위 안에서 성립하므로 ReLU·residual·normalization이 있는 모든 model에서 같은 분포가
+          최적이라는 법칙으로 일반화하면 안 됩니다.
         </p>
       </div>
     </section>

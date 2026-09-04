@@ -9,10 +9,9 @@ export default function OutputLayer() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Hidden layer는 표현을 만들지만 output layer는 모델이 무엇을 예측한다고 주장하는지
-          정한다. 값의 범위, class가 서로 배타적인지, label마다 독립적인 사건인지, noise를
-          어떤 분포로 가정할지를 먼저 정해야 output dimension과 activation, loss가 함께
-          결정된다. 모든 분류에 softmax를 붙이거나 모든 회귀에 MSE를 쓰는 규칙은 없다.
+          hidden layer는 표현을 만들지만 output layer는 모델이 무엇을 예측한다고 주장하는지 정한다. 값의 범위, class가 서로 배타적인지, label마다 독립적인
+          사건인지, noise를 어떤 분포로 가정할지를 먼저 정해야 output dimension과 activation, loss가 함께 결정된다. 모든 분류에 softmax를 붙이거나
+          모든 회귀에 MSE를 쓰는 규칙은 없다.
         </p>
       </div>
 
@@ -41,9 +40,8 @@ export default function OutputLayer() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>정확도, ranking과 calibration은 같은 평가가 아니다</h3>
         <p>
-          Argmax accuracy가 같아도 confidence가 실제 정답률과 맞지 않을 수 있다. 서비스가
-          threshold, rejection, expected cost를 사용한다면 calibration과 class별 error를
-          별도로 측정해야 한다. Class imbalance는 sampling이나 weighted objective를 검토하되,
+          argmax accuracy가 같아도 confidence가 실제 정답률과 맞지 않을 수 있다. 서비스가 threshold, rejection, expected cost를 사용한다면
+          calibration과 class별 error를 별도로 측정해야 한다. class imbalance는 sampling이나 weighted objective를 검토하되
           evaluation distribution까지 바꾸지 않도록 split과 metric 정의를 고정한다.
         </p>
         <p>

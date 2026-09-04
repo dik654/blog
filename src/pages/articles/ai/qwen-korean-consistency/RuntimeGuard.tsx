@@ -74,16 +74,13 @@ function findHanSpans(fields): ScriptFinding[] { /* ... */ }`}
 
         <h3>2단계: false positive와 false negative를 함께 보정합니다</h3>
         <p>
-          임계값은 감으로 정하지 않고 사람이 label한 calibration set에서
-          confusion matrix를 계산합니다. 번역·인용·고유명사처럼 허용 외국어가
-          많은 slice와 예기치 않은 문자·구간 전환 slice를 함께 넣어야, 탐지율을
-          올리다가 정상 응답을 과도하게 막는 문제를 볼 수 있습니다.
+          임계값은 감으로 정하지 않고 사람이 label한 calibration set에서 confusion matrix를 계산합니다. 번역·인용·고유명사처럼 허용 외국어가 많은 slice와
+          예기치 않은 문자·구간 전환 slice를 함께 넣어야 탐지율을 올리다가 정상 응답을 과도하게 막는 문제가 보입니다.
         </p>
         <p>
-          Threshold를 고른 calibration set과 별도의 holdout에서 같은 confusion
-          matrix와 slice별 비용을 다시 확인합니다. Regex·Unicode normalization,
-          language detector, judge model·prompt·schema version을 함께 기록해야 다음
-          배포에서 threshold 변화와 detector 교체 효과를 구분할 수 있습니다.
+          Threshold를 고른 calibration set과 별도의 holdout에서 같은 confusion matrix와 slice별 비용을 다시 확인합니다. Regex·Unicode
+          normalization, language detector, judge model·prompt·schema version을 함께 기록해야 다음 배포에서 threshold 변화와
+          detector 교체 효과를 구분합니다.
         </p>
       </div>
 
@@ -99,11 +96,9 @@ function findHanSpans(fields): ScriptFinding[] { /* ... */ }`}
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>3단계: 애매한 응답만 judge가 구조화해 판정합니다</h3>
         <p>
-          Judge에는 원래 요청, 출력 field, checker findings, 허용 예외를 함께
-          제공합니다. 자유로운 비평문 대신 versioned schema로 판정하게 하면
-          runtime이 문자열을 다시 추측하지 않고 분기할 수 있습니다. 최소한
-          verdict, 위반 유형, span, confidence, 권장 action을 분리하고, schema를
-          채우지 못한 결과는 pass로 간주하지 않습니다.
+          Judge에는 원래 요청, 출력 field, checker findings, 허용 예외를 함께 제공합니다. 자유로운 비평문 대신 versioned schema로 판정하게 하면
+          runtime이 문자열을 다시 추측하지 않고 분기합니다. 최소한 verdict, 위반 유형, span, confidence, 권장 action을 분리하고 schema를 채우지 못한
+          결과는 pass로 간주하지 않습니다.
         </p>
       </div>
 
@@ -122,11 +117,9 @@ function findHanSpans(fields): ScriptFinding[] { /* ... */ }`}
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          생성 모델과 judge가 같은 provider·model family라면 outage, prompt
-          interpretation, language bias가 서로 상관될 수 있습니다. Judge 호출을
-          하나 더 붙였다고 독립 검증이 되는 것은 아니므로, deterministic 정답
-          checker, 다른 family의 evaluator, sampled human review를 위험도에 맞게
-          섞습니다.
+          생성 모델과 judge가 같은 provider·model family라면 outage, prompt interpretation, language bias가 서로 상관될 수
+          있습니다. Judge 호출을 하나 더 붙였다고 독립 검증이 되는 것은 아니므로 deterministic 정답 checker, 다른 family의 evaluator, sampled
+          human review를 위험도에 맞게 섞습니다.
         </p>
 
         <h3>4단계: retry는 상한 뒤에 degrade나 review로 끝납니다</h3>

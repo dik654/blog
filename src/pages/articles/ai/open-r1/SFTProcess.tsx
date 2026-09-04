@@ -17,17 +17,13 @@ export default function SFTProcess() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          Supervised fine-tuning은 problem과 검증된 solution trace를 한
-          sequence로 만들고, 정답 token의 다음-token likelihood를 높입니다.
-          Distillation에서는 작은 model이 teacher의 답변 형식과 문제 풀이 패턴을
-          빠르게 습득하고, multi-stage recipe에서는 이후 RL이 유효한 reward를
-          받을 수 있는 cold-start policy를 만듭니다.
+          Supervised fine-tuning은 problem과 검증된 solution trace를 한 sequence로 만들고 정답 token의 다음-token likelihood를
+          높입니다. Distillation에서는 작은 model이 teacher의 답변 형식과 문제 풀이 패턴을 빠르게 습득합니다. Multi-stage recipe에서는 이후 RL이
+          유효한 reward를 받을 cold-start policy를 만듭니다.
         </p>
         <p className="leading-8">
-          그렇다고 SFT trace가 faithful한 내부 추론을 증명하지는 않습니다. Final
-          answer가 맞다는 verifier 판정은 중간 설명의 모든 문장이 옳다는 뜻이
-          아니며, student는 teacher가 자주 쓰는 표현·길이·형식 shortcut도 함께
-          학습할 수 있습니다.
+          그렇다고 SFT trace가 faithful한 내부 추론을 증명하지는 않습니다. Final answer가 맞다는 verifier 판정은 중간 설명의 모든 문장이 옳다는 보증이
+          아닙니다. Student는 teacher가 자주 쓰는 표현·길이·형식 shortcut까지 함께 배울 수 있습니다.
         </p>
         <p className="leading-8">
           일반 SFT의 response-only loss·teacher forcing·packing 경계는
@@ -115,27 +111,22 @@ Z&=\underbrace{\sum_{t=1}^{T}m_t}_{\text{loss mask 계산}}\\
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Cold start는 필수가 아니라 reward accessibility 선택이다</h3>
         <p className="leading-8">
-          R1-Zero의 특징은 SFT 없이 base model에 RL을 적용한 데 있지만, 초기
-          policy가 parser가 읽을 수 있는 answer나 code를 거의 만들지 못하면
-          reward가 대부분 0이 됩니다.
+          R1-Zero의 특징은 SFT 없이 base model에 RL을 적용한 데 있습니다. 다만 초기 policy가 parser가 읽을 만한 답이나 code를 거의 만들지 못하면
+          reward는 대부분 0입니다.
         </p>
         <p className="leading-8">
-          이때 작은 cold-start SFT는 “정답을 가르친다”기보다 verifier가 구분할
-          수 있는 output 영역으로 policy를 옮깁니다. 이미 verifiable output을
-          충분히 만드는 base model이라면 SFT 없이 RL의 변화를 관찰할 수도
-          있습니다.
+          이때 작은 cold-start SFT는 “정답을 가르친다”기보다 verifier가 구분할 수 있는 output 영역으로 policy를 옮깁니다. 이미 verifiable
+          output을 충분히 만드는 base model이라면 SFT 없이 RL의 변화를 관찰하기도 합니다.
         </p>
 
         <h3>YAML 숫자를 복사하기 전에 token budget을 다시 계산한다</h3>
         <p className="leading-8">
-          Open-R1 recipe는 특정 checkpoint와 GPU topology의 실행 예시입니다. GPU
-          수를 바꾸면 per-device batch와 gradient accumulation을 조정해 global
-          batch를 유지해야 합니다.
+          Open-R1 recipe는 특정 checkpoint와 GPU topology의 실행 예시입니다. GPU 수를 바꾸면 per-device batch와 gradient
+          accumulation을 조정해 global batch를 유지합니다.
         </p>
         <p className="leading-8">
-          Max sequence length, packing과 truncation을 적용한 뒤 실제 supervised
-          token 수도 기록합니다. Reasoning trace는 길이 분포가 넓어서 sample
-          수가 같아도 update당 token budget은 크게 달라질 수 있습니다.
+          Max sequence length, packing과 truncation을 적용한 뒤 실제 supervised token 수도 기록합니다. Reasoning trace는 길이
+          분포가 넓습니다. Sample 수가 같아도 update당 token budget은 크게 달라집니다.
         </p>
       </div>
 
@@ -152,10 +143,8 @@ Z&=\underbrace{\sum_{t=1}^{T}m_t}_{\text{loss mask 계산}}\\
           accumulation을 조정해 global batch를 유지하라고 안내합니다.
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Tokenizer의 chat template와 EOS가 맞지 않으면 종료와 format 학습도
-          달라집니다. 예시 YAML 숫자보다 실제 serialization을 먼저 확인해야
-          합니다. 이는 현재 저장소 동작의 근거이지 모든 base model에 같은
-          learning rate와 epoch가 최적이라는 주장은 아닙니다.
+          Tokenizer의 chat template와 EOS가 맞지 않으면 종료와 format 학습도 달라집니다. 예시 YAML 숫자보다 실제 serialization을 먼저 봅니다.
+          여기서 확인되는 것은 현재 저장소의 동작이지, 모든 base model에 같은 learning rate와 epoch가 최적이라는 주장이 아닙니다.
         </p>
         <a
           className="mt-3 inline-block text-sm font-medium text-primary hover:underline"

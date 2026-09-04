@@ -23,8 +23,7 @@ export default function MomentumOptimizerArticle() {
             memory를 parameter update direction으로 사용합니다.
           </p>
           <p>
-            일관된 방향은 누적되고 좌우로 번갈아 나오는 방향은 상쇄되지만, 큰
-            β·learning rate에서는 늦게 꺾여 overshoot할 수 있습니다.
+            일관된 방향은 누적되고 좌우로 번갈아 나오는 방향은 상쇄되지만 큰 β·learning rate에서는 늦게 꺾여 overshoot할 수 있습니다.
           </p>
         </div>
         <TermBreakdown

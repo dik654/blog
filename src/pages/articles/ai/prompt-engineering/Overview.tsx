@@ -27,10 +27,8 @@ export default function Overview() {
           <li><strong>무엇을 내고 누가 통과시키나:</strong> output과 completion criteria</li>
         </ul>
         <p>
-          상담원용 고객 문의 요약이라면 원문만 evidence로 사용합니다. Output은
-          issue·urgency·근거 인용으로 나누고, 근거가 없으면 추측 대신 unknown을
-          반환합니다. Schema validator는 field와 type을, 인용 검사는 실제 span
-          존재를 판정합니다.
+          상담원용 고객 문의 요약이라면 원문만 evidence로 사용합니다. Output은 issue·urgency·근거 인용으로 나눕니다. 근거가 없으면 추측 대신 unknown을
+          반환합니다. Schema validator는 field와 type을, 인용 검사는 실제 span 존재를 판정합니다.
         </p>
       </div>
 
@@ -66,10 +64,8 @@ export default function Overview() {
           Instruction following은 SFT·RLHF로 학습된 능력입니다
         </h3>
         <p>
-          Instruction following은 prompt에 적힌 지시를 실제로 따르는 model의
-          능력입니다. Pretraining만 마친 model은 다음 token을 잇는 데는
-          능하지만 “요약해 줘” 같은 요청 형식 자체를 지시로 알아듣지 못할 수
-          있습니다.
+          prompt에 적힌 지시를 model이 실제로 따르는 능력을 instruction following이라 합니다. Pretraining만 마친 model은 다음 token을 잇는
+          데는 능하지만 “요약해 줘” 같은 요청 형식 자체를 지시로 알아듣지 못할 수 있습니다.
         </p>
         <p>
           이 능력은 <Link to="/ai/supervised-fine-tuning#overview">supervised
@@ -89,10 +85,8 @@ export default function Overview() {
           읽힐 수 있습니다.
         </p>
         <p>
-          System policy, task, evidence, output contract를 분리하면 우선순위를
-          설명하기 쉬워지지만, delimiter만으로 security boundary가 생기는 것은
-          아닙니다. Tool permission과 data egress는 runtime이 별도로 강제해야
-          합니다.
+          System policy, task, evidence, output contract를 분리하면 우선순위를 설명하기 쉬워지지만 delimiter만으로 security
+          boundary가 생기는 것은 아닙니다. Tool permission과 data egress는 runtime이 별도로 강제해야 합니다.
         </p>
       </div>
 
@@ -105,18 +99,15 @@ export default function Overview() {
           수 없습니다.
         </p>
         <p>
-          이때는 RAG나 tool로 evidence를 보충해야 하고, 외부 effect가 있다면
-          authorization을 붙이며, 형식 실패에는 constrained decoding과 schema
-          validation을 사용해야 합니다.
+          이때는 RAG나 tool로 evidence를 보충해야 합니다. 외부 effect가 있다면 authorization을 붙이고 형식 실패에는 constrained decoding과
+          schema validation을 사용해야 합니다.
         </p>
       </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          따라서 prompt 변경의 완료 조건은 “한 번 보기 좋은 답이 나왔다”가
-          아닙니다. 대표 case와 경계 case에서 task quality·constraint violation·
-          latency·token cost를 비교하고, 실패 case를 다음 regression suite에
-          추가해야 합니다.
+          prompt 변경의 완료 조건은 “한 번 보기 좋은 답이 나왔다”가 아닙니다. 대표 case와 경계 case에서 task quality·constraint violation·
+          latency·token cost를 비교하고 실패 case를 다음 regression suite에 추가해야 합니다.
         </p>
         <p>
           이 계약을 이해한 뒤에는

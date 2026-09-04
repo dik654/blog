@@ -9,7 +9,9 @@ export default function ProbabilityExperimentsArticle() {
   return <article className="space-y-16">
     <section id="overview" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">00 · 아직 결과를 모르는 절차</p><h2 className="mt-2 text-2xl font-bold">Probability model은 실험·가능한 경우·실제 관측을 먼저 분리한다</h2></header>
-      <p className="text-lg leading-8">확률은 막연한 불확실성의 숫자가 아닙니다. 무엇을 한 번 실행하는지, 어떤 결과들을 구별할지, 각 결과에 얼마의 mass를 배정할지를 먼저 고정해야 계산이 시작됩니다.</p>
+      <p className="text-lg leading-8">
+            확률 계산은 무엇을 한 번 실행하는지, 어떤 결과들을 구별할지, 각 결과에 얼마의 mass를 배정할지를 먼저 고정해야 시작됩니다. 막연한 불확실성의 숫자가 아닙니다.
+          </p>
       <Term name="Experiment" shape="repeatable procedure" meaning="실행 전에는 어느 결과가 나올지 정해지지 않은 반복 가능한 절차입니다." example="동전을 두 번 던지고 순서를 기록합니다." boundary="실험의 기록 규칙이 달라지면 sample space도 달라집니다." />
       <Term name="Sample space" shape="Ω = all possible outcomes" meaning="실험에서 가능한 outcome 전체를 모은 집합입니다." example="Ω={HH,HT,TH,TT}입니다." boundary="앞면 수만 기록하면 {0,1,2}라는 다른 sample space가 됩니다." />
       <Term name="Outcome" shape="ω∈Ω" meaning="실험 한 번에서 실제로 관측된 결과 하나입니다." example="이번 실행에서 HT가 나왔다면 HT가 outcome입니다." boundary="Outcome 하나와 여러 outcome을 묶은 event를 섞지 않습니다." />

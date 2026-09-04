@@ -18,7 +18,7 @@
       "score": 69
     },
     "ai/openclaw-assistant": {
-      "fingerprint": "b01ccfe632f15e76",
+      "fingerprint": "1ee01c5ca7b5ff20",
       "score": 43
     },
     "ai/claw-api-client": {
@@ -105,6 +105,10 @@
       "fingerprint": "99881913c4ec5185",
       "score": 31
     },
+    "ai/multi-agent-implementation": {
+      "fingerprint": "280c282d489e212d",
+      "score": 30
+    },
     "ai/vla-embodiment-gap": {
       "fingerprint": "65a07c43f540866c",
       "score": 30
@@ -143,10 +147,6 @@
     },
     "ai/llm-serving-ops": {
       "fingerprint": "60d66f3902d1eaf4",
-      "score": 28
-    },
-    "ai/multi-agent-implementation": {
-      "fingerprint": "b08af647b4683cf6",
       "score": 28
     },
     "ai/resnet": {
@@ -199,6 +199,10 @@
     },
     "ai/arima": {
       "fingerprint": "eb79a36fb9d1ce00",
+      "score": 26
+    },
+    "ai/mixture-of-experts": {
+      "fingerprint": "7cea2afd647fa3f7",
       "score": 26
     },
     "ai/rag-pipeline": {
@@ -369,10 +373,6 @@
       "fingerprint": "4623bf689dc7fdd9",
       "score": 20
     },
-    "ai/mixture-of-experts": {
-      "fingerprint": "84abd80325629abd",
-      "score": 20
-    },
     "ai/training-pipeline": {
       "fingerprint": "44e6d8c2b0266786",
       "score": 20
@@ -458,7 +458,7 @@
       "score": 18
     },
     "ai/neural-network": {
-      "fingerprint": "1a2c55c4933b9453",
+      "fingerprint": "2d15cd61ccb816b9",
       "score": 18
     },
     "ai/supervised-fine-tuning": {
@@ -710,11 +710,7 @@
       "score": 12
     },
     "ai/math-variance-sampling": {
-      "fingerprint": "e578f0a9907e8aed",
-      "score": 12
-    },
-    "ai/multiview-fusion": {
-      "fingerprint": "5539637e8ff51135",
+      "fingerprint": "60a40e6d6c51f8fd",
       "score": 12
     },
     "ai/on-policy-distillation": {
@@ -817,8 +813,12 @@
       "fingerprint": "5866f691743903da",
       "score": 10
     },
+    "ai/multiview-fusion": {
+      "fingerprint": "011d3580e4e7ca9a",
+      "score": 10
+    },
     "ai/qwen-korean-consistency": {
-      "fingerprint": "9ea6b2b54fbcee2c",
+      "fingerprint": "020acdfce7efa94a",
       "score": 10
     },
     "ai/word2vec-negative-sampling": {
@@ -934,7 +934,7 @@
       "score": 8
     },
     "ai/math-gradient-descent-convergence": {
-      "fingerprint": "c87270093b9d64ce",
+      "fingerprint": "d84f0797e5aa28a7",
       "score": 8
     },
     "ai/orpo": {
@@ -1126,7 +1126,7 @@
       "score": 6
     },
     "ai/mcp-server-operations": {
-      "fingerprint": "febb85f83aceace3",
+      "fingerprint": "63086e49c69fd5b1",
       "score": 6
     },
     "ai/sequence-modeling-tabular": {

@@ -8,11 +8,9 @@ export default function Convergence() {
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          “Gradient descent가 수렴한다”는 문장은 조건 없이 참이 아닙니다.
-          Convexity, L-smoothness, lower bound, 정확한 gradient, learning rate 범위
-          같은 전제가 결론의 범위를 정합니다. Strong convexity까지 있으면 objective가
-          minimizer 주변에서 충분히 가파르게 올라 linear convergence rate를 얻을 수
-          있습니다.
+          “Gradient descent가 수렴한다”는 문장은 조건 없이 참이 아닙니다. Convexity, L-smoothness, lower bound, 정확한 gradient,
+          learning rate 범위 같은 전제가 결론의 범위를 정합니다. Strong convexity까지 있으면 objective가 minimizer 주변에서 충분히 가파르게 올라
+          linear convergence rate를 얻습니다.
         </p>
       </div>
       <ExplainedFormula
@@ -44,15 +42,13 @@ export default function Convergence() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>증명 아이디어와 반례로 전제 확인하기</h3>
         <p>
-          먼저 descent lemma에 y=x−∇f(x)/L을 대입하면 한 step 뒤 objective가
-          gradient norm의 제곱에 비례해 줄어듭니다. Strong convexity는 이 gradient
-          norm을 현재 objective gap의 아래쪽에서 묶어 주므로, 두 inequality를 연결하면
-          매 step gap이 (1−μ/L)배 이하로 수축합니다.
+          먼저 descent lemma에 y=x−∇f(x)/L을 대입하면 한 step 뒤 objective가 gradient norm의 제곱에 비례해 줄어듭니다. Strong
+          convexity는 이 gradient norm을 현재 objective gap의 아래쪽에서 묶어 주므로 두 inequality를 연결하면 매 step gap이 (1−μ/L)배
+          이하로 수축합니다.
         </p>
         <p>
-          같은 f(x)=x²/2도 η=2이면 x가 매번 부호만 바꿔 크기가 줄지 않고,
-          η&gt;2이면 발산합니다. Convex 함수라는 사실만으로 모든 learning rate의
-          수렴을 보장할 수 없다는 가장 작은 반례입니다.
+          같은 f(x)=x²/2도 η=2이면 x가 매번 부호만 바꿔 크기가 줄지 않고 η&gt;2이면 발산합니다. Convex 함수라는 사실만으로 모든 learning rate의 수렴을
+          보장할 수 없다는 가장 작은 반례입니다.
         </p>
       </div>
     </section>

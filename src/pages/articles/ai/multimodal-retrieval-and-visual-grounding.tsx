@@ -43,20 +43,16 @@ export default function MultimodalRetrievalAndVisualGroundingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Multimodal embedding은 서로 다른 modality(image·text)를 같은 차원의 벡터 공간에 투영해
-            그 공간에서 거리가 가까울수록 의미가 가깝다고 두는 표현입니다. 이 공간이 있어야 text
-            query로 image를 찾거나 image로 비슷한 image를 찾는 검색이 벡터 비교만으로 성립합니다.
+            서로 다른 modality(image·text)를 같은 차원의 벡터 공간에 투영해 그 공간에서 거리가 가까울수록 의미가 가깝다고 둡니다. 이렇게 만든 표현이 multimodal
+            embedding입니다. 이 공간이 있어야 text query로 image를 찾거나 image로 비슷한 image를 찾는 검색이 벡터 비교만으로 성립합니다.
           </p>
           <p>
-            Image retrieval은 query(text 또는 image)로 관련 image를 찾는 작업이고, cross-modal
-            retrieval은 query와 대상의 modality가 서로 다른 경우, 즉 text로 image를 찾거나 image로
-            text를 찾는 경우를 가리키는 이름입니다.
+            Image retrieval은 query(text 또는 image)로 관련 image를 찾는 작업입니다. 그중 query와 대상의 modality가 서로 다른 경우를
+            cross-modal retrieval이라고 부릅니다. text로 image를 찾거나 image로 text를 찾는 쪽입니다.
           </p>
           <p>
-            CLIP은 image encoder와 text encoder를 따로 두고, 같은 batch 안 진짜 image-text 쌍의
-            cosine similarity는 키우고 나머지 재배열 쌍은 낮추는 대조학습으로 이 공간을 만듭니다.
-            배치 크기가 클수록(원 논문은 32,768) 한 번에 비교하는 negative pair가 많아져 학습
-            신호가 강해집니다.
+            CLIP은 image encoder와 text encoder를 따로 두고 같은 batch 안 진짜 image-text 쌍의 cosine similarity는 키우고 나머지
+            재배열 쌍은 낮추는 대조학습으로 이 공간을 만듭니다. 배치 크기가 클수록(원 논문은 32,768) 한 번에 비교하는 negative pair가 많아져 학습 신호가 강해집니다.
           </p>
         </div>
         <ExplainedFormula
@@ -111,21 +107,18 @@ export default function MultimodalRetrievalAndVisualGroundingArticle() {
             다릅니다.
           </p>
           <p>
-            ColPali는 문서 페이지 이미지를 vision-language model(PaliGemma)에 넣어 patch 1024개를
-            각각 128차원 벡터로 만드는 multi-vector embedding을 만듭니다. Query token embedding과 각
-            patch embedding의 내적 중 최댓값을 골라 더하는 MaxSim(late interaction) 방식으로 둘을
-            매칭합니다.
+            ColPali는 문서 페이지 이미지를 vision-language model(PaliGemma)에 넣어 patch 1024개를 각각 128차원 벡터로 만드는 multi-
+            vector embedding을 만듭니다. query token embedding과 각 patch embedding의 내적 중 최댓값을 골라 더하는 MaxSim(late
+            interaction) 방식으로 둘을 매칭합니다.
           </p>
           <p>
-            OCR·layout 분석·caption 생성을 순서대로 거치는 기존 파이프라인은 한 페이지에 layout
-            감지 0.81초, OCR 2.67초, captioning 3.71초로 합쳐서 7.22초가 걸립니다. ColPali는 이미지를
-            그대로 embedding에 넣어 페이지당 0.39초, 즉 20분의 1 이하 시간으로 인덱싱을 끝냅니다.
+            기존 파이프라인은 OCR과 layout 분석, caption 생성을 순서대로 거칩니다. 한 페이지에 layout 감지 0.81초, OCR 2.67초, captioning
+            3.71초로 합쳐서 7.22초가 걸립니다. ColPali는 이미지를 그대로 embedding에 넣어 페이지당 0.39초, 즉 20분의 1 이하 시간으로 인덱싱을 끝냅니다.
           </p>
           <p>
-            ViDoRe 벤치마크(nDCG@5)에서 ColPali는 평균 81.3점을 냈고, OCR+캡션+텍스트 검색을 조합한
-            기존 파이프라인은 67.0점, CLIP류 대조학습 VLM(SigLIP)은 51.4점에 그쳤습니다. Layout이
-            복잡하거나 표·그림이 섞인 문서일수록 텍스트만 뽑는 경로가 놓치는 정보를 이미지 자체
-            embedding이 더 많이 보존한다는 뜻입니다.
+            ViDoRe 벤치마크(nDCG@5)에서 ColPali는 평균 81.3점을 냈고, OCR+캡션+텍스트 검색을 조합한 기존 파이프라인은 67.0점, CLIP류 대조학습
+            VLM(SigLIP)은 51.4점에 그쳤습니다. layout이 복잡하거나 표·그림이 섞인 문서일수록 텍스트만 뽑는 경로가 놓치는 정보를 이미지 자체 embedding이 더 많이
+            보존한다는 뜻입니다.
           </p>
         </div>
         <ProgressiveDetail
@@ -133,9 +126,8 @@ export default function MultimodalRetrievalAndVisualGroundingArticle() {
           preview="레이아웃·표·그림이 복잡한 문서는 screenshot retrieval이, 순수 텍스트 위주 문서는 OCR 기반 경로도 충분합니다."
         >
           <p>
-            ColPali 논문은 인덱싱 속도(7.22초→0.39초)와 정확도(67.0→81.3) 모두에서 우위를 보고하지만,
-            비교 대상은 저자들이 구성한 특정 OCR+캡션 파이프라인이라 모든 OCR 구현에 그대로
-            일반화되지는 않습니다.
+            ColPali 논문은 인덱싱 속도(7.22초→0.39초)와 정확도(67.0→81.3) 모두에서 우위를 보고합니다. 다만 비교 대상이 저자들이 구성한 특정 OCR+캡션
+            파이프라인인 이상, 이 우위가 모든 OCR 구현으로 그대로 옮겨 가지는 않습니다.
           </p>
         </ProgressiveDetail>
       </section>
@@ -146,25 +138,21 @@ export default function MultimodalRetrievalAndVisualGroundingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Visual grounding은 text가 가리키는 대상이 image의 어느 위치에 있는지 찾는 작업입니다.
-            그 위치를 표현하는 방식을 visual primitive라고 부르며, bounding box·point·segmentation
-            mask 세 가지가 흔히 쓰입니다.
+            text가 가리키는 대상이 image의 어느 위치에 있는지 찾는 작업을 visual grounding이라고 합니다. 그 위치를 표현하는 방식은 visual primitive라고
+            부르며, bounding box·point·segmentation mask 세 가지가 흔히 쓰입니다.
           </p>
           <p>
-            Bounding box grounding은 좌상단·우하단 좌표 4개로 대상을 감싸는 사각형을 표현합니다.
-            Kosmos-2는 224px 이미지를 32×32 bin으로 나눠 각 좌표를 1,024개 location token 중 하나로
-            양자화하고, "&lt;box&gt;&lt;loc1&gt;&lt;loc2&gt;&lt;/box&gt;" 형태로 text sequence 안에
-            끼워 넣습니다.
+            Bounding box grounding은 좌상단·우하단 좌표 4개로 대상을 감싸는 사각형을 표현합니다. Kosmos-2는 224px 이미지를 32×32 bin으로 나눠 각
+            좌표를 1,024개 location token 중 하나로 양자화하고 "&lt;box&gt;&lt;loc1&gt;&lt;loc2&gt;&lt;/box&gt;" 형태로 text
+            sequence 안에 끼워 넣습니다.
           </p>
           <p>
-            Point grounding은 좌표 2개(x, y)만으로 대상의 한 지점을 가리키고, segmentation
-            grounding은 픽셀마다 대상에 속하는지 아닌지를 표시하는 mask 전체로 대상을 표현합니다.
-            좌표 4개 → 2개 → 픽셀 수만큼으로 표현에 드는 정보량이 늘어나는 순서입니다.
+            Point grounding은 좌표 2개(x, y)만으로 대상의 한 지점을 가리킵니다. Segmentation grounding은 픽셀마다 대상에 속하는지 아닌지를 표시하는
+            mask 전체로 대상을 표현합니다. 좌표 4개 → 2개 → 픽셀 수만큼으로 표현에 드는 정보량이 늘어나는 순서입니다.
           </p>
           <p>
-            Bounding box는 표현이 가장 싸지만 배경을 함께 감싸 물체의 실제 윤곽은 담지 못하고,
-            point는 더 간단하지만 대상의 크기·범위 정보가 아예 없습니다. Segmentation mask는 윤곽을
-            그대로 담는 대신 이미지 픽셀 수에 비례해 표현 비용이 커집니다.
+            Bounding box는 표현이 가장 싸지만 배경을 함께 감싸 물체의 실제 윤곽은 담지 못하고 point는 더 간단하지만 대상의 크기·범위 정보가 아예 없습니다.
+            Segmentation mask는 윤곽을 그대로 담는 대신 이미지 픽셀 수에 비례해 표현 비용이 커집니다.
           </p>
         </div>
         <TermBreakdown
@@ -186,14 +174,12 @@ export default function MultimodalRetrievalAndVisualGroundingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Vision-in-the-loop reasoning은 한 번의 grounding으로 끝내지 않고, grounding 결과(잘라낸
-            영역·짚은 좌표)를 다시 모델에 넣어 다음 판단의 근거로 쓰는 반복 절차입니다. 작은 글자나
-            겹친 물체처럼 한 번에 답하기 어려운 질문에서 이 반복이 정확도를 끌어올립니다.
+            grounding을 한 번으로 끝내지 않는 방법도 있습니다. grounding 결과(잘라낸 영역·짚은 좌표)를 다시 모델에 넣어 다음 판단의 근거로 쓰는 반복 절차가
+            vision-in-the-loop reasoning입니다. 작은 글자나 겹친 물체처럼 한 번에 답하기 어려운 질문에서 이 반복이 정확도를 끌어올립니다.
           </p>
           <p>
-            예를 들어 "표 3행의 값은?"이라는 질문에 전체 image만 보고 답하면 작은 글자를 놓치기
-            쉽지만, 먼저 표 영역을 bounding box로 grounding한 뒤 그 영역만 잘라 확대해 다시 읽으면
-            같은 모델로도 더 정확한 답을 낼 수 있습니다.
+            예를 들어 "표 3행의 값은?"이라는 질문에 전체 image만 보고 답하면 작은 글자를 놓치기 쉽지만 먼저 표 영역을 bounding box로 grounding한 뒤 그 영역만
+            잘라 확대해 다시 읽으면 같은 모델로도 더 정확한 답을 낼 수 있습니다.
           </p>
         </div>
         <AlgorithmBlock

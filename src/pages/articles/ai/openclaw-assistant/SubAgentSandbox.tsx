@@ -31,11 +31,9 @@ export default function SubAgentSandbox({
         tool policy가 먼저이고 sandbox는 실행 위치를 바꿉니다
       </h3>
       <p>
-        sandbox를 “에이전트 전체가 별도 서버로 이동한다”고 생각하면 책임이
-        뒤집힙니다. OpenClaw Gateway는 계속 host에서 channel connection,
-        session, routing을 관리하고, 허용된 tool execution만 configured backend로
-        옮깁니다. sandbox는 optional이며 기본적으로 꺼져 있을 수 있으므로, 켰다고
-        가정하지 말고 실제 resolved configuration을 확인해야 합니다.
+        sandbox를 “에이전트 전체가 별도 서버로 이동한다”고 생각하면 책임이 뒤집힙니다. OpenClaw Gateway는 계속 host에서 channel connection,
+        session, routing을 관리하고 허용된 tool execution만 configured backend로 옮깁니다. sandbox는 optional이고 기본적으로 꺼져 있기도
+        합니다. 켰다고 가정하지 말고 실제 resolved configuration을 확인합니다.
       </p>
 
       <div className="not-prose my-6 grid min-w-0 gap-3 lg:grid-cols-3">

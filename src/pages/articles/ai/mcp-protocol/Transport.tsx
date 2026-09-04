@@ -19,10 +19,8 @@ export default function Transport() {
           Origin 검증과 tenant isolation을 함께 운영할 수 있습니다.
         </p>
         <p>
-          여기서 SSE라는 단어만 보고 과거의 HTTP+SSE transport와 혼동하면 안
-          됩니다. 현행 Streamable HTTP는 POST-only request와 request-scoped SSE를
-          사용하며, 별도 GET session과 resumable SSE를 전제로 한 legacy HTTP+SSE는
-          deprecated입니다.
+          여기서 SSE라는 단어만 보고 과거의 HTTP+SSE transport와 혼동하면 안 됩니다. 현행 Streamable HTTP는 POST-only request와 request-
+          scoped SSE를 사용합니다. 별도 GET session과 resumable SSE를 전제로 한 legacy HTTP+SSE는 deprecated입니다.
         </p>
       </div>
 

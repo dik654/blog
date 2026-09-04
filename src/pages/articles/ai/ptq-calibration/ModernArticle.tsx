@@ -198,8 +198,7 @@ export default function PtqCalibrationArticle() {
           question="Calibration range가 실제 입력을 덮는지 어떻게 측정하나요?"
           idea={
             <p>
-              Validation input에서 range 밖 element를 indicator로 표시하고
-              layer·slice별 비율을 계산한 뒤 최대값을 남깁니다.
+              Validation input에서 range 밖 element를 indicator로 표시하고 layer와 slice별 비율을 계산한 뒤 최대값을 남깁니다.
             </p>
           }
           formula={String.raw`I_i^{\ell,c}=\mathbf1[x_i\notin R_\ell],\quad \rho_{\ell,c}=N_{\ell,c}^{-1}\sum_i I_i^{\ell,c},\quad \rho_{\rm worst}=\max_{\ell,c}\rho_{\ell,c}`}

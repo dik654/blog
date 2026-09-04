@@ -10,7 +10,10 @@ export default function VarianceSamplingArticle() {
   return <article className="space-y-16">
     <section id="overview" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">00 · Center만으로 부족한 이유</p><h2 className="mt-2 text-2xl font-bold">같은 expectation을 가진 distribution도 흔들림과 estimate reliability는 다를 수 있다</h2></header>
-      <p className="text-lg leading-8">Expectation은 중심을 말하지만 값들이 그 주위에 얼마나 퍼졌는지는 말하지 않습니다. Variance가 population spread를 재고, sample mean과 sample variance가 관측 일부로 그 성질을 추정합니다.</p>
+      <p className="text-lg leading-8">
+            Expectation은 중심을 말하지만 값들이 그 주위에 얼마나 퍼졌는지는 말하지 않습니다. Variance가 population spread를 재고 sample mean과
+            sample variance가 관측 일부로 그 성질을 추정합니다.
+          </p>
       <SamplingNoiseViz />
     </section>
 
@@ -56,7 +59,11 @@ g_B&=\underbrace{\frac1B}_{\text{batch weight}}\\
 
     <section id="boundaries" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">05 · 1/B가 사라지는 경우</p><h2 className="mt-2 text-2xl font-bold">Correlation·biased sampling·heavy tail은 서로 다른 방식으로 평균의 보장을 깨뜨린다</h2></header>
-      <p className="leading-7">같은 random index J를 batch의 모든 자리에 복제하면 g_B=∇ℓ_J라서 unbiased일 수는 있지만 variance가 줄지 않습니다. Sampling probability가 objective weight와 다르면 center 자체가 바뀌고, finite moment가 없는 heavy tail에서는 variance 기반 bound를 쓸 수 없습니다.</p>
+      <p className="leading-7">
+            같은 random index J를 batch의 모든 자리에 복제하면 g_B=∇ℓ_J라서 unbiased일 수는 있지만 variance가 줄지 않습니다. Sampling
+            probability가 objective weight와 다르면 center 자체가 바뀌고 finite moment가 없는 heavy tail에서는 variance 기반
+            bound를 쓸 수 없습니다.
+          </p>
       <p>이 estimate를 실제 parameter update로 바꾸는 과정은 <a className="font-semibold text-primary underline" href="/ai/math-gradient-descent-convergence">gradient descent와 convergence</a>에서, optimizer state와 batch trade-off는 <a className="font-semibold text-primary underline" href="/ai/optimizers">optimizers</a>에서 이어집니다.</p>
       <div id="paper-variance-sampling"><CitationBlock source="MIT 6.041SC · Variance and laws of large numbers" citeKey={1} href={`${MIT}#variance-and-lln`}><Evidence problem="Population spread와 finite sample average의 reliability를 구분하는 문제" contribution="Variance·sample mean·Chebyshev bound·large-number behavior를 연결" assumptions="Course가 선언한 independence·moment 조건" scope="Discrete variance·sampling average·LLN" notClaim="모든 dependent or heavy-tail data에서 1/B가 성립한다는 주장이 아님" /></CitationBlock></div>
       <div id="paper-robbins-monro"><CitationBlock source="Robbins & Monro · A Stochastic Approximation Method" citeKey={2} href={ROBBINS_MONRO}><Evidence problem="Noise가 섞인 관측으로 expectation-defined target에 접근하는 문제" contribution="Random observation을 사용한 recursive stochastic approximation의 수렴 틀 제시" assumptions="원 논문의 conditional expectation·variance·step-size·monotonicity 조건" scope="1951 one-dimensional stochastic root finding" notClaim="Arbitrary nonconvex mini-batch training의 global optimum 보장이 아님" /></CitationBlock></div>

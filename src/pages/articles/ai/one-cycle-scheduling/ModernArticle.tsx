@@ -127,8 +127,7 @@ export default function OneCycleSchedulingArticle() {
           question="T=1000, p=.3인 OneCycle에서 두 phase의 길이와 local progress는 무엇인가요?"
           idea={
             <p>
-              먼저 rise 길이를 floor(pT)로 고정하고, 현재 update를 해당 phase
-              시작점과 길이로 정규화합니다.
+              먼저 rise 길이를 floor(pT)로 고정하고 현재 update를 해당 phase 시작점과 길이로 정규화합니다.
             </p>
           }
           formula={String.raw`\begin{aligned}T_\uparrow&=\lfloor pT\rfloor\\r_\uparrow&=t/T_\uparrow\\r_\downarrow&=(t-T_\uparrow)/(T-T_\uparrow)\end{aligned}`}
@@ -193,11 +192,9 @@ export default function OneCycleSchedulingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Nonfinite loss·gradient overflow·loss ratio·update norm 상한을
-            정하고 마지막 healthy checkpoint로 rollback합니다. Range-test model
-            state는 실제 run에 이어 쓰지 않으며, max
-            LR·batch·optimizer·regularization 중 하나가 바뀌면 진단도 다시
-            수행합니다.
+            nonfinite loss와 gradient overflow, loss ratio, update norm의 상한을 정하고 마지막 healthy checkpoint로
+            rollback합니다. Range-test model state는 실제 run에 이어 쓰지 않으며 max LR·batch·optimizer·regularization 중 하나가
+            바뀌면 진단도 다시 수행합니다.
           </p>
         </div>
         <div id="paper-super-convergence" className="scroll-mt-24">

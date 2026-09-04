@@ -150,8 +150,7 @@ export default function MetricSelectionProtocolArticle() {
           question="Primary score가 좋지만 latency 또는 worst-slice가 기준을 넘은 후보를 어떻게 제외하나요?"
           idea={
             <p>
-              각 hard constraint를 통과한 후보들의 교집합을 feasible set으로
-              만들고, 그 집합 안에서만 primary metric을 최적화합니다.
+              각 hard constraint를 통과한 후보들의 교집합을 feasible set으로 만들고 그 집합 안에서만 primary metric을 최적화합니다.
             </p>
           }
           formula={String.raw`\mathcal F=\{h:G_j(h)\le b_j\ \forall j\},\quad h^*=\arg\min_{h\in\mathcal F}M_{primary}(h)`}

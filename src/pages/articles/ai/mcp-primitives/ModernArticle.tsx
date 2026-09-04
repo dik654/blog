@@ -10,7 +10,9 @@ export default function ModernArticle() {
     <article className="space-y-16">
       <section id="overview" className="scroll-mt-20 space-y-7">
         <header className="space-y-3"><p className="text-sm font-semibold text-primary">기능 하나의 control 방식부터 봅니다</p><h2 className="text-3xl font-bold tracking-tight">Tool·Resource·Prompt는 이름이 아니라 누가 시작하고 무엇이 남는지로 구분합니다</h2></header>
-        <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8"><Link to="/ai/mcp-protocol">MCP core</Link>가 통신의 바깥 틀이라면 <strong>primitive</strong>는 그 안에서 교환하는 기능의 종류입니다. 모든 항목을 “model이 부르는 함수”로 뭉치면 승인·cache·side effect의 경계가 사라집니다.</p><p className="leading-8">먼저 Tool 하나를 정의하고, 그다음 Resource와 Prompt를 대조합니다. 마지막에 schema·result·cache를 붙여 완전한 호출 contract로 조합합니다.</p></div>
+        <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8"><Link to="/ai/mcp-protocol">MCP core</Link>가 통신의 바깥 틀이라면 <strong>primitive</strong>는 그 안에서 교환하는 기능의 종류입니다. 모든 항목을 “model이 부르는 함수”로 뭉치면 승인·cache·side effect의 경계가 사라집니다.</p><p className="leading-8">
+            먼저 Tool 하나를 정의하고 그다음 Resource와 Prompt를 대조합니다. 마지막에 schema·result·cache를 붙여 완전한 호출 contract로 조합합니다.
+          </p></div>
         <McpLearningFlowViz mode="primitives" />
         <ContentBoundary article="mcp-primitives" />
       </section>

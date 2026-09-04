@@ -46,10 +46,8 @@ export default function Convergence() {
           Cauchy–Schwarz inequality가 그 수학적 연결고리입니다.
         </p>
         <p>
-          R이 같은데 γ가 크면 두 class 사이에 넓은 빈 통로가 있다는 뜻이고,
-          update가 찾아야 할 방향도 비교적 분명합니다. 반대로 γ가 작으면 가장
-          가까운 점이 경계에 바짝 붙어 있으므로 mistake 횟수의 이론적 상한이
-          빠르게 커집니다.
+          R이 같은데 γ가 크면 두 class 사이에 넓은 빈 통로가 있다는 뜻입니다. update가 찾아야 할 방향도 비교적 분명합니다. 반대로 γ가 작으면 가장 가까운 점이 경계에 바짝
+          붙어 있으므로 mistake 횟수의 이론적 상한이 빠르게 커집니다.
         </p>
       </div>
 
@@ -126,18 +124,13 @@ export default function Convergence() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>왜 R/γ의 제곱이 나오는가</h3>
         <p>
-          오분류가 한 번 일어날 때마다 새 weight는 정답 separator 방향으로 적어도
-          γ만큼 전진합니다. 따라서 M번 틀린 뒤 그 방향으로 전진한 양은 최소
-          Mγ입니다. 한편 매 update에 더하는 input의 크기는 R 이하이므로, weight의
-          전체 길이는 아무리 커져도 대략 R√M보다 빠르게 자랄 수 없습니다. 같은
-          weight에 대한 두 설명을 결합하면 Mγ ≤ R√M이고, 양변을 정리해
-          M ≤ (R/γ)²를 얻습니다.
+          오분류가 한 번 일어날 때마다 새 weight는 정답 separator 방향으로 적어도 γ만큼 전진합니다. 따라서 M번 틀린 뒤 그 방향으로 전진한 양은 최소 Mγ입니다. 한편 매
+          update에 더하는 input의 크기는 R 이하이므로 weight의 전체 길이는 아무리 커져도 대략 R√M보다 빠르게 자랄 수 없습니다. 같은 weight에 대한 두 설명을
+          결합하면 Mγ ≤ R√M이고, 양변을 정리해 M ≤ (R/γ)²를 얻습니다.
         </p>
         <p>
-          이 증명은 퍼셉트론이 매 step마다 loss를 매끄럽게 줄인다고 말하지
-          않습니다. Training example의 순서에 따라 중간 경계는 흔들릴 수 있지만,
-          positive margin이라는 강한 조건 아래에서는 오분류가 무한히 반복될 수
-          없다고 말합니다.
+          이 증명은 퍼셉트론이 매 step마다 loss를 매끄럽게 줄인다고 말하지 않습니다. Training example의 순서에 따라 중간 경계는 흔들릴 수 있습니다. 증명이 말하는
+          것은 positive margin이라는 강한 조건 아래에서 오분류가 무한히 반복될 수 없다는 사실입니다.
         </p>
 
         <h3>XOR과 label noise에서는 왜 적용할 수 없는가</h3>

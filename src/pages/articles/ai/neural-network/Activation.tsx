@@ -9,11 +9,9 @@ export default function Activation() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Affine layer를 여러 개 연결해도 중간에 nonlinear activation이 없다면 전체
-          계산은 다시 하나의 affine transformation으로 정리된다. Parameter는 늘어나지만
-          decision boundary의 종류는 늘어나지 않는 셈이다. ReLU처럼 구간별로 기울기가
-          달라지는 함수를 사이에 두면 input에 따라 활성화되는 affine region이 달라져,
-          network가 여러 local boundary를 조합할 수 있다.
+          Affine layer를 여러 개 연결해도 중간에 nonlinear activation이 없다면 전체 계산은 다시 하나의 affine transformation으로 정리된다.
+          parameter는 늘어나지만 decision boundary의 종류는 늘어나지 않는 셈이다. ReLU처럼 구간별로 기울기가 달라지는 함수를 사이에 두면 input에 따라
+          활성화되는 affine region이 달라져 network가 여러 local boundary를 조합할 수 있다.
         </p>
       </div>
 
@@ -41,11 +39,9 @@ export default function Activation() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>표현력만 보고 activation을 고르지 않는다</h3>
         <p>
-          Sigmoid와 tanh는 saturation 구간에서 derivative가 작아질 수 있고, ReLU는 양수
-          구간의 gradient를 유지하지만 음수 구간이 계속 선택되면 dead unit이 생길 수 있다.
-          GELU·SiLU는 부드러운 gate처럼 동작하고, SwiGLU는 activation 하나가 아니라 두
-          projection을 곱하는 FFN 구조다. 이 차이는 initialization과 signal scale,
-          parameter·FLOP 예산까지 바꾸므로 이름만 나열해 고를 수 없다.
+          sigmoid와 tanh는 saturation 구간에서 derivative가 작아질 수 있고 ReLU는 양수 구간의 gradient를 유지하지만 음수 구간이 계속 선택되면 dead
+          unit이 생길 수 있다. GELU·SiLU는 부드러운 gate처럼 동작하고 SwiGLU는 activation 하나가 아니라 두 projection을 곱하는 FFN 구조다. 이
+          차이는 initialization과 signal scale, parameter·FLOP 예산까지 바꾸므로 이름만 나열해 고를 수 없다.
         </p>
         <p>
           각 함수의 수식 의도와 gradient, ReLU 이후 계보는

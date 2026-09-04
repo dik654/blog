@@ -106,9 +106,8 @@ export default function QwenKoreanConsistencyArticle() {
         <h2 className="mb-4 text-2xl font-bold">Reasoning policy update는 별도 학습 실험입니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            한국어 reasoning SFT와 oracle-guided Dr.GRPO는 weight를 직접 업데이트하고,
-            checker·judge·rollout distribution까지 학습 결과에 영향을 줍니다. 화면의
-            문자 혼용을 줄이는 운영 가드와 같은 개입으로 취급하지 않습니다.
+            한국어 reasoning SFT와 oracle-guided Dr.GRPO는 weight를 직접 업데이트하고 checker·judge·rollout distribution까지
+            학습 결과에 영향을 줍니다. 화면의 문자 혼용을 줄이는 운영 가드와 같은 개입으로 취급하지 않습니다.
           </p>
           <p>
             <Link to="/ai/qwen-korean-reasoning-posttraining">

@@ -7,10 +7,8 @@ export default function LogicGates() {
       <h2 className="text-2xl font-bold mb-6">논리 회로 구현</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          두 입력을 받는 퍼셉트론 하나만으로도 AND, OR, NAND 같은 기본 논리
-          게이트를 표현할 수 있습니다. 입력은 같아도 weight와 bias를 바꾸면
-          어느 조합에서 출력이 1이 되는지가 달라지므로, 퍼셉트론이 결국 하나의
-          선형 경계를 학습한다는 사실을 작은 truth table로 확인할 수 있습니다.
+          두 입력을 받는 퍼셉트론 하나만으로도 AND, OR, NAND 같은 기본 논리 게이트를 표현할 수 있습니다. 입력은 같아도 weight와 bias를 바꾸면 어느 조합에서 출력이
+          1이 되는지가 달라집니다. 퍼셉트론이 결국 하나의 선형 경계를 학습한다는 사실은 작은 truth table로 확인할 수 있습니다.
         </p>
         <h3 className="text-xl font-semibold mt-6 mb-3">게이트별 파라미터</h3>
         <p>

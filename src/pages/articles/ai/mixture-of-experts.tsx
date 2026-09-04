@@ -272,7 +272,9 @@ export default function MixtureOfExpertsArticle() {
             여기서 “expert”라는 이름이 특정 분야를 사람처럼 이해한다는 뜻은 아닙니다. 학습 과정에서 서로 다른 token 분포를 더 자주 처리하게 된 parameter branch이며, specialization은 관측과 분석의 대상이지 이름만으로 보장되는 성질이 아닙니다. 또한 routing은 보통 request 단위가 아니라 layer에 들어온 <strong>token state</strong> 단위로 다시 일어납니다.
           </p>
           <p className="leading-8">
-            이 글은 MoE를 parameter 절약 기법으로만 소개하지 않습니다. Dense FFN과의 차이에서 출발해 router 계산, Top-k weighted mixture, load balancing, capacity와 overflow, expert parallel communication을 차례로 계산합니다. 마지막에는 total parameter와 active parameter를 왜 memory·FLOPs·latency의 동의어로 쓰면 안 되는지 구분합니다.
+            이 글은 MoE를 parameter 절약 기법으로만 소개하지 않습니다. 출발점은 Dense FFN과의 차이이고, 거기서 router 계산, Top-k weighted
+            mixture, load balancing, capacity와 overflow, expert parallel communication을 차례로 계산합니다. total
+            parameter와 active parameter를 memory·FLOPs·latency의 동의어로 쓸 수 없는 이유는 그 계산을 마친 뒤에 구분합니다.
           </p>
         </div>
 
@@ -320,7 +322,9 @@ export default function MixtureOfExpertsArticle() {
             Router는 token state <code>x</code>에 작은 linear projection을 적용해 expert 수만큼의 logit을 만듭니다. Softmax를 적용하면 expert 선호를 합이 1인 값으로 읽을 수 있지만, 실제 계산을 sparse하게 만드는 단계는 <strong>Top-k selection</strong>입니다. Softmax만 하고 모든 expert를 계산하면 weighted mixture일 뿐 sparse conditional computation은 아닙니다.
           </p>
           <p className="leading-8">
-            Top-k index 선택은 경계에서 불연속이므로 보통 선택된 경로를 통해 gradient가 흐르고, 별도의 auxiliary loss나 bias update가 router의 장기적인 균형을 돕습니다. “Top-1이 언제나 더 빠르다”거나 “Top-2가 언제나 더 정확하다”고 단정할 수는 없습니다. Expert GEMM 크기, all-to-all 구현, token batch, capacity policy가 달라지면 같은 k도 system cost가 달라집니다.
+            Top-k index 선택은 경계에서 불연속이라 gradient는 보통 선택된 경로를 통해 흐릅니다. 여기에 별도의 auxiliary loss나 bias update가 붙어
+            router의 장기적인 균형을 돕습니다. 그렇다고 “Top-1이 언제나 더 빠르다”거나 “Top-2가 언제나 더 정확하다”고 단정할 수는 없습니다. 같은 k라도 expert
+            GEMM 크기, all-to-all 구현, token batch, capacity policy가 달라지면 system cost가 달라지기 때문입니다.
           </p>
           <p className="leading-8">
             여기서 말하는 expert는 router가 골라야만 계산되는 <strong>routed expert</strong>입니다. 일부 MoE는 이와 별도로 router 선택과 무관하게 모든 token이 항상 통과하는 <strong>shared expert</strong>를 둡니다. Shared expert의 출력은 top-k 합이 아니라 그대로 더해지며, routed expert를 더 잘게 나누고 shared expert를 분리하는 설계는{" "}
@@ -369,11 +373,14 @@ export default function MixtureOfExpertsArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <h3>선택된 token은 expert별로 모았다가 다시 원래 순서로 돌아온다</h3>
           <p className="leading-8">
-            실제 accelerator에서는 token 하나마다 작은 FFN을 따로 호출하지 않습니다. 먼저 Top-k assignment를 expert별로 정렬해 연속 buffer를 만들고(dispatch), expert FFN을 큰 batched GEMM으로 실행한 뒤, 결과를 원 token position으로 되돌려 합칩니다(gather 또는 combine). Expert가 여러 장치에 나뉘면 이 재배치가 all-to-all network communication이 됩니다.
+            실제 accelerator에서는 token 하나마다 작은 FFN을 따로 호출하지 않습니다. Top-k assignment를 expert별로 정렬해 연속 buffer를
+            만들고(dispatch) expert FFN을 큰 batched GEMM으로 실행한 뒤 결과를 원 token position으로 되돌려 합치는(gather 또는 combine)
+            방식입니다. 여러 장치에 expert가 나뉘면 이 재배치가 all-to-all network communication이 됩니다.
           </p>
           <h3>Token routing과 sequence routing은 다른 문제다</h3>
           <p className="leading-8">
-            한 문장의 앞 token과 뒤 token은 같은 layer에서도 서로 다른 expert를 선택할 수 있고, 같은 token도 layer마다 다른 expert로 이동할 수 있습니다. 따라서 “코드 질문이 코드 expert 하나로 간다”는 설명은 직관으로는 쓸 수 있어도 실제 routing contract로 간주하면 안 됩니다.
+            한 문장의 앞 token과 뒤 token은 같은 layer에서도 서로 다른 expert를 선택할 수 있습니다. 같은 token이 layer마다 다른 expert로 이동하는 것도
+            가능합니다. 이 때문에 “코드 질문이 코드 expert 하나로 간다”는 설명은 직관으로는 쓸 수 있어도 실제 routing contract가 되지는 못합니다.
           </p>
         </div>
       </section>
@@ -385,7 +392,9 @@ export default function MixtureOfExpertsArticle() {
             Router가 특정 expert만 계속 선택하면 그 expert의 token buffer와 장치가 병목이 되고, 거의 선택되지 않는 expert는 학습 신호를 받지 못합니다. 이를 <strong>expert load imbalance</strong>라고 합니다. Batch에 token이 <code>m</code>개이고 token마다 k개 expert를 선택하면 assignment는 총 <code>mk</code>개이며, n개 expert의 균등 목표는 expert당 <code>mk/n</code>개입니다.
           </p>
           <p className="leading-8">
-            그러나 균등 목표는 모든 expert가 같은 의미를 배워야 한다는 뜻이 아닙니다. Specialization 때문에 batch별 분포는 흔들릴 수 있습니다. 운영상 필요한 것은 slowest expert가 step 전체를 지연시키거나 buffer capacity를 넘지 않도록 분포를 관리하면서, router가 language-model objective에 유용한 선택을 유지하는 것입니다.
+            다만 균등 목표가 모든 expert에게 같은 의미를 배우라고 요구하지는 않습니다. batch별 분포는 specialization 때문에 흔들릴 수 있습니다. 운영에서 필요한
+            일은 slowest expert가 step 전체를 지연시키거나 buffer capacity를 넘지 않도록 분포를 관리하되 router는 language-model
+            objective에 유용한 선택을 계속 하게 두는 것입니다.
           </p>
         </div>
 
@@ -488,10 +497,16 @@ L_{\rm aux}&=\underbrace{\alpha N\sum_{i=1}^{N}f_iP_i}_{\text{두 값이 모두 
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <h3>Auxiliary loss, routing bias, capacity는 서로 다른 개입 지점이다</h3>
           <p className="leading-8">
-            Auxiliary load-balancing loss는 language-model loss에 균형 항을 더해 router gradient를 바꿉니다. 반면 auxiliary-loss-free 방식의 routing bias는 선택 score에 별도 bias를 더하고 실제 mixture weight에서는 제외하는 식으로 분배만 조정할 수 있습니다. Capacity factor는 expert buffer에 받을 수 있는 token 수를 미리 정하며, 넘친 assignment를 drop하거나 다른 expert로 보내는 overflow policy가 뒤따릅니다.
+            균형 항을 language-model loss에 더해 router gradient를 바꾸는 쪽이 auxiliary load-balancing loss입니다. 반면
+            auxiliary-loss-free 방식의 routing bias는 선택 score에 별도 bias를 더하고 실제 mixture weight에서는 제외하는 식으로 분배만 조정할
+            수 있습니다. 여기에 capacity factor가 expert buffer에 받을 수 있는 token 수를 미리 정합니다. 넘친 assignment를 drop하거나 다른
+            expert로 보내는 overflow policy가 그 뒤를 잇습니다.
           </p>
           <p className="leading-8">
-            균형 항을 지나치게 키우면 token 내용보다 균등 분배를 우선해 specialization을 해칠 수 있고, capacity를 너무 작게 잡으면 중요한 token 경로가 drop됩니다. 반대로 capacity를 넉넉히 잡으면 memory와 padding waste가 늘어납니다. 그러므로 router entropy 하나만 보지 말고 expert별 token count, dropped-token rate, per-expert GEMM size, all-to-all time과 task quality를 함께 측정해야 합니다.
+            균형 항을 지나치게 키우면 token 내용보다 균등 분배를 우선해 specialization을 해칠 수 있습니다. 반대쪽으로 capacity를 너무 작게 잡으면 중요한
+            token 경로가 drop되고 넉넉히 잡으면 memory와 padding waste가 늘어납니다. 이런 움직임은 router entropy 하나만 봐서는 드러나지 않습니다.
+            실무에서는 expert별 token count, dropped-token rate, per-expert GEMM size, all-to-all time을 task
+            quality와 함께 측정합니다.
           </p>
           <p className="leading-8">
             Load balancing loss의 정확한 f_i·P_i 식, bias만으로 균형을 잡는 auxiliary-loss-free
@@ -510,10 +525,16 @@ L_{\rm aux}&=\underbrace{\alpha N\sum_{i=1}^{N}f_iP_i}_{\text{두 값이 모두 
         <h2 className="mb-6 text-2xl font-bold">Total parameter, active parameter, FLOPs, 통신량은 네 개의 다른 장부다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">
-            Model card의 “전체 600B, 활성 40B” 같은 표기는 capacity와 token별 경로를 빠르게 비교하는 데 유용하지만, GPU memory와 latency를 직접 알려 주지는 않습니다. 모든 expert weight를 동시에 올려야 한다면 weight memory는 total parameter에 가깝고, token별 expert FFN multiply-add는 active expert에 가깝습니다. 여기에 shared attention·embedding·router·normalization과 communication이 더해집니다.
+            Model card의 “전체 600B, 활성 40B” 같은 표기는 capacity와 token별 경로를 빠르게 비교하는 데 유용합니다. 다만 GPU memory와
+            latency를 직접 알려 주지는 않습니다. 모든 expert weight를 동시에 올려야 한다면 weight memory는 total parameter에 가깝고 token별
+            expert FFN multiply-add는 active expert에 가깝습니다. 여기에 shared
+            attention·embedding·router·normalization과 communication이 더해집니다.
           </p>
           <p className="leading-8">
-            특히 expert parallelism에서는 token state를 expert가 있는 장치로 보내고 다시 가져옵니다. Dense model에서 주로 tensor-parallel collective를 고민했다면 MoE에서는 dispatch·all-to-all·combine의 message size와 장치별 imbalance가 새로운 병목이 됩니다. Active parameter가 작아도 작은 batch에서 expert GEMM이 조각나거나 network overlap이 실패하면 latency는 낮아지지 않을 수 있습니다.
+            특히 expert parallelism에서는 token state를 expert가 있는 장치로 보내고 다시 가져옵니다. Dense model에서 주로 tensor-
+            parallel collective를 고민했다면 MoE에서 새로 등장하는 병목은 dispatch·all-to-all·combine의 message size와 장치별
+            imbalance입니다. 그래서 active parameter가 작아도 작은 batch에서 expert GEMM이 조각나거나 network overlap이 실패하면
+            latency는 낮아지지 않을 수 있습니다.
           </p>
         </div>
 
@@ -555,8 +576,7 @@ L_{\rm aux}&=\underbrace{\alpha N\sum_{i=1}^{N}f_iP_i}_{\text{두 값이 모두 
             있어 두 축이 갈라집니다.
           </p>
           <p className="leading-8">
-            Shared 10B, expert당 2B, n=16이면 dense 대비 parameter는 8배지만, k=2를 유지하면
-            token별 expert FLOP은 2배에 그칩니다.
+            Shared 10B, expert당 2B, n=16이면 dense 대비 parameter는 8배지만 k=2를 유지하는 한 token별 expert FLOP은 2배에 그칩니다.
           </p>
         </div>
 
@@ -601,7 +621,10 @@ L_{\rm aux}&=\underbrace{\alpha N\sum_{i=1}^{N}f_iP_i}_{\text{두 값이 모두 
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <h3>Serving에서는 average보다 tail과 locality를 본다</h3>
           <p className="leading-8">
-            Batch가 작으면 선택된 expert마다 token이 몇 개 없어 GEMM 효율이 떨어지고, batch가 커지면 all-to-all payload와 hot expert queue가 커질 수 있습니다. Expert placement, replica, node-limited routing, communication–compute overlap은 이 trade-off를 다루는 system policy입니다. 따라서 model architecture 비교에서는 active parameter뿐 아니라 실제 batch·parallel layout에서 expert load histogram과 collective time을 함께 공개해야 합니다.
+            Batch가 작으면 선택된 expert마다 token이 몇 개 없어 GEMM 효율이 떨어집니다. 반대로 batch가 커지면 all-to-all payload와 hot
+            expert queue가 커질 수 있습니다. 이 trade-off를 다루는 system policy가 expert placement, replica, node-limited
+            routing, communication–compute overlap입니다. 그래서 model architecture 비교에서는 active parameter만으로 부족합니다.
+            실제 batch·parallel layout에서 나온 expert load histogram과 collective time을 함께 공개하지 않으면 비교가 성립하지 않습니다.
           </p>
         </div>
 
@@ -614,10 +637,14 @@ L_{\rm aux}&=\underbrace{\alpha N\sum_{i=1}^{N}f_iP_i}_{\text{두 값이 모두 
         <h2 className="mb-6 text-2xl font-bold">최근 설계는 더 많은 expert보다 중복을 줄이고 조합을 세밀하게 만드는 쪽으로 확장됐다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">
-            초기 sparse MoE가 conditional computation을 실제 cluster에서 작동시키는 데 집중했다면, GShard와 Switch는 Transformer·distributed routing의 복잡도를 다뤘습니다. DeepSeekMoE는 routed expert를 더 작은 단위로 나눠 조합 수를 늘리고, 모든 token이 쓰는 shared expert를 따로 두어 공통 지식이 여러 routed expert에 반복되는 문제를 줄이려 했습니다.
+            초기 sparse MoE가 conditional computation을 실제 cluster에서 작동시키는 데 집중했다면 GShard와 Switch는
+            Transformer·distributed routing의 복잡도를 다뤘습니다. DeepSeekMoE는 routed expert를 더 작은 단위로 나눠 조합 수를 늘렸고 모든
+            token이 쓰는 shared expert를 따로 두었습니다. 공통 지식이 여러 routed expert에 반복되는 문제를 줄이려는 설계였습니다.
           </p>
           <p className="leading-8">
-            이 계보를 “새 모델이 이전 모델보다 무조건 낫다”는 순위표로 보면 안 됩니다. Top-1·Top-2·shared expert·fine-grained expert는 quality, specialization, router stability, GEMM shape, network topology 사이에서 서로 다른 예산 배분을 선택합니다. 동일한 total parameter만 맞추거나 active parameter만 맞춘 비교로는 어느 구성 요소가 이득을 만들었는지 분리하기 어렵습니다.
+            이 계보는 “새 모델이 이전 모델보다 무조건 낫다”는 순위표로 읽히기 쉽습니다. 그런데 Top-1·Top-2·shared expert·fine-grained expert가 하는
+            일은 quality, specialization, router stability, GEMM shape, network topology 사이에서 예산을 다르게 배분하는 것입니다.
+            동일한 total parameter만 맞추거나 active parameter만 맞춘 비교로는 어느 구성 요소가 이득을 만들었는지 분리하기 어렵습니다.
           </p>
         </div>
 

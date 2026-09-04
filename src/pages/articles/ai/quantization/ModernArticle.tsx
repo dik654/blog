@@ -71,8 +71,7 @@ export default function QuantizationArticle() {
           question="실수 x는 어떤 연산을 거쳐 integer code q가 되나요?"
           idea={
             <p>
-              Scale로 실수 축을 code 간격으로 바꾸고 zero-point만큼 이동한 뒤,
-              가장 가까운 integer와 허용 range를 차례로 적용합니다.
+              Scale로 실수 축을 code 간격으로 바꾸고 zero-point만큼 이동한 뒤 가장 가까운 integer와 허용 range를 차례로 적용합니다.
             </p>
           }
           formula={String.raw`u=\operatorname{round}(x/s)+z,\quad q=\operatorname{clip}(u,q_{\min},q_{\max}),\quad \hat x=s(q-z)`}
@@ -149,8 +148,7 @@ export default function QuantizationArticle() {
           question="왜 range 안의 s/2 bound를 outlier에도 적용하면 안 되나요?"
           idea={
             <p>
-              Nearest rounding은 인접 눈금의 중간점보다 멀리 이동하지 않지만,
-              clipping은 endpoint와 원래 값 사이 거리를 그대로 남깁니다.
+              Nearest rounding은 인접 눈금의 중간점보다 멀리 이동하지 않지만 clipping은 endpoint와 원래 값 사이 거리를 그대로 남깁니다.
             </p>
           }
           formula={String.raw`e=x-\hat x,\quad |e|\le s/2\;(x\in R),\quad |e|=|x-x_{\rm edge}|\;(x\notin R)`}

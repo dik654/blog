@@ -10,7 +10,10 @@ export default function ModernArticle() {
     <article className="space-y-16">
       <section id="overview" className="scroll-mt-20 space-y-7">
         <header className="space-y-3"><p className="text-sm font-semibold text-primary">Message와 운반 경로를 분리합니다</p><h2 className="text-3xl font-bold tracking-tight">MCP transport는 같은 protocol message를 local process 또는 remote service까지 옮기는 방법입니다</h2></header>
-        <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8"><Link to="/ai/mcp-protocol">MCP core</Link>에서 만든 JSON-RPC request가 실제 byte로 이동하려면 transport가 필요합니다. <strong>stdio</strong>와 <strong>Streamable HTTP</strong>는 같은 primitive 의미를 운반하지만, process 수명·identity·관측·실패 경계는 다릅니다.</p><p className="leading-8">먼저 local pipe 하나를 보고, 다음에 remote endpoint를 봅니다. 마지막에 response stream·cancel·subscription을 수명 기준으로 조합합니다.</p></div>
+        <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8"><Link to="/ai/mcp-protocol">MCP core</Link>에서 만든 JSON-RPC request가 실제 byte로 이동하려면 transport가 필요합니다. <strong>stdio</strong>와 <strong>Streamable HTTP</strong>는 같은 primitive 의미를 운반하지만, process 수명·identity·관측·실패 경계는 다릅니다.</p><p className="leading-8">
+            먼저 local pipe 하나를 보고 다음에 remote endpoint를 봅니다. 마지막에 response stream·cancel·subscription을 수명 기준으로
+            조합합니다.
+          </p></div>
         <McpLearningFlowViz mode="transport" />
         <ContentBoundary article="mcp-transports" />
       </section>
@@ -36,7 +39,11 @@ export default function ModernArticle() {
       </section>
 
       <section id="lifetimes" className="scroll-mt-20 space-y-7">
-        <div className="prose prose-neutral max-w-none dark:prose-invert"><h2>Response·cancel·subscription은 연결이 아니라 논리 수명으로 나눕니다</h2><p className="leading-8">Request-scoped SSE는 한 request의 여러 response event를 운반합니다. 그 stream을 닫아 cancellation 의사를 알릴 수 있지만, 이미 외부 system에 생긴 effect까지 되돌리지는 않습니다. Resource update를 계속 받는 subscription은 별도 장기 channel이며 request response와 같은 수명으로 묶지 않습니다.</p></div>
+        <div className="prose prose-neutral max-w-none dark:prose-invert"><h2>Response·cancel·subscription은 연결이 아니라 논리 수명으로 나눕니다</h2><p className="leading-8">
+            Request-scoped SSE는 한 request의 여러 response event를 운반합니다. 그 stream을 닫아 cancellation 의사를 알릴 수 있지만 이미
+            외부 system에 생긴 effect까지 되돌리지는 않습니다. Resource update를 계속 받는 subscription은 별도 장기 channel이며 request
+            response와 같은 수명으로 묶지 않습니다.
+          </p></div>
         <ExplainedFormula
           question="Remote call의 전체 deadline을 어느 단계가 소비했는지 어떻게 보존하는가?"
           idea={<>DNS/TLS·authorization·server work·stream delivery를 순서대로 합칩니다. 합계만 남기지 않고 각 항을 trace에 보존해야 timeout 원인을 구분할 수 있습니다.</>}

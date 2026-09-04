@@ -8,10 +8,8 @@ export default function Smoothness() {
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Learning rate를 안전하게 고르려면 gradient가 공간에서 얼마나 빠르게
-          변하는지 알아야 합니다. L-smooth는 두 점의 gradient 차이가 두 점 사이
-          거리의 L배를 넘지 않는다는 조건입니다. L이 크면 곡률이 큰 방향이 있어
-          작은 step이 필요합니다.
+          Learning rate를 안전하게 고르려면 gradient가 공간에서 얼마나 빠르게 변하는지 알아야 합니다. L-smooth는 두 점의 gradient 차이가 두 점 사이 거리의
+          L배를 넘지 않는다는 조건을 말합니다. L이 크면 곡률이 큰 방향이 있습니다. 그만큼 step을 작게 잡아야 합니다.
         </p>
       </div>
       <ExplainedFormula

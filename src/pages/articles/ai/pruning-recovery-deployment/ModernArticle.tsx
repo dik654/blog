@@ -12,10 +12,8 @@ export default function PruningRecoveryDeploymentArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Pruning 뒤 fine-tuning이나 distillation을 할 수 있지만 fixed-mask
-            recovery라면 제거한 위치는 parameter와 optimizer state에서 계속
-            0이어야 합니다. 그 다음 실제 artifact·quality·target kernel을 같은
-            generation으로 검증합니다.
+            Pruning 뒤 fine-tuning이나 distillation을 할 수 있지만 fixed-mask recovery라면 제거한 위치는 parameter와 optimizer
+            state에서 계속 0이어야 합니다. 그 다음 같은 generation에서 실제 artifact와 quality, target kernel을 함께 검증합니다.
           </p>
         </div>
         <TermBreakdown
@@ -125,8 +123,7 @@ export default function PruningRecoveryDeploymentArticle() {
           question="일부 operator만 빨라질 때 전체 latency 상한은 어떻게 읽나요?"
           idea={
             <p>
-              전체 시간 중 sparse tactic이 적용되는 비율만 속도가 바뀌고
-              나머지는 그대로 남는 Amdahl 경계를 사용합니다.
+              여기서는 Amdahl 경계를 씁니다. 전체 시간 중 sparse tactic이 적용되는 비율만 속도가 바뀌고 나머지는 그대로 남는다는 뜻입니다.
             </p>
           }
           formula={String.raw`S_{end}\le[(1-f)+f/S_{sparse}]^{-1}`}
@@ -186,11 +183,9 @@ export default function PruningRecoveryDeploymentArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            같은 base·batch·sequence·concurrency에서 artifact byte,
-            language·domain·long-context worst quality, peak memory,
-            prefill/decode p50·p95, throughput과 fallback을 한 표로 비교합니다.
-            어느 축에서도 더 나쁘고 어떤 축에서도 낫지 않은 후보는 frontier에서
-            제거합니다.
+            base와 batch, sequence, concurrency를 똑같이 맞춘 뒤 한 표로 비교합니다. 표에 들어가는 축은 artifact byte,
+            language·domain·long-context worst quality, peak memory, prefill/decode p50·p95, throughput, 그리고
+            fallback입니다. 어느 축에서도 더 나쁘고 어떤 축에서도 낫지 않은 후보는 frontier에서 뺍니다.
           </p>
         </div>
       </section>

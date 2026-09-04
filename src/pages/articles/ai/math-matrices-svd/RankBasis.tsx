@@ -6,11 +6,9 @@ export default function RankBasis() {
       <h2 className="mb-6 text-2xl font-bold">Rank는 output이 실제로 펼칠 수 있는 독립 방향의 수다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          행렬의 column이 여러 개여도 하나가 다른 column의 배수나 합으로 만들어진다면
-          새로운 방향을 추가하지 못합니다. Rank는 독립적인 column 방향의 최대 수이며,
-          linear map이 input 공간을 몇 차원의 output 부분공간으로 보낼 수 있는지
-          나타냅니다. 모든 정보를 보존하려면 dimension만 클 것이 아니라 필요한 방향이
-          서로 독립이어야 합니다.
+          행렬의 column이 여러 개여도 하나가 다른 column의 배수나 합으로 만들어진다면 새로운 방향을 추가하지 못합니다. Rank는 독립적인 column 방향의 최대 수이며
+          linear map이 input 공간을 몇 차원의 output 부분공간으로 보내는지 나타냅니다. 모든 정보를 보존하려면 dimension만 클 것이 아니라 필요한 방향이 서로
+          독립이어야 합니다.
         </p>
         <p>
           SVD는 이 독립 방향을 서로 직각이고 길이 1인 <strong>orthonormal

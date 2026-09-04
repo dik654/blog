@@ -5,7 +5,11 @@ export default function SampleMean() {
   return (
     <section id="sample-mean" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Sample mean: 관측한 일부로 distribution의 중심 추정하기</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none"><p>Population expectation을 정확히 합산할 수 없으면 sample을 뽑아 평균냅니다. 독립이고 같은 distribution에서 뽑은 sample의 평균은 population mean에 대해 unbiased이며, variance는 sample 수 B로 나뉩니다. 이 조건이 mini-batch가 흔들림을 줄이는 가장 단순한 이유입니다.</p></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none"><p>
+            Population expectation을 정확히 합산할 수 없으면 sample을 뽑아 평균냅니다. 독립이고 같은 distribution에서 뽑은 sample의 평균은
+            population mean에 대해 unbiased이며 variance는 sample 수 B로 나뉩니다. 이 조건이 mini-batch가 흔들림을 줄이는 가장 단순한
+            이유입니다.
+          </p></div>
       <BatchVarianceViz />
       <ExplainedFormula
         question="독립 sample B개의 평균은 왜 개별 sample보다 덜 흔들릴까요?"
@@ -15,7 +19,10 @@ export default function SampleMean() {
         assumptions={["X_i가 서로 독립이고 같은 mean μ와 finite variance σ²를 가집니다.","상관된 sample이면 covariance 항이 남아 1/B 감소가 그대로 성립하지 않습니다."]}
         interpretation="Batch size를 4배로 늘리면 variance는 1/4, standard deviation은 1/2가 됩니다. 흔들림이 4배 줄어드는 것은 아닙니다."
       />
-      <div className="prose prose-neutral dark:prose-invert max-w-none"><h3>큰 수의 법칙이 말하는 것과 말하지 않는 것</h3><p>Sample 수가 커질수록 sample mean이 population mean에서 크게 벗어날 확률이 작아진다는 것이 큰 수의 법칙의 핵심입니다. 유한한 B에서 정확히 같아진다는 뜻도, 특정 오차 안에 반드시 들어온다는 뜻도, 데이터가 독립이 아닌 상황을 자동으로 해결한다는 뜻도 아닙니다.</p></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none"><h3>큰 수의 법칙이 말하는 것과 말하지 않는 것</h3><p>
+            Sample 수가 커질수록 sample mean이 population mean에서 크게 벗어날 확률이 작아진다는 것이 큰 수의 법칙의 핵심입니다. 유한한 B에서 정확히
+            같아진다는 뜻은 아닙니다. 특정 오차 안에 반드시 들어온다거나 데이터가 독립이 아닌 상황을 자동으로 해결한다는 뜻도 아닙니다.
+          </p></div>
       <ExplainedFormula
         question="Sample mean이 population mean에 가까워진다는 말을 확률로 어떻게 확인할까요?"
         idea={<>독립 sample 평균의 variance σ²/B에 Chebyshev inequality를 적용합니다. 고정한 오차 ε보다 크게 벗어날 probability의 상한이 B와 함께 0으로 줄면 확률수렴을 얻습니다.</>}

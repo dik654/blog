@@ -20,17 +20,14 @@ export default function ModernImageModelStackArticle() {
             처음부터 끝까지 처리한다고 느끼기 쉽습니다.
           </p>
           <p>
-            실제 latent diffusion이나 flow 기반 제품은 여러 component로 나뉩니다.
-            Prompt encoder가 요청을 읽고, autoencoder가 image를 압축·복원합니다.
-            Transformer는 noisy latent를 갱신하고 solver는 sampling path를 적분합니다.
-            제품에 따라 prompt expander와 reference encoder, upscaler가 더 붙습니다.
+            실제 latent diffusion이나 flow 기반 제품은 여러 component로 나뉩니다. 요청을 읽는 쪽은 prompt encoder이고 image를 압축·복원하는 쪽은
+            autoencoder입니다. noisy latent는 Transformer가 갱신하고 sampling path는 solver가 적분합니다. 제품에 따라 prompt
+            expander와 reference encoder, upscaler가 더 붙습니다.
           </p>
           <p>
-            이 분해를 알아야 “아키텍처가 좋아졌다”는 말을 정확히 읽을 수 있습니다.
-            글자 이해가 좋아진 원인이 text encoder와 caption data일 수도 있고, 피부
-            detail의 상한은 VAE가 만들 수도 있으며, 구조 artifact는 denoiser와
-            post-training reward가 함께 바꿀 수 있습니다. 최종 sample만 보고 한 component에
-            원인을 몰아주면 잘못된 LoRA target과 잘못된 평가로 이어집니다.
+            이 분해를 알아야 “아키텍처가 좋아졌다”는 말을 정확히 읽을 수 있습니다. 글자 이해가 좋아진 원인은 text encoder와 caption data일 수 있고 피부
+            detail의 상한은 VAE가 만들 수도 있습니다. 구조 artifact라면 denoiser와 post-training reward가 함께 바꿀 수 있습니다. 최종
+            sample만 보고 한 component에 원인을 몰아주면 잘못된 LoRA target과 잘못된 평가로 이어집니다.
           </p>
           <p>
             앞의 <Link to="/ai/visual-representation-tokenizers">visual representation
@@ -56,10 +53,9 @@ export default function ModernImageModelStackArticle() {
             <code>z₁</code>의 noise에서 <code>z₀</code>로 이동합니다.
           </p>
           <p>
-            중요한 점은 이들이 독립적으로 교체 가능한 동시에 완전히 독립적이지 않다는
-            것입니다. Autoencoder를 바꾸면 latent scale·channel·reconstruction ceiling이
-            달라지고, text encoder를 바꾸면 condition length와 feature distribution이
-            달라집니다. DiT checkpoint는 학습 때 본 exact contract와 맞아야 합니다.
+            이들은 독립적으로 교체 가능하면서도 완전히 독립적이지는 않습니다. Autoencoder를 바꾸면 latent scale·channel·reconstruction ceiling이
+            달라지고 text encoder를 바꾸면 condition length와 feature distribution이 달라집니다. DiT checkpoint는 학습 때 본 exact
+            contract와 맞아야 합니다.
           </p>
         </div>
         <ExplainedFormula
@@ -106,21 +102,17 @@ z_0&=\underbrace{\operatorname{Solve}(z_1,v_\theta,c)}_{\text{noise에서 data l
             long-tail style을 만듭니다.
           </p>
           <p>
-            고해상도 stage는 detail을 더 학습합니다. 이후의 curated SFT와 preference
-            optimization, RL은 자주 나오는 artifact와 기본 미감을 바꿉니다. Architecture는
-            이런 신호를 담는 그릇이지 output 분포의 유일한 원인이 아닙니다.
+            고해상도 stage는 detail을 더 학습하고 이후의 curated SFT와 preference optimization, RL은 자주 나오는 artifact와 기본 미감을
+            바꿉니다. Architecture는 이런 신호를 담는 그릇입니다. 그것만으로 output 분포가 정해지지는 않습니다.
           </p>
           <p>
-            Krea 2 공식 technical report는 이 다층 구조를 보여 주는 현재 사례입니다.
-            모델 구조만 공개한 것이 아니라 데이터 준비부터 prompt 확장과 post-training까지
-            하나의 생성 시스템으로 설명합니다.
+            Krea 2 공식 technical report는 이 다층 구조를 보여 주는 현재 사례입니다. 모델 구조에서 그치지 않고 데이터 준비부터 prompt 확장과 post-
+            training까지 하나의 생성 시스템으로 설명합니다.
           </p>
           <p>
-            이 목록을 “현대 image model의 필수 부품”으로 외우면 안 됩니다. 보고서 안에서도
-            hybrid stream이 약간 앞섰지만 단순성을 위해 single stream을 골랐고, MLA는
-            약간의 gain에도 compute overhead 때문에 채택하지 않았습니다. 이는 하나의
-            연구팀이 stability·kernel 생태계·iteration speed를 포함해 내린 engineering
-            선택입니다.
+            이 목록을 “현대 image model의 필수 부품”으로 외우면 놓치는 게 있습니다. 보고서 안에서도 hybrid stream이 약간 앞섰지만 단순성을 위해 single
+            stream을 골랐고 MLA는 약간의 gain에도 compute overhead 때문에 채택하지 않았습니다. 하나의 연구팀이 stability·kernel
+            생태계·iteration speed를 포함해 내린 engineering 선택입니다.
           </p>
         </div>
         <ProgressiveDetail
@@ -128,19 +120,16 @@ z_0&=\underbrace{\operatorname{Solve}(z_1,v_\theta,c)}_{\text{noise에서 data l
           preview="256→512→1024 해상도 curriculum 위에 condition encoder, autoencoder, rectified-flow transformer와 여러 post-training 단계를 조립했습니다."
         >
           <p>
-            보고서의 condition 쪽에는 Qwen 3 VL encoder와 prompt expander가 있습니다.
-            Image representation 쪽에는 Qwen Image 또는 FLUX 2 계열 autoencoder가 있고,
-            생성 backbone은 rectified-flow Transformer입니다.
+            보고서의 condition 쪽에는 Qwen 3 VL encoder와 prompt expander가 있습니다. Image representation 쪽에는 Qwen Image
+            또는 FLUX 2 계열 autoencoder가 있고 생성 backbone은 rectified-flow Transformer입니다.
           </p>
           <p>
-            Final backbone은 single-stream을 택했습니다. Attention에는 GQA와 gated sigmoid
-            attention을, FFN에는 SwiGLU를 사용합니다. Normalization에는 zero-centered
-            RMSNorm과 QKNorm을, 위치 표현에는 3D axial RoPE를 둡니다.
+            Final backbone은 single-stream을 택했습니다. 그 안에서 attention에는 GQA와 gated sigmoid attention이, FFN에는
+            SwiGLU가 들어갑니다. Normalization은 zero-centered RMSNorm과 QKNorm으로, 위치 표현은 3D axial RoPE로 잡았습니다.
           </p>
           <p>
-            학습은 256에서 512, 다시 1024 해상도로 올라갑니다. 그 뒤 SFT, preference
-            optimization과 RL이 이어집니다. 이 목록은 Krea의 선택이지 현대 이미지 모델의
-            필수 부품 목록은 아닙니다.
+            학습은 256에서 512, 다시 1024 해상도로 올라가고 그 뒤 SFT, preference optimization과 RL이 이어집니다. 여기까지가 Krea가 고른 구성이고
+            현대 이미지 모델의 필수 부품 목록과는 다릅니다.
           </p>
         </ProgressiveDetail>
         <AlgorithmBlock
@@ -196,11 +185,9 @@ z_0&=\underbrace{\operatorname{Solve}(z_1,v_\theta,c)}_{\text{noise에서 data l
             아닙니다.
           </p>
           <p>
-            따라서 다음 단계에서는 spatial latent에 time axis를 붙이는 것만으로 끝나지
-            않습니다. Camera motion과 object motion을 분리하고, action·control frequency를
-            condition으로 넣고, rollout이 길어질 때 error가 누적되는지 검증해야 합니다.
-            Physical AI에서는 예측을 다시 실제 controller와 sensor observation으로 닫는
-            closed loop까지 필요합니다.
+            그래서 다음 단계는 spatial latent에 time axis를 붙이는 것만으로 끝나지 않습니다. 여기서 camera motion과 object motion을 분리하고
+            action·control frequency를 condition으로 넣고 rollout이 길어질 때 error가 누적되는지 검증하는 일이 남습니다. Physical AI에서는
+            예측을 다시 실제 controller와 sensor observation으로 닫는 closed loop까지 필요합니다.
           </p>
           <p>
             Diffusion이라는 생성 원리를 language token에 옮기는 별도 분기는 다음 글인
@@ -214,14 +201,12 @@ z_0&=\underbrace{\operatorname{Solve}(z_1,v_\theta,c)}_{\text{noise에서 data l
           preview="Frame 품질 외에 시간 일관성, action sensitivity, long-rollout drift, closed-loop success를 별도 slice로 둡니다."
         >
           <p>
-            Appearance가 같은데 action만 다른 paired rollout으로 action sensitivity를,
-            action과 object가 같은데 camera만 움직이는 pair로 viewpoint robustness를 봅니다.
-            이어 1-step error와 32-step rollout error를 나눠 compounding을 확인합니다.
+            Appearance가 같은데 action만 다른 paired rollout으로 action sensitivity를, action과 object가 같은데 camera만 움직이는
+            pair로 viewpoint robustness를 봅니다. compounding은 1-step error와 32-step rollout error를 나눠 확인합니다.
           </p>
           <p>
-            마지막으로 prediction metric이 좋아도 실제 planner/controller가 task를
-            성공하는지 확인해야 합니다. Representation과 video quality가 좋아졌다는
-            결과를 physical action generalization으로 자동 승격하지 않습니다.
+            prediction metric이 좋아도 실제 planner/controller가 task를 성공하는지는 따로 확인합니다. Representation과 video
+            quality가 좋아졌다는 결과를 physical action generalization으로 자동 승격하지 않습니다.
           </p>
         </ProgressiveDetail>
       </section>

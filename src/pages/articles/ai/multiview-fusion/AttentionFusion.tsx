@@ -8,12 +8,9 @@ export default function AttentionFusion() {
       <h2 className="mb-6 text-2xl font-bold">Attention fusion은 pooled feature보다 늦게 spatial token을 압축하며, 그 대가로 correspondence와 비용 계약이 필요합니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Cross-attention에서는 한 view의 token이 query가 되고 다른 view의
-          key·value에서 필요한 정보를 가져옵니다. Pooled vector를 합치는 것보다
-          공간 correspondence를 늦게까지 보존하지만, 서로 다른 camera의 같은 2D
-          좌표가 같은 물리 지점을 뜻하지는 않습니다. 따라서 content embedding뿐
-          아니라 view ID·2D position·camera pose·timestamp·availability를 token의
-          의미에 포함합니다.
+          Cross-attention에서는 한 view의 token이 query가 되고 다른 view의 key·value에서 필요한 정보를 가져옵니다. Pooled vector를 합치는
+          것보다 공간 correspondence를 늦게까지 보존하지만 서로 다른 camera의 같은 2D 좌표가 같은 물리 지점을 뜻하지는 않습니다. 따라서 content
+          embedding뿐 아니라 view ID와 2D position, camera pose, timestamp, availability를 token의 의미에 포함합니다.
         </p>
         <p>
           Q·K·V와 scaled dot-product 계산 자체는 <Link to="/ai/attention-theory">attention
@@ -66,17 +63,20 @@ N_{\mathrm{total}}&=\underbrace{\sum_{v=1}^{V}m_vN_v,}_{\text{오른쪽 항으�
       />
       <div id="paper-set-transformer" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">논문 읽기 · Set Transformer</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">Lee 등은 순서가 없는 set의 원소 간 interaction을 attention으로 처리하고 invariant pooling으로 set-level output을 만드는 architecture를 제안했습니다. Inducing point로 self-attention 비용을 줄이는 경로도 제시합니다. 이 보장은 architecture의 set 처리 조건에 관한 것이며, 고정 view position embedding을 잘못 더한 구현까지 자동으로 invariant하게 만들지는 않습니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            Lee 등은 순서가 없는 set의 원소 간 interaction을 attention으로 처리하고 invariant pooling으로 set-level output을 만드는
+            architecture를 제안했습니다. inducing point로 self-attention 비용을 줄이는 경로도 제시합니다. 다만 이 보장이 미치는 범위는
+            architecture의 set 처리 조건까지입니다. 고정 view position embedding을 잘못 더한 구현까지 자동으로 invariant하게 만들어 주지는
+            않습니다.
+          </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://proceedings.mlr.press/v97/lee19d.html" target="_blank" rel="noreferrer">Permutation invariance와 inducing-point 범위 보기</a>
       </div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>평가는 정상 상태의 평균 점수보다 view intervention을 먼저 설계합니다</h3>
         <p>
-          단일-view, masked mean, gated pooling, attention fusion을 같은 split·encoder
-          budget·preprocessing에서 비교합니다. 그다음 view drop, 순서 재배열,
-          timestamp·pose 오차, blur·noise를 한 축씩 바꿉니다. Attention map이나 gate
-          weight가 커 보인다는 사실보다 실제 prediction error가 어떻게 변했는지가
-          더 직접적인 관측입니다.
+          단일-view, masked mean, gated pooling, attention fusion을 같은 split·encoder budget·preprocessing에서
+          비교합니다. 그다음 view drop, 순서 재배열, timestamp·pose 오차, blur·noise를 한 축씩 바꿉니다. 더 직접적인 관측은 attention map이나
+          gate weight가 커 보인다는 사실이 아니라 실제 prediction error가 어떻게 변했는지입니다.
         </p>
       </div>
       <ExplainedFormula

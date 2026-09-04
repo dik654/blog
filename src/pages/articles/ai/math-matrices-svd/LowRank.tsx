@@ -7,11 +7,9 @@ export default function LowRank() {
       <h2 className="mb-6 text-2xl font-bold">Low-rank approximation은 작은 singular direction부터 생략한다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          SVD를 rank-one outer product의 합으로 펼치면 각 항이 하나의 input pattern과
-          output pattern을 singular value로 연결합니다. 앞의 k개만 남긴 Aₖ는 저장과
-          계산을 줄이면서 큰 방향을 보존합니다. Eckart–Young 정리는 같은 rank k 예산을
-          가진 모든 행렬 가운데 truncated SVD가 spectral norm과 Frobenius norm 기준의
-          최적 근사임을 보장합니다.
+          SVD를 rank-one outer product의 합으로 펼치면 각 항이 하나의 input pattern과 output pattern을 singular value로 연결합니다.
+          앞의 k개만 남긴 Aₖ는 저장과 계산을 줄이면서 큰 방향을 보존합니다. Eckart–Young 정리는 같은 rank k 예산을 쓰는 모든 행렬 가운데 truncated SVD가
+          spectral norm과 Frobenius norm 기준의 최적 근사임을 보장합니다.
         </p>
         <p>
           SVD가 만드는 <code>Aₖ=UₖΣₖVₖᵀ</code>는 <strong>low-rank

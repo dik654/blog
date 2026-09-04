@@ -56,7 +56,10 @@ export default function ModernArticle() {
       <section id="request-envelope" className="scroll-mt-20 space-y-7">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <h2>Stateless는 “기억이 없다”가 아니라 “숨은 session에 기대지 않는다”는 뜻입니다</h2>
-          <p className="leading-8">2026-07-28 core에서는 이전의 initialize session 대신 요청이 자신을 설명합니다. 요청마다 protocol version·client information·capability를 함께 보내므로, 다른 worker가 받아도 이전 connection memory 없이 해석할 수 있습니다.</p>
+          <p className="leading-8">
+            2026-07-28 core에서는 이전의 initialize session 대신 요청이 자신을 설명합니다. 요청마다 protocol version·client
+            information·capability를 함께 보내므로 다른 worker가 받아도 이전 connection memory 없이 해석할 수 있습니다.
+          </p>
         </div>
         <TermBreakdown
           title="Self-describing request의 형태"

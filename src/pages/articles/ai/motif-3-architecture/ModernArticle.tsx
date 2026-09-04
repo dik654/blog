@@ -88,9 +88,8 @@ export default function Motif3ArchitectureArticle() {
           attention 이 무엇에 점수를 주는지를 바꾸는 selectivity 축입니다.
         </p>
         <p className="text-sm leading-7 text-muted-foreground">
-          GDLA의 결합 지점은 두 query path(signal, noise)가 별도 KV cache 없이 같은 compressed
-          latent를 읽게 만든 자리입니다. 새로 드는 비용은 이 latent 하나를 signal·noise 두 경로가
-          각각 복원해야 한다는 것과, token별 λ·output gate 계산이 MLA 단독보다 늘어난다는 것입니다.
+          GDLA의 결합 지점은 두 query path(signal, noise)가 별도 KV cache 없이 같은 compressed latent를 읽게 만든 자리입니다. 새로 드는
+          비용은 두 가지입니다. latent 하나를 signal·noise 두 경로가 각각 복원해야 하고, token별 λ·output gate 계산도 MLA 단독보다 늘어납니다.
         </p>
       </section>
 

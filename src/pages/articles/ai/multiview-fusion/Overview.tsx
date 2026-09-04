@@ -53,10 +53,8 @@ X_i&=\underbrace{\{(x_{iv},m_{iv},c_{iv})\}_{v=1}^{V_i},}_{\text{오른쪽 항�
       <div className="not-prose my-8"><OverviewViz /></div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          고정 camera 번호처럼 순서 자체가 의미라면 tuple로 다루고 view ID를
-          보존합니다. 반대로 여러 각도의 사진처럼 입력 순서가 임의라면 set으로
-          다루며, 순서를 바꿔도 결과가 같아야 합니다. 이 둘을 구분하지 않으면
-          dataset loader의 정렬 순서를 model이 의미 있는 신호로 외울 수 있습니다.
+          고정 camera 번호처럼 순서 자체가 의미라면 tuple로 다루고 view ID를 보존합니다. 반대로 여러 각도의 사진처럼 입력 순서가 임의라면 set으로 다루며 순서를 바꿔도
+          결과가 같아야 합니다. 이 둘을 구분하지 않으면 dataset loader의 정렬 순서를 model이 의미 있는 신호로 외울 수 있습니다.
         </p>
       </div>
       <ExplainedFormula

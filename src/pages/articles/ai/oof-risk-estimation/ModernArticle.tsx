@@ -23,7 +23,9 @@ export default function OofRiskEstimationArticle() {
         <h2 className="mb-5 text-2xl font-bold">모든 OOF row를 원래 weight로 모은 뒤 risk를 한 번 계산합니다</h2>
         <ExplainedFormula
           question="왜 fold score의 단순 평균보다 pooled OOF risk가 필요한가요?"
-          idea={<p>Fold 크기가 다르면 fold 평균에 같은 weight를 주는 순간 작은 fold의 row가 더 큰 영향력을 얻습니다. 행별 loss와 업무 weight를 원래 단위로 합칩니다.</p>}
+          idea={<p>
+            Fold 크기가 다르면 fold 평균에 같은 weight를 주는 순간 작은 fold의 행이 더 큰 영향력을 얻습니다. 행별 loss와 업무 weight는 원래 단위로 합칩니다.
+          </p>}
           formula={String.raw`\widehat R_{\mathrm{OOF}}=\frac{\sum_i w_i\ell(y_i,\widehat y_i^{(-f(i))})}{\sum_i w_i}`}
           annotatedFormula={String.raw`\begin{aligned}\widehat y_i^{\mathrm{OOF}}&=\underbrace{A(D\setminus V_{f(i)})(x_i)}_{\text{row i의 fold를 제외해 prediction}}\\e_i&=\underbrace{\ell(y_i,\widehat y_i^{\mathrm{OOF}})}_{\text{같은 row의 target과 비교}}\\\widehat R_{\mathrm{OOF}}&=\underbrace{\frac{\sum_i w_ie_i}{\sum_iw_i}}_{\text{원래 row weight로 pooled 평균}}
 \end{aligned}`}
@@ -43,7 +45,10 @@ export default function OofRiskEstimationArticle() {
       </section>
       <section id="estimand" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">CV는 완성된 model 한 개보다 다시 실행할 learning procedure를 평가합니다</h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert"><p>Fold마다 training subset과 fitted model이 다릅니다. 따라서 OOF loss는 full data로 마지막에 fit한 model 하나의 conditional error와 정확히 같지 않고, 비슷한 training sample에서 같은 procedure를 반복했을 때의 평균 risk에 더 가깝습니다.</p></div>
+        <div className="prose prose-neutral max-w-none dark:prose-invert"><p>
+            Fold마다 training subset과 fitted model이 다릅니다. OOF loss는 full data로 마지막에 fit한 model 하나의 conditional
+            error와 정확히 같지 않습니다. 비슷한 training sample에서 같은 procedure를 반복했을 때의 평균 risk에 더 가깝습니다.
+          </p></div>
       </section>
       <section id="boundary" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">Fold score는 서로 독립 반복이 아니므로 단순 표준오차를 과신하지 않습니다</h2>

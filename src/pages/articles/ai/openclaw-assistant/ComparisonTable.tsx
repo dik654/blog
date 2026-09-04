@@ -33,8 +33,7 @@ export default function ComparisonTable() {
         책임표로 다시 확인하기
       </h3>
       <p className="mt-2 max-w-3xl break-words text-sm leading-6 text-muted-foreground">
-        이 표의 핵심은 기능 목록이 아니라 비소유 영역입니다. Telegram A의 요청을
-        처리한 model이 “Slack으로 답하라”고 생성해도 reply route는 바뀌지 않아야 하며,
+        이 표의 핵심은 기능 목록이 아니라 비소유 영역입니다. Telegram A의 요청을 처리한 model이 “Slack으로 답하라”고 생성해도 reply route는 그대로입니다.
         sandbox가 켜져 있어도 사용자 인증을 대신하지 않습니다.
       </p>
       <div className="mt-5 grid min-w-0 gap-3 lg:grid-cols-2">

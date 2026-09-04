@@ -52,10 +52,8 @@ export default function CodeStructure({
         <aside className="not-prose my-6 rounded-lg border border-border/70 bg-muted/20 p-4">
           <p className="text-sm font-semibold">번들 코드 보기의 근거 경계</p>
           <p className="mt-2 max-w-3xl break-words text-xs leading-5 text-muted-foreground">
-            아래 세 파일은 이 블로그가 보관한 설명용 스냅샷으로, 처리 순서를
-            따라가기 위한 보조 자료입니다. 현재 upstream의 경로·함수명·기본값을
-            보장하지 않으며, 충돌할 때는 위 CitationBlock의 공식 문서와 실제 배포
-            version의 source를 우선합니다.
+            아래 세 파일은 이 블로그가 보관한 설명용 스냅샷으로, 처리 순서를 따라가기 위한 보조 자료입니다. 현재 upstream의 경로·함수명·기본값까지 보장하지는 않습니다. 충돌하면
+            위 CitationBlock의 공식 문서와 실제 배포 version의 source를 우선합니다.
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
             <CodeViewButton
@@ -77,13 +75,10 @@ export default function CodeStructure({
 
       <h3 className="mt-8 text-xl font-semibold">두 요청의 끝을 다시 재생합니다</h3>
       <p>
-        Telegram A의 typed result가 돌아오면 Gateway는 Telegram inbound route와
-        결합해 A의 chat으로 답합니다. Slack B도 별도의 session state와 Slack
-        thread route를 사용합니다. 어느 runtime을 썼든, skill을 몇 개 읽었든,
-        sandbox 안팎 어디서 tool이 실행됐든 이 delivery ownership은 바뀌지
-        않습니다. 운영 test는 model 문장 품질뿐 아니라 이 invariant와 audit
-        모델 응답의 품질뿐 아니라 이 invariant와 audit evidence를 함께 검증해야
-        합니다.
+        Telegram A의 typed result가 돌아오면 Gateway는 Telegram inbound route와 결합해 A의 chat으로 답합니다. Slack B도 별도의
+        session state와 Slack thread route를 사용합니다. 어느 runtime을 썼든, skill을 몇 개 읽었든, sandbox 안팎 어디서 tool이 실행됐든 이
+        delivery ownership은 바뀌지 않습니다. 운영 test는 model 문장 품질뿐 아니라 이 invariant와 audit 모델 응답의 품질뿐 아니라 이 invariant와
+        audit evidence를 함께 검증합니다.
       </p>
 
       <h3 className="mt-8 text-xl font-semibold">
@@ -100,11 +95,9 @@ export default function CodeStructure({
         bounded retry나 사람 검토로 보냅니다.
       </p>
       <p>
-        이와 별개로 Gateway event stream은 durable replay queue가 아닙니다.
-        sequence gap을 발견한 client는 누락 event를 추측하지 않고 현재 state를
-        다시 조회합니다. Request 재시도, outbound delivery 복구, event state
-        refresh는 서로 다른 절차이며 어느 것도 외부 tool side effect에 무한한
-        exactly-once를 보장하지 않으므로 effect receipt를 별도로 기록합니다.
+        이와 별개로 Gateway event stream은 durable replay queue가 아닙니다. sequence gap을 발견한 client는 누락 event를 추측하지 않고
+        현재 state를 다시 조회합니다. Request 재시도, outbound delivery 복구, event state refresh는 서로 다른 절차입니다. 어느 것도 외부 tool
+        side effect에 무한한 exactly-once를 보장하지 않으므로 effect receipt를 별도로 기록합니다.
       </p>
 
       <div className="not-prose my-6 grid min-w-0 gap-3 sm:grid-cols-2">
@@ -121,14 +114,11 @@ export default function CodeStructure({
         <article className="min-w-0 rounded-lg border border-border/70 bg-background p-4">
           <h4 className="text-sm font-semibold">Release failure matrix</h4>
           <p className="mt-2 break-words text-xs leading-5 text-muted-foreground">
-            2026-08-13 기준 OpenClaw·plugin·skill artifact와 config backup,
-            immutable fixture를 기록하고 동일 provider/model, input, tool set으로
-            제한된 canary traffic에서 binding
-            collision, shared-DM leak, explicit runtime failure, denied/elevated tool,
-            duplicate reply를 주입합니다. route winner, session isolation, resource
-            inventory, policy trace, reply receipt, quality·latency·tool call을 paired
-            비교합니다. Hard boundary가 회귀하거나 delivery 상태가 unknown으로
-            남으면 배포를 중단하고 보관한 binary·plugin·skill·config 조합으로
+            2026-08-13 기준 OpenClaw·plugin·skill artifact와 config backup, immutable fixture를 기록합니다. 그 다음 동일
+            provider/model, input, tool set으로 제한된 canary traffic에서 binding collision, shared-DM leak, explicit
+            runtime failure, denied/elevated tool, duplicate reply를 주입합니다. route winner, session isolation,
+            resource inventory, policy trace, reply receipt, quality·latency·tool call을 paired 비교합니다. Hard
+            boundary가 회귀하거나 delivery 상태가 unknown으로 남으면 배포를 중단하고 보관한 binary·plugin·skill·config 조합으로
             rollback합니다.
           </p>
         </article>

@@ -37,7 +37,8 @@ export default function ModernArticle() {
             더 중요한 점은 “FP8 모델”도 모든 tensor를 1 byte로 저장하지 않을 수 있다는 것입니다. Embedding·normalization·vision block이나 민감한 tensor를 BF16으로 남기고, scale tensor를 더할 수 있습니다. 따라서 이름의 dtype이 아니라 <strong>checkpoint index와 tensor dtype histogram</strong>을 읽어야 합니다.
           </p>
           <p className="leading-8">
-            이 글은 parameter headline에서 바로 결론내리지 않습니다. 먼저 weight payload를 계산하고, 다음으로 request가 만드는 KV·고정 state를 더합니다. 마지막에 runtime이 실제 예약한 peak를 확인해 GPU에 넣을지 결정합니다.
+            이 글은 parameter headline에서 바로 결론내리지 않습니다. 계산은 weight payload에서 시작해 request가 만드는 KV·고정 state를 더하고 그
+            위에서 runtime이 실제 예약한 peak를 확인해 GPU에 넣을지 결정합니다.
           </p>
         </div>
 
@@ -171,14 +172,12 @@ C_{use}
             parameters</strong>는 한 token이 router를 거쳐 실제로 사용하는 expert path 규모의 힌트입니다.
           </p>
           <p className="leading-8">
-            이는 exact FLOPs나 실제로 이동한 weight bytes와 같은 수치는 아닙니다. Active 수가 작아도 모든
-            expert weight를 resident하게 만들 capacity와 expert routing·통신은 별도로 남고, 이 관계를
-            bandwidth 숫자로 푸는 이야기는 아래 절에서 이어집니다.
+            여기서 나온 값은 exact FLOPs나 실제로 이동한 weight bytes와 같은 수치는 아닙니다. Active 수가 작아도 모든 expert weight를
+            resident하게 만들 capacity와 expert routing·통신은 별도로 남습니다. 이 관계를 bandwidth 숫자로 푸는 이야기는 아래 절에서 이어집니다.
           </p>
           <p className="leading-8">
-            Full context를 요청하면 attention KV·recurrent state·prefill workload가 함께 늘어나고,
-            Q8·NVFP4처럼 precision을 낮추는 선택도 known floor를 바꿉니다. 두 결정의 구체적인 크기는
-            각각 아래 절에서 다룹니다.
+            Full context를 요청하면 attention KV·recurrent state·prefill workload가 함께 늘어납니다. Q8·NVFP4처럼 precision을
+            낮추는 선택도 known floor를 바꿉니다. 두 결정의 구체적인 크기는 각각 아래 절에서 다룹니다.
           </p>
         </div>
 
@@ -196,9 +195,8 @@ C_{use}
 
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">
-            이 분해는 경험적 관찰을 버리기 위한 것이 아닙니다. “Small-active MoE에서는 prefill 비중이
-            커졌다”, “base decode가 빨라 MTP 이득이 작았다”, “64K부터 특정 Mac에서 급락했다”는 말은
-            다음 benchmark를 고르는 유용한 가설입니다.
+            이 분해가 경험적 관찰을 버리자는 뜻은 아닙니다. “Small-active MoE에서는 prefill 비중이 커졌다”, “base decode가 빨라 MTP 이득이 작았다”,
+            “64K부터 특정 Mac에서 급락했다”는 말은 다음 benchmark를 고르는 유용한 가설입니다.
           </p>
           <p className="leading-8">
             다만 정확한 model과 runtime, hardware와 quantization, input/output 길이, batch와 concurrency,
@@ -233,7 +231,8 @@ C_{use}
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <h2>4단계 · 기동 로그는 나중에 memory 미지수를 되살리는 receipt입니다</h2>
           <p className="leading-8">
-            OOM 뒤에 model 이름과 마지막 오류만 남으면 dtype upcast, fallback kernel, 생성된 KV pool, CUDA graph capture가 얼마를 예약했는지 알 수 없습니다. 첫 140줄 요약은 빠른 확인용으로 남기되, 원본 stdout·stderr는 rotation된 별도 파일이나 journal에 보존해야 합니다.
+            OOM 뒤에 model 이름과 마지막 오류만 남으면 dtype upcast, fallback kernel, 생성된 KV pool, CUDA graph capture가 얼마를
+            예약했는지 알 수 없습니다. 첫 140줄 요약은 빠른 확인용으로 남기되 원본 stdout·stderr는 rotation된 별도 파일이나 journal에 그대로 남깁니다.
           </p>
         </div>
 
@@ -253,7 +252,8 @@ C_{use}
             공식 BF16 index의 55,562,855,904 bytes는 51.75GiB라 weight만으로 한 장을 넘습니다. 공식 mixed-FP8 checkpoint는 FP8 약 24.699B와 BF16 약 3.084B를 합쳐 tensor payload가 약 28.75GiB입니다.
           </p>
           <p className="leading-8">
-            여기에 BF16 attention KV가 32K/128K/262K에서 약 2/8/16GiB, Delta core state가 request당 약 144MiB 들어갑니다. Known floor는 약 30.89/36.89/44.89GiB지만, 마지막 값은 workspace를 넣기 전이라 262K 안전 운용을 보장하지 않습니다.
+            여기에 BF16 attention KV가 32K/128K/262K에서 약 2/8/16GiB, Delta core state가 request당 약 144MiB 들어갑니다.
+            Known floor는 약 30.89/36.89/44.89GiB지만 마지막 값은 workspace를 넣기 전이라 262K 안전 운용을 보장하지 않습니다.
           </p>
         </div>
 

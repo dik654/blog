@@ -5,7 +5,10 @@ export default function Expectation() {
   return (
     <section id="expectation" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Expectation: 많은 반복에서 중심이 되는 probability-weighted average</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none"><p>Expectation은 다음 한 번에 반드시 나올 값을 예언하지 않습니다. 가능한 값을 probability만큼 가중해 더한 장기 평균의 기준입니다. 그래서 정수만 나오는 실험의 expectation이 1.5처럼 실제 outcome이 아닌 값일 수도 있습니다.</p></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none"><p>
+            Expectation은 가능한 값을 probability만큼 가중해 더한 장기 평균의 기준입니다. 다음 한 번에 반드시 나올 값을 예언하지는 않습니다. 그래서 정수만 나오는
+            실험의 expectation이 1.5처럼 실제 outcome이 아닌 값일 수도 있습니다.
+          </p></div>
       <ExpectationBalanceViz />
       <ExplainedFormula
         question="앞면 개수 X의 expectation은 얼마이고 어떤 의미일까요?"

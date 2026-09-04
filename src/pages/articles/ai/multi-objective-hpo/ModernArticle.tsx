@@ -74,8 +74,7 @@ export default function MultiObjectiveHpoArticle() {
           question="Minimize objectives에서 configuration a가 b를 지배한다는 뜻은 무엇인가요?"
           idea={
             <p>
-              a가 모든 목표에서 b보다 크지 않고, 적어도 한 목표에서는 엄격히
-              작아야 합니다. 한 축이라도 나쁘면 둘은 trade-off입니다.
+              a가 모든 목표에서 b보다 크지 않고 적어도 한 목표에서는 엄격히 작아야 합니다. 한 축이라도 나쁘면 둘은 trade-off입니다.
             </p>
           }
           formula={String.raw`a\prec b\iff(\forall k, f_k(a)\le f_k(b))\land(\exists j,f_j(a)<f_j(b))`}
@@ -136,18 +135,15 @@ export default function MultiObjectiveHpoArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Latency는 background load에, quality는 seed와 sample에 흔들립니다.
-            한 번의 측정으로 frontier를 만들면 0.2ms 차이로 후보가 들어오고
-            나갑니다. 같은 후보를 여러 seed·measurement rounds에서 반복하고,
-            tolerance를 넘는 dominance가 얼마나 자주 유지되는지 기록합니다.
+            Latency는 background load에, quality는 seed와 sample에 흔들립니다. 한 번의 측정으로 frontier를 만들면 0.2ms 차이로 후보가
+            들어오고 나갑니다. 같은 후보를 여러 seed·measurement rounds에서 반복하고 tolerance를 넘는 dominance가 얼마나 자주 유지되는지 기록합니다.
           </p>
         </div>
         <ExplainedFormula
           question="반복 측정에서 a가 b를 안정적으로 지배하는 비율은 어떻게 보나요?"
           idea={
             <p>
-              각 repeat에서 tolerance-aware dominance가 성립하면 1을 기록하고,
-              전체 repeats의 평균을 냅니다.
+              각 repeat에서 tolerance-aware dominance가 성립하면 1을 기록하고 전체 repeats의 평균을 냅니다.
             </p>
           }
           formula={String.raw`\widehat\pi_{a\prec b}=R^{-1}\sum_{r=1}^{R}\mathbf1[a\prec_r b]`}

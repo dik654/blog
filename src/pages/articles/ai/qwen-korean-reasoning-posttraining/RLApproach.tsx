@@ -40,11 +40,8 @@ export default function RLApproach() {
           probability를 높입니다. 관련 기초는 <Link to="/ai/supervised-fine-tuning">SFT 정본</Link>, <Link to="/ai/rlhf">RLHF 정본</Link>, 구현 맥락은 <Link to="/ai/open-r1">Open-R1 정본</Link>에서 이어서 볼 수 있습니다.
         </p>
         <p>
-          여기서 “reasoning”은 논문이 학습 데이터와 출력 형식으로 명시한
-          research trace입니다. 이 사례를 일반 제품이 숨겨진 chain-of-thought를
-          노출해야 한다는 권장으로 옮기면 안 됩니다. 운영 제품은 final answer와
-          짧고 검증 가능한 근거만 노출하고, 내부 평가는 별도 계약으로 설계할 수
-          있습니다.
+          여기서 “reasoning”은 논문이 학습 데이터와 출력 형식으로 명시한 research trace입니다. 이 사례를 일반 제품이 숨겨진 chain-of-thought를 노출해야
+          한다는 권장으로 옮기면 안 됩니다. 운영 제품은 final answer와 짧고 검증 가능한 근거만 노출하고 내부 평가는 별도 계약으로 설계하면 됩니다.
         </p>
       </div>
 
@@ -55,19 +52,15 @@ export default function RLApproach() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>1단계: SFT로 한국어 reasoning의 출발 분포를 만듭니다</h3>
         <p>
-          논문은 reasoning과 일반 prompt를 섞은 한국어 30,000 samples로 SFT를
-          수행했습니다. reasoning subset은 DeepSeek-R1 출력에서, 나머지 예시와
-          prompt seed는 DeepSeek-V3-0324에서 가져왔으며 수학·과학·프로그래밍
-          문제를 포함합니다. 이는 한국어 표현만 가르친 데이터가 아니라 문제 풀이
-          pattern과 언어를 동시에 보여 준 distillation recipe입니다.
+          논문은 reasoning과 일반 prompt를 섞은 한국어 30,000 samples로 SFT를 수행했습니다. reasoning subset은 DeepSeek-R1 출력에서,
+          나머지 예시와 prompt seed는 DeepSeek-V3-0324에서 가져왔으며 수학·과학·프로그래밍 문제를 포함합니다. 이 데이터는 문제 풀이 pattern과 언어를 동시에
+          보여 준 distillation recipe이지, 한국어 표현만 가르친 데이터가 아닙니다.
         </p>
         <p>
-          Decoder-only 모델의 response-only SFT에서는 prompt token의 loss를 mask해
-          학습 대상에서 빼고, 정답 response token의 negative log-likelihood(NLL)를
-          줄이는 방식으로 demonstration을 따라 하게 만듭니다. 즉 고정된 정답 예시를
-          모방하는 신호이며, 현재 policy가 새로 생성한 여러 후보의 reward를 비교하는
-          다음 RL 단계와 data source가 다릅니다. 실제 mask 범위와 template은 사용한
-          trainer 설정으로 확인해야 합니다.
+          Decoder-only 모델의 response-only SFT에서는 prompt token의 loss를 mask해 학습 대상에서 빼고 정답 response token의
+          negative log-likelihood(NLL)를 줄이는 방식으로 demonstration을 따라 하게 만듭니다. 즉 고정된 정답 예시를 모방하는 신호입니다. 다음 RL 단계는
+          현재 policy가 새로 생성한 여러 후보의 reward를 비교하므로 data source가 다릅니다. 실제 mask 범위와 template은 사용한 trainer 설정으로
+          확인해야 합니다.
         </p>
         <p>
           연구 설정은 14B checkpoint, 8×H100, 32K context를 사용했습니다. 이
@@ -118,10 +111,8 @@ export default function RLApproach() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>3단계: 같은 질문의 12개 후보를 평균보다 나은지 비교합니다</h3>
         <p>
-          GRPO는 하나의 질문에서 여러 candidate를 sampling하고, 각 reward가
-          group 평균보다 높은지 낮은지로 update 방향을 정합니다. 절대 reward가
-          높더라도 같은 질문의 다른 후보가 모두 더 높으면 그 후보는 상대적으로
-          나쁜 예입니다. 이 연구에서는 질문당 12 rollouts를 사용했습니다.
+          GRPO는 하나의 질문에서 여러 candidate를 sampling하고 각 reward가 group 평균보다 높은지 낮은지로 update 방향을 정합니다. 절대 reward가
+          높더라도 같은 질문의 다른 후보가 모두 더 높으면 그 후보는 상대적으로 나쁜 예입니다. 이 연구에서는 질문당 12 rollouts를 사용했습니다.
         </p>
       </div>
 
@@ -163,35 +154,25 @@ export default function RLApproach() {
           <code>(r_i-r̄)/σ_r</code>가 아니라 raw group-centered advantage입니다.
         </p>
         <p>
-          이것은 “정규화는 언제나 나쁘다”는 일반 법칙이 아니라 Dr.GRPO 논문과
-          이 한국어 연구가 채택한 algorithm claim입니다. 표준편차를 없애면 작은
-          reward 차이가 자동 증폭되지 않지만 reward scale 설계가 더 중요해지고,
-          length normalization을 없애도 별도의 overlong penalty와 길이
-          distribution monitoring은 여전히 필요합니다.
+          이것은 “정규화는 언제나 나쁘다”는 일반 법칙이 아니라 Dr.GRPO 논문과 이 한국어 연구가 채택한 algorithm claim입니다. 표준편차를 없애면 작은 reward 차이가
+          자동 증폭되지 않지만 reward scale 설계가 더 중요해지고 length normalization을 없애도 별도의 overlong penalty와 길이 distribution
+          monitoring은 여전히 필요합니다.
         </p>
 
         <h3>oracle judge는 ground truth가 아니라 reward의 두 번째 측정기입니다</h3>
         <p>
-          연구진의 verifiable-only run은 약 220 step에서 accuracy reward가 거의
-          0으로 떨어지는 collapse를 보였습니다. 형식 checker가 정답의 의미를
-          충분히 판별하지 못하자 policy가 허점을 이용했고, 같은 질문의 후보
-          다양성도 줄었습니다. 이후 더 큰 frozen model을 oracle judge로 붙여
-          주로 accuracy reward를 재검토했고, 같은 hyperparameter 비교에서 약
-          1,000 step까지 안정적으로 진행됐다고 보고합니다.
+          연구진의 verifiable-only run은 약 220 step에서 accuracy reward가 거의 0으로 떨어지는 collapse를 보였습니다. 형식 checker가 정답의
+          의미를 충분히 판별하지 못하자 policy가 허점을 이용했고 같은 질문의 후보 다양성도 줄었습니다. 이후 더 큰 frozen model을 oracle judge로 붙여 주로
+          accuracy reward를 재검토했고 같은 hyperparameter 비교에서 약 1,000 step까지 안정적으로 진행됐다고 보고합니다.
         </p>
         <p>
-          oracle은 이름과 달리 완전한 정답지가 아닙니다. 학습 대상 policy와
-          별개의 frozen evaluator일 뿐이며, 수학 checker의 오탐·누락을 의미
-          판단으로 보정합니다. judge 자체의 편향·환각·provider 상관 실패를
-          calibration set으로 측정하지 않으면 잘못된 reward를 더 그럴듯하게 만들
-          수 있습니다.
+          oracle은 학습 대상 policy와 별개의 frozen evaluator일 뿐입니다. 이름과 달리 완전한 정답지가 아니며, 수학 checker의 오탐·누락을 의미 판단으로
+          보정합니다. judge 자체의 편향·환각·provider 상관 실패를 calibration set으로 측정하지 않으면 잘못된 reward를 더 그럴듯하게 만들 수 있습니다.
         </p>
         <p>
-          재현할 때는 checker와 oracle이 충돌하면 accuracy reward를 교체하는지,
-          일정 범위로 clamp하는지, 두 값을 결합하는지를 구현 계약으로 명시합니다.
-          Checker version, oracle model snapshot, judge prompt와 override·clamp 규칙을
-          하나의 reward receipt로 고정해야, 학습 곡선 변화가 policy 개선인지 측정기
-          변경인지 구분할 수 있습니다.
+          재현할 때는 checker와 oracle이 충돌하면 accuracy reward를 교체하는지, 일정 범위로 clamp하는지, 두 값을 결합하는지를 구현 계약으로 명시합니다.
+          Checker version, oracle model snapshot, judge prompt와 override·clamp 규칙을 하나의 reward receipt로 고정해야 학습
+          곡선 변화가 policy 개선인지 측정기 변경인지 구분합니다.
         </p>
       </div>
 
@@ -206,7 +187,8 @@ export default function RLApproach() {
           ))}
         </dl>
         <p className="mt-3 text-xs leading-5 text-muted-foreground">
-          위 숫자는 논문의 단일 experiment snapshot입니다. 다른 model size·data·reward·judge에 그대로 적용할 recipe나 인과 효과 크기가 아닙니다.
+          위 숫자는 논문의 단일 experiment snapshot입니다. model size와 data, reward, judge가 다른 환경에 그대로 적용할 recipe나 인과 효과
+          크기가 아닙니다.
         </p>
       </div>
 
@@ -229,7 +211,8 @@ export default function RLApproach() {
           ))}
         </div>
         <p className="mt-3 text-xs leading-5 text-muted-foreground">
-          논문이 보고한 accuracy snapshot입니다. Base→SFT→RL 사이에는 data·training stage·oracle reward가 함께 바뀌었으므로, 표의 차이를 “한국어 reasoning 하나가 만든 인과 효과”로 분리할 수 없습니다.
+          논문이 보고한 accuracy snapshot입니다. Base→SFT→RL 사이에는 data와 training stage, oracle reward가 함께 바뀌었으므로 표의 차이를
+          “한국어 reasoning 하나가 만든 인과 효과”로 분리할 수 없습니다.
         </p>
       </div>
 
@@ -256,10 +239,8 @@ export default function RLApproach() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          이 단계까지 가려면 출력 표면 문제가 아니라 reasoning trace와 과제 품질의
-          반복 가능한 실패가 있어야 합니다. 그보다 가벼운 서비스 요구에서는
-          다음 절의 runtime guard가 더 직접적일 수 있으며, 학습 모델을 배포한
-          뒤에도 long-tail 실패를 관찰하는 마지막 방어선은 별도로 필요합니다.
+          이 단계까지 가려면 출력 표면 문제가 아니라 reasoning trace와 과제 품질의 반복 가능한 실패가 있어야 합니다. 그보다 가벼운 서비스 요구라면 다음 절의 runtime
+          guard가 더 직접적일 수 있습니다. 학습 모델을 배포한 뒤에도 long-tail 실패를 관찰하는 마지막 방어선은 별도로 필요합니다.
         </p>
       </div>
     </section>

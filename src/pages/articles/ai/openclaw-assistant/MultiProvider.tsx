@@ -19,10 +19,8 @@ export default function MultiProvider({
         provider·model을 고른 뒤 runtime policy를 적용합니다
       </h3>
       <p>
-        Telegram 사용자 A에게 OpenAI model을, Slack 사용자 B에게 다른 provider의
-        model을 지정할 수는 있습니다. 그러나 이 선택은 channel adapter가 곧
-        model runtime이라는 뜻이 아닙니다. Gateway는 먼저 canonical
-        provider/model ref를 확정하고, 그 조합에 맞는 runtime policy를 별도로
+        Telegram 사용자 A에게 OpenAI model을, Slack 사용자 B에게 다른 provider의 model을 지정할 수는 있습니다. 그렇다고 channel adapter가 곧
+        model runtime이 되지는 않습니다. Gateway는 먼저 canonical provider/model ref를 확정하고 그 조합에 맞는 runtime policy를 별도로
         적용합니다.
       </p>
 

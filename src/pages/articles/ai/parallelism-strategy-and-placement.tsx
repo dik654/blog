@@ -24,21 +24,18 @@ export default function ParallelismStrategyAndPlacementArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Parallelism strategy 는 model 하나를 GPU 여러 장에 올릴 때 TP·PP·DP 의 degree 를 각각
-            얼마로 두고 어느 GPU 묶음이 어느 축을 맡을지 정한 결과입니다. 그 GPU 묶음을 축 이름이
-            붙은 격자로 그린 것이 parallelism mesh 이고, 축을 둘 이상 동시에 쓰면 hybrid parallelism
-            이라 부릅니다.
+            model 하나를 GPU 여러 장에 올릴 때는 TP·PP·DP 의 degree 를 각각 얼마로 둘지, 어느 GPU 묶음이 어느 축을 맡을지 정합니다. 그렇게 정한 결과가
+            parallelism strategy 입니다. 그 GPU 묶음을 축 이름이 붙은 격자로 그린 것이 parallelism mesh 이고, 축을 둘 이상 동시에 쓰면 hybrid
+            parallelism 이라 부릅니다.
           </p>
           <p>
-            같은 16 GPU 라도 mesh 는 여러 가지입니다. TP 16 하나로 두거나, TP 8 × PP 2 로 두거나,
-            TP 8 × DP 2 로 둘 수 있습니다. 세 mesh 는 GPU 당 weight 는 비슷하지만 어느 link 로 몇
-            byte 를 보내는지가 다르고, 그 차이가 token 당 시간과 초당 token 을 정합니다.
+            같은 16 GPU 라도 mesh 는 여러 가지입니다. TP 16 하나로 둘 수도 있고 TP 8 × PP 2 나 TP 8 × DP 2 로 나눌 수도 있습니다. 세 mesh 는
+            GPU 당 weight 가 비슷합니다. 다른 것은 어느 link 로 몇 byte 를 보내는지이고, 그 차이가 token 당 시간과 초당 token 을 정합니다.
           </p>
           <p>
-            판정 기준은 두 수입니다. GPU 를 N 배로 늘렸을 때 얻은 이득의 비율인 scaling efficiency
-            와, 계산 시간 대비 통신 시간의 비율인 communication-to-computation ratio 입니다. 이 글은
-            70B FP16 을 8 × 80 GB node 두 대에 놓는 mesh 후보 셋을 그 두 수로 비교하고, 마지막에
-            degree 를 고르는 절차를 pseudocode 로 닫습니다.
+            판정 기준은 두 수입니다. 하나는 GPU 를 N 배로 늘렸을 때 얻은 이득의 비율인 scaling efficiency, 다른 하나는 계산 시간 대비 통신 시간의 비율인
+            communication-to-computation ratio 입니다. 이 글은 70B FP16 을 8 × 80 GB node 두 대에 놓는 mesh 후보 셋을 그 두 수로
+            비교하고 마지막에 degree 를 고르는 절차를 pseudocode 로 닫습니다.
           </p>
           <p>
             각 축이 layer 마다 보내는 byte 와 μs 는{" "}
@@ -56,21 +53,18 @@ export default function ParallelismStrategyAndPlacementArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Mesh 를 hardware 에 올릴 때 가장 큰 경계는 node 입니다. node 안의 GPU 8 장은 NVSwitch 로
-            서로 직접 이어져 있고, NVIDIA 는 Hopper 세대의 GPU 당 NVLink 대역폭을 900 GB/s 로 적습니다.
-            NVSwitch 는 그 link 들을 모아 node 안 모든 GPU 쌍이 같은 속도로 통신하게 하는 switch
-            chip 입니다.
+            Mesh 를 hardware 에 올릴 때 가장 큰 경계는 node 입니다. node 안의 GPU 8 장은 NVSwitch 로 서로 직접 이어져 있습니다. NVIDIA 는
+            Hopper 세대의 GPU 당 NVLink 대역폭을 900 GB/s 로 적습니다. NVSwitch 는 그 link 들을 모아 node 안 모든 GPU 쌍이 같은 속도로 통신하게
+            하는 switch chip 입니다.
           </p>
           <p>
-            Node 를 넘으면 GPU 마다 붙은 network adapter 를 지납니다. InfiniBand 는 RDMA 로 CPU 를
-            거치지 않고 원격 GPU memory 에 쓰는 fabric 이며, 400 Gb/s adapter 는 방향당 50 GB/s
-            입니다. 같은 byte 를 옮기는 데 NVSwitch 보다 18 배 오래 걸리고, 고정 latency 도 수 μs
-            에서 십수 μs 로 올라갑니다.
+            Node 를 넘으면 GPU 마다 붙은 network adapter 를 지납니다. InfiniBand 는 RDMA 로 CPU 를 거치지 않고 원격 GPU memory 에 쓰는
+            fabric 입니다. 400 Gb/s adapter 는 방향당 50 GB/s 입니다. 같은 byte 를 옮기는 데 NVSwitch 보다 18 배 오래 걸리고 고정 latency
+            도 수 μs 에서 십수 μs 로 올라갑니다.
           </p>
           <p>
-            이 두 계층이 배치의 첫 규칙을 만듭니다. layer 마다 통신하는 TP 는 NVSwitch 도메인 안에
-            가두고, stage 경계에서만 통신하는 PP 와 통신이 없는 DP 를 node 경계에 놓습니다. vLLM 공식
-            문서도 TP 크기를 node 당 GPU 수로, PP 크기를 node 수로 두라고 적습니다.
+            이 두 계층이 배치의 첫 규칙을 만듭니다. layer 마다 통신하는 TP 는 NVSwitch 도메인 안에 가둡니다. stage 경계에서만 통신하는 PP 와 통신이 없는 DP 는
+            node 경계에 놓습니다. vLLM 공식 문서도 TP 크기를 node 당 GPU 수로, PP 크기를 node 수로 두라고 적습니다.
           </p>
           <p>
             NVLink 와 PCIe 의 device 경계, GPU 와 adapter 사이의 경로는{" "}
@@ -109,9 +103,8 @@ export default function ParallelismStrategyAndPlacementArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Shard placement 는 mesh 의 각 좌표를 물리 GPU 에 대응시키는 일입니다. mesh 가 TP 8 × PP 2
-            라고 해도 TP 그룹 여덟 장이 한 node 에 모이는지, 두 node 에 네 장씩 흩어지는지는 별개의
-            결정이고, 후자는 layer 마다의 all-reduce 가 InfiniBand 를 건너게 만듭니다.
+            mesh 의 각 좌표를 물리 GPU 에 대응시키는 일을 shard placement 라 부릅니다. mesh 가 TP 8 × PP 2 라고 해도 TP 그룹 여덟 장이 한 node
+            에 모이는지, 두 node 에 네 장씩 흩어지는지는 별개의 결정입니다. 후자는 layer 마다의 all-reduce 가 InfiniBand 를 건너게 만듭니다.
           </p>
           <p>
             Topology-aware placement 는 그 대응을 link 지도에 맞춰 고르는 방법입니다. 규칙은 하나로
@@ -125,21 +118,18 @@ export default function ParallelismStrategyAndPlacementArticle() {
             에 더해 TPOT 은 11 ms 이고 통신이 계산의 3 배입니다.
           </p>
           <p>
-            후보 B 는 TP 8 × PP 2 입니다. all-reduce 는 NVSwitch 안에서 한 번에 7 μs, token 당 1.1 ms
-            이고, node 경계는 stage 사이 activation 1 MB 가 한 번 지나 35 μs 입니다. 대신 한 token 이
-            두 stage 를 직렬로 지나 weight 읽기가 5.2 ms 씩 두 번이라 TPOT 은 약 11.6 ms 로 A 와
-            비슷하지만, microbatch 둘을 겹치면 throughput 은 두 배입니다.
+            후보 B 는 TP 8 × PP 2 입니다. all-reduce 는 NVSwitch 안에서 한 번에 7 μs, token 당 1.1 ms 입니다. node 경계는 stage 사이
+            activation 1 MB 가 한 번 지나 35 μs 입니다. 대신 한 token 이 두 stage 를 직렬로 지나 weight 읽기가 5.2 ms 씩 두 번이라 TPOT 은
+            약 11.6 ms 로 A 와 비슷합니다. 다만 microbatch 둘을 겹치면 throughput 은 두 배입니다.
           </p>
           <p>
-            후보 C 는 TP 8 × DP 2 입니다. replica 하나가 node 하나에 들어가므로 node 경계 통신은 0
-            이고 TPOT 은 5.2 + 1.1 = 6.3 ms, throughput 은 replica 둘이라 C 가 A 의 1.7 배 빠른 token
-            을 두 배로 냅니다. 70B 는 node 하나의 weight 140 GB 와 KV pool 을 감당하므로 C 가 답이고,
-            B 는 replica 가 node 에 들어가지 않는 405B 급에서 답이 됩니다.
+            후보 C 는 TP 8 × DP 2 입니다. replica 하나가 node 하나에 들어가므로 node 경계 통신은 0 이고 TPOT 은 5.2 + 1.1 = 6.3 ms,
+            throughput 은 replica 둘이라 C 가 A 의 1.7 배 빠른 token 을 두 배로 냅니다. 70B 는 node 하나의 weight 140 GB 와 KV pool
+            을 감당하므로 C 가 답입니다. B 는 replica 가 node 에 들어가지 않는 405B 급에서 답이 됩니다.
           </p>
           <p>
-            같은 mesh 라도 placement 를 틀리면 C 가 A 가 됩니다. TP 그룹이 두 node 에 걸치게 rank 를
-            배정하면 통신량은 후보 A 와 같아집니다. runtime 이 rank 를 node 순서로 채우는 기본값을
-            믿지 말고, 기동 log 의 rank 와 GPU·host 대응을 확인하는 것이 placement 점검의 전부입니다.
+            같은 mesh 라도 placement 를 틀리면 C 가 A 가 됩니다. TP 그룹이 두 node 에 걸치게 rank 를 배정하면 통신량은 후보 A 와 같아집니다. runtime
+            이 rank 를 node 순서로 채우는 기본값은 믿지 않습니다. 기동 log 의 rank 와 GPU·host 대응을 확인하는 것이 placement 점검의 전부입니다.
           </p>
         </div>
         <TermBreakdown
@@ -159,9 +149,8 @@ export default function ParallelismStrategyAndPlacementArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Scaling efficiency 는 GPU 를 N 배로 늘렸을 때 이상적인 N 배 이득 중 실제로 얻은 비율입니다.
-            문제 크기를 고정하고 시간이 얼마나 줄었는지 재면 strong scaling, GPU 수에 비례해 문제를
-            키우고 시간이 그대로인지 재면 weak scaling 입니다. 둘은 같은 배치에 대해 다른 값을 냅니다.
+            GPU 를 N 배로 늘리면 이상적으로는 N 배 이득이 나옵니다. 그중 실제로 얻은 비율이 scaling efficiency 입니다. 문제 크기를 고정하고 시간이 얼마나 줄었는지
+            재면 strong scaling, GPU 수에 비례해 문제를 키우고 시간이 그대로인지 재면 weak scaling 입니다. 둘은 같은 배치에 대해 다른 값을 냅니다.
           </p>
           <p>
             추론에서 TP 는 strong scaling 의 축입니다. 요청 하나의 batch 를 고정한 채 GPU 를 늘려
@@ -169,9 +158,8 @@ export default function ParallelismStrategyAndPlacementArticle() {
             42 ms 대비 6.3 ms 이므로 strong scaling efficiency 는 42 / (8 × 6.3) = 83% 입니다.
           </p>
           <p>
-            DP 는 weak scaling 의 축입니다. GPU 묶음을 두 배로 늘리며 요청도 두 배로 받아 token 당
-            시간은 그대로 두고 초당 token 을 두 배로 만듭니다. router 가 균등하고 replica 가 독립이면
-            효율은 100% 에 가깝고, 그래서 replica 가 들어가기만 하면 DP 가 가장 싼 축입니다.
+            DP 는 weak scaling 의 축입니다. GPU 묶음을 두 배로 늘리며 요청도 두 배로 받아 token 당 시간은 그대로 두고 초당 token 을 두 배로 만듭니다.
+            router 가 균등하고 replica 가 독립이면 효율은 100% 에 가깝습니다. 그래서 replica 가 들어가기만 하면 DP 가 가장 싼 축입니다.
           </p>
           <p>
             Strong scaling 이 100% 에 못 미치는 이유는 Amdahl 의 법칙입니다. 나눌 수 없는 부분이 남고,
@@ -180,10 +168,9 @@ export default function ParallelismStrategyAndPlacementArticle() {
             소유하며, 아래 식은 그 상한을 통신 비율로 다시 쓴 것입니다.
           </p>
           <p>
-            Megatron-LM 은 512 V100 에서 8.3B model 을 훈련하며 단일 GPU baseline 대비 74% 의 weak
-            scaling 을, 8-way model parallel 만으로는 77% 를 보고했습니다. training 의 수치라 추론에
-            옮겨 적을 수는 없지만, TP 8 이 node 안에서도 4 분의 1 가까이를 통신과 중복 계산에 잃는다는
-            크기 감각은 유효합니다.
+            Megatron-LM 은 512 V100 에서 8.3B model 을 훈련하며 단일 GPU baseline 대비 74% 의 weak scaling 을, 8-way model
+            parallel 만으로는 77% 를 보고했습니다. training 의 수치라 추론에 옮겨 적을 수는 없지만 TP 8 이 node 안에서도 4 분의 1 가까이를 통신과 중복
+            계산에 잃는다는 크기 감각은 유효합니다.
           </p>
         </div>
         <ExplainedFormula
@@ -227,21 +214,18 @@ export default function ParallelismStrategyAndPlacementArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Communication-to-computation ratio 는 한 step 의 통신 시간을 계산 시간으로 나눈 값입니다.
-            비율이 0.2 면 통신이 계산의 5 분의 1 이고, 1 을 넘으면 GPU 가 계산보다 기다리는 시간이
-            깁니다. 후보 C 는 1.1 / 5.2 = 0.21, 후보 A 는 8.4 / 2.6 = 3.2 입니다.
+            Communication-to-computation ratio 는 한 step 의 통신 시간을 계산 시간으로 나눈 값입니다. 비율이 0.2 면 통신이 계산의 5 분의 1
+            입니다. 1 을 넘으면 GPU 가 계산보다 기다리는 시간이 깁니다. 후보 C 는 1.1 / 5.2 = 0.21, 후보 A 는 8.4 / 2.6 = 3.2 입니다.
           </p>
           <p>
-            Distributed inference bottleneck 은 이 비율이 정합니다. 비율이 작으면 병목은 여전히 각
-            GPU 의 weight 읽기이고 TP 를 더 올리면 빨라집니다. 비율이 1 근처를 넘으면 병목이 link 로
-            옮겨 가 GPU 를 더 넣어도 token 당 시간이 줄지 않으며, 후보 A 가 후보 C 보다 GPU 는 두 배인데
+            Distributed inference bottleneck 은 이 비율이 정합니다. 비율이 작으면 병목은 여전히 각 GPU 의 weight 읽기이고 TP 를 더 올리면
+            빨라집니다. 비율이 1 근처를 넘으면 병목이 link 로 옮겨 가 GPU 를 더 넣어도 token 당 시간이 줄지 않습니다. 후보 A 가 후보 C 보다 GPU 는 두 배인데
             느린 이유가 그것입니다.
           </p>
           <p>
-            비율을 줄이는 방법은 통신을 계산 뒤에 숨기는 것입니다. Communication–compute overlap 은 한
-            layer 의 all-reduce 를 다음 GEMM 과 다른 CUDA stream 에 올려 동시에 돌리는 기법이고, 겹쳐진
-            비율 o 만큼 통신 시간이 사라집니다. 앞 글의 Ring Attention 이 KV 전송을 attention 계산 뒤에
-            숨긴 것이 그 예입니다.
+            비율을 줄이는 방법은 통신을 계산 뒤에 숨기는 것입니다. Communication–compute overlap 은 한 layer 의 all-reduce 를 다음 GEMM 과
+            다른 CUDA stream 에 올려 동시에 돌리는 기법입니다. 겹쳐진 비율 o 만큼 통신 시간이 사라집니다. 앞 글의 Ring Attention 이 KV 전송을
+            attention 계산 뒤에 숨긴 것이 그 예입니다.
           </p>
           <p>
             겹치려면 의존성이 없어야 합니다. TP 의 all-reduce 결과는 바로 다음 layer 의 입력이라 그
@@ -250,10 +234,9 @@ export default function ParallelismStrategyAndPlacementArticle() {
             <Link to="/gpu/cuda-sync-streams#streams">CUDA stream ordering</Link> 글이 소유합니다.
           </p>
           <p>
-            Decode 에서 overlap 의 한계는 α 입니다. 1 MB all-reduce 의 7 μs 중 5 μs 가 고정 latency 라
-            chunk 로 잘라도 각 chunk 에 α 가 다시 붙습니다. 그래서 decode 의 통신 비율은 overlap 보다
-            TP 를 NVSwitch 안에 가두는 placement 가 먼저이고, overlap 은 prefill 처럼 byte 항이 큰
-            곳에서 효과가 큽니다.
+            Decode 에서 overlap 의 한계는 α 입니다. 1 MB all-reduce 의 7 μs 중 5 μs 가 고정 latency 라 chunk 로 잘라도 각 chunk 에
+            α 가 다시 붙습니다. 그래서 decode 의 통신 비율은 overlap 보다 TP 를 NVSwitch 안에 가두는 placement 가 먼저입니다. overlap 은
+            prefill 처럼 byte 항이 큰 곳에서 효과가 큽니다.
           </p>
         </div>
         <ExplainedFormula
@@ -285,9 +268,9 @@ export default function ParallelismStrategyAndPlacementArticle() {
             비율에는 나타나지 않는 routing 문제입니다.
           </p>
           <p>
-            PP 에서는 동시 요청이 microbatch 를 채우지 못하면 bubble 이 throughput 을 먹습니다. stage 수
-            p 와 microbatch 수 m 에서 (p−1)/(m+p−1) 을 다시 계산하고, m 이 작으면 PP 대신 DP 로 축을
-            바꾸는 쪽이 낫습니다. KV pool 이 작아 admission 이 막히는 경우는 capacity 글의 범위입니다.
+            PP 에서는 동시 요청이 microbatch 를 채우지 못하면 bubble 이 throughput 을 먹습니다. stage 수 p 와 microbatch 수 m 에서
+            (p−1)/(m+p−1) 을 다시 계산합니다. m 이 작으면 PP 대신 DP 로 축을 바꾸는 쪽이 낫습니다. KV pool 이 작아 admission 이 막히는 경우는
+            capacity 글의 범위입니다.
           </p>
         </ProgressiveDetail>
       </section>
@@ -298,15 +281,13 @@ export default function ParallelismStrategyAndPlacementArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            지금까지의 규칙을 한 절차로 묶으면 순서가 정해집니다. 먼저 replica 하나가 들어가는 최소 GPU
-            수를 memory 로 구하고, 그 수가 node 안에 들어가면 TP 로, 넘으면 node 안은 TP 로 채우고
-            node 수만큼 PP 로 나눕니다. 남는 GPU 는 전부 DP 에 줍니다.
+            지금까지의 규칙을 한 절차로 묶으면 순서가 정해집니다. 먼저 replica 하나가 들어가는 최소 GPU 수를 memory 로 구합니다. 그 수가 node 안에 들어가면 TP 로
+            두고, 넘으면 node 안은 TP 로 채우고 node 수만큼 PP 로 나눕니다. 남는 GPU 는 전부 DP 에 줍니다.
           </p>
           <p>
-            이 순서는 vLLM 공식 문서의 권고와 같습니다. model 이 한 GPU 에 안 들어가지만 한 node 에
-            들어가면 TP, 한 node 에도 안 들어가면 TP 를 node 당 GPU 수로 두고 PP 를 node 수로 두며, NVLink
-            가 없는 node 에서는 TP 대신 PP 를 쓰라고 적습니다. 아래 pseudocode 는 그 권고에 memory 와
-            통신 비율 검산을 붙인 것입니다.
+            이 순서는 vLLM 공식 문서의 권고와 같습니다. model 이 한 GPU 에 안 들어가지만 한 node 에 들어가면 TP, 한 node 에도 안 들어가면 TP 를 node 당
+            GPU 수로 두고 PP 를 node 수로 두라고 적습니다. NVLink 가 없는 node 에서는 TP 대신 PP 를 쓰라고 합니다. 아래 pseudocode 는 그 권고에
+            memory 와 통신 비율 검산을 붙인 것입니다.
           </p>
         </div>
         <AlgorithmBlock

@@ -10,7 +10,10 @@ export default function OptimizationGeometryArticle() {
   return <article className="space-y-16">
     <section id="overview" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">00 · 함수의 지형</p><h2 className="mt-2 text-2xl font-bold">Convexity와 smoothness는 optimizer가 아니라 objective에 붙는 구조 조건이다</h2></header>
-      <p className="text-lg leading-8">Objective와 feasible set을 정했다고 바로 빠른 algorithm이 나오는 것은 아닙니다. 이제 함수의 두 점 사이가 어떻게 굽고, slope가 얼마나 빨리 바뀌며, 바닥 주변이 얼마나 평평한지 묻습니다. 이 조건들이 뒤 글의 convergence theorem에 들어갈 전제가 됩니다.</p>
+      <p className="text-lg leading-8">
+            Objective와 feasible set을 정했다고 바로 빠른 algorithm이 나오는 것은 아닙니다. 이제 함수의 두 점 사이가 어떻게 굽는지, slope가 얼마나 빨리
+            바뀌는지, 바닥 주변이 얼마나 평평한지를 묻습니다. 이 조건들이 뒤 글의 convergence theorem에 들어갈 전제가 됩니다.
+          </p>
       <Term name="Convex function" shape="graph ≤ every chord" meaning="두 graph point 사이에서 함수가 그 둘을 잇는 직선보다 위로 솟지 않습니다." example="x²은 convex이고 −x²은 concave입니다." boundary="그릇처럼 보이는 한 그림이 아니라 모든 두 점과 혼합 비율에서 확인합니다." />
       <CurvatureShapeViz />
     </section>

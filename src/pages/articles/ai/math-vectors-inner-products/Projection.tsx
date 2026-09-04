@@ -7,10 +7,8 @@ export default function Projection() {
       <h2 className="mb-6 text-2xl font-bold">Projection: 한 방향에 해당하는 성분만 남기기</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          햇빛 아래 물체의 그림자를 생각하면 projection이 쉽습니다. Vector u를 기준 방향 v에
-          비추었을 때 v와 평행하게 남는 그림자가 projection입니다. 먼저 dot product로 v
-          방향의 signed 크기를 구하고, v의 길이 제곱으로 scale을 보정한 뒤 v 방향을 다시
-          곱합니다.
+          햇빛 아래 물체의 그림자를 생각하면 projection이 쉽습니다. Vector u를 기준 방향 v에 비추었을 때 v와 평행하게 남는 그림자가 projection입니다. 먼저
+          dot product로 v 방향의 signed 크기를 구하고 v의 길이 제곱으로 scale을 보정한 뒤 v 방향을 다시 곱합니다.
         </p>
       </div>
       <ProjectionViz />

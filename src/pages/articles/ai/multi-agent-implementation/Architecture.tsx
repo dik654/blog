@@ -2,7 +2,15 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import ArchitectureViz from "./viz/ArchitectureViz";
 
 export default function Architecture() {
-  return <section id="architecture" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">분해 패턴을 고르기 전에 worker가 무엇을 받아 무엇을 반환하고, 누가 합칠지부터 계약합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>Coordinator–worker는 범위와 owner를 나누기 쉽고, map–reduce는 같은 schema의 독립 작업에 적합합니다. Actor–reviewer는 작성과 검증 context를 분리하지만 test나 rubric이 없으면 의견만 한 번 더 생성합니다. Debate는 열린 판단에서 관점 차이가 실제 가치가 있을 때만 round·budget·최종 판정자를 제한합니다.</p><p>이 네 패턴은 모두 <strong>agent role specialization</strong>의 예시입니다. 각 agent instance에 서로 다른 input·tool·artifact 범위를 부여해 한 agent가 모든 context를 떠안지 않게 나누는 일입니다. 나뉜 역할이 실제로 맞물리려면 실행 순서·의존성·합류 시점을 맞추는 <strong>agent coordination</strong>이 함께 있어야 하고, 아래 join 조건이 그 coordination을 완료로 판정하는 기준입니다.</p><p>Worker output은 자연어 보고 하나가 아니라 task ID, input snapshot, artifact URI/hash, evidence, validation status, uncertainty와 retry-safe receipt를 가집니다. Coordinator가 원문 전체를 다시 읽지 않고 schema와 충돌·누락만 확인할 수 있어야 분리 효과가 남습니다.</p></div><ExplainedFormula question="여러 worker 결과를 합친 output이 완료됐다고 언제 판정할까요?" idea={<>필수 task ID 집합과 성공 receipt가 있는 task ID 집합이 같고, artifact 충돌이 없으며 전역 validator가 통과해야 합니다.</>} formula={String.raw`\begin{aligned}
+  return <section id="architecture" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">분해 패턴을 고르기 전에 worker가 무엇을 받아 무엇을 반환하고, 누가 합칠지부터 계약합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
+            Coordinator–worker는 범위와 owner를 나누기 쉽고 map–reduce는 같은 schema의 독립 작업에 적합합니다. 작성과 검증 context를 분리하는 쪽은
+            Actor–reviewer인데, test나 rubric이 없으면 의견만 한 번 더 생성합니다. Debate는 열린 판단에서 관점 차이가 실제 가치가 있을 때만
+            round·budget·최종 판정자를 제한합니다.
+          </p><p>이 네 패턴은 모두 <strong>agent role specialization</strong>의 예시입니다. 각 agent instance에 서로 다른 input·tool·artifact 범위를 부여해 한 agent가 모든 context를 떠안지 않게 나누는 일입니다. 나뉜 역할이 실제로 맞물리려면 실행 순서·의존성·합류 시점을 맞추는 <strong>agent coordination</strong>이 함께 있어야 하고, 아래 join 조건이 그 coordination을 완료로 판정하는 기준입니다.</p><p>
+            Worker output에는 task ID, input snapshot, artifact URI/hash, evidence, validation status,
+            uncertainty와 retry-safe receipt가 담깁니다. 자연어 보고 하나로 끝나지 않습니다. 그래서 coordinator가 원문 전체를 다시 읽지 않고
+            schema와 충돌·누락만 확인할 수 있어야 분리 효과가 남습니다.
+          </p></div><ExplainedFormula question="여러 worker 결과를 합친 output이 완료됐다고 언제 판정할까요?" idea={<>필수 task ID 집합과 성공 receipt가 있는 task ID 집합이 같고, artifact 충돌이 없으며 전역 validator가 통과해야 합니다.</>} formula={String.raw`\begin{aligned}
 J_R&=\mathbf 1[R=K]\\
 J_A&=\mathbf 1[\operatorname{conflicts}(A)=\varnothing]\\
 \operatorname{join\_ok}&=J_RJ_A\mathbf 1[V(A)=1]

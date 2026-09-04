@@ -16,11 +16,9 @@ export default function Overview() {
           중간 표현으로 바꾸고, 뒤쪽 layer는 그 표현을 task의 예측 parameter로 바꾼다.
         </p>
         <p>
-          이때 hidden layer가 “숨겨져 있다”는 말은 값을 볼 수 없다는 뜻이 아니다.
-          각 hidden activation은 얼마든지 기록하고 시각화할 수 있지만, 어느 unit이
-          어떤 feature를 맡아야 하는지 정답 label로 직접 감독하지 않는다. 최종 objective의
-          gradient가 모든 layer를 함께 조정하면서 유용한 internal representation이
-          만들어진다. 이 관점이 neuron 그림보다 실제 tensor·framework 동작에 가깝다.
+          이때 hidden layer가 “숨겨져 있다”는 말은 값을 볼 수 없다는 뜻이 아니다. 각 hidden activation은 얼마든지 기록하고 시각화할 수 있지만 어느 unit이
+          어떤 feature를 맡아야 하는지 정답 label로 직접 감독하지 않는다. 최종 objective의 gradient가 모든 layer를 함께 조정하면서 유용한 internal
+          representation이 만들어진다. 이 관점이 neuron 그림보다 실제 tensor·framework 동작에 가깝다.
         </p>
       </div>
 

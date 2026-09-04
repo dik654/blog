@@ -6,8 +6,14 @@ export default function ConditionalProbability() {
     <section id="conditional-probability" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">조건부확률과 연쇄법칙: 정보를 받은 뒤 확률을 다시 읽는 법</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="text-lg leading-8">Event는 sample space 안에서 관심 있는 outcome을 묶은 집합입니다. “앞면이 정확히 한 번”과 “첫 toss가 H”처럼 서로 다른 event를 정의할 수 있습니다. 조건부확률은 새로운 사실을 알았을 때 가능한 경우를 그 조건 안으로 좁힌 뒤, target event가 차지하는 비율을 다시 계산합니다.</p>
-        <p>이 관점이 중요한 이유는 sequence model이 긴 문장을 한 번에 맞히는 대신, 앞서 본 token을 조건으로 다음 token의 확률을 반복해서 계산하기 때문입니다. 연쇄법칙은 이 작은 조건부확률들을 곱하면 전체 sequence의 joint probability가 된다는 정확한 연결고리입니다.</p>
+        <p className="text-lg leading-8">
+            Sample space 안에서 관심 있는 outcome을 묶은 집합을 event라고 부릅니다. “앞면이 정확히 한 번”과 “첫 toss가 H”처럼 서로 다른 event를 정의할
+            수 있습니다. 조건부확률은 새로운 사실을 알았을 때 가능한 경우를 그 조건 안으로 좁힌 뒤 target event가 차지하는 비율을 다시 계산합니다.
+          </p>
+        <p>
+            Sequence model은 긴 문장을 한 번에 맞히는 대신 앞서 본 token을 조건으로 다음 token의 확률을 반복해서 계산합니다. 이 관점이 중요한 이유입니다.
+            연쇄법칙은 이 작은 조건부확률들을 곱하면 전체 sequence의 joint probability가 된다는 정확한 연결고리입니다.
+          </p>
       </div>
 
       <ConditionalProbabilityViz />

@@ -30,10 +30,9 @@ export default function PrefixCachingRadixAttentionArticle() {
             재사용되는 token 수는 크게 달라집니다.
           </p>
           <p>
-            이 글은 SGLang 의 RadixAttention 이 쓰는 radix tree 와 vLLM 의 block hash chain
-            을 같은 예로 비교합니다. System prompt 2,000 token 과 few-shot 500 token 을 세
-            요청이 공유하는 상황을 끝까지 따라가며, hit token 수가 어디서 잘리고 어디서
-            늘어나는지를 셉니다.
+            이 글은 SGLang 의 RadixAttention 이 쓰는 radix tree 와 vLLM 의 block hash chain 을 같은 예로 비교합니다. System
+            prompt 2,000 token 과 few-shot 500 token 을 세 요청이 공유하는 상황을 끝까지 따라가며 hit token 수가 어디서 잘리고 어디서 늘어나는지를
+            셉니다.
           </p>
           <p>
             Block 단위 prefix sharing 과 token·request hit rate 의 정의는{" "}
@@ -53,15 +52,13 @@ export default function PrefixCachingRadixAttentionArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Radix tree 는 edge 하나에 token 여러 개를 붙일 수 있는 trie 입니다. SGLang 의
-            RadixAttention 은 이 tree 의 edge 에 token 열을, node 에 그 token 열까지의 KV
-            cache 위치를 둡니다. 두 요청이 앞부분을 공유하면 그 부분이 하나의 edge 로 남고,
-            갈라지는 지점에서 node 가 쪼개집니다.
+            Radix tree 는 edge 하나에 token 여러 개를 붙일 수 있는 trie 입니다. SGLang 의 RadixAttention 은 이 tree 의 edge 에
+            token 열을, node 에 그 token 열까지의 KV cache 위치를 둡니다. 두 요청이 앞부분을 공유하면 그 부분이 하나의 edge 로 남고 갈라지는 지점에서 node
+            가 쪼개집니다.
           </p>
           <p>
-            첫 요청 R1 이 system prompt 2,000 token, few-shot 500 token, 질문 100 token 으로
-            들어오면 tree 는 root 에서 2,600 token 짜리 edge 하나를 가집니다. 다음 요청 R2 가
-            같은 2,500 token 뒤에 다른 질문 100 token 을 붙이면 match 는 2,500 에서 멈추고,
+            첫 요청 R1 이 system prompt 2,000 token, few-shot 500 token, 질문 100 token 으로 들어오면 tree 는 root 에서 2,600
+            token 짜리 edge 하나를 가집니다. 다음 요청 R2 가 같은 2,500 token 뒤에 다른 질문 100 token 을 붙이면 match 는 2,500 에서 멈춥니다.
             edge 는 공유 node(2,500)와 두 leaf(100, 100)로 갈라집니다.
           </p>
           <p>
@@ -71,16 +68,13 @@ export default function PrefixCachingRadixAttentionArticle() {
             start 였습니다.
           </p>
           <p>
-            네 번째 요청 R4 가 system prompt 만 같고 few-shot 이 다르면 공유 node 가 2,000
-            에서 다시 쪼개집니다. 이제 tree 는 system(2,000) 아래 few-shot(500) 과 R4 의
-            few-shot(500) 두 가지를 갖고, R4 의 hit 은 2,000 token 입니다. Tree 는 요청이
-            들어올 때마다 이렇게 자랍니다.
+            네 번째 요청 R4 가 system prompt 만 같고 few-shot 이 다르면 공유 node 가 2,000 에서 다시 쪼개집니다. 이제 tree 는
+            system(2,000) 아래 few-shot(500) 과 R4 의 few-shot(500) 두 가지를 갖습니다. R4 의 hit 은 2,000 token 입니다. Tree 는
+            요청이 들어올 때마다 이렇게 자랍니다.
           </p>
           <p>
-            Node 마다 reference counter 가 있어 지금 running 인 요청이 몇 개나 그 node 를
-            지나는지를 셉니다. 이 counter 가 아래 eviction 절의 보호 조건이 되고, cache 와
-            running batch 가 하나의 memory pool 을 나눠 쓰기 때문에 waiting 이 많아지면
-            cache 쪽이 밀려납니다.
+            Node 마다 reference counter 가 있어 지금 running 인 요청이 몇 개나 그 node 를 지나는지를 셉니다. 이 counter 가 아래 eviction
+            절의 보호 조건이 됩니다. cache 와 running batch 가 하나의 memory pool 을 나눠 쓰기 때문에 waiting 이 많아지면 cache 쪽이 밀려납니다.
           </p>
         </div>
         <ExplainedFormula
@@ -120,10 +114,8 @@ n_r^{hit} &= \underbrace{m_r}_{\text{token 단위 match 길이}}, \qquad n_r^{hi
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Prefix cache matching 은 새 요청의 token 열이 cache 와 처음부터 몇 token 이나
-            일치하는지를 찾는 일입니다. 답은 언제나 하나의 길이이며, 중간만 같은 구간은 세지
-            않습니다. Causal attention 에서 KV 는 앞선 token 전체에 의존하므로 앞이 다르면
-            뒤가 같아도 재사용할 수 없기 때문입니다.
+            새 요청의 token 열이 cache 와 처음부터 몇 token 이나 일치하는지 찾는 일이 prefix cache matching 입니다. 답은 언제나 하나의 길이입니다.
+            중간만 같은 구간은 세지 않습니다. Causal attention 에서 KV 는 앞선 token 전체에 의존하므로 앞이 다르면 뒤가 같아도 재사용할 수 없기 때문입니다.
           </p>
           <p>
             SGLang 의 <code>match_prefix</code> 는 root 에서 edge 의 token 열을 요청과 한
@@ -132,15 +124,13 @@ n_r^{hit} &= \underbrace{m_r}_{\text{token 단위 match 길이}}, \qquad n_r^{hi
             걷기 때문에 유지 비용은 작다고 논문은 적습니다.
           </p>
           <p>
-            vLLM 은 tree 를 두지 않습니다. Block 마다 parent block 의 hash, 그 block 의
-            token 들, LoRA·multimodal 같은 추가 key 를 함께 hash 한 chained hash 를 만들고,
-            새 요청의 prompt 를 16 token 씩 잘라 첫 block 부터 hash 를 조회합니다. 처음
-            miss 가 나는 block 에서 멈추니 결과는 역시 하나의 길이입니다.
+            vLLM 은 tree 를 두지 않습니다. Block 마다 parent block 의 hash, 그 block 의 token 들, LoRA·multimodal 같은 추가 key
+            를 함께 hash 한 chained hash 를 만듭니다. 새 요청의 prompt 는 16 token 씩 잘라 첫 block 부터 hash 를 조회합니다. 처음 miss 가
+            나는 block 에서 멈추니 결과는 역시 하나의 길이입니다.
           </p>
           <p>
-            차이는 경계입니다. 공유 prefix 2,500 token 은 156 개의 full block(2,496 token)
-            과 4 token 짜리 partial block 으로 나뉘고, vLLM 은 full block 만 cache 하므로 hit
-            은 2,496 에서 끊깁니다. R4 의 2,000 token 은 정확히 125 block 이라 손실이
+            차이는 경계입니다. 공유 prefix 2,500 token 은 156 개의 full block(2,496 token) 과 4 token 짜리 partial block 으로
+            나뉩니다. vLLM 은 full block 만 cache 하므로 hit 은 2,496 에서 끊깁니다. R4 의 2,000 token 은 정확히 125 block 이라 손실이
             없습니다. 손실은 요청당 최대 15 token 입니다.
           </p>
           <p>
@@ -169,10 +159,9 @@ n_r^{hit} &= \underbrace{m_r}_{\text{token 단위 match 길이}}, \qquad n_r^{hi
             Hybrid cache manager 는 group 마다 다른 hit 길이를 한 값으로 합의합니다
           </h3>
           <p>
-            Full attention layer 와 sliding window layer 가 섞인 model 은 KV cache group 이
-            둘 이상입니다. Full attention 은 prefix 의 모든 block 이 남아 있어야 hit 이지만,
-            window 1,024 인 layer 는 hit 경계 직전 1,024 token 을 담은 block 만 있으면 됩니다.
-            Group 마다 hit 길이가 다르니 하나로 맞춰야 합니다.
+            Full attention layer 와 sliding window layer 가 섞인 model 은 KV cache group 이 둘 이상입니다. Full attention
+            은 prefix 의 모든 block 이 남아 있어야 hit 이지만 window 1,024 인 layer 는 hit 경계 직전 1,024 token 을 담은 block 만 있으면
+            됩니다. Group 마다 hit 길이가 다르니 하나로 맞춰야 합니다.
           </p>
           <p>
             vLLM V1 의 <code>HybridKVCacheCoordinator.find_longest_cache_hit</code> 은 이를
@@ -181,9 +170,8 @@ n_r^{hit} &= \underbrace{m_r}_{\text{token 단위 match 길이}}, \qquad n_r^{hi
             group 을 처음부터 다시 검사하고, 아무도 줄이지 않는 길이에서 멈춥니다.
           </p>
           <p>
-            Full attention 이 2,496 을 내고 sliding window group 의 block 130 이 지워져
-            있었다고 합시다. Window group 은 후보를 2,080 으로 줄이고, full attention 은
-            block 0~129 가 있으니 2,080 을 받아들입니다. Window group 이 [1,056, 2,080) 을
+            Full attention 이 2,496 을 내고 sliding window group 의 block 130 이 지워져 있었다고 합시다. Window group 은 후보를
+            2,080 으로 줄입니다. full attention 은 block 0~129 가 있으니 2,080 을 받아들입니다. Window group 이 [1,056, 2,080) 을
             다시 확인해 통과하면 hit 은 2,080 으로 확정됩니다.
           </p>
           <p>
@@ -202,10 +190,8 @@ n_r^{hit} &= \underbrace{m_r}_{\text{token 단위 match 길이}}, \qquad n_r^{hi
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            RadixAttention 의 eviction 은 두 조건을 겹칩니다. Reference counter 가 0 인
-            node 만 후보이고, 후보 가운데 leaf 를 least recently used 순으로 지웁니다. Leaf
-            를 먼저 지우는 이유는 조상 node 가 여러 요청이 공유하는 부분이라 마지막까지
-            남겨야 재사용 가치가 크기 때문입니다.
+            RadixAttention 의 eviction 은 두 조건을 겹칩니다. Reference counter 가 0 인 node 만 후보입니다. 그중에서 leaf 를 least
+            recently used 순으로 지웁니다. Leaf 를 먼저 지우는 이유는 조상 node 가 여러 요청이 공유하는 부분이라 마지막까지 남겨야 재사용 가치가 크기 때문입니다.
           </p>
           <p>
             R1·R2·R3 이 모두 끝나 ref 가 0 이고 250 token 어치를 비워야 한다고 합시다. Leaf
@@ -214,10 +200,8 @@ n_r^{hit} &= \underbrace{m_r}_{\text{token 단위 match 길이}}, \qquad n_r^{hi
             후보가 됩니다.
           </p>
           <p>
-            R3 이 아직 running 이면 그 경로의 node 는 ref 가 1 이라 q3 과 조상 모두 보호
-            됩니다. 지울 수 있는 것은 q1·q2 의 200 token 뿐이라 250 을 채우지 못하고,
-            scheduler 는 새 요청을 이번 step 에 받지 못합니다. Cache 가 running 과 같은 pool
-            을 쓰기 때문에 생기는 제약입니다.
+            R3 이 아직 running 이면 그 경로의 node 는 ref 가 1 이라 q3 과 조상 모두 보호 됩니다. 지울 수 있는 것은 q1·q2 의 200 token 뿐이라 250
+            을 채우지 못합니다. scheduler 는 새 요청을 이번 step 에 받지 못합니다. Cache 가 running 과 같은 pool 을 쓰기 때문에 생기는 제약입니다.
           </p>
           <p>
             vLLM 은 tree 가 없으므로 순서를 free queue 에 심습니다. 요청이 끝나면 block 을
@@ -226,9 +210,8 @@ n_r^{hit} &= \underbrace{m_r}_{\text{token 단위 match 길이}}, \qquad n_r^{hi
             가 queue 에서 빼내고, 끝나면 다시 tail 로 돌아옵니다.
           </p>
           <p>
-            새 block 이 필요하면 queue 의 head 를 꺼내면서 그 block 의 hash 를 지웁니다. 두
-            방식 모두 최근에 쓰인 공유 prefix 가 오래 남는다는 점은 같고, radix tree 는 tree
-            모양으로 조상을 명시하고 vLLM 은 반환 순서로 같은 효과를 얻는다는 점이 다릅니다.
+            새 block 이 필요하면 queue 의 head 를 꺼내면서 그 block 의 hash 를 지웁니다. 두 방식 모두 최근에 쓰인 공유 prefix 가 오래 남습니다. 다른
+            것은 radix tree 가 tree 모양으로 조상을 명시하는 데 비해 vLLM 은 반환 순서로 같은 효과를 얻는다는 점입니다.
           </p>
         </div>
         <TermBreakdown
@@ -249,16 +232,14 @@ n_r^{hit} &= \underbrace{m_r}_{\text{token 단위 match 길이}}, \qquad n_r^{hi
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Cache-aware scheduling 은 waiting queue 의 요청을 도착 순이 아니라 matched
-            prefix 길이가 긴 순으로 세우는 정책입니다. Prefix-aware scheduling 이라고도
-            부릅니다. 같은 prefix 를 공유하는 요청을 연달아 돌리면 그 prefix 가 evict 되기
-            전에 다시 hit 하므로 hit rate 가 올라갑니다.
+            Cache-aware scheduling 은 waiting queue 의 요청을 matched prefix 길이가 긴 순으로 세우는 정책입니다. 도착 순은 쓰지 않습니다.
+            Prefix-aware scheduling 이라고도 부릅니다. 같은 prefix 를 공유하는 요청을 연달아 돌리면 그 prefix 가 evict 되기 전에 다시 hit 하므로
+            hit rate 가 올라갑니다.
           </p>
           <p>
-            FCFS 가 왜 나쁜지는 thrashing 예로 보입니다. Cache 가 2,500 token prefix 하나만
-            담을 수 있고, X 계열과 Y 계열 요청이 X1, Y1, X2, Y2, X3, Y3 순으로 도착해 한
-            step 에 하나씩 들어간다고 합시다. Y1 이 X 를 밀어내고 X2 가 Y 를 밀어내니 여섯
-            요청 모두 miss 이고 hit token 은 0 입니다.
+            FCFS 가 왜 나쁜지는 thrashing 예로 보입니다. Cache 가 2,500 token prefix 하나만 담을 수 있다고 합시다. X 계열과 Y 계열 요청이 X1,
+            Y1, X2, Y2, X3, Y3 순으로 도착해 한 step 에 하나씩 들어갑니다. Y1 이 X 를 밀어내고 X2 가 Y 를 밀어내니 여섯 요청 모두 miss 이고 hit
+            token 은 0 입니다.
           </p>
           <p>
             같은 요청을 match 길이 순으로 다시 세우면 X 셋이 먼저, Y 셋이 뒤에 옵니다. 각
@@ -266,21 +247,18 @@ n_r^{hit} &= \underbrace{m_r}_{\text{token 단위 match 길이}}, \qquad n_r^{hi
             15,600 의 64% 입니다.
           </p>
           <p>
-            SGLang 논문은 cache 가 가장 긴 요청 하나를 담을 수 있으면 radix tree 의
-            depth-first 순서가 hit rate 의 상한에 닿고, longest-prefix-first 가 곧 그 순서라고
-            증명합니다.
+            SGLang 논문은 cache 가 가장 긴 요청 하나를 담을 수 있으면 radix tree 의 depth-first 순서가 hit rate 의 상한에 닿는다고 증명합니다.
+            longest-prefix-first 가 곧 그 순서입니다.
           </p>
           <p>
-            대가는 공정성입니다. Hit 이 없는 3,000 token 요청 r1 이 먼저 와 있고, 매 step
-            2,500 을 hit 하는 요청 8 개가 새로 도착해 각각 100 token 만 계산하면 된다고
-            합시다. Step 의 새 prefill 상한이 3,200 이면 hit 요청 8 개가 800 을 쓰고 남은
-            2,400 에 r1 이 들어가지 못하는 일이 step 마다 반복됩니다.
+            대가는 공정성입니다. Hit 이 없는 3,000 token 요청 r1 이 먼저 와 있다고 합시다. 매 step 2,500 을 hit 하는 요청 8 개가 새로 도착해 각각 100
+            token 만 계산하면 됩니다. Step 의 새 prefill 상한이 3,200 이면 hit 요청 8 개가 800 을 쓰고 남은 2,400 에 r1 이 들어가지 못하는 일이
+            step 마다 반복됩니다.
           </p>
           <p>
-            FCFS 였다면 r1 이 먼저 3,000 을 받고 hit 요청 2 개가 같이 들어가며, 나머지 6
-            개는 한 step(수십 ms) 늦어질 뿐입니다. Longest-prefix-first 는 r1 의 TTFT 를
-            hit 요청의 도착이 멈출 때까지 미룹니다. 논문도 greedy cache-aware scheduling 이
-            starvation 을 만들 수 있다고 적고 fair scheduling 과의 결합을 후속 과제로 남겼습니다.
+            FCFS 였다면 r1 이 먼저 3,000 을 받고 hit 요청 2 개가 같이 들어갑니다. 나머지 6 개는 한 step(수십 ms) 늦어질 뿐입니다. Longest-prefix-
+            first 는 r1 의 TTFT 를 hit 요청의 도착이 멈출 때까지 미룹니다. 논문도 greedy cache-aware scheduling 이 starvation 을 만들 수
+            있다고 적고 fair scheduling 과의 결합을 후속 과제로 남겼습니다.
           </p>
           <p>
             SGLang 은 <code>--schedule-policy</code> 로 <code>lpm</code>(longest prefix
@@ -308,10 +286,9 @@ n_r^{hit} &= \underbrace{m_r}_{\text{token 단위 match 길이}}, \qquad n_r^{hi
           preview="Tree 의 edge 마다 KV 는 적어도 한 번 계산해야 하므로 총 계산량의 하한은 edge 크기의 합이고, DFS 로 걸으면 각 edge 를 정확히 한 번만 계산합니다."
         >
           <p>
-            요청 묶음 R 로 만든 radix tree T 에서 edge e 의 KV 크기를 |e| 라 하면 어떤
-            순서로 돌려도 총 계산량 C 는 모든 |e| 의 합 이상입니다. DFS 로 걸으면 edge e 를
-            처음 계산한 뒤 그 subtree 를 끝낼 때까지 e 는 계속 hit 이고, subtree 를 떠난
-            뒤에는 다시 오지 않으므로 각 edge 를 정확히 한 번 계산합니다.
+            요청 묶음 R 로 만든 radix tree T 에서 edge e 의 KV 크기를 |e| 라 하면 어떤 순서로 돌려도 총 계산량 C 는 모든 |e| 의 합 이상입니다. DFS 로
+            걸으면 edge e 를 처음 계산한 뒤 그 subtree 를 끝낼 때까지 e 는 계속 hit 입니다. subtree 를 떠난 뒤에는 다시 오지 않으므로 각 edge 를 정확히
+            한 번 계산합니다.
           </p>
           <p>
             이 논증은 cache 가 가장 긴 요청 하나(tree 의 가장 긴 경로)를 담을 수 있다는
@@ -321,9 +298,8 @@ n_r^{hit} &= \underbrace{m_r}_{\text{token 단위 match 길이}}, \qquad n_r^{hi
             tree 위에서 DFS 를 근사한다고 봅니다.
           </p>
           <p>
-            Output 길이를 미리 모르므로 실제 계산은 증명과 다를 수 있다는 각주가 붙어 있고,
-            논문이 보고한 benchmark 의 hit rate 는 상한의 평균 96% 였습니다. 이 수치는
-            저자 자기보고입니다.
+            Output 길이를 미리 모르므로 실제 계산은 증명과 다를 수 있다는 각주가 붙어 있습니다. 논문이 보고한 benchmark 의 hit rate 는 상한의 평균 96%
+            였습니다. 이 수치는 저자 자기보고입니다.
           </p>
         </ProgressiveDetail>
       </section>
@@ -358,10 +334,9 @@ n_r^{hit} &= \underbrace{m_r}_{\text{token 단위 match 길이}}, \qquad n_r^{hi
             Slot mapping 은 새 token 하나하나가 쓰일 physical 자리입니다
           </h3>
           <p>
-            Slot mapping 은 이번 forward 에서 새로 계산하는 token 마다 그 K·V 를 저장할
-            physical slot 번호를 적은 1차원 tensor 입니다. Slot 번호는 physical block 번호에
-            block 크기를 곱하고 block 안 offset 을 더한 값이라, kernel 은 block table 을 다시
-            보지 않고 이 번호만으로 K·V 를 씁니다.
+            Slot mapping 은 이번 forward 에서 새로 계산하는 token 마다 그 K·V 를 저장할 physical slot 번호를 적은 1차원 tensor 입니다.
+            Slot 번호는 physical block 번호에 block 크기를 곱하고 block 안 offset 을 더한 값이라 kernel 은 block table 을 다시 보지 않고
+            이 번호만으로 K·V 를 씁니다.
           </p>
           <p>
             R2 는 2,496 token 을 hit 했고 104 token(위치 2,496~2,599)을 새로 계산합니다.
@@ -430,10 +405,9 @@ n_r^{hit} &= \underbrace{m_r}_{\text{token 단위 match 길이}}, \qquad n_r^{hi
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Radix tree 로 prefix 를 보관하고 LRU 와 cache-aware scheduling 을 결합한 것은
-            SGLang 논문(NeurIPS 2024)의 §3 입니다. 논문은 Llama-2 7B 를 A10G 한 장에서
-            돌린 benchmark 에서 hit rate 50~99% 와 처리량 최대 6.4× 를 보고했고, 비교
-            대상은 당시의 vLLM v0.2.5 였습니다. 모두 저자 자기보고입니다.
+            Radix tree 로 prefix 를 보관하고 LRU 와 cache-aware scheduling 을 결합한 것은 SGLang 논문(NeurIPS 2024)의 §3 입니다.
+            논문은 Llama-2 7B 를 A10G 한 장에서 돌린 benchmark 에서 hit rate 50~99% 와 처리량 최대 6.4× 를 보고했습니다. 비교 대상은 당시의
+            vLLM v0.2.5 였습니다. 모두 저자 자기보고입니다.
           </p>
           <p>
             Chained block hash, full block 만 cache 하는 규칙, free queue 의 LRU 순서는

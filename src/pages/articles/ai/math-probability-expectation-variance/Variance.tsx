@@ -4,7 +4,11 @@ export default function Variance() {
   return (
     <section id="variance" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Variance: expectation 주변에서 얼마나 흔들리는가</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none"><p>평균만 같아도 distribution의 불안정성은 다를 수 있습니다. Variance는 각 값이 expectation에서 떨어진 거리를 제곱해 평균냅니다. 제곱하는 이유는 양·음 편차가 상쇄되지 않게 하고 큰 편차에 더 큰 가중치를 주기 위해서입니다. X를 초 단위로 잰다면 variance의 단위는 초²이고, 제곱근인 standard deviation은 다시 초 단위입니다.</p></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none"><p>
+            평균만 같아도 distribution의 불안정성은 다를 수 있습니다. Variance는 각 값이 expectation에서 떨어진 거리를 제곱해 평균냅니다. 제곱하는 이유는
+            양·음 편차가 상쇄되지 않게 하고 큰 편차에 더 큰 가중치를 주기 위해서입니다. X를 초 단위로 잰다면 variance의 단위는 초²이고 제곱근인 standard
+            deviation은 다시 초 단위입니다.
+          </p></div>
       <ExplainedFormula
         question="앞면 개수 X는 expectation 1 주변에서 얼마나 흩어져 있을까요?"
         idea={<>각 값에서 평균 1을 빼고 제곱한 뒤 probability로 가중합니다. Standard deviation은 variance의 단위를 원래 X와 맞추기 위해 제곱근을 취합니다.</>}

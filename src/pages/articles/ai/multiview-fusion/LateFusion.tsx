@@ -7,16 +7,14 @@ export default function LateFusion() {
       <h2 className="mb-6 text-2xl font-bold">Late fusion은 view별 표현을 독립적으로 만든 뒤, 결측을 아는 집계 함수로 합칩니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          각 view를 encoder로 처리한 뒤 pooled feature나 prediction을 concat,
-          mean, max 또는 learned gate로 결합합니다. View의 modality와 image
-          statistics가 비슷하면 encoder weight를 공유해 parameter를 줄일 수 있고,
-          서로 다르면 독립 encoder가 각 분포에 맞게 표현을 학습할 수 있습니다.
+          각 view를 encoder로 처리한 뒤 pooled feature나 prediction을 concat, mean, max 또는 learned gate로 결합합니다. view의
+          modality와 image statistics가 비슷하면 encoder weight를 공유해 parameter를 줄일 수 있고 서로 다르면 독립 encoder가 각 분포에 맞게
+          표현을 학습할 수 있습니다.
         </p>
         <p>
-          Prediction-level averaging은 가장 단순한 baseline이고 pretrained model을
-          거의 수정하지 않습니다. Feature-level fusion은 더 많은 interaction을
-          학습하지만 concat dimension과 head capacity가 커질 수 있으므로 projection
-          뒤 공통 dimension으로 맞추는 방법도 비교합니다.
+          Prediction-level averaging은 가장 단순한 baseline이고 pretrained model을 거의 수정하지 않습니다. feature-level fusion은
+          더 많은 interaction을 학습하지만 concat dimension과 head capacity가 커질 수 있으므로 projection 뒤 공통 dimension으로 맞추는
+          방법도 비교합니다.
         </p>
       </div>
       <ExplainedFormula
@@ -50,20 +48,21 @@ h&=\underbrace{\sum_v\alpha_v h_v.}_{\text{오른쪽 항으로 결과 계산}}
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>View mask와 permutation contract를 명시합니다</h3>
         <p>
-          View 위치가 의미를 갖는 고정 camera라면 view ID embedding을 넣고 순서를
-          고정할 수 있습니다. 반대로 unordered set이라면 mean pooling이나
-          permutation-invariant aggregator를 사용해 입력 순서를 바꿔도 prediction이
-          유지되는지 test합니다.
+          view 위치가 의미를 갖는 고정 camera라면 view ID embedding을 넣고 순서를 고정할 수 있습니다. 반대로 unordered set이라면 mean
+          pooling이나 permutation-invariant aggregator를 사용해 입력 순서를 바꿔도 prediction이 유지되는지 test합니다.
         </p>
         <p>
-          Gating weight는 “설명 가능한 중요도”로 곧바로 해석하지 않습니다.
-          특정 view를 가렸을 때의 metric drop과 sample별 error를 함께 봐야 model이
+          gating weight는 “설명 가능한 중요도”로 곧바로 해석하지 않습니다. 특정 view를 가렸을 때의 metric drop과 sample별 error를 함께 봐야 model이
           실제로 어떤 정보에 의존하는지 확인할 수 있습니다.
         </p>
       </div>
       <div id="paper-mvcnn" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">논문 읽기 · Multi-view CNN</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">Su 등은 3D shape를 여러 2D rendering으로 표현하고, 각 view에 CNN을 적용한 뒤 view pooling으로 compact shape descriptor를 만들었습니다. 이 결과는 rendered-view 기반 3D shape recognition 조건의 근거이며, 서로 다른 modality의 calibration이나 임의의 missing-view 조합까지 해결했다는 뜻은 아닙니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            Su 등은 3D shape를 여러 2D rendering으로 표현하고 각 view에 CNN을 적용한 뒤 view pooling으로 compact shape descriptor를
+            만들었습니다. 이 결과는 rendered-view 기반 3D shape recognition 조건의 근거이며, 서로 다른 modality의 calibration이나 임의의
+            missing-view 조합까지 해결했다는 뜻은 아닙니다.
+          </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://openaccess.thecvf.com/content_iccv_2015/html/Su_Multi-View_Convolutional_Neural_ICCV_2015_paper.html" target="_blank" rel="noreferrer">View pooling 위치와 평가 범위 보기</a>
       </div>
     </section>

@@ -48,12 +48,9 @@ export default function SkillSystem({
       </ol>
 
       <p>
-        여기서 allowlist의 의미를 구분해야 합니다. skill 후보를 걸러 prompt에
-        보이지 않게 하는 설정은 유용한 제어 수단이지만 host shell authorization을
-        대신하지 않습니다. third-party skill은 untrusted code와 지침으로
-        취급하고, 실제 tool 호출은 별도의 tool policy와 sandbox 경계를 통과시켜야
-        합니다. 또한 host 환경 변수를 잠시 주입하는 skill 설정이 sandbox 내부에
-        자동으로 secret을 전달한다는 뜻도 아닙니다.
+        여기서 allowlist의 의미를 구분합니다. skill 후보를 걸러 prompt에 보이지 않게 하는 설정은 유용한 제어 수단이지만 host shell authorization을
+        대신하지 않습니다. third-party skill은 untrusted code와 지침으로 취급하고 실제 tool 호출은 별도의 tool policy와 sandbox 경계를
+        통과시킵니다. host 환경 변수를 잠시 주입하는 skill 설정도 sandbox 내부에 자동으로 secret을 전달하지 않습니다.
       </p>
 
       <div className="not-prose my-6 min-w-0 rounded-lg border border-border/70 bg-muted/20 p-4">
