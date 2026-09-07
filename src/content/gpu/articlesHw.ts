@@ -136,6 +136,20 @@ export const hwArticles: Article[] = [
     component: () => import("@/pages/articles/hw/gpu-collective-network"),
   },
   {
+    slug: "modded-rtx4090-moe-serving",
+    title: "개조 RTX 4090 48GB와 MoE Serving: NVLink 공백을 엔지니어링으로 메우기",
+    subcategory: "hw-infra",
+    sections: [
+      { id: "overview", title: "용량은 늘어도 링크는 그대로" },
+      { id: "capacity-mod", title: "48GB 개조의 회로 수준 메커니즘" },
+      { id: "nvlink-gap-quantified", title: "4090 · 3090 · A100 · H100 대역폭 정량 대조" },
+      { id: "moe-communication-sensitivity", title: "MoE all-to-all이 dense all-reduce보다 예민한 이유" },
+      { id: "engineering-recovery", title: "Expert 배치 · 병렬화 선택 · quantization · batching" },
+      { id: "release-gate", title: "용량 병목 vs 통신 병목 판단 순서" },
+    ],
+    component: () => import("@/pages/articles/hw/modded-rtx4090-moe-serving"),
+  },
+  {
     slug: "b300-switchless-network",
     title: "DGX B300 Switchless: ConnectX-8 직결 RoCE 클러스터",
     subcategory: "hw-infra",

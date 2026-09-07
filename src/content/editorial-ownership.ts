@@ -4165,6 +4165,28 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "project-measurement", rule: "algbw·busbw를 wire payload로 간주하지 않고 rank placement·algorithm·counter·failure recovery와 함께 측정한다." },
     ],
   },
+  "modded-rtx4090-moe-serving": {
+    title: "개조 RTX 4090 MoE serving 글이 소유하는 범위",
+    owns: [
+      "GDDR6X 칩 밀도 교체(24GB→48GB) 개조의 회로 수준 메커니즘과 대역폭 불변성",
+      "RTX 4090·3090·A100·H100의 GPU 간 interconnect bandwidth 정량 대조표",
+      "MoE all-to-all dispatch·combine이 dense tensor-parallel all-reduce보다 통신에 민감한 이유",
+      "NVLink 부재를 expert 배치·quantization·batching·병렬화 선택으로 완화하는 절차와 그 한계",
+    ],
+    reuses: [
+      { label: "세대별 GPU 스펙 비교", href: "/gpu/hw-gpu-comparison" },
+      { label: "PCIe·NVLink raw bandwidth 공식", href: "/gpu/gpu-interconnects" },
+      { label: "MoE VRAM·decode bandwidth tradeoff", href: "/ai/model-vram-budgeting" },
+      { label: "Expert parallelism 라우팅·통신 구조", href: "/ai/expert-parallelism-moe-systems" },
+      { label: "Tensor·pipeline parallel 기초", href: "/ai/tensor-and-pipeline-parallel-inference" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "GDDR6X 대역폭 공식, PCIe/NVLink raw bandwidth 공식은 JEDEC·NVIDIA 공개 스펙에서 그대로 가져온다." },
+      { kind: "primary-source", rule: "NVLink·NVSwitch 세대별 집계 대역폭 수치는 NVIDIA 공식 제품 스펙 문서를 기준으로 한다." },
+      { kind: "project-claim", rule: "48GB 개조 카드의 실제 안정성·수율·타이밍 마진은 비공식 개조 제품이라 커뮤니티 보고 수준의 근거로만 제한하고 일반화하지 않는다." },
+      { kind: "project-claim", rule: "엔지니어링 완화 기법의 효과 크기는 실측치가 아니라 통신량·연산량 공식에서 유도한 방향성 판단이며, 실제 배포 전 자체 벤치마크로 검증해야 한다." },
+    ],
+  },
   "b300-switchless-network": {
     title: "스위치리스 B300 글이 소유하는 범위",
     owns: [

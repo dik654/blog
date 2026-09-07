@@ -53,6 +53,10 @@
       "fingerprint": "73a952b80323e8cc",
       "score": 36
     },
+    "gpu/modded-rtx4090-moe-serving": {
+      "fingerprint": "4443368e00d7d2b1",
+      "score": 36
+    },
     "blockchain/helios-state": {
       "fingerprint": "179bb98a0a01716d",
       "score": 35
