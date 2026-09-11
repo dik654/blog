@@ -24,8 +24,7 @@ export default function ShapeSurvival() {
         </p>
 
         <p className="leading-7">
-          설명은 단순합니다. 극단적인 실루엣은 모델에게 선택지를 주지 않습니다. 부드럽게 다듬어진 형태는
-          모델의 사전이 개입할 여지가 생기고, 그 사전이 평균 쪽으로 끌어당깁니다.
+          설명은 단순합니다. 극단적인 실루엣은 모델에게 선택지를 주지 않습니다. 부드럽게 다듬어진 형태는 모델의 사전이 개입할 여지가 생기고 그 사전이 평균 쪽으로 끌어당깁니다.
         </p>
       </div>
 
@@ -66,8 +65,8 @@ export default function ShapeSurvival() {
 
       <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <p className="leading-7">
-          얼굴 임베딩으로도 같은 결론이 나옵니다. 네 결과의 여섯 쌍을 재니 최솟값이 0.728이었습니다. 판정
-          임계값의 두 배 근처라, 얼굴 인식 시스템에 넣으면 넷 다 같은 사람으로 등록됩니다.
+          얼굴 임베딩으로도 같은 결론이 나옵니다. 네 결과의 여섯 쌍을 재니 최솟값이 0.728이었습니다. 판정 임계값의 두 배 근처라 얼굴 인식 시스템에 넣으면 넷 다 같은 사람으로
+          등록됩니다.
         </p>
 
         <p className="leading-7">

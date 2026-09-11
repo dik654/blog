@@ -8,9 +8,8 @@ export default function Overview() {
       <h2 className="mb-6 text-2xl font-bold">세 라운드를 들여 실패했고 그 기록이 남을 가치가 있습니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          얼굴을 문장으로 묘사하면 모델이 자기 학습 분포대로 되돌아갑니다. 그렇다면 형태를 3차원에서
-          결정론적으로 먼저 정하고 모델에게는 "이걸 사진처럼 바꿔라"만 시키면 어떨까. 합리적인 발상이고,
-          세 가지 방법으로 시도해 전부 실패했습니다.
+          얼굴을 문장으로 묘사하면 모델이 자기 학습 분포대로 되돌아갑니다. 그렇다면 형태를 3차원에서 결정론적으로 먼저 정하고 모델에게는 "이걸 사진처럼 바꿔라"만 시키면 어떨까. 합리적인
+          발상이고 세 가지 방법으로 시도해 전부 실패했습니다.
         </p>
 
         <p className="leading-7">

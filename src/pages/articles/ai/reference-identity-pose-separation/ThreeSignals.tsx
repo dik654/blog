@@ -9,8 +9,7 @@ export default function ThreeSignals() {
       <h2 className="mb-6 text-2xl font-bold">세 신호가 각각 다른 것을 맡아야 네 각도가 나옵니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          앞의 두 절이 각각 하나씩 제거했습니다. 참조 잠재는 자세를 붙잡으므로 정체성 전달에서 빼고, 관절
-          좌표는 방향을 표현하지 못하므로 방향 전달에서 뺍니다. 남은 조합이 답입니다.
+          앞의 두 절이 각각 하나씩 제거했습니다. 참조 잠재는 자세를 붙잡으므로 정체성 전달에서 빼고 관절 좌표는 방향을 표현하지 못하므로 방향 전달에서 뺍니다. 남은 조합이 답입니다.
         </p>
 
         <p className="leading-7">
@@ -65,9 +64,8 @@ export default function ThreeSignals() {
         </p>
 
         <p className="leading-7">
-          이 구조에서 배운 일반적인 것은 신호를 역할별로 나누라는 것이 아니라, 한 신호가 두 역할을 겸하고
-          있는지 먼저 확인하라는 쪽입니다. 참조 잠재가 정체성과 자세를 겸하고 있다는 사실을 못 봤다면 문구를
-          계속 다듬고 있었을 것입니다.
+          이 구조에서 배운 일반적인 것은 신호를 역할별로 나누라는 것이 아니라 한 신호가 두 역할을 겸하고 있는지 먼저 확인하라는 쪽입니다. 참조 잠재가 정체성과 자세를 겸하고 있다는
+          사실을 못 봤다면 문구를 계속 다듬고 있었을 것입니다.
         </p>
 
         <p className="leading-7">
