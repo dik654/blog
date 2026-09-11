@@ -11438,6 +11438,37 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "removal-is-not-inpainting": {
+    title: "지우기 글이 소유하는 범위",
+    owns: [
+      "디노이저가 비우기 요청에 물건을 채우는 이유와 그것이 도구 범주의 문제라는 판정",
+      "안내 계수 1에서 네거티브 프롬프트가 계산에서 상쇄된다는 성질",
+      "조건을 받지 않는 구조 전파 방식의 성질과 잠재 공간을 거치지 않는다는 차이",
+      "제거 세기의 경계 버그와 거절 대신 클램프를 택하는 근거",
+      "프롬프트 인자를 노출하지 않는 도구 계약과 확장 기본값 0의 근거",
+      "생성 범위를 제한하는 게이트가 결함 지점에 닿았는지 판정하는 방법",
+      "실행 전에 예측을 적어 두어 지표만 좋아진 결과를 성공으로 쓰지 않는 절차",
+    ],
+    reuses: [
+      { label: "계측기 검증", href: "/ai/generative-measurement-controls" },
+      { label: "편집 동작과 모델 라우팅", href: "/ai/masked-edit-verb-routing" },
+      { label: "잠재 확산과 안내", href: "/ai/latent-diffusion-guidance" },
+    ],
+    evidence: [
+      {
+        kind: "project-measurement",
+        rule: "수치는 한 장비·한 회차의 실측이며 측정일과 고정한 조건을 함께 밝힌다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "자동 판정기가 없는 회차이므로 정량 실패율을 주장하지 않고 대조표와 마스크 밖 수치로만 판정한다.",
+      },
+      {
+        kind: "standard",
+        rule: "실패한 모델 목록은 이 장비에 설치된 범위이며 시험하지 않은 모델과 클라우드 전용 제거 모델로 일반화하지 않는다.",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;
