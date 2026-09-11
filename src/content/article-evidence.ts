@@ -6652,4 +6652,24 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "교차 엔트로피 한 줄과 부호 행렬·로그 시그모이드, 그리고 logit_scale·logit_bias 파라미터의 근거이며 커밋 f62dc9bf2c90 스냅샷 기준임",
     },
   ],
+  "ai/vision-backbone-selection": [
+    {
+      kind: "보충 읽기",
+      label: "DINOv3 · arXiv 2508.10104",
+      href: "https://arxiv.org/abs/2508.10104",
+      note: "자기지도 계열의 dense 능력 경향 근거이며 이 글의 계열 비교는 각 논문의 자기보고를 정성 요약한 것임",
+    },
+    {
+      kind: "보충 읽기",
+      label: "CLIP · arXiv 2103.00020",
+      href: "https://arxiv.org/abs/2103.00020",
+      note: "캡션 정렬 계열의 zero-shot 능력 근거이며 보고된 점수는 해당 프롬프트 설정 위의 값임",
+    },
+    {
+      kind: "보충 읽기",
+      label: "SAM 3 · arXiv 2511.16719",
+      href: "https://arxiv.org/abs/2511.16719",
+      note: "분할 감독 계열이 남기는 경계 능력의 근거이며 검색용 표현으로서의 성능을 주장하지 않음",
+    },
+  ],
 };

@@ -70788,4 +70788,211 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "ai/vision-backbone-selection": {
+    coreIdea:
+      "비전 백본은 공개 점수표가 아니라 학습 목표가 남긴 능력, 과제가 요구하는 능력, 배포가 감당할 비용의 세 축으로 후보를 좁힌 뒤 조건을 맞춘 짧은 실측과 교체 비용을 더해 결정해야 하며, 이 순서를 뒤집으면 평가 조건 차이가 가려집니다.",
+    assumedKnowledge: [
+      { id: "frozen-backbone-evaluation-protocol", role: "얼린 조건에서 표현을 재는 평가 규칙입니다." },
+      { id: "caption-as-supervision", role: "문장을 감독 신호로 쓰는 학습이 무엇을 더해 주는지입니다." },
+      { id: "promptable-concept-segmentation", role: "마스크를 정답으로 받은 계열이 무엇을 남기는지입니다." },
+      { id: "embedding-pipeline-fingerprint", role: "벡터를 비교 가능하게 만드는 계약입니다." },
+      { id: "low-level-cue-leakage", role: "변형 민감도를 재는 방법입니다." },
+      { id: "backbone-budget-comparison", role: "품질과 실행 예산을 함께 놓는 비교 기준입니다." },
+    ],
+    introducedHere: [
+      { id: "pretraining-objective-capability-profile", role: "계열별로 남는 능력을 네 축으로 비교합니다." },
+      { id: "text-alignment-as-separate-capability", role: "텍스트 질의 능력이 별도 학습의 산물임을 고정합니다." },
+      { id: "task-to-backbone-family-mapping", role: "세 질문으로 후보 계열을 좁히는 절차를 세웁니다." },
+      { id: "frozen-probe-selection-experiment", role: "선택 전에 돌리는 최소 실측을 정의합니다." },
+      { id: "probe-protocol-comparability", role: "실측이 비교가 되려면 무엇을 고정해야 하는지 정리합니다." },
+      { id: "backbone-switch-cost", role: "교체 시 드는 세 가지 비용을 계산 가능한 형태로 만듭니다." },
+      { id: "backbone-decision-order", role: "네 단계 판단 순서와 뒤집었을 때의 함정을 고정합니다." },
+    ],
+    conceptExplanations: [
+      {
+        id: "pretraining-objective-capability-profile",
+        sectionId: "objective-axes",
+        intuition:
+          "같은 몸으로도 무엇을 연습했느냐에 따라 잘하는 종목이 달라지듯, 같은 아키텍처도 학습 신호가 능력을 정합니다.",
+        workedExample:
+          "라벨 없이 이미지끼리 맞춘 계열은 자리별 세밀함이 높고 어휘 접근이 낮으며, 캡션 정렬 계열은 그 반대, 분할 감독 계열은 경계가 높고 장면 요약이 낮습니다.",
+        boundary:
+          "이 프로필은 각 논문이 보고한 경향을 정성적으로 요약한 것이며 특정 두 모델의 우열이 아닙니다. 미세조정을 하면 차이가 줄어듭니다.",
+      },
+      {
+        id: "text-alignment-as-separate-capability",
+        sectionId: "text-aligned",
+        intuition:
+          "표현이 좋다고 해서 그 표현에 이름표가 붙어 있는 것은 아니라, 문장으로 부르려면 따로 맞춰 둬야 합니다.",
+        workedExample:
+          "이미지로 이미지를 찾는 질의는 자기지도 계열이 강점을 갖고, 문장으로 이미지를 찾는 질의는 정렬된 계열이 필요합니다. 둘 다 받으려면 벡터를 두 벌 두거나 정렬 단계를 붙입니다.",
+        boundary:
+          "사후 정렬을 붙이면 그 성능은 백본이 아니라 정렬 단계의 데이터와 목표가 정합니다. 두 벡터를 이어 붙이는 방식은 스케일 지배 문제가 생겨 권하지 않습니다.",
+      },
+      {
+        id: "task-to-backbone-family-mapping",
+        sectionId: "task-mapping",
+        intuition:
+          "무엇을 넣고 무엇을 받을지, 그리고 자리가 중요한지 세 가지만 적으면 볼 계열이 정해집니다.",
+        workedExample:
+          "'사용자 사진으로 같은 상품 찾기'는 입력 이미지·출력 순위·자리 불필요라 장면 요약과 변형 견고성이 필요하고 자기지도 계열이 1차 후보가 됩니다.",
+        boundary:
+          "같은 칸에 들어가는 과제라도 도메인이 학습 분포에서 멀면 결과가 뒤집힐 수 있습니다. 이 표는 후보를 좁히는 도구이지 결론이 아닙니다.",
+      },
+      {
+        id: "frozen-probe-selection-experiment",
+        sectionId: "measure-first",
+        intuition:
+          "논문을 더 읽는 대신 내 데이터 몇백 장으로 직접 재 보면 대부분의 논쟁이 끝납니다.",
+        workedExample:
+          "백본을 얼리고 벡터를 한 번 뽑아 둔 뒤 선형 head 성능, 변형 민감도 비, 패치 수준 성능 세 숫자를 후보마다 구합니다.",
+        boundary:
+          "얼린 조건의 결과이므로 미세조정 후 순위와 다를 수 있습니다. 값이 비슷하면 점수가 아니라 운영 조건으로 결정하는 편이 낫습니다.",
+      },
+      {
+        id: "probe-protocol-comparability",
+        sectionId: "probe-protocol",
+        intuition:
+          "달리기 시합에서 한 명만 트랙이 짧으면 기록을 비교할 수 없습니다.",
+        workedExample:
+          "해상도를 한쪽만 336으로 두면 계산량과 성능이 함께 달라져 그 차이가 백본의 성질처럼 보입니다. 선형 head의 학습률·에폭도 후보마다 같게 둡니다.",
+        boundary:
+          "조건을 완전히 맞춘 비교는 표현 자체를, 각 모델 권장 설정을 쓴 비교는 배포 성능을 말합니다. 둘을 섞으면 어느 질문에도 답하지 못합니다.",
+      },
+      {
+        id: "backbone-switch-cost",
+        sectionId: "cost-and-switch",
+        intuition:
+          "더 좋은 모델로 바꾸는 일에는 모델 값 말고도 창고를 다시 채우는 비용이 듭니다.",
+        workedExample:
+          "1,000만 장·장당 10밀리초면 재색인이 단일 장비 기준 약 28시간이고, 전환 기간에는 두 색인을 함께 들고 있어야 하므로 저장 비용이 두 배입니다.",
+        boundary:
+          "임계값 재조정은 자동화가 어려워 사람 시간이 듭니다. 이 비용을 넘지 못하는 성능 차이라면 지금 바꾸지 않는 편이 낫습니다.",
+      },
+      {
+        id: "backbone-decision-order",
+        sectionId: "decision-gate",
+        intuition:
+          "고를 순서를 먼저 정해 두면 어느 모델이 더 좋냐는 답 없는 논쟁으로 빠지지 않습니다.",
+        workedExample:
+          "과제를 한 문장으로 적고, 계열로 후보를 좁히고, 조건을 맞춰 재고, 교체 비용을 더해 결정한 뒤 근거를 기록합니다.",
+        boundary:
+          "모델을 먼저 고르면 표현이 요구를 못 채울 때 미세조정 외 방법이 없어집니다. 점수표를 먼저 보면 그 점수를 만든 평가 조건 차이가 가려집니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 능력의 출처",
+        relation: "학습 목표가 남긴 것을 먼저 구분",
+        concepts: ["pretraining-objective-capability-profile", "text-alignment-as-separate-capability"],
+      },
+      {
+        label: "01 요구 정의",
+        relation: "과제를 좁혀 후보 계열로 내려감",
+        concepts: ["task-to-backbone-family-mapping"],
+      },
+      {
+        label: "02 실측",
+        relation: "얼린 조건에서 세 숫자를 구함",
+        concepts: ["frozen-probe-selection-experiment", "frozen-backbone-evaluation-protocol"],
+      },
+      {
+        label: "03 비교 가능성",
+        relation: "백본 말고 모든 것을 고정",
+        concepts: ["probe-protocol-comparability", "embedding-pipeline-fingerprint"],
+      },
+      {
+        label: "04 교체 비용",
+        relation: "지금 고르는 결정에 나중 비용을 포함",
+        concepts: ["backbone-switch-cost", "backbone-budget-comparison"],
+      },
+      {
+        label: "05 순서",
+        relation: "네 단계로 묶고 근거를 기록",
+        concepts: ["backbone-decision-order"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "세 계열의 학습 신호를 각각 한 줄로 쓰고, 그 신호가 남기는 대표 능력을 하나씩 짝지으세요.",
+        answerChecklist: ["이미지끼리 맞추기 → 자리별 세밀함", "캡션과 맞추기 → 어휘 접근", "마스크 정답 → 경계 품질", "얼린 조건에서 차이가 드러남"],
+        requiredConcepts: ["pretraining-objective-capability-profile"],
+        sectionId: "objective-axes",
+      },
+      {
+        level: "basic",
+        question:
+          "'이 백본이 검색에 좋은가'라는 질문을 두 개로 나누고, 각각 어느 계열이 1차 후보인지 쓰세요.",
+        answerChecklist: ["이미지로 이미지 찾기", "문장으로 이미지 찾기", "전자는 자기지도", "후자는 정렬 계열", "둘 다면 벡터 두 벌 또는 정렬 단계 추가"],
+        requiredConcepts: ["text-alignment-as-separate-capability"],
+        sectionId: "text-aligned",
+      },
+      {
+        level: "basic",
+        question:
+          "후보 계열을 좁히는 세 질문을 순서대로 쓰고, '사용자 사진으로 같은 상품 찾기'에 적용해 결론을 내세요.",
+        answerChecklist: ["질의 형태", "출력 형태", "자리 정보 필요 여부", "입력 이미지·출력 순위·자리 불필요", "자기지도 계열이 1차 후보"],
+        requiredConcepts: ["task-to-backbone-family-mapping"],
+        sectionId: "task-mapping",
+      },
+      {
+        level: "basic",
+        question:
+          "선택 전 최소 실측에서 구하는 세 숫자를 쓰고, 왜 백본을 얼린 채로 재는지 설명하세요.",
+        answerChecklist: ["선형 head 과제 성능", "변형 민감도 비", "패치 수준 성능", "표현 자체를 비교하기 위함", "미세조정하면 초기값 유용성 주장이 됨"],
+        requiredConcepts: ["frozen-probe-selection-experiment"],
+        sectionId: "measure-first",
+      },
+      {
+        level: "basic",
+        question:
+          "실측 비교에서 고정해야 하는 항목을 네 가지 쓰고, 고정하지 않았을 때 무엇을 비교하게 되는지 설명하세요.",
+        answerChecklist: ["전처리", "해상도", "풀링", "정규화", "선형 head 학습 설정", "백본이 아니라 설정을 비교하게 됨"],
+        requiredConcepts: ["probe-protocol-comparability"],
+        sectionId: "probe-protocol",
+      },
+      {
+        level: "basic",
+        question:
+          "1,000만 장 색인에서 장당 추론 10밀리초일 때 재색인 시간을 계산하고, 전환 기간에 추가로 드는 비용을 쓰세요.",
+        answerChecklist: ["10^7 × 10ms = 10^8 ms", "약 27.8시간", "두 색인 동시 운영", "저장 비용 2배", "임계값 재조정 시간"],
+        requiredConcepts: ["backbone-switch-cost"],
+        sectionId: "cost-and-switch",
+      },
+      {
+        level: "advanced",
+        question:
+          "조건을 완전히 맞춘 비교와 각 모델 권장 설정을 쓴 비교가 각각 어떤 질문에 답하는지 구분하고, 둘을 섞으면 왜 답을 얻지 못하는지 설명하세요.",
+        answerChecklist: ["맞춘 비교는 표현 자체", "권장 설정 비교는 배포 성능", "해상도가 다르면 계산량도 다름", "큰 해상도로 학습된 모델이 손해", "섞으면 원인 귀속 불가", "두 비교를 따로 보고"],
+        requiredConcepts: ["probe-protocol-comparability", "frozen-probe-selection-experiment"],
+        sectionId: "probe-protocol",
+      },
+      {
+        level: "advanced",
+        question:
+          "성능이 더 높은 후보 A와 변형 견고성·비용이 나은 후보 B가 있을 때 선택 점수로 결정하는 절차를 쓰고, 점수가 비슷할 때의 판단 기준을 제시하세요.",
+        answerChecklist: ["같은 조건에서 세 숫자 확보", "감점 가중치는 서비스 요구에서 결정", "데이터로 가중치를 추정하지 않음", "점수는 상대 비교용", "비슷하면 교체 비용·라이선스·지원 상태로 결정"],
+        requiredConcepts: ["frozen-probe-selection-experiment", "backbone-switch-cost"],
+        sectionId: "measure-first",
+      },
+      {
+        level: "advanced",
+        question:
+          "판단 순서를 뒤집었을 때 생기는 세 가지 문제를 각각 설명하고, 근거 기록이 왜 순서의 일부인지 쓰세요.",
+        answerChecklist: ["모델 먼저 고르면 미세조정 외 방법 없음", "점수표 먼저 보면 평가 조건 차이가 가려짐", "기록 없으면 다음에 또 바꾸게 됨", "같은 실측을 반복해 비교 가능", "교체 검토의 입력이 됨"],
+        requiredConcepts: ["backbone-decision-order"],
+        sectionId: "decision-gate",
+      },
+      {
+        level: "advanced",
+        question:
+          "이미지 질의와 문장 질의를 모두 받아야 하는 서비스의 설계 선택지 두 가지를 비교하고, 벡터를 이어 붙이는 방식을 권하지 않는 이유를 쓰세요.",
+        answerChecklist: ["색인 두 벌 운영", "정렬 단계를 따로 붙임", "전자는 저장·운영 2배", "후자는 정렬 데이터가 품질 결정", "이어 붙이면 스케일 큰 쪽이 거리 지배", "정규화 조정이 또 다른 과제"],
+        requiredConcepts: ["text-alignment-as-separate-capability", "task-to-backbone-family-mapping"],
+        sectionId: "task-mapping",
+      },
+    ],
+  },
 };

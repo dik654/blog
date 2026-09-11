@@ -202,6 +202,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "원 논문 두 편과 transformers 커밋 f62dc9bf2c90 구현만 근거로 삼고, 두 손실의 성능 우열을 자체 실측으로 주장하지 않는다.",
   },
+  "ai/vision-backbone-selection": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-09-11",
+    rationale:
+      "본문은 6 section·concept 7개로 keep 범위다. 능력 프로필·과제 매핑·실측·비용·순서는 하나의 판단 절차를 이루는 단계라 나누면 각 글이 같은 전제를 다시 세워야 한다.",
+    sharedGate:
+      "계열 비교는 각 원 논문의 자기보고를 정성 요약한 범위로만 쓰고, 특정 모델 간 벤치마크 수치나 자체 실측을 이 글에서 주장하지 않는다.",
+  },
 };
 
 /**
@@ -223,6 +232,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/qwen-korean-consistency": "28703cf32620721b",
   "ai/dinov3-self-supervised-backbone": "1d4f7adb50ed720a",
   "ai/image-embedding-pipeline": "183b7fb7e57921f8",
+  "ai/vision-backbone-selection": "cdd9671993dee419",
   "ai/image-text-contrastive-pretraining": "f5b36610fc8dff17",
   "ai/sam3-promptable-concept-segmentation": "fc7656e7ef8d7e3c",
   "ai/qwen38-flash-next-architecture": "fe506f8b67ff5ddf",

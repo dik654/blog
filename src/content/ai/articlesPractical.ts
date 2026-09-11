@@ -489,6 +489,28 @@ export const cvArticles: Article[] = [
     component: () => import("@/pages/articles/ai/dinov3-self-supervised-backbone"),
   },
   {
+    slug: "vision-backbone-selection",
+    title: "무엇으로 학습했는지가 어떤 과제에 맞는지를 정합니다",
+    subcategory: "ai-practical-cv",
+    sections: [
+      { id: "overview", title: "벤치마크 순위표는 선택 기준이 아닙니다" },
+      {
+        id: "objective-axes",
+        title: "학습 목표가 남긴 것과 지운 것을 봅니다",
+        subsections: [{ id: "text-aligned", title: "텍스트로 질의할 수 있다는 것은 별도 능력입니다" }],
+      },
+      { id: "task-mapping", title: "과제가 요구하는 능력부터 한 문장으로 적습니다" },
+      {
+        id: "measure-first",
+        title: "고르기 전에 30분짜리 실측을 돌립니다",
+        subsections: [{ id: "probe-protocol", title: "비교 가능하려면 무엇을 고정해야 합니까" }],
+      },
+      { id: "cost-and-switch", title: "교체 비용을 먼저 계산하고 고릅니다" },
+      { id: "decision-gate", title: "판단 순서를 고정하면 논쟁이 줄어듭니다" },
+    ],
+    component: () => import("@/pages/articles/ai/vision-backbone-selection"),
+  },
+  {
     slug: "multiview-fusion",
     title: "멀티뷰 Fusion: Episode Contract에서 Missing-view 평가까지",
     subcategory: "ai-practical-cv",

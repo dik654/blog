@@ -21718,6 +21718,69 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "범주 이름을 문장 틀에 넣어 인코딩하고 범주별로 평균·정규화해 선형 분류기 가중치 행렬을 구성하는 방법입니다. 학습 없이 범주 목록을 교체할 수 있지만 문장 틀과 이름 표기 선택이 성능에 영향을 줍니다.",
     canonicalHref: "/ai/image-text-contrastive-pretraining#zero-shot",
   },
+  "pretraining-objective-capability-profile": {
+    id: "pretraining-objective-capability-profile",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "학습 목표별 능력 프로필",
+    definition:
+      "같은 아키텍처라도 무엇을 정답으로 삼아 학습했는지에 따라 얼린 표현에 남는 정보가 달라진다는 관점입니다. 자리별 세밀함·장면 요약·어휘 접근·경계 품질이 계열마다 다른 높이를 갖습니다.",
+    canonicalHref: "/ai/vision-backbone-selection#objective-axes",
+  },
+  "text-alignment-as-separate-capability": {
+    id: "text-alignment-as-separate-capability",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "텍스트 정렬은 별도 능력",
+    definition:
+      "문장으로 이미지를 질의할 수 있는 능력이 백본의 자연스러운 성질이 아니라 그 목표로 학습했을 때만 생긴다는 구분입니다. 사후에 정렬을 붙이면 성능은 백본이 아니라 그 단계의 데이터와 목표가 정합니다.",
+    canonicalHref: "/ai/vision-backbone-selection#text-aligned",
+  },
+  "task-to-backbone-family-mapping": {
+    id: "task-to-backbone-family-mapping",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "과제에서 계열로 가는 매핑",
+    definition:
+      "질의 형태와 출력 형태, 자리 정보 필요 여부라는 세 질문으로 후보 계열을 좁히는 절차입니다. 도메인이 학습 분포에서 멀면 이 매핑보다 실측이 앞섭니다.",
+    canonicalHref: "/ai/vision-backbone-selection#task-mapping",
+  },
+  "frozen-probe-selection-experiment": {
+    id: "frozen-probe-selection-experiment",
+    kind: "method",
+    domain: "machine-learning",
+    label: "얼린 표현 기반 선택 실측",
+    definition:
+      "후보 백본을 고정한 채 벡터를 한 번 뽑아 두고 선형 head 성능·변형 견고성·자리별 성능 세 숫자를 구하는 짧은 비교 실험입니다. 큰 학습 없이 후보를 가를 수 있습니다.",
+    canonicalHref: "/ai/vision-backbone-selection#measure-first",
+  },
+  "probe-protocol-comparability": {
+    id: "probe-protocol-comparability",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "실측 조건의 비교 가능성",
+    definition:
+      "후보 비교가 성립하려면 백본을 제외한 모든 설정이 같아야 한다는 요구입니다. 조건을 완전히 맞춘 비교와 각 모델 권장 설정을 쓴 비교는 서로 다른 질문에 답하므로 섞으면 안 됩니다.",
+    canonicalHref: "/ai/vision-backbone-selection#probe-protocol",
+  },
+  "backbone-switch-cost": {
+    id: "backbone-switch-cost",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "백본 교체 비용",
+    definition:
+      "백본을 바꿀 때 드는 재색인 시간, 전환 기간의 이중 저장, 그리고 벡터 분포에 묶인 임계값 재조정을 함께 세는 관점입니다. 이 비용이 성능 차이보다 큰 경우가 흔합니다.",
+    canonicalHref: "/ai/vision-backbone-selection#cost-and-switch",
+  },
+  "backbone-decision-order": {
+    id: "backbone-decision-order",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "백본 선택의 판단 순서",
+    definition:
+      "과제를 한 문장으로 적고, 계열로 후보를 좁히고, 같은 조건에서 재고, 교체 비용을 더해 결정하는 순서입니다. 순서를 뒤집으면 평가 조건 차이가 가려지고 되돌리기 어려운 선택이 됩니다.",
+    canonicalHref: "/ai/vision-backbone-selection#decision-gate",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -39464,6 +39527,72 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     to: "prompt-built-classifier",
     relation: "constrains",
     reason: "온도는 점수의 크기만 바꾸고 순위를 바꾸지 않으므로 분류 예측에는 영향을 주지 않습니다.",
+  },
+  {
+    from: "frozen-backbone-evaluation-protocol",
+    to: "pretraining-objective-capability-profile",
+    relation: "prerequisite",
+    reason: "얼린 조건에서 재야 학습 목표가 남긴 차이가 성능 차이로 드러납니다.",
+  },
+  {
+    from: "caption-as-supervision",
+    to: "text-alignment-as-separate-capability",
+    relation: "prerequisite",
+    reason: "문장을 감독 신호로 쓴 학습이 있어야 어휘로 질의할 수 있는 축이 생깁니다.",
+  },
+  {
+    from: "promptable-concept-segmentation",
+    to: "pretraining-objective-capability-profile",
+    relation: "prerequisite",
+    reason: "마스크를 정답으로 받은 계열이 무엇을 남기는지 알아야 세 계열 비교가 완성됩니다.",
+  },
+  {
+    from: "pretraining-objective-capability-profile",
+    to: "task-to-backbone-family-mapping",
+    relation: "produces",
+    reason: "계열별 능력 차이를 알면 과제 요구에서 후보 계열로 바로 내려갈 수 있습니다.",
+  },
+  {
+    from: "task-to-backbone-family-mapping",
+    to: "frozen-probe-selection-experiment",
+    relation: "produces",
+    reason: "후보가 두세 개로 줄어야 짧은 실측으로 결정할 수 있습니다.",
+  },
+  {
+    from: "probe-protocol-comparability",
+    to: "frozen-probe-selection-experiment",
+    relation: "constrains",
+    reason: "조건이 다르면 같은 실측도 백본이 아니라 설정을 비교하게 됩니다.",
+  },
+  {
+    from: "low-level-cue-leakage",
+    to: "frozen-probe-selection-experiment",
+    relation: "prerequisite",
+    reason: "변형 민감도 측정 방법이 있어야 세 숫자 중 하나를 구할 수 있습니다.",
+  },
+  {
+    from: "embedding-pipeline-fingerprint",
+    to: "backbone-switch-cost",
+    relation: "prerequisite",
+    reason: "지문이 바뀌는 순간 기존 벡터를 쓸 수 없다는 규칙이 재색인 비용의 근거입니다.",
+  },
+  {
+    from: "backbone-budget-comparison",
+    to: "backbone-switch-cost",
+    relation: "prerequisite",
+    reason: "품질과 실행 예산을 함께 놓는 기존 비교 위에 교체 시점의 비용을 더합니다.",
+  },
+  {
+    from: "frozen-probe-selection-experiment",
+    to: "backbone-decision-order",
+    relation: "produces",
+    reason: "실측 결과가 있어야 판단 순서의 마지막 단계인 결정을 근거와 함께 기록할 수 있습니다.",
+  },
+  {
+    from: "backbone-switch-cost",
+    to: "backbone-decision-order",
+    relation: "constrains",
+    reason: "교체 비용이 성능 차이를 넘으면 지금 가장 좋은 모델이 최선의 선택이 아닙니다.",
   },
 ];
 

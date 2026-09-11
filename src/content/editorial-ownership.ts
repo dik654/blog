@@ -11078,6 +11078,40 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "vision-backbone-selection": {
+    title: "비전 백본 선택 글이 소유하는 범위",
+    owns: [
+      "학습 목표가 남긴 능력을 자리별 세밀함·장면 요약·어휘 접근·경계 품질 네 축으로 비교하는 프로필",
+      "텍스트 정렬이 백본의 자연스러운 성질이 아니라 별도 학습의 산물이라는 구분",
+      "질의 형태·출력 형태·자리 정보 필요 여부 세 질문으로 후보 계열을 좁히는 절차",
+      "얼린 표현에서 세 숫자를 구하는 최소 실측의 설계와 실행 순서",
+      "후보 비교가 성립하기 위한 고정 조건과 두 종류 비교의 구분",
+      "재색인 시간·이중 저장·임계값 재조정으로 이루어진 교체 비용 계산",
+      "과제 정의부터 결정 기록까지의 네 단계 판단 순서와 순서를 뒤집었을 때의 함정",
+    ],
+    reuses: [
+      { label: "자기지도 백본", href: "/ai/dinov3-self-supervised-backbone" },
+      { label: "이미지·텍스트 대조 사전학습", href: "/ai/image-text-contrastive-pretraining" },
+      { label: "개념 프롬프트 분할", href: "/ai/sam3-promptable-concept-segmentation" },
+      { label: "이미지 임베딩 파이프라인", href: "/ai/image-embedding-pipeline" },
+      { label: "백본 예산 비교", href: "/ai/image-backbone-scaling" },
+      { label: "벡터 검색과 ANN 색인", href: "/ai/vector-search-and-ann-indexes" },
+    ],
+    evidence: [
+      {
+        kind: "standard",
+        rule: "계열별 능력 프로필은 각 원 논문이 보고한 경향의 정성 요약이며 특정 두 모델의 우열 판정이 아니다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "선택 점수 식과 실측 절차는 판단을 구조화하기 위한 제안이며 특정 데이터셋에서 검증된 공식이 아니다.",
+      },
+      {
+        kind: "standard",
+        rule: "재색인 시간과 저장 비용은 명시한 가정에서의 산술이며 배포 환경에서 다시 재야 한다.",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;
