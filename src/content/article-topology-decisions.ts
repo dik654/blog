@@ -354,12 +354,12 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/negative-result-3d-face-control": "7b682cb8105bc0e9",
-  "ai/generative-identity-diversity": "2363cd7992286b11",
+  "ai/generative-identity-diversity": "6967a26acfec547c",
   "ai/reference-identity-pose-separation": "a753dfc2bdc4f420",
   "ai/roi-resolution-identity-budget": "adf0f60c3e64205e",
   "ai/removal-is-not-inpainting": "eb81c2f2f9a411bc",
   "ai/masked-edit-verb-routing": "8a4d2f13be391d98",
-  "ai/generative-measurement-controls": "cef7c8f17d1b41f3",
+  "ai/generative-measurement-controls": "3f7c039e0b5967de",
   "ai/claw-bash": "d3ec03f41aa635ae",
   "ai/claw-cli": "085e65b3b3de27cd",
   "ai/claw-compaction": "8286beaab27c0693",

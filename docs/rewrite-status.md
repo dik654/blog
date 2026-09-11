@@ -1924,3 +1924,16 @@
 - 6편과 맞물리는 지점이 결론을 키운다 — 여기서 끝까지 안 움직인 광대·턱 너비 축이 텍스트 경로에서도 노이즈 수준에 머물렀다. 두 경로 모두면 방법이 아니라 모델 쪽 문제라는 쪽에 무게가 실린다.
 
 **확산 편집 실측 시리즈 7편 종결**: 계측기 검증 → 편집 동작과 라우팅 → 지우기 → 해상도 예산 → 정체성·포즈 분리 → 다양성의 출처 → 3D 제어 실패 기록. 사용자의 `~/lapis-studio-bakeoff/` 실측 기록(562회 실행)이 `ai-generative` 정본으로 옮겨졌다. 저장소에 0건이던 ArcFace·PuLID·LaMa·OpenPose·Vendi·RealESRGAN·SeedVR2가 전부 개념으로 등록됐고, 시리즈 전체에서 원본 기록의 수치 오류 2건(손 힌트 "나머지 ±0.2", 보수형 "6개 중 5개 최저")을 산출물 재계산으로 잡아 정정했다.
+
+### 2026-09-12 · 시리즈 외부 인용 검증 (후속)
+
+- 사용자가 "딥리서치도 해가면서 작성한 거 맞냐"고 물어 확인한 결과, **7편 시리즈에는 외부 문헌 검증을 하지 않았음**이 사실이었다. 세션 앞부분 SaaS·k8s 글은 Cloudflare Unimog·Maglev·BeyondCorp·AWS PrivateLink·Gateway API Inference Extension·LeaderWorkerSet을 직접 fetch했고 Wei·Heidemann 논문은 PDF를 `pdftotext`로 읽어 수치를 뽑았으나, 7편은 사용자 실측 산출물 검증만 하고 외부 인용은 로그를 그대로 옮겼다.
+- 사후 검증 결과 **세 인용 모두 사실이었다.**
+  - FLUXSynID: ICCVW 2025(FoundGen-Bio, pp.3757–3767) 확정. 원문 *"340k impostor verification attempts on identities from the CFD dataset, yielding values of 0.423 and 0.497 for ArcFace"*, ArcFace FMR 0.1%에서 6,641/14,889 = 44.6%, FLUX.1-dev·guidance 1.7~2.5·20 steps.
+  - arXiv:2207.12598 = Ho·Salimans, *Classifier-Free Diffusion Guidance*(2022). 초록에 *"trade off mode coverage and sample fidelity"*.
+  - arXiv:2604.04018 = *1.x-Distill*(2026). 증류의 mode collapse를 다룸.
+- 다만 검증하면서 규약 위반과 조건 누락 3건을 발견해 고쳤다.
+  1. 6편 본문이 "두 문헌"을 문장으로만 언급하고 evidence 항목이 없었다 → 두 논문을 `핵심 논문`·`선행·비교 논문`으로 등록하고, 각각 "정체성 다양성을 직접 측정하지 않음"·"분포 정합 계열이라 측정 대상과 다른 증류 방식"이라는 인용 범위를 note와 본문 양쪽에 적었다.
+  2. 0.423이 **ArcFace 전용** 값이라는 조건이 빠져 있었다(같은 표의 AdaFace는 0.253). 1편 본문에 문단을 추가해, 이 사실이 오히려 "임계값은 모델에서 측정해 정한다"는 그 글 자체의 논지를 한 번 더 확인해 준다는 점까지 적었다.
+  3. 44.6%가 **FMR 0.1% 행**이라는 조건이 빠져 있었다(0.01% 행은 9,358명·62.9%). 본문의 0.40이 그들의 0.423과 가까워 그 행이 맞는 비교임을 evidence note에 명시했다.
+- 검증: 전 audit 통과, 시리즈 7편 topology 전부 clean, tsc·eslint·build 통과(676 static route).
