@@ -22348,6 +22348,69 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "두 조건의 차이를 계측기 탓으로 돌리기 전에 비교 대상의 변화량 자체가 같은지 확인하고, 다르면 변화량을 통제한 설계로 다시 재는 절차입니다. 교란된 표는 그럴듯한 중간 결론을 만들어 검증을 멈추게 만듭니다.",
     canonicalHref: "/ai/generative-measurement-controls#style-coverage",
   },
+  "edit-verb-taxonomy": {
+    id: "edit-verb-taxonomy",
+    kind: "concept",
+    domain: "computer-science",
+    label: "마스크 편집 동작의 분류",
+    definition:
+      "마스크 안을 바꾸라는 한 기능을 속성 변경·실체 교체·생성·소거처럼 모델에게 요구하는 바가 다른 동작들로 나누는 구분입니다. 동작마다 성공 조건과 실패 방식이 달라 한 모델과 한 설정으로 전부 처리할 수 없습니다.",
+    canonicalHref: "/ai/masked-edit-verb-routing#overview",
+  },
+  "model-edit-disposition": {
+    id: "model-edit-disposition",
+    kind: "concept",
+    domain: "computer-science",
+    label: "모델의 편집 성향",
+    definition:
+      "같은 입력과 프롬프트에서 모델마다 변화의 크기와 요청 반영 방식이 일관되게 나타나는 성질입니다. 보수적인 모델은 기존 그림을 지키는 대신 없던 것을 만들지 못하고, 과잉 반응하는 모델은 강한 단어에 영역을 덮어 씁니다. 성향은 대체로 일관되지만 동작에 따라 예외가 나타나므로 줄 전체를 보고 판단해야 합니다.",
+    canonicalHref: "/ai/masked-edit-verb-routing#model-disposition",
+  },
+  "hand-hint-survival": {
+    id: "hand-hint-survival",
+    kind: "concept",
+    domain: "computer-science",
+    label: "손 힌트의 생존",
+    definition:
+      "마스크 안에 사람이 거칠게 그려 넣은 형태가 결과에 반영되는지를 같은 조건 두 실행의 차이로 재는 성질입니다. 차이를 재는 설계라 두 실행에 공통으로 들어가는 오차가 상쇄되어 절대값 비교가 무효인 표에서도 그대로 쓸 수 있습니다.",
+    canonicalHref: "/ai/masked-edit-verb-routing#hand-hint",
+  },
+  "mask-grow-verb-polarity": {
+    id: "mask-grow-verb-polarity",
+    kind: "concept",
+    domain: "computer-science",
+    label: "마스크 확장의 동작별 극성",
+    definition:
+      "마스크를 넓히는 것이 실체 교체에서는 필수이고 소거에서는 금지라는 반대 관계입니다. 교체는 새 물건이 끝날 자리를 보여 줘야 성립하고, 소거는 준 범위를 그대로 지우므로 넓힌 만큼 아래 레이어까지 사라집니다.",
+    canonicalHref: "/ai/masked-edit-verb-routing#mask-polarity",
+  },
+  "style-dependent-metric-scale": {
+    id: "style-dependent-metric-scale",
+    kind: "concept",
+    domain: "computer-science",
+    label: "그림체에 의존하는 지표 스케일",
+    definition:
+      "평면 색으로 칠해진 그림은 넓은 면적이 한꺼번에 바뀌어 평균 절대 변화가 구조적으로 커진다는 성질이며, 같은 동작의 수치가 그림체에 따라 두 배까지 벌어집니다. 절대 임계값으로 모델을 고르면 안 되고 비교는 같은 그림체 안에서만 성립합니다.",
+    canonicalHref: "/ai/masked-edit-verb-routing#style-scale",
+  },
+  "pre-compute-edit-guard": {
+    id: "pre-compute-edit-guard",
+    kind: "method",
+    domain: "computer-science",
+    label: "연산 전 편집 거절 가드",
+    definition:
+      "되돌릴 수 없는 결과가 예상되는 요청을 모델 호출 전에 거절하고 대안을 안내하는 장치입니다. 얼굴이 프레임에 있고 마스크가 크롭의 일정 비율을 넘는 생성 요청처럼, 실행한 뒤에는 복구할 수 없는 조합에 적용합니다.",
+    canonicalHref: "/ai/masked-edit-verb-routing#style-scale",
+  },
+  "verb-to-model-routing-table": {
+    id: "verb-to-model-routing-table",
+    kind: "method",
+    domain: "computer-science",
+    label: "동작 기반 모델 라우팅 표",
+    definition:
+      "호출하는 쪽이 모델 이름이 아니라 동작을 말하고, 측정으로 만든 표가 모델과 마스크 확장값을 정하는 구조입니다. 모델 고정과 언어 모델의 임의 선택 사이의 세 번째 배치이며, 표를 실제로 쓰게 만드는 유일한 자리입니다.",
+    canonicalHref: "/ai/masked-edit-verb-routing#routing-gate",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -40784,6 +40847,78 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     to: "confound-removed-comparison",
     relation: "contrasts",
     reason: "지표 형태로 오염을 상쇄하는 방법과 설계로 교란을 제거하는 방법이 서로 다른 층에서 같은 문제를 다룹니다.",
+  },
+  {
+    from: "edit-verb-taxonomy",
+    to: "model-edit-disposition",
+    relation: "produces",
+    reason: "동작을 나눠 같은 조건으로 전부 돌려 보면 모델마다 일관된 성향이 드러납니다.",
+  },
+  {
+    from: "edit-verb-taxonomy",
+    to: "mask-grow-verb-polarity",
+    relation: "produces",
+    reason: "동작의 요구가 다르다는 사실이 마스크 확장의 방향까지 갈라놓습니다.",
+  },
+  {
+    from: "model-edit-disposition",
+    to: "verb-to-model-routing-table",
+    relation: "produces",
+    reason: "성향이 일관되므로 동작별 최적 모델을 표로 고정할 수 있습니다.",
+  },
+  {
+    from: "differential-versus-absolute-metric",
+    to: "hand-hint-survival",
+    relation: "prerequisite",
+    reason: "차이를 재는 설계가 왜 오염에 강한지를 알아야 이 측정이 유효한 이유가 읽힙니다.",
+  },
+  {
+    from: "autoencoder-roundtrip-floor",
+    to: "model-edit-disposition",
+    relation: "constrains",
+    reason: "마스크 밖 변화량이 모델의 성질이 아니므로 성향 판단에서 제외해야 합니다.",
+  },
+  {
+    from: "known-answer-instrument-check",
+    to: "style-dependent-metric-scale",
+    relation: "prerequisite",
+    reason: "지표의 스케일이 입력에 의존하는지 확인하는 습관에서 이 성질이 드러났습니다.",
+  },
+  {
+    from: "style-dependent-metric-scale",
+    to: "verb-to-model-routing-table",
+    relation: "constrains",
+    reason: "절대값을 쓸 수 없으므로 표는 같은 그림체 안의 순위로만 해석됩니다.",
+  },
+  {
+    from: "pre-compute-edit-guard",
+    to: "verb-to-model-routing-table",
+    relation: "constrains",
+    reason: "일부 동작은 모델을 고르는 대신 아예 거절하는 것이 올바른 라우팅 결과입니다.",
+  },
+  {
+    from: "latent-diffusion-component-contract",
+    to: "edit-verb-taxonomy",
+    relation: "prerequisite",
+    reason: "마스크 편집이 어떤 구성 요소를 거치는지 알아야 동작별 요구를 읽을 수 있습니다.",
+  },
+  {
+    from: "classifier-free-guidance",
+    to: "model-edit-disposition",
+    relation: "prerequisite",
+    reason: "안내 계수를 올려도 움직이지 않는다는 관찰이 구조적 한계의 근거가 됩니다.",
+  },
+  {
+    from: "mask-grow-verb-polarity",
+    to: "pre-compute-edit-guard",
+    relation: "contrasts",
+    reason: "마스크를 조절해 푸는 문제와 아예 실행하지 않아야 하는 문제가 갈립니다.",
+  },
+  {
+    from: "hand-hint-survival",
+    to: "verb-to-model-routing-table",
+    relation: "produces",
+    reason: "같은 동작이라도 힌트 유무에 따라 다른 모델로 보내야 한다는 분기가 여기서 나옵니다.",
   },
 ];
 

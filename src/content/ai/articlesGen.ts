@@ -280,6 +280,20 @@ export const genArticles: Article[] = [
     component: () => import("@/pages/articles/ai/generative-measurement-controls"),
   },
   {
+    slug: "masked-edit-verb-routing",
+    title: "\"편집\"은 한 동작이 아니라 요구가 서로 다른 여섯 동작입니다",
+    subcategory: "ai-generative",
+    sections: [
+      { id: "overview", title: "요구가 다른 여섯 동작으로 먼저 나눕니다" },
+      { id: "model-disposition", title: "같은 요청에 모델마다 일관된 성향이 나타납니다" },
+      { id: "hand-hint", title: "손으로 그은 선을 살리는 모델은 하나뿐이었습니다" },
+      { id: "mask-polarity", title: "마스크를 넓히는 방향이 동작마다 반대입니다" },
+      { id: "style-scale", title: "같은 동작의 수치가 그림체에 따라 두 배씩 달라집니다" },
+      { id: "routing-gate", title: "모델 이름은 사용자도 에이전트도 고르지 않습니다" },
+    ],
+    component: () => import("@/pages/articles/ai/masked-edit-verb-routing"),
+  },
+  {
     slug: "in-context-lora",
     title: "In-Context LoRA: reference·target을 한 context로 이어붙이기",
     subcategory: "ai-generative",
