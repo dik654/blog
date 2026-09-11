@@ -73621,4 +73621,205 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "ai/generative-identity-diversity": {
+    coreIdea:
+      "정체성 다양성은 모델을 설득해 얻는 것이 아닙니다. 시드는 사실상 기여가 없고 텍스트는 인구통계 축에서만 크게 들으며, 같은 인구통계 안에서는 참조 뱅크가 용량을 정합니다. 그리고 텍스트가 닿을 수 있는 범위 자체를 가중치가 제한하므로, 어휘를 탓하기 전에 비증류 대조를 먼저 돌려야 합니다.",
+    assumedKnowledge: [
+      { id: "impostor-threshold-derivation", role: "충돌 판정에 쓰는 임계값입니다." },
+      { id: "metric-style-coverage-boundary", role: "판정 도구의 적용 범위입니다." },
+      { id: "confound-removed-comparison", role: "교란을 제거한 비교 설계입니다." },
+      { id: "attention-identity-injection", role: "참조에서 정체성을 주입하는 방식입니다." },
+      { id: "classifier-free-guidance", role: "안내가 충실도와 커버리지를 맞바꾸는 성질입니다." },
+    ],
+    introducedHere: [
+      { id: "seed-diversity-null-effect", role: "가장 흔한 오해를 측정으로 닫습니다." },
+      { id: "demographic-axis-dominance", role: "텍스트가 듣는 축과 멈추는 축을 가릅니다." },
+      { id: "convex-blend-mean-regression", role: "혼합이 구조적으로 막혀 있음을 정의합니다." },
+      { id: "conditioning-blend-token-misalignment", role: "배선 쪽 함정을 정의합니다." },
+      { id: "distillation-diversity-collapse", role: "어휘 진단을 뒤집은 원인을 정의합니다." },
+      { id: "reference-bank-as-capacity", role: "실제 공급원을 정의합니다." },
+      { id: "collision-rate-sample-size", role: "세 번 뒤집힌 이유 중 하나를 일반화합니다." },
+    ],
+    conceptExplanations: [
+      {
+        id: "seed-diversity-null-effect",
+        sectionId: "seed-null",
+        intuition:
+          "같은 주문서에 주문 번호만 바꿔 넣으면 나오는 음식은 그대로입니다.",
+        workedExample:
+          "의도를 고정하고 서른 번 시도했을 때 채택된 새 인물이 서술 축 샘플링과 시드 변경 모두 한 명이었고, 이는 세 모델 계열에서 같았습니다.",
+        boundary:
+          "의도를 고정하지 않으면 계열에 따라 시드 효과가 보이기도 합니다. 이 결론은 인구통계를 못 박은 조건에 한정됩니다.",
+      },
+      {
+        id: "demographic-axis-dominance",
+        sectionId: "seed-null",
+        intuition:
+          "키와 나이를 바꾸면 다른 사람처럼 보이지만 코 모양만 바꾸면 형제처럼 보입니다.",
+        workedExample:
+          "나이·성별·체형을 함께 흔든 열두 묘사에서 66쌍 중 27쌍이 다른 인물이었습니다. 형태 지표로는 얼굴 세로 대 가로 비가 15.6%로 노이즈 바닥 3.7%의 네 배였고, 광대폭과 턱폭은 3.8%로 노이즈와 구분되지 않았습니다.",
+        boundary:
+          "너비 축이 영영 안 움직인다는 뜻은 아닙니다. 이 관찰은 특정 가중치에서 얻은 것이고, 비증류로 바꾸면 부위 서술어의 효과가 크게 살아납니다.",
+      },
+      {
+        id: "convex-blend-mean-regression",
+        sectionId: "blend-regression",
+        intuition:
+          "두 색을 섞으면 항상 두 색 사이의 색이 나오고, 그 바깥의 색은 절대 나오지 않습니다.",
+        workedExample:
+          "열두 명 뱅크에서 예순 번 시도해 단독이 두 명, 혼합 마흔여덟 번이 0명을 기여했습니다. 혼합끼리의 유사도 0.549가 단독끼리의 0.437보다 높고 전체 평균 얼굴과도 더 가깝습니다.",
+        boundary:
+          "정체성 주입이 벡터 평균으로 구현된 경우의 결론입니다. 다른 결합 방식이라면 달라질 수 있고, 생성 결과가 주입 벡터를 충실히 따른다는 가정도 들어 있습니다.",
+      },
+      {
+        id: "conditioning-blend-token-misalignment",
+        sectionId: "blend-regression",
+        intuition:
+          "길이가 다른 두 악보를 겹쳐 놓고 마디를 맞추지 않으면 화음이 아니라 소음이 됩니다.",
+        workedExample:
+          "구현이 한쪽 조건을 다른 쪽의 토큰 길이에 맞춰 잘라 내기 때문에, 길이가 다른 두 문장을 섞으면 위치가 어긋나 결과가 무너집니다.",
+        boundary:
+          "단독 실행과 자기 자신과의 혼합은 정상이라 증상이 늦게 드러납니다. 깨진 결과에서도 단조롭게 움직이는 지표가 나올 수 있어 수치만 보면 성공으로 읽힙니다.",
+      },
+      {
+        id: "distillation-diversity-collapse",
+        sectionId: "distillation-bottleneck",
+        intuition:
+          "요약본으로 공부하면 빠르지만 원본에 있던 변주가 사라집니다.",
+        workedExample:
+          "같은 일흔두 개 묘사·같은 시드·같은 임계값에서 증류 가중치가 열여덟 명을 남기고 비증류가 예순한 명을 남겼습니다. 충돌이 2211쌍 중 215쌍에서 2145쌍 중 8쌍으로 줄었습니다.",
+        boundary:
+          "한 모델 가족에서 한 번 잰 결과입니다. 다른 가족에서 같은 대조를 돌리지 않았으므로 증류 일반에 대한 주장으로 읽으면 안 되고, 대가로 생성 시간이 네 배 듭니다.",
+      },
+      {
+        id: "reference-bank-as-capacity",
+        sectionId: "bank-capacity",
+        intuition:
+          "배역을 채우려면 배우를 섭외해야지 한 배우에게 분장을 더 시켜도 인원이 늘지 않습니다.",
+        workedExample:
+          "주입 세기 0.9·1.3·1.8에서 정체성 전이가 0.376·0.502·0.607로, 출력 다양성 지표가 0.562·0.457·0.353으로, 다른 인물 쌍이 0·0·5로 모두 단조롭게 움직입니다.",
+        boundary:
+          "세기를 높이면 참조의 성별 같은 속성까지 따라오므로 의도가 밀립니다. 그리고 용량은 임계값을 어디에 두느냐에 따라 달라져, 같은 열두 명 뱅크가 두 명분이 되기도 다섯 명분이 되기도 합니다.",
+      },
+      {
+        id: "collision-rate-sample-size",
+        sectionId: "diversity-gate",
+        intuition:
+          "동전을 세 번 던져 앞면이 안 나왔다고 뒷면만 나오는 동전이라고 할 수 없습니다.",
+        workedExample:
+          "여섯 명에서 만들 수 있는 쌍은 열다섯 개인데, 규모를 일흔두 개로 늘리자 2211쌍이 되고 215쌍의 충돌이 보였습니다.",
+        boundary:
+          "표본을 키우는 것이 항상 가능하지는 않습니다. 불가능하면 결론을 내지 않고 관측 가능한 범위를 명시하는 편이 낫습니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 시드와 축",
+        relation: "무엇이 듣고 무엇이 멈추는가",
+        concepts: ["seed-diversity-null-effect", "demographic-axis-dominance"],
+      },
+      {
+        label: "01 혼합의 한계",
+        relation: "구조와 배선 두 가지 실패",
+        concepts: ["convex-blend-mean-regression", "conditioning-blend-token-misalignment", "attention-identity-injection"],
+      },
+      {
+        label: "02 가중치",
+        relation: "어휘 진단을 뒤집은 원인",
+        concepts: ["distillation-diversity-collapse", "classifier-free-guidance", "confound-removed-comparison"],
+      },
+      {
+        label: "03 공급원",
+        relation: "용량이 어디서 오는가",
+        concepts: ["reference-bank-as-capacity", "metric-style-coverage-boundary"],
+      },
+      {
+        label: "04 표본",
+        relation: "결론을 언제 내도 되는가",
+        concepts: ["collision-rate-sample-size", "impostor-threshold-derivation"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "의도를 고정했을 때 시드와 서술 축 샘플링의 기여를 쓰고, 시드 효과가 보이는 경우는 어떤 조건인지 설명하세요.",
+        answerChecklist: ["서른 번에 한 명", "축 샘플링도 같은 값", "세 모델 계열에서 동일", "의도를 고정하지 않으면 효과가 보이기도 함", "이 결론은 인구통계를 못 박은 조건에 한정"],
+        requiredConcepts: ["seed-diversity-null-effect"],
+        sectionId: "seed-null",
+      },
+      {
+        level: "basic",
+        question:
+          "텍스트가 듣는 축과 멈추는 축을 형태 지표 수치로 구분해 쓰세요.",
+        answerChecklist: ["얼굴 세로 대 가로 15.6%", "노이즈 바닥 3.7%·2.5%", "네다섯 배로 반응", "광대폭·턱폭 3.8%", "노이즈 3.1%·4.0%와 구분되지 않음"],
+        requiredConcepts: ["demographic-axis-dominance"],
+        sectionId: "seed-null",
+      },
+      {
+        level: "basic",
+        question:
+          "참조 혼합이 새 인물을 만들지 못하는 이유를 설명하고 실측 결과를 쓰세요.",
+        answerChecklist: ["볼록 결합이라 선분 위에만 놓임", "전체 평균에서 더 멀어질 수 없음", "단독 12회에서 2명", "혼합 48회에서 0명", "혼합끼리 0.549 대 단독끼리 0.437"],
+        requiredConcepts: ["convex-blend-mean-regression", "attention-identity-injection"],
+        sectionId: "blend-regression",
+      },
+      {
+        level: "basic",
+        question:
+          "두 프롬프트의 조건을 섞는 방식이 깨지는 원인을 쓰고, 증상이 늦게 드러나는 이유도 적으세요.",
+        answerChecklist: ["한쪽을 다른 쪽 토큰 길이에 맞춰 잘라 냄", "길이가 다르면 위치가 어긋남", "단독 실행은 정상", "자기 자신과의 혼합도 정상", "깨진 결과에서도 그럴듯한 지표가 나옴"],
+        requiredConcepts: ["conditioning-blend-token-misalignment"],
+        sectionId: "blend-regression",
+      },
+      {
+        level: "basic",
+        question:
+          "같은 묘사 집합에서 증류 가중치와 비증류 가중치의 결과를 수치로 비교하세요.",
+        answerChecklist: ["증류 18명 채택", "비증류 61명 채택", "충돌 215/2211에서 8/2145", "다양성 지표 28.5에서 51.2", "생성 시간은 네 배"],
+        requiredConcepts: ["distillation-diversity-collapse", "confound-removed-comparison"],
+        sectionId: "distillation-bottleneck",
+      },
+      {
+        level: "basic",
+        question:
+          "주입 세기를 올릴 때 세 지표가 어떻게 움직이는지 쓰고, 세기를 마음껏 올릴 수 없는 이유를 설명하세요.",
+        answerChecklist: ["정체성 전이 0.376·0.502·0.607", "출력 다양성 0.562·0.457·0.353", "다른 인물 쌍 0·0·5", "세 지표가 전부 단조", "세기를 높이면 참조의 성별 같은 속성까지 따라와 의도가 밀림"],
+        requiredConcepts: ["reference-bank-as-capacity"],
+        sectionId: "bank-capacity",
+      },
+      {
+        level: "advanced",
+        question:
+          "\"어휘가 천장\"이라는 진단이 왜 틀렸는지 설명하고, 그 진단을 뒤집은 측정 설계를 쓰세요.",
+        answerChecklist: ["구간을 고정하면 27~38% 충돌이라 어휘 한계로 읽었음", "같은 묘사·같은 시드로 가중치만 교체", "구간별 충돌이 0~7%로 떨어짐", "남성 세 구간은 0", "측정 도구가 아니라 측정 대상이 능력을 억누르고 있었음"],
+        requiredConcepts: ["distillation-diversity-collapse", "demographic-axis-dominance"],
+        sectionId: "distillation-bottleneck",
+      },
+      {
+        level: "advanced",
+        question:
+          "모델 교체가 다양성 축으로서 갖는 힘을 수치로 쓰고, 비교에서 한 계열을 제외한 이유를 설명하세요.",
+        answerChecklist: ["모델 간 쌍 평균 0.254", "모델 내 시드 변경 0.686", "54쌍 중 34쌍이 다른 인물", "일러스트 계열은 판정 도구의 적용 범위 밖", "포함하면 수치가 부풀려짐"],
+        requiredConcepts: ["reference-bank-as-capacity", "metric-style-coverage-boundary"],
+        sectionId: "bank-capacity",
+      },
+      {
+        level: "advanced",
+        question:
+          "같은 질문에 세 번 다른 답이 나온 각각의 원인을 쓰고, 두 번째 원인을 일반화한 규칙을 적으세요.",
+        answerChecklist: ["고정한 변수가 실제 변수를 가림", "표본이 작아 충돌률을 볼 수 없었음", "측정 대상이 능력을 억누르고 있었음", "작은 표본의 충돌 0은 충돌률 0이 아님", "규모를 키우기 전까지 결론을 미룸"],
+        requiredConcepts: ["collision-rate-sample-size", "seed-diversity-null-effect"],
+        sectionId: "diversity-gate",
+      },
+      {
+        level: "advanced",
+        question:
+          "이 회차의 최종 답을 영향력 순서로 정리하고, 실무 규칙 세 가지와 그 대가를 쓰세요.",
+        answerChecklist: ["정체성은 조건의 함수이고 사상은 다대일", "프롬프트 > 모델 > 시드", "가중치가 프롬프트의 도달 범위를 정함", "뱅크는 비증류로 만든다", "혼합으로 늘리지 않는다", "필요 인원보다 넉넉히 확보한다", "생성 시간 네 배"],
+        requiredConcepts: ["reference-bank-as-capacity", "distillation-diversity-collapse", "convex-blend-mean-regression"],
+        sectionId: "diversity-gate",
+      },
+    ],
+  },
 };

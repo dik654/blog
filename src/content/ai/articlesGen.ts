@@ -344,6 +344,20 @@ export const genArticles: Article[] = [
     component: () => import("@/pages/articles/ai/reference-identity-pose-separation"),
   },
   {
+    slug: "generative-identity-diversity",
+    title: "같은 질문에 세 번 다르게 답했고 세 번 다 틀렸습니다",
+    subcategory: "ai-generative",
+    sections: [
+      { id: "overview", title: "세 번의 정정을 순서대로 따라갑니다" },
+      { id: "seed-null", title: "시드는 기여가 없고, 인구통계를 고정하면 묘사도 멈춥니다" },
+      { id: "blend-regression", title: "둘을 섞으면 평균 얼굴 쪽으로 끌려갑니다" },
+      { id: "distillation-bottleneck", title: "어휘가 천장이라던 진단이 사실은 가중치 문제였습니다" },
+      { id: "bank-capacity", title: "참조 뱅크는 정체성을 공급하고 가중치는 의도와 저울질합니다" },
+      { id: "diversity-gate", title: "표본이 작으면 같은 질문에 계속 다른 답이 나옵니다" },
+    ],
+    component: () => import("@/pages/articles/ai/generative-identity-diversity"),
+  },
+  {
     slug: "in-context-lora",
     title: "In-Context LoRA: reference·target을 한 context로 이어붙이기",
     subcategory: "ai-generative",
