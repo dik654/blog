@@ -22474,6 +22474,69 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "측정을 돌리기 전에 예상 결과와 그 결과를 어떻게 해석할지 적어 두는 규율입니다. 숫자를 본 뒤에 해석을 맞추는 일을 막아 주며, 특히 지표가 좋아졌는데 문제는 그대로인 경우를 성공으로 쓰지 않게 합니다.",
     canonicalHref: "/ai/removal-is-not-inpainting#two-stage-rejected",
   },
+  "target-latent-token-budget": {
+    id: "target-latent-token-budget",
+    kind: "concept",
+    domain: "computer-science",
+    label: "대상의 잠재 토큰 예산",
+    definition:
+      "편집 대상이 잠재 공간에서 차지하는 칸과 토큰의 수이며, 화면 픽셀이 아니라 이 값이 실제 정보 예산입니다. 예산이 작으면 노이즈 비율을 낮춰도 남길 원본 자체가 부족해 모델의 사전이 그 자리를 채웁니다.",
+    canonicalHref: "/ai/roi-resolution-identity-budget#token-budget",
+  },
+  "denoise-window-by-model-class": {
+    id: "denoise-window-by-model-class",
+    kind: "concept",
+    domain: "computer-science",
+    label: "모델 종류별 노이즈 비율 구간",
+    definition:
+      "부분 노이즈가 지시 편집 모델에서는 중간값이 변환 자체를 막는 절벽으로, 일반 생성 모델에서는 폭이 좁은 레버로 동작한다는 구분입니다. 같은 파라미터가 종류에 따라 다른 의미를 가지므로 설정 전에 종류를 확인해야 합니다.",
+    canonicalHref: "/ai/roi-resolution-identity-budget#denoise-window",
+  },
+  "roi-crop-pixel-budget": {
+    id: "roi-crop-pixel-budget",
+    kind: "concept",
+    domain: "computer-science",
+    label: "영역 크롭의 픽셀 예산",
+    definition:
+      "모델이 정해진 넓이로 다시 샘플링하거나 정해진 해상도 집합으로 스냅하므로, 예산을 넘겨 보낸 크롭은 줄여져서 처리되고 그 안의 대상도 함께 작아진다는 관계입니다. 크게 자를수록 좋다는 직관이 여기서 뒤집힙니다.",
+    canonicalHref: "/ai/roi-resolution-identity-budget#roi-crop",
+  },
+  "mask-size-identity-risk": {
+    id: "mask-size-identity-risk",
+    kind: "concept",
+    domain: "computer-science",
+    label: "마스크 크기와 정체성 위험",
+    definition:
+      "부위 편집에서 재생성 범위에 들어간 픽셀이 많을수록 인물이 흔들린다는 관계입니다. 모델·프롬프트·시드를 고정한 채 마스크만 좁혀도 정체성이 크게 회복되므로, 부위 편집 실패의 상당수는 모델이 아니라 범위 지정에서 나옵니다.",
+    canonicalHref: "/ai/roi-resolution-identity-budget#roi-crop",
+  },
+  "pixel-error-blur-preference": {
+    id: "pixel-error-blur-preference",
+    kind: "concept",
+    domain: "computer-science",
+    label: "픽셀 오차 지표의 흐림 선호",
+    definition:
+      "평균 픽셀 오차로 복원 품질을 재면 추측을 거부하는 보간법이 1등이 된다는 성질입니다. 없던 디테일을 지어낸 것과 원래 있던 것을 되살린 것을 구분하지 못하므로 복원 비교의 단독 지표로 쓸 수 없습니다.",
+    canonicalHref: "/ai/roi-resolution-identity-budget#upscale-known-answer",
+  },
+  "edge-energy-restoration-metric": {
+    id: "edge-energy-restoration-metric",
+    kind: "method",
+    domain: "computer-science",
+    label: "원본 대비 엣지 에너지",
+    definition:
+      "복원 결과의 엣지 에너지를 원본의 그것으로 나눠 1에 가까운지 보는 지표이며, 사람이 보는 선명도와 방향이 맞습니다. 1을 크게 넘으면 없던 디테일을 지어낸 쪽으로 읽어야 하므로 클수록 좋은 값이 아닙니다.",
+    canonicalHref: "/ai/roi-resolution-identity-budget#upscale-known-answer",
+  },
+  "goal-shaped-tool-api": {
+    id: "goal-shaped-tool-api",
+    kind: "concept",
+    domain: "computer-science",
+    label: "목적을 받는 도구 인터페이스",
+    definition:
+      "품질이 하나의 축이 아닐 때 도구가 방법 이름이나 품질 등급 대신 목적을 받아 방법을 고르게 하는 설계입니다. 서로 다른 지표에서 1등이 갈리고 비용 차이가 클 때, 호출하는 쪽이 알아야 할 것은 방법이 아니라 지금 무엇을 원하는지입니다.",
+    canonicalHref: "/ai/roi-resolution-identity-budget#upscale-known-answer",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -41054,6 +41117,78 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     to: "gate-target-mismatch",
     relation: "contrasts",
     reason: "인자를 빼서 막는 방법과 생성 범위를 제한해 막는 방법이 서로 다른 결과를 냈습니다.",
+  },
+  {
+    from: "latent-diffusion-bottleneck",
+    to: "target-latent-token-budget",
+    relation: "prerequisite",
+    reason: "압축 비율을 알아야 대상이 몇 칸을 받는지 계산됩니다.",
+  },
+  {
+    from: "target-latent-token-budget",
+    to: "roi-crop-pixel-budget",
+    relation: "produces",
+    reason: "대상을 키워야 한다는 결론이 잘라 보내는 방식과 그 상한을 부릅니다.",
+  },
+  {
+    from: "target-latent-token-budget",
+    to: "mask-size-identity-risk",
+    relation: "constrains",
+    reason: "재생성 범위가 넓을수록 보존할 원본의 비중이 줄어듭니다.",
+  },
+  {
+    from: "denoise-window-by-model-class",
+    to: "target-latent-token-budget",
+    relation: "constrains",
+    reason: "낮은 노이즈 비율이 보호해 주는 정도가 예산에 달려 있습니다.",
+  },
+  {
+    from: "edit-verb-taxonomy",
+    to: "denoise-window-by-model-class",
+    relation: "prerequisite",
+    reason: "동작과 모델 종류를 먼저 나눠야 이 파라미터의 의미가 갈립니다.",
+  },
+  {
+    from: "mask-grow-verb-polarity",
+    to: "mask-size-identity-risk",
+    relation: "contrasts",
+    reason: "좁히는 것이 옳은 동작과 넓히는 것이 옳은 동작이 반대 방향으로 갈립니다.",
+  },
+  {
+    from: "known-answer-instrument-check",
+    to: "pixel-error-blur-preference",
+    relation: "prerequisite",
+    reason: "정답을 아는 입력을 만들어야 지표가 무엇을 선호하는지 드러납니다.",
+  },
+  {
+    from: "pixel-error-blur-preference",
+    to: "edge-energy-restoration-metric",
+    relation: "produces",
+    reason: "픽셀 오차만으로 판정할 수 없다는 사실이 다른 지표를 요구합니다.",
+  },
+  {
+    from: "edge-energy-restoration-metric",
+    to: "goal-shaped-tool-api",
+    relation: "produces",
+    reason: "두 지표에서 1등이 갈리므로 하나의 품질 축을 제시할 수 없습니다.",
+  },
+  {
+    from: "impostor-threshold-derivation",
+    to: "mask-size-identity-risk",
+    relation: "prerequisite",
+    reason: "정체성 수치를 판정하려면 임계값이 먼저 서 있어야 합니다.",
+  },
+  {
+    from: "roi-crop-pixel-budget",
+    to: "goal-shaped-tool-api",
+    relation: "constrains",
+    reason: "모델마다 예산이 달라 호출하는 쪽이 해상도를 직접 정하기 어렵습니다.",
+  },
+  {
+    from: "denoise-window-by-model-class",
+    to: "pixel-error-blur-preference",
+    relation: "contrasts",
+    reason: "재생성으로 확대하는 방식이 왜 복원이 아닌지를 두 관점이 각각 보여 줍니다.",
   },
 ];
 

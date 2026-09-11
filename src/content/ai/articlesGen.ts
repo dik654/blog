@@ -312,6 +312,20 @@ export const genArticles: Article[] = [
     component: () => import("@/pages/articles/ai/removal-is-not-inpainting"),
   },
   {
+    slug: "roi-resolution-identity-budget",
+    title: "같은 편집이 얼굴 크기에 따라 성공하고 실패합니다",
+    subcategory: "ai-generative",
+    sections: [
+      { id: "overview", title: "성패를 가르는 단위는 대상 해상도입니다" },
+      { id: "token-budget", title: "대상이 잠재 공간에서 몇 칸을 차지하는지가 결과를 정합니다" },
+      { id: "denoise-window", title: "노이즈 비율이 레버인 모델과 절벽인 모델이 있습니다" },
+      { id: "roi-crop", title: "잘라 보낼 크기는 모델이 실제로 받는 예산으로 정합니다" },
+      { id: "upscale-known-answer", title: "픽셀 오차 지표는 가장 흐린 결과를 1등으로 뽑습니다" },
+      { id: "resolution-gate", title: "편집을 걸기 전에 대상이 몇 픽셀인지 먼저 봅니다" },
+    ],
+    component: () => import("@/pages/articles/ai/roi-resolution-identity-budget"),
+  },
+  {
     slug: "in-context-lora",
     title: "In-Context LoRA: reference·target을 한 context로 이어붙이기",
     subcategory: "ai-generative",

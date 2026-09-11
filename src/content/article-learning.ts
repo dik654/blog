@@ -73219,4 +73219,205 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "ai/roi-resolution-identity-budget": {
+    coreIdea:
+      "편집의 성패를 가르는 단위는 프레임 해상도가 아니라 대상 해상도입니다. 대상이 잠재 공간에서 받는 칸이 적으면 낮은 노이즈 비율도 보호해 주지 못하므로, 리파인은 영역별로 걸고 크롭은 모델의 픽셀 예산 안에서 잡으며 마스크는 동작에 맞는 크기로 좁혀야 합니다.",
+    assumedKnowledge: [
+      { id: "latent-diffusion-bottleneck", role: "잠재 공간의 압축 비율입니다." },
+      { id: "known-answer-instrument-check", role: "정답을 아는 입력으로 검증하는 절차입니다." },
+      { id: "impostor-threshold-derivation", role: "정체성 판정에 쓰는 임계값입니다." },
+      { id: "edit-verb-taxonomy", role: "편집 동작의 분류입니다." },
+      { id: "mask-grow-verb-polarity", role: "마스크 확장 방향이 동작마다 반대라는 관계입니다." },
+    ],
+    introducedHere: [
+      { id: "target-latent-token-budget", role: "실제 예산의 단위를 정의합니다." },
+      { id: "denoise-window-by-model-class", role: "같은 파라미터의 의미가 모델 종류에 따라 갈린다는 점을 고정합니다." },
+      { id: "roi-crop-pixel-budget", role: "잘라 보내는 크기의 상한을 정의합니다." },
+      { id: "mask-size-identity-risk", role: "범위 지정이 정체성에 주는 영향을 정의합니다." },
+      { id: "pixel-error-blur-preference", role: "복원 비교에서 단독으로 쓸 수 없는 지표를 드러냅니다." },
+      { id: "edge-energy-restoration-metric", role: "대신 쓸 지표와 그 읽는 법을 정의합니다." },
+      { id: "goal-shaped-tool-api", role: "품질이 한 축이 아닐 때의 인터페이스 설계를 정리합니다." },
+    ],
+    conceptExplanations: [
+      {
+        id: "target-latent-token-budget",
+        sectionId: "token-budget",
+        intuition:
+          "지도 전체를 크게 인쇄해도 그 안의 골목 한 칸이 여전히 작으면 골목 이름은 안 보입니다.",
+        workedExample:
+          "전신 1메가픽셀 프레임의 95픽셀 얼굴은 여덟 배 줄인 잠재 공간에서 한 변 약 12칸이고, 패치로 쪼개면 한 자리 수 토큰이 됩니다. 327픽셀 패널에서는 한 변이 세 배가 되어 면적으로 열 배 이상 벌어집니다.",
+        boundary:
+          "축소 배율과 패치 크기는 구현마다 다르므로 이 계산은 관계를 보여 주는 용도입니다. 또 토큰이 많다고 정체성이 반드시 보존되는 것은 아니라 필요 조건에 가깝습니다.",
+      },
+      {
+        id: "denoise-window-by-model-class",
+        sectionId: "denoise-window",
+        intuition:
+          "같은 모양의 손잡이가 어떤 기계에서는 무단 조절이고 어떤 기계에서는 두 단 스위치입니다.",
+        workedExample:
+          "지시 편집 모델에서는 0.55와 0.75가 변환을 일으키지 않고 1.0에서만 결과가 나옵니다. 일반 생성 모델 둘은 같은 패널에서 0.25에 0.531과 0.683, 0.40에 0.237과 0.490이었습니다.",
+        boundary:
+          "앞 회차에서 이 파라미터 자체가 레버가 아니라고 일반화했던 것을 좁힙니다. 그것은 지시 편집 모델에 대한 이야기였고, 일반 생성 모델에서는 레버가 맞으며 창이 좁을 뿐입니다.",
+      },
+      {
+        id: "roi-crop-pixel-budget",
+        sectionId: "roi-crop",
+        intuition:
+          "정해진 크기의 액자에 큰 그림을 넣으면 그림 전체가 줄어들지 액자가 늘어나지 않습니다.",
+        workedExample:
+          "2메가픽셀 전체 프레임을 그대로 넘겼을 때 마스크 안 변화가 73.3이었고, 영역만 잘라 보내자 44.8이 됐습니다.",
+        boundary:
+          "예산은 모델마다 다르고 리샘플 방식도 다릅니다. 크롭을 줄이는 것이 아니라 대상이 차지하는 비율을 유지한 채 예산에 맞추는 것이 요령입니다.",
+      },
+      {
+        id: "mask-size-identity-risk",
+        sectionId: "roi-crop",
+        intuition:
+          "글자 하나를 고치려고 문단을 통째로 다시 쓰면 문체가 바뀝니다.",
+        workedExample:
+          "뺨에 흉터를 더하는 편집에서 마스크를 눈부터 입까지의 박스로 잡자 정체성이 0.142였고, 같은 모델·프롬프트·시드에서 마스크만 좁은 띠로 바꾸자 0.943이 됐습니다.",
+        boundary:
+          "좁히는 것이 항상 옳지는 않습니다. 물건을 다른 물건으로 바꾸는 동작에서는 넓혀야 새 물건이 끝날 자리가 보이므로, 이것은 규칙이 아니라 동작별 기본값의 한쪽 끝입니다.",
+      },
+      {
+        id: "pixel-error-blur-preference",
+        sectionId: "upscale-known-answer",
+        intuition:
+          "모르는 문제를 빈칸으로 두면 오답은 없지만 점수도 없습니다. 평균 오차만 보면 빈칸이 유리합니다.",
+        workedExample:
+          "원본을 4분의 1로 줄여 복원시킨 비교에서 보간법이 31.2 dB로 1등이었는데, 같은 결과의 엣지 에너지는 원본의 0.55배였습니다.",
+        boundary:
+          "픽셀 오차가 쓸모없다는 뜻은 아닙니다. 결과가 원본에서 크게 벗어났는지 거르는 데는 유효하고, 다만 선명도나 복원 충실도의 순위를 정하는 데 단독으로 쓸 수 없습니다.",
+      },
+      {
+        id: "edge-energy-restoration-metric",
+        sectionId: "upscale-known-answer",
+        intuition:
+          "되살린 그림에 원본만큼의 결이 돌아왔는지를 결의 양으로 잽니다.",
+        workedExample:
+          "복원 전용 모델이 원본 대비 1.07배로 사실상 원본 수준이었고, 확대 전용이 0.73배, 보간법이 0.55배, 타일 재생성이 0.63배였습니다.",
+        boundary:
+          "1을 크게 넘으면 없던 디테일을 지어낸 쪽으로 읽어야 하므로 클수록 좋은 값이 아닙니다. 또 정체성 지표와 함께 봐야 하며, 타일 재생성은 엣지만 보면 중간인데 정체성이 0.781로 무너졌습니다.",
+      },
+      {
+        id: "goal-shaped-tool-api",
+        sectionId: "upscale-known-answer",
+        intuition:
+          "공구를 빌릴 때 모델명을 고르는 대신 무엇을 할 것인지 말하면 맞는 것을 내줍니다.",
+        workedExample:
+          "확대 도구가 방법 이름 대신 목적을 받아, 이미 선명한 것을 크게는 2초짜리로, 디테일을 되살리는 것은 16초짜리로, 미리보기는 연산 장치를 쓰지 않는 0초짜리로 보냅니다.",
+        boundary:
+          "목적 이름이 실제 선택을 가리지 않도록 각 목적이 무엇을 하는지 문서에 남겨야 합니다. 목적 어휘가 늘어나면 결국 방법 이름과 같아지므로 축이 실제로 갈릴 때만 나눌 가치가 있습니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 예산의 단위",
+        relation: "화면 픽셀이 아니라 잠재 칸",
+        concepts: ["target-latent-token-budget", "latent-diffusion-bottleneck"],
+      },
+      {
+        label: "01 유효 구간",
+        relation: "모델 종류가 파라미터의 의미를 바꿈",
+        concepts: ["denoise-window-by-model-class", "edit-verb-taxonomy"],
+      },
+      {
+        label: "02 범위 지정",
+        relation: "크롭과 마스크가 예산을 정함",
+        concepts: ["roi-crop-pixel-budget", "mask-size-identity-risk", "mask-grow-verb-polarity", "impostor-threshold-derivation"],
+      },
+      {
+        label: "03 지표의 배신",
+        relation: "정답을 아는 실험으로 드러남",
+        concepts: ["pixel-error-blur-preference", "known-answer-instrument-check"],
+      },
+      {
+        label: "04 인터페이스",
+        relation: "품질이 한 축이 아닐 때",
+        concepts: ["edge-energy-restoration-metric", "goal-shaped-tool-api"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "전신 프레임의 얼굴 편집이 실패하는 이유를 잠재 공간 관점에서 설명하세요.",
+        answerChecklist: ["전신 1MP에서 얼굴이 95픽셀", "여덟 배 줄면 한 변 약 12칸", "패치로 쪼개면 토큰이 한 자리 수", "남길 원본 자체가 부족", "모델의 얼굴 사전이 그 자리를 채움"],
+        requiredConcepts: ["target-latent-token-budget", "latent-diffusion-bottleneck"],
+        sectionId: "token-budget",
+      },
+      {
+        level: "basic",
+        question:
+          "프레임을 4메가픽셀로 키운 결과와 얼굴 패널로 바꾼 결과를 비교하고, 무엇이 답인지 쓰세요.",
+        answerChecklist: ["전신 1MP 0.265", "전신 4MP 0.318", "얼굴 패널 0.531", "총 픽셀은 패널이 적음", "프레임이 아니라 대상을 키우는 것이 답"],
+        requiredConcepts: ["target-latent-token-budget"],
+        sectionId: "token-budget",
+      },
+      {
+        level: "basic",
+        question:
+          "노이즈 비율이 지시 편집 모델과 일반 생성 모델에서 어떻게 다르게 동작하는지 쓰세요.",
+        answerChecklist: ["지시 편집은 절벽", "0.55·0.75에서 변환이 일어나지 않음", "1.0에서만 결과", "일반 생성은 레버이나 창이 좁음", "부분 노이즈가 원본 잠재를 거의 그대로 남김"],
+        requiredConcepts: ["denoise-window-by-model-class", "edit-verb-taxonomy"],
+        sectionId: "denoise-window",
+      },
+      {
+        level: "basic",
+        question:
+          "모델 예산을 넘겨 큰 크롭을 보내면 무엇이 일어나는지 설명하세요.",
+        answerChecklist: ["정해진 넓이로 다시 샘플링됨", "넘긴 만큼을 버림", "크롭 안의 대상도 함께 작아짐", "잘라 보내는 목적과 정반대", "전체 프레임 73.3 → 영역 크롭 44.8"],
+        requiredConcepts: ["roi-crop-pixel-budget"],
+        sectionId: "roi-crop",
+      },
+      {
+        level: "basic",
+        question:
+          "마스크만 바꿔서 정체성이 크게 회복된 사례를 수치로 쓰고, 무엇이 고정돼 있었는지 적으세요.",
+        answerChecklist: ["눈~입 박스에서 0.142", "좁은 띠로 바꿔 0.943", "모델 동일", "프롬프트 동일", "시드 동일"],
+        requiredConcepts: ["mask-size-identity-risk", "impostor-threshold-derivation"],
+        sectionId: "roi-crop",
+      },
+      {
+        level: "basic",
+        question:
+          "확대 방법을 정답을 아는 실험으로 비교하는 절차를 쓰고, 픽셀 오차 지표가 어느 방법을 1등으로 뽑았는지 적으세요.",
+        answerChecklist: ["고해상 원본을 4분의 1로 축소", "각 방법에 복원시킴", "모델이 본 적 없는 원본과 비교", "보간법이 31.2 dB로 1등", "그 결과의 엣지는 원본의 0.55배"],
+        requiredConcepts: ["pixel-error-blur-preference", "known-answer-instrument-check"],
+        sectionId: "upscale-known-answer",
+      },
+      {
+        level: "advanced",
+        question:
+          "대상 해상도를 올리는 두 방법을 비교하고, 왜 한쪽이 훨씬 효율적인지 토큰 관점에서 설명하세요.",
+        answerChecklist: ["프레임 전체를 키우는 방법", "대상만 잘라 보내는 방법", "프레임을 키워도 대상 비율은 그대로", "잘라 보내면 같은 예산에서 대상이 차지하는 칸이 늘어남", "총 픽셀이 적어도 결과가 좋음"],
+        requiredConcepts: ["target-latent-token-budget", "roi-crop-pixel-budget"],
+        sectionId: "roi-crop",
+      },
+      {
+        level: "advanced",
+        question:
+          "픽셀 오차와 엣지 에너지에서 순위가 뒤집히는 이유를 설명하고, 엣지 에너지를 읽을 때의 주의점을 쓰세요.",
+        answerChecklist: ["보간법은 추측을 거부해 평균 오차에서 유리", "엣지 에너지는 되살아난 결의 양을 잼", "복원 전용이 1.07배", "1을 크게 넘으면 지어낸 것", "정체성 지표와 함께 봐야 함"],
+        requiredConcepts: ["pixel-error-blur-preference", "edge-energy-restoration-metric"],
+        sectionId: "upscale-known-answer",
+      },
+      {
+        level: "advanced",
+        question:
+          "타일을 나눠 낮은 노이즈 비율로 다시 그리는 확대 방식이 왜 복원이 아닌지 두 지표로 설명하세요.",
+        answerChecklist: ["노이즈 비율 0.25인데 정체성 0.781", "엣지 0.63배로 확대 전용보다 낮음", "되살리는 것이 아니라 매끈하게 다시 그림", "재해석이지 복원이 아님", "확대 용도에서 제외"],
+        requiredConcepts: ["edge-energy-restoration-metric", "denoise-window-by-model-class"],
+        sectionId: "upscale-known-answer",
+      },
+      {
+        level: "advanced",
+        question:
+          "도구가 방법 이름 대신 목적을 받게 한 근거를 쓰고, 이 설계가 나쁜 경우도 함께 적으세요.",
+        answerChecklist: ["두 지표에서 1등이 갈림", "시간이 0초에서 16초까지 벌어짐", "품질이 하나의 축이 아님", "미리보기는 연산 장치를 쓰지 않는 것이 정답", "목적 어휘가 늘면 결국 방법 이름과 같아짐"],
+        requiredConcepts: ["goal-shaped-tool-api", "roi-crop-pixel-budget"],
+        sectionId: "resolution-gate",
+      },
+    ],
+  },
 };

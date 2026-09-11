@@ -310,6 +310,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "자동 판정기가 없는 회차이므로 정량 실패율을 주장하지 않고, 실패한 모델 목록과 기각 범위를 측정 조건까지로 한정한다.",
   },
+  "ai/roi-resolution-identity-budget": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-09-11",
+    rationale:
+      "본문은 6 section·concept 7개로 keep 범위다. 토큰 예산·유효 구간·크롭·마스크·확대 지표가 모두 하나의 해상도 결정을 떠받치므로 나누면 각 글이 같은 예산 논증을 다시 세워야 한다.",
+    sharedGate:
+      "수치는 한 장비·한 소스의 실측이며 토큰 계산은 관계만 보이고 확대 순위는 소스 의존임을 밝힌다.",
+  },
 };
 
 /**
@@ -317,6 +326,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "ai/roi-resolution-identity-budget": "adf0f60c3e64205e",
   "ai/removal-is-not-inpainting": "eb81c2f2f9a411bc",
   "ai/masked-edit-verb-routing": "8a4d2f13be391d98",
   "ai/generative-measurement-controls": "cef7c8f17d1b41f3",
