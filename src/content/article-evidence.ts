@@ -6592,4 +6592,24 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "EMA teacher와 centering·sharpening으로 붕괴를 막는 원형이며 DINOv3의 dense 관련 기여는 포함하지 않음",
     },
   ],
+  "ai/sam3-promptable-concept-segmentation": [
+    {
+      kind: "핵심 논문",
+      label: "SAM 3: Segment Anything with Concepts · arXiv 2511.16719",
+      href: "https://arxiv.org/abs/2511.16719",
+      note: "과제 정의·존재 토큰·데이터 엔진·지표의 원문이며 보고된 수치는 저자 자기보고 범위임",
+    },
+    {
+      kind: "공식 코드",
+      label: "facebookresearch/sam3 · decoder·encoder 구현",
+      href: "https://github.com/facebookresearch/sam3",
+      note: "이 글이 인용한 presence token과 융합 인코더 스냅샷의 출처이며 커밋 660a5e9e 기준임",
+    },
+    {
+      kind: "선행·비교 논문",
+      label: "Segment Anything · arXiv 2304.02643",
+      href: "https://arxiv.org/abs/2304.02643",
+      note: "점·상자 지목 프롬프트로 단일 인스턴스를 분할하는 이전 과제 정의이며 개념 단위 전수 분할은 포함하지 않음",
+    },
+  ],
 };

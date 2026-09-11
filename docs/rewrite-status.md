@@ -1722,3 +1722,12 @@
 - 같은 이름의 다른 개념을 구분했다. 여기서의 self-distillation은 EMA teacher의 출력 분포를 목표로 쓰는 손실 항이고, 기존 `ai/self-distillation`의 자기증류는 생성물을 데이터로 승격하는 절차의 문제다. 본문에서 경계를 명시하고 링크했다.
 - 카탈로그 병합에서 문제를 하나 고쳤다. `articlesPractical.ts`는 지역 배열 여러 개를 `practicalArticles`로 spread 하는데 병합기는 export 된 배열만 보므로 `after: vision-transformer`가 무시되고 파일 끝에 append 됐고, 손으로 옮기면 다음 병합에서 중복 삽입됐다. `cvArticles`를 export 로 바꿔 병합기가 그 배열을 인식하게 하고 중복을 제거했다. 이제 재병합이 제자리에서 replace 된다.
 - 검증: learning·graph·formula·reading·order·prose·terms 통과, `audit:viz --strict` ERROR 0, topology `keep` 결정과 fingerprint 등록, tsc·production build 통과(656 static route). Playwright 1440×1000·390×844에서 overflow 0·console error 0을 확인하고 Viz 6개의 마지막 장면과 CodeSidebar 열람을 `output/playwright/dinov3-*.png`에 남겼다.
+
+### 2026-09-11 · 비전 시리즈 2편 · SAM 3 개념 프롬프트 분할
+
+- `ai/sam3-promptable-concept-segmentation`을 `ai-vision`의 `vision-task-spatial-contracts` 뒤에 추가했다. 저장소에 SAM 계열 정본이 0건이었다. 1편 DINOv3와 달리 이 글의 선수 개념(공간 계약·visual grounding)이 `ai-vision`에 있어 subcategory를 다르게 잡았다.
+- 글의 축은 "프롬프트 단위가 자리에서 이름으로 바뀌면 무엇이 새로 필요한가"다. 개념 존재 판단이 새 부담으로 생기고, 그 부담을 전용 토큰으로 분리해 최종 점수를 `p(존재)·p(매칭|존재)`의 곱으로 만들며, 평가도 `cgF1 = 100·pmF1·IL_MCC`처럼 곱으로 채점한다는 하나의 논리로 연결했다. 더하기가 아니라 곱하기인 이유를 Viz로 직접 비교했다.
+- 코드 근거는 `facebookresearch/sam3` 커밋 660a5e9e의 `decoder.py`·`encoder.py`를 pin 하고 codeRefs 2개로 존재 토큰 정의·레이어별 logit·융합 인코더를 열람한다. 존재 토큰이 self-attention에는 질의 앞에 붙고 cross-attention mask는 열어 두는 배선까지 주석으로 달았다.
+- 수치는 논문 값만 썼다. 고유 명사구 400만 개, 존재 토큰 ablation의 종합 점수 +1.5·존재 상관계수 +0.05, 자동 검수자 투입 시 처리량 약 2배가 그것이다. 전부 저자 자기보고로 표시했고 "기존 시스템의 두 배"는 저자들이 정의한 지표·벤치마크 위의 값이라는 경계를 본문과 ownership에 적었다.
+- 데이터 엔진 절에서는 자동 검수자와 학습 대상이 실수를 공유할 때 생기는 순환 위험을 따로 다뤘다. 평가 구간에만 사람이 여러 명 붙는 구성이 그 순환을 끊는 장치라는 점을 Viz의 마지막 장면으로 보여 준다.
+- 검증: learning·graph·formula·reading·order·prose·terms 통과, `audit:viz --strict` ERROR 0, topology `keep`+fingerprint 등록, tsc·build 통과(657 static route). Playwright 1440×1000·390×844에서 overflow 0·console error 0, Viz 6개 마지막 장면을 `output/playwright/sam3-*.png`에 남겼다.

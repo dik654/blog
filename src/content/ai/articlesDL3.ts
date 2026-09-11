@@ -162,6 +162,32 @@ export const dlVisionArticles: Article[] = [
       import("@/pages/articles/ai/vision-task-spatial-contracts"),
   },
   {
+    slug: "sam3-promptable-concept-segmentation",
+    title: "SAM 3는 이름으로 개념을 받아 모든 인스턴스를 분할합니다",
+    subcategory: "ai-vision",
+    sections: [
+      { id: "overview", title: "프롬프트의 단위가 자리에서 이름으로 바뀝니다" },
+      {
+        id: "pcs-task",
+        title: "없는 개념을 없다고 답하는 것도 과제입니다",
+        subsections: [{ id: "cg-f1", title: "위치 점수와 존재 점수를 곱해서 채점합니다" }],
+      },
+      {
+        id: "detector",
+        title: "프롬프트가 이미지 표현 자체를 바꿉니다",
+        subsections: [{ id: "exemplar-prompt", title: "예시 상자는 개념을 좁히는 신호입니다" }],
+      },
+      { id: "presence-head", title: "있는지 묻는 일과 어디냐고 묻는 일을 나눕니다" },
+      { id: "video-tracker", title: "영상에서는 매 프레임의 검출과 기존 궤적을 잇습니다" },
+      {
+        id: "data-engine",
+        title: "사람만으로는 이 규모의 라벨을 만들 수 없습니다",
+        subsections: [{ id: "paper-sam3", title: "논문이 보인 것과 보이지 않은 것" }],
+      },
+    ],
+    component: () => import("@/pages/articles/ai/sam3-promptable-concept-segmentation"),
+  },
+  {
     slug: "vla-embodiment-gap",
     title: "VLA Embodiment Gap: 의미에서 물리 행동까지",
     subcategory: "ai-vision",

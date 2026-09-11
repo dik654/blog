@@ -70109,4 +70109,227 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "ai/sam3-promptable-concept-segmentation": {
+    coreIdea:
+      "SAM 3는 프롬프트 단위를 자리에서 개념 이름으로 옮기면서 존재 판단이라는 새 부담을 떠안았고, 그 부담을 전용 토큰으로 분리해 최종 점수를 존재 확률과 조건부 매칭 확률의 곱으로 만들며, 평가도 위치 지표와 존재 지표의 곱으로 채점합니다.",
+    assumedKnowledge: [
+      { id: "cnn-task-spatial-contract", role: "분류·검출·분할이 약속하는 출력 형태의 정의입니다." },
+      { id: "visual-grounding-primitives", role: "텍스트로 영역을 지목하는 일반 개념입니다." },
+      { id: "vit-patch-sequence-contract", role: "이미지를 토큰 시퀀스로 다루는 계약입니다." },
+      { id: "classification-evaluation-layer-separation", role: "평가를 층으로 나눠 보는 일반 원칙입니다." },
+      { id: "frozen-backbone-evaluation-protocol", role: "backbone을 고정한 채 상위 모듈만 학습하는 조건의 정의입니다." },
+    ],
+    introducedHere: [
+      { id: "promptable-concept-segmentation", role: "개념 단위 전수 분할이라는 과제를 정의합니다." },
+      { id: "concept-grounded-composite-metric", role: "위치와 존재를 곱으로 채점하는 이유를 계산합니다." },
+      { id: "prompt-conditioned-image-encoding", role: "프롬프트가 이미지 표현을 바꾸는 융합 단계를 설명합니다." },
+      { id: "image-exemplar-prompt", role: "예시 상자가 개념을 좁히는 신호임을 고정합니다." },
+      { id: "presence-localization-factorization", role: "존재 판단을 떼어 내고 곱으로 되합치는 설계를 정의합니다." },
+      { id: "detection-track-association", role: "영상에서 검출과 궤적을 잇는 절차를 정리합니다." },
+      { id: "ai-verified-annotation-pipeline", role: "이 규모의 라벨을 만든 방법과 순환 위험을 설명합니다." },
+    ],
+    conceptExplanations: [
+      {
+        id: "promptable-concept-segmentation",
+        sectionId: "pcs-task",
+        intuition:
+          "사진에서 손가락으로 가리키는 대신 이름을 부르면, 그 이름에 해당하는 것을 전부 찾아 하나씩 구분해 줍니다.",
+        workedExample:
+          "'줄무늬 고양이'를 주면 사진 속 해당 개체 수만큼 마스크와 서로 다른 정체성이 나오고, 없으면 빈 결과가 정답입니다.",
+        boundary:
+          "짧은 명사구 단위이며 관계나 조건이 들어간 긴 지시문을 푸는 과제가 아닙니다. 정답 마스크가 0개인 문항이 평가에 포함된다는 점이 이전 과제와의 결정적 차이입니다.",
+      },
+      {
+        id: "concept-grounded-composite-metric",
+        sectionId: "cg-f1",
+        intuition:
+          "잘 찾는 능력과 함부로 찾지 않는 능력을 둘 다 요구하려면 두 점수를 더하지 말고 곱해야 합니다.",
+        workedExample:
+          "위치 0.8·존재 0.05인 모델은 곱이 0.04라 4점이지만, 평균으로 채점하면 42점이 되어 균형 잡힌 모델과 비슷해집니다.",
+        boundary:
+          "값 하나만 보면 어느 쪽이 약한지 알 수 없어 분해해서 봐야 합니다. 신뢰도 0.5 위의 예측만 평가에 들어간다는 전제도 함께 봅니다.",
+      },
+      {
+        id: "prompt-conditioned-image-encoding",
+        sectionId: "detector",
+        intuition:
+          "무엇을 찾는지 미리 알려 주고 사진을 보면, 같은 사진이라도 눈에 들어오는 것이 달라집니다.",
+        workedExample:
+          "이미지 인코더가 낸 토큰이 명사구 토큰을 cross-attention으로 참조해 조건부 표현이 되고, 그 위에서 학습된 질의가 후보를 뽑습니다.",
+        boundary:
+          "조건을 주는 단계이지 후보를 고르는 단계가 아닙니다. 질의 수가 상한이므로 같은 개념이 질의 수보다 많으면 전부 잡지 못합니다.",
+      },
+      {
+        id: "image-exemplar-prompt",
+        sectionId: "exemplar-prompt",
+        intuition:
+          "말로 설명하기 어려운 대상은 '이런 것'이라고 하나 짚어 주면 훨씬 정확히 전달됩니다.",
+        workedExample:
+          "상자의 위치 임베딩, 긍정·부정 라벨 임베딩, 그 영역의 시각 특징을 이어 붙여 작은 transformer에 통과시킨 결과가 프롬프트 토큰이 됩니다.",
+        boundary:
+          "그 상자 안만 분할하라는 지시가 아니며 출력은 여전히 사진 전체의 모든 인스턴스입니다. 특정 개체 하나만 다루려면 별도의 지목 경로를 씁니다.",
+      },
+      {
+        id: "presence-localization-factorization",
+        sectionId: "presence-head",
+        intuition:
+          "한 사람에게 '있는지 판단'과 '어디인지 판단'을 동시에 시키면 둘 다 무뎌지므로 역할을 나눕니다.",
+        workedExample:
+          "존재 확률 0.93에 질의 점수 0.82를 곱해 0.76이 되고, 존재 확률이 0.08이면 같은 질의가 0.07로 내려가 임계값 아래가 됩니다.",
+        boundary:
+          "독립 가정이 아니라 조건부 분해입니다. 보고된 이득은 해당 설정에서 종합 점수 1.5점·존재 상관계수 0.05이며 다른 구조에서의 재현을 보장하지 않습니다.",
+      },
+      {
+        id: "detection-track-association",
+        sectionId: "video-tracker",
+        intuition:
+          "이어 오던 궤적과 방금 찾은 것을 겹쳐 보고 같은 것이면 이름표를 잇고 아니면 새 이름표를 답니다.",
+        workedExample:
+          "궤적 2개를 현재 프레임으로 옮긴 뒤 검출 3개와 겹침으로 짝지으면 둘은 정체성을 유지하고 하나는 새 궤적이 됩니다.",
+        boundary:
+          "검출은 프레임마다 독립이라 잠깐 놓치면 끊기고 추적은 한 번 잘못 붙으면 끌고 갑니다. 최근 매칭 빈도로 궤적 점수를 낮추고 주기적으로 다시 프롬프트하는 장치가 함께 필요합니다.",
+      },
+      {
+        id: "ai-verified-annotation-pipeline",
+        sectionId: "data-engine",
+        intuition:
+          "사람을 빼는 것이 아니라, 기계가 쉽게 거르는 부분을 맡기고 사람은 어려운 곳으로 옮깁니다.",
+        workedExample:
+          "마스크가 맞는지와 빠짐없이 찾았는지를 미세조정한 언어모델이 먼저 판정해 처리량이 사람만 쓸 때의 약 두 배가 됩니다.",
+        boundary:
+          "검수자와 학습 대상이 실수를 공유하면 그 실수가 데이터에 반복 기록됩니다. 사람이 여러 명 붙는 평가 구간을 따로 두는 이유가 이 순환을 끊기 위해서입니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 과제 정의",
+        relation: "프롬프트 단위가 바뀌면서 늘어난 요구를 먼저 고정",
+        concepts: ["promptable-concept-segmentation", "cnn-task-spatial-contract", "visual-grounding-primitives"],
+      },
+      {
+        label: "01 채점",
+        relation: "정답이 0개일 수 있는 과제를 어떻게 한 숫자로 재는지",
+        concepts: ["concept-grounded-composite-metric", "classification-evaluation-layer-separation"],
+      },
+      {
+        label: "02 조건 짓기",
+        relation: "프롬프트가 이미지 표현을 바꾸는 지점",
+        concepts: ["prompt-conditioned-image-encoding", "image-exemplar-prompt"],
+      },
+      {
+        label: "03 역할 분리",
+        relation: "존재 판단을 떼어 내고 곱으로 되합침",
+        concepts: ["presence-localization-factorization"],
+      },
+      {
+        label: "04 시간 축",
+        relation: "정체성 요구가 만드는 검출·추적 결합",
+        concepts: ["detection-track-association", "frozen-backbone-evaluation-protocol"],
+      },
+      {
+        label: "05 데이터",
+        relation: "이 규모를 가능하게 한 라벨 생성과 그 위험",
+        concepts: ["ai-verified-annotation-pipeline"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "점으로 지목하는 분할과 개념 이름으로 하는 분할에서 모델이 추가로 판단해야 하는 것을 두 가지 쓰세요.",
+        answerChecklist: ["개념이 사진에 있는지", "몇 개인지", "서로 다른 개체인지", "지목 프롬프트는 존재가 전제됨", "출력에 정체성 포함"],
+        requiredConcepts: ["promptable-concept-segmentation"],
+        sectionId: "pcs-task",
+      },
+      {
+        level: "basic",
+        question:
+          "학습·평가 데이터에 사진에 없는 개념을 일부러 붙이는 이유를 설명하고, 그것이 없을 때 생기는 습관을 쓰세요.",
+        answerChecklist: ["어려운 부정 예시", "없음을 맞히는 것도 채점 대상", "없으면 항상 무언가 찾으려 함", "실사용에서 거짓 검출", "존재 지표가 이를 잡음"],
+        requiredConcepts: ["promptable-concept-segmentation"],
+        sectionId: "pcs-task",
+      },
+      {
+        level: "basic",
+        question:
+          "위치 지표 0.8·존재 지표 0.05인 모델의 점수를 곱 방식과 평균 방식으로 각각 계산하고 차이를 설명하세요.",
+        answerChecklist: ["곱 0.04 → 4점", "평균 0.425 → 약 42점", "곱은 한쪽이 낮으면 전체가 낮음", "평균은 벌충 가능", "순위가 뒤바뀜"],
+        requiredConcepts: ["concept-grounded-composite-metric"],
+        sectionId: "cg-f1",
+      },
+      {
+        level: "basic",
+        question:
+          "융합 인코더가 하는 일을 한 문장으로 쓰고, 그 결과가 이후 단계에 무엇을 바꾸는지 설명하세요.",
+        answerChecklist: ["이미지 토큰이 프롬프트를 cross-attention", "조건부 이미지 표현", "같은 사진도 질문마다 다른 특징", "질의가 그 표현을 봄", "프롬프트 종류와 무관하게 같은 경로"],
+        requiredConcepts: ["prompt-conditioned-image-encoding"],
+        sectionId: "detector",
+      },
+      {
+        level: "basic",
+        question:
+          "이미지 예시 프롬프트를 이루는 세 조각을 쓰고, 예시 상자가 무엇을 뜻하지 않는지 설명하세요.",
+        answerChecklist: ["위치 임베딩", "긍정·부정 라벨 임베딩", "영역 시각 특징", "작은 transformer 통과", "상자 안만 분할하라는 뜻이 아님", "출력은 전체 인스턴스"],
+        requiredConcepts: ["image-exemplar-prompt"],
+        sectionId: "exemplar-prompt",
+      },
+      {
+        level: "basic",
+        question:
+          "존재 확률 0.93과 0.08에서 질의 점수 0.82가 각각 어떤 최종 점수가 되는지 계산하고 결과를 해석하세요.",
+        answerChecklist: ["0.93 × 0.82 ≈ 0.76", "0.08 × 0.82 ≈ 0.07", "존재 확률이 공통 인수", "낮으면 모든 질의가 함께 하락", "빈 결과가 됨"],
+        requiredConcepts: ["presence-localization-factorization"],
+        sectionId: "presence-head",
+      },
+      {
+        level: "advanced",
+        question:
+          "한 질의가 존재와 위치를 함께 판단할 때 학습 신호가 어떻게 충돌하는지 설명하고, 분해가 각 출력의 목표를 어떻게 단순화하는지 쓰세요.",
+        answerChecklist: ["없는 사진에서는 모든 질의가 낮아야 함", "있는 사진에서는 자리를 구분해야 함", "한 출력이 두 요구를 맞추면 무뎌짐", "존재 토큰은 전체를 보고 있음·없음만", "질의는 조건부 매칭만", "곱으로 원래 확률 복원"],
+        requiredConcepts: ["presence-localization-factorization", "promptable-concept-segmentation"],
+        sectionId: "presence-head",
+      },
+      {
+        level: "advanced",
+        question:
+          "영상에서 검출만으로도 마스크는 얻을 수 있는데 추적기를 함께 두는 이유를 과제 정의로 설명하고, 두 흐름이 각각 만드는 실패와 그 완화 장치를 쓰세요.",
+        answerChecklist: ["출력에 고유 정체성 포함", "프레임 사이 대응 필요", "검출은 놓치면 끊김", "추적은 오류를 끌고 감", "최근 매칭 빈도로 궤적 점수 조정", "높은 신뢰도 검출로 재프롬프트"],
+        requiredConcepts: ["detection-track-association"],
+        sectionId: "video-tracker",
+      },
+      {
+        level: "advanced",
+        question:
+          "자동 검수자를 넣어 처리량을 올릴 때 생기는 순환 위험을 설명하고, 평가 데이터에서 그 순환을 끊기 위해 무엇을 다르게 했는지 쓰세요.",
+        answerChecklist: ["검수자와 학습 모델이 실수를 공유", "같은 실수가 데이터에 반복 기록", "모델이 다시 검수자가 됨", "평가 구간은 사람 여러 명", "학습 데이터와 평가 데이터의 생성 방식 분리"],
+        requiredConcepts: ["ai-verified-annotation-pipeline"],
+        sectionId: "data-engine",
+      },
+      {
+        level: "advanced",
+        question:
+          "이 논문의 종합 점수가 기존 시스템의 두 배라는 보고를 다른 분할 모델과 비교할 때 주의할 점을 세 가지 쓰세요.",
+        answerChecklist: ["저자들이 정의한 지표", "저자들이 공개한 벤치마크", "개념 분포와 부정 예시 구성에 의존", "다른 지표로 옮겨 읽을 수 없음", "목표가 다른 모델과 같은 표에 놓을 수 없음", "학습 분포 밖 용어는 논문이 한계로 명시"],
+        requiredConcepts: ["concept-grounded-composite-metric", "promptable-concept-segmentation"],
+        sectionId: "paper-sam3",
+      },
+    ],
+    papers: [
+      {
+        title: "SAM 3: Segment Anything with Concepts",
+        href: "https://arxiv.org/abs/2511.16719",
+        problem:
+          "특정 자리를 지목해야만 분할할 수 있던 제약을 넘어, 개념 이름만으로 모든 인스턴스를 찾아 구분하는 과제를 정의하고 풀어야 했습니다.",
+        contribution:
+          "개념 프롬프트 분할 과제와 벤치마크를 정의하고, 존재 판단을 전용 토큰으로 분리한 검출기와 자동 검수를 결합한 데이터 엔진을 함께 제시했습니다.",
+        assumptions:
+          "보고된 성능은 저자들이 구성한 개념 온톨로지와 어려운 부정 예시 분포, 그리고 함께 정의한 지표 위에서 성립합니다.",
+        evidenceScope:
+          "저자 자기보고로 이미지와 영상 모두에서 기존 시스템 대비 종합 점수 약 두 배와 존재 판정 개선을 보고했습니다.",
+        notClaim:
+          "다른 분할 과제나 다른 지표로 옮겨 읽을 수 없으며, 학습 분포 밖의 전문 용어 일반화는 논문 스스로 한계로 적고 있습니다.",
+        sectionId: "paper-sam3",
+      },
+    ],
+  },
 };

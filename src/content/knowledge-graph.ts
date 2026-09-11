@@ -21526,6 +21526,72 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "backbone 가중치를 고정한 채 얇은 head만 학습해 표현 자체를 재는 평가 조건입니다. head를 키우거나 backbone까지 학습하면 점수가 말해 주는 주어가 표현 품질에서 초기값의 유용성으로 바뀝니다.",
     canonicalHref: "/ai/dinov3-self-supervised-backbone#use-boundary",
   },
+  "promptable-concept-segmentation": {
+    id: "promptable-concept-segmentation",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "개념 프롬프트 분할",
+    aliases: ["PCS", "Promptable Concept Segmentation"],
+    definition:
+      "짧은 명사구나 예시 상자를 받아 그 개념에 해당하는 모든 인스턴스의 마스크와 고유 정체성을 내놓는 과제입니다. 특정 자리를 지목하는 분할과 달리 개념이 존재하는지부터 모델이 판단해야 하고, 없을 때 빈 결과를 내는 것도 채점 대상입니다.",
+    canonicalHref: "/ai/sam3-promptable-concept-segmentation#pcs-task",
+  },
+  "concept-grounded-composite-metric": {
+    id: "concept-grounded-composite-metric",
+    kind: "metric",
+    domain: "machine-learning",
+    label: "위치·존재 곱 결합 지표",
+    aliases: ["cgF1"],
+    definition:
+      "정답이 있는 문항에서의 위치 정확도와 개념 존재 여부 판정의 상관계수를 곱해 하나의 점수로 만드는 평가 방식입니다. 합이 아니라 곱이므로 한쪽을 포기하고 다른 쪽으로 벌충할 수 없습니다.",
+    canonicalHref: "/ai/sam3-promptable-concept-segmentation#cg-f1",
+  },
+  "prompt-conditioned-image-encoding": {
+    id: "prompt-conditioned-image-encoding",
+    kind: "method",
+    domain: "machine-learning",
+    label: "프롬프트 조건부 이미지 인코딩",
+    definition:
+      "이미지 토큰이 프롬프트 토큰을 cross-attention으로 참조해 조건부 표현이 되는 융합 단계입니다. 같은 사진이라도 무엇을 찾느냐에 따라 이후 단계가 보는 특징이 달라집니다.",
+    canonicalHref: "/ai/sam3-promptable-concept-segmentation#detector",
+  },
+  "image-exemplar-prompt": {
+    id: "image-exemplar-prompt",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "이미지 예시 프롬프트",
+    definition:
+      "사진 안의 상자를 긍정 또는 부정 예시로 주어 찾을 개념의 범위를 좁히는 프롬프트입니다. 위치 임베딩·라벨 임베딩·영역 시각 특징을 합쳐 토큰으로 만들며, 그 상자 안만 분할하라는 지시가 아닙니다.",
+    canonicalHref: "/ai/sam3-promptable-concept-segmentation#exemplar-prompt",
+  },
+  "presence-localization-factorization": {
+    id: "presence-localization-factorization",
+    kind: "method",
+    domain: "machine-learning",
+    label: "존재·위치 판단 분해",
+    aliases: ["presence token", "presence head"],
+    definition:
+      "최종 점수를 개념 존재 확률과 존재를 전제한 조건부 매칭 확률의 곱으로 분해하고, 전자를 전용 토큰에 맡기는 설계입니다. 질의는 존재 판단의 부담을 덜고 자리 구분만 학습합니다.",
+    canonicalHref: "/ai/sam3-promptable-concept-segmentation#presence-head",
+  },
+  "detection-track-association": {
+    id: "detection-track-association",
+    kind: "method",
+    domain: "machine-learning",
+    label: "검출·궤적 매칭",
+    definition:
+      "프레임마다 독립으로 만든 검출 결과와 메모리로 이어 온 궤적을 겹침 정도로 짝지어 정체성을 유지하는 절차입니다. 짝 없는 검출은 새 궤적이 되고, 궤적은 최근 검출과 얼마나 자주 맞았는지로 신뢰도를 조정합니다.",
+    canonicalHref: "/ai/sam3-promptable-concept-segmentation#video-tracker",
+  },
+  "ai-verified-annotation-pipeline": {
+    id: "ai-verified-annotation-pipeline",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "자동 검수 결합 라벨링 파이프라인",
+    definition:
+      "라벨 검수의 일부를 미세조정한 모델에 맡기고 사람은 모델이 어려워하는 사례로 재배치해 처리량을 올리는 데이터 생성 구조입니다. 검수자와 학습 대상이 실수를 공유하면 그 실수가 데이터에 반복 기록되는 순환 위험을 함께 갖습니다.",
+    canonicalHref: "/ai/sam3-promptable-concept-segmentation#data-engine",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -39063,6 +39129,83 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "contrasts",
     reason:
       "가린 자리를 픽셀로 복원하는 목표와 teacher 분포로 맞추는 목표를 같은 축에서 구분합니다.",
+  },
+  {
+    from: "cnn-task-spatial-contract",
+    to: "promptable-concept-segmentation",
+    relation: "prerequisite",
+    reason:
+      "분류·검출·분할이 각각 무엇을 출력하기로 약속하는지 알아야 개념 단위 출력이 무엇을 더 요구하는지 구분됩니다.",
+  },
+  {
+    from: "visual-grounding-primitives",
+    to: "promptable-concept-segmentation",
+    relation: "prerequisite",
+    reason:
+      "텍스트로 영역을 지목하는 일반적인 grounding 개념 위에서 개념 단위 전수 분할이라는 확장을 정의합니다.",
+  },
+  {
+    from: "promptable-concept-segmentation",
+    to: "concept-grounded-composite-metric",
+    relation: "evaluates",
+    reason:
+      "정답 마스크가 0개일 수 있는 과제 정의가 위치와 존재를 함께 채점하는 지표를 필요하게 만듭니다.",
+  },
+  {
+    from: "classification-evaluation-layer-separation",
+    to: "concept-grounded-composite-metric",
+    relation: "prerequisite",
+    reason:
+      "평가를 층으로 나눠 보는 일반 원칙이 있어야 위치 지표와 존재 지표를 분리해 곱하는 설계를 읽을 수 있습니다.",
+  },
+  {
+    from: "vit-patch-sequence-contract",
+    to: "prompt-conditioned-image-encoding",
+    relation: "prerequisite",
+    reason:
+      "이미지를 토큰 시퀀스로 다룬다는 계약이 있어야 그 토큰이 프롬프트를 cross-attention으로 참조한다는 설명이 성립합니다.",
+  },
+  {
+    from: "prompt-conditioned-image-encoding",
+    to: "image-exemplar-prompt",
+    relation: "extends",
+    reason:
+      "같은 융합 경로에 텍스트 대신 영역 시각 특징을 프롬프트 토큰으로 넣는 변형이 예시 프롬프트입니다.",
+  },
+  {
+    from: "promptable-concept-segmentation",
+    to: "presence-localization-factorization",
+    relation: "produces",
+    reason:
+      "없을 때 없다고 답해야 한다는 요구가 존재 판단을 질의에서 떼어 내는 설계를 만듭니다.",
+  },
+  {
+    from: "presence-localization-factorization",
+    to: "concept-grounded-composite-metric",
+    relation: "optimizes",
+    reason:
+      "존재 판정이 분리돼 날카로워지면 지표의 존재 항이 올라 곱으로 만든 종합 점수가 함께 오릅니다.",
+  },
+  {
+    from: "promptable-concept-segmentation",
+    to: "detection-track-association",
+    relation: "constrains",
+    reason:
+      "출력에 고유 정체성이 포함되므로 영상에서는 프레임 사이 대응을 정하는 절차가 반드시 필요합니다.",
+  },
+  {
+    from: "ai-verified-annotation-pipeline",
+    to: "promptable-concept-segmentation",
+    relation: "produces",
+    reason:
+      "400만 개 규모의 개념 라벨은 사람만으로 만들 수 없어 이 파이프라인이 과제 자체를 가능하게 합니다.",
+  },
+  {
+    from: "frozen-backbone-evaluation-protocol",
+    to: "detection-track-association",
+    relation: "prerequisite",
+    reason:
+      "추적기가 시각 backbone을 고정한 채 학습된다는 점을 알아야 검출과 추적이 같은 특징 위에서 동작하는 이유가 설명됩니다.",
   },
 ];
 

@@ -10971,6 +10971,44 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "sam3-promptable-concept-segmentation": {
+    title: "SAM 3 개념 프롬프트 분할 글이 소유하는 범위",
+    owns: [
+      "짧은 명사구·예시 상자로 모든 인스턴스와 정체성을 요구하는 개념 프롬프트 분할의 과제 정의",
+      "정답 마스크가 0개인 문항을 포함하기 위해 위치 지표와 존재 지표를 곱으로 결합하는 채점 방식",
+      "이미지 토큰이 프롬프트를 cross-attention으로 참조해 조건부 표현이 되는 융합 단계",
+      "위치·라벨·영역 특징을 합쳐 토큰으로 만드는 이미지 예시 프롬프트와 그 오해 경계",
+      "존재 확률과 조건부 매칭 확률의 곱 분해, 그리고 전용 토큰의 배선과 레이어별 logit",
+      "검출과 궤적을 겹침으로 잇고 매칭 빈도·재프롬프트로 보정하는 영상 처리 절차",
+      "자동 검수자를 결합한 라벨 생성 구조와 검수자·학습 대상이 실수를 공유할 때의 순환 위험",
+    ],
+    reuses: [
+      { label: "비전 과제의 공간 계약", href: "/ai/vision-task-spatial-contracts" },
+      { label: "멀티모달 검색과 visual grounding", href: "/ai/multimodal-retrieval-and-visual-grounding" },
+      { label: "Vision Transformer의 패치 시퀀스", href: "/ai/vision-transformer" },
+      { label: "분류 지표의 층 분리", href: "/ai/classification-metrics" },
+      { label: "얼린 backbone 평가 조건", href: "/ai/dinov3-self-supervised-backbone" },
+      { label: "비디오 클립 샘플링", href: "/ai/video-clip-sampling" },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "과제 정의·지표 공식·데이터 규모·ablation 수치는 SAM 3 논문에 귀속하며 저자 자기보고임을 본문에 표시한다.",
+      },
+      {
+        kind: "primary-source",
+        rule: "존재 토큰과 융합 인코더의 배선은 facebookresearch/sam3 커밋 660a5e9e 스냅샷에 귀속한다.",
+      },
+      {
+        kind: "standard",
+        rule: "종합 점수 비교는 저자들이 정의한 벤치마크 위의 값이며 다른 분할 과제나 지표로 옮겨 읽지 않는다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "본문 그림의 점수·상자 배치는 구조를 설명하기 위한 예시이며 실제 모델 출력이 아니다.",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;
