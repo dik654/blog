@@ -292,6 +292,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "수치는 한 장비의 프로젝트 실측이며 다른 모델 조합으로 일반화하지 않고, 임계값은 표본 규모의 한계를 함께 밝힌다.",
   },
+  "ai/masked-edit-verb-routing": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-09-11",
+    rationale:
+      "본문은 6 section·concept 7개로 keep 범위다. 동작 분류·모델 성향·마스크 극성·지표 스케일이 하나의 라우팅 결정을 함께 떠받치므로 나누면 각 글이 같은 표를 다시 세워야 한다.",
+    sharedGate:
+      "수치는 한 장비·한 회차·한 프롬프트 문체의 실측이며 절대 임계값과 모델 실력 평가로 일반화하지 않는다.",
+  },
 };
 
 /**
@@ -299,6 +308,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "ai/masked-edit-verb-routing": "8a4d2f13be391d98",
   "ai/generative-measurement-controls": "cef7c8f17d1b41f3",
   "ai/claw-bash": "d3ec03f41aa635ae",
   "ai/claw-cli": "085e65b3b3de27cd",

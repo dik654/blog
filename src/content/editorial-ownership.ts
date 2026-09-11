@@ -11408,6 +11408,36 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "masked-edit-verb-routing": {
+    title: "편집 동작 라우팅 글이 소유하는 범위",
+    owns: [
+      "마스크 편집을 요구가 다른 동작들로 나누는 분류와 각 동작의 성공 조건",
+      "같은 조건에서 모델마다 일관되게 나타나는 편집 성향과 그 배치 조건",
+      "손으로 그린 힌트가 반영되는지를 같은 조건 두 실행의 차이로 재는 방법",
+      "마스크 확장 방향이 교체와 소거에서 반대라는 관계와 각각의 상한",
+      "그림체가 평균 절대 변화의 스케일을 바꾼다는 성질과 절대 임계값 사용 금지",
+      "되돌릴 수 없는 조합을 모델 호출 전에 거절하는 가드",
+      "호출하는 쪽이 동작만 말하고 표가 모델과 파라미터를 정하는 배치",
+    ],
+    reuses: [
+      { label: "계측기 검증", href: "/ai/generative-measurement-controls" },
+      { label: "잠재 확산 파이프라인", href: "/ai/latent-diffusion-guidance" },
+    ],
+    evidence: [
+      {
+        kind: "project-measurement",
+        rule: "수치는 한 장비·한 회차의 실측이며 측정일과 고정한 조건을 함께 밝힌다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "동작 분류와 라우팅 배치는 이 기록이 정리한 방식이며 제품 규격이 아니다.",
+      },
+      {
+        kind: "standard",
+        rule: "프롬프트 문체를 통제하지 않았으므로 모델 순위를 실력 평가로 제시하지 않는다.",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

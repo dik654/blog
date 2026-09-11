@@ -72817,4 +72817,205 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "ai/masked-edit-verb-routing": {
+    coreIdea:
+      "마스크 편집은 요구가 서로 다른 여러 동작이고 모델마다 일관된 성향이 있으므로, 선택을 사람의 기억이나 언어 모델의 인상이 아니라 측정으로 만든 표에 맡겨야 합니다. 그 표를 만들 때는 마스크 확장 방향이 동작마다 반대라는 것과 지표 스케일이 그림체에 의존한다는 것을 함께 고정해야 합니다.",
+    assumedKnowledge: [
+      { id: "autoencoder-roundtrip-floor", role: "마스크 밖 변화량이 왜 선택 근거가 못 되는지입니다." },
+      { id: "differential-versus-absolute-metric", role: "차이를 재는 비교가 오염에 강한 이유입니다." },
+      { id: "known-answer-instrument-check", role: "지표를 쓰기 전에 검증하는 절차입니다." },
+      { id: "latent-diffusion-component-contract", role: "마스크 편집이 거치는 구성 요소입니다." },
+      { id: "classifier-free-guidance", role: "안내 계수가 요청 반영에 하는 역할입니다." },
+    ],
+    introducedHere: [
+      { id: "edit-verb-taxonomy", role: "한 기능을 요구가 다른 동작들로 나눕니다." },
+      { id: "model-edit-disposition", role: "모델마다 일관된 성향이 있다는 사실을 정의합니다." },
+      { id: "hand-hint-survival", role: "드로잉이 반영되는지를 차분으로 재는 방법을 정의합니다." },
+      { id: "mask-grow-verb-polarity", role: "확장 방향이 동작마다 반대라는 관계를 고정합니다." },
+      { id: "style-dependent-metric-scale", role: "절대값 비교를 막는 경계를 세웁니다." },
+      { id: "pre-compute-edit-guard", role: "실행 전에 거절해야 하는 조합을 정의합니다." },
+      { id: "verb-to-model-routing-table", role: "표를 실제로 쓰게 만드는 배치를 정의합니다." },
+    ],
+    conceptExplanations: [
+      {
+        id: "edit-verb-taxonomy",
+        sectionId: "overview",
+        intuition:
+          "\"고쳐 줘\"라는 한마디가 페인트칠, 부품 교체, 없던 손잡이 달기를 전부 뜻할 수 있습니다.",
+        workedExample:
+          "색 변경과 재질 변경은 형태 보존이 성공 조건이고, 물건 교체는 새 물건이 끝나는 자리를 정해야 하며, 더하기는 없던 것을 만들어 내야 합니다.",
+        boundary:
+          "이 분류는 이 기록이 정리한 것이며 제품마다 동사 이름과 경계가 다릅니다. 중요한 것은 이름이 아니라 각 요구가 모델에게 다른 일을 시킨다는 사실입니다.",
+      },
+      {
+        id: "model-edit-disposition",
+        sectionId: "model-disposition",
+        intuition:
+          "같은 주문을 받아도 조심스러운 요리사와 과감한 요리사의 결과가 매번 다른 방향으로 다릅니다.",
+        workedExample:
+          "보수적인 모델은 여섯 동작 중 넷에서 최저 변화량을 냈고 색 변경에서도 0.61 차이로 두 번째였으며, 없던 것을 더하는 동작에서는 안내 계수를 2.5에서 7.0으로 올려도 4.4에서 4.5로만 움직였습니다.",
+        boundary:
+          "순위는 한 장비·한 회차·하나의 프롬프트 문체에서 얻은 것입니다. 모델마다 잘 맞는 프롬프트 방식이 다르다는 점을 통제하지 않았으므로 실력인지 문체 궁합인지 이 측정만으로는 가릴 수 없습니다.",
+      },
+      {
+        id: "hand-hint-survival",
+        sectionId: "hand-hint",
+        intuition:
+          "밑그림을 주고 색칠을 맡겼을 때, 밑그림을 따라 칠하는 사람과 지우고 새로 그리는 사람이 있습니다.",
+        workedExample:
+          "같은 조건에서 힌트만 넣고 뺀 두 실행의 차이가 한 모델에서 10.26 → 12.13으로 +1.87이었고 다섯 모델은 −0.13에서 +0.16이었습니다.",
+        boundary:
+          "차이의 크기만 재는 값이라 그린 대로 나왔는지는 그림으로 따로 확인해야 합니다. 또 두 실행이 힌트 외에 완전히 같아야 상쇄가 성립합니다.",
+      },
+      {
+        id: "mask-grow-verb-polarity",
+        sectionId: "mask-polarity",
+        intuition:
+          "새 가구를 들이려면 놓을 자리를 비워 봐야 하지만, 물건을 치우는 일에는 더 넓은 자리가 필요 없습니다.",
+        workedExample:
+          "교체에서 마스크를 정강이까지 96픽셀 열자 부츠 모양 금속이 관절식 각반이 됐고, 지우기에서 24픽셀만 넓히자 띠 아래의 가죽 벨트까지 사라졌습니다.",
+        boundary:
+          "교체 쪽에도 상한이 있어 160픽셀에서는 떠다니는 파편이 생깁니다. 사실 이것은 참고 범위와 칠할 범위 두 손잡이인데 하나가 둘을 겸하고 있어 96은 타협값입니다.",
+      },
+      {
+        id: "style-dependent-metric-scale",
+        sectionId: "style-scale",
+        intuition:
+          "같은 붓질도 흰 벽에서는 크게 보이고 무늬 벽지에서는 덜 보입니다.",
+        workedExample:
+          "같은 색 변경이 3D 렌더에서 35.0, 애니에서 63.4였습니다. 평면 색 그림은 넓은 면적이 한꺼번에 바뀌어 평균 절대 변화가 구조적으로 커집니다.",
+        boundary:
+          "그래서 무동작이나 과잉을 판정하는 절대 임계값은 그림체 불변이 아닙니다. 표의 숫자는 같은 그림체 안의 순위로만 읽어야 합니다.",
+      },
+      {
+        id: "pre-compute-edit-guard",
+        sectionId: "style-scale",
+        intuition:
+          "지울 수 없는 펜을 내주기 전에 종이가 맞는지 확인합니다.",
+        workedExample:
+          "분할 모델이 준 얼굴 전체 마스크에 흉터를 더하자 사진에서 인물의 성별이 바뀌었습니다. 얼굴이 있고 마스크가 크롭의 4분의 1을 넘으면 연산 전에 거절합니다.",
+        boundary:
+          "가드는 되돌릴 수 없는 조합에만 걸어야 합니다. 지나치게 넓히면 정당한 요청까지 막아 사용자가 우회 경로를 찾게 되고, 그 경로에는 가드가 없습니다.",
+      },
+      {
+        id: "verb-to-model-routing-table",
+        sectionId: "routing-gate",
+        intuition:
+          "손님이 요리사 이름을 고르는 식당은 없습니다. 주문을 말하면 주방이 정합니다.",
+        workedExample:
+          "호출하는 쪽은 색을 바꾼다·재질을 바꾼다·교체한다·더한다만 말하고, 모델과 마스크 확장값은 표가 정합니다. 실제 요청 일곱 건에서 선택이 매번 표의 예측과 같았습니다.",
+        boundary:
+          "표는 측정한 조건 안에서만 유효합니다. 소스 그림체나 프롬프트 문체가 바뀌면 다시 재야 하고, 표가 없으면 이 배치는 모델 고정과 다를 바 없습니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 동작 분류",
+        relation: "요구가 다른 동작으로 나눔",
+        concepts: ["edit-verb-taxonomy", "latent-diffusion-component-contract"],
+      },
+      {
+        label: "01 모델 성향",
+        relation: "같은 조건에서 일관되게 나타나는 성질",
+        concepts: ["model-edit-disposition", "classifier-free-guidance", "autoencoder-roundtrip-floor"],
+      },
+      {
+        label: "02 차분 측정",
+        relation: "오염에 강한 비교로 드로잉 기여를 잼",
+        concepts: ["hand-hint-survival", "differential-versus-absolute-metric"],
+      },
+      {
+        label: "03 마스크와 지표",
+        relation: "확장 방향과 스케일 의존성",
+        concepts: ["mask-grow-verb-polarity", "style-dependent-metric-scale", "known-answer-instrument-check"],
+      },
+      {
+        label: "04 배치",
+        relation: "표를 실제로 쓰게 만드는 자리",
+        concepts: ["verb-to-model-routing-table", "pre-compute-edit-guard"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "마스크 편집 동작을 요구의 종류로 나누고, 각 묶음의 성공 조건을 쓰세요.",
+        answerChecklist: ["속성만 바꾸기 — 형태 보존이 성공 조건", "실체 교체 — 새 물건이 끝나는 자리를 정해야 함", "없던 것 생성", "있던 것 소거", "한 모델과 한 설정으로 전부 처리할 수 없음"],
+        requiredConcepts: ["edit-verb-taxonomy", "latent-diffusion-component-contract"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "보수적인 모델이 없던 것을 더하지 못한다는 판단의 근거를 쓰고, 왜 이것이 설정 문제가 아닌지 설명하세요.",
+        answerChecklist: ["더하기 동작에서 4.5", "안내 계수를 2.5에서 7.0으로 올림", "4.4에서 4.5로만 움직임", "소심한 것이 아니라 구조적 한계", "여섯 중 넷에서 최저 변화량", "물건 교체는 예외로 55.5"],
+        requiredConcepts: ["model-edit-disposition", "classifier-free-guidance"],
+        sectionId: "model-disposition",
+      },
+      {
+        level: "basic",
+        question:
+          "마스크 밖 변화량을 모델 선택 근거로 쓰지 않은 이유를 쓰고, 대신 무엇을 썼는지 적으세요.",
+        answerChecklist: ["오토인코더 왕복 바닥값으로 설명됨", "모델의 성질이 아니라 오토인코더 선택", "마스크 안 변화량을 씀", "그림 확인을 함께 씀"],
+        requiredConcepts: ["autoencoder-roundtrip-floor", "model-edit-disposition"],
+        sectionId: "model-disposition",
+      },
+      {
+        level: "basic",
+        question:
+          "손 힌트가 반영되는지를 재는 방법을 쓰고, 실측된 차이에서 무엇이 드러났는지 설명하세요.",
+        answerChecklist: ["같은 조건에서 힌트만 넣고 뺌", "두 실행의 차이가 드로잉 기여", "한 모델만 +1.87", "다섯 모델은 −0.13에서 +0.16", "나머지는 선을 지우고 다시 그림"],
+        requiredConcepts: ["hand-hint-survival"],
+        sectionId: "hand-hint",
+      },
+      {
+        level: "basic",
+        question:
+          "교체와 지우기에서 마스크 확장의 기본값이 반대인 이유를 각각 설명하세요.",
+        answerChecklist: ["교체는 새 물건이 끝날 자리를 보여 줘야 함", "딱 맞는 마스크는 부츠 모양 금속을 만듦", "96픽셀에서 관절식 각반", "지우기는 준 범위를 그대로 지움", "24픽셀에서 아래 레이어까지 소실"],
+        requiredConcepts: ["mask-grow-verb-polarity"],
+        sectionId: "mask-polarity",
+      },
+      {
+        level: "basic",
+        question:
+          "같은 동작의 수치가 그림체에 따라 달라지는 이유를 쓰고, 그 결과 표를 어떻게 읽어야 하는지 설명하세요.",
+        answerChecklist: ["평면 색은 넓은 면적이 한꺼번에 바뀜", "평균 절대 변화가 구조적으로 커짐", "3D 35.0 대 애니 63.4", "절대 임계값은 그림체 불변이 아님", "같은 그림체 안의 순위로만 읽음"],
+        requiredConcepts: ["style-dependent-metric-scale", "known-answer-instrument-check"],
+        sectionId: "style-scale",
+      },
+      {
+        level: "advanced",
+        question:
+          "힌트 기여를 차이로 재는 설계가 절대값 비교보다 나은 이유를 설명하고, 그 상쇄가 깨지는 조건을 쓰세요.",
+        answerChecklist: ["두 실행에 공통으로 들어가는 오차가 상쇄", "오토인코더 왕복이 양쪽에 동일하게 들어감", "절대값 비교가 무효인 표에서도 유효", "시드·스케줄·해상도가 다르면 성립하지 않음", "크기만 재므로 방향은 그림으로 확인"],
+        requiredConcepts: ["hand-hint-survival", "differential-versus-absolute-metric"],
+        sectionId: "hand-hint",
+      },
+      {
+        level: "advanced",
+        question:
+          "물건 교체가 지저분했던 두 원인을 쓰고, 마스크 확장에 상한이 있는 이유를 설명하세요.",
+        answerChecklist: ["전체 프레임을 통째로 넘김", "마스크를 대상에 딱 맞게 잡음", "73.3 → 44.8 → 32.4", "160픽셀에서 떠다니는 파편", "참고 범위와 칠할 범위가 한 손잡이에 묶여 있음"],
+        requiredConcepts: ["mask-grow-verb-polarity", "pre-compute-edit-guard"],
+        sectionId: "mask-polarity",
+      },
+      {
+        level: "advanced",
+        question:
+          "얼굴 전체 마스크에 무언가를 더하는 요청을 연산 전에 거절하는 이유를 설명하고, 가드를 넓게 걸면 안 되는 이유도 쓰세요.",
+        answerChecklist: ["사진에서 인물의 성별이 바뀜", "애니에서 눈매와 표정이 함께 바뀜", "이미 바뀐 인물은 되돌릴 수 없음", "모델을 부르기 전에 막는 편이 나음", "지나친 가드는 우회 경로를 만들고 그 경로에는 가드가 없음"],
+        requiredConcepts: ["pre-compute-edit-guard", "style-dependent-metric-scale"],
+        sectionId: "style-scale",
+      },
+      {
+        level: "advanced",
+        question:
+          "모델 선택을 둘 수 있는 세 가지 자리를 비교하고, 표 기반 라우팅이 유효하기 위한 조건을 쓰세요.",
+        answerChecklist: ["모델 고정 — 여섯 동작 중 넷이 나빠짐", "언어 모델이 선택 — 측정을 모른 채 최근 이름을 고름", "동작을 말하고 표가 선택", "마스크 확장값도 동작에서 따라옴", "측정한 조건 안에서만 유효", "그림체나 프롬프트 문체가 바뀌면 다시 재야 함"],
+        requiredConcepts: ["verb-to-model-routing-table", "model-edit-disposition", "style-dependent-metric-scale"],
+        sectionId: "routing-gate",
+      },
+    ],
+  },
 };
