@@ -6832,4 +6832,24 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "파드 묶음을 복제 단위로 다루는 API, 대표·작업자 이중 템플릿, 토폴로지 배치와 전체 재생성, 그룹 단위 갱신의 출처 (2026-09-11 확인)",
     },
   ],
+  "ai/generative-measurement-controls": [
+    {
+      kind: "프로젝트 실측",
+      label: "여섯 인물 × 네 스타일 얼굴 임베딩 검증 (2026-09-11, RTX 4090 48GB)",
+      href: "https://github.com/dik654/blog",
+      note: "사진·유화·3D 렌더 각 15쌍에서 0.40 초과 0쌍, 2D 애니 탐지 0/6. 0.28에서는 45쌍 중 6쌍이 초과",
+    },
+    {
+      kind: "프로젝트 실측",
+      label: "오토인코더 왕복 바닥값 (2026-09-11, RTX 4090 48GB)",
+      href: "https://github.com/dik654/blog",
+      note: "샘플링·프롬프트·마스크 없는 인코딩·디코딩만으로 0.60~2.75, 소스가 바뀌면 같은 오토인코더가 0.49~2.88",
+    },
+    {
+      kind: "핵심 논문",
+      label: "FLUXSynID — 합성 신원 데이터셋 생성 (ICCVW 2025, arXiv:2505.07530)",
+      href: "https://arxiv.org/abs/2505.07530",
+      note: "남남 34만 건 비교에서 오탐률 0.1%에 해당하는 임계값 0.423을 보고하며 본문의 0.40 선택을 독립 확인함",
+    },
+  ],
 };

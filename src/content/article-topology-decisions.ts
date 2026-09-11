@@ -283,6 +283,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "공개 프로젝트 문서에 적힌 구조까지만 근거로 삼고 구현별 성능·성숙도 평가와 구체 설정값 권고를 하지 않는다.",
   },
+  "ai/generative-measurement-controls": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-09-11",
+    rationale:
+      "본문은 6 section·concept 7개로 keep 범위다. 네 가지 검증이 하나의 절차를 이루고 서로를 근거로 삼아 나누면 각 글이 같은 검증 틀을 다시 세워야 한다.",
+    sharedGate:
+      "수치는 한 장비의 프로젝트 실측이며 다른 모델 조합으로 일반화하지 않고, 임계값은 표본 규모의 한계를 함께 밝힌다.",
+  },
 };
 
 /**
@@ -290,6 +299,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "ai/generative-measurement-controls": "cef7c8f17d1b41f3",
   "ai/claw-bash": "d3ec03f41aa635ae",
   "ai/claw-cli": "085e65b3b3de27cd",
   "ai/claw-compaction": "8286beaab27c0693",

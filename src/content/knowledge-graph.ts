@@ -22285,6 +22285,69 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "쫓겨나거나 갱신된 복제본이 다시 처리 가능해지려면 가중치 적재와 예열을 거쳐야 한다는 지연이며, 이 시간이 재배분 규칙의 반응 주기 하한을 정합니다. 이보다 짧은 주기로 죽였다 살리면 용량이 늘기는커녕 양쪽 모두 느려집니다.",
     canonicalHref: "/ai/onprem-k8s-inference-platform#fixed-pool",
   },
+  "known-answer-instrument-check": {
+    id: "known-answer-instrument-check",
+    kind: "method",
+    domain: "computer-science",
+    label: "답을 아는 입력으로 계측기 검증",
+    definition:
+      "새 계측기를 붙일 때 결과를 미리 아는 입력(원본 자신·무동작·자기 자신 대 자기 자신)을 함께 통과시켜 계측기 자체의 고장을 드러내는 절차입니다. 비용은 실행 한 번이고, 없으면 계측기가 다른 것을 재는 상태로 여러 회차가 지나갑니다.",
+    canonicalHref: "/ai/generative-measurement-controls#overview",
+  },
+  "detection-recognition-separation": {
+    id: "detection-recognition-separation",
+    kind: "concept",
+    domain: "computer-science",
+    label: "탐지와 인식의 실패 분리",
+    definition:
+      "얼굴 유사도가 탐지기와 인식기 두 모델의 직렬 구성이라는 사실과, 탐지 실패는 값이 나오지 않는 것인데 결과 표에서는 낮은 점수와 구분되지 않는다는 경계입니다. 대체 도구를 찾기 전에 어느 단계가 실패했는지부터 갈라야 합니다.",
+    canonicalHref: "/ai/generative-measurement-controls#identity-metric",
+  },
+  "impostor-threshold-derivation": {
+    id: "impostor-threshold-derivation",
+    kind: "method",
+    domain: "computer-science",
+    label: "남남 쌍 분포에서 임계값 유도",
+    definition:
+      "서로 다른 개체들의 모든 쌍을 재어 얻은 분포에서 허용할 오탐률을 먼저 정하고 그 조건을 만족하는 가장 작은 값을 임계값으로 삼는 절차입니다. 임계값이 모델의 성질이 아니라 운영 결정임을 드러내며, 물려받은 기본값은 검증되지 않은 가정으로 취급합니다.",
+    canonicalHref: "/ai/generative-measurement-controls#threshold-choice",
+  },
+  "metric-style-coverage-boundary": {
+    id: "metric-style-coverage-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "계측기의 스타일 적용 범위",
+    definition:
+      "사진으로 학습된 판정 도구를 렌더·회화·일러스트에 쓸 때 어디까지 유효한지를 직접 측정해 정하는 경계입니다. 적용 범위 밖에서는 값이 압축되는 것이 아니라 아예 산출되지 않을 수 있어, 낮은 점수와 측정 불가를 구분해야 합니다.",
+    canonicalHref: "/ai/generative-measurement-controls#style-coverage",
+  },
+  "autoencoder-roundtrip-floor": {
+    id: "autoencoder-roundtrip-floor",
+    kind: "method",
+    domain: "computer-science",
+    label: "오토인코더 왕복 바닥값",
+    definition:
+      "잠재 공간 편집에서 샘플링·프롬프트·마스크 없이 인코딩과 디코딩만 수행해 얻는 픽셀 변화량이며, 모든 마스크 밖 수치의 바닥입니다. 이 값 이하는 무동작과 구별되지 않고, 값이 입력 이미지에 크게 의존하므로 같은 입력에서 잰 것만 차감할 수 있습니다.",
+    canonicalHref: "/ai/generative-measurement-controls#roundtrip-floor",
+  },
+  "differential-versus-absolute-metric": {
+    id: "differential-versus-absolute-metric",
+    kind: "concept",
+    domain: "computer-science",
+    label: "차분 지표와 절대 지표의 오염 내성",
+    definition:
+      "같은 조건에서 두 번 실행한 값의 차이를 보는 지표는 공통 오염항이 상쇄되어 면역이고, 한 번 실행한 값을 그대로 쓰는 절대 지표는 그 오염을 결과로 오인한다는 구분입니다. 가능하면 비교를 차이로 설계하는 편이 안전합니다.",
+    canonicalHref: "/ai/generative-measurement-controls#roundtrip-floor",
+  },
+  "confound-removed-comparison": {
+    id: "confound-removed-comparison",
+    kind: "method",
+    domain: "computer-science",
+    label: "교란을 제거한 비교 설계",
+    definition:
+      "두 조건의 차이를 계측기 탓으로 돌리기 전에 비교 대상의 변화량 자체가 같은지 확인하고, 다르면 변화량을 통제한 설계로 다시 재는 절차입니다. 교란된 표는 그럴듯한 중간 결론을 만들어 검증을 멈추게 만듭니다.",
+    canonicalHref: "/ai/generative-measurement-controls#style-coverage",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -40649,6 +40712,78 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     to: "fixed-pool-reallocation",
     relation: "contrasts",
     reason: "외부 제공자에서는 예산 문제였던 용량 부족이 자체 클러스터에서는 우선순위 문제가 됩니다.",
+  },
+  {
+    from: "known-answer-instrument-check",
+    to: "detection-recognition-separation",
+    relation: "produces",
+    reason: "답을 아는 입력을 넣어 보면 값이 안 나오는 경우와 낮은 경우가 갈립니다.",
+  },
+  {
+    from: "detection-recognition-separation",
+    to: "metric-style-coverage-boundary",
+    relation: "prerequisite",
+    reason: "어느 단계가 실패하는지 알아야 적용 범위를 어디서 끊을지 정할 수 있습니다.",
+  },
+  {
+    from: "impostor-threshold-derivation",
+    to: "metric-style-coverage-boundary",
+    relation: "constrains",
+    reason: "같은 임계값을 다른 스타일에 쓰려면 그 스타일에서 남남 쌍을 다시 재야 합니다.",
+  },
+  {
+    from: "cost-sensitive-threshold",
+    to: "impostor-threshold-derivation",
+    relation: "prerequisite",
+    reason: "허용 오탐률을 먼저 정한다는 발상이 비용 민감 임계 선택에서 옵니다.",
+  },
+  {
+    from: "confusion-matrix-metrics",
+    to: "impostor-threshold-derivation",
+    relation: "prerequisite",
+    reason: "오탐률의 정의가 있어야 임계값 조건을 쓸 수 있습니다.",
+  },
+  {
+    from: "cosine-similarity",
+    to: "detection-recognition-separation",
+    relation: "prerequisite",
+    reason: "정규화된 벡터의 내적이 왜 유사도가 되는지가 인식기 출력의 전제입니다.",
+  },
+  {
+    from: "vae-rate-distortion",
+    to: "autoencoder-roundtrip-floor",
+    relation: "prerequisite",
+    reason: "압축과 복원이 손실을 남긴다는 성질에서 바닥값이 생깁니다.",
+  },
+  {
+    from: "autoencoder-roundtrip-floor",
+    to: "differential-versus-absolute-metric",
+    relation: "produces",
+    reason: "바닥값의 존재가 절대 지표와 차분 지표를 갈라 보게 만듭니다.",
+  },
+  {
+    from: "known-answer-instrument-check",
+    to: "autoencoder-roundtrip-floor",
+    relation: "produces",
+    reason: "무동작 대조군을 실제로 돌리는 것이 바닥값 측정 그 자체입니다.",
+  },
+  {
+    from: "confound-removed-comparison",
+    to: "metric-style-coverage-boundary",
+    relation: "produces",
+    reason: "변화량을 통제한 설계에서야 스타일별 적용 범위가 드러났습니다.",
+  },
+  {
+    from: "benchmark-reproducibility-baseline",
+    to: "known-answer-instrument-check",
+    relation: "prerequisite",
+    reason: "기준선을 함께 돌린다는 벤치마크 규율이 계측기에도 그대로 적용됩니다.",
+  },
+  {
+    from: "differential-versus-absolute-metric",
+    to: "confound-removed-comparison",
+    relation: "contrasts",
+    reason: "지표 형태로 오염을 상쇄하는 방법과 설계로 교란을 제거하는 방법이 서로 다른 층에서 같은 문제를 다룹니다.",
   },
 ];
 
