@@ -11563,6 +11563,37 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "negative-result-3d-face-control": {
+    title: "3차원 얼굴 제어 실패 기록이 소유하는 범위",
+    owns: [
+      "같은 조정을 반복하는 대신 가설을 숫자로 검증하는 절차와 그것이 찾아낸 렌더 버그",
+      "면 감김 순서 역전이 형태를 가리면서 조립 메쉬에서는 그럴듯해 보이는 현상",
+      "극단적 형태만 전달되고 다듬어진 차이는 흡수된다는 성질과 그 부작용",
+      "입력과 출력의 상대 편차 비로 형태 전달률을 재는 방법",
+      "조작 변수의 효과를 주장하기 전에 난수만 바꾼 대조군을 붙이는 절차",
+      "분리 지표가 가장 좋아 보이는 지점이 이미지 열화 구간일 수 있다는 경계",
+      "실패한 경로를 합격 기준·측정 방법과 함께 남기는 것의 가치",
+    ],
+    reuses: [
+      { label: "계측기 검증", href: "/ai/generative-measurement-controls" },
+      { label: "해상도 예산", href: "/ai/roi-resolution-identity-budget" },
+      { label: "정체성 다양성", href: "/ai/generative-identity-diversity" },
+    ],
+    evidence: [
+      {
+        kind: "project-measurement",
+        rule: "수치는 한 장비·특정 모델 조합의 실측이며 측정일과 고정한 조건을 함께 밝힌다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "실패한 것은 이 세 방법이며 3차원 형태 제어 일반이 불가능하다는 주장으로 제시하지 않는다.",
+      },
+      {
+        kind: "standard",
+        rule: "네 얼굴 표본이라 편차 추정이 거칠므로 전달률은 순위가 아니라 자릿수를 읽는 값으로 쓴다.",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

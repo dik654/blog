@@ -358,6 +358,20 @@ export const genArticles: Article[] = [
     component: () => import("@/pages/articles/ai/generative-identity-diversity"),
   },
   {
+    slug: "negative-result-3d-face-control",
+    title: "세 라운드를 들여 실패했고 그 기록이 남을 가치가 있습니다",
+    subcategory: "ai-generative",
+    sections: [
+      { id: "overview", title: "합격 기준을 먼저 정하고 시작했습니다" },
+      { id: "winding-bug", title: "추측을 멈추고 숫자를 재자 진짜 버그가 나왔습니다" },
+      { id: "shape-survival", title: "더 조잡한 메쉬가 형태를 더 잘 보존했습니다" },
+      { id: "seed-control", title: "성공처럼 보이던 결과를 대조군 하나가 뒤집었습니다" },
+      { id: "broken-not-different", title: "가장 잘 나뉘던 지점은 애초에 쓸 수 없었습니다" },
+      { id: "negative-gate", title: "실패한 경로를 지우지 않는 것이 다음 판단을 바꿉니다" },
+    ],
+    component: () => import("@/pages/articles/ai/negative-result-3d-face-control"),
+  },
+  {
     slug: "in-context-lora",
     title: "In-Context LoRA: reference·target을 한 context로 이어붙이기",
     subcategory: "ai-generative",

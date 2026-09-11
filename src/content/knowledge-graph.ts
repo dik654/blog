@@ -22663,6 +22663,69 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "낮은 충돌률을 확인하려면 그에 걸맞은 쌍의 수가 필요하며, 작은 표본에서 충돌이 0이라는 것은 충돌률이 0이라는 뜻이 아니라 그 표본으로는 볼 수 없다는 뜻이라는 경계입니다. 규모를 키우기 전에 내린 결론은 다음 측정에서 뒤집히기 쉽습니다.",
     canonicalHref: "/ai/generative-identity-diversity#diversity-gate",
   },
+  "measure-instead-of-repeating-a-guess": {
+    id: "measure-instead-of-repeating-a-guess",
+    kind: "method",
+    domain: "computer-science",
+    label: "같은 조정을 반복하는 대신 측정",
+    definition:
+      "같은 방향의 조정을 두 번 했는데 결과가 변하지 않으면 세 번째 조정 대신 가설 자체를 숫자로 검증하는 절차입니다. 눈으로 그럴듯해 보이는 중간 결과가 정상이라는 증거가 아니므로, 파이프라인의 각 단계가 실제로 무엇을 내놓는지 따로 재야 합니다.",
+    canonicalHref: "/ai/negative-result-3d-face-control#winding-bug",
+  },
+  "render-normal-orientation-failure": {
+    id: "render-normal-orientation-failure",
+    kind: "concept",
+    domain: "computer-science",
+    label: "렌더 법선 방향 실패",
+    definition:
+      "면의 감김 순서가 뒤집혀 래스터라이저가 앞면을 버리고 뒤쪽을 그리는 상태이며, 형태 정보는 메쉬에 있는데 결과 이미지에는 나타나지 않습니다. 조립된 메쉬에서는 부품별 뒷면 실루엣이 우연히 그럴듯해 보여 오래 발견되지 않을 수 있습니다.",
+    canonicalHref: "/ai/negative-result-3d-face-control#winding-bug",
+  },
+  "extreme-shape-survival": {
+    id: "extreme-shape-survival",
+    kind: "concept",
+    domain: "computer-science",
+    label: "극단적 형태만의 생존",
+    definition:
+      "형태 조건이 생성 결과에 전달될 때 극단적인 실루엣은 모델에게 선택지를 주지 않아 살아남고 부드럽게 다듬어진 차이는 모델의 사전에 흡수된다는 성질입니다. 더 조잡한 입력이 더 정교한 입력보다 형태를 잘 보존하는 역설이 여기서 나옵니다.",
+    canonicalHref: "/ai/negative-result-3d-face-control#shape-survival",
+  },
+  "geometry-signal-attenuation": {
+    id: "geometry-signal-attenuation",
+    kind: "method",
+    domain: "computer-science",
+    label: "기하 신호 감쇠 측정",
+    definition:
+      "입력 형태들 사이의 상대 편차와 출력 형태들 사이의 상대 편차를 같은 지표로 재어 나눈 값으로, 그 경로가 형태 정보를 얼마나 전달했는지를 나타냅니다. 값이 작으면 약하게 전달하는 것이 아니라 사실상 전달하지 못한다고 읽어야 합니다.",
+    canonicalHref: "/ai/negative-result-3d-face-control#shape-survival",
+  },
+  "seed-control-group-for-effect": {
+    id: "seed-control-group-for-effect",
+    kind: "method",
+    domain: "computer-science",
+    label: "효과 검증용 시드 대조군",
+    definition:
+      "조작 변수의 효과를 주장하기 전에 그 변수를 고정하고 난수만 바꾼 실행을 같은 지표로 재어 비교하는 절차입니다. 재현성을 위해 시드를 고정하는 습관이 효과 검증에서는 조작 변수를 유일한 변수처럼 보이게 만드는 함정이 됩니다.",
+    canonicalHref: "/ai/negative-result-3d-face-control#seed-control",
+  },
+  "low-similarity-from-degradation": {
+    id: "low-similarity-from-degradation",
+    kind: "concept",
+    domain: "computer-science",
+    label: "열화에서 오는 낮은 유사도",
+    definition:
+      "결과 이미지가 무너지면 유사도가 함께 떨어지므로, 분리 지표가 가장 좋아 보이는 지점이 실은 사용 불가 구간일 수 있다는 경계입니다. 낮은 값을 성공 신호로 읽는 한 결과가 망가지는 방향이 항상 이깁니다.",
+    canonicalHref: "/ai/negative-result-3d-face-control#broken-not-different",
+  },
+  "negative-result-record": {
+    id: "negative-result-record",
+    kind: "concept",
+    domain: "computer-science",
+    label: "음성 결과의 기록 가치",
+    definition:
+      "실패한 경로를 합격 기준·측정 방법·무너진 지점과 함께 남겨 두면 같은 발상이 다시 떠올랐을 때 탐색을 반복하지 않고, 다른 회차의 관찰과 맞물려 더 큰 결론을 만든다는 관점입니다. 기록 없이 지운 실패는 같은 비용으로 다시 치러집니다.",
+    canonicalHref: "/ai/negative-result-3d-face-control#negative-gate",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -41459,6 +41522,78 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     to: "collision-rate-sample-size",
     relation: "contrasts",
     reason: "효과가 없다는 결론과 표본이 작아 못 본다는 사실을 구분해야 합니다.",
+  },
+  {
+    from: "measure-instead-of-repeating-a-guess",
+    to: "render-normal-orientation-failure",
+    relation: "produces",
+    reason: "진폭을 더 키우는 대신 숫자를 재자 감김 순서 문제가 특정됐습니다.",
+  },
+  {
+    from: "render-normal-orientation-failure",
+    to: "extreme-shape-survival",
+    relation: "prerequisite",
+    reason: "렌더가 정상이 된 뒤에야 형태 전달을 비교할 수 있게 됐습니다.",
+  },
+  {
+    from: "extreme-shape-survival",
+    to: "geometry-signal-attenuation",
+    relation: "produces",
+    reason: "어떤 형태가 살아남는지 보려면 전달률을 숫자로 재야 합니다.",
+  },
+  {
+    from: "seed-control-group-for-effect",
+    to: "geometry-signal-attenuation",
+    relation: "constrains",
+    reason: "남은 신호가 난수 수준이면 전달률 수치도 효과로 읽을 수 없습니다.",
+  },
+  {
+    from: "low-similarity-from-degradation",
+    to: "seed-control-group-for-effect",
+    relation: "constrains",
+    reason: "가장 분리가 큰 지점이 사용 불가라면 대조군 비교도 그 지점에서 성립하지 않습니다.",
+  },
+  {
+    from: "detection-recognition-separation",
+    to: "low-similarity-from-degradation",
+    relation: "prerequisite",
+    reason: "탐지 실패와 낮은 유사도를 구분할 수 있어야 열화를 알아차립니다.",
+  },
+  {
+    from: "impostor-threshold-derivation",
+    to: "geometry-signal-attenuation",
+    relation: "prerequisite",
+    reason: "결과가 같은 사람인지 판정하려면 임계값이 먼저 서 있어야 합니다.",
+  },
+  {
+    from: "known-answer-instrument-check",
+    to: "measure-instead-of-repeating-a-guess",
+    relation: "prerequisite",
+    reason: "중간 단계가 무엇을 내놓는지 확인하는 습관이 같은 계열입니다.",
+  },
+  {
+    from: "demographic-axis-dominance",
+    to: "negative-result-record",
+    relation: "constrains",
+    reason: "텍스트 경로에서도 같은 축이 멈춘다는 관찰과 맞물려야 결론이 커집니다.",
+  },
+  {
+    from: "denoise-window-by-model-class",
+    to: "extreme-shape-survival",
+    relation: "constrains",
+    reason: "부분 노이즈로 형태를 붙잡으려는 시도가 모델 종류 때문에 막혔습니다.",
+  },
+  {
+    from: "negative-result-record",
+    to: "reference-bank-as-capacity",
+    relation: "produces",
+    reason: "이 경로의 실패를 확인한 뒤에야 참조에서 정체성을 가져오는 답을 찾았습니다.",
+  },
+  {
+    from: "seed-control-group-for-effect",
+    to: "measure-instead-of-repeating-a-guess",
+    relation: "contrasts",
+    reason: "가설을 재는 것과 결론을 반증하는 것이 같은 회차의 서로 다른 단계입니다.",
   },
 ];
 

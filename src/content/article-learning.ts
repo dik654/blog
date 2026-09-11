@@ -73822,4 +73822,205 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "ai/negative-result-3d-face-control": {
+    coreIdea:
+      "3차원에서 얼굴 형태를 정해 두고 사진으로 바꾸는 경로는 세 가지 방법 모두에서 사전에 세운 합격 기준에 미달했습니다. 기하 변화의 대부분이 사라지고, 남은 분리는 난수를 바꿔 얻는 것과 구분되지 않으며, 가장 분리가 커 보이던 구간은 이미지가 무너진 상태였습니다. 실패 자체보다 그것을 확인한 세 가지 절차가 남습니다.",
+    assumedKnowledge: [
+      { id: "impostor-threshold-derivation", role: "같은 사람인지 판정하는 임계값입니다." },
+      { id: "detection-recognition-separation", role: "탐지 실패와 낮은 유사도의 구분입니다." },
+      { id: "known-answer-instrument-check", role: "중간 단계를 따로 확인하는 습관입니다." },
+      { id: "demographic-axis-dominance", role: "텍스트 경로에서 축별 반응이 갈린다는 관찰입니다." },
+      { id: "denoise-window-by-model-class", role: "부분 노이즈의 성질이 모델 종류에 따라 다르다는 점입니다." },
+    ],
+    introducedHere: [
+      { id: "measure-instead-of-repeating-a-guess", role: "첫 라운드를 푼 절차를 정의합니다." },
+      { id: "render-normal-orientation-failure", role: "그 절차가 찾아낸 실제 버그를 정의합니다." },
+      { id: "extreme-shape-survival", role: "조잡한 입력이 더 잘 보존한 역설을 설명합니다." },
+      { id: "geometry-signal-attenuation", role: "형태 전달을 숫자로 재는 방법을 정의합니다." },
+      { id: "seed-control-group-for-effect", role: "성공처럼 보인 결과를 뒤집은 절차를 정의합니다." },
+      { id: "low-similarity-from-degradation", role: "지표의 최적점이 사용 불가일 수 있다는 경계를 세웁니다." },
+      { id: "negative-result-record", role: "실패를 남기는 것의 가치를 정리합니다." },
+    ],
+    conceptExplanations: [
+      {
+        id: "measure-instead-of-repeating-a-guess",
+        sectionId: "winding-bug",
+        intuition:
+          "볼륨을 두 번 올렸는데 소리가 안 나면 세 번째로 올리기 전에 선이 꽂혔는지 봅니다.",
+        workedExample:
+          "변형 진폭을 두 번 키워도 렌더가 그대로여서, 세 번째 대신 코가 존재하는지와 그 면이 카메라를 향하는지를 각각 쟀습니다.",
+        boundary:
+          "측정 자체가 틀릴 수도 있으므로 재는 대상이 가설을 실제로 가르는지 먼저 확인해야 합니다. 여기서는 존재 여부와 방향 두 가지를 나눠 재서 원인이 특정됐습니다.",
+      },
+      {
+        id: "render-normal-orientation-failure",
+        sectionId: "winding-bug",
+        intuition:
+          "옷을 뒤집어 입고 거울을 보면 무늬가 안 보이는데 옷에 무늬가 없는 것은 아닙니다.",
+        workedExample:
+          "카메라 쪽에 있는 면 5,986개 중 법선이 카메라를 향한 것이 0개였습니다. 중심선 최대 깊이 1.181로 코 형태는 분명히 존재했습니다.",
+        boundary:
+          "조립된 메쉬에서는 부품별 뒷면 실루엣이 우연히 얼굴처럼 보여 이 버그가 오래 숨습니다. 실제로 1차 결과를 정상으로 여기고 그 위에 해석을 쌓고 있었습니다.",
+      },
+      {
+        id: "extreme-shape-survival",
+        sectionId: "shape-survival",
+        intuition:
+          "아주 크게 쓴 글씨는 흐린 복사기에서도 읽히지만 작은 글씨는 뭉개집니다.",
+        workedExample:
+          "부속물이 달린 조잡한 1차 메쉬가 실루엣과 비율을 확실히 전달한 반면, 깨끗하게 다듬은 2차 메쉬는 결과가 서로 수렴했습니다.",
+        boundary:
+          "극단적인 형태를 쓰면 부작용이 따라옵니다. 1차에서는 턱 타원체가 콧수염처럼, 눈썹 상자가 검은 막대로 그대로 복사됐습니다.",
+      },
+      {
+        id: "geometry-signal-attenuation",
+        sectionId: "shape-survival",
+        intuition:
+          "입력에서 벌려 놓은 간격이 출력에서 얼마나 남았는지를 비율로 봅니다.",
+        workedExample:
+          "네 얼굴의 폭 대 높이 비 편차가 3차원에서 64.8퍼센트였는데 출력에서 1.6퍼센트로 줄어, 기하 변화의 약 97퍼센트가 사라졌습니다.",
+        boundary:
+          "한 지표로 형태 차이를 대표할 수 있다고 가정한 값이고 네 얼굴 표본이라 편차 추정이 거칩니다. 순위가 아니라 자릿수를 읽는 용도입니다.",
+      },
+      {
+        id: "seed-control-group-for-effect",
+        sectionId: "seed-control",
+        intuition:
+          "약이 들었다고 말하려면 약을 안 준 쪽도 재 봐야 합니다.",
+        workedExample:
+          "얼굴형 넷을 바꿔 얻은 분리가 0.376이었는데, 얼굴형을 고정하고 시드만 넷으로 바꾸자 0.346과 0.300이 나와 세 값이 구분되지 않았습니다.",
+        boundary:
+          "시드 고정 자체가 나쁜 것은 아니고 재현성에는 필요합니다. 효과를 주장하는 단계에서만 그 고정이 조작 변수를 유일한 변수처럼 보이게 만든다는 점을 의심해야 합니다.",
+      },
+      {
+        id: "low-similarity-from-degradation",
+        sectionId: "broken-not-different",
+        intuition:
+          "사진을 태워 버리면 두 사람이 달라 보이지만 그건 구분이 아닙니다.",
+        workedExample:
+          "분리가 가장 컸던 최대 강도에서 시드 대조군 네 장 중 세 장이 얼굴로 검출되지 않았고, 결과 이미지에서 머리가 공 형태로 그려지고 눈 홈이 안경으로 렌더됐습니다.",
+        boundary:
+          "그 구간의 낮은 값이 전부 열화 때문이라는 뜻은 아닙니다. 다만 분리 지표만으로는 두 원인을 가를 수 없으므로 끝점의 이미지를 직접 봐야 합니다.",
+      },
+      {
+        id: "negative-result-record",
+        sectionId: "negative-gate",
+        intuition:
+          "막다른 길에 표지판을 세워 두면 다음 사람이 같은 길을 다시 걷지 않습니다.",
+        workedExample:
+          "여기서 끝까지 안 움직이던 광대와 턱의 너비 축이 텍스트로 얼굴을 묘사하는 경로에서도 노이즈 수준에 머물렀습니다. 두 경로가 맞물려 원인을 모델 쪽으로 좁혔습니다.",
+        boundary:
+          "실패한 것은 이 세 방법이며 3차원 형태로 얼굴을 제어하는 모든 접근이 불가능하다는 뜻이 아닙니다. 수치도 한 장비의 특정 모델 조합에서 얻은 것입니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 진단",
+        relation: "추측 대신 측정으로 버그를 특정",
+        concepts: ["measure-instead-of-repeating-a-guess", "render-normal-orientation-failure", "known-answer-instrument-check"],
+      },
+      {
+        label: "01 전달률",
+        relation: "어떤 형태가 살아남는가",
+        concepts: ["extreme-shape-survival", "geometry-signal-attenuation", "impostor-threshold-derivation", "denoise-window-by-model-class"],
+      },
+      {
+        label: "02 대조군",
+        relation: "고정한 변수를 의심",
+        concepts: ["seed-control-group-for-effect"],
+      },
+      {
+        label: "03 열화",
+        relation: "지표의 최적점이 사용 불가",
+        concepts: ["low-similarity-from-degradation", "detection-recognition-separation"],
+      },
+      {
+        label: "04 기록",
+        relation: "다른 관찰과 맞물림",
+        concepts: ["negative-result-record", "demographic-axis-dominance"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "메쉬가 특징 없는 덩어리로 렌더된 원인을 어떻게 특정했는지 두 측정으로 설명하세요.",
+        answerChecklist: ["중심선 최대 깊이 1.181·옆면 0.850으로 코가 존재함을 확인", "앞쪽 면 5,986개 중 법선이 카메라를 향한 것 0개", "면 감김 순서가 뒤집힘", "래스터라이저가 뒤통수 안쪽을 그림", "진폭을 키워도 보일 리가 없었음"],
+        requiredConcepts: ["measure-instead-of-repeating-a-guess", "render-normal-orientation-failure"],
+        sectionId: "winding-bug",
+      },
+      {
+        level: "basic",
+        question:
+          "1차 조립식 메쉬에서 같은 버그가 오래 발견되지 않은 이유를 쓰세요.",
+        answerChecklist: ["부품별 뒷면 실루엣이 우연히 얼굴처럼 보임", "1차 결과를 정상으로 여김", "그 위에 해석을 쌓고 있었음", "눈으로 그럴듯한 것이 정상의 증거가 아님"],
+        requiredConcepts: ["render-normal-orientation-failure", "known-answer-instrument-check"],
+        sectionId: "winding-bug",
+      },
+      {
+        level: "basic",
+        question:
+          "조잡한 1차 메쉬가 정교한 2차보다 형태를 더 잘 보존한 이유를 설명하고, 그 대가도 쓰세요.",
+        answerChecklist: ["극단적 실루엣은 모델에게 선택지를 주지 않음", "다듬어진 형태는 사전이 개입", "결과가 서로 수렴", "턱 타원체가 콧수염으로 복사", "눈썹 상자가 검은 막대로"],
+        requiredConcepts: ["extreme-shape-survival"],
+        sectionId: "shape-survival",
+      },
+      {
+        level: "basic",
+        question:
+          "형태 신호 전달률을 계산하고, 그 값이 무엇을 뜻하는지 쓰세요.",
+        answerChecklist: ["3차원 입력 편차 64.8%", "출력 편차 1.6%", "약 97%가 사라짐", "약하게 전달하는 것이 아니라 사실상 전달 못 함", "네 얼굴 표본이라 자릿수를 읽는 용도"],
+        requiredConcepts: ["geometry-signal-attenuation", "impostor-threshold-derivation"],
+        sectionId: "shape-survival",
+      },
+      {
+        level: "basic",
+        question:
+          "매 단계 조건화 방식이 성공처럼 보였던 근거와 그것을 뒤집은 대조군 결과를 쓰세요.",
+        answerChecklist: ["강도 0.60·0.85·1.00에서 0.676·0.376·0.229로 단조 감소", "다른 인물 판정 0·2·5", "얼굴형 넷 변경이 0.376", "시드만 변경이 0.346과 0.300", "세 값이 구분되지 않음"],
+        requiredConcepts: ["seed-control-group-for-effect"],
+        sectionId: "seed-control",
+      },
+      {
+        level: "basic",
+        question:
+          "가장 분리가 컸던 강도에서 무엇이 일어났는지 쓰고, 그 지점의 낮은 유사도를 어떻게 읽어야 하는지 설명하세요.",
+        answerChecklist: ["시드 대조군 네 장 중 세 장이 얼굴 미검출", "머리가 공 형태로 그려짐", "눈 홈이 안경으로 렌더됨", "낮은 값의 상당 부분이 망가진 이미지", "낮은 유사도를 성공 신호로 읽으면 무너지는 쪽이 이김"],
+        requiredConcepts: ["low-similarity-from-degradation", "detection-recognition-separation"],
+        sectionId: "broken-not-different",
+      },
+      {
+        level: "advanced",
+        question:
+          "깊이 신호를 추정기 대신 렌더러에서 직접 뽑은 이유를 설명하고, 윤곽을 깊이 불연속에서 뽑은 이유도 쓰세요.",
+        answerChecklist: ["추정기가 얼굴에 대한 의견을 가진 두 번째 모델이 됨", "측정하려는 누수를 스스로 만듦", "래스터라이저의 깊이 버퍼에서 바로 꺼냄", "픽셀 윤곽은 조명 경계를 포함", "깊이 불연속은 실제 기하만 담음"],
+        requiredConcepts: ["seed-control-group-for-effect", "known-answer-instrument-check"],
+        sectionId: "seed-control",
+      },
+      {
+        level: "advanced",
+        question:
+          "이 경로에서 유일하게 살아남은 신호를 수치로 쓰고, 그것이 목적에 왜 부족한지 설명하세요.",
+        answerChecklist: ["가장 극단적인 형태의 세로 대 가로 비 1.644", "시드 노이즈 범위 1.215~1.518", "그 하나만 범위를 벗어남", "극단적 형태만 전달되고 미묘한 차이는 흡수", "서로 다른 인물을 여럿 만들려는 목적에는 부족"],
+        requiredConcepts: ["extreme-shape-survival", "low-similarity-from-degradation"],
+        sectionId: "broken-not-different",
+      },
+      {
+        level: "advanced",
+        question:
+          "이 회차의 세 라운드가 각각 어디서 무너졌는지 쓰고, 사전에 세운 합격 기준이 왜 중요했는지 설명하세요.",
+        answerChecklist: ["조립식은 부속물까지 복사", "단일 두상은 결과가 수렴", "매 단계 조건화는 분리가 난수와 같은 크기", "합격 기준은 넷이 모두 구분되는 것", "\"부분 성공\"이라는 처음 판정이 후했음"],
+        requiredConcepts: ["geometry-signal-attenuation", "negative-result-record", "seed-control-group-for-effect"],
+        sectionId: "negative-gate",
+      },
+      {
+        level: "advanced",
+        question:
+          "이 실패 기록이 다른 회차의 관찰과 어떻게 맞물리는지 설명하고, 이 글이 주장하지 않는 것도 쓰세요.",
+        answerChecklist: ["여기서 안 움직인 축이 광대·턱 너비", "텍스트 경로에서도 같은 축이 노이즈 수준", "두 경로 모두면 모델이 그 축을 배우지 않았다는 쪽", "실패한 것은 이 세 방법", "3차원 형태 제어 일반이 불가능하다는 뜻이 아님", "한 장비·특정 모델 조합의 수치"],
+        requiredConcepts: ["negative-result-record", "demographic-axis-dominance"],
+        sectionId: "negative-gate",
+      },
+    ],
+  },
 };
