@@ -301,6 +301,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "수치는 한 장비·한 회차·한 프롬프트 문체의 실측이며 절대 임계값과 모델 실력 평가로 일반화하지 않는다.",
   },
+  "ai/removal-is-not-inpainting": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-09-11",
+    rationale:
+      "본문은 6 section·concept 7개로 keep 범위다. 범주 판정·대체 도구·도구 계약·조합 기각이 하나의 결론을 함께 떠받치므로 나누면 각 글이 같은 실패 사례를 다시 세워야 한다.",
+    sharedGate:
+      "자동 판정기가 없는 회차이므로 정량 실패율을 주장하지 않고, 실패한 모델 목록과 기각 범위를 측정 조건까지로 한정한다.",
+  },
 };
 
 /**
@@ -308,6 +317,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "ai/removal-is-not-inpainting": "eb81c2f2f9a411bc",
   "ai/masked-edit-verb-routing": "8a4d2f13be391d98",
   "ai/generative-measurement-controls": "cef7c8f17d1b41f3",
   "ai/claw-bash": "d3ec03f41aa635ae",

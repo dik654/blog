@@ -73018,4 +73018,205 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "ai/removal-is-not-inpainting": {
+    coreIdea:
+      "디노이저는 마스크를 채우도록 학습된 도구라 비우라는 요청에 그럴듯한 물건을 그립니다. 일곱 모델이 같은 방식으로 실패한다면 여덟 번째를 찾는 대신 도구 범주를 바꿔야 하고, 조건을 받지 않는 전파 방식이 그 답입니다. 도구로 만들 때는 프롬프트를 받지 않고 확장 기본값을 0으로 두는 좁은 계약이 보장의 근거가 됩니다.",
+    assumedKnowledge: [
+      { id: "edit-verb-taxonomy", role: "지우기가 다른 동작과 요구가 다르다는 구분입니다." },
+      { id: "mask-grow-verb-polarity", role: "확장 방향이 동작마다 반대라는 관계입니다." },
+      { id: "autoencoder-roundtrip-floor", role: "마스크 밖 수치에 바닥값이 있다는 사실입니다." },
+      { id: "known-answer-instrument-check", role: "계측기를 대조군으로 검증하는 절차입니다." },
+      { id: "classifier-free-guidance", role: "조건부·무조건부 예측을 섞는 안내 식입니다." },
+    ],
+    introducedHere: [
+      { id: "absence-is-not-generatable", role: "글 전체의 결론을 도구 범주 문제로 세웁니다." },
+      { id: "guidance-scale-negative-inertness", role: "네거티브가 무효였던 통제 실패를 정의합니다." },
+      { id: "unconditional-structure-propagation", role: "답이 된 도구의 성질을 정의합니다." },
+      { id: "parameter-cliff-and-clamp", role: "경계 버그와 그 대응을 정의합니다." },
+      { id: "no-prompt-tool-contract", role: "받지 않는 것이 보장이 되는 설계를 정의합니다." },
+      { id: "gate-target-mismatch", role: "2단계 조합이 왜 기각됐는지의 핵심을 정의합니다." },
+      { id: "prewritten-prediction-discipline", role: "그럴듯한 오답을 막은 절차를 정리합니다." },
+    ],
+    conceptExplanations: [
+      {
+        id: "absence-is-not-generatable",
+        sectionId: "absence-not-drawable",
+        intuition:
+          "빈 종이를 그려 달라고 하면 화가는 무언가를 그립니다. 아무것도 그리지 않는 것은 그리는 일이 아닙니다.",
+        workedExample:
+          "배경을 설명하는 프롬프트와 물건 이름 네거티브를 함께 줬는데도 네 그림체 전부에서 띠가 다시 그려졌습니다. 마스크 안 변화 44.9~93.7은 크게 지운 것이 아니라 크게 그린 것이었습니다.",
+        boundary:
+          "실패한 일곱 모델은 이 장비에 설치된 목록이며 시험하지 않은 모델까지 일반화하지 않습니다. 클라우드 API로만 제공되는 전용 제거 모델은 아예 시험하지 못했습니다.",
+      },
+      {
+        id: "guidance-scale-negative-inertness",
+        sectionId: "absence-not-drawable",
+        intuition:
+          "두 의견의 차이를 한 배로 키워 더하면 결국 한쪽 의견만 남습니다.",
+        workedExample:
+          "안내 식이 계수 1일 때 ε_neg + 1·(ε_pos − ε_neg)로 줄어들어 ε_pos만 남고, 네거티브 조건은 계산에서 상쇄됩니다.",
+        boundary:
+          "계수를 올리면 네거티브가 살아나지만 증류된 빠른 모델에서는 결과가 함께 무너질 수 있어 그냥 올릴 수 없습니다. 이 실행의 네거티브 무효는 통제 실패로 기록하되, 양의 배경 프롬프트는 정상 적용됐으므로 결론은 유지됩니다.",
+      },
+      {
+        id: "unconditional-structure-propagation",
+        sectionId: "propagation",
+        intuition:
+          "찢어진 벽지를 메울 때 주변 무늬를 이어 붙이는 일에는 무엇을 그릴지 정하는 단계가 없습니다.",
+        workedExample:
+          "텍스트도 노이즈도 시드도 받지 않고 주변 구조를 안쪽으로 전파해, 네 그림체에서 띠 아래에 있던 벨트가 그대로 이어졌습니다. 1~3초, 마스크 밖 0.15~1.03.",
+        boundary:
+          "주변에 없는 것은 만들 수 없습니다. 또 이미지 전체를 통과시키는 합성곱이라 마스크 밖도 조금 움직이며, 애니 그림체에서 1.03으로 눈에 띄게 큽니다.",
+      },
+      {
+        id: "parameter-cliff-and-clamp",
+        sectionId: "strength-cliff",
+        intuition:
+          "다이얼을 끝까지 돌리면 조금 더 세지는 것이 아니라 기계가 멈추는 종류의 손잡이가 있습니다.",
+        workedExample:
+          "제거 세기를 120에서 254까지 올릴 때 마스크 밖 변화가 0.139에서 0.525로 완만했는데, 255에서 115.66이 되며 프레임 전체가 덮였습니다.",
+        boundary:
+          "거절 대신 254로 자르는 선택은 호출 규약의 판단입니다. 허용된 값을 넣었는데 에러를 받는 것보다 가장 강한 설정을 받는 편이 기대에 맞다고 보았고, 다른 도구에서는 다른 판단이 맞을 수 있습니다.",
+      },
+      {
+        id: "no-prompt-tool-contract",
+        sectionId: "tool-contract",
+        intuition:
+          "핸들이 없는 기계는 잘못 돌릴 수가 없습니다.",
+        workedExample:
+          "설명 인자를 노출하면 호출하는 쪽이 채우고, 채운 문구는 무시되거나 실제로 전달하는 순간 조건을 받는 모델로 갈아 끼워야 해서 원래 실패로 돌아갑니다.",
+        boundary:
+          "좁은 계약은 확장을 막습니다. 나중에 설명이 실제로 필요한 요구가 생기면 이 도구가 아니라 다른 도구를 추가해야 하며, 같은 이름에 인자를 늘리는 방식은 이 보장을 깨뜨립니다.",
+      },
+      {
+        id: "gate-target-mismatch",
+        sectionId: "two-stage-rejected",
+        intuition:
+          "새는 곳은 지붕인데 창틀을 아무리 잘 막아도 물은 계속 들어옵니다.",
+        workedExample:
+          "구멍 전체를 연 팔과 경계 띠만 연 팔의 마스크 안 변화량이 소수점 첫째 자리까지 같았습니다. 게이트를 좁혔는데 결과가 같다면 그 게이트는 결과에 닿지 않은 것입니다.",
+        boundary:
+          "닿지 않았다는 것이 무해하다는 뜻은 아닙니다. 시작 시각을 픽셀마다 나눈 팔은 실제로 결과를 바꿨는데, 바꾼 방향이 지운 물건을 되살리는 쪽이었습니다.",
+      },
+      {
+        id: "prewritten-prediction-discipline",
+        sectionId: "two-stage-rejected",
+        intuition:
+          "내기를 걸기 전에 어느 쪽에 걸었는지 적어 두면 나중에 기억을 고칠 수 없습니다.",
+        workedExample:
+          "실행 전에 \"이음새만 여는 문은 구조적으로 구멍 안에 닿을 수 없고, 숫자가 좋아지는데 질감이 그대로면 고장나지 않은 것을 고친 것\"이라고 적어 뒀고 그대로 됐습니다.",
+        boundary:
+          "예측이 맞았다고 해서 실험 설계가 옳았다는 뜻은 아닙니다. 이 회차에서도 네거티브가 무효인 채로 돌았고 그것은 예측 목록에 없었습니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 범주 문제",
+        relation: "같은 실패가 전부에서 나타남",
+        concepts: ["absence-is-not-generatable", "edit-verb-taxonomy"],
+      },
+      {
+        label: "01 통제 실패",
+        relation: "네거티브가 꺼져 있었음",
+        concepts: ["guidance-scale-negative-inertness", "classifier-free-guidance"],
+      },
+      {
+        label: "02 다른 도구",
+        relation: "조건을 받지 않는 전파",
+        concepts: ["unconditional-structure-propagation", "autoencoder-roundtrip-floor"],
+      },
+      {
+        label: "03 도구 계약",
+        relation: "받지 않는 것이 보장",
+        concepts: ["no-prompt-tool-contract", "parameter-cliff-and-clamp", "mask-grow-verb-polarity", "known-answer-instrument-check"],
+      },
+      {
+        label: "04 조합 기각",
+        relation: "게이트가 결함에 닿지 않음",
+        concepts: ["gate-target-mismatch", "prewritten-prediction-discipline"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "확산 모델이 지우기 요청에 실패하는 이유를 쓰고, 일곱 모델이 전부 같은 방식으로 실패한 것이 무엇을 뜻하는지 설명하세요.",
+        answerChecklist: ["노이즈에서 무언가를 만들도록 학습됨", "마스크를 채우라고 하면 채움", "없음은 채울 수 있는 대상이 아님", "전부 같은 실패면 도구 범주의 문제", "여덟 번째 모델을 찾는 대신 종류를 바꿔야 함"],
+        requiredConcepts: ["absence-is-not-generatable", "edit-verb-taxonomy"],
+        sectionId: "absence-not-drawable",
+      },
+      {
+        level: "basic",
+        question:
+          "안내 계수가 1일 때 네거티브 프롬프트가 무효가 되는 과정을 식으로 설명하세요.",
+        answerChecklist: ["ε_neg + w(ε_pos − ε_neg)", "w = 1을 대입", "ε_pos만 남음", "네거티브 조건이 상쇄됨", "증류된 빠른 모델은 대개 계수 1"],
+        requiredConcepts: ["guidance-scale-negative-inertness", "classifier-free-guidance"],
+        sectionId: "absence-not-drawable",
+      },
+      {
+        level: "basic",
+        question:
+          "조건 없는 구조 전파 방식이 받는 입력과 받지 않는 입력을 쓰고, 받지 않는 것이 왜 능력이 되는지 설명하세요.",
+        answerChecklist: ["이미지와 마스크만 받음", "텍스트·노이즈·시드를 받지 않음", "무엇을 그릴지 말해 줄 통로가 없음", "주변 구조를 이어 붙이는 것만 가능", "그 한계가 비우기를 보장함"],
+        requiredConcepts: ["unconditional-structure-propagation"],
+        sectionId: "propagation",
+      },
+      {
+        level: "basic",
+        question:
+          "제거 세기 파라미터의 절벽을 수치로 설명하고, 에러 대신 클램프를 택한 근거를 쓰세요.",
+        answerChecklist: ["120에서 254까지 0.139~0.525로 완만", "255에서 115.66", "프레임 전체가 덮임", "254로 자름", "허용 범위의 값을 거절당하는 것보다 가장 강한 설정이 기대에 맞음"],
+        requiredConcepts: ["parameter-cliff-and-clamp"],
+        sectionId: "strength-cliff",
+      },
+      {
+        level: "basic",
+        question:
+          "지우기 도구에서 마스크 확장 기본값을 0으로 둔 이유를 수치와 함께 쓰세요.",
+        answerChecklist: ["24픽셀에서 아래 레이어까지 사라짐", "96픽셀에서 마스크 밖이 0.16에서 4.12", "교체는 반대로 96을 열어야 좋아짐", "같은 손잡이가 동작마다 반대 방향"],
+        requiredConcepts: ["no-prompt-tool-contract", "mask-grow-verb-polarity"],
+        sectionId: "tool-contract",
+      },
+      {
+        level: "basic",
+        question:
+          "이 회차의 성공 판정이 무엇에 기대고 있는지 쓰고, 하지 않은 주장을 두 가지 적으세요.",
+        answerChecklist: ["네 그림체 대조표를 눈으로 확인", "마스크 밖 변화량", "자동 판정기가 없음", "정량 실패율을 주장하지 않음", "시험하지 않은 모델로 일반화하지 않음"],
+        requiredConcepts: ["known-answer-instrument-check", "absence-is-not-generatable"],
+        sectionId: "remove-gate",
+      },
+      {
+        level: "advanced",
+        question:
+          "도구가 설명 인자를 받아 두기만 하는 설계의 두 가지 결말을 설명하고, 좁은 계약이 대신 잃는 것도 쓰세요.",
+        answerChecklist: ["받아 두고 무시하면 효과 없는 문구를 계속 다듬게 됨", "실제로 전달하면 조건을 받는 모델로 갈아 끼워야 함", "원래 실패한 자리로 되돌아감", "좁은 계약은 확장을 막음", "새 요구는 인자 추가가 아니라 다른 도구로 받아야 함"],
+        requiredConcepts: ["no-prompt-tool-contract", "absence-is-not-generatable"],
+        sectionId: "tool-contract",
+      },
+      {
+        level: "advanced",
+        question:
+          "2단계 조합에서 세 가지 게이트를 비교한 결과를 쓰고, 게이트가 결함 지점에 닿았는지를 어떻게 판정했는지 설명하세요.",
+        answerChecklist: ["구멍 전체·경계 띠·시작 시각 분리 셋", "전체와 경계의 결과가 소수점 첫째 자리까지 같음", "좁혔는데 같으면 결과에 닿지 않은 것", "시작 시각을 나눈 팔은 결과를 바꿨으나 띠를 되살림", "열두 칸 전부 단독보다 나은 칸이 없음"],
+        requiredConcepts: ["gate-target-mismatch", "unconditional-structure-propagation"],
+        sectionId: "two-stage-rejected",
+      },
+      {
+        level: "advanced",
+        question:
+          "실행 전에 예측을 적어 두는 절차가 이 회차에서 무엇을 막았는지 설명하고, 그 절차의 한계도 쓰세요.",
+        answerChecklist: ["이음새 게이트는 구멍 안에 닿을 수 없다고 예측", "숫자가 좋아지는데 질감이 그대로면 고장나지 않은 것을 고친 것", "바닥값 차감 후 누출 0.04~0.33으로 개선처럼 읽을 근거가 있었음", "예측이 맞아도 설계가 옳았다는 뜻은 아님", "네거티브 무효는 예측 목록에 없었음"],
+        requiredConcepts: ["prewritten-prediction-discipline", "gate-target-mismatch"],
+        sectionId: "two-stage-rejected",
+      },
+      {
+        level: "advanced",
+        question:
+          "이 전용 망의 마스크 밖 수치가 확산 모델의 같은 수치와 성격이 다른 이유를 설명하고, 애니 그림체에서 1.03이 나온 것이 무엇을 뜻하는지 쓰세요.",
+        answerChecklist: ["계산 그래프에 오토인코더가 없음", "압축·복원 왕복이 없어 바닥값이 0", "차감할 것이 없는 진짜 값", "그런데도 1.03이면 망 자신이 마스크 밖을 건드린 것", "이미지 전체를 통과시키는 합성곱이라 구조적으로 가능"],
+        requiredConcepts: ["unconditional-structure-propagation", "autoencoder-roundtrip-floor"],
+        sectionId: "propagation",
+      },
+    ],
+  },
 };

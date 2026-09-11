@@ -294,6 +294,24 @@ export const genArticles: Article[] = [
     component: () => import("@/pages/articles/ai/masked-edit-verb-routing"),
   },
   {
+    slug: "removal-is-not-inpainting",
+    title: "지우기는 인페인팅의 한 종류가 아닙니다",
+    subcategory: "ai-generative",
+    sections: [
+      { id: "overview", title: "일곱 모델이 같은 방식으로 실패했습니다" },
+      { id: "absence-not-drawable", title: "디노이저에게 마스크를 채우라고 하면 채웁니다" },
+      {
+        id: "propagation",
+        title: "물건을 지어낼 방법이 없다는 것이 곧 능력입니다",
+        subsections: [{ id: "strength-cliff", title: "세기 손잡이에 중간이 없는 지점이 있습니다" }],
+      },
+      { id: "tool-contract", title: "무엇을 그릴지 말하지 않는 것이 작동하는 이유입니다" },
+      { id: "two-stage-rejected", title: "싼 모델로 지우고 다시 그리는 조합은 기각했습니다" },
+      { id: "remove-gate", title: "모델을 바꾸기 전에 도구의 종류를 먼저 의심합니다" },
+    ],
+    component: () => import("@/pages/articles/ai/removal-is-not-inpainting"),
+  },
+  {
     slug: "in-context-lora",
     title: "In-Context LoRA: reference·target을 한 context로 이어붙이기",
     subcategory: "ai-generative",

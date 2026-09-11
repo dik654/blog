@@ -22411,6 +22411,69 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "호출하는 쪽이 모델 이름이 아니라 동작을 말하고, 측정으로 만든 표가 모델과 마스크 확장값을 정하는 구조입니다. 모델 고정과 언어 모델의 임의 선택 사이의 세 번째 배치이며, 표를 실제로 쓰게 만드는 유일한 자리입니다.",
     canonicalHref: "/ai/masked-edit-verb-routing#routing-gate",
   },
+  "absence-is-not-generatable": {
+    id: "absence-is-not-generatable",
+    kind: "concept",
+    domain: "computer-science",
+    label: "없음은 생성 대상이 아니다",
+    definition:
+      "노이즈에서 무언가를 만들어 내도록 학습된 디노이저에게 마스크를 비우라고 요구할 수 없다는 경계입니다. 배경을 설명하는 프롬프트를 줘도 모델은 그 자리에 그럴듯한 물건을 채우며, 같은 실패가 모든 모델에서 나타나면 선택이 아니라 도구 범주의 문제입니다.",
+    canonicalHref: "/ai/removal-is-not-inpainting#absence-not-drawable",
+  },
+  "guidance-scale-negative-inertness": {
+    id: "guidance-scale-negative-inertness",
+    kind: "concept",
+    domain: "computer-science",
+    label: "안내 계수 1에서의 네거티브 무효",
+    definition:
+      "조건부와 무조건부 예측의 차이를 계수만큼 증폭해 더하는 안내 식에서 계수가 1이면 조건부 예측만 남아 네거티브 프롬프트가 계산에서 상쇄된다는 성질입니다. 증류된 빠른 모델은 대개 계수 1로 돌기 때문에 설정에 적힌 네거티브가 아무 효과 없이 무시됩니다.",
+    canonicalHref: "/ai/removal-is-not-inpainting#absence-not-drawable",
+  },
+  "unconditional-structure-propagation": {
+    id: "unconditional-structure-propagation",
+    kind: "method",
+    domain: "computer-science",
+    label: "조건 없는 구조 전파",
+    definition:
+      "텍스트도 노이즈도 시드도 받지 않고 구멍 주변의 구조를 안쪽으로 이어 붙이는 마스크 채우기 방식입니다. 무엇을 그릴지 지시할 통로가 없다는 한계가 곧 비우기를 보장하는 능력이며, 잠재 공간을 거치지 않아 마스크 밖 수치에 차감할 바닥값이 없습니다.",
+    canonicalHref: "/ai/removal-is-not-inpainting#propagation",
+  },
+  "parameter-cliff-and-clamp": {
+    id: "parameter-cliff-and-clamp",
+    kind: "concept",
+    domain: "computer-science",
+    label: "파라미터 절벽과 상한 클램프",
+    definition:
+      "허용 범위 안의 값인데 마지막 한 칸에서 결과가 연속적으로 나빠지는 대신 통째로 무너지는 경계 조건과, 그 직전 값으로 잘라 내는 대응입니다. 거절 대신 클램프를 택하는 근거는 호출하는 쪽의 기대가 '가능한 가장 강한 설정'이라는 데 있습니다.",
+    canonicalHref: "/ai/removal-is-not-inpainting#strength-cliff",
+  },
+  "no-prompt-tool-contract": {
+    id: "no-prompt-tool-contract",
+    kind: "concept",
+    domain: "computer-science",
+    label: "프롬프트를 받지 않는 도구 계약",
+    definition:
+      "도구가 설명 인자를 아예 노출하지 않음으로써 보장을 지키는 설계입니다. 인자를 받아 두면 조용히 무시되는 값이 되어 호출하는 쪽이 효과 없는 문구를 계속 다듬거나, 실제로 전달하는 순간 그 도구가 해결하려던 문제로 되돌아갑니다.",
+    canonicalHref: "/ai/removal-is-not-inpainting#tool-contract",
+  },
+  "gate-target-mismatch": {
+    id: "gate-target-mismatch",
+    kind: "concept",
+    domain: "computer-science",
+    label: "게이트와 결함 지점의 불일치",
+    definition:
+      "생성 범위를 제한하는 장치가 실제 결함이 있는 자리에 닿지 않으면 지표는 개선되는데 문제는 그대로 남는다는 경계입니다. 좁힌 게이트와 넓은 게이트의 결과가 같다면 그 게이트는 결과에 영향을 주지 않은 것입니다.",
+    canonicalHref: "/ai/removal-is-not-inpainting#two-stage-rejected",
+  },
+  "prewritten-prediction-discipline": {
+    id: "prewritten-prediction-discipline",
+    kind: "method",
+    domain: "computer-science",
+    label: "실행 전 예측 기록",
+    definition:
+      "측정을 돌리기 전에 예상 결과와 그 결과를 어떻게 해석할지 적어 두는 규율입니다. 숫자를 본 뒤에 해석을 맞추는 일을 막아 주며, 특히 지표가 좋아졌는데 문제는 그대로인 경우를 성공으로 쓰지 않게 합니다.",
+    canonicalHref: "/ai/removal-is-not-inpainting#two-stage-rejected",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -40919,6 +40982,78 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     to: "verb-to-model-routing-table",
     relation: "produces",
     reason: "같은 동작이라도 힌트 유무에 따라 다른 모델로 보내야 한다는 분기가 여기서 나옵니다.",
+  },
+  {
+    from: "edit-verb-taxonomy",
+    to: "absence-is-not-generatable",
+    relation: "prerequisite",
+    reason: "동작을 나눠 봐야 지우기 칸만 통째로 비어 있다는 사실이 보입니다.",
+  },
+  {
+    from: "absence-is-not-generatable",
+    to: "unconditional-structure-propagation",
+    relation: "produces",
+    reason: "생성으로 풀 수 없다는 결론이 조건을 받지 않는 도구를 부릅니다.",
+  },
+  {
+    from: "guidance-scale-negative-inertness",
+    to: "absence-is-not-generatable",
+    relation: "constrains",
+    reason: "네거티브가 무효였다는 사실이 이 결론의 근거 범위를 좁힙니다.",
+  },
+  {
+    from: "classifier-free-guidance",
+    to: "guidance-scale-negative-inertness",
+    relation: "prerequisite",
+    reason: "안내 식의 형태를 알아야 계수 1에서 왜 상쇄되는지 읽힙니다.",
+  },
+  {
+    from: "unconditional-structure-propagation",
+    to: "no-prompt-tool-contract",
+    relation: "produces",
+    reason: "조건 통로가 없다는 성질이 도구 인자에서 프롬프트를 빼는 결정으로 이어집니다.",
+  },
+  {
+    from: "unconditional-structure-propagation",
+    to: "parameter-cliff-and-clamp",
+    relation: "constrains",
+    reason: "이 구현의 세기 파라미터에 경계 버그가 있어 상한을 잘라야 합니다.",
+  },
+  {
+    from: "mask-grow-verb-polarity",
+    to: "no-prompt-tool-contract",
+    relation: "prerequisite",
+    reason: "확장 기본값을 0으로 두는 근거가 동작별 극성에서 옵니다.",
+  },
+  {
+    from: "autoencoder-roundtrip-floor",
+    to: "unconditional-structure-propagation",
+    relation: "contrasts",
+    reason: "잠재 공간을 거치지 않아 마스크 밖 수치의 성격이 다릅니다.",
+  },
+  {
+    from: "known-answer-instrument-check",
+    to: "parameter-cliff-and-clamp",
+    relation: "prerequisite",
+    reason: "프레임이 파괴된 결과를 계측기가 성공으로 채점한 것을 대조군이 잡아냈습니다.",
+  },
+  {
+    from: "gate-target-mismatch",
+    to: "prewritten-prediction-discipline",
+    relation: "produces",
+    reason: "지표만 좋아지는 경우를 미리 예측해 두면 그 결과를 성공으로 쓰지 않게 됩니다.",
+  },
+  {
+    from: "prewritten-prediction-discipline",
+    to: "absence-is-not-generatable",
+    relation: "constrains",
+    reason: "예측을 먼저 적어 둔 덕분에 2단계 조합의 그럴듯한 개선을 결론으로 쓰지 않았습니다.",
+  },
+  {
+    from: "no-prompt-tool-contract",
+    to: "gate-target-mismatch",
+    relation: "contrasts",
+    reason: "인자를 빼서 막는 방법과 생성 범위를 제한해 막는 방법이 서로 다른 결과를 냈습니다.",
   },
 ];
 
