@@ -229,6 +229,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "각 벤더의 공개 제품 문서와 명시한 가정의 산술만 근거로 삼고, 연산 성능 비교나 자체 실측 순위는 이 글에서 주장하지 않는다.",
   },
+  "gpu/server-cpu-lineup-comparison": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-09-11",
+    rationale:
+      "본문은 6 section·concept 7개로 keep 범위다. 레인·채널·코어·계열은 하나의 구성 계산 절차를 이루는 단계라 나누면 각 글이 같은 역할 규정을 다시 세워야 한다.",
+    sharedGate:
+      "제조사 공개 사양과 명시한 가정의 산술만 근거로 삼고, 개별 제품의 성능 비교나 벤치마크는 이 글에서 주장하지 않는다.",
+  },
 };
 
 /**
@@ -250,6 +259,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/qwen-korean-consistency": "28703cf32620721b",
   "ai/dinov3-self-supervised-backbone": "1d4f7adb50ed720a",
   "ai/image-embedding-pipeline": "183b7fb7e57921f8",
+  "gpu/server-cpu-lineup-comparison": "f8273f0dacbcd008",
   "gpu/ai-accelerator-vendor-comparison": "f82e89ae427c88c0",
   "ai/multi-component-finetuning-vram": "c3f7e981c26b48fc",
   "ai/vision-backbone-selection": "cdd9671993dee419",

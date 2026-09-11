@@ -47,6 +47,28 @@ export const hwArticles: Article[] = [
     ],
     component: () => import("@/pages/articles/hw/server-vs-desktop"),
   },
+  {
+    slug: "server-cpu-lineup-comparison",
+    title: "GPU 서버의 CPU는 레인과 채널로 고릅니다",
+    subcategory: "hw-compute",
+    sections: [
+      { id: "overview", title: "가속기 서버에서 CPU는 연산보다 통로를 담당합니다" },
+      {
+        id: "lane-budget",
+        title: "레인은 나눠 쓰는 자원이라 먼저 예산을 짭니다",
+        subsections: [{ id: "lane-arithmetic", title: "나눠 쓰면 언제 문제가 되는지 계산합니다" }],
+      },
+      { id: "memory-channels", title: "채널 수가 대역폭과 최대 용량을 함께 정합니다" },
+      {
+        id: "core-character",
+        title: "코어는 개수보다 성격과 배치가 중요합니다",
+        subsections: [{ id: "numa-placement", title: "어느 소켓에 붙은 가속기인지가 성능을 바꿉니다" }],
+      },
+      { id: "product-tiers", title: "제품군 경계는 코어가 아니라 플랫폼 기능이 정합니다" },
+      { id: "selection-gate", title: "구성표를 먼저 적고 그다음에 제품을 고릅니다" },
+    ],
+    component: () => import("@/pages/articles/hw/server-cpu-lineup-comparison"),
+  },
 
   /* ── Storage ── */
   {

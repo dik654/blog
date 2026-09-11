@@ -21907,6 +21907,69 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "제품 스펙처럼 빠르게 낡는 값을 기준일과 출처를 함께 적어 스냅샷으로 다루고, 순위 판정이 아니라 축을 확인하는 용도로만 쓰는 규율입니다. 정밀도 정의가 벤더마다 다른 연산 성능은 같은 표에 넣지 않습니다.",
     canonicalHref: "/gpu/ai-accelerator-vendor-comparison#snapshot-gate",
   },
+  "ai-server-cpu-role": {
+    id: "ai-server-cpu-role",
+    kind: "concept",
+    domain: "computer-science",
+    label: "가속기 서버에서 CPU의 역할",
+    definition:
+      "가속기를 여러 장 꽂는 서버에서 CPU가 맡는 일이 행렬 연산이 아니라 데이터 읽기·전처리·장치 연결이라는 구분입니다. 그래서 선택 기준이 코어 수가 아니라 PCIe 레인과 메모리 채널이 됩니다.",
+    canonicalHref: "/gpu/server-cpu-lineup-comparison#overview",
+  },
+  "pcie-lane-budget": {
+    id: "pcie-lane-budget",
+    kind: "method",
+    domain: "computer-science",
+    label: "PCIe 레인 예산 계산",
+    definition:
+      "장치 종류별 개수에 장치당 레인 수를 곱해 더한 값이 소켓 수 곱하기 소켓당 레인 수를 넘는지 확인하는 계산입니다. 넘으면 소켓을 늘리거나 스위치로 나누거나 연결 폭을 줄여야 합니다.",
+    canonicalHref: "/gpu/server-cpu-lineup-comparison#lane-budget",
+  },
+  "lane-sharing-concurrency-cost": {
+    id: "lane-sharing-concurrency-cost",
+    kind: "concept",
+    domain: "computer-science",
+    label: "레인 공유의 동시성 비용",
+    definition:
+      "스위치 아래 여러 장치를 묶으면 각자 필요할 때는 상위 링크 전체를 쓰지만 동시에 전송하면 그 링크를 나눠 갖는다는 성질입니다. 접근이 산발적인 장치는 영향이 적고 지속 트래픽이 있는 장치는 그대로 손해를 봅니다.",
+    canonicalHref: "/gpu/server-cpu-lineup-comparison#lane-arithmetic",
+  },
+  "memory-channel-supply-ceiling": {
+    id: "memory-channel-supply-ceiling",
+    kind: "concept",
+    domain: "computer-science",
+    label: "메모리 채널이 정하는 공급 상한",
+    definition:
+      "CPU의 메모리 채널 수가 대역폭과 최대 용량을 함께 정하고, 그 값이 가속기에 데이터를 공급하는 경로의 상한이 된다는 관계입니다. 채널을 다 채우지 않거나 채널당 모듈을 늘려 속도 등급이 내려가면 상한도 함께 내려갑니다.",
+    canonicalHref: "/gpu/server-cpu-lineup-comparison#memory-channels",
+  },
+  "performance-density-core-split": {
+    id: "performance-density-core-split",
+    kind: "concept",
+    domain: "computer-science",
+    label: "성능 코어와 밀도 코어의 구분",
+    definition:
+      "같은 세대 안에서 단일 스레드 성능을 우선한 코어와 면적·전력을 아껴 수를 늘린 코어가 나뉜다는 사실입니다. 같은 코어 수라도 어느 쪽인지에 따라 병렬 전처리와 단일 스레드 작업의 적합성이 달라집니다.",
+    canonicalHref: "/gpu/server-cpu-lineup-comparison#core-character",
+  },
+  "accelerator-numa-locality": {
+    id: "accelerator-numa-locality",
+    kind: "concept",
+    domain: "computer-science",
+    label: "가속기와 소켓의 지역성",
+    definition:
+      "두 소켓 서버에서 메모리와 확장 슬롯이 소켓마다 나뉘므로, 가속기와 다른 소켓의 코어·메모리를 쓰면 소켓 간 링크를 한 번 더 지난다는 배치 문제입니다. 코어를 늘려서는 해결되지 않고 프로세스 고정으로 다뤄야 합니다.",
+    canonicalHref: "/gpu/server-cpu-lineup-comparison#numa-placement",
+  },
+  "cpu-platform-tier-boundary": {
+    id: "cpu-platform-tier-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "CPU 제품군의 플랫폼 경계",
+    definition:
+      "서버·워크스테이션·고성능 데스크톱 계열을 가르는 것이 코어 수가 아니라 소켓 확장, 레인과 채널 수, 원격 관리와 이중화 지원이라는 구분입니다. 코어 수는 계열끼리 겹쳐 선택 기준이 되지 못합니다.",
+    canonicalHref: "/gpu/server-cpu-lineup-comparison#product-tiers",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -39857,6 +39920,78 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     to: "accelerator-comparison-axes",
     relation: "evaluates",
     reason: "스냅샷은 축이 실제 제품에서 어떻게 나타나는지 확인하는 용도로만 쓰입니다.",
+  },
+  {
+    from: "ai-server-cpu-role",
+    to: "pcie-lane-budget",
+    relation: "produces",
+    reason: "CPU가 통로를 제공한다는 역할 규정이 레인을 예산으로 다루는 계산으로 이어집니다.",
+  },
+  {
+    from: "pcie-transaction-bandwidth-latency",
+    to: "pcie-lane-budget",
+    relation: "prerequisite",
+    reason: "레인당 대역폭 공식이 있어야 폭을 줄이는 선택의 대가를 계산할 수 있습니다.",
+  },
+  {
+    from: "pcie-lane-budget",
+    to: "lane-sharing-concurrency-cost",
+    relation: "produces",
+    reason: "예산을 넘겼을 때 나눠 쓰는 선택지가 생기고 그 비용이 동시성으로 나타납니다.",
+  },
+  {
+    from: "pcie-topology-peer-path",
+    to: "lane-sharing-concurrency-cost",
+    relation: "prerequisite",
+    reason: "경로에 따라 달성 대역폭이 달라진다는 사실이 스위치 아래 배치 판단의 근거입니다.",
+  },
+  {
+    from: "nvme-device-path-lane-budget",
+    to: "pcie-lane-budget",
+    relation: "extends",
+    reason: "저장장치 경로의 레인 계산을 시스템 전체 장치로 확장한 것이 이 예산입니다.",
+  },
+  {
+    from: "ddr-channel-bandwidth-latency",
+    to: "memory-channel-supply-ceiling",
+    relation: "prerequisite",
+    reason: "채널당 대역폭 계산이 있어야 채널 수가 공급 상한을 정한다는 결론이 성립합니다.",
+  },
+  {
+    from: "dimm-electrical-load",
+    to: "memory-channel-supply-ceiling",
+    relation: "constrains",
+    reason: "채널당 모듈을 늘릴 때 속도 등급이 내려가는 이유가 전기적 부하에서 나옵니다.",
+  },
+  {
+    from: "performance-density-core-split",
+    to: "ai-server-cpu-role",
+    relation: "constrains",
+    reason: "CPU가 맡는 일이 대체로 병렬화되므로 어떤 코어 성격이 유리한지가 역할에서 정해집니다.",
+  },
+  {
+    from: "accelerator-numa-locality",
+    to: "memory-channel-supply-ceiling",
+    relation: "constrains",
+    reason: "반대쪽 소켓의 메모리를 쓰면 채널로 계산한 공급 상한을 실제로 달성하지 못합니다.",
+  },
+  {
+    from: "cpu-platform-tier-boundary",
+    to: "pcie-lane-budget",
+    relation: "constrains",
+    reason: "계열마다 소켓당 레인 수가 다르므로 예산 부등식의 오른쪽 값이 계열 선택으로 정해집니다.",
+  },
+  {
+    from: "module-form-factor-consequences",
+    to: "pcie-lane-budget",
+    relation: "prerequisite",
+    reason: "가속기를 카드로 붙일지 모듈로 붙일지가 레인 요구의 크기를 먼저 정합니다.",
+  },
+  {
+    from: "ecc-protection-boundary",
+    to: "cpu-platform-tier-boundary",
+    relation: "prerequisite",
+    reason: "오류 정정 지원 여부가 계열을 가르는 플랫폼 기능 중 하나입니다.",
   },
 ];
 

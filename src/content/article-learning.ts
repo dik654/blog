@@ -71407,4 +71407,211 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "gpu/server-cpu-lineup-comparison": {
+    coreIdea:
+      "가속기 서버에서 CPU는 연산보다 데이터 공급과 장치 연결을 맡으므로, 붙일 장치에서 PCIe 레인 예산과 메모리 채널 요구를 먼저 계산하고 그 예산을 만족하는 제품군을 고르는 순서로 선택해야 하며 코어 수는 계열을 가르지 못합니다.",
+    assumedKnowledge: [
+      { id: "pcie-transaction-bandwidth-latency", role: "레인당 대역폭 계산의 근거입니다." },
+      { id: "pcie-topology-peer-path", role: "경로에 따라 달성 대역폭이 달라진다는 사실입니다." },
+      { id: "ddr-channel-bandwidth-latency", role: "채널 수와 대역폭의 관계입니다." },
+      { id: "dimm-electrical-load", role: "채널당 모듈 수가 속도에 주는 제약입니다." },
+      { id: "nvme-device-path-lane-budget", role: "저장장치 경로의 레인 계산입니다." },
+      { id: "module-form-factor-consequences", role: "가속기 폼팩터가 결정하는 것들입니다." },
+    ],
+    introducedHere: [
+      { id: "ai-server-cpu-role", role: "CPU가 맡는 일을 규정해 선택 기준을 바꿉니다." },
+      { id: "pcie-lane-budget", role: "레인 예산 부등식을 세워 소켓 수를 정합니다." },
+      { id: "lane-sharing-concurrency-cost", role: "나눠 쓰는 구성의 대가를 동시성으로 설명합니다." },
+      { id: "memory-channel-supply-ceiling", role: "채널이 데이터 공급 상한을 정한다는 관계를 세웁니다." },
+      { id: "performance-density-core-split", role: "코어 성격 차이와 워크로드 적합성을 구분합니다." },
+      { id: "accelerator-numa-locality", role: "두 소켓 배치 문제를 정의하고 해결 방향을 제시합니다." },
+      { id: "cpu-platform-tier-boundary", role: "계열을 가르는 것이 플랫폼 기능임을 고정합니다." },
+    ],
+    conceptExplanations: [
+      {
+        id: "ai-server-cpu-role",
+        sectionId: "overview",
+        intuition:
+          "이런 서버에서 CPU는 선수가 아니라 물과 수건을 나르는 역할에 가깝습니다.",
+        workedExample:
+          "데이터를 읽고 전처리해 가속기로 보내는 경로가 CPU의 일이라, 레인이 부족하면 장치를 못 붙이고 채널이 부족하면 공급이 막힙니다.",
+        boundary:
+          "추론 전용 노드와 학습 노드는 CPU 요구가 다릅니다. 전처리가 무거운 워크로드는 코어 수도 함께 봐야 합니다.",
+      },
+      {
+        id: "pcie-lane-budget",
+        sectionId: "lane-budget",
+        intuition:
+          "레인은 정해진 개수의 콘센트 같아서 붙일 장치를 먼저 세어 봐야 합니다.",
+        workedExample:
+          "가속기 8장 × 16레인 = 128, 고속 NIC 2장 × 16 = 32, NVMe 4개 × 4 = 16으로 합계 176레인이라 소켓당 128레인 예산을 넘습니다.",
+        boundary:
+          "넘는다고 구성이 불가능한 것은 아닙니다. 스위치로 나누거나 폭을 줄이면 들어가지만 그만큼 대역폭을 내줍니다. 소켓 간 연결용 예약 레인은 제품마다 달라 따로 확인해야 합니다.",
+      },
+      {
+        id: "lane-sharing-concurrency-cost",
+        sectionId: "lane-arithmetic",
+        intuition:
+          "네 사람이 한 수도꼭지를 쓰면 혼자 쓸 때는 괜찮지만 동시에 틀면 수압이 나뉩니다.",
+        workedExample:
+          "스위치 아래 네 장치를 16레인 하나에 붙이면 단독 사용 시 16레인이지만 넷이 동시에 전송하면 각자 4레인 분량이 됩니다.",
+        boundary:
+          "접근이 산발적인 저장장치는 체감이 적고, 지속 트래픽이 있는 네트워크나 가속기 간 통신은 그대로 손해를 봅니다.",
+      },
+      {
+        id: "memory-channel-supply-ceiling",
+        sectionId: "memory-channels",
+        intuition:
+          "채널은 데이터를 퍼 올리는 파이프의 개수라 수가 곧 초당 양을 정합니다.",
+        workedExample:
+          "12채널은 8채널보다 같은 속도 등급에서 1.5배의 대역폭을 갖고, 채널을 8개만 채우면 12채널 CPU도 8채널 수준으로 내려갑니다.",
+        boundary:
+          "채널당 모듈을 둘로 늘려 용량을 키우면 전기적 부하로 속도 등급이 내려갈 수 있어 용량과 대역폭이 교환됩니다.",
+      },
+      {
+        id: "performance-density-core-split",
+        sectionId: "core-character",
+        intuition:
+          "같은 인원이라도 한 명이 오래 붙잡는 일에 강한 팀과 여럿이 나눠 하는 일에 강한 팀이 다릅니다.",
+        workedExample:
+          "데이터 로딩과 디코딩, 전처리는 잘 나눠지므로 밀도 우선 코어가 유리한 구간이 넓고, 한 스레드가 오래 붙잡는 작업은 단일 스레드 성능에 묶입니다.",
+        boundary:
+          "코어 성격은 같은 세대 안에서도 모델마다 다르고, 코어 수보다 배치가 먼저 병목이 되는 경우가 많습니다.",
+      },
+      {
+        id: "accelerator-numa-locality",
+        sectionId: "numa-placement",
+        intuition:
+          "가속기와 데이터가 서로 다른 건물에 있으면 매번 건너가야 합니다.",
+        workedExample:
+          "0번 소켓 메모리의 데이터를 1번 소켓에 붙은 가속기로 보내면 소켓 간 링크를 한 번 더 지나므로, 프로세스를 같은 쪽 소켓에 고정하면 이 이동이 사라집니다.",
+        boundary:
+          "단일 소켓 구성에는 이 문제가 없습니다. 소켓을 늘리는 결정은 레인이나 용량이 모자랄 때 하는 것이지 코어를 늘리려고 하는 것이 아닙니다.",
+      },
+      {
+        id: "cpu-platform-tier-boundary",
+        sectionId: "product-tiers",
+        intuition:
+          "가격 차이의 이유는 코어가 아니라 그 CPU가 올라가는 플랫폼이 무엇을 할 수 있느냐입니다.",
+        workedExample:
+          "코어 수는 세 계열이 겹치지만 레인은 두 배 이상 갈리고, 원격 관리와 이중화는 서버 계열 플랫폼에서만 제공됩니다.",
+        boundary:
+          "관리와 이중화는 CPU가 아니라 보드와 섀시가 제공하므로 플랫폼 단위로 확인해야 합니다. 계열별 값은 세대마다 바뀝니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 역할 규정",
+        relation: "무엇을 하는 부품인지 먼저 정하면 기준이 바뀜",
+        concepts: ["ai-server-cpu-role"],
+      },
+      {
+        label: "01 레인",
+        relation: "붙일 장치에서 예산을 계산",
+        concepts: ["pcie-lane-budget", "pcie-transaction-bandwidth-latency"],
+      },
+      {
+        label: "02 나눠 쓰기",
+        relation: "예산을 넘겼을 때의 선택지와 대가",
+        concepts: ["lane-sharing-concurrency-cost", "pcie-topology-peer-path"],
+      },
+      {
+        label: "03 채널",
+        relation: "데이터 공급 상한을 정하는 축",
+        concepts: ["memory-channel-supply-ceiling", "ddr-channel-bandwidth-latency"],
+      },
+      {
+        label: "04 코어와 배치",
+        relation: "성격 차이와 소켓 지역성",
+        concepts: ["performance-density-core-split", "accelerator-numa-locality"],
+      },
+      {
+        label: "05 계열 판정",
+        relation: "플랫폼 기능으로 계열을 가르고 결정",
+        concepts: ["cpu-platform-tier-boundary", "ecc-protection-boundary"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "가속기 서버에서 CPU가 맡는 일 세 가지를 쓰고, 그래서 선택 기준이 무엇이 되는지 설명하세요.",
+        answerChecklist: ["데이터 읽기", "전처리", "장치 연결", "코어 수가 아니라 레인", "메모리 채널"],
+        requiredConcepts: ["ai-server-cpu-role"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "가속기 8장(각 16레인), 고속 NIC 2장(각 16레인), NVMe 4개(각 4레인) 구성의 레인 요구를 계산하고 소켓당 128레인 예산과 비교하세요.",
+        answerChecklist: ["8 × 16 = 128", "2 × 16 = 32", "4 × 4 = 16", "합계 176레인", "128 초과", "48레인 부족"],
+        requiredConcepts: ["pcie-lane-budget"],
+        sectionId: "lane-budget",
+      },
+      {
+        level: "basic",
+        question:
+          "스위치 아래 네 장치를 16레인 하나에 묶었을 때 단독 사용과 동시 사용의 대역폭을 각각 쓰고, 어떤 장치가 이 구성에 적합한지 설명하세요.",
+        answerChecklist: ["단독이면 16레인 분량", "동시면 각자 4레인 분량", "산발적 접근 장치에 적합", "지속 트래픽은 손해", "저장장치는 괜찮고 네트워크는 불리"],
+        requiredConcepts: ["lane-sharing-concurrency-cost"],
+        sectionId: "lane-arithmetic",
+      },
+      {
+        level: "basic",
+        question:
+          "12채널과 8채널의 대역폭 비를 쓰고, 12채널 CPU에 모듈을 8개만 꽂았을 때 어떻게 되는지 설명하세요.",
+        answerChecklist: ["12 ÷ 8 = 1.5배", "같은 속도 등급 기준", "8개만 채우면 8채널 수준", "대칭 배치 필요", "대역폭 손실"],
+        requiredConcepts: ["memory-channel-supply-ceiling"],
+        sectionId: "memory-channels",
+      },
+      {
+        level: "basic",
+        question:
+          "성능 코어와 밀도 코어의 차이를 쓰고, 가속기 서버의 CPU 작업에서 어느 쪽이 유리한 구간이 넓은지 근거와 함께 설명하세요.",
+        answerChecklist: ["단일 스레드 우선 vs 수 우선", "로딩·디코딩·전처리는 병렬화가 잘 됨", "밀도 코어 유리 구간이 넓음", "한 스레드가 오래 붙잡는 작업은 예외"],
+        requiredConcepts: ["performance-density-core-split"],
+        sectionId: "core-character",
+      },
+      {
+        level: "basic",
+        question:
+          "두 소켓 서버에서 가속기와 다른 소켓의 메모리를 쓸 때 생기는 문제를 쓰고, 해결 방향을 설명하세요.",
+        answerChecklist: ["소켓 간 링크를 한 번 더 지남", "대역폭과 지연 손해", "코어를 늘려도 해결 안 됨", "프로세스를 같은 쪽 소켓에 고정", "단일 소켓은 이 문제 없음"],
+        requiredConcepts: ["accelerator-numa-locality"],
+        sectionId: "numa-placement",
+      },
+      {
+        level: "advanced",
+        question:
+          "레인 예산을 넘긴 구성에서 세 가지 해결책을 쓰고 각각의 대가를 설명한 뒤, 어떤 장치를 어디에 배치해야 하는지 기준을 제시하세요.",
+        answerChecklist: ["소켓 추가 → 배치 문제 발생", "스위치로 나누기 → 동시 사용 시 분할", "폭 줄이기 → 해당 장치 대역폭 감소", "많이 통신하는 장치는 같은 스위치 아래", "대역폭을 다투는 장치는 분리"],
+        requiredConcepts: ["pcie-lane-budget", "lane-sharing-concurrency-cost"],
+        sectionId: "lane-arithmetic",
+      },
+      {
+        level: "advanced",
+        question:
+          "학습 중 가속기 사용률이 낮을 때 확인할 항목을 순서대로 쓰고, 각 항목이 어느 하드웨어 값에 묶여 있는지 설명하세요.",
+        answerChecklist: ["저장장치 읽기 경로 → 레인", "메모리 대역폭 → 채널 수와 배치", "프로세스 배치 → 소켓 지역성", "코어 추가는 마지막", "사용률과 대기 시간을 함께 확인"],
+        requiredConcepts: ["memory-channel-supply-ceiling", "accelerator-numa-locality"],
+        sectionId: "core-character",
+      },
+      {
+        level: "advanced",
+        question:
+          "코어 수가 제품군 선택 기준이 되지 못하는 이유를 설명하고, 계열을 가르는 항목 네 가지를 제시하세요.",
+        answerChecklist: ["코어 수는 계열끼리 겹침", "소켓 확장 가능 여부", "레인과 채널 수", "원격 관리와 이중화", "메모리 정정 지원", "레인은 두 배 이상 갈림"],
+        requiredConcepts: ["cpu-platform-tier-boundary"],
+        sectionId: "product-tiers",
+      },
+      {
+        level: "advanced",
+        question:
+          "구성표에서 시작해 계열을 정하는 네 단계를 순서대로 쓰고, 순서를 뒤집었을 때 생기는 문제를 설명하세요.",
+        answerChecklist: ["장치 목록 작성", "레인 예산 계산으로 소켓 수 결정", "메모리 요구로 채널 수 결정", "운영 요구로 관리·이중화 확인", "제품을 먼저 고르면 슬롯 부족을 조립 단계에서 발견"],
+        requiredConcepts: ["pcie-lane-budget", "cpu-platform-tier-boundary"],
+        sectionId: "selection-gate",
+      },
+    ],
+  },
 };

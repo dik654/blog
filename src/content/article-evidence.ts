@@ -6706,4 +6706,24 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "전용 링크와 전용 스위치 구조의 근거이며 특정 워크로드의 achievable 성능은 아님",
     },
   ],
+  "gpu/server-cpu-lineup-comparison": [
+    {
+      kind: "공식 문서",
+      label: "AMD · EPYC 서버 프로세서 제품 사양",
+      href: "https://www.amd.com/en/products/processors/server/epyc.html",
+      note: "서버 계열의 소켓·레인·메모리 채널 대표값 근거이며 2026-09-11 확인 기준으로 세대마다 값이 바뀜",
+    },
+    {
+      kind: "공식 문서",
+      label: "Intel · Xeon 프로세서 제품 사양",
+      href: "https://www.intel.com/content/www/us/en/products/details/processors/xeon.html",
+      note: "서버 계열 비교 대상의 사양 근거이며 모델별로 레인·채널이 다르므로 개별 확인이 필요함",
+    },
+    {
+      kind: "공식 규격",
+      label: "PCI-SIG · PCI Express Base Specification",
+      href: "https://pcisig.com/specifications",
+      note: "레인 폭과 세대별 전송률로 대역폭을 계산하는 근거이며 실제 goodput은 이보다 낮음",
+    },
+  ],
 };

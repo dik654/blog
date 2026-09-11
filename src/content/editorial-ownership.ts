@@ -11179,6 +11179,41 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "server-cpu-lineup-comparison": {
+    title: "서버 CPU 제품군 비교 글이 소유하는 범위",
+    owns: [
+      "가속기 서버에서 CPU가 데이터 공급과 장치 연결을 맡는다는 역할 규정과 그로부터 나오는 선택 기준",
+      "장치별 레인을 더해 소켓 수를 정하는 레인 예산 부등식과 그 계산 예",
+      "스위치 아래 묶었을 때 단독 사용과 동시 사용의 대역폭 차이",
+      "메모리 채널 수가 대역폭과 최대 용량을 함께 정해 데이터 공급 상한이 된다는 관계",
+      "성능 코어와 밀도 코어의 구분이 가속기 서버 워크로드에서 갖는 의미",
+      "두 소켓 구성에서 가속기와 코어·메모리의 지역성 문제와 해결 방향",
+      "서버·워크스테이션·고성능 데스크톱 계열을 코어가 아닌 플랫폼 기능으로 가르는 기준",
+    ],
+    reuses: [
+      { label: "GPU 인터커넥트 공식", href: "/gpu/gpu-interconnects" },
+      { label: "메모리 채널과 ECC", href: "/gpu/hw-memory" },
+      { label: "NVMe 저장장치", href: "/gpu/hw-nvme-storage" },
+      { label: "서버와 데스크톱", href: "/gpu/hw-server-vs-desktop" },
+      { label: "가속기 벤더 비교", href: "/gpu/ai-accelerator-vendor-comparison" },
+      { label: "전력과 냉각", href: "/gpu/hw-power-cooling" },
+      { label: "병렬화 전략과 배치", href: "/ai/parallelism-strategy-and-placement" },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "계열별 레인·채널 대표값은 각 제조사의 공개 제품 사양에 귀속하고 확인 기준일을 본문에 표시한다.",
+      },
+      {
+        kind: "standard",
+        rule: "레인 예산 계산은 명시한 장치별 레인 수 가정에서의 산술이며 메인보드와 라이저의 동시 장착 제약은 별도 문서로 확인해야 한다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "특정 제품의 성능 우열이나 벤치마크는 이 글에서 주장하지 않으며 계열 판정까지만 다룬다.",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

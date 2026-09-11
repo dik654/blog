@@ -1775,3 +1775,11 @@
 - contract 2.2.1을 따라 스펙 숫자는 기준일(2026-09-11)과 출처를 박은 스냅샷으로만 두고, 연산 성능 수치는 정밀도 정의와 측정 조건이 벤더마다 달라 아예 표에 넣지 않았다. 순위 판정에 쓰지 않는다는 규칙을 ownership evidence에 적었다.
 - 기존 정본과의 경계: NVIDIA 제품 계열 비교는 `hw-gpu-comparison`, 링크 대역폭 공식은 `gpu-interconnects`, 랙 전력·냉각은 `hw-power-cooling`, MoE 통신 민감도는 `modded-rtx4090-moe-serving`이 소유하고 이 글은 벤더가 갈라지는 지점만 다룬다.
 - 검증: 전 audit 통과, `audit:viz --strict` ERROR 0, topology `keep`+fingerprint, tsc·build 통과(662 static route), Playwright 1440·390 overflow 0·error 0.
+
+### 2026-09-11 · 하드웨어 비교 2편 · 서버 CPU 제품군
+
+- `gpu/server-cpu-lineup-comparison`을 `hw-compute`의 `hw-server-vs-desktop` 뒤에 추가했다. 저장소에 EPYC·Xeon·Threadripper를 같은 축에서 비교하는 정본이 없었고, 사용자가 지목한 "제품별 비교"의 CPU 쪽을 담당한다.
+- 축은 "코어 수는 계열을 가르지 못한다"다. 가속기 서버에서 CPU가 맡는 일이 연산이 아니라 데이터 공급과 장치 연결이므로, 레인 예산 부등식(Σ n_d·ℓ_d ≤ S·L_cpu)과 메모리 채널이 실제 선택 기준이 된다는 논리로 이어진다. 가속기 8장·NIC 2장·NVMe 4개 구성이 176레인을 요구해 소켓당 128레인을 넘는다는 계산이 글의 중심 예다.
+- 기존 정본과 분리: 채널 대역폭·ECC·DIMM 전기 부하는 `hw-memory`, PCIe 공식과 토폴로지는 `gpu-interconnects`, NVMe 경로 레인은 `hw-nvme-storage`, 서버·데스크톱 운영 차이는 `hw-server-vs-desktop`이 소유하고 이 글은 그 값들을 CPU 계열 판정에 적용하는 부분만 다룬다.
+- contract 2.2.1에 따라 계열별 레인·채널은 기준일(2026-09-11)을 박은 대표값으로만 두고 개별 제품의 성능 비교나 벤치마크는 주장하지 않는다고 ownership에 적었다.
+- 검증: 전 audit 통과, `audit:viz --strict` ERROR 0, topology `keep`+fingerprint, tsc·build 통과(663 static route), Playwright 1440·390 overflow 0·error 0.
