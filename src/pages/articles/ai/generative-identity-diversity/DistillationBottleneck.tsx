@@ -8,8 +8,8 @@ export default function DistillationBottleneck() {
       <h2 className="mb-6 text-2xl font-bold">어휘가 천장이라던 진단이 사실은 가중치 문제였습니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          성별 둘, 나이 셋, 얼굴형 셋, 이목구비 넷을 조합해 일흔두 개 묘사를 만들고 한 모델에서 각각 하나씩
-          생성했습니다. 채택된 인물은 열여덟 명이었고, 2211쌍 중 215쌍이 임계를 넘었습니다.
+          성별 둘, 나이 셋, 얼굴형 셋, 이목구비 넷을 조합해 일흔두 개 묘사를 만들고 한 모델에서 각각 하나씩 생성했습니다. 채택된 인물은 열여덟 명이었고 2211쌍 중 215쌍이
+          임계를 넘었습니다.
         </p>
 
         <p className="leading-7">
@@ -24,10 +24,8 @@ export default function DistillationBottleneck() {
         </p>
 
         <p className="leading-7">
-          그 측정은 증류된 모델에서 한 것이었습니다. 여덟 단계로 압축된 가중치를 안내 계수 1.0으로 돌린
-          것이고, 두 방향의 선행 연구가 이것이 다양성에 불리한 조합이라고 말합니다. 안내를 제안한 논문이
-          그 연산을 모드 커버리지와 표본 충실도를 맞바꾸는 장치로 정의했고, 소수 단계 증류 쪽에서는 모드
-          붕괴가 풀어야 할 장벽으로 다뤄집니다.
+          그 측정은 증류된 모델에서 한 것이었습니다. 여덟 단계로 압축된 가중치를 안내 계수 1.0으로 돌린 것이고 두 방향의 선행 연구가 이것이 다양성에 불리한 조합이라고 말합니다.
+          안내를 제안한 논문이 그 연산을 모드 커버리지와 표본 충실도를 맞바꾸는 장치로 정의했고 소수 단계 증류 쪽에서는 모드 붕괴가 풀어야 할 장벽으로 다뤄집니다.
         </p>
       </div>
 
@@ -35,9 +33,8 @@ export default function DistillationBottleneck() {
 
       <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <p className="leading-7">
-          같은 일흔두 개 묘사, 같은 시드, 같은 임계값으로 비증류 가중치에서 다시 돌렸습니다. 채택된 인물이
-          열여덟에서 예순하나가 됐고, 충돌이 2211쌍 중 215쌍에서 2145쌍 중 8쌍으로 줄었습니다. 다양성
-          지표도 28.5에서 51.2로 올라갔습니다.
+          같은 일흔두 개 묘사, 같은 시드, 같은 임계값으로 비증류 가중치에서 다시 돌렸습니다. 채택된 인물이 열여덟에서 예순하나가 됐고 충돌이 2211쌍 중 215쌍에서 2145쌍 중
+          8쌍으로 줄었습니다. 다양성 지표도 28.5에서 51.2로 올라갔습니다.
         </p>
 
         <p className="leading-7">
@@ -71,9 +68,8 @@ export default function DistillationBottleneck() {
 
       <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <p className="leading-7">
-          같은 파이프라인을 훨씬 큰 규모로 돌린 공개 연구가 비교 기준을 줍니다. 비증류 가중치로 14,889개를
-          생성해 6,641명을 남겼으니 보존율이 44.6퍼센트입니다. 증류 가중치를 쓴 제 보존율은 26.9퍼센트로 그보다
-          낮고, 비증류로 바꾼 뒤에는 그 범위에 들어옵니다.
+          같은 파이프라인을 훨씬 큰 규모로 돌린 공개 연구가 비교 기준을 줍니다. 비증류 가중치로 14,889개를 생성해 6,641명을 남겼으니 보존율이 44.6퍼센트입니다. 증류 가중치를
+          쓴 제 보존율은 26.9퍼센트로 그보다 낮고 비증류로 바꾼 뒤에는 그 범위에 들어옵니다.
         </p>
 
         <p className="leading-7">

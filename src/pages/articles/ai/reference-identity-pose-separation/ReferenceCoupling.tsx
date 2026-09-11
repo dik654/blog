@@ -8,8 +8,8 @@ export default function ReferenceCoupling() {
       <h2 className="mb-6 text-2xl font-bold">참조 조건에는 인물과 자세가 같이 들어 있습니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          참조 이미지를 잠재 표현으로 인코딩해 조건에 이어 붙이는 방식이 있습니다. 출발점으로 쓰는 것이 아니라
-          조건으로 쓰기 때문에 샘플링은 완전한 노이즈에서 시작하고, 그래도 인물이 유지됩니다.
+          참조 이미지를 잠재 표현으로 인코딩해 조건에 이어 붙이는 방식이 있습니다. 출발점으로 쓰는 것이 아니라 조건으로 쓰기 때문에 샘플링은 완전한 노이즈에서 시작하고 그래도 인물이
+          유지됩니다.
         </p>
 
         <p className="leading-7">

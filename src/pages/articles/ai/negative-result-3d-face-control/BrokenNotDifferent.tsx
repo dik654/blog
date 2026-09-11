@@ -13,8 +13,7 @@ export default function BrokenNotDifferent() {
         </p>
 
         <p className="leading-7">
-          실제 이미지를 보면 이유가 분명합니다. 모델이 깊이 실루엣을 문자 그대로 받아들여 머리를 공 모양으로
-          그리고, 눈이 파인 홈을 안경으로 렌더했습니다.
+          실제 이미지를 보면 이유가 분명합니다. 모델이 깊이 실루엣을 문자 그대로 받아들여 머리를 공 모양으로 그리고 눈이 파인 홈을 안경으로 렌더했습니다.
         </p>
 
         <p className="leading-7">

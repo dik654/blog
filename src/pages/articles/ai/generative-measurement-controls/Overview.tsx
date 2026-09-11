@@ -28,8 +28,8 @@ export default function Overview() {
         <ContentBoundary article="generative-measurement-controls" />
 
         <p className="leading-7">
-          순서는 얼굴 임계값, 스타일 적용 범위, 오토인코더 바닥값, 계측기 대조군입니다. 앞의 둘은 "이 도구를
-          어디까지 믿을 수 있는가"이고, 뒤의 둘은 "이 숫자가 재고 있는 것이 내가 재려던 것인가"입니다.
+          순서는 얼굴 임계값, 스타일 적용 범위, 오토인코더 바닥값, 계측기 대조군입니다. 앞의 둘은 "이 도구를 어디까지 믿을 수 있는가"이고 뒤의 둘은 "이 숫자가 재고 있는 것이 내가
+          재려던 것인가"입니다.
         </p>
 
         <p className="leading-7">
