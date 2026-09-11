@@ -73420,4 +73420,205 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "ai/reference-identity-pose-separation": {
+    coreIdea:
+      "참조 잠재 조건은 인물과 자세를 함께 전달하므로 둘을 동시에 통제할 수 없습니다. 정체성은 어텐션 경로로, 자세는 공간 조건으로, 방향은 문구로 나눠 넣어야 네 각도가 성립하며, 결과가 안 나올 때는 설정을 다듬기 전에 의심되는 신호를 완전히 꺼 보는 편이 빠릅니다.",
+    assumedKnowledge: [
+      { id: "impostor-threshold-derivation", role: "정체성 판정에 쓰는 임계값입니다." },
+      { id: "detection-recognition-separation", role: "탐지 실패와 낮은 유사도의 구분입니다." },
+      { id: "known-answer-instrument-check", role: "결과를 아는 실행으로 검증하는 발상입니다." },
+      { id: "latent-diffusion-component-contract", role: "조건이 들어가는 구성 요소입니다." },
+      { id: "denoise-window-by-model-class", role: "샘플링 구간에 따라 성질이 달라진다는 관찰입니다." },
+    ],
+    introducedHere: [
+      { id: "reference-latent-pose-coupling", role: "문제의 원인을 정의합니다." },
+      { id: "prompt-cannot-override-conditioning", role: "문구로 풀리지 않는다는 경계를 고정합니다." },
+      { id: "attention-identity-injection", role: "대체 경로와 그 편향을 정의합니다." },
+      { id: "conditioning-schedule-window", role: "조건을 거는 시점이 만드는 차이를 정의합니다." },
+      { id: "skeleton-front-back-ambiguity", role: "자세 신호가 방향을 담지 못한다는 한계를 정의합니다." },
+      { id: "signal-role-separation", role: "세 신호를 나누는 구성을 세웁니다." },
+      { id: "ablation-before-tuning", role: "세 번의 오진을 푼 절차를 정리합니다." },
+    ],
+    conceptExplanations: [
+      {
+        id: "reference-latent-pose-coupling",
+        sectionId: "reference-coupling",
+        intuition:
+          "사진 한 장을 보여 주며 이 사람을 그려 달라고 하면 그 사진의 자세까지 따라 그립니다.",
+        workedExample:
+          "참조 있음과 없음의 정체성이 얼굴 정면 기준 0.845 대 0.284로 0.56 격차입니다. 그런데 측면을 요구하면 머리만 60도 돌고 몸은 정면에 남습니다.",
+        boundary:
+          "참조 조건을 제거하면 몸이 실제로 회전하지만 인물이 매번 달라집니다. 둘 다 얻으려면 정체성을 다른 경로로 넣어야 하며, 이 결합 자체가 버그는 아닙니다.",
+      },
+      {
+        id: "prompt-cannot-override-conditioning",
+        sectionId: "reference-coupling",
+        intuition:
+          "핸들이 고정된 차에서 어디로 가자고 말을 바꿔 봐야 방향은 그대로입니다.",
+        workedExample:
+          "인물이 돈다는 표현을 카메라가 돈다는 표현으로 바꿨을 때 실측 회전각이 59.5도에서 59.9도, 28.3도에서 28.0도로 움직였습니다.",
+        boundary:
+          "문구가 아무 역할도 못 한다는 뜻은 아닙니다. 같은 실험의 후반부에서 방향을 정하는 유일한 신호가 문구였으므로, 이기지 못하는 것은 다른 층의 조건이 그 속성을 붙잡고 있을 때뿐입니다.",
+      },
+      {
+        id: "attention-identity-injection",
+        sectionId: "attention-injection",
+        intuition:
+          "사진을 붙여 주는 대신 인상착의만 귀띔하면 그림의 구도까지 따라 하지는 않습니다.",
+        workedExample:
+          "참조 픽셀이 생성에 들어가지 않으므로 한 인구통계의 참조에서 다른 인구통계의 인물이 나올 수 있습니다. 골격은 따라오고 표현은 프롬프트가 정합니다.",
+        boundary:
+          "정면 얼굴 임베딩으로 학습된 편향이 있어 세기를 높이면 매 단계 정면 얼굴을 밀어 넣습니다. 실측에서 세기 1.3 전 구간의 측면 회전이 22.2도에 그쳤습니다.",
+      },
+      {
+        id: "conditioning-schedule-window",
+        sectionId: "schedule-start",
+        intuition:
+          "콘크리트가 굳는 동안 형틀을 잡고 있으면 모양이 정해집니다. 굳은 뒤에 대면 표면만 다듬습니다.",
+        workedExample:
+          "정체성을 0.3 지점부터 켜면 측면 회전이 22.2도에서 62.7도로, 0.5 지점부터면 71.9도로 늘어납니다. 대신 정체성은 0.399에서 0.376, 0.100으로 떨어집니다.",
+        boundary:
+          "이 손잡이만으로는 답이 아닙니다. 실측에서 세기를 1.3에서 0.7로 낮춰 전 구간에 거는 쪽이 회전 49.4도에 정체성 0.464로 두 지표 모두에서 더 좋았습니다.",
+      },
+      {
+        id: "skeleton-front-back-ambiguity",
+        sectionId: "skeleton-ambiguity",
+        intuition:
+          "막대 인형의 관절 위치만 보고는 이 사람이 나를 보고 있는지 등을 돌렸는지 알 수 없습니다.",
+        workedExample:
+          "후면 뷰에 정면 얼굴이 나온 원인을 정체성 주입으로 의심했는데, 주입을 완전히 꺼도 좌표에서 얼굴 지점을 지워도 같은 결과였습니다.",
+        boundary:
+          "이 한계는 해당 좌표 표현의 성질이며 다른 자세 표현에서는 다를 수 있습니다. 또 그 실행들은 신호 기여를 격리하려고 시점 문구를 뺀 조건이었으므로, 실제 파이프라인의 한계로 바로 읽으면 안 됩니다.",
+      },
+      {
+        id: "signal-role-separation",
+        sectionId: "three-signals",
+        intuition:
+          "합주에서 각 악기가 다른 음역을 맡으면 섞이지만, 같은 음을 겹쳐 내면 서로를 지웁니다.",
+        workedExample:
+          "관절 좌표가 사지 배치를, 시점 문구가 방향을, 어텐션 주입이 정체성을 맡은 구성에서 정면 0.637·사분의삼 0.510·측면 0.438이 나오고 후면에서는 얼굴이 검출되지 않았습니다.",
+        boundary:
+          "한 인물·한 의상에서의 결과입니다. 그리고 셋을 나눴다고 완전히 독립인 것은 아니라, 정체성 세기를 높이면 여전히 얼굴 방향이 밀립니다.",
+      },
+      {
+        id: "ablation-before-tuning",
+        sectionId: "separation-gate",
+        intuition:
+          "소리가 나는 원인을 찾을 때 의심되는 부품을 빼 보면 한 번에 압니다.",
+        workedExample:
+          "참조 조건을 빼자 몸이 실제로 돌았고, 정체성 주입을 끄자 후면 얼굴이 그대로였습니다. 두 실행으로 각각의 원인이 확정됐습니다.",
+        boundary:
+          "끌 수 없는 신호도 있고, 끄면 다른 것이 함께 무너져 비교가 성립하지 않는 경우도 있습니다. 또 증상이 남았다고 그 신호가 무해하다는 뜻은 아니며 원인이 아니라는 것까지만 말합니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 결합 발견",
+        relation: "참조가 자세까지 전달",
+        concepts: ["reference-latent-pose-coupling", "latent-diffusion-component-contract"],
+      },
+      {
+        label: "01 문구의 한계",
+        relation: "조건을 이기지 못함",
+        concepts: ["prompt-cannot-override-conditioning", "impostor-threshold-derivation"],
+      },
+      {
+        label: "02 다른 경로",
+        relation: "어텐션 주입과 그 편향",
+        concepts: ["attention-identity-injection", "conditioning-schedule-window", "denoise-window-by-model-class"],
+      },
+      {
+        label: "03 자세 신호",
+        relation: "방향을 담지 못하는 한계",
+        concepts: ["skeleton-front-back-ambiguity", "detection-recognition-separation"],
+      },
+      {
+        label: "04 구성과 절차",
+        relation: "역할 분리와 제거 실험",
+        concepts: ["signal-role-separation", "ablation-before-tuning", "known-answer-instrument-check"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "참조 잠재 조건의 효과와 대가를 각각 수치로 쓰세요.",
+        answerChecklist: ["참조 있음 0.845 대 없음 0.284", "얼굴 정면은 양쪽 회전각이 0도라 교란 없음", "측면 요구 시 머리만 60도", "몸은 정면에 고정", "참조를 빼면 몸이 실제로 회전"],
+        requiredConcepts: ["reference-latent-pose-coupling", "latent-diffusion-component-contract"],
+        sectionId: "reference-coupling",
+      },
+      {
+        level: "basic",
+        question:
+          "문구를 바꿔도 자세가 풀리지 않는다는 판정의 근거를 쓰고, 문구가 무력하다는 뜻이 아닌 이유도 적으세요.",
+        answerChecklist: ["인물 회전을 카메라 회전으로 바꿈", "59.5도에서 59.9도", "28.3도에서 28.0도", "측정 오차 수준", "후반부에서는 문구가 방향을 정하는 유일한 신호였음"],
+        requiredConcepts: ["prompt-cannot-override-conditioning"],
+        sectionId: "reference-coupling",
+      },
+      {
+        level: "basic",
+        question:
+          "어텐션 경로로 정체성을 넣는 방식이 참조 잠재와 다른 점을 쓰고, 그 방식의 고유한 편향도 적으세요.",
+        answerChecklist: ["참조 픽셀이 생성에 들어가지 않음", "빈 잠재에서 시작", "인구통계를 함께 끌고 오지 않음", "정면 얼굴로 학습된 편향", "세기를 높이면 얼굴이 정면으로 고정"],
+        requiredConcepts: ["attention-identity-injection", "impostor-threshold-derivation"],
+        sectionId: "attention-injection",
+      },
+      {
+        level: "basic",
+        question:
+          "정체성을 거는 구간을 늦췄을 때의 회전과 정체성 변화를 수치로 쓰세요.",
+        answerChecklist: ["전 구간 22.2도·0.399", "0.3 지점부터 62.7도·0.376", "0.5 지점부터 71.9도·0.100", "늦출수록 회전은 늘고 정체성은 떨어짐"],
+        requiredConcepts: ["conditioning-schedule-window", "denoise-window-by-model-class"],
+        sectionId: "schedule-start",
+      },
+      {
+        level: "basic",
+        question:
+          "관절 좌표가 후면 뷰를 만들지 못하는 이유를 설명하고, 그것을 어떻게 확인했는지 쓰세요.",
+        answerChecklist: ["정면과 후면의 관절 위치가 사실상 같음", "방향을 표현할 수 없음", "정체성 주입을 꺼도 같은 결과", "좌표에서 얼굴 지점을 지워도 같음", "의심한 신호가 원인이 아님이 확정"],
+        requiredConcepts: ["skeleton-front-back-ambiguity"],
+        sectionId: "skeleton-ambiguity",
+      },
+      {
+        level: "basic",
+        question:
+          "세 신호가 각각 무엇을 맡고 어느 층으로 들어가는지 쓰세요.",
+        answerChecklist: ["관절 좌표 · 사지 배치 · 공간 조건", "시점 문구 · 향하는 방향 · 텍스트 조건", "어텐션 주입 · 정체성 · 어텐션 경로", "층이 달라 서로를 덮어쓰지 않음"],
+        requiredConcepts: ["signal-role-separation"],
+        sectionId: "three-signals",
+      },
+      {
+        level: "advanced",
+        question:
+          "정체성을 초반에만 거는 설정으로 방향이 풀리지 않은 이유를 설명하고, 어느 손잡이가 답이었는지 쓰세요.",
+        answerChecklist: ["구조와 방향이 초반에 정해짐", "방향이 박히는 구간에만 켜 놓은 것", "질문이 거꾸로였음", "늦게 켜는 쪽이 방향을 풂", "다만 세기를 낮춘 전 구간이 두 지표 모두에서 더 좋음"],
+        requiredConcepts: ["conditioning-schedule-window", "attention-identity-injection"],
+        sectionId: "schedule-start",
+      },
+      {
+        level: "advanced",
+        question:
+          "후면 뷰 원인 진단에서 저지른 두 가지 실수를 쓰고, 격리 실험 자체는 왜 옳았는지 설명하세요.",
+        answerChecklist: ["정체성 주입의 편향으로 오인", "격리하려고 시점 문구를 빼 둔 것을 잊음", "방향을 말해 줄 통로가 없었음", "격리는 기여를 보려면 필요한 절차", "격리 조건의 결과를 실제 파이프라인 한계로 읽은 것이 문제"],
+        requiredConcepts: ["skeleton-front-back-ambiguity", "ablation-before-tuning"],
+        sectionId: "skeleton-ambiguity",
+      },
+      {
+        level: "advanced",
+        question:
+          "후면 뷰에서 얼굴이 검출되지 않은 것을 성공으로 읽는 근거를 설명하고, 이 판정에 필요한 사전 지식을 쓰세요.",
+        answerChecklist: ["뒤통수만 보이면 얼굴 탐지가 안 되는 것이 정상", "검출되면 오히려 이상", "탐지 실패와 낮은 유사도를 구분해야 함", "결과 표에서는 둘이 같아 보임", "이 회차에서 처음 나온 진짜 후면 뷰"],
+        requiredConcepts: ["signal-role-separation", "detection-recognition-separation"],
+        sectionId: "three-signals",
+      },
+      {
+        level: "advanced",
+        question:
+          "설정을 다듬기 전에 신호를 꺼 보는 절차의 이점과 한계를 쓰고, 이 회차의 적용 사례 두 가지를 드세요.",
+        answerChecklist: ["한 번의 실행으로 탐색 범위를 크게 줄임", "증상이 남으면 그 신호는 원인이 아님", "참조 조건을 빼자 몸이 돎", "정체성 주입을 끄자 후면 얼굴 그대로", "끌 수 없는 신호가 있음", "원인이 아니라는 것까지만 말하고 무해하다는 뜻은 아님"],
+        requiredConcepts: ["ablation-before-tuning", "known-answer-instrument-check"],
+        sectionId: "separation-gate",
+      },
+    ],
+  },
 };

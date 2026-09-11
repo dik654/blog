@@ -22537,6 +22537,69 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "품질이 하나의 축이 아닐 때 도구가 방법 이름이나 품질 등급 대신 목적을 받아 방법을 고르게 하는 설계입니다. 서로 다른 지표에서 1등이 갈리고 비용 차이가 클 때, 호출하는 쪽이 알아야 할 것은 방법이 아니라 지금 무엇을 원하는지입니다.",
     canonicalHref: "/ai/roi-resolution-identity-budget#upscale-known-answer",
   },
+  "reference-latent-pose-coupling": {
+    id: "reference-latent-pose-coupling",
+    kind: "concept",
+    domain: "computer-science",
+    label: "참조 잠재의 자세 결합",
+    definition:
+      "참조 이미지를 잠재 표현으로 인코딩해 조건에 붙이면 인물뿐 아니라 그 인물의 자세까지 함께 전달된다는 성질입니다. 인물 보존 효과는 크지만 회전을 요구해도 머리만 돌고 몸이 고정되며, 참조 조건을 제거하면 몸이 실제로 회전합니다.",
+    canonicalHref: "/ai/reference-identity-pose-separation#reference-coupling",
+  },
+  "prompt-cannot-override-conditioning": {
+    id: "prompt-cannot-override-conditioning",
+    kind: "concept",
+    domain: "computer-science",
+    label: "문구가 조건을 이기지 못함",
+    definition:
+      "텍스트로 아무리 다르게 표현해도 다른 층의 조건이 붙잡고 있는 속성은 바뀌지 않는다는 경계입니다. 같은 요구를 여러 문장으로 바꿔 측정했을 때 결과가 측정 오차 수준으로 같다면 문장의 문제가 아니라 조건의 문제입니다.",
+    canonicalHref: "/ai/reference-identity-pose-separation#reference-coupling",
+  },
+  "attention-identity-injection": {
+    id: "attention-identity-injection",
+    kind: "method",
+    domain: "computer-science",
+    label: "어텐션 경로 정체성 주입",
+    definition:
+      "참조 얼굴에서 정체성 벡터만 뽑아 어텐션 계산에 삽입하고 생성은 빈 잠재에서 시작하는 방식입니다. 참조 픽셀이 들어가지 않아 인구통계를 함께 끌고 오지 않지만, 정면 얼굴로 학습된 편향 때문에 세기를 높이면 얼굴이 정면으로 고정됩니다.",
+    canonicalHref: "/ai/reference-identity-pose-separation#attention-injection",
+  },
+  "conditioning-schedule-window": {
+    id: "conditioning-schedule-window",
+    kind: "concept",
+    domain: "computer-science",
+    label: "조건 적용 구간",
+    definition:
+      "조건을 샘플링의 어느 구간에 거는지가 결과의 어떤 성질에 영향을 주는지 갈리는 관계입니다. 구조와 방향은 초반에 정해지므로 초반에 건 조건이 방향을 지배하고, 늦게 걸면 방향이 풀리는 대신 그 조건의 효과 자체가 약해집니다.",
+    canonicalHref: "/ai/reference-identity-pose-separation#schedule-start",
+  },
+  "skeleton-front-back-ambiguity": {
+    id: "skeleton-front-back-ambiguity",
+    kind: "concept",
+    domain: "computer-science",
+    label: "관절 좌표의 앞뒤 모호성",
+    definition:
+      "관절 위치만으로 자세를 표현하면 정면과 후면의 좌표가 사실상 같아 향하는 방향을 담지 못한다는 한계입니다. 사지 배치는 강제되지만 앞뒤는 다른 신호가 정해야 하며, 이를 모르면 원인을 다른 구성 요소에서 찾게 됩니다.",
+    canonicalHref: "/ai/reference-identity-pose-separation#skeleton-ambiguity",
+  },
+  "signal-role-separation": {
+    id: "signal-role-separation",
+    kind: "concept",
+    domain: "computer-science",
+    label: "신호의 역할 분리",
+    definition:
+      "기하·방향·정체성처럼 서로 다른 속성을 각각 다른 조건 층으로 넣어 서로를 덮어쓰지 않게 하는 구성입니다. 한 신호가 두 역할을 겸하고 있으면 한쪽을 강하게 걸 때 다른 쪽이 밀리므로, 설정을 조정하기 전에 겸직 여부를 먼저 확인해야 합니다.",
+    canonicalHref: "/ai/reference-identity-pose-separation#three-signals",
+  },
+  "ablation-before-tuning": {
+    id: "ablation-before-tuning",
+    kind: "method",
+    domain: "computer-science",
+    label: "미세 조정 전 제거 실험",
+    definition:
+      "결과가 나오지 않을 때 설정값을 다듬기 전에 의심되는 신호를 완전히 꺼 보고 증상이 남는지 확인하는 절차입니다. 증상이 그대로면 그 신호는 원인이 아니므로, 한 번의 실행으로 탐색 범위를 크게 줄입니다.",
+    canonicalHref: "/ai/reference-identity-pose-separation#separation-gate",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -41189,6 +41252,78 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     to: "pixel-error-blur-preference",
     relation: "contrasts",
     reason: "재생성으로 확대하는 방식이 왜 복원이 아닌지를 두 관점이 각각 보여 줍니다.",
+  },
+  {
+    from: "reference-latent-pose-coupling",
+    to: "prompt-cannot-override-conditioning",
+    relation: "produces",
+    reason: "조건이 자세를 붙잡고 있으므로 문구를 바꿔도 각도가 변하지 않습니다.",
+  },
+  {
+    from: "reference-latent-pose-coupling",
+    to: "attention-identity-injection",
+    relation: "produces",
+    reason: "자세까지 끌고 오는 경로를 버려야 한다는 결론이 다른 주입 경로를 부릅니다.",
+  },
+  {
+    from: "attention-identity-injection",
+    to: "conditioning-schedule-window",
+    relation: "constrains",
+    reason: "정면 편향을 다루려면 이 조건을 언제 거는지가 손잡이가 됩니다.",
+  },
+  {
+    from: "skeleton-front-back-ambiguity",
+    to: "signal-role-separation",
+    relation: "produces",
+    reason: "자세 신호가 방향을 담지 못한다는 사실이 방향 전용 신호를 따로 두게 만듭니다.",
+  },
+  {
+    from: "signal-role-separation",
+    to: "conditioning-schedule-window",
+    relation: "constrains",
+    reason: "역할을 나눈 뒤에도 각 신호의 세기와 구간은 따로 맞춰야 합니다.",
+  },
+  {
+    from: "ablation-before-tuning",
+    to: "reference-latent-pose-coupling",
+    relation: "produces",
+    reason: "참조 조건을 빼 보는 실험이 자세 결합을 확정했습니다.",
+  },
+  {
+    from: "ablation-before-tuning",
+    to: "skeleton-front-back-ambiguity",
+    relation: "produces",
+    reason: "정체성 주입을 꺼 봐도 증상이 남아 원인이 다른 곳임이 드러났습니다.",
+  },
+  {
+    from: "detection-recognition-separation",
+    to: "signal-role-separation",
+    relation: "prerequisite",
+    reason: "후면 뷰의 탐지 실패를 성공 신호로 읽으려면 두 실패를 구분할 수 있어야 합니다.",
+  },
+  {
+    from: "impostor-threshold-derivation",
+    to: "attention-identity-injection",
+    relation: "prerequisite",
+    reason: "주입 세기를 판정하려면 정체성 임계값이 먼저 서 있어야 합니다.",
+  },
+  {
+    from: "latent-diffusion-component-contract",
+    to: "reference-latent-pose-coupling",
+    relation: "prerequisite",
+    reason: "조건이 어느 구성 요소로 들어가는지 알아야 무엇이 함께 전달되는지 읽힙니다.",
+  },
+  {
+    from: "known-answer-instrument-check",
+    to: "ablation-before-tuning",
+    relation: "prerequisite",
+    reason: "결과를 미리 아는 실행을 만들어 두는 발상이 제거 실험과 같은 계열입니다.",
+  },
+  {
+    from: "prompt-cannot-override-conditioning",
+    to: "ablation-before-tuning",
+    relation: "contrasts",
+    reason: "문구를 다듬는 시간과 신호를 꺼 보는 한 번의 실행이 같은 질문에 다른 비용으로 답합니다.",
   },
 ];
 

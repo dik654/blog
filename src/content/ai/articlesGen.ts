@@ -326,6 +326,24 @@ export const genArticles: Article[] = [
     component: () => import("@/pages/articles/ai/roi-resolution-identity-budget"),
   },
   {
+    slug: "reference-identity-pose-separation",
+    title: "정체성과 포즈를 한 장치에 맡기면 둘 다 반만 됩니다",
+    subcategory: "ai-generative",
+    sections: [
+      { id: "overview", title: "두 신호를 갈라 놓아야 합니다" },
+      { id: "reference-coupling", title: "참조 조건에는 인물과 자세가 같이 들어 있습니다" },
+      {
+        id: "attention-injection",
+        title: "정체성을 잠재가 아니라 어텐션으로 넣습니다",
+        subsections: [{ id: "schedule-start", title: "여기서 한 번 잘못 접을 뻔했습니다" }],
+      },
+      { id: "skeleton-ambiguity", title: "후면 뷰가 안 나온 진짜 원인은 정체성 쪽이 아니었습니다" },
+      { id: "three-signals", title: "세 신호가 각각 다른 것을 맡아야 네 각도가 나옵니다" },
+      { id: "separation-gate", title: "한 신호가 두 역할을 겸하고 있는지 먼저 확인합니다" },
+    ],
+    component: () => import("@/pages/articles/ai/reference-identity-pose-separation"),
+  },
+  {
     slug: "in-context-lora",
     title: "In-Context LoRA: reference·target을 한 context로 이어붙이기",
     subcategory: "ai-generative",

@@ -319,6 +319,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "수치는 한 장비·한 소스의 실측이며 토큰 계산은 관계만 보이고 확대 순위는 소스 의존임을 밝힌다.",
   },
+  "ai/reference-identity-pose-separation": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-09-11",
+    rationale:
+      "본문은 6 section·concept 7개로 keep 범위다. 결합 발견·대체 경로·자세 신호 한계·역할 분리가 하나의 구성을 함께 만들므로 나누면 각 글이 같은 제거 실험을 다시 세워야 한다.",
+    sharedGate:
+      "세기·구간의 구체 값은 이 모델 조합의 실측이며 한 인물·한 의상에서의 결과임을 밝힌다.",
+  },
 };
 
 /**
@@ -326,6 +335,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "ai/reference-identity-pose-separation": "a753dfc2bdc4f420",
   "ai/roi-resolution-identity-budget": "adf0f60c3e64205e",
   "ai/removal-is-not-inpainting": "eb81c2f2f9a411bc",
   "ai/masked-edit-verb-routing": "8a4d2f13be391d98",
