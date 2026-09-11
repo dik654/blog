@@ -21325,6 +21325,139 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "Systolic array의 PE 격자에서 한 번 읽은 weight 또는 partial sum이 레지스터에 머무르며 여러 사이클 동안 재사용돼, 메모리에서 다시 읽지 않고도 arithmetic intensity(FLOP/byte)를 높이는 원리입니다. WS는 weight를, OS는 partial sum을 고정해 이 재사용을 만듭니다.",
     canonicalHref: "/gpu/gemmini-pe-mac-dataflow#dataflow",
   },
+  "qwen4exp-linear-sparse-layer-schedule": {
+    id: "qwen4exp-linear-sparse-layer-schedule",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Qwen4-Exp 선형 36 · 희소 12 layer schedule",
+    aliases: ["full_attention_interval", "Qwen3.8-Flash-Next layer_types"],
+    definition:
+      "Qwen3.8-Flash-Next의 48개 decoder layer를 세 개의 Gated DeltaNet과 한 개의 Qwen Sparse Attention으로 묶어 12번 반복하는 공개 configuration입니다. 문맥 전체를 보는 층이 하나도 없고, KV cache 계산에 들어가는 층 수는 48이 아니라 12입니다.",
+    canonicalHref: "/ai/qwen38-flash-next-architecture#overview",
+  },
+  "qsa-compressed-block-index": {
+    id: "qsa-compressed-block-index",
+    kind: "method",
+    domain: "machine-learning",
+    label: "QSA 압축 블록 색인",
+    aliases: ["QSA indexer", "Qwen Sparse Attention indexer"],
+    definition:
+      "연속한 네 토큰의 index key를 평균내 만든 블록 키로 점수를 매기고 읽을 블록을 고르는 경량 모듈입니다. 점수는 질의 head별 내적에 ReLU를 걸어 더한 값이며, 선택 결과는 causal mask에 덧씌워질 뿐 값 집계는 원본 K/V가 담당합니다.",
+    canonicalHref: "/ai/qwen38-flash-next-architecture#qsa-index",
+  },
+  "qsa-token-budget-expansion": {
+    id: "qsa-token-budget-expansion",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "QSA 토큰 예산과 블록 되펼침",
+    aliases: ["indexer_budget", "indexer_compress_ratio"],
+    definition:
+      "토큰 단위 예산을 압축비로 나눠 블록 수로 쓰고, 고른 블록을 다시 토큰으로 펼친 뒤 미완성 꼬리를 덧붙이는 규칙입니다. 예산 2048과 압축비 4이면 블록 512개를 골라 2048자리를 만들고 꼬리 최대 3개가 더해져 한 질의가 보는 위치는 최대 2051개가 됩니다.",
+    canonicalHref: "/ai/qwen38-flash-next-architecture#qsa-budget",
+  },
+  "gated-residual-stream-mixing": {
+    id: "gated-residual-stream-mixing",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Gated residual 다중 stream 혼합",
+    aliases: ["hc_count", "hc_lowrank", "GatedResidual"],
+    definition:
+      "층 사이를 흐르는 residual stream을 여러 갈래로 늘리고, 블록 입력은 저랭크 게이트로 섞은 가중 평균으로 만들며 블록 출력은 갈래별 계수를 곱해 되돌리는 배선입니다. Qwen3.8-Flash-Next는 갈래 4개와 랭크 320을 쓰고 층마다 이 배선을 두 벌 둡니다.",
+    canonicalHref: "/ai/qwen38-flash-next-architecture#gated-residual",
+  },
+  "per-layer-ngram-embedding": {
+    id: "per-layer-ngram-embedding",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Per-Layer n-gram embedding",
+    aliases: ["PLE", "Per-Layer Embedding", "해시 n-gram 임베딩"],
+    definition:
+      "직전 토큰들을 해시해 전용 임베딩 표에서 head마다 한 행씩 조회하고, 그 값을 현재 상태로 게이팅해 특정 층에만 더하는 어휘 보강 방식입니다. 표 전체는 크지만 토큰 하나가 읽는 행 수는 head 수로 고정돼 계산량과 저장량이 분리됩니다.",
+    canonicalHref: "/ai/qwen38-flash-next-architecture#ple-ngram",
+  },
+  "auxiliary-parameter-class-accounting": {
+    id: "auxiliary-parameter-class-accounting",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "보조 파라미터 클래스 회계",
+    aliases: ["조회 전용 파라미터", "draft 모듈 파라미터"],
+    definition:
+      "한 체크포인트의 파라미터를 계산 경로에 들어가는 backbone, 조회에만 쓰이는 표, 별도 경로에서만 도는 draft 모듈처럼 역할이 다른 묶음으로 나눠 세는 방식입니다. 총합 하나로 합치면 배치할 장치와 필요한 메모리를 잘못 잡습니다.",
+    canonicalHref: "/ai/qwen38-flash-next-architecture#param-classes",
+  },
+  "qwen4exp-request-state-triplet": {
+    id: "qwen4exp-request-state-triplet",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Qwen4-Exp 요청 상태 세 종류",
+    definition:
+      "Qwen3.8-Flash-Next의 요청 하나가 남기는 상태를 토큰에 비례하는 희소 attention K/V, 같은 비례로 자라는 indexer key, 요청마다 크기가 고정된 선형 층 상태와 짧은 convolution 상태로 구분하는 회계입니다. 세 가지는 증가 규칙이 달라 같은 공식으로 합산할 수 없습니다.",
+    canonicalHref: "/ai/qwen38-flash-next-architecture#request-state",
+  },
+  "clamshell-memory-topology": {
+    id: "clamshell-memory-topology",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Clamshell 메모리 배치",
+    aliases: ["clamshell 구성", "양면 메모리 배치"],
+    definition:
+      "메모리 채널 하나를 PCB 앞면과 뒷면의 칩 두 개가 나눠 쓰도록 배치하는 방식입니다. 채널 수와 버스 폭을 늘리지 않고 보드에 실리는 칩 수만 두 배로 늘려 용량을 확보합니다.",
+    canonicalHref: "/gpu/modded-rtx4090-moe-serving#stock-clamshell",
+  },
+  "gddr-density-capacity-bandwidth-split": {
+    id: "gddr-density-capacity-bandwidth-split",
+    kind: "concept",
+    domain: "computer-science",
+    label: "메모리 밀도와 대역폭의 분리",
+    definition:
+      "GDDR 메모리에서 칩 밀도는 용량만 정하고 대역폭은 핀 speed와 버스 폭이 정한다는 구분입니다. 대역폭 공식에 밀도 항이 없으므로 칩을 더 큰 밀도로 교체해도 초당 읽을 수 있는 바이트는 그대로입니다.",
+    canonicalHref: "/gpu/modded-rtx4090-moe-serving#bandwidth-unchanged",
+  },
+  "consumer-gpu-interconnect-regression": {
+    id: "consumer-gpu-interconnect-regression",
+    kind: "concept",
+    domain: "computer-science",
+    label: "소비자 GPU의 인터커넥트 후퇴",
+    definition:
+      "세대가 올라가면서 연산 성능은 높아졌지만 GPU 사이를 직결하는 전용 링크가 제품 라인에서 제거돼 카드 간 통신 상한이 오히려 낮아진 상황입니다. 커넥터가 물리적으로 없으므로 드라이버나 개조로 되돌릴 수 없습니다.",
+    canonicalHref: "/gpu/modded-rtx4090-moe-serving#4090-has-no-pins",
+  },
+  "moe-vs-dense-interconnect-sensitivity": {
+    id: "moe-vs-dense-interconnect-sensitivity",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "MoE와 dense의 인터커넥트 민감도 차이",
+    definition:
+      "Dense 모델의 tensor parallel 통신은 layer마다 고정된 all-reduce인 반면 MoE의 expert parallel 통신은 라우팅 결과에 따라 양이 달라지는 비대칭 all-to-all이라는 구조 차이입니다. 대역폭이 좁은 구성에서는 이 비대칭이 특정 링크의 쏠림으로 먼저 드러납니다.",
+    canonicalHref: "/gpu/modded-rtx4090-moe-serving#why-interconnect-matters-more",
+  },
+  "unofficial-gpu-mod-support-boundary": {
+    id: "unofficial-gpu-mod-support-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "비공식 하드웨어 개조의 지원 경계",
+    definition:
+      "벤더가 검증하지 않은 개조 제품에서 메모리 타이밍·용량 인식·드라이버 호환이 커스텀 펌웨어에 의존하게 되는 범위입니다. 성능 수치가 같더라도 워런티와 지원 채널, 장기 호환성이 공식 제품과 다른 조건에 놓입니다.",
+    canonicalHref: "/gpu/modded-rtx4090-moe-serving#mod-risk",
+  },
+  "interconnect-bound-parallelism-switch": {
+    id: "interconnect-bound-parallelism-switch",
+    kind: "method",
+    domain: "machine-learning",
+    label: "통신 병목에서의 병렬화 전략 전환",
+    definition:
+      "GPU 간 대역폭이 병목일 때 layer마다 all-reduce를 부르는 tensor parallel 대신 stage 경계에서만 activation을 넘기는 pipeline parallel을 택하는 판단입니다. 통신 횟수를 줄이는 대신 pipeline bubble이라는 다른 비용을 받아들입니다.",
+    canonicalHref: "/gpu/modded-rtx4090-moe-serving#tp-vs-ep-choice",
+  },
+  "capacity-versus-communication-gate": {
+    id: "capacity-versus-communication-gate",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "용량 병목과 통신 병목의 구분 순서",
+    definition:
+      "하드웨어 선택을 정하기 전에 지금 겪는 문제가 모델이 올라가지 않는 용량 문제인지 처리량이 나오지 않는 통신 문제인지 먼저 가르는 판단 순서입니다. 두 병목은 해법이 서로 겹치지 않아 순서를 바꾸면 잘못된 장비를 삽니다.",
+    canonicalHref: "/gpu/modded-rtx4090-moe-serving#release-gate",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -38618,6 +38751,167 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   { from: "weight-stationary-dataflow", to: "systolic-dataflow-arithmetic-reuse", relation: "produces", reason: "Weight를 고정해 두면 같은 weight가 여러 activation과 곱해지며 다시 읽지 않고도 재사용됩니다." },
   { from: "output-stationary-dataflow", to: "pe-double-buffered-pipelining", relation: "prerequisite", reason: "출력을 고정해 누적하는 동안 다음 값을 흘려보내려면 레지스터가 최소 두 벌 있어야 충돌이 없습니다." },
   { from: "pe-double-buffered-pipelining", to: "systolic-dataflow-arithmetic-reuse", relation: "extends", reason: "이중 버퍼링이 있어야 재사용이 파이프라인 정지 없이 매 사이클 이어집니다." },
+  {
+    from: "qwen36-hybrid-layer-schedule",
+    to: "qwen4exp-linear-sparse-layer-schedule",
+    relation: "prerequisite",
+    reason:
+      "세 선형 mixer 뒤에 하나의 attention을 두는 3:1 리듬을 먼저 이해해야 네 번째 자리가 full에서 희소로 바뀐 변화를 읽을 수 있습니다.",
+  },
+  {
+    from: "qwen4exp-linear-sparse-layer-schedule",
+    to: "qsa-compressed-block-index",
+    relation: "produces",
+    reason:
+      "층 배치가 12개 희소 attention 자리를 만들고, 그 자리마다 블록 색인 모듈이 하나씩 붙어 읽을 위치를 정합니다.",
+  },
+  {
+    from: "qsa-compressed-block-index",
+    to: "qsa-token-budget-expansion",
+    relation: "produces",
+    reason:
+      "블록 점수가 나온 뒤에야 예산을 블록 수로 환산해 상위 몇 개를 남기고 꼬리를 덧붙일지 정할 수 있습니다.",
+  },
+  {
+    from: "sparse-attention-pattern-family",
+    to: "qsa-compressed-block-index",
+    relation: "prerequisite",
+    reason:
+      "고정 패턴과 학습된 선택을 구분하는 희소 attention의 분류를 알아야 이 색인이 어느 갈래에 속하는지 판단할 수 있습니다.",
+  },
+  {
+    from: "kv-cache-decode-state",
+    to: "qwen4exp-request-state-triplet",
+    relation: "prerequisite",
+    reason:
+      "토큰마다 커지는 K/V 기록의 정의가 있어야 희소 attention 층에서도 저장량은 줄지 않는다는 결론을 계산으로 확인할 수 있습니다.",
+  },
+  {
+    from: "recurrent-fixed-size-state",
+    to: "qwen4exp-request-state-triplet",
+    relation: "prerequisite",
+    reason:
+      "고정 크기 상태라는 개념이 있어야 문맥 길이와 무관한 108 MiB 항목을 토큰 비례 항목과 분리해 셀 수 있습니다.",
+  },
+  {
+    from: "qwen4exp-linear-sparse-layer-schedule",
+    to: "gated-residual-stream-mixing",
+    relation: "constrains",
+    reason:
+      "층마다 attention 앞과 MoE 앞에서 각각 한 번씩 배선이 필요하므로 층 수가 그대로 gated residual 파라미터 수를 결정합니다.",
+  },
+  {
+    from: "per-layer-ngram-embedding",
+    to: "gated-residual-stream-mixing",
+    relation: "extends",
+    reason:
+      "n-gram 조회 결과는 하나의 벡터가 아니라 갈래마다 다른 게이트를 통과해 들어가므로 여러 stream 배선 위에서만 정의됩니다.",
+  },
+  {
+    from: "per-layer-ngram-embedding",
+    to: "auxiliary-parameter-class-accounting",
+    relation: "produces",
+    reason:
+      "조회 전용 표가 backbone과 맞먹는 크기로 등장하면서 계산 경로 파라미터와 조회 파라미터를 나눠 세야 할 이유가 생깁니다.",
+  },
+  {
+    from: "moe-total-active-parameter-ledger",
+    to: "auxiliary-parameter-class-accounting",
+    relation: "prerequisite",
+    reason:
+      "총 파라미터와 토큰당 활성 파라미터를 구분하는 회계를 먼저 알아야 그 위에 조회 전용 묶음이라는 세 번째 축을 더할 수 있습니다.",
+  },
+  {
+    from: "conditional-expert-ffn",
+    to: "auxiliary-parameter-class-accounting",
+    relation: "prerequisite",
+    reason:
+      "토큰마다 일부 expert만 계산한다는 구조가 있어야 backbone 125B와 활성 6B가 같은 대상의 다른 셈이라는 점을 설명할 수 있습니다.",
+  },
+  {
+    from: "qsa-token-budget-expansion",
+    to: "qwen4exp-request-state-triplet",
+    relation: "constrains",
+    reason:
+      "어떤 블록이 뒤에 선택될지 예산만으로는 알 수 없으므로 K/V를 전부 남겨야 한다는 저장 요구가 여기서 나옵니다.",
+  },
+  {
+    from: "qwen4exp-request-state-triplet",
+    to: "hybrid-kv-cache-allocation",
+    relation: "extends",
+    reason:
+      "크기 규칙이 다른 cache group을 한 장치에 배치하는 일반 원리에 indexer key라는 세 번째 group을 더한 사례입니다.",
+  },
+  {
+    from: "clamshell-memory-topology",
+    to: "gddr-density-capacity-bandwidth-split",
+    relation: "prerequisite",
+    reason:
+      "채널 하나를 두 칩이 나눠 쓰는 배치를 알아야 칩을 교체해도 채널 수와 버스 폭이 그대로라는 점을 이해할 수 있습니다.",
+  },
+  {
+    from: "gddr-density-capacity-bandwidth-split",
+    to: "capacity-versus-communication-gate",
+    relation: "constrains",
+    reason:
+      "용량만 늘고 대역폭은 그대로라는 사실이 개조가 어떤 병목에만 답이 되는지를 판단 순서의 첫 갈래로 만듭니다.",
+  },
+  {
+    from: "nvlink-device-fabric-boundary",
+    to: "consumer-gpu-interconnect-regression",
+    relation: "prerequisite",
+    reason:
+      "전용 링크와 fabric의 경계를 알아야 소비자 카드에서 그 경로가 사라졌을 때 무엇이 남는지 계산할 수 있습니다.",
+  },
+  {
+    from: "pcie-transaction-bandwidth-latency",
+    to: "consumer-gpu-interconnect-regression",
+    relation: "constrains",
+    reason:
+      "전용 링크가 없으면 카드 간 상한이 PCIe raw bandwidth 공식으로 그대로 결정됩니다.",
+  },
+  {
+    from: "expert-parallel-dispatch-cost",
+    to: "moe-vs-dense-interconnect-sensitivity",
+    relation: "prerequisite",
+    reason:
+      "dispatch와 combine의 payload 하한을 알아야 라우팅 쏠림이 어떤 링크에서 먼저 드러나는지 비교할 수 있습니다.",
+  },
+  {
+    from: "tp-allreduce-per-layer",
+    to: "moe-vs-dense-interconnect-sensitivity",
+    relation: "contrasts",
+    reason:
+      "layer마다 고정된 대칭 all-reduce와 라우팅에 따라 달라지는 비대칭 all-to-all을 같은 축에서 대비합니다.",
+  },
+  {
+    from: "moe-vs-dense-interconnect-sensitivity",
+    to: "interconnect-bound-parallelism-switch",
+    relation: "produces",
+    reason:
+      "통신량이 구조적으로 늘어날 여지가 크다는 진단이 병렬화 축을 바꾸는 선택지를 만듭니다.",
+  },
+  {
+    from: "pipeline-parallel-bubble",
+    to: "interconnect-bound-parallelism-switch",
+    relation: "constrains",
+    reason:
+      "all-reduce를 피한 대가로 stage 사이 유휴 구간이 생기므로 전환의 이득이 무조건 크지는 않습니다.",
+  },
+  {
+    from: "unofficial-gpu-mod-support-boundary",
+    to: "capacity-versus-communication-gate",
+    relation: "constrains",
+    reason:
+      "성능 수치가 맞아도 지원과 워런티 조건이 다르므로 판단 순서의 마지막에서 운영 조건을 함께 봐야 합니다.",
+  },
+  {
+    from: "moe-residency-active-path-boundary",
+    to: "capacity-versus-communication-gate",
+    relation: "prerequisite",
+    reason:
+      "전체 expert가 상주해야 한다는 제약이 있어야 용량 병목과 통신 병목 중 무엇이 먼저인지 가릅니다.",
+  },
 ];
 
 export function getKnowledgeConcept(id: string): KnowledgeConcept {

@@ -148,6 +148,24 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "같은 model config·hardware profile에서 quantization level·GPU 구성별 VRAM 소요와 device capacity 대비 여유를 한 receipt로 비교합니다.",
   },
+  "ai/qwen38-flash-next-architecture": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-09-11",
+    rationale:
+      "closure 1,716줄 중 808줄이 6개 Viz이고 본문은 6 section·concept 7개로 keep 범위다. 선택·배선·조회·회계·요청 상태는 같은 공개 config 하나를 읽는 연속된 질문이라 나누면 각 글이 config 설명을 중복하게 된다.",
+    sharedGate:
+      "Qwen3.8-Flash-Next 공개 config revision과 transformers qwen4_exp f62dc9bf2c90 스냅샷 하나만 근거로 삼는다. 서빙 런타임 구현과 실측이 필요한 주제는 이 글에 넣지 않고 별도 글로 분리한다.",
+  },
+  "gpu/modded-rtx4090-moe-serving": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-09-11",
+    rationale:
+      "closure 4,727줄의 대부분이 6개 section에 딸린 Viz step 파일이고 본문은 concept 7개·section 6개로 keep 범위다. 개조·인터커넥트·MoE 통신·완화 기법은 '48GB 4090으로 MoE를 서빙한다면'이라는 질문 하나의 연속 단계라 나누면 각 글이 같은 전제를 다시 세워야 한다.",
+    sharedGate:
+      "카드 스펙과 링크 대역폭은 벤더 공식 스펙과 PCIe 규격 공식으로만 계산하고, 개조 카드의 안정성·수율·실측 처리량은 이 글에서 주장하지 않는다.",
+  },
 };
 
 /**
@@ -167,6 +185,8 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/open-r1": "e635761fc3c1d371",
   "ai/openclaw-assistant": "2ac6c31bce49af09",
   "ai/qwen-korean-consistency": "28703cf32620721b",
+  "ai/qwen38-flash-next-architecture": "fe506f8b67ff5ddf",
+  "gpu/modded-rtx4090-moe-serving": "73c84dae6a67f21c",
   "ai/rag-pipeline": "ea1e5a0cf9b8d13d",
   "ai/sequence-modeling-tabular": "c3bd6f97f16088ca",
   "ai/sionic-eureka": "5c06113df7dc929f",

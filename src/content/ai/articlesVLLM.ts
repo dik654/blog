@@ -635,6 +635,31 @@ export const vllmServingArticles: Article[] = [
       import("@/pages/articles/ai/qwen36-long-context-deployment"),
   },
   {
+    slug: "qwen38-flash-next-architecture",
+    title: "Qwen3.8-Flash-Next는 선형과 희소 attention을 층마다 나눠 씁니다",
+    subcategory: "ai-llm-serving",
+    sections: [
+      { id: "overview", title: "48층을 선형 36개와 희소 12개로 나눕니다" },
+      {
+        id: "qsa-index",
+        title: "희소 attention은 블록을 먼저 고르고 원본을 읽습니다",
+        subsections: [
+          { id: "qsa-budget", title: "2048 토큰 예산이 자리 2051개를 잡는 이유" },
+          { id: "paper-native-sparse-attention", title: "선행 논문이 물려준 아이디어" },
+        ],
+      },
+      {
+        id: "gated-residual",
+        title: "층 사이를 잇는 통로가 네 갈래로 늘어납니다",
+        subsections: [{ id: "paper-hyper-connections", title: "Hyper-Connections가 보인 것" }],
+      },
+      { id: "ple-ngram", title: "n-gram 임베딩은 한 층에만 붙고 표는 51B입니다" },
+      { id: "param-classes", title: "125B와 51B와 6B는 서로 다른 회계입니다" },
+      { id: "request-state", title: "요청 하나가 남기는 상태는 세 종류입니다" },
+    ],
+    component: () => import("@/pages/articles/ai/qwen38-flash-next-architecture"),
+  },
+  {
     slug: "model-vram-budgeting",
     title: "모델 VRAM 계산: 가중치 · KV Cache · Runtime Headroom",
     subcategory: "ai-llm-serving",

@@ -69436,4 +69436,453 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "ai/qwen38-flash-next-architecture": {
+    coreIdea:
+      "Qwen3.8-Flash-Next는 48개 층을 선형 mixer 36개와 희소 attention 12개로 나누고, 층 사이를 네 갈래 residual로 잇고 2번 층에만 n-gram 조회를 붙였으므로, 공개 config와 reference 구현에서 선택 규칙·배선 비용·파라미터 클래스·요청 상태를 각각 따로 계산해야 합니다.",
+    assumedKnowledge: [
+      { id: "qwen36-hybrid-layer-schedule", role: "세 선형 mixer와 한 attention을 반복하는 3:1 배치의 원형입니다." },
+      { id: "kv-cache-decode-state", role: "토큰마다 커지는 K/V 기록의 정의이며 이 글은 층 수만 12로 바꿔 계산합니다." },
+      { id: "grouped-query-kv-sharing", role: "저장 폭을 질의 head가 아니라 KV head로 세는 이유입니다." },
+      { id: "recurrent-fixed-size-state", role: "문맥 길이와 무관하게 고정되는 상태의 정의입니다." },
+      { id: "conditional-expert-ffn", role: "토큰마다 일부 expert만 계산한다는 MoE의 기본 구조입니다." },
+      { id: "token-router-topk", role: "층당 몇 개의 expert가 켜지는지 정하는 top-k 선택의 출처입니다." },
+    ],
+    introducedHere: [
+      { id: "qwen4exp-linear-sparse-layer-schedule", role: "공개 layer_types에서 선형 36·희소 12를 세고 KV 계산에 쓸 층 수를 고릅니다." },
+      { id: "qsa-compressed-block-index", role: "블록 키 점수로 읽을 위치를 고르는 두 단계 구조를 정의합니다." },
+      { id: "qsa-token-budget-expansion", role: "예산 2048이 블록 512개와 자리 2051개로 환산되는 규칙을 계산합니다." },
+      { id: "gated-residual-stream-mixing", role: "네 갈래 통로의 mix와 주입을 정의하고 층당 파라미터 비용을 셉니다." },
+      { id: "per-layer-ngram-embedding", role: "해시 조회와 게이팅으로 어휘 신호를 한 층에 주입하는 방식을 설명합니다." },
+      { id: "auxiliary-parameter-class-accounting", role: "backbone·조회 표·draft 모듈을 서로 다른 묶음으로 세는 회계를 세웁니다." },
+      { id: "qwen4exp-request-state-triplet", role: "요청 하나가 남기는 세 상태를 증가 규칙별로 분리해 계산합니다." },
+    ],
+    conceptExplanations: [
+      {
+        id: "qwen4exp-linear-sparse-layer-schedule",
+        sectionId: "overview",
+        intuition:
+          "과거를 압축해 들고 다니는 mixer 세 개마다 과거 위치를 골라 다시 읽는 mixer 하나를 끼워 넣고, 이 네 칸을 열두 번 반복합니다.",
+        workedExample:
+          "12×3=36 선형, 12×1=12 희소로 합계 48층입니다. 토큰당 KV byte를 구할 때 층 수에는 48이 아니라 12를 넣습니다.",
+        boundary:
+          "이 배치는 공개 config의 값이지 모든 규모에서 3:1이 최적이라는 실험 결론이 아닙니다. 같은 리듬을 쓰는 Qwen3.6은 네 번째 자리에 희소가 아니라 전체를 보는 attention을 둡니다.",
+      },
+      {
+        id: "qsa-compressed-block-index",
+        sectionId: "qsa-index",
+        intuition:
+          "책 전체를 다시 읽는 대신 네 쪽씩 묶은 요약 색인을 먼저 훑어 읽을 묶음을 정하고, 정한 묶음만 원문으로 읽습니다.",
+        workedExample:
+          "질의 head 4개가 블록 키와 내적을 구하고 음수를 0으로 누른 뒤 더한 값을 128의 제곱근으로 나눠 블록 점수 하나를 만듭니다.",
+        boundary:
+          "압축 키는 색인이지 값이 아닙니다. softmax와 value 집계는 원본 K/V로 수행되며, 선택되지 않은 위치는 낮은 확률이 아니라 계산에서 완전히 빠집니다.",
+      },
+      {
+        id: "qsa-token-budget-expansion",
+        sectionId: "qsa-budget",
+        intuition:
+          "예산은 토큰 수로 적혀 있지만 실제로는 묶음 단위로 씁니다. 묶음을 고른 뒤 다시 토큰으로 펼치고 아직 묶이지 못한 최신 토큰을 덧붙입니다.",
+        workedExample:
+          "2048 ÷ 4 = 512개 블록을 고르면 2048자리가 되고, 꼬리가 최대 3개 붙어 한 질의가 보는 위치는 최대 2051개입니다.",
+        boundary:
+          "문맥이 약 8K보다 짧으면 완전한 블록이 512개에 못 미쳐 아무것도 버려지지 않습니다. 희소해지는 시점 자체가 예산과 압축비에 따라 정해집니다.",
+      },
+      {
+        id: "gated-residual-stream-mixing",
+        sectionId: "gated-residual",
+        intuition:
+          "층 사이를 잇는 통로를 하나가 아니라 네 개 두고, 블록에 들어갈 때는 네 통로를 섞어 하나로 만들고 나올 때는 통로마다 다른 세기로 되돌립니다.",
+        workedExample:
+          "10,240차원을 320으로 줄였다가 펼쳐 게이트를 만들면 배선 하나가 659만 개, 층당 두 벌이면 1,319만 개, 48층이면 6.3억 개입니다.",
+        boundary:
+          "갈래 수 4와 랭크 320은 이 체크포인트의 선택이며 최적값이라는 근거는 공개돼 있지 않습니다. 비용도 파라미터만이 아니라 층 사이 텐서가 네 배로 커지는 대역폭을 포함합니다.",
+      },
+      {
+        id: "per-layer-ngram-embedding",
+        sectionId: "ple-ngram",
+        intuition:
+          "단어 하나의 뜻이 앞 단어에 따라 달라지는 부분을 attention이 배우게 두지 않고, 조합 자체에 전용 벡터를 주어 한 층에서 더합니다.",
+        workedExample:
+          "head 16개가 각각 약 2천만 행을 가져 표는 3.2억 행이고 행 폭이 160이라 512억 개, BF16으로 95.4 GiB입니다. 토큰 하나가 읽는 것은 16행뿐입니다.",
+        boundary:
+          "해시 충돌은 설계상 일어나며 head를 여러 개 두어 완화할 뿐 없애지 못합니다. config는 이 층을 선형 attention 층에만 허용하고 공개 체크포인트는 2번 한 곳만 지정했습니다.",
+      },
+      {
+        id: "auxiliary-parameter-class-accounting",
+        sectionId: "param-classes",
+        intuition:
+          "같은 체크포인트 안이라도 매 토큰 계산에 참여하는 파라미터와 표에서 몇 줄만 꺼내 쓰는 파라미터는 배치할 자리가 다릅니다.",
+        workedExample:
+          "backbone 125.5B와 조회 표 51.2B, 예측 모듈을 더하면 가중치 색인의 1,800억 개가 되고, 그중 토큰 하나가 지나는 것은 약 58억 개입니다.",
+        boundary:
+          "활성 58억은 계산량의 지표이지 필요한 VRAM이 아닙니다. 라우터가 고를 expert를 미리 알 수 없으므로 512개는 모두 적재돼 있어야 합니다.",
+      },
+      {
+        id: "qwen4exp-request-state-triplet",
+        sectionId: "request-state",
+        intuition:
+          "요청 하나가 남기는 것을 한 덩어리로 보지 않고 토큰을 따라 자라는 것과 처음부터 크기가 정해진 것으로 나눠 셉니다.",
+        workedExample:
+          "토큰당 K/V 24 KiB와 indexer key 3 KiB가 자라고 선형 상태 108 MiB는 고정이라, 262,144 토큰이면 약 6.9 GiB입니다.",
+        boundary:
+          "텐서 모양과 dtype만 곱한 논리적 크기이며 블록 할당·병렬 배치·실행 버퍼는 빠져 있습니다. indexer key 보관 범위는 서빙 구현에 따라 달라집니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 배치",
+        relation: "공개 layer_types에서 선형과 희소의 개수를 먼저 고정",
+        concepts: ["qwen4exp-linear-sparse-layer-schedule"],
+      },
+      {
+        label: "01 선택",
+        relation: "희소 층이 무엇을 읽을지 정하는 두 단계 색인을 따라감",
+        concepts: ["qsa-compressed-block-index", "qsa-token-budget-expansion"],
+      },
+      {
+        label: "02 배선",
+        relation: "층과 층을 잇는 통로가 넷으로 늘어난 이유와 비용을 계산",
+        concepts: ["gated-residual-stream-mixing"],
+      },
+      {
+        label: "03 어휘 보강",
+        relation: "한 층에만 붙은 조회 경로를 배선 위에 얹음",
+        concepts: ["per-layer-ngram-embedding"],
+      },
+      {
+        label: "04 회계",
+        relation: "역할이 다른 파라미터 묶음을 나눠 세고 활성량을 계산",
+        concepts: ["auxiliary-parameter-class-accounting"],
+      },
+      {
+        label: "05 요청 상태",
+        relation: "앞의 구조가 요청 하나에 남기는 세 상태로 수렴",
+        concepts: ["qwen4exp-request-state-triplet"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "공개 config의 full_attention_interval이 4이고 층이 48개일 때 선형 층과 희소 층의 수를 구하고, 토큰당 KV byte 공식에 넣을 층 수를 고르세요.",
+        answerChecklist: ["(i+1) % 4", "선형 36", "희소 12", "한 묶음 4층", "12번 반복", "KV 공식 층 수 12"],
+        requiredConcepts: ["qwen4exp-linear-sparse-layer-schedule"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "indexer_budget 2048과 indexer_compress_ratio 4에서 고르는 블록 수와 한 질의가 보는 최대 위치 수를 계산하고 그 차이가 어디서 오는지 설명하세요.",
+        answerChecklist: ["2048 ÷ 4 = 512 블록", "되펼치면 2048자리", "꼬리 최대 3", "합계 2051", "미완성 블록은 점수 경쟁 없이 포함"],
+        requiredConcepts: ["qsa-token-budget-expansion"],
+        sectionId: "qsa-budget",
+      },
+      {
+        level: "basic",
+        question:
+          "블록 점수 계산에서 head별 내적에 ReLU를 걸어 더하는 이유를 설명하고, 이 점수가 attention 확률과 어떻게 다른지 쓰세요.",
+        answerChecklist: ["head마다 내적", "음수를 0으로", "반대 방향 신호가 상쇄하지 못함", "√128로 나눔", "선택에만 사용", "softmax는 원본 K/V로"],
+        requiredConcepts: ["qsa-compressed-block-index"],
+        sectionId: "qsa-index",
+      },
+      {
+        level: "basic",
+        question:
+          "hc_count 4와 hc_lowrank 320에서 gated residual 한 벌의 파라미터 수를 계산하고, 층마다 두 벌이 필요한 이유를 쓰세요.",
+        answerChecklist: ["10240 = 4 × 2560", "down 10240×320", "up 320×10240", "약 655만", "주입 계수 추가", "attention 앞과 MoE 앞"],
+        requiredConcepts: ["gated-residual-stream-mixing"],
+        sectionId: "gated-residual",
+      },
+      {
+        level: "basic",
+        question:
+          "n-gram 임베딩 표가 3.2억 행이고 행 폭이 160일 때 파라미터 수와 BF16 크기를 구하고, 토큰 하나가 실제로 읽는 양을 쓰세요.",
+        answerChecklist: ["3.2억 × 160", "512억 개", "BF16 95.4 GiB", "토큰당 16행", "160차원 16개", "표 크기와 조회량이 분리"],
+        requiredConcepts: ["per-layer-ngram-embedding"],
+        sectionId: "ple-ngram",
+      },
+      {
+        level: "basic",
+        question:
+          "expert 하나가 3 × 2560 × 640일 때 층당 전체 expert 파라미터와 토큰당 켜지는 파라미터를 각각 계산하고 비율을 쓰세요.",
+        answerChecklist: ["expert 하나 4,915,200", "512개면 약 25.2억", "라우팅 10 + 공유 1", "층당 약 5,407만", "약 47분의 1"],
+        requiredConcepts: ["auxiliary-parameter-class-accounting", "token-router-topk"],
+        sectionId: "param-classes",
+      },
+      {
+        level: "advanced",
+        question:
+          "희소 attention 층 12개, KV head 2개, head 차원 256, BF16에서 토큰당 K/V byte와 262,144 토큰의 합을 구하고, 희소 선택이 이 값을 줄이지 못하는 이유를 설명하세요.",
+        answerChecklist: ["12 × 2 × 2 × 256 × 2", "24,576 byte", "24 KiB/token", "262K에서 6 GiB", "선택은 계산이지 저장이 아님", "어느 블록이 선택될지 미리 모름"],
+        requiredConcepts: ["qwen4exp-request-state-triplet", "qsa-token-budget-expansion"],
+        sectionId: "request-state",
+      },
+      {
+        level: "advanced",
+        question:
+          "선형 층 36개가 value head 48개와 128×128 상태를 FP32로 들고 있을 때 요청당 고정 상태를 구하고, 4K와 262K 문맥에서 전체 상태 대비 비중이 어떻게 달라지는지 계산하세요.",
+        answerChecklist: ["48 × 128 × 128 × 4", "층당 3 MiB", "36층이면 108 MiB", "4K에서는 절반 수준", "262K에서는 약 1.5%", "증가 규칙이 다른 항목을 분리"],
+        requiredConcepts: ["qwen4exp-request-state-triplet", "recurrent-fixed-size-state"],
+        sectionId: "request-state",
+      },
+      {
+        level: "advanced",
+        question:
+          "체크포인트 총 바이트 359,999,963,128에서 파라미터 수를 구하고 backbone·조회 표·예측 모듈로 나눈 뒤, 이 분해가 배치 판단을 어떻게 바꾸는지 설명하세요.",
+        answerChecklist: ["BF16이므로 2로 나눔", "1,800억 개", "backbone 125.5B", "n-gram 표 51.2B", "표는 조회 전용", "호스트 메모리 배치 가능", "총합 하나로 VRAM을 잡으면 과대 추정"],
+        requiredConcepts: ["auxiliary-parameter-class-accounting", "per-layer-ngram-embedding"],
+        sectionId: "param-classes",
+      },
+      {
+        level: "advanced",
+        question:
+          "Native Sparse Attention이 물려준 원리와 QSA가 다르게 놓인 지점을 구분하고, NSA의 벤치마크 수치를 Flash-Next의 근거로 쓰면 안 되는 이유를 쓰세요.",
+        answerChecklist: ["블록 압축 후 선택", "사전학습부터 희소 경로", "NSA는 attention 자체를 대체", "QSA는 선택 모듈만 추가", "GQA 경로는 유지", "12개 층에서만 사용", "모델 규모와 학습 조건이 다름"],
+        requiredConcepts: ["qsa-compressed-block-index"],
+        sectionId: "paper-native-sparse-attention",
+      },
+    ],
+    papers: [
+      {
+        title: "Native Sparse Attention: Hardware-Aligned and Natively Trainable Sparse Attention",
+        href: "https://arxiv.org/abs/2502.11089",
+        problem:
+          "긴 문맥에서 전체 attention의 읽기 비용을 줄이면서도 사후에 덧씌운 희소 패턴이 학습된 표현과 어긋나는 문제를 함께 풀어야 했습니다.",
+        contribution:
+          "블록 압축과 세밀한 토큰 선택을 결합한 계층적 희소 전략을 제안하고, 선택기를 사전학습 단계부터 함께 학습해 하드웨어 정렬과 정확도를 동시에 노렸습니다.",
+        assumptions:
+          "논문이 학습한 모델 규모와 데이터, 64K 길이 중심의 실험 조건, 저자들이 구현한 커널 환경 안에서 성립하는 결과입니다.",
+        evidenceScope:
+          "저자 자기보고 benchmark로 일반 과제와 긴 문맥 과제, 추론 평가에서 전체 attention 대비 동등 이상을 보고했습니다.",
+        notClaim:
+          "Qwen의 QSA 구현이나 선형 층과 희소 층을 3:1로 섞은 배치의 우수성을 보증하지 않으며, 다른 규모에서의 재현도 주장하지 않습니다.",
+        sectionId: "paper-native-sparse-attention",
+      },
+      {
+        title: "Hyper-Connections",
+        href: "https://arxiv.org/abs/2409.19606",
+        problem:
+          "residual connection의 변형들이 기울기 소실과 표현 붕괴 사이에서 한쪽을 택하게 되는 절충을 피하지 못했습니다.",
+        contribution:
+          "residual stream을 여러 갈래로 확장하고 깊이 방향 연결과 갈래 사이 연결을 분리해 학습 가능한 값으로 두는 방법을 제시했습니다.",
+        assumptions:
+          "논문이 실험한 언어·비전 모델의 규모와 학습 설정, 비교 대상으로 삼은 residual 변형들의 범위 안에서 성립합니다.",
+        evidenceScope:
+          "저자 자기보고 실험으로 같은 예산에서 수렴이 빨라지고 최종 지표가 개선됐다는 결과를 제시했습니다.",
+        notClaim:
+          "Qwen이 고른 갈래 수 4와 랭크 320이 최적이라는 근거는 논문에 없으며, 125B 규모 MoE에서 같은 이득이 난다는 확인도 아닙니다.",
+        sectionId: "paper-hyper-connections",
+      },
+    ],
+  },
+  "gpu/modded-rtx4090-moe-serving": {
+    coreIdea:
+      "48GB 개조 RTX 4090은 메모리 칩 밀도만 바꾼 카드라 용량 병목은 풀지만 대역폭 공식과 카드 간 링크는 그대로이므로, MoE 서빙에서는 PCIe만 남은 인터커넥트 상한을 먼저 정량화하고 그 격차를 소프트웨어로 어디까지 메울 수 있는지 판단해야 합니다.",
+    assumedKnowledge: [
+      { id: "pcie-transaction-bandwidth-latency", role: "카드 간 상한을 구하는 raw bandwidth 공식의 출처입니다." },
+      { id: "nvlink-device-fabric-boundary", role: "전용 링크와 fabric이 무엇을 보장하는지의 정의입니다." },
+      { id: "expert-parallel-dispatch-cost", role: "dispatch·combine payload의 하한식이며 이 글은 그 위에 링크 조건을 더합니다." },
+      { id: "moe-residency-active-path-boundary", role: "전체 expert 상주와 active path를 구분하는 기준입니다." },
+      { id: "tp-allreduce-per-layer", role: "dense 모델의 layer당 고정 통신 패턴이며 비교 기준으로 씁니다." },
+    ],
+    introducedHere: [
+      { id: "clamshell-memory-topology", role: "정품 24GB가 이미 양면 배치라는 사실에서 개조의 실제 변화량을 셉니다." },
+      { id: "gddr-density-capacity-bandwidth-split", role: "대역폭 공식에 밀도 항이 없다는 점으로 개조가 푸는 문제를 가릅니다." },
+      { id: "consumer-gpu-interconnect-regression", role: "세대가 올라가며 카드 간 링크가 PCIe만 남은 상황을 정량화합니다." },
+      { id: "moe-vs-dense-interconnect-sensitivity", role: "대칭 all-reduce와 비대칭 all-to-all의 차이를 같은 축에서 비교합니다." },
+      { id: "unofficial-gpu-mod-support-boundary", role: "검증·워런티·드라이버 호환이 달라지는 범위를 명시합니다." },
+      { id: "interconnect-bound-parallelism-switch", role: "통신 병목에서 TP 대신 PP를 택하는 판단과 그 대가를 정리합니다." },
+      { id: "capacity-versus-communication-gate", role: "두 병목을 가르는 순서를 글 전체의 결론으로 세웁니다." },
+    ],
+    conceptExplanations: [
+      {
+        id: "clamshell-memory-topology",
+        sectionId: "stock-clamshell",
+        intuition:
+          "메모리 채널 하나에 칩을 한 개만 붙이지 않고 보드 앞뒤로 두 개를 붙여 같은 통로를 나눠 쓰게 만듭니다.",
+        workedExample:
+          "384-bit 버스를 32-bit 채널 12개로 나누고 채널마다 앞뒤 칩 2개를 붙이면 1GB 칩 24개로 24GB가 됩니다.",
+        boundary:
+          "칩 수를 늘리는 배치일 뿐 채널 수나 버스 폭을 늘리지 않습니다. 따라서 이 배치로 얻는 것은 용량이지 대역폭이 아닙니다.",
+      },
+      {
+        id: "gddr-density-capacity-bandwidth-split",
+        sectionId: "bandwidth-unchanged",
+        intuition:
+          "물탱크를 큰 것으로 바꿔도 수도관 굵기는 그대로인 것과 같습니다. 담는 양과 흘려보내는 속도는 다른 축입니다.",
+        workedExample:
+          "21Gbps 핀 speed와 384-bit 버스를 넣으면 21 × 384 ÷ 8 ≈ 1,008GB/s이고, 칩 밀도를 1GB에서 2GB로 바꿔도 이 값은 변하지 않습니다.",
+        boundary:
+          "이론 상한이며 실제 achievable bandwidth는 접근 패턴과 컨트롤러 효율에 따라 낮아집니다. 밀도 교체가 타이밍을 통해 간접적으로 안정성에 영향을 줄 수는 있습니다.",
+      },
+      {
+        id: "consumer-gpu-interconnect-regression",
+        sectionId: "4090-has-no-pins",
+        intuition:
+          "다음 세대 카드가 연산은 더 빨라졌는데 옆 카드와 이야기할 전용 통로는 아예 없어진 상황입니다.",
+        workedExample:
+          "PCIe Gen4 x16에 16 × 16 × 128/130 ÷ 8을 넣으면 약 31.5GB/s 편도, duplex 합 약 63GB/s이고 이것이 카드 간 상한 전부입니다.",
+        boundary:
+          "커넥터가 PCB에 없는 물리적 제약이라 드라이버 설정이나 메모리 개조로 되돌릴 수 없습니다. 같은 세대에서도 데이터센터 제품은 별도 링크를 유지합니다.",
+      },
+      {
+        id: "moe-vs-dense-interconnect-sensitivity",
+        sectionId: "why-interconnect-matters-more",
+        intuition:
+          "dense는 모든 참가자가 같은 양을 주고받지만 MoE는 인기 있는 expert가 있는 카드로 트래픽이 몰릴 수 있습니다.",
+        workedExample:
+          "TP는 layer마다 all-reduce가 두 번으로 고정되는 반면 EP는 dispatch와 combine의 양이 top-k·expert 배치·batch 구성에 따라 달라집니다.",
+        boundary:
+          "구조적으로 쏠릴 여지가 크다는 뜻이지 항상 느리다는 뜻은 아닙니다. 어떤 쌍이든 같은 대역폭을 보장하는 fabric에서는 이 차이가 성능으로 잘 드러나지 않습니다.",
+      },
+      {
+        id: "unofficial-gpu-mod-support-boundary",
+        sectionId: "mod-risk",
+        intuition:
+          "성능표가 같아도 문제가 생겼을 때 물어볼 곳이 없다는 점이 공식 제품과의 실질적인 차이입니다.",
+        workedExample:
+          "48GB 인식 자체가 개조된 vBIOS의 커스텀 VRAM descriptor에 의존하므로 드라이버 업데이트가 이 값과 충돌하면 복구 경로가 사용자에게 남습니다.",
+        boundary:
+          "개조 카드가 반드시 불안정하다는 실측 주장이 아니라 검증 주체와 지원 채널이 다르다는 조건의 구분입니다.",
+      },
+      {
+        id: "interconnect-bound-parallelism-switch",
+        sectionId: "tp-vs-ep-choice",
+        intuition:
+          "통로가 좁으면 짐을 자주 나르는 방식 대신 한 번에 넘기고 각자 오래 일하는 방식으로 바꿉니다.",
+        workedExample:
+          "TP는 attention 뒤와 MLP 뒤로 layer마다 all-reduce가 들어가지만 PP는 stage 경계에서 activation을 한 번 넘깁니다.",
+        boundary:
+          "통신 횟수를 줄이는 대신 stage 사이 유휴 구간이 생기고 batch 구성에 따라 이득이 사라질 수 있습니다. expert 수가 한 장을 넘으면 EP 자체를 피할 수 없습니다.",
+      },
+      {
+        id: "capacity-versus-communication-gate",
+        sectionId: "release-gate",
+        intuition:
+          "지금 막힌 이유가 모델이 안 올라가서인지 속도가 안 나와서인지를 먼저 가르면 살 장비가 달라집니다.",
+        workedExample:
+          "한 장에 올라가지 않는 상황이면 개조가 정확한 해법이고, 이미 올라가는데 처리량이 문제면 개조는 해당 사항이 없습니다.",
+        boundary:
+          "네 가지 완화 기법을 모두 적용해도 데이터센터 fabric과의 9~14배 격차는 메워지지 않습니다. tail latency가 필수인 워크로드는 이 구성의 범위 밖입니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 개조가 바꾸는 것",
+        relation: "보드 배치와 대역폭 공식에서 용량과 속도를 분리",
+        concepts: ["clamshell-memory-topology", "gddr-density-capacity-bandwidth-split"],
+      },
+      {
+        label: "01 남은 링크",
+        relation: "전용 링크가 없을 때의 상한을 공식으로 계산",
+        concepts: [
+          "consumer-gpu-interconnect-regression",
+          "pcie-transaction-bandwidth-latency",
+          "nvlink-device-fabric-boundary",
+        ],
+      },
+      {
+        label: "02 워크로드 민감도",
+        relation: "MoE 통신이 dense와 어떻게 다른지 대비",
+        concepts: [
+          "moe-vs-dense-interconnect-sensitivity",
+          "tp-allreduce-per-layer",
+          "expert-parallel-dispatch-cost",
+          "moe-residency-active-path-boundary",
+        ],
+      },
+      {
+        label: "03 완화와 대가",
+        relation: "병렬화 축을 바꿔 통신을 줄이되 새 비용을 확인",
+        concepts: ["interconnect-bound-parallelism-switch", "pipeline-parallel-bubble"],
+      },
+      {
+        label: "04 판단",
+        relation: "두 병목을 가르고 지원 조건까지 포함해 결정",
+        concepts: ["capacity-versus-communication-gate", "unofficial-gpu-mod-support-boundary"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "384-bit 버스를 32-bit 채널로 나누고 clamshell로 배치했을 때 1GB 칩 몇 개로 24GB가 되는지 계산하고, 48GB 개조가 바꾸는 항목 하나를 고르세요.",
+        answerChecklist: ["384 ÷ 32 = 12채널", "채널당 앞뒤 2칩", "칩 24개", "밀도만 1GB → 2GB", "채널 수와 버스 폭은 그대로"],
+        requiredConcepts: ["clamshell-memory-topology"],
+        sectionId: "stock-clamshell",
+      },
+      {
+        level: "basic",
+        question:
+          "핀 speed 21Gbps와 384-bit 버스로 메모리 대역폭을 계산하고, 이 값이 개조 전후로 같은 이유를 공식으로 설명하세요.",
+        answerChecklist: ["21 × 384 ÷ 8", "약 1,008GB/s", "공식에 밀도 항 없음", "밀도는 용량을 정함", "개조 전후 동일"],
+        requiredConcepts: ["gddr-density-capacity-bandwidth-split"],
+        sectionId: "bandwidth-unchanged",
+      },
+      {
+        level: "basic",
+        question:
+          "PCIe Gen4 x16의 편도 raw bandwidth를 공식으로 계산하고 duplex 합까지 구하세요.",
+        answerChecklist: ["16GT/s × 16 lane", "128/130 인코딩", "÷ 8", "약 31.5GB/s 편도", "duplex 약 63GB/s"],
+        requiredConcepts: ["consumer-gpu-interconnect-regression", "pcie-transaction-bandwidth-latency"],
+        sectionId: "pcie-only-ceiling",
+      },
+      {
+        level: "basic",
+        question:
+          "RTX 4090에 NVLink를 다시 붙일 수 없는 이유를 하드웨어 수준에서 설명하고, 메모리 개조와 무관한 이유를 쓰세요.",
+        answerChecklist: ["Ada 세대에서 커넥터 제거", "PCB에 golden finger 없음", "드라이버 제한이 아님", "개조는 GDDR6X 칩 교체", "통신 경로는 PCIe 하나"],
+        requiredConcepts: ["consumer-gpu-interconnect-regression"],
+        sectionId: "4090-has-no-pins",
+      },
+      {
+        level: "basic",
+        question:
+          "MoE가 연산은 sparse인데 메모리는 dense라고 말하는 이유를 설명하고, 그 결과 개조 용량이 어디에 쓰이는지 쓰세요.",
+        answerChecklist: ["토큰마다 top-k expert만 계산", "FLOPs 감소", "라우터가 그때 결정", "전체 expert 상주 필요", "용량은 전체 파라미터 기준"],
+        requiredConcepts: ["moe-residency-active-path-boundary"],
+        sectionId: "sparse-compute-dense-memory",
+      },
+      {
+        level: "basic",
+        question:
+          "Expert parallel에서 한 MoE layer가 만드는 all-to-all이 몇 번인지 쓰고 각각이 무엇을 옮기는지 설명하세요.",
+        answerChecklist: ["dispatch 1회", "combine 1회", "layer마다 2회", "토큰을 목적지 GPU로", "결과를 원래 위치로", "MoE layer 수만큼 반복"],
+        requiredConcepts: ["expert-parallel-dispatch-cost"],
+        sectionId: "expert-parallel-all-to-all",
+      },
+      {
+        level: "advanced",
+        question:
+          "PCIe duplex 63GB/s를 기준으로 3090 NVLink 112.5GB/s, A100 600GB/s, H100 900GB/s의 배수를 각각 계산하고, NVSwitch가 추가로 보장하는 성질을 쓰세요.",
+        answerChecklist: ["3090 약 1.8배", "A100 약 9.5배", "H100 약 14.3배", "full mesh", "어떤 쌍도 같은 대역폭", "PCIe는 topology 의존"],
+        requiredConcepts: ["consumer-gpu-interconnect-regression", "nvlink-device-fabric-boundary"],
+        sectionId: "datacenter-nvswitch-baseline",
+      },
+      {
+        level: "advanced",
+        question:
+          "같은 파라미터 수의 dense TP 구성과 MoE EP 구성에서 통신량이 무엇에 의해 결정되는지 각각 쓰고, 왜 PCIe만 있는 구성에서 차이가 먼저 드러나는지 설명하세요.",
+        answerChecklist: ["TP는 layer당 고정 all-reduce", "degree를 올려도 늘지 않음", "EP는 경계를 넘는 토큰 수에 비례", "top-k·expert 배치·batch가 얽힘", "쏠리면 특정 링크 포화", "fabric에서는 비대칭이 잘 안 드러남"],
+        requiredConcepts: ["moe-vs-dense-interconnect-sensitivity", "tp-allreduce-per-layer"],
+        sectionId: "why-interconnect-matters-more",
+      },
+      {
+        level: "advanced",
+        question:
+          "통신 병목 구성에서 tensor parallel 대신 pipeline parallel을 택할 때 줄어드는 비용과 새로 생기는 비용을 각각 쓰고, 이 전환이 불가능한 조건을 하나 드세요.",
+        answerChecklist: ["layer마다 all-reduce 제거", "stage 경계에서만 activation 전달", "pipeline bubble 발생", "batch 구성에 민감", "expert가 한 장을 넘으면 EP 불가피"],
+        requiredConcepts: ["interconnect-bound-parallelism-switch", "pipeline-parallel-bubble"],
+        sectionId: "tp-vs-ep-choice",
+      },
+      {
+        level: "advanced",
+        question:
+          "모델이 한 장에 올라가지 않는 경우와 이미 올라가는데 처리량이 부족한 경우로 나눠 48GB 개조의 효용을 판정하고, 완화 기법을 모두 적용해도 남는 격차를 쓰세요.",
+        answerChecklist: ["용량 문제면 개조가 정확한 해법", "느리게라도 돌아가는 상태", "처리량 문제면 해당 없음", "병목은 GPU 간 통신", "9~14배 격차는 유지", "tail latency 필수 워크로드는 범위 밖", "워런티·지원 조건도 함께 판단"],
+        requiredConcepts: ["capacity-versus-communication-gate", "unofficial-gpu-mod-support-boundary"],
+        sectionId: "release-gate",
+      },
+    ],
+  },
 };

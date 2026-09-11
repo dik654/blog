@@ -10892,6 +10892,46 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "project-claim", rule: "PE 단독 chiseltest는 저장소에 없다는 사실을 명시하고, 이 글이 제안하는 실습은 검증되지 않은 제안임을 분명히 한다." },
     ],
   },
+  "qwen38-flash-next-architecture": {
+    title: "Qwen3.8-Flash-Next 아키텍처 글이 소유하는 범위",
+    owns: [
+      "공개 layer_types를 36 Gated DeltaNet과 12 Qwen Sparse Attention으로 분리하는 48층 배치",
+      "블록 압축 색인의 점수식과 예산 2048이 블록 512개·자리 2051개로 환산되는 계산",
+      "hc_count 4와 hc_lowrank 320에서 나오는 gated residual의 층당 1,319만·전체 6.3억 파라미터 계산",
+      "해시 n-gram 임베딩 표의 3.2억 행·512억 파라미터·95.4 GiB 계산과 토큰당 16행 조회",
+      "체크포인트 1,800억 개를 backbone 125.5B·조회 표 51.2B·예측 모듈로 나누는 파라미터 클래스 회계",
+      "토큰당 K/V 24 KiB·indexer key 3 KiB와 요청당 고정 108 MiB로 나눈 요청 상태 계산",
+    ],
+    reuses: [
+      { label: "Qwen3.6의 3:1 hybrid 배치", href: "/ai/qwen36-hybrid-architecture" },
+      { label: "하이브리드 런타임의 prefill·decode", href: "/ai/qwen36-hybrid-runtime" },
+      { label: "긴 문맥 배포와 memory profile", href: "/ai/qwen36-long-context-deployment" },
+      { label: "KV cache 기초와 GQA", href: "/ai/kv-cache-fundamentals" },
+      { label: "선형 attention과 상태공간 모델", href: "/ai/linear-attention-and-state-space-models" },
+      { label: "희소 attention 패턴 계열", href: "/ai/sparse-windowed-attention-patterns" },
+      { label: "MoE 라우팅과 부하 분산", href: "/ai/moe-routing-and-load-balancing" },
+      { label: "expert 병렬 시스템", href: "/ai/expert-parallelism-moe-systems" },
+      { label: "하이브리드 KV cache 배치", href: "/ai/hybrid-kv-cache-allocation" },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "모델명·층 배치·expert 수·indexer 설정·n-gram 설정은 Qwen3.8-Flash-Next 공식 model card와 config revision에 귀속한다.",
+      },
+      {
+        kind: "primary-source",
+        rule: "계산 경로 설명은 huggingface/transformers의 qwen4_exp reference 구현 f62dc9bf2c90 스냅샷에 귀속하며, 서빙 엔진의 커널 구현과 동일하다고 주장하지 않는다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "파라미터 수와 요청 상태 byte는 공개 config의 텐서 모양과 dtype으로 센 논리값이며 allocator·양자화·텐서 병렬 이후의 physical allocation으로 확대하지 않는다.",
+      },
+      {
+        kind: "standard",
+        rule: "블록 점수식과 예산 환산은 reference 구현의 연산 순서에서 그대로 유도한 것이며 학습된 선택 품질에 대한 주장은 포함하지 않는다.",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

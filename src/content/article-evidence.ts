@@ -6508,4 +6508,62 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 구현", label: "ucb-bar/gemmini — PE.scala", href: "https://github.com/ucb-bar/gemmini/blob/main/src/main/scala/gemmini/PE.scala", note: "이 글이 그대로 인용한 MacUnit·PE의 실제 Chisel 소스" },
     { kind: "공식 문서", label: "Gemmini README — Quick Start", href: "https://github.com/ucb-bar/gemmini#quick-start", note: "Chipyard 설치부터 Verilator·Spike 시뮬레이션까지의 공식 절차, build 절 근거" },
   ],
+  "ai/qwen38-flash-next-architecture": [
+    {
+      kind: "공식 문서",
+      label: "Qwen/Qwen3.8-Flash-Next · official model card",
+      href: "https://huggingface.co/Qwen/Qwen3.8-Flash-Next",
+      note: "125B backbone·토큰당 6B 활성·51B n-gram 임베딩·native 262,144 문맥의 공개 범위이며 특정 런타임의 품질·VRAM·latency 보장은 아님",
+    },
+    {
+      kind: "공식 코드",
+      label: "Qwen3.8-Flash-Next · official config.json",
+      href: "https://huggingface.co/Qwen/Qwen3.8-Flash-Next/blob/main/config.json",
+      note: "layer_types 48개·num_experts 512·num_experts_per_tok 10·indexer_budget 2048·hc_count 4·ple_layer_ids의 machine-readable artifact이며 allocator·kernel의 실제 메모리를 확정하지 않음",
+    },
+    {
+      kind: "공식 코드",
+      label: "Qwen3.8-Flash-Next · model.safetensors.index.json",
+      href: "https://huggingface.co/Qwen/Qwen3.8-Flash-Next/blob/main/model.safetensors.index.json",
+      note: "total_size 359,999,963,128 바이트와 층별 텐서 목록의 근거이며 KV·activation·런타임 peak는 포함하지 않음",
+    },
+    {
+      kind: "공식 구현",
+      label: "Transformers · qwen4_exp reference implementation",
+      href: "https://huggingface.co/docs/transformers/main/en/model_doc/qwen4_exp",
+      note: "QSA indexer·GatedResidual·PLE의 계산 경로 근거이며 이 글은 f62dc9bf2c90 스냅샷을 인용함. 서빙 엔진의 production 성능을 대표하지 않음",
+    },
+    {
+      kind: "핵심 논문",
+      label: "Native Sparse Attention · arXiv 2502.11089",
+      href: "https://arxiv.org/abs/2502.11089",
+      note: "블록 압축 후 선택을 사전학습부터 함께 학습하는 설계의 원문이며 Qwen QSA 구현의 성능 근거는 아님",
+    },
+    {
+      kind: "핵심 논문",
+      label: "Hyper-Connections · arXiv 2409.19606",
+      href: "https://arxiv.org/abs/2409.19606",
+      note: "다중 residual stream과 학습 가능한 배합의 원문이며 갈래 4개·랭크 320 선택의 최적성 근거는 아님",
+    },
+  ],
+  "gpu/modded-rtx4090-moe-serving": [
+    {
+      kind: "공식 문서",
+      label: "NVIDIA · GeForce RTX 4090 제품 스펙",
+      href: "https://www.nvidia.com/en-us/geforce/graphics-cards/40-series/rtx-4090/",
+      note: "384-bit 버스·GDDR6X·24GB 구성과 NVLink 미제공의 공식 근거이며 개조 제품의 동작을 보증하지 않음",
+    },
+    {
+      kind: "공식 문서",
+      label: "NVIDIA · NVLink와 NVSwitch 제품 페이지",
+      href: "https://www.nvidia.com/en-us/data-center/nvlink/",
+      note: "3090 bridge 112.5GB/s·A100 600GB/s·H100 900GB/s 집계 대역폭의 출처이며 특정 워크로드의 achievable goodput은 아님",
+    },
+    {
+      kind: "공식 규격",
+      label: "PCI-SIG · PCI Express Base Specification",
+      href: "https://pcisig.com/specifications",
+      note: "Gen4 16GT/s와 128b/130b 인코딩으로 raw bandwidth를 계산하는 근거이며 protocol overhead 이후 실측값과는 다름",
+    },
+  ],
 };
