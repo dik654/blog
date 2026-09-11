@@ -11500,6 +11500,38 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "reference-identity-pose-separation": {
+    title: "정체성과 포즈 분리 글이 소유하는 범위",
+    owns: [
+      "참조 잠재 조건이 인물과 자세를 함께 전달한다는 성질과 그 측정",
+      "다른 층의 조건이 붙잡은 속성은 문구로 바뀌지 않는다는 경계",
+      "정체성을 어텐션 경로로 주입하는 방식의 성질과 정면 편향",
+      "조건을 거는 구간이 방향과 효과 강도에 각각 주는 영향",
+      "관절 좌표가 앞뒤를 표현하지 못한다는 한계와 그 원인 격리",
+      "기하·방향·정체성을 서로 다른 층으로 나누는 구성",
+      "설정을 다듬기 전에 의심되는 신호를 꺼 보는 진단 절차",
+    ],
+    reuses: [
+      { label: "계측기 검증", href: "/ai/generative-measurement-controls" },
+      { label: "해상도 예산", href: "/ai/roi-resolution-identity-budget" },
+      { label: "잠재 확산 파이프라인", href: "/ai/latent-diffusion-guidance" },
+      { label: "In-Context LoRA", href: "/ai/in-context-lora" },
+    ],
+    evidence: [
+      {
+        kind: "project-measurement",
+        rule: "수치는 한 장비·한 인물·한 의상의 실측이며 측정일과 고정한 조건을 함께 밝힌다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "세 신호 구성과 제거 실험 절차는 이 기록이 정리한 방식이며 표준 파이프라인이 아니다.",
+      },
+      {
+        kind: "standard",
+        rule: "세기와 구간의 구체 값은 이 모델 조합에서 얻은 것이며 다른 조합으로 일반화하지 않는다.",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;
