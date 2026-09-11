@@ -21592,6 +21592,69 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "라벨 검수의 일부를 미세조정한 모델에 맡기고 사람은 모델이 어려워하는 사례로 재배치해 처리량을 올리는 데이터 생성 구조입니다. 검수자와 학습 대상이 실수를 공유하면 그 실수가 데이터에 반복 기록되는 순환 위험을 함께 갖습니다.",
     canonicalHref: "/ai/sam3-promptable-concept-segmentation#data-engine",
   },
+  "image-preprocessing-contract": {
+    id: "image-preprocessing-contract",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "이미지 전처리 계약",
+    definition:
+      "모델에 넣기 전 사진의 크기·자르기·보간·정규화 상수와 그 연산 순서를 고정해 두는 약속입니다. 색인을 만들 때와 질의를 처리할 때 이 설정이 다르면 두 벡터가 같은 공간에 있지 않습니다.",
+    canonicalHref: "/ai/image-embedding-pipeline#preprocessing",
+  },
+  "resize-crop-information-loss": {
+    id: "resize-crop-information-loss",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "크기 맞춤의 정보 손실",
+    definition:
+      "고정 크기 입력을 만들기 위해 비율을 왜곡하거나 가장자리를 잘라내거나 여백을 채우면서 무엇을 버리고 무엇을 더하는지의 구분입니다. 세 방식 모두 대가가 있고 과제에 따라 손해의 크기가 달라집니다.",
+    canonicalHref: "/ai/image-embedding-pipeline#resize-crop",
+  },
+  "global-vs-patch-pooling": {
+    id: "global-vs-patch-pooling",
+    kind: "method",
+    domain: "machine-learning",
+    label: "요약 토큰과 패치 평균 풀링",
+    definition:
+      "이미지 모델의 출력 시퀀스에서 벡터 하나를 만드는 방식의 선택입니다. 맨 앞 요약 토큰을 그대로 쓰거나 패치 토큰만 평균 내며, 평균을 낼 때는 요약·보조 토큰을 잘라내야 합니다.",
+    canonicalHref: "/ai/image-embedding-pipeline#pooling",
+  },
+  "patch-retrieval-granularity": {
+    id: "patch-retrieval-granularity",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "패치 단위 검색 granularity",
+    definition:
+      "사진 전체를 한 벡터로 볼지 패치나 영역 단위 벡터로 색인할지의 결정입니다. 부분 검색 품질과 색인 크기·질의 비용이 함께 움직이며 사진당 벡터 수가 수백 배로 늘 수 있습니다.",
+    canonicalHref: "/ai/image-embedding-pipeline#dense-vs-global",
+  },
+  "low-level-cue-leakage": {
+    id: "low-level-cue-leakage",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "저수준 단서 누출",
+    definition:
+      "밝기·대비·압축 같은 촬영 조건의 차이가 임베딩 거리에 섞여 들어가 의미 기준의 검색을 방해하는 현상입니다. 같은 대상 변형본 사이 거리와 다른 대상 사이 거리의 비로 그 정도를 잴 수 있습니다.",
+    canonicalHref: "/ai/image-embedding-pipeline#similarity",
+  },
+  "embedding-pipeline-fingerprint": {
+    id: "embedding-pipeline-fingerprint",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "임베딩 파이프라인 지문",
+    definition:
+      "백본 체크포인트·전처리 설정·풀링 방식·정규화 여부를 한 묶음으로 기록해 벡터와 함께 저장하는 값입니다. 차원이 같아도 이 지문이 다르면 비교가 성립하지 않으며, 재색인 범위도 어느 항목이 바뀌었는지로 정해집니다.",
+    canonicalHref: "/ai/image-embedding-pipeline#pipeline-contract",
+  },
+  "visual-semantic-answer-definition": {
+    id: "visual-semantic-answer-definition",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "시각적 근접과 과제 정답의 구분",
+    definition:
+      "사람 눈에 비슷한 사진과 과제 기준의 정답이 다를 수 있다는 구분이며, 평가 집합의 정답 정의와 분할 방식이 점수의 의미를 정한다는 원칙입니다. 같은 촬영 세션을 질의와 정답으로 나누면 배경을 근거로 맞히는 누출이 생깁니다.",
+    canonicalHref: "/ai/image-embedding-pipeline#evaluation",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -39206,6 +39269,72 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "prerequisite",
     reason:
       "추적기가 시각 backbone을 고정한 채 학습된다는 점을 알아야 검출과 추적이 같은 특징 위에서 동작하는 이유가 설명됩니다.",
+  },
+  {
+    from: "image-preprocessing-contract",
+    to: "resize-crop-information-loss",
+    relation: "produces",
+    reason: "고정 크기를 강제하는 계약이 있기 때문에 무엇을 버릴지 고르는 문제가 생깁니다.",
+  },
+  {
+    from: "vit-patch-sequence-contract",
+    to: "global-vs-patch-pooling",
+    relation: "prerequisite",
+    reason: "출력이 패치 토큰 시퀀스라는 사실을 알아야 무엇을 합쳐 벡터를 만들지 고를 수 있습니다.",
+  },
+  {
+    from: "global-vs-patch-pooling",
+    to: "patch-retrieval-granularity",
+    relation: "extends",
+    reason: "합치지 않고 패치 벡터를 그대로 색인하는 선택이 검색 granularity 문제로 이어집니다.",
+  },
+  {
+    from: "resize-crop-information-loss",
+    to: "low-level-cue-leakage",
+    relation: "constrains",
+    reason: "전처리에서 남긴 여백이나 잘린 가장자리도 촬영 조건처럼 거리에 섞여 들어갈 수 있습니다.",
+  },
+  {
+    from: "image-preprocessing-contract",
+    to: "embedding-pipeline-fingerprint",
+    relation: "produces",
+    reason: "전처리 설정이 비교 가능성을 좌우하므로 지문에 반드시 포함돼야 합니다.",
+  },
+  {
+    from: "global-vs-patch-pooling",
+    to: "embedding-pipeline-fingerprint",
+    relation: "produces",
+    reason: "풀링 방식이 다르면 같은 백본에서도 다른 벡터가 나오므로 지문의 한 항목이 됩니다.",
+  },
+  {
+    from: "embedding-index-generation-receipt",
+    to: "embedding-pipeline-fingerprint",
+    relation: "prerequisite",
+    reason: "색인 생성 기록의 일반 구조 위에 이미지 고유 항목 두 개를 더한 것이 이 지문입니다.",
+  },
+  {
+    from: "low-level-cue-leakage",
+    to: "visual-semantic-answer-definition",
+    relation: "constrains",
+    reason: "저수준 단서가 남아 있으면 정답 정의를 아무리 잘 해도 점수가 의미가 아닌 근거에서 나옵니다.",
+  },
+  {
+    from: "multipositive-retrieval-metrics",
+    to: "visual-semantic-answer-definition",
+    relation: "prerequisite",
+    reason: "정답이 여러 개인 검색을 전제한 지표를 알아야 이미지 평가 집합의 정답 정의를 설계할 수 있습니다.",
+  },
+  {
+    from: "patch-retrieval-granularity",
+    to: "retrieve-rerank-composition",
+    relation: "extends",
+    reason: "장면 벡터로 후보를 좁히고 패치로 다시 보는 구성이 후보 생성과 재순위 분리의 이미지판입니다.",
+  },
+  {
+    from: "frozen-backbone-evaluation-protocol",
+    to: "embedding-pipeline-fingerprint",
+    relation: "prerequisite",
+    reason: "backbone을 고정해 쓰는 전제가 있어야 지문이 바뀌는 시점을 재색인 트리거로 다룰 수 있습니다.",
   },
 ];
 

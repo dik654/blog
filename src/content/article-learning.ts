@@ -70332,4 +70332,227 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "ai/image-embedding-pipeline": {
+    coreIdea:
+      "이미지 임베딩의 품질은 백본 이름이 아니라 전처리·풀링·정규화라는 세 결정과 그 결정을 지문으로 고정하는 계약에서 갈리며, 평가에서도 시각적 근접과 과제 정답을 구분하고 촬영 세션 누출을 막아야 점수가 실제 사용과 맞습니다.",
+    assumedKnowledge: [
+      { id: "vit-patch-sequence-contract", role: "이미지 모델의 출력이 패치 토큰 시퀀스라는 전제입니다." },
+      { id: "embedding-index-generation-receipt", role: "색인 생성 기록의 일반 구조입니다." },
+      { id: "offline-document-embedding-reuse", role: "미리 계산한 벡터를 재사용하는 검색 구조입니다." },
+      { id: "multipositive-retrieval-metrics", role: "정답이 여러 개인 검색을 전제한 평가 지표입니다." },
+      { id: "frozen-backbone-evaluation-protocol", role: "backbone을 고정한 채 표현을 그대로 쓰는 조건입니다." },
+    ],
+    introducedHere: [
+      { id: "image-preprocessing-contract", role: "전처리 설정과 순서를 계약으로 고정해야 하는 이유를 세웁니다." },
+      { id: "resize-crop-information-loss", role: "크기를 맞추는 세 방식이 각각 무엇을 버리는지 비교합니다." },
+      { id: "global-vs-patch-pooling", role: "출력 토큰에서 벡터를 만드는 두 방식과 흔한 실수를 정리합니다." },
+      { id: "patch-retrieval-granularity", role: "부분 검색을 위해 벡터 수를 늘릴 때의 비용을 계산합니다." },
+      { id: "low-level-cue-leakage", role: "촬영 조건이 거리에 섞이는 정도를 재는 방법을 정의합니다." },
+      { id: "embedding-pipeline-fingerprint", role: "네 항목을 묶어 재색인 범위를 정하는 기준을 세웁니다." },
+      { id: "visual-semantic-answer-definition", role: "평가에서 정답 정의와 분할이 점수의 의미를 정한다는 원칙을 고정합니다." },
+    ],
+    conceptExplanations: [
+      {
+        id: "image-preprocessing-contract",
+        sectionId: "preprocessing",
+        intuition:
+          "같은 사진이라도 어떤 규격으로 다듬어 넣었느냐에 따라 모델이 보는 것이 달라지므로 규격을 문서로 고정합니다.",
+        workedExample:
+          "참조 구현은 224×224, 이중선형 보간, ImageNet 평균·표준편차를 기본값으로 두고 rescale → resize → normalize 순서를 고정합니다.",
+        boundary:
+          "학습 때 쓰던 설정에서 벗어나면 모델이 본 적 없는 분포가 들어갑니다. 색인 경로와 질의 경로가 다른 라이브러리 버전을 쓰면 보간 결과가 미세하게 갈릴 수 있습니다.",
+      },
+      {
+        id: "resize-crop-information-loss",
+        sectionId: "resize-crop",
+        intuition:
+          "정사각형 액자에 가로로 긴 사진을 넣으려면 눌러 넣거나 잘라내거나 여백을 두는 수밖에 없습니다.",
+        workedExample:
+          "16:9 사진을 정사각형으로 만들 때 비율 무시는 형태를 왜곡하고, 중앙 자르기는 가장자리를 버리며, 여백 채우기는 입력의 약 43%가 여백이 됩니다.",
+        boundary:
+          "무엇이 나은지는 과제가 정합니다. 형태가 근거면 왜곡이, 주제가 가장자리에 있으면 자르기가 더 큰 손해입니다.",
+      },
+      {
+        id: "global-vs-patch-pooling",
+        sectionId: "pooling",
+        intuition:
+          "모델이 돌려준 여러 칸 중 어느 칸을 합쳐 하나로 만들지가 그 벡터의 의미를 정합니다.",
+        workedExample:
+          "요약 토큰을 쓰면 out[:, 0]이고, 패치 평균은 out[:, 1+R:].mean(1)입니다. R은 보조 토큰 수로 모델 설정에서 읽습니다.",
+        boundary:
+          "앞의 1+R칸을 자르지 않고 평균 내면 이미지 위치와 무관한 벡터가 섞이는데, 차원이 맞으므로 오류 없이 조용히 잘못됩니다.",
+      },
+      {
+        id: "patch-retrieval-granularity",
+        sectionId: "dense-vs-global",
+        intuition:
+          "사진 전체를 찾는 것과 사진 속 작은 물체를 찾는 것은 다른 질의라, 뒤쪽은 평균을 내면 배경에 묻힙니다.",
+        workedExample:
+          "224픽셀·패치 16이면 사진당 패치 196개입니다. 1,024차원 float16 기준으로 1,000만 장이면 벡터 하나씩은 약 20GB, 패치 전부는 약 3.9TB입니다.",
+        boundary:
+          "전수 패치 색인은 후보 축소가 불가능한 과제에서만 정당화됩니다. 보통은 장면 벡터로 후보를 좁힌 뒤 그 안에서만 패치 비교를 합니다.",
+      },
+      {
+        id: "low-level-cue-leakage",
+        sectionId: "similarity",
+        intuition:
+          "같은 물건을 밝기만 바꿔 찍었는데 벡터가 크게 움직이면, 검색이 대상이 아니라 촬영 조건으로 모입니다.",
+        workedExample:
+          "같은 대상 변형본 사이 평균 거리를 다른 대상 사이 평균 거리로 나눈 비가 0.86이면 두 집단이 거의 겹친 상태이고 0.25면 분리된 상태입니다.",
+        boundary:
+          "이 비가 낮다고 검색 품질이 좋다는 뜻은 아닙니다. 변형에 둔감한 것과 의미를 잘 구분하는 것은 다른 성질이며 변형 목록이 곧 측정 범위입니다.",
+      },
+      {
+        id: "embedding-pipeline-fingerprint",
+        sectionId: "pipeline-contract",
+        intuition:
+          "벡터만 저장하면 나중에 그 벡터를 어떤 규격으로 만들었는지 알 수 없어 비교해도 되는지 판단할 수 없습니다.",
+        workedExample:
+          "백본 체크포인트·전처리 설정·풀링 방식·정규화 여부 네 항목을 벡터와 함께 저장하고, 질의 경로가 같은 값을 쓰는지 검사합니다.",
+        boundary:
+          "지문이 어긋나도 차원이 같으면 코드는 오류를 내지 않습니다. 전처리만 바뀌면 부분 재계산이 가능하지만 백본이 바뀌면 전량 재색인입니다.",
+      },
+      {
+        id: "visual-semantic-answer-definition",
+        sectionId: "evaluation",
+        intuition:
+          "사람 눈에 비슷한 것과 사용자가 찾던 것이 다를 수 있으므로 정답을 과제 기준으로 먼저 정의해야 합니다.",
+        workedExample:
+          "'같은 제품의 다른 각도'가 과제라면 색만 비슷한 다른 제품은 오답이고, 같은 촬영 세션 사진은 배경으로 맞힌 누출일 수 있습니다.",
+        boundary:
+          "세션이 겹치지 않게 분할하면 점수는 내려갑니다. 낮아진 점수가 나빠진 것이 아니라 부풀려져 있던 값이 걷힌 것입니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 입력 규격",
+        relation: "모델 앞에서 무엇이 결정되는지 먼저 고정",
+        concepts: ["image-preprocessing-contract", "resize-crop-information-loss"],
+      },
+      {
+        label: "01 출력 합치기",
+        relation: "토큰 시퀀스에서 벡터를 만드는 선택",
+        concepts: ["global-vs-patch-pooling", "vit-patch-sequence-contract"],
+      },
+      {
+        label: "02 granularity",
+        relation: "부분을 찾으려면 벡터 수가 달라진다",
+        concepts: ["patch-retrieval-granularity"],
+      },
+      {
+        label: "03 거리의 구성",
+        relation: "의미가 아닌 성분이 거리에 섞이는지 측정",
+        concepts: ["low-level-cue-leakage"],
+      },
+      {
+        label: "04 계약",
+        relation: "결정들을 지문으로 묶어 재색인 범위를 정함",
+        concepts: ["embedding-pipeline-fingerprint", "embedding-index-generation-receipt"],
+      },
+      {
+        label: "05 평가",
+        relation: "정답 정의와 분할이 점수의 의미를 정함",
+        concepts: ["visual-semantic-answer-definition", "multipositive-retrieval-metrics"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "참조 구현이 고정해 둔 전처리 기본값 네 가지를 쓰고, 연산 순서가 왜 계약의 일부인지 설명하세요.",
+        answerChecklist: ["224×224", "이중선형 보간", "ImageNet 평균·표준편차", "rescale → resize → normalize", "순서가 바뀌면 결과가 달라짐"],
+        requiredConcepts: ["image-preprocessing-contract"],
+        sectionId: "preprocessing",
+      },
+      {
+        level: "basic",
+        question:
+          "16:9 사진을 정사각형 입력으로 만드는 세 방식을 쓰고 각각 무엇을 버리거나 더하는지 정리하세요.",
+        answerChecklist: ["비율 무시 → 형태 왜곡", "중앙 자르기 → 가장자리 손실", "여백 채우기 → 여백 패턴 추가", "모든 픽셀 보존 여부", "과제에 따라 손해가 다름"],
+        requiredConcepts: ["resize-crop-information-loss"],
+        sectionId: "resize-crop",
+      },
+      {
+        level: "basic",
+        question:
+          "출력 시퀀스가 요약 토큰 1개·보조 토큰 R개·패치 P개일 때 패치 평균을 구하는 슬라이싱을 쓰고, 자르지 않으면 무슨 일이 생기는지 설명하세요.",
+        answerChecklist: ["out[:, 1+R:]", "패치만 평균", "보조 토큰이 섞임", "이미지 위치와 무관한 벡터", "차원이 맞아 오류가 안 남"],
+        requiredConcepts: ["global-vs-patch-pooling"],
+        sectionId: "pooling",
+      },
+      {
+        level: "basic",
+        question:
+          "pooler 출력이 실제로 무엇인지 쓰고, 장면 단위 검색에 이 값을 쓰는 근거를 설명하세요.",
+        answerChecklist: ["0번 토큰을 그대로 꺼낸 값", "별도 계산이 아님", "학습이 이 토큰에 전체 대표 압력을 줌", "장면 비교에 적합", "부분 검색에는 부적합"],
+        requiredConcepts: ["global-vs-patch-pooling"],
+        sectionId: "pooling",
+      },
+      {
+        level: "basic",
+        question:
+          "변형 민감도 비가 0.86일 때와 0.25일 때 검색 결과가 어떻게 달라지는지 설명하고, 이 지표가 재지 못하는 것을 쓰세요.",
+        answerChecklist: ["0.86이면 두 집단이 겹침", "촬영 조건으로 모임", "0.25면 의미 기준 검색", "변형 목록이 측정 범위", "의미 구분 능력은 따로 재야 함"],
+        requiredConcepts: ["low-level-cue-leakage"],
+        sectionId: "similarity",
+      },
+      {
+        level: "basic",
+        question:
+          "벡터와 함께 저장해야 하는 네 항목을 쓰고, 지문이 어긋났을 때 왜 조용히 망가지는지 설명하세요.",
+        answerChecklist: ["백본 체크포인트", "전처리 설정", "풀링 방식", "정규화 여부", "차원이 같으면 오류 없음", "결과는 나오지만 무의미"],
+        requiredConcepts: ["embedding-pipeline-fingerprint"],
+        sectionId: "pipeline-contract",
+      },
+      {
+        level: "advanced",
+        question:
+          "224픽셀·패치 16·1,024차원 float16에서 사진 1,000만 장을 장면 벡터로 색인할 때와 패치 전부를 색인할 때의 저장량을 각각 계산하고, 현실적인 절충안을 쓰세요.",
+        answerChecklist: ["패치 196개/장", "벡터 하나 약 2KB", "장면 색인 약 20GB", "패치 전수 약 3.9TB", "장면으로 후보 축소 후 패치 비교", "영역 단위 묶기로 벡터 수 감소"],
+        requiredConcepts: ["patch-retrieval-granularity"],
+        sectionId: "dense-vs-global",
+      },
+      {
+        level: "advanced",
+        question:
+          "색인과 질의의 전처리가 달라지는 실제 경로를 하나 들고, 그 차이를 발견하기 어려운 이유와 점검 방법을 쓰세요.",
+        answerChecklist: ["색인은 배치 파이프라인 질의는 웹 서버", "라이브러리 버전 차이", "보간 결과가 미세하게 다름", "오류가 나지 않음", "지문을 저장하고 비교", "같은 사진으로 두 경로 벡터를 대조"],
+        requiredConcepts: ["image-preprocessing-contract", "embedding-pipeline-fingerprint"],
+        sectionId: "pipeline-contract",
+      },
+      {
+        level: "advanced",
+        question:
+          "평가 집합에서 촬영 세션 누출이 어떻게 점수를 부풀리는지 설명하고, 분할을 고쳤을 때 점수가 내려가는 것을 어떻게 해석해야 하는지 쓰세요.",
+        answerChecklist: ["같은 세션을 질의와 정답으로 분할", "배경·조명으로 맞힘", "대상 인식이 아님", "실사용에서 재현 안 됨", "세션 분리 후 점수 하락", "부풀려진 값이 걷힌 것"],
+        requiredConcepts: ["visual-semantic-answer-definition", "low-level-cue-leakage"],
+        sectionId: "evaluation",
+      },
+      {
+        level: "advanced",
+        question:
+          "전처리만 바뀐 경우와 백본이 바뀐 경우의 재색인 범위를 각각 정하고, 두 벌 색인을 동시에 운영할 때 확인할 점을 쓰세요.",
+        answerChecklist: ["전처리 변경은 원본이 있으면 부분 재계산", "백본 변경은 전량 재계산", "두 공간을 섞으면 안 됨", "질의 경로가 어느 색인을 보는지 고정", "전환 시점과 중단 여부를 미리 결정"],
+        requiredConcepts: ["embedding-pipeline-fingerprint", "image-preprocessing-contract"],
+        sectionId: "pipeline-contract",
+      },
+    ],
+    papers: [
+      {
+        title: "Patch n' Pack: NaViT, a Vision Transformer for any Aspect Ratio and Resolution",
+        href: "https://arxiv.org/abs/2307.06304",
+        problem:
+          "모든 이미지를 고정 해상도로 맞춘 뒤 처리하는 관행이 비율을 왜곡하고 해상도 선택의 자유를 없앤다는 문제를 다뤘습니다.",
+        contribution:
+          "여러 해상도의 패치 시퀀스를 하나의 배치로 이어 붙여 학습하는 방식을 제안해 임의의 종횡비와 해상도를 그대로 처리하게 했습니다.",
+        assumptions:
+          "논문이 학습한 모델 규모와 데이터, 그리고 그 방식으로 처음부터 학습했다는 조건에서 성립합니다.",
+        evidenceScope:
+          "저자 자기보고로 학습 효율과 전이 성능, 견고성·공정성 지표의 개선을 보고했습니다.",
+        notClaim:
+          "고정 크기로 학습된 기존 백본의 전처리만 바꿔도 같은 이득이 난다는 뜻이 아니며, 이 글의 전처리 선택 기준을 대체하지도 않습니다.",
+        sectionId: "resize-crop",
+      },
+    ],
+  },
 };

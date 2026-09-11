@@ -6612,4 +6612,24 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "점·상자 지목 프롬프트로 단일 인스턴스를 분할하는 이전 과제 정의이며 개념 단위 전수 분할은 포함하지 않음",
     },
   ],
+  "ai/image-embedding-pipeline": [
+    {
+      kind: "공식 구현",
+      label: "Transformers · DINOv3 ViT image processor와 모델 정의",
+      href: "https://github.com/huggingface/transformers/tree/main/src/transformers/models/dinov3_vit",
+      note: "기본 전처리 설정·연산 순서와 CLS·register·patch 토큰 배치의 근거이며 커밋 f62dc9bf2c90 스냅샷 기준임",
+    },
+    {
+      kind: "핵심 논문",
+      label: "Patch n' Pack: NaViT · arXiv 2307.06304",
+      href: "https://arxiv.org/abs/2307.06304",
+      note: "고정 해상도 관행의 대안을 제시한 원문이며 기존 백본의 전처리 변경에 그대로 적용되지 않음",
+    },
+    {
+      kind: "보충 읽기",
+      label: "DINOv3 · 모델 카드와 공개 계열",
+      href: "https://ai.meta.com/dinov3/",
+      note: "이 글이 예로 든 백본 계열의 공개 범위이며 특정 검색 과제의 성능 보장은 아님",
+    },
+  ],
 };

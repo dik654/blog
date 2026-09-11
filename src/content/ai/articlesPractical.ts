@@ -613,7 +613,7 @@ export const cvArticles: Article[] = [
 ];
 
 // ── E. 도메인 특화 임베딩 ──
-const embeddingArticles: Article[] = [
+export const embeddingArticles: Article[] = [
   {
     slug: "contrastive-learning",
     title: "Contrastive Learning 기초: Pair Contract와 Projection",
@@ -758,6 +758,28 @@ const embeddingArticles: Article[] = [
       { id: "index-artifact", title: "Index generation receipt" },
     ],
     component: () => import("@/pages/articles/ai/embedding-serving-contract"),
+  },
+  {
+    slug: "image-embedding-pipeline",
+    title: "이미지 임베딩은 전처리와 풀링에서 대부분 갈립니다",
+    subcategory: "ai-practical-embedding",
+    sections: [
+      { id: "overview", title: "사진 한 장이 벡터가 되기까지 결정이 세 번 있습니다" },
+      {
+        id: "preprocessing",
+        title: "전처리는 정보를 버리는 단계입니다",
+        subsections: [{ id: "resize-crop", title: "같은 설정이라도 순서가 다르면 결과가 다릅니다" }],
+      },
+      {
+        id: "pooling",
+        title: "출력은 벡터 하나가 아니라 패치 수만큼 나옵니다",
+        subsections: [{ id: "dense-vs-global", title: "부분을 찾으려면 벡터를 하나로 줄이면 안 됩니다" }],
+      },
+      { id: "similarity", title: "거리에는 의미가 아닌 것도 섞여 들어옵니다" },
+      { id: "pipeline-contract", title: "네 가지를 묶어야 색인을 다시 만들 시점이 정해집니다" },
+      { id: "evaluation", title: "시각적으로 비슷한 것이 정답은 아닙니다" },
+    ],
+    component: () => import("@/pages/articles/ai/image-embedding-pipeline"),
   },
   {
     slug: "embedding-evaluation",

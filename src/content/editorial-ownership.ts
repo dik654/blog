@@ -11009,6 +11009,41 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "image-embedding-pipeline": {
+    title: "이미지 임베딩 파이프라인 글이 소유하는 범위",
+    owns: [
+      "전처리 기본값과 연산 순서를 임베딩 계약의 일부로 고정해야 하는 이유",
+      "비율 무시·중앙 자르기·여백 채우기가 각각 버리거나 더하는 것의 비교",
+      "요약 토큰과 패치 평균의 선택, 그리고 앞쪽 토큰을 잘라내지 않을 때 생기는 조용한 오류",
+      "패치 단위 색인의 저장량·질의 비용 계산과 후보 축소 후 패치 비교라는 절충",
+      "촬영 조건이 거리에 섞이는 정도를 같은 대상·다른 대상 평균 거리 비로 재는 방법",
+      "백본·전처리·풀링·정규화를 묶은 지문과 그 지문으로 정하는 재색인 범위",
+      "이미지 검색 평가에서 정답 정의와 촬영 세션 분할이 점수의 의미를 정한다는 원칙",
+    ],
+    reuses: [
+      { label: "벡터 검색과 ANN 색인", href: "/ai/vector-search-and-ann-indexes" },
+      { label: "임베딩 서빙 계약", href: "/ai/embedding-serving-contract" },
+      { label: "임베딩 평가", href: "/ai/embedding-evaluation" },
+      { label: "검색 랭킹 퍼널", href: "/ai/retrieval-ranking-funnel" },
+      { label: "벡터와 내적", href: "/ai/math-vectors-inner-products" },
+      { label: "백본 예산 비교", href: "/ai/image-backbone-scaling" },
+      { label: "DINOv3 자기지도 백본", href: "/ai/dinov3-self-supervised-backbone" },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "전처리 기본값·연산 순서와 토큰 배치는 transformers 커밋 f62dc9bf2c90 스냅샷에 귀속하며 모든 모델의 공통 규격으로 확대하지 않는다.",
+      },
+      {
+        kind: "standard",
+        rule: "저장량·벡터 수 계산은 명시한 해상도·패치 크기·차원·dtype 가정에서의 산술이며 특정 제품의 실측이 아니다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "변형 민감도 비와 평가 예시의 수치는 방법을 보여 주기 위한 예시이며 특정 데이터셋의 측정값이 아니다.",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

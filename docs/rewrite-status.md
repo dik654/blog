@@ -1731,3 +1731,12 @@
 - 수치는 논문 값만 썼다. 고유 명사구 400만 개, 존재 토큰 ablation의 종합 점수 +1.5·존재 상관계수 +0.05, 자동 검수자 투입 시 처리량 약 2배가 그것이다. 전부 저자 자기보고로 표시했고 "기존 시스템의 두 배"는 저자들이 정의한 지표·벤치마크 위의 값이라는 경계를 본문과 ownership에 적었다.
 - 데이터 엔진 절에서는 자동 검수자와 학습 대상이 실수를 공유할 때 생기는 순환 위험을 따로 다뤘다. 평가 구간에만 사람이 여러 명 붙는 구성이 그 순환을 끊는 장치라는 점을 Viz의 마지막 장면으로 보여 준다.
 - 검증: learning·graph·formula·reading·order·prose·terms 통과, `audit:viz --strict` ERROR 0, topology `keep`+fingerprint 등록, tsc·build 통과(657 static route). Playwright 1440×1000·390×844에서 overflow 0·console error 0, Viz 6개 마지막 장면을 `output/playwright/sam3-*.png`에 남겼다.
+
+### 2026-09-11 · 비전 시리즈 3편 · 이미지 임베딩 파이프라인
+
+- `ai/image-embedding-pipeline`을 `ai-practical-embedding`의 `embedding-serving-contract` 뒤에 추가했다. 기존 임베딩 글 4개(`embedding-evaluation`·`sentence-embeddings`·`bi-encoder-retrieval`·`embedding-serving-contract`)는 이미지 언급이 0회인 텍스트 전용이었다.
+- 이 글은 논문 해설이 아니라 실무 계약 글이다. 축은 "품질은 백본 이름이 아니라 그 앞뒤 결정에서 갈린다" 하나이고, 전처리(무엇을 버리는가) → 풀링(어느 칸을 합치는가) → 거리(의미가 아닌 성분이 섞이는가) → 지문(재색인 범위) → 평가(정답 정의와 분할) 순서로 닫는다.
+- 코드 근거는 transformers 커밋 f62dc9bf2c90의 `image_processing_dinov3_vit.py`·`modular_dinov3_vit.py`다. 전처리 기본값과 `rescale → resize → normalize` 순서 고정, 그리고 `cat([cls_token, register_tokens, patch_embeddings])`와 `pooled_output = sequence_output[:, 0, :]`를 그대로 인용해 "패치 평균 시 앞의 1+R칸을 자르지 않으면 조용히 잘못된다"는 실무 함정을 코드로 고정했다.
+- 기존 정본과 겹치지 않도록 범위를 좁혔다. ANN 색인은 `vector-search-and-ann-indexes`, 서빙 계약은 `embedding-serving-contract`, 다중 정답 지표는 `embedding-evaluation`, 후보·재순위 분리는 `retrieval-ranking-funnel`이 소유하고 이 글은 사진이 벡터가 되는 구간만 다룬다. 지문 개념도 기존 색인 생성 기록 위에 이미지 고유 항목(전처리·풀링) 두 개를 더한 것으로 정의했다.
+- 카탈로그 병합 함정이 재발해 `embeddingArticles`도 export 로 바꿨다(`cvArticles`와 같은 이유).
+- 검증: 전 audit 통과, `audit:viz --strict` ERROR 0, topology `keep`+fingerprint 등록, tsc·build 통과(658 static route), Playwright 1440·390 overflow 0·error 0.

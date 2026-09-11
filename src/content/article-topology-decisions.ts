@@ -184,6 +184,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "SAM 3 논문과 facebookresearch/sam3 커밋 660a5e9e 스냅샷만 근거로 삼는다. 다른 분할 모델과의 벤치마크 비교나 자체 실측은 이 글에 넣지 않는다.",
   },
+  "ai/image-embedding-pipeline": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-09-11",
+    rationale:
+      "본문은 6 section·concept 7개로 keep 범위이며 closure 대부분이 6개 Viz다. 전처리·풀링·거리·계약·평가는 '사진이 벡터가 되는 구간'이라는 한 경로의 연속 단계라 나누면 각 글이 같은 파이프라인을 다시 세워야 한다.",
+    sharedGate:
+      "reference 구현 스냅샷과 공개 논문만 근거로 삼고, 특정 데이터셋의 검색 성능 실측은 이 글에서 주장하지 않는다.",
+  },
 };
 
 /**
@@ -204,6 +213,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/openclaw-assistant": "2ac6c31bce49af09",
   "ai/qwen-korean-consistency": "28703cf32620721b",
   "ai/dinov3-self-supervised-backbone": "1d4f7adb50ed720a",
+  "ai/image-embedding-pipeline": "183b7fb7e57921f8",
   "ai/sam3-promptable-concept-segmentation": "fc7656e7ef8d7e3c",
   "ai/qwen38-flash-next-architecture": "fe506f8b67ff5ddf",
   "gpu/modded-rtx4090-moe-serving": "73c84dae6a67f21c",
