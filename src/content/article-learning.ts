@@ -72214,4 +72214,205 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "saas/private-access-inbound-closure": {
+    coreIdea:
+      "사설 접근 설계는 두 축의 조합입니다. 연결 방향을 뒤집어 인터넷에서 두드릴 표면을 없애는 축과, 부여 단위를 자원으로 좁히고 요청마다 판정해 통과 기준을 위치에서 떼어 내는 축입니다. 앞의 축만 있으면 문 없는 넓은 방이 되고, 뒤의 축만 있으면 두드릴 문이 남습니다.",
+    assumedKnowledge: [
+      { id: "origin-exposure-closure", role: "오리진을 숨기는 수단으로 나온 방향 뒤집기입니다." },
+      { id: "nat-mapping-filtering-separation", role: "나가는 연결이 들어오는 규칙 없이 성립하는 이유입니다." },
+      { id: "blast-radius-least-privilege-boundary", role: "피해 반경을 미리 제한한다는 원칙입니다." },
+      { id: "authentication-authorization-boundary", role: "인증과 인가를 나눠 두는 경계입니다." },
+      { id: "identity-account-credential-lifecycle", role: "자격 증명의 발급·변경·폐기 절차입니다." },
+    ],
+    introducedHere: [
+      { id: "inbound-surface-elimination", role: "글 전체의 첫 축을 세웁니다." },
+      { id: "network-reach-versus-resource-grant", role: "두 번째 축인 부여 단위를 정의합니다." },
+      { id: "implicit-internal-trust", role: "범위를 좁혀도 남는 통과 기준의 문제를 드러냅니다." },
+      { id: "outbound-initiated-connector", role: "방향을 뒤집는 첫 구현과 그 대가를 정의합니다." },
+      { id: "consumer-side-private-endpoint", role: "주소를 옮기는 두 번째 구현의 성질을 정의합니다." },
+      { id: "per-request-access-decision", role: "통과 기준을 위치에서 요청으로 옮기는 설계를 정의합니다." },
+      { id: "credential-lifetime-revocation-coupling", role: "판정 결과의 수명이 구조를 어떻게 바꾸는지 고정합니다." },
+    ],
+    conceptExplanations: [
+      {
+        id: "inbound-surface-elimination",
+        sectionId: "overview",
+        intuition:
+          "문을 튼튼하게 만드는 대신 벽만 남기는 선택입니다. 두드릴 문이 없으면 자물쇠를 고를 일도 없습니다.",
+        workedExample:
+          "안쪽 프로그램이 바깥으로 먼저 연결을 걸어 두거나, 쓰려는 쪽 네트워크 안에 그 서비스만 대신하는 주소를 만듭니다. 어느 쪽이든 받는 포트가 0개입니다.",
+        boundary:
+          "없어지는 것은 인터넷에서 직접 두드릴 표면뿐입니다. 통로로 닿을 수 있는 범위와 통로를 지난 요청의 통과 기준은 그대로 남으므로 이것만으로는 충분하지 않습니다.",
+      },
+      {
+        id: "network-reach-versus-resource-grant",
+        sectionId: "reach-scope",
+        intuition:
+          "건물 출입증을 주는 것과 회의실 하나의 열쇠를 주는 것의 차이입니다.",
+        workedExample:
+          "네트워크를 준 경우의 노출은 대역 안 호스트 수에 내부 통과 비율을 곱한 값이고, 자원만 준 경우는 그 사용자에게 명시적으로 부여한 자원의 수입니다.",
+        boundary:
+          "자원 단위 부여가 인증을 강하게 만들어 주지는 않습니다. 줄어드는 것은 뚫린 뒤에 닿을 수 있는 대상의 수이므로 이 선택은 인증 설계가 아니라 피해 범위 설계에 속합니다.",
+      },
+      {
+        id: "implicit-internal-trust",
+        sectionId: "lateral-reach",
+        intuition:
+          "사무실 안에 있는 사람은 다 직원이라고 가정하면, 한 번 들어온 외부인이 모든 방을 지납니다.",
+        workedExample:
+          "내부에서 온 요청이면 인증을 생략하도록 설정된 서비스가 섞여 있으면, 사설망 계정 하나가 뚫린 순간 공격자도 내부에서 온 요청이 되어 그 서비스들을 차례로 지납니다.",
+        boundary:
+          "이 관행 자체는 외부에서 직접 닿지 못한다는 전제 위에서 합리적이었습니다. 문제는 전제가 깨진 뒤에도 설정이 남아 있는 것이므로, 대응은 범위를 좁히는 쪽과 근거를 바꾸는 쪽 둘로 나뉩니다.",
+      },
+      {
+        id: "outbound-initiated-connector",
+        sectionId: "outbound-connector",
+        intuition:
+          "택배를 받으려고 문을 열어 두는 대신, 내가 먼저 나가서 기사와 통화 연결을 유지하는 것과 같습니다.",
+        workedExample:
+          "커넥터가 시작하면서 바깥 중계망으로 나가는 연결을 맺고, 사용자 요청은 중계망이 그 통로로 안쪽에 밀어 넣습니다. 방화벽에 추가되는 들어오는 규칙은 0개입니다.",
+        boundary:
+          "커넥터와 그 자격 증명이 새 신뢰 지점이자 단일 장애 지점이 됩니다. 통로가 닿는 안쪽 대상을 제한하지 않으면 이 구조는 네트워크 단위 부여와 같아집니다.",
+      },
+      {
+        id: "consumer-side-private-endpoint",
+        sectionId: "private-endpoint",
+        intuition:
+          "상대 회사에 찾아가는 대신 우리 사무실 안에 그 회사 창구를 하나 놓는 것과 같습니다.",
+        workedExample:
+          "소비자 서브넷마다 인터페이스를 만들어 소비자 대역의 사설 주소를 붙이면, 인터넷 게이트웨이도 공인 주소도 없이 그 서비스에 닿습니다. 양쪽 대역이 겹쳐도 상관없습니다.",
+        boundary:
+          "노출은 단방향이라 제공자가 소비자 네트워크를 보게 되지는 않지만, 연결 승인과 인터페이스 정책을 따로 걸지 않으면 자격이 있는 모든 주체가 그 서비스를 씁니다. 이름 해석이 위치에 따라 달라진다는 점도 장애 조사에서 기억해야 합니다.",
+      },
+      {
+        id: "per-request-access-decision",
+        sectionId: "per-request-decision",
+        intuition:
+          "출입증을 한 번 확인하고 끝내는 대신 방마다 사람과 소지품을 다시 보는 방식입니다.",
+        workedExample:
+          "판정에 신원뿐 아니라 기기가 관리 대상인지, 최근 상태 점검을 통과했는지가 함께 들어갑니다. 같은 사람이라도 관리되지 않는 기기로 접근하면 그 요청이 거절됩니다.",
+        boundary:
+          "판정 지점이 멈추면 새 접근이 전부 막힙니다. 다만 이전 구조에도 사설망 게이트웨이라는 같은 성격의 지점이 있었으므로, 문제는 단일 지점을 없애는 것이 아니라 무엇을 단일 지점으로 둘지 고르는 것입니다.",
+      },
+      {
+        id: "credential-lifetime-revocation-coupling",
+        sectionId: "credential-lifetime",
+        intuition:
+          "하루짜리 입장권은 회수하지 않아도 다음 날이면 쓸모가 없습니다.",
+        workedExample:
+          "몇 시간 단위로 만료되게 하면 철회가 필요할 때 모든 곳에 취소를 전파하는 대신 다음 갱신을 거절하기만 하면 됩니다.",
+        boundary:
+          "갱신 경로가 가용성의 일부가 됩니다. 판정 지점이 멈추면 새 요청이 통과하지 못하고, 수명이 짧을수록 그 영향이 더 빨리 도달합니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 두 축",
+        relation: "표면을 없애는 축과 범위를 좁히는 축",
+        concepts: ["inbound-surface-elimination", "origin-exposure-closure"],
+      },
+      {
+        label: "01 부여 단위",
+        relation: "사고 이후의 도달 범위를 정함",
+        concepts: ["network-reach-versus-resource-grant", "implicit-internal-trust", "blast-radius-least-privilege-boundary"],
+      },
+      {
+        label: "02 방향 뒤집기",
+        relation: "받는 포트를 두지 않는 두 구현",
+        concepts: ["outbound-initiated-connector", "consumer-side-private-endpoint", "nat-mapping-filtering-separation"],
+      },
+      {
+        label: "03 통과 기준",
+        relation: "위치를 근거에서 빼고 요청마다 판정",
+        concepts: ["per-request-access-decision", "authentication-authorization-boundary"],
+      },
+      {
+        label: "04 수명",
+        relation: "판정 결과가 얼마나 오래 사는가",
+        concepts: ["credential-lifetime-revocation-coupling", "identity-account-credential-lifecycle"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "받는 포트를 열어 접근을 허용하는 방식이 만드는 두 가지를 쓰고, 방향을 뒤집는 방식이 그중 무엇을 없애는지 설명하세요.",
+        answerChecklist: ["열린 입구 하나", "입구를 지난 뒤의 넓은 내부", "인터넷에서 직접 두드릴 표면이 사라짐", "통로가 닿는 범위는 그대로", "통과 기준도 그대로"],
+        requiredConcepts: ["inbound-surface-elimination"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "네트워크 단위 부여와 자원 단위 부여의 차이가 언제 드러나는지 설명하고, 각 경우의 노출 크기를 식으로 쓰세요.",
+        answerChecklist: ["평소에는 차이가 드러나지 않음", "계정이 뚫린 뒤에 드러남", "대역 안 호스트 수 × 내부 통과 비율", "명시적으로 부여한 자원의 수", "인증 강도가 아니라 피해 범위 설계"],
+        requiredConcepts: ["network-reach-versus-resource-grant", "blast-radius-least-privilege-boundary"],
+        sectionId: "reach-scope",
+      },
+      {
+        level: "basic",
+        question:
+          "내부에서 온 요청의 인증을 생략하는 설정이 왜 만들어졌는지, 그리고 언제 취약점이 되는지 설명하세요.",
+        answerChecklist: ["외부에서 직접 닿지 못한다는 전제", "그 전제 아래의 편의", "사설망 계정이 뚫리면 전제가 깨짐", "공격자도 내부에서 온 요청이 됨", "뚫린 것은 계정 하나인데 열린 것은 대역 전체"],
+        requiredConcepts: ["implicit-internal-trust"],
+        sectionId: "lateral-reach",
+      },
+      {
+        level: "basic",
+        question:
+          "역방향 커넥터가 동작하는 순서를 쓰고, 방화벽에 추가되는 들어오는 규칙이 몇 개인지와 그 이유를 설명하세요.",
+        answerChecklist: ["커넥터가 바깥으로 먼저 연결", "대부분의 방화벽이 나가는 연결을 기본 허용", "들어오는 규칙 0개", "중계망이 그 통로로 요청을 밀어 넣음", "응답도 같은 통로로"],
+        requiredConcepts: ["outbound-initiated-connector", "nat-mapping-filtering-separation"],
+        sectionId: "outbound-connector",
+      },
+      {
+        level: "basic",
+        question:
+          "소비자 쪽 사설 엔드포인트가 두 네트워크를 붙이는 방식과 다른 점 세 가지를 쓰세요.",
+        answerChecklist: ["인터넷을 거치지 않음", "주소 대역이 겹쳐도 무관", "연결되는 것이 인터페이스 하나", "노출이 단방향", "제공자가 소비자 안을 보지 못함"],
+        requiredConcepts: ["consumer-side-private-endpoint"],
+        sectionId: "private-endpoint",
+      },
+      {
+        level: "basic",
+        question:
+          "요청 단위 판정에서 판정에 들어가는 항목을 쓰고, 사설망 접속 여부가 어떤 위치로 내려가는지 설명하세요.",
+        answerChecklist: ["신원 확인", "기기가 관리 대상인지", "최근 상태 점검 통과 여부", "요청 대상이 부여 목록 안인지", "접속 여부는 근거가 아니라 신호 하나"],
+        requiredConcepts: ["per-request-access-decision", "authentication-authorization-boundary"],
+        sectionId: "per-request-decision",
+      },
+      {
+        level: "advanced",
+        question:
+          "역방향 커넥터가 없앤 위험과 새로 들인 위험을 각각 쓰고, 이 구조가 네트워크 단위 부여와 같아지는 조건을 설명하세요.",
+        answerChecklist: ["없앤 것은 인터넷에서 직접 두드릴 표면", "새로 생긴 것은 커넥터와 그 자격 증명", "어떤 계정으로 도는지", "자격 증명의 저장 위치와 교체 주기", "통로가 닿는 안쪽 대상을 제한하지 않으면 대역 전체 부여와 같아짐"],
+        requiredConcepts: ["outbound-initiated-connector", "network-reach-versus-resource-grant"],
+        sectionId: "outbound-connector",
+      },
+      {
+        level: "advanced",
+        question:
+          "사설 엔드포인트에서 연결 승인과 인터페이스 정책이 각각 무엇을 정하는지 구분하고, 이름 해석이 위치에 따라 달라질 때 생기는 실무 영향을 쓰세요.",
+        answerChecklist: ["승인은 붙어도 되는지를 정함", "요청은 소비자가 걸고 승인은 제공자가 함", "정책은 붙은 뒤 무엇이 허용되는지를 정함", "같은 이름이 위치에 따라 다르게 풀림", "장애 조사에서 어느 쪽 주소로 풀렸는지 먼저 확인해야 함"],
+        requiredConcepts: ["consumer-side-private-endpoint", "authentication-authorization-boundary"],
+        sectionId: "private-endpoint",
+      },
+      {
+        level: "advanced",
+        question:
+          "자격 증명 수명을 짧게 두는 이유와 그 대가를 설명하고, 판정 지점이 단일 지점이라는 지적에 어떻게 답할 수 있는지 쓰세요.",
+        answerChecklist: ["결과가 오래 살면 판정이 의미를 잃음", "철회가 다음 갱신 거절만으로 가능", "갱신 경로가 가용성의 일부", "수명이 짧을수록 영향이 빨리 도달", "이전에도 사설망 게이트웨이라는 단일 지점이 있었음", "무엇을 단일 지점으로 둘지 고르는 문제"],
+        requiredConcepts: ["credential-lifetime-revocation-coupling", "per-request-access-decision", "identity-account-credential-lifecycle"],
+        sectionId: "credential-lifetime",
+      },
+      {
+        level: "advanced",
+        question:
+          "사설 접근 설계를 두 축으로 정리하고, 한 축만 적용했을 때 각각 어떤 상태가 되는지 쓰세요. 확인 항목 네 가지도 함께 적으세요.",
+        answerChecklist: ["표면을 없애는 축", "부여 단위를 좁히고 요청마다 판정하는 축", "앞의 축만 있으면 문 없는 넓은 방", "뒤의 축만 있으면 두드릴 문이 남음", "표면·범위·기준·비밀 네 항목", "커넥터 자격 증명의 위치와 교체 주기"],
+        requiredConcepts: ["inbound-surface-elimination", "network-reach-versus-resource-grant", "per-request-access-decision"],
+        sectionId: "access-gate",
+      },
+    ],
+  },
 };

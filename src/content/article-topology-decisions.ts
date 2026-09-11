@@ -265,6 +265,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "인용 논문의 측정 대상과 사업자 공개 문서의 범위를 벗어난 일반화를 하지 않고 검사 주기·단계 비율의 구체 값을 권고하지 않는다.",
   },
+  "saas/private-access-inbound-closure": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-09-11",
+    rationale:
+      "본문은 6 section·concept 7개로 keep 범위다. 두 축이 서로를 보완해야 결론이 서는 구조라 나누면 각 글이 나머지 축을 다시 세워야 한다.",
+    sharedGate:
+      "사업자 공개 문서와 인용 문헌의 범위를 벗어난 제품 일반화를 하지 않고 자격 증명 수명·판정 신호의 구체 값을 권고하지 않는다.",
+  },
 };
 
 /**
@@ -333,6 +342,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "gpu/cuda-register-pressure": "bb8de1b5a0f91f2c",
   "isms-aml/isms-security-infra": "3c313e4c01bcc569",
   "ai/lora-finetuning": "33795cea211c3c2a",
-  "saas/edge-request-defense-pipeline": "087fffa8fe412987",
-  "saas/anycast-delivery-continuity": "51f5aa851fd46bfa",
+  "saas/edge-request-defense-pipeline": "8e5a816ebdc10526",
+  "saas/anycast-delivery-continuity": "2075a2f45f73e4a4",
+  "saas/private-access-inbound-closure": "83a3283cfe7a8fd4",
 };

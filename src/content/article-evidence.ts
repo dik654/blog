@@ -6792,4 +6792,24 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "단계별 지표 판정으로 계속·중지·되돌리기를 자동 결정한다는 설명과 오류율 0.1% 미만이라는 기준 예시의 출처 (2026-09-11 확인)",
     },
   ],
+  "saas/private-access-inbound-closure": [
+    {
+      kind: "핵심 논문",
+      label: "Ward · Beyer — BeyondCorp: A New Approach to Enterprise Security (;login: 39(6), 2014)",
+      href: "https://research.google/pubs/beyondcorp-a-new-approach-to-enterprise-security/",
+      note: "특권적 사내망을 없애고 사용자·기기 확인으로 접근을 판정한다는 전환의 출처이며 대규모 기기 관리 체계를 전제한 사례임",
+    },
+    {
+      kind: "공식 문서",
+      label: "Cloudflare — Tunnel 커넥터",
+      href: "https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/",
+      note: "커넥터가 나가는 연결을 먼저 맺어 들어오는 트래픽을 전부 막을 수 있고 여러 커넥터로 중복을 구성한다는 설명의 출처 (2026-09-11 확인)",
+    },
+    {
+      kind: "공식 문서",
+      label: "AWS — PrivateLink 개념",
+      href: "https://docs.aws.amazon.com/vpc/latest/privatelink/concepts.html",
+      note: "소비자 서브넷의 엔드포인트 인터페이스, 공개 인터넷 비경유, 소비자 요청·제공자 수락, 엔드포인트 정책, 위치별 이름 해석의 출처 (2026-09-11 확인)",
+    },
+  ],
 };

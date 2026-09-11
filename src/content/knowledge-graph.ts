@@ -22159,6 +22159,69 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "모든 지점이 같은 변경을 같은 순간에 받는 실패 앞에서 중복 구성이 무력하다는 성질과, 피해량이 단계 비율에 감지 시간과 되돌리기 시간의 합을 곱한 값이라는 관계입니다. 단계를 잘게 나누는 것보다 되돌리기를 자동화하는 편이 큰 구간이 있습니다.",
     canonicalHref: "/saas/anycast-delivery-continuity#correlated-change",
   },
+  "inbound-surface-elimination": {
+    id: "inbound-surface-elimination",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "인바운드 표면 제거",
+    definition:
+      "받는 포트를 잘 지키는 대신 아예 두지 않는 선택이며, 안쪽이 바깥으로 먼저 연결을 걸거나 쓰려는 쪽 네트워크에 대리 주소를 만들어 달성합니다. 인터넷에서 직접 두드릴 대상이 사라지지만 통과 기준과 부여 범위는 그대로 남습니다.",
+    canonicalHref: "/saas/private-access-inbound-closure#overview",
+  },
+  "network-reach-versus-resource-grant": {
+    id: "network-reach-versus-resource-grant",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "네트워크 접근과 자원 부여의 구분",
+    definition:
+      "접속 결과로 대역으로 가는 경로를 주는지, 특정 서비스로 가는 입구 하나만 주는지의 구분입니다. 평소 동작은 비슷하고 계정이 뚫린 뒤 공격자가 다음으로 시도할 수 있는 대상의 수에서 갈립니다.",
+    canonicalHref: "/saas/private-access-inbound-closure#reach-scope",
+  },
+  "implicit-internal-trust": {
+    id: "implicit-internal-trust",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "내부 출처의 암묵적 신뢰",
+    definition:
+      "내부 주소에서 온 요청이라는 사실을 권한 근거로 삼아 추가 확인을 생략하는 관행입니다. 외부에서 직접 닿지 못한다는 전제 위에 만들어진 편의라, 그 전제가 깨지는 순간 계정 하나가 대역 전체로 번지는 통로가 됩니다.",
+    canonicalHref: "/saas/private-access-inbound-closure#lateral-reach",
+  },
+  "outbound-initiated-connector": {
+    id: "outbound-initiated-connector",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "역방향 커넥터",
+    definition:
+      "안쪽에서 실행되는 프로그램이 바깥 중계망으로 나가는 연결을 먼저 맺어 두고 그 통로로 요청을 받는 방식입니다. 들어오는 방화벽 규칙이 늘지 않는 대신 커넥터와 그 자격 증명이 새 신뢰 지점이 되고, 여러 개를 띄워야 단일 장애 지점을 피합니다.",
+    canonicalHref: "/saas/private-access-inbound-closure#outbound-connector",
+  },
+  "consumer-side-private-endpoint": {
+    id: "consumer-side-private-endpoint",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "소비자 쪽 사설 엔드포인트",
+    definition:
+      "쓰려는 쪽 서브넷 안에 대상 서비스를 대신하는 인터페이스를 만들고 소비자 대역의 사설 주소를 붙이는 방식입니다. 인터넷을 거치지 않고 주소 겹침이 문제되지 않으며 노출이 단방향이라, 두 네트워크를 붙이는 방식과 성질이 다릅니다.",
+    canonicalHref: "/saas/private-access-inbound-closure#private-endpoint",
+  },
+  "per-request-access-decision": {
+    id: "per-request-access-decision",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "요청 단위 접근 판정",
+    definition:
+      "네트워크 위치를 권한 근거에서 빼고 신원과 기기 상태를 요청마다 확인해 판정하는 방식입니다. 사설망 접속 여부가 참고 신호 하나로 내려가며, 판정 지점이 새 단일 지점이 되므로 가용성 항목으로 관리해야 합니다.",
+    canonicalHref: "/saas/private-access-inbound-closure#per-request-decision",
+  },
+  "credential-lifetime-revocation-coupling": {
+    id: "credential-lifetime-revocation-coupling",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "자격 증명 수명과 철회의 결합",
+    definition:
+      "판정 결과의 유효 기간이 길면 정교한 판정도 의미가 줄고, 짧으면 철회가 취소 전파 없이 다음 갱신 거절만으로 이뤄진다는 관계입니다. 대가는 갱신 경로가 가용성의 일부가 되고 수명이 짧을수록 그 영향이 빨리 도달한다는 점입니다.",
+    canonicalHref: "/saas/private-access-inbound-closure#credential-lifetime",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -40379,6 +40442,78 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     to: "health-probe-depth-tradeoff",
     relation: "contrasts",
     reason: "감지된 고장을 다루는 장치와 계획된 빼기를 다루는 절차가 서로 다른 시점을 담당합니다.",
+  },
+  {
+    from: "inbound-surface-elimination",
+    to: "outbound-initiated-connector",
+    relation: "produces",
+    reason: "표면을 없애자는 요구가 연결 방향을 뒤집는 구현을 부릅니다.",
+  },
+  {
+    from: "inbound-surface-elimination",
+    to: "consumer-side-private-endpoint",
+    relation: "produces",
+    reason: "같은 요구를 주소를 옮기는 방식으로 달성하는 두 번째 구현입니다.",
+  },
+  {
+    from: "network-reach-versus-resource-grant",
+    to: "implicit-internal-trust",
+    relation: "constrains",
+    reason: "대역을 통째로 주는 선택이 내부 출처를 신뢰하는 관행과 맞물려 피해를 키웁니다.",
+  },
+  {
+    from: "implicit-internal-trust",
+    to: "per-request-access-decision",
+    relation: "produces",
+    reason: "위치를 근거로 삼는 관행의 문제가 요청마다 판정하는 설계를 부릅니다.",
+  },
+  {
+    from: "per-request-access-decision",
+    to: "credential-lifetime-revocation-coupling",
+    relation: "constrains",
+    reason: "요청마다 판정한다는 요구가 판정 결과의 유효 기간을 짧게 만듭니다.",
+  },
+  {
+    from: "network-reach-versus-resource-grant",
+    to: "outbound-initiated-connector",
+    relation: "constrains",
+    reason: "통로가 닿는 범위를 어디까지 열어 두느냐가 이 구현의 실제 성질을 정합니다.",
+  },
+  {
+    from: "origin-exposure-closure",
+    to: "inbound-surface-elimination",
+    relation: "prerequisite",
+    reason: "오리진을 숨기는 수단으로 나왔던 방향 뒤집기가 여기서 일반화됩니다.",
+  },
+  {
+    from: "nat-mapping-filtering-separation",
+    to: "outbound-initiated-connector",
+    relation: "prerequisite",
+    reason: "나가는 연결이 왜 들어오는 규칙 없이 성립하는지를 이 구분이 설명합니다.",
+  },
+  {
+    from: "blast-radius-least-privilege-boundary",
+    to: "network-reach-versus-resource-grant",
+    relation: "prerequisite",
+    reason: "피해 반경을 미리 제한한다는 원칙이 부여 단위 선택의 기준이 됩니다.",
+  },
+  {
+    from: "authentication-authorization-boundary",
+    to: "per-request-access-decision",
+    relation: "prerequisite",
+    reason: "누구인지 확인하는 일과 무엇을 허용할지 정하는 일이 나뉘어야 판정 구조가 읽힙니다.",
+  },
+  {
+    from: "identity-account-credential-lifecycle",
+    to: "credential-lifetime-revocation-coupling",
+    relation: "prerequisite",
+    reason: "발급·변경·폐기를 사람의 사건과 맞추는 절차 위에서 수명 선택이 의미를 가집니다.",
+  },
+  {
+    from: "consumer-side-private-endpoint",
+    to: "outbound-initiated-connector",
+    relation: "contrasts",
+    reason: "방향을 뒤집는 쪽과 주소를 옮기는 쪽이 같은 표면 제거를 다른 대가로 달성합니다.",
   },
 ];
 

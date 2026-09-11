@@ -1814,3 +1814,17 @@
 - 기존 정본과의 경계: 중복 구성·장애 조치 일반론은 `ai/rate-limiting-and-reliability-patterns`, 복제본 분배는 `ai/llm-serving-ops`, 애니캐스트의 공격 흡수 용도는 `saas/edge-request-defense-pipeline`이 소유한다.
 - 브라우저 검증에서 잡은 실제 결함 3건: AnycastViz의 캐치먼트 띠가 지점 철수 장면에서 가운데가 빈 채로 남아 "양옆으로 흡수"라는 본문과 어긋나 좌표표로 재작성했고, GateViz의 네 번째 행이 하단 주석과 겹쳐 행 간격을 줄였으며, AnycastViz 주석의 "해당 위치에서는 80%"가 논문의 "불안정한 조합의 80%"를 잘못 옮겨 정정했다.
 - 검증: 전 audit 통과, `audit:viz --strict` ERROR 0, topology `keep`+fingerprint, tsc·eslint·build 통과(667 static route), Playwright 1440·390 overflow 0·error 0, viz 6개 24장면 전수 캡처 확인.
+
+### 2026-09-11 · SaaS 3편 · 사설 접근
+
+- `saas/private-access-inbound-closure`를 `saas-access`의 첫 글로 추가해 SaaS 섹션 세 축을 모두 채웠다. 사용자가 요청한 "VPN 등을 제공하는 방식"의 정본을 이 글이 맡는다.
+- 축은 두 개다. 연결 방향을 뒤집어 인터넷에서 두드릴 표면을 없애는 축과, 부여 단위를 자원으로 좁히고 요청마다 판정해 통과 기준을 네트워크 위치에서 떼어 내는 축이다. "앞의 축만 있으면 문 없는 넓은 방, 뒤의 축만 있으면 두드릴 문이 남는다"가 결론 문장이다.
+- 사고 이후의 노출 크기를 `R_net = |H|·p` 대 `R_res = |G_u|`로 두어, 자원 단위 부여가 줄이는 것은 인증 강도가 아니라 뚫린 뒤 닿을 수 있는 대상의 수임을 명시했다. 이 구분이 "이 선택은 인증 설계가 아니라 피해 범위 설계"라는 절의 결론을 만든다.
+- 구현 둘을 각각 한 절로 뒀다. 역방향 커넥터는 들어오는 규칙이 0개가 되는 대신 커넥터와 그 자격 증명이 새 신뢰 지점이 되고, 통로가 닿는 범위를 제한하지 않으면 네트워크 단위 부여와 같아진다는 점까지 적었다. 사설 엔드포인트는 인터넷 비경유·주소 겹침 무관·단방향이라는 세 성질과 승인·정책 두 단계를 다뤘다.
+- 근거: BeyondCorp(;login: 2014), Cloudflare Tunnel 커넥터 공식 문서, AWS PrivateLink 개념 문서. 제품별 세부는 공개 문서 범위까지만 서술하고 자격 증명 수명·판정 신호의 구체 값은 권고하지 않는다고 ownership에 적었다.
+- 기존 정본과의 경계: 인증과 인가의 구분·자격 증명 생애주기는 `isms-aml/isms-auth-management`, 피해 반경과 최소 권한은 `ai/agent-control-boundaries`, 나가는 연결이 인바운드 없이 성립하는 원리는 `p2p/nat-traversal`이 소유한다.
+- 브라우저 검증에서 잡은 실제 결함 3건: EndpointViz의 "제공자 내부망" 주석이 네트워크 프레임 하단과 겹쳐 프레임 높이와 인터페이스 위치를 재배치했고, GateViz의 네 번째 행이 활성 상태인데도 비활성 색으로 그려져 전용 색을 줬으며, ReachViz의 박스 라벨이 폭에 꽉 차 문구를 줄였다.
+- 3편을 넣으면서 앞선 두 편의 topology fingerprint가 stale이 된 것도 함께 갱신했다(브라우저 검증 수정이 지문 계산 뒤에 들어갔기 때문).
+- 검증: 전 audit 통과, `audit:viz --strict` ERROR 0, topology `keep`+fingerprint(saas 3편 모두 clean), tsc·eslint·build 통과(668 static route), Playwright 1440·390 overflow 0·error 0, viz 6개 24장면 전수 캡처 확인.
+
+**SaaS 섹션 신설 트랙 종결**: 엣지 요청 방어 → 무중단 전달 → 사설 접근. 사용자가 지시한 "cloudflare·aws 등이 내부적으로 어떻게 봇·공격을 막고 끊김없이 하드웨어·VPN을 제공하는지"가 세 정본으로 나뉘어 채워졌다. 남은 백로그는 온프레미스 쿠버네티스 토큰 라우팅 1건이다.

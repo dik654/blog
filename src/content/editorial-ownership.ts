@@ -11309,6 +11309,39 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "private-access-inbound-closure": {
+    title: "사설 접근 글이 소유하는 범위",
+    owns: [
+      "받는 포트를 두지 않는 선택이 없애는 것과 남기는 것의 구분",
+      "네트워크 단위·서비스 단위·요청 단위 부여의 차이와 사고 이후의 도달 범위 비교",
+      "내부 출처를 권한 근거로 삼는 관행이 좁힌 범위 안에서도 남기는 문제",
+      "역방향 커넥터의 동작 순서와 신뢰 지점 이동, 중복 구성 요건",
+      "소비자 쪽 사설 엔드포인트의 단방향성·주소 겹침 무관성과 승인·정책 두 단계",
+      "판정 근거를 네트워크 위치에서 요청 단위 신원·기기 상태로 옮기는 설계",
+      "자격 증명 수명과 철회 방식의 결합, 그리고 갱신 경로가 가용성이 되는 대가",
+    ],
+    reuses: [
+      { label: "엣지 요청 방어", href: "/saas/edge-request-defense-pipeline" },
+      { label: "무중단 전달", href: "/saas/anycast-delivery-continuity" },
+      { label: "계정·인증 관리", href: "/isms-aml/isms-auth-management" },
+      { label: "피해 반경과 최소 권한", href: "/ai/agent-control-boundaries" },
+      { label: "NAT 통과", href: "/p2p/nat-traversal" },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "제품 구조는 각 사업자의 공개 문서에 적힌 범위까지만 서술하고 확인 기준일을 함께 표시한다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "두 축 정리와 네 항목 확인 틀은 이 글이 정리한 설명 방식이며 특정 제품의 점검 목록이 아니다.",
+      },
+      {
+        kind: "standard",
+        rule: "자격 증명 수명과 판정 신호의 구체 값은 권고하지 않고 성질과 대가만 서술한다.",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

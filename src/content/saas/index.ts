@@ -1,6 +1,7 @@
 import type { Category } from "../types";
 import { saasEdgeArticles } from "./articlesEdge";
 import { saasDeliveryArticles } from "./articlesDelivery";
+import { saasAccessArticles } from "./articlesAccess";
 
 const saas: Category = {
   slug: "saas",
@@ -27,7 +28,7 @@ const saas: Category = {
       icon: "🔐",
     },
   ],
-  articles: [...saasEdgeArticles, ...saasDeliveryArticles],
+  articles: [...saasEdgeArticles, ...saasDeliveryArticles, ...saasAccessArticles],
 };
 
 export default saas;
