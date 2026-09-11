@@ -11375,6 +11375,39 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "generative-measurement-controls": {
+    title: "생성 결과 계측 검증 글이 소유하는 범위",
+    owns: [
+      "답을 아는 입력을 함께 통과시키는 계측기 검증 절차와 세 가지 대조군",
+      "얼굴 유사도가 탐지와 인식 두 단계라는 구분과 각 실패가 결과 표에 나타나는 방식",
+      "남남 쌍 분포에서 허용 오탐률을 정해 임계값을 유도하는 절차",
+      "사진으로 학습된 판정 도구의 스타일별 적용 범위와 측정 불가와 낮은 점수의 구분",
+      "잠재 공간 편집에서 오토인코더 왕복이 만드는 마스크 밖 수치의 바닥값",
+      "차분 지표가 공통 오염에 면역이고 절대 지표가 취약하다는 구분",
+      "변화량이 다른 비교를 계측기 차이로 오인하지 않게 교란을 제거하는 설계",
+    ],
+    reuses: [
+      { label: "분포 의미론", href: "/ai/distributional-semantics" },
+      { label: "비용 민감 임계", href: "/ai/cost-sensitive-thresholding" },
+      { label: "불균형 분류 평가", href: "/ai/imbalanced-classification-evaluation" },
+      { label: "VAE", href: "/ai/vae" },
+      { label: "서빙 벤치마크 방법론", href: "/ai/serving-benchmark-methodology" },
+    ],
+    evidence: [
+      {
+        kind: "project-measurement",
+        rule: "수치는 한 대의 장비에서 특정 모델 조합으로 얻은 실측이며 산출물 경로와 측정일을 함께 밝힌다.",
+      },
+      {
+        kind: "primary-source",
+        rule: "외부 임계값과 대규모 비교 수치는 해당 논문에 귀속하고 표본 규모 차이를 명시한다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "네 항목 점검 틀은 이 기록이 정리한 절차이며 표준 규격이 아니다.",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

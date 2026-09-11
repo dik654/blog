@@ -262,6 +262,24 @@ export const genArticles: Article[] = [
     component: () => import("@/pages/articles/ai/multi-component-finetuning-vram"),
   },
   {
+    slug: "generative-measurement-controls",
+    title: "계측기도 답을 아는 입력으로 먼저 검증해야 합니다",
+    subcategory: "ai-generative",
+    sections: [
+      { id: "overview", title: "계측기를 검증하지 않으면 결과 표가 조용히 비어 있습니다" },
+      {
+        id: "identity-metric",
+        title: "얼굴 심판은 두 단계이고 앞 단계가 조용히 실패합니다",
+        subsections: [{ id: "threshold-choice", title: "임계값은 남남 쌍의 분포에서 나옵니다" }],
+      },
+      { id: "style-coverage", title: "사진으로 학습된 심판을 그림에 쓰려면 범위를 먼저 재야 합니다" },
+      { id: "roundtrip-floor", title: "마스크 밖 변화량은 모델이 아니라 오토인코더를 재고 있었습니다" },
+      { id: "instrument-controls", title: "계측기마다 답을 아는 입력을 하나씩 같이 돌립니다" },
+      { id: "measurement-gate", title: "숫자를 쓰기 전에 네 가지를 답할 수 있어야 합니다" },
+    ],
+    component: () => import("@/pages/articles/ai/generative-measurement-controls"),
+  },
+  {
     slug: "in-context-lora",
     title: "In-Context LoRA: reference·target을 한 context로 이어붙이기",
     subcategory: "ai-generative",

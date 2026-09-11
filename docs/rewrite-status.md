@@ -1841,3 +1841,16 @@
 - 검증: 전 audit 통과, `audit:viz --strict` ERROR 0, topology `keep`+fingerprint, tsc·eslint·build 통과(669 static route), Playwright 1440·390 overflow 0·error 0, viz 6개 24장면 전수 캡처 확인.
 
 **사용자 지정 백로그 5건 전부 종결**: 비전 5편 → 파인튜닝 VRAM → 하드웨어 3편 → SaaS 섹션 3편 → 온프레미스 k8s 추론 인프라.
+
+### 2026-09-11 · 확산 편집 실측 시리즈 1편 · 계측기 검증
+
+- 사용자가 제공한 `~/lapis-studio-bakeoff/` 실측 기록(RTX 4090 48GB, 562회 실행, 판정 번복 3회·계측기 오류 7회)을 정본 시리즈로 옮기기 시작했다. 저장소 전수 검색에서 ArcFace·PuLID·LaMa·OpenPose·Vendi·RealESRGAN·SeedVR2가 전부 0건이었고 ControlNet·인페인팅은 각각 1건의 스쳐 지나가는 언급뿐이었다. `ai-generative`는 확산 이론은 두껍게 덮고 있으나 편집·정체성·계측 실무가 통째로 비어 있었다.
+- 1편을 계측기로 잡은 이유는 나머지 여섯 편이 전부 이 글의 임계값과 바닥값을 인용하기 때문이다. 축은 "계측기도 답을 아는 입력으로 먼저 검증해야 한다"이며, 얼굴 임계값 → 스타일 적용 범위 → 오토인코더 바닥값 → 계측기 대조군 순으로 이어진다.
+- 수치는 전부 원본 산출물에서 확인했다. `2026-09-11-identity-metric/metric_validity.json`의 남남 45쌍(사진 평균 0.132·최대 0.351, 유화 0.190·0.390, 3D 렌더 0.176·0.302, 2D 애니 탐지 0/6)을 ThresholdViz에 점 45개로 그대로 찍었고, 임계 0.28에서 6쌍·0.40에서 0쌍이 시각화와 JSON 양쪽에서 일치한다. `2026-09-11-vae-floor/srcfloor.log`의 바닥값 0.60·0.94·2.11·2.75도 FloorViz에 그대로 들어갔다.
+- 정직성 처리 세 가지: ① 0.40의 여유가 최댓값 0.390 대비 0.01뿐이라 표본이 커지면 달라질 수 있음을 본문·viz·경계에 모두 적었다. ② 2단계 표(사진 0.25~0.37 대 애니 0.62~0.73)는 변화량 자체가 달라 비교가 성립하지 않는다는 점을 명시하고 그 숫자를 결론에서 뺐다. ③ 외부 확인용으로 인용한 FLUXSynID의 0.423(FMR 0.1%, impostor 34만 건)은 표본 규모 차이를 함께 밝혔다.
+- evidence는 기존 `"프로젝트 실측"` kind와 `project-measurement` class를 썼다(저장소에 311곳 선례). 측정일·장비·산출물 경로를 note에 박는 규칙을 ownership evidence에 고정했다.
+- 기존 정본과의 경계: 코사인 유사도는 `ai/distributional-semantics`, 허용 오탐률에서 임계값을 얻는 발상은 `ai/cost-sensitive-thresholding`, 오탐률 정의는 `ai/imbalanced-classification-evaluation`, 압축·복원 손실은 `ai/vae`, 기준선을 함께 돌리는 규율은 `ai/serving-benchmark-methodology`가 소유한다.
+- 브라우저 검증에서 잡은 실제 결함 1건: FloorViz의 막대가 폭을 넘겨 "실제 누출" 라벨과 겹쳐 막대 스케일을 200에서 140으로 줄이고 라벨을 옮겼다.
+- 검증: 전 audit 통과, `audit:viz --strict` ERROR 0, topology `keep`+fingerprint, tsc·eslint·build 통과(670 static route), Playwright 1440·390 overflow 0·error 0, viz 6개 24장면 전수 캡처 확인.
+
+**남은 6편**(같은 실측 기록에서): 편집 동사 6개와 모델 라우팅 · 지우기는 인페인팅이 아님 · 해상도 예산과 영역별 리파인 · 정체성과 포즈 분리 · 다양성의 출처 · 3D 얼굴 제어 실패 기록.

@@ -72616,4 +72616,205 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "ai/generative-measurement-controls": {
+    coreIdea:
+      "생성 결과를 숫자로 판정하려면 계측기 자체를 먼저 검증해야 합니다. 답을 아는 입력을 함께 통과시켜 적용 범위와 바닥값을 확인하고, 임계값은 남남 쌍 분포에서 유도하며, 교란된 비교는 설계로 제거합니다. 이 절차 없이 얻은 숫자는 모델이 아니라 계측기의 성질을 재고 있을 수 있습니다.",
+    assumedKnowledge: [
+      { id: "cosine-similarity", role: "정규화된 벡터의 내적이 유사도가 되는 근거입니다." },
+      { id: "cost-sensitive-threshold", role: "허용 오탐률에서 임계값을 얻는 발상입니다." },
+      { id: "confusion-matrix-metrics", role: "오탐률과 미탐률의 정의입니다." },
+      { id: "vae-rate-distortion", role: "압축과 복원이 손실을 남긴다는 성질입니다." },
+      { id: "benchmark-reproducibility-baseline", role: "기준선을 함께 돌린다는 벤치마크 규율입니다." },
+    ],
+    introducedHere: [
+      { id: "known-answer-instrument-check", role: "글 전체를 관통하는 검증 절차를 세웁니다." },
+      { id: "detection-recognition-separation", role: "얼굴 심판의 두 단계와 실패 방식을 구분합니다." },
+      { id: "impostor-threshold-derivation", role: "임계값이 운영 결정임을 절차로 고정합니다." },
+      { id: "metric-style-coverage-boundary", role: "도구를 어디까지 믿을 수 있는지의 경계를 정의합니다." },
+      { id: "autoencoder-roundtrip-floor", role: "마스크 밖 수치의 바닥을 정의합니다." },
+      { id: "differential-versus-absolute-metric", role: "어떤 지표가 오염에 강한지를 구분합니다." },
+      { id: "confound-removed-comparison", role: "중간 단계의 그럴듯한 오답을 걸러 내는 설계를 정리합니다." },
+    ],
+    conceptExplanations: [
+      {
+        id: "known-answer-instrument-check",
+        sectionId: "overview",
+        intuition:
+          "저울이 맞는지 보려면 무게를 아는 추를 먼저 올려 봅니다. 모르는 물건부터 재면 눈금이 틀려도 알 수 없습니다.",
+        workedExample:
+          "원본을 그대로 통과시키기, 아무것도 바꾸지 않는 설정으로 돌리기, 같은 그림을 두 번 주기 세 가지가 이 프로젝트에서 실제로 고장을 잡아낸 대조군입니다.",
+        boundary:
+          "대조군을 통과했다고 해서 계측기가 실제 변화를 정확히 판정한다는 보장은 아닙니다. 확인되는 것은 하한이며, 결과 분포에서 다시 실패할 수 있습니다.",
+      },
+      {
+        id: "detection-recognition-separation",
+        sectionId: "identity-metric",
+        intuition:
+          "얼굴을 못 알아본 것과 애초에 얼굴이 있는 줄도 몰랐던 것은 다른 실패입니다.",
+        workedExample:
+          "탐지기가 상자와 기준점을 찾아 정렬된 크롭을 만들고, 인식기가 그것을 단위 길이 벡터로 바꿉니다. 탐지가 실패하면 벡터가 없어 유사도 계산이 시작되지 않습니다.",
+        boundary:
+          "결과 표에서는 탐지 실패가 빈칸이나 0으로 보여 낮은 유사도와 구분되지 않습니다. 이 구분을 하지 않으면 잘못된 대체 도구를 찾게 됩니다.",
+      },
+      {
+        id: "impostor-threshold-derivation",
+        sectionId: "threshold-choice",
+        intuition:
+          "경보기의 민감도는 기계가 정하는 것이 아니라 얼마나 자주 잘못 울려도 되는지가 정합니다.",
+        workedExample:
+          "명백히 다른 여섯 인물을 세 스타일로 만들어 45쌍을 재니 0.28에서 6쌍이 넘었고 0.40에서는 0쌍이었습니다. 34만 건 규모의 공개 연구도 오탐률 0.1%에서 0.423을 보고합니다.",
+        boundary:
+          "45쌍은 0.1% 수준의 오탐률을 직접 확인할 수 없는 작은 표본입니다. 최댓값 0.390과 0.40의 여유가 0.01뿐이라 표본이 커지면 값이 달라질 수 있습니다.",
+      },
+      {
+        id: "metric-style-coverage-boundary",
+        sectionId: "style-coverage",
+        intuition:
+          "사람 체온계를 그대로 오븐에 넣으면 눈금이 이상한 게 아니라 아무것도 안 나옵니다.",
+        workedExample:
+          "같은 여섯 인물을 네 스타일로 생성해 재니 사진·유화·3D 렌더는 여섯 명 전부 탐지되고 45쌍 모두 오탐이 없었는데, 2D 애니는 여섯 장 모두 탐지에 실패했습니다.",
+        boundary:
+          "탐지 여부가 스타일화 정도에 달려 있어 같은 애니라도 눈이 사실적인 게임 아트에서는 값이 나옵니다. 스타일 이름이 아니라 실제 입력으로 확인해야 합니다.",
+      },
+      {
+        id: "autoencoder-roundtrip-floor",
+        sectionId: "roundtrip-floor",
+        intuition:
+          "복사기로 복사만 해도 원본과 조금 달라집니다. 그 차이를 편집자의 실수로 세면 안 됩니다.",
+        workedExample:
+          "기록한 침범 0.6·0.7·1.0·2.0·2.8·2.9가 각 모델이 쓰는 오토인코더의 바닥값 0.60·0.60·0.94·2.11·2.75·2.75와 거의 같았고, 차감하면 전 모델 0.00~0.15였습니다.",
+        boundary:
+          "바닥값은 입력 이미지에 크게 의존합니다. 같은 오토인코더가 애니에서 1.01, 3D 렌더에서 2.88을 냈으므로 다른 그림에서 잰 값을 빼면 안 됩니다.",
+      },
+      {
+        id: "differential-versus-absolute-metric",
+        sectionId: "roundtrip-floor",
+        intuition:
+          "저울에 그릇을 올려 둔 채 재면 절대 무게는 틀리지만 재료를 더한 전후의 차이는 맞습니다.",
+        workedExample:
+          "모델 간 침범 절대값 비교는 오토인코더 차이에 오염돼 무효가 됐지만, 같은 모델·같은 소스로 두 번 돌려 얻은 차이는 공통항이 상쇄되어 그대로 살아남았습니다.",
+        boundary:
+          "차분 지표도 두 실행이 정말 같은 조건인지에 의존합니다. 한쪽만 캐시에서 답했거나 스케줄이 달랐다면 상쇄가 성립하지 않습니다.",
+      },
+      {
+        id: "confound-removed-comparison",
+        sectionId: "style-coverage",
+        intuition:
+          "두 반의 시험 점수를 비교하려면 같은 문제를 냈는지부터 확인해야 합니다.",
+        workedExample:
+          "얼굴을 다시 그린 편집에서 사진만 크게 떨어져 계측기 차이처럼 보였지만, 사진 쪽은 성별이 바뀐 변화였고 애니 쪽은 눈매가 달라진 정도라 변화량 자체가 달랐습니다.",
+        boundary:
+          "교란을 제거한 설계가 항상 가능한 것은 아닙니다. 불가능하면 그 비교로는 결론을 내지 않고 무엇이 섞여 있는지 명시하는 편이 낫습니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 검증 절차",
+        relation: "답을 아는 입력을 함께 돌림",
+        concepts: ["known-answer-instrument-check", "benchmark-reproducibility-baseline"],
+      },
+      {
+        label: "01 얼굴 심판",
+        relation: "두 단계 구분과 임계값 유도",
+        concepts: ["detection-recognition-separation", "impostor-threshold-derivation", "cosine-similarity", "cost-sensitive-threshold", "confusion-matrix-metrics"],
+      },
+      {
+        label: "02 적용 범위",
+        relation: "교란을 제거해야 드러나는 경계",
+        concepts: ["metric-style-coverage-boundary", "confound-removed-comparison"],
+      },
+      {
+        label: "03 바닥값",
+        relation: "무동작이 0이 아닐 때",
+        concepts: ["autoencoder-roundtrip-floor", "vae-rate-distortion"],
+      },
+      {
+        label: "04 지표 형태",
+        relation: "오염에 강한 비교로 설계",
+        concepts: ["differential-versus-absolute-metric"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "계측기를 검증하는 대조군 세 가지를 쓰고, 각각 무엇을 확인하는지 설명하세요.",
+        answerChecklist: ["원본 자신 — 계측기가 원본에서도 실패하는지", "무동작 — 0이 나오는지 아니면 바닥값이 있는지", "자기 자신 대 자기 자신 — 변화 없음이라고 답하는지", "비용은 실행 한 번", "없으면 회차 전체가 무의미해짐"],
+        requiredConcepts: ["known-answer-instrument-check", "benchmark-reproducibility-baseline"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "얼굴 유사도 측정이 두 단계인 이유를 쓰고, 앞 단계가 실패했을 때 결과 표에서 어떻게 보이는지 설명하세요.",
+        answerChecklist: ["탐지기가 상자와 기준점을 찾음", "인식기가 단위 길이 벡터를 만듦", "탐지 실패는 벡터가 없음", "결과 표에서 빈칸이나 0으로 보임", "낮은 유사도와 구분되지 않음"],
+        requiredConcepts: ["detection-recognition-separation", "cosine-similarity"],
+        sectionId: "identity-metric",
+      },
+      {
+        level: "basic",
+        question:
+          "임계값을 남남 쌍 분포에서 유도하는 절차를 쓰고, 측정된 두 값에서 각각 몇 쌍이 샜는지 적으세요.",
+        answerChecklist: ["서로 다른 개체들의 모든 쌍을 측정", "허용할 오탐률을 먼저 정함", "조건을 만족하는 가장 작은 값", "0.28에서 45쌍 중 6쌍", "0.40에서 0쌍", "임계값은 모델의 성질이 아니라 운영 결정"],
+        requiredConcepts: ["impostor-threshold-derivation", "cost-sensitive-threshold"],
+        sectionId: "threshold-choice",
+      },
+      {
+        level: "basic",
+        question:
+          "사진으로 학습된 얼굴 도구를 네 스타일에 적용한 결과를 쓰고, 2D 애니에서 나온 결과가 왜 '압축'이 아닌지 설명하세요.",
+        answerChecklist: ["사진·유화·3D 렌더는 6/6 탐지", "세 스타일 45쌍 모두 0.40 미만", "애니는 0/6 탐지", "값이 작아진 것이 아니라 나오지 않음", "계산이 시작되지도 않음"],
+        requiredConcepts: ["metric-style-coverage-boundary"],
+        sectionId: "style-coverage",
+      },
+      {
+        level: "basic",
+        question:
+          "오토인코더 왕복 바닥값을 어떻게 재는지 쓰고, 그 값이 마스크 밖 수치에 대해 무엇을 뜻하는지 설명하세요.",
+        answerChecklist: ["샘플링·프롬프트·마스크 없이", "인코딩과 디코딩만 수행", "그 값이 모든 마스크 밖 수치의 바닥", "이하는 무동작과 구별 불가", "입력 이미지에 의존하므로 같은 입력에서만 차감"],
+        requiredConcepts: ["autoencoder-roundtrip-floor", "vae-rate-distortion"],
+        sectionId: "roundtrip-floor",
+      },
+      {
+        level: "basic",
+        question:
+          "얼굴을 다시 그린 편집에서 사진과 애니의 값이 갈렸을 때, 이 비교로 계측기 차이를 결론지을 수 없는 이유를 설명하세요.",
+        answerChecklist: ["사진 쪽은 성별이 바뀐 큰 변화", "애니 쪽은 눈매가 달라진 정도", "변화량 자체가 다름", "계측기 차이인지 구분되지 않음", "교란을 제거한 설계가 따로 필요"],
+        requiredConcepts: ["confound-removed-comparison"],
+        sectionId: "style-coverage",
+      },
+      {
+        level: "advanced",
+        question:
+          "침범 순위가 무효화된 과정을 설명하고, 같은 측정에서 살아남은 수치와 죽은 수치를 각각 구분하세요.",
+        answerChecklist: ["기록값이 각 모델의 오토인코더 바닥값과 거의 같음", "차감하면 전 모델 0.00~0.15", "순위는 오토인코더 선택이었음", "모델 간 침범 비교는 무효", "마스크 안 변화량은 유효", "같은 모델 두 실행의 차이는 유효"],
+        requiredConcepts: ["autoencoder-roundtrip-floor", "differential-versus-absolute-metric"],
+        sectionId: "roundtrip-floor",
+      },
+      {
+        level: "advanced",
+        question:
+          "계측기 검증이 세 단계를 거쳐야 했던 이유를 쓰고, 각 단계에서 멈췄다면 어떤 결론을 냈을지 설명하세요.",
+        answerChecklist: ["1단계는 얼굴을 건드리지 않는 편집 — 네 스타일 모두 통과", "1단계만 보면 애니도 잘 된다고 결론", "2단계는 교란된 비교 — 애니가 덜 반응", "2단계만 보면 애니에서 압축된다고 결론", "3단계에서 탐지 자체가 0임을 확인", "답을 아는 입력과 교란 제거가 둘 다 필요"],
+        requiredConcepts: ["confound-removed-comparison", "metric-style-coverage-boundary", "known-answer-instrument-check"],
+        sectionId: "style-coverage",
+      },
+      {
+        level: "advanced",
+        question:
+          "'지웠는가'를 픽셀 변화량으로 판정할 수 없는 이유를 설명하고, 보조 계측기 둘이 각자의 대조군에서 어떻게 실패했는지 쓰세요.",
+        answerChecklist: ["지운 결과와 바꿔치기한 결과가 같은 크기", "오히려 바꿔치기가 더 높게 나옴", "분할 모델은 원본에서도 대상을 못 찾음", "언어 모델은 같은 그림 두 번에 절반을 제거됨이라 답함", "둘 다 프레임 파괴를 성공으로 채점", "마스크 밖 변화량만 그것을 잡아냄"],
+        requiredConcepts: ["known-answer-instrument-check", "differential-versus-absolute-metric"],
+        sectionId: "instrument-controls",
+      },
+      {
+        level: "advanced",
+        question:
+          "새 계측기를 붙일 때 확인할 네 가지를 쓰고, 각 항목에서 실제로 봐야 하는 값을 함께 적으세요.",
+        answerChecklist: ["적용 범위 · 탐지 성공률", "임계값의 근거 · 남남 쌍의 오탐률", "바닥값 · 무동작 통과 값", "지표 형태 · 절대값인지 두 실행의 차이인지", "네 항목에 답하지 못하면 그 숫자는 아직 쓸 수 없음"],
+        requiredConcepts: ["known-answer-instrument-check", "impostor-threshold-derivation", "autoencoder-roundtrip-floor"],
+        sectionId: "measurement-gate",
+      },
+    ],
+  },
 };
