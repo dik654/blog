@@ -22222,6 +22222,69 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "판정 결과의 유효 기간이 길면 정교한 판정도 의미가 줄고, 짧으면 철회가 취소 전파 없이 다음 갱신 거절만으로 이뤄진다는 관계입니다. 대가는 갱신 경로가 가용성의 일부가 되고 수명이 짧을수록 그 영향이 빨리 도달한다는 점입니다.",
     canonicalHref: "/saas/private-access-inbound-closure#credential-lifetime",
   },
+  "gateway-responsibility-decomposition": {
+    id: "gateway-responsibility-decomposition",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "게이트웨이 책임의 분해",
+    definition:
+      "외부 제공자용 게이트웨이 하나에 모여 있던 이름 변환·키 관리·한도·대체·집계가 자체 클러스터로 옮길 때 앞단 프록시·클러스터 확장점·모델 서버로 나뉘어 배치된다는 관점입니다. 새 주인이 지정되지 않은 항목은 장애 없이 조용히 사라집니다.",
+    canonicalHref: "/ai/onprem-k8s-inference-platform#overview",
+  },
+  "service-abstraction-metric-blindness": {
+    id: "service-abstraction-metric-blindness",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "기본 서비스 추상의 지표 맹점",
+    definition:
+      "준비 상태인 파드 목록만 보고 연결 수준에서 분배하는 추상이 요청 비용의 큰 분산과 모델 서버의 캐시 상태를 볼 수 없다는 한계입니다. 요청 수를 고르게 나눠도 실제 부하는 고르지 않습니다.",
+    canonicalHref: "/ai/onprem-k8s-inference-platform#service-abstraction-gap",
+  },
+  "endpoint-selection-extension-point": {
+    id: "endpoint-selection-extension-point",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "엔드포인트 선택 확장점",
+    definition:
+      "모델을 서빙하는 엔드포인트 묶음을 자원으로 선언하고, 그 묶음 안에서 어느 엔드포인트로 보낼지는 모델 서버 지표를 보는 별도 선택기가 정하게 하는 구조입니다. 엔진이 바뀌어도 선택기만 교체하면 되지만 선택기가 모든 요청 경로에 들어갑니다.",
+    canonicalHref: "/ai/onprem-k8s-inference-platform#service-abstraction-gap",
+  },
+  "group-scheduled-replica": {
+    id: "group-scheduled-replica",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "그룹 단위 복제본",
+    definition:
+      "여러 노드에 걸쳐 샤딩된 모델에서 파드 묶음 자체를 복제 단위로 다루는 추상입니다. 같은 토폴로지에 함께 배치하고 하나가 실패하면 그룹 전체를 다시 만들며 갱신도 그룹 단위로 진행해, 반쪽만 살아 있는 복제본이 자원을 점유하는 상태를 막습니다.",
+    canonicalHref: "/ai/onprem-k8s-inference-platform#group-replica",
+  },
+  "rollout-capacity-floor": {
+    id: "rollout-capacity-floor",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "갱신 중 용량 하한",
+    definition:
+      "그룹 단위 갱신이 복제본을 통째로 내렸다 올리므로 갱신 중 살아 있는 복제본의 처리량이 그 시간대 도착률을 넘어야 한다는 조건입니다. 클라우드와 달리 온프레미스에는 새 그룹을 먼저 띄울 여유분이 없어 이 하한이 실제 제약이 됩니다.",
+    canonicalHref: "/ai/onprem-k8s-inference-platform#rollout-ratio",
+  },
+  "fixed-pool-reallocation": {
+    id: "fixed-pool-reallocation",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "고정 총량의 재배분",
+    definition:
+      "가속기 총량이 고정된 환경에서 한 모델의 복제본을 늘리라는 규칙이 다른 모델의 복제본을 죽이라는 규칙과 같아진다는 성질입니다. 정적 분할·우선순위 선점·시간 분할이 이 다툼을 정리하는 세 방식이며, 어느 쪽이든 기술이 아니라 정책이 기준을 정합니다.",
+    canonicalHref: "/ai/onprem-k8s-inference-platform#fixed-pool",
+  },
+  "model-residency-restart-cost": {
+    id: "model-residency-restart-cost",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "모델 재기동 비용",
+    definition:
+      "쫓겨나거나 갱신된 복제본이 다시 처리 가능해지려면 가중치 적재와 예열을 거쳐야 한다는 지연이며, 이 시간이 재배분 규칙의 반응 주기 하한을 정합니다. 이보다 짧은 주기로 죽였다 살리면 용량이 늘기는커녕 양쪽 모두 느려집니다.",
+    canonicalHref: "/ai/onprem-k8s-inference-platform#fixed-pool",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -40514,6 +40577,78 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     to: "outbound-initiated-connector",
     relation: "contrasts",
     reason: "방향을 뒤집는 쪽과 주소를 옮기는 쪽이 같은 표면 제거를 다른 대가로 달성합니다.",
+  },
+  {
+    from: "gateway-responsibility-decomposition",
+    to: "service-abstraction-metric-blindness",
+    relation: "produces",
+    reason: "복제본 선택이 클러스터로 내려오면서 기본 추상이 그 일을 못 한다는 사실이 드러납니다.",
+  },
+  {
+    from: "service-abstraction-metric-blindness",
+    to: "endpoint-selection-extension-point",
+    relation: "produces",
+    reason: "지표가 들어갈 자리가 없다는 한계가 선택을 별도 확장점으로 빼는 구조를 부릅니다.",
+  },
+  {
+    from: "replica-routing-load-balancing",
+    to: "endpoint-selection-extension-point",
+    relation: "prerequisite",
+    reason: "어떤 규칙으로 복제본을 고르는지 알아야 그 규칙이 설 자리의 요구가 읽힙니다.",
+  },
+  {
+    from: "prefill-decode-execution-phase",
+    to: "service-abstraction-metric-blindness",
+    relation: "prerequisite",
+    reason: "요청 비용의 분산이 왜 큰지가 두 단계의 성질에서 나옵니다.",
+  },
+  {
+    from: "group-scheduled-replica",
+    to: "rollout-capacity-floor",
+    relation: "produces",
+    reason: "그룹을 통째로 내렸다 올리는 갱신 방식이 용량 하한 조건을 만듭니다.",
+  },
+  {
+    from: "endpoint-selection-extension-point",
+    to: "group-scheduled-replica",
+    relation: "prerequisite",
+    reason: "무엇을 하나의 엔드포인트로 볼지 정해야 선택기가 고를 대상이 확정됩니다.",
+  },
+  {
+    from: "fixed-pool-reallocation",
+    to: "model-residency-restart-cost",
+    relation: "constrains",
+    reason: "자리를 뺏고 돌려주는 주기가 다시 뜨는 데 걸리는 시간보다 길어야 합니다.",
+  },
+  {
+    from: "rollout-capacity-floor",
+    to: "fixed-pool-reallocation",
+    relation: "constrains",
+    reason: "갱신에 쓸 여유분을 남기는 일 자체가 고정 총량을 나누는 결정의 일부입니다.",
+  },
+  {
+    from: "little-law-stable-system",
+    to: "rollout-capacity-floor",
+    relation: "prerequisite",
+    reason: "도착률과 처리율의 관계를 알아야 남는 복제본이 감당 가능한지 계산됩니다.",
+  },
+  {
+    from: "paged-kv-block-allocation",
+    to: "service-abstraction-metric-blindness",
+    relation: "prerequisite",
+    reason: "캐시 공간이 어떻게 잡히는지를 알아야 그 사용률이 왜 선택 신호가 되는지 읽힙니다.",
+  },
+  {
+    from: "gpu-and-queue-monitoring",
+    to: "fixed-pool-reallocation",
+    relation: "prerequisite",
+    reason: "무엇을 보고 재배분을 판단할지의 신호가 관측 쪽에서 옵니다.",
+  },
+  {
+    from: "gateway-responsibility-decomposition",
+    to: "fixed-pool-reallocation",
+    relation: "contrasts",
+    reason: "외부 제공자에서는 예산 문제였던 용량 부족이 자체 클러스터에서는 우선순위 문제가 됩니다.",
   },
 ];
 

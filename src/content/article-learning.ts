@@ -72415,4 +72415,205 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "ai/onprem-k8s-inference-platform": {
+    coreIdea:
+      "온프레미스 추론 인프라를 만드는 일은 라우팅 알고리즘을 고르는 일이 아니라 그 알고리즘이 설 자리를 만드는 일입니다. 엔드포인트 선택에 모델 서버 지표가 들어갈 확장점, 파드 묶음을 복제 단위로 다루는 추상, 고정된 총량을 나누는 정책, 그리고 게이트웨이에서 내려온 항목들의 새 주인이 그 자리입니다.",
+    assumedKnowledge: [
+      { id: "replica-routing-load-balancing", role: "복제본을 고르는 규칙 자체입니다." },
+      { id: "prefill-decode-execution-phase", role: "요청 비용의 분산이 큰 이유입니다." },
+      { id: "paged-kv-block-allocation", role: "캐시 공간이 잡히는 방식입니다." },
+      { id: "little-law-stable-system", role: "도착률과 처리율의 관계입니다." },
+      { id: "gpu-and-queue-monitoring", role: "재배분 판단에 쓰이는 관측 신호입니다." },
+    ],
+    introducedHere: [
+      { id: "gateway-responsibility-decomposition", role: "글 전체의 문제 설정을 세웁니다." },
+      { id: "service-abstraction-metric-blindness", role: "기본 추상이 못 하는 것을 정의합니다." },
+      { id: "endpoint-selection-extension-point", role: "그 한계를 푸는 구조와 대가를 정의합니다." },
+      { id: "group-scheduled-replica", role: "복제본이 파드 하나가 아닐 때의 추상을 정의합니다." },
+      { id: "rollout-capacity-floor", role: "갱신이 용량에 거는 제약을 조건으로 고정합니다." },
+      { id: "fixed-pool-reallocation", role: "온프레미스 고유 제약과 세 가지 정리 방식을 세웁니다." },
+      { id: "model-residency-restart-cost", role: "재배분 주기의 하한을 정의합니다." },
+    ],
+    conceptExplanations: [
+      {
+        id: "gateway-responsibility-decomposition",
+        sectionId: "overview",
+        intuition:
+          "한 사람이 하던 일을 팀으로 나눌 때, 목록을 적지 않으면 아무도 안 맡는 일이 생깁니다.",
+        workedExample:
+          "이름 변환과 키 관리는 앞단 프록시에 남고, 복제본 선택은 클러스터 확장점으로 내려가며, 부하 상태 노출은 모델 서버가 맡습니다.",
+        boundary:
+          "새 주인이 지정되지 않은 항목은 장애를 내지 않고 사라집니다. 사용량 집계나 요청 기록처럼 없어도 당장 티가 안 나는 항목이 특히 그렇습니다.",
+      },
+      {
+        id: "service-abstraction-metric-blindness",
+        sectionId: "service-abstraction-gap",
+        intuition:
+          "줄 세 개에 손님을 번갈아 넣으면 되는 창구와, 손님마다 볼일의 길이가 수십 배 다른 창구는 다릅니다.",
+        workedExample:
+          "복제본 셋이 요청을 두 건씩 받고 있어도 한쪽은 긴 입력을 처리 중이고 다른 쪽은 거의 끝난 상태라 실제 부하는 크게 벌어집니다.",
+        boundary:
+          "요청 수는 프록시가 셀 수 있지만 남은 양은 셀 수 없습니다. 출력 길이는 생성이 끝나야 확정되므로 보낸 수로 나누는 규칙은 긴 요청이 몰린 쪽으로 계속 보내는 편향을 만듭니다.",
+      },
+      {
+        id: "endpoint-selection-extension-point",
+        sectionId: "service-abstraction-gap",
+        intuition:
+          "누구에게 보낼지 정하는 일을 배달원이 아니라 매장 상황을 아는 사람에게 맡기는 것입니다.",
+        workedExample:
+          "모델을 서빙하는 엔드포인트 묶음을 자원으로 선언하고, 대기 중인 요청 수와 캐시 사용 상황, 적재된 어댑터를 보는 선택기가 그 안에서 고릅니다.",
+        boundary:
+          "선택기가 모든 요청 경로에 들어가므로 그 지연과 가용성이 그대로 서비스에 반영됩니다. 지표는 긁는 주기만큼 지난 값이라 그 사이 요청이 한곳으로 몰리는 구간이 남습니다.",
+      },
+      {
+        id: "group-scheduled-replica",
+        sectionId: "group-replica",
+        intuition:
+          "네 명이 함께 드는 짐은 한 명이 손을 놓으면 나머지 셋도 아무것도 못 합니다.",
+        workedExample:
+          "대표 파드 하나와 작업자 파드들을 한 그룹으로 묶어 같은 토폴로지에 함께 배치하고, 하나가 실패하면 그룹 전체를 다시 만들며, 갱신도 그룹 단위로 하나씩 진행합니다.",
+        boundary:
+          "부분 배치도 막아야 합니다. 여덟 개 중 여섯 개만 자리를 잡으면 그 여섯이 아무 일도 못 하면서 자원을 점유하고, 여러 그룹이 서로의 부분 배치에 막혀 아무도 뜨지 못할 수 있습니다.",
+      },
+      {
+        id: "rollout-capacity-floor",
+        sectionId: "rollout-ratio",
+        intuition:
+          "네 대로 돌리던 일을 한 대 정비하는 동안 세 대로 버틸 수 있어야 정비를 시작할 수 있습니다.",
+        workedExample:
+          "복제본 N개 중 k개를 동시에 내릴 때 (N−k)·μ가 그 시간대 도착률 λ보다 커야 하며, 이 부등식을 k에 대해 풀면 한 번에 내릴 수 있는 수의 상한이 나옵니다.",
+        boundary:
+          "새 복제본이 뜨자마자 처리율 μ를 낸다고 가정한 계산입니다. 적재와 예열이 끝나기 전에는 그보다 낮고, 부등식이 아슬아슬한 구간에서는 대기열이 급격히 길어지므로 여유를 두고 씁니다.",
+      },
+      {
+        id: "fixed-pool-reallocation",
+        sectionId: "fixed-pool",
+        intuition:
+          "방 개수가 정해진 집에서 한 사람에게 방을 더 주려면 다른 사람의 방을 빼야 합니다.",
+        workedExample:
+          "가속기 12장을 세 모델이 네 장씩 쓰고 있을 때 한 모델을 여섯 장으로 늘리라는 규칙은 다른 모델에서 두 장을 빼라는 규칙과 같습니다.",
+        boundary:
+          "정적 분할은 사용률을 낮추고, 우선순위 선점은 진행 중 요청을 끊으며, 시간 분할은 미룰 수 있는 작업에만 쓸 수 있습니다. 어느 모델이 멈춰도 되는지는 기술로 정해지지 않으므로 이 결정은 정책입니다.",
+      },
+      {
+        id: "model-residency-restart-cost",
+        sectionId: "fixed-pool",
+        intuition:
+          "가마솥을 껐다 켜는 데 한 시간이 걸리면 십 분 단위로 껐다 켜는 규칙은 음식을 못 만듭니다.",
+        workedExample:
+          "쫓겨난 복제본이 다시 처리하려면 가중치를 읽어 올리고 예열을 거쳐야 하며, 이 시간이 재배분 규칙의 반응 주기 하한이 됩니다.",
+        boundary:
+          "이 시간은 모델 크기와 저장 경로에 따라 크게 달라지므로 일반적인 값을 쓸 수 없습니다. 각 환경에서 직접 재고 그 값으로 규칙의 주기를 잡아야 합니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 책임 배치",
+        relation: "게이트웨이 항목이 어디로 가는지",
+        concepts: ["gateway-responsibility-decomposition"],
+      },
+      {
+        label: "01 선택의 자리",
+        relation: "지표가 들어갈 확장점을 만듦",
+        concepts: ["service-abstraction-metric-blindness", "endpoint-selection-extension-point", "replica-routing-load-balancing", "prefill-decode-execution-phase", "paged-kv-block-allocation"],
+      },
+      {
+        label: "02 복제 단위",
+        relation: "파드 묶음을 하나로 다룸",
+        concepts: ["group-scheduled-replica"],
+      },
+      {
+        label: "03 갱신",
+        relation: "내려도 되는 수의 상한",
+        concepts: ["rollout-capacity-floor", "little-law-stable-system"],
+      },
+      {
+        label: "04 총량",
+        relation: "고정된 자리를 나누는 정책",
+        concepts: ["fixed-pool-reallocation", "model-residency-restart-cost", "gpu-and-queue-monitoring"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "외부 제공자용 게이트웨이가 하던 일을 자체 클러스터로 옮길 때 항목별 주인을 세 갈래로 나누고, 주인을 지정하지 않으면 무엇이 일어나는지 쓰세요.",
+        answerChecklist: ["앞단 프록시에 남는 항목", "클러스터 확장점으로 내려가는 항목", "모델 서버가 노출하는 값으로 대체되는 항목", "주인 없는 항목은 조용히 사라짐", "당장 장애가 안 나는 항목일수록 위험"],
+        requiredConcepts: ["gateway-responsibility-decomposition"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "기본 서비스 추상이 추론 요청 분배에 맞지 않는 이유를 두 가지 쓰세요.",
+        answerChecklist: ["요청 하나의 비용 분산이 큼", "요청 수를 고르게 나눠도 부하는 고르지 않음", "모델 서버가 캐시 상태를 가짐", "연결 수준 규칙은 그 상태를 볼 수 없음"],
+        requiredConcepts: ["service-abstraction-metric-blindness", "prefill-decode-execution-phase"],
+        sectionId: "service-abstraction-gap",
+      },
+      {
+        level: "basic",
+        question:
+          "엔드포인트 선택 확장점이 무엇을 분리하는지 설명하고, 선택기가 보는 모델 서버 지표를 세 가지 쓰세요.",
+        answerChecklist: ["엔드포인트 묶음을 자원으로 선언", "선택을 별도 구성요소로 분리", "대기 중인 요청 수", "캐시 사용 상황", "적재된 어댑터", "값이 모델 서버에서 옴"],
+        requiredConcepts: ["endpoint-selection-extension-point", "replica-routing-load-balancing"],
+        sectionId: "service-abstraction-gap",
+      },
+      {
+        level: "basic",
+        question:
+          "여러 노드에 걸친 모델을 기본 배포 추상으로 올렸을 때 파드 하나가 죽으면 무엇이 일어나는지 설명하세요.",
+        answerChecklist: ["죽은 파드 하나만 새로 생성", "나머지는 이미 초기화를 마침", "대부분의 분산 실행이 재합류를 지원하지 않음", "반쪽만 살아 있는 복제본이 남음", "요청은 못 하면서 가속기는 점유"],
+        requiredConcepts: ["group-scheduled-replica"],
+        sectionId: "group-replica",
+      },
+      {
+        level: "basic",
+        question:
+          "복제본 4개 중 1개를 갱신하는 동안 살아 있는 복제본이 감당해야 하는 조건을 부등식으로 쓰고, 온프레미스에서 이것이 실제 제약이 되는 이유를 설명하세요.",
+        answerChecklist: ["(N−k)·μ > λ", "N=4, k=1이면 3μ > λ", "클라우드는 새 복제본을 먼저 띄움", "온프레미스에는 여유분이 없음", "내렸다 올리는 순서밖에 쓸 수 없음"],
+        requiredConcepts: ["rollout-capacity-floor", "little-law-stable-system"],
+        sectionId: "rollout-ratio",
+      },
+      {
+        level: "basic",
+        question:
+          "고정 총량에서 자리를 나누는 세 가지 방식을 쓰고, 각각이 포기하는 것을 함께 적으세요.",
+        answerChecklist: ["정적 분할 · 전체 사용률이 낮음", "우선순위 선점 · 진행 중 요청이 끊김", "시간 분할 · 미룰 수 있는 작업에만 적용", "세 방식은 배타적이지 않음"],
+        requiredConcepts: ["fixed-pool-reallocation"],
+        sectionId: "fixed-pool",
+      },
+      {
+        level: "advanced",
+        question:
+          "프록시가 자체적으로 요청 수를 세는 방식과 모델 서버 지표를 쓰는 방식의 차이를 설명하고, 후자에도 남는 한계와 그 보정 방법을 쓰세요.",
+        answerChecklist: ["프록시는 보낸 수만 알고 남은 양은 모름", "출력 길이는 생성이 끝나야 확정", "모델 서버는 배치·대기열·캐시 여유를 앎", "지표는 긁는 주기만큼 지난 값", "그 구간의 요청이 한곳으로 몰림", "보낸 직후의 요청을 따로 세어 보정"],
+        requiredConcepts: ["endpoint-selection-extension-point", "service-abstraction-metric-blindness", "paged-kv-block-allocation"],
+        sectionId: "service-abstraction-gap",
+      },
+      {
+        level: "advanced",
+        question:
+          "그룹 단위 복제본에서 부분 배치를 막아야 하는 이유를 설명하고, 막지 않았을 때 여러 그룹 사이에 생기는 문제를 쓰세요.",
+        answerChecklist: ["일부만 뜨면 아무 일도 못 함", "그러면서 자원은 점유", "전부 놓을 수 있을 때만 놓는 판단 필요", "여러 그룹이 서로의 부분 배치에 막힘", "아무도 뜨지 못하는 상태"],
+        requiredConcepts: ["group-scheduled-replica", "rollout-capacity-floor"],
+        sectionId: "group-replica",
+      },
+      {
+        level: "advanced",
+        question:
+          "모델마다 자동 확장 규칙을 따로 써 두었을 때 고정 총량에서 생기는 문제를 설명하고, 재배분 규칙의 주기를 무엇이 정하는지 쓰세요.",
+        answerChecklist: ["늘리라는 규칙이 죽이라는 규칙과 같아짐", "서로를 밀어내는 규칙이 동시에 돔", "다시 뜨려면 가중치 적재와 예열", "그 시간이 반응 주기의 하한", "더 짧은 주기면 양쪽 모두 느려짐"],
+        requiredConcepts: ["fixed-pool-reallocation", "model-residency-restart-cost", "gpu-and-queue-monitoring"],
+        sectionId: "fixed-pool",
+      },
+      {
+        level: "advanced",
+        question:
+          "자체 클러스터로 옮기기 전에 답해야 하는 네 가지 질문을 쓰고, 각 질문에서 흔히 나오는 나쁜 답이 무엇을 뜻하는지 설명하세요.",
+        answerChecklist: ["복제본 선택을 누가 정하는가", "앞단 프록시가 순서대로면 가속기가 놀고 있음", "복제본 하나가 파드 몇 개인가", "기본 배포 추상이면 첫 장애에서 반쪽만 남음", "부하가 늘면 누가 자리를 내주는가", "주인이 지정되지 않은 항목이 있는가"],
+        requiredConcepts: ["gateway-responsibility-decomposition", "group-scheduled-replica", "fixed-pool-reallocation"],
+        sectionId: "platform-gate",
+      },
+    ],
+  },
 };

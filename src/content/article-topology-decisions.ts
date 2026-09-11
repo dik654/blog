@@ -274,6 +274,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "사업자 공개 문서와 인용 문헌의 범위를 벗어난 제품 일반화를 하지 않고 자격 증명 수명·판정 신호의 구체 값을 권고하지 않는다.",
   },
+  "ai/onprem-k8s-inference-platform": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-09-11",
+    rationale:
+      "본문은 6 section·concept 7개로 keep 범위다. 선택의 자리·복제 단위·고정 총량이 하나의 이전 결정을 함께 떠받치는 구조라 나누면 각 글이 같은 전제를 다시 세워야 한다.",
+    sharedGate:
+      "공개 프로젝트 문서에 적힌 구조까지만 근거로 삼고 구현별 성능·성숙도 평가와 구체 설정값 권고를 하지 않는다.",
+  },
 };
 
 /**
@@ -345,4 +354,5 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "saas/edge-request-defense-pipeline": "8e5a816ebdc10526",
   "saas/anycast-delivery-continuity": "2075a2f45f73e4a4",
   "saas/private-access-inbound-closure": "83a3283cfe7a8fd4",
+  "ai/onprem-k8s-inference-platform": "ee6dd6a304c15e68",
 };

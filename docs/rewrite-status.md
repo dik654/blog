@@ -1828,3 +1828,16 @@
 - 검증: 전 audit 통과, `audit:viz --strict` ERROR 0, topology `keep`+fingerprint(saas 3편 모두 clean), tsc·eslint·build 통과(668 static route), Playwright 1440·390 overflow 0·error 0, viz 6개 24장면 전수 캡처 확인.
 
 **SaaS 섹션 신설 트랙 종결**: 엣지 요청 방어 → 무중단 전달 → 사설 접근. 사용자가 지시한 "cloudflare·aws 등이 내부적으로 어떻게 봇·공격을 막고 끊김없이 하드웨어·VPN을 제공하는지"가 세 정본으로 나뉘어 채워졌다. 남은 백로그는 온프레미스 쿠버네티스 토큰 라우팅 1건이다.
+
+### 2026-09-11 · 백로그 5번 · 온프레미스 쿠버네티스 추론 인프라
+
+- `ai/onprem-k8s-inference-platform`을 `ai-llm-serving`의 `llm-serving-ops` 뒤에 추가해 사용자가 지시한 마지막 백로그를 닫았다. 저장소 전수 검색에서 KServe·Ray Serve·LeaderWorkerSet·Gateway API Inference Extension·InferencePool 언급이 0건임을 먼저 확인했다.
+- 기존 정본과 겹치지 않도록 범위를 좁혔다. `ai/disaggregated-prefill-decode-serving#routing`이 이미 복제본 라우팅 규칙(shortest queue·prefix affinity·cache-aware)을 소유하므로, 이 글은 **그 규칙이 쿠버네티스 안에서 설 자리**만 다룬다. `ai/llm-serving-ops#k8s-gpu-fleet`이 소유하는 "요청된 Pod에서 Ready capacity까지"와도 분리했다.
+- 축은 "온프레미스는 총량이 고정이라 배치가 곧 정책"이다. 게이트웨이 책임 분해 → 기본 서비스 추상의 지표 맹점과 엔드포인트 선택 확장점 → 파드 묶음을 복제 단위로 다루는 추상 → 고정 총량의 재배분 → 인계되지 않은 항목 순으로 이어진다.
+- 갱신 중 용량 하한을 `(N − k)·μ > λ`로 두고 k에 대해 풀어 한 번에 내릴 수 있는 복제본 수의 상한을 만들었다. 클라우드는 새 그룹을 먼저 띄워 이 제약을 피하지만 온프레미스에는 그 여유분이 없다는 점이 부등식이 실제 제약이 되는 이유다.
+- 근거: Gateway API Inference Extension 소개 글과 프로젝트 문서(엔드포인트 묶음 선언 + 선택기 분리, 대기열 깊이·KV 캐시 사용률·어댑터 적재를 선택 신호로), LeaderWorkerSet 프로젝트 문서(대표·작업자 이중 템플릿, 토폴로지 배치, 전체 재생성, 그룹 단위 갱신). 구현별 성능·성숙도 평가와 구체 설정값 권고는 하지 않는다고 ownership에 적었다.
+- 병합기 함정 재발 방지: `articlesLLM.ts`의 `llmBaseArticles`가 지역 배열이라 `after: "llm-serving-ops"`가 무시될 상황이어서 export로 바꿨다. 이제 제자리 insert 된다.
+- 브라우저 검증에서 잡은 실제 결함 3건: PlatformViz의 "주인이 없으면 사라집니다" 주석이 항목 박스와 겹쳐 프레임·항목 간격을 줄이고 주석을 프레임 밖으로 뺐고, 같은 장면에서 "제공자 대체"까지 사라진 항목으로 표시돼 본문과 어긋나 "사용량 집계" 하나만 남겼으며, EndpointViz의 지표 목록이 엔드포인트 묶음 프레임 아래로 파고들어 위치를 옮기고 부하 막대 폭을 줄여 라벨이 잘리지 않게 했다.
+- 검증: 전 audit 통과, `audit:viz --strict` ERROR 0, topology `keep`+fingerprint, tsc·eslint·build 통과(669 static route), Playwright 1440·390 overflow 0·error 0, viz 6개 24장면 전수 캡처 확인.
+
+**사용자 지정 백로그 5건 전부 종결**: 비전 5편 → 파인튜닝 VRAM → 하드웨어 3편 → SaaS 섹션 3편 → 온프레미스 k8s 추론 인프라.

@@ -11342,6 +11342,39 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "onprem-k8s-inference-platform": {
+    title: "온프레미스 추론 인프라 글이 소유하는 범위",
+    owns: [
+      "외부 게이트웨이의 항목들이 자체 클러스터에서 어디로 배치되는지의 분해",
+      "기본 서비스 추상이 추론 분배에 맞지 않는 두 가지 이유",
+      "엔드포인트 묶음 선언과 선택기 분리라는 확장점 구조와 그 대가",
+      "여러 노드에 걸친 복제본을 그룹 단위로 다루는 추상과 부분 배치 문제",
+      "그룹 단위 갱신이 만드는 용량 하한 조건과 온프레미스에서의 의미",
+      "고정 총량에서 자동 확장이 재배분이 된다는 성질과 세 가지 정리 방식",
+      "재기동 비용이 재배분 규칙의 반응 주기 하한을 정한다는 관계",
+    ],
+    reuses: [
+      { label: "분리 서빙의 복제본 라우팅", href: "/ai/disaggregated-prefill-decode-serving" },
+      { label: "LLM 게이트웨이와 모델 라우팅", href: "/ai/llm-gateway-and-model-routing" },
+      { label: "LLM 서빙 운영", href: "/ai/llm-serving-ops" },
+      { label: "추론 비용과 용량 계획", href: "/ai/inference-cost-and-capacity-planning" },
+      { label: "레이트 리밋과 신뢰성 패턴", href: "/ai/rate-limiting-and-reliability-patterns" },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "구성요소의 구조는 공개 프로젝트 문서에 적힌 범위까지만 서술하고 확인 기준일을 함께 표시한다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "책임 분해와 네 항목 확인 틀은 이 글이 정리한 설명 방식이며 특정 구현의 성능이나 성숙도를 평가하지 않는다.",
+      },
+      {
+        kind: "standard",
+        rule: "용량 부등식은 명시한 가정 아래 상한을 계산하는 방법이며 복제본 수·갱신 단위·수집 주기의 구체 값은 권고하지 않는다.",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

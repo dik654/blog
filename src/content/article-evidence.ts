@@ -6812,4 +6812,24 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "소비자 서브넷의 엔드포인트 인터페이스, 공개 인터넷 비경유, 소비자 요청·제공자 수락, 엔드포인트 정책, 위치별 이름 해석의 출처 (2026-09-11 확인)",
     },
   ],
+  "ai/onprem-k8s-inference-platform": [
+    {
+      kind: "공식 문서",
+      label: "Kubernetes — Gateway API Inference Extension 소개",
+      href: "https://kubernetes.io/blog/2025/06/05/introducing-gateway-api-inference-extension/",
+      note: "일반 분배가 모델 서버 지표를 보지 못한다는 문제 제기와 엔드포인트 묶음·선택기 구조의 출처 (2026-09-11 확인)",
+    },
+    {
+      kind: "공식 문서",
+      label: "Gateway API Inference Extension 프로젝트 문서",
+      href: "https://gateway-api-inference-extension.sigs.k8s.io/",
+      note: "엔드포인트 선택기가 모델 서버가 제공하는 성능·가용성·능력 데이터를 써서 고른다는 설명의 출처 (2026-09-11 확인)",
+    },
+    {
+      kind: "공식 문서",
+      label: "Kubernetes SIG — LeaderWorkerSet",
+      href: "https://github.com/kubernetes-sigs/lws",
+      note: "파드 묶음을 복제 단위로 다루는 API, 대표·작업자 이중 템플릿, 토폴로지 배치와 전체 재생성, 그룹 단위 갱신의 출처 (2026-09-11 확인)",
+    },
+  ],
 };
