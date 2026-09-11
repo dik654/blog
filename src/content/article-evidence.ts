@@ -6849,7 +6849,7 @@ export const ARTICLE_EVIDENCE: Readonly<
       kind: "핵심 논문",
       label: "FLUXSynID — 합성 신원 데이터셋 생성 (ICCVW 2025, arXiv:2505.07530)",
       href: "https://arxiv.org/abs/2505.07530",
-      note: "남남 34만 건 비교에서 오탐률 0.1%에 해당하는 임계값 0.423을 보고하며 본문의 0.40 선택을 독립 확인함",
+      note: "CFD 데이터셋 기반 impostor 34만 건 비교에서 ArcFace 오탐률 0.1%에 해당하는 임계값 0.423을 보고. 같은 표의 AdaFace 값은 0.253이므로 이 수치는 인식기별 값이며, 본문이 ArcFace를 쓰기 때문에 비교가 성립함",
     },
   ],
   "ai/masked-edit-verb-routing": [
@@ -6953,9 +6953,21 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
     {
       kind: "핵심 논문",
+      label: "Ho · Salimans — Classifier-Free Diffusion Guidance (arXiv:2207.12598, 2022)",
+      href: "https://arxiv.org/abs/2207.12598",
+      note: "안내가 모드 커버리지와 표본 충실도를 맞바꾼다는 본문 서술의 출처. 정체성 다양성을 직접 측정한 연구는 아니며 이 글은 그 맞바꿈이 같은 방향으로 작용한다는 근거로만 인용함",
+    },
+    {
+      kind: "선행·비교 논문",
+      label: "1.x-Distill — 증류에서의 다양성·품질·효율 장벽 (arXiv:2604.04018, 2026)",
+      href: "https://arxiv.org/abs/2604.04018",
+      note: "소수 단계 증류가 모드 붕괴를 일으킨다는 문제 설정의 출처. 분포 정합 증류 계열을 대상으로 하며 본문이 측정한 가중치와 같은 증류 방식이 아님",
+    },
+    {
+      kind: "핵심 논문",
       label: "FLUXSynID — 합성 신원 데이터셋 생성 (ICCVW 2025, arXiv:2505.07530)",
       href: "https://arxiv.org/abs/2505.07530",
-      note: "비증류 가중치로 14,889개 생성 후 6,641명 보존(44.6%). 본문의 보존율 비교 기준이며 모델과 어휘가 다르므로 직접 비교가 아님",
+      note: "비증류 FLUX.1-dev로 14,889개 생성 후 ArcFace 오탐률 0.1% 기준에서 6,641명 보존(44.6%). 같은 표의 0.01% 행은 9,358명(62.9%)이므로 본문은 임계값이 가까운 0.1% 행을 비교 기준으로 삼음. 모델과 어휘가 달라 직접 비교가 아님",
     },
   ],
   "ai/negative-result-3d-face-control": [
