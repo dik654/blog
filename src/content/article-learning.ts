@@ -72014,4 +72014,204 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "saas/anycast-delivery-continuity": {
+    coreIdea:
+      "무중단은 고장이 없다는 뜻이 아니라 고장에서 트래픽이 옮겨 가는 시간이 짧다는 뜻입니다. 그 시간은 감지·이동·되돌리기 세 구간으로 나뉘고, 경로 층과 서버 층의 장치는 가운데 구간만 줄이므로 검사 설계와 변경 절차가 나머지 두 구간을 맡아야 총 장애 시간이 줄어듭니다.",
+    assumedKnowledge: [
+      { id: "graceful-degradation-and-failover", role: "중복 구성과 장애 조치의 일반 개념입니다." },
+      { id: "circuit-breaker-and-health-check", role: "건강 검사와 차단기의 기본 동작입니다." },
+      { id: "replica-routing-load-balancing", role: "복제본 사이의 요청 분배 전략입니다." },
+      { id: "defense-layer-cost-gradient", role: "엣지에서 층을 나눠 배치하는 비용 원칙입니다." },
+    ],
+    introducedHere: [
+      { id: "interruption-time-decomposition", role: "무중단을 시간으로 환산하는 틀을 세웁니다." },
+      { id: "anycast-catchment", role: "경로 층에서 지점이 정해지는 방식을 정의합니다." },
+      { id: "anycast-flip-connection-loss", role: "같은 성질이 만드는 연결 손실의 경계를 고정합니다." },
+      { id: "rehash-blast-radius", role: "서버 층에서 장애가 번지는 범위를 비율로 정의합니다." },
+      { id: "previous-owner-fallback-forwarding", role: "옮긴 연결을 살리는 장치와 그 대가를 정의합니다." },
+      { id: "health-probe-depth-tradeoff", role: "감지 구간을 정하는 설계 선택을 정리합니다." },
+      { id: "correlated-change-blast-radius", role: "중복 구성이 막지 못하는 실패와 그 대응을 세웁니다." },
+    ],
+    conceptExplanations: [
+      {
+        id: "interruption-time-decomposition",
+        sectionId: "overview",
+        intuition:
+          "소방차가 몇 대인지보다 불이 났다는 사실을 언제 알고 몇 분 만에 도착하는지가 피해를 정합니다.",
+        workedExample:
+          "감지 6초·이동 1초·되돌리기 30분인 구성에서 이동을 0으로 만들어도 사용자가 겪는 시간은 거의 그대로입니다.",
+        boundary:
+          "세 구간이 항상 순서대로 일어나는 것은 아닙니다. 계획된 작업처럼 감지 구간이 아예 없는 경우가 있고, 데이터가 망가지는 변경처럼 시간으로 환산되지 않는 피해도 있습니다.",
+      },
+      {
+        id: "anycast-catchment",
+        sectionId: "anycast-routing",
+        intuition:
+          "같은 전화번호를 여러 지사가 나눠 받는 것과 같습니다. 어느 지사가 받을지는 전화망이 정합니다.",
+        workedExample:
+          "한 지점이 광고를 멈추면 그 지점으로 가던 경로가 사라지고, 다음 순간부터 그 트래픽은 남은 지점 중 하나로 흘러갑니다. 새 주소를 알려 줄 필요가 없습니다.",
+        boundary:
+          "캐치먼트는 지도상 거리가 아니라 경로 정책으로 정해지므로 예측이 어렵습니다. 지점을 뺄 때 그 캐치먼트가 통째로 이웃에 얹히므로 이웃의 여유 용량을 미리 확인해야 합니다.",
+      },
+      {
+        id: "anycast-flip-connection-loss",
+        sectionId: "catchment-flip",
+        intuition:
+          "통화 중에 전화가 다른 지사로 연결되면 상대는 무슨 이야기를 하던 중인지 모릅니다.",
+        workedExample:
+          "약 9,000개 관측 지점과 11개 애니캐스트 서비스 조합 중 약 1%가 불안정했고, 연결 지향 프로토콜에서 지점이 갈리는 경우는 약 0.15% 조합에서 관찰됐습니다.",
+        boundary:
+          "측정 대상이 루트 DNS 배치라 상용 CDN 분포와 같다고 볼 수 없습니다. 이 수치는 절대적 안정성의 근거가 아니라 드물지만 특정 위치에는 지속적으로 나쁘다는 성질의 근거로만 씁니다.",
+      },
+      {
+        id: "rehash-blast-radius",
+        sectionId: "site-balancing",
+        intuition:
+          "번호표를 사람 수로 나눈 나머지로 창구를 정하면 창구 하나가 닫히는 순간 거의 모든 사람의 창구가 바뀝니다.",
+        workedExample:
+          "연결 9개와 서버 3대에서 서버 하나가 빠질 때 나머지 연산은 6개를 옮기고, 각 서버에 고유한 순서를 주는 방식은 3개만 옮깁니다.",
+        boundary:
+          "줄여 주는 것은 옮기는 연결의 수이지 옮긴 연결이 끊기지 않는다는 보장이 아닙니다. 비율은 해시가 고르게 뿌린다는 가정과 한 대만 빠진다는 가정에서 나옵니다.",
+      },
+      {
+        id: "previous-owner-fallback-forwarding",
+        sectionId: "connection-affinity",
+        intuition:
+          "이사 간 집에 온 우편물을 버리지 않고 옛 주소로 한 번 더 보내 주는 것과 같습니다.",
+        workedExample:
+          "각 칸에 현재와 직전 담당을 함께 두고, 도착한 서버에 상태가 없으면 원래 패킷을 감싸 직전 담당으로 넘깁니다. 중앙 연결 목록이 없어도 기존 연결이 살아남습니다.",
+        boundary:
+          "대가는 재배정 직후의 추가 전달 한 번이며 지연과 내부 대역폭이 늘어납니다. 직전 담당까지만 기억하므로 짧은 간격으로 두 번 재배정되면 그 사이 연결은 살아남지 못합니다.",
+      },
+      {
+        id: "health-probe-depth-tradeoff",
+        sectionId: "health-and-drain",
+        intuition:
+          "숨을 쉬는지만 확인할지, 일할 수 있는지 물어볼지, 거래처에 전화까지 걸어 볼지의 차이입니다.",
+        workedExample:
+          "주기 2초에 연속 3회 실패를 조건으로 두면 감지에 최대 6초가 걸리고, 그 6초 동안의 요청은 그대로 실패합니다.",
+        boundary:
+          "깊은 검사는 공용 종속성이 흔들릴 때 모든 서버를 동시에 제외해 남는 용량을 0으로 만듭니다. 계획된 작업에서는 검사를 기다리지 말고 새 연결만 끊는 빼기를 쓰되, 남은 서버에 여유가 있어야 성립합니다.",
+      },
+      {
+        id: "correlated-change-blast-radius",
+        sectionId: "correlated-change",
+        intuition:
+          "배를 여러 척으로 나눠도 모든 배에 같은 구멍을 동시에 뚫으면 함께 가라앉습니다.",
+        workedExample:
+          "피해량은 그 단계가 받는 트래픽 비율에 감지 시간과 되돌리기 시간의 합을 곱한 값이며, 첫 단계를 전체의 1%로 두면 비율이 1에서 0.01로 줄어듭니다.",
+        boundary:
+          "단계가 전체를 대표한다는 가정이 필요합니다. 첫 단계에 없는 조건에서만 터지는 문제는 잡히지 않고, 데이터가 망가지는 변경은 비율에 비례한다는 전제 자체가 성립하지 않습니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 시간으로 보기",
+        relation: "무중단을 세 구간의 합으로 환산",
+        concepts: ["interruption-time-decomposition", "graceful-degradation-and-failover"],
+      },
+      {
+        label: "01 경로 층",
+        relation: "지점을 정하는 규칙과 그 부작용",
+        concepts: ["anycast-catchment", "anycast-flip-connection-loss", "defense-layer-cost-gradient"],
+      },
+      {
+        label: "02 서버 층",
+        relation: "목록 변화가 연결에 미치는 범위와 대응",
+        concepts: ["rehash-blast-radius", "previous-owner-fallback-forwarding", "replica-routing-load-balancing"],
+      },
+      {
+        label: "03 판정 층",
+        relation: "감지 구간을 정하는 검사 설계",
+        concepts: ["health-probe-depth-tradeoff", "circuit-breaker-and-health-check"],
+      },
+      {
+        label: "04 변경 층",
+        relation: "중복으로 막히지 않는 실패를 절차로 막음",
+        concepts: ["correlated-change-blast-radius"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "사용자가 겪는 장애 시간을 세 구간으로 나누고, 중복 구성이 줄여 주는 구간이 어느 것인지 쓰세요.",
+        answerChecklist: ["감지 시간", "이동 시간", "되돌리기 시간", "중복 구성은 이동 구간만 줄임", "나머지가 크면 총합이 줄지 않음"],
+        requiredConcepts: ["interruption-time-decomposition", "graceful-degradation-and-failover"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "캐치먼트가 무엇인지 정의하고, 지점 하나를 뺄 때 무엇을 미리 확인해야 하는지 쓰세요.",
+        answerChecklist: ["지점이 실제로 받는 출처의 집합", "지도 거리가 아니라 경로 정책이 정함", "캐치먼트가 이웃에 통째로 얹힘", "이웃 지점의 여유 용량 확인"],
+        requiredConcepts: ["anycast-catchment"],
+        sectionId: "anycast-routing",
+      },
+      {
+        level: "basic",
+        question:
+          "경로가 바뀔 때 이미 맺어진 연결이 끊기는 이유를 설명하고, 측정으로 보고된 수치를 인용 범위와 함께 쓰세요.",
+        answerChecklist: ["새 지점에 연결 상태가 없음", "모르는 연결이라 거절", "약 1%가 불안정", "연결 지향은 약 0.15% 조합", "불안정 조합의 80%가 일주일 이상 지속", "루트 DNS 대상이라 상용 CDN에 그대로 적용 불가"],
+        requiredConcepts: ["anycast-flip-connection-loss"],
+        sectionId: "catchment-flip",
+      },
+      {
+        level: "basic",
+        question:
+          "연결 9개와 서버 3대에서 한 대가 빠질 때 나머지 연산과 일관 해싱이 각각 몇 개의 연결을 옮기는지 계산하세요.",
+        answerChecklist: ["나머지 연산은 (n−1)/n", "9 × 2/3 = 6개", "일관 해싱은 1/n", "9 × 1/3 = 3개", "빠진 서버가 맡던 것만 옮김"],
+        requiredConcepts: ["rehash-blast-radius"],
+        sectionId: "site-balancing",
+      },
+      {
+        level: "basic",
+        question:
+          "건강 검사의 세 가지 깊이를 쓰고, 각각이 어떤 방식으로 틀리는지 설명하세요.",
+        answerChecklist: ["생존 확인", "처리 준비 확인", "종속성 확인", "얕으면 고장 난 서버가 남음", "깊으면 공용 문제로 전체 동시 제외", "판단 기준을 서버가 정하면 느슨해질 수 있음"],
+        requiredConcepts: ["health-probe-depth-tradeoff", "circuit-breaker-and-health-check"],
+        sectionId: "health-and-drain",
+      },
+      {
+        level: "basic",
+        question:
+          "주기 2초에 연속 3회 실패를 조건으로 둔 검사의 감지 시간을 계산하고, 그 값이 장애 시간과 어떤 관계인지 쓰세요.",
+        answerChecklist: ["2 × 3 = 최대 6초", "그 동안 요청이 계속 실패", "감지 시간이 장애 시간의 하한", "짧게 잡으면 오탐으로 흔들림", "빼는 조건과 되돌리는 조건을 다르게"],
+        requiredConcepts: ["health-probe-depth-tradeoff"],
+        sectionId: "health-and-drain",
+      },
+      {
+        level: "advanced",
+        question:
+          "일관 해싱이 재배정 수를 줄여도 연결 끊김이 남는 이유를 설명하고, 직전 담당 되넘김이 그 문제를 어떻게 푸는지와 그 대가를 쓰세요.",
+        answerChecklist: ["옮긴 연결은 상태 없는 서버에 도착", "각 칸에 현재와 직전 담당을 함께 저장", "원래 패킷을 감싸 한 번 더 전달", "중앙 연결 목록 불필요", "재배정 직후 추가 전달 한 번", "지연과 내부 대역폭 증가"],
+        requiredConcepts: ["previous-owner-fallback-forwarding", "rehash-blast-radius"],
+        sectionId: "connection-affinity",
+      },
+      {
+        level: "advanced",
+        question:
+          "계획된 작업에서 건강 검사를 기다리지 않고 빼기를 쓰는 이유를 설명하고, 빼기가 성립하기 위한 조건 세 가지를 쓰세요.",
+        answerChecklist: ["시점을 우리가 정하므로 끊김이 없음", "새 연결만 끊고 기존은 유지", "분배기가 중간 상태를 표현할 수 있어야 함", "남은 연결을 기다릴 최대 시간", "남은 서버에 여유 용량"],
+        requiredConcepts: ["health-probe-depth-tradeoff", "replica-routing-load-balancing"],
+        sectionId: "health-and-drain",
+      },
+      {
+        level: "advanced",
+        question:
+          "피해량 식을 써서 단계를 나누는 것과 되돌리기를 자동화하는 것 중 어느 쪽이 더 큰 효과를 내는 구간이 있는지 설명하세요.",
+        answerChecklist: ["단계 비율 곱하기 감지와 되돌리기 시간의 합", "비율을 1에서 0.01로 줄임", "되돌리기가 30분이면 그 시간은 그대로", "자동 되돌리기가 합 자체를 줄임", "단계가 전체를 대표해야 한다는 가정"],
+        requiredConcepts: ["correlated-change-blast-radius", "interruption-time-decomposition"],
+        sectionId: "correlated-change",
+      },
+      {
+        level: "advanced",
+        question:
+          "무중단을 주장하기 전에 층별로 확인할 항목을 네 가지 쓰고, 각 항목에서 실제로 재야 하는 값을 함께 적으세요.",
+        answerChecklist: ["지점 층 · 이웃의 여유 용량", "서버 층 · 자리를 옮긴 연결 수", "판정 층 · 주기와 실패 횟수의 곱", "변경 층 · 단계 비율과 되돌리기 시간", "구성도가 아니라 잰 값으로 판정"],
+        requiredConcepts: ["anycast-catchment", "correlated-change-blast-radius", "interruption-time-decomposition"],
+        sectionId: "continuity-gate",
+      },
+    ],
+  },
 };

@@ -256,6 +256,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "사업자 공개 문서와 프로토콜 규격에 적힌 범위만 근거로 삼고, 비공개 모델·신호와 제품별 설정값은 이 글에서 확정하지 않는다.",
   },
+  "saas/anycast-delivery-continuity": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-09-11",
+    rationale:
+      "본문은 6 section·concept 7개로 keep 범위다. 경로·서버·판정·변경 네 층이 하나의 장애 시간 합을 나눠 갖는 구조라 나누면 각 글이 같은 시간 분해를 다시 세워야 한다.",
+    sharedGate:
+      "인용 논문의 측정 대상과 사업자 공개 문서의 범위를 벗어난 일반화를 하지 않고 검사 주기·단계 비율의 구체 값을 권고하지 않는다.",
+  },
 };
 
 /**
@@ -325,4 +334,5 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "isms-aml/isms-security-infra": "3c313e4c01bcc569",
   "ai/lora-finetuning": "33795cea211c3c2a",
   "saas/edge-request-defense-pipeline": "087fffa8fe412987",
+  "saas/anycast-delivery-continuity": "51f5aa851fd46bfa",
 };

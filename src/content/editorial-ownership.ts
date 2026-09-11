@@ -11278,6 +11278,37 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "anycast-delivery-continuity": {
+    title: "무중단 전달 글이 소유하는 범위",
+    owns: [
+      "장애 시간을 감지·이동·되돌리기 세 구간으로 나눠 보는 관점",
+      "캐치먼트가 경로 정책으로 정해지는 성질과 지점 철수 시의 용량 이동",
+      "경로 변동이 연결 지향 프로토콜에 주는 손실과 그 측정 범위",
+      "나머지 연산과 일관 해싱의 재배정 비율 비교",
+      "직전 담당 되넘김으로 재배정된 연결을 살리는 방식과 그 대가",
+      "건강 검사 깊이 세 층의 실패 방식과 감지 시간 계산",
+      "전역 동시 변경이 중복 구성을 무력화하는 이유와 단계적 적용의 피해량 관계",
+    ],
+    reuses: [
+      { label: "엣지 요청 방어", href: "/saas/edge-request-defense-pipeline" },
+      { label: "레이트 리밋과 신뢰성 패턴", href: "/ai/rate-limiting-and-reliability-patterns" },
+      { label: "서빙 운영", href: "/ai/llm-serving-ops" },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "인용한 측정값은 해당 논문의 대상과 기간을 함께 밝히고 다른 배치로 일반화하지 않는다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "시간 구간 분해와 층별 확인 틀은 이 글이 정리한 설명 방식이며 특정 제품의 점검 목록이 아니다.",
+      },
+      {
+        kind: "standard",
+        rule: "재배정 비율은 명시한 가정 아래의 산술 결과이며 검사 주기·단계 비율의 구체 값은 권고하지 않는다.",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

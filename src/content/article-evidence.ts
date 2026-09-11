@@ -6766,4 +6766,30 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "첫 협상 메시지에 어떤 필드가 담기는지의 규격 근거",
     },
   ],
+  "saas/anycast-delivery-continuity": [
+    {
+      kind: "핵심 논문",
+      label: "Wei · Heidemann — Does Anycast Hang Up on You (UDP and TCP)? (IEEE TNSM 15(2), 2018)",
+      href: "https://ant.isi.edu/~johnh/PAPERS/Wei18a.pdf",
+      note: "약 1% 불안정, 연결 지향 약 0.15%, 불안정 조합 80%가 일주일 이상 지속이라는 수치의 출처이며 측정 대상은 루트 DNS 배치임",
+    },
+    {
+      kind: "핵심 논문",
+      label: "Eisenbud et al. — Maglev: A Fast and Reliable Software Network Load Balancer (USENIX NSDI 2016)",
+      href: "https://research.google/pubs/maglev-a-fast-and-reliable-software-network-load-balancer/",
+      note: "일반 서버에서 일관 해싱과 연결 추적을 함께 쓰는 분배기 구조의 근거이며 보고된 처리량은 논문의 실험 환경 값임",
+    },
+    {
+      kind: "공식 문서",
+      label: "Cloudflare — Unimog 엣지 부하 분산기",
+      href: "https://blog.cloudflare.com/unimog-cloudflares-edge-load-balancer/",
+      note: "칸마다 현재와 직전 담당을 두어 기존 연결을 살리는 구조와 부하 제어 루프의 출처 (2026-09-11 확인)",
+    },
+    {
+      kind: "공식 문서",
+      label: "Cloudflare — 건강 지표 매개 배포",
+      href: "https://blog.cloudflare.com/safe-change-at-any-scale/",
+      note: "단계별 지표 판정으로 계속·중지·되돌리기를 자동 결정한다는 설명과 오류율 0.1% 미만이라는 기준 예시의 출처 (2026-09-11 확인)",
+    },
+  ],
 };

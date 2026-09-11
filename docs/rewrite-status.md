@@ -1804,3 +1804,13 @@
 - 기존 정본과의 경계: 핸드셰이크 내용은 `p2p/tls-fundamentals`, 요청 수를 세는 알고리즘과 분산 집계는 `ai/rate-limiting-and-reliability-patterns`, 안에서 바깥으로 거는 연결의 원리는 `p2p/nat-traversal`, 전달 코드 무결성은 `blockchain/webcat-frontend-integrity`가 소유하고 이 글은 그 요소가 엣지 방어의 어느 층에 놓이는지만 다룬다.
 - 브라우저 검증에서 잡은 실제 결함 2건: RequestViz의 "오리진" 라벨이 세 번째 처분 박스와 겹쳐 상단 흐름 표기로 옮겼고, SignalViz의 분포 라벨("사람"·"자동화"·"겹치는 구간")이 곡선 외곽선 위에 얹혀 세 개 모두 곡선 안쪽으로 내렸다.
 - 검증: 전 audit 통과, `audit:viz --strict` ERROR 0, topology `keep`+fingerprint, tsc·eslint·build 통과(666 static route), Playwright 1440·390 overflow 0·error 0, viz 6개 24장면 전수 캡처 확인.
+
+### 2026-09-11 · SaaS 2편 · 무중단 전달
+
+- `saas/anycast-delivery-continuity`를 `saas-delivery`의 첫 글로 추가했다. 저장소에 애니캐스트·BGP·헬스체크·드레이닝 정본이 0건이었고, 사용자가 요청한 "끊김없이 제공하는 방식"의 정본을 이 글이 맡는다.
+- 축은 "무중단은 고장이 없는 상태가 아니라 고장이 짧은 상태"다. 장애 시간을 감지·이동·되돌리기 세 구간으로 분해하고, 경로 층(애니캐스트)과 서버 층(해시 분배)의 장치가 가운데 구간만 줄인다는 점에서 검사 설계와 변경 절차가 나머지 두 구간을 맡아야 한다는 논증으로 이어진다.
+- 산술 두 개가 중심이다. 재해시 비율은 나머지 연산 (n−1)/n 대 일관 해싱 1/n이며, 연속한 두 수가 서로소라는 성질에서 나온다는 근거까지 적었다. Viz는 연결 9개·서버 3대로 6/9 대 3/9가 정확히 맞아떨어지게 구성했다. 피해량은 `B = f·(t_detect + t_rollback)`로 두어 단계를 잘게 나누는 것보다 되돌리기 자동화가 큰 구간이 있음을 보였다.
+- 근거: Wei·Heidemann(IEEE TNSM 2018)의 애니캐스트 안정성 측정(약 1% 불안정, 연결 지향 약 0.15%, 불안정 조합 80%가 일주일 이상), Maglev(NSDI 2016), Cloudflare Unimog 공개 문서(칸마다 현재·직전 담당을 두는 되넘김, 부하 제어 루프), 건강 지표 매개 배포 문서(오류율 0.1% 미만 같은 기준 예시). 측정 대상이 루트 DNS 배치라 상용 CDN에 일반화하지 않는다는 경계를 본문·ownership 양쪽에 적었다.
+- 기존 정본과의 경계: 중복 구성·장애 조치 일반론은 `ai/rate-limiting-and-reliability-patterns`, 복제본 분배는 `ai/llm-serving-ops`, 애니캐스트의 공격 흡수 용도는 `saas/edge-request-defense-pipeline`이 소유한다.
+- 브라우저 검증에서 잡은 실제 결함 3건: AnycastViz의 캐치먼트 띠가 지점 철수 장면에서 가운데가 빈 채로 남아 "양옆으로 흡수"라는 본문과 어긋나 좌표표로 재작성했고, GateViz의 네 번째 행이 하단 주석과 겹쳐 행 간격을 줄였으며, AnycastViz 주석의 "해당 위치에서는 80%"가 논문의 "불안정한 조합의 80%"를 잘못 옮겨 정정했다.
+- 검증: 전 audit 통과, `audit:viz --strict` ERROR 0, topology `keep`+fingerprint, tsc·eslint·build 통과(667 static route), Playwright 1440·390 overflow 0·error 0, viz 6개 24장면 전수 캡처 확인.

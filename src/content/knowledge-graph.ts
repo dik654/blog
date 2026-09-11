@@ -22096,6 +22096,69 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "원 서버 주소가 알려지면 앞단 검사를 통째로 건너뛸 수 있으므로, 유출 경로를 정리한 뒤 앞단에서 온 연결만 받게 하거나 연결 방향을 뒤집어 인바운드를 닫는 조치입니다. 어느 방식이든 새 신뢰 지점이 따라옵니다.",
     canonicalHref: "/saas/edge-request-defense-pipeline#origin-protection",
   },
+  "interruption-time-decomposition": {
+    id: "interruption-time-decomposition",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "장애 시간의 세 구간 분해",
+    definition:
+      "사용자가 겪는 장애 시간을 고장을 감지하는 시간, 트래픽을 옮기는 시간, 나쁜 변경을 되돌리는 시간으로 나눠 보는 관점입니다. 중복 구성은 가운데 구간만 줄이므로 나머지 두 구간이 크면 총합이 줄지 않습니다.",
+    canonicalHref: "/saas/anycast-delivery-continuity#overview",
+  },
+  "anycast-catchment": {
+    id: "anycast-catchment",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "애니캐스트 캐치먼트",
+    definition:
+      "같은 주소를 여러 지점이 광고할 때 각 지점이 실제로 받게 되는 출처의 집합입니다. 지도상 거리가 아니라 경로 정책이 경계를 그리며, 지점 하나가 광고를 멈추면 그 캐치먼트가 통째로 이웃 지점에 얹힙니다.",
+    canonicalHref: "/saas/anycast-delivery-continuity#anycast-routing",
+  },
+  "anycast-flip-connection-loss": {
+    id: "anycast-flip-connection-loss",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "캐치먼트 전환에 의한 연결 손실",
+    definition:
+      "경로가 바뀌어 이미 연결이 맺어진 트래픽이 다른 지점에 도착하면 그 지점에는 연결 상태가 없어 거절된다는 경계입니다. 평균적으로는 드물지만 특정 위치에서는 오래 지속된다는 성질이 측정으로 보고됐습니다.",
+    canonicalHref: "/saas/anycast-delivery-continuity#catchment-flip",
+  },
+  "rehash-blast-radius": {
+    id: "rehash-blast-radius",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "재해시의 파급 범위",
+    definition:
+      "연결 네 값의 해시를 서버 수로 나눈 나머지로 담당을 고르면 서버 하나가 빠질 때 (n−1)/n의 연결이 자리를 옮기고, 각 서버에 고유한 순서를 주는 방식으로 바꾸면 1/n만 옮긴다는 비교입니다. 고장 하나가 실제보다 넓게 번지는지를 이 비율이 정합니다.",
+    canonicalHref: "/saas/anycast-delivery-continuity#site-balancing",
+  },
+  "previous-owner-fallback-forwarding": {
+    id: "previous-owner-fallback-forwarding",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "직전 담당 되넘김",
+    definition:
+      "각 해시 칸에 현재 담당과 직전 담당을 함께 적어 두고, 도착한 서버에 그 연결의 상태가 없으면 원래 패킷을 감싸 직전 담당으로 한 번 더 넘기는 방식입니다. 중앙 연결 목록 없이 재배정된 연결을 살리는 대신 재배정 직후 한 번의 추가 전달이 듭니다.",
+    canonicalHref: "/saas/anycast-delivery-continuity#connection-affinity",
+  },
+  "health-probe-depth-tradeoff": {
+    id: "health-probe-depth-tradeoff",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "건강 검사 깊이의 균형",
+    definition:
+      "생존 확인·처리 준비 확인·종속성 확인이 같은 서버에 다른 답을 주며, 얕으면 고장 난 서버가 남고 깊으면 공용 종속성 하나로 전체가 동시에 제외된다는 경계입니다. 검사 주기와 연속 실패 허용 횟수의 곱이 감지 시간의 하한을 정합니다.",
+    canonicalHref: "/saas/anycast-delivery-continuity#health-and-drain",
+  },
+  "correlated-change-blast-radius": {
+    id: "correlated-change-blast-radius",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "상관 변경의 파급 범위",
+    definition:
+      "모든 지점이 같은 변경을 같은 순간에 받는 실패 앞에서 중복 구성이 무력하다는 성질과, 피해량이 단계 비율에 감지 시간과 되돌리기 시간의 합을 곱한 값이라는 관계입니다. 단계를 잘게 나누는 것보다 되돌리기를 자동화하는 편이 큰 구간이 있습니다.",
+    canonicalHref: "/saas/anycast-delivery-continuity#correlated-change",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -40244,6 +40307,78 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     to: "web-frontend-delivered-code-gap",
     relation: "contrasts",
     reason: "앞단을 신뢰 지점으로 두는 선택이 전달 코드 무결성 쪽에서는 다른 문제로 되돌아옵니다.",
+  },
+  {
+    from: "interruption-time-decomposition",
+    to: "anycast-catchment",
+    relation: "produces",
+    reason: "옮기는 시간을 줄이려는 요구가 경로 자체를 장애 조치로 쓰는 배치를 만듭니다.",
+  },
+  {
+    from: "anycast-catchment",
+    to: "anycast-flip-connection-loss",
+    relation: "constrains",
+    reason: "캐치먼트가 경로로 정해진다는 성질이 그대로 경로 변동 시 연결 손실의 원인이 됩니다.",
+  },
+  {
+    from: "anycast-catchment",
+    to: "rehash-blast-radius",
+    relation: "prerequisite",
+    reason: "지점이 정해진 뒤에야 그 안에서 어느 서버가 받을지의 문제가 남습니다.",
+  },
+  {
+    from: "rehash-blast-radius",
+    to: "previous-owner-fallback-forwarding",
+    relation: "produces",
+    reason: "옮긴 연결이 상태 없는 서버에 도착한다는 문제가 되넘김 장치를 부릅니다.",
+  },
+  {
+    from: "health-probe-depth-tradeoff",
+    to: "interruption-time-decomposition",
+    relation: "constrains",
+    reason: "검사 설계가 감지 구간의 길이를 직접 정합니다.",
+  },
+  {
+    from: "circuit-breaker-and-health-check",
+    to: "health-probe-depth-tradeoff",
+    relation: "prerequisite",
+    reason: "검사와 차단기의 기본 동작을 알아야 깊이 선택이 만드는 차이를 읽을 수 있습니다.",
+  },
+  {
+    from: "graceful-degradation-and-failover",
+    to: "interruption-time-decomposition",
+    relation: "prerequisite",
+    reason: "장애 조치와 중복 구성의 일반 개념 위에서 시간 분해가 의미를 가집니다.",
+  },
+  {
+    from: "replica-routing-load-balancing",
+    to: "rehash-blast-radius",
+    relation: "prerequisite",
+    reason: "복제본 사이의 요청 분배를 알아야 상태 없는 해시 분배의 제약이 드러납니다.",
+  },
+  {
+    from: "correlated-change-blast-radius",
+    to: "interruption-time-decomposition",
+    relation: "constrains",
+    reason: "되돌리기 구간의 길이를 변경 절차가 정하므로 총 장애 시간의 상한을 여기서 잡습니다.",
+  },
+  {
+    from: "correlated-change-blast-radius",
+    to: "anycast-catchment",
+    relation: "contrasts",
+    reason: "지점을 늘리는 대응과 변경 범위를 줄이는 대응은 서로 다른 실패를 막습니다.",
+  },
+  {
+    from: "defense-layer-cost-gradient",
+    to: "anycast-catchment",
+    relation: "contrasts",
+    reason: "같은 애니캐스트 배치가 공격 흡수에 쓰일 때와 장애 조치에 쓰일 때 다른 성질이 중요해집니다.",
+  },
+  {
+    from: "previous-owner-fallback-forwarding",
+    to: "health-probe-depth-tradeoff",
+    relation: "contrasts",
+    reason: "감지된 고장을 다루는 장치와 계획된 빼기를 다루는 절차가 서로 다른 시점을 담당합니다.",
   },
 ];
 
