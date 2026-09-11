@@ -6632,4 +6632,24 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "이 글이 예로 든 백본 계열의 공개 범위이며 특정 검색 과제의 성능 보장은 아님",
     },
   ],
+  "ai/image-text-contrastive-pretraining": [
+    {
+      kind: "핵심 논문",
+      label: "CLIP · arXiv 2103.00020",
+      href: "https://arxiv.org/abs/2103.00020",
+      note: "웹 규모 이미지·캡션 짝과 배치 정규화 대조 손실의 원문이며 보고된 zero-shot 성능은 해당 프롬프트 설정 위의 자기보고임",
+    },
+    {
+      kind: "핵심 논문",
+      label: "SigLIP · arXiv 2303.15343",
+      href: "https://arxiv.org/abs/2303.15343",
+      note: "쌍 단위 시그모이드 손실과 배치 크기 실험의 원문이며 보고된 임계·포화 지점은 해당 데이터·모델 조합의 관측임",
+    },
+    {
+      kind: "공식 구현",
+      label: "Transformers · CLIP·SigLIP 손실 구현",
+      href: "https://github.com/huggingface/transformers/tree/main/src/transformers/models",
+      note: "교차 엔트로피 한 줄과 부호 행렬·로그 시그모이드, 그리고 logit_scale·logit_bias 파라미터의 근거이며 커밋 f62dc9bf2c90 스냅샷 기준임",
+    },
+  ],
 };

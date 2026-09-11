@@ -11044,6 +11044,40 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "image-text-contrastive-pretraining": {
+    title: "이미지·텍스트 대조 사전학습 글이 소유하는 범위",
+    owns: [
+      "캡션을 감독 신호로 쓰는 구조와 그로부터 zero-shot 분류가 나오는 경로",
+      "배치 유사도 행렬을 정답 index arange 인 분류 문제로 바꾸는 손실과 양방향 평균",
+      "코사인 범위를 벌리기 위해 로짓 스케일을 학습 대상으로 두는 이유와 구현 형태",
+      "부호 행렬과 로그 시그모이드로 칸마다 독립인 손실을 만드는 방식, 그리고 부분 합 분해",
+      "음성이 N배 많은 불균형을 학습되는 상수 편향으로 흡수하는 역할",
+      "배치 크기가 음성 수·행렬 크기·가짜 음성 확률을 동시에 정하는 결합 구조",
+      "범주 이름과 문장 틀로 분류기 가중치를 구성하는 절차와 그 점수를 비교할 때의 조건",
+    ],
+    reuses: [
+      { label: "대조학습의 양성 쌍 계약", href: "/ai/contrastive-learning" },
+      { label: "이미지 임베딩 파이프라인", href: "/ai/image-embedding-pipeline" },
+      { label: "Vision Transformer", href: "/ai/vision-transformer" },
+      { label: "자기지도 백본", href: "/ai/dinov3-self-supervised-backbone" },
+      { label: "collective 통신", href: "/gpu/gpu-collective-network" },
+      { label: "병렬 추론", href: "/ai/tensor-and-pipeline-parallel-inference" },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "두 손실의 형태와 파라미터 구성은 transformers 커밋 f62dc9bf2c90 스냅샷과 원 논문에 귀속한다.",
+      },
+      {
+        kind: "standard",
+        rule: "배치 크기 임계와 포화 지점은 원 논문의 자기보고로 표시하고 다른 도메인의 일반 법칙으로 확대하지 않는다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "본문 그림의 유사도 값과 이득·비용 막대는 구조를 설명하기 위한 예시이며 실측이 아니다.",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

@@ -782,6 +782,32 @@ export const embeddingArticles: Article[] = [
     component: () => import("@/pages/articles/ai/image-embedding-pipeline"),
   },
   {
+    slug: "image-text-contrastive-pretraining",
+    title: "이미지와 문장을 같은 공간에 맞추는 두 가지 손실",
+    subcategory: "ai-practical-embedding",
+    sections: [
+      { id: "overview", title: "캡션을 정답 대신 씁니다" },
+      {
+        id: "softmax-loss",
+        title: "배치 안에서 자기 짝을 골라내게 만듭니다",
+        subsections: [{ id: "temperature-scale", title: "온도를 학습시키는 이유" }],
+      },
+      {
+        id: "sigmoid-loss",
+        title: "정규화를 없애면 쌍마다 독립이 됩니다",
+        subsections: [{ id: "logit-bias", title: "음성 쌍이 N배 많다는 사실을 편향이 흡수합니다" }],
+      },
+      { id: "batch-and-negatives", title: "배치 크기가 곧 음성 쌍의 개수입니다" },
+      { id: "zero-shot", title: "범주 이름을 문장으로 바꾸면 분류기가 됩니다" },
+      {
+        id: "boundary",
+        title: "두 손실은 우열이 아니라 다른 제약을 풉니다",
+        subsections: [{ id: "paper-clip", title: "원 논문 두 편이 각각 보인 것" }],
+      },
+    ],
+    component: () => import("@/pages/articles/ai/image-text-contrastive-pretraining"),
+  },
+  {
     slug: "embedding-evaluation",
     title: "Embedding Evaluation: 정답 집합에서 품질–비용 Frontier까지",
     subcategory: "ai-practical-embedding",

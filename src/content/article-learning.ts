@@ -70555,4 +70555,237 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "ai/image-text-contrastive-pretraining": {
+    coreIdea:
+      "이미지와 문장의 짝을 감독 신호로 쓰면 같은 벡터 공간이 만들어지는데, 그 공간을 만드는 손실을 배치 정규화 소프트맥스로 둘지 쌍 단위 시그모이드로 둘지에 따라 배치 크기·분산 구현·필요한 보정 항이 달라집니다.",
+    assumedKnowledge: [
+      { id: "contrastive-pair-semantics", role: "양성·음성 쌍을 정의하는 일반 계약입니다." },
+      { id: "positive-transformation-invariance", role: "무엇을 같은 것으로 볼지 정하는 전제입니다." },
+      { id: "vit-patch-sequence-contract", role: "이미지 인코더의 입출력 형태입니다." },
+      { id: "embedding-pipeline-fingerprint", role: "만들어진 벡터를 쓸 때 고정해야 하는 계약입니다." },
+      { id: "softmax-max-shift-invariance", role: "소프트맥스가 상수 덧셈에 불변하다는 성질입니다." },
+    ],
+    introducedHere: [
+      { id: "caption-as-supervision", role: "라벨 대신 캡션을 쓰는 구조와 그로부터 나오는 능력을 정의합니다." },
+      { id: "batch-softmax-contrastive-objective", role: "배치 안 분류 문제로 바꾸는 손실을 유도합니다." },
+      { id: "learned-logit-scale", role: "온도를 학습 대상으로 두는 이유를 설명합니다." },
+      { id: "pairwise-sigmoid-objective", role: "정규화를 없앤 손실과 그 분해 가능성을 정의합니다." },
+      { id: "negative-prior-logit-bias", role: "음성 우세를 상수로 흡수하는 항의 역할을 고정합니다." },
+      { id: "batch-size-negative-coupling", role: "배치 크기가 신호와 비용을 동시에 정하는 구조를 정리합니다." },
+      { id: "prompt-built-classifier", role: "범주 목록에서 분류기를 만드는 절차와 한계를 설명합니다." },
+    ],
+    conceptExplanations: [
+      {
+        id: "caption-as-supervision",
+        sectionId: "overview",
+        intuition:
+          "사람이 라벨을 붙이는 대신 이미 사진 옆에 적혀 있던 설명을 정답으로 씁니다.",
+        workedExample:
+          "사진 벡터와 캡션 벡터를 같은 구면 위에 놓고 짝인 것끼리 가깝게 만들면, 나중에 범주 이름을 문장으로 넣어 가장 가까운 것을 고르는 방식으로 분류할 수 있습니다.",
+        boundary:
+          "캡션이 사진 내용을 충실히 설명한다는 가정에 의존하고, 웹에서 모은 짝의 분포가 곧 모델이 아는 세계의 분포가 됩니다.",
+      },
+      {
+        id: "batch-softmax-contrastive-objective",
+        sectionId: "softmax-loss",
+        intuition:
+          "배치에 함께 들어온 것들 중에서 자기 짝을 골라내는 객관식 문제로 바꿉니다.",
+        workedExample:
+          "N×N 유사도 행렬에서 정답 index가 arange(N)이므로 교차 엔트로피 한 줄이고, 이미지→문장과 문장→이미지 두 방향을 평균합니다.",
+        boundary:
+          "행 전체를 더한 정규화 상수 때문에 한 쌍의 손실이 배치 구성에 의존합니다. 비대각 쌍이 모두 진짜 음성이라는 가정도 함께 깔려 있습니다.",
+      },
+      {
+        id: "learned-logit-scale",
+        sectionId: "temperature-scale",
+        intuition:
+          "-1에서 1 사이 값을 그대로 쓰면 차이가 손실에 잘 드러나지 않아 배율을 곱해 벌려 줍니다.",
+        workedExample:
+          "배율 자체가 아니라 로그를 파라미터로 두고 지수를 취하면 양수 제약이 자동으로 만족되고 곱셈 스케일을 덧셈 공간에서 학습합니다.",
+        boundary:
+          "초반에 배율이 너무 크면 아직 엉킨 표현에 강한 기울기가 갑니다. 값이 무한정 커지지 않게 상한을 두는 구현도 흔합니다.",
+      },
+      {
+        id: "pairwise-sigmoid-objective",
+        sectionId: "sigmoid-loss",
+        intuition:
+          "어느 칸이 정답이냐고 묻는 대신 칸마다 짝인지 아닌지를 따로 묻습니다.",
+        workedExample:
+          "대각선 +1, 나머지 -1인 부호 행렬을 로짓에 곱하고 로그 시그모이드를 취해 행마다 더합니다. 정규화 상수가 없어 전체 합이 부분 합의 합입니다.",
+        boundary:
+          "상대 비교를 강제하지 않으므로 배치 안 순위 정보를 덜 씁니다. 대신 분산 구현에서 다른 장치의 유사도를 기다릴 필요가 없습니다.",
+      },
+      {
+        id: "negative-prior-logit-bias",
+        sectionId: "logit-bias",
+        intuition:
+          "대부분이 '아니다'인 문제에서는 기본 답을 아니다 쪽으로 옮겨 두면 학습이 쉬워집니다.",
+        workedExample:
+          "배치 1,024면 한 행에 양성 1개와 음성 1,023개입니다. 모든 로짓에 같은 편향을 더하면 상대 순서는 그대로 두고 판정선만 음수 쪽으로 옮깁니다.",
+        boundary:
+          "소프트맥스 쪽에는 이 항이 없습니다. 행 안에서 확률을 나눠 갖는 구조라 불균형이 정규화에 이미 반영돼 있기 때문입니다.",
+      },
+      {
+        id: "batch-size-negative-coupling",
+        sectionId: "batch-and-negatives",
+        intuition:
+          "배치를 키우면 비교 대상이 늘어 신호가 세지지만, 같은 이유로 비용과 사고 확률도 함께 커집니다.",
+        workedExample:
+          "원 논문은 배치를 백만까지 올려도 이득이 빠르게 줄고 3만 규모면 충분하다고 보고했으며, 정규화 없는 손실은 배치가 작을 때 더 잘 동작한다고 보고했습니다.",
+        boundary:
+          "이 임계와 포화 지점은 해당 데이터·모델 조합의 관측입니다. 배치가 커질수록 같은 내용의 다른 쌍이 음성으로 섞이는 문제도 함께 커집니다.",
+      },
+      {
+        id: "prompt-built-classifier",
+        sectionId: "zero-shot",
+        intuition:
+          "범주 이름을 문장으로 만들어 넣으면 그 벡터들이 곧 분류기의 가중치가 됩니다.",
+        workedExample:
+          "범주마다 문장 틀 여러 개로 벡터를 만들고 평균 낸 뒤 정규화하면 가중치 행렬이 되고, 이미지 벡터와의 내적이 가장 큰 범주를 고릅니다.",
+        boundary:
+          "문장 틀과 이름 표기를 평가 집합을 보며 고르면 그 조정 자체가 학습입니다. 세밀한 구분이나 학습 캡션에 드문 용어에서는 소량 라벨로 얇은 분류기를 학습시키는 편이 낫습니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 감독 신호",
+        relation: "라벨 대신 캡션을 쓰는 구조를 먼저 고정",
+        concepts: ["caption-as-supervision", "contrastive-pair-semantics"],
+      },
+      {
+        label: "01 정규화 손실",
+        relation: "배치 안 분류 문제로 바꾸고 온도를 학습",
+        concepts: ["batch-softmax-contrastive-objective", "learned-logit-scale"],
+      },
+      {
+        label: "02 정규화 제거",
+        relation: "칸마다 독립으로 두면 무엇이 달라지는지",
+        concepts: ["pairwise-sigmoid-objective", "negative-prior-logit-bias"],
+      },
+      {
+        label: "03 배치 비용",
+        relation: "같은 배치 크기가 두 손실에서 다른 비용을 뜻함",
+        concepts: ["batch-size-negative-coupling"],
+      },
+      {
+        label: "04 활용",
+        relation: "만들어진 공간에서 분류기를 구성",
+        concepts: ["prompt-built-classifier", "embedding-pipeline-fingerprint"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "이미지·캡션 짝으로 학습한 모델이 학습 때 본 적 없는 범주를 분류할 수 있는 이유를 구조로 설명하세요.",
+        answerChecklist: ["두 인코더가 같은 공간", "범주 이름을 문장으로 인코딩", "범주 벡터가 생김", "이미지 벡터와 내적", "학습 없이 목록 교체"],
+        requiredConcepts: ["caption-as-supervision", "prompt-built-classifier"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "N×N 유사도 행렬에서 정답 라벨이 arange(N)인 이유를 쓰고, 두 방향을 모두 계산하는 이유를 설명하세요.",
+        answerChecklist: ["i번째 이미지의 짝이 i번째 문장", "대각선이 양성", "이미지→문장", "문장→이미지", "한 방향만 쓰면 비대칭"],
+        requiredConcepts: ["batch-softmax-contrastive-objective"],
+        sectionId: "softmax-loss",
+      },
+      {
+        level: "basic",
+        question:
+          "코사인 유사도를 그대로 소프트맥스에 넣으면 왜 문제가 되는지 설명하고, 구현이 배율의 로그를 파라미터로 두는 이유를 쓰세요.",
+        answerChecklist: ["범위가 -1~1로 좁음", "분포가 평평해짐", "양성·음성 차이가 손실에 안 실림", "지수를 취해 양수 보장", "곱셈 스케일을 덧셈 공간에서 학습"],
+        requiredConcepts: ["learned-logit-scale"],
+        sectionId: "temperature-scale",
+      },
+      {
+        level: "basic",
+        question:
+          "부호 행렬 -ones + 2·eye 가 만드는 값을 쓰고, 이 행렬을 로짓에 곱한 뒤 로그 시그모이드를 취하면 양성과 음성 칸이 각각 어느 방향으로 학습되는지 설명하세요.",
+        answerChecklist: ["대각선 +1", "나머지 -1", "양성은 로짓이 클수록 손실 감소", "음성은 작을수록 감소", "행 합으로 나누지 않음"],
+        requiredConcepts: ["pairwise-sigmoid-objective"],
+        sectionId: "sigmoid-loss",
+      },
+      {
+        level: "basic",
+        question:
+          "배치 1,024에서 한 행의 양성과 음성 개수를 쓰고, 로짓 편향이 이 불균형을 어떻게 흡수하는지 설명하세요.",
+        answerChecklist: ["양성 1개", "음성 1023개", "초기 기울기가 음성에 쏠림", "모든 로짓에 같은 값", "상대 순서 유지", "판정선만 이동"],
+        requiredConcepts: ["negative-prior-logit-bias"],
+        sectionId: "logit-bias",
+      },
+      {
+        level: "basic",
+        question:
+          "범주 목록으로 분류기를 만드는 절차를 순서대로 쓰고, 온도가 예측에 영향을 주지 않는 이유를 설명하세요.",
+        answerChecklist: ["문장 틀 적용", "텍스트 인코딩", "범주별 평균", "다시 정규화", "이미지 벡터와 내적", "온도는 모든 점수에 같은 배율이라 순위 불변"],
+        requiredConcepts: ["prompt-built-classifier", "learned-logit-scale"],
+        sectionId: "zero-shot",
+      },
+      {
+        level: "advanced",
+        question:
+          "정규화가 있는 손실에서 한 쌍의 손실이 배치 구성에 의존하는 이유를 수식으로 설명하고, 그 의존성이 분산 학습에 무엇을 요구하는지 쓰세요.",
+        answerChecklist: ["분모가 행 전체의 합", "같은 행의 다른 칸이 값에 영향", "모든 유사도를 모아야 함", "배치 제곱 크기 행렬", "장치 간 통신 필요"],
+        requiredConcepts: ["batch-softmax-contrastive-objective", "batch-size-negative-coupling"],
+        sectionId: "softmax-loss",
+      },
+      {
+        level: "advanced",
+        question:
+          "쌍 단위 손실에서 전체 합이 부분 합의 합으로 분해된다는 성질을 설명하고, 그 성질이 장치별 메모리를 어떻게 바꾸는지 쓰세요.",
+        answerChecklist: ["칸마다 독립", "정규화 상수 없음", "조각별로 계산해 더하면 됨", "표현을 장치 간 순환", "b×b 조각만 동시 보유", "손실 값은 동일"],
+        requiredConcepts: ["pairwise-sigmoid-objective", "batch-size-negative-coupling"],
+        sectionId: "batch-and-negatives",
+      },
+      {
+        level: "advanced",
+        question:
+          "배치를 키울 때 늘어나는 세 가지를 구분하고, 무조건 키우는 것이 답이 아닌 이유를 두 가지 근거로 쓰세요.",
+        answerChecklist: ["음성 쌍 수", "유사도 행렬과 통신", "가짜 음성 확률", "이득이 어느 지점에서 포화", "같은 내용의 다른 쌍이 서로를 밀어냄", "데이터 중복 제거가 함께 필요"],
+        requiredConcepts: ["batch-size-negative-coupling"],
+        sectionId: "batch-and-negatives",
+      },
+      {
+        level: "advanced",
+        question:
+          "zero-shot 점수를 두 모델 사이에서 비교할 때 고정해야 하는 것을 쓰고, 이 점수를 그대로 신뢰하기 어려운 이유를 설명하세요.",
+        answerChecklist: ["문장 틀 고정", "범주 이름 표기 고정", "틀 개수 고정", "평가 집합을 보며 고르면 조정이 곧 학습", "학습 캡션과 평가 데이터의 중복 확인 어려움"],
+        requiredConcepts: ["prompt-built-classifier"],
+        sectionId: "zero-shot",
+      },
+    ],
+    papers: [
+      {
+        title: "Learning Transferable Visual Models From Natural Language Supervision",
+        href: "https://arxiv.org/abs/2103.00020",
+        problem:
+          "고정된 범주 집합으로 학습한 비전 모델이 새로운 범주로 옮겨 가지 못한다는 제약을 다뤘습니다.",
+        contribution:
+          "웹 규모의 이미지·캡션 짝과 배치 정규화 대조 손실로 학습해 범주 이름만으로 분류기를 구성하는 전이 방식을 제시했습니다.",
+        assumptions:
+          "웹에서 수집한 짝의 분포와 논문이 고른 프롬프트 설정, 그리고 그 규모의 학습 자원 안에서 성립합니다.",
+        evidenceScope:
+          "저자 자기보고로 여러 분류 벤치마크에서 학습 없이도 경쟁력 있는 성능을 보고했습니다.",
+        notClaim:
+          "평가 집합과 학습 데이터의 중복을 완전히 배제했다는 뜻이 아니며, 세밀한 구분이 필요한 과제에서의 우위를 보장하지도 않습니다.",
+        sectionId: "paper-clip",
+      },
+      {
+        title: "Sigmoid Loss for Language Image Pre-Training",
+        href: "https://arxiv.org/abs/2303.15343",
+        problem:
+          "배치 전체를 정규화하는 대조 손실이 분산 학습에서 메모리와 통신을 함께 키운다는 문제를 다뤘습니다.",
+        contribution:
+          "쌍마다 독립인 시그모이드 손실과 학습되는 편향 항을 제안해 정규화 없이도 학습이 되도록 하고 조각 단위 계산을 가능하게 했습니다.",
+        assumptions:
+          "논문이 사용한 데이터와 모델 규모, 그리고 비교 대상으로 삼은 소프트맥스 레시피 안에서 성립합니다.",
+        evidenceScope:
+          "저자 자기보고로 작은 배치에서의 우위와 극단적 배치에서의 이득 포화를 보고했습니다.",
+        notClaim:
+          "보고된 배치 크기 임계와 포화 지점이 다른 도메인에서도 같다는 뜻이 아니며, 모든 과제에서 소프트맥스 손실보다 낫다는 주장도 아닙니다.",
+        sectionId: "paper-clip",
+      },
+    ],
+  },
 };

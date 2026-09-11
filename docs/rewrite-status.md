@@ -1740,3 +1740,12 @@
 - 기존 정본과 겹치지 않도록 범위를 좁혔다. ANN 색인은 `vector-search-and-ann-indexes`, 서빙 계약은 `embedding-serving-contract`, 다중 정답 지표는 `embedding-evaluation`, 후보·재순위 분리는 `retrieval-ranking-funnel`이 소유하고 이 글은 사진이 벡터가 되는 구간만 다룬다. 지문 개념도 기존 색인 생성 기록 위에 이미지 고유 항목(전처리·풀링) 두 개를 더한 것으로 정의했다.
 - 카탈로그 병합 함정이 재발해 `embeddingArticles`도 export 로 바꿨다(`cvArticles`와 같은 이유).
 - 검증: 전 audit 통과, `audit:viz --strict` ERROR 0, topology `keep`+fingerprint 등록, tsc·build 통과(658 static route), Playwright 1440·390 overflow 0·error 0.
+
+### 2026-09-11 · 비전 시리즈 4편 · 이미지·텍스트 대조 사전학습
+
+- `ai/image-text-contrastive-pretraining`을 `ai-practical-embedding`의 3편 뒤에 배치했다. 기존 `contrastive-learning`은 같은 이미지의 두 변형을 다루는 일반 SSL 글이고 CLIP·InfoNCE 언급이 0건이었다. 짝의 한쪽이 문장일 때 달라지는 부분만 이 글이 소유한다.
+- 축은 "같은 유사도 행렬을 어떻게 읽을 것인가" 하나다. 행 정규화 소프트맥스와 칸 단위 시그모이드를 같은 N×N 행렬 위에서 대비하고, 그 수학적 차이가 배치 크기·분산 통신·필요한 보정 항으로 이어지는 경로를 따라간다.
+- 코드 근거는 transformers 커밋 f62dc9bf2c90의 `modeling_clip.py`·`modeling_siglip.py`다. `cross_entropy(logits, arange(n))` 한 줄과 `logsigmoid(m1_diag1 * logits)`, 그리고 `logit_scale`만 있는 쪽과 `logit_scale`·`logit_bias` 둘 다 있는 쪽의 차이를 그대로 인용해 편향 항의 존재 이유를 코드로 고정했다.
+- 배치 관련 수치는 SigLIP 논문의 자기보고로 표시했다(백만까지 키워도 이득 포화, 3만 규모면 충분, 작은 배치에서 시그모이드 우위). 두 손실의 우열을 주장하지 않고 "무엇을 제약으로 두느냐가 다르다"로 닫았다.
+- zero-shot 절에서는 문장 틀·이름 표기 선택이 평가 집합을 보며 이뤄지면 그 조정 자체가 학습이라는 점과, 대규모 웹 수집에서 평가 데이터 중복 확인이 어렵다는 점을 한계로 적었다.
+- 검증: 전 audit 통과, `audit:viz --strict` ERROR 0, tsc·build 통과(659 static route), Playwright 1440·390 overflow 0·error 0. 이 글은 closure가 작아 topology 휴리스틱에 걸리지 않았지만 결정과 fingerprint는 함께 등록했다.

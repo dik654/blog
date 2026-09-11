@@ -21655,6 +21655,69 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "사람 눈에 비슷한 사진과 과제 기준의 정답이 다를 수 있다는 구분이며, 평가 집합의 정답 정의와 분할 방식이 점수의 의미를 정한다는 원칙입니다. 같은 촬영 세션을 질의와 정답으로 나누면 배경을 근거로 맞히는 누출이 생깁니다.",
     canonicalHref: "/ai/image-embedding-pipeline#evaluation",
   },
+  "caption-as-supervision": {
+    id: "caption-as-supervision",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "캡션을 감독 신호로 쓰기",
+    definition:
+      "사진과 그 설명 문장의 짝을 정답으로 삼아 이미지 인코더와 텍스트 인코더를 같은 벡터 공간으로 끌어당기는 학습 방식입니다. 분류 라벨을 만들지 않고도 범주 이름을 문장으로 넣어 분류기를 구성할 수 있게 됩니다.",
+    canonicalHref: "/ai/image-text-contrastive-pretraining#overview",
+  },
+  "batch-softmax-contrastive-objective": {
+    id: "batch-softmax-contrastive-objective",
+    kind: "method",
+    domain: "machine-learning",
+    label: "배치 정규화 대조 손실",
+    definition:
+      "배치 안의 유사도 행렬에서 대각선이 정답인 분류 문제로 바꿔 양방향 교차 엔트로피를 평균하는 손실입니다. 행 전체를 더해 정규화하므로 한 쌍의 손실이 배치 구성에 의존합니다.",
+    canonicalHref: "/ai/image-text-contrastive-pretraining#softmax-loss",
+  },
+  "learned-logit-scale": {
+    id: "learned-logit-scale",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "학습되는 로짓 스케일",
+    definition:
+      "코사인 유사도의 좁은 범위를 넓혀 분포의 날카로움을 조절하는 배율을 고정값이 아니라 학습 파라미터로 두는 방식입니다. 구현은 로그 값을 파라미터로 두고 지수를 취해 양수 제약을 자연스럽게 만족시킵니다.",
+    canonicalHref: "/ai/image-text-contrastive-pretraining#temperature-scale",
+  },
+  "pairwise-sigmoid-objective": {
+    id: "pairwise-sigmoid-objective",
+    kind: "method",
+    domain: "machine-learning",
+    label: "쌍 단위 시그모이드 손실",
+    definition:
+      "유사도 행렬의 각 칸을 독립적인 이진 분류로 보고 로지스틱 손실을 거는 방식입니다. 행 전체를 더하는 정규화 상수가 없어 전체 손실이 부분 합의 합으로 분해되고 장치별 메모리와 통신이 줄어듭니다.",
+    canonicalHref: "/ai/image-text-contrastive-pretraining#sigmoid-loss",
+  },
+  "negative-prior-logit-bias": {
+    id: "negative-prior-logit-bias",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "음성 우세를 흡수하는 로짓 편향",
+    definition:
+      "배치 N에서 양성 1개에 음성 N-1개인 불균형을 상수 하나로 보정하는 학습 파라미터입니다. 모든 로짓에 같은 값을 더해 상대 순서는 유지한 채 판정선만 옮깁니다.",
+    canonicalHref: "/ai/image-text-contrastive-pretraining#logit-bias",
+  },
+  "batch-size-negative-coupling": {
+    id: "batch-size-negative-coupling",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "배치 크기와 음성 쌍의 결합",
+    definition:
+      "대조 학습에서 배치 크기가 곧 한 양성당 음성 수를 정하므로 학습 신호와 자원 비용이 같은 변수에 묶이는 구조입니다. 이득은 어느 지점에서 포화하는 반면 메모리·통신 비용과 가짜 음성 확률은 계속 증가합니다.",
+    canonicalHref: "/ai/image-text-contrastive-pretraining#batch-and-negatives",
+  },
+  "prompt-built-classifier": {
+    id: "prompt-built-classifier",
+    kind: "method",
+    domain: "machine-learning",
+    label: "문장으로 만든 분류기",
+    definition:
+      "범주 이름을 문장 틀에 넣어 인코딩하고 범주별로 평균·정규화해 선형 분류기 가중치 행렬을 구성하는 방법입니다. 학습 없이 범주 목록을 교체할 수 있지만 문장 틀과 이름 표기 선택이 성능에 영향을 줍니다.",
+    canonicalHref: "/ai/image-text-contrastive-pretraining#zero-shot",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -39335,6 +39398,72 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     to: "embedding-pipeline-fingerprint",
     relation: "prerequisite",
     reason: "backbone을 고정해 쓰는 전제가 있어야 지문이 바뀌는 시점을 재색인 트리거로 다룰 수 있습니다.",
+  },
+  {
+    from: "contrastive-pair-semantics",
+    to: "caption-as-supervision",
+    relation: "prerequisite",
+    reason: "양성 쌍과 음성 쌍을 정의하는 일반 계약 위에서 짝의 한쪽이 문장인 경우를 다룹니다.",
+  },
+  {
+    from: "caption-as-supervision",
+    to: "batch-softmax-contrastive-objective",
+    relation: "produces",
+    reason: "짝을 정답으로 쓰기로 하면 배치 안에서 자기 짝을 고르는 분류 문제가 자연스럽게 나옵니다.",
+  },
+  {
+    from: "batch-softmax-contrastive-objective",
+    to: "learned-logit-scale",
+    relation: "constrains",
+    reason: "코사인 값을 그대로 소프트맥스에 넣으면 분포가 평평해 배율을 함께 학습해야 합니다.",
+  },
+  {
+    from: "batch-softmax-contrastive-objective",
+    to: "pairwise-sigmoid-objective",
+    relation: "contrasts",
+    reason: "같은 유사도 행렬에 대해 행 정규화를 둘지 칸마다 독립으로 둘지를 같은 축에서 대비합니다.",
+  },
+  {
+    from: "pairwise-sigmoid-objective",
+    to: "negative-prior-logit-bias",
+    relation: "produces",
+    reason: "정규화가 사라지면 음성 칸이 N배 많다는 불균형이 그대로 드러나 보정 항이 필요해집니다.",
+  },
+  {
+    from: "batch-softmax-contrastive-objective",
+    to: "batch-size-negative-coupling",
+    relation: "constrains",
+    reason: "행 전체를 모아야 하므로 배치를 키울 때 메모리와 통신이 함께 커집니다.",
+  },
+  {
+    from: "pairwise-sigmoid-objective",
+    to: "batch-size-negative-coupling",
+    relation: "optimizes",
+    reason: "부분 합으로 분해되므로 같은 배치에서도 장치가 동시에 들고 있어야 하는 행렬이 작아집니다.",
+  },
+  {
+    from: "caption-as-supervision",
+    to: "prompt-built-classifier",
+    relation: "produces",
+    reason: "문장과 이미지가 같은 공간에 있으므로 범주 이름을 문장으로 넣으면 그대로 분류기가 됩니다.",
+  },
+  {
+    from: "prompt-built-classifier",
+    to: "embedding-pipeline-fingerprint",
+    relation: "constrains",
+    reason: "텍스트 인코더와 토크나이저도 지문에 포함돼야 같은 공간에서 비교가 성립합니다.",
+  },
+  {
+    from: "positive-transformation-invariance",
+    to: "caption-as-supervision",
+    relation: "contrasts",
+    reason: "같은 이미지의 변형을 양성으로 두는 방식과 다른 modality의 짝을 양성으로 두는 방식을 구분합니다.",
+  },
+  {
+    from: "learned-logit-scale",
+    to: "prompt-built-classifier",
+    relation: "constrains",
+    reason: "온도는 점수의 크기만 바꾸고 순위를 바꾸지 않으므로 분류 예측에는 영향을 주지 않습니다.",
   },
 ];
 
