@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import SeismicViz from "./viz/SeismicViz";

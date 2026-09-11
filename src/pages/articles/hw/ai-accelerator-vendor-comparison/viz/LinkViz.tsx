@@ -16,7 +16,6 @@ const SW = "#10b981";
 const MESH = "#f59e0b";
 const ETH = "#8b5cf6";
 const HOT = "#ef4444";
-const MUTED = "#94a3b8";
 
 const POS = [
   [120, 56], [220, 56], [320, 56],
