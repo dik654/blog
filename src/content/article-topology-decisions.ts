@@ -337,6 +337,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "수치는 한 장비·특정 모델 조합의 실측이며 증류 결론은 한 가족에서 한 번 잰 것임을 밝힌다.",
   },
+  "ai/negative-result-3d-face-control": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-09-11",
+    rationale:
+      "본문은 6 section·concept 7개로 keep 범위다. 세 라운드가 하나의 합격 기준을 공유하고 각 절이 앞 절의 결과를 재해석하는 구조라 나누면 그 연결이 끊긴다.",
+    sharedGate:
+      "실패한 것은 이 세 방법이며 수치는 한 장비·네 얼굴 표본의 실측임을 밝힌다.",
+  },
 };
 
 /**
@@ -344,6 +353,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "ai/negative-result-3d-face-control": "7b682cb8105bc0e9",
   "ai/generative-identity-diversity": "2363cd7992286b11",
   "ai/reference-identity-pose-separation": "a753dfc2bdc4f420",
   "ai/roi-resolution-identity-budget": "adf0f60c3e64205e",
