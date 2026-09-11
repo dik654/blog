@@ -11469,6 +11469,37 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "roi-resolution-identity-budget": {
+    title: "해상도 예산 글이 소유하는 범위",
+    owns: [
+      "편집 대상이 잠재 공간에서 받는 칸과 토큰이 실제 예산이라는 관점",
+      "프레임 해상도를 올리는 것과 대상 해상도를 올리는 것의 차이",
+      "부분 노이즈가 지시 편집 모델에서 절벽이고 일반 생성 모델에서 좁은 레버라는 구분",
+      "모델의 픽셀 예산을 넘긴 크롭이 오히려 대상을 줄인다는 관계",
+      "마스크 크기가 부위 편집의 정체성 위험을 지배한다는 관계",
+      "픽셀 오차 지표가 흐린 결과를 선호한다는 성질과 엣지 에너지로 대체하는 방법",
+      "품질이 한 축이 아닐 때 도구가 목적을 받게 하는 인터페이스 설계",
+    ],
+    reuses: [
+      { label: "계측기 검증", href: "/ai/generative-measurement-controls" },
+      { label: "편집 동작과 모델 라우팅", href: "/ai/masked-edit-verb-routing" },
+      { label: "잠재 확산", href: "/ai/latent-diffusion-guidance" },
+    ],
+    evidence: [
+      {
+        kind: "project-measurement",
+        rule: "수치는 한 장비·한 소스의 실측이며 측정일과 고정한 조건을 함께 밝힌다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "토큰 수 계산은 관계를 보여 주는 용도이며 축소 배율·패치 크기가 구현마다 다르다는 점을 명시한다.",
+      },
+      {
+        kind: "standard",
+        rule: "확대 비교는 한 소스에서의 결과이며 그림체와 열화 방식이 다르면 순위가 달라질 수 있음을 밝힌다.",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;
