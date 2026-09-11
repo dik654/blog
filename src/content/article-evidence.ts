@@ -6686,4 +6686,24 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "할당기 동작과 캐시 해제의 근거이며 텐서 합과 실제 사용량이 다른 이유를 설명함",
     },
   ],
+  "gpu/ai-accelerator-vendor-comparison": [
+    {
+      kind: "공식 문서",
+      label: "AMD Instinct MI355X · 시스템 수용 문서",
+      href: "https://instinct.docs.amd.com/projects/system-acceptance/en/latest/gpus/mi355x.html",
+      note: "메모리 용량·대역폭·OAM 폼팩터·Infinity Fabric 링크 구성의 근거이며 2026-09-11 확인 기준임",
+    },
+    {
+      kind: "공식 문서",
+      label: "Intel Gaudi 3 · 기술 백서",
+      href: "https://cdrdv2-public.intel.com/817486/gaudi-3-ai-accelerator-white-paper.pdf",
+      note: "HBM 구성과 패키지 내장 이더넷 포트, OAM·PCIe 폼팩터별 전력의 근거이며 2026-09-11 확인 기준임",
+    },
+    {
+      kind: "공식 문서",
+      label: "NVIDIA · NVLink와 NVSwitch 제품 문서",
+      href: "https://www.nvidia.com/en-us/data-center/nvlink/",
+      note: "전용 링크와 전용 스위치 구조의 근거이며 특정 워크로드의 achievable 성능은 아님",
+    },
+  ],
 };

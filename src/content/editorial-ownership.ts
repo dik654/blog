@@ -11144,6 +11144,41 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "ai-accelerator-vendor-comparison": {
+    title: "가속기 벤더 비교 글이 소유하는 범위",
+    owns: [
+      "메모리·링크·폼팩터·소프트웨어 네 축과 축 사이의 종속 관계",
+      "용량은 나눌지를, 대역폭은 토큰당 시간 하한을 정한다는 역할 분리",
+      "전용 스위치·메시·패키지 내장 이더넷 세 연결 철학과 각각이 포기하는 것",
+      "노드 안팎 대역폭 격차와 그 경계에 병렬화 축을 배치하는 기준",
+      "확장 슬롯 카드와 베이스보드 모듈이 전력·냉각·배선·조달을 함께 정한다는 관계",
+      "모델 코드부터 커널·통신 라이브러리까지의 층별 이식 위험과 확인 절차",
+      "기준일과 출처를 함께 적어 스펙 표를 스냅샷으로 다루는 규율",
+    ],
+    reuses: [
+      { label: "NVIDIA 제품 계열 비교", href: "/gpu/hw-gpu-comparison" },
+      { label: "GPU 인터커넥트 공식", href: "/gpu/gpu-interconnects" },
+      { label: "collective 네트워크", href: "/gpu/gpu-collective-network" },
+      { label: "전력과 냉각", href: "/gpu/hw-power-cooling" },
+      { label: "개조 RTX 4090과 MoE 서빙", href: "/gpu/modded-rtx4090-moe-serving" },
+      { label: "병렬화 전략과 배치", href: "/ai/parallelism-strategy-and-placement" },
+      { label: "서빙 벤치마크 방법론", href: "/ai/serving-benchmark-methodology" },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "메모리·링크·폼팩터 항목은 각 벤더의 공개 제품 문서에 귀속하고 확인 기준일을 본문에 표시한다.",
+      },
+      {
+        kind: "standard",
+        rule: "연산 성능 수치는 정밀도 정의와 측정 조건이 벤더마다 달라 같은 표에 넣지 않으며 순위 판정에도 쓰지 않는다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "토큰당 시간 비 계산은 명시한 가정에서의 산술 하한이며 특정 제품의 실측 성능이 아니다.",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

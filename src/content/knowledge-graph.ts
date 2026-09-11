@@ -21844,6 +21844,69 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "모델만 올린 직후와 한 스텝 뒤의 사용량을 각각 재어 가중치 항과 나머지를 분리한 뒤, 넘치는 항에 맞는 대응책을 고르는 절차입니다. 원인을 가르지 않고 배치부터 줄이면 해결되지 않는 경우가 많습니다.",
     canonicalHref: "/ai/multi-component-finetuning-vram#budget-gate",
   },
+  "accelerator-comparison-axes": {
+    id: "accelerator-comparison-axes",
+    kind: "concept",
+    domain: "computer-science",
+    label: "가속기 비교의 네 축",
+    definition:
+      "메모리, 가속기 간 링크, 폼팩터, 소프트웨어 생태계를 순서대로 보는 비교 틀입니다. 앞 축의 결정이 뒤 축의 선택지를 좁히므로 스펙표의 한 칸만 보면 뒤따라오는 결과를 놓칩니다.",
+    canonicalHref: "/gpu/ai-accelerator-vendor-comparison#overview",
+  },
+  "capacity-bandwidth-role-split": {
+    id: "capacity-bandwidth-role-split",
+    kind: "concept",
+    domain: "computer-science",
+    label: "용량과 대역폭의 역할 분리",
+    definition:
+      "메모리 용량은 모델과 실행 상태를 나눠야 하는지를 정하고 대역폭은 배치가 작을 때의 토큰당 시간 하한을 정한다는 구분입니다. 두 숫자를 하나의 메모리 성능으로 합치면 판단이 흐려집니다.",
+    canonicalHref: "/gpu/ai-accelerator-vendor-comparison#memory-axis",
+  },
+  "interconnect-topology-philosophy": {
+    id: "interconnect-topology-philosophy",
+    kind: "concept",
+    domain: "computer-science",
+    label: "가속기 간 연결 철학의 분기",
+    definition:
+      "전용 링크에 전용 스위치를 두는 방식, 스위치 없이 직접 잇는 메시 방식, 표준 이더넷을 가속기 패키지에 넣는 방식으로 갈리는 설계 선택입니다. 쌍별 대역폭의 균일성과 조달 자유도가 서로 교환됩니다.",
+    canonicalHref: "/gpu/ai-accelerator-vendor-comparison#link-axis",
+  },
+  "scale-up-scale-out-boundary": {
+    id: "scale-up-scale-out-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "노드 안팎 대역폭 경계",
+    definition:
+      "한 노드 안에서 가속기를 잇는 대역폭과 노드 사이를 잇는 네트워크 대역폭이 보통 한 자릿수 배 이상 차이 난다는 사실과, 그 경계에 어떤 병렬화 축을 두느냐가 성능을 정한다는 원칙입니다.",
+    canonicalHref: "/gpu/ai-accelerator-vendor-comparison#scale-up-vs-out",
+  },
+  "module-form-factor-consequences": {
+    id: "module-form-factor-consequences",
+    kind: "concept",
+    domain: "computer-science",
+    label: "폼팩터가 정하는 전력·냉각·조달",
+    definition:
+      "확장 슬롯 카드와 베이스보드 모듈 중 무엇을 고르느냐가 전력 상한, 냉각 방식, 전용 링크 배선 가능 여부, 그리고 사용할 수 있는 서버 섀시 범위를 함께 정한다는 관계입니다.",
+    canonicalHref: "/gpu/ai-accelerator-vendor-comparison#form-factor",
+  },
+  "accelerator-software-portability-cost": {
+    id: "accelerator-software-portability-cost",
+    kind: "concept",
+    domain: "computer-science",
+    label: "가속기 소프트웨어 이식 비용",
+    definition:
+      "모델 코드와 프레임워크는 대체로 옮겨지지만 성능을 내는 커널과 양자화 형식, 통신 라이브러리는 다시 만들어야 한다는 층별 위험 구조입니다. 벤더가 공개한 성능 수치도 그 최적 경로가 켜져야 재현됩니다.",
+    canonicalHref: "/gpu/ai-accelerator-vendor-comparison#software-axis",
+  },
+  "dated-spec-snapshot-discipline": {
+    id: "dated-spec-snapshot-discipline",
+    kind: "concept",
+    domain: "computer-science",
+    label: "기준일을 박은 스펙 스냅샷",
+    definition:
+      "제품 스펙처럼 빠르게 낡는 값을 기준일과 출처를 함께 적어 스냅샷으로 다루고, 순위 판정이 아니라 축을 확인하는 용도로만 쓰는 규율입니다. 정밀도 정의가 벤더마다 다른 연산 성능은 같은 표에 넣지 않습니다.",
+    canonicalHref: "/gpu/ai-accelerator-vendor-comparison#snapshot-gate",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -39728,6 +39791,72 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     to: "weight-vs-activation-dominance",
     relation: "constrains",
     reason: "프레임 수가 activation 항에 그대로 곱해져 영상에서는 지배 구간이 더 빨리 바뀝니다.",
+  },
+  {
+    from: "accelerator-comparison-axes",
+    to: "capacity-bandwidth-role-split",
+    relation: "produces",
+    reason: "네 축 중 첫 축을 펼치면 용량과 대역폭이 서로 다른 질문에 답한다는 구분이 나옵니다.",
+  },
+  {
+    from: "gddr-density-capacity-bandwidth-split",
+    to: "capacity-bandwidth-role-split",
+    relation: "prerequisite",
+    reason: "밀도와 대역폭이 독립이라는 소비자 카드의 공식이 데이터센터 카드에도 같은 축으로 적용됩니다.",
+  },
+  {
+    from: "capacity-bandwidth-role-split",
+    to: "interconnect-topology-philosophy",
+    relation: "produces",
+    reason: "용량이 부족해 나눠야 할 때 비로소 링크 구조가 성능을 정하는 변수가 됩니다.",
+  },
+  {
+    from: "nvlink-device-fabric-boundary",
+    to: "interconnect-topology-philosophy",
+    relation: "prerequisite",
+    reason: "전용 링크와 fabric의 정의를 알아야 스위치·메시·이더넷 세 방식을 같은 축에서 비교할 수 있습니다.",
+  },
+  {
+    from: "pcie-transaction-bandwidth-latency",
+    to: "interconnect-topology-philosophy",
+    relation: "prerequisite",
+    reason: "표준 버스의 대역폭 공식이 있어야 전용 링크가 무엇을 더 주는지 계산됩니다.",
+  },
+  {
+    from: "interconnect-topology-philosophy",
+    to: "scale-up-scale-out-boundary",
+    relation: "produces",
+    reason: "연결 방식이 노드 안팎의 대역폭 격차와 그 경계의 성격을 정합니다.",
+  },
+  {
+    from: "moe-vs-dense-interconnect-sensitivity",
+    to: "interconnect-topology-philosophy",
+    relation: "evaluates",
+    reason: "라우팅 쏠림이 있는 워크로드가 쌍별 대역폭 균일성의 차이를 드러내는 시험대가 됩니다.",
+  },
+  {
+    from: "interconnect-topology-philosophy",
+    to: "module-form-factor-consequences",
+    relation: "constrains",
+    reason: "전용 링크는 베이스보드 위에서 배선되므로 링크 선택이 폼팩터를 사실상 결정합니다.",
+  },
+  {
+    from: "module-form-factor-consequences",
+    to: "accelerator-comparison-axes",
+    relation: "constrains",
+    reason: "폼팩터가 요구하는 전력·냉각을 현장이 감당하지 못하면 앞 축의 우위가 실현되지 않습니다.",
+  },
+  {
+    from: "accelerator-software-portability-cost",
+    to: "accelerator-comparison-axes",
+    relation: "constrains",
+    reason: "지금 스택이 같은 기능으로 돌지 않으면 나머지 세 축의 차이가 실현되지 않습니다.",
+  },
+  {
+    from: "dated-spec-snapshot-discipline",
+    to: "accelerator-comparison-axes",
+    relation: "evaluates",
+    reason: "스냅샷은 축이 실제 제품에서 어떻게 나타나는지 확인하는 용도로만 쓰입니다.",
   },
 ];
 

@@ -71201,4 +71201,210 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "gpu/ai-accelerator-vendor-comparison": {
+    coreIdea:
+      "서로 다른 벤더의 AI 가속기는 메모리·링크·폼팩터·소프트웨어 네 축에서 갈라지며 앞 축의 선택이 뒤 축을 묶으므로, 스펙표를 나란히 놓는 대신 내 워크로드가 어느 축에 민감한지로 후보를 좁히고 마지막에는 실제 워크로드를 띄워 확인해야 합니다.",
+    assumedKnowledge: [
+      { id: "pcie-transaction-bandwidth-latency", role: "표준 버스의 대역폭 공식입니다." },
+      { id: "nvlink-device-fabric-boundary", role: "전용 링크와 fabric이 무엇을 보장하는지의 정의입니다." },
+      { id: "gddr-density-capacity-bandwidth-split", role: "용량과 대역폭이 독립이라는 공식입니다." },
+      { id: "moe-vs-dense-interconnect-sensitivity", role: "통신 패턴이 링크 구조에 따라 다르게 드러난다는 사실입니다." },
+      { id: "collective-rank-semantics", role: "여러 장을 묶을 때의 collective 통신 기본 개념입니다." },
+    ],
+    introducedHere: [
+      { id: "accelerator-comparison-axes", role: "비교를 네 축으로 구조화하고 축 사이 종속을 밝힙니다." },
+      { id: "capacity-bandwidth-role-split", role: "메모리 두 숫자가 답하는 질문을 나눕니다." },
+      { id: "interconnect-topology-philosophy", role: "세 가지 연결 철학과 그 교환 관계를 정의합니다." },
+      { id: "scale-up-scale-out-boundary", role: "노드 안팎 대역폭 격차와 병렬화 배치의 관계를 정리합니다." },
+      { id: "module-form-factor-consequences", role: "폼팩터가 함께 정하는 네 가지를 고정합니다." },
+      { id: "accelerator-software-portability-cost", role: "층별 이식 위험과 확인 방법을 세웁니다." },
+      { id: "dated-spec-snapshot-discipline", role: "스펙 표를 기준일과 함께 다루는 규율을 정합니다." },
+    ],
+    conceptExplanations: [
+      {
+        id: "accelerator-comparison-axes",
+        sectionId: "overview",
+        intuition:
+          "표의 칸을 하나씩 비교하는 대신 회사들이 서로 다르게 선택한 지점을 축으로 세워 놓고 봅니다.",
+        workedExample:
+          "메모리 용량이 부족하면 나눠야 하고, 나누면 링크가 문제가 되며, 링크 방식이 폼팩터를 정하고, 폼팩터가 전력과 냉각을 정합니다.",
+        boundary:
+          "네 축은 독립이 아니라 순서가 있는 종속 관계입니다. 연산 성능은 정밀도 정의가 벤더마다 달라 이 축에 넣지 않았습니다.",
+      },
+      {
+        id: "capacity-bandwidth-role-split",
+        sectionId: "memory-axis",
+        intuition:
+          "가방이 큰 것과 가방에서 물건을 빨리 꺼내는 것은 다른 능력입니다.",
+        workedExample:
+          "배치가 작을 때 토큰당 하한 시간은 읽어야 할 바이트를 대역폭으로 나눈 값이라, 대역폭 8 TB/s와 3.7 TB/s는 같은 모델에서 약 2.16배 차이가 납니다.",
+        boundary:
+          "하한이므로 커널 효율과 KV 읽기, 통신이 더해져 실제는 더 큽니다. 배치가 커지면 연산이 지배적이 되어 이 식의 의미가 약해집니다.",
+      },
+      {
+        id: "interconnect-topology-philosophy",
+        sectionId: "link-axis",
+        intuition:
+          "모두를 잇는 교환기를 둘지, 이웃끼리 직접 연결할지, 아니면 일반 도로망에 태울지의 선택입니다.",
+        workedExample:
+          "전용 스위치는 어떤 쌍이든 같은 대역폭을 주고, 메시는 쌍별로 링크 수만큼이며, 패키지 내장 이더넷은 노드 안팎을 같은 프로토콜로 잇습니다.",
+        boundary:
+          "균일한 대역폭은 조달 자유도를 내주고, 메시는 쏠림에 약하며, 이더넷은 단일 링크 대역폭과 지연에서 불리합니다. 어느 쪽이 낫다가 아니라 무엇을 교환하느냐의 문제입니다.",
+      },
+      {
+        id: "scale-up-scale-out-boundary",
+        sectionId: "scale-up-vs-out",
+        intuition:
+          "같은 건물 안에서 이야기하는 것과 건물 사이에 전화를 거는 것의 속도 차이입니다.",
+        workedExample:
+          "layer마다 전체 합이 필요한 병렬화는 노드 안에 두고, 구간 경계에서만 넘기는 병렬화는 노드 밖으로 두는 배치가 기본입니다.",
+        boundary:
+          "패키지에 이더넷을 넣은 설계는 경계를 흐리지만 대역폭이 같아진다는 뜻은 아닙니다. 실제 배치에서는 여전히 홉 수와 스위치 단수를 세야 합니다.",
+      },
+      {
+        id: "module-form-factor-consequences",
+        sectionId: "form-factor",
+        intuition:
+          "어디에 꽂느냐가 얼마나 먹일 수 있고 얼마나 식힐 수 있는지를 결정합니다.",
+        workedExample:
+          "같은 칩이 모듈 형태에서는 900W, 카드 형태에서는 600W로 공시되기도 하며, 전용 링크 배선은 대개 베이스보드 위에서만 제공됩니다.",
+        boundary:
+          "카드 형태의 대역폭을 모듈 형태 스펙으로 읽으면 안 됩니다. 공개 규격이라도 전력·냉각 조건이 맞아야 실제로 장착됩니다.",
+      },
+      {
+        id: "accelerator-software-portability-cost",
+        sectionId: "software-axis",
+        intuition:
+          "표에 없지만 실제 도입 일정을 가장 크게 좌우하는 항목입니다.",
+        workedExample:
+          "모델 코드와 프레임워크는 대체로 옮겨지지만 attention·정규화·양자화 커널과 통신 라이브러리는 다시 만들거나 다시 튜닝해야 합니다.",
+        boundary:
+          "지원한다는 말은 기능 단위로 쪼개 확인해야 합니다. 벤더 공개 수치는 그 최적 경로가 켜져야 재현되므로 내 스택에서 직접 띄워 봐야 합니다.",
+      },
+      {
+        id: "dated-spec-snapshot-discipline",
+        sectionId: "snapshot-gate",
+        intuition:
+          "제품 표는 우유처럼 유통기한이 있어서 날짜를 적어 두지 않으면 오래된 것을 새것처럼 씁니다.",
+        workedExample:
+          "표에 기준일 2026-09-11과 출처를 함께 적고, 같은 계열 안에서도 공랭·액랭 변형에 따라 전력이 다르다는 점을 각주로 남깁니다.",
+        boundary:
+          "이 표로 성능 우열을 판정하지 않습니다. 연산 성능은 정밀도 정의와 측정 조건이 벤더마다 달라 같은 표에 넣지 않았습니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 비교 틀",
+        relation: "축을 세우고 종속 관계를 먼저 고정",
+        concepts: ["accelerator-comparison-axes"],
+      },
+      {
+        label: "01 메모리",
+        relation: "두 숫자가 답하는 질문을 분리",
+        concepts: ["capacity-bandwidth-role-split", "gddr-density-capacity-bandwidth-split"],
+      },
+      {
+        label: "02 링크",
+        relation: "나눠야 할 때의 연결 철학과 교환 관계",
+        concepts: ["interconnect-topology-philosophy", "nvlink-device-fabric-boundary"],
+      },
+      {
+        label: "03 경계",
+        relation: "노드 안팎 격차와 병렬화 배치",
+        concepts: ["scale-up-scale-out-boundary", "collective-rank-semantics"],
+      },
+      {
+        label: "04 폼팩터",
+        relation: "전력·냉각·조달이 함께 정해짐",
+        concepts: ["module-form-factor-consequences"],
+      },
+      {
+        label: "05 실행과 규율",
+        relation: "이식 비용을 재고 스냅샷을 기준일과 함께 다룸",
+        concepts: ["accelerator-software-portability-cost", "dated-spec-snapshot-discipline"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "가속기 비교의 네 축을 순서대로 쓰고, 앞 축이 뒤 축을 어떻게 좁히는지 한 예로 설명하세요.",
+        answerChecklist: ["메모리", "링크", "폼팩터", "소프트웨어", "용량 부족 → 나눔 → 링크 문제", "링크 방식 → 폼팩터 → 전력·냉각"],
+        requiredConcepts: ["accelerator-comparison-axes"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "메모리 용량과 대역폭이 각각 어떤 질문에 답하는지 쓰고, 하나로 합치면 안 되는 이유를 설명하세요.",
+        answerChecklist: ["용량은 한 장에 들어가는지", "대역폭은 토큰당 시간 하한", "용량 부족이면 통신 발생", "대역폭은 생성 속도 상한", "합치면 판단이 흐려짐"],
+        requiredConcepts: ["capacity-bandwidth-role-split"],
+        sectionId: "memory-axis",
+      },
+      {
+        level: "basic",
+        question:
+          "대역폭 8 TB/s와 3.7 TB/s에서 같은 모델의 토큰당 하한 시간 비를 계산하고, 이 값이 하한인 이유를 쓰세요.",
+        answerChecklist: ["8 ÷ 3.7 ≈ 2.16", "약 2.16배", "커널 효율 미포함", "KV 읽기 미포함", "통신 미포함", "실제는 더 큼"],
+        requiredConcepts: ["capacity-bandwidth-role-split"],
+        sectionId: "memory-axis",
+      },
+      {
+        level: "basic",
+        question:
+          "가속기를 잇는 세 가지 방식을 쓰고 각각이 포기하는 것을 하나씩 적으세요.",
+        answerChecklist: ["전용 스위치 → 조달 자유도", "메시 → 쏠림에 약함", "패키지 이더넷 → 단일 링크 대역폭·지연", "쌍별 대역폭 균일성 차이", "스위치 칩 유무"],
+        requiredConcepts: ["interconnect-topology-philosophy"],
+        sectionId: "link-axis",
+      },
+      {
+        level: "basic",
+        question:
+          "폼팩터가 함께 결정하는 네 가지를 쓰고, 카드 형태 스펙을 모듈 형태 스펙으로 읽으면 안 되는 이유를 설명하세요.",
+        answerChecklist: ["전력 상한", "냉각 방식", "가속기 간 배선", "조달 선택지", "전용 링크는 베이스보드 배선", "같은 칩도 전력이 다르게 공시됨"],
+        requiredConcepts: ["module-form-factor-consequences"],
+        sectionId: "form-factor",
+      },
+      {
+        level: "basic",
+        question:
+          "소프트웨어 축에서 층별로 이식 위험이 다른 이유를 설명하고, 가장 위험한 층을 고르세요.",
+        answerChecklist: ["모델 코드는 대체로 이동", "프레임워크는 백엔드 제공", "커널·라이브러리가 가장 위험", "attention·정규화·양자화에 집중", "기능 단위로 확인 필요"],
+        requiredConcepts: ["accelerator-software-portability-cost"],
+        sectionId: "software-axis",
+      },
+      {
+        level: "advanced",
+        question:
+          "MoE 서빙에서 전용 스위치 구조와 메시 구조의 차이가 dense 모델보다 크게 드러나는 이유를 통신 패턴으로 설명하세요.",
+        answerChecklist: ["dense는 layer마다 대칭 all-reduce", "모든 쌍이 같은 양", "MoE는 라우팅 의존 비대칭", "특정 카드로 쏠림", "균일 패브릭은 흡수", "메시는 그 링크가 병목"],
+        requiredConcepts: ["interconnect-topology-philosophy", "moe-vs-dense-interconnect-sensitivity"],
+        sectionId: "link-axis",
+      },
+      {
+        level: "advanced",
+        question:
+          "노드 안 대역폭과 노드 간 대역폭의 격차를 전제로, 어떤 병렬화 축을 어디에 두어야 하는지 기준을 쓰고 그 이유를 설명하세요.",
+        answerChecklist: ["노드 안이 한 자릿수 배 이상 큼", "layer마다 전체 합이 필요한 축은 노드 안", "구간 경계에서만 넘기는 축은 노드 밖", "통신 빈도가 기준", "경계가 흐려져도 홉 수는 세야 함"],
+        requiredConcepts: ["scale-up-scale-out-boundary"],
+        sectionId: "scale-up-vs-out",
+      },
+      {
+        level: "advanced",
+        question:
+          "벤더가 공개한 성능 수치를 내 환경에 그대로 옮겨 읽으면 안 되는 이유를 소프트웨어 축으로 설명하고, 대신 확인할 절차를 쓰세요.",
+        answerChecklist: ["벤더 최적 경로에서 나온 값", "내 스택에서 그 경로가 안 켜질 수 있음", "프로덕션 모델·양자화·엔진 버전으로 직접 실행", "처리량보다 기능과 정확도 먼저", "같은 조건에서 재는 방법론 적용"],
+        requiredConcepts: ["accelerator-software-portability-cost", "dated-spec-snapshot-discipline"],
+        sectionId: "software-axis",
+      },
+      {
+        level: "advanced",
+        question:
+          "선택 판단 순서를 첫 질문부터 마지막 관문까지 쓰고, 모델이 한 장에 들어가는 경우와 아닌 경우에 축의 비중이 어떻게 달라지는지 설명하세요.",
+        answerChecklist: ["첫 질문은 용량", "들어가면 대역폭·소프트웨어가 결정적", "링크 비중 축소", "안 들어가면 링크 구조와 통신 패턴 궁합", "폼팩터의 전력·냉각 감당 여부", "마지막은 실제 워크로드 실행"],
+        requiredConcepts: ["accelerator-comparison-axes", "dated-spec-snapshot-discipline"],
+        sectionId: "snapshot-gate",
+      },
+    ],
+  },
 };

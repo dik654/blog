@@ -17,6 +17,24 @@ export const hwArticles: Article[] = [
     component: () => import("@/pages/articles/hw/gpu-comparison"),
   },
   {
+    slug: "ai-accelerator-vendor-comparison",
+    title: "가속기 비교는 스펙표가 아니라 네 축으로 합니다",
+    subcategory: "hw-compute",
+    sections: [
+      { id: "overview", title: "스펙표를 나란히 놓는 것으로는 결론이 안 납니다" },
+      { id: "memory-axis", title: "용량은 올라가느냐를, 대역폭은 얼마나 빠르냐를 정합니다" },
+      {
+        id: "link-axis",
+        title: "가속기를 잇는 방식에서 셋이 갈라집니다",
+        subsections: [{ id: "scale-up-vs-out", title: "노드 안과 노드 밖을 구분해서 봐야 합니다" }],
+      },
+      { id: "form-factor", title: "폼팩터가 전력과 냉각, 그리고 조달 선택지를 함께 정합니다" },
+      { id: "software-axis", title: "같은 코드가 그대로 도는지가 네 번째 축입니다" },
+      { id: "snapshot-gate", title: "스냅샷은 기준일과 함께 읽습니다" },
+    ],
+    component: () => import("@/pages/articles/hw/ai-accelerator-vendor-comparison"),
+  },
+  {
     slug: "hw-server-vs-desktop",
     title: "서버 vs 데스크톱: 부품 차이 완전 정리",
     subcategory: "hw-compute",

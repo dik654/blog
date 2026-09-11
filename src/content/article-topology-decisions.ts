@@ -220,6 +220,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "diffusers 커밋 82f175e0 학습 예제와 명시한 예시 구성의 산술만 근거로 삼고, 특정 모델의 실측 VRAM 수치를 주장하지 않는다.",
   },
+  "gpu/ai-accelerator-vendor-comparison": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-09-11",
+    rationale:
+      "본문은 6 section·concept 7개로 keep 범위다. 네 축은 앞이 뒤를 좁히는 종속 관계라 나누면 각 글이 같은 비교 틀을 다시 세워야 하고 종속이 사라진다.",
+    sharedGate:
+      "각 벤더의 공개 제품 문서와 명시한 가정의 산술만 근거로 삼고, 연산 성능 비교나 자체 실측 순위는 이 글에서 주장하지 않는다.",
+  },
 };
 
 /**
@@ -241,6 +250,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/qwen-korean-consistency": "28703cf32620721b",
   "ai/dinov3-self-supervised-backbone": "1d4f7adb50ed720a",
   "ai/image-embedding-pipeline": "183b7fb7e57921f8",
+  "gpu/ai-accelerator-vendor-comparison": "f82e89ae427c88c0",
   "ai/multi-component-finetuning-vram": "c3f7e981c26b48fc",
   "ai/vision-backbone-selection": "cdd9671993dee419",
   "ai/image-text-contrastive-pretraining": "f5b36610fc8dff17",

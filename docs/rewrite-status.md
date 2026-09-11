@@ -1767,3 +1767,11 @@
 - 코드 근거는 diffusers 커밋 82f175e0의 `train_text_to_image_lora.py`다. `unet/vae/text_encoder.requires_grad_(False)` 직후 셋 다 `.to(accelerator.device, dtype=weight_dtype)` 하는 부분과, 학습 루프가 매 스텝 `vae.encode`·`text_encoder`를 호출하는 부분을 인용해 "동결해도 상주해야 하는 이유"를 코드로 고정했다.
 - 수치는 예시 구성임을 본문·ownership 양쪽에 표시했다. 가중치 합 14.8 GB 중 text encoder가 9.4 GB, 어댑터 관련 항은 0.14 GB로 1% 미만, 24 GB 장치에서 activation 여유 약 9 GB라는 계산이 글의 결론을 만든다. 텐서 합은 하한이며 할당기 단편화와 커널 작업 공간이 빠져 있다는 경계도 적었다.
 - 검증: 전 audit 통과, `audit:viz --strict` ERROR 0, topology `keep`+fingerprint, tsc·build 통과(661 static route), Playwright 1440·390 overflow 0·error 0.
+
+### 2026-09-11 · 하드웨어 비교 1편 · 가속기 벤더 비교
+
+- 사용자가 요청한 하드웨어 비교 트랙의 첫 글로 `gpu/ai-accelerator-vendor-comparison`을 `hw-compute`의 `hw-gpu-comparison` 뒤에 추가했다. 저장소에 AMD Instinct·Intel Gaudi 언급이 0건이었고 기존 GPU 비교 글은 NVIDIA 제품 계열 안의 비교였다.
+- 스펙표 비교 대신 네 축(메모리·링크·폼팩터·소프트웨어)으로 구조를 세웠다. 축이 독립이 아니라 앞이 뒤를 좁히는 종속 관계라는 점이 글의 뼈대다. 용량은 나눌지를, 대역폭은 토큰당 시간 하한을 정한다는 분리가 첫 축이고, 나눠야 할 때 비로소 링크 철학(전용 스위치·메시·패키지 내장 이더넷)이 성능을 정한다.
+- contract 2.2.1을 따라 스펙 숫자는 기준일(2026-09-11)과 출처를 박은 스냅샷으로만 두고, 연산 성능 수치는 정밀도 정의와 측정 조건이 벤더마다 달라 아예 표에 넣지 않았다. 순위 판정에 쓰지 않는다는 규칙을 ownership evidence에 적었다.
+- 기존 정본과의 경계: NVIDIA 제품 계열 비교는 `hw-gpu-comparison`, 링크 대역폭 공식은 `gpu-interconnects`, 랙 전력·냉각은 `hw-power-cooling`, MoE 통신 민감도는 `modded-rtx4090-moe-serving`이 소유하고 이 글은 벤더가 갈라지는 지점만 다룬다.
+- 검증: 전 audit 통과, `audit:viz --strict` ERROR 0, topology `keep`+fingerprint, tsc·build 통과(662 static route), Playwright 1440·390 overflow 0·error 0.
