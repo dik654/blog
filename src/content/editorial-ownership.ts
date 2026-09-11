@@ -11112,6 +11112,38 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "multi-component-finetuning-vram": {
+    title: "다중 부품 미세조정 VRAM 글이 소유하는 범위",
+    owns: [
+      "학습 중 장치 상주 집합을 학습 대상·gradient와 state·동결 가중치·activation 네 갈래로 나누는 구분",
+      "동결이 gradient만 없애고 forward 상주는 없애지 못한다는 사실과 그 코드 근거",
+      "부품마다 가중치 항을 세고 학습 대상에만 두 번째 항을 붙이는 계산 방식",
+      "가중치 항이 먼저 차고 activation 항만 실행 조건에 따라 자라는 지배 구조",
+      "어댑터가 줄이지 못하는 비용이 역전파 경로에서 나온다는 설명",
+      "동결 부품 출력의 불변성을 이용해 사전계산으로 부품을 내리는 기법과 그 조건",
+      "두 번의 측정으로 넘치는 항을 가려 대응책을 고르는 판정 순서",
+    ],
+    reuses: [
+      { label: "학습 메모리 예산", href: "/ai/training-memory-budget" },
+      { label: "LoRA 미세조정", href: "/ai/lora-finetuning" },
+      { label: "이미지·영상 LoRA 구조", href: "/ai/image-video-lora-architecture" },
+      { label: "현대 이미지 모델 스택", href: "/ai/modern-image-model-stack" },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "동결과 장치 이동, 매 스텝 호출 구조는 diffusers 커밋 82f175e0 학습 예제에 귀속한다.",
+      },
+      {
+        kind: "standard",
+        rule: "부품별 파라미터 수는 설명을 위해 고른 예시 구성이며 특정 제품의 값이 아니라고 본문에 표시한다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "메모리 계산값은 텐서 크기의 합이며 할당기 단편화와 커널 작업 공간을 포함하지 않는 하한으로만 쓴다.",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

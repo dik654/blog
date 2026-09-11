@@ -21781,6 +21781,69 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "과제를 한 문장으로 적고, 계열로 후보를 좁히고, 같은 조건에서 재고, 교체 비용을 더해 결정하는 순서입니다. 순서를 뒤집으면 평가 조건 차이가 가려지고 되돌리기 어려운 선택이 됩니다.",
     canonicalHref: "/ai/vision-backbone-selection#decision-gate",
   },
+  "training-residency-set": {
+    id: "training-residency-set",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "학습 중 장치 상주 집합",
+    definition:
+      "학습이 도는 동안 장치에 있어야 하는 것을 학습 대상 파라미터, 그 gradient와 optimizer state, 동결 부품의 가중치, 그리고 activation 네 갈래로 나눈 구분입니다. 추론과 달리 매 스텝 같은 순서를 반복하므로 부품을 내렸다 올리기 어렵습니다.",
+    canonicalHref: "/ai/multi-component-finetuning-vram#residency-set",
+  },
+  "frozen-module-forward-residency": {
+    id: "frozen-module-forward-residency",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "동결 부품의 forward 상주 요구",
+    definition:
+      "동결은 gradient와 optimizer state를 만들지 않는다는 뜻일 뿐, 매 스텝 forward에 쓰이는 부품의 가중치는 그대로 장치에 있어야 한다는 구분입니다. 학습 루프가 그 부품을 호출하는 한 내릴 수 없습니다.",
+    canonicalHref: "/ai/multi-component-finetuning-vram#frozen-forward",
+  },
+  "per-component-memory-ledger": {
+    id: "per-component-memory-ledger",
+    kind: "method",
+    domain: "machine-learning",
+    label: "부품별 메모리 원장",
+    definition:
+      "파이프라인의 모든 부품에 가중치 항을 세고, 학습 대상에만 gradient·master·optimizer state 항을 더하며, 실행 조건에서 activation 항을 구해 합치는 계산 방식입니다. 부품이 여러 개인 생성 파이프라인에서 예산을 예측 가능하게 만듭니다.",
+    canonicalHref: "/ai/multi-component-finetuning-vram#component-budget",
+  },
+  "weight-vs-activation-dominance": {
+    id: "weight-vs-activation-dominance",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "가중치 항과 activation 항의 지배 구간",
+    definition:
+      "가중치 항은 실행 조건과 무관하게 먼저 자리를 차지하고 activation 항만 배치·해상도·프레임에 따라 자라는 구조입니다. 어느 항이 장치를 채우고 있는지에 따라 유효한 대응책이 달라집니다.",
+    canonicalHref: "/ai/multi-component-finetuning-vram#worked-budget",
+  },
+  "adapter-backprop-path-cost": {
+    id: "adapter-backprop-path-cost",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "어댑터 역전파 경로 비용",
+    definition:
+      "학습 대상이 어댑터뿐이어도 기울기가 그곳에 닿으려면 뒤쪽 base 블록을 모두 통과해야 하므로 base 가중치와 경로상 activation이 그대로 남아야 한다는 제약입니다. 어댑터 방식이 줄이는 것은 gradient와 optimizer state 항뿐입니다.",
+    canonicalHref: "/ai/multi-component-finetuning-vram#adapter-scope",
+  },
+  "precompute-to-evict": {
+    id: "precompute-to-evict",
+    kind: "method",
+    domain: "machine-learning",
+    label: "사전계산으로 부품 내리기",
+    definition:
+      "동결 부품의 출력이 학습 중 변하지 않는다는 성질을 이용해 학습 전에 전부 계산해 저장하고 그 부품을 장치에서 제거하는 기법입니다. 가중치 항이 통째로 빠지는 대신 디스크 사용량이 늘고 전처리 설정이 고정됩니다.",
+    canonicalHref: "/ai/multi-component-finetuning-vram#precompute-offload",
+  },
+  "memory-overflow-diagnosis-gate": {
+    id: "memory-overflow-diagnosis-gate",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "메모리 초과 원인 판정 순서",
+    definition:
+      "모델만 올린 직후와 한 스텝 뒤의 사용량을 각각 재어 가중치 항과 나머지를 분리한 뒤, 넘치는 항에 맞는 대응책을 고르는 절차입니다. 원인을 가르지 않고 배치부터 줄이면 해결되지 않는 경우가 많습니다.",
+    canonicalHref: "/ai/multi-component-finetuning-vram#budget-gate",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -39593,6 +39656,78 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     to: "backbone-decision-order",
     relation: "constrains",
     reason: "교체 비용이 성능 차이를 넘으면 지금 가장 좋은 모델이 최선의 선택이 아닙니다.",
+  },
+  {
+    from: "training-memory-budget-and-checkpointing",
+    to: "training-residency-set",
+    relation: "prerequisite",
+    reason: "단일 모델의 가중치·gradient·optimizer state 회계가 있어야 부품별로 반복하는 확장을 이해할 수 있습니다.",
+  },
+  {
+    from: "training-residency-set",
+    to: "frozen-module-forward-residency",
+    relation: "produces",
+    reason: "네 갈래로 나누면 동결 부품이 어느 갈래에 남는지가 바로 드러납니다.",
+  },
+  {
+    from: "modern-image-generation-component-stack",
+    to: "per-component-memory-ledger",
+    relation: "prerequisite",
+    reason: "파이프라인이 어떤 부품으로 이루어졌는지 알아야 원장의 행을 채울 수 있습니다.",
+  },
+  {
+    from: "training-residency-set",
+    to: "per-component-memory-ledger",
+    relation: "produces",
+    reason: "상주 집합의 네 갈래가 그대로 원장의 항목이 됩니다.",
+  },
+  {
+    from: "per-component-memory-ledger",
+    to: "weight-vs-activation-dominance",
+    relation: "produces",
+    reason: "항을 나눠 세면 어느 항이 실행 조건과 무관하게 먼저 차는지가 보입니다.",
+  },
+  {
+    from: "lora-trainable-scope-contract",
+    to: "adapter-backprop-path-cost",
+    relation: "prerequisite",
+    reason: "무엇이 학습 대상인지 정의돼야 그 바깥의 경로 비용을 구분할 수 있습니다.",
+  },
+  {
+    from: "adapter-backprop-path-cost",
+    to: "weight-vs-activation-dominance",
+    relation: "constrains",
+    reason: "어댑터 방식이 두 번째 항만 줄이므로 나머지 두 항의 지배 구조가 그대로 남습니다.",
+  },
+  {
+    from: "frozen-module-forward-residency",
+    to: "precompute-to-evict",
+    relation: "produces",
+    reason: "출력이 변하지 않는다는 관찰이 곧 미리 계산해 두고 내릴 수 있다는 결론으로 이어집니다.",
+  },
+  {
+    from: "precompute-to-evict",
+    to: "memory-overflow-diagnosis-gate",
+    relation: "optimizes",
+    reason: "가중치 항이 문제일 때 가장 큰 폭으로 줄이는 대응책이라 판정 결과와 직접 연결됩니다.",
+  },
+  {
+    from: "weight-vs-activation-dominance",
+    to: "memory-overflow-diagnosis-gate",
+    relation: "prerequisite",
+    reason: "두 항의 성격이 다르다는 것을 알아야 두 번 재서 원인을 가르는 절차가 의미를 갖습니다.",
+  },
+  {
+    from: "qlora-training-memory-ledger",
+    to: "per-component-memory-ledger",
+    relation: "contrasts",
+    reason: "단일 모델 양자화 학습의 원장과 부품이 여러 개인 파이프라인의 원장을 같은 축에서 비교합니다.",
+  },
+  {
+    from: "video-lora-spatiotemporal-target-scope",
+    to: "weight-vs-activation-dominance",
+    relation: "constrains",
+    reason: "프레임 수가 activation 항에 그대로 곱해져 영상에서는 지배 구간이 더 빨리 바뀝니다.",
   },
 ];
 

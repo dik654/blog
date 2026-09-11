@@ -70995,4 +70995,210 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "ai/multi-component-finetuning-vram": {
+    coreIdea:
+      "생성 파이프라인을 미세조정할 때는 학습하지 않는 부품도 매 스텝 forward에 쓰이므로 전부 장치에 상주해야 하며, 어댑터 방식이 줄이는 것은 gradient와 optimizer state 항뿐이라 예산은 부품별 가중치 항과 activation 항이 지배합니다.",
+    assumedKnowledge: [
+      { id: "training-memory-budget-and-checkpointing", role: "단일 모델의 학습 메모리 회계와 checkpointing 교환입니다." },
+      { id: "lora-trainable-scope-contract", role: "어댑터가 무엇을 학습 대상으로 삼는지의 정의입니다." },
+      { id: "qlora-training-memory-ledger", role: "양자화된 base 위에서 학습할 때의 메모리 원장입니다." },
+      { id: "modern-image-generation-component-stack", role: "생성 파이프라인이 어떤 부품으로 이루어지는지입니다." },
+      { id: "diffusion-lora-host-target-map", role: "어댑터를 어느 부품의 어느 모듈에 붙이는지의 지도입니다." },
+    ],
+    introducedHere: [
+      { id: "training-residency-set", role: "학습 중 장치에 있어야 하는 것을 네 갈래로 나눕니다." },
+      { id: "frozen-module-forward-residency", role: "동결과 상주가 별개임을 코드로 고정합니다." },
+      { id: "per-component-memory-ledger", role: "부품마다 항을 나눠 세는 계산 방식을 세웁니다." },
+      { id: "weight-vs-activation-dominance", role: "어느 항이 먼저 차고 어느 항이 자라는지 구분합니다." },
+      { id: "adapter-backprop-path-cost", role: "어댑터가 줄이지 못하는 비용의 출처를 설명합니다." },
+      { id: "precompute-to-evict", role: "동결 부품을 아예 내리는 기법과 그 조건을 정리합니다." },
+      { id: "memory-overflow-diagnosis-gate", role: "넘치는 항을 가려 대응책을 고르는 순서를 세웁니다." },
+    ],
+    conceptExplanations: [
+      {
+        id: "training-residency-set",
+        sectionId: "residency-set",
+        intuition:
+          "학습 중 장치에 무엇이 들어 있는지를 네 칸으로 나눠 적으면 어디를 줄일 수 있는지가 보입니다.",
+        workedExample:
+          "학습 대상 파라미터, 그 gradient와 optimizer state, 동결 부품 가중치, activation 네 갈래 중 앞의 둘만 어댑터 크기에 비례합니다.",
+        boundary:
+          "추론은 부품을 한 번씩만 쓰므로 하나씩 올렸다 내릴 수 있지만, 학습은 매 스텝 반복해 그 전략이 성립하지 않습니다.",
+      },
+      {
+        id: "frozen-module-forward-residency",
+        sectionId: "frozen-forward",
+        intuition:
+          "가르치지 않는 부품도 일은 하므로 자리는 그대로 차지합니다.",
+        workedExample:
+          "공식 학습 스크립트가 세 부품을 동결한 직후 셋 다 장치로 옮기고, 학습 루프는 매 스텝 autoencoder와 text encoder를 호출합니다.",
+        boundary:
+          "동결로 줄어드는 것은 gradient와 optimizer state뿐입니다. 출력이 매 스텝 같다는 성질을 쓰면 내릴 수 있지만 그것은 별도 기법입니다.",
+      },
+      {
+        id: "per-component-memory-ledger",
+        sectionId: "component-budget",
+        intuition:
+          "부품 목록을 적고 항목마다 다른 배수를 곱해 더하면 예산이 나옵니다.",
+        workedExample:
+          "모든 부품에 dtype 바이트를 곱해 더하고, 학습 대상에만 gradient·master·optimizer state를 더하며, activation은 배치·해상도·프레임에서 구합니다.",
+        boundary:
+          "텐서 크기의 합이므로 할당기 단편화와 커널 작업 공간이 빠져 있습니다. 실제 사용량은 이보다 큽니다.",
+      },
+      {
+        id: "weight-vs-activation-dominance",
+        sectionId: "worked-budget",
+        intuition:
+          "가중치는 방에 들어오자마자 자리를 차지하고 activation은 손님 수에 따라 늘어납니다.",
+        workedExample:
+          "예시 구성에서 가중치 합 14.8 GB 중 text encoder 하나가 9.4 GB이고, 어댑터 관련 항은 0.14 GB로 1%가 되지 않습니다. 24 GB 장치면 activation 여유가 9 GB 남짓입니다.",
+        boundary:
+          "파라미터 수는 설명용 예시 구성입니다. 실제 모델은 공개 config와 가중치 색인에서 확인해야 합니다.",
+      },
+      {
+        id: "adapter-backprop-path-cost",
+        sectionId: "adapter-scope",
+        intuition:
+          "작은 손잡이를 돌리려 해도 그 손잡이가 달린 문 전체는 그대로 있어야 합니다.",
+        workedExample:
+          "optimizer가 받는 것은 requires_grad가 True인 텐서뿐이지만, 기울기가 어댑터에 닿으려면 뒤쪽 base 블록을 모두 통과하므로 그 경로의 activation이 남아야 합니다.",
+        boundary:
+          "base 가중치를 줄이려면 양자화 같은 다른 손잡이가 필요하고, 그 경우에도 activation 항은 그대로입니다.",
+      },
+      {
+        id: "precompute-to-evict",
+        sectionId: "precompute-offload",
+        intuition:
+          "매번 같은 답이 나오는 계산이라면 미리 해 두고 그 도구를 치워도 됩니다.",
+        workedExample:
+          "잠재 표현과 문장 임베딩을 학습 전에 저장하면 예시 구성에서 약 9.6 GB가 통째로 빠지고, 남는 공간을 배치나 해상도에 쓸 수 있습니다.",
+        boundary:
+          "무작위 증강이나 캡션 드롭아웃, 인코더 동시 학습이 있으면 출력이 스텝마다 달라져 이 전제가 깨집니다. 디스크 사용량과 설정 고정도 대가입니다.",
+      },
+      {
+        id: "memory-overflow-diagnosis-gate",
+        sectionId: "budget-gate",
+        intuition:
+          "어디가 넘치는지 모르고 손잡이를 돌리면 효과 없는 조정을 반복하게 됩니다.",
+        workedExample:
+          "모델만 올린 직후 사용량이 가중치 항이고, 한 스텝 뒤 증가분이 나머지입니다. 두 숫자로 세 항 중 어디가 문제인지 가려집니다.",
+        boundary:
+          "계산값은 하한이므로 여유가 있어 보여도 실제로 한 스텝 돌려 확인해야 합니다. checkpointing은 activation 항에만 작용합니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 상주 집합",
+        relation: "추론과 다른 점을 먼저 구분",
+        concepts: ["training-residency-set", "training-memory-budget-and-checkpointing"],
+      },
+      {
+        label: "01 동결의 의미",
+        relation: "동결과 상주가 별개임을 코드로 확인",
+        concepts: ["frozen-module-forward-residency"],
+      },
+      {
+        label: "02 원장 만들기",
+        relation: "부품마다 항을 나눠 세기",
+        concepts: ["per-component-memory-ledger", "modern-image-generation-component-stack"],
+      },
+      {
+        label: "03 지배 구간",
+        relation: "어느 항이 먼저 차고 어느 항이 자라는지",
+        concepts: ["weight-vs-activation-dominance"],
+      },
+      {
+        label: "04 어댑터의 한계",
+        relation: "줄지 않는 비용의 출처를 경로로 설명",
+        concepts: ["adapter-backprop-path-cost", "lora-trainable-scope-contract"],
+      },
+      {
+        label: "05 줄이기와 판정",
+        relation: "부품을 내리는 기법과 원인별 대응",
+        concepts: ["precompute-to-evict", "memory-overflow-diagnosis-gate"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "학습 중 장치에 있어야 하는 것을 네 갈래로 쓰고, 그중 어댑터 크기에 비례하는 것을 고르세요.",
+        answerChecklist: ["학습 대상 파라미터", "gradient와 optimizer state", "동결 부품 가중치", "activation", "앞의 둘만 어댑터 크기에 비례"],
+        requiredConcepts: ["training-residency-set"],
+        sectionId: "residency-set",
+      },
+      {
+        level: "basic",
+        question:
+          "동결이 줄이는 항목과 줄이지 않는 항목을 각각 쓰고, 동결 부품을 내릴 수 없는 이유를 설명하세요.",
+        answerChecklist: ["gradient 제거", "optimizer state 제거", "가중치는 그대로", "activation도 남음", "매 스텝 forward에 호출됨"],
+        requiredConcepts: ["frozen-module-forward-residency"],
+        sectionId: "frozen-forward",
+      },
+      {
+        level: "basic",
+        question:
+          "부품이 denoiser 2.6B·text encoder 4.7B·autoencoder 84M·어댑터 10M일 때 BF16 가중치 합을 계산하고 가장 큰 항목을 고르세요.",
+        answerChecklist: ["합 약 7.4B", "×2바이트", "약 14.8 GB", "text encoder 9.4 GB", "전체의 60% 이상"],
+        requiredConcepts: ["per-component-memory-ledger"],
+        sectionId: "component-budget",
+      },
+      {
+        level: "basic",
+        question:
+          "어댑터 1,000만 개에 gradient 2바이트·master 4바이트·optimizer state 8바이트가 붙을 때 두 번째 항의 크기를 구하고 전체 대비 비중을 쓰세요.",
+        answerChecklist: ["10^7 × 14바이트", "약 0.14 GB", "가중치 14.8 GB 대비", "1% 미만", "어댑터 방식의 절감은 이 항뿐"],
+        requiredConcepts: ["per-component-memory-ledger", "weight-vs-activation-dominance"],
+        sectionId: "worked-budget",
+      },
+      {
+        level: "basic",
+        question:
+          "어댑터만 학습하는데도 base 가중치와 activation이 남아야 하는 이유를 역전파 경로로 설명하세요.",
+        answerChecklist: ["순전파에 base 블록 필요", "기울기가 뒤쪽 블록을 통과", "경로상 activation 저장", "optimizer는 requires_grad만 받음", "줄어드는 것은 두 번째 항뿐"],
+        requiredConcepts: ["adapter-backprop-path-cost"],
+        sectionId: "adapter-scope",
+      },
+      {
+        level: "basic",
+        question:
+          "사전계산으로 부품을 내릴 수 있는 근거를 쓰고, 예시 구성에서 확보되는 크기를 계산하세요.",
+        answerChecklist: ["동결 부품 출력이 스텝마다 동일", "미리 계산해 저장", "text encoder 9.4 GB", "autoencoder 0.17 GB", "약 9.6 GB 확보"],
+        requiredConcepts: ["precompute-to-evict"],
+        sectionId: "precompute-offload",
+      },
+      {
+        level: "advanced",
+        question:
+          "24 GB 장치에서 예시 구성으로 어댑터 학습을 할 때 activation에 쓸 수 있는 여유를 계산하고, 배치를 늘릴 때 가장 먼저 넘치는 항이 무엇인지 설명하세요.",
+        answerChecklist: ["가중치 14.8 GB", "학습 대상 항 0.14 GB", "여유 약 9 GB", "activation 항이 배치에 비례", "해상도는 제곱으로", "영상이면 프레임 수까지 곱"],
+        requiredConcepts: ["weight-vs-activation-dominance", "per-component-memory-ledger"],
+        sectionId: "worked-budget",
+      },
+      {
+        level: "advanced",
+        question:
+          "사전계산을 쓸 수 없는 조건 세 가지를 쓰고 각각의 우회 방법 또는 대가를 설명하세요.",
+        answerChecklist: ["무작위 이미지 증강", "캡션 드롭아웃", "인코더 동시 학습", "증강 끄거나 조합별 사전계산", "빈 캡션 임베딩 하나 저장", "인코더 학습 시 예산이 오히려 증가"],
+        requiredConcepts: ["precompute-to-evict", "frozen-module-forward-residency"],
+        sectionId: "precompute-offload",
+      },
+      {
+        level: "advanced",
+        question:
+          "메모리 부족을 만났을 때 원인을 가리는 두 번의 측정을 쓰고, 각 항이 문제일 때의 대응책을 짝지으세요.",
+        answerChecklist: ["모델만 올린 직후 = 가중치 항", "한 스텝 뒤 증가분 = 나머지", "가중치 항이면 사전계산·양자화", "activation 항이면 checkpointing·배치 조정", "학습 대상 항이면 어댑터 전환", "배치부터 줄이면 해결 안 되는 경우"],
+        requiredConcepts: ["memory-overflow-diagnosis-gate", "weight-vs-activation-dominance"],
+        sectionId: "budget-gate",
+      },
+      {
+        level: "advanced",
+        question:
+          "영상 파이프라인에서 이미지와 달라지는 점을 두 항으로 나눠 설명하고, 사전계산의 이득과 대가가 어떻게 달라지는지 쓰세요.",
+        answerChecklist: ["프레임 수가 activation에 곱해짐", "시간축 모듈과 추가 인코더가 가중치 항 증가", "이미지 배치를 그대로 옮기면 초과", "프레임마다 인코딩이라 매 스텝 비용 큼", "사전계산 이득이 더 큼", "저장량도 프레임 수만큼 증가"],
+        requiredConcepts: ["weight-vs-activation-dominance", "precompute-to-evict"],
+        sectionId: "budget-gate",
+      },
+    ],
+  },
 };

@@ -211,6 +211,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "계열 비교는 각 원 논문의 자기보고를 정성 요약한 범위로만 쓰고, 특정 모델 간 벤치마크 수치나 자체 실측을 이 글에서 주장하지 않는다.",
   },
+  "ai/multi-component-finetuning-vram": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-09-11",
+    rationale:
+      "본문은 6 section·concept 7개로 keep 범위다. 상주 집합·원장·어댑터 한계·사전계산·판정은 하나의 예산 계산 절차를 이루는 단계라 나누면 각 글이 같은 네 갈래 구분을 다시 세워야 한다.",
+    sharedGate:
+      "diffusers 커밋 82f175e0 학습 예제와 명시한 예시 구성의 산술만 근거로 삼고, 특정 모델의 실측 VRAM 수치를 주장하지 않는다.",
+  },
 };
 
 /**
@@ -232,6 +241,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/qwen-korean-consistency": "28703cf32620721b",
   "ai/dinov3-self-supervised-backbone": "1d4f7adb50ed720a",
   "ai/image-embedding-pipeline": "183b7fb7e57921f8",
+  "ai/multi-component-finetuning-vram": "c3f7e981c26b48fc",
   "ai/vision-backbone-selection": "cdd9671993dee419",
   "ai/image-text-contrastive-pretraining": "f5b36610fc8dff17",
   "ai/sam3-promptable-concept-segmentation": "fc7656e7ef8d7e3c",

@@ -240,6 +240,28 @@ export const genArticles: Article[] = [
       import("@/pages/articles/ai/image-video-lora-architecture"),
   },
   {
+    slug: "multi-component-finetuning-vram",
+    title: "학습 때는 배우지 않는 부품까지 VRAM에 올라갑니다",
+    subcategory: "ai-generative",
+    sections: [
+      { id: "overview", title: "추론과 학습은 올려 두는 집합이 다릅니다" },
+      {
+        id: "residency-set",
+        title: "동결은 배우지 않는다는 뜻이지 없어도 된다는 뜻이 아닙니다",
+        subsections: [{ id: "frozen-forward", title: "매 스텝 호출되기 때문에 내릴 수 없습니다" }],
+      },
+      {
+        id: "component-budget",
+        title: "부품마다 따로 세고 항목마다 따로 곱합니다",
+        subsections: [{ id: "worked-budget", title: "예시 구성으로 합을 내 봅니다" }],
+      },
+      { id: "adapter-scope", title: "어댑터가 줄이는 항목은 하나뿐입니다" },
+      { id: "precompute-offload", title: "바뀌지 않는 계산은 미리 해 두고 부품을 내립니다" },
+      { id: "budget-gate", title: "어느 항이 넘치는지부터 가릅니다" },
+    ],
+    component: () => import("@/pages/articles/ai/multi-component-finetuning-vram"),
+  },
+  {
     slug: "in-context-lora",
     title: "In-Context LoRA: reference·target을 한 context로 이어붙이기",
     subcategory: "ai-generative",

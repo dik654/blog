@@ -1759,3 +1759,11 @@
 - 검증: 전 audit 통과, `audit:viz --strict` ERROR 0, tsc·build 통과(660 static route), Playwright 1440·390 overflow 0·error 0.
 
 **비전 5편 시리즈 종결 요약**: DINOv3(자기지도 백본) → SAM 3(개념 프롬프트 분할) → 이미지 임베딩 파이프라인 → 이미지·텍스트 대조 사전학습 → 백본 선택. 저장소에 0건이던 SAM·DINO 정본과 이미지 전용 임베딩 실무 글이 채워졌고, `ai/` 카테고리에 처음으로 codebase 스냅샷 pin 패턴(4개 글)이 자리 잡았다.
+
+### 2026-09-11 · 파인튜닝 다중 부품 VRAM
+
+- 사용자가 지목한 공백(추론과 달리 학습에서는 text encoder·VAE·video encoder까지 같이 띄워야 한다)을 `ai/multi-component-finetuning-vram`으로 채웠다. `ai-generative`의 `image-video-lora-architecture` 뒤에 배치했다. 기존 `training-memory-budget`은 단일 모델 회계만, `image-video-lora-architecture`는 VRAM 언급이 0회였다.
+- 축은 "동결은 배우지 않는다는 뜻이지 없어도 된다는 뜻이 아니다"다. 상주 집합을 네 갈래로 나누고, 부품별 원장을 세우고, 어댑터가 줄이는 항이 하나뿐임을 역전파 경로로 설명한 뒤, 사전계산으로 부품을 내리는 기법과 초과 원인 판정 순서로 닫는다.
+- 코드 근거는 diffusers 커밋 82f175e0의 `train_text_to_image_lora.py`다. `unet/vae/text_encoder.requires_grad_(False)` 직후 셋 다 `.to(accelerator.device, dtype=weight_dtype)` 하는 부분과, 학습 루프가 매 스텝 `vae.encode`·`text_encoder`를 호출하는 부분을 인용해 "동결해도 상주해야 하는 이유"를 코드로 고정했다.
+- 수치는 예시 구성임을 본문·ownership 양쪽에 표시했다. 가중치 합 14.8 GB 중 text encoder가 9.4 GB, 어댑터 관련 항은 0.14 GB로 1% 미만, 24 GB 장치에서 activation 여유 약 9 GB라는 계산이 글의 결론을 만든다. 텐서 합은 하한이며 할당기 단편화와 커널 작업 공간이 빠져 있다는 경계도 적었다.
+- 검증: 전 audit 통과, `audit:viz --strict` ERROR 0, topology `keep`+fingerprint, tsc·build 통과(661 static route), Playwright 1440·390 overflow 0·error 0.

@@ -6672,4 +6672,18 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "분할 감독 계열이 남기는 경계 능력의 근거이며 검색용 표현으로서의 성능을 주장하지 않음",
     },
   ],
+  "ai/multi-component-finetuning-vram": [
+    {
+      kind: "공식 예제",
+      label: "Diffusers · text-to-image LoRA 학습 예제",
+      href: "https://github.com/huggingface/diffusers/blob/main/examples/text_to_image/train_text_to_image_lora.py",
+      note: "세 부품을 동결한 뒤 모두 장치로 옮기고 매 스텝 호출하는 구조의 근거이며 커밋 82f175e0 스냅샷 기준임",
+    },
+    {
+      kind: "보충 읽기",
+      label: "PyTorch · CUDA 메모리 관리 문서",
+      href: "https://pytorch.org/docs/stable/notes/cuda.html",
+      note: "할당기 동작과 캐시 해제의 근거이며 텐서 합과 실제 사용량이 다른 이유를 설명함",
+    },
+  ],
 };
