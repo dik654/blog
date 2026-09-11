@@ -127,6 +127,32 @@ export const hwArticles: Article[] = [
     component: () => import("@/pages/articles/hw/power-cooling"),
   },
   {
+    slug: "datacenter-site-readiness",
+    title: "랙에 들어가는지는 무게와 냉각으로 먼저 갈립니다",
+    subcategory: "hw-infra",
+    sections: [
+      { id: "overview", title: "사양서에 없는 조건에서 막히는 경우가 많습니다" },
+      {
+        id: "cooling-type",
+        title: "같은 카드라도 바람을 어디로 버리느냐가 다릅니다",
+        subsections: [{ id: "airflow-direction", title: "섀시 기류 방향이 랙 배치와 맞아야 합니다" }],
+      },
+      {
+        id: "power-sizing",
+        title: "명판 전력과 실제 전력은 다른 숫자입니다",
+        subsections: [{ id: "redundancy", title: "이중화 표기는 감당 범위를 말합니다" }],
+      },
+      {
+        id: "floor-load",
+        title: "가속기 랙은 바닥 허용치를 먼저 넘습니다",
+        subsections: [{ id: "load-arithmetic", title: "숫자를 한 번 넣어 봅니다" }],
+      },
+      { id: "seismic", title: "고정하지 않은 랙은 흔들림에 먼저 쓰러집니다" },
+      { id: "readiness-gate", title: "건물이 정한 제약에서 거꾸로 올라옵니다" },
+    ],
+    component: () => import("@/pages/articles/hw/datacenter-site-readiness"),
+  },
+  {
     slug: "hw-network",
     title: "서버 네트워크 기초: Workload · Goodput · Ethernet Fabric",
     subcategory: "hw-infra",

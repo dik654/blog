@@ -6726,4 +6726,24 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "레인 폭과 세대별 전송률로 대역폭을 계산하는 근거이며 실제 goodput은 이보다 낮음",
     },
   ],
+  "gpu/datacenter-site-readiness": [
+    {
+      kind: "공식 규격",
+      label: "Telcordia GR-63-CORE · NEBS 물리적 보호 요건",
+      href: "https://telecom-info.njdepot.ericsson.net/site-cgi/ido/docs.cgi?ID=SEARCH&DOCUMENT=GR-63",
+      note: "지진 등급 시험 조건의 출처이며 실제 요구 등급과 인정되는 고정 방식은 지역 건축 기준을 따름",
+    },
+    {
+      kind: "공식 문서",
+      label: "제조사 공개 내진 랙 시험 사양",
+      href: "https://www.hammfg.com/dci/products/cabinet-systems/dcz4",
+      note: "수평 0.8 g·수직 1.0 g 시험 조건과 적재 한도 표기의 근거이며 2026-09-11 확인 기준임",
+    },
+    {
+      kind: "보충 읽기",
+      label: "ASHRAE · 데이터센터 열 가이드라인",
+      href: "https://www.ashrae.org/technical-resources/bookstore/datacom-series",
+      note: "흡기 온도 등급과 통로 배치 전제의 배경이며 구체 수치는 해당 판본을 확인해야 함",
+    },
+  ],
 };

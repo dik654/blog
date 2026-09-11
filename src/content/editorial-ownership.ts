@@ -11214,6 +11214,38 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "datacenter-site-readiness": {
+    title: "현장 준비 조건 글이 소유하는 범위",
+    owns: [
+      "후면 배기형·개방형 축류·직접 액체 냉각·액침 네 방식이 요구하는 섀시와 전산실 조건",
+      "통로 배치와 장비 기류 방향이 맞아야 한다는 전제와 어긋날 때의 증상",
+      "명판 용량과 지속 부하를 구분해 회로 용량을 잡는 계산 구조",
+      "이중 급전이 성립하려면 각 경로가 전체 부하를 감당해야 한다는 규칙",
+      "랙 총 무게를 면적과 접지점 수로 각각 나눠 두 허용치와 비교하는 하중 점검",
+      "점하중이 넘칠 때의 완화 수단과 분산판이 면하중을 낮추지 못한다는 경계",
+      "랙 등급·고정 시공·장비 고정·케이블 여유가 함께 갖춰져야 하는 내진 요건",
+    ],
+    reuses: [
+      { label: "전력과 냉각", href: "/gpu/hw-power-cooling" },
+      { label: "가속기 벤더 비교", href: "/gpu/ai-accelerator-vendor-comparison" },
+      { label: "서버 CPU 제품군", href: "/gpu/server-cpu-lineup-comparison" },
+      { label: "개조 RTX 4090과 MoE 서빙", href: "/gpu/modded-rtx4090-moe-serving" },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "지진 등급 시험 조건은 공개된 규격과 제조사 시험 사양에 귀속하고 확인 기준일을 본문에 표시한다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "하중·전력 계산에 쓴 숫자는 계산 방법을 보여 주기 위한 예시이며 실제 판정은 도면과 구조·전기 담당의 확인으로 한다.",
+      },
+      {
+        kind: "standard",
+        rule: "요구 등급과 허용치, 여유율은 지역 건축·전기 기준에 따르며 이 글이 규정 해석을 대신하지 않는다.",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

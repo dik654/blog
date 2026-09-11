@@ -238,6 +238,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "제조사 공개 사양과 명시한 가정의 산술만 근거로 삼고, 개별 제품의 성능 비교나 벤치마크는 이 글에서 주장하지 않는다.",
   },
+  "gpu/datacenter-site-readiness": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-09-11",
+    rationale:
+      "본문은 6 section·concept 7개로 keep 범위다. 냉각·전력·하중·내진은 한 노드를 들이기 전 확인 절차의 네 항목이라 나누면 각 글이 같은 확인 틀을 다시 세워야 한다.",
+    sharedGate:
+      "공개 규격과 제조사 시험 사양, 명시한 예시 산술만 근거로 삼고 구체적 허용치와 규정 해석은 이 글에서 확정하지 않는다.",
+  },
 };
 
 /**
@@ -259,6 +268,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/qwen-korean-consistency": "28703cf32620721b",
   "ai/dinov3-self-supervised-backbone": "1d4f7adb50ed720a",
   "ai/image-embedding-pipeline": "183b7fb7e57921f8",
+  "gpu/datacenter-site-readiness": "e91e802631393b41",
   "gpu/server-cpu-lineup-comparison": "f8273f0dacbcd008",
   "gpu/ai-accelerator-vendor-comparison": "f82e89ae427c88c0",
   "ai/multi-component-finetuning-vram": "c3f7e981c26b48fc",

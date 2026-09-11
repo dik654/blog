@@ -71614,4 +71614,203 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "gpu/datacenter-site-readiness": {
+    coreIdea:
+      "가속기 서버 도입에서 실제로 막히는 지점은 서버 사양서 밖의 현장 조건이므로, 바닥 하중과 내진 요구처럼 바꾸기 어려운 제약부터 확인하고 회로 용량과 냉각 설비를 거쳐 서버 구성을 고르는 순서로 진행해야 합니다.",
+    assumedKnowledge: [
+      { id: "module-form-factor-consequences", role: "폼팩터가 전력 상한과 냉각 방식을 정한다는 관계입니다." },
+      { id: "consumer-gpu-interconnect-regression", role: "소비자 카드와 서버 카드의 설계 전제 차이입니다." },
+      { id: "nvme-thermal-serviceability-envelope", role: "장비 단위 발열과 정비 동선의 관계입니다." },
+    ],
+    introducedHere: [
+      { id: "card-cooling-type-boundary", role: "네 가지 냉각 방식과 각각이 요구하는 조건을 정의합니다." },
+      { id: "chassis-airflow-direction-contract", role: "통로 배치와 기류 방향이 맞아야 한다는 전제를 고정합니다." },
+      { id: "nameplate-versus-sustained-power", role: "회로 사이징에 쓸 값을 구분합니다." },
+      { id: "feed-redundancy-capacity-rule", role: "이중화가 성립하는 용량 조건을 세웁니다." },
+      { id: "rack-floor-load-check", role: "면하중과 점하중을 각각 계산하는 방법을 정의합니다." },
+      { id: "point-load-mitigation", role: "점하중이 넘칠 때의 완화 수단과 그 한계를 정리합니다." },
+      { id: "seismic-anchoring-requirement", role: "내진 고정이 성립하는 네 조건을 고정합니다." },
+    ],
+    conceptExplanations: [
+      {
+        id: "card-cooling-type-boundary",
+        sectionId: "cooling-type",
+        intuition:
+          "같은 카드라도 뜨거운 바람을 밖으로 내보내는지 방 안에 흩뿌리는지에 따라 여러 장을 붙일 수 있는지가 갈립니다.",
+        workedExample:
+          "후면 배기형은 옆 카드를 데우지 않아 밀집 구성에 맞고, 개방형 축류는 조용하지만 배기가 섀시 안에 남아 안쪽 카드가 과열됩니다.",
+        boundary:
+          "액체 냉각과 액침은 서버만 바꿔서 되는 선택이 아니라 분배 장치·배관·누수 감지 같은 전산실 설비가 함께 있어야 합니다.",
+      },
+      {
+        id: "chassis-airflow-direction-contract",
+        sectionId: "airflow-direction",
+        intuition:
+          "모두가 같은 방향을 보고 서 있어야 앞사람의 숨을 마시지 않습니다.",
+        workedExample:
+          "앞에서 흡기하고 뒤로 배기하는 전제에서 방향이 다른 장비가 섞이면 그 장비가 더운 통로 공기를 마시고 주변 흡기 온도까지 올립니다.",
+        boundary:
+          "확인 항목은 방향뿐 아니라 흡기 허용 온도 등급과 앞뒤 여유 공간까지입니다. 여유 공간은 케이블과 문 때문에 도면보다 좁아지므로 실측이 필요합니다.",
+      },
+      {
+        id: "nameplate-versus-sustained-power",
+        sectionId: "power-sizing",
+        intuition:
+          "차의 최고 속도와 실제 주행 속도가 다르듯 명판과 실제 소비는 다른 값입니다.",
+        workedExample:
+          "회로 용량은 섀시 지속 부하의 합에 여유율을 곱해 잡고, 이중 급전이면 각 경로가 감당해야 할 몫으로 다시 나눕니다.",
+        boundary:
+          "지속 부하를 유휴 상태에서 재면 과소 산정됩니다. 여유율과 회로 산정 기준은 지역 전기 규정을 따르며 이 글의 식은 구조만 보여 줍니다.",
+      },
+      {
+        id: "feed-redundancy-capacity-rule",
+        sectionId: "redundancy",
+        intuition:
+          "예비 낙하산은 본 낙하산의 절반 크기여서는 쓸모가 없습니다.",
+        workedExample:
+          "두 경로에 절반씩 나눠 설계하면 평소에는 여유로워 보이지만 한쪽이 끊기는 순간 남은 쪽이 두 배를 받아 차단됩니다.",
+        boundary:
+          "모듈 이중화와 급전 이중화는 다른 층위입니다. 섀시 사양과 랙·건물 배전을 나눠 확인해야 한 지점 고장으로 랙이 죽지 않습니다.",
+      },
+      {
+        id: "rack-floor-load-check",
+        sectionId: "floor-load",
+        intuition:
+          "같은 사람이 스키를 신으면 눈에 안 빠지고 하이힐을 신으면 빠지는 것과 같은 차이입니다.",
+        workedExample:
+          "1,400 kg 랙이 0.6 m × 1.2 m면 면하중은 약 1,944 kg/m²이고, 레벨러 네 개면 점하중은 한 점당 350 kg입니다.",
+        boundary:
+          "무게가 접지점에 고르게 분배된다는 가정이며 실제로는 장비 배치에 따라 치우칩니다. 이동 중에는 캐스터에 실려 접지 면적이 더 작아지므로 운반 경로도 확인해야 합니다.",
+      },
+      {
+        id: "point-load-mitigation",
+        sectionId: "load-arithmetic",
+        intuition:
+          "발이 빠지면 발 밑에 널빤지를 깔아 면적을 넓힙니다.",
+        workedExample:
+          "하중 분산판으로 접지 면적을 넓히면 점하중이 내려가고, 랙 간격을 띄우면 구역 평균 면하중이 내려갑니다.",
+        boundary:
+          "분산판은 점하중만 완화하고 면하중은 그대로입니다. 어느 쪽이든 건물 도면과 구조 담당의 확인이 필요하며 IT 조직이 단독으로 결정할 수 없습니다.",
+      },
+      {
+        id: "seismic-anchoring-requirement",
+        sectionId: "seismic",
+        intuition:
+          "무거운 짐을 높이 실은 수레는 바닥에 묶어 두지 않으면 흔들릴 때 먼저 넘어집니다.",
+        workedExample:
+          "가장 높은 위험 등급은 수평 0.8 g·수직 1.0 g 수준의 가속도 시험에서 전도와 변형, 연결 이탈이 없을 것을 요구하며 지정된 고정 방식으로 시공했을 때 성립합니다.",
+        boundary:
+          "랙 등급만으로 끝나지 않습니다. 고정 시공, 섀시 전후면 고정, 케이블·배관 여유가 함께 갖춰져야 하고 요구 수준은 지역 건축 기준이 정합니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 냉각 방식",
+        relation: "배기 경로가 밀집 가능 여부와 설비 요구를 정함",
+        concepts: ["card-cooling-type-boundary", "module-form-factor-consequences"],
+      },
+      {
+        label: "01 기류",
+        relation: "통로 배치와 장비 방향을 맞춤",
+        concepts: ["chassis-airflow-direction-contract"],
+      },
+      {
+        label: "02 전력",
+        relation: "어떤 값으로 회로를 잡는지 정함",
+        concepts: ["nameplate-versus-sustained-power", "feed-redundancy-capacity-rule"],
+      },
+      {
+        label: "03 하중",
+        relation: "같은 무게를 두 번 나눠 허용치와 비교",
+        concepts: ["rack-floor-load-check", "point-load-mitigation"],
+      },
+      {
+        label: "04 내진",
+        relation: "무게 중심이 만드는 회전력을 고정으로 받음",
+        concepts: ["seismic-anchoring-requirement"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "가속기 카드의 네 가지 냉각 방식을 쓰고, 밀집 구성에 후면 배기형이 적합한 이유를 설명하세요.",
+        answerChecklist: ["후면 배기형", "개방형 축류", "직접 액체 냉각", "액침", "배기를 섀시 밖으로", "옆 카드를 데우지 않음"],
+        requiredConcepts: ["card-cooling-type-boundary"],
+        sectionId: "cooling-type",
+      },
+      {
+        level: "basic",
+        question:
+          "개방형 축류 카드를 여러 장 붙여 꽂았을 때 생기는 문제를 설명하고, 그 증상이 어떻게 나타나는지 쓰세요.",
+        answerChecklist: ["배기가 섀시 안에 머묾", "안쪽 카드가 옆 카드 배기를 흡입", "흡기 온도 상승", "성능 저하", "작업용 기기에는 적합"],
+        requiredConcepts: ["card-cooling-type-boundary", "chassis-airflow-direction-contract"],
+        sectionId: "cooling-type",
+      },
+      {
+        level: "basic",
+        question:
+          "섀시 기류 방향이 통로 배치와 맞지 않을 때 무엇이 일어나는지 쓰고, 함께 확인할 항목 두 가지를 더 적으세요.",
+        answerChecklist: ["더운 통로 공기를 흡입", "주변 장비 흡기 온도 상승", "흡기 허용 온도 등급", "앞뒤 여유 공간", "케이블과 문 때문에 실측 필요"],
+        requiredConcepts: ["chassis-airflow-direction-contract"],
+        sectionId: "airflow-direction",
+      },
+      {
+        level: "basic",
+        question:
+          "명판 용량과 지속 부하의 차이를 설명하고, 회로 사이징에 어느 값을 쓰는지와 그 이유를 쓰세요.",
+        answerChecklist: ["명판은 최대로 끌 수 있는 값", "지속 부하는 실제 지속 소비", "회로는 지속 부하 기준", "여유율을 곱함", "명판으로 잡으면 과잉 설계"],
+        requiredConcepts: ["nameplate-versus-sustained-power"],
+        sectionId: "power-sizing",
+      },
+      {
+        level: "basic",
+        question:
+          "총 무게 1,400 kg, 폭 0.6 m·깊이 1.2 m, 접지점 4개인 랙의 면하중과 점하중을 각각 계산하세요.",
+        answerChecklist: ["면적 0.72 m²", "1400 ÷ 0.72 ≈ 1,944 kg/m²", "1400 ÷ 4 = 350 kg", "두 값을 각각 허용치와 비교", "하나만 넘어도 불가"],
+        requiredConcepts: ["rack-floor-load-check"],
+        sectionId: "floor-load",
+      },
+      {
+        level: "basic",
+        question:
+          "내진 대응에서 확인할 네 가지를 쓰고, 랙 등급 표기만으로 충분하지 않은 이유를 설명하세요.",
+        answerChecklist: ["랙 등급과 적재 한도", "바닥 고정 방식", "섀시 전후면 고정", "케이블·배관 여유", "등급은 지정된 고정 방식에서만 성립"],
+        requiredConcepts: ["seismic-anchoring-requirement"],
+        sectionId: "seismic",
+      },
+      {
+        level: "advanced",
+        question:
+          "이중 급전에서 각 경로를 부하의 절반으로 설계했을 때 무슨 일이 일어나는지 계산으로 설명하고, 올바른 설계 원칙을 쓰세요.",
+        answerChecklist: ["평소 각 경로 50%", "한쪽 상실 시 남은 경로가 100%를 받음", "설계 용량의 두 배", "차단 발생", "각 경로가 전체를 감당해야 함", "모듈 이중화와 급전 이중화는 별개 층위"],
+        requiredConcepts: ["feed-redundancy-capacity-rule", "nameplate-versus-sustained-power"],
+        sectionId: "redundancy",
+      },
+      {
+        level: "advanced",
+        question:
+          "면하중은 통과했는데 점하중이 허용치를 넘는 경우의 대응책을 쓰고, 각 대응책이 어느 값을 낮추는지 구분하세요.",
+        answerChecklist: ["하중 분산판으로 접지 면적 확대", "점하중만 낮아짐", "면하중은 그대로", "랙 간격을 띄우면 구역 평균 면하중 하락", "보강 구역 배치", "구조 담당 확인 필요"],
+        requiredConcepts: ["point-load-mitigation", "rack-floor-load-check"],
+        sectionId: "load-arithmetic",
+      },
+      {
+        level: "advanced",
+        question:
+          "랙 배치에서 기류 요구와 하중 요구가 맞서는 지점을 설명하고, 두 요구를 함께 만족시키려면 무엇을 확인해야 하는지 쓰세요.",
+        answerChecklist: ["기류는 통로 폭과 밀집 배치를 요구", "하중은 간격을 띄워 평균을 낮추려 함", "두 요구가 반대 방향", "구역별 허용치 확인", "보강 구역 활용", "도면과 실측을 함께"],
+        requiredConcepts: ["chassis-airflow-direction-contract", "rack-floor-load-check"],
+        sectionId: "floor-load",
+      },
+      {
+        level: "advanced",
+        question:
+          "현장 준비 확인 순서를 네 단계로 쓰고, 이 순서를 뒤집었을 때 생기는 결과를 세 가지 드세요.",
+        answerChecklist: ["바닥 허용치와 내진 요구", "랙당 회로 용량과 급전 경로", "감당 가능한 냉각 방식", "후보 서버 구성", "회로 증설 지연", "액체 냉각 설비 부재", "랙 위치 제한"],
+        requiredConcepts: ["rack-floor-load-check", "card-cooling-type-boundary"],
+        sectionId: "readiness-gate",
+      },
+    ],
+  },
 };

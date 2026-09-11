@@ -21970,6 +21970,69 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "서버·워크스테이션·고성능 데스크톱 계열을 가르는 것이 코어 수가 아니라 소켓 확장, 레인과 채널 수, 원격 관리와 이중화 지원이라는 구분입니다. 코어 수는 계열끼리 겹쳐 선택 기준이 되지 못합니다.",
     canonicalHref: "/gpu/server-cpu-lineup-comparison#product-tiers",
   },
+  "card-cooling-type-boundary": {
+    id: "card-cooling-type-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "가속기 냉각 방식의 경계",
+    definition:
+      "후면 배기형 송풍, 개방형 축류, 직접 액체 냉각, 액침으로 나뉘는 냉각 방식이 각각 요구하는 섀시와 전산실 조건입니다. 방식 선택이 한 섀시에 몇 장을 넣을 수 있는지와 건물 설비 요구를 함께 정합니다.",
+    canonicalHref: "/gpu/datacenter-site-readiness#cooling-type",
+  },
+  "chassis-airflow-direction-contract": {
+    id: "chassis-airflow-direction-contract",
+    kind: "concept",
+    domain: "computer-science",
+    label: "섀시 기류 방향 계약",
+    definition:
+      "전산실의 찬 통로와 더운 통로 배치에 맞춰 장비가 앞에서 흡기하고 뒤로 배기해야 한다는 전제입니다. 방향이 다른 장비가 섞이면 그 장비가 더운 공기를 마시고 주변 장비의 흡기 온도까지 올립니다.",
+    canonicalHref: "/gpu/datacenter-site-readiness#airflow-direction",
+  },
+  "nameplate-versus-sustained-power": {
+    id: "nameplate-versus-sustained-power",
+    kind: "concept",
+    domain: "computer-science",
+    label: "명판 전력과 지속 부하의 구분",
+    definition:
+      "섀시에 적힌 최대 용량과 대표 워크로드에서 실제로 지속되는 소비 전력이 다른 값이며, 회로 사이징은 지속 부하에 여유율을 곱해 잡는다는 구분입니다. 가속기 서버는 두 값의 간격이 크고 전환이 빠릅니다.",
+    canonicalHref: "/gpu/datacenter-site-readiness#power-sizing",
+  },
+  "feed-redundancy-capacity-rule": {
+    id: "feed-redundancy-capacity-rule",
+    kind: "concept",
+    domain: "computer-science",
+    label: "급전 이중화의 용량 규칙",
+    definition:
+      "이중 급전이 성립하려면 각 경로가 전체 부하를 혼자 감당할 수 있어야 한다는 요건입니다. 두 경로에 절반씩 나눠 설계하면 한쪽 상실 시 남은 경로가 두 배를 받아 차단됩니다.",
+    canonicalHref: "/gpu/datacenter-site-readiness#redundancy",
+  },
+  "rack-floor-load-check": {
+    id: "rack-floor-load-check",
+    kind: "method",
+    domain: "computer-science",
+    label: "랙 바닥 하중 이중 점검",
+    definition:
+      "랙 총 무게를 바닥 투영 면적으로 나눈 면하중과 접지점 수로 나눈 점하중을 각각 구해 건물의 분포 하중·집중 하중 허용치와 비교하는 계산입니다. 둘 중 하나만 넘어도 그대로 들일 수 없습니다.",
+    canonicalHref: "/gpu/datacenter-site-readiness#floor-load",
+  },
+  "point-load-mitigation": {
+    id: "point-load-mitigation",
+    kind: "concept",
+    domain: "computer-science",
+    label: "점하중 완화 수단",
+    definition:
+      "좁은 접지면에 힘이 집중되는 문제를 하중 분산판으로 접지 면적을 넓히거나 랙 간격을 띄우거나 보강 구역에 배치해 다루는 방법입니다. 분산판은 점하중만 완화하고 면하중은 그대로 남습니다.",
+    canonicalHref: "/gpu/datacenter-site-readiness#load-arithmetic",
+  },
+  "seismic-anchoring-requirement": {
+    id: "seismic-anchoring-requirement",
+    kind: "concept",
+    domain: "computer-science",
+    label: "내진 고정 요건",
+    definition:
+      "높은 무게 중심이 수평 가속에서 만드는 회전력을 바닥 고정으로 받게 하는 요건이며, 랙 등급·고정 시공·장비 고정·케이블 여유가 함께 갖춰져야 성립합니다. 등급 표기는 지정된 고정 방식으로 시공했을 때의 값입니다.",
+    canonicalHref: "/gpu/datacenter-site-readiness#seismic",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -39992,6 +40055,66 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     to: "cpu-platform-tier-boundary",
     relation: "prerequisite",
     reason: "오류 정정 지원 여부가 계열을 가르는 플랫폼 기능 중 하나입니다.",
+  },
+  {
+    from: "card-cooling-type-boundary",
+    to: "chassis-airflow-direction-contract",
+    relation: "produces",
+    reason: "카드가 바람을 어디로 버리느냐가 섀시 기류 방향 요구를 만듭니다.",
+  },
+  {
+    from: "module-form-factor-consequences",
+    to: "card-cooling-type-boundary",
+    relation: "prerequisite",
+    reason: "폼팩터가 전력 상한을 정하고 그 전력이 감당 가능한 냉각 방식을 좁힙니다.",
+  },
+  {
+    from: "nameplate-versus-sustained-power",
+    to: "feed-redundancy-capacity-rule",
+    relation: "prerequisite",
+    reason: "어떤 부하 값을 기준으로 삼는지 정해야 각 경로가 감당할 용량을 계산할 수 있습니다.",
+  },
+  {
+    from: "card-cooling-type-boundary",
+    to: "nameplate-versus-sustained-power",
+    relation: "constrains",
+    reason: "냉각 방식이 허용하는 전력 등급이 섀시의 지속 부하 범위를 먼저 제한합니다.",
+  },
+  {
+    from: "rack-floor-load-check",
+    to: "point-load-mitigation",
+    relation: "produces",
+    reason: "두 값을 각각 계산해 보면 어느 쪽이 넘치는지에 따라 필요한 완화 수단이 정해집니다.",
+  },
+  {
+    from: "rack-floor-load-check",
+    to: "seismic-anchoring-requirement",
+    relation: "constrains",
+    reason: "무게가 클수록 흔들릴 때 생기는 추가 힘도 커져 요구되는 고정이 함께 커집니다.",
+  },
+  {
+    from: "seismic-anchoring-requirement",
+    to: "point-load-mitigation",
+    relation: "constrains",
+    reason: "앵커 위치와 분산판 시공이 서로 간섭할 수 있어 함께 계획해야 합니다.",
+  },
+  {
+    from: "chassis-airflow-direction-contract",
+    to: "rack-floor-load-check",
+    relation: "contrasts",
+    reason: "기류는 배치 간격을 좁히려 하고 하중은 넓히려 해서 랙 배치에서 두 요구가 맞섭니다.",
+  },
+  {
+    from: "consumer-gpu-interconnect-regression",
+    to: "card-cooling-type-boundary",
+    relation: "contrasts",
+    reason: "소비자 카드가 개방형 축류를 쓰는 이유와 서버 카드가 후면 배기를 쓰는 이유를 같은 축에서 구분합니다.",
+  },
+  {
+    from: "feed-redundancy-capacity-rule",
+    to: "seismic-anchoring-requirement",
+    relation: "contrasts",
+    reason: "전기 이중화와 구조 고정은 서로 다른 실패를 막는 장치라 한쪽이 다른 쪽을 대신하지 않습니다.",
   },
 ];
 
