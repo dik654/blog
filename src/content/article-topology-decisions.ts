@@ -247,6 +247,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "공개 규격과 제조사 시험 사양, 명시한 예시 산술만 근거로 삼고 구체적 허용치와 규정 해석은 이 글에서 확정하지 않는다.",
   },
+  "saas/edge-request-defense-pipeline": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-09-11",
+    rationale:
+      "본문은 6 section·concept 7개로 keep 범위다. 층별 비용 기울기가 글 전체의 단일 논지라 층을 나누면 각 글이 같은 비용 논증을 다시 세워야 한다.",
+    sharedGate:
+      "사업자 공개 문서와 프로토콜 규격에 적힌 범위만 근거로 삼고, 비공개 모델·신호와 제품별 설정값은 이 글에서 확정하지 않는다.",
+  },
 };
 
 /**
@@ -315,4 +324,5 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "gpu/cuda-register-pressure": "bb8de1b5a0f91f2c",
   "isms-aml/isms-security-infra": "3c313e4c01bcc569",
   "ai/lora-finetuning": "33795cea211c3c2a",
+  "saas/edge-request-defense-pipeline": "087fffa8fe412987",
 };

@@ -71813,4 +71813,205 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "saas/edge-request-defense-pipeline": {
+    coreIdea:
+      "엣지 방어는 제품 기능의 목록이 아니라 비용 기울기 하나로 설명되는 구조입니다. 앞 층일수록 아는 것이 적고 값싸므로 대량 트래픽은 커널 앞단에서 버리고, 요청 내용을 봐야 하는 판단만 비싼 층으로 넘기며, 강도는 경로별 오탐 단가로 정하고, 오리진 우회 경로가 없어야 이 전부가 성립합니다.",
+    assumedKnowledge: [
+      { id: "tls13-secure-channel", role: "연결 첫 메시지가 무엇을 협상하는지의 전제입니다." },
+      { id: "tls13-transcript-authentication", role: "핸드셰이크 기록이 어떻게 묶이는지의 배경입니다." },
+      { id: "rate-limiting-algorithms", role: "요청 수를 세는 알고리즘 자체입니다." },
+      { id: "nat-mapping-filtering-separation", role: "바깥으로 먼저 연결을 걸면 인바운드가 필요 없어지는 원리입니다." },
+      { id: "web-frontend-delivered-code-gap", role: "앞단을 신뢰 지점으로 둘 때 남는 다른 층의 문제입니다." },
+    ],
+    introducedHere: [
+      { id: "defense-layer-cost-gradient", role: "글 전체를 관통하는 배치 원칙을 세웁니다." },
+      { id: "kernel-bypass-packet-drop", role: "가장 값싼 층이 무엇을 어떻게 하는지 정의합니다." },
+      { id: "attack-fingerprint-rule-synthesis", role: "그 층의 규칙이 어디서 오는지 정의합니다." },
+      { id: "request-layer-disposition-set", role: "요청 층의 세 수단과 각각의 실패 방식을 구분합니다." },
+      { id: "client-handshake-fingerprint", role: "연결 중에 얻는 식별 신호를 정의합니다." },
+      { id: "score-threshold-cost-tradeoff", role: "임계를 정하는 기준을 비용 관계로 고정합니다." },
+      { id: "origin-exposure-closure", role: "층 구조가 무효화되는 조건과 그 대응을 정리합니다." },
+    ],
+    conceptExplanations: [
+      {
+        id: "defense-layer-cost-gradient",
+        sectionId: "overview",
+        intuition:
+          "공항 검색대와 같습니다. 입구에서 표를 확인하는 일은 싸고 빠르며, 짐을 전부 열어 보는 일은 정확하지만 한 사람당 오래 걸립니다.",
+        workedExample:
+          "패킷 층은 주소와 포트만 보고, 연결 층은 클라이언트 소프트웨어의 특징까지 알며, 요청 층은 경로와 본문을 전부 봅니다. 아는 것이 늘어난 만큼 한 건당 비용도 늘어납니다.",
+        boundary:
+          "비용이 싸다는 것이 정확하다는 뜻은 아닙니다. 앞 층은 둔하므로 정상 트래픽을 같이 버릴 위험이 있고, 그래서 앞 층 규칙은 좁게 잡고 뒤 층이 정밀 판단을 맡습니다.",
+      },
+      {
+        id: "kernel-bypass-packet-drop",
+        sectionId: "packet-layer",
+        intuition:
+          "짐을 창고에 들여 정리한 뒤 버리는 것보다 문 앞에서 되돌려 보내는 편이 쌉니다.",
+        workedExample:
+          "네트워크 카드 직후 프로그램이 규칙에 맞는 패킷을 버리면 커널의 자료구조 할당과 계층 통과가 아예 일어나지 않습니다. 공개 설명은 코어 하나로 초당 천만 패킷 이상을 버릴 수 있다고 보고합니다.",
+        boundary:
+          "그 위치에서는 연결 상태나 요청 내용을 볼 수 없습니다. 상태를 따라가야 판정되는 공격은 별도 구성요소가 보고, 그 판정 결과가 다시 규칙으로 내려옵니다. 인용한 처리량은 자기보고 값입니다.",
+      },
+      {
+        id: "attack-fingerprint-rule-synthesis",
+        sectionId: "fingerprint-rule",
+        intuition:
+          "몽타주를 그릴 때 특징을 너무 적게 넣으면 아무나 걸리고 너무 많이 넣으면 옷만 갈아입어도 못 잡습니다.",
+        workedExample:
+          "출발지 포트·패킷 길이·프로토콜 플래그 같은 필드의 조합을 후보로 만들어 두고, 관측된 트래픽 분포에서 공격을 많이 거르고 정상을 적게 건드리는 조합을 고릅니다.",
+        boundary:
+          "이 선택은 트래픽 분포가 바뀌면 다시 해야 합니다. 또 좁은 지문은 필드 하나 변경으로 우회되고 넓은 지문은 정상 트래픽을 버리므로, 생성된 규칙은 계속 갱신되는 대상이지 고정 자산이 아닙니다.",
+      },
+      {
+        id: "request-layer-disposition-set",
+        sectionId: "request-layer",
+        intuition:
+          "출입 통제에서 명단 대조와 횟수 제한과 신분 확인은 서로 다른 일이며 각각 다른 방식으로 틀립니다.",
+        workedExample:
+          "패턴 규칙은 즉시 판단하고, 속도 한도는 누가 얼마나 보냈는지 기억해야 하며, 확인 절차는 클라이언트에 일을 시키고 응답을 봅니다.",
+        boundary:
+          "속도 한도는 여러 지점에 분산되면 지점마다 따로 세어 합계가 한도를 넘거나, 한곳에 모아 지연이 늘어납니다. 확인 절차는 사람에게도 마찰이라 접근성과 이탈률에 직접 영향을 줍니다.",
+      },
+      {
+        id: "client-handshake-fingerprint",
+        sectionId: "client-signals",
+        intuition:
+          "같은 인사말이라도 사람마다 말버릇이 다르듯 소프트웨어마다 첫 인사의 모양이 다릅니다.",
+        workedExample:
+          "암호 목록과 확장 구성, 상위 프로토콜 협상 정보를 해시하면 브라우저와 스크립트 라이브러리가 다른 값으로 갈립니다. 프로토콜 설정 프레임에서 얻는 두 번째 지문이 이를 보강합니다.",
+        boundary:
+          "지문은 신원이 아니라 소프트웨어의 종류입니다. 같은 브라우저를 쓰는 모든 사용자가 같은 값을 내므로 지문만으로 차단하면 그 브라우저 사용자 전체가 걸립니다.",
+      },
+      {
+        id: "score-threshold-cost-tradeoff",
+        sectionId: "score-and-action",
+        intuition:
+          "경보기의 민감도를 올리면 도둑을 더 잡지만 고양이에도 울립니다. 어디에 맞출지는 두 실수의 대가가 정합니다.",
+        workedExample:
+          "총비용은 오탐 단가에 오탐 비율을 곱한 값과 미탐 단가에 미탐 비율을 곱한 값의 합이며, 이 합이 가장 작아지는 임계를 고릅니다.",
+        boundary:
+          "두 오류의 비용을 같은 단위로 환산할 수 있다고 가정한 계산이며 환산 자체가 조직의 판단입니다. 또 점수화는 결정을 한곳에 모으는 대신 왜 그 점수가 나왔는지를 흐리게 만듭니다.",
+      },
+      {
+        id: "origin-exposure-closure",
+        sectionId: "origin-protection",
+        intuition:
+          "정문에 경비를 세워도 뒷문 열쇠가 돌아다니면 경비는 장식입니다.",
+        workedExample:
+          "주소는 과거 공개 기록·메일 발송 서버·인증서 투명성 로그처럼 여러 경로로 샙니다. 유출 경로를 정리한 뒤 앞단 대역만 허용하거나, 오리진이 바깥으로 먼저 연결을 걸어 인바운드를 닫습니다.",
+        boundary:
+          "대역 허용만으로는 같은 앞단 서비스를 쓰는 제3자의 요청과 구분되지 않아 상호 인증이 필요합니다. 터널 방식은 터널 구성요소와 그 자격 증명이 새 신뢰 지점이자 장애 지점이 됩니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 배치 원칙",
+        relation: "아는 것과 비용이 함께 커지는 기울기",
+        concepts: ["defense-layer-cost-gradient"],
+      },
+      {
+        label: "01 패킷 층",
+        relation: "규칙을 앞단에 두고 표본으로 갱신",
+        concepts: ["kernel-bypass-packet-drop", "attack-fingerprint-rule-synthesis"],
+      },
+      {
+        label: "02 요청 층",
+        relation: "정확한 대신 비싼 판단을 세 수단으로 나눔",
+        concepts: ["request-layer-disposition-set", "rate-limiting-algorithms"],
+      },
+      {
+        label: "03 클라이언트 식별",
+        relation: "연결 중 얻는 신호를 점수로 모음",
+        concepts: ["client-handshake-fingerprint", "score-threshold-cost-tradeoff", "tls13-secure-channel", "tls13-transcript-authentication"],
+      },
+      {
+        label: "04 우회 차단",
+        relation: "층 구조가 성립하기 위한 전제",
+        concepts: ["origin-exposure-closure", "nat-mapping-filtering-separation", "web-frontend-delivered-code-gap"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "패킷 층·연결 층·요청 층이 각각 무엇을 알 수 있는지 쓰고, 뒤로 갈수록 비용이 커지는 이유를 설명하세요.",
+        answerChecklist: ["패킷 층은 주소·포트·플래그", "연결 층은 클라이언트 소프트웨어 특징", "요청 층은 경로·헤더·본문", "뒤로 갈수록 아는 것이 늘어남", "연결 설정과 암호화 처리 비용을 이미 치름"],
+        requiredConcepts: ["defense-layer-cost-gradient"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "커널 앞단에서 패킷을 버리는 방식이 일반 방화벽 규칙보다 싼 이유를 설명하고, 그 대가로 포기하는 것을 쓰세요.",
+        answerChecklist: ["커널 네트워크 스택 진입 전에 판단", "자료구조 할당과 계층 통과가 없음", "버릴 패킷에도 그 비용이 들었음", "연결 상태 추적 불가", "요청 내용 기반 판단 불가"],
+        requiredConcepts: ["kernel-bypass-packet-drop"],
+        sectionId: "packet-layer",
+      },
+      {
+        level: "basic",
+        question:
+          "공격 지문이 너무 좁을 때와 너무 넓을 때 각각 무슨 일이 생기는지 쓰세요.",
+        answerChecklist: ["좁으면 필드 하나만 바꿔도 우회", "넓으면 정상 트래픽까지 폐기", "후보 조합을 여러 개 생성", "관측 분포에서 효율적인 것을 선택", "분포가 바뀌면 다시 선택"],
+        requiredConcepts: ["attack-fingerprint-rule-synthesis"],
+        sectionId: "fingerprint-rule",
+      },
+      {
+        level: "basic",
+        question:
+          "요청 층의 세 가지 수단을 쓰고, 그중 상태를 유지해야 하는 것이 무엇이며 왜 그런지 설명하세요.",
+        answerChecklist: ["패턴 규칙", "속도 한도", "확인 절차", "속도 한도가 상태 필요", "누가 얼마나 보냈는지 기억", "분산 환경에서 집계 정확도와 지연이 교환"],
+        requiredConcepts: ["request-layer-disposition-set", "rate-limiting-algorithms"],
+        sectionId: "request-layer",
+      },
+      {
+        level: "basic",
+        question:
+          "연결 지문이 무엇으로 만들어지는지 쓰고, 이 신호가 요청 내용 기반 판단보다 이른 시점에 얻어진다는 점이 왜 유용한지 설명하세요.",
+        answerChecklist: ["암호 목록·확장 구성·상위 프로토콜 협상 정보", "구현마다 조합이 다름", "연결 설정 중 도착", "스크립트가 돌기 전·쿠키 생기기 전", "값싼 층의 판단 재료가 늘어남"],
+        requiredConcepts: ["client-handshake-fingerprint", "tls13-secure-channel"],
+        sectionId: "client-signals",
+      },
+      {
+        level: "basic",
+        question:
+          "오리진 주소가 새는 경로를 세 가지 이상 쓰고, 주소를 바꾸는 것만으로 부족한 이유를 설명하세요.",
+        answerChecklist: ["과거 공개 기록", "메일 발송 서버", "같은 호스트의 다른 서비스", "인증서 투명성 로그", "같은 경로로 새 주소도 다시 노출", "유출 경로 정리가 먼저"],
+        requiredConcepts: ["origin-exposure-closure"],
+        sectionId: "origin-protection",
+      },
+      {
+        level: "advanced",
+        question:
+          "총비용 식을 써서 최적 임계가 모델 성능이 아니라 두 단가의 비율에서 정해진다는 점을 설명하고, 결제 경로와 공개 문서 경로에 같은 임계를 쓰면 안 되는 이유를 쓰세요.",
+        answerChecklist: ["오탐 단가 곱하기 오탐 비율", "미탐 단가 곱하기 미탐 비율", "둘의 합이 최소인 임계", "결제는 오탐 단가가 큼", "공개 문서는 미탐 단가가 작음", "같은 단위 환산은 조직의 판단"],
+        requiredConcepts: ["score-threshold-cost-tradeoff", "client-handshake-fingerprint"],
+        sectionId: "score-and-action",
+      },
+      {
+        level: "advanced",
+        question:
+          "앞단 대역만 허용하는 방식과 오리진이 바깥으로 먼저 연결을 거는 방식을 비교하고, 각각 남는 신뢰 지점을 쓰세요.",
+        answerChecklist: ["대역 허용은 인바운드 포트가 열려 있음", "같은 앞단을 쓰는 제3자와 구분 불가", "상호 인증 추가 필요", "역방향 터널은 인바운드 불필요", "터널 구성요소와 자격 증명이 새 신뢰 지점", "터널 이중화 필요"],
+        requiredConcepts: ["origin-exposure-closure", "nat-mapping-filtering-separation"],
+        sectionId: "origin-protection",
+      },
+      {
+        level: "advanced",
+        question:
+          "지문 폭 선택과 점수 임계 선택이 같은 종류의 문제라는 점을 설명하고, 두 결정이 서로 다른 층에 놓이는 이유를 쓰세요.",
+        answerChecklist: ["둘 다 오탐과 미탐의 균형", "지문은 패킷 층에서 자동 생성", "임계는 요청 층에서 운영자가 조정", "앞 층은 정보가 적어 좁게 잡음", "뒤 층은 신호를 합쳐 정밀하게 나눔"],
+        requiredConcepts: ["attack-fingerprint-rule-synthesis", "score-threshold-cost-tradeoff"],
+        sectionId: "fingerprint-rule",
+      },
+      {
+        level: "advanced",
+        question:
+          "방어 강도를 올리기 전에 확인할 세 가지를 순서대로 쓰고, 차단 건수만 보는 관측이 왜 부족한지 설명하세요.",
+        answerChecklist: ["경로별 강도 구분", "정상 사용자가 막힌 비율 관측", "우회 경로 점검", "차단 건수는 올려도 내려도 그럴듯함", "확인 절차 통과율·이탈률·문의 건수", "우회로가 남으면 강도 논의가 무의미"],
+        requiredConcepts: ["score-threshold-cost-tradeoff", "origin-exposure-closure", "defense-layer-cost-gradient"],
+        sectionId: "tradeoff-gate",
+      },
+    ],
+  },
 };

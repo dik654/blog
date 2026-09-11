@@ -1794,3 +1794,13 @@
 - 검증: 전 audit 통과, `audit:viz --strict` ERROR 0, topology `keep`+fingerprint, tsc·build 통과(664 static route), Playwright 1440·390 overflow 0·error 0.
 
 **하드웨어 3편 트랙 종결**: 가속기 벤더 비교 → 서버 CPU 제품군 → 현장 준비 조건. 사용자가 요청한 제조사·제품별 비교, 전력(최대·일반), 발열, 냉각 타입, 내진·하중이 모두 정본을 갖게 됐다.
+
+### 2026-09-11 · SaaS 섹션 신설 1편 · 엣지 요청 방어 파이프라인
+
+- 사용자 지시대로 8번째 최상위 카테고리 `saas`("SaaS / Infra Services")를 신설하고 하위 3개(Edge Security·Always-on Delivery·Private Access)를 선언했다. 첫 글은 `saas/edge-request-defense-pipeline`이며 나머지 둘은 이어지는 두 편이 채운다.
+- 축은 "막는 위치가 앞일수록 비용이 싸다"는 비용 기울기 하나다. 패킷 층(아는 것: 주소·포트·플래그) → 연결 층(클라이언트 소프트웨어 특징) → 요청 층(경로·헤더·본문)으로 갈수록 정확해지지만 한 건당 비용이 커지므로, 값싼 층이 최대한 걸러 내는 배치가 설계 목표라는 논증이 여섯 절을 관통한다.
+- 커널 앞단 폐기와 표본 기반 지문 규칙 생성, 연결 지문(첫 협상 메시지·프로토콜 설정 프레임), 점수·임계 배분, 오리진 우회 차단을 각각 한 절로 두고, 임계 선택은 총비용 식 `C(τ) = c_fp·FP(τ) + c_fn·FN(τ)`로 고정했다. 최적 임계가 모델 성능이 아니라 두 단가의 비율에서 나온다는 점이 마지막 절의 "경로마다 다른 강도"로 이어진다.
+- contract 2.2.1에 따라 사업자 내부 구조는 공개 기술 문서에 적힌 범위까지만 서술하고 기준일(2026-09-11)을 본문 인용에 박았다. 코어 하나로 초당 천만 패킷 이상이라는 처리량은 자기보고 값이며 모든 구성에서 재현되지 않는다고 명시했다.
+- 기존 정본과의 경계: 핸드셰이크 내용은 `p2p/tls-fundamentals`, 요청 수를 세는 알고리즘과 분산 집계는 `ai/rate-limiting-and-reliability-patterns`, 안에서 바깥으로 거는 연결의 원리는 `p2p/nat-traversal`, 전달 코드 무결성은 `blockchain/webcat-frontend-integrity`가 소유하고 이 글은 그 요소가 엣지 방어의 어느 층에 놓이는지만 다룬다.
+- 브라우저 검증에서 잡은 실제 결함 2건: RequestViz의 "오리진" 라벨이 세 번째 처분 박스와 겹쳐 상단 흐름 표기로 옮겼고, SignalViz의 분포 라벨("사람"·"자동화"·"겹치는 구간")이 곡선 외곽선 위에 얹혀 세 개 모두 곡선 안쪽으로 내렸다.
+- 검증: 전 audit 통과, `audit:viz --strict` ERROR 0, topology `keep`+fingerprint, tsc·eslint·build 통과(666 static route), Playwright 1440·390 overflow 0·error 0, viz 6개 24장면 전수 캡처 확인.

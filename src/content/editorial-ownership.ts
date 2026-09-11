@@ -11246,6 +11246,38 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "edge-request-defense-pipeline": {
+    title: "엣지 요청 방어 글이 소유하는 범위",
+    owns: [
+      "패킷·연결·요청 세 층이 각각 아는 정보와 한 건당 비용의 관계",
+      "커널 앞단에서 패킷을 버리는 방식과 그 위치에서 포기하는 판단",
+      "표본에서 후보 지문을 만들어 규칙으로 내리는 절차와 지문 폭 선택의 균형",
+      "요청 층의 패턴 규칙·속도 한도·확인 절차 세 수단의 구분과 각각의 실패 방식",
+      "연결 첫 메시지와 프로토콜 설정 프레임에서 얻는 클라이언트 지문의 성질과 한계",
+      "여러 신호를 점수로 모아 임계로 처분을 나눌 때의 오탐·미탐 비용 관계",
+      "오리진 주소 유출 경로와 대역 허용·역방향 터널 두 대응의 신뢰 지점 차이",
+    ],
+    reuses: [
+      { label: "TLS 1.3 기초", href: "/p2p/tls-fundamentals" },
+      { label: "레이트 리밋과 신뢰성 패턴", href: "/ai/rate-limiting-and-reliability-patterns" },
+      { label: "NAT 통과", href: "/p2p/nat-traversal" },
+      { label: "프런트엔드 무결성", href: "/blockchain/webcat-frontend-integrity" },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "사업자별 내부 구조는 공개 기술 문서에 적힌 범위까지만 서술하고 확인 기준일을 함께 표시한다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "비용 기울기와 처분 배분은 이 글이 정리한 설명 틀이며 특정 제품의 설정값을 규정하지 않는다.",
+      },
+      {
+        kind: "standard",
+        rule: "연결 협상 메시지의 구성은 프로토콜 규격에 귀속하고, 지문 해석은 규격이 보장하는 성질이 아님을 밝힌다.",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

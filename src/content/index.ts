@@ -7,8 +7,9 @@ import p2p from "./p2p";
 import gpu from "./gpu";
 import tee from "./tee";
 import ismsAml from "./isms-aml";
+import saas from "./saas";
 
-export const categories = [ai, blockchain, crypto, p2p, gpu, tee, ismsAml];
+export const categories = [ai, blockchain, crypto, p2p, gpu, tee, ismsAml, saas];
 
 export function getCategoryBySlug(slug: string) {
   return categories.find((c) => c.slug === slug);

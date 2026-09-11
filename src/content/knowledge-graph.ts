@@ -22033,6 +22033,69 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "높은 무게 중심이 수평 가속에서 만드는 회전력을 바닥 고정으로 받게 하는 요건이며, 랙 등급·고정 시공·장비 고정·케이블 여유가 함께 갖춰져야 성립합니다. 등급 표기는 지정된 고정 방식으로 시공했을 때의 값입니다.",
     canonicalHref: "/gpu/datacenter-site-readiness#seismic",
   },
+  "defense-layer-cost-gradient": {
+    id: "defense-layer-cost-gradient",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "방어 계층의 비용 기울기",
+    definition:
+      "같은 요청이라도 패킷 층·연결 층·요청 층 중 어디서 판단하느냐에 따라 쓸 수 있는 정보와 한 건당 처리 비용이 함께 커진다는 관계입니다. 뒤로 갈수록 정확해지지만 비싸므로 값싼 층이 최대한 걸러 내는 배치가 목표가 됩니다.",
+    canonicalHref: "/saas/edge-request-defense-pipeline#overview",
+  },
+  "kernel-bypass-packet-drop": {
+    id: "kernel-bypass-packet-drop",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "커널 앞단 패킷 폐기",
+    definition:
+      "네트워크 카드에서 패킷을 받은 직후, 운영체제의 일반 네트워크 처리에 넣기 전에 완화 규칙을 적용해 그 자리에서 버리는 방식입니다. 버릴 패킷에 커널 스택 처리 비용을 들이지 않는 대신 그 위치에서 쓸 수 있는 정보가 제한됩니다.",
+    canonicalHref: "/saas/edge-request-defense-pipeline#packet-layer",
+  },
+  "attack-fingerprint-rule-synthesis": {
+    id: "attack-fingerprint-rule-synthesis",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "표본 기반 공격 지문 규칙 생성",
+    definition:
+      "표본 패킷에서 여러 필드 조합을 후보 지문으로 만들고, 공격 트래픽을 많이 거르면서 정상 트래픽을 적게 건드리는 조합을 골라 완화 규칙으로 내려보내는 절차입니다. 규칙이 놓이는 층도 트래픽 규모에 따라 달라집니다.",
+    canonicalHref: "/saas/edge-request-defense-pipeline#fingerprint-rule",
+  },
+  "request-layer-disposition-set": {
+    id: "request-layer-disposition-set",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "요청 층의 세 가지 처분",
+    definition:
+      "요청 내용을 볼 수 있는 층에서 쓰는 패턴 규칙·속도 한도·확인 절차 세 수단의 구분입니다. 각각 판단 근거와 상태 요구, 그리고 틀렸을 때 사용자가 겪는 마찰의 모양이 다릅니다.",
+    canonicalHref: "/saas/edge-request-defense-pipeline#request-layer",
+  },
+  "client-handshake-fingerprint": {
+    id: "client-handshake-fingerprint",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "클라이언트 연결 지문",
+    definition:
+      "암호화 연결의 첫 메시지와 상위 프로토콜 설정 프레임이 구현마다 다르다는 성질을 이용해 클라이언트 소프트웨어를 구분하는 해시 지문입니다. 연결이 맺어지는 동안 얻어지므로 요청 내용을 보기 전에 분류 재료가 됩니다.",
+    canonicalHref: "/saas/edge-request-defense-pipeline#client-signals",
+  },
+  "score-threshold-cost-tradeoff": {
+    id: "score-threshold-cost-tradeoff",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "점수 임계의 비용 균형",
+    definition:
+      "여러 신호를 한 점수로 모은 뒤 임계로 통과·확인·차단을 나눌 때, 최적 임계가 모델 성능이 아니라 오탐 단가와 미탐 단가의 비율에서 정해진다는 관계입니다. 경로마다 두 단가가 다르므로 임계도 달라집니다.",
+    canonicalHref: "/saas/edge-request-defense-pipeline#score-and-action",
+  },
+  "origin-exposure-closure": {
+    id: "origin-exposure-closure",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "오리진 노출 차단",
+    definition:
+      "원 서버 주소가 알려지면 앞단 검사를 통째로 건너뛸 수 있으므로, 유출 경로를 정리한 뒤 앞단에서 온 연결만 받게 하거나 연결 방향을 뒤집어 인바운드를 닫는 조치입니다. 어느 방식이든 새 신뢰 지점이 따라옵니다.",
+    canonicalHref: "/saas/edge-request-defense-pipeline#origin-protection",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -40115,6 +40178,72 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     to: "seismic-anchoring-requirement",
     relation: "contrasts",
     reason: "전기 이중화와 구조 고정은 서로 다른 실패를 막는 장치라 한쪽이 다른 쪽을 대신하지 않습니다.",
+  },
+  {
+    from: "defense-layer-cost-gradient",
+    to: "kernel-bypass-packet-drop",
+    relation: "produces",
+    reason: "비용 기울기를 받아들이면 가장 앞에서 버리는 구성요소를 두는 결론이 따라옵니다.",
+  },
+  {
+    from: "kernel-bypass-packet-drop",
+    to: "attack-fingerprint-rule-synthesis",
+    relation: "prerequisite",
+    reason: "앞단에서 버리려면 적용할 규칙이 먼저 있어야 하고 그 규칙을 표본이 만듭니다.",
+  },
+  {
+    from: "defense-layer-cost-gradient",
+    to: "request-layer-disposition-set",
+    relation: "constrains",
+    reason: "요청 층이 비싸다는 사실이 이 층에서 다룰 대상을 애매한 요청으로 좁힙니다.",
+  },
+  {
+    from: "client-handshake-fingerprint",
+    to: "score-threshold-cost-tradeoff",
+    relation: "produces",
+    reason: "지문은 확신이 아니라 정도이므로 다른 신호와 합쳐 점수로 쓰게 됩니다.",
+  },
+  {
+    from: "score-threshold-cost-tradeoff",
+    to: "request-layer-disposition-set",
+    relation: "constrains",
+    reason: "임계 구간이 어떤 요청에 차단·확인·통과를 배정할지 정합니다.",
+  },
+  {
+    from: "tls13-secure-channel",
+    to: "client-handshake-fingerprint",
+    relation: "prerequisite",
+    reason: "첫 협상 메시지에 무엇이 담기는지 알아야 그 조합이 왜 구현마다 다른지 이해됩니다.",
+  },
+  {
+    from: "rate-limiting-algorithms",
+    to: "request-layer-disposition-set",
+    relation: "prerequisite",
+    reason: "속도 한도를 세는 알고리즘을 알아야 이 층의 상태 요구를 읽을 수 있습니다.",
+  },
+  {
+    from: "origin-exposure-closure",
+    to: "defense-layer-cost-gradient",
+    relation: "constrains",
+    reason: "우회 경로가 남아 있으면 층을 아무리 잘 쌓아도 전체가 무력화됩니다.",
+  },
+  {
+    from: "nat-mapping-filtering-separation",
+    to: "origin-exposure-closure",
+    relation: "produces",
+    reason: "안에서 바깥으로 먼저 연결을 거는 방식이 왜 인바운드 구멍을 없애는지 같은 원리로 설명됩니다.",
+  },
+  {
+    from: "attack-fingerprint-rule-synthesis",
+    to: "score-threshold-cost-tradeoff",
+    relation: "contrasts",
+    reason: "지문 폭 선택과 임계 선택은 같은 오탐·미탐 균형 문제를 다른 층에서 푸는 방식입니다.",
+  },
+  {
+    from: "origin-exposure-closure",
+    to: "web-frontend-delivered-code-gap",
+    relation: "contrasts",
+    reason: "앞단을 신뢰 지점으로 두는 선택이 전달 코드 무결성 쪽에서는 다른 문제로 되돌아옵니다.",
   },
 ];
 

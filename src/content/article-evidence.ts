@@ -6746,4 +6746,24 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "흡기 온도 등급과 통로 배치 전제의 배경이며 구체 수치는 해당 판본을 확인해야 함",
     },
   ],
+  "saas/edge-request-defense-pipeline": [
+    {
+      kind: "공식 문서",
+      label: "Cloudflare — 자율 엣지 DDoS 방어 구조 설명",
+      href: "https://blog.cloudflare.com/deep-dive-cloudflare-autonomous-edge-ddos-protection/",
+      note: "커널 앞단 폐기와 표본 기반 지문 생성·규칙 하강 구조의 출처이며 처리량 수치는 자기보고임 (2026-09-11 확인)",
+    },
+    {
+      kind: "공식 문서",
+      label: "Cloudflare — JA4 지문과 요청 신호",
+      href: "https://blog.cloudflare.com/ja4-signals/",
+      note: "연결 지문이 규칙과 점수 모델 입력으로 쓰인다는 설명의 출처이며 내부 모델 세부는 비공개임 (2026-09-11 확인)",
+    },
+    {
+      kind: "보충 읽기",
+      label: "TLS 1.3 핸드셰이크 규격 · RFC 8446",
+      href: "https://www.rfc-editor.org/rfc/rfc8446",
+      note: "첫 협상 메시지에 어떤 필드가 담기는지의 규격 근거",
+    },
+  ],
 };
