@@ -11532,6 +11532,37 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "generative-identity-diversity": {
+    title: "정체성 다양성 글이 소유하는 범위",
+    owns: [
+      "의도를 고정했을 때 시드와 부위 서술어가 새 인물을 만들지 못한다는 측정",
+      "텍스트 다양성이 인구통계 축에 몰려 있고 너비 축이 약하다는 구분",
+      "정체성 벡터 혼합이 평균 회귀로 용량을 늘리지 못한다는 구조적 근거",
+      "조건 텐서 혼합의 토큰 정렬 파괴와 그 증상이 늦게 드러나는 이유",
+      "증류 가중치가 같은 프롬프트 집합의 정체성 다양성을 크게 줄인다는 대조",
+      "참조 뱅크가 용량을 정하고 주입 세기가 정체성과 의도의 다이얼이라는 관계",
+      "낮은 충돌률을 관측하는 데 필요한 표본 크기와 성급한 결론의 위험",
+    ],
+    reuses: [
+      { label: "계측기 검증", href: "/ai/generative-measurement-controls" },
+      { label: "정체성과 포즈 분리", href: "/ai/reference-identity-pose-separation" },
+      { label: "잠재 확산과 안내", href: "/ai/latent-diffusion-guidance" },
+    ],
+    evidence: [
+      {
+        kind: "project-measurement",
+        rule: "수치는 한 장비·특정 모델 조합의 실측이며 측정일과 고정한 조건을 함께 밝힌다.",
+      },
+      {
+        kind: "primary-source",
+        rule: "외부 대규모 결과는 해당 논문에 귀속하고 모델과 어휘가 달라 직접 비교가 아님을 밝힌다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "증류 결론은 한 모델 가족에서 한 번 잰 것이며 증류 일반에 대한 주장으로 제시하지 않는다.",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

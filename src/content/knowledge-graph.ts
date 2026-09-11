@@ -22600,6 +22600,69 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "결과가 나오지 않을 때 설정값을 다듬기 전에 의심되는 신호를 완전히 꺼 보고 증상이 남는지 확인하는 절차입니다. 증상이 그대로면 그 신호는 원인이 아니므로, 한 번의 실행으로 탐색 범위를 크게 줄입니다.",
     canonicalHref: "/ai/reference-identity-pose-separation#separation-gate",
   },
+  "seed-diversity-null-effect": {
+    id: "seed-diversity-null-effect",
+    kind: "concept",
+    domain: "computer-science",
+    label: "시드의 정체성 다양성 무효과",
+    definition:
+      "의도를 고정한 상태에서 초기 노이즈만 바꾸면 새로운 인물이 거의 나오지 않는다는 성질입니다. 시드가 결과를 바꾸는 것처럼 보이는 상황은 대개 의도가 고정되지 않은 경우이며, 고정하면 서술어 축 샘플링도 같은 바닥으로 내려갑니다.",
+    canonicalHref: "/ai/generative-identity-diversity#seed-null",
+  },
+  "demographic-axis-dominance": {
+    id: "demographic-axis-dominance",
+    kind: "concept",
+    domain: "computer-science",
+    label: "인구통계 축의 지배",
+    definition:
+      "텍스트가 만들어 내는 정체성 다양성의 대부분이 나이·성별·체형 축에서 나오고, 같은 인구통계 안에서 부위 서술어가 만드는 차이는 훨씬 작다는 관계입니다. 형태 지표로 보면 길이 축은 반응하고 너비 축은 노이즈 수준에 머뭅니다.",
+    canonicalHref: "/ai/generative-identity-diversity#seed-null",
+  },
+  "convex-blend-mean-regression": {
+    id: "convex-blend-mean-regression",
+    kind: "concept",
+    domain: "computer-science",
+    label: "볼록 결합의 평균 회귀",
+    definition:
+      "정체성 벡터를 가중 평균하면 결과가 두 원본을 잇는 선분 위에만 놓여 전체 평균에서 더 멀어질 수 없다는 성질입니다. 혼합으로 참조 뱅크를 늘리려는 시도가 구현 문제가 아니라 구조적으로 막혀 있다는 근거가 됩니다.",
+    canonicalHref: "/ai/generative-identity-diversity#blend-regression",
+  },
+  "conditioning-blend-token-misalignment": {
+    id: "conditioning-blend-token-misalignment",
+    kind: "concept",
+    domain: "computer-science",
+    label: "조건 혼합의 토큰 정렬 파괴",
+    definition:
+      "두 프롬프트의 조건 텐서를 가중 평균할 때 구현이 한쪽을 다른 쪽의 토큰 길이에 맞춰 잘라 내면 위치가 어긋나 결과가 무너진다는 함정입니다. 단독 실행과 자기 자신과의 혼합은 정상이라 원인을 찾기 어렵고, 깨진 결과에서 그럴듯한 지표가 나오기도 합니다.",
+    canonicalHref: "/ai/generative-identity-diversity#blend-regression",
+  },
+  "distillation-diversity-collapse": {
+    id: "distillation-diversity-collapse",
+    kind: "concept",
+    domain: "computer-science",
+    label: "증류 가중치의 다양성 붕괴",
+    definition:
+      "소수 단계로 증류된 가중치가 같은 프롬프트 집합에서 만들어 내는 서로 다른 정체성의 수를 크게 줄인다는 관찰입니다. 어휘가 천장처럼 보이던 진단이 실은 가중치의 제약이었을 수 있으므로, 다양성을 어휘 문제로 결론짓기 전에 비증류 대조를 돌려야 합니다.",
+    canonicalHref: "/ai/generative-identity-diversity#distillation-bottleneck",
+  },
+  "reference-bank-as-capacity": {
+    id: "reference-bank-as-capacity",
+    kind: "concept",
+    domain: "computer-science",
+    label: "참조 뱅크가 곧 용량",
+    definition:
+      "같은 인구통계 안에서의 정체성 다양성이 모델을 설득해 얻어지는 것이 아니라 확보한 참조의 수에서 온다는 관점입니다. 주입 세기가 정체성 전이와 의도 유지 사이의 연속 다이얼이며, 혼합으로는 용량이 늘지 않습니다.",
+    canonicalHref: "/ai/generative-identity-diversity#bank-capacity",
+  },
+  "collision-rate-sample-size": {
+    id: "collision-rate-sample-size",
+    kind: "concept",
+    domain: "computer-science",
+    label: "충돌률 관측에 필요한 표본",
+    definition:
+      "낮은 충돌률을 확인하려면 그에 걸맞은 쌍의 수가 필요하며, 작은 표본에서 충돌이 0이라는 것은 충돌률이 0이라는 뜻이 아니라 그 표본으로는 볼 수 없다는 뜻이라는 경계입니다. 규모를 키우기 전에 내린 결론은 다음 측정에서 뒤집히기 쉽습니다.",
+    canonicalHref: "/ai/generative-identity-diversity#diversity-gate",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -41324,6 +41387,78 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     to: "ablation-before-tuning",
     relation: "contrasts",
     reason: "문구를 다듬는 시간과 신호를 꺼 보는 한 번의 실행이 같은 질문에 다른 비용으로 답합니다.",
+  },
+  {
+    from: "seed-diversity-null-effect",
+    to: "demographic-axis-dominance",
+    relation: "produces",
+    reason: "시드가 무효라는 사실이 텍스트 축을 나눠 보게 만듭니다.",
+  },
+  {
+    from: "demographic-axis-dominance",
+    to: "reference-bank-as-capacity",
+    relation: "produces",
+    reason: "같은 인구통계 안에서 텍스트가 멈추므로 다른 공급원이 필요해집니다.",
+  },
+  {
+    from: "convex-blend-mean-regression",
+    to: "reference-bank-as-capacity",
+    relation: "constrains",
+    reason: "혼합으로 늘릴 수 없으므로 용량이 확보한 참조 수로 고정됩니다.",
+  },
+  {
+    from: "attention-identity-injection",
+    to: "convex-blend-mean-regression",
+    relation: "prerequisite",
+    reason: "정체성이 벡터로 주입된다는 사실에서 평균의 성질이 따라옵니다.",
+  },
+  {
+    from: "distillation-diversity-collapse",
+    to: "demographic-axis-dominance",
+    relation: "constrains",
+    reason: "증류 가중치에서는 부위 서술어의 효과가 더 크게 눌립니다.",
+  },
+  {
+    from: "classifier-free-guidance",
+    to: "distillation-diversity-collapse",
+    relation: "prerequisite",
+    reason: "안내가 충실도와 모드 커버리지를 맞바꾼다는 성질이 같은 방향으로 작용합니다.",
+  },
+  {
+    from: "collision-rate-sample-size",
+    to: "demographic-axis-dominance",
+    relation: "constrains",
+    reason: "작은 표본에서는 축이 듣는지 여부를 판정할 수 없습니다.",
+  },
+  {
+    from: "impostor-threshold-derivation",
+    to: "collision-rate-sample-size",
+    relation: "prerequisite",
+    reason: "충돌을 세려면 임계값이 먼저 정해져 있어야 합니다.",
+  },
+  {
+    from: "metric-style-coverage-boundary",
+    to: "reference-bank-as-capacity",
+    relation: "constrains",
+    reason: "판정 도구의 적용 범위 밖 모델은 다양성 비교에서 제외해야 합니다.",
+  },
+  {
+    from: "confound-removed-comparison",
+    to: "distillation-diversity-collapse",
+    relation: "prerequisite",
+    reason: "같은 묘사·같은 시드로 가중치만 바꾼 설계라 이 비교가 성립합니다.",
+  },
+  {
+    from: "conditioning-blend-token-misalignment",
+    to: "convex-blend-mean-regression",
+    relation: "contrasts",
+    reason: "배선이 깨진 실패와 배선은 맞는데 구조가 막는 실패가 서로 다릅니다.",
+  },
+  {
+    from: "seed-diversity-null-effect",
+    to: "collision-rate-sample-size",
+    relation: "contrasts",
+    reason: "효과가 없다는 결론과 표본이 작아 못 본다는 사실을 구분해야 합니다.",
   },
 ];
 

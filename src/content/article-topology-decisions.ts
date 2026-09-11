@@ -328,6 +328,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "세기·구간의 구체 값은 이 모델 조합의 실측이며 한 인물·한 의상에서의 결과임을 밝힌다.",
   },
+  "ai/generative-identity-diversity": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-09-11",
+    rationale:
+      "본문은 6 section·concept 7개로 keep 범위다. 세 번의 정정이 하나의 서사로 이어지고 각 절이 앞 절의 결론을 뒤집는 구조라 나누면 그 연결이 끊긴다.",
+    sharedGate:
+      "수치는 한 장비·특정 모델 조합의 실측이며 증류 결론은 한 가족에서 한 번 잰 것임을 밝힌다.",
+  },
 };
 
 /**
@@ -335,6 +344,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "ai/generative-identity-diversity": "2363cd7992286b11",
   "ai/reference-identity-pose-separation": "a753dfc2bdc4f420",
   "ai/roi-resolution-identity-budget": "adf0f60c3e64205e",
   "ai/removal-is-not-inpainting": "eb81c2f2f9a411bc",
