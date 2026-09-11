@@ -9,9 +9,9 @@ export default function Propagation() {
       <h2 className="mb-6 text-2xl font-bold">물건을 지어낼 방법이 없다는 것이 곧 능력입니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          답은 확산 모델이 아니라 마스크 채우기 전용으로 학습된 합성곱 신경망이었습니다. 텍스트 조건도, 노이즈도,
-          시드도 없습니다. 구멍 주변의 구조를 안쪽으로 전파할 뿐입니다. 주파수 영역 합성곱으로 넓은 수용
-          영역을 갖는 것이 구조적 특징입니다.
+          답은 확산 모델이 아니라 큰 마스크를 채우도록 학습된 합성곱 신경망이었습니다. 텍스트 조건도, 노이즈도,
+          시드도 없습니다. 구멍 주변의 구조를 안쪽으로 전파할 뿐입니다. 제안 논문이 밝힌 구조적 특징은 빠른
+          푸리에 합성곱을 써서 이미지 전체 크기의 수용 영역을 갖는다는 것입니다.
         </p>
 
         <p className="leading-7">
@@ -37,8 +37,9 @@ export default function Propagation() {
       <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <p className="leading-7">
           그 덕분에 한 가지가 더 읽힙니다. 애니 그림체에서만 마스크 밖 변화가 1.03으로 눈에 띄게 큽니다.
-          오토인코더가 없는데도 그렇다는 것은 이 모델 자신이 마스크 밖 픽셀을 건드렸다는 뜻입니다. 이미지
-          전체를 통과시키는 합성곱 망이라 구조적으로 가능한 일입니다.
+          오토인코더가 없는데도 그렇다는 것은 이 모델 자신이 마스크 밖 픽셀을 건드렸다는 뜻입니다. 수용 영역이
+          이미지 전체라는 논문의 설명이 그대로 이 측정의 설명이 됩니다. 멀리 있는 화소가 구멍을 채우는 데
+          쓰인다면 그 반대 방향도 열려 있습니다.
         </p>
 
         <p className="leading-7">

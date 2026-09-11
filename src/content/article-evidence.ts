@@ -6846,6 +6846,12 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "샘플링·프롬프트·마스크 없는 인코딩·디코딩만으로 0.60~2.75, 소스가 바뀌면 같은 오토인코더가 0.49~2.88",
     },
     {
+      kind: "공식 문서",
+      label: "CCIP — 애니 캐릭터 이미지 대조 사전학습 모델 카드 (2026-09-12 확인)",
+      href: "https://huggingface.co/deepghs/ccip",
+      note: "임계값이 F1 점수 최대 지점으로 정해진다는 서술과 최고 성능 모델의 정밀도 0.938·재현율 0.944·F1 0.941의 출처. 반환값이 차이값이라 낮을수록 같은 인물이며, 의상 변화에 대한 민감도는 문서에 기재돼 있지 않아 본문에서 주장하지 않음",
+    },
+    {
       kind: "핵심 논문",
       label: "FLUXSynID — 합성 신원 데이터셋 생성 (ICCVW 2025, arXiv:2505.07530)",
       href: "https://arxiv.org/abs/2505.07530",
@@ -6878,6 +6884,12 @@ export const ARTICLE_EVIDENCE: Readonly<
       label: "지우기 요청에 대한 확산 모델 응답 (2026-09-11, RTX 4090 48GB)",
       href: "https://github.com/dik654/blog",
       note: "배경 프롬프트와 이름 네거티브를 함께 줘도 네 그림체 모두 띠를 재생성. 마스크 안 44.9~93.7. 이 실행의 네거티브는 안내 계수 1.0 탓에 무효였으며 통제 실패로 기록",
+    },
+    {
+      kind: "핵심 논문",
+      label: "Suvorov et al. — Resolution-robust Large Mask Inpainting with Fourier Convolutions (WACV 2022, arXiv:2109.07161)",
+      href: "https://arxiv.org/abs/2109.07161",
+      note: "빠른 푸리에 합성곱이 이미지 전체 크기의 수용 영역을 준다는 구조 설명의 출처이며, 텍스트 조건이나 노이즈 입력이 없는 이미지 전용 방식임. 본문의 마스크 밖 변화 측정을 설명하는 근거로 쓰되 논문이 제거 용도를 주장한 것은 아님",
     },
     {
       kind: "프로젝트 실측",
