@@ -21458,6 +21458,74 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "하드웨어 선택을 정하기 전에 지금 겪는 문제가 모델이 올라가지 않는 용량 문제인지 처리량이 나오지 않는 통신 문제인지 먼저 가르는 판단 순서입니다. 두 병목은 해법이 서로 겹치지 않아 순서를 바꾸면 잘못된 장비를 삽니다.",
     canonicalHref: "/gpu/modded-rtx4090-moe-serving#release-gate",
   },
+  "ema-teacher-view-distillation": {
+    id: "ema-teacher-view-distillation",
+    kind: "method",
+    domain: "machine-learning",
+    label: "EMA teacher 크롭 분포 정합",
+    aliases: ["DINO 이미지 수준 목표", "self-distillation with no labels"],
+    definition:
+      "학습 중인 모델의 가중치 이동평균으로 따라오는 teacher를 두고, 같은 이미지의 다른 크롭에 대해 teacher가 낸 prototype 분포를 student가 맞추게 하는 라벨 없는 학습 목표입니다. teacher 쪽 centering과 낮은 온도가 모든 입력이 한 prototype으로 몰리는 붕괴를 막습니다.",
+    canonicalHref: "/ai/dinov3-self-supervised-backbone#view-objective",
+  },
+  "masked-patch-latent-target": {
+    id: "masked-patch-latent-target",
+    kind: "method",
+    domain: "machine-learning",
+    label: "가린 패치의 latent 목표",
+    aliases: ["iBOT 패치 목표", "패치 수준 자기증류"],
+    definition:
+      "student 입력의 일부 패치를 가리고 그 자리에서 teacher가 낸 출력 분포를 맞추게 하는 목표입니다. 복원 대상이 픽셀이 아니라 이미 한 번 접힌 표현이라 질감 복원이 아니라 자리별 의미를 학습 신호로 씁니다.",
+    canonicalHref: "/ai/dinov3-self-supervised-backbone#patch-objective",
+  },
+  "dense-feature-degradation": {
+    id: "dense-feature-degradation",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Dense feature 붕괴",
+    aliases: ["패치 표현 평탄화"],
+    definition:
+      "긴 학습 일정에서 이미지 한 장을 요약하는 능력은 계속 좋아지는데 패치마다 다른 정보를 담는 능력은 오히려 나빠지는 현상입니다. 사전학습 손실은 계속 내려가므로 얼린 backbone에 dense head를 붙여 재야 드러납니다.",
+    canonicalHref: "/ai/dinov3-self-supervised-backbone#dense-collapse",
+  },
+  "gram-matrix-patch-consistency": {
+    id: "gram-matrix-patch-consistency",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Gram 행렬 패치 관계 정합",
+    aliases: ["Gram anchoring"],
+    definition:
+      "패치 특징을 정규화해 만든 패치 사이 유사도 행렬을 기준 모델의 같은 행렬과 맞추는 규제입니다. 특징값 자체를 따라가게 하지 않으므로 표현은 계속 움직이면서 패치 쌍의 관계 구조만 보존됩니다.",
+    canonicalHref: "/ai/dinov3-self-supervised-backbone#gram-anchoring",
+  },
+  "gram-teacher-refresh-schedule": {
+    id: "gram-teacher-refresh-schedule",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Gram teacher 기준 갱신 주기",
+    definition:
+      "관계 구조의 기준으로 삼는 복사본을 언제 세우고 얼마마다 현재 teacher 값으로 다시 맞출지 정하는 일정입니다. 자주 갱신하면 붙잡는 힘이 약해지고 전혀 갱신하지 않으면 낡은 구조에 묶이므로 규제 강도를 결정하는 값이 됩니다.",
+    canonicalHref: "/ai/dinov3-self-supervised-backbone#gram-teacher",
+  },
+  "post-hoc-capability-adaptation": {
+    id: "post-hoc-capability-adaptation",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "사후 능력 확장 단계",
+    definition:
+      "사전학습을 다시 돌리지 않고 짧은 적응 단계와 증류로 해상도·모델 크기·텍스트 정렬을 넓히는 방식입니다. 확장된 능력은 원 학습 목표가 보장하는 성질이 아니라 해당 사후 단계의 데이터와 목표에 달려 있습니다.",
+    canonicalHref: "/ai/dinov3-self-supervised-backbone#post-hoc",
+  },
+  "frozen-backbone-evaluation-protocol": {
+    id: "frozen-backbone-evaluation-protocol",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "얼린 backbone 평가 프로토콜",
+    aliases: ["linear probing 조건"],
+    definition:
+      "backbone 가중치를 고정한 채 얇은 head만 학습해 표현 자체를 재는 평가 조건입니다. head를 키우거나 backbone까지 학습하면 점수가 말해 주는 주어가 표현 품질에서 초기값의 유용성으로 바뀝니다.",
+    canonicalHref: "/ai/dinov3-self-supervised-backbone#use-boundary",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -38911,6 +38979,90 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "prerequisite",
     reason:
       "전체 expert가 상주해야 한다는 제약이 있어야 용량 병목과 통신 병목 중 무엇이 먼저인지 가릅니다.",
+  },
+  {
+    from: "teacher-student-distillation-framework",
+    to: "ema-teacher-view-distillation",
+    relation: "prerequisite",
+    reason:
+      "teacher와 student를 두고 출력 분포를 맞추는 일반 구조를 알아야 정답이 이동평균 복사본에서 나온다는 변형을 이해할 수 있습니다.",
+  },
+  {
+    from: "positive-transformation-invariance",
+    to: "ema-teacher-view-distillation",
+    relation: "prerequisite",
+    reason:
+      "같은 이미지의 다른 크롭을 같은 것으로 취급한다는 전제가 있어야 크롭 쌍을 학습 신호로 쓰는 이유가 성립합니다.",
+  },
+  {
+    from: "vit-patch-sequence-contract",
+    to: "masked-patch-latent-target",
+    relation: "prerequisite",
+    reason:
+      "이미지를 패치 토큰 시퀀스로 다룬다는 계약이 있어야 특정 패치를 가리고 그 자리의 출력을 비교한다는 목표를 정의할 수 있습니다.",
+  },
+  {
+    from: "ema-teacher-view-distillation",
+    to: "dense-feature-degradation",
+    relation: "produces",
+    reason:
+      "크롭이 달라도 같은 답을 내라는 압력이 자리에 따라 달라지는 성분을 지우면서 패치 표현 평탄화를 만듭니다.",
+  },
+  {
+    from: "masked-patch-latent-target",
+    to: "dense-feature-degradation",
+    relation: "constrains",
+    reason:
+      "패치별 목표가 붕괴를 늦추기는 하지만 패치들끼리의 관계를 직접 재지 않아 평탄화를 막지 못합니다.",
+  },
+  {
+    from: "dense-feature-degradation",
+    to: "gram-matrix-patch-consistency",
+    relation: "produces",
+    reason:
+      "무너지는 대상이 값이 아니라 패치 쌍의 관계라는 진단이 유사도 행렬을 직접 규제하는 손실을 낳습니다.",
+  },
+  {
+    from: "gram-matrix-patch-consistency",
+    to: "gram-teacher-refresh-schedule",
+    relation: "constrains",
+    reason:
+      "기준 행렬을 누가 언제 만드느냐가 이 손실이 실제로 붙잡는 구조와 규제 강도를 결정합니다.",
+  },
+  {
+    from: "gram-matrix-patch-consistency",
+    to: "post-hoc-capability-adaptation",
+    relation: "extends",
+    reason:
+      "해상도를 바꾸는 짧은 적응 단계에서도 같은 규제를 걸어 패치 관계가 흐트러지지 않게 합니다.",
+  },
+  {
+    from: "backbone-budget-comparison",
+    to: "post-hoc-capability-adaptation",
+    relation: "evaluates",
+    reason:
+      "증류로 갈라진 계열 중 무엇을 쓸지는 품질과 실행 예산을 함께 놓는 기존 비교 기준으로 판단합니다.",
+  },
+  {
+    from: "frozen-module-buffer-state",
+    to: "frozen-backbone-evaluation-protocol",
+    relation: "prerequisite",
+    reason:
+      "가중치를 고정한다는 것이 구현에서 무엇을 멈추고 무엇을 남기는지 알아야 이 평가 조건을 정확히 재현할 수 있습니다.",
+  },
+  {
+    from: "frozen-backbone-evaluation-protocol",
+    to: "dense-feature-degradation",
+    relation: "evaluates",
+    reason:
+      "사전학습 손실에 드러나지 않는 평탄화를 얼린 backbone에 dense head를 붙여 재는 방식으로만 관측합니다.",
+  },
+  {
+    from: "mae-visible-token-pretraining",
+    to: "masked-patch-latent-target",
+    relation: "contrasts",
+    reason:
+      "가린 자리를 픽셀로 복원하는 목표와 teacher 분포로 맞추는 목표를 같은 축에서 구분합니다.",
   },
 ];
 

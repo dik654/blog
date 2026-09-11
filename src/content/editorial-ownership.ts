@@ -10932,6 +10932,45 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "dinov3-self-supervised-backbone": {
+    title: "DINOv3 자기지도 백본 글이 소유하는 범위",
+    owns: [
+      "라벨 대신 EMA teacher 분포를 쓰는 이미지 수준 목표와 centering·온도의 붕괴 방지 역할",
+      "가린 패치의 목표가 픽셀이 아니라 teacher 분포라는 구분과 손실이 걸리는 자리",
+      "긴 학습 일정에서 패치 유사도 구조가 평탄해지는 dense feature 붕괴의 정의와 관측 방법",
+      "패치 유사도 행렬을 기준 teacher와 맞추는 Gram anchoring의 손실과 회전 불변 성질",
+      "Gram teacher를 100만 스텝 이후에 세우고 1만 스텝마다 갱신하는 일정이 규제 강도인 이유",
+      "해상도 적응 1만 스텝과 21M~0.8B 증류 계열로 능력을 사후에 넓히는 구조",
+      "얼린 backbone 평가 조건이 결론의 주어를 바꾼다는 기준",
+    ],
+    reuses: [
+      { label: "Vision Transformer의 패치 시퀀스", href: "/ai/vision-transformer" },
+      { label: "teacher·student 증류 일반 구조", href: "/ai/knowledge-distillation" },
+      { label: "대조학습의 양성 쌍 계약", href: "/ai/contrastive-learning" },
+      { label: "백본 예산 비교", href: "/ai/image-backbone-scaling" },
+      { label: "전이학습에서의 freezing", href: "/ai/transfer-learning-practice" },
+      { label: "임베딩 평가 기준", href: "/ai/embedding-evaluation" },
+      { label: "멀티모달 검색과 grounding", href: "/ai/multimodal-retrieval-and-visual-grounding" },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "모델 구성·데이터 규모·학습 일정·손실 항 구성은 DINOv3 기술 보고서와 공개 구현에 귀속한다.",
+      },
+      {
+        kind: "primary-source",
+        rule: "손실 계산 순서와 구현 선택지는 facebookresearch/dinov3 커밋 11c58638 스냅샷에 귀속하며 다른 재구현과 동일하다고 주장하지 않는다.",
+      },
+      {
+        kind: "standard",
+        rule: "dense feature 붕괴와 Gram anchoring의 효과는 논문의 자기보고 범위로 표시하고 모든 자기지도 학습의 일반 법칙으로 확대하지 않는다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "본문의 유사도 행렬 그림과 점수 막대는 설명을 위한 예시이며 특정 체크포인트의 실측값이 아니다.",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

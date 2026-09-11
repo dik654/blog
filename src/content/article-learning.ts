@@ -69885,4 +69885,228 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "ai/dinov3-self-supervised-backbone": {
+    coreIdea:
+      "DINOv3는 라벨 대신 EMA teacher의 분포를 이미지 수준과 패치 수준에서 맞추며 학습하는데, 긴 일정에서 이미지 수준 목표가 패치 관계를 평탄하게 만들므로, 패치 유사도 행렬을 기준 teacher와 맞추는 Gram anchoring을 학습 후반에만 켜서 dense feature를 보존합니다.",
+    assumedKnowledge: [
+      { id: "vit-patch-sequence-contract", role: "이미지를 패치 토큰 시퀀스로 다루는 계약입니다." },
+      { id: "teacher-student-distillation-framework", role: "teacher 출력으로 student를 학습시키는 일반 구조입니다." },
+      { id: "positive-transformation-invariance", role: "같은 이미지의 다른 변형을 같은 것으로 두는 전제입니다." },
+      { id: "mae-visible-token-pretraining", role: "가린 패치를 복원하는 사전학습의 원형이며 이 글은 목표를 분포로 바꾼 변형을 다룹니다." },
+      { id: "backbone-budget-comparison", role: "증류 계열 중 무엇을 쓸지 판단하는 기존 비교 기준입니다." },
+      { id: "frozen-module-buffer-state", role: "가중치 고정이 구현에서 무엇을 멈추는지의 정의입니다." },
+    ],
+    introducedHere: [
+      { id: "ema-teacher-view-distillation", role: "라벨 없이 이미지 수준 목표를 만드는 방식을 정의합니다." },
+      { id: "masked-patch-latent-target", role: "가린 패치의 목표가 픽셀이 아니라 분포라는 점을 고정합니다." },
+      { id: "dense-feature-degradation", role: "긴 학습에서 패치 관계가 평탄해지는 현상을 정의합니다." },
+      { id: "gram-matrix-patch-consistency", role: "관계 행렬만 맞추는 손실과 그 회전 불변 성질을 설명합니다." },
+      { id: "gram-teacher-refresh-schedule", role: "기준을 언제 세우고 얼마마다 갱신하는지가 규제 강도임을 보입니다." },
+      { id: "post-hoc-capability-adaptation", role: "해상도·크기·텍스트 정렬을 사후 단계로 붙이는 구조를 정리합니다." },
+      { id: "frozen-backbone-evaluation-protocol", role: "평가 조건이 결론의 주어를 바꾼다는 기준을 세웁니다." },
+    ],
+    conceptExplanations: [
+      {
+        id: "ema-teacher-view-distillation",
+        sectionId: "view-objective",
+        intuition:
+          "정답지를 사람이 만들지 않고 몇 스텝 전의 자기 자신이 만든 답안을 정답으로 삼아 현재의 자신을 맞춥니다.",
+        workedExample:
+          "teacher는 넓은 크롭을, student는 좁은 크롭까지 보고 각각 prototype 분포를 냅니다. student 온도 0.1의 log-softmax와 teacher 확률의 교차 엔트로피를 모든 크롭 쌍에서 평균합니다.",
+        boundary:
+          "teacher는 gradient를 받지 않고 이동평균으로만 갱신됩니다. centering이나 배치 정규화가 없으면 모든 입력이 한 prototype으로 몰려 손실이 0이 되는 붕괴가 일어납니다.",
+      },
+      {
+        id: "masked-patch-latent-target",
+        sectionId: "patch-objective",
+        intuition:
+          "가린 자리를 다시 그리게 하는 대신, 가리지 않은 teacher가 그 자리에서 무엇이라고 답했는지를 맞히게 합니다.",
+        workedExample:
+          "student 입력에서 일부 패치를 가리고 그 자리들만 골라 teacher 분포와의 교차 엔트로피를 계산한 뒤 가려진 패치 수로 나눕니다.",
+        boundary:
+          "목표가 픽셀이 아니라 teacher 출력이므로 teacher가 평탄해지면 이 목표도 함께 평탄해집니다. 패치들끼리의 관계를 직접 재는 항은 여기에 없습니다.",
+      },
+      {
+        id: "dense-feature-degradation",
+        sectionId: "dense-collapse",
+        intuition:
+          "이미지 한 장을 한 마디로 요약하는 연습만 오래 하면 세부를 구분해 말하는 능력이 줄어듭니다.",
+        workedExample:
+          "같은 이미지 안 패치들의 유사도 행렬을 그리면 초반에는 물체와 배경이 블록으로 갈리다가 학습이 길어지면 대비가 사라집니다.",
+        boundary:
+          "사전학습 손실 세 항 어디에도 이 구조가 직접 들어가지 않아 손실값으로는 관측되지 않습니다. 보고된 붕괴는 해당 규모와 일정에서의 자기보고이며 모든 자기지도 학습의 일반 법칙이 아닙니다.",
+      },
+      {
+        id: "gram-matrix-patch-consistency",
+        sectionId: "gram-anchoring",
+        intuition:
+          "사람의 얼굴을 똑같이 그리라고 하지 않고 눈과 코 사이의 비율만 유지하라고 요구하는 것과 같습니다.",
+        workedExample:
+          "패치 특징을 L2 정규화해 P×d 행렬을 만들고 자기 자신과 곱해 P×P 유사도 행렬을 얻은 뒤, student와 기준 teacher의 두 행렬 차이를 제곱해 더합니다.",
+        boundary:
+          "표현 전체를 회전시켜도 손실이 변하지 않으므로 값의 정합을 보장하지 않습니다. 기준 teacher의 관계 구조가 나쁘면 그 구조를 그대로 유지시키는 손실이 됩니다.",
+      },
+      {
+        id: "gram-teacher-refresh-schedule",
+        sectionId: "gram-teacher",
+        intuition:
+          "붙잡을 기준을 너무 일찍 세우면 나쁜 상태에 묶이고, 너무 자주 바꾸면 붙잡는 의미가 사라집니다.",
+        workedExample:
+          "사전학습 100만 스텝이 끝난 뒤 기준을 세우고 이후 1만 스텝마다 현재 teacher 값으로 다시 맞춥니다. 기준 특징은 두 배 해상도 입력을 2×2로 줄여 만듭니다.",
+        boundary:
+          "갱신 주기와 시작 시점은 공개된 설정값이며 다른 데이터·규모에서의 최적값이라는 근거는 제시되지 않았습니다.",
+      },
+      {
+        id: "post-hoc-capability-adaptation",
+        sectionId: "post-hoc",
+        intuition:
+          "큰 모델을 한 번만 제대로 학습해 두고 나머지 요구사항은 짧은 후속 단계로 붙입니다.",
+        workedExample:
+          "넓은 크롭 512·768과 좁은 크롭 112~336을 섞어 1만 스텝을 더 돌리고, 증류로 21M부터 0.8B까지의 계열을 만듭니다.",
+        boundary:
+          "증류 모델이 원 모델과 같은 표현을 준다는 뜻이 아니며 과제별로 따라잡는 정도가 다릅니다. 텍스트 정렬 성능은 backbone의 성질이 아니라 사후 단계 데이터에 달려 있습니다.",
+      },
+      {
+        id: "frozen-backbone-evaluation-protocol",
+        sectionId: "use-boundary",
+        intuition:
+          "표현이 좋은지 보려면 위에 올리는 장치를 최대한 얇게 만들어야 점수가 표현을 말해 줍니다.",
+        workedExample:
+          "backbone을 고정하고 선형층 하나만 학습해 분할이나 분류 점수를 잽니다. head를 키우면 같은 backbone에서도 점수가 올라 차이가 가려집니다.",
+        boundary:
+          "이 조건은 표현에 이미 선형으로 드러난 정보만 측정합니다. backbone까지 미세조정한 결과는 표현 품질이 아니라 초기값의 유용성에 대한 주장입니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 라벨 대신 무엇을",
+        relation: "teacher가 만드는 두 층위의 목표를 먼저 고정",
+        concepts: ["ema-teacher-view-distillation", "masked-patch-latent-target", "teacher-student-distillation-framework"],
+      },
+      {
+        label: "01 목표끼리의 충돌",
+        relation: "두 목표가 요구하는 방향 차이가 만드는 현상을 확인",
+        concepts: ["dense-feature-degradation"],
+      },
+      {
+        label: "02 관계를 붙잡기",
+        relation: "무너지는 대상을 유사도 행렬로 정의하고 손실로 씀",
+        concepts: ["gram-matrix-patch-consistency"],
+      },
+      {
+        label: "03 기준의 일정",
+        relation: "언제 세우고 얼마마다 갱신하는지로 규제 강도를 조절",
+        concepts: ["gram-teacher-refresh-schedule"],
+      },
+      {
+        label: "04 사후 확장",
+        relation: "학습을 다시 하지 않고 해상도와 크기를 넓힘",
+        concepts: ["post-hoc-capability-adaptation", "backbone-budget-comparison"],
+      },
+      {
+        label: "05 평가와 경계",
+        relation: "무엇을 학습시키느냐가 결론의 주어를 바꾼다는 기준으로 닫음",
+        concepts: ["frozen-backbone-evaluation-protocol", "frozen-module-buffer-state"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "라벨이 없는데 이미지 수준 목표의 정답이 어디서 나오는지 설명하고, teacher가 어떻게 갱신되는지 쓰세요.",
+        answerChecklist: ["teacher는 student의 이동평균", "gradient를 받지 않음", "같은 이미지의 다른 크롭", "teacher 분포가 목표", "교차 엔트로피"],
+        requiredConcepts: ["ema-teacher-view-distillation"],
+        sectionId: "view-objective",
+      },
+      {
+        level: "basic",
+        question:
+          "모든 입력에 같은 답을 내는 붕괴가 왜 손실을 0으로 만드는지 설명하고, teacher 쪽에서 이를 막는 두 경로를 쓰세요.",
+        answerChecklist: ["student와 teacher가 같은 분포면 손실 최소", "centering으로 배치 평균 제거", "낮은 온도로 뾰족하게", "Sinkhorn-Knopp 정규화", "prototype 사용량 균등화"],
+        requiredConcepts: ["ema-teacher-view-distillation"],
+        sectionId: "view-objective",
+      },
+      {
+        level: "basic",
+        question:
+          "가린 패치의 목표가 픽셀이 아니라 teacher 분포일 때 무엇이 달라지는지 설명하고, 손실이 어떤 자리에만 걸리는지 쓰세요.",
+        answerChecklist: ["픽셀 복원은 질감·색에 용량 소모", "목표가 이미 의미 쪽으로 접힌 표현", "가려진 패치만 손실", "가려진 개수로 나눔", "안 가린 패치는 제외"],
+        requiredConcepts: ["masked-patch-latent-target", "mae-visible-token-pretraining"],
+        sectionId: "patch-objective",
+      },
+      {
+        level: "basic",
+        question:
+          "두 패치 특징을 L2 정규화한 뒤 내적하면 무엇이 되는지 쓰고, 패치가 P개일 때 나오는 행렬의 크기를 구하세요.",
+        answerChecklist: ["코사인 유사도", "크기 성분 제거", "P×P 행렬", "(i,j) 성분은 패치 쌍의 닮은 정도", "대각은 1"],
+        requiredConcepts: ["gram-matrix-patch-consistency"],
+        sectionId: "gram-anchoring",
+      },
+      {
+        level: "basic",
+        question:
+          "Gram teacher를 사전학습 100만 스텝 이후에야 세우는 이유와 1만 스텝마다 갱신하는 이유를 각각 쓰세요.",
+        answerChecklist: ["초반 구조는 아직 나쁨", "나쁜 구조를 붙잡으면 손해", "너무 자주 갱신하면 붙잡는 힘 약화", "전혀 갱신 안 하면 낡은 구조에 묶임", "주기가 규제 강도"],
+        requiredConcepts: ["gram-teacher-refresh-schedule"],
+        sectionId: "gram-teacher",
+      },
+      {
+        level: "basic",
+        question:
+          "얼린 backbone에 선형 head만 붙여 평가하는 이유를 설명하고, head를 키울 때 생기는 문제를 쓰세요.",
+        answerChecklist: ["학습되는 것은 선형층뿐", "점수 차이가 표현에서 나옴", "head가 크면 head가 과제를 품", "backbone 차이가 가려짐", "선형으로 드러난 정보만 측정"],
+        requiredConcepts: ["frozen-backbone-evaluation-protocol"],
+        sectionId: "use-boundary",
+      },
+      {
+        level: "advanced",
+        question:
+          "이미지 수준 목표와 패치 수준 목표가 요구하는 방향이 어떻게 다른지 설명하고, 모델과 데이터를 키울 때 왜 dense feature 붕괴가 더 잘 드러나는지 쓰세요.",
+        answerChecklist: ["크롭이 달라도 같은 답 요구", "위치 의존 성분이 지워지는 쪽이 유리", "패치 목표는 자리마다 다른 답 요구", "작은 모델은 용량 부족으로 절충", "용량이 늘면 한쪽을 희생하는 해가 나타남"],
+        requiredConcepts: ["dense-feature-degradation", "ema-teacher-view-distillation"],
+        sectionId: "dense-collapse",
+      },
+      {
+        level: "advanced",
+        question:
+          "Gram anchoring이 특징값 정합이 아니라 관계 정합인 덕분에 얻는 성질을 설명하고, 그 성질이 만드는 한계도 함께 쓰세요.",
+        answerChecklist: ["회전에 불변", "값은 계속 움직일 수 있음", "학습 자유도 유지", "값의 일치는 보장하지 않음", "기준 구조가 나쁘면 나쁜 구조를 유지", "구현은 Frobenius 제곱 대신 MSE"],
+        requiredConcepts: ["gram-matrix-patch-consistency", "gram-teacher-refresh-schedule"],
+        sectionId: "gram-anchoring",
+      },
+      {
+        level: "advanced",
+        question:
+          "사전학습 손실이 계속 내려가는데도 dense 성능이 떨어질 수 있는 이유를 손실 구성으로 설명하고, 이를 관측하려면 무엇을 재야 하는지 쓰세요.",
+        answerChecklist: ["세 항 어디에도 패치 간 관계가 없음", "teacher도 같은 방향으로 흘러감", "student와 teacher 차이는 작게 유지", "얼린 backbone + 선형 head로 측정", "downstream dense 과제 점수"],
+        requiredConcepts: ["dense-feature-degradation", "frozen-backbone-evaluation-protocol"],
+        sectionId: "dense-collapse",
+      },
+      {
+        level: "advanced",
+        question:
+          "해상도 적응과 증류를 사후 단계로 두는 설계의 이득과 경계를 각각 정리하고, 증류 모델의 성능을 원 모델의 성능으로 읽으면 안 되는 이유를 쓰세요.",
+        answerChecklist: ["100만 스텝 재학습 회피", "적응은 1만 스텝", "global 512·768 / local 112~336", "기준은 7B 모델", "증류는 별도 학습된 모델", "과제별로 따라잡는 정도가 다름", "예산 기준으로 각자 측정"],
+        requiredConcepts: ["post-hoc-capability-adaptation", "backbone-budget-comparison"],
+        sectionId: "post-hoc",
+      },
+    ],
+    papers: [
+      {
+        title: "DINOv3",
+        href: "https://arxiv.org/abs/2508.10104",
+        problem:
+          "자기지도 학습에서 모델과 데이터를 함께 키울 때 긴 학습 일정이 dense feature 품질을 무너뜨리는 문제를 풀어야 했습니다.",
+        contribution:
+          "붕괴를 패치 유사도 구조의 손실로 정의하고, 학습 후반에만 켜는 Gram anchoring 규제와 사후 해상도·증류 단계를 제시했습니다.",
+        assumptions:
+          "보고된 결과는 논문이 사용한 데이터 준비 방식과 학습 일정, 얼린 backbone 평가 조건 안에서 성립합니다.",
+        evidenceScope:
+          "저자 자기보고 실험으로 여러 dense 과제와 전역 과제에서 이전 자기지도·약지도 모델 대비 개선을 보고했습니다.",
+        notClaim:
+          "모든 자기지도 학습이 같은 방식으로 붕괴한다는 주장이 아니며, 손실 가중치와 갱신 주기가 다른 규모에서도 최적이라는 근거도 아닙니다.",
+        sectionId: "paper-dinov3",
+      },
+    ],
+  },
 };

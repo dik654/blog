@@ -166,6 +166,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "카드 스펙과 링크 대역폭은 벤더 공식 스펙과 PCIe 규격 공식으로만 계산하고, 개조 카드의 안정성·수율·실측 처리량은 이 글에서 주장하지 않는다.",
   },
+  "ai/dinov3-self-supervised-backbone": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-09-11",
+    rationale:
+      "closure 1,497줄 중 절반 이상이 6개 Viz이고 본문은 6 section·concept 7개로 keep 범위다. 두 학습 목표·붕괴·Gram anchoring은 '라벨 없이 학습할 때 무엇이 무너지는가'라는 한 질문의 연속 단계라 나누면 각 글이 손실 구성을 다시 세워야 한다.",
+    sharedGate:
+      "DINOv3 기술 보고서와 facebookresearch/dinov3 커밋 11c58638 스냅샷만 근거로 삼는다. 다른 자기지도 방법과의 벤치마크 비교나 재현 실측은 이 글에 넣지 않는다.",
+  },
 };
 
 /**
@@ -185,6 +194,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/open-r1": "e635761fc3c1d371",
   "ai/openclaw-assistant": "2ac6c31bce49af09",
   "ai/qwen-korean-consistency": "28703cf32620721b",
+  "ai/dinov3-self-supervised-backbone": "1d4f7adb50ed720a",
   "ai/qwen38-flash-next-architecture": "fe506f8b67ff5ddf",
   "gpu/modded-rtx4090-moe-serving": "73c84dae6a67f21c",
   "ai/rag-pipeline": "ea1e5a0cf9b8d13d",

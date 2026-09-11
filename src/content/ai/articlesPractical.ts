@@ -396,7 +396,7 @@ const pipelineArticles: Article[] = [
 ];
 
 // ── D. 실전 컴퓨터 비전 ──
-const cvArticles: Article[] = [
+export const cvArticles: Article[] = [
   {
     slug: "image-classification-pipeline",
     title: "이미지 분류 데이터 경계: Identity Split과 Baseline Receipt",
@@ -458,6 +458,35 @@ const cvArticles: Article[] = [
       { id: "practice", title: "Position Resize와 Logit Parity" },
     ],
     component: () => import("@/pages/articles/ai/vision-transformer"),
+  },
+  {
+    slug: "dinov3-self-supervised-backbone",
+    title: "DINOv3는 dense feature 붕괴를 Gram anchoring으로 막습니다",
+    subcategory: "ai-practical-cv",
+    sections: [
+      { id: "overview", title: "라벨 없이 배운 표현을 얼려 두고 씁니다" },
+      {
+        id: "two-objectives",
+        title: "정답은 이전 시점의 자기 자신이 만듭니다",
+        subsections: [
+          { id: "view-objective", title: "이미지 수준 목표는 크롭 쌍의 분포를 맞춥니다" },
+          { id: "patch-objective", title: "패치 수준 목표는 가린 자리의 분포를 맞춥니다" },
+        ],
+      },
+      { id: "dense-collapse", title: "오래 학습할수록 패치 사이 구별이 흐려집니다" },
+      {
+        id: "gram-anchoring",
+        title: "값을 베끼지 않고 패치 사이 관계만 붙잡습니다",
+        subsections: [{ id: "gram-teacher", title: "기준 teacher는 언제 세우고 언제 갱신합니까" }],
+      },
+      { id: "post-hoc", title: "해상도와 크기는 학습을 다시 하지 않고 넓힙니다" },
+      {
+        id: "use-boundary",
+        title: "얼린 backbone에 얇은 head만 올려 판단합니다",
+        subsections: [{ id: "paper-dinov3", title: "기술 보고서가 보인 것과 보이지 않은 것" }],
+      },
+    ],
+    component: () => import("@/pages/articles/ai/dinov3-self-supervised-backbone"),
   },
   {
     slug: "multiview-fusion",

@@ -6566,4 +6566,30 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "Gen4 16GT/s와 128b/130b 인코딩으로 raw bandwidth를 계산하는 근거이며 protocol overhead 이후 실측값과는 다름",
     },
   ],
+  "ai/dinov3-self-supervised-backbone": [
+    {
+      kind: "핵심 논문",
+      label: "DINOv3 · arXiv 2508.10104",
+      href: "https://arxiv.org/abs/2508.10104",
+      note: "Gram anchoring·학습 일정·증류 계열의 원문이며 보고된 개선은 논문이 명시한 데이터와 평가 조건 안의 자기보고임",
+    },
+    {
+      kind: "공식 코드",
+      label: "facebookresearch/dinov3 · loss 구현",
+      href: "https://github.com/facebookresearch/dinov3",
+      note: "이 글이 인용한 gram_loss·dino_clstoken_loss·ibot_patch_loss·koleo_loss 스냅샷의 출처이며 커밋 11c58638 기준임",
+    },
+    {
+      kind: "공식 문서",
+      label: "Meta AI · DINOv3 모델 공개 페이지",
+      href: "https://ai.meta.com/dinov3/",
+      note: "공개된 모델 계열과 사용 조건의 근거이며 특정 과제의 성능 보장은 아님",
+    },
+    {
+      kind: "선행·비교 논문",
+      label: "Emerging Properties in Self-Supervised Vision Transformers · arXiv 2104.14294",
+      href: "https://arxiv.org/abs/2104.14294",
+      note: "EMA teacher와 centering·sharpening으로 붕괴를 막는 원형이며 DINOv3의 dense 관련 기여는 포함하지 않음",
+    },
+  ],
 };
