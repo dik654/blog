@@ -27,22 +27,13 @@ function annotationLines(annotation: FormulaOperationAnnotation["annotation"]) {
   return typeof annotation === "string" ? [annotation] : [...annotation];
 }
 
-function escapeKatexText(value: string) {
-  return value
-    .replace(/\\/g, String.raw`\textbackslash{}`)
-    .replace(/([{}%#$&_])/g, String.raw`\$1`)
-    .replace(/\^/g, String.raw`\textasciicircum{}`)
-    .replace(/~/g, String.raw`\textasciitilde{}`);
-}
-
-function annotatedOperation({
-  expression,
-  annotation,
-}: FormulaOperationAnnotation) {
-  const note = annotationLines(annotation)
-    .map((line) => String.raw`\text{${escapeKatexText(line)}}`)
-    .join(String.raw`\\[4pt]`);
-  return String.raw`\underbrace{${expression}}_{\substack{${note}}}`;
+/**
+ * 주석 문구는 KaTeX 밖에서 렌더한다. `\substack{\text{...}}` 안의 한글은 줄바꿈이
+ * 되지 않아 카드 폭을 넘기면 그대로 잘려 나갔다(긴 한글 주석이 흔하다).
+ * 식은 underbrace로 묶어 그대로 두고, 문구만 아래에 wrap 가능한 텍스트로 뺀다.
+ */
+function bracedExpression(expression: string) {
+  return String.raw`\underbrace{${expression}}`;
 }
 
 function inferOperations(formula: string): FormulaOperationAnnotation[] {
@@ -211,11 +202,23 @@ export default function ExplainedFormula({
               <div
                 key={`${operation.expression}-${index}`}
                 data-formula-operation
-                className="min-w-0 overflow-x-auto rounded-md border border-border/50 bg-muted/10 px-3 py-4 sm:px-4"
+                className="min-w-0 rounded-md border border-border/50 bg-muted/10 px-3 py-4 sm:px-4"
               >
-                <Math display className="my-0 text-sm">
-                  {annotatedOperation(operation)}
-                </Math>
+                <div className="min-w-0 overflow-x-auto">
+                  <Math display className="my-0 text-sm">
+                    {bracedExpression(operation.expression)}
+                  </Math>
+                </div>
+                <div className="mt-1 space-y-1 text-center">
+                  {annotationLines(operation.annotation).map((line, lineIndex) => (
+                    <p
+                      key={`${line}-${lineIndex}`}
+                      className="break-keep text-xs leading-5 text-muted-foreground"
+                    >
+                      {line}
+                    </p>
+                  ))}
+                </div>
               </div>
             ))}
           </div>
