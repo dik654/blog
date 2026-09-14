@@ -7022,4 +7022,18 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "M1·M2·Lf·L의 포함 범위 구분에 대한 한국 기준 근거. 발표 시점의 잔액 수치는 본문에 인용하지 않음",
     },
   ],
+  "money/time-value-and-discounting": [
+    {
+      kind: "보충 읽기",
+      label: "Irving Fisher · The Theory of Interest (1930)",
+      href: "https://oll.libertyfund.org/titles/fisher-the-theory-of-interest",
+      note: "명목·실질금리와 예상 물가의 관계식에 대한 근거. 관계식의 정식화이며 반영 정도에 대한 실증은 아님",
+    },
+    {
+      kind: "공식 문서",
+      label: "한국은행 · 경제금융용어 800선 (2026)",
+      href: "https://www.bok.or.kr/portal/bbs/B0000249/view.do?nttId=10096081&menuNo=200765",
+      note: "명목금리·실질금리·현재가치 등 본문 용어의 한국어 표준 표기를 맞추는 데 사용한 중앙은행 용어집. 계산식의 근거가 아니라 표기 기준으로만 참조",
+    },
+  ],
 };

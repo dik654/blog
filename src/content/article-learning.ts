@@ -74300,4 +74300,263 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "money/time-value-and-discounting": {
+    entryNote:
+      "돈이 구매력을 미래로 옮긴다는 것까지만 알고 들어오면 됩니다. 거듭제곱과 로그의 기본 성질은 별도 정본 글이 소유하며, 이 글은 그 계산을 쓰기만 합니다.",
+    coreIdea:
+      "시점이 다른 금액은 단위가 달라 그대로 더할 수 없으므로, 매 기간 곱해지는 배율의 역수로 한 시점에 모은 뒤에야 비교와 합산이 뜻을 가집니다. 그 배율을 무엇으로 잡느냐가 결론 전체를 좌우합니다.",
+    assumedKnowledge: [
+      {
+        id: "store-of-value",
+        role: "구매력을 미래로 옮긴다는 성질이 이 글에서 계산 대상이 됩니다.",
+      },
+      {
+        id: "exponentiation",
+        role: "같은 배율을 n번 곱하는 연산을 거듭제곱으로 읽는 데 씁니다.",
+      },
+      {
+        id: "logarithm",
+        role: "지수로 얽힌 식을 다루고 배율을 비교할 때 씁니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "time-value-of-money",
+        role: "시점이 다른 금액을 같은 자리에 놓을 수 없다는 문제를 세웁니다.",
+      },
+      {
+        id: "compound-interest",
+        role: "앞으로 굴리는 방향의 계산을 거듭제곱 형태로 확정합니다.",
+      },
+      {
+        id: "discount-factor",
+        role: "그 계산을 뒤집어 미래 금액을 오늘로 되돌리는 계수를 만듭니다.",
+      },
+      {
+        id: "net-present-value",
+        role: "흩어진 현금흐름을 한 숫자로 합쳐 판정하는 기준을 세웁니다.",
+      },
+      {
+        id: "internal-rate-of-return",
+        role: "같은 식을 비율로 되묻는 지표와 그 지표가 무너지는 조건을 보입니다.",
+      },
+      {
+        id: "real-interest-rate",
+        role: "물가를 걷어 낸 기준으로 바꿔야 하는 이유와 근사식의 유효 범위를 정합니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "time-value-of-money",
+        sectionId: "overview",
+        intuition:
+          "오늘 받으면 그사이 굴릴 수 있으므로, 같은 숫자라도 언제 받느냐에 따라 값이 달라집니다.",
+        workedExample:
+          "오늘의 100만 원과 3년 뒤의 100만 원은 연 5% 기준으로 각각 115만 7,625원과 100만 원이 되어 같은 시점에서 갈립니다.",
+        boundary:
+          "시점 차이가 값 차이를 만든다는 것이지, 기다림 자체가 손해라는 뜻은 아닙니다. 기다린 대가가 충분히 크면 미래 쪽이 더 좋을 수 있습니다.",
+      },
+      {
+        id: "compound-interest",
+        sectionId: "compounding",
+        intuition:
+          "붙은 이자를 원금에 얹으면 다음 이자는 더 커진 금액에 붙습니다.",
+        workedExample:
+          "연 5%로 100만 원을 3년 두면 단리는 115만 원, 복리는 115만 7,625원으로 7,625원 차이가 납니다.",
+        boundary:
+          "같은 연 5%라도 이자를 매달 붙이면 연 5.116%로 굴린 것과 같아지므로, 주기를 밝히지 않은 표시금리는 비교 근거가 되지 않습니다.",
+      },
+      {
+        id: "discount-factor",
+        sectionId: "discounting",
+        intuition:
+          "미래로 갈 때 곱한 배율을 그대로 나누면 오늘의 값이 나오고, 그 나누는 몫을 계수 하나로 묶어 둘 수 있습니다.",
+        workedExample:
+          "10년 뒤 1억 원은 할인율 3%에서 약 7,441만 원, 8%에서 약 4,632만 원으로 1.6배 차이가 납니다.",
+        boundary:
+          "할인율에 위험을 반영하면서 현금흐름도 기대값으로 낮추면 같은 위험을 두 번 세게 되므로 한쪽에서만 처리해야 합니다.",
+      },
+      {
+        id: "net-present-value",
+        sectionId: "npv",
+        intuition:
+          "시점이 흩어진 금액을 각자의 계수로 오늘에 모은 뒤 더하면, 들어온 것과 나간 것이 한 숫자로 정리됩니다.",
+        workedExample:
+          "초기 1억 원을 넣고 3년간 매년 4천만 원이 들어오는 사업은 할인율 8%에서 약 308만 원입니다.",
+        boundary:
+          "금액 지표이므로 규모가 큰 쪽이 유리하게 보이며, 같은 r과 같은 기간으로 계산하지 않은 두 값은 비교할 수 없습니다.",
+      },
+      {
+        id: "internal-rate-of-return",
+        sectionId: "irr",
+        intuition:
+          "이 현금흐름 스스로가 만들어 내는 수익률이 얼마인지를 되묻고, 순현재가치가 정확히 0이 되는 지점을 찾습니다.",
+        workedExample:
+          "초기 1억 원 투입 뒤 3년간 매년 4천만 원이 들어오면 내부수익률은 약 9.7%입니다.",
+        boundary:
+          "현금흐름의 부호가 여러 번 바뀌면 해가 여러 개 나올 수 있고, 기간이나 규모가 다른 사업을 이 값만으로 줄 세우면 결론이 뒤집힙니다.",
+      },
+      {
+        id: "real-interest-rate",
+        sectionId: "real-rate",
+        intuition:
+          "통장 숫자가 늘어도 물가가 더 올랐다면 살 수 있는 양은 오히려 줄어듭니다.",
+        workedExample:
+          "명목 5%에 물가 4%면 실질금리는 약 0.96%이고, 명목 20%에 물가 18%면 약 1.69%로 뺄셈 근사와 눈에 띄게 어긋납니다.",
+        boundary:
+          "계약 시점에는 예상 물가만 알 수 있으므로, 사전 실질금리와 사후 실질금리는 다른 숫자이며 어느 쪽인지 밝히지 않으면 비교에 쓸 수 없습니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 문제",
+        relation: "시점이 다른 금액은 단위가 달라 그대로 더할 수 없습니다.",
+        concepts: ["time-value-of-money"],
+      },
+      {
+        label: "01 앞으로",
+        relation: "한 기간의 배율을 반복해 곱해 미래 시점으로 옮깁니다.",
+        concepts: ["compound-interest"],
+      },
+      {
+        label: "02 뒤로",
+        relation: "같은 배율로 나눠 오늘의 값을 얻고 계수로 묶습니다.",
+        concepts: ["compound-interest", "discount-factor"],
+      },
+      {
+        label: "03 합치기",
+        relation: "흩어진 현금흐름을 한 시점에 모아 한 숫자로 판정합니다.",
+        concepts: ["discount-factor", "net-present-value"],
+      },
+      {
+        label: "04 비율로",
+        relation: "같은 식을 비율로 되묻고 그 지표가 무너지는 조건을 봅니다.",
+        concepts: ["net-present-value", "internal-rate-of-return"],
+      },
+      {
+        label: "05 물가 제거",
+        relation: "구매력 기준으로 바꿔야 판단이 뒤집히지 않습니다.",
+        concepts: ["real-interest-rate"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "연 4%로 200만 원을 2년 맡길 때 단리와 복리의 결과를 각각 계산하고 차이가 생기는 이유를 설명하세요.",
+        answerChecklist: ["단리 216만 원", "복리 216만 3,200원", "이자가 원금에 더해짐", "배율의 반복 곱셈"],
+        requiredConcepts: ["compound-interest"],
+        sectionId: "compounding",
+      },
+      {
+        level: "basic",
+        question:
+          "할인계수가 무엇인지 정의하고, 할인율이 커지거나 기간이 길어질 때 어떻게 변하는지 쓰세요.",
+        answerChecklist: ["(1+r)^-n", "미래 1원의 오늘 값", "r이 크면 작아짐", "n이 길면 0에 가까워짐"],
+        requiredConcepts: ["discount-factor"],
+        sectionId: "discounting",
+      },
+      {
+        level: "basic",
+        question:
+          "순현재가치가 0보다 크다는 것이 정확히 무엇을 뜻하는지, 무엇과 비교한 결과인지 밝혀 설명하세요.",
+        answerChecklist: ["할인율로 삼은 대안 대비", "절대적 수익성 아님", "비교 대상이 r에 들어 있음", "같은 r로 계산해야 비교 가능"],
+        requiredConcepts: ["net-present-value", "discount-factor"],
+        sectionId: "npv",
+      },
+      {
+        level: "basic",
+        question:
+          "내부수익률의 정의를 쓰고, 왜 손으로 풀지 않고 수치적으로 찾는지 설명하세요.",
+        answerChecklist: ["NPV를 0으로 만드는 r", "r에 대한 고차 다항식", "일반 해법 없음", "반복으로 근을 찾음"],
+        requiredConcepts: ["internal-rate-of-return"],
+        sectionId: "irr",
+      },
+      {
+        level: "basic",
+        question:
+          "명목금리 6%, 물가상승률 2%일 때 실질금리를 정확한 식과 근사식으로 각각 구하고 차이를 쓰세요.",
+        answerChecklist: ["1.06/1.02", "약 3.92%", "근사 4%", "둘 다 작을 때만 근사 가능"],
+        requiredConcepts: ["real-interest-rate"],
+        sectionId: "real-rate",
+      },
+      {
+        level: "basic",
+        question:
+          "같은 연 6%라도 이자를 연 1회 붙일 때와 매달 붙일 때 1년 뒤 금액이 달라지는 이유를 설명하세요.",
+        answerChecklist: ["기간당 이자율과 기간 수의 짝", "(1+0.06/12)^12", "약 6.168%", "표시금리만으로 비교 불가"],
+        requiredConcepts: ["compound-interest"],
+        sectionId: "compounding",
+      },
+      {
+        level: "advanced",
+        question:
+          "매기 같은 금액이 T기간 들어오는 현금흐름의 현재가치가 닫힌 식으로 정리되는 과정을 등비수열로 유도하고, T가 무한대로 갈 때의 극한을 구하세요.",
+        answerChecklist: [
+          "공비 1/(1+r)",
+          "등비급수 합",
+          "C[1-(1+r)^-T]/r",
+          "T→∞에서 C/r로 수렴",
+        ],
+        requiredConcepts: ["discount-factor", "net-present-value"],
+        sectionId: "npv",
+      },
+      {
+        level: "advanced",
+        question:
+          "현금흐름의 부호가 여러 번 바뀌면 내부수익률이 여러 개 나올 수 있는 이유를 설명하고, 그런 사업을 어떻게 판정해야 하는지 쓰세요.",
+        answerChecklist: [
+          "NPV가 r에 대해 단조가 아님",
+          "부호 변화 횟수만큼 근이 가능",
+          "어느 값이 수익률인지 정할 수 없음",
+          "NPV로 판정",
+        ],
+        requiredConcepts: ["internal-rate-of-return", "net-present-value"],
+        sectionId: "irr",
+      },
+      {
+        level: "advanced",
+        question:
+          "장기 사업의 평가에서 할인율을 3%로 잡을 때와 8%로 잡을 때 결론이 뒤집힐 수 있는 이유를, 할인계수가 기간에 따라 변하는 방식으로 설명하세요.",
+        answerChecklist: [
+          "할인계수가 지수적으로 감소",
+          "먼 미래 기여가 빠르게 축소",
+          "30년에서 0.41 대 0.10",
+          "r을 밝히지 않은 평가액은 비교 불가",
+        ],
+        requiredConcepts: ["discount-factor", "net-present-value"],
+        sectionId: "discounting",
+      },
+      {
+        level: "advanced",
+        question:
+          "위험한 현금흐름을 평가할 때 할인율을 높이는 방법과 현금흐름을 기대값으로 낮추는 방법 중 하나만 써야 하는 이유를 설명하세요.",
+        answerChecklist: [
+          "두 방법 모두 위험을 반영",
+          "동시에 쓰면 이중 반영",
+          "평가액이 과소평가됨",
+          "어느 쪽에서 처리했는지 명시",
+        ],
+        requiredConcepts: ["discount-factor", "net-present-value"],
+        sectionId: "discounting",
+      },
+    ],
+    papers: [
+      {
+        title: "Irving Fisher · The Theory of Interest (1930)",
+        href: "https://oll.libertyfund.org/titles/fisher-the-theory-of-interest",
+        problem:
+          "금액 기준의 이자율과 실제 구매력 기준의 이자율이 물가 변동에 따라 어떻게 갈라지는지가 체계적으로 정리되어 있지 않았습니다.",
+        contribution:
+          "명목이자율·실질이자율·예상 물가상승률의 관계를 하나의 관계식으로 정식화해 이후 실질금리 논의의 기준이 되었습니다.",
+        assumptions:
+          "장래 물가에 대한 기대가 존재하고 그 기대가 명목 계약에 반영될 수 있는 시장을 전제합니다.",
+        evidenceScope:
+          "1930년에 출간된 이론 저작으로, 관계식의 도출과 해석에 한정된 범위를 다룹니다.",
+        notClaim:
+          "명목금리가 예상 물가를 실제로 얼마나 반영하는지에 대한 실증 결과가 아니므로, 이 저작으로 특정 시기의 금리 움직임을 설명할 수 없습니다.",
+        sectionId: "real-rate",
+      },
+    ],
+  },
 };

@@ -22787,6 +22787,66 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "어떤 채무까지 돈으로 셀지 발행 주체·보유 주체·유동성 문턱으로 정해 합산한 숫자입니다. 문턱을 낮추면 M1처럼 좁아지고 높이면 M2·Lf·L로 넓어지므로, 지표 이름을 밝히지 않은 통화량 서술은 절반만 말한 것입니다.",
     canonicalHref: "/finance/money/money-as-a-claim#money-aggregates",
   },
+  "time-value-of-money": {
+    id: "time-value-of-money",
+    kind: "concept",
+    domain: "economics",
+    label: "Time value of money · 화폐의 시간가치",
+    aliases: ["시간가치", "돈의 시간 가치"],
+    definition:
+      "시점이 다른 금액은 서로 다른 단위여서 그대로 더하거나 비교할 수 없다는 성질입니다. 지금 받으면 그 기간만큼 굴릴 수 있으므로, 비교하려면 한 시점으로 환산하는 절차가 먼저 필요합니다.",
+    canonicalHref: "/finance/money/time-value-and-discounting#overview",
+  },
+  "compound-interest": {
+    id: "compound-interest",
+    kind: "method",
+    domain: "economics",
+    label: "Compound interest · 복리",
+    aliases: ["복리 계산", "미래가치", "future value"],
+    definition:
+      "붙은 이자를 원금에 더해 다음 기간의 이자 기준으로 삼는 방식입니다. 매 기간 같은 배율 (1+r)을 곱하므로 n기간 뒤 금액이 거듭제곱으로 커지며, 같은 표시금리라도 이자를 붙이는 주기가 잦을수록 결과가 커집니다.",
+    canonicalHref: "/finance/money/time-value-and-discounting#compounding",
+  },
+  "discount-factor": {
+    id: "discount-factor",
+    kind: "concept",
+    domain: "economics",
+    label: "Discount factor · 할인계수",
+    aliases: ["현재가치", "present value", "할인율", "discount rate"],
+    definition:
+      "미래 시점의 1원이 오늘 얼마인지를 나타내는 수 (1+r)^-n입니다. 여기서 r은 그 돈을 지금 받아 대신 굴렸을 때의 수익률이므로, 할인계수는 관측되는 상수가 아니라 비교 대상을 고르는 선택의 결과입니다.",
+    canonicalHref: "/finance/money/time-value-and-discounting#discounting",
+  },
+  "net-present-value": {
+    id: "net-present-value",
+    kind: "metric",
+    domain: "economics",
+    label: "Net present value · 순현재가치",
+    aliases: ["NPV", "순현가"],
+    definition:
+      "시점이 흩어진 현금흐름을 각자의 할인계수로 오늘에 모아 더한 값입니다. 0보다 크면 할인율로 삼은 대안보다 낫다는 판정이며, 절대적인 수익성이 아니라 비교 대상 대비 판정이라는 점이 핵심입니다.",
+    canonicalHref: "/finance/money/time-value-and-discounting#npv",
+  },
+  "internal-rate-of-return": {
+    id: "internal-rate-of-return",
+    kind: "metric",
+    domain: "economics",
+    label: "Internal rate of return · 내부수익률",
+    aliases: ["IRR"],
+    definition:
+      "순현재가치를 0으로 만드는 할인율입니다. 바깥에서 기준을 가져오지 않고 현금흐름 자체에서 뽑아내지만, 부호가 여러 번 바뀌면 해가 여러 개 나올 수 있고 규모·기간이 다른 사업의 줄 세우기에는 쓸 수 없습니다.",
+    canonicalHref: "/finance/money/time-value-and-discounting#irr",
+  },
+  "real-interest-rate": {
+    id: "real-interest-rate",
+    kind: "concept",
+    domain: "economics",
+    label: "Real interest rate · 실질금리",
+    aliases: ["피셔 방정식", "Fisher equation", "명목금리"],
+    definition:
+      "금액이 늘어난 배율을 물가가 오른 배율로 나눠 구매력 기준의 증가율만 남긴 값입니다. 명목금리에서 물가상승률을 빼는 것은 둘이 모두 작을 때의 근사이며, 사전 예상 물가로 계산한 값과 사후 실현 물가로 계산한 값은 서로 다른 숫자입니다.",
+    canonicalHref: "/finance/money/time-value-and-discounting#real-rate",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -41704,6 +41764,69 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "prerequisite",
     reason:
       "서로 다른 금융상품의 잔액을 더하려면 같은 계산 단위로 적혀 있어야 하므로, 계산 단위 기능이 집계의 전제가 됩니다.",
+  },
+  {
+    from: "store-of-value",
+    to: "time-value-of-money",
+    relation: "prerequisite",
+    reason:
+      "돈이 구매력을 미래로 옮기는 일을 한다는 것을 먼저 받아들여야, 옮기는 동안 값이 달라진다는 성질을 계산 대상으로 삼을 수 있습니다.",
+  },
+  {
+    from: "exponentiation",
+    to: "compound-interest",
+    relation: "prerequisite",
+    reason:
+      "같은 배율을 n번 곱하는 연산을 거듭제곱으로 읽을 수 있어야 복리 식이 왜 덧셈이 아닌지 설명됩니다.",
+  },
+  {
+    from: "time-value-of-money",
+    to: "compound-interest",
+    relation: "produces",
+    reason:
+      "시점이 다르면 값이 다르다는 성질을 앞 방향으로 계산하면 매 기간 배율을 곱하는 복리 식이 나옵니다.",
+  },
+  {
+    from: "compound-interest",
+    to: "discount-factor",
+    relation: "produces",
+    reason:
+      "미래로 보내는 곱셈을 그대로 뒤집으면 오늘로 되돌리는 나눗셈이 되고, 그 몫을 계수로 묶은 것이 할인계수입니다.",
+  },
+  {
+    from: "discount-factor",
+    to: "net-present-value",
+    relation: "prerequisite",
+    reason:
+      "각 시점 금액을 같은 단위로 바꿔 주는 계수가 있어야 흩어진 현금흐름의 합이 뜻을 가집니다.",
+  },
+  {
+    from: "net-present-value",
+    to: "internal-rate-of-return",
+    relation: "produces",
+    reason:
+      "순현재가치를 0으로 만드는 할인율을 되묻는 것이 내부수익률이므로, 같은 식을 미지수만 바꿔 푼 결과입니다.",
+  },
+  {
+    from: "internal-rate-of-return",
+    to: "net-present-value",
+    relation: "contrasts",
+    reason:
+      "하나는 금액으로 하나는 비율로 답하며 규모·기간이 다를 때 순위가 어긋나므로, 두 지표는 서로 다른 질문에 쓰입니다.",
+  },
+  {
+    from: "real-interest-rate",
+    to: "discount-factor",
+    relation: "constrains",
+    reason:
+      "명목 현금흐름은 명목 할인율로, 실질 현금흐름은 실질 할인율로 짝지어야 하므로 실질금리 구분이 할인 계산의 유효 조건을 정합니다.",
+  },
+  {
+    from: "logarithm",
+    to: "internal-rate-of-return",
+    relation: "prerequisite",
+    reason:
+      "거듭제곱으로 얽힌 식에서 지수를 다루려면 로그의 성질이 필요하며, 수렴 판정과 배율 비교에서도 같은 도구를 씁니다.",
   },
 ];
 
