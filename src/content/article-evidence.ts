@@ -7170,4 +7170,18 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "권력분립의 근거를 덕성이 아니라 제도적 이해에서 찾는 논증의 출처. 정치 문헌이며 효과에 대한 실증 근거는 아님",
     },
   ],
+  "constitution/government-forms": [
+    {
+      kind: "보충 읽기",
+      label: "Linz, The Perils of Presidentialism (Journal of Democracy 1:1, 1990)",
+      href: "https://www.journalofdemocracy.org/articles/the-perils-of-presidentialism/",
+      note: "대통령제·의원내각제 정의와 이중 정당성·경직성·승자독식 논의의 출처. 비교 논증이며 통제된 실증 연구가 아님",
+    },
+    {
+      kind: "공식 문서",
+      label: "대한민국헌법 제63조·제65조·제86조 (한국법제연구원 영문 번역본)",
+      href: "https://elaw.klri.re.kr/eng_service/lawView.do?hseq=1&lang=ENG",
+      note: "국무총리 임명 동의·해임건의·탄핵소추 조문. 번역본은 참조용이며 법적 효력은 국문 원문에 있음",
+    },
+  ],
 };

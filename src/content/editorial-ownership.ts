@@ -11936,6 +11936,41 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "government-forms": {
+    title: "같은 부품으로 조립했는데 전혀 다른 기계가 나옵니다 글이 소유하는 범위",
+    owns: [
+      "정부 형태를 가르는 두 축과 그 곱이 만드는 네 칸",
+      "생존의 분리가 만드는 세 가지 대가",
+      "교착의 출구가 체계마다 다르다는 구조",
+      "단독 과반이 없을 때 정부가 서기까지의 절차",
+      "결정적 연합의 수로 재는 협상력과 의석 비율의 괴리",
+      "준대통령제에서 이중 정통성이 행정부 내부로 들어오는 경로",
+    ],
+    reuses: [
+      {
+        label: "거부권자가 늘수록 통과 가능 영역이 좁아진다는 계산",
+        href: "/politics/constitution/constitutionalism-and-separation#checks",
+      },
+      {
+        label: "정당성이 통치 비용을 낮추는 관계",
+        href: "/politics/polity/state-and-legitimacy#legitimacy",
+      },
+      {
+        label: "조문이 같아도 실제 운용이 달라지는 이유",
+        href: "/politics/polity/state-and-legitimacy#state-capacity",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "조문의 내용은 공개 번역본을 확인한 범위에서만 적고, 그 조문이 실제로 어떻게 운용되는지에 대한 주장은 싣지 않는다",
+      },
+      {
+        kind: "primary-source",
+        rule: "체제 유형과 결과를 잇는 주장은 논쟁적 문헌임을 함께 적고, 제도가 만드는 것은 위험이지 사건이 아니라는 경계를 유지한다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

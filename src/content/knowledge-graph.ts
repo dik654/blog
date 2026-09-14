@@ -23498,6 +23498,76 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "헌법 개정에 일반 법률보다 높은 문턱을 두어 제약을 먼저 없애는 우회로를 막는 장치입니다. 문턱을 높이는 것은 거부권자를 늘리는 것과 같아 통과 가능 영역을 좁히므로, 너무 낮으면 제약이 사라지고 너무 높으면 고칠 수 없어 조문이 무시되기 시작합니다.",
     canonicalHref: "/politics/constitution/constitutionalism-and-separation#entrenchment",
   },
+  "executive-survival-dependence": {
+    id: "executive-survival-dependence",
+    kind: "concept",
+    domain: "political-science",
+    label: "행정부 생존의 의회 의존",
+    aliases: ["생존의 분리", "separate survival", "신임 의존"],
+    definition:
+      "의회 과반이 등을 돌렸을 때 행정부가 자리를 잃는가를 묻는 축이며, 정부 형태를 가르는 첫째 갈림길입니다. 임기가 고정되는지, 교착이 해소되지 않은 채 유지되는지, 연립을 만들 필요가 있는지가 전부 이 하나에서 따라 나옵니다.",
+    canonicalHref: "/politics/constitution/government-forms#two-axes",
+  },
+  "dual-legitimacy": {
+    id: "dual-legitimacy",
+    kind: "concept",
+    domain: "political-science",
+    label: "이중 정통성",
+    aliases: ["dual democratic legitimacy", "이중 정당성"],
+    definition:
+      "행정부 수반과 의회가 각각 국민에게서 직접 위임을 받아, 둘의 뜻이 갈릴 때 누가 국민을 대변하는지 가릴 기준이 체계 안에 없는 상태입니다. 헌법이 정할 수 있는 것은 권한의 경계이지 누구의 주장이 더 정당한가가 아니므로, 이 다툼은 제도 안에서 판정되지 않습니다.",
+    canonicalHref: "/politics/constitution/government-forms#presidential",
+  },
+  "fixed-term-rigidity": {
+    id: "fixed-term-rigidity",
+    kind: "concept",
+    domain: "political-science",
+    label: "고정 임기의 경직성",
+    aliases: ["임기 경직성", "rigidity of fixed terms"],
+    definition:
+      "행정부 수반의 임기가 미리 정해져 있어 상황이 바뀌어도 사람을 바꿔 대응할 수 없는 성질입니다. 누가 언제까지 맡는지를 예측 가능하게 만드는 것과 같은 성질의 두 얼굴이며, 임기 중간의 실패나 급변에 대응할 통로를 함께 막습니다.",
+    canonicalHref: "/politics/constitution/government-forms#presidential",
+  },
+  "confidence-and-dissolution": {
+    id: "confidence-and-dissolution",
+    kind: "concept",
+    domain: "political-science",
+    label: "신임과 해산",
+    aliases: ["불신임", "의회 해산", "vote of confidence"],
+    definition:
+      "행정부와 의회 과반의 선호가 갈렸을 때 내각을 교체하거나 의회를 해산해 위임을 다시 받는 일상적 조정 수단입니다. 교착을 제도 안에서 해소하는 대신 정부의 수명을 짧게 만들며, 이 두 결과는 분리되지 않습니다.",
+    canonicalHref: "/politics/constitution/government-forms#parliamentary",
+  },
+  "coalition-government": {
+    id: "coalition-government",
+    kind: "concept",
+    domain: "political-science",
+    label: "연립정부",
+    aliases: ["최소승리연합", "연정", "minimal winning coalition"],
+    definition:
+      "단독 과반이 없을 때 여러 정당이 함께 과반을 만들어 세우는 정부입니다. 정부를 서게 하는 동시에 내각 안에 새 거부권자를 만들며, 빠져도 과반이 유지되는 참가자를 끼우면 나눌 몫만 늘어나므로 불필요한 참가자가 없는 조합이 우선 후보가 됩니다.",
+    canonicalHref: "/politics/constitution/government-forms#parliamentary",
+  },
+  "voting-power-index": {
+    id: "voting-power-index",
+    kind: "theorem",
+    domain: "political-science",
+    label: "투표력 지수",
+    aliases: ["Banzhaf 지수", "협상력 지수", "결정적 연합"],
+    definition:
+      "한 정당의 협상력을 의석이 아니라 그 정당이 빠지면 과반이 깨지는 연합의 수로 재는 지표입니다. 의석 비율과 크게 어긋날 수 있어, 아주 작은 정당이 큰 정당과 같은 무게를 갖기도 하고 상당한 의석을 가진 정당의 값이 0이 되기도 합니다.",
+    canonicalHref: "/politics/constitution/government-forms#power-index",
+  },
+  "semi-presidential-cohabitation": {
+    id: "semi-presidential-cohabitation",
+    kind: "concept",
+    domain: "political-science",
+    label: "준대통령제와 동거정부",
+    aliases: ["이원집정부제", "cohabitation", "semi-presidentialism"],
+    definition:
+      "직선 대통령과 의회 신임에 매인 총리가 함께 행정부를 이루는 형태이며, 의회 과반이 대통령의 반대편일 때 서로 다른 위임을 받은 두 사람이 한 행정부에 앉는 상태가 동거정부입니다. 같은 조문이 의석 분포에 따라 강한 대통령제처럼도, 대통령이 외교만 맡는 의원내각제처럼도 굴러갑니다.",
+    canonicalHref: "/politics/constitution/government-forms#semi-presidential",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -43150,6 +43220,90 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "constrains",
     reason:
       "정보와 집행이 닿지 않는 지역에서는 위반이 알려지지도 판정되지도 않으므로, 같은 조문이라도 조정 효과가 생기지 않습니다.",
+  },
+  {
+    from: "separation-of-powers",
+    to: "executive-survival-dependence",
+    relation: "extends",
+    reason:
+      "기능을 가른다는 같은 원칙 안에서, 가른 기관들의 생존을 서로 묶을지 말지가 체계를 실제로 갈라놓는 축입니다.",
+  },
+  {
+    from: "executive-survival-dependence",
+    to: "dual-legitimacy",
+    relation: "produces",
+    reason:
+      "생존이 분리되고 수반을 국민이 직접 뽑으면 두 기관이 각각 국민의 위임을 주장할 수 있게 됩니다.",
+  },
+  {
+    from: "executive-survival-dependence",
+    to: "fixed-term-rigidity",
+    relation: "produces",
+    reason:
+      "신임과 무관하게 자리를 지킨다는 것은 임기가 미리 정해져 있고 중간에 바꿀 수 없다는 뜻입니다.",
+  },
+  {
+    from: "executive-survival-dependence",
+    to: "confidence-and-dissolution",
+    relation: "produces",
+    reason:
+      "생존이 의회에 매여 있으면 불신임과 해산이 교착을 푸는 일상적 절차가 됩니다.",
+  },
+  {
+    from: "veto-player-winset",
+    to: "dual-legitimacy",
+    relation: "prerequisite",
+    reason:
+      "거부권자가 둘이면 통과 가능 영역이 빌 수 있다는 계산을 알아야, 둘 다 물러나지 않는 상태가 왜 위험한지 설명됩니다.",
+  },
+  {
+    from: "political-legitimacy",
+    to: "dual-legitimacy",
+    relation: "prerequisite",
+    reason:
+      "정당성이 무엇을 낮추는 장치인지 알아야, 그 주장이 둘로 갈렸을 때 무엇이 사라지는지 볼 수 있습니다.",
+  },
+  {
+    from: "confidence-and-dissolution",
+    to: "coalition-government",
+    relation: "prerequisite",
+    reason:
+      "정부가 과반의 신임 위에 서야 하므로, 단독 과반이 없으면 여러 정당이 함께 과반을 만들어야 합니다.",
+  },
+  {
+    from: "coalition-government",
+    to: "voting-power-index",
+    relation: "produces",
+    reason:
+      "어떤 조합이 과반을 만드는지를 전부 나열하면, 각 정당이 빠질 때 무너지는 연합의 수라는 협상력 척도가 나옵니다.",
+  },
+  {
+    from: "voting-power-index",
+    to: "veto-player-winset",
+    relation: "contrasts",
+    reason:
+      "둘 다 누가 막을 수 있는가를 재지만, 하나는 정책 축 위의 위치로 재고 다른 하나는 정당 조합의 구조로 잽니다.",
+  },
+  {
+    from: "executive-survival-dependence",
+    to: "semi-presidential-cohabitation",
+    relation: "extends",
+    reason:
+      "두 축 가운데 하나씩을 각 체계에서 가져오면 직선 수반과 신임에 매인 총리가 공존하는 형태가 나옵니다.",
+  },
+  {
+    from: "semi-presidential-cohabitation",
+    to: "dual-legitimacy",
+    relation: "extends",
+    reason:
+      "기관 사이에 있던 이중 정통성이 행정부 내부로 들어와, 한 부서 안에서 두 위임이 맞서는 형태가 됩니다.",
+  },
+  {
+    from: "state-capacity",
+    to: "semi-presidential-cohabitation",
+    relation: "constrains",
+    reason:
+      "조문이 같아도 실제 운용이 달라진다는 점이 여기서 다시 나타나며, 형태만으로 체제를 읽으면 안 되는 이유가 됩니다.",
   },
 ];
 
